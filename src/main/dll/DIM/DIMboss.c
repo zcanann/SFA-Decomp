@@ -53,6 +53,24 @@ extern undefined8 FUN_801150ac();
 extern undefined4 fn_80113F9C();
 extern undefined4 fn_80114F64();
 extern undefined4 FUN_801149bc();
+extern void fn_801B9ECC(void);
+extern void fn_801BA224(void);
+extern void fn_801BA4B8(void);
+extern void fn_801BA590(void);
+extern void fn_801BA5A8(void);
+extern void fn_801BA5F0(void);
+extern void fn_801BA654(void);
+extern void fn_801BA780(void);
+extern void fn_801BA880(void);
+extern void fn_801BA958(void);
+extern void fn_801BAA84(void);
+extern void fn_801BAB88(void);
+extern void fn_801BACB8(void);
+extern void fn_801BAE00(void);
+extern void fn_801BAF58(void);
+extern void fn_801BB0D8(void);
+extern void fn_801BB1EC(void);
+extern void fn_801BB2B0(void);
 extern undefined4 FUN_801bbed0();
 extern undefined4 FUN_801bb848();
 extern undefined4 warpDarkIceMines_801bbb44();
@@ -99,7 +117,8 @@ extern f32 lbl_803E5908;
 extern undefined4 lbl_803AC9AC[];
 extern undefined4 lbl_803AC9DC[];
 extern undefined4 lbl_802C2338[];
-extern undefined4 lbl_803AD018[];
+extern void (*lbl_803AD000[])(void);
+extern void (*lbl_803AD018[])(void);
 extern int lbl_803DCA8C;
 extern undefined4* lbl_803DCA54;
 extern undefined4* lbl_803DCAB8;
@@ -750,8 +769,6 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   Music_Trigger(0xe0,0);
 }
 
-extern void fn_801BDAF4(void);
-
 /*
  * --INFO--
  *
@@ -767,7 +784,38 @@ extern void fn_801BDAF4(void);
  */
 void dimboss_initialise(void)
 {
-  fn_801BDAF4();
+  DIMboss_initialiseAnimTables();
 }
 
 void dimboss_release(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+void DIMboss_initialiseAnimTables(void)
+{
+  void (**table)(void);
+
+  table = lbl_803AD018;
+  table[0] = fn_801BB2B0;
+  table[1] = fn_801BB1EC;
+  table[2] = fn_801BB0D8;
+  table[3] = fn_801BAF58;
+  table[4] = fn_801BAE00;
+  table[5] = fn_801BACB8;
+  table[6] = fn_801BAB88;
+  table[7] = fn_801BAA84;
+  table[8] = fn_801BA958;
+  table[9] = fn_801BA880;
+  table[10] = fn_801BA780;
+  table[11] = fn_801BA654;
+
+  table = lbl_803AD000;
+  table[0] = fn_801BA5F0;
+  table[1] = fn_801BA5A8;
+  table[2] = fn_801BA590;
+  table[3] = fn_801BA4B8;
+  table[4] = fn_801BA224;
+  table[5] = fn_801B9ECC;
+}
+#pragma peephole reset
+#pragma scheduling reset

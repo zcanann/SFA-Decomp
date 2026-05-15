@@ -139,5 +139,6 @@ void DIMboss_update(DIMbossObject *obj);
 void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3);
 void dimboss_release(void);
 void dimboss_initialise(void);
+void DIMboss_initialiseAnimTables(void);
 
 #endif /* MAIN_DLL_DIM_DIMBOSS_H_ */
