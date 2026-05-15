@@ -171,6 +171,10 @@ static inline f64 ObjAnim_U32AsDouble(u32 value) {
   return *(f64 *)&bits;
 }
 
+static inline f64 ObjAnim_S32AsDouble(s32 value) {
+  return ObjAnim_U32AsDouble((u32)(value ^ (s32)OBJANIM_S32_DOUBLE_BIAS_XOR));
+}
+
 static inline s32 ObjAnim_ResolveMoveIndex(ObjAnimDef *animDef, u32 moveId) {
   s32 moveIndex =
       animDef->moveBaseTable[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
