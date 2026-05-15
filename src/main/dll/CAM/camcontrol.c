@@ -173,7 +173,7 @@ void camcontrol_updateTargetFeedback(void)
   }
   if (gCamcontrolTargetState == '\0') {
     if (lbl_803E22B0 < *(float *)(psVar6 + 0x4c)) {
-      ObjAnim_AdvanceCurrentMove((double)lbl_803E22F0,(double)lbl_803DC074,(int)psVar6,
+      ObjAnim_AdvanceCurrentMove(lbl_803E22F0,lbl_803DC074,(int)psVar6,
                                  (ObjAnimEventList *)0x0);
     }
     else if (iVar11 == 0) {
@@ -189,7 +189,7 @@ void camcontrol_updateTargetFeedback(void)
   }
   else if ((*(int *)(gCamcontrolState + 0x128) == iVar11) ||
           (*(float *)(psVar6 + 0x4c) < lbl_803E22AC)) {
-    ObjAnim_AdvanceCurrentMove((double)lbl_803E22F4,(double)lbl_803DC074,(int)psVar6,
+    ObjAnim_AdvanceCurrentMove(lbl_803E22F4,lbl_803DC074,(int)psVar6,
                                (ObjAnimEventList *)0x0);
   }
   else {
