@@ -3,7 +3,7 @@
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
-#include "main/objlib.h"
+#include "main/objhits.h"
 
 extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);

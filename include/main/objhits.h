@@ -146,5 +146,8 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
 void ObjHits_CheckTrackContact(void);
 void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                     undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
+                uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
+int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume);
 
 #endif /* MAIN_OBJHITS_H_ */

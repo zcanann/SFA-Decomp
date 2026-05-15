@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
+#include "main/objhits.h"
 
 typedef struct ObjAnimBank ObjAnimBank;
 typedef void (*ObjContactCallback)(int objA,int objB);
@@ -32,9 +33,6 @@ undefined4
 ObjHits_RecordPositionHit(double hitPosX,double hitPosY,double hitPosZ,int obj,int hitObj,char priority,
             undefined hitVolume,undefined sphereIndex);
 void ObjHits_AddContactObject(int param_1,int param_2);
-int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
-                uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
-int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume);
 void ObjHits_ResetWorkBuffers(void);
 void ObjHits_InitWorkBuffers(void);
 uint ObjGroup_ContainsObject(uint obj,int group);
