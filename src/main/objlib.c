@@ -2925,10 +2925,10 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
   int jointIndex;
   int pointOffset;
   ObjPathTransform transform;
-  float rotMtx[16];
+  float rootMtx[12];
   float transposedMtx[12];
   float concatMtx[12];
-  float rootMtx[12];
+  float rotMtx[16];
 
   if ((pointIndex < 0) ||
       ((int)(uint)*(u8 *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINT_COUNT_OFFSET) <=
