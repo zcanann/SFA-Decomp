@@ -16,11 +16,14 @@ extern undefined4 FUN_80017a6c();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
+extern int randomGetRange(int min,int max);
 extern undefined4 ObjHits_SyncObjectPosition();
 extern int ObjGroup_FindNearestObject();
 extern undefined4 ObjLink_AttachChild();
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_80039580();
+extern int Sfx_IsPlayingFromObjectChannel(int obj,int channel);
+extern void objAudioFn_800393f8(int obj,void *audio,int soundId,int volume,int param5,int param6);
 extern int FUN_800da5f0();
 extern undefined4 FUN_800da700();
 extern uint FUN_800db47c();
@@ -1703,7 +1706,7 @@ void fn_801444A4(int param_1,int param_2)
   int iVar1;
   int iVar3;
 
-  iVar1 = (int)FUN_80017760(0,4);
+  iVar1 = randomGetRange(0,4);
   switch (iVar1) {
   case 0:
     objAnimFn_8013a3f0(param_1,0,lbl_803E30D4,0);
@@ -1711,10 +1714,10 @@ void fn_801444A4(int param_1,int param_2)
     break;
   case 1:
     iVar3 = *(int *)(param_1 + 0xb8);
-    if ((*(byte *)(iVar3 + 0x58) >> 6 & 1) == 0) {
+    if (((u32)(*(byte *)(iVar3 + 0x58) >> 6 & 1)) == 0U) {
       if (*(short *)(param_1 + 0xa0) >= 0x30 || *(short *)(param_1 + 0xa0) < 0x29) {
-        if (FUN_800067f0(param_1,0x10) == 0) {
-          FUN_80039468(param_1,iVar3 + 0x3a8,0x357,0,0xffffffff,0);
+        if (Sfx_IsPlayingFromObjectChannel(param_1,0x10) == 0) {
+          objAudioFn_800393f8(param_1,(void *)(iVar3 + 0x3a8),0x357,0,0xffffffff,0);
         }
       }
     }
