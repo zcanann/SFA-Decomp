@@ -4,7 +4,7 @@
 extern u32 __cvt_fp2unsigned(double x);
 extern f32 powf(f32 x, f32 y);
 
-extern u8 voiceMidiKeySlots[];
+extern u8 voiceMidiKeySlots[][16];
 extern u8 voiceDirectSlots[];
 extern u8 lbl_803BD150[];
 extern f32 voicePitchUpTable[];
@@ -30,7 +30,7 @@ extern f64 lbl_803E7840;
  */
 void voiceInitRegistrationTables(void)
 {
-    u8 *p = voiceMidiKeySlots;
+    u8 *p = &voiceMidiKeySlots[0][0];
     int i;
     int j;
 
@@ -63,12 +63,10 @@ int voiceScaleSampleRate(u16 x)
         struct { u32 hi, lo; } w;
         f64 d;
     } conv;
-    f32 scaled;
 
     conv.w.lo = (u32)x;
     conv.w.hi = 0x43300000;
-    scaled = conv.d - lbl_803E7820;
-    return (int)(lbl_803E7818 * scaled);
+    return (int)(lbl_803E7818 * (conv.d - lbl_803E7820));
 }
 
 /*
