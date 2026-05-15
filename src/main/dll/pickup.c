@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/pickup.h"
 
-extern uint FUN_80017760();
 extern undefined4 FUN_80286838();
 extern int FUN_8028683c();
 extern int FUN_80286840();

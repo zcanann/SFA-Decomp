@@ -8,7 +8,7 @@ extern undefined4 FUN_800068f4();
 extern int FUN_80006a10();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
@@ -588,7 +588,7 @@ void FUN_80152cf0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     dVar13 = (double)lbl_803E34E4;
     local_28 = (longlong)(int)(dVar13 * (double)lbl_803DC078);
-    uVar3 = FUN_80017760(0,(int)(dVar13 * (double)lbl_803DC078));
+    uVar3 = randomGetRange(0,(int)(dVar13 * (double)lbl_803DC078));
     if (uVar3 == 0) {
       dVar13 = (double)FUN_80006824((uint)psVar1,0xe7);
     }

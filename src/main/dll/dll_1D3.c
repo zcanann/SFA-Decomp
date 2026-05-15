@@ -10,7 +10,7 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017708();
 extern double FUN_80017714();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017af8();
@@ -326,7 +326,7 @@ undefined4 FUN_801ce424(uint param_1,int param_2)
       }
       if ((*(byte *)(param_2 + 0x43c) & 2) != 0) {
         *(undefined *)(param_2 + 0x408) = 0x15;
-        uVar3 = FUN_80017760(0,300);
+        uVar3 = randomGetRange(0,300);
         *(float *)(param_2 + 4) =
              (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e5eb8);
       }

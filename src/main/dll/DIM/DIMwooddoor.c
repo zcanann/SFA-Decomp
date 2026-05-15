@@ -5,7 +5,6 @@ extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017730();
-extern uint FUN_80017760();
 extern undefined4 FUN_80017a88();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();

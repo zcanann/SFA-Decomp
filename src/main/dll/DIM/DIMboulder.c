@@ -15,7 +15,6 @@ extern uint GameBit_Get(int eventId);
 extern undefined8 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017710();
 extern undefined4 FUN_8001771c();
-extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();

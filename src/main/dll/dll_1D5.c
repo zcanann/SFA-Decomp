@@ -4,7 +4,7 @@
 
 extern undefined4 FUN_80017680();
 extern double FUN_80017714();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a6c();
 extern undefined4 FUN_80017a98();
 extern int FUN_8002fc3c();
@@ -286,7 +286,7 @@ LAB_801cf840:
   *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xfb;
   if (((*(byte *)(iVar6 + 0x43c) & 0x10) == 0) && (iVar5 = ObjTrigger_IsSet((int)param_9), iVar5 != 0))
   {
-    uVar4 = FUN_80017760(1,(uint)**(byte **)(iVar6 + 0x48));
+    uVar4 = randomGetRange(1,(uint)**(byte **)(iVar6 + 0x48));
     *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) | 4;
     (**(code **)(*DAT_803dd6d4 + 0x48))
               (*(undefined *)(*(int *)(iVar6 + 0x48) + uVar4),param_9,0xffffffff);

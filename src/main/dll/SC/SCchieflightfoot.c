@@ -10,8 +10,7 @@
 extern undefined4 Sfx_PlayFromObject();
 extern double FUN_80017708();
 extern int FUN_80017730();
-extern uint FUN_80017760();
-extern uint randomGetRange(int min,int max);
+extern u32 randomGetRange(int min, int max);
 extern undefined4 Obj_GetActiveModel();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 modelInitBones();
@@ -248,7 +247,7 @@ void SHthorntail_update(SHthorntailObject *obj)
     }
     runtime->behaviorFlags = runtime->behaviorFlags & 0xfd;
     if (((runtime->behaviorFlags & 4) == 0) && (iVar6 = ObjTrigger_IsSet((int)psVar2), iVar6 != 0)) {
-      uVar7 = FUN_80017760(1,(uint)*runtime->impactSfxTable);
+      uVar7 = randomGetRange(1,(uint)*runtime->impactSfxTable);
       runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_IMPACT_PENDING;
       (*(code *)(*DAT_803dd6d4 + 0x48))
                 (*(undefined *)(runtime->impactSfxTable + uVar7),psVar2,0xffffffff);

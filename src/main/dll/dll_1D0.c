@@ -5,7 +5,7 @@ extern undefined4 FUN_800066e0();
 extern void* FUN_800069a8();
 extern int FUN_80006a64();
 extern undefined8 FUN_80006a68();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjHits_SetHitVolumeSlot();
 extern double FUN_80293900();
 
@@ -181,7 +181,7 @@ void FUN_801cd484(int param_1)
         local_18 = lbl_803E5E70;
         (**(code **)(*DAT_803dd708 + 8))(param_1,0x1f7,auStack_2c,0x12,0xffffffff,0);
       }
-      uVar4 = FUN_80017760(0xfffffff6,10);
+      uVar4 = randomGetRange(0xfffffff6,10);
       *(short *)(iVar5 + 4) = (short)uVar4 + 0x3c;
     }
     else {

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/mmshrine/animobj1C0.h"
 
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
@@ -142,7 +142,7 @@ void FUN_801c5c2c(int param_1)
     *(float *)(param_1 + 0x10) = fVar1;
     *(uint *)(param_1 + 0xf4) = *(int *)(param_1 + 0xf4) - (uint)DAT_803dc070;
     if (*(int *)(param_1 + 0xf4) < 1) {
-      uVar4 = FUN_80017760(0x3c,0xf0);
+      uVar4 = randomGetRange(0x3c,0xf0);
       *(uint *)(param_1 + 0xf4) = uVar4;
       if ((double)lbl_803E5C1C == in_f31) {
         (**(code **)(*DAT_803dd718 + 0x14))

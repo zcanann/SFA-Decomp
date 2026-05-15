@@ -16,7 +16,7 @@ extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
 extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern int FUN_80017af8();
 extern undefined4 FUN_8002fc3c();
@@ -332,7 +332,7 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(float *)(iVar11 + 8) = fVar1;
       if (fVar1 <= fVar4) {
         FUN_80006824((uint)param_9,0x343);
-        uVar5 = FUN_80017760(500,1000);
+        uVar5 = randomGetRange(500,1000);
         *(float *)(iVar11 + 8) =
              (float)((double)CONCAT44(0x43300000,uVar5 ^ 0x80000000) - DOUBLE_803e5b18);
       }

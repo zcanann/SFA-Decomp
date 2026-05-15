@@ -17,7 +17,7 @@ extern undefined4 FUN_80017620();
 extern void* FUN_80017624();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -296,7 +296,7 @@ LAB_801b10e4:
   }
   iVar6 = *piVar7;
   if (((iVar6 != 0) && (*(char *)(iVar6 + 0x2f8) != '\0')) && (*(char *)(iVar6 + 0x4c) != '\0')) {
-    uVar5 = FUN_80017760(0xffffffe7,0x19);
+    uVar5 = randomGetRange(0xffffffe7,0x19);
     iVar6 = *piVar7;
     sVar4 = (ushort)*(byte *)(iVar6 + 0x2f9) + (short)*(char *)(iVar6 + 0x2fa) + (short)uVar5;
     if (sVar4 < 0) {

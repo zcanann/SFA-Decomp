@@ -7,7 +7,6 @@ extern undefined4 FUN_800175cc();
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
-extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjMsg_AllocQueue();

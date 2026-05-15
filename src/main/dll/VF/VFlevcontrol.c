@@ -5,7 +5,7 @@ extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
@@ -106,7 +106,7 @@ void FUN_801de430(undefined8 param_1,double param_2,double param_3,undefined8 pa
             bVar3 = true;
           }
           else {
-            uVar7 = FUN_80017760(0,(uVar7 & 0xff) - 1);
+            uVar7 = randomGetRange(0,(uVar7 & 0xff) - 1);
             bVar9 = local_38[uVar7];
             if ((int)psVar11[0x12] == (uint)bVar9) {
               GameBit_Set((uint)*(ushort *)(psVar11[0x12] * 2 + -0x7fcd7960),1);

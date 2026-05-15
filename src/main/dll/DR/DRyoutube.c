@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRyoutube.h"
 
-extern uint FUN_80017760();
 extern int FUN_80017a98();
 extern undefined4 ObjGroup_FindNearestObject();
 extern int FUN_80039520();

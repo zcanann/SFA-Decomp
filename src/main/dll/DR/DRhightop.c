@@ -12,7 +12,7 @@ extern undefined4 FUN_80006c88();
 extern uint GameBit_Get(int eventId);
 extern uint FUN_80017730();
 extern undefined4 FUN_8001774c();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -409,7 +409,7 @@ void FUN_801eb708(uint param_1,int param_2)
         *(float *)(param_2 + 0x46c) = fVar2;
       }
       else {
-        uVar4 = FUN_80017760(0,10);
+        uVar4 = randomGetRange(0,10);
         if (uVar4 == 0) {
           FUN_80006824(0,0x117);
         }

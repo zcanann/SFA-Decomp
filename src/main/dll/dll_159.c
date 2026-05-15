@@ -5,7 +5,7 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_8001771c();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjGroup_AddObject();
@@ -47,7 +47,7 @@ void FUN_801833e4(undefined2 *param_1,int param_2)
     *(int *)(iVar2 + 0x18) = *(short *)(param_2 + 0x1c) * 0x3c;
   }
   DAT_803de740 = FUN_80006b14(0x5b);
-  uVar1 = FUN_80017760(0,100);
+  uVar1 = randomGetRange(0,100);
   *(short *)(iVar2 + 0xe) = (short)uVar1 + 300;
   *(char *)(iVar2 + 0x1f) = (char)*(undefined2 *)(param_2 + 0x1a);
   *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
