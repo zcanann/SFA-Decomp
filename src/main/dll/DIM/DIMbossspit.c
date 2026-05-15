@@ -123,8 +123,8 @@ void fn_801BE19C(u8 *obj, u8 *unused2, u8 *state, u8 *updateState)
   *(u32 *)(state + DIMBOSSSPIT_SAVED_OBJ_FIELD_C0_OFFSET) = *(u32 *)(obj + 0xC0);
   *(u32 *)(obj + 0xC0) = 0;
 
-  (*(void (**)(double, double, u8 *, u8 *, u8 *, u8 *))(*(int *)lbl_803DCA8C + 0x8))(
-      (double)timeDelta, (double)timeDelta, obj, updateState, lbl_803DDBB0, lbl_803DDBA8);
+  (*(void (**)(u8 *, u8 *, double, double, u8 *, u8 *))(*(int *)lbl_803DCA8C + 0x8))(
+      obj, updateState, (double)timeDelta, (double)timeDelta, lbl_803DDBB0, lbl_803DDBA8);
 
   *(u32 *)(obj + 0xC0) = *(u32 *)(state + DIMBOSSSPIT_SAVED_OBJ_FIELD_C0_OFFSET);
 }
