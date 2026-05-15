@@ -12,8 +12,8 @@ extern int Obj_GetPlayerObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern int ObjTrigger_IsSet();
 extern void characterDoEyeAnims(int obj,int collisionShapeState);
-extern void objAudioFn_8006ef38(double scaleX,double scaleY,int obj,int joint,int pointCount,int pathPoints,
-                        int scratch);
+extern void objAudioFn_8006ef38(int obj,int joint,int pointCount,int pathPoints,int scratch,f32 scaleX,
+                        f32 scaleY);
 extern int dll_2E_func07();
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
 
@@ -172,40 +172,40 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
   switch(runtime->locomotionMode) {
   case SHTHORNTAIL_LOCOMOTION_1:
     runtime->impactSfxTable =
-        levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC1 + config->impactSfxVariant * 2;
+        levelControlTables + config->impactSfxVariant * 2 + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC1;
     break;
   case SHTHORNTAIL_LOCOMOTION_2:
     gameBit = GameBit_Get(0x9e);
     if (gameBit != 0) {
       runtime->impactSfxTable =
-          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_SET +
-          config->impactSfxVariant * 2;
+          levelControlTables + config->impactSfxVariant * 2 +
+          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_SET;
     }
     else {
       runtime->impactSfxTable =
-          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_CLEAR +
-          config->impactSfxVariant * 2;
+          levelControlTables + config->impactSfxVariant * 2 +
+          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_CLEAR;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_3:
     gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION3_GAMEBIT);
     if (gameBit != 0) {
       runtime->impactSfxTable =
-          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_SET +
-          config->impactSfxVariant * 2;
+          levelControlTables + config->impactSfxVariant * 2 +
+          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_SET;
     }
     else {
       runtime->impactSfxTable =
-          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_CLEAR +
-          config->impactSfxVariant * 2;
+          levelControlTables + config->impactSfxVariant * 2 +
+          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_CLEAR;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_5:
     gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_PLAYER_GAMEBIT);
     if (gameBit == 0) {
       runtime->impactSfxTable =
-          levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC5_CLEAR +
-          config->impactSfxVariant * 2;
+          levelControlTables + config->impactSfxVariant * 2 +
+          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC5_CLEAR;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_6:
@@ -227,7 +227,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     break;
   case SHTHORNTAIL_LOCOMOTION_8:
     runtime->impactSfxTable =
-        levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC8 + config->impactSfxVariant * 2;
+        levelControlTables + config->impactSfxVariant * 2 + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC8;
     break;
   }
   SHthorntail_updateState(obj,runtime);
@@ -281,8 +281,8 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
     characterDoEyeAnims((int)obj,(int)runtime->collisionShapeState);
   }
   runtime->activeMoveValid = 0;
-  objAudioFn_8006ef38((double)lbl_803E5448,(double)lbl_803E5448,(int)obj,param_3 + 0xf0,8,
-              (int)runtime->renderPathPoints,(int)runtime->moveScratch);
+  objAudioFn_8006ef38((int)obj,param_3 + 0xf0,8,(int)runtime->renderPathPoints,
+              (int)runtime->moveScratch,lbl_803E5448,lbl_803E5448);
   return 0;
 }
 #pragma peephole reset
