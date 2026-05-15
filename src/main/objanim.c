@@ -382,7 +382,6 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   short previousMove;
   u8 moveChanged;
   int frameStep;
-  int moveIndex;
   ObjAnimMoveData *moveData;
   float eventStepFrames;
   objAnim = (ObjAnimComponent *)objAnimArg;
@@ -414,16 +413,23 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   previousMove = objAnim->activeMove;
   moveChanged = previousMove != moveId;
   objAnim->activeMove = (s16)moveId;
-  moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
+  moveId = (int)animDef->moveBaseTable[moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+           (moveId & OBJANIM_MOVE_INDEX_MASK);
+  if (moveId >= (int)animDef->moveCount) {
+    moveId = animDef->moveCount - 1;
+  }
+  if (moveId < 0) {
+    moveId = 0;
+  }
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
-      if (animDef->blendMoveIds[moveIndex] == OBJANIM_MISSING_MOVE_ID) {
+      if (animDef->blendMoveIds[moveId] == OBJANIM_MISSING_MOVE_ID) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
-        moveIndex = 0;
+        moveId = 0;
       }
-      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
+      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveId],(int)(s16)moveId,
                              state->moveCache[state->moveCacheSlot],animDef);
     }
     moveData =
@@ -431,7 +437,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
                             OBJANIM_CACHED_MOVE_DATA_OFFSET);
   }
   else {
-    state->moveCacheSlot = (u16)moveIndex;
+    state->moveCacheSlot = (u16)moveId;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
   }
   state->frameData = moveData->frameCmd;
@@ -1117,7 +1123,6 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
   s16 previousMove;
   u8 moveChanged;
   int frameStep;
-  int moveIndex;
   ObjAnimMoveData *moveData;
   float eventStepFrames;
   ObjHitReactState *hitState;
@@ -1161,16 +1166,23 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != moveId;
   objAnim->currentMove = (s16)moveId;
-  moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
+  moveId = (int)animDef->moveBaseTable[moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+           (moveId & OBJANIM_MOVE_INDEX_MASK);
+  if (moveId >= (int)animDef->moveCount) {
+    moveId = animDef->moveCount - 1;
+  }
+  if (moveId < 0) {
+    moveId = 0;
+  }
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
       state->moveCacheSlot = (u16)state->blendToggle;
-      if (animDef->blendMoveIds[moveIndex] == OBJANIM_MISSING_MOVE_ID) {
+      if (animDef->blendMoveIds[moveId] == OBJANIM_MISSING_MOVE_ID) {
         OSReport(gObjAnimSetBlendMoveMissingAnimWarning,animDef->modNo);
-        moveIndex = 0;
+        moveId = 0;
       }
-      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveIndex],(int)(s16)moveIndex,
+      ObjAnim_LoadCachedMove((int)animDef->blendMoveIds[moveId],(int)(s16)moveId,
                              state->moveCache[state->moveCacheSlot],animDef);
     }
     moveData =
@@ -1178,7 +1190,7 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
                             OBJANIM_CACHED_MOVE_DATA_OFFSET);
   }
   else {
-    state->moveCacheSlot = (u16)moveIndex;
+    state->moveCacheSlot = (u16)moveId;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
   }
   state->frameData = moveData->frameCmd;
@@ -1188,7 +1200,7 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
     state->segmentLength = state->segmentLength - gObjAnimProgressOne;
   }
   frameStep = moveData->frameInfo & OBJANIM_FRAME_STEP_MASK;
-  if ((frameStep != 0) && ((flags & OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN) == 0)) {
+  if ((frameStep != 0) && (((u8)flags & OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN) == 0)) {
     state->savedStep = state->step;
     eventStepFrames = gObjAnimEventStepScale / (float)frameStep;
     state->eventStep = eventStepFrames;
