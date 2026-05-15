@@ -3,6 +3,8 @@
 #include "main/dll/FRONT/dll_39.h"
 #include "dolphin/os.h"
 #include "dolphin/thp/THPAudio.h"
+#include "dolphin/thp/THPFile.h"
+#include "dolphin/thp/THPInfo.h"
 
 typedef struct TitleMenuTextEntry {
   u8 pad0[0x16];
@@ -26,19 +28,32 @@ typedef struct MovieAudioCursor {
   int frameIndex;
 } MovieAudioCursor;
 
-typedef struct MovieAudioState {
-  u8 pad0[0x50];
-  u32 framesPerGroup;
-  u8 pad54[0x18];
-  u32 audioTrackCount;
-  u8 audioTrackEnabled[0x2e];
-  u8 flags;
-  u8 pad9f[0xd];
+typedef struct AttractMovieVideoInfo {
+  u32 width;
+  u32 height;
+} AttractMovieVideoInfo;
+
+typedef struct AttractMovieAudioInfo {
+  u32 channels;
+  u32 frequency;
+  u32 sampleCount;
+} AttractMovieAudioInfo;
+
+typedef struct AttractMoviePlayer {
+  u8 pad0[0x3c];
+  THPHeader header;
+  THPFrameCompInfo compInfo;
+  AttractMovieVideoInfo videoInfo;
+  AttractMovieAudioInfo audioInfo;
+  u8 pad94[0xa];
+  u8 playFlags;
+  u8 audioExists;
+  u8 padA0[0xc];
   void *loopFrame;
-  u8 padb0[4];
+  u8 padB0[4];
   int frameStride;
-  u32 frameOffset;
-} MovieAudioState;
+  u32 initReadFrame;
+} AttractMoviePlayer;
 
 extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
 extern void audioStopByMask(int mask);
@@ -62,7 +77,7 @@ extern TitleMenuTextEntry lbl_8031A214[4];
 extern OSMessageQueue lbl_803A4460;
 extern OSMessageQueue lbl_803A4480;
 extern OSThread lbl_803A54A0;
-extern MovieAudioState lbl_803A5D60;
+extern AttractMoviePlayer lbl_803A5D60;
 extern u8 *lbl_803DD498;
 extern u8 lbl_803DB424;
 extern s32 lbl_803DD610;
@@ -237,14 +252,14 @@ void thpAudioFn_80117380(void *cursorArg)
 
   cursor = (MovieAudioCursor *)cursorArg;
   audioFrameSizes = (u32 *)(cursor->frame + 8);
-  audioFrame = cursor->frame + (lbl_803A5D60.audioTrackCount * 4) + 8;
+  audioFrame = cursor->frame + (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) + 8;
   {
     MovieAudioPacket *received;
     OSReceiveMessage(&lbl_803A4480,&received,1);
     packet = received;
   }
-  for (track = 0; track < lbl_803A5D60.audioTrackCount; track++) {
-    if (lbl_803A5D60.audioTrackEnabled[track] != 1) {
+  for (track = 0; track < lbl_803A5D60.compInfo.mNumComponents; track++) {
+    if (lbl_803A5D60.compInfo.mFrameComp[track] != 1) {
     } else {
       packet->decodedSize = THPAudioDecode(packet->audioBuffer,audioFrame,0);
       packet->decodedBuffer = packet->audioBuffer;
@@ -265,6 +280,8 @@ void *threadMainAlt_80117460(void *param)
 {
   int frame;
   int stride;
+  u32 framesPerGroup;
+  u32 frameInGroup;
   MovieAudioCursor cursor;
 
   stride = lbl_803A5D60.frameStride;
@@ -273,9 +290,10 @@ void *threadMainAlt_80117460(void *param)
   while (true) {
     cursor.frameIndex = frame;
     thpAudioFn_80117380(&cursor);
-    if (((frame + lbl_803A5D60.frameOffset) % lbl_803A5D60.framesPerGroup) ==
-        (lbl_803A5D60.framesPerGroup - 1)) {
-      if ((lbl_803A5D60.flags & 1) != 0) {
+    framesPerGroup = lbl_803A5D60.header.mNumFrames;
+    frameInGroup = (frame + lbl_803A5D60.initReadFrame) % framesPerGroup;
+    if ((framesPerGroup - 1) == frameInGroup) {
+      if ((lbl_803A5D60.playFlags & 1) != 0) {
         stride = *(int *)cursor.frame;
         cursor.frame = lbl_803A5D60.loopFrame;
       } else {
