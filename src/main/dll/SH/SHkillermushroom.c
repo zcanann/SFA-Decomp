@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
-extern undefined4 FUN_80017620();
+extern void ModelLightStruct_free(void *light);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017714();
 extern u32 randomGetRange(int min, int max);
@@ -34,7 +34,7 @@ extern undefined4 DAT_80327960;
 extern undefined4 DAT_80327964;
 extern undefined4 DAT_80327968;
 extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd6f8;
+extern void *lbl_803DCA78;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e5ff8;
 extern f64 DOUBLE_803e6038;
@@ -172,9 +172,9 @@ void FUN_801d2dd4(undefined2 *param_1,int param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_801d2dd8
- * EN v1.0 Address: 0x801D2DD8
- * EN v1.0 Size: 88b
+ * Function: bombplantspore_free
+ * EN v1.0 Address: 0x801D3380
+ * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x801D3970
  * EN v1.1 Size: 84b
  * JP Address: TODO
@@ -182,19 +182,18 @@ void FUN_801d2dd4(undefined2 *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d2dd8(int param_1)
+void bombplantspore_free(void *obj)
 {
-  uint uVar1;
-  int iVar2;
+  void *state;
+  void *light;
   
-  iVar2 = *(int *)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6f8 + 0x14))();
-  uVar1 = *(uint *)(iVar2 + 0x270);
-  if (uVar1 != 0) {
-    FUN_80017620(uVar1);
-    *(undefined4 *)(iVar2 + 0x270) = 0;
+  state = *(void **)((u8 *)obj + 0xb8);
+  (*(void (***)(void *))lbl_803DCA78)[5](obj);
+  light = *(void **)((u8 *)state + 0x270);
+  if (light != NULL) {
+    ModelLightStruct_free(light);
+    *(void **)((u8 *)state + 0x270) = NULL;
   }
-  return;
 }
 
 /*
