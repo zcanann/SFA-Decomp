@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/treasureRelated0177.h"
+#include "main/objanim.h"
 
 extern undefined8 FUN_80006894();
 extern undefined4 FUN_800068a0();
@@ -18,8 +19,6 @@ extern undefined4 FUN_80017ac8();
 extern void ModelLightStruct_free(void *effect);
 extern u32 GameBit_Get(int bit);
 extern undefined4 FUN_8002fc3c();
-extern undefined4 ObjAnim_AdvanceCurrentMove(double moveStepScale,double deltaTime,int objAnimArg,
-                                             void *animEvents);
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -431,9 +430,8 @@ void kt_torch_update(int obj)
   mapData = *(int *)(obj + 0x4c);
   local_18[1] = *(u8 *)(mapData + 0x1b);
   local_18[0] = 0x43300000;
-  ObjAnim_AdvanceCurrentMove((double)((float)(*(double *)local_18 - lbl_803E3DB8) /
-                                      lbl_803E3DB4),
-                             (double)timeDelta,obj,0);
+  ObjAnim_AdvanceCurrentMove((float)(*(double *)local_18 - lbl_803E3DB8) / lbl_803E3DB4,
+                             timeDelta,obj,(ObjAnimEventList *)0);
   bit = *(short *)(mapData + 0x20);
   if (bit != -1) {
     if (GameBit_Get(bit) != 0) {
