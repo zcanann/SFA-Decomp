@@ -205,7 +205,7 @@ void dfplightni_update(u8 *obj)
             clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
                        : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
-                fn_8008FB20(clampX,clampY,start,end,state->delayFrames,
+                fn_8008FB20(clampX,clampY,start,end,(u16)state->delayFrames,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
                                 DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
