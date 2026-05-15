@@ -24,7 +24,8 @@ void expgfx_free(u32 sourceId);
 void expgfx_resetAllPools(void);
 void expgfx_updateFrameState(int sourceMode,int sourceId);
 struct ExpgfxSpawnConfig;
-int expgfx_addremove(struct ExpgfxSpawnConfig *config, int preferredPoolIdx, short slotType, u8 boundsTemplateId);
+int expgfx_addremove(struct ExpgfxSpawnConfig *config, int preferredPoolIndex, short slotType,
+                     u8 boundsTemplateId);
 void expgfx_onMapSetup(void);
 void expgfx_release(void);
 void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
