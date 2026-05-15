@@ -38,6 +38,11 @@ static inline f32 DFRope_S32AsFloat(s32 value) {
   return (f32)(*(f64 *)&bits - lbl_803E4DF0);
 }
 
+static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value) {
+  u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
+  return (f32)*(f64 *)&bits - (f32)lbl_803E4DF0;
+}
+
 /*
  * --INFO--
  *
@@ -151,15 +156,14 @@ void dfropenode_render2(double phase, double force, int obj)
   f32 fraction;
 
   extra = *(DFropenodeExtra **)(obj + 0xb8);
-  phase = phase - (double)DFRope_S32AsFloat((s32)(s8)(s32)phase);
+  phase = phase - (double)DFRope_S32AsFloat_SubAsFloat((s32)(s8)(s32)phase);
   segmentIndex = (s8)(s32)phase;
-  fraction = (f32)phase - DFRope_S32AsFloat(segmentIndex);
+  fraction = (f32)phase - DFRope_S32AsFloat_SubAsFloat(segmentIndex);
   segmentOffset = segmentIndex * 0x34;
   node = **(int **)&extra->rope + segmentOffset;
-  *(f32 *)(node + 0x1c) = (f32)(force * (double)fraction + (double)*(f32 *)(node + 0x1c));
+  *(f32 *)(node + 0x1c) = (f32)force * fraction + *(f32 *)(node + 0x1c);
   node = **(int **)&extra->rope + segmentOffset;
-  *(f32 *)(node + 0x1c) =
-      (f32)(force * (double)(lbl_803E4E18 - fraction) + (double)*(f32 *)(node + 0x1c));
+  *(f32 *)(node + 0x1c) = (f32)force * (lbl_803E4E18 - fraction) + *(f32 *)(node + 0x1c);
 }
 #pragma scheduling reset
 
