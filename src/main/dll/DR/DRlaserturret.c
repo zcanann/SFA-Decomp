@@ -49,6 +49,8 @@ extern f32 lbl_803E5A18;
 extern f32 lbl_803E5A1C;
 extern f32 lbl_803E5A20;
 
+#define DR_LASERTURRET_FLAG_ACTION_ACTIVE 0x08
+
 typedef struct DRLaserTurretState {
     u8 pad000[0x9b0];
     void *stateStack;
@@ -139,7 +141,7 @@ int fn_801E6B10(void *obj, void *param2)
 int fn_801E6D08(void *obj, void *param2)
 {
     void *playerObj;
-    void *state;
+    DRLaserTurretState *state;
     void *psStack;
     int v;
     int sum;
@@ -152,13 +154,13 @@ int fn_801E6D08(void *obj, void *param2)
     void *out;
 
     playerObj = Obj_GetPlayerObject();
-    state = *(void **)((char *)obj + 0xb8);
+    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
     if (*(s8 *)((char *)param2 + 0x27a) != 0) {
         rng = randomGetRange(0x1f4, 0x3e8);
-        *(f32 *)((char *)state + 0x9c0) = (f32)rng;
-        *(u8 *)((char *)state + 0x9d4) = *(u8 *)((char *)state + 0x9d4) & ~0x08;
+        state->actionTimer = (f32)rng;
+        state->flags = state->flags & ~DR_LASERTURRET_FLAG_ACTION_ACTIVE;
     }
-    if ((*(u8 *)((char *)state + 0x9d4) & 8) != 0) {
+    if ((state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) != 0) {
         if (*(s8 *)((char *)param2 + 0x346) != 0) {
             if (*(s16 *)((char *)obj + 0xa0) == 0x11) {
                 if (*(f32 *)((char *)param2 + 0x2a0) > lbl_803E59DC) {
@@ -171,9 +173,9 @@ int fn_801E6D08(void *obj, void *param2)
             }
         L_DE8:
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
-            *(u8 *)((char *)state + 0x9d4) = *(u8 *)((char *)state + 0x9d4) & ~0x08;
+            state->flags = state->flags & ~DR_LASERTURRET_FLAG_ACTION_ACTIVE;
             rng = randomGetRange(0x1f4, 0x3e8);
-            *(f32 *)((char *)state + 0x9c0) = (f32)rng;
+            state->actionTimer = (f32)rng;
         }
     } else {
         if (*(s16 *)((char *)obj + 0xa0) != 0x12 && *(s16 *)((char *)obj + 0xa0) != 0) {
@@ -181,8 +183,9 @@ int fn_801E6D08(void *obj, void *param2)
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
         }
     }
-    *(f32 *)((char *)state + 0x9c0) = *(f32 *)((char *)state + 0x9c0) - timeDelta;
-    if (*(f32 *)((char *)state + 0x9c0) <= lbl_803E59DC && (*(u8 *)((char *)state + 0x9d4) & 8) == 0) {
+    state->actionTimer = state->actionTimer - timeDelta;
+    if (state->actionTimer <= lbl_803E59DC &&
+        (state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) == 0) {
         Sfx_PlayFromObject((int)obj, 0x40d);
         if (*(s16 *)((char *)obj + 0xa0) == 0x12) {
             ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E5A08, 0);
@@ -192,11 +195,11 @@ int fn_801E6D08(void *obj, void *param2)
             ObjAnim_SetCurrentMove(obj, (int)lbl_803DC0A0[rng], lbl_803E59DC, 0);
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803DC0A4[rng];
         }
-        *(u8 *)((char *)state + 0x9d4) = *(u8 *)((char *)state + 0x9d4) | 8;
+        state->flags = state->flags | DR_LASERTURRET_FLAG_ACTION_ACTIVE;
     }
     if (GameBit_Get(0x617) == 0) {
         v = 4;
-        psStack = *(void **)((char *)state + 0x9b0);
+        psStack = state->stateStack;
         if (Stack_IsFull(psStack) == 0) {
             Stack_Push(psStack, &v);
         }
@@ -229,8 +232,7 @@ int fn_801E6D08(void *obj, void *param2)
                 fdist = -fdist;
             }
             if (fdist < fmin) {
-                *(f32 *)((char *)state + 0x9bc) =
-                    lbl_803E59E0 + *(f32 *)*(int *)((char *)arr + idx);
+                state->bobBaseY = lbl_803E59E0 + *(f32 *)*(int *)((char *)arr + idx);
                 fmin = fdist;
             }
             idx += 4;
@@ -238,18 +240,18 @@ int fn_801E6D08(void *obj, void *param2)
         } while (count != 0);
     }
     *(f32 *)((char *)obj + 0x10) =
-        *(f32 *)((char *)state + 0x9b8) *
+        state->bobAmplitude *
             fn_80293E80(
                 (double)(lbl_803E59E8 *
-                         (float)(uint)*(u16 *)((char *)state + 0x9ca) /
+                         (float)(uint)state->bobPhase /
                          lbl_803E59EC)) +
-        *(f32 *)((char *)state + 0x9bc);
-    sum = (uint)*(u16 *)((char *)state + 0x9ca) + (uint)framesThisStep * 0x100;
+        state->bobBaseY;
+    sum = (uint)state->bobPhase + (uint)framesThisStep * 0x100;
     if (sum > 0xffff) {
         rng = randomGetRange(0xf, 0x23);
-        *(f32 *)((char *)state + 0x9b8) = (float)rng * lbl_803E59F0;
+        state->bobAmplitude = (float)rng * lbl_803E59F0;
     }
-    *(u16 *)((char *)state + 0x9ca) = (u16)sum;
+    state->bobPhase = (u16)sum;
     if (ObjTrigger_IsSet(obj) != 0) {
         rng = randomGetRange(0, 2);
         (*(code **)lbl_803DCA54)[0x48 / 4](rng, obj, -1);
