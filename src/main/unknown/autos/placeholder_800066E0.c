@@ -23,7 +23,6 @@ extern undefined4 FUN_80017704();
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017750();
 extern undefined4 FUN_80017754();
-extern uint FUN_80017760();
 extern undefined4 FUN_80017768();
 extern undefined4 FUN_80017770();
 extern undefined4 FUN_80017774();
