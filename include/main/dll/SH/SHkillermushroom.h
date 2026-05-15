@@ -14,6 +14,7 @@ void FUN_801d2dd0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_801d2dd4(undefined2 *param_1,int param_2,int param_3);
 void bombplantspore_free(void *obj);
 void fn_801D33D4(void *obj, void *state);
+void fn_801D359C(void *obj, void *state);
 int bombplantspore_getExtraSize(void);
 
 #endif /* MAIN_DLL_SH_SHKILLERMUSHROOM_H_ */

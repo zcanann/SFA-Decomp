@@ -6,7 +6,7 @@ extern undefined4 FUN_800068c4();
 extern void ModelLightStruct_free(void *light);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017714();
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min, int max);
 extern undefined4 FUN_80017a28();
 extern byte FUN_80017a34();
 extern undefined4 FUN_80017a3c();
@@ -33,9 +33,11 @@ extern f32 sin(f32 x);
 extern undefined4 DAT_80327960;
 extern undefined4 DAT_80327964;
 extern undefined4 DAT_80327968;
+extern u8 framesThisStep;
 extern undefined4* DAT_803dd6d4;
 extern void *lbl_803DCA78;
 extern undefined4* DAT_803dd708;
+extern f32 timeDelta;
 extern f64 DOUBLE_803e5ff8;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dda58;
@@ -51,6 +53,10 @@ extern f32 lbl_803E5394;
 extern f32 lbl_803E5398;
 extern f32 lbl_803E539C;
 extern f64 lbl_803E53A0;
+extern f32 lbl_803E53A8;
+extern f32 lbl_803E53AC;
+extern f32 lbl_803E53B0;
+extern f32 lbl_803E53B4;
 
 /*
  * --INFO--
@@ -255,4 +261,84 @@ void fn_801D33D4(void *obj, void *state)
       fn_80293E80((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
   *(f32 *)((u8 *)state + 0x294) =
       sin((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801D359C
+ * EN v1.0 Address: 0x801D359C
+ * EN v1.0 Size: 672b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_801D359C(void *obj, void *state)
+{
+  void *params;
+  s16 baseAngle;
+  s32 angleDelta;
+  u32 randAsDouble[2];
+  
+  params = *(void **)((u8 *)obj + 0x4c);
+  baseAngle = *(s16 *)((u8 *)params + 0x1c);
+
+  if (randomGetRange(0, 100) < 10 && *(f32 *)((u8 *)state + 0x2a0) <= lbl_803E5394) {
+    *(s16 *)((u8 *)state + 0x2ac) = (s16)randomGetRange(2000, 4000);
+    if (randomGetRange(0, 1) != 0) {
+      *(s16 *)((u8 *)state + 0x2ac) = -*(s16 *)((u8 *)state + 0x2ac);
+    }
+    *(s16 *)((u8 *)state + 0x2ac) =
+        *(s16 *)((u8 *)state + 0x2ac) + *(s16 *)((u8 *)state + 0x2a8);
+    angleDelta = (s32)*(s16 *)((u8 *)state + 0x2ac) - (u16)baseAngle;
+    if (0x8000 < angleDelta) {
+      angleDelta -= 0xffff;
+    }
+    if (angleDelta < -0x8000) {
+      angleDelta += 0xffff;
+    }
+    if (*(s16 *)((u8 *)params + 0x1a) < angleDelta) {
+      *(s16 *)((u8 *)state + 0x2ac) = (s16)(baseAngle + *(s16 *)((u8 *)params + 0x1a));
+    }
+    if (angleDelta < -(s32)*(s16 *)((u8 *)params + 0x1a)) {
+      *(s16 *)((u8 *)state + 0x2ac) = (s16)(baseAngle - *(s16 *)((u8 *)params + 0x1a));
+    }
+    *(f32 *)((u8 *)state + 0x2a0) = lbl_803E53A8;
+  }
+
+  if (randomGetRange(0, 100) < 10 && *(f32 *)((u8 *)state + 0x2a0) <= lbl_803E5394) {
+    randAsDouble[0] = 0x43300000;
+    randAsDouble[1] = randomGetRange(-200, 200) ^ 0x80000000;
+    *(f32 *)((u8 *)state + 0x280) =
+        *(f32 *)((u8 *)state + 0x278) + (*(f64 *)randAsDouble - lbl_803E53A0) / lbl_803E5390;
+    if (*(f32 *)((u8 *)state + 0x280) < lbl_803E53AC) {
+      *(f32 *)((u8 *)state + 0x280) = lbl_803E53AC;
+    } else if (lbl_803E53B0 < *(f32 *)((u8 *)state + 0x280)) {
+      *(f32 *)((u8 *)state + 0x280) = lbl_803E53B0;
+    }
+  }
+
+  angleDelta = (s32)*(s16 *)((u8 *)state + 0x2ac) - (u16)*(s16 *)((u8 *)state + 0x2a8);
+  if (0x8000 < angleDelta) {
+    angleDelta -= 0xffff;
+  }
+  if (angleDelta < -0x8000) {
+    angleDelta += 0xffff;
+  }
+  *(s16 *)((u8 *)state + 0x2a8) =
+      *(s16 *)((u8 *)state + 0x2a8) + (s16)((angleDelta * (s32)framesThisStep) >> 4);
+  *(f32 *)((u8 *)state + 0x278) =
+      lbl_803E53B4 * (*(f32 *)((u8 *)state + 0x280) - *(f32 *)((u8 *)state + 0x278)) *
+          timeDelta +
+      *(f32 *)((u8 *)state + 0x278);
+
+  *(f32 *)((u8 *)state + 0x288) =
+      *(f32 *)((u8 *)state + 0x278) *
+      fn_80293E80((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2a8)) / lbl_803E539C);
+  *(f32 *)((u8 *)state + 0x28c) =
+      *(f32 *)((u8 *)state + 0x278) *
+      sin((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2a8)) / lbl_803E539C);
 }
