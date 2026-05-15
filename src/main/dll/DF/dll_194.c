@@ -193,7 +193,7 @@ void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
   dx = *(f32 *)(nodeBase + segmentOffset) - *(f32 *)(nodeBase + segmentOffset + 0x34);
   dz = *(f32 *)(nodeBase + segmentOffset + 8) - *(f32 *)(nodeBase + segmentOffset + 0x3c);
   segmentLength = sqrtf(dx * dx + dz * dz);
-  *phase = *phase + (f32)(distance / (double)segmentLength);
+  *phase = *phase + distance / segmentLength;
   *phase = *phase + DFRope_S32AsFloat((s8)segmentRaw);
 }
 #pragma scheduling reset
