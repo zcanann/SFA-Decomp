@@ -37,10 +37,17 @@ extern f32 getXZDistance(f32 *p1, f32 *p2);
 extern void gameBitIncrement(int eventId);
 extern int ObjMsg_Pop(int obj, u32 *outMessage, u32 *outSender, u32 *outParam);
 extern void ObjMsg_SendToObject(int obj, int message, int sender, int *param);
+extern void ObjMsg_SendToObjects(int targetId, u32 flags, void *sender, u32 message, u32 param);
+extern void ObjAnim_SetCurrentMove(f32 moveProgress, int obj, int moveId, int flags);
 extern void tumbleweed_updateRollingMotion(int obj, int aux);
 extern void fn_80163990(int obj, int aux);
+extern void fn_80165B3C(int obj, int state);
+extern void fn_80165C8C(int obj, int state);
+extern void fn_80166444(int obj, int state);
+extern void fn_80166A50(f32 x, f32 y, f32 z, f32 scale, int obj);
 
 extern f32 timeDelta;
+extern u8 framesThisStep;
 extern f32 lbl_803E2F5C;
 extern f32 lbl_803E2F68;
 extern f32 lbl_803E2F98;
@@ -55,6 +62,17 @@ extern f32 lbl_803E2FBC;
 extern f32 lbl_803E2FC0;
 extern f32 lbl_803E2FC4;
 extern f64 lbl_803E2F90;
+extern f32 lbl_803E2FD8;
+extern f32 lbl_803E2FDC;
+extern f32 lbl_803E2FE0;
+extern f32 lbl_803E2FE4;
+extern f32 lbl_803E2FE8;
+extern f32 lbl_803E2FEC;
+extern f32 lbl_803E2FF0;
+extern f32 lbl_803E2FF4;
+extern f32 lbl_803E2FF8;
+extern f32 lbl_803E2FFC;
+extern f32 lbl_803E3000;
 
 extern f32 sqrtf(f32 x);
 
@@ -409,5 +427,131 @@ int fn_801650D8(int obj, int target) {
         *(u8*)((char*)aux + 0x405) = 0;
     }
     return 0;
+}
+#pragma pop
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80165188
+ * EN v1.0 Address: 0x80165188
+ * EN v1.0 Size: 592b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int fn_80165188(int obj, u32 *stateWord) {
+    f32 horizontalDamping;
+    int state;
+
+    state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    *(u8 *)((int)stateWord + 0x34d) = 3;
+    if (*(s8 *)((int)stateWord + 0x27a) != 0) {
+        ObjHits_DisableObject(obj);
+        *(f32 *)(obj + 0x24) = -*(f32 *)(obj + 0x24);
+        *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) + lbl_803E2FD8;
+        *(f32 *)(obj + 0x2c) = -*(f32 *)(obj + 0x2c);
+        ObjAnim_SetCurrentMove(lbl_803E2FDC, obj, 3, 0);
+        *(f32 *)(state + 0x44) = lbl_803E2FE0;
+    }
+    *(u8 *)(*(int *)(obj + 0x54) + 0x6d) = 0;
+    *stateWord = *stateWord | 0x4000;
+    horizontalDamping = lbl_803E2FE4;
+    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * lbl_803E2FE4;
+    *(f32 *)(obj + 0x28) = lbl_803E2FE8 * (*(f32 *)(obj + 0x28) - lbl_803E2FEC);
+    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * horizontalDamping;
+    objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
+    if (*(f32 *)(obj + 0xc) < *(f32 *)(state + 0x48)) {
+        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x48);
+        *(f32 *)(obj + 0x24) = lbl_803E2FF0 * -*(f32 *)(obj + 0x24);
+    }
+    if (*(f32 *)(state + 0x4c) < *(f32 *)(obj + 0xc)) {
+        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x4c);
+        *(f32 *)(obj + 0x24) = lbl_803E2FF0 * -*(f32 *)(obj + 0x24);
+    }
+    if (*(f32 *)(obj + 0x10) < *(f32 *)(state + 0x5c)) {
+        *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x5c);
+        *(f32 *)(obj + 0x28) = lbl_803E2FF0 * -*(f32 *)(obj + 0x28);
+    }
+    if (*(f32 *)(state + 0x58) < *(f32 *)(obj + 0x10)) {
+        *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x58);
+        *(f32 *)(obj + 0x28) = lbl_803E2FF0 * -*(f32 *)(obj + 0x28);
+    }
+    if (*(f32 *)(obj + 0x14) < *(f32 *)(state + 0x54)) {
+        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x54);
+        *(f32 *)(obj + 0x2c) = lbl_803E2FF0 * -*(f32 *)(obj + 0x2c);
+    }
+    if (*(f32 *)(state + 0x50) < *(f32 *)(obj + 0x14)) {
+        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x50);
+        *(f32 *)(obj + 0x2c) = lbl_803E2FF0 * -*(f32 *)(obj + 0x2c);
+    }
+    if (lbl_803E2FF4 == *(f32 *)(obj + 0x98)) {
+        ObjMsg_SendToObjects(0, 3, (void *)obj, 0xe0000, obj);
+        Obj_FreeObject(obj);
+    } else {
+        *(s8 *)(obj + 0x36) = -1 - (s8)(s32)(lbl_803E2FF8 * *(f32 *)(obj + 0x98));
+    }
+    return 0;
+}
+#pragma pop
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801653D8
+ * EN v1.0 Address: 0x801653D8
+ * EN v1.0 Size: 436b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int fn_801653D8(int obj, int stateWord) {
+    f32 scale;
+    int player;
+    int state;
+    f32 x;
+    f32 y;
+    f32 z;
+
+    state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    player = (int)Obj_GetPlayerObject();
+    *(u8 *)(stateWord + 0x34d) = 1;
+    if (*(s8 *)(stateWord + 0x27a) != 0) {
+        *(u16 *)(state + 0x8e) = 0x3c;
+        *(f32 *)(state + 0x60) = lbl_803E2FFC;
+        ObjHits_DisableObject(obj);
+    }
+    if ((*(s8 *)(state + 0x90) == 6) ||
+        ((((player != 0 && *(f32 *)(state + 0x48) <= *(f32 *)(player + 0x18)) &&
+           ((*(f32 *)(player + 0x18) <= *(f32 *)(state + 0x4c) ||
+             *(f32 *)(state + 0x5c) <= *(f32 *)(player + 0x1c)))) &&
+          ((*(f32 *)(player + 0x1c) <= *(f32 *)(state + 0x58) ||
+            *(f32 *)(state + 0x54) <= *(f32 *)(player + 0x20)) &&
+           *(f32 *)(player + 0x20) <= *(f32 *)(state + 0x50))))) {
+        x = -(lbl_803E3000 * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc)) - *(f32 *)(obj + 0xc));
+        y = -(lbl_803E3000 * (*(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10)) - *(f32 *)(obj + 0x10));
+        z = -(lbl_803E3000 * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) - *(f32 *)(obj + 0x14));
+        scale = lbl_803E2FF4;
+    } else {
+        x = *(f32 *)(obj + 0xc);
+        y = *(f32 *)(obj + 0x10);
+        z = *(f32 *)(obj + 0x14);
+        scale = lbl_803E2FDC;
+    }
+    fn_80166A50(x, y, z, scale, obj);
+    if (*(s8 *)(state + 0x90) == 6) {
+        if (((*(u8 *)(state + 0x92) >> 2) & 1) == 0) {
+            fn_80166444(obj, state);
+        } else {
+            fn_80165B3C(obj, state);
+        }
+    } else {
+        fn_80165C8C(obj, state);
+    }
+    if ((u16)framesThisStep < *(u16 *)(state + 0x8e)) {
+        *(u16 *)(state + 0x8e) = *(u16 *)(state + 0x8e) - (u16)framesThisStep;
+        return 0;
+    }
+    return 2;
 }
 #pragma pop
