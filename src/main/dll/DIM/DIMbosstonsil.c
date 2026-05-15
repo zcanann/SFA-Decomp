@@ -4,9 +4,11 @@
 extern void fn_8002B8C8(void *obj, int resourceId);
 extern undefined4 ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg,
                                              void *eventList);
-extern undefined4 ObjAnim_SetCurrentMove(f32 moveProgress, int objAnimArg, int moveId, int flags);
+extern undefined4 ObjAnim_SetCurrentMove(int objAnimArg, int moveId, f32 moveProgress, int flags);
 extern void objRenderFn_8003b8f4(int obj, undefined4 param_2, undefined4 param_3,
                                  undefined4 param_4, undefined4 param_5, double scale);
+typedef undefined4 (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg, double moveStepScale,
+                                                  double deltaTime, void *eventList);
 
 extern f32 timeDelta;
 extern f32 lbl_803E4C80;
@@ -35,27 +37,36 @@ extern void fn_801BB2B0(void);
 extern void (*lbl_803AD000[])(void);
 extern void (*lbl_803AD018[])(void);
 
+#pragma scheduling off
+#pragma peephole off
 void fn_801BDAF4(void)
 {
-  lbl_803AD018[0] = fn_801BB2B0;
-  lbl_803AD018[1] = fn_801BB1EC;
-  lbl_803AD018[2] = fn_801BB0D8;
-  lbl_803AD018[3] = fn_801BAF58;
-  lbl_803AD018[4] = fn_801BAE00;
-  lbl_803AD018[5] = fn_801BACB8;
-  lbl_803AD018[6] = fn_801BAB88;
-  lbl_803AD018[7] = fn_801BAA84;
-  lbl_803AD018[8] = fn_801BA958;
-  lbl_803AD018[9] = fn_801BA880;
-  lbl_803AD018[10] = fn_801BA780;
-  lbl_803AD018[11] = fn_801BA654;
-  lbl_803AD000[0] = fn_801BA5F0;
-  lbl_803AD000[1] = fn_801BA5A8;
-  lbl_803AD000[2] = fn_801BA590;
-  lbl_803AD000[3] = fn_801BA4B8;
-  lbl_803AD000[4] = fn_801BA224;
-  lbl_803AD000[5] = fn_801B9ECC;
+  void (**table)(void);
+
+  table = lbl_803AD018;
+  table[0] = fn_801BB2B0;
+  table[1] = fn_801BB1EC;
+  table[2] = fn_801BB0D8;
+  table[3] = fn_801BAF58;
+  table[4] = fn_801BAE00;
+  table[5] = fn_801BACB8;
+  table[6] = fn_801BAB88;
+  table[7] = fn_801BAA84;
+  table[8] = fn_801BA958;
+  table[9] = fn_801BA880;
+  table[10] = fn_801BA780;
+  table[11] = fn_801BA654;
+
+  table = lbl_803AD000;
+  table[0] = fn_801BA5F0;
+  table[1] = fn_801BA5A8;
+  table[2] = fn_801BA590;
+  table[3] = fn_801BA4B8;
+  table[4] = fn_801BA224;
+  table[5] = fn_801B9ECC;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -72,25 +83,40 @@ int dimbossgut_getExtraSize(void) { return 0x0; }
 int dimbossgut_func08(void) { return 0x0; }
 void dimbossgut_free(void) {}
 
+#pragma scheduling off
+#pragma peephole off
 void DIMbossgut_render(int obj, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                        undefined4 param_5, char shouldRender)
 {
-  if (shouldRender != 0) {
+  int visible;
+
+  visible = shouldRender;
+  if (visible != 0) {
     ObjAnim_AdvanceCurrentMove(lbl_803E4C80, timeDelta, obj, NULL);
     objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, (double)lbl_803E4C84);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void dimbossgut_hitDetect(void) {}
 void dimbossgut_update(void) {}
 
+#pragma scheduling off
+#pragma peephole off
 void DIMbossgut_init(void *obj)
 {
+  int objArg;
+
   fn_8002B8C8(obj, 0x5a);
   *(void **)((char *)obj + 0xbc) = fn_801BDBE0;
-  ObjAnim_SetCurrentMove(lbl_803E4C88, (int)obj, 0, 0);
-  ObjAnim_AdvanceCurrentMove(lbl_803E4C80, timeDelta, (int)obj, NULL);
+  objArg = (int)obj;
+  ObjAnim_SetCurrentMove(objArg, 0, lbl_803E4C88, 0);
+  ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
+      (objArg, (double)lbl_803E4C80, (double)timeDelta, NULL);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void dimbossgut_release(void) {}
 void dimbossgut_initialise(void) {}
