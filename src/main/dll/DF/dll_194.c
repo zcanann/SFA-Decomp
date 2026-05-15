@@ -223,6 +223,7 @@ void dfropenode_func0B(double phase, int obj, float *xOut, float *yOut, float *z
   DFropenodeExtra *extra;
   int segmentOffset;
   int node;
+  s8 segmentIndex;
   f32 fraction;
   f32 x0;
   f32 y0;
@@ -231,18 +232,19 @@ void dfropenode_func0B(double phase, int obj, float *xOut, float *yOut, float *z
   f32 z1;
 
   extra = *(DFropenodeExtra **)(obj + 0xb8);
-  fraction = (f32)(phase - (double)DFRope_S32AsFloat((s8)(s32)phase));
-  segmentOffset = (s8)(s32)phase * 0x34;
+  segmentIndex = (s8)(s32)phase;
+  fraction = (f32)(phase - (double)DFRope_S32AsFloat_SubAsFloat(segmentIndex));
+  segmentOffset = segmentIndex * 0x34;
   node = **(int **)&extra->rope + segmentOffset;
   y0 = *(f32 *)(node + 0x38);
   y1 = *(f32 *)(node + 4);
   z0 = *(f32 *)(node + 0x3c);
   z1 = *(f32 *)(node + 8);
   x0 = *(f32 *)(**(int **)&extra->rope + segmentOffset);
-  *xOut = (*(f32 *)(node + 0x34) - x0) * fraction + *(f32 *)(obj + 0xc) + x0;
-  *yOut = (y0 - y1) * fraction + *(f32 *)(obj + 0x10) +
-          *(f32 *)(**(int **)&extra->rope + segmentOffset + 4);
-  *zOut = (z0 - z1) * fraction + *(f32 *)(obj + 0x14) +
-          *(f32 *)(**(int **)&extra->rope + segmentOffset + 8);
+  *xOut = (*(f32 *)(node + 0x34) - x0) * fraction + (*(f32 *)(obj + 0xc) + x0);
+  *yOut = (y0 - y1) * fraction +
+          (*(f32 *)(obj + 0x10) + *(f32 *)(**(int **)&extra->rope + segmentOffset + 4));
+  *zOut = (z0 - z1) * fraction +
+          (*(f32 *)(obj + 0x14) + *(f32 *)(**(int **)&extra->rope + segmentOffset + 8));
 }
 #pragma scheduling reset
