@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/treasurechest.h"
 
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017784();
 extern undefined4 FUN_80017788();
 extern int FUN_80017a98();
@@ -200,7 +200,7 @@ void FUN_8016702c(void)
                                0xffffffff,0xff,0);
           if ((iVar3 != 0) && (local_30 == '\r')) {
             *(byte *)((int)piVar6 + 0x92) = *(byte *)((int)piVar6 + 0x92) & 0xfe | 1;
-            uVar5 = FUN_80017760(10,0xf);
+            uVar5 = randomGetRange(10,0xf);
             *(short *)((int)piVar6 + 0x8e) = (short)uVar5 * 0x3c;
           }
         }

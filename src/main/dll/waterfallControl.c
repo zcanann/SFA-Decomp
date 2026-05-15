@@ -2,7 +2,7 @@
 #include "main/dll/waterfallControl.h"
 
 extern undefined4 FUN_80006824();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_800632d8();
 extern int FUN_800632f4();
 
@@ -195,7 +195,7 @@ void FUN_80163e44(short *param_1,int param_2)
     if (*(float *)(param_1 + 8) <= lbl_803E3BF8 + *(float *)local_68[0][iVar5]) {
       *(float *)(param_1 + 8) = lbl_803E3BF8 + *(float *)local_68[0][iVar5];
       if (param_1[0x23] == 0x3fb) {
-        uVar2 = FUN_80017760(0x8c,0xb4);
+        uVar2 = randomGetRange(0x8c,0xb4);
         local_20 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
         uStack_24 = (uint)*(ushort *)(param_2 + 0x268);
         *(float *)(param_1 + 0x14) =
@@ -204,7 +204,7 @@ void FUN_80163e44(short *param_1,int param_2)
               (float)(local_20 - DOUBLE_803e3c08)));
       }
       else {
-        uVar2 = FUN_80017760(0x14,0x28);
+        uVar2 = randomGetRange(0x14,0x28);
         local_20 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
         uStack_24 = (uint)*(ushort *)(param_2 + 0x268);
         *(float *)(param_1 + 0x14) =
@@ -220,7 +220,7 @@ void FUN_80163e44(short *param_1,int param_2)
       }
       if (0x10 < iVar5) {
         FUN_80006824((uint)param_1,0x27e);
-        uVar2 = FUN_80017760(0,5);
+        uVar2 = randomGetRange(0,5);
         if ((uVar2 == 0) && ((*(byte *)(param_2 + 0x27a) & 8) != 0)) {
           FUN_80006824((uint)param_1,0x27f);
         }

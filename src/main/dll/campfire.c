@@ -3,14 +3,13 @@
 
 extern undefined4 FUN_80006824();
 extern undefined4 Sfx_PlayFromObject();
-extern uint FUN_80017760();
 extern undefined4 FUN_80017a28();
 extern undefined4 FUN_80017a98();
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 Resource_Acquire();
-extern uint randomGetRange();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjAnim_SetCurrentMove();
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();

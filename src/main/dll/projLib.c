@@ -2,7 +2,7 @@
 #include "main/dll/projLib.h"
 
 extern undefined4 FUN_8001771c();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017a98();
 extern int ObjGroup_FindNearestObject();
 extern int Obj_GetYawDeltaToObject();
@@ -179,7 +179,7 @@ void FUN_801150ac(void)
             *(uint *)(iVar10 + 0x5f8) = uVar3 >> 5;
           }
           if (*(int *)(iVar10 + 0x620) < (int)-*(uint *)(iVar10 + 0x61c)) {
-            uVar3 = FUN_80017760(*(uint *)(iVar10 + 0x61c),*(uint *)(iVar10 + 0x618));
+            uVar3 = randomGetRange(*(uint *)(iVar10 + 0x61c),*(uint *)(iVar10 + 0x618));
             *(uint *)(iVar10 + 0x620) = uVar3;
           }
           if (*(int *)(iVar10 + 0x620) < 0) goto LAB_801158cc;

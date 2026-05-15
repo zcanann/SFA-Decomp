@@ -3,7 +3,7 @@
 
 extern bool FUN_800067f0();
 extern int FUN_80017728();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80039468();
 extern int FUN_800575b4();
@@ -73,7 +73,7 @@ void FUN_8013f100(undefined8 param_1,undefined8 param_2,double param_3,undefined
   
   iVar1 = FUN_80017728();
   if (*(char *)(param_10 + 10) == '\0') {
-    uVar2 = FUN_80017760(0,1);
+    uVar2 = randomGetRange(0,1);
     *(uint *)(param_10 + 0x700) = uVar2;
     if (*(int *)(param_10 + 0x700) == 0) {
       *(undefined4 *)(param_10 + 0x700) = 0xffffffff;
@@ -161,7 +161,7 @@ void FUN_8013f308(undefined8 param_1,undefined8 param_2,double param_3,undefined
                            param_16), iVar2 == 0)) {
     param_10[0x1d0] = (int)((float)param_10[0x1d0] - lbl_803DC074);
     if ((float)param_10[0x1d0] <= lbl_803E306C) {
-      uVar3 = FUN_80017760(500,0x2ee);
+      uVar3 = randomGetRange(500,0x2ee);
       param_10[0x1d0] =
            (int)(float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e30f0);
       iVar2 = *(int *)(param_9 + 0xb8);

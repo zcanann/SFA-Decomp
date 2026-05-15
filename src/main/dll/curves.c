@@ -12,7 +12,6 @@ extern int FUN_80017730();
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();
-extern uint FUN_80017760();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017b00();
@@ -1016,7 +1015,7 @@ LAB_800e33ac:
         iVar7 = iVar7 + 4;
       }
       *param_4 = *(int *)(param_1 + 0x14);
-      uVar9 = FUN_80017760(0,iVar2 - 1);
+      uVar9 = randomGetRange(0,iVar2 - 1);
       local_28[0] = local_28[uVar9];
     }
   }
@@ -1469,7 +1468,7 @@ void FUN_800e31dc(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
         uVar5 = 0xffffffff;
       }
       else {
-        uVar5 = FUN_80017760(0,iVar4 - 1);
+        uVar5 = randomGetRange(0,iVar4 - 1);
         uVar5 = local_a8[uVar5];
       }
       if ((int)uVar5 < 0) {
@@ -1613,7 +1612,7 @@ LAB_800e41e4:
         uVar5 = 0xffffffff;
       }
       else {
-        uVar5 = FUN_80017760(0,iVar4 - 1);
+        uVar5 = randomGetRange(0,iVar4 - 1);
         uVar5 = local_98[uVar5];
       }
       if ((int)uVar5 < 0) {
@@ -1789,7 +1788,7 @@ int FUN_800e3ad4(int param_1)
       uVar4 = 0xffffffff;
     }
     else {
-      uVar4 = FUN_80017760(0,iVar3 - 1);
+      uVar4 = randomGetRange(0,iVar3 - 1);
       uVar4 = local_18[uVar4];
     }
     if ((int)uVar4 < 0) {
