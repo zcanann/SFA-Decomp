@@ -1173,33 +1173,31 @@ ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj
 #pragma peephole off
 void ObjHits_AddContactObject(int param_1,int param_2)
 {
-  char cVar1;
+  u8 cVar1;
   int iVar2;
   int iVar3;
   int iVar4;
+  int iVar5;
 
   iVar4 = *(int *)(param_1 + 0x58);
-  if (iVar4 == 0) {
+  if ((u32)iVar4 == 0) {
     return;
   }
   iVar2 = (int)*(char *)(iVar4 + 0x10f);
-  if (2 < iVar2) {
+  if (iVar2 >= 3) {
     return;
   }
   iVar3 = 0;
-  if (0 < iVar2) {
-    do {
-      if (*(int *)(iVar4 + iVar3 + 0x100) == param_2) {
-        return;
-      }
-      iVar3 = iVar3 + 4;
-      iVar2 = iVar2 + -1;
-    } while (iVar2 != 0);
+  for (iVar5 = 0; iVar5 < iVar2; iVar5++) {
+    if ((u32)*(int *)(iVar4 + iVar3 + 0x100) == (u32)param_2) {
+      return;
+    }
+    iVar3 = iVar3 + 4;
   }
   iVar2 = *(int *)(param_1 + 0x58);
-  cVar1 = *(char *)(iVar4 + 0x10f);
-  *(char *)(iVar4 + 0x10f) = cVar1 + '\x01';
-  *(int *)(iVar2 + cVar1 * 4 + 0x100) = param_2;
+  cVar1 = *(u8 *)(iVar4 + 0x10f);
+  *(undefined *)(iVar4 + 0x10f) = cVar1 + 1;
+  *(int *)(iVar2 + (s8)cVar1 * 4 + 0x100) = param_2;
   return;
 }
 #pragma peephole reset
