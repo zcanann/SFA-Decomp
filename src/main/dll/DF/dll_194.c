@@ -141,6 +141,7 @@ void dfropenode_func0E(undefined8 param_1, double y, double z, undefined4 param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void dfropenode_render2(double phase, double force, int obj)
 {
   DFropenodeExtra *extra;
@@ -160,6 +161,7 @@ void dfropenode_render2(double phase, double force, int obj)
   *(f32 *)(node + 0x1c) =
       (f32)(force * (double)(lbl_803E4E18 - fraction) + (double)*(f32 *)(node + 0x1c));
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -211,6 +213,7 @@ void dfropenode_modelMtxFn(double distance, int obj, float *phase)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void dfropenode_func0B(double phase, int obj, float *xOut, float *yOut, float *zOut)
 {
   DFropenodeExtra *extra;
@@ -238,3 +241,4 @@ void dfropenode_func0B(double phase, int obj, float *xOut, float *yOut, float *z
   *zOut = (z0 - z1) * fraction + *(f32 *)(obj + 0x14) +
           *(f32 *)(**(int **)&extra->rope + segmentOffset + 8);
 }
+#pragma scheduling reset
