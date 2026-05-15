@@ -8,7 +8,7 @@ extern uint FUN_80006c00();
 extern double FUN_80017708();
 extern undefined4 FUN_8001771c();
 extern undefined4 FUN_80017748();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -361,12 +361,12 @@ void dll153_updateExploderState
         cVar1 = *(char *)(puVar15 + 0xf);
         if ((cVar1 == '\x05') || (cVar1 == '\x06')) {
           FUN_80006824(uVar6,0x6c);
-          uVar9 = FUN_80017760(0,100);
+          uVar9 = randomGetRange(0,100);
           puVar15[7] = (short)uVar9 + 300;
         }
         else if (((byte)(cVar1 - 1U) < 2) || (cVar1 == '\x03')) {
           FUN_80006824(uVar6,0x6d);
-          uVar9 = FUN_80017760(0,100);
+          uVar9 = randomGetRange(0,100);
           puVar15[7] = (short)uVar9 + 300;
         }
       }

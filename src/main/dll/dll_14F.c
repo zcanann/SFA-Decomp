@@ -15,7 +15,7 @@ extern double FUN_80017714();
 extern undefined4 FUN_8001771c();
 extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017814();
 extern undefined8 FUN_80017a28();
 extern undefined4 FUN_80017a30();
@@ -263,11 +263,11 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
      (lbl_803E4508 <= *(float *)(param_9 + 0x98))) {
     *param_11 = 0;
     ObjLink_DetachChild(param_9,iVar2);
-    uVar1 = FUN_80017760(0x27,0x2c);
+    uVar1 = randomGetRange(0x27,0x2c);
     dVar4 = (double)((float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e44f8) /
                     lbl_803E450C);
     uVar1 = FUN_80017730();
-    FUN_80017760((uVar1 & 0xffff) - 0x1000,(uVar1 & 0xffff) + 0x1000);
+    randomGetRange((uVar1 & 0xffff) - 0x1000,(uVar1 & 0xffff) + 0x1000);
     dVar3 = (double)FUN_80293f90();
     *(float *)(iVar2 + 0x24) = (float)(dVar4 * dVar3);
     param_2 = (double)lbl_803E4510;
@@ -526,7 +526,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
                          (int)param_9,
                          *(undefined2 *)(&DAT_803dca00 + (*(byte *)(iVar7 + 0x1b) & 3) * 2));
             *(undefined *)((int)piVar8 + 0xf) = 1;
-            uVar5 = FUN_80017760(300,600);
+            uVar5 = randomGetRange(300,600);
             *(short *)(piVar8 + 3) = (short)uVar5;
           }
           if (param_9[0x50] != 0) {
@@ -1008,7 +1008,7 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         in_r8 = 0;
         in_r9 = *DAT_803dd708;
         (**(code **)(in_r9 + 8))(puVar2,0x51f,0,2);
-        uVar5 = FUN_80017760(0,4);
+        uVar5 = randomGetRange(0,4);
         *(char *)(pfVar10 + 6) = (char)uVar5;
         fVar1 = lbl_803E455C;
         if (*(char *)((int)pfVar10 + 0x1d) == '\0') {
@@ -1264,7 +1264,7 @@ LAB_801814d8:
         goto LAB_80181668;
       }
     }
-    uStack_54 = FUN_80017760(-(uint)*(byte *)(iVar10 + 0x19),(uint)*(byte *)(iVar10 + 0x19) << 1);
+    uStack_54 = randomGetRange(-(uint)*(byte *)(iVar10 + 0x19),(uint)*(byte *)(iVar10 + 0x19) << 1);
     uStack_54 = uStack_54 ^ 0x80000000;
     local_58 = 0x43300000;
     pfVar12[0x45] =

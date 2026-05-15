@@ -7,7 +7,7 @@ extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern double FUN_80017708();
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a54();
 extern undefined4 FUN_80017a70();
 extern undefined4 FUN_80017a74();
@@ -151,7 +151,7 @@ void magicdust_update(int param_1)
       *(short *)(iVar8 + 0x278) = sVar2;
       if (sVar2 < 0) {
         FUN_80006824((uint)psVar4,0x56);
-        uVar7 = FUN_80017760(0xf0,300);
+        uVar7 = randomGetRange(0xf0,300);
         *(short *)(iVar8 + 0x278) = (short)uVar7;
       }
     }
@@ -325,8 +325,8 @@ void magicdust_init(int param_1,int param_2)
   local_58[0] = 3;
   local_50[0] = DAT_803e4140;
   local_54[0] = DAT_803e4144;
-  uVar3 = FUN_80017760(0,0xffff);
-  uStack_44 = FUN_80017760(0x27,0x2c);
+  uVar3 = randomGetRange(0,0xffff);
+  uStack_44 = randomGetRange(0x27,0x2c);
   uStack_44 = uStack_44 ^ 0x80000000;
   local_48 = 0x43300000;
   dVar7 = (double)((float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e4198) /
@@ -337,7 +337,7 @@ void magicdust_init(int param_1,int param_2)
   *(float *)(param_1 + 0x24) = (float)(dVar7 * dVar6);
   dVar6 = (double)FUN_80294964();
   *(float *)(param_1 + 0x2c) = (float)(dVar7 * dVar6);
-  uStack_34 = FUN_80017760(0x28,0x32);
+  uStack_34 = randomGetRange(0x28,0x32);
   uStack_34 = uStack_34 ^ 0x80000000;
   local_38 = 0x43300000;
   *(float *)(param_1 + 0x28) =
@@ -363,7 +363,7 @@ void magicdust_init(int param_1,int param_2)
   else if (sVar1 == 3) {
     *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
     *(undefined *)(param_1 + 0x36) = 1;
-    uStack_34 = FUN_80017760(0x8c,0x96);
+    uStack_34 = randomGetRange(0x8c,0x96);
     uStack_34 = uStack_34 ^ 0x80000000;
     local_38 = 0x43300000;
     *(float *)(param_1 + 0x28) =
@@ -380,7 +380,7 @@ void magicdust_init(int param_1,int param_2)
   iVar4 = FUN_80017a54(param_1);
   sVar1 = *(short *)(param_1 + 0x46);
   if (sVar1 == 0x2cd) {
-    uVar3 = FUN_80017760(0,1);
+    uVar3 = randomGetRange(0,1);
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(undefined *)((int)local_54 + uVar3);
     *(undefined2 *)(iVar5 + 0x272) = 0x54e;
     *(undefined2 *)(iVar5 + 0x270) = 0x54a;
@@ -391,7 +391,7 @@ void magicdust_init(int param_1,int param_2)
   else {
     if (sVar1 < 0x2cd) {
       if (sVar1 == 0x2c4) {
-        uVar3 = FUN_80017760(0,1);
+        uVar3 = randomGetRange(0,1);
         *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(undefined *)((int)local_50 + uVar3);
         *(undefined2 *)(iVar5 + 0x272) = 0x54f;
         *(undefined2 *)(iVar5 + 0x270) = 0x54b;

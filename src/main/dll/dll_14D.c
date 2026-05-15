@@ -3,7 +3,7 @@
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017760();
+extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
@@ -86,7 +86,7 @@ void FUN_8017eff0(undefined2 *param_1)
             }
           }
           else {
-            uVar3 = FUN_80017760((uint)*(byte *)(iVar5 + 0x1d),(uint)*(byte *)(iVar5 + 0x1e));
+            uVar3 = randomGetRange((uint)*(byte *)(iVar5 + 0x1d),(uint)*(byte *)(iVar5 + 0x1e));
             pbVar4[1] = (byte)uVar3;
           }
           *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
