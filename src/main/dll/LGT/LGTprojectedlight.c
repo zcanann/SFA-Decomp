@@ -16,11 +16,11 @@ extern undefined4 FUN_80080f5c();
 extern undefined4 FUN_80080f60();
 extern undefined4 FUN_80080f64();
 extern undefined4 FUN_80080f68();
-extern undefined4 FUN_80080f70();
+extern undefined4 fn_800894A8();
 extern undefined4 FUN_80080f74();
 extern undefined4 FUN_80080f78();
-extern undefined4 FUN_80080f7c();
-extern undefined4 FUN_80080f80();
+extern undefined4 fn_800895E0();
+extern undefined4 fn_80089710();
 extern double FUN_80081014();
 extern undefined4 FUN_801d8308();
 extern undefined4 FUN_801d8480();
@@ -166,11 +166,11 @@ void FUN_801f456c(int param_1)
       FUN_80080f60(1);
       FUN_80080f5c(0x88,0xb7,0xba);
       if ((*(uint *)(param_1 + 0xf4) & 4) == 0) {
-        FUN_80080f80(1,1,0);
+        fn_80089710(1,1,0);
         *(uint *)(param_1 + 0xf4) = *(uint *)(param_1 + 0xf4) | 4;
       }
       else {
-        FUN_80080f80(1,1,1);
+        fn_80089710(1,1,1);
       }
       dVar12 = FUN_80081014();
       if ((double)lbl_803E6B08 < dVar12) {
@@ -199,7 +199,7 @@ void FUN_801f456c(int param_1)
                                                           0x80000000) - DOUBLE_803e6b20) +
                                 (float)((double)CONCAT44(0x43300000,bRam803dcd82 ^ 0x80000000) -
                                        DOUBLE_803e6b20));
-      FUN_80080f7c(1,DAT_803de91c,bRam803de91d,bRam803de91e,0x40,0x40);
+      fn_800895E0(1,DAT_803de91c,bRam803de91d,bRam803de91e,0x40,0x40);
       DAT_803de918 = (undefined)
                      (int)(lbl_803DE90C *
                            (float)((double)CONCAT44(0x43300000,
@@ -249,12 +249,12 @@ void FUN_801f456c(int param_1)
       FUN_80080f64((double)(lbl_803DE90C * (fVar7 - fVar4) + fVar4),
                    (double)(lbl_803DE90C * (fVar8 - fVar5) + fVar5),
                    (double)(lbl_803DE90C * (fVar9 - fVar6) + fVar6),(double)lbl_803E6B1C);
-      FUN_80080f70((double)fVar1,(double)fVar2,(double)fVar3,1);
+      fn_800894A8((double)fVar1,(double)fVar2,(double)fVar3,1);
     }
     else {
       FUN_80080f60(0);
       FUN_80080f68(0);
-      FUN_80080f80(7,0,1);
+      fn_80089710(7,0,1);
     }
   }
   return;
