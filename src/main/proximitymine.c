@@ -40,7 +40,7 @@ void proximitymine_free(ProximityMineObject *obj)
 void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4 param_3,
                           undefined4 param_4,undefined4 param_5)
 {
-  int sector;
+  int mapBlock;
   ProximityMineEffect *effect;
   ProximityMineState *state;
 
@@ -50,15 +50,14 @@ void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4
     obj->pendingTarget = NULL;
   }
   if (fn_80080150(state->renderTimer) == 0) {
-    sector = objPosToMapBlockIdx((double)obj->posX,(double)obj->posY,(double)obj->posZ);
-    if (sector == -1) {
-      return;
+    mapBlock = objPosToMapBlockIdx((double)obj->posX,(double)obj->posY,(double)obj->posZ);
+    if (mapBlock != -1) {
+      effect = state->effectHandle;
+      if ((effect != NULL) && (effect->active != 0) && (effect->visible != 0)) {
+        queueGlowRender(effect);
+      }
+      objRenderFn_8003b8f4(obj,param_2,param_3,param_4,param_5,(double)lbl_803E6778);
     }
-    effect = state->effectHandle;
-    if ((effect != NULL) && (effect->active != 0) && (effect->visible != 0)) {
-      queueGlowRender(effect);
-    }
-    objRenderFn_8003b8f4(obj,param_2,param_3,param_4,param_5,(double)lbl_803E6778);
   }
   return;
 }

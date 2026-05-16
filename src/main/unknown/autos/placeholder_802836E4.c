@@ -21,8 +21,10 @@ extern u8 salTimeOffset;
 void hwStart(int slot)
 {
   int offset;
+  u8 startTime;
 
   offset = slot * 0xf4;
-  dspVoice[offset + 0xd4] = salTimeOffset;
+  startTime = salTimeOffset;
+  dspVoice[offset + 0xd4] = startTime;
   salActivateVoice(dspVoice + offset);
 }
