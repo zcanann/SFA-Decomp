@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_802827D4.h"
 
 extern u16 _GetInputValue(void *state, void *slot, u8 a, u8 b);
-extern int fn_8026F584(int x);
+extern int synthGetVoiceSlotChannelScale(int x);
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u32 value);
 
@@ -350,7 +350,7 @@ void sndConvertMs(u32 *p)
  */
 void sndConvertTicks(u32 *p, int x)
 {
-    int div = fn_8026F584(x);
+    int div = synthGetVoiceSlotChannelScale(x);
     *p = (((*p << 16) / div) * 0x3e8) >> 5;
 }
 

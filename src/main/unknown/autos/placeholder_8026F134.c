@@ -17,9 +17,9 @@ void fn_8026F30C(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_8026F53C - magic-divide table store (~72 instructions). Stubbed.
+ * Set one studio/channel scale entry.
  */
-void fn_8026F53C(int value, u8 bank, u32 key)
+void synthSetStudioChannelScale(int value, u8 bank, u32 key)
 {
     if (bank == 0xff) {
         bank = 8;
@@ -33,7 +33,7 @@ void fn_8026F53C(int value, u8 bank, u32 key)
  *
  * EN v1.1 Address: 0x8026F584, size 52b
  */
-int fn_8026F584(int state)
+int synthGetVoiceSlotChannelScale(int state)
 {
     u32 a = *(u8 *)(state + 0x122);
     int b;

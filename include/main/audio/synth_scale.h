@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void synthSetStudioChannelScale(int param_1, byte param_2, uint param_3);
-undefined4 synthGetVoiceSlotChannelScale(int param_1);
+void synthSetStudioChannelScale(int value, byte studioIndex, uint channelIndex);
+int synthGetVoiceSlotChannelScale(int state);
 
 #endif /* MAIN_AUDIO_SYNTH_SCALE_H_ */
