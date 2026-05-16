@@ -20,7 +20,8 @@ extern undefined4 gameTextShow();
 extern undefined4 checkReset();
 extern undefined8 mmFreeTick();
 extern undefined4 ObjModel_ClearRenderAttachment();
-extern undefined4 ObjModel_EnableDefaultRenderCallback();
+extern void ObjModel_EnableDefaultRenderCallback(double scale,DIMbossObject *obj,undefined4 model,
+                                                 void *mtx,int enabled);
 extern int Obj_GetActiveModel();
 extern undefined4 Obj_BuildWorldTransformMatrix();
 extern undefined4 FUN_80017a98();
@@ -628,14 +629,16 @@ void DIMboss_update(DIMbossObject *obj)
         }
       }
       if ((runtime->phase == DIMBOSS_PHASE_START) || (runtime->phase == DIMBOSS_PHASE_NO_RENDER)) {
-        if ((topState->stompDustDelay != 0) &&
-            (--topState->stompDustDelay == 0)) {
-          Obj_BuildWorldTransformMatrix(obj,lbl_803AC9AC,0);
-          targetModel = Obj_GetActiveModel(obj);
-          ObjModel_EnableDefaultRenderCallback
-                    ((double)(obj->modelScale * obj->baseScale),obj,targetModel,lbl_803AC9AC,1);
+        if (topState->stompDustDelay != 0) {
+          topState->stompDustDelay--;
+          if (topState->stompDustDelay == 0) {
+            Obj_BuildWorldTransformMatrix(obj,lbl_803AC9AC,0);
+            targetModel = Obj_GetActiveModel(obj);
+            ObjModel_EnableDefaultRenderCallback
+                      ((double)(obj->modelScale * obj->baseScale),obj,targetModel,lbl_803AC9AC,1);
+          }
         }
-        if ((topState->steamSfxPending & DIMBOSS_STEAM_SFX_PENDING_FLAG) != 0) {
+        if (((uint)topState->steamSfxPending >> 7) != 0) {
           getEnvfxAct(0,0,0xdb,0);
           getEnvfxAct(0,0,0xdc,0);
           fn_80089710(7,1,0);
