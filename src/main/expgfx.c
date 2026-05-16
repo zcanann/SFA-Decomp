@@ -794,9 +794,10 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   poolSourceIds = gExpgfxTrackedPoolSourceIds;
   while ((s16)poolIndex < EXPGFX_POOL_COUNT) {
     if ((source->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) || (*poolSourceIds == (u32)sourceObject)) {
-      bit = 1 << ((s16)poolIndex >> 1);
+      s16 signedPoolIndex = poolIndex;
+      bit = 1 << (signedPoolIndex >> 1);
       highBit = (s32)bit >> 0x1f;
-      sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(poolIndex & 1)) * 2];
+      sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(signedPoolIndex & 1)) * 2];
       sourceMaskHit = CONCAT44(highBit & sourceMasks[0],bit & sourceMasks[1]);
       if (sourceMaskHit != 0) {
         gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
