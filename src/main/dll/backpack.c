@@ -90,6 +90,21 @@ typedef void (*ExpgfxSpawnObjectFn)(int obj, int objectId, void *params, int mod
 #define TUMBLEWEED_EFFECT_SPAWN_COUNT 0x14
 #define TUMBLEWEED_EXPGFX_MODE_ACTIVE 2
 
+#define TUMBLEWEED_EFFECT_FLAG_BURST 0x01
+#define TUMBLEWEED_EFFECT_FLAG_PUFF 0x02
+#define TUMBLEWEED_EFFECT_FLAG_DESPAWN 0x04
+#define TUMBLEWEED_EFFECT_FLAG_HIT_PULSE 0x10
+
+typedef struct TumbleweedState {
+    u8 pad000[0x270];
+    f32 despawnTimer;
+    u8 pad274[0x278 - 0x274];
+    u8 mode;
+    u8 variant;
+    u8 effectFlags;
+    u8 hitPulseCounter;
+} TumbleweedState;
+
 /*
  * --INFO--
  *
@@ -337,11 +352,11 @@ void tumbleweed_init(int obj, int defData) {
 #pragma scheduling off
 #pragma peephole off
 void tumbleweed_updateEffects(int obj) {
-    int aux = *(int*)(obj + 0xb8);
+    TumbleweedState *state = *(TumbleweedState **)(obj + 0xb8);
     int i;
     s16 type;
 
-    if ((*(u8*)(aux + 0x27a) & 1) != 0) {
+    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_BURST) != 0) {
         switch (*(s16*)(obj + 0x46)) {
         case TUMBLEWEED_TYPE_3:
         case TUMBLEWEED_TYPE_1:
@@ -365,10 +380,10 @@ void tumbleweed_updateEffects(int obj) {
             break;
         }
         Sfx_PlayFromObject(obj, 0x27d);
-        *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) & ~1);
+        state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_BURST);
     }
 
-    if ((*(u8*)(aux + 0x27a) & 2) != 0) {
+    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_PUFF) != 0) {
         switch (*(s16*)(obj + 0x46)) {
         case TUMBLEWEED_TYPE_3:
         case TUMBLEWEED_TYPE_1:
@@ -381,24 +396,26 @@ void tumbleweed_updateEffects(int obj) {
                 (obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, 0, TUMBLEWEED_EXPGFX_MODE_ACTIVE, -1, 0);
             break;
         }
-        *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) & ~2);
+        state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_PUFF);
     }
 
-    if ((*(u8*)(aux + 0x27a) & 4) != 0) {
+    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_DESPAWN) != 0) {
         *(u8*)(obj + 0x36) = 0;
-        *(u8*)(aux + 0x278) = 5;
-        *(f32*)(aux + 0x270) = lbl_803E2FC8;
+        state->mode = 5;
+        state->despawnTimer = lbl_803E2FC8;
         ObjHits_DisableObject(obj);
-        *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) & ~4);
+        state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_DESPAWN);
     }
 
-    if ((*(u8*)(aux + 0x27a) & 0x10) != 0 && (*(u16*)(obj + 0xb0) & 0x800) != 0) {
+    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_HIT_PULSE) != 0 &&
+        (*(u16*)(obj + 0xb0) & 0x800) != 0) {
         u32 r;
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
-        r = *(u8*)(aux + 0x27b);
+        r = state->hitPulseCounter;
         r = r + 1;
-        *(u8*)(aux + 0x27b) = r;
-        if ((int)(r & 0xff) % 6 != 0) {
+        state->hitPulseCounter = r;
+        r = (u8)r;
+        if ((int)r % 6 != 0) {
             fn_80098B18(obj, *(f32*)(obj + 0x8), 1, 0, 0, 0);
         } else {
             fn_80098B18(obj, *(f32*)(obj + 0x8), 1, 3, 0, 0);
