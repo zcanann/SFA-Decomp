@@ -857,9 +857,10 @@ void macHandle(u32 delta)
     int wakeHi;
     int nextTimer;
     int hasAlt;
+    u32 oldLo;
 
     timer = macTimeQueueRoot;
-    while (active = macActiveRoot, timer != 0) {
+    while (timer != 0) {
         wakeLo = *(u32 *)(timer + 0x9c);
         wakeHi = *(int *)(timer + 0x98);
         if (macRealTimeHi < (u32)(macRealTimeLo < wakeLo) + wakeHi) {
@@ -872,15 +873,16 @@ void macHandle(u32 delta)
         timer = nextTimer;
     }
 
+    active = macActiveRoot;
     for (; active != 0; active = *(int *)(active + 0x3c)) {
-        if (*(s8 *)(active + 0x68) == 0) {
+        if (*(u8 *)(active + 0x68) == 0) {
             hasAlt = 0;
         } else {
             hasAlt = *(int *)(active + 0x54) != 0;
         }
         if (hasAlt && ((*(u32 *)(active + 0x118) & 0x20) == 0) &&
             hwIsActive(*(u32 *)(active + 0xf4) & 0xff) == 0 &&
-            (*(s8 *)(active + 0x68) != 0 && *(int *)(active + 0x54) != 0)) {
+            (*(u8 *)(active + 0x68) != 0 && *(int *)(active + 0x54) != 0)) {
             *(int *)(active + 0x38) = *(int *)(active + 0x60);
             *(int *)(active + 0x34) = *(int *)(active + 0x54);
             *(int *)(active + 0x54) = 0;
@@ -888,8 +890,9 @@ void macHandle(u32 delta)
         }
         macHandleActive(active);
     }
-    macRealTimeHi += CARRY4(macRealTimeLo, delta);
-    macRealTimeLo += delta;
+    oldLo = macRealTimeLo;
+    macRealTimeLo = oldLo + delta;
+    macRealTimeHi += CARRY4(oldLo, delta);
 }
 
 /*
