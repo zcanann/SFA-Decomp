@@ -2,6 +2,7 @@
 #include "main/audio/mcmd.h"
 
 extern u8 *synthVoice;
+extern u32 lbl_8032EDD0[];
 extern int audioFn_80278b94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
                        int p9, int p10, int p11, int p12, int p13, int p14, int p15, int p16);
 extern void synthFXCloneMidiSetup(int voice, int state);
@@ -201,12 +202,89 @@ void mcmdVibrato(int state, u32 *args)
 }
 
 /*
- * DoSetPitch - voice processor (~400 instructions). Stubbed.
+ * Map the previous sample pitch toward the requested pitch, splitting the
+ * result into key and fine-tune cents.
  */
 #pragma dont_inline on
 void DoSetPitch(int state)
 {
-    (void)state;
+    u16 *pitchRatioTable;
+    u16 *ratioPtr;
+    u32 sampleKey;
+    u32 targetPitch;
+    u32 ratio;
+    u32 samplePitch;
+    u32 sourcePitch;
+    int octave;
+    int semitone;
+    int shiftLimit;
+
+    pitchRatioTable = (u16 *)lbl_8032EDD0;
+    targetPitch = *(u32 *)(state + 0x128) & 0xffffff;
+    samplePitch = *(u32 *)(state + MCMD_VOICE_PREV_SAMPLE_ID_OFFSET);
+    sourcePitch = samplePitch & 0xffffff;
+    sampleKey = samplePitch >> 0x18;
+
+    if (sourcePitch == targetPitch) {
+        *(u16 *)(state + 0x12c) = sampleKey;
+        *(u8 *)(state + 0x12e) = 0;
+        return;
+    }
+
+    if (sourcePitch < targetPitch) {
+        ratio = (targetPitch << 0xc) / sourcePitch;
+        shiftLimit = 0xb;
+        octave = 0;
+        do {
+            if ((ratio >> 0xc) < (u32)(1 << (octave + 1))) {
+                break;
+            }
+            octave++;
+            shiftLimit--;
+        } while (shiftLimit != 0);
+
+        ratio = ratio / (u32)(1 << octave);
+        semitone = 0xb;
+        for (ratioPtr = pitchRatioTable + 0xb; ratio <= *ratioPtr; ratioPtr--) {
+            semitone--;
+        }
+
+        *(u16 *)(state + 0x12c) = sampleKey + (s16)octave * 0xc + (s16)semitone;
+        targetPitch = (u32)pitchRatioTable[semitone];
+        *(s8 *)(state + 0x12e) =
+            (s8)(((ratio - targetPitch) * 100) /
+                 (pitchRatioTable[semitone + 1] - targetPitch));
+        return;
+    }
+
+    ratio = (sourcePitch << 0xc) / targetPitch;
+    shiftLimit = 0xb;
+    octave = 0;
+    do {
+        if ((ratio >> 0xc) < (u32)(1 << (octave + 1))) {
+            break;
+        }
+        octave++;
+        shiftLimit--;
+    } while (shiftLimit != 0);
+
+    ratio = ratio / (u32)(1 << octave);
+    semitone = 0xb;
+    for (ratioPtr = pitchRatioTable + 0xb; ratio <= *ratioPtr; ratioPtr--) {
+        semitone--;
+    }
+
+    octave = semitone + octave * 0xc;
+    if ((int)(samplePitch >> 0x18) < octave) {
+        *(u8 *)(state + 0x12e) = 0;
+        *(u16 *)(state + 0x12c) = 0;
+        return;
+    }
+    *(u16 *)(state + 0x12c) = sampleKey - octave;
+    sourcePitch = (u32)pitchRatioTable[semitone];
+    *(s8 *)(state + 0x12e) =
+        (s8)(((sourcePitch - ratio) * 100) /
+             (pitchRatioTable[semitone + 1] - sourcePitch));
 }
 #pragma dont_inline reset
 
