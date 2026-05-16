@@ -5,9 +5,6 @@
 extern int FUN_80271b50();
 extern undefined4 FUN_80272224();
 extern uint FUN_80272ec4();
-extern undefined4 FUN_80280c30();
-extern int FUN_80280c34();
-
 extern uint DAT_803cd570;
 extern undefined4 DAT_803defd0;
 extern int* DAT_803defd4;
@@ -29,20 +26,20 @@ extern f64 lbl_803E78D8;
 
 extern void hwExit(void);
 extern void IFFifoAlloc(void);
-extern void doNothing_80281040(void);
+extern void s3dExit(void);
 extern void synthExit(void);
 extern double __frsqrte(double x);
 
-void fn_80281160(void)
+void sndQuit(void)
 {
     hwExit();
     IFFifoAlloc();
-    doNothing_80281040();
+    s3dExit();
     synthExit();
     gSynthInitialized = 0;
 }
 
-void fn_80281194(u8 valueA, u8 valueB)
+void sndSetMaxVoices(u8 valueA, u8 valueB)
 {
     lbl_803BD150[0x211] = valueA;
     lbl_803BD150[0x212] = valueB;

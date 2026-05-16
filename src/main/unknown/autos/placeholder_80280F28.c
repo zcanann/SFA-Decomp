@@ -8,7 +8,7 @@ extern void synthInit(int sampleRate, void *p2);
 extern void synthInitJobTable(void);
 extern void synthInitVirtualSampleTable(void);
 extern void synthResetLoadedGroupCount(void);
-extern void fn_80280FFC(u32 flags);
+extern void s3dInit(u32 flags);
 
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
@@ -34,14 +34,14 @@ void fn_80280C30(void)
 #pragma dont_inline reset
 
 /*
- * Reset misc synth state and store a "stereo" flag.
+ * Reset 3D sound bookkeeping and store a stereo flag.
  *
  * EN v1.0 Address: 0x80280BD8
  * EN v1.0 Size: 4b (stub)
  * EN v1.1 Address: 0x80280FFC
  * EN v1.1 Size: 68b
  */
-void fn_80280FFC(u32 flags)
+void s3dInit(u32 flags)
 {
     u8 stereo = (flags & 0x2) ? 1 : 0;
     s3dEmitterRoot = 0;
@@ -60,7 +60,7 @@ void fn_80280FFC(u32 flags)
  *
  * EN v1.1 Address: 0x80281040
  */
-void doNothing_80281040(void)
+void s3dExit(void)
 {
 }
 
@@ -105,7 +105,7 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32 fla
         synthInit(0x7d00, &voiceCountSnapshot);
         synthInitJobTable();
         synthInitVirtualSampleTable();
-        fn_80280FFC(flags);
+        s3dInit(flags);
         gSynthInitialized = 1;
     }
     return 0;

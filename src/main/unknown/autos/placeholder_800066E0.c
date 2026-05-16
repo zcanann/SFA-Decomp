@@ -701,7 +701,7 @@ typedef struct SfxLoopedObjectSoundTable {
 extern SfxLoopedObjectSoundTable gSfxLoopedObjectSoundFlags;
 extern u16 gSfxLoopedObjectSoundCount;
 
-extern void fn_80281160(void);
+extern void sndQuit(void);
 extern void AIReset(void);
 extern void Music_Update(void);
 extern void Sfx_UpdateObjectSounds(void);
@@ -1340,7 +1340,7 @@ void audioStopByMask(u32 mask)
 void audioReset(void)
 {
     if (gAudioInitStarted != 0) {
-        fn_80281160();
+        sndQuit();
     }
     AIReset();
 }

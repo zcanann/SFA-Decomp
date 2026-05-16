@@ -3,9 +3,8 @@
 
 #include "ghidra_import.h"
 
-void FUN_80281160(void);
-void FUN_80281164(void);
-void fn_80281194(u8 valueA, u8 valueB);
+void sndQuit(void);
+void sndSetMaxVoices(u8 valueA, u8 valueB);
 u8 sndIsInstalled(void);
 void salApplyMatrix(f32 *matrix, f32 *vec, f32 *out);
 void salNormalizeVector(f32 *v);
