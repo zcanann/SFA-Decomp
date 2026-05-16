@@ -7,7 +7,13 @@ void hwSaveSample(u32 **sample, void **ptr);
 void hwRemoveSample(u32 *sample, void *ptr);
 void hwSyncSampleMem(void);
 void hwFrameDone(void);
-void sndSetHooks(u32 *values);
+
+typedef struct SalHooks {
+  void *(*mallocHook)(u32 size);
+  void (*freeHook)(void *ptr);
+} SalHooks;
+
+void sndSetHooks(SalHooks *hooks);
 void hwDisableHRTF(void);
 int hwGetVirtualSampleID(int slot);
 int hwVoiceInStartup(int slot);

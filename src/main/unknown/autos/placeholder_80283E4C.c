@@ -118,15 +118,10 @@ void hwSyncSampleMem(void)
 /* Pattern wrappers. */
 void hwFrameDone(void) {}
 
-void sndSetHooks(u32 *values)
+void sndSetHooks(SalHooks *hooks)
 {
-  u32 first;
-  u32 second;
-
-  first = values[0];
-  second = values[1];
-  gSalMallocHook = (void *(*)(u32))first;
-  gSalFreeHook = (void (*)(void *))second;
+  gSalMallocHook = hooks->mallocHook;
+  gSalFreeHook = hooks->freeHook;
 }
 
 void hwDisableHRTF(void)
