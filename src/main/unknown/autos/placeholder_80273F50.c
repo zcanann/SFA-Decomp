@@ -570,7 +570,7 @@ int dataInsertMacro(u32 key, void *value)
     u32 bucketCount;
     u32 insertIndex;
     u32 bucketIndex;
-    u16 *bucket;
+    DataMacroBucket *bucket;
     u32 *entry;
     int i;
     u32 moveCount;
@@ -588,15 +588,14 @@ int dataInsertMacro(u32 key, void *value)
         insertIndex = *(u16 *)(dataMacroBucketTable + bucketOffset + 2);
         i = 0;
         while ((i < (int)bucketCount) &&
-               (*(u16 *)(dataMacroTable + 4 + (insertIndex + i) * 8) <
-                (key & 0xffff))) {
+               (((DataRefEntry *)dataMacroTable)[insertIndex + i].key < (key & 0xffff))) {
             i++;
         }
         if (i < (int)bucketCount) {
             bucketCount = insertIndex + i;
             i = bucketCount * 8;
-            if ((key & 0xffff) == *(u16 *)(dataMacroTable + 4 + i)) {
-                (*(u16 *)(dataMacroTable + 6 + i))++;
+            if ((key & 0xffff) == ((DataRefEntry *)dataMacroTable)[bucketCount].key) {
+                ((DataRefEntry *)dataMacroTable)[bucketCount].refCount++;
                 sndEnd();
                 return 0;
             }
@@ -610,33 +609,33 @@ int dataInsertMacro(u32 key, void *value)
     }
 
     i = 0x40;
-    bucket = (u16 *)dataMacroBucketTable;
+    bucket = (DataMacroBucket *)dataMacroBucketTable;
     do {
-        if (insertIndex < bucket[1]) {
-            bucket[1]++;
+        if (insertIndex < bucket[0].startIndex) {
+            bucket[0].startIndex++;
         }
-        if (insertIndex < bucket[3]) {
-            bucket[3]++;
+        if (insertIndex < bucket[1].startIndex) {
+            bucket[1].startIndex++;
         }
-        if (insertIndex < bucket[5]) {
-            bucket[5]++;
+        if (insertIndex < bucket[2].startIndex) {
+            bucket[2].startIndex++;
         }
-        if (insertIndex < bucket[7]) {
-            bucket[7]++;
+        if (insertIndex < bucket[3].startIndex) {
+            bucket[3].startIndex++;
         }
-        if (insertIndex < bucket[9]) {
-            bucket[9]++;
+        if (insertIndex < bucket[4].startIndex) {
+            bucket[4].startIndex++;
         }
-        if (insertIndex < bucket[11]) {
-            bucket[11]++;
+        if (insertIndex < bucket[5].startIndex) {
+            bucket[5].startIndex++;
         }
-        if (insertIndex < bucket[13]) {
-            bucket[13]++;
+        if (insertIndex < bucket[6].startIndex) {
+            bucket[6].startIndex++;
         }
-        if (insertIndex < bucket[15]) {
-            bucket[15]++;
+        if (insertIndex < bucket[7].startIndex) {
+            bucket[7].startIndex++;
         }
-        bucket += 0x10;
+        bucket += 8;
         i--;
     } while (i != 0);
 
@@ -680,10 +679,9 @@ int dataInsertMacro(u32 key, void *value)
     }
 
 insert:
-    i = bucketCount * 8;
-    *(u16 *)(dataMacroTable + 4 + i) = key;
-    *(void **)(dataMacroTable + i) = value;
-    *(u16 *)(dataMacroTable + 6 + i) = 1;
+    ((DataRefEntry *)dataMacroTable)[bucketCount].key = key;
+    ((DataRefEntry *)dataMacroTable)[bucketCount].data = value;
+    ((DataRefEntry *)dataMacroTable)[bucketCount].refCount = 1;
     (*(u16 *)(dataMacroBucketTable + bucketIndex * 4))++;
     dataMacTotal++;
     sndEnd();
@@ -699,7 +697,7 @@ int dataRemoveMacro(u32 key)
     int countOffset;
     u32 bucketOffset;
     u32 moveCount;
-    u16 *bucket;
+    DataMacroBucket *bucket;
     u32 *entry;
     u32 startIndex;
     int scanIndex;
@@ -771,33 +769,33 @@ int dataRemoveMacro(u32 key)
 
 compactBuckets:
     scanIndex = 0x40;
-    bucket = (u16 *)(tableBase + 0x5a00);
+    bucket = (DataMacroBucket *)(tableBase + 0x5a00);
     do {
-        if (startIndex < bucket[1]) {
-            bucket[1]--;
+        if (startIndex < bucket[0].startIndex) {
+            bucket[0].startIndex--;
         }
-        if (startIndex < bucket[3]) {
-            bucket[3]--;
+        if (startIndex < bucket[1].startIndex) {
+            bucket[1].startIndex--;
         }
-        if (startIndex < bucket[5]) {
-            bucket[5]--;
+        if (startIndex < bucket[2].startIndex) {
+            bucket[2].startIndex--;
         }
-        if (startIndex < bucket[7]) {
-            bucket[7]--;
+        if (startIndex < bucket[3].startIndex) {
+            bucket[3].startIndex--;
         }
-        if (startIndex < bucket[9]) {
-            bucket[9]--;
+        if (startIndex < bucket[4].startIndex) {
+            bucket[4].startIndex--;
         }
-        if (startIndex < bucket[11]) {
-            bucket[11]--;
+        if (startIndex < bucket[5].startIndex) {
+            bucket[5].startIndex--;
         }
-        if (startIndex < bucket[13]) {
-            bucket[13]--;
+        if (startIndex < bucket[6].startIndex) {
+            bucket[6].startIndex--;
         }
-        if (startIndex < bucket[15]) {
-            bucket[15]--;
+        if (startIndex < bucket[7].startIndex) {
+            bucket[7].startIndex--;
         }
-        bucket += 0x10;
+        bucket += 8;
         scanIndex--;
     } while (scanIndex != 0);
     (*(s16 *)(tableBase + 0x5a00 + bucketOffset))--;
@@ -1031,7 +1029,7 @@ extern void hwGetStreamPlayBuffer(void);
 
 void dataInit(u32 unused, void *base)
 {
-    u16 *bucketTable;
+    DataMacroBucket *bucketTable;
     int i;
 
     dataSmpSDirNum = 0;
@@ -1042,41 +1040,41 @@ void dataInit(u32 unused, void *base)
     dataMacTotal = 0;
 
     i = 0x20;
-    bucketTable = (u16 *)dataMacroBucketTable;
+    bucketTable = (DataMacroBucket *)dataMacroBucketTable;
     do {
-        bucketTable[0] = 0;
-        bucketTable[1] = 0;
-        bucketTable[2] = 0;
-        bucketTable[3] = 0;
-        bucketTable[4] = 0;
-        bucketTable[5] = 0;
-        bucketTable[6] = 0;
-        bucketTable[7] = 0;
-        bucketTable[8] = 0;
-        bucketTable[9] = 0;
-        bucketTable[10] = 0;
-        bucketTable[11] = 0;
-        bucketTable[12] = 0;
-        bucketTable[13] = 0;
-        bucketTable[14] = 0;
-        bucketTable[15] = 0;
-        bucketTable[16] = 0;
-        bucketTable[17] = 0;
-        bucketTable[18] = 0;
-        bucketTable[19] = 0;
-        bucketTable[20] = 0;
-        bucketTable[21] = 0;
-        bucketTable[22] = 0;
-        bucketTable[23] = 0;
-        bucketTable[24] = 0;
-        bucketTable[25] = 0;
-        bucketTable[26] = 0;
-        bucketTable[27] = 0;
-        bucketTable[28] = 0;
-        bucketTable[29] = 0;
-        bucketTable[30] = 0;
-        bucketTable[31] = 0;
-        bucketTable += 0x20;
+        bucketTable[0].count = 0;
+        bucketTable[0].startIndex = 0;
+        bucketTable[1].count = 0;
+        bucketTable[1].startIndex = 0;
+        bucketTable[2].count = 0;
+        bucketTable[2].startIndex = 0;
+        bucketTable[3].count = 0;
+        bucketTable[3].startIndex = 0;
+        bucketTable[4].count = 0;
+        bucketTable[4].startIndex = 0;
+        bucketTable[5].count = 0;
+        bucketTable[5].startIndex = 0;
+        bucketTable[6].count = 0;
+        bucketTable[6].startIndex = 0;
+        bucketTable[7].count = 0;
+        bucketTable[7].startIndex = 0;
+        bucketTable[8].count = 0;
+        bucketTable[8].startIndex = 0;
+        bucketTable[9].count = 0;
+        bucketTable[9].startIndex = 0;
+        bucketTable[10].count = 0;
+        bucketTable[10].startIndex = 0;
+        bucketTable[11].count = 0;
+        bucketTable[11].startIndex = 0;
+        bucketTable[12].count = 0;
+        bucketTable[12].startIndex = 0;
+        bucketTable[13].count = 0;
+        bucketTable[13].startIndex = 0;
+        bucketTable[14].count = 0;
+        bucketTable[14].startIndex = 0;
+        bucketTable[15].count = 0;
+        bucketTable[15].startIndex = 0;
+        bucketTable += 0x10;
         i--;
     } while (i != 0);
 
