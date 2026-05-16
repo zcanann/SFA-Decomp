@@ -3542,6 +3542,31 @@ int titlescreen_func08(u8* obj)
     return 0;
 }
 
+extern void titlescreen_free(void);
+extern void titlescreen_render(void);
+extern void titlescreen_update(void);
+extern void titlescreen_init(void);
+extern void titlescreen_release(void);
+extern void titlescreen_initialise(void);
+
+u32 gTitleScreenObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)titlescreen_initialise,
+    (u32)titlescreen_release,
+    0,
+    (u32)titlescreen_init,
+    (u32)titlescreen_update,
+    (u32)titlescreen_hitDetect,
+    (u32)titlescreen_render,
+    (u32)titlescreen_free,
+    (u32)titlescreen_func08,
+    (u32)titlescreen_getExtraSize,
+    0,
+};
+
 extern void* lbl_803DD9D4;
 extern void* lbl_803A9F98[0x13];
 extern u8    lbl_803DD992;
