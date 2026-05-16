@@ -897,17 +897,17 @@ void macHandle(u32 delta)
  */
 void macSampleEndNotify(int state)
 {
-    int resumed;
+    bool resumed;
 
     if (*(int *)(state + 0x4c) == 1) {
         if (*(u8 *)(state + 0x68) == 0 || *(int *)(state + 0x54) == 0) {
-            resumed = 0;
+            resumed = false;
         } else {
             *(int *)(state + 0x38) = *(int *)(state + 0x60);
             *(int *)(state + 0x34) = *(int *)(state + 0x54);
             *(int *)(state + 0x54) = 0;
             audioFn_80278990(state);
-            resumed = 1;
+            resumed = true;
         }
         if (!resumed && ((*(u32 *)(state + 0x118) & 0x40000) != 0)) {
             audioFn_80278990(state);
