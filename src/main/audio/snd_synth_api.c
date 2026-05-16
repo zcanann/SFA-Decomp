@@ -37,6 +37,11 @@ extern u8 synthAuxAIndex[8];
 extern u32 synthFlags;
 extern u8 *synthVoice;
 
+#define SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET 0x210
+#define SYNTH_VOICE_STRIDE 0x404
+#define SYNTH_VOICE_DIRTY_FLAGS_OFFSET 0x114
+#define SYNTH_VOICE_OUTPUT_MODE_DIRTY 0x2000
+
 /*
  * MusyX sequence volume API, wrapping the underlying synth volume helper.
  *
@@ -193,19 +198,19 @@ void sndOutputMode(int mode)
     if (oldFlags != synthFlags) {
         u32 i;
         u32 offset;
-        for (i = 0, offset = 0; i < lbl_803BD150[0x210];) {
-            u32 flagsOffset = offset + 0x114;
+        for (i = 0, offset = 0; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET];) {
+            u32 flagsOffset = offset + SYNTH_VOICE_DIRTY_FLAGS_OFFSET;
             volatile u32 *readFlags;
             volatile u32 *writeFlags;
             u32 lowFlags;
             u32 highFlags;
-            offset += 0x404;
+            offset += SYNTH_VOICE_STRIDE;
             readFlags = (volatile u32 *)(synthVoice + flagsOffset);
             lowFlags = readFlags[0];
             writeFlags = (volatile u32 *)(synthVoice + flagsOffset);
             highFlags = readFlags[1];
             i++;
-            lowFlags |= 0x2000;
+            lowFlags |= SYNTH_VOICE_OUTPUT_MODE_DIRTY;
             writeFlags[1] = highFlags;
             writeFlags[0] = lowFlags;
         }
@@ -283,7 +288,7 @@ void synthDeactivateStudio(u8 slot)
 
     i = 0;
     offset = 0;
-    for (; i < lbl_803BD150[0x210]; i++) {
+    for (; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; i++) {
         voice = synthVoice + offset;
         if (slot == *(u8 *)(voice + 0x11f)) {
             if (*(u32 *)(voice + 0xf4) != 0xffffffff) {
@@ -294,7 +299,7 @@ void synthDeactivateStudio(u8 slot)
                 }
             }
         }
-        offset += 0x404;
+        offset += SYNTH_VOICE_STRIDE;
     }
     sndBegin();
     lbl_803BD9C4[slot] = 0;
