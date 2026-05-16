@@ -2988,8 +2988,8 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
   float rotMtx[16];
 
   if ((pointIndex < 0) ||
-      ((int)(uint)*(u8 *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINT_COUNT_OFFSET) <=
-       pointIndex)) {
+      (pointIndex >=
+       (int)(uint)*(u8 *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINT_COUNT_OFFSET))) {
     *outX = *(float *)(obj + OBJ_POSITION_X_OFFSET);
     *outY = *(float *)(obj + OBJ_POSITION_Y_OFFSET);
     *outZ = *(float *)(obj + OBJ_POSITION_Z_OFFSET);
@@ -2998,10 +2998,11 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
     model = Obj_GetActiveModel(obj);
     pointOffset = pointIndex * sizeof(ObjPathPoint);
     pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) +
-                                          OBJPATH_POINTS_OFFSET) + pointOffset);
+                                          OBJPATH_POINTS_OFFSET));
+    pathPoint = (ObjPathPoint *)((int)pathPoint + pointOffset);
     jointIndex = pathPoint->modelIndex[(int)*(char *)(obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
     if ((jointIndex < OBJPATH_ROOT_JOINT_INDEX) ||
-        ((int)(uint)*(u8 *)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET) <= jointIndex)) {
+        (jointIndex >= (int)(uint)*(u8 *)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET))) {
       *outX = *(float *)(obj + OBJ_POSITION_X_OFFSET);
       *outY = *(float *)(obj + OBJ_POSITION_Y_OFFSET);
       *outZ = *(float *)(obj + OBJ_POSITION_Z_OFFSET);
@@ -3023,7 +3024,10 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
         transform.rotZ = 0;
       }
       else {
-        transform.x = pathPoint->x;
+        pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(obj + OBJ_MODEL_INSTANCE_OFFSET) +
+                                              OBJPATH_POINTS_OFFSET));
+        transform.x = *(f32 *)((int)pathPoint + pointOffset);
+        pathPoint = (ObjPathPoint *)((int)pathPoint + pointOffset);
         transform.y = pathPoint->y;
         transform.z = pathPoint->z;
         transform.rotX = pathPoint->rotX;
