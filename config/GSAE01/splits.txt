@@ -640,6 +640,7 @@ main/dll/pressureSwitch.c:
 
 main/dll/seqObj.c:
 	.text       start:0x8014F9E8 end:0x801504F8
+	.data       start:0x8031DCF8 end:0x8031DD30
 
 main/dll/newSeqObj.c:
 	.text       start:0x801504F8 end:0x801511E8

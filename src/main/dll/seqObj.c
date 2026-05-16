@@ -65,6 +65,13 @@ extern f32 lbl_803E33E8;
 extern f32 lbl_803E33EC;
 extern void* PTR_DAT_8031fdc4;
 
+extern void wispbaddie_free(void);
+extern void wispbaddie_render(void);
+extern void wispbaddie_hitDetect(void);
+extern void wispbaddie_init(void);
+extern int wispbaddie_func08(void);
+extern int wispbaddie_getExtraSize(void);
+
 /*
  * --INFO--
  *
@@ -503,6 +510,23 @@ void wispbaddie_release(void)
 void wispbaddie_initialise(void)
 {
 }
+
+u32 gWispBaddieObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)wispbaddie_initialise,
+    (u32)wispbaddie_release,
+    0,
+    (u32)wispbaddie_init,
+    (u32)wispbaddie_update,
+    (u32)wispbaddie_hitDetect,
+    (u32)wispbaddie_render,
+    (u32)wispbaddie_free,
+    (u32)wispbaddie_func08,
+    (u32)wispbaddie_getExtraSize,
+};
 
 
 /* Trivial 4b 0-arg blr leaves. */
