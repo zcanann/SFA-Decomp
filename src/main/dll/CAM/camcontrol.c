@@ -31,8 +31,12 @@ extern void fn_800E84D8(s16 actionNo);
 extern void voxmaps_initialise(void);
 extern void voxmaps_resetLoadedMaps(void);
 
+typedef struct CamcontrolHandlerVTable CamcontrolHandlerVTable;
+typedef struct CamcontrolHandler CamcontrolHandler;
+typedef struct CamcontrolHandlerEntry CamcontrolHandlerEntry;
+
 extern void *gCamcontrolHandlers[20];
-extern void *lbl_803A4228[20];
+extern CamcontrolHandlerEntry *lbl_803A4228[20];
 extern u8 lbl_803A4278[];
 extern undefined4* DAT_803dd738;
 extern undefined4 gCamcontrolTargetChanged;
@@ -81,21 +85,25 @@ extern undefined4 lbl_803DD4CC;
 extern int lbl_803DD514;
 extern u8 lbl_803DD520;
 
-typedef struct CamcontrolHandlerVTable {
+struct CamcontrolHandlerVTable {
   u8 pad00[0x10];
+  void (*loadTriggeredAction)(CamcontrolTriggeredAction *action,int size);
   void (*release)(void);
-} CamcontrolHandlerVTable;
+};
 
-typedef struct CamcontrolHandler {
+struct CamcontrolHandler {
   CamcontrolHandlerVTable *vtable;
-} CamcontrolHandler;
+};
 
-typedef struct CamcontrolCurrentHandler {
-  u8 pad00[4];
+struct CamcontrolHandlerEntry {
+  u16 actionId;
+  u8 pad02[2];
   CamcontrolHandler *handler;
-} CamcontrolCurrentHandler;
+  u8 priority;
+  u8 pad09[3];
+};
 
-extern CamcontrolCurrentHandler *lbl_803DD51C;
+extern CamcontrolHandlerEntry *lbl_803DD51C;
 extern u32 gCamcontrolActiveActionId;
 extern u32 pCamera;
 
@@ -463,7 +471,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
 {
   int handlerCount;
   int handlerIndex;
-  void **handlerEntry;
+  CamcontrolHandlerEntry **handlerEntry;
   int blendFrames;
   CamcontrolTriggeredAction *camAction;
   int actionOffset;
@@ -532,7 +540,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
       handlerEntry = lbl_803A4228;
       for (handlerCount = (int)lbl_803DD520; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
-        if (*(u16 *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
+        if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
           handlerIndex = (int)lbl_803A4228[handlerIndex];
           goto LAB_80102f3c;
         }
@@ -541,7 +549,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
       }
       handlerIndex = 0;
 LAB_80102f3c:
-      (*(code *)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
+      ((CamcontrolHandlerEntry *)handlerIndex)->handler->vtable->loadTriggeredAction(camAction,
                                                           CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
@@ -578,7 +586,7 @@ LAB_80102f3c:
       handlerEntry = lbl_803A4228;
       for (handlerCount = (int)lbl_803DD520; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
-        if (*(u16 *)*handlerEntry == CAMCONTROL_ACTION_DEFAULT) {
+        if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
           handlerIndex = (int)lbl_803A4228[handlerIndex];
           goto LAB_80102f3c_b;
         }
@@ -587,7 +595,7 @@ LAB_80102f3c:
       }
       handlerIndex = 0;
 LAB_80102f3c_b:
-      (*(code *)(**(int **)(handlerIndex + 4) + 0x10))(camAction,
+      ((CamcontrolHandlerEntry *)handlerIndex)->handler->vtable->loadTriggeredAction(camAction,
                                                           CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
@@ -657,7 +665,7 @@ void *Camera_getCamActionsBinEntry(int actionNo)
  */
 void camcontrol_release(void)
 {
-  CamcontrolCurrentHandler *currentHandler;
+  CamcontrolHandlerEntry *currentHandler;
 
   currentHandler = lbl_803DD51C;
   if (currentHandler != NULL) {
@@ -851,13 +859,13 @@ void Camera_update(void)
 #pragma peephole off
 void *Camera_func08(void)
 {
-  void **entry;
+  CamcontrolHandlerEntry **entry;
   int i;
 
   i = 0;
   entry = lbl_803A4228;
   for (; i < lbl_803DD520; i++) {
-    if (*(u16 *)*entry == CAMCONTROL_ACTION_DEFAULT) {
+    if ((*entry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
       return lbl_803A4228[i];
     }
     entry++;
