@@ -203,6 +203,7 @@ extern char sObjAddObjectTypeReachedMaxTypes[];
 #define OBJPATH_POINTS_OFFSET 0x2c
 #define OBJPATH_POINT_COUNT_OFFSET 0x58
 #define OBJPATH_ROOT_JOINT_INDEX -1
+#define OBJLIB_UNIT_SCALE lbl_803DE97C
 
 typedef struct ObjMsgEntry {
   uint message;
@@ -2387,7 +2388,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
     if ((collisionType != 0x1a) && (collisionType != 5)) {
       hitPos[0] = hitPos[0] + playerMapOffsetX;
       hitPos[2] = hitPos[2] + playerMapOffsetZ;
-      effectPos.scale = lbl_803DE97C;
+      effectPos.scale = OBJLIB_UNIT_SCALE;
       effectPos.z = 0;
       effectPos.y = 0;
       effectPos.x = 0;
@@ -2890,18 +2891,20 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float 
  */
 void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
 {
+  ObjPathPoint *pathPoints;
   ObjPathPoint *pathPoint;
   ObjPathTransform transform;
 
-  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) +
-                                        OBJPATH_POINTS_OFFSET) + param_2 * sizeof(ObjPathPoint));
-  transform.x = pathPoint->x;
+  pathPoints = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) +
+                                         OBJPATH_POINTS_OFFSET));
+  transform.x = pathPoints[param_2].x;
+  pathPoint = &pathPoints[param_2];
   transform.y = pathPoint->y;
   transform.z = pathPoint->z;
   transform.rotX = pathPoint->rotX;
   transform.rotY = pathPoint->rotY;
   transform.rotZ = pathPoint->rotZ;
-  transform.scale = lbl_803DE97C;
+  transform.scale = OBJLIB_UNIT_SCALE;
   setMatrixFromObjectTransposed(&transform,param_3);
   return;
 }
