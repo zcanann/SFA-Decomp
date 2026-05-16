@@ -308,12 +308,16 @@ void camcontrol_releaseModeSettings(void) { mm_free(cameraMtxVar57); cameraMtxVa
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void camcontrol_initialiseModeSettings(void)
 {
   cameraMtxVar57 = (f32 *)mmAlloc(0xcc,0xf,0);
   memset(cameraMtxVar57,0,0xcc);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void camcontrol_samplePathState(undefined4 param_1,undefined4 param_2,undefined4 *param_3,
                                 undefined4 param_4,int param_5)
