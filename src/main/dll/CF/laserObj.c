@@ -113,3 +113,20 @@ void laserObj_release(void)
 void laserObj_initialise(void)
 {
 }
+
+u32 gLaserObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)laserObj_initialise,
+    (u32)laserObj_release,
+    0,
+    (u32)laserObj_init,
+    (u32)laserObj_update,
+    (u32)laserObj_hitDetect,
+    (u32)laserObj_render,
+    (u32)laserObj_free,
+    (u32)laserObj_func08,
+    (u32)laserObj_getExtraSize,
+};

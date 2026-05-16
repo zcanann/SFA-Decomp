@@ -234,3 +234,20 @@ void fireObj_release(void)
 void fireObj_initialise(void)
 {
 }
+
+u32 gFireObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)fireObj_initialise,
+    (u32)fireObj_release,
+    0,
+    (u32)fireObj_init,
+    (u32)fireObj_update,
+    (u32)fireObj_hitDetect,
+    (u32)fireObj_render,
+    (u32)fireObj_free,
+    (u32)fireObj_func08,
+    (u32)fireObj_getExtraSize,
+};
