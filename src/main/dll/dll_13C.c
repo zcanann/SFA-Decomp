@@ -65,7 +65,7 @@ extern undefined4 DAT_803dc070;
 extern undefined4 *pDll_expgfx;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
-extern undefined4 lbl_8032059C[];
+extern u32 *lbl_8032059C[];
 extern f64 DOUBLE_803e3d80;
 extern f64 DOUBLE_803e3d98;
 extern f64 DOUBLE_803e3dc8;
@@ -768,7 +768,7 @@ void pollenfragment_init(int obj,int config)
     pollenType = 5;
   }
   *(byte *)(config + 0x19) = pollenType;
-  state[7] = lbl_8032059C[*(char *)(config + 0x19)];
+  state[7] = (u32)lbl_8032059C[*(char *)(config + 0x19)];
   if ((int)*(short *)state[7] != 0) {
     Sfx_PlayFromObjectLimited(obj,(int)*(short *)state[7] & 0xffff,3);
   }
@@ -1183,4 +1183,74 @@ u32 gPollenObjDescriptor[] = {
     (u32)pollen_free,
     (u32)pollen_func08,
     (u32)pollen_getExtraSize,
+};
+
+u32 lbl_80320538[] = {
+    0x0000049F,
+    0x00B904BA,
+    0x04BAFFFF,
+    0x3E4CCCCD,
+    0x0000C000,
+};
+
+u32 lbl_8032054C[] = {
+    0x02FA02FB,
+    0x0496068F,
+    0x068F068F,
+    0x3ECCCCCD,
+    0x00267000,
+};
+
+u32 lbl_80320560[] = {
+    0x02FA02FB,
+    0x0496068F,
+    0x068F068F,
+    0x3ECCCCCD,
+    0x00262000,
+};
+
+u32 lbl_80320574[] = {
+    0x02FA02FB,
+    0x0496068F,
+    0x068FFFFF,
+    0x3E4CCCCD,
+    0x00002000,
+};
+
+u32 lbl_80320588[] = {
+    0x02FA02FB,
+    0x0496068F,
+    0x068F068F,
+    0x3ECCCCCD,
+    0x00263000,
+};
+
+u32 *lbl_8032059C[] = {
+    lbl_80320538,
+    lbl_8032054C,
+    lbl_80320560,
+    lbl_80320574,
+    lbl_80320588,
+};
+
+extern void pollenfragment_free(void);
+extern void pollenfragment_render(void);
+extern void pollenfragment_hitDetect(void);
+extern void pollenfragment_update(void);
+
+u32 gPollenFragmentObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)pollenfragment_initialise,
+    (u32)pollenfragment_release,
+    0,
+    (u32)pollenfragment_init,
+    (u32)pollenfragment_update,
+    (u32)pollenfragment_hitDetect,
+    (u32)pollenfragment_render,
+    (u32)pollenfragment_free,
+    (u32)pollenfragment_func08,
+    (u32)pollenfragment_getExtraSize,
 };
