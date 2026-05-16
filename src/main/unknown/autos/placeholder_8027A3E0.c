@@ -32,20 +32,106 @@ void voiceInitRegistrationTables(void)
 {
     u8 *p = &voiceMidiKeySlots[0][0];
     int i;
-    int j;
 
     for (i = 0; i < 4; i++) {
-        for (j = 0; j < 32; j++) {
-            p[j] = 0xff;
-        }
+        p[0] = 0xff;
+        p[1] = 0xff;
+        p[2] = 0xff;
+        p[3] = 0xff;
+        p[4] = 0xff;
+        p[5] = 0xff;
+        p[6] = 0xff;
+        p[7] = 0xff;
+        p[8] = 0xff;
+        p[9] = 0xff;
+        p[10] = 0xff;
+        p[11] = 0xff;
+        p[12] = 0xff;
+        p[13] = 0xff;
+        p[14] = 0xff;
+        p[15] = 0xff;
+        p[16] = 0xff;
+        p[17] = 0xff;
+        p[18] = 0xff;
+        p[19] = 0xff;
+        p[20] = 0xff;
+        p[21] = 0xff;
+        p[22] = 0xff;
+        p[23] = 0xff;
+        p[24] = 0xff;
+        p[25] = 0xff;
+        p[26] = 0xff;
+        p[27] = 0xff;
+        p[28] = 0xff;
+        p[29] = 0xff;
+        p[30] = 0xff;
+        p[31] = 0xff;
         p += 32;
     }
-    {
-        u8 *q = voiceDirectSlots;
-        for (j = 0; j < 64; j++) {
-            q[j] = 0xff;
-        }
-    }
+    voiceDirectSlots[0] = 0xff;
+    voiceDirectSlots[1] = 0xff;
+    voiceDirectSlots[2] = 0xff;
+    voiceDirectSlots[3] = 0xff;
+    voiceDirectSlots[4] = 0xff;
+    voiceDirectSlots[5] = 0xff;
+    voiceDirectSlots[6] = 0xff;
+    voiceDirectSlots[7] = 0xff;
+    voiceDirectSlots[8] = 0xff;
+    voiceDirectSlots[9] = 0xff;
+    voiceDirectSlots[10] = 0xff;
+    voiceDirectSlots[11] = 0xff;
+    voiceDirectSlots[12] = 0xff;
+    voiceDirectSlots[13] = 0xff;
+    voiceDirectSlots[14] = 0xff;
+    voiceDirectSlots[15] = 0xff;
+    voiceDirectSlots[16] = 0xff;
+    voiceDirectSlots[17] = 0xff;
+    voiceDirectSlots[18] = 0xff;
+    voiceDirectSlots[19] = 0xff;
+    voiceDirectSlots[20] = 0xff;
+    voiceDirectSlots[21] = 0xff;
+    voiceDirectSlots[22] = 0xff;
+    voiceDirectSlots[23] = 0xff;
+    voiceDirectSlots[24] = 0xff;
+    voiceDirectSlots[25] = 0xff;
+    voiceDirectSlots[26] = 0xff;
+    voiceDirectSlots[27] = 0xff;
+    voiceDirectSlots[28] = 0xff;
+    voiceDirectSlots[29] = 0xff;
+    voiceDirectSlots[30] = 0xff;
+    voiceDirectSlots[31] = 0xff;
+    voiceDirectSlots[32] = 0xff;
+    voiceDirectSlots[33] = 0xff;
+    voiceDirectSlots[34] = 0xff;
+    voiceDirectSlots[35] = 0xff;
+    voiceDirectSlots[36] = 0xff;
+    voiceDirectSlots[37] = 0xff;
+    voiceDirectSlots[38] = 0xff;
+    voiceDirectSlots[39] = 0xff;
+    voiceDirectSlots[40] = 0xff;
+    voiceDirectSlots[41] = 0xff;
+    voiceDirectSlots[42] = 0xff;
+    voiceDirectSlots[43] = 0xff;
+    voiceDirectSlots[44] = 0xff;
+    voiceDirectSlots[45] = 0xff;
+    voiceDirectSlots[46] = 0xff;
+    voiceDirectSlots[47] = 0xff;
+    voiceDirectSlots[48] = 0xff;
+    voiceDirectSlots[49] = 0xff;
+    voiceDirectSlots[50] = 0xff;
+    voiceDirectSlots[51] = 0xff;
+    voiceDirectSlots[52] = 0xff;
+    voiceDirectSlots[53] = 0xff;
+    voiceDirectSlots[54] = 0xff;
+    voiceDirectSlots[55] = 0xff;
+    voiceDirectSlots[56] = 0xff;
+    voiceDirectSlots[57] = 0xff;
+    voiceDirectSlots[58] = 0xff;
+    voiceDirectSlots[59] = 0xff;
+    voiceDirectSlots[60] = 0xff;
+    voiceDirectSlots[61] = 0xff;
+    voiceDirectSlots[62] = 0xff;
+    voiceDirectSlots[63] = 0xff;
 }
 
 /*
