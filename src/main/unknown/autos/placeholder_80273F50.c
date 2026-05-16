@@ -434,29 +434,29 @@ int dataAddSampleReference(s16 sampleId)
 {
     u32 remaining;
     u32 bucketIndex;
-    s16 **bucket;
-    s16 *entry;
-    s16 *sampleDesc;
+    DataSampleDirBucket *bucket;
+    DataSampleDirEntry *entry;
+    u8 *sampleDesc;
 
-    bucket = (s16 **)dataSmpSDirTable;
+    bucket = (DataSampleDirBucket *)dataSmpSDirTable;
     bucketIndex = 0;
     for (remaining = dataSmpSDirNum, entry = 0; remaining != 0; remaining--) {
-        for (entry = *bucket; *entry != -1; entry += 0x10) {
-            if ((*entry == sampleId) && (entry[1] != -1)) {
+        for (entry = bucket->entries; entry->sampleId != -1; entry++) {
+            if ((entry->sampleId == sampleId) && (entry->refCount != -1)) {
                 goto found;
             }
         }
-        bucket += 3;
+        bucket++;
         bucketIndex++;
     }
 
 found:
-    if (entry[1] == 0) {
-        sampleDesc = entry + 6;
-        *(int *)(entry + 4) = *(int *)(entry + 2) + *(int *)(dataSmpSDirTable + 4 + bucketIndex * 0xc);
-        hwSaveSample(&sampleDesc, entry + 4);
+    if (entry->refCount == 0) {
+        sampleDesc = entry->header;
+        entry->loadedAddr = entry->offset + *(u32 *)(dataSmpSDirTable + 4 + bucketIndex * 0xc);
+        hwSaveSample(&sampleDesc, &entry->loadedAddr);
     }
-    entry[1]++;
+    entry->refCount++;
     return 1;
 }
 
@@ -468,25 +468,25 @@ extern void hwRemoveSample(void *sampleDesc, u32 addr);
 int dataRemoveSampleReference(s16 sampleId)
 {
     u32 remaining;
-    s16 **bucket;
-    s16 *entry;
+    DataSampleDirBucket *bucket;
+    DataSampleDirEntry *entry;
 
-    bucket = (s16 **)dataSmpSDirTable;
+    bucket = (DataSampleDirBucket *)dataSmpSDirTable;
     remaining = dataSmpSDirNum;
     do {
         if (remaining == 0) {
             return 0;
         }
-        for (entry = *bucket; *entry != -1; entry += 0x10) {
-            if ((*entry == sampleId) && (entry[1] != -1)) {
-                entry[1]--;
-                if (entry[1] == 0) {
-                    hwRemoveSample(entry + 6, *(u32 *)(entry + 4));
+        for (entry = bucket->entries; entry->sampleId != -1; entry++) {
+            if ((entry->sampleId == sampleId) && (entry->refCount != -1)) {
+                entry->refCount--;
+                if (entry->refCount == 0) {
+                    hwRemoveSample(entry->header, entry->loadedAddr);
                 }
                 return 1;
             }
         }
-        bucket += 3;
+        bucket++;
         remaining--;
     } while (1);
 }
