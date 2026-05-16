@@ -130,20 +130,25 @@ int audioKeymapFn_8026fc8c(u32 sampleId, s16 key, u32 velocity, u32 baseSample, 
  * Start a sample/FX id, handling direct samples, table-expanded sample
  * groups, and already-linked voice chains.
  */
-int audioFn_8026feec(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u32 pan, u32 param_7,
-                u32 param_8, u32 param_9, u32 param_10, u32 param_11, u8 auxIndex, u32 param_13,
-                u32 studio, u8 studioAux)
+int audioFn_8026feec(u32 sampleId, char key, u32 velocity, u32 flags, u32 volume, u32 pan, u32 param_7,
+                u32 param_8, u8 param_9, u16 param_10, u16 param_11, u8 auxIndex, s16 keyOffset,
+                u8 studio, u32 studioAux)
 {
     u32 sampleClass;
     int handle;
     u32 voice;
     u8 *slot;
     u32 outFlags;
+    u32 adjustedKey;
 
-    key = key + param_13;
+    adjustedKey = key + keyOffset;
+    if ((u8)adjustedKey > 0xff) {
+        adjustedKey = 0xff;
+    }
+    adjustedKey &= 0xff;
     sampleClass = sampleId & 0xc000;
     if (sampleClass == 0x4000) {
-        handle = audioKeymapFn_8026fc8c(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
+        handle = audioKeymapFn_8026fc8c(sampleId, adjustedKey, velocity, sampleId, flags, volume, pan, param_7,
                              param_8, param_9, param_10, param_11, 1, auxIndex, studio,
                              studioAux);
         if (handle != -1) {
@@ -169,12 +174,12 @@ int audioFn_8026feec(u32 sampleId, u8 key, u8 velocity, u32 flags, u32 volume, u
             if (handle != -1) {
                 return handle;
             }
-            return audioFn_80278b94(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
+            return audioFn_80278b94(sampleId, adjustedKey, velocity, sampleId, flags, volume, pan, param_7,
                                param_8, param_9, param_10, param_11, 1, auxIndex, studio,
                                studioAux);
         }
         if (sampleClass == 0x8000) {
-            handle = audioLayerFn_8026f8b8(sampleId, key, velocity, sampleId, flags, volume, pan, param_7,
+            handle = audioLayerFn_8026f8b8(sampleId, adjustedKey, velocity, sampleId, flags, volume, pan, param_7,
                                  param_8, param_9, param_10, param_11, 1, auxIndex, studio,
                                  studioAux);
             if (handle == -1) {
