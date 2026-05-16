@@ -11,7 +11,6 @@ extern void sndConvertTicks(u32 *p, int state);
 extern int dataGetSample(u32 key, u32 *out);
 extern void hwInitSamplePlayback(u32 voice, u32 sampleId, u32 *sampleInfo, u32 noKeySync,
                                  u32 priority, u32 handle, u32 noStartOffset, u8 restart);
-extern u32 countLeadingZeros(u32 value);
 extern void fn_80271370(int state);
 extern u32 dataSampleInfo[];
 extern void *dataGetCurve(u16 key);
@@ -99,7 +98,7 @@ void mcmdPlayMacro(int state, int args)
 void mcmdStartSample(int state, u32 *args)
 {
     int found;
-    u32 mode;
+    int mode;
     u32 noStartOffset;
     u32 noKeySync;
     u32 sampleId;
@@ -119,13 +118,13 @@ void mcmdStartSample(int state, u32 *args)
         } else {
             dataSampleInfo[3] = 0;
         }
-        if (dataSampleInfo[4] <= dataSampleInfo[3]) {
+        if (dataSampleInfo[3] >= dataSampleInfo[4]) {
             dataSampleInfo[3] = dataSampleInfo[4] - 1;
         }
-        noStartOffset = countLeadingZeros(*(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) &
-                                          MCMD_VOICE_START_OFFSET_INPUT_FLAG);
-        noKeySync = countLeadingZeros(*(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &
-                                      MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG);
+        noStartOffset = __cntlzw(*(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) &
+                                  MCMD_VOICE_START_OFFSET_INPUT_FLAG);
+        noKeySync = __cntlzw(*(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &
+                              MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG);
         hwInitSamplePlayback(*(u32 *)(state + MCMD_VOICE_ID_OFFSET) & 0xff, sampleId,
                              dataSampleInfo,
                              noKeySync >> 5,
@@ -134,7 +133,7 @@ void mcmdStartSample(int state, u32 *args)
                              *(u32 *)(state + MCMD_VOICE_ID_OFFSET), noStartOffset >> 5,
                              *(u8 *)(state + 0x193));
         *(u32 *)(state + MCMD_VOICE_PREV_SAMPLE_ID_OFFSET) = dataSampleInfo[0];
-        if (*(int *)(state + 0x128) != -1) {
+        if (*(u32 *)(state + 0x128) != 0xffffffff) {
             DoSetPitch(state);
         }
         *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_ACTIVE_OUTPUT_FLAG;
