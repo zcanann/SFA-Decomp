@@ -4466,6 +4466,22 @@ int checkpoint4_getExtraSize(void) { return 0x40; }
 int checkpoint4_func08(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
 
+u32 gCheckpoint4ObjDescriptor[] = {
+    0, 0, 0, 0x000A0000,
+    (u32)checkpoint4_initialise,
+    (u32)checkpoint4_release,
+    0,
+    (u32)checkpoint4_init,
+    (u32)checkpoint4_update,
+    (u32)checkpoint4_hitDetect,
+    (u32)checkpoint4_render,
+    (u32)checkpoint4_free,
+    (u32)checkpoint4_func08,
+    (u32)checkpoint4_getExtraSize,
+    (u32)checkpoint4_setScale,
+    0,
+};
+
 /* Pattern wrappers. */
 s16 staff_func13(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x88); }
 u8 fn_8016F16C(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x71); }
