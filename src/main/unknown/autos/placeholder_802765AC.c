@@ -985,9 +985,9 @@ void macSetPedalState(int state, u32 defer)
  */
 void TimeQueueAdd(int state)
 {
-    int next;
-    int prev;
-    int cur;
+    u32 next;
+    u32 prev;
+    u32 cur;
 
     next = macTimeQueueRoot;
     prev = 0;
@@ -999,30 +999,29 @@ void TimeQueueAdd(int state)
         next = *(int *)(cur + 0x44);
     }
 
-    if (cur != 0) {
-        *(int *)(state + 0x44) = cur;
-        prev = *(int *)(cur + 0x48);
-        *(int *)(state + 0x48) = prev;
-        next = state;
-        if (prev != 0) {
-            *(int *)(*(int *)(cur + 0x48) + 0x44) = state;
-            next = macTimeQueueRoot;
+    if (cur == 0) {
+        if (prev == 0) {
+            macTimeQueueRoot = state;
+            *(int *)(state + 0x44) = 0;
+            *(int *)(state + 0x48) = 0;
+            return;
         }
-        macTimeQueueRoot = next;
-        *(int *)(cur + 0x48) = state;
-        return;
-    }
 
-    if (prev != 0) {
         *(int *)(prev + 0x44) = state;
         *(int *)(state + 0x48) = prev;
         *(int *)(state + 0x44) = 0;
         return;
     }
 
-    macTimeQueueRoot = state;
-    *(int *)(state + 0x44) = 0;
-    *(int *)(state + 0x48) = 0;
+    *(int *)(state + 0x44) = cur;
+    prev = *(int *)(cur + 0x48);
+    *(int *)(state + 0x48) = prev;
+    if (prev != 0) {
+        *(int *)(*(int *)(cur + 0x48) + 0x44) = state;
+    } else {
+        macTimeQueueRoot = state;
+    }
+    *(int *)(cur + 0x48) = state;
 }
 
 /*
