@@ -5,8 +5,8 @@ typedef struct WorldAsteroidsObject WorldAsteroidsObject;
 extern u32 randomGetRange(int min,int max);
 extern WorldAsteroidsObject *ObjList_FindObjectById(int objectId);
 extern void objRenderFn_8003b8f4(double scale);
-extern f32 fsin16Approx(int angle);
-extern f32 fcos16Approx(int angle);
+extern f32 fsin16Approx(u16 angle);
+extern f32 fcos16Approx(u16 angle);
 
 extern f32 lbl_803E65D0;
 extern f64 lbl_803E65D8;
@@ -125,7 +125,7 @@ void worldasteroids_update(WorldAsteroidsObject *obj)
 #pragma peephole off
 void worldasteroids_init(WorldAsteroidsObject *obj)
 {
-  s16 baseAngle;
+  int baseAngle;
   s16 randomValue;
   WorldAsteroidsState *state;
   f32 orbitShape;
@@ -133,20 +133,20 @@ void worldasteroids_init(WorldAsteroidsObject *obj)
 
   state = worldasteroids_getState(obj);
   baseAngle = randomGetRange(-0x7fff,0x7fff);
-  orbitShape = fsin16Approx((u16)baseAngle);
+  orbitShape = fsin16Approx(baseAngle);
   if (orbitShape < lbl_803E65E0) {
-    orbitShape = -fsin16Approx((u16)baseAngle);
+    orbitShape = -fsin16Approx(baseAngle);
   }
   else {
-    orbitShape = fsin16Approx((u16)baseAngle);
+    orbitShape = fsin16Approx(baseAngle);
   }
   randomGetRange(0,(int)(lbl_803E65E8 * orbitShape + lbl_803E65E4));
-  orbitShape = fsin16Approx((u16)baseAngle);
+  orbitShape = fsin16Approx(baseAngle);
   if (orbitShape < lbl_803E65E0) {
-    orbitShape = -fsin16Approx((u16)baseAngle);
+    orbitShape = -fsin16Approx(baseAngle);
   }
   else {
-    orbitShape = fsin16Approx((u16)baseAngle);
+    orbitShape = fsin16Approx(baseAngle);
   }
   radiusSeed = (int)(lbl_803E65EC * orbitShape);
   randomValue = randomGetRange(WORLD_ASTEROIDS_ROTATION_SPEED_MIN,WORLD_ASTEROIDS_ROTATION_SPEED_MAX);
@@ -158,9 +158,9 @@ void worldasteroids_init(WorldAsteroidsObject *obj)
   randomValue = randomGetRange(-0x7fff,0x7fff);
   state->orbitAngle = randomValue;
   state->orbitRadius =
-      worldasteroids_s32AsFloat(radiusSeed) * fsin16Approx((u16)baseAngle) + lbl_803E65F0;
+      worldasteroids_s32AsFloat(radiusSeed) * fsin16Approx(baseAngle) + lbl_803E65F0;
   state->heightOffset =
-      worldasteroids_s32AsFloat(radiusSeed) * fcos16Approx((u16)baseAngle);
+      worldasteroids_s32AsFloat(radiusSeed) * fcos16Approx(baseAngle);
   return;
 }
 #pragma peephole reset
