@@ -48,11 +48,14 @@ int synthGetVoiceSlotChannelScale(int state)
  */
 void fn_8026F5B8(int state)
 {
-    if ((*(u32 *)(state + 0x118) & 0x20000) != 0) {
+    u64 flags;
+
+    flags = *(u64 *)(state + 0x114);
+    if ((flags & 0x20000) != 0) {
         return;
     }
-    if (*(s8 *)(state + 0x131) == 1) {
-        if ((*(u32 *)(state + 0x118) & 0x1000) == 0) {
+    if (*(u8 *)(state + 0x131) == 1) {
+        if ((flags & 0x1000) == 0) {
             *(u32 *)(state + 0x13c) = 0;
         } else {
             *(u32 *)(state + 0x13c) = *(u32 *)(state + 0x134);
