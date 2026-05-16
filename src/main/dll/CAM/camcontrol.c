@@ -87,8 +87,7 @@ extern u8 lbl_803DD520;
 
 struct CamcontrolHandlerVTable {
   u8 pad00[0x10];
-  void (*loadTriggeredAction)(CamcontrolTriggeredAction *action,int size);
-  void (*release)(void);
+  void (*actionCallback)();
 };
 
 struct CamcontrolHandler {
@@ -549,8 +548,8 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
       }
       handlerIndex = 0;
 LAB_80102f3c:
-      ((CamcontrolHandlerEntry *)handlerIndex)->handler->vtable->loadTriggeredAction(camAction,
-                                                          CAMCONTROL_ACTION_RECORD_SIZE);
+      ((CamcontrolHandlerEntry *)handlerIndex)->handler->vtable->actionCallback(
+          camAction,CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
       switch (camAction->actionKind) {
@@ -595,8 +594,8 @@ LAB_80102f3c:
       }
       handlerIndex = 0;
 LAB_80102f3c_b:
-      ((CamcontrolHandlerEntry *)handlerIndex)->handler->vtable->loadTriggeredAction(camAction,
-                                                          CAMCONTROL_ACTION_RECORD_SIZE);
+      ((CamcontrolHandlerEntry *)handlerIndex)->handler->vtable->actionCallback(
+          camAction,CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
       switch (camAction->actionKind) {
@@ -669,7 +668,7 @@ void camcontrol_release(void)
 
   currentHandler = lbl_803DD51C;
   if (currentHandler != NULL) {
-    currentHandler->handler->vtable->release();
+    currentHandler->handler->vtable->actionCallback();
   }
   return;
 }
