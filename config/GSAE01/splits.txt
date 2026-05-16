@@ -767,7 +767,7 @@ main/dll/alphaanim.c:
 
 main/dll/groundAnimator.c:
 	.text       start:0x8017D0D4 end:0x8017E1A0
-	.data       start:0x80321460 end:0x80321498
+	.data       start:0x80321460 end:0x803214F8
 
 main/dll/crackanim.c:
 	.text       start:0x8017E1A0 end:0x8017EC94
