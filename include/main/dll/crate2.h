@@ -3,8 +3,7 @@
 
 #include "ghidra_import.h"
 
-void dfpstatue1_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void dfpstatue1_updateState(int obj);
 
 extern char sDfperchwitchInitNoLongerSupported[];
 
@@ -22,7 +21,7 @@ int dfpstatue1_func08(void);
 void dfpstatue1_free(void);
 void dfpstatue1_render(void);
 void dfpstatue1_hitDetect(void);
-void dfpstatue1_update(void);
+void dfpstatue1_update(int obj);
 void dfpstatue1_init(undefined2 *obj, int mapData);
 void dfpstatue1_release(void);
 void dfpstatue1_initialise(void);
