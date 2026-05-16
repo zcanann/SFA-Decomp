@@ -7,7 +7,6 @@ extern undefined4 Sfx_PlayFromObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 objGetAnimStateField35c_2();
 extern undefined4 FUN_8028683c();
-extern undefined4 FUN_80286888();
 extern undefined4 Obj_GetPlayerObject();
 
 extern ObjAnimEventList gSClanternObjAnimEvents;
@@ -30,44 +29,62 @@ extern f32 lbl_803E5498;
  */
 #pragma scheduling off
 #pragma peephole off
-void SHthorntail_init(f32 moveStepScale, int obj)
+undefined4 SHthorntail_init(f32 moveStepScale, int obj)
 {
   undefined4 advanceResult;
-  u8 *event;
+  s8 *event;
+  s16 *objYaw;
   int pointIndex;
   int i;
-  float local_28;
-  float local_24;
-  float local_20;
+  float posZ;
+  float posY;
+  float posX;
+
   pointIndex = 0;
+  objYaw = (s16 *)obj;
   gSClanternObjAnimEvents.triggerCount = 0;
   gSClanternObjAnimEvents.rootCurveValid = 0;
   advanceResult = ObjAnim_AdvanceCurrentMove(moveStepScale,timeDelta,obj,&gSClanternObjAnimEvents);
   if (gSClanternObjAnimEvents.rootCurveValid != 0) {
-    *(short *)obj = *(short *)obj + gSClanternObjAnimEvents.rootPitch;
+    *objYaw += gSClanternObjAnimEvents.rootPitch;
   }
-  event = gSClanternObjAnimEvents.triggeredIds;
-  for (i = 0; i < gSClanternObjAnimEvents.triggerCount; i++) {
-    switch(*event) {
+  i = 0;
+  event = (s8 *)&gSClanternObjAnimEvents;
+  while (i < (s8)gSClanternObjAnimEvents.triggerCount) {
+    switch(event[0x13]) {
     case 1:
-    case 3:
       pointIndex = 1;
       break;
     case 2:
+      pointIndex = 2;
+      break;
+    case 3:
+      pointIndex = 1;
+      break;
     case 4:
       pointIndex = 2;
       break;
     case 9:
       Sfx_PlayFromObject(obj,0x2f4);
+      break;
+    case 0:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    default:
+      break;
     }
     event++;
+    i++;
   }
-  if ((pointIndex != 0) &&
-      (ObjPath_GetPointWorldPosition(obj,pointIndex - 1,&local_28,&local_24,&local_20,0),
-       ((*(short *)(obj + 0xa0) != 0x1b || (lbl_803E5498 <= *(float *)(obj + 0x98)))))) {
-    Sfx_PlayAtPositionFromObject((double)local_28,(double)local_24,(double)local_20,obj,0x415);
+  if (pointIndex != 0) {
+    ObjPath_GetPointWorldPosition(obj,pointIndex - 1,&posX,&posY,&posZ,0);
+    if (!((*(s16 *)(obj + 0xa0) == 0x1b) && (*(f32 *)(obj + 0x98) < lbl_803E5498))) {
+      Sfx_PlayAtPositionFromObject((double)posX,(double)posY,(double)posZ,obj,0x415);
+    }
   }
-  FUN_80286888(advanceResult);
+  return advanceResult;
 }
 #pragma peephole reset
 #pragma scheduling reset
