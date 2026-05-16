@@ -297,14 +297,17 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async)
 {
   ObjHitReactMoveEntry *moveEntry;
-  ObjHitReactMoveEntry *moveEntryTable;
+  int entryShortOffset;
   s16 firstEntryOffset;
+  ObjHitReactMoveEntry *moveEntryTable;
 
   moveEntryTable = ((ObjAnimDef *)((ObjAnimComponent *)objAnim)->modelInstance)->hitReactMoveTable;
   hitState->activeEntryCount = 0;
   if (moveEntryTable != (ObjHitReactMoveEntry *)0x0) {
-    for (moveEntry = moveEntryTable; moveEntry->moveId != -1; moveEntry++) {
+    entryShortOffset = 0;
+    for (moveEntry = moveEntryTable; moveEntry->moveId != -1;) {
       if (moveId == moveEntry->moveId) {
+        moveEntry = (ObjHitReactMoveEntry *)((s16 *)moveEntryTable + entryShortOffset);
         firstEntryOffset = moveEntry->firstEntryIndex;
         hitState->activeEntryCount = moveEntry->entryCount;
         if (hitState->activeEntryCount > hitState->entryCapacity) {
@@ -319,6 +322,8 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
                                (int)firstEntryOffset,(int)hitState->activeEntryCount);
         return;
       }
+      moveEntry++;
+      entryShortOffset += sizeof(ObjHitReactMoveEntry) / sizeof(s16);
     }
   }
   return;
