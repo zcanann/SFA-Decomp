@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 
-extern int fn_8026DE58(u8 i);
-extern void fn_8026E070(int slot, int item);
+extern int synthGetNextChannelEvent(u8 i);
+extern void synthInsertChannelEvent(int slot, int item);
 
 extern int gSynthCurrentVoice;
 
@@ -24,17 +24,17 @@ void fn_8026E864(void)
     u32 x;
     if (*(u32 *)(gSynthCurrentVoice + 0x14e4) == 0) {
         for (i = 0; i < 0x40; i++) {
-            x = fn_8026DE58((u8)i);
+            x = synthGetNextChannelEvent((u8)i);
             if (x != 0) {
-                fn_8026E070(gSynthCurrentVoice + 0x14e8, x);
+                synthInsertChannelEvent(gSynthCurrentVoice + 0x14e8, x);
             }
         }
     } else {
         for (i = 0; i < 0x40; i++) {
-            x = fn_8026DE58((u8)i);
+            x = synthGetNextChannelEvent((u8)i);
             if (x != 0) {
                 u8 *table = *(u8 **)(gSynthCurrentVoice + 0x14e4);
-                fn_8026E070(gSynthCurrentVoice + table[i] * 0x38 + 0x14e8, x);
+                synthInsertChannelEvent(gSynthCurrentVoice + table[i] * 0x38 + 0x14e8, x);
             }
         }
     }

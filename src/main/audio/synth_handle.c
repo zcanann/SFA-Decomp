@@ -316,12 +316,11 @@ resolved_reuse:
 }
 
 /*
- * fn_8026DDB4: parse a 1-or-2-byte unsigned event tag (out into u16* at r4)
- * followed by a 1-or-2-byte signed value (sign-extended low 7 / 14 bits, out
- * into s16* at r5). Returns the advanced read pointer, or NULL when the tag
- * is the sentinel 0x80 0x00.
+ * Parse a 1-or-2-byte unsigned event tag followed by a 1-or-2-byte signed
+ * value. Returns the advanced read pointer, or NULL when the tag is the
+ * sentinel 0x80 0x00.
  */
-u8* fn_8026DDB4(u8* p, u16* tagOut, s16* valueOut) {
+u8* synthReadVariablePair(u8* p, u16* tagOut, s16* valueOut) {
     u8 b1;
     u8 b2;
 

@@ -1,8 +1,9 @@
 #ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8026DFE4_H_
 #define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8026DFE4_H_
 
-#include "ghidra_import.h"
+#include "src/main/audio/synth_internal.h"
 
-void FUN_8026de58(uint *param_1,uint *param_2,char param_3);
+SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
+void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8026DFE4_H_ */
