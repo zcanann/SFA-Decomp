@@ -40,15 +40,33 @@ void fn_8026E864(void)
     }
 }
 
-/*
- * fn_8026E90C - voice-loop to add one voice (~196 instructions). Stubbed.
- */
-#pragma dont_inline on
 void fn_8026E90C(u8 voice)
 {
-    (void)voice;
+    u32 group;
+    u32 queueOffset;
+    u32 i;
+    u32 x;
+
+    if (*(u32 *)(gSynthCurrentVoice + 0x14e4) == 0) {
+        for (i = 0; i < 0x40; i++) {
+            x = synthGetNextChannelEvent((u8)i);
+            if (x != 0) {
+                synthInsertChannelEvent(gSynthCurrentVoice + 0x14e8, x);
+            }
+        }
+    } else {
+        group = voice & 0xff;
+        queueOffset = group * 0x38;
+        for (i = 0; i < 0x40; i++) {
+            if (group == *(u8 *)(*(u32 *)(gSynthCurrentVoice + 0x14e4) + i)) {
+                x = synthGetNextChannelEvent((u8)i);
+                if (x != 0) {
+                    synthInsertChannelEvent(gSynthCurrentVoice + queueOffset + 0x14e8, x);
+                }
+            }
+        }
+    }
 }
-#pragma dont_inline reset
 
 /*
  * fn_8026E9D0 - large 628-instr voice update with FP math. Stubbed.
