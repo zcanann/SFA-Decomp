@@ -920,15 +920,15 @@ void macSampleEndNotify(int state)
  */
 u32 macSetExternalKeyoff(int state)
 {
-    int resumed;
+    u32 resumed;
     u32 result;
 
     result = *(u32 *)(state + 0x114);
     *(u32 *)(state + 0x118) |= 8;
-    if (*(int *)(state + 0x34) != 0) {
+    if (*(u32 *)(state + 0x34) != 0) {
         result = 0;
         if ((*(u32 *)(state + 0x114) & 0x100) == 0) {
-            if (*(s8 *)(state + 0x68) == 0 || *(int *)(state + 0x50) == 0) {
+            if (*(u8 *)(state + 0x68) == 0 || *(u32 *)(state + 0x50) == 0) {
                 resumed = 0;
             } else {
                 *(int *)(state + 0x38) = *(int *)(state + 0x5c);
@@ -954,13 +954,15 @@ u32 macSetExternalKeyoff(int state)
 /*
  * Clear or defer the release request flag.
  */
-void macSetPedalState(int state, int defer)
+void macSetPedalState(int state, u32 defer)
 {
-    int resumed;
+    u32 resumed;
 
-    if (defer == 0) {
-        if (*(int *)(state + 0x34) != 0 && ((*(u32 *)(state + 0x114) & 0x400) != 0)) {
-            if (*(s8 *)(state + 0x68) == 0 || *(int *)(state + 0x50) == 0) {
+    if (defer != 0) {
+        *(u32 *)(state + 0x114) |= 0x100;
+    } else {
+        if (*(u32 *)(state + 0x34) != 0 && ((*(u32 *)(state + 0x114) & 0x400) != 0)) {
+            if (*(u8 *)(state + 0x68) == 0 || *(u32 *)(state + 0x50) == 0) {
                 resumed = 0;
             } else {
                 *(int *)(state + 0x38) = *(int *)(state + 0x5c);
@@ -975,8 +977,6 @@ void macSetPedalState(int state, int defer)
         }
         *(u32 *)(state + 0x118) = *(u32 *)(state + 0x118);
         *(u32 *)(state + 0x114) &= 0xfffffaff;
-    } else {
-        *(u32 *)(state + 0x114) |= 0x100;
     }
 }
 
