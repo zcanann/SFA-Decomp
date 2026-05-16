@@ -1437,6 +1437,20 @@ int portalspelldoor_func08(void) { return 0x0; }
 int LanternFireFly_getExtraSize(void) { return 0x74; }
 int LanternFireFly_func08(void) { return 0x0; }
 
+u32 gDummy108ObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)Dummy108_initialise,
+    (u32)Dummy108_release,
+    0,
+    (u32)Dummy108_init,
+    (u32)Dummy108_update,
+    (u32)Dummy108_hitDetect,
+    (u32)Dummy108_render,
+    (u32)Dummy108_free,
+    (u32)Dummy108_func08_ret_0,
+    (u32)Dummy108_getExtraSize,
+};
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3A88;
 extern void objRenderFn_8003b8f4(f32);
