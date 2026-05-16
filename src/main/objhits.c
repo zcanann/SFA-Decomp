@@ -1104,8 +1104,8 @@ float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRa
       axisDir[2] = axisDir[2] * axial;
       Vec3_ScaleAdd(axisDir,normal,radiusOffset,blended);
       Vec3_Normalize(blended);
+      axisDir[0] = axisDir[0] * (gObjHitsScalarOne / axial);
       invAxial = gObjHitsScalarOne / axial;
-      axisDir[0] = axisDir[0] * invAxial;
       axisDir[1] = axisDir[1] * invAxial;
       axisDir[2] = axisDir[2] * invAxial;
       Vec3_Cross(normal,axisDir,cross);
