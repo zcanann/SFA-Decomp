@@ -505,11 +505,13 @@ int dataInsertFX(s16 fxId, u8 *samples, u32 count)
     u32 used;
     u32 batchCount;
     u8 *tableBase;
+    DataFXGroupRef *groups;
 
     tableBase = dataSmpSDirTable;
+    groups = (DataFXGroupRef *)(tableBase + 0xa200);
     i = 0;
     used = dataFXGroupNum;
-    while (((int)i < (int)used) && (fxId != *(s16 *)(tableBase + 0xa200 + i * 8))) {
+    while (((int)i < (int)used) && (fxId != groups[i].groupId)) {
         i++;
     }
     if ((i != used) || (used > 0x7f)) {
@@ -519,9 +521,9 @@ int dataInsertFX(s16 fxId, u8 *samples, u32 count)
     sndBegin();
     used = dataFXGroupNum;
     i = count & 0xffff;
-    *(s16 *)(tableBase + 0xa200 + used * 8) = fxId;
-    *(s16 *)(tableBase + 0xa202 + used * 8) = count;
-    *(u8 **)(tableBase + 0xa204 + used * 8) = samples;
+    groups[used].groupId = fxId;
+    groups[used].count = count;
+    groups[used].samples = samples;
     if (i != 0) {
         batchCount = i >> 3;
         if (batchCount != 0) {
@@ -829,16 +831,16 @@ extern void *dataGetMacro_result;
 
 void *dataGetMacro(u32 key)
 {
-    u16 *bucketTable;
+    DataMacroBucket *bucketTable;
     void *result;
 
-    bucketTable = (u16 *)dataMacroBucketTable;
+    bucketTable = (DataMacroBucket *)dataMacroBucketTable;
     dataGetMacro_bucket = (key >> 6) & 0x3ff;
-    if (bucketTable[dataGetMacro_bucket * 2] != 0) {
-        dataGetMacro_main = bucketTable[dataGetMacro_bucket * 2 + 1];
+    if (bucketTable[dataGetMacro_bucket].count != 0) {
+        dataGetMacro_main = bucketTable[dataGetMacro_bucket].startIndex;
         *(u16 *)(dataGetMacro_key + 4) = key;
         result = sndBSearch(dataGetMacro_key, dataMacroTable + dataGetMacro_main * 8,
-                            bucketTable[dataGetMacro_bucket * 2], 8, maccmp);
+                            bucketTable[dataGetMacro_bucket].count, 8, maccmp);
         dataGetMacro_result = result;
         if (result != 0) {
             return ((DataRefEntry *)dataGetMacro_result)->data;
