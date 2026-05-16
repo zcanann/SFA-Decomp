@@ -223,3 +223,26 @@ void skeetlawall_initialise(void) {}
 /* 8b "li r3, N; blr" returners. */
 int skeetlawall_getExtraSize(void) { return 0x7; }
 int skeetlawall_func08(void) { return 0x0; }
+
+extern void skeetlawall_setScale(void);
+extern void skeetlawall_render(void);
+extern void skeetlawall_init(void);
+
+u32 gSkeetlaWallObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x000A0000,
+    (u32)skeetlawall_initialise,
+    (u32)skeetlawall_release,
+    0,
+    (u32)skeetlawall_init,
+    (u32)skeetlawall_update,
+    (u32)skeetlawall_hitDetect,
+    (u32)skeetlawall_render,
+    (u32)skeetlawall_free,
+    (u32)skeetlawall_func08,
+    (u32)skeetlawall_getExtraSize,
+    (u32)skeetlawall_setScale,
+    0,
+};
