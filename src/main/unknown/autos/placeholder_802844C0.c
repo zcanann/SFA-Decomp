@@ -5,6 +5,13 @@
 extern void aramUploadData(void *src, void *dst, u32 size, int mode, int callback,
                            int callbackArg);
 
+typedef struct AramStreamBufferEntry {
+    struct AramStreamBufferEntry *next;
+    u32 address;
+    u32 position;
+    u32 state;
+} AramStreamBufferEntry;
+
 extern u8 lbl_803D3F60[];
 extern u32 aramTop;
 extern u32 aramWrite;
@@ -13,15 +20,7 @@ extern void *(*aramChunkCallback)(void *src, u32 chunk);
 extern u32 aramChunkSize;
 extern u32 aramQueueWrite;
 extern u32 aramQueueValid;
-extern void *aramStreamFreeList;
-
-typedef struct AramStreamBufferEntry {
-    u32 next;
-    u32 address;
-    u32 position;
-    u32 state;
-} AramStreamBufferEntry;
-
+extern AramStreamBufferEntry *aramStreamFreeList;
 extern AramStreamBufferEntry lbl_803D4468[];
 
 /*
@@ -76,9 +75,9 @@ void aramRemoveData(void *unused, u32 size)
 }
 
 /*
- * Initialize the 64-element doubly-linked free list at lbl_803D3F60.
- * Layout: 0x80-byte stride, with each entry's "next" at +0 and the
- * unrolled body sets up 8 entries per outer iteration.
+ * Initialize the 64-element stream-buffer free list at lbl_803D4468.
+ * The allocator uses the first word of each 0x10-byte entry as the next
+ * pointer, and the setup loop links eight entries per iteration.
  *
  * EN v1.1 Address: 0x80284570
  * EN v1.1 Size: 196b
@@ -86,33 +85,35 @@ void aramRemoveData(void *unused, u32 size)
 void aramInitStreamBuffers(void)
 {
     u8 *base = lbl_803D3F60;
-    u8 *node;
+    AramStreamBufferEntry *buffers = (AramStreamBufferEntry *)(base + 0x508);
+    AramStreamBufferEntry *node;
     int i;
 
     aramQueueWrite = 0;
     aramQueueValid = 0;
-    aramStreamFreeList = base + 0x508;
+    aramStreamFreeList = buffers;
 
-    node = base + 0x518;
+    node = &buffers[1];
     for (i = 1; i < 57; i += 8) {
-        *(u8 **)(node - 0x10) = node;
-        *(u8 **)(node + 0x00) = node + 0x10;
-        *(u8 **)(node + 0x10) = node + 0x20;
-        *(u8 **)(node + 0x20) = node + 0x30;
-        *(u8 **)(node + 0x30) = node + 0x40;
-        *(u8 **)(node + 0x40) = node + 0x50;
-        *(u8 **)(node + 0x50) = node + 0x60;
-        *(u8 **)(node + 0x60) = node + 0x70;
-        node += 0x80;
+        node[-1].next = node;
+        node[0].next = node + 1;
+        node[1].next = node + 2;
+        node[2].next = node + 3;
+        node[3].next = node + 4;
+        node[4].next = node + 5;
+        node[5].next = node + 6;
+        node[6].next = node + 7;
+        node += 8;
     }
+
 tail_loop:
     if (i < 64) {
-        *(u8 **)(node - 0x10) = node;
-        node += 0x10;
+        node[-1].next = node;
+        node++;
         i++;
         goto tail_loop;
     }
-    *(u32 *)(base + i * 0x10 + 0x4f8) = 0;
+    buffers[i - 1].next = NULL;
     aramStream = aramTop;
 }
 
@@ -121,8 +122,8 @@ void fn_80284634(void)
 }
 
 /*
- * Look up entry at lbl_803D4468[idx*16]; if outPos != NULL, store
- * the entry's offset-8 word; return the entry's offset-4 word.
+ * Look up stream-buffer metadata; if outPos != NULL, store the current
+ * position, and return the ARAM address.
  *
  * EN v1.1 Address: 0x80284638
  * EN v1.1 Size: 56b
