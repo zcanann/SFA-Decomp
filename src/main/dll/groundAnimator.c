@@ -459,6 +459,20 @@ void wm_column_initialise(void)
 {
 }
 
+u32 gWM_ColumnObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)wm_column_initialise,
+    (u32)wm_column_release,
+    0,
+    (u32)wm_column_init,
+    (u32)wm_column_update,
+    (u32)wm_column_hitDetect,
+    (u32)wm_column_render,
+    (u32)wm_column_free,
+    (u32)wm_column_func08,
+    (u32)wm_column_getExtraSize,
+};
+
 /*
  * --INFO--
  *
