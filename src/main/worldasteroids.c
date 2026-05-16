@@ -175,3 +175,20 @@ void worldasteroids_initialise(void)
 {
   return;
 }
+
+u32 gWorldAsteroidsObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)worldasteroids_initialise,
+    (u32)worldasteroids_release,
+    0,
+    (u32)worldasteroids_init,
+    (u32)worldasteroids_update,
+    (u32)worldasteroids_hitDetect,
+    (u32)worldasteroids_render,
+    (u32)worldasteroids_free,
+    (u32)worldasteroids_func08,
+    (u32)worldasteroids_getExtraSize,
+};
