@@ -1,4 +1,6 @@
 #include "ghidra_import.h"
+#include "main/dll/door.h"
+#include "main/dll/fruit.h"
 #include "main/dll/zBomb.h"
 
 extern undefined4 FUN_8000a380();
@@ -200,3 +202,20 @@ void dfptargetblock_release(void)
 void dfptargetblock_initialise(void)
 {
 }
+
+s32 lbl_80329B78[] = {0, 0, 0};
+
+u32 gDfptargetblockObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)dfptargetblock_initialise,
+    (u32)dfptargetblock_release,
+    0,
+    (u32)dfptargetblock_init,
+    (u32)dfptargetblock_update,
+    (u32)dfptargetblock_hitDetect,
+    (u32)dfptargetblock_render,
+    (u32)dfptargetblock_free,
+    (u32)dfptargetblock_func08,
+    (u32)dfptargetblock_getExtraSize,
+    0,
+};
