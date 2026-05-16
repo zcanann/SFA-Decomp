@@ -509,8 +509,10 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
     return;
   }
   if (actionNo != CAMCONTROL_ACTION_NO_NONE) {
-    camAction = (CamcontrolTriggeredAction *)0x0;
-    if (actionNo != CAMCONTROL_ACTION_NO_NONE) {
+    if (actionNo == CAMCONTROL_ACTION_NO_NONE) {
+      camAction = (CamcontrolTriggeredAction *)0x0;
+    }
+    else {
       camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,CAMCONTROL_ACTION_HEAP,0);
       if (camAction != (CamcontrolTriggeredAction *)0x0) {
         actionOffset = (actionNo - 1) * CAMCONTROL_ACTION_RECORD_SIZE;
