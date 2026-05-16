@@ -610,3 +610,47 @@ int swarmbaddie_getExtraSize(void) { return 0x24; }
 int swarmbaddie_func08(void) { return 0x9; }
 int wispbaddie_getExtraSize(void) { return 0x2c; }
 int wispbaddie_func08(void) { return 0x9; }
+
+extern void hagabon_free(void);
+extern void hagabon_render(void);
+extern void hagabon_hitDetect(void);
+extern void hagabon_update(void);
+extern void hagabon_init(void);
+extern void swarmbaddie_free(void);
+extern void swarmbaddie_render(void);
+extern void swarmbaddie_update(void);
+extern void swarmbaddie_init(void);
+
+u32 gHagabonObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)hagabon_initialise,
+    (u32)hagabon_release,
+    0,
+    (u32)hagabon_init,
+    (u32)hagabon_update,
+    (u32)hagabon_hitDetect,
+    (u32)hagabon_render,
+    (u32)hagabon_free,
+    (u32)hagabon_func08,
+    (u32)hagabon_getExtraSize,
+};
+
+u32 gSwarmBaddieObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)swarmbaddie_initialise,
+    (u32)swarmbaddie_release,
+    0,
+    (u32)swarmbaddie_init,
+    (u32)swarmbaddie_update,
+    (u32)swarmbaddie_hitDetect,
+    (u32)swarmbaddie_render,
+    (u32)swarmbaddie_free,
+    (u32)swarmbaddie_func08,
+    (u32)swarmbaddie_getExtraSize,
+};
