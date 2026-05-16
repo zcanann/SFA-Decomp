@@ -1,5 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/dll_39.h"
+#include "main/dll/FRONT/dll_44.h"
+#include "main/dll/FRONT/picmenu.h"
 
 extern undefined4 FUN_80006b1c();
 extern undefined4 FUN_80006b84();
@@ -18,12 +20,6 @@ extern undefined4 fn_801181F8();
 extern undefined4 fn_8011881C();
 extern undefined4 fn_80118900();
 extern bool prepareAttractMode();
-extern undefined8 fn_80118C88();
-extern undefined4 fn_80118EAC();
-extern undefined4 fn_80118FAC();
-extern int movieLoad();
-extern undefined4 audioFn_801192ec();
-extern int attractModeAudioFn_80119338();
 extern undefined8 FUN_8011d9b0();
 extern int FUN_80241de8();
 extern undefined4 FUN_802420b0();

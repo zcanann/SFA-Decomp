@@ -88,8 +88,8 @@ extern AttractMoviePlayer lbl_803A5D60;
  * EN v1.0 Address: 0x80118C88
  * EN v1.0 Size: 548b
  */
-int fn_80118C88(int movieOrReadBuffer, int yTextureBuffer, int uTextureBuffer,
-                int vTextureBuffer, int audioBuffer, int thpWorkBuffer)
+int fn_80118C88(void *movieOrReadBuffer, void *yTextureBuffer, void *uTextureBuffer,
+                void *vTextureBuffer, void *audioBuffer, void *thpWorkBuffer)
 {
     u8 *base;
     u8 *base2;
@@ -103,11 +103,11 @@ int fn_80118C88(int movieOrReadBuffer, int yTextureBuffer, int uTextureBuffer,
     if (*(u8 *)(base + 0x9c) != 0) return 0;
 
     if (*(int *)(base + 0xa8) != 0) {
-        *(int *)(base + 0xac) = movieOrReadBuffer;
-        curr = movieOrReadBuffer + *(int *)(base + 0x58);
+        *(void **)(base + 0xac) = movieOrReadBuffer;
+        curr = (int)movieOrReadBuffer + *(int *)(base + 0x58);
     } else {
-        *(int *)(base + 0xf4) = movieOrReadBuffer;
-        *(int *)(base + 0xfc) = movieOrReadBuffer + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
+        *(void **)(base + 0xf4) = movieOrReadBuffer;
+        *(int *)(base + 0xfc) = (int)movieOrReadBuffer + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
         *(int *)(base + 0x104) = *(int *)(base + 0xfc) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
         *(int *)(base + 0x10c) = *(int *)(base + 0x104) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
         *(int *)(base + 0x114) = *(int *)(base + 0x10c) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
@@ -124,11 +124,11 @@ int fn_80118C88(int movieOrReadBuffer, int yTextureBuffer, int uTextureBuffer,
     align2 = ((u32)(*(int *)(base2 + 0x80) * *(int *)(base2 + 0x84)) >> 2) + 0x1f & ~0x1f;
     i = 0;
     do {
-        *(int *)(base2 + 0x144) = yTextureBuffer;
+        *(void **)(base2 + 0x144) = yTextureBuffer;
         DCInvalidateRange((void *)curr, align1);
-        *(int *)(base2 + 0x148) = uTextureBuffer;
+        *(void **)(base2 + 0x148) = uTextureBuffer;
         DCInvalidateRange((void *)curr, align2);
-        *(int *)(base2 + 0x14c) = vTextureBuffer;
+        *(void **)(base2 + 0x14c) = vTextureBuffer;
         DCInvalidateRange((void *)curr, align2);
         curr += align2;
         base2 += 0x10;
@@ -137,12 +137,12 @@ int fn_80118C88(int movieOrReadBuffer, int yTextureBuffer, int uTextureBuffer,
 
     base = (u8 *)&lbl_803A5D60;
     if (*(u8 *)(base + 0x9f) != 0) {
-        *(int *)(base + 0x174) = audioBuffer;
-        *(int *)(base + 0x178) = audioBuffer;
+        *(void **)(base + 0x174) = audioBuffer;
+        *(void **)(base + 0x178) = audioBuffer;
         *(int *)(base + 0x17c) = 0;
         {
             int sz = (*(int *)(base + 0x48) * 4 + 0x1f) & ~0x1f;
-            int p2 = audioBuffer + sz;
+            int p2 = (int)audioBuffer + sz;
             *(int *)(base + 0x184) = p2;
             *(int *)(base + 0x188) = p2;
             *(int *)(base + 0x18c) = 0;
@@ -153,7 +153,7 @@ int fn_80118C88(int movieOrReadBuffer, int yTextureBuffer, int uTextureBuffer,
         }
     }
 
-    *(int *)((u8 *)&lbl_803A5D60 + 0x94) = thpWorkBuffer;
+    *(void **)((u8 *)&lbl_803A5D60 + 0x94) = thpWorkBuffer;
     return 1;
 }
 
@@ -164,8 +164,8 @@ int fn_80118C88(int movieOrReadBuffer, int yTextureBuffer, int uTextureBuffer,
  * EN v1.0 Address: 0x80118EAC
  * EN v1.0 Size: 256b
  */
-void fn_80118EAC(int *movieOrReadBufferSize, int *yTextureBufferSize,
-                 int *uTextureBufferSize, int *vTextureBufferSize, int *audioBufferSize,
+void fn_80118EAC(uint *movieOrReadBufferSize, int *yTextureBufferSize,
+                 int *uTextureBufferSize, int *vTextureBufferSize, uint *audioBufferSize,
                  int *thpWorkBufferSize)
 {
     AttractMoviePlayer *player;
