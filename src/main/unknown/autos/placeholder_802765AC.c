@@ -803,19 +803,24 @@ void mcmdSetKeyGroup(int state, u32 *args)
     u32 command;
     u32 doKill;
     u32 i;
+    u32 zero;
+    int synthInfo;
     int offset;
     int voice;
 
+    zero = 0;
     offset = 0;
-    *(u8 *)(state + 0x104) = 0;
+    *(u8 *)(state + 0x104) = (u8)zero;
     command = *args;
     group = (command >> 8) & 0xff;
     doKill = ((command >> 0x10) & 0xff) != 0;
     if (group != 0) {
-        for (i = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++) {
+        synthInfo = (int)lbl_803BD150;
+        for (i = 0; i < *(u8 *)(synthInfo + 0x210); i++) {
             voice = (int)(synthVoice + offset);
-            if (*(int *)(voice + 0x34) != 0) {
-                if (((*(u32 *)(voice + 0x118) & 2) == 0) &&
+            if (*(u32 *)(voice + 0x34) != 0) {
+                if ((((*(u32 *)(voice + 0x114) & zero) | (*(u32 *)(voice + 0x118) & 2)) ==
+                     zero) &&
                     group == *(u8 *)(voice + 0x104)) {
                     if (doKill == 0) {
                         macSetExternalKeyoff(voice);
