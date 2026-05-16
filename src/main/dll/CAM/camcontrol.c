@@ -373,29 +373,31 @@ int Camera_getOverrideTarget(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void camcontrol_getRelativePosition(f32 param_1,int param_2,float *param_3,float *param_4,
-                                    float *param_5,float *param_6,int param_7)
+void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
+                                    float *outZ,float *outDistanceXZ,int useWorldPosition)
 {
-  int iVar1;
+  int focusObj;
+  f32 distance;
 
-  iVar1 = *(int *)((char *)pCamera + 0xa4);
-  if (param_7 != 0) {
-    *param_3 = *(float *)(param_2 + 0xc) - *(float *)(iVar1 + 0xc);
-    *param_4 = *(float *)(param_2 + 0x10) - (*(float *)(iVar1 + 0x10) + param_1);
-    *param_5 = *(float *)(param_2 + 0x14) - *(float *)(iVar1 + 0x14);
+  focusObj = *(int *)((char *)pCamera + 0xa4);
+  if (useWorldPosition != 0) {
+    *outX = *(float *)(targetObj + 0xc) - *(float *)(focusObj + 0xc);
+    *outY = *(float *)(targetObj + 0x10) - (*(float *)(focusObj + 0x10) + heightOffset);
+    *outZ = *(float *)(targetObj + 0x14) - *(float *)(focusObj + 0x14);
   }
   else {
-    *param_3 = *(float *)(param_2 + 0x18) - *(float *)(iVar1 + 0x18);
-    *param_4 = *(float *)(param_2 + 0x1c) - (*(float *)(iVar1 + 0x1c) + param_1);
-    *param_5 = *(float *)(param_2 + 0x20) - *(float *)(iVar1 + 0x20);
+    *outX = *(float *)(targetObj + 0x18) - *(float *)(focusObj + 0x18);
+    *outY = *(float *)(targetObj + 0x1c) - (*(float *)(focusObj + 0x1c) + heightOffset);
+    *outZ = *(float *)(targetObj + 0x20) - *(float *)(focusObj + 0x20);
   }
-  if (param_6 != (float *)0x0) {
-    *param_6 = *param_3 * *param_3 + *param_5 * *param_5;
-    if (*param_6 > lbl_803E1630) {
-      *param_6 = sqrtf(*param_6);
+  if (outDistanceXZ != (float *)0x0) {
+    *outDistanceXZ = *outX * *outX + *outZ * *outZ;
+    if (*outDistanceXZ > lbl_803E1630) {
+      *outDistanceXZ = sqrtf(*outDistanceXZ);
     }
-    if (*param_6 < lbl_803E1680) {
-      *param_6 = lbl_803E1680;
+    distance = *outDistanceXZ;
+    if (distance < lbl_803E1680) {
+      *outDistanceXZ = lbl_803E1680;
     }
   }
   return;
