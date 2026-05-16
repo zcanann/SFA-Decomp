@@ -21,16 +21,16 @@ typedef struct FrontendSaveSlot {
     u8 pad22[0x24 - 0x22];
 } FrontendSaveSlot;
 
-extern u8 lbl_803DD6BC;
-extern u8 lbl_803DD6BD;
-extern u8 lbl_803DD6BE;
-extern s8 lbl_803DD6A4;
-extern u8 lbl_803DD6A5;
-extern FrontendSaveSlot *lbl_803DD6A8;
-extern FrontendSaveSlot *lbl_803DD6B0;
+extern u8 saveFileSelect_debugCheatProgress;
+extern u8 saveFileSelect_saveCheatProgress;
+extern u8 saveFileSelect_cheatInputTimer;
+extern s8 saveFileSelect_currentSlotIndex;
+extern u8 saveFileSelect_saveDirty;
+extern FrontendSaveSlot *saveFileSelect_saveSlotsBase;
+extern FrontendSaveSlot *saveFileSelect_saveSlots;
 extern u8 enableDebugText;
-extern u16 lbl_8031A814[6];
-extern u16 lbl_8031A820[6];
+extern u16 saveFileSelect_debugCheatSequence[6];
+extern u16 saveFileSelect_slotCheatSequence[6];
 extern void *lbl_803A8680[4];
 extern f32 lbl_803E1D58;
 extern f32 lbl_803E1D5C;
@@ -58,35 +58,35 @@ void saveFileSelect_checkCheatCodes(void)
     u32 low;
     u32 midLow;
 
-    if (lbl_803DD6BC != 0 || lbl_803DD6BD != 0) {
-        int inc = lbl_803DD6BE + 1;
-        lbl_803DD6BE = inc;
+    if (saveFileSelect_debugCheatProgress != 0 || saveFileSelect_saveCheatProgress != 0) {
+        int inc = saveFileSelect_cheatInputTimer + 1;
+        saveFileSelect_cheatInputTimer = inc;
         if ((u8)inc > 0xF) {
-            lbl_803DD6BC = 0;
-            lbl_803DD6BD = 0;
-            lbl_803DD6BE = 0;
+            saveFileSelect_debugCheatProgress = 0;
+            saveFileSelect_saveCheatProgress = 0;
+            saveFileSelect_cheatInputTimer = 0;
         }
     }
     held = getButtonsHeld(0);
     if ((held & 0x10) == 0) return;
 
-    if (lbl_803DD6BD == 0) {
+    if (saveFileSelect_saveCheatProgress == 0) {
         pressed = (u16)getButtonsJustPressed(0);
         hi = (int)(pressed & 0xF000) >> 8;
         midHi = (pressed & 0xF00) << 4;
         low = (pressed & 0xF) << 8;
         midLow = (int)(pressed & 0xF0) >> 4;
         nibbles = hi | (midHi | (low | midLow));
-        if ((int)(nibbles & lbl_8031A814[lbl_803DD6BC]) != 0) {
-            lbl_803DD6BC++;
-            lbl_803DD6BE = 0;
+        if ((int)(nibbles & saveFileSelect_debugCheatSequence[saveFileSelect_debugCheatProgress]) != 0) {
+            saveFileSelect_debugCheatProgress++;
+            saveFileSelect_cheatInputTimer = 0;
         }
-        if (lbl_803DD6BC == 5) {
+        if (saveFileSelect_debugCheatProgress == 5) {
             enableDebugText = 1;
             Sfx_PlayFromObject(0, 0x58);
         }
     }
-    if (lbl_803DD6BC != 0) return;
+    if (saveFileSelect_debugCheatProgress != 0) return;
 
     {
         pressed = (u16)getButtonsJustPressed(0);
@@ -95,13 +95,13 @@ void saveFileSelect_checkCheatCodes(void)
         low = (pressed & 0xF) << 8;
         midLow = (int)(pressed & 0xF0) >> 4;
         nibbles = hi | (midHi | (low | midLow));
-        if ((int)(nibbles & lbl_8031A820[lbl_803DD6BD]) != 0) {
-            lbl_803DD6BD++;
-            lbl_803DD6BE = 0;
+        if ((int)(nibbles & saveFileSelect_slotCheatSequence[saveFileSelect_saveCheatProgress]) != 0) {
+            saveFileSelect_saveCheatProgress++;
+            saveFileSelect_cheatInputTimer = 0;
         }
-        if (lbl_803DD6BD == 5) {
-            lbl_803DD6B0[(int)lbl_803DD6A4].cheatFlag = 5;
-            lbl_803DD6A5 = 1;
+        if (saveFileSelect_saveCheatProgress == 5) {
+            saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].cheatFlag = 5;
+            saveFileSelect_saveDirty = 1;
             Sfx_PlayFromObject(0, 0x58);
         }
     }
@@ -126,15 +126,15 @@ void saveSelect_drawText(int param_1, int param_2)
     drawTexture(lbl_803A8680[2], param_2, lbl_803E1D60, lbl_803E1D5C, 0x100);
     gameTextSetColor(0xff, 0xff, 0xff, param_2);
 
-    lbl_803DD6B0 = lbl_803DD6A8;
-    gameTextShowStr(&lbl_803DD6B0[(int)lbl_803DD6A4], 0x41, 0, 0);
+    saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
+    gameTextShowStr(&saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex], 0x41, 0, 0);
 
     sprintf(buf, sFrontendCompletionPercentFormat,
-            (u32)lbl_803DD6B0[(int)lbl_803DD6A4].completionPercent);
+            (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].completionPercent);
     gameTextShowStr(buf, 0x42, 0, 0);
 
     {
-        u32 secs = lbl_803DD6B0[(int)lbl_803DD6A4].playTimeSeconds;
+        u32 secs = saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].playTimeSeconds;
         u32 mins = secs / 0xe10;
         int rem = secs - mins * 0xe10;
         int m_in_h = rem / 0x3c;
@@ -143,10 +143,10 @@ void saveSelect_drawText(int param_1, int param_2)
         gameTextShowStr(buf, 0x43, 0, 0);
     }
 
-    sprintf(buf, sFrontendSingleDigitFormat, (u32)lbl_803DD6B0[(int)lbl_803DD6A4].lifeCount);
+    sprintf(buf, sFrontendSingleDigitFormat, (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].lifeCount);
     gameTextShowStr(buf, 0x44, 0, 0);
 
-    sprintf(buf, sFrontendSingleDigitFormat, (u32)lbl_803DD6B0[(int)lbl_803DD6A4].magicCount);
+    sprintf(buf, sFrontendSingleDigitFormat, (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].magicCount);
     gameTextShowStr(buf, 0x45, 0, 0);
 }
 #pragma scheduling reset

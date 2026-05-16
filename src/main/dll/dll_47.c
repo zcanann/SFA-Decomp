@@ -89,8 +89,8 @@ extern undefined4* PTR_DAT_8031b43c;
 extern char s__savegame_save_d_bin_8031b4b4[];
 extern void mm_free(void *p);
 extern void *lbl_803A8658[10];
-extern void *lbl_803DD6A8;
-extern void *lbl_803DD6B0;
+extern void *saveFileSelect_saveSlotsBase;
+extern void *saveFileSelect_saveSlots;
 extern int lbl_803DB9FC;
 extern u8 lbl_803DB424;
 extern char sFrontendStringFormat[];
@@ -882,8 +882,8 @@ void fn_8011A410(void **p) {
     int off2 = 0;
     char *base;
     while (i < (int)*(u8 *)((char *)p + 0x4)) {
-        base = (char *)lbl_803DD6A8;
-        lbl_803DD6B0 = base;
+        base = (char *)saveFileSelect_saveSlotsBase;
+        saveFileSelect_saveSlots = base;
         if (*(u8 *)(base + off1 + 0x20) == 0) {
             *(u16 *)((char *)*p + off2) = 0x39d;
             *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) & ~0x1);
@@ -913,7 +913,7 @@ void fn_8011A4E8(void) {}
 void fn_8011A70C(void) {
     int i;
     int off;
-    lbl_803DD6B0 = lbl_803DD6A8;
+    saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
     lbl_803DB9FC = 0;
     if (lbl_803DB424 != 0) {
         fn_800E8D9C();
@@ -924,12 +924,12 @@ void fn_8011A70C(void) {
     i = lbl_803DB9FC;
     off = i * 0x24;
     while (i < 3) {
-        sprintf((char *)lbl_803DD6B0 + off, sFrontendStringFormat, lbl_803DBA20);
-        *((u8 *)lbl_803DD6B0 + off + 0x5) = 0;
-        *((u8 *)lbl_803DD6B0 + off + 0x6) = 0;
-        *((u8 *)lbl_803DD6B0 + off + 0x4) = 0;
-        *((int *)((char *)lbl_803DD6B0 + off + 0x8)) = 0;
-        *((u8 *)lbl_803DD6B0 + off + 0x21) = 0;
+        sprintf((char *)saveFileSelect_saveSlots + off, sFrontendStringFormat, lbl_803DBA20);
+        *((u8 *)saveFileSelect_saveSlots + off + 0x5) = 0;
+        *((u8 *)saveFileSelect_saveSlots + off + 0x6) = 0;
+        *((u8 *)saveFileSelect_saveSlots + off + 0x4) = 0;
+        *((int *)((char *)saveFileSelect_saveSlots + off + 0x8)) = 0;
+        *((u8 *)saveFileSelect_saveSlots + off + 0x21) = 0;
         off += 0x24;
         i++;
     }
