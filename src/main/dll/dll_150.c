@@ -408,3 +408,22 @@ int smallbasket_getExtraSize(void)
 {
   return 0x24;
 }
+
+extern void smallbasket_init();
+extern void smallbasket_update();
+extern void smallbasket_render();
+extern void smallbasket_free();
+
+u32 gSmallBasketObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)smallbasket_init,
+    (u32)smallbasket_update,
+    0,
+    (u32)smallbasket_render,
+    (u32)smallbasket_free,
+    0,
+    (u32)smallbasket_getExtraSize,
+};
