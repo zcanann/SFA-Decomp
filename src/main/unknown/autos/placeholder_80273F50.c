@@ -10,6 +10,7 @@ extern void sndEnd(void);
  */
 extern u8 dataKeymapTable[];
 extern u8 dataLayerTable[];
+extern u8 dataSmpSDirTable[];
 extern u16 dataLayerNum;
 
 int dataInsertLayer(u16 key, void *value, u16 count)
@@ -19,17 +20,19 @@ int dataInsertLayer(u16 key, void *value, u16 count)
     u32 used;
     u32 batches;
     int index;
+    u8 *tableBase;
 
+    tableBase = dataSmpSDirTable;
     sndBegin();
     used = dataLayerNum;
     index = 0;
-    for (entry = (u32 *)dataLayerTable;
+    for (entry = (u32 *)(tableBase + 0x4e00);
          (index < (int)used) && (*(u16 *)(entry + 1) < key); entry += 3) {
         index++;
     }
     if (index < (int)used) {
-        if (key == *(u16 *)(dataLayerTable + 4 + index * 0xc)) {
-            (*(u16 *)(dataLayerTable + 8 + index * 0xc))++;
+        if (key == *(u16 *)(tableBase + 0x4e04 + index * 0xc)) {
+            (*(u16 *)(tableBase + 0x4e08 + index * 0xc))++;
             sndEnd();
             return 0;
         }
@@ -38,7 +41,7 @@ int dataInsertLayer(u16 key, void *value, u16 count)
             return 0;
         }
         moveCount = used - index;
-        entry = (u32 *)(dataLayerTable + (used - 1) * 0xc);
+        entry = (u32 *)(tableBase + 0x4e00 + (used - 1) * 0xc);
         if (index <= (int)(used - 1)) {
             batches = moveCount >> 3;
             if (batches != 0) {
@@ -90,10 +93,10 @@ int dataInsertLayer(u16 key, void *value, u16 count)
 
 insert:
     dataLayerNum++;
-    *(u16 *)(dataLayerTable + 4 + index * 0xc) = key;
-    *(void **)(dataLayerTable + index * 0xc) = value;
-    *(u16 *)(dataLayerTable + 6 + index * 0xc) = count;
-    *(u16 *)(dataLayerTable + 8 + index * 0xc) = 1;
+    *(u16 *)(tableBase + 0x4e04 + index * 0xc) = key;
+    *(void **)(tableBase + 0x4e00 + index * 0xc) = value;
+    *(u16 *)(tableBase + 0x4e06 + index * 0xc) = count;
+    *(u16 *)(tableBase + 0x4e08 + index * 0xc) = 1;
     sndEnd();
     return 1;
 }
@@ -109,11 +112,13 @@ int dataRemoveLayer(s16 key)
     u32 moveCount;
     u32 index;
     u32 used;
+    u8 *tableBase;
 
+    tableBase = dataSmpSDirTable;
     sndBegin();
     used = dataLayerNum;
     index = 0;
-    for (entry = (u32 *)dataLayerTable;
+    for (entry = (u32 *)(tableBase + 0x4e00);
          ((int)index < (int)used) && (key != *(s16 *)(entry + 1)); entry += 3) {
         index++;
     }
@@ -121,8 +126,8 @@ int dataRemoveLayer(s16 key)
         sndEnd();
         return 0;
     }
-    refCount = *(s16 *)(dataLayerTable + 8 + index * 0xc);
-    *(s16 *)(dataLayerTable + 8 + index * 0xc) = refCount - 1;
+    refCount = *(s16 *)(tableBase + 0x4e08 + index * 0xc);
+    *(s16 *)(tableBase + 0x4e08 + index * 0xc) = refCount - 1;
     if ((s16)(refCount - 1) != 0) {
         sndEnd();
         return 0;
@@ -130,7 +135,7 @@ int dataRemoveLayer(s16 key)
 
     next = index + 1;
     moveCount = used - next;
-    entry = (u32 *)(dataLayerTable + next * 0xc);
+    entry = (u32 *)(tableBase + 0x4e00 + next * 0xc);
     if (next < (int)used) {
         used = moveCount >> 3;
         if (used != 0) {
