@@ -2939,8 +2939,9 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
   int jointIndex;
 
   model = Obj_GetActiveModel(param_1);
-  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
-                               param_2 * sizeof(ObjPathPoint));
+  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) +
+                                        OBJPATH_POINTS_OFFSET));
+  pathPoint += param_2;
   jointIndex = pathPoint->modelIndex[(int)*(char *)(param_1 + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
   if ((jointIndex >= 0) && (jointIndex < (int)(uint)*(byte *)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET))) {
     ObjModel_GetJointMatrix(model,jointIndex);
