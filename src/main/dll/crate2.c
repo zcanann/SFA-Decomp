@@ -9,6 +9,7 @@ extern undefined4 FUN_80006b54();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 FUN_80017ac8();
+extern undefined4 sfxplayer_updateState(int obj, undefined4 param_2, int hitState);
 extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -138,27 +139,43 @@ void dfpstatue1_updateState(undefined8 param_1,undefined8 param_2,undefined8 par
 }
 
 
+int dfpstatue1_getExtraSize(void) { return 0xa; }
+int dfpstatue1_func08(void) { return 0x0; }
+
 /* Trivial 4b 0-arg blr leaves. */
 void dfpstatue1_free(void) {}
 void dfpstatue1_render(void) {}
 void dfpstatue1_hitDetect(void) {}
-void dfpstatue1_release(void) {}
-void dfpstatue1_initialise(void) {}
-void dfperchwitch_free(void) {}
-void dfperchwitch_render(void) {}
-void dfperchwitch_hitDetect(void) {}
-void dfperchwitch_release(void) {}
-void dfperchwitch_initialise(void) {}
-
-/* 8b "li r3, N; blr" returners. */
-int dfpstatue1_getExtraSize(void) { return 0xa; }
-int dfpstatue1_func08(void) { return 0x0; }
-int dfperchwitch_getExtraSize(void) { return 0x0; }
-int dfperchwitch_func08(void) { return 0x0; }
 
 /* plain forwarder.  Logic-only (~55%): existing dfpstatue1_updateState
  * signature has 8 args, but expected `bl` calls it with no setup. */
 void dfpstatue1_update(void) { dfpstatue1_updateState(0,0.0,0.0,0,0,0,0,0); }
+
+void dfpstatue1_init(undefined2 *obj, int mapData)
+{
+  DfpStatue1State *state = *(DfpStatue1State **)(obj + 0x5c);
+
+  *obj = (short)((int)*(s8 *)(mapData + 0x18) << 8);
+  *(undefined4 (**)(int, undefined4, int))(obj + 0x5e) = sfxplayer_updateState;
+  state->effectPairCount = *(u8 *)(mapData + 0x19);
+  state->triggerSfxId = *(s16 *)(mapData + 0x1e);
+  state->loopSfxId = *(s16 *)(mapData + 0x20);
+  if (GameBit_Get((int)state->loopSfxId) != 0) {
+    state->loopActive = 1;
+  }
+  state->loopSfxStopTimer = 0;
+  state->stateFlags = 0;
+  obj[0x58] = obj[0x58] | 0x4000;
+}
+
+void dfpstatue1_release(void) {}
+void dfpstatue1_initialise(void) {}
+
+int dfperchwitch_getExtraSize(void) { return 0x0; }
+int dfperchwitch_func08(void) { return 0x0; }
+void dfperchwitch_free(void) {}
+void dfperchwitch_render(void) {}
+void dfperchwitch_hitDetect(void) {}
 
 /* OSReport(string) wrappers. */
 extern void OSReport(const char *fmt, ...);
@@ -168,3 +185,36 @@ void dfperchwitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 #pragma peephole reset
 #pragma scheduling reset
+
+void dfperchwitch_release(void) {}
+void dfperchwitch_initialise(void) {}
+
+u32 gDfpstatue1ObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)dfpstatue1_initialise,
+    (u32)dfpstatue1_release,
+    0,
+    (u32)dfpstatue1_init,
+    (u32)dfpstatue1_update,
+    (u32)dfpstatue1_hitDetect,
+    (u32)dfpstatue1_render,
+    (u32)dfpstatue1_free,
+    (u32)dfpstatue1_func08,
+    (u32)dfpstatue1_getExtraSize,
+};
+
+u32 gDfperchwitchObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)dfperchwitch_initialise,
+    (u32)dfperchwitch_release,
+    0,
+    (u32)dfperchwitch_init,
+    (u32)dfperchwitch_update,
+    (u32)dfperchwitch_hitDetect,
+    (u32)dfperchwitch_render,
+    (u32)dfperchwitch_free,
+    (u32)dfperchwitch_func08,
+    (u32)dfperchwitch_getExtraSize,
+};
+
+char sDfperchwitchInitNoLongerSupported[] = "<dfperchwitch Init>No Longer supported \n";

@@ -17,4 +17,14 @@ void dfperchwitch_init(void);
 void dfperchwitch_release(void);
 void dfperchwitch_initialise(void);
 
+int dfpstatue1_getExtraSize(void);
+int dfpstatue1_func08(void);
+void dfpstatue1_free(void);
+void dfpstatue1_render(void);
+void dfpstatue1_hitDetect(void);
+void dfpstatue1_update(void);
+void dfpstatue1_init(undefined2 *obj, int mapData);
+void dfpstatue1_release(void);
+void dfpstatue1_initialise(void);
+
 #endif /* MAIN_DLL_CRATE2_H_ */
