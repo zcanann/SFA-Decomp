@@ -144,6 +144,8 @@ void dfplightni_update(u8 *obj)
   DfpLightniState *state;
   double radiusX;
   double radiusY;
+  float *effectStart;
+  float *effectEnd;
   float start[3];
   float end[3];
   u32 randomZ;
@@ -197,20 +199,25 @@ void dfplightni_update(u8 *obj)
           if (eventActive != 0) {
             clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
                        : (radiusY > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusY;
+            effectStart = start;
+            effectEnd = end;
             clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
                        : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
-                fn_8008FB20(clampX,clampY,start,end,DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
+                fn_8008FB20(clampX,clampY,effectStart,effectEnd,
+                            DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
                                 DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
           else {
             clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
                        : (radiusY > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusY;
+            effectStart = start;
+            effectEnd = end;
             clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
                        : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
-                fn_8008FB20(clampX,clampY,start,end,(u16)state->delayFrames,
+                fn_8008FB20(clampX,clampY,effectStart,effectEnd,(u16)state->delayFrames,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
                                 DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
