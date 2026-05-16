@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/dll/CF/laser.h"
+#include "main/object_descriptor.h"
 #include "main/textblock.h"
 
 int laser_getExtraSizeUnsupported(void)
@@ -53,21 +54,21 @@ void laser_initialiseUnsupported(void)
 {
 }
 
-u32 gLaserUnsupportedObjDescriptor[] = {
+ObjectDescriptor gLaserUnsupportedObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)laser_initialiseUnsupported,
-    (u32)laser_releaseUnsupported,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    laser_initialiseUnsupported,
+    laser_releaseUnsupported,
     0,
-    (u32)laser_init,
-    (u32)laser_updateUnsupported,
-    (u32)laser_hitDetectUnsupported,
-    (u32)laser_renderUnsupported,
-    (u32)laser_freeUnsupported,
-    (u32)laser_func08,
-    (u32)laser_getExtraSizeUnsupported,
+    laser_init,
+    laser_updateUnsupported,
+    laser_hitDetectUnsupported,
+    laser_renderUnsupported,
+    laser_freeUnsupported,
+    (ObjectDescriptorCallback)laser_func08,
+    laser_getExtraSizeUnsupported,
 };
 
 char sTextBlockInitNoLongerSupported[] = "<textblock.c Init>No Longer supported \n";

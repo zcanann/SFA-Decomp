@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
+#include "main/object_descriptor.h"
 #include "main/textblock.h"
 
 int textblockObj_getExtraSize(void)
@@ -89,21 +90,21 @@ void textblockObj_initialise(void)
 {
 }
 
-u32 gTextBlockObjDescriptor[] = {
+ObjectDescriptor gTextBlockObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)textblockObj_initialise,
-    (u32)textblockObj_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    textblockObj_initialise,
+    textblockObj_release,
     0,
-    (u32)textblockObj_initUnsupported,
-    (u32)textblockObj_updateUnsupported,
-    (u32)textblockObj_hitDetect,
-    (u32)textblockObj_render,
-    (u32)textblockObj_freeUnsupported,
-    (u32)textblockObj_func08,
-    (u32)textblockObj_getExtraSize,
+    textblockObj_initUnsupported,
+    textblockObj_updateUnsupported,
+    textblockObj_hitDetect,
+    textblockObj_render,
+    textblockObj_freeUnsupported,
+    (ObjectDescriptorCallback)textblockObj_func08,
+    textblockObj_getExtraSize,
 };
 
 char sTextBlockObjInitNoLongerSupported[] = "<textblock.c Init>No Longer supported \n";
