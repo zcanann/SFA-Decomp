@@ -679,6 +679,7 @@ main/dll/barrel.c:
 
 main/dll/ladders.c:
 	.text       start:0x801630EC end:0x80163BBC
+	.data       start:0x80320248 end:0x80320288
 
 main/dll/waterfallControl.c:
 	.text       start:0x80163BBC end:0x801641B0

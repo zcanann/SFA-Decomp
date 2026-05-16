@@ -603,3 +603,26 @@ void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma peephole off
 void cannonclaw_init(s16 *dst, void* src) { s8 v = *((s8*)src + 0x28); s16 t = v << 8; *dst = t; }
 #pragma peephole reset
+
+extern void tumbleweedbush_setScale(void);
+extern void tumbleweedbush_update(void);
+extern void tumbleweedbush_init(void);
+
+u32 gTumbleWeedBushObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x000A0000,
+    (u32)tumbleweedbush_initialise,
+    (u32)tumbleweedbush_release,
+    0,
+    (u32)tumbleweedbush_init,
+    (u32)tumbleweedbush_update,
+    (u32)tumbleweedbush_hitDetect,
+    (u32)tumbleweedbush_render,
+    (u32)tumbleweedbush_free,
+    (u32)tumbleweedbush_func08,
+    (u32)tumbleweedbush_getExtraSize,
+    (u32)tumbleweedbush_setScale,
+    0,
+};
