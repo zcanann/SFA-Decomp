@@ -451,9 +451,9 @@ void FUN_802765c4(int *param_1,int param_2)
 void mcmdRandomKey(int state, u32 *args)
 {
     u32 command;
-    u32 low;
-    u32 high;
-    u32 pitch;
+    int low;
+    int high;
+    int pitch;
     u32 rand;
     int range;
 
@@ -491,7 +491,7 @@ void mcmdRandomKey(int state, u32 *args)
             (low + ((rand & 0xffff) - ((int)(rand & 0xffff) / range) * range)) * 0x100;
     args[1] = 0;
     *(u16 *)(state + 0x12c) = (u16)(*args >> 8) & 0x7f;
-    *(u8 *)(state + 0x12e) = *args >> 0x10;
+    *(s8 *)(state + 0x12e) = (s8)(*args >> 0x10);
     if (voiceIsRegistered(state) != 0) {
         inpSetMidiLastNote(*(u8 *)(state + 0x121), *(u8 *)(state + 0x122),
                            *(u16 *)(state + 0x12c) & 0xff);
@@ -725,7 +725,7 @@ void mcmdSendMessage(int state, u32 *args)
             }
         } else {
             offset = 0;
-            for (i = 0; i < *(u32 *)(lbl_803BD150 + 0x210); i++) {
+            for (i = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++) {
                 voice = (int)(synthVoice + offset);
                 if (*(int *)(voice + 0x34) != 0 &&
                     targetInstrument == *(u16 *)(voice + 0x102)) {
@@ -781,6 +781,7 @@ void mcmdSetKeyGroup(int state, u32 *args)
 {
     u32 group;
     u32 command;
+    u32 doKill;
     u32 i;
     int offset;
     int voice;
@@ -789,13 +790,14 @@ void mcmdSetKeyGroup(int state, u32 *args)
     *(u8 *)(state + 0x104) = 0;
     command = *args;
     group = (command >> 8) & 0xff;
+    doKill = ((command >> 0x10) & 0xff) != 0;
     if (group != 0) {
-        for (i = 0; i < *(u32 *)(lbl_803BD150 + 0x210); i++) {
+        for (i = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++) {
             voice = (int)(synthVoice + offset);
             if (*(int *)(voice + 0x34) != 0) {
                 if (((*(u32 *)(voice + 0x118) & 2) == 0) &&
                     group == *(u8 *)(voice + 0x104)) {
-                    if (((command >> 0x10) & 0xff) == 0) {
+                    if (doKill == 0) {
                         macSetExternalKeyoff(voice);
                     } else {
                         voiceKill(i);
