@@ -688,3 +688,19 @@ void kaldachom_initialise(void)
   lbl_803AC680[4] = fn_801678E4;
   lbl_803AC680[5] = fn_80167764;
 }
+
+u32 gKaldaChomObjDescriptor[] = {
+    0, 0, 0, 0x000B0000,
+    (u32)kaldachom_initialise,
+    (u32)kaldachom_release,
+    0,
+    (u32)kaldachom_init,
+    (u32)kaldachom_update,
+    (u32)kaldachom_hitDetect,
+    (u32)kaldachom_render,
+    (u32)kaldachom_free,
+    (u32)kaldachom_func08,
+    (u32)kaldachom_getExtraSize,
+    (u32)kaldachom_setScale,
+    (u32)kaldachom_func0B,
+};
