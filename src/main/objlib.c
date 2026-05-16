@@ -2894,16 +2894,17 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float 
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
 {
-  ObjPathPoint *pathPoints;
   ObjPathPoint *pathPoint;
   ObjPathTransform transform;
 
-  pathPoints = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) +
+  pathPoint = (ObjPathPoint *)(*(int *)(*(int *)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) +
                                          OBJPATH_POINTS_OFFSET));
-  transform.x = pathPoints[param_2].x;
-  pathPoint = &pathPoints[param_2];
+  transform.x = pathPoint[param_2].x;
+  pathPoint += param_2;
   transform.y = pathPoint->y;
   transform.z = pathPoint->z;
   transform.rotX = pathPoint->rotX;
@@ -2913,6 +2914,8 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
   setMatrixFromObjectTransposed(&transform,param_3);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
