@@ -56,6 +56,12 @@ def disasm_symbols(objdump: str, obj: Path) -> dict[str, list[tuple[str, str]]]:
             # Normalise branch targets which look like "0x1c <foo+0x1c>"
             instr = re.sub(r"<[^>]+>", "", instr)
             instr = re.sub(r"0x[0-9a-f]+", "0x?", instr)
+            # objdump prints local branch targets as bare hex offsets. Those
+            # offsets change whenever earlier code in the object shifts, even
+            # when the branch instruction is semantically identical.
+            parts = instr.split(None, 1)
+            if parts and parts[0].startswith("b") and len(parts) > 1:
+                instr = parts[0] + " " + re.sub(r"\b[0-9a-f]+\b", "0x?", parts[1])
             cur.append((addr, instr))
     return syms
 

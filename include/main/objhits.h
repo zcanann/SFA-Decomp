@@ -119,11 +119,11 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius,float axial,floa
 float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRadius,
                                         float length,float *point,float *base,float *tip,
                                         float *out);
-uint ObjHits_TestTaperedCapsuleXZ(float radiusA,float radiusB,float radiusC,float halfLength,
-                                  float *p0,float *p1,float *axis,float *hit,
+uint ObjHits_TestTaperedCapsuleXZ(float pointRadius,float baseRadius,float tipRadius,float length,
+                                  float *point,float *base,float *axis,float *tip,
                                   float *axial,float *dist2,float *sumR);
-uint ObjHits_TestTaperedCapsule3D(float radiusA,float radiusB,float radiusC,float halfLength,
-                                  float *p0,float *p1,float *axis,float *hit,
+uint ObjHits_TestTaperedCapsule3D(float pointRadius,float baseRadius,float tipRadius,float length,
+                                  float *point,float *base,float *axis,float *tip,
                                   float *axial,float *dist2,float *sumR);
 void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount);
 void ObjHits_TickPriorityHitCooldowns(void);

@@ -1132,41 +1132,41 @@ float *ObjHits_CalcTaperedCapsuleNormal(float axial,float baseRadius,float tipRa
  * PAL Size: TODO
  */
 #pragma scheduling off
-uint ObjHits_TestTaperedCapsuleXZ(float radiusA, float radiusB, float radiusC, float halfLength,
-                                  float *p0, float *p1, float *axis, float *hit,
+uint ObjHits_TestTaperedCapsuleXZ(float pointRadius, float baseRadius, float tipRadius, float length,
+                                  float *point, float *base, float *axis, float *tip,
                                   float *axial, float *dist2, float *sumR)
 {
-    float dx, dz;
-    float ex, ey;
-    float fa, fc;
-    float t;
-    float r;
+    float deltaX, deltaZ;
+    float radialX, radialZ;
+    float tipDeltaX, tipDeltaZ;
+    float projection;
+    float radiusSum;
 
-    dx = p0[0] - p1[0];
-    dz = p0[2] - p1[2];
-    *axial = dx * axis[0] + dz * axis[2];
-    if (*axial > halfLength) {
-        fa = hit[0] - p0[0];
-        fa *= fa;
-        fc = hit[2] - p0[2];
-        fc *= fc;
-        *dist2 = fa + fc;
-        r = radiusA + radiusC;
-        *sumR = r;
-        return *dist2 <= r * r;
+    deltaX = point[0] - base[0];
+    deltaZ = point[2] - base[2];
+    *axial = deltaX * axis[0] + deltaZ * axis[2];
+    if (*axial > length) {
+        tipDeltaX = tip[0] - point[0];
+        tipDeltaX *= tipDeltaX;
+        tipDeltaZ = tip[2] - point[2];
+        tipDeltaZ *= tipDeltaZ;
+        *dist2 = tipDeltaX + tipDeltaZ;
+        radiusSum = pointRadius + tipRadius;
+        *sumR = radiusSum;
+        return *dist2 <= radiusSum * radiusSum;
     }
     if (*axial < gObjHitsScalarZero) {
-        *dist2 = dx * dx + dz * dz;
-        r = radiusA + radiusB;
-        *sumR = r;
-        return *dist2 <= r * r;
+        *dist2 = deltaX * deltaX + deltaZ * deltaZ;
+        radiusSum = pointRadius + baseRadius;
+        *sumR = radiusSum;
+        return *dist2 <= radiusSum * radiusSum;
     }
-    ex = axis[0] * (t = -*axial) + dx;
-    ey = axis[2] * t + dz;
-    *dist2 = ex * ex + ey * ey;
-    r = (*axial / halfLength) * (radiusC - radiusB) + (radiusA + radiusB);
-    *sumR = r;
-    return *dist2 <= r * r;
+    radialX = axis[0] * (projection = -*axial) + deltaX;
+    radialZ = axis[2] * projection + deltaZ;
+    *dist2 = radialX * radialX + radialZ * radialZ;
+    radiusSum = (*axial / length) * (tipRadius - baseRadius) + (pointRadius + baseRadius);
+    *sumR = radiusSum;
+    return *dist2 <= radiusSum * radiusSum;
 }
 #pragma scheduling reset
 
@@ -1185,42 +1185,41 @@ uint ObjHits_TestTaperedCapsuleXZ(float radiusA, float radiusB, float radiusC, f
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint ObjHits_TestTaperedCapsule3D(float radiusA, float radiusB, float radiusC, float halfLength,
-                                  float *p0, float *p1, float *axis, float *hit,
+uint ObjHits_TestTaperedCapsule3D(float pointRadius, float baseRadius, float tipRadius, float length,
+                                  float *point, float *base, float *axis, float *tip,
                                   float *axial, float *dist2, float *sumR)
 {
-    float dx, dy, dz;
-    float ex, ey, ez;
-    float fa, fb, fc;
-    float t;
-    float r;
+    float deltaX, deltaY, deltaZ;
+    float radialX, radialY, radialZ;
+    float tipDeltaX, tipDeltaY, tipDeltaZ;
+    float radiusSum;
 
-    dx = p0[0] - p1[0];
-    dy = p0[1] - p1[1];
-    dz = p0[2] - p1[2];
-    *axial = dz * axis[2] + (dx * axis[0] + dy * axis[1]);
-    if (*axial > halfLength) {
-        fa = hit[0] - p0[0];
-        fb = hit[1] - p0[1];
-        fc = hit[2] - p0[2];
-        *dist2 = fc * fc + (fa * fa + fb * fb);
-        r = radiusA + radiusC;
-        *sumR = r;
-        return *dist2 <= r * r;
+    deltaX = point[0] - base[0];
+    deltaY = point[1] - base[1];
+    deltaZ = point[2] - base[2];
+    *axial = deltaZ * axis[2] + (deltaX * axis[0] + deltaY * axis[1]);
+    if (*axial > length) {
+        tipDeltaX = tip[0] - point[0];
+        tipDeltaY = tip[1] - point[1];
+        tipDeltaZ = tip[2] - point[2];
+        *dist2 = tipDeltaZ * tipDeltaZ + (tipDeltaX * tipDeltaX + tipDeltaY * tipDeltaY);
+        radiusSum = pointRadius + tipRadius;
+        *sumR = radiusSum;
+        return *dist2 <= radiusSum * radiusSum;
     }
     if (*axial < gObjHitsScalarZero) {
-        *dist2 = dz * dz + (dx * dx + dy * dy);
-        r = radiusA + radiusB;
-        *sumR = r;
-        return *dist2 <= r * r;
+        *dist2 = deltaZ * deltaZ + (deltaX * deltaX + deltaY * deltaY);
+        radiusSum = pointRadius + baseRadius;
+        *sumR = radiusSum;
+        return *dist2 <= radiusSum * radiusSum;
     }
-    ex = axis[0] * -*axial + dx;
-    ey = axis[1] * -*axial + dy;
-    ez = axis[2] * -*axial + dz;
-    *dist2 = ez * ez + (ex * ex + ey * ey);
-    r = (*axial / halfLength) * (radiusC - radiusB) + (radiusA + radiusB);
-    *sumR = r;
-    return *dist2 <= r * r;
+    radialX = axis[0] * -*axial + deltaX;
+    radialY = axis[1] * -*axial + deltaY;
+    radialZ = axis[2] * -*axial + deltaZ;
+    *dist2 = radialZ * radialZ + (radialX * radialX + radialY * radialY);
+    radiusSum = (*axial / length) * (tipRadius - baseRadius) + (pointRadius + baseRadius);
+    *sumR = radiusSum;
+    return *dist2 <= radiusSum * radiusSum;
 }
 #pragma peephole reset
 #pragma scheduling reset
