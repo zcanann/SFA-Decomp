@@ -870,33 +870,33 @@ extern u8 *dataGetSample_sheader;
 int dataGetSample(u16 key, u32 *out)
 {
     u32 i;
-    u32 *bucket;
-    u8 *entry;
+    DataSampleDirBucket *bucket;
+    DataSampleDirEntry *entry;
     u8 *searchKey;
 
     i = 0;
-    bucket = (u32 *)dataSmpSDirTable;
+    bucket = (DataSampleDirBucket *)dataSmpSDirTable;
     searchKey = dataGetSampleSearchKey;
     *(u16 *)searchKey = key;
     while (i < dataSmpSDirNum) {
-        dataGetSample_result = sndBSearch(searchKey, (void *)*bucket, *(u16 *)(bucket + 2), 0x20,
-                                  smpcmp);
+        dataGetSample_result = sndBSearch(searchKey, bucket->entries, bucket->count, 0x20,
+                                          smpcmp);
         entry = dataGetSample_result;
-        if ((entry != 0) && (*(s16 *)(entry + 2) != -1)) {
-            dataGetSample_sheader = entry + 0xc;
+        if ((entry != 0) && (entry->refCount != -1)) {
+            dataGetSample_sheader = entry->header;
             out[0] = *(u32 *)dataGetSample_sheader;
-            out[1] = *(u32 *)(entry + 8);
+            out[1] = entry->loadedAddr;
             out[3] = 0;
             out[5] = *(u32 *)(dataGetSample_sheader + 8);
             out[4] = *(u32 *)(dataGetSample_sheader + 4) & 0xffffff;
             out[6] = *(u32 *)(dataGetSample_sheader + 0xc);
             *(u8 *)(out + 7) = *(u32 *)(dataGetSample_sheader + 4) >> 0x18;
-            if (*(int *)(entry + 0x1c) != 0) {
-                out[2] = *(int *)(entry + 0x1c) + *bucket;
+            if (entry->loopOffset != 0) {
+                out[2] = entry->loopOffset + (u32)bucket->entries;
             }
             return 0;
         }
-        bucket += 3;
+        bucket++;
         i++;
     }
     return -1;
@@ -1004,20 +1004,20 @@ int fxcmp(void *a, void *b)
 void *dataGetFX(u16 key)
 {
     u32 i;
-    u16 *bucket;
+    DataFXGroupRef *bucket;
     void *entry;
     u8 *searchKey;
 
     i = 0;
-    bucket = (u16 *)dataFXGroupTable;
+    bucket = (DataFXGroupRef *)dataFXGroupTable;
     searchKey = dataGetFXSearchKey;
     *(u16 *)searchKey = key;
     while (i < dataFXGroupNum) {
-        entry = sndBSearch(searchKey, *(void **)(bucket + 2), bucket[1], 10, fxcmp);
+        entry = sndBSearch(searchKey, bucket->samples, bucket->count, 10, fxcmp);
         if (entry != 0) {
             return entry;
         }
-        bucket += 4;
+        bucket++;
         i++;
     }
     return 0;

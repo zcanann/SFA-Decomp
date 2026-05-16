@@ -9,7 +9,7 @@ extern void synthFXCloneMidiSetup(int voice, int state);
 void DoSetPitch(int state);
 extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, int state);
-extern int dataGetSample(u32 key, u32 *out);
+extern int dataGetSample(u16 key, u32 *out);
 extern void hwInitSamplePlayback(u32 voice, u32 sampleId, u32 *sampleInfo, u32 noKeySync,
                                  u32 priority, u32 handle, u32 noStartOffset, u8 restart);
 extern void fn_80271370(int state);
