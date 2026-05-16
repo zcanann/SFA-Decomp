@@ -311,3 +311,15 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+u32 gFirePipeObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0, 0, 0,
+    (u32)firepipe_init,
+    (u32)firepipe_update,
+    0,
+    (u32)firepipe_render,
+    (u32)firepipe_free,
+    (u32)firepipe_func08,
+    (u32)firepipe_getExtraSize,
+};

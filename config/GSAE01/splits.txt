@@ -1486,6 +1486,7 @@ main/unknown/autos/placeholder_80211C24.c:
 
 main/dll/firepipe.c:
 	.text       start:0x8021F8CC end:0x80220608
+	.data       start:0x8032AC90 end:0x8032ACC8
 
 main/unknown/autos/placeholder_80220608.c:
 	.text       start:0x80220608 end:0x8024034C
