@@ -18,6 +18,12 @@ extern u32 salLastTick;
 extern u32 salDspInitIsDone;
 extern u8 salAIBufferIndex;
 
+#define SAL_AI_BUFFER_COUNT 4
+#define SAL_AI_DMA_CHUNK_SIZE 0x280
+#define SAL_AI_DMA_BUFFER_SIZE (SAL_AI_BUFFER_COUNT * SAL_AI_DMA_CHUNK_SIZE)
+#define SAL_AI_CACHED_BASE 0x80000000U
+#define SAL_AI_OUTPUT_SAMPLE_COUNT 0x7d00
+
 /*
  * AI DMA done callback: bumps the round-robin buffer index and
  * re-issues AIInitDMA on the next 0x280-byte chunk. If a higher-
@@ -31,8 +37,10 @@ extern u8 salAIBufferIndex;
  */
 void salCallback(u32 p1, u32 p2, u32 p3, int p4, u32 p5, u32 p6)
 {
-    salAIBufferIndex = (salAIBufferIndex + 1) % 4;
-    AIInitDMA((u32)(u8 *)salAiDmaBuffer | 0x80000000U + salAIBufferIndex * 0x280, 0x280);
+    salAIBufferIndex = (salAIBufferIndex + 1) % SAL_AI_BUFFER_COUNT;
+    AIInitDMA((salAiDmaBuffer + SAL_AI_CACHED_BASE) +
+                  salAIBufferIndex * SAL_AI_DMA_CHUNK_SIZE,
+              SAL_AI_DMA_CHUNK_SIZE);
     salLastTick = OSGetTick();
     if (salDspCallbackEnabled != 0) {
         if (salCallbackActive == 0) {
@@ -63,6 +71,8 @@ void dspInitCallback(void)
  *
  * EN v1.1 Address: 0x80284724
  */
+#pragma scheduling off
+#pragma peephole off
 void dspResumeCallback(void)
 {
     salDspCallbackEnabled = 1;
@@ -77,6 +87,8 @@ void dspResumeCallback(void)
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * Audio output setup: allocate 0xa00-byte (4 x 0x280) DMA buffer,
@@ -87,25 +99,23 @@ void dspResumeCallback(void)
  */
 int salInitAi(void *userCallback, u32 unused, u32 *outSampleCount)
 {
-    void *buf;
-
-    buf = salMalloc(0xa00);
-    salAiDmaBuffer = (u32)buf;
-    if (buf == NULL) {
-        return 0;
+    if ((salAiDmaBuffer = (u32)salMalloc(SAL_AI_DMA_BUFFER_SIZE)) != 0) {
+        memset((void *)salAiDmaBuffer, 0, SAL_AI_DMA_BUFFER_SIZE);
+        DCFlushRange((void *)salAiDmaBuffer, SAL_AI_DMA_BUFFER_SIZE);
+        salAiCallback = userCallback;
+        salDspCallbackPending = 0;
+        salDspCallbackEnabled = 1;
+        salAIBufferIndex = 1;
+        salCallbackActive = 0;
+        AIRegisterDMACallback(salCallback);
+        AIInitDMA((salAiDmaBuffer + SAL_AI_CACHED_BASE) +
+                      salAIBufferIndex * SAL_AI_DMA_CHUNK_SIZE,
+                  SAL_AI_DMA_CHUNK_SIZE);
+        *(u32 *)(lbl_803BD150 + 4) = 0x20;
+        *outSampleCount = SAL_AI_OUTPUT_SAMPLE_COUNT;
+        return 1;
     }
-    memset(buf, 0, 0xa00);
-    DCFlushRange(buf, 0xa00);
-    salAiCallback = userCallback;
-    salDspCallbackPending = 0;
-    salDspCallbackEnabled = 1;
-    salAIBufferIndex = 1;
-    salCallbackActive = 0;
-    AIRegisterDMACallback(salCallback);
-    AIInitDMA((u32)(u8 *)salAiDmaBuffer | 0x80000000U + salAIBufferIndex * 0x280, 0x280);
-    *(u32 *)(lbl_803BD150 + 4) = 0x20;
-    *outSampleCount = 0x7d00;
-    return 1;
+    return 0;
 }
 
 /*
@@ -131,5 +141,7 @@ int salAiGetDest(void)
     int nextBuffer;
 
     nextBuffer = salAIBufferIndex + 2;
-    return salAiDmaBuffer + ((u8)(nextBuffer - (nextBuffer / 4) * 4)) * 0x280;
+    return ((u8)(nextBuffer - (nextBuffer / SAL_AI_BUFFER_COUNT) * SAL_AI_BUFFER_COUNT)) *
+               SAL_AI_DMA_CHUNK_SIZE +
+           salAiDmaBuffer;
 }
