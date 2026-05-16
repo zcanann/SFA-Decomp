@@ -507,40 +507,41 @@ void fn_8027670C(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
                  u32 activeFlag, u32 dirtyFlag)
 {
     u32 command;
-    u32 panDelta;
-    u32 panScaled;
+    u32 inputFlags;
+    u32 outputFlags;
+    u32 zero;
     int baseValue;
     int signedDelta;
     u32 ctrlValue;
 
     (void)unused;
-    if (((*(u32 *)(state + 0x118) & activeFlag) |
-         (*(u32 *)(state + 0x114) & stateFlag)) == 0) {
-        *(u32 *)(state + 0x118) |= activeFlag;
+    zero = 0;
+    inputFlags = *(u32 *)(state + 0x114);
+    outputFlags = *(u32 *)(state + 0x118);
+    if (((inputFlags & stateFlag) | (outputFlags & activeFlag)) == zero) {
+        *(u32 *)(state + 0x118) = outputFlags | activeFlag;
         ctrlValue = 0;
-        *(u32 *)(state + 0x114) |= stateFlag;
+        *(u32 *)(state + 0x114) = inputFlags | stateFlag;
     } else {
         ctrlValue = args[1] & 0xff;
     }
 
     command = *args;
-    baseValue = (int)(command & 0xffff0000) / 100 + ((int)command >> 0x1f);
-    baseValue = baseValue - (baseValue >> 0x1f);
-    panDelta = (u32)(s8)(args[1] >> 0x10);
-    panScaled = panDelta << 8;
-    signedDelta = (int)panScaled / 100 + ((int)(panScaled | (panDelta >> 0x18)) >> 0x1f);
-    signedDelta = signedDelta - (signedDelta >> 0x1f);
+    baseValue = (int)(command & 0xffff0000) / 100;
     if (baseValue < 0) {
+        signedDelta = ((s8)(args[1] >> 0x10) << 8) / 100;
         signedDelta = -signedDelta;
+    } else {
+        signedDelta = ((s8)(args[1] >> 0x10) << 8) / 100;
     }
 
     inpAddCtrl(ctrlObj, (command >> 8) & 0xff, baseValue + signedDelta, ctrlValue,
                ((args[1] >> 8) & 0xff) != 0);
-    if ((dirtyFlag & 0x80000000) == 0) {
-        *(u32 *)(state + 0x214) |= dirtyFlag;
-    } else {
+    if ((dirtyFlag & 0x80000000) != 0) {
         inpSetGlobalMIDIDirtyFlag(*(u8 *)(state + 0x121), *(u8 *)(state + 0x122),
                                   dirtyFlag);
+    } else {
+        *(u32 *)(state + 0x214) |= dirtyFlag;
     }
 }
 
