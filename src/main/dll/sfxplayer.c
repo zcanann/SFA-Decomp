@@ -110,19 +110,20 @@ void sfxplayer_update(int obj)
         if (handles[0] != 0) {
           hitObj = 0;
           hitType = ObjHits_GetPriorityHit(handles[1],&hitObj,(int *)0x0,(uint *)0x0);
-          if ((hitType == 0x13) &&
-             (mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac)),
-              (mode == 1 || (*(int *)((int)hitObj + 0xf4) == i)))) {
-            if (handles[0] != 0) {
-              Obj_FreeObject(handles[0]);
+          if (hitType == 0x13) {
+            mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + 0xac));
+            if ((mode == 1) || (*(int *)((int)hitObj + 0xf4) == i)) {
+              if (handles[0] != 0) {
+                Obj_FreeObject(handles[0]);
+              }
+              handles[0] = 0;
+              if (handles[1] != 0) {
+                Obj_FreeObject(handles[1]);
+              }
+              handles[1] = 0;
+              Sfx_PlayFromObject(0,0x409);
+              state->ringCount++;
             }
-            handles[0] = 0;
-            if (handles[1] != 0) {
-              Obj_FreeObject(handles[1]);
-            }
-            handles[1] = 0;
-            Sfx_PlayFromObject(0,0x409);
-            state->ringCount++;
           }
         }
         handles += 2;
