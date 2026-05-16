@@ -7,8 +7,8 @@
 extern void *Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern f32 fsin16Precise(int angle);
-extern f32 fcos16Precise(int angle);
+extern f32 fsin16Precise(u16 angle);
+extern f32 fcos16Precise(u16 angle);
 
 extern void fn_80165B3C(int obj, int sub);
 extern void fn_80165C8C(int obj, int sub);
@@ -80,9 +80,9 @@ undefined4 fn_8016558C(int obj, int param_2)
     if (*(s8 *)(stateWord + 0x27a) != 0) {
         *(f32 *)(sub + 0x60) = lbl_803E3004;
         ObjHits_EnableObject(objLocal);
-        *(f32 *)(objLocal + 0x24) = -*(f32 *)(sub + 0x60) * fsin16Precise((u16)*(s16 *)objLocal);
+        *(f32 *)(objLocal + 0x24) = -*(f32 *)(sub + 0x60) * fsin16Precise(*(s16 *)objLocal);
         *(f32 *)(objLocal + 0x28) = lbl_803E2FDC;
-        *(f32 *)(objLocal + 0x2c) = -*(f32 *)(sub + 0x60) * fcos16Precise((u16)*(s16 *)objLocal);
+        *(f32 *)(objLocal + 0x2c) = -*(f32 *)(sub + 0x60) * fcos16Precise(*(s16 *)objLocal);
         *(u32 *)stateWord |= LANDED_ARWING_FLAG_LAUNCHING;
         ((void (*)(int, int, f32, int))ObjAnim_SetCurrentMove)(objLocal, 0, lbl_803E2FDC, 0);
         *(f32 *)(sub + 0x44) = lbl_803E3008;
