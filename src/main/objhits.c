@@ -2268,7 +2268,8 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
   float local_90;
   float local_8c;
   float local_88;
-  float local_84 [2];
+  float local_84;
+  undefined4 local_80;
   uint uStack_7c;
   undefined4 local_78;
   uint uStack_74;
@@ -2305,12 +2306,12 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
   *puVar6 = (undefined4)psVar4;
   *puVar5 = (undefined4)psVar2;
   if (*(int *)(psVar2 + 0x18) == 0) {
-    local_84[0] = (float)dVar8;
+    local_84 = (float)dVar8;
     local_88 = (float)param_2;
     local_8c = (float)param_3;
   }
   else {
-    Obj_TransformWorldPointToLocal(dVar8,param_2,param_3,local_84,&local_88,&local_8c,*(int *)(psVar2 + 0x18));
+    Obj_TransformWorldPointToLocal(dVar8,param_2,param_3,&local_84,&local_88,&local_8c,*(int *)(psVar2 + 0x18));
   }
   if (*(int *)(psVar4 + 0x18) == 0) {
     local_90 = (float)dVar8;
@@ -2322,7 +2323,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
   }
   if (((psVar2[0x22] == 1) && (*(char *)((int)puVar6 + 0x6a) != '\0')) &&
      ((*(ushort *)(puVar5 + 0x18) & 0x400) == 0)) {
-    *(float *)(psVar2 + 6) = *(float *)(psVar2 + 6) - local_84[0];
+    *(float *)(psVar2 + 6) = *(float *)(psVar2 + 6) - local_84;
     *(float *)(psVar2 + 8) = *(float *)(psVar2 + 8) - local_88;
     *(float *)(psVar2 + 10) = *(float *)(psVar2 + 10) - local_8c;
     if (param_6 == 0) {
@@ -2354,7 +2355,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
   }
   else if (*(char *)((int)puVar5 + 0x6a) == '\0') {
     if (*(char *)((int)puVar6 + 0x6a) != '\0') {
-      *(float *)(psVar2 + 6) = *(float *)(psVar2 + 6) - local_84[0];
+      *(float *)(psVar2 + 6) = *(float *)(psVar2 + 6) - local_84;
       *(float *)(psVar2 + 8) = *(float *)(psVar2 + 8) - local_88;
       *(float *)(psVar2 + 10) = *(float *)(psVar2 + 10) - local_8c;
       if (param_6 == 0) {
@@ -2403,7 +2404,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
       uVar3 = uVar3 + 0xffff;
     }
     uStack_7c = uStack_7c ^ 0x80000000;
-    local_84[1] = 176.0f;
+    local_80 = 0x43300000;
     dVar8 = (double)sin();
     uStack_74 = (uint)*(byte *)((int)puVar6 + 0x6a);
     local_78 = 0x43300000;
@@ -2436,7 +2437,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     if (dVar7 < (double)(float)(dVar9 + dVar8)) {
       dVar7 = (double)(float)(dVar8 / (double)(float)(dVar9 + dVar8));
     }
-    *(float *)(psVar2 + 6) = -(float)((double)local_84[0] * dVar7 - (double)*(float *)(psVar2 + 6));
+    *(float *)(psVar2 + 6) = -(float)((double)local_84 * dVar7 - (double)*(float *)(psVar2 + 6));
     *(float *)(psVar2 + 8) = -(float)((double)local_88 * dVar7 - (double)*(float *)(psVar2 + 8));
     *(float *)(psVar2 + 10) = -(float)((double)local_8c * dVar7 - (double)*(float *)(psVar2 + 10));
     Obj_TransformLocalPointToWorld((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
