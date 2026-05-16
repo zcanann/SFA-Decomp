@@ -8,10 +8,10 @@ extern s16 lbl_803DB990;
 extern f32 lbl_803E1628;
 extern f32 lbl_803E162C;
 
-extern void Obj_TransformWorldPointToLocal(f32 *outX, f32 *outY, f32 *outZ,
-                                           f32 x, f32 y, f32 z, void *xform);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z,
+                                           f32 *outX, f32 *outY, f32 *outZ, void *xform);
 extern void objRenderFn_8003b8f4(u8 *reticle, undefined4 a, undefined4 b, undefined4 c,
-                        undefined4 d, undefined4 e, f32 f);
+                        undefined4 d, f32 f);
 
 #pragma scheduling off
 #pragma peephole off
@@ -31,8 +31,8 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
   u8 savedReticleByte;
   u8 *reticle;
   u8 *target;
-  u8 *slot;
   u8 *otherTbl;
+  u8 *slot;
   u8 idx;
   s8 mode;
   int paletteIdx;
@@ -80,15 +80,15 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
     *(f32 *)(reticle + 0x18) = *(f32 *)(slot + 0x0);
     *(f32 *)(reticle + 0x1C) = *(f32 *)(slot + 0x4);
     *(f32 *)(reticle + 0x20) = *(f32 *)(slot + 0x8);
-    reticle[0xAD] = (u8)mode;
+    reticle[0xAD] = mode;
 
     *(u32 *)(reticle + 0x30) = *(u32 *)(target + 0x30);
     if (*(u32 *)(reticle + 0x30) != 0) {
-      Obj_TransformWorldPointToLocal((f32 *)(reticle + 0xC), (f32 *)(reticle + 0x10),
-                                     (f32 *)(reticle + 0x14),
-                                     *(f32 *)(reticle + 0x18),
+      Obj_TransformWorldPointToLocal(*(f32 *)(reticle + 0x18),
                                      *(f32 *)(reticle + 0x1C),
                                      *(f32 *)(reticle + 0x20),
+                                     (f32 *)(reticle + 0xC), (f32 *)(reticle + 0x10),
+                                     (f32 *)(reticle + 0x14),
                                      (void *)*(u32 *)(reticle + 0x30));
     } else {
       *(f32 *)(reticle + 0xC) = *(f32 *)(reticle + 0x18);
@@ -99,7 +99,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
     *(s16 *)(reticle + 0x4) = 0;
     *(f32 *)(reticle + 0x8) = lbl_803E1628;
     reticle[0x37] = reticle[0x36];
-    objRenderFn_8003b8f4(reticle, arg3, arg4, arg5, arg6, 0, lbl_803E162C);
+    objRenderFn_8003b8f4(reticle, arg3, arg4, arg5, arg6, lbl_803E162C);
   } else {
     *(u32 *)(reticle + 0x30) = 0;
   }
