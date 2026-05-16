@@ -2498,7 +2498,7 @@ void ObjHits_DetectObjectPair(void)
   double dVar23;
   double dVar24;
   undefined8 uVar25;
-  undefined8 local_b0;
+  double local_b0;
   
   uVar25 = FUN_80286840();
   iVar10 = (int)((ulonglong)uVar25 >> 0x20);
