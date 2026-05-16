@@ -50,6 +50,8 @@ extern f32 lbl_803E5A1C;
 extern f32 lbl_803E5A20;
 
 #define DR_LASERTURRET_FLAG_ACTION_ACTIVE 0x08
+#define DR_LASERTURRET_FLAG_START_SEQUENCE 0x02
+#define DR_LASERTURRET_FLAG_CONFIRM_PROMPT 0x10
 
 typedef struct DRLaserTurretState {
     u8 pad000[0x9b0];
@@ -268,10 +270,10 @@ int fn_801E6D08(void *obj, void *param2)
  */
 int fn_801E7124(void *obj)
 {
-    void *state;
+    DRLaserTurretState *state;
     int v;
 
-    state = *(void **)((char *)obj + 0xb8);
+    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
     if (GameBit_Get(0xcef) == 0) {
         return 0;
     }
@@ -279,7 +281,7 @@ int fn_801E7124(void *obj)
     if (v == 0) {
         int *target;
         GameBit_Set(0xad3, 1);
-        target = *(int **)((char *)state + 0x9b4);
+        target = state->linkedTarget;
         (**(code ***)((char *)target + 0x68))[0x24 / 4](target, 1, 2);
     }
     return 2;
@@ -294,7 +296,7 @@ int fn_801E7124(void *obj)
  */
 int fn_801E71A4(void *obj, void *param2, int dispatch)
 {
-    void *state;
+    DRLaserTurretState *state;
     char stickHi;
     char stickLo;
     s16 v9d0;
@@ -302,25 +304,25 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
     int slot;
     char nudge;
 
-    state = *(void **)((char *)obj + 0xb8);
+    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
     if (dispatch == 0x14) {
         padGetAnalogInput(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0) {
-            *(s16 *)((char *)state + 0x9d0) = *(s16 *)((char *)state + 0x9d0) - 1;
+            state->countValue = state->countValue - 1;
             Sfx_PlayFromObject(0, 0xf3);
         } else if ((s8)stickLo > 0) {
-            *(s16 *)((char *)state + 0x9d0) = *(s16 *)((char *)state + 0x9d0) + 1;
+            state->countValue = state->countValue + 1;
             Sfx_PlayFromObject(0, 0xf3);
         }
-        if (*(s16 *)((char *)state + 0x9d0) > *(s16 *)((char *)state + 0x9c8)) {
-            *(s16 *)((char *)state + 0x9d0) = *(s16 *)((char *)state + 0x9c8);
+        if (state->countValue > state->maxCount) {
+            state->countValue = state->maxCount;
         }
-        if (*(s16 *)((char *)state + 0x9d0) > (s16)(*(s16 *)((char *)state + 0x9cc) << 1)) {
-            *(s16 *)((char *)state + 0x9d0) = (s16)(*(s16 *)((char *)state + 0x9cc) << 1);
-        } else if (*(s16 *)((char *)state + 0x9d0) < (s16)(*(s16 *)((char *)state + 0x9cc) >> 1)) {
-            *(s16 *)((char *)state + 0x9d0) = (s16)(*(s16 *)((char *)state + 0x9cc) >> 1);
+        if (state->countValue > (s16)(state->countScale << 1)) {
+            state->countValue = (s16)(state->countScale << 1);
+        } else if (state->countValue < (s16)(state->countScale >> 1)) {
+            state->countValue = (s16)(state->countScale >> 1);
         }
-        v9d0 = *(s16 *)((char *)state + 0x9d0);
+        v9d0 = state->countValue;
         *(int *)objFindTexture(obj, 8, 0) = (v9d0 - v9d0 / 10 * 10) << 8;
         *(int *)objFindTexture(obj, 7, 0) = (v9d0 / 10 - v9d0 / 100 * 10) << 8;
         slot = v9d0 / 100;
@@ -329,22 +331,22 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
     } else if (dispatch == 0x17) {
         padGetAnalogInput(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0) {
-            *(u8 *)((char *)state + 0x9d5) = *(u8 *)((char *)state + 0x9d5) - 1;
+            state->digitCount = state->digitCount - 1;
             Sfx_PlayFromObject(0, 0xf3);
         } else if ((s8)stickLo > 0) {
-            *(u8 *)((char *)state + 0x9d5) = *(u8 *)((char *)state + 0x9d5) + 1;
+            state->digitCount = state->digitCount + 1;
             Sfx_PlayFromObject(0, 0xf3);
         }
-        if (*(u8 *)((char *)state + 0x9d5) > *(s16 *)((char *)state + 0x9c8)) {
-            *(u8 *)((char *)state + 0x9d5) = (u8)*(s16 *)((char *)state + 0x9c8);
+        if (state->digitCount > state->maxCount) {
+            state->digitCount = (u8)state->maxCount;
         }
-        if (*(u8 *)((char *)state + 0x9d5) > 0xa) {
-            *(u8 *)((char *)state + 0x9d5) = 0xa;
-        } else if (*(u8 *)((char *)state + 0x9d5) < 1) {
-            *(u8 *)((char *)state + 0x9d5) = 1;
+        if (state->digitCount > 0xa) {
+            state->digitCount = 0xa;
+        } else if (state->digitCount < 1) {
+            state->digitCount = 1;
         }
         {
-            u8 v = *(u8 *)((char *)state + 0x9d5);
+            u8 v = state->digitCount;
             *(int *)objFindTexture(obj, 8, 0) = (v - v / 10 * 10) << 8;
             *(int *)objFindTexture(obj, 7, 0) = (v / 10 - v / 100 * 10) << 8;
             slot = v / 100;
@@ -353,7 +355,7 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
         }
         btn = getButtonsJustPressed(0);
         if ((btn & 0x200) != 0) {
-            *(u8 *)((char *)state + 0x9d4) = *(u8 *)((char *)state + 0x9d4) | 0x10;
+            state->flags = state->flags | DR_LASERTURRET_FLAG_CONFIRM_PROMPT;
             (*(code **)lbl_803DCA4C)[0x8 / 4](0x1e, 1);
             return 1;
         }
@@ -362,8 +364,8 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
     if ((btn & 0x100) == 0) {
         return 0;
     }
-    if (*(s16 *)((char *)state + 0x9d0) < *(s16 *)((char *)state + 0x9ce)) {
-        if (*(u8 *)((char *)state + 0x9d2) >= 2) nudge = 2;
+    if (state->countValue < state->countTarget) {
+        if (state->nudgeCount >= 2) nudge = 2;
         else nudge = 0;
     } else {
         nudge = 1;
@@ -371,12 +373,12 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
     switch (dispatch) {
     case 0x14:
         if ((s8)nudge == 0) {
-            *(u8 *)((char *)state + 0x9d2) = *(u8 *)((char *)state + 0x9d2) + 1;
+            state->nudgeCount = state->nudgeCount + 1;
         }
         return ((s8)nudge == 0) ? 1 : 0;
     case 0x15:
         if ((s8)nudge == 1) {
-            int *target = *(int **)((char *)state + 0x9b4);
+            int *target = state->linkedTarget;
             (**(code ***)((char *)target + 0x68))[0x48 / 4](target);
         }
         return ((s8)nudge == 1) ? 1 : 0;
@@ -395,22 +397,22 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
  */
 void fn_801E75EC(void *obj)
 {
-    void *state;
+    DRLaserTurretState *state;
 
-    state = *(void **)((char *)obj + 0xb8);
-    if ((*(u8 *)((char *)state + 0x9d4) & 2) != 0) {
+    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
+    if ((state->flags & DR_LASERTURRET_FLAG_START_SEQUENCE) != 0) {
         int *target;
         gameTimerInit(0x11, 0x1e);
         timerSetToCountUp();
         hudFn_8011f6f0(1);
         GameBit_Set(0x626, 1);
-        target = *(int **)((char *)state + 0x9b4);
-        (**(code ***)((char *)target + 0x68))[0x4c / 4](target, *(u8 *)((char *)state + 0x9d5));
+        target = state->linkedTarget;
+        (**(code ***)((char *)target + 0x68))[0x4c / 4](target, state->digitCount);
         (*(code **)lbl_803DCA74)[0x4 / 4](0, 0xf5, 0, 0, 0);
     } else {
         hudFn_8011f38c(0);
     }
-    *(u8 *)((char *)state + 0x9d4) = 0;
+    state->flags = 0;
 }
 
 #pragma scheduling reset
