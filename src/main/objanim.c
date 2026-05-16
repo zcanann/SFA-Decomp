@@ -1112,12 +1112,14 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
   ObjAnimState *state;
   s16 previousMove;
   u8 moveChanged;
+  int requestedMoveId;
   int frameStep;
   ObjAnimMoveData *moveData;
   float eventStepFrames;
   ObjHitReactState *hitState;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
+  requestedMoveId = moveId;
   if (moveProgress > gObjAnimProgressOne) {
     moveProgress = gObjAnimProgressOne;
   }
@@ -1148,16 +1150,16 @@ undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int
   state->lastBlendMoveIndex = OBJANIM_BLEND_MOVE_INDEX_INVALID;
   hitState = objAnim->hitReactState;
   if ((hitState != (ObjHitReactState *)0x0) && (hitState->entries != (ObjHitReactEntry *)0x0)) {
-    ObjHitReact_LoadMoveEntries(objAnimArg,bank,(int)objAnim->objType,hitState,moveId,0);
+    ObjHitReact_LoadMoveEntries(objAnimArg,bank,(int)objAnim->objType,hitState,requestedMoveId,0);
   }
   if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
-    ObjAnim_LoadMoveEvents(objAnimArg,(int)objAnim->objType,objAnim->eventTable,moveId,0);
+    ObjAnim_LoadMoveEvents(objAnimArg,(int)objAnim->objType,objAnim->eventTable,requestedMoveId,0);
   }
   previousMove = objAnim->currentMove;
-  moveChanged = previousMove != moveId;
-  objAnim->currentMove = (s16)moveId;
-  moveId = (int)animDef->moveGroupBaseIndices[moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
-           (moveId & OBJANIM_MOVE_INDEX_MASK);
+  moveChanged = previousMove != requestedMoveId;
+  objAnim->currentMove = (s16)requestedMoveId;
+  moveId = (int)animDef->moveGroupBaseIndices[requestedMoveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+           (requestedMoveId & OBJANIM_MOVE_INDEX_MASK);
   if (moveId >= (int)animDef->moveCount) {
     moveId = animDef->moveCount - 1;
   }
