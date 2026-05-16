@@ -1078,34 +1078,51 @@ void fn_802788B4(int state, u32 skipFadeReset)
  */
 void audioFn_80278990(int state)
 {
-    int activeTimeHi;
-    int hadHead;
+    u32 wakeHi;
+    u32 wakeLo;
+    u32 prev;
+    u32 next;
+    u32 zero;
+    u32 allBits;
+    u32 activeTimeHi;
+    u32 activeTimeLo;
+    u32 flags118;
+    u32 flags114;
+    u32 activeHead;
 
     if (*(int *)(state + 0x4c) != 0) {
-        if ((*(u32 *)(state + 0x9c) | *(u32 *)(state + 0x98)) != 0) {
-            if ((*(u32 *)(state + 0x9c) ^ 0xffffffff |
-                 *(u32 *)(state + 0x98) ^ 0xffffffff) != 0) {
-                if (*(int *)(state + 0x48) == 0) {
+        wakeHi = *(u32 *)(state + 0x98);
+        zero = 0;
+        wakeLo = *(u32 *)(state + 0x9c);
+        if (((wakeHi ^ zero) | (wakeLo ^ zero)) != 0) {
+            allBits = 0xffffffff;
+            if (((wakeLo ^ allBits) | (wakeHi ^ allBits)) != 0) {
+                prev = *(u32 *)(state + 0x48);
+                if (prev == 0) {
                     macTimeQueueRoot = *(int *)(state + 0x44);
                 } else {
-                    *(int *)(*(int *)(state + 0x48) + 0x44) = *(int *)(state + 0x44);
+                    *(int *)(prev + 0x44) = *(int *)(state + 0x44);
                 }
-                if (*(int *)(state + 0x44) != 0) {
-                    *(int *)(*(int *)(state + 0x44) + 0x48) = *(int *)(state + 0x48);
+                next = *(u32 *)(state + 0x44);
+                if (next != 0) {
+                    *(int *)(next + 0x48) = *(int *)(state + 0x48);
                 }
             }
             audioFn_8027132c((void *)state);
             *(int *)(state + 0x9c) = 0;
             *(int *)(state + 0x98) = 0;
             activeTimeHi = macRealTimeHi;
-            *(int *)(state + 0xa4) = macRealTimeLo;
+            activeTimeLo = macRealTimeLo;
+            *(int *)(state + 0xa4) = activeTimeLo;
             *(int *)(state + 0xa0) = activeTimeHi;
-            *(u32 *)(state + 0x118) &= 0xfffbfffb;
-            *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+            flags118 = *(u32 *)(state + 0x118);
+            flags114 = *(u32 *)(state + 0x114);
+            *(u32 *)(state + 0x118) = flags118 & 0xfffbfffb;
+            *(u32 *)(state + 0x114) = flags114 & allBits;
         }
-        hadHead = macActiveRoot != 0;
-        *(int *)(state + 0x3c) = macActiveRoot;
-        if (hadHead) {
+        activeHead = macActiveRoot;
+        *(int *)(state + 0x3c) = activeHead;
+        if (activeHead != 0) {
             *(int *)(macActiveRoot + 0x40) = state;
         }
         *(int *)(state + 0x40) = 0;
