@@ -4,9 +4,9 @@
 #include "ghidra_import.h"
 
 void hwRemoveInput(u32 idx);
-int hwChangeStudio(int param_1);
-void hwGetPos(int param_1, u32 param_2, int param_3, int param_4, undefined4 param_5,
-              undefined4 param_6);
+int hwChangeStudio(int slot);
+void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 callback,
+              undefined4 callbackArg);
 void hwFlushStream(int stream);
 void hwInitStream(void);
 

@@ -29,7 +29,7 @@ void hwRemoveInput(u32 idx) {
  * EN v1.0 Address: 0x80283C08
  * EN v1.0 Size: 164b
  */
-int hwChangeStudio(int param_1) {
+int hwChangeStudio(int slot) {
     int mode;
     u32 pos;
     u32 lowBits;
@@ -37,7 +37,7 @@ int hwChangeStudio(int param_1) {
     int base;
     int offset;
 
-    offset = param_1 * 0xf4;
+    offset = slot * 0xf4;
     base = dspVoice;
     entry = base + offset;
     if (*(u8 *)(entry + 0xec) != 2) {
@@ -63,7 +63,7 @@ int hwChangeStudio(int param_1) {
     case 2:
         return *(int *)(entry + 0x20) - (*(u32 *)(entry + 0x78) >> 1);
     default:
-        return param_1;
+        return slot;
     }
 }
 
@@ -74,19 +74,25 @@ int hwChangeStudio(int param_1) {
  * EN v1.0 Address: 0x80283CAC
  * EN v1.0 Size: 136b
  */
-void hwGetPos(int param_1, u32 param_2, int param_3, int param_4, undefined4 param_5,
-              undefined4 param_6) {
+void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 callback,
+              undefined4 callbackArg) {
+    int alignedDest;
+    u32 alignedStreamPos;
+    int alignedByteCount;
     u32 size;
     int offset;
     u8 stack[8];
 
-    offset = aramGetStreamBufferAddress(param_4, stack);
-    param_3 += param_2 & 0x1f;
-    param_2 &= 0xffffffe0;
-    size = (param_3 + 0x1f) & 0xffffffe0;
-    param_1 = param_1 + param_2;
-    DCStoreRange((void *)param_1, size);
-    aramUploadData(param_1, offset + param_2, size, 1, param_5, param_6);
+    alignedDest = dest;
+    alignedStreamPos = streamPos;
+    alignedByteCount = byteCount;
+    offset = aramGetStreamBufferAddress(stream, stack);
+    alignedByteCount += alignedStreamPos & 0x1f;
+    alignedStreamPos &= 0xffffffe0;
+    size = (alignedByteCount + 0x1f) & 0xffffffe0;
+    alignedDest += alignedStreamPos;
+    DCStoreRange((void *)alignedDest, size);
+    aramUploadData(alignedDest, offset + alignedStreamPos, size, 1, callback, callbackArg);
 }
 
 /*
