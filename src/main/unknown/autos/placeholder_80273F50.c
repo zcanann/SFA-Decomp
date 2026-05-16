@@ -810,22 +810,23 @@ extern u8 dataMacroBucketTable[];
 extern u8 dataMacroTable[];
 extern u32 dataGetMacro_main;
 extern u32 dataGetMacro_bucket;
-extern u8 dataGetMacro_key[];
+extern u8 dataGetMacro_key[8];
 extern void *dataGetMacro_result;
 
 void *dataGetMacro(u32 key)
 {
     u16 *bucketTable;
+    void *result;
 
     bucketTable = (u16 *)dataMacroBucketTable;
     dataGetMacro_bucket = (key >> 6) & 0x3ff;
     if (bucketTable[dataGetMacro_bucket * 2] != 0) {
         dataGetMacro_main = bucketTable[dataGetMacro_bucket * 2 + 1];
         *(u16 *)(dataGetMacro_key + 4) = key;
-        dataGetMacro_result =
-            sndBSearch(dataGetMacro_key, dataMacroTable + dataGetMacro_main * 8,
-                       bucketTable[dataGetMacro_bucket * 2], 8, maccmp);
-        if (dataGetMacro_result != 0) {
+        result = sndBSearch(dataGetMacro_key, dataMacroTable + dataGetMacro_main * 8,
+                            bucketTable[dataGetMacro_bucket * 2], 8, maccmp);
+        dataGetMacro_result = result;
+        if (result != 0) {
             return ((DataRefEntry *)dataGetMacro_result)->data;
         }
     }
@@ -909,17 +910,20 @@ extern u16 dataCurveNum;
 extern u16 dataKeymapNum;
 extern u16 dataLayerNum;
 extern u16 dataFXGroupNum;
-extern u8 dataGetCurve_key[];
+extern u8 dataGetCurve_key[8];
 extern void *dataGetCurve_result;
-extern u8 dataGetKeymap_key[];
+extern u8 dataGetKeymap_key[8];
 extern void *dataGetKeymap_result;
 extern void *dataGetLayer_result;
 
 void *dataGetCurve(u16 key)
 {
+    void *result;
+
     *(u16 *)(dataGetCurve_key + 4) = key;
-    dataGetCurve_result = sndBSearch(dataGetCurve_key, dataCurveTable, dataCurveNum, 8, curvecmp);
-    if (dataGetCurve_result == 0) {
+    result = sndBSearch(dataGetCurve_key, dataCurveTable, dataCurveNum, 8, curvecmp);
+    dataGetCurve_result = result;
+    if (result == 0) {
         return 0;
     }
     return ((DataRefEntry *)dataGetCurve_result)->data;
@@ -930,9 +934,12 @@ void *dataGetCurve(u16 key)
  */
 void *dataGetKeymap(u16 key)
 {
+    void *result;
+
     *(u16 *)(dataGetKeymap_key + 4) = key;
-    dataGetKeymap_result = sndBSearch(dataGetKeymap_key, dataKeymapTable, dataKeymapNum, 8, curvecmp);
-    if (dataGetKeymap_result == 0) {
+    result = sndBSearch(dataGetKeymap_key, dataKeymapTable, dataKeymapNum, 8, curvecmp);
+    dataGetKeymap_result = result;
+    if (result == 0) {
         return 0;
     }
     return ((DataRefEntry *)dataGetKeymap_result)->data;
@@ -954,11 +961,12 @@ int layercmp(void *a, void *b)
 void *dataGetLayer(u16 key, u16 *outCount)
 {
     u8 *searchKey = dataGetLayerSearchKey;
+    void *result;
 
     *(u16 *)(searchKey + 4) = key;
-    dataGetLayer_result =
-        sndBSearch(searchKey, dataLayerTable, dataLayerNum, 0xc, layercmp);
-    if (dataGetLayer_result == 0) {
+    result = sndBSearch(searchKey, dataLayerTable, dataLayerNum, 0xc, layercmp);
+    dataGetLayer_result = result;
+    if (result == 0) {
         return 0;
     }
     *outCount = ((DataLayerRef *)dataGetLayer_result)->count;
