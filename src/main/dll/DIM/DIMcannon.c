@@ -126,6 +126,10 @@ extern f32 lbl_803E549C;
 extern f32 lbl_803E54A0;
 extern f32 lbl_803E54AC;
 
+extern void imicepillar_free(void);
+extern int imicepillar_func08(void);
+extern int imicepillar_getExtraSize(void);
+
 /*
  * --INFO--
  *
@@ -1893,6 +1897,24 @@ void imicepillar_update(void) {}
 void imicepillar_init(void) {}
 void imicepillar_release(void) {}
 void imicepillar_initialise(void) {}
+
+u32 gIMIcePillarObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)imicepillar_initialise,
+    (u32)imicepillar_release,
+    0,
+    (u32)imicepillar_init,
+    (u32)imicepillar_update,
+    (u32)imicepillar_hitDetect,
+    (u32)imicepillar_render,
+    (u32)imicepillar_free,
+    (u32)imicepillar_func08,
+    (u32)imicepillar_getExtraSize,
+};
+
 void imanimspacecraft_modelMtxFn(void) {}
 void imanimspacecraft_hitDetect(void) {}
 void imanimspacecraft_release(void) {}

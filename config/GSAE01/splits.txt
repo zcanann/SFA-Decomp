@@ -911,6 +911,7 @@ main/dll/DIM/DIMboulder.c:
 
 main/dll/DIM/DIMcannon.c:
 	.text       start:0x801AE100 end:0x801B0924
+	.data       start:0x80323778 end:0x803237B0
 
 main/dll/DIM/DIMlavasmash.c:
 	.text       start:0x801B0924 end:0x801B1354
