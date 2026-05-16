@@ -46,6 +46,8 @@ extern u8 lbl_803BDEF4[];
 extern u32 lbl_803D3CA0[];
 extern u32 lbl_8032FFE0[];
 
+#define MIDI_DIRTY_AUX_BANK_STRIDE 0x10
+
 /*
  * Cached aux A input getter for a studio/channel/slot.
  */
@@ -55,7 +57,7 @@ u32 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     u32 mask;
     u32 tableIndex;
 
-    tableIndex = (handleIndex & 0xff) * 0x10 + (auxIndex & 0xff);
+    tableIndex = (handleIndex & 0xff) * MIDI_DIRTY_AUX_BANK_STRIDE + (auxIndex & 0xff);
     flags = lbl_803D3CA0[tableIndex];
     mask = lbl_8032FFE0[channel & 0xff];
     if ((mask & flags) == 0) {
@@ -75,7 +77,7 @@ u32 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     u32 mask;
     u32 tableIndex;
 
-    tableIndex = (handleIndex & 0xff) * 0x10 + (auxIndex & 0xff);
+    tableIndex = (handleIndex & 0xff) * MIDI_DIRTY_AUX_BANK_STRIDE + (auxIndex & 0xff);
     flags = lbl_803D3CA0[tableIndex];
     mask = lbl_8032FFE0[(channel & 0xff) + 4];
     if ((mask & flags) == 0) {

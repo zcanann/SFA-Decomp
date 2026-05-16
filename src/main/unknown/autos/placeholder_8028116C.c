@@ -30,6 +30,9 @@ extern void s3dExit(void);
 extern void synthExit(void);
 extern double __frsqrte(double x);
 
+#define MIDI_DIRTY_GROUP_STRIDE 0x40
+#define MIDI_DIRTY_ENTRY_STRIDE 4
+
 void sndQuit(void)
 {
     hwExit();
@@ -85,8 +88,8 @@ void inpSetGlobalMIDIDirtyFlag(u8 index, u8 group, u32 flags)
     u8 *entry;
     u32 offset;
 
-    groupBase = lbl_803D3CA0 + group * 0x40;
-    offset = index * 4;
+    groupBase = lbl_803D3CA0 + group * MIDI_DIRTY_GROUP_STRIDE;
+    offset = index * MIDI_DIRTY_ENTRY_STRIDE;
     entry = groupBase + offset;
     *(u32 *)entry |= flags;
 }
