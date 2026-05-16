@@ -529,7 +529,7 @@ void fn_801D44A4(void *obj, void *state)
       *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
       *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
       *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
-      fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
+      fn_8003B500(obj, (void *)((int)state + 0x8), lbl_803E53F8);
       break;
     default:
       break;
@@ -543,7 +543,6 @@ void fn_801D44A4(void *obj, void *state)
 void fn_801D4364(void *obj, void *state)
 {
   void *player;
-  u8 *trackingState;
 
   player = Obj_GetPlayerObject();
   *(u8 *)((u8 *)obj + 0xaf) &= ~0x8;
@@ -564,12 +563,11 @@ void fn_801D4364(void *obj, void *state)
   }
 
   player = Obj_GetPlayerObject();
-  ((u8 *)state)[8] = 1;
+  *(u8 *)((u8 *)state + 0x8) = 1;
   *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
   *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
   *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
-  trackingState = (u8 *)state + 0x8;
-  fn_8003B500(obj, trackingState, lbl_803E53F8);
+  fn_8003B500(obj, (void *)((int)state + 0x8), lbl_803E53F8);
 }
 #pragma peephole reset
 #pragma scheduling reset
