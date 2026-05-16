@@ -9,6 +9,7 @@ extern uint GameBit_Get(int bit);
 extern int coordsToMapCell(u8 *p, f32 a, f32 b);
 extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 
+#pragma scheduling off
 #pragma peephole off
 
 /*
@@ -61,3 +62,5 @@ int trickyFoodFn_8013db3c(u8 *arg1, u8 *arg2)
   }
   return result;
 }
+
+#pragma scheduling reset
