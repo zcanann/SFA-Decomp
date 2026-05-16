@@ -125,7 +125,7 @@ void worldasteroids_update(WorldAsteroidsObject *obj)
 #pragma peephole off
 void worldasteroids_init(WorldAsteroidsObject *obj)
 {
-  int baseAngle;
+  s16 baseAngle;
   s16 randomValue;
   WorldAsteroidsState *state;
   f32 orbitShape;
