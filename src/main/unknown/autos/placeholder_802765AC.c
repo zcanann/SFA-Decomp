@@ -101,7 +101,7 @@ u32 macSetExternalKeyoff(int state);
 extern u32 inpGetExCtrl(int state, u32 ctrl);
 extern void inpSetExCtrl(int state, u32 ctrl, s16 value);
 extern void voiceKill(u32 voice);
-extern u8 lbl_803BD9E4[];
+extern u8 lbl_803BDA34[];
 extern void sndConvertTicks(u32 *p, int state);
 extern void sndConvertMs(u32 *p);
 extern void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask);
@@ -115,6 +115,8 @@ extern void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
 extern void inpSetGlobalMIDIDirtyFlag(u8 a, u8 b, u32 flag);
 extern int vidGetInternalId(u32 id);
 extern void (*synthMessageCallback)(u32 id);
+
+#define SYNTH_GLOBAL_REG(index) (*(u32 *)(lbl_803BDA34 + (index) * 4 - 0x40))
 
 /*
  * --INFO--
@@ -549,20 +551,21 @@ void fn_8027670C(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
  * Read a 32-bit synth register, either from the voice or EX controller bank.
  */
 #pragma dont_inline on
-u32 fn_802769A4(int state, int useExCtrl, u32 index)
+u32 fn_802769A4(int state, u32 useExCtrl, u32 index)
 {
     u32 value;
 
-    if (useExCtrl == 0) {
-        index &= 0x1f;
-        if (index < 0x10) {
-            value = *(u32 *)(state + index * 4 + 0xac);
-        } else {
-            value = *(u32 *)(lbl_803BD9E4 + 0x10 + index * 4);
-        }
-    } else {
+    if (useExCtrl != 0) {
         value = inpGetExCtrl(state, index);
         value &= 0xffff;
+    } else {
+        index &= 0x1f;
+        if (index < 0x10) {
+            state += index * 4;
+            value = *(u32 *)(state + 0xac);
+        } else {
+            value = SYNTH_GLOBAL_REG(index);
+        }
     }
     return value;
 }
@@ -570,37 +573,39 @@ u32 fn_802769A4(int state, int useExCtrl, u32 index)
 /*
  * Read a signed 16-bit synth register.
  */
-int fn_80276A08(int state, int useExCtrl, u32 index)
+int fn_80276A08(int state, u32 useExCtrl, u32 index)
 {
-    s16 value;
+    u32 value;
 
-    if (useExCtrl == 0) {
+    if (useExCtrl != 0) {
+        value = inpGetExCtrl(state, index) & 0xffff;
+    } else {
         index &= 0x1f;
         if (index < 0x10) {
-            value = (s16)*(u32 *)(state + index * 4 + 0xac);
+            state += index * 4;
+            value = *(u32 *)(state + 0xac);
         } else {
-            value = (s16)*(u32 *)(lbl_803BD9E4 + 0x10 + index * 4);
+            value = SYNTH_GLOBAL_REG(index);
         }
-    } else {
-        value = inpGetExCtrl(state, index);
     }
-    return value;
+    return (s16)value;
 }
 
 /*
  * Write a synth register, routing high registers to the EX controller bank.
  */
-void fn_80276A70(int state, int useExCtrl, u32 index, u32 value)
+void fn_80276A70(int state, u32 useExCtrl, u32 index, u32 value)
 {
-    if (useExCtrl == 0) {
+    if (useExCtrl != 0) {
+        inpSetExCtrl(state, index, (s16)value);
+    } else {
         index &= 0x1f;
         if (index < 0x10) {
-            *(u32 *)(state + index * 4 + 0xac) = value;
+            state += index * 4;
+            *(u32 *)(state + 0xac) = value;
         } else {
-            *(u32 *)(lbl_803BD9E4 + 0x10 + index * 4) = value;
+            SYNTH_GLOBAL_REG(index) = value;
         }
-    } else {
-        inpSetExCtrl(state, index, (s16)value);
     }
 }
 #pragma dont_inline reset
@@ -722,30 +727,26 @@ void mcmdSendMessage(int state, u32 *args)
     u32 targetInstrument;
     int offset;
     int voice;
-    u32 i;
-    int targetVoice;
+    u8 i;
+    u32 targetVoice;
 
     index = (args[1] >> 8) & 0x1f;
     if (index < 0x10) {
         value = *(u32 *)(state + index * 4 + 0xac);
     } else {
-        value = *(u32 *)(lbl_803BD9E4 + 0x10 + index * 4);
+        value = SYNTH_GLOBAL_REG(index);
     }
 
     if (((*args >> 8) & 0xff) == 0) {
         targetInstrument = *args >> 0x10;
-        if (targetInstrument == 0xffff) {
-            if (synthMessageCallback != 0) {
-                synthMessageCallback(*(u32 *)(*(int *)(state + 0xf8) + 8));
-            }
-        } else {
+        if (targetInstrument != 0xffff) {
             offset = 0;
             for (i = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++) {
                 voice = (int)(synthVoice + offset);
                 if (*(int *)(voice + 0x34) != 0 &&
                     targetInstrument == *(u16 *)(voice + 0x102)) {
                     targetVoice = vidGetInternalId(*(u32 *)(*(int *)(voice + 0xf8) + 8));
-                    if (targetVoice != -1) {
+                    if (targetVoice != 0xffffffff) {
                         voice = (int)(synthVoice + (targetVoice & 0xff) * 0x404);
                         if (*(u8 *)(voice + 0x3ec) < 4) {
                             *(u8 *)(voice + 0x3ec) = *(u8 *)(voice + 0x3ec) + 1;
@@ -763,16 +764,20 @@ void mcmdSendMessage(int state, u32 *args)
                 }
                 offset += 0x404;
             }
+        } else {
+            if (synthMessageCallback != 0) {
+                synthMessageCallback(*(u32 *)(*(int *)(state + 0xf8) + 8));
+            }
         }
     } else {
         index = args[1] & 0x1f;
         if (index < 0x10) {
             targetInstrument = *(u32 *)(state + index * 4 + 0xac);
         } else {
-            targetInstrument = *(u32 *)(lbl_803BD9E4 + 0x10 + index * 4);
+            targetInstrument = SYNTH_GLOBAL_REG(index);
         }
         targetVoice = vidGetInternalId(targetInstrument);
-        if (targetVoice != -1) {
+        if (targetVoice != 0xffffffff) {
             voice = (int)(synthVoice + (targetVoice & 0xff) * 0x404);
             if (*(u8 *)(voice + 0x3ec) < 4) {
                 *(u8 *)(voice + 0x3ec) = *(u8 *)(voice + 0x3ec) + 1;
