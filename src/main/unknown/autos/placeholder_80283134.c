@@ -94,7 +94,7 @@ extern void salCtrlDsp(u32 param_1);
 extern void salHandleAuxProcessing(void);
 extern void fn_8026EC44(u32 value);
 extern void audioFn_80271498(u32 value);
-extern void fn_80280C30(void);
+extern void s3dHandle(void);
 extern void synthUpdateJobTable(void);
 extern void synthUpdateVirtualSamples(void);
 
@@ -164,7 +164,7 @@ void snd_handle_irq(void)
 
     hwIRQEnterCritical();
     hwSetTimeOffset(0);
-    fn_80280C30();
+    s3dHandle();
     hwIRQLeaveCritical();
     hwIRQEnterCritical();
     synthUpdateJobTable();

@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void fn_80280C30(void);
+void s3dHandle(void);
 void s3dInit(u32 flags);
 void s3dExit(void);
 int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32 flags);

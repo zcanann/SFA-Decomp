@@ -24,11 +24,10 @@ extern u8 snd_max_studios;
 extern u8 lbl_803DE36A;
 
 /*
- * fn_80280C30 - large state-table init not implemented here; stubbed
- * so that any cross-file callers link.
+ * 3D sound emitter/listener update. Stubbed so cross-file callers link.
  */
 #pragma dont_inline on
-void fn_80280C30(void)
+void s3dHandle(void)
 {
 }
 #pragma dont_inline reset
