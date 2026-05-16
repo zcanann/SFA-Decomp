@@ -2969,3 +2969,45 @@ extern void fn_8015DAE8(void);
 extern void Camera_DisableViewYOffset(void);
 void fn_8015DAC8(void) { fn_8015DAE8(); }
 void iceball_free(void) { Camera_DisableViewYOffset(); }
+
+extern void chukchuk_setScale(void);
+extern void chukchuk_update(void);
+extern void chukchuk_init(void);
+extern void iceball_update(void);
+extern void iceball_init(void);
+
+u32 gChukChukObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x000A0000,
+    (u32)chukchuk_initialise,
+    (u32)chukchuk_release,
+    0,
+    (u32)chukchuk_init,
+    (u32)chukchuk_update,
+    (u32)chukchuk_hitDetect,
+    (u32)chukchuk_render,
+    (u32)chukchuk_free,
+    (u32)chukchuk_func08,
+    (u32)chukchuk_getExtraSize,
+    (u32)chukchuk_setScale,
+    0,
+};
+
+u32 gIceBallObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)iceball_initialise,
+    (u32)iceball_release,
+    0,
+    (u32)iceball_init,
+    (u32)iceball_update,
+    (u32)iceball_hitDetect,
+    (u32)iceball_render,
+    (u32)iceball_free,
+    (u32)iceball_func08,
+    (u32)iceball_getExtraSize,
+};

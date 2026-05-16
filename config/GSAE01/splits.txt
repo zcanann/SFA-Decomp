@@ -671,6 +671,7 @@ main/dll/mediumbasket.c:
 
 main/dll/scarab.c:
 	.text       start:0x8015D7B0 end:0x80161F0C
+	.data       start:0x8031FF90 end:0x80320008
 
 main/dll/barrel.c:
 	.text       start:0x80161F0C end:0x801630EC
