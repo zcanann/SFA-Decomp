@@ -179,13 +179,22 @@ LAB_8017a09c:
 }
 
 
-/* Trivial 4b 0-arg blr leaves. */
+int area_getExtraSize(void) { return 0x0; }
+int area_func08(void) { return 0x0; }
 void area_free(void) {}
 void area_render(void) {}
 void area_hitDetect(void) {}
 void area_update(void) {}
+
+/* obj->u16_X |= MASK */
+#pragma peephole off
+void area_init(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0xa000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
+#pragma peephole reset
+
 void area_release(void) {}
 void area_initialise(void) {}
+
+/* Trivial 4b 0-arg blr leaves. */
 void levelname_free(void) {}
 void levelname_render(void) {}
 void levelname_hitDetect(void) {}
@@ -194,13 +203,20 @@ void levelname_initialise(void) {}
 void ProjectileSwitch_free(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int area_getExtraSize(void) { return 0x0; }
-int area_func08(void) { return 0x0; }
 int levelname_getExtraSize(void) { return 0x18; }
 int levelname_func08(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
-/* obj->u16_X |= MASK */
-#pragma peephole off
-void area_init(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0xa000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
-#pragma peephole reset
+u32 gAreaObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)area_initialise,
+    (u32)area_release,
+    0,
+    (u32)area_init,
+    (u32)area_update,
+    (u32)area_hitDetect,
+    (u32)area_render,
+    (u32)area_free,
+    (u32)area_func08,
+    (u32)area_getExtraSize,
+};
