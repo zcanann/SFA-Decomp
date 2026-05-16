@@ -32,8 +32,8 @@ void synthSetStudioChannelScale(int value, u8 bank, u32 key)
     if (bank == 0xff) {
         bank = 8;
     }
-    *(u32 *)(lbl_803BCD90 + (key & 0xff) * 4 + bank * 0x40) =
-        (u32)(value * 0x3000) / 0xf0;
+    *(u32 *)(lbl_803BCD90 + bank * 0x40 + (key & 0xff) * 4) =
+        (u32)((value << 3) * 0x600) / 0xf0;
 }
 
 /*
@@ -41,12 +41,12 @@ void synthSetStudioChannelScale(int value, u8 bank, u32 key)
  *
  * EN v1.1 Address: 0x8026F584, size 52b
  */
-int synthGetVoiceSlotChannelScale(int state)
+int synthGetVoiceSlotChannelScale(u8 *state)
 {
-    u32 a = *(u8 *)(state + 0x122);
+    u32 a = state[0x122];
     int b;
     if (a == 0xff) a = 8;
-    b = *(u8 *)(state + 0x123);
+    b = state[0x123];
     return *(int *)(lbl_803BCD90 + a * 64 + b * 4);
 }
 
