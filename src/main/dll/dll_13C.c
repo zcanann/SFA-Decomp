@@ -1120,3 +1120,67 @@ extern f32 lbl_803E31C0;
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3138); }
 void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E31C0); }
 #pragma peephole reset
+
+extern void kaldachompspit_free(void);
+extern void kaldachompspit_hitDetect(void);
+extern void kaldachompspit_update(void);
+extern int kaldachompspit_func08(void);
+extern int kaldachompspit_getExtraSize(void);
+extern void pinponspike_free(void);
+extern void pinponspike_update(void);
+extern void pinponspike_init(void);
+extern void pollen_free(void);
+extern void pollen_hitDetect(void);
+extern void pollen_update(void);
+extern void pollen_init(void);
+
+u32 gKaldaChompSpitObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)kaldachompspit_initialise,
+    (u32)kaldachompspit_release,
+    0,
+    (u32)kaldachompspit_init,
+    (u32)kaldachompspit_update,
+    (u32)kaldachompspit_hitDetect,
+    (u32)kaldachompspit_render,
+    (u32)kaldachompspit_free,
+    (u32)kaldachompspit_func08,
+    (u32)kaldachompspit_getExtraSize,
+};
+
+u32 gPinPonSpikeObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)pinponspike_initialise,
+    (u32)pinponspike_release,
+    0,
+    (u32)pinponspike_init,
+    (u32)pinponspike_update,
+    (u32)pinponspike_hitDetect,
+    (u32)pinponspike_render,
+    (u32)pinponspike_free,
+    (u32)pinponspike_func08,
+    (u32)pinponspike_getExtraSize,
+};
+
+u32 gPollenObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)pollen_initialise,
+    (u32)pollen_release,
+    0,
+    (u32)pollen_init,
+    (u32)pollen_update,
+    (u32)pollen_hitDetect,
+    (u32)pollen_render,
+    (u32)pollen_free,
+    (u32)pollen_func08,
+    (u32)pollen_getExtraSize,
+};
