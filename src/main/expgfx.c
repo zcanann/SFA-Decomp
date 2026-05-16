@@ -1297,7 +1297,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
                 + ((f32 *)viewMatrix)[10] * outZ
                 + ((f32 *)viewMatrix)[11];
       if (viewProjW > lbl_803DB790) {
-        alpha = (int)((double)((s32)alpha - 0xff) * (double)((-viewProjW) - lbl_803DF414) /
+        alpha = (int)((double)(s32)alpha * (double)((-viewProjW) - lbl_803DF414) /
                       (double)((-lbl_803DB790) - lbl_803DF414));
       }
       *(volatile f32 *)0xCC008000 = outX;
