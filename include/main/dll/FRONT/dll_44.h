@@ -3,11 +3,10 @@
 
 #include "ghidra_import.h"
 
-void FUN_80118c88(void);
-void FUN_80118d44(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                 int param_5,undefined4 param_6);
-void FUN_80118ed8(uint *param_1,int *param_2,int *param_3,int *param_4,int *param_5,
-                 undefined4 *param_6);
-undefined4 FUN_80118fc8(void);
+int fn_80118C88(int movieOrReadBuffer, int yTextureBuffer, int uTextureBuffer, int vTextureBuffer,
+                int audioBuffer, int thpWorkBuffer);
+void fn_80118EAC(int *movieOrReadBufferSize, int *yTextureBufferSize, int *uTextureBufferSize,
+                 int *vTextureBufferSize, int *audioBufferSize, int *thpWorkBufferSize);
+int fn_80118FAC(void);
 
 #endif /* MAIN_DLL_FRONT_DLL_44_H_ */

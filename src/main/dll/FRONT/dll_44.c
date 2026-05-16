@@ -1,10 +1,82 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/dll_44.h"
-
-extern u8 lbl_803A5D60[];
+#include "dolphin/dvd.h"
+#include "dolphin/thp/THPFile.h"
+#include "dolphin/thp/THPInfo.h"
 
 extern void DCInvalidateRange(void *start, u32 nBytes);
-extern void DVDClose(void);
+
+typedef struct AttractMovieVideoInfo {
+    u32 xSize;
+    u32 ySize;
+} AttractMovieVideoInfo;
+
+typedef struct AttractMovieAudioInfo {
+    u32 channelCount;
+    u32 frequency;
+    u32 sampleCount;
+} AttractMovieAudioInfo;
+
+typedef struct AttractMovieReadBuffer {
+    u8 *ptr;
+    s32 frameNumber;
+} AttractMovieReadBuffer;
+
+typedef struct AttractMovieTextureSet {
+    u8 *yTexture;
+    u8 *uTexture;
+    u8 *vTexture;
+    s32 frameNumber;
+} AttractMovieTextureSet;
+
+typedef struct AttractMovieAudioBuffer {
+    s16 *buffer;
+    s16 *curPtr;
+    u32 validSample;
+    u8 pad0C[4];
+} AttractMovieAudioBuffer;
+
+typedef struct AttractMoviePlayer {
+    DVDFileInfo fileInfo;
+    THPHeader header;
+    THPFrameCompInfo compInfo;
+    AttractMovieVideoInfo videoInfo;
+    AttractMovieAudioInfo audioInfo;
+    void *thpWorkArea;
+    s32 isOpen;
+    u8 state;
+    u8 internalState;
+    u8 playFlag;
+    u8 audioExists;
+    s32 dvdError;
+    s32 videoError;
+    s32 isOnMemory;
+    u8 *movieData;
+    s32 initOffset;
+    s32 initReadSize;
+    s32 initReadFrame;
+    u32 curField;
+    s64 retraceCount;
+    s32 prevCount;
+    s32 curCount;
+    s32 videoDecodeCount;
+    f32 curVolume;
+    f32 targetVolume;
+    f32 deltaVolume;
+    s32 rampCount;
+    s32 curAudioTrack;
+    s32 curVideoNumber;
+    s32 curAudioNumber;
+    AttractMovieTextureSet *dispTextureSet;
+    AttractMovieReadBuffer readBuffer[10];
+    AttractMovieTextureSet textureSet[3];
+    AttractMovieAudioBuffer audioBuffer[3];
+    u8 pad1A4[4];
+} AttractMoviePlayer;
+
+extern AttractMoviePlayer lbl_803A5D60;
+
+#define ALIGN_NEXT_32(value) (((value) + 0x1f) & ~0x1f)
 
 #pragma peephole off
 #pragma scheduling off
@@ -16,7 +88,8 @@ extern void DVDClose(void);
  * EN v1.0 Address: 0x80118C88
  * EN v1.0 Size: 548b
  */
-int fn_80118C88(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6)
+int fn_80118C88(int movieOrReadBuffer, int yTextureBuffer, int uTextureBuffer,
+                int vTextureBuffer, int audioBuffer, int thpWorkBuffer)
 {
     u8 *base;
     u8 *base2;
@@ -25,16 +98,16 @@ int fn_80118C88(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6)
     u32 align2;
     int i;
 
-    base = lbl_803A5D60;
+    base = (u8 *)&lbl_803A5D60;
     if (*(int *)(base + 0x98) == 0) return 0;
     if (*(u8 *)(base + 0x9c) != 0) return 0;
 
     if (*(int *)(base + 0xa8) != 0) {
-        *(int *)(base + 0xac) = arg1;
-        curr = arg1 + *(int *)(base + 0x58);
+        *(int *)(base + 0xac) = movieOrReadBuffer;
+        curr = movieOrReadBuffer + *(int *)(base + 0x58);
     } else {
-        *(int *)(base + 0xf4) = arg1;
-        *(int *)(base + 0xfc) = arg1 + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
+        *(int *)(base + 0xf4) = movieOrReadBuffer;
+        *(int *)(base + 0xfc) = movieOrReadBuffer + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
         *(int *)(base + 0x104) = *(int *)(base + 0xfc) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
         *(int *)(base + 0x10c) = *(int *)(base + 0x104) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
         *(int *)(base + 0x114) = *(int *)(base + 0x10c) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
@@ -46,30 +119,30 @@ int fn_80118C88(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6)
         curr = *(int *)(base + 0x13c) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
     }
 
-    base2 = lbl_803A5D60;
+    base2 = (u8 *)&lbl_803A5D60;
     align1 = (*(int *)(base2 + 0x80) * *(int *)(base2 + 0x84) + 0x1f) & ~0x1f;
     align2 = ((u32)(*(int *)(base2 + 0x80) * *(int *)(base2 + 0x84)) >> 2) + 0x1f & ~0x1f;
     i = 0;
     do {
-        *(int *)(base2 + 0x144) = arg2;
+        *(int *)(base2 + 0x144) = yTextureBuffer;
         DCInvalidateRange((void *)curr, align1);
-        *(int *)(base2 + 0x148) = arg3;
+        *(int *)(base2 + 0x148) = uTextureBuffer;
         DCInvalidateRange((void *)curr, align2);
-        *(int *)(base2 + 0x14c) = arg4;
+        *(int *)(base2 + 0x14c) = vTextureBuffer;
         DCInvalidateRange((void *)curr, align2);
         curr += align2;
         base2 += 0x10;
         i++;
     } while (i < 3);
 
-    base = lbl_803A5D60;
+    base = (u8 *)&lbl_803A5D60;
     if (*(u8 *)(base + 0x9f) != 0) {
-        *(int *)(base + 0x174) = arg5;
-        *(int *)(base + 0x178) = arg5;
+        *(int *)(base + 0x174) = audioBuffer;
+        *(int *)(base + 0x178) = audioBuffer;
         *(int *)(base + 0x17c) = 0;
         {
             int sz = (*(int *)(base + 0x48) * 4 + 0x1f) & ~0x1f;
-            int p2 = arg5 + sz;
+            int p2 = audioBuffer + sz;
             *(int *)(base + 0x184) = p2;
             *(int *)(base + 0x188) = p2;
             *(int *)(base + 0x18c) = 0;
@@ -80,7 +153,7 @@ int fn_80118C88(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6)
         }
     }
 
-    *(int *)(lbl_803A5D60 + 0x94) = arg6;
+    *(int *)((u8 *)&lbl_803A5D60 + 0x94) = thpWorkBuffer;
     return 1;
 }
 
@@ -91,35 +164,39 @@ int fn_80118C88(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6)
  * EN v1.0 Address: 0x80118EAC
  * EN v1.0 Size: 256b
  */
-void fn_80118EAC(int *out1, int *out2, int *out3, int *out4, int *out5, int *out6)
+void fn_80118EAC(int *movieOrReadBufferSize, int *yTextureBufferSize,
+                 int *uTextureBufferSize, int *vTextureBufferSize, int *audioBufferSize,
+                 int *thpWorkBufferSize)
 {
-    u8 *base;
+    AttractMoviePlayer *player;
+    int size;
 
-    base = lbl_803A5D60;
-    if (*(int *)(base + 0x98) == 0) {
-        *out1 = 0;
-        *out2 = 0;
-        *out3 = 0;
-        *out4 = 0;
-        *out5 = 0;
-        *out6 = 0;
+    player = &lbl_803A5D60;
+    if (player->isOpen != 0) {
+        if (player->isOnMemory != 0) {
+            *movieOrReadBufferSize = ALIGN_NEXT_32(player->header.mMovieDataSize);
+        } else {
+            *movieOrReadBufferSize = ALIGN_NEXT_32(player->header.mBufferSize) * 10;
+        }
+        *yTextureBufferSize = ALIGN_NEXT_32(player->videoInfo.xSize * player->videoInfo.ySize) * 3;
+        *uTextureBufferSize = ALIGN_NEXT_32((u32)(player->videoInfo.xSize * player->videoInfo.ySize) >> 2) * 3;
+        *vTextureBufferSize = ALIGN_NEXT_32((u32)(player->videoInfo.xSize * player->videoInfo.ySize) >> 2) * 3;
+        if (player->audioExists != 0) {
+            size = ALIGN_NEXT_32(player->header.mAudioMaxSamples * 4) * 3;
+        } else {
+            size = 0;
+        }
+        *audioBufferSize = size;
+        *thpWorkBufferSize = 0x1000;
         return;
     }
 
-    if (*(int *)(base + 0xa8) != 0) {
-        *out1 = (*(int *)(base + 0x58) + 0x1f) & ~0x1f;
-    } else {
-        *out1 = ((*(int *)(base + 0x44) + 0x1f) & ~0x1f) * 10;
-    }
-    *out2 = ((*(int *)(base + 0x80) * *(int *)(base + 0x84) + 0x1f) & ~0x1f) * 3;
-    *out3 = ((((u32)(*(int *)(base + 0x80) * *(int *)(base + 0x84)) >> 2) + 0x1f) & ~0x1f) * 3;
-    *out4 = ((((u32)(*(int *)(base + 0x80) * *(int *)(base + 0x84)) >> 2) + 0x1f) & ~0x1f) * 3;
-    if (*(u8 *)(base + 0x9f) != 0) {
-        *out5 = ((*(int *)(base + 0x48) * 4 + 0x1f) & ~0x1f) * 3;
-    } else {
-        *out5 = 0;
-    }
-    *out6 = 0x1000;
+    *movieOrReadBufferSize = 0;
+    *yTextureBufferSize = 0;
+    *uTextureBufferSize = 0;
+    *vTextureBufferSize = 0;
+    *audioBufferSize = 0;
+    *thpWorkBufferSize = 0;
 }
 
 /*
@@ -131,14 +208,16 @@ void fn_80118EAC(int *out1, int *out2, int *out3, int *out4, int *out5, int *out
  */
 int fn_80118FAC(void)
 {
-    u8 *base;
+    AttractMoviePlayer *player;
 
-    base = lbl_803A5D60;
-    if (*(int *)(base + 0x98) == 0) return 0;
-    if (*(u8 *)(base + 0x9c) != 0) return 0;
-    *(int *)(base + 0x98) = 0;
-    DVDClose();
-    return 1;
+    player = &lbl_803A5D60;
+    if ((player->isOpen != 0) && (player->state == 0)) {
+        player->isOpen = 0;
+        DVDClose(&player->fileInfo);
+        return 1;
+    }
+
+    return 0;
 }
 
 #pragma peephole reset
