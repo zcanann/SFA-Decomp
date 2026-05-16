@@ -2209,11 +2209,11 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
 #pragma peephole off
 void ObjHits_RegisterActiveHitVolumeObject(int obj)
 {
-  u32 *entry;
+  int *entry;
   int index;
 
   index = 0;
-  entry = (u32 *)gObjHitsActiveHitVolumeObjects;
+  entry = gObjHitsActiveHitVolumeObjects;
   while (index < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT && *entry != 0) {
     entry = entry + 1;
     index = index + 1;
