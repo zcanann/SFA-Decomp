@@ -3,16 +3,10 @@
 
 #include "ghidra_import.h"
 
-int FUN_801e6b10(int param_1,int param_2);
-void FUN_801e6be4(void);
-undefined4 FUN_801e6da4(void);
-undefined4 FUN_801e6ddc(int param_1);
-undefined4
-FUN_801e6f2c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,ushort *param_9,int param_10,
-            undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
-            undefined4 param_15,undefined4 param_16);
-void FUN_801e719c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+int fn_801E6B10(void *obj, void *param2);
+int fn_801E6D08(void *obj, void *param2);
+int fn_801E7124(void *obj);
+int fn_801E71A4(void *obj, void *param2, int dispatch);
+void fn_801E75EC(void *obj);
 
 #endif /* MAIN_DLL_DR_DRLASERTURRET_H_ */
