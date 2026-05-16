@@ -397,8 +397,8 @@ void tumbleweed_updateEffects(int obj) {
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
         r = *(u8*)(aux + 0x27b);
         r = r + 1;
-        *(u8*)(aux + 0x27b) = (u8)r;
-        if ((int)(r & 0xff) % 6 == 0) {
+        *(u8*)(aux + 0x27b) = r;
+        if ((int)(r & 0xff) % 6 != 0) {
             fn_80098B18(obj, *(f32*)(obj + 0x8), 1, 0, 0, 0);
         } else {
             fn_80098B18(obj, *(f32*)(obj + 0x8), 1, 3, 0, 0);
