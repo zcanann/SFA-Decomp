@@ -2,6 +2,7 @@
 #include "main/objhits.h"
 
 extern undefined8 memcpy();
+extern undefined4 Obj_TransformWorldVectorToLocal();
 extern undefined4 Obj_TransformWorldPointToLocal();
 extern undefined4 Obj_TransformLocalPointToWorld();
 extern uint getAngle();
@@ -2312,7 +2313,8 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     local_8c = (float)param_3;
   }
   else {
-    Obj_TransformWorldPointToLocal(dVar8,param_2,param_3,&local_84,&local_88,&local_8c,*(int *)(psVar2 + 0x18));
+    Obj_TransformWorldVectorToLocal(dVar8,param_2,param_3,&local_84,&local_88,&local_8c,
+                                    *(int *)(psVar2 + 0x18));
   }
   if (*(int *)(psVar4 + 0x18) == 0) {
     local_90 = (float)dVar8;
@@ -2320,7 +2322,8 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
     local_98 = (float)param_3;
   }
   else {
-    Obj_TransformWorldPointToLocal(dVar8,param_2,param_3,&local_90,&local_94,&local_98,*(int *)(psVar4 + 0x18));
+    Obj_TransformWorldVectorToLocal(dVar8,param_2,param_3,&local_90,&local_94,&local_98,
+                                    *(int *)(psVar4 + 0x18));
   }
   if (((psVar2[0x22] == 1) && (*(char *)((int)puVar6 + 0x6a) != '\0')) &&
      ((*(ushort *)(puVar5 + 0x18) & 0x400) == 0)) {
