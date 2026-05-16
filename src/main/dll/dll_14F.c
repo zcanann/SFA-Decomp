@@ -1525,3 +1525,104 @@ u32 MagicPlant_func08(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x1c) <<
 #pragma peephole off
 void StayPoint_init(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0x4000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
 #pragma peephole reset
+
+extern void MagicPlant_free();
+extern void MagicPlant_render();
+extern void MagicPlant_update();
+extern void MagicPlant_init();
+extern void trickywarp_free();
+extern void trickywarp_update();
+extern void trickywarp_init();
+extern void trickyguard_update();
+extern void trickyguard_init();
+extern void StayPoint_update();
+extern void duster_render();
+extern void duster_hitDetect();
+extern void duster_update();
+extern void duster_init();
+extern void curvefish_update();
+extern void curvefish_init();
+
+u32 gMagicPlantObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)MagicPlant_init,
+    (u32)MagicPlant_update,
+    0,
+    (u32)MagicPlant_render,
+    (u32)MagicPlant_free,
+    (u32)MagicPlant_func08,
+    (u32)MagicPlant_getExtraSize,
+};
+
+u32 gTrickyWarpObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)trickywarp_init,
+    (u32)trickywarp_update,
+    0,
+    0,
+    (u32)trickywarp_free,
+    0,
+    (u32)trickywarp_getExtraSize,
+};
+
+u32 gTrickyGuardObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)trickyguard_init,
+    (u32)trickyguard_update,
+    0,
+    0,
+    0,
+    0,
+    0,
+};
+
+u32 gStayPointObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)StayPoint_init,
+    (u32)StayPoint_update,
+    0,
+    0,
+    0,
+    0,
+    0,
+};
+
+u32 gDusterObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)duster_init,
+    (u32)duster_update,
+    (u32)duster_hitDetect,
+    (u32)duster_render,
+    0,
+    0,
+    (u32)duster_getExtraSize,
+};
+
+u32 gCurveFishObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)curvefish_init,
+    (u32)curvefish_update,
+    0,
+    0,
+    0,
+    0,
+    (u32)curvefish_getExtraSize,
+};

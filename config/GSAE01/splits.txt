@@ -782,6 +782,7 @@ main/dll/dll_14D.c:
 
 main/dll/dll_14F.c:
 	.text       start:0x8017F4F4 end:0x801816F8
+	.data       start:0x80321568 end:0x803216B8
 
 main/dll/dll_150.c:
 	.text       start:0x801816F8 end:0x801826E8
