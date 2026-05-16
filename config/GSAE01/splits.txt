@@ -1385,6 +1385,7 @@ main/dll/baddie/chuka.c:
 
 main/dll/baddie/chukachuck.c:
 	.text       start:0x8020652C end:0x80206968
+	.data       start:0x80329A20 end:0x80329A68
 
 main/dll/tesla.c:
 	.text       start:0x80206968 end:0x80206F30

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/baddie/chuka.h"
 #include "main/dll/baddie/chukachuck.h"
 
 extern u32 GameBit_Get(int eventId);
@@ -9,7 +10,11 @@ extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 
 extern void fn_80206474(void);
 
-extern u8 gDfpfloorbarModeTable[9];
+u8 gDfpfloorbarModeTable[12] = {
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+};
 extern undefined4 *lbl_803DCAAC;
 extern f32 timeDelta;
 extern f32 lbl_803E6408;
@@ -218,3 +223,21 @@ void dfpfloorbar_initialise(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+u32 gDfpfloorbarObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)dfpfloorbar_initialise,
+    (u32)dfpfloorbar_release,
+    0,
+    (u32)dfpfloorbar_init,
+    (u32)dfpfloorbar_update,
+    (u32)dfpfloorbar_hitDetect,
+    (u32)dfpfloorbar_render,
+    (u32)dfpfloorbar_free,
+    (u32)dfpfloorbar_func08,
+    (u32)dfpfloorbar_getExtraSize,
+    0,
+};
