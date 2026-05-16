@@ -107,7 +107,7 @@ void fn_801C0FD8(u8 *self)
  * EN v1.0 Address: 0x801C11B8
  * EN v1.0 Size: 128b
  */
-void fn_801C11B8(u8 *linkSelf, u8 *firstNode, u8 *secondNode)
+void fn_801C11B8(DFRopeLink *linkSelf, DFRopeNode *firstNode, DFRopeNode *secondNode)
 {
   u8 *nodeLinkIter;
   int firstLinkIndex;
@@ -115,20 +115,20 @@ void fn_801C11B8(u8 *linkSelf, u8 *firstNode, u8 *secondNode)
 
   firstLinkIndex = 0;
   secondLinkIndex = 0;
-  nodeLinkIter = firstNode;
+  nodeLinkIter = (u8 *)firstNode;
   while (*(u32 *)(nodeLinkIter + DFBARREL_NODE_LINKS_OFFSET) != 0) {
     nodeLinkIter += 4;
     firstLinkIndex++;
   }
-  nodeLinkIter = secondNode;
+  nodeLinkIter = (u8 *)secondNode;
   while (*(u32 *)(nodeLinkIter + DFBARREL_NODE_LINKS_OFFSET) != 0) {
     nodeLinkIter += 4;
     secondLinkIndex++;
   }
-  if (firstLinkIndex > (int)firstNode[DFBARREL_NODE_LINK_LIMIT_OFFSET]) return;
-  if (secondLinkIndex > (int)secondNode[DFBARREL_NODE_LINK_LIMIT_OFFSET]) return;
-  ((u32 *)(firstNode + DFBARREL_NODE_LINKS_OFFSET))[firstLinkIndex] = (u32)linkSelf;
-  ((u32 *)(secondNode + DFBARREL_NODE_LINKS_OFFSET))[secondLinkIndex] = (u32)linkSelf;
-  *(u32 *)(linkSelf + DFBARREL_LINK_FIRST_NODE_OFFSET) = (u32)firstNode;
-  *(u32 *)(linkSelf + DFBARREL_LINK_SECOND_NODE_OFFSET) = (u32)secondNode;
+  if (firstLinkIndex > (int)firstNode->linkCount) return;
+  if (secondLinkIndex > (int)secondNode->linkCount) return;
+  firstNode->links[firstLinkIndex] = linkSelf;
+  secondNode->links[secondLinkIndex] = linkSelf;
+  linkSelf->a = firstNode;
+  linkSelf->b = secondNode;
 }

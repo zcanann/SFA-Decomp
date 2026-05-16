@@ -1,45 +1,6 @@
 #include "ghidra_import.h"
+#include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/DFbarrelanim.h"
-
-typedef struct DFRopeNode {
-  f32 pos[3];
-  f32 velocity[3];
-  f32 force[3];
-  u8 linkCount;
-  u8 pad25[3];
-  struct DFRopeLink *links[2];
-  u8 locked;
-  u8 pad31[3];
-} DFRopeNode;
-
-typedef struct DFRopeLink {
-  f32 length;
-  DFRopeNode *a;
-  DFRopeNode *b;
-  f32 restLength;
-  f32 stiffness;
-  f32 maxLength;
-  f32 force[3];
-} DFRopeLink;
-
-typedef struct DFRope {
-  DFRopeNode *nodes;
-  DFRopeLink *links;
-  u8 count;
-  u8 pad09[3];
-  f32 start[3];
-  f32 end[3];
-  f32 totalLength;
-  s32 enabled;
-  f32 maxSlack;
-  f32 step;
-  u8 sway;
-  u8 direction;
-  u8 pad36[2];
-  f32 damping;
-  f32 inverseTicks;
-  f32 stepPerTick;
-} DFRope;
 
 typedef struct DFropenodeExtra {
   void *linkedObj;
@@ -58,7 +19,6 @@ typedef struct DFropenodeExtra {
 
 extern f32 sqrtf(f32 x);
 extern void *mmAlloc(int size, int heap, int flags);
-extern void fn_801C11B8(void *link, void *a, void *b);
 
 extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
