@@ -6,7 +6,6 @@ extern void aramUploadData(void *src, void *dst, u32 size, int mode, int callbac
                            int callbackArg);
 
 extern u8 lbl_803D3F60[];
-extern u8 lbl_803D4468[];
 extern u32 aramTop;
 extern u32 aramWrite;
 extern u32 aramStream;
@@ -15,6 +14,15 @@ extern u32 aramChunkSize;
 extern u32 aramQueueWrite;
 extern u32 aramQueueValid;
 extern void *aramStreamFreeList;
+
+typedef struct AramStreamBufferEntry {
+    u32 next;
+    u32 address;
+    u32 position;
+    u32 state;
+} AramStreamBufferEntry;
+
+extern AramStreamBufferEntry lbl_803D4468[];
 
 /*
  * Allocate+DMA: copies `size` bytes from `src` into the audio
@@ -122,7 +130,7 @@ void fn_80284634(void)
 u32 aramGetStreamBufferAddress(u8 idx, u32 *outPos)
 {
     if (outPos != NULL) {
-        *outPos = *(u32 *)(lbl_803D4468 + idx * 16 + 8);
+        *outPos = lbl_803D4468[idx].position;
     }
-    return *(u32 *)(lbl_803D4468 + idx * 16 + 4);
+    return lbl_803D4468[idx].address;
 }
