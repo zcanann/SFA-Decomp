@@ -949,6 +949,7 @@ main/dll/DIM/DIM2icicle.c:
 
 main/dll/DIM/DIMboss.c:
 	.text       start:0x801BCB34 end:0x801BDBE0
+	.data       start:0x80325B04 end:0x80325B44
 
 main/dll/DIM/DIMbossgut.c:
 	.text       start:0x801BDBE0 end:0x801BDCF8

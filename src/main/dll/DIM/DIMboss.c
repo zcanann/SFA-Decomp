@@ -789,6 +789,22 @@ void dimboss_initialise(void)
 
 void dimboss_release(void) {}
 
+u32 gDIM_BossObjDescriptor[] = {
+    0, 0, 0, 0x000B0000,
+    (u32)dimboss_initialise,
+    (u32)dimboss_release,
+    0,
+    (u32)DIMboss_init,
+    (u32)DIMboss_update,
+    (u32)DIMboss_hitDetect,
+    (u32)DIMboss_render,
+    (u32)DIMboss_free,
+    (u32)dimboss_func08,
+    (u32)DIMboss_getExtraSize,
+    (u32)DIMboss_setScale,
+    (u32)dimboss_func11,
+};
+
 #pragma scheduling off
 #pragma peephole off
 void DIMboss_initialiseAnimTables(void)
