@@ -337,3 +337,23 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3848); }
 #pragma peephole reset
+
+extern void fn_8017EF68();
+extern void fn_8017EF64();
+extern void fn_8017EF3C();
+extern void fn_8017EC94();
+extern void fn_8017EC54();
+
+u32 lbl_803214F8[] = {
+    0, 0, 0, 0x00090000,
+    (u32)fn_8017EF68,
+    (u32)fn_8017EF64,
+    0,
+    (u32)fn_8017EF3C,
+    (u32)fn_8017EC94,
+    (u32)fn_8017EC54,
+    (u32)dll_FC_render,
+    (u32)dll_FC_free_nop,
+    (u32)dll_FC_func08_ret_0,
+    (u32)dll_FC_getExtraSize_ret_8,
+};
