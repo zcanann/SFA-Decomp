@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027B41C.h"
 
-extern u32 synthAdvanceVirtualSampleEntry(void *entry, u32 tick);
+extern void synthAdvanceVirtualSampleEntry(void *entry, u32 tick);
 extern u32 hwChangeStudio(int slot);
 extern u32 hwGetVirtualSampleState(int slot);
 extern u16 hwGetVirtualSampleID(int slot);
