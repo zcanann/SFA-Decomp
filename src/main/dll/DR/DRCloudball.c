@@ -33,6 +33,12 @@ extern f32 lbl_803E5A90;
 extern f32 lbl_803E5A94;
 extern f64 lbl_803E5A98; /* int->float magic 0x4330000000000000 */
 
+extern void spscarab_hitDetect(void);
+extern void spscarab_render(void);
+extern void spscarab_free(int x);
+extern int spscarab_func08(void);
+extern int spscarab_getExtraSize(void);
+
 /*
  * --INFO--
  *
@@ -188,6 +194,23 @@ void spscarab_release(void)
 void spscarab_initialise(void)
 {
 }
+
+u32 gSPScarabObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)spscarab_initialise,
+    (u32)spscarab_release,
+    0,
+    (u32)spscarab_init,
+    (u32)spscarab_update,
+    (u32)spscarab_hitDetect,
+    (u32)spscarab_render,
+    (u32)spscarab_free,
+    (u32)spscarab_func08,
+    (u32)spscarab_getExtraSize,
+};
 
 /*
  * --INFO--
