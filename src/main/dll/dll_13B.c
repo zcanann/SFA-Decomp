@@ -200,6 +200,20 @@ void kaldachompme_initialise(void)
 {
 }
 
+u32 gKaldaChompMeObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)kaldachompme_initialise,
+    (u32)kaldachompme_release,
+    0,
+    (u32)kaldachompme_init,
+    (u32)kaldachompme_update,
+    (u32)kaldachompme_hitDetect,
+    (u32)kaldachompme_render,
+    (u32)kaldachompme_free,
+    (u32)kaldachompme_func08,
+    (u32)kaldachompme_getExtraSize,
+};
+
 /*
  * --INFO--
  *

@@ -701,6 +701,7 @@ main/dll/campfire.c:
 
 main/dll/dll_13B.c:
 	.text       start:0x80169360 end:0x80169CC4
+	.data       start:0x80320458 end:0x80320490
 
 main/dll/dll_13C.c:
 	.text       start:0x80169CC4 end:0x8016B2E0
