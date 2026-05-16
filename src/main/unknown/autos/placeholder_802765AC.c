@@ -753,7 +753,7 @@ void mcmdSendMessage(int state, u32 *args)
                             *(u32 *)(voice + (u32)*(u8 *)(voice + 0x3ee) * 4 + 0x3f0) =
                                 value;
                             *(u8 *)(voice + 0x3ee) = (*(u8 *)(voice + 0x3ee) + 1) & 3;
-                            if (*(s8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
+                            if (*(u8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
                                 *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
                                 *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
                                 *(int *)(voice + 0x58) = 0;
@@ -783,7 +783,7 @@ void mcmdSendMessage(int state, u32 *args)
                 *(u8 *)(voice + 0x3ec) = *(u8 *)(voice + 0x3ec) + 1;
                 *(u32 *)(voice + (u32)*(u8 *)(voice + 0x3ee) * 4 + 0x3f0) = value;
                 *(u8 *)(voice + 0x3ee) = (*(u8 *)(voice + 0x3ee) + 1) & 3;
-                if (*(s8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
+                if (*(u8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
                     *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
                     *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
                     *(int *)(voice + 0x58) = 0;
@@ -903,7 +903,7 @@ void macSampleEndNotify(int state)
     int resumed;
 
     if (*(int *)(state + 0x4c) == 1) {
-        if (*(s8 *)(state + 0x68) == 0 || *(int *)(state + 0x54) == 0) {
+        if (*(u8 *)(state + 0x68) == 0 || *(int *)(state + 0x54) == 0) {
             resumed = 0;
         } else {
             *(int *)(state + 0x38) = *(int *)(state + 0x60);
