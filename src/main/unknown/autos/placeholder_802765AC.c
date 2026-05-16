@@ -86,7 +86,7 @@ extern int macRealTimeLo;
 extern void audioFn_8027132c(void *state);
 extern void *dataGetMacro(u32 key);
 extern u16 seqGetMIDIPriority(u8 slot, u8 event);
-extern u32 voiceAllocate(u8 priority, u8 maxInstances, u16 key, u8 streamKind);
+extern u32 voiceAllocate(u32 priority, u32 maxInstances, u32 key, u8 streamKind);
 extern void vidRemoveVoice(int state);
 extern void voiceSetPriority(int state, u8 newGroup);
 extern u32 vidMakeNew(int state, int returnNewId);
@@ -1207,12 +1207,15 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
 {
     int instrument;
     u8 streamKey;
+    u32 streamKind;
     u32 midiPriority;
     u32 voiceId;
     int wasActive;
     int vid;
     int state;
-    int hadHead;
+    u32 activePrev;
+    u32 activeNext;
+    u32 activeHead;
 
     instrument = (int)dataGetMacro(instrumentKey);
     if (instrument != 0) {
@@ -1223,19 +1226,26 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
                 priority = midiPriority & 0xff;
             }
         }
-        voiceId = voiceAllocate(priority, maxInstances, baseSample, streamKey != 0);
+        if (streamKey != 0) {
+            streamKind = 1;
+        } else {
+            streamKind = 0;
+        }
+        voiceId = voiceAllocate(priority, maxInstances, baseSample, streamKind);
         if (voiceId != 0xffffffff) {
             state = (int)(synthVoice + voiceId * 0x404);
             vidRemoveVoice(state);
             if (*(int *)(state + 0x4c) != 2) {
                 if (*(int *)(state + 0x4c) == 0) {
-                    if (*(int *)(state + 0x40) == 0) {
+                    activePrev = *(u32 *)(state + 0x40);
+                    if (activePrev == 0) {
                         macActiveRoot = *(int *)(state + 0x3c);
                     } else {
-                        *(int *)(*(int *)(state + 0x40) + 0x3c) = *(int *)(state + 0x3c);
+                        *(int *)(activePrev + 0x3c) = *(int *)(state + 0x3c);
                     }
-                    if (*(int *)(state + 0x3c) != 0) {
-                        *(int *)(*(int *)(state + 0x3c) + 0x40) = *(int *)(state + 0x40);
+                    activeNext = *(u32 *)(state + 0x3c);
+                    if (activeNext != 0) {
+                        *(int *)(activeNext + 0x40) = *(int *)(state + 0x40);
                     }
                 }
                 fn_802788B4(state, 1);
@@ -1297,10 +1307,10 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
                     return vid;
                 }
                 fn_802788B4(state, 0);
-                hadHead = macActiveRoot != 0;
-                *(int *)(state + 0x3c) = macActiveRoot;
-                if (hadHead) {
-                    *(int *)(macActiveRoot + 0x40) = state;
+                activeHead = macActiveRoot;
+                *(int *)(state + 0x3c) = activeHead;
+                if (activeHead != 0) {
+                    *(int *)(activeHead + 0x40) = state;
                 }
                 *(int *)(state + 0x40) = 0;
                 macActiveRoot = state;
