@@ -453,44 +453,46 @@ void FUN_802765c4(int *param_1,int param_2)
 void mcmdRandomKey(int state, u32 *args)
 {
     u32 command;
-    int low;
-    int high;
-    int pitch;
-    u32 rand;
-    int range;
+    int lowKey;
+    int highKey;
+    int fineTune;
+    u32 randomValue;
+    int keyRange;
 
     if (((args[1] >> 8) & 0xff) == 0) {
         command = *args;
-        low = (command >> 8) & 0xff;
-        high = command >> 0x18;
-        if (high < low) {
-            high = low;
-            low = command >> 0x18;
+        lowKey = (command >> 8) & 0xff;
+        highKey = command >> 0x18;
+        if (highKey < lowKey) {
+            highKey = lowKey;
+            lowKey = command >> 0x18;
         }
     } else {
-        low = (u32)*(u16 *)(state + 0x12c) - ((*args >> 8) & 0xff);
-        high = (u32)*(u16 *)(state + 0x12c) + (*args >> 0x18);
-        if ((int)low < 0) {
-            low = 0;
-        } else if ((int)low > 0x7f) {
-            low = 0x7f;
+        lowKey = *(u16 *)(state + 0x12c) - (int)((*args >> 8) & 0xff);
+        highKey = *(u16 *)(state + 0x12c) + (int)(*args >> 0x18);
+        if ((int)lowKey < 0) {
+            lowKey = 0;
+        } else if ((int)lowKey > 0x7f) {
+            lowKey = 0x7f;
         }
-        low &= 0xff;
-        if (high > 0x7f) {
-            high = 0x7f;
+        lowKey &= 0xff;
+        if (highKey > 0x7f) {
+            highKey = 0x7f;
         }
-        high &= 0xff;
+        highKey &= 0xff;
     }
 
     if ((args[1] & 0xff) == 0) {
-        pitch = (*args >> 0x10) & 0xff;
+        fineTune = (*args >> 0x10) & 0xff;
     } else {
-        pitch = (sndRand() & 0xffff) % 0xc9 - 100;
+        fineTune = (sndRand() & 0xffff) % 0xc9 - 100;
     }
-    rand = sndRand();
-    range = (high - low) + 1;
-    *args = ((pitch & 0xff) << 0x10) | 0x19 |
-            (low + ((rand & 0xffff) - ((int)(rand & 0xffff) / range) * range)) * 0x100;
+    randomValue = sndRand();
+    keyRange = (highKey - lowKey) + 1;
+    *args = ((fineTune & 0xff) << 0x10) | 0x19 |
+            (lowKey + ((randomValue & 0xffff) -
+                       ((int)(randomValue & 0xffff) / keyRange) * keyRange)) *
+                0x100;
     args[1] = 0;
     *(u16 *)(state + 0x12c) = (u16)(*args >> 8) & 0x7f;
     *(s8 *)(state + 0x12e) = (s8)(*args >> 0x10);
