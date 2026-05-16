@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 
 extern u8 *synthVoice;
 extern int audioFn_80278b94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
@@ -121,19 +122,22 @@ void mcmdStartSample(int state, u32 *args)
         if (dataSampleInfo[4] <= dataSampleInfo[3]) {
             dataSampleInfo[3] = dataSampleInfo[4] - 1;
         }
-        noStartOffset = countLeadingZeros(*(u32 *)(state + 0x114) & 0x800);
-        noKeySync = countLeadingZeros(*(u32 *)(state + 0x118) & 0x100);
-        hwInitSamplePlayback(*(u32 *)(state + 0xf4) & 0xff, sampleId, dataSampleInfo,
+        noStartOffset = countLeadingZeros(*(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) &
+                                          MCMD_VOICE_START_OFFSET_INPUT_FLAG);
+        noKeySync = countLeadingZeros(*(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &
+                                      MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG);
+        hwInitSamplePlayback(*(u32 *)(state + MCMD_VOICE_ID_OFFSET) & 0xff, sampleId,
+                             dataSampleInfo,
                              noKeySync >> 5,
                              ((u32)*(u8 *)(state + 0x10c) << 0x18) |
                                  (*(u32 *)(state + 0x110) >> 0xf),
-                             *(u32 *)(state + 0xf4), noStartOffset >> 5,
+                             *(u32 *)(state + MCMD_VOICE_ID_OFFSET), noStartOffset >> 5,
                              *(u8 *)(state + 0x193));
-        *(u32 *)(state + 0x124) = dataSampleInfo[0];
+        *(u32 *)(state + MCMD_VOICE_PREV_SAMPLE_ID_OFFSET) = dataSampleInfo[0];
         if (*(int *)(state + 0x128) != -1) {
             DoSetPitch(state);
         }
-        *(u32 *)(state + 0x118) |= 0x20;
+        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_ACTIVE_OUTPUT_FLAG;
         fn_80271370(state);
     }
 }
@@ -148,10 +152,11 @@ void mcmdVibrato(int state, u32 *args)
     u32 duration[2];
 
     if (((*args >> 0x18) & 3) == 0) {
-        *(u32 *)(state + 0x118) &= ~0x4000;
-        *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &= ~MCMD_VOICE_VIBRATO_CURVE_OUTPUT_FLAG;
+        *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) =
+            *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET);
     } else {
-        *(u32 *)(state + 0x118) |= 0x4000;
+        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_VIBRATO_CURVE_OUTPUT_FLAG;
     }
 
     duration[0] = args[1] >> 0x10;
@@ -161,10 +166,11 @@ void mcmdVibrato(int state, u32 *args)
         sndConvertMs(duration);
     }
     if (duration[0] == 0) {
-        *(u32 *)(state + 0x118) &= ~0x2000;
-        *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &= ~MCMD_VOICE_VIBRATO_RAMP_OUTPUT_FLAG;
+        *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) =
+            *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET);
     } else {
-        *(u32 *)(state + 0x118) |= 0x2000;
+        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_VIBRATO_RAMP_OUTPUT_FLAG;
         *(u32 *)(state + 0x144) = duration[0];
         start = (s8)(*args >> 8);
         target = (s8)(*args >> 0x10);
@@ -240,7 +246,7 @@ void mcmdSetADSR(int state, u32 *args)
                       (u16)((words[1] << 8) | ((u32)words[1] >> 8));
             adsr[1] = (((u16)((words[2] << 8) | ((u32)words[2] >> 8))) << 16) |
                       (u16)((words[3] << 8) | ((u32)words[3] >> 8));
-            hwSetADSR(*(u32 *)(state + 0xf4) & 0xff, adsr, 0);
+            hwSetADSR(*(u32 *)(state + MCMD_VOICE_ID_OFFSET) & 0xff, adsr, 0);
         } else {
             adsr[0] = ((u32)table[3] << 24) | ((u32)table[2] << 16) |
                       ((u32)table[1] << 8) | table[0];
@@ -274,9 +280,9 @@ void mcmdSetADSR(int state, u32 *args)
                              (f32)(curve.d - lbl_803E7808));
                 adsr[1] += bend;
             }
-            hwSetADSR(*(u32 *)(state + 0xf4) & 0xff, adsr, 1);
+            hwSetADSR(*(u32 *)(state + MCMD_VOICE_ID_OFFSET) & 0xff, adsr, 1);
         }
-        *(u32 *)(state + 0x118) |= 0x100;
+        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG;
     }
 }
 
@@ -365,7 +371,7 @@ void mcmdSetPitchADSR(int state, u32 *args)
         *(u16 *)(state + 0x1f8) = 0xc1 - voiceAdsrDecayTable[decayIndex];
         *(u32 *)(state + 0x1fc) = ((releaseRaw & 0xff) << 8) | ((u32)releaseRaw >> 8);
         fn_8027A8D4(state + 0x1dc);
-        *(u32 *)(state + 0x114) |= 0x200;
+        *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) |= MCMD_VOICE_PITCH_ADSR_INPUT_FLAG;
     }
 }
 
@@ -397,5 +403,5 @@ void voiceConfigureParamRamp(int state, u32 *args, u32 idx)
     } else {
         *(int *)(base + 0x178) = stepBase / (int)(packed >> 0x10);
     }
-    *(u32 *)(state + 0x114) |= 0x2000;
+    *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) |= MCMD_VOICE_PARAM_RAMP_INPUT_FLAG;
 }
