@@ -63,12 +63,7 @@ void voiceSetPriority(int state, u8 newGroup)
                     voicePrioSortRootListRoot = (u16)group;
                 } else {
                     /* walk list: find first node with id > group */
-                    prev = cur;
-                    cur = *(u16 *)(nodes + 0xac0 + cur * 4);
-                    while (cur != 0xffff) {
-                        if (cur > group) {
-                            break;
-                        }
+                    while ((cur != 0xffff) && (cur <= group)) {
                         prev = cur;
                         cur = *(u16 *)(nodes + 0xac0 + cur * 4);
                     }
