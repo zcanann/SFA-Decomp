@@ -680,3 +680,26 @@ int cannonclaw_func08(void) { return 0x0; }
 /* plain forwarder. */
 extern void fn_80162FC0(void);
 void grimble_initialise(void) { fn_80162FC0(); }
+
+extern void grimble_free(void);
+extern void grimble_render(void);
+extern void grimble_hitDetect(void);
+extern void grimble_update(void);
+extern void grimble_init(void);
+
+u32 gGrimbleObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)grimble_initialise,
+    (u32)grimble_release,
+    0,
+    (u32)grimble_init,
+    (u32)grimble_update,
+    (u32)grimble_hitDetect,
+    (u32)grimble_render,
+    (u32)grimble_free,
+    (u32)grimble_func08,
+    (u32)grimble_getExtraSize,
+};
