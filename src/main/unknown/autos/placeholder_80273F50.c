@@ -357,14 +357,14 @@ remove:
 extern u8 dataSmpSDirTable[];
 extern u16 dataSmpSDirNum;
 
-int dataInsertSDir(s16 *sampleTable, void *baseAddr)
+int dataInsertSDir(DataSampleDirEntry *sampleTable, void *baseAddr)
 {
-    s16 **bucket;
-    s16 *entry;
+    DataSampleDirBucket *bucket;
+    DataSampleDirEntry *entry;
     int result;
     u32 bucketIndex;
     u32 used;
-    s16 *scan;
+    DataSampleDirEntry *scan;
     u16 tableCount;
     u16 i;
     u16 j;
@@ -372,45 +372,45 @@ int dataInsertSDir(s16 *sampleTable, void *baseAddr)
 
     bucketIndex = 0;
     used = dataSmpSDirNum;
-    for (bucket = (s16 **)dataSmpSDirTable;
-         ((int)bucketIndex < (int)used) && (*bucket != sampleTable); bucket += 3) {
+    for (bucket = (DataSampleDirBucket *)dataSmpSDirTable;
+         ((int)bucketIndex < (int)used) && (bucket->entries != sampleTable); bucket++) {
         bucketIndex++;
     }
     if (bucketIndex == used) {
         if (used < 0x80) {
             tableCount = 0;
-            for (entry = sampleTable; *entry != -1; entry += 0x10) {
+            for (entry = sampleTable; entry->sampleId != -1; entry++) {
                 tableCount++;
             }
             sndBegin();
             entry = sampleTable;
             for (i = 0; i < tableCount; i++) {
                 j = 0;
-                bucket = (s16 **)dataSmpSDirTable;
+                bucket = (DataSampleDirBucket *)dataSmpSDirTable;
                 for (bucketIndex = dataSmpSDirNum; bucketIndex != 0; bucketIndex--) {
-                    scan = *bucket;
-                    for (k = 0; k < *(u16 *)(bucket + 2); k++) {
-                        if (*entry == *scan) {
+                    scan = bucket->entries;
+                    for (k = 0; k < bucket->count; k++) {
+                        if (entry->sampleId == scan->sampleId) {
                             goto foundEntry;
                         }
-                        scan += 0x10;
+                        scan++;
                     }
-                    bucket += 3;
+                    bucket++;
                     j++;
                 }
 
 foundEntry:
                 if (j == dataSmpSDirNum) {
-                    entry[1] = 0;
+                    entry->refCount = 0;
                 } else {
-                    entry[1] = -1;
+                    entry->refCount = -1;
                 }
-                entry += 0x10;
+                entry++;
             }
             bucketIndex = dataSmpSDirNum;
-            *(s16 **)(dataSmpSDirTable + bucketIndex * 0xc) = sampleTable;
-            *(u16 *)(dataSmpSDirTable + bucketIndex * 0xc + 8) = tableCount;
-            *(void **)(dataSmpSDirTable + bucketIndex * 0xc + 4) = baseAddr;
+            ((DataSampleDirBucket *)dataSmpSDirTable)[bucketIndex].entries = sampleTable;
+            ((DataSampleDirBucket *)dataSmpSDirTable)[bucketIndex].count = tableCount;
+            ((DataSampleDirBucket *)dataSmpSDirTable)[bucketIndex].baseAddr = baseAddr;
             dataSmpSDirNum++;
             sndEnd();
             result = 1;
