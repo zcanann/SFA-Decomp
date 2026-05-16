@@ -38,8 +38,8 @@ typedef struct CamcontrolQueuedActionParam {
 #define CAMCONTROL_QUEUE_SENTINEL 0xFF
 
 void camcontrol_updateTargetFeedback(void);
-void camcontrol_getRelativePosition(f32 param_1,int param_2,float *param_3,float *param_4,
-                                    float *param_5,float *param_6,int param_7);
+void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
+                                    float *outZ,float *outDistanceXZ,int useWorldPosition);
 int Camera_isZooming(void);
 void Camera_func15(int x);
 void Camera_setTarget(int target);
