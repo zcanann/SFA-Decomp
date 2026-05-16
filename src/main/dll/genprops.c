@@ -4466,6 +4466,437 @@ int checkpoint4_getExtraSize(void) { return 0x40; }
 int checkpoint4_func08(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
 
+extern void mikabomb_free();
+extern void mikabomb_render();
+extern void mikabomb_hitDetect();
+extern void mikabomb_update();
+extern void mikabomb_init();
+extern int mikabomb_func08();
+extern int mikabomb_getExtraSize();
+extern void mikabombshadow_render();
+extern void mikabombshadow_update();
+extern void mikabombshadow_init();
+extern void StaticCamera_init();
+extern void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+extern void StaticCamera_free(int x);
+extern void gcbaddieshield_render();
+extern void gcbaddieshield_update();
+extern void gcbaddieshield_init();
+extern void baddieinterestp_update();
+extern void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+extern void animatedobj_free();
+extern void animatedobj_render();
+extern void animatedobj_update();
+extern void animatedobj_init();
+extern void dim2roofrub_free();
+extern void dim2roofrub_render();
+extern void dim2roofrub_update();
+extern void dim2roofrub_init();
+extern void depthoffieldpoint_update();
+extern void depthoffieldpoint_init();
+extern void staff_free();
+extern void staff_update();
+extern void staff_init();
+extern void staff_release();
+extern void staff_initialise();
+extern void staff_modelMtxFn();
+extern void staff_hitDetectGeometry();
+extern void staff_func10();
+extern void staff_func11();
+extern void staff_func12();
+extern s16 staff_func13(int *obj);
+extern void staff_func14();
+extern void staff_func15();
+extern s32 staff_func16(int *obj);
+extern void fireball_free();
+extern void fireball_render();
+extern void fireball_hitDetect();
+extern void fireball_update();
+extern void fireball_init();
+extern void flamethrowerspe_setScale();
+extern void flamethrowerspe_func0B(int *obj);
+extern void flamethrowerspe_render(void);
+extern void flamethrowerspe_update();
+extern void flamethrowerspe_init();
+extern void shield_free();
+extern void shield_render();
+extern void shield_update();
+extern void shield_init();
+extern void curve_init();
+extern void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+extern void restartmarker_init();
+extern void fn_8017140C();
+extern void fn_80171470();
+extern void fn_8017151C();
+extern void fn_801718D0();
+extern u8 fn_80170380[];
+
+u32 gMikaBombObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)mikabomb_initialise,
+    (u32)mikabomb_release,
+    0,
+    (u32)mikabomb_init,
+    (u32)mikabomb_update,
+    (u32)mikabomb_hitDetect,
+    (u32)mikabomb_render,
+    (u32)mikabomb_free,
+    (u32)mikabomb_func08,
+    (u32)mikabomb_getExtraSize,
+};
+
+u32 gMikaBombShadowObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)mikabombshadow_initialise,
+    (u32)mikabombshadow_release,
+    0,
+    (u32)mikabombshadow_init,
+    (u32)mikabombshadow_update,
+    (u32)mikabombshadow_hitDetect,
+    (u32)mikabombshadow_render,
+    (u32)mikabombshadow_free,
+    (u32)mikabombshadow_func08,
+    (u32)mikabombshadow_getExtraSize,
+};
+
+u32 gStaticCameraObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)StaticCamera_initialise,
+    (u32)StaticCamera_release,
+    0,
+    (u32)StaticCamera_init,
+    (u32)StaticCamera_update,
+    (u32)StaticCamera_hitDetect,
+    (u32)StaticCamera_render,
+    (u32)StaticCamera_free,
+    (u32)StaticCamera_func08,
+    (u32)StaticCamera_getExtraSize,
+};
+
+u32 gGCbaddieShieldObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)gcbaddieshield_initialise,
+    (u32)gcbaddieshield_release,
+    0,
+    (u32)gcbaddieshield_init,
+    (u32)gcbaddieshield_update,
+    (u32)gcbaddieshield_hitDetect,
+    (u32)gcbaddieshield_render,
+    (u32)gcbaddieshield_free,
+    (u32)gcbaddieshield_func08,
+    (u32)gcbaddieshield_getExtraSize,
+};
+
+u32 gBaddieInterestPObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)baddieinterestp_initialise,
+    (u32)baddieinterestp_release,
+    0,
+    (u32)baddieinterestp_init,
+    (u32)baddieinterestp_update,
+    (u32)baddieinterestp_hitDetect,
+    (u32)baddieinterestp_render,
+    (u32)baddieinterestp_free,
+    (u32)baddieinterestp_func08,
+    (u32)baddieinterestp_getExtraSize,
+};
+
+u32 lbl_80320700[] = {
+    0xFFFFFFFF,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+};
+
+u32 gAnimatedObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)animatedobj_init,
+    (u32)animatedobj_update,
+    0,
+    (u32)animatedobj_render,
+    (u32)animatedobj_free,
+    0,
+    (u32)animatedobj_getExtraSize,
+};
+
+u32 lbl_80320768[] = {
+    0x00000000,
+    0x3FD5A1CB,
+    0xC0253F7D,
+    0x3C23D70A,
+    0x06100000,
+    0x402F3B64,
+    0x3F4B020C,
+    0xBFFA1CAC,
+    0x3C23D70A,
+    0x09200000,
+    0x402EB852,
+    0x3F476C8B,
+    0xBF73B646,
+    0x3C23D70A,
+    0x07200000,
+    0x4032E148,
+    0xBF795810,
+    0xBFF8F5C3,
+    0x3C23D70A,
+    0x09200000,
+    0x4033F7CF,
+    0xBF810625,
+    0xBF747AE1,
+    0x3C23D70A,
+    0x07200000,
+    0xC02F3B64,
+    0x3F4B020C,
+    0xBFFC28F6,
+    0x3C23D70A,
+    0x09200000,
+    0xC02EB852,
+    0x3F476C8B,
+    0xBF73B646,
+    0x3C23D70A,
+    0x07200000,
+    0xC032E148,
+    0xBF795810,
+    0xBFFC49BA,
+    0x3C23D70A,
+    0x09200000,
+    0xC033F7CF,
+    0xBF810625,
+    0xBF747AE1,
+    0x3C23D70A,
+    0x07200000,
+    0x00000000,
+    0x3ECF5C29,
+    0x403CED91,
+    0x3C23D70A,
+    0x08400000,
+};
+
+u32 gDIM2RoofRubObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)dim2roofrub_init,
+    (u32)dim2roofrub_update,
+    0,
+    (u32)dim2roofrub_render,
+    (u32)dim2roofrub_free,
+    0,
+    (u32)dim2roofrub_getExtraSize,
+};
+
+u32 gDepthOfFieldPointObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)depthoffieldpoint_init,
+    (u32)depthoffieldpoint_update,
+    0,
+    0,
+    0,
+    0,
+    (u32)depthoffieldpoint_getExtraSize,
+};
+
+u16 lbl_803208A0[] = {
+    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
+    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
+    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
+    0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
+    0x00C2, 0x006F, 0x00C3, 0x00C3, 0x00C3, 0x00C3,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+};
+
+u32 lbl_803208E8[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0x01020000,
+    0,
+    0,
+};
+
+u32 gStaffObjDescriptor[] = {
+    0, 0, 0, 0x00160000,
+    (u32)staff_initialise,
+    (u32)staff_release,
+    0,
+    (u32)staff_init,
+    (u32)staff_update,
+    (u32)staff_hitDetect,
+    (u32)staff_render,
+    (u32)staff_free,
+    (u32)staff_func08,
+    (u32)staff_getExtraSize,
+    (u32)staff_setScale,
+    (u32)staff_func0B,
+    (u32)staff_modelMtxFn,
+    (u32)staff_hitDetectGeometry,
+    (u32)staff_func0E,
+    (u32)staff_func0F,
+    (u32)staff_func10,
+    (u32)staff_func11,
+    (u32)staff_func12,
+    (u32)staff_func13,
+    (u32)staff_func14,
+    (u32)staff_func15,
+    (u32)staff_func16,
+};
+
+u32 lbl_80320978[] = {
+    0xFF202020,
+    0xFF202020,
+    0xFF000000,
+};
+
+u32 gFireballObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)fireball_initialise,
+    (u32)fireball_release,
+    0,
+    (u32)fireball_init,
+    (u32)fireball_update,
+    (u32)fireball_hitDetect,
+    (u32)fireball_render,
+    (u32)fireball_free,
+    (u32)fireball_func08,
+    (u32)fireball_getExtraSize,
+    0,
+};
+
+u32 lbl_803209C0[] = {
+    0x0000004F,
+    0xFFC40000,
+    0x0000001F,
+    0x0000004F,
+    0x00C4FF00,
+    0x00000005,
+    0x0000004F,
+    0x00C4FF00,
+    0x0000001E,
+};
+
+u32 gFlameThrowerSpeObjDescriptor[] = {
+    0, 0, 0, 0x000C0000,
+    (u32)flamethrowerspe_initialise,
+    (u32)flamethrowerspe_release,
+    0,
+    (u32)flamethrowerspe_init,
+    (u32)flamethrowerspe_update,
+    (u32)flamethrowerspe_hitDetect,
+    (u32)flamethrowerspe_render,
+    (u32)flamethrowerspe_free,
+    (u32)flamethrowerspe_func08,
+    (u32)flamethrowerspe_getExtraSize,
+    (u32)flamethrowerspe_setScale,
+    (u32)flamethrowerspe_func0B,
+    (u32)flamethrowerspe_modelMtxFn,
+};
+
+f32 lbl_80320A28[] = {
+    0.5f,
+    0.55f,
+    0.65f,
+    0.7f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.3f,
+    0.3f,
+    0.3f,
+    0.3f,
+};
+
+u32 gShieldObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)shield_initialise,
+    (u32)shield_release,
+    0,
+    (u32)shield_init,
+    (u32)shield_update,
+    (u32)shield_hitDetect,
+    (u32)shield_render,
+    (u32)shield_free,
+    (u32)shield_func08,
+    (u32)shield_getExtraSize,
+};
+
+u32 jumptable_80320AA0[] = {
+    (u32)(fn_80170380 + 0x10C),
+    (u32)(fn_80170380 + 0x184),
+    (u32)(fn_80170380 + 0x35C),
+    (u32)(fn_80170380 + 0x3D0),
+    (u32)(fn_80170380 + 0x584),
+    (u32)(fn_80170380 + 0x550),
+    (u32)(fn_80170380 + 0x65C),
+    (u32)(fn_80170380 + 0x84),
+};
+
+u32 gCurveObjDescriptor[] = {
+    0, 0, 0, 0x000B0000,
+    0,
+    0,
+    0,
+    (u32)curve_init,
+    0,
+    0,
+    (u32)curve_render,
+    (u32)curve_free,
+    (u32)curve_func08,
+    (u32)curve_getExtraSize,
+    (u32)curve_setScale,
+    (u32)curve_func11,
+};
+
+u32 gReStartMarkerObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    0,
+    0,
+    0,
+    (u32)restartmarker_init,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+};
+
+u32 lbl_80320B38[] = {
+    0, 0, 0, 0x00090000,
+    (u32)fn_801719DC,
+    (u32)fn_801719D8,
+    0,
+    (u32)fn_801718D0,
+    (u32)fn_8017151C,
+    (u32)fn_80171518,
+    (u32)fn_80171470,
+    (u32)fn_8017140C,
+    (u32)fn_80171404,
+    (u32)fn_801713FC,
+};
+
 u32 gCheckpoint4ObjDescriptor[] = {
     0, 0, 0, 0x000A0000,
     (u32)checkpoint4_initialise,
