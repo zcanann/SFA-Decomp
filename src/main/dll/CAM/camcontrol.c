@@ -653,8 +653,11 @@ void *Camera_getCamActionsBinEntry(int actionNo)
  */
 void camcontrol_release(void)
 {
-  if (lbl_803DD51C != NULL) {
-    lbl_803DD51C->handler->vtable->release();
+  CamcontrolCurrentHandler *currentHandler;
+
+  currentHandler = lbl_803DD51C;
+  if (currentHandler != NULL) {
+    currentHandler->handler->vtable->release();
   }
   return;
 }
