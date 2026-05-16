@@ -120,7 +120,8 @@ void fn_8026D880(SynthStartRequest* request, u32* outHandle, u8 noLock) {
     u16 speed;
     u16 fadeTime;
     u8 flags;
-    u8* runtimeSlot;
+    SynthVoice* pendingVoice;
+    SynthStartRequest* pendingRequest;
 
     handle = request->handle;
     runtime = SYNTH_VOICE_RUNTIME();
@@ -145,20 +146,21 @@ void fn_8026D880(SynthStartRequest* request, u32* outHandle, u8 noLock) {
 resolved_initial:
     flags = request->flags;
     if ((flags & SYNTH_START_FLAG_PENDING_START) != 0) {
-        runtimeSlot = (u8*)runtime + slot * sizeof(SynthVoice);
-        *(u32*)(runtimeSlot + 0x22B4) = request->handle;
-        *(u32*)(runtimeSlot + 0x22B8) = *(u32*)((u8*)request + 0x04);
-        *(u32*)(runtimeSlot + 0x22BC) = request->reuseHandle;
-        *(u32*)(runtimeSlot + 0x22C0) = *(u32*)((u8*)request + 0x0C);
-        *(u32*)(runtimeSlot + 0x22C4) = request->seqId;
-        *(u32*)(runtimeSlot + 0x22C8) = *(u32*)((u8*)request + 0x14);
-        *(u32*)(runtimeSlot + 0x22CC) = *(u32*)((u8*)request + 0x18);
-        *(u32*)(runtimeSlot + 0x22D0) = request->mixValue0;
-        *(u32*)(runtimeSlot + 0x22D4) = request->mixValue1;
-        *(u32*)(runtimeSlot + 0x22D8) = *(u32*)((u8*)request + 0x24);
-        *(u8*)(runtimeSlot + 0x22E0) = 1;
-        *(u32**)(runtimeSlot + 0x22DC) = outHandle;
-        *(u8*)(runtimeSlot + 0x22DA) &= (u8)~SYNTH_START_FLAG_PENDING_START;
+        pendingVoice = &runtime->voices[slot];
+        pendingRequest = SYNTH_VOICE_PENDING_START_REQUEST(pendingVoice);
+        pendingRequest->handle = request->handle;
+        *(u32*)((u8*)pendingRequest + 0x04) = *(u32*)((u8*)request + 0x04);
+        pendingRequest->reuseHandle = request->reuseHandle;
+        *(u32*)((u8*)pendingRequest + 0x0C) = *(u32*)((u8*)request + 0x0C);
+        pendingRequest->seqId = request->seqId;
+        *(u32*)((u8*)pendingRequest + 0x14) = *(u32*)((u8*)request + 0x14);
+        *(u32*)((u8*)pendingRequest + 0x18) = *(u32*)((u8*)request + 0x18);
+        pendingRequest->mixValue0 = request->mixValue0;
+        pendingRequest->mixValue1 = request->mixValue1;
+        *(u32*)((u8*)pendingRequest + 0x24) = *(u32*)((u8*)request + 0x24);
+        SYNTH_VOICE_PENDING_START_ACTIVE(pendingVoice) = 1;
+        SYNTH_VOICE_PENDING_START_OUT_HANDLE(pendingVoice) = outHandle;
+        pendingRequest->flags &= (u8)~SYNTH_START_FLAG_PENDING_START;
         *outHandle = request->handle | 0x80000000;
         return;
     }

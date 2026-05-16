@@ -2,13 +2,10 @@
 #define MAIN_AUDIO_SYNTH_HANDLE_H_
 
 #include "ghidra_import.h"
+#include "src/main/audio/synth_internal.h"
 
-void FUN_8026d7c4(int *param_1);
-void FUN_8026d828(uint param_1);
-void FUN_8026d9dc(uint param_1);
-void FUN_8026dbac(uint param_1,undefined2 param_2);
-void FUN_8026dc88(uint param_1);
-void FUN_8026dd94(uint param_1,undefined4 param_2,undefined4 param_3);
-void FUN_8026de48(uint param_1,uint param_2,uint param_3,byte param_4);
+void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
+void fn_8026D880(SynthStartRequest* request, u32* outHandle, u8 noLock);
+u8* fn_8026DDB4(u8* p, u16* tagOut, s16* valueOut);
 
 #endif /* MAIN_AUDIO_SYNTH_HANDLE_H_ */
