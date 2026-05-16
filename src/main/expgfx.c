@@ -782,7 +782,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   u32 bit;
   s32 highBit;
   u32 *sourceMasks;
-  u64 sourceMaskHit;
+  u64 trackedPoolFrameMask;
   u32 *poolSourceIds;
   int poolIndex;
   int aggregateState;
@@ -798,8 +798,8 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       bit = 1 << (signedPoolIndex >> 1);
       highBit = (s32)bit >> 0x1f;
       sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(signedPoolIndex & 1)) * 2];
-      sourceMaskHit = CONCAT44(highBit & sourceMasks[0],bit & sourceMasks[1]);
-      if (sourceMaskHit != 0) {
+      trackedPoolFrameMask = CONCAT44(highBit & sourceMasks[0],bit & sourceMasks[1]);
+      if (trackedPoolFrameMask != 0) {
         gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
         if ((s8)aggregateState == EXPGFX_SOURCE_FRAME_STATE_A) {
           aggregateState = EXPGFX_SOURCE_FRAME_STATE_MIXED;
@@ -1099,7 +1099,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     lifetimeFrameLimit = slot->lifetimeFrameLimit;
     lifeFraction = lbl_803DF358 * (f32)(s32)lifetimeFrameLimit;
     behaviorFlags = slot->behaviorFlags;
-    if ((behaviorFlags & 0x00800000) != 0) {
+    if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_TO_OPAQUE) != 0) {
       f32 ratio = (f32)(s32)lifetimeFrame / (f32)(s32)lifetimeFrameLimit;
       if (ratio < lbl_803DF35C) {
         ratio = lbl_803DF35C;
@@ -1107,7 +1107,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
         ratio = lbl_803DF354;
       }
       alpha = (int)((f32)((s32)slot->initialStateByte - 0xff) * ratio + (f32)(u32)slot->initialStateByte);
-    } else if ((behaviorFlags & 0x00000200) != 0) {
+    } else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_OUT) != 0) {
       f32 ratio = (f32)(s32)lifetimeFrame / (f32)(s32)lifetimeFrameLimit;
       if (ratio < lbl_803DF35C) {
         ratio = lbl_803DF35C;
@@ -1115,7 +1115,8 @@ void drawGlow(uint slotPoolBase,int poolIndex)
         ratio = lbl_803DF354;
       }
       alpha = (int)((f32)(u32)slot->initialStateByte * ratio);
-    } else if ((slot->renderFlags & 0x00400000) != 0 && (f32)(s32)lifetimeFrame <= lifeFraction) {
+    } else if ((slot->renderFlags & EXPGFX_RENDER_ALPHA_FADE_IN) != 0 &&
+               (f32)(s32)lifetimeFrame <= lifeFraction) {
       f32 ratio = (f32)(s32)lifetimeFrame / lifeFraction;
       if (ratio < lbl_803DF35C) {
         ratio = lbl_803DF35C;
@@ -1123,7 +1124,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
         ratio = lbl_803DF354;
       }
       alpha = (int)((f32)(u32)slot->initialStateByte * ratio);
-    } else if ((behaviorFlags & 0x00000100) != 0) {
+    } else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0) {
       f32 ratio;
       if ((f32)(s32)lifetimeFrame <= lifeFraction) {
         ratio = (f32)(s32)lifetimeFrame / lifeFraction;
@@ -1146,7 +1147,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     sy = *(f32 *)((char *)slot + 0x94);
     sz = *(f32 *)((char *)slot + 0x98);
     scaleSize = lbl_803DF410 * (f32)(u32)(u16)slot->scaleCounter;
-    if ((slot->behaviorFlags & 0x00400000) != 0 && dummy == 0) {
+    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0) {
       f32 base = lbl_803DF358 * scaleSize;
       f32 rnd = (f32)(s32)randomGetRange(1, 10);
       scaleFactor = base + base / rnd;
@@ -1156,14 +1157,14 @@ void drawGlow(uint slotPoolBase,int poolIndex)
 
     {
       uint behavior = slot->behaviorFlags;
-      if ((behavior & 0x04000000) != 0) {
+      if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0) {
         angleA = 0;
         angleB = 0;
-      } else if ((behavior & 0x02000000) != 0) {
+      } else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_A) != 0) {
         angleA = 0;
         angleB = 0;
       } else if ((behavior & 0x00100000) != 0) {
-        if ((slot->renderFlags & 0x00000400) != 0 && textureKey0 != 0) {
+        if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && textureKey0 != 0) {
           aimDelta[0] = *(f32 *)((char *)cameraSlot + 0xc) - *(f32 *)((char *)textureKey0 + 0x18);
           aimDelta[1] = *(f32 *)((char *)cameraSlot + 0x10) - *(f32 *)((char *)textureKey0 + 0x1c);
           aimDelta[2] = *(f32 *)((char *)cameraSlot + 0x14) - *(f32 *)((char *)textureKey0 + 0x20);
@@ -1196,7 +1197,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     } else if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_B) != 0) {
       angleToVec2((u16)(gExpgfxPhaseAngleB + (((u32)slot & 0xff) << 8)), &sinC, &cosC);
     }
-    if (textureKey0 != 0 && (slot->renderFlags & 0x00000080) != 0) {
+    if (textureKey0 != 0 && (slot->renderFlags & EXPGFX_RENDER_MODULATE_ALPHA_SOURCE) != 0) {
       alpha = (alpha * *(u8 *)((char *)textureKey0 + 0x36)) >> 8;
     }
 
@@ -1207,18 +1208,18 @@ void drawGlow(uint slotPoolBase,int poolIndex)
 
     {
       uint flags = slot->renderFlags;
-      if ((flags & 0x00000040) != 0) {
+      if ((flags & EXPGFX_RENDER_ALPHA_TEXTURE_SETUP) != 0) {
         if ((s8)alphaMode != 0) {
           textureSetupFn_800799c0();
           fn_80079180();
           textRenderSetupFn_80079804();
           alphaMode = 0;
         }
-      } else if ((flags & 0x00010000) != 0) {
-        if (!((s8)alphaMode == 4 && trackedFlags == (int)(flags & 0x00000020))) {
-          fn_8007C3D0(flags & 0x00000020);
+      } else if ((flags & EXPGFX_RENDER_ALT_ALPHA_SETUP) != 0) {
+        if (!((s8)alphaMode == 4 && trackedFlags == (int)(flags & EXPGFX_RENDER_OVERRIDE_COLORS))) {
+          fn_8007C3D0(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
           alphaMode = 4;
-          trackedFlags = (int)(slot->renderFlags & 0x00000020);
+          trackedFlags = (int)(slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS);
         }
       } else if ((s8)alphaMode != 1) {
         textureSetupFn_800799c0();
@@ -1227,7 +1228,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
         alphaMode = 1;
       }
     }
-    if ((slot->renderFlags & 0x00000001) != 0) {
+    if ((slot->renderFlags & EXPGFX_RENDER_DEPTH_BLEND_MODE) != 0) {
       if ((s8)blendMode != 0) {
         Camera_ApplyFullViewport();
         gxSetZMode_(1, 3, 1);
@@ -1244,7 +1245,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
         GXSetAlphaCompare(7, 0, 0, 7, 0);
         zCompLoc = 1;
       }
-      if ((slot->behaviorFlags & 0x00000010) != 0) {
+      if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_DEPTH_MODE_OVERRIDE) != 0) {
         if ((s8)zMode != 1) {
           fn_8000F83C();
           gxSetZMode_(1, 3, 0);
@@ -1255,7 +1256,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
         gxSetZMode_(1, 3, 0);
         zMode = 2;
       }
-      if ((slot->renderFlags & 0x00000800) != 0) {
+      if ((slot->renderFlags & EXPGFX_RENDER_BLEND_ADDITIVE) != 0) {
         if ((s8)blendMode != 1) {
           GXSetBlendMode(1, 4, 1, 5);
           blendMode = 1;
@@ -1895,7 +1896,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     f32 inv;
     playerObj = Obj_GetPlayerObject();
     slot->renderFlags = slot->renderFlags ^ EXPGFX_RENDER_AIM_AT_ACTOR;
-    if ((slot->behaviorFlags & 1) != 0) {
+    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
       dx = *(f32 *)((char *)playerObj + 0x18) - *(f32 *)&slot->startPosX;
       dz = *(f32 *)((char *)playerObj + 0x20) - *(f32 *)&slot->startPosZ;
       distSq = dx * dx + dz * dz;
