@@ -7,6 +7,11 @@ extern undefined4 FUN_80017ac8();
 extern void GameBit_Set(int eventId,int value);
 extern int gSfxplayerEffectHandles[8];
 
+#define SFXPLAYER_EVENT_ACTIVATE 1
+#define SFXPLAYER_EVENT_DEACTIVATE 2
+#define SFXPLAYER_EVENT_VARIANT 3
+#define SFXPLAYER_VARIANT_TIMER_FRAMES 0x96
+
 typedef struct SfxplayerState {
   s16 unused0;
   s16 effectSfxBaseId;
@@ -38,38 +43,40 @@ undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
   state = *(SfxplayerState **)(obj + 0xb8);
   *(s16 *)(hitState + 0x6e) = -1;
   *(u8 *)(hitState + 0x56) = 0;
-  for (i = 0; i < (int)*(u8 *)(hitState + 0x8b); i++) {
+  i = 0;
+  while (i < (int)*(u8 *)(hitState + 0x8b)) {
     event = *(u8 *)(hitState + i + 0x81);
-    if (event == 2) {
+    switch (event) {
+    case SFXPLAYER_EVENT_ACTIVATE:
+      GameBit_Set(state->effectSfxBaseId + 5,1);
+      break;
+    case SFXPLAYER_EVENT_DEACTIVATE:
       GameBit_Set(state->effectSfxBaseId + 5,0);
       state->effectFlags = 1;
-    }
-    else if (event < 2) {
-      if (event >= 1) {
-        GameBit_Set(state->effectSfxBaseId + 5,1);
-      }
-    }
-    else if (event < 4) {
-      if (state->effectSfxBaseId == 0x674) {
+      break;
+    case SFXPLAYER_EVENT_VARIANT:
+      switch (state->effectSfxBaseId) {
+      case 0x672:
+        GameBit_Set(0x66e,1);
+        state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
+        break;
+      case 0x673:
+        GameBit_Set(0x66f,1);
+        state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
+        break;
+      case 0x674:
         GameBit_Set(0x670,1);
-        state->variantSfxTimer = 0x96;
-      }
-      else if (state->effectSfxBaseId < 0x674) {
-        if (state->effectSfxBaseId == 0x672) {
-          GameBit_Set(0x66e,1);
-          state->variantSfxTimer = 0x96;
-        }
-        else if (0x671 < state->effectSfxBaseId) {
-          GameBit_Set(0x66f,1);
-          state->variantSfxTimer = 0x96;
-        }
-      }
-      else if (state->effectSfxBaseId < 0x676) {
+        state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
+        break;
+      case 0x675:
         GameBit_Set(0x9f5,1);
-        state->variantSfxTimer = 0x96;
+        state->variantSfxTimer = SFXPLAYER_VARIANT_TIMER_FRAMES;
+        break;
       }
+      break;
     }
     *(u8 *)(hitState + i + 0x81) = 0;
+    i++;
   }
   return 0;
 }
