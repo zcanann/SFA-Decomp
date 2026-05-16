@@ -8,7 +8,7 @@ extern void aramUploadData(int dest, int src, u32 size, int mode, undefined4 cal
 extern void DCStoreRange(void *addr, u32 nBytes);
 
 extern u8 lbl_803CC1E0[];
-extern int dspVoice;
+extern u8 *dspVoice;
 
 /*
  * --INFO--
@@ -33,35 +33,36 @@ int hwChangeStudio(int slot) {
     int mode;
     u32 pos;
     u32 lowBits;
-    int entry;
-    int base;
+    int samplePos;
+    u8 *voice;
+    u8 *base;
     int offset;
 
     offset = slot * 0xf4;
     base = dspVoice;
-    entry = base + offset;
-    if (*(u8 *)(entry + 0xec) != 2) {
+    voice = base + offset;
+    if (*(u8 *)(voice + 0xec) != 2) {
         return 0;
     }
-    mode = *(u8 *)(entry + 0x90);
+    mode = *(u8 *)(voice + 0x90);
     switch (mode) {
     case 0:
     case 1:
     case 4:
     case 5:
-        entry = base + offset;
-        pos = *(u32 *)(entry + 0x20);
-        entry = ((pos - 2 * *(int *)(entry + 0x78)) >> 4) * 0xe;
+        voice = base + offset;
+        pos = *(u32 *)(voice + 0x20);
+        samplePos = ((pos - 2 * *(int *)(voice + 0x78)) >> 4) * 0xe;
         lowBits = pos & 0xf;
         if (lowBits < 2) {
-            return entry;
+            return samplePos;
         }
-        entry += lowBits;
-        return entry - 2;
+        samplePos += lowBits;
+        return samplePos - 2;
     case 3:
-        return *(int *)(entry + 0x20) - *(int *)(entry + 0x78);
+        return *(int *)(voice + 0x20) - *(int *)(voice + 0x78);
     case 2:
-        return *(int *)(entry + 0x20) - (*(u32 *)(entry + 0x78) >> 1);
+        return *(int *)(voice + 0x20) - (*(u32 *)(voice + 0x78) >> 1);
     default:
         return slot;
     }
