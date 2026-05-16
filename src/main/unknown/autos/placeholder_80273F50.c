@@ -186,6 +186,7 @@ remove:
  * Insert a keygroup/sample indirection entry, keeping the table sorted by id.
  */
 extern u8 dataCurveTable[];
+extern u8 dataSmpSDirTable[];
 extern u16 dataCurveNum;
 extern void sndBegin(void);
 extern void sndEnd(void);
@@ -197,18 +198,20 @@ int dataInsertCurve(u16 key, void *value)
     u32 batches;
     int index;
     u32 *entry;
+    u8 *tableBase;
 
+    tableBase = dataSmpSDirTable;
     sndBegin();
     used = dataCurveNum;
     index = 0;
-    for (entry = (u32 *)dataCurveTable;
+    for (entry = (u32 *)(tableBase + 0x600);
          (index < (int)used) && (*(u16 *)(entry + 1) < key); entry += 2) {
         index++;
     }
     if (index < (int)used) {
-        if (key == *(u16 *)(dataCurveTable + 4 + index * 8)) {
+        if (key == *(u16 *)(tableBase + 0x604 + index * 8)) {
             sndEnd();
-            (*(u16 *)(dataCurveTable + 6 + index * 8))++;
+            (*(u16 *)(tableBase + 0x606 + index * 8))++;
             return 0;
         }
         if (used > 0x7ff) {
@@ -216,7 +219,7 @@ int dataInsertCurve(u16 key, void *value)
             return 0;
         }
         moveCount = used - index;
-        entry = (u32 *)(dataCurveTable + (used - 1) * 8);
+        entry = (u32 *)(tableBase + 0x600 + (used - 1) * 8);
         if (index <= (int)(used - 1)) {
             batches = moveCount >> 3;
             if (batches != 0) {
@@ -259,9 +262,9 @@ int dataInsertCurve(u16 key, void *value)
 
 insert:
     dataCurveNum++;
-    *(u16 *)(dataCurveTable + 4 + index * 8) = key;
-    *(void **)(dataCurveTable + index * 8) = value;
-    *(u16 *)(dataCurveTable + 6 + index * 8) = 1;
+    *(u16 *)(tableBase + 0x604 + index * 8) = key;
+    *(void **)(tableBase + 0x600 + index * 8) = value;
+    *(u16 *)(tableBase + 0x606 + index * 8) = 1;
     sndEnd();
     return 1;
 }
@@ -277,11 +280,13 @@ int dataRemoveCurve(s16 key)
     u32 moveCount;
     u32 index;
     u32 used;
+    u8 *tableBase;
 
+    tableBase = dataSmpSDirTable;
     sndBegin();
     used = dataCurveNum;
     index = 0;
-    for (entry = (u32 *)dataCurveTable;
+    for (entry = (u32 *)(tableBase + 0x600);
          ((int)index < (int)used) && (key != *(s16 *)(entry + 1)); entry += 2) {
         index++;
     }
@@ -289,8 +294,8 @@ int dataRemoveCurve(s16 key)
         sndEnd();
         return 0;
     }
-    refCount = *(s16 *)(dataCurveTable + 6 + index * 8);
-    *(s16 *)(dataCurveTable + 6 + index * 8) = refCount - 1;
+    refCount = *(s16 *)(tableBase + 0x606 + index * 8);
+    *(s16 *)(tableBase + 0x606 + index * 8) = refCount - 1;
     if ((s16)(refCount - 1) != 0) {
         sndEnd();
         return 0;
@@ -298,7 +303,7 @@ int dataRemoveCurve(s16 key)
 
     next = index + 1;
     moveCount = used - next;
-    entry = (u32 *)(dataCurveTable + next * 8);
+    entry = (u32 *)(tableBase + 0x600 + next * 8);
     if (next < (int)used) {
         used = moveCount >> 3;
         if (used != 0) {
