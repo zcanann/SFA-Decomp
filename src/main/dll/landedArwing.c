@@ -60,6 +60,8 @@ typedef struct {
  */
 undefined4 fn_8016558C(int obj, int param_2)
 {
+    int objLocal;
+    int stateWord;
     int playerObj;
     int sub;
     int targetMode;
@@ -69,27 +71,29 @@ undefined4 fn_8016558C(int obj, int param_2)
     f32 chaseScale;
     u32 scriptFlags;
 
-    sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    objLocal = obj;
+    stateWord = param_2;
+    sub = *(int *)(*(int *)(objLocal + 0xb8) + 0x40c);
     playerObj = (int)Obj_GetPlayerObject();
-    *(u8 *)(param_2 + 0x34d) = 1;
+    *(u8 *)(stateWord + 0x34d) = 1;
 
-    if (*(s8 *)(param_2 + 0x27a) != 0) {
+    if (*(s8 *)(stateWord + 0x27a) != 0) {
         *(f32 *)(sub + 0x60) = lbl_803E3004;
-        ObjHits_EnableObject(obj);
-        *(f32 *)(obj + 0x24) = -*(f32 *)(sub + 0x60) * fsin16Precise((u16)*(s16 *)obj);
-        *(f32 *)(obj + 0x28) = lbl_803E2FDC;
-        *(f32 *)(obj + 0x2c) = -*(f32 *)(sub + 0x60) * fcos16Precise((u16)*(s16 *)obj);
-        *(u32 *)param_2 |= LANDED_ARWING_FLAG_LAUNCHING;
-        ((void (*)(int, int, f32, int))ObjAnim_SetCurrentMove)(obj, 0, lbl_803E2FDC, 0);
+        ObjHits_EnableObject(objLocal);
+        *(f32 *)(objLocal + 0x24) = -*(f32 *)(sub + 0x60) * fsin16Precise((u16)*(s16 *)objLocal);
+        *(f32 *)(objLocal + 0x28) = lbl_803E2FDC;
+        *(f32 *)(objLocal + 0x2c) = -*(f32 *)(sub + 0x60) * fcos16Precise((u16)*(s16 *)objLocal);
+        *(u32 *)stateWord |= LANDED_ARWING_FLAG_LAUNCHING;
+        ((void (*)(int, int, f32, int))ObjAnim_SetCurrentMove)(objLocal, 0, lbl_803E2FDC, 0);
         *(f32 *)(sub + 0x44) = lbl_803E3008;
     }
 
-    ObjHits_SetHitVolumeSlot(obj, LANDED_ARWING_HIT_VOLUME_SLOT, LANDED_ARWING_HIT_VOLUME_FRAME, -1);
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6c) = LANDED_ARWING_HIT_VOLUME_SLOT;
-    *(u8 *)(*(int *)(obj + 0x54) + 0x6d) = LANDED_ARWING_HIT_VOLUME_FRAME;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ObjHits_SetHitVolumeSlot(objLocal, LANDED_ARWING_HIT_VOLUME_SLOT, LANDED_ARWING_HIT_VOLUME_FRAME, -1);
+    *(u8 *)(*(int *)(objLocal + 0x54) + 0x6c) = LANDED_ARWING_HIT_VOLUME_SLOT;
+    *(u8 *)(*(int *)(objLocal + 0x54) + 0x6d) = LANDED_ARWING_HIT_VOLUME_FRAME;
+    ObjHits_RegisterActiveHitVolumeObject(objLocal);
 
-    (*(code *)(*(int *)lbl_803DCAA8 + 0x18))(obj, param_2 + 4, (double)timeDelta);
+    (*(code *)(*(int *)lbl_803DCAA8 + 0x18))(objLocal, stateWord + 4, (double)timeDelta);
 
     if (*(u8 *)(sub + 0x90) != LANDED_ARWING_SCRIPT_MODE) {
         if ((u32)playerObj != 0 &&
@@ -149,16 +153,16 @@ undefined4 fn_8016558C(int obj, int param_2)
         break;
     }
 
-    updateConstrainedChaseVelocity(obj, targetX, targetY, targetZ, chaseScale);
+    updateConstrainedChaseVelocity(objLocal, targetX, targetY, targetZ, chaseScale);
 
     if (*(u8 *)(sub + 0x90) == LANDED_ARWING_SCRIPT_MODE) {
-        if ((*(u8 *)(sub + 0x92) & LANDED_ARWING_FLAG_ALTERNATE_SCRIPT_ANIM) != 0) {
-            fn_80165B3C(obj, sub);
+        if ((u32)((*(u8 *)(sub + 0x92) >> 2) & 1) != 0) {
+            fn_80165B3C(objLocal, sub);
         } else {
-            fn_80166444(obj, sub);
+            fn_80166444(objLocal, sub);
         }
     } else {
-        fn_80165C8C(obj, sub);
+        fn_80165C8C(objLocal, sub);
     }
 
     return 0;
