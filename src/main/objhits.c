@@ -2663,8 +2663,8 @@ LAB_800344f4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_2, int *param_3,
-                                           int recursionDepth) {
+void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_3)
+{
   byte bVar1;
   float fVar2;
   float fVar3;
@@ -2673,6 +2673,7 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
   int iVar7;
   int *piVar8;
   int iVar9;
+  int recursionDepth;
   double dVar10;
   double dVar11;
   undefined8 uVar12;
@@ -2711,7 +2712,7 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
     if ((bVar1 & OBJHITBOX_SHAPE_SKELETON_3D) == 0) {
       if ((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
         if (((bVar1 & OBJHITBOX_SHAPE_CHECK_REVERSE) != 0) && (recursionDepth < 1)) {
-          ObjHits_CheckSkeletonPairInner(iVar7, iVar5, param_3, recursionDepth + 1);
+          ObjHits_CheckSkeletonPair(iVar7,iVar5,param_3);
         }
       } else {
         local_60 = *(float *)(iVar7 + 0x18) - playerMapOffsetX;
@@ -2810,11 +2811,6 @@ static void ObjHits_CheckSkeletonPairInner(undefined4 param_1, undefined4 param_
     }
   }
   FUN_8028688c();
-}
-
-void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_3)
-{
-  ObjHits_CheckSkeletonPairInner(param_1, param_2, param_3, 0);
 }
 
 /*
