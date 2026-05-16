@@ -2842,11 +2842,15 @@ undefined4 ObjList_ContainsObject(int param_1)
 #pragma peephole off
 void ObjPath_GetPointWorldPositionArray(int obj,int pointIndex,int count,float *positions)
 {
+  float *position;
   int i;
 
-  for (i = 0; i < count; i++) {
-    ObjPath_GetPointWorldPosition(obj,pointIndex + i,positions,positions + 1,positions + 2,0);
-    positions = positions + 3;
+  i = 0;
+  position = positions;
+  while (i < count) {
+    ObjPath_GetPointWorldPosition(obj,pointIndex + i,position,position + 1,position + 2,0);
+    position = position + 3;
+    i++;
   }
 }
 #pragma peephole reset
