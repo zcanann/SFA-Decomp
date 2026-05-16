@@ -504,10 +504,12 @@ int dataInsertFX(s16 fxId, u8 *samples, u32 count)
     u32 i;
     u32 used;
     u32 batchCount;
+    u8 *tableBase;
 
+    tableBase = dataSmpSDirTable;
     i = 0;
     used = dataFXGroupNum;
-    while (((int)i < (int)used) && (fxId != *(s16 *)(dataFXGroupTable + i * 8))) {
+    while (((int)i < (int)used) && (fxId != *(s16 *)(tableBase + 0xa200 + i * 8))) {
         i++;
     }
     if ((i != used) || (used > 0x7f)) {
@@ -517,9 +519,9 @@ int dataInsertFX(s16 fxId, u8 *samples, u32 count)
     sndBegin();
     used = dataFXGroupNum;
     i = count & 0xffff;
-    *(s16 *)(dataFXGroupTable + used * 8) = fxId;
-    *(s16 *)(dataFXGroupTable + 2 + used * 8) = count;
-    *(u8 **)(dataFXGroupTable + 4 + used * 8) = samples;
+    *(s16 *)(tableBase + 0xa200 + used * 8) = fxId;
+    *(s16 *)(tableBase + 0xa202 + used * 8) = count;
+    *(u8 **)(tableBase + 0xa204 + used * 8) = samples;
     if (i != 0) {
         batchCount = i >> 3;
         if (batchCount != 0) {
@@ -700,33 +702,35 @@ int dataRemoveMacro(u32 key)
     u32 startIndex;
     int scanIndex;
     u32 batches;
+    u8 *tableBase;
 
     sndBegin();
+    tableBase = dataSmpSDirTable;
     bucketOffset = (key >> 4) & 0xffc;
-    if (*(s16 *)(dataMacroBucketTable + bucketOffset) == 0) {
+    if (*(s16 *)(tableBase + 0x5a00 + bucketOffset) == 0) {
         goto done;
     }
-    startIndex = *(u16 *)(dataMacroBucketTable + bucketOffset + 2);
+    startIndex = *(u16 *)(tableBase + 0x5a02 + bucketOffset);
     scanIndex = 0;
-    while ((scanIndex < (int)(u32)*(u16 *)(dataMacroBucketTable + bucketOffset)) &&
+    while ((scanIndex < (int)(u32)*(u16 *)(tableBase + 0x5a00 + bucketOffset)) &&
            ((key & 0xffff) !=
-            *(u16 *)(dataMacroTable + 4 + (startIndex + scanIndex) * 8))) {
+            *(u16 *)(tableBase + 0x6204 + (startIndex + scanIndex) * 8))) {
         scanIndex++;
     }
-    if ((int)(u32)*(u16 *)(dataMacroBucketTable + bucketOffset) <= scanIndex) {
+    if ((int)(u32)*(u16 *)(tableBase + 0x5a00 + bucketOffset) <= scanIndex) {
         goto done;
     }
 
     countOffset = (startIndex + scanIndex) * 8;
-    refCount = *(s16 *)(dataMacroTable + 6 + countOffset);
-    *(s16 *)(dataMacroTable + 6 + countOffset) = refCount - 1;
+    refCount = *(s16 *)(tableBase + 0x6206 + countOffset);
+    *(s16 *)(tableBase + 0x6206 + countOffset) = refCount - 1;
     if ((s16)(refCount - 1) != 0) {
         goto done;
     }
 
     scanIndex = startIndex + scanIndex + 1;
     moveCount = dataMacTotal - scanIndex;
-    entry = (u32 *)(dataMacroTable + scanIndex * 8);
+    entry = (u32 *)(tableBase + 0x6200 + scanIndex * 8);
     if (scanIndex < (int)(u32)dataMacTotal) {
         batches = moveCount >> 3;
         if (batches != 0) {
@@ -765,7 +769,7 @@ int dataRemoveMacro(u32 key)
 
 compactBuckets:
     scanIndex = 0x40;
-    bucket = (u16 *)dataMacroBucketTable;
+    bucket = (u16 *)(tableBase + 0x5a00);
     do {
         if (startIndex < bucket[1]) {
             bucket[1]--;
@@ -794,7 +798,7 @@ compactBuckets:
         bucket += 0x10;
         scanIndex--;
     } while (scanIndex != 0);
-    (*(s16 *)(dataMacroBucketTable + bucketOffset))--;
+    (*(s16 *)(tableBase + 0x5a00 + bucketOffset))--;
     dataMacTotal--;
 
 done:
