@@ -608,24 +608,24 @@ void fn_80276A70(int state, int useExCtrl, u32 index, u32 value)
 void mcmdPortamento(int state, u32 *args)
 {
     u32 duration[2];
-    u32 mode;
+    int mode;
 
     *(u8 *)(state + 0x131) = *args >> 0x10;
     duration[0] = args[1] >> 0x10;
-    if (((args[1] >> 8) & 1) == 0) {
-        sndConvertTicks(duration, state);
-    } else {
+    if (((args[1] >> 8) & 1) != 0) {
         sndConvertMs(duration);
+    } else {
+        sndConvertTicks(duration, state);
     }
     *(u32 *)(state + 0x134) = duration[0];
     mode = (*args >> 8) & 0xff;
     if (mode == 1) {
-        if (*(s8 *)(state + 0x121) != -1) {
+        if (*(u8 *)(state + 0x121) != 0xff) {
             inpSetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), 0x7f);
         }
     } else {
         if (mode == 0) {
-            if (*(s8 *)(state + 0x121) != -1) {
+            if (*(u8 *)(state + 0x121) != 0xff) {
                 inpSetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), 0);
             }
             *(u32 *)(state + 0x118) &= 0xfffffbff;
@@ -635,11 +635,11 @@ void mcmdPortamento(int state, u32 *args)
         if (mode > 2) {
             return;
         }
-        if (*(s8 *)(state + 0x121) == -1) {
+        if (*(u8 *)(state + 0x121) == 0xff) {
             return;
         }
-        if ((u16)inpGetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122)) <
-            0x1f81) {
+        if ((u16)inpGetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122)) <=
+            0x1f80) {
             return;
         }
     }
