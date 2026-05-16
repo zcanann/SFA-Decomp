@@ -153,13 +153,14 @@ typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMboss
  */
 #pragma scheduling off
 #pragma peephole off
-void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
+undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   DIMbossRuntime *runtime;
   DIMbossConfig *config;
   DIMbossTopState *topState;
   byte bVar1;
   bool loadWaitStarted;
+  undefined4 updateResult;
   undefined4 *puVar3;
   int iVar4;
   undefined4 mapDirIndex;
@@ -178,6 +179,7 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
   puVar3 = (undefined4 *)obj;
   puVar13 = (undefined4 *)runtime;
   iVar12 = (int)config;
+  updateResult = 0;
   Obj_GetPlayerObject();
   iVar11 = (int)topState;
   runtime->phase = DIMBOSS_PHASE_START;
@@ -325,11 +327,14 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
         lbl_803DDB80 = lbl_803DDB80 & 0xfff7ffff;
       }
     }
-    if (*(short *)(puVar3 + 0x2d) != -1) {
+    if (obj->animStateId != -1) {
       puVar7 = (undefined4 *)0x1;
       puVar8 = (undefined4 *)*DAT_803dd738;
       iVar11 = (*(code *)puVar8[0xc])(puVar3,puVar13);
-      if (iVar11 == 0) goto LAB_801bd7dc;
+      if (iVar11 == 0) {
+        updateResult = 1;
+        goto LAB_801bd7dc;
+      }
       if (puVar3[0x32] != 0) {
         *(undefined4 *)(puVar3[0x32] + 0x30) = puVar3[0xc];
       }
@@ -365,12 +370,16 @@ void DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateStat
       }
     }
     warpDarkIceMines_801bbb44(puVar3,puVar13);
-    if (*(short *)(puVar3 + 0x2d) == -1) {
+    if (obj->animStateId == -1) {
       runtime->stateFlags |= DIMBOSS_STATE_FLAG_START_MOVE;
+      updateResult = 0;
+    }
+    else {
+      updateResult = -((uint)runtime->hitReactMode) >> 31;
     }
   }
 LAB_801bd7dc:
-  return;
+  return updateResult;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -514,31 +523,17 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
 {
   DIMbossRuntime *runtime;
   DIMbossEffect *effect;
-  int visible;
 
   runtime = obj->runtime;
-  visible = shouldRender;
-  if (visible == 0) {
-    return;
-  }
-  if (obj->renderPause != 0) {
-    return;
-  }
-  if (runtime->phase == DIMBOSS_PHASE_NO_RENDER) {
-    return;
-  }
-  objRenderFn_8003b8f4((double)lbl_803E4C44);
-  fn_801BB598(obj,runtime);
-  dll_2E_func06(obj,lbl_803AC9DC,0);
-  effect = runtime->topState->effect;
-  if (effect == NULL) {
-    return;
-  }
-  if (effect->active == 0) {
-    return;
-  }
-  if (effect->visible != 0) {
-    queueGlowRender();
+  if (((shouldRender != 0) && (obj->renderPause == 0)) &&
+      (runtime->phase != DIMBOSS_PHASE_NO_RENDER)) {
+    objRenderFn_8003b8f4((double)lbl_803E4C44);
+    fn_801BB598(obj,runtime);
+    dll_2E_func06(obj,lbl_803AC9DC,0);
+    effect = runtime->topState->effect;
+    if (((effect != NULL) && (effect->active != 0)) && (effect->visible != 0)) {
+      queueGlowRender();
+    }
   }
 }
 #pragma peephole reset
