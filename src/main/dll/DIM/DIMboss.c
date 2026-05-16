@@ -709,7 +709,7 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   obj->updateMode = 2;
   animFlags = 6;
   if (param_3 != 0) {
-    animFlags = (animFlags | 1) & 0xff;
+    animFlags |= 1;
   }
   ((DIMbossAnimSetupFn)(*(code *)(*lbl_803DCAB8 + 0x58)))
       (obj,param_2,runtime,0xc,6,0x102,animFlags,lbl_803E4C28);
