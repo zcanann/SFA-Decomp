@@ -548,6 +548,7 @@ void fn_8027670C(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
 /*
  * Read a 32-bit synth register, either from the voice or EX controller bank.
  */
+#pragma dont_inline on
 u32 fn_802769A4(int state, int useExCtrl, u32 index)
 {
     u32 value;
@@ -602,6 +603,7 @@ void fn_80276A70(int state, int useExCtrl, u32 index, u32 value)
         inpSetExCtrl(state, index, (s16)value);
     }
 }
+#pragma dont_inline reset
 
 /*
  * Configure the controller-0x41 ramp trigger for the current voice.
@@ -655,47 +657,59 @@ void mcmdPortamento(int state, u32 *args)
  */
 void mcmdVarCalculation(int state, u32 *args, u8 op)
 {
+    u32 command;
+    u32 operand;
+    int opValue;
     s16 lhs;
     s16 rhs;
     int result;
 
-    lhs = (s16)fn_802769A4(state, *args >> 0x18, args[1] & 0xff);
-    if (op == 4) {
-        rhs = (s16)(args[1] >> 8);
+    operand = args[1];
+    command = *args;
+    lhs = (s16)fn_802769A4(state, command >> 0x18, operand & 0xff);
+    opValue = op;
+    if (opValue == 4) {
+        rhs = (s16)(operand >> 8);
     } else {
-        rhs = (s16)fn_802769A4(state, (args[1] >> 8) & 0xff, (args[1] >> 0x10) & 0xff);
+        operand = args[1];
+        rhs = (s16)fn_802769A4(state, (operand >> 8) & 0xff, (operand >> 0x10) & 0xff);
     }
 
-    if (op == 2) {
+    opValue = op;
+    if (opValue == 2) {
         result = lhs * rhs;
-    } else if (op < 2) {
-        if (op != 0) {
-            result = lhs - rhs;
-        } else {
-            result = lhs + rhs;
-        }
-    } else if (op != 4) {
-        if (op < 4) {
-            if (rhs == 0) {
-                result = 0;
-            } else {
-                result = lhs / (int)rhs;
-            }
-        } else {
-            result = lhs + rhs;
-        }
     } else {
-        result = lhs + rhs;
+        if (opValue < 2) {
+            if (opValue == 0) {
+                result = lhs + rhs;
+            } else {
+                result = lhs - rhs;
+                goto clamp;
+            }
+        } else if (opValue != 4) {
+            if (opValue < 4) {
+                if (rhs == 0) {
+                    result = 0;
+                } else {
+                    result = lhs / (int)rhs;
+                }
+            }
+            goto clamp;
+        } else {
+            result = lhs + rhs;
+        }
     }
 
+clamp:
+    command = *args;
     if (result < -0x8000) {
         rhs = -0x8000;
-    } else if (result < 0x8000) {
+    } else if (result <= 0x7fff) {
         rhs = (s16)result;
     } else {
         rhs = 0x7fff;
     }
-    fn_80276A70(state, (*args >> 8) & 0xff, (*args >> 0x10) & 0xff, (int)rhs);
+    fn_80276A70(state, (command >> 8) & 0xff, (command >> 0x10) & 0xff, (int)rhs);
 }
 
 /*
