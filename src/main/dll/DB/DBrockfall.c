@@ -299,3 +299,17 @@ void fn_801DF9D0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
 #pragma peephole reset
 #pragma scheduling reset
+
+u32 gFElevControlObjDescriptor[] = {
+    0, 0, 0, 0x00090000,
+    (u32)FElevControl_initialise,
+    (u32)FElevControl_release,
+    0,
+    (u32)FElevControl_init,
+    (u32)FElevControl_update,
+    (u32)FElevControl_hitDetect,
+    (u32)FElevControl_render,
+    (u32)FElevControl_free,
+    (u32)FElevControl_func08,
+    (u32)FElevControl_getExtraSize,
+};
