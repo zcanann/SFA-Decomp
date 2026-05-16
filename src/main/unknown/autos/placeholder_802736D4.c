@@ -20,6 +20,7 @@ extern void hwSetVolume(int slot, undefined4 mode, f32 front, f32 left, f32 righ
                         undefined4 auxB);
 
 extern u8 lbl_803BD150[];
+extern u8 dataSmpSDirTable[];
 extern u8 dataKeymapTable[];
 extern SynthJob synthJobTable[];
 extern u32 synthFlags;
@@ -110,10 +111,11 @@ void synthRefreshJobVolumes(void)
     sndEnd();
 }
 
-int dataInsertKeymap(u32 keymapId, void *data)
+int dataInsertKeymap(u16 keymapId, void *data)
 {
     DataRefEntry *table;
     DataRefEntry *entry;
+    u8 *tableBase;
     u16 count;
     u32 moveCount;
     u32 batches;
@@ -121,9 +123,10 @@ int dataInsertKeymap(u32 keymapId, void *data)
     int index;
     u16 key;
 
+    tableBase = dataSmpSDirTable;
     sndBegin();
     count = dataKeymapNum;
-    table = (DataRefEntry *)dataKeymapTable;
+    table = (DataRefEntry *)(tableBase + 0x4600);
     key = keymapId;
     entry = table;
     index = 0;
