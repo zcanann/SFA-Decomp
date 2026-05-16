@@ -173,5 +173,24 @@ void spellstone_initialise(void)
   return;
 }
 
+u32 gSpellStoneObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x000B0000,
+    (u32)spellstone_initialise,
+    (u32)spellstone_release,
+    0,
+    (u32)spellstone_init,
+    (u32)spellstone_update,
+    (u32)spellstone_hitDetect,
+    (u32)spellstone_render,
+    (u32)spellstone_free,
+    (u32)spellstone_func08,
+    (u32)spellstone_getExtraSize,
+    (u32)spellstone_setState,
+    (u32)spellstone_getState,
+};
+
 #pragma peephole reset
 #pragma scheduling reset

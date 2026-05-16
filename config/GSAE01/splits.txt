@@ -1452,18 +1452,21 @@ main/unknown/autos/placeholder_8020C9CC.c:
 
 main/crcloudrace.c:
 	.text       start:0x80210A54 end:0x80210BE8
+	.data       start:0x8032A3C8 end:0x8032A400
 
 main/unknown/autos/placeholder_80210BE8.c:
 	.text       start:0x80210BE8 end:0x80210BF0
 
 main/spellstone.c:
 	.text       start:0x80210BF0 end:0x80210E8C
+	.data       start:0x8032A428 end:0x8032A468
 
 main/unknown/autos/placeholder_80210E8C.c:
 	.text       start:0x80210E8C end:0x80210E8C
 
 main/crfueltank.c:
 	.text       start:0x80210E8C end:0x802110F8
+	.data       start:0x8032A468 end:0x8032A4A0
 
 main/unknown/autos/placeholder_802110F8.c:
 	.text       start:0x802110F8 end:0x8021122C

@@ -174,3 +174,20 @@ void crfueltank_initialise(void)
 {
   return;
 }
+
+u32 gCrFuelTankObjDescriptor[] = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (u32)crfueltank_initialise,
+    (u32)crfueltank_release,
+    0,
+    (u32)crfueltank_init,
+    (u32)crfueltank_update,
+    (u32)crfueltank_hitDetect,
+    (u32)crfueltank_render,
+    (u32)crfueltank_free,
+    (u32)crfueltank_func08,
+    (u32)crfueltank_getExtraSize,
+};
