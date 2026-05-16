@@ -157,3 +157,25 @@ void FUN_8017f290(int param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8017F32C(void) {}
 void fn_8017F330(void) {}
+
+extern void fn_8017F308();
+extern void fn_8017EFF0();
+extern void fn_8017EFB0();
+extern void fn_8017EF80();
+extern void fn_8017EF7C();
+extern int fn_8017EF74(void);
+extern int fn_8017EF6C(void);
+
+u32 lbl_80321530[] = {
+    0, 0, 0, 0x00090000,
+    (u32)fn_8017F330,
+    (u32)fn_8017F32C,
+    0,
+    (u32)fn_8017F308,
+    (u32)fn_8017EFF0,
+    (u32)fn_8017EFB0,
+    (u32)fn_8017EF80,
+    (u32)fn_8017EF7C,
+    (u32)fn_8017EF74,
+    (u32)fn_8017EF6C,
+};
