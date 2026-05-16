@@ -23,7 +23,7 @@ extern f32 lbl_803E5424;
 extern f64 lbl_803E5428;
 extern f32 lbl_803E5438;
 extern f32 lbl_803E5448;
-extern u8 lbl_80326E98[];
+extern u8 gSHthorntailDataTables[];
 
 #define SHTHORNTAIL_LEVEL_MODE0_SFX_BASE 0x53C
 #define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC1 0x54C
@@ -167,7 +167,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
   int randomIdleWait;
   u8 *levelControlTables;
 
-  levelControlTables = lbl_80326E98;
+  levelControlTables = gSHthorntailDataTables;
   runtime->impactSfxTable = levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_BASE;
   switch(runtime->locomotionMode) {
   case SHTHORNTAIL_LOCOMOTION_1:

@@ -23,7 +23,7 @@ extern undefined4 FUN_801d4810();
 extern undefined4 FUN_801d4814();
 
 extern undefined4 DAT_80327a58;
-extern u32 lbl_80326E98[][4];
+extern u32 gSHthorntailDataTables[][4];
 extern char sSHthorntailAngleYawDebug[];
 extern undefined4 DAT_80327a64;
 extern undefined4 DAT_803dcc30;
@@ -81,7 +81,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
   linkedEventPending = 0;
   groupIndex = -1;
   matchCount = 0;
-  linkedConfigRow = lbl_80326E98[0];
+  linkedConfigRow = gSHthorntailDataTables[0];
   configToken = obj->config->configToken;
   if (configToken == linkedConfigRow[0]) {
     groupIndex = 0;
@@ -109,9 +109,9 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
   objects = ObjGroup_GetObjects(3,&count);
   for (index = 0; index < count; index++) {
     if (((*objects)->objType == 0x4d7) &&
-        (((*objects)->config->configToken == lbl_80326E98[groupIndex][1]) ||
-         ((*objects)->config->configToken == lbl_80326E98[groupIndex][2]) ||
-         ((*objects)->config->configToken == lbl_80326E98[groupIndex][3]))) {
+        (((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][1]) ||
+         ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
+         ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][3]))) {
       fn_8014C66C(*objects,obj);
       if ((vec3f_distanceSquared(&(*objects)->pos,&obj->pos) < lbl_803E5414) &&
           (GameBit_Get(SHthorntail_GetLinkedGameBit((*objects)->config)) == 0)) {
