@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 
 extern u16 sndRand(void);
 extern void sndConvertTicks(u32 *p, int state);
@@ -22,32 +23,38 @@ int mcmdWait(int state, u32 *args)
 
     delay[0] = args[1] >> 0x10;
     if (delay[0] != 0) {
-        if (((*args >> 8) & 1) == 0) {
-            *(u32 *)(state + 0x118) &= 0xfffffffb;
-            *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+        if ((*args & MCMD_LOOP_WAIT_FOR_KEYOFF_FLAG) == 0) {
+            *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &= 0xfffffffb;
+            *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) =
+                *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET);
         } else {
-            if ((*(u32 *)(state + 0x118) & 8) != 0) {
-                if ((*(u32 *)(state + 0x114) & 0x100) == 0) {
+            if ((*(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &
+                 MCMD_VOICE_KEYOFF_OUTPUT_FLAG) != 0) {
+                if ((*(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) &
+                     MCMD_VOICE_KEYOFF_INPUT_FLAG) == 0) {
                     return 0;
                 }
-                *(u32 *)(state + 0x118) = *(u32 *)(state + 0x118);
-                *(u32 *)(state + 0x114) |= 0x400;
+                *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) =
+                    *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET);
+                *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) |= 0x400;
             }
-            *(u32 *)(state + 0x118) |= 4;
+            *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= 4;
         }
 
-        if (((*args >> 0x18) & 1) == 0) {
-            *(u32 *)(state + 0x118) &= 0xfffbffff;
-            *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+        if ((*args & MCMD_LOOP_WAIT_FOR_INACTIVE_FLAG) == 0) {
+            *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &= 0xfffbffff;
+            *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) =
+                *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET);
         } else {
-            if (((*(u32 *)(state + 0x118) & 0x20) == 0) &&
-                hwIsActive(*(u32 *)(state + 0xf4) & 0xff) == 0) {
+            if (((*(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &
+                  MCMD_VOICE_ACTIVE_OUTPUT_FLAG) == 0) &&
+                hwIsActive(*(u32 *)(state + MCMD_VOICE_ID_OFFSET) & 0xff) == 0) {
                 return 0;
             }
-            *(u32 *)(state + 0x118) |= 0x40000;
+            *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= 0x40000;
         }
 
-        if (((*args >> 0x10) & 1) != 0) {
+        if ((*args & MCMD_LOOP_RANDOM_DELAY_FLAG) != 0) {
             rand = sndRand();
             delay[0] = (rand & 0xffff) - ((rand & 0xffff) / delay[0]) * delay[0];
         }
