@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_800443cc(int param_1);
+undefined4 mapLoadDataFile(int param_1);
 void FUN_800443fc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_80044400(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,

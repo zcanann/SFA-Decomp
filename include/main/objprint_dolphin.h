@@ -73,6 +73,6 @@ void FUN_80042c18(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 undefined * FUN_80042f88(int param_1);
 void FUN_80043030(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-undefined4 FUN_80043034(uint *param_1,int param_2,int param_3);
+undefined4 clearLoadedFileFlags_blocks1(uint *param_1,int param_2,int param_3);
 
 #endif /* MAIN_OBJPRINT_DOLPHIN_H_ */

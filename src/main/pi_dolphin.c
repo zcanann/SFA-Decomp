@@ -53,7 +53,7 @@ extern undefined4 FUN_80041a3c();
 extern undefined4 FUN_80041ad8();
 extern undefined4 FUN_80041b74();
 extern undefined4 FUN_8004286c();
-extern undefined4 FUN_80043034();
+extern undefined4 clearLoadedFileFlags_blocks1();
 extern uint FUN_80053078();
 extern undefined4 FUN_800530b4();
 extern undefined4 FUN_800530b8();
@@ -545,7 +545,7 @@ extern undefined uRam803dc24f;
 /*
  * --INFO--
  *
- * Function: FUN_800443cc
+ * Function: mapLoadDataFile
  * EN v1.0 Address: 0x800443CC
  * EN v1.0 Size: 48b
  * EN v1.1 Address: 0x80044510
@@ -555,7 +555,7 @@ extern undefined uRam803dc24f;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_800443cc(int param_1)
+undefined4 mapLoadDataFile(int param_1)
 {
   if (DAT_803601f2 == param_1) {
     return 0;

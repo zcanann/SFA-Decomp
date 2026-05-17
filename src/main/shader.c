@@ -40,7 +40,7 @@ extern undefined8 FUN_80040d94();
 extern int FUN_80042830();
 extern int FUN_80042838();
 extern undefined4 FUN_80042f88();
-extern int FUN_800443cc();
+extern int mapLoadDataFile();
 extern undefined8 FUN_800443fc();
 extern int FUN_80044404();
 extern undefined8 FUN_80044424();
