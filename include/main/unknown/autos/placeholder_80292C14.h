@@ -3,7 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80292b44(void);
-void FUN_80292b48(void);
+float powfBitEstimate(float x, float y);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80292C14_H_ */
