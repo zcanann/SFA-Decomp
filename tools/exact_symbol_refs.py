@@ -84,12 +84,22 @@ def iter_refs(
     skip: set[str],
     named_definitions: dict[str, set[Path]],
     include_duplicate_definitions: bool,
+    include_unused_externs: bool,
 ):
     for path in root.rglob("*.c"):
         rel = path.as_posix()
         if not include_autos and "unknown/autos" in rel:
             continue
         text = path.read_text(errors="ignore")
+        live_addresses: set[str] = set()
+        if not include_unused_externs:
+            for line in text.splitlines():
+                if "FUN_" not in line:
+                    continue
+                kind = classify_line(line.strip())
+                if kind in ("comment", "extern", "definition"):
+                    continue
+                live_addresses.update(match.group(1).lower() for match in FUN_RE.finditer(line))
         for lineno, line in enumerate(text.splitlines(), 1):
             if "FUN_" not in line:
                 continue
@@ -101,6 +111,8 @@ def iter_refs(
                 address = match.group(1).lower()
                 name = symbols.get(address)
                 if name is None or address in skip or re.search(rf"\b{re.escape(name)}\b", text):
+                    continue
+                if kind == "extern" and not include_unused_externs and address not in live_addresses:
                     continue
                 if (
                     kind == "definition"
@@ -144,6 +156,11 @@ def main() -> int:
         action="store_true",
         help="include raw definitions even when a named definition exists in another source file",
     )
+    parser.add_argument(
+        "--include-unused-externs",
+        action="store_true",
+        help="include raw extern declarations that have no live use in the same file",
+    )
     args = parser.parse_args()
 
     if args.show_skips:
@@ -164,6 +181,7 @@ def main() -> int:
         skip,
         named_definitions,
         args.include_duplicate_definitions,
+        args.include_unused_externs,
     ):
         if args.kind != "all" and kind != args.kind:
             continue
