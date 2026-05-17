@@ -2,7 +2,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objanim.h"
 
-extern undefined4 FUN_800066e0();
+extern undefined4 getLActions();
 extern undefined4 FUN_80006728();
 extern undefined4 FUN_800067c0();
 extern bool FUN_800067f0();
@@ -2065,7 +2065,7 @@ void FUN_8019dcb8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar9 = ObjMsg_Pop(uVar4,&uStack_34,auStack_30,&local_38);
     } while (iVar9 != 0);
     if (*(char *)(param_11 + 0x80) == '\x01') {
-      FUN_800066e0(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar4,uVar4,0x18,0
+      getLActions(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar4,uVar4,0x18,0
                    ,0,0,in_r9,in_r10);
       *(undefined *)(param_11 + 0x80) = 0;
     }

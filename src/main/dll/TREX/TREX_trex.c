@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/TREX/TREX_trex.h"
 
-extern undefined4 FUN_800066e0();
+extern undefined4 getLActions();
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();

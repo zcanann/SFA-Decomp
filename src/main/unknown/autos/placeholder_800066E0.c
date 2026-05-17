@@ -732,7 +732,7 @@ extern void *mmAlloc(u32 size, u32 tag, void *name);
 /*
  * --INFO--
  *
- * Function: FUN_800066e0
+ * Function: getLActions
  * EN v1.0 Address: 0x800066E0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x800066E0
@@ -743,7 +743,7 @@ extern void *mmAlloc(u32 size, u32 tag, void *name);
  * PAL Size: TODO
  */
 undefined4
-FUN_800066e0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+getLActions(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
             undefined4 param_10,uint param_11,undefined4 param_12,undefined4 param_13,
             undefined4 param_14,undefined4 param_15,undefined4 param_16)

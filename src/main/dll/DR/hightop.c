@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/hightop.h"
 
-extern undefined4 FUN_800066e0();
+extern undefined4 getLActions();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006824();
@@ -351,7 +351,7 @@ LAB_80199ef0:
         case 0xd:
           param_14 = 0;
           param_13 = param_12;
-          FUN_800066e0(dVar22,param_2,param_3,param_4,param_5,param_6,param_7,param_8,psVar7,iVar17,
+          getLActions(dVar22,param_2,param_3,param_4,param_5,param_6,param_7,param_8,psVar7,iVar17,
                        (uint)*(ushort *)(pbVar21 + 2),param_11,param_12,0,param_15,param_16);
           break;
         case 0x10:

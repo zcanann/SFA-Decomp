@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1D0.h"
 
-extern undefined4 FUN_800066e0();
+extern undefined4 getLActions();
 extern void* FUN_800069a8();
 extern int FUN_80006a64();
 extern undefined8 FUN_80006a68();
@@ -54,15 +54,15 @@ void FUN_801cd258(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar4 = ObjHits_SetHitVolumeSlot(param_9,0xe,uVar2,0);
   cVar1 = *(char *)(iVar3 + 0x19);
   if (cVar1 == '\x01') {
-    FUN_800066e0(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,0x203
+    getLActions(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,0x203
                  ,0,0,0,in_r9,in_r10);
   }
   else if (cVar1 == '\x02') {
-    FUN_800066e0(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,0x204
+    getLActions(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,0x204
                  ,0,0,0,in_r9,in_r10);
   }
   else {
-    FUN_800066e0(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,0x201
+    getLActions(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,0x201
                  ,0,0,0,in_r9,in_r10);
   }
   return;

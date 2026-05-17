@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WClaser.h"
 
-extern undefined4 FUN_800066e0();
+extern undefined4 getLActions();
 extern undefined4 FUN_80006b0c();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -57,11 +57,11 @@ WM_Galleon_update(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined4 *)(param_9 + 0xf4) = 10;
       break;
     case 2:
-      FUN_800066e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+      getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    0x77,0,0,0,in_r9,in_r10);
-      FUN_800066e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+      getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    0x78,0,0,0,in_r9,in_r10);
-      FUN_800066e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+      getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    0x80,0,0,0,in_r9,in_r10);
       break;
     case 3:

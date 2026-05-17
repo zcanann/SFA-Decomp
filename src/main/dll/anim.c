@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
-extern undefined4 FUN_800066e0();
+extern undefined4 getLActions();
 extern undefined4 FUN_800067c0();
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -3369,7 +3369,7 @@ void FUN_80204238(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined8 uVar1;
   
   uVar1 = (**(code **)(*DAT_803dd6f8 + 0x18))();
-  FUN_800066e0(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,0,0,0,0
+  getLActions(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,0,0,0,0
                ,in_r9,in_r10);
   return;
 }

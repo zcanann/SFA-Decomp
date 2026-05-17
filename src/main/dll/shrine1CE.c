@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/shrine1CE.h"
 
-extern undefined4 FUN_800066e0();
+extern undefined4 getLActions();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
@@ -385,7 +385,7 @@ void FUN_801cc868(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   iVar1 = *(int *)(param_9 + 0xb8);
   if ((*(byte *)(iVar1 + 0x36) & 2) == 0) {
-    FUN_800066e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,1,0
+    getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,1,0
                  ,0,0,in_r9,in_r10);
     *(byte *)(iVar1 + 0x36) = *(byte *)(iVar1 + 0x36) | 2;
   }

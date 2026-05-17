@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/creator1CF.h"
 
-extern undefined4 FUN_800066e0();
+extern undefined4 getLActions();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjHits_ClearHitVolumes();
@@ -143,7 +143,7 @@ void FUN_801cd098(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   else {
     if ((*(byte *)(iVar4 + 0x36) & 2) == 0) {
-      FUN_800066e0(dVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,1,0
+      getLActions(dVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,1,0
                    ,0,0,in_r9,in_r10);
       *(byte *)(iVar4 + 0x36) = *(byte *)(iVar4 + 0x36) | 2;
     }

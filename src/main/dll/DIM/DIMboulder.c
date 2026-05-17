@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMboulder.h"
 
-extern undefined4 FUN_800066e0();
+extern undefined4 getLActions();
 extern undefined4 FUN_80006724();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -274,13 +274,13 @@ void FUN_801ac490(undefined8 param_1,double param_2,double param_3,undefined8 pa
                            param_9,0x9e,0,param_13,param_14,param_15,param_16);
       uVar4 = FUN_80006728(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
                            param_9,0x119,0,param_13,param_14,param_15,param_16);
-      FUN_800066e0(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+      getLActions(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    0x15b,0,0,0,param_15,param_16);
-      FUN_800066e0(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+      getLActions(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    0x15c,0,0,0,param_15,param_16);
-      FUN_800066e0(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+      getLActions(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    0x17c,0,0,0,param_15,param_16);
-      FUN_800066e0(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+      getLActions(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    0x17b,0,0,0,param_15,param_16);
       (**(code **)(*DAT_803dd6e4 + 0x1c))(1);
       *(undefined4 *)(param_9 + 0xf4) = 1;
@@ -778,13 +778,13 @@ FUN_801ad984(undefined8 param_1,undefined8 param_2,double param_3,undefined8 par
       if (((double)(float)((double)lbl_803E53D0 + dVar4) < dVar3) &&
          (*(char *)((int)pfVar2 + 0xb) != '\0')) {
         *(undefined *)((int)pfVar2 + 0xb) = 0;
-        FUN_800066e0(dVar3,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+        getLActions(dVar3,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                      (uint)*(ushort *)(pfVar2 + 2),0,0,0,in_r9,in_r10);
       }
     }
     else {
       *(undefined *)((int)pfVar2 + 0xb) = 1;
-      FUN_800066e0(dVar3,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+      getLActions(dVar3,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    (uint)*(ushort *)((int)pfVar2 + 6),0,0,0,in_r9,in_r10);
     }
   }
@@ -813,7 +813,7 @@ void FUN_801adb28(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   if (*(short *)(param_9 + 0x46) != 0x172) {
     if (*(char *)(*(int *)(param_9 + 0xb8) + 0xb) != '\0') {
-      FUN_800066e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
+      getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    (uint)*(ushort *)(*(int *)(param_9 + 0xb8) + 8),0,0,0,in_r9,in_r10);
     }
     (**(code **)(*DAT_803dd6f8 + 0x18))(param_9);
