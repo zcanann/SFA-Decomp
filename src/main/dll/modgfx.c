@@ -2248,7 +2248,8 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1,undefined8 param_2,unde
 void FUN_800a1804(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
-  FUN_800a11cc(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,1);
+  modgfx_releaseActiveEffectsByType(param_1,param_2,param_3,param_4,param_5,param_6,param_7,
+                                    param_8,0,1);
   return;
 }
 
