@@ -994,9 +994,9 @@ void TimeQueueAdd(int state)
     next = macTimeQueueRoot;
     prev = 0;
     while ((cur = next) != 0 &&
-           (*(u32 *)(cur + 0x98) <
-            (u32)(*(u32 *)(cur + 0x9c) < *(u32 *)(state + 0x9c)) +
-                *(u32 *)(state + 0x98))) {
+           (*(u32 *)(cur + 0x98) < *(u32 *)(state + 0x98) ||
+            (*(u32 *)(cur + 0x98) == *(u32 *)(state + 0x98) &&
+             *(u32 *)(cur + 0x9c) < *(u32 *)(state + 0x9c)))) {
         prev = cur;
         next = *(int *)(cur + 0x44);
     }
