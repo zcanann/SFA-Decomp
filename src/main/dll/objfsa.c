@@ -4158,7 +4158,7 @@ LAB_800e19bc:
 /*
  * --INFO--
  *
- * Function: FUN_800dfe64
+ * Function: RomCurve_findProjectedCurveFromStart
  * EN v1.0 Address: 0x800DFE64
  * EN v1.0 Size: 720b
  * EN v1.1 Address: 0x800E1A4C
@@ -4168,101 +4168,102 @@ LAB_800e19bc:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800dfe64(double param_1,double param_2,double param_3,int param_4,float *param_5)
+int RomCurve_findProjectedCurveFromStart(double x,double y,double z,int curve,float *outPhase)
 {
-  bool bVar1;
-  int iVar2;
-  int iVar3;
-  uint uVar4;
-  int iVar5;
-  float local_78;
-  float local_74;
-  float local_70;
-  uint local_6c [4];
-  uint auStack_5c [8];
+  bool noOpenLinks;
+  int projected;
+  int linkCount;
+  uint linkId;
+  int mid;
+  float phase;
+  float verticalOffset;
+  float lateralOffset;
+  uint candidateLinkIds[4];
+  uint adjacentWindow[8];
   
 LAB_800e1c9c:
   do {
     while( true ) {
-      bVar1 = false;
-      if ((*(int *)(param_4 + 0x1c) == -1) || ((*(byte *)(param_4 + 0x1b) & 1) != 0)) {
-        if ((*(int *)(param_4 + 0x20) == -1) || ((*(byte *)(param_4 + 0x1b) & 2) != 0)) {
-          if ((*(int *)(param_4 + 0x24) == -1) || ((*(byte *)(param_4 + 0x1b) & 4) != 0)) {
-            if ((*(int *)(param_4 + 0x28) == -1) || ((*(byte *)(param_4 + 0x1b) & 8) != 0)) {
-              bVar1 = true;
+      noOpenLinks = false;
+      if ((*(int *)(curve + 0x1c) == -1) || ((*(byte *)(curve + 0x1b) & 1) != 0)) {
+        if ((*(int *)(curve + 0x20) == -1) || ((*(byte *)(curve + 0x1b) & 2) != 0)) {
+          if ((*(int *)(curve + 0x24) == -1) || ((*(byte *)(curve + 0x1b) & 4) != 0)) {
+            if ((*(int *)(curve + 0x28) == -1) || ((*(byte *)(curve + 0x1b) & 8) != 0)) {
+              noOpenLinks = true;
             }
             else {
-              bVar1 = false;
+              noOpenLinks = false;
             }
           }
           else {
-            bVar1 = false;
+            noOpenLinks = false;
           }
         }
         else {
-          bVar1 = false;
+          noOpenLinks = false;
         }
       }
-      if (bVar1) {
-        *param_5 = lbl_803E12B8;
-        return param_4;
+      if (noOpenLinks) {
+        *outPhase = lbl_803E12B8;
+        return curve;
       }
-      RomCurve_getAdjacentWindow(param_4,(int *)auStack_5c);
-      iVar2 = RomCurve_projectPointToAdjacentWindow(param_1,param_2,param_3,auStack_5c,&local_70,
-                                                    &local_74,&local_78);
-      if ((((iVar2 != 0) && (lbl_803E12C8 < local_70)) && (local_70 < lbl_803E12CC)) &&
-         ((lbl_803E12D0 < local_74 && (local_74 < lbl_803E12D4)))) {
-        *param_5 = local_78;
-        return param_4;
+      RomCurve_getAdjacentWindow(curve,(int *)adjacentWindow);
+      projected = RomCurve_projectPointToAdjacentWindow(x,y,z,adjacentWindow,&lateralOffset,
+                                                        &verticalOffset,&phase);
+      if ((((projected != 0) && (lbl_803E12C8 < lateralOffset)) &&
+           (lateralOffset < lbl_803E12CC)) &&
+         ((lbl_803E12D0 < verticalOffset && (verticalOffset < lbl_803E12D4)))) {
+        *outPhase = phase;
+        return curve;
       }
-      iVar2 = 0;
-      uVar4 = *(uint *)(param_4 + 0x1c);
-      if (((-1 < (int)uVar4) && ((*(byte *)(param_4 + 0x1b) & 1) == 0)) && (uVar4 != 0)) {
-        iVar2 = 1;
-        local_6c[0] = uVar4;
+      projected = 0;
+      linkId = *(uint *)(curve + 0x1c);
+      if (((-1 < (int)linkId) && ((*(byte *)(curve + 0x1b) & 1) == 0)) && (linkId != 0)) {
+        projected = 1;
+        candidateLinkIds[0] = linkId;
       }
-      uVar4 = *(uint *)(param_4 + 0x20);
-      iVar3 = iVar2;
-      if (((-1 < (int)uVar4) && ((*(byte *)(param_4 + 0x1b) & 2) == 0)) && (uVar4 != 0)) {
-        iVar3 = iVar2 + 1;
-        local_6c[iVar2] = uVar4;
+      linkId = *(uint *)(curve + 0x20);
+      linkCount = projected;
+      if (((-1 < (int)linkId) && ((*(byte *)(curve + 0x1b) & 2) == 0)) && (linkId != 0)) {
+        linkCount = projected + 1;
+        candidateLinkIds[projected] = linkId;
       }
-      uVar4 = *(uint *)(param_4 + 0x24);
-      iVar2 = iVar3;
-      if (((-1 < (int)uVar4) && ((*(byte *)(param_4 + 0x1b) & 4) == 0)) && (uVar4 != 0)) {
-        iVar2 = iVar3 + 1;
-        local_6c[iVar3] = uVar4;
+      linkId = *(uint *)(curve + 0x24);
+      projected = linkCount;
+      if (((-1 < (int)linkId) && ((*(byte *)(curve + 0x1b) & 4) == 0)) && (linkId != 0)) {
+        projected = linkCount + 1;
+        candidateLinkIds[linkCount] = linkId;
       }
-      uVar4 = *(uint *)(param_4 + 0x28);
-      iVar3 = iVar2;
-      if (((-1 < (int)uVar4) && ((*(byte *)(param_4 + 0x1b) & 8) == 0)) && (uVar4 != 0)) {
-        iVar3 = iVar2 + 1;
-        local_6c[iVar2] = uVar4;
+      linkId = *(uint *)(curve + 0x28);
+      linkCount = projected;
+      if (((-1 < (int)linkId) && ((*(byte *)(curve + 0x1b) & 8) == 0)) && (linkId != 0)) {
+        linkCount = projected + 1;
+        candidateLinkIds[projected] = linkId;
       }
-      if (iVar3 == 0) {
-        uVar4 = 0xffffffff;
-      }
-      else {
-        uVar4 = randomGetRange(0,iVar3 - 1);
-        uVar4 = local_6c[uVar4];
-      }
-      if (-1 < (int)uVar4) break;
-      param_4 = 0;
-    }
-    iVar3 = DAT_803de0f0 + -1;
-    iVar2 = 0;
-    while (iVar2 <= iVar3) {
-      iVar5 = iVar3 + iVar2 >> 1;
-      param_4 = (&DAT_803a2448)[iVar5];
-      if (*(uint *)(param_4 + 0x14) < uVar4) {
-        iVar2 = iVar5 + 1;
+      if (linkCount == 0) {
+        linkId = 0xffffffff;
       }
       else {
-        if (*(uint *)(param_4 + 0x14) <= uVar4) goto LAB_800e1c9c;
-        iVar3 = iVar5 + -1;
+        linkId = randomGetRange(0,linkCount - 1);
+        linkId = candidateLinkIds[linkId];
+      }
+      if (-1 < (int)linkId) break;
+      curve = 0;
+    }
+    linkCount = DAT_803de0f0 + -1;
+    projected = 0;
+    while (projected <= linkCount) {
+      mid = linkCount + projected >> 1;
+      curve = (&DAT_803a2448)[mid];
+      if (*(uint *)(curve + 0x14) < linkId) {
+        projected = mid + 1;
+      }
+      else {
+        if (*(uint *)(curve + 0x14) <= linkId) goto LAB_800e1c9c;
+        linkCount = mid + -1;
       }
     }
-    param_4 = 0;
+    curve = 0;
   } while( true );
 }
 
