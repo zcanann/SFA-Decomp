@@ -507,8 +507,8 @@ void mcmdRandomKey(int state, u32 *args)
 /*
  * Queue a controller event and mark the owning MIDI/global dirty flag.
  */
-void fn_8027670C(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
-                 u32 activeFlag, u32 dirtyFlag)
+void SelectSource(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
+                  u32 activeFlag, u32 dirtyFlag)
 {
     u32 command;
     u32 inputFlags;
