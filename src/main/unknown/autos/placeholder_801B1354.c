@@ -23,6 +23,7 @@ typedef struct DimSnowballDef {
     int targetId;
 } DimSnowballDef;
 
+#pragma scheduling off
 void dimsnowball_init(DimSnowballObject *obj, DimSnowballDef *def)
 {
     DimSnowballState *state;
@@ -37,8 +38,9 @@ void dimsnowball_init(DimSnowballObject *obj, DimSnowballDef *def)
     if (obj->handle64 != NULL) {
         *(u32 *)(obj->handle64 + 0x30) |= 0x810;
     }
-    obj->flags |= 0x4000;
+    obj->flags = (u16)(obj->flags | 0x4000);
 }
+#pragma scheduling reset
 
 void dimsnowball_release(void)
 {
