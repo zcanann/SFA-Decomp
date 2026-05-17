@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8018bc50(short *param_1,int param_2);
+void deathgas_free(short *param_1,int param_2);
 void FUN_8018bd10(int param_1);
 void FUN_8018bd34(int param_1);
 void FUN_8018bef8(short *param_1,int param_2);

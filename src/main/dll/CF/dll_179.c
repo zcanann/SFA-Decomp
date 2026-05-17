@@ -30,7 +30,7 @@ extern f32 FLOAT_803e4a30;
 /*
  * --INFO--
  *
- * Function: FUN_8018d728
+ * Function: cfccrate_render
  * EN v1.0 Address: 0x8018D728
  * EN v1.0 Size: 880b
  * EN v1.1 Address: 0x8018D74C
@@ -40,7 +40,7 @@ extern f32 FLOAT_803e4a30;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018d728(int param_1,int param_2)
+void cfccrate_render(int param_1,int param_2)
 {
   int iVar1;
   float fVar2;

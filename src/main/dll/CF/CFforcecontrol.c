@@ -91,7 +91,7 @@ extern f32 FLOAT_803e49a8;
 /*
  * --INFO--
  *
- * Function: FUN_8018bc50
+ * Function: deathgas_free
  * EN v1.0 Address: 0x8018BC50
  * EN v1.0 Size: 192b
  * EN v1.1 Address: 0x8018BC64
@@ -101,7 +101,7 @@ extern f32 FLOAT_803e49a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018bc50(short *param_1,int param_2)
+void deathgas_free(short *param_1,int param_2)
 {
   uint uVar1;
   int iVar2;
