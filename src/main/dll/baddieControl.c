@@ -283,7 +283,7 @@ extern f32 lbl_803E28E8;
 /*
  * --INFO--
  *
- * Function: FUN_8010dd58
+ * Function: CameraModeNpcSpeak_update
  * EN v1.0 Address: 0x8010DD58
  * EN v1.0 Size: 388b
  * EN v1.1 Address: 0x8010DE18
@@ -293,7 +293,7 @@ extern f32 lbl_803E28E8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010dd58(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
+void CameraModeNpcSpeak_update(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
 {
   float fVar1;
   float *pfVar2;

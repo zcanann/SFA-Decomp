@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8010dd58(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
+void CameraModeNpcSpeak_update(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
 void FUN_8010dedc(void);
 void FUN_8010df0c(short *param_1);
 void FUN_8010df10(int param_1,undefined4 param_2,undefined4 *param_3);
