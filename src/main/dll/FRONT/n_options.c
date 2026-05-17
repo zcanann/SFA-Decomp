@@ -34,7 +34,7 @@ extern undefined4 FUN_8025c2a8();
 extern undefined4 FUN_8025c368();
 extern undefined4 FUN_8025c49c();
 extern undefined4 FUN_8025c510();
-extern undefined4 FUN_8025c584();
+extern undefined4 GXSetBlendMode();
 extern undefined4 FUN_8025c5f0();
 extern undefined4 FUN_8025c65c();
 extern undefined4 FUN_8025c6b4();
@@ -160,7 +160,7 @@ void FUN_80117724(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
   FUN_8025c2a8(0,0,0,0,0,0);
   FUN_8025c224(0,7,4,6,1);
   FUN_8025c368(0,1,0,0,0,0);
-  FUN_8025c584(0,0xc);
+  GXSetBlendMode(0,0xc);
   FUN_8025c5f0(0,0x1c);
   FUN_8025c65c(0,0,0);
   FUN_8025c828(1,1,2,0xff);
@@ -169,7 +169,7 @@ void FUN_80117724(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
   FUN_8025c2a8(1,0,0,1,0,0);
   FUN_8025c224(1,7,4,6,0);
   FUN_8025c368(1,1,0,0,0,0);
-  FUN_8025c584(1,0xd);
+  GXSetBlendMode(1,0xd);
   FUN_8025c5f0(1,0x1d);
   FUN_8025c65c(1,0,0);
   FUN_8025c828(2,0,0,0xff);
@@ -186,7 +186,7 @@ void FUN_80117724(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
   FUN_8025c224(3,7,7,7,7);
   FUN_8025c368(3,0,0,0,1,0);
   FUN_8025c65c(3,0,0);
-  FUN_8025c584(3,0xe);
+  GXSetBlendMode(3,0xe);
   local_8c = DAT_803e29b0;
   local_88 = DAT_803e29b4;
   FUN_8025c49c(1,(short *)&local_8c);
