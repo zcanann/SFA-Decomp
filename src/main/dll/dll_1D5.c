@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/creator1D4.h"
 #include "main/dll/dll_1D5.h"
 #include "main/objHitReact.h"
 
@@ -21,7 +22,6 @@ extern int FUN_8012efc4();
 extern undefined4 FUN_801ce340();
 extern int FUN_801ce424();
 extern undefined4 FUN_801ce638();
-extern undefined4 FUN_801cefbc();
 
 extern ObjHitReactEntry DAT_80327400;
 extern ObjHitReactEntry DAT_80327414;
@@ -240,7 +240,7 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     if ('\x03' < cVar1) goto LAB_801cf840;
   }
-  FUN_801cefbc(param_9,iVar6,iVar5);
+  nw_mammoth_free(param_9);
 LAB_801cf840:
   if (((&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 1) == 0) {
     *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xef;
