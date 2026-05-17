@@ -1,18 +1,20 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camshipbattle.h"
 
-extern uint FUN_80006c00();
+extern u32 getButtonsJustPressed(int port);
 extern undefined4 FUN_80017748();
 extern undefined4 FUN_80017814();
 extern undefined4 camcontrol_buildPathAngles();
 extern undefined4 FUN_80286834();
 extern undefined4 FUN_80286880();
-extern int FUN_80294c88();
-extern int FUN_80294d10();
+extern int objFn_802962b4(int obj);
+extern int objFn_80296700(int obj);
 
-extern undefined4* DAT_803dd6d0;
-extern undefined4 gCamcontrolPathState;
+extern int *lbl_803DCA50;
+extern u8 *lbl_803DD538;
 extern f64 DOUBLE_803e23d0;
+
+#define gCamcontrolPathState lbl_803DD538
 
 /*
  * --INFO--
@@ -164,32 +166,48 @@ void camcontrol_buildPathPoints(undefined8 param_1,double param_2,double param_3
 void camcontrol_updatePathTargetAction(int param_1,int param_2)
 {
   short sVar1;
-  uint uVar2;
-  int iVar3;
-  undefined4 local_28;
-  undefined4 local_24;
-  undefined2 local_20;
-  longlong local_18;
+  u16 buttons;
+  u8 *targetObj;
+  struct {
+    f32 x;
+    f32 z;
+    s16 y;
+  } local_28;
   
-  if (*(int *)(param_2 + 0xc0) == 0) {
-    uVar2 = FUN_80006c00(0);
-    if ((((*(int *)(param_1 + 0x124) == 0) ||
-         (((sVar1 = *(short *)(*(int *)(param_1 + 0x124) + 0x44), sVar1 != 0x1c && (sVar1 != 0x2a))
-          || (*(short *)(param_2 + 0x44) != 1)))) || (iVar3 = FUN_80294d10(param_2), iVar3 == 0)) &&
-       ((*(byte *)(param_1 + 0x141) & 2) == 0)) {
-      if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
-         (iVar3 = FUN_80294c88(param_2), iVar3 != 0)) {
-        local_28 = *(undefined4 *)(gCamcontrolPathState + 4);
-        local_24 = *(undefined4 *)(gCamcontrolPathState + 0xc);
-        local_18 = (longlong)(int)*(float *)(gCamcontrolPathState + 0x10);
-        local_20 = (undefined2)(int)*(float *)(gCamcontrolPathState + 0x10);
-        (**(code **)(*DAT_803dd6d0 + 0x1c))(0x44,1,0,0xc,&local_28,0,0xff);
+  if (*(u32 *)(param_2 + 0xc0) == 0) {
+    buttons = getButtonsJustPressed(0);
+    targetObj = *(u8 **)(param_1 + 0x124);
+    if (targetObj != NULL) {
+      sVar1 = *(short *)(targetObj + 0x44);
+      if (sVar1 == 0x1c) {
+        goto checkActiveTarget;
+      }
+      if (sVar1 != 0x2a) {
+        goto checkOverrideFlag;
+      }
+checkActiveTarget:
+      if (*(short *)(param_2 + 0x44) != 1) {
+        goto checkOverrideFlag;
+      }
+      if (objFn_80296700(param_2) != 0) {
+        goto sendFollowAction;
       }
     }
-    else {
-      (**(code **)(*DAT_803dd6d0 + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
+checkOverrideFlag:
+    if ((*(byte *)(param_1 + 0x141) & 2) != 0) {
+sendFollowAction:
+      (*(code *)(*lbl_803DCA50 + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
+      goto done;
+    }
+    if ((((buttons & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
+        (objFn_802962b4(param_2) != 0)) {
+      local_28.x = *(float *)(lbl_803DD538 + 4);
+      local_28.z = *(float *)(lbl_803DD538 + 0xc);
+      local_28.y = (s16)*(float *)(lbl_803DD538 + 0x10);
+      (*(code *)(*lbl_803DCA50 + 0x1c))(0x44,1,0,0xc,&local_28,0,0xff);
     }
   }
+done:
   return;
 }
 #pragma peephole reset
