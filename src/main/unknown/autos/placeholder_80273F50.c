@@ -928,7 +928,7 @@ extern u8 dataGetCurve_key[8];
 extern void * volatile dataGetCurve_result;
 extern u8 dataGetKeymap_key[8];
 extern void * volatile dataGetKeymap_result;
-extern void *dataGetLayer_result;
+extern void * volatile dataGetLayer_result;
 
 void *dataGetCurve(u16 key)
 {
@@ -974,17 +974,17 @@ int layercmp(void *a, void *b)
  */
 void *dataGetLayer(u16 key, u16 *outCount)
 {
-    u8 *searchKey = dataGetLayerSearchKey;
+    u8 *tableBase = dataSmpSDirTable;
     void *result;
 
-    *(u16 *)(searchKey + 4) = key;
-    result = sndBSearch(searchKey, dataLayerTable, dataLayerNum, 0xc, layercmp);
+    *(u16 *)(tableBase + 0xa624) = key;
+    result = sndBSearch(tableBase + 0xa620, tableBase + 0x4e00, dataLayerNum, 0xc, layercmp);
     dataGetLayer_result = result;
-    if (result == 0) {
-        return 0;
+    if (result != 0) {
+        *outCount = ((DataLayerRef *)dataGetLayer_result)->count;
+        return ((DataLayerRef *)dataGetLayer_result)->data;
     }
-    *outCount = ((DataLayerRef *)dataGetLayer_result)->count;
-    return ((DataLayerRef *)dataGetLayer_result)->data;
+    return 0;
 }
 
 /*
@@ -1007,8 +1007,8 @@ void *dataGetFX(u16 key)
     u8 *searchKey;
 
     i = 0;
-    bucket = (DataFXGroupRef *)dataFXGroupTable;
-    searchKey = dataGetFXSearchKey;
+    bucket = (DataFXGroupRef *)(dataSmpSDirTable + 0xa200);
+    searchKey = dataSmpSDirTable + 0xa62c;
     *(u16 *)searchKey = key;
     while (i < dataFXGroupNum) {
         entry = sndBSearch(searchKey, bucket->samples, bucket->count, 10, fxcmp);
