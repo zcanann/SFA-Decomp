@@ -96,7 +96,7 @@ extern int FUN_800620e8();
 extern u16 hitDetectFn_80065e50(f32 x,f32 y,f32 z,int obj,int *hits,int param_6,int param_7);
 extern undefined4 FUN_8006dca8();
 extern void fn_8006EDCC(f32 param_1,f32 param_2,int obj,u16 param_4,int param_5,float *points,void *aux);
-extern undefined4 FUN_8006ef38();
+extern undefined4 objAudioFn_8006ef38();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_800da700();
@@ -762,7 +762,7 @@ void FUN_801457a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
                piVar11 + 0x1ee);
   FUN_80136310(uVar3,piVar11);
   FUN_80135f38(uVar3,piVar11);
-  FUN_8006ef38((double)lbl_803E3078,(double)lbl_803E3078,uVar3,param_11 + 0xf0,1,
+  objAudioFn_8006ef38((double)lbl_803E3078,(double)lbl_803E3078,uVar3,param_11 + 0xf0,1,
                (int)(piVar11 + 0x1f6),(int)(piVar11 + 0x3e));
   if ((piVar11[0x15] & 1U) != 0) {
     *(ushort *)(param_11 + 0x6e) = *(ushort *)(param_11 + 0x6e) & 0xffbf;

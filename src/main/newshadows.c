@@ -41,7 +41,7 @@ extern undefined4 FUN_800606a8();
 extern undefined4 FUN_80060710();
 extern ushort FUN_80061198();
 extern undefined4 FUN_80064384();
-extern undefined4 FUN_8006ef38();
+extern undefined4 objAudioFn_8006ef38();
 extern undefined4 FUN_8006f788();
 extern undefined4 FUN_8006f790();
 extern undefined4 FUN_8006f8fc();
@@ -2718,7 +2718,7 @@ void FUN_8006dca8(undefined8 param_1,double param_2,undefined4 param_3,undefined
     uVar2 = uVar2 + 4;
     iVar3 = iVar3 + -1;
   } while (iVar3 != 0);
-  FUN_8006ef38(uVar4,param_2,(int)((ulonglong)uVar5 >> 0x20),auStack_48,param_5,param_6,param_7);
+  objAudioFn_8006ef38(uVar4,param_2,(int)((ulonglong)uVar5 >> 0x20),auStack_48,param_5,param_6,param_7);
   FUN_8028688c();
   return;
 }

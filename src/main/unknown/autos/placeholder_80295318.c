@@ -139,7 +139,7 @@ extern int FUN_800632e8();
 extern int FUN_800632f4();
 extern ushort FUN_8006dc08();
 extern undefined4 FUN_8006dca8();
-extern undefined4 FUN_8006ef38();
+extern undefined4 objAudioFn_8006ef38();
 extern uint FUN_8006f764();
 extern undefined4 FUN_80070ec8();
 extern undefined4 FUN_80071d70();

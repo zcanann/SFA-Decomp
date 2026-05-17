@@ -16,7 +16,7 @@ extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003a1c4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8006ef38();
+extern undefined4 objAudioFn_8006ef38();
 extern int FUN_8012efc4();
 extern undefined4 FUN_801ce340();
 extern int FUN_801ce424();
@@ -280,7 +280,7 @@ LAB_801cf840:
   else {
     *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) | 2;
   }
-  FUN_8006ef38((double)lbl_803E5EA8,(double)lbl_803E5EA8,param_9,iVar6 + 0x440,8,iVar6 + 0x45c,
+  objAudioFn_8006ef38((double)lbl_803E5EA8,(double)lbl_803E5EA8,param_9,iVar6 + 0x440,8,iVar6 + 0x45c,
                iVar6 + 0x16c);
   FUN_801ce340(param_9,iVar6,(byte)(&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 4);
   *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xfb;

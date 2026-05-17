@@ -23,7 +23,7 @@ extern undefined4 FUN_8003a1c4();
 extern undefined4 fn_8003A328();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
-extern undefined4 FUN_8006ef38();
+extern undefined4 objAudioFn_8006ef38();
 extern undefined4 FUN_8014ccac();
 extern int FUN_80163ac8();
 extern undefined4 FUN_80163b8c();
@@ -210,7 +210,7 @@ undefined4 FUN_801ce244(short *param_1,undefined4 param_2,int param_3)
     *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xffbf;
     FUN_801ce340(param_1,iVar1,1);
   }
-  FUN_8006ef38((double)lbl_803E5EA8,(double)lbl_803E5EA8,param_1,iVar1 + 0x440,8,iVar1 + 0x45c,
+  objAudioFn_8006ef38((double)lbl_803E5EA8,(double)lbl_803E5EA8,param_1,iVar1 + 0x440,8,iVar1 + 0x45c,
                iVar1 + 0x16c);
   if (*(char *)(param_3 + 0x8b) != '\0') {
     param_1[0x58] = param_1[0x58] & 0xfbff;
