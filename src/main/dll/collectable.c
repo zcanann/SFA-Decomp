@@ -143,10 +143,11 @@ extern undefined4 FUN_80153440();
 extern undefined4 FUN_80153db4();
 extern undefined4 FUN_80154108();
 extern undefined4 FUN_80154cc8();
-extern undefined4 FUN_80155b08();
-extern undefined4 FUN_801564ec();
-extern undefined4 FUN_80156e48();
-extern undefined4 FUN_801578c4();
+extern void rachnopUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4);
+extern void baddieUpdateWhileFrozen_80155e10(uint param_9,int param_10,undefined4 param_11,
+                                            int param_12,undefined4 param_13,int param_14);
+extern void wbUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4);
+extern void mutatedEbaUpdateWhileFrozen(uint param_9,int param_10,undefined4 param_11,int param_12);
 extern undefined4 FUN_80157168();
 extern undefined4 FUN_80158540();
 extern undefined4 FUN_80159c60();
