@@ -118,13 +118,10 @@ void hwSyncSampleMem(void)
 /* Pattern wrappers. */
 void hwFrameDone(void) {}
 
-void sndSetHooks(SalHooks *hooks)
+void sndSetHooks(const SalHooks *hooks)
 {
-  void *(*mallocHook)(u32 size) = hooks->mallocHook;
-  void (*freeHook)(void *ptr) = hooks->freeHook;
-
-  gSalMallocHook = mallocHook;
-  gSalFreeHook = freeHook;
+  gSalMallocHook = hooks->mallocHook;
+  gSalFreeHook = hooks->freeHook;
 }
 
 void hwDisableHRTF(void)

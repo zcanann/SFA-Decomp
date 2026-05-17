@@ -13,7 +13,7 @@ typedef struct SalHooks {
   void (*freeHook)(void *ptr);
 } SalHooks;
 
-void sndSetHooks(SalHooks *hooks);
+void sndSetHooks(const SalHooks *hooks);
 void hwDisableHRTF(void);
 int hwGetVirtualSampleID(int slot);
 int hwVoiceInStartup(int slot);
