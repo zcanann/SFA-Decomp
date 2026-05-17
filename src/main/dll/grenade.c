@@ -32,7 +32,7 @@ extern undefined4 FUN_80139a4c();
 extern int FUN_8013b368();
 extern int trickyFn_8013b368(int param_1, f32 param_2, int *param_3);
 extern undefined4 objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
-extern undefined4 FUN_8013d8f0();
+extern void trickyFn_8013d8f0(u8 *arg1, u8 *arg2);
 extern undefined4 FUN_80144e40();
 extern undefined4 FUN_80145120();
 extern undefined4 FUN_80146fa0();
@@ -168,8 +168,7 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
     break;
   case 2:
     FUN_80146fa0();
-    FUN_8013d8f0((double)lbl_803E3118,(short *)param_9,(int)param_10,
-                 (float *)(param_10[0x1c0] + 8),'\x01');
+    trickyFn_8013d8f0((u8 *)param_9, (u8 *)param_10);
     iVar6 = FUN_80139a48();
     if (iVar6 == 0) {
       param_10[0x15] = param_10[0x15] | 0x2010;
@@ -254,8 +253,7 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
   case 5:
     FUN_80017710((float *)(param_9 + 0xc),(float *)(param_10[0x1c1] + 8));
     FUN_80146fa0();
-    FUN_8013d8f0((double)lbl_803E3118,(short *)param_9,(int)param_10,
-                 (float *)(param_10[0x1c1] + 8),'\x01');
+    trickyFn_8013d8f0((u8 *)param_9, (u8 *)param_10);
     iVar6 = FUN_80139a48();
     if (iVar6 == 0) {
       iVar7 = 0;
@@ -279,8 +277,7 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
     break;
   case 6:
     FUN_80146fa0();
-    FUN_8013d8f0((double)lbl_803E3118,(short *)param_9,(int)param_10,
-                 (float *)(param_10[0x1c1] + 8),'\x01');
+    trickyFn_8013d8f0((u8 *)param_9, (u8 *)param_10);
     iVar6 = FUN_80139a48();
     if (iVar6 == 0) {
       if (lbl_803E306C == (float)param_10[0xab]) {

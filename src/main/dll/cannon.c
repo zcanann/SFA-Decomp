@@ -22,7 +22,7 @@ extern undefined4 FUN_80139910();
 extern int FUN_80139a48();
 extern undefined4 FUN_80139a4c();
 extern int FUN_8013b368();
-extern undefined4 FUN_8013d8f0();
+extern void trickyFn_8013d8f0(u8 *arg1, u8 *arg2);
 extern undefined4 FUN_80146fa0();
 extern undefined4 FUN_801778d0();
 extern undefined8 FUN_80286838();
@@ -225,8 +225,7 @@ void FUN_801400fc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     break;
   case 2:
     FUN_80146fa0();
-    FUN_8013d8f0((double)lbl_803E30A8,(short *)puVar4,(int)puVar10,(float *)(puVar10[9] + 0x18),
-                 '\x01');
+    trickyFn_8013d8f0((u8 *)puVar4, (u8 *)puVar10);
     iVar8 = FUN_80139a48();
     if (iVar8 == 0) {
       FUN_80139a4c((double)lbl_803E3074,(int)puVar4,0x1a,0x4000000);
@@ -246,8 +245,7 @@ void FUN_801400fc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     break;
   case 4:
     FUN_80146fa0();
-    FUN_8013d8f0((double)lbl_803E3118,(short *)puVar4,(int)puVar10,(float *)(puVar10[0x1c7] + 8),
-                 '\x01');
+    trickyFn_8013d8f0((u8 *)puVar4, (u8 *)puVar10);
     FUN_80139a48();
     iVar8 = FUN_800db47c((float *)(puVar4 + 0xc),(undefined *)0x0);
     if (iVar8 == 0) {
@@ -257,8 +255,7 @@ void FUN_801400fc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     break;
   case 5:
     FUN_80146fa0();
-    FUN_8013d8f0((double)lbl_803E3118,(short *)puVar4,(int)puVar10,(float *)(puVar10[0x1c7] + 8),
-                 '\x01');
+    trickyFn_8013d8f0((u8 *)puVar4, (u8 *)puVar10);
     iVar8 = FUN_80139a48();
     if (iVar8 != 0) break;
     FUN_80139a4c((double)lbl_803E3074,(int)puVar4,0x1a,0x4000000);
@@ -408,8 +405,7 @@ LAB_8014149c:
     FUN_80146fa0();
     puVar10[0x1ca] = (float)puVar10[0x1ca] - lbl_803DC074;
     if ((float)puVar10[0x1ca] <= lbl_803E306C) {
-      FUN_8013d8f0((double)lbl_803E3118,(short *)puVar4,(int)puVar10,(float *)(puVar10[0x1c8] + 8)
-                   ,'\x01');
+      trickyFn_8013d8f0((u8 *)puVar4, (u8 *)puVar10);
       FUN_80139a48();
       iVar8 = FUN_800db47c((float *)(puVar4 + 0xc),(undefined *)0x0);
       if (iVar8 != 0) {
