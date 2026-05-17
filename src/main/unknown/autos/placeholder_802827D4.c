@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802827D4.h"
 
-extern u16 _GetInputValue(void *state, void *slot, u8 a, u8 b);
+extern u16 _GetInputValue();
 extern int synthGetVoiceSlotChannelScale(int x);
 extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
 extern void inpSetMidiCtrl14(u32 controller, u8 slot, u8 key, u16 value);
@@ -52,19 +52,25 @@ extern u32 lbl_8032FFF0[];
 /*
  * Cached aux A input getter for a studio/channel/slot.
  */
-u32 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
+u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
 {
     u32 flags;
     u32 mask;
-    u32 tableIndex;
+    u32 maskedFlags;
+    u32 isDirty;
+    u32 *dirtyWord;
 
-    tableIndex = (handleIndex & 0xff) * MIDI_DIRTY_AUX_BANK_STRIDE + (auxIndex & 0xff);
-    flags = lbl_803D3CA0[tableIndex];
     mask = lbl_8032FFE0[channel & 0xff];
-    if ((mask & flags) == 0) {
+    dirtyWord = (u32 *)((u8 *)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
+    flags = *dirtyWord;
+    maskedFlags = mask & flags;
+    isDirty = maskedFlags != 0;
+    if (isDirty != 0) {
+        *dirtyWord = flags & ~mask;
+    }
+    if (isDirty == 0) {
         return *(u16 *)(lbl_803BDEF4 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
-    lbl_803D3CA0[tableIndex] = flags & ~mask;
     return _GetInputValue(0, lbl_803BDEF4 + (channel & 0xff) * 0x24 + (studio & 0xff) * 0x90,
                           auxIndex, handleIndex);
 }
@@ -72,19 +78,25 @@ u32 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
 /*
  * Cached aux B input getter for a studio/channel/slot.
  */
-u32 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
+u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
 {
     u32 flags;
     u32 mask;
-    u32 tableIndex;
+    u32 maskedFlags;
+    u32 isDirty;
+    u32 *dirtyWord;
 
-    tableIndex = (handleIndex & 0xff) * MIDI_DIRTY_AUX_BANK_STRIDE + (auxIndex & 0xff);
-    flags = lbl_803D3CA0[tableIndex];
     mask = lbl_8032FFF0[channel & 0xff];
-    if ((mask & flags) == 0) {
+    dirtyWord = (u32 *)((u8 *)lbl_803D3CA0 + ((handleIndex & 0xff) << 6) + ((auxIndex & 0xff) << 2));
+    flags = *dirtyWord;
+    maskedFlags = mask & flags;
+    isDirty = maskedFlags != 0;
+    if (isDirty != 0) {
+        *dirtyWord = flags & ~mask;
+    }
+    if (isDirty == 0) {
         return *(u16 *)(lbl_803BDA74 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
-    lbl_803D3CA0[tableIndex] = flags & ~mask;
     return _GetInputValue(0, lbl_803BDA74 + (channel & 0xff) * 0x24 + (studio & 0xff) * 0x90,
                           auxIndex, handleIndex);
 }
