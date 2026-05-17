@@ -15,15 +15,23 @@ FUN_RE = re.compile(r"\bFUN_([0-9A-Fa-f]{8})\b")
 AUTO_NAME_RE = re.compile(r"^(FUN|fn|lbl|__|_)")
 
 
-DEFAULT_SKIP = {
-    # Known noisy or duplicated/boundary-sensitive hits.
-    "8007e77c",
-    "801101dc",
-    "801847e8",
-    "801d1e24",
-    "801d80f4",
-    "801feb30",
-    "80247f54",
+DEFAULT_SKIP_REASONS = {
+    # Known noisy or duplicated/boundary-sensitive hits. Use --no-default-skip
+    # when revisiting one after its neighboring split/window has been repaired.
+    "8007e77c": "maketex save callback window is much larger than symbol",
+    "8010daf8": "raw reference lands inside CameraModeFixed_init",
+    "801101dc": "CameraModeForceBehind has duplicate raw and named stubs",
+    "8012eb7c": "GameUI item-use helper has duplicate raw and named bodies",
+    "8013dc88": "trickyGrowl is named in dll_D1; dll_E2 hit is a duplicate window",
+    "8013ffb8": "trickyGuard appears as duplicate raw and named bodies",
+    "801847e8": "scarab_getExtraSize has duplicate raw windows",
+    "801b5650": "explosion_release has duplicate/boundary-sensitive ownership",
+    "801d1e24": "enemymushroom_update spans duplicate object windows",
+    "801d80f4": "SH_LevelControl_setMusic appears in conflicting source windows",
+    "801e34c0": "SB_ShipGun_update appears in multiple duplicate object windows",
+    "801feb30": "dbegg_update spans duplicate expr/timer/anim ownership",
+    "80209df0": "dfplightni_init source window is much smaller than symbol",
+    "80247f54": "SeekTwiceBeforeRead symbol overlaps many vector-length callsites",
 }
 
 
@@ -88,10 +96,25 @@ def main() -> int:
         default=[],
         help="extra lowercase hex address or FUN_ address to suppress; repeatable",
     )
+    parser.add_argument(
+        "--no-default-skip",
+        action="store_true",
+        help="do not suppress the built-in noisy/boundary-sensitive addresses",
+    )
+    parser.add_argument(
+        "--show-skips",
+        action="store_true",
+        help="print the built-in skip list with reasons and exit",
+    )
     args = parser.parse_args()
 
+    if args.show_skips:
+        for address, reason in sorted(DEFAULT_SKIP_REASONS.items()):
+            print(f"FUN_{address}: {reason}")
+        return 0
+
     symbols = load_symbols(args.symbols)
-    skip = set(DEFAULT_SKIP)
+    skip = set() if args.no_default_skip else set(DEFAULT_SKIP_REASONS)
     skip.update(item.lower().removeprefix("fun_") for item in args.skip)
 
     count = 0
