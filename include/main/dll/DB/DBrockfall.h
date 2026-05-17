@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801df43c(int param_1);
+void paymentkiosk_init(int param_1);
 void FUN_801df45c(undefined2 *param_1);
 uint FUN_801df69c(int param_1,undefined4 param_2,int param_3);
 void FUN_801df784(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,

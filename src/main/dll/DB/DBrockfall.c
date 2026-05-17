@@ -28,7 +28,7 @@ extern f32 lbl_803E6310;
 /*
  * --INFO--
  *
- * Function: FUN_801df43c
+ * Function: paymentkiosk_init
  * EN v1.0 Address: 0x801DF43C
  * EN v1.0 Size: 32b
  * EN v1.1 Address: 0x801DF458
@@ -38,7 +38,7 @@ extern f32 lbl_803E6310;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801df43c(int param_1)
+void paymentkiosk_init(int param_1)
 {
   FUN_8003b818(param_1);
   return;
