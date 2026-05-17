@@ -2884,9 +2884,12 @@ void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void Obj_UpdateWorldTransform(s16 *obj)
 {
     s16 *parent;
+    s32 matrixIndex;
 
     parent = *(s16 **)(obj + 0x20);
     if (parent == (s16 *)0) {
@@ -2897,14 +2900,18 @@ void Obj_UpdateWorldTransform(s16 *obj)
         obj[0x29] = obj[1];
         obj[0x2A] = obj[2];
     } else {
+        matrixIndex = *(s8 *)((u8 *)parent + 0x35) << 4;
         Matrix_TransformPoint(*(f32 *)(obj + 6), *(f32 *)(obj + 8), *(f32 *)(obj + 10),
-                              gObjYawTransformMatrices[*(s8 *)((u8 *)parent + 0x35)], (f32 *)(obj + 0x22),
+                              (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), (f32 *)(obj + 0x22),
                               (f32 *)(obj + 0x24), (f32 *)(obj + 0x26));
         obj[0x28] = obj[0] - parent[0];
         obj[0x29] = obj[1];
         obj[0x2A] = obj[2];
     }
 }
+
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
