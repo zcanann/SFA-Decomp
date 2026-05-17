@@ -21,7 +21,7 @@ extern undefined4 FUN_80081120();
 extern undefined4 FUN_8011e868();
 extern undefined4 FUN_80181b50();
 extern undefined4 FUN_801816f8();
-extern undefined4 FUN_801826e8();
+extern undefined4 smallbasket_update();
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern uint FUN_80294bec();
@@ -181,7 +181,7 @@ void dll153_updateExploderState
         param_2 = (double)*(float *)(uVar6 + 0x2c);
         *(float *)(uVar6 + 0x14) =
              (float)(param_2 * (double)lbl_803DC074 + (double)*(float *)(uVar6 + 0x14));
-        dVar17 = (double)FUN_801826e8();
+        dVar17 = (double)smallbasket_update();
         fVar3 = lbl_803E45D0;
         cVar1 = *(char *)(*(int *)(uVar6 + 0x54) + 0xad);
         if ((cVar1 == '\0') || (*(char *)((int)puVar15 + 9) != '\x01')) {

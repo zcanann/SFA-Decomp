@@ -28,7 +28,7 @@ extern f32 lbl_803E460C;
 /*
  * --INFO--
  *
- * Function: FUN_801826e8
+ * Function: smallbasket_update
  * EN v1.0 Address: 0x801826E8
  * EN v1.0 Size: 764b
  * EN v1.1 Address: 0x80182754
@@ -38,7 +38,7 @@ extern f32 lbl_803E460C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801826e8(void)
+void smallbasket_update(void)
 {
   float fVar1;
   int *piVar2;
