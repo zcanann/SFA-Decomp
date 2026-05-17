@@ -77,23 +77,25 @@ int hwChangeStudio(int slot) {
  */
 void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 callback,
               undefined4 callbackArg) {
-    int alignedDest;
-    u32 alignedStreamPos;
-    int alignedByteCount;
+    int uploadDest;
+    int uploadSize;
+    undefined4 uploadCallbackArg;
+    undefined4 uploadCallback;
     u32 size;
     int offset;
     u8 stack[8];
 
-    alignedDest = dest;
-    alignedStreamPos = streamPos;
-    alignedByteCount = byteCount;
+    uploadDest = dest;
+    uploadSize = byteCount;
+    uploadCallback = callback;
+    uploadCallbackArg = callbackArg;
     offset = aramGetStreamBufferAddress(stream, stack);
-    alignedByteCount += alignedStreamPos & 0x1f;
-    alignedStreamPos &= 0xffffffe0;
-    size = (alignedByteCount + 0x1f) & 0xffffffe0;
-    alignedDest += alignedStreamPos;
-    DCStoreRange((void *)alignedDest, size);
-    aramUploadData(alignedDest, offset + alignedStreamPos, size, 1, callback, callbackArg);
+    uploadSize += streamPos & 0x1f;
+    streamPos &= 0xffffffe0;
+    size = (uploadSize + 0x1f) & 0xffffffe0;
+    uploadDest += streamPos;
+    DCStoreRange((void *)uploadDest, size);
+    aramUploadData(uploadDest, offset + streamPos, size, 1, uploadCallback, uploadCallbackArg);
 }
 
 /*
