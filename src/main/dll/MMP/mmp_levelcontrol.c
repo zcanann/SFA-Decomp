@@ -39,7 +39,7 @@ extern f32 lbl_803E4C98;
 /*
  * --INFO--
  *
- * Function: FUN_8019443c
+ * Function: wallanimator_setScale
  * EN v1.0 Address: 0x8019443C
  * EN v1.0 Size: 264b
  * EN v1.1 Address: 0x80194688
@@ -49,7 +49,7 @@ extern f32 lbl_803E4C98;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8019443c(int param_1,int param_2)
+void wallanimator_setScale(int param_1,int param_2)
 {
   uint uVar1;
   int iVar2;

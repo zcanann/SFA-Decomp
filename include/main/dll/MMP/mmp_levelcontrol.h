@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8019443c(int param_1,int param_2);
+void wallanimator_setScale(int param_1,int param_2);
 void FUN_80194544(int param_1);
 void FUN_801945fc(int param_1,int param_2);
 void FUN_801946b8(void);
