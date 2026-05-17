@@ -45,7 +45,7 @@ extern f32 lbl_803E5BF8;
 /*
  * --INFO--
  *
- * Function: FUN_801c4b10
+ * Function: MMSH_Shrine_SeqFn
  * EN v1.0 Address: 0x801C4B10
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801C4B54
@@ -55,10 +55,10 @@ extern f32 lbl_803E5BF8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c4b10(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9,int param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void MMSH_Shrine_SeqFn(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                       undefined2 *param_9,int param_10,undefined4 param_11,undefined4 param_12,
+                       undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
 }
 
