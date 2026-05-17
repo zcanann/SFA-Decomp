@@ -234,21 +234,23 @@ u32 inpTranslateExCtrl(u32 input)
  */
 u32 inpGetExCtrl(int state, u32 ctrl)
 {
-    u8 translated;
+    int translated;
     u32 value;
 
-    translated = inpTranslateExCtrl(ctrl);
-    if (translated == 0xa1) {
-        value = *(s16 *)(state + 0x1d0) * 2 + 0x2000;
-    } else if (translated < 0xa1 && translated > 0x9f) {
-        value = *(s16 *)(state + 0x1c4) * 2 + 0x2000;
-    } else if (*(u8 *)(state + 0x121) == 0xff) {
-        value = 0;
-    } else {
-        value = inpGetMidiCtrl(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
-        value &= 0xffff;
+    translated = inpTranslateExCtrl(ctrl) & 0xff;
+    if (translated != 0xa1) {
+        if (translated < 0xa1 && translated >= 0xa0) {
+            return *(s16 *)(state + 0x1c4) * 2 + 0x2000;
+        }
+        if (*(u8 *)(state + 0x121) == 0xff) {
+            value = 0;
+        } else {
+            value = inpGetMidiCtrl(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
+            value &= 0xffff;
+        }
+        return value;
     }
-    return value;
+    return *(s16 *)(state + 0x1d0) * 2 + 0x2000;
 }
 
 /*
@@ -256,15 +258,15 @@ u32 inpGetExCtrl(int state, u32 ctrl)
  */
 void inpSetExCtrl(int state, u32 ctrl, s16 value)
 {
-    u8 translated;
+    int translated;
 
     if (value < 0) {
         value = 0;
     } else if (value > 0x3fff) {
         value = 0x3fff;
     }
-    translated = inpTranslateExCtrl(ctrl);
-    if ((translated > 0xa1 || translated < 0xa0) && *(u8 *)(state + 0x121) != 0xff) {
+    translated = inpTranslateExCtrl(ctrl) & 0xff;
+    if ((translated >= 0xa2 || translated < 0xa0) && *(u8 *)(state + 0x121) != 0xff) {
         inpSetMidiCtrl14(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), value);
     }
 }
