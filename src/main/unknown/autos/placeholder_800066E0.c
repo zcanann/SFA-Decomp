@@ -2113,6 +2113,7 @@ int * FUN_8000685c(int param_1,ushort param_2,short param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void AudioStream_StopAll(void)
 {
     if (gAudioStreamDvdState != 0) {
@@ -2149,6 +2150,7 @@ void AudioStream_StopAll(void)
     gAudioStreamMusicFadeFlagB = 0;
     gAudioStreamMusicFadeFlagA = 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2281,6 +2283,7 @@ void AudioStream_SetVolume(u32 volume)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void AudioStream_CancelCallback(s32 result)
 {
     if (result == 0) {
@@ -2289,6 +2292,7 @@ void AudioStream_CancelCallback(s32 result)
     gAudioActiveChannelMask = 0;
     gAudioStreamPlaying = 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2303,6 +2307,7 @@ void AudioStream_CancelCallback(s32 result)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void AudioStream_StopCurrent(void)
 {
     if (gAudioStreamCurrentId != 0) {
@@ -2323,6 +2328,7 @@ void AudioStream_StopCurrent(void)
         gAudioStreamPlaying = 0;
     }
 }
+#pragma scheduling reset
 
 void fn_8000D0B4(void)
 {
@@ -2342,6 +2348,7 @@ void fn_8000D0B4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void AudioStream_CancelPrepared(void)
 {
     AISetStreamVolLeft(0);
@@ -2357,6 +2364,7 @@ void AudioStream_CancelPrepared(void)
     gAudioStreamMusicFadeFlagB = 0;
     gAudioStreamMusicFadeFlagA = 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2371,6 +2379,7 @@ void AudioStream_CancelPrepared(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void AudioStream_StartPrepared(void)
 {
     if (gAudioStreamPreparingId != 0) {
@@ -2398,6 +2407,7 @@ void AudioStream_StartPrepared(void)
         gAudioActiveChannelMask = 0;
     }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2430,6 +2440,7 @@ void FUN_800068a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void AudioStream_UpdateFadeTimer(void)
 {
     if (gAudioStreamCurrentId != 0) {
@@ -2439,6 +2450,7 @@ void AudioStream_UpdateFadeTimer(void)
         gAudioStreamPos = lbl_803DE5D0;
     }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2471,6 +2483,7 @@ void AudioStream_SetDefaultVolume(u8 volume)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void AudioStream_Init(void)
 {
     AISetStreamVolLeft(0);
@@ -2481,6 +2494,7 @@ void AudioStream_Init(void)
     gAudioStreamDefaultVolume = 0x7f;
     gAudioStreamStartWhenPrepared = 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2495,6 +2509,7 @@ void AudioStream_Init(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void AudioStream_PrepareCallback(void)
 {
     if (fn_80020620() != 1) {
@@ -2522,6 +2537,7 @@ void AudioStream_PrepareCallback(void)
     }
     gAudioStreamDvdState = 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
