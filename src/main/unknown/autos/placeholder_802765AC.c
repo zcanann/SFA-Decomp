@@ -507,6 +507,8 @@ void mcmdRandomKey(int state, u32 *args)
 /*
  * Queue a controller event and mark the owning MIDI/global dirty flag.
  */
+#pragma scheduling off
+#pragma peephole off
 void SelectSource(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
                   u32 activeFlag, u32 dirtyFlag)
 {
@@ -548,6 +550,8 @@ void SelectSource(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
         *(u32 *)(state + 0x214) |= dirtyFlag;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * Read a 32-bit synth register, either from the voice or EX controller bank.
