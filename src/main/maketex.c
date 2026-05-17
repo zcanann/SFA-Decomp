@@ -10,7 +10,7 @@ extern undefined4 FUN_80006b58();
 extern undefined4 FUN_80006c1c();
 extern undefined8 FUN_80006c30();
 extern undefined8 FUN_80006c84();
-extern undefined4 FUN_80017434();
+extern undefined4 gameTextFn_80017434();
 extern undefined8 FUN_80017484();
 extern int FUN_800174a0();
 extern undefined4 FUN_800174b8();
@@ -152,7 +152,7 @@ void FUN_8007e77c(undefined8 param_1,double param_2,undefined8 param_3,undefined
   int local_24 [9];
   
   cVar3 = FUN_80286840();
-  FUN_80017434(0);
+  gameTextFn_80017434(0);
   iVar5 = 0;
   do {
     FUN_80006c1c();
