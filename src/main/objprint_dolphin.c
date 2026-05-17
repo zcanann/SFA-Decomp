@@ -148,7 +148,7 @@ extern undefined4 FUN_8025c2a8();
 extern undefined4 FUN_8025c368();
 extern undefined4 FUN_8025c428();
 extern undefined4 FUN_8025c510();
-extern undefined4 FUN_8025c584();
+extern undefined4 GXSetBlendMode();
 extern undefined4 FUN_8025c5f0();
 extern undefined4 FUN_8025c65c();
 extern undefined4 FUN_8025c754();
@@ -368,7 +368,7 @@ void FUN_8003d6f8(int param_1)
   local_54 = local_3c;
   FUN_8025c510(0,(byte *)&local_54);
   FUN_8025c5f0(0,0x1c);
-  FUN_8025c584(0,0xc);
+  GXSetBlendMode(0,0xc);
   newshadows_getShadowTextureTable4x8(&local_40,&local_44,&uStack_48);
   FUN_8004812c(*(int *)(local_40 + ((DAT_803dd8c4 >> 2) + (uint)DAT_803dd8bd * local_44) * 4),0);
   FUN_80247a7c((double)lbl_803DF6B8,(double)lbl_803DF6B8,(double)lbl_803DF69C,afStack_38);

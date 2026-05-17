@@ -66,7 +66,7 @@ extern undefined4 FUN_8025c2a8();
 extern undefined4 FUN_8025c368();
 extern undefined4 FUN_8025c49c();
 extern undefined4 FUN_8025c510();
-extern undefined4 FUN_8025c584();
+extern undefined4 GXSetBlendMode();
 extern undefined4 FUN_8025c5f0();
 extern undefined4 FUN_8025c65c();
 extern undefined4 FUN_8025c828();
@@ -2814,7 +2814,7 @@ undefined4 FUN_8003c1f8(int param_1,int *param_2,int param_3)
     local_180 = local_158;
     FUN_8025c510(0,(byte *)&local_180);
     FUN_8025c5f0(1,0x1c);
-    FUN_8025c584(1,0xc);
+    GXSetBlendMode(1,0xc);
     FUN_80247a7c((double)lbl_803DF6AC,(double)lbl_803DF6AC,(double)lbl_803DF684,afStack_94);
     FUN_80247a48((double)lbl_803DF6A8,(double)lbl_803DF6A8,(double)lbl_803DF69C,afStack_c4);
     FUN_80247618(afStack_c4,afStack_94,afStack_94);
@@ -2863,7 +2863,7 @@ undefined4 FUN_8003c1f8(int param_1,int *param_2,int param_3)
     FUN_80247a7c((double)lbl_803DF6B0,(double)lbl_803DF6B0,(double)lbl_803DF69C,afStack_64);
     FUN_8025d8c4(afStack_64,0x40,0);
     FUN_80258674(4,1,4,0x3c,1,0x40);
-    FUN_8025c584(3,4);
+    GXSetBlendMode(3,4);
     FUN_8025c828(3,4,3,8);
     FUN_8025c1a4(3,8,0xe,0,0);
     FUN_8025c224(3,7,4,5,7);
@@ -2895,7 +2895,7 @@ undefined4 FUN_8003c1f8(int param_1,int *param_2,int param_3)
       local_18c = local_170;
       FUN_8025c510(0,(byte *)&local_18c);
       FUN_8025c5f0(5,0x1c);
-      FUN_8025c584(5,0xc);
+      GXSetBlendMode(5,0xc);
       newshadows_getShadowTextureTable4x8(&local_174,&local_178,&uStack_17c);
       FUN_8004812c(*(int *)(local_174 + (DAT_803dd8c4 + (uint)DAT_803dd8bd * local_178 + -0xc) * 4),
                    5);

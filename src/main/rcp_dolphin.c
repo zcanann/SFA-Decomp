@@ -60,7 +60,7 @@ extern undefined4 FUN_802570dc();
 extern undefined4 FUN_80257b5c();
 extern undefined4 FUN_80258674();
 extern undefined4 FUN_80258944();
-extern undefined4 FUN_8025898c();
+extern undefined4 __GXSendFlushPrim();
 extern undefined8 FUN_80259000();
 extern undefined4 FUN_80259288();
 extern undefined4 FUN_80259340();
@@ -88,7 +88,7 @@ extern undefined4 FUN_8025c2a8();
 extern undefined4 FUN_8025c368();
 extern undefined4 FUN_8025c428();
 extern undefined4 FUN_8025c510();
-extern undefined4 FUN_8025c584();
+extern undefined4 GXSetBlendMode();
 extern undefined4 FUN_8025c5f0();
 extern undefined4 FUN_8025c65c();
 extern undefined4 FUN_8025c6b4();
@@ -361,7 +361,7 @@ void FUN_80051b04(int param_1,float *param_2,int param_3,char *param_4)
     DAT_803dda00 = DAT_803dda00 + 3;
   }
   FUN_80047d88(param_4,'\x01','\0',&local_14,&uStack_18);
-  FUN_8025c584(DAT_803dda10,local_14);
+  GXSetBlendMode(DAT_803dda10,local_14);
   if (param_3 == 0) {
     FUN_8025c1a4(DAT_803dda10,0xf,8,0xe,0xf);
   }
@@ -507,7 +507,7 @@ void FUN_80051fc4(undefined4 param_1,undefined4 param_2,int param_3,char *param_
   if ((param_6 & 0xff) == 0) {
     local_28 = *(undefined4 *)param_4;
     FUN_8025c510(DAT_803dd9f4,(byte *)&local_28);
-    FUN_8025c584(DAT_803dda10,DAT_803dd9f0);
+    GXSetBlendMode(DAT_803dda10,DAT_803dd9f0);
     if (*(int *)(iVar2 + 0x50) == 0) {
       FUN_8025c5f0(DAT_803dda10,DAT_803dd9ec);
     }
@@ -520,7 +520,7 @@ void FUN_80051fc4(undefined4 param_1,undefined4 param_2,int param_3,char *param_
   }
   else {
     FUN_80047d88(param_4,'\x01','\x01',local_20,&local_24);
-    FUN_8025c584(DAT_803dda10,local_20[0]);
+    GXSetBlendMode(DAT_803dda10,local_20[0]);
     if (*(int *)(iVar2 + 0x50) == 0) {
       FUN_8025c5f0(DAT_803dda10,local_24);
     }
@@ -677,7 +677,7 @@ void FUN_8005264c(char *param_1)
   local_18 = *(undefined4 *)param_1;
   FUN_8025c428(1,(byte *)&local_18);
   FUN_80047d88(param_1,'\x01','\0',local_10,&uStack_14);
-  FUN_8025c584(DAT_803dda10,local_10[0]);
+  GXSetBlendMode(DAT_803dda10,local_10[0]);
   FUN_8025c828(DAT_803dda10,0xff,0xff,0xff);
   FUN_8025c65c(DAT_803dda10,0,0);
   if ((DAT_803dd9ea != '\0') && (DAT_803dd9b0 != '\0')) {
@@ -713,7 +713,7 @@ void FUN_80052778(char *param_1)
   FUN_8025be80(DAT_803dda10);
   FUN_80047d88(param_1,'\x01','\x01',local_14,&local_18);
   FUN_8025c5f0(DAT_803dda10,local_18);
-  FUN_8025c584(DAT_803dda10,local_14[0]);
+  GXSetBlendMode(DAT_803dda10,local_14[0]);
   FUN_8025c828(DAT_803dda10,0xff,0xff,4);
   FUN_8025c65c(DAT_803dda10,0,0);
   if ((DAT_803dd9ea == '\0') || (DAT_803dd9b0 == '\0')) {
@@ -828,7 +828,7 @@ void FUN_80052988(void)
   undefined8 uVar14;
   
   if (DAT_803dda18 == '\0') {
-    FUN_8025898c(1,0);
+    __GXSendFlushPrim(1,0);
     FUN_802420b0(0x80378620,0x6640);
     FUN_8025d4a0(-0x7fc879e0,0x6640);
     uVar3 = 0;
@@ -884,7 +884,7 @@ void FUN_80052988(void)
     } while (uVar3 < 0x10);
     DAT_803dda1c = FUN_8025d568((int)((ulonglong)uVar14 >> 0x20),(int)uVar14,uVar1);
     DAT_803dda18 = '\x01';
-    FUN_8025898c(1,8);
+    __GXSendFlushPrim(1,8);
   }
   FUN_8025d63c(&DAT_80378620,DAT_803dda1c);
   return;
