@@ -16,6 +16,12 @@
 #define SYNTH_VOICE_MIDI_SLOT_OFFSET 0x121
 #define SYNTH_VOICE_MIDI_KEY_OFFSET 0x122
 
+typedef struct VoiceIdSlot {
+    u8 prev;
+    u8 next;
+    u16 active;
+} VoiceIdSlot;
+
 void voiceInitPriorityTables(void);
 void voiceBreakAndFree(u32 voice);
 void voiceKill(u32 voice);

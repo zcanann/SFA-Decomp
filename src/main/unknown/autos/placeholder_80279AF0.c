@@ -1,13 +1,9 @@
 #include "ghidra_import.h"
+#include "main/unknown/autos/placeholder_802792F8.h"
+#include "main/unknown/autos/placeholder_80279AF0.h"
+#include "main/unknown/autos/placeholder_80279EC0.h"
 
 extern void fn_80278A98(int state, int x);
-extern void voiceRemovePriority(int state);
-
-typedef struct VoiceIdSlot {
-    u8 prev;
-    u8 next;
-    u16 active;
-} VoiceIdSlot;
 
 extern VoiceIdSlot voiceFreeListSlots[];
 extern u8 *synthVoice;

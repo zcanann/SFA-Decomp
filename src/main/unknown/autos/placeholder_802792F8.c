@@ -162,37 +162,35 @@ int vidMakeRoot(int state)
  */
 u32 vidMakeNew(int state, int returnNewId)
 {
-    int wrapped;
     u32 nextId;
-    int **freeNode;
     int **cursor;
     int **node;
     int **prev;
+    int **freeNode;
 
-    freeNode = vidFree;
-    nextId = vidCurrentId;
     do {
-        vidCurrentId = nextId;
-        nextId = vidCurrentId + 1;
-    } while (vidCurrentId == 0xffffffffU);
+        nextId = vidCurrentId;
+        vidCurrentId = nextId + 1;
+    } while (nextId == 0xffffffffU);
 
-    nextId = vidCurrentId;
     cursor = vidRoot;
     prev = 0;
-    vidCurrentId++;
-    while ((node = cursor) != 0 && ((u32)node[2] <= nextId)) {
+    while ((node = cursor) != 0) {
+        if ((u32)node[2] > nextId) {
+            break;
+        }
         if ((u32)node[2] == nextId) {
             do {
-                wrapped = vidCurrentId == 0xffffffffU;
                 nextId = vidCurrentId;
-                vidCurrentId++;
-            } while (wrapped);
+                vidCurrentId = nextId + 1;
+            } while (nextId == 0xffffffffU);
         }
         prev = node;
         cursor = (int **)*node;
     }
 
-    if (vidFree != 0) {
+    freeNode = vidFree;
+    if (freeNode != 0) {
         vidFree = *(void **)vidFree;
         if (vidFree != 0) {
             *(u32 *)((u8 *)vidFree + 4) = 0;
@@ -237,23 +235,25 @@ int vidGetInternalId(u32 id)
     int *node;
 
     if (id == 0xffffffffU) {
-        return -1;
+        goto fail;
     }
     node = vidRoot;
     while (node != NULL) {
-        if (*(u32 *)(node + 2) == id) {
+        if (*(u32 *)(node + 2) != id) {
+            if (*(u32 *)(node + 2) > id) {
+                node = NULL;
+                break;
+            }
+            node = *(int **)node;
+        } else {
             break;
         }
-        if (*(u32 *)(node + 2) > id) {
-            node = NULL;
-            break;
-        }
-        node = *(int **)node;
     }
-    if (node == NULL) {
-        return -1;
+    if (node != NULL) {
+        return *(int *)(node + 3);
     }
-    return *(int *)(node + 3);
+fail:
+    return -1;
 }
 
 /*
