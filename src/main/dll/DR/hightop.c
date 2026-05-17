@@ -46,7 +46,7 @@ extern undefined4 FUN_80080f3c();
 extern uint FUN_80080f40();
 extern undefined4 FUN_80125b7c();
 extern undefined4 FUN_80198e08();
-extern int FUN_80198fa4();
+extern int objFn_80198fa4();
 extern undefined4 FUN_801991bc();
 extern undefined4 FUN_80199440();
 extern undefined4 FUN_8019959c();
@@ -827,8 +827,8 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
           if (sVar1 == 0x4d) {
             if (bVar3) {
               iVar9 = *(int *)(iVar4 + 0xb8);
-              iVar5 = FUN_80198fa4(iVar4,(float *)(iVar9 + 0x28));
-              iVar9 = FUN_80198fa4(iVar4,(float *)(iVar9 + 0x1c));
+              iVar5 = objFn_80198fa4(iVar4,(float *)(iVar9 + 0x28));
+              iVar9 = objFn_80198fa4(iVar4,(float *)(iVar9 + 0x1c));
               if (iVar5 == 0) {
                 if (iVar9 == 0) {
                   FUN_801993b0(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
