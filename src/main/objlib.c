@@ -37,7 +37,7 @@ extern undefined4 FUN_80017a50();
 extern int *Obj_GetActiveModel(int obj);
 extern void *Obj_GetPlayerObject(void);
 extern void Obj_UpdateObject(ObjAnimComponent *obj,void *modelInstance);
-extern int ObjList_GetObjects();
+extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
 extern void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2);
 extern undefined4 FUN_80045328();
 extern void getTabEntry(void *dst,int fileId,int offset,int size);

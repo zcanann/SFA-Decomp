@@ -61,6 +61,7 @@ void ObjContact_RemoveObjectCallbacks(int param_1);
 undefined4 ObjContact_AddCallback(int param_1,int param_2,ObjContactCallback callback);
 undefined4 ObjTrigger_IsSetById(int obj,short triggerId);
 undefined4 ObjTrigger_IsSet(int obj);
+int *ObjList_GetObjects(int *startIndex,int *objectCount);
 int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq);
 undefined4 ObjList_ContainsObject(int param_1);
 void ObjPath_GetPointWorldPositionArray(int obj,int pointIndex,int count,float *positions);
