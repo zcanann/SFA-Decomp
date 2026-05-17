@@ -310,11 +310,11 @@ s16 sndSin(u32 packed)
 /*
  * Binary search over fixed-stride sorted table entries.
  */
-void *sndBSearch(void *key, void *base, u16 count, u32 stride, int (*cmp)(void *, void *))
+void *sndBSearch(void *key, void *base, int count, u32 stride, int (*cmp)(void *, void *))
 {
+    int high;
     int low;
     int mid;
-    int high;
     void *entry;
     int result;
 
@@ -328,11 +328,11 @@ void *sndBSearch(void *key, void *base, u16 count, u32 stride, int (*cmp)(void *
             if (result == 0) {
                 return entry;
             }
-            if (result > -1) {
+            if (result < 0) {
+                high = mid - 1;
+            } else {
                 low = mid + 1;
-                mid = high;
             }
-            high = mid;
         } while (low <= high);
     }
     return 0;
