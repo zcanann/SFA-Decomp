@@ -99,6 +99,6 @@ void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 call
  */
 void aramSyncTransferQueue(void)
 {
-    while (lbl_803D3F60[0x281] != 0) {
+    while (((volatile u8 *)lbl_803D3F60)[0x281] != 0) {
     }
 }
