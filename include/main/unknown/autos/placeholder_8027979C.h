@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8027975c(int param_1);
+u32 voiceAllocate(u8 priority, u8 maxInstances, u16 key, u8 streamKind);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027979C_H_ */

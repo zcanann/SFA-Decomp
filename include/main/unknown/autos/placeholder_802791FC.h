@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80279038(int param_1,int param_2);
+void vidRemoveVoice(int state);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802791FC_H_ */
