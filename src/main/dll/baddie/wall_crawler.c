@@ -45,7 +45,7 @@ extern undefined4 FUN_801242dc();
 extern int fn_801244B0();
 extern undefined8 FUN_801249bc();
 extern undefined8 FUN_80126044();
-extern undefined8 FUN_801262cc();
+extern undefined8 pauseMenuDraw();
 extern undefined4 FUN_801291ac();
 extern undefined4 FUN_801294d8();
 extern undefined4 FUN_8012a21c();
@@ -370,7 +370,7 @@ void fn_8012F04C(undefined8 param_1,double param_2,double param_3,undefined8 par
   iVar4 = FUN_80017674();
   if (iVar4 == 0) {
     if (iVar3 == 0) {
-      uVar7 = FUN_801262cc(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+      uVar7 = pauseMenuDraw(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
       uVar7 = FUN_8012dab8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,uVar5
                            ,param_11,param_12,param_13,param_14,param_15,param_16);
       if (DAT_803de3fe != '\0') {
@@ -413,7 +413,7 @@ void fn_8012F04C(undefined8 param_1,double param_2,double param_3,undefined8 par
     }
     else {
       uVar7 = FUN_80126044();
-      uVar7 = FUN_801262cc(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+      uVar7 = pauseMenuDraw(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
       FUN_8012eb7c(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
       FUN_8012dab8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,uVar5,
                    param_11,param_12,param_13,param_14,param_15,param_16);
