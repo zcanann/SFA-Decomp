@@ -6,7 +6,7 @@ extern void hwBreak(u32 voice);
 extern void vidRemoveVoice(int handle);
 extern void voiceFree(int handle);
 extern u32 get_vidlist(u32 id);
-extern void synthCancelJob(u8 voice);
+extern void synthCancelJob(int voice);
 
 extern u8 *synthVoice;
 extern u8 vidListNodes[];
@@ -214,13 +214,17 @@ void voiceInitPriorityTables(void)
  */
 void voiceBreakAndFree(u32 voice)
 {
+    u8 *voiceState;
+
     if (voice == SYNTH_INVALID_VOICE) return;
     if (hwIsActive(voice) != 0) {
         hwBreak(voice);
     }
-    *(u32 *)(synthVoice + voice * SYNTH_VOICE_STRIDE + SYNTH_VOICE_HANDLE_OFFSET) = voice;
+    voiceState = synthVoice + voice * SYNTH_VOICE_STRIDE;
+    *(u32 *)(voiceState + SYNTH_VOICE_HANDLE_OFFSET) = voice;
     voiceFree((int)(synthVoice + voice * SYNTH_VOICE_STRIDE));
-    *(u8 *)(synthVoice + voice * SYNTH_VOICE_STRIDE + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) = 0;
+    voiceState = synthVoice + voice * SYNTH_VOICE_STRIDE;
+    *(u8 *)(voiceState + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) = 0;
 }
 
 /*
@@ -231,6 +235,7 @@ void voiceBreakAndFree(u32 voice)
 void voiceKill(u32 voice)
 {
     int base = (int)(synthVoice + voice * SYNTH_VOICE_STRIDE);
+
     if (*(u32 *)(base + SYNTH_VOICE_ACTIVE_HANDLE_OFFSET) != 0) {
         vidRemoveVoice(base);
         *(u32 *)(base + SYNTH_VOICE_STATE_FLAGS_OFFSET) =
@@ -240,7 +245,7 @@ void voiceKill(u32 voice)
         voiceFree(base);
     }
     if (*(u8 *)(base + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) != 0) {
-        synthCancelJob((u8)voice);
+        synthCancelJob(voice);
     }
     hwBreak(voice);
 }
