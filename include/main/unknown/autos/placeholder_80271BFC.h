@@ -3,9 +3,9 @@
 
 #include "ghidra_import.h"
 
-void FUN_80271b4c(uint param_1);
-undefined4 FUN_80271b50(undefined2 param_1,byte param_2,uint param_3,undefined param_4,int param_5);
-undefined4 FUN_80271b58(uint param_1,byte param_2,byte param_3);
-undefined4 FUN_80271b60(uint param_1,byte param_2,uint param_3);
+void synthVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle);
+int synthIsFadeOutActive(u8 voiceIdx);
+void synthSetMusicVolumeType(u32 voiceIdx, u8 value);
+int synthHWMessageHandler(int mode, u32 arg);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80271BFC_H_ */
