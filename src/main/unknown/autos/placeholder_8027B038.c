@@ -37,24 +37,28 @@ void synthHandleVirtualSampleDone(u32 packed)
     u8 *slots;
     u8 vid;
     u8 *entry;
+    u32 entryOffset;
+    u32 generation;
 
+    state = synthVirtualSampleState;
+    slots = state + 0x908;
     if (packed == 0xffffffffU) {
         return;
     }
-    state = synthVirtualSampleState;
-    slots = state + 0x908;
     vid = slots[(u8)packed];
     if (vid == SYNTH_VIRTUAL_SAMPLE_FREE_SLOT) {
         return;
     }
-    entry = state + vid * 0x24;
-    if (*(u16 *)(entry + 0x1a) != ((packed >> 8) & 0xffff)) {
+    entryOffset = vid * 0x24;
+    generation = (packed >> 8) & 0xffff;
+    if (*(u16 *)(state + entryOffset + 0x1a) != generation) {
         return;
     }
     if (*(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET) != 0) {
         ((void (*)(int, void *))(*(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET)))(
-            2, entry + 0x18);
+            2, state + entryOffset + 0x18);
     }
+    entry = state + entryOffset;
     *(u8 *)(entry + 0x8) = 0;
     slots[*(u8 *)(entry + 0xb)] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
 }
