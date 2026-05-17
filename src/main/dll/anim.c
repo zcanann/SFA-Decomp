@@ -784,7 +784,7 @@ void FUN_801ff9e0(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801ffa1c
+ * Function: drakorenergy_update
  * EN v1.0 Address: 0x801FFA1C
  * EN v1.0 Size: 1044b
  * EN v1.1 Address: 0x80200054
@@ -794,9 +794,9 @@ void FUN_801ff9e0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ffa1c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9)
+void drakorenergy_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                         undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                         short *param_9)
 {
   byte bVar1;
   float fVar2;
