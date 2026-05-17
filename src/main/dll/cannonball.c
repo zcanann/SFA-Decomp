@@ -11,7 +11,7 @@ extern undefined4 FUN_800da5e8();
 extern int FUN_800db47c();
 extern undefined4 FUN_80139800();
 extern undefined4 FUN_80139a48();
-extern undefined4 FUN_8013b368();
+extern undefined4 trickyFn_8013b368();
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_80286884();
 
@@ -73,8 +73,9 @@ void FUN_80141290(undefined8 param_1,undefined8 param_2,double param_3,undefined
   iVar6 = (int)uVar14;
   iVar8 = 0;
   if (*(char *)(iVar6 + 10) == '\0') {
-    FUN_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 iVar3,iVar6,param_11,param_12,(byte)param_13,param_14,param_15,param_16);
+    trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,
+                      param_8,iVar3,iVar6,param_11,param_12,(byte)param_13,param_14,param_15,
+                      param_16);
     iVar8 = FUN_800db47c((float *)(*(int *)(iVar6 + 0x700) + 8),(undefined *)0x0);
     iVar3 = FUN_800db47c((float *)(iVar3 + 0x18),(undefined *)0x0);
     if (iVar3 == iVar8) {

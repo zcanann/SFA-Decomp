@@ -8,7 +8,7 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_80039468();
 extern int FUN_800575b4();
 extern undefined4 FUN_80139a4c();
-extern int FUN_8013b368();
+extern int trickyFn_8013b368();
 extern int FUN_801451dc();
 extern undefined4 FUN_80146f9c();
 extern undefined4 FUN_80146fa0();
@@ -103,8 +103,9 @@ void FUN_8013f100(undefined8 param_1,undefined8 param_2,double param_3,undefined
   dVar4 = (double)lbl_803E3164;
   *(float *)(param_10 + 0x710) =
        -(float)(dVar4 * dVar3 - (double)*(float *)(*(int *)(param_10 + 0x24) + 0x20));
-  iVar1 = FUN_8013b368((double)lbl_803E3118,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,
-                       param_9,param_10,param_11,param_12,param_13,param_14,param_15,param_16);
+  iVar1 = trickyFn_8013b368((double)lbl_803E3118,dVar4,param_3,param_4,param_5,param_6,param_7,
+                            param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
+                            param_16);
   if (iVar1 == 0) {
     FUN_80146f9c();
   }
@@ -156,9 +157,9 @@ void FUN_8013f308(undefined8 param_1,undefined8 param_2,double param_3,undefined
   
   iVar2 = FUN_801451dc(param_9,param_10);
   if ((iVar2 == 0) &&
-     (iVar2 = FUN_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,
-                           param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
-                           param_16), iVar2 == 0)) {
+     (iVar2 = trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,
+                                param_7,param_8,param_9,param_10,param_11,param_12,param_13,
+                                param_14,param_15,param_16), iVar2 == 0)) {
     param_10[0x1d0] = (int)((float)param_10[0x1d0] - lbl_803DC074);
     if ((float)param_10[0x1d0] <= lbl_803E306C) {
       uVar3 = randomGetRange(500,0x2ee);
@@ -248,9 +249,9 @@ void FUN_8013f644(undefined8 param_1,undefined8 param_2,double param_3,undefined
   bool bVar1;
   int iVar2;
   
-  iVar2 = FUN_8013b368((double)lbl_803E310C,param_2,param_3,param_4,param_5,param_6,param_7,
-                       param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
-                       param_16);
+  iVar2 = trickyFn_8013b368((double)lbl_803E310C,param_2,param_3,param_4,param_5,param_6,param_7,
+                            param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
+                            param_16);
   if (iVar2 == 0) {
     if (lbl_803E306C == *(float *)(param_10 + 0x2ac)) {
       bVar1 = false;
