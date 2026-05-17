@@ -18,29 +18,35 @@ extern u8 lbl_803D41E4[];
  * EN v1.1 Address: 0x80283FA0
  * EN v1.1 Size: 152b
  */
+#pragma scheduling off
 void aramQueueCallback(void *req)
 {
     u8 *base;
     u8 *slot;
-    int i;
+    u8 *callbackSlot;
+    u32 i;
 
     if (*(u32 *)((u8 *)req + 0xc) == 1) {
         base = lbl_803D41E4;
     } else {
         base = lbl_803D3F60;
     }
+    i = 0;
+    callbackSlot = base + i * 0x28;
     slot = base;
-    for (i = 0; i < 0x10; i++) {
+    for (; i < 0x10; i++) {
         if (req == slot) {
             void (*cb)(void *) = *(void (**)(void *))(slot + 0x20);
             if (cb != NULL) {
-                cb(*(void **)(slot + 0x24));
+                cb(*(void **)(callbackSlot + 0x24));
             }
         }
         slot += 0x28;
+        callbackSlot += 0x28;
     }
     base[0x281] = base[0x281] - 1;
 }
+#pragma scheduling reset
 
 /*
  * Submit an ARQ DMA request: locks interrupts, finds the next free
