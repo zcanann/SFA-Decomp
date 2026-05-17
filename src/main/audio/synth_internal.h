@@ -23,6 +23,9 @@ typedef float f32;
 #define SYNTH_PENDING_FLAG_MIX_DATA 0x10
 #define SYNTH_PENDING_FLAG_SPEED 0x20
 #define SYNTH_PENDING_FLAG_STUDIO_MODE3 0x80
+#define SYNTH_VARIABLE_PAIR_EXTENDED_FLAG 0x80
+#define SYNTH_VARIABLE_PAIR_VALUE_MASK 0x7F
+#define SYNTH_VARIABLE_PAIR_END_LOW 0x00
 
 typedef struct SynthCallbackLink {
     struct SynthCallbackLink* next;

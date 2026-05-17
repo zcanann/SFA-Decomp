@@ -13,12 +13,12 @@ u8* synthReadVariablePair(u8* input, u16* value0, s16* value1) {
 
     high = input[0];
     low = input[1];
-    if (high == 0x80 && low == 0) {
+    if (high == SYNTH_VARIABLE_PAIR_EXTENDED_FLAG && low == SYNTH_VARIABLE_PAIR_END_LOW) {
         return 0;
     }
 
-    if ((high & 0x80) != 0) {
-        combinedValue = (u32)((high & 0x7F) << 8);
+    if ((high & SYNTH_VARIABLE_PAIR_EXTENDED_FLAG) != 0) {
+        combinedValue = (u32)((high & SYNTH_VARIABLE_PAIR_VALUE_MASK) << 8);
         combinedValue = combinedValue | low;
         *value0 = (u16)combinedValue;
         input += 2;
@@ -29,8 +29,8 @@ u8* synthReadVariablePair(u8* input, u16* value0, s16* value1) {
 
     high = input[0];
     low = input[1];
-    if ((high & 0x80) != 0) {
-        combinedValue = (u32)((high & 0x7F) << 8);
+    if ((high & SYNTH_VARIABLE_PAIR_EXTENDED_FLAG) != 0) {
+        combinedValue = (u32)((high & SYNTH_VARIABLE_PAIR_VALUE_MASK) << 8);
         combinedValue = combinedValue | low;
         combined = (s16)combinedValue;
         shift = 1;
