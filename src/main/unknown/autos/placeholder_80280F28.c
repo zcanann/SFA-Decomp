@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80280F28.h"
 
-extern int hwInit(void *params, u8 voiceCount, u8 streamCount, u8 stereo, void *aux1, void *aux2, u32 sampleRate);
+extern int hwInit(u32 *sampleRate, u8 voiceCount, u8 maxStudios, u32 flags);
 extern void dataInit(int p1, void *p2);
 extern void fn_8026F30C(void);
-extern void synthInit(int sampleRate, void *p2);
+extern void synthInit(u32 sampleRate, u32 voiceCount);
 extern void synthInitJobTable(void);
 extern void synthInitVirtualSampleTable(void);
 extern void synthResetLoadedGroupCount(void);
@@ -13,7 +13,7 @@ extern void s3dInit(u32 flags);
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 synthIdleWaitActive;
-extern u32 s3dCallCnt;
+extern u8 s3dCallCnt;
 extern u32 s3dEmitterRoot;
 extern u32 s3dListenerRoot;
 extern u32 s3dRoomRoot;
@@ -40,9 +40,10 @@ void s3dHandle(void)
  * EN v1.1 Address: 0x80280FFC
  * EN v1.1 Size: 68b
  */
+#pragma dont_inline on
 void s3dInit(u32 flags)
 {
-    u8 stereo = (flags & 0x2) ? 1 : 0;
+    u8 stereo = (flags & 0x2) != 0;
     s3dEmitterRoot = 0;
     s3dListenerRoot = 0;
     s3dRoomRoot = 0;
@@ -53,6 +54,7 @@ void s3dInit(u32 flags)
     s3dCallCnt = 0;
     lbl_803DE36A = stereo;
 }
+#pragma dont_inline reset
 
 /*
  * Empty stub.
@@ -73,39 +75,38 @@ void s3dExit(void)
  * EN v1.1 Address: 0x80281044
  * EN v1.1 Size: 280b
  */
-int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, void *p7, u32 flags)
+int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void *data)
 {
-    u32 sampleRate;
-    void *params;
+    u32 sampleRate[4];
+    int result;
 
     gSynthInitialized = 0;
-    if (voiceCount > 0x40) {
-        lbl_803BD150[0x210] = 0x40;
-    } else {
+    if (voiceCount <= 0x40) {
         lbl_803BD150[0x210] = voiceCount;
-    }
-    if (stereo > 0x8) {
-        lbl_803BD150[0x213] = 0x8;
     } else {
+        lbl_803BD150[0x210] = 0x40;
+    }
+    if (stereo <= 0x8) {
         lbl_803BD150[0x213] = stereo;
+    } else {
+        lbl_803BD150[0x213] = 0x8;
     }
     lbl_803BD150[0x211] = streamCount;
     lbl_803BD150[0x212] = unk5;
-    sampleRate = 0x7d00;
-    if (hwInit(&sampleRate, lbl_803BD150[0x210], streamCount, lbl_803BD150[0x213], NULL, p7, sampleRate) != 0) {
-        return 0;
-    }
-    {
+    sampleRate[3] = 0x7d00;
+    result = hwInit(&sampleRate[3], lbl_803BD150[0x210], lbl_803BD150[0x213], flags);
+    if (result == 0) {
         u8 voiceCountSnapshot = lbl_803BD150[0x210];
         synthResetLoadedGroupCount();
-        dataInit(0, p7);
+        dataInit(0, data);
         fn_8026F30C();
         synthIdleWaitActive = 0;
-        synthInit(0x7d00, &voiceCountSnapshot);
+        synthInit(0x7d00, voiceCountSnapshot);
         synthInitJobTable();
         synthInitVirtualSampleTable();
         s3dInit(flags);
         gSynthInitialized = 1;
+        result = 0;
     }
-    return 0;
+    return result;
 }
