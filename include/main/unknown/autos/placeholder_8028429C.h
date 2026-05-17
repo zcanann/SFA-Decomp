@@ -3,7 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80284224(uint param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                 undefined4 param_5);
+void aramInit(u32 extraSize);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028429C_H_ */
