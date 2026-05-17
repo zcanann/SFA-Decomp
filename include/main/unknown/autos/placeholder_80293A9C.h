@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8029397c(void);
+float fcos16Precise(int angle);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80293A9C_H_ */

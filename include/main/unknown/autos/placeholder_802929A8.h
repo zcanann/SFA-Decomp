@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_802927a4(void);
+float powfCoreHighPrecision(float x, float y);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802929A8_H_ */
