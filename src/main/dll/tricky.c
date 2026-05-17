@@ -57,7 +57,7 @@ extern undefined4 fn_80124B38();
 extern undefined8 FUN_8012c894();
 extern undefined4 FUN_802475e4();
 extern undefined4 FUN_80247618();
-extern undefined4 FUN_8024782c();
+extern undefined4 PSVECDotProduct();
 extern undefined4 FUN_80247a48();
 extern undefined4 FUN_80247a7c();
 extern undefined4 FUN_80247d2c();
@@ -755,10 +755,10 @@ void FUN_8011e464(double param_1,double param_2,double param_3,double param_4,us
   lbl_803DE480 =
        (lbl_803E2B10 * (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e2b08)) /
        lbl_803E2B14;
-  FUN_8024782c((double)lbl_803DE480,afStack_68,0x79);
-  FUN_8024782c((double)lbl_803DE484,afStack_98,0x78);
+  PSVECDotProduct((double)lbl_803DE480,afStack_68,0x79);
+  PSVECDotProduct((double)lbl_803DE484,afStack_98,0x78);
   FUN_80247618(afStack_98,afStack_68,afStack_68);
-  FUN_8024782c((double)lbl_803DE488,afStack_98,0x7a);
+  PSVECDotProduct((double)lbl_803DE488,afStack_98,0x7a);
   FUN_80247618(afStack_98,afStack_68,afStack_68);
   dVar1 = (double)lbl_803DE48C;
   FUN_80247a7c(dVar1,dVar1,dVar1,afStack_98);
