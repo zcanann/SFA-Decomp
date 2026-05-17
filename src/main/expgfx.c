@@ -724,13 +724,11 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   ExpgfxTableEntry *entryBase;
   int tableIndex;
   int freeIndex;
-  int remaining;
   
   tableIndex = 0;
   entryBase = gExpgfxTableEntries;
   entry = entryBase;
-  remaining = EXPGFX_EXPTAB_ENTRY_COUNT;
-  do {
+  for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
       refCount = &gExpgfxTableEntries[tableIndex].refCount;
@@ -742,13 +740,9 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
       return (int)(short)tableIndex;
     }
     entry++;
-    tableIndex++;
-    remaining--;
-  } while (remaining != 0);
+  }
 
-  freeIndex = 0;
-  remaining = EXPGFX_EXPTAB_ENTRY_COUNT;
-  do {
+  for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++) {
     if (entryBase->refCount == 0) {
       gExpgfxTableEntries[freeIndex].refCount = 1;
       gExpgfxTableEntries[freeIndex].textureOrResource = textureOrResource;
@@ -758,9 +752,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
       return (int)(short)freeIndex;
     }
     entryBase++;
-    freeIndex++;
-    remaining--;
-  } while (remaining != 0);
+  }
 
   debugPrintf(sExpgfxExpTabIsFull);
   return EXPGFX_INVALID_TABLE_INDEX;
