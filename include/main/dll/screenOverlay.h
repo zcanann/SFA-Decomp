@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8017a38c(int param_1);
+void ProjectileSwitch_render(int param_1);
 undefined4 FUN_8017a4e8(int param_1,undefined4 param_2,int param_3);
 void FUN_8017a56c(int param_1);
 void FUN_8017a718(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,

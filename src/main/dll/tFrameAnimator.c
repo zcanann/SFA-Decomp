@@ -30,7 +30,7 @@ extern f32 lbl_803E436C;
 /*
  * --INFO--
  *
- * Function: FUN_80179eb0
+ * Function: sidekickball_init
  * EN v1.0 Address: 0x80179EB0
  * EN v1.0 Size: 1220b
  * EN v1.1 Address: 0x80179F40
@@ -40,7 +40,7 @@ extern f32 lbl_803E436C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80179eb0(ushort *param_1)
+undefined4 sidekickball_init(ushort *param_1)
 {
   bool bVar1;
   float fVar2;

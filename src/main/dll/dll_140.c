@@ -13,7 +13,7 @@ extern undefined4 ObjHits_EnableObject();
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b818();
 extern undefined4 sidekickball_update();
-extern undefined4 FUN_80179eb0();
+extern undefined4 sidekickball_init();
 extern uint countLeadingZeros();
 
 extern undefined4* DAT_803dd728;
@@ -149,13 +149,13 @@ void FUN_80179b34(double param_1,double param_2,double param_3,undefined8 param_
   }
   bVar2 = *(byte *)(iVar8 + 0x274);
   if (bVar2 == 3) {
-    uVar6 = FUN_80179eb0(param_9);
+    uVar6 = sidekickball_init(param_9);
     *(char *)(iVar8 + 0x274) = (char)uVar6;
     return;
   }
   if (bVar2 < 3) {
     if (bVar2 == 1) {
-      FUN_80179eb0(param_9);
+      sidekickball_init(param_9);
     }
     else if (bVar2 == 0) {
       sidekickball_update(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)param_9,

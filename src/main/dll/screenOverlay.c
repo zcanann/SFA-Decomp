@@ -32,7 +32,7 @@ extern f32 lbl_803E43A0;
 /*
  * --INFO--
  *
- * Function: FUN_8017a38c
+ * Function: ProjectileSwitch_render
  * EN v1.0 Address: 0x8017A38C
  * EN v1.0 Size: 348b
  * EN v1.1 Address: 0x8017A3F4
@@ -42,7 +42,7 @@ extern f32 lbl_803E43A0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017a38c(int param_1)
+void ProjectileSwitch_render(int param_1)
 {
   int iVar1;
   undefined local_18 [8];

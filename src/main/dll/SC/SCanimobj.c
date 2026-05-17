@@ -46,7 +46,7 @@ extern f32 lbl_803DDA5C;
 /*
  * --INFO--
  *
- * Function: FUN_801d7674
+ * Function: warpstone_update
  * EN v1.0 Address: 0x801D7674
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x801D76A4
@@ -56,7 +56,7 @@ extern f32 lbl_803DDA5C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d7674(void)
+void warpstone_update(void)
 {
   FUN_80006b84(1);
   return;
