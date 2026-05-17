@@ -346,7 +346,6 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,
 void expgfxRemoveAll(void)
 {
   ExpgfxTableEntry *tableEntry;
-  u16 *refCount;
   ExpgfxSlot *slot;
   u8 *expgfxBase;
   uint tableIndex;
@@ -379,10 +378,9 @@ void expgfxRemoveAll(void)
         }
         tableIndex = Expgfx_GetSlotTableIndex(slot);
         tableEntry = &((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[tableIndex];
-        refCount = &tableEntry->refCount;
-        if (*refCount != 0) {
-          (*refCount)--;
-          if (*refCount == 0) {
+        if (tableEntry->refCount != 0) {
+          tableEntry->refCount--;
+          if (tableEntry->refCount == 0) {
             tableEntry->textureOrResource = 0;
             tableEntry->key0 = 0;
           }
@@ -1527,7 +1525,6 @@ void expgfx_free(u32 sourceId)
 void expgfx_resetAllPools(void)
 {
   ExpgfxTableEntry *tableEntry;
-  u16 *refCount;
   u8 *staticDataBase;
   u8 *expgfxBase;
   u32 *slotPoolBases;
@@ -1568,10 +1565,9 @@ void expgfx_resetAllPools(void)
         tableEntry =
             (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET +
                                  (Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT));
-        refCount = &tableEntry->refCount;
-        if (*refCount != 0) {
-          (*refCount)--;
-          if (*refCount == 0) {
+        if (tableEntry->refCount != 0) {
+          tableEntry->refCount--;
+          if (tableEntry->refCount == 0) {
             tableEntry->textureOrResource = 0;
             tableEntry->key0 = 0;
           }
