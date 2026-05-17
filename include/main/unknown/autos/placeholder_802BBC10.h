@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_802bb720(undefined4 param_1,undefined4 param_2,int param_3);
+void fn_802BB720(undefined4 param_1, undefined4 param_2, int param_3);
 void FUN_802bb724(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_802bb728(undefined4 param_1,undefined4 param_2,int param_3);
