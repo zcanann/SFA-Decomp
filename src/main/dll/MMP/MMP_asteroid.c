@@ -60,7 +60,7 @@ extern f32 lbl_803E4CF4;
 /*
  * --INFO--
  *
- * Function: FUN_80195008
+ * Function: xyzanimator_update
  * EN v1.0 Address: 0x80195008
  * EN v1.0 Size: 164b
  * EN v1.1 Address: 0x801950E0
@@ -70,7 +70,7 @@ extern f32 lbl_803E4CF4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80195008(int param_1,int param_2)
+void xyzanimator_update(int param_1,int param_2)
 {
   float fVar1;
   int iVar2;
