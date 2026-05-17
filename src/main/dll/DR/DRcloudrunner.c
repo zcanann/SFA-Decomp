@@ -67,7 +67,7 @@ extern f32 lbl_803E6274;
 /*
  * --INFO--
  *
- * Function: FUN_801dc310
+ * Function: sc_musictree_update
  * EN v1.0 Address: 0x801DC310
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801DC444
@@ -77,7 +77,7 @@ extern f32 lbl_803E6274;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dc310(int param_1)
+void sc_musictree_update(int param_1)
 {
 }
 

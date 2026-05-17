@@ -54,7 +54,7 @@ extern f32 lbl_803E6754;
 /*
  * --INFO--
  *
- * Function: FUN_801e9344
+ * Function: spdrape_update
  * EN v1.0 Address: 0x801E9344
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801E93B4
@@ -64,7 +64,7 @@ extern f32 lbl_803E6754;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e9344(short *param_1,int param_2)
+void spdrape_update(short *param_1,int param_2)
 {
 }
 

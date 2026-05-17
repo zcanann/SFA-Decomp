@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801e9344(short *param_1,int param_2);
+void spdrape_update(short *param_1,int param_2);
 void FUN_801e9348(void);
 void FUN_801e9368(int *param_1);
 void FUN_801e9690(short *param_1,int param_2);
