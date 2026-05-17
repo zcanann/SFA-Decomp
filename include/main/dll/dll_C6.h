@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8010224c(void);
+void camcontrol_updateTargetFeedback(void);
 
 #endif /* MAIN_DLL_DLL_C6_H_ */

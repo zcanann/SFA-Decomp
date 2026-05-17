@@ -12,7 +12,7 @@ extern undefined4 gCamcontrolState;
 /*
  * --INFO--
  *
- * Function: FUN_8010224c
+ * Function: camcontrol_updateTargetFeedback
  * EN v1.0 Address: 0x8010224C
  * EN v1.0 Size: 80b
  * EN v1.1 Address: 0x801023A8
@@ -22,7 +22,7 @@ extern undefined4 gCamcontrolState;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010224c(void)
+void camcontrol_updateTargetFeedback(void)
 {
   int iVar1;
   

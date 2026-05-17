@@ -8,7 +8,7 @@ extern undefined4 gCamcontrolState;
 /*
  * --INFO--
  *
- * Function: FUN_8010224c
+ * Function: camcontrol_updateTargetFeedback
  * EN v1.0 Address: 0x8010224C
  * EN v1.0 Size: 80b
  * EN v1.1 Address: 0x80102354
@@ -18,7 +18,7 @@ extern undefined4 gCamcontrolState;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8010224c(int param_1,int param_2)
+void camcontrol_updateTargetFeedback(int param_1,int param_2)
 {
   if (*(char *)(gCamcontrolState + 0x13b) < param_1) {
     *(char *)(gCamcontrolState + 0x13b) = (char)param_1;
