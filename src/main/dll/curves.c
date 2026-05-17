@@ -2616,6 +2616,9 @@ void curves_remove(int curve)
 
   gRomCurveCount = gRomCurveCount - 1;
   slot = gRomCurveTable + index;
+  if (index >= gRomCurveCount) {
+    return;
+  }
   remaining = gRomCurveCount - index;
   while (remaining > 0) {
     *slot = slot[1];
