@@ -200,6 +200,8 @@ extern char sObjAddObjectTypeReachedMaxTypes[];
 #define OBJ_POSITION_Z_OFFSET 0x14
 
 #define OBJ_MODEL_JOINT_COUNT_OFFSET 0xf3
+#define OBJLIB_BLINK_LEFT_JOINT_TAG 5
+#define OBJLIB_BLINK_RIGHT_JOINT_TAG 4
 #define OBJPATH_POINTS_OFFSET 0x2c
 #define OBJPATH_POINT_COUNT_OFFSET 0x58
 #define OBJPATH_ROOT_JOINT_INDEX -1
@@ -3169,20 +3171,22 @@ uint fn_800386BC(f32 x,f32 y,f32 z)
  */
 void fn_80038988(int obj,int blinkState,uint flags)
 {
+  ObjAnimComponent *objAnim;
   u8 step;
   f32 leftScale;
   f32 rightScale;
   f32 phase;
   f32 wave;
   int joint;
-  int model;
-  int jointData;
+  ObjModelInstance *model;
+  s8 *jointData;
   int jointDataOffset;
   int poseOffset;
   uint jointCount;
   s16 rotation;
   u8 state;
 
+  objAnim = (ObjAnimComponent *)obj;
   step = (u8)(s32)(lbl_803DE998 * timeDelta);
   leftScale = lbl_803DE99C;
   rightScale = leftScale;
@@ -3289,18 +3293,18 @@ void fn_80038988(int obj,int blinkState,uint flags)
   wave = (lbl_803DE9A8 * fn_802943F4(phase) * (f32)*(u8 *)(blinkState + 0x2d)) / lbl_803DE9B0;
   rotation = (s16)(s32)((lbl_803DE9B4 * (leftScale * wave)) / lbl_803DE9B8);
   joint = 0;
-  model = *(int *)(obj + 0x50);
+  model = objAnim->modelInstance;
   if (model != 0) {
     jointDataOffset = 0;
     poseOffset = 0;
-    jointCount = (uint)*(u8 *)(model + 0x5a);
+    jointCount = (uint)model->jointCount;
     while (jointCount != 0) {
-      jointData = *(int *)(model + 0x10);
-      if ((*(s8 *)(jointData + *(s8 *)(obj + 0xad) + jointDataOffset + 1) != -1) &&
-          (*(s8 *)(jointData + jointDataOffset) == 5)) {
-        joint = *(int *)(obj + 0x6c) + poseOffset;
+      jointData = model->jointData;
+      if ((jointData[objAnim->bankIndex + jointDataOffset + 1] != -1) &&
+          (jointData[jointDataOffset] == OBJLIB_BLINK_LEFT_JOINT_TAG)) {
+        joint = (int)objAnim->jointPoseData + poseOffset;
       }
-      jointDataOffset += *(s8 *)(model + 0x55) + 1;
+      jointDataOffset += model->modelCount + 1;
       poseOffset += 0x12;
       jointCount--;
     }
@@ -3309,18 +3313,18 @@ void fn_80038988(int obj,int blinkState,uint flags)
 
   rotation = (s16)(s32)((lbl_803DE9B4 * (rightScale * wave)) / lbl_803DE9B8);
   joint = 0;
-  model = *(int *)(obj + 0x50);
+  model = objAnim->modelInstance;
   if (model != 0) {
     jointDataOffset = 0;
     poseOffset = 0;
-    jointCount = (uint)*(u8 *)(model + 0x5a);
+    jointCount = (uint)model->jointCount;
     while (jointCount != 0) {
-      jointData = *(int *)(model + 0x10);
-      if ((*(s8 *)(jointData + *(s8 *)(obj + 0xad) + jointDataOffset + 1) != -1) &&
-          (*(s8 *)(jointData + jointDataOffset) == 4)) {
-        joint = *(int *)(obj + 0x6c) + poseOffset;
+      jointData = model->jointData;
+      if ((jointData[objAnim->bankIndex + jointDataOffset + 1] != -1) &&
+          (jointData[jointDataOffset] == OBJLIB_BLINK_RIGHT_JOINT_TAG)) {
+        joint = (int)objAnim->jointPoseData + poseOffset;
       }
-      jointDataOffset += *(s8 *)(model + 0x55) + 1;
+      jointDataOffset += model->modelCount + 1;
       poseOffset += 0x12;
       jointCount--;
     }

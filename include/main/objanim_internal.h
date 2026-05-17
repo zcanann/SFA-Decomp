@@ -129,10 +129,16 @@ typedef struct ObjAnimRootCurve {
 typedef struct ObjModelInstance {
   u8 pad00[4];
   f32 rootMotionScaleBase;
-  u8 pad08[0x24 - 0x08];
+  u8 pad08[0x10 - 0x08];
+  s8 *jointData;
+  u8 pad14[0x24 - 0x14];
   ObjHitReactMoveEntry *hitReactMoveTable;
   u8 pad28[0x44 - 0x28];
   u32 flags;
+  u8 pad48[0x55 - 0x48];
+  s8 modelCount;
+  u8 pad56[0x5A - 0x56];
+  u8 jointCount;
 } ObjModelInstance;
 
 typedef struct ObjAnimMoveData {
@@ -160,7 +166,9 @@ typedef struct ObjAnimComponent {
   ObjHitReactState *hitReactState;
   u8 pad58[0x60 - 0x58];
   struct ObjAnimEventTable *eventTable;
-  u8 pad64[0x7C - 0x64];
+  u8 pad64[0x6C - 0x64];
+  u8 *jointPoseData;
+  u8 pad70[0x7C - 0x70];
   ObjAnimBank **banks;
   u8 pad80[0x98 - 0x80];
   f32 currentMoveProgress;
