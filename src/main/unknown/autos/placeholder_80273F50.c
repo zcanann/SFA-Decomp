@@ -1001,17 +1001,17 @@ int fxcmp(void *a, void *b)
  */
 void *dataGetFX(u16 key)
 {
-    u32 i;
+    int i;
+    u8 *tableBase;
     DataFXGroupRef *bucket;
     void *entry;
-    u8 *searchKey;
 
+    tableBase = dataSmpSDirTable;
     i = 0;
-    bucket = (DataFXGroupRef *)(dataSmpSDirTable + 0xa200);
-    searchKey = dataSmpSDirTable + 0xa62c;
-    *(u16 *)searchKey = key;
+    bucket = (DataFXGroupRef *)(tableBase + 0xa200);
+    *(u16 *)(tableBase + 0xa62c) = key;
     while (i < dataFXGroupNum) {
-        entry = sndBSearch(searchKey, bucket->samples, bucket->count, 10, fxcmp);
+        entry = sndBSearch(tableBase + 0xa62c, bucket->samples, bucket->count, 10, fxcmp);
         if (entry != 0) {
             return entry;
         }
