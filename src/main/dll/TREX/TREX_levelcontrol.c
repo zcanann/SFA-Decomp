@@ -41,7 +41,7 @@ extern f32 lbl_803E6544;
 /*
  * --INFO--
  *
- * Function: FUN_801e34c0
+ * Function: SB_ShipGun_update
  * EN v1.0 Address: 0x801E34C0
  * EN v1.0 Size: 2312b
  * EN v1.1 Address: 0x801E3AB0
@@ -51,7 +51,7 @@ extern f32 lbl_803E6544;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e34c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   char cVar1;
