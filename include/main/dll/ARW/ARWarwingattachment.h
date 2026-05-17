@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801f0b50(int param_1);
+void LaserBeam_update(int param_1);
 void FUN_801f0cb8(int param_1);
 void FUN_801f0cf0(int param_1);
 void FUN_801f0d8c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
