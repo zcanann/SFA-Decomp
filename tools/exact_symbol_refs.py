@@ -24,14 +24,22 @@ DEFAULT_SKIP_REASONS = {
     "8012eb7c": "GameUI item-use helper has duplicate raw and named bodies",
     "8013dc88": "trickyGrowl is named in dll_D1; dll_E2 hit is a duplicate window",
     "8013ffb8": "trickyGuard appears as duplicate raw and named bodies",
+    "8014d9e4": "enemy_init live source is a stub before the recovered body window",
     "801847e8": "scarab_getExtraSize has duplicate raw windows",
+    "801978a8": "lightning_free descriptor name conflicts with init-like live body",
+    "801b3658": "dimlavasmash_init live source is only the stub at a larger symbol window start",
     "801b5650": "explosion_release has duplicate/boundary-sensitive ownership",
+    "801cf0ac": "nw_mammoth_update live source is split into stub and following body windows",
     "801d1e24": "enemymushroom_update spans duplicate object windows",
     "801d80f4": "SH_LevelControl_setMusic appears in conflicting source windows",
+    "801dafdc": "sh_emptytumblew_init live source window disagrees with the symbol window",
     "801e34c0": "SB_ShipGun_update appears in multiple duplicate object windows",
+    "801e42f8": "SB_FireBall_hitDetect appears at a boundary-sensitive TREX window",
     "801feb30": "dbegg_update spans duplicate expr/timer/anim ownership",
     "80209df0": "dfplightni_init source window is much smaller than symbol",
     "80247f54": "SeekTwiceBeforeRead symbol overlaps many vector-length callsites",
+    "8028685c": "TRKNubMainLoop aliases unresolved game callsites; verify SDK ownership first",
+    "80286990": "TRKPostEvent aliases arithmetic-looking game callsites; verify SDK ownership first",
 }
 
 
