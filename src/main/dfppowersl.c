@@ -17,7 +17,10 @@ typedef void (*DfpPowerSlFreeFn)(u8 *obj);
 typedef void (*DfpPowerSlActivateFn)(u8 *obj,int objectId);
 typedef void (*DfpPowerSlRefreshFn)(int param_1,u8 *obj,int param_3);
 typedef void (*DfpPowerSlSpawnFn)(u8 *obj,int objectId,void *params,int param_4,int param_5,void *outObj);
+typedef int (*DfpPowerSlHitCallback)(u8 *obj);
 
+#define DFPPOWERSL_OBJECT_STATE_OFFSET 0xb8
+#define DFPPOWERSL_HIT_CALLBACK_OFFSET 0xbc
 #define DFPPOWERSL_PARAM_MODE 0x18
 #define DFPPOWERSL_PARAM_ACTIVATE_OBJECT_ID 0x1a
 #define DFPPOWERSL_PARAM_SPAWN_OBJECT_ID 0x1c
@@ -29,11 +32,11 @@ typedef void (*DfpPowerSlSpawnFn)(u8 *obj,int objectId,void *params,int param_4,
 #define DFPPOWERSL_HIT_VOLUME_SLOT 0x13
 #define DFPPOWERSL_HIT_VOLUME_ENABLED 1
 
-undefined4 dfppowersl_spawnSeqObjectsOnHit(u8 *obj);
+int dfppowersl_spawnSeqObjectsOnHit(u8 *obj);
 
 static inline DfpPowerSlState *dfppowersl_getState(u8 *obj)
 {
-  return *(DfpPowerSlState **)(obj + 0xb8);
+  return *(DfpPowerSlState **)(obj + DFPPOWERSL_OBJECT_STATE_OFFSET);
 }
 
 int dfppowersl_getExtraSize(void)
@@ -109,7 +112,8 @@ void dfppowersl_init(u8 *obj,u8 *params)
     if (*(s16 *)(params + DFPPOWERSL_PARAM_SPAWN_OBJECT_ID) <= 0) {
       *(s16 *)(params + DFPPOWERSL_PARAM_SPAWN_OBJECT_ID) = DFPPOWERSL_DEFAULT_PARAM_OBJECT_ID;
     }
-    *(undefined4 **)(obj + 0xbc) = (undefined4 *)dfppowersl_spawnSeqObjectsOnHit;
+    *(DfpPowerSlHitCallback *)(obj + DFPPOWERSL_HIT_CALLBACK_OFFSET) =
+        dfppowersl_spawnSeqObjectsOnHit;
     state->activateObjectId = *(s16 *)(params + DFPPOWERSL_PARAM_ACTIVATE_OBJECT_ID);
     state->spawnObjectId = *(s16 *)(params + DFPPOWERSL_PARAM_SPAWN_OBJECT_ID);
     state->eventId = *(s16 *)(params + DFPPOWERSL_PARAM_EVENT_ID);

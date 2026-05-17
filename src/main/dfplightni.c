@@ -269,7 +269,7 @@ void dfplightni_init(u8 *obj,DfpLightniMapData *mapData)
 
 #pragma scheduling off
 #pragma peephole off
-undefined4 dfppowersl_spawnSeqObjectsOnHit(u8 *obj)
+int dfppowersl_spawnSeqObjectsOnHit(u8 *obj)
 {
   int i;
   int outObj;
