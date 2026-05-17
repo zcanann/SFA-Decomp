@@ -47,14 +47,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   float frameValue;
 
   preservedEventState = eventState;
-  moveIndex = (int)animDef->moveGroupBaseIndices[(int)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
-              (moveId & OBJANIM_MOVE_INDEX_MASK);
-  if (moveIndex >= (int)animDef->moveCount) {
-    moveIndex = animDef->moveCount - 1;
-  }
-  if (moveIndex < 0) {
-    moveIndex = 0;
-  }
+  moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
@@ -413,14 +406,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   previousMove = objAnim->activeMove;
   moveChanged = previousMove != moveId;
   objAnim->activeMove = (s16)moveId;
-  moveId = (int)animDef->moveGroupBaseIndices[moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
-           (moveId & OBJANIM_MOVE_INDEX_MASK);
-  if (moveId >= (int)animDef->moveCount) {
-    moveId = animDef->moveCount - 1;
-  }
-  if (moveId < 0) {
-    moveId = 0;
-  }
+  moveId = ObjAnim_ResolveMoveIndex(animDef,moveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
@@ -1136,14 +1122,7 @@ int ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != requestedMoveId;
   objAnim->currentMove = (s16)requestedMoveId;
-  moveId = (int)animDef->moveGroupBaseIndices[requestedMoveId >> OBJANIM_MOVE_GROUP_SHIFT] +
-           (requestedMoveId & OBJANIM_MOVE_INDEX_MASK);
-  if (moveId >= (int)animDef->moveCount) {
-    moveId = animDef->moveCount - 1;
-  }
-  if (moveId < 0) {
-    moveId = 0;
-  }
+  moveId = ObjAnim_ResolveMoveIndex(animDef,requestedMoveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
