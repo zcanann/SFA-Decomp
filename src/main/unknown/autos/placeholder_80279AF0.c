@@ -198,7 +198,7 @@ void voiceFree(int state)
     *(u8 *)(state + 0x10c) = 0;
     {
         u32 voice = *(u32 *)(state + 0xf4);
-        u8 v = (u8)voice;
+        u32 v = voice & 0xff;
         VoiceIdSlot *slot = &voiceFreeListSlots[v];
         if (slot->active == 0) {
             slot->active = 1;
