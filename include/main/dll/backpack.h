@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801641b0(int param_1,undefined4 param_2);
+void tumbleweed_updateStateMachine(int obj);
 void FUN_801641f0(int param_1);
 void FUN_8016425c(int param_1);
 void FUN_80164354(int param_1);

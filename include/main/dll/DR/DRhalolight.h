@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-double FUN_801ecf94(int param_1,undefined4 *param_2);
+double SnowBike_hitDetect(int param_1,undefined4 *param_2);
 void FUN_801ed014(int param_1,int param_2);
 void FUN_801ed104(int param_1);
 void FUN_801ed188(void);

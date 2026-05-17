@@ -3,7 +3,8 @@
 
 #include "ghidra_import.h"
 
-void FUN_801ecec4(undefined4 param_1,int param_2);
+void SnowBike_render(void *obj,undefined4 p2,undefined4 p3,undefined4 p4,undefined4 p5,
+                     char visible);
 void FUN_801ecf58(int param_1);
 uint FUN_801ecf94(int param_1);
 void FUN_801ed004(short *param_1);
