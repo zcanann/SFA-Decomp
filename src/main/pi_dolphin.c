@@ -102,7 +102,7 @@ extern undefined4 FUN_802471c4();
 extern undefined4 FUN_802472b0();
 extern undefined4 FUN_802475b8();
 extern undefined4 FUN_80247618();
-extern undefined4 FUN_8024782c();
+extern undefined4 PSVECDotProduct();
 extern undefined4 FUN_80247944();
 extern undefined4 FUN_80247a48();
 extern undefined4 FUN_80247a7c();
@@ -3929,7 +3929,7 @@ void FUN_80049390(void)
   local_74 = lbl_803DF74C;
   local_70 = lbl_803DF7A0;
   local_6c = lbl_803DF7A0 * lbl_803DDA5C;
-  FUN_8024782c((double)lbl_803DF7A8,afStack_f8,0x79);
+  PSVECDotProduct((double)lbl_803DF7A8,afStack_f8,0x79);
   FUN_80247618(afStack_f8,&local_98,&local_98);
   FUN_80247618(&local_98,pfVar1,&local_98);
   FUN_80247618(afStack_188,&local_98,&local_98);
@@ -4131,7 +4131,7 @@ void FUN_80049910(undefined4 *param_1)
     local_50 = lbl_803DF74C;
     local_4c = lbl_803DF74C;
     local_48 = lbl_803DF748;
-    FUN_8024782c((double)lbl_803DF7A8,afStack_d4,0x7a);
+    PSVECDotProduct((double)lbl_803DF7A8,afStack_d4,0x7a);
     FUN_80247618(afStack_d4,&local_74,&local_74);
     FUN_80247618(&local_74,pfVar2,&local_74);
     FUN_8025d8c4(&local_74,DAT_803dda00 + 3,0);
@@ -4151,7 +4151,7 @@ void FUN_80049910(undefined4 *param_1)
     local_80 = lbl_803DF74C;
     local_7c = lbl_803DF74C;
     local_78 = lbl_803DF748;
-    FUN_8024782c((double)lbl_803DF7AC,afStack_d4,0x78);
+    PSVECDotProduct((double)lbl_803DF7AC,afStack_d4,0x78);
     FUN_80247618(afStack_d4,&local_a4,&local_a4);
     FUN_80247618(&local_a4,pfVar2,&local_a4);
     FUN_8025d8c4(&local_a4,DAT_803dda00 + 6,0);
