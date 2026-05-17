@@ -244,7 +244,7 @@ extern f32 FLOAT_803e6d80;
 /*
  * --INFO--
  *
- * Function: FUN_801f4f88
+ * Function: FireFlyFn_801f4f88
  * EN v1.0 Address: 0x801F4F88
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801F5194
@@ -254,7 +254,7 @@ extern f32 FLOAT_803e6d80;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f4f88(int param_1)
+void FireFlyFn_801f4f88(int param_1)
 {
 }
 

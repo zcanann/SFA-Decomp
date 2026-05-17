@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801f4f88(int param_1);
+void FireFlyFn_801f4f88(int param_1);
 void FUN_801f4f8c(int param_1);
 undefined4
 FUN_801f4f90(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
