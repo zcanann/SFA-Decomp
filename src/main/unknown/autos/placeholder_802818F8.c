@@ -198,7 +198,7 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
  * inpSetMidiCtrl14 - wrapper that splits a 16-bit data word into two
  * 7-bit MIDI controller bytes and dispatches to the MIDI-control setter.
  */
-void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u16 data)
+void inpSetMidiCtrl14(int controller, u8 slot, u8 key, u16 data)
 {
     u8 ctrl;
 
@@ -209,23 +209,20 @@ void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u16 data)
     ctrl = controller;
     if (ctrl < 0x40) {
         u32 base = ctrl & 0x1f;
-        u16 value = data;
         inpSetMidiCtrl(base, slot, key, (data >> 7) & 0xff);
-        inpSetMidiCtrl(base + 0x20, slot, key, value & 0x7f);
+        inpSetMidiCtrl(base + 0x20, slot, key, data & 0x7f);
         return;
     }
     if ((u8)(controller - 0x80) <= 1U) {
         u32 base = ctrl & 0xfe;
-        u16 value = data;
         inpSetMidiCtrl(base, slot, key, (data >> 7) & 0xff);
-        inpSetMidiCtrl(base + 1, slot, key, value & 0x7f);
+        inpSetMidiCtrl(base + 1, slot, key, data & 0x7f);
         return;
     }
     if ((u8)(controller - 0x84) <= 1U) {
         u32 base = ctrl & 0xfe;
-        u16 value = data;
         inpSetMidiCtrl(base, slot, key, (data >> 7) & 0xff);
-        inpSetMidiCtrl(base + 1, slot, key, value & 0x7f);
+        inpSetMidiCtrl(base + 1, slot, key, data & 0x7f);
         return;
     }
     inpSetMidiCtrl(controller, slot, key, (data >> 7) & 0xff);
