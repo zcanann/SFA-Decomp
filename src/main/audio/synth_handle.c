@@ -48,24 +48,24 @@ void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode) {
 
     runtime = SYNTH_VOICE_RUNTIME();
     for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next) {
-        if (voice->handle == (handle & 0x7FFFFFFF)) {
-            studioIndex = (handle & 0x80000000) | voice->slotIndex;
+        if (voice->handle == (handle & SYNTH_HANDLE_ID_MASK)) {
+            studioIndex = (handle & SYNTH_HANDLE_QUEUED_FLAG) | voice->slotIndex;
             goto resolved;
         }
     }
 
     for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next) {
-        if (voice->handle == (handle & 0x7FFFFFFF)) {
-            studioIndex = (handle & 0x80000000) | voice->slotIndex;
+        if (voice->handle == (handle & SYNTH_HANDLE_ID_MASK)) {
+            studioIndex = (handle & SYNTH_HANDLE_QUEUED_FLAG) | voice->slotIndex;
             goto resolved;
         }
     }
 
-    studioIndex = 0xFFFFFFFF;
+    studioIndex = SYNTH_HANDLE_INVALID;
 
 resolved:
-    if (studioIndex != 0xFFFFFFFF) {
-        if ((studioIndex & 0x80000000) == 0) {
+    if (studioIndex != SYNTH_HANDLE_INVALID) {
+        if ((studioIndex & SYNTH_HANDLE_QUEUED_FLAG) == 0) {
             synthVolume(value0, value1, runtime->voices[studioIndex].currentStudio, mode, handle);
             voice = &runtime->voices[studioIndex];
             voiceBytes = (u8*)voice;
@@ -73,7 +73,7 @@ resolved:
             voiceIndex = 0;
             do {
                 if (voiceBytes[SYNTH_VOICE_STUDIO_MAP_OFFSET] != runtime->voices[studioIndex].currentStudio) {
-                    synthVolume(value0, value1, voiceCursor[SYNTH_VOICE_STUDIO_MAP_OFFSET], 0, 0xFFFFFFFF);
+                    synthVolume(value0, value1, voiceCursor[SYNTH_VOICE_STUDIO_MAP_OFFSET], 0, SYNTH_HANDLE_INVALID);
                 }
                 voiceBytes++;
                 voiceCursor++;
@@ -81,7 +81,7 @@ resolved:
             } while (voiceIndex < SYNTH_SEQUENCE_TRACK_COUNT);
         } else {
             mode &= 0xF;
-            voiceIndex = studioIndex & 0x7FFFFFFF;
+            voiceIndex = studioIndex & SYNTH_HANDLE_ID_MASK;
             switch (mode) {
             case 0:
                 runtime->voices[voiceIndex].pendingUpdate.studio = (u8)value0;
@@ -126,22 +126,22 @@ void synthStartHandleFromRequest(SynthStartRequest* request, u32* outHandle, u8 
     handle = request->handle;
     runtime = SYNTH_VOICE_RUNTIME();
 
-    resolvedHandle = handle & 0x7FFFFFFF;
+    resolvedHandle = handle & SYNTH_HANDLE_ID_MASK;
     for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next) {
         if (voice->handle == resolvedHandle) {
-            slot = voice->slotIndex | (handle & 0x80000000);
+            slot = voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
             goto resolved_initial;
         }
     }
 
     for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next) {
         if (voice->handle == resolvedHandle) {
-            slot = voice->slotIndex | (handle & 0x80000000);
+            slot = voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
             goto resolved_initial;
         }
     }
 
-    slot = 0xFFFFFFFF;
+    slot = SYNTH_HANDLE_INVALID;
 
 resolved_initial:
     flags = request->flags;
@@ -161,7 +161,7 @@ resolved_initial:
         SYNTH_VOICE_PENDING_START_ACTIVE(pendingVoice) = 1;
         SYNTH_VOICE_PENDING_START_OUT_HANDLE(pendingVoice) = outHandle;
         pendingRequest->flags &= (u8)~SYNTH_START_FLAG_PENDING_START;
-        *outHandle = request->handle | 0x80000000;
+        *outHandle = request->handle | SYNTH_HANDLE_QUEUED_FLAG;
         return;
     }
 
@@ -193,26 +193,26 @@ resolved_initial:
 
     if ((request->flags & SYNTH_START_FLAG_REUSE_HANDLE) != 0) {
         handle = request->reuseHandle;
-        resolvedHandle = handle & 0x7FFFFFFF;
+        resolvedHandle = handle & SYNTH_HANDLE_ID_MASK;
         for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next) {
             if (voice->handle == resolvedHandle) {
-                slot = voice->slotIndex | (handle & 0x80000000);
+                slot = voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
                 goto resolved_reuse;
             }
         }
 
         for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next) {
             if (voice->handle == resolvedHandle) {
-                slot = voice->slotIndex | (handle & 0x80000000);
+                slot = voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
                 goto resolved_reuse;
             }
         }
 
-        slot = 0xFFFFFFFF;
+        slot = SYNTH_HANDLE_INVALID;
 
 resolved_reuse:
-        if (slot == 0xFFFFFFFF) {
-            *outHandle = 0xFFFFFFFF;
+        if (slot == SYNTH_HANDLE_INVALID) {
+            *outHandle = SYNTH_HANDLE_INVALID;
             return;
         }
 
@@ -223,21 +223,21 @@ resolved_reuse:
                 mixValue1 = request->mixValue1;
                 mixValue0 = request->mixValue0;
                 newHandle = synthResolveHandle(request->reuseHandle);
-                if (newHandle != 0xFFFFFFFF) {
-                    if ((newHandle & 0x80000000) == 0) {
+                if (newHandle != SYNTH_HANDLE_INVALID) {
+                    if ((newHandle & SYNTH_HANDLE_QUEUED_FLAG) == 0) {
                         runtime->voices[newHandle].immediateMixValue0 = mixValue0;
                         runtime->voices[newHandle].immediateMixValue1 = mixValue1;
                     } else {
-                        runtime->voices[newHandle & 0x7FFFFFFF].pendingUpdate.flags |= 0x10;
-                        runtime->voices[newHandle & 0x7FFFFFFF].pendingUpdate.mixValue0 = mixValue0;
-                        runtime->voices[newHandle & 0x7FFFFFFF].pendingUpdate.mixValue1 = mixValue1;
+                        runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= 0x10;
+                        runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue0 = mixValue0;
+                        runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue1 = mixValue1;
                     }
                 }
             }
             if ((request->flags & SYNTH_START_FLAG_SPEED) != 0) {
                 speed = request->value16;
                 newHandle = synthResolveHandle(request->reuseHandle);
-                if ((newHandle & 0x80000000) == 0) {
+                if ((newHandle & SYNTH_HANDLE_QUEUED_FLAG) == 0) {
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 0) = speed;
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 1) = speed;
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 2) = speed;
@@ -255,8 +255,8 @@ resolved_reuse:
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 14) = speed;
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 15) = speed;
                 } else {
-                    runtime->voices[newHandle & 0x7FFFFFFF].pendingUpdate.flags |= 0x20;
-                    runtime->voices[newHandle & 0x7FFFFFFF].pendingUpdate.value16 = speed;
+                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= 0x20;
+                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.value16 = speed;
                 }
             }
         } else {
@@ -293,23 +293,23 @@ resolved_reuse:
     if (noLock != 0) {
         newHandle = fn_8027B89C(request->groupId, request->sampleId, request->seqId, &params, 1, request->startStudio);
         *outHandle = newHandle;
-        if ((newHandle != 0xFFFFFFFF) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
+        if ((newHandle != SYNTH_HANDLE_INVALID) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
             newHandle = synthResolveHandle(*outHandle);
-            if (newHandle != 0xFFFFFFFF) {
-                if ((newHandle & 0x80000000) == 0) {
+            if (newHandle != SYNTH_HANDLE_INVALID) {
+                if ((newHandle & SYNTH_HANDLE_QUEUED_FLAG) == 0) {
                     runtime->voices[newHandle].immediateMixValue0 = 0;
                     runtime->voices[newHandle].immediateMixValue1 = 0;
                 } else {
-                    runtime->voices[newHandle & 0x7FFFFFFF].pendingUpdate.flags |= 0x10;
-                    runtime->voices[newHandle & 0x7FFFFFFF].pendingUpdate.mixValue0 = 0;
-                    runtime->voices[newHandle & 0x7FFFFFFF].pendingUpdate.mixValue1 = 0;
+                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= 0x10;
+                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue0 = 0;
+                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue1 = 0;
                 }
             }
         }
     } else {
         newHandle = fn_8027B9DC(request->groupId, request->sampleId, request->seqId, &params, request->startStudio);
         *outHandle = newHandle;
-        if ((newHandle != 0xFFFFFFFF) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
+        if ((newHandle != SYNTH_HANDLE_INVALID) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
             sndSeqMute(*outHandle, 0, 0);
         }
     }

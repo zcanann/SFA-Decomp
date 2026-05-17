@@ -16,6 +16,9 @@ typedef float f32;
 #define SYNTH_STUDIO_CHANNEL_SCALE_STUDIO_COUNT 9
 #define SYNTH_DELAY_BUCKET_COUNT 0x20
 #define SYNTH_DELAY_BUCKET_INVALID 0xFF
+#define SYNTH_HANDLE_INVALID 0xFFFFFFFF
+#define SYNTH_HANDLE_ID_MASK 0x7FFFFFFF
+#define SYNTH_HANDLE_QUEUED_FLAG 0x80000000
 
 typedef struct SynthCallbackLink {
     struct SynthCallbackLink* next;

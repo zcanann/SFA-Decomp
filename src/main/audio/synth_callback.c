@@ -197,22 +197,22 @@ u32 synthAssignHandle(s32 voiceIndex) {
         allocatedVoices = gSynthAllocatedVoices;
         handle = gSynthNextHandle;
         gSynthNextHandle = handle + 1;
-        gSynthNextHandle &= 0x7FFFFFFF;
+        gSynthNextHandle &= SYNTH_HANDLE_ID_MASK;
 
         for (current = queuedVoices; current != 0; current = current->next) {
             if (current->handle == handle) {
-                handle = 0xFFFFFFFF;
+                handle = SYNTH_HANDLE_INVALID;
                 break;
             }
         }
 
         for (current = allocatedVoices; current != 0; current = current->next) {
             if (current->handle == handle) {
-                handle = 0xFFFFFFFF;
+                handle = SYNTH_HANDLE_INVALID;
                 break;
             }
         }
-    } while (handle == 0xFFFFFFFF);
+    } while (handle == SYNTH_HANDLE_INVALID);
 
     gSynthVoices[voiceIndex].handle = handle;
     return handle;
@@ -221,16 +221,16 @@ u32 synthAssignHandle(s32 voiceIndex) {
 u32 synthResolveHandle(u32 handle) {
     SynthVoice* voice;
     for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next) {
-        if (voice->handle == (handle & 0x7FFFFFFF)) {
-            return voice->slotIndex | (handle & 0x80000000);
+        if (voice->handle == (handle & SYNTH_HANDLE_ID_MASK)) {
+            return voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
         }
     }
 
     for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next) {
-        if (voice->handle == (handle & 0x7FFFFFFF)) {
-            return voice->slotIndex | (handle & 0x80000000);
+        if (voice->handle == (handle & SYNTH_HANDLE_ID_MASK)) {
+            return voice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
         }
     }
 
-    return 0xFFFFFFFF;
+    return SYNTH_HANDLE_INVALID;
 }
