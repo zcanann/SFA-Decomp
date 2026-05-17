@@ -10,7 +10,7 @@ extern f32 lbl_803E5FE8;
 /*
  * --INFO--
  *
- * Function: FUN_801d2c54
+ * Function: bombplant_update
  * EN v1.0 Address: 0x801D2C54
  * EN v1.0 Size: 168b
  * EN v1.1 Address: 0x801D2DA8
@@ -20,7 +20,7 @@ extern f32 lbl_803E5FE8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d2c54(undefined2 *param_1,int param_2,int param_3)
+void bombplant_update(undefined2 *param_1,int param_2,int param_3)
 {
   float fVar1;
   int iVar2;
