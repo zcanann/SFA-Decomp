@@ -67,7 +67,7 @@ extern undefined4 DAT_803bef8a;
 extern undefined4 DAT_803befae;
 extern undefined4 DAT_803befd2;
 extern undefined4 DAT_803d4900;
-extern u8 lbl_803DE238;
+extern u8 gSynthInitialized;
 extern u8 salTimeOffset;
 extern u8 salNumVoices;
 extern u8 salAuxFrame;
@@ -114,10 +114,12 @@ extern void synthUpdateVirtualSamples(void);
 void snd_handle_irq(void)
 {
     u32 offset;
-    u32 i;
+    u32 voiceIndex;
+    u32 timeOffset;
+    u32 clearValue;
     u8 *entry;
 
-    if (lbl_803DE238 == 0) {
+    if (gSynthInitialized == 0) {
         return;
     }
 
@@ -133,33 +135,34 @@ void snd_handle_irq(void)
     salAuxFrame = (salAuxFrame + 1) % 3;
     salFrame ^= 1;
 
+    clearValue = 0;
     offset = 0;
-    i = 0;
-    while ((u8)i < salNumVoices) {
+    voiceIndex = 0;
+    while ((u8)voiceIndex < salNumVoices) {
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x24) = 0;
+        *(u32 *)(entry + offset + 0x24) = clearValue;
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x28) = 0;
+        *(u32 *)(entry + offset + 0x28) = clearValue;
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x2c) = 0;
+        *(u32 *)(entry + offset + 0x2c) = clearValue;
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x30) = 0;
+        *(u32 *)(entry + offset + 0x30) = clearValue;
         entry = dspVoice;
-        *(u32 *)(entry + offset + 0x34) = 0;
+        *(u32 *)(entry + offset + 0x34) = clearValue;
         offset += 0xf4;
-        i++;
+        voiceIndex++;
     }
 
     hwIRQLeaveCritical();
 
-    i = 0;
-    while ((u8)i < 5) {
+    timeOffset = 0;
+    while ((u8)timeOffset < 5) {
         hwIRQEnterCritical();
-        hwSetTimeOffset(i);
+        hwSetTimeOffset(timeOffset);
         fn_8026EC44(0x100);
         audioFn_80271498(0x100);
         hwIRQLeaveCritical();
-        i++;
+        timeOffset++;
     }
 
     hwIRQEnterCritical();
