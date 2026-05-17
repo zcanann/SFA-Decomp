@@ -7,7 +7,8 @@ extern u8 synthVirtualSampleState[];
 #define SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET 0x94c
 #define SYNTH_VIRTUAL_SAMPLE_FREE_SLOT 0xff
 #define SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE 5
-#define SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES 14
+#define SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES 14
+#define SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES 8
 
 #define VIRTUAL_SAMPLE_MODE_OFFSET 0
 #define VIRTUAL_SAMPLE_TYPE_OFFSET 2
@@ -65,11 +66,14 @@ void synthHandleVirtualSampleDone(u32 packed)
 
 void synthAdvanceVirtualSampleEntry(void *entry, u32 elapsed)
 {
+    u8 *state;
     u8 *sample;
+    u32 *loopSizePtr;
     u32 position;
     u32 loopSize;
-    int advanced;
+    u32 advanced;
 
+    state = synthVirtualSampleState;
     sample = entry;
     position = *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET);
     if (position == elapsed) {
@@ -77,61 +81,67 @@ void synthAdvanceVirtualSampleEntry(void *entry, u32 elapsed)
     }
 
     if (position < elapsed) {
-        if (sample[VIRTUAL_SAMPLE_TYPE_OFFSET] == SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE) {
+        if ((int)sample[VIRTUAL_SAMPLE_TYPE_OFFSET] == SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE) {
             *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_START_OFFSET) =
-                ((position / 7) * SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES) & ~7;
+                (position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
+                SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
             *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_SIZE_OFFSET) =
                 elapsed - *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET);
             *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_WRAP_A_OFFSET) = 0;
             *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_WRAP_B_OFFSET) = 0;
-            advanced = ((int (*)(int, void *))(*(u32 *)(synthVirtualSampleState +
+            advanced = ((int (*)(int, void *))(*(u32 *)(state +
                                                         SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET)))(
                 1, sample + VIRTUAL_SAMPLE_CALLBACK_DATA_OFFSET);
-            if (advanced != 0) {
+            if (advanced != 0U) {
                 position = *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET) + advanced;
-                loopSize = *(u32 *)(synthVirtualSampleState +
-                                    SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET);
+                loopSize = *(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET);
                 *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET) =
                     position - (position / loopSize) * loopSize;
             }
+        } else {
+            return;
         }
     } else if (elapsed == 0) {
-        if (sample[VIRTUAL_SAMPLE_TYPE_OFFSET] == SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE) {
+        if ((int)sample[VIRTUAL_SAMPLE_TYPE_OFFSET] == SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE) {
             *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_START_OFFSET) =
-                ((position / 7) * SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES) & ~7;
+                (position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
+                SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
+            loopSizePtr = (u32 *)(state + SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET);
             *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_SIZE_OFFSET) =
-                *(u32 *)(synthVirtualSampleState + SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET) -
-                *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET);
+                *loopSizePtr - *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET);
             *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_WRAP_A_OFFSET) = 0;
             *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_WRAP_B_OFFSET) = 0;
-            advanced = ((int (*)(int, void *))(*(u32 *)(synthVirtualSampleState +
+            advanced = ((int (*)(int, void *))(*(u32 *)(state +
                                                         SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET)))(
                 1, sample + VIRTUAL_SAMPLE_CALLBACK_DATA_OFFSET);
-            if (advanced != 0) {
+            if (advanced != 0U) {
                 position = *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET) + advanced;
-                loopSize = *(u32 *)(synthVirtualSampleState +
-                                    SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET);
+                loopSize = *loopSizePtr;
                 *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET) =
                     position - (position / loopSize) * loopSize;
             }
+        } else {
+            return;
         }
-    } else if (sample[VIRTUAL_SAMPLE_TYPE_OFFSET] == SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE) {
+    } else if ((int)sample[VIRTUAL_SAMPLE_TYPE_OFFSET] == SYNTH_VIRTUAL_SAMPLE_STREAM_TYPE) {
         *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_START_OFFSET) =
-            ((position / 7) * SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES) & ~7;
+            (position / SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_SAMPLES) *
+            SYNTH_VIRTUAL_SAMPLE_ADPCM_FRAME_BYTES;
+        loopSizePtr = (u32 *)(state + SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET);
         *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_SIZE_OFFSET) =
-            *(u32 *)(synthVirtualSampleState + SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET) -
-            *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET);
+            *loopSizePtr - *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET);
         *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_WRAP_A_OFFSET) = 0;
         *(u32 *)(sample + VIRTUAL_SAMPLE_CALLBACK_WRAP_B_OFFSET) = elapsed;
-        advanced = ((int (*)(int, void *))(*(u32 *)(synthVirtualSampleState +
+        advanced = ((int (*)(int, void *))(*(u32 *)(state +
                                                     SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET)))(
             1, sample + VIRTUAL_SAMPLE_CALLBACK_DATA_OFFSET);
-        if (advanced != 0) {
+        if (advanced != 0U) {
             position = *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET) + advanced;
-            loopSize =
-                *(u32 *)(synthVirtualSampleState + SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET);
+            loopSize = *loopSizePtr;
             *(u32 *)(sample + VIRTUAL_SAMPLE_POSITION_OFFSET) =
                 position - (position / loopSize) * loopSize;
         }
+    } else {
+        return;
     }
 }
