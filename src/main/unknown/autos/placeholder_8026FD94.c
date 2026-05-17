@@ -15,6 +15,31 @@ typedef struct SynthDelayStorageLocal {
     SynthDelayedNode *bucketHeads[0x20][3];
 } SynthDelayStorageLocal;
 
+#define SYNTH_FADE_COUNT 0x20
+#define SYNTH_FADE_TABLE_OFFSET 0x5d4
+#define SYNTH_FADE_DELAY_ACTION_FREE_HANDLE 1
+#define SYNTH_FADE_DELAY_ACTION_QUEUE_HANDLE 2
+#define SYNTH_FADE_DELAY_ACTION_CLEAR_MIX 3
+#define SYNTH_VOICE_SLOT_SIZE 0x404
+#define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET 0x11c
+
+typedef struct SynthFade {
+    f32 current;
+    f32 target;
+    f32 start;
+    f32 progress;
+    f32 progressStep;
+    f32 auxCurrent;
+    f32 auxTarget;
+    f32 auxStart;
+    f32 auxProgress;
+    f32 auxProgressStep;
+    u32 handle;
+    u8 delayAction;
+    u8 type;
+    u8 pad[2];
+} SynthFade;
+
 extern SynthDelayStorageLocal gSynthDelayStorage;
 extern u8 gSynthDelayBucketCursor;
 extern void synthQueueDelayedUpdate(SynthDelayedNode *fade, int mode, u32 delay);
@@ -351,7 +376,8 @@ void synthDrainDelayedBucket(SynthDelayedNode **head, SynthDelayedBucketCallback
         node->bucketIndex = 0xff;
         {
             int voiceIndex = node->voiceIndex;
-            if (*(u8 *)(synthVoice + voiceIndex * 0x404 + 0x11c) == 0) {
+            if (*(u8 *)(synthVoice + voiceIndex * SYNTH_VOICE_SLOT_SIZE +
+                        SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) == 0) {
                 callback(voiceIndex);
             }
         }
@@ -366,20 +392,20 @@ void synthDrainDelayedBucket(SynthDelayedNode **head, SynthDelayedBucketCallback
  *
  * EN v1.1 Address: 0x8027142C, size 108b
  */
-void synthDispatchFadeAction(u8 *fade)
+void synthDispatchFadeAction(SynthFade *fade)
 {
     u8 action;
 
-    action = fade[0x2c];
+    action = fade->delayAction;
     switch (action) {
-    case 1:
-        synthFreeHandle(*(u32 *)(fade + 0x28));
+    case SYNTH_FADE_DELAY_ACTION_FREE_HANDLE:
+        synthFreeHandle(fade->handle);
         break;
-    case 2:
-        synthQueueHandle(*(u32 *)(fade + 0x28));
+    case SYNTH_FADE_DELAY_ACTION_QUEUE_HANDLE:
+        synthQueueHandle(fade->handle);
         break;
-    case 3:
-        synthSetHandleMixData(*(u32 *)(fade + 0x28), 0, 0);
+    case SYNTH_FADE_DELAY_ACTION_CLEAR_MIX:
+        synthSetHandleMixData(fade->handle, 0, 0);
         break;
     }
 }
@@ -417,16 +443,16 @@ void audioFn_80271498(u32 delta)
         if (hwGetTimeOffset() == 0) {
             if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0) {
                 zeroThreshold = lbl_803E77D0;
-                fade = (f32 *)(stateBase + 0x5d4);
+                fade = (f32 *)(stateBase + SYNTH_FADE_TABLE_OFFSET);
                 mask = 1;
-                for (fadeIndex = 0; fadeIndex < 0x20; fadeIndex++) {
+                for (fadeIndex = 0; fadeIndex < SYNTH_FADE_COUNT; fadeIndex++) {
                     if ((synthMasterFaderActiveFlags & mask) != 0) {
                         fadeDelta = fade[3] * (fade[1] - fade[2]);
                         fade[0] = fade[1] - fadeDelta;
                         fade[3] = fade[3] - fade[4];
                         if (fade[3] <= zeroThreshold) {
                             fade[0] = fade[1];
-                            synthDispatchFadeAction((u8 *)fade);
+                            synthDispatchFadeAction((SynthFade *)fade);
                             synthMasterFaderActiveFlags &= ~mask;
                             if ((synthMasterFaderActiveFlags == 0) && (synthMasterFaderPauseActiveFlags == 0)) {
                                 break;
