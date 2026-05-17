@@ -2970,6 +2970,7 @@ s32 Angle_SubWrappedS16(s32 angle, s16 *delta)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
     f32 vec[3];
@@ -3067,6 +3068,7 @@ void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
         *outZ = z;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
