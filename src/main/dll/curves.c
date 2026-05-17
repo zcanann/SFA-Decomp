@@ -127,7 +127,7 @@ static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
 /*
  * --INFO--
  *
- * Function: fn_800E1B24
+ * Function: RomCurve_projectPointToAdjacentWindow
  * EN v1.0 Address: 0x800E1B24
  * EN v1.0 Size: 1048b
  * EN v1.1 Address: 0x800E1DA8
@@ -138,8 +138,9 @@ static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
  * PAL Size: TODO
  */
 undefined4
-fn_800E1B24(double x,double y,double z,u32 *curveIds,float *outLateralOffset,
-            float *outVerticalOffset,float *outPhase)
+RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
+                                      float *outLateralOffset,float *outVerticalOffset,
+                                      float *outPhase)
 {
   RomCurveDef *curves[4];
   RomCurveDef *prevCurve;
