@@ -23,7 +23,7 @@ extern undefined4 ObjMsg_AllocQueue();
 extern int FUN_800620e8();
 extern int FUN_800632f4();
 extern undefined4 FUN_80081118();
-extern undefined4 FUN_801d083c();
+extern undefined4 edibleMushroomFn_801d083c();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
@@ -316,8 +316,8 @@ void FUN_801d1b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
           }
         }
       }
-      FUN_801d083c(dVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(short *)puVar1,
-                   pfVar7,iVar6,pfVar5,in_r7,in_r8,in_r9,in_r10);
+      edibleMushroomFn_801d083c(dVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                                (short *)puVar1,pfVar7,iVar6,pfVar5,in_r7,in_r8,in_r9,in_r10);
     }
   }
   FUN_8028688c();
