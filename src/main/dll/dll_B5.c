@@ -13,7 +13,7 @@ extern int FUN_80017a54();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern undefined4 lockIconTexCb();
-extern undefined4 FUN_80100fa0();
+extern undefined4 lockIconInit();
 
 extern undefined4 gCamcontrolTargetReticle;
 extern undefined4 DAT_803de13c;
@@ -24,7 +24,7 @@ extern f32 lbl_803E22C0;
 /*
  * --INFO--
  *
- * Function: FUN_801010b4
+ * Function: camcontrol_findBestTarget
  * EN v1.0 Address: 0x801010B4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8010123C
@@ -34,7 +34,7 @@ extern f32 lbl_803E22C0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801010b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void camcontrol_findBestTarget(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }

@@ -14,7 +14,7 @@ extern undefined4 FUN_80043030();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 extern undefined8 FUN_80080f24();
-extern undefined8 FUN_801010b4();
+extern undefined8 camcontrol_findBestTarget();
 extern undefined4 movieFn_80117b68();
 extern undefined4 fn_801181F8();
 extern undefined4 fn_8011881C();
