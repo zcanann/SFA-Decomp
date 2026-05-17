@@ -1376,6 +1376,7 @@ u32 audioIsResetting(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void audioStopAll(void)
 {
     gAudioResetting = 1;
@@ -1390,6 +1391,7 @@ void audioStopAll(void)
     }
     AudioStream_CancelPrepared();
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2710,10 +2712,12 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
 {
     Sfx_KeepAliveLoopedObjectSoundLimited(obj, sfxId, 0);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
