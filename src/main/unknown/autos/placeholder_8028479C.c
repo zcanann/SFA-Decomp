@@ -15,7 +15,7 @@ extern u32 salDspCallbackEnabled;
 extern u32 salDspCallbackPending;
 extern u32 salCallbackActive;
 extern u32 salLastTick;
-extern u32 salDspInitIsDone;
+extern volatile u32 salDspInitIsDone;
 extern u8 salAIBufferIndex;
 
 #define SAL_AI_BUFFER_COUNT 4
