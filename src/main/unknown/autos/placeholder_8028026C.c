@@ -12,14 +12,24 @@ typedef struct S3DEmitterCtrlList {
     S3DEmitterCtrl *entries;
 } S3DEmitterCtrlList;
 
+typedef struct SndSpatialEntryLite {
+    u8 pad00[0x1c];
+    s8 assignedVoice;
+} SndSpatialEntryLite;
+
 typedef struct Snd3DEmitterLite {
-    u8 pad00[0x0c];
+    u8 pad00[0x08];
+    SndSpatialEntryLite *entry;
     S3DEmitterCtrlList *ctrlList;
     u32 flags;
     u8 pad14[0x3c - 0x14];
     u32 handle;
     u32 groupKey;
-    u8 pad44[0x4c - 0x44];
+    u16 fxId;
+    u8 studio;
+    u8 maxVoices;
+    u16 retryCounter;
+    u8 pad4a[0x4c - 0x4a];
     f32 age;
 } Snd3DEmitterLite;
 
@@ -51,22 +61,34 @@ extern u8 lbl_803CC8C0[];
 extern u8 lbl_803DE36B;
 extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
+extern u8 lbl_803DE36A;
+extern f32 lbl_803E7880;
 extern f32 lbl_803E78A0;
 extern f32 lbl_803E78A4;
 extern f32 lbl_803E78B4;
 extern f32 lbl_803E78B8;
+extern f32 lbl_803E78BC;
+extern f32 lbl_803E78C0;
 
+extern u32 synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
 extern u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 
 #define S3D_MAX_GROUPS 0x40
 #define S3D_MAX_ACTIVE_NODES 0x40
+#define S3D_EMITTER_FLAG_RESTART_ON_STOP 0x00000002
+#define S3D_EMITTER_FLAG_USE_AUX_STUDIO 0x00000010
+#define S3D_EMITTER_FLAG_SKIP_FADE_IN 0x00000020
+#define S3D_EMITTER_FLAG_PLAYING 0x00020000
+#define S3D_EMITTER_FLAG_REMOVE 0x00040000
 #define S3D_EMITTER_FLAG_AGE_OUT 0x00100000
 #define S3D_CTRL_VOLUME 0x07
 #define S3D_CTRL_PAN 0x0a
 #define S3D_CTRL_SPATIAL_AZIMUTH 0x83
 #define S3D_CTRL_SPATIAL_PITCH 0x84
 #define S3D_CTRL_14BIT_LIMIT 0x3fff
+#define S3D_GROUP_KEY_STEREO_LIMIT 0x80000000
+#define S3D_INVALID_FX_HANDLE 0xffffffff
 #define S3D_MIX_GROUPS ((S3DMixGroup *)(lbl_803CC8C0 + 0x50))
 #define S3D_ACTIVE_NODES ((S3DActiveNode *)(lbl_803CC8C0 + 0x450))
 #define S3D_SORTED_NODES ((S3DSortedNode *)(lbl_803CC8C0 + 0xb50))
@@ -266,9 +288,94 @@ int fn_802808D8(Snd3DEmitterLite *emitter, f32 distance, f32 arg1, f32 arg2, f32
 }
 #pragma dont_inline reset
 
-/*
- * audioFn_80280a08 - 552-instr voice list walker with FP math. Stubbed.
- */
 #pragma dont_inline on
-void audioFn_80280a08(void) {}
+void audioFn_80280a08(void)
+{
+    S3DMixGroup *group;
+    S3DActiveNode *node;
+    Snd3DEmitterLite *emitter;
+    SndSpatialEntryLite *entry;
+    u32 groupIndex;
+    u32 handle;
+    u8 studio;
+    f32 lowerWindow;
+    f32 upperWindow;
+    f32 zero;
+    f32 one;
+    f32 distanceDelta;
+
+    group = S3D_MIX_GROUPS;
+    groupIndex = 0;
+    zero = lbl_803E7880;
+    one = lbl_803E78A4;
+    upperWindow = lbl_803E78C0;
+    lowerWindow = lbl_803E78BC;
+
+    while (groupIndex < lbl_803DE36B) {
+        node = group->activeHead;
+        while (node != (S3DActiveNode *)0x0) {
+            if (group->sortedHead == (S3DSortedNode *)0x0) {
+                goto start_voice;
+            }
+            if ((lbl_803DE36A != 0) && ((group->key & S3D_GROUP_KEY_STEREO_LIMIT) != 0) &&
+                (group->sortedCount < group->activeHead->emitter->maxVoices)) {
+                goto start_voice;
+            }
+
+            distanceDelta = node->distance - group->sortedHead->distance;
+            if (distanceDelta > lowerWindow) {
+                if (distanceDelta <= upperWindow) {
+                    emitter = node->emitter;
+                    emitter->retryCounter++;
+                    if (emitter->retryCounter < 0x14) {
+                        goto next_node;
+                    }
+                } else {
+                    node->emitter->retryCounter = 0;
+                }
+
+start_voice:
+                emitter = node->emitter;
+                entry = emitter->entry;
+                if ((entry == (SndSpatialEntryLite *)0x0) || (entry->assignedVoice != -1)) {
+                    if (entry == (SndSpatialEntryLite *)0x0) {
+                        studio = emitter->studio;
+                    } else {
+                        studio = entry->assignedVoice;
+                    }
+
+                    handle = synthFXStart(emitter->fxId, 0x7f, 0x40, studio,
+                                          (emitter->flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0);
+                    emitter->handle = handle;
+                    if (handle != S3D_INVALID_FX_HANDLE) {
+                        if ((emitter->flags & S3D_EMITTER_FLAG_SKIP_FADE_IN) == 0) {
+                            emitter->flags |= S3D_EMITTER_FLAG_AGE_OUT;
+                            emitter->age = zero;
+                        } else {
+                            emitter->age = one;
+                        }
+                        fn_802805A4(emitter, node->distance, node->arg1, node->arg2, node->arg3,
+                                     node->arg4);
+                        emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
+                        group->sortedCount++;
+                        if (group->sortedHead != (S3DSortedNode *)0x0) {
+                            group->sortedHead = group->sortedHead->next;
+                        }
+                        goto next_node;
+                    }
+                }
+
+                if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0) {
+                    emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
+                    emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
+                }
+            }
+
+next_node:
+            node = node->next;
+        }
+        group++;
+        groupIndex++;
+    }
+}
 #pragma dont_inline reset
