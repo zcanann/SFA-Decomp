@@ -26,11 +26,7 @@ void aramQueueCallback(void *req)
     u8 *callbackSlot;
     u32 i;
 
-    if (*(u32 *)((u8 *)req + 0xc) == 1) {
-        base = lbl_803D41E4;
-    } else {
-        base = lbl_803D3F60;
-    }
+    base = (*(u32 *)((u8 *)req + 0xc) == 1) ? lbl_803D41E4 : lbl_803D3F60;
     i = 0;
     callbackSlot = base + i * 0x28;
     slot = base;
@@ -62,28 +58,22 @@ void aramQueueCallback(void *req)
 void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg)
 {
     u8 *base;
-    u8 *slot;
     BOOL irq;
 
-    if (mode != 0) {
-        base = lbl_803D41E4;
-    } else {
-        base = lbl_803D3F60;
-    }
+    base = (mode != 0) ? lbl_803D41E4 : lbl_803D3F60;
 
     while (1) {
         irq = OSDisableInterrupts();
         if (base[0x281] < 0x10) {
-            slot = base + base[0x280] * 0x28;
-            *(u32 *)(slot + 0x4) = 0x2a;
-            *(u32 *)(slot + 0x8) = 0;
-            *(u32 *)(slot + 0xc) = (mode != 0) ? 1 : 0;
-            *(u32 *)(slot + 0x10) = src;
-            *(u32 *)(slot + 0x14) = dst;
-            *(u32 *)(slot + 0x18) = size;
-            *(u32 *)(slot + 0x1c) = (u32)aramQueueCallback;
-            *(u32 *)(slot + 0x20) = callback;
-            *(u32 *)(slot + 0x24) = callbackArg;
+            *(u32 *)(base + base[0x280] * 0x28 + 0x4) = 0x2a;
+            *(u32 *)(base + base[0x280] * 0x28 + 0x8) = 0;
+            *(u32 *)(base + base[0x280] * 0x28 + 0xc) = (mode != 0) ? 1 : 0;
+            *(u32 *)(base + base[0x280] * 0x28 + 0x10) = src;
+            *(u32 *)(base + base[0x280] * 0x28 + 0x14) = dst;
+            *(u32 *)(base + base[0x280] * 0x28 + 0x18) = size;
+            *(u32 *)(base + base[0x280] * 0x28 + 0x1c) = (u32)aramQueueCallback;
+            *(u32 *)(base + base[0x280] * 0x28 + 0x20) = callback;
+            *(u32 *)(base + base[0x280] * 0x28 + 0x24) = callbackArg;
             ARQPostRequest((void *)(base + base[0x280] * 0x28),
                            *(u32 *)(base + base[0x280] * 0x28 + 0x4),
                            *(u32 *)(base + base[0x280] * 0x28 + 0x8),
@@ -93,7 +83,7 @@ void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 call
                            *(u32 *)(base + base[0x280] * 0x28 + 0x18),
                            *(void (**)(void *))(base + base[0x280] * 0x28 + 0x1c));
             base[0x281] += 1;
-            base[0x280] = (base[0x280] + 1) & 0xf;
+            base[0x280] = (base[0x280] + 1) % 0x10;
             OSRestoreInterrupts(irq);
             return;
         }
