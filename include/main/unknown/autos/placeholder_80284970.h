@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_802848d8(void);
+int salInitDsp(u32 flags);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284970_H_ */
