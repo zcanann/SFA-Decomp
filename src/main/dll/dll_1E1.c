@@ -51,7 +51,7 @@ extern f32 lbl_803E5FD8;
 /*
  * --INFO--
  *
- * Function: dll1E1_updateTrickyState
+ * Function: enemymushroom_update
  * EN v1.0 Address: 0x801D1E24
  * EN v1.0 Size: 2644b
  * EN v1.1 Address: 0x801D2414
@@ -61,7 +61,7 @@ extern f32 lbl_803E5FD8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll1E1_updateTrickyState
+void enemymushroom_update
           (undefined8 param_1,double param_2,double param_3,undefined8 param_4,
            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {

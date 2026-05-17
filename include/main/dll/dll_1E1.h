@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void dll1E1_updateTrickyState
+void enemymushroom_update
           (undefined8 param_1,double param_2,double param_3,undefined8 param_4,
            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void enemymushroom_release(void);
