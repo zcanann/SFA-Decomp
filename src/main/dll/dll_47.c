@@ -28,7 +28,7 @@ extern undefined4 FUN_80133a68();
 extern undefined8 FUN_80133c3c();
 extern undefined4 FUN_80134830();
 extern undefined4 FUN_801348c0();
-extern undefined8 FUN_80134bc4();
+extern undefined8 creditsStart();
 extern undefined4 FUN_80286830();
 extern undefined4 FUN_8028687c();
 extern undefined8 FUN_8028fde8();
@@ -791,7 +791,7 @@ int FUN_8011b5d4(undefined8 param_1,double param_2,undefined8 param_3,undefined8
           FUN_800e8ba4(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,DAT_803de324);
         }
         FUN_8011ae74(1);
-        uVar7 = FUN_80134bc4();
+        uVar7 = creditsStart();
         uVar2 = FUN_80017818(0);
         uVar7 = FUN_80043030(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
         FUN_80017818(uVar2);
