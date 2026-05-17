@@ -107,7 +107,7 @@ resolved:
  * no-lock backend used by the sequence event runner when it needs to defer a
  * start until the current voice reaches the queued-start marker.
  */
-void fn_8026D880(SynthStartRequest* request, u32* outHandle, u8 noLock) {
+void synthStartHandleFromRequest(SynthStartRequest* request, u32* outHandle, u8 noLock) {
     SynthVoiceRuntime* runtime;
     SynthVoice* voice;
     SynthStartParams params;
