@@ -50,7 +50,7 @@ extern f32 lbl_803E6DBC;
 /*
  * --INFO--
  *
- * Function: FUN_801fb9f4
+ * Function: vfpblock1_update
  * EN v1.0 Address: 0x801FB9F4
  * EN v1.0 Size: 732b
  * EN v1.1 Address: 0x801FBA6C
@@ -60,7 +60,7 @@ extern f32 lbl_803E6DBC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801fb9f4(void)
+void vfpblock1_update(void)
 {
   uint uVar1;
   int iVar2;
@@ -238,7 +238,7 @@ void FUN_801fbd90(uint param_1)
   FUN_80017a98();
   sVar1 = *(short *)(param_1 + 0x46);
   if (sVar1 == 0x3b7) {
-    FUN_801fb9f4();
+    vfpblock1_update();
   }
   else if (sVar1 == 0x3bf) {
     FUN_801f5070(param_1);

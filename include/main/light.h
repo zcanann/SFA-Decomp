@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801fb9f4(void);
+void vfpblock1_update(void);
 void FUN_801fbcd0(void);
 void FUN_801fbd04(int param_1);
 void FUN_801fbd24(int param_1);
