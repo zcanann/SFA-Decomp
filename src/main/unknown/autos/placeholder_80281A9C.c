@@ -185,8 +185,10 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
     ctrl = controller & 0xff;
     dstVoice = *(u32 *)(dstState + 0xf4) & 0xff;
     srcVoice = *(u32 *)(srcState + 0xf4) & 0xff;
-    dst = gInpMidiCtrl + dstVoice * INP_MIDI_CTRL_BANK_SIZE;
-    src = gInpMidiCtrl + srcVoice * INP_MIDI_CTRL_BANK_SIZE;
+    dst = (u8 *)lbl_803CD760 + INP_MIDI_CTRL_GLOBAL_OFFSET +
+          dstVoice * INP_MIDI_CTRL_BANK_SIZE;
+    src = (u8 *)lbl_803CD760 + INP_MIDI_CTRL_GLOBAL_OFFSET +
+          srcVoice * INP_MIDI_CTRL_BANK_SIZE;
 
     if (ctrl < 0x40) {
         ctrl = controller & 0x1f;

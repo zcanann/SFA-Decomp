@@ -32,7 +32,8 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             if ((hi & 0xffff) != 0) break;
             {
                 u8 v = (value <= 0x18) ? value : 0x18;
-                lbl_803CD760[key * INP_MIDI_SLOT_COUNT + slot + 0x6740] = v;
+                lbl_803CD760[key * INP_MIDI_SLOT_COUNT + slot +
+                              INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET] = v;
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
                     u8 *vp = synthVoice + voff;
@@ -51,7 +52,8 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             u16 hi = ((u16)e[0x125] << 8) | e[0x124];
             if ((hi & 0xffff) != 0) break;
             {
-                u8 *p = lbl_803CD760 + key * INP_MIDI_SLOT_COUNT + slot + 0x6740;
+                u8 *p = lbl_803CD760 + key * INP_MIDI_SLOT_COUNT + slot +
+                        INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET;
                 u8 v = *p;
                 if (v != 0) v -= 1;
                 *p = v;
@@ -73,7 +75,8 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             u16 hi = ((u16)e[0x125] << 8) | e[0x124];
             if ((hi & 0xffff) != 0) break;
             {
-                u8 *p = lbl_803CD760 + key * INP_MIDI_SLOT_COUNT + slot + 0x6740;
+                u8 *p = lbl_803CD760 + key * INP_MIDI_SLOT_COUNT + slot +
+                        INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET;
                 u8 v = *p;
                 if (v < 0x18) v += 1;
                 *p = v;
@@ -92,7 +95,7 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
         }
         }
         base = lbl_803CD760 + key * INP_MIDI_KEY_STRIDE + slot * INP_MIDI_CTRL_BANK_SIZE + controller;
-        base[0xc0] = value & 0x7f;
+        base[INP_MIDI_CTRL_BY_KEY_OFFSET] = value & 0x7f;
         voff = 0;
         for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
             u8 *vp = synthVoice + voff;
@@ -103,7 +106,8 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             }
             voff += SYNTH_VOICE_STRIDE;
         }
-        *(u32 *)(lbl_803CD760 + key * 0x40 + slot * 4 + 0x6540) = INP_INVALID_SLOT;
+        *(u32 *)(lbl_803CD760 + key * INP_MIDI_AUX_KEY_STRIDE + slot * 4 +
+                 INP_MIDI_AUX_BY_KEY_OFFSET) = INP_INVALID_SLOT;
     } else {
         /* Global controller bank for this MIDI slot. */
         switch (controller) {
@@ -113,7 +117,8 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             if ((hi & 0xffff) != 0) break;
             {
                 u8 v = (value <= 0x18) ? value : 0x18;
-                lbl_803CD760[key * INP_MIDI_SLOT_COUNT + slot + 0x6740] = v;
+                lbl_803CD760[key * INP_MIDI_SLOT_COUNT + slot +
+                              INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET] = v;
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
                     u8 *vp = synthVoice + voff;
@@ -132,7 +137,8 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             u16 hi = ((u16)e[0x125] << 8) | e[0x124];
             if ((hi & 0xffff) != 0) break;
             {
-                u8 *p = lbl_803CD760 + key * INP_MIDI_SLOT_COUNT + slot + 0x6740;
+                u8 *p = lbl_803CD760 + key * INP_MIDI_SLOT_COUNT + slot +
+                        INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET;
                 u8 v = *p;
                 if (v != 0) v -= 1;
                 *p = v;
@@ -154,7 +160,8 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             u16 hi = ((u16)e[0x125] << 8) | e[0x124];
             if ((hi & 0xffff) != 0) break;
             {
-                u8 *p = lbl_803CD760 + key * INP_MIDI_SLOT_COUNT + slot + 0x6740;
+                u8 *p = lbl_803CD760 + key * INP_MIDI_SLOT_COUNT + slot +
+                        INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET;
                 u8 v = *p;
                 if (v < 0x18) v += 1;
                 *p = v;
@@ -173,7 +180,7 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
         }
         }
         aux = lbl_803CD760 + slot * INP_MIDI_CTRL_BANK_SIZE + controller;
-        aux[0x43c0] = value & 0x7f;
+        aux[INP_MIDI_CTRL_GLOBAL_OFFSET] = value & 0x7f;
         voff = 0;
         for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
             u8 *vp = synthVoice + voff;

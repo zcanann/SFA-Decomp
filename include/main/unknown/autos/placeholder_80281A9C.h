@@ -7,6 +7,11 @@
 #define INP_MIDI_CTRL_BANK_SIZE 0x86
 #define INP_MIDI_KEY_STRIDE 0x860
 #define INP_MIDI_SLOT_COUNT 16
+#define INP_MIDI_CTRL_BY_KEY_OFFSET 0xC0
+#define INP_MIDI_CTRL_GLOBAL_OFFSET 0x43C0
+#define INP_MIDI_AUX_KEY_STRIDE 0x40
+#define INP_MIDI_AUX_BY_KEY_OFFSET 0x6540
+#define INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET 0x6740
 
 void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
