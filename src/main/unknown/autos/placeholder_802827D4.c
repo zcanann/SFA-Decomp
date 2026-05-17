@@ -45,6 +45,7 @@ extern u8 lbl_803BDA74[];
 extern u8 lbl_803BDEF4[];
 extern u32 lbl_803D3CA0[];
 extern u32 lbl_8032FFE0[];
+extern u32 lbl_8032FFF0[];
 
 #define MIDI_DIRTY_AUX_BANK_STRIDE 0x10
 
@@ -61,11 +62,11 @@ u32 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     flags = lbl_803D3CA0[tableIndex];
     mask = lbl_8032FFE0[channel & 0xff];
     if ((mask & flags) == 0) {
-        return *(u16 *)(lbl_803BDEF4 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24);
+        return *(u16 *)(lbl_803BDEF4 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
     lbl_803D3CA0[tableIndex] = flags & ~mask;
     return _GetInputValue(0, lbl_803BDEF4 + (channel & 0xff) * 0x24 + (studio & 0xff) * 0x90,
-                          0, 0);
+                          auxIndex, handleIndex);
 }
 
 /*
@@ -79,13 +80,13 @@ u32 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
 
     tableIndex = (handleIndex & 0xff) * MIDI_DIRTY_AUX_BANK_STRIDE + (auxIndex & 0xff);
     flags = lbl_803D3CA0[tableIndex];
-    mask = lbl_8032FFE0[(channel & 0xff) + 4];
+    mask = lbl_8032FFF0[channel & 0xff];
     if ((mask & flags) == 0) {
-        return *(u16 *)(lbl_803BDA74 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24);
+        return *(u16 *)(lbl_803BDA74 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
     lbl_803D3CA0[tableIndex] = flags & ~mask;
     return _GetInputValue(0, lbl_803BDA74 + (channel & 0xff) * 0x24 + (studio & 0xff) * 0x90,
-                          0, 0);
+                          auxIndex, handleIndex);
 }
 
 /*
