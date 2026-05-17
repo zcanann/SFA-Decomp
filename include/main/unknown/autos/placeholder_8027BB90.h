@@ -3,15 +3,14 @@
 
 #include "ghidra_import.h"
 
-void FUN_8027ba04(uint param_1,int *param_2,byte param_3,int param_4);
-void FUN_8027ba08(ushort *param_1,int *param_2,byte param_3,int param_4);
-undefined4 FUN_8027ba0c(int *param_1,short param_2,undefined4 param_3,int *param_4,int *param_5);
-int FUN_8027ba14(short param_1,short param_2,int *param_3,uint *param_4,char param_5,
-                undefined param_6);
-void FUN_8027ba1c(short param_1,short param_2,int *param_3,uint *param_4,undefined param_5);
-undefined4 FUN_8027ba20(byte param_1,byte param_2,int param_3);
-void FUN_8027ba28(void);
-undefined4 FUN_8027ba2c(void);
-void FUN_8027ba34(uint param_1,undefined param_2,undefined4 param_3);
+void fn_8027BA04(void);
+void fn_8027BDA8(void);
+int audioFreeFn_8027bde0(void);
+void fn_8027BEBC(u8 idx, u8 a, int b);
+void fn_8027BFC4(u8 idx);
+int fn_8027BFE4(u16 *active, u16 *direction, u16 *current, u16 target, u16 *stepFlags,
+                u16 mask);
+void fn_8027C0D8(int accum, int *voiceRef);
+void fn_8027C390(int *items, int left, int right);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027BB90_H_ */
