@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_80100c90(void);
+undefined4 aButtonIconTexCb(void);
 
 #endif /* MAIN_DLL_DLL_AC_H_ */

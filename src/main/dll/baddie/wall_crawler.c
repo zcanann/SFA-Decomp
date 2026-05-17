@@ -34,7 +34,7 @@ extern undefined4 FUN_800533cc();
 extern undefined8 FUN_80053c98();
 extern undefined8 FUN_800709e8();
 extern uint FUN_800ea9ac();
-extern int FUN_80100c90();
+extern int aButtonIconTexCb();
 extern undefined8 FUN_8011e880();
 extern undefined4 FUN_8011ebb8();
 extern undefined4 FUN_8011f438();
@@ -596,12 +596,12 @@ void FUN_8012f758(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (bVar1) {
       FUN_80006ba8(0,0xf0000);
       DAT_803de524 = 0;
-      iVar7 = FUN_80100c90();
+      iVar7 = aButtonIconTexCb();
       if (iVar7 == 4) {
         DAT_803de524 = DAT_803de524 | 0x80000;
       }
       else {
-        iVar7 = FUN_80100c90();
+        iVar7 = aButtonIconTexCb();
         if (iVar7 == 9) {
           DAT_803de524 = DAT_803de524 | 0x40000;
         }
@@ -609,7 +609,7 @@ void FUN_8012f758(undefined8 param_1,double param_2,double param_3,undefined8 pa
                 (dVar12 = FUN_80017714((float *)(iVar4 + 0x18),(float *)(iVar5 + 0x18)),
                 (double)FLOAT_803e2e60 <= dVar12)) {
           if (((iVar5 == 0) || (uVar6 = GameBit_Get(0x4e4), uVar6 == 0)) ||
-             (iVar4 = FUN_80100c90(), iVar4 != 8)) {
+             (iVar4 = aButtonIconTexCb(), iVar4 != 8)) {
             if (DAT_803de536 == '\x01') {
 LAB_8012f798:
               iVar4 = fn_801244B0((short *)PTR_DAT_8031c238,'\0');

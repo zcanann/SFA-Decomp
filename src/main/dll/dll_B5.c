@@ -12,7 +12,7 @@ extern undefined4 FUN_80017964();
 extern int FUN_80017a54();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
-extern undefined4 FUN_80100dcc();
+extern undefined4 lockIconTexCb();
 extern undefined4 FUN_80100fa0();
 
 extern undefined4 gCamcontrolTargetReticle;
