@@ -169,7 +169,7 @@ extern undefined4 FUN_8025c368();
 extern undefined4 FUN_8025c428();
 extern undefined4 FUN_8025c49c();
 extern undefined4 FUN_8025c510();
-extern undefined4 FUN_8025c584();
+extern undefined4 GXSetBlendMode();
 extern undefined4 FUN_8025c5f0();
 extern undefined4 FUN_8025c65c();
 extern undefined4 FUN_8025c6b4();
@@ -3285,7 +3285,7 @@ void FUN_8004817c(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
     FUN_8025c2a8(DAT_803dda10,0,0,0,0,2);
     FUN_8025c224(DAT_803dda10,7,4,6,1);
     FUN_8025c368(DAT_803dda10,1,0,0,0,2);
-    FUN_8025c584(DAT_803dda10,DAT_803dd9f0);
+    GXSetBlendMode(DAT_803dda10,DAT_803dd9f0);
     FUN_8025c5f0(DAT_803dda10,DAT_803dd9ec);
     FUN_8025c65c(DAT_803dda10,0,0);
     FUN_8025c828(DAT_803dda10 + 1,DAT_803dda08 + 1,DAT_803dda0c + 2,0xff);
@@ -3294,7 +3294,7 @@ void FUN_8004817c(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
     FUN_8025c2a8(DAT_803dda10 + 1,0,0,1,0,2);
     FUN_8025c224(DAT_803dda10 + 1,7,4,6,2);
     FUN_8025c368(DAT_803dda10 + 1,1,0,0,0,2);
-    FUN_8025c584(DAT_803dda10 + 1,DAT_803dd9f0 + 1);
+    GXSetBlendMode(DAT_803dda10 + 1,DAT_803dd9f0 + 1);
     FUN_8025c5f0(DAT_803dda10 + 1,DAT_803dd9ec + 1);
     FUN_8025c65c(DAT_803dda10 + 1,0,0);
     FUN_8025c828(DAT_803dda10 + 2,DAT_803dda08,DAT_803dda0c,0xff);
@@ -3311,7 +3311,7 @@ void FUN_8004817c(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
     FUN_8025c224(DAT_803dda10 + 3,7,7,7,7);
     FUN_8025c368(DAT_803dda10 + 3,0,0,0,1,2);
     FUN_8025c65c(DAT_803dda10 + 3,0,0);
-    FUN_8025c584(DAT_803dda10 + 3,DAT_803dd9f0 + 2);
+    GXSetBlendMode(DAT_803dda10 + 3,DAT_803dd9f0 + 2);
     FUN_8025c828(DAT_803dda10 + 4,0xff,0xff,0xff);
     FUN_8025be80(DAT_803dda10 + 4);
     FUN_8025c1a4(DAT_803dda10 + 4,0,4,0xe,0xf);
@@ -3319,7 +3319,7 @@ void FUN_8004817c(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
     FUN_8025c224(DAT_803dda10 + 4,7,7,7,0);
     FUN_8025c368(DAT_803dda10 + 4,0,0,0,1,0);
     FUN_8025c65c(DAT_803dda10 + 4,0,0);
-    FUN_8025c584(DAT_803dda10 + 4,6);
+    GXSetBlendMode(DAT_803dda10 + 4,6);
     DAT_803dd9b0 = 1;
     local_8c = DAT_803df730;
     local_88 = DAT_803df734;
@@ -3426,7 +3426,7 @@ void FUN_800487e0(float *param_1)
   FUN_8025bd1c(0,2,2);
   FUN_8025bb48(0,0,0);
   FUN_8025b94c(1,0,0,7,1,0,0,0,0,0);
-  FUN_8025c584(1,4);
+  GXSetBlendMode(1,4);
   FUN_8025c828(1,1,1,0xff);
   FUN_8025c1a4(1,8,0xe,0,0);
   FUN_8025c224(1,7,4,0,7);
@@ -3610,7 +3610,7 @@ void FUN_80048f00(int param_1)
   local_4 = CONCAT13(uVar1,CONCAT12(uVar1,CONCAT11(uVar1,(undefined)local_4)));
   local_8 = local_4;
   FUN_8025c510(DAT_803dd9f4,(byte *)&local_8);
-  FUN_8025c584(DAT_803dda10,DAT_803dd9f0);
+  GXSetBlendMode(DAT_803dda10,DAT_803dd9f0);
   FUN_8025be80(DAT_803dda10);
   FUN_8025c828(DAT_803dda10,0xff,0xff,0xff);
   FUN_8025c65c(DAT_803dda10,0,0);
@@ -3716,7 +3716,7 @@ void FUN_80049260(void)
   newshadows_bindShadowCaptureTexture(DAT_803dda0c);
   FUN_80258674(DAT_803dda08,0,0,0x24,0,0x7d);
   FUN_8025be80(DAT_803dda10);
-  FUN_8025c584(DAT_803dda10,6);
+  GXSetBlendMode(DAT_803dda10,6);
   FUN_8025c828(DAT_803dda10,DAT_803dda08,DAT_803dda0c,0xff);
   FUN_8025c1a4(DAT_803dda10,0xf,8,0xe,0);
   FUN_8025c224(DAT_803dda10,7,7,7,0);
@@ -4105,7 +4105,7 @@ void FUN_80049910(undefined4 *param_1)
     FUN_8025c2a8(DAT_803dda10,0,0,0,1,0);
     FUN_8025c368(DAT_803dda10,0,0,0,1,0);
     DAT_803dd9b0 = 1;
-    FUN_8025c584(DAT_803dda10,DAT_803dd9f0);
+    GXSetBlendMode(DAT_803dda10,DAT_803dd9f0);
     DAT_803dda08 = DAT_803dda08 + 1;
     DAT_803dda10 = DAT_803dda10 + 1;
     DAT_803dda0c = DAT_803dda0c + 1;
@@ -4180,7 +4180,7 @@ void FUN_80049910(undefined4 *param_1)
         FUN_8025aeac((uint *)(local_f4 + 0x20),*(uint **)(local_f4 + 0x40),DAT_803dda0c + 1);
       }
     }
-    FUN_8025c584(DAT_803dda10 + 1,DAT_803dd9f0);
+    GXSetBlendMode(DAT_803dda10 + 1,DAT_803dd9f0);
     DAT_803dda08 = DAT_803dda08 + 3;
     DAT_803dda10 = DAT_803dda10 + 2;
     DAT_803dda0c = DAT_803dda0c + 2;
@@ -4406,7 +4406,7 @@ void FUN_8004a394(double param_1,undefined4 *param_2,float *param_3)
     FUN_8025c828(DAT_803dda10,DAT_803dda08,DAT_803dda0c,0xff);
     local_78 = *param_2;
     FUN_8025c510(DAT_803dd9f4,(byte *)&local_78);
-    FUN_8025c584(DAT_803dda10,DAT_803dd9f0);
+    GXSetBlendMode(DAT_803dda10,DAT_803dd9f0);
     FUN_8025c1a4(DAT_803dda10,0xf,0xe,8,0xf);
     FUN_8025c224(DAT_803dda10,7,7,7,0);
     FUN_8025c65c(DAT_803dda10,0,0);
@@ -4520,7 +4520,7 @@ void FUN_8004a670(double param_1,undefined4 *param_2,float *param_3)
     FUN_8025c828(DAT_803dda10,DAT_803dda08,DAT_803dda0c,0xff);
     local_78 = *param_2;
     FUN_8025c510(DAT_803dd9f4,(byte *)&local_78);
-    FUN_8025c584(DAT_803dda10,DAT_803dd9f0);
+    GXSetBlendMode(DAT_803dda10,DAT_803dd9f0);
     FUN_8025c1a4(DAT_803dda10,0xf,0xe,8,0xf);
     FUN_8025c224(DAT_803dda10,7,7,7,0);
     FUN_8025c65c(DAT_803dda10,0,0);
@@ -4637,7 +4637,7 @@ void FUN_8004a94c(double param_1,undefined4 *param_2,float *param_3)
     FUN_8025c828(DAT_803dda10,DAT_803dda08,DAT_803dda0c,0xff);
     local_78 = *param_2;
     FUN_8025c510(DAT_803dd9f4,(byte *)&local_78);
-    FUN_8025c584(DAT_803dda10,DAT_803dd9f0);
+    GXSetBlendMode(DAT_803dda10,DAT_803dd9f0);
     FUN_8025c1a4(DAT_803dda10,0xf,0xe,8,0xf);
     FUN_8025c224(DAT_803dda10,7,7,7,0);
     FUN_8025c65c(DAT_803dda10,0,0);
@@ -4691,7 +4691,7 @@ void FUN_8004ac40(int param_1,float *param_2)
   FUN_8025d8c4(param_2,DAT_803dda00,0);
   FUN_80258674(DAT_803dda08,0,0,0,0,DAT_803dda00);
   FUN_8025c828(DAT_803dda10,DAT_803dda08,DAT_803dda0c,0xff);
-  FUN_8025c584(DAT_803dda10,4);
+  GXSetBlendMode(DAT_803dda10,4);
   FUN_8025c1a4(DAT_803dda10,0xe,9,0,0);
   FUN_8025c224(DAT_803dda10,7,7,7,0);
   FUN_8025c65c(DAT_803dda10,0,0);
@@ -4802,7 +4802,7 @@ void FUN_8004afc0(float *param_1)
   FUN_8025c828(DAT_803dda10 + 1,DAT_803dda08 + 1,DAT_803dda0c + 1,0xff);
   FUN_8025c828(DAT_803dda10 + 2,DAT_803dda08 + 1,DAT_803dda0c + 1,0xff);
   FUN_8025c828(DAT_803dda10 + 3,DAT_803dda08 + 1,DAT_803dda0c + 1,0xff);
-  FUN_8025c584(DAT_803dda10 + 2,6);
+  GXSetBlendMode(DAT_803dda10 + 2,6);
   FUN_8025c1a4(DAT_803dda10,0xf,0xf,0xf,8);
   FUN_8025c224(DAT_803dda10,7,7,7,0);
   FUN_8025c65c(DAT_803dda10,0,0);
