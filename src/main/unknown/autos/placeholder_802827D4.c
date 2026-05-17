@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
+#include "main/unknown/autos/placeholder_802818F8.h"
 #include "main/unknown/autos/placeholder_802827D4.h"
 
 extern u16 _GetInputValue(void *state, void *slot, u8 a, u8 b);
 extern int synthGetVoiceSlotChannelScale(int x);
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
-extern void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u32 value);
 
 extern u32 lbl_803DC610;
 extern s16 lbl_80330028[];
@@ -262,7 +262,7 @@ void inpSetExCtrl(int state, u32 ctrl, s16 value)
     }
     translated = inpTranslateExCtrl(ctrl);
     if ((translated > 0xa1 || translated < 0xa0) && *(s8 *)(state + 0x121) != -1) {
-        inpSetMidiCtrl14(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), (int)value);
+        inpSetMidiCtrl14(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), value);
     }
 }
 

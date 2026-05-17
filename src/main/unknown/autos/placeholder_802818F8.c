@@ -191,20 +191,35 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
  * inpSetMidiCtrl14 - wrapper that splits a 16-bit data word into two
  * 7-bit MIDI controller bytes and dispatches to the MIDI-control setter.
  */
-void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u32 data)
+void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u16 data)
 {
-    if (slot != INP_INVALID_SLOT) {
-        if (controller < 0x40) {
-            inpSetMidiCtrl(controller & 0x1f, slot, key, (data >> 7) & 0xff);
-            inpSetMidiCtrl((controller & 0x1f) + 0x20, slot, key, data & 0x7f);
-        } else if (((controller - 0x80) & 0xff) < 2) {
-            inpSetMidiCtrl(controller & 0xfe, slot, key, (data >> 7) & 0xff);
-            inpSetMidiCtrl((controller & 0xfe) + 1, slot, key, data & 0x7f);
-        } else if (((controller - 0x84) & 0xff) < 2) {
-            inpSetMidiCtrl(controller & 0xfe, slot, key, (data >> 7) & 0xff);
-            inpSetMidiCtrl((controller & 0xfe) + 1, slot, key, data & 0x7f);
-        } else {
-            inpSetMidiCtrl(controller, slot, key, (data >> 7) & 0xff);
-        }
+    u8 ctrl;
+
+    if (slot == INP_INVALID_SLOT) {
+        return;
     }
+
+    ctrl = controller;
+    if (ctrl < 0x40) {
+        u32 base = ctrl & 0x1f;
+        u16 value = data;
+        inpSetMidiCtrl(base, slot, key, (data >> 7) & 0xff);
+        inpSetMidiCtrl(base + 0x20, slot, key, value & 0x7f);
+        return;
+    }
+    if ((u8)(controller - 0x80) <= 1U) {
+        u32 base = ctrl & 0xfe;
+        u16 value = data;
+        inpSetMidiCtrl(base, slot, key, (data >> 7) & 0xff);
+        inpSetMidiCtrl(base + 1, slot, key, value & 0x7f);
+        return;
+    }
+    if ((u8)(controller - 0x84) <= 1U) {
+        u32 base = ctrl & 0xfe;
+        u16 value = data;
+        inpSetMidiCtrl(base, slot, key, (data >> 7) & 0xff);
+        inpSetMidiCtrl(base + 1, slot, key, value & 0x7f);
+        return;
+    }
+    inpSetMidiCtrl(controller, slot, key, (data >> 7) & 0xff);
 }
