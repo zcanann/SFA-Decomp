@@ -42,6 +42,12 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803E5EA4;
 extern f32 lbl_803E5EA8;
 
+#define gNwMammothNormalHitReactEntry DAT_80327400
+#define gNwMammothHeavyHitReactEntry DAT_80327414
+#define gNwMammothStateMoveIds DAT_80327468
+#define gNwMammothStateMoveStepScales DAT_80327498
+#define gNwMammothStateFlags DAT_803274f4
+
 /*
  * --INFO--
  *
@@ -183,7 +189,7 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   ObjHitReactEntry *hitReactEntries;
   double dVar8;
   
-  hitReactEntries = &DAT_80327400;
+  hitReactEntries = &gNwMammothNormalHitReactEntry;
   iVar6 = *(int *)(param_9 + 0x5c);
   iVar5 = *(int *)(param_9 + 0x26);
   if ((*(byte *)(iVar6 + 0x43c) & 0x20) != 0) {
@@ -195,7 +201,7 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (*(int *)(iVar6 + 0x28) == 0) {
     return;
   }
-  if (((&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 0x20) == 0) {
+  if (((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 0x20) == 0) {
     param_9[0x58] = param_9[0x58] & 0xfbff;
     *(uint *)(*(int *)(param_9 + 0x32) + 0x30) = *(uint *)(*(int *)(param_9 + 0x32) + 0x30) | 4;
   }
@@ -204,9 +210,9 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(uint *)(*(int *)(param_9 + 0x32) + 0x30) =
          *(uint *)(*(int *)(param_9 + 0x32) + 0x30) & 0xfffffffb;
   }
-  if (((&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 8) == 0) {
-    if (((&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 2) != 0) {
-      hitReactEntries = &DAT_80327414;
+  if (((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 8) == 0) {
+    if (((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 2) != 0) {
+      hitReactEntries = &gNwMammothHeavyHitReactEntry;
     }
     in_r7 = (float *)(iVar6 + 0x50);
     uVar3 = objHitReact_update((int)param_9,hitReactEntries,1,(uint)*(byte *)(iVar6 + 0x3d4),
@@ -242,9 +248,9 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   nw_mammoth_free(param_9);
 LAB_801cf840:
-  if (((&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 1) == 0) {
+  if (((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 1) == 0) {
     *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xef;
-    if ((((&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 0x10) == 0) ||
+    if ((((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 0x10) == 0) ||
        (iVar5 = FUN_8012efc4(), iVar5 == -1)) {
       in_r7 = (float *)0x0;
       in_r8 = 2;
@@ -260,9 +266,9 @@ LAB_801cf840:
     *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 0x10;
   }
   uVar4 = (uint)*(byte *)(iVar6 + 0x408);
-  iVar5 = (int)*(short *)(&DAT_80327468 + uVar4 * 2);
+  iVar5 = (int)*(short *)(&gNwMammothStateMoveIds + uVar4 * 2);
   if (param_9[0x50] != iVar5) {
-    if ((double)*(float *)(&DAT_80327498 + uVar4 * 4) <= (double)lbl_803E5EA4) {
+    if ((double)*(float *)(&gNwMammothStateMoveStepScales + uVar4 * 4) <= (double)lbl_803E5EA4) {
       FUN_800305f8((double)lbl_803E5EA8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    param_9,iVar5,0,uVar4,in_r7,in_r8,in_r9,in_r10);
     }
@@ -271,7 +277,7 @@ LAB_801cf840:
                    param_9,iVar5,0,uVar4,in_r7,in_r8,in_r9,in_r10);
     }
     *(undefined4 *)(iVar6 + 0x4c) =
-         *(undefined4 *)(&DAT_80327498 + (uint)*(byte *)(iVar6 + 0x408) * 4);
+         *(undefined4 *)(&gNwMammothStateMoveStepScales + (uint)*(byte *)(iVar6 + 0x408) * 4);
   }
   iVar5 = FUN_8002fc3c((double)*(float *)(iVar6 + 0x4c),(double)lbl_803DC074);
   if (iVar5 == 0) {
@@ -282,7 +288,7 @@ LAB_801cf840:
   }
   objAudioFn_8006ef38((double)lbl_803E5EA8,(double)lbl_803E5EA8,param_9,iVar6 + 0x440,8,iVar6 + 0x45c,
                iVar6 + 0x16c);
-  FUN_801ce340(param_9,iVar6,(byte)(&DAT_803274f4)[*(byte *)(iVar6 + 0x408)] & 4);
+  FUN_801ce340(param_9,iVar6,(byte)(&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 4);
   *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xfb;
   if (((*(byte *)(iVar6 + 0x43c) & 0x10) == 0) && (iVar5 = ObjTrigger_IsSet((int)param_9), iVar5 != 0))
   {
