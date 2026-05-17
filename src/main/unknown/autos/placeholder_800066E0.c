@@ -2258,6 +2258,7 @@ u8 AudioStream_IsPreparing(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void AudioStream_SetVolume(u32 volume)
 {
     gAudioStreamVolumeLeft = volume;
@@ -2265,6 +2266,7 @@ void AudioStream_SetVolume(u32 volume)
     AISetStreamVolLeft(volume);
     AISetStreamVolRight(volume);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
