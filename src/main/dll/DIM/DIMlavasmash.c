@@ -165,7 +165,7 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_801b0be8
+ * Function: dimlogfire_init
  * EN v1.0 Address: 0x801B0BE8
  * EN v1.0 Size: 180b
  * EN v1.1 Address: 0x801B0DFC
@@ -175,7 +175,7 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b0be8(void)
+void dimlogfire_init(void)
 {
   int iVar1;
   char in_r8;
