@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/unknown/autos/placeholder_802792F8.h"
 #include "main/unknown/autos/placeholder_80279608.h"
 
-extern void voiceRemovePriority(int state);
 extern void hwSetPriority(u8 voiceId, u32 priority);
 
 extern u8 vidListNodes[];
