@@ -3,7 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80281338(uint param_1);
-void FUN_8028133c(void);
+void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80281760_H_ */
