@@ -719,39 +719,39 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
 #pragma peephole off
 int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
-  u16 *refCount;
+  u16 *entryRefCount;
   ExpgfxTableEntry *entry;
-  ExpgfxTableEntry *entryBase;
-  int tableIndex;
-  int freeIndex;
+  ExpgfxTableEntry *freeEntry;
+  int entryIndex;
+  int freeEntryIndex;
   
-  tableIndex = 0;
-  entryBase = gExpgfxTableEntries;
-  entry = entryBase;
-  for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++) {
+  entryIndex = 0;
+  freeEntry = gExpgfxTableEntries;
+  entry = freeEntry;
+  for (; entryIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entryIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
-      refCount = &gExpgfxTableEntries[tableIndex].refCount;
-      if (*refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
+      entryRefCount = &gExpgfxTableEntries[entryIndex].refCount;
+      if (*entryRefCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
       }
-      (*refCount)++;
-      return (int)(short)tableIndex;
+      (*entryRefCount)++;
+      return (int)(short)entryIndex;
     }
     entry++;
   }
 
-  for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++) {
-    if (entryBase->refCount == 0) {
-      gExpgfxTableEntries[freeIndex].refCount = 1;
-      gExpgfxTableEntries[freeIndex].textureOrResource = textureOrResource;
-      gExpgfxTableEntries[freeIndex].key0 = key0;
-      gExpgfxTableEntries[freeIndex].key1 = key1;
-      gExpgfxTableEntries[freeIndex].slotType = slotType;
-      return (int)(short)freeIndex;
+  for (freeEntryIndex = 0; freeEntryIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeEntryIndex++) {
+    if (freeEntry->refCount == 0) {
+      gExpgfxTableEntries[freeEntryIndex].refCount = 1;
+      gExpgfxTableEntries[freeEntryIndex].textureOrResource = textureOrResource;
+      gExpgfxTableEntries[freeEntryIndex].key0 = key0;
+      gExpgfxTableEntries[freeEntryIndex].key1 = key1;
+      gExpgfxTableEntries[freeEntryIndex].slotType = slotType;
+      return (int)(short)freeEntryIndex;
     }
-    entryBase++;
+    freeEntry++;
   }
 
   debugPrintf(sExpgfxExpTabIsFull);
