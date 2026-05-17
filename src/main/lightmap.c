@@ -406,7 +406,7 @@ undefined4 FUN_8005af9c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8005afac
+ * Function: coordsToMapCell
  * EN v1.0 Address: 0x8005AFAC
  * EN v1.0 Size: 112b
  * EN v1.1 Address: 0x8005B0A8
@@ -416,7 +416,7 @@ undefined4 FUN_8005af9c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8005afac(int param_1,int param_2,int param_3)
+undefined4 coordsToMapCell(int param_1,int param_2,int param_3)
 {
   int iVar1;
   

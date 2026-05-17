@@ -6,7 +6,7 @@
 void FUN_8005ab70(void);
 undefined4 FUN_8005af70(int param_1);
 undefined4 FUN_8005af9c(int param_1);
-undefined4 FUN_8005afac(int param_1,int param_2,int param_3);
+undefined4 coordsToMapCell(int param_1,int param_2,int param_3);
 int * fn_8005B11C(void);
 int FUN_8005b024(void);
 void FUN_8005b12c(float *param_1,float *param_2);

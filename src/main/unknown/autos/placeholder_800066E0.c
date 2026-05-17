@@ -43,7 +43,7 @@ extern undefined8 FUN_8004600c();
 extern undefined4 FUN_800537a0();
 extern undefined4 FUN_80053c34();
 extern int FUN_80056cdc();
-extern int FUN_8005afac();
+extern int coordsToMapCell();
 extern uint FUN_8006f764();
 extern undefined4 FUN_8006f79c();
 extern undefined4 FUN_800723a0();
