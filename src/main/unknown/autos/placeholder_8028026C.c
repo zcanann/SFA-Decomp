@@ -174,19 +174,18 @@ void fn_802807C4(Snd3DEmitterLite *emitter, f32 distance)
     S3DSortedNode *prev;
     S3DSortedNode *newNode;
     u32 groupIndex;
-    u32 remaining;
+    u32 groupCount;
 
     groups = S3D_MIX_GROUPS;
     group = groups;
-    remaining = lbl_803DE36B;
+    groupCount = lbl_803DE36B;
     groupIndex = 0;
-    while ((remaining != 0) && (emitter->groupKey != group->key)) {
+    while ((groupIndex < groupCount) && (emitter->groupKey != group->key)) {
         group++;
         groupIndex++;
-        remaining--;
     }
 
-    if (groupIndex == lbl_803DE36B) {
+    if (groupIndex == groupCount) {
         group->activeHead = (S3DActiveNode *)0x0;
         group->sortedHead = (S3DSortedNode *)0x0;
         group->sortedCount = 0;
@@ -228,19 +227,21 @@ int fn_802808D8(Snd3DEmitterLite *emitter, f32 distance, f32 arg1, f32 arg2, f32
     S3DActiveNode *newNode;
     u32 groupIndex;
     u32 groupCount;
+    u32 remaining;
     u32 activeIndex;
 
     groups = S3D_MIX_GROUPS;
     group = groups;
     groupCount = lbl_803DE36B;
+    remaining = groupCount;
     groupIndex = 0;
-    while ((groupCount != 0) && (emitter->groupKey != group->key)) {
+    while ((remaining != 0) && (emitter->groupKey != group->key)) {
         group++;
         groupIndex++;
-        groupCount--;
+        remaining--;
     }
 
-    if (groupIndex == lbl_803DE36B) {
+    if (groupIndex == groupCount) {
         if (groupCount == S3D_MAX_GROUPS) {
             return 0;
         }
