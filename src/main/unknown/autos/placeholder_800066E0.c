@@ -2554,6 +2554,8 @@ void AudioStream_PrepareCallback(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void AudioStream_PlayAddrCallback(u32 result)
 {
     if ((result & 0xff) == 0) {
@@ -2571,6 +2573,8 @@ void AudioStream_PlayAddrCallback(u32 result)
     gAudioStreamPlayAddrCallbackResult = result;
     gAudioStreamPlayAddrCallbackDone = 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
