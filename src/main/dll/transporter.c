@@ -129,7 +129,7 @@ extern f32 lbl_803E42BC;
 /*
  * --INFO--
  *
- * Function: FUN_801755cc
+ * Function: pushable_setScale
  * EN v1.0 Address: 0x801755CC
  * EN v1.0 Size: 372b
  * EN v1.1 Address: 0x801758D4
@@ -139,7 +139,7 @@ extern f32 lbl_803E42BC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801755cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void pushable_setScale(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {

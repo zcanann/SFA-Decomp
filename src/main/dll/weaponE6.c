@@ -17,7 +17,7 @@ extern uint FUN_801799c0();
 extern undefined4 FUN_80179ad8();
 extern int FUN_80179b00();
 extern undefined4 FUN_80179b28();
-extern undefined4 FUN_80179a2c();
+extern undefined4 trickyBallMove();
 extern undefined4 FUN_801ce238();
 extern double FUN_80293900();
 extern undefined4 FUN_80293bc4();

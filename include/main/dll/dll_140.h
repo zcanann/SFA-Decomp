@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_80179a2c(double param_1,double param_2,double param_3,int param_4);
+void trickyBallMove(double param_1,double param_2,double param_3,int param_4);
 void FUN_80179ad4(void);
 void FUN_80179afc(int param_1);
 void FUN_80179b34(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5

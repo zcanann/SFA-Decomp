@@ -26,7 +26,7 @@ extern f32 lbl_803E4344;
 /*
  * --INFO--
  *
- * Function: FUN_80179a2c
+ * Function: trickyBallMove
  * EN v1.0 Address: 0x80179A2C
  * EN v1.0 Size: 168b
  * EN v1.1 Address: 0x80179B84
@@ -36,7 +36,7 @@ extern f32 lbl_803E4344;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80179a2c(double param_1,double param_2,double param_3,int param_4)
+void trickyBallMove(double param_1,double param_2,double param_3,int param_4)
 {
   int iVar1;
   

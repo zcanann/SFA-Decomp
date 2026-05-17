@@ -16,7 +16,7 @@ extern undefined4 ObjGroup_FindNearestObject();
 extern int FUN_80039520();
 extern int FUN_800620e8();
 extern undefined4 FUN_800e8630();
-extern undefined4 FUN_801755cc();
+extern undefined4 pushable_setScale();
 extern undefined8 FUN_80286820();
 extern undefined4 FUN_8028686c();
 extern double FUN_80293900();
@@ -77,7 +77,7 @@ FUN_80174a80(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   
   bVar4 = false;
   local_38[0] = lbl_803E41D8;
-  FUN_801755cc(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
+  pushable_setScale(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
   uVar5 = FUN_80017690((int)*(short *)(param_10 + 0xac));
   fVar2 = lbl_803E41DC;
   if (uVar5 == 0) {

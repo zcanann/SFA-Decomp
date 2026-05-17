@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801755cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void pushable_setScale(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
 uint FUN_80175740(int param_1,int param_2);
