@@ -8,6 +8,8 @@ typedef struct SynthDelayedNode {
     u8 pad[2];
 } SynthDelayedNode;
 
+typedef void (*SynthDelayedBucketCallback)(int voiceIndex);
+
 typedef struct SynthDelayStorageLocal {
     u32 studioChannelScales[9][0x10];
     SynthDelayedNode *bucketHeads[0x20][3];
@@ -341,19 +343,19 @@ void fn_80271370(SynthDelayedNode *fade)
  * EN v1.1 Address: 0x80271398, size 148b
  */
 #pragma dont_inline on
-void fn_80271398(void **head, void (*cb)(int idx))
+void synthDrainDelayedBucket(SynthDelayedNode **head, SynthDelayedBucketCallback callback)
 {
-    void *cur = *head;
-    while (cur != 0) {
-        void *next = *(void **)cur;
-        *(u8 *)((u8 *)cur + 0x9) = 0xff;
+    SynthDelayedNode *node = *head;
+    while (node != 0) {
+        SynthDelayedNode *next = node->next;
+        node->bucketIndex = 0xff;
         {
-            int idx = *(u8 *)((u8 *)cur + 0x8);
-            if (*(u8 *)(synthVoice + idx * 0x404 + 0x11c) == 0) {
-                cb(idx);
+            int voiceIndex = node->voiceIndex;
+            if (*(u8 *)(synthVoice + voiceIndex * 0x404 + 0x11c) == 0) {
+                callback(voiceIndex);
             }
         }
-        cur = next;
+        node = next;
     }
     *head = 0;
 }
@@ -408,9 +410,9 @@ void audioFn_80271498(u32 delta)
         storage = (SynthDelayStorageLocal *)stateBase;
         macHandle(delta);
         bucket = gSynthDelayBucketCursor;
-        fn_80271398((void **)&storage->bucketHeads[bucket][0], audioFn_80270184);
-        fn_80271398((void **)&storage->bucketHeads[bucket][1], fn_80270FE8);
-        fn_80271398((void **)&storage->bucketHeads[bucket][2], fn_80270938);
+        synthDrainDelayedBucket(&storage->bucketHeads[bucket][0], audioFn_80270184);
+        synthDrainDelayedBucket(&storage->bucketHeads[bucket][1], fn_80270FE8);
+        synthDrainDelayedBucket(&storage->bucketHeads[bucket][2], fn_80270938);
         gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
         if (hwGetTimeOffset() == 0) {
             if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0) {
