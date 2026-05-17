@@ -2,15 +2,8 @@
 #define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80285220_H_
 
 #include "ghidra_import.h"
+#include "dolphin/axfx.h"
 
-void FUN_8028504c(void);
-void FUN_80285050(void);
-ulonglong FUN_80285054(void);
-ulonglong FUN_80285060(void);
-void FUN_8028506c(void);
-void FUN_80285070(void);
-void FUN_80285074(int param_1);
-undefined4
-FUN_80285078(double param_1,double param_2,double param_3,double param_4,double param_5,int param_6);
+void HandleReverb2(s32 *sptr, AXFX_REVSTD_WORK *rv);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80285220_H_ */
