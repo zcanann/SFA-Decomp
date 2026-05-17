@@ -92,7 +92,7 @@ extern f32 lbl_803E50A0;
 /*
  * --INFO--
  *
- * Function: FUN_801a39d0
+ * Function: cfforcefield_update
  * EN v1.0 Address: 0x801A39D0
  * EN v1.0 Size: 240b
  * EN v1.1 Address: 0x801A3B20
@@ -102,9 +102,9 @@ extern f32 lbl_803E50A0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801a39d0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,int param_10)
+void cfforcefield_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                         undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                         int param_9,int param_10)
 {
   int *piVar1;
   int iVar2;
