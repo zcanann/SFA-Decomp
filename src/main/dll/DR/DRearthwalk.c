@@ -64,7 +64,7 @@ extern f32 lbl_803E61C0;
 /*
  * --INFO--
  *
- * Function: FUN_801d9bdc
+ * Function: sh_staff_render
  * EN v1.0 Address: 0x801D9BDC
  * EN v1.0 Size: 232b
  * EN v1.1 Address: 0x801DA010
@@ -74,7 +74,7 @@ extern f32 lbl_803E61C0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d9bdc(undefined2 *param_1,int param_2)
+void sh_staff_render(undefined2 *param_1,int param_2)
 {
   byte bVar1;
   uint uVar2;

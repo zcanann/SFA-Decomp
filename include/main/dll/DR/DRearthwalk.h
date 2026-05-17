@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801d9bdc(undefined2 *param_1,int param_2);
+void sh_staff_render(undefined2 *param_1,int param_2);
 void FUN_801d9cc4(void);
 void FUN_801da33c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
