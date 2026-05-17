@@ -3,8 +3,11 @@
 
 #include "ghidra_import.h"
 
-byte * FUN_8026e518(byte *param_1,ushort *param_2,short *param_3);
-int FUN_8026e5bc(byte param_1);
-void FUN_8026e7d4(int param_1,undefined4 *param_2);
+typedef struct SynthSequenceEvent SynthSequenceEvent;
+typedef struct SynthSequenceQueue SynthSequenceQueue;
+
+u8 *synthReadVariablePair(u8 *input, u16 *value0, s16 *value1);
+SynthSequenceEvent *synthGetNextChannelEvent(u8 channel);
+void synthInsertChannelEvent(SynthSequenceQueue *queue, SynthSequenceEvent *event);
 
 #endif /* MAIN_AUDIO_SYNTH_SEQUENCE_H_ */

@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8026d6dc(uint param_1);
+void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1);
 
 #endif /* MAIN_AUDIO_SYNTH_CHANNEL_H_ */
