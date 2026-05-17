@@ -90,11 +90,11 @@ resolved:
                 runtime->voices[voiceIndex].pendingUpdate.output = 0;
                 break;
             case 2:
-                runtime->voices[voiceIndex].pendingUpdate.flags |= 8;
+                runtime->voices[voiceIndex].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE2;
                 runtime->voices[voiceIndex].pendingUpdate.studio = (u8)value0;
                 break;
             case 3:
-                runtime->voices[voiceIndex].pendingUpdate.flags |= 0x80;
+                runtime->voices[voiceIndex].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE3;
                 runtime->voices[voiceIndex].pendingUpdate.studio = (u8)value0;
                 break;
             }
@@ -228,7 +228,7 @@ resolved_reuse:
                         runtime->voices[newHandle].immediateMixValue0 = mixValue0;
                         runtime->voices[newHandle].immediateMixValue1 = mixValue1;
                     } else {
-                        runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= 0x10;
+                        runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= SYNTH_PENDING_FLAG_MIX_DATA;
                         runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue0 = mixValue0;
                         runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue1 = mixValue1;
                     }
@@ -255,7 +255,7 @@ resolved_reuse:
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 14) = speed;
                     SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 15) = speed;
                 } else {
-                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= 0x20;
+                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= SYNTH_PENDING_FLAG_SPEED;
                     runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.value16 = speed;
                 }
             }
@@ -300,7 +300,7 @@ resolved_reuse:
                     runtime->voices[newHandle].immediateMixValue0 = 0;
                     runtime->voices[newHandle].immediateMixValue1 = 0;
                 } else {
-                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= 0x10;
+                    runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.flags |= SYNTH_PENDING_FLAG_MIX_DATA;
                     runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue0 = 0;
                     runtime->voices[newHandle & SYNTH_HANDLE_ID_MASK].pendingUpdate.mixValue1 = 0;
                 }
