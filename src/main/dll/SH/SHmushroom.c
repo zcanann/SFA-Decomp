@@ -21,7 +21,7 @@ extern f32 FLOAT_803e600c;
 /*
  * --INFO--
  *
- * Function: FUN_801d2c54
+ * Function: bombplant_update
  * EN v1.0 Address: 0x801D2C54
  * EN v1.0 Size: 356b
  * EN v1.1 Address: 0x801D2E5C
@@ -31,7 +31,7 @@ extern f32 FLOAT_803e600c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801d2c54(uint param_1)
+undefined4 bombplant_update(uint param_1)
 {
   uint uVar1;
   int iVar2;
