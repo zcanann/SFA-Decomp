@@ -1347,7 +1347,7 @@ void renderParticles(void)
 {
   ExpgfxBounds *boundsTemplate;
   float *sourcePosition;
-  u8 *expgfxBase;
+  register u8 *expgfxBase = gExpgfxRuntimeData;
   char *poolActiveCounts;
   u8 *poolSourceModes;
   u8 *poolBoundsTemplateIds;
@@ -1359,7 +1359,9 @@ void renderParticles(void)
   int currentMatrix;
   float queuePosition[3];
 
-  expgfxBase = gExpgfxRuntimeData;
+  asm {
+    mr expgfxBase, expgfxBase
+  }
   currentMatrix = Camera_GetViewMatrix();
   poolIndex = 0;
   poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
