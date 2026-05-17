@@ -3,9 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80282618(uint param_1,int param_2,int param_3);
-void FUN_8028261c(uint param_1,uint param_2,undefined param_3);
-undefined FUN_80282620(uint param_1,uint param_2);
 u16 inpGetDoppler(int state);
 u16 inpGetModulation(int state);
 u16 inpGetPedal(int state);
