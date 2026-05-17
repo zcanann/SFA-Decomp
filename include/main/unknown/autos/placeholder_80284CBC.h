@@ -2,9 +2,8 @@
 #define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284CBC_H_
 
 #include "ghidra_import.h"
+#include "dolphin/axfx.h"
 
-void FUN_80284c58(undefined4 param_1,int param_2);
-void FUN_80284c5c(void);
-undefined4 FUN_80284c60(uint param_1,undefined4 *param_2);
+int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32 damping, f32 predelay);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284CBC_H_ */
