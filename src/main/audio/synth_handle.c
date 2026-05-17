@@ -321,43 +321,45 @@ resolved_reuse:
  * sentinel 0x80 0x00.
  */
 u8* synthReadVariablePair(u8* p, u16* tagOut, s16* valueOut) {
-    u8 b1;
-    u8 b2;
+    s16 combined;
+    s32 shift;
+    u32 combinedValue;
+    u8 high;
+    u8 low;
 
-    b1 = p[0];
-    b2 = p[1];
-    if (b1 == 0x80 && b2 == 0) {
+    high = p[0];
+    low = p[1];
+    if (high == 0x80 && low == 0) {
         return 0;
     }
 
-    if (b1 & 0x80) {
-        *tagOut = (u16)(((b1 & 0x7F) << 8) | b2);
+    if ((high & 0x80) != 0) {
+        combinedValue = (u32)((high & 0x7F) << 8);
+        combinedValue = combinedValue | low;
+        *tagOut = (u16)combinedValue;
         p += 2;
     } else {
-        *tagOut = (u16)b1;
+        *tagOut = high;
         p += 1;
     }
 
-    {
-        u8 b3 = p[0];
-        u8 b4 = p[1];
-        int shift;
-        s16 v;
-
-        if (b3 & 0x80) {
-            v = (s16)(u16)(((b3 & 0x7F) << 8) | b4);
-            shift = 1;
-            v = (s16)((s16)((s16)v << shift) >> shift);
-            *valueOut = v;
-            p += 2;
-            return p;
-        }
-
-        v = (s16)(u16)b3;
+    high = p[0];
+    low = p[1];
+    if ((high & 0x80) != 0) {
+        combinedValue = (u32)((high & 0x7F) << 8);
+        combinedValue = combinedValue | low;
+        combined = (s16)combinedValue;
+        shift = 1;
+        combined = (s16)(combined << shift);
+        *valueOut = (s16)(combined >> shift);
+        p += 2;
+    } else {
+        combined = high;
         shift = 9;
-        v = (s16)((s16)((s16)v << shift) >> shift);
-        *valueOut = v;
+        combined = (s16)(combined << shift);
+        *valueOut = (s16)(combined >> shift);
         p += 1;
-        return p;
     }
+
+    return p;
 }
