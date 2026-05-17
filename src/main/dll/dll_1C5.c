@@ -42,7 +42,7 @@ extern f32 lbl_803E5D20;
 /*
  * --INFO--
  *
- * Function: FUN_801c83d0
+ * Function: ecsh_cup_update
  * EN v1.0 Address: 0x801C83D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801C8524
@@ -52,7 +52,7 @@ extern f32 lbl_803E5D20;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c83d0(undefined2 *param_1)
+void ecsh_cup_update(undefined2 *param_1)
 {
 }
 
