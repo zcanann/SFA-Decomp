@@ -3,8 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8027f2ac(void);
-void FUN_8027f2b0(double param_1,double param_2,double param_3,char param_4,float *param_5,
-                 uint param_6,uint param_7,int param_8,int param_9);
+void fn_8027F2AC(undefined4 p2, f32 *out, u32 aux, undefined4 p7, BOOL voiceFlag,
+                 BOOL auxFlag, f32 a, f32 b, f32 c);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027F8B0_H_ */
