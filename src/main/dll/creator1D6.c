@@ -20,7 +20,7 @@ extern f32 lbl_803E5EF0;
 /*
  * --INFO--
  *
- * Function: FUN_801cf7e8
+ * Function: nw_tricky_update
  * EN v1.0 Address: 0x801CF7E8
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801CFAC0
@@ -30,7 +30,7 @@ extern f32 lbl_803E5EF0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cf7e8(undefined2 *param_1,int param_2,int param_3)
+void nw_tricky_update(undefined2 *param_1,int param_2,int param_3)
 {
 }
 
