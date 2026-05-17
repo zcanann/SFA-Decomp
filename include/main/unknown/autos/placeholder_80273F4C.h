@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80273d2c(void);
+int dataInsertLayer(u16 key, void *value, u16 count);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80273F4C_H_ */
