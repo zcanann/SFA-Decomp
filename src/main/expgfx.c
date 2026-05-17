@@ -733,40 +733,37 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   do {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
-      break;
+      refCount = &gExpgfxTableEntries[tableIndex].refCount;
+      if (*refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
+        debugPrintf(sExpgfxAddToTableUsageOverflow);
+        return EXPGFX_INVALID_TABLE_INDEX;
+      }
+      (*refCount)++;
+      return (int)(short)tableIndex;
     }
     entry++;
     tableIndex++;
     remaining--;
-    if (remaining == 0) {
-      freeIndex = 0;
-      remaining = EXPGFX_EXPTAB_ENTRY_COUNT;
-      do {
-        if (entryBase->refCount == 0) {
-          gExpgfxTableEntries[freeIndex].refCount = 1;
-          gExpgfxTableEntries[freeIndex].textureOrResource = textureOrResource;
-          gExpgfxTableEntries[freeIndex].key0 = key0;
-          gExpgfxTableEntries[freeIndex].key1 = key1;
-          gExpgfxTableEntries[freeIndex].slotType = slotType;
-          return (int)(short)freeIndex;
-        }
-        entryBase++;
-        freeIndex++;
-        remaining--;
-      } while (remaining != 0);
+  } while (remaining != 0);
 
-      debugPrintf(sExpgfxExpTabIsFull);
-      return EXPGFX_INVALID_TABLE_INDEX;
+  freeIndex = 0;
+  remaining = EXPGFX_EXPTAB_ENTRY_COUNT;
+  do {
+    if (entryBase->refCount == 0) {
+      gExpgfxTableEntries[freeIndex].refCount = 1;
+      gExpgfxTableEntries[freeIndex].textureOrResource = textureOrResource;
+      gExpgfxTableEntries[freeIndex].key0 = key0;
+      gExpgfxTableEntries[freeIndex].key1 = key1;
+      gExpgfxTableEntries[freeIndex].slotType = slotType;
+      return (int)(short)freeIndex;
     }
-  } while (true);
+    entryBase++;
+    freeIndex++;
+    remaining--;
+  } while (remaining != 0);
 
-  refCount = &gExpgfxTableEntries[tableIndex].refCount;
-  if (*refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
-    debugPrintf(sExpgfxAddToTableUsageOverflow);
-    return EXPGFX_INVALID_TABLE_INDEX;
-  }
-  (*refCount)++;
-  return (int)(short)tableIndex;
+  debugPrintf(sExpgfxExpTabIsFull);
+  return EXPGFX_INVALID_TABLE_INDEX;
 }
 #pragma peephole reset
 #pragma scheduling reset
