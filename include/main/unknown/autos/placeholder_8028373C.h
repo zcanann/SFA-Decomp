@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-uint FUN_80283710(uint param_1);
+void hwSetPitch(int slot, u32 value);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028373C_H_ */
