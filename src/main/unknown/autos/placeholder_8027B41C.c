@@ -4,7 +4,7 @@
 extern void synthAdvanceVirtualSampleEntry(void *entry, u32 tick);
 extern u32 hwChangeStudio(int slot);
 extern u32 hwGetVirtualSampleState(int slot);
-extern u16 hwGetVirtualSampleID(int slot);
+extern u32 hwGetVirtualSampleID(int slot);
 extern u32 hwVoiceInStartup(int slot);
 extern void hwBreak(int slot);
 
@@ -50,15 +50,15 @@ void synthUpdateVirtualSamples(void)
 
         currentTick = hwChangeStudio(i);
         if (entry[2] == 5) {
-            elapsed = (currentTick / 7) * 0xe;
+            elapsed = (currentTick / 0xe) * 0xe;
         } else {
             elapsed = currentTick;
         }
 
         if (entry[0] == 2) {
-            u16 sampleId = hwGetVirtualSampleID(entry[3]);
+            u32 sampleId = hwGetVirtualSampleID(entry[3]);
             u32 expected = (u32)entry[3] | ((u32)*(u16 *)(entry + 0x12) << 8);
-            if ((expected & 0xffffff) != sampleId) {
+            if (expected != sampleId) {
                 entry[0] = 0;
                 *(u8 *)(state + 0x908 + entry[3]) = 0xff;
             } else {
@@ -76,7 +76,7 @@ void synthUpdateVirtualSamples(void)
                 *(u32 *)(entry + 0xc) = currentTick;
 
                 val = *(u16 *)(synthVoice + entry[3] * 0x404 + 0x206);
-                threshold = (u32)((s32)(val * 0xa0 + 0xfff) >> 12);
+                threshold = (u32)((s32)(val * 0xa0 + 0xfff) / 0x1000);
                 if ((s32)threshold > (s32)*(u32 *)(entry + 8)) {
                     if (hwVoiceInStartup(entry[3]) == 0) {
                         hwBreak(entry[3]);
