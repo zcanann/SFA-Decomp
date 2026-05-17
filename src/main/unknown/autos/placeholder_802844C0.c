@@ -35,10 +35,13 @@ extern AramStreamBufferEntry lbl_803D4468[];
  */
 u32 aramStoreData(void *src, u32 size)
 {
-    u32 alignedSize = (size + 0x1f) & ~0x1f;
-    u32 startPos = aramWrite;
-    void *piece;
     u32 chunk;
+    u32 startPos;
+    void *piece;
+    u32 alignedSize;
+
+    alignedSize = (size + 0x1f) & ~0x1f;
+    startPos = aramWrite;
 
     if (aramChunkCallback == NULL) {
         DCFlushRange(src, alignedSize);
