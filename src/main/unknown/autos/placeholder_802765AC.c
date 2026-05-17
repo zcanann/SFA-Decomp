@@ -553,7 +553,7 @@ void fn_8027670C(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
  * Read a 32-bit synth register, either from the voice or EX controller bank.
  */
 #pragma dont_inline on
-u32 fn_802769A4(int state, u32 useExCtrl, u32 index)
+u32 varGet32(int state, u32 useExCtrl, u32 index)
 {
     u32 value;
 
@@ -575,7 +575,7 @@ u32 fn_802769A4(int state, u32 useExCtrl, u32 index)
 /*
  * Read a signed 16-bit synth register.
  */
-int fn_80276A08(int state, u32 useExCtrl, u32 index)
+int varGet(int state, u32 useExCtrl, u32 index)
 {
     u32 value;
 
@@ -596,7 +596,7 @@ int fn_80276A08(int state, u32 useExCtrl, u32 index)
 /*
  * Write a synth register, routing high registers to the EX controller bank.
  */
-void fn_80276A70(int state, u32 useExCtrl, u32 index, u32 value)
+void varSet32(int state, u32 useExCtrl, u32 index, u32 value)
 {
     if (useExCtrl != 0) {
         inpSetExCtrl(state, index, (s16)value);
@@ -673,13 +673,13 @@ void mcmdVarCalculation(int state, u32 *args, u8 op)
 
     operand = args[1];
     command = *args;
-    lhs = (s16)fn_802769A4(state, command >> 0x18, operand & 0xff);
+    lhs = (s16)varGet32(state, command >> 0x18, operand & 0xff);
     opValue = op;
     if (opValue == 4) {
         rhs = (s16)(operand >> 8);
     } else {
         operand = args[1];
-        rhs = (s16)fn_802769A4(state, (operand >> 8) & 0xff, (operand >> 0x10) & 0xff);
+        rhs = (s16)varGet32(state, (operand >> 8) & 0xff, (operand >> 0x10) & 0xff);
     }
 
     opValue = op;
@@ -716,7 +716,7 @@ clamp:
     } else {
         rhs = 0x7fff;
     }
-    fn_80276A70(state, (command >> 8) & 0xff, (command >> 0x10) & 0xff, (int)rhs);
+    varSet32(state, (command >> 8) & 0xff, (command >> 0x10) & 0xff, (int)rhs);
 }
 
 /*

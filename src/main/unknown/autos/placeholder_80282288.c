@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_80282288.h"
 
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
-extern int fn_80276A08(int state, int useExCtrl, u32 index);
+extern int varGet(int state, int useExCtrl, u32 index);
 extern u32 synthRealTimeHi;
 extern u32 synthRealTimeLo;
 
@@ -147,7 +147,7 @@ u16 _GetInputValue(void *statePtr, void *slotPtr, u8 midiSlot, u8 midiKey)
             if (state == 0) {
                 signedValue = 0;
             } else {
-                signedValue = fn_80276A08(state, 0, entry[0]);
+                signedValue = varGet(state, 0, entry[0]);
             }
 signed_input:
             signedValue = (int)(signedValue * (*(int *)(entry + 4) >> 1)) >> 0xf;
