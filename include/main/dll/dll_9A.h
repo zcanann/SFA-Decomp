@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_80100aa4(void);
+undefined4 camcontrol_updateTargetReticle(void);
 
 #endif /* MAIN_DLL_DLL_9A_H_ */

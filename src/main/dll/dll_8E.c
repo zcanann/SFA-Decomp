@@ -6,7 +6,7 @@ extern undefined4 FUN_800723a0();
 /*
  * --INFO--
  *
- * Function: FUN_80100aa4
+ * Function: camcontrol_updateTargetReticle
  * EN v1.0 Address: 0x80100AA4
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x80100AC4
@@ -16,7 +16,7 @@ extern undefined4 FUN_800723a0();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80100aa4(void)
+undefined4 camcontrol_updateTargetReticle(void)
 {
   FUN_800723a0();
   return 0xffffffff;
