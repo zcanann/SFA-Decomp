@@ -9,7 +9,7 @@ extern uint getAngle();
 extern undefined4 mtxRotateByVec3s();
 extern undefined4 setMatrixFromObjectPos();
 extern int FUN_80017970();
-extern undefined4 ObjList_GetObjects();
+extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
 extern int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex);
 extern int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
                                      u8 hitVolume,u8 sphereIndex);
@@ -3047,8 +3047,8 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
   ObjHitsSweepEntry *nextEntry;
   ObjHitsSweepEntry *sweepEntries;
   ObjHitsSweepEntry **sweepPtrs;
-  undefined4 uStack_f28;
-  undefined4 auStack_f24[51];
+  int uStack_f28;
+  int auStack_f24[51];
   int aiStack_e58[918];
   
   objectCount = FUN_80286820();
