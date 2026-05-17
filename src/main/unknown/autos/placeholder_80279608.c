@@ -44,7 +44,7 @@ void voiceSetPriority(int state, u8 newGroup)
 
     /* prepend to new group's linked list */
     {
-        u32 group = newGroup;
+        int group = newGroup;
         u8 *groupHead = nodes + group + 0x9c0;
         oldFirst = *groupHead;
         *(u8 *)(slot + 1) = oldFirst;
@@ -55,13 +55,7 @@ void voiceSetPriority(int state, u8 newGroup)
             /* group was empty: insert into the global priority list */
             cur = voicePrioSortRootListRoot;
             if (cur != 0xffff) {
-                if (group < cur) {
-                    /* prepend: group's next = old head, old head's prev = group */
-                    *(u16 *)(nodes + 0xac0 + group * 4) = cur;
-                    *(u16 *)(nodes + 0xac2 + group * 4) = 0xffff;
-                    *(u16 *)(nodes + 0xac2 + cur * 4) = (u16)group;
-                    voicePrioSortRootListRoot = (u16)group;
-                } else {
+                if (group >= cur) {
                     /* walk list: find first node with id > group */
                     while ((cur != 0xffff) && (cur <= group)) {
                         prev = cur;
@@ -74,6 +68,12 @@ void voiceSetPriority(int state, u8 newGroup)
                     if (cur != 0xffff) {
                         *(u16 *)(nodes + 0xac2 + cur * 4) = (u16)group;
                     }
+                } else {
+                    /* prepend: group's next = old head, old head's prev = group */
+                    *(u16 *)(nodes + 0xac0 + group * 4) = cur;
+                    *(u16 *)(nodes + 0xac2 + group * 4) = 0xffff;
+                    *(u16 *)(nodes + 0xac2 + cur * 4) = (u16)group;
+                    voicePrioSortRootListRoot = (u16)group;
                 }
             } else {
                 /* list empty: group becomes head and tail */

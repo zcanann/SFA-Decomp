@@ -781,6 +781,8 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   u32 bit;
   s32 highBit;
   u32 *sourceMasks;
+  u32 maskHigh;
+  u32 maskLow;
   u64 trackedPoolFrameMask;
   u32 *poolSourceIds;
   int poolIndex;
@@ -797,7 +799,9 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       bit = 1 << (signedPoolIndex >> 1);
       highBit = (s32)bit >> 0x1f;
       sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(signedPoolIndex & 1)) * 2];
-      trackedPoolFrameMask = CONCAT44(highBit & sourceMasks[0],bit & sourceMasks[1]);
+      maskHigh = sourceMasks[0];
+      maskLow = sourceMasks[1];
+      trackedPoolFrameMask = CONCAT44(highBit & maskHigh,bit & maskLow);
       if (trackedPoolFrameMask != 0) {
         gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
         if ((s8)aggregateState == EXPGFX_SOURCE_FRAME_STATE_A) {
