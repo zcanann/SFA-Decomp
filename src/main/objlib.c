@@ -36,7 +36,7 @@ extern void mtxRotateByVec3s(float *mtx,void *transform);
 extern undefined4 FUN_80017a50();
 extern int *Obj_GetActiveModel(int obj);
 extern void *Obj_GetPlayerObject(void);
-extern void Obj_UpdateObject(ObjAnimComponent *obj,void *modelInstance);
+extern void Obj_UpdateObject(ObjAnimComponent *obj,ObjModelInstance *modelInstance);
 extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
 extern void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2);
 extern undefined4 FUN_80045328();
@@ -301,7 +301,7 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
   s16 firstEntryOffset;
   ObjHitReactMoveEntry *moveEntryTable;
 
-  moveEntryTable = ((ObjAnimDef *)((ObjAnimComponent *)objAnim)->modelInstance)->hitReactMoveTable;
+  moveEntryTable = ((ObjAnimComponent *)objAnim)->modelInstance->hitReactMoveTable;
   hitState->activeEntryCount = 0;
   if (moveEntryTable != (ObjHitReactMoveEntry *)0x0) {
     entryShortOffset = 0;
@@ -1407,7 +1407,7 @@ void ObjHitReact_UpdateResetObjects(void)
   objectOffset = 0;
   for (; objectIndex < gObjHitsResetObjectCount; objectIndex = objectIndex + 1) {
     obj = *(ObjAnimComponent **)((int)gObjHitsResetObjects + objectOffset);
-    if (((*(uint *)((int)obj->modelInstance + 0x44) & 0x40) == 0) &&
+    if (((obj->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0) &&
        (obj->activeHitboxMode != 'd')) {
       Obj_UpdateObject(obj,obj->modelInstance);
     }

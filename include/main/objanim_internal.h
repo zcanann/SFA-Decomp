@@ -119,6 +119,22 @@ typedef struct ObjAnimRootCurve {
   ObjAnimRootCurveAxis axes[1];
 } ObjAnimRootCurve;
 
+#define OBJMODEL_FLAG_SKIP_RESET_UPDATE 0x40
+
+/*
+ * Minimal recovered shape of the model pointer carried by ObjAnimComponent.
+ * The named fields below are shared by root-motion sampling and hit-reaction
+ * table loading; the rest of the object/model layout is still being mapped.
+ */
+typedef struct ObjModelInstance {
+  u8 pad00[4];
+  f32 rootMotionScaleBase;
+  u8 pad08[0x24 - 0x08];
+  ObjHitReactMoveEntry *hitReactMoveTable;
+  u8 pad28[0x44 - 0x28];
+  u32 flags;
+} ObjModelInstance;
+
 typedef struct ObjAnimMoveData {
   u8 pad00;
   s8 frameInfo;
@@ -140,7 +156,7 @@ typedef struct ObjAnimComponent {
   u8 pad0C[0x46 - 0x0C];
   s16 objType;
   u8 pad48[0x50 - 0x48];
-  void *modelInstance;
+  ObjModelInstance *modelInstance;
   ObjHitReactState *hitReactState;
   u8 pad58[0x60 - 0x58];
   struct ObjAnimEventTable *eventTable;

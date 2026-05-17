@@ -577,7 +577,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
     state = bank->currentState;
     iVar18 = (int)state;
     fVar5 = objAnim->rootMotionScale;
-    fVar3 = distance * (fVar5 / *(float *)((int)objAnim->modelInstance + 4));
+    fVar3 = distance * (fVar5 / objAnim->modelInstance->rootMotionScaleBase);
     pfVar15 = (float *)0x0;
     if (state->eventState != 0) {
       in_f7 = (float)(u32)state->eventState / gObjAnimEventStepScale;
