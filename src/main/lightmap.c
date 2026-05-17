@@ -105,7 +105,7 @@ extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286884();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_802924c4();
-extern undefined4 FUN_802927a4();
+extern undefined4 powfCoreHighPrecision();
 extern undefined4 FUN_80293900();
 extern undefined4 FUN_80293d0c();
 extern undefined4 FUN_80293f84();
@@ -327,7 +327,7 @@ void FUN_8005ab70(void)
   dVar4 = (double)FUN_80293d0c();
   fVar1 = (float)(dVar4 / dVar3) * (float)(dVar4 / dVar3);
   FUN_80293900((double)(lbl_803DF888 * lbl_803DF888 * fVar1 + fVar1));
-  FUN_802927a4();
+  powfCoreHighPrecision();
   dVar3 = (double)FUN_802947f8();
   dVar4 = (double)FUN_802949e8();
   dVar3 = -dVar3;

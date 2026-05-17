@@ -133,7 +133,7 @@ extern undefined4 FUN_80286884();
 extern undefined4 FUN_8028688c();
 extern undefined4 FUN_802924c4();
 extern double FUN_80293900();
-extern undefined4 FUN_8029397c();
+extern undefined4 fcos16Precise();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern undefined4 FUN_80294c48();
@@ -3444,7 +3444,7 @@ void FUN_80170048(void)
       dVar13 = DOUBLE_803e4068;
       do {
         *(undefined2 *)(piVar4 + 0xd) = 0xc000;
-        dVar10 = (double)FUN_8029397c();
+        dVar10 = (double)fcos16Precise();
         piVar7[9] = (int)(*pfVar9 * (float)((double)(float)(dVar12 + dVar10) * dVar11));
         piVar7[5] = *piVar8;
         uVar5 = randomGetRange(0x78,0x7f);
@@ -3508,7 +3508,7 @@ void FUN_80170048(void)
     piVar4 = piVar7;
     do {
       *(undefined2 *)(piVar7 + 0xd) = 0;
-      dVar11 = (double)FUN_8029397c();
+      dVar11 = (double)fcos16Precise();
       piVar4[9] = (int)(*pfVar9 * (float)((double)(float)(dVar14 + dVar11) * dVar13));
       piVar4[5] = *piVar8;
       piVar7 = (int *)((int)piVar7 + 2);
@@ -3534,7 +3534,7 @@ void FUN_80170048(void)
     dVar13 = DOUBLE_803e4068;
     do {
       *(undefined2 *)(piVar7 + 0xd) = 0xc000;
-      dVar10 = (double)FUN_8029397c();
+      dVar10 = (double)fcos16Precise();
       piVar4[9] = (int)(*pfVar9 * (float)((double)(float)(dVar14 + dVar10) * dVar11));
       piVar4[5] = *piVar8;
       uVar5 = randomGetRange(0x78,0x7f);
@@ -3565,7 +3565,7 @@ void FUN_80170048(void)
     piVar4 = piVar7;
     do {
       *(undefined2 *)(piVar7 + 0xd) = 0x4000;
-      dVar11 = (double)FUN_8029397c();
+      dVar11 = (double)fcos16Precise();
       piVar4[9] = (int)(*pfVar9 * (float)((double)(float)(dVar13 + dVar11) * dVar14));
       piVar4[5] = *piVar8;
       piVar7 = (int *)((int)piVar7 + 2);
