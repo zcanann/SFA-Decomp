@@ -1,8 +1,26 @@
 #include "ghidra_import.h"
 
+typedef struct S3DEmitterCtrl {
+    u8 controller;
+    u8 pad01;
+    u16 value;
+} S3DEmitterCtrl;
+
+typedef struct S3DEmitterCtrlList {
+    u8 count;
+    u8 pad01[3];
+    S3DEmitterCtrl *entries;
+} S3DEmitterCtrlList;
+
 typedef struct Snd3DEmitterLite {
-    u8 pad00[0x40];
+    u8 pad00[0x0c];
+    S3DEmitterCtrlList *ctrlList;
+    u32 flags;
+    u8 pad14[0x3c - 0x14];
+    u32 handle;
     u32 groupKey;
+    u8 pad44[0x4c - 0x44];
+    f32 age;
 } Snd3DEmitterLite;
 
 typedef struct S3DActiveNode {
@@ -33,12 +51,27 @@ extern u8 lbl_803CC8C0[];
 extern u8 lbl_803DE36B;
 extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
+extern f32 lbl_803E78A0;
+extern f32 lbl_803E78A4;
+extern f32 lbl_803E78B4;
+extern f32 lbl_803E78B8;
+
+extern u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
+extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 
 #define S3D_MAX_GROUPS 0x40
 #define S3D_MAX_ACTIVE_NODES 0x40
+#define S3D_EMITTER_FLAG_AGE_OUT 0x00100000
+#define S3D_CTRL_VOLUME 0x07
+#define S3D_CTRL_PAN 0x0a
+#define S3D_CTRL_SPATIAL_AZIMUTH 0x83
+#define S3D_CTRL_SPATIAL_PITCH 0x84
+#define S3D_CTRL_14BIT_LIMIT 0x3fff
 #define S3D_MIX_GROUPS ((S3DMixGroup *)(lbl_803CC8C0 + 0x50))
 #define S3D_ACTIVE_NODES ((S3DActiveNode *)(lbl_803CC8C0 + 0x450))
 #define S3D_SORTED_NODES ((S3DSortedNode *)(lbl_803CC8C0 + 0xb50))
+
+#define S3D_CLAMP_7BIT(value) (((value) & 0xff) > 0x7f ? 0x7f : (value))
 
 /*
  * fn_802800C0 - large reverb/effect chain init (~840 instructions).
@@ -48,11 +81,63 @@ extern u8 lbl_803DE36D;
 void fn_802800C0(void) {}
 #pragma dont_inline reset
 
-/*
- * fn_802805A4 - 540-instr per-voice update. Stubbed.
- */
 #pragma dont_inline on
-void fn_802805A4(void) {}
+void fn_802805A4(Snd3DEmitterLite *emitter, f32 distance, f32 pan, f32 unused, f32 azimuth,
+                 f32 pitch)
+{
+    S3DEmitterCtrlList *ctrlList;
+    S3DEmitterCtrl *ctrl;
+    u32 handle;
+    u32 value;
+    u16 value14;
+    u8 i;
+    u8 controller;
+    f32 scaledPitch;
+
+    (void)unused;
+    handle = emitter->handle;
+    if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) == 0) {
+        value = (u32)(lbl_803E78A0 * distance);
+        value = S3D_CLAMP_7BIT(value);
+        synthFXSetCtrl(handle, S3D_CTRL_VOLUME, value);
+    } else {
+        value = (u32)(lbl_803E78A0 * (emitter->age * distance));
+        value = S3D_CLAMP_7BIT(value);
+        synthFXSetCtrl(handle, S3D_CTRL_VOLUME, value);
+    }
+
+    value = (u32)(lbl_803E78B4 * (lbl_803E78A4 + pan));
+    value = S3D_CLAMP_7BIT(value);
+    synthFXSetCtrl(handle, S3D_CTRL_PAN, value);
+
+    value = (u32)(lbl_803E78B4 * (lbl_803E78A4 - azimuth));
+    value = S3D_CLAMP_7BIT(value);
+    synthFXSetCtrl(handle, S3D_CTRL_SPATIAL_AZIMUTH, value);
+
+    scaledPitch = lbl_803E78B8 * pitch;
+    value = (u32)scaledPitch;
+    if (value < S3D_CTRL_14BIT_LIMIT + 1) {
+        value14 = (u16)(u32)scaledPitch;
+    } else {
+        value14 = S3D_CTRL_14BIT_LIMIT;
+    }
+    synthFXSetCtrl14(handle, S3D_CTRL_SPATIAL_PITCH, value14);
+
+    ctrlList = emitter->ctrlList;
+    if (ctrlList != (S3DEmitterCtrlList *)0x0) {
+        ctrl = ctrlList->entries;
+        for (i = 0; i < ctrlList->count; i++) {
+            controller = ctrl->controller;
+            if (((controller < 0x40) || (controller == 0x80)) ||
+                (controller == S3D_CTRL_SPATIAL_PITCH)) {
+                synthFXSetCtrl14(handle, controller, ctrl->value);
+            } else {
+                synthFXSetCtrl(handle, controller, ctrl->value);
+            }
+            ctrl++;
+        }
+    }
+}
 #pragma dont_inline reset
 
 /*
