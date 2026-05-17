@@ -8,7 +8,8 @@ extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 FUN_8014ccb8();
-extern undefined4 FUN_8014d164();
+extern void enemy_free(double param_1,double param_2,ushort *param_3,int param_4,uint param_5,
+                       char param_6);
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_80154af4();
 extern undefined4 FUN_80247eb8();
@@ -105,7 +106,7 @@ void FUN_80154870(ushort *param_1,undefined4 *param_2)
                        (double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e3640));
   local_18 = (longlong)iVar1;
   param_1[1] = (ushort)iVar1;
-  FUN_8014d164((double)lbl_803E365C,(double)lbl_803E362C,param_1,(int)param_2,0xf,'\0');
+  enemy_free((double)lbl_803E365C,(double)lbl_803E362C,param_1,(int)param_2,0xf,'\0');
   if ((param_2[0xb7] & 0x40000000) != 0) {
     if (DOUBLE_803e3660 <= (double)*(float *)(param_1 + 0x4c)) {
       uVar2 = randomGetRange(0,0x3c);
@@ -205,7 +206,7 @@ void FUN_80154b88(ushort *param_1,undefined4 *param_2)
   else {
     FUN_8014ccb8((double)lbl_803E3638,(double)lbl_803E364C,(double)lbl_803E364C,(int)param_1,
                  (int)param_2,&local_38,'\x01');
-    FUN_8014d164((double)lbl_803E365C,(double)lbl_803E362C,param_1,(int)param_2,0xf,'\0');
+    enemy_free((double)lbl_803E365C,(double)lbl_803E362C,param_1,(int)param_2,0xf,'\0');
   }
   fVar1 = lbl_803E3628;
   if ((param_2[0xb7] & 0x40000000) != 0) {

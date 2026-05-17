@@ -41,7 +41,8 @@ extern int Obj_GetYawDeltaToObject();
 extern uint FUN_800620e8();
 extern byte FUN_8014c78c();
 extern undefined4 FUN_8014cfac();
-extern undefined4 FUN_8014d164();
+extern void enemy_free(double param_1,double param_2,ushort *param_3,int param_4,uint param_5,
+                       char param_6);
 extern undefined8 FUN_8014d3d0();
 extern undefined8 FUN_8014d4c8();
 extern undefined4 FUN_8014d59c();

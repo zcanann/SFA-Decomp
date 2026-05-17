@@ -93,7 +93,7 @@ extern f32 lbl_803E3298;
 /*
  * --INFO--
  *
- * Function: FUN_8014d164
+ * Function: enemy_free
  * EN v1.0 Address: 0x8014D164
  * EN v1.0 Size: 620b
  * EN v1.1 Address: 0x8014D194
@@ -103,7 +103,7 @@ extern f32 lbl_803E3298;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8014d164(double param_1,double param_2,ushort *param_3,int param_4,uint param_5,
+void enemy_free(double param_1,double param_2,ushort *param_3,int param_4,uint param_5,
                  char param_6)
 {
   uint uVar1;
