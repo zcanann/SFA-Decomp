@@ -27,25 +27,29 @@ extern u16 synthLoadedGroupCount;
 void synthUpdateVirtualSamples(void)
 {
     u8 *state;
-    int i;
+    u8 *slotMap;
+    u32 i;
     u32 currentTick;
     u32 elapsed;
     u8 *entry;
+    u8 vid;
+    int mode;
 
     state = synthVirtualSampleState;
     if (*(u32 *)(state + 0x94c) == 0) {
         return;
     }
 
-    for (i = 0; i < 0x40; i++) {
-        u8 vid = *(u8 *)(state + 0x908 + i);
+    slotMap = state;
+    for (i = 0; i < 0x40; i++, slotMap++) {
+        vid = slotMap[0x908];
         if (vid == 0xff) {
             continue;
         }
         if (hwGetVirtualSampleState(i) == 0) {
             continue;
         }
-        vid = *(u8 *)(state + 0x908 + i);
+        vid = slotMap[0x908];
         entry = state + (vid * 0x24 + 8);
 
         currentTick = hwChangeStudio(i);
@@ -55,7 +59,8 @@ void synthUpdateVirtualSamples(void)
             elapsed = currentTick;
         }
 
-        if (entry[0] == 2) {
+        mode = entry[0];
+        if (mode == 2) {
             u32 sampleId = hwGetVirtualSampleID(entry[3]);
             u32 expected = (u32)entry[3] | ((u32)*(u16 *)(entry + 0x12) << 8);
             if (expected != sampleId) {
@@ -67,11 +72,11 @@ void synthUpdateVirtualSamples(void)
                 u16 val;
                 synthAdvanceVirtualSampleEntry(entry, elapsed);
                 prev = *(u32 *)(entry + 0xc);
-                if (currentTick < prev) {
+                if (currentTick >= prev) {
+                    *(u32 *)(entry + 8) -= (currentTick - prev);
+                } else {
                     u32 delta = *(u32 *)(state + 4) - (prev - currentTick);
                     *(u32 *)(entry + 8) -= delta;
-                } else {
-                    *(u32 *)(entry + 8) -= (currentTick - prev);
                 }
                 *(u32 *)(entry + 0xc) = currentTick;
 
@@ -85,8 +90,10 @@ void synthUpdateVirtualSamples(void)
                     *(u8 *)(state + 0x908 + entry[3]) = 0xff;
                 }
             }
-        } else if (entry[0] == 1) {
-            synthAdvanceVirtualSampleEntry(entry, elapsed);
+        } else if (mode < 2) {
+            if (mode >= 1) {
+                synthAdvanceVirtualSampleEntry(entry, elapsed);
+            }
         }
     }
 }
