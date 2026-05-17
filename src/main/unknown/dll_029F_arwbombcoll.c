@@ -9,7 +9,7 @@
 // - gARWBombCollObjDescriptor @ 0x8032B6E8
 //
 // Runtime notes:
-// - update follows the player arwing object from FUN_8022D768 and hides/culls itself when
+// - update follows the player arwing object from getArwing and hides/culls itself when
 //   the arwing is inactive or the extra float +0 lifetime has expired.
 // - while near the arwing, object byte +0x36 fades in, model visibility flag 0x4000 is
 //   cleared, and collision/effect hooks detect hits against ARW shot object ids 0x0604

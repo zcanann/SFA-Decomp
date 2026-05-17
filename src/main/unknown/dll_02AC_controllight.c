@@ -19,7 +19,7 @@
 // - 9: controllight_getExtraSize (0x80234C10)
 
 // Runtime shape:
-// - extra +0x00: control switch/flag id polled through FUN_8001ffb4.
+// - extra +0x00: control switch/flag id polled through GameBit_Get.
 // - extra +0x04: radius for nearby pointlight updates.
 // - extra +0x08: mode. 0 forwards the raw switch state, 1 forwards whether the
 //   switch state is zero.

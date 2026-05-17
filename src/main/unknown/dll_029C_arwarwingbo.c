@@ -13,7 +13,7 @@
 // - the player arwing update uses arwarwingbo_setActiveVisible to show or hide the linked
 //   bomb/secondary object stored from the arwing extra block.
 // - arwarwingbo_setActiveVisible writes extra byte +0, toggles model visibility flag
-//   0x4000, and optionally enables collision/visibility through FUN_8002B884.
+//   0x4000, and optionally enables collision/visibility through Obj_SetActiveModelIndex.
 //
 // Descriptor slots:
 // - 0: arwarwingbo_initialise (0x8022F144)
