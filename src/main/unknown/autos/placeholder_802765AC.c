@@ -84,7 +84,7 @@ extern int macActiveRoot;
 extern int macTimeQueueRoot;
 extern int macRealTimeHi;
 extern int macRealTimeLo;
-extern void audioFn_8027132c(void *state);
+extern void synthQueueVoicePrimaryUpdates(void *state);
 extern void *dataGetMacro(u32 key);
 extern u16 seqGetMIDIPriority(u8 slot, u8 event);
 extern u32 voiceAllocate(u32 priority, u32 maxInstances, u32 key, u8 streamKind);
@@ -1064,7 +1064,7 @@ void fn_802788B4(int state, u32 skipFadeReset)
             }
         }
         if (skipFadeReset == 0) {
-            audioFn_8027132c((void *)state);
+            synthQueueVoicePrimaryUpdates((void *)state);
         }
         *(int *)(state + 0x9c) = 0;
         *(int *)(state + 0x98) = 0;
@@ -1114,7 +1114,7 @@ void audioFn_80278990(int state)
                     *(int *)(next + 0x48) = *(int *)(state + 0x48);
                 }
             }
-            audioFn_8027132c((void *)state);
+            synthQueueVoicePrimaryUpdates((void *)state);
             *(int *)(state + 0x9c) = 0;
             *(int *)(state + 0x98) = 0;
             activeTimeHi = macRealTimeHi;

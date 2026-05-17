@@ -5,7 +5,7 @@
 extern u8 lbl_803CD760[];
 extern u8 lbl_803BD150[];
 extern u8 *synthVoice;
-extern void fn_80271370(int voice);
+extern void synthQueueVoiceInputUpdate(int voice);
 
 /*
  * inpSetMidiCtrl - combined RPN/MIDI controller setter.
@@ -102,7 +102,7 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
                 slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
                 *(u32 *)(vp + 0x214) = 0x1fff;
-                fn_80271370((int)(synthVoice + voff));
+                synthQueueVoiceInputUpdate((int)(synthVoice + voff));
             }
             voff += SYNTH_VOICE_STRIDE;
         }
@@ -187,7 +187,7 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
                 slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
                 *(u32 *)(vp + 0x214) = 0x1fff;
-                fn_80271370((int)(synthVoice + voff));
+                synthQueueVoiceInputUpdate((int)(synthVoice + voff));
             }
             voff += SYNTH_VOICE_STRIDE;
         }

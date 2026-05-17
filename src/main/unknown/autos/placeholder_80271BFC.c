@@ -7,7 +7,7 @@ extern void macSampleEndNotify(void);
 extern void synthHandleVirtualSampleDone(u32 packed);
 extern u32 hwGetVirtualSampleID(int slot);
 extern void sndConvertMs(u32 *p);
-extern void fn_8027142C(u8 *fade);
+extern void synthDispatchFadeAction(u8 *fade);
 
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD364[];
@@ -77,7 +77,7 @@ void synthVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle)
                             fade->target = targetVolume;
                             fade->current = targetVolume;
                             if (fade->handle != 0xffffffff) {
-                                fn_8027142C((u8 *)fade);
+                                synthDispatchFadeAction((u8 *)fade);
                             }
                         }
                         synthMasterFaderActiveFlags |= 1U << i;
@@ -109,7 +109,7 @@ void synthVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle)
                         fade->target = targetVolume;
                         fade->current = targetVolume;
                         if (fade->handle != 0xffffffff) {
-                            fn_8027142C((u8 *)fade);
+                            synthDispatchFadeAction((u8 *)fade);
                         }
                     }
                     synthMasterFaderActiveFlags |= 1U << i;
@@ -140,7 +140,7 @@ void synthVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle)
                 fade->target = targetVolume;
                 fade->current = targetVolume;
                 if (fade->handle != 0xffffffff) {
-                    fn_8027142C((u8 *)fade);
+                    synthDispatchFadeAction((u8 *)fade);
                 }
             }
             synthMasterFaderActiveFlags |= 1U << i;
@@ -162,7 +162,7 @@ single_slot:
         fade->target = targetVolume;
         fade->current = targetVolume;
         if (fade->handle != 0xffffffff) {
-            fn_8027142C((u8 *)fade);
+            synthDispatchFadeAction((u8 *)fade);
         }
     }
     synthMasterFaderActiveFlags |= 1U << targetIndex;

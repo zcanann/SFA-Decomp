@@ -12,7 +12,7 @@ extern void sndConvertTicks(u32 *p, int state);
 extern int dataGetSample(u16 key, u32 *out);
 extern void hwInitSamplePlayback(u32 voice, u32 sampleId, u32 *sampleInfo, u32 noKeySync,
                                  u32 priority, u32 handle, u32 noStartOffset, u8 restart);
-extern void fn_80271370(int state);
+extern void synthQueueVoiceInputUpdate(int state);
 extern u32 dataSampleInfo[];
 extern void *dataGetCurve(u16 key);
 extern u32 voiceConvertDbToLinear(u32 value);
@@ -138,7 +138,7 @@ void mcmdStartSample(int state, u32 *args)
             DoSetPitch(state);
         }
         *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_ACTIVE_OUTPUT_FLAG;
-        fn_80271370(state);
+        synthQueueVoiceInputUpdate(state);
     }
 }
 

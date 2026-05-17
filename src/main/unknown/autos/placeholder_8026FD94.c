@@ -17,7 +17,7 @@ typedef struct SynthDelayStorageLocal {
 
 extern SynthDelayStorageLocal gSynthDelayStorage;
 extern u8 gSynthDelayBucketCursor;
-extern void audioFn_80271178(SynthDelayedNode *fade, int mode, u32 delay);
+extern void synthQueueDelayedUpdate(SynthDelayedNode *fade, int mode, u32 delay);
 extern void synthQueueHandle(u32 handle);
 extern void synthFreeHandle(u32 handle);
 extern void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1);
@@ -227,7 +227,7 @@ void fn_80270FE8(int idx) { (void)idx; }
  *
  * EN v1.1 Address: 0x80271178, size 336b
  */
-void audioFn_80271178(SynthDelayedNode *fade, int mode, u32 delay)
+void synthQueueDelayedUpdate(SynthDelayedNode *fade, int mode, u32 delay)
 {
     u32 bucket;
     SynthDelayStorageLocal *storage;
@@ -311,8 +311,8 @@ void fn_802712C8(SynthDelayedNode *fade)
         *(int *)((u8 *)fade + 0x2c) = a;
         *(int *)((u8 *)fade + 0x30) = b;
     }
-    audioFn_80271178(fade, 0, 0);
-    audioFn_80271178(fade, 1, 0);
+    synthQueueDelayedUpdate(fade, 0, 0);
+    synthQueueDelayedUpdate(fade, 1, 0);
 }
 
 /*
@@ -320,20 +320,20 @@ void fn_802712C8(SynthDelayedNode *fade)
  *
  * EN v1.1 Address: 0x8027132C, size 68b
  */
-void audioFn_8027132c(SynthDelayedNode *fade)
+void synthQueueVoicePrimaryUpdates(SynthDelayedNode *fade)
 {
-    audioFn_80271178(fade, 0, 0);
-    audioFn_80271178(fade, 1, 0);
+    synthQueueDelayedUpdate(fade, 0, 0);
+    synthQueueDelayedUpdate(fade, 1, 0);
 }
 
 /*
- * Wrapper for audioFn_80271178(handle, 2, 0).
+ * Wrapper for synthQueueDelayedUpdate(handle, 2, 0).
  *
  * EN v1.1 Address: 0x80271370, size 40b
  */
-void fn_80271370(SynthDelayedNode *fade)
+void synthQueueVoiceInputUpdate(SynthDelayedNode *fade)
 {
-    audioFn_80271178(fade, 2, 0);
+    synthQueueDelayedUpdate(fade, 2, 0);
 }
 
 /*
@@ -366,7 +366,7 @@ void synthDrainDelayedBucket(SynthDelayedNode **head, SynthDelayedBucketCallback
  *
  * EN v1.1 Address: 0x8027142C, size 108b
  */
-void fn_8027142C(u8 *fade)
+void synthDispatchFadeAction(u8 *fade)
 {
     u8 action;
 
@@ -426,7 +426,7 @@ void audioFn_80271498(u32 delta)
                         fade[3] = fade[3] - fade[4];
                         if (fade[3] <= zeroThreshold) {
                             fade[0] = fade[1];
-                            fn_8027142C((u8 *)fade);
+                            synthDispatchFadeAction((u8 *)fade);
                             synthMasterFaderActiveFlags &= ~mask;
                             if ((synthMasterFaderActiveFlags == 0) && (synthMasterFaderPauseActiveFlags == 0)) {
                                 break;
