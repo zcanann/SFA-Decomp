@@ -141,7 +141,6 @@ int salAiGetDest(void)
     int nextBuffer;
 
     nextBuffer = salAIBufferIndex + 2;
-    return ((u8)(nextBuffer - (nextBuffer / SAL_AI_BUFFER_COUNT) * SAL_AI_BUFFER_COUNT)) *
-               SAL_AI_DMA_CHUNK_SIZE +
-           salAiDmaBuffer;
+    return salAiDmaBuffer +
+           (u8)(nextBuffer % SAL_AI_BUFFER_COUNT) * SAL_AI_DMA_CHUNK_SIZE;
 }
