@@ -23,7 +23,7 @@ extern undefined4 FUN_800e8f58();
 extern undefined4 FUN_800e9298();
 extern undefined8 n_attractmode_releaseMovieBuffers();
 extern undefined4 FUN_80119d90();
-extern undefined4 FUN_80119fac();
+extern undefined4 saveSelectSetSlot();
 extern undefined4 FUN_80133a68();
 extern undefined8 FUN_80133c3c();
 extern undefined4 FUN_80134830();
@@ -597,7 +597,7 @@ void FUN_8011afa4(undefined8 param_1,undefined8 param_2,double param_3,undefined
         }
       }
       else if (-1 < DAT_803dc65b) {
-        FUN_80119fac(uVar16,dVar15,param_3,param_4,param_5,param_6,param_7,param_8,uVar3,uVar14,
+        saveSelectSetSlot(uVar16,dVar15,param_3,param_4,param_5,param_6,param_7,param_8,uVar3,uVar14,
                      uVar6,in_r6,in_r7,in_r8,in_r9,in_r10);
         FUN_80017484(0xff,0xff,0xff,bVar7);
         iVar13 = 0;
