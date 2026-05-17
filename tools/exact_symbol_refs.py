@@ -47,6 +47,26 @@ def load_symbols(symbols_path: Path) -> dict[str, str]:
     return symbols
 
 
+def collect_named_definitions(root: Path, include_autos: bool) -> dict[str, set[Path]]:
+    definitions: dict[str, set[Path]] = {}
+    definition_re = re.compile(
+        r"\b(?:void|int|uint|undefined\d*|double|float|char|bool)\s+([A-Za-z_][A-Za-z0-9_]*)\s*\("
+    )
+    for path in root.rglob("*.c"):
+        rel = path.as_posix()
+        if not include_autos and "unknown/autos" in rel:
+            continue
+        for line in path.read_text(errors="ignore").splitlines():
+            match = definition_re.search(line.strip())
+            if match is None:
+                continue
+            name = match.group(1)
+            if AUTO_NAME_RE.match(name):
+                continue
+            definitions.setdefault(name, set()).add(path)
+    return definitions
+
+
 def classify_line(stripped: str) -> str:
     if stripped.startswith("extern "):
         return "extern"
@@ -57,7 +77,14 @@ def classify_line(stripped: str) -> str:
     return "live"
 
 
-def iter_refs(root: Path, symbols: dict[str, str], include_autos: bool, skip: set[str]):
+def iter_refs(
+    root: Path,
+    symbols: dict[str, str],
+    include_autos: bool,
+    skip: set[str],
+    named_definitions: dict[str, set[Path]],
+    include_duplicate_definitions: bool,
+):
     for path in root.rglob("*.c"):
         rel = path.as_posix()
         if not include_autos and "unknown/autos" in rel:
@@ -74,6 +101,12 @@ def iter_refs(root: Path, symbols: dict[str, str], include_autos: bool, skip: se
                 address = match.group(1).lower()
                 name = symbols.get(address)
                 if name is None or address in skip or re.search(rf"\b{re.escape(name)}\b", text):
+                    continue
+                if (
+                    kind == "definition"
+                    and not include_duplicate_definitions
+                    and any(named_path != path for named_path in named_definitions.get(name, set()))
+                ):
                     continue
                 yield kind, name, f"FUN_{address}", path, lineno, stripped
 
@@ -106,6 +139,11 @@ def main() -> int:
         action="store_true",
         help="print the built-in skip list with reasons and exit",
     )
+    parser.add_argument(
+        "--include-duplicate-definitions",
+        action="store_true",
+        help="include raw definitions even when a named definition exists in another source file",
+    )
     args = parser.parse_args()
 
     if args.show_skips:
@@ -114,11 +152,19 @@ def main() -> int:
         return 0
 
     symbols = load_symbols(args.symbols)
+    named_definitions = collect_named_definitions(args.root, args.include_autos)
     skip = set() if args.no_default_skip else set(DEFAULT_SKIP_REASONS)
     skip.update(item.lower().removeprefix("fun_") for item in args.skip)
 
     count = 0
-    for kind, name, fun, path, lineno, line in iter_refs(args.root, symbols, args.include_autos, skip):
+    for kind, name, fun, path, lineno, line in iter_refs(
+        args.root,
+        symbols,
+        args.include_autos,
+        skip,
+        named_definitions,
+        args.include_duplicate_definitions,
+    ):
         if args.kind != "all" and kind != args.kind:
             continue
         print(f"{kind:10} {name:32} {fun} {path}:{lineno}: {line[:180]}")
