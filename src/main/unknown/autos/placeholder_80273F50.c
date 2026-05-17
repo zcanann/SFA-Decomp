@@ -925,9 +925,9 @@ extern u16 dataKeymapNum;
 extern u16 dataLayerNum;
 extern u16 dataFXGroupNum;
 extern u8 dataGetCurve_key[8];
-extern void *dataGetCurve_result;
+extern void * volatile dataGetCurve_result;
 extern u8 dataGetKeymap_key[8];
-extern void *dataGetKeymap_result;
+extern void * volatile dataGetKeymap_result;
 extern void *dataGetLayer_result;
 
 void *dataGetCurve(u16 key)
@@ -937,10 +937,10 @@ void *dataGetCurve(u16 key)
     *(u16 *)(dataGetCurve_key + 4) = key;
     result = sndBSearch(dataGetCurve_key, dataCurveTable, dataCurveNum, 8, curvecmp);
     dataGetCurve_result = result;
-    if (result == 0) {
-        return 0;
+    if (result != 0) {
+        return ((DataRefEntry *)dataGetCurve_result)->data;
     }
-    return ((DataRefEntry *)dataGetCurve_result)->data;
+    return 0;
 }
 
 /*
@@ -953,10 +953,10 @@ void *dataGetKeymap(u16 key)
     *(u16 *)(dataGetKeymap_key + 4) = key;
     result = sndBSearch(dataGetKeymap_key, dataKeymapTable, dataKeymapNum, 8, curvecmp);
     dataGetKeymap_result = result;
-    if (result == 0) {
-        return 0;
+    if (result != 0) {
+        return ((DataRefEntry *)dataGetKeymap_result)->data;
     }
-    return ((DataRefEntry *)dataGetKeymap_result)->data;
+    return 0;
 }
 
 /*
