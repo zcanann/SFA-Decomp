@@ -117,29 +117,30 @@ void fn_8027BFC4(u8 idx)
  * fn_8027BFE4 - pitch/interval mapper (~244 instructions). Stubbed.
  */
 #pragma dont_inline on
-int fn_8027BFE4(u16 *active, u16 *direction, s16 *current, s16 target, u16 *stepFlags, u16 mask)
+int fn_8027BFE4(u16 *active, u16 *direction, u16 *current, u16 target, u16 *stepFlags, u16 mask)
 {
     int delta;
     int step;
 
     if (target != *current) {
-        delta = (s16)(target - *current);
-        if ((delta > 0x1f) && (delta < 0xa0)) {
+        delta = (s16)target - (s16)*current;
+        delta = (s16)delta;
+        if ((delta >= 0x20) && (delta < 0xa0)) {
             step = (s16)(delta >> 5);
             if (step < 5) {
                 stepFlags[step] |= mask;
             }
             *direction = 1;
-            *current += (s16)(step << 5);
+            *current += step << 5;
             return 1;
         }
-        if ((delta < -0x1f) && (delta > -0xa0)) {
+        if ((delta <= -0x20) && (delta > -0xa0)) {
             step = (s16)(-delta >> 5);
             if (step < 5) {
                 stepFlags[step] |= mask;
             }
             *direction = 0xffff;
-            *current -= (s16)(step << 5);
+            *current -= step << 5;
             return 1;
         }
         if ((target == 0) && (delta > -0x20)) {
