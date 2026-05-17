@@ -3,8 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801732a4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void magicdust_update(int param_1);
 void FUN_80173b84(int param_1,int param_2);
 void FUN_80173fdc(int param_1);
 void FUN_80173ffc(int param_1);

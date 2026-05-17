@@ -286,7 +286,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_8017fa10
+ * Function: MagicPlant_update
  * EN v1.0 Address: 0x8017FA10
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8017FA4C
@@ -296,7 +296,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017fa10(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void MagicPlant_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,undefined4 param_10,int param_11)
 {
@@ -535,7 +535,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
           ObjAnim_SetMoveProgress((double)(float)piVar8[1],(ObjAnimComponent *)param_9);
         }
         else if (-1 < cVar2) {
-          FUN_8017fa10(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar7
+          MagicPlant_update(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar7
                        ,(int)piVar8);
         }
       }
