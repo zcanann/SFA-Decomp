@@ -11,7 +11,7 @@ extern undefined4 FUN_80053754();
 extern undefined4 FUN_8005398c();
 extern undefined4 FUN_801c1450();
 extern int dfropenode_func0E();
-extern undefined4 FUN_801c1f5c();
+extern void dfropenode_render(int obj,int param_2,int param_3);
 extern double FUN_80293900();
 extern undefined4 FUN_80294964();
 

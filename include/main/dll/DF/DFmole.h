@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801c1eac(double param_1,double param_2,int param_3);
+void dfropenode_free(void *obj);
 void FUN_801c1fb8(double param_1,int param_2,float *param_3);
 void FUN_801c20b8(double param_1,int param_2,float *param_3,float *param_4,float *param_5);
 
