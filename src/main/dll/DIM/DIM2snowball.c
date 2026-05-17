@@ -88,7 +88,7 @@ extern f32 lbl_803E5768;
 /*
  * --INFO--
  *
- * Function: FUN_801b6464
+ * Function: dim_levelcontrol_update
  * EN v1.0 Address: 0x801B6464
  * EN v1.0 Size: 56b
  * EN v1.1 Address: 0x801B69B0
@@ -98,7 +98,7 @@ extern f32 lbl_803E5768;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b6464(void)
+void dim_levelcontrol_update(void)
 {
   FUN_800067c0((int *)0xa1,0);
   FUN_800067c0((int *)0xed,0);

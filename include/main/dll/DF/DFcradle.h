@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801c053c(int param_1);
+void dimbossfire_update(int param_1);
 void FUN_801c0564(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);

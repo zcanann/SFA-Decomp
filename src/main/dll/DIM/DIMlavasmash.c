@@ -48,7 +48,7 @@ extern f32 lbl_803E54D4;
 /*
  * --INFO--
  *
- * Function: FUN_801b0924
+ * Function: dimlogfire_update
  * EN v1.0 Address: 0x801B0924
  * EN v1.0 Size: 184b
  * EN v1.1 Address: 0x801B0B58
@@ -58,7 +58,7 @@ extern f32 lbl_803E54D4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b0924(short *param_1,int param_2)
+void dimlogfire_update(short *param_1,int param_2)
 {
   uint uVar1;
   int iVar2;

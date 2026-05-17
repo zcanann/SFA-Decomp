@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801a6778(int param_1,int param_2);
+void MMP_levelcontrol_update(int param_1,int param_2);
 undefined4
 FUN_801a68b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10

@@ -53,7 +53,7 @@ extern f32 lbl_803E5A58;
 /*
  * --INFO--
  *
- * Function: FUN_801c053c
+ * Function: dimbossfire_update
  * EN v1.0 Address: 0x801C053C
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x801C05BC
@@ -63,7 +63,7 @@ extern f32 lbl_803E5A58;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c053c(int param_1)
+void dimbossfire_update(int param_1)
 {
   char in_r8;
   

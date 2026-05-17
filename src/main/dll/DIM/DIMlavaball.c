@@ -130,7 +130,7 @@ extern f32 lbl_803E5238;
 /*
  * --INFO--
  *
- * Function: FUN_801a6778
+ * Function: MMP_levelcontrol_update
  * EN v1.0 Address: 0x801A6778
  * EN v1.0 Size: 320b
  * EN v1.1 Address: 0x801A6AD0
@@ -140,7 +140,7 @@ extern f32 lbl_803E5238;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801a6778(int param_1,int param_2)
+void MMP_levelcontrol_update(int param_1,int param_2)
 {
   float fVar1;
   double dVar2;

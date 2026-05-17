@@ -10,7 +10,7 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053754();
 extern undefined4 FUN_8005398c();
 extern undefined4 FUN_801c1450();
-extern int FUN_801c1740();
+extern int dfropenode_func0E();
 extern undefined4 FUN_801c1f5c();
 extern double FUN_80293900();
 extern undefined4 FUN_80294964();
@@ -96,7 +96,7 @@ void FUN_801c282c(int param_1)
       }
       *(short *)(piVar3 + 6) = sVar2;
       dVar8 = (double)lbl_803E5A94;
-      iVar6 = FUN_801c1740(dVar8,dVar8,dVar8,dVar9,dVar10,dVar12,dVar7,
+      iVar6 = dfropenode_func0E(dVar8,dVar8,dVar8,dVar9,dVar10,dVar12,dVar7,
                            (double)*(float *)(&DAT_803dcbb8 + (uint)*(byte *)(iVar6 + 0x1b) * 4));
       piVar3[0xb] = iVar6;
       piVar3[1] = *(int *)(param_1 + 0xc);
