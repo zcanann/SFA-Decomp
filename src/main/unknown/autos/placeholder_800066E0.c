@@ -2556,14 +2556,17 @@ void AudioStream_PrepareCallback(void)
  */
 void AudioStream_PlayAddrCallback(u32 result)
 {
-    if (((result & 0xff) == 0) && (gAudioStreamPlaying = 0, gAudioStreamCurrentId != 0)) {
-        AISetStreamVolLeft(0);
-        AISetStreamVolRight(0);
-        gAudioStreamCurrentId = 0;
-        gAudioActiveChannelMask = 0;
-        AISetStreamPlayState(0);
-        gAudioStreamMusicFadeFlagB = 0;
-        gAudioStreamMusicFadeFlagA = 0;
+    if ((result & 0xff) == 0) {
+        gAudioStreamPlaying = 0;
+        if (gAudioStreamCurrentId != 0) {
+            AISetStreamVolLeft(0);
+            AISetStreamVolRight(0);
+            gAudioStreamCurrentId = 0;
+            gAudioActiveChannelMask = 0;
+            AISetStreamPlayState(0);
+            gAudioStreamMusicFadeFlagB = 0;
+            gAudioStreamMusicFadeFlagA = 0;
+        }
     }
     gAudioStreamPlayAddrCallbackResult = result;
     gAudioStreamPlayAddrCallbackDone = 1;
@@ -2656,19 +2659,22 @@ void Sfx_UpdateLoopedObjectSounds(void)
  */
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 {
+    SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
+    u8 *flags = table->flags;
+    u16 *ids = table->ids;
+    u32 *objects = table->objects;
     s16 i;
     u16 count = gSfxLoopedObjectSoundCount;
     u16 sameSfxCount = 0;
     u32 found;
 
     for (i = 0; i < count; i++) {
-        if (sfxId == gSfxLoopedObjectSoundFlags.ids[i]) {
+        if (sfxId == ids[i]) {
             if (limit != 0) {
                 sameSfxCount++;
             }
-            if (gSfxLoopedObjectSoundFlags.objects[i] == obj) {
-                gSfxLoopedObjectSoundFlags.flags[i] |=
-                    SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+            if (objects[i] == obj) {
+                flags[i] |= SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
                 return;
             }
         }
@@ -2677,25 +2683,23 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
     if (sameSfxCount <= limit) {
         found = 0;
         for (i = 0; i < count; i++) {
-            if ((gSfxLoopedObjectSoundFlags.objects[i] == obj) &&
-                (sfxId == gSfxLoopedObjectSoundFlags.ids[i])) {
+            if ((objects[i] == obj) && (sfxId == ids[i])) {
                 found = 1;
                 break;
             }
         }
 
         if ((found == 0) && (count != SFX_LOOPED_OBJECT_SOUND_COUNT)) {
-            gSfxLoopedObjectSoundFlags.objects[count] = obj;
-            gSfxLoopedObjectSoundFlags.ids[count] = sfxId;
-            gSfxLoopedObjectSoundFlags.flags[count] = 0;
+            objects[count] = obj;
+            ids[count] = sfxId;
+            flags[count] = 0;
             gSfxLoopedObjectSoundCount++;
             Sfx_PlayFromObject(obj, sfxId);
         }
     }
 
     if (count != gSfxLoopedObjectSoundCount) {
-        gSfxLoopedObjectSoundFlags.flags[count] |=
-            SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+        flags[count] |= SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
     }
 }
 
