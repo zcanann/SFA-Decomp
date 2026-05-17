@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80283dfc(int param_1,byte param_2);
+void hwSaveSample(u32 **sample, void **ptr);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283E10_H_ */

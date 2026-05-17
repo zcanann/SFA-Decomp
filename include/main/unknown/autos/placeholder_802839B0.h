@@ -3,9 +3,6 @@
 
 #include "ghidra_import.h"
 
-undefined FUN_8028383c(void);
-bool FUN_80283844(int param_1);
-void FUN_8028384c(undefined4 param_1);
-void FUN_80283850(int param_1,undefined4 param_2);
+void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefined4 p7);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802839B0_H_ */
