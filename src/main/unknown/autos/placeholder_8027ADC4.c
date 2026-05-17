@@ -34,13 +34,14 @@ extern u8 hwGetSampleType(int slot);
 void synthInitVirtualSampleTable(void)
 {
     int i;
-    synthVirtualSampleState[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET] = 0;
+    u8 *state = synthVirtualSampleState;
+
+    state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET] = 0;
     for (i = 0; i < SYNTH_VIRTUAL_SAMPLE_MAX_VOICES; i++) {
-        synthVirtualSampleState[SYNTH_VIRTUAL_SAMPLE_VOICE_MAP_OFFSET + i] =
-            SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+        state[SYNTH_VIRTUAL_SAMPLE_VOICE_MAP_OFFSET + i] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
     }
-    *(u16 *)(synthVirtualSampleState + SYNTH_VIRTUAL_SAMPLE_NEXT_ID_OFFSET) = 0;
-    *(u32 *)(synthVirtualSampleState + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET) = 0;
+    *(u16 *)(state + SYNTH_VIRTUAL_SAMPLE_NEXT_ID_OFFSET) = 0;
+    *(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET) = 0;
 }
 
 /*
@@ -100,8 +101,9 @@ claim_slot:
             *(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET));
         sampleId = hwGetSampleID(voice);
         entryOffset = entryIndex * SYNTH_VIRTUAL_SAMPLE_ENTRY_SIZE;
-        entry = state + entryOffset + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET;
-        *(u16 *)(entry + VIRTUAL_SAMPLE_CALLBACK_SAMPLE_ID_OFFSET) = sampleId;
+        entry = state + entryOffset;
+        *(u16 *)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
+                 VIRTUAL_SAMPLE_CALLBACK_SAMPLE_ID_OFFSET) = sampleId;
 
         do {
             generation = *(u16 *)(state + SYNTH_VIRTUAL_SAMPLE_NEXT_ID_OFFSET);
@@ -118,14 +120,20 @@ claim_slot:
             }
         } while (entryIndex != state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET]);
 
-        *(u16 *)(entry + VIRTUAL_SAMPLE_GENERATION_OFFSET) = generation;
-        entry[VIRTUAL_SAMPLE_TYPE_OFFSET] = hwGetSampleType(voice);
-        entry[VIRTUAL_SAMPLE_VOICE_OFFSET] = voice;
+        *(u16 *)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
+                 VIRTUAL_SAMPLE_GENERATION_OFFSET) = generation;
+        entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_TYPE_OFFSET] =
+            hwGetSampleType(voice);
+        entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_VOICE_OFFSET] = voice;
 
         if (*(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET) != 0) {
             ((int (*)(int, void *))(*(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET)))(
-                0, entry + VIRTUAL_SAMPLE_CALLBACK_DATA_OFFSET);
-            return CONCAT21(*(u16 *)(entry + VIRTUAL_SAMPLE_GENERATION_OFFSET), voice);
+                0,
+                entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
+                    VIRTUAL_SAMPLE_CALLBACK_DATA_OFFSET);
+            return CONCAT21(*(u16 *)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
+                                     VIRTUAL_SAMPLE_GENERATION_OFFSET),
+                            voice);
         }
         hwSetVirtualSampleLoopBuffer(voice, 0, 0);
     }
