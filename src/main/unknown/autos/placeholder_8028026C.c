@@ -22,7 +22,16 @@ typedef struct Snd3DEmitterLite {
     SndSpatialEntryLite *entry;
     S3DEmitterCtrlList *ctrlList;
     u32 flags;
-    u8 pad14[0x3c - 0x14];
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    f32 refX;
+    f32 refY;
+    f32 refZ;
+    f32 maxDistance;
+    f32 maxVolume;
+    f32 minVolume;
+    f32 distanceCurve;
     u32 handle;
     u32 groupKey;
     u16 fxId;
@@ -32,6 +41,28 @@ typedef struct Snd3DEmitterLite {
     u8 pad4a[0x4c - 0x4a];
     f32 age;
 } Snd3DEmitterLite;
+
+typedef struct SndSpatialListenerLite {
+    struct SndSpatialListenerLite *next;
+    u8 pad04[8];
+    u32 flags;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    f32 time;
+    f32 refX;
+    f32 refY;
+    f32 refZ;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    u8 pad38[0x50 - 0x38];
+    f32 matrix[12];
+    f32 rearRange;
+    f32 frontRange;
+    f32 panScale;
+    f32 volumeScale;
+} SndSpatialListenerLite;
 
 typedef struct S3DActiveNode {
     struct S3DActiveNode *next;
@@ -62,14 +93,23 @@ extern u8 lbl_803DE36B;
 extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
 extern u8 lbl_803DE36A;
+extern SndSpatialListenerLite *s3dListenerRoot;
 extern f32 lbl_803E7880;
+extern f64 lbl_803E7888;
+extern f32 lbl_803E7890;
+extern f64 lbl_803E7898;
 extern f32 lbl_803E78A0;
 extern f32 lbl_803E78A4;
+extern f64 lbl_803E78A8;
+extern f32 lbl_803E78B0;
 extern f32 lbl_803E78B4;
 extern f32 lbl_803E78B8;
 extern f32 lbl_803E78BC;
 extern f32 lbl_803E78C0;
 
+extern double __frsqrte(double x);
+extern void salApplyMatrix(f32 *matrix, f32 *vec, f32 *out);
+extern void salNormalizeVector(f32 *v);
 extern u32 synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
 extern u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
@@ -95,13 +135,160 @@ extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 
 #define S3D_CLAMP_7BIT(value) (((value) & 0xff) > 0x7f ? 0x7f : (value))
 
-/*
- * fn_802800C0 - large reverb/effect chain init (~840 instructions).
- * Stubbed.
- */
+#pragma fp_contract off
 #pragma dont_inline on
-void fn_802800C0(void) {}
+void fn_802800C0(Snd3DEmitterLite *emitter, f32 *distanceOut, f32 *panOut, f32 *azimuthOut,
+                 f32 *pitchOut, f32 *frontBackOut)
+{
+    SndSpatialListenerLite *listener;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 listenerDistance;
+    f32 ratio;
+    f32 curve;
+    f32 listenerVelocityDistance;
+    f32 projectedDistance;
+    f32 transformed[3];
+    f32 azimuthSum;
+    f32 pitchSum;
+    f32 frontBackSum;
+    u32 listenerCount;
+    f64 invSqrt;
+    f64 countFloat;
+
+    listenerCount = 0;
+    *distanceOut = lbl_803E7880;
+    *panOut = lbl_803E78A4;
+    azimuthSum = lbl_803E7880;
+    pitchSum = lbl_803E7880;
+    frontBackSum = lbl_803E7880;
+
+    for (listener = s3dListenerRoot; listener != (SndSpatialListenerLite *)0x0;
+         listener = listener->next) {
+        dx = emitter->posX - (listener->posX + listener->velX * listener->time);
+        dy = emitter->posY - (listener->posY + listener->velY * listener->time);
+        dz = emitter->posZ - (listener->posZ + listener->velZ * listener->time);
+        listenerDistance = dx * dx + dy * dy + dz * dz;
+        if (listenerDistance > lbl_803E7880) {
+            invSqrt = __frsqrte((f64)listenerDistance);
+            invSqrt = lbl_803E7898 * invSqrt *
+                      (lbl_803E78A8 - (f64)listenerDistance * invSqrt * invSqrt);
+            invSqrt = lbl_803E7898 * invSqrt *
+                      (lbl_803E78A8 - (f64)listenerDistance * invSqrt * invSqrt);
+            invSqrt = lbl_803E7898 * invSqrt *
+                      (lbl_803E78A8 - (f64)listenerDistance * invSqrt * invSqrt);
+            *(volatile f32 *)&listenerDistance = (f32)((f64)listenerDistance * invSqrt);
+        }
+
+        if (listenerDistance <= emitter->maxDistance) {
+            ratio = listenerDistance / emitter->maxDistance;
+            if (listener->time >= lbl_803E7880) {
+                curve = lbl_803E78A4 -
+                        (((lbl_803E78A4 + listener->time) * ratio) -
+                         (listener->time *
+                          (lbl_803E78A4 -
+                           ((lbl_803E78A4 - ratio) * (lbl_803E78A4 - ratio)))));
+            } else {
+                curve = lbl_803E78A4 -
+                        (((lbl_803E78A4 - listener->time) * ratio) +
+                         (ratio * (listener->time * ratio)));
+            }
+            *distanceOut += listener->volumeScale *
+                            (emitter->minVolume +
+                             (emitter->maxVolume - emitter->minVolume) * curve);
+
+            if ((emitter->flags & 0x00080000) == 0) {
+                if (((emitter->flags & 0x00000008) != 0) || ((listener->flags & 1) != 0)) {
+                    dx = listener->refX - emitter->refX;
+                    dy = listener->refY - emitter->refY;
+                    dz = listener->refZ - emitter->refZ;
+                    listenerVelocityDistance = dx * dx + dy * dy + dz * dz;
+                    if (listenerVelocityDistance > lbl_803E7880) {
+                        invSqrt = __frsqrte((f64)listenerVelocityDistance);
+                        invSqrt = lbl_803E7898 * invSqrt *
+                                  (lbl_803E78A8 -
+                                   (f64)listenerVelocityDistance * invSqrt * invSqrt);
+                        invSqrt = lbl_803E7898 * invSqrt *
+                                  (lbl_803E78A8 -
+                                   (f64)listenerVelocityDistance * invSqrt * invSqrt);
+                        invSqrt = lbl_803E7898 * invSqrt *
+                                  (lbl_803E78A8 -
+                                   (f64)listenerVelocityDistance * invSqrt * invSqrt);
+                        *(volatile f32 *)&listenerVelocityDistance =
+                            (f32)((f64)listenerVelocityDistance * invSqrt);
+                    }
+
+                    if (listenerVelocityDistance > lbl_803E7880) {
+                        dx = (emitter->posX + emitter->refX * lbl_803E78B0) -
+                             (listener->posX + listener->refX * lbl_803E78B0);
+                        dy = (emitter->posY + emitter->refY * lbl_803E78B0) -
+                             (listener->posY + listener->refY * lbl_803E78B0);
+                        dz = (emitter->posZ + emitter->refZ * lbl_803E78B0) -
+                             (listener->posZ + listener->refZ * lbl_803E78B0);
+                        projectedDistance = dx * dx + dy * dy + dz * dz;
+                        if (projectedDistance > lbl_803E7880) {
+                            invSqrt = __frsqrte((f64)projectedDistance);
+                            invSqrt = lbl_803E7898 * invSqrt *
+                                      (lbl_803E78A8 -
+                                       (f64)projectedDistance * invSqrt * invSqrt);
+                            invSqrt = lbl_803E7898 * invSqrt *
+                                      (lbl_803E78A8 -
+                                       (f64)projectedDistance * invSqrt * invSqrt);
+                            invSqrt = lbl_803E7898 * invSqrt *
+                                      (lbl_803E78A8 -
+                                       (f64)projectedDistance * invSqrt * invSqrt);
+                            *(volatile f32 *)&projectedDistance =
+                                (f32)((f64)projectedDistance * invSqrt);
+                        }
+                        if (listenerDistance <= projectedDistance) {
+                            *panOut = listener->panScale /
+                                      (listener->panScale + listenerVelocityDistance);
+                        } else {
+                            *panOut = listener->panScale /
+                                      (listener->panScale - listenerVelocityDistance);
+                        }
+                    }
+                }
+
+                if (listenerDistance != lbl_803E7880) {
+                    salApplyMatrix(listener->matrix, &emitter->posX, transformed);
+                    if (transformed[2] <= lbl_803E7880) {
+                        if (-listener->rearRange < transformed[2]) {
+                            frontBackSum += -transformed[2] / listener->rearRange;
+                        } else {
+                            frontBackSum += lbl_803E78A4;
+                        }
+                    } else {
+                        if (transformed[2] < listener->frontRange) {
+                            frontBackSum += -transformed[2] / listener->frontRange;
+                        } else {
+                            frontBackSum += lbl_803E7890;
+                        }
+                    }
+
+                    if (((transformed[0] != lbl_803E7880) ||
+                         (transformed[1] != lbl_803E7880)) ||
+                        (transformed[2] != lbl_803E7880)) {
+                        salNormalizeVector(transformed);
+                    }
+                    azimuthSum += transformed[0];
+                    pitchSum -= transformed[1];
+                }
+            }
+        }
+        listenerCount++;
+    }
+
+    if (listenerCount != 0) {
+        countFloat = (f64)listenerCount;
+        *azimuthOut = azimuthSum / (f32)countFloat;
+        *pitchOut = pitchSum / (f32)countFloat;
+        *frontBackOut = frontBackSum / (f32)countFloat;
+    }
+}
 #pragma dont_inline reset
+#pragma fp_contract reset
 
 #pragma dont_inline on
 void fn_802805A4(Snd3DEmitterLite *emitter, f32 distance, f32 pan, f32 unused, f32 azimuth,
