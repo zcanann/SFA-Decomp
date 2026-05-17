@@ -2,7 +2,6 @@
 #define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027B41C_H_
 
 #include "ghidra_import.h"
-
-void FUN_8027b25c(void);
+#include "main/audio/synth_virtual_sample.h"
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027B41C_H_ */

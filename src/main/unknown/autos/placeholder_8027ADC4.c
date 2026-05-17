@@ -1,29 +1,11 @@
 #include "ghidra_import.h"
+#include "main/audio/synth_virtual_sample.h"
 
 extern u8 synthVirtualSampleState[];
 extern u32 aramGetStreamBufferAddress(u8 slot, u32 *outPos);
 extern void hwSetVirtualSampleLoopBuffer(int slot, u32 valueA, u32 valueB);
 extern u16 hwGetSampleID(int slot);
 extern u8 hwGetSampleType(int slot);
-
-#define SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET 0
-#define SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET 4
-#define SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET 8
-#define SYNTH_VIRTUAL_SAMPLE_ENTRY_SIZE 0x24
-#define SYNTH_VIRTUAL_SAMPLE_VOICE_MAP_OFFSET 0x908
-#define SYNTH_VIRTUAL_SAMPLE_NEXT_ID_OFFSET 0x948
-#define SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET 0x94c
-#define SYNTH_VIRTUAL_SAMPLE_MAX_VOICES 64
-#define SYNTH_VIRTUAL_SAMPLE_FREE_SLOT 0xff
-#define SYNTH_VIRTUAL_SAMPLE_INVALID_ID 0xffffffffU
-
-#define VIRTUAL_SAMPLE_MODE_OFFSET 0
-#define VIRTUAL_SAMPLE_TYPE_OFFSET 2
-#define VIRTUAL_SAMPLE_VOICE_OFFSET 3
-#define VIRTUAL_SAMPLE_POSITION_OFFSET 4
-#define VIRTUAL_SAMPLE_CALLBACK_SAMPLE_ID_OFFSET 0x10
-#define VIRTUAL_SAMPLE_GENERATION_OFFSET 0x12
-#define VIRTUAL_SAMPLE_CALLBACK_DATA_OFFSET 0x10
 
 /*
  * Reset a 64-byte handle table at synthVirtualSampleState+0x908 to all-0xff,
@@ -63,7 +45,7 @@ u32 synthClaimVirtualSampleSlot(u8 voice)
     for (entryIndex = 0; entryIndex < state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET];
          entryIndex++) {
         if (entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] !=
-                0 &&
+                SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE &&
             entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_VOICE_OFFSET] ==
                 voice) {
             entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] = 0;
@@ -77,10 +59,12 @@ u32 synthClaimVirtualSampleSlot(u8 voice)
     entryIndex = 0;
     entry = state;
     while (entryIndex < state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET]) {
-        if (entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] == 0) {
+        if (entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] ==
+            SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE) {
             entryOffset = entryIndex * SYNTH_VIRTUAL_SAMPLE_ENTRY_SIZE;
             entry = state + entryOffset;
-            entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] = 1;
+            entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] =
+                SYNTH_VIRTUAL_SAMPLE_MODE_ACTIVE;
             *(u32 *)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
                      VIRTUAL_SAMPLE_POSITION_OFFSET) = 0;
             goto claim_slot;
@@ -112,7 +96,8 @@ claim_slot:
             scanEntry = state;
             for (; entryIndex < state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET] &&
                    (scanEntry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-                              VIRTUAL_SAMPLE_MODE_OFFSET] == 0 ||
+                              VIRTUAL_SAMPLE_MODE_OFFSET] ==
+                        SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE ||
                     *(u16 *)(scanEntry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
                               VIRTUAL_SAMPLE_GENERATION_OFFSET) != generation);
                  entryIndex++) {
@@ -128,7 +113,7 @@ claim_slot:
 
         if (*(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET) != 0) {
             ((int (*)(int, void *))(*(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET)))(
-                0,
+                SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND,
                 entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
                     VIRTUAL_SAMPLE_CALLBACK_DATA_OFFSET);
             return CONCAT21(*(u16 *)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
