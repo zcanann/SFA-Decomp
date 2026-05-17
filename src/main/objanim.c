@@ -345,7 +345,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,Obj
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
+int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 {
   if (moveProgress > lbl_803DE908) {
     moveProgress = lbl_803DE908;
@@ -372,7 +372,7 @@ undefined4 Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objA
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4
+int
 Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
 {
   ObjAnimComponent *objAnim;
@@ -556,7 +556,7 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut)
+int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut)
 {
   ObjAnimBank *bank;
   ObjAnimDef *animDef;
@@ -721,8 +721,8 @@ undefined4 ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,f
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
-                                      ObjAnimEventList *events)
+int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
+                               ObjAnimEventList *events)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
@@ -1055,7 +1055,7 @@ undefined4 ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAni
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
+int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 {
   if (moveProgress > lbl_803DE908) {
     moveProgress = lbl_803DE908;
@@ -1082,7 +1082,7 @@ undefined4 ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
+int ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
