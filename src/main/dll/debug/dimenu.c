@@ -28,7 +28,7 @@ extern uint isCheatUnlocked();
 extern u8 *gameplay_getPreviewSettings();
 extern void saveGame_save();
 extern undefined4 FUN_8011bfc8();
-extern undefined4 FUN_8011c5cc();
+extern undefined4 languageMenuInit();
 extern int FUN_8011c7b4();
 extern undefined4 FUN_8011c860();
 extern undefined4 FUN_8011ca28();
@@ -241,7 +241,7 @@ int FUN_8011d11c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
       }
       DAT_803de380 = iVar4;
       if (DAT_803dc690 == '\x02') {
-        FUN_8011c5cc(iVar3,iVar4);
+        languageMenuInit(iVar3,iVar4);
         if (iVar3 == 0) {
           uVar8 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9430);
           *(undefined *)(DAT_803de388 + 6) = uVar8;
