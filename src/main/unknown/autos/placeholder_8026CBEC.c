@@ -351,7 +351,6 @@ done:
         gSynthQueuedVoices = voice;
         voice->state = 1;
     } else {
-        voice = &gSynthVoices[found & 0x7fffffffu];
-        voice->pendingUpdate.flags &= ~8;
+        gSynthVoices[found & 0x7fffffffu].pendingUpdate.flags &= ~8;
     }
 }
