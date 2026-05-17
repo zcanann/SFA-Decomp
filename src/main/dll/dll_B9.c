@@ -11,7 +11,7 @@ extern f32 lbl_803E22AC;
 /*
  * --INFO--
  *
- * Function: FUN_80101980
+ * Function: camcontrol_applyState
  * EN v1.0 Address: 0x80101980
  * EN v1.0 Size: 224b
  * EN v1.1 Address: 0x80101B44
@@ -21,7 +21,7 @@ extern f32 lbl_803E22AC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80101980(uint param_1,undefined param_2)
+void camcontrol_applyState(uint param_1,undefined param_2)
 {
   float fVar1;
   undefined2 *puVar2;

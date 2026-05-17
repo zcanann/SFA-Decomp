@@ -162,7 +162,7 @@ extern undefined4 FUN_800e514c();
 extern undefined4 FUN_800e5428();
 extern uint FUN_800e6680();
 extern undefined4 FUN_800eaeb8();
-extern undefined4 FUN_80101980();
+extern undefined4 camcontrol_applyState();
 extern undefined4 FUN_8011daf8();
 extern undefined4 FUN_8011e7bc();
 extern undefined4 FUN_8011e800();

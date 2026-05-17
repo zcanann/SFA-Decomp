@@ -19,7 +19,7 @@ extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,
 extern int FUN_8007f7c0();
 extern int getCurSeqNo();
 extern void cameraSetInterpMode(u8);
-extern undefined4 FUN_80101980();
+extern undefined4 camcontrol_applyState();
 extern undefined4 FUN_802473cc();
 extern undefined4 FUN_8028681c();
 extern undefined8 FUN_8028683c();

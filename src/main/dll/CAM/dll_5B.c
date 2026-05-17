@@ -27,7 +27,7 @@ extern int ObjHits_GetPriorityHit();
 extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80053bf0();
 extern undefined4 FUN_800810d8();
-extern undefined4 FUN_80101980();
+extern undefined4 camcontrol_applyState();
 extern undefined4 firstPersonPlaceCamera();
 extern undefined4 firstPersonExit();
 extern double fn_8010AEA8();
