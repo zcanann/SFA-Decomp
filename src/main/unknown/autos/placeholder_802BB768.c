@@ -13,7 +13,7 @@ extern f32 FLOAT_803e8f34;
 /*
  * --INFO--
  *
- * Function: FUN_802bb720
+ * Function: fn_802BB720
  * EN v1.0 Address: 0x802BB720
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802BB780
@@ -23,14 +23,14 @@ extern f32 FLOAT_803e8f34;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_802bb720(ushort *param_1,float *param_2,float *param_3,float *param_4)
+void fn_802BB720(ushort *param_1, float *param_2, float *param_3, float *param_4)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_802bb724
+ * Function: fn_802BB724
  * EN v1.0 Address: 0x802BB724
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x802BB844
@@ -40,7 +40,7 @@ void FUN_802bb720(ushort *param_1,float *param_2,float *param_3,float *param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool FUN_802bb724(int param_1)
+bool fn_802BB724(int param_1)
 {
     return 0;
 }
