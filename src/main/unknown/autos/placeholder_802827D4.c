@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_802818F8.h"
 #include "main/unknown/autos/placeholder_802827D4.h"
 
 extern u16 _GetInputValue(void *state, void *slot, u8 a, u8 b);
 extern int synthGetVoiceSlotChannelScale(int x);
-extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
+extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
+extern void inpSetMidiCtrl14(u32 controller, u8 slot, u8 key, u16 value);
 
 extern u32 lbl_803DC610;
 extern s16 lbl_80330028[];
@@ -207,6 +207,7 @@ void inpInit(u32 state)
  *
  * EN v1.1 Address: 0x80282CB4, size 112b
  */
+#pragma dont_inline on
 u32 inpTranslateExCtrl(u32 input)
 {
     u32 value = input & 0xff;
@@ -224,6 +225,7 @@ u32 inpTranslateExCtrl(u32 input)
     default: return input;
     }
 }
+#pragma dont_inline reset
 
 /*
  * Read an extended controller value, with local state-backed overrides for
@@ -239,7 +241,7 @@ u32 inpGetExCtrl(int state, u32 ctrl)
         value = *(s16 *)(state + 0x1d0) * 2 + 0x2000;
     } else if (translated < 0xa1 && translated > 0x9f) {
         value = *(s16 *)(state + 0x1c4) * 2 + 0x2000;
-    } else if (*(s8 *)(state + 0x121) == -1) {
+    } else if (*(u8 *)(state + 0x121) == 0xff) {
         value = 0;
     } else {
         value = inpGetMidiCtrl(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
@@ -261,7 +263,7 @@ void inpSetExCtrl(int state, u32 ctrl, s16 value)
         value = 0x3fff;
     }
     translated = inpTranslateExCtrl(ctrl);
-    if ((translated > 0xa1 || translated < 0xa0) && *(s8 *)(state + 0x121) != -1) {
+    if ((translated > 0xa1 || translated < 0xa0) && *(u8 *)(state + 0x121) != 0xff) {
         inpSetMidiCtrl14(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), value);
     }
 }
@@ -285,21 +287,22 @@ u16 sndRand(void)
  */
 s16 sndSin(u32 packed)
 {
+    s16 *table = lbl_80330028;
     u32 zone = packed & 0xfff;
     if (zone < 0x400) {
-        return *(s16 *)((u8 *)lbl_80330028 + zone * 2);
+        return table[zone];
     }
     if (zone < 0x800) {
         u32 idx = 0x3ff - (zone & 0x3ff);
-        return *(s16 *)((u8 *)lbl_80330028 + idx * 2);
+        return table[idx];
     }
     if (zone < 0xc00) {
         u32 idx = (zone & 0x3ff);
-        return -*(s16 *)((u8 *)lbl_80330028 + idx * 2);
+        return -table[idx];
     }
     {
         u32 idx = 0x3ff - (zone & 0x3ff);
-        return -*(s16 *)((u8 *)lbl_80330028 + idx * 2);
+        return -table[idx];
     }
 }
 
