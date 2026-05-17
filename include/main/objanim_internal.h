@@ -45,6 +45,12 @@ typedef struct ObjAnimHitReactRow {
 #define OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET 10
 #define OBJANIM_ROOT_CURVE_AXIS_COUNT 6
 #define OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT 3
+#define OBJANIM_ROOT_CURVE_AXIS_X 0
+#define OBJANIM_ROOT_CURVE_AXIS_Y 1
+#define OBJANIM_ROOT_CURVE_AXIS_Z 2
+#define OBJANIM_ROOT_CURVE_AXIS_YAW 3
+#define OBJANIM_ROOT_CURVE_AXIS_PITCH 4
+#define OBJANIM_ROOT_CURVE_AXIS_ROLL 5
 #define OBJANIM_DOUBLE_CONVERSION_HIGH_WORD 0x43300000
 #define OBJANIM_S32_DOUBLE_BIAS_XOR 0x80000000
 #define OBJANIM_U32_DOUBLE(value) ((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD, (value)))
@@ -102,10 +108,15 @@ typedef struct ObjAnimState {
   s16 lastBlendMoveIndex;
 } ObjAnimState;
 
+typedef struct ObjAnimRootCurveAxis {
+  s16 firstSample;
+  s16 samples[1];
+} ObjAnimRootCurveAxis;
+
 typedef struct ObjAnimRootCurve {
   f32 scale;
   s16 sampleCount;
-  s16 axisData[1];
+  ObjAnimRootCurveAxis axes[1];
 } ObjAnimRootCurve;
 
 typedef struct ObjAnimMoveData {
