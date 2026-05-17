@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_802757c4(undefined2 param_1,undefined2 *param_2);
+void mcmdPlayMacro(int state, int args);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027588C_H_ */
