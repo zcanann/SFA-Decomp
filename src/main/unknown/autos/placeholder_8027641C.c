@@ -56,13 +56,14 @@ void mcmdScaleVolume(int state, u32 *params, u32 timeArg)
     u32 t;
     int divisor;
     u32 scaled;
-    u16 keyId;
+    u32 keyId;
     u8 *table;
     u32 p0;
     u32 hi;
     u32 lo;
     u32 a;
     u32 b;
+    u32 dirtyFlag;
 
     t = params[1] >> 16;
     if ((params[1] >> 8) & 1) {
@@ -82,9 +83,10 @@ void mcmdScaleVolume(int state, u32 *params, u32 timeArg)
     if (scaled > 0x7f0000) {
         scaled = 0x7f0000;
     }
-    keyId = (u16)((p0 >> 24) | ((params[1] & 0xff) << 8));
+    keyId = p0 >> 24;
+    keyId |= (params[1] & 0xff) << 8;
 
-    if (keyId != 0xffff) {
+    if ((u16)keyId != 0xffff) {
         table = dataGetCurve(keyId);
         if (table != NULL) {
             hi = scaled >> 16;
@@ -92,7 +94,7 @@ void mcmdScaleVolume(int state, u32 *params, u32 timeArg)
             if (hi < 0x7f) {
                 a = table[hi];
                 b = table[hi + 1];
-                scaled = (a << 16) + lo * (b - a);
+                scaled = lo * (b - a) + (a << 16);
             } else {
                 scaled = (u32)table[hi] << 16;
             }
@@ -103,5 +105,6 @@ void mcmdScaleVolume(int state, u32 *params, u32 timeArg)
     *(u32 *)(state + 0x19c) = timeArg;
     *(u32 *)(state + 0x194) = (s32)(scaled - timeArg) / divisor;
     *(u32 *)(state + 0x154) = timeArg;
-    *(u32 *)(state + 0x118) |= 0x8000;
+    dirtyFlag = 0x8000;
+    *(u32 *)(state + 0x118) |= dirtyFlag;
 }
