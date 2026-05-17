@@ -80,7 +80,7 @@ extern undefined4 FUN_80081118();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_8011e868();
 extern ushort FUN_8016edb4();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247edc();

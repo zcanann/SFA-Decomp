@@ -42,7 +42,7 @@ extern undefined4 FUN_8008112c();
 extern undefined4 FUN_800e8630();
 extern int FUN_800e8b98();
 extern undefined4 FUN_8011e868();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern ulonglong FUN_80286830();
 extern int FUN_8028683c();
 extern int FUN_80286840();
@@ -397,8 +397,8 @@ void FUN_801a6b10(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  ,in_r7,in_r8,in_r9,in_r10);
     *(undefined4 *)(param_9 + 0xf8) = 0;
   }
-  FUN_801d8308(&DAT_803de7ac,1,-1,-1,0x389,(int *)0xd5);
-  FUN_801d8308(&DAT_803de7ac,2,-1,-1,0xcbb,(int *)0xc4);
+  SH_LevelControl_runBloopEvent(&DAT_803de7ac,1,-1,-1,0x389,(int *)0xd5);
+  SH_LevelControl_runBloopEvent(&DAT_803de7ac,2,-1,-1,0xcbb,(int *)0xc4);
   return;
 }
 

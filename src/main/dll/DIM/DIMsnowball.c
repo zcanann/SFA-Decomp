@@ -55,7 +55,7 @@ extern char FUN_80132034();
 extern double FUN_8014cbcc();
 extern undefined4 FUN_8014ccac();
 extern undefined4 FUN_801aa4a4();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern undefined4 FUN_80286834();
 extern undefined8 FUN_8028683c();

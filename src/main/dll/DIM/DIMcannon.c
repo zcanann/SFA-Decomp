@@ -51,7 +51,7 @@ extern undefined4 FUN_8008112c();
 extern int FUN_800e8b98();
 extern undefined4 FUN_80135c84();
 extern undefined4 FUN_801adca0();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined8 FUN_80286830();
 extern int FUN_8028683c();
 extern int FUN_80286840();
@@ -993,9 +993,9 @@ void FUN_801af444(void)
           (*(undefined2 *)(puVar9 + 3) = 0xffff, (*puVar9 & 8) != 0)) {
     FUN_800067c0((int *)0x1a,0);
   }
-  FUN_801d8308(puVar9,1,-1,-1,0x3a0,(int *)0x35);
-  FUN_801d8308(puVar9,2,-1,-1,0xb36,(int *)0x96);
-  FUN_801d8308(puVar9,8,-1,-1,0x3a1,(int *)(int)*(short *)(puVar9 + 3));
+  SH_LevelControl_runBloopEvent(puVar9,1,-1,-1,0x3a0,(int *)0x35);
+  SH_LevelControl_runBloopEvent(puVar9,2,-1,-1,0xb36,(int *)0x96);
+  SH_LevelControl_runBloopEvent(puVar9,8,-1,-1,0x3a1,(int *)(int)*(short *)(puVar9 + 3));
   if ((*puVar9 & 4) == 0) {
     uVar8 = GameBit_Get(0x256);
     if ((uVar8 != 0) || (uVar8 = GameBit_Get(0x1fd), uVar8 != 0)) {
@@ -1244,7 +1244,7 @@ void FUN_801afcf8(int param_1)
         FUN_800067c0((int *)0x95,1);
       }
     }
-    FUN_801d8308(iVar4 + 0xc,1,-1,-1,0xe1e,(int *)0x36);
+    SH_LevelControl_runBloopEvent(iVar4 + 0xc,1,-1,-1,0xe1e,(int *)0x36);
   }
   else if ((cVar1 < 'H') && ('F' < cVar1)) {
     iVar2 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);

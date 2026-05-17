@@ -22,7 +22,7 @@ extern undefined4 FUN_8011eb10();
 extern void MMSH_Shrine_SeqFn(void);
 extern undefined4 FUN_801c4b14();
 extern undefined4 FUN_801c4f4c();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -150,9 +150,9 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar4 = FUN_80044404(0x20);
   FUN_80042b9c(iVar4,1,0);
   FUN_801c4b14(param_9);
-  FUN_801d8308(iVar6 + 0x18,8,-1,-1,0xae6,(int *)0xa);
+  SH_LevelControl_runBloopEvent(iVar6 + 0x18,8,-1,-1,0xae6,(int *)0xa);
   FUN_801d8480(iVar6 + 0x18,4,-1,-1,0xcbb,(int *)0x8);
-  FUN_801d8308(iVar6 + 0x18,0x10,-1,-1,0xcbb,(int *)0xc4);
+  SH_LevelControl_runBloopEvent(iVar6 + 0x18,0x10,-1,-1,0xcbb,(int *)0xc4);
   bVar1 = *(byte *)(iVar6 + 0x24);
   if (bVar1 == 3) {
     (**(code **)(*DAT_803dd6d4 + 0x4c))((int)(short)param_9[0x5a]);

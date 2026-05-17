@@ -31,7 +31,7 @@ extern undefined8 FUN_80080f28();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_801c5f28();
 extern undefined4 FUN_801c61f4();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -163,9 +163,9 @@ void ecsh_shrine_update(ushort *param_9)
   do {
     iVar11 = ObjMsg_Pop((int)param_9,auStack_34,&uStack_38,auStack_34 + 1);
   } while (iVar11 != 0);
-  FUN_801d8308(iVar12 + 0x34,2,-1,-1,0xb9d,(int *)0xd);
+  SH_LevelControl_runBloopEvent(iVar12 + 0x34,2,-1,-1,0xb9d,(int *)0xd);
   FUN_801d8480(iVar12 + 0x34,1,-1,-1,0xcbb,(int *)0x8);
-  FUN_801d8308(iVar12 + 0x34,0x10,-1,-1,0xcbb,(int *)0xc4);
+  SH_LevelControl_runBloopEvent(iVar12 + 0x34,0x10,-1,-1,0xcbb,(int *)0xc4);
   fVar2 = lbl_803E5C64;
   if (*(float *)(iVar12 + 8) <= lbl_803E5C64) {
     switch(*(undefined *)(iVar12 + 0x2f)) {

@@ -40,7 +40,7 @@ extern int FUN_800620e8();
 extern int FUN_800632f4();
 extern int FUN_800e8b98();
 extern undefined4 FUN_800ea9b8();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
@@ -265,14 +265,14 @@ void FUN_801b64c4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_800067c0((int *)0xe2,0);
     FUN_800067c0((int *)0xc5,1);
   }
-  FUN_801d8308(pfVar6 + 1,1,0x1a7,0x64b,0xc1e,(int *)0xa1);
-  FUN_801d8308(pfVar6 + 1,2,0x1a8,0xc0,0xc1f,(int *)0xcf);
-  FUN_801d8308(pfVar6 + 1,4,0x1ba,0x1b9,0xc20,(int *)(int)*(short *)((int)pfVar6 + 10));
-  FUN_801d8308(pfVar6 + 1,8,-1,-1,0xd8f,(int *)0xdc);
-  FUN_801d8308(pfVar6 + 1,0x10,0x1a7,0x64b,0xc1e,(int *)0xed);
-  FUN_801d8308(pfVar6 + 1,0x20,0x1a8,0xc0,0xc1f,(int *)0x36);
-  FUN_801d8308(pfVar6 + 1,0x40,0x1ba,0x1b9,0xc20,(int *)0x35);
-  FUN_801d8308(pfVar6 + 1,0x100,-1,-1,0x3e2,(int *)0x2b);
+  SH_LevelControl_runBloopEvent(pfVar6 + 1,1,0x1a7,0x64b,0xc1e,(int *)0xa1);
+  SH_LevelControl_runBloopEvent(pfVar6 + 1,2,0x1a8,0xc0,0xc1f,(int *)0xcf);
+  SH_LevelControl_runBloopEvent(pfVar6 + 1,4,0x1ba,0x1b9,0xc20,(int *)(int)*(short *)((int)pfVar6 + 10));
+  SH_LevelControl_runBloopEvent(pfVar6 + 1,8,-1,-1,0xd8f,(int *)0xdc);
+  SH_LevelControl_runBloopEvent(pfVar6 + 1,0x10,0x1a7,0x64b,0xc1e,(int *)0xed);
+  SH_LevelControl_runBloopEvent(pfVar6 + 1,0x20,0x1a8,0xc0,0xc1f,(int *)0x36);
+  SH_LevelControl_runBloopEvent(pfVar6 + 1,0x40,0x1ba,0x1b9,0xc20,(int *)0x35);
+  SH_LevelControl_runBloopEvent(pfVar6 + 1,0x100,-1,-1,0x3e2,(int *)0x2b);
   FUN_80286888();
   return;
 }

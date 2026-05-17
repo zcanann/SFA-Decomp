@@ -15,7 +15,7 @@ extern undefined4 FUN_80017698();
 extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80080f14();
 extern int FUN_801d025c();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern u8 *Obj_GetPlayerObject(void);
@@ -91,10 +91,10 @@ void nw_levcontrol_update(int param_1)
           (*(undefined2 *)(pfVar10 + 4) = 0xffff, ((uint)pfVar10[2] & 0x10) != 0)) {
     FUN_800067c0((int *)0x1a,0);
   }
-  FUN_801d8308(pfVar10 + 2,8,-1,-1,0x3a0,(int *)0x35);
-  FUN_801d8308(pfVar10 + 2,0x10,-1,-1,0x3a1,(int *)(int)*(short *)(pfVar10 + 4));
-  FUN_801d8308(pfVar10 + 2,0x20,-1,-1,0x393,(int *)0x36);
-  FUN_801d8308(pfVar10 + 2,0x40,-1,-1,0xcbb,(int *)0xc4);
+  SH_LevelControl_runBloopEvent(pfVar10 + 2,8,-1,-1,0x3a0,(int *)0x35);
+  SH_LevelControl_runBloopEvent(pfVar10 + 2,0x10,-1,-1,0x3a1,(int *)(int)*(short *)(pfVar10 + 4));
+  SH_LevelControl_runBloopEvent(pfVar10 + 2,0x20,-1,-1,0x393,(int *)0x36);
+  SH_LevelControl_runBloopEvent(pfVar10 + 2,0x40,-1,-1,0xcbb,(int *)0xc4);
   uVar9 = 0;
   uVar4 = FUN_80017690(0x19f);
   uVar5 = FUN_80017690(0x19d);
@@ -102,7 +102,7 @@ void nw_levcontrol_update(int param_1)
     uVar9 = 1;
   }
   FUN_80017698(0xf31,uVar9);
-  FUN_801d8308(pfVar10 + 2,0x80,-1,-1,0xf31,(int *)0xaf);
+  SH_LevelControl_runBloopEvent(pfVar10 + 2,0x80,-1,-1,0xf31,(int *)0xaf);
   uVar4 = FUN_80017690(0x398);
   if ((uVar4 != 0) &&
      (cVar7 = (**(code **)(*DAT_803dd72c + 0x4c))((int)*(char *)(iVar1 + 0xac),0x1f), cVar7 == '\0')

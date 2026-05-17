@@ -36,7 +36,7 @@ extern undefined4 FUN_80080f14();
 extern undefined4 FUN_800e8630();
 extern int FUN_800e8b98();
 extern undefined4 FUN_800ea9b8();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -1005,11 +1005,11 @@ void FUN_801b9d8c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     pcVar4[0xf] = -0x20;
     FUN_800067c0((int *)0xe0,1);
   }
-  FUN_801d8308(pcVar4 + 8,1,-1,-1,0xd99,(int *)0xde);
-  FUN_801d8308(pcVar4 + 8,2,-1,-1,0xda5,*(int **)(pcVar4 + 0xc));
-  FUN_801d8308(pcVar4 + 8,8,-1,-1,0xf04,(int *)0x96);
+  SH_LevelControl_runBloopEvent(pcVar4 + 8,1,-1,-1,0xd99,(int *)0xde);
+  SH_LevelControl_runBloopEvent(pcVar4 + 8,2,-1,-1,0xda5,*(int **)(pcVar4 + 0xc));
+  SH_LevelControl_runBloopEvent(pcVar4 + 8,8,-1,-1,0xf04,(int *)0x96);
   FUN_801d8480(pcVar4 + 8,0x10,-1,-1,0xf04,(int *)0x2c);
-  FUN_801d8308(pcVar4 + 8,4,-1,-1,0xcbb,(int *)0xc4);
+  SH_LevelControl_runBloopEvent(pcVar4 + 8,4,-1,-1,0xcbb,(int *)0xc4);
   return;
 }
 

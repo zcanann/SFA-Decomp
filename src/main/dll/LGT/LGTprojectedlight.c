@@ -22,7 +22,7 @@ extern undefined4 FUN_80080f78();
 extern undefined4 fn_800895E0();
 extern undefined4 fn_80089710();
 extern double FUN_80081014();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern uint countLeadingZeros();
 extern void *Obj_GetPlayerObject(void);

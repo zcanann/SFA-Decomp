@@ -307,7 +307,7 @@ extern int FUN_8019f0fc();
 extern undefined4 FUN_8019f16c();
 extern undefined4 FUN_8019f1ac();
 extern undefined4 FUN_801a1310();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern int FUN_801ecf58();
 extern uint FUN_801ecf94();

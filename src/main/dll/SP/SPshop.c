@@ -15,7 +15,7 @@ extern undefined4* DAT_803dd6d8;
 /*
  * --INFO--
  *
- * Function: FUN_801d8308
+ * Function: SH_LevelControl_runBloopEvent
  * EN v1.0 Address: 0x801D8308
  * EN v1.0 Size: 376b
  * EN v1.1 Address: 0x801D84C4
@@ -25,7 +25,7 @@ extern undefined4* DAT_803dd6d8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d8308(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5,
+void SH_LevelControl_runBloopEvent(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5,
                  int *param_6)
 {
   uint uVar1;
@@ -102,7 +102,7 @@ void FUN_801d8480(undefined4 param_1,undefined4 param_2,short param_3,short para
   uVar1 = GameBit_Get(uVar2);
   uVar1 = countLeadingZeros(uVar1);
   GameBit_Set(uVar2,uVar1 >> 5);
-  FUN_801d8308((int)((ulonglong)uVar3 >> 0x20),(int)uVar3,param_3,param_4,param_5,param_6);
+  SH_LevelControl_runBloopEvent((int)((ulonglong)uVar3 >> 0x20),(int)uVar3,param_3,param_4,param_5,param_6);
   uVar1 = GameBit_Get(uVar2);
   uVar1 = countLeadingZeros(uVar1);
   GameBit_Set(uVar2,uVar1 >> 5);

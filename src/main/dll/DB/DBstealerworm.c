@@ -49,7 +49,7 @@ extern undefined4 fn_800895E0();
 extern undefined4 fn_80089710();
 extern double FUN_80081014();
 extern undefined4 FUN_8008112c();
-extern undefined4 FUN_801d8308();
+extern undefined4 SH_LevelControl_runBloopEvent();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();
