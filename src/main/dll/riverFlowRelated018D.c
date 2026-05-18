@@ -39,7 +39,7 @@ extern f32 lbl_803E4CCC;
 /*
  * --INFO--
  *
- * Function: dimbosstonsil_init
+ * Function: DIMbosstonsil_init
  * EN v1.0 Address: 0x801BEC70
  * EN v1.0 Size: 496b
  * EN v1.1 Address: 0x801BEE40
@@ -49,7 +49,7 @@ extern f32 lbl_803E4CCC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
+void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
 {
   u8 variant;
   int state;
@@ -95,7 +95,7 @@ void dimbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
 /*
  * --INFO--
  *
- * Function: dimbosstonsil_release
+ * Function: DIMbosstonsil_release
  * EN v1.0 Address: 0x801BEE60
  * EN v1.0 Size: 4b
  * EN v1.1 Address: TODO
@@ -105,13 +105,13 @@ void dimbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbosstonsil_release(void)
+void DIMbosstonsil_release(void)
 {
 }
 
 #pragma scheduling off
 #pragma peephole off
-void dimbosstonsil_initialise(void)
+void DIMbosstonsil_initialise(void)
 {
   lbl_803DDBB0[0] = fn_801BDF20;
   lbl_803DDBB0[1] = fn_801BDDB4;

@@ -114,7 +114,7 @@ void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8
 /*
  * --INFO--
  *
- * Function: dimbosstonsil_func11
+ * Function: DIMbosstonsil_func0B
  * EN v1.0 Address: 0x801BE86C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: TODO
@@ -124,14 +124,14 @@ void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbosstonsil_func11(void)
+void DIMbosstonsil_func0B(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: dimbosstonsil_setScale
+ * Function: DIMbosstonsil_setScale
  * EN v1.0 Address: 0x801BE870
  * EN v1.0 Size: 12b
  * EN v1.1 Address: TODO
@@ -141,7 +141,7 @@ void dimbosstonsil_func11(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dimbosstonsil_setScale(int obj)
+int DIMbosstonsil_setScale(int obj)
 {
   return *(short *)(*(int *)(obj + 0xb8) + 0x274);
 }
@@ -149,7 +149,7 @@ int dimbosstonsil_setScale(int obj)
 /*
  * --INFO--
  *
- * Function: dimbosstonsil_getExtraSize
+ * Function: DIMbosstonsil_getExtraSize
  * EN v1.0 Address: 0x801BE87C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -159,7 +159,7 @@ int dimbosstonsil_setScale(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dimbosstonsil_getExtraSize(void)
+int DIMbosstonsil_getExtraSize(void)
 {
   return 0x410;
 }
@@ -167,7 +167,7 @@ int dimbosstonsil_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: dimbosstonsil_func08
+ * Function: DIMbosstonsil_func08
  * EN v1.0 Address: 0x801BE884
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -177,7 +177,7 @@ int dimbosstonsil_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dimbosstonsil_func08(void)
+int DIMbosstonsil_func08(void)
 {
   return 0x4b;
 }

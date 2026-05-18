@@ -41,7 +41,7 @@ extern undefined4 FUN_8003b818();
 extern int FUN_8005b398();
 extern undefined4 FUN_8005fe14();
 extern int FUN_800632f4();
-extern undefined4 dimbosstonsil_render();
+extern undefined4 DIMbosstonsil_render();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 

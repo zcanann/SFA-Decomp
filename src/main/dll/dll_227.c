@@ -24,13 +24,13 @@ extern f32 lbl_803E4CC8;
 /*
  * --INFO--
  *
- * Function: dimbosstonsil_render
+ * Function: DIMbosstonsil_render
  * EN v1.0 Address: 0x801BE8F8
  * EN v1.0 Size: 324b
  */
 #pragma peephole off
 #pragma scheduling off
-void dimbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     int local_8;
     f32 outX, outY, outZ;
@@ -58,13 +58,13 @@ void dimbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
 /*
  * --INFO--
  *
- * Function: dimbosstonsil_hitDetect
+ * Function: DIMbosstonsil_hitDetect
  * EN v1.0 Address: 0x801BEA3C
  * EN v1.0 Size: 56b
  */
 #pragma peephole off
 #pragma scheduling off
-void dimbosstonsil_hitDetect(void *obj)
+void DIMbosstonsil_hitDetect(void *obj)
 {
     (*(void (***)(void *, void *, int *))lbl_803DCA8C)[3](obj, *(void **)((char *)obj + 0xb8), &lbl_803DDBB0);
 }
@@ -74,13 +74,13 @@ void dimbosstonsil_hitDetect(void *obj)
 /*
  * --INFO--
  *
- * Function: dimbosstonsil_update
+ * Function: DIMbosstonsil_update
  * EN v1.0 Address: 0x801BEA74
  * EN v1.0 Size: 0x1FC
  */
 #pragma peephole off
 #pragma scheduling off
-void dimbosstonsil_update(void *obj)
+void DIMbosstonsil_update(void *obj)
 {
     void *r30;
     void *r4_loc;
