@@ -42,7 +42,7 @@ extern undefined4* pDll_expgfx;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
-extern undefined4* lbl_803DCAA8;
+extern SHthorntailPathControlInterface **lbl_803DCAA8;
 extern f32 timeDelta;
 extern f64 lbl_803E5428;
 extern f64 lbl_803E5440;
@@ -63,6 +63,8 @@ extern f32 lbl_803E5480;
 extern f32 lbl_803E5484;
 extern f32 lbl_803E5488;
 extern f64 lbl_803E5490;
+
+#define gSHthorntailPathControlInterface lbl_803DCAA8
 
 typedef struct SHthorntailDustEffectParams {
   undefined2 flags;
@@ -359,11 +361,12 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   Obj_GetActiveModel((int)obj);
   modelInitBones((double)*(float *)((int)obj + 8));
   moveScratch = (int)runtime->moveScratch;
-  (*(code *)(*lbl_803DCAA8 + 4))(moveScratch,SHTHORNTAIL_PATH_CONTROL_MODE,
-                                  SHTHORNTAIL_PATH_CONTROL_FLAGS,0);
-  (*(code *)(*lbl_803DCAA8 + 0xc))(moveScratch,SHTHORNTAIL_PATH_CHANNEL,
-                                    gSHthorntailPathHeaders,gSHthorntailPathData,local_28);
-  (*(code *)(*lbl_803DCAA8 + 0x20))((int)obj,moveScratch);
+  (*gSHthorntailPathControlInterface)->initControl(moveScratch,SHTHORNTAIL_PATH_CONTROL_MODE,
+                                                   SHTHORNTAIL_PATH_CONTROL_FLAGS,0);
+  (*gSHthorntailPathControlInterface)->attachPathData(moveScratch,SHTHORNTAIL_PATH_CHANNEL,
+                                                      gSHthorntailPathHeaders,
+                                                      gSHthorntailPathData,local_28);
+  (*gSHthorntailPathControlInterface)->bindObject(obj,moveScratch);
   *(code **)((int)obj + 0xbc) = (code *)SHthorntail_updateLevelControlState;
   fn_80114F64((int)obj,(int)runtime,0xffffdc72,0x2aaa,3);
   fn_8011507C((int)runtime,400,0x78);
