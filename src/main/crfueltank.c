@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/object_descriptor.h"
+#include "main/crfueltank.h"
 
 extern void *Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void *obj,u16 volumeId);
@@ -14,51 +14,6 @@ extern void s16toFloat(void *timer,int duration);
 extern int timerCountDown(void *timer);
 
 extern f32 lbl_803E6760;
-
-typedef struct CrFuelTankState {
-  u8 unk0[0xc];
-  u8 timer[4];
-} CrFuelTankState;
-
-typedef struct CrFuelTankDef {
-  u8 unk0[0x1a];
-  s16 idleFrameCount;
-  u8 unk1C[2];
-  s16 hitEvent;
-} CrFuelTankDef;
-
-typedef struct CrFuelTankCollider {
-  u8 unk0[0x50];
-  void *hitObj;
-} CrFuelTankCollider;
-
-typedef struct CrFuelTankHitObj {
-  u8 unk0[0x24];
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  u8 unk30[0x16];
-  s16 objType;
-} CrFuelTankHitObj;
-
-typedef struct CrFuelTankObject {
-  u8 unk0[6];
-  s16 flags;
-  u8 unk8[0x1c];
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  u8 unk30[6];
-  u8 fadeTimer;
-  u8 unk37[0x15];
-  CrFuelTankDef *def;
-  u8 unk50[4];
-  CrFuelTankCollider *collider;
-  u8 unk58[0x60];
-  CrFuelTankState *state;
-  u8 unkBC[0x3c];
-  int triggered;
-} CrFuelTankObject;
 
 static inline int crfueltank_animFrame(CrFuelTankDef *def)
 {

@@ -1,7 +1,5 @@
 #include "ghidra_import.h"
-#include "main/object_descriptor.h"
-
-typedef struct WorldAsteroidsObject WorldAsteroidsObject;
+#include "main/worldasteroids.h"
 
 extern u32 randomGetRange(int min,int max);
 extern WorldAsteroidsObject *ObjList_FindObjectById(int objectId);
@@ -16,33 +14,6 @@ extern f32 lbl_803E65E4;
 extern f32 lbl_803E65E8;
 extern f32 lbl_803E65EC;
 extern f32 lbl_803E65F0;
-
-#define WORLD_ASTEROIDS_CENTER_OBJECT_ID 0x42fe7
-#define WORLD_ASTEROIDS_ORBIT_TILT_ANGLE 3000
-#define WORLD_ASTEROIDS_ORBIT_STEP_SCALE 0x9c4
-#define WORLD_ASTEROIDS_ROTATION_SPEED_MIN -300
-#define WORLD_ASTEROIDS_ROTATION_SPEED_MAX 300
-
-typedef struct WorldAsteroidsState {
-  s16 rotStepZ;
-  s16 rotStepY;
-  s16 rotStepX;
-  s16 orbitAngle;
-  s16 orbitRadius;
-  s16 heightOffset;
-} WorldAsteroidsState;
-
-struct WorldAsteroidsObject {
-  s16 rotX;
-  s16 rotY;
-  s16 rotZ;
-  u8 pad006[6];
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  u8 pad018[0xb8 - 0x18];
-  WorldAsteroidsState *state;
-};
 
 static inline WorldAsteroidsState *worldasteroids_getState(WorldAsteroidsObject *obj)
 {

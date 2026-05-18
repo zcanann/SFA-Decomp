@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/object_descriptor.h"
+#include "main/crcloudrace.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 extern void getEnvfxActImmediately(void *obj,void *target,int animId,int flags);
@@ -13,24 +13,6 @@ extern void crcloudrace_updateRaceState(void *obj);
 extern undefined4 crcloudrace_completionCallback(void *obj,undefined4 param_2,void *param_3);
 
 extern f32 lbl_803E6748;
-
-typedef struct CrCloudRaceState {
-  u8 unk0[4];
-  u8 timer[4];
-  u8 phase;
-  u8 flags;
-  u8 unkA[2];
-  u8 effect[4];
-} CrCloudRaceState;
-
-typedef struct CrCloudRaceObject {
-  u8 unk0[0xb8];
-  CrCloudRaceState *state;
-  undefined4 (*callback)(void *obj,undefined4 param_2,void *param_3);
-  u8 unkC0[0x34];
-  int unkF4;
-  int unkF8;
-} CrCloudRaceObject;
 
 int crcloudrace_getExtraSize(void)
 {
