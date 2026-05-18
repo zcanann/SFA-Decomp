@@ -2,6 +2,7 @@
 #define MAIN_DLL_BADDIE_TUMBLEWEED_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void FUN_80132024(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -118,5 +119,6 @@ int FUN_801365b8(int param_1);
 void FUN_801365c4(void);
 void FUN_801367b4(undefined2 *param_1,int param_2);
 void FUN_80136870(void);
+extern ObjectDescriptor10WithPadding gTitleScreenObjDescriptor;
 
 #endif /* MAIN_DLL_BADDIE_TUMBLEWEED_H_ */

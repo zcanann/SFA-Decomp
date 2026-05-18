@@ -2,6 +2,7 @@
 #define MAIN_DLL_LADDERS_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void cannonclaw_update(short *param_1);
 void FUN_80163388(int param_1,undefined4 param_2,int param_3);
@@ -20,5 +21,6 @@ void FUN_801638e4(undefined8 param_1,undefined8 param_2,double param_3,undefined
 void FUN_801638e8(undefined4 param_1,undefined4 param_2,int param_3);
 int FUN_80163ac8(float *param_1);
 void FUN_80163b8c(int param_1);
+extern ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor;
 
 #endif /* MAIN_DLL_LADDERS_H_ */

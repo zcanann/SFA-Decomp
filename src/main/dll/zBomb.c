@@ -205,17 +205,19 @@ void dfptargetblock_initialise(void)
 
 s32 lbl_80329B78[] = {0, 0, 0};
 
-u32 gDfptargetblockObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)dfptargetblock_initialise,
-    (u32)dfptargetblock_release,
-    0,
-    (u32)dfptargetblock_init,
-    (u32)dfptargetblock_update,
-    (u32)dfptargetblock_hitDetect,
-    (u32)dfptargetblock_render,
-    (u32)dfptargetblock_free,
-    (u32)dfptargetblock_func08,
-    (u32)dfptargetblock_getExtraSize,
+ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
+    {
+        0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)dfptargetblock_initialise,
+        (ObjectDescriptorCallback)dfptargetblock_release,
+        0,
+        (ObjectDescriptorCallback)dfptargetblock_init,
+        (ObjectDescriptorCallback)dfptargetblock_update,
+        (ObjectDescriptorCallback)dfptargetblock_hitDetect,
+        (ObjectDescriptorCallback)dfptargetblock_render,
+        (ObjectDescriptorCallback)dfptargetblock_free,
+        (ObjectDescriptorCallback)dfptargetblock_func08,
+        dfptargetblock_getExtraSize,
+    },
     0,
 };

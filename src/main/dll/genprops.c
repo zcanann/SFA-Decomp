@@ -4765,18 +4765,20 @@ u32 lbl_80320978[] = {
     0xFF000000,
 };
 
-u32 gFireballObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)fireball_initialise,
-    (u32)fireball_release,
-    0,
-    (u32)fireball_init,
-    (u32)fireball_update,
-    (u32)fireball_hitDetect,
-    (u32)fireball_render,
-    (u32)fireball_free,
-    (u32)fireball_func08,
-    (u32)fireball_getExtraSize,
+ObjectDescriptor10WithPadding gFireballObjDescriptor = {
+    {
+        0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)fireball_initialise,
+        (ObjectDescriptorCallback)fireball_release,
+        0,
+        (ObjectDescriptorCallback)fireball_init,
+        (ObjectDescriptorCallback)fireball_update,
+        (ObjectDescriptorCallback)fireball_hitDetect,
+        (ObjectDescriptorCallback)fireball_render,
+        (ObjectDescriptorCallback)fireball_free,
+        (ObjectDescriptorCallback)fireball_func08,
+        fireball_getExtraSize,
+    },
     0,
 };
 
@@ -4897,19 +4899,21 @@ u32 lbl_80320B38[] = {
     (u32)fn_801713FC,
 };
 
-u32 gCheckpoint4ObjDescriptor[] = {
-    0, 0, 0, 0x000A0000,
-    (u32)checkpoint4_initialise,
-    (u32)checkpoint4_release,
-    0,
-    (u32)checkpoint4_init,
-    (u32)checkpoint4_update,
-    (u32)checkpoint4_hitDetect,
-    (u32)checkpoint4_render,
-    (u32)checkpoint4_free,
-    (u32)checkpoint4_func08,
-    (u32)checkpoint4_getExtraSize,
-    (u32)checkpoint4_setScale,
+ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
+    {
+        0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        (ObjectDescriptorCallback)checkpoint4_initialise,
+        (ObjectDescriptorCallback)checkpoint4_release,
+        0,
+        (ObjectDescriptorCallback)checkpoint4_init,
+        (ObjectDescriptorCallback)checkpoint4_update,
+        (ObjectDescriptorCallback)checkpoint4_hitDetect,
+        (ObjectDescriptorCallback)checkpoint4_render,
+        (ObjectDescriptorCallback)checkpoint4_free,
+        (ObjectDescriptorCallback)checkpoint4_func08,
+        checkpoint4_getExtraSize,
+        (ObjectDescriptorCallback)checkpoint4_setScale,
+    },
     0,
 };
 

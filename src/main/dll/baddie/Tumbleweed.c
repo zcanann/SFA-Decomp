@@ -3549,21 +3549,23 @@ extern void titlescreen_init(void);
 extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
 
-u32 gTitleScreenObjDescriptor[] = {
-    0,
-    0,
-    0,
-    0x00090000,
-    (u32)titlescreen_initialise,
-    (u32)titlescreen_release,
-    0,
-    (u32)titlescreen_init,
-    (u32)titlescreen_update,
-    (u32)titlescreen_hitDetect,
-    (u32)titlescreen_render,
-    (u32)titlescreen_free,
-    (u32)titlescreen_func08,
-    (u32)titlescreen_getExtraSize,
+ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)titlescreen_initialise,
+        (ObjectDescriptorCallback)titlescreen_release,
+        0,
+        (ObjectDescriptorCallback)titlescreen_init,
+        (ObjectDescriptorCallback)titlescreen_update,
+        (ObjectDescriptorCallback)titlescreen_hitDetect,
+        (ObjectDescriptorCallback)titlescreen_render,
+        (ObjectDescriptorCallback)titlescreen_free,
+        (ObjectDescriptorCallback)titlescreen_func08,
+        titlescreen_getExtraSize,
+    },
     0,
 };
 

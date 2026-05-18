@@ -608,21 +608,23 @@ extern void tumbleweedbush_setScale(void);
 extern void tumbleweedbush_update(void);
 extern void tumbleweedbush_init(void);
 
-u32 gTumbleWeedBushObjDescriptor[] = {
-    0,
-    0,
-    0,
-    0x000A0000,
-    (u32)tumbleweedbush_initialise,
-    (u32)tumbleweedbush_release,
-    0,
-    (u32)tumbleweedbush_init,
-    (u32)tumbleweedbush_update,
-    (u32)tumbleweedbush_hitDetect,
-    (u32)tumbleweedbush_render,
-    (u32)tumbleweedbush_free,
-    (u32)tumbleweedbush_func08,
-    (u32)tumbleweedbush_getExtraSize,
-    (u32)tumbleweedbush_setScale,
+ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        (ObjectDescriptorCallback)tumbleweedbush_initialise,
+        (ObjectDescriptorCallback)tumbleweedbush_release,
+        0,
+        (ObjectDescriptorCallback)tumbleweedbush_init,
+        (ObjectDescriptorCallback)tumbleweedbush_update,
+        (ObjectDescriptorCallback)tumbleweedbush_hitDetect,
+        (ObjectDescriptorCallback)tumbleweedbush_render,
+        (ObjectDescriptorCallback)tumbleweedbush_free,
+        (ObjectDescriptorCallback)tumbleweedbush_func08,
+        tumbleweedbush_getExtraSize,
+        (ObjectDescriptorCallback)tumbleweedbush_setScale,
+    },
     0,
 };

@@ -2,6 +2,7 @@
 #define MAIN_DLL_SCARAB_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void FUN_8015d7b0(int param_1,int param_2,int param_3);
 void FUN_8015d99c(int param_1,char param_2);
@@ -146,5 +147,8 @@ FUN_80161ea0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16);
+
+extern ObjectDescriptor11WithPadding gChukChukObjDescriptor;
+extern ObjectDescriptor gIceBallObjDescriptor;
 
 #endif /* MAIN_DLL_SCARAB_H_ */

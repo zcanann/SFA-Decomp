@@ -228,21 +228,23 @@ extern void skeetlawall_setScale(void);
 extern void skeetlawall_render(void);
 extern void skeetlawall_init(void);
 
-u32 gSkeetlaWallObjDescriptor[] = {
-    0,
-    0,
-    0,
-    0x000A0000,
-    (u32)skeetlawall_initialise,
-    (u32)skeetlawall_release,
-    0,
-    (u32)skeetlawall_init,
-    (u32)skeetlawall_update,
-    (u32)skeetlawall_hitDetect,
-    (u32)skeetlawall_render,
-    (u32)skeetlawall_free,
-    (u32)skeetlawall_func08,
-    (u32)skeetlawall_getExtraSize,
-    (u32)skeetlawall_setScale,
+ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        (ObjectDescriptorCallback)skeetlawall_initialise,
+        (ObjectDescriptorCallback)skeetlawall_release,
+        0,
+        (ObjectDescriptorCallback)skeetlawall_init,
+        (ObjectDescriptorCallback)skeetlawall_update,
+        (ObjectDescriptorCallback)skeetlawall_hitDetect,
+        (ObjectDescriptorCallback)skeetlawall_render,
+        (ObjectDescriptorCallback)skeetlawall_free,
+        (ObjectDescriptorCallback)skeetlawall_func08,
+        skeetlawall_getExtraSize,
+        (ObjectDescriptorCallback)skeetlawall_setScale,
+    },
     0,
 };

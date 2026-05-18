@@ -224,20 +224,22 @@ void dfpfloorbar_initialise(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-u32 gDfpfloorbarObjDescriptor[] = {
-    0,
-    0,
-    0,
-    0x00090000,
-    (u32)dfpfloorbar_initialise,
-    (u32)dfpfloorbar_release,
-    0,
-    (u32)dfpfloorbar_init,
-    (u32)dfpfloorbar_update,
-    (u32)dfpfloorbar_hitDetect,
-    (u32)dfpfloorbar_render,
-    (u32)dfpfloorbar_free,
-    (u32)dfpfloorbar_func08,
-    (u32)dfpfloorbar_getExtraSize,
+ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)dfpfloorbar_initialise,
+        (ObjectDescriptorCallback)dfpfloorbar_release,
+        0,
+        (ObjectDescriptorCallback)dfpfloorbar_init,
+        (ObjectDescriptorCallback)dfpfloorbar_update,
+        (ObjectDescriptorCallback)dfpfloorbar_hitDetect,
+        (ObjectDescriptorCallback)dfpfloorbar_render,
+        (ObjectDescriptorCallback)dfpfloorbar_free,
+        (ObjectDescriptorCallback)dfpfloorbar_func08,
+        dfpfloorbar_getExtraSize,
+    },
     0,
 };

@@ -110,9 +110,11 @@ extern ObjectDescriptor gBaddieInterestPObjDescriptor;
 extern ObjectDescriptor gAnimatedObjDescriptor;
 extern ObjectDescriptor gDIM2RoofRubObjDescriptor;
 extern ObjectDescriptor gDepthOfFieldPointObjDescriptor;
+extern ObjectDescriptor10WithPadding gFireballObjDescriptor;
 extern ObjectDescriptor gShieldObjDescriptor;
 extern ObjectDescriptor13 gFlameThrowerSpeObjDescriptor;
 extern ObjectDescriptor12 gCurveObjDescriptor;
 extern ObjectDescriptor gReStartMarkerObjDescriptor;
+extern ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor;
 
 #endif /* MAIN_DLL_GENPROPS_H_ */
