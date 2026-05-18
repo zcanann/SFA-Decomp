@@ -7,29 +7,6 @@ extern int mapUnload(int id, int flags);
 extern int Music_Trigger(int id, int value);
 extern void SH_LevelControl_setMusic(void *p);
 
-typedef struct SCTotemLogPuzzleEventInterface {
-    u8 pad00[0x50];
-    void (*setAnimEvent)(int animId, int eventId, int value);
-} SCTotemLogPuzzleEventInterface;
-
-typedef struct SCTotemLogPuzzleRuntime {
-    u8 pad00[7];
-    u8 eventCountdown;
-} SCTotemLogPuzzleRuntime;
-
-typedef struct SCTotemLogPuzzleObject {
-    u8 pad00[0xAC];
-    s8 animId;
-    u8 padAD[0xB8 - 0xAD];
-    SCTotemLogPuzzleRuntime *runtime;
-} SCTotemLogPuzzleObject;
-
-typedef struct SCTotemLogPuzzleUpdateState {
-    u8 pad00[0x81];
-    u8 eventHandled[10];
-    u8 eventCount;
-} SCTotemLogPuzzleUpdateState;
-
 #define SCTOTEMLOGPUZ_RESET_GAMEBIT 0xBF8
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET 5
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
