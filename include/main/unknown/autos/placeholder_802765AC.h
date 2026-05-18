@@ -7,11 +7,11 @@
 void mcmdRandomKey(McmdVoiceState *state, McmdCommandArgs *args);
 void SelectSource(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
                   u32 activeFlag, u32 dirtyFlag);
-u32 varGet32(int state, u32 useExCtrl, u32 index);
-int varGet(int state, u32 useExCtrl, u32 index);
-void varSet32(int state, u32 useExCtrl, u32 index, u32 value);
+u32 varGet32(McmdVoiceState *state, u32 useExCtrl, u32 index);
+int varGet(McmdVoiceState *state, u32 useExCtrl, u32 index);
+void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value);
 void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args);
-void mcmdVarCalculation(int state, u32 *args, u8 op);
+void mcmdVarCalculation(McmdVoiceState *state, McmdCommandArgs *args, u8 op);
 void mcmdSendMessage(int state, u32 *args);
 void mcmdSetKeyGroup(McmdVoiceState *state, McmdCommandArgs *args);
 void macHandleActive(int state);

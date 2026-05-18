@@ -71,7 +71,7 @@ typedef struct McmdVoiceState {
     u32 activeTimeLo;
     u8 unkA8[MCMD_VOICE_LOOP_COUNTER_OFFSET - 0xA8];
     u16 loopCounter;
-    u8 unkAC[0xEC - 0xAC];
+    u32 localRegs[16];
     u32 voiceNextHandle;
     u32 voicePrevHandle;
     union {

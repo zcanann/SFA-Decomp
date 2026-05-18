@@ -556,18 +556,17 @@ void SelectSource(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
  * Read a 32-bit synth register, either from the voice or EX controller bank.
  */
 #pragma dont_inline on
-u32 varGet32(int state, u32 useExCtrl, u32 index)
+u32 varGet32(McmdVoiceState *state, u32 useExCtrl, u32 index)
 {
     u32 value;
 
     if (useExCtrl != 0) {
-        value = inpGetExCtrl(state, index);
+        value = inpGetExCtrl((int)state, index);
         value &= 0xffff;
     } else {
         index &= 0x1f;
         if (index < 0x10) {
-            state += index * 4;
-            value = *(u32 *)(state + 0xac);
+            value = state->localRegs[index];
         } else {
             value = SYNTH_GLOBAL_REG(index);
         }
@@ -578,17 +577,16 @@ u32 varGet32(int state, u32 useExCtrl, u32 index)
 /*
  * Read a signed 16-bit synth register.
  */
-int varGet(int state, u32 useExCtrl, u32 index)
+int varGet(McmdVoiceState *state, u32 useExCtrl, u32 index)
 {
     u32 value;
 
     if (useExCtrl != 0) {
-        value = inpGetExCtrl(state, index) & 0xffff;
+        value = inpGetExCtrl((int)state, index) & 0xffff;
     } else {
         index &= 0x1f;
         if (index < 0x10) {
-            state += index * 4;
-            value = *(u32 *)(state + 0xac);
+            value = state->localRegs[index];
         } else {
             value = SYNTH_GLOBAL_REG(index);
         }
@@ -599,15 +597,14 @@ int varGet(int state, u32 useExCtrl, u32 index)
 /*
  * Write a synth register, routing high registers to the EX controller bank.
  */
-void varSet32(int state, u32 useExCtrl, u32 index, u32 value)
+void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value)
 {
     if (useExCtrl != 0) {
-        inpSetExCtrl(state, index, (s16)value);
+        inpSetExCtrl((int)state, index, (s16)value);
     } else {
         index &= 0x1f;
         if (index < 0x10) {
-            state += index * 4;
-            *(u32 *)(state + 0xac) = value;
+            state->localRegs[index] = value;
         } else {
             SYNTH_GLOBAL_REG(index) = value;
         }
@@ -664,7 +661,7 @@ void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args)
 /*
  * Arithmetic command over synth registers.
  */
-void mcmdVarCalculation(int state, u32 *args, u8 op)
+void mcmdVarCalculation(McmdVoiceState *state, McmdCommandArgs *args, u8 op)
 {
     u32 command;
     u32 operand;
@@ -673,14 +670,14 @@ void mcmdVarCalculation(int state, u32 *args, u8 op)
     s16 rhs;
     int result;
 
-    operand = args[1];
-    command = *args;
+    operand = args->value;
+    command = args->flags;
     lhs = (s16)varGet32(state, command >> 0x18, operand & 0xff);
     opValue = op;
     if (opValue == 4) {
         rhs = (s16)(operand >> 8);
     } else {
-        operand = args[1];
+        operand = args->value;
         rhs = (s16)varGet32(state, (operand >> 8) & 0xff, (operand >> 0x10) & 0xff);
     }
 
@@ -710,7 +707,7 @@ void mcmdVarCalculation(int state, u32 *args, u8 op)
     }
 
 clamp:
-    command = *args;
+    command = args->flags;
     if (result < -0x8000) {
         rhs = -0x8000;
     } else if (result <= 0x7fff) {
