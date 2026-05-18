@@ -18,6 +18,7 @@ void wm_column_init(short *obj,int mapData);
 void wm_column_release(void);
 void wm_column_initialise(void);
 extern ObjectDescriptor gWM_ColumnObjDescriptor;
+extern ObjectDescriptor13 gAppleOnTreeObjDescriptor;
 void appleontree_func0B(int obj,float *pos);
 void FUN_8017db40(uint param_1,int param_2);
 void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 param_4,

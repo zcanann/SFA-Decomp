@@ -111,6 +111,7 @@ extern ObjectDescriptor gAnimatedObjDescriptor;
 extern ObjectDescriptor gDIM2RoofRubObjDescriptor;
 extern ObjectDescriptor gDepthOfFieldPointObjDescriptor;
 extern ObjectDescriptor gShieldObjDescriptor;
+extern ObjectDescriptor13 gFlameThrowerSpeObjDescriptor;
 extern ObjectDescriptor12 gCurveObjDescriptor;
 extern ObjectDescriptor gReStartMarkerObjDescriptor;
 

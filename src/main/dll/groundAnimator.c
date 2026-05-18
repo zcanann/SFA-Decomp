@@ -482,21 +482,21 @@ extern void appleontree_setScale(void);
 extern void appleontree_func0B(int obj, float *pos);
 extern u8 appleontree_modelMtxFn(int *obj);
 
-u32 gAppleOnTreeObjDescriptor[] = {
-    0, 0, 0, 0x000C0000,
+ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
     0,
     0,
     0,
-    (u32)appleontree_init,
-    (u32)appleontree_update,
+    (ObjectDescriptorCallback)appleontree_init,
+    (ObjectDescriptorCallback)appleontree_update,
     0,
-    (u32)appleontree_render,
-    (u32)appleontree_free,
+    (ObjectDescriptorCallback)appleontree_render,
+    (ObjectDescriptorCallback)appleontree_free,
     0,
-    (u32)appleontree_getExtraSize,
-    (u32)appleontree_setScale,
-    (u32)appleontree_func0B,
-    (u32)appleontree_modelMtxFn,
+    appleontree_getExtraSize,
+    (ObjectDescriptorCallback)appleontree_setScale,
+    (ObjectDescriptorCallback)appleontree_func0B,
+    (ObjectDescriptorCallback)appleontree_modelMtxFn,
 };
 
 u32 jumptable_803214DC[] = {

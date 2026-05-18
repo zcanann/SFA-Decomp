@@ -4792,21 +4792,21 @@ u32 lbl_803209C0[] = {
     0x0000001E,
 };
 
-u32 gFlameThrowerSpeObjDescriptor[] = {
-    0, 0, 0, 0x000C0000,
-    (u32)flamethrowerspe_initialise,
-    (u32)flamethrowerspe_release,
+ObjectDescriptor13 gFlameThrowerSpeObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
+    (ObjectDescriptorCallback)flamethrowerspe_initialise,
+    (ObjectDescriptorCallback)flamethrowerspe_release,
     0,
-    (u32)flamethrowerspe_init,
-    (u32)flamethrowerspe_update,
-    (u32)flamethrowerspe_hitDetect,
-    (u32)flamethrowerspe_render,
-    (u32)flamethrowerspe_free,
-    (u32)flamethrowerspe_func08,
-    (u32)flamethrowerspe_getExtraSize,
-    (u32)flamethrowerspe_setScale,
-    (u32)flamethrowerspe_func0B,
-    (u32)flamethrowerspe_modelMtxFn,
+    (ObjectDescriptorCallback)flamethrowerspe_init,
+    (ObjectDescriptorCallback)flamethrowerspe_update,
+    (ObjectDescriptorCallback)flamethrowerspe_hitDetect,
+    (ObjectDescriptorCallback)flamethrowerspe_render,
+    (ObjectDescriptorCallback)flamethrowerspe_free,
+    (ObjectDescriptorCallback)flamethrowerspe_func08,
+    flamethrowerspe_getExtraSize,
+    (ObjectDescriptorCallback)flamethrowerspe_setScale,
+    (ObjectDescriptorCallback)flamethrowerspe_func0B,
+    (ObjectDescriptorCallback)flamethrowerspe_modelMtxFn,
 };
 
 f32 lbl_80320A28[] = {
