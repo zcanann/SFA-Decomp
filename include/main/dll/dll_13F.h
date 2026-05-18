@@ -4,14 +4,20 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+extern ObjectDescriptor17 gCollectibleObjDescriptor;
 extern ObjectDescriptor gMagicDustObjDescriptor;
 
+int collectible_getExtraSize(void);
+int collectible_func08(void);
 void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                       short *param_9);
+u8 collectible_func0F(int *obj);
+int collectible_setScale(int *obj);
 void FUN_80173364(short *param_1,int param_2);
 void FUN_80173368(int param_1);
 void FUN_801733c0(int param_1);
+void collectible_hitDetect(void);
 void collectible_release(void);
 void collectible_initialise(void);
 int magicdust_getExtraSize(void);
