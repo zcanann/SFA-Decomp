@@ -4,6 +4,16 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+typedef struct DfpFloorbarState {
+    s16 triggerGameBit;
+    s16 completionGameBit;
+    u8 active;
+    u8 modeIndex;
+    u8 requiredScore;
+    u8 lastSequenceValue;
+    int *linkedObject;
+} DfpFloorbarState;
+
 void dfpfloorbar_update(int param_1);
 void dfpfloorbar_release(void);
 void dfpfloorbar_init(int obj, int params);

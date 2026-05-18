@@ -3,6 +3,12 @@
 
 #include "ghidra_import.h"
 
+typedef struct ChukaState {
+    f32 startY;
+    int linkedObject;
+    u8 modeIndex;
+} ChukaState;
+
 void chuka_init(int obj, int params);
 void dfpfloorbar_free(int *obj);
 void chuka_release(void);

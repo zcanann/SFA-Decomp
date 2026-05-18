@@ -1,17 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/chuka.h"
+#include "main/dll/baddie/chukachuck.h"
 
 extern undefined4* lbl_803DCA78;
 extern u8 gChukaModeTable[9];
 extern f32 lbl_803E63F8;
 extern f32 lbl_803E63FC;
 extern int return0_80205F40(void);
-
-typedef struct ChukaState {
-    f32 startY;
-    int linkedObject;
-    u8 modeIndex;
-} ChukaState;
 
 /*
  * --INFO--
@@ -83,11 +78,11 @@ typedef void (*DfpFloorbarFreeFn)(void *obj);
 #pragma peephole off
 void dfpfloorbar_free(int *obj)
 {
-  int *extra;
+  DfpFloorbarState *state;
 
-  extra = (int *)obj[0x2e];
+  state = (DfpFloorbarState *)obj[0x2e];
   ((DfpFloorbarFreeFn)(*(u32 *)(*lbl_803DCA78 + 0x18)))(obj);
-  extra[2] = 0;
+  state->linkedObject = NULL;
   return;
 }
 #pragma peephole reset

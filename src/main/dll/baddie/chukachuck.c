@@ -46,9 +46,9 @@ extern f32 lbl_803E642C;
 void dfpfloorbar_update(int param_1)
 {
     int iVar6 = *(int *)(param_1 + 0x4c);
-    int iVar5 = *(int *)(param_1 + 0xb8);
+    DfpFloorbarState *state = *(DfpFloorbarState **)(param_1 + 0xb8);
     s16 score = -1;
-    int state;
+    int mode;
     u8 active;
     u32 r27;
     u8 *playerObj;
@@ -56,12 +56,12 @@ void dfpfloorbar_update(int param_1)
     f32 xMid;
     f32 zDelta;
 
-    state = *(s8 *)(param_1 + 0xac);
-    state = (*(code *)(*lbl_803DCAAC + 0x40))(state);
+    mode = *(s8 *)(param_1 + 0xac);
+    mode = (*(code *)(*lbl_803DCAAC + 0x40))(mode);
 
-    switch ((u8)state) {
+    switch ((u8)mode) {
         case 1:
-            if (*(u8 *)(iVar5 + 5) > 5) return;
+            if (state->modeIndex > 5) return;
             if (GameBit_Get(0xe57) != 0) {
                 *(f32 *)(param_1 + 0x10) = *(f32 *)(iVar6 + 0xc) - lbl_803E640C;
                 return;
@@ -76,12 +76,12 @@ void dfpfloorbar_update(int param_1)
     }
 
     r27 = (u8)GameBit_Get(0x5e4);
-    if (GameBit_Get(0x5e5) != 0 || r27 != *(u8 *)(iVar5 + 7)) {
-        *(u8 *)(iVar5 + 4) = 0;
+    if (GameBit_Get(0x5e5) != 0 || r27 != state->lastSequenceValue) {
+        state->active = 0;
     }
-    *(u8 *)(iVar5 + 7) = (u8)r27;
+    state->lastSequenceValue = (u8)r27;
 
-    if (*(u32 *)(iVar5 + 8) == 0) {
+    if (state->linkedObject == NULL) {
         int *items;
         int idx_init;
         int count;
@@ -91,21 +91,21 @@ void dfpfloorbar_update(int param_1)
         for (; idx < count; idx++) {
             int o = items[idx];
             if (*(s16 *)(o + 0x46) == 0x431) {
-                *(int *)(iVar5 + 8) = o;
+                state->linkedObject = (int *)o;
                 idx = count;
             }
         }
-        if (*(u32 *)(iVar5 + 8) == 0) return;
+        if (state->linkedObject == NULL) return;
     }
 
     {
-        int objPtr = *(int *)(iVar5 + 8);
+        int objPtr = (int)state->linkedObject;
         (*(code *)(**(int **)(objPtr + 0x68) + 0x20))(objPtr, gDfpfloorbarModeTable);
     }
 
-    *(u8 *)(iVar5 + 6) = gDfpfloorbarModeTable[*(u8 *)(iVar5 + 5)];
+    state->requiredScore = gDfpfloorbarModeTable[state->modeIndex];
 
-    active = *(u8 *)(iVar5 + 4);
+    active = state->active;
     if (active != 0) {
         if (*(f32 *)(param_1 + 0x10) > *(f32 *)(iVar6 + 0xc) - lbl_803E640C) {
             Sfx_KeepAliveLoopedObjectSound(param_1, 0x1c8);
@@ -117,11 +117,11 @@ void dfpfloorbar_update(int param_1)
         return;
     }
 
-    if (*(u8 *)(iVar5 + 6) == 0) return;
+    if (state->requiredScore == 0) return;
     if (active == 0) {
         *(f32 *)(param_1 + 0x10) = *(f32 *)(iVar6 + 0xc);
     }
-    if (*(u8 *)(iVar5 + 4) != 0) return;
+    if (state->active != 0) return;
 
     playerObj = Obj_GetPlayerObject();
     if (playerObj == NULL) return;
@@ -145,8 +145,8 @@ void dfpfloorbar_update(int param_1)
         score = 1;
     }
 
-    if ((s16)score == (s16)*(u8 *)(iVar5 + 6)) {
-        *(u8 *)(iVar5 + 4) = 1;
+    if ((s16)score == (s16)state->requiredScore) {
+        state->active = 1;
         return;
     }
 
@@ -183,21 +183,21 @@ void dfpfloorbar_release(void)
 #pragma peephole off
 void dfpfloorbar_init(int obj, int params)
 {
-    int state = *(int *)(obj + 0xb8);
+    DfpFloorbarState *state = *(DfpFloorbarState **)(obj + 0xb8);
 
     *(s16 *)(obj + 0x0) = (s16)((s8)*(u8 *)(params + 0x18) << 8);
     *(int *)(obj + 0xbc) = (int)&fn_80206474;
-    *(u8 *)(state + 0x5) = *(u8 *)(params + 0x19);
-    *(s16 *)(state + 0x0) = *(s16 *)(params + 0x1e);
-    *(s16 *)(state + 0x2) = *(s16 *)(params + 0x20);
-    *(int *)(state + 0x8) = 0;
+    state->modeIndex = *(u8 *)(params + 0x19);
+    state->triggerGameBit = *(s16 *)(params + 0x1e);
+    state->completionGameBit = *(s16 *)(params + 0x20);
+    state->linkedObject = NULL;
 
     if (*(s16 *)(params + 0x1c) != 0) {
         *(f32 *)(obj + 0x8) = lbl_803E6408 / ((f32)(s32)*(s16 *)(params + 0x1c) / lbl_803E642C);
     }
 
-    if (GameBit_Get((int)*(s16 *)(state + 0x2)) != 0) {
-        *(u8 *)(state + 0x4) = 1;
+    if (GameBit_Get((int)state->completionGameBit) != 0) {
+        state->active = 1;
         *(f32 *)(obj + 0x10) = *(f32 *)(params + 0xc) - lbl_803E640C;
     }
 }
