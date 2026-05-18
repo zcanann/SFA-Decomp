@@ -6,7 +6,7 @@ extern u32 lbl_8032EDD0[];
 extern int audioFn_80278b94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
                        int p9, int p10, int p11, int p12, int p13, int p14, int p15, int p16);
 extern void synthFXCloneMidiSetup(int voice, int state);
-void DoSetPitch(int state);
+void DoSetPitch(McmdVoiceState *state);
 extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, McmdVoiceState *state);
 extern int dataGetSample(u16 key, u32 *out);
@@ -133,7 +133,7 @@ void mcmdStartSample(McmdVoiceState *state, McmdCommandArgs *args)
                              *(u8 *)((u8 *)state + 0x193));
         state->prevSampleId = dataSampleInfo[0];
         if (state->targetPitch != 0xffffffff) {
-            DoSetPitch((int)state);
+            DoSetPitch(state);
         }
         state->outputFlags |= MCMD_VOICE_ACTIVE_OUTPUT_FLAG;
         synthQueueVoiceInputUpdate(state);
@@ -202,7 +202,7 @@ void mcmdVibrato(McmdVoiceState *state, McmdCommandArgs *args)
  * result into key and fine-tune cents.
  */
 #pragma dont_inline on
-void DoSetPitch(int state)
+void DoSetPitch(McmdVoiceState *state)
 {
     u16 *pitchRatioTable;
     u16 *ratioPtr;
@@ -216,14 +216,14 @@ void DoSetPitch(int state)
     int shiftLimit;
 
     pitchRatioTable = (u16 *)lbl_8032EDD0;
-    targetPitch = *(u32 *)(state + 0x128) & 0xffffff;
-    samplePitch = *(u32 *)(state + MCMD_VOICE_PREV_SAMPLE_ID_OFFSET);
+    targetPitch = state->targetPitch & 0xffffff;
+    samplePitch = state->prevSampleId;
     sourcePitch = samplePitch & 0xffffff;
     sampleKey = samplePitch >> 0x18;
 
     if (sourcePitch == targetPitch) {
-        *(u16 *)(state + 0x12c) = sampleKey;
-        *(u8 *)(state + 0x12e) = 0;
+        state->key = sampleKey;
+        state->fineTune = 0;
         return;
     }
 
@@ -245,9 +245,9 @@ void DoSetPitch(int state)
             semitone--;
         }
 
-        *(u16 *)(state + 0x12c) = sampleKey + (s16)octave * 0xc + (s16)semitone;
+        state->key = sampleKey + (s16)octave * 0xc + (s16)semitone;
         targetPitch = (u32)pitchRatioTable[semitone];
-        *(s8 *)(state + 0x12e) =
+        state->fineTune =
             (s8)(((ratio - targetPitch) * 100) /
                  (pitchRatioTable[semitone + 1] - targetPitch));
         return;
@@ -272,13 +272,13 @@ void DoSetPitch(int state)
 
     octave = semitone + octave * 0xc;
     if ((int)(samplePitch >> 0x18) < octave) {
-        *(u8 *)(state + 0x12e) = 0;
-        *(u16 *)(state + 0x12c) = 0;
+        state->fineTune = 0;
+        state->key = 0;
         return;
     }
-    *(u16 *)(state + 0x12c) = sampleKey - octave;
+    state->key = sampleKey - octave;
     sourcePitch = (u32)pitchRatioTable[semitone];
-    *(s8 *)(state + 0x12e) =
+    state->fineTune =
         (s8)(((sourcePitch - ratio) * 100) /
              (pitchRatioTable[semitone + 1] - sourcePitch));
 }
