@@ -1317,8 +1317,8 @@ int fn_802BF728(void) { return 0x0; }
 void fn_802C0CEC(void) {}
 int fn_802C0CF0(void) { return 0x0; }
 int fn_802C0DB0(void) { return 0x0; }
-int fn_802C0E98(void) { return 0x0; }
-int fn_802C0EFC(void) { return 0x0; }
-int fn_802C0F04(void) { return 0xbc8; }
+int DR_CloudRunner_render2(void) { return 0x0; }
+int DR_CloudRunner_setScale(void) { return 0x0; }
+int DR_CloudRunner_getExtraSize(void) { return 0xbc8; }
 int fn_802C0F0C(void) { return 0x43; }
-void fn_802C1800(void) {}
+void DR_CloudRunner_release(void) {}
