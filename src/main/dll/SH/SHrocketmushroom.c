@@ -289,7 +289,7 @@ void bombplantingspot_init(void *obj, void *param2) {
     *(s16 *)obj = (s16)((s8) * ((s8 *)param2 + 0x18) << 8);
 }
 
-int fn_801D4198(void *obj, void *unused, void *p5) {
+int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, void *p5) {
     void *pState = *(void **)((u8 *)obj + 0xb8);
     int i;
     u8 b2;

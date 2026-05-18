@@ -27,7 +27,7 @@ extern f32 getXZDistance(f32 *a, f32 *b);
 extern int fn_8003B500(void *obj, void *p2, f32 f1);
 extern int fn_8003B228(void *obj, void *p2);
 extern int characterDoEyeAnims(void *obj, void *p2);
-extern int fn_801D4198(void *obj, void *unused, void *p5);
+extern int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, void *p5);
 extern void fn_8002B6D8(void *obj, int arg1, int arg2, int arg3, int arg4, int arg5);
 extern int cMenuGetSelectedItem(void);
 extern int fn_8011F3A8(s16 *outTrigger);
@@ -577,7 +577,7 @@ void fn_801D4364(void *obj, void *state)
 void sh_queenearthwalker_init(void *obj, void *param2)
 {
   *(s16 *)obj = (s16)((s8)*((s8 *)param2 + 0x18) << 8);
-  *(int *)((u8 *)obj + 0xbc) = (int)fn_801D4198;
+  *(int *)((u8 *)obj + 0xbc) = (int)sh_queenearthwalker_processAnimEvents;
   *(u16 *)((u8 *)obj + 0xb0) |= 0x4000;
 }
 #pragma peephole reset
