@@ -18,7 +18,7 @@ extern void* FUN_800069a8();
 extern undefined4 FUN_800069cc();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
-extern void mm_free(uint slotPoolBase);
+extern void mm_free(void *ptr);
 extern undefined4 FUN_8004812c();
 extern undefined8 FUN_80053754();
 extern void textureFree(void *resource);
@@ -2119,14 +2119,14 @@ void expgfx_onMapSetup(void)
 #pragma peephole off
 void expgfx_release(void)
 {
-  u32 *slotPoolBases;
+  void **slotPoolBases;
   int poolIndex;
 
   asm {
     bl expgfxRemoveAll
   }
   poolIndex = 0;
-  slotPoolBases = gExpgfxSlotPoolBases;
+  slotPoolBases = (void **)gExpgfxSlotPoolBases;
   do {
     mm_free(*slotPoolBases);
     slotPoolBases = slotPoolBases + 1;
