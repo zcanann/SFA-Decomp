@@ -22,31 +22,6 @@ extern f32 lbl_803E64CC;
 extern f32 lbl_803E64D0;
 extern f32 lbl_803E64D4;
 
-typedef struct DfpTargetBlockPoint {
-  f32 x;
-  f32 y;
-  f32 z;
-} DfpTargetBlockPoint;
-
-typedef struct DfpTargetBlockState {
-  u32 controlId;
-  DfpTargetBlockPoint floorPoints[8];
-  s16 stateSfxId;
-  s16 completionSfxId;
-  s8 floorPointCount;
-  u8 mode;
-  u8 stateSfxReady;
-  u8 completionSfxReady;
-} DfpTargetBlockState;
-
-typedef enum DfpTargetBlockMode {
-  DFPTARGETBLOCK_MODE_RAISING = 0,
-  DFPTARGETBLOCK_MODE_ACTIVE = 1,
-  DFPTARGETBLOCK_MODE_RESETTING = 2,
-  DFPTARGETBLOCK_MODE_LOWERING = 3,
-  DFPTARGETBLOCK_MODE_SETTLED = 4,
-} DfpTargetBlockMode;
-
 /*
  * --INFO--
  *
