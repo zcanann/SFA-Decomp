@@ -2,6 +2,10 @@
 #define MAIN_DLL_CF_CFCHUCKOBJ_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gAreaFXEmitObjDescriptor;
+extern ObjectDescriptor12 gLFXEmitterObjDescriptor;
 
 void fxemit_init(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_8018f158(undefined4 param_1);
@@ -21,5 +25,27 @@ void FUN_80190004(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_80190008(int param_1,int param_2);
 void FUN_80190148(int param_1);
 void FUN_801905c4(int param_1);
+
+int areafxemit_getExtraSize(void);
+int areafxemit_func08(void);
+void areafxemit_free(void);
+void areafxemit_render(void);
+void areafxemit_hitDetect(void);
+void areafxemit_update(void);
+void areafxemit_init(void);
+void areafxemit_release(void);
+void areafxemit_initialise(void);
+
+void lfxemitter_func0B(void);
+void lfxemitter_setScale(void);
+int lfxemitter_getExtraSize(void);
+int lfxemitter_func08(void);
+void lfxemitter_free(void);
+void lfxemitter_render(void);
+void lfxemitter_hitDetect(void);
+void lfxemitter_update(void);
+void lfxemitter_init(void);
+void lfxemitter_release(void);
+void lfxemitter_initialise(void);
 
 #endif /* MAIN_DLL_CF_CFCHUCKOBJ_H_ */
