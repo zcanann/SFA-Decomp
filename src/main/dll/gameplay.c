@@ -13062,7 +13062,7 @@ u8 fn_800E87C4(void) { return lbl_803DD488; }
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_800EA920(int x) { ObjGroup_RemoveObject(x, 0x10); }
+void Carryable_free(int x) { ObjGroup_RemoveObject(x, 0x10); }
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -13070,7 +13070,7 @@ void fn_800EA920(int x) { ObjGroup_RemoveObject(x, 0x10); }
 void fn_800E878C(void) { lbl_803DD488 = 0x0; }
 
 /* 12b 3-insn patterns. */
-s32 fn_800EA914(u8 *obj) { return *(s8*)(obj + 0x5); }
+s32 Carryable_isHeld(u8 *obj) { return *(s8*)(obj + 0x5); }
 
 /* misc 8b leaves */
 u8 fn_800EA900(u8 *p) { return p[8]; }
