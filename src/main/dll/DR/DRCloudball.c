@@ -195,21 +195,21 @@ void spscarab_initialise(void)
 {
 }
 
-u32 gSPScarabObjDescriptor[] = {
+ObjectDescriptor gSPScarabObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)spscarab_initialise,
-    (u32)spscarab_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)spscarab_initialise,
+    (ObjectDescriptorCallback)spscarab_release,
     0,
-    (u32)spscarab_init,
-    (u32)spscarab_update,
-    (u32)spscarab_hitDetect,
-    (u32)spscarab_render,
-    (u32)spscarab_free,
-    (u32)spscarab_func08,
-    (u32)spscarab_getExtraSize,
+    (ObjectDescriptorCallback)spscarab_init,
+    (ObjectDescriptorCallback)spscarab_update,
+    (ObjectDescriptorCallback)spscarab_hitDetect,
+    (ObjectDescriptorCallback)spscarab_render,
+    (ObjectDescriptorCallback)spscarab_free,
+    (ObjectDescriptorCallback)spscarab_func08,
+    spscarab_getExtraSize,
 };
 
 /*

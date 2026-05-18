@@ -2,6 +2,7 @@
 #define MAIN_DLL_GROUNDANIMATOR_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void dll_115_update(int obj);
 void dll_115_init(short *obj,int mapData);
@@ -16,6 +17,7 @@ void wm_column_update(int obj);
 void wm_column_init(short *obj,int mapData);
 void wm_column_release(void);
 void wm_column_initialise(void);
+extern ObjectDescriptor gWM_ColumnObjDescriptor;
 void appleontree_func0B(int obj,float *pos);
 void FUN_8017db40(uint param_1,int param_2);
 void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 param_4,

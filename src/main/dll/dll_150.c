@@ -414,16 +414,16 @@ extern void smallbasket_update();
 extern void smallbasket_render();
 extern void smallbasket_free();
 
-u32 gSmallBasketObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gSmallBasketObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)smallbasket_init,
-    (u32)smallbasket_update,
+    (ObjectDescriptorCallback)smallbasket_init,
+    (ObjectDescriptorCallback)smallbasket_update,
     0,
-    (u32)smallbasket_render,
-    (u32)smallbasket_free,
+    (ObjectDescriptorCallback)smallbasket_render,
+    (ObjectDescriptorCallback)smallbasket_free,
     0,
-    (u32)smallbasket_getExtraSize,
+    smallbasket_getExtraSize,
 };
