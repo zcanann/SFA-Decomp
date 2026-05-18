@@ -144,6 +144,9 @@ typedef struct McmdVoiceState {
     u8 queuedMessageCount;
     u8 unk3ED;
     u8 queuedMessageWriteIndex;
+    u8 unk3EF;
+    u32 queuedMessages[4];
+    u8 unk400[4];
 } McmdVoiceState;
 
 #endif /* MAIN_AUDIO_MCMD_H_ */

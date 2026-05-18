@@ -733,6 +733,7 @@ void mcmdSendMessage(int state, u32 *args)
     u32 targetInstrument;
     int offset;
     int voice;
+    McmdVoiceState *voiceState;
     u8 i;
     u32 targetVoice;
 
@@ -749,16 +750,17 @@ void mcmdSendMessage(int state, u32 *args)
             offset = 0;
             for (i = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++) {
                 voice = (int)(synthVoice + offset);
-                if (*(int *)(voice + 0x34) != 0 &&
-                    targetInstrument == *(u16 *)(voice + 0x102)) {
-                    targetVoice = vidGetInternalId(*(u32 *)(*(int *)(voice + 0xf8) + 8));
+                voiceState = (McmdVoiceState *)voice;
+                if (voiceState->macroBase != 0 && targetInstrument == voiceState->instrumentKey) {
+                    targetVoice = vidGetInternalId(*(u32 *)((u8 *)voiceState->vidListNode + 8));
                     if (targetVoice != 0xffffffff) {
                         voice = (int)(synthVoice + (targetVoice & 0xff) * 0x404);
-                        if (*(u8 *)(voice + 0x3ec) < 4) {
-                            *(u8 *)(voice + 0x3ec) = *(u8 *)(voice + 0x3ec) + 1;
-                            *(u32 *)(voice + (u32)*(u8 *)(voice + 0x3ee) * 4 + 0x3f0) =
-                                value;
-                            *(u8 *)(voice + 0x3ee) = (*(u8 *)(voice + 0x3ee) + 1) & 3;
+                        voiceState = (McmdVoiceState *)voice;
+                        if (voiceState->queuedMessageCount < 4) {
+                            voiceState->queuedMessageCount = voiceState->queuedMessageCount + 1;
+                            voiceState->queuedMessages[voiceState->queuedMessageWriteIndex] = value;
+                            voiceState->queuedMessageWriteIndex =
+                                (voiceState->queuedMessageWriteIndex + 1) & 3;
                             if (*(u8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
                                 *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
                                 *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
@@ -772,7 +774,7 @@ void mcmdSendMessage(int state, u32 *args)
             }
         } else {
             if (synthMessageCallback != 0) {
-                synthMessageCallback(*(u32 *)(*(int *)(state + 0xf8) + 8));
+                synthMessageCallback(*(u32 *)((u8 *)((McmdVoiceState *)state)->vidListNode + 8));
             }
         }
     } else {
@@ -785,10 +787,12 @@ void mcmdSendMessage(int state, u32 *args)
         targetVoice = vidGetInternalId(targetInstrument);
         if (targetVoice != 0xffffffff) {
             voice = (int)(synthVoice + (targetVoice & 0xff) * 0x404);
-            if (*(u8 *)(voice + 0x3ec) < 4) {
-                *(u8 *)(voice + 0x3ec) = *(u8 *)(voice + 0x3ec) + 1;
-                *(u32 *)(voice + (u32)*(u8 *)(voice + 0x3ee) * 4 + 0x3f0) = value;
-                *(u8 *)(voice + 0x3ee) = (*(u8 *)(voice + 0x3ee) + 1) & 3;
+            voiceState = (McmdVoiceState *)voice;
+            if (voiceState->queuedMessageCount < 4) {
+                voiceState->queuedMessageCount = voiceState->queuedMessageCount + 1;
+                voiceState->queuedMessages[voiceState->queuedMessageWriteIndex] = value;
+                voiceState->queuedMessageWriteIndex =
+                    (voiceState->queuedMessageWriteIndex + 1) & 3;
                 if (*(u8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
                     *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
                     *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
