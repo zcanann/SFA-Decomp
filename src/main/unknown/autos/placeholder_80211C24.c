@@ -1,7 +1,7 @@
 
 
 /* Pattern wrappers. */
-int fn_802133E8(void) { return 0x0; }
+int ktrex_stateHandlerA00(void) { return 0x0; }
 int drshackle_getExtraSize(void) { return 0x20; }
 int drshackle_func08(void) { return 0x0; }
 void drshackle_release(void) {}
