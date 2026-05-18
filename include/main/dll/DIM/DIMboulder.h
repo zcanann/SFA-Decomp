@@ -2,6 +2,12 @@
 #define MAIN_DLL_DIM_DIMBOULDER_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gIMIceMountainObjDescriptor;
+extern ObjectDescriptor gCRrockfallObjDescriptor;
+extern ObjectDescriptor gMagicLightObjDescriptor;
+extern ObjectDescriptor gIMIcePillarObjDescriptor;
 
 void FUN_801ac248(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -41,5 +47,43 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
             ,int param_11,undefined4 param_12,uint *param_13,undefined4 param_14,undefined4 param_15
             ,undefined4 param_16);
+
+int imicemountain_getExtraSize(void);
+int imicemountain_func08(void);
+void imicemountain_free(void);
+void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void imicemountain_hitDetect(void);
+void imicemountain_update(void);
+void imicemountain_init(void);
+
+int crrockfall_getExtraSize(void);
+int crrockfall_func08(void);
+void crrockfall_free(void);
+void crrockfall_render(void);
+void crrockfall_hitDetect(void);
+void crrockfall_update(void);
+void crrockfall_init(void);
+void crrockfall_release(void);
+void crrockfall_initialise(void);
+
+int magiclight_getExtraSize(int *obj);
+int magiclight_func08(void);
+void magiclight_free(void);
+void magiclight_render(void);
+void magiclight_hitDetect(void);
+void magiclight_update(void);
+void magiclight_init(void);
+void magiclight_release(void);
+void magiclight_initialise(void);
+
+int imicepillar_getExtraSize(void);
+int imicepillar_func08(void);
+void imicepillar_free(void);
+void imicepillar_render(void);
+void imicepillar_hitDetect(void);
+void imicepillar_update(void);
+void imicepillar_init(void);
+void imicepillar_release(void);
+void imicepillar_initialise(void);
 
 #endif /* MAIN_DLL_DIM_DIMBOULDER_H_ */
