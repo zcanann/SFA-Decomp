@@ -4447,8 +4447,8 @@ void fn_800DA928(float *p) {
 
 /* UIController vtable dispatch via lbl_803DCA68 */
 extern int *lbl_803DCA68;
-extern u8 fn_80014054(void *p, int a, int b);
-extern void fn_80014060(void *p);
+extern u8 gameTimerIsRunning(void *p, int a, int b);
+extern void hudNumberFn_80014060(void *p);
 extern void gameTimerRun(void *p);
 void UIController_frameStart(void) {
     (**(void (**)(void))(*lbl_803DCA68 + 0x4))();
@@ -4459,10 +4459,10 @@ void UIController_frameEnd(void) {
 #pragma peephole off
 #pragma scheduling off
 void UIController_render(void *p, int a, int b) {
-    if (fn_80014054(p, a, b) != 0) {
+    if (gameTimerIsRunning(p, a, b) != 0) {
         gameTimerRun(p);
     }
-    fn_80014060(p);
+    hudNumberFn_80014060(p);
     (**(void (**)(void *, int, int))(*lbl_803DCA68 + 0xc))(p, a, b);
 }
 #pragma scheduling on

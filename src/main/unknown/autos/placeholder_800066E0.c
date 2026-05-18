@@ -716,7 +716,7 @@ extern void AISetStreamVolLeft(u32 volume);
 extern void AISetStreamVolRight(u32 volume);
 extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
-extern s32 fn_80020620(void);
+extern s32 getGameState(void);
 extern void AudioStream_CancelCallback(s32 result);
 extern void fn_8000D0B4(void);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
@@ -2387,8 +2387,8 @@ void AudioStream_StartPrepared(void)
     if (gAudioStreamPreparingId != 0) {
         gAudioStreamStartWhenPrepared = 1;
     } else if (gAudioStreamPreparedId != 0) {
-        if (fn_80020620() == 1) {
-            if (fn_80020620() == 1) {
+        if (getGameState() == 1) {
+            if (getGameState() == 1) {
                 AISetStreamVolLeft(gAudioStreamVolumeLeft);
                 AISetStreamVolRight(gAudioStreamVolumeRight);
                 AISetStreamPlayState(1);
@@ -2514,14 +2514,14 @@ void AudioStream_Init(void)
 #pragma scheduling off
 void AudioStream_PrepareCallback(void)
 {
-    if (fn_80020620() != 1) {
+    if (getGameState() != 1) {
         gAudioStreamDvdState = 0;
         return;
     }
     gAudioStreamPreparedId = gAudioStreamPreparingId;
     gAudioStreamPreparingId = 0;
     if (gAudioStreamStartWhenPrepared != 0) {
-        if (fn_80020620() == 1) {
+        if (getGameState() == 1) {
             AISetStreamVolLeft(gAudioStreamVolumeLeft);
             AISetStreamVolRight(gAudioStreamVolumeRight);
             AISetStreamPlayState(1);
@@ -6173,4 +6173,4 @@ undefined4 FUN_80006ca4(void)
 int fn_80008B6C(void) { return -0x1; }
 int fn_8000A378(void) { return 0x64; }
 void fn_8000CF54(void) {}
-void fn_80014F3C(void) {}
+void doNothing_endOfFrame(void) {}
