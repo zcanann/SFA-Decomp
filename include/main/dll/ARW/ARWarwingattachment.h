@@ -2,6 +2,10 @@
 #define MAIN_DLL_ARW_ARWARWINGATTACHMENT_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gPressureSwitchObjDescriptor;
+extern ObjectDescriptor gWM_LaserTargetObjDescriptor;
 
 void LaserBeam_update(int param_1);
 void FUN_801f0cb8(int param_1);
@@ -53,5 +57,25 @@ void FUN_801f2ac8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10);
 void FUN_801f2b94(short *param_1);
+
+int pressureswitch_getExtraSize(void);
+int pressureswitch_func08(void);
+void pressureswitch_free(void);
+void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void pressureswitch_hitDetect(void);
+void pressureswitch_update(void);
+void pressureswitch_init(void);
+void pressureswitch_release(void);
+void pressureswitch_initialise(void);
+
+int wmlasertarget_getExtraSize(void);
+int wmlasertarget_func08(void);
+void wmlasertarget_free(void);
+void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void wmlasertarget_hitDetect(void);
+void wmlasertarget_update(void);
+void wmlasertarget_init(void);
+void wmlasertarget_release(void);
+void wmlasertarget_initialise(void);
 
 #endif /* MAIN_DLL_ARW_ARWARWINGATTACHMENT_H_ */
