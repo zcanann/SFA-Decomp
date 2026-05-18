@@ -66,6 +66,13 @@ typedef struct McmdInputSlot {
     u8 unk23;
 } McmdInputSlot;
 
+typedef struct McmdExCtrlState {
+    u32 unk00;
+    u32 rampFrames;
+    s16 value;
+    u16 limit;
+} McmdExCtrlState;
+
 typedef struct McmdEnvelopeState {
     u8 mode;
     u8 submode;
@@ -185,12 +192,22 @@ typedef struct McmdVoiceState {
     s32 volumeStep;
     u32 volumeTarget;
     u32 volumeStart;
-    u8 unk1A0[0x1C4 - 0x1A0];
-    s16 exCtrlA0Value;
-    u16 exCtrlA0Limit;
-    u8 unk1C8[0x1D0 - 0x1C8];
-    s16 exCtrlA1Value;
-    u16 exCtrlA1Limit;
+    u8 unk1A0[0x1BC - 0x1A0];
+    union {
+        struct {
+            McmdExCtrlState exCtrlA0;
+            McmdExCtrlState exCtrlA1;
+        };
+        McmdExCtrlState exCtrls[2];
+        struct {
+            u8 unk1BC[8];
+            s16 exCtrlA0Value;
+            u16 exCtrlA0Limit;
+            u8 unk1C8[8];
+            s16 exCtrlA1Value;
+            u16 exCtrlA1Limit;
+        };
+    };
     u8 unk1D4[2];
     u8 pitchBendRangeUp;
     u8 pitchBendRangeDown;
