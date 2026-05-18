@@ -13012,48 +13012,48 @@ void dll_68_func01_nop(void) {}
 void dll_68_func00_nop(void) {}
 void Dummy58_release(void) {}
 void Dummy58_initialise(void) {}
-void fn_800F0224(void) {}
-void fn_800F0228(void) {}
-void fn_800F0584(void) {}
-void fn_800F0588(void) {}
-void fn_800F07D4(void) {}
-void fn_800F07D8(void) {}
+void dll_69_func01_nop(void) {}
+void dll_69_func00_nop(void) {}
+void dll_6A_func01_nop(void) {}
+void dll_6A_func00_nop(void) {}
+void dll_6B_func01_nop(void) {}
+void dll_6B_func00_nop(void) {}
 void Dummy6C_release(void) {}
 void Dummy6C_initialise(void) {}
-void fn_800F0A44(void) {}
-void fn_800F0A48(void) {}
-void fn_800F0C94(void) {}
-void fn_800F0C98(void) {}
-void fn_800F11DC(void) {}
-void fn_800F11E0(void) {}
-void fn_800F16DC(void) {}
-void fn_800F16E0(void) {}
-void fn_800F1A50(void) {}
-void fn_800F1A54(void) {}
-void fn_800F1D5C(void) {}
-void fn_800F1D60(void) {}
-void fn_800F2204(void) {}
-void fn_800F2208(void) {}
-void fn_800F268C(void) {}
-void fn_800F2690(void) {}
-void fn_800F2A84(void) {}
-void fn_800F2A88(void) {}
-void fn_800F2CE4(void) {}
-void fn_800F2CE8(void) {}
-void fn_800F2F44(void) {}
-void fn_800F2F48(void) {}
-void fn_800F33F8(void) {}
-void fn_800F33FC(void) {}
-void fn_800F3CC8(void) {}
-void fn_800F3CCC(void) {}
-void fn_800F416C(void) {}
-void fn_800F4170(void) {}
-void fn_800F4724(void) {}
-void fn_800F4728(void) {}
+void dll_6D_func01_nop(void) {}
+void dll_6D_func00_nop(void) {}
+void dll_6E_func01_nop(void) {}
+void dll_6E_func00_nop(void) {}
+void dll_6F_func01_nop(void) {}
+void dll_6F_func00_nop(void) {}
+void dll_70_func01_nop(void) {}
+void dll_70_func00_nop(void) {}
+void dll_71_func01_nop(void) {}
+void dll_71_func00_nop(void) {}
+void dll_72_func01_nop(void) {}
+void dll_72_func00_nop(void) {}
+void dll_73_func01_nop(void) {}
+void dll_73_func00_nop(void) {}
+void dll_74_func01_nop(void) {}
+void dll_74_func00_nop(void) {}
+void dll_75_func01_nop(void) {}
+void dll_75_func00_nop(void) {}
+void dll_76_func01_nop(void) {}
+void dll_76_func00_nop(void) {}
+void dll_77_func01_nop(void) {}
+void dll_77_func00_nop(void) {}
+void dll_78_func01_nop(void) {}
+void dll_78_func00_nop(void) {}
+void dll_79_func01_nop(void) {}
+void dll_79_func00_nop(void) {}
+void dll_7A_func01_nop(void) {}
+void dll_7A_func00_nop(void) {}
+void dll_7B_func01_nop(void) {}
+void dll_7B_func00_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int Dummy58_func03_ret_0(void) { return 0x0; }
-int fn_800F07DC(void) { return 0x0; }
+int Dummy6C_func03_ret_0(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern u8 lbl_803DD488;

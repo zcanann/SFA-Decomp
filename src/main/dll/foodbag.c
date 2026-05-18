@@ -6373,8 +6373,8 @@ void FUN_800fa16c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800F4C68(void) {}
-void fn_800F4C6C(void) {}
+void dll_7C_func01_nop(void) {}
+void dll_7C_func00_nop(void) {}
 void fn_800F4F9C(void) {}
 void fn_800F4FA0(void) {}
 void fn_800F52D8(void) {}
