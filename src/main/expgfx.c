@@ -728,8 +728,8 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   for (; entryIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entryIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
-      entryRefCount = &gExpgfxTableEntries[entryIndex].refCount;
-      if (*entryRefCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
+      entryRefCount = &entry->refCount;
+      if (*entryRefCount == EXPGFX_REFCOUNT_OVERFLOW) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
       }
@@ -741,11 +741,11 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 
   for (freeEntryIndex = 0; freeEntryIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeEntryIndex++) {
     if (freeEntry->refCount == 0) {
-      gExpgfxTableEntries[freeEntryIndex].refCount = 1;
-      gExpgfxTableEntries[freeEntryIndex].textureOrResource = textureOrResource;
-      gExpgfxTableEntries[freeEntryIndex].key0 = key0;
-      gExpgfxTableEntries[freeEntryIndex].key1 = key1;
-      gExpgfxTableEntries[freeEntryIndex].slotType = slotType;
+      freeEntry->refCount = 1;
+      freeEntry->textureOrResource = textureOrResource;
+      freeEntry->key0 = key0;
+      freeEntry->key1 = key1;
+      freeEntry->slotType = slotType;
       return (int)(short)freeEntryIndex;
     }
     freeEntry++;
@@ -1780,7 +1780,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  if (resourceHandle->refCount >= EXPGFX_EXPTAB_REFCOUNT_MAX) {
+  if (resourceHandle->refCount == EXPGFX_REFCOUNT_OVERFLOW) {
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
