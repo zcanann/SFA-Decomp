@@ -5,23 +5,6 @@ extern u32 gSalMallocHook[2];
 extern void ReverbSTDCallback(int a, int b, int c, void *state);
 extern int ReverbSTDCreate(void *state, f32 a, f32 b, f32 c, f32 d, f32 e);
 
-typedef struct ReverbParams {
-    int p0;
-    int p4;
-    int p8;
-} ReverbParams;
-
-typedef struct ReverbState {
-    u8 unk0[0x13c];
-    u8 enabled;
-    u8 unk13D[3];
-    f32 a;
-    f32 c;
-    f32 b;
-    f32 d;
-    f32 e;
-} ReverbState;
-
 /*
  * --INFO--
  *
