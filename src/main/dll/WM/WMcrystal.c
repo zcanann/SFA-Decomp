@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/WM/WMcrystal.h"
+#include "main/objanim_update.h"
 
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_800067e8();
@@ -289,7 +290,7 @@ void FUN_801dd6e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_801dd938
+ * Function: sc_totempuzzle_processAnimEvents
  * EN v1.0 Address: 0x801DD938
  * EN v1.0 Size: 468b
  * EN v1.1 Address: 0x801DE210
@@ -299,7 +300,7 @@ void FUN_801dd6e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801dd938(int param_1,undefined4 param_2,int param_3)
+undefined4 sc_totempuzzle_processAnimEvents(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
   int iVar2;
@@ -312,13 +313,13 @@ undefined4 FUN_801dd938(int param_1,undefined4 param_2,int param_3)
   int local_1c [3];
   
   iVar5 = *(int *)(param_1 + 0xb8);
-  *(undefined *)(param_3 + 0x56) = 0;
+  animUpdate->sequenceEventActive = 0;
   iVar4 = 0;
   do {
-    if ((int)(uint)*(byte *)(param_3 + 0x8b) <= iVar4) {
+    if ((int)(uint)animUpdate->eventCount <= iVar4) {
       return 0;
     }
-    bVar1 = *(byte *)(param_3 + iVar4 + 0x81);
+    bVar1 = animUpdate->eventIds[iVar4];
     if (bVar1 == 2) {
       iVar2 = FUN_80017b00(&local_20,local_1c);
       piVar3 = (int *)(iVar2 + local_20 * 4);
