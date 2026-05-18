@@ -8,21 +8,21 @@
 BOOL movieLoad(const char* fileName, void* param2);
 void AttractMovieAudio_Shutdown(void);
 BOOL AttractMovieAudio_Init(int audioMode);
-void fn_80119458(OSMessage msg);
-OSMessage fn_80119488(void);
-void fn_801194BC(OSMessage msg);
-OSMessage fn_801194EC(void);
-void fn_80119520(void);
-void fn_80119618(void);
-void fn_80119654(void);
-BOOL fn_80119688(OSPriority priority);
-OSMessage fn_80119724(s32 flags);
-void fn_80119768(OSMessage msg);
-void fn_80119798(void* param);
-void fn_801198E0(void* param);
-void fn_80119A1C(void);
-void fn_80119AE8(void);
-void fn_80119B24(void);
-BOOL fn_80119B58(int param_1, int param_2);
+void PushReadedBuffer2(OSMessage msg);
+OSMessage PopReadedBuffer2(void);
+void PushFreeReadBuffer(OSMessage msg);
+OSMessage PopReadedBuffer(void);
+void THPRead_Reader(void);
+void ReadThreadCancel(void);
+void ReadThreadStart(void);
+BOOL CreateReadThread(OSPriority priority);
+OSMessage PopDecodedTextureSet(s32 flags);
+void PushFreeTextureSet(OSMessage msg);
+void AttractMovieVideo_Decode(void* param);
+void AttractMovieVideo_DecoderForOnMemory(void* param);
+void AttractMovieVideo_Decoder(void);
+void VideoDecodeThreadCancel(void);
+void VideoDecodeThreadStart(void);
+BOOL CreateVideoDecodeThread(int param_1, int param_2);
 
 #endif /* MAIN_DLL_FRONT_PICMENU_H_ */

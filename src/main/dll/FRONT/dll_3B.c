@@ -32,8 +32,8 @@ extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void setLinkIsRotated(void);
 extern void titleScreenPositionElements(f32 x, f32 y);
 extern void titleScreenFn_801368a4(u8 arg);
-extern void *fn_801194EC(void);
-extern void fn_80119458(void *arg);
+extern void *PopReadedBuffer(void);
+extern void PushReadedBuffer2(void *arg);
 
 extern TitleMenuTextEntry lbl_8031A1D8[1];
 extern TitleMenuTextEntry lbl_8031A214[4];
@@ -278,9 +278,9 @@ void *AudioDecoder(void *param)
 
   (void)param;
   while (true) {
-    token = fn_801194EC();
+    token = PopReadedBuffer();
     AttractMovieAudio_Decode(token);
-    fn_80119458(token);
+    PushReadedBuffer2(token);
   }
 }
 

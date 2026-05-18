@@ -2,11 +2,11 @@
 #include "dolphin/dvd.h"
 #include "dolphin/os.h"
 #include "dolphin/thp/THPPlayer.h"
-#include "dolphin/thp/THPVideoDecode.h"
 #include "string.h"
 
 /* DVDRead: sync DVD read (distinct from DVDReadPrio) */
 extern s32 DVDRead(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset);
+extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
 
 /* External functions */
 extern BOOL THPInit(void);
@@ -45,9 +45,9 @@ extern s32              lbl_803DD694;
 extern u32              lbl_803DD698;
 
 /* Forward declarations needed by OSCreateThread */
-void  fn_80119520(void);
-void  fn_801198E0(void*);
-void  fn_80119A1C(void);
+void  THPRead_Reader(void);
+void  AttractMovieVideo_DecoderForOnMemory(void*);
+void  AttractMovieVideo_Decoder(void);
 
 /* ------------------------------------------------------------------ */
 /* movieLoad (748 bytes)                                                */
@@ -223,11 +223,11 @@ BOOL AttractMovieAudio_Init(int audioMode)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119458 (48 bytes)                                              */
+/* PushReadedBuffer2 (48 bytes)                                        */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void fn_80119458(OSMessage msg)
+void PushReadedBuffer2(OSMessage msg)
 {
     OSSendMessage(&lbl_803A7290, msg, OS_MESSAGE_BLOCK);
 }
@@ -235,12 +235,12 @@ void fn_80119458(OSMessage msg)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119488 (52 bytes)                                              */
+/* PopReadedBuffer2 (52 bytes)                                         */
 /* ------------------------------------------------------------------ */
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-OSMessage fn_80119488(void)
+OSMessage PopReadedBuffer2(void)
 {
     OSMessage msg;
     OSReceiveMessage(&lbl_803A7290, &msg, OS_MESSAGE_BLOCK);
@@ -251,12 +251,12 @@ OSMessage fn_80119488(void)
 #pragma dont_inline reset
 
 /* ------------------------------------------------------------------ */
-/* fn_801194BC (48 bytes)                                              */
+/* PushFreeReadBuffer (48 bytes)                                       */
 /* ------------------------------------------------------------------ */
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-void fn_801194BC(OSMessage msg)
+void PushFreeReadBuffer(OSMessage msg)
 {
     OSSendMessage(&lbl_803A72D0, msg, OS_MESSAGE_BLOCK);
 }
@@ -265,12 +265,12 @@ void fn_801194BC(OSMessage msg)
 #pragma dont_inline reset
 
 /* ------------------------------------------------------------------ */
-/* fn_801194EC (52 bytes)                                              */
+/* PopReadedBuffer (52 bytes)                                          */
 /* ------------------------------------------------------------------ */
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-OSMessage fn_801194EC(void)
+OSMessage PopReadedBuffer(void)
 {
     OSMessage msg;
     OSReceiveMessage(&lbl_803A72B0, &msg, OS_MESSAGE_BLOCK);
@@ -281,11 +281,11 @@ OSMessage fn_801194EC(void)
 #pragma dont_inline reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119520 (248 bytes) - DVD-read thread                           */
+/* THPRead_Reader (248 bytes) - DVD-read thread                        */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void fn_80119520(void)
+void THPRead_Reader(void)
 {
     char* base = lbl_803A5F08;
     int i = 0;
@@ -337,11 +337,11 @@ void fn_80119520(void)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119618 (60 bytes)                                              */
+/* ReadThreadCancel (60 bytes)                                         */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void fn_80119618(void)
+void ReadThreadCancel(void)
 {
     if (lbl_803DD688 != 0) {
         OSCancelThread(&lbl_803A6F08);
@@ -352,11 +352,11 @@ void fn_80119618(void)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119654 (52 bytes)                                              */
+/* ReadThreadStart (52 bytes)                                          */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void fn_80119654(void)
+void ReadThreadStart(void)
 {
     if (lbl_803DD688 != 0) {
         OSResumeThread(&lbl_803A6F08);
@@ -366,16 +366,16 @@ void fn_80119654(void)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119688 (156 bytes)                                             */
+/* CreateReadThread (156 bytes)                                        */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-BOOL fn_80119688(OSPriority priority)
+BOOL CreateReadThread(OSPriority priority)
 {
     char* base = lbl_803A5F08;
     char* stack = base + 0x1000;
 
-    if (!OSCreateThread((OSThread*)stack, (void*(*)(void*))fn_80119520, NULL,
+    if (!OSCreateThread((OSThread*)stack, (void*(*)(void*))THPRead_Reader, NULL,
                         stack, 0x1000, priority, 1)) {
         return 0;
     }
@@ -390,11 +390,11 @@ BOOL fn_80119688(OSPriority priority)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119724 (68 bytes)                                              */
+/* PopDecodedTextureSet (68 bytes)                                     */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-OSMessage fn_80119724(s32 flags)
+OSMessage PopDecodedTextureSet(s32 flags)
 {
     OSMessage msg;
     if (OSReceiveMessage(&lbl_803A7308, &msg, flags) == 1) {
@@ -406,11 +406,11 @@ OSMessage fn_80119724(s32 flags)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119768 (48 bytes)                                              */
+/* PushFreeTextureSet (48 bytes)                                       */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void fn_80119768(OSMessage msg)
+void PushFreeTextureSet(OSMessage msg)
 {
     OSSendMessage(&lbl_803A7328, msg, OS_MESSAGE_NOBLOCK);
 }
@@ -418,10 +418,10 @@ void fn_80119768(OSMessage msg)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119798 (328 bytes) - video decode frame                        */
+/* AttractMovieVideo_Decode (328 bytes) - video decode frame           */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-void fn_80119798(void* param)
+void AttractMovieVideo_Decode(void* param)
 {
     char* pb;           /* 1st function-scope callee-saved → r31 */
     char* db;           /* 2nd → r30 */
@@ -483,11 +483,11 @@ void fn_80119798(void* param)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_801198E0 (316 bytes)                                             */
+/* AttractMovieVideo_DecoderForOnMemory (316 bytes)                    */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void fn_801198E0(void* param)
+void AttractMovieVideo_DecoderForOnMemory(void* param)
 {
     char* pb = (char*)&lbl_803A5D60;   /* r31 */
     u32 frameSize = *(u32*)(pb + 0xB4); /* r30 */
@@ -524,9 +524,9 @@ void fn_801198E0(void* param)
             }
         }
 
-        /* Store i adjacent to cur on stack so fn_80119798 can read it as param[1] */
+        /* Store i adjacent to cur on stack so AttractMovieVideo_Decode can read it as param[1] */
         *(s32*)(&cur + 1) = i;
-        fn_80119798(&cur);
+        AttractMovieVideo_Decode(&cur);
 
         {
             u32 cols = *(u32*)(pb + 0x50);
@@ -553,11 +553,11 @@ void fn_801198E0(void* param)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119A1C (204 bytes)                                             */
+/* AttractMovieVideo_Decoder (204 bytes)                               */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void fn_80119A1C(void)
+void AttractMovieVideo_Decoder(void)
 {
     char* pb = (char*)&lbl_803A5D60;  /* r31 */
     void* msg;                         /* r30 */
@@ -565,16 +565,16 @@ void fn_80119A1C(void)
     while (1) {
         if (*(u8*)(pb + 0x9F) != 0) {
             while (*(s32*)(pb + 0xD0) < 0) {
-                msg = fn_80119488();
+                msg = PopReadedBuffer2();
                 {
                     u32 cols = *(u32*)(pb + 0x50);
                     u32 bOff = *(u32*)(pb + 0xB8);
                     u32 pos  = (*(u32*)((char*)msg + 4) + bOff) % cols;
                     if (pos == cols - 1 && !(*(u8*)(pb + 0x9E) & 1)) {
-                        fn_80119798(msg);
+                        AttractMovieVideo_Decode(msg);
                     }
                 }
-                fn_801194BC((OSMessage)msg);
+                PushFreeReadBuffer((OSMessage)msg);
                 {
                     u32 intr = OSDisableInterrupts();
                     *(s32*)(pb + 0xD0) += 1;
@@ -583,23 +583,23 @@ void fn_80119A1C(void)
             }
         }
         if (*(u8*)(pb + 0x9F) != 0) {
-            msg = fn_80119488();
+            msg = PopReadedBuffer2();
         } else {
-            msg = (void*)fn_801194EC();
+            msg = (void*)PopReadedBuffer();
         }
-        fn_80119798(msg);
-        fn_801194BC((OSMessage)msg);
+        AttractMovieVideo_Decode(msg);
+        PushFreeReadBuffer((OSMessage)msg);
     }
 }
 #pragma peephole reset
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119AE8 (60 bytes)                                              */
+/* VideoDecodeThreadCancel (60 bytes)                                  */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void fn_80119AE8(void)
+void VideoDecodeThreadCancel(void)
 {
     if (lbl_803DD690 != 0) {
         OSCancelThread(&lbl_803A8348);
@@ -610,11 +610,11 @@ void fn_80119AE8(void)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119B24 (52 bytes)                                              */
+/* VideoDecodeThreadStart (52 bytes)                                   */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void fn_80119B24(void)
+void VideoDecodeThreadStart(void)
 {
     if (lbl_803DD690 != 0) {
         OSResumeThread(&lbl_803A8348);
@@ -624,20 +624,20 @@ void fn_80119B24(void)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* fn_80119B58 (200 bytes)                                             */
+/* CreateVideoDecodeThread (200 bytes)                                 */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-BOOL fn_80119B58(OSPriority param_1, u32 param_2)
+BOOL CreateVideoDecodeThread(OSPriority param_1, u32 param_2)
 {
     char* db = lbl_803A72F0;
 
     if (param_2 != 0) {
-        if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))fn_801198E0, (void*)param_2,
+        if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))AttractMovieVideo_DecoderForOnMemory, (void*)param_2,
                             (void*)(db + 0x1058), 0x1000, param_1, 1)) {
             return 0;
         }
     } else {
-        if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))fn_80119A1C, NULL,
+        if (!OSCreateThread((OSThread*)(db + 0x1058), (void*(*)(void*))AttractMovieVideo_Decoder, NULL,
                             (void*)(db + 0x1058), 0x1000, param_1, 1)) {
             return 0;
         }
