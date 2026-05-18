@@ -1047,7 +1047,7 @@ LAB_800c826c:
 }
 
 
-/* sda21 externs for fn_800C4730 tick. */
+/* sda21 externs for Effect10_func05 tick. */
 extern f32 lbl_803DB838;
 extern f32 lbl_803DB83C;
 extern f32 lbl_803DFEB8;
@@ -1068,7 +1068,7 @@ extern f32 fn_80293E80(f32 x);
 /* Advance two periodic counters; compute sin of phase. */
 #pragma push
 #pragma scheduling off
-void fn_800C4730(void)
+void Effect10_func05(void)
 {
     f32 sum;
     sum = lbl_803DB838 + lbl_803DFEB8 * timeDelta;
@@ -1095,15 +1095,15 @@ void fn_800C4730(void)
 #pragma pop
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800C4858(void) {}
+void Effect10_func03_nop(void) {}
 void Effect10_release(void) {}
 void Effect10_initialise(void) {}
-void fn_800C56D0(void) {}
-void fn_800C56D4(void) {}
+void Effect11_func05_nop(void) {}
+void Effect11_func03_nop(void) {}
 void Effect11_release(void) {}
 void Effect11_initialise(void) {}
-void fn_800C65A4(void) {}
-void fn_800C65A8(void) {}
+void Effect12_func05_nop(void) {}
+void Effect12_func03_nop(void) {}
 void Effect12_release(void) {}
 void Effect12_initialise(void) {}
 void fn_800C7FF8(void) {}
