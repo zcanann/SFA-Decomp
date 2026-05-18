@@ -37,6 +37,20 @@ typedef struct McmdCommandArgs {
     u32 value;
 } McmdCommandArgs;
 
+typedef struct McmdInputEntry {
+    u8 controller;
+    u8 combineModeFlags;
+    u8 unk2[2];
+    s32 scale;
+} McmdInputEntry;
+
+typedef struct McmdInputSlot {
+    McmdInputEntry entries[4];
+    s16 cachedValue;
+    u8 entryCount;
+    u8 unk23;
+} McmdInputSlot;
+
 typedef struct McmdEnvelopeState {
     u8 mode;
     u8 submode;
@@ -181,7 +195,24 @@ typedef struct McmdVoiceState {
     u8 startupDeferStart;
     u8 unk211[3];
     u32 inputDirtyFlags;
-    u8 unk218[0x3EC - 0x218];
+    union {
+        struct {
+            McmdInputSlot volumeInput;
+            McmdInputSlot panningInput;
+            McmdInputSlot surPanningInput;
+            McmdInputSlot pitchBendInput;
+            McmdInputSlot dopplerInput;
+            McmdInputSlot modulationInput;
+            McmdInputSlot pedalInput;
+            McmdInputSlot portamentoInput;
+            McmdInputSlot preAuxAInput;
+            McmdInputSlot reverbInput;
+            McmdInputSlot preAuxBInput;
+            McmdInputSlot postAuxBInput;
+            McmdInputSlot tremoloInput;
+        };
+        McmdInputSlot inputSlots[13];
+    };
     u8 queuedMessageCount;
     u8 queuedMessageReadIndex;
     u8 queuedMessageWriteIndex;

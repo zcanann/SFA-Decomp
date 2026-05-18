@@ -16,10 +16,12 @@ extern int _GetInputValue(int obj, int buf, u8 a, u8 b);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int inpGetSurPanning(int obj)
+int inpGetSurPanning(McmdVoiceState *state)
 {
+    int obj;
     int flags;
 
+    obj = (int)state;
     flags = *(int *)(obj + 0x214);
     if ((flags & 0x4) == 0) {
         return *(u16 *)(obj + 0x280);
@@ -35,10 +37,12 @@ int inpGetSurPanning(int obj)
  * EN v1.0 Address: 0x802825D0
  * EN v1.0 Size: 72b
  */
-int inpGetPitchBend(int obj)
+int inpGetPitchBend(McmdVoiceState *state)
 {
+    int obj;
     int flags;
 
+    obj = (int)state;
     flags = *(int *)(obj + 0x214);
     if ((flags & 0x8) == 0) {
         return *(u16 *)(obj + 0x2a4);

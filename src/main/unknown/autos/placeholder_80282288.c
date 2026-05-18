@@ -9,7 +9,7 @@ extern u32 synthRealTimeLo;
 /*
  * Evaluate a controller expression list and cache its 14-bit result.
  */
-u16 _GetInputValue(void *statePtr, void *slotPtr, u8 midiSlot, u8 midiKey)
+u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u8 midiSlot, u8 midiKey)
 {
     int state;
     u8 *slot;
@@ -226,15 +226,16 @@ signed_input:
  * EN v1.1 Address: 0x802824F8
  * EN v1.1 Size: 72b
  */
-u16 inpGetVolume(int state)
+u16 inpGetVolume(McmdVoiceState *state)
 {
-    u32 flags = *(u32 *)(state + 0x214);
+    int rawState = (int)state;
+    u32 flags = *(u32 *)(rawState + 0x214);
     if ((flags & 0x1) == 0) {
-        return *(u16 *)(state + 0x238);
+        return *(u16 *)(rawState + 0x238);
     }
-    *(u32 *)(state + 0x214) = flags & ~0x1;
-    return _GetInputValue((void *)state, (void *)(state + 0x218),
-                          *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
+    *(u32 *)(rawState + 0x214) = flags & ~0x1;
+    return _GetInputValue(state, (McmdInputSlot *)(rawState + 0x218),
+                          *(u8 *)(rawState + 0x121), *(u8 *)(rawState + 0x122));
 }
 
 /*
@@ -243,13 +244,14 @@ u16 inpGetVolume(int state)
  * EN v1.1 Address: 0x80282540
  * EN v1.1 Size: 72b
  */
-u16 inpGetPanning(int state)
+u16 inpGetPanning(McmdVoiceState *state)
 {
-    u32 flags = *(u32 *)(state + 0x214);
+    int rawState = (int)state;
+    u32 flags = *(u32 *)(rawState + 0x214);
     if ((flags & 0x2) == 0) {
-        return *(u16 *)(state + 0x25c);
+        return *(u16 *)(rawState + 0x25c);
     }
-    *(u32 *)(state + 0x214) = flags & ~0x2;
-    return _GetInputValue((void *)state, (void *)(state + 0x23c),
-                          *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
+    *(u32 *)(rawState + 0x214) = flags & ~0x2;
+    return _GetInputValue(state, (McmdInputSlot *)(rawState + 0x23c),
+                          *(u8 *)(rawState + 0x121), *(u8 *)(rawState + 0x122));
 }

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802827D4.h"
 
-extern u16 _GetInputValue();
+extern u16 _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u8 a, u8 b);
 extern int synthGetVoiceSlotChannelScale(int x);
 extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
 extern void inpSetMidiCtrl14(u32 controller, u8 slot, u8 key, u16 value);
@@ -16,12 +16,13 @@ extern s16 lbl_80330028[];
  */
 u16 inpGetPostAuxB(McmdVoiceState *state)
 {
-    u32 flags = state->inputDirtyFlags;
+    int rawState = (int)state;
+    u32 flags = *(u32 *)(rawState + 0x214);
     if ((flags & 0x800) == 0) {
         return *(u16 *)((u8 *)state + 0x3c4);
     }
-    state->inputDirtyFlags = flags & ~0x800;
-    return _GetInputValue((void *)state, (void *)((u8 *)state + 0x3a4),
+    *(u32 *)(rawState + 0x214) = flags & ~0x800;
+    return _GetInputValue(state, (McmdInputSlot *)((u8 *)state + 0x3a4),
                           state->midiSlot, state->midiEvent);
 }
 
@@ -32,12 +33,13 @@ u16 inpGetPostAuxB(McmdVoiceState *state)
  */
 u16 inpGetTremolo(McmdVoiceState *state)
 {
-    u32 flags = state->inputDirtyFlags;
+    int rawState = (int)state;
+    u32 flags = *(u32 *)(rawState + 0x214);
     if ((flags & 0x1000) == 0) {
         return *(u16 *)((u8 *)state + 0x3e8);
     }
-    state->inputDirtyFlags = flags & ~0x1000;
-    return _GetInputValue((void *)state, (void *)((u8 *)state + 0x3c8),
+    *(u32 *)(rawState + 0x214) = flags & ~0x1000;
+    return _GetInputValue(state, (McmdInputSlot *)((u8 *)state + 0x3c8),
                           state->midiSlot, state->midiEvent);
 }
 
@@ -71,7 +73,9 @@ u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     if (isDirty == 0) {
         return *(u16 *)(lbl_803BDEF4 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
-    return _GetInputValue(0, lbl_803BDEF4 + (channel & 0xff) * 0x24 + (studio & 0xff) * 0x90,
+    return _GetInputValue(0,
+                          (McmdInputSlot *)(lbl_803BDEF4 + (channel & 0xff) * 0x24 +
+                                             (studio & 0xff) * 0x90),
                           auxIndex, handleIndex);
 }
 
@@ -97,7 +101,9 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
     if (isDirty == 0) {
         return *(u16 *)(lbl_803BDA74 + (studio & 0xff) * 0x90 + (channel & 0xff) * 0x24 + 0x20);
     }
-    return _GetInputValue(0, lbl_803BDA74 + (channel & 0xff) * 0x24 + (studio & 0xff) * 0x90,
+    return _GetInputValue(0,
+                          (McmdInputSlot *)(lbl_803BDA74 + (channel & 0xff) * 0x24 +
+                                             (studio & 0xff) * 0x90),
                           auxIndex, handleIndex);
 }
 
