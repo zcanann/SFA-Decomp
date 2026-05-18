@@ -2,6 +2,7 @@
 #define MAIN_DLL_GENPROPS_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void FUN_8016b2e0(uint param_1,int param_2);
 void FUN_8016b2e4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
@@ -100,5 +101,17 @@ void FUN_80171354(int param_1,int param_2);
 void FUN_801713ac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
+
+extern ObjectDescriptor gMikaBombObjDescriptor;
+extern ObjectDescriptor gMikaBombShadowObjDescriptor;
+extern ObjectDescriptor gStaticCameraObjDescriptor;
+extern ObjectDescriptor gGCbaddieShieldObjDescriptor;
+extern ObjectDescriptor gBaddieInterestPObjDescriptor;
+extern ObjectDescriptor gAnimatedObjDescriptor;
+extern ObjectDescriptor gDIM2RoofRubObjDescriptor;
+extern ObjectDescriptor gDepthOfFieldPointObjDescriptor;
+extern ObjectDescriptor gShieldObjDescriptor;
+extern ObjectDescriptor12 gCurveObjDescriptor;
+extern ObjectDescriptor gReStartMarkerObjDescriptor;
 
 #endif /* MAIN_DLL_GENPROPS_H_ */

@@ -4531,74 +4531,74 @@ extern void fn_8017151C();
 extern void fn_801718D0();
 extern u8 fn_80170380[];
 
-u32 gMikaBombObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)mikabomb_initialise,
-    (u32)mikabomb_release,
+ObjectDescriptor gMikaBombObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)mikabomb_initialise,
+    (ObjectDescriptorCallback)mikabomb_release,
     0,
-    (u32)mikabomb_init,
-    (u32)mikabomb_update,
-    (u32)mikabomb_hitDetect,
-    (u32)mikabomb_render,
-    (u32)mikabomb_free,
-    (u32)mikabomb_func08,
-    (u32)mikabomb_getExtraSize,
+    (ObjectDescriptorCallback)mikabomb_init,
+    (ObjectDescriptorCallback)mikabomb_update,
+    (ObjectDescriptorCallback)mikabomb_hitDetect,
+    (ObjectDescriptorCallback)mikabomb_render,
+    (ObjectDescriptorCallback)mikabomb_free,
+    (ObjectDescriptorCallback)mikabomb_func08,
+    mikabomb_getExtraSize,
 };
 
-u32 gMikaBombShadowObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)mikabombshadow_initialise,
-    (u32)mikabombshadow_release,
+ObjectDescriptor gMikaBombShadowObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)mikabombshadow_initialise,
+    (ObjectDescriptorCallback)mikabombshadow_release,
     0,
-    (u32)mikabombshadow_init,
-    (u32)mikabombshadow_update,
-    (u32)mikabombshadow_hitDetect,
-    (u32)mikabombshadow_render,
-    (u32)mikabombshadow_free,
-    (u32)mikabombshadow_func08,
-    (u32)mikabombshadow_getExtraSize,
+    (ObjectDescriptorCallback)mikabombshadow_init,
+    (ObjectDescriptorCallback)mikabombshadow_update,
+    (ObjectDescriptorCallback)mikabombshadow_hitDetect,
+    (ObjectDescriptorCallback)mikabombshadow_render,
+    (ObjectDescriptorCallback)mikabombshadow_free,
+    (ObjectDescriptorCallback)mikabombshadow_func08,
+    mikabombshadow_getExtraSize,
 };
 
-u32 gStaticCameraObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)StaticCamera_initialise,
-    (u32)StaticCamera_release,
+ObjectDescriptor gStaticCameraObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)StaticCamera_initialise,
+    (ObjectDescriptorCallback)StaticCamera_release,
     0,
-    (u32)StaticCamera_init,
-    (u32)StaticCamera_update,
-    (u32)StaticCamera_hitDetect,
-    (u32)StaticCamera_render,
-    (u32)StaticCamera_free,
-    (u32)StaticCamera_func08,
-    (u32)StaticCamera_getExtraSize,
+    (ObjectDescriptorCallback)StaticCamera_init,
+    (ObjectDescriptorCallback)StaticCamera_update,
+    (ObjectDescriptorCallback)StaticCamera_hitDetect,
+    (ObjectDescriptorCallback)StaticCamera_render,
+    (ObjectDescriptorCallback)StaticCamera_free,
+    (ObjectDescriptorCallback)StaticCamera_func08,
+    StaticCamera_getExtraSize,
 };
 
-u32 gGCbaddieShieldObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)gcbaddieshield_initialise,
-    (u32)gcbaddieshield_release,
+ObjectDescriptor gGCbaddieShieldObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)gcbaddieshield_initialise,
+    (ObjectDescriptorCallback)gcbaddieshield_release,
     0,
-    (u32)gcbaddieshield_init,
-    (u32)gcbaddieshield_update,
-    (u32)gcbaddieshield_hitDetect,
-    (u32)gcbaddieshield_render,
-    (u32)gcbaddieshield_free,
-    (u32)gcbaddieshield_func08,
-    (u32)gcbaddieshield_getExtraSize,
+    (ObjectDescriptorCallback)gcbaddieshield_init,
+    (ObjectDescriptorCallback)gcbaddieshield_update,
+    (ObjectDescriptorCallback)gcbaddieshield_hitDetect,
+    (ObjectDescriptorCallback)gcbaddieshield_render,
+    (ObjectDescriptorCallback)gcbaddieshield_free,
+    (ObjectDescriptorCallback)gcbaddieshield_func08,
+    gcbaddieshield_getExtraSize,
 };
 
-u32 gBaddieInterestPObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)baddieinterestp_initialise,
-    (u32)baddieinterestp_release,
+ObjectDescriptor gBaddieInterestPObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)baddieinterestp_initialise,
+    (ObjectDescriptorCallback)baddieinterestp_release,
     0,
-    (u32)baddieinterestp_init,
-    (u32)baddieinterestp_update,
-    (u32)baddieinterestp_hitDetect,
-    (u32)baddieinterestp_render,
-    (u32)baddieinterestp_free,
-    (u32)baddieinterestp_func08,
-    (u32)baddieinterestp_getExtraSize,
+    (ObjectDescriptorCallback)baddieinterestp_init,
+    (ObjectDescriptorCallback)baddieinterestp_update,
+    (ObjectDescriptorCallback)baddieinterestp_hitDetect,
+    (ObjectDescriptorCallback)baddieinterestp_render,
+    (ObjectDescriptorCallback)baddieinterestp_free,
+    (ObjectDescriptorCallback)baddieinterestp_func08,
+    baddieinterestp_getExtraSize,
 };
 
 u32 lbl_80320700[] = {
@@ -4616,18 +4616,18 @@ u32 lbl_80320700[] = {
     0,
 };
 
-u32 gAnimatedObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gAnimatedObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)animatedobj_init,
-    (u32)animatedobj_update,
+    (ObjectDescriptorCallback)animatedobj_init,
+    (ObjectDescriptorCallback)animatedobj_update,
     0,
-    (u32)animatedobj_render,
-    (u32)animatedobj_free,
+    (ObjectDescriptorCallback)animatedobj_render,
+    (ObjectDescriptorCallback)animatedobj_free,
     0,
-    (u32)animatedobj_getExtraSize,
+    animatedobj_getExtraSize,
 };
 
 u32 lbl_80320768[] = {
@@ -4683,32 +4683,32 @@ u32 lbl_80320768[] = {
     0x08400000,
 };
 
-u32 gDIM2RoofRubObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gDIM2RoofRubObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)dim2roofrub_init,
-    (u32)dim2roofrub_update,
+    (ObjectDescriptorCallback)dim2roofrub_init,
+    (ObjectDescriptorCallback)dim2roofrub_update,
     0,
-    (u32)dim2roofrub_render,
-    (u32)dim2roofrub_free,
+    (ObjectDescriptorCallback)dim2roofrub_render,
+    (ObjectDescriptorCallback)dim2roofrub_free,
     0,
-    (u32)dim2roofrub_getExtraSize,
+    dim2roofrub_getExtraSize,
 };
 
-u32 gDepthOfFieldPointObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gDepthOfFieldPointObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)depthoffieldpoint_init,
-    (u32)depthoffieldpoint_update,
+    (ObjectDescriptorCallback)depthoffieldpoint_init,
+    (ObjectDescriptorCallback)depthoffieldpoint_update,
     0,
     0,
     0,
     0,
-    (u32)depthoffieldpoint_getExtraSize,
+    depthoffieldpoint_getExtraSize,
 };
 
 u16 lbl_803208A0[] = {
@@ -4828,18 +4828,18 @@ f32 lbl_80320A28[] = {
     0.3f,
 };
 
-u32 gShieldObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)shield_initialise,
-    (u32)shield_release,
+ObjectDescriptor gShieldObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)shield_initialise,
+    (ObjectDescriptorCallback)shield_release,
     0,
-    (u32)shield_init,
-    (u32)shield_update,
-    (u32)shield_hitDetect,
-    (u32)shield_render,
-    (u32)shield_free,
-    (u32)shield_func08,
-    (u32)shield_getExtraSize,
+    (ObjectDescriptorCallback)shield_init,
+    (ObjectDescriptorCallback)shield_update,
+    (ObjectDescriptorCallback)shield_hitDetect,
+    (ObjectDescriptorCallback)shield_render,
+    (ObjectDescriptorCallback)shield_free,
+    (ObjectDescriptorCallback)shield_func08,
+    shield_getExtraSize,
 };
 
 u32 jumptable_80320AA0[] = {
@@ -4853,28 +4853,28 @@ u32 jumptable_80320AA0[] = {
     (u32)(fn_80170380 + 0x84),
 };
 
-u32 gCurveObjDescriptor[] = {
-    0, 0, 0, 0x000B0000,
+ObjectDescriptor12 gCurveObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
     0,
     0,
     0,
-    (u32)curve_init,
+    (ObjectDescriptorCallback)curve_init,
     0,
     0,
-    (u32)curve_render,
-    (u32)curve_free,
-    (u32)curve_func08,
-    (u32)curve_getExtraSize,
-    (u32)curve_setScale,
-    (u32)curve_func11,
+    (ObjectDescriptorCallback)curve_render,
+    (ObjectDescriptorCallback)curve_free,
+    (ObjectDescriptorCallback)curve_func08,
+    curve_getExtraSize,
+    (ObjectDescriptorCallback)curve_setScale,
+    (ObjectDescriptorCallback)curve_func11,
 };
 
-u32 gReStartMarkerObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gReStartMarkerObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)restartmarker_init,
+    (ObjectDescriptorCallback)restartmarker_init,
     0,
     0,
     0,
