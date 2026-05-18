@@ -14,7 +14,7 @@ extern f32 lbl_803E44E4;
 /*
  * --INFO--
  *
- * Function: FUN_8017eff0
+ * Function: dll_14D_update
  * EN v1.0 Address: 0x8017EFF0
  * EN v1.0 Size: 632b
  * EN v1.1 Address: 0x8017F1EC
@@ -24,7 +24,7 @@ extern f32 lbl_803E44E4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017eff0(undefined2 *param_1)
+void dll_14D_update(undefined2 *param_1)
 {
   byte bVar1;
   undefined4 uVar2;
@@ -112,8 +112,8 @@ void FUN_8017eff0(undefined2 *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8017f268
- * EN v1.0 Address: 0x8017F268
+ * Function: dll_14D_init
+ * EN v1.0 Address: 0x8017F308
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x8017F4D8
  * EN v1.1 Size: 48b
@@ -122,7 +122,7 @@ void FUN_8017eff0(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017f268(int param_1)
+void dll_14D_init(int param_1)
 {
   char in_r8;
   
@@ -155,27 +155,27 @@ void FUN_8017f290(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8017F32C(void) {}
-void fn_8017F330(void) {}
+void dll_14D_release_nop(void) {}
+void dll_14D_initialise_nop(void) {}
 
-extern void fn_8017F308();
-extern void fn_8017EFF0();
-extern void fn_8017EFB0();
-extern void fn_8017EF80();
-extern void fn_8017EF7C();
-extern int fn_8017EF74(void);
-extern int fn_8017EF6C(void);
+extern void dll_14D_init();
+extern void dll_14D_update();
+extern void dll_14D_hitDetect();
+extern void dll_14D_render();
+extern void dll_14D_free_nop();
+extern int dll_14D_func08_ret_0(void);
+extern int dll_14D_getExtraSize_ret_8(void);
 
-ObjectDescriptor lbl_80321530 = {
+ObjectDescriptor gDll14DObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)fn_8017F330,
-    (ObjectDescriptorCallback)fn_8017F32C,
+    (ObjectDescriptorCallback)dll_14D_initialise_nop,
+    (ObjectDescriptorCallback)dll_14D_release_nop,
     0,
-    (ObjectDescriptorCallback)fn_8017F308,
-    (ObjectDescriptorCallback)fn_8017EFF0,
-    (ObjectDescriptorCallback)fn_8017EFB0,
-    (ObjectDescriptorCallback)fn_8017EF80,
-    (ObjectDescriptorCallback)fn_8017EF7C,
-    (ObjectDescriptorCallback)fn_8017EF74,
-    fn_8017EF6C,
+    (ObjectDescriptorCallback)dll_14D_init,
+    (ObjectDescriptorCallback)dll_14D_update,
+    (ObjectDescriptorCallback)dll_14D_hitDetect,
+    (ObjectDescriptorCallback)dll_14D_render,
+    (ObjectDescriptorCallback)dll_14D_free_nop,
+    (ObjectDescriptorCallback)dll_14D_func08_ret_0,
+    dll_14D_getExtraSize_ret_8,
 };

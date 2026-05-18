@@ -120,7 +120,7 @@ void dll_FC_init(int param_1, int param_2)
 /*
  * --INFO--
  *
- * Function: fn_8017EFB0
+ * Function: dll_14D_hitDetect
  * EN v1.0 Address: 0x8017EFB0
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x8017F1AC
@@ -131,7 +131,7 @@ void dll_FC_init(int param_1, int param_2)
  * PAL Size: TODO
  */
 #pragma peephole off
-void fn_8017EFB0(int param_1)
+void dll_14D_hitDetect(int param_1)
 {
   if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(uint *)(param_1 + 0x74) != 0)) {
     objRenderFn_80041018();
@@ -144,15 +144,15 @@ void fn_8017EFB0(int param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void dll_FC_release_nop(void) {}
 void dll_FC_initialise_nop(void) {}
-void fn_8017EF7C(void) {}
+void dll_14D_free_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_8017EF6C(void) { return 0x8; }
-int fn_8017EF74(void) { return 0x0; }
+int dll_14D_getExtraSize_ret_8(void) { return 0x8; }
+int dll_14D_func08_ret_0(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3850;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
-void fn_8017EF80(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3850); }
+void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3850); }
 #pragma peephole reset
