@@ -44,7 +44,7 @@ extern void fn_8005D3B4();
 extern void fn_8006C4E0();
 extern void fn_80088730();
 extern void fn_8008982C();
-extern uint fn_80118294();
+extern uint AttractMovie_DrawTextureCallback();
 extern u8 isHeavyFogEnabled();
 
 extern f64 lbl_803DEBC0;
@@ -798,7 +798,7 @@ LAB_8005F608:
   }
   if ((iVar1 != 0) && ((*(uint *)(iVar1 + 0x3c) & 0x20000) != 0)) {
     uint res;
-    res = fn_80118294(0,0,0);
+    res = AttractMovie_DrawTextureCallback(0,0,0);
     if ((res & 0xff) != 0) {
       return iVar1;
     }
