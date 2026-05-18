@@ -1646,7 +1646,7 @@ int fn_800D8004(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern u8 lbl_803DD42D;
-u8 fn_800D7A7C(void) { return lbl_803DD42D; }
+u8 screenTransition_func07(void) { return lbl_803DD42D; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DD410;

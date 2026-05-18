@@ -2396,7 +2396,7 @@ typedef struct PartFxNode {
 #pragma dont_inline on
 #pragma push
 #pragma scheduling off
-u32 fn_800D5530(s32 key, s32 *idx_out)
+u32 Checkpoint_find(s32 key, s32 *idx_out)
 {
     s32 high;
     s32 low;
@@ -2423,7 +2423,7 @@ u32 fn_800D5530(s32 key, s32 *idx_out)
 #pragma dont_inline off
 
 /* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
-u32 fn_800D65A8(s32 *p)
+u32 Checkpoint_func0E(s32 *p)
 {
     *p = lbl_803DD414;
     return lbl_803DD418;
@@ -2454,7 +2454,7 @@ typedef struct PartFxItem {
 /* NOTE: 96.8% ? register choice differs (r5 vs r7 for rank). */
 #pragma push
 #pragma scheduling off
-s32 fn_800D6488(PartFxItem *p)
+s32 Checkpoint_func0F(PartFxItem *p)
 {
     s32 rank = 1;
     PartFxItem **arr = (PartFxItem **)lbl_803DD418;
@@ -2478,7 +2478,7 @@ s32 fn_800D6488(PartFxItem *p)
 #pragma pop
 
 /* Find item in lbl_803DD418 array whose rank equals target_rank. */
-PartFxItem *fn_800D64EC(s32 target_rank)
+PartFxItem *Checkpoint_func10(s32 target_rank)
 {
     s32 i;
     PartFxItem **outer = (PartFxItem **)lbl_803DD418;
@@ -2511,12 +2511,12 @@ PartFxItem *fn_800D64EC(s32 target_rank)
 
 /* Init random offsets / chain advance with lookup. */
 #pragma push
-void fn_800D5F80(s32 key, f32 *out_vec, u8 *flag_byte)
+void Checkpoint_func0A(s32 key, f32 *out_vec, u8 *flag_byte)
 {
     s32 local_idx;
     PartFxNode *n;
     s32 alt_found;
-    n = (PartFxNode *)fn_800D5530(key, &local_idx);
+    n = (PartFxNode *)Checkpoint_find(key, &local_idx);
     if (n == 0) return;
     out_vec[0] = (f32)(s32)randomGetRange(-0x63, 0x63) / lbl_803E0500;
     out_vec[1] = (f32)(s32)randomGetRange(-0x63, 0x63) / lbl_803E0500;
@@ -2525,7 +2525,7 @@ void fn_800D5F80(s32 key, f32 *out_vec, u8 *flag_byte)
     {
         s32 v = *(s32 *)((char *)n + 0x20);
         if (v != 0) {
-            PartFxNode *m = (PartFxNode *)fn_800D5530(v, &local_idx);
+            PartFxNode *m = (PartFxNode *)Checkpoint_find(v, &local_idx);
             if (*(s32 *)((char *)m + 0x20) > -1) {
                 alt_found = 1;
             }
@@ -2553,22 +2553,22 @@ void fn_800D5F80(s32 key, f32 *out_vec, u8 *flag_byte)
 }
 #pragma pop
 
-/* Walk a chain via fn_800D5530 lookups starting from o->_0x10. */
+/* Walk a chain via Checkpoint_find lookups starting from o->_0x10. */
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void fn_800D65B8(PartFxNode *o)
+void Checkpoint_func0C(PartFxNode *o)
 {
     s32 local_idx;
     PartFxNode *ret;
     s32 nxt;
-    ret = (PartFxNode *)fn_800D5530(o->_0x10, &local_idx);
+    ret = (PartFxNode *)Checkpoint_find(o->_0x10, &local_idx);
     if (ret == 0) {
         o->_0x18 = 0;
         o->_0xc = lbl_803E04E8;
     } else {
         while ((nxt = ret->_0x18) > -1) {
-            ret = (PartFxNode *)fn_800D5530(nxt, &local_idx);
+            ret = (PartFxNode *)Checkpoint_find(nxt, &local_idx);
             o->_0x1c = o->_0x1c + 1;
         }
         o->_0x18 = o->_0x10;
@@ -2579,7 +2579,7 @@ void fn_800D65B8(PartFxNode *o)
 
 /* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
  * NOTE: stuck at ~78% ? instruction scheduling differs. */
-void fn_800D663C(u32 v)
+void Checkpoint_func0D(u32 v)
 {
     s32 i;
     i = lbl_803DD416;
@@ -2703,4 +2703,4 @@ void Effect20_release(void) {}
 void Effect20_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_800D6108(void) { return 0x1; }
+int Checkpoint_func09_ret_1(void) { return 0x1; }
