@@ -106,7 +106,7 @@ extern undefined4 uRam803de8d4;
 /*
  * --INFO--
  *
- * Function: FUN_801e42f8
+ * Function: SB_FireBall_hitDetect
  * EN v1.0 Address: 0x801E42F8
  * EN v1.0 Size: 88b
  * EN v1.1 Address: 0x801E4330
@@ -116,7 +116,7 @@ extern undefined4 uRam803de8d4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e42f8(int param_1)
+void SB_FireBall_hitDetect(int param_1)
 {
   uint uVar1;
   int iVar2;

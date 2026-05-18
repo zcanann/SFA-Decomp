@@ -53,7 +53,7 @@ extern f32 lbl_803E4D54;
 /*
  * --INFO--
  *
- * Function: FUN_801978a8
+ * Function: lightning_free
  * EN v1.0 Address: 0x801978A8
  * EN v1.0 Size: 184b
  * EN v1.1 Address: 0x801978DC
@@ -63,7 +63,7 @@ extern f32 lbl_803E4D54;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801978a8(int param_1,int param_2)
+void lightning_free(int param_1,int param_2)
 {
   uint uVar1;
   int *piVar2;

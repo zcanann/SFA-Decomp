@@ -31,7 +31,7 @@ extern f32 lbl_803E68E4;
 /*
  * --INFO--
  *
- * Function: FUN_801ed428
+ * Function: SnowBike_update
  * EN v1.0 Address: 0x801ED428
  * EN v1.0 Size: 1140b
  * EN v1.1 Address: 0x801ED5CC
@@ -41,7 +41,7 @@ extern f32 lbl_803E68E4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ed428(short *param_1)
+void SnowBike_update(short *param_1)
 {
   int iVar1;
   float fVar2;

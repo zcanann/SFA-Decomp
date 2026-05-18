@@ -11,7 +11,7 @@ extern undefined4* DAT_803dd72c;
 /*
  * --INFO--
  *
- * Function: FUN_801f0b50
+ * Function: LaserBeam_update
  * EN v1.0 Address: 0x801F0B50
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801F0C0C
@@ -21,7 +21,7 @@ extern undefined4* DAT_803dd72c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f0b50(undefined2 *param_1,int param_2)
+void LaserBeam_update(undefined2 *param_1,int param_2)
 {
 }
 
