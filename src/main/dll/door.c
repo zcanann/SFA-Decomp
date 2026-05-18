@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/door.h"
+#include "main/dll/fruit.h"
 
 extern undefined4 FUN_80006b4c();
 extern int objBboxFn_800640cc(f32 *from,f32 *to,f32 radius,int mode,void *hit,
@@ -19,23 +20,6 @@ extern undefined4 DAT_803addb4;
 extern f32 lbl_803E6488;
 extern f32 lbl_803E648C;
 extern f32 lbl_803E6490;
-
-struct DfpTargetBlockObject {
-  u8 pad00[0x0C];
-  f32 x;
-  f32 y;
-  f32 z;
-  u8 pad18[0x0C];
-  f32 velX;
-  f32 velY;
-  f32 velZ;
-};
-
-typedef struct DfpTargetBlockCollisionPoints {
-  u8 pointData[0x64];
-  u8 pad64[0x68 - 0x64];
-  s8 count;
-} DfpTargetBlockCollisionPoints;
 
 #define DFPTARGETBLOCK_POINT_OFFSET_X 0x04
 #define DFPTARGETBLOCK_POINT_OFFSET_Y 0x08
@@ -172,11 +156,11 @@ void dfptargetblock_free(void)
 #pragma peephole off
 void dfptargetblock_render(int obj)
 {
-  int state;
+  DfpTargetBlockAudioState *state;
 
-  state = *(int *)(obj + 0xb8);
-  if (((*(u8 *)(state + 0x6b) == 0) && (*(u8 *)(state + 0x6a) != 0)) &&
-      (*(u8 *)(state + 0x69) != 4)) {
+  state = *(DfpTargetBlockAudioState **)(obj + 0xb8);
+  if (((state->completionSfxReady == 0) && (state->stateSfxReady != 0)) &&
+      (state->mode != DFPTARGETBLOCK_AUDIO_MODE_SETTLED)) {
     objRenderFn_8003b8f4(obj,lbl_803E6490);
   }
 }

@@ -3,8 +3,22 @@
 
 #include "ghidra_import.h"
 
-typedef struct DfpTargetBlockObject DfpTargetBlockObject;
-typedef struct DfpTargetBlockCollisionPoints DfpTargetBlockCollisionPoints;
+typedef struct DfpTargetBlockObject {
+  u8 pad00[0x0C];
+  f32 x;
+  f32 y;
+  f32 z;
+  u8 pad18[0x0C];
+  f32 velX;
+  f32 velY;
+  f32 velZ;
+} DfpTargetBlockObject;
+
+typedef struct DfpTargetBlockCollisionPoints {
+  u8 pointData[0x64];
+  u8 pad64[0x68 - 0x64];
+  s8 count;
+} DfpTargetBlockCollisionPoints;
 
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
                                            DfpTargetBlockCollisionPoints *collisionPoints);
