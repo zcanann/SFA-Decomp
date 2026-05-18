@@ -102,7 +102,7 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             u8 *vp = synthVoice + voff;
             McmdVoiceState *voice = (McmdVoiceState *)vp;
             if (key == voice->midiEvent && slot == voice->midiSlot) {
-                voice->inputDirtyFlags = 0x1fff;
+                voice->inputDirtyFlags = MCMD_INPUT_DIRTY_ALL;
                 synthQueueVoiceInputUpdate((int)voice);
             }
             voff += SYNTH_VOICE_STRIDE;
@@ -187,7 +187,7 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
             u8 *vp = synthVoice + voff;
             McmdVoiceState *voice = (McmdVoiceState *)vp;
             if (key == voice->midiEvent && slot == voice->midiSlot) {
-                voice->inputDirtyFlags = 0x1fff;
+                voice->inputDirtyFlags = MCMD_INPUT_DIRTY_ALL;
                 synthQueueVoiceInputUpdate((int)voice);
             }
             voff += SYNTH_VOICE_STRIDE;

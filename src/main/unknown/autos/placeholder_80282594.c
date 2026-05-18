@@ -23,10 +23,10 @@ int inpGetSurPanning(McmdVoiceState *state)
 
     obj = (int)state;
     flags = *(int *)(obj + 0x214);
-    if ((flags & 0x4) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_SUR_PANNING) == 0) {
         return *(u16 *)(obj + 0x280);
     }
-    *(int *)(obj + 0x214) = flags & ~0x4;
+    *(int *)(obj + 0x214) = flags & ~MCMD_INPUT_DIRTY_SUR_PANNING;
     return _GetInputValue(obj, obj + 0x260, *(u8 *)(obj + 0x121), *(u8 *)(obj + 0x122));
 }
 
@@ -44,9 +44,9 @@ int inpGetPitchBend(McmdVoiceState *state)
 
     obj = (int)state;
     flags = *(int *)(obj + 0x214);
-    if ((flags & 0x8) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_PITCH_BEND) == 0) {
         return *(u16 *)(obj + 0x2a4);
     }
-    *(int *)(obj + 0x214) = flags & ~0x8;
+    *(int *)(obj + 0x214) = flags & ~MCMD_INPUT_DIRTY_PITCH_BEND;
     return _GetInputValue(obj, obj + 0x284, *(u8 *)(obj + 0x121), *(u8 *)(obj + 0x122));
 }

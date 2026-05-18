@@ -18,10 +18,10 @@ u16 inpGetPostAuxB(McmdVoiceState *state)
 {
     int rawState = (int)state;
     u32 flags = *(u32 *)(rawState + 0x214);
-    if ((flags & 0x800) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_POST_AUX_B) == 0) {
         return *(u16 *)((u8 *)state + 0x3c4);
     }
-    *(u32 *)(rawState + 0x214) = flags & ~0x800;
+    *(u32 *)(rawState + 0x214) = flags & ~MCMD_INPUT_DIRTY_POST_AUX_B;
     return _GetInputValue(state, (McmdInputSlot *)((u8 *)state + 0x3a4),
                           state->midiSlot, state->midiEvent);
 }
@@ -35,10 +35,10 @@ u16 inpGetTremolo(McmdVoiceState *state)
 {
     int rawState = (int)state;
     u32 flags = *(u32 *)(rawState + 0x214);
-    if ((flags & 0x1000) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_TREMOLO) == 0) {
         return *(u16 *)((u8 *)state + 0x3e8);
     }
-    *(u32 *)(rawState + 0x214) = flags & ~0x1000;
+    *(u32 *)(rawState + 0x214) = flags & ~MCMD_INPUT_DIRTY_TREMOLO;
     return _GetInputValue(state, (McmdInputSlot *)((u8 *)state + 0x3c8),
                           state->midiSlot, state->midiEvent);
 }
@@ -162,7 +162,7 @@ void inpInit(u32 state)
         *(u32 *)(state + 0x2ac) = 0x10000;
         *(u8 *)(state + 0x2ca) = 1;
         *(u8 *)(state + 0x3ea) = 0;
-        *(u32 *)(state + 0x214) = 0x1fff;
+        *(u32 *)(state + 0x214) = MCMD_INPUT_DIRTY_ALL;
         *(u8 *)(state + 0x1d4) = 0;
         *(u8 *)(state + 0x1d5) = 0;
         *(u8 *)(state + 0xa8) = 0;

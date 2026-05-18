@@ -230,10 +230,10 @@ u16 inpGetVolume(McmdVoiceState *state)
 {
     int rawState = (int)state;
     u32 flags = *(u32 *)(rawState + 0x214);
-    if ((flags & 0x1) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_VOLUME) == 0) {
         return *(u16 *)(rawState + 0x238);
     }
-    *(u32 *)(rawState + 0x214) = flags & ~0x1;
+    *(u32 *)(rawState + 0x214) = flags & ~MCMD_INPUT_DIRTY_VOLUME;
     return _GetInputValue(state, (McmdInputSlot *)(rawState + 0x218),
                           *(u8 *)(rawState + 0x121), *(u8 *)(rawState + 0x122));
 }
@@ -248,10 +248,10 @@ u16 inpGetPanning(McmdVoiceState *state)
 {
     int rawState = (int)state;
     u32 flags = *(u32 *)(rawState + 0x214);
-    if ((flags & 0x2) == 0) {
+    if ((flags & MCMD_INPUT_DIRTY_PANNING) == 0) {
         return *(u16 *)(rawState + 0x25c);
     }
-    *(u32 *)(rawState + 0x214) = flags & ~0x2;
+    *(u32 *)(rawState + 0x214) = flags & ~MCMD_INPUT_DIRTY_PANNING;
     return _GetInputValue(state, (McmdInputSlot *)(rawState + 0x23c),
                           *(u8 *)(rawState + 0x121), *(u8 *)(rawState + 0x122));
 }
