@@ -5,8 +5,14 @@
 #include "main/object_descriptor.h"
 #include "main/dll/anim_internal.h"
 
+extern ObjectDescriptor12 gDB_eggObjDescriptor;
+extern ObjectDescriptor12 gDrakorEnergyObjDescriptor;
+extern ObjectDescriptor gDBHoleControl1ObjDescriptor;
+extern ObjectDescriptor10WithPadding gDFP_LevelControlObjDescriptor;
+extern ObjectDescriptor gDFP_ObjCreatorObjDescriptor;
 extern ObjectDescriptor gDoorswitchObjDescriptor;
 extern ObjectDescriptor gDFP_seqpointObjDescriptor;
+extern ObjectDescriptor gDFP_TorchObjDescriptor;
 
 void FUN_801feb30(void);
 void FUN_801ff8b8(short *param_1);
@@ -151,6 +157,81 @@ void doorswitch_init(void);
 void doorswitch_release(void);
 void doorswitch_initialise(void);
 
+int dbegg_func0B(void);
+void dbegg_setScale(void);
+int dbegg_getExtraSize(void);
+int dbegg_func08(void);
+void dbegg_free(void);
+void dbegg_render(void);
+void dbegg_hitDetect(void);
+void dbegg_update(void);
+void dbegg_init(void);
+void dbegg_release(void);
+void dbegg_initialise(void);
+
+int GCRobotBlast_getExtraSize(void);
+int GCRobotBlast_func08_ret_0(void);
+void GCRobotBlast_free(void);
+void GCRobotBlast_render(void);
+void GCRobotBlast_hitDetect(void);
+void GCRobotBlast_update(void);
+void GCRobotBlast_init(void);
+void GCRobotBlast_release(void);
+void GCRobotBlast_initialise(void);
+
+int DrakorEnergy_setScale(int *obj);
+void DrakorEnergy_func0B_nop(void);
+int drakorenergy_getExtraSize(void);
+int drakorenergy_func08(void);
+void drakorenergy_free(void);
+void drakorenergy_render(void);
+void drakorenergy_hitDetect(void);
+void drakorenergy_init(void);
+void drakorenergy_release(void);
+void drakorenergy_initialise(void);
+
+s16 DBstealerworm_setScale(int *obj);
+int dbstealerworm_getExtraSize(void);
+int dbstealerworm_func08(void);
+void dbstealerworm_free(void);
+void dbstealerworm_render(void);
+void dbstealerworm_hitDetect(void);
+void dbstealerworm_update(void);
+void dbstealerworm_init(void);
+void dbstealerworm_release(void);
+void dbstealerworm_initialise(void);
+
+int dbholecontrol1_getExtraSize(void);
+int dbholecontrol1_func08(void);
+void dbholecontrol1_free(int x);
+void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dbholecontrol1_hitDetect(void);
+void dbholecontrol1_update(void);
+void dbholecontrol1_init(void);
+void dbholecontrol1_release(void);
+void dbholecontrol1_initialise(void);
+
+void dfplevelcontrol_setScale(void);
+int dfplevelcontrol_getExtraSize(void);
+int dfplevelcontrol_func08(void);
+void dfplevelcontrol_free(int x);
+void dfplevelcontrol_render(void);
+void dfplevelcontrol_hitDetect(void);
+void dfplevelcontrol_update(void);
+void dfplevelcontrol_init(void);
+void dfplevelcontrol_release(void);
+void dfplevelcontrol_initialise(void);
+
+int dfpobjcreator_getExtraSize(void);
+int dfpobjcreator_func08(void);
+void dfpobjcreator_free(void);
+void dfpobjcreator_render(void);
+void dfpobjcreator_hitDetect(void);
+void dfpobjcreator_update(void);
+void dfpobjcreator_init(void);
+void dfpobjcreator_release(void);
+void dfpobjcreator_initialise(void);
+
 int dfpseqpoint_getExtraSize(void);
 int dfpseqpoint_func08(void);
 void dfpseqpoint_free(void);
@@ -160,5 +241,15 @@ void dfpseqpoint_update(void);
 void dfpseqpoint_init(void);
 void dfpseqpoint_release(void);
 void dfpseqpoint_initialise(void);
+
+int DFP_Torch_getExtraSize(void);
+int DFP_Torch_func08(void);
+void DFP_Torch_free(void);
+void DFP_Torch_render(void);
+void DFP_Torch_hitDetect(void);
+void DFP_Torch_update(void);
+void DFP_Torch_init(void);
+void DFP_Torch_release(void);
+void DFP_Torch_initialise(void);
 
 #endif /* MAIN_DLL_ANIM_H_ */
