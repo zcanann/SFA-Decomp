@@ -2700,10 +2700,10 @@ void fn_8005D14C(void) {}
 
 /* return (lbl & 1<<bit). */
 extern u32 renderFlags;
-u32 fn_8005CD48(void) { return renderFlags & 0x10000; }
+u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & 0x10000; }
 u32 fn_8005CDB0(void) { return renderFlags & 0x8; }
-u32 fn_8005CDBC(void) { return renderFlags & 0x80; }
-u32 fn_8005CDC8(void) { return renderFlags & 0x10; }
+u32 shouldDrawShadows(void) { return renderFlags & 0x80; }
+u32 shouldDrawClouds(void) { return renderFlags & 0x10; }
 
 /* return (lbl >> bit) & 1 via cntlzw-equivalent (rlwinm; neg; or; srwi). */
 extern u32 renderFlags;

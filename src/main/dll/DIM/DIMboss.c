@@ -44,7 +44,7 @@ extern undefined4 GXFlush_();
 extern undefined8 waitNextFrame();
 extern undefined4 FUN_80053b3c();
 extern undefined4 FUN_8005fe14();
-extern void fn_8005CEF0(int param_1);
+extern void setDrawCloudsAndLights(int param_1);
 extern undefined4 fn_800894A8();
 extern undefined4 fn_800895E0();
 extern undefined4 fn_80089710();
@@ -706,7 +706,7 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   localVec.y = localVecSrc->y;
   localVec.z = localVecSrc->z;
   localVec.mode = localVecSrc->mode;
-  fn_8005CEF0(0);
+  setDrawCloudsAndLights(0);
   obj->updateMode = 2;
   animFlags = 6;
   if (param_3 != 0) {

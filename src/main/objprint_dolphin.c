@@ -4407,7 +4407,7 @@ extern u32 curObjMtx;
 extern u8 lbl_803DCC29;
 extern u32 lbl_803DCC74;
 void fn_800412D4(u32 x) { curObjMtx = x; }
-void fn_80041D28(u8 x) { lbl_803DCC29 = x; }
+void set_shadowFlag_803dcc29(u8 x) { lbl_803DCC29 = x; }
 u32 fn_800430A4(void) { return lbl_803DCC74; }
 
 /* Pattern wrappers. */

@@ -511,7 +511,7 @@ fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,fl
 /*
  * --INFO--
  *
- * Function: fn_8005EC80
+ * Function: mapBlockRender_callList
  * EN v1.0 Address: 0x8005EC80
  * EN v1.0 Size: 1376b
  * EN v1.1 Address: 0x8005EDFC
@@ -519,7 +519,7 @@ fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,fl
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8005EC80(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+void mapBlockRender_callList(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                 int *param_5,undefined4 param_6,float *param_7,undefined4 param_8)
 {
   int iVar1;
@@ -746,7 +746,7 @@ void fn_8005F1E0(int param_1, int param_2)
 /*
  * --INFO--
  *
- * Function: fn_8005F558
+ * Function: mapBlockRender_setShader
  * EN v1.0 Address: 0x8005F558
  * EN v1.0 Size: 968b
  * EN v1.1 Address: 0x8005F6D4
@@ -754,7 +754,7 @@ void fn_8005F1E0(int param_1, int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_8005F558(byte param_1,int param_2,int *param_3)
+int mapBlockRender_setShader(byte param_1,int param_2,int *param_3)
 {
   uint iVar1;
   uint uVar2;
