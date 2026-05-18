@@ -160,11 +160,11 @@ BOOL movieLoad(const char* fileName, void* param2)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* audioFn_801192ec (76 bytes)                                         */
+/* AttractMovieAudio_Shutdown (76 bytes)                               */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
 #pragma peephole off
-void audioFn_801192ec(void)
+void AttractMovieAudio_Shutdown(void)
 {
     u32 saved = OSDisableInterrupts();
     if (lbl_803DD668 != (AIDCallback)0) {
@@ -177,10 +177,10 @@ void audioFn_801192ec(void)
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
-/* attractModeAudioFn_80119338 (288 bytes)                             */
+/* AttractMovieAudio_Init (288 bytes)                                  */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-BOOL attractModeAudioFn_80119338(int param_1)
+BOOL AttractMovieAudio_Init(int audioMode)
 {
     char* base = lbl_803A57C0;
     u32 saved;
@@ -194,7 +194,7 @@ BOOL attractModeAudioFn_80119338(int param_1)
     }
 
     saved = OSDisableInterrupts();
-    lbl_803DD66C = param_1;
+    lbl_803DD66C = audioMode;
     lbl_803DD678 = 0;
     lbl_803DD674 = 0;
     lbl_803DD670 = 0;

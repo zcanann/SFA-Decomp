@@ -6,8 +6,8 @@
 #include "dolphin/thp/THPPlayer.h"
 
 BOOL movieLoad(const char* fileName, void* param2);
-void audioFn_801192ec(void);
-BOOL attractModeAudioFn_80119338(int param_1);
+void AttractMovieAudio_Shutdown(void);
+BOOL AttractMovieAudio_Init(int audioMode);
 void fn_80119458(OSMessage msg);
 OSMessage fn_80119488(void);
 void fn_801194BC(OSMessage msg);

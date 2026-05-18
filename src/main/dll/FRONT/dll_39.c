@@ -231,7 +231,7 @@ void n_attractmode_releaseMovieBuffers(void)
   if (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) {
     fn_8011881C();
     fn_80118FAC();
-    audioFn_801192ec();
+    AttractMovieAudio_Shutdown();
     freeDelay = mmSetFreeDelay(0);
     if (gAttractMovieBuffer0 != 0) {
       mm_free(gAttractMovieBuffer0);
@@ -299,12 +299,12 @@ void n_attractmode_prepareMovie(void)
   
   attractModeData = lbl_8031A1D8;
   gAttractMoviePreparePending = NATTRACTMODE_MOVIE_BUSY;
-  ok = attractModeAudioFn_80119338(NATTRACTMODE_MOVIE_SETUP_ID);
+  ok = AttractMovieAudio_Init(NATTRACTMODE_MOVIE_SETUP_ID);
   if (ok != 0) {
     ok = movieLoad(attractModeData + NATTRACTMODE_MOVIE_PATH_OFFSET,
                    NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
     if (ok == 0) {
-      audioFn_801192ec();
+      AttractMovieAudio_Shutdown();
     }
     else {
       fn_801181F8((uint)&gAttractMovieDims);
@@ -329,7 +329,7 @@ void n_attractmode_prepareMovie(void)
            ((gAttractMovieOptionalBuffer == 0 &&
             (optionalBufferSize != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE)))))) ||
          ((gAttractMovieWorkBuffer == 0 || (gAttractMovieScratchBuffer == 0)))) {
-        audioFn_801192ec();
+        AttractMovieAudio_Shutdown();
         freeDelay = mmSetFreeDelay(0);
         if (gAttractMovieBuffer0 != 0) {
           mm_free(gAttractMovieBuffer0);
