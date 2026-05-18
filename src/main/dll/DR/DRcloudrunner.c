@@ -313,7 +313,7 @@ void FUN_801dc6e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_801dc8d8
+ * Function: sc_totempole_sortCompletionGameBits
  * EN v1.0 Address: 0x801DC8D8
  * EN v1.0 Size: 268b
  * EN v1.1 Address: 0x801DCEC4
@@ -323,7 +323,7 @@ void FUN_801dc6e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dc8d8(void)
+void sc_totempole_sortCompletionGameBits(void)
 {
   ushort uVar1;
   ushort uVar2;
@@ -385,7 +385,7 @@ void FUN_801dc9e4(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801dca0c
+ * Function: sc_totempole_update
  * EN v1.0 Address: 0x801DCA0C
  * EN v1.0 Size: 648b
  * EN v1.1 Address: 0x801DD01C
@@ -395,7 +395,7 @@ void FUN_801dc9e4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dca0c(uint param_1)
+void sc_totempole_update(uint param_1)
 {
   bool bVar1;
   uint uVar2;
@@ -437,7 +437,7 @@ void FUN_801dca0c(uint param_1)
         }
         dVar6 = FUN_80006b34();
         local_20 = (longlong)(int)(dVar6 / (double)lbl_803E6270);
-        FUN_801dc8d8();
+        sc_totempole_sortCompletionGameBits();
       }
       if (!bVar1) {
         FUN_80006824(0,0x109);
