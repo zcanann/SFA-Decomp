@@ -184,7 +184,7 @@ void TitleMenu_initialise(void)
 
 #pragma scheduling off
 #pragma peephole off
-void *fn_8011730C(int flags)
+void *PopDecodedAudioBuffer(int flags)
 {
   void *message;
 
@@ -194,7 +194,7 @@ void *fn_8011730C(int flags)
   return NULL;
 }
 
-void fn_80117350(void *message)
+void PushFreeAudioBuffer(void *message)
 {
   OSSendMessage(&lbl_803A4480,message,0);
 }
@@ -204,7 +204,7 @@ void fn_80117350(void *message)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void thpAudioFn_80117380(void *cursorArg)
+void AttractMovieAudio_Decode(void *cursorArg)
 {
   u32 *audioFrameSizes;
   u8 *audioFrame;
@@ -238,7 +238,7 @@ void thpAudioFn_80117380(void *cursorArg)
 
 #pragma scheduling off
 #pragma peephole off
-void *threadMainAlt_80117460(void *param)
+void *AudioDecoderForOnMemory(void *param)
 {
   int frame;
   int stride;
@@ -251,7 +251,7 @@ void *threadMainAlt_80117460(void *param)
   frame = 0;
   while (true) {
     cursor.frameIndex = frame;
-    thpAudioFn_80117380(&cursor);
+    AttractMovieAudio_Decode(&cursor);
     framesPerGroup = lbl_803A5D60.header.mNumFrames;
     frameInGroup = (frame + lbl_803A5D60.initReadFrame) % framesPerGroup;
     if ((framesPerGroup - 1) == frameInGroup) {
@@ -272,19 +272,19 @@ void *threadMainAlt_80117460(void *param)
 #pragma peephole reset
 #pragma scheduling reset
 
-void *thpAudioThreadMain(void *param)
+void *AudioDecoder(void *param)
 {
   void *token;
 
   (void)param;
   while (true) {
     token = fn_801194EC();
-    thpAudioFn_80117380(token);
+    AttractMovieAudio_Decode(token);
     fn_80119458(token);
   }
 }
 
-void AXInit(void)
+void AudioDecodeThreadCancel(void)
 {
   if (lbl_803DD658 != 0) {
     OSCancelThread(&lbl_803A54A0);
@@ -292,7 +292,7 @@ void AXInit(void)
   }
 }
 
-void AXQuit(void)
+void AudioDecodeThreadStart(void)
 {
   if (lbl_803DD658 != 0) {
     OSResumeThread(&lbl_803A54A0);

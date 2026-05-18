@@ -2,15 +2,15 @@
 #include "main/unknown/autos/placeholder_801175B4.h"
 #include "dolphin/os.h"
 
-extern void *threadMainAlt_80117460(void *);
-extern void *thpAudioThreadMain(void *);
+extern void *AudioDecoderForOnMemory(void *);
+extern void *AudioDecoder(void *);
 extern u8 lbl_803A4448[];
 extern int lbl_803DD658;
 
 /*
  * --INFO--
  *
- * Function: fn_801175A4
+ * Function: CreateAudioDecodeThread
  * EN v1.0 Address: 0x801175A4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x801175B4
@@ -22,17 +22,17 @@ extern int lbl_803DD658;
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_801175A4(OSPriority priority, void *param)
+int CreateAudioDecodeThread(OSPriority priority, void *param)
 {
     u8 *base = lbl_803A4448;
 
     if (param != NULL) {
-        if (OSCreateThread((OSThread *)(base + 0x1058), threadMainAlt_80117460, param,
+        if (OSCreateThread((OSThread *)(base + 0x1058), AudioDecoderForOnMemory, param,
                            base + 0x1058, 0x1000, priority, 1) == 0) {
             return 0;
         }
     } else {
-        if (OSCreateThread((OSThread *)(base + 0x1058), thpAudioThreadMain, NULL,
+        if (OSCreateThread((OSThread *)(base + 0x1058), AudioDecoder, NULL,
                            base + 0x1058, 0x1000, priority, 1) == 0) {
             return 0;
         }
