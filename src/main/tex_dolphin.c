@@ -41,7 +41,7 @@ extern int textureCrazyPointerFollowFn_80054c30();
 extern void textureFn_800528bc();
 extern void resetLotsOfRenderVars();
 extern void fn_8005D3B4();
-extern void fn_8006C4E0();
+extern void textureFn_8006c4e0();
 extern void fn_80088730();
 extern void objGetColor();
 extern uint AttractMovie_DrawTextureCallback();
@@ -191,7 +191,7 @@ void shaderFn_8005e348(undefined4 param_1,undefined4 param_2,int *param_3,Mtx pa
     local_28[3] = *(float*)((int)&lbl_802C1E40 + 12);
     local_28[4] = *(float*)((int)&lbl_802C1E40 + 16);
     local_28[5] = *(float*)((int)&lbl_802C1E40 + 20);
-    fn_8006C4E0((int*)&local_b8,(int*)&uStack_b4);
+    textureFn_8006c4e0((int*)&local_b8,(int*)&uStack_b4);
     selectTexture(*(int *)(local_b8 + (uVar5 & 0xff) * 4),1);
     iD2.words.lo = (uVar5 & 0xff) + 1 ^ 0x80000000;
     iD2.words.hi = 0x43300000;

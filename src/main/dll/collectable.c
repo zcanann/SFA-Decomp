@@ -95,7 +95,7 @@ extern int FUN_800575b4();
 extern int FUN_800620e8();
 extern u16 hitDetectFn_80065e50(f32 x,f32 y,f32 z,int obj,int *hits,int param_6,int param_7);
 extern undefined4 FUN_8006dca8();
-extern void fn_8006EDCC(f32 param_1,f32 param_2,int obj,u16 param_4,int param_5,float *points,void *aux);
+extern void objAudioFn_8006edcc(f32 param_1,f32 param_2,int obj,u16 param_4,int param_5,float *points,void *aux);
 extern undefined4 objAudioFn_8006ef38();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_80081120();
@@ -1766,7 +1766,7 @@ void fn_8014A5FC(int obj,int state)
   }
   if ((*(u32 *)(state + 0x2e4) & 0x00200000) != 0) {
     ObjPath_GetPointWorldPositionArray(obj,2,2,points);
-    fn_8006EDCC(*(f32 *)(state + 0x310),lbl_803E256C,obj,*(u16 *)(state + 0x2f8),7,points,
+    objAudioFn_8006edcc(*(f32 *)(state + 0x310),lbl_803E256C,obj,*(u16 *)(state + 0x2f8),7,points,
                 (void *)(state + 4));
   }
 }
