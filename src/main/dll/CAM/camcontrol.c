@@ -467,7 +467,7 @@ void Camera_setFocus(void *target)
 void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerMode)
 {
   int handlerCount;
-  int handlerIndex;
+  CamcontrolHandlerEntry *defaultHandler;
   CamcontrolHandlerEntry **handlerEntry;
   int blendFrames;
   CamcontrolTriggeredAction *camAction;
@@ -533,21 +533,18 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
          ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
-      handlerIndex = 0;
+      defaultHandler = NULL;
       handlerEntry = lbl_803A4228;
       for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
-          handlerIndex = (int)lbl_803A4228[handlerIndex];
+          defaultHandler = *handlerEntry;
           goto LAB_80102f3c;
         }
         handlerEntry = handlerEntry + 1;
-        handlerIndex = handlerIndex + 1;
       }
-      handlerIndex = 0;
 LAB_80102f3c:
-      ((CamcontrolHandlerEntry *)handlerIndex)->handler->vtable->actionCallback(
-          camAction,CAMCONTROL_ACTION_RECORD_SIZE);
+      defaultHandler->handler->vtable->actionCallback(camAction,CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
       switch (camAction->actionKind) {
@@ -579,21 +576,18 @@ LAB_80102f3c:
          ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
-      handlerIndex = 0;
+      defaultHandler = NULL;
       handlerEntry = lbl_803A4228;
       for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
-          handlerIndex = (int)lbl_803A4228[handlerIndex];
+          defaultHandler = *handlerEntry;
           goto LAB_80102f3c_b;
         }
         handlerEntry = handlerEntry + 1;
-        handlerIndex = handlerIndex + 1;
       }
-      handlerIndex = 0;
 LAB_80102f3c_b:
-      ((CamcontrolHandlerEntry *)handlerIndex)->handler->vtable->actionCallback(
-          camAction,CAMCONTROL_ACTION_RECORD_SIZE);
+      defaultHandler->handler->vtable->actionCallback(camAction,CAMCONTROL_ACTION_RECORD_SIZE);
     }
     else {
       switch (camAction->actionKind) {
