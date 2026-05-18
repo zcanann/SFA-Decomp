@@ -1216,7 +1216,7 @@ extern s16 seqGlobal2;
 extern s16 seqGlobal1;
 extern u8 seqGlobal3;
 u8 getCurSeqNo(void) { return curSeqNo; }
-u32 fn_80080234(void) { return lbl_803DD0FC; }
+u32 getFocusedNpc(void) { return lbl_803DD0FC; }
 void ObjSeq_setGlobal2(s16 x) { seqGlobal2 = x; }
 s16 ObjSeq_getGlobal2(void) { return seqGlobal2; }
 void ObjSeq_setGlobal1(s16 x) { seqGlobal1 = x; }

@@ -3911,9 +3911,9 @@ int FUN_80081134(undefined8 param_1,double param_2,double param_3,undefined8 par
 }
 
 /* Pattern wrappers. */
-int fn_80088758(void) { return 0x0; }
-void fn_800887C4(void) {}
-void fn_800887C8(void) {}
+int return0_80088758(void) { return 0x0; }
+void doNothing_800887C4(void) {}
+void doNothing_800887C8(void) {}
 int return0_8008B7E8(void) { return 0x0; }
 void doNothing_8008B8B0(void) {}
 void pDll_Sky_setTimeOfDay_nop(void) {}
