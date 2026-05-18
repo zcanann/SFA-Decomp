@@ -53,6 +53,13 @@ typedef struct McmdEnvelopeState {
     u8 unk24[4];
 } McmdEnvelopeState;
 
+typedef struct McmdVidListNode {
+    struct McmdVidListNode *next;
+    struct McmdVidListNode *prev;
+    u32 id;
+    u32 internalId;
+} McmdVidListNode;
+
 typedef struct McmdVoiceState {
     u8 unk00[0x34];
     u8 *macroBase;
@@ -62,7 +69,14 @@ typedef struct McmdVoiceState {
     struct McmdVoiceState *timeNext;
     struct McmdVoiceState *timePrev;
     u32 queueMode;
-    u8 unk50[0x90 - 0x50];
+    u8 *keyoffMacroBase;
+    u8 *sampleEndMacroBase;
+    u8 *messageMacroBase;
+    u8 *keyoffMacroCursor;
+    u8 *sampleEndMacroCursor;
+    u8 *messageMacroCursor;
+    u8 hasTriggerMacros;
+    u8 unk69[0x90 - 0x69];
     u32 startTimeHi;
     u32 startTimeLo;
     u32 wakeTimeHi;
@@ -78,13 +92,13 @@ typedef struct McmdVoiceState {
         u32 voiceHandle;
         u8 voiceHandleBytes[4];
     };
-    void *vidListNode;
+    McmdVidListNode *vidListNode;
     u32 unkFC;
     u16 baseSample;
     u16 instrumentKey;
     u8 keyGroup;
     u8 unk105[3];
-    void *cloneVidListNode;
+    McmdVidListNode *cloneVidListNode;
     u8 priorityGroup;
     u8 unk10D;
     u16 priorityScale;

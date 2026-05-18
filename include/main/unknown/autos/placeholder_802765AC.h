@@ -12,7 +12,7 @@ int varGet(McmdVoiceState *state, u32 useExCtrl, u32 index);
 void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value);
 void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args);
 void mcmdVarCalculation(McmdVoiceState *state, McmdCommandArgs *args, u8 op);
-void mcmdSendMessage(int state, u32 *args);
+void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args);
 void mcmdSetKeyGroup(McmdVoiceState *state, McmdCommandArgs *args);
 void macHandleActive(int state);
 void macHandle(u32 delta);

@@ -116,6 +116,7 @@ extern void inpSetGlobalMIDIDirtyFlag(u8 a, u8 b, u32 flag);
 extern int vidGetInternalId(u32 id);
 extern void (*synthMessageCallback)(u32 id);
 
+#define SYNTH_VOICE_STRIDE 0x404
 #define SYNTH_GLOBAL_REG(index) (*(u32 *)(lbl_803BDA34 + (index) * 4 - 0x40))
 
 /*
@@ -721,7 +722,7 @@ clamp:
 /*
  * Queue register-derived messages onto voices found through vid handles.
  */
-void mcmdSendMessage(int state, u32 *args)
+void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
 {
     u32 index;
     u32 value;
@@ -732,66 +733,67 @@ void mcmdSendMessage(int state, u32 *args)
     u8 i;
     u32 targetVoice;
 
-    index = (args[1] >> 8) & 0x1f;
+    index = (args->value >> 8) & 0x1f;
     if (index < 0x10) {
-        value = *(u32 *)(state + index * 4 + 0xac);
+        value = state->localRegs[index];
     } else {
         value = SYNTH_GLOBAL_REG(index);
     }
 
-    if (((*args >> 8) & 0xff) == 0) {
-        targetInstrument = *args >> 0x10;
+    if (((args->flags >> 8) & 0xff) == 0) {
+        targetInstrument = args->flags >> 0x10;
         if (targetInstrument != 0xffff) {
             offset = 0;
             for (i = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++) {
                 voice = (int)(synthVoice + offset);
                 voiceState = (McmdVoiceState *)voice;
                 if (voiceState->macroBase != 0 && targetInstrument == voiceState->instrumentKey) {
-                    targetVoice = vidGetInternalId(*(u32 *)((u8 *)voiceState->vidListNode + 8));
+                    targetVoice = vidGetInternalId(voiceState->vidListNode->id);
                     if (targetVoice != 0xffffffff) {
-                        voice = (int)(synthVoice + (targetVoice & 0xff) * 0x404);
+                        voice = (int)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
                         voiceState = (McmdVoiceState *)voice;
                         if (voiceState->queuedMessageCount < 4) {
                             voiceState->queuedMessageCount = voiceState->queuedMessageCount + 1;
                             voiceState->queuedMessages[voiceState->queuedMessageWriteIndex] = value;
                             voiceState->queuedMessageWriteIndex =
                                 (voiceState->queuedMessageWriteIndex + 1) & 3;
-                            if (*(u8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
-                                *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
-                                *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
-                                *(int *)(voice + 0x58) = 0;
+                            if (voiceState->hasTriggerMacros != 0 &&
+                                voiceState->messageMacroBase != 0) {
+                                voiceState->macroCursor = voiceState->messageMacroCursor;
+                                voiceState->macroBase = voiceState->messageMacroBase;
+                                voiceState->messageMacroBase = 0;
                                 audioFn_80278990(voice);
                             }
                         }
                     }
                 }
-                offset += 0x404;
+                offset += SYNTH_VOICE_STRIDE;
             }
         } else {
             if (synthMessageCallback != 0) {
-                synthMessageCallback(*(u32 *)((u8 *)((McmdVoiceState *)state)->vidListNode + 8));
+                synthMessageCallback(state->vidListNode->id);
             }
         }
     } else {
-        index = args[1] & 0x1f;
+        index = args->value & 0x1f;
         if (index < 0x10) {
-            targetInstrument = *(u32 *)(state + index * 4 + 0xac);
+            targetInstrument = state->localRegs[index];
         } else {
             targetInstrument = SYNTH_GLOBAL_REG(index);
         }
         targetVoice = vidGetInternalId(targetInstrument);
         if (targetVoice != 0xffffffff) {
-            voice = (int)(synthVoice + (targetVoice & 0xff) * 0x404);
+            voice = (int)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
             voiceState = (McmdVoiceState *)voice;
             if (voiceState->queuedMessageCount < 4) {
                 voiceState->queuedMessageCount = voiceState->queuedMessageCount + 1;
                 voiceState->queuedMessages[voiceState->queuedMessageWriteIndex] = value;
                 voiceState->queuedMessageWriteIndex =
                     (voiceState->queuedMessageWriteIndex + 1) & 3;
-                if (*(u8 *)(voice + 0x68) != 0 && *(int *)(voice + 0x58) != 0) {
-                    *(int *)(voice + 0x38) = *(int *)(voice + 0x64);
-                    *(int *)(voice + 0x34) = *(int *)(voice + 0x58);
-                    *(int *)(voice + 0x58) = 0;
+                if (voiceState->hasTriggerMacros != 0 && voiceState->messageMacroBase != 0) {
+                    voiceState->macroCursor = voiceState->messageMacroCursor;
+                    voiceState->macroBase = voiceState->messageMacroBase;
+                    voiceState->messageMacroBase = 0;
                     audioFn_80278990(voice);
                 }
             }
@@ -858,6 +860,7 @@ void macHandle(u32 delta)
     int nextTimer;
     int hasAlt;
     u32 oldLo;
+    McmdVoiceState *activeState;
 
     timer = macTimeQueueRoot;
     while (timer != 0) {
@@ -875,17 +878,18 @@ void macHandle(u32 delta)
 
     active = macActiveRoot;
     for (; active != 0; active = *(int *)(active + 0x3c)) {
-        if (*(u8 *)(active + 0x68) == 0) {
+        activeState = (McmdVoiceState *)active;
+        if (activeState->hasTriggerMacros == 0) {
             hasAlt = 0;
         } else {
-            hasAlt = *(int *)(active + 0x54) != 0;
+            hasAlt = activeState->sampleEndMacroBase != 0;
         }
-        if (hasAlt && ((*(u32 *)(active + 0x118) & 0x20) == 0) &&
-            hwIsActive(*(u32 *)(active + 0xf4) & 0xff) == 0 &&
-            (*(u8 *)(active + 0x68) != 0 && *(int *)(active + 0x54) != 0)) {
-            *(int *)(active + 0x38) = *(int *)(active + 0x60);
-            *(int *)(active + 0x34) = *(int *)(active + 0x54);
-            *(int *)(active + 0x54) = 0;
+        if (hasAlt && ((activeState->outputFlags & MCMD_VOICE_ACTIVE_OUTPUT_FLAG) == 0) &&
+            hwIsActive(activeState->voiceHandle & 0xff) == 0 &&
+            (activeState->hasTriggerMacros != 0 && activeState->sampleEndMacroBase != 0)) {
+            activeState->macroCursor = activeState->sampleEndMacroCursor;
+            activeState->macroBase = activeState->sampleEndMacroBase;
+            activeState->sampleEndMacroBase = 0;
             audioFn_80278990(active);
         }
         macHandleActive(active);
@@ -901,18 +905,20 @@ void macHandle(u32 delta)
 void macSampleEndNotify(int state)
 {
     bool resumed;
+    McmdVoiceState *voiceState;
 
-    if (*(int *)(state + 0x4c) == 1) {
-        if (*(u8 *)(state + 0x68) == 0 || *(int *)(state + 0x54) == 0) {
+    voiceState = (McmdVoiceState *)state;
+    if (voiceState->queueMode == 1) {
+        if (voiceState->hasTriggerMacros == 0 || voiceState->sampleEndMacroBase == 0) {
             resumed = false;
         } else {
-            *(int *)(state + 0x38) = *(int *)(state + 0x60);
-            *(int *)(state + 0x34) = *(int *)(state + 0x54);
-            *(int *)(state + 0x54) = 0;
+            voiceState->macroCursor = voiceState->sampleEndMacroCursor;
+            voiceState->macroBase = voiceState->sampleEndMacroBase;
+            voiceState->sampleEndMacroBase = 0;
             audioFn_80278990(state);
             resumed = true;
         }
-        if (!resumed && ((*(u32 *)(state + 0x118) & 0x40000) != 0)) {
+        if (!resumed && ((voiceState->outputFlags & MCMD_VOICE_INACTIVE_WAIT_OUTPUT_FLAG) != 0)) {
             audioFn_80278990(state);
         }
     }
@@ -925,30 +931,31 @@ u32 macSetExternalKeyoff(int state)
 {
     u32 resumed;
     u32 result;
+    McmdVoiceState *voiceState;
 
-    result = *(u32 *)(state + 0x114);
-    *(u32 *)(state + 0x118) |= 8;
-    if (*(u32 *)(state + 0x34) != 0) {
+    voiceState = (McmdVoiceState *)state;
+    result = voiceState->inputFlags;
+    voiceState->outputFlags |= MCMD_VOICE_KEYOFF_OUTPUT_FLAG;
+    if (voiceState->macroBase != 0) {
         result = 0;
-        if ((*(u32 *)(state + 0x114) & 0x100) == 0) {
-            if (*(u8 *)(state + 0x68) == 0 || *(u32 *)(state + 0x50) == 0) {
+        if ((voiceState->inputFlags & MCMD_VOICE_KEYOFF_INPUT_FLAG) == 0) {
+            if (voiceState->hasTriggerMacros == 0 || voiceState->keyoffMacroBase == 0) {
                 resumed = 0;
             } else {
-                *(int *)(state + 0x38) = *(int *)(state + 0x5c);
-                *(int *)(state + 0x34) = *(int *)(state + 0x50);
-                *(int *)(state + 0x50) = 0;
+                voiceState->macroCursor = voiceState->keyoffMacroCursor;
+                voiceState->macroBase = voiceState->keyoffMacroBase;
+                voiceState->keyoffMacroBase = 0;
                 audioFn_80278990(state);
                 resumed = 1;
             }
             if (!resumed) {
-                result = *(u32 *)(state + 0x118) & 4;
+                result = voiceState->outputFlags & MCMD_VOICE_KEYOFF_WAIT_OUTPUT_FLAG;
                 if (result != 0) {
                     audioFn_80278990(state);
                 }
             }
         } else {
-            *(u32 *)(state + 0x118) = *(u32 *)(state + 0x118);
-            *(u32 *)(state + 0x114) |= 0x400;
+            voiceState->inputFlags |= MCMD_VOICE_DEFERRED_KEYOFF_INPUT_FLAG;
         }
     }
     return result;
@@ -960,26 +967,29 @@ u32 macSetExternalKeyoff(int state)
 void macSetPedalState(int state, u32 defer)
 {
     u32 resumed;
+    McmdVoiceState *voiceState;
 
+    voiceState = (McmdVoiceState *)state;
     if (defer != 0) {
-        *(u32 *)(state + 0x114) |= 0x100;
+        voiceState->inputFlags |= MCMD_VOICE_KEYOFF_INPUT_FLAG;
     } else {
-        if (*(u32 *)(state + 0x34) != 0 && ((*(u32 *)(state + 0x114) & 0x400) != 0)) {
-            if (*(u8 *)(state + 0x68) == 0 || *(u32 *)(state + 0x50) == 0) {
+        if (voiceState->macroBase != 0 &&
+            ((voiceState->inputFlags & MCMD_VOICE_DEFERRED_KEYOFF_INPUT_FLAG) != 0)) {
+            if (voiceState->hasTriggerMacros == 0 || voiceState->keyoffMacroBase == 0) {
                 resumed = 0;
             } else {
-                *(int *)(state + 0x38) = *(int *)(state + 0x5c);
-                *(int *)(state + 0x34) = *(int *)(state + 0x50);
-                *(int *)(state + 0x50) = 0;
+                voiceState->macroCursor = voiceState->keyoffMacroCursor;
+                voiceState->macroBase = voiceState->keyoffMacroBase;
+                voiceState->keyoffMacroBase = 0;
                 audioFn_80278990(state);
                 resumed = 1;
             }
-            if (!resumed && ((*(u32 *)(state + 0x118) & 4) != 0)) {
+            if (!resumed && ((voiceState->outputFlags & MCMD_VOICE_KEYOFF_WAIT_OUTPUT_FLAG) != 0)) {
                 audioFn_80278990(state);
             }
         }
-        *(u32 *)(state + 0x118) = *(u32 *)(state + 0x118);
-        *(u32 *)(state + 0x114) &= 0xfffffaff;
+        voiceState->inputFlags &= ~(MCMD_VOICE_KEYOFF_INPUT_FLAG |
+                                    MCMD_VOICE_DEFERRED_KEYOFF_INPUT_FLAG);
     }
 }
 
