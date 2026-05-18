@@ -230,7 +230,7 @@ void n_attractmode_releaseMovieBuffers(void)
   
   if (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) {
     fn_8011881C();
-    fn_80118FAC();
+    AttractMovie_CloseFile();
     AttractMovieAudio_Shutdown();
     freeDelay = mmSetFreeDelay(0);
     if (gAttractMovieBuffer0 != 0) {
@@ -310,8 +310,8 @@ void n_attractmode_prepareMovie(void)
       fn_801181F8((uint)&gAttractMovieDims);
       gAttractMovieOffsetX = ((uint)lbl_803DCCF0[2] - gAttractMovieDims.width) >> 1;
       gAttractMovieOffsetY = ((uint)lbl_803DCCF0[3] - gAttractMovieDims.height) >> 1;
-      fn_80118EAC(movieBuffer0Size,&movieBuffer1Size,&movieBuffer2Size,&movieBuffer3Size,
-                  &optionalBufferSize,&workBufferSize);
+      AttractMovie_GetBufferSizes(movieBuffer0Size,&movieBuffer1Size,&movieBuffer2Size,
+                                   &movieBuffer3Size,&optionalBufferSize,&workBufferSize);
       gAttractMovieBuffer0 = mmAlloc(movieBuffer0Size[0],NATTRACTMODE_MOVIE_HEAP,0);
       gAttractMovieBuffer1 = mmAlloc(movieBuffer1Size,NATTRACTMODE_MOVIE_HEAP,0);
       gAttractMovieBuffer2 = mmAlloc(movieBuffer2Size,NATTRACTMODE_MOVIE_HEAP,0);
@@ -377,8 +377,9 @@ void n_attractmode_prepareMovie(void)
         }
         DCInvalidateRange(gAttractMovieWorkBuffer,workBufferSize);
         DCInvalidateRange(gAttractMovieScratchBuffer,NATTRACTMODE_WORK_BUFFER_SIZE);
-        fn_80118C88(gAttractMovieBuffer0,gAttractMovieBuffer1,gAttractMovieBuffer2,
-                     gAttractMovieBuffer3,gAttractMovieOptionalBuffer,gAttractMovieWorkBuffer);
+        AttractMovie_AssignBuffers(gAttractMovieBuffer0,gAttractMovieBuffer1,
+                                   gAttractMovieBuffer2,gAttractMovieBuffer3,
+                                   gAttractMovieOptionalBuffer,gAttractMovieWorkBuffer);
         ok = prepareAttractMode(0,1);
         if (ok == 0) {
           OSPanic(attractModeData + NATTRACTMODE_SOURCE_FILE_OFFSET,

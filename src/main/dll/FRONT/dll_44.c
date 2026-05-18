@@ -14,12 +14,13 @@ extern void DCInvalidateRange(void *start, u32 nBytes);
 /*
  * --INFO--
  *
- * Function: fn_80118C88
+ * Function: AttractMovie_AssignBuffers
  * EN v1.0 Address: 0x80118C88
  * EN v1.0 Size: 548b
  */
-int fn_80118C88(void *movieOrReadBuffer, void *yTextureBuffer, void *uTextureBuffer,
-                void *vTextureBuffer, void *audioBuffer, void *thpWorkBuffer)
+int AttractMovie_AssignBuffers(void *movieOrReadBuffer, void *yTextureBuffer,
+                               void *uTextureBuffer, void *vTextureBuffer, void *audioBuffer,
+                               void *thpWorkBuffer)
 {
     u8 *base;
     u8 *base2;
@@ -90,13 +91,13 @@ int fn_80118C88(void *movieOrReadBuffer, void *yTextureBuffer, void *uTextureBuf
 /*
  * --INFO--
  *
- * Function: fn_80118EAC
+ * Function: AttractMovie_GetBufferSizes
  * EN v1.0 Address: 0x80118EAC
  * EN v1.0 Size: 256b
  */
-void fn_80118EAC(uint *movieOrReadBufferSize, int *yTextureBufferSize,
-                 int *uTextureBufferSize, int *vTextureBufferSize, uint *audioBufferSize,
-                 int *thpWorkBufferSize)
+void AttractMovie_GetBufferSizes(uint *movieOrReadBufferSize, int *yTextureBufferSize,
+                                 int *uTextureBufferSize, int *vTextureBufferSize,
+                                 uint *audioBufferSize, int *thpWorkBufferSize)
 {
     AttractMoviePlayer *player;
     int size;
@@ -132,11 +133,11 @@ void fn_80118EAC(uint *movieOrReadBufferSize, int *yTextureBufferSize,
 /*
  * --INFO--
  *
- * Function: fn_80118FAC
+ * Function: AttractMovie_CloseFile
  * EN v1.0 Address: 0x80118FAC
  * EN v1.0 Size: 84b
  */
-int fn_80118FAC(void)
+int AttractMovie_CloseFile(void)
 {
     AttractMoviePlayer *player;
 
