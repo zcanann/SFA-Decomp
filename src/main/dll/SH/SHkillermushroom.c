@@ -207,7 +207,7 @@ void bombplantspore_free(void *obj)
 /*
  * --INFO--
  *
- * Function: fn_801D33D4
+ * Function: bombplantspore_startDriftBurst
  * EN v1.0 Address: 0x801D33D4
  * EN v1.0 Size: 456b
  * EN v1.1 Address: 0x801D39C4
@@ -217,7 +217,7 @@ void bombplantspore_free(void *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801D33D4(void *obj, void *state)
+void bombplantspore_startDriftBurst(void *obj, void *state)
 {
   void *params;
   s16 baseAngle;
@@ -266,7 +266,7 @@ void fn_801D33D4(void *obj, void *state)
 /*
  * --INFO--
  *
- * Function: fn_801D359C
+ * Function: bombplantspore_updateDrift
  * EN v1.0 Address: 0x801D359C
  * EN v1.0 Size: 672b
  * EN v1.1 Address: TODO
@@ -276,7 +276,7 @@ void fn_801D33D4(void *obj, void *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801D359C(void *obj, void *state)
+void bombplantspore_updateDrift(void *obj, void *state)
 {
   void *params;
   s16 baseAngle;

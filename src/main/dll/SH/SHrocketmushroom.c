@@ -33,8 +33,8 @@ extern void ObjMsg_AllocQueue(void *obj, int count);
 extern void ObjMsg_SendToObject(void *dst, int msg, void *src, void *payload);
 extern void objFn_800972dc(f32 f1, f32 f2, void *obj, int p4, int p5, int p6, int p7, int p8, int p9);
 extern int randomGetRange(int min, int max);
-extern void fn_801D33D4(void *obj, void *state);
-extern void fn_801D359C(void *obj, void *state);
+extern void bombplantspore_startDriftBurst(void *obj, void *state);
+extern void bombplantspore_updateDrift(void *obj, void *state);
 
 extern void *lbl_803DCA54;
 extern void *lbl_803DCA78;
@@ -142,10 +142,10 @@ void bombplantspore_update(void *obj) {
             if (*(f32 *)((u8 *)obj + 0x28) < lbl_803E5394) {
                 ObjHits_EnableObject(obj);
             }
-            fn_801D359C(obj, state);
+            bombplantspore_updateDrift(obj, state);
             if (randomGetRange(0, 100) < 5 &&
                 *(f32 *)((u8 *)state + 0x284) <= lbl_803E5394) {
-                fn_801D33D4(obj, state);
+                bombplantspore_startDriftBurst(obj, state);
             }
             *(f32 *)((u8 *)state + 0x298) -= timeDelta;
             if (*(f32 *)((u8 *)state + 0x298) <= lbl_803E5394) {
