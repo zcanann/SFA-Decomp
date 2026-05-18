@@ -1117,7 +1117,7 @@ void FUN_801b5628(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801b5650
+ * Function: explosion_release
  * EN v1.0 Address: 0x801B5650
  * EN v1.0 Size: 356b
  * EN v1.1 Address: 0x801B5DB8
@@ -1127,7 +1127,7 @@ void FUN_801b5628(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b5650(uint param_1)
+void explosion_release(uint param_1)
 {
   short sVar1;
   float fVar2;

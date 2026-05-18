@@ -128,7 +128,7 @@ extern char s_opening_bnr_8030f718[];
 /*
  * --INFO--
  *
- * Function: FUN_8007e77c
+ * Function: saveCb_8007e77c
  * EN v1.0 Address: 0x8007E77C
  * EN v1.0 Size: 672b
  * EN v1.1 Address: 0x8007E7A0
@@ -138,7 +138,7 @@ extern char s_opening_bnr_8030f718[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8007e77c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+void saveCb_8007e77c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   char cVar3;

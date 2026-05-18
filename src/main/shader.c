@@ -262,7 +262,7 @@ extern undefined4 cRam803dc288;
 /*
  * --INFO--
  *
- * Function: FUN_80055980
+ * Function: objShouldLoad
  * EN v1.0 Address: 0x80055980
  * EN v1.0 Size: 908b
  * EN v1.1 Address: 0x80055AFC
@@ -272,7 +272,7 @@ extern undefined4 cRam803dc288;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80055980(undefined4 param_1,undefined4 param_2,undefined4 param_3)
+void objShouldLoad(undefined4 param_1,undefined4 param_2,undefined4 param_3)
 {
   bool bVar1;
   int iVar2;

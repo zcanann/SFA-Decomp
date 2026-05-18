@@ -1110,7 +1110,7 @@ void FUN_80006740(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80006744
+ * Function: modelRenderFn_80006744
  * EN v1.0 Address: 0x80006744
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80009224
@@ -1120,7 +1120,7 @@ void FUN_80006740(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80006744(int param_1,int *param_2)
+void modelRenderFn_80006744(int param_1,int *param_2)
 {
 }
 

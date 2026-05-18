@@ -778,7 +778,7 @@ extern undefined4 uRam00000000;
 /*
  * --INFO--
  *
- * Function: FUN_80017434
+ * Function: gameTextFn_80017434
  * EN v1.0 Address: 0x80017434
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8001746C
@@ -788,7 +788,7 @@ extern undefined4 uRam00000000;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80017434(int param_1)
+void gameTextFn_80017434(int param_1)
 {
 }
 
