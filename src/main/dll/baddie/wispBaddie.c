@@ -3,7 +3,7 @@
  *
  * Text span (EN v1.0): 0x801262CC..0x80128120 (3 functions, 7764 b)
  *  - pauseMenuDraw   @ 0x801262CC, 4564 b
- *  - fn_801274A0     @ 0x801274A0, 2692 b
+ *  - pauseMenuDrawStatus_801274a0     @ 0x801274A0, 2692 b
  *  - fn_80127F24     @ 0x80127F24,  508 b
  *
  * The Ghidra-imported placeholder previously declared two 4-byte

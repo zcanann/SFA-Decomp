@@ -119,7 +119,7 @@ extern undefined4 DAT_803aa030;
 extern undefined4 DAT_803aa034;
 extern undefined4 DAT_803aa038;
 extern undefined4 DAT_803aa03c;
-// v1.0 symbols for fn_8012310C
+// v1.0 symbols for minimapFn_8012310c
 extern sbyte lbl_803DD7A0;
 extern short lbl_803DD7A2;
 extern byte framesThisStep;
@@ -127,7 +127,7 @@ extern short lbl_803DD8D2;
 extern short lbl_803DBA68;
 extern short lbl_803DBA6E;
 
-// v1.0 symbols for fn_80124068
+// v1.0 symbols for cMenuUpdateAnims
 extern byte lbl_803DBA65;
 extern short lbl_803DD796;
 extern short lbl_803DD78E;
@@ -136,7 +136,7 @@ extern short cMenuFadeCounter;
 extern short lbl_803DD8D6;
 extern short lbl_803DBA66;
 
-// v1.0 symbols for fn_801241CC
+// v1.0 symbols for trickyBitFn_801241cc
 extern int lbl_803DD738;
 extern short lbl_8031B4E0[];
 
@@ -241,7 +241,7 @@ extern undefined2 uRam803de4ce;
 /*
  * --INFO--
  *
- * Function: fn_80121C4C
+ * Function: hudDrawMagicBar
  * EN v1.0 Address: 0x80121C4C
  * EN v1.0 Size: 0x9A8
  * EN v1.1 Address: 0x80121F30
@@ -251,7 +251,7 @@ extern undefined2 uRam803de4ce;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80121C4C(undefined4 param_1,undefined4 param_2,uint param_3)
+void hudDrawMagicBar(undefined4 param_1,undefined4 param_2,uint param_3)
 {
   int iVar1;
   uint uVar2;
@@ -491,7 +491,7 @@ void fn_80121C4C(undefined4 param_1,undefined4 param_2,uint param_3)
 /*
  * --INFO--
  *
- * Function: fn_801225F4
+ * Function: hudDrawCounter
  * EN v1.0 Address: 0x801225F4
  * EN v1.0 Size: 0x308
  * EN v1.1 Address: 0x801228D8
@@ -501,7 +501,7 @@ void fn_80121C4C(undefined4 param_1,undefined4 param_2,uint param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801225F4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void hudDrawCounter(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,short param_11,uint param_12,uint param_13,
                  int *param_14,uint param_15,undefined4 param_16)
@@ -607,7 +607,7 @@ LAB_80122bc8:
 /*
  * --INFO--
  *
- * Function: fn_801228FC
+ * Function: pauseMenuDrawStatus
  * EN v1.0 Address: 0x801228FC
  * EN v1.0 Size: 0x810
  * EN v1.1 Address: 0x80122BE0
@@ -617,14 +617,14 @@ LAB_80122bc8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801228FC(void)
+void pauseMenuDrawStatus(void)
 {
 }
 
 /*
  * --INFO--
  *
- * Function: fn_8012310C
+ * Function: minimapFn_8012310c
  * EN v1.0 Address: 0x8012310C
  * EN v1.0 Size: 0xF8
  * EN v1.1 Address: 0x801233F0
@@ -634,7 +634,7 @@ void fn_801228FC(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8012310C(void)
+void minimapFn_8012310c(void)
 {
   if (lbl_803DD7A0 != '\0') {
     lbl_803DD7A2 = lbl_803DD7A2 + framesThisStep * 0x20;
@@ -1152,11 +1152,11 @@ LAB_8012431c:
 /*
  * --INFO--
  *
- * Function: fn_80124068
+ * Function: cMenuUpdateAnims
  * EN v1.0 Address: 0x80124068
  * EN v1.0 Size: 0x164
  */
-void fn_80124068(void)
+void cMenuUpdateAnims(void)
 {
   sbyte s;
   byte b;
@@ -1210,11 +1210,11 @@ void fn_80124068(void)
 /*
  * --INFO--
  *
- * Function: fn_801241CC
+ * Function: trickyBitFn_801241cc
  * EN v1.0 Address: 0x801241CC
  * EN v1.0 Size: 0x110
  */
-int fn_801241CC(short* arr, sbyte flag)
+int trickyBitFn_801241cc(short* arr, sbyte flag)
 {
   short* entry;
   int count;

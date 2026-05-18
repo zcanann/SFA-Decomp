@@ -1805,7 +1805,7 @@ u8 pauseMenuGetState(void) { return pauseMenuState; }
 void fn_8011F34C(u8 x) { lbl_803DD7B3 = x; }
 void hudFn_8011f38c(u8 x) { lbl_803DD792 = x; }
 void hudFn_8011f6f0(u8 x) { lbl_803DD75A = x; }
-void fn_80121180(u8 x) { lbl_803DBA88 = x; }
+void GameUI_func0E(u8 x) { lbl_803DBA88 = x; }
 
 /* sth (s16 store) of zero-extended u8 — extsh + sth pattern */
 extern s16 lbl_803DD76E;
