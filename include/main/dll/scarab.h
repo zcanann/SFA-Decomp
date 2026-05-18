@@ -85,7 +85,7 @@ void FUN_8015fae4(int param_1);
 void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9);
-void FUN_8015ffc8(undefined2 *param_1,int param_2);
+void iceball_update(undefined2 *param_1,int param_2);
 void FUN_801600a8(uint param_1);
 void FUN_80160190(uint param_1);
 void FUN_8016041c(void);

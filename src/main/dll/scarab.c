@@ -1659,7 +1659,7 @@ void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 /*
  * --INFO--
  *
- * Function: FUN_8015ffc8
+ * Function: iceball_update
  * EN v1.0 Address: 0x8015FFC8
  * EN v1.0 Size: 224b
  * EN v1.1 Address: 0x8015FF9C
@@ -1669,7 +1669,7 @@ void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8015ffc8(undefined2 *param_1,int param_2)
+void iceball_update(undefined2 *param_1,int param_2)
 {
   uint uVar1;
   int iVar2;
@@ -2973,7 +2973,7 @@ void iceball_free(void) { Camera_DisableViewYOffset(); }
 extern void chukchuk_setScale(void);
 extern void chukchuk_update(void);
 extern void chukchuk_init(void);
-extern void iceball_update(void);
+extern void iceball_update(undefined2 *param_1,int param_2);
 extern void iceball_init(void);
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {

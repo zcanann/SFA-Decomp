@@ -357,7 +357,7 @@ extern void* PTR_DAT_803211ec;
 /*
  * --INFO--
  *
- * Function: FUN_8016b2e0
+ * Function: mikabomb_update
  * EN v1.0 Address: 0x8016B2E0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8016B550
@@ -367,7 +367,7 @@ extern void* PTR_DAT_803211ec;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016b2e0(uint param_1,int param_2)
+void mikabomb_update(uint param_1,int param_2)
 {
 }
 
@@ -4469,7 +4469,7 @@ int siderepel_getExtraSize(void) { return 0x1; }
 extern void mikabomb_free();
 extern void mikabomb_render();
 extern void mikabomb_hitDetect();
-extern void mikabomb_update();
+extern void mikabomb_update(uint param_1,int param_2);
 extern void mikabomb_init();
 extern int mikabomb_func08();
 extern int mikabomb_getExtraSize();
