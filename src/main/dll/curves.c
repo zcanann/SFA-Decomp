@@ -56,7 +56,7 @@ extern undefined4 gGameplayEnabledDebugOptions;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de0e8;
 extern undefined4 DAT_803de0ec;
-extern undefined4 gRomCurveCount;
+extern int gRomCurveCount;
 extern undefined4 DAT_803de0f8;
 extern undefined4 DAT_803de0fc;
 extern f64 DOUBLE_803e12a8;
@@ -2595,18 +2595,18 @@ void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 pa
  */
 #pragma scheduling off
 #pragma peephole off
-void curves_remove(int curve)
+void curves_remove(RomCurveDef *curve)
 {
-  int *slot;
+  RomCurveDef **slot;
   int count;
   int index;
   int remaining;
 
   index = 0;
-  slot = gRomCurveTable;
+  slot = (RomCurveDef **)gRomCurveTable;
   count = gRomCurveCount;
   while ((index < count) &&
-         (RomCurve_GetId(curve) != RomCurve_GetId(*slot))) {
+         (curve->id != (*slot)->id)) {
     slot = slot + 1;
     index = index + 1;
   }
@@ -2616,7 +2616,7 @@ void curves_remove(int curve)
   }
 
   gRomCurveCount = gRomCurveCount - 1;
-  slot = gRomCurveTable + index;
+  slot = (RomCurveDef **)gRomCurveTable + index;
   if (index >= gRomCurveCount) {
     return;
   }
@@ -2647,7 +2647,7 @@ void curves_remove(int curve)
  */
 #pragma scheduling off
 #pragma peephole off
-void curves_addCurveDef(int curve)
+void curves_addCurveDef(RomCurveDef *curve)
 {
   RomCurveDef **slot;
   int count;
@@ -2660,7 +2660,7 @@ void curves_addCurveDef(int curve)
   }
 
   for (insertIndex = 0, slot = (RomCurveDef **)gRomCurveTable;
-       (insertIndex < count) && (RomCurve_GetId(curve) > (*slot)->id);
+       (insertIndex < count) && (RomCurve_GetId((int)curve) > (*slot)->id);
        insertIndex++) {
     slot = slot + 1;
   }
@@ -2670,7 +2670,7 @@ void curves_addCurveDef(int curve)
   }
 
   gRomCurveCount = gRomCurveCount + 1;
-  gRomCurveTable[insertIndex] = curve;
+  gRomCurveTable[insertIndex] = (int)curve;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4394,7 +4394,6 @@ void loadSaveSettings(void)
 #pragma scheduling reset
 
 /* Pattern wrappers. */
-extern u32 gRomCurveCount;
 void curves_initialise(void) { gRomCurveCount = 0x0; }
 
 /* *p1 = lbl1; *p2 = lbl2; (u32) */
