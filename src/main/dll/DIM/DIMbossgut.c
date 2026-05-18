@@ -26,9 +26,9 @@ int DIMbossgut_updateState(int obj, int param_2, void *state)
 #pragma peephole reset
 #pragma scheduling reset
 
-int dimbossgut_getExtraSize(void) { return 0x0; }
-int dimbossgut_func08(void) { return 0x0; }
-void dimbossgut_free(void) {}
+int DIMbossgut_getExtraSize(void) { return 0x0; }
+int DIMbossgut_func08(void) { return 0x0; }
+void DIMbossgut_free(void) {}
 
 #pragma scheduling off
 #pragma peephole off
@@ -46,8 +46,8 @@ void DIMbossgut_render(int obj, undefined4 param_2, undefined4 param_3, undefine
 #pragma peephole reset
 #pragma scheduling reset
 
-void dimbossgut_hitDetect(void) {}
-void dimbossgut_update(void) {}
+void DIMbossgut_hitDetect(void) {}
+void DIMbossgut_update(void) {}
 
 #pragma scheduling off
 #pragma peephole off
@@ -65,19 +65,19 @@ void DIMbossgut_init(void *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-void dimbossgut_release(void) {}
-void dimbossgut_initialise(void) {}
+void DIMbossgut_release(void) {}
+void DIMbossgut_initialise(void) {}
 
 ObjectDescriptor gDIM_BossGutObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dimbossgut_initialise,
-    (ObjectDescriptorCallback)dimbossgut_release,
+    (ObjectDescriptorCallback)DIMbossgut_initialise,
+    (ObjectDescriptorCallback)DIMbossgut_release,
     0,
     (ObjectDescriptorCallback)DIMbossgut_init,
-    (ObjectDescriptorCallback)dimbossgut_update,
-    (ObjectDescriptorCallback)dimbossgut_hitDetect,
+    (ObjectDescriptorCallback)DIMbossgut_update,
+    (ObjectDescriptorCallback)DIMbossgut_hitDetect,
     (ObjectDescriptorCallback)DIMbossgut_render,
-    (ObjectDescriptorCallback)dimbossgut_free,
-    (ObjectDescriptorCallback)dimbossgut_func08,
-    dimbossgut_getExtraSize,
+    (ObjectDescriptorCallback)DIMbossgut_free,
+    (ObjectDescriptorCallback)DIMbossgut_func08,
+    DIMbossgut_getExtraSize,
 };

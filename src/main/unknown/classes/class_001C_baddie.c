@@ -220,15 +220,15 @@
  *   slot 08: 0x801BD258 DIMboss_func08
  *   slot 09: 0x801BD250 DIMboss_getExtraSize
  * - DLL 0x01E1: gDIM_BossGutObjDescriptor (slots=10, mask=1101111111)
- *   slot 00: 0x801BDCF4 dimbossgut_initialise
- *   slot 01: 0x801BDCF0 dimbossgut_release
+ *   slot 00: 0x801BDCF4 DIMbossgut_initialise
+ *   slot 01: 0x801BDCF0 DIMbossgut_release
  *   slot 03: 0x801BDC8C DIMbossgut_init
- *   slot 04: 0x801BDC88 dimbossgut_update
- *   slot 05: 0x801BDC84 dimbossgut_hitDetect
+ *   slot 04: 0x801BDC88 DIMbossgut_update
+ *   slot 05: 0x801BDC84 DIMbossgut_hitDetect
  *   slot 06: 0x801BDC0C DIMbossgut_render
- *   slot 07: 0x801BDC08 dimbossgut_free
- *   slot 08: 0x801BDC00 dimbossgut_func08
- *   slot 09: 0x801BDBF8 dimbossgut_getExtraSize
+ *   slot 07: 0x801BDC08 DIMbossgut_free
+ *   slot 08: 0x801BDC00 DIMbossgut_func08
+ *   slot 09: 0x801BDBF8 DIMbossgut_getExtraSize
  * - DLL 0x01E2: gDIM_BossTonsilObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x801BEE64 DIMbosstonsil_initialise
  *   slot 01: 0x801BEE60 DIMbosstonsil_release
