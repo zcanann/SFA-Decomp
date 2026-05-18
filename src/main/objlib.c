@@ -157,8 +157,6 @@ extern f32 lbl_803DF630;
 extern f32 lbl_803DF634;
 extern f32 lbl_803DF638;
 
-#define gObjHitsResetObjectCount gObjHitReactResetObjectCount
-#define gObjHitsResetObjects gObjHitReactResetObjects
 extern char sObjMsgOverflowInObjectWarning[];
 extern char sObjAddObjectTypeReachedMaxTypes[];
 
@@ -1407,8 +1405,8 @@ void ObjHitReact_UpdateResetObjects(void)
 
   objectIndex = 0;
   objectOffset = 0;
-  for (; objectIndex < gObjHitsResetObjectCount; objectIndex = objectIndex + 1) {
-    obj = *(ObjAnimComponent **)((int)gObjHitsResetObjects + objectOffset);
+  for (; objectIndex < gObjHitReactResetObjectCount; objectIndex = objectIndex + 1) {
+    obj = *(ObjAnimComponent **)((int)gObjHitReactResetObjects + objectOffset);
     if (((obj->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0) &&
        (obj->activeHitboxMode != 'd')) {
       Obj_UpdateObject(obj,obj->modelInstance);
@@ -1417,8 +1415,8 @@ void ObjHitReact_UpdateResetObjects(void)
   }
   objectOffset = 0;
   objectIndex = objectOffset;
-  for (; objectOffset < gObjHitsResetObjectCount; objectOffset = objectOffset + 1) {
-    ObjHitbox_UpdateRotatedBounds(*(short **)((int)gObjHitsResetObjects + objectIndex),1);
+  for (; objectOffset < gObjHitReactResetObjectCount; objectOffset = objectOffset + 1) {
+    ObjHitbox_UpdateRotatedBounds(*(short **)((int)gObjHitReactResetObjects + objectIndex),1);
     objectIndex = objectIndex + 4;
   }
   return;
@@ -1480,7 +1478,7 @@ void ObjHits_ResetWorkBuffers(void)
       remainingSlots--;
     } while (remainingSlots != 0);
   }
-  gObjHitsResetObjectCount = 0;
+  gObjHitReactResetObjectCount = 0;
   return;
 }
 #pragma peephole reset
@@ -1501,8 +1499,8 @@ void ObjHits_ResetWorkBuffers(void)
  */
 int *ObjHitReact_GetResetObjects(int *outObjectCount)
 {
-  *outObjectCount = gObjHitsResetObjectCount;
-  return gObjHitsResetObjects;
+  *outObjectCount = gObjHitReactResetObjectCount;
+  return gObjHitReactResetObjects;
 }
 
 /*
@@ -1522,7 +1520,7 @@ int *ObjHitReact_GetResetObjects(int *outObjectCount)
 #pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
-  gObjHitsResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
+  gObjHitReactResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
   gObjHitsPriorityHitStates =
       (undefined4)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * OBJHITS_PRIORITY_WORK_SLOT_SIZE,0xe,0);
   lbl_803DCBD8 = mmAlloc(0x1900,0xe,0);
