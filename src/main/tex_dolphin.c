@@ -71,7 +71,7 @@ extern int lbl_803DB63C;
 extern int lbl_803DB640;
 extern byte lbl_803DB644;
 extern int lbl_80382008[5];
-extern int lbl_8038793C[25];
+extern int gViewFrustumPlanes[25];
 extern int lbl_803E8444;
 extern int lbl_803E8448;
 extern undefined4 jumptable_8030E844;
@@ -385,7 +385,7 @@ fn_8005E97C(float param_1,float param_2,float param_3,float param_4,float param_
   float dVar8;
   float dVar9;
 
-  pfVar2 = (float *)&lbl_8038793C;
+  pfVar2 = (float *)&gViewFrustumPlanes;
   for (i = 5; i != 0; i--, pfVar2 = pfVar2 + 5, param_7 = param_7 + 1) {
     bVar1 = *(byte *)(pfVar2 + 4);
     if ((bVar1 & 1) != 0) {
