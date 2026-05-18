@@ -848,12 +848,12 @@ void FUN_8011c080(void)
 /*
  * --INFO--
  *
- * Function: fn_8011B354
+ * Function: SaveSelectScreen_freeTextBuffers
  * EN v1.0 Address: 0x8011B354
  * EN v1.0 Size: 96b
  */
 #pragma scheduling off
-void fn_8011B354(void) {
+void SaveSelectScreen_freeTextBuffers(void) {
     int i = 0;
     void **p = lbl_803A8658;
     void *zero = NULL;
@@ -940,7 +940,7 @@ void saveSelectGoToChooseSlot(void) {}
 void SaveSelectScreen_release(void) {}
 void SaveSelectScreen_render(void) {}
 void SaveSelectScreen_run(void) {}
-void fn_8011B3B4(void) {}
+void SaveSelectScreen_initialise(void) {}
 
 /* Trivial 4b 0-arg blr leaves. */
 void SaveSelectScreen_frameEnd(void) {}
