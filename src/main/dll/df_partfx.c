@@ -1630,7 +1630,7 @@ void Dummy04_func07_nop(void) {}
 void Dummy04_func04_nop(void) {}
 void Dummy04_release(void) {}
 void Dummy04_initialise(void) {}
-void fn_800D8BB0(void) {}
+void dll_0F_func19_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int Dummy04_func24_ret_0(void) { return 0x0; }

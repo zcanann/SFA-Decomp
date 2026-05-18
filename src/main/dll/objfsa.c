@@ -4273,19 +4273,19 @@ void player_release(void) {}
 void player_initialise(void) {}
 void UIController_release(void) {}
 void UIController_initialise(void) {}
-void fn_800D9EB4(void) {}
-void fn_800D9EC4(void) {}
-void fn_800D9EC8(void) {}
-void fn_800D9ED4(void) {}
-void fn_800D9ED8(void) {}
-void fn_800D9EDC(void) {}
+void dll_12_func0A_nop(void) {}
+void dll_12_func08_nop(void) {}
+void dll_12_func07_nop(void) {}
+void dll_12_func04_nop(void) {}
+void dll_12_func03_nop(void) {}
+void dll_12_func05_nop(void) {}
 void Dummy12_release(void) {}
 void Dummy12_initialise(void) {}
-void fn_800DD640(void) {}
-void fn_800DD644(void) {}
+void doNothing_onTrickyFree(void) {}
+void doNothing_onTrickyInit(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_800D9ECC(void) { return 0x0; }
+int dll_12_func06_ret_0(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern u32 lbl_803DD430;
@@ -4293,7 +4293,7 @@ void player_setOverride(u32 x) { lbl_803DD430 = x; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DD458;
-void fn_800D9EB8(void) { lbl_803DD458 = 0x3; }
+void dll_12_func09(void) { lbl_803DD458 = 0x3; }
 
 /* player_init: memset constructor */
 extern void *memset(void *dst, int val, u32 n);
@@ -4376,7 +4376,7 @@ extern u8 lbl_803DD44E;
 extern u8 lbl_803DD44F;
 extern f32 timeDelta;
 extern float sqrtf(float x);
-extern int fn_800D92D0(void *a, void *b, float t, int c);
+extern int playerRunStateMachine(void *a, void *b, float t, int c);
 #pragma peephole off
 #pragma scheduling off
 void player_updateVel(char *p, char *obj, int unused) {
@@ -4400,7 +4400,7 @@ void player_updateVel(char *p, char *obj, int unused) {
         lbl_803DD434 = 1;
         lbl_803DD44F = 0;
         lbl_803DD44E = 1;
-        fn_800D92D0(p, obj, timeDelta, unused);
+        playerRunStateMachine(p, obj, timeDelta, unused);
     }
 }
 #pragma scheduling on

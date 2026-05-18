@@ -106,9 +106,9 @@ extern ushort FUN_800db690();
 extern undefined4 FUN_800dbc68();
 extern undefined8 FUN_800dd3dc();
 extern undefined4 FUN_800dd3e0();
-extern void fn_800DD640(void);
-extern void fn_800DD644(void);
-extern void fn_800DC398(void);
+extern void doNothing_onTrickyFree(void);
+extern void doNothing_onTrickyInit(void);
+extern void walkgroupFindExitPointFn_800dc398(void);
 extern void gameBitIncrement(int eventId);
 extern u32 GameBit_Get(int bit);
 extern void GameBit_Set(int eventId,int value);
@@ -1202,7 +1202,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
       objAudioFn_800393f8(obj,(void *)(childSlot + 0x3a8),0x29d,0,0xffffffff,0);
     }
   }
-  fn_800DD640();
+  doNothing_onTrickyFree();
   fn_801389E0(obj,state,(int *)(state + 0x7a8));
   fn_801389E0(obj,state,(int *)(state + 0x7b0));
   fn_801389E0(obj,state,(int *)(state + 0x7b8));
@@ -1266,8 +1266,8 @@ void Tricky_init(int obj)
   (*(void (**)(int,int,char *,undefined4 *,u16 *))(*(int *)lbl_803DCAA8 + 0xc))
       (pathState,2,lbl_8031D2E8,&lbl_803DBC40,startPath);
   (*(void (**)(int,int))(*(int *)lbl_803DCAA8 + 0x20))(obj,pathState);
-  fn_800DD644();
-  fn_800DC398();
+  doNothing_onTrickyInit();
+  walkgroupFindExitPointFn_800dc398();
   *(u8 *)(state + 0x374) = 2;
   enabledBit = 1;
   *(u8 *)(state + 0x82e) = (*(u8 *)(state + 0x82e) & 0x7f) | (enabledBit << 7);
