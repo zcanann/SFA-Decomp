@@ -15,13 +15,23 @@ void CameraModeViewfinder_init(undefined8 param_1,undefined8 param_2,undefined8 
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,undefined4 *param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void CameraModeViewfinder_release(void);
+void CameraModeViewfinder_initialise(void);
 void FUN_801089d8(void);
 void dll_46_update(short *param_1);
 void dll_46_init(void);
+void dll_46_func06_nop(void);
+void dll_46_func05(void);
+void dll_46_release_nop(void);
+void dll_46_initialise_nop(void);
 void fn_80109B04(undefined8 param_1,double param_2,double param_3);
 void FUN_80108e7c(void);
 void CameraModeStatic_update(short *param_1);
 void CameraModeStatic_init(void);
+void CameraModeStatic_func06_nop(void);
+void CameraModeStatic_func05(void);
+void CameraModeStatic_release(void);
+void CameraModeStatic_initialise(void);
 void fn_8010A104(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,

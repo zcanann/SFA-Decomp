@@ -3,6 +3,18 @@
 
 #include "ghidra_import.h"
 
+typedef struct CamcontrolAction43Payload {
+  s16 action;
+  u8 enabled;
+  u8 immediate;
+} CamcontrolAction43Payload;
+
+typedef struct CamcontrolAction44Payload {
+  f32 distance;
+  f32 yOffset;
+  undefined2 height;
+} CamcontrolAction44Payload;
+
 void Camera_init(double param_1,double param_2,double param_3,undefined4 param_4);
 void FUN_80103620(void);
 void Camera_initialise(undefined8 param_1,double param_2,double param_3,undefined8 param_4,

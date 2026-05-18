@@ -68,18 +68,6 @@ extern f32 lbl_803E2344;
 extern f32 lbl_803E2348;
 extern f32 lbl_803E234C;
 
-typedef struct CamcontrolAction43Payload {
-  short action;
-  u8 enabled;
-  u8 immediate;
-} CamcontrolAction43Payload;
-
-typedef struct CamcontrolAction44Payload {
-  float distance;
-  float yOffset;
-  undefined2 height;
-} CamcontrolAction44Payload;
-
 /*
  * --INFO--
  *

@@ -57,17 +57,6 @@ extern f32 lbl_803E2448;
 extern f32 lbl_803E244C;
 extern f32 lbl_803E2450;
 
-typedef struct CamTalkTransformInput {
-  ushort yaw;
-  undefined2 pitch;
-  undefined2 roll;
-  undefined2 pad;
-  float scale;
-  float x;
-  float y;
-  float z;
-} CamTalkTransformInput;
-
 /*
  * --INFO--
  *

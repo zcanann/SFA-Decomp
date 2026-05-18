@@ -33,26 +33,6 @@ extern f32 lbl_803E1748;
 #define gCamcontrolModeSettings cameraMtxVar57
 #define gCamcontrolPathState lbl_803DD538
 
-typedef struct CamcontrolPathSampleWork {
-  u8 unk0[0xc];
-  f32 sampleX;
-  f32 sampleY;
-  f32 sampleZ;
-  f32 targetX;
-  f32 targetY;
-  f32 targetZ[4];
-  int model;
-  u8 unk34[0x70];
-  undefined4 targetObj;
-  f32 localX;
-  f32 localY;
-  f32 localZ;
-  u8 unkB4[4];
-  f32 worldX;
-  f32 worldY;
-  f32 worldZ[33];
-} CamcontrolPathSampleWork;
-
 static inline f64 PathCam_U32AsDouble(u32 value) {
   u64 bits = CONCAT44(0x43300000, value);
   return *(f64 *)&bits;
