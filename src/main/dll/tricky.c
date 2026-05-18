@@ -1866,9 +1866,9 @@ void fn_8011F6E0(u8 a, u8 b, s16 c) {
     lbl_803DBA5A = c;
 }
 
-/* fn_8011F6F8: store float at *p + 0x24 if p non-null */
+/* GameUI_airMeterSetField24: store float at *p + 0x24 if p non-null */
 extern void *lbl_803DD7D0;
-void fn_8011F6F8(float v) {
+void GameUI_airMeterSetField24(float v) {
     void *p = lbl_803DD7D0;
     if (p == 0) return;
     *(f32 *)((char *)p + 0x24) = v;
@@ -1897,13 +1897,13 @@ void fn_8011DD30(void) {
 }
 #pragma scheduling on
 
-/* fn_80121408 */
+/* GameUI_setInputOverride */
 extern int lbl_803DD8A0;
 extern s16 lbl_803DD89E;
 extern s16 lbl_803DD89C;
 extern u8 lbl_803DD8AC;
 #pragma scheduling off
-void fn_80121408(int x, s16 a, s16 b) {
+void GameUI_setInputOverride(int x, s16 a, s16 b) {
     if (x == -1) {
         lbl_803DD8A0 = 0;
         lbl_803DD89E = 0;
@@ -1950,13 +1950,13 @@ u16 fn_8011F3A8(s16 *out) {
 }
 #pragma peephole on
 
-/* fn_8011F70C: set bit 7 of (*p)+0x44 if p non-null — uses bitfield insert (rlwimi) */
+/* GameUI_airMeterSetFlag80: set bit 7 of (*p)+0x44 if p non-null — uses bitfield insert (rlwimi) */
 typedef struct {
     char pad[0x44];
     u8 bit7 : 1;
     u8 bits_0to6 : 7;
 } _Obj8011F70C;
-void fn_8011F70C(void) {
+void GameUI_airMeterSetFlag80(void) {
     _Obj8011F70C *p = (_Obj8011F70C *)lbl_803DD7D0;
     if (p == 0) return;
     p->bit7 = 1;
