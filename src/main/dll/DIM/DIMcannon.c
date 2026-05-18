@@ -1898,21 +1898,21 @@ void imicepillar_init(void) {}
 void imicepillar_release(void) {}
 void imicepillar_initialise(void) {}
 
-u32 gIMIcePillarObjDescriptor[] = {
+ObjectDescriptor gIMIcePillarObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)imicepillar_initialise,
-    (u32)imicepillar_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)imicepillar_initialise,
+    (ObjectDescriptorCallback)imicepillar_release,
     0,
-    (u32)imicepillar_init,
-    (u32)imicepillar_update,
-    (u32)imicepillar_hitDetect,
-    (u32)imicepillar_render,
-    (u32)imicepillar_free,
-    (u32)imicepillar_func08,
-    (u32)imicepillar_getExtraSize,
+    (ObjectDescriptorCallback)imicepillar_init,
+    (ObjectDescriptorCallback)imicepillar_update,
+    (ObjectDescriptorCallback)imicepillar_hitDetect,
+    (ObjectDescriptorCallback)imicepillar_render,
+    (ObjectDescriptorCallback)imicepillar_free,
+    (ObjectDescriptorCallback)imicepillar_func08,
+    imicepillar_getExtraSize,
 };
 
 void imanimspacecraft_modelMtxFn(void) {}

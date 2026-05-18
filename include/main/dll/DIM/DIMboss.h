@@ -2,6 +2,7 @@
 #define MAIN_DLL_DIM_DIMBOSS_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
 #define DIMBOSS_RUNTIME_SIZE 0x4C8
@@ -144,5 +145,6 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3);
 void dimboss_release(void);
 void dimboss_initialise(void);
 void DIMboss_initialiseAnimTables(void);
+extern ObjectDescriptor12 gDIM_BossObjDescriptor;
 
 #endif /* MAIN_DLL_DIM_DIMBOSS_H_ */

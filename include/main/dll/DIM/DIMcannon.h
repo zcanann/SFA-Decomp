@@ -2,6 +2,7 @@
 #define MAIN_DLL_DIM_DIMCANNON_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void imicepillar_render(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -59,5 +60,7 @@ void FUN_801b0dcc(int param_1);
 void FUN_801b0df4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
+
+extern ObjectDescriptor gIMIcePillarObjDescriptor;
 
 #endif /* MAIN_DLL_DIM_DIMCANNON_H_ */

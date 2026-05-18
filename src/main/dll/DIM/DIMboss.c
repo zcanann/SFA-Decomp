@@ -788,20 +788,20 @@ void dimboss_initialise(void)
   DIMboss_initialiseAnimTables();
 }
 
-u32 gDIM_BossObjDescriptor[] = {
-    0, 0, 0, 0x000B0000,
-    (u32)dimboss_initialise,
-    (u32)dimboss_release,
+ObjectDescriptor12 gDIM_BossObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)dimboss_initialise,
+    (ObjectDescriptorCallback)dimboss_release,
     0,
-    (u32)DIMboss_init,
-    (u32)DIMboss_update,
-    (u32)DIMboss_hitDetect,
-    (u32)DIMboss_render,
-    (u32)DIMboss_free,
-    (u32)dimboss_func08,
-    (u32)DIMboss_getExtraSize,
-    (u32)DIMboss_setScale,
-    (u32)dimboss_func11,
+    (ObjectDescriptorCallback)DIMboss_init,
+    (ObjectDescriptorCallback)DIMboss_update,
+    (ObjectDescriptorCallback)DIMboss_hitDetect,
+    (ObjectDescriptorCallback)DIMboss_render,
+    (ObjectDescriptorCallback)DIMboss_free,
+    (ObjectDescriptorCallback)dimboss_func08,
+    DIMboss_getExtraSize,
+    (ObjectDescriptorCallback)DIMboss_setScale,
+    (ObjectDescriptorCallback)dimboss_func11,
 };
 
 #pragma scheduling off

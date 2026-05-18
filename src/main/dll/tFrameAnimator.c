@@ -207,16 +207,16 @@ int levelname_getExtraSize(void) { return 0x18; }
 int levelname_func08(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
-u32 gAreaObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)area_initialise,
-    (u32)area_release,
+ObjectDescriptor gAreaObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)area_initialise,
+    (ObjectDescriptorCallback)area_release,
     0,
-    (u32)area_init,
-    (u32)area_update,
-    (u32)area_hitDetect,
-    (u32)area_render,
-    (u32)area_free,
-    (u32)area_func08,
-    (u32)area_getExtraSize,
+    (ObjectDescriptorCallback)area_init,
+    (ObjectDescriptorCallback)area_update,
+    (ObjectDescriptorCallback)area_hitDetect,
+    (ObjectDescriptorCallback)area_render,
+    (ObjectDescriptorCallback)area_free,
+    (ObjectDescriptorCallback)area_func08,
+    area_getExtraSize,
 };

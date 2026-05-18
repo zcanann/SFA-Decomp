@@ -2,6 +2,7 @@
 #define MAIN_DLL_CF_WINDLIFT_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void scarab_update(int param_1);
 void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
@@ -17,5 +18,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 void FUN_8018671c(undefined2 *param_1,int param_2);
 void FUN_80186720(int param_1);
 void FUN_80186748(int param_1);
+
+extern ObjectDescriptor gDummy108ObjDescriptor;
 
 #endif /* MAIN_DLL_CF_WINDLIFT_H_ */
