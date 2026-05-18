@@ -14,36 +14,6 @@ extern f64 DOUBLE_803e7118;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E7124;
 
-typedef union DfpTargetBlockControlId {
-  u32 value;
-  struct {
-    u16 unused0;
-    s16 triggerSfxId;
-  } audio;
-} DfpTargetBlockControlId;
-
-typedef struct DfpTargetBlockState {
-  DfpTargetBlockControlId control;
-  s16 specialSfxStopTimer;
-  u8 effectEmitterActive;
-  u8 unused7;
-  u8 stopRequested;
-  u8 unk09[0x5B];
-  s16 stateSfxId;
-  s16 completionSfxId;
-  u8 mode;
-  u8 stateSfxReady;
-  u8 completionSfxReady;
-} DfpTargetBlockState;
-
-typedef enum DfpTargetBlockMode {
-  DFPTARGETBLOCK_MODE_RAISING = 0,
-  DFPTARGETBLOCK_MODE_ACTIVE = 1,
-  DFPTARGETBLOCK_MODE_RESETTING = 2,
-  DFPTARGETBLOCK_MODE_LOWERING = 3,
-  DFPTARGETBLOCK_MODE_SETTLED = 4,
-} DfpTargetBlockMode;
-
 /*
  * --INFO--
  *
@@ -62,9 +32,9 @@ undefined4 dfptargetblock_hitDetect(int param_1,undefined4 param_2,int param_3)
   byte bVar1;
   short sVar2;
   int iVar3;
-  DfpTargetBlockState *state;
+  DfpTargetBlockAudioState *state;
   
-  state = *(DfpTargetBlockState **)(param_1 + 0xb8);
+  state = *(DfpTargetBlockAudioState **)(param_1 + 0xb8);
   *(undefined2 *)(param_3 + 0x6e) = 0xffff;
   *(undefined *)(param_3 + 0x56) = 0;
   for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
@@ -121,9 +91,9 @@ void dfptargetblock_updateAudioState(uint param_1)
 {
   short sVar1;
   uint uVar2;
-  DfpTargetBlockState *state;
+  DfpTargetBlockAudioState *state;
   
-  state = *(DfpTargetBlockState **)(param_1 + 0xb8);
+  state = *(DfpTargetBlockAudioState **)(param_1 + 0xb8);
   uVar2 = FUN_80017690((int)state->control.audio.triggerSfxId);
   if (((state->effectEmitterActive == 0) && ((short)uVar2 != 0)) &&
      (uVar2 = FUN_80017690(0xedf), uVar2 != 0)) {
@@ -309,11 +279,11 @@ void dfptargetblock_resolveCollision(int *param_1,int param_2)
  */
 void FUN_80208c28(int param_1)
 {
-  DfpTargetBlockState *state;
+  DfpTargetBlockAudioState *state;
   
-  state = *(DfpTargetBlockState **)(param_1 + 0xb8);
+  state = *(DfpTargetBlockAudioState **)(param_1 + 0xb8);
   if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-     (state->mode != DFPTARGETBLOCK_MODE_SETTLED)) {
+     (state->mode != DFPTARGETBLOCK_AUDIO_MODE_SETTLED)) {
     FUN_8003b818(param_1);
   }
   return;
