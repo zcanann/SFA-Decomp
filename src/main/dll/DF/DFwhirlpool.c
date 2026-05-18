@@ -42,9 +42,9 @@ extern void getAmbientColor(int param_1, u8 *blue, u8 *green, u8 *red);
 extern void gxBlendFn_80078b4c(void);
 extern void fn_80078740(void);
 extern void selectTexture(void *texture, int param_2);
-extern void fn_8005D118(undefined4 *objAndParam, u8 blue, u8 green, u8 red, int alpha);
+extern void setTextColor(undefined4 *objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void fn_801C0BF8(void *templateData, int angle, void *startNode, void *endNode, void *out);
-extern void fn_8005CF8C(void *matrix, void *displayList, int count);
+extern void drawFn_8005cf8c(void *matrix, void *displayList, int count);
 extern int randomGetRange(int min, int max);
 
 extern u8 framesThisStep;
@@ -136,26 +136,26 @@ void dfropenode_render(int obj, int param_2, int param_3)
       alpha = 0xff;
     }
     selectTexture((&lbl_803DBF48)[*(u8 *)(objDef + 0x1b)], 0);
-    fn_8005D118(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
+    setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
                 alpha);
     rope = (DFRope *)extra->rope;
     node = (int)rope->nodes;
     for (segment = 0; segment < (int)(rope->count - 1); segment++) {
       node += 0x34;
       fn_801C0BF8(DAT_80325e00, extra->angle, (void *)(node - 0x34), (void *)node, matrix);
-      fn_8005CF8C(matrix, lbl_802C2358, 6);
+      drawFn_8005cf8c(matrix, lbl_802C2358, 6);
     }
     if (*(u8 *)(objDef + 0x1b) == 1) {
       Sfx_KeepAliveLoopedObjectSound(obj, 0x480);
       gxBlendFn_80078b4c();
       alpha = *(u8 *)(obj + 0x36) + randomGetRange(0, *(u8 *)(obj + 0x36));
-      fn_8005D118(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
+      setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
                   alpha);
       node = (int)rope->nodes;
       for (segment = 0; segment < (int)(rope->count - 1); segment++) {
         node += 0x34;
         fn_801C0BF8(DAT_80325e60, extra->angle, (void *)(node - 0x34), (void *)node, matrix);
-        fn_8005CF8C(matrix, lbl_802C2358, 6);
+        drawFn_8005cf8c(matrix, lbl_802C2358, 6);
       }
     }
   }

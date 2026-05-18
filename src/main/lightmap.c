@@ -2694,14 +2694,14 @@ void FUN_8005e1d8(undefined4 param_1,undefined4 param_2,int param_3)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8005C7E8(void) {}
-void fn_8005D148(void) {}
-void fn_8005D14C(void) {}
+void doNothing_beforeTitleScreen(void) {}
+void doNothing_8005D148(void) {}
+void doNothing_8005D14C(void) {}
 
 /* return (lbl & 1<<bit). */
 extern u32 renderFlags;
 u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & 0x10000; }
-u32 fn_8005CDB0(void) { return renderFlags & 0x8; }
+u32 isWidescreen(void) { return renderFlags & 0x8; }
 u32 shouldDrawShadows(void) { return renderFlags & 0x80; }
 u32 shouldDrawClouds(void) { return renderFlags & 0x10; }
 
@@ -2709,7 +2709,7 @@ u32 shouldDrawClouds(void) { return renderFlags & 0x10; }
 extern u32 renderFlags;
 #pragma scheduling off
 #pragma peephole off
-u32 fn_8005CE90(void) {
+u32 isOvercast(void) {
     u32 v = renderFlags & 0x40000;
     u32 t = ((u32)-(s32)v | v) >> 31;
     return t;

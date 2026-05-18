@@ -124,7 +124,7 @@ undefined4 fn_8005DF5C(int param_1,float *param_2)
 /*
  * --INFO--
  *
- * Function: fn_8005E348
+ * Function: shaderFn_8005e348
  * EN v1.0 Address: 0x8005E348
  * EN v1.0 Size: 536b
  * EN v1.1 Address: 0x8005E4C4
@@ -132,7 +132,7 @@ undefined4 fn_8005DF5C(int param_1,float *param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8005E348(undefined4 param_1,undefined4 param_2,int *param_3,Mtx param_4)
+void shaderFn_8005e348(undefined4 param_1,undefined4 param_2,int *param_3,Mtx param_4)
 {
   undefined uVar1;
   undefined uVar2;
@@ -210,7 +210,7 @@ LAB_8005E528:
 /*
  * --INFO--
  *
- * Function: fn_8005E560
+ * Function: shaderFn_8005e560
  * EN v1.0 Address: 0x8005E560
  * EN v1.0 Size: 464b
  * EN v1.1 Address: 0x8005E6DC
@@ -218,7 +218,7 @@ LAB_8005E528:
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_8005E560(int param_1,int *param_3,int *param_2)
+int shaderFn_8005e560(int param_1,int *param_3,int *param_2)
 {
   int iVar1;
   uint uVar2;
@@ -283,7 +283,7 @@ LAB_8005E718:
 /*
  * --INFO--
  *
- * Function: fn_8005E730
+ * Function: renderFn_8005e730
  * EN v1.0 Address: 0x8005E730
  * EN v1.0 Size: 588b
  * EN v1.1 Address: 0x8005E8AC
@@ -291,7 +291,7 @@ LAB_8005E718:
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8005E730(undefined4 param_1,undefined4 param_2,int param_3)
+void renderFn_8005e730(undefined4 param_1,undefined4 param_2,int param_3)
 {
   int *piVar3;
   SfaIntDouble iD6;
