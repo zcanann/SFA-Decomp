@@ -12,7 +12,7 @@
 //   and maps object byte +0xAC variants 0x3A..0x3E onto route/formation selector bytes
 //   in extra +0x47B/+0x471/+0x47E.
 // - update runs the flight input/state machine, updates wing/engine child transforms, and
-//   drives shot spawning through helper 0x8022B998.  Spawned ARW projectile objects use
+//   drives shot spawning through arwarwing_spawnLaserShot.  Spawned ARW projectile objects use
 //   arwprojectile_createLinkedEffect, arwprojectile_setLifetime, and
 //   arwprojectile_placeForward to initialize their effect, lifetime, and forward offset.
 //
