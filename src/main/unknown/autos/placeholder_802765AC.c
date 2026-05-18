@@ -98,8 +98,8 @@ extern void inpResetChannelDefaults(u8 a, u8 b);
 void audioFn_80278990(int state);
 void fn_802788B4(int state, u32 skipFadeReset);
 u32 macSetExternalKeyoff(int state);
-extern u32 inpGetExCtrl(int state, u32 ctrl);
-extern void inpSetExCtrl(int state, u32 ctrl, s16 value);
+extern u32 inpGetExCtrl(McmdVoiceState *state, u32 ctrl);
+extern void inpSetExCtrl(McmdVoiceState *state, u32 ctrl, s16 value);
 extern void voiceKill(u32 voice);
 extern u8 lbl_803BDA34[];
 extern void sndConvertTicks(u32 *p, McmdVoiceState *state);
@@ -562,7 +562,7 @@ u32 varGet32(McmdVoiceState *state, u32 useExCtrl, u32 index)
     u32 value;
 
     if (useExCtrl != 0) {
-        value = inpGetExCtrl((int)state, index);
+        value = inpGetExCtrl(state, index);
         value &= 0xffff;
     } else {
         index &= 0x1f;
@@ -583,7 +583,7 @@ int varGet(McmdVoiceState *state, u32 useExCtrl, u32 index)
     u32 value;
 
     if (useExCtrl != 0) {
-        value = inpGetExCtrl((int)state, index) & 0xffff;
+        value = inpGetExCtrl(state, index) & 0xffff;
     } else {
         index &= 0x1f;
         if (index < 0x10) {
@@ -601,7 +601,7 @@ int varGet(McmdVoiceState *state, u32 useExCtrl, u32 index)
 void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value)
 {
     if (useExCtrl != 0) {
-        inpSetExCtrl((int)state, index, (s16)value);
+        inpSetExCtrl(state, index, (s16)value);
     } else {
         index &= 0x1f;
         if (index < 0x10) {

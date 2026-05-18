@@ -244,7 +244,7 @@ u32 inpTranslateExCtrl(u32 input)
  * Read an extended controller value, with local state-backed overrides for
  * translated controller 0xA0/0xA1.
  */
-u32 inpGetExCtrl(int state, u32 ctrl)
+u32 inpGetExCtrl(McmdVoiceState *state, u32 ctrl)
 {
     int translated;
     u32 value;
@@ -252,23 +252,23 @@ u32 inpGetExCtrl(int state, u32 ctrl)
     translated = inpTranslateExCtrl(ctrl) & 0xff;
     if (translated != 0xa1) {
         if (translated < 0xa1 && translated >= 0xa0) {
-            return *(s16 *)(state + 0x1c4) * 2 + 0x2000;
+            return state->exCtrlA0Value * 2 + 0x2000;
         }
-        if (*(u8 *)(state + 0x121) == 0xff) {
+        if (state->midiSlot == 0xff) {
             value = 0;
         } else {
-            value = inpGetMidiCtrl(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
+            value = inpGetMidiCtrl(ctrl, state->midiSlot, state->midiEvent);
             value &= 0xffff;
         }
         return value;
     }
-    return *(s16 *)(state + 0x1d0) * 2 + 0x2000;
+    return state->exCtrlA1Value * 2 + 0x2000;
 }
 
 /*
  * Clamp and write an extended controller through MIDI for non-local controls.
  */
-void inpSetExCtrl(int state, u32 ctrl, s16 value)
+void inpSetExCtrl(McmdVoiceState *state, u32 ctrl, s16 value)
 {
     int translated;
 
@@ -278,8 +278,8 @@ void inpSetExCtrl(int state, u32 ctrl, s16 value)
         value = 0x3fff;
     }
     translated = inpTranslateExCtrl(ctrl) & 0xff;
-    if ((translated >= 0xa2 || translated < 0xa0) && *(u8 *)(state + 0x121) != 0xff) {
-        inpSetMidiCtrl14(ctrl, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), value);
+    if ((translated >= 0xa2 || translated < 0xa0) && state->midiSlot != 0xff) {
+        inpSetMidiCtrl14(ctrl, state->midiSlot, state->midiEvent, value);
     }
 }
 
