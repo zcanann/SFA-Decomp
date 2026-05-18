@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_14F_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void FUN_8017f4f4(undefined2 *param_1);
 void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
@@ -39,5 +40,12 @@ void FUN_80181a90(int param_1,int param_2);
 void FUN_80181b50(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11);
+
+extern ObjectDescriptor gMagicPlantObjDescriptor;
+extern ObjectDescriptor gTrickyWarpObjDescriptor;
+extern ObjectDescriptor gTrickyGuardObjDescriptor;
+extern ObjectDescriptor gStayPointObjDescriptor;
+extern ObjectDescriptor gDusterObjDescriptor;
+extern ObjectDescriptor gCurveFishObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_14F_H_ */

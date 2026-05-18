@@ -1543,55 +1543,41 @@ extern void duster_init();
 extern void curvefish_update();
 extern void curvefish_init();
 
-u32 gMagicPlantObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gMagicPlantObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)MagicPlant_init,
-    (u32)MagicPlant_update,
+    (ObjectDescriptorCallback)MagicPlant_init,
+    (ObjectDescriptorCallback)MagicPlant_update,
     0,
-    (u32)MagicPlant_render,
-    (u32)MagicPlant_free,
-    (u32)MagicPlant_func08,
-    (u32)MagicPlant_getExtraSize,
+    (ObjectDescriptorCallback)MagicPlant_render,
+    (ObjectDescriptorCallback)MagicPlant_free,
+    (ObjectDescriptorCallback)MagicPlant_func08,
+    MagicPlant_getExtraSize,
 };
 
-u32 gTrickyWarpObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gTrickyWarpObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)trickywarp_init,
-    (u32)trickywarp_update,
+    (ObjectDescriptorCallback)trickywarp_init,
+    (ObjectDescriptorCallback)trickywarp_update,
     0,
     0,
-    (u32)trickywarp_free,
+    (ObjectDescriptorCallback)trickywarp_free,
     0,
-    (u32)trickywarp_getExtraSize,
+    trickywarp_getExtraSize,
 };
 
-u32 gTrickyGuardObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gTrickyGuardObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)trickyguard_init,
-    (u32)trickyguard_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-u32 gStayPointObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    0,
-    0,
-    0,
-    (u32)StayPoint_init,
-    (u32)StayPoint_update,
+    (ObjectDescriptorCallback)trickyguard_init,
+    (ObjectDescriptorCallback)trickyguard_update,
     0,
     0,
     0,
@@ -1599,30 +1585,44 @@ u32 gStayPointObjDescriptor[] = {
     0,
 };
 
-u32 gDusterObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gStayPointObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)duster_init,
-    (u32)duster_update,
-    (u32)duster_hitDetect,
-    (u32)duster_render,
+    (ObjectDescriptorCallback)StayPoint_init,
+    (ObjectDescriptorCallback)StayPoint_update,
     0,
     0,
-    (u32)duster_getExtraSize,
+    0,
+    0,
+    0,
 };
 
-u32 gCurveFishObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
+ObjectDescriptor gDusterObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
     0,
     0,
-    (u32)curvefish_init,
-    (u32)curvefish_update,
+    (ObjectDescriptorCallback)duster_init,
+    (ObjectDescriptorCallback)duster_update,
+    (ObjectDescriptorCallback)duster_hitDetect,
+    (ObjectDescriptorCallback)duster_render,
+    0,
+    0,
+    duster_getExtraSize,
+};
+
+ObjectDescriptor gCurveFishObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)curvefish_init,
+    (ObjectDescriptorCallback)curvefish_update,
     0,
     0,
     0,
     0,
-    (u32)curvefish_getExtraSize,
+    curvefish_getExtraSize,
 };
