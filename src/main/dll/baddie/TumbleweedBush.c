@@ -79,7 +79,7 @@ extern f32 FLOAT_803e2e88;
 /*
  * --INFO--
  *
- * Function: FUN_80130cf0
+ * Function: Link_update
  * EN v1.0 Address: 0x80130CF0
  * EN v1.0 Size: 936b
  * EN v1.1 Address: 0x80131078
@@ -89,7 +89,7 @@ extern f32 FLOAT_803e2e88;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80130cf0(void)
+undefined4 Link_update(void)
 {
   short sVar1;
   char cVar2;
@@ -802,7 +802,7 @@ int TitleMenuItem_isChanged(u8* obj)
 }
 
 /* EN v1.0 0x8013157C  size: 20b  Set obj->_c (s16) = val and obj->_6 = 2.
- * Logic-only — target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
+ * Logic-only ? target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
  * strips the redundant extsh before sth (same family as GameUI_func0F /
  * CMenu_SetShouldClose). */
 #pragma scheduling off

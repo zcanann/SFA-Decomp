@@ -33,7 +33,7 @@ extern f64 DOUBLE_803e2e70;
 /*
  * --INFO--
  *
- * Function: FUN_80130888
+ * Function: Link_render
  * EN v1.0 Address: 0x80130888
  * EN v1.0 Size: 368b
  * EN v1.1 Address: 0x801309A8
@@ -43,7 +43,7 @@ extern f64 DOUBLE_803e2e70;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80130888(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void Link_render(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)

@@ -118,7 +118,6 @@ extern void trickyImpress(int obj);
 extern int fn_8014460C(int obj,int state);
 extern void fn_80145304(void);
 extern void objAnimFn_8013a3f0(int obj,int animId,f32 blend,int flags);
-extern int trickyFn_8013b368(int obj,f32 radius,int state);
 extern undefined4 FUN_80135f38();
 extern undefined4 FUN_80136310();
 extern undefined4 FUN_8013651c();
@@ -130,7 +129,7 @@ extern undefined4 FUN_80139a4c();
 extern undefined4 FUN_8013a408();
 extern void fn_8013ADFC(int obj);
 extern void fn_80139164(int obj,int state);
-extern int FUN_8013b368();
+extern int trickyFn_8013b368();
 extern int FUN_8013dc88();
 extern int FUN_801451dc();
 extern undefined4 FUN_8014a9f0();
@@ -484,7 +483,7 @@ void FUN_80145230(undefined8 param_1,undefined8 param_2,double param_3,undefined
     dVar6 = (double)lbl_803E30E4;
     dVar5 = (double)FUN_80294964();
     param_10[0x1cd] = (int)(float)((double)*(float *)(param_9 + 0x20) - dVar5);
-    iVar2 = FUN_8013b368((double)lbl_803E310C,dVar6,param_3,param_4,param_5,param_6,param_7,
+    iVar2 = trickyFn_8013b368((double)lbl_803E310C,dVar6,param_3,param_4,param_5,param_6,param_7,
                          param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
                          param_16);
     if (iVar2 != 1) {

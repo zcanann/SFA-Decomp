@@ -21,7 +21,7 @@ extern f32 getXZDistance(float *a, float *b);
 extern undefined4 FUN_80139910();
 extern int FUN_80139a48();
 extern undefined4 FUN_80139a4c();
-extern int FUN_8013b368();
+extern int trickyFn_8013b368();
 extern void trickyFn_8013d8f0(u8 *arg1, u8 *arg2);
 extern undefined4 FUN_80146fa0();
 extern undefined4 FUN_801778d0();
@@ -198,12 +198,12 @@ void FUN_801400fc(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       *(undefined *)((int)puVar10 + 10) = 1;
     }
-    FUN_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+    trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  puVar4,puVar10,iVar11,param_12,param_13,param_14,param_15,param_16);
     break;
   case 1:
     FUN_80146fa0();
-    iVar8 = FUN_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,
+    iVar8 = trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,
                          param_8,puVar4,puVar10,param_11,param_12,param_13,param_14,param_15,
                          param_16);
     if (iVar8 == 0) {
@@ -235,7 +235,7 @@ void FUN_801400fc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     break;
   case 3:
     FUN_80146fa0();
-    FUN_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+    trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  puVar4,puVar10,param_11,param_12,param_13,param_14,param_15,param_16);
     uVar5 = FUN_800db47c((float *)(puVar4 + 0xc),(undefined *)0x0);
     if (*(byte *)(puVar10[0x1c8] + 3) == uVar5) {
@@ -475,7 +475,6 @@ int trickyGuardFindBaddieTarget(int p) {
 #pragma scheduling on
 
 extern int trickyDebugPrint(const char *fmt, ...);
-extern int trickyFn_8013b368(int p1, int p2, f32 f);
 extern int fn_800DAFDC(float *pos, int p2, int p3);
 extern int fn_8013D5A4(int p1, int p2, void *target, int p4, f32 f);
 extern int fn_80139A8C(int p1, void *p2);
@@ -889,7 +888,7 @@ void trickyGuard(int p1, int p2) {
             }
             break;
         }
-        /* fallthrough into case 5 setup? No — case 4 has `b .L_801403D4` (= state 5 prologue). */
+        /* fallthrough into case 5 setup? No ? case 4 has `b .L_801403D4` (= state 5 prologue). */
         /* Actually case 4 ends with branch to .L_801403D4 (start of case 5). */
         /* But MWCC will see this as fallthrough. */
     case 5:

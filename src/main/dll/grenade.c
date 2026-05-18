@@ -29,8 +29,7 @@ extern int FUN_8012efc4();
 extern undefined4 FUN_80139910();
 extern int FUN_80139a48();
 extern undefined4 FUN_80139a4c();
-extern int FUN_8013b368();
-extern int trickyFn_8013b368(int param_1, f32 param_2, int *param_3);
+extern int trickyFn_8013b368();
 extern undefined4 objAnimFn_8013a3f0(int param_1, int param_2, f32 param_3, int param_4);
 extern void trickyFn_8013d8f0(u8 *arg1, u8 *arg2);
 extern undefined4 FUN_80144e40();
@@ -158,7 +157,7 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
     *(undefined *)((int)param_10 + 10) = 1;
   case 1:
     FUN_80146fa0();
-    FUN_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+    trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,param_10,param_11,param_12,param_13,param_14,param_15,param_16);
     uVar4 = FUN_800db47c((float *)(param_9 + 0xc),(undefined *)0x0);
     if (*(byte *)(param_10[0x1c2] + 3) == uVar4) {
@@ -362,7 +361,7 @@ void fn_80141FEC(undefined8 param_1,undefined8 param_2,double param_3,undefined8
   iVar9 = param_10[9];
   bVar1 = *(byte *)((int)param_10 + 10);
   if (bVar1 == 2) {
-    iVar9 = FUN_8013b368((double)lbl_803E30A8,param_2,param_3,param_4,param_5,param_6,param_7,
+    iVar9 = trickyFn_8013b368((double)lbl_803E30A8,param_2,param_3,param_4,param_5,param_6,param_7,
                          param_8,param_9,param_10,iVar9,param_12,param_13,param_14,param_15,param_16
                         );
     if (iVar9 == 0) {
@@ -386,7 +385,7 @@ void fn_80141FEC(undefined8 param_1,undefined8 param_2,double param_3,undefined8
       }
       *(undefined *)((int)param_10 + 10) = 1;
     }
-    iVar9 = FUN_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,
+    iVar9 = trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,
                          param_8,param_9,param_10,iVar9,param_12,param_13,param_14,param_15,param_16
                         );
     if (iVar9 == 0) {
@@ -541,7 +540,7 @@ void fn_80142524(undefined8 param_1,undefined8 param_2,double param_3,undefined8
         }
         iVar5 = fn_8014460C((int)param_9,param_10);
         if ((iVar5 == 0) &&
-           (iVar5 = FUN_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,
+           (iVar5 = trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,
                                  param_7,param_8,param_9,param_10,iVar6,param_12,param_13,param_14,
                                  param_15,param_16), iVar5 == 0)) {
           param_10[0x1d0] = (int)((float)param_10[0x1d0] - lbl_803DC074);
@@ -697,7 +696,7 @@ fn_80142A14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
     *(undefined4 *)(param_10 + 0x734) = local_20;
   }
   if ((*(byte *)(param_10 + 0x728) >> 5 & 1) == 0) {
-    cVar3 = FUN_8013b368((double)lbl_803E3158,param_2,param_3,param_4,param_5,param_6,param_7,
+    cVar3 = trickyFn_8013b368((double)lbl_803E3158,param_2,param_3,param_4,param_5,param_6,param_7,
                          param_8,param_9,param_10,(int)pfVar4,param_12,param_13,param_14,param_15,
                          param_16);
     if (cVar3 != '\x01') {
@@ -874,7 +873,7 @@ LAB_801431cc:
     param_10[0x15] = param_10[0x15] & 0xffffffef;
     *(undefined *)((int)param_10 + 10) = 0;
   }
-  cVar3 = FUN_8013b368((double)lbl_803E3098,param_2,param_3,param_4,param_5,param_6,param_7,
+  cVar3 = trickyFn_8013b368((double)lbl_803E3098,param_2,param_3,param_4,param_5,param_6,param_7,
                        param_8,param_9,param_10,iVar4,puVar5,param_13,param_14,param_15,param_16);
   return cVar3 == '\x01';
 }
@@ -981,7 +980,7 @@ fn_801430E0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
   
   iVar1 = fn_8014460C(param_9,param_10);
   if ((iVar1 == 0) &&
-     (cVar3 = FUN_8013b368((double)lbl_803E30A8,param_2,param_3,param_4,param_5,param_6,param_7,
+     (cVar3 = trickyFn_8013b368((double)lbl_803E30A8,param_2,param_3,param_4,param_5,param_6,param_7,
                            param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
                            param_16), cVar3 != '\x01')) {
     if (param_10[0x1ec] == 0) {
@@ -1462,7 +1461,7 @@ fn_80143C04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
       fVar1 = lbl_803E3098;
     }
   }
-  cVar3 = FUN_8013b368((double)fVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9
+  cVar3 = trickyFn_8013b368((double)fVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9
                        ,param_10,param_11,param_12,param_13,param_14,param_15,param_16);
   if (cVar3 == '\x01') {
     *(byte *)(param_10 + 0x1ca) = *(byte *)(param_10 + 0x1ca) & 0x7f | 0x80;
