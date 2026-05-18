@@ -467,6 +467,7 @@ void Camera_setFocus(void *target)
 void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerMode)
 {
   int handlerCount;
+  int handlerIndex;
   CamcontrolHandlerEntry *defaultHandler;
   CamcontrolHandlerEntry **handlerEntry;
   int blendFrames;
@@ -533,16 +534,18 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
          ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
-      defaultHandler = NULL;
+      handlerIndex = 0;
       handlerEntry = lbl_803A4228;
       for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
-          defaultHandler = *handlerEntry;
+          defaultHandler = lbl_803A4228[handlerIndex];
           goto LAB_80102f3c;
         }
         handlerEntry = handlerEntry + 1;
+        handlerIndex++;
       }
+      defaultHandler = NULL;
 LAB_80102f3c:
       defaultHandler->handler->vtable->actionCallback(camAction,CAMCONTROL_ACTION_RECORD_SIZE);
     }
@@ -576,16 +579,18 @@ LAB_80102f3c:
          ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
-      defaultHandler = NULL;
+      handlerIndex = 0;
       handlerEntry = lbl_803A4228;
       for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
-          defaultHandler = *handlerEntry;
+          defaultHandler = lbl_803A4228[handlerIndex];
           goto LAB_80102f3c_b;
         }
         handlerEntry = handlerEntry + 1;
+        handlerIndex++;
       }
+      defaultHandler = NULL;
 LAB_80102f3c_b:
       defaultHandler->handler->vtable->actionCallback(camAction,CAMCONTROL_ACTION_RECORD_SIZE);
     }
