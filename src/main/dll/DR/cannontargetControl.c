@@ -93,7 +93,7 @@ extern int objHitDetectFn_80062e84(int p1, int p2, int p3);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern void fn_8002273C(void *p1, void *p2, void *p3);
 extern f32 PSVECMag(f32 *v);
-extern int fn_801A0E04(int p1, int p2);
+extern int gunpowderbarrel_setPlayerHeldState(int p1, int p2);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 
 /*
@@ -179,7 +179,7 @@ void gunpowderbarrel_hitDetect(int param_1)
 
     if ((*(u8 *)(p_b8 + 0x4a) >> 7 & 1) != 0 &&
         (s8)*((u8 *)&collision_buf[0] + 0x51) == 3) {
-        fn_801A0E04(param_1, 0);
+        gunpowderbarrel_setPlayerHeldState(param_1, 0);
         ObjGroup_RemoveObject(param_1, 0x16);
         goto copy_end;
     }
