@@ -102,7 +102,7 @@ extern u32 inpGetExCtrl(int state, u32 ctrl);
 extern void inpSetExCtrl(int state, u32 ctrl, s16 value);
 extern void voiceKill(u32 voice);
 extern u8 lbl_803BDA34[];
-extern void sndConvertTicks(u32 *p, int state);
+extern void sndConvertTicks(u32 *p, McmdVoiceState *state);
 extern void sndConvertMs(u32 *p);
 extern void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask);
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
@@ -618,48 +618,47 @@ void varSet32(int state, u32 useExCtrl, u32 index, u32 value)
 /*
  * Configure the controller-0x41 ramp trigger for the current voice.
  */
-void mcmdPortamento(int state, u32 *args)
+void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args)
 {
     u32 duration[2];
     int mode;
 
-    *(u8 *)(state + 0x131) = *args >> 0x10;
-    duration[0] = args[1] >> 0x10;
-    if (((args[1] >> 8) & 1) != 0) {
+    state->portamentoMode = args->flags >> 0x10;
+    duration[0] = args->value >> 0x10;
+    if (((args->value >> 8) & 1) != 0) {
         sndConvertMs(duration);
     } else {
         sndConvertTicks(duration, state);
     }
-    *(u32 *)(state + 0x134) = duration[0];
-    mode = (*args >> 8) & 0xff;
+    state->portamentoDuration = duration[0];
+    mode = (args->flags >> 8) & 0xff;
     if (mode == 1) {
-        if (*(u8 *)(state + 0x121) != 0xff) {
-            inpSetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), 0x7f);
+        if (state->midiSlot != 0xff) {
+            inpSetMidiCtrl(0x41, state->midiSlot, state->midiEvent, 0x7f);
         }
     } else {
         if (mode == 0) {
-            if (*(u8 *)(state + 0x121) != 0xff) {
-                inpSetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122), 0);
+            if (state->midiSlot != 0xff) {
+                inpSetMidiCtrl(0x41, state->midiSlot, state->midiEvent, 0);
             }
-            *(u32 *)(state + 0x118) &= 0xfffffbff;
-            *(u32 *)(state + 0x114) = *(u32 *)(state + 0x114);
+            state->outputFlags &= ~MCMD_VOICE_PORTAMENTO_OUTPUT_FLAG;
+            state->inputFlags = state->inputFlags;
             return;
         }
         if (mode > 2) {
             return;
         }
-        if (*(u8 *)(state + 0x121) == 0xff) {
+        if (state->midiSlot == 0xff) {
             return;
         }
-        if ((u16)inpGetMidiCtrl(0x41, *(u8 *)(state + 0x121), *(u8 *)(state + 0x122)) <=
-            0x1f80) {
+        if ((u16)inpGetMidiCtrl(0x41, state->midiSlot, state->midiEvent) <= 0x1f80) {
             return;
         }
     }
-    if ((*(u32 *)(state + 0x118) & 0x400) == 0) {
-        fn_8026F5B8(state);
+    if ((state->outputFlags & MCMD_VOICE_PORTAMENTO_OUTPUT_FLAG) == 0) {
+        fn_8026F5B8((int)state);
     }
-    *(u32 *)(state + 0x118) |= 0x400;
+    state->outputFlags |= MCMD_VOICE_PORTAMENTO_OUTPUT_FLAG;
 }
 
 /*

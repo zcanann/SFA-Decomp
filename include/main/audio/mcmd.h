@@ -25,6 +25,7 @@
 #define MCMD_VOICE_KEYOFF_OUTPUT_FLAG 0x8
 #define MCMD_VOICE_ACTIVE_OUTPUT_FLAG 0x20
 #define MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG 0x100
+#define MCMD_VOICE_PORTAMENTO_OUTPUT_FLAG 0x400
 #define MCMD_VOICE_ALLOCATED_OUTPUT_FLAG 0x2
 #define MCMD_VOICE_VOLUME_RAMP_OUTPUT_FLAG 0x8000
 #define MCMD_VOICE_INACTIVE_WAIT_OUTPUT_FLAG 0x40000
@@ -103,7 +104,11 @@ typedef struct McmdVoiceState {
     u16 key;
     s8 fineTune;
     u8 keyBase;
-    u8 unk130[0x140 - 0x130];
+    u8 registeredKey;
+    u8 portamentoMode;
+    u16 portamentoCtrlValue;
+    u32 portamentoDuration;
+    u8 unk138[0x140 - 0x138];
     s8 vibratoStart;
     s8 vibratoTarget;
     u8 unk142[2];
