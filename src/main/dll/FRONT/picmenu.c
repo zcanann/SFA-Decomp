@@ -10,7 +10,7 @@ extern s32 DVDRead(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset);
 
 /* External functions */
 extern BOOL THPInit(void);
-extern void fn_80118018(void);
+extern void AttractMovieAudio_DmaCallback(void);
 
 /* BSS objects (lis+addi addressing) */
 extern char             lbl_803A57C0[0x50C];
@@ -197,7 +197,7 @@ BOOL AttractMovieAudio_Init(int audioMode)
     lbl_803DD678 = 0;
     lbl_803DD674 = 0;
     lbl_803DD670 = 0;
-    oldCb = AIRegisterDMACallback((AIDCallback)fn_80118018);
+    oldCb = AIRegisterDMACallback((AIDCallback)AttractMovieAudio_DmaCallback);
     lbl_803DD668 = oldCb;
 
     if (oldCb == (AIDCallback)0) {
