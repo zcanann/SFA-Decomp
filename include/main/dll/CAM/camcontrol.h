@@ -15,6 +15,26 @@ typedef struct CamcontrolQueuedActionParam {
   byte noBlendFlag;
 } CamcontrolQueuedActionParam;
 
+typedef struct CamcontrolHandlerVTable {
+  void (*func00)();
+  void (*activate)(void *camera,int startFlags,void *actionData);
+  void (*func08)();
+  void (*release)(void *camera);
+  void (*actionCallback)();
+} CamcontrolHandlerVTable;
+
+typedef struct CamcontrolHandler {
+  CamcontrolHandlerVTable *vtable;
+} CamcontrolHandler;
+
+typedef struct CamcontrolHandlerEntry {
+  u16 actionId;
+  u8 pad02[2];
+  CamcontrolHandler *handler;
+  u8 priority;
+  u8 pad09[3];
+} CamcontrolHandlerEntry;
+
 #define CAMCONTROL_TRIGGER_KIND_LOAD_ACTION 0
 #define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE1 1
 #define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE2 2

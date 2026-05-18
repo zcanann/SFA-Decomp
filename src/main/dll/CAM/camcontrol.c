@@ -31,12 +31,8 @@ extern void fn_800E84D8(s16 actionNo);
 extern void voxmaps_initialise(void);
 extern void voxmaps_resetLoadedMaps(void);
 
-typedef struct CamcontrolHandlerVTable CamcontrolHandlerVTable;
-typedef struct CamcontrolHandler CamcontrolHandler;
-typedef struct CamcontrolHandlerEntry CamcontrolHandlerEntry;
-
 extern void *gCamcontrolHandlers[20];
-extern CamcontrolHandlerEntry *lbl_803A4228[20];
+extern CamcontrolHandlerEntry *gCamcontrolHandlerEntries[20];
 extern u8 lbl_803A4278[];
 extern undefined4* DAT_803dd738;
 extern undefined4 gCamcontrolTargetChanged;
@@ -82,24 +78,7 @@ extern u16 lbl_803DB992;
 extern undefined lbl_803DD4CA;
 extern s8 lbl_803DD4CB;
 extern undefined4 lbl_803DD4CC;
-extern int lbl_803DD514;
-
-struct CamcontrolHandlerVTable {
-  u8 pad00[0x10];
-  void (*actionCallback)();
-};
-
-struct CamcontrolHandler {
-  CamcontrolHandlerVTable *vtable;
-};
-
-struct CamcontrolHandlerEntry {
-  u16 actionId;
-  u8 pad02[2];
-  CamcontrolHandler *handler;
-  u8 priority;
-  u8 pad09[3];
-};
+extern int gCamcontrolCurrentHandlerIndex;
 
 extern u32 gCamcontrolActiveActionId;
 extern u32 pCamera;
@@ -535,11 +514,11 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
-      handlerEntry = lbl_803A4228;
+      handlerEntry = gCamcontrolHandlerEntries;
       for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
-          defaultHandler = lbl_803A4228[handlerIndex];
+          defaultHandler = gCamcontrolHandlerEntries[handlerIndex];
           goto LAB_80102f3c;
         }
         handlerEntry = handlerEntry + 1;
@@ -580,11 +559,11 @@ LAB_80102f3c:
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
-      handlerEntry = lbl_803A4228;
+      handlerEntry = gCamcontrolHandlerEntries;
       for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
-          defaultHandler = lbl_803A4228[handlerIndex];
+          defaultHandler = gCamcontrolHandlerEntries[handlerIndex];
           goto LAB_80102f3c_b;
         }
         handlerEntry = handlerEntry + 1;
@@ -859,7 +838,7 @@ void *Camera_func08(void)
   int i;
 
   i = 0;
-  entry = lbl_803A4228;
+  entry = gCamcontrolHandlerEntries;
   for (; i < gCamcontrolHandlerCount; i++) {
     if ((*entry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
       return *entry;
@@ -910,7 +889,7 @@ void Camera_initialise(void)
   memset((void *)pCamera,0,0x144);
   voxmaps_initialise();
   gCamcontrolActiveActionId = -1;
-  lbl_803DD514 = -1;
+  gCamcontrolCurrentHandlerIndex = -1;
   gCamcontrolQueuedActionId = -1;
   lbl_803DD4CC = 0;
   lbl_803DD4CB = -1;
