@@ -35,8 +35,8 @@ extern f32 gSHthorntailStateMoveStepScales[];
 extern u8 gSHthorntailStateFlags[];
 extern u16 gSHthorntailStateTrigger0Sfx[];
 extern u8 gSHthorntailStateTrigger7Sfx[];
-extern u8 lbl_80326EF8[0x30];
-extern u8 lbl_80326F28[0x4AC];
+extern u8 gSHthorntailPathHeaders[0x30];
+extern u8 gSHthorntailPathData[0x4AC];
 extern undefined4 lbl_803E5410;
 extern undefined4* pDll_expgfx;
 extern undefined4* DAT_803dd6d4;
@@ -176,17 +176,17 @@ void SHthorntail_update(SHthorntailObject *obj)
       break;
     }
     if ((gSHthorntailStateFlags[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_STATUS_ACTIVE) == 0) {
-      *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) & 0xef;
-      *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) & 0xf7;
+      obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
+      obj->statusFlags &= ~SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
     }
     else {
-      *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) | 0x10;
+      obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_ACTIVE;
     }
     if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_FREEZE_MOTION) != 0) {
       bVar1 = runtime->freezeFrameCounter + 1;
       runtime->freezeFrameCounter = bVar1;
       if (bVar1 < 0xb) {
-        *(byte *)((int)psVar2 + 0xaf) = *(byte *)((int)psVar2 + 0xaf) | 8;
+        obj->statusFlags |= SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
       }
       else {
         runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
@@ -359,8 +359,10 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   Obj_GetActiveModel((int)obj);
   modelInitBones((double)*(float *)((int)obj + 8));
   moveScratch = (int)runtime->moveScratch;
-  (*(code *)(*lbl_803DCAA8 + 4))(moveScratch,3,0xa3,0);
-  (*(code *)(*lbl_803DCAA8 + 0xc))(moveScratch,4,lbl_80326EF8,lbl_80326F28,local_28);
+  (*(code *)(*lbl_803DCAA8 + 4))(moveScratch,SHTHORNTAIL_PATH_CONTROL_MODE,
+                                  SHTHORNTAIL_PATH_CONTROL_FLAGS,0);
+  (*(code *)(*lbl_803DCAA8 + 0xc))(moveScratch,SHTHORNTAIL_PATH_CHANNEL,
+                                    gSHthorntailPathHeaders,gSHthorntailPathData,local_28);
   (*(code *)(*lbl_803DCAA8 + 0x20))((int)obj,moveScratch);
   *(code **)((int)obj + 0xbc) = (code *)SHthorntail_updateLevelControlState;
   fn_80114F64((int)obj,(int)runtime,0xffffdc72,0x2aaa,3);

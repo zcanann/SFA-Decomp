@@ -269,7 +269,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
     runtime->behaviorFlags = runtime->behaviorFlags | (SHTHORNTAIL_FLAG_LEVELCONTROL_READY |
                                                        SHTHORNTAIL_FLAG_FREEZE_MOTION);
     runtime->freezeFrameCounter = 0;
-    obj->statusFlags = obj->statusFlags | SHTHORNTAIL_OBJECT_STATUS_08;
+    obj->statusFlags = obj->statusFlags | SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
   }
   impactPending = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING);
   if (impactPending != 0) {
