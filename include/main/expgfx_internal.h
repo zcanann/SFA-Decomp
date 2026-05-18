@@ -116,7 +116,13 @@ typedef struct ExpgfxCurrentSource {
 } ExpgfxCurrentSource;
 
 typedef struct ExpgfxSourceObject {
-  u8 pad00[0x46];
+  u8 pad00[0x18];
+  f32 posX;
+  f32 posY;
+  f32 posZ;
+  u8 pad24[0x36 - 0x24];
+  u8 alpha;
+  u8 pad37[0x46 - 0x37];
   /* Type 0xD4 updates frame flags for every tracked pool, not just pointer matches. */
   s16 objType;
 } ExpgfxSourceObject;
@@ -253,7 +259,11 @@ typedef struct ExpgfxSlot {
   u8 colorByte0;
   u8 colorByte1;
   u8 colorByte2;
-  u8 pad8F[0xA0 - 0x8F];
+  u8 pad8F[0x90 - 0x8F];
+  f32 renderX;
+  f32 renderY;
+  f32 renderZ;
+  u8 pad9C[0xA0 - 0x9C];
 } ExpgfxSlot;
 
 /*

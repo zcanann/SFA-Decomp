@@ -1022,8 +1022,8 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   void *cameraSlot;
   ExpgfxSlot *slot;
   ExpgfxTableEntry *tabEntry;
+  ExpgfxSourceObject *sourceObject;
   uint texture;
-  uint textureKey0;
   int slotIndex;
   uint behaviorFlags;
   uint renderFlags;
@@ -1085,7 +1085,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     slot = (ExpgfxSlot *)((char *)slot + EXPGFX_SLOT_SIZE);
     tabEntry = &((ExpgfxTableEntry *)dstBuf)[((u32)slot->encodedTableIndex >> 1) &
                                              EXPGFX_SLOT_TABLE_INDEX_MASK];
-    textureKey0 = tabEntry->key0;
+    sourceObject = (ExpgfxSourceObject *)tabEntry->key0;
     texture = tabEntry->textureOrResource;
     if ((1U << slotIndex & gExpgfxSlotActiveMasks[poolIndex]) == 0) goto next_slot;
     state = slot->stateBits.value;
@@ -1142,9 +1142,9 @@ void drawGlow(uint slotPoolBase,int poolIndex)
 
     angleA = 0;
     angleB = 0;
-    sx = *(f32 *)((char *)slot + 0x90);
-    sy = *(f32 *)((char *)slot + 0x94);
-    sz = *(f32 *)((char *)slot + 0x98);
+    sx = slot->renderX;
+    sy = slot->renderY;
+    sz = slot->renderZ;
     scaleSize = lbl_803DF410 * (f32)(u32)(u16)slot->scaleCounter;
     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0) {
       f32 base = lbl_803DF358 * scaleSize;
@@ -1163,10 +1163,10 @@ void drawGlow(uint slotPoolBase,int poolIndex)
         angleA = 0;
         angleB = 0;
       } else if ((behavior & 0x00100000) != 0) {
-        if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && textureKey0 != 0) {
-          aimDelta[0] = *(f32 *)((char *)cameraSlot + 0xc) - *(f32 *)((char *)textureKey0 + 0x18);
-          aimDelta[1] = *(f32 *)((char *)cameraSlot + 0x10) - *(f32 *)((char *)textureKey0 + 0x1c);
-          aimDelta[2] = *(f32 *)((char *)cameraSlot + 0x14) - *(f32 *)((char *)textureKey0 + 0x20);
+        if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && sourceObject != NULL) {
+          aimDelta[0] = *(f32 *)((char *)cameraSlot + 0xc) - sourceObject->posX;
+          aimDelta[1] = *(f32 *)((char *)cameraSlot + 0x10) - sourceObject->posY;
+          aimDelta[2] = *(f32 *)((char *)cameraSlot + 0x14) - sourceObject->posZ;
           PSVECNormalize((Vec *)aimDelta, (Vec *)aimDelta);
           {
             f32 absX = (f32)__fabs(aimDelta[0]);
@@ -1196,8 +1196,8 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     } else if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_B) != 0) {
       angleToVec2((u16)(gExpgfxPhaseAngleB + (((u32)slot & 0xff) << 8)), &sinC, &cosC);
     }
-    if (textureKey0 != 0 && (slot->renderFlags & EXPGFX_RENDER_MODULATE_ALPHA_SOURCE) != 0) {
-      alpha = (alpha * *(u8 *)((char *)textureKey0 + 0x36)) >> 8;
+    if (sourceObject != NULL && (slot->renderFlags & EXPGFX_RENDER_MODULATE_ALPHA_SOURCE) != 0) {
+      alpha = (alpha * sourceObject->alpha) >> 8;
     }
 
     if (slotPoolBase != texture) {
