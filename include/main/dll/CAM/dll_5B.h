@@ -5,8 +5,8 @@
 
 void firstPersonDoControls(short *param_1);
 void firstPersonEnter(void);
-void CameraModeViewfinder_func06(undefined2 *param_1);
-void CameraModeViewfinder_func05(int param_1);
+void CameraModeViewfinder_copyToCurrent(undefined2 *param_1);
+void CameraModeViewfinder_free(int param_1);
 void CameraModeViewfinder_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -18,18 +18,18 @@ void CameraModeViewfinder_init(undefined8 param_1,undefined8 param_2,undefined8 
 void CameraModeViewfinder_release(void);
 void CameraModeViewfinder_initialise(void);
 void FUN_801089d8(void);
-void dll_46_update(short *param_1);
-void dll_46_init(void);
-void dll_46_func06_nop(void);
-void dll_46_func05(void);
-void dll_46_release_nop(void);
-void dll_46_initialise_nop(void);
+void CameraModeDebug_update(short *param_1);
+void CameraModeDebug_init(void);
+void CameraModeDebug_copyToCurrent_nop(void);
+void CameraModeDebug_free(void);
+void CameraModeDebug_release_nop(void);
+void CameraModeDebug_initialise_nop(void);
 void fn_80109B04(undefined8 param_1,double param_2,double param_3);
 void FUN_80108e7c(void);
 void CameraModeStatic_update(short *param_1);
 void CameraModeStatic_init(void);
-void CameraModeStatic_func06_nop(void);
-void CameraModeStatic_func05(void);
+void CameraModeStatic_copyToCurrent_nop(void);
+void CameraModeStatic_free(void);
 void CameraModeStatic_release(void);
 void CameraModeStatic_initialise(void);
 void fn_8010A104(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,

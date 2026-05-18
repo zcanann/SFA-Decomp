@@ -217,7 +217,7 @@ void firstPersonEnter(void)
 /*
  * --INFO--
  *
- * Function: CameraModeViewfinder_func06
+ * Function: CameraModeViewfinder_copyToCurrent
  * EN v1.0 Address: 0x80108874
  * EN v1.0 Size: 160b
  * EN v1.1 Address: 0x80108D6C
@@ -227,7 +227,7 @@ void firstPersonEnter(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeViewfinder_func06(undefined2 *param_1)
+void CameraModeViewfinder_copyToCurrent(undefined2 *param_1)
 {
   undefined2 *puVar1;
   
@@ -250,7 +250,7 @@ void CameraModeViewfinder_func06(undefined2 *param_1)
 /*
  * --INFO--
  *
- * Function: CameraModeViewfinder_func05
+ * Function: CameraModeViewfinder_free
  * EN v1.0 Address: 0x80108914
  * EN v1.0 Size: 188b
  * EN v1.1 Address: 0x80108E08
@@ -260,7 +260,7 @@ void CameraModeViewfinder_func06(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeViewfinder_func05(int param_1)
+void CameraModeViewfinder_free(int param_1)
 {
   int iVar1;
   int iVar2;
@@ -352,7 +352,7 @@ void FUN_801089d8(void)
 /*
  * --INFO--
  *
- * Function: dll_46_update
+ * Function: CameraModeDebug_update
  * EN v1.0 Address: 0x80108A04
  * EN v1.0 Size: 848b
  * EN v1.1 Address: 0x80109A14
@@ -362,7 +362,7 @@ void FUN_801089d8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_46_update(short *param_1)
+void CameraModeDebug_update(short *param_1)
 {
   float fVar1;
   uint uVar2;
@@ -434,7 +434,7 @@ void dll_46_update(short *param_1)
 /*
  * --INFO--
  *
- * Function: dll_46_init
+ * Function: CameraModeDebug_init
  * EN v1.0 Address: 0x80108D54
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80109D44
@@ -444,7 +444,7 @@ void dll_46_update(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_46_init(void)
+void CameraModeDebug_init(void)
 {
   if (lbl_803DD550 == (f32 *)0x0) {
     lbl_803DD550 = (f32 *)mmAlloc(8,0xf,0);
@@ -716,10 +716,10 @@ void fn_8010A47C(undefined4 param_1,undefined4 param_2,uint param_3)
 /* Trivial 4b 0-arg blr leaves. */
 void CameraModeViewfinder_release(void) {}
 void CameraModeViewfinder_initialise(void) {}
-void dll_46_func06_nop(void) {}
-void dll_46_release_nop(void) {}
-void dll_46_initialise_nop(void) {}
-void CameraModeStatic_func06_nop(void) {}
+void CameraModeDebug_copyToCurrent_nop(void) {}
+void CameraModeDebug_release_nop(void) {}
+void CameraModeDebug_initialise_nop(void) {}
+void CameraModeStatic_copyToCurrent_nop(void) {}
 void CameraModeStatic_release(void) {}
 void CameraModeStatic_initialise(void) {}
 
@@ -727,7 +727,7 @@ void CameraModeStatic_initialise(void) {}
 extern void mm_free(void *);
 #pragma scheduling off
 #pragma peephole off
-void dll_46_func05(void) { mm_free(lbl_803DD550); lbl_803DD550 = 0; }
-void CameraModeStatic_func05(void) { mm_free(lbl_803DD558); lbl_803DD558 = 0; }
+void CameraModeDebug_free(void) { mm_free(lbl_803DD550); lbl_803DD550 = 0; }
+void CameraModeStatic_free(void) { mm_free(lbl_803DD558); lbl_803DD558 = 0; }
 #pragma peephole reset
 #pragma scheduling reset

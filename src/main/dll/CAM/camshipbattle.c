@@ -235,4 +235,4 @@ void camcontrol_releasePathState(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void CameraModeStaffAnim_func06_nop(void) {}
+void CameraModeStaffAnim_copyToCurrent_nop(void) {}
