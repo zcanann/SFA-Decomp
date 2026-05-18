@@ -17,10 +17,10 @@ extern f32 lbl_803E4C88;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801BDBE0(int p1, int p2, void *p3)
+int DIMbossgut_updateState(int obj, int param_2, void *state)
 {
-  *(s16 *)((char *)p3 + 0x6e) = -1;
-  *(u8 *)((char *)p3 + 0x56) = 0;
+  *(s16 *)((char *)state + 0x6e) = -1;
+  *(u8 *)((char *)state + 0x56) = 0;
   return 0;
 }
 #pragma peephole reset
@@ -56,7 +56,7 @@ void DIMbossgut_init(void *obj)
   int objArg;
 
   objSetSlot(obj, 0x5a);
-  *(void **)((char *)obj + 0xbc) = fn_801BDBE0;
+  *(void **)((char *)obj + 0xbc) = DIMbossgut_updateState;
   objArg = (int)obj;
   ObjAnim_SetCurrentMove(objArg, 0, lbl_803E4C88, 0);
   ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
