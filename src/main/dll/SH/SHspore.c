@@ -37,7 +37,7 @@ extern void *ObjGroup_FindNearestObject(int group, void *obj, f32 *distanceOut);
 extern int ObjTrigger_IsSet(void *obj);
 extern void ObjAnim_SetCurrentMove(void *obj, int moveId, f32 progress, int flags);
 extern void ObjAnim_AdvanceCurrentMove(void *obj, void *events, f32 stepScale, f32 deltaTime);
-extern int fn_8002208C(f32 *state, f32 min, f32 max);
+extern int RandomTimer_UpdateRangeTrigger(f32 *state, f32 min, f32 max);
 extern void Sfx_PlayFromObject(void *obj, int sfxId);
 extern short FUN_8011e824();
 extern int FUN_8012efc4();
@@ -456,7 +456,8 @@ void sh_queenearthwalker_update(void *obj)
     }
   }
 
-  if (fn_8002208C((f32 *)((u8 *)state + 0x3c), lbl_803E5404, lbl_803E5408) != 0) {
+  if (RandomTimer_UpdateRangeTrigger((f32 *)((u8 *)state + 0x3c), lbl_803E5404,
+                                     lbl_803E5408) != 0) {
     Sfx_PlayFromObject(obj, 0x410);
   }
 }

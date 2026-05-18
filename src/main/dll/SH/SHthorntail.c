@@ -5,7 +5,7 @@
 extern void Sfx_PlayFromObject(SHthorntailObject *obj,u16 volumeId);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
-extern u32 fn_8002208C(f32 *state,f32 min,f32 max);
+extern u32 RandomTimer_UpdateRangeTrigger(f32 *state,f32 min,f32 max);
 extern int randomGetRange(int min,int max);
 extern int ObjTrigger_IsSet(int obj);
 extern int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
@@ -47,7 +47,8 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 
   switch((s8)runtime->behaviorState) {
   case SHTHORNTAIL_STATE_IDLE:
-    alertTriggered = fn_8002208C(&runtime->proximityAlertState,lbl_803E5430,lbl_803E5434);
+    alertTriggered =
+        RandomTimer_UpdateRangeTrigger(&runtime->proximityAlertState,lbl_803E5430,lbl_803E5434);
     if (alertTriggered != 0) {
       Sfx_PlayFromObject(obj,SHTHORNTAIL_ALERT_VOLUME_ID);
     }
