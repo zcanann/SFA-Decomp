@@ -68,7 +68,7 @@ void runLoadingScreens(void)
   int alpha;
   int textureSlot;
   uint color;
-  union { u32 word; u8 bytes[4]; } colorBuf;
+  union { u32 word; char bytes[4]; } colorBuf;
 
   if (lbl_803DD5EC < 0xf0) {
     if (lbl_803DD5EC < 0x1e) {
@@ -116,10 +116,11 @@ void runLoadingScreens(void)
                 lbl_803A4438[2],alpha,0x119);
   }
 
+  if (lbl_803DC950 != 0) {
+    lbl_803DD5E8 = 1;
+  }
   if (lbl_803DC950 == 0) {
     lbl_803DD5EC++;
-  } else {
-    lbl_803DD5E8 = 1;
   }
 
   if ((lbl_803DD5E8 != 0) && (lbl_803DD5EC > 600) && (lbl_803DC950 == 0)) {
