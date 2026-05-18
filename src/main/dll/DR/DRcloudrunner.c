@@ -28,7 +28,7 @@ extern undefined4 FUN_8004800c();
 extern undefined4 FUN_800810e4();
 extern undefined4 FUN_80081120();
 extern int FUN_800e8b98();
-extern undefined4 FUN_801db670();
+extern undefined4 sc_levelcontrol_processAnimEvents();
 extern int FUN_8028683c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_80286888();

@@ -262,7 +262,7 @@ void FUN_801db5b8(short *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801db670
+ * Function: sc_levelcontrol_processAnimEvents
  * EN v1.0 Address: 0x801DB670
  * EN v1.0 Size: 324b
  * EN v1.1 Address: 0x801DB688
@@ -272,7 +272,7 @@ void FUN_801db5b8(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801db670(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
+undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar2;
   byte eventId;
@@ -285,11 +285,11 @@ undefined4 FUN_801db670(int param_1,undefined4 param_2,ObjAnimUpdateState *animU
   for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
     eventId = animUpdate->eventIds[iVar3];
     if (eventId == 2) {
-      FUN_801db7b4(param_1,5);
+      sc_levelcontrol_setAnimEventState(param_1,5);
     }
     else if (eventId < 2) {
       if (eventId != 0) {
-        FUN_801db7b4(param_1,7);
+        sc_levelcontrol_setAnimEventState(param_1,7);
       }
     }
     else if (eventId < 4) {
@@ -320,7 +320,7 @@ undefined4 FUN_801db670(int param_1,undefined4 param_2,ObjAnimUpdateState *animU
 /*
  * --INFO--
  *
- * Function: FUN_801db7b4
+ * Function: sc_levelcontrol_setAnimEventState
  * EN v1.0 Address: 0x801DB7B4
  * EN v1.0 Size: 272b
  * EN v1.1 Address: 0x801DB7E8
@@ -330,7 +330,7 @@ undefined4 FUN_801db670(int param_1,undefined4 param_2,ObjAnimUpdateState *animU
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801db7b4(int param_1,undefined param_2)
+void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
 {
   char cVar1;
   int iVar2;
