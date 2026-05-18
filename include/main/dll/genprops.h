@@ -4,16 +4,60 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+int mikabomb_getExtraSize();
+int mikabomb_func08();
+void mikabomb_free();
+void mikabomb_render();
+void mikabomb_hitDetect();
 void mikabomb_update(uint param_1,int param_2);
+void mikabomb_init();
+void mikabomb_release(void);
+void mikabomb_initialise(void);
 void FUN_8016b2e4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10);
 void FUN_8016b39c(int param_1);
 void FUN_8016b3c4(uint param_1);
+int mikabombshadow_getExtraSize(void);
+int mikabombshadow_func08(void);
+void mikabombshadow_free(void);
+void mikabombshadow_render();
+void mikabombshadow_hitDetect(void);
+void mikabombshadow_update();
+void mikabombshadow_init();
+void mikabombshadow_release(void);
+void mikabombshadow_initialise(void);
 void FUN_8016b7d4(undefined2 *param_1);
+int StaticCamera_getExtraSize(void);
+int StaticCamera_func08(void);
+void StaticCamera_free(int x);
+void StaticCamera_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
+void StaticCamera_hitDetect(void);
+void StaticCamera_update(void);
+void StaticCamera_init();
+void StaticCamera_release(void);
+void StaticCamera_initialise(void);
 void FUN_8016b970(int param_1);
 void FUN_8016b9a8(int param_1);
+int gcbaddieshield_getExtraSize(void);
+int gcbaddieshield_func08(void);
+void gcbaddieshield_free(void);
+void gcbaddieshield_render();
+void gcbaddieshield_hitDetect(void);
+void gcbaddieshield_update();
+void gcbaddieshield_init();
+void gcbaddieshield_release(void);
+void gcbaddieshield_initialise(void);
 void FUN_8016ba18(undefined2 *param_1);
+int baddieinterestp_getExtraSize(void);
+int baddieinterestp_func08(void);
+void baddieinterestp_free(void);
+void baddieinterestp_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
+void baddieinterestp_hitDetect(void);
+void baddieinterestp_update();
+void baddieinterestp_init(void);
+void baddieinterestp_release(void);
+void baddieinterestp_initialise(void);
 void staticCamera_free(int param_1);
 void staticCamera_render(int param_1);
 void staticCamera_init(short *param_1,int param_2,int param_3);
