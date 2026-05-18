@@ -12,7 +12,7 @@ extern void *lbl_803DCA54;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8017EC94(int param_1)
+void dll_FC_update(int param_1)
 {
   int *piVar1;
   byte *pbState;
@@ -94,8 +94,8 @@ end:
 /*
  * --INFO--
  *
- * Function: FUN_8017f0ac
- * EN v1.0 Address: 0x8017F0AC
+ * Function: dll_FC_init
+ * EN v1.0 Address: 0x8017EF3C
  * EN v1.0 Size: 40b
  * EN v1.1 Address: 0x8017F17C
  * EN v1.1 Size: 48b
@@ -105,7 +105,7 @@ end:
  * PAL Size: TODO
  */
 #pragma peephole off
-void fn_8017EF3C(int param_1, int param_2)
+void dll_FC_init(int param_1, int param_2)
 {
   byte *pbVar1;
 
@@ -120,9 +120,9 @@ void fn_8017EF3C(int param_1, int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8017f0d4
- * EN v1.0 Address: 0x8017F0D4
- * EN v1.0 Size: 60b
+ * Function: fn_8017EFB0
+ * EN v1.0 Address: 0x8017EFB0
+ * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x8017F1AC
  * EN v1.1 Size: 64b
  * JP Address: TODO
@@ -142,8 +142,8 @@ void fn_8017EFB0(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8017EF64(void) {}
-void fn_8017EF68(void) {}
+void dll_FC_release_nop(void) {}
+void dll_FC_initialise_nop(void) {}
 void fn_8017EF7C(void) {}
 
 /* 8b "li r3, N; blr" returners. */

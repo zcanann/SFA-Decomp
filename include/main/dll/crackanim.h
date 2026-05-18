@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-extern ObjectDescriptor lbl_803214F8;
+extern ObjectDescriptor gDllFCObjDescriptor;
 
 void appleontree_update(int param_1);
 

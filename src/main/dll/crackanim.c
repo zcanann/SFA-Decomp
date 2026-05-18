@@ -338,20 +338,20 @@ extern void objRenderFn_8003b8f4(f32);
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3848); }
 #pragma peephole reset
 
-extern void fn_8017EF68();
-extern void fn_8017EF64();
-extern void fn_8017EF3C();
-extern void fn_8017EC94();
-extern void fn_8017EC54();
+extern void dll_FC_initialise_nop(void);
+extern void dll_FC_release_nop(void);
+extern void dll_FC_init(void);
+extern void dll_FC_update(void);
+extern void dll_FC_hitDetect(void);
 
-ObjectDescriptor lbl_803214F8 = {
+ObjectDescriptor gDllFCObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)fn_8017EF68,
-    (ObjectDescriptorCallback)fn_8017EF64,
+    (ObjectDescriptorCallback)dll_FC_initialise_nop,
+    (ObjectDescriptorCallback)dll_FC_release_nop,
     0,
-    (ObjectDescriptorCallback)fn_8017EF3C,
-    (ObjectDescriptorCallback)fn_8017EC94,
-    (ObjectDescriptorCallback)fn_8017EC54,
+    (ObjectDescriptorCallback)dll_FC_init,
+    (ObjectDescriptorCallback)dll_FC_update,
+    (ObjectDescriptorCallback)dll_FC_hitDetect,
     (ObjectDescriptorCallback)dll_FC_render,
     (ObjectDescriptorCallback)dll_FC_free_nop,
     (ObjectDescriptorCallback)dll_FC_func08_ret_0,
