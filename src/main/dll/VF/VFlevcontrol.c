@@ -11,7 +11,7 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 FUN_8011e800();
 extern undefined4 FUN_8011eb10();
-extern undefined4 FUN_801dd6e8();
+extern undefined4 sc_totembond_spawnGameBitOrbs();
 extern undefined4 FUN_80286838();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286884();
@@ -74,7 +74,7 @@ void FUN_801de430(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uVar2 = *puVar5;
     psVar11[0x12] = ((short)uVar2 >> 0xd) + (ushort)((short)uVar2 < 0 && (uVar2 & 0x1fff) != 0);
     ObjHits_DisableObject((int)puVar5);
-    FUN_801dd6e8((double)lbl_803E62D0,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+    sc_totembond_spawnGameBitOrbs((double)lbl_803E62D0,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
     GameBit_Set((uint)*(ushort *)(psVar11[0x12] * 2 + -0x7fcd7960),1);
     *(undefined *)(puVar5 + 0x1b) = 0;
     *(byte *)(psVar11 + 0x13) = *(byte *)(psVar11 + 0x13) & 0xfe;

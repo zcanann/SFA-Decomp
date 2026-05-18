@@ -223,7 +223,7 @@ void FUN_801dd6e4(undefined2 *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801dd6e8
+ * Function: sc_totembond_spawnGameBitOrbs
  * EN v1.0 Address: 0x801DD6E8
  * EN v1.0 Size: 592b
  * EN v1.1 Address: 0x801DE018
@@ -233,7 +233,7 @@ void FUN_801dd6e4(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dd6e8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void sc_totembond_spawnGameBitOrbs(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   short *psVar1;
