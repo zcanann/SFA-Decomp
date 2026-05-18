@@ -2,6 +2,9 @@
 #define MAIN_DLL_TREX_TREX_TREX_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor24 gShopObjDescriptor;
 
 void FUN_801e42f8(int param_1);
 void FUN_801e4350(int param_1);
@@ -62,5 +65,19 @@ void FUN_801e6510(uint param_1);
 void FUN_801e6558(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10);
+void shop_initialise(void);
+void shop_release(void);
+void shop_init(int obj,int objDef);
+void shop_update(int obj);
+void shop_hitDetect(void);
+void shop_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
+void shop_free(int obj);
+int shop_func08(void);
+int shop_getExtraSize(void);
+s32 shop_setScale(int *obj);
+void shop_func0B(int obj);
+void shop_func15(int obj);
+void shop_func16(int obj);
+void shop_func17(int obj);
 
 #endif /* MAIN_DLL_TREX_TREX_TREX_H_ */
