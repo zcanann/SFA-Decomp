@@ -10,7 +10,7 @@
 //
 // Runtime notes:
 // - EarthWalker is shared by WCKingEarth, WCEarthWalk, and WM_deaddino object defs.
-// - init installs callback 0x80223004, initializes the anim/control block at extra +0,
+// - init installs earthwalker_animEventCallback, initializes the anim/control block at extra +0,
 //   and copies object-def byte +0x19 into extra +0x65B as the mode selector.
 // - update drives a large mode table from extra +0x65B, previous mode +0x65C, world state
 //   DAT_803DCAAC, and game bits including 0x7FC, 0x9AD, 0xC36, 0xC55, 0xC90, and 0xC92.
