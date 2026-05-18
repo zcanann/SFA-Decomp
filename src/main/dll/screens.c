@@ -977,7 +977,7 @@ void FUN_800fd2b4(int param_1,int param_2,short *param_3,uint param_4)
 /* Trivial 4b 0-arg blr leaves. */
 void dll_9A_func01_nop(void) {}
 void dll_9A_func00_nop(void) {}
-void fn_800FD2AC(void) {}
-void fn_800FD2B0(void) {}
-void fn_800FD73C(void) {}
-void fn_800FD740(void) {}
+void dll_9B_func01_nop(void) {}
+void dll_9B_func00_nop(void) {}
+void dll_9C_func01_nop(void) {}
+void dll_9C_func00_nop(void) {}

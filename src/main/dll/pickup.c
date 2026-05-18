@@ -2398,32 +2398,32 @@ void FUN_800fda2c(int param_1,undefined2 param_2,int param_3,uint param_4,undefi
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800FDA90(void) {}
-void fn_800FDA94(void) {}
-void fn_800FDE10(void) {}
-void fn_800FDE14(void) {}
-void fn_800FE238(void) {}
-void fn_800FE23C(void) {}
-void fn_800FE5A0(void) {}
-void fn_800FE5A4(void) {}
-void fn_800FE920(void) {}
-void fn_800FE924(void) {}
-void fn_800FEC6C(void) {}
-void fn_800FEC70(void) {}
+void dll_9D_func01_nop(void) {}
+void dll_9D_func00_nop(void) {}
+void dll_9E_func01_nop(void) {}
+void dll_9E_func00_nop(void) {}
+void dll_9F_func01_nop(void) {}
+void dll_9F_func00_nop(void) {}
+void dll_A0_func01_nop(void) {}
+void dll_A0_func00_nop(void) {}
+void dll_A1_func01_nop(void) {}
+void dll_A1_func00_nop(void) {}
+void dll_A2_func01_nop(void) {}
+void dll_A2_func00_nop(void) {}
 void DummyA4_release(void) {}
 void DummyA4_initialise(void) {}
-void fn_800FEFFC(void) {}
-void fn_800FF000(void) {}
-void fn_800FF698(void) {}
-void fn_800FF69C(void) {}
-void fn_800FFB3C(void) {}
-void fn_800FFB40(void) {}
-void fn_800FFEFC(void) {}
-void fn_800FFF00(void) {}
+void dll_A5_func01_nop(void) {}
+void dll_A5_func00_nop(void) {}
+void dll_A6_func01_nop(void) {}
+void dll_A6_func00_nop(void) {}
+void dll_A7_func01_nop(void) {}
+void dll_A7_func00_nop(void) {}
+void dll_A8_func01_nop(void) {}
+void dll_A8_func00_nop(void) {}
 void dll_A9_func01_nop(void) {}
 void dll_A9_func00_nop(void) {}
 void dll_AA_func01_nop(void) {}
 void dll_AA_func00_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_800FEC74(void) { return 0x0; }
+int DummyA4_func03_ret_0(void) { return 0x0; }
