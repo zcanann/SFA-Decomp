@@ -19,9 +19,24 @@ extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80080f14();
 
-extern undefined4* DAT_803dd6d4;
+typedef undefined8 (*LaserRuntimeTriggerFn)();
+
+typedef struct LaserRuntimeEventInterface {
+  u8 pad00[0x40];
+  int (*getMode)(int mapId);
+  void (*setMode)(int mapId,int mode);
+  u8 pad48[0x50 - 0x48];
+  LaserRuntimeTriggerFn triggerEvent;
+} LaserRuntimeEventInterface;
+
+typedef struct LaserReleaseInterface {
+  u8 pad00[0x48];
+  void (*releaseObject)(int parent,undefined4 object,int flags);
+} LaserReleaseInterface;
+
+extern LaserReleaseInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd72c;
+extern LaserRuntimeEventInterface **DAT_803dd72c;
 
 /*
  * --INFO--
@@ -43,6 +58,7 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
              undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   LaserObject *obj;
+  LaserRuntimeEventInterface *eventInterface;
   char eventId;
   byte mode;
   undefined4 mapResource;
@@ -53,7 +69,8 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   
   obj = (LaserObject *)param_9;
   spawnFlag = (int)animUpdate;
-  mode = (**(code **)(*DAT_803dd72c + 0x40))((int)obj->modeIndex);
+  eventInterface = *DAT_803dd72c;
+  mode = eventInterface->getMode((int)obj->modeIndex);
   effectHandle = FUN_800068c4(0,0x48b);
   for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
     eventId = (char)animUpdate->eventIds[eventIndex];
@@ -65,14 +82,14 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
         FUN_80042bec(mapResource,0);
       }
       else if (mode < 2) {
-        (**(code **)(*DAT_803dd72c + 0x50))(7,0,0);
-        (**(code **)(*DAT_803dd72c + 0x50))(7,2,0);
-        (**(code **)(*DAT_803dd72c + 0x50))(7,3,0);
-        (**(code **)(*DAT_803dd72c + 0x50))(7,7,0);
-        (**(code **)(*DAT_803dd72c + 0x50))(7,10,0);
+        eventInterface->triggerEvent(7,0,0);
+        eventInterface->triggerEvent(7,2,0);
+        eventInterface->triggerEvent(7,3,0);
+        eventInterface->triggerEvent(7,7,0);
+        eventInterface->triggerEvent(7,10,0);
         spawnFlag = 0;
-        param_12 = *DAT_803dd72c;
-        (**(code **)(param_12 + 0x50))(10,7);
+        param_12 = (int)eventInterface;
+        eventInterface->triggerEvent(10,7);
         effectHandle = GameBit_Set(0x1ed,1);
         FUN_80041ff8(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x17);
         mapResource = FUN_80044404(0x17);
@@ -93,31 +110,31 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
           if (bitValue == 0) {
             bitValue = GameBit_Get(0xc6e);
             if (bitValue != 0) {
-              (**(code **)(*DAT_803dd72c + 0x44))(0xb,4);
-              (**(code **)(*DAT_803dd72c + 0x50))(0xb,8,1);
+              eventInterface->setMode(0xb,4);
+              eventInterface->triggerEvent(0xb,8,1);
               spawnFlag = 1;
-              param_12 = *DAT_803dd72c;
-              effectHandle = (**(code **)(param_12 + 0x50))(0xb,9);
+              param_12 = (int)eventInterface;
+              effectHandle = eventInterface->triggerEvent(0xb,9);
               FUN_80053c98(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                            0x22,'\0',spawnFlag,param_12,param_13,param_14,param_15,param_16);
             }
           }
           else {
-            (**(code **)(*DAT_803dd72c + 0x44))(0xb,2);
-            (**(code **)(*DAT_803dd72c + 0x50))(0xb,5,1);
+            eventInterface->setMode(0xb,2);
+            eventInterface->triggerEvent(0xb,5,1);
             spawnFlag = 1;
-            param_12 = *DAT_803dd72c;
-            effectHandle = (**(code **)(param_12 + 0x50))(0xb,6);
+            param_12 = (int)eventInterface;
+            effectHandle = eventInterface->triggerEvent(0xb,6);
             FUN_80053c98(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                          0x20,'\0',spawnFlag,param_12,param_13,param_14,param_15,param_16);
           }
         }
         else {
-          (**(code **)(*DAT_803dd72c + 0x44))(0xb,3);
-          (**(code **)(*DAT_803dd72c + 0x50))(0xb,8,1);
+          eventInterface->setMode(0xb,3);
+          eventInterface->triggerEvent(0xb,8,1);
           spawnFlag = 1;
-          param_12 = *DAT_803dd72c;
-          effectHandle = (**(code **)(param_12 + 0x50))(0xb,9);
+          param_12 = (int)eventInterface;
+          effectHandle = eventInterface->triggerEvent(0xb,9);
           FUN_80053c98(effectHandle,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x22,
                        '\0',spawnFlag,param_12,param_13,param_14,param_15,param_16);
         }
@@ -182,7 +199,7 @@ void laser_render(int param_1)
  */
 void laser_release(undefined4 param_1)
 {
-  (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+  (*DAT_803dd6d4)->releaseObject(0,param_1,0xffffffff);
   return;
 }
 
