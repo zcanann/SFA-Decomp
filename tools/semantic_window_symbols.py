@@ -35,6 +35,17 @@ INFO_RE = re.compile(
     re.S,
 )
 AUTO_NAME_RE = re.compile(r"^(?:FUN|fn|lbl|__|_)")
+CALLBACK_SUFFIXES = (
+    ("getExtraSize", ("_getExtraSize",)),
+    ("func08", ("_func08", "_func08_ret_0", "_func08_ret_1")),
+    ("free", ("_free", "_free_nop")),
+    ("render", ("_render",)),
+    ("hitDetect", ("_hitDetect", "_hitDetect_nop")),
+    ("update", ("_update",)),
+    ("init", ("_init",)),
+    ("release", ("_release", "_release_nop")),
+    ("initialise", ("_initialise", "_initialise_nop")),
+)
 
 
 @dataclass(frozen=True)
@@ -53,6 +64,18 @@ class HiddenSymbol:
     start: int
     end: int
     symbol: Symbol
+
+
+@dataclass(frozen=True)
+class CallbackFamily:
+    path: Path
+    line: int
+    function_name: str
+    function_label: str
+    start: int
+    end: int
+    family: str
+    rows: tuple[tuple[str, HiddenSymbol], ...]
 
 
 def load_text_symbols(path: Path, include_auto_names: bool) -> list[Symbol]:
@@ -168,6 +191,86 @@ def format_markdown(rows: list[HiddenSymbol], repo_root: Path, limit: int) -> st
     return "\n".join(lines).rstrip() + "\n"
 
 
+def callback_family_for(name: str) -> tuple[str, str] | None:
+    for slot, suffixes in CALLBACK_SUFFIXES:
+        for suffix in suffixes:
+            if name.endswith(suffix):
+                return name[: -len(suffix)], slot
+    return None
+
+
+def group_callback_families(rows: list[HiddenSymbol], min_family_slots: int) -> list[CallbackFamily]:
+    grouped: dict[tuple[Path, int, int, str, str, int, str], list[tuple[str, HiddenSymbol]]] = {}
+    for row in rows:
+        family = callback_family_for(row.symbol.name)
+        if family is None:
+            continue
+        family_name, slot = family
+        key = (
+            row.path,
+            row.start,
+            row.end,
+            row.function_name,
+            row.function_label,
+            row.line,
+            family_name,
+        )
+        grouped.setdefault(key, []).append((slot, row))
+
+    families: list[CallbackFamily] = []
+    for (path, start, end, function_name, function_label, line, family), entries in grouped.items():
+        slots = {slot for slot, _row in entries}
+        if len(slots) < min_family_slots:
+            continue
+        entries.sort(key=lambda item: item[1].symbol.address)
+        families.append(
+            CallbackFamily(
+                path=path,
+                line=line,
+                function_name=function_name,
+                function_label=function_label,
+                start=start,
+                end=end,
+                family=family,
+                rows=tuple(entries),
+            )
+        )
+    return sorted(
+        families,
+        key=lambda item: (
+            str(item.path).lower(),
+            item.start,
+            -len({slot for slot, _row in item.rows}),
+            item.family.lower(),
+        ),
+    )
+
+
+def format_callback_families(
+    families: list[CallbackFamily], repo_root: Path, limit: int
+) -> str:
+    lines = ["# Hidden descriptor callback families", ""]
+    lines.append(f"- families: `{len(families)}`")
+    lines.append("")
+
+    for emitted, family in enumerate(families, start=1):
+        if limit and emitted > limit:
+            break
+        rel = display_path(family.path, repo_root)
+        slots = {slot for slot, _row in family.rows}
+        lines.append(
+            f"- `{rel}:{family.line}` family=`{family.family}` "
+            f"slots=`{len(slots)}` in `{family.function_name}` "
+            f"span=`0x{family.start:08X}-0x{family.end:08X}`"
+        )
+        for slot, row in family.rows[:12]:
+            size = "" if row.symbol.size is None else f" size=`0x{row.symbol.size:X}`"
+            lines.append(f"  - `{slot}` `0x{row.symbol.address:08X}` `{row.symbol.name}`{size}")
+        if len(family.rows) > 12:
+            lines.append(f"  - ... +{len(family.rows) - 12} more")
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def write_csv(rows: list[HiddenSymbol], repo_root: Path) -> None:
     writer = csv.writer(sys.stdout, lineterminator="\n")
     writer.writerow(
@@ -213,6 +316,17 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--search", help="case-insensitive filter over path/function/symbol names")
     parser.add_argument("--include-auto-names", action="store_true")
+    parser.add_argument(
+        "--descriptor-families",
+        action="store_true",
+        help="group hidden symbols that look like object descriptor callback families",
+    )
+    parser.add_argument(
+        "--min-family-slots",
+        type=int,
+        default=3,
+        help="minimum callback slots required for --descriptor-families",
+    )
     return parser.parse_args()
 
 
@@ -222,7 +336,13 @@ def main() -> int:
     symbols = load_text_symbols(args.symbols, include_auto_names=args.include_auto_names)
     rows = iter_hidden_symbols(args.source_root, symbols, args.min_contained, args.search)
 
-    if args.format == "csv":
+    if args.descriptor_families and args.format == "csv":
+        raise SystemExit("--descriptor-families is only supported with markdown output")
+
+    if args.descriptor_families:
+        families = group_callback_families(rows, args.min_family_slots)
+        sys.stdout.write(format_callback_families(families, repo_root, args.limit))
+    elif args.format == "csv":
         write_csv(rows, repo_root)
     else:
         sys.stdout.write(format_markdown(rows, repo_root, args.limit))
