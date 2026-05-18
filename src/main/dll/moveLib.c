@@ -28,7 +28,7 @@ extern undefined8 FUN_8003ad08();
 extern undefined4 FUN_800620e8();
 extern int FUN_800632e8();
 extern undefined4 FUN_8006f7a0();
-extern int FUN_80115650();
+extern int objAnimFn_80115650();
 extern undefined8 FUN_80286834();
 extern undefined8 FUN_80286838();
 extern undefined8 FUN_8028683c();

@@ -15,7 +15,7 @@ extern undefined4 FUN_80053754();
 extern undefined4 FUN_8005398c();
 extern undefined4 FUN_800e65c8();
 extern undefined4 FUN_801eba78();
-extern undefined4 FUN_801ecec4();
+extern undefined4 SnowBike_render();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
 

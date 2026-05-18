@@ -28,7 +28,7 @@ extern f32 lbl_803E5550;
 /*
  * --INFO--
  *
- * Function: FUN_801b3658
+ * Function: dimlavasmash_init
  * EN v1.0 Address: 0x801B3658
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801B367C
@@ -38,7 +38,7 @@ extern f32 lbl_803E5550;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b3658(undefined2 *param_1,int param_2)
+void dimlavasmash_init(undefined2 *param_1,int param_2)
 {
 }
 

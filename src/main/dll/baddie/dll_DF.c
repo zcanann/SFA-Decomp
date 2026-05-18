@@ -32,7 +32,7 @@ extern undefined4 FUN_80139a4c();
 extern int FUN_80139e1c();
 extern void fn_8013AD50();
 extern undefined4 FUN_8013a144();
-extern undefined4 FUN_8013d8f0();
+extern undefined4 trickyFn_8013d8f0();
 extern undefined4 FUN_80146f9c();
 extern undefined4 FUN_80146fa0();
 extern undefined8 FUN_80286828();

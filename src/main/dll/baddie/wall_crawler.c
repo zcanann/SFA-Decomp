@@ -41,7 +41,7 @@ extern undefined4 FUN_8011f438();
 extern undefined4 FUN_80122a48();
 extern undefined4 FUN_80122a4c();
 extern undefined8 FUN_80122b14();
-extern undefined4 FUN_801242dc();
+extern undefined4 cMenuSetItems();
 extern int fn_801244B0();
 extern undefined8 FUN_801249bc();
 extern undefined8 FUN_80126044();
@@ -803,7 +803,7 @@ LAB_8012fb2c:
   DAT_803de40e = sVar10;
   FUN_80122a48();
   if (DAT_803de413 != '\0') {
-    FUN_801242dc();
+    cMenuSetItems();
   }
   FUN_80122a4c();
   DAT_803de528 = DAT_803de528 + 1;

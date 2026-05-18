@@ -114,7 +114,7 @@ extern f32 FLOAT_803e2ce8;
 /*
  * --INFO--
  *
- * Function: FUN_80125424
+ * Function: drawFn_80125424
  * EN v1.0 Address: 0x80125424
  * EN v1.0 Size: 1880b
  * EN v1.1 Address: 0x80125708
@@ -124,7 +124,7 @@ extern f32 FLOAT_803e2ce8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80125424(void)
+void drawFn_80125424(void)
 {
   ushort uVar1;
   short sVar3;
@@ -607,7 +607,7 @@ void FUN_80126044(void)
     }
     FUN_80017484(0xff,0xff,0xff,(byte)DAT_803de4b8);
     FUN_80006c64(&local_58,0x93,0x23a,0x41);
-    FUN_80125424();
+    drawFn_80125424();
   }
   FUN_80286878();
   return;

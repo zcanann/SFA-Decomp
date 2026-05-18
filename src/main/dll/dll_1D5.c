@@ -51,7 +51,7 @@ extern f32 lbl_803E5EA8;
 /*
  * --INFO--
  *
- * Function: FUN_801cf0ac
+ * Function: nw_mammoth_update
  * EN v1.0 Address: 0x801CF0AC
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801CF2E0
@@ -61,7 +61,7 @@ extern f32 lbl_803E5EA8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cf0ac(int param_1,int param_2)
+void nw_mammoth_update(int param_1,int param_2)
 {
 }
 
@@ -228,7 +228,7 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(float *)(iVar6 + 0x18) = (float)dVar8;
   cVar1 = *(char *)(iVar5 + 0x1d);
   if (cVar1 == '\x02') {
-    FUN_801cf0ac((int)param_9,iVar6);
+    nw_mammoth_update((int)param_9,iVar6);
     goto LAB_801cf840;
   }
   if (cVar1 < '\x02') {

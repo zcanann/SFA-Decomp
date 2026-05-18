@@ -119,7 +119,7 @@ extern f32 FLOAT_803e2cbc;
 /*
  * --INFO--
  *
- * Function: FUN_801242dc
+ * Function: cMenuSetItems
  * EN v1.0 Address: 0x801242DC
  * EN v1.0 Size: 192b
  * EN v1.1 Address: 0x8012434C
@@ -129,7 +129,7 @@ extern f32 FLOAT_803e2cbc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801242dc(void)
+void cMenuSetItems(void)
 {
   if (DAT_803dc6cd < '\0') {
     DAT_803de416 = DAT_803de416 + (ushort)DAT_803dc070 * -(short)DAT_803dc6cd;
