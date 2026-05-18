@@ -6,18 +6,6 @@
 #include "dolphin/thp/THPFile.h"
 #include "dolphin/thp/THPInfo.h"
 
-typedef struct MovieAudioPacket {
-  s16 *audioBuffer;
-  s16 *decodedBuffer;
-  u32 decodedSize;
-  int frameIndex;
-} MovieAudioPacket;
-
-typedef struct MovieAudioCursor {
-  u8 *frame;
-  int frameIndex;
-} MovieAudioCursor;
-
 extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
 extern void audioStopByMask(int mask);
 extern void audioFn_8000b694(int arg);
@@ -204,29 +192,29 @@ void PushFreeAudioBuffer(void *message)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void AttractMovieAudio_Decode(void *cursorArg)
+void AttractMovieAudio_Decode(void *readBufferArg)
 {
   u32 *audioFrameSizes;
   u8 *audioFrame;
-  MovieAudioCursor *cursor;
-  MovieAudioPacket *packet;
+  AttractMovieReadBuffer *readBuffer;
+  AttractMovieAudioBuffer *audioBuf;
   u32 track;
 
-  cursor = (MovieAudioCursor *)cursorArg;
-  audioFrameSizes = (u32 *)(cursor->frame + 8);
-  audioFrame = cursor->frame + (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) + 8;
+  readBuffer = (AttractMovieReadBuffer *)readBufferArg;
+  audioFrameSizes = (u32 *)(readBuffer->ptr + 8);
+  audioFrame = readBuffer->ptr + (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) + 8;
   {
-    MovieAudioPacket *received;
+    AttractMovieAudioBuffer *received;
     OSReceiveMessage(&lbl_803A4480,&received,1);
-    packet = received;
+    audioBuf = received;
   }
   for (track = 0; track < lbl_803A5D60.compInfo.mNumComponents; track++) {
-    if (lbl_803A5D60.compInfo.mFrameComp[track] != 1) {
+    if (lbl_803A5D60.compInfo.mFrameComp[track] == 1) {
+      audioBuf->validSample = THPAudioDecode(audioBuf->buffer,audioFrame,0);
+      audioBuf->curPtr = audioBuf->buffer;
+      audioBuf->frameNumber = readBuffer->frameNumber;
+      OSSendMessage(&lbl_803A4460,audioBuf,1);
     } else {
-      packet->decodedSize = THPAudioDecode(packet->audioBuffer,audioFrame,0);
-      packet->decodedBuffer = packet->audioBuffer;
-      packet->frameIndex = cursor->frameIndex;
-      OSSendMessage(&lbl_803A4460,packet,1);
     }
     audioFrame += *audioFrameSizes;
     audioFrameSizes++;
@@ -244,26 +232,26 @@ void *AudioDecoderForOnMemory(void *param)
   int stride;
   u32 framesPerGroup;
   u32 frameInGroup;
-  MovieAudioCursor cursor;
+  AttractMovieReadBuffer readBuffer;
 
   stride = lbl_803A5D60.frameStride;
-  cursor.frame = param;
+  readBuffer.ptr = param;
   frame = 0;
   while (true) {
-    cursor.frameIndex = frame;
-    AttractMovieAudio_Decode(&cursor);
+    readBuffer.frameNumber = frame;
+    AttractMovieAudio_Decode(&readBuffer);
     framesPerGroup = lbl_803A5D60.header.mNumFrames;
     frameInGroup = (frame + lbl_803A5D60.initReadFrame) % framesPerGroup;
-    if ((framesPerGroup - 1) == frameInGroup) {
+    if (frameInGroup == (framesPerGroup - 1)) {
       if ((lbl_803A5D60.playFlags & 1) != 0) {
-        stride = *(int *)cursor.frame;
-        cursor.frame = lbl_803A5D60.loopFrame;
+        stride = *(int *)readBuffer.ptr;
+        readBuffer.ptr = lbl_803A5D60.loopFrame;
       } else {
         OSSuspendThread(&lbl_803A54A0);
       }
     } else {
-      int newStride = *(int *)cursor.frame;
-      cursor.frame += stride;
+      int newStride = *(int *)readBuffer.ptr;
+      readBuffer.ptr += stride;
       stride = newStride;
     }
     frame++;

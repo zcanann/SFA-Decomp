@@ -33,7 +33,7 @@ typedef struct AttractMovieAudioBuffer {
     s16 *buffer;
     s16 *curPtr;
     u32 validSample;
-    u8 pad0C[4];
+    s32 frameNumber;
 } AttractMovieAudioBuffer;
 
 typedef struct AttractMoviePlayer {
