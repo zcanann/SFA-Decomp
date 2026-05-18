@@ -35,11 +35,20 @@ typedef struct LaserTriggerInterface {
   int (*isEventReady)(int eventId);
 } LaserTriggerInterface;
 
+typedef undefined8 (*LaserMapEventTriggerFn)();
+
 typedef struct LaserEventInterface {
   u8 pad00[0x40];
   int (*getMode)(int mapId);
-  void (*triggerEvent)(int eventId,int value);
+  void (*setMode)(int mapId,int mode);
+  u8 pad48[0x50 - 0x48];
+  LaserMapEventTriggerFn triggerEvent;
 } LaserEventInterface;
+
+typedef struct LaserReleaseInterface {
+  u8 pad00[0x48];
+  void (*releaseObject)(int parent,undefined4 object,int flags);
+} LaserReleaseInterface;
 
 #define LASER_OBJECT_STATUS_ACTIVE 0x01
 #define LASER_OBJECT_STATUS_DISABLED 0x08

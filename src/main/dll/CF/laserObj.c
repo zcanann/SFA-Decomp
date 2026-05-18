@@ -70,10 +70,10 @@ void laserObj_update(LaserObject *obj)
           GameBit_Set((int)state->secondarySequenceId,0);
           state->sequenceLatched = 1;
           obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
-          (*lbl_803DCAAC)->triggerEvent(LASEROBJ_SEQUENCE_B_TRIGGER_A,
-                                        LASEROBJ_SEQUENCE_B_TRIGGER_A_VALUE);
-          (*lbl_803DCAAC)->triggerEvent(LASEROBJ_SEQUENCE_B_TRIGGER_B,
-                                        LASEROBJ_SEQUENCE_B_TRIGGER_B_VALUE);
+          (*lbl_803DCAAC)->setMode(LASEROBJ_SEQUENCE_B_TRIGGER_A,
+                                   LASEROBJ_SEQUENCE_B_TRIGGER_A_VALUE);
+          (*lbl_803DCAAC)->setMode(LASEROBJ_SEQUENCE_B_TRIGGER_B,
+                                   LASEROBJ_SEQUENCE_B_TRIGGER_B_VALUE);
         }
         break;
     }

@@ -19,24 +19,9 @@ extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80080f14();
 
-typedef undefined8 (*LaserRuntimeTriggerFn)();
-
-typedef struct LaserRuntimeEventInterface {
-  u8 pad00[0x40];
-  int (*getMode)(int mapId);
-  void (*setMode)(int mapId,int mode);
-  u8 pad48[0x50 - 0x48];
-  LaserRuntimeTriggerFn triggerEvent;
-} LaserRuntimeEventInterface;
-
-typedef struct LaserReleaseInterface {
-  u8 pad00[0x48];
-  void (*releaseObject)(int parent,undefined4 object,int flags);
-} LaserReleaseInterface;
-
 extern LaserReleaseInterface **DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
-extern LaserRuntimeEventInterface **DAT_803dd72c;
+extern LaserEventInterface **DAT_803dd72c;
 
 /*
  * --INFO--
@@ -58,7 +43,7 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
              undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   LaserObject *obj;
-  LaserRuntimeEventInterface *eventInterface;
+  LaserEventInterface *eventInterface;
   char eventId;
   byte mode;
   undefined4 mapResource;
