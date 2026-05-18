@@ -2,6 +2,7 @@
 #define MAIN_PROXIMITYMINE_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 typedef struct ProximityMineEffect {
   u8 unk0[0x4c];
@@ -64,5 +65,19 @@ typedef struct ProximityMineDef {
   s8 mode;
   s16 parameter;
 } ProximityMineDef;
+
+extern ObjectDescriptor gProximityMineObjDescriptor;
+
+void proximitymine_resetToIdle(ProximityMineObject *obj);
+int proximitymine_getExtraSize(void);
+int proximitymine_func08(void);
+void proximitymine_free(ProximityMineObject *obj);
+void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4 param_3,
+                          undefined4 param_4,undefined4 param_5);
+void proximitymine_hitDetect(ProximityMineObject *obj);
+void proximitymine_update(ProximityMineObject *obj);
+void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def);
+void proximitymine_release(void);
+void proximitymine_initialise(void);
 
 #endif /* MAIN_PROXIMITYMINE_H_ */

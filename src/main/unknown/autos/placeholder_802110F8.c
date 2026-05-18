@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/proximitymine.h"
 
 extern void *Obj_GetPlayerObject(void);
 extern void Sfx_StopFromObject(void *obj, u16 sfxId);
@@ -18,39 +19,6 @@ extern f32 lbl_803E676C;
 extern f32 lbl_803E6770;
 extern f32 lbl_803E6774;
 extern f32 lbl_803DC24C;
-
-typedef struct ProximityMineState {
-    void *targetObj;
-    void *effectHandle;
-    f32 triggerDistance;
-    f32 verticalStep;
-    u8 unk10[4];
-    u8 renderTimer[4];
-    u8 launchTimer[4];
-    u8 resetTimer[4];
-    u8 bounceTimer[4];
-    u8 initTimer[4];
-    u8 lifespanTimer[4];
-    s8 mode;
-    u8 unk2D;
-    u8 flashMode;
-    u8 unk2F;
-    u8 effectVisible;
-    u8 unk31[3];
-} ProximityMineState;
-
-typedef struct ProximityMineObject {
-    u8 unk0[0xc];
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    u8 unk18[0xc];
-    f32 velocityX;
-    f32 velocityY;
-    f32 velocityZ;
-    u8 unk30[0x88];
-    ProximityMineState *state;
-} ProximityMineObject;
 
 #pragma scheduling off
 #pragma peephole off
