@@ -1,6 +1,7 @@
 #include "dolphin/ai.h"
 #include "dolphin/dvd.h"
 #include "dolphin/os.h"
+#include "main/dll/FRONT/attract_movie.h"
 #include "dolphin/thp/THPPlayer.h"
 #include "string.h"
 
@@ -14,7 +15,6 @@ extern void AttractMovieAudio_DmaCallback(void);
 
 /* BSS objects (lis+addi addressing) */
 extern char             lbl_803A57C0[0x50C];
-extern THPPlayer        lbl_803A5D60;
 extern char             lbl_803A5F08[0x1000];
 extern OSThread         lbl_803A6F08;
 extern OSMessageQueue   lbl_803A7290;
@@ -289,22 +289,22 @@ void THPRead_Reader(void)
 {
     char* base = lbl_803A5F08;
     int i = 0;
-    char* pb = (char*)&lbl_803A5D60;
-    u32* req;
-    u32 readOff = *(u32*)(pb + 0xB0);
-    u32 readSize = *(u32*)(pb + 0xB4);
+    AttractMoviePlayer* player = &lbl_803A5D60;
+    AttractMovieReadBuffer* req;
+    u32 readOff = player->initOffset;
+    u32 readSize = player->initReadSize;
 
     while (1) {
         OSMessage msgVal;
         s32 res;
 
         OSReceiveMessage((OSMessageQueue*)(base + 0x13C8), &msgVal, OS_MESSAGE_BLOCK);
-        req = (u32*)msgVal;
+        req = (AttractMovieReadBuffer*)msgVal;
 
-        res = DVDReadPrio((DVDFileInfo*)pb, (void*)req[0], readSize, readOff, 2);
+        res = DVDReadPrio(&player->fileInfo, req->ptr, readSize, readOff, 2);
         if (res != (s32)readSize) {
             if (res == -1) {
-                *(s32*)(pb + 0xA0) = -1;
+                player->dvdError = -1;
             }
             if (i == 0) {
                 PrepareReady(0);
@@ -312,19 +312,19 @@ void THPRead_Reader(void)
             OSSuspendThread((OSThread*)(base + 0x1000));
         }
 
-        req[1] = i;
+        req->frameNumber = i;
         OSSendMessage((OSMessageQueue*)(base + 0x13A8), (OSMessage)req, OS_MESSAGE_BLOCK);
 
         readOff += readSize;
-        readSize = *(u32*)(req[0]);
+        readSize = *(u32*)req->ptr;
 
         {
-            u32 cols = *(u32*)(pb + 0x50);
-            u32 bOff = *(u32*)(pb + 0xB8);
+            u32 cols = player->header.mNumFrames;
+            u32 bOff = player->initReadFrame;
             u32 pos  = (i + bOff) % cols;
             if (pos == cols - 1) {
-                if (*(u8*)(pb + 0x9E) & 1) {
-                    readOff = *(u32*)(pb + 0x64);
+                if (player->playFlags & 1) {
+                    readOff = player->header.mMovieDataOffsets;
                 } else {
                     OSSuspendThread((OSThread*)(base + 0x1000));
                 }
@@ -431,9 +431,10 @@ void AttractMovieVideo_Decode(void* param)
     /* param (function arg) → r26 auto */
 
     db = lbl_803A72F0;
-    compSizes = (u32*)(((char**)param)[0] + 8);
+    compSizes = (u32*)(((AttractMovieReadBuffer*)param)->ptr + 8);
     pb = (char*)&lbl_803A5D60;
-    dvdData = ((char**)param)[0] + *(u32*)(pb + 0x6C) * 4 + 8;
+    dvdData = (char*)((AttractMovieReadBuffer*)param)->ptr +
+              ((AttractMoviePlayer*)pb)->compInfo.mNumComponents * sizeof(u32) + 8;
 
     {
         char* pb2;          /* block-local → r25 */
@@ -447,11 +448,14 @@ void AttractMovieVideo_Decode(void* param)
         pb2 = (char*)&lbl_803A5D60;
         pbwalk = pb2;
 
-        while (i < *(u32*)(pb + 0x6C)) {
+        while (i < ((AttractMoviePlayer*)pb)->compInfo.mNumComponents) {
             if (pbwalk[0x70] == 0) {
-                s32 dec = THPVideoDecode(dvdData, readMsg[0], readMsg[1], readMsg[2],
-                                         (void*)*(u32*)(pb2 + 0x94));
-                *(s32*)(pb2 + 0xA4) = dec;
+                s32 dec = THPVideoDecode(dvdData,
+                                         ((AttractMovieTextureSet*)readMsg)->yTexture,
+                                         ((AttractMovieTextureSet*)readMsg)->uTexture,
+                                         ((AttractMovieTextureSet*)readMsg)->vTexture,
+                                         ((AttractMoviePlayer*)pb2)->thpWorkArea);
+                ((AttractMoviePlayer*)pb2)->videoError = dec;
                 if (dec != 0) {
                     if (lbl_803DD694 != 0) {
                         PrepareReady(0);
@@ -459,11 +463,12 @@ void AttractMovieVideo_Decode(void* param)
                     }
                     OSSuspendThread((OSThread*)(db + 0x1058));
                 }
-                readMsg[3] = (void*)((u32*)param)[1];
+                ((AttractMovieTextureSet*)readMsg)->frameNumber =
+                    ((AttractMovieReadBuffer*)param)->frameNumber;
                 OSSendMessage((OSMessageQueue*)(db + 0x18), (OSMessage)readMsg, OS_MESSAGE_BLOCK);
                 {
                     u32 intr = OSDisableInterrupts();
-                    *(s32*)(pb2 + 0xD0) += 1;
+                    ((AttractMoviePlayer*)pb2)->videoDecodeCount++;
                     OSRestoreInterrupts(intr);
                 }
                 lbl_803DD698 = 0;
