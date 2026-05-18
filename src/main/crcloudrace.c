@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
 extern void getEnvfxActImmediately(void *obj,void *target,int animId,int flags);
@@ -116,19 +117,19 @@ void crcloudrace_initialise(void)
   return;
 }
 
-u32 gCrCloudRaceObjDescriptor[] = {
+ObjectDescriptor gCrCloudRaceObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)crcloudrace_initialise,
-    (u32)crcloudrace_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)crcloudrace_initialise,
+    (ObjectDescriptorCallback)crcloudrace_release,
     0,
-    (u32)crcloudrace_init,
-    (u32)crcloudrace_update,
-    (u32)crcloudrace_hitDetect,
-    (u32)crcloudrace_render,
-    (u32)crcloudrace_free,
-    (u32)crcloudrace_func08,
-    (u32)crcloudrace_getExtraSize,
+    (ObjectDescriptorCallback)crcloudrace_init,
+    (ObjectDescriptorCallback)crcloudrace_update,
+    (ObjectDescriptorCallback)crcloudrace_hitDetect,
+    (ObjectDescriptorCallback)crcloudrace_render,
+    (ObjectDescriptorCallback)crcloudrace_free,
+    (ObjectDescriptorCallback)crcloudrace_func08,
+    crcloudrace_getExtraSize,
 };

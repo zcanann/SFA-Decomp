@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 typedef struct WorldAsteroidsObject WorldAsteroidsObject;
 
@@ -176,19 +177,19 @@ void worldasteroids_initialise(void)
   return;
 }
 
-u32 gWorldAsteroidsObjDescriptor[] = {
+ObjectDescriptor gWorldAsteroidsObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)worldasteroids_initialise,
-    (u32)worldasteroids_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)worldasteroids_initialise,
+    (ObjectDescriptorCallback)worldasteroids_release,
     0,
-    (u32)worldasteroids_init,
-    (u32)worldasteroids_update,
-    (u32)worldasteroids_hitDetect,
-    (u32)worldasteroids_render,
-    (u32)worldasteroids_free,
-    (u32)worldasteroids_func08,
-    (u32)worldasteroids_getExtraSize,
+    (ObjectDescriptorCallback)worldasteroids_init,
+    (ObjectDescriptorCallback)worldasteroids_update,
+    (ObjectDescriptorCallback)worldasteroids_hitDetect,
+    (ObjectDescriptorCallback)worldasteroids_render,
+    (ObjectDescriptorCallback)worldasteroids_free,
+    (ObjectDescriptorCallback)worldasteroids_func08,
+    worldasteroids_getExtraSize,
 };

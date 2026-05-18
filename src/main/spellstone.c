@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 extern f32 Vec_distance(void *posA,void *posB);
 extern void GameBit_Set(int eventId,int value);
@@ -173,23 +174,23 @@ void spellstone_initialise(void)
   return;
 }
 
-u32 gSpellStoneObjDescriptor[] = {
+ObjectDescriptor12 gSpellStoneObjDescriptor = {
     0,
     0,
     0,
-    0x000B0000,
-    (u32)spellstone_initialise,
-    (u32)spellstone_release,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)spellstone_initialise,
+    (ObjectDescriptorCallback)spellstone_release,
     0,
-    (u32)spellstone_init,
-    (u32)spellstone_update,
-    (u32)spellstone_hitDetect,
-    (u32)spellstone_render,
-    (u32)spellstone_free,
-    (u32)spellstone_func08,
-    (u32)spellstone_getExtraSize,
-    (u32)spellstone_setState,
-    (u32)spellstone_getState,
+    (ObjectDescriptorCallback)spellstone_init,
+    (ObjectDescriptorCallback)spellstone_update,
+    (ObjectDescriptorCallback)spellstone_hitDetect,
+    (ObjectDescriptorCallback)spellstone_render,
+    (ObjectDescriptorCallback)spellstone_free,
+    (ObjectDescriptorCallback)spellstone_func08,
+    spellstone_getExtraSize,
+    (ObjectDescriptorCallback)spellstone_setState,
+    (ObjectDescriptorCallback)spellstone_getState,
 };
 
 #pragma peephole reset

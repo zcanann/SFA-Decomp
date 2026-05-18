@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 extern u32 GameBit_Get(int eventId);
 extern void ObjHits_SetHitVolumeSlot(u8 *obj,int param_2,int param_3,int param_4);
@@ -125,19 +126,19 @@ void dfppowersl_init(u8 *obj,u8 *params)
 #pragma peephole reset
 #pragma scheduling reset
 
-u32 gDfppowerslObjDescriptor[] = {
+ObjectDescriptor gDfppowerslObjDescriptor = {
   0,
   0,
   0,
-  0x00090000,
+  OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
   0,
   0,
   0,
-  (u32)dfppowersl_init,
-  (u32)dfppowersl_update,
+  (ObjectDescriptorCallback)dfppowersl_init,
+  (ObjectDescriptorCallback)dfppowersl_update,
   0,
-  (u32)dfppowersl_render,
-  (u32)dfppowersl_free,
+  (ObjectDescriptorCallback)dfppowersl_render,
+  (ObjectDescriptorCallback)dfppowersl_free,
   0,
-  (u32)dfppowersl_getExtraSize,
+  dfppowersl_getExtraSize,
 };

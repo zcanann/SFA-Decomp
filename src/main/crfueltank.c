@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 extern void *Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void *obj,u16 volumeId);
@@ -175,19 +176,19 @@ void crfueltank_initialise(void)
   return;
 }
 
-u32 gCrFuelTankObjDescriptor[] = {
+ObjectDescriptor gCrFuelTankObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)crfueltank_initialise,
-    (u32)crfueltank_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)crfueltank_initialise,
+    (ObjectDescriptorCallback)crfueltank_release,
     0,
-    (u32)crfueltank_init,
-    (u32)crfueltank_update,
-    (u32)crfueltank_hitDetect,
-    (u32)crfueltank_render,
-    (u32)crfueltank_free,
-    (u32)crfueltank_func08,
-    (u32)crfueltank_getExtraSize,
+    (ObjectDescriptorCallback)crfueltank_init,
+    (ObjectDescriptorCallback)crfueltank_update,
+    (ObjectDescriptorCallback)crfueltank_hitDetect,
+    (ObjectDescriptorCallback)crfueltank_render,
+    (ObjectDescriptorCallback)crfueltank_free,
+    (ObjectDescriptorCallback)crfueltank_func08,
+    crfueltank_getExtraSize,
 };
