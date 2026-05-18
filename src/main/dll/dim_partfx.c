@@ -346,7 +346,7 @@ extern f32 lbl_803E1188;
 /*
  * --INFO--
  *
- * Function: FUN_800c8008
+ * Function: Effect16_func04
  * EN v1.0 Address: 0x800C8008
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x800C8294
@@ -357,7 +357,7 @@ extern f32 lbl_803E1188;
  * PAL Size: TODO
  */
 undefined4
-FUN_800c8008(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,undefined param_5,
+Effect16_func04(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,undefined param_5,
             int param_6)
 {
     return 0;

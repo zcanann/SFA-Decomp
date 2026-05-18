@@ -167,7 +167,7 @@ extern f32 lbl_803E0D14;
 /*
  * --INFO--
  *
- * Function: FUN_800c291c
+ * Function: Effect10_func04
  * EN v1.0 Address: 0x800C291C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x800C2BA8
@@ -178,7 +178,7 @@ extern f32 lbl_803E0D14;
  * PAL Size: TODO
  */
 undefined4
-FUN_800c291c(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,undefined param_5,
+Effect10_func04(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,undefined param_5,
             float *param_6)
 {
     return 0;

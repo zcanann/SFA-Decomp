@@ -83,7 +83,7 @@ extern f32 lbl_803E1230;
 /*
  * --INFO--
  *
- * Function: FUN_800d6660
+ * Function: Checkpoint_func07
  * EN v1.0 Address: 0x800D6660
  * EN v1.0 Size: 132b
  * EN v1.1 Address: 0x800D6844
@@ -93,7 +93,7 @@ extern f32 lbl_803E1230;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800d6660(int param_1)
+void Checkpoint_func07(int param_1)
 {
   int iVar1;
   int aiStack_18 [5];

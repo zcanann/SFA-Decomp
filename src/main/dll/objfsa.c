@@ -129,7 +129,7 @@ extern f32 lbl_803E12D4;
 /*
  * --INFO--
  *
- * Function: FUN_800d8f90
+ * Function: player_setScale
  * EN v1.0 Address: 0x800D8F90
  * EN v1.0 Size: 256b
  * EN v1.1 Address: 0x800D8FE0
@@ -139,7 +139,7 @@ extern f32 lbl_803E12D4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800d8f90(ushort *param_1,int param_2,uint param_3)
+void player_setScale(ushort *param_1,int param_2,uint param_3)
 {
   uint uVar1;
   

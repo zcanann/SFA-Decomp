@@ -425,7 +425,7 @@ void FUN_8014d924(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8014d9e4
+ * Function: enemy_init
  * EN v1.0 Address: 0x8014D9E4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8014D984
@@ -435,7 +435,7 @@ void FUN_8014d924(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8014d9e4(undefined8 param_1,undefined8 param_2,double param_3,double param_4,double param_5
+void enemy_init(undefined8 param_1,undefined8 param_2,double param_3,double param_4,double param_5
                  ,double param_6,double param_7,undefined8 param_8)
 {
 }
