@@ -6413,5 +6413,5 @@ void dll_8E_func01_nop(void) {}
 void dll_8E_func00_nop(void) {}
 void dll_8F_func01_nop(void) {}
 void dll_8F_func00_nop(void) {}
-void fn_800FA5D0(void) {}
-void fn_800FA5D4(void) {}
+void dll_90_func01_nop(void) {}
+void dll_90_func00_nop(void) {}

@@ -2301,21 +2301,21 @@ void FUN_800fa9c0(int param_1,int param_2,int param_3,uint param_4,undefined4 pa
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800FA9F0(void) {}
-void fn_800FA9F4(void) {}
-void fn_800FADA0(void) {}
-void fn_800FADA4(void) {}
-void fn_800FB070(void) {}
-void fn_800FB074(void) {}
-void fn_800FB420(void) {}
-void fn_800FB424(void) {}
-void fn_800FB718(void) {}
-void fn_800FB71C(void) {}
-void fn_800FBA38(void) {}
-void fn_800FBA3C(void) {}
-void fn_800FBDE8(void) {}
-void fn_800FBDEC(void) {}
-void fn_800FC200(void) {}
-void fn_800FC204(void) {}
-void fn_800FC5B0(void) {}
-void fn_800FC5B4(void) {}
+void dll_91_func01_nop(void) {}
+void dll_91_func00_nop(void) {}
+void dll_92_func01_nop(void) {}
+void dll_92_func00_nop(void) {}
+void dll_93_func01_nop(void) {}
+void dll_93_func00_nop(void) {}
+void dll_94_func01_nop(void) {}
+void dll_94_func00_nop(void) {}
+void dll_95_func01_nop(void) {}
+void dll_95_func00_nop(void) {}
+void dll_96_func01_nop(void) {}
+void dll_96_func00_nop(void) {}
+void dll_97_func01_nop(void) {}
+void dll_97_func00_nop(void) {}
+void dll_98_func01_nop(void) {}
+void dll_98_func00_nop(void) {}
+void dll_99_func01_nop(void) {}
+void dll_99_func00_nop(void) {}
