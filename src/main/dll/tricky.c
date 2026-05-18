@@ -1918,21 +1918,21 @@ void fn_80121408(int x, s16 a, s16 b) {
 }
 #pragma scheduling on
 
-/* fn_8011F354 */
-extern u8 lbl_803DD7CC;
-extern s16 lbl_803DD838;
+/* arwingHudSetVisible */
+extern u8 arwingHudVisible;
+extern s16 arwingHudAlpha;
 #pragma peephole off
 #pragma scheduling off
-void fn_8011F354(u32 x) {
+void arwingHudSetVisible(u32 x) {
     u32 v = x & 0xff;
-    lbl_803DD7CC = (u8)(v & 1);
+    arwingHudVisible = (u8)(v & 1);
     if ((s32)v != 3) {
         if ((s32)v >= 3) return;
         if ((s32)v < 2) return;
-        lbl_803DD838 = 0;
+        arwingHudAlpha = 0;
         return;
     }
-    lbl_803DD838 = (s16)0xff;
+    arwingHudAlpha = (s16)0xff;
 }
 #pragma scheduling on
 #pragma peephole on

@@ -18,7 +18,7 @@
 //   slot 0x56, reacts to command 4 by committing the current route index, and installs
 //   arwlevelcon_commitRingChoice as the payload follow-up callback.
 // - arwlevelcon_commitRingChoice raises either game bit 2 or 0xF3 based on extra byte
-//   +0x1B, then advances the ARW level state through FUN_8011F354.
+//   +0x1B, then advances the ARW level state through arwingHudSetVisible.
 //
 // Descriptor slots:
 // - 0: arwlevelcon_initialise (0x80230E28)
