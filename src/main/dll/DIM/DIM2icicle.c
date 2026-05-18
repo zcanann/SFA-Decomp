@@ -34,9 +34,9 @@ extern undefined4 ObjMsg_SendToObject();
 extern uint ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
-extern undefined4 fn_800894A8();
-extern undefined4 fn_800895E0();
-extern undefined4 fn_80089710();
+extern undefined4 skyFn_800894a8();
+extern undefined4 skyFn_800895e0();
+extern undefined4 skyFn_80089710();
 extern undefined8 FUN_8012e0b8();
 extern undefined4 FUN_801bbf98();
 extern undefined4 FUN_80247bf8();
@@ -430,9 +430,9 @@ void FUN_801bbed0(undefined8 param_1,double param_2,double param_3,undefined8 pa
                            0xdb,0,param_13,param_14,param_15,param_16);
       FUN_80006728(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0xdc,0,param_13
                    ,param_14,param_15,param_16);
-      fn_80089710(7,1,0);
-      fn_800894A8((double)lbl_803E58E4,(double)lbl_803E58E8,(double)lbl_803E58EC,7);
-      fn_800895E0(7,0xa0,0xa0,0xff,0x7f,0x28);
+      skyFn_80089710(7,1,0);
+      skyFn_800894a8((double)lbl_803E58E4,(double)lbl_803E58E8,(double)lbl_803E58EC,7);
+      skyFn_800895e0(7,0xa0,0xa0,0xff,0x7f,0x28);
       *(byte *)(iVar5 + 0xb6) = *(byte *)(iVar5 + 0xb6) & 0x7f;
     }
     if ((*(uint *)(iVar4 + 0x314) & 4) != 0) {

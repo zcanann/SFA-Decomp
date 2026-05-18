@@ -43,7 +43,7 @@ extern void resetLotsOfRenderVars();
 extern void fn_8005D3B4();
 extern void fn_8006C4E0();
 extern void fn_80088730();
-extern void fn_8008982C();
+extern void objGetColor();
 extern uint AttractMovie_DrawTextureCallback();
 extern u8 isHeavyFogEnabled();
 
@@ -270,7 +270,7 @@ LAB_8005E630:
   GXSetChanCtrl(0,1,0,1,0,0,2);
   goto LAB_8005E718;
 LAB_8005E6D0:
-  fn_8008982C(0,&local_16,&local_15,&local_14);
+  objGetColor(0,&local_16,&local_15,&local_14);
   GXSetChanCtrl(0,1,0,1,0,0,2);
   local_8 = *(int*)&local_16;
   GXSetChanAmbColor(0,*(GXColor *)&local_8);
@@ -863,7 +863,7 @@ LAB_8005F7FC:
   GXSetChanCtrl(0,1,0,1,0,0,2);
   goto LAB_8005F8E4;
 LAB_8005F89C:
-  fn_8008982C(0,&local_18,&local_19,&local_1a);
+  objGetColor(0,&local_18,&local_19,&local_1a);
   GXSetChanCtrl(0,1,0,1,0,0,2);
   local_8 = *(int*)&local_18;
   GXSetChanAmbColor(0,*(GXColor *)&local_8);

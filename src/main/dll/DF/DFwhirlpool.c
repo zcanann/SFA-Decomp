@@ -38,7 +38,7 @@ extern void Camera_LoadModelViewMatrix(f32 scale, f32 unused, int param_3, int p
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textRenderSetupFn_80079804(void);
-extern void fn_800898C8(int param_1, u8 *blue, u8 *green, u8 *red);
+extern void getAmbientColor(int param_1, u8 *blue, u8 *green, u8 *red);
 extern void gxBlendFn_80078b4c(void);
 extern void fn_80078740(void);
 extern void selectTexture(void *texture, int param_2);
@@ -124,7 +124,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
       renderState.blue = 0xff;
     } else {
       *(u8 *)(obj + 0x36) = 0xff;
-      fn_800898C8(0, &renderState.blue, &renderState.green, &renderState.red);
+      getAmbientColor(0, &renderState.blue, &renderState.green, &renderState.red);
       renderState.green = (u8)((u32)renderState.green * 200 >> 8);
       renderState.red = (u8)((u32)renderState.red * 0xaa >> 8);
     }

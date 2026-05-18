@@ -45,9 +45,9 @@ extern undefined8 waitNextFrame();
 extern undefined4 FUN_80053b3c();
 extern undefined4 FUN_8005fe14();
 extern void setDrawCloudsAndLights(int param_1);
-extern undefined4 fn_800894A8();
-extern undefined4 fn_800895E0();
-extern undefined4 fn_80089710();
+extern undefined4 skyFn_800894a8();
+extern undefined4 skyFn_800895e0();
+extern undefined4 skyFn_80089710();
 extern undefined8 dll_2E_func07();
 extern undefined4 FUN_801150a4();
 extern undefined8 FUN_801150ac();
@@ -639,9 +639,9 @@ void DIMboss_update(DIMbossObject *obj)
         if (((uint)topState->steamSfxPending >> 7) != 0) {
           getEnvfxAct(0,0,0xdb,0);
           getEnvfxAct(0,0,0xdc,0);
-          fn_80089710(7,1,0);
-          fn_800894A8((double)lbl_803E4C4C,(double)lbl_803E4C50,(double)lbl_803E4C54,7);
-          fn_800895E0(7,0xa0,0xa0,0xff,0x7f,0x28);
+          skyFn_80089710(7,1,0);
+          skyFn_800894a8((double)lbl_803E4C4C,(double)lbl_803E4C50,(double)lbl_803E4C54,7);
+          skyFn_800895e0(7,0xa0,0xa0,0xff,0x7f,0x28);
           topState->steamSfxPending &= ~DIMBOSS_STEAM_SFX_PENDING_FLAG;
         }
       }
