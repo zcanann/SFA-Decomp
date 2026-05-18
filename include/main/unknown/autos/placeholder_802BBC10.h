@@ -113,5 +113,14 @@ void FUN_802bb82c(undefined8 param_1,undefined8 param_2,double param_3,undefined
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9);
 void FUN_802bb830(undefined2 *param_1,int param_2);
+int DR_EarthWarrior_render2(void);
+int DR_EarthWarrior_setScale(void);
+int DR_EarthWarrior_getExtraSize(void);
+int DR_EarthWarrior_func08(void);
+int DR_CloudRunner_render2(void);
+int DR_CloudRunner_setScale(void);
+int DR_CloudRunner_getExtraSize(void);
+int DR_CloudRunner_func08(void);
+void DR_CloudRunner_release(void);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802BBC10_H_ */

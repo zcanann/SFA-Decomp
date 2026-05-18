@@ -1911,35 +1911,35 @@
  *   slot 08: 0x80216B50 ktlazerlight_func08
  *   slot 09: 0x80216B48 ktlazerlight_getExtraSize
  * - DLL 0x0256: gDIMSnowHorn1ObjDescriptor (slots=24, mask=110111111111111111111111)
- *   slot 00: 0x802BBFF0 fn_802BBFF0
- *   slot 01: 0x802BBFA8 fn_802BBFA8
- *   slot 03: 0x802BBCDC fn_802BBCDC
- *   slot 04: 0x802BB720 fn_802BB720
- *   slot 05: 0x802BB4B0 fn_802BB4B0
- *   slot 06: 0x802BB3C0 fn_802BBB20
- *   slot 07: 0x802BB39C fn_802BBAFC
- *   slot 08: 0x802BB394 fn_802BBAF4
- *   slot 09: 0x802BB38C fn_802BBAEC
+ *   slot 00: 0x802BBFF0 DIMSnowHorn1_initialise
+ *   slot 01: 0x802BBFA8 DIMSnowHorn1_release
+ *   slot 03: 0x802BBCDC DIMSnowHorn1_init
+ *   slot 04: 0x802BB720 DIMSnowHorn1_update
+ *   slot 05: 0x802BB4B0 DIMSnowHorn1_hitDetect
+ *   slot 06: 0x802BB3C0 DIMSnowHorn1_render
+ *   slot 07: 0x802BB39C DIMSnowHorn1_free
+ *   slot 08: 0x802BB394 DIMSnowHorn1_func08
+ *   slot 09: 0x802BB38C DIMSnowHorn1_getExtraSize
  * - DLL 0x0257: gDR_EarthWarriorObjDescriptor (slots=24, mask=110111111111111111111111)
- *   slot 00: 0x802BF04C fn_802BF04C
- *   slot 01: 0x802BF018 fn_802BF018
- *   slot 03: 0x802BECF4 fn_802BECF4
- *   slot 04: 0x802BE918 fn_802BE918
- *   slot 05: 0x802BE17C fn_802BE17C
- *   slot 06: 0x802BE0B0 fn_802BE0B0
- *   slot 07: 0x802BE020 fn_802BE020
- *   slot 08: 0x802BE018 fn_802BE018
- *   slot 09: 0x802BE010 fn_802BE010
+ *   slot 00: 0x802BF04C DR_EarthWarrior_initialise
+ *   slot 01: 0x802BF018 DR_EarthWarrior_release
+ *   slot 03: 0x802BECF4 DR_EarthWarrior_init
+ *   slot 04: 0x802BE918 DR_EarthWarrior_update
+ *   slot 05: 0x802BE17C DR_EarthWarrior_hitDetect
+ *   slot 06: 0x802BE0B0 DR_EarthWarrior_render
+ *   slot 07: 0x802BE020 DR_EarthWarrior_free
+ *   slot 08: 0x802BE018 DR_EarthWarrior_func08
+ *   slot 09: 0x802BE010 DR_EarthWarrior_getExtraSize
  * - DLL 0x0258: gDR_CloudRunnerObjDescriptor (slots=24, mask=110111111111111111111111)
- *   slot 00: 0x802C1804 fn_802C1804
- *   slot 01: 0x802C1800 fn_802C1800
- *   slot 03: 0x802C1674 fn_802C1674
- *   slot 04: 0x802C13C4 fn_802C13C4
- *   slot 05: 0x802C1040 fn_802C1040
- *   slot 06: 0x802C0F78 fn_802C0F78
- *   slot 07: 0x802C0F14 fn_802C0F14
- *   slot 08: 0x802C0F0C fn_802C0F0C
- *   slot 09: 0x802C0F04 fn_802C0F04
+ *   slot 00: 0x802C1804 DR_CloudRunner_initialise
+ *   slot 01: 0x802C1800 DR_CloudRunner_release
+ *   slot 03: 0x802C1674 DR_CloudRunner_init
+ *   slot 04: 0x802C13C4 DR_CloudRunner_update
+ *   slot 05: 0x802C1040 DR_CloudRunner_hitDetect
+ *   slot 06: 0x802C0F78 DR_CloudRunner_render
+ *   slot 07: 0x802C0F14 DR_CloudRunner_free
+ *   slot 08: 0x802C0F0C DR_CloudRunner_func08
+ *   slot 09: 0x802C0F04 DR_CloudRunner_getExtraSize
  * - DLL 0x0259: gSB_CloudRunnerObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801EF35C SB_CloudRunner_initialise
  *   slot 01: 0x801EF358 SB_CloudRunner_release

@@ -50,16 +50,16 @@
  *
  * EN descriptor slot map:
  * - descriptor=0x8033567C gDR_EarthWarriorObjDescriptor (slots=24, mask=110111111111111111111111)
- * - slot 00: 0x802BF04C fn_802BF04C ref=initialise
- * - slot 01: 0x802BF018 fn_802BF018 ref=release
- * - slot 03: 0x802BECF4 fn_802BECF4 ref=init
- * - slot 04: 0x802BE918 fn_802BE918 ref=update
- * - slot 05: 0x802BE17C fn_802BE17C ref=hitDetect
- * - slot 06: 0x802BE0B0 fn_802BE0B0 ref=render
- * - slot 07: 0x802BE020 fn_802BE020 ref=free
- * - slot 08: 0x802BE018 fn_802BE018 stub=const 67
- * - slot 09: 0x802BE010 fn_802BE010 stub=const 5372 ref=getExtraSize (stub)
- * - slot 10: 0x802BE008 fn_802BE008 stub=const 0 ref=setScale (stub)
+ * - slot 00: 0x802BF04C DR_EarthWarrior_initialise ref=initialise
+ * - slot 01: 0x802BF018 DR_EarthWarrior_release ref=release
+ * - slot 03: 0x802BECF4 DR_EarthWarrior_init ref=init
+ * - slot 04: 0x802BE918 DR_EarthWarrior_update ref=update
+ * - slot 05: 0x802BE17C DR_EarthWarrior_hitDetect ref=hitDetect
+ * - slot 06: 0x802BE0B0 DR_EarthWarrior_render ref=render
+ * - slot 07: 0x802BE020 DR_EarthWarrior_free ref=free
+ * - slot 08: 0x802BE018 DR_EarthWarrior_func08 stub=const 67
+ * - slot 09: 0x802BE010 DR_EarthWarrior_getExtraSize stub=const 5372 ref=getExtraSize (stub)
+ * - slot 10: 0x802BE008 DR_EarthWarrior_setScale stub=const 0 ref=setScale (stub)
  * - slot 11: 0x802BDFE8 fn_802BDFE8
  */
 

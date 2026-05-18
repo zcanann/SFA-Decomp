@@ -1312,7 +1312,7 @@ int fn_802BDF7C(void) { return 0x0; }
 int DR_EarthWarrior_render2(void) { return 0x0; }
 int DR_EarthWarrior_setScale(void) { return 0x0; }
 int DR_EarthWarrior_getExtraSize(void) { return 0x14fc; }
-int fn_802BE018(void) { return 0x43; }
+int DR_EarthWarrior_func08(void) { return 0x43; }
 int fn_802BF728(void) { return 0x0; }
 void fn_802C0CEC(void) {}
 int fn_802C0CF0(void) { return 0x0; }
@@ -1320,5 +1320,5 @@ int fn_802C0DB0(void) { return 0x0; }
 int DR_CloudRunner_render2(void) { return 0x0; }
 int DR_CloudRunner_setScale(void) { return 0x0; }
 int DR_CloudRunner_getExtraSize(void) { return 0xbc8; }
-int fn_802C0F0C(void) { return 0x43; }
+int DR_CloudRunner_func08(void) { return 0x43; }
 void DR_CloudRunner_release(void) {}

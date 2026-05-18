@@ -50,16 +50,16 @@
  *
  * EN descriptor slot map:
  * - descriptor=0x80335138 gDIMSnowHorn1ObjDescriptor (slots=24, mask=110111111111111111111111)
- * - slot 00: 0x802BBFF0 fn_802BBFF0 ref=initialise
- * - slot 01: 0x802BBFA8 fn_802BBFA8 ref=release
- * - slot 03: 0x802BBCDC fn_802BBCDC ref=init
- * - slot 04: 0x802BB720 fn_802BB720 ref=update
- * - slot 05: 0x802BB4B0 fn_802BB4B0 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x802BB3C0 fn_802BBB20 ref=render
- * - slot 07: 0x802BB39C fn_802BBAFC ref=free
- * - slot 08: 0x802BB394 fn_802BBAF4 stub=const 67
- * - slot 09: 0x802BB38C fn_802BBAEC stub=const 3340 ref=getExtraSize (stub)
- * - slot 10: 0x802BB184 fn_802BB8E4 ref=setScale
+ * - slot 00: 0x802BBFF0 DIMSnowHorn1_initialise ref=initialise
+ * - slot 01: 0x802BBFA8 DIMSnowHorn1_release ref=release
+ * - slot 03: 0x802BBCDC DIMSnowHorn1_init ref=init
+ * - slot 04: 0x802BB720 DIMSnowHorn1_update ref=update
+ * - slot 05: 0x802BB4B0 DIMSnowHorn1_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x802BB3C0 DIMSnowHorn1_render ref=render
+ * - slot 07: 0x802BB39C DIMSnowHorn1_free ref=free
+ * - slot 08: 0x802BB394 DIMSnowHorn1_func08 stub=const 67
+ * - slot 09: 0x802BB38C DIMSnowHorn1_getExtraSize stub=const 3340 ref=getExtraSize (stub)
+ * - slot 10: 0x802BB184 DIMSnowHorn1_setScale ref=setScale
  * - slot 11: 0x802BB164 gdev_cc_initinterrupts
  */
 

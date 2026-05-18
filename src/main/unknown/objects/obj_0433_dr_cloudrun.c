@@ -50,16 +50,16 @@
  *
  * EN descriptor slot map:
  * - descriptor=0x803357C0 gDR_CloudRunnerObjDescriptor (slots=24, mask=110111111111111111111111)
- * - slot 00: 0x802C1804 fn_802C1804 ref=initialise
- * - slot 01: 0x802C1800 fn_802C1800 stub=blr ref=release (stub)
- * - slot 03: 0x802C1674 fn_802C1674 ref=init
- * - slot 04: 0x802C13C4 fn_802C13C4 ref=update
- * - slot 05: 0x802C1040 fn_802C1040 ref=hitDetect
- * - slot 06: 0x802C0F78 fn_802C0F78 ref=render
- * - slot 07: 0x802C0F14 fn_802C0F14 ref=free
- * - slot 08: 0x802C0F0C fn_802C0F0C stub=const 67
- * - slot 09: 0x802C0F04 fn_802C0F04 stub=const 3016 ref=getExtraSize (stub)
- * - slot 10: 0x802C0EFC fn_802C0EFC stub=const 0 ref=setScale (stub)
+ * - slot 00: 0x802C1804 DR_CloudRunner_initialise ref=initialise
+ * - slot 01: 0x802C1800 DR_CloudRunner_release stub=blr ref=release (stub)
+ * - slot 03: 0x802C1674 DR_CloudRunner_init ref=init
+ * - slot 04: 0x802C13C4 DR_CloudRunner_update ref=update
+ * - slot 05: 0x802C1040 DR_CloudRunner_hitDetect ref=hitDetect
+ * - slot 06: 0x802C0F78 DR_CloudRunner_render ref=render
+ * - slot 07: 0x802C0F14 DR_CloudRunner_free ref=free
+ * - slot 08: 0x802C0F0C DR_CloudRunner_func08 stub=const 67
+ * - slot 09: 0x802C0F04 DR_CloudRunner_getExtraSize stub=const 3016 ref=getExtraSize (stub)
+ * - slot 10: 0x802C0EFC DR_CloudRunner_setScale stub=const 0 ref=setScale (stub)
  * - slot 11: 0x802C0EDC fn_802C0EDC
  */
 

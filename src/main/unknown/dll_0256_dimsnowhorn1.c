@@ -18,16 +18,16 @@
  * - 0x015B DIMSnowHorn: class=0x0030, placements=11, romlists=2, objsize=0x200, widths=9w x11, aliases=0x018F
  *
  * EN slot map with reference-only names by slot index:
- * - slot 00: 0x802BBFF0 fn_802BBFF0 ref=initialise
- * - slot 01: 0x802BBFA8 fn_802BBFA8 ref=release
- * - slot 03: 0x802BBCDC fn_802BBCDC ref=init
- * - slot 04: 0x802BB720 fn_802BB720 ref=update
- * - slot 05: 0x802BB4B0 fn_802BB4B0 stub=blr ref=hitDetect (stub)
- * - slot 06: 0x802BB3C0 fn_802BBB20 ref=render
- * - slot 07: 0x802BB39C fn_802BBAFC ref=free
- * - slot 08: 0x802BB394 fn_802BBAF4 stub=const 67
- * - slot 09: 0x802BB38C fn_802BBAEC stub=const 3340 ref=getExtraSize (stub)
- * - slot 10: 0x802BB184 fn_802BB8E4 ref=setScale
+ * - slot 00: 0x802BBFF0 DIMSnowHorn1_initialise ref=initialise
+ * - slot 01: 0x802BBFA8 DIMSnowHorn1_release ref=release
+ * - slot 03: 0x802BBCDC DIMSnowHorn1_init ref=init
+ * - slot 04: 0x802BB720 DIMSnowHorn1_update ref=update
+ * - slot 05: 0x802BB4B0 DIMSnowHorn1_hitDetect stub=blr ref=hitDetect (stub)
+ * - slot 06: 0x802BB3C0 DIMSnowHorn1_render ref=render
+ * - slot 07: 0x802BB39C DIMSnowHorn1_free ref=free
+ * - slot 08: 0x802BB394 DIMSnowHorn1_func08 stub=const 67
+ * - slot 09: 0x802BB38C DIMSnowHorn1_getExtraSize stub=const 3340 ref=getExtraSize (stub)
+ * - slot 10: 0x802BB184 DIMSnowHorn1_setScale ref=setScale
  * - slot 11: 0x802BB164 gdev_cc_initinterrupts
  * - slot 12: 0x802BB144 fn_802BB144 ref=modelMtxFn
  * - slot 13: 0x802BB0E4 fn_802BB0E4 ref=render2
