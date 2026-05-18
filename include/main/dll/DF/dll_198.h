@@ -2,6 +2,9 @@
 #define MAIN_DLL_DF_DLL_198_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor20 gDFropenodeObjDescriptor;
 
 void dfropenode_update(int obj);
 void dfropenode_init(int obj, int objDef);
