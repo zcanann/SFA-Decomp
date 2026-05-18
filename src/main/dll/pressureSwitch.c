@@ -621,36 +621,36 @@ extern void swarmbaddie_render(void);
 extern void swarmbaddie_update(void);
 extern void swarmbaddie_init(void);
 
-u32 gHagabonObjDescriptor[] = {
+ObjectDescriptor gHagabonObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)hagabon_initialise,
-    (u32)hagabon_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)hagabon_initialise,
+    (ObjectDescriptorCallback)hagabon_release,
     0,
-    (u32)hagabon_init,
-    (u32)hagabon_update,
-    (u32)hagabon_hitDetect,
-    (u32)hagabon_render,
-    (u32)hagabon_free,
-    (u32)hagabon_func08,
-    (u32)hagabon_getExtraSize,
+    (ObjectDescriptorCallback)hagabon_init,
+    (ObjectDescriptorCallback)hagabon_update,
+    (ObjectDescriptorCallback)hagabon_hitDetect,
+    (ObjectDescriptorCallback)hagabon_render,
+    (ObjectDescriptorCallback)hagabon_free,
+    (ObjectDescriptorCallback)hagabon_func08,
+    hagabon_getExtraSize,
 };
 
-u32 gSwarmBaddieObjDescriptor[] = {
+ObjectDescriptor gSwarmBaddieObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)swarmbaddie_initialise,
-    (u32)swarmbaddie_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)swarmbaddie_initialise,
+    (ObjectDescriptorCallback)swarmbaddie_release,
     0,
-    (u32)swarmbaddie_init,
-    (u32)swarmbaddie_update,
-    (u32)swarmbaddie_hitDetect,
-    (u32)swarmbaddie_render,
-    (u32)swarmbaddie_free,
-    (u32)swarmbaddie_func08,
-    (u32)swarmbaddie_getExtraSize,
+    (ObjectDescriptorCallback)swarmbaddie_init,
+    (ObjectDescriptorCallback)swarmbaddie_update,
+    (ObjectDescriptorCallback)swarmbaddie_hitDetect,
+    (ObjectDescriptorCallback)swarmbaddie_render,
+    (ObjectDescriptorCallback)swarmbaddie_free,
+    (ObjectDescriptorCallback)swarmbaddie_func08,
+    swarmbaddie_getExtraSize,
 };

@@ -2,6 +2,7 @@
 #define MAIN_DLL_SEQOBJ_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void wispbaddie_update(int param_1,undefined4 *param_2);
 void FUN_8014fd38(int param_1);
@@ -17,5 +18,7 @@ void FUN_8014ffa8(undefined8 param_1,double param_2,undefined8 param_3,undefined
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void wispbaddie_release(void);
 void wispbaddie_initialise(void);
+
+extern ObjectDescriptor gWispBaddieObjDescriptor;
 
 #endif /* MAIN_DLL_SEQOBJ_H_ */

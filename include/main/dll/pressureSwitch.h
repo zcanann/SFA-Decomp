@@ -2,6 +2,7 @@
 #define MAIN_DLL_PRESSURESWITCH_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void pressureSwitch_freeSharedResource(void);
 void pressureSwitch_ensureSharedResource(void);
@@ -15,5 +16,8 @@ void FUN_8014ea20(short *param_1,undefined4 *param_2);
 void FUN_8014ed98(int param_1);
 void FUN_8014ede0(short *param_1);
 void FUN_8014ede4(uint param_1,int param_2,int param_3);
+
+extern ObjectDescriptor gHagabonObjDescriptor;
+extern ObjectDescriptor gSwarmBaddieObjDescriptor;
 
 #endif /* MAIN_DLL_PRESSURESWITCH_H_ */

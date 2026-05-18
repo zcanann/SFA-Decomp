@@ -511,21 +511,21 @@ void wispbaddie_initialise(void)
 {
 }
 
-u32 gWispBaddieObjDescriptor[] = {
+ObjectDescriptor gWispBaddieObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)wispbaddie_initialise,
-    (u32)wispbaddie_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wispbaddie_initialise,
+    (ObjectDescriptorCallback)wispbaddie_release,
     0,
-    (u32)wispbaddie_init,
-    (u32)wispbaddie_update,
-    (u32)wispbaddie_hitDetect,
-    (u32)wispbaddie_render,
-    (u32)wispbaddie_free,
-    (u32)wispbaddie_func08,
-    (u32)wispbaddie_getExtraSize,
+    (ObjectDescriptorCallback)wispbaddie_init,
+    (ObjectDescriptorCallback)wispbaddie_update,
+    (ObjectDescriptorCallback)wispbaddie_hitDetect,
+    (ObjectDescriptorCallback)wispbaddie_render,
+    (ObjectDescriptorCallback)wispbaddie_free,
+    (ObjectDescriptorCallback)wispbaddie_func08,
+    wispbaddie_getExtraSize,
 };
 
 

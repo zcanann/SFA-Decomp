@@ -300,16 +300,16 @@ void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
 #pragma peephole reset
 #pragma scheduling reset
 
-u32 gFElevControlObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)FElevControl_initialise,
-    (u32)FElevControl_release,
+ObjectDescriptor gFElevControlObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)FElevControl_initialise,
+    (ObjectDescriptorCallback)FElevControl_release,
     0,
-    (u32)FElevControl_init,
-    (u32)FElevControl_update,
-    (u32)FElevControl_hitDetect,
-    (u32)FElevControl_render,
-    (u32)FElevControl_free,
-    (u32)FElevControl_func08,
-    (u32)FElevControl_getExtraSize,
+    (ObjectDescriptorCallback)FElevControl_init,
+    (ObjectDescriptorCallback)FElevControl_update,
+    (ObjectDescriptorCallback)FElevControl_hitDetect,
+    (ObjectDescriptorCallback)FElevControl_render,
+    (ObjectDescriptorCallback)FElevControl_free,
+    (ObjectDescriptorCallback)FElevControl_func08,
+    FElevControl_getExtraSize,
 };

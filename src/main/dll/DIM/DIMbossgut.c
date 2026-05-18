@@ -68,16 +68,16 @@ void DIMbossgut_init(void *obj)
 void dimbossgut_release(void) {}
 void dimbossgut_initialise(void) {}
 
-u32 gDIM_BossGutObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)dimbossgut_initialise,
-    (u32)dimbossgut_release,
+ObjectDescriptor gDIM_BossGutObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dimbossgut_initialise,
+    (ObjectDescriptorCallback)dimbossgut_release,
     0,
-    (u32)DIMbossgut_init,
-    (u32)dimbossgut_update,
-    (u32)dimbossgut_hitDetect,
-    (u32)DIMbossgut_render,
-    (u32)dimbossgut_free,
-    (u32)dimbossgut_func08,
-    (u32)dimbossgut_getExtraSize,
+    (ObjectDescriptorCallback)DIMbossgut_init,
+    (ObjectDescriptorCallback)dimbossgut_update,
+    (ObjectDescriptorCallback)dimbossgut_hitDetect,
+    (ObjectDescriptorCallback)DIMbossgut_render,
+    (ObjectDescriptorCallback)dimbossgut_free,
+    (ObjectDescriptorCallback)dimbossgut_func08,
+    dimbossgut_getExtraSize,
 };
