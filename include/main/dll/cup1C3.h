@@ -14,5 +14,8 @@ void FUN_801ca0e0(undefined4 param_1);
 void FUN_801ca13c(int param_1);
 int dbsh_symbol_getExtraSize(void);
 void dbsh_symbol_free(void);
+void dbsh_symbol_render(void);
+void dbsh_symbol_update(void);
+void dbsh_symbol_init(void);
 
 #endif /* MAIN_DLL_CUP1C3_H_ */
