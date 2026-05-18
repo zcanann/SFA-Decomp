@@ -27,11 +27,11 @@ int AttractMovie_AssignBuffers(void *movieOrReadBuffer, void *yTextureBuffer,
     int curr;
     u32 align1;
     u32 align2;
-    int i;
+    u32 i;
 
     base = (u8 *)&lbl_803A5D60;
-    if (*(int *)(base + 0x98) == 0) return 0;
-    if (*(u8 *)(base + 0x9c) != 0) return 0;
+    if (*(int *)(base + 0x98) == 0) goto fail;
+    if (*(u8 *)(base + 0x9c) != 0) goto fail;
 
     if (*(int *)(base + 0xa8) != 0) {
         *(void **)(base + 0xac) = movieOrReadBuffer;
@@ -86,6 +86,9 @@ int AttractMovie_AssignBuffers(void *movieOrReadBuffer, void *yTextureBuffer,
 
     *(void **)((u8 *)&lbl_803A5D60 + 0x94) = thpWorkBuffer;
     return 1;
+
+fail:
+    return 0;
 }
 
 /*
@@ -100,15 +103,17 @@ void AttractMovie_GetBufferSizes(uint *movieOrReadBufferSize, int *yTextureBuffe
                                  uint *audioBufferSize, int *thpWorkBufferSize)
 {
     AttractMoviePlayer *player;
+    u32 movieOrReadSize;
     int size;
 
     player = &lbl_803A5D60;
     if (player->isOpen != 0) {
         if (player->isOnMemory != 0) {
-            *movieOrReadBufferSize = ALIGN_NEXT_32(player->header.mMovieDataSize);
+            movieOrReadSize = ALIGN_NEXT_32(player->header.mMovieDataSize);
         } else {
-            *movieOrReadBufferSize = ALIGN_NEXT_32(player->header.mBufferSize) * 10;
+            movieOrReadSize = ALIGN_NEXT_32(player->header.mBufferSize) * 10;
         }
+        *movieOrReadBufferSize = movieOrReadSize;
         *yTextureBufferSize = ALIGN_NEXT_32(player->videoInfo.xSize * player->videoInfo.ySize) * 3;
         *uTextureBufferSize = ALIGN_NEXT_32((u32)(player->videoInfo.xSize * player->videoInfo.ySize) >> 2) * 3;
         *vTextureBufferSize = ALIGN_NEXT_32((u32)(player->videoInfo.xSize * player->videoInfo.ySize) >> 2) * 3;
