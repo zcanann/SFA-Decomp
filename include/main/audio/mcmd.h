@@ -35,6 +35,22 @@ typedef struct McmdCommandArgs {
     u32 value;
 } McmdCommandArgs;
 
+typedef struct McmdEnvelopeState {
+    u8 mode;
+    u8 submode;
+    u8 unk02[2];
+    u32 duration;
+    u32 value;
+    u32 target;
+    s32 step;
+    u32 attack;
+    u32 decay;
+    u16 sustain;
+    u16 unk1E;
+    u32 release;
+    u8 unk24[4];
+} McmdEnvelopeState;
+
 typedef struct McmdVoiceState {
     u8 unk00[0x34];
     u8 *macroBase;
@@ -93,12 +109,36 @@ typedef struct McmdVoiceState {
     u32 vibratoHalfDuration;
     u8 unk14C[0x154 - 0x14C];
     u32 volume;
-    u8 unk158[0x170 - 0x158];
-    u32 pan;
-    u8 unk174[0x194 - 0x174];
+    u32 volumeBase;
+    u8 unk15C[0x170 - 0x15C];
+    union {
+        struct {
+            u32 pan;
+            u32 unkParamCurrent1;
+        };
+        u32 paramCurrent[2];
+    };
+    s32 paramStep[2];
+    u32 paramTarget[2];
+    u32 paramDuration[2];
+    u8 unk190[3];
+    u8 deferStart;
     s32 volumeStep;
     u32 volumeTarget;
     u32 volumeStart;
+    u8 unk1A0[0x1DC - 0x1A0];
+    McmdEnvelopeState pitchAdsr;
+    s16 pitchAdsrPan;
+    u8 unk206[0x208 - 0x206];
+    u8 startupVolume;
+    u8 startupPan;
+    u8 startupMidiSlot;
+    u8 startupMidiEvent;
+    u8 startupMidiLayer;
+    u8 startupStudio;
+    u8 startupAuxA;
+    u8 startupAuxB;
+    u8 startupDeferStart;
 } McmdVoiceState;
 
 #endif /* MAIN_AUDIO_MCMD_H_ */

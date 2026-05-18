@@ -18,7 +18,7 @@ extern void synthQueueVoiceInputUpdate(McmdVoiceState *state);
 extern u32 dataSampleInfo[];
 extern void *dataGetCurve(u16 key);
 extern u32 voiceConvertDbToLinear(u32 value);
-extern int fn_8027A8D4(int state);
+extern int fn_8027A8D4(McmdEnvelopeState *state);
 extern void hwSetADSR(int slot, u32 *adsr, u8 mode);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
@@ -58,7 +58,7 @@ void mcmdPlayMacro(McmdVoiceState *state, McmdCommandArgs *args)
                               (state->volume >> 8) & 0xff, (state->pan >> 8) & 0xff,
                               state->midiSlot, state->midiEvent, state->midiLayer,
                               args->value & 0xffff, state->studio, 0, state->auxA,
-                              state->auxB, *(u8 *)((u8 *)state + 0x193) == 0);
+                              state->auxB, state->deferStart == 0);
 
     state->macroAllocating = 0;
 
@@ -102,13 +102,11 @@ void mcmdStartSample(McmdVoiceState *state, McmdCommandArgs *args)
     if (found == 0) {
         mode = args->flags >> 0x18;
         if (mode == 1) {
-            dataSampleInfo[3] =
-                (args->value * (0x7f - ((*(u32 *)((u8 *)state + 0x154) >> 0x10) & 0xff))) / 0x7f;
+            dataSampleInfo[3] = (args->value * (0x7f - ((state->volume >> 0x10) & 0xff))) / 0x7f;
         } else if (mode == 0) {
             dataSampleInfo[3] = args->value;
         } else if (mode < 3) {
-            dataSampleInfo[3] =
-                (args->value * ((*(u32 *)((u8 *)state + 0x154) >> 0x10) & 0xff)) / 0x7f;
+            dataSampleInfo[3] = (args->value * ((state->volume >> 0x10) & 0xff)) / 0x7f;
         } else {
             dataSampleInfo[3] = 0;
         }
@@ -123,7 +121,7 @@ void mcmdStartSample(McmdVoiceState *state, McmdCommandArgs *args)
                              ((u32)state->priorityGroup << 0x18) |
                                  (state->priorityValue >> 0xf),
                              state->voiceHandle, noStartOffset >> 5,
-                             *(u8 *)((u8 *)state + 0x193));
+                             state->deferStart);
         state->prevSampleId = dataSampleInfo[0];
         if (state->targetPitch != 0xffffffff) {
             DoSetPitch(state);
@@ -330,7 +328,7 @@ void mcmdSetADSR(McmdVoiceState *state, McmdCommandArgs *args)
                        ((u32)table[17] << 8) | table[16];
             if (velCurve != 0x80000000) {
                 conv.word.hi = 0x43300000;
-                conv.word.lo = *(u32 *)((u8 *)state + 0x158);
+                conv.word.lo = state->volumeBase;
                 curve.word.hi = 0x43300000;
                 curve.word.lo = velCurve ^ 0x80000000;
                 bend = (int)(lbl_803E77F4 * (f32)(conv.d - lbl_803E7800) *
@@ -355,7 +353,7 @@ void mcmdSetADSR(McmdVoiceState *state, McmdCommandArgs *args)
 /*
  * Configure the per-voice envelope state from an ADSR/keygroup table.
  */
-void mcmdSetPitchADSR(int state, u32 *args)
+void mcmdSetPitchADSR(McmdVoiceState *state, McmdCommandArgs *args)
 {
     s16 basePan;
     u16 decayRaw;
@@ -384,18 +382,18 @@ void mcmdSetPitchADSR(int state, u32 *args)
         f64 d;
     } curve;
 
-    table = dataGetCurve((*args >> 8) & 0xffff);
+    table = dataGetCurve((args->flags >> 8) & 0xffff);
     if (table != 0) {
-        *(s16 *)(state + 0x204) = (s16)((s8)args[1] << 8);
-        basePan = *(s16 *)(state + 0x204);
-        panDelta = (u32)(s16)(s8)(args[1] >> 8);
+        state->pitchAdsrPan = (s16)((s8)args->value << 8);
+        basePan = state->pitchAdsrPan;
+        panDelta = (u32)(s16)(s8)(args->value >> 8);
         panScaled = panDelta << 8;
         delta = (int)panScaled / 100 + ((int)(panScaled | (panDelta >> 24)) >> 31);
         delta = (s16)delta - (s16)(delta >> 31);
         if (basePan < 0) {
-            *(s16 *)(state + 0x204) = basePan - (s16)delta;
+            state->pitchAdsrPan = basePan - (s16)delta;
         } else {
-            *(s16 *)(state + 0x204) = basePan + (s16)delta;
+            state->pitchAdsrPan = basePan + (s16)delta;
         }
 
         decayRaw = *(u16 *)(table + 8);
@@ -411,7 +409,7 @@ void mcmdSetPitchADSR(int state, u32 *args)
 
         if (velCurve != 0x80000000) {
             conv.word.hi = 0x43300000;
-            conv.word.lo = *(u32 *)(state + 0x158);
+            conv.word.lo = state->volumeBase;
             curve.word.hi = 0x43300000;
             curve.word.lo = velCurve ^ 0x80000000;
             attack += (int)(lbl_803E77F4 * (f32)(conv.d - lbl_803E7800) *
@@ -419,55 +417,50 @@ void mcmdSetPitchADSR(int state, u32 *args)
         }
         if (keyCurve != 0x80000000) {
             conv.word.hi = 0x43300000;
-            conv.word.lo = *(u8 *)(state + 0x12f);
+            conv.word.lo = state->keyBase;
             curve.word.hi = 0x43300000;
             curve.word.lo = keyCurve ^ 0x80000000;
             decay += (int)(lbl_803E77F8 * (f32)(conv.d - lbl_803E7800) *
                            (f32)(curve.d - lbl_803E7808));
         }
 
-        *(u8 *)(state + 0x1dc) = 1;
-        *(u8 *)(state + 0x202) = 0;
-        *(u32 *)(state + 0x1f0) = voiceConvertDbToLinear(attack);
-        *(u32 *)(state + 0x1f4) = voiceConvertDbToLinear(decay);
+        state->pitchAdsr.mode = 1;
+        state->pitchAdsr.unk24[2] = 0;
+        state->pitchAdsr.attack = voiceConvertDbToLinear(attack);
+        state->pitchAdsr.decay = voiceConvertDbToLinear(decay);
         decayIndex = ((decayRaw & 0xff) << 8 | ((u32)decayRaw >> 8)) >> 2;
         if (decayIndex > 0x3ff) {
             decayIndex = 0x3ff;
         }
-        *(u16 *)(state + 0x1f8) = 0xc1 - voiceAdsrDecayTable[decayIndex];
-        *(u32 *)(state + 0x1fc) = ((releaseRaw & 0xff) << 8) | ((u32)releaseRaw >> 8);
-        fn_8027A8D4(state + 0x1dc);
-        *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) |= MCMD_VOICE_PITCH_ADSR_INPUT_FLAG;
+        state->pitchAdsr.sustain = 0xc1 - voiceAdsrDecayTable[decayIndex];
+        state->pitchAdsr.release = ((releaseRaw & 0xff) << 8) | ((u32)releaseRaw >> 8);
+        fn_8027A8D4(&state->pitchAdsr);
+        state->inputFlags |= MCMD_VOICE_PITCH_ADSR_INPUT_FLAG;
     }
 }
 
 /*
  * voiceConfigureParamRamp - voice param store with magic-divide (~160 instructions).
- * Stubbed.
  */
-void voiceConfigureParamRamp(int state, u32 *args, u32 idx)
+void voiceConfigureParamRamp(McmdVoiceState *state, McmdCommandArgs *args, u32 idx)
 {
-    u32 *duration;
-    int offset;
+    u32 index;
     u32 packed;
     u32 initial;
     int stepBase;
-    int base;
 
-    offset = (idx & 0xff) * 4;
-    packed = *args;
-    duration = (u32 *)(state + offset + 0x188);
-    *duration = packed >> 0x10;
-    sndConvertMs(duration);
-    initial = args[1];
-    *(u32 *)(state + offset + 0x170) = (*args & 0xff00) << 8;
+    index = idx & 0xff;
+    packed = args->flags;
+    state->paramDuration[index] = packed >> 0x10;
+    sndConvertMs(&state->paramDuration[index]);
+    initial = args->value;
+    state->paramCurrent[index] = (args->flags & 0xff00) << 8;
     stepBase = (s8)initial * 0x10000;
-    base = state + offset;
-    *(int *)(base + 0x180) = *(int *)(state + offset + 0x170) + stepBase;
-    if (*duration == 0) {
-        *(int *)(base + 0x178) = stepBase;
+    state->paramTarget[index] = state->paramCurrent[index] + stepBase;
+    if (state->paramDuration[index] == 0) {
+        state->paramStep[index] = stepBase;
     } else {
-        *(int *)(base + 0x178) = stepBase / (int)(packed >> 0x10);
+        state->paramStep[index] = stepBase / (int)(packed >> 0x10);
     }
-    *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) |= MCMD_VOICE_PARAM_RAMP_INPUT_FLAG;
+    state->inputFlags |= MCMD_VOICE_PARAM_RAMP_INPUT_FLAG;
 }
