@@ -235,6 +235,9 @@ def collect_candidates(
     dol = DolFile(retail_strings_path)
     strings = scan_strings(dol)
     strings_by_address = {entry.address: entry for entry in strings}
+    for entry in strings:
+        if "source" in entry.tags:
+            strings_by_address.setdefault(entry.address + 1, entry)
     xrefs = scan_text_xrefs(dol, strings_by_address, retail_functions)
     xrefs_by_target = group_xrefs_by_target(xrefs)
 
@@ -259,7 +262,10 @@ def collect_candidates(
                 retail_address=entry.address,
                 retail_label=retail_label,
                 retail_message=retail_message,
-                xrefs=tuple(xrefs_by_target.get(entry.address, [])),
+                xrefs=tuple(
+                    xrefs_by_target.get(entry.address, [])
+                    + (xrefs_by_target.get(entry.address + 1, []) if "source" in entry.tags else [])
+                ),
                 debug_sources=debug_sources,
                 debug_symbol_hits=tuple(symbol_stem_hits(debug_symbol_names, source_name)),
                 listed_in_debug_srcfiles=basename in debug_srcfiles,
