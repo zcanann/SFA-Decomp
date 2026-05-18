@@ -230,6 +230,11 @@ typedef struct ObjectDescriptor20 {
   ObjectDescriptorCallback slot13;
 } ObjectDescriptor20;
 
+typedef struct ObjectDescriptor20WithPadding {
+  ObjectDescriptor20 descriptor;
+  u32 padding;
+} ObjectDescriptor20WithPadding;
+
 typedef struct ObjectDescriptor23 {
   u32 reserved0;
   u32 reserved1;

@@ -2,6 +2,9 @@
 #define MAIN_DLL_COLLECTABLE_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor20WithPadding gTrickyObjDescriptor;
 
 void FUN_80144e40(int param_1,int param_2);
 int FUN_80145120(int param_1,int param_2);
@@ -20,14 +23,15 @@ int fn_801451D8(int obj,int state);
 void fn_80144F50(int obj,int state);
 void FUN_80145ea4(int param_1);
 void FUN_80145ee8(int param_1,int param_2,int param_3);
-int fn_80145828(int *obj,int targetObj);
-void fn_801458BC(int *obj,int commandEnabled,int targetObj);
+int Tricky_func10(int *obj,int targetObj);
+void Tricky_func0F(int *obj,int commandEnabled,int targetObj);
 void sideCommandEnable(int obj,int targetObj,int commandKind,int commandBit);
 void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 uint FUN_80146874(void);
 void Tricky_destroy(int obj,int shouldKeepFlameChildren);
 void Tricky_init(int obj);
+void Tricky_update(int obj);
 void fn_80148C18(int obj,int state);
 void fn_80148D8C(int obj,int state);
 int fn_80149CEC(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mode);
@@ -35,8 +39,8 @@ int fn_8014A150(int obj,int state,void *from,void *to);
 void fn_8014A304(float radius,int obj,int state);
 void fn_8014A5FC(int obj,int state);
 void fn_8014A86C(int obj,int state,float *nearestFloorY,float *nearestSpecialY);
-void fn_801463BC(int obj,int param_2,int param_3,int param_4,int param_5,char doRender);
-void fn_8014658C(int obj);
+void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char doRender);
+void Tricky_hitDetect(int obj);
 void FUN_80146f94(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_80146f98(int param_1);
@@ -68,5 +72,12 @@ void FUN_80147884(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 void FUN_80147a70(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_80147d2c(int param_1,int param_2);
+int Tricky_getExtraSize(void);
+u8 Tricky_func0E(int *obj);
+u8 Tricky_render2(int *obj);
+void Tricky_func11(int *obj);
+int Tricky_func13(int *obj);
+int Tricky_func12(int *obj);
+int Tricky_getAvailableCommands(void);
 
 #endif /* MAIN_DLL_COLLECTABLE_H_ */
