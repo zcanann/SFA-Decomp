@@ -15,7 +15,7 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,i
 int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim,ObjAnimEventList *events);
 int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
 int Object_ObjAnimSetMove(f32 moveProgress,int objAnim,int moveId,int flags);
-undefined2 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
+u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
 void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value);
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount);
 int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut);

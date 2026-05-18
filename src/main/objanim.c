@@ -469,7 +469,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined2 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim)
+u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim)
 {
   return ObjAnim_GetCurrentState(objAnim)->eventCountdown;
 }
