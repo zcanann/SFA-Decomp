@@ -3157,7 +3157,7 @@ uint fn_800386BC(f32 x,f32 y,f32 z)
 /*
  * --INFO--
  *
- * Function: fn_80038988
+ * Function: playerEyeAnimFn_80038988
  * EN v1.0 Address: 0x80038988
  * EN v1.0 Size: 1428b
  * EN v1.1 Address: 0x80038A80
@@ -3167,7 +3167,7 @@ uint fn_800386BC(f32 x,f32 y,f32 z)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80038988(int obj,int blinkState,uint flags)
+void playerEyeAnimFn_80038988(int obj,int blinkState,uint flags)
 {
   ObjAnimComponent *objAnim;
   u8 step;

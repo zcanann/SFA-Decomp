@@ -84,7 +84,7 @@ extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
 extern void objRenderFn_8003b8f4(f32 scale,...);
-extern int fn_800395D8(int obj,int param_2);
+extern int objModelGetVecFn_800395d8(int obj,int param_2);
 extern undefined4 FUN_80046f44();
 extern undefined4 FUN_80046f84();
 extern void fn_8004B594(void *param_1);
@@ -1865,7 +1865,7 @@ void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char 
     } while (i < 4);
     ObjPath_GetPointWorldPosition(obj,8,(float *)(pathState + 0x408),
                  (undefined4 *)(pathState + 0x40c),(float *)(pathState + 0x410),0);
-    pathInfo = fn_800395D8(obj,0);
+    pathInfo = objModelGetVecFn_800395d8(obj,0);
     *(s16 *)(pathState + 0x414) = *(s16 *)(pathInfo + 2);
     if ((*(u32 *)(state + 0x54) & 0x10) != 0) {
       mode = *(u8 *)(state + 8);

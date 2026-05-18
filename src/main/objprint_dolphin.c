@@ -4406,7 +4406,7 @@ undefined4 clearLoadedFileFlags_blocks1(uint *param_1,int param_2,int param_3)
 extern u32 curObjMtx;
 extern u8 lbl_803DCC29;
 extern u32 lbl_803DCC74;
-void fn_800412D4(u32 x) { curObjMtx = x; }
+void objSetMtxFn_800412d4(u32 x) { curObjMtx = x; }
 void set_shadowFlag_803dcc29(u8 x) { lbl_803DCC29 = x; }
 u32 isRomListLoading(void) { return lbl_803DCC74; }
 
