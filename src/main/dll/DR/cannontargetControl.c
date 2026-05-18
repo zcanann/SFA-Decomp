@@ -91,7 +91,7 @@ extern f32 lbl_803E4334;
 extern int fn_80080150(void *p1);
 extern int objHitDetectFn_80062e84(int p1, int p2, int p3);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern void fn_8002273C(void *p1, void *p2, void *p3);
+extern void Vec3_ReflectAgainstNormal(void *normal, void *velocity, void *out);
 extern f32 PSVECMag(f32 *v);
 extern int gunpowderbarrel_setPlayerHeldState(int p1, int p2);
 extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -187,8 +187,8 @@ void gunpowderbarrel_hitDetect(int param_1)
     sp10[0] = *((f32 *)&collision_buf[0] + 7);
     sp10[1] = *((f32 *)&collision_buf[0] + 8);
     sp10[2] = *((f32 *)&collision_buf[0] + 9);
-    fn_8002273C(sp10, (void *)(param_1 + 0x24), (void *)(param_1 + 0x24));
-    fn_8002273C(sp10, (void *)(p_b8 + 0x20), (void *)(p_b8 + 0x20));
+    Vec3_ReflectAgainstNormal(sp10, (void *)(param_1 + 0x24), (void *)(param_1 + 0x24));
+    Vec3_ReflectAgainstNormal(sp10, (void *)(p_b8 + 0x20), (void *)(p_b8 + 0x20));
 
     *(f32 *)(param_1 + 0x24) = lbl_803E4330 * *(f32 *)(param_1 + 0x24);
     *(f32 *)(param_1 + 0x28) = lbl_803E4330 * *(f32 *)(param_1 + 0x28);

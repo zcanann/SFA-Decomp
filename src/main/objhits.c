@@ -64,7 +64,7 @@ extern void Vec3_Normalize();
 extern void Vec3_ScaleAdd();
 extern void Vec3_Cross();
 extern f32 Vec3_Length();
-extern void fn_8002273C();
+extern void Vec3_ReflectAgainstNormal();
 extern f32 lbl_803DF59C;
 extern f32 lbl_803DF5A0;
 extern f32 lbl_803DF5B0;
@@ -667,7 +667,7 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
     local_dc = local_dc * fVar2;
     local_d8 = local_d8 * fVar2;
     local_d4 = local_d4 * fVar2;
-    fn_8002273C(&local_c4,&local_dc,&local_ac);
+    Vec3_ReflectAgainstNormal(&local_c4,&local_dc,&local_ac);
   }
   local_7c = local_7c + local_ac;
   local_78 = local_78 + local_a8;
@@ -858,7 +858,7 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
     local_cc = local_cc * fVar1;
     local_c8 = local_c8 * fVar1;
     local_c4 = local_c4 * fVar1;
-    fn_8002273C(&local_b4,&local_cc,&local_9c);
+    Vec3_ReflectAgainstNormal(&local_b4,&local_cc,&local_9c);
   }
   local_6c = local_6c + local_9c;
   local_68 = local_68 + local_98;
