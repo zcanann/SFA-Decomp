@@ -204,10 +204,10 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         Music_Trigger(0x27,1);
         break;
       case 2:
-        *(undefined2 *)((int)puVar13 + 0x402) = 1;
-        *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) & 0xf7;
-        *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) | 0x80;
-        (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,0,0);
+        runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
+        obj->objectFlags &= ~8;
+        obj->objectFlags |= 0x80;
+        (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,0,0);
         break;
       case 6:
         lbl_803DDB80 = lbl_803DDB80 | 0x40004;
