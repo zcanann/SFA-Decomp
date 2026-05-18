@@ -2,7 +2,11 @@
 #define MAIN_DLL_ANIM_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 #include "main/dll/anim_internal.h"
+
+extern ObjectDescriptor gDoorswitchObjDescriptor;
+extern ObjectDescriptor gDFP_seqpointObjDescriptor;
 
 void FUN_801feb30(void);
 void FUN_801ff8b8(short *param_1);
@@ -138,6 +142,7 @@ void FUN_802051e0(uint param_1);
 extern char sDoorswitchInitNoLongerSupported[];
 
 int doorswitch_getExtraSize(void);
+int doorswitch_func08(void);
 void doorswitch_free(void);
 void doorswitch_render(void);
 void doorswitch_hitDetect(void);
@@ -145,5 +150,15 @@ void doorswitch_update(void);
 void doorswitch_init(void);
 void doorswitch_release(void);
 void doorswitch_initialise(void);
+
+int dfpseqpoint_getExtraSize(void);
+int dfpseqpoint_func08(void);
+void dfpseqpoint_free(void);
+void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dfpseqpoint_hitDetect(void);
+void dfpseqpoint_update(void);
+void dfpseqpoint_init(void);
+void dfpseqpoint_release(void);
+void dfpseqpoint_initialise(void);
 
 #endif /* MAIN_DLL_ANIM_H_ */
