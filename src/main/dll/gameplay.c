@@ -13057,7 +13057,7 @@ int fn_800F07DC(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern u8 lbl_803DD488;
-u8 fn_800E87C4(void) { return lbl_803DD488; }
+u8 getSaveGameLoadStatus(void) { return lbl_803DD488; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
@@ -13067,7 +13067,7 @@ void Carryable_free(int x) { ObjGroup_RemoveObject(x, 0x10); }
 #pragma scheduling reset
 
 /* lbl = N (byte) */
-void fn_800E878C(void) { lbl_803DD488 = 0x0; }
+void clearSaveGameLoadingFlag(void) { lbl_803DD488 = 0x0; }
 
 /* 12b 3-insn patterns. */
 s32 Carryable_isHeld(u8 *obj) { return *(s8*)(obj + 0x5); }

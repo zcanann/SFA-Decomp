@@ -4352,8 +4352,8 @@ void gameplay_setDebugOptionEnabled(uint param_1,u8 param_2)
 /* Trivial 4b 0-arg blr leaves. */
 void curves_release(void) {}
 void RomCurve_initialise(void) {}
-void fn_800E7D98(void) {}
-void fn_800E7D9C(void) {}
+void dll_15_release_nop(void) {}
+void dll_15_initialise_nop(void) {}
 
 /*
  * --INFO--
@@ -4399,4 +4399,4 @@ void curves_initialise(void) { gRomCurveCount = 0x0; }
 /* *p1 = lbl1; *p2 = lbl2; (u32) */
 extern u32 lbl_803DD474;
 extern u32 lbl_803DD470;
-void fn_800E36E4(u32 *p1, u32 *p2) { *p1 = lbl_803DD474; *p2 = lbl_803DD470; }
+void RomCurve_func0D(u32 *p1, u32 *p2) { *p1 = lbl_803DD474; *p2 = lbl_803DD470; }
