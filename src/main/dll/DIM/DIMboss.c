@@ -83,7 +83,7 @@ extern void OSReport(const char *msg, ...);
 
 extern undefined4 Camera_DisableViewYOffset();
 extern undefined4 getEnvfxAct();
-extern undefined4 Resource_Release();
+extern void Resource_Release(void *resource);
 extern undefined4 ModelLightStruct_free();
 extern undefined4 Obj_FreeObject();
 extern undefined4 Obj_GetPlayerObject();
@@ -106,7 +106,7 @@ extern undefined4* DAT_803dd70c;
 extern undefined4* lbl_803DCAAC;
 extern undefined4* lbl_803DCAB4;
 extern undefined4* DAT_803dd738;
-extern undefined4 lbl_803DDB80;
+extern u32 lbl_803DDB80;
 extern undefined4 DAT_803de808;
 extern f32 lbl_803E58DC;
 extern f32 lbl_803DC074;
@@ -123,7 +123,7 @@ extern void (*lbl_803AD018[])(void);
 extern int lbl_803DCA8C;
 extern undefined4* lbl_803DCA54;
 extern undefined4* lbl_803DCAB8;
-extern undefined4 lbl_803DDB88;
+extern void *lbl_803DDB88;
 extern u8 lbl_803DDB84;
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C28;
@@ -186,7 +186,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
   Obj_GetPlayerObject();
   iVar11 = (int)topState;
   runtime->phase = DIMBOSS_PHASE_START;
-  (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,5,0);
+  ((DIMbossMapAreaTriggerFn)(*(code *)(*lbl_803DCAAC + 0x50)))(DIMBOSS_MAP_DIR,5,0);
   if (obj->renderPause == 0) {
     puVar7 = lbl_803AC9DC;
     puVar8 = (undefined4 *)0x1;
@@ -210,7 +210,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
         obj->objectFlags &= ~8;
         obj->objectFlags |= 0x80;
-        (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,0,0);
+        ((DIMbossMapAreaTriggerFn)(*(code *)(*lbl_803DCAAC + 0x50)))(DIMBOSS_MAP_DIR,0,0);
         break;
       case 6:
         lbl_803DDB80 = lbl_803DDB80 | 0x40004;
@@ -256,10 +256,10 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         (*(code *)(*DAT_803dd6d4 + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,puVar3,0x3c);
         break;
       case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
-        (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,2,1);
+        ((DIMbossMapAreaTriggerFn)(*(code *)(*lbl_803DCAAC + 0x50)))(DIMBOSS_MAP_DIR,2,1);
         break;
       case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
-        (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,2,0);
+        ((DIMbossMapAreaTriggerFn)(*(code *)(*lbl_803DCAAC + 0x50)))(DIMBOSS_MAP_DIR,2,0);
         break;
       case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
@@ -358,7 +358,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         }
       }
       else if ((bVar1 != 0) && (bVar1 < 3)) {
-        *(undefined2 *)((int)animUpdate + 0x6e) = 0;
+        animUpdate->hitVolumePair = 0;
         puVar7 = puVar13;
         puVar8 = puVar13;
         fn_801BC7E4(puVar3,animUpdate,(int)puVar13,(int)puVar13);
@@ -368,7 +368,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
           puVar8 = &DAT_803adc60;
           puVar9 = (undefined4 *)*DAT_803dd70c;
           (*(code *)puVar9[2])(puVar3,puVar13);
-          *(undefined *)((int)animUpdate + 0x56) = 0;
+          animUpdate->sequenceEventActive = 0;
         }
       }
     }
@@ -742,7 +742,7 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   *animFlagsByte |= 8;
   *animFlagsByte &= 0xfe;
   topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
-  lbl_803DDB88 = (undefined4)Resource_Acquire(0x5a,1);
+  lbl_803DDB88 = Resource_Acquire(0x5a,1);
   if (GameBit_Get(0x1df) == 0) {
     topState->stompDustDelay = 2;
     topState->introSinkHeight = lbl_803E4C78;

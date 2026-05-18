@@ -281,7 +281,7 @@ undefined4 FUN_801db670(int param_1,undefined4 param_2,ObjAnimUpdateState *animU
   int iVar4;
   
   iVar4 = *(int *)(param_1 + 0xb8);
-  *(undefined *)((int)animUpdate + 0x56) = 0;
+  animUpdate->sequenceEventActive = 0;
   for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
     eventId = animUpdate->eventIds[iVar3];
     if (eventId == 2) {
