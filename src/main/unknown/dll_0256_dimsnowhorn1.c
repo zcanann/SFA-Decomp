@@ -33,12 +33,12 @@
  * - slot 13: 0x802BB0E4 fn_802BB0E4 ref=render2
  * - slot 14: 0x802BB0C4 fn_802BB0C4
  * - slot 15: 0x802BB020 fn_802BB020
- * - slot 16: 0x802BB018 fn_802BB018 stub=const 0
+ * - slot 16: 0x802BB018 DIMSnowHorn1_func16 stub=const 0
  * - slot 17: 0x802BB008 fn_802BB008
  * - slot 18: 0x802BAFF4 fn_802BB754
  * - slot 19: 0x802BAFC4 fn_802BB724
- * - slot 20: 0x802BAFBC fn_802BB71C stub=const 0
- * - slot 21: 0x802BAFB8 fn_802BB718 stub=blr
+ * - slot 20: 0x802BAFBC DIMSnowHorn1_func20 stub=const 0
+ * - slot 21: 0x802BAFB8 DIMSnowHorn1_func21 stub=blr
  * - slot 22: 0x802BAEE8 fn_802BB648
  * - slot 23: 0x802B9780 fn_802B9780 stub=blr
  *

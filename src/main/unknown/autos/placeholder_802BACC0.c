@@ -18,12 +18,12 @@ extern void Matrix_TransformPoint(double x, double y, double z, void *matrix, un
 /*
  * Empty stub.
  */
-void fn_802BB718(void) {}
+void DIMSnowHorn1_func21(void) {}
 
 /*
  * Returns 0.
  */
-int fn_802BB71C(void) { return 0; }
+int DIMSnowHorn1_func20(void) { return 0; }
 
 /*
  * Returns floored neg-velocity-Y in *out, or a constant if mode != 10;
@@ -62,7 +62,7 @@ void fn_802BB008(int obj, u8 value)
 /*
  * Returns 0.
  */
-int fn_802BB018(void) { return 0; }
+int DIMSnowHorn1_func16(void) { return 0; }
 
 /*
  * Build a transform from a packed rotation/translation record and sample
