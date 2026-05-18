@@ -18,7 +18,10 @@ typedef struct PollenFragmentConfig {
 
 void kaldachompspit_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                            undefined4 param_4,undefined4 param_5,char visible);
+void kaldachompspit_hitDetect(void);
 void kaldachompspit_init(uint param_1);
+void kaldachompspit_release(void);
+void kaldachompspit_initialise(void);
 void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,double param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9);
@@ -31,12 +34,38 @@ void FUN_8016aa90(uint param_1);
 void FUN_8016aae4(void);
 void FUN_8016ab18(int param_1);
 void FUN_8016ab40(int param_1);
+int pinponspike_getExtraSize(void);
+int pinponspike_func08(void);
+void pinponspike_free(void);
+void pinponspike_render(void);
+void pinponspike_hitDetect(void);
+void pinponspike_update(void);
+void pinponspike_init(void);
+void pinponspike_release(void);
+void pinponspike_initialise(void);
 void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
 void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
+int pollen_getExtraSize(void);
+int pollen_func08(void);
+void pollen_free(void);
+void pollen_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
+void pollen_hitDetect(void);
+void pollen_update(void);
+void pollen_init(void);
+void pollen_release(void);
+void pollen_initialise(void);
+int pollenfragment_getExtraSize(void);
+int pollenfragment_func08(void);
+void pollenfragment_free(void);
+void pollenfragment_render(void);
+void pollenfragment_hitDetect(void);
+void pollenfragment_update(void);
 void pollenfragment_init(int obj,int config);
+void pollenfragment_release(void);
+void pollenfragment_initialise(void);
 void FUN_8016b174(int param_1);
 void FUN_8016b1dc(void);
 void FUN_8016b228(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
