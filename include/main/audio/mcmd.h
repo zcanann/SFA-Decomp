@@ -80,7 +80,8 @@ typedef struct McmdVoiceState {
     u32 unkFC;
     u16 baseSample;
     u16 instrumentKey;
-    u8 unk104[4];
+    u8 keyGroup;
+    u8 unk105[3];
     void *cloneVidListNode;
     u8 priorityGroup;
     u8 unk10D;
@@ -139,6 +140,10 @@ typedef struct McmdVoiceState {
     u8 startupAuxA;
     u8 startupAuxB;
     u8 startupDeferStart;
+    u8 unk211[0x3EC - 0x211];
+    u8 queuedMessageCount;
+    u8 unk3ED;
+    u8 queuedMessageWriteIndex;
 } McmdVoiceState;
 
 #endif /* MAIN_AUDIO_MCMD_H_ */

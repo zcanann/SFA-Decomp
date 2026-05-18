@@ -1219,6 +1219,7 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
     int wasActive;
     int vid;
     int state;
+    McmdVoiceState *voiceState;
     u32 activePrev;
     u32 activeNext;
     u32 activeHead;
@@ -1240,6 +1241,7 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
         voiceId = voiceAllocate(priority, maxInstances, baseSample, streamKind);
         if (voiceId != 0xffffffff) {
             state = (int)(synthVoice + voiceId * 0x404);
+            voiceState = (McmdVoiceState *)state;
             vidRemoveVoice(state);
             if (*(int *)(state + 0x4c) != 2) {
                 if (*(int *)(state + 0x4c) == 0) {
@@ -1258,53 +1260,53 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
                 *(int *)(state + 0x4c) = 2;
             }
 
-            *(u32 *)(state + 0x118) = (*(u32 *)(state + 0x118) & 0x10) | 2;
-            *(int *)(state + 0x114) = 0;
+            voiceState->outputFlags = (voiceState->outputFlags & 0x10) | 2;
+            voiceState->inputFlags = 0;
             wasActive = hwIsActive(voiceId);
             if (wasActive != 0) {
-                *(u32 *)(state + 0x118) |= 1;
+                voiceState->outputFlags |= 1;
             }
-            *(int *)(state + 0x9c) = 0;
-            *(int *)(state + 0x98) = 0;
+            voiceState->wakeTimeLo = 0;
+            voiceState->wakeTimeHi = 0;
             if (streamKey == 0) {
-                *(u8 *)(state + 0x11d) = 0;
-                *(u8 *)(state + 0x20a) = (u8)midiSlot;
-                *(u8 *)(state + 0x20b) = midiEvent;
-                *(u8 *)(state + 0x20c) = midiLayer;
+                voiceState->streamKind = 0;
+                voiceState->startupMidiSlot = (u8)midiSlot;
+                voiceState->startupMidiEvent = midiEvent;
+                voiceState->startupMidiLayer = midiLayer;
             } else {
-                *(u8 *)(state + 0x11d) = 1;
+                voiceState->streamKind = 1;
                 keyFlags &= 0x7f;
                 inpResetMidiCtrl(voiceId & 0xff, 0xff, 1);
                 inpResetChannelDefaults(voiceId & 0xff, 0xff);
-                *(u8 *)(state + 0x20a) = voiceId;
-                *(u8 *)(state + 0x20b) = 0xff;
-                *(u8 *)(state + 0x20c) = 0;
+                voiceState->startupMidiSlot = voiceId;
+                voiceState->startupMidiEvent = 0xff;
+                voiceState->startupMidiLayer = 0;
             }
 
-            *(u16 *)(state + 0x102) = instrumentKey;
-            *(s16 *)(state + 0x100) = (s16)baseSample;
-            *(u32 *)(state + 0x110) = 0x75300000;
-            *(u16 *)(state + 0x10e) = 0x400;
-            *(int *)(state + 0x34) = instrument;
-            *(u32 *)(state + 0x38) = instrument + (u32)sampleOffsetIndex * 8;
-            *(u8 *)(state + 0x12f) = keyFlags;
-            *(u16 *)(state + 0x12c) = keyFlags;
-            *(u8 *)(state + 0x12e) = 0;
-            *(u8 *)(state + 0x208) = volume;
-            *(u8 *)(state + 0x209) = pan;
-            *(u8 *)(state + 0x20d) = studio;
+            voiceState->instrumentKey = instrumentKey;
+            voiceState->baseSample = (s16)baseSample;
+            voiceState->priorityValue = 0x75300000;
+            voiceState->priorityScale = 0x400;
+            voiceState->macroBase = (u8 *)instrument;
+            voiceState->macroCursor = (u8 *)(instrument + (u32)sampleOffsetIndex * 8);
+            voiceState->keyBase = keyFlags;
+            voiceState->key = keyFlags;
+            voiceState->fineTune = 0;
+            voiceState->startupVolume = volume;
+            voiceState->startupPan = pan;
+            voiceState->startupStudio = studio;
             *(u8 *)(state + 0x8c) = 0;
             *(u8 *)(state + 0x8d) = 0;
-            *(int *)(state + 0xec) = -1;
-            *(int *)(state + 0xf0) = -1;
-            *(int *)(state + 0x108) = -1;
-            *(u8 *)(state + 0x20e) = auxA;
-            *(u8 *)(state + 0x20f) = auxB;
-            *(u8 *)(state + 0x210) = startImmediately == 0;
-            *(u8 *)(state + 0x3ee) = 0;
-            *(u8 *)(state + 0x3ed) = 0;
-            *(u8 *)(state + 0x3ec) = 0;
-            *(u32 *)(state + 0xf4) = voiceId | ((u32)instrumentKey << 0x10) |
+            voiceState->voiceNextHandle = -1;
+            voiceState->voicePrevHandle = -1;
+            voiceState->cloneVidListNode = (void *)-1;
+            voiceState->startupAuxA = auxA;
+            voiceState->startupAuxB = auxB;
+            voiceState->startupDeferStart = startImmediately == 0;
+            voiceState->queuedMessageWriteIndex = 0;
+            voiceState->unk3ED = 0;
+            voiceState->queuedMessageCount = 0;
+            voiceState->voiceHandle = voiceId | ((u32)instrumentKey << 0x10) |
                                       ((u32)keyFlags << 8);
             voiceSetPriority(state, priority);
             vid = vidMakeNew(state, returnNewId);

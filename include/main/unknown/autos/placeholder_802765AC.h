@@ -2,6 +2,7 @@
 #define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802765AC_H_
 
 #include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 
 void mcmdRandomKey(int state, u32 *args);
 void SelectSource(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
