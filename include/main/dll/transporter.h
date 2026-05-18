@@ -2,6 +2,13 @@
 #define MAIN_DLL_TRANSPORTER_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor14 gPushableObjDescriptor;
+extern ObjectDescriptor gWarpPointObjDescriptor;
+extern ObjectDescriptor gInvHitObjDescriptor;
+extern ObjectDescriptor gIceblastObjDescriptor;
+extern ObjectDescriptor gFlameblastObjDescriptor;
 
 void pushable_setScale(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -39,5 +46,28 @@ undefined4
 FUN_801778e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             int param_10);
+
+int pushable_getExtraSize(void);
+int pushable_func08(void);
+
+int WarpPoint_getExtraSize(void);
+int WarpPoint_func08(void);
+
+int invhit_getExtraSize(void);
+int invhit_func08(void);
+void invhit_render(void);
+void invhit_hitDetect(void);
+void invhit_release(void);
+void invhit_initialise(void);
+
+int iceblast_getExtraSize(void);
+int iceblast_func08(void);
+void iceblast_free(void);
+void iceblast_render(void);
+void iceblast_hitDetect(void);
+void iceblast_release(void);
+void iceblast_initialise(void);
+
+int flameblast_getExtraSize(void);
 
 #endif /* MAIN_DLL_TRANSPORTER_H_ */
