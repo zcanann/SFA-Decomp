@@ -6,7 +6,7 @@ extern undefined4 FUN_802867b0();
 extern undefined4 FUN_802867b4();
 extern undefined4 FUN_802867fc();
 extern undefined4 FUN_80286800();
-extern undefined4 FUN_802923c4();
+extern undefined4 __kernel_cos();
 extern undefined4 FUN_802923cc();
 extern double FUN_802924b8();
 extern undefined4 FUN_802924c0();

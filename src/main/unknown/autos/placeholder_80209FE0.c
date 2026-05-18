@@ -311,7 +311,7 @@ extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern int FUN_801ecf58();
 extern uint FUN_801ecf94();
-extern undefined4 FUN_8024782c();
+extern undefined4 PSVECDotProduct();
 extern undefined4 FUN_80247944();
 extern undefined4 FUN_80247bf8();
 extern undefined4 FUN_80247cd8();

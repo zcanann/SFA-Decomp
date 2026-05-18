@@ -195,7 +195,7 @@ extern undefined4 FUN_8020a718();
 extern undefined4 FUN_8020a71c();
 extern undefined4 FUN_8020a720();
 extern undefined4 FUN_80247618();
-extern undefined4 FUN_8024782c();
+extern undefined4 PSVECDotProduct();
 extern undefined4 FUN_80247bf8();
 extern undefined4 FUN_80247cd8();
 extern undefined4 FUN_80247e94();

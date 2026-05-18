@@ -5,7 +5,7 @@ extern undefined4 FUN_800033a8();
 extern ulonglong FUN_80243e74();
 extern ulonglong FUN_80243e88();
 extern undefined4 FUN_80243e9c();
-extern double FUN_80294bb8();
+extern double powf();
 
 extern int DAT_80332e80;
 extern undefined4* DAT_803deff4;

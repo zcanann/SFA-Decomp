@@ -133,7 +133,7 @@ extern undefined4 FUN_80257b5c();
 extern undefined4 FUN_80257ba8();
 extern undefined4 FUN_80258664();
 extern undefined4 FUN_80258674();
-extern undefined4 FUN_8025898c();
+extern undefined4 __GXSendFlushPrim();
 extern undefined4 FUN_80258a04();
 extern undefined4 FUN_80258a94();
 extern undefined4 FUN_80258b60();
