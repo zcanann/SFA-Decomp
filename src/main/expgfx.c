@@ -1536,7 +1536,7 @@ void expgfx_resetAllPools(void)
   int slotIndex;
   u32 activeBit;
   int resourceIndex;
-  void *resource;
+  ExpgfxResourceEntry *resourceEntry;
 
   staticDataBase = gExpgfxStaticData;
   expgfxBase = gExpgfxRuntimeData;
@@ -1593,18 +1593,18 @@ void expgfx_resetAllPools(void)
     poolIndex = poolIndex + 1;
   } while (poolIndex < EXPGFX_POOL_COUNT);
   resourceIndex = 0;
+  resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
   do {
     lbl_803DD258 = 1;
-    resource = *(void **)expgfxBase;
-    if (resource != (void *)0x0) {
-      textureFree(resource);
+    if (resourceEntry->resource != (void *)0x0) {
+      textureFree(resourceEntry->resource);
     }
     lbl_803DD258 = 0;
-    *(int *)(expgfxBase + 0) = 0;
-    *(int *)(expgfxBase + 8) = 0;
-    *(int *)(expgfxBase + 4) = 0;
-    *(int *)(expgfxBase + 0xc) = 0;
-    expgfxBase = expgfxBase + 0x10;
+    resourceEntry->resource = (void *)0x0;
+    resourceEntry->tableKeyType = 0;
+    resourceEntry->evictionScore = 0;
+    resourceEntry->wordC = 0;
+    resourceEntry++;
     resourceIndex = resourceIndex + 1;
   } while (resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT);
   return;
