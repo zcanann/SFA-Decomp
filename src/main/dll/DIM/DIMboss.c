@@ -183,7 +183,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
   Obj_GetPlayerObject();
   iVar11 = (int)topState;
   runtime->phase = DIMBOSS_PHASE_START;
-  (*(code *)(*lbl_803DCAAC + 0x50))(0x1c,5,0);
+  (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,5,0);
   if (obj->renderPause == 0) {
     puVar7 = lbl_803AC9DC;
     puVar8 = (undefined4 *)0x1;
@@ -335,8 +335,8 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         updateResult = 1;
         goto LAB_801bd7dc;
       }
-      if (puVar3[0x32] != 0) {
-        *(undefined4 *)(puVar3[0x32] + 0x30) = puVar3[0xc];
+      if (obj->childObject != NULL) {
+        *(undefined4 *)((int)obj->childObject + 0x30) = obj->facingAngle;
       }
       if ((runtime->eventGameBit != -1) &&
           (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0)) {
@@ -369,7 +369,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         }
       }
     }
-    warpDarkIceMines_801bbb44(puVar3,puVar13);
+    warpDarkIceMines_801bbb44(obj,runtime);
     if (obj->animStateId == -1) {
       runtime->stateFlags |= DIMBOSS_STATE_FLAG_START_MOVE;
       updateResult = 0;
