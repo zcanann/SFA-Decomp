@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_13F_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gMagicDustObjDescriptor;
 
 void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -11,5 +14,8 @@ void FUN_80173368(int param_1);
 void FUN_801733c0(int param_1);
 void collectible_release(void);
 void collectible_initialise(void);
+int magicdust_getExtraSize(void);
+void magicdust_free(int param_1);
+void magicdust_render(void);
 
 #endif /* MAIN_DLL_DLL_13F_H_ */
