@@ -60,7 +60,7 @@
  * - slot 08: 0x802BE018 DR_EarthWarrior_func08 stub=const 67
  * - slot 09: 0x802BE010 DR_EarthWarrior_getExtraSize stub=const 5372 ref=getExtraSize (stub)
  * - slot 10: 0x802BE008 DR_EarthWarrior_setScale stub=const 0 ref=setScale (stub)
- * - slot 11: 0x802BDFE8 fn_802BDFE8
+ * - slot 11: 0x802BDFE8 DR_EarthWarrior_func11
  */
 
 #if 0

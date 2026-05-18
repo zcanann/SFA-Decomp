@@ -28,19 +28,19 @@
  * - slot 08: 0x802C0F0C DR_CloudRunner_func08 stub=const 67
  * - slot 09: 0x802C0F04 DR_CloudRunner_getExtraSize stub=const 3016 ref=getExtraSize (stub)
  * - slot 10: 0x802C0EFC DR_CloudRunner_setScale stub=const 0 ref=setScale (stub)
- * - slot 11: 0x802C0EDC fn_802C0EDC
+ * - slot 11: 0x802C0EDC DR_CloudRunner_func11
  * - slot 12: 0x802C0EA0 DR_CloudRunner_modelMtxFn ref=modelMtxFn
  * - slot 13: 0x802C0E98 DR_CloudRunner_render2 stub=const 0 ref=render2 (stub)
- * - slot 14: 0x802C0E78 fn_802C0E78
- * - slot 15: 0x802C0DB8 fn_802C0DB8
+ * - slot 14: 0x802C0E78 DR_CloudRunner_func14
+ * - slot 15: 0x802C0DB8 DR_CloudRunner_func15
  * - slot 16: 0x802C0DB0 DR_CloudRunner_func16 stub=const 0
- * - slot 17: 0x802C0D1C fn_802C0D1C
- * - slot 18: 0x802C0D08 fn_802C0D08
- * - slot 19: 0x802C0CF8 fn_802C0CF8
+ * - slot 17: 0x802C0D1C DR_CloudRunner_func17
+ * - slot 18: 0x802C0D08 DR_CloudRunner_func18
+ * - slot 19: 0x802C0CF8 DR_CloudRunner_func19
  * - slot 20: 0x802C0CF0 DR_CloudRunner_func20 stub=const 0
  * - slot 21: 0x802C0CEC DR_CloudRunner_func21 stub=blr
- * - slot 22: 0x802C0CC4 fn_802C0CC4
- * - slot 23: 0x802BF2C4 fn_802BF2C4
+ * - slot 22: 0x802C0CC4 DR_CloudRunner_func22
+ * - slot 23: 0x802BF2C4 DR_CloudRunner_func23
  *
  * Reference-only hints:
  * - reference DLL name: DR_CloudRunner
@@ -61,18 +61,18 @@ enum dll_0258_DR_CloudRunner_slot {
     DR_CLOUDRUNNER_SLOT_08 = 8,
     DR_CLOUDRUNNER_GETEXTRASIZE = 9,
     DR_CLOUDRUNNER_SETSCALE = 10,
-    DR_CLOUDRUNNER_SLOT_11 = 11,
+    DR_CLOUDRUNNER_FUNC11 = 11,
     DR_CLOUDRUNNER_MODELMTXFN = 12,
     DR_CLOUDRUNNER_RENDER2 = 13,
-    DR_CLOUDRUNNER_SLOT_14 = 14,
-    DR_CLOUDRUNNER_SLOT_15 = 15,
+    DR_CLOUDRUNNER_FUNC14 = 14,
+    DR_CLOUDRUNNER_FUNC15 = 15,
     DR_CLOUDRUNNER_SLOT_16 = 16,
-    DR_CLOUDRUNNER_SLOT_17 = 17,
-    DR_CLOUDRUNNER_SLOT_18 = 18,
-    DR_CLOUDRUNNER_SLOT_19 = 19,
+    DR_CLOUDRUNNER_FUNC17 = 17,
+    DR_CLOUDRUNNER_FUNC18 = 18,
+    DR_CLOUDRUNNER_FUNC19 = 19,
     DR_CLOUDRUNNER_SLOT_20 = 20,
     DR_CLOUDRUNNER_SLOT_21 = 21,
-    DR_CLOUDRUNNER_SLOT_22 = 22,
-    DR_CLOUDRUNNER_SLOT_23 = 23,
+    DR_CLOUDRUNNER_FUNC22 = 22,
+    DR_CLOUDRUNNER_FUNC23 = 23,
 };
 #endif

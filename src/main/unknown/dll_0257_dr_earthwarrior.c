@@ -28,19 +28,19 @@
  * - slot 08: 0x802BE018 DR_EarthWarrior_func08 stub=const 67
  * - slot 09: 0x802BE010 DR_EarthWarrior_getExtraSize stub=const 5372 ref=getExtraSize (stub)
  * - slot 10: 0x802BE008 DR_EarthWarrior_setScale stub=const 0 ref=setScale (stub)
- * - slot 11: 0x802BDFE8 fn_802BDFE8
+ * - slot 11: 0x802BDFE8 DR_EarthWarrior_func11
  * - slot 12: 0x802BDFC8 DR_EarthWarrior_modelMtxFn ref=modelMtxFn
  * - slot 13: 0x802BDFC0 DR_EarthWarrior_render2 stub=const 0 ref=render2 (stub)
- * - slot 14: 0x802BDFA0 fn_802BDFA0
- * - slot 15: 0x802BDF84 fn_802BDF84
+ * - slot 14: 0x802BDFA0 DR_EarthWarrior_func14
+ * - slot 15: 0x802BDF84 DR_EarthWarrior_func15
  * - slot 16: 0x802BDF7C DR_EarthWarrior_func16 stub=const 0
- * - slot 17: 0x802BDE90 fn_802BDE90
- * - slot 18: 0x802BDE54 fn_802BDE54
- * - slot 19: 0x802BDE10 fn_802BDE10
+ * - slot 17: 0x802BDE90 DR_EarthWarrior_func17
+ * - slot 18: 0x802BDE54 DR_EarthWarrior_func18
+ * - slot 19: 0x802BDE10 DR_EarthWarrior_func19
  * - slot 20: 0x802BDE08 DR_EarthWarrior_func20 stub=const 0
  * - slot 21: 0x802BDE04 DR_EarthWarrior_func21 stub=blr
- * - slot 22: 0x802BDD34 fn_802BDD34
- * - slot 23: 0x802BC7C0 fn_802BC7C0
+ * - slot 22: 0x802BDD34 DR_EarthWarrior_func22
+ * - slot 23: 0x802BC7C0 DR_EarthWarrior_func23
  *
  * Reference-only hints:
  * - reference DLL name: DR_EarthWarrior
@@ -61,18 +61,18 @@ enum dll_0257_DR_EarthWarrior_slot {
     DR_EARTHWARRIOR_SLOT_08 = 8,
     DR_EARTHWARRIOR_GETEXTRASIZE = 9,
     DR_EARTHWARRIOR_SETSCALE = 10,
-    DR_EARTHWARRIOR_SLOT_11 = 11,
+    DR_EARTHWARRIOR_FUNC11 = 11,
     DR_EARTHWARRIOR_MODELMTXFN = 12,
     DR_EARTHWARRIOR_RENDER2 = 13,
-    DR_EARTHWARRIOR_SLOT_14 = 14,
-    DR_EARTHWARRIOR_SLOT_15 = 15,
+    DR_EARTHWARRIOR_FUNC14 = 14,
+    DR_EARTHWARRIOR_FUNC15 = 15,
     DR_EARTHWARRIOR_SLOT_16 = 16,
-    DR_EARTHWARRIOR_SLOT_17 = 17,
-    DR_EARTHWARRIOR_SLOT_18 = 18,
-    DR_EARTHWARRIOR_SLOT_19 = 19,
+    DR_EARTHWARRIOR_FUNC17 = 17,
+    DR_EARTHWARRIOR_FUNC18 = 18,
+    DR_EARTHWARRIOR_FUNC19 = 19,
     DR_EARTHWARRIOR_SLOT_20 = 20,
     DR_EARTHWARRIOR_SLOT_21 = 21,
-    DR_EARTHWARRIOR_SLOT_22 = 22,
-    DR_EARTHWARRIOR_SLOT_23 = 23,
+    DR_EARTHWARRIOR_FUNC22 = 22,
+    DR_EARTHWARRIOR_FUNC23 = 23,
 };
 #endif
