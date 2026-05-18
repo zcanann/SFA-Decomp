@@ -5,7 +5,7 @@ extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_8006f8a4();
 extern undefined4 FUN_8006f8fc();
-extern undefined4 FUN_801175a4();
+extern undefined4 CreateAudioDecodeThread();
 extern undefined4 FUN_801175ac();
 extern undefined4 FUN_801175b4();
 extern undefined4 FUN_801175b8();
@@ -81,7 +81,7 @@ extern f32 FLOAT_803e29c4;
 /*
  * --INFO--
  *
- * Function: FUN_80117668
+ * Function: THPPlayerDrawCurrentFrame
  * EN v1.0 Address: 0x80117668
  * EN v1.0 Size: 188b
  * EN v1.1 Address: 0x8011784C
@@ -91,7 +91,7 @@ extern f32 FLOAT_803e29c4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80117668(int param_1,int param_2)
+undefined4 THPPlayerDrawCurrentFrame(int param_1,int param_2)
 {
   int iVar1;
   
@@ -297,7 +297,7 @@ void FUN_80117d5c(undefined2 *param_1,short *param_2,uint param_3)
       do {
         do {
           if (DAT_803a6ab0 == 0) {
-            DAT_803a6ab0 = FUN_801175a4(0);
+            DAT_803a6ab0 = CreateAudioDecodeThread(0);
             if (DAT_803a6ab0 == 0) {
               FUN_800033a8((int)param_1,0,param_3 << 2);
               return;
@@ -354,7 +354,7 @@ void FUN_80117d5c(undefined2 *param_1,short *param_2,uint param_3)
     do {
       do {
         if (DAT_803a6ab0 == 0) {
-          DAT_803a6ab0 = FUN_801175a4(0);
+          DAT_803a6ab0 = CreateAudioDecodeThread(0);
           if (DAT_803a6ab0 == 0) {
             FUN_80003494((uint)param_1,(uint)param_2,param_3 << 2);
             return;

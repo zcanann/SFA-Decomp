@@ -29,7 +29,7 @@ extern undefined4 FUN_80017978();
 extern undefined4 FUN_80017a00();
 extern undefined4 FUN_80017a04();
 extern undefined4 FUN_80017a54();
-extern undefined4 FUN_8003d6f8();
+extern undefined4 objRenderFuzzFn_8003d6f8();
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_800406cc();
 extern undefined4 FUN_80040a88();
@@ -181,7 +181,7 @@ extern undefined4 _DAT_803dc0f4;
 /*
  * --INFO--
  *
- * Function: FUN_80038f38
+ * Function: objAnimFn_80038f38
  * EN v1.0 Address: 0x80038F38
  * EN v1.0 Size: 504b
  * EN v1.1 Address: 0x80039030
@@ -191,7 +191,7 @@ extern undefined4 _DAT_803dc0f4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80038f38(int param_1,char *param_2)
+void objAnimFn_80038f38(int param_1,char *param_2)
 {
   float fVar1;
   uint uVar2;
@@ -2780,7 +2780,7 @@ undefined4 FUN_8003c1f8(int param_1,int *param_2,int param_3)
   if ((*(uint *)(iVar3 + 0x3c) & 0x200) == 0) {
     if ((DAT_803dd8c4 & 3) == 0) {
       DAT_803dd8be = 1;
-      FUN_8003d6f8(param_1);
+      objRenderFuzzFn_8003d6f8(param_1);
       uVar4 = 1;
     }
     else {

@@ -177,7 +177,7 @@ extern undefined4 ObjPath_GetPointLocalPosition();
 extern uint ObjPath_GetPointModelMtx();
 extern undefined8 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
-extern undefined4 FUN_80038f38();
+extern undefined4 objAnimFn_80038f38();
 extern undefined4 FUN_80039130();
 extern undefined4 FUN_800392e0();
 extern undefined4 FUN_800392ec();

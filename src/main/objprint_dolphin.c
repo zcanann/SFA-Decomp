@@ -325,7 +325,7 @@ extern undefined2 uRam803dd8da;
 /*
  * --INFO--
  *
- * Function: FUN_8003d6f8
+ * Function: objRenderFuzzFn_8003d6f8
  * EN v1.0 Address: 0x8003D6F8
  * EN v1.0 Size: 644b
  * EN v1.1 Address: 0x8003D7F0
@@ -335,7 +335,7 @@ extern undefined2 uRam803dd8da;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8003d6f8(int param_1)
+void objRenderFuzzFn_8003d6f8(int param_1)
 {
   int *piVar1;
   double dVar2;

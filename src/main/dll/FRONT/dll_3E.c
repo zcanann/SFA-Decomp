@@ -4,7 +4,7 @@
 extern int FUN_80006c30();
 extern undefined4 FUN_801177dc();
 extern undefined4 FUN_80117818();
-extern undefined4 FUN_80117668();
+extern undefined4 THPPlayerDrawCurrentFrame();
 extern int FUN_80118540();
 extern undefined4 FUN_80118c88();
 extern undefined4 FUN_801197e0();

@@ -61,7 +61,7 @@ extern undefined4 ObjPath_GetPointWorldPositionArray();
 extern undefined4 ObjPath_GetPointLocalPosition();
 extern undefined4 ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_80038f38();
+extern undefined4 objAnimFn_80038f38();
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_8003964c();
 extern undefined4 FUN_8003a1c4();

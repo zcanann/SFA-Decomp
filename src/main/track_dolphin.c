@@ -378,7 +378,7 @@ extern char s_trackIntersect__FUNC_OVERFLOW__d_8030f43c[];
 /*
  * --INFO--
  *
- * Function: FUN_8005f920
+ * Function: mapBlockRender_setVtxDcrs
  * EN v1.0 Address: 0x8005F920
  * EN v1.0 Size: 400b
  * EN v1.1 Address: 0x8005FA9C
@@ -388,7 +388,7 @@ extern char s_trackIntersect__FUNC_OVERFLOW__d_8030f43c[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8005f920(char param_1,undefined4 param_2,int param_3,int *param_4)
+void mapBlockRender_setVtxDcrs(char param_1,undefined4 param_2,int param_3,int *param_4)
 {
   undefined uVar1;
   undefined uVar2;
@@ -565,7 +565,7 @@ void FUN_8005fb68(void)
       uVar4 = uVar3 & 0xf;
       if (uVar4 == 3) {
         local_68 = uVar10;
-        FUN_8005f920((char)iVar11,iVar6,iVar12,local_78);
+        mapBlockRender_setVtxDcrs((char)iVar11,iVar6,iVar12,local_78);
         uVar10 = local_68;
       }
       else if (uVar4 < 3) {

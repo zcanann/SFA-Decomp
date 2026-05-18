@@ -3,7 +3,7 @@
 #include "main/dll/fruit.h"
 #include "main/dll/zBomb.h"
 
-extern undefined4 FUN_8000a380();
+extern undefined4 streamFn_8000a380();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void fn_80026E00(int param_1,int param_2,float *param_3);

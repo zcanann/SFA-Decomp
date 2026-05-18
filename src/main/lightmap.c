@@ -48,7 +48,7 @@ extern int FUN_8005e25c();
 extern undefined4 FUN_8005e264();
 extern undefined4 FUN_8005e884();
 extern int FUN_8005ec0c();
-extern undefined4 FUN_8005f920();
+extern undefined4 mapBlockRender_setVtxDcrs();
 extern undefined4 FUN_8005fab0();
 extern undefined4 FUN_8005fb68();
 extern undefined4 FUN_8005fdec();
@@ -260,7 +260,7 @@ extern f32 lbl_803DF8A0;
 /*
  * --INFO--
  *
- * Function: FUN_8005ab70
+ * Function: updateVisibleGeometry
  * EN v1.0 Address: 0x8005AB70
  * EN v1.0 Size: 1024b
  * EN v1.1 Address: 0x8005ACEC
@@ -270,7 +270,7 @@ extern f32 lbl_803DF8A0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8005ab70(void)
+void updateVisibleGeometry(void)
 {
   float fVar1;
   undefined2 *puVar2;
@@ -1414,7 +1414,7 @@ void fn_8005C8CC(void)
     DAT_803dda68 = DAT_803dda68 & 0xfffffffe;
   }
   FUN_8000694c();
-  FUN_8005ab70();
+  updateVisibleGeometry();
   FUN_80057fd0();
   FUN_800069bc();
   FUN_80006984();
@@ -2338,7 +2338,7 @@ void FUN_8005d85c(int param_1,int param_2,float *param_3)
   FUN_8005e264(param_1,param_2,param_3);
   iVar3 = FUN_8005e25c(param_2,local_28);
   local_18 = local_18 + 4;
-  FUN_8005f920('\x01',param_2,iVar3,local_28);
+  mapBlockRender_setVtxDcrs('\x01',param_2,iVar3,local_28);
   uVar5 = local_18 + 4;
   iVar2 = (int)uVar5 >> 3;
   iVar4 = local_28[0] + iVar2;
@@ -2405,7 +2405,7 @@ void FUN_8005d984(int param_1,int param_2,float *param_3)
   local_48 = local_48 + 4;
   iVar3 = FUN_8005ec0c('\x01',param_2,local_58);
   local_48 = local_48 + 4;
-  FUN_8005f920('\x01',param_2,iVar3,local_58);
+  mapBlockRender_setVtxDcrs('\x01',param_2,iVar3,local_58);
   uVar5 = local_48 + 4;
   iVar2 = (int)uVar5 >> 3;
   iVar4 = local_58[0] + iVar2;
@@ -2467,7 +2467,7 @@ void FUN_8005daec(int param_1,int param_2,float *param_3)
   local_18 = local_18 + 4;
   iVar3 = FUN_8005ec0c('\x01',param_2,local_28);
   local_18 = local_18 + 4;
-  FUN_8005f920('\x01',param_2,iVar3,local_28);
+  mapBlockRender_setVtxDcrs('\x01',param_2,iVar3,local_28);
   uVar5 = local_18 + 4;
   iVar2 = (int)uVar5 >> 3;
   iVar4 = local_28[0] + iVar2;

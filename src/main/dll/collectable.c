@@ -72,7 +72,7 @@ extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int par
 extern u8 Obj_IsLoadingLocked(void);
 extern undefined4 ObjPath_GetPointWorldPositionArray();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_80038f38();
+extern undefined4 objAnimFn_80038f38();
 extern undefined8 FUN_80039468();
 extern void objAudioFn_800393f8(int param_1,void *param_2,int param_3,int param_4,int param_5,
                                 int param_6);

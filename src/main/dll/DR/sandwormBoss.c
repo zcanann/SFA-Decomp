@@ -54,7 +54,7 @@ extern undefined4 ObjLink_DetachChild();
 extern int ObjTrigger_IsSet();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern int Obj_GetYawDeltaToObject();
-extern undefined4 FUN_80038f38();
+extern undefined4 objAnimFn_80038f38();
 extern undefined4 FUN_800392ec();
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_8003964c();
@@ -2357,7 +2357,7 @@ void FUN_8019e54c(uint param_1)
       }
       iVar2 = ObjTrigger_IsSet(param_1);
       if (iVar2 == 0) {
-        FUN_80038f38(param_1,(char *)(piVar6 + 0xd));
+        objAnimFn_80038f38(param_1,(char *)(piVar6 + 0xd));
         uStack_1c = (uint)DAT_803dc070;
         local_20 = 0x43300000;
         FUN_8002fc3c((double)lbl_803E4F24,

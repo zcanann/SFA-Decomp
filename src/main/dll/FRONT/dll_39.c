@@ -131,7 +131,7 @@ extern f32 lbl_803E1D18;
 /*
  * --INFO--
  *
- * Function: FUN_80115fbc
+ * Function: n_rareware_frameStart
  * EN v1.0 Address: 0x80115FBC
  * EN v1.0 Size: 296b
  * EN v1.1 Address: 0x80115FF0
