@@ -35,9 +35,9 @@ extern void fn_8004FDA0();
 extern void fn_80051528();
 extern void fn_80051868();
 extern void fn_80051B00();
-extern void fn_800523D0();
-extern void fn_800524EC();
-extern int fn_80054C30();
+extern void gxColorFn_800523d0();
+extern void textureFn_800524ec();
+extern int textureCrazyPointerFollowFn_80054c30();
 extern void textureFn_800528bc();
 extern void resetLotsOfRenderVars();
 extern void fn_8005D3B4();
@@ -641,7 +641,7 @@ void fn_8005F1E0(int param_1, int param_2)
       for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
         if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
            (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
-          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
+          iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
           break;
         }
         piVar5 = piVar5 + 4;
@@ -675,7 +675,7 @@ void fn_8005F1E0(int param_1, int param_2)
       for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
         if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
            (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
-          iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
+          iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
           break;
         }
         piVar5 = piVar5 + 4;
@@ -694,14 +694,14 @@ void fn_8005F1E0(int param_1, int param_2)
       pfVar4 = (float*)afStack_44;
     }
     fn_80051868(iVar1,pfVar4,9);
-    fn_800524EC((char *)&local_48);
+    textureFn_800524ec((char *)&local_48);
   }
   else {
     for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_1 + 0x41); iVar3 = iVar3 + 1) {
       piVar2 = (int *)Shader_getLayer(param_1,iVar3);
       iVar1 = *piVar2;
       if (iVar1 == 0) {
-        fn_800523D0();
+        gxColorFn_800523d0();
       }
       else {
         bVar1 = *(byte *)((int)piVar2 + 5);
@@ -711,7 +711,7 @@ void fn_8005F1E0(int param_1, int param_2)
           for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
             if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
                (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
-              iVar1 = fn_80054C30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
+              iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
               break;
             }
             piVar5 = piVar5 + 4;
