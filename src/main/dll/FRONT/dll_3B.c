@@ -6,16 +6,6 @@
 #include "dolphin/thp/THPFile.h"
 #include "dolphin/thp/THPInfo.h"
 
-typedef struct TitleMenuTextEntry {
-  u8 pad0[0x16];
-  u16 flags;
-  u8 pad18[0x24];
-} TitleMenuTextEntry;
-
-typedef struct TitleMenuControl {
-  void *vtable;
-} TitleMenuControl;
-
 typedef struct MovieAudioPacket {
   s16 *audioBuffer;
   s16 *decodedBuffer;

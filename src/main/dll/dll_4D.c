@@ -1,24 +1,6 @@
 #include "global.h"
 #include "main/dll/dll_4D.h"
 
-typedef struct TitleMenuTextEntry {
-    u8 pad0[0x16];
-    u16 flags;
-    s8 pad18[0x24];
-} TitleMenuTextEntry;
-
-typedef struct TitleMenuControl {
-    void *vtable;
-} TitleMenuControl;
-
-typedef struct MenuPanelGroup {
-    u8 pad00[0x30];
-    TitleMenuTextEntry *entries;
-    u32 unused34;
-    u8 count;
-    u8 pad39[7];
-} MenuPanelGroup;
-
 extern MenuPanelGroup lbl_8031ACB8;
 
 extern u8 lbl_803DBA28;

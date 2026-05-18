@@ -2,16 +2,6 @@
 #include "main/dll/FRONT/n_filemenu.h"
 #include "main/dll/FRONT/dll_39.h"
 
-typedef struct TitleMenuTextEntry {
-  u8 pad0[0x16];
-  u16 flags;
-  u8 pad18[0x24];
-} TitleMenuTextEntry;
-
-typedef struct TitleMenuControl {
-  void *vtable;
-} TitleMenuControl;
-
 extern void FUN_80006824(uint obj, ushort sfxId);
 extern void FUN_80006b84(int id);
 extern void FUN_80006ba8(int controller, uint buttons);

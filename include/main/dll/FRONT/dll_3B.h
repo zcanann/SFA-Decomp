@@ -2,6 +2,7 @@
 #define MAIN_DLL_FRONT_DLL_3B_H_
 
 #include "ghidra_import.h"
+#include "main/dll/FRONT/title_menu.h"
 
 void TitleMenu_initialise(void);
 void *fn_8011730C(int flags);
