@@ -1285,7 +1285,7 @@ void FUN_800174cc(void)
 /*
  * --INFO--
  *
- * Function: FUN_800174d0
+ * Function: textRenderStr
  * EN v1.0 Address: 0x800174D0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8001AE18
@@ -1295,7 +1295,7 @@ void FUN_800174cc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800174d0(void)
+void textRenderStr(void)
 {
 }
 

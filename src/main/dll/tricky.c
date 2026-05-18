@@ -1878,7 +1878,7 @@ void GameUI_airMeterSetField24(float v) {
 extern void cutsceneFadeInOut(int x);
 extern void setTimeStop(int x);
 extern void pauseMenuInit(void);
-extern int fn_80019BF0(void);
+extern int getCurGameText(void);
 extern void gameTextLoadDir(int x);
 extern f32 lbl_803E1E60;
 extern f32 lbl_803DD764;
@@ -1890,7 +1890,7 @@ void fn_8011DD30(void) {
     setTimeStop(0xff);
     pauseMenuInit();
     pauseMenuState = 0xb;
-    lbl_803DD8DC = fn_80019BF0();
+    lbl_803DD8DC = getCurGameText();
     gameTextLoadDir(0xb);
     lbl_803DD764 = lbl_803E1E60;
     lbl_803DD7D8 = 1;
