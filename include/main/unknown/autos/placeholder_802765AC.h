@@ -13,7 +13,7 @@ void varSet32(int state, u32 useExCtrl, u32 index, u32 value);
 void mcmdPortamento(int state, u32 *args);
 void mcmdVarCalculation(int state, u32 *args, u8 op);
 void mcmdSendMessage(int state, u32 *args);
-void mcmdSetKeyGroup(int state, u32 *args);
+void mcmdSetKeyGroup(McmdVoiceState *state, McmdCommandArgs *args);
 void macHandleActive(int state);
 void macHandle(u32 delta);
 void macSampleEndNotify(int state);

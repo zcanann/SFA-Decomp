@@ -807,30 +807,28 @@ void mcmdSendMessage(int state, u32 *args)
 /*
  * Key off other voices in the same tag group, optionally by immediate stop.
  */
-void mcmdSetKeyGroup(int state, u32 *args)
+void mcmdSetKeyGroup(McmdVoiceState *state, McmdCommandArgs *args)
 {
     u32 group;
-    u32 command;
     u32 doKill;
     u32 i;
     int synthInfo;
     int offset;
-    int voice;
+    McmdVoiceState *voice;
 
     offset = 0;
-    *(u8 *)(state + 0x104) = 0;
-    command = *args;
-    group = (command >> 8) & 0xff;
-    doKill = ((command >> 0x10) & 0xff) != 0;
+    state->keyGroup = 0;
+    group = (args->flags >> 8) & 0xff;
+    doKill = ((args->flags >> 0x10) & 0xff) != 0;
     if (group != 0) {
         synthInfo = (int)lbl_803BD150;
         for (i = 0; i < *(u8 *)(synthInfo + 0x210); i++) {
-            voice = (int)(synthVoice + offset);
-            if (*(u32 *)(voice + 0x34) != 0) {
-                if (((*(u32 *)(voice + 0x118) & 2) == 0) &&
-                    group == *(u8 *)(voice + 0x104)) {
+            voice = (McmdVoiceState *)(synthVoice + offset);
+            if (voice->macroBase != 0) {
+                if (((voice->outputFlags & MCMD_VOICE_ALLOCATED_OUTPUT_FLAG) == 0) &&
+                    group == voice->keyGroup) {
                     if (doKill == 0) {
-                        macSetExternalKeyoff(voice);
+                        macSetExternalKeyoff((int)voice);
                     } else {
                         voiceKill(i);
                     }
@@ -838,7 +836,7 @@ void mcmdSetKeyGroup(int state, u32 *args)
             }
             offset += 0x404;
         }
-        *(u8 *)(state + 0x104) = group;
+        state->keyGroup = group;
     }
 }
 
