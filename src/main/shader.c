@@ -2281,8 +2281,8 @@ void FUN_80057fd0(void)
 }
 
 /* 8b "li r3, N; blr" returners. */
-int fn_80056694(void) { return 0x0; }
-int fn_8005669C(void) { return 0x0; }
+int return0_80056694(void) { return 0x0; }
+int return0_8005669C(void) { return 0x0; }
 
 /* 12b 3-insn patterns. */
 extern s8 curMapLayer;
