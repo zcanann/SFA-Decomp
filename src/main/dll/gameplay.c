@@ -10990,7 +10990,7 @@ void FUN_800ed560(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800ed5e4
+ * Function: dll_60_func03
  * EN v1.0 Address: 0x800ED5E4
  * EN v1.0 Size: 168b
  * EN v1.1 Address: 0x800F24A8
@@ -11000,7 +11000,7 @@ void FUN_800ed560(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800ed5e4(int param_1,int param_2,int param_3,uint param_4)
+void dll_60_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   undefined4 *local_368;
   int local_364;
