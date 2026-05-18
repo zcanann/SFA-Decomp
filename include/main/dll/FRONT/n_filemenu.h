@@ -6,6 +6,6 @@
 
 int TitleMenu_run(void);
 void TitleMenu_release(void);
-void fn_80116F44(int a);
+void TitleMenu_setSelection(int selection);
 
 #endif /* MAIN_DLL_FRONT_N_FILEMENU_H_ */

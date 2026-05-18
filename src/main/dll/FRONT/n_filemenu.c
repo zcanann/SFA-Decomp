@@ -348,9 +348,9 @@ void TitleMenu_release(void)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80116F44(int a)
+void TitleMenu_setSelection(int selection)
 {
-  u8 v = (u8)a;
+  u8 v = (u8)selection;
   gTitleMenuSelection = v;
   lbl_803DD615 = 0xff;
   (*(*(void (**)(int))((int)lbl_803DCAA0->vtable + 0x18)))(v);
