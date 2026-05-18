@@ -2,12 +2,16 @@
 #define MAIN_DLL_CRATE2_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void dfpstatue1_updateState(int obj);
 
 extern char sDfperchwitchInitNoLongerSupported[];
+extern ObjectDescriptor gDfpstatue1ObjDescriptor;
+extern ObjectDescriptor gDfperchwitchObjDescriptor;
 
 int dfperchwitch_getExtraSize(void);
+int dfperchwitch_func08(void);
 void dfperchwitch_free(void);
 void dfperchwitch_render(void);
 void dfperchwitch_hitDetect(void);

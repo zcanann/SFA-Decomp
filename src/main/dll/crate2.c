@@ -144,32 +144,32 @@ void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 void dfperchwitch_release(void) {}
 void dfperchwitch_initialise(void) {}
 
-u32 gDfpstatue1ObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)dfpstatue1_initialise,
-    (u32)dfpstatue1_release,
+ObjectDescriptor gDfpstatue1ObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dfpstatue1_initialise,
+    (ObjectDescriptorCallback)dfpstatue1_release,
     0,
-    (u32)dfpstatue1_init,
-    (u32)dfpstatue1_update,
-    (u32)dfpstatue1_hitDetect,
-    (u32)dfpstatue1_render,
-    (u32)dfpstatue1_free,
-    (u32)dfpstatue1_func08,
-    (u32)dfpstatue1_getExtraSize,
+    (ObjectDescriptorCallback)dfpstatue1_init,
+    (ObjectDescriptorCallback)dfpstatue1_update,
+    (ObjectDescriptorCallback)dfpstatue1_hitDetect,
+    (ObjectDescriptorCallback)dfpstatue1_render,
+    (ObjectDescriptorCallback)dfpstatue1_free,
+    (ObjectDescriptorCallback)dfpstatue1_func08,
+    dfpstatue1_getExtraSize,
 };
 
-u32 gDfperchwitchObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)dfperchwitch_initialise,
-    (u32)dfperchwitch_release,
+ObjectDescriptor gDfperchwitchObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dfperchwitch_initialise,
+    (ObjectDescriptorCallback)dfperchwitch_release,
     0,
-    (u32)dfperchwitch_init,
-    (u32)dfperchwitch_update,
-    (u32)dfperchwitch_hitDetect,
-    (u32)dfperchwitch_render,
-    (u32)dfperchwitch_free,
-    (u32)dfperchwitch_func08,
-    (u32)dfperchwitch_getExtraSize,
+    (ObjectDescriptorCallback)dfperchwitch_init,
+    (ObjectDescriptorCallback)dfperchwitch_update,
+    (ObjectDescriptorCallback)dfperchwitch_hitDetect,
+    (ObjectDescriptorCallback)dfperchwitch_render,
+    (ObjectDescriptorCallback)dfperchwitch_free,
+    (ObjectDescriptorCallback)dfperchwitch_func08,
+    dfperchwitch_getExtraSize,
 };
 
 char sDfperchwitchInitNoLongerSupported[] = "<dfperchwitch Init>No Longer supported \n";

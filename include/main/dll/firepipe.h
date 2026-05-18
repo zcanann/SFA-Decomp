@@ -2,6 +2,7 @@
 #define MAIN_DLL_FIREPIPE_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 typedef struct FirePipeExtra {
     int effectObjs[8];
@@ -61,5 +62,7 @@ void firepipe_free(FirePipeObject *obj);
 void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4, int param_5, char param_6);
 void firepipe_update(FirePipeObject *obj);
 void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData);
+
+extern ObjectDescriptor gFirePipeObjDescriptor;
 
 #endif /* MAIN_DLL_FIREPIPE_H_ */
