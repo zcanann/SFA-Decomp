@@ -12,14 +12,6 @@ extern int gSfxplayerEffectHandles[8];
 #define SFXPLAYER_EVENT_VARIANT 3
 #define SFXPLAYER_VARIANT_TIMER_FRAMES 0x96
 
-typedef struct SfxplayerState {
-  s16 unused0;
-  s16 effectSfxBaseId;
-  s16 variantSfxTimer;
-  u8 unused6[2];
-  u8 effectFlags;
-} SfxplayerState;
-
 /*
  * --INFO--
  *

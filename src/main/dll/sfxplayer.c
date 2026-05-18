@@ -38,23 +38,6 @@ extern undefined4* lbl_803DCAAC;
 #define SFXPLAYER_HIT_TYPE_RING_TARGET 0x13
 #define SFXPLAYER_OBJECT_FLAGS 0x6000
 
-typedef struct SfxplayerStateFlags {
-  u8 bit80 : 1;
-  u8 bit40 : 1;
-  u8 bit20 : 1;
-  u8 bit10 : 1;
-  u8 lowBits : 4;
-} SfxplayerStateFlags;
-
-typedef struct SfxplayerState {
-  s16 eventId;
-  s16 unk2;
-  s16 unk4;
-  u8 config19;
-  u8 ringCount;
-  SfxplayerStateFlags flags;
-} SfxplayerState;
-
 /*
  * --INFO--
  *

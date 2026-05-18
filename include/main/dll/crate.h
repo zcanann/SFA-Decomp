@@ -2,6 +2,7 @@
 #define MAIN_DLL_CRATE_H_
 
 #include "ghidra_import.h"
+#include "main/dll/sfxplayer.h"
 
 undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState);
 void FUN_802081e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
