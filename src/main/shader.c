@@ -2287,5 +2287,5 @@ int fn_8005669C(void) { return 0x0; }
 /* 12b 3-insn patterns. */
 extern s8 curMapLayer;
 extern s8 lbl_803DCEA4;
-s32 fn_800571E4(void) { return curMapLayer; }
-s32 fn_80057404(void) { return lbl_803DCEA4; }
+s32 getCurMapLayer(void) { return curMapLayer; }
+s32 getCurMapType(void) { return lbl_803DCEA4; }
