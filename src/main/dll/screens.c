@@ -67,7 +67,7 @@ extern f32 lbl_803E2068;
 /*
  * --INFO--
  *
- * Function: FUN_800fc5b8
+ * Function: dll_9A_func03
  * EN v1.0 Address: 0x800FC5B8
  * EN v1.0 Size: 2428b
  * EN v1.1 Address: 0x800FC854
@@ -77,7 +77,7 @@ extern f32 lbl_803E2068;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fc5b8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void dll_9A_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   float fVar1;
   undefined4 uVar2;
@@ -458,7 +458,7 @@ void FUN_800fc5b8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800fcf3c
+ * Function: dll_9B_func03
  * EN v1.0 Address: 0x800FCF3C
  * EN v1.0 Size: 880b
  * EN v1.1 Address: 0x800FD1D8
@@ -468,7 +468,7 @@ void FUN_800fc5b8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fcf3c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void dll_9B_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
@@ -742,7 +742,7 @@ void FUN_800fcf3c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800fd2b4
+ * Function: dll_9C_func03
  * EN v1.0 Address: 0x800FD2B4
  * EN v1.0 Size: 1160b
  * EN v1.1 Address: 0x800FD550
@@ -752,7 +752,7 @@ void FUN_800fcf3c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd2b4(int param_1,int param_2,short *param_3,uint param_4)
+void dll_9C_func03(int param_1,int param_2,short *param_3,uint param_4)
 {
   int iVar1;
   undefined4 *puVar2;

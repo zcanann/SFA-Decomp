@@ -210,7 +210,7 @@ extern f32 lbl_803E1FE8;
 /*
  * --INFO--
  *
- * Function: FUN_800fa5d8
+ * Function: dll_91_func03
  * EN v1.0 Address: 0x800FA5D8
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800FA874
@@ -220,7 +220,7 @@ extern f32 lbl_803E1FE8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fa5d8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void dll_91_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;

@@ -262,7 +262,7 @@ extern f32 lbl_803E227C;
 /*
  * --INFO--
  *
- * Function: FUN_800fd744
+ * Function: dll_9D_func03
  * EN v1.0 Address: 0x800FD744
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800FD9E0
@@ -272,7 +272,7 @@ extern f32 lbl_803E227C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd744(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void dll_9D_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
