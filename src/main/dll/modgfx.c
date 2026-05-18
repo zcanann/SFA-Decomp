@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/expgfx_internal.h"
 #include "main/dll/modgfx.h"
+#include "main/object_descriptor.h"
 
 typedef struct ModgfxVertexData {
   s16 posX;
@@ -4537,22 +4538,22 @@ int projgfx_setzscale_doUnsupported(void) { OSReport(sProjgfxSetzscaleDoNoLonger
 /* Pattern wrappers. */
 int fn_800A3AB4(void) { return -0x1; }
 
-u32 projgfx_funcs[] = {
+ObjectDescriptor11 projgfx_funcs = {
     0,
     0,
     0,
-    0x000A0000,
-    (u32)projgfx_initialise,
-    (u32)projgfx_release_doUnsupported,
+    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+    projgfx_initialise,
+    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
     0,
-    (u32)projgfx_onMapSetup,
-    (u32)fn_800A3AB4,
-    (u32)fn_800A3AB0,
-    (u32)fn_800A3AAC,
-    (u32)fn_800A3AA8,
-    (u32)fn_800A3AA0,
-    (u32)projgfx_setzscale_doUnsupported,
-    (u32)projgfx_rayhit_doUnsupported,
+    projgfx_onMapSetup,
+    (ObjectDescriptorCallback)fn_800A3AB4,
+    (ObjectDescriptorCallback)fn_800A3AB0,
+    (ObjectDescriptorCallback)fn_800A3AAC,
+    (ObjectDescriptorCallback)fn_800A3AA8,
+    (ObjectDescriptorCallback)fn_800A3AA0,
+    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
+    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
 };
 
 char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";

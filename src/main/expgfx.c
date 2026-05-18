@@ -3,6 +3,7 @@
 #include "dolphin/os/OSCache.h"
 #include "main/expgfx.h"
 #include "main/expgfx_internal.h"
+#include "main/object_descriptor.h"
 
 extern undefined4 ABS();
 extern int Camera_GetViewMatrix(void);
@@ -189,25 +190,25 @@ extern char sExpgfxMismatchInAddRemove[];
 extern char sExpgfxScaleOverflow[];
 extern char sExpgfxNoTexture[];
 
-u32 expgfx_funcs[] = {
+ObjectDescriptor14 expgfx_funcs = {
     0,
     0,
     0,
-    0x000D0000,
-    (u32)expgfx_initialise,
-    (u32)expgfx_release,
+    OBJECT_DESCRIPTOR_FLAGS_14_SLOTS,
+    (ObjectDescriptorCallback)expgfx_initialise,
+    (ObjectDescriptorCallback)expgfx_release,
     0,
-    (u32)expgfx_onMapSetup,
-    (u32)expgfx_addremove,
-    (u32)expgfx_updateFrameState,
-    (u32)expgfx_resetAllPools,
-    (u32)expgfx_free,
-    (u32)expgfx_free2,
-    (u32)expgfx_func09,
-    (u32)expgfx_func0A_nop,
-    (u32)expgfx_func0B_nop,
-    (u32)expgfx_ownerFree3,
-    (u32)expgfx_updateSourceFrameFlags,
+    (ObjectDescriptorCallback)expgfx_onMapSetup,
+    (ObjectDescriptorCallback)expgfx_addremove,
+    (ObjectDescriptorCallback)expgfx_updateFrameState,
+    (ObjectDescriptorCallback)expgfx_resetAllPools,
+    (ObjectDescriptorCallback)expgfx_free,
+    (ObjectDescriptorCallback)expgfx_free2,
+    (ObjectDescriptorCallback)expgfx_func09,
+    (ObjectDescriptorCallback)expgfx_func0A_nop,
+    (ObjectDescriptorCallback)expgfx_func0B_nop,
+    (ObjectDescriptorCallback)expgfx_ownerFree3,
+    (ObjectDescriptorCallback)expgfx_updateSourceFrameFlags,
 };
 
 #define EXPGFX_SLOT_TABLE_INDEX_OFFSET 0x8A
