@@ -2,11 +2,11 @@
 #include "main/unknown/autos/placeholder_802817A8.h"
 
 extern undefined4 FUN_8026fa70();
-extern undefined4 FUN_80272720();
+extern undefined4 sndSeqVolume();
 extern undefined4 FUN_80272724();
 extern undefined4 FUN_802757cc();
 extern undefined4 FUN_802757d0();
-extern undefined4 FUN_8027b25c();
+extern undefined4 synthUpdateVirtualSamples();
 extern undefined4 FUN_8027ba04();
 extern undefined4 FUN_8028133c();
 extern int FUN_802838b0();

@@ -25,7 +25,7 @@ extern f32 FLOAT_803e85ac;
 /*
  * --INFO--
  *
- * Function: FUN_8028504c
+ * Function: HandleReverb2
  * EN v1.0 Address: 0x8028504C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80285220
@@ -35,7 +35,7 @@ extern f32 FLOAT_803e85ac;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8028504c(void)
+void HandleReverb2(void)
 {
 }
 

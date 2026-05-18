@@ -6,11 +6,10 @@
 extern undefined4 FUN_802420b0();
 extern undefined4 FUN_8028383c();
 extern undefined4 FUN_80283d78();
-extern undefined4 FUN_80283dfc();
+extern undefined4 hwSaveSample();
 extern undefined4 FUN_80283e00();
-extern undefined4 FUN_80283fa0();
-extern uint FUN_80284224();
-extern undefined4 FUN_80284224();
+extern undefined4 aramQueueCallback();
+extern uint aramInit();
 extern undefined4 FUN_80284228();
 
 extern void sndBegin(void);

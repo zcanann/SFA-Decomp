@@ -195,7 +195,7 @@ extern undefined8 FUN_80135b7c();
 extern undefined4 FUN_80135c40();
 extern undefined4 FUN_8016e834();
 extern uint FUN_80240a7c();
-extern undefined4 FUN_80240c5c();
+extern undefined4 __OSEVSetNumber();
 extern void* FUN_80241b84();
 extern int FUN_80241de8();
 extern int FUN_80241df0();

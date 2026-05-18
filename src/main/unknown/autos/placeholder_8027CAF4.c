@@ -5,7 +5,7 @@ extern undefined4 FUN_800033a8();
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_80242148();
 extern undefined4 FUN_80242178();
-extern int FUN_8027afc0();
+extern int synthHandleVirtualSampleDone();
 extern undefined4 FUN_8027afc4();
 extern undefined4 FUN_8027afcc();
 extern int FUN_8027afd4();
