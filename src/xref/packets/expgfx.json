@@ -6,8 +6,8 @@
   "categories": [
     "source"
   ],
-  "direct_xref_count": 4,
-  "direct_function_count": 2,
+  "direct_xref_count": 6,
+  "direct_function_count": 4,
   "source_string_count": 5,
   "orig": {
     "root_file_count": 0,
@@ -22,6 +22,34 @@
   "family_hint": null,
   "map_hints": [],
   "functions": [
+    {
+      "function_start": "0x8009B0E0",
+      "function_name": "expgfxRemove",
+      "xrefs": [
+        {
+          "xref_address": "0x8009B1C4",
+          "pair_address": "0x8009B1C8",
+          "target_address": "0x8030FBF0",
+          "target_text": "@expgfx.c: mismatch in add/remove in exptab",
+          "pair_kind": "lis/addi",
+          "function_name": "expgfxRemove"
+        }
+      ]
+    },
+    {
+      "function_start": "0x8009B254",
+      "function_name": "expgfxRemoveAll",
+      "xrefs": [
+        {
+          "xref_address": "0x8009B334",
+          "pair_address": "0x8009B338",
+          "target_address": "0x8030FBF0",
+          "target_text": "@expgfx.c: mismatch in add/remove in exptab",
+          "pair_kind": "lis/addi",
+          "function_name": "expgfxRemoveAll"
+        }
+      ]
+    },
     {
       "function_start": "0x8009DDEC",
       "function_name": "expgfx_addToTable",
@@ -106,13 +134,5 @@
       ]
     }
   ],
-  "neighbor_strings": [
-    {
-      "address": "0x8030E740",
-      "text": "TRACK ERROR: Global texanim overflow",
-      "tags": [
-        "warning"
-      ]
-    }
-  ]
+  "neighbor_strings": []
 }

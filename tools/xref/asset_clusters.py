@@ -462,7 +462,9 @@ def build_clusters(
         keys = cluster_keys_for_string(entry)
         if not keys:
             continue
-        xref_group = grouped_xrefs.get(entry.address, [])
+        xref_group = list(grouped_xrefs.get(entry.address, []))
+        if "source" in entry.tags:
+            xref_group.extend(grouped_xrefs.get(entry.address + 1, []))
         if not xref_group and "source" not in entry.tags:
             continue
         for key in keys:
@@ -948,6 +950,9 @@ def main() -> None:
     strings = scan_strings(dol)
     functions = load_function_symbols(args.symbols.resolve())
     strings_by_address = {entry.address: entry for entry in strings}
+    for entry in strings:
+        if "source" in entry.tags:
+            strings_by_address.setdefault(entry.address + 1, entry)
     xrefs = scan_text_xrefs(dol, strings_by_address, functions)
     family_hints = load_family_hints(args.family_reference.resolve())
     map_hints = load_map_hints(args.maps_reference.resolve())

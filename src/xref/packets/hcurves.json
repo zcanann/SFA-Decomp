@@ -6,8 +6,8 @@
   "categories": [
     "source"
   ],
-  "direct_xref_count": 0,
-  "direct_function_count": 0,
+  "direct_xref_count": 1,
+  "direct_function_count": 1,
   "source_string_count": 1,
   "orig": {
     "root_file_count": 0,
@@ -21,7 +21,22 @@
   },
   "family_hint": null,
   "map_hints": [],
-  "functions": [],
+  "functions": [
+    {
+      "function_start": "0x800E52E8",
+      "function_name": "curves_addCurveDef",
+      "xrefs": [
+        {
+          "xref_address": "0x800E5300",
+          "pair_address": "0x800E5304",
+          "target_address": "0x803116BC",
+          "target_text": "Hcurves.c: MAX_ROMCURVES exceeded!!",
+          "pair_kind": "lis/addi",
+          "function_name": "curves_addCurveDef"
+        }
+      ]
+    }
+  ],
   "strings": [
     {
       "address": "0x803116BB",
@@ -31,20 +46,5 @@
       ]
     }
   ],
-  "neighbor_strings": [
-    {
-      "address": "0x8030FDB8",
-      "text": "<projgfx release Do>No Longer supported ",
-      "tags": [
-        "warning"
-      ]
-    },
-    {
-      "address": "0x80319397",
-      "text": "P<projdummy Do>No Longer supported ",
-      "tags": [
-        "warning"
-      ]
-    }
-  ]
+  "neighbor_strings": []
 }

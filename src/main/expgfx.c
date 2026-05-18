@@ -275,12 +275,15 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
 void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive)
 {
   ExpgfxTableEntry *tableEntry;
+  u8 *exptabTextureResources;
   u8 *expgfxBase;
   u32 *poolActiveMask;
   char *poolActiveCount;
   ExpgfxSlot *slot;
+  u16 *entryRefCount;
   uint activeMask;
   uint tableIndex;
+  uint tableOffset;
 
   expgfxBase = gExpgfxRuntimeData;
   activeMask = 1 << slotIndex;
@@ -290,17 +293,22 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,
     slot = (ExpgfxSlot *)(slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
     slot->behaviorFlags = 0;
     if (freeTexture == 0) {
-      tableIndex = Expgfx_GetSlotTableIndex(slot);
-      tableEntry = Expgfx_GetTableEntry(tableIndex);
-      if (tableEntry->textureOrResource != 0) {
+      exptabTextureResources = expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET;
+      tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
+      if (*(uint *)(exptabTextureResources + tableOffset) != 0) {
         lbl_803DD258 = 1;
-        textureFree((void *)tableEntry->textureOrResource);
+        tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
+        textureFree((void *)*(uint *)(exptabTextureResources + tableOffset));
         lbl_803DD258 = 0;
       }
-      if (tableEntry->refCount != 0) {
-        tableEntry->refCount--;
-        if (tableEntry->refCount == 0) {
-          tableEntry->textureOrResource = 0;
+      tableIndex = Expgfx_GetSlotTableIndex(slot);
+      tableOffset = tableIndex << EXPGFX_TABLE_ENTRY_SHIFT;
+      tableEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset);
+      entryRefCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableOffset);
+      if (*entryRefCount != 0) {
+        (*entryRefCount)--;
+        if (*entryRefCount == 0) {
+          *(uint *)(exptabTextureResources + tableOffset) = 0;
           tableEntry->key0 = 0;
         }
       }

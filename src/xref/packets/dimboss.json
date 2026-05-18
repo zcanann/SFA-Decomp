@@ -6,7 +6,7 @@
   "categories": [
     "source"
   ],
-  "direct_xref_count": 1,
+  "direct_xref_count": 2,
   "direct_function_count": 1,
   "source_string_count": 2,
   "orig": {
@@ -26,6 +26,14 @@
       "function_start": "0x801BCB34",
       "function_name": "DIMboss_updateState",
       "xrefs": [
+        {
+          "xref_address": "0x801BCEA8",
+          "pair_address": "0x801BCEAC",
+          "target_address": "0x80325B44",
+          "target_text": "@<DIMBoss.c> freeing assets for DIMBoss",
+          "pair_kind": "lis/addi",
+          "function_name": "DIMboss_updateState"
+        },
         {
           "xref_address": "0x801BCEF8",
           "pair_address": "0x801BCEFC",
@@ -53,13 +61,5 @@
       ]
     }
   ],
-  "neighbor_strings": [
-    {
-      "address": "0x80320D8E",
-      "text": "U PUSHPULL OBJECT: hitpoint overflow",
-      "tags": [
-        "warning"
-      ]
-    }
-  ]
+  "neighbor_strings": []
 }
