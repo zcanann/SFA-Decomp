@@ -39,5 +39,25 @@ void FUN_80163220(int param_1);
 void FUN_80163308(int param_1);
 
 extern ObjectDescriptor gGrimbleObjDescriptor;
+extern ObjectDescriptor gCannonClawObjDescriptor;
+
+int grimble_getExtraSize(void);
+int grimble_func08(void);
+void grimble_free(void);
+void grimble_render(void);
+void grimble_hitDetect(void);
+void grimble_update(void);
+void grimble_init(void);
+void grimble_release(void);
+void grimble_initialise(void);
+
+int cannonclaw_getExtraSize(void);
+int cannonclaw_func08(void);
+void cannonclaw_free(void);
+void cannonclaw_render(void);
+void cannonclaw_hitDetect(void);
+void cannonclaw_update(void);
+void cannonclaw_init(void);
+void cannonclaw_initialise(void);
 
 #endif /* MAIN_DLL_BARREL_H_ */

@@ -2,6 +2,11 @@
 #define MAIN_DLL_CF_CFBABY_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gLanternFireFlyObjDescriptor;
+extern ObjectDescriptor gFireFlyLanternObjDescriptor;
+extern ObjectDescriptor gFlammableVineObjDescriptor;
 
 void FireFlyLantern_init(int param_1,int param_2);
 int FUN_80187664(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
@@ -55,5 +60,15 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
 void FUN_80189e94(int param_1,int param_2);
+
+int flammablevine_getExtraSize(void);
+int flammablevine_func08(void);
+void flammablevine_free(int obj);
+void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void flammablevine_hitDetect(void);
+void flammablevine_update(void);
+void flammablevine_init(void);
+void flammablevine_release(void);
+void flammablevine_initialise(void);
 
 #endif /* MAIN_DLL_CF_CFBABY_H_ */
