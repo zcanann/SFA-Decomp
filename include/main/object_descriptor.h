@@ -129,10 +129,41 @@ typedef struct ObjectDescriptor14 {
   ObjectDescriptorCallback slot0D;
 } ObjectDescriptor14;
 
+typedef struct ObjectDescriptor23 {
+  u32 reserved0;
+  u32 reserved1;
+  u32 reserved2;
+  u32 slotCountAndFlags;
+  ObjectDescriptorCallback initialise;
+  ObjectDescriptorCallback release;
+  ObjectDescriptorCallback slot02;
+  ObjectDescriptorCallback init;
+  ObjectDescriptorCallback update;
+  ObjectDescriptorCallback hitDetect;
+  ObjectDescriptorCallback render;
+  ObjectDescriptorCallback free;
+  ObjectDescriptorCallback slot08;
+  ObjectDescriptorExtraSizeCallback getExtraSize;
+  ObjectDescriptorCallback slot0A;
+  ObjectDescriptorCallback slot0B;
+  ObjectDescriptorCallback slot0C;
+  ObjectDescriptorCallback slot0D;
+  ObjectDescriptorCallback slot0E;
+  ObjectDescriptorCallback slot0F;
+  ObjectDescriptorCallback slot10;
+  ObjectDescriptorCallback slot11;
+  ObjectDescriptorCallback slot12;
+  ObjectDescriptorCallback slot13;
+  ObjectDescriptorCallback slot14;
+  ObjectDescriptorCallback slot15;
+  ObjectDescriptorCallback slot16;
+} ObjectDescriptor23;
+
 #define OBJECT_DESCRIPTOR_FLAGS_10_SLOTS 0x00090000
 #define OBJECT_DESCRIPTOR_FLAGS_11_SLOTS 0x000A0000
 #define OBJECT_DESCRIPTOR_FLAGS_12_SLOTS 0x000B0000
 #define OBJECT_DESCRIPTOR_FLAGS_13_SLOTS 0x000C0000
 #define OBJECT_DESCRIPTOR_FLAGS_14_SLOTS 0x000D0000
+#define OBJECT_DESCRIPTOR_FLAGS_23_SLOTS 0x00160000
 
 #endif /* MAIN_OBJECT_DESCRIPTOR_H_ */

@@ -110,6 +110,7 @@ extern ObjectDescriptor gBaddieInterestPObjDescriptor;
 extern ObjectDescriptor gAnimatedObjDescriptor;
 extern ObjectDescriptor gDIM2RoofRubObjDescriptor;
 extern ObjectDescriptor gDepthOfFieldPointObjDescriptor;
+extern ObjectDescriptor23 gStaffObjDescriptor;
 extern ObjectDescriptor10WithPadding gFireballObjDescriptor;
 extern ObjectDescriptor gShieldObjDescriptor;
 extern ObjectDescriptor13 gFlameThrowerSpeObjDescriptor;
