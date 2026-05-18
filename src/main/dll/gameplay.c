@@ -12982,34 +12982,34 @@ void Carryable_release(void) {}
 void Carryable_initialise(void) {}
 void dll_59_func01_nop(void) {}
 void dll_59_func00_nop(void) {}
-void fn_800ECAD8(void) {}
-void fn_800ECADC(void) {}
-void fn_800ECDFC(void) {}
-void fn_800ECE00(void) {}
-void fn_800ED28C(void) {}
-void fn_800ED290(void) {}
-void fn_800ED5DC(void) {}
-void fn_800ED5E0(void) {}
-void fn_800EDA20(void) {}
-void fn_800EDA24(void) {}
-void fn_800EDE6C(void) {}
-void fn_800EDE70(void) {}
-void fn_800EE254(void) {}
-void fn_800EE258(void) {}
-void fn_800EE8F4(void) {}
-void fn_800EE8F8(void) {}
-void fn_800EEC2C(void) {}
-void fn_800EEC30(void) {}
-void fn_800EEFE4(void) {}
-void fn_800EEFE8(void) {}
-void fn_800EF398(void) {}
-void fn_800EF39C(void) {}
-void fn_800EF7AC(void) {}
-void fn_800EF7B0(void) {}
-void fn_800EFA28(void) {}
-void fn_800EFA2C(void) {}
-void fn_800EFD2C(void) {}
-void fn_800EFD30(void) {}
+void dll_5C_func01_nop(void) {}
+void dll_5C_func00_nop(void) {}
+void dll_5D_func01_nop(void) {}
+void dll_5D_func00_nop(void) {}
+void dll_5E_func01_nop(void) {}
+void dll_5E_func00_nop(void) {}
+void dll_5F_func01_nop(void) {}
+void dll_5F_func00_nop(void) {}
+void dll_60_func01_nop(void) {}
+void dll_60_func00_nop(void) {}
+void dll_61_func01_nop(void) {}
+void dll_61_func00_nop(void) {}
+void dll_62_func01_nop(void) {}
+void dll_62_func00_nop(void) {}
+void dll_63_func01_nop(void) {}
+void dll_63_func00_nop(void) {}
+void dll_64_func01_nop(void) {}
+void dll_64_func00_nop(void) {}
+void dll_65_func01_nop(void) {}
+void dll_65_func00_nop(void) {}
+void dll_A3_func01_nop(void) {}
+void dll_A3_func00_nop(void) {}
+void dll_66_func01_nop(void) {}
+void dll_66_func00_nop(void) {}
+void dll_67_func01_nop(void) {}
+void dll_67_func00_nop(void) {}
+void dll_68_func01_nop(void) {}
+void dll_68_func00_nop(void) {}
 void Dummy58_release(void) {}
 void Dummy58_initialise(void) {}
 void fn_800F0224(void) {}
@@ -13052,7 +13052,7 @@ void fn_800F4724(void) {}
 void fn_800F4728(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_800EFD34(void) { return 0x0; }
+int Dummy58_func03_ret_0(void) { return 0x0; }
 int fn_800F07DC(void) { return 0x0; }
 
 /* sda21 accessors. */
