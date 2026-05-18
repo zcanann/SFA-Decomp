@@ -11,7 +11,6 @@ extern s32 DVDRead(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset);
 /* External functions */
 extern BOOL THPInit(void);
 extern void fn_80118018(void);
-extern void fn_80118B88(int);
 
 /* BSS objects (lis+addi addressing) */
 extern char             lbl_803A57C0[0x50C];
@@ -308,7 +307,7 @@ void fn_80119520(void)
                 *(s32*)(pb + 0xA0) = -1;
             }
             if (i == 0) {
-                fn_80118B88(0);
+                PrepareReady(0);
             }
             OSSuspendThread((OSThread*)(base + 0x1000));
         }
@@ -455,7 +454,7 @@ void fn_80119798(void* param)
                 *(s32*)(pb2 + 0xA4) = dec;
                 if (dec != 0) {
                     if (lbl_803DD694 != 0) {
-                        fn_80118B88(0);
+                        PrepareReady(0);
                         lbl_803DD694 = 0;
                     }
                     OSSuspendThread((OSThread*)(db + 0x1058));
@@ -477,7 +476,7 @@ void fn_80119798(void* param)
     }
 
     if (lbl_803DD694 != 0) {
-        fn_80118B88(1);
+        PrepareReady(1);
         lbl_803DD694 = 0;
     }
 }

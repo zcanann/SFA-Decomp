@@ -16,9 +16,6 @@ extern undefined4 FUN_800723a0();
 extern undefined8 FUN_80080f24();
 extern undefined8 camcontrol_findBestTarget();
 extern undefined4 Movie_SetVolumeFade();
-extern undefined4 fn_801181F8();
-extern undefined4 fn_8011881C();
-extern undefined4 fn_80118900();
 extern bool prepareAttractMode();
 extern undefined8 FUN_8011d9b0();
 extern int FUN_80241de8();
@@ -229,7 +226,7 @@ void n_attractmode_releaseMovieBuffers(void)
   int freeDelay;
   
   if (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) {
-    fn_8011881C();
+    THPPlayerStop();
     AttractMovie_CloseFile();
     AttractMovieAudio_Shutdown();
     freeDelay = mmSetFreeDelay(0);
@@ -307,7 +304,7 @@ void n_attractmode_prepareMovie(void)
       AttractMovieAudio_Shutdown();
     }
     else {
-      fn_801181F8((uint)&gAttractMovieDims);
+      THPPlayerGetVideoInfo(&gAttractMovieDims);
       gAttractMovieOffsetX = ((uint)lbl_803DCCF0[2] - gAttractMovieDims.width) >> 1;
       gAttractMovieOffsetY = ((uint)lbl_803DCCF0[3] - gAttractMovieDims.height) >> 1;
       AttractMovie_GetBufferSizes(movieBuffer0Size,&movieBuffer1Size,&movieBuffer2Size,
@@ -386,7 +383,7 @@ void n_attractmode_prepareMovie(void)
                   NATTRACTMODE_PREPARE_FAIL_LINE,
                   attractModeData + NATTRACTMODE_FAIL_TO_PREPARE_OFFSET);
         }
-        fn_80118900();
+        THPPlayerPlay();
         gAttractMovieState = NATTRACTMODE_MOVIE_STATE_PREPARED;
         VIWaitForRetrace();
         gAttractMovieRetraceCountdown = NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN;
