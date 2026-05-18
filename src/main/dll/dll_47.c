@@ -937,8 +937,8 @@ void fn_8011A70C(void) {
 }
 #pragma scheduling reset
 void saveSelectGoToChooseSlot(void) {}
-void fn_8011A914(void) {}
-void fn_8011AA50(void) {}
+void SaveSelectScreen_release(void) {}
+void SaveSelectScreen_render(void) {}
 void SaveSelectScreen_run(void) {}
 void fn_8011B3B4(void) {}
 
