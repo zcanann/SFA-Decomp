@@ -27,7 +27,7 @@ extern void *objCreateLight(void *obj, int arg);
 extern void lightFn_8001db6c(f32 f1, void *light, int arg);
 extern void modelLightStruct_setField50(void *light, int value);
 extern void modelLightStruct_setColorsA8AC(void *light, int r, int g, int b, int a);
-extern void fn_8001DB14(void *light, int value);
+extern void lightSetFieldBC_8001db14(void *light, int value);
 extern void lightDistAttenFn_8001dc38(void *light, f32 min, f32 max);
 extern void ObjMsg_AllocQueue(void *obj, int count);
 extern void ObjMsg_SendToObject(void *dst, int msg, void *src, void *payload);
@@ -241,7 +241,7 @@ void bombplantspore_init(void *obj, void *param2) {
     if (light != NULL) {
         modelLightStruct_setField50(light, 2);
         modelLightStruct_setColorsA8AC(light, 0xff, 0, 0xff, 0);
-        fn_8001DB14(light, 1);
+        lightSetFieldBC_8001db14(light, 1);
         lightDistAttenFn_8001dc38(light, lbl_803E5388, lbl_803E538C);
     }
     *(void **)((u8 *)state + 0x270) = light;
