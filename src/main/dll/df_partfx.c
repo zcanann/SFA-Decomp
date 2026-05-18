@@ -1603,46 +1603,46 @@ void FUN_800d8e9c(uint param_1,int param_2,int param_3,int param_4,int param_5)
 
 /* Trivial 4b 0-arg blr leaves. */
 void Checkpoint_release(void) {}
-void fn_800D7F5C(void) {}
-void fn_800D7F60(void) {}
-void fn_800D7F64(void) {}
-void fn_800D7F70(void) {}
-void fn_800D7F84(void) {}
-void fn_800D7F88(void) {}
-void fn_800D7F8C(void) {}
-void fn_800D7F98(void) {}
-void fn_800D7F9C(void) {}
-void fn_800D7FA0(void) {}
-void fn_800D7FA4(void) {}
-void fn_800D7FA8(void) {}
-void fn_800D7FAC(void) {}
-void fn_800D7FB0(void) {}
+void Dummy04_func14_nop(void) {}
+void Dummy04_func26_nop(void) {}
+void Dummy04_func25_nop(void) {}
+void Dummy04_func23_nop(void) {}
+void Dummy04_func20_nop(void) {}
+void Dummy04_func1F_nop(void) {}
+void Dummy04_func1E_nop(void) {}
+void Dummy04_func1C_nop(void) {}
+void Dummy04_func1B_nop(void) {}
+void Dummy04_func1A_nop(void) {}
+void Dummy04_func19_nop(void) {}
+void Dummy04_func18_nop(void) {}
+void Dummy04_func17_nop(void) {}
+void Dummy04_func16_nop(void) {}
 void Dummy04_onSetupPlayer(void) {}
-void fn_800D7FB8(void) {}
-void fn_800D7FBC(void) {}
-void fn_800D7FC0(void) {}
-void fn_800D7FCC(void) {}
-void fn_800D7FD8(void) {}
-void fn_800D7FE4(void) {}
+void Dummy04_func15_nop(void) {}
+void Dummy04_func13_nop(void) {}
+void Dummy04_func12_nop(void) {}
+void Dummy04_func10_nop(void) {}
+void Dummy04_func0E_nop(void) {}
+void Dummy04_func0C_nop(void) {}
 void Dummy04_onSelectSave(void) {}
-void fn_800D7FFC(void) {}
-void fn_800D8000(void) {}
-void fn_800D800C(void) {}
+void Dummy04_func08_nop(void) {}
+void Dummy04_func07_nop(void) {}
+void Dummy04_func04_nop(void) {}
 void Dummy04_release(void) {}
 void Dummy04_initialise(void) {}
 void fn_800D8BB0(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_800D7F68(void) { return 0x0; }
-int fn_800D7F74(void) { return 0x7f; }
-int fn_800D7F7C(void) { return 0x0; }
-int fn_800D7F90(void) { return 0x0; }
-int fn_800D7FC4(void) { return 0x0; }
-int fn_800D7FD0(void) { return 0x0; }
-int fn_800D7FDC(void) { return 0x0; }
-int fn_800D7FE8(void) { return 0x0; }
-int fn_800D7FF0(void) { return 0x0; }
-int fn_800D8004(void) { return 0x0; }
+int Dummy04_func24_ret_0(void) { return 0x0; }
+int Dummy04_func22_ret_127(void) { return 0x7f; }
+int Dummy04_func21_ret_0(void) { return 0x0; }
+int Dummy04_func1D_ret_0(void) { return 0x0; }
+int Dummy04_func11_ret_0(void) { return 0x0; }
+int Dummy04_func0F_ret_0(void) { return 0x0; }
+int Dummy04_func0D_ret_0(void) { return 0x0; }
+int Dummy04_func0B_ret_0(void) { return 0x0; }
+int Dummy04_func0A_ret_0(void) { return 0x0; }
+int Dummy04_func05_ret_0(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern u8 lbl_803DD42D;
@@ -1662,4 +1662,4 @@ extern f32 lbl_803DD420;
 f32 screenTransition_getAlpha(void) { return lbl_803DD420; }
 
 /* Pattern wrappers. */
-int fn_800D8010(void) { return -0x1; }
+int Dummy04_func03_ret_m1(void) { return -0x1; }
