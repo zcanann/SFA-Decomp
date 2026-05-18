@@ -863,7 +863,7 @@ void *Camera_func08(void)
   entry = lbl_803A4228;
   for (; i < gCamcontrolHandlerCount; i++) {
     if ((*entry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
-      return lbl_803A4228[i];
+      return *entry;
     }
     entry++;
   }
