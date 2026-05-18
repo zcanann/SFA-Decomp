@@ -1796,12 +1796,12 @@ void FUN_8011f438(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 }
 
 /* sda21 accessors. */
-extern u8 lbl_803DD780;
+extern u8 pauseMenuState;
 extern u8 lbl_803DD7B3;
 extern u8 lbl_803DD792;
 extern u8 lbl_803DD75A;
 extern u8 lbl_803DBA88;
-u8 fn_8011F344(void) { return lbl_803DD780; }
+u8 pauseMenuGetState(void) { return pauseMenuState; }
 void fn_8011F34C(u8 x) { lbl_803DD7B3 = x; }
 void hudFn_8011f38c(u8 x) { lbl_803DD792 = x; }
 void hudFn_8011f6f0(u8 x) { lbl_803DD75A = x; }
@@ -1889,7 +1889,7 @@ void fn_8011DD30(void) {
     cutsceneFadeInOut(1);
     setTimeStop(0xff);
     pauseMenuInit();
-    lbl_803DD780 = 0xb;
+    pauseMenuState = 0xb;
     lbl_803DD8DC = fn_80019BF0();
     gameTextLoadDir(0xb);
     lbl_803DD764 = lbl_803E1E60;

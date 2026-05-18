@@ -1080,7 +1080,7 @@ typedef struct BabySnowwormBitTableEntry {
 extern BabySnowwormBitTableEntry lbl_8031B074[5];
 extern u32 GameBit_Get(u32);
 
-extern u8  lbl_803DD780;
+extern u8  pauseMenuState;
 extern u8  pauseMenuFrameCounter;
 extern u32 getButtonsJustPressed(s32);
 extern void padGetAnalogInput(s32, u8*, u8*);
@@ -1255,7 +1255,7 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
 #pragma scheduling reset
 
 /* EN v1.0 0x8012BE84  size: 380b  Pause-menu input poll. While the
- * "freeze" byte at lbl_803DD780 is clear, polls the digital pad via
+ * pauseMenuState byte is clear, polls the digital pad via
  * getButtonsJustPressed / padGetAnalogInput. The byte read into buf[0] is the d-pad
  * direction (1 = right, -1 = left, 0 = neutral) and lbl_803DD75B
  * tracks the current selection (1 = right entry, 2 = left entry). On
@@ -1280,7 +1280,7 @@ void timeListFn_8012be84(void)
     u8  buf[16];
 
     prev_state = lbl_803DD75B;
-    if (lbl_803DD780 != 0) return;
+    if (pauseMenuState != 0) return;
 
     buttons = (u16)getButtonsJustPressed(0);
     padGetAnalogInput(0, &buf[1], &buf[0]);
@@ -1559,7 +1559,7 @@ void npcTalkFn_8012e880(void)
 #pragma scheduling reset
 
 /* EN v1.0 0x80129DB4  size: 300b  Conditional render setup gated on
- * the freeze byte at lbl_803DD780. While frozen, runs the layer-1
+ * pauseMenuState. While a pause-menu state is active, runs the layer-1
  * render block: snaps clip planes (0,0,0), restores ZBuf window
  * 0x8000, saves current FOV (in f31) before swapping in 43.0f, then
  * issues GXSetViewport with width/height from the global render obj
@@ -1574,7 +1574,7 @@ void perspectiveFn_80129db4(void)
 {
     f32 saved_fov;
 
-    if (lbl_803DD780 == 0) return;
+    if (pauseMenuState == 0) return;
     Camera_SetCurrentViewIndex(1);
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
