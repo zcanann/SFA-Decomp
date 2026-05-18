@@ -710,9 +710,9 @@ void dimbossgut2_func11(void) {}
 void dimbossgut2_hitDetect(void) {}
 void dimbossgut2_release(void) {}
 void dimbossgut2_initialise(void) {}
-void dimbossspit_hitDetect(void) {}
-void dimbossspit_release(void) {}
-void dimbossspit_initialise(void) {}
+void DIMbossspit_hitDetect(void) {}
+void DIMbossspit_release(void) {}
+void DIMbossspit_initialise(void) {}
 void magicmaker_free(void) {}
 void magicmaker_hitDetect(void) {}
 void magicmaker_init(void) {}
@@ -727,8 +727,8 @@ void dimbossfire_hitDetect(void) {}
 int dimbossgut2_setScale(void) { return 0x0; }
 int dimbossgut2_getExtraSize(void) { return 0x42c; }
 int dimbossgut2_func08(void) { return 0x49; }
-int dimbossspit_getExtraSize(void) { return 0x8; }
-int dimbossspit_func08(void) { return 0x0; }
+int DIMbossspit_getExtraSize(void) { return 0x8; }
+int DIMbossspit_func08(void) { return 0x0; }
 int magicmaker_getExtraSize(void) { return 0x0; }
 int magicmaker_func08(void) { return 0x0; }
 int dimbosscrackpar_getExtraSize(void) { return 0x0; }

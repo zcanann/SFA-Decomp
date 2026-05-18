@@ -7,12 +7,12 @@
 // - gDIM_BossSpitObjDescriptor @ 0x80325CB0
 //
 // Descriptor slots:
-// - 0: dimbossspit_initialise (0x801BFFF0)
-// - 1: dimbossspit_release (0x801BFFEC)
-// - 3: dimbossspit_init (0x801BFEB4)
-// - 4: dimbossspit_update (0x801BFC2C)
-// - 5: dimbossspit_hitDetect (0x801BFC28)
-// - 6: dimbossspit_render (0x801BFBC4)
-// - 7: dimbossspit_free (0x801BFB70)
-// - 8: dimbossspit_func08 (0x801BFB68)
-// - 9: dimbossspit_getExtraSize (0x801BFB60)
+// - 0: DIMbossspit_initialise (0x801BFFF0)
+// - 1: DIMbossspit_release (0x801BFFEC)
+// - 3: DIMbossspit_init (0x801BFEB4)
+// - 4: DIMbossspit_update (0x801BFC2C)
+// - 5: DIMbossspit_hitDetect (0x801BFC28)
+// - 6: DIMbossspit_render (0x801BFBC4)
+// - 7: DIMbossspit_free (0x801BFB70)
+// - 8: DIMbossspit_func08 (0x801BFB68)
+// - 9: DIMbossspit_getExtraSize (0x801BFB60)
