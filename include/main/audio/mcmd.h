@@ -7,6 +7,7 @@
 #define MCMD_VOICE_PREV_SAMPLE_ID_OFFSET 0x124
 #define MCMD_VOICE_INPUT_FLAGS_OFFSET 0x114
 #define MCMD_VOICE_OUTPUT_FLAGS_OFFSET 0x118
+#define MCMD_VOICE_HANDLE_SLOT_BYTE 0
 
 #define MCMD_LOOP_RANDOM_DELAY_FLAG 0x00010000
 #define MCMD_LOOP_WAIT_FOR_KEYOFF_FLAG 0x00000100
@@ -22,5 +23,28 @@
 #define MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG 0x100
 #define MCMD_VOICE_VIBRATO_RAMP_OUTPUT_FLAG 0x2000
 #define MCMD_VOICE_VIBRATO_CURVE_OUTPUT_FLAG 0x4000
+
+typedef struct McmdCommandArgs {
+    u32 flags;
+    u32 value;
+} McmdCommandArgs;
+
+typedef struct McmdVoiceState {
+    u8 unk00[0x34];
+    u8 *macroBase;
+    u8 *macroCursor;
+    u8 unk3C[MCMD_VOICE_LOOP_COUNTER_OFFSET - 0x3C];
+    u16 loopCounter;
+    u8 unkAC[MCMD_VOICE_ID_OFFSET - 0xAC];
+    union {
+        u32 voiceHandle;
+        u8 voiceHandleBytes[4];
+    };
+    u8 unkF8[MCMD_VOICE_INPUT_FLAGS_OFFSET - 0xF8];
+    u32 inputFlags;
+    u32 outputFlags;
+    u8 unk11C[MCMD_VOICE_PREV_SAMPLE_ID_OFFSET - 0x11C];
+    u32 prevSampleId;
+} McmdVoiceState;
 
 #endif /* MAIN_AUDIO_MCMD_H_ */
