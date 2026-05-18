@@ -137,6 +137,9 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMbossRuntime *runtime,
                                    int param_4,int param_5,int param_6,int param_7,float scale);
+typedef u8 (*DIMbossMapAreaStateFn)(int areaId);
+typedef void (*DIMbossMapAreaSetStateFn)(int areaId,int state);
+typedef void (*DIMbossMapAreaTriggerFn)(int mapDir,int param_2,int enabled);
 
 /*
  * --INFO--
@@ -691,18 +694,18 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   DIMbossRuntime *runtime;
   DIMbossTopState *topState;
   DIMbossLocalVec localVec;
-  undefined4 *localVecSrc;
+  DIMbossLocalVec *localVecSrc;
   u8 *animFlagsByte;
   undefined4 mapDir;
-  int animFlags;
+  u8 animFlags;
   f32 liftHeight;
 
   runtime = obj->runtime;
-  localVecSrc = lbl_802C2338;
-  localVec.x = localVecSrc[0];
-  localVec.y = localVecSrc[1];
-  localVec.z = localVecSrc[2];
-  localVec.mode = *(undefined2 *)&localVecSrc[3];
+  localVecSrc = (DIMbossLocalVec *)lbl_802C2338;
+  localVec.x = localVecSrc->x;
+  localVec.y = localVecSrc->y;
+  localVec.z = localVecSrc->z;
+  localVec.mode = localVecSrc->mode;
   fn_8005CEF0(0);
   obj->updateMode = 2;
   animFlags = 6;
@@ -716,7 +719,7 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   (*(code *)(*(int *)lbl_803DCA8C + 0x14))(obj,runtime,0);
   runtime->field270 = 0;
   runtime->animMode = 3;
-  obj->objectFlags |= 0x88;
+  obj->objectFlags = (u8)(obj->objectFlags | 0x88);
   if (GameBit_Get(0x210) != 0) {
     runtime->phase = DIMBOSS_PHASE_RENDER_PAUSE;
     obj->renderPause = 1;
@@ -738,21 +741,19 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   animFlagsByte = (u8 *)((int)lbl_803AC9DC + 0x611);
   *animFlagsByte |= 8;
   *animFlagsByte &= 0xfe;
-  topState->steamSfxPending =
-      (topState->steamSfxPending & ~DIMBOSS_STEAM_SFX_PENDING_FLAG) |
-      DIMBOSS_STEAM_SFX_PENDING_FLAG;
+  topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
   lbl_803DDB88 = (undefined4)Resource_Acquire(0x5a,1);
   if (GameBit_Get(0x1df) == 0) {
     topState->stompDustDelay = 2;
     topState->introSinkHeight = lbl_803E4C78;
-    (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,5,1);
+    ((DIMbossMapAreaTriggerFn)(*(code *)(*lbl_803DCAAC + 0x50)))(DIMBOSS_MAP_DIR,5,1);
   }
   else {
-    (*(code *)(*lbl_803DCAAC + 0x50))(DIMBOSS_MAP_DIR,5,0);
+    ((DIMbossMapAreaTriggerFn)(*(code *)(*lbl_803DCAAC + 0x50)))(DIMBOSS_MAP_DIR,5,0);
   }
   topState->defeatTimer = 0;
-  if ((*(code *)(*lbl_803DCAAC + 0x40))(7) == 2) {
-    (*(code *)(*lbl_803DCAAC + 0x44))(7,3);
+  if (((DIMbossMapAreaStateFn)(*(code *)(*lbl_803DCAAC + 0x40)))(7) == 2) {
+    ((DIMbossMapAreaSetStateFn)(*(code *)(*lbl_803DCAAC + 0x44)))(7,3);
   }
   GameBit_Set(0xefd,1);
   unlockLevel(0,0,1);
@@ -780,12 +781,12 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+void dimboss_release(void) {}
+
 void dimboss_initialise(void)
 {
   DIMboss_initialiseAnimTables();
 }
-
-void dimboss_release(void) {}
 
 u32 gDIM_BossObjDescriptor[] = {
     0, 0, 0, 0x000B0000,
