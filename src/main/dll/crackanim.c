@@ -344,16 +344,16 @@ extern void fn_8017EF3C();
 extern void fn_8017EC94();
 extern void fn_8017EC54();
 
-u32 lbl_803214F8[] = {
-    0, 0, 0, 0x00090000,
-    (u32)fn_8017EF68,
-    (u32)fn_8017EF64,
+ObjectDescriptor lbl_803214F8 = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)fn_8017EF68,
+    (ObjectDescriptorCallback)fn_8017EF64,
     0,
-    (u32)fn_8017EF3C,
-    (u32)fn_8017EC94,
-    (u32)fn_8017EC54,
-    (u32)dll_FC_render,
-    (u32)dll_FC_free_nop,
-    (u32)dll_FC_func08_ret_0,
-    (u32)dll_FC_getExtraSize_ret_8,
+    (ObjectDescriptorCallback)fn_8017EF3C,
+    (ObjectDescriptorCallback)fn_8017EC94,
+    (ObjectDescriptorCallback)fn_8017EC54,
+    (ObjectDescriptorCallback)dll_FC_render,
+    (ObjectDescriptorCallback)dll_FC_free_nop,
+    (ObjectDescriptorCallback)dll_FC_func08_ret_0,
+    dll_FC_getExtraSize_ret_8,
 };

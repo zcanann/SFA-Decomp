@@ -4885,18 +4885,18 @@ ObjectDescriptor gReStartMarkerObjDescriptor = {
     0,
 };
 
-u32 lbl_80320B38[] = {
-    0, 0, 0, 0x00090000,
-    (u32)fn_801719DC,
-    (u32)fn_801719D8,
+ObjectDescriptor lbl_80320B38 = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)fn_801719DC,
+    (ObjectDescriptorCallback)fn_801719D8,
     0,
-    (u32)fn_801718D0,
-    (u32)fn_8017151C,
-    (u32)fn_80171518,
-    (u32)fn_80171470,
-    (u32)fn_8017140C,
-    (u32)fn_80171404,
-    (u32)fn_801713FC,
+    (ObjectDescriptorCallback)fn_801718D0,
+    (ObjectDescriptorCallback)fn_8017151C,
+    (ObjectDescriptorCallback)fn_80171518,
+    (ObjectDescriptorCallback)fn_80171470,
+    (ObjectDescriptorCallback)fn_8017140C,
+    (ObjectDescriptorCallback)fn_80171404,
+    fn_801713FC,
 };
 
 ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {

@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_14D_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor lbl_80321530;
 
 void FUN_8017eff0(undefined2 *param_1);
 void FUN_8017f268(int param_1);

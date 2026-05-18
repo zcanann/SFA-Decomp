@@ -116,6 +116,7 @@ extern ObjectDescriptor gShieldObjDescriptor;
 extern ObjectDescriptor13 gFlameThrowerSpeObjDescriptor;
 extern ObjectDescriptor12 gCurveObjDescriptor;
 extern ObjectDescriptor gReStartMarkerObjDescriptor;
+extern ObjectDescriptor lbl_80320B38;
 extern ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor;
 
 #endif /* MAIN_DLL_GENPROPS_H_ */

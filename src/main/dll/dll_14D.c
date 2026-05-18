@@ -166,16 +166,16 @@ extern void fn_8017EF7C();
 extern int fn_8017EF74(void);
 extern int fn_8017EF6C(void);
 
-u32 lbl_80321530[] = {
-    0, 0, 0, 0x00090000,
-    (u32)fn_8017F330,
-    (u32)fn_8017F32C,
+ObjectDescriptor lbl_80321530 = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)fn_8017F330,
+    (ObjectDescriptorCallback)fn_8017F32C,
     0,
-    (u32)fn_8017F308,
-    (u32)fn_8017EFF0,
-    (u32)fn_8017EFB0,
-    (u32)fn_8017EF80,
-    (u32)fn_8017EF7C,
-    (u32)fn_8017EF74,
-    (u32)fn_8017EF6C,
+    (ObjectDescriptorCallback)fn_8017F308,
+    (ObjectDescriptorCallback)fn_8017EFF0,
+    (ObjectDescriptorCallback)fn_8017EFB0,
+    (ObjectDescriptorCallback)fn_8017EF80,
+    (ObjectDescriptorCallback)fn_8017EF7C,
+    (ObjectDescriptorCallback)fn_8017EF74,
+    fn_8017EF6C,
 };
