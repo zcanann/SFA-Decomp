@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 
-void mcmdRandomKey(int state, u32 *args);
+void mcmdRandomKey(McmdVoiceState *state, McmdCommandArgs *args);
 void SelectSource(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
                   u32 activeFlag, u32 dirtyFlag);
 u32 varGet32(int state, u32 useExCtrl, u32 index);

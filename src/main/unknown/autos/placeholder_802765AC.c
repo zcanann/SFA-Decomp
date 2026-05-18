@@ -110,7 +110,7 @@ extern void fn_8026F5B8(int state);
 extern u16 sndRand(void);
 extern int voiceIsRegistered(int state);
 extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
-extern int mcmdWait(int state, u32 *args);
+extern int mcmdWait(McmdVoiceState *state, McmdCommandArgs *args);
 extern void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
 extern void inpSetGlobalMIDIDirtyFlag(u8 a, u8 b, u32 flag);
 extern int vidGetInternalId(u32 id);
@@ -450,7 +450,7 @@ void FUN_802765c4(int *param_1,int param_2)
  * Choose a randomized note/velocity command and dispatch it through the
  * normal sample-start handler.
  */
-void mcmdRandomKey(int state, u32 *args)
+void mcmdRandomKey(McmdVoiceState *state, McmdCommandArgs *args)
 {
     u32 command;
     int lowKey;
@@ -459,8 +459,8 @@ void mcmdRandomKey(int state, u32 *args)
     u32 randomValue;
     int keyRange;
 
-    if (((args[1] >> 8) & 0xff) == 0) {
-        command = *args;
+    if (((args->value >> 8) & 0xff) == 0) {
+        command = args->flags;
         lowKey = (command >> 8) & 0xff;
         highKey = command >> 0x18;
         if (highKey < lowKey) {
@@ -468,8 +468,8 @@ void mcmdRandomKey(int state, u32 *args)
             lowKey = command >> 0x18;
         }
     } else {
-        lowKey = *(u16 *)(state + 0x12c) - (int)((*args >> 8) & 0xff);
-        highKey = *(u16 *)(state + 0x12c) + (int)(*args >> 0x18);
+        lowKey = state->key - (int)((args->flags >> 8) & 0xff);
+        highKey = state->key + (int)(args->flags >> 0x18);
         if ((int)lowKey < 0) {
             lowKey = 0;
         } else if ((int)lowKey > 0x7f) {
@@ -482,25 +482,24 @@ void mcmdRandomKey(int state, u32 *args)
         highKey &= 0xff;
     }
 
-    if ((args[1] & 0xff) == 0) {
-        fineTune = (*args >> 0x10) & 0xff;
+    if ((args->value & 0xff) == 0) {
+        fineTune = (args->flags >> 0x10) & 0xff;
     } else {
         fineTune = (sndRand() & 0xffff) % 0xc9 - 100;
     }
     randomValue = sndRand();
     keyRange = (highKey - lowKey) + 1;
-    *args = ((fineTune & 0xff) << 0x10) | 0x19 |
+    args->flags = ((fineTune & 0xff) << 0x10) | 0x19 |
             (lowKey + ((randomValue & 0xffff) -
                        ((int)(randomValue & 0xffff) / keyRange) * keyRange)) *
                 0x100;
-    args[1] = 0;
-    *(u16 *)(state + 0x12c) = (u16)(*args >> 8) & 0x7f;
-    *(s8 *)(state + 0x12e) = (s8)(*args >> 0x10);
-    if (voiceIsRegistered(state) != 0) {
-        inpSetMidiLastNote(*(u8 *)(state + 0x121), *(u8 *)(state + 0x122),
-                           *(u16 *)(state + 0x12c) & 0xff);
+    args->value = 0;
+    state->key = (u16)(args->flags >> 8) & 0x7f;
+    state->fineTune = (s8)(args->flags >> 0x10);
+    if (voiceIsRegistered((int)state) != 0) {
+        inpSetMidiLastNote(state->midiSlot, state->midiEvent, state->key & 0xff);
     }
-    *args = 4;
+    args->flags = 4;
     mcmdWait(state, args);
 }
 
