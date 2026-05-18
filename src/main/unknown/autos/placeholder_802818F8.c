@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 #include "main/unknown/autos/placeholder_80279EC0.h"
 #include "main/unknown/autos/placeholder_80281A9C.h"
 
@@ -37,10 +38,10 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
                     u8 *vp = synthVoice + voff;
-                    if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
-                        slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
-                        vp[0x1d7] = v;
-                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
+                    McmdVoiceState *voice = (McmdVoiceState *)vp;
+                    if (key == voice->midiEvent && slot == voice->midiSlot) {
+                        voice->pitchBendRangeDown = v;
+                        voice->pitchBendRangeUp = v;
                     }
                     voff += SYNTH_VOICE_STRIDE;
                 }
@@ -60,10 +61,10 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
                     u8 *vp = synthVoice + voff;
-                    if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
-                        slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
-                        vp[0x1d7] = v;
-                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
+                    McmdVoiceState *voice = (McmdVoiceState *)vp;
+                    if (key == voice->midiEvent && slot == voice->midiSlot) {
+                        voice->pitchBendRangeDown = v;
+                        voice->pitchBendRangeUp = v;
                     }
                     voff += SYNTH_VOICE_STRIDE;
                 }
@@ -83,10 +84,10 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
                     u8 *vp = synthVoice + voff;
-                    if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
-                        slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
-                        vp[0x1d7] = v;
-                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
+                    McmdVoiceState *voice = (McmdVoiceState *)vp;
+                    if (key == voice->midiEvent && slot == voice->midiSlot) {
+                        voice->pitchBendRangeDown = v;
+                        voice->pitchBendRangeUp = v;
                     }
                     voff += SYNTH_VOICE_STRIDE;
                 }
@@ -122,10 +123,10 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
                     u8 *vp = synthVoice + voff;
-                    if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
-                        slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
-                        vp[0x1d7] = v;
-                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
+                    McmdVoiceState *voice = (McmdVoiceState *)vp;
+                    if (key == voice->midiEvent && slot == voice->midiSlot) {
+                        voice->pitchBendRangeDown = v;
+                        voice->pitchBendRangeUp = v;
                     }
                     voff += SYNTH_VOICE_STRIDE;
                 }
@@ -145,10 +146,10 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
                     u8 *vp = synthVoice + voff;
-                    if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
-                        slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
-                        vp[0x1d7] = v;
-                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
+                    McmdVoiceState *voice = (McmdVoiceState *)vp;
+                    if (key == voice->midiEvent && slot == voice->midiSlot) {
+                        voice->pitchBendRangeDown = v;
+                        voice->pitchBendRangeUp = v;
                     }
                     voff += SYNTH_VOICE_STRIDE;
                 }
@@ -168,10 +169,10 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
                 voff = 0;
                 for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
                     u8 *vp = synthVoice + voff;
-                    if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
-                        slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
-                        vp[0x1d7] = v;
-                        *(u8 *)(synthVoice + voff + 0x1d6) = v;
+                    McmdVoiceState *voice = (McmdVoiceState *)vp;
+                    if (key == voice->midiEvent && slot == voice->midiSlot) {
+                        voice->pitchBendRangeDown = v;
+                        voice->pitchBendRangeUp = v;
                     }
                     voff += SYNTH_VOICE_STRIDE;
                 }

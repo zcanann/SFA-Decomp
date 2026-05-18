@@ -162,7 +162,11 @@ typedef struct McmdVoiceState {
     u8 unk1C8[0x1D0 - 0x1C8];
     s16 exCtrlA1Value;
     u16 exCtrlA1Limit;
-    u8 unk1D4[0x1DC - 0x1D4];
+    u8 unk1D4[2];
+    u8 pitchBendRangeUp;
+    u8 pitchBendRangeDown;
+    u16 pitchBend;
+    u8 unk1DA[0x1DC - 0x1DA];
     McmdEnvelopeState pitchAdsr;
     s16 pitchAdsrPan;
     u8 unk206[0x208 - 0x206];
