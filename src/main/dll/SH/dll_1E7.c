@@ -8,7 +8,7 @@ extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern int randomGetRange(int min,int max);
 extern int Obj_GetPlayerObject(void);
 extern SHthorntailObject **ObjGroup_GetObjects(int group,int *countOut);
-extern int fn_8005A10C(Vec *pos,f32 radius);
+extern int ViewFrustum_IsSphereVisible(Vec *pos,f32 radius);
 extern void fn_8014C66C(SHthorntailObject *obj,SHthorntailObject *other);
 extern void OSReport(const char *msg,...);
 extern uint FUN_80017758();
@@ -250,8 +250,9 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
         return SHTHORNTAIL_STATE_CLOSE_ATTACK;
       }
     }
-    value = fn_8005A10C((Vec *)(objWords + 6),
-                        *(float *)(objWords + 0x54) * *(float *)(objWords + 4));
+    value = ViewFrustum_IsSphereVisible((Vec *)(objWords + 6),
+                                        *(float *)(objWords + 0x54) *
+                                            *(float *)(objWords + 4));
     if (value == 0) {
       nextState = SHTHORNTAIL_STATE_CLOSE_ATTACK;
     }

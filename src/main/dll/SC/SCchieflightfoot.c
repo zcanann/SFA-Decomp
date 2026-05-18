@@ -19,7 +19,7 @@ extern int ObjTrigger_IsSet();
 extern void ObjPath_GetPointWorldPosition(SHthorntailObject *obj,int pointIndex,f32 *x,f32 *y,f32 *z,int param_6);
 extern void characterDoEyeAnims(int obj,int collisionShapeState);
 extern void fn_8003B228(int obj,int collisionShapeState);
-extern int fn_8005A10C(f32 *pos,f32 scale);
+extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 extern void objAudioFn_8006ef38(int obj,int joint,int pointCount,int pathPoints,int scratch,f32 scaleX,f32 scaleY);
 extern undefined4 fn_80114F64();
 extern undefined4 fn_8011507C();
@@ -267,8 +267,9 @@ void SHthorntail_update(SHthorntailObject *obj)
       dVar11 = getXZDistance((float *)(psVar2 + 0xc),(float *)&config->homePos);
       if ((dVar11 > (double)(f32)(s32)((uint)config->leashRadiusByte *
                                       (uint)config->leashRadiusByte)) &&
-         (iVar9 = fn_8005A10C((float *)(psVar2 + 6),
-                              *(float *)(psVar2 + 0x54) * *(float *)(psVar2 + 4)),
+         (iVar9 = ViewFrustum_IsSphereVisible((float *)(psVar2 + 6),
+                                              *(float *)(psVar2 + 0x54) *
+                                                  *(float *)(psVar2 + 4)),
           iVar9 == 0)) {
         iVar9 = getAngle(*(float *)(psVar2 + 6) - config->homePos.x,
                          *(float *)(psVar2 + 10) - config->homePos.z);

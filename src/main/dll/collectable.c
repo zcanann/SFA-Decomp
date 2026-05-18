@@ -89,7 +89,7 @@ extern undefined4 FUN_80046f44();
 extern undefined4 FUN_80046f84();
 extern void freeAndNull(void *param_1);
 extern void trickyVoxAllocFn_8004b5d4(void *param_1);
-extern int fn_8005A10C(f32 *pos,f32 radius);
+extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 extern undefined8 FUN_800571f8();
 extern int FUN_800575b4();
 extern int FUN_800620e8();
@@ -2935,7 +2935,7 @@ int fn_80144E40(int *obj, int *p) {
     objs = ObjGroup_GetObjects(0x4b, count);
     d = getXZDistance((f32*)((char*)(int*)p[0x4/4] + 0x18), (f32*)((char*)obj + 0x18));
     if ((d >= lbl_803E2538) || (*(f32*)((char*)p + 0x71c) > lbl_803E23DC)) {
-        if (fn_8005A10C((f32*)((char*)obj + 0xc), lbl_803E2500) == 0) {
+        if (ViewFrustum_IsSphereVisible((f32*)((char*)obj + 0xc), lbl_803E2500) == 0) {
             bestD = lbl_803E2418;
             for (i = 0; i < count[0]; i++) {
                 f32 cd = getXZDistance((f32*)((char*)(int*)p[0x4/4] + 0x18), (f32*)((char*)*objs + 0x18));

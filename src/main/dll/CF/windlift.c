@@ -151,7 +151,7 @@ extern u32 randomGetRange(int min, int max);
 extern void playerAddMoney(int player, u8 b);
 extern int fn_801843C0(int obj);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern int fn_8005A10C(f32 *p1, f32 f1);
+extern int ViewFrustum_IsSphereVisible(f32 *pos, f32 radius);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void *out, int p5, int p6);
 extern int fn_8006961C(void *p1, void *p2, void *p3, void *p4, void *p5, int p6);
 extern int hitDetectFn_800691c0(int obj, void *p2, int p3, int p4);
