@@ -3,6 +3,9 @@
 
 #include "ghidra_import.h"
 #include "main/expgfx_internal.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor11 projgfx_funcs;
 
 void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                              undefined8 param_4,undefined8 param_5,undefined8 param_6,

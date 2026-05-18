@@ -2,6 +2,7 @@
 #define MAIN_DLL_FIRE_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
 typedef struct FireObject FireObject;
@@ -14,6 +15,8 @@ struct FireObject {
     u8 padB2[0xBC - 0xB2];
     undefined4 (*stateCallback)(FireObject *obj, undefined4 param_2, ObjAnimUpdateState *animUpdate);
 };
+
+extern ObjectDescriptor gFireObjDescriptor;
 
 undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 int fireObj_getExtraSize(void);

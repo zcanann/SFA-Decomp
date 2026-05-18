@@ -2,6 +2,7 @@
 #define MAIN_DLL_CF_LASER_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
 typedef struct LaserState {
@@ -59,6 +60,8 @@ typedef struct LaserEventInterface {
 #define LASEROBJ_MAIN_SEQUENCE_B_EVENT 0x83b
 
 extern char sLaserInitNoLongerSupported[];
+extern ObjectDescriptor gLaserUnsupportedObjDescriptor;
+extern ObjectDescriptor gLaserObjDescriptor;
 
 int laser_getExtraSizeUnsupported(void);
 int laser_func08(void);
