@@ -12980,8 +12980,8 @@ void SaveGame_func08_nop(void) {}
 void screens_release(void) {}
 void Carryable_release(void) {}
 void Carryable_initialise(void) {}
-void fn_800EB090(void) {}
-void fn_800EB094(void) {}
+void dll_59_func01_nop(void) {}
+void dll_59_func00_nop(void) {}
 void fn_800ECAD8(void) {}
 void fn_800ECADC(void) {}
 void fn_800ECDFC(void) {}
