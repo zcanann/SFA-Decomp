@@ -2,6 +2,12 @@
 #define MAIN_DLL_ALPHAANIM_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gDoorLockObjDescriptor;
+extern ObjectDescriptor gSeqObjectObjDescriptor;
+extern ObjectDescriptor gSeqObj2ObjDescriptor;
+extern ObjectDescriptor gIMMultiSeqObjDescriptor;
 
 void doorlock_init(short *obj,int config);
 void FUN_8017c230(int param_1);
@@ -22,5 +28,37 @@ undefined4 FUN_8017ca44(int param_1,undefined4 param_2,int param_3);
 void seqObj2_free(int param_1);
 void seqObj2_update(int param_1);
 void seqObj2_init(short *param_1,int param_2);
+
+int doorlock_getExtraSize(void);
+void doorlock_free(void);
+void doorlock_render(void);
+void doorlock_update(void);
+
+int seqobject_getExtraSize(void);
+int seqobject_func08(void);
+void seqobject_free(int x);
+void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void seqobject_update(void);
+void seqobject_init(void);
+
+int seqobj2_getExtraSize(void);
+int seqobj2_func08(void);
+void seqobj2_free(int x);
+void seqobj2_render(void);
+void seqobj2_hitDetect(void);
+void seqobj2_update(void);
+void seqobj2_init(void);
+void SeqObj2_release(void);
+void SeqObj2_initialise(void);
+
+int immultiseq_getExtraSize(void);
+int immultiseq_func08(void);
+void immultiseq_free(int x);
+void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void immultiseq_hitDetect(void);
+void immultiseq_update(void);
+void immultiseq_init(void);
+void immultiseq_release(void);
+void immultiseq_initialise(void);
 
 #endif /* MAIN_DLL_ALPHAANIM_H_ */
