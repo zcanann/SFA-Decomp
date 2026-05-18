@@ -2,6 +2,14 @@
 #define MAIN_DLL_DIM_DIMLAVABALL_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gMMP_levelcontrolObjDescriptor;
+extern ObjectDescriptor gMoonSeedBushObjDescriptor;
+extern ObjectDescriptor gMMP_asteroid_reObjDescriptor;
+extern ObjectDescriptor gMMP_moonrockObjDescriptor;
+extern ObjectDescriptor gMMP_trenchFXObjDescriptor;
+extern ObjectDescriptor gMMP_gyserventObjDescriptor;
 
 void MMP_levelcontrol_update(int param_1,int param_2);
 undefined4
@@ -43,5 +51,58 @@ void FUN_801a8bb0(void);
 void FUN_801a8c14(void);
 void FUN_801a8c18(int param_1,int param_2);
 void FUN_801a8d70(void);
+
+void MMP_levelcontrol_release(void);
+void MMP_levelcontrol_initialise(void);
+
+int MoonSeedBush_getExtraSize(void);
+int MoonSeedBush_func08(void);
+void MoonSeedBush_free(void);
+void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void MoonSeedBush_hitDetect(void);
+void MoonSeedBush_update(void);
+void MoonSeedBush_init(void);
+void MoonSeedBush_release(void);
+void MoonSeedBush_initialise(void);
+
+int mmp_asteroid_re_getExtraSize(void);
+int mmp_asteroid_re_func08(void);
+void mmp_asteroid_re_free(void);
+void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void mmp_asteroid_re_hitDetect(void);
+void mmp_asteroid_re_update(void);
+void mmp_asteroid_re_init(void);
+void mmp_asteroid_re_release(void);
+void mmp_asteroid_re_initialise(void);
+
+int mmp_moonrock_getExtraSize(void);
+int mmp_moonrock_func08(void);
+void mmp_moonrock_free(void);
+void mmp_moonrock_render(void);
+void mmp_moonrock_hitDetect(void);
+void mmp_moonrock_update(void);
+void mmp_moonrock_init(void);
+void mmp_moonrock_release(void);
+void mmp_moonrock_initialise(void);
+
+int mmp_trenchfx_getExtraSize(void);
+int mmp_trenchfx_func08(void);
+void mmp_trenchfx_free(void);
+void mmp_trenchfx_render(void);
+void mmp_trenchfx_hitDetect(void);
+void mmp_trenchfx_update(void);
+void mmp_trenchfx_init(void);
+void mmp_trenchfx_release(void);
+void mmp_trenchfx_initialise(void);
+
+int mmp_gyservent_getExtraSize(void);
+int mmp_gyservent_func08(void);
+void mmp_gyservent_free(void);
+void mmp_gyservent_render(void);
+void mmp_gyservent_hitDetect(void);
+void mmp_gyservent_update(void);
+void mmp_gyservent_init(void);
+void mmp_gyservent_release(void);
+void mmp_gyservent_initialise(void);
 
 #endif /* MAIN_DLL_DIM_DIMLAVABALL_H_ */
