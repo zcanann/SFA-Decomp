@@ -36,8 +36,8 @@ typedef struct ObjHitReactEffectHandle {
 
 typedef struct ObjHitReactMoveEntry {
   s16 moveId;
-  s16 firstEntryIndex;
-  s16 entryCount;
+  s16 firstEntryOffset;
+  s16 entryBytes;
 } ObjHitReactMoveEntry;
 
 #define OBJHITREACT_MAX_RESET_OBJECTS 0x32
@@ -65,8 +65,8 @@ typedef struct ObjHitReactMoveEntry {
 
 typedef struct ObjHitReactState {
   int activeHit;
-  s16 activeEntryCount;
-  s16 entryCapacity;
+  s16 activeEntryBytes;
+  s16 entryByteCapacity;
   ObjHitReactEntry *entries;
   u8 pad0C[0x58 - 0x0C];
   s16 resetFrameCount;

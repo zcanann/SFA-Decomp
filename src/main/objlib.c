@@ -300,28 +300,28 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
 {
   ObjHitReactMoveEntry *moveEntry;
   int entryShortOffset;
-  s16 firstEntryOffset;
+  s16 firstEntryByteOffset;
   ObjHitReactMoveEntry *moveEntryTable;
 
   moveEntryTable = ((ObjAnimComponent *)objAnim)->modelInstance->hitReactMoveTable;
-  hitState->activeEntryCount = 0;
+  hitState->activeEntryBytes = 0;
   if (moveEntryTable != (ObjHitReactMoveEntry *)0x0) {
     entryShortOffset = 0;
     for (moveEntry = moveEntryTable; moveEntry->moveId != -1;) {
       if (moveId == moveEntry->moveId) {
         moveEntry = (ObjHitReactMoveEntry *)((s16 *)moveEntryTable + entryShortOffset);
-        firstEntryOffset = moveEntry->firstEntryIndex;
-        hitState->activeEntryCount = moveEntry->entryCount;
-        if (hitState->activeEntryCount > hitState->entryCapacity) {
-          hitState->activeEntryCount = hitState->entryCapacity;
+        firstEntryByteOffset = moveEntry->firstEntryOffset;
+        hitState->activeEntryBytes = moveEntry->entryBytes;
+        if (hitState->activeEntryBytes > hitState->entryByteCapacity) {
+          hitState->activeEntryBytes = hitState->entryByteCapacity;
         }
         if (async == 0) {
-          getTabEntry(hitState->entries,OBJHITREACT_ENTRY_TAB_FILE_ID,(int)firstEntryOffset,
-                      (int)hitState->activeEntryCount);
+          getTabEntry(hitState->entries,OBJHITREACT_ENTRY_TAB_FILE_ID,(int)firstEntryByteOffset,
+                      (int)hitState->activeEntryBytes);
           return;
         }
         fileLoadToBufferOffset(OBJHITREACT_ENTRY_TAB_FILE_ID,hitState->entries,
-                               (int)firstEntryOffset,(int)hitState->activeEntryCount);
+                               (int)firstEntryByteOffset,(int)hitState->activeEntryBytes);
         return;
       }
       moveEntry++;
@@ -357,10 +357,10 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
   if (bank == (ObjAnimBank *)0x0) {
     return entryArena;
   }
-  hitState->entryCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
+  hitState->entryByteCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
   entries = (ObjHitReactEntry *)roundUpTo8(entryArena);
   hitState->entries = entries;
-  entryArena = (uint)entries + hitState->entryCapacity;
+  entryArena = (uint)entries + hitState->entryByteCapacity;
   hitState->activeHitboxMode = OBJHITREACT_ACTIVE_HITBOX_MODE;
   if ((hitState->resetFlags & OBJHITREACT_RESET_MODE_MASK) != 0) {
     hitState->resetHitboxMode = OBJHITREACT_RESET_HITBOX_MODE;
