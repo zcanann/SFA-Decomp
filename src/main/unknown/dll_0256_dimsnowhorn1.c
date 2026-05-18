@@ -40,7 +40,7 @@
  * - slot 20: 0x802BAFBC DIMSnowHorn1_func20 stub=const 0
  * - slot 21: 0x802BAFB8 DIMSnowHorn1_func21 stub=blr
  * - slot 22: 0x802BAEE8 DIMSnowHorn1_func22
- * - slot 23: 0x802B9780 fn_802B9780 stub=blr
+ * - slot 23: 0x802B9780 DIMSnowHorn1_func23 stub=blr
  *
  * Reference-only hints:
  * - reference DLL name: DIMSnowHorn1
@@ -73,6 +73,6 @@ enum dll_0256_DIMSnowHorn1_slot {
     DIMSNOWHORN1_SLOT_20 = 20,
     DIMSNOWHORN1_SLOT_21 = 21,
     DIMSNOWHORN1_SLOT_22 = 22,
-    DIMSNOWHORN1_SLOT_23 = 23,
+    DIMSNOWHORN1_FUNC23 = 23,
 };
 #endif
