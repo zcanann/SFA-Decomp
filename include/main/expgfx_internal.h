@@ -127,6 +127,13 @@ typedef struct ExpgfxSourceObject {
   s16 objType;
 } ExpgfxSourceObject;
 
+typedef struct ExpgfxPoolSourcePosition {
+  u8 pad00[0x0C];
+  f32 x;
+  f32 y;
+  f32 z;
+} ExpgfxPoolSourcePosition;
+
 /*
  * Retail warning strings call this structure "exptab". The key fields are
  * still only partially understood, but the table's role and lifetime rules

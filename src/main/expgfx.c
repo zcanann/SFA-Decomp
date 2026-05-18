@@ -1342,13 +1342,13 @@ void drawGlow(uint slotPoolBase,int poolIndex)
 void renderParticles(void)
 {
   ExpgfxBounds *boundsTemplate;
-  float *sourcePosition;
+  ExpgfxPoolSourcePosition *sourcePosition;
   register u8 *expgfxBase = gExpgfxRuntimeData;
   char *poolActiveCounts;
   u8 *poolSourceModes;
   u8 *poolBoundsTemplateIds;
   ExpgfxBounds *poolBounds;
-  int *poolSourceIds;
+  u32 *poolSourceIds;
   s16 *poolSlotTypeIds;
   uint *slotPoolBases;
   int poolIndex;
@@ -1364,7 +1364,7 @@ void renderParticles(void)
   poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
   poolBoundsTemplateIds = expgfxBase + EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET;
   poolBounds = (ExpgfxBounds *)(expgfxBase + EXPGFX_POOL_BOUNDS_OFFSET);
-  poolSourceIds = (int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
+  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
   poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
   slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
   do {
@@ -1378,11 +1378,11 @@ void renderParticles(void)
                       (double)poolBounds->minY,(double)poolBounds->maxY,
                       (double)(poolBounds->minZ - playerMapOffsetZ),
                       (double)(poolBounds->maxZ - playerMapOffsetZ),boundsTemplate) != 0) {
-        sourcePosition = (float *)*poolSourceIds;
-        if (sourcePosition != (float *)0x0) {
-          queuePosition[0] = sourcePosition[3] - playerMapOffsetX;
-          queuePosition[1] = sourcePosition[4];
-          queuePosition[2] = sourcePosition[5] - playerMapOffsetZ;
+        sourcePosition = (ExpgfxPoolSourcePosition *)*poolSourceIds;
+        if (sourcePosition != (ExpgfxPoolSourcePosition *)0x0) {
+          queuePosition[0] = sourcePosition->x - playerMapOffsetX;
+          queuePosition[1] = sourcePosition->y;
+          queuePosition[2] = sourcePosition->z - playerMapOffsetZ;
         }
         else {
           queuePosition[0] =
