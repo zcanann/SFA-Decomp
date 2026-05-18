@@ -21,7 +21,7 @@ extern void loadSaveSettings(void);
 extern int titleLoadSaveFiles(void);
 extern void gameplay_capturePreviewSettings(void);
 extern float titleScreenGetCamProgress(void);
-extern void movieFn_80117b68(int fade, int frames);
+extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void titleScreenFn_80130464(u8 v);
 extern void setLinkNotRotated(void);
 extern u8 shouldShowCredits(void);
@@ -181,7 +181,7 @@ int TitleMenu_run(void)
   }
   if ((gAttractMovieRetraceCountdown != 0) && (--gAttractMovieRetraceCountdown == 0) &&
       (gAttractMoviePlaybackEnabled != 0)) {
-    movieFn_80117b68(100,1000);
+    Movie_SetVolumeFade(100,1000);
   }
   if ((gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) &&
       (++gAttractMovieIdleFrameCount > NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN)) {

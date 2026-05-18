@@ -710,7 +710,7 @@ extern void AudioStream_UpdateFadeTimer(void);
 extern void AudioStream_StopCurrent(void);
 extern void AudioStream_CancelPrepared(void);
 extern void streamFn_8000a380(u32 channel, u32 mode, u32 time);
-extern void movieFn_80117b68(u32 volume, u32 fadeMs);
+extern void Movie_SetVolumeFade(u32 volume, u32 fadeMs);
 extern void AISetStreamPlayState(u32 state);
 extern void AISetStreamVolLeft(u32 volume);
 extern void AISetStreamVolRight(u32 volume);
@@ -1387,7 +1387,7 @@ void audioStopAll(void)
     gAudioManagedChannelMask &= ~0xfU;
     gAudioResetting = 1;
     if ((lbl_803DD610 == 2) || (lbl_803DD610 == 3)) {
-        movieFn_80117b68(0, 500);
+        Movie_SetVolumeFade(0, 500);
     }
     AudioStream_CancelPrepared();
 }

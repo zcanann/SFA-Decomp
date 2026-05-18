@@ -28,7 +28,7 @@ extern void setDrawLights(int arg);
 extern void setIsOvercast(int arg);
 extern void saveFn_8007d960(int arg);
 extern void envFxActFn_800887f8(int arg);
-extern void movieFn_80117b68(int fade, int frames);
+extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void setLinkIsRotated(void);
 extern void titleScreenPositionElements(f32 x, f32 y);
 extern void titleScreenFn_801368a4(u8 arg);
@@ -163,13 +163,13 @@ void TitleMenu_initialise(void)
     n_attractmode_prepareMovie();
     titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
     gAttractMoviePlaybackEnabled = 1;
-    movieFn_80117b68(0,0);
+    Movie_SetVolumeFade(0,0);
     audioSetVolumes(0,10,1,0,0);
     lbl_803DD616 = 0;
   } else {
     titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
     gAttractMoviePlaybackEnabled = 0;
-    movieFn_80117b68(0,1);
+    Movie_SetVolumeFade(0,1);
   }
   setIsOvercast(0);
   setDrawLights(0);

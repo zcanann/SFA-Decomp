@@ -15,7 +15,7 @@ extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 extern undefined8 FUN_80080f24();
 extern undefined8 camcontrol_findBestTarget();
-extern undefined4 movieFn_80117b68();
+extern undefined4 Movie_SetVolumeFade();
 extern undefined4 fn_801181F8();
 extern undefined4 fn_8011881C();
 extern undefined4 fn_80118900();
@@ -391,10 +391,10 @@ void n_attractmode_prepareMovie(void)
         gAttractMovieRetraceCountdown = NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN;
         gAttractMovieIdleFrameCount = 0;
         if ((int)gTitleMenuSelection == NATTRACTMODE_MOVIE_STATE_RELEASED) {
-          movieFn_80117b68(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
+          Movie_SetVolumeFade(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
         }
         else {
-          movieFn_80117b68(NATTRACTMODE_MOVIE_START_FRAME_DEFAULT,1);
+          Movie_SetVolumeFade(NATTRACTMODE_MOVIE_START_FRAME_DEFAULT,1);
         }
       }
     }
