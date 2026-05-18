@@ -1,13 +1,10 @@
 #include "ghidra_import.h"
+#include "main/worldplanet.h"
 
 extern void objRenderFn_8003b8f4(double scale);
 extern void setShowWorldMapHud(int enabled);
 
 extern f32 lbl_803E6618;
-
-typedef struct WorldPlanetState {
-  u8 unk0[0x18];
-} WorldPlanetState;
 
 int worldplanet_getExtraSize(void)
 {
