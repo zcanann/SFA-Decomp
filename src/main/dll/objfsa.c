@@ -4289,13 +4289,13 @@ int fn_800D9ECC(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern u32 lbl_803DD430;
-void fn_800D9668(u32 x) { lbl_803DD430 = x; }
+void player_setOverride(u32 x) { lbl_803DD430 = x; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DD458;
 void fn_800D9EB8(void) { lbl_803DD458 = 0x3; }
 
-/* fn_800D9D3C: init / memset constructor */
+/* player_init: memset constructor */
 extern void *memset(void *dst, int val, u32 n);
 extern f32 lbl_803E05BC;
 extern f32 lbl_803E05C8;
@@ -4305,7 +4305,7 @@ extern f32 lbl_803E05F4;
 extern void curveFn_80010320(float *p);
 #pragma scheduling off
 #pragma peephole off
-void fn_800D9D3C(int unused, void *obj, int a, int b) {
+void player_init(int unused, void *obj, int a, int b) {
     memset(obj, 0, 0x35c);
     *(s16 *)((char *)obj + 0x26c) = (s16)a;
     *(s16 *)((char *)obj + 0x26e) = (s16)b;
@@ -4368,7 +4368,7 @@ int fn_800D9F38(void *a, void *b) {
 #pragma scheduling on
 #pragma peephole on
 
-/* player_hitDetect */
+/* player_updateVel */
 extern f32 lbl_803E05A4;
 extern f32 lbl_803E05A8;
 extern u8 lbl_803DD434;
@@ -4379,7 +4379,7 @@ extern float sqrtf(float x);
 extern int fn_800D92D0(void *a, void *b, float t, int c);
 #pragma peephole off
 #pragma scheduling off
-void player_hitDetect(char *p, char *obj, int unused) {
+void player_updateVel(char *p, char *obj, int unused) {
     float fcos, fsin;
     if (((s32)(s8)*(obj + 0x34c) & 1) != 0) {
         fcos = fn_80293E80(lbl_803E05A4 * (float)(s32)*(s16 *)p / lbl_803E05A8);
@@ -4468,10 +4468,10 @@ void UIController_render(void *p, int a, int b) {
 #pragma scheduling on
 #pragma peephole on
 
-/* player_SetState */
+/* player_setState */
 #pragma peephole off
 #pragma scheduling off
-void player_SetState(void *ctx, void *p, int new_state) {
+void player_setState(void *ctx, void *p, int new_state) {
     void *q;
     if (*(s16 *)((char *)p + 0x274) == new_state) goto end;
     *(s16 *)((char *)p + 0x276) = *(s16 *)((char *)p + 0x274);

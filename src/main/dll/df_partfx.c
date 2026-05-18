@@ -1655,7 +1655,7 @@ void Checkpoint_reset(void) { lbl_803DD410 = 0x0; }
 /* 12b 3-insn patterns. */
 extern u32 lbl_803DD43C;
 extern u32 lbl_803DD438;
-void fn_800D895C(int unused1, int unused2, u32 a, u32 b) { lbl_803DD43C = a; lbl_803DD438 = b; }
+void player_setAnimIds(int unused1, int unused2, u32 a, u32 b) { lbl_803DD43C = a; lbl_803DD438 = b; }
 
 /* misc 8b leaves */
 extern f32 lbl_803DD420;
