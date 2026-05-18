@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMbossgut.h"
 
-extern void fn_8002B8C8(void *obj, int resourceId);
+extern void objSetSlot(void *obj, int resourceId);
 extern undefined4 ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg,
                                              void *eventList);
 extern undefined4 ObjAnim_SetCurrentMove(int objAnimArg, int moveId, f32 moveProgress, int flags);
@@ -55,7 +55,7 @@ void DIMbossgut_init(void *obj)
 {
   int objArg;
 
-  fn_8002B8C8(obj, 0x5a);
+  objSetSlot(obj, 0x5a);
   *(void **)((char *)obj + 0xbc) = fn_801BDBE0;
   objArg = (int)obj;
   ObjAnim_SetCurrentMove(objArg, 0, lbl_803E4C88, 0);

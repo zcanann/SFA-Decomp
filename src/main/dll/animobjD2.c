@@ -7,7 +7,7 @@
 extern void *fn_80296118(void *p);
 extern void **ObjGroup_GetObjects(int group, int *countOut);
 extern f32 Vec_xzDistance(void *a, void *b);
-extern int fn_8002178C(f32 dx, f32 dz);
+extern int atan2_8002178c(f32 dx, f32 dz);
 extern int randomGetRange(int lo, int hi);
 extern f32 fsin16Precise(int angle);
 extern f32 fcos16Precise(int angle);
@@ -54,7 +54,7 @@ void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
     void *p_24 = *(void **)((u8 *)p2 + 0x24);
     f32 dx = *(f32 *)((u8 *)p_24 + 0x18) - *(f32 *)((u8 *)p1 + 0x18);
     f32 dz = *(f32 *)((u8 *)p_24 + 0x20) - *(f32 *)((u8 *)p1 + 0x20);
-    int angle = fn_8002178C(dx, dz);
+    int angle = atan2_8002178c(dx, dz);
     s32 delta;
     s32 absDelta;
 

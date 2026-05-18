@@ -6992,8 +6992,8 @@ void doNothing_8001F678(void) {}
 void doNothing_startOfFrame(void) {}
 void doNothing_onSaveSelectScreenExit(void) {}
 int return1_800202BC(void) { return 0x1; }
-int fn_8002969C(void) { return 0x0; }
-int fn_8002A5B8(void) { return 0x0; }
-void fn_8002A5D4(void) {}
-void fn_8002A5D8(void) {}
+int return0_8002969C(void) { return 0x0; }
+int return0_8002A5B8(void) { return 0x0; }
+void doNothing_afterRenderObject(void) {}
+void doNothing_beforeRenderObject(void) {}
 void fn_8002B85C(void) {}

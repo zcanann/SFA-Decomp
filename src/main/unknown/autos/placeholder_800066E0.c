@@ -1446,7 +1446,7 @@ FUN_80006788(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u32 fn_8000A188(u32 mask)
+u32 audioFlagFn_8000a188(u32 mask)
 {
     u32 managed = gAudioManagedChannelMask & mask;
     if (managed == 0) {
@@ -1468,7 +1468,7 @@ u32 fn_8000A188(u32 mask)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8000A1B8(void *ptr)
+void audioFree(void *ptr)
 {
     mm_free(ptr);
 }
@@ -1486,7 +1486,7 @@ void fn_8000A1B8(void *ptr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void *fn_8000A1D8(u32 size)
+void *_audioAlloc(u32 size)
 {
     return mmAlloc(size, 0xb, NULL);
 }
@@ -6170,7 +6170,7 @@ undefined4 FUN_80006ca4(void)
 }
 
 /* Pattern wrappers. */
-int fn_80008B6C(void) { return -0x1; }
-int fn_8000A378(void) { return 0x64; }
-void fn_8000CF54(void) {}
+int return0xFFFF_80008B6C(void) { return -0x1; }
+int return0x64_8000A378(void) { return 0x64; }
+void doNothing_8000CF54(void) {}
 void doNothing_endOfFrame(void) {}
