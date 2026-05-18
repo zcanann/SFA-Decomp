@@ -19,7 +19,7 @@ extern byte hitDetectFn_80067958(int obj,float *startPoints,float *endPoints,int
 extern void hitDetectFn_800691c0(int obj,void *bounds,uint mask,int flags);
 extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
                         int pointCount);
-extern undefined4 FUN_80135810();
+extern void debugPrintf(char *message,...);
 extern undefined8 FUN_8028680c();
 extern undefined8 FUN_80286818();
 extern int FUN_80286820();
@@ -73,7 +73,7 @@ extern f32 lbl_803DF5B8;
 extern f32 lbl_803DF5D8;
 extern f32 lbl_803DF5DC;
 extern f32 lbl_803DF5E0;
-extern char s_HIT_VOLUMES__an_object_has_too_m_802cb98c[];
+extern char sObjHitsTooManyHitSpheresWarning[];
 extern undefined4 uRam803dd84c;
 extern undefined4 uRam803dd854;
 
@@ -1730,9 +1730,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
     }
     dVar42 = (double)fVar2;
     if ((0x40 < local_174) || (0x40 < local_178)) {
-      FUN_80135810(dVar32,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   s_HIT_VOLUMES__an_object_has_too_m_802cb98c,iVar16,param_11,param_12,param_13,
-                   param_14,param_15,param_16);
+      debugPrintf(sObjHitsTooManyHitSpheresWarning);
     }
     dVar41 = (double)(*(float *)(iVar14 + 0x18) - *(float *)(iVar15 + 0x18));
     dVar40 = (double)(*(float *)(iVar14 + 0x1c) - *(float *)(iVar15 + 0x1c));
