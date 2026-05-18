@@ -32,9 +32,10 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u8 midiSlot
         }
         if ((entry[1] & MCMD_INPUT_ENTRY_USE_VAR_FLAG) == 0) {
             u8 ctrl = entry[0];
-            if (ctrl == 0x80 || ctrl == 1 || ctrl == 10 || (u8)(ctrl + 0x60) < 2 ||
-                ctrl == 0x83) {
-                if (ctrl < 0xa2 && ctrl > 0x9f) {
+            if (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION ||
+                ctrl == MCMD_CTRL_PANNING || (u8)(ctrl + 0x60) < 2 ||
+                ctrl == MCMD_CTRL_SUR_PANNING) {
+                if (ctrl < MCMD_CTRL_MIDI_LAYER && ctrl > 0x9f) {
                     int signedValue;
                     if (state == 0) {
                         signedValue = 0;
@@ -50,14 +51,14 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u8 midiSlot
                 }
             }
 
-            if (ctrl == 0xa3) {
+            if (ctrl == MCMD_CTRL_VOICE_AGE) {
                 if (state == 0) {
                     value = 0;
                 } else {
                     value = *(u32 *)(state + 0x158) >> 9;
                 }
-            } else if (ctrl < 0xa3) {
-                if (ctrl < 0xa2) {
+            } else if (ctrl < MCMD_CTRL_VOICE_AGE) {
+                if (ctrl < MCMD_CTRL_MIDI_LAYER) {
                     value = inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff;
                 } else if (state == 0) {
                     value = 0;

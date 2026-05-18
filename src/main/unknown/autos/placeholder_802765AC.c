@@ -614,7 +614,7 @@ void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value)
 #pragma dont_inline reset
 
 /*
- * Configure the controller-0x41 ramp trigger for the current voice.
+ * Configure the portamento controller ramp trigger for the current voice.
  */
 void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args)
 {
@@ -632,12 +632,12 @@ void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args)
     mode = (args->flags >> 8) & 0xff;
     if (mode == 1) {
         if (state->midiSlot != 0xff) {
-            inpSetMidiCtrl(0x41, state->midiSlot, state->midiEvent, 0x7f);
+            inpSetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent, 0x7f);
         }
     } else {
         if (mode == 0) {
             if (state->midiSlot != 0xff) {
-                inpSetMidiCtrl(0x41, state->midiSlot, state->midiEvent, 0);
+                inpSetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent, 0);
             }
             state->outputFlags &= ~MCMD_VOICE_PORTAMENTO_OUTPUT_FLAG;
             state->inputFlags = state->inputFlags;
@@ -649,7 +649,8 @@ void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args)
         if (state->midiSlot == 0xff) {
             return;
         }
-        if ((u16)inpGetMidiCtrl(0x41, state->midiSlot, state->midiEvent) <= 0x1f80) {
+        if ((u16)inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent) <=
+            0x1f80) {
             return;
         }
     }

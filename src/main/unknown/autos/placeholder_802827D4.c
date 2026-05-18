@@ -116,48 +116,48 @@ u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex)
 void inpInit(u32 state)
 {
     if (state != 0) {
-        *(u8 *)(state + 0x218) = 7;
+        *(u8 *)(state + 0x218) = MCMD_CTRL_VOLUME;
         *(u8 *)(state + 0x219) = 0;
         *(u32 *)(state + 0x21c) = 0x10000;
         *(u8 *)(state + 0x220) = 0xb;
         *(u8 *)(state + 0x221) = 2;
         *(u32 *)(state + 0x224) = 0x10000;
         *(u8 *)(state + 0x23a) = 2;
-        *(u8 *)(state + 0x23c) = 0xa;
+        *(u8 *)(state + 0x23c) = MCMD_CTRL_PANNING;
         *(u8 *)(state + 0x23d) = 0;
         *(u32 *)(state + 0x240) = 0x10000;
         *(u8 *)(state + 0x25e) = 1;
-        *(u8 *)(state + 0x260) = 0x83;
+        *(u8 *)(state + 0x260) = MCMD_CTRL_SUR_PANNING;
         *(u8 *)(state + 0x261) = 0;
         *(u32 *)(state + 0x264) = 0x10000;
         *(u8 *)(state + 0x282) = 1;
-        *(u8 *)(state + 0x284) = 0x80;
+        *(u8 *)(state + 0x284) = MCMD_CTRL_PITCH_BEND;
         *(u8 *)(state + 0x285) = 0;
         *(u32 *)(state + 0x288) = 0x10000;
         *(u8 *)(state + 0x2a6) = 1;
-        *(u8 *)(state + 0x2cc) = 1;
+        *(u8 *)(state + 0x2cc) = MCMD_CTRL_MODULATION;
         *(u8 *)(state + 0x2cd) = 0;
         *(u32 *)(state + 0x2d0) = 0x10000;
         *(u8 *)(state + 0x2ee) = 1;
-        *(u8 *)(state + 0x2f0) = 0x40;
+        *(u8 *)(state + 0x2f0) = MCMD_CTRL_PEDAL;
         *(u8 *)(state + 0x2f1) = 0;
         *(u32 *)(state + 0x2f4) = 0x10000;
         *(u8 *)(state + 0x312) = 1;
-        *(u8 *)(state + 0x314) = 0x41;
+        *(u8 *)(state + 0x314) = MCMD_CTRL_PORTAMENTO;
         *(u8 *)(state + 0x315) = 0;
         *(u32 *)(state + 0x318) = 0x10000;
         *(u8 *)(state + 0x336) = 1;
         *(u8 *)(state + 0x35a) = 0;
-        *(u8 *)(state + 0x35c) = 0x5b;
+        *(u8 *)(state + 0x35c) = MCMD_CTRL_REVERB;
         *(u8 *)(state + 0x35d) = 0;
         *(u32 *)(state + 0x360) = 0x10000;
         *(u8 *)(state + 0x37e) = 1;
         *(u8 *)(state + 0x3a2) = 0;
-        *(u8 *)(state + 0x3a4) = 0x5d;
+        *(u8 *)(state + 0x3a4) = MCMD_CTRL_POST_AUX_B;
         *(u8 *)(state + 0x3a5) = 0;
         *(u32 *)(state + 0x3a8) = 0x10000;
         *(u8 *)(state + 0x3c6) = 1;
-        *(u8 *)(state + 0x2a8) = 0x84;
+        *(u8 *)(state + 0x2a8) = MCMD_CTRL_DOPPLER;
         *(u8 *)(state + 0x2a9) = 0;
         *(u32 *)(state + 0x2ac) = 0x10000;
         *(u8 *)(state + 0x2ca) = 1;
@@ -232,14 +232,14 @@ u32 inpTranslateExCtrl(u32 input)
     u32 value = input & 0xff;
     u32 idx = value - 0x80;
     switch (idx) {
-    case 0: return 0x80;
+    case 0: return MCMD_CTRL_PITCH_BEND;
     case 1: return 0x82;
-    case 2: return 0xa0;
-    case 3: return 0xa1;
-    case 4: return 0x83;
-    case 5: return 0x84;
-    case 6: return 0xa2;
-    case 7: return 0xa3;
+    case 2: return MCMD_CTRL_EX_A0;
+    case 3: return MCMD_CTRL_EX_A1;
+    case 4: return MCMD_CTRL_SUR_PANNING;
+    case 5: return MCMD_CTRL_DOPPLER;
+    case 6: return MCMD_CTRL_MIDI_LAYER;
+    case 7: return MCMD_CTRL_VOICE_AGE;
     case 8: return 0xa4;
     default: return input;
     }
@@ -256,8 +256,8 @@ u32 inpGetExCtrl(McmdVoiceState *state, u32 ctrl)
     u32 value;
 
     translated = inpTranslateExCtrl(ctrl) & 0xff;
-    if (translated != 0xa1) {
-        if (translated < 0xa1 && translated >= 0xa0) {
+    if (translated != MCMD_CTRL_EX_A1) {
+        if (translated < MCMD_CTRL_EX_A1 && translated >= MCMD_CTRL_EX_A0) {
             return state->exCtrlA0Value * 2 + 0x2000;
         }
         if (state->midiSlot == 0xff) {
@@ -284,7 +284,8 @@ void inpSetExCtrl(McmdVoiceState *state, u32 ctrl, s16 value)
         value = 0x3fff;
     }
     translated = inpTranslateExCtrl(ctrl) & 0xff;
-    if ((translated >= 0xa2 || translated < 0xa0) && state->midiSlot != 0xff) {
+    if ((translated >= MCMD_CTRL_MIDI_LAYER || translated < MCMD_CTRL_EX_A0) &&
+        state->midiSlot != 0xff) {
         inpSetMidiCtrl14(ctrl, state->midiSlot, state->midiEvent, value);
     }
 }
