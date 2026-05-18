@@ -5298,7 +5298,7 @@ extern u8 lbl_803DCD28;
 u8 isHeavyFogEnabled(void) { return lbl_803DCD28; }
 
 /* lbl = N (byte) */
-void fn_8004C204(void) { lbl_803DCD28 = 0x0; }
+void disableHeavyFog(void) { lbl_803DCD28 = 0x0; }
 
 /* *p1 = lbl1; *p2 = lbl2; (f32) */
 extern f32 lbl_803DCD44;

@@ -23,7 +23,7 @@ extern void fn_8004D928();
 extern void fn_8004D230();
 extern void fn_8004DA54();
 extern void fn_8004E0FC();
-extern void fn_8004E7F8();
+extern void renderHeavyFog();
 extern void fn_8004EECC();
 extern void fn_8004EF9C();
 extern void fn_8004F080();
@@ -823,7 +823,7 @@ LAB_8005F690:
   }
   if (isHeavyFogEnabled()) {
     getColor803dd01c(local_14);
-    fn_8004E7F8(local_14);
+    renderHeavyFog(local_14);
   }
 LAB_8005F6F4:
   if (((*(uint *)(iVar1 + 0x3c) & 0x40000000) != 0) || ((*(uint *)(iVar1 + 0x3c) & 0x20000000) != 0)) {
