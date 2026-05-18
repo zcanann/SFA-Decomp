@@ -2343,7 +2343,7 @@ extern PartFxKV lbl_8039C458[];
 extern f32 lbl_803E04E8;
 extern f32 lbl_803E0500;
 
-/* Globals for tick functions fn_800C900C / fn_800CB55C / fn_800CCE28 / fn_800CD2FC / fn_800D53FC. */
+/* Globals for tick functions Effect16_func05 / Effect17_func05 / Effect18_func05 / Effect19_func05 / Effect20_func05. */
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 fn_80293E80(f32 x);
@@ -2591,7 +2591,7 @@ void fn_800D663C(u32 v)
 /* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
 #pragma push
 #pragma scheduling off
-void fn_800C900C(void)
+void Effect16_func05(void)
 {
     f32 sum;
     sum = lbl_803DB848 + lbl_803E00A8 * timeDelta;
@@ -2608,7 +2608,7 @@ void fn_800C900C(void)
     lbl_803DD3C8 = fn_80293E80(lbl_803E0108 * (f32)(s16)lbl_803DD3C4 / lbl_803E010C);
 }
 
-void fn_800CB55C(void)
+void Effect17_func05(void)
 {
     f32 sum;
     sum = lbl_803DB858 + lbl_803E01B8 * timeDelta;
@@ -2625,7 +2625,7 @@ void fn_800CB55C(void)
     lbl_803DD3D8 = fn_80293E80(lbl_803E0218 * (f32)(s16)lbl_803DD3D4 / lbl_803E021C);
 }
 
-void fn_800CCE28(void)
+void Effect18_func05(void)
 {
     f32 sum;
     sum = lbl_803DB868 + lbl_803E0220 * timeDelta;
@@ -2642,7 +2642,7 @@ void fn_800CCE28(void)
     lbl_803DD3E8 = fn_80293E80(lbl_803E02D0 * (f32)(s16)lbl_803DD3E4 / lbl_803E02D4);
 }
 
-void fn_800CD2FC(void)
+void Effect19_func05(void)
 {
     f32 sum;
     sum = lbl_803DB878 + lbl_803E02D8 * timeDelta;
@@ -2659,7 +2659,7 @@ void fn_800CD2FC(void)
     lbl_803DD3F8 = fn_80293E80(lbl_803E0308 * (f32)(s16)lbl_803DD3F4 / lbl_803E030C);
 }
 
-void fn_800D53FC(void)
+void Effect20_func05(void)
 {
     f32 sum;
     sum = lbl_803DB888 + lbl_803E0310 * timeDelta;
@@ -2678,27 +2678,27 @@ void fn_800D53FC(void)
 #pragma pop
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800C9134(void) {}
+void Effect16_func03_nop(void) {}
 void Effect16_release(void) {}
 void Effect16_initialise(void) {}
-void fn_800CA3BC(void) {}
-void fn_800CA3C0(void) {}
+void Effect15_func05_nop(void) {}
+void Effect15_func03_nop(void) {}
 void Effect15_release(void) {}
 void Effect15_initialise(void) {}
-void fn_800CA920(void) {}
-void fn_800CA924(void) {}
+void Effect13_func05_nop(void) {}
+void Effect13_func03_nop(void) {}
 void Effect13_release(void) {}
 void Effect13_initialise(void) {}
-void fn_800CB684(void) {}
+void Effect17_func03_nop(void) {}
 void Effect17_release(void) {}
 void Effect17_initialise(void) {}
-void fn_800CCF50(void) {}
+void Effect18_func03_nop(void) {}
 void Effect18_release(void) {}
 void Effect18_initialise(void) {}
-void fn_800CD424(void) {}
+void Effect19_func03_nop(void) {}
 void Effect19_release(void) {}
 void Effect19_initialise(void) {}
-void fn_800D5524(void) {}
+void Effect20_func03_nop(void) {}
 void Effect20_release(void) {}
 void Effect20_initialise(void) {}
 

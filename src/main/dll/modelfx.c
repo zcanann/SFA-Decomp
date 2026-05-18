@@ -1106,7 +1106,7 @@ void Effect12_func05_nop(void) {}
 void Effect12_func03_nop(void) {}
 void Effect12_release(void) {}
 void Effect12_initialise(void) {}
-void fn_800C7FF8(void) {}
-void fn_800C7FFC(void) {}
+void Effect14_func05_nop(void) {}
+void Effect14_func03_nop(void) {}
 void Effect14_release(void) {}
 void Effect14_initialise(void) {}
