@@ -603,8 +603,8 @@ void OptionsScreen_frameEnd(void) {}
 void OptionsScreen_release(void) {}
 void WeirdUnusedMenu_render(void) {}
 void WeirdUnusedMenu_frameEnd(void) {}
-void fn_8011D854(void) {}
-void fn_8011D858(void) {}
+void Dummy39_render(void) {}
+void Dummy39_frameEnd(void) {}
 void Dummy3A_render(void) {}
 void Dummy3A_frameEnd(void) {}
 void Dummy3A_release(void) {}
@@ -615,12 +615,12 @@ int Dummy3A_frameStart(void) { return 0x0; }
 
 /* Pattern wrappers. */
 extern u8 lbl_803DD728;
-void fn_8011D8F4(void) { lbl_803DD728 = 0x28; }
+void Dummy39_initialise(void) { lbl_803DD728 = 0x28; }
 
 extern u32 lbl_803DD72C;
 extern void textureFree(u32);
 #pragma scheduling off
 #pragma peephole off
-void fn_8011D8D0(void) { textureFree(lbl_803DD72C); }
+void Dummy39_release(void) { textureFree(lbl_803DD72C); }
 #pragma peephole reset
 #pragma scheduling reset
