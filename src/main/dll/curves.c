@@ -289,9 +289,9 @@ undefined4 FUN_800e1b2c(double param_1,undefined8 param_2,double param_3,int par
 /*
  * --INFO--
  *
- * Function: FUN_800e1c00
- * EN v1.0 Address: 0x800E1C00
- * EN v1.0 Size: 748b
+ * Function: curves_distFn15
+ * EN v1.0 Address: 0x800E1FF4
+ * EN v1.0 Size: 536b
  * EN v1.1 Address: 0x800E2278
  * EN v1.1 Size: 544b
  * JP Address: TODO
@@ -299,7 +299,7 @@ undefined4 FUN_800e1b2c(double param_1,undefined8 param_2,double param_3,int par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e1c00(undefined8 param_1,double param_2,double param_3)
+void curves_distFn15(undefined8 param_1,double param_2,double param_3)
 {
   float fVar1;
   float fVar2;
@@ -1221,7 +1221,7 @@ LAB_800e3628:
 /*
  * --INFO--
  *
- * Function: RomCurve_distanceToObject
+ * Function: curves_distFn0B
  * EN v1.0 Address: 0x800E33E0
  * EN v1.0 Size: 208b
  * EN v1.1 Address: 0x800E3664
@@ -1233,7 +1233,7 @@ LAB_800e3628:
  */
 #pragma scheduling off
 #pragma peephole off
-f32 RomCurve_distanceToObject(int param_1,uint param_2)
+f32 curves_distFn0B(int param_1,uint param_2)
 {
   float fVar1;
   float fVar2;

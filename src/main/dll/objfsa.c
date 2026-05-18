@@ -26,7 +26,7 @@ extern undefined4 FUN_800723a0();
 extern undefined4 FUN_800d8088();
 extern undefined4 FUN_800d8240();
 extern int RomCurve_projectPointToAdjacentWindow();
-extern int FUN_800e1c00();
+extern int curves_distFn15();
 extern int RomCurve_findByIdWithIndex();
 extern undefined4 RomCurve_getAdjacentWindow();
 extern f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
@@ -3714,7 +3714,7 @@ uint FUN_800df46c(undefined8 param_1,double param_2,double param_3)
     if (iVar11 == 0) {
       return 0xffffffff;
     }
-    iVar5 = FUN_800e1c00(param_1,param_2,param_3);
+    iVar5 = curves_distFn15(param_1,param_2,param_3);
     if (iVar5 != 0) {
       return local_84[0];
     }
