@@ -107,7 +107,7 @@ int fn_802BB0C4(int obj)
  * If bit 1 of state->[0xa8e] is set, set GameBit 0x3e3 to 0, clear
  * the bit, and return 1. Otherwise return 0.
  */
-int fn_802BB0E4(int obj)
+int DIMSnowHorn1_render2(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     if ((*(u8 *)(state + 0xa8e) & 0x2) != 0) {
@@ -121,7 +121,7 @@ int fn_802BB0E4(int obj)
 /*
  * Read 3 floats from state into the 3 output pointers.
  */
-void fn_802BB144(int obj, f32 *out_x, f32 *out_y, f32 *out_z)
+void DIMSnowHorn1_modelMtxFn(int obj, f32 *out_x, f32 *out_y, f32 *out_z)
 {
     int state = *(int *)(obj + 0xb8);
     *out_x = *(f32 *)(state + 0x9e8);
@@ -208,10 +208,10 @@ void fn_802BB648(void) {}
 #pragma dont_inline reset
 
 /*
- * fn_802BB8E4 - 45-instruction helper. Stubbed.
+ * DIMSnowHorn1_setScale - 45-instruction helper. Stubbed.
  */
 #pragma dont_inline on
-void fn_802BB8E4(void) {}
+void DIMSnowHorn1_setScale(void) {}
 #pragma dont_inline reset
 
 /*
@@ -224,7 +224,7 @@ void fn_802BB998(void) {}
 /*
  * Returns 0xd0c.
  */
-int fn_802BBAEC(void) { return 0xd0c; }
+int DIMSnowHorn1_getExtraSize(void) { return 0xd0c; }
 
 /*
  * Returns 0x43.
@@ -234,14 +234,14 @@ int fn_802BBAF4(void) { return 0x43; }
 /*
  * Wrapper for ObjGroup_RemoveObject(obj, 0xa).
  */
-void fn_802BBAFC(int obj)
+void DIMSnowHorn1_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 0xa);
 }
 
 /*
- * fn_802BBB20 - 60-instruction helper. Stubbed.
+ * DIMSnowHorn1_render - 60-instruction helper. Stubbed.
  */
 #pragma dont_inline on
-void fn_802BBB20(void) {}
+void DIMSnowHorn1_render(void) {}
 #pragma dont_inline reset

@@ -332,7 +332,7 @@ extern undefined4 _DAT_803df140;
 /*
  * --INFO--
  *
- * Function: fn_802BB720
+ * Function: DIMSnowHorn1_update
  * EN v1.0 Address: 0x802BB720
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x802BBC14
@@ -342,7 +342,7 @@ extern undefined4 _DAT_803df140;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_802BB720(undefined4 param_1, undefined4 param_2, int param_3)
+void DIMSnowHorn1_update(undefined4 param_1, undefined4 param_2, int param_3)
 {
 }
 
