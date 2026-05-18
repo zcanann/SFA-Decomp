@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 
-void mcmdPlayMacro(int state, int args);
+void mcmdPlayMacro(McmdVoiceState *state, McmdCommandArgs *args);
 void mcmdStartSample(McmdVoiceState *state, McmdCommandArgs *args);
 void mcmdVibrato(McmdVoiceState *state, McmdCommandArgs *args);
 void DoSetPitch(McmdVoiceState *state);

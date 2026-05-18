@@ -3,9 +3,11 @@
 
 extern u8 *synthVoice;
 extern u32 lbl_8032EDD0[];
-extern int audioFn_80278b94(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8,
-                       int p9, int p10, int p11, int p12, int p13, int p14, int p15, int p16);
-extern void synthFXCloneMidiSetup(int voice, int state);
+extern int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 baseSample,
+                            u8 keyFlags, u8 volume, u8 pan, u32 midiSlot, u8 midiEvent,
+                            u8 midiLayer, u16 sampleOffsetIndex, u8 studio, u8 returnNewId,
+                            u8 auxA, u8 auxB, int startImmediately);
+extern void synthFXCloneMidiSetup(McmdVoiceState *voice, McmdVoiceState *state);
 void DoSetPitch(McmdVoiceState *state);
 extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, McmdVoiceState *state);
@@ -32,13 +34,13 @@ extern f64 lbl_803E7808;
  * EN v1.0 Address: 0x802757C4
  * EN v1.0 Size: 408b
  */
-void mcmdPlayMacro(int state, int args)
+void mcmdPlayMacro(McmdVoiceState *state, McmdCommandArgs *args)
 {
     int sum;
     u8 key;
     int result;
 
-    sum = (s32)*(u8 *)(state + 0x12f) + (s32)(s8)((*(u32 *)args >> 8) & 0xff);
+    sum = (s32)state->keyBase + (s32)(s8)((args->flags >> 8) & 0xff);
     if (sum < 0) {
         key = 0;
     } else if (sum > 0x7f) {
@@ -46,49 +48,40 @@ void mcmdPlayMacro(int state, int args)
     } else {
         key = (u8)sum;
     }
-    if (*(u8 *)(state + 0x11d) != 0) {
+    if (state->streamKind != 0) {
         key |= 0x80;
     }
-    *(u8 *)(state + 0x11c) = 1;
+    state->macroAllocating = 1;
 
-    result = audioFn_80278b94(*(u32 *)args >> 16,
-                        (*(u32 *)(args + 4) >> 8) & 0xff,
-                        *(u32 *)(args + 4) >> 24,
-                        *(u16 *)(state + 0x100), key,
-                        (*(u32 *)(state + 0x154) >> 8) & 0xff,
-                        (*(u32 *)(state + 0x170) >> 8) & 0xff,
-                        *(u8 *)(state + 0x121),
-                        *(u8 *)(state + 0x122),
-                        *(u8 *)(state + 0x123),
-                        *(u32 *)(args + 4) & 0xffff,
-                        *(u8 *)(state + 0x120),
-                        0,
-                        *(u8 *)(state + 0x11e),
-                        *(u8 *)(state + 0x11f),
-                        *(u8 *)(state + 0x193) == 0);
+    result = audioFn_80278b94(args->flags >> 16, (args->value >> 8) & 0xff,
+                              args->value >> 24, state->baseSample, key,
+                              (state->volume >> 8) & 0xff, (state->pan >> 8) & 0xff,
+                              state->midiSlot, state->midiEvent, state->midiLayer,
+                              args->value & 0xffff, state->studio, 0, state->auxA,
+                              state->auxB, *(u8 *)((u8 *)state + 0x193) == 0);
 
-    *(u8 *)(state + 0x11c) = 0;
+    state->macroAllocating = 0;
 
     if (result == -1) {
-        *(int *)(state + 0x108) = -1;
+        state->cloneVidListNode = (void *)-1;
         return;
     }
 
     {
         u8 voice = (u8)result;
-        u8 *vp = synthVoice + voice * 0x404;
-        *(int *)(state + 0x108) = *(int *)(vp + 0xf8);
-        *(int *)(synthVoice + voice * 0x404 + 0xf0) = *(int *)(state + 0xf4);
+        McmdVoiceState *voiceState = (McmdVoiceState *)(synthVoice + voice * 0x404);
+        state->cloneVidListNode = voiceState->vidListNode;
+        voiceState->voicePrevHandle = state->voiceHandle;
 
-        if (*(int *)(state + 0xec) != -1) {
-            int prev = *(int *)(state + 0xec);
-            *(int *)(synthVoice + voice * 0x404 + 0xec) = prev;
-            *(int *)(synthVoice + (prev & 0xff) * 0x404 + 0xf0) = result;
+        if (state->voiceNextHandle != -1) {
+            u32 prev = state->voiceNextHandle;
+            voiceState->voiceNextHandle = prev;
+            ((McmdVoiceState *)(synthVoice + (prev & 0xff) * 0x404))->voicePrevHandle = result;
         }
-        *(int *)(state + 0xec) = result;
+        state->voiceNextHandle = result;
 
-        if (*(u8 *)(state + 0x11d) != 0) {
-            synthFXCloneMidiSetup((int)(synthVoice + voice * 0x404), state);
+        if (state->streamKind != 0) {
+            synthFXCloneMidiSetup(voiceState, state);
         }
     }
 }
