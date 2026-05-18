@@ -25,6 +25,7 @@
 #define MCMD_VOICE_KEYOFF_OUTPUT_FLAG 0x8
 #define MCMD_VOICE_ACTIVE_OUTPUT_FLAG 0x20
 #define MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG 0x100
+#define MCMD_VOICE_VOLUME_RAMP_OUTPUT_FLAG 0x8000
 #define MCMD_VOICE_INACTIVE_WAIT_OUTPUT_FLAG 0x40000
 #define MCMD_VOICE_VIBRATO_RAMP_OUTPUT_FLAG 0x2000
 #define MCMD_VOICE_VIBRATO_CURVE_OUTPUT_FLAG 0x4000
@@ -75,6 +76,12 @@ typedef struct McmdVoiceState {
     u8 unk142[2];
     u32 vibratoDuration;
     u32 vibratoHalfDuration;
+    u8 unk14C[0x154 - 0x14C];
+    u32 volume;
+    u8 unk158[0x194 - 0x158];
+    s32 volumeStep;
+    u32 volumeTarget;
+    u32 volumeStart;
 } McmdVoiceState;
 
 #endif /* MAIN_AUDIO_MCMD_H_ */

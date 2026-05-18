@@ -3,7 +3,7 @@
 
 extern u8 *dataGetCurve(u16 keyId);
 extern void sndConvertMs(u32 *p);
-extern void sndConvertTicks(u32 *p, int state);
+extern void sndConvertTicks(u32 *p, McmdVoiceState *state);
 extern int sndConvert2Ms(u32 v);
 
 /*
@@ -51,7 +51,7 @@ u32 fn_802763C0(u32 value, u16 keyId)
  * EN v1.1 Address: 0x80276440
  * EN v1.1 Size: 296b
  */
-void mcmdScaleVolume(int state, u32 *params, u32 timeArg)
+void mcmdScaleVolume(McmdVoiceState *state, McmdCommandArgs *params, u32 volumeStart)
 {
     u32 t;
     int divisor;
@@ -65,8 +65,8 @@ void mcmdScaleVolume(int state, u32 *params, u32 timeArg)
     u32 b;
     u32 dirtyFlag;
 
-    t = params[1] >> 16;
-    if ((params[1] >> 8) & 1) {
+    t = params->value >> 16;
+    if ((params->value >> 8) & 1) {
         sndConvertMs(&t);
     } else {
         sndConvertTicks(&t, state);
@@ -76,15 +76,15 @@ void mcmdScaleVolume(int state, u32 *params, u32 timeArg)
         divisor = 1;
     }
 
-    p0 = params[0];
+    p0 = params->flags;
     hi = (p0 >> 8) & 0xff;
-    scaled = (*(u32 *)(state + 0x154) * hi) >> 7;
+    scaled = (state->volume * hi) >> 7;
     scaled += (p0 & 0xff0000);
     if (scaled > 0x7f0000) {
         scaled = 0x7f0000;
     }
     keyId = p0 >> 24;
-    keyId |= (params[1] & 0xff) << 8;
+    keyId |= (params->value & 0xff) << 8;
 
     if ((u16)keyId != 0xffff) {
         table = dataGetCurve(keyId);
@@ -101,10 +101,10 @@ void mcmdScaleVolume(int state, u32 *params, u32 timeArg)
         }
     }
 
-    *(u32 *)(state + 0x198) = scaled;
-    *(u32 *)(state + 0x19c) = timeArg;
-    *(u32 *)(state + 0x194) = (s32)(scaled - timeArg) / divisor;
-    *(u32 *)(state + 0x154) = timeArg;
-    dirtyFlag = 0x8000;
-    *(u32 *)(state + 0x118) |= dirtyFlag;
+    state->volumeTarget = scaled;
+    state->volumeStart = volumeStart;
+    state->volumeStep = (s32)(scaled - volumeStart) / divisor;
+    state->volume = volumeStart;
+    dirtyFlag = MCMD_VOICE_VOLUME_RAMP_OUTPUT_FLAG;
+    state->outputFlags |= dirtyFlag;
 }
