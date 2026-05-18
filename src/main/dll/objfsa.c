@@ -4407,13 +4407,13 @@ void player_updateVel(char *p, char *obj, int unused) {
 #pragma peephole on
 
 
-/* fn_800DE8F0: similar to fn_800D9F38 branch2 with different consts */
+/* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 extern f32 lbl_803E0610;
 extern f32 lbl_803E0614;
 extern f32 lbl_803E0618;
 #pragma peephole off
 #pragma scheduling off
-void fn_800DE8F0(void *a, void *b) {
+void RomCurve_setA4(void *a, void *b) {
     char *A = (char *)a;
     f32 t;
     if (b != 0 && (u32)b != *(u32 *)(A + 0xa4)) {
