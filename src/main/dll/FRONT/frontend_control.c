@@ -9,18 +9,6 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(void *str, int id, int p3, int p4);
 extern int sprintf(char *buf, const char *fmt, ...);
 
-typedef struct FrontendSaveSlot {
-    char name[4];
-    u8 completionPercent;
-    u8 magicCount;
-    u8 lifeCount;
-    u8 pad07;
-    u32 playTimeSeconds;
-    u8 pad0C[0x21 - 0x0C];
-    u8 cheatFlag;
-    u8 pad22[0x24 - 0x22];
-} FrontendSaveSlot;
-
 extern u8 saveFileSelect_debugCheatProgress;
 extern u8 saveFileSelect_saveCheatProgress;
 extern u8 saveFileSelect_cheatInputTimer;

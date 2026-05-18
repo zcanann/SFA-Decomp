@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_47.h"
+#include "main/dll/FRONT/frontend_control.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800067c0();
@@ -89,8 +90,8 @@ extern undefined4* PTR_DAT_8031b43c;
 extern char s__savegame_save_d_bin_8031b4b4[];
 extern void mm_free(void *p);
 extern void *lbl_803A8658[10];
-extern void *saveFileSelect_saveSlotsBase;
-extern void *saveFileSelect_saveSlots;
+extern FrontendSaveSlot *saveFileSelect_saveSlotsBase;
+extern FrontendSaveSlot *saveFileSelect_saveSlots;
 extern int lbl_803DB9FC;
 extern u8 lbl_803DB424;
 extern char sFrontendStringFormat[];
@@ -883,7 +884,7 @@ void fn_8011A410(void **p) {
     char *base;
     while (i < (int)*(u8 *)((char *)p + 0x4)) {
         base = (char *)saveFileSelect_saveSlotsBase;
-        saveFileSelect_saveSlots = base;
+        saveFileSelect_saveSlots = (FrontendSaveSlot *)base;
         if (*(u8 *)(base + off1 + 0x20) == 0) {
             *(u16 *)((char *)*p + off2) = 0x39d;
             *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) & ~0x1);
