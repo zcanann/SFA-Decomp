@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/fire.h"
+#include "main/object_descriptor.h"
 
 extern undefined4 FUN_800178b8();
 extern undefined8 FUN_80286840();
@@ -235,19 +236,19 @@ void fireObj_initialise(void)
 {
 }
 
-u32 gFireObjDescriptor[] = {
+ObjectDescriptor gFireObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)fireObj_initialise,
-    (u32)fireObj_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    fireObj_initialise,
+    fireObj_release,
     0,
-    (u32)fireObj_init,
-    (u32)fireObj_update,
-    (u32)fireObj_hitDetect,
-    (u32)fireObj_render,
-    (u32)fireObj_free,
-    (u32)fireObj_func08,
-    (u32)fireObj_getExtraSize,
+    (ObjectDescriptorCallback)fireObj_init,
+    (ObjectDescriptorCallback)fireObj_update,
+    fireObj_hitDetect,
+    fireObj_render,
+    fireObj_free,
+    (ObjectDescriptorCallback)fireObj_func08,
+    fireObj_getExtraSize,
 };

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/os.h"
 #include "main/dll/VF/platform1.h"
+#include "main/object_descriptor.h"
 
 int platform1_getExtraSize(void)
 {
@@ -50,21 +51,21 @@ void platform1_initialise(void)
 {
 }
 
-u32 gPlatform1ObjDescriptor[] = {
+ObjectDescriptor gPlatform1ObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)platform1_initialise,
-    (u32)platform1_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    platform1_initialise,
+    platform1_release,
     0,
-    (u32)platform1_initUnsupported,
-    (u32)platform1_updateUnsupported,
-    (u32)platform1_hitDetect,
-    (u32)platform1_renderUnsupported,
-    (u32)platform1_free,
-    (u32)platform1_func08,
-    (u32)platform1_getExtraSize,
+    platform1_initUnsupported,
+    platform1_updateUnsupported,
+    platform1_hitDetect,
+    platform1_renderUnsupported,
+    platform1_free,
+    (ObjectDescriptorCallback)platform1_func08,
+    platform1_getExtraSize,
 };
 
 char sPlatform1DrawNoLongerSupported[] = "<platform1 draw>No Longer supported \n";

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/laser.h"
+#include "main/object_descriptor.h"
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
@@ -114,19 +115,19 @@ void laserObj_initialise(void)
 {
 }
 
-u32 gLaserObjDescriptor[] = {
+ObjectDescriptor gLaserObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)laserObj_initialise,
-    (u32)laserObj_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    laserObj_initialise,
+    laserObj_release,
     0,
-    (u32)laserObj_init,
-    (u32)laserObj_update,
-    (u32)laserObj_hitDetect,
-    (u32)laserObj_render,
-    (u32)laserObj_free,
-    (u32)laserObj_func08,
-    (u32)laserObj_getExtraSize,
+    (ObjectDescriptorCallback)laserObj_init,
+    (ObjectDescriptorCallback)laserObj_update,
+    laserObj_hitDetect,
+    laserObj_render,
+    laserObj_free,
+    (ObjectDescriptorCallback)laserObj_func08,
+    laserObj_getExtraSize,
 };

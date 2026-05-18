@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 extern int Sfx_PlayFromObjectLimited(u8 *obj,int sfxId,int maxCount);
 extern u32 GameBit_Get(int eventId);
@@ -291,19 +292,19 @@ int dfppowersl_spawnSeqObjectsOnHit(u8 *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-u32 gDfplightniObjDescriptor[] = {
+ObjectDescriptor gDfplightniObjDescriptor = {
   0,
   0,
   0,
-  0x00090000,
+  OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
   0,
   0,
   0,
-  (u32)dfplightni_init,
-  (u32)dfplightni_update,
+  (ObjectDescriptorCallback)dfplightni_init,
+  (ObjectDescriptorCallback)dfplightni_update,
   0,
-  (u32)dfplightni_render,
-  (u32)dfplightni_free,
+  (ObjectDescriptorCallback)dfplightni_render,
+  (ObjectDescriptorCallback)dfplightni_free,
   0,
-  (u32)dfplightni_getExtraSize,
+  dfplightni_getExtraSize,
 };
