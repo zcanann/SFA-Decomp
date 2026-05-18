@@ -67,7 +67,7 @@ extern f32 lbl_803E6214;
 /*
  * --INFO--
  *
- * Function: FUN_801dafdc
+ * Function: sh_emptytumblew_init
  * EN v1.0 Address: 0x801DAFDC
  * EN v1.0 Size: 1440b
  * EN v1.1 Address: 0x801DB048
@@ -77,7 +77,7 @@ extern f32 lbl_803E6214;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dafdc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void sh_emptytumblew_init(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {

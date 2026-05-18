@@ -22,7 +22,7 @@ extern f32 lbl_803E614C;
 /*
  * --INFO--
  *
- * Function: FUN_801d87f8
+ * Function: SH_LevelControl_doThornTailEvents
  * EN v1.0 Address: 0x801D87F8
  * EN v1.0 Size: 1380b
  * EN v1.1 Address: 0x801D88F8
@@ -32,7 +32,7 @@ extern f32 lbl_803E614C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d87f8(void)
+void SH_LevelControl_doThornTailEvents(void)
 {
   int iVar1;
   char cVar6;

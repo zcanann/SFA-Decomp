@@ -21,7 +21,7 @@ extern f32 lbl_803E5F18;
 /*
  * --INFO--
  *
- * Function: FUN_801d083c
+ * Function: edibleMushroomFn_801d083c
  * EN v1.0 Address: 0x801D083C
  * EN v1.0 Size: 792b
  * EN v1.1 Address: 0x801D0AB0
@@ -31,7 +31,7 @@ extern f32 lbl_803E5F18;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d083c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void edibleMushroomFn_801d083c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
