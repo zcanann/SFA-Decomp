@@ -20,21 +20,7 @@ extern undefined4* DAT_803dd72c;
 extern undefined4 sfxplayer_updateEffectHandlePositions();
 extern f32 timeDelta;
 
-typedef struct DfpObjectInterface {
-  u8 pad00[0x48];
-  void (*refresh)(int mode, int obj, int arg);
-} DfpObjectInterface;
-
 extern DfpObjectInterface **lbl_803DCA54;
-
-typedef struct DfpStatue1State {
-  s16 triggerSfxId;
-  s16 loopSfxId;
-  s16 loopSfxStopTimer;
-  u8 loopActive;
-  u8 effectPairCount;
-  u8 stateFlags;
-} DfpStatue1State;
 
 /*
  * --INFO--

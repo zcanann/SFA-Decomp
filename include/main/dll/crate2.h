@@ -4,6 +4,20 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+typedef struct DfpObjectInterface {
+  u8 pad00[0x48];
+  void (*refresh)(int mode, int obj, int arg);
+} DfpObjectInterface;
+
+typedef struct DfpStatue1State {
+  s16 triggerSfxId;
+  s16 loopSfxId;
+  s16 loopSfxStopTimer;
+  u8 loopActive;
+  u8 effectPairCount;
+  u8 stateFlags;
+} DfpStatue1State;
+
 void dfpstatue1_updateState(int obj);
 
 extern char sDfperchwitchInitNoLongerSupported[];
