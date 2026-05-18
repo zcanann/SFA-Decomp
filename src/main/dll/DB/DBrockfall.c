@@ -154,25 +154,25 @@ uint FUN_801df69c(int param_1,undefined4 param_2,int param_3)
   bool bVar1;
   int iVar2;
   uint uVar3;
-  int iVar4;
   int iVar5;
+  FEseqobjectState *state;
   
   iVar5 = *(int *)(param_1 + 0x4c);
-  iVar4 = *(int *)(param_1 + 0xb8);
+  state = *(FEseqobjectState **)(param_1 + 0xb8);
   iVar2 = FUN_80017a98();
   uVar3 = FUN_80006c00(0);
   if ((uVar3 & 0x100) == 0) {
     uVar3 = 0;
   }
   else {
-    *(undefined *)(iVar4 + 2) = 0;
+    state->promptState = 0;
     iVar2 = FUN_80294d20(iVar2);
     bVar1 = iVar2 < *(short *)(iVar5 + 0x1a);
     if (bVar1) {
-      *(undefined *)(iVar4 + 2) = 2;
+      state->promptState = 2;
     }
     else {
-      *(undefined *)(iVar4 + 2) = 0;
+      state->promptState = 0;
     }
     uVar3 = (uint)!bVar1;
     if (param_3 == 0x15) {
@@ -226,10 +226,10 @@ void FUN_801df788(int param_1)
 {
   byte bVar1;
   uint uVar2;
-  byte *pbVar3;
+  FEseqobjectState *state;
   
-  pbVar3 = *(byte **)(param_1 + 0xb8);
-  bVar1 = *pbVar3;
+  state = *(FEseqobjectState **)(param_1 + 0xb8);
+  bVar1 = state->state;
   if (bVar1 == 1) {
     if ((*(byte *)(param_1 + 0xaf) & 1) != 0) {
       (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
@@ -239,16 +239,16 @@ void FUN_801df788(int param_1)
   else if (bVar1 == 0) {
     uVar2 = (uint)*(short *)(*(int *)(param_1 + 0x4c) + 0x1e);
     if ((uVar2 == 0xffffffff) || (uVar2 = GameBit_Get(uVar2), uVar2 == 0)) {
-      *pbVar3 = 1;
+      state->state = 1;
     }
     else {
-      *pbVar3 = 2;
+      state->state = 2;
     }
   }
   else if (bVar1 < 3) {
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
   }
-  pbVar3[2] = 0;
+  state->promptState = 0;
   if (((*(uint *)(*(int *)(param_1 + 0x50) + 0x44) & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
     FUN_800400b0();
   }
