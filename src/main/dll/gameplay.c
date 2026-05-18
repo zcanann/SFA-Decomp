@@ -12976,7 +12976,7 @@ void FUN_800ee10c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800EA048(void) {}
+void SaveGame_func08_nop(void) {}
 void screens_release(void) {}
 void Carryable_release(void) {}
 void Carryable_initialise(void) {}
@@ -13073,7 +13073,7 @@ void clearSaveGameLoadingFlag(void) { lbl_803DD488 = 0x0; }
 s32 Carryable_isHeld(u8 *obj) { return *(s8*)(obj + 0x5); }
 
 /* misc 8b leaves */
-u8 fn_800EA900(u8 *p) { return p[8]; }
+u8 dll_2F_getField8(u8 *p) { return p[8]; }
 
 /* if (lbl) fn(lbl); */
 extern u32 pRestartPoint;
@@ -13087,7 +13087,7 @@ void SaveGame_release(void) { if (pRestartPoint != 0) mm_free(pRestartPoint); }
 extern void* getLastSavedGameTexts(void);
 #pragma scheduling off
 #pragma peephole off
-u8 fn_800EA2BC(void) { u8 *p = (u8*)getLastSavedGameTexts(); return p[5]; }
+u8 getNextTaskHintText(void) { u8 *p = (u8*)getLastSavedGameTexts(); return p[5]; }
 #pragma peephole reset
 #pragma scheduling reset
 

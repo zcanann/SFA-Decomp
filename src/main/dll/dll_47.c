@@ -96,7 +96,7 @@ extern int lbl_803DB9FC;
 extern u8 lbl_803DB424;
 extern char sFrontendStringFormat[];
 extern char lbl_803DBA20[];
-extern int fn_800E8D9C(void);
+extern int saveSelect_getInfo(void);
 extern int sprintf(char *dst, const char *fmt, ...);
 
 /*
@@ -917,7 +917,7 @@ void fn_8011A70C(void) {
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
     lbl_803DB9FC = 0;
     if (lbl_803DB424 != 0) {
-        fn_800E8D9C();
+        saveSelect_getInfo();
         if (lbl_803DB424 != 0) {
             lbl_803DB9FC = 3;
         }
