@@ -16,6 +16,19 @@ struct FireObject {
     undefined4 (*stateCallback)(FireObject *obj, undefined4 param_2, ObjAnimUpdateState *animUpdate);
 };
 
+typedef struct FireObjectInterface {
+  u8 pad00[0x48];
+  void (*refresh)(int param_1,FireObject *obj,int param_3);
+} FireObjectInterface;
+
+typedef struct FireEventInterface {
+  u8 pad00[0x40];
+  int (*getMode)(int mapId);
+  void (*triggerEvent)(int eventId,int value);
+  u8 pad48[0x50 - 0x48];
+  void (*setAnimEvent)(int animId,int eventId,int value);
+} FireEventInterface;
+
 extern ObjectDescriptor gFireObjDescriptor;
 
 undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);

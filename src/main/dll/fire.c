@@ -20,19 +20,6 @@ extern undefined4 objRenderFn_8003b8f4(double scale);
 extern undefined4 unlockLevel(int param_1,int param_2,int param_3);
 extern undefined4 envFxActFn_800887f8(int param_1);
 
-typedef struct FireObjectInterface {
-  u8 pad00[0x48];
-  void (*refresh)(int param_1,FireObject *obj,int param_3);
-} FireObjectInterface;
-
-typedef struct FireEventInterface {
-  u8 pad00[0x40];
-  int (*getMode)(int mapId);
-  void (*triggerEvent)(int eventId,int value);
-  u8 pad48[0x50 - 0x48];
-  void (*setAnimEvent)(int animId,int eventId,int value);
-} FireEventInterface;
-
 extern FireObjectInterface **lbl_803DCA54;
 extern FireEventInterface **lbl_803DCAAC;
 extern f32 lbl_803E64D8;
