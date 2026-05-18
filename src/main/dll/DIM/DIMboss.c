@@ -106,7 +106,7 @@ extern undefined4* DAT_803dd70c;
 extern undefined4* lbl_803DCAAC;
 extern undefined4* lbl_803DCAB4;
 extern undefined4* DAT_803dd738;
-extern u32 lbl_803DDB80;
+extern u32 gDIMbossSequenceFlags;
 extern undefined4 DAT_803de808;
 extern f32 lbl_803E58DC;
 extern f32 lbl_803DC074;
@@ -194,7 +194,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
     dll_2E_func07(puVar3,animUpdate,(float *)lbl_803AC9DC,1,1);
     for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
       switch(animUpdate->eventIds[eventIndex]) {
-      case 1:
+      case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
         (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
         (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
         (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
@@ -206,43 +206,43 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         ObjModel_ClearRenderAttachment(iVar4);
         Music_Trigger(0x27,1);
         break;
-      case 2:
+      case DIMBOSS_EVENT_LAUNCH_LIFT:
         runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
         obj->objectFlags &= ~8;
         obj->objectFlags |= 0x80;
         ((DIMbossMapAreaTriggerFn)(*(code *)(*lbl_803DCAAC + 0x50)))(DIMBOSS_MAP_DIR,0,0);
         break;
-      case 6:
-        lbl_803DDB80 = lbl_803DDB80 | 0x40004;
+      case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_06:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_06;
         break;
-      case 7:
-        lbl_803DDB80 = lbl_803DDB80 | 2;
+      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_07:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
         break;
-      case 8:
+      case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
         iVar11 = (int)topState;
         topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
         Music_Trigger(0xee,0);
         break;
-      case 9:
-        lbl_803DDB80 = lbl_803DDB80 | 0x40;
+      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_09:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0040;
         break;
-      case 10:
-        lbl_803DDB80 = lbl_803DDB80 & 0xffffffbf;
+      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_09:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0040;
         break;
-      case 0xc:
-        lbl_803DDB80 = lbl_803DDB80 & 0xffffff7f;
+      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0C:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0080;
         break;
-      case 0xd:
-        lbl_803DDB80 = lbl_803DDB80 | 0x100;
+      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0D:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0100;
         break;
-      case 0xe:
-        lbl_803DDB80 = lbl_803DDB80 & 0xfffffeff;
+      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0D:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0100;
         break;
-      case 0xf:
-        lbl_803DDB80 = lbl_803DDB80 | 0x2001;
+      case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_0F:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_0F;
         break;
-      case 0x10:
-        lbl_803DDB80 = lbl_803DDB80 | 0x8021;
+      case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_10:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_10;
         break;
       case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
         topState->defeatTimer = DIMBOSS_DEFEAT_TIMER_START;
@@ -324,10 +324,10 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         clearLoadedFileFlags_blocks1();
         break;
       case DIMBOSS_EVENT_SET_SEQUENCE_FLAG:
-        lbl_803DDB80 = lbl_803DDB80 | 0x80000;
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_80000;
         break;
       case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG:
-        lbl_803DDB80 = lbl_803DDB80 & 0xfff7ffff;
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_80000;
       }
     }
     if (obj->animStateId != -1) {
@@ -734,7 +734,7 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   obj->activeModelId = -1;
   topState->effect = NULL;
   lbl_803DDB84 = 0;
-  lbl_803DDB80 = 0;
+  gDIMbossSequenceFlags = 0;
   GameBit_Set(0x4e4,1);
   fn_80114F64(obj,lbl_803AC9DC,0xffffd8e4,0x1c71,6);
   fn_80113F9C(lbl_803AC9DC,&localVec,&localVec,6);
