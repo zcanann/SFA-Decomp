@@ -65,7 +65,7 @@ extern undefined4 DAT_803dc070;
 extern undefined4 *pDll_expgfx;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
-extern u32 *lbl_8032059C[];
+extern PollenFragmentConfig *lbl_8032059C[];
 extern f64 DOUBLE_803e3d80;
 extern f64 DOUBLE_803e3d98;
 extern f64 DOUBLE_803e3dc8;
@@ -1185,52 +1185,72 @@ ObjectDescriptor gPollenObjDescriptor = {
     pollen_getExtraSize,
 };
 
-u32 lbl_80320538[] = {
-    0x0000049F,
-    0x00B904BA,
-    0x04BAFFFF,
-    0x3E4CCCCD,
-    0x0000C000,
+PollenFragmentConfig lbl_80320538 = {
+    0x0000,
+    0x049F,
+    0x00B9,
+    0x04BA,
+    0x04BA,
+    -1,
+    0.2f,
+    0x0000,
+    0xC000,
 };
 
-u32 lbl_8032054C[] = {
-    0x02FA02FB,
-    0x0496068F,
-    0x068F068F,
-    0x3ECCCCCD,
-    0x00267000,
+PollenFragmentConfig lbl_8032054C = {
+    0x02FA,
+    0x02FB,
+    0x0496,
+    0x068F,
+    0x068F,
+    0x068F,
+    0.4f,
+    0x0026,
+    0x7000,
 };
 
-u32 lbl_80320560[] = {
-    0x02FA02FB,
-    0x0496068F,
-    0x068F068F,
-    0x3ECCCCCD,
-    0x00262000,
+PollenFragmentConfig lbl_80320560 = {
+    0x02FA,
+    0x02FB,
+    0x0496,
+    0x068F,
+    0x068F,
+    0x068F,
+    0.4f,
+    0x0026,
+    0x2000,
 };
 
-u32 lbl_80320574[] = {
-    0x02FA02FB,
-    0x0496068F,
-    0x068FFFFF,
-    0x3E4CCCCD,
-    0x00002000,
+PollenFragmentConfig lbl_80320574 = {
+    0x02FA,
+    0x02FB,
+    0x0496,
+    0x068F,
+    0x068F,
+    -1,
+    0.2f,
+    0x0000,
+    0x2000,
 };
 
-u32 lbl_80320588[] = {
-    0x02FA02FB,
-    0x0496068F,
-    0x068F068F,
-    0x3ECCCCCD,
-    0x00263000,
+PollenFragmentConfig lbl_80320588 = {
+    0x02FA,
+    0x02FB,
+    0x0496,
+    0x068F,
+    0x068F,
+    0x068F,
+    0.4f,
+    0x0026,
+    0x3000,
 };
 
-u32 *lbl_8032059C[] = {
-    lbl_80320538,
-    lbl_8032054C,
-    lbl_80320560,
-    lbl_80320574,
-    lbl_80320588,
+PollenFragmentConfig *lbl_8032059C[] = {
+    &lbl_80320538,
+    &lbl_8032054C,
+    &lbl_80320560,
+    &lbl_80320574,
+    &lbl_80320588,
 };
 
 extern void pollenfragment_free(void);
