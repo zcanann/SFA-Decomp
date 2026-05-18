@@ -29,7 +29,7 @@ int DIMSnowHorn1_func20(void) { return 0; }
  * Returns floored neg-velocity-Y in *out, or a constant if mode != 10;
  * also returns f1 = constant.
  */
-void fn_802BB724(int obj, f32 *out)
+void DIMSnowHorn1_func19(int obj, f32 *out)
 {
     int state = *(int *)(obj + 0xb8);
     if (*(s16 *)(state + 0x274) == 0xa) {
@@ -44,7 +44,7 @@ void fn_802BB724(int obj, f32 *out)
 /*
  * Sets *out_f = 0.0f, *out_i = 0.
  */
-void fn_802BB754(void *unused, f32 *out_f, int *out_i)
+void DIMSnowHorn1_func18(void *unused, f32 *out_f, int *out_i)
 {
     (void)unused;
     *out_f = lbl_803E8234;
@@ -54,7 +54,7 @@ void fn_802BB754(void *unused, f32 *out_f, int *out_i)
 /*
  * Stores arg at obj->state[0xa8a] (low byte).
  */
-void fn_802BB008(int obj, u8 value)
+void DIMSnowHorn1_func17(int obj, u8 value)
 {
     *(u8 *)(*(int *)(obj + 0xb8) + 0xa8a) = value;
 }
@@ -69,7 +69,7 @@ int DIMSnowHorn1_func16(void) { return 0; }
  * one fixed local point through it.
  */
 #pragma dont_inline on
-void fn_802BB020(undefined2 *packed, undefined4 outX, undefined4 outY, undefined4 outZ)
+void DIMSnowHorn1_func15(undefined2 *packed, undefined4 outX, undefined4 outY, undefined4 outZ)
 {
     undefined2 local_68;
     undefined2 local_66;
@@ -95,7 +95,7 @@ void fn_802BB020(undefined2 *packed, undefined4 outX, undefined4 outY, undefined
 /*
  * Returns 2 if state->[0xa8f] != 0, else 1.
  */
-int fn_802BB0C4(int obj)
+int DIMSnowHorn1_func14(int obj)
 {
     if (*(u8 *)(*(int *)(obj + 0xb8) + 0xa8f) != 0) {
         return 2;
@@ -201,10 +201,10 @@ int ddh_cc_initinterrupts(int obj, undefined4 unused, int setup)
 #pragma dont_inline reset
 
 /*
- * fn_802BB648 - 52-instruction helper. Stubbed.
+ * DIMSnowHorn1_func22 - 52-instruction helper. Stubbed.
  */
 #pragma dont_inline on
-void fn_802BB648(void) {}
+void DIMSnowHorn1_func22(void) {}
 #pragma dont_inline reset
 
 /*
