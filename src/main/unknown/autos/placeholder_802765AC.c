@@ -1302,8 +1302,8 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
             voiceState->startupVolume = volume;
             voiceState->startupPan = pan;
             voiceState->startupStudio = studio;
-            *(u8 *)(state + 0x8c) = 0;
-            *(u8 *)(state + 0x8d) = 0;
+            voiceState->macroStackDepth = 0;
+            voiceState->macroStackIndex = 0;
             voiceState->voiceNextHandle = -1;
             voiceState->voicePrevHandle = -1;
             voiceState->cloneVidListNode = (void *)-1;
