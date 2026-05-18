@@ -2385,9 +2385,8 @@ f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
  */
 #pragma scheduling off
 #pragma peephole off
-int RomCurve_getRandomBlockedLink(int curvePtr,int excludeLinkId)
+int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId)
 {
-  RomCurveDef *curve;
   int link;
   int count;
   uint mask;
@@ -2397,7 +2396,6 @@ int RomCurve_getRandomBlockedLink(int curvePtr,int excludeLinkId)
 
   count = 0;
   mask = 1;
-  curve = (RomCurveDef *)curvePtr;
 
   for (i = 0; i < ROMCURVE_LINK_COUNT; i = i + 1) {
     link = curve->linkIds[i];
@@ -2432,9 +2430,8 @@ int RomCurve_getRandomBlockedLink(int curvePtr,int excludeLinkId)
  */
 #pragma scheduling off
 #pragma peephole off
-int RomCurve_getRandomUnblockedLink(int curvePtr,int excludeLinkId)
+int RomCurve_getRandomUnblockedLink(RomCurveDef *curve,int excludeLinkId)
 {
-  RomCurveDef *curve;
   int link;
   int count;
   uint mask;
@@ -2444,7 +2441,6 @@ int RomCurve_getRandomUnblockedLink(int curvePtr,int excludeLinkId)
 
   count = 0;
   mask = 1;
-  curve = (RomCurveDef *)curvePtr;
 
   for (i = 0; i < ROMCURVE_LINK_COUNT; i = i + 1) {
     link = curve->linkIds[i];
@@ -2649,6 +2645,7 @@ void curves_remove(RomCurveDef *curve)
 #pragma peephole off
 void curves_addCurveDef(RomCurveDef *curve)
 {
+  RomCurveDef **table;
   RomCurveDef **slot;
   int count;
   int insertIndex;
@@ -2659,18 +2656,18 @@ void curves_addCurveDef(RomCurveDef *curve)
     return;
   }
 
-  for (insertIndex = 0, slot = (RomCurveDef **)gRomCurveTable;
-       (insertIndex < count) && (RomCurve_GetId((int)curve) > (*slot)->id);
-       insertIndex++) {
+  insertIndex = 0;
+  table = (RomCurveDef **)gRomCurveTable;
+  for (slot = table; (insertIndex < count) && (curve->id > (*slot)->id); insertIndex++) {
     slot = slot + 1;
   }
 
   for (count = count; count > insertIndex; count--) {
-    gRomCurveTable[count] = gRomCurveTable[count - 1];
+    table[count] = table[count - 1];
   }
 
   gRomCurveCount = gRomCurveCount + 1;
-  gRomCurveTable[insertIndex] = (int)curve;
+  table[insertIndex] = curve;
 }
 #pragma peephole reset
 #pragma scheduling reset
