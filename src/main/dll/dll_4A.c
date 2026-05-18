@@ -44,7 +44,7 @@ extern undefined uRam803de373;
 /*
  * --INFO--
  *
- * Function: FUN_8011b868
+ * Function: EnterSaveNameScreen_run
  * EN v1.0 Address: 0x8011B868
  * EN v1.0 Size: 1636b
  * EN v1.1 Address: 0x8011BB4C
@@ -55,8 +55,8 @@ extern undefined uRam803de373;
  * PAL Size: TODO
  */
 undefined4
-FUN_8011b868(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_4,undefined4 param_5
-            ,undefined4 param_6,undefined4 param_7,undefined4 param_8)
+EnterSaveNameScreen_run(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_4,undefined4 param_5
+                        ,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
   bool bVar1;
   int iVar2;

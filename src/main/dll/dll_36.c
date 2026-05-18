@@ -35,7 +35,7 @@ extern undefined4* PTR_DAT_8031b418;
 /*
  * --INFO--
  *
- * Function: FUN_8011b5d4
+ * Function: EnterSaveNameScreen_render
  * EN v1.0 Address: 0x8011B5D4
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8011B698
@@ -45,8 +45,8 @@ extern undefined4* PTR_DAT_8031b418;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011b5d4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void EnterSaveNameScreen_render(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
 }
 
