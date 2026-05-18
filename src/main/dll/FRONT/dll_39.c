@@ -17,7 +17,7 @@ extern undefined8 FUN_80080f24();
 extern undefined8 camcontrol_findBestTarget();
 extern undefined4 Movie_SetVolumeFade();
 extern bool prepareAttractMode();
-extern undefined8 FUN_8011d9b0();
+extern void gameUiLoadResources(void);
 extern int FUN_80241de8();
 extern undefined4 FUN_802420b0();
 extern undefined4 FUN_8024d054();

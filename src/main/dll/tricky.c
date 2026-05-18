@@ -333,7 +333,7 @@ extern char s_x___2f_8031ccf4[];
 /*
  * --INFO--
  *
- * Function: FUN_8011d9b0
+ * Function: gameUiLoadResources
  * EN v1.0 Address: 0x8011D9B0
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8011DC94
@@ -343,8 +343,7 @@ extern char s_x___2f_8031ccf4[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011d9b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void gameUiLoadResources(void)
 {
 }
 

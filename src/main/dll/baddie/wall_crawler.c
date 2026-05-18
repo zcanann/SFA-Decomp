@@ -956,7 +956,7 @@ void CMenu_SetShouldClose(int val)
 #pragma peephole reset
 
 extern u8 mapScreenVisible;
-extern u8 lbl_803DD7C5;
+extern u8 gameUiResourcesLoaded;
 extern u8 cMenuEnabled;
 extern void drawWorldMapHud(void);
 extern void gameTextFadeOut(void);
@@ -964,13 +964,13 @@ extern void cMenuRun(void);
 extern void npcTalkFn_8012e880(void);
 
 /* EN v1.0 0x8012FB2C  size: 92b  Per-frame state advance dispatcher.
- * Gated on the lbl_803DD7C5 enable flag; when zero, fast-returns 0.
+ * Gated on the gameUiResourcesLoaded enable flag; when zero, fast-returns 0.
  * Otherwise: optionally runs drawWorldMapHud (if mapScreenVisible set), runs
  * gameTextFadeOut, optionally runs cMenuRun (if cMenuEnabled set),
  * runs npcTalkFn_8012e880, returns 0. */
 int GameUI_run(void)
 {
-    if (lbl_803DD7C5 == 0) return 0;
+    if (gameUiResourcesLoaded == 0) return 0;
     if (mapScreenVisible != 0) drawWorldMapHud();
     gameTextFadeOut();
     if (cMenuEnabled != 0) cMenuRun();

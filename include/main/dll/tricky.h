@@ -3,8 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8011d9b0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void gameUiLoadResources(void);
 void FUN_8011d9b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_8011daf8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
