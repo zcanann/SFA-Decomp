@@ -37,6 +37,13 @@
  * - curves_distFn0B
  * - curves_distFn15
  * - curves_distXZ
+ * - curves_findByAction
+ * - curves_findNearObj
+ * - curves_getIds_18
+ * - curves_getPos
+ * - curves_isNotPoint
+ * - curves_isPoint
+ * - curves_lengthFn24
  * - curves_find
  *
  * Inferred current EN DLL families:
