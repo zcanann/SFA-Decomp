@@ -14,7 +14,7 @@
 //   and moves through states that attach, carry, release, or reset the held object.
 // - while carrying, render keeps the held object at the cached carry position and draws it
 //   unless the state machine is in state 4.
-// - free releases any still-held object through the gasvent/small-object helper at 0x801A0B90
+// - free releases any still-held GunPowderBarrel through gunpowderbarrel_clearHeldState
 //   and clears extra flag bit 7.
 //
 // Descriptor slots:

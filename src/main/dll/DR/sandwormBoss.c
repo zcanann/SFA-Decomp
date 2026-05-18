@@ -3216,7 +3216,7 @@ int cfprisoncage_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x128) ret
 
 /* chained byte bit-extract. */
 u32 fn_801A0174(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x8) >> 7) & 1; }
-u32 fn_801A0B14(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x4a) >> 5) & 1; }
+u32 gunpowderbarrel_isHeld(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x4a) >> 5) & 1; }
 
 /* plain forwarder. */
 extern void waterSpellStone1Fn_8019b4c8(void);
