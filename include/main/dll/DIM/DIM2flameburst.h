@@ -2,6 +2,11 @@
 #define MAIN_DLL_DIM_DIM2FLAMEBURST_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gExplosionObjDescriptor;
+extern ObjectDescriptor gDIMWoodDoor2ObjDescriptor;
+extern ObjectDescriptor gDIMMagicBridgeObjDescriptor;
 
 void FUN_801b3de4(undefined4 param_1,uint param_2);
 bool FUN_801b3e28(int param_1);
@@ -36,5 +41,35 @@ undefined4 FUN_801b5df0(int param_1,undefined4 param_2,int param_3);
 void FUN_801b6108(int param_1);
 void FUN_801b6130(int param_1);
 void FUN_801b63c0(void);
+
+int explosion_getExtraSize(void);
+int explosion_func08(void);
+void explosion_free(void);
+void explosion_render(void);
+void explosion_hitDetect(void);
+void explosion_update(void);
+void explosion_init(void);
+void explosion_release(uint param_1);
+void explosion_initialise(void);
+
+int dimwooddoor2_getExtraSize(void);
+int dimwooddoor2_func08(void);
+void dimwooddoor2_free(void);
+void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dimwooddoor2_hitDetect(void);
+void dimwooddoor2_update(void);
+void dimwooddoor2_init(void);
+void dimwooddoor2_release(void);
+void dimwooddoor2_initialise(void);
+
+int dimmagicbridge_getExtraSize(void);
+int dimmagicbridge_func08(void);
+void dimmagicbridge_free(void);
+void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dimmagicbridge_hitDetect(void);
+void dimmagicbridge_update(void);
+void dimmagicbridge_init(void);
+void dimmagicbridge_release(void);
+void dimmagicbridge_initialise(void);
 
 #endif /* MAIN_DLL_DIM_DIM2FLAMEBURST_H_ */
