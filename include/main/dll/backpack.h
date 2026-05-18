@@ -3,26 +3,40 @@
 
 #include "ghidra_import.h"
 
+#define TUMBLEWEED_TYPE_1 0x39d
+#define TUMBLEWEED_TYPE_3 0x4ba
+#define TUMBLEWEED_TYPE_4 0x4c1
+
+#define TUMBLEWEED_EFFECT_BURST_SPECIAL 0x34d
+#define TUMBLEWEED_EFFECT_BURST_DEFAULT 0x32e
+#define TUMBLEWEED_EFFECT_PUFF_SPECIAL 0x34c
+#define TUMBLEWEED_EFFECT_PUFF_DEFAULT 0x32d
+#define TUMBLEWEED_EFFECT_SPAWN_COUNT 0x14
+#define TUMBLEWEED_EXPGFX_MODE_ACTIVE 2
+
+#define TUMBLEWEED_EFFECT_FLAG_BURST 0x01
+#define TUMBLEWEED_EFFECT_FLAG_PUFF 0x02
+#define TUMBLEWEED_EFFECT_FLAG_DESPAWN 0x04
+#define TUMBLEWEED_EFFECT_FLAG_HIT_PULSE 0x10
+
+typedef struct TumbleweedState {
+    u8 pad000[0x270];
+    f32 despawnTimer;
+    u8 pad274[0x278 - 0x274];
+    u8 mode;
+    u8 variant;
+    u8 effectFlags;
+    u8 hitPulseCounter;
+} TumbleweedState;
+
 void tumbleweed_updateStateMachine(int obj);
-void FUN_801641f0(int param_1);
-void FUN_8016425c(int param_1);
-void FUN_80164354(int param_1);
-void FUN_8016437c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9);
-void FUN_80164c58(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9);
-void FUN_80164ff4(uint param_1);
-void FUN_80165264(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9);
-void FUN_8016531c(int param_1,int param_2);
-undefined4 FUN_801654bc(int param_1,int param_2);
-undefined4
-FUN_80165570(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9,uint *param_10,
-            undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
-            undefined4 param_15,undefined4 param_16);
+void tumbleweed_updateTargetedStateMachine(int obj);
+void tumbleweed_updateEffects(int obj);
+void tumbleweed_update(int obj);
+int fn_801650D0(void);
+void tumbleweed_init(int obj, int defData);
+int fn_801650D8(int obj, int target);
+int fn_80165188(int obj, u32 *stateWord);
+int fn_801653D8(int obj, int stateWord);
 
 #endif /* MAIN_DLL_BACKPACK_H_ */
