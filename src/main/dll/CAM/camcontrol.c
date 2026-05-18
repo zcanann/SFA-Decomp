@@ -53,7 +53,7 @@ extern s8 gCamcontrolQueuedActionStartFlags;
 extern undefined gCamcontrolQueuedActionPending;
 extern void *gCamcontrolQueuedActionData;
 extern undefined4 gCamcontrolQueuedActionId;
-extern undefined4 gCamcontrolCurrentHandler;
+extern CamcontrolHandlerEntry *gCamcontrolCurrentHandler;
 extern u8 gCamcontrolHandlerCount;
 extern short* gCamcontrolState;
 extern char sCamcontrolTriggeredCamActionLoadWarning[];
@@ -83,7 +83,6 @@ extern undefined lbl_803DD4CA;
 extern s8 lbl_803DD4CB;
 extern undefined4 lbl_803DD4CC;
 extern int lbl_803DD514;
-extern u8 lbl_803DD520;
 
 struct CamcontrolHandlerVTable {
   u8 pad00[0x10];
@@ -102,7 +101,6 @@ struct CamcontrolHandlerEntry {
   u8 pad09[3];
 };
 
-extern CamcontrolHandlerEntry *lbl_803DD51C;
 extern u32 gCamcontrolActiveActionId;
 extern u32 pCamera;
 
@@ -537,7 +535,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
       handlerEntry = lbl_803A4228;
-      for (handlerCount = (int)lbl_803DD520; 0 < handlerCount;
+      for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
           handlerIndex = (int)lbl_803A4228[handlerIndex];
@@ -583,7 +581,7 @@ LAB_80102f3c:
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
       handlerEntry = lbl_803A4228;
-      for (handlerCount = (int)lbl_803DD520; 0 < handlerCount;
+      for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
           handlerIndex = (int)lbl_803A4228[handlerIndex];
@@ -666,7 +664,7 @@ void camcontrol_release(void)
 {
   CamcontrolHandlerEntry *currentHandler;
 
-  currentHandler = lbl_803DD51C;
+  currentHandler = gCamcontrolCurrentHandler;
   if (currentHandler != NULL) {
     currentHandler->handler->vtable->actionCallback();
   }
@@ -814,7 +812,7 @@ void Camera_update(void)
     }
     camcontrol_applyQueuedAction();
     if (gCamcontrolCurrentHandler != 0) {
-      (**(code **)(**(int **)(gCamcontrolCurrentHandler + 4) + 8))(gCamcontrolState);
+      gCamcontrolCurrentHandler->handler->vtable->actionCallback(gCamcontrolState);
       FUN_800068f8((double)*(float *)(gCamcontrolState + 6),
                    (double)*(float *)(gCamcontrolState + 8),
                    (double)*(float *)(gCamcontrolState + 10),
@@ -863,7 +861,7 @@ void *Camera_func08(void)
 
   i = 0;
   entry = lbl_803A4228;
-  for (; i < lbl_803DD520; i++) {
+  for (; i < gCamcontrolHandlerCount; i++) {
     if ((*entry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
       return lbl_803A4228[i];
     }
@@ -874,7 +872,7 @@ void *Camera_func08(void)
 
 void *Camera_GetFollowPos(void)
 {
-  return lbl_803DD51C;
+  return gCamcontrolCurrentHandler;
 }
 
 /* sda21 accessors. */
