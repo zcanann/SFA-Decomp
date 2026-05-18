@@ -37,7 +37,7 @@ extern undefined8 FUN_8028681c();
 extern undefined8 FUN_80286820();
 extern undefined8 FUN_8028682c();
 extern uint FUN_80286840();
-extern undefined4 FUN_8028685c();
+extern undefined4 TRKNubMainLoop();
 extern undefined4 FUN_80286868();
 extern undefined4 FUN_8028686c();
 extern undefined4 FUN_80286878();

@@ -35,7 +35,7 @@ extern undefined8 FUN_80286834();
 extern undefined8 FUN_80286838();
 extern longlong FUN_8028683c();
 extern undefined4 FUN_80286858();
-extern undefined4 FUN_8028685c();
+extern undefined4 TRKNubMainLoop();
 extern undefined4 FUN_80286874();
 extern undefined4 FUN_80286878();
 extern undefined4 FUN_8028687c();
@@ -1025,7 +1025,7 @@ LAB_800e3130:
       }
     }
   }
-  FUN_8028685c();
+  TRKNubMainLoop();
   return;
 }
 

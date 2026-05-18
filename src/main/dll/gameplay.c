@@ -55,7 +55,7 @@ extern uint FUN_80286834();
 extern undefined8 FUN_80286838();
 extern uint FUN_8028683c();
 extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028685c();
+extern undefined4 TRKNubMainLoop();
 extern undefined4 FUN_8028686c();
 extern undefined4 FUN_80286870();
 extern undefined4 FUN_8028687c();
@@ -3920,7 +3920,7 @@ void FUN_800eb4d0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     local_3fc = param_4 | 0x2000490;
     (**(code **)(*DAT_803dd6fc + 8))(&local_450,0,uVar9,puVar10,uVar11,puVar12,0,0);
   }
-  FUN_8028685c();
+  TRKNubMainLoop();
   return;
 }
 

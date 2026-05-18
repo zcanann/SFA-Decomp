@@ -130,7 +130,7 @@ extern ulonglong FUN_80286838();
 extern undefined8 FUN_8028683c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_80286858();
-extern undefined4 FUN_8028685c();
+extern undefined4 TRKNubMainLoop();
 extern undefined4 FUN_8028686c();
 extern undefined4 FUN_80286870();
 extern undefined4 FUN_80286878();
