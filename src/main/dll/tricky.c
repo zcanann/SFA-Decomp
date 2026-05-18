@@ -50,7 +50,7 @@ extern undefined4 FUN_800709d8();
 extern undefined4 FUN_800709e0();
 extern undefined4 FUN_800709e8();
 extern uint FUN_800e6680();
-extern undefined4 FUN_80121c4c();
+extern undefined4 hudDrawMagicBar();
 extern undefined8 FUN_801225a8();
 extern undefined4 fn_80124A78();
 extern undefined4 fn_80124B38();
@@ -1646,7 +1646,7 @@ void FUN_8011f438(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   if ((((uVar7 & 0xff) != 0) && (uVar9 = FUN_80294be4(iVar2), uVar9 != 0)) &&
      (uVar9 = GameBit_Get(0xeb1), uVar9 != 0)) {
-    FUN_80121c4c(uVar7,0x100,0);
+    hudDrawMagicBar(uVar7,0x100,0);
   }
   iVar2 = 0;
   uVar9 = FUN_800e6680('\x01',0);

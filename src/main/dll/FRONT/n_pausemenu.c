@@ -6,7 +6,7 @@ extern undefined4 FUN_8004817c();
 extern undefined4 FUN_80117724();
 extern ushort FUN_8024df24();
 extern int FUN_8024e064();
-extern undefined8 FUN_80286990();
+extern undefined8 TRKPostEvent();
 
 extern undefined4 DAT_803a6a0c;
 extern undefined4 DAT_803a6a40;
@@ -102,13 +102,13 @@ undefined4 FUN_80118540(void)
       uVar1 = (uint)(FLOAT_803e29d0 * DAT_803a6a0c);
       iVar2 = FUN_8024e064();
       if (iVar2 == 1) {
-        uVar4 = FUN_80286990((int)((ulonglong)DAT_803a6a84 * (ulonglong)uVar1 >> 0x20) +
+        uVar4 = TRKPostEvent((int)((ulonglong)DAT_803a6a84 * (ulonglong)uVar1 >> 0x20) +
                              DAT_803a6a80 * uVar1 + DAT_803a6a84 * ((int)uVar1 >> 0x1f),
                              DAT_803a6a84 * uVar1,0,5000);
         DAT_803a6a8c = (int)uVar4;
       }
       else {
-        uVar4 = FUN_80286990((int)((ulonglong)DAT_803a6a84 * (ulonglong)uVar1 >> 0x20) +
+        uVar4 = TRKPostEvent((int)((ulonglong)DAT_803a6a84 * (ulonglong)uVar1 >> 0x20) +
                              DAT_803a6a80 * uVar1 + DAT_803a6a84 * ((int)uVar1 >> 0x1f),
                              DAT_803a6a84 * uVar1,0,0x176a);
         DAT_803a6a8c = (int)uVar4;

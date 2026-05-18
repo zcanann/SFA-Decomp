@@ -6,7 +6,7 @@ extern undefined4 FUN_801177dc();
 extern undefined4 FUN_80117818();
 extern undefined4 THPPlayerDrawCurrentFrame();
 extern int FUN_80118540();
-extern undefined4 FUN_80118c88();
+extern undefined4 AttractMovie_AssignBuffers();
 extern undefined4 FUN_801197e0();
 extern undefined4 FUN_8011981c();
 extern undefined4 FUN_80119850();

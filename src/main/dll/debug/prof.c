@@ -5,7 +5,7 @@ extern undefined4 FUN_800067b4();
 extern undefined4 FUN_80006824();
 extern undefined4 isCheatActive();
 extern uint isCheatUnlocked();
-extern undefined4 FUN_8011cd54();
+extern undefined4 OptionsScreen_render();
 extern bool FUN_80245dbc();
 extern uint countLeadingZeros();
 
@@ -51,7 +51,7 @@ undefined4 FUN_8011c7b4(int param_1,int param_2)
     }
     if (param_2 < 2) {
       if (param_2 == 0) {
-        FUN_8011cd54();
+        OptionsScreen_render();
         return 1;
       }
     }

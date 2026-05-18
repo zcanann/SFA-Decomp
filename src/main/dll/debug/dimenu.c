@@ -87,7 +87,7 @@ extern undefined4* PTR_DAT_8031b928;
 /*
  * --INFO--
  *
- * Function: FUN_8011cd54
+ * Function: OptionsScreen_render
  * EN v1.0 Address: 0x8011CD54
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x8011CD58
@@ -97,7 +97,7 @@ extern undefined4* PTR_DAT_8031b928;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011cd54(void)
+void OptionsScreen_render(void)
 {
 }
 
@@ -366,7 +366,7 @@ void FUN_8011d67c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   DAT_803de38c = 0;
   DAT_803de388 = (undefined4)gameplay_getPreviewSettings();
   if (DAT_803de378 == '\0') {
-    FUN_8011cd54();
+    OptionsScreen_render();
   }
   else if (DAT_803de378 == '\x01') {
     FUN_8011ca28();

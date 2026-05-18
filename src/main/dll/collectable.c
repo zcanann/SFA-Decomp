@@ -130,7 +130,7 @@ extern undefined4 FUN_8013a408();
 extern void fn_8013ADFC(int obj);
 extern void fn_80139164(int obj,int state);
 extern int trickyFn_8013b368();
-extern int FUN_8013dc88();
+extern int trickyGrowl();
 extern int FUN_801451dc();
 extern undefined4 FUN_8014a9f0();
 extern undefined4 FUN_8014fef8();

@@ -482,7 +482,7 @@ void FUN_801287ac();
 void FUN_80128db8();
 void FUN_801291ac();
 void FUN_801294d8();
-undefined4 FUN_801299d4();
+undefined4 pauseMenuDoSave();
 void FUN_80129a98(void);
 void FUN_80129d10();
 void fn_80129FB0(void);
@@ -574,7 +574,7 @@ void FUN_801294d8()
 {
 }
 
-undefined4 FUN_801299d4()
+undefined4 pauseMenuDoSave()
 {
     return 0;
 }

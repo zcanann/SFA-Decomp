@@ -118,7 +118,7 @@ extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80080f88();
 extern undefined4 FUN_80080f90();
 extern undefined4 FUN_80080f94();
-extern undefined4 FUN_8011846c();
+extern undefined4 PlayControl();
 extern undefined4 FUN_80243e74();
 extern undefined4 FUN_80243e9c();
 extern undefined4 FUN_802475b8();
@@ -1513,7 +1513,7 @@ LAB_8003f328:
       FUN_8005264c((char *)&local_11c);
     }
     if ((*(uint *)(iVar7 + 0x3c) & 0x20000) != 0) {
-      FUN_8011846c();
+      PlayControl();
     }
     FUN_800528d0();
     pcVar8 = (code *)FUN_8001794c((int)param_3);
