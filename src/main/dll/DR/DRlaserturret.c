@@ -49,30 +49,6 @@ extern f32 lbl_803E5A18;
 extern f32 lbl_803E5A1C;
 extern f32 lbl_803E5A20;
 
-#define DR_LASERTURRET_FLAG_ACTION_ACTIVE 0x08
-#define DR_LASERTURRET_FLAG_START_SEQUENCE 0x02
-#define DR_LASERTURRET_FLAG_CONFIRM_PROMPT 0x10
-
-typedef struct DRLaserTurretState {
-    u8 pad000[0x9b0];
-    void *stateStack;
-    void *linkedTarget;
-    f32 bobAmplitude;
-    f32 bobBaseY;
-    f32 actionTimer;
-    u8 pad9c4[0x9c8 - 0x9c4];
-    s16 maxCount;
-    u16 bobPhase;
-    s16 countScale;
-    s16 countTarget;
-    s16 countValue;
-    u8 nudgeCount;
-    u8 pad9d3;
-    u8 flags;
-    u8 digitCount;
-    u8 promptState;
-} DRLaserTurretState;
-
 /*
  * --INFO--
  *
