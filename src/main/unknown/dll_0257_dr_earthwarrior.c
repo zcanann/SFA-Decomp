@@ -33,12 +33,12 @@
  * - slot 13: 0x802BDFC0 DR_EarthWarrior_render2 stub=const 0 ref=render2 (stub)
  * - slot 14: 0x802BDFA0 fn_802BDFA0
  * - slot 15: 0x802BDF84 fn_802BDF84
- * - slot 16: 0x802BDF7C fn_802BDF7C stub=const 0
+ * - slot 16: 0x802BDF7C DR_EarthWarrior_func16 stub=const 0
  * - slot 17: 0x802BDE90 fn_802BDE90
  * - slot 18: 0x802BDE54 fn_802BDE54
  * - slot 19: 0x802BDE10 fn_802BDE10
- * - slot 20: 0x802BDE08 fn_802BDE08 stub=const 0
- * - slot 21: 0x802BDE04 fn_802BDE04 stub=blr
+ * - slot 20: 0x802BDE08 DR_EarthWarrior_func20 stub=const 0
+ * - slot 21: 0x802BDE04 DR_EarthWarrior_func21 stub=blr
  * - slot 22: 0x802BDD34 fn_802BDD34
  * - slot 23: 0x802BC7C0 fn_802BC7C0
  *

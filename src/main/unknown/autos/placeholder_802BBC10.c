@@ -1306,17 +1306,17 @@ void FUN_802bb830(undefined2 *param_1,int param_2)
 /* Pattern wrappers. */
 int fn_802BC0D0(void) { return 0x0; }
 int fn_802BCCFC(void) { return 0x0; }
-void fn_802BDE04(void) {}
-int fn_802BDE08(void) { return 0x0; }
-int fn_802BDF7C(void) { return 0x0; }
+void DR_EarthWarrior_func21(void) {}
+int DR_EarthWarrior_func20(void) { return 0x0; }
+int DR_EarthWarrior_func16(void) { return 0x0; }
 int DR_EarthWarrior_render2(void) { return 0x0; }
 int DR_EarthWarrior_setScale(void) { return 0x0; }
 int DR_EarthWarrior_getExtraSize(void) { return 0x14fc; }
 int DR_EarthWarrior_func08(void) { return 0x43; }
 int fn_802BF728(void) { return 0x0; }
-void fn_802C0CEC(void) {}
-int fn_802C0CF0(void) { return 0x0; }
-int fn_802C0DB0(void) { return 0x0; }
+void DR_CloudRunner_func21(void) {}
+int DR_CloudRunner_func20(void) { return 0x0; }
+int DR_CloudRunner_func16(void) { return 0x0; }
 int DR_CloudRunner_render2(void) { return 0x0; }
 int DR_CloudRunner_setScale(void) { return 0x0; }
 int DR_CloudRunner_getExtraSize(void) { return 0xbc8; }

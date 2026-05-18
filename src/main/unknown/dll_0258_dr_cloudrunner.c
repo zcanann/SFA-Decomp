@@ -33,12 +33,12 @@
  * - slot 13: 0x802C0E98 DR_CloudRunner_render2 stub=const 0 ref=render2 (stub)
  * - slot 14: 0x802C0E78 fn_802C0E78
  * - slot 15: 0x802C0DB8 fn_802C0DB8
- * - slot 16: 0x802C0DB0 fn_802C0DB0 stub=const 0
+ * - slot 16: 0x802C0DB0 DR_CloudRunner_func16 stub=const 0
  * - slot 17: 0x802C0D1C fn_802C0D1C
  * - slot 18: 0x802C0D08 fn_802C0D08
  * - slot 19: 0x802C0CF8 fn_802C0CF8
- * - slot 20: 0x802C0CF0 fn_802C0CF0 stub=const 0
- * - slot 21: 0x802C0CEC fn_802C0CEC stub=blr
+ * - slot 20: 0x802C0CF0 DR_CloudRunner_func20 stub=const 0
+ * - slot 21: 0x802C0CEC DR_CloudRunner_func21 stub=blr
  * - slot 22: 0x802C0CC4 fn_802C0CC4
  * - slot 23: 0x802BF2C4 fn_802BF2C4
  *
