@@ -19,9 +19,8 @@ extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80080f14();
 
-extern LaserReleaseInterface **DAT_803dd6d4;
-extern undefined4* DAT_803dd6e8;
-extern LaserEventInterface **DAT_803dd72c;
+extern LaserReleaseInterface **lbl_803DD6D4;
+extern LaserEventInterface **lbl_803DD72C;
 
 /*
  * --INFO--
@@ -54,7 +53,7 @@ laser_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   
   obj = (LaserObject *)param_9;
   spawnFlag = (int)animUpdate;
-  eventInterface = *DAT_803dd72c;
+  eventInterface = *lbl_803DD72C;
   mode = eventInterface->getMode((int)obj->modeIndex);
   effectHandle = FUN_800068c4(0,0x48b);
   for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
@@ -184,7 +183,7 @@ void laser_render(int param_1)
  */
 void laser_release(undefined4 param_1)
 {
-  (*DAT_803dd6d4)->releaseObject(0,param_1,0xffffffff);
+  (*lbl_803DD6D4)->releaseObject(0,param_1,0xffffffff);
   return;
 }
 
