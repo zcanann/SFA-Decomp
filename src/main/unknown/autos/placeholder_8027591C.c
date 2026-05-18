@@ -287,7 +287,7 @@ void DoSetPitch(McmdVoiceState *state)
 /*
  * Resolve ADSR parameters and send them to the hardware voice.
  */
-void mcmdSetADSR(int state, u32 *args)
+void mcmdSetADSR(McmdVoiceState *state, McmdCommandArgs *args)
 {
     u8 *table;
     u16 *words;
@@ -311,15 +311,15 @@ void mcmdSetADSR(int state, u32 *args)
         f64 d;
     } curve;
 
-    table = dataGetCurve((*args >> 8) & 0xffff);
+    table = dataGetCurve((args->flags >> 8) & 0xffff);
     if (table != 0) {
         words = (u16 *)table;
-        if ((*args >> 0x18) == 0) {
+        if ((args->flags >> 0x18) == 0) {
             adsr[0] = (((u16)((words[0] << 8) | ((u32)words[0] >> 8))) << 16) |
                       (u16)((words[1] << 8) | ((u32)words[1] >> 8));
             adsr[1] = (((u16)((words[2] << 8) | ((u32)words[2] >> 8))) << 16) |
                       (u16)((words[3] << 8) | ((u32)words[3] >> 8));
-            hwSetADSR(*(u32 *)(state + MCMD_VOICE_ID_OFFSET) & 0xff, adsr, 0);
+            hwSetADSR(state->voiceHandle & 0xff, adsr, 0);
         } else {
             adsr[0] = ((u32)table[3] << 24) | ((u32)table[2] << 16) |
                       ((u32)table[1] << 8) | table[0];
@@ -337,7 +337,7 @@ void mcmdSetADSR(int state, u32 *args)
                        ((u32)table[17] << 8) | table[16];
             if (velCurve != 0x80000000) {
                 conv.word.hi = 0x43300000;
-                conv.word.lo = *(u32 *)(state + 0x158);
+                conv.word.lo = *(u32 *)((u8 *)state + 0x158);
                 curve.word.hi = 0x43300000;
                 curve.word.lo = velCurve ^ 0x80000000;
                 bend = (int)(lbl_803E77F4 * (f32)(conv.d - lbl_803E7800) *
@@ -346,16 +346,16 @@ void mcmdSetADSR(int state, u32 *args)
             }
             if (keyCurve != 0x80000000) {
                 conv.word.hi = 0x43300000;
-                conv.word.lo = *(u8 *)(state + 0x12f);
+                conv.word.lo = state->keyBase;
                 curve.word.hi = 0x43300000;
                 curve.word.lo = keyCurve ^ 0x80000000;
                 bend = (int)(lbl_803E77F8 * (f32)(conv.d - lbl_803E7800) *
                              (f32)(curve.d - lbl_803E7808));
                 adsr[1] += bend;
             }
-            hwSetADSR(*(u32 *)(state + MCMD_VOICE_ID_OFFSET) & 0xff, adsr, 1);
+            hwSetADSR(state->voiceHandle & 0xff, adsr, 1);
         }
-        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG;
+        state->outputFlags |= MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG;
     }
 }
 
