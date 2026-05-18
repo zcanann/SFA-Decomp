@@ -200,18 +200,18 @@ void kaldachompme_initialise(void)
 {
 }
 
-u32 gKaldaChompMeObjDescriptor[] = {
-    0, 0, 0, 0x00090000,
-    (u32)kaldachompme_initialise,
-    (u32)kaldachompme_release,
+ObjectDescriptor gKaldaChompMeObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)kaldachompme_initialise,
+    (ObjectDescriptorCallback)kaldachompme_release,
     0,
-    (u32)kaldachompme_init,
-    (u32)kaldachompme_update,
-    (u32)kaldachompme_hitDetect,
-    (u32)kaldachompme_render,
-    (u32)kaldachompme_free,
-    (u32)kaldachompme_func08,
-    (u32)kaldachompme_getExtraSize,
+    (ObjectDescriptorCallback)kaldachompme_init,
+    (ObjectDescriptorCallback)kaldachompme_update,
+    (ObjectDescriptorCallback)kaldachompme_hitDetect,
+    (ObjectDescriptorCallback)kaldachompme_render,
+    (ObjectDescriptorCallback)kaldachompme_free,
+    (ObjectDescriptorCallback)kaldachompme_func08,
+    kaldachompme_getExtraSize,
 };
 
 /*

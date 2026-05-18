@@ -1134,55 +1134,55 @@ extern void pollen_hitDetect(void);
 extern void pollen_update(void);
 extern void pollen_init(void);
 
-u32 gKaldaChompSpitObjDescriptor[] = {
+ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)kaldachompspit_initialise,
-    (u32)kaldachompspit_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)kaldachompspit_initialise,
+    (ObjectDescriptorCallback)kaldachompspit_release,
     0,
-    (u32)kaldachompspit_init,
-    (u32)kaldachompspit_update,
-    (u32)kaldachompspit_hitDetect,
-    (u32)kaldachompspit_render,
-    (u32)kaldachompspit_free,
-    (u32)kaldachompspit_func08,
-    (u32)kaldachompspit_getExtraSize,
+    (ObjectDescriptorCallback)kaldachompspit_init,
+    (ObjectDescriptorCallback)kaldachompspit_update,
+    (ObjectDescriptorCallback)kaldachompspit_hitDetect,
+    (ObjectDescriptorCallback)kaldachompspit_render,
+    (ObjectDescriptorCallback)kaldachompspit_free,
+    (ObjectDescriptorCallback)kaldachompspit_func08,
+    kaldachompspit_getExtraSize,
 };
 
-u32 gPinPonSpikeObjDescriptor[] = {
+ObjectDescriptor gPinPonSpikeObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)pinponspike_initialise,
-    (u32)pinponspike_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)pinponspike_initialise,
+    (ObjectDescriptorCallback)pinponspike_release,
     0,
-    (u32)pinponspike_init,
-    (u32)pinponspike_update,
-    (u32)pinponspike_hitDetect,
-    (u32)pinponspike_render,
-    (u32)pinponspike_free,
-    (u32)pinponspike_func08,
-    (u32)pinponspike_getExtraSize,
+    (ObjectDescriptorCallback)pinponspike_init,
+    (ObjectDescriptorCallback)pinponspike_update,
+    (ObjectDescriptorCallback)pinponspike_hitDetect,
+    (ObjectDescriptorCallback)pinponspike_render,
+    (ObjectDescriptorCallback)pinponspike_free,
+    (ObjectDescriptorCallback)pinponspike_func08,
+    pinponspike_getExtraSize,
 };
 
-u32 gPollenObjDescriptor[] = {
+ObjectDescriptor gPollenObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)pollen_initialise,
-    (u32)pollen_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)pollen_initialise,
+    (ObjectDescriptorCallback)pollen_release,
     0,
-    (u32)pollen_init,
-    (u32)pollen_update,
-    (u32)pollen_hitDetect,
-    (u32)pollen_render,
-    (u32)pollen_free,
-    (u32)pollen_func08,
-    (u32)pollen_getExtraSize,
+    (ObjectDescriptorCallback)pollen_init,
+    (ObjectDescriptorCallback)pollen_update,
+    (ObjectDescriptorCallback)pollen_hitDetect,
+    (ObjectDescriptorCallback)pollen_render,
+    (ObjectDescriptorCallback)pollen_free,
+    (ObjectDescriptorCallback)pollen_func08,
+    pollen_getExtraSize,
 };
 
 u32 lbl_80320538[] = {
@@ -1238,19 +1238,19 @@ extern void pollenfragment_render(void);
 extern void pollenfragment_hitDetect(void);
 extern void pollenfragment_update(void);
 
-u32 gPollenFragmentObjDescriptor[] = {
+ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)pollenfragment_initialise,
-    (u32)pollenfragment_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)pollenfragment_initialise,
+    (ObjectDescriptorCallback)pollenfragment_release,
     0,
-    (u32)pollenfragment_init,
-    (u32)pollenfragment_update,
-    (u32)pollenfragment_hitDetect,
-    (u32)pollenfragment_render,
-    (u32)pollenfragment_free,
-    (u32)pollenfragment_func08,
-    (u32)pollenfragment_getExtraSize,
+    (ObjectDescriptorCallback)pollenfragment_init,
+    (ObjectDescriptorCallback)pollenfragment_update,
+    (ObjectDescriptorCallback)pollenfragment_hitDetect,
+    (ObjectDescriptorCallback)pollenfragment_render,
+    (ObjectDescriptorCallback)pollenfragment_free,
+    (ObjectDescriptorCallback)pollenfragment_func08,
+    pollenfragment_getExtraSize,
 };

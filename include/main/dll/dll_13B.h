@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_13B_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void FUN_80169360(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -30,5 +31,7 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
 void FUN_80169c04(int param_1);
+
+extern ObjectDescriptor gKaldaChompMeObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_13B_H_ */

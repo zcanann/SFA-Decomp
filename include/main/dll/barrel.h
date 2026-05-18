@@ -2,6 +2,7 @@
 #define MAIN_DLL_BARREL_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 undefined4
 FUN_80161f0c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
@@ -36,5 +37,7 @@ void FUN_80162ec0(short *param_1);
 void cannonclaw_release(int param_1);
 void FUN_80163220(int param_1);
 void FUN_80163308(int param_1);
+
+extern ObjectDescriptor gGrimbleObjDescriptor;
 
 #endif /* MAIN_DLL_BARREL_H_ */

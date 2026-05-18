@@ -2,6 +2,7 @@
 #define MAIN_DLL_CAMPFIRE_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void fn_8016821C(int param_1,int *param_2);
 void fn_80168374(int param_1,int param_2,char param_3);
@@ -13,5 +14,7 @@ void kaldachom_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,u
 void kaldachom_update(int param_1);
 void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3);
 void kaldachom_initialise(void);
+
+extern ObjectDescriptor12 gKaldaChomObjDescriptor;
 
 #endif /* MAIN_DLL_CAMPFIRE_H_ */

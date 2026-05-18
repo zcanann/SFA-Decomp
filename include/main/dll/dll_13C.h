@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_13C_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
 void kaldachompspit_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                            undefined4 param_4,undefined4 param_5,char visible);
@@ -32,5 +33,10 @@ void FUN_8016b228(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,double param_4,
                  double param_5,double param_6,undefined8 param_7,undefined8 param_8,ushort *param_9
                  );
+
+extern ObjectDescriptor gKaldaChompSpitObjDescriptor;
+extern ObjectDescriptor gPinPonSpikeObjDescriptor;
+extern ObjectDescriptor gPollenObjDescriptor;
+extern ObjectDescriptor gPollenFragmentObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_13C_H_ */

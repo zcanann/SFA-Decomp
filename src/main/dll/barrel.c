@@ -687,19 +687,19 @@ extern void grimble_hitDetect(void);
 extern void grimble_update(void);
 extern void grimble_init(void);
 
-u32 gGrimbleObjDescriptor[] = {
+ObjectDescriptor gGrimbleObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
-    (u32)grimble_initialise,
-    (u32)grimble_release,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)grimble_initialise,
+    (ObjectDescriptorCallback)grimble_release,
     0,
-    (u32)grimble_init,
-    (u32)grimble_update,
-    (u32)grimble_hitDetect,
-    (u32)grimble_render,
-    (u32)grimble_free,
-    (u32)grimble_func08,
-    (u32)grimble_getExtraSize,
+    (ObjectDescriptorCallback)grimble_init,
+    (ObjectDescriptorCallback)grimble_update,
+    (ObjectDescriptorCallback)grimble_hitDetect,
+    (ObjectDescriptorCallback)grimble_render,
+    (ObjectDescriptorCallback)grimble_free,
+    (ObjectDescriptorCallback)grimble_func08,
+    grimble_getExtraSize,
 };
