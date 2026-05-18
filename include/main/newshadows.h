@@ -44,7 +44,7 @@ void FUN_8006b824(double param_1,double param_2,double param_3,float *param_4,in
                  float *param_6,float *param_7);
 void FUN_8006bce4(void);
 void FUN_8006c2d8(void);
-undefined2 FUN_8006dc08(uint param_1,undefined param_2);
+ushort FUN_8006dc08(uint param_1,undefined param_2);
 void FUN_8006dca8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7);
 

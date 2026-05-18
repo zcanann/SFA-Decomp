@@ -466,7 +466,7 @@ void FUN_801303d8(undefined4 param_1,undefined2 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 FUN_8013041c(void)
+ushort FUN_8013041c(void)
 {
   return (&DAT_803aa0ba)[DAT_803de592 * 0x1e];
 }

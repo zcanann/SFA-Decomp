@@ -41,7 +41,7 @@ undefined2
 FUN_800db110(float *param_1,int param_2,undefined4 param_3,undefined4 param_4,byte param_5);
 undefined4 FUN_800db2f0(float *param_1);
 void FUN_800db47c(float *param_1,undefined *param_2);
-undefined2 FUN_800db690(float *param_1);
+ushort FUN_800db690(float *param_1);
 int FUN_800db820(float *param_1);
 void FUN_800dbc68(void);
 void FUN_800dd3dc(void);

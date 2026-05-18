@@ -2621,7 +2621,7 @@ void FUN_8006c2d8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 FUN_8006dc08(uint param_1,undefined param_2)
+ushort FUN_8006dc08(uint param_1,undefined param_2)
 {
   uint uVar1;
   undefined2 *puVar2;

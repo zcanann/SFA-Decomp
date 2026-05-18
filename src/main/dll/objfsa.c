@@ -1585,7 +1585,7 @@ void FUN_800db47c(float *param_1,undefined *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined2 FUN_800db690(float *param_1)
+ushort FUN_800db690(float *param_1)
 {
   uint uVar1;
   byte bVar2;

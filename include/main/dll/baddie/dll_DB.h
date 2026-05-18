@@ -25,7 +25,7 @@ void FUN_801302b0(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 int FUN_801302b4(int *param_1);
 void FUN_801303d8(undefined4 param_1,undefined2 param_2);
-undefined2 FUN_8013041c(void);
+ushort FUN_8013041c(void);
 void FUN_80130434(int param_1);
 void FUN_80130588(void);
 void FUN_80130728(undefined param_1);
