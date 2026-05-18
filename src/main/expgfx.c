@@ -273,14 +273,13 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
 #pragma peephole off
 void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive)
 {
+  ExpgfxTableEntry *tableEntry;
   u8 *expgfxBase;
   u32 *poolActiveMask;
   char *poolActiveCount;
   ExpgfxSlot *slot;
   uint activeMask;
-  uint tableOffset;
-  u16 *refCount;
-  u8 *tableTextureResources;
+  uint tableIndex;
 
   expgfxBase = gExpgfxRuntimeData;
   activeMask = 1 << slotIndex;
@@ -290,21 +289,18 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,
     slot = (ExpgfxSlot *)(slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
     slot->behaviorFlags = 0;
     if (freeTexture == 0) {
-      tableTextureResources = expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET;
-      tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-      if (*(u32 *)(tableTextureResources + tableOffset) != 0) {
+      tableIndex = Expgfx_GetSlotTableIndex(slot);
+      tableEntry = Expgfx_GetTableEntry(tableIndex);
+      if (tableEntry->textureOrResource != 0) {
         lbl_803DD258 = 1;
-        textureFree(*(void **)(tableTextureResources +
-                               (Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT)));
+        textureFree((void *)tableEntry->textureOrResource);
         lbl_803DD258 = 0;
       }
-      tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-      refCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableOffset);
-      if (*refCount != 0) {
-        (*refCount)--;
-        if (*refCount == 0) {
-          *(u32 *)(tableTextureResources + tableOffset) = 0;
-          *(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset) = 0;
+      if (tableEntry->refCount != 0) {
+        tableEntry->refCount--;
+        if (tableEntry->refCount == 0) {
+          tableEntry->textureOrResource = 0;
+          tableEntry->key0 = 0;
         }
       }
       else {
