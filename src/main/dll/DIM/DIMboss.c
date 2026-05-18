@@ -390,7 +390,7 @@ LAB_801bd7dc:
 /*
  * --INFO--
  *
- * Function: dimboss_func11
+ * Function: DIMboss_func0B
  * EN v1.0 Address: 0x801BD240
  * EN v1.0 Size: 4b
  * EN v1.1 Address: TODO
@@ -400,7 +400,7 @@ LAB_801bd7dc:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimboss_func11(void)
+void DIMboss_func0B(void)
 {
 }
 
@@ -443,7 +443,7 @@ int DIMboss_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: dimboss_func08
+ * Function: DIMboss_func08
  * EN v1.0 Address: 0x801BD258
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -453,7 +453,7 @@ int DIMboss_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dimboss_func08(void)
+int DIMboss_func08(void)
 {
   return DIMBOSS_OBJECT_TYPE_ID;
 }
@@ -771,7 +771,7 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: dimboss_initialise
+ * Function: DIMboss_initialise
  * EN v1.0 Address: 0x801BDAD4
  * EN v1.0 Size: 32b
  * EN v1.1 Address: TODO
@@ -781,27 +781,27 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimboss_release(void) {}
+void DIMboss_release(void) {}
 
-void dimboss_initialise(void)
+void DIMboss_initialise(void)
 {
   DIMboss_initialiseAnimTables();
 }
 
 ObjectDescriptor12 gDIM_BossObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
-    (ObjectDescriptorCallback)dimboss_initialise,
-    (ObjectDescriptorCallback)dimboss_release,
+    (ObjectDescriptorCallback)DIMboss_initialise,
+    (ObjectDescriptorCallback)DIMboss_release,
     0,
     (ObjectDescriptorCallback)DIMboss_init,
     (ObjectDescriptorCallback)DIMboss_update,
     (ObjectDescriptorCallback)DIMboss_hitDetect,
     (ObjectDescriptorCallback)DIMboss_render,
     (ObjectDescriptorCallback)DIMboss_free,
-    (ObjectDescriptorCallback)dimboss_func08,
+    (ObjectDescriptorCallback)DIMboss_func08,
     DIMboss_getExtraSize,
     (ObjectDescriptorCallback)DIMboss_setScale,
-    (ObjectDescriptorCallback)dimboss_func11,
+    (ObjectDescriptorCallback)DIMboss_func0B,
 };
 
 #pragma scheduling off

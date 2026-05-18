@@ -210,14 +210,14 @@
  *   slot 08: 0x802B8A60 lightfoot_func08
  *   slot 09: 0x802B8A58 lightfoot_getExtraSize
  * - DLL 0x01E0: gDIM_BossObjDescriptor (slots=12, mask=110111111111)
- *   slot 00: 0x801BDAD4 dimboss_initialise
- *   slot 01: 0x801BDAD0 dimboss_release
+ *   slot 00: 0x801BDAD4 DIMboss_initialise
+ *   slot 01: 0x801BDAD0 DIMboss_release
  *   slot 03: 0x801BD7AC DIMboss_init
  *   slot 04: 0x801BD450 DIMboss_update
  *   slot 05: 0x801BD414 DIMboss_hitDetect
  *   slot 06: 0x801BD364 DIMboss_render
  *   slot 07: 0x801BD260 DIMboss_free
- *   slot 08: 0x801BD258 dimboss_func08
+ *   slot 08: 0x801BD258 DIMboss_func08
  *   slot 09: 0x801BD250 DIMboss_getExtraSize
  * - DLL 0x01E1: gDIM_BossGutObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801BDCF4 dimbossgut_initialise

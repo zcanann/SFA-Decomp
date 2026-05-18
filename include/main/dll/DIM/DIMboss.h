@@ -162,18 +162,18 @@ typedef struct DIMbossObject {
 
 undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,
                                ObjAnimUpdateState *animUpdate);
-void dimboss_func11(void);
+void DIMboss_func0B(void);
 int DIMboss_setScale(DIMbossObject *obj);
 int DIMboss_getExtraSize(void);
-int dimboss_func08(void);
+int DIMboss_func08(void);
 void DIMboss_free(DIMbossObject *obj);
 void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                     undefined4 param_5,char shouldRender);
 void DIMboss_hitDetect(DIMbossObject *obj);
 void DIMboss_update(DIMbossObject *obj);
 void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3);
-void dimboss_release(void);
-void dimboss_initialise(void);
+void DIMboss_release(void);
+void DIMboss_initialise(void);
 void DIMboss_initialiseAnimTables(void);
 extern ObjectDescriptor12 gDIM_BossObjDescriptor;
 
