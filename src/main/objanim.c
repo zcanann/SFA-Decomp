@@ -1132,7 +1132,15 @@ int ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
   previousMove = objAnim->currentMove;
   moveChanged = previousMove != requestedMoveId;
   objAnim->currentMove = (s16)requestedMoveId;
-  moveId = ObjAnim_ResolveMoveIndex(animDef,requestedMoveId);
+  moveId =
+      animDef->moveGroupBaseIndices[(s32)requestedMoveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+      (requestedMoveId & OBJANIM_MOVE_INDEX_MASK);
+  if (moveId >= animDef->moveCount) {
+    moveId = animDef->moveCount - 1;
+  }
+  if (moveId < 0) {
+    moveId = 0;
+  }
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (moveChanged != 0) {
       state->blendToggle = OBJANIM_MOVE_CACHE_SLOT_COUNT - 1 - state->blendToggle;
