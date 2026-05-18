@@ -120,5 +120,6 @@ void FUN_801365c4(void);
 void FUN_801367b4(undefined2 *param_1,int param_2);
 void FUN_80136870(void);
 extern ObjectDescriptor10WithPadding gTitleScreenObjDescriptor;
+extern ObjectDescriptor16WithPadding gTumbleweedObjDescriptor;
 
 #endif /* MAIN_DLL_BADDIE_TUMBLEWEED_H_ */
