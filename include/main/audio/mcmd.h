@@ -179,7 +179,9 @@ typedef struct McmdVoiceState {
     u8 startupAuxA;
     u8 startupAuxB;
     u8 startupDeferStart;
-    u8 unk211[0x3EC - 0x211];
+    u8 unk211[3];
+    u32 inputDirtyFlags;
+    u8 unk218[0x3EC - 0x218];
     u8 queuedMessageCount;
     u8 queuedMessageReadIndex;
     u8 queuedMessageWriteIndex;

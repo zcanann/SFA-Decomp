@@ -4,8 +4,8 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 
-u16 inpGetPostAuxB(int state);
-u16 inpGetTremolo(int state);
+u16 inpGetPostAuxB(McmdVoiceState *state);
+u16 inpGetTremolo(McmdVoiceState *state);
 u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
 u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
 void inpInit(u32 state);

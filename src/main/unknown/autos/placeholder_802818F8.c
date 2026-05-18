@@ -100,10 +100,10 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
         voff = 0;
         for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
             u8 *vp = synthVoice + voff;
-            if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
-                slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
-                *(u32 *)(vp + 0x214) = 0x1fff;
-                synthQueueVoiceInputUpdate((int)(synthVoice + voff));
+            McmdVoiceState *voice = (McmdVoiceState *)vp;
+            if (key == voice->midiEvent && slot == voice->midiSlot) {
+                voice->inputDirtyFlags = 0x1fff;
+                synthQueueVoiceInputUpdate((int)voice);
             }
             voff += SYNTH_VOICE_STRIDE;
         }
@@ -185,10 +185,10 @@ void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value)
         voff = 0;
         for (i = 0; (u32)i < (u32)lbl_803BD150[0x210]; i++) {
             u8 *vp = synthVoice + voff;
-            if (key == vp[SYNTH_VOICE_MIDI_KEY_OFFSET] &&
-                slot == vp[SYNTH_VOICE_MIDI_SLOT_OFFSET]) {
-                *(u32 *)(vp + 0x214) = 0x1fff;
-                synthQueueVoiceInputUpdate((int)(synthVoice + voff));
+            McmdVoiceState *voice = (McmdVoiceState *)vp;
+            if (key == voice->midiEvent && slot == voice->midiSlot) {
+                voice->inputDirtyFlags = 0x1fff;
+                synthQueueVoiceInputUpdate((int)voice);
             }
             voff += SYNTH_VOICE_STRIDE;
         }

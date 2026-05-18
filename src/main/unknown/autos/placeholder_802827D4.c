@@ -14,15 +14,15 @@ extern s16 lbl_80330028[];
  *
  * EN v1.1 Address: 0x802827C8, size 72b
  */
-u16 inpGetPostAuxB(int state)
+u16 inpGetPostAuxB(McmdVoiceState *state)
 {
-    u32 flags = *(u32 *)(state + 0x214);
+    u32 flags = state->inputDirtyFlags;
     if ((flags & 0x800) == 0) {
-        return *(u16 *)(state + 0x3c4);
+        return *(u16 *)((u8 *)state + 0x3c4);
     }
-    *(u32 *)(state + 0x214) = flags & ~0x800;
-    return _GetInputValue((void *)state, (void *)(state + 0x3a4),
-                       *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
+    state->inputDirtyFlags = flags & ~0x800;
+    return _GetInputValue((void *)state, (void *)((u8 *)state + 0x3a4),
+                          state->midiSlot, state->midiEvent);
 }
 
 /*
@@ -30,15 +30,15 @@ u16 inpGetPostAuxB(int state)
  *
  * EN v1.1 Address: 0x80282810, size 72b
  */
-u16 inpGetTremolo(int state)
+u16 inpGetTremolo(McmdVoiceState *state)
 {
-    u32 flags = *(u32 *)(state + 0x214);
+    u32 flags = state->inputDirtyFlags;
     if ((flags & 0x1000) == 0) {
-        return *(u16 *)(state + 0x3e8);
+        return *(u16 *)((u8 *)state + 0x3e8);
     }
-    *(u32 *)(state + 0x214) = flags & ~0x1000;
-    return _GetInputValue((void *)state, (void *)(state + 0x3c8),
-                       *(u8 *)(state + 0x121), *(u8 *)(state + 0x122));
+    state->inputDirtyFlags = flags & ~0x1000;
+    return _GetInputValue((void *)state, (void *)((u8 *)state + 0x3c8),
+                          state->midiSlot, state->midiEvent);
 }
 
 extern u8 lbl_803BDA74[];

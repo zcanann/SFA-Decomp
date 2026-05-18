@@ -547,7 +547,7 @@ void SelectSource(int state, int ctrlObj, u32 *args, int unused, u32 stateFlag,
         inpSetGlobalMIDIDirtyFlag(*(u8 *)(state + 0x121), *(u8 *)(state + 0x122),
                                   dirtyFlag);
     } else {
-        *(u32 *)(state + 0x214) |= dirtyFlag;
+        ((McmdVoiceState *)state)->inputDirtyFlags |= dirtyFlag;
     }
 }
 #pragma peephole reset
