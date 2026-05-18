@@ -181,7 +181,7 @@ LAB_801de8b4:
 /*
  * --INFO--
  *
- * Function: FUN_801de914
+ * Function: sc_totemstrength_sortCompletionGameBits
  * EN v1.0 Address: 0x801DE914
  * EN v1.0 Size: 268b
  * EN v1.1 Address: 0x801DE910
@@ -191,7 +191,7 @@ LAB_801de8b4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801de914(void)
+void sc_totemstrength_sortCompletionGameBits(void)
 {
   ushort uVar1;
   ushort uVar2;

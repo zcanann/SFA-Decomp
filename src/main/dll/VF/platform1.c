@@ -15,7 +15,7 @@ extern undefined4 ObjAnim_SetCurrentMove();
 extern undefined4 FUN_80080eec();
 extern undefined4 FUN_8011e800();
 extern undefined4 setAButtonIcon();
-extern undefined4 FUN_801de914();
+extern undefined4 sc_totemstrength_sortCompletionGameBits();
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern u8 *Obj_GetPlayerObject(void);
@@ -436,7 +436,7 @@ LAB_801defcc:
 LAB_801defd8:
   dVar12 = FUN_80006b34();
   local_f0 = (double)(longlong)(int)(dVar12 / (double)lbl_803E632C);
-  FUN_801de914();
+  sc_totemstrength_sortCompletionGameBits();
   FUN_8011e800(0);
   if (0 < state->loopSfxHandle) {
     FUN_80080eec(state->loopSfxHandle);
