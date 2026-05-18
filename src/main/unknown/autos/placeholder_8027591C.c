@@ -8,11 +8,11 @@ extern int audioFn_80278b94(int p1, int p2, int p3, int p4, int p5, int p6, int 
 extern void synthFXCloneMidiSetup(int voice, int state);
 void DoSetPitch(int state);
 extern void sndConvertMs(u32 *p);
-extern void sndConvertTicks(u32 *p, int state);
+extern void sndConvertTicks(u32 *p, McmdVoiceState *state);
 extern int dataGetSample(u16 key, u32 *out);
 extern void hwInitSamplePlayback(u32 voice, u32 sampleId, u32 *sampleInfo, u32 noKeySync,
                                  u32 priority, u32 handle, u32 noStartOffset, u8 restart);
-extern void synthQueueVoiceInputUpdate(int state);
+extern void synthQueueVoiceInputUpdate(McmdVoiceState *state);
 extern u32 dataSampleInfo[];
 extern void *dataGetCurve(u16 key);
 extern u32 voiceConvertDbToLinear(u32 value);
@@ -96,7 +96,7 @@ void mcmdPlayMacro(int state, int args)
 /*
  * Resolve a sample descriptor and start hardware playback for a voice.
  */
-void mcmdStartSample(int state, u32 *args)
+void mcmdStartSample(McmdVoiceState *state, McmdCommandArgs *args)
 {
     int found;
     int mode;
@@ -104,40 +104,38 @@ void mcmdStartSample(int state, u32 *args)
     u32 noKeySync;
     u32 sampleId;
 
-    sampleId = (*args >> 8) & 0xffff;
+    sampleId = (args->flags >> 8) & 0xffff;
     found = dataGetSample(sampleId, dataSampleInfo);
     if (found == 0) {
-        mode = *args >> 0x18;
+        mode = args->flags >> 0x18;
         if (mode == 1) {
             dataSampleInfo[3] =
-                (args[1] * (0x7f - ((*(u32 *)(state + 0x154) >> 0x10) & 0xff))) / 0x7f;
+                (args->value * (0x7f - ((*(u32 *)((u8 *)state + 0x154) >> 0x10) & 0xff))) / 0x7f;
         } else if (mode == 0) {
-            dataSampleInfo[3] = args[1];
+            dataSampleInfo[3] = args->value;
         } else if (mode < 3) {
             dataSampleInfo[3] =
-                (args[1] * ((*(u32 *)(state + 0x154) >> 0x10) & 0xff)) / 0x7f;
+                (args->value * ((*(u32 *)((u8 *)state + 0x154) >> 0x10) & 0xff)) / 0x7f;
         } else {
             dataSampleInfo[3] = 0;
         }
         if (dataSampleInfo[3] >= dataSampleInfo[4]) {
             dataSampleInfo[3] = dataSampleInfo[4] - 1;
         }
-        noStartOffset = __cntlzw(*(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) &
-                                  MCMD_VOICE_START_OFFSET_INPUT_FLAG);
-        noKeySync = __cntlzw(*(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &
-                              MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG);
-        hwInitSamplePlayback(*(u32 *)(state + MCMD_VOICE_ID_OFFSET) & 0xff, sampleId,
+        noStartOffset = __cntlzw(state->inputFlags & MCMD_VOICE_START_OFFSET_INPUT_FLAG);
+        noKeySync = __cntlzw(state->outputFlags & MCMD_VOICE_KEY_SYNC_OUTPUT_FLAG);
+        hwInitSamplePlayback(state->voiceHandle & 0xff, sampleId,
                              dataSampleInfo,
                              noKeySync >> 5,
-                             ((u32)*(u8 *)(state + 0x10c) << 0x18) |
-                                 (*(u32 *)(state + 0x110) >> 0xf),
-                             *(u32 *)(state + MCMD_VOICE_ID_OFFSET), noStartOffset >> 5,
-                             *(u8 *)(state + 0x193));
-        *(u32 *)(state + MCMD_VOICE_PREV_SAMPLE_ID_OFFSET) = dataSampleInfo[0];
-        if (*(u32 *)(state + 0x128) != 0xffffffff) {
-            DoSetPitch(state);
+                             ((u32)state->priorityGroup << 0x18) |
+                                 (state->priorityValue >> 0xf),
+                             state->voiceHandle, noStartOffset >> 5,
+                             *(u8 *)((u8 *)state + 0x193));
+        state->prevSampleId = dataSampleInfo[0];
+        if (state->targetPitch != 0xffffffff) {
+            DoSetPitch((int)state);
         }
-        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_ACTIVE_OUTPUT_FLAG;
+        state->outputFlags |= MCMD_VOICE_ACTIVE_OUTPUT_FLAG;
         synthQueueVoiceInputUpdate(state);
     }
 }
@@ -145,58 +143,56 @@ void mcmdStartSample(int state, u32 *args)
 /*
  * Configure the voice pitch bend ramp and curve flags.
  */
-void mcmdVibrato(int state, u32 *args)
+void mcmdVibrato(McmdVoiceState *state, McmdCommandArgs *args)
 {
     s8 start;
     s8 target;
     u32 duration[2];
 
-    if (((*args >> 0x18) & 3) == 0) {
-        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &= ~MCMD_VOICE_VIBRATO_CURVE_OUTPUT_FLAG;
-        *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) =
-            *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET);
+    if (((args->flags >> 0x18) & 3) == 0) {
+        state->outputFlags &= ~MCMD_VOICE_VIBRATO_CURVE_OUTPUT_FLAG;
+        state->inputFlags = state->inputFlags;
     } else {
-        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_VIBRATO_CURVE_OUTPUT_FLAG;
+        state->outputFlags |= MCMD_VOICE_VIBRATO_CURVE_OUTPUT_FLAG;
     }
 
-    duration[0] = args[1] >> 0x10;
-    if (((args[1] >> 8) & 1) == 0) {
+    duration[0] = args->value >> 0x10;
+    if ((args->value & MCMD_WAIT_TIME_UNIT_MS_FLAG) == 0) {
         sndConvertTicks(duration, state);
     } else {
         sndConvertMs(duration);
     }
     if (duration[0] == 0) {
-        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) &= ~MCMD_VOICE_VIBRATO_RAMP_OUTPUT_FLAG;
-        *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET) =
-            *(u32 *)(state + MCMD_VOICE_INPUT_FLAGS_OFFSET);
+        state->outputFlags &= ~MCMD_VOICE_VIBRATO_RAMP_OUTPUT_FLAG;
+        state->inputFlags = state->inputFlags;
     } else {
-        *(u32 *)(state + MCMD_VOICE_OUTPUT_FLAGS_OFFSET) |= MCMD_VOICE_VIBRATO_RAMP_OUTPUT_FLAG;
-        *(u32 *)(state + 0x144) = duration[0];
-        start = (s8)(*args >> 8);
-        target = (s8)(*args >> 0x10);
+        state->outputFlags |= MCMD_VOICE_VIBRATO_RAMP_OUTPUT_FLAG;
+        state->vibratoDuration = duration[0];
+        start = (s8)(args->flags >> 8);
+        target = (s8)(args->flags >> 0x10);
         if (start < 0) {
             if (target < 0) {
-                *(s8 *)(state + 0x141) = -target;
+                state->vibratoTarget = -target;
             } else {
-                *(s8 *)(state + 0x141) = target;
+                state->vibratoTarget = target;
             }
-            *(s8 *)(state + 0x140) = -start;
-            *(u32 *)(state + 0x148) = *(u32 *)(state + 0x144) >> 1;
+            state->vibratoStart = -start;
+            state->vibratoHalfDuration = state->vibratoDuration >> 1;
         } else {
             if (target < 0) {
                 if (start == 0) {
-                    *(s8 *)(state + 0x141) = -target;
-                    *(u32 *)(state + 0x148) = *(u32 *)(state + 0x144) >> 1;
+                    state->vibratoTarget = -target;
+                    state->vibratoHalfDuration = state->vibratoDuration >> 1;
                 } else {
-                    *(s8 *)(state + 0x141) = 100 - target;
+                    state->vibratoTarget = 100 - target;
                     start--;
-                    *(u32 *)(state + 0x148) = 0;
+                    state->vibratoHalfDuration = 0;
                 }
             } else {
-                *(s8 *)(state + 0x141) = target;
-                *(u32 *)(state + 0x148) = 0;
+                state->vibratoTarget = target;
+                state->vibratoHalfDuration = 0;
             }
-            *(s8 *)(state + 0x140) = start;
+            state->vibratoStart = start;
         }
     }
 }

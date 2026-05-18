@@ -57,11 +57,24 @@ typedef struct McmdVoiceState {
         u32 voiceHandle;
         u8 voiceHandleBytes[4];
     };
-    u8 unkF8[MCMD_VOICE_INPUT_FLAGS_OFFSET - 0xF8];
+    u8 unkF8[0x10C - 0xF8];
+    u8 priorityGroup;
+    u8 unk10D[3];
+    u32 priorityValue;
     u32 inputFlags;
     u32 outputFlags;
     u8 unk11C[MCMD_VOICE_PREV_SAMPLE_ID_OFFSET - 0x11C];
     u32 prevSampleId;
+    u32 targetPitch;
+    u16 key;
+    s8 fineTune;
+    u8 keyBase;
+    u8 unk130[0x140 - 0x130];
+    s8 vibratoStart;
+    s8 vibratoTarget;
+    u8 unk142[2];
+    u32 vibratoDuration;
+    u32 vibratoHalfDuration;
 } McmdVoiceState;
 
 #endif /* MAIN_AUDIO_MCMD_H_ */
