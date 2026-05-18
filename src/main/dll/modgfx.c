@@ -4461,14 +4461,14 @@ void FUN_800a392c(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_800A3AA8(void) {}
-void fn_800A3AAC(void) {}
-void fn_800A3AB0(void) {}
+void projgfx_func07_nop(void) {}
+void projgfx_func06_nop(void) {}
+void projgfx_func05_nop(void) {}
 void projgfx_onMapSetup(void) {}
 void projgfx_initialise(void) {}
-void fn_800A432C(void) {}
-void fn_800A4330(void) {}
-void fn_800A4334(void) {}
+void dll_0D_func03_nop(void) {}
+void dll_0D_release_nop(void) {}
+void dll_0D_initialise_nop(void) {}
 void fn_800A4338(void) {}
 void fn_800A4A20(void) {}
 void fn_800A4BA8(void) {}
@@ -4504,13 +4504,13 @@ void Effect9_release(void) {}
 void Effect9_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_800A3AA0(void) { return 0x0; }
+int projgfx_func08_ret_0(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern s16 lbl_803DD288;
 extern s16 lbl_803DD28A;
-s16 fn_8009FFF0(void) { return lbl_803DD288; }
-void fn_800A01B0(s16 x) { lbl_803DD28A = x; }
+s16 dll_0B_func18(void) { return lbl_803DD288; }
+void dll_0B_func13(s16 x) { lbl_803DD28A = x; }
 
 /* OSReport(literal) wrapper. */
 extern char sProjgfxReleaseDoNoLongerSupported[];
@@ -4536,7 +4536,7 @@ int projgfx_setzscale_doUnsupported(void) { OSReport(sProjgfxSetzscaleDoNoLonger
 #pragma scheduling reset
 
 /* Pattern wrappers. */
-int fn_800A3AB4(void) { return -0x1; }
+int projgfx_func04_ret_m1(void) { return -0x1; }
 
 ObjectDescriptor11 projgfx_funcs = {
     0,
@@ -4547,11 +4547,11 @@ ObjectDescriptor11 projgfx_funcs = {
     (ObjectDescriptorCallback)projgfx_release_doUnsupported,
     0,
     projgfx_onMapSetup,
-    (ObjectDescriptorCallback)fn_800A3AB4,
-    (ObjectDescriptorCallback)fn_800A3AB0,
-    (ObjectDescriptorCallback)fn_800A3AAC,
-    (ObjectDescriptorCallback)fn_800A3AA8,
-    (ObjectDescriptorCallback)fn_800A3AA0,
+    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
+    (ObjectDescriptorCallback)projgfx_func05_nop,
+    (ObjectDescriptorCallback)projgfx_func06_nop,
+    (ObjectDescriptorCallback)projgfx_func07_nop,
+    (ObjectDescriptorCallback)projgfx_func08_ret_0,
     (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
     (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
 };

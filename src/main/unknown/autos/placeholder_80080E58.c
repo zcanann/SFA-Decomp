@@ -3917,7 +3917,7 @@ void doNothing_800887C8(void) {}
 int return0_8008B7E8(void) { return 0x0; }
 void doNothing_8008B8B0(void) {}
 void pDll_Sky_setTimeOfDay_nop(void) {}
-void fn_8008D970(void) {}
-int fn_8008DCA8(void) { return 0x0; }
+void dll_06_func0C_nop(void) {}
+int dll_06_func07_ret_0(void) { return 0x0; }
 void sky2_release(void) {}
 void dll_07_func0A_nop(void) {}
