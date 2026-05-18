@@ -747,8 +747,10 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   undefined8 local_38;
   undefined8 local_30;
   undefined8 local_20;
+  ObjAnimEventList *eventList;
   float *pfVar20;
 
+  eventList = events;
   pfVar20 = (float *)events;
   dVar31 = (double)lbl_803DE90C;
   uVar18 = 0;
@@ -838,15 +840,15 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
       }
       uVar18 = 1;
     }
-    if (pfVar20 != (float *)0x0) {
-      *(undefined *)((int)pfVar20 + 0x12) = 0;
+    if (eventList != (ObjAnimEventList *)0x0) {
+      eventList->rootCurveValid = 0;
       fVar5 = gObjAnimProgressZero;
-      pfVar20[2] = gObjAnimProgressZero;
-      pfVar20[1] = fVar5;
-      *pfVar20 = fVar5;
-      if (*(int *)(objAnimArg + 0x60) != 0) {
-        *(undefined *)((int)pfVar20 + 0x1b) = 0;
-        iVar23 = **(int **)(objAnimArg + 0x60) >> 1;
+      eventList->rootDeltaZ = gObjAnimProgressZero;
+      eventList->rootDeltaY = fVar5;
+      eventList->rootDeltaX = fVar5;
+      if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
+        eventList->triggerCount = 0;
+        iVar23 = objAnim->eventTable->byteCount >> 1;
         if (iVar23 != 0) {
           iVar30 = (int)(gObjAnimEventFrameScale * fVar4);
           iVar26 = (int)(gObjAnimEventFrameScale * objAnim->currentMoveProgress);
@@ -857,35 +859,35 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
           iVar25 = 0;
           iVar21 = 0;
           while ((iVar25 < iVar23 &&
-                  (*(char *)((int)pfVar20 + 0x1b) < OBJANIM_EVENT_TRIGGER_CAPACITY))) {
-            uVar16 = (uint)*(short *)(*(int *)(*(int *)(objAnimArg + 0x60) + 4) + iVar21);
+                  (eventList->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY))) {
+            uVar16 = (uint)*(short *)((u8 *)objAnim->eventTable->entries + iVar21);
             uVar15 = uVar16 & OBJANIM_EVENT_FRAME_MASK;
             uVar16 = uVar16 >> OBJANIM_EVENT_ID_SHIFT & OBJANIM_EVENT_ID_MASK;
             if (uVar16 != OBJANIM_EVENT_ID_NONE) {
               uVar17 = (undefined)uVar16;
               if (((bVar29 == OBJANIM_EVENT_SCAN_FORWARD) && (iVar30 <= (int)uVar15)) &&
                   ((int)uVar15 < iVar26)) {
-                cVar2 = *(char *)((int)pfVar20 + 0x1b);
-                *(char *)((int)pfVar20 + 0x1b) = cVar2 + '\x01';
-                *(undefined *)((int)pfVar20 + cVar2 + 0x13) = uVar17;
+                cVar2 = eventList->triggerCount;
+                eventList->triggerCount = cVar2 + '\x01';
+                eventList->triggeredIds[(u8)cVar2] = uVar17;
               }
               if ((bVar29 == OBJANIM_EVENT_SCAN_WRAPPED) &&
                   ((iVar30 <= (int)uVar15 || ((int)uVar15 < iVar26)))) {
-                cVar2 = *(char *)((int)pfVar20 + 0x1b);
-                *(char *)((int)pfVar20 + 0x1b) = cVar2 + '\x01';
-                *(undefined *)((int)pfVar20 + cVar2 + 0x13) = uVar17;
+                cVar2 = eventList->triggerCount;
+                eventList->triggerCount = cVar2 + '\x01';
+                eventList->triggeredIds[(u8)cVar2] = uVar17;
               }
               if (((bVar29 == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) &&
                   (iVar26 < (int)uVar15)) && ((int)uVar15 <= iVar30)) {
-                cVar2 = *(char *)((int)pfVar20 + 0x1b);
-                *(char *)((int)pfVar20 + 0x1b) = cVar2 + '\x01';
-                *(undefined *)((int)pfVar20 + cVar2 + 0x13) = uVar17;
+                cVar2 = eventList->triggerCount;
+                eventList->triggerCount = cVar2 + '\x01';
+                eventList->triggeredIds[(u8)cVar2] = uVar17;
               }
               if ((bVar29 == OBJANIM_EVENT_SCAN_REVERSE) &&
                   ((iVar26 < (int)uVar15 || ((int)uVar15 <= iVar30)))) {
-                cVar2 = *(char *)((int)pfVar20 + 0x1b);
-                *(char *)((int)pfVar20 + 0x1b) = cVar2 + '\x01';
-                *(undefined *)((int)pfVar20 + cVar2 + 0x13) = uVar17;
+                cVar2 = eventList->triggerCount;
+                eventList->triggerCount = cVar2 + '\x01';
+                eventList->triggeredIds[(u8)cVar2] = uVar17;
               }
             }
             iVar21 = iVar21 + 2;
@@ -900,10 +902,10 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
         iVar23 = *(int *)(iVar24 + (uint)*(ushort *)(iVar24 + 0x44) * 4 + 0x1c) + 0x80;
       }
       if (*(short *)(iVar23 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) == 0) {
-        *(undefined *)((int)pfVar20 + 0x12) = 0;
+        eventList->rootCurveValid = 0;
       }
       else {
-        *(undefined *)((int)pfVar20 + 0x12) = 1;
+        eventList->rootCurveValid = 1;
         pfVar27 = (float *)(iVar23 + *(short *)(iVar23 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
         fVar5 = *pfVar27;
         fVar6 = objAnim->rootMotionScale;
