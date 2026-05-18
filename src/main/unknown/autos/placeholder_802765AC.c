@@ -1311,7 +1311,7 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
             voiceState->startupAuxB = auxB;
             voiceState->startupDeferStart = startImmediately == 0;
             voiceState->queuedMessageWriteIndex = 0;
-            voiceState->unk3ED = 0;
+            voiceState->queuedMessageReadIndex = 0;
             voiceState->queuedMessageCount = 0;
             voiceState->voiceHandle = voiceId | ((u32)instrumentKey << 0x10) |
                                       ((u32)keyFlags << 8);

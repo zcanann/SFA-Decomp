@@ -171,7 +171,7 @@ typedef struct McmdVoiceState {
     u8 startupDeferStart;
     u8 unk211[0x3EC - 0x211];
     u8 queuedMessageCount;
-    u8 unk3ED;
+    u8 queuedMessageReadIndex;
     u8 queuedMessageWriteIndex;
     u8 unk3EF;
     u32 queuedMessages[4];
