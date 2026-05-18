@@ -18,33 +18,6 @@ typedef struct MovieAudioCursor {
   int frameIndex;
 } MovieAudioCursor;
 
-typedef struct AttractMovieVideoInfo {
-  u32 width;
-  u32 height;
-} AttractMovieVideoInfo;
-
-typedef struct AttractMovieAudioInfo {
-  u32 channels;
-  u32 frequency;
-  u32 sampleCount;
-} AttractMovieAudioInfo;
-
-typedef struct AttractMoviePlayer {
-  u8 pad0[0x3c];
-  THPHeader header;
-  THPFrameCompInfo compInfo;
-  AttractMovieVideoInfo videoInfo;
-  AttractMovieAudioInfo audioInfo;
-  u8 pad94[0xa];
-  u8 playFlags;
-  u8 audioExists;
-  u8 padA0[0xc];
-  void *loopFrame;
-  u8 padB0[4];
-  int frameStride;
-  u32 initReadFrame;
-} AttractMoviePlayer;
-
 extern void audioSetVolumes(int channel, int volume, int frames, int arg3, int arg4);
 extern void audioStopByMask(int mask);
 extern void audioFn_8000b694(int arg);
@@ -67,7 +40,6 @@ extern TitleMenuTextEntry lbl_8031A214[4];
 extern OSMessageQueue lbl_803A4460;
 extern OSMessageQueue lbl_803A4480;
 extern OSThread lbl_803A54A0;
-extern AttractMoviePlayer lbl_803A5D60;
 extern u8 *lbl_803DD498;
 extern u8 lbl_803DB424;
 extern s32 lbl_803DD610;
