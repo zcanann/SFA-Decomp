@@ -123,7 +123,7 @@ extern void (*lbl_803AD018[])(void);
 extern int lbl_803DCA8C;
 extern undefined4* lbl_803DCA54;
 extern undefined4* lbl_803DCAB8;
-extern void *lbl_803DDB88;
+extern void *gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C28;
@@ -495,10 +495,10 @@ void DIMboss_free(DIMbossObject *obj)
     obj->childObject = NULL;
   }
   (*(code *)(*lbl_803DCAB8 + 0x40))(obj,runtime,0x20);
-  if (lbl_803DDB88 != 0) {
-    Resource_Release(lbl_803DDB88);
+  if (gDIMbossHitEffectResource != 0) {
+    Resource_Release(gDIMbossHitEffectResource);
   }
-  lbl_803DDB88 = 0;
+  gDIMbossHitEffectResource = 0;
   effect = runtime->topState->effect;
   if (effect != NULL) {
     ModelLightStruct_free(effect);
@@ -739,7 +739,8 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   *animFlagsByte |= 8;
   *animFlagsByte &= 0xfe;
   topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
-  lbl_803DDB88 = Resource_Acquire(0x5a,1);
+  gDIMbossHitEffectResource =
+      Resource_Acquire(DIMBOSS_HIT_EFFECT_ID,DIMBOSS_HIT_EFFECT_RESOURCE_COUNT);
   if (GameBit_Get(0x1df) == 0) {
     topState->stompDustDelay = 2;
     topState->introSinkHeight = lbl_803E4C78;
