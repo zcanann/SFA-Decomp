@@ -568,3 +568,18 @@ update_action:
     return 0;
 }
 #pragma pop
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_updateTargetedStateMachine
+ * EN v1.0 Address: 0x80164940
+ * EN v1.0 Size: 772b
+ *
+ * TODO: stub. Body is a state machine on extra->field_0x278 (case 0/1/2 with
+ * gSHthorntailAnimationInterface checks, sqrtf distance to player, motion
+ * updates, hit detection). Adding as stub so function set aligns.
+ */
+void tumbleweed_updateTargetedStateMachine(int obj)
+{
+}
