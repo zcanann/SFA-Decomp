@@ -301,3 +301,83 @@ void CameraModeTestStrength_init(undefined4 param_1,undefined4 param_2,undefined
 void CameraModeTestStrength_release(void) {}
 void CameraModeTestStrength_initialise(void) {}
 void CameraModeCombat_copyToCurrent_nop(void) {}
+
+extern undefined4 *lbl_803DD568;
+extern f32 lbl_803E18C0;
+extern f32 lbl_803E18C4;
+extern f32 lbl_803E18C8;
+extern f32 timeDelta;
+extern void mm_free(void *p);
+extern void Rcp_DisableBlurFilter(void);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8010BF08
+ * EN v1.0 Address: 0x8010BF08
+ * EN v1.0 Size: 348b
+ */
+void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFloatPtr)
+{
+  int paths;
+  int settings;
+  u8 curIdx;
+  float t;
+
+  settings = *(int *)(control + 0x11c);
+  paths = *(int *)(control + 0xa4);
+  curIdx = *(u8 *)(settings + 0xe4);
+  if ((u32)curIdx != (u32)*(u8 *)(*(int **)&lbl_803DD568 + 0x14/4)) {
+    *(u8 *)(*(int **)&lbl_803DD568 + 0x13/4) = *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14);
+    *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = lbl_803E18C0;
+  }
+  t = *(float *)((char *)*(int **)&lbl_803DD568 + 0x18);
+  if (t > lbl_803E18C4) {
+    t = -(lbl_803E18C8 * timeDelta) + t;
+    *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = t;
+    if (t < lbl_803E18C4) {
+      *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = lbl_803E18C4;
+      *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13) = *(u8 *)(settings + 0xe4);
+    }
+    {
+      u8 ci = *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13);
+      u8 ti = *(u8 *)(settings + 0xe4);
+      float dx = *(float *)((char *)paths + ci * 0x18 + 0xc) - *(float *)((char *)paths + ti * 0x18 + 0xc);
+      float dy = *(float *)((char *)paths + ci * 0x18 + 0x10) - *(float *)((char *)paths + ti * 0x18 + 0x10);
+      float dz = *(float *)((char *)paths + ci * 0x18 + 0x14) - *(float *)((char *)paths + ti * 0x18 + 0x14);
+      float w = *(float *)((char *)*(int **)&lbl_803DD568 + 0x18);
+      dx = dx * w + *(float *)((char *)paths + ti * 0x18 + 0xc);
+      dy = dy * w + *(float *)((char *)paths + ti * 0x18 + 0x10);
+      dz = dz * w + *(float *)((char *)paths + ti * 0x18 + 0x14);
+      *outX = dx - *(float *)(control + 0x18);
+      *outY = dy - *(float *)inFloatPtr;
+      *outZ = dz - *(float *)(control + 0x20);
+    }
+  } else {
+    u8 ti = *(u8 *)(settings + 0xe4);
+    *outX = *(float *)((char *)paths + ti * 0x18 + 0xc) - *(float *)(control + 0x18);
+    *outY = *(float *)((char *)paths + ti * 0x18 + 0x10) - *(float *)inFloatPtr;
+    *outZ = *(float *)((char *)paths + ti * 0x18 + 0x14) - *(float *)(control + 0x20);
+  }
+  *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14) = *(u8 *)(settings + 0xe4);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: CameraModeCombat_free
+ * EN v1.0 Address: 0x8010C068
+ * EN v1.0 Size: 112b
+ */
+void CameraModeCombat_free(int obj)
+{
+  u32 v;
+  if (*(int *)(obj + 0x11c) != 0) {
+    (*(void (**)(int))((char *)*(int *)lbl_803DCA50 + 0x48))(0);
+  }
+  mm_free(lbl_803DD568);
+  *(int *)&lbl_803DD568 = 0;
+  Rcp_DisableBlurFilter();
+  v = 0;
+  *(u8 *)(obj + 0x143) = (u8)((*(u8 *)(obj + 0x143) & 0x7f) | ((v & 1) << 7));
+}
