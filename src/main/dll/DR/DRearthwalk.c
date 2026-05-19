@@ -680,3 +680,82 @@ void FUN_801da868(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 
 /* 8b "li r3, N; blr" returners. */
 int sh_beacon_getExtraSize(void) { return 0x18; }
+
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4,
+                                  undefined4 p5, double scale);
+extern void Obj_FreeObject(int obj);
+extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d,
+                                                       int e, void* f);
+extern undefined4* lbl_803DCA78;
+extern f32 lbl_803E5518;
+extern f32 lbl_803E551C;
+extern f32 lbl_803E5520;
+extern f32 lbl_803E5528;
+extern f32 lbl_803E552C;
+extern int lbl_803DDC00;
+extern f32 timeDelta;
+
+/* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
+void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5)
+{
+  float local[3];
+  objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5518);
+  local[0] = lbl_803E551C;
+  local[1] = lbl_803E5520;
+  local[2] = lbl_803E551C;
+  fn_80098B18(obj, *(float*)(obj + 8), 4, 0, 0, (int)&local[0]);
+}
+
+/* 48b: free if 0x4000 flag set. */
+void sh_staffhaze_update(int obj)
+{
+  if ((*(short*)(obj + 6) & 0x4000) != 0) {
+    Obj_FreeObject(obj);
+  }
+}
+
+/* 120b: tick a float timer; on wrap optionally trigger an effect. */
+int fn_801DA954(int obj)
+{
+  int extra = *(int*)(obj + 0xb8);
+  *(float*)(extra + 4) = *(float*)(extra + 4) + timeDelta;
+  if (*(float*)(extra + 4) >= lbl_803E5528) {
+    *(float*)(extra + 4) = *(float*)(extra + 4) - lbl_803E5528;
+    if ((*(unsigned short*)(obj + 0xb0) & 0x800) != 0) {
+      fn_80098B18(obj, *(float*)(obj + 8), 0, 2, 0, 0);
+    }
+  }
+  return 0;
+}
+
+/* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
+#pragma scheduling off
+int fn_801DA9CC(int obj)
+{
+  float f = lbl_803E552C;
+  obj = *(int*)(obj + 0xb8);
+  *(float*)(obj + 8) = f;
+  return 1;
+}
+#pragma scheduling reset
+
+/* 112b: vtable cleanup then maybe Obj_FreeObject. */
+void sh_beacon_free(int obj, int param_2)
+{
+  int extra = *(int*)(obj + 0xb8);
+  (*(code*)(*(int*)lbl_803DCA78 + 0x18))(obj);
+  if (param_2 == 0) {
+    int p = *(int*)extra;
+    if (p != 0 && (*(unsigned short*)(p + 0xb0) & 0x40) == 0) {
+      Obj_FreeObject(obj);
+    }
+  }
+}
+
+/* 56b: single-call hit-effect poll. */
+void sh_emptytumblew_update(int obj)
+{
+  ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
+                                              &lbl_803DDC00);
+}
