@@ -136,3 +136,88 @@ fuzzy otherwise. The remaining MWCC-vs-target diffs are usually unimportant
 scheduling choices (`extsb.` vs `extsb + cmplwi`, `lis r3` order vs `slwi r0`,
 epilog reordering of `lwz r0` vs saved-reg restores) that we can't trivially
 force from C source.
+
+## Forcing MWCC instruction selection: the asm{} + register trick
+
+When a function reports 80-99% fuzzy and the diff shows MWCC picking a
+"compressed" form where target uses a longer encoding, the residual is almost
+always one of these instruction-selection mismatches:
+
+| Source pattern | MWCC picks | Target picks |
+|---|---|---|
+| `x &= 0xfffffbff;` (single bit clear) | `rlwinm r0,r0,0,22,20` (1 instr) | `li r0,-1025; and r0,r3,r0` (2 instr) |
+| `byte = (b & ~M) \| ((v & 1) << S);` | `andi.; ori` (constant collapse) | `li r3, v; rlwimi r0,r3,S,...` |
+| `(s8)b != 0` (then branch) | `extsb.; beq` (fused, 1 instr) | `extsb r0,r8; cmpwi r0,0; beq` (2-3 instr) |
+| `if (*(int*)p != 0)` | `cmpwi` (signed) | `cmplwi` (unsigned) — use `*(void**)p != NULL` |
+
+`#pragma peephole off` + `#pragma scheduling off` around the function fixes the
+`extsb./extsh.`/peephole cases (huge win — took dll_198 from low-90s to 100% on
+3 of its 6 functions). It does **not** fix the rlwinm-vs-li-and or
+andi+ori-vs-rlwimi cases — those are instruction-selection, not peephole.
+
+For the instruction-selection ones, the only reliable workaround is an inline
+`asm { }` block with `register` variables. The pattern:
+
+```c
+{
+    register u32 m, v;        // m wins r0, v wins r3 (declaration order)
+    register int pReg = p;    // forces parameter into a fixed register
+    /* normal C statements that precede the bit-op stay outside the asm */
+    asm {
+        lwz v, 0x54(pReg)
+        li m, -1025           // force the "long" form
+        and m, v, m
+        stw m, 0x54(pReg)
+    }
+    /* normal C resumes */
+}
+```
+
+**Critical: declaration order chooses the register.** MWCC's allocator picks
+volatile regs roughly in declaration order. Swap `register u32 m;` /
+`register u32 v;` declarations to swap which goes to r0 vs r3 in the asm.
+This is how `CameraModeCombat_free` and `fn_80189BE4` were taken from low-80s
+to 100% — same source body, just reordered the two `register` lines until the
+register assignment matched target.
+
+For `rlwimi` (bit insert vs MWCC's andi+ori), the asm form is:
+
+```c
+{
+    register u32 b;
+    register u32 bitval;
+    /* set bitval to the 0/1 value to insert */
+    bitval = 1;
+    asm {
+        lbz b, 0x1d(t)
+        rlwimi b, bitval, 5, 26, 26   // insert bit at position 5 (0x20)
+        stb b, 0x1d(t)
+    }
+}
+```
+
+### When to NOT use this
+
+- The diff is only scheduling reorder (mr/li swap, lfs/fmr swap before a call,
+  prologue save order). `#pragma peephole off` is enough or there's nothing
+  reasonable from source.
+- The diff is missing or wrong function bodies (FUN_xxx vs target symbol).
+  Restructure source first — asm tricks won't help if the function isn't even
+  there.
+- Function is below ~50% fuzzy. Solve the bulk of the body first, then come
+  back for the asm{} polish.
+
+### Cheap pre-check before reaching for asm{}
+
+Try these one-line source rewrites first; sometimes they're enough on their own:
+- `& 0xff7f` → `& ~0x80`         (often gives `rlwinm` where literal gives `andi`)
+- `*(int*)p != 0` → `*(void**)p != NULL`   (signed → unsigned compare)
+- `if (v <= K) return v; return K;` → `if (v > K) v = K; return v;`
+  (gives `blelr` from a single value-clamp)
+- For a constant reused across N consecutive stores, lift to a local:
+  `f32 fz = lbl_xxx; *p1 = fz; *p2 = fz; *p3 = fz;` so MWCC CSEs across the
+  stores instead of reloading.
+- Swap declaration order of two `int` locals whose addresses are passed to an
+  out-param function. The compiler allocates stack offsets in declaration
+  order; if target wants `&objectIndex` at sp+8 and `&objectCount` at sp+0xc,
+  declare objectCount first.
