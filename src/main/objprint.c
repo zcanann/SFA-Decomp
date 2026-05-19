@@ -2995,6 +2995,30 @@ void fn_8003B5E0(u8 a, u8 b, u8 c, u8 d) {
     lbl_803DCC0A = d;
 }
 
+/* 100b texture lookup by byte tag. */
+void* objFindTexture(void* obj, int target) {
+    void* result = NULL;
+    void* p50 = *(void**)((char*)obj + 0x50);
+    if (p50 != NULL) {
+        u8* entries = *(u8**)((char*)p50 + 0xC);
+        if (entries == NULL) return NULL;
+        {
+            s8 count = *(s8*)((char*)p50 + 0x59);
+            int offset = 0;
+            int i;
+            for (i = 0; i < count; i++) {
+                if (target == entries[0]) {
+                    char* base = *(char**)((char*)obj + 0x70);
+                    result = base + offset;
+                }
+                entries += 2;
+                offset += 0x10;
+            }
+        }
+    }
+    return result;
+}
+
 /* 60b objRenderShadow guard. */
 extern void objRenderShadow(void* obj);
 void objRenderShadowIfVisible(void* obj) {
