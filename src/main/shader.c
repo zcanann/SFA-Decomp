@@ -2340,6 +2340,31 @@ void goToNextMapLayer(void) {
 	renderFlags |= 0x4000;
 }
 
+/* 80b current map block lookup. */
+extern int lbl_803DB648;
+extern void* lbl_803DCEA0;
+extern void* lbl_80386468[];
+
+void* mapBlockFn_800592e4(void) {
+	char* p = (char*)lbl_803822A0[0];
+	int v = *(s16*)(p + 0x594);
+	if (v < 0) {
+		v = lbl_803DB648;
+	}
+	if (v < 0) {
+		return 0;
+	}
+	{
+		void* res = lbl_80386468[v];
+		if (res == 0) {
+			return res;
+		}
+		lbl_803DB648 = v;
+		lbl_803DCEA0 = res;
+		return res;
+	}
+}
+
 /* 104b conditional gameTextLoadDir caller. */
 extern int lbl_803DCEC4;
 extern int lbl_803DCEC8;
