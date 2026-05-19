@@ -340,7 +340,43 @@ extern void lightFn_8001db6c(int p1, int p2, f32 f);
 extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4,
                                   undefined4 p5, f32 f);
 extern void objParticleFn_80099d84(int p1, int p2, int p3, f32 f1, f32 f2);
+extern void ModelLightStruct_free(void* p);
+extern void fn_8011F6D4(int x);
+extern void Music_Trigger(int trackId, int restart);
 extern f32 lbl_803E4F50;
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_shrine_free
+ * EN v1.0 Address: 0x801C4D88
+ * EN v1.0 Size: 220b
+ */
+void mmsh_shrine_free(int param_1)
+{
+  int extra;
+  void* light;
+  extra = *(int*)(param_1 + 0xb8);
+  if ((*(int*)(extra + 0x18) >> 5) & 1) {
+    fn_8011F6D4(0);
+    *(int*)(extra + 0x18) = *(int*)(extra + 0x18) & ~0x20;
+  }
+  light = *(void**)extra;
+  if (light != 0) {
+    ModelLightStruct_free(light);
+    *(int*)extra = 0;
+  }
+  Music_Trigger(0xd8, 0);
+  Music_Trigger(0xd9, 0);
+  Music_Trigger(8, 0);
+  Music_Trigger(0xa, 0);
+  GameBit_Set(0xefa, 0);
+  GameBit_Set(0xcbb, 1);
+  GameBit_Set(0xe82, 0);
+  GameBit_Set(0xe83, 0);
+  GameBit_Set(0xe84, 0);
+  GameBit_Set(0xe85, 0);
+}
 
 /*
  * --INFO--
