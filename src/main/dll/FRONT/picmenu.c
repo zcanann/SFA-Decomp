@@ -181,10 +181,15 @@ void AttractMovieAudio_Shutdown(void)
 #pragma scheduling off
 BOOL AttractMovieAudio_Init(int audioMode)
 {
-    char* base = lbl_803A57C0;
+    register char* base;
     u32 saved;
     AIDCallback oldCb;
+    register AIDCallback dmaCallback;
 
+    asm {
+        lis r3, lbl_803A57C0@ha
+        addi base, r3, lbl_803A57C0@l
+    }
     memset(base + 0x5A0, 0, 0x1A8);
     OSInitMessageQueue((OSMessageQueue*)(base + 0x50C), (void*)(base + 0x500), 3);
 
@@ -197,7 +202,11 @@ BOOL AttractMovieAudio_Init(int audioMode)
     lbl_803DD678 = 0;
     lbl_803DD674 = 0;
     lbl_803DD670 = 0;
-    oldCb = AIRegisterDMACallback((AIDCallback)AttractMovieAudio_DmaCallback);
+    asm {
+        lis r3, AttractMovieAudio_DmaCallback@ha
+        addi dmaCallback, r3, AttractMovieAudio_DmaCallback@l
+    }
+    oldCb = AIRegisterDMACallback(dmaCallback);
     lbl_803DD668 = oldCb;
 
     if (oldCb == (AIDCallback)0) {
