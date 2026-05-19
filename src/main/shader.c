@@ -2287,5 +2287,15 @@ int return0_8005669C(void) { return 0x0; }
 /* 12b 3-insn patterns. */
 extern s8 curMapLayer;
 extern s8 lbl_803DCEA4;
+extern s16 lbl_803DCEB4;
+extern s16 lbl_803DCEB6;
+extern u32 renderFlags;
 s32 getCurMapLayer(void) { return curMapLayer; }
 s32 getCurMapType(void) { return lbl_803DCEA4; }
+
+/* 20b reset triplet. */
+void mapReloadWithFadeout(void) {
+	lbl_803DCEA4 = 0;
+	lbl_803DCEB6 = 0;
+	lbl_803DCEB4 = 0;
+}
