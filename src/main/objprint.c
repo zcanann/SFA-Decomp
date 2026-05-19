@@ -2969,3 +2969,28 @@ void fn_8003B608(s16 a, s16 b, s16 c) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* 12b "*p = -1" */
+void fn_80039264(s32* p) {
+    *p = -1;
+}
+
+/* 12b sda accessor return */
+extern int lbl_802CAE88[10];
+void* seqFn_800394a0(void) {
+    return lbl_802CAE88;
+}
+
+/* 40b 4-byte field setter triplet+flag. */
+extern u8 lbl_803DCC09;
+extern u8 lbl_803DCC0A;
+extern u8 lbl_803DCC0B;
+extern u8 lbl_803DCC0C;
+extern u8 lbl_803DCC0D;
+void fn_8003B5E0(u8 a, u8 b, u8 c, u8 d) {
+    lbl_803DCC0D = a;
+    lbl_803DCC0C = b;
+    lbl_803DCC0B = c;
+    lbl_803DCC09 = 1;
+    lbl_803DCC0A = d;
+}
