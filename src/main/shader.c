@@ -2305,3 +2305,37 @@ extern int lbl_803DCE6C;
 void* fn_80056684(int idx) {
 	return (void*)(lbl_803DCE6C + (idx << 4));
 }
+
+/* 32b two-stage table lookup via lis/addi/lwz. */
+extern int lbl_803822A0[5];
+void* fn_80059334(int a, int b) {
+	int* base = (int*)lbl_803822A0[0];
+	return (char*)base + (a + (b << 4)) * 12;
+}
+
+/* 48b paired float reads scaled by sda21 constant. */
+extern int lbl_803DCE68;
+extern f32 lbl_803DEBC8;
+
+void fn_80056B8C(int idx, float* out1, float* out2) {
+	float* p = (float*)(lbl_803DCE68 + (idx << 4));
+	*out1 = p[0] / lbl_803DEBC8;
+	*out2 = ((float*)(lbl_803DCE68 + (idx << 4)))[1] / lbl_803DEBC8;
+}
+
+/* 52b layer clamp pair. */
+void goToPrevMapLayer(void) {
+	curMapLayer = curMapLayer - 1;
+	if (curMapLayer < -2) {
+		curMapLayer = -2;
+	}
+	renderFlags |= 0x4000;
+}
+
+void goToNextMapLayer(void) {
+	curMapLayer = curMapLayer + 1;
+	if (curMapLayer > 2) {
+		curMapLayer = 2;
+	}
+	renderFlags |= 0x4000;
+}
