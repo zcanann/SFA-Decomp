@@ -40,7 +40,7 @@ extern f32 lbl_803E5E4C;
 /*
  * --INFO--
  *
- * Function: FUN_801cbd88
+ * Function: fn_801CBD88
  * EN v1.0 Address: 0x801CBD88
  * EN v1.0 Size: 2124b
  * EN v1.1 Address: 0x801CC33C
@@ -50,7 +50,7 @@ extern f32 lbl_803E5E4C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cbd88(void)
+void fn_801CBD88(void)
 {
   int iVar1;
   uint uVar2;
@@ -419,3 +419,12 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void fn_801CC740(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0); }
 #pragma peephole reset
+
+/* Stubs to align function set with v1.0 asm. */
+void fn_801CC578(void) {}
+void fn_801CC774(void) {}
+void fn_801CC950(void) {}
+void fn_801CC9A8(void) {}
+void fn_801CCA30(void) {}
+void fn_801CCB44(void) {}
+void fn_801CCECC(void) {}
