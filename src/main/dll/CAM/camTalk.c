@@ -57,25 +57,7 @@ extern f32 lbl_803E2448;
 extern f32 lbl_803E244C;
 extern f32 lbl_803E2450;
 
-/*
- * --INFO--
- *
- * Function: FUN_80107b4c
- * EN v1.0 Address: 0x80107B4C
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80107DBC
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80107b4c(void)
-{
-  FUN_80017814(lbl_803DD540);
-  lbl_803DD540 = 0;
-  return;
-}
+/* FUN_80107b4c removed: in v1.0 this address is the start of CameraModeBike_update. */
 
 /*
  * --INFO--
@@ -90,6 +72,7 @@ void FUN_80107b4c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void CameraModeBike_update(short *param_1)
 {
   int iVar1;
@@ -216,6 +199,7 @@ void CameraModeBike_update(short *param_1)
   }
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -255,6 +239,7 @@ void CameraModeBike_init(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void firstPersonPlaceCamera(int param_1,int param_2)
 {
   int *puVar1;
@@ -292,6 +277,7 @@ void firstPersonPlaceCamera(int param_1,int param_2)
   }
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -306,6 +292,7 @@ void firstPersonPlaceCamera(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void firstPersonExit(short *param_1)
 {
   float fVar1;
@@ -390,6 +377,7 @@ void firstPersonExit(short *param_1)
   }
   curvesMove(lbl_803DD548 + 0x78);
 }
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
