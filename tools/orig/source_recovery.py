@@ -238,6 +238,7 @@ def collect_candidates(
     for entry in strings:
         if "source" in entry.tags:
             strings_by_address.setdefault(entry.address + 1, entry)
+            strings_by_address.setdefault(entry.address + 2, entry)
     xrefs = scan_text_xrefs(dol, strings_by_address, retail_functions)
     xrefs_by_target = group_xrefs_by_target(xrefs)
 
@@ -265,6 +266,7 @@ def collect_candidates(
                 xrefs=tuple(
                     xrefs_by_target.get(entry.address, [])
                     + (xrefs_by_target.get(entry.address + 1, []) if "source" in entry.tags else [])
+                    + (xrefs_by_target.get(entry.address + 2, []) if "source" in entry.tags else [])
                 ),
                 debug_sources=debug_sources,
                 debug_symbol_hits=tuple(symbol_stem_hits(debug_symbol_names, source_name)),

@@ -473,6 +473,11 @@ def build_boundary_hints(
         address: RawStringRef(text=text)
         for address, text in raw_strings
     }
+    for address, text in raw_strings:
+        if FILE_TOKEN_RE.search(text):
+            ref = raw_string_entries[address]
+            raw_string_entries.setdefault(address + 1, ref)
+            raw_string_entries.setdefault(address + 2, ref)
     text_xrefs = scan_text_xrefs(current_dol, raw_string_entries, current_functions)
     grouped_xrefs: dict[int, list[FunctionSymbol]] = {}
     for xref in text_xrefs:
