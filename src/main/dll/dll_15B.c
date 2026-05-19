@@ -1,218 +1,103 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_15B.h"
 
-extern bool FUN_800067f8();
-extern undefined4 FUN_8000680c();
-extern undefined8 FUN_80006824();
-extern undefined4 FUN_80017714();
-extern undefined4 FUN_8001771c();
+extern uint GameBit_Get(int eventId);
+extern void *Resource_Acquire(int resourceId, int mode);
+extern void ObjHits_DisableObject(u32 obj);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a28();
-extern undefined4 FUN_80017a3c();
-extern int FUN_80017a98();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined4 FUN_80081120();
-extern undefined4 FUN_801835c4();
-extern undefined4 FUN_801833e4();
+extern int fn_8006961C(void *outA, void *inA, void *inB, int param4);
+extern int hitDetectFn_800691c0(int obj, void *outA, short id, int param4);
+extern int hitDetectFn_80067958(int obj, void *inA, void *inB, int param4, void *outVec, int param6);
 
-extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd72c;
-extern undefined4* DAT_803de748;
-extern f64 DOUBLE_803e4648;
-extern f64 DOUBLE_803e4660;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E4644;
-extern f32 lbl_803E4650;
-extern f32 lbl_803E4668;
-extern f32 lbl_803E4674;
-extern f32 lbl_803E4678;
+extern f32 *lbl_803AC7A0;
+extern undefined4 lbl_802C2280;
+extern undefined4 lbl_802C228C;
+extern undefined4 lbl_803DDAC8;
+extern f32 lbl_803E39AC;
+extern f64 lbl_803E39C8;
+extern f32 lbl_803E39E8;
+extern f32 lbl_803E39F4;
+extern void fn_80183B04(void);
 
 /*
  * --INFO--
  *
  * Function: largecrate_init
  * EN v1.0 Address: 0x80184180
- * EN v1.0 Size: 1468b
+ * EN v1.0 Size: 568b
  * EN v1.1 Address: 0x801841F4
- * EN v1.1 Size: 1252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.1 Size: 568b
  */
-void largecrate_init(ushort *param_1)
+void largecrate_init(int obj, u8 *initData)
 {
-  ushort uVar1;
-  float fVar2;
-  short sVar3;
-  int iVar4;
-  int iVar5;
-  bool bVar7;
-  uint uVar6;
-  undefined4 uVar8;
-  undefined4 uVar9;
-  undefined4 uVar10;
-  undefined4 in_r10;
-  uint *puVar11;
-  int iVar12;
-  double dVar13;
-  undefined8 uVar14;
-  double dVar15;
-  undefined8 in_f4;
-  undefined8 in_f5;
-  undefined8 in_f6;
-  undefined8 in_f7;
-  undefined8 in_f8;
-  float local_48;
-  undefined4 local_44;
-  int local_40;
-  undefined4 uStack_3c;
-  undefined auStack_38 [12];
-  float local_2c;
-  undefined4 uStack_28;
-  float local_24;
-  undefined8 local_20;
-  undefined8 local_18;
-  
-  iVar12 = *(int *)(param_1 + 0x26);
-  local_40 = -1;
-  local_48 = lbl_803E4644;
-  (**(code **)(*DAT_803dd6d8 + 0x18))(&local_48);
-  puVar11 = *(uint **)(param_1 + 0x5c);
-  iVar4 = FUN_80017a98();
-  if (*(int *)(param_1 + 0x18) != 0) {
-    *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
+  int state;
+  u32 r3rand;
+  int constArrA[3];
+  int constArrB[3];
+  short id;
+
+  /* copy two constant blobs to stack (used as lookup arrays) */
+  constArrA[0] = *(int *)((char *)&lbl_802C2280 + 0);
+  constArrA[1] = *(int *)((char *)&lbl_802C2280 + 4);
+  constArrA[2] = *(int *)((char *)&lbl_802C2280 + 8);
+  constArrB[0] = *(int *)((char *)&lbl_802C228C + 0);
+  constArrB[1] = *(int *)((char *)&lbl_802C228C + 4);
+  constArrB[2] = *(int *)((char *)&lbl_802C228C + 8);
+
+  state = *(int *)(obj + 0xb8);
+  *(void (**)(void))(obj + 0xbc) = fn_80183B04;
+  *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
+  *(short *)(state + 0xe) = *(short *)(initData + 0x1e);
+
+  id = *(short *)(initData + 0x1c);
+  if (id == 0) {
+    *(int *)state = 0;
   }
-  iVar5 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar12 + 0x14));
-  fVar2 = lbl_803E4650;
-  if (iVar5 == 0) {
-    ObjHits_DisableObject((int)param_1);
-  }
-  else if ((float)puVar11[1] <= lbl_803E4650) {
-    dVar15 = (double)lbl_803E4674;
-    dVar13 = (double)lbl_803DC074;
-    local_20 = (double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0x1b));
-    iVar5 = (int)(dVar15 * dVar13 + (double)(float)(local_20 - DOUBLE_803e4648));
-    local_18 = (double)(longlong)iVar5;
-    if (0xff < iVar5) {
-      iVar5 = 0xff;
-    }
-    *(char *)(param_1 + 0x1b) = (char)iVar5;
-    if (*(short *)(puVar11 + 2) != 0) {
-      ObjHits_DisableObject((int)param_1);
-      sVar3 = *(short *)(puVar11 + 2);
-      uVar1 = (ushort)DAT_803dc070;
-      *(ushort *)(puVar11 + 2) = sVar3 - uVar1;
-      if ((short)(sVar3 - uVar1) < 1) {
-        if ((int)*puVar11 < 1) {
-          puVar11[1] = (uint)lbl_803E4644;
-        }
-        else {
-          puVar11[1] = (uint)lbl_803E4644;
-          local_18 = (double)CONCAT44(0x43300000,*puVar11 ^ 0x80000000);
-          (**(code **)(*DAT_803dd72c + 100))
-                    ((double)(float)(local_18 - DOUBLE_803e4660),*(undefined4 *)(iVar12 + 0x14));
-        }
-        *(undefined4 *)(param_1 + 6) = *(undefined4 *)(iVar12 + 8);
-        *(undefined4 *)(param_1 + 8) = *(undefined4 *)(iVar12 + 0xc);
-        *(undefined4 *)(param_1 + 10) = *(undefined4 *)(iVar12 + 0x10);
-        *(undefined4 *)(param_1 + 0x40) = *(undefined4 *)(iVar12 + 8);
-        *(undefined4 *)(param_1 + 0x42) = *(undefined4 *)(iVar12 + 0xc);
-        *(undefined4 *)(param_1 + 0x44) = *(undefined4 *)(iVar12 + 0x10);
-        fVar2 = lbl_803E4650;
-        *(float *)(param_1 + 0x12) = lbl_803E4650;
-        *(float *)(param_1 + 0x14) = fVar2;
-        *(float *)(param_1 + 0x16) = fVar2;
-      }
-      if (*(short *)(puVar11 + 2) < 0x33) {
-        return;
-      }
-    }
-    param_1[1] = *(ushort *)(puVar11 + 6);
-    local_18 = (double)CONCAT44(0x43300000,(int)*(short *)(puVar11 + 6) ^ 0x80000000);
-    iVar12 = (int)((float)(local_18 - DOUBLE_803e4660) * lbl_803E4678);
-    local_20 = (double)(longlong)iVar12;
-    *(short *)(puVar11 + 6) = (short)iVar12;
-    if (((short)param_1[1] < 10) && (-10 < (short)param_1[1])) {
-      param_1[1] = 0;
-    }
-    iVar12 = ObjHits_GetPriorityHitWithPosition((int)param_1,&uStack_3c,&local_40,&local_44,&local_2c,&uStack_28,&local_24
-                         );
-    if (iVar12 == 0x10) {
-      FUN_80017a3c(param_1,300);
-      iVar12 = 0;
-    }
-    if ((iVar12 != 0) && (*(int *)(param_1 + 0x18) == 0)) {
-      *(char *)((int)puVar11 + 0x13) = *(char *)((int)puVar11 + 0x13) + (char)local_44;
-      FUN_80017a28(param_1,0xf,200,0,0,1);
-      local_2c = local_2c + lbl_803DDA58;
-      local_24 = local_24 + lbl_803DDA5C;
-      FUN_80081120(param_1,auStack_38,1,(int *)0x0);
-      if (*(byte *)((int)puVar11 + 0x13) < *(byte *)(puVar11 + 10)) {
-        bVar7 = FUN_800067f8(0,*(short *)(puVar11 + 5));
-        if (!bVar7) {
-          FUN_80006824((uint)param_1,*(ushort *)(puVar11 + 5));
-        }
-        if (param_1[0x23] == 0x3de) {
-          uVar6 = randomGetRange(600,800);
-          *(short *)(puVar11 + 6) = (short)uVar6;
-        }
-      }
-      else {
-        FUN_8000680c((int)param_1,0x7f);
-        uVar8 = 2;
-        uVar9 = 0xffffffff;
-        uVar10 = 0;
-        iVar12 = *DAT_803de748;
-        uVar14 = (**(code **)(iVar12 + 4))(param_1,1,0);
-        bVar7 = FUN_800067f8(0,*(short *)((int)puVar11 + 0x16));
-        if (!bVar7) {
-          uVar14 = FUN_80006824((uint)param_1,*(ushort *)((int)puVar11 + 0x16));
-        }
-        *(undefined2 *)(puVar11 + 2) = 0x32;
-        *(undefined *)((int)puVar11 + 0x13) = 0;
-        FUN_801833e4(uVar14,dVar13,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,(int)param_1,iVar4,
-                     (int)puVar11,uVar8,uVar9,uVar10,iVar12,in_r10);
-        *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
-      }
-    }
-    iVar4 = FUN_80017a98();
-    FUN_80017714((float *)(iVar4 + 0x18),(float *)(param_1 + 0xc));
-    sVar3 = *(short *)((int)puVar11 + 10) - (ushort)DAT_803dc070;
-    *(short *)((int)puVar11 + 10) = sVar3;
-    if (sVar3 < 1) {
-      uVar6 = randomGetRange(0,100);
-      *(short *)((int)puVar11 + 10) = (short)uVar6 + 300;
-    }
-    if (*(int *)(param_1 + 0x18) != 0) {
-      FUN_801835c4((uint)param_1,(int)puVar11);
-    }
+  else if (id == 0xff) {
+    *(int *)state = -1;
   }
   else {
-    *(undefined *)(param_1 + 0x1b) = 0;
-    if ((*puVar11 != 0xffffffff) &&
-       (puVar11[1] = (uint)-(lbl_803DC074 * local_48 - (float)puVar11[1]),
-       (float)puVar11[1] <= fVar2)) {
-      iVar4 = FUN_80017a98();
-      dVar13 = (double)FUN_8001771c((float *)(param_1 + 0xc),(float *)(iVar4 + 0x18));
-      if ((double)lbl_803E4668 < dVar13) {
-        puVar11[1] = (uint)lbl_803E4650;
-        *(undefined2 *)(puVar11 + 2) = 0;
-        ObjHits_EnableObject((int)param_1);
-        *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
-        param_1[3] = param_1[3] & 0xbfff;
-      }
-      else {
-        puVar11[1] = (uint)lbl_803E4644;
-      }
-    }
+    *(int *)state = (int)id * 0x3c;
   }
-  return;
+
+  if (GameBit_Get((int)*(short *)(state + 0xe)) != 0) {
+    *(float *)(state + 4) = lbl_803E39AC;
+    ObjHits_DisableObject((u32)obj);
+  }
+
+  *(u8 *)(state + 0x11) = initData[0x19];
+  lbl_803DDAC8 = (undefined4)Resource_Acquire(0x5b, 1);
+  r3rand = randomGetRange(0, 100);
+  *(short *)(state + 0xa) = (short)(r3rand + 300);
+  *(short *)(state + 0xc) = 0x190;
+  *(u8 *)(state + 0x12) = (u8)*(short *)(initData + 0x1a);
+  *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
+  *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
+
+  id = *(short *)(obj + 0x46);
+  if (id == 0x3de) {
+    *(u8 *)(state + 0x11) = (u8)((short *)constArrA)[*(u8 *)(state + 0x11)];
+    *(short *)(state + 0x14) = 0x5f;
+    *(short *)(state + 0x16) = 0x60;
+  }
+  else if (id == 0x49f || id == 0x7be) {
+    *(u8 *)(state + 0x11) = (u8)((short *)constArrB)[*(u8 *)(state + 0x11)];
+    *(short *)(state + 0x14) = 0x48;
+    *(short *)(state + 0x16) = 0x4a;
+  }
+
+  *(short *)(state + 0x20) = 0;
+  r3rand = randomGetRange(0, 200);
+  *(float *)(state + 0x1c) =
+      lbl_803E39E8 + (float)((double)(int)r3rand - lbl_803E39C8);
+  *(float *)(state + 0x24) = *(float *)(obj + 0xc);
+
+  if (*(short *)(obj + 0x46) == 0x7be) {
+    *(u8 *)(state + 0x28) = 0;
+  }
+  else {
+    *(u8 *)(state + 0x28) = 2;
+  }
 }
 
 /*
@@ -221,12 +106,6 @@ void largecrate_init(ushort *param_1)
  * Function: largecrate_release
  * EN v1.0 Address: 0x801843B8
  * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80184514
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 void largecrate_release(void)
 {
@@ -238,13 +117,85 @@ void largecrate_release(void)
  * Function: largecrate_initialise
  * EN v1.0 Address: 0x801843BC
  * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80184518
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 void largecrate_initialise(void)
 {
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801843C0
+ * EN v1.0 Address: 0x801843C0
+ * EN v1.0 Size: 572b
+ */
+int fn_801843C0(int obj)
+{
+  int state;
+  float locA[3], locB[3], locC[3];
+  float origin[3];
+  float resultTable[16];
+  u8 hitTable[16];
+  u32 *zeroTable;
+  float gridVec[4];
+  int idx;
+  u8 hitMask;
+  int hit;
+
+  state = *(int *)(obj + 0x54);
+  if (state == 0) {
+    return 0;
+  }
+  locA[0] = *(float *)(obj + 0xc);
+  locA[1] = *(float *)(obj + 0x10);
+  locA[2] = *(float *)(obj + 0x14);
+  locB[0] = *(float *)(obj + 0x80);
+  locB[1] = *(float *)(obj + 0x84);
+  locB[2] = *(float *)(obj + 0x88);
+  gridVec[0] = lbl_803E39F4;
+  hitTable[0] = 0xff;
+  hitTable[4] = 0x3;
+
+  fn_8006961C(&locC, locB, locA, 1);
+  hitDetectFn_800691c0(obj, &locC, *(short *)(state + 0xb2), 1);
+  hit = hitDetectFn_80067958(obj, locB, locA, 1, locB, 0);
+  hit = hit & 0xff;
+  if (hit == 0) {
+    return 0;
+  }
+
+  if ((hit & 1) != 0) {
+    idx = 0;
+  }
+  else if ((hit & 2) != 0) {
+    idx = 1;
+  }
+  else if ((hit & 4) != 0) {
+    idx = 2;
+  }
+  else {
+    idx = 3;
+  }
+
+  hitMask = ((u8 *)&hitTable)[idx];
+  *(u8 *)(state + 0xac) = hitMask;
+  *(float *)(state + 0x3c) = locA[idx];
+  *(float *)(state + 0x40) = locA[idx];  /* same column trick */
+  *(float *)(state + 0x44) = locA[idx];
+  *(float *)&lbl_803AC7A0 = locB[idx];
+
+  zeroTable = (u32 *)((char *)&hitTable + 0x0c);
+  if (zeroTable[idx] != 0) {
+    *(u8 *)(state + 0xad) = (u8)((int)(signed char)*(u8 *)(state + 0xad) | 2);
+  }
+  else {
+    *(u8 *)(state + 0xad) = (u8)((int)(signed char)*(u8 *)(state + 0xad) | 1);
+  }
+  *(float *)(obj + 0xc) = *(float *)(state + 0x3c);
+  *(float *)(obj + 0x10) = *(float *)(state + 0x40);
+  *(float *)(obj + 0x14) = *(float *)(state + 0x44);
+  *(float *)(state + 0x10) = *(float *)(obj + 0x80);
+  *(float *)(state + 0x14) = *(float *)(obj + 0x84);
+  *(float *)(state + 0x18) = *(float *)(obj + 0x88);
+  return 1;
 }

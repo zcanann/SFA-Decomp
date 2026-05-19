@@ -3,8 +3,9 @@
 
 #include "ghidra_import.h"
 
-void largecrate_init(ushort *param_1);
+void largecrate_init(int obj, u8 *initData);
 void largecrate_release(void);
 void largecrate_initialise(void);
+int fn_801843C0(int obj);
 
 #endif /* MAIN_DLL_DLL_15B_H_ */
