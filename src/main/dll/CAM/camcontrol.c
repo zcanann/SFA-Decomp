@@ -5,8 +5,8 @@
 #include "string.h"
 
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068f4();
-extern undefined4 FUN_800068f8();
+extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
+extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 extern uint FUN_80006c00();
 extern undefined4 FUN_80017640();
 extern int Obj_IsObjectAlive();
@@ -748,10 +748,10 @@ void Camera_update(void)
   else {
     textActive = 0;
   }
-  psVar3 = *(short **)(gCamcontrolState + 0x52);
+  psVar3 = *(short **)((char *)pCamera + 0xa4);
   if (psVar3 == (short *)0x0) {
-    *(undefined4 *)(gCamcontrolState + 0x92) = 0;
-    *(undefined4 *)(gCamcontrolState + 0x8e) = 0;
+    *(undefined4 *)((char *)pCamera + 0x124) = 0;
+    *(undefined4 *)((char *)pCamera + 0x11c) = 0;
   }
   else {
     lbl_803DD4E8 = *(float *)(psVar3 + 6);
@@ -760,66 +760,79 @@ void Camera_update(void)
     lbl_803DD4DC = *(float *)(psVar3 + 0xc);
     lbl_803DD4D8 = *(float *)(psVar3 + 0xe);
     lbl_803DD4D4 = *(float *)(psVar3 + 0x10);
-    camcontrol_updateMoveAverage((int)gCamcontrolState,(int)psVar3);
-    if (*(char *)((int)gCamcontrolState + 0x13d) != '\0') {
-      *(undefined4 *)(psVar3 + 0xc) = *(undefined4 *)(gCamcontrolState + 0x6e);
-      *(undefined4 *)(psVar3 + 0xe) = *(undefined4 *)(gCamcontrolState + 0x70);
-      *(undefined4 *)(psVar3 + 0x10) = *(undefined4 *)(gCamcontrolState + 0x72);
-      FUN_800068f4((double)*(float *)(psVar3 + 0xc),(double)*(float *)(psVar3 + 0xe),
-                   (double)*(float *)(psVar3 + 0x10),(float *)(psVar3 + 6),
-                   (float *)(psVar3 + 8),(float *)(psVar3 + 10),*(int *)(psVar3 + 0x18));
-      *(undefined *)((int)gCamcontrolState + 0x13d) = 0;
+    camcontrol_updateMoveAverage((int)pCamera,(int)psVar3);
+    if (*(u8 *)((char *)pCamera + 0x13d) != 0) {
+      *(float *)(psVar3 + 0xc) = *(float *)((char *)pCamera + 0xdc);
+      *(float *)(psVar3 + 0xe) = *(float *)((char *)pCamera + 0xe0);
+      *(float *)(psVar3 + 0x10) = *(float *)((char *)pCamera + 0xe4);
+      Obj_TransformWorldPointToLocal(*(float *)(psVar3 + 0xc),*(float *)(psVar3 + 0xe),
+                                     *(float *)(psVar3 + 0x10),(float *)(psVar3 + 6),
+                                     (float *)(psVar3 + 8),(float *)(psVar3 + 10),
+                                     *(int *)(psVar3 + 0x18));
+      *(undefined *)((char *)pCamera + 0x13d) = 0;
     }
-    if (*(int *)(gCamcontrolState + 0x18) != *(int *)(psVar3 + 0x18)) {
-      FUN_800068f8((double)*(float *)(gCamcontrolState + 6),(double)*(float *)(gCamcontrolState + 8),
-                   (double)*(float *)(gCamcontrolState + 10),(float *)(gCamcontrolState + 0xc),
-                   (float *)(gCamcontrolState + 0xe),(float *)(gCamcontrolState + 0x10),
-                   *(int *)(gCamcontrolState + 0x18));
-      FUN_800068f8((double)*(float *)(gCamcontrolState + 0x54),(double)*(float *)(gCamcontrolState + 0x56),
-                   (double)*(float *)(gCamcontrolState + 0x58),(float *)(gCamcontrolState + 0x5c),
-                   (float *)(gCamcontrolState + 0x5e),(float *)(gCamcontrolState + 0x60),
-                   *(int *)(gCamcontrolState + 0x18));
-      FUN_800068f4((double)*(float *)(gCamcontrolState + 0xc),(double)*(float *)(gCamcontrolState + 0xe),
-                   (double)*(float *)(gCamcontrolState + 0x10),(float *)(gCamcontrolState + 6),
-                   (float *)(gCamcontrolState + 8),(float *)(gCamcontrolState + 10),*(int *)(psVar3 + 0x18))
+    if (*(u32 *)((char *)pCamera + 0x30) != *(u32 *)(psVar3 + 0x18)) {
+      Obj_TransformLocalPointToWorld(*(float *)((char *)pCamera + 0xc),
+                                     *(float *)((char *)pCamera + 0x10),
+                                     *(float *)((char *)pCamera + 0x14),
+                                     (float *)((char *)pCamera + 0x18),
+                                     (float *)((char *)pCamera + 0x1c),
+                                     (float *)((char *)pCamera + 0x20),
+                                     *(int *)((char *)pCamera + 0x30));
+      Obj_TransformLocalPointToWorld(*(float *)((char *)pCamera + 0xa8),
+                                     *(float *)((char *)pCamera + 0xac),
+                                     *(float *)((char *)pCamera + 0xb0),
+                                     (float *)((char *)pCamera + 0xb8),
+                                     (float *)((char *)pCamera + 0xbc),
+                                     (float *)((char *)pCamera + 0xc0),
+                                     *(int *)((char *)pCamera + 0x30));
+      Obj_TransformWorldPointToLocal(*(float *)((char *)pCamera + 0x18),
+                                     *(float *)((char *)pCamera + 0x1c),
+                                     *(float *)((char *)pCamera + 0x20),
+                                     (float *)((char *)pCamera + 0xc),
+                                     (float *)((char *)pCamera + 0x10),
+                                     (float *)((char *)pCamera + 0x14),*(int *)(psVar3 + 0x18))
       ;
-      FUN_800068f4((double)*(float *)(gCamcontrolState + 0x5c),
-                   (double)*(float *)(gCamcontrolState + 0x5e),
-                   (double)*(float *)(gCamcontrolState + 0x60),
-                   (float *)(gCamcontrolState + 0x54),(float *)(gCamcontrolState + 0x56),
-                   (float *)(gCamcontrolState + 0x58),*(int *)(psVar3 + 0x18));
-      *(undefined4 *)(gCamcontrolState + 0x18) = *(undefined4 *)(psVar3 + 0x18);
+      Obj_TransformWorldPointToLocal(*(float *)((char *)pCamera + 0xb8),
+                                     *(float *)((char *)pCamera + 0xbc),
+                                     *(float *)((char *)pCamera + 0xc0),
+                                     (float *)((char *)pCamera + 0xa8),
+                                     (float *)((char *)pCamera + 0xac),
+                                     (float *)((char *)pCamera + 0xb0),*(int *)(psVar3 + 0x18));
+      *(undefined4 *)((char *)pCamera + 0x30) = *(undefined4 *)(psVar3 + 0x18);
     }
     if (*(short **)(psVar3 + 0x18) != (short *)0x0) {
       *psVar3 = *psVar3 + **(short **)(psVar3 + 0x18);
     }
     camcontrol_applyQueuedAction();
     if (gCamcontrolCurrentHandler != 0) {
-      gCamcontrolCurrentHandler->handler->vtable->actionCallback(gCamcontrolState);
-      FUN_800068f8((double)*(float *)(gCamcontrolState + 6),
-                   (double)*(float *)(gCamcontrolState + 8),
-                   (double)*(float *)(gCamcontrolState + 10),
-                   (float *)(gCamcontrolState + 0xc),(float *)(gCamcontrolState + 0xe),
-                   (float *)(gCamcontrolState + 0x10),*(int *)(gCamcontrolState + 0x18));
-      camcontrol_applyState(gCamcontrolState);
+      gCamcontrolCurrentHandler->handler->vtable->update((void *)pCamera);
+      Obj_TransformLocalPointToWorld(*(float *)((char *)pCamera + 0xc),
+                                     *(float *)((char *)pCamera + 0x10),
+                                     *(float *)((char *)pCamera + 0x14),
+                                     (float *)((char *)pCamera + 0x18),
+                                     (float *)((char *)pCamera + 0x1c),
+                                     (float *)((char *)pCamera + 0x20),
+                                     *(int *)((char *)pCamera + 0x30));
+      camcontrol_applyState((void *)pCamera);
     }
     camcontrol_applyQueuedAction();
     if (textActive == 0) {
-      if (*(int *)(gCamcontrolState + 0x8e) == 0) {
-        uVar2 = camcontrol_findBestTarget((int)gCamcontrolState,psVar3);
-        *(undefined4 *)(gCamcontrolState + 0x92) = uVar2;
+      if (*(u32 *)((char *)pCamera + 0x11c) == 0) {
+        uVar2 = camcontrol_findBestTarget((int)pCamera,psVar3);
+        *(undefined4 *)((char *)pCamera + 0x124) = uVar2;
       }
       else {
-        *(int *)(gCamcontrolState + 0x92) = *(int *)(gCamcontrolState + 0x8e);
+        *(int *)((char *)pCamera + 0x124) = *(int *)((char *)pCamera + 0x11c);
       }
     }
-    *(undefined4 *)(gCamcontrolState + 0x54) = *(undefined4 *)(gCamcontrolState + 6);
-    *(undefined4 *)(gCamcontrolState + 0x56) = *(undefined4 *)(gCamcontrolState + 8);
-    *(undefined4 *)(gCamcontrolState + 0x58) = *(undefined4 *)(gCamcontrolState + 10);
-    *(undefined4 *)(gCamcontrolState + 0x5c) = *(undefined4 *)(gCamcontrolState + 0xc);
-    *(undefined4 *)(gCamcontrolState + 0x5e) = *(undefined4 *)(gCamcontrolState + 0xe);
-    *(undefined4 *)(gCamcontrolState + 0x60) = *(undefined4 *)(gCamcontrolState + 0x10);
-    *(undefined *)(gCamcontrolState + 0xa0) = 0;
+    *(float *)((char *)pCamera + 0xa8) = *(float *)((char *)pCamera + 0xc);
+    *(float *)((char *)pCamera + 0xac) = *(float *)((char *)pCamera + 0x10);
+    *(float *)((char *)pCamera + 0xb0) = *(float *)((char *)pCamera + 0x14);
+    *(float *)((char *)pCamera + 0xb8) = *(float *)((char *)pCamera + 0x18);
+    *(float *)((char *)pCamera + 0xbc) = *(float *)((char *)pCamera + 0x1c);
+    *(float *)((char *)pCamera + 0xc0) = *(float *)((char *)pCamera + 0x20);
+    *(undefined *)((char *)pCamera + 0x140) = 0;
     *(float *)(psVar3 + 6) = lbl_803DD4E8;
     *(float *)(psVar3 + 8) = lbl_803DD4E4;
     *(float *)(psVar3 + 10) = lbl_803DD4E0;

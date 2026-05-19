@@ -18,7 +18,7 @@ typedef struct CamcontrolQueuedActionParam {
 typedef struct CamcontrolHandlerVTable {
   void (*func00)();
   void (*activate)(void *camera,int startFlags,void *actionData);
-  void (*func08)();
+  void (*update)(void *camera);
   void (*release)(void *camera);
   void (*actionCallback)();
 } CamcontrolHandlerVTable;
