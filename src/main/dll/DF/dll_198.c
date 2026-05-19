@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/DFbarrelanim.h"
+#include "main/dll/DF/dll_196.h"
 #include "main/dll/DF/dll_198.h"
 
 typedef struct DFropenodeExtra {
@@ -35,8 +36,6 @@ extern void *textureLoadAsset(int assetId);
 extern s32 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern f64 sin(f64 x);
-extern int fn_801C1BF0(int obj);
-
 extern u8 framesThisStep;
 extern int lbl_803DBF40;
 extern void *lbl_803DBF48;
@@ -209,7 +208,7 @@ void dfropenode_init(int obj, int objDef)
     *(s16 *)(obj + 6) = *(s16 *)(obj + 6) & 0xff7f;
   }
   ObjGroup_AddObject(obj, 0x17);
-  *(void **)(obj + 0xbc) = fn_801C1BF0;
+  *(void **)(obj + 0xbc) = dfropenode_syncRopeToEndpoints;
   extra->rope = NULL;
   extra->linkedObj = 0;
   *(u8 *)(obj + 0x36) = 0x46;

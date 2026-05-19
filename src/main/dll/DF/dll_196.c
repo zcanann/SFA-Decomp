@@ -1,45 +1,6 @@
 #include "ghidra_import.h"
+#include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/dll_196.h"
-
-typedef struct DFRopeNode {
-  f32 pos[3];
-  f32 velocity[3];
-  f32 force[3];
-  u8 linkCount;
-  u8 pad25[3];
-  struct DFRopeLink *links[2];
-  u8 locked;
-  u8 pad31[3];
-} DFRopeNode;
-
-typedef struct DFRopeLink {
-  f32 length;
-  DFRopeNode *a;
-  DFRopeNode *b;
-  f32 restLength;
-  f32 stiffness;
-  f32 maxLength;
-  f32 force[3];
-} DFRopeLink;
-
-typedef struct DFRope {
-  DFRopeNode *nodes;
-  DFRopeLink *links;
-  u8 count;
-  u8 pad09[3];
-  f32 start[3];
-  f32 end[3];
-  f32 totalLength;
-  s32 enabled;
-  f32 maxSlack;
-  f32 step;
-  u8 sway;
-  u8 direction;
-  u8 pad36[2];
-  f32 damping;
-  f32 inverseTicks;
-  f32 stepPerTick;
-} DFRope;
 
 typedef struct DFropenodeExtra {
   int linkedObj;
@@ -66,7 +27,7 @@ extern f32 lbl_803E4E24;
 /*
  * --INFO--
  *
- * Function: fn_801C1BF0
+ * Function: dfropenode_syncRopeToEndpoints
  * EN v1.0 Address: 0x801C1BF0
  * EN v1.0 Size: 684b
  * EN v1.1 Address: 0x801C1C4C
@@ -77,7 +38,7 @@ extern f32 lbl_803E4E24;
  * PAL Size: TODO
  */
 #pragma scheduling off
-int fn_801C1BF0(int obj)
+int dfropenode_syncRopeToEndpoints(int obj)
 {
   DFropenodeExtra *extra;
   DFRopeLink *link;
