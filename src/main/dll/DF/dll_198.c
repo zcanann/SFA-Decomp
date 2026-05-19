@@ -70,7 +70,7 @@ void dfropenode_update(int obj)
 {
   DFropenodeExtra *extra;
   int objDef;
-  int linkedObj;
+  u32 linkedObj;
   int *objects;
   int objectCount;
   int objectIndex;
@@ -126,10 +126,10 @@ void dfropenode_update(int obj)
     length = sqrtf(dz * dz + (dx * dx + dy * dy));
     angle = getAngle(dx, dz);
     if (angle > 0x8000) {
-      angle += 1;
+      angle -= 0xFFFF;
     }
     if (angle < -0x8000) {
-      angle -= 1;
+      angle += 0xFFFF;
     }
     extra->angle = angle;
 
