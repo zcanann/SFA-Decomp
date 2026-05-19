@@ -257,7 +257,8 @@ void s3dExit(void)
  */
 int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void *data)
 {
-    u32 sampleRate[4];
+    u32 sampleRate;
+    u32 sampleRatePad[3];
     int result;
 
     gSynthInitialized = 0;
@@ -273,8 +274,9 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void *
     }
     lbl_803BD150[0x211] = streamCount;
     lbl_803BD150[0x212] = unk5;
-    sampleRate[3] = 0x7d00;
-    result = hwInit(&sampleRate[3], lbl_803BD150[0x210], lbl_803BD150[0x213], flags);
+    (void)sampleRatePad;
+    sampleRate = 0x7d00;
+    result = hwInit(&sampleRate, lbl_803BD150[0x210], lbl_803BD150[0x213], flags);
     if (result == 0) {
         u8 voiceCountSnapshot = lbl_803BD150[0x210];
         synthResetLoadedGroupCount();
