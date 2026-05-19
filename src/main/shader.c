@@ -2339,3 +2339,23 @@ void goToNextMapLayer(void) {
 	}
 	renderFlags |= 0x4000;
 }
+
+/* 104b conditional gameTextLoadDir caller. */
+extern int lbl_803DCEC4;
+extern int lbl_803DCEC8;
+extern s8 lbl_8030E55C[];
+extern void gameTextLoadDir(int dirId);
+
+void gameTextLoadForMap_800571f0(u8 force) {
+	int curVal = lbl_803DCEC8;
+	if (curVal == -1) return;
+	if (curVal == lbl_803DCEC4 && force == 0) return;
+	lbl_803DCEC4 = curVal;
+	if (curVal >= 0x76) return;
+	{
+		s8 entry = lbl_8030E55C[curVal];
+		if (entry == -1) return;
+		gameTextLoadDir(entry);
+	}
+}
+
