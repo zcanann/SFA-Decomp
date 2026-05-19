@@ -1709,3 +1709,56 @@ void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E59A8); }
 void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E59C8); }
 #pragma peephole reset
+
+/* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
+ * splits at wrong addresses; these stubs ensure every asm symbol has a src
+ * definition so future hunters can fill bodies one at a time. */
+void Flag_init(void) {}
+void Flag_update(void) {}
+void fn_801E4AC0(void) {}
+void fn_801E4F14(void) {}
+void fn_801E5060(void) {}
+void fn_801E5A2C(void) {}
+void fn_801E66EC(void) {}
+void Lamp_free(void) {}
+void Lamp_init(void) {}
+void Lamp_update(void) {}
+void SB_CageKyte_init(void) {}
+void SB_CageKyte_render(void) {}
+void SB_CageKyte_update(void) {}
+void SB_CloudBall_free(void) {}
+void SB_CloudBall_hitDetect(void) {}
+void SB_CloudBall_init(void) {}
+void SB_CloudBall_update(void) {}
+void SB_FireBall_init(void) {}
+void SB_FireBall_update(void) {}
+void SB_KyteCage_free(void) {}
+void SB_KyteCage_init(void) {}
+void SB_KyteCage_update(void) {}
+void SB_MiniFire_free(void) {}
+void SB_MiniFire_init(void) {}
+void SB_MiniFire_render(void) {}
+void SB_MiniFire_update(void) {}
+void SB_SeqDoor_init(void) {}
+void SB_SeqDoor_update(void) {}
+void SB_ShipGunBroke_render(void) {}
+void SB_ShipGunBroke_update(void) {}
+void ShipBattle_free(void) {}
+void ShipBattle_init(void) {}
+void ShipBattle_render(void) {}
+void ShipBattle_update(void) {}
+void shop_buyItem(void) {}
+void shop_free(int obj) {}
+void shop_func0B(int obj) {}
+void shop_func15(int obj) {}
+void shop_func16(int obj) {}
+void shop_func17(int obj) {}
+int  shop_getItemField4(void) { return 0; }
+int  shop_getItemMinPrice(void) { return 0; }
+int  shop_getItemPrice(void) { return 0; }
+int  shop_getItemTextId(void) { return 0; }
+void shop_init(int obj, int objDef) {}
+int  shop_isItemAvailable(void) { return 0; }
+int  shop_isItemBought(void) { return 0; }
+void shop_setStateField1(void) {}
+void shop_update(int obj) {}
