@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/rope.h"
+#include "main/dll/dll_18E.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();
@@ -20,6 +21,7 @@ extern undefined4 FUN_800175d0();
 extern undefined4 FUN_800175d8();
 extern undefined4 FUN_80017620();
 extern void* FUN_80017624();
+extern void ModelLightStruct_free(void *light);
 extern uint FUN_80017720();
 extern uint FUN_80017730();
 extern u32 randomGetRange(int min, int max);
@@ -31,6 +33,7 @@ extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
+extern void Obj_FreeObject(int obj);
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -38,8 +41,10 @@ extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern int ObjMsg_Pop();
 extern undefined4 FUN_8003b818();
+extern void objRenderFn_8003b8f4(f32 scale);
 extern int FUN_8005b398();
 extern undefined4 FUN_8005fe14();
+extern void queueGlowRender(void *light);
 extern int FUN_800632f4();
 extern undefined4 DIMbosstonsil_render();
 extern undefined4 FUN_80293f90();
@@ -55,11 +60,15 @@ extern undefined4 DAT_803de810;
 extern undefined4 DAT_803de814;
 extern f64 DOUBLE_803e5990;
 extern f64 DOUBLE_803e59f0;
+extern undefined4* lbl_803DCA78;
+extern undefined4* lbl_803DCAB8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DE818;
 extern f32 lbl_803DE81C;
 extern f32 lbl_803DE820;
 extern f32 lbl_803DE824;
+extern f32 lbl_803E4CF0;
+extern f32 lbl_803E4D44;
 extern f32 lbl_803E5928;
 extern f32 lbl_803E5934;
 extern f32 lbl_803E5938;
@@ -104,80 +113,9 @@ extern f32 lbl_803E5A18;
 /*
  * --INFO--
  *
- * Function: FUN_801bf048
+ * Function: dimbossgut2_updateTracking
  * EN v1.0 Address: 0x801BF048
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801BF224
- * EN v1.1 Size: 560b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801bf048(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,undefined4 param_10,int param_11)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801bf04c
- * EN v1.0 Address: 0x801BF04C
- * EN v1.0 Size: 424b
- * EN v1.1 Address: 0x801BF454
- * EN v1.1 Size: 424b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801bf04c(int param_1,int param_2)
-{
-  short sVar1;
-  uint uVar2;
-  float *pfVar3;
-  double dVar4;
-  
-  pfVar3 = *(float **)(param_2 + 0x40c);
-  dVar4 = (double)(pfVar3[3] - *(float *)(param_1 + 0x10));
-  *(short *)(pfVar3 + 5) = *(short *)(pfVar3 + 5) + 0x400;
-  uVar2 = FUN_80017720();
-  *pfVar3 = lbl_803DC074 *
-            ((float)(dVar4 + (double)((float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
-                                             DOUBLE_803e5990) / lbl_803E5998)) / lbl_803E599C -
-            pfVar3[2]) + *pfVar3;
-  *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + *pfVar3;
-  *(short *)(param_1 + 2) = (short)(int)(lbl_803E59A0 * *pfVar3);
-  dVar4 = DOUBLE_803e5990;
-  sVar1 = -*(short *)(param_1 + 4);
-  if (0x8000 < sVar1) {
-    sVar1 = sVar1 + 1;
-  }
-  if (sVar1 < -0x8000) {
-    sVar1 = sVar1 + -1;
-  }
-  uVar2 = (uint)sVar1;
-  pfVar3[1] = pfVar3[1] +
-              (float)((double)CONCAT44(0x43300000,
-                                       (((int)uVar2 >> 4) +
-                                       (uint)((int)uVar2 < 0 && (uVar2 & 0xf) != 0)) *
-                                       (uint)DAT_803dc070 ^ 0x80000000) - DOUBLE_803e5990);
-  *(short *)(param_1 + 4) =
-       (short)(int)((float)((double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 4) ^ 0x80000000) -
-                           dVar4) + pfVar3[1]);
-  *pfVar3 = *pfVar3 / lbl_803E59A4;
-  pfVar3[1] = pfVar3[1] / lbl_803E59A8;
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801bf1f4
- * EN v1.0 Address: 0x801BF1F4
- * EN v1.0 Size: 660b
+ * EN v1.0 Size: 652b
  * EN v1.1 Address: 0x801BF5FC
  * EN v1.1 Size: 680b
  * JP Address: TODO
@@ -185,7 +123,7 @@ void FUN_801bf04c(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bf1f4(ushort *param_1,int param_2)
+void dimbossgut2_updateTracking(ushort *param_1,int param_2)
 {
   float fVar1;
   ushort uVar3;
@@ -259,9 +197,9 @@ void FUN_801bf1f4(ushort *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801bf488
- * EN v1.0 Address: 0x801BF488
- * EN v1.0 Size: 260b
+ * Function: dimbossgut2_free
+ * EN v1.0 Address: 0x801BF2F0
+ * EN v1.0 Size: 140b
  * EN v1.1 Address: 0x801BF8A4
  * EN v1.1 Size: 140b
  * JP Address: TODO
@@ -269,35 +207,33 @@ void FUN_801bf1f4(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bf488(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
+void dimbossgut2_free(int param_9)
 {
   uint uVar1;
   int iVar2;
-  undefined8 uVar3;
+  void *childObj;
   
   iVar2 = *(int *)(param_9 + 0xb8);
   uVar1 = *(uint *)(*(int *)(iVar2 + 0x40c) + 0x18);
   if (uVar1 != 0) {
-    FUN_80017620(uVar1);
+    ModelLightStruct_free((void *)uVar1);
   }
-  uVar3 = ObjGroup_RemoveObject(param_9,3);
-  if (*(int *)(param_9 + 200) != 0) {
-    FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 *(int *)(param_9 + 200));
+  ObjGroup_RemoveObject(param_9,3);
+  childObj = *(void **)(param_9 + 200);
+  if (childObj != 0) {
+    Obj_FreeObject((int)childObj);
     *(undefined4 *)(param_9 + 200) = 0;
   }
-  (**(code **)(*DAT_803dd738 + 0x40))(param_9,iVar2,0);
+  (*(void (*)(int,int,int))(*(int *)(*lbl_803DCAB8 + 0x40)))(param_9,iVar2,0);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801bf58c
- * EN v1.0 Address: 0x801BF58C
- * EN v1.0 Size: 96b
+ * Function: dimbossgut2_render
+ * EN v1.0 Address: 0x801BF37C
+ * EN v1.0 Size: 104b
  * EN v1.1 Address: 0x801BF930
  * EN v1.1 Size: 108b
  * JP Address: TODO
@@ -305,17 +241,18 @@ void FUN_801bf488(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bf58c(int param_1)
+void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  int iVar1;
+  u8 *light;
+  s32 isVisible;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
-  if (in_r8 != '\0') {
-    FUN_8003b818(param_1);
-    iVar1 = *(int *)(*(int *)(iVar1 + 0x40c) + 0x18);
-    if (((iVar1 != 0) && (*(char *)(iVar1 + 0x2f8) != '\0')) && (*(char *)(iVar1 + 0x4c) != '\0')) {
-      FUN_8005fe14(iVar1);
+  light = *(u8 **)(param_1 + 0xb8);
+  isVisible = visible;
+  if (isVisible != 0) {
+    objRenderFn_8003b8f4(lbl_803E4CF0);
+    light = *(u8 **)(*(int *)(light + 0x40c) + 0x18);
+    if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0)) {
+      queueGlowRender(light);
     }
   }
   return;
@@ -324,9 +261,9 @@ void FUN_801bf58c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801bf5ec
- * EN v1.0 Address: 0x801BF5EC
- * EN v1.0 Size: 876b
+ * Function: dimbossgut2_update
+ * EN v1.0 Address: 0x801BF3E8
+ * EN v1.0 Size: 716b
  * EN v1.1 Address: 0x801BF99C
  * EN v1.1 Size: 716b
  * JP Address: TODO
@@ -334,7 +271,7 @@ void FUN_801bf58c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bf5ec(ushort *param_1)
+void dimbossgut2_update(ushort *param_1)
 {
   int iVar1;
   uint uVar2;
@@ -390,8 +327,8 @@ void FUN_801bf5ec(ushort *param_1)
       }
     }
     *(ushort *)((int)pfVar4 + 0x16) = *(short *)((int)pfVar4 + 0x16) + (ushort)DAT_803dc070;
-    FUN_801bf04c((int)param_1,iVar5);
-    FUN_801bf1f4(param_1,iVar5);
+    fn_801BEEA0((s16 *)param_1,(u8 *)iVar5);
+    dimbossgut2_updateTracking(param_1,iVar5);
     FUN_8002fc3c((double)lbl_803E59B8,(double)lbl_803DC074);
     *(undefined *)(*(int *)(param_1 + 0x2a) + 0x6e) = 9;
     *(undefined *)(*(int *)(param_1 + 0x2a) + 0x6f) = 1;
@@ -417,26 +354,9 @@ void FUN_801bf5ec(ushort *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801bf958
- * EN v1.0 Address: 0x801BF958
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801BFC68
- * EN v1.1 Size: 548b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801bf958(int param_1,undefined4 param_2,int param_3)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801bf95c
- * EN v1.0 Address: 0x801BF95C
- * EN v1.0 Size: 824b
+ * Function: DIMbossspit_updateBurst
+ * EN v1.0 Address: 0x801BF8D8
+ * EN v1.0 Size: 648b
  * EN v1.1 Address: 0x801BFE8C
  * EN v1.1 Size: 664b
  * JP Address: TODO
@@ -444,9 +364,9 @@ void FUN_801bf958(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bf95c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9)
+void DIMbossspit_updateBurst(undefined8 param_1,undefined8 param_2,undefined8 param_3,
+                             undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                             undefined8 param_7,undefined8 param_8,short *param_9)
 {
   uint uVar1;
   int iVar2;
@@ -518,9 +438,9 @@ void FUN_801bf95c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_801bfc94
- * EN v1.0 Address: 0x801BFC94
- * EN v1.0 Size: 88b
+ * Function: DIMbossspit_free
+ * EN v1.0 Address: 0x801BFB70
+ * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x801C0124
  * EN v1.1 Size: 84b
  * JP Address: TODO
@@ -528,24 +448,24 @@ void FUN_801bf95c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bfc94(int param_1)
+void DIMbossspit_free(int param_1)
 {
   uint uVar1;
   
   uVar1 = *(uint *)(*(int *)(param_1 + 0xb8) + 4);
   if (uVar1 != 0) {
-    FUN_80017620(uVar1);
+    ModelLightStruct_free((void *)uVar1);
   }
-  (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
+  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(param_1);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801bfcec
- * EN v1.0 Address: 0x801BFCEC
- * EN v1.0 Size: 92b
+ * Function: DIMbossspit_render
+ * EN v1.0 Address: 0x801BFBC4
+ * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x801C0178
  * EN v1.1 Size: 104b
  * JP Address: TODO
@@ -553,17 +473,18 @@ void FUN_801bfc94(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bfcec(int param_1)
+void DIMbossspit_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  int iVar1;
+  u8 *light;
+  s32 isVisible;
   
-  iVar1 = *(int *)(param_1 + 0xb8);
-  if (in_r8 != '\0') {
-    FUN_8003b818(param_1);
-    iVar1 = *(int *)(iVar1 + 4);
-    if (((iVar1 != 0) && (*(char *)(iVar1 + 0x2f8) != '\0')) && (*(char *)(iVar1 + 0x4c) != '\0')) {
-      FUN_8005fe14(iVar1);
+  light = *(u8 **)(param_1 + 0xb8);
+  isVisible = visible;
+  if (isVisible != 0) {
+    objRenderFn_8003b8f4(lbl_803E4D44);
+    light = *(u8 **)(light + 4);
+    if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0)) {
+      queueGlowRender(light);
     }
   }
   return;
@@ -572,9 +493,9 @@ void FUN_801bfcec(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801bfd48
- * EN v1.0 Address: 0x801BFD48
- * EN v1.0 Size: 772b
+ * Function: DIMbossspit_update
+ * EN v1.0 Address: 0x801BFC2C
+ * EN v1.0 Size: 648b
  * EN v1.1 Address: 0x801C01E0
  * EN v1.1 Size: 648b
  * JP Address: TODO
@@ -582,9 +503,9 @@ void FUN_801bfcec(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bfd48(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9)
+void DIMbossspit_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                        undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                        short *param_9)
 {
   double dVar1;
   float fVar2;
@@ -631,7 +552,8 @@ void FUN_801bfd48(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
   }
   else {
-    FUN_801bf95c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
+    DIMbossspit_updateBurst(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
+                            param_9);
   }
   iVar5 = *(int *)(psVar6 + 2);
   if (((iVar5 != 0) && (*(char *)(iVar5 + 0x2f8) != '\0')) && (*(char *)(iVar5 + 0x4c) != '\0')) {
@@ -656,9 +578,9 @@ void FUN_801bfd48(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_801c004c
- * EN v1.0 Address: 0x801C004C
- * EN v1.0 Size: 468b
+ * Function: DIMbossspit_init
+ * EN v1.0 Address: 0x801BFEB4
+ * EN v1.0 Size: 312b
  * EN v1.1 Address: 0x801C0468
  * EN v1.1 Size: 312b
  * JP Address: TODO
@@ -666,9 +588,9 @@ void FUN_801bfd48(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c004c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
+void DIMbossspit_init(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                      int param_9)
 {
   int *piVar1;
   int iVar2;
@@ -738,7 +660,6 @@ int dimbossfire_func08(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4D88;
-extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4D88); }
 #pragma peephole reset
