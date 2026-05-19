@@ -325,17 +325,17 @@ void wm_column_hitDetect(void)
 void wm_column_update(int obj)
 {
   int *objects;
-  int flags;
+  u32 playerFlags;
+  f32 nearest;
   int i;
   int count;
   int other;
   int state;
-  f32 nearest[5];
 
   state = *(int *)(obj + 0xb8);
-  nearest[0] = lbl_803E37BC;
+  nearest = lbl_803E37BC;
   if ((*(GroundAnimatorAnimStateFn *)(*lbl_803DCAC0 + 8))(obj, *(int *)(obj + 0xb8)) != 0) {
-    if ((*(u32 *)(obj + 0xf4) & 2) != 0) {
+    if ((*(int *)(obj + 0xf4) & 2) != 0) {
       objects = ObjList_GetObjects(&i, &count);
       for (; i < count; i++) {
         other = objects[i];
@@ -348,10 +348,10 @@ void wm_column_update(int obj)
         }
       }
     }
-    flags = Obj_GetPlayerObject();
-    ObjGroup_FindNearestObject(0x10, obj, nearest);
-    flags = playerGetStateFlag310(flags);
-    if (((flags & 0x4000) != 0) && (nearest[0] > lbl_803E37C4)) {
+    playerFlags = Obj_GetPlayerObject();
+    ObjGroup_FindNearestObject(0x10, obj, &nearest);
+    playerFlags = playerGetStateFlag310(playerFlags);
+    if (((playerFlags & 0x4000) != 0) && (nearest > lbl_803E37C4)) {
       (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 0);
       setAButtonIcon(5);
       *(u32 *)(obj + 0xf4) |= 1;
@@ -360,7 +360,7 @@ void wm_column_update(int obj)
     }
     *(u32 *)(obj + 0xf4) &= ~2;
   } else {
-    if ((*(u32 *)(obj + 0xf4) & 1) != 0) {
+    if ((*(int *)(obj + 0xf4) & 1) != 0) {
       objects = ObjList_GetObjects(&i, &count);
       for (; i < count; i++) {
         other = objects[i];
@@ -380,8 +380,8 @@ void wm_column_update(int obj)
         }
       }
     }
-    flags = playerGetStateFlag310(Obj_GetPlayerObject());
-    if ((flags & 0x4000) != 0) {
+    playerFlags = playerGetStateFlag310(Obj_GetPlayerObject());
+    if ((playerFlags & 0x4000) != 0) {
       (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 0);
       *(u32 *)(obj + 0xf4) |= 2;
     } else {
