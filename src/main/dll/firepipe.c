@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "global.h"
 #include "main/dll/firepipe.h"
 #include "string.h"
 
@@ -72,8 +73,8 @@ int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *
     effectObj = loadObjectAtObject(obj, spawnDef);
     if (extra->effectCount != 8) {
         *(u16 *)(effectObj + 0xb0) |= 0x200;
-        extra->effectObjs[extra->effectCount] = effectObj;
-        extra->effectCount++;
+        i = extra->effectCount++;
+        extra->effectObjs[i] = effectObj;
     }
     return effectObj;
 }
@@ -210,12 +211,12 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
     short sVar1;
     short sVar5;
     undefined4 uVar3;
+    uint uVar4;
 
     extra = obj->extra;
     if ((int)mapData->scale != 0) {
-        obj->scale =
-            lbl_803E6BA8 *
-            (f32)(s32)mapData->scale * *(float *)(*(int *)((int)obj + 0x50) + 4);
+        f32 scale = lbl_803E6BA8 * (f32)(s32)mapData->scale;
+        obj->scale = scale * *(float *)(*(int *)((int)obj + 0x50) + 4);
     }
     if (mapData->gameBit != -1) {
         uVar3 = GameBit_Get((int)mapData->gameBit);
@@ -232,18 +233,20 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         sVar5 = *(short *)(iVar7 + 0x1a);
         if (sVar5 != 0) {
             sVar1 = *(short *)(iVar7 + 0x20);
-            if (sVar1 == 0) {
-                s16toFloat(iVar8 + 0x24, (int)(short)(sVar5 * 0x3c));
-            }
-            else if (sVar1 < 0) {
-                sVar5 = randomGetRange(1, sVar5 * 0x3c);
-                s16toFloat(iVar8 + 0x24, (int)sVar5);
+            if (sVar1 != 0) {
+                if (sVar1 < 0) {
+                    sVar5 = randomGetRange(1, sVar5 * 0x3c);
+                    s16toFloat(iVar8 + 0x24, (int)sVar5);
+                }
+                else {
+                    s16toFloat(iVar8 + 0x24, (int)(short)(sVar1 * 0x3c));
+                    if (*(short *)(iVar7 + 0x20) >= *(short *)(iVar7 + 0x1a)) {
+                        ((FirePipeBitFlags *)(iVar8 + 0x41))->bit6 = 0;
+                    }
+                }
             }
             else {
-                s16toFloat(iVar8 + 0x24, (int)(short)(sVar1 * 0x3c));
-                if (*(short *)(iVar7 + 0x1a) <= *(short *)(iVar7 + 0x20)) {
-                    ((FirePipeBitFlags *)(iVar8 + 0x41))->bit6 = 0;
-                }
+                s16toFloat(iVar8 + 0x24, (int)(short)(sVar5 * 0x3c));
             }
         }
         extra->clearVolumeA = 0;
@@ -297,13 +300,25 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         extra->activeSpawn = 0;
         uVar3 = GameBit_Get((int)mapData->gameBit);
         {
-            uint clz = countLeadingZeros(uVar3);
+            uint clz = __cntlzw(uVar3);
             ((FirePipeBitFlags *)&extra->flags)->bit7 = (u8)(clz >> 5);
         }
-        ((FirePipeBitFlags *)&extra->flags)->bit1 = (mapData->flags & 1) == 0;
-        ((FirePipeBitFlags *)&extra->flags)->bit0 = (mapData->flags & 2) == 0;
-        storeZeroToFloatParam((int)&extra->cycleTimer);
-        s16toFloat((int)&extra->cycleTimer, 0x14);
+        if ((mapData->flags & 1) != 0) {
+            uVar4 = 0;
+        }
+        else {
+            uVar4 = 1;
+        }
+        ((FirePipeBitFlags *)&extra->flags)->bit1 = uVar4;
+        if ((mapData->flags & 2) != 0) {
+            uVar4 = 0;
+        }
+        else {
+            uVar4 = 1;
+        }
+        ((FirePipeBitFlags *)&extra->flags)->bit0 = uVar4;
+        storeZeroToFloatParam((int)extra + 0x28);
+        s16toFloat((int)extra + 0x28, 0x14);
         ObjGroup_AddObject(obj, 0x4a);
         ((FirePipeBitFlags *)&extra->flags)->bit2 = 0;
         extra->subObj = 0;
