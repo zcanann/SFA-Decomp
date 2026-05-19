@@ -23,6 +23,8 @@ extern undefined4 ObjHitbox_SetSphereRadius();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
+extern undefined8 ObjGroup_RemoveObject(int obj, int groupId);
+extern undefined4 ObjGroup_AddObject(int obj, int groupId);
 extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810ec();
@@ -49,6 +51,9 @@ extern f32 lbl_803E4DB4;
 extern f32 lbl_803E4DB8;
 extern f32 lbl_803E4DBC;
 extern f32 lbl_803E4DC0;
+extern f32 lbl_803E4DD0;
+extern f32 lbl_803E4DD4;
+extern f64 lbl_803E4DD8;
 
 /*
  * --INFO--
@@ -175,6 +180,39 @@ void dimbossfire_update(int param_1)
 /*
  * --INFO--
  *
+ * Function: dimbossfire_init
+ * EN v1.0 Address: 0x801C09AC
+ * EN v1.0 Size: 172b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimbossfire_init(int obj,undefined4 param_2,int param_3)
+{
+  uint uVar1;
+  undefined uVar2;
+  int state;
+
+  state = *(int *)(obj + 0xb8);
+  ObjHits_SetHitVolumeSlot(obj,0,0,0);
+  ObjHitbox_SetSphereRadius(obj,0);
+  ObjHits_DisableObject(obj);
+  if (param_3 == 0) {
+    uVar1 = randomGetRange(0xf0,0x1e0);
+    *(float *)(state + 0xc) =
+         (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - lbl_803E4DC8);
+    uVar2 = randomGetRange(0,9);
+    *(undefined *)(state + 1) = uVar2;
+  }
+  return;
+}
+
+/*
+ * --INFO--
+ *
  * Function: dimbossfire_release
  * EN v1.0 Address: 0x801C0A58
  * EN v1.0 Size: 4b
@@ -227,6 +265,27 @@ int ccriverflow_getExtraSize(void)
 /*
  * --INFO--
  *
+ * Function: ccriverflow_free
+ * EN v1.0 Address: 0x801C0A68
+ * EN v1.0 Size: 52b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void ccriverflow_free(int obj)
+{
+  if (**(byte **)(obj + 0xb8) != 0) {
+    ObjGroup_RemoveObject(obj,0x14);
+  }
+  return;
+}
+
+/*
+ * --INFO--
+ *
  * Function: ccriverflow_render
  * EN v1.0 Address: 0x801C0A9C
  * EN v1.0 Size: 4b
@@ -239,4 +298,72 @@ int ccriverflow_getExtraSize(void)
  */
 void ccriverflow_render(void)
 {
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ccriverflow_update
+ * EN v1.0 Address: 0x801C0AA0
+ * EN v1.0 Size: 148b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void ccriverflow_update(int obj)
+{
+  uint uVar1;
+  byte *state;
+
+  if (*(short *)(*(int *)(obj + 0x4c) + 0x1c) != -1) {
+    state = *(byte **)(obj + 0xb8);
+    uVar1 = GameBit_Get((int)*(short *)(*(int *)(obj + 0x4c) + 0x1c));
+    if (uVar1 != 0) {
+      if (*state != 0) {
+        *state = 0;
+        ObjGroup_RemoveObject(obj,0x14);
+      }
+    }
+    else if (*state == 0) {
+      *state = 1;
+      ObjGroup_AddObject(obj,0x14);
+    }
+  }
+  return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ccriverflow_init
+ * EN v1.0 Address: 0x801C0B34
+ * EN v1.0 Size: 196b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void ccriverflow_init(short *obj,int params)
+{
+  if (*(short *)(params + 0x1c) == -1) {
+    ObjGroup_AddObject((int)obj,0x14);
+    **(undefined **)(obj + 0x5c) = 1;
+  }
+  *obj = (ushort)*(byte *)(params + 0x18) << 8;
+  *(undefined4 *)(obj + 4) = *(undefined4 *)(*(int *)(obj + 0x28) + 4);
+  *(float *)(obj + 4) =
+       (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(params + 0x19)) - lbl_803E4DD8) *
+       lbl_803E4DD0 + *(float *)(obj + 4);
+  if (*(float *)(obj + 4) < lbl_803E4DD4) {
+    *(float *)(obj + 4) = lbl_803E4DD4;
+  }
+  if (*(byte *)(params + 0x1a) == 0) {
+    *(undefined *)(params + 0x1a) = 0xff;
+  }
+  return;
 }
