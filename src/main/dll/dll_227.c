@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_227.h"
+#include "main/dll/DIM/DIMbosstonsil.h"
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void lightVecFn_8001dd88(f32 x, f32 y, f32 z);

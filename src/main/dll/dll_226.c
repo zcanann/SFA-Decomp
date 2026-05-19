@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_226.h"
+#include "main/dll/DIM/DIMbosstonsil.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b94();
@@ -143,7 +143,7 @@ void DIMbosstonsil_func0B(void)
  */
 int DIMbosstonsil_setScale(int obj)
 {
-  return *(short *)(*(int *)(obj + 0xb8) + 0x274);
+  return *(short *)(*(int *)(obj + 0xb8) + DIMBOSSTONSIL_SCALE_OFFSET);
 }
 
 /*
@@ -161,7 +161,7 @@ int DIMbosstonsil_setScale(int obj)
  */
 int DIMbosstonsil_getExtraSize(void)
 {
-  return 0x410;
+  return DIMBOSSTONSIL_STATE_SIZE;
 }
 
 /*
@@ -179,5 +179,5 @@ int DIMbosstonsil_getExtraSize(void)
  */
 int DIMbosstonsil_func08(void)
 {
-  return 0x4b;
+  return DIMBOSSTONSIL_OBJECT_TYPE;
 }
