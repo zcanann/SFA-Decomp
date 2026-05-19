@@ -13,10 +13,10 @@ extern int Obj_IsObjectAlive();
 extern undefined8 FUN_800723a0();
 extern undefined4 FUN_80081100();
 extern undefined4 FUN_800e8794();
-extern undefined4 camcontrol_findBestTarget(int cameraState, void *target);
-extern undefined4 camcontrol_updateMoveAverage();
-extern undefined4 camcontrol_applyState();
-extern undefined8 camcontrol_applyQueuedAction();
+extern int camcontrol_findBestTarget(int cameraState, short *target);
+extern void camcontrol_updateMoveAverage(int cameraState, int target);
+extern void camcontrol_applyState(short *cameraState);
+extern void camcontrol_applyQueuedAction(void);
 extern int FUN_801113c0();
 extern int FUN_8012ef0c();
 extern int FUN_80133a28();
@@ -42,13 +42,13 @@ extern undefined4 gCamcontrolTargetState;
 extern int gCamcontrolSavedActionStartFlags;
 extern int gCamcontrolSavedActionPriority;
 extern int gCamcontrolSavedActionId;
-extern undefined gCamcontrolQueuedActionMode;
-extern undefined4 gCamcontrolQueuedActionBlendFrames;
+extern u8 gCamcontrolQueuedActionMode;
+extern s32 gCamcontrolQueuedActionBlendFrames;
 extern s8 gCamcontrolQueuedActionPriority;
 extern s8 gCamcontrolQueuedActionStartFlags;
-extern undefined gCamcontrolQueuedActionPending;
+extern u8 gCamcontrolQueuedActionPending;
 extern void *gCamcontrolQueuedActionData;
-extern undefined4 gCamcontrolQueuedActionId;
+extern s32 gCamcontrolQueuedActionId;
 extern CamcontrolHandlerEntry *gCamcontrolCurrentHandler;
 extern u8 gCamcontrolHandlerCount;
 extern short* gCamcontrolState;
@@ -81,7 +81,7 @@ extern undefined4 lbl_803DD4CC;
 extern int gCamcontrolCurrentHandlerIndex;
 
 extern u32 gCamcontrolActiveActionId;
-extern u32 pCamera;
+extern u8 *pCamera;
 
 /*
  * --INFO--
@@ -814,7 +814,7 @@ void Camera_update(void)
                                      (float *)((char *)pCamera + 0x1c),
                                      (float *)((char *)pCamera + 0x20),
                                      *(int *)((char *)pCamera + 0x30));
-      camcontrol_applyState((void *)pCamera);
+      camcontrol_applyState((short *)pCamera);
     }
     camcontrol_applyQueuedAction();
     if (textActive == 0) {
@@ -873,7 +873,7 @@ void *Camera_GetFollowPos(void)
 
 /* sda21 accessors. */
 u32 Camera_getMode(void) { return gCamcontrolActiveActionId; }
-u32 Camera_get(void) { return pCamera; }
+u32 Camera_get(void) { return (u32)pCamera; }
 
 void Camera_init(void *focus,f32 x,f32 y,f32 z)
 {
@@ -903,7 +903,7 @@ void Camera_release(void)
 
 void Camera_initialise(void)
 {
-  pCamera = (u32)lbl_803A4278;
+  pCamera = lbl_803A4278;
   memset((void *)pCamera,0,0x144);
   voxmaps_initialise();
   gCamcontrolActiveActionId = -1;
