@@ -1532,6 +1532,7 @@ void expgfx_free(u32 sourceId)
 #pragma peephole off
 void expgfx_resetAllPools(void)
 {
+  u16 *entryRefCount;
   ExpgfxTableEntry *tableEntry;
   u8 *staticDataBase;
   u8 *expgfxBase;
@@ -1573,9 +1574,10 @@ void expgfx_resetAllPools(void)
         tableEntry =
             (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET +
                                  (Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT));
-        if (tableEntry->refCount != 0) {
-          tableEntry->refCount--;
-          if (tableEntry->refCount == 0) {
+        entryRefCount = &tableEntry->refCount;
+        if (*entryRefCount != 0) {
+          (*entryRefCount)--;
+          if (*entryRefCount == 0) {
             tableEntry->textureOrResource = 0;
             tableEntry->key0 = 0;
           }
@@ -1610,7 +1612,7 @@ void expgfx_resetAllPools(void)
       textureFree(resourceEntry->resource);
     }
     lbl_803DD258 = 0;
-    resourceEntry->resource = (void *)0x0;
+    resourceEntry->resource = 0;
     resourceEntry->tableKeyType = 0;
     resourceEntry->evictionScore = 0;
     resourceEntry->wordC = 0;
