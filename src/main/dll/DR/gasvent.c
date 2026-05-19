@@ -380,3 +380,35 @@ int gunpowderbarrel_getExtraSize(void)
 {
   return 0x58;
 }
+
+extern undefined4* lbl_803DCAC0;
+extern undefined4* lbl_803DCA78;
+extern int Obj_IsObjectAlive(void* obj);
+extern void ObjLink_DetachChild(int obj, void* child);
+
+/*
+ * --INFO--
+ *
+ * Function: gunpowderbarrel_free
+ * EN v1.0 Address: 0x801A189C
+ * EN v1.0 Size: 196b
+ */
+void gunpowderbarrel_free(int param_1, int param_2)
+{
+  int extra;
+  void* child;
+  extra = *(int*)(param_1 + 0xb8);
+  (*(code*)(*(int *)lbl_803DCAC0 + 0x10))(param_1);
+  child = *(void**)(extra + 0x10);
+  if (child != 0 && param_2 == 0) {
+    if (Obj_IsObjectAlive(child) != 0) {
+      ObjLink_DetachChild(param_1, *(void**)(extra + 0x10));
+      *(int*)(extra + 0x10) = 0;
+    }
+  }
+  ObjGroup_RemoveObject(param_1, 0x19);
+  ObjGroup_RemoveObject(param_1, 0x16);
+  if (*(char*)(extra + 0x17) != 0) {
+    (*(code*)(*(int *)lbl_803DCA78 + 0x18))(param_1);
+  }
+}
