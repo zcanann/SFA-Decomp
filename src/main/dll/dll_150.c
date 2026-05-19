@@ -433,9 +433,52 @@ void smallbasket_free(int param_1)
 }
 
 extern undefined4* lbl_803DCAAC;
+extern f32 lbl_803E3938;
 extern f32 lbl_803E3950;
+extern f32 lbl_803E3958;
+extern f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
                                  undefined4 p5, double scale);
+extern void* Obj_GetPlayerObject(void);
+extern void mathFn_80021ac8(void* in, void* out);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80182504
+ * EN v1.0 Address: 0x80182504
+ * EN v1.0 Size: 144b
+ */
+void fn_80182504(int param_1)
+{
+  struct LocalArgs {
+    short f8;
+    short fa;
+    short fc;
+    short pad_e;
+    float f10;
+    float f14;
+    float f18;
+    float f1c;
+  } local;
+  int extra;
+  short* player;
+  extra = *(int*)(param_1 + 0xb8);
+  player = (short*)Obj_GetPlayerObject();
+  *(char*)(extra + 6) = 0;
+  *(char*)(extra + 5) = 0;
+  *(char*)(extra + 9) = 1;
+  *(float*)(param_1 + 0x28) = lbl_803E3958;
+  *(float*)(param_1 + 0x2c) = lbl_803E3974;
+  local.f14 = lbl_803E3938;
+  local.f18 = lbl_803E3938;
+  local.f1c = lbl_803E3938;
+  local.f10 = lbl_803E3950;
+  local.fc = 0;
+  local.fa = 0;
+  local.f8 = *player;
+  mathFn_80021ac8(&local.f8, (void*)(param_1 + 0x24));
+}
 
 /*
  * --INFO--
