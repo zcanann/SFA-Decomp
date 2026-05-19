@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/DFwhirlpool.h"
 
 typedef struct DFropenodeExtra {
@@ -14,14 +15,8 @@ typedef struct DFropenodeExtra {
   f32 planeNormalY;
   f32 planeNormalZ;
   f32 planeDistance;
-  void *rope;
+  DFRope *rope;
 } DFropenodeExtra;
-
-typedef struct DFRope {
-  f32 *nodes;
-  f32 *links;
-  u8 count;
-} DFRope;
 
 typedef struct DFRenderState {
   undefined4 objAndParam;
