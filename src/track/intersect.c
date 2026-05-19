@@ -7016,7 +7016,7 @@ void cardShowLoadingMsg(u8 kind)
     extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
     extern void curUiDllDraw(int, int, int, int);
     extern int lbl_803DB708;
-    extern void getLastRenderedFrame(void);
+    extern int getLastRenderedFrame(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
     extern void gameTextFn_80016810(int, int, int);
@@ -7028,6 +7028,7 @@ void cardShowLoadingMsg(u8 kind)
     int frame;
     int j;
     int count;
+    f32 rectAlpha;
     void (*draw)(int, int, int);
     u8 mode = kind;
 
@@ -7040,15 +7041,15 @@ void cardShowLoadingMsg(u8 kind)
         if ((u32)count != 0) {
             draw = (void (*)(int, int, int))((void**)*lbl_803DCA4C)[1];
             draw(0, 0, 0);
-            drawRect(0x280, 0x1E0, lbl_803DEF98, lbl_803DEF98);
+            rectAlpha = lbl_803DEF98;
+            drawRect(0x280, 0x1E0, rectAlpha, rectAlpha);
             for (j = 0; j < count; j++) {
                 objRenderFn_8003b8f4(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
             }
             curUiDllDraw(0, 0, 0, 0);
         } else {
             saved = lbl_803DB708;
-            getLastRenderedFrame();
-            hudDrawColored(0, 0, 0, &saved, 0x200, 0);
+            hudDrawColored(getLastRenderedFrame(), 0, 0, &saved, 0x200, 0);
         }
         gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         if (mode == 1) {
