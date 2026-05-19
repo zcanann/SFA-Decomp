@@ -302,3 +302,17 @@ byte FUN_8018a0d0(int param_1)
 
 /* chained byte bit-extract. */
 u32 fn_80189C58(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x1d) >> 5) & 1; }
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80189F44
+ * EN v1.0 Address: 0x80189F44
+ * EN v1.0 Size: 24b
+ */
+u32 fn_80189F44(int obj) {
+    u32 v;
+    v = *(u8 *)(*(int *)(obj + 0x4c) + 0x1d);
+    if (v > 2) v = 2;
+    return v;
+}
