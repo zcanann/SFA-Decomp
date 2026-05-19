@@ -24,9 +24,10 @@ typedef struct DimSnowballDef {
 } DimSnowballDef;
 
 #pragma scheduling off
-void dimsnowball_init(DimSnowballObject *obj, DimSnowballDef *def)
+void dimsnowball_init(register DimSnowballObject *obj, DimSnowballDef *def)
 {
     DimSnowballState *state;
+    register u32 flags;
 
     state = obj->state;
     state->targetId = def->targetId;
@@ -38,7 +39,9 @@ void dimsnowball_init(DimSnowballObject *obj, DimSnowballDef *def)
     if (obj->handle64 != NULL) {
         *(u32 *)(obj->handle64 + 0x30) |= 0x810;
     }
-    obj->flags = (u16)(obj->flags | 0x4000);
+    flags = obj->flags | 0x4000;
+    asm { clrlwi flags, flags, 16 }
+    obj->flags = flags;
 }
 #pragma scheduling reset
 
