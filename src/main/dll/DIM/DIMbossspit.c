@@ -21,7 +21,7 @@ extern f32 lbl_803E4CC0;
 extern void GameBit_Set(int bit, int value);
 extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
 extern void doRumble(f32 val);
-extern void fn_801BDF7C(u8 *arg1, u8 *arg4);
+extern void DIMbosstonsil_checkHit(u8 *arg1, u8 *arg4);
 
 #define DIMBOSSSPIT_MODEL_ACTIVE_FLAG 0x1
 #define DIMBOSSSPIT_OBJECT_DISABLED_FLAG 0x8
@@ -101,7 +101,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *up
   }
 
   lbl_803DDBA0 = lbl_803DDBA0 + timeDelta;
-  fn_801BDF7C(obj, updateState);
+  DIMbosstonsil_checkHit(obj, updateState);
 
   if (lbl_803E4C90 != lbl_803DDB98) {
     lbl_803DDB98 = lbl_803DDB98 - timeDelta;
