@@ -20,15 +20,15 @@ extern f32 lbl_803E2488;
 extern const char sTrickyShouldNeverStopCirclingError[];
 
 void *trickyFindCirclingTarget(void *obj, void *arg2) {
-    void *p_24 = *(void **)((u8 *)arg2 + 0x24);
     void *target;
     void **list;
     int count;
     int i;
     f32 d1, d2, d3;
 
-    if (*(s16 *)((u8 *)p_24 + 0x46) == 0x6a3) {
-        return p_24;
+    target = *(void **)((u8 *)arg2 + 0x24);
+    if (*(s16 *)((u8 *)target + 0x46) == 0x6a3) {
+        return target;
     }
 
     target = fn_80296118(*(void **)((u8 *)arg2 + 0x4));
@@ -40,10 +40,10 @@ void *trickyFindCirclingTarget(void *obj, void *arg2) {
             d1 = Vec_xzDistance((u8 *)obj + 0x18, (u8 *)target + 0x18);
             d2 = Vec_xzDistance((u8 *)obj + 0x18, (u8 *)*(void **)((u8 *)arg2 + 0x4) + 0x18);
             d3 = Vec_xzDistance((u8 *)target + 0x18, (u8 *)*(void **)((u8 *)arg2 + 0x4) + 0x18);
-            if ((d1 + d2) >= lbl_803E23F8 * d3) {
-                goto fail;
+            if ((d1 + d2) < lbl_803E23F8 * d3) {
+                return target;
             }
-            return target;
+            goto fail;
         }
     }
 fail:
