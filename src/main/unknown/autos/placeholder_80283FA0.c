@@ -7,6 +7,25 @@ extern void ARQPostRequest(void *req, u32 owner, u32 type, u32 prio, u32 src, u3
 extern u8 lbl_803D3F60[];
 extern u8 lbl_803D41E4[];
 
+typedef struct AramQueueSlot {
+    u32 request;
+    u32 owner;
+    u32 type;
+    u32 priority;
+    u32 src;
+    u32 dst;
+    u32 size;
+    void (*arqCallback)(void *);
+    void (*callback)(void *);
+    void *callbackArg;
+} AramQueueSlot;
+
+typedef struct AramTransferQueue {
+    AramQueueSlot slots[16];
+    volatile u8 head;
+    volatile u8 count;
+} AramTransferQueue;
+
 /*
  * ARQ DMA completion callback dispatcher: walks the 16-slot ring
  * queue at lbl_803D3F60 (or lbl_803D41E4 for the secondary pool)
@@ -21,26 +40,26 @@ extern u8 lbl_803D41E4[];
 #pragma scheduling off
 void aramQueueCallback(void *req)
 {
-    u8 *base;
-    u8 *slot;
-    u8 *callbackSlot;
+    AramTransferQueue *queue;
+    AramQueueSlot *slot;
+    AramQueueSlot *callbackSlot;
     u32 i;
 
-    base = (*(u32 *)((u8 *)req + 0xc) == 1) ? lbl_803D41E4 : lbl_803D3F60;
+    queue = (*(u32 *)((u8 *)req + 0xc) == 1) ? (AramTransferQueue *)lbl_803D41E4 : (AramTransferQueue *)lbl_803D3F60;
     i = 0;
-    callbackSlot = base + i * 0x28;
-    slot = base;
+    callbackSlot = &queue->slots[i];
+    slot = queue->slots;
     for (; i < 0x10; i++) {
         if (req == slot) {
-            void (*cb)(void *) = *(void (**)(void *))(slot + 0x20);
+            void (*cb)(void *) = slot->callback;
             if (cb != NULL) {
-                cb(*(void **)(callbackSlot + 0x24));
+                cb(callbackSlot->callbackArg);
             }
         }
-        slot += 0x28;
-        callbackSlot += 0x28;
+        slot++;
+        callbackSlot++;
     }
-    base[0x281] = base[0x281] - 1;
+    queue->count = queue->count - 1;
 }
 #pragma scheduling reset
 
@@ -57,33 +76,33 @@ void aramQueueCallback(void *req)
  */
 void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg)
 {
-    u8 *base;
+    AramTransferQueue *queue;
     BOOL irq;
 
-    base = (mode != 0) ? lbl_803D41E4 : lbl_803D3F60;
+    queue = (mode != 0) ? (AramTransferQueue *)lbl_803D41E4 : (AramTransferQueue *)lbl_803D3F60;
 
     while (1) {
         irq = OSDisableInterrupts();
-        if (base[0x281] < 0x10) {
-            *(u32 *)(base + base[0x280] * 0x28 + 0x4) = 0x2a;
-            *(u32 *)(base + base[0x280] * 0x28 + 0x8) = 0;
-            *(u32 *)(base + base[0x280] * 0x28 + 0xc) = (mode != 0) ? 1 : 0;
-            *(u32 *)(base + base[0x280] * 0x28 + 0x10) = src;
-            *(u32 *)(base + base[0x280] * 0x28 + 0x14) = dst;
-            *(u32 *)(base + base[0x280] * 0x28 + 0x18) = size;
-            *(u32 *)(base + base[0x280] * 0x28 + 0x1c) = (u32)aramQueueCallback;
-            *(u32 *)(base + base[0x280] * 0x28 + 0x20) = callback;
-            *(u32 *)(base + base[0x280] * 0x28 + 0x24) = callbackArg;
-            ARQPostRequest((void *)(base + base[0x280] * 0x28),
-                           *(u32 *)(base + base[0x280] * 0x28 + 0x4),
-                           *(u32 *)(base + base[0x280] * 0x28 + 0x8),
-                           *(u32 *)(base + base[0x280] * 0x28 + 0xc),
-                           *(u32 *)(base + base[0x280] * 0x28 + 0x10),
-                           *(u32 *)(base + base[0x280] * 0x28 + 0x14),
-                           *(u32 *)(base + base[0x280] * 0x28 + 0x18),
-                           *(void (**)(void *))(base + base[0x280] * 0x28 + 0x1c));
-            base[0x281] += 1;
-            base[0x280] = (base[0x280] + 1) % 0x10;
+        if (queue->count < 0x10) {
+            queue->slots[queue->head].owner = 0x2a;
+            queue->slots[queue->head].type = 0;
+            queue->slots[queue->head].priority = (mode != 0) ? 1 : 0;
+            queue->slots[queue->head].src = src;
+            queue->slots[queue->head].dst = dst;
+            queue->slots[queue->head].size = size;
+            queue->slots[queue->head].arqCallback = aramQueueCallback;
+            queue->slots[queue->head].callback = (void (*)(void *))callback;
+            queue->slots[queue->head].callbackArg = (void *)callbackArg;
+            ARQPostRequest(&queue->slots[queue->head],
+                           queue->slots[queue->head].owner,
+                           queue->slots[queue->head].type,
+                           queue->slots[queue->head].priority,
+                           queue->slots[queue->head].src,
+                           queue->slots[queue->head].dst,
+                           queue->slots[queue->head].size,
+                           queue->slots[queue->head].arqCallback);
+            queue->count += 1;
+            queue->head = (queue->head + 1) % 0x10;
             OSRestoreInterrupts(irq);
             return;
         }
