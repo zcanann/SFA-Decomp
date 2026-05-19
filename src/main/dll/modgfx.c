@@ -92,6 +92,7 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017814();
 extern uint FUN_80017830();
+extern void *mmAlloc(int size, int heap, int flags);
 extern undefined4 FUN_80017970();
 extern undefined4 FUN_80017a54();
 extern int FUN_80017a98();
@@ -130,6 +131,7 @@ extern undefined4 FUN_80080f8c();
 extern void expgfxRemoveAll();
 extern undefined4 FUN_80135814();
 extern undefined4 FUN_802420e0();
+extern void DCFlushRange(void *addr, u32 nBytes);
 extern undefined4 FUN_80247618();
 extern undefined4 FUN_80247bf8();
 extern undefined4 FUN_80259288();
@@ -226,6 +228,8 @@ extern undefined4 DAT_803111c1;
 extern undefined4 DAT_8031122c;
 extern undefined DAT_80380209;
 extern int DAT_8039b7b8;
+extern u8 gExpgfxRuntimeData[];
+extern s16 gExpgfxStaticPoolSlotTypeIds[];
 extern undefined gExpgfxPoolSourceModes;
 extern undefined4 gExpgfxPoolSourceIds;
 extern undefined4 DAT_8039c7c8;
@@ -1142,105 +1146,67 @@ extern void* PTR_LAB_803108a0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                             undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                             undefined8 param_7,undefined8 param_8)
+#pragma scheduling off
+void expgfx_initialise(void)
 {
-  undefined *puVar1;
-  undefined4 *puVar2;
-  undefined *puVar3;
-  undefined2 *puVar4;
-  undefined *puVar5;
-  undefined4 *puVar6;
-  int *piVar7;
-  int iVar8;
-  
-  piVar7 = &DAT_8039b7b8;
-  expgfxRemoveAll(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  puVar2 = &gExpgfxPoolActiveMasks;
-  puVar3 = &gExpgfxPoolActiveCounts;
-  puVar4 = &gExpgfxPoolSlotTypeIds;
-  puVar1 = &gExpgfxPoolFrameFlags;
-  puVar5 = &gExpgfxPoolSourceModes;
-  puVar6 = &gExpgfxPoolSourceIds;
-  iVar8 = EXPGFX_POOL_GROUP_COUNT;
+  u8 *expgfxBase;
+  u32 *poolActiveMasks;
+  u8 *poolActiveCounts;
+  s16 *poolSlotTypeIds;
+  u32 *slotPoolBases;
+  int poolIndex;
+  int groupCount;
+
+  expgfxBase = gExpgfxRuntimeData;
+  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+  poolActiveCounts = expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
+  poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
+  groupCount = EXPGFX_POOL_GROUP_COUNT;
   do {
-    *puVar2 = 0;
-    *puVar3 = 0;
-    *puVar4 = 0xffff;
-    *puVar1 = 0;
-    *puVar5 = 0;
-    *puVar6 = 0;
-    puVar2[1] = 0;
-    puVar3[1] = 0;
-    puVar4[1] = 0xffff;
-    puVar1[1] = 0;
-    puVar5[1] = 0;
-    puVar6[1] = 0;
-    puVar2[2] = 0;
-    puVar3[2] = 0;
-    puVar4[2] = 0xffff;
-    puVar1[2] = 0;
-    puVar5[2] = 0;
-    puVar6[2] = 0;
-    puVar2[3] = 0;
-    puVar3[3] = 0;
-    puVar4[3] = 0xffff;
-    puVar1[3] = 0;
-    puVar5[3] = 0;
-    puVar6[3] = 0;
-    puVar2[4] = 0;
-    puVar3[4] = 0;
-    puVar4[4] = 0xffff;
-    puVar1[4] = 0;
-    puVar5[4] = 0;
-    puVar6[4] = 0;
-    puVar2[5] = 0;
-    puVar3[5] = 0;
-    puVar4[5] = 0xffff;
-    puVar1[5] = 0;
-    puVar5[5] = 0;
-    puVar6[5] = 0;
-    puVar2[6] = 0;
-    puVar3[6] = 0;
-    puVar4[6] = 0xffff;
-    puVar1[6] = 0;
-    puVar5[6] = 0;
-    puVar6[6] = 0;
-    puVar2[7] = 0;
-    puVar3[7] = 0;
-    puVar4[7] = 0xffff;
-    puVar1[7] = 0;
-    puVar5[7] = 0;
-    puVar6[7] = 0;
-    puVar2 = puVar2 + 8;
-    puVar3 = puVar3 + 8;
-    puVar4 = puVar4 + 8;
-    puVar1 = puVar1 + 8;
-    puVar5 = puVar5 + 8;
-    puVar6 = puVar6 + 8;
-    iVar8 = iVar8 + -1;
-  } while (iVar8 != 0);
-  DAT_8039c7cc = 0;
-  DAT_8039c7c8 = 0;
-  DAT_8039c7d4 = 0;
-  DAT_8039c7d0 = 0;
-  DAT_803dded8 = 1;
-  iVar8 = 0;
+    poolIndex = 0;
+    *poolActiveMasks = poolIndex;
+    *poolActiveCounts = poolIndex;
+    *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
+    poolActiveMasks[1] = poolIndex;
+    poolActiveCounts[1] = poolIndex;
+    poolSlotTypeIds[1] = EXPGFX_INVALID_SLOT_TYPE;
+    poolActiveMasks[2] = poolIndex;
+    poolActiveCounts[2] = poolIndex;
+    poolSlotTypeIds[2] = EXPGFX_INVALID_SLOT_TYPE;
+    poolActiveMasks[3] = poolIndex;
+    poolActiveCounts[3] = poolIndex;
+    poolSlotTypeIds[3] = EXPGFX_INVALID_SLOT_TYPE;
+    poolActiveMasks[4] = poolIndex;
+    poolActiveCounts[4] = poolIndex;
+    poolSlotTypeIds[4] = EXPGFX_INVALID_SLOT_TYPE;
+    poolActiveMasks[5] = poolIndex;
+    poolActiveCounts[5] = poolIndex;
+    poolSlotTypeIds[5] = EXPGFX_INVALID_SLOT_TYPE;
+    poolActiveMasks[6] = poolIndex;
+    poolActiveCounts[6] = poolIndex;
+    poolSlotTypeIds[6] = EXPGFX_INVALID_SLOT_TYPE;
+    poolActiveMasks[7] = poolIndex;
+    poolActiveCounts[7] = poolIndex;
+    poolSlotTypeIds[7] = EXPGFX_INVALID_SLOT_TYPE;
+    poolActiveMasks += 8;
+    poolActiveCounts += 8;
+    poolSlotTypeIds += 8;
+    groupCount--;
+  } while (groupCount != 0);
+
+  slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
+  poolIndex = 0;
   do {
-    if (*piVar7 != 0) {
-      FUN_80053754();
-    }
-    *piVar7 = 0;
-    piVar7[2] = 0;
-    piVar7[1] = 0;
-    piVar7[3] = 0;
-    piVar7 = piVar7 + 4;
-    iVar8 = iVar8 + 1;
-  } while (iVar8 < 0x20);
-  DAT_803dded8 = 0;
+    *slotPoolBases = (u32)mmAlloc(EXPGFX_POOL_BYTES, 0x14, 0);
+    memset((void *)*slotPoolBases, 0, EXPGFX_POOL_BYTES);
+    DCFlushRange((void *)*slotPoolBases, EXPGFX_POOL_BYTES);
+    slotPoolBases++;
+    poolIndex++;
+  } while (poolIndex < EXPGFX_POOL_COUNT);
+  memset(expgfxBase + EXPGFX_EXPTAB_OFFSET, 0, 0x500);
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--

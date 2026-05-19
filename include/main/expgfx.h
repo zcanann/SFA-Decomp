@@ -31,8 +31,6 @@ int expgfx_addremove(struct ExpgfxSpawnConfig *config, int preferredPoolIndex, s
                      u8 boundsTemplateId);
 void expgfx_onMapSetup(void);
 void expgfx_release(void);
-void expgfx_initialise(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                       undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                       undefined8 param_7,undefined8 param_8);
+void expgfx_initialise(void);
 
 #endif /* MAIN_EXPGFX_H_ */
