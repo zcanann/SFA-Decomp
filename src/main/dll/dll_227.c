@@ -15,7 +15,6 @@ extern void *lbl_803DCA8C;
 extern void *lbl_803DCA54;
 extern void *lbl_803DCAB8;
 extern int lbl_803DDBB0;
-extern void *lbl_803DDB90;
 extern f32 lbl_803DDBA4;
 extern void *pDll_expgfx;
 extern f32 lbl_803E4CB8;
@@ -45,9 +44,9 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
             ObjPath_GetPointWorldPosition(obj, 0, &outX, &outY, &outZ, 0);
             (*(void (***)(void *, int, int *, int, int, int))pDll_expgfx)[2](obj, 0x4bd, &local_8, 0x200001, -1, 0);
 
-            if (lbl_803DDB90 != NULL && *((u8 *)lbl_803DDB90 + 0x2f8) != 0 && *((u8 *)lbl_803DDB90 + 0x4c) != 0) {
+            if (gDIMbosstonsilLight != 0 && *((u8 *)gDIMbosstonsilLight + 0x2f8) != 0 && *((u8 *)gDIMbosstonsilLight + 0x4c) != 0) {
                 lightVecFn_8001dd88(outX, outY, outZ);
-                queueGlowRender(lbl_803DDB90);
+                queueGlowRender((void *)gDIMbosstonsilLight);
             }
         }
     }
@@ -115,31 +114,31 @@ void DIMbosstonsil_update(void *obj)
     *(void **)((char *)r30 + 0x2d0) = Obj_GetPlayerObject();
     dimBossTonsil_newState_hitFightMain(obj, 0, r30, r30);
 
-    if (lbl_803DDB90 == NULL) return;
+    if (gDIMbosstonsilLight == 0) return;
 
     fn_8001D9F4(&b4, &b3, &b2, &b1);
-    fn_8001D71C(lbl_803DDB90, *((u8 *)lbl_803DDB90 + 0x13), *((u8 *)lbl_803DDB90 + 0x12), *((u8 *)lbl_803DDB90 + 0x11), 0xc0);
+    fn_8001D71C((void *)gDIMbosstonsilLight, *((u8 *)gDIMbosstonsilLight + 0x13), *((u8 *)gDIMbosstonsilLight + 0x12), *((u8 *)gDIMbosstonsilLight + 0x11), 0xc0);
 
-    if (*((u8 *)lbl_803DDB90 + 0x2f8) == 0) return;
-    if (*((u8 *)lbl_803DDB90 + 0x4c) == 0) return;
+    if (*((u8 *)gDIMbosstonsilLight + 0x2f8) == 0) return;
+    if (*((u8 *)gDIMbosstonsilLight + 0x4c) == 0) return;
 
     {
         s16 r30_local;
         int sum;
-        sum = (int)*((u8 *)lbl_803DDB90 + 0x2f9) + (int)*((s8 *)lbl_803DDB90 + 0x2fa);
+        sum = (int)*((u8 *)gDIMbosstonsilLight + 0x2f9) + (int)*((s8 *)gDIMbosstonsilLight + 0x2fa);
         r30_local = (s16)sum;
         if (r30_local < 0) {
             r30_local = 0;
-            *((u8 *)lbl_803DDB90 + 0x2fa) = 0;
+            *((u8 *)gDIMbosstonsilLight + 0x2fa) = 0;
         } else if (r30_local > 0xc) {
             int rnd = randomGetRange(-0xc, 0xc);
             r30_local = (s16)(r30_local + rnd);
             if (r30_local > 0xff) {
                 r30_local = 0xff;
-                *((u8 *)lbl_803DDB90 + 0x2fa) = 0;
+                *((u8 *)gDIMbosstonsilLight + 0x2fa) = 0;
             }
         }
-        *((u8 *)lbl_803DDB90 + 0x2f9) = (u8)r30_local;
+        *((u8 *)gDIMbosstonsilLight + 0x2f9) = (u8)r30_local;
     }
 }
 #pragma scheduling reset

@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/DIM/DIMbossspit.h"
 
 extern f32 timeDelta;
-extern u8 lbl_803DDB94;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
@@ -82,7 +82,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *up
           (s16)(*(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) & ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG);
       obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
       GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
-      if ((s8)lbl_803DDB94 >= DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD) {
+      if (gDIMbosstonsilRoutePhase >= DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD) {
         GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH, 1);
       } else {
         GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_LOW, 1);
@@ -112,7 +112,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *up
           (s16)(*(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) & ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG);
       obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
       GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
-      if ((s8)lbl_803DDB94 == DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD) {
+      if (gDIMbosstonsilRoutePhase == DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD) {
         GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_LOW, 1);
       } else {
         GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH, 1);

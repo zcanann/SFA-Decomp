@@ -8,6 +8,9 @@
 #define DIMBOSSTONSIL_SCALE_OFFSET 0x274
 #define DIMBOSSTONSIL_HEALTH_PHASE_OFFSET 0x354
 
+extern int gDIMbosstonsilLight;
+extern s8 gDIMbosstonsilRoutePhase;
+
 void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                                 undefined8 param_4,undefined8 param_5,undefined8 param_6,
                                 undefined8 param_7,undefined8 param_8,uint param_9,

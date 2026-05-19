@@ -22,8 +22,6 @@ extern void fn_801BDF20(void);
 
 extern undefined4* lbl_803DCA8C;
 extern undefined4* lbl_803DCAB8;
-extern int lbl_803DDB90;
-extern s8 lbl_803DDB94;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
@@ -62,31 +60,31 @@ void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
   *(void (**)(void))(obj + 0xbc) = (void (*)(void))dll_DIM_BossGutSpik_update;
   (*(code *)(*lbl_803DCA8C + 0x14))(obj,state,0);
   *(s16 *)(state + 0x270) = 0;
-  lbl_803DDB94 = (s8)GameBit_Get(0x20c);
-  if (lbl_803DDB94 < 3) {
-    *(s8 *)(state + DIMBOSSTONSIL_HEALTH_PHASE_OFFSET) = 3 - lbl_803DDB94;
+  gDIMbosstonsilRoutePhase = (s8)GameBit_Get(0x20c);
+  if (gDIMbosstonsilRoutePhase < 3) {
+    *(s8 *)(state + DIMBOSSTONSIL_HEALTH_PHASE_OFFSET) = 3 - gDIMbosstonsilRoutePhase;
   }
   else {
-    *(s8 *)(state + DIMBOSSTONSIL_HEALTH_PHASE_OFFSET) = 7 - lbl_803DDB94;
+    *(s8 *)(state + DIMBOSSTONSIL_HEALTH_PHASE_OFFSET) = 7 - gDIMbosstonsilRoutePhase;
   }
   lbl_803DDBA4 = lbl_803E4C90;
   lbl_803DDBA0 = lbl_803E4C90;
   lbl_803DDB98 = lbl_803E4C90;
   lbl_803DDB9C = lbl_803E4C9C;
-  lbl_803DDB90 = objCreateLight(0,1);
-  if (lbl_803DDB90 != 0) {
-    modelLightStruct_setField50(lbl_803DDB90,2);
-    modelLightStruct_setColorsA8AC(lbl_803DDB90,0xff,0,0,0x7f);
-    modelLightStruct_setColors100104(lbl_803DDB90,0xff,0,0,0x7f);
-    lightDistAttenFn_8001dc38(lbl_803DDB90,lbl_803E4C9C,lbl_803E4CA0);
-    lightSetField4D(lbl_803DDB90,1);
-    lightFn_8001db6c(lbl_803DDB90,lbl_803E4C90,1);
-    fn_8001D714(lbl_803DDB90,lbl_803E4CA0);
-    lightSetFieldB0(lbl_803DDB90,0xff,0x7f,0,0x40);
-    fn_8001D9E0(lbl_803DDB90,0xff,0x7f,0,0x40);
-    lightFn_8001d620(lbl_803DDB90,2,0x3c);
-    lightSetField2FB(lbl_803DDB90,1);
-    fn_8001D730(lbl_803DDB90,lbl_803E4CA0,0,0xff,0,0,0x7f);
+  gDIMbosstonsilLight = objCreateLight(0,1);
+  if (gDIMbosstonsilLight != 0) {
+    modelLightStruct_setField50(gDIMbosstonsilLight,2);
+    modelLightStruct_setColorsA8AC(gDIMbosstonsilLight,0xff,0,0,0x7f);
+    modelLightStruct_setColors100104(gDIMbosstonsilLight,0xff,0,0,0x7f);
+    lightDistAttenFn_8001dc38(gDIMbosstonsilLight,lbl_803E4C9C,lbl_803E4CA0);
+    lightSetField4D(gDIMbosstonsilLight,1);
+    lightFn_8001db6c(gDIMbosstonsilLight,lbl_803E4C90,1);
+    fn_8001D714(gDIMbosstonsilLight,lbl_803E4CA0);
+    lightSetFieldB0(gDIMbosstonsilLight,0xff,0x7f,0,0x40);
+    fn_8001D9E0(gDIMbosstonsilLight,0xff,0x7f,0,0x40);
+    lightFn_8001d620(gDIMbosstonsilLight,2,0x3c);
+    lightSetField2FB(gDIMbosstonsilLight,1);
+    fn_8001D730(gDIMbosstonsilLight,lbl_803E4CA0,0,0xff,0,0,0x7f);
   }
   return;
 }
