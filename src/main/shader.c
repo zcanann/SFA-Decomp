@@ -2340,6 +2340,36 @@ void goToNextMapLayer(void) {
 	renderFlags |= 0x4000;
 }
 
+/* 132b per-block flag scan. */
+typedef struct {
+	u32 field_0;
+	s16 field_4;
+	u16 field_6;
+} BlockEntry;
+
+extern BlockEntry lbl_8038224C[8];
+extern s8 lbl_803DCDEC;
+
+void mapBlockFn_80059c2c(u8* outFlags) {
+	int outer;
+	for (outer = 0; outer < 0x78; outer++) {
+		int i;
+		int found = -1;
+		s8 limit = lbl_803DCDEC;
+		for (i = 0; i < limit; i++) {
+			if (lbl_8038224C[i].field_0 != 0 && lbl_8038224C[i].field_4 == outer) {
+				found = i;
+				break;
+			}
+		}
+		if (found == -1) {
+			outFlags[outer] = 0;
+		} else {
+			outFlags[outer] = 1;
+		}
+	}
+}
+
 /* 136b 5-plane view-frustum sphere visibility test. */
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
