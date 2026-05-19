@@ -39,6 +39,12 @@ extern f32 lbl_803E5D18;
 extern f32 lbl_803E5D1C;
 extern f32 lbl_803E5D20;
 
+extern f32 lbl_803E5064;
+extern f32 lbl_803E5068;
+extern f32 lbl_803E5084;
+extern undefined4 lbl_803DDBC8;
+extern int randomGetRange(int min, int max);
+
 /*
  * --INFO--
  *
@@ -94,6 +100,44 @@ void FUN_801c83d4(int param_1)
  */
 void ecsh_cup_release(void)
 {
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ecsh_cup_init
+ * EN v1.0 Address: 0x801C8A34
+ * EN v1.0 Size: 300b
+ */
+void ecsh_cup_init(int obj, int p2)
+{
+    int t;
+    f32 ftmp;
+
+    t = *(int *)(obj + 0xb8);
+    ftmp = lbl_803E5064;
+    lbl_803DDBC8 = 0;
+    *(f32 *)(t + 0x0) = *(f32 *)(obj + 0xc);
+    *(f32 *)(t + 0x4) = *(f32 *)(obj + 0x10);
+    *(f32 *)(t + 0x8) = *(f32 *)(obj + 0x14);
+    *(f32 *)(t + 0x18) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E5084;
+    *(f32 *)(t + 0xc) = lbl_803E5068;
+    *(f32 *)(t + 0x10) = lbl_803E5068;
+    *(f32 *)(t + 0x14) = lbl_803E5068;
+    *(int *)(t + 0x24) = 0;
+    *(int *)(t + 0x28) = *(s16 *)(p2 + 0x1a);
+    *(f32 *)(t + 0x20) = (f32)randomGetRange(0, 0x258);
+    *(s16 *)(t + 0x2c) = (s16)randomGetRange(-0x320, 0x320);
+    *(u8 *)(t + 0x2e) = 1;
+    *(u8 *)(obj + 0x37) = 0;
+    *(f32 *)(t + 0x1c) = lbl_803E5068;
+    if (lbl_803DDBC8 == 0) {
+        lbl_803DDBC8 = ObjGroup_FindNearestObject(0xb, obj, &ftmp);
+    }
+    ObjHits_EnableObject(obj);
+    ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+    ObjHits_SyncObjectPositionIfDirty(obj);
 }
 
 /*
