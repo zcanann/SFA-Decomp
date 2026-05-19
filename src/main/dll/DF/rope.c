@@ -645,6 +645,40 @@ void dimbosscrackpar_release(void) {}
 void dimbosscrackpar_initialise(void) {}
 void dimbossfire_hitDetect(void) {}
 
+/*
+ * --INFO--
+ *
+ * Function: dimbossfire_free
+ * EN v1.0 Address: 0x801C04C8
+ * EN v1.0 Size: 100b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dimbossfire_free(int obj)
+{
+  int state;
+  void *light;
+
+  state = *(int *)(obj + 0xb8);
+  light = *(void **)(state + 0x10);
+  if (light != 0) {
+    ModelLightStruct_free(light);
+    *(undefined4 *)(state + 0x10) = 0;
+  }
+  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+
+void dimbossfire_render(int p1,int p2,int p3,int p4,int p5,s8 visible)
+{
+  s32 isVisible = visible;
+  if (isVisible != 0) {
+  }
+}
+
 /* 8b "li r3, N; blr" returners. */
 int dimbossgut2_setScale(void) { return 0x0; }
 int dimbossgut2_getExtraSize(void) { return 0x42c; }

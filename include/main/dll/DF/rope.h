@@ -18,5 +18,7 @@ void DIMbossspit_update(undefined8 param_1,undefined8 param_2,undefined8 param_3
 void DIMbossspit_init(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                       int param_9);
+void dimbossfire_free(int obj);
+void dimbossfire_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 
 #endif /* MAIN_DLL_DF_ROPE_H_ */
