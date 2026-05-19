@@ -65,13 +65,16 @@ void synthCancelJob(int voice)
     state = job->state;
     if (state < 3) {
         if (state >= 1) {
-            if ((u32)state == 2) {
-                voiceBreakAndFree(job->voice);
-            }
-            job->state = 3;
-            job->callback(0, 0, 0, 0, job->callbackUser);
+            goto cancel;
         }
     }
+    return;
+cancel:
+    if ((u32)state == 2) {
+        voiceBreakAndFree(job->voice);
+    }
+    job->state = 3;
+    job->callback(0, 0, 0, 0, job->callbackUser);
 }
 
 void synthRefreshJobVolumes(void)
