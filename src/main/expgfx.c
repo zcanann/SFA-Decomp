@@ -1358,7 +1358,7 @@ void renderParticles(void)
   u8 *poolBoundsTemplateIds;
   ExpgfxBounds *poolBounds;
   u32 *poolSourceIds;
-  s16 *poolSlotTypeIds;
+  register s16 *poolSlotTypeIds;
   uint *slotPoolBases;
   int poolIndex;
   int currentMatrix;
@@ -1374,7 +1374,10 @@ void renderParticles(void)
   poolBoundsTemplateIds = expgfxBase + EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET;
   poolBounds = (ExpgfxBounds *)(expgfxBase + EXPGFX_POOL_BOUNDS_OFFSET);
   poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
+  asm {
+    lis poolSlotTypeIds, gExpgfxStaticPoolSlotTypeIds@ha
+    addi poolSlotTypeIds, poolSlotTypeIds, gExpgfxStaticPoolSlotTypeIds@l
+  }
   slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
   do {
     if ((*poolActiveCounts != '\0') &&
