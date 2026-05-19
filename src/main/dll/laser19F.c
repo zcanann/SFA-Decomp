@@ -335,3 +335,37 @@ int mmsh_shrine_func08(void)
 void mmsh_shrine_hitDetect(void)
 {
 }
+
+extern void lightFn_8001db6c(int p1, int p2, f32 f);
+extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4,
+                                  undefined4 p5, f32 f);
+extern void objParticleFn_80099d84(int p1, int p2, int p3, f32 f1, f32 f2);
+extern f32 lbl_803E4F50;
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_shrine_render
+ * EN v1.0 Address: 0x801C4E64
+ * EN v1.0 Size: 184b
+ */
+#pragma peephole off
+#pragma scheduling off
+void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
+                        char flag)
+{
+    int t = *(int *)(obj + 0xb8);
+    if (flag == 0) {
+        if (*(void **)t != NULL) {
+            lightFn_8001db6c(*(int *)t, 0, lbl_803E4F50);
+        }
+    } else {
+        if (*(void **)t != NULL) {
+            lightFn_8001db6c(*(int *)t, 1, lbl_803E4F50);
+        }
+        objRenderFn_8003b8f4(obj, a2, a3, a4, a5, lbl_803E4F50);
+        objParticleFn_80099d84(obj, 7, *(int *)t, lbl_803E4F50, lbl_803E4F50);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
