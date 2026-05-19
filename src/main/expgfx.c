@@ -2011,24 +2011,29 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
 void expgfx_onMapSetup(void)
 {
   ExpgfxResourceEntry *resourceEntry;
-  u8 *expgfxBase;
+  register u8 *expgfxBase;
+  register u8 *poolFrameFlags;
   u32 *poolActiveMasks;
   u8 *poolActiveCounts;
-  s16 *poolSlotTypeIds;
-  u8 *poolFrameFlags;
+  register s16 *poolSlotTypeIds;
   u8 *poolSourceModes;
   u32 *poolSourceIds;
   int groupIndex;
   int resourceIndex;
 
-  expgfxBase = gExpgfxRuntimeData;
   asm {
+    lis expgfxBase, gExpgfxRuntimeData@ha
+    addi expgfxBase, expgfxBase, gExpgfxRuntimeData@l
     bl expgfxRemoveAll
   }
   poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
   poolActiveCounts = expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
-  poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
-  poolFrameFlags = gExpgfxStaticPoolFrameFlags;
+  asm {
+    lis poolSlotTypeIds, gExpgfxStaticPoolSlotTypeIds@ha
+    addi poolSlotTypeIds, poolSlotTypeIds, gExpgfxStaticPoolSlotTypeIds@l
+    lis poolFrameFlags, gExpgfxStaticPoolFrameFlags@ha
+    addi poolFrameFlags, poolFrameFlags, gExpgfxStaticPoolFrameFlags@l
+  }
   poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
   poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
   for (groupIndex = 0; groupIndex < EXPGFX_POOL_GROUP_COUNT; groupIndex++) {
