@@ -2299,3 +2299,9 @@ void mapReloadWithFadeout(void) {
 	lbl_803DCEB6 = 0;
 	lbl_803DCEB4 = 0;
 }
+
+/* 16b sda lookup. */
+extern int lbl_803DCE6C;
+void* fn_80056684(int idx) {
+	return (void*)(lbl_803DCE6C + (idx << 4));
+}
