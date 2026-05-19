@@ -2340,6 +2340,23 @@ void goToNextMapLayer(void) {
 	renderFlags |= 0x4000;
 }
 
+/* 96b camera-pos gated load. */
+extern f32 lbl_803DCE5C;
+extern f32 lbl_803DCE60;
+extern f32 lbl_803DCE64;
+extern void doPendingMapLoads(void);
+
+void loadMapForCameraPos(float x, float y, float z) {
+	if ((renderFlags & 2) != 0 && (renderFlags & 0x800) == 0) return;
+	lbl_803DCE64 = x;
+	lbl_803DCE60 = y;
+	lbl_803DCE5C = z;
+	renderFlags |= 2;
+	if ((renderFlags & 0x800) != 0) {
+		doPendingMapLoads();
+	}
+}
+
 /* 80b current map block lookup. */
 extern int lbl_803DB648;
 extern void* lbl_803DCEA0;
