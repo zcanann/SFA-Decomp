@@ -762,3 +762,21 @@ void Link_setOpacity(u8 v) { lbl_803DD90C = v; }
 void Link_setSelected(int v) { lbl_803DD912 = (s8)v; }
 #pragma peephole reset
 s32  Link_getSelected(void) { return lbl_803DD912; }
+
+/* Stubs added to align function set with v1.0 asm. Source had many Ghidra
+ * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
+ * asm symbol set is fully present so future hunters can fill bodies. */
+void fn_8012FCEC(void) {}
+void GameUI_initialise(void) {}
+void fn_8012FEE8(void) {}
+void fn_80130034(void) {}
+void fn_8013006C(void) {}
+void fn_801300A4(void) {}
+void Menu_initialise(void) {}
+void fn_80130124(void) {}
+void fn_80130144(void) {}
+void fn_801302C0(void) {}
+void fn_80130484(void) {}
+void fn_80130578(void) {}
+void Link_copy(void) {}
+void fn_801306E4(void) {}
