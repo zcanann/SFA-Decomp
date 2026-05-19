@@ -77,9 +77,8 @@ int trickyGuardFindBaddieTarget(int p) {
     f32 bestDist;
     int *list;
     int i;
-    uint best;
+    uint best = 0;
 
-    best = 0;
     list = (int *)ObjGroup_GetObjects(3, &count);
     for (i = 0; (s16)i < count; i++) {
         d = (f32)getXZDistance((float *)(*list + 0x18), (float *)(p + 0x71c));
@@ -97,10 +96,18 @@ int trickyGuardFindBaddieTarget(int p) {
         list++;
     }
     if (best != 0) {
+        register u32 mask;
+        register u32 oldFlags;
+        register int pReg = p;
         *(int *)(p + 0x72c) = best;
         if (*(uint *)(p + 0x28) != (best + 0x18)) {
             *(int *)(p + 0x28) = best + 0x18;
-            *(u32 *)(p + 0x54) = *(u32 *)(p + 0x54) & 0xfffffbff;
+            asm {
+                lwz oldFlags, 0x54(pReg)
+                li mask, -1025
+                and mask, oldFlags, mask
+                stw mask, 0x54(pReg)
+            }
             *(u16 *)(p + 0xd2) = 0;
         }
         *(u8 *)(p + 0xa) = 4;
