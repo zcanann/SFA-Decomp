@@ -49,7 +49,7 @@ extern undefined4 FUN_80294964();
 extern uint countLeadingZeros();
 
 extern int DAT_803a2448;
-extern int gRomCurveTable[];
+extern RomCurveDef *gRomCurveTable[];
 extern undefined4 DAT_803a3898;
 extern undefined4 gGameplayRegisteredDebugOptions;
 extern undefined4 gGameplayEnabledDebugOptions;
@@ -92,8 +92,8 @@ extern f32 lbl_803E133C;
 extern f32 lbl_803E1340;
 extern char sCurvesMaxRomCurvesExceeded[];
 
-static inline u32 RomCurve_GetId(int curve) {
-  return ((RomCurveDef *)curve)->id;
+static inline u32 RomCurve_GetId(RomCurveDef *curve) {
+  return curve->id;
 }
 
 static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
@@ -110,7 +110,7 @@ static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
   low = 0;
   while (low <= high) {
     mid = (high + low) >> 1;
-    curve = (RomCurveDef *)gRomCurveTable[mid];
+    curve = gRomCurveTable[mid];
     if (curveId <= curve->id) {
       if (curve->id <= curveId) {
         return curve;
@@ -330,11 +330,11 @@ void curves_distFn15(undefined8 param_1,double param_2,double param_3)
     while (iVar11 <= iVar7) {
       iVar8 = iVar7 + iVar11 >> 1;
       iVar9 = (&DAT_803a2448)[iVar8];
-      if (RomCurve_GetId(iVar9) < uVar4) {
+      if (RomCurve_GetId((RomCurveDef *)iVar9) < uVar4) {
         iVar11 = iVar8 + 1;
       }
       else {
-        if (RomCurve_GetId(iVar9) <= uVar4) goto LAB_800e2324;
+        if (RomCurve_GetId((RomCurveDef *)iVar9) <= uVar4) goto LAB_800e2324;
         iVar7 = iVar8 + -1;
       }
     }
@@ -366,11 +366,11 @@ LAB_800e2324:
         while (iVar7 <= iVar8) {
           iVar6 = iVar8 + iVar7 >> 1;
           iVar11 = (&DAT_803a2448)[iVar6];
-          if (RomCurve_GetId(iVar11) < uVar12) {
+          if (RomCurve_GetId((RomCurveDef *)iVar11) < uVar12) {
             iVar7 = iVar6 + 1;
           }
           else {
-            if (RomCurve_GetId(iVar11) <= uVar12) goto LAB_800e23ec;
+            if (RomCurve_GetId((RomCurveDef *)iVar11) <= uVar12) goto LAB_800e23ec;
             iVar8 = iVar6 + -1;
           }
         }
@@ -1416,7 +1416,7 @@ undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
     }
     else {
       *outIndex = mid;
-      return gRomCurveTable[mid];
+      return (undefined4)gRomCurveTable[mid];
     }
   }
   *outIndex = -1;
@@ -2549,7 +2549,7 @@ void curves_remove(RomCurveDef *curve)
   int remaining;
 
   index = 0;
-  slot = (RomCurveDef **)gRomCurveTable;
+  slot = gRomCurveTable;
   count = gRomCurveCount;
   while ((index < count) &&
          (curve->id != (*slot)->id)) {
@@ -2562,16 +2562,16 @@ void curves_remove(RomCurveDef *curve)
   }
 
   gRomCurveCount = gRomCurveCount - 1;
-  slot = (RomCurveDef **)gRomCurveTable + index;
+  slot = gRomCurveTable + index;
+  remaining = gRomCurveCount - index;
   if (index >= gRomCurveCount) {
     return;
   }
-  remaining = gRomCurveCount - index;
-  while (remaining > 0) {
+  do {
     *slot = slot[1];
     slot = slot + 1;
     remaining = remaining + -1;
-  }
+  } while (remaining > 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2606,17 +2606,17 @@ void curves_addCurveDef(RomCurveDef *curve)
   }
 
   insertIndex = 0;
-  slot = (RomCurveDef **)gRomCurveTable;
+  slot = gRomCurveTable;
   for (; (insertIndex < count) && (curve->id > (*slot)->id); insertIndex++) {
     slot = slot + 1;
   }
 
   for (count = count; count > insertIndex; count--) {
-    ((RomCurveDef **)gRomCurveTable)[count] = ((RomCurveDef **)gRomCurveTable)[count - 1];
+    gRomCurveTable[count] = gRomCurveTable[count - 1];
   }
 
   gRomCurveCount = gRomCurveCount + 1;
-  ((RomCurveDef **)gRomCurveTable)[insertIndex] = curve;
+  gRomCurveTable[insertIndex] = curve;
 }
 #pragma peephole reset
 #pragma scheduling reset
