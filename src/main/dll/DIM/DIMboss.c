@@ -528,8 +528,10 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
   DIMbossEffect *effect;
 
   runtime = obj->runtime;
-  if (((shouldRender != 0) && (obj->renderPause == 0)) &&
-      (runtime->phase != DIMBOSS_PHASE_NO_RENDER)) {
+  if ((shouldRender != 0) && (obj->renderPause == 0)) {
+    if (runtime->phase == DIMBOSS_PHASE_NO_RENDER) {
+      return;
+    }
     objRenderFn_8003b8f4((double)lbl_803E4C44);
     fn_801BB598(obj,runtime);
     dll_2E_func06(obj,lbl_803AC9DC,0);
@@ -636,7 +638,7 @@ void DIMboss_update(DIMbossObject *obj)
                       ((double)(obj->modelScale * obj->baseScale),obj,targetModel,lbl_803AC9AC,1);
           }
         }
-        if (((uint)topState->steamSfxPending >> 7) != 0) {
+        if (((topState->steamSfxPending >> 7) & 1) != 0) {
           getEnvfxAct(0,0,0xdb,0);
           getEnvfxAct(0,0,0xdc,0);
           skyFn_80089710(7,1,0);
@@ -694,18 +696,13 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   DIMbossRuntime *runtime;
   DIMbossTopState *topState;
   DIMbossLocalVec localVec;
-  DIMbossLocalVec *localVecSrc;
   u8 *animFlagsByte;
   undefined4 mapDir;
   u8 animFlags;
   f32 liftHeight;
 
   runtime = obj->runtime;
-  localVecSrc = (DIMbossLocalVec *)lbl_802C2338;
-  localVec.x = localVecSrc->x;
-  localVec.y = localVecSrc->y;
-  localVec.z = localVecSrc->z;
-  localVec.mode = localVecSrc->mode;
+  localVec = *(DIMbossLocalVec *)lbl_802C2338;
   setDrawCloudsAndLights(0);
   obj->updateMode = 2;
   animFlags = 6;
