@@ -350,6 +350,7 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,
 #pragma peephole off
 void expgfxRemoveAll(void)
 {
+  u16 *entryRefCount;
   ExpgfxTableEntry *tableEntry;
   ExpgfxSlot *slot;
   u8 *expgfxBase;
@@ -383,9 +384,10 @@ void expgfxRemoveAll(void)
         }
         tableIndex = Expgfx_GetSlotTableIndex(slot);
         tableEntry = &((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[tableIndex];
-        if (tableEntry->refCount != 0) {
-          tableEntry->refCount--;
-          if (tableEntry->refCount == 0) {
+        entryRefCount = &tableEntry->refCount;
+        if (*entryRefCount != 0) {
+          (*entryRefCount)--;
+          if (*entryRefCount == 0) {
             tableEntry->textureOrResource = 0;
             tableEntry->key0 = 0;
           }
