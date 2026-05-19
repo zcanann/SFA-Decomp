@@ -372,46 +372,47 @@ void transporter_update(int obj)
 #pragma scheduling off
 void transporter_hitDetect(int obj)
 {
-    int state2 = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    register int self = obj;
+    register int state2 = *(int *)(self + 0x4c);
+    register int state = *(int *)(self + 0xb8);
 
     if ((int)lbl_803DCEB8 > -1) {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xe7);
-        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 1);
-        if (*(int *)(obj + 0x74) != 0) {
-            objRenderFn_80041018(obj);
+        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xffffffe7);
+        *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) | 1);
+        if (*(u32 *)(self + 0x74) != 0) {
+            objRenderFn_80041018(self);
         }
-    } else if ((int)(signed char)*(u8 *)(state2 + 0x1a) == -1) {
-        if ((*(u8 *)(state + 0xe) & 0x40) != 0) {
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
-        } else {
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xe7);
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
-        }
-        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) & 0xfe);
-    } else if ((*(u8 *)(state + 0xe) & 0x20) == 0
-               && (*(u8 *)(state + 0xd) != 0 || *(u8 *)(state + 0xc) != 0)) {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
-        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) & 0xfe);
-        if (*(int *)(obj + 0x74) != 0) {
-            objRenderFn_80041018(obj);
-        }
-    } else if ((*(u8 *)(state + 0xe) & 0x20) == 0
-               && *(short *)(state2 + 0x20) != -1
-               && GameBit_Get((int)*(short *)(state2 + 0x20)) == 0) {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xe7);
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
-        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) & 0xfe);
-        if (*(int *)(obj + 0x74) != 0) {
-            objRenderFn_80041018(obj);
-        }
-    } else {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xe7);
-        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 1);
-        if (*(int *)(obj + 0x74) != 0) {
-            objRenderFn_80041018(obj);
-        }
+        return;
     }
+
+    if ((int)(signed char)*(u8 *)(state2 + 0x1a) != -1
+        && (*(u8 *)(state + 0xe) & 0x20) == 0) {
+        if (*(u8 *)(state + 0xd) != 0 || *(u8 *)(state + 0xc) != 0) {
+            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
+            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & 0xfffffffe);
+        } else if ((int)*(short *)(state2 + 0x20) != -1
+                   && GameBit_Get((int)*(short *)(state2 + 0x20)) == 0) {
+            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xfffffff7);
+            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x10);
+            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & 0xfffffffe);
+        } else {
+            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xffffffe7);
+            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) | 1);
+        }
+        if (*(u32 *)(self + 0x74) != 0) {
+            objRenderFn_80041018(self);
+        }
+        return;
+    }
+
+    /* Branch C */
+    if ((*(u8 *)(state + 0xe) & 0x40) != 0) {
+        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
+    } else {
+        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xfffffff7);
+        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x10);
+    }
+    *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & 0xfffffffe);
 }
 #pragma scheduling reset
 #pragma peephole reset
