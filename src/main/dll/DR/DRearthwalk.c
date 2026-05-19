@@ -759,3 +759,11 @@ void sh_emptytumblew_update(int obj)
   ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
                                               &lbl_803DDC00);
 }
+
+/* TODO stubs to align function set with v1.0 asm. Bodies are large
+ * state-machine and animation logic; filling them is a follow-up task. */
+void fn_801DA284(int obj) {}
+void fn_801DA4A8(int obj) {}
+void sh_staff_update(int obj) {}
+void sh_beacon_init(int obj, int defData) {}
+void sh_beacon_update(int obj) {}
