@@ -180,7 +180,7 @@ extern u8 gExpgfxRuntimeData[];
 extern u32 gExpgfxTrackedPoolSourceIds[];
 extern u32 gExpgfxTrackedSourceFrameMasks[];
 extern s16 gExpgfxStaticPoolSlotTypeIds[];
-extern int lbl_803DD258;
+extern int gExpgfxTextureFreeInProgress;
 extern volatile s16 gExpgfxSequenceCounter;
 extern volatile u8 gExpgfxFrameParityBit;
 extern char sExpgfxAddToTableUsageOverflow[];
@@ -296,10 +296,10 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,
       exptabTextureResources = expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET;
       tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
       if (*(uint *)(exptabTextureResources + tableOffset) != 0) {
-        lbl_803DD258 = 1;
+        gExpgfxTextureFreeInProgress = 1;
         tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
         textureFree((void *)*(uint *)(exptabTextureResources + tableOffset));
-        lbl_803DD258 = 0;
+        gExpgfxTextureFreeInProgress = 0;
       }
       tableIndex = Expgfx_GetSlotTableIndex(slot);
       tableOffset = tableIndex << EXPGFX_TABLE_ENTRY_SHIFT;
@@ -377,10 +377,10 @@ void expgfxRemoveAll(void)
              textureOrResource != 0) &&
             (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
              textureOrResource != 0)) {
-          lbl_803DD258 = 1;
+          gExpgfxTextureFreeInProgress = 1;
           textureFree((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
                           [Expgfx_GetSlotTableIndex(slot)].textureOrResource);
-          lbl_803DD258 = 0;
+          gExpgfxTextureFreeInProgress = 0;
         }
         tableIndex = Expgfx_GetSlotTableIndex(slot);
         tableEntry = &((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[tableIndex];
@@ -1566,10 +1566,10 @@ void expgfx_resetAllPools(void)
       if ((*poolActiveMasks & activeBit) != 0) {
         if (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
             textureOrResource != 0) {
-          lbl_803DD258 = 1;
+          gExpgfxTextureFreeInProgress = 1;
           textureFree((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
                           [Expgfx_GetSlotTableIndex(slot)].textureOrResource);
-          lbl_803DD258 = 0;
+          gExpgfxTextureFreeInProgress = 0;
         }
         tableEntry =
             (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET +
@@ -1607,11 +1607,11 @@ void expgfx_resetAllPools(void)
   resourceIndex = 0;
   resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
   do {
-    lbl_803DD258 = 1;
+    gExpgfxTextureFreeInProgress = 1;
     if (resourceEntry->resource != 0) {
       textureFree(resourceEntry->resource);
     }
-    lbl_803DD258 = 0;
+    gExpgfxTextureFreeInProgress = 0;
     resourceEntry->resource = 0;
     resourceEntry->tableKeyType = 0;
     resourceEntry->evictionScore = 0;
@@ -2103,7 +2103,7 @@ void expgfx_onMapSetup(void)
   *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET) = 0;
   *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET + 0xC) = 0;
   *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET + 8) = 0;
-  lbl_803DD258 = 1;
+  gExpgfxTextureFreeInProgress = 1;
   resourceIndex = 0;
   resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
   do {
@@ -2117,7 +2117,7 @@ void expgfx_onMapSetup(void)
     resourceEntry = resourceEntry + 1;
     resourceIndex = resourceIndex + 1;
   } while (resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT);
-  lbl_803DD258 = 0;
+  gExpgfxTextureFreeInProgress = 0;
   return;
 }
 #pragma peephole reset
