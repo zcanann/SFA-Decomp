@@ -738,11 +738,16 @@ void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *
 #pragma peephole off
 void Camera_update(void)
 {
-  int iVar1;
-  undefined4 uVar2;
   short *psVar3;
+  int textActive;
+  undefined4 uVar2;
   
-  iVar1 = gameTextFn_80134be8();
+  if (gameTextFn_80134be8() != 0) {
+    textActive = 1;
+  }
+  else {
+    textActive = 0;
+  }
   psVar3 = *(short **)(gCamcontrolState + 0x52);
   if (psVar3 == (short *)0x0) {
     *(undefined4 *)(gCamcontrolState + 0x92) = 0;
@@ -799,7 +804,7 @@ void Camera_update(void)
       camcontrol_applyState(gCamcontrolState);
     }
     camcontrol_applyQueuedAction();
-    if (iVar1 == 0) {
+    if (textActive == 0) {
       if (*(int *)(gCamcontrolState + 0x8e) == 0) {
         uVar2 = camcontrol_findBestTarget((int)gCamcontrolState,psVar3);
         *(undefined4 *)(gCamcontrolState + 0x92) = uVar2;
