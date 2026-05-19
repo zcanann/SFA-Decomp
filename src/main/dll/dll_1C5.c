@@ -109,6 +109,8 @@ void ecsh_cup_release(void)
  * EN v1.0 Address: 0x801C8A34
  * EN v1.0 Size: 300b
  */
+#pragma peephole off
+#pragma scheduling off
 void ecsh_cup_init(int obj, int p2)
 {
     int t;
@@ -122,9 +124,12 @@ void ecsh_cup_init(int obj, int p2)
     *(f32 *)(t + 0x8) = *(f32 *)(obj + 0x14);
     *(f32 *)(t + 0x18) = *(f32 *)(obj + 0x10);
     *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E5084;
-    *(f32 *)(t + 0xc) = lbl_803E5068;
-    *(f32 *)(t + 0x10) = lbl_803E5068;
-    *(f32 *)(t + 0x14) = lbl_803E5068;
+    {
+        f32 fz = lbl_803E5068;
+        *(f32 *)(t + 0xc) = fz;
+        *(f32 *)(t + 0x10) = fz;
+        *(f32 *)(t + 0x14) = fz;
+    }
     *(int *)(t + 0x24) = 0;
     *(int *)(t + 0x28) = *(s16 *)(p2 + 0x1a);
     *(f32 *)(t + 0x20) = (f32)randomGetRange(0, 0x258);
@@ -139,6 +144,8 @@ void ecsh_cup_init(int obj, int p2)
     ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
