@@ -334,6 +334,88 @@ int transporter_getExtraSize(void)
   return 0x10;
 }
 
+extern void objRenderFn_80041018(int obj);
+extern uint GameBit_Get(int eventId);
+extern void fn_8019098C(int obj);
+extern void fn_8019042C(int obj);
+extern short lbl_803DCEB8;
+
+/*
+ * --INFO--
+ *
+ * Function: transporter_update
+ * EN v1.0 Address: 0x80191658
+ * EN v1.0 Size: 72b
+ */
+#pragma peephole off
+#pragma scheduling off
+void transporter_update(int obj)
+{
+    register int self = obj;
+    register int state2 = *(int *)(self + 0x4c);
+    if ((int)(signed char)*(u8 *)(state2 + 0x1a) != -1) {
+        fn_8019098C(self);
+    }
+    fn_8019042C(self);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: transporter_hitDetect
+ * EN v1.0 Address: 0x801914AC
+ * EN v1.0 Size: 428b
+ */
+#pragma peephole off
+#pragma scheduling off
+void transporter_hitDetect(int obj)
+{
+    int state2 = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+
+    if ((int)lbl_803DCEB8 > -1) {
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xe7);
+        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 1);
+        if (*(int *)(obj + 0x74) != 0) {
+            objRenderFn_80041018(obj);
+        }
+    } else if ((int)(signed char)*(u8 *)(state2 + 0x1a) == -1) {
+        if ((*(u8 *)(state + 0xe) & 0x40) != 0) {
+            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
+        } else {
+            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xe7);
+            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+        }
+        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) & 0xfe);
+    } else if ((*(u8 *)(state + 0xe) & 0x20) == 0
+               && (*(u8 *)(state + 0xd) != 0 || *(u8 *)(state + 0xc) != 0)) {
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
+        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) & 0xfe);
+        if (*(int *)(obj + 0x74) != 0) {
+            objRenderFn_80041018(obj);
+        }
+    } else if ((*(u8 *)(state + 0xe) & 0x20) == 0
+               && *(short *)(state2 + 0x20) != -1
+               && GameBit_Get((int)*(short *)(state2 + 0x20)) == 0) {
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xe7);
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) & 0xfe);
+        if (*(int *)(obj + 0x74) != 0) {
+            objRenderFn_80041018(obj);
+        }
+    } else {
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xe7);
+        *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 1);
+        if (*(int *)(obj + 0x74) != 0) {
+            objRenderFn_80041018(obj);
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /*
  * --INFO--
  *
