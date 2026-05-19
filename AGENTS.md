@@ -94,3 +94,45 @@ Commit when both are true:
 - The result is plausible original source or materially improves the ability to recover it.
 
 Less process is intentional. Use judgment, move fast, and avoid spending an hour proving a bad assumption.
+
+## Ghidra Drift Playbook (add-new-function pattern)
+
+The Ghidra-imported `dll_XXX.c` files are usually decomp'd from a different snapshot
+than the v1.0 `.s` we're matching against. Symptom: the report says "1 stub" but
+when you read the asm you find 3-5 stubs, and the src functions (often named
+`FUN_801cXXXX`) are at addresses INSIDE the asm symbol ranges - Ghidra split
+them differently than the binary did.
+
+**Do not** try to fix the misaligned `FUN_xxx` functions in place. Compile order
+matters less than you think. Instead use the **add-new-function** pattern:
+
+1. Read `build/GSAE01/asm/main/dll/<unit>.s` and list `^\.fn` symbols + sizes.
+   That is the canonical function set.
+2. List the src's current function set (`grep -nE "^void|^int|^undefined" src/...`).
+3. For each asm symbol missing from src, ADD a new function with that exact name
+   to the bottom of the src file. The src file's existing `FUN_xxx` functions
+   can stay - they're dead/unreferenced or referenced only externally.
+4. Read the asm body for the new function and translate to C. Cargo-cult call
+   patterns from already-matched files:
+   - `(*(code *)(*(int *)lbl_XXX + offset))(args)` for vtable calls through
+     SDA21 pointer-to-pointer.
+   - `extern int Obj_IsObjectAlive(void* obj);` style — check `src/main/dll/*.c`
+     for existing extern declarations.
+   - `(double)lbl_SDA_FLOAT` for f1 args to functions that take a `double`.
+   - `*(unsigned char*)(p + off)` instead of `*(char*)(p + off)` when the asm
+     reads with `lbz; cmplwi` (no `extsb.`).
+5. Build, check the report, commit per-function gains. Even a partial fuzzy
+   match (50-90%) is real progress and unblocks the unit from "0 of N matched"
+   purgatory.
+
+For deeper structural fixes (where the asm body of one symbol corresponds to a
+`FUN_xxx` source function, just renamed), see `dbbc5ba9 Restructure laser19F`:
+move the `FUN_xxx` body into the right symbol with the right signature, delete
+the `FUN_xxx`, drop its `.h` declaration. Keep `FUN_xxx` only if other `.c`
+files extern-reference it (e.g. shrine.c calls FUN_801c4b14).
+
+Wins seen in practice: byte-exact matches when the body lines up well, ~50-99%
+fuzzy otherwise. The remaining MWCC-vs-target diffs are usually unimportant
+scheduling choices (`extsb.` vs `extsb + cmplwi`, `lis r3` order vs `slwi r0`,
+epilog reordering of `lwz r0` vs saved-reg restores) that we can't trivially
+force from C source.
