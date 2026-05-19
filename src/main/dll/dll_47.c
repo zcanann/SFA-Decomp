@@ -1,6 +1,42 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_47.h"
 #include "main/dll/FRONT/frontend_control.h"
+#include "main/dll/FRONT/title_menu.h"
+
+typedef struct SaveSelectPanel {
+    TitleMenuTextEntry *entries;
+    u8 count;
+    u8 pad5[7];
+} SaveSelectPanel;
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void textureFree(void *resource);
+extern void doNothing_onSaveSelectScreenExit(void);
+extern void loadUiDll(int id);
+
+extern u8 lbl_803DB9FB;
+extern u8 lbl_803DB424;
+extern s8 saveFileSelect_currentSlotIndex;
+extern u8 saveFileSelect_saveDirty;
+extern u8 saveFileSelect_debugCheatProgress;
+extern u8 saveFileSelect_saveCheatProgress;
+extern u8 saveFileSelect_cheatInputTimer;
+extern TitleMenuControl *lbl_803DCA4C;
+extern TitleMenuControl *lbl_803DCA70;
+extern TitleMenuControl *lbl_803DCAA0;
+extern TitleMenuControl *lbl_803DCAA4;
+extern int lbl_803DD6A0;
+extern void *lbl_803DD6AC;
+extern void *lbl_803DD6B8;
+extern void *lbl_803DD6C8;
+extern u8 lbl_803DD6C5;
+extern u8 lbl_803DD6CC;
+extern u8 lbl_803DD6CD;
+extern u8 lbl_803DD6CE;
+extern u8 lbl_803DD6CF;
+extern u8 lbl_803DD6C4;
+extern void *lbl_8031A804;
+extern SaveSelectPanel lbl_8031A7BC[8];
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800067c0();
@@ -936,8 +972,105 @@ void fn_8011A70C(void) {
     }
 }
 #pragma scheduling reset
-void saveSelectGoToChooseSlot(void) {}
-void SaveSelectScreen_release(void) {}
+/*
+ * --INFO--
+ *
+ * Function: saveSelectGoToChooseSlot
+ * EN v1.0 Address: 0x8011A7E4
+ * EN v1.0 Size: 304b
+ */
+#pragma scheduling off
+#pragma peephole off
+void saveSelectGoToChooseSlot(int arg) {
+    u8 i;
+
+    if ((s8)lbl_803DB9FB != -1) {
+        ((void (**)(void))lbl_803DCAA0->vtable)[2]();
+    }
+    lbl_803DB9FB = 0;
+    saveFileSelect_currentSlotIndex = 0;
+
+    fn_8011A70C();
+    fn_8011A410((void **)&lbl_8031A7BC[0]);
+
+    for (i = 0; i < 1; i++) {
+        if (((int *)&lbl_803DB9FC)[i] == 3) {
+            lbl_8031A7BC[0].entries[0].pad18[2] = -1;
+        } else {
+            lbl_8031A7BC[0].entries[0].pad18[2] = 3;
+        }
+    }
+
+    ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
+        lbl_803DCAA0->vtable)[1](
+        lbl_8031A7BC[0].entries, lbl_8031A7BC[0].count, 0, 0, 5, 4, 0x14, 0xc8,
+        0xff, 0xff, 0xff, 0xff);
+
+    ((void (**)(int))lbl_803DCAA0->vtable)[6](0);
+
+    lbl_803DD6CE = 2;
+    if (lbl_803DB424 == 0) {
+        fn_8011A4E8();
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: SaveSelectScreen_release
+ * EN v1.0 Address: 0x8011A914
+ * EN v1.0 Size: 316b
+ */
+#pragma scheduling off
+#pragma peephole off
+void SaveSelectScreen_release(int param_1) {
+    int i;
+    void **p;
+    void *zero;
+
+    if (lbl_8031A804 != NULL) {
+        mm_free(lbl_8031A804);
+        lbl_8031A804 = NULL;
+    }
+    lbl_803DD6A0 = 0;
+    if ((s8)lbl_803DB9FB != -1) {
+        ((void (**)(void))lbl_803DCAA0->vtable)[2]();
+        lbl_803DB9FB = -1;
+    }
+    if (saveFileSelect_saveSlotsBase != NULL) {
+        mm_free(saveFileSelect_saveSlotsBase);
+        saveFileSelect_saveSlotsBase = NULL;
+    }
+    if (lbl_803DD6AC != NULL) {
+        mm_free(lbl_803DD6AC);
+        lbl_803DD6AC = NULL;
+    }
+
+    i = 0;
+    p = lbl_803A8680;
+    zero = NULL;
+    do {
+        if (*p != NULL) {
+            textureFree(*p);
+            *p = zero;
+        }
+        p++;
+        i++;
+    } while (i < 4);
+
+    textureFree(lbl_803DD6C8);
+    if (param_1 != 0) {
+        doNothing_onSaveSelectScreenExit();
+    }
+    if (lbl_803DD6B8 != NULL) {
+        ((void (**)(void))lbl_803DCAA4->vtable)[4]();
+        lbl_803DD6B8 = NULL;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SaveSelectScreen_render(void) {}
 void SaveSelectScreen_run(void) {}
 void SaveSelectScreen_initialise(void) {}
