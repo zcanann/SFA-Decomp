@@ -56,23 +56,28 @@ void synthRecycleVoiceCallbacks(SynthVoice* voice) {
 }
 
 SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex) {
-    SynthCallbackLink* callback;
-    SynthCallbackLink* current;
-    SynthCallbackLink* prev;
+    register SynthCallbackLink* callback;
+    SynthCallbackLink* next;
+    register SynthCallbackLink* prev;
+    register SynthCallbackLink* current;
 
     callback = gSynthFreeCallbacks;
+    asm {
+        mr callback, callback
+    }
     if (callback != 0) {
-        gSynthFreeCallbacks = callback->next;
-        if (gSynthFreeCallbacks != 0) {
+        next = callback->next;
+        gSynthFreeCallbacks = next;
+        if (next != 0) {
             gSynthFreeCallbacks->prev = 0;
         }
 
         callback->triggerValue = triggerValue;
         callback->controllerIndex = controllerIndex;
+        prev = 0;
         callback->listIndex =
             SYNTH_CALLBACK_CONTROLLER_STATE(gSynthCurrentVoice, controllerIndex)->listIndex;
 
-        prev = 0;
         current = gSynthCurrentVoice->callbackLists[callback->listIndex];
         while (current != 0) {
             if (current->triggerValue > callback->triggerValue) {
