@@ -403,10 +403,14 @@ u32 SnowBike_setScale(int obj)
  * EN v1.0 Address: 0x801EC9BC
  * EN v1.0 Size: 56b
  */
+#pragma peephole off
+#pragma scheduling off
 void fn_801EC9BC(int obj)
 {
-    (*(void (**)(int))((char *)*(int *)&lbl_803DCA6C + 0x34))(*(int *)(obj + 0xb8) + 0x28);
+    (*(void (**)(int))((char *)*(int *)lbl_803DCA6C + 0x34))(*(int *)(obj + 0xb8) + 0x28);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -419,7 +423,7 @@ void fn_801EC9BC(int obj)
 #pragma scheduling off
 u32 fn_801EC9F4(int obj)
 {
-    int result = (*(int (**)(int))((char *)*(int *)&lbl_803DCA6C + 0x34))(*(int *)(obj + 0xb8) + 0x28);
+    int result = (*(int (**)(int))((char *)*(int *)lbl_803DCA6C + 0x34))(*(int *)(obj + 0xb8) + 0x28);
     if (result == 3) {
         if (lbl_803DC0BC == -1) {
             return 1;
@@ -441,11 +445,12 @@ u32 fn_801EC9F4(int obj)
 #pragma scheduling off
 void SnowBike_free(int obj)
 {
-    int t = *(int *)(obj + 0xb8);
     char *p;
     int i;
     u32 bit;
+    int t;
 
+    t = *(int *)(obj + 0xb8);
     ObjGroup_RemoveObject(obj, 0xa);
     p = (char *)t;
     for (i = 0; i < 9; i++) {
@@ -454,7 +459,7 @@ void SnowBike_free(int obj)
     }
     bit = (*(u8 *)(t + 0x428) >> 5) & 1;
     if (bit != 0) {
-        (*(void (**)(void))((char *)*(int *)&lbl_803DCA68 + 0x60))();
+        (*(void (**)(void))((char *)*(int *)lbl_803DCA68 + 0x60))();
     }
 }
 #pragma scheduling reset
