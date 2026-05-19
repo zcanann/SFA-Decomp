@@ -44,7 +44,7 @@ extern f32 lbl_803E5A94;
 /*
  * --INFO--
  *
- * Function: FUN_801c1238
+ * Function: DFRope_Create
  * EN v1.0 Address: 0x801C1238
  * EN v1.0 Size: 536b
  * EN v1.1 Address: 0x801C1414
@@ -55,8 +55,8 @@ extern f32 lbl_803E5A94;
  * PAL Size: TODO
  */
 #pragma scheduling off
-void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ,
-                    f32 unused, f32 tickScale)
+DFRope *DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ,
+                      f32 unused, f32 tickScale)
 {
   DFRope *rope;
   DFRopeNode *node;

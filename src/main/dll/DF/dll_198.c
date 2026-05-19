@@ -1,4 +1,6 @@
 #include "ghidra_import.h"
+#include "main/dll/DF/DFbarrel.h"
+#include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dll_198.h"
 
 typedef struct DFropenodeExtra {
@@ -14,7 +16,7 @@ typedef struct DFropenodeExtra {
   f32 planeNormalY;
   f32 planeNormalZ;
   f32 planeDistance;
-  void *rope;
+  DFRope *rope;
 } DFropenodeExtra;
 
 typedef struct DFDoorSpeciExtra {
@@ -33,9 +35,6 @@ extern void *textureLoadAsset(int assetId);
 extern s32 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern f64 sin(f64 x);
-extern void DFRope_UpdateSimulation(void *rope);
-extern void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY,
-                         f32 endZ, f32 unused, f32 tickScale);
 extern int fn_801C1BF0(int obj);
 
 extern u8 framesThisStep;
@@ -135,8 +134,8 @@ void dfropenode_update(int obj)
     extra->angle = angle;
 
     extra->rope =
-        fn_801C1238(0x10, lbl_803E4DFC, lbl_803E4DFC, lbl_803E4DFC, dx, dy, dz, length,
-                    (&lbl_803DBF50)[*(u8 *)(objDef + 0x1b)]);
+        DFRope_Create(0x10, lbl_803E4DFC, lbl_803E4DFC, lbl_803E4DFC, dx, dy, dz, length,
+                      (&lbl_803DBF50)[*(u8 *)(objDef + 0x1b)]);
 
     extra->minX = *(f32 *)(obj + 0xc);
     extra->minZ = *(f32 *)(obj + 0x14);
@@ -183,7 +182,7 @@ void dfropenode_update(int obj)
     extra->planeDistance = -(baseZ * normalZ + (baseX * normalX + baseY * normalY));
   }
 
-  DFRope_UpdateSimulation(extra->rope);
+  DFRope_UpdateSimulation((u8 *)extra->rope);
 }
 #pragma scheduling reset
 

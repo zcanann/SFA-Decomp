@@ -3,8 +3,10 @@
 
 #include "ghidra_import.h"
 
-void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ,
-                  f32 unused, f32 tickScale);
+struct DFRope;
+
+struct DFRope *DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY,
+                             f32 endZ, f32 unused, f32 tickScale);
 void dfropenode_func12(int obj,float value);
 int dfropenode_func11(int obj);
 void dfropenode_func10(int obj,int value);
