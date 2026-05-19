@@ -411,7 +411,8 @@ int smallbasket_getExtraSize(void)
 
 extern void smallbasket_init();
 extern void smallbasket_update();
-extern void smallbasket_render();
+extern void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                              undefined4 param_5, char param_6);
 extern undefined4* lbl_803DCA7C;
 extern void* lbl_803DDAC0;
 extern void Resource_Release(void* handle);
@@ -429,6 +430,44 @@ void smallbasket_free(int param_1)
   (*(code *)(*(int *)lbl_803DCA7C + 0x18))(param_1);
   Resource_Release(lbl_803DDAC0);
   ObjGroup_RemoveObject(param_1, 0x10);
+}
+
+extern undefined4* lbl_803DCAAC;
+extern f32 lbl_803E3950;
+extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
+                                 undefined4 p5, double scale);
+
+/*
+ * --INFO--
+ *
+ * Function: smallbasket_render
+ * EN v1.0 Address: 0x801825EC
+ * EN v1.0 Size: 252b
+ */
+void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                        undefined4 param_5, char param_6)
+{
+  int extra;
+  int result;
+  short field_a;
+  extra = *(int*)(param_1 + 0xb8);
+  result = (int)(*(code *)(*(int *)lbl_803DCAAC + 0x68))(
+    *(int*)(*(int*)(param_1 + 0x4c) + 0x14));
+  if (result == 0) {
+    *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+  } else {
+    field_a = *(short*)(extra + 0xa);
+    if (field_a != 0 && field_a <= 0x32) {
+      *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+    } else if (*(int*)(extra + 0x14) != 0) {
+      *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+    } else if (*(int*)(param_1 + 0xf8) != 0 && param_6 != -1) {
+      *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+    } else {
+      objRenderFn_8003b8f4((void*)param_1, param_2, param_3, param_4, param_5,
+                            (double)lbl_803E3950);
+    }
+  }
 }
 
 ObjectDescriptor gSmallBasketObjDescriptor = {
