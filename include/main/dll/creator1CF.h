@@ -3,9 +3,8 @@
 
 #include "ghidra_import.h"
 
-void FUN_801ccfb4(int param_1);
-void FUN_801cd098(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9);
+void fn_801CCFB4(int param_1);
+void fn_801CD008(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                 undefined4 param_5, char param_6);
 
 #endif /* MAIN_DLL_CREATOR1CF_H_ */

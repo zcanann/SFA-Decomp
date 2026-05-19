@@ -1,162 +1,123 @@
 #include "ghidra_import.h"
 #include "main/dll/creator1CF.h"
 
-extern undefined4 getLActions();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80017ac8();
-extern undefined8 ObjHits_ClearHitVolumes();
+extern void *Camera_GetCurrentViewSlot(void);
+extern float sqrtf(float x);
+extern int randomGetRange(int min, int max);
+extern void voxmaps_worldToGrid(void *world, void *grid);
+extern int voxmaps_traceLine(void *from, void *to, void *out, int param4, int param5);
 
-extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd708;
-extern f64 DOUBLE_803e5e58;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E5E50;
+extern undefined4 *lbl_803DCA78;
+extern undefined4 *lbl_803DCA7C;
+extern undefined4 *pDll_expgfx;
+extern u8 framesThisStep;
+extern f32 lbl_803E51C8;
+extern f32 lbl_803E51CC;
+extern f32 lbl_803E51D0;
+extern f32 lbl_803E51D4;
+extern f32 lbl_803E51D8;
+extern f32 lbl_803E51DC;
 
 /*
  * --INFO--
  *
- * Function: FUN_801ccfb4
+ * Function: fn_801CCFB4
  * EN v1.0 Address: 0x801CCFB4
- * EN v1.0 Size: 228b
+ * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x801CCFE4
- * EN v1.1 Size: 276b
+ * EN v1.1 Size: 84b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ccfb4(int param_1)
+void fn_801CCFB4(int param_1)
 {
-  int iVar1;
-  int iVar2;
-  undefined auStack_28 [8];
-  float local_20;
-  float local_1c;
-  float local_18;
-  float local_14;
-  undefined4 local_10;
-  uint uStack_c;
-  
-  iVar2 = *(int *)(param_1 + 0xb8);
-  local_1c = lbl_803E5E50;
-  local_18 = lbl_803E5E50;
-  local_14 = lbl_803E5E50;
-  uStack_c = (int)*(char *)(*(int *)(param_1 + 0x4c) + 0x19) ^ 0x80000000;
-  local_10 = 0x43300000;
-  local_20 = (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e5e58);
-  iVar1 = *(int *)(*(int *)(param_1 + 0x54) + 0x50);
-  if ((iVar1 != 0) && (*(short *)(iVar1 + 0x46) != 0x248)) {
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0x2a0,auStack_28,1,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0x2a0,auStack_28,1,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0x2a0,auStack_28,1,0xffffffff,0);
-    *(undefined2 *)(iVar2 + 0x32) = 0x32;
-  }
-  return;
+  (*(code *)(*(int *)lbl_803DCA7C + 0x18))(param_1);
+  (*(code *)(*(int *)lbl_803DCA78 + 0x18))(param_1);
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_801cd098
- * EN v1.0 Address: 0x801CD098
- * EN v1.0 Size: 1120b
+ * Function: fn_801CD008
+ * EN v1.0 Address: 0x801CD008
+ * EN v1.0 Size: 588b
  * EN v1.1 Address: 0x801CD0F8
- * EN v1.1 Size: 904b
+ * EN v1.1 Size: 588b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cd098(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9)
+void fn_801CD008(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                 undefined4 param_5, char param_6)
 {
-  float fVar1;
-  short sVar2;
-  uint uVar3;
-  int in_r9;
-  undefined4 in_r10;
-  int iVar4;
-  double dVar5;
-  undefined8 uVar6;
-  undefined auStack_28 [8];
-  float local_20;
-  float local_1c;
-  float local_18;
-  float local_14;
-  undefined4 local_10;
-  uint uStack_c;
-  
-  dVar5 = DOUBLE_803e5e58;
-  iVar4 = *(int *)(param_9 + 0x5c);
-  local_1c = lbl_803E5E50;
-  local_18 = lbl_803E5E50;
-  local_14 = lbl_803E5E50;
-  uStack_c = (int)*(char *)(*(int *)(param_9 + 0x26) + 0x19) ^ 0x80000000;
-  local_10 = 0x43300000;
-  local_20 = (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e5e58);
-  if ((*(byte *)(iVar4 + 0x36) & 1) == 0) {
-    *(undefined4 *)(iVar4 + 8) = *(undefined4 *)(param_9 + 6);
-    *(undefined4 *)(iVar4 + 0xc) = *(undefined4 *)(param_9 + 8);
-    *(undefined4 *)(iVar4 + 0x10) = *(undefined4 *)(param_9 + 10);
-    *(byte *)(iVar4 + 0x36) = *(byte *)(iVar4 + 0x36) | 1;
+  int state;
+  void *camera;
+  float dx, dy, dz;
+  float dist;
+  float invDist;
+  float fac1x, fac1y, fac1z;
+  float fac2x, fac2y, fac2z;
+  float gridA[2];
+  float gridB[2];
+  void *traceOut;
+  float midA[3];
+  float midB[3];
+  float vecBA[3];
+  float gfxVec[3];
+  int auStack_28[2];
+
+  state = *(int *)(param_1 + 0xb8);
+  if ((int)(signed char)param_6 == 0) {
+    *(short *)(state + 4) = 0;
+    *(char *)(state + 0xa) = 0;
+    goto end;
   }
-  if (*(char *)(*(int *)(param_9 + 0x2a) + 0xad) != '\0') {
-    FUN_80006824((uint)param_9,0xb3);
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0x2a0,auStack_28,1,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0x2a0,auStack_28,1,0xffffffff,0);
-    in_r9 = *DAT_803dd708;
-    dVar5 = (double)(**(code **)(in_r9 + 8))(param_9,0x2a0,auStack_28,1,0xffffffff,0);
-    *(undefined2 *)(iVar4 + 0x32) = 0x32;
-  }
-  if (*(short *)(iVar4 + 0x32) == 0) {
-    *(undefined4 *)(param_9 + 0x40) = *(undefined4 *)(param_9 + 6);
-    *(undefined4 *)(param_9 + 0x42) = *(undefined4 *)(param_9 + 8);
-    *(undefined4 *)(param_9 + 0x44) = *(undefined4 *)(param_9 + 10);
-    *param_9 = *param_9 + *(short *)(iVar4 + 0x2e) * (ushort)DAT_803dc070;
-    param_9[2] = param_9[2] + *(short *)(iVar4 + 0x2c) * (ushort)DAT_803dc070;
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0x29d,auStack_28,4,0xffffffff,0);
-    sVar2 = *(short *)(iVar4 + 0x30) - (ushort)DAT_803dc070;
-    *(short *)(iVar4 + 0x30) = sVar2;
-    if (sVar2 < 1) {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x29e,auStack_28,4,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x29f,auStack_28,4,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x2a1,auStack_28,4,0xffffffff,0);
-      *(undefined2 *)(iVar4 + 0x30) = 0x32;
-    }
-    *(float *)(iVar4 + 8) = *(float *)(param_9 + 0x12) * lbl_803DC074 + *(float *)(iVar4 + 8);
-    *(float *)(iVar4 + 0xc) = *(float *)(param_9 + 0x14) * lbl_803DC074 + *(float *)(iVar4 + 0xc);
-    fVar1 = *(float *)(param_9 + 0x16);
-    dVar5 = (double)lbl_803DC074;
-    *(float *)(iVar4 + 0x10) = (float)((double)fVar1 * dVar5 + (double)*(float *)(iVar4 + 0x10));
-    *(ushort *)(iVar4 + 0x34) = *(short *)(iVar4 + 0x34) + (ushort)DAT_803dc070 * 0x5dc;
-    *(undefined4 *)(param_9 + 6) = *(undefined4 *)(iVar4 + 8);
-    *(undefined4 *)(param_9 + 8) = *(undefined4 *)(iVar4 + 0xc);
-    *(undefined4 *)(param_9 + 10) = *(undefined4 *)(iVar4 + 0x10);
-    uVar3 = (uint)DAT_803dc070;
-    iVar4 = *(int *)(param_9 + 0x7a);
-    *(uint *)(param_9 + 0x7a) = iVar4 - uVar3;
-    if ((int)(iVar4 - uVar3) < 0) {
-      FUN_80017ac8(dVar5,(double)fVar1,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9)
-      ;
+  if (*(char *)(state + 0xc) == '\0') goto end;
+  *(char *)(state + 0xa) = 1;
+  camera = Camera_GetCurrentViewSlot();
+  dx = *(float *)((int)camera + 0xc) - *(float *)(param_1 + 0xc);
+  dy = *(float *)((int)camera + 0x10) - *(float *)(param_1 + 0x10);
+  dz = *(float *)((int)camera + 0x14) - *(float *)(param_1 + 0x14);
+  dist = sqrtf(dx * dx + dy * dy + dz * dz);
+  if (dist > lbl_803E51C8) {
+    invDist = lbl_803E51CC / dist;
+    dx = dx * invDist;
+    dy = dy * invDist;
+    dz = dz * invDist;
+    fac1x = lbl_803E51D0 * dx;
+    fac1y = lbl_803E51D0 * dy;
+    fac1z = lbl_803E51D0 * dz;
+    midA[0] = fac1x + *(float *)(param_1 + 0xc);
+    midA[1] = fac1y + *(float *)(param_1 + 0x10);
+    midA[2] = fac1z + *(float *)(param_1 + 0x14);
+    fac2x = lbl_803E51D4 * dx;
+    fac2y = lbl_803E51D4 * dy;
+    fac2z = lbl_803E51D4 * dz;
+    midB[0] = fac2x + *(float *)((int)camera + 0xc);
+    midB[1] = fac2y + *(float *)((int)camera + 0x10);
+    midB[2] = fac2z + *(float *)((int)camera + 0x14);
+    voxmaps_worldToGrid(midA, gridA);
+    voxmaps_worldToGrid(midB, gridB);
+    if (voxmaps_traceLine(gridB, gridB, auStack_28, 0, 0) == 0) {
+      *(char *)(state + 0xa) = 0;
+      (**(code **)(*lbl_803DCA78 + 0x14))(param_1);
     }
   }
-  else {
-    if ((*(byte *)(iVar4 + 0x36) & 2) == 0) {
-      getLActions(dVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,1,0
-                   ,0,0,in_r9,in_r10);
-      *(byte *)(iVar4 + 0x36) = *(byte *)(iVar4 + 0x36) | 2;
-    }
-    fVar1 = lbl_803E5E50;
-    *(float *)(param_9 + 0x12) = lbl_803E5E50;
-    *(float *)(param_9 + 0x14) = fVar1;
-    *(float *)(param_9 + 0x16) = fVar1;
-    uVar6 = ObjHits_ClearHitVolumes((int)param_9);
-    *(short *)(iVar4 + 0x32) = *(short *)(iVar4 + 0x32) + -1;
-    if (*(short *)(iVar4 + 0x32) < 1) {
-      FUN_80017ac8(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
-    }
+  if (*(short *)(state + 4) > 0) {
+    *(short *)(state + 4) = *(short *)(state + 4) - framesThisStep;
+    goto end;
   }
+  if (*(char *)(state + 0xa) != '\0') {
+    gfxVec[0] = lbl_803E51D8;
+    gfxVec[1] = lbl_803E51DC;
+    gfxVec[2] = lbl_803E51D8;
+    (**(code **)(*pDll_expgfx + 0x8))(param_1, 0x1f7, gfxVec, 0x12, 0xffffffff, 0);
+  }
+  *(short *)(state + 4) = (short)(randomGetRange(-10, 10) + 0x3c);
+end:
   return;
 }
 
