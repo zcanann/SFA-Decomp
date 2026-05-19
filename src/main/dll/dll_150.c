@@ -412,7 +412,24 @@ int smallbasket_getExtraSize(void)
 extern void smallbasket_init();
 extern void smallbasket_update();
 extern void smallbasket_render();
-extern void smallbasket_free();
+extern undefined4* lbl_803DCA7C;
+extern void* lbl_803DDAC0;
+extern void Resource_Release(void* handle);
+extern void ObjGroup_RemoveObject(int obj, int flag);
+
+/*
+ * --INFO--
+ *
+ * Function: smallbasket_free
+ * EN v1.0 Address: 0x8018259C
+ * EN v1.0 Size: 80b
+ */
+void smallbasket_free(int param_1)
+{
+  (*(code *)(*(int *)lbl_803DCA7C + 0x18))(param_1);
+  Resource_Release(lbl_803DDAC0);
+  ObjGroup_RemoveObject(param_1, 0x10);
+}
 
 ObjectDescriptor gSmallBasketObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
