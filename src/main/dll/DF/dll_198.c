@@ -64,6 +64,7 @@ extern f64 lbl_803E4E48;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 #pragma scheduling off
 void dfropenode_update(int obj)
 {
@@ -184,6 +185,7 @@ void dfropenode_update(int obj)
   DFRope_UpdateSimulation((u8 *)extra->rope);
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -198,6 +200,7 @@ void dfropenode_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 #pragma scheduling off
 void dfropenode_init(int obj, int objDef)
 {
@@ -205,7 +208,7 @@ void dfropenode_init(int obj, int objDef)
 
   extra = *(DFropenodeExtra **)(obj + 0xb8);
   if ((&lbl_803DBF58)[*(u8 *)(objDef + 0x1b)] == 0) {
-    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) & 0xff7f;
+    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) & ~0x80;
   }
   ObjGroup_AddObject(obj, 0x17);
   *(void **)(obj + 0xbc) = dfropenode_syncRopeToEndpoints;
@@ -214,6 +217,7 @@ void dfropenode_init(int obj, int objDef)
   *(u8 *)(obj + 0x36) = 0x46;
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -228,6 +232,7 @@ void dfropenode_init(int obj, int objDef)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 #pragma scheduling off
 void dfropenode_release(void)
 {
@@ -238,6 +243,7 @@ void dfropenode_release(void)
   }
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -252,6 +258,7 @@ void dfropenode_release(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 #pragma scheduling off
 void dfropenode_initialise(void)
 {
@@ -262,6 +269,7 @@ void dfropenode_initialise(void)
   }
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -276,6 +284,7 @@ void dfropenode_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 #pragma scheduling off
 int fn_801C26E0(int obj)
 {
@@ -322,6 +331,7 @@ int fn_801C26E0(int obj)
   return 0;
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
