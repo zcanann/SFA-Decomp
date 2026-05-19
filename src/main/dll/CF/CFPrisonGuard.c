@@ -310,6 +310,28 @@ u32 fn_80189C58(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x1d) >> 5) & 
  * EN v1.0 Address: 0x80189F44
  * EN v1.0 Size: 24b
  */
+/*
+ * --INFO--
+ *
+ * Function: fn_80189BE4
+ * EN v1.0 Address: 0x80189BE4
+ * EN v1.0 Size: 116b
+ */
+void fn_80189BE4(int obj, u8 flag)
+{
+    int s = *(int *)(obj + 0x4c);
+    int t = *(int *)(obj + 0xb8);
+    if (flag != 0) {
+        u32 bitval = 1;
+        GameBit_Set((int)*(short *)(s + 0x24), 1);
+        *(u8 *)(t + 0x1d) = (u8)((*(u8 *)(t + 0x1d) & 0xdf) | ((bitval & 1) << 5));
+    } else {
+        u32 bitval = 0;
+        GameBit_Set((int)*(short *)(s + 0x24), 0);
+        *(u8 *)(t + 0x1d) = (u8)((*(u8 *)(t + 0x1d) & 0xdf) | ((bitval & 1) << 5));
+    }
+}
+
 u32 fn_80189F44(int obj) {
     u32 v;
     v = *(u8 *)(*(int *)(obj + 0x4c) + 0x1d);
