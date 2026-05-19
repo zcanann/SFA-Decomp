@@ -72,8 +72,8 @@ void dfropenode_update(int obj)
   int objDef;
   int linkedObj;
   int *objects;
-  int objectIndex;
   int objectCount;
+  int objectIndex;
   int candidateObj;
   f32 dx;
   f32 dy;
