@@ -54,6 +54,17 @@ typedef struct ModgfxActiveEffect {
   u8 keepSharedResource;
 } ModgfxActiveEffect;
 
+typedef struct ModgfxPendingSpawn {
+  int modelOrResource;
+  float posX;
+  float posY;
+  float posZ;
+  int param10;
+  s16 param14;
+  u8 sequenceIndex;
+  u8 pad17;
+} ModgfxPendingSpawn;
+
 extern uint DAT_8039ce58;
 
 static ModgfxVertexData *modgfx_getActiveVertexBuffer(ModgfxState *state)
@@ -73,6 +84,7 @@ static ModgfxActiveEffect **modgfx_getActiveEffectRegistry(void)
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
+extern void *memcpy(void *dst, const void *src, u32 n);
 extern int FUN_80006714();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -4473,10 +4485,42 @@ void Effect9_initialise(void) {}
 int projgfx_func08_ret_0(void) { return 0x0; }
 
 /* sda21 accessors. */
+extern u8 lbl_8039BE98[];
+extern ModgfxPendingSpawn lbl_8039BEF8[];
 extern s16 lbl_803DD288;
 extern s16 lbl_803DD28A;
+extern ModgfxPendingSpawn *lbl_803DD28C;
+extern ModgfxPendingSpawn *lbl_803DD290;
+#pragma scheduling off
 s16 dll_0B_func18(void) { return lbl_803DD288; }
+void dll_0B_func17(u32 flags) { *(u32 *)(lbl_8039BE98 + 0x54) |= flags; }
+void dll_0B_func15(void *params) { memcpy(lbl_8039BE98 + 0x46, params, 0xe); }
+void dll_0B_func14(s16 value)
+{
+  u8 *state = lbl_8039BE98;
+  *(s16 *)(state + 0x46 + lbl_803DD28A * 2) = value;
+}
 void dll_0B_func13(s16 x) { lbl_803DD28A = x; }
+void dll_0B_func12(void) { lbl_803DD28A++; }
+void dll_0B_func11(int modelOrResource, float posX, float posY, float posZ, s16 param14, int param10)
+{
+  lbl_803DD28C->sequenceIndex = (u32)lbl_803DD28A & 0xff;
+  lbl_803DD28C->param14 = param14;
+  lbl_803DD28C->param10 = param10;
+  lbl_803DD28C->modelOrResource = modelOrResource;
+  lbl_803DD28C->posX = posX;
+  lbl_803DD28C->posY = posY;
+  lbl_803DD28C->posZ = posZ;
+  lbl_803DD28C++;
+}
+void dll_0B_func10(void)
+{
+  ModgfxPendingSpawn *cursor = lbl_8039BEF8;
+  lbl_803DD290 = cursor;
+  lbl_803DD28C = cursor;
+  lbl_803DD28A = 0;
+}
+#pragma scheduling reset
 
 /* OSReport(literal) wrapper. */
 extern char sProjgfxReleaseDoNoLongerSupported[];
