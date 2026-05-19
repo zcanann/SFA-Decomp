@@ -2140,13 +2140,17 @@ void expgfx_onMapSetup(void)
 #pragma peephole off
 void expgfx_release(void)
 {
-  void **slotPoolBases = (void **)gExpgfxSlotPoolBases;
+  register void **slotPoolBases;
   int poolIndex;
 
   asm {
     bl expgfxRemoveAll
   }
   poolIndex = 0;
+  asm {
+    lis r3, gExpgfxSlotPoolBases@ha
+    addi slotPoolBases, r3, gExpgfxSlotPoolBases@l
+  }
   do {
     mm_free(*slotPoolBases);
     slotPoolBases = slotPoolBases + 1;
