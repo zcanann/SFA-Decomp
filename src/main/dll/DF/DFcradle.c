@@ -4,6 +4,7 @@
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
 extern void doRumble(f32 val);
+extern void *memcpy(void *dst, const void *src, u32 size);
 extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setField50(int light, int value);
@@ -28,6 +29,8 @@ extern undefined4 ObjGroup_AddObject(int obj, int groupId);
 extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810ec();
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
 
 extern undefined4 DAT_80326928;
 extern undefined4 DAT_8032692a;
@@ -54,6 +57,10 @@ extern f32 lbl_803E4DC0;
 extern f32 lbl_803E4DD0;
 extern f32 lbl_803E4DD4;
 extern f64 lbl_803E4DD8;
+extern f32 lbl_803E4DE0;
+extern f32 lbl_803E4DE4;
+extern f32 lbl_803E4DE8;
+extern f64 lbl_803E4DF0;
 
 /*
  * --INFO--
@@ -365,5 +372,69 @@ void ccriverflow_init(short *obj,int params)
   if (*(byte *)(params + 0x1a) == 0) {
     *(undefined *)(params + 0x1a) = 0xff;
   }
+  return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801C0BF8
+ * EN v1.0 Address: 0x801C0BF8
+ * EN v1.0 Size: 616b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_801C0BF8(void *templateData,int angle,float *startNode,float *endNode,short *out)
+{
+  int startX;
+  int startY;
+  int startZ;
+  int endX;
+  int endY;
+  int endZ;
+  int i;
+  short *vertex;
+  float angleRadians;
+  double vertexX;
+
+  startX = (int)(lbl_803E4DE0 * startNode[0]);
+  startY = (int)(lbl_803E4DE0 * startNode[1]);
+  startZ = (int)(lbl_803E4DE0 * startNode[2]);
+  endX = (int)(lbl_803E4DE0 * endNode[0]);
+  endY = (int)(lbl_803E4DE0 * endNode[1]);
+  endZ = (int)(lbl_803E4DE0 * endNode[2]);
+  memcpy(out,templateData,0x60);
+
+  angleRadians = (lbl_803E4DE4 * (float)(short)angle) / lbl_803E4DE8;
+  vertex = out;
+  for (i = 0; i < 6; i++) {
+    vertexX = (float)(int)*vertex;
+    *vertex = (short)(int)(vertexX * sin(angleRadians));
+    vertex[2] = (short)(int)(-vertexX * fn_80293E80(angleRadians));
+    vertex += 8;
+  }
+
+  out[0] += startX;
+  out[1] += startY;
+  out[2] += startZ;
+  out[0x18] += endX;
+  out[0x19] += endY;
+  out[0x1a] += endZ;
+  out[8] += startX;
+  out[9] += startY;
+  out[10] += startZ;
+  out[0x20] += endX;
+  out[0x21] += endY;
+  out[0x22] += endZ;
+  out[0x10] += startX;
+  out[0x11] += startY;
+  out[0x12] += startZ;
+  out[0x28] += endX;
+  out[0x29] += endY;
+  out[0x2a] += endZ;
   return;
 }

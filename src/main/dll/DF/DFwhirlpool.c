@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFbarrel.h"
+#include "main/dll/DF/DFcradle.h"
 #include "main/dll/DF/DFwhirlpool.h"
 
 typedef struct DFropenodeExtra {
@@ -38,7 +39,6 @@ extern void gxBlendFn_80078b4c(void);
 extern void fn_80078740(void);
 extern void selectTexture(void *texture, int param_2);
 extern void setTextColor(undefined4 *objAndParam, u8 blue, u8 green, u8 red, int alpha);
-extern void fn_801C0BF8(void *templateData, int angle, void *startNode, void *endNode, void *out);
 extern void drawFn_8005cf8c(void *matrix, void *displayList, int count);
 extern int randomGetRange(int min, int max);
 
@@ -73,10 +73,10 @@ void dfropenode_render(int obj, int param_2, int param_3)
   int eventId;
   int alpha;
   int oldAlpha;
-  int node;
+  DFRopeNode *node;
   s16 segment;
   DFRenderState renderState;
-  u8 matrix[0x60];
+  s16 matrix[0x30];
   f32 originalScale;
 
   renderState.objAndParam = (undefined4)param_2;
@@ -134,10 +134,10 @@ void dfropenode_render(int obj, int param_2, int param_3)
     setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
                 alpha);
     rope = (DFRope *)extra->rope;
-    node = (int)rope->nodes;
+    node = rope->nodes;
     for (segment = 0; segment < (int)(rope->count - 1); segment++) {
-      node += 0x34;
-      fn_801C0BF8(DAT_80325e00, extra->angle, (void *)(node - 0x34), (void *)node, matrix);
+      node++;
+      fn_801C0BF8(DAT_80325e00, extra->angle, (node - 1)->pos, node->pos, matrix);
       drawFn_8005cf8c(matrix, lbl_802C2358, 6);
     }
     if (*(u8 *)(objDef + 0x1b) == 1) {
@@ -146,10 +146,10 @@ void dfropenode_render(int obj, int param_2, int param_3)
       alpha = *(u8 *)(obj + 0x36) + randomGetRange(0, *(u8 *)(obj + 0x36));
       setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
                   alpha);
-      node = (int)rope->nodes;
+      node = rope->nodes;
       for (segment = 0; segment < (int)(rope->count - 1); segment++) {
-        node += 0x34;
-        fn_801C0BF8(DAT_80325e60, extra->angle, (void *)(node - 0x34), (void *)node, matrix);
+        node++;
+        fn_801C0BF8(DAT_80325e60, extra->angle, (node - 1)->pos, node->pos, matrix);
         drawFn_8005cf8c(matrix, lbl_802C2358, 6);
       }
     }

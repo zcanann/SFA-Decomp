@@ -12,5 +12,6 @@ void ccriverflow_free(int obj);
 void ccriverflow_render(void);
 void ccriverflow_update(int obj);
 void ccriverflow_init(short *obj, int params);
+void fn_801C0BF8(void *templateData, int angle, float *startNode, float *endNode, short *out);
 
 #endif /* MAIN_DLL_DF_DFCRADLE_H_ */
