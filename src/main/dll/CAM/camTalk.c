@@ -117,7 +117,7 @@ void CameraModeBike_update(short *param_1)
     local_fc.y = *(float *)(puVar5 + 0xe);
     local_fc.z = *(float *)(puVar5 + 0x10);
     local_fc.scale = lbl_803E1788;
-    local_fc.yaw = *puVar5;
+    local_fc.yaw = *(short *)puVar5;
     local_a0 = (longlong)(int)*(float *)(lbl_803DD540 + 0x30);
     local_fc.pitch = (undefined2)(int)*(float *)(lbl_803DD540 + 0x30);
     local_fc.roll = 0;
