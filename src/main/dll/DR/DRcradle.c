@@ -336,6 +336,130 @@ int SnowBike_func08(void) { return 0x3; }
 /* Pattern wrappers. */
 u8 SnowBike_func0B(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x420); }
 
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_mount
+ * EN v1.0 Address: 0x801ECD98
+ * EN v1.0 Size: 56b
+ */
+void SnowBike_mount(int obj, f32 *x, f32 *y, f32 *z)
+{
+    int t = *(int *)(obj + 0xb8);
+    *(f32 *)(t + 0x400) = *(f32 *)(obj + 0xc);
+    *(f32 *)(t + 0x404) = *(f32 *)(obj + 0x10);
+    *(f32 *)(t + 0x408) = *(f32 *)(obj + 0x14);
+    *x = *(f32 *)(t + 0x400);
+    *y = *(f32 *)(t + 0x404);
+    *z = *(f32 *)(t + 0x408);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_modelMtxFn
+ * EN v1.0 Address: 0x801ECDE0
+ * EN v1.0 Size: 32b
+ */
+void SnowBike_modelMtxFn(int obj, f32 *x, f32 *y, f32 *z)
+{
+    int t = *(int *)(obj + 0xb8);
+    *x = *(f32 *)(t + 0x3e8);
+    *y = *(f32 *)(t + 0x3ec);
+    *z = *(f32 *)(t + 0x3f0);
+}
+
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void mm_free(void *p);
+extern void *lbl_803DCA6C;
+extern void *lbl_803DCA68;
+extern int lbl_803DC0BC;
+
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_setScale
+ * EN v1.0 Address: 0x801ECE0C
+ * EN v1.0 Size: 36b
+ */
+#pragma peephole off
+#pragma scheduling off
+u32 SnowBike_setScale(int obj)
+{
+    int t = *(int *)(obj + 0xb8);
+    u32 bit = (*(u8 *)(t + 0x428) >> 1) & 1;
+    if (bit != 0) {
+        return 0;
+    }
+    return *(u8 *)(t + 0x420);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801EC9BC
+ * EN v1.0 Address: 0x801EC9BC
+ * EN v1.0 Size: 56b
+ */
+void fn_801EC9BC(int obj)
+{
+    (*(void (**)(int))((char *)*(int *)&lbl_803DCA6C + 0x34))(*(int *)(obj + 0xb8) + 0x28);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801EC9F4
+ * EN v1.0 Address: 0x801EC9F4
+ * EN v1.0 Size: 104b
+ */
+#pragma peephole off
+#pragma scheduling off
+u32 fn_801EC9F4(int obj)
+{
+    int result = (*(int (**)(int))((char *)*(int *)&lbl_803DCA6C + 0x34))(*(int *)(obj + 0xb8) + 0x28);
+    if (result == 3) {
+        if (lbl_803DC0BC == -1) {
+            return 1;
+        }
+    }
+    return (u32)__cntlzw(lbl_803DC0BC - 1 - result) >> 5;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_free
+ * EN v1.0 Address: 0x801ECE40
+ * EN v1.0 Size: 132b
+ */
+#pragma peephole off
+#pragma scheduling off
+void SnowBike_free(int obj)
+{
+    int t = *(int *)(obj + 0xb8);
+    char *p;
+    int i;
+    u32 bit;
+
+    ObjGroup_RemoveObject(obj, 0xa);
+    p = (char *)t;
+    for (i = 0; i < 9; i++) {
+        mm_free(*(void **)(p + 0x4c8));
+        p += 8;
+    }
+    bit = (*(u8 *)(t + 0x428) >> 5) & 1;
+    if (bit != 0) {
+        (*(void (**)(void))((char *)*(int *)&lbl_803DCA68 + 0x60))();
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* 16b chained patterns. */
 s32 SnowBike_func14(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x422); }
 s32 SnowBike_getType(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x421); }
