@@ -737,7 +737,7 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
       entryRefCount = &entry->refCount;
-      if (*entryRefCount == EXPGFX_REFCOUNT_OVERFLOW) {
+      if (*entryRefCount >= EXPGFX_REFCOUNT_OVERFLOW) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
         return EXPGFX_INVALID_TABLE_INDEX;
       }
@@ -2128,14 +2128,13 @@ void expgfx_onMapSetup(void)
 #pragma peephole off
 void expgfx_release(void)
 {
-  void **slotPoolBases;
+  void **slotPoolBases = (void **)gExpgfxSlotPoolBases;
   int poolIndex;
 
   asm {
     bl expgfxRemoveAll
   }
   poolIndex = 0;
-  slotPoolBases = (void **)gExpgfxSlotPoolBases;
   do {
     mm_free(*slotPoolBases);
     slotPoolBases = slotPoolBases + 1;
