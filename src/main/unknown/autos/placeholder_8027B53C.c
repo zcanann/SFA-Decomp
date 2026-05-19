@@ -55,9 +55,8 @@ void fn_8027B690(u16 *list, u16 a, u16 b, u16 c)
             }
             list += 2;
         } else {
-            v = *list;
-            list++;
-            audioFn_8027b42c(v, a, b, c);
+            u16 single = *list++;
+            audioFn_8027b42c(single, a, b, c);
         }
     }
 }
