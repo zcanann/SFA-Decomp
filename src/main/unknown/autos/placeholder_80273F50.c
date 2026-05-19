@@ -379,7 +379,7 @@ int dataInsertSDir(DataSampleDirEntry *sampleTable, void *baseAddr)
     if (bucketIndex == used) {
         if (used < 0x80) {
             tableCount = 0;
-            for (entry = sampleTable; entry->sampleId != -1; entry++) {
+            for (entry = sampleTable; entry->sampleId != 0xffff; entry++) {
                 tableCount++;
             }
             sndBegin();
@@ -403,7 +403,7 @@ foundEntry:
                 if (j == dataSmpSDirNum) {
                     entry->refCount = 0;
                 } else {
-                    entry->refCount = -1;
+                    entry->refCount = 0xffff;
                 }
                 entry++;
             }
@@ -430,7 +430,7 @@ extern u8 dataSmpSDirTable[];
 extern u16 dataSmpSDirNum;
 extern void hwSaveSample(void *sampleDescPtr, void *addrOut);
 
-int dataAddSampleReference(s16 sampleId)
+int dataAddSampleReference(u16 sampleId)
 {
     u32 remaining;
     u32 bucketIndex;
@@ -441,8 +441,8 @@ int dataAddSampleReference(s16 sampleId)
     bucket = (DataSampleDirBucket *)dataSmpSDirTable;
     bucketIndex = 0;
     for (remaining = dataSmpSDirNum, entry = 0; remaining != 0; remaining--) {
-        for (entry = bucket->entries; entry->sampleId != -1; entry++) {
-            if ((entry->sampleId == sampleId) && (entry->refCount != -1)) {
+        for (entry = bucket->entries; entry->sampleId != 0xffff; entry++) {
+            if ((entry->sampleId == sampleId) && (entry->refCount != 0xffff)) {
                 goto found;
             }
         }
@@ -465,7 +465,7 @@ found:
  */
 extern void hwRemoveSample(void *sampleDesc, u32 addr);
 
-int dataRemoveSampleReference(s16 sampleId)
+int dataRemoveSampleReference(u16 sampleId)
 {
     u32 remaining;
     DataSampleDirBucket *bucket;
@@ -477,8 +477,8 @@ int dataRemoveSampleReference(s16 sampleId)
         if (remaining == 0) {
             return 0;
         }
-        for (entry = bucket->entries; entry->sampleId != -1; entry++) {
-            if ((entry->sampleId == sampleId) && (entry->refCount != -1)) {
+        for (entry = bucket->entries; entry->sampleId != 0xffff; entry++) {
+            if ((entry->sampleId == sampleId) && (entry->refCount != 0xffff)) {
                 entry->refCount--;
                 if (entry->refCount == 0) {
                     hwRemoveSample(entry->header, entry->loadedAddr);
@@ -880,7 +880,7 @@ int dataGetSample(u16 key, u32 *out)
         dataGetSample_result = sndBSearch(searchKey, bucket->entries, bucket->count, 0x20,
                                           smpcmp);
         entry = dataGetSample_result;
-        if ((entry != 0) && (entry->refCount != -1)) {
+        if ((entry != 0) && (entry->refCount != 0xffff)) {
             dataGetSample_sheader = entry->header;
             out[0] = *(u32 *)dataGetSample_sheader;
             out[1] = entry->loadedAddr;

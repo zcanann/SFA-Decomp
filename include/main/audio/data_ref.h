@@ -17,8 +17,8 @@ typedef struct DataLayerRef {
 } DataLayerRef;
 
 typedef struct DataSampleDirEntry {
-    s16 sampleId;
-    s16 refCount;
+    u16 sampleId;
+    u16 refCount;
     u32 offset;
     u32 loadedAddr;
     u8 header[0x10];
