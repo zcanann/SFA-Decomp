@@ -751,3 +751,18 @@ void fn_801EEDE0(int *src, f32 *out_x, f32 *out_y, f32 *out_z) {
     *out_y = *(f32*)((char*)src + 0x10);
     *out_z = *(f32*)((char*)src + 0x14);
 }
+
+/* Stubs to align function set with v1.0 asm. Bodies are large state
+ * machines / inits and need real reverse-engineering. */
+void fn_801EE668(void) {}
+void fn_801EEA68(void) {}
+void fn_801EEB50(void) {}
+void fn_801EED24(void) {}
+void fn_801EED5C(void) {}
+void fn_801EED80(void) {}
+void fn_801EEDC0(void) {}
+void fn_801EEE0C(void) {}
+void SB_CloudRunner_free(void) {}
+void SB_CloudRunner_init(void) {}
+void SB_CloudRunner_render(void) {}
+void SB_CloudRunner_update(void) {}
