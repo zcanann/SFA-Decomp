@@ -2994,3 +2994,13 @@ void fn_8003B5E0(u8 a, u8 b, u8 c, u8 d) {
     lbl_803DCC09 = 1;
     lbl_803DCC0A = d;
 }
+
+/* 60b objRenderShadow guard. */
+extern void objRenderShadow(void* obj);
+void objRenderShadowIfVisible(void* obj) {
+    void** arr = *(void***)((char*)obj + 0x7C);
+    s8 idx = *(s8*)((char*)obj + 0xAD);
+    if (arr[idx] != NULL) {
+        objRenderShadow(obj);
+    }
+}
