@@ -11,8 +11,8 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 int MagicPlant_getExtraSize(void);
 u32 MagicPlant_func08(int *obj);
-void MagicPlant_free();
-void MagicPlant_render();
+void MagicPlant_free(int obj, int param_2);
+void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void MagicPlant_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,undefined4 param_10,int param_11);
@@ -30,19 +30,19 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  ushort *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 int trickywarp_getExtraSize(void);
-void trickywarp_free();
+void trickywarp_free(int obj);
 void trickywarp_update();
-void trickywarp_init();
+void trickywarp_init(s16 *obj, u8 *param_2);
 void FUN_801804a0(short *param_1,int param_2);
 void FUN_801804a4(int param_1);
 void FUN_801804d8(int param_1,undefined4 param_2,byte *param_3,int param_4,int param_5);
 void FUN_801804dc(undefined4 param_1,undefined4 param_2,byte *param_3,int param_4,int param_5);
 void trickyguard_update();
-void trickyguard_init();
+void trickyguard_init(s16 *obj, u8 *param_2);
 void StayPoint_update();
 void StayPoint_init(u16 *obj);
 int duster_getExtraSize(void);
-void duster_render();
+void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void duster_hitDetect();
 void duster_update();
 void duster_init();

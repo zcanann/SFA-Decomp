@@ -1526,17 +1526,80 @@ u32 MagicPlant_func08(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x1c) <<
 void StayPoint_init(u16 *obj) { u32 v; v = *(u16*)((char*)obj + 0xb0); v |= 0x4000; *(u16*)((char*)obj + 0xb0) = (u16)v; }
 #pragma peephole reset
 
-extern void MagicPlant_free();
-extern void MagicPlant_render();
+extern void Obj_FreeObject(int obj);
+extern void objRenderFn_8003b8f4(int obj, float arg);
+extern f32 lbl_803E3858;
+extern f32 lbl_803E38B0;
+
+void MagicPlant_free(int obj, int param_2) {
+  int *state = *(int **)(obj + 0xb8);
+  ObjGroup_RemoveObject(obj, 0x34);
+  ObjGroup_RemoveObject(obj, 0x3e);
+  if (*(u8 *)(obj + 0xeb) != 0) {
+    ObjLink_DetachChild(obj, *state);
+    if (param_2 == 0) {
+      Obj_FreeObject(*state);
+    }
+  }
+}
+
+#pragma peephole off
+void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+  int *state;
+  int s0;
+  s32 v;
+  state = *(int **)(obj + 0xb8);
+  v = visible;
+  if (v != 0) {
+    objRenderFn_8003b8f4(obj, lbl_803E3858);
+    s0 = *state;
+    if (s0 != 0 && *(int *)(s0 + 0xc4) != 0) {
+      ObjPath_GetPointWorldPosition(obj, 0, (float *)(s0 + 0xc), (float *)(s0 + 0x10), (float *)(s0 + 0x14), 0);
+    }
+  }
+}
+#pragma peephole reset
+
+void trickywarp_free(int obj) {
+  int state = *(int *)(obj + 0xb8);
+  if (*(u8 *)(state + 1) != 0) {
+    ObjGroup_RemoveObject(obj, 0x4b);
+  }
+}
+
+#pragma peephole off
+void trickywarp_init(s16 *obj, u8 *param_2) {
+  u32 v;
+  v = *(u16 *)((char *)obj + 0xb0);
+  v |= 0x4000;
+  *(u16 *)((char *)obj + 0xb0) = (u16)v;
+  *obj = (s16)((u32)param_2[0x1a] << 8);
+}
+
+void trickyguard_init(s16 *obj, u8 *param_2) {
+  u32 v;
+  *obj = (s16)((u32)param_2[0x18] << 8);
+  v = *(u16 *)((char *)obj + 0xb0);
+  v |= 0x4000;
+  *(u16 *)((char *)obj + 0xb0) = (u16)v;
+}
+
+void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+  int state;
+  s32 v;
+  state = *(int *)(obj + 0xb8);
+  v = visible;
+  if (v != 0 && *(u8 *)(state + 0x1b) != 0 && *(u8 *)(state + 0x1c) == 0) {
+    objRenderFn_8003b8f4(obj, lbl_803E38B0);
+  }
+}
+#pragma peephole reset
+
 extern void MagicPlant_update();
 extern void MagicPlant_init();
-extern void trickywarp_free();
 extern void trickywarp_update();
-extern void trickywarp_init();
 extern void trickyguard_update();
-extern void trickyguard_init();
 extern void StayPoint_update();
-extern void duster_render();
 extern void duster_hitDetect();
 extern void duster_update();
 extern void duster_init();
