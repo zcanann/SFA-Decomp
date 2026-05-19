@@ -408,7 +408,7 @@ void gunpowderbarrel_free(int param_1, int param_2)
   }
   ObjGroup_RemoveObject(param_1, 0x19);
   ObjGroup_RemoveObject(param_1, 0x16);
-  if (*(char*)(extra + 0x17) != 0) {
+  if (*(unsigned char*)(extra + 0x17) != 0) {
     (*(code*)(*(int *)lbl_803DCA78 + 0x18))(param_1);
   }
 }
