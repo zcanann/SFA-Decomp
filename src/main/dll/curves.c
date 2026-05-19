@@ -1176,36 +1176,10 @@ f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
   float fVar1;
   float fVar2;
   RomCurveDef *curve;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  uint iVar6;
   f32 dist;
 
-  if ((int)param_3 < 0) {
-    iVar6 = 0;
-  }
-  else {
-    iVar5 = gRomCurveCount + -1;
-    iVar4 = 0;
-    while (iVar5 >= iVar4) {
-      iVar3 = (iVar5 + iVar4) >> 1;
-      iVar6 = gRomCurveTable[iVar3];
-      if (param_3 > RomCurve_GetId((int)iVar6)) {
-        iVar4 = iVar3 + 1;
-      }
-      else if (param_3 >= RomCurve_GetId((int)iVar6)) {
-        goto LAB_800e3628;
-      }
-      else {
-        iVar5 = iVar3 + -1;
-      }
-    }
-    iVar6 = 0;
-  }
-LAB_800e3628:
-  if (iVar6 != 0) {
-    curve = (RomCurveDef *)iVar6;
+  curve = RomCurve_FindByIdInline(param_3);
+  if (curve != NULL) {
     fVar1 = curve->x - param_1;
     fVar2 = curve->z - param_2;
     dist = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
@@ -1239,34 +1213,10 @@ f32 curves_distFn0B(int param_1,uint param_2)
   float fVar2;
   float fVar3;
   RomCurveDef *curve;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  uint iVar7;
   f32 dist;
 
-  if ((int)param_2 < 0) {
-    iVar7 = 0;
-  }
-  else {
-    iVar6 = gRomCurveCount + -1;
-    iVar5 = 0;
-    while (iVar6 >= iVar5) {
-      iVar4 = (iVar6 + iVar5) >> 1;
-      iVar7 = gRomCurveTable[iVar4];
-      if (param_2 > RomCurve_GetId((int)iVar7)) {
-        iVar5 = iVar4 + 1;
-      }
-      else {
-        if (param_2 >= RomCurve_GetId((int)iVar7)) goto LAB_800e36d8;
-        iVar6 = iVar4 + -1;
-      }
-    }
-    iVar7 = 0;
-  }
-LAB_800e36d8:
-  if ((iVar7 != 0) && ((uint)param_1 != 0)) {
-    curve = (RomCurveDef *)iVar7;
+  curve = RomCurve_FindByIdInline(param_2);
+  if ((curve != NULL) && ((uint)param_1 != 0)) {
     fVar1 = curve->x - *(float *)(param_1 + 0xc);
     fVar2 = curve->y - *(float *)(param_1 + 0x10);
     fVar3 = curve->z - *(float *)(param_1 + 0x14);
