@@ -43,7 +43,7 @@ typedef struct DFRope {
   f32 stepPerTick;
 } DFRope;
 
-void fn_801C0FD8(u8 *self);
-void fn_801C11B8(DFRopeLink *linkSelf, DFRopeNode *firstNode, DFRopeNode *secondNode);
+void DFRope_UpdateSimulation(u8 *self);
+void DFRopeLink_AttachNodes(DFRopeLink *linkSelf, DFRopeNode *firstNode, DFRopeNode *secondNode);
 
 #endif /* MAIN_DLL_DF_DFBARREL_H_ */

@@ -25,11 +25,11 @@ extern void fn_801C0E60(u8 *self);
 /*
  * --INFO--
  *
- * Function: fn_801C0FD8
+ * Function: DFRope_UpdateSimulation
  * EN v1.0 Address: 0x801C0FD8
  * EN v1.0 Size: 480b
  */
-void fn_801C0FD8(u8 *self)
+void DFRope_UpdateSimulation(u8 *self)
 {
   int j;
   u8 *link;
@@ -103,11 +103,11 @@ void fn_801C0FD8(u8 *self)
 /*
  * --INFO--
  *
- * Function: fn_801C11B8
+ * Function: DFRopeLink_AttachNodes
  * EN v1.0 Address: 0x801C11B8
  * EN v1.0 Size: 128b
  */
-void fn_801C11B8(DFRopeLink *linkSelf, DFRopeNode *firstNode, DFRopeNode *secondNode)
+void DFRopeLink_AttachNodes(DFRopeLink *linkSelf, DFRopeNode *firstNode, DFRopeNode *secondNode)
 {
   u8 *nodeLinkIter;
   int firstLinkIndex;

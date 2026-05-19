@@ -145,7 +145,7 @@ void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 e
     link->force[0] = zero;
     link->maxLength = lbl_803E4E14 * link->restLength;
     nextNode = (DFRopeNode *)((u8 *)rope->nodes + (i + 1) * sizeof(DFRopeNode));
-    fn_801C11B8(link, node, nextNode);
+    DFRopeLink_AttachNodes(link, node, nextNode);
     link++;
     node++;
   }

@@ -33,7 +33,7 @@ extern void *textureLoadAsset(int assetId);
 extern s32 getAngle(f32 dx, f32 dz);
 extern f32 sqrtf(f32 x);
 extern f64 sin(f64 x);
-extern void fn_801C0FD8(void *rope);
+extern void DFRope_UpdateSimulation(void *rope);
 extern void *fn_801C1238(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY,
                          f32 endZ, f32 unused, f32 tickScale);
 extern int fn_801C1BF0(int obj);
@@ -183,7 +183,7 @@ void dfropenode_update(int obj)
     extra->planeDistance = -(baseZ * normalZ + (baseX * normalX + baseY * normalY));
   }
 
-  fn_801C0FD8(extra->rope);
+  DFRope_UpdateSimulation(extra->rope);
 }
 #pragma scheduling reset
 
