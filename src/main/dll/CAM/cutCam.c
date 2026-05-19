@@ -71,100 +71,6 @@ extern f32 lbl_803E234C;
 /*
  * --INFO--
  *
- * Function: Camera_init
- * EN v1.0 Address: 0x80103524
- * EN v1.0 Size: 252b
- * EN v1.1 Address: 0x80103648
- * EN v1.1 Size: 240b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void Camera_init(double param_1,double param_2,double param_3,undefined4 param_4)
-{
-  FUN_800033a8(gCamcontrolState,0,0x144);
-  *(float *)(gCamcontrolState + 0xc) = (float)param_1;
-  *(float *)(gCamcontrolState + 0x10) = (float)param_2;
-  *(float *)(gCamcontrolState + 0x14) = (float)param_3;
-  *(float *)(gCamcontrolState + 0x18) = (float)param_1;
-  *(float *)(gCamcontrolState + 0x1c) = (float)param_2;
-  *(float *)(gCamcontrolState + 0x20) = (float)param_3;
-  *(float *)(gCamcontrolState + 0xa8) = (float)param_1;
-  *(float *)(gCamcontrolState + 0xac) = (float)param_2;
-  *(float *)(gCamcontrolState + 0xb0) = (float)param_3;
-  *(float *)(gCamcontrolState + 0xb8) = (float)param_1;
-  *(float *)(gCamcontrolState + 0xbc) = (float)param_2;
-  *(float *)(gCamcontrolState + 0xc0) = (float)param_3;
-  *(undefined4 *)(gCamcontrolState + 0xa4) = param_4;
-  *(float *)(gCamcontrolState + 0xb4) = lbl_803E2304;
-  gCamcontrolTargetState = 0;
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80103620
- * EN v1.0 Address: 0x80103620
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80103738
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80103620(void)
-{
-  FUN_80006a88();
-  DAT_803de143 = 0xff;
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: Camera_initialise
- * EN v1.0 Address: 0x80103648
- * EN v1.0 Size: 288b
- * EN v1.1 Address: 0x80103760
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void Camera_initialise(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
-{
-  int iVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 in_r6;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  
-  gCamcontrolState = &DAT_803a4ed8;
-  uVar2 = 0;
-  uVar3 = 0x144;
-  iVar1 = FUN_800033a8(-0x7fc5b128,0,0x144);
-  FUN_80006a8c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,uVar2,uVar3,
-               in_r6,in_r7,in_r8,in_r9,in_r10);
-  gCamcontrolCurrentActionId = 0xffffffff;
-  DAT_803de18c = 0xffffffff;
-  DAT_803de188 = 0xffffffff;
-  DAT_803de144 = 0;
-  DAT_803de143 = 0xff;
-  gCamcontrolTargetTypeMask = 0xffff;
-  return;
-}
-
-/*
- * --INFO--
- *
  * Function: camcontrol_traceMove
  * EN v1.0 Address: 0x80103768
  * EN v1.0 Size: 284b
@@ -216,24 +122,6 @@ camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,
 #pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
-
-/*
- * --INFO--
- *
- * Function: FUN_80103884
- * EN v1.0 Address: 0x80103884
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801038FC
- * EN v1.1 Size: 4b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80103884(void)
-{
-  return;
-}
 
 /*
  * --INFO--
@@ -433,17 +321,14 @@ done:
 /*
  * --INFO--
  *
- * Function: FUN_80103e00
- * EN v1.0 Address: 0x80103E00
- * EN v1.0 Size: 1468b
- * EN v1.1 Address: 0x80103DDC
- * EN v1.1 Size: 1280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * Function: cameraFn_80103b40
+ * EN v1.0 Address: 0x80103B40
+ * EN v1.0 Size: 1280b
+ *
+ * NOTE: body inherited from Ghidra-imported v1.1 FUN_80103e00 (v1.1 size 1280b
+ * matches asm v1.0 size). Signature/byte-match is approximate.
  */
-void FUN_80103e00(void)
+void cameraFn_80103b40(void)
 {
   float fVar1;
   float fVar2;
@@ -664,17 +549,27 @@ void FUN_80103e00(void)
 /*
  * --INFO--
  *
- * Function: FUN_801043bc
- * EN v1.0 Address: 0x801043BC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801042DC
- * EN v1.1 Size: 1280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * Function: camMoveFn_80104040
+ * EN v1.0 Address: 0x80104040
+ * EN v1.0 Size: 1280b
+ *
+ * TODO: stub. Body is 1280b move/animation update; needs reverse-engineering.
+ * Adding so the function set aligns with v1.0 asm.
  */
-void FUN_801043bc(void)
+void camMoveFn_80104040(void)
+{
+}
+
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_updateModeSettings
+ * EN v1.0 Address: 0x80104540
+ * EN v1.0 Size: 436b
+ *
+ * TODO: stub. Body adjusts gCamcontrolModeSettings fields with clamping.
+ */
+void camcontrol_updateModeSettings(void)
 {
 }
 
