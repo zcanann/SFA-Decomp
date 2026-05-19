@@ -1604,7 +1604,7 @@ void expgfx_resetAllPools(void)
   resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
   do {
     lbl_803DD258 = 1;
-    if (resourceEntry->resource != (void *)0x0) {
+    if (resourceEntry->resource != 0) {
       textureFree(resourceEntry->resource);
     }
     lbl_803DD258 = 0;
@@ -2103,7 +2103,7 @@ void expgfx_onMapSetup(void)
   resourceIndex = 0;
   resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
   do {
-    if (resourceEntry->resource != (void *)0x0) {
+    if (resourceEntry->resource != 0) {
       textureFree(resourceEntry->resource);
     }
     resourceEntry->resource = (void *)0x0;
