@@ -35,7 +35,7 @@ extern f32 lbl_803E1CE0;
 int objAnimFn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turning,
                 PostControl *control, float *turnSpeed, s16 *moves)
 {
-  int yawDelta;
+  s16 yawDelta;
   PostMotionTarget *motion;
   s16 hitResult;
   int turnAmount;
