@@ -2340,6 +2340,40 @@ void goToNextMapLayer(void) {
 	renderFlags |= 0x4000;
 }
 
+/* 136b 5-plane view-frustum sphere visibility test. */
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803DEBCC;
+extern char gViewFrustumPlanes[];
+
+int ViewFrustum_IsSphereVisible(float* center, float radius) {
+	u8 i;
+	for (i = 0; i < 5; i++) {
+		float* plane = (float*)(gViewFrustumPlanes + i * 0x14);
+		float dot = plane[0] * (center[0] - playerMapOffsetX)
+		          + center[1] * plane[1]
+		          + plane[2] * (center[2] - playerMapOffsetZ)
+		          + plane[3];
+		if (radius + dot < lbl_803DEBCC) return 0;
+	}
+	return 1;
+}
+
+/* 112b indexed teardown/free of map block. */
+extern char lbl_803822C8[];
+extern void* lbl_80386468[];
+extern void defStartFn_8005972c(void* p1, void* p2, int idx, int flag);
+extern void mm_free(void* p);
+
+void fn_80059A50(int idx) {
+	void* p = lbl_80386468[idx];
+	if (p != 0) {
+		defStartFn_8005972c(p, lbl_803822C8 + idx * 0x8C, idx, 1);
+		mm_free(lbl_80386468[idx]);
+		lbl_80386468[idx] = 0;
+	}
+}
+
 /* 96b camera-pos gated load. */
 extern f32 lbl_803DCE5C;
 extern f32 lbl_803DCE60;
