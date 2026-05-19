@@ -38,11 +38,25 @@ extern f32 lbl_803E6310;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void paymentkiosk_init(int param_1)
+extern void fn_801DF1EC(void);
+#pragma scheduling off
+#pragma peephole off
+void paymentkiosk_init(int obj, u8 *initData)
 {
-  FUN_8003b818(param_1);
-  return;
+    register int self = obj;
+    register int state = *(int *)(self + 0xb8);
+    u32 secondaryFlag;
+
+    *(void (**)(void))(self + 0xbc) = fn_801DF1EC;
+    *(short *)self = (short)((int)(signed char)initData[0x18] << 8);
+    *(u8 *)state = 0;
+    *(u16 *)(self + 0xb0) = (u16)((u32)*(u16 *)(self + 0xb0) | 0x6000);
+    *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
+    secondaryFlag = (*(short *)(self + 0x46) == 0x476) ? 1 : 0;
+    *(u8 *)(state + 1) = (u8)secondaryFlag;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

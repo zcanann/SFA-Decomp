@@ -14,7 +14,7 @@ extern void textureFree(void *resource);
 extern void doNothing_onSaveSelectScreenExit(void);
 extern void loadUiDll(int id);
 
-extern u8 lbl_803DB9FB;
+extern s8 lbl_803DB9FB;
 extern u8 lbl_803DB424;
 extern s8 saveFileSelect_currentSlotIndex;
 extern u8 saveFileSelect_saveDirty;
@@ -985,7 +985,7 @@ void fn_8011A70C(void) {
 void saveSelectGoToChooseSlot(int arg) {
     u8 i;
 
-    if ((s8)lbl_803DB9FB != -1) {
+    if (lbl_803DB9FB != -1) {
         ((void (**)(void))lbl_803DCAA0->vtable)[2]();
     }
     lbl_803DB9FB = 0;
@@ -1036,7 +1036,7 @@ void SaveSelectScreen_release(int param_1) {
         lbl_8031A804[0] = NULL;
     }
     lbl_803DD6A0 = 0;
-    if ((s8)lbl_803DB9FB != -1) {
+    if (lbl_803DB9FB != -1) {
         ((void (**)(void))lbl_803DCAA0->vtable)[2]();
         lbl_803DB9FB = -1;
     }
