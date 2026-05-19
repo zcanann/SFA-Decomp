@@ -114,6 +114,7 @@ void AttractMovie_GetBufferSizes(uint *movieOrReadBufferSize, int *yTextureBuffe
             movieOrReadSize = ALIGN_NEXT_32(player->header.mBufferSize) * 10;
         }
         *movieOrReadBufferSize = movieOrReadSize;
+        player = &lbl_803A5D60;
         *yTextureBufferSize = ALIGN_NEXT_32(player->videoInfo.xSize * player->videoInfo.ySize) * 3;
         *uTextureBufferSize = ALIGN_NEXT_32((u32)(player->videoInfo.xSize * player->videoInfo.ySize) >> 2) * 3;
         *vTextureBufferSize = ALIGN_NEXT_32((u32)(player->videoInfo.xSize * player->videoInfo.ySize) >> 2) * 3;
