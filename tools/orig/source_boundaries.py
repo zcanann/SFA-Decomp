@@ -399,11 +399,23 @@ def indirect_neighborhood(
     return tuple(support_strings), tuple(support_functions), span_start, span_end, gap_text
 
 
-def suggested_path(hint: ReferenceHint) -> str:
+def suggested_path(
+    hint: ReferenceHint,
+    alias_names: tuple[str, ...] = (),
+    current_split_paths: tuple[str, ...] = (),
+) -> str:
     if hint.current_debug_paths:
         return hint.current_debug_paths[0].replace("\\", "/")
     if hint.reference_configure_paths:
         return hint.reference_configure_paths[0].replace("\\", "/")
+
+    alias_basenames = {Path(name).name.lower() for name in alias_names}
+    if alias_basenames:
+        for split_path in current_split_paths:
+            normalized = split_path.replace("\\", "/")
+            if Path(normalized).name.lower() in alias_basenames:
+                return normalized
+
     return Path(hint.retail_source_name).name
 
 
@@ -507,7 +519,7 @@ def build_boundary_hints(
             span_end,
         )
         before, after = symbol_neighbors(current_functions, xref_functions)
-        selected_path = suggested_path(hint)
+        selected_path = suggested_path(hint, alias_names, current_split_paths)
         indirect_strings, indirect_functions, indirect_span_start, indirect_span_end, indirect_gap_text = indirect_neighborhood(
             group,
             raw_strings,

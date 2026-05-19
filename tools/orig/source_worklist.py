@@ -395,6 +395,7 @@ def find_matching_split_range(
 def current_range_satisfies_action(
     action: str,
     anchor: SourceAnchor,
+    suggested_path: str,
     hint: BoundaryHint,
     estimate: WindowEstimate | None,
     island: SourceIsland | None,
@@ -410,7 +411,7 @@ def current_range_satisfies_action(
     if hint.split_status != "single-split":
         return False
 
-    current_range = find_matching_split_range(anchor.suggested_path, split_range_by_path)
+    current_range = find_matching_split_range(suggested_path, split_range_by_path)
     if current_range is None:
         return False
 
@@ -458,9 +459,11 @@ def build_work_items(
         island = island_by_name.get(anchor.retail_source_name.lower())
         estimate = estimate_window(current_functions, anchor, hint, island)
         action, confidence, reason = classify_anchor(anchor, hint, island, prev_corridor, next_corridor, estimate)
+        suggested_path = hint.suggested_path or anchor.suggested_path
         if current_range_satisfies_action(
             action,
             anchor,
+            suggested_path,
             hint,
             estimate,
             island,
@@ -468,7 +471,7 @@ def build_work_items(
             split_range_by_path,
         ):
             continue
-        matching_range = find_matching_split_range(anchor.suggested_path, split_range_by_path)
+        matching_range = find_matching_split_range(suggested_path, split_range_by_path)
         suggested_overlap_paths: tuple[str, ...] = ()
         if estimate is not None:
             suggested_overlap_paths = overlapping_split_paths(current_split_ranges, estimate.start, estimate.end)
@@ -499,7 +502,7 @@ def build_work_items(
         items.append(
             WorkItem(
                 retail_source_name=anchor.retail_source_name,
-                suggested_path=anchor.suggested_path,
+                suggested_path=suggested_path,
                 action=action,
                 confidence=confidence,
                 reason=reason,
