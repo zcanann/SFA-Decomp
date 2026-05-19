@@ -374,6 +374,38 @@ extern void mm_free(void *p);
 extern void *lbl_803DCA6C;
 extern void *lbl_803DCA68;
 extern int lbl_803DC0BC;
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E5BB8;
+extern f32 lbl_803E5BA8;
+extern f32 lbl_803E5AEC;
+
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_func13
+ * EN v1.0 Address: 0x801ECBD4
+ * EN v1.0 Size: 100b
+ */
+#pragma peephole off
+#pragma scheduling off
+f32 SnowBike_func13(int obj, f32 *out)
+{
+    int t = *(int *)(obj + 0xb8);
+    f32 a, b, c, sum, r;
+    *out = lbl_803E5BB8;
+    a = *(f32 *)(t + 0x49c) * *(f32 *)(t + 0x49c);
+    b = *(f32 *)(t + 0x494) * *(f32 *)(t + 0x494);
+    c = *(f32 *)(t + 0x498) * *(f32 *)(t + 0x498);
+    sum = b + c;
+    sum = a + sum;
+    r = sqrtf(sum) * lbl_803E5BA8;
+    if (r > lbl_803E5AEC) {
+        r = lbl_803E5AEC;
+    }
+    return r;
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
