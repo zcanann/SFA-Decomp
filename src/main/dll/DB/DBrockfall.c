@@ -300,6 +300,73 @@ void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void fn_801DF4AC(void);
+extern undefined4 *lbl_803DCA54;
+
+/*
+ * Function: FEseqobject_init
+ * EN v1.0 Address: 0x801DF8F4
+ * EN v1.0 Size: 56b
+ */
+#pragma scheduling off
+#pragma peephole off
+void FEseqobject_init(int obj)
+{
+    *(short *)obj = 0;
+    *(void (**)(void))(obj + 0xbc) = fn_801DF4AC;
+    ObjMsg_AllocQueue((void *)obj, 0xa);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * Function: FEseqobject_update
+ * EN v1.0 Address: 0x801DF894
+ * EN v1.0 Size: 96b
+ */
+#pragma scheduling off
+#pragma peephole off
+void FEseqobject_update(int obj)
+{
+    register int self = obj;
+    *(short *)self = 0x2000;
+    if (GameBit_Get(0x75) == 0) {
+        (*(void (**)(int, int, int))((char *)*(int *)lbl_803DCA54 + 0x48))(0, self, -1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * Function: fn_801DF9AC
+ * EN v1.0 Address: 0x801DF9AC
+ * EN v1.0 Size: 16b
+ */
+#pragma scheduling off
+#pragma peephole off
+int fn_801DF9AC(void *p1, void *p2, u8 *p3)
+{
+    p3[0x56] = 0;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * Function: fn_801DFA08
+ * EN v1.0 Address: 0x801DFA08
+ * EN v1.0 Size: 24b
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_801DFA08(int obj)
+{
+    *(short *)obj = 0;
+    *(int (**)(void *, void *, u8 *))(obj + 0xbc) = fn_801DF9AC;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 ObjectDescriptor gFElevControlObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)FElevControl_initialise,

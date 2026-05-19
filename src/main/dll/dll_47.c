@@ -35,7 +35,8 @@ extern u8 lbl_803DD6CD;
 extern u8 lbl_803DD6CE;
 extern u8 lbl_803DD6CF;
 extern u8 lbl_803DD6C4;
-extern void *lbl_8031A804;
+extern void *lbl_8031A804[4];
+extern void *lbl_803A8680[4];
 extern SaveSelectPanel lbl_8031A7BC[8];
 
 extern undefined4 FUN_80003494();
@@ -1030,9 +1031,9 @@ void SaveSelectScreen_release(int param_1) {
     void **p;
     void *zero;
 
-    if (lbl_8031A804 != NULL) {
-        mm_free(lbl_8031A804);
-        lbl_8031A804 = NULL;
+    if (lbl_8031A804[0] != NULL) {
+        mm_free(lbl_8031A804[0]);
+        lbl_8031A804[0] = NULL;
     }
     lbl_803DD6A0 = 0;
     if ((s8)lbl_803DB9FB != -1) {
