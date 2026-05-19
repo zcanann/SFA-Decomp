@@ -174,7 +174,7 @@ void kaldachompme_update(int obj)
       }
     }
   }
-  ObjAnim_SetCurrentMove((double)extra[0],obj,(uint)*(byte *)((int)extra + 0xc),0);
+  ObjAnim_SetCurrentMove(obj,(uint)*(byte *)((int)extra + 0xc),extra[0],0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -187,7 +187,7 @@ void kaldachompme_init(int obj,int params)
   *(s16 *)(obj + 2) = (s16)(*(u8 *)(params + 0x19) << 8);
   *(s16 *)(obj + 0) = (s16)(*(u8 *)(params + 0x1a) << 8);
   *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
-  ObjAnim_SetCurrentMove((double)lbl_803E30D4,obj,0,0);
+  ObjAnim_SetCurrentMove(obj,0,lbl_803E30D4,0);
 }
 #pragma peephole reset
 #pragma scheduling reset

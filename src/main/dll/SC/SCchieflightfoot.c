@@ -195,8 +195,8 @@ void SHthorntail_update(SHthorntailObject *obj)
       }
     }
     if ((int)psVar2[0x50] != (int)gSHthorntailStateMoveIds[runtime->behaviorState]) {
-      ObjAnim_SetCurrentMove((double)lbl_803E5418,(int)psVar2,
-                             (int)gSHthorntailStateMoveIds[runtime->behaviorState],0);
+      ObjAnim_SetCurrentMove((int)psVar2,(int)gSHthorntailStateMoveIds[runtime->behaviorState],
+                             lbl_803E5418,0);
       runtime->storedFacingAngle = *psVar2;
     }
     iVar6 = ObjAnim_AdvanceCurrentMove(gSHthorntailStateMoveStepScales[runtime->behaviorState],

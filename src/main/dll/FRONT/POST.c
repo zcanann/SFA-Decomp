@@ -101,11 +101,11 @@ int objAnimFn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turn
   }
 
   if ((0 < yawDelta) && (objAnim->currentMove != moves[1])) {
-    ObjAnim_SetCurrentMove((double)lbl_803E1C90,(int)objAnim,moves[1],0);
+    ObjAnim_SetCurrentMove((int)objAnim,moves[1],lbl_803E1C90,0);
     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)objAnim,0x1e);
   }
   if ((yawDelta < 0) && (objAnim->currentMove != moves[0])) {
-    ObjAnim_SetCurrentMove((double)lbl_803E1C90,(int)objAnim,moves[0],0);
+    ObjAnim_SetCurrentMove((int)objAnim,moves[0],lbl_803E1C90,0);
     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)objAnim,0x1e);
   }
 

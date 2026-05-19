@@ -1392,12 +1392,12 @@ void FUN_800d85f4(undefined8 param_1,double param_2,double param_3,undefined8 pa
        (*(short *)(param_9 + 0xa0) == DAT_803de0bc)) {
       if ((*(float *)(param_10 + 0x280) < lbl_803E11F0) &&
          (*(short *)(param_9 + 0xa0) != DAT_803de0b8)) {
-        ObjAnim_SetCurrentMove((double)*(float *)(param_9 + 0x98),(int)param_9,DAT_803de0b8,0);
+        ObjAnim_SetCurrentMove((int)param_9,DAT_803de0b8,*(float *)(param_9 + 0x98),0);
         *(undefined *)(param_10 + 0x346) = 0;
       }
     }
     else {
-      ObjAnim_SetCurrentMove((double)*(float *)(param_9 + 0x98),(int)param_9,DAT_803de0bc,0);
+      ObjAnim_SetCurrentMove((int)param_9,DAT_803de0bc,*(float *)(param_9 + 0x98),0);
       *(undefined *)(param_10 + 0x346) = 0;
     }
     dVar4 = FUN_80293900((double)(*(float *)(param_10 + 0x280) * *(float *)(param_10 + 0x280) +

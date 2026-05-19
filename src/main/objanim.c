@@ -1078,7 +1078,7 @@ int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
+int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int flags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
