@@ -5509,7 +5509,7 @@ void doHeatEffect(u32 alpha_in)
 #pragma scheduling off
 void renderMotionBlur(f32 alpha)
 {
-    extern struct { f32 x, y; } lbl_803DEF1C;
+    extern f32 lbl_803DEF20;
     extern GXColor lbl_803DB6A0;
     extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
@@ -5521,7 +5521,7 @@ void renderMotionBlur(f32 alpha)
     extern void GXSetZCompLoc(u8);
     Mtx mtx;
 
-    lbl_803DB6A0.a = lbl_803DEF1C.y * alpha;
+    lbl_803DB6A0.a = lbl_803DEF20 * alpha;
     selectReflectionTexture(0);
     GXSetTevKColor(0, lbl_803DB6A0);
     GXSetTevKAlphaSel(0, 0x1C);
