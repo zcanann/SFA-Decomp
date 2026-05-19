@@ -393,9 +393,9 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
 #pragma peephole off
 void SHthorntail_updateDustEffects(SHthorntailObject *obj)
 {
-  SHthorntailRuntime *runtime;
   undefined4 playerObj;
-  u8 burstCount;
+  SHthorntailRuntime *runtime;
+  int burstCount;
   SHthorntailDustEffectParams effectParams;
 
   playerObj = Obj_GetPlayerObject();
@@ -432,7 +432,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
         runtime->dustEffectFlags = runtime->dustEffectFlags & ~SHTHORNTAIL_DUST_FLAG_BURST_READY;
         effectParams.radius = 0x46;
         effectParams.scale = lbl_803E5484;
-        for (burstCount = 0xf; burstCount != 0; burstCount = burstCount + -1) {
+        for (burstCount = 0xf; (u8)burstCount != 0; burstCount = burstCount + -1) {
           (*(code *)(*pDll_expgfx + 8))(playerObj,0x7d2,&effectParams,2,0xffffffff,0);
         }
       }
