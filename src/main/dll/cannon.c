@@ -439,9 +439,9 @@ int trickyGuardFindBaddieTarget(int p) {
     int count;
     f32 d;
     f32 bestDist;
-    uint best;
-    int i;
     int *list;
+    int i;
+    uint best;
 
     best = 0;
     list = (int *)ObjGroup_GetObjects(3, &count);
@@ -460,17 +460,17 @@ int trickyGuardFindBaddieTarget(int p) {
         }
         list++;
     }
-    if (best == 0) {
-        return 0;
+    if (best != 0) {
+        *(int *)(p + 0x72c) = best;
+        if (*(uint *)(p + 0x28) != (best + 0x18)) {
+            *(int *)(p + 0x28) = best + 0x18;
+            *(u32 *)(p + 0x54) = *(u32 *)(p + 0x54) & 0xfffffbff;
+            *(u16 *)(p + 0xd2) = 0;
+        }
+        *(u8 *)(p + 0xa) = 4;
+        return 1;
     }
-    *(int *)(p + 0x72c) = best;
-    if (*(uint *)(p + 0x28) != (best + 0x18)) {
-        *(int *)(p + 0x28) = best + 0x18;
-        *(u32 *)(p + 0x54) = *(u32 *)(p + 0x54) & 0xfffffbff;
-        *(u16 *)(p + 0xd2) = 0;
-    }
-    *(u8 *)(p + 0xa) = 4;
-    return 1;
+    return 0;
 }
 #pragma scheduling on
 
