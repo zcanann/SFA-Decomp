@@ -630,9 +630,11 @@ void CameraModeShipBattle_update(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void CameraModeShipBattle_init(void)
 {
   float fVar1;
+  u8 zero;
 
   if (lbl_803DD570 == (float *)0x0) {
     lbl_803DD570 = (float *)mmAlloc(0x2c,0xf,0);
@@ -645,12 +647,14 @@ void CameraModeShipBattle_init(void)
   lbl_803DD570[4] = lbl_803E194C;
   lbl_803DD570[3] = fVar1;
   lbl_803DD570[5] = lbl_803E195C;
-  *(undefined *)(lbl_803DD570 + 10) = 0;
+  zero = 0;
+  *(u8 *)(lbl_803DD570 + 10) = zero;
   fVar1 = lbl_803E1950;
   lbl_803DD570[8] = lbl_803E1950;
   lbl_803DD570[7] = fVar1;
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
