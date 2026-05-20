@@ -1970,6 +1970,32 @@ extern void *textureLoadAsset(int id);
 extern f32 lbl_803E1E3C;
 extern int lbl_803A9398[];
 
+extern void textureFree(int handle);
+extern void mm_free(void *p);
+#pragma scheduling off
+#pragma peephole off
+void GameUI_airMeterShutdown(void) {
+    int *m = (int *)airMeter;
+    if (m == NULL) return;
+    *(u8 *)((char *)m + 0x18) = 0;
+    switch (m[0x10]) {
+        case 0:
+            textureFree(m[0xb]);
+            textureFree(m[0xc]);
+            break;
+        case 1:
+            textureFree(m[0xc]);
+            textureFree(m[0xd]);
+            textureFree(m[0xe]);
+            textureFree(m[0xf]);
+            break;
+    }
+    mm_free(airMeter);
+    airMeter = NULL;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern int *lbl_803DCAAC;
 extern u8 lbl_803DB424;
 extern int lbl_803DD8DC;
