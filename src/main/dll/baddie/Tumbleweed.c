@@ -3628,9 +3628,15 @@ void Credits_initialise(void)
 int trickyFn_80138f14(u8* obj)
 {
     u8* b = *(u8**)(obj + 0xb8);
-    if (GameBit_Get(0x4E4) == 0) return 0;
-    *(u32*)(b + 0x54) |= 0x10000;
-    if ((*(u32*)(b + 0x54) & 0x10) != 0) return 1;
+    u32 v;
+    u32 mask = 0x10000;
+    if ((u32)GameBit_Get(0x4E4) == 0u) return 0;
+    v = *(u32*)(b + 0x54);
+    v = v | mask;
+    *(u32*)(b + 0x54) = v;
+    if ((*(u32*)(b + 0x54) & 0x10) != 0u) {
+        return 1;
+    }
     return 0;
 }
 
