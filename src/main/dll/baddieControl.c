@@ -3158,9 +3158,32 @@ int fn_80113278(int p1, int p2, u8 b)
 #pragma peephole reset
 #pragma scheduling reset
 
+/* compute progress ratio (signed numerator / unsigned denominator) */
+extern f32 lbl_803E1C2C;
+#pragma peephole off
+#pragma scheduling off
+f32 fn_80111E48(int obj)
+{
+  int p_b8 = *(int *)(obj + 0xb8);
+  int p_4c = *(int *)(obj + 0x4c);
+  s8 numer;
+  u8 denom;
+  f32 result;
+
+  numer = *(s8 *)(p_b8 + 0x354);
+  denom = *(u8 *)(p_4c + 0x32);
+  if (denom != 0 && numer != 0) {
+    result = (f32)numer / (f32)denom;
+  } else {
+    result = lbl_803E1C2C;
+  }
+  return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* baddie state reset */
 extern void ObjHits_SetHitVolumeSlot(void *obj, int animObjId, int frame, int flags);
-extern f32 lbl_803E1C2C;
 #pragma peephole off
 #pragma scheduling off
 void fn_801132F4(int p1, int p2, s8 b, f32 fval)

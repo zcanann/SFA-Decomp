@@ -4179,3 +4179,39 @@ void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 int DrakorEnergy_setScale(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x8) == 0; }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
+extern f32 lbl_803E62A8;
+#pragma peephole off
+#pragma scheduling off
+int fn_80200460(int p1, int p2)
+{
+  f32 fz;
+  if (*(void **)(p2 + 0x2d0) == NULL) return 0;
+  if ((s8)*(u8 *)(p2 + 0x27b) != 0) {
+    fz = lbl_803E62A8;
+    *(f32 *)(p2 + 0x284) = fz;
+    *(f32 *)(p2 + 0x280) = fz;
+    return 7;
+  }
+  if ((s8)*(u8 *)(p2 + 0x346) == 0) return 0;
+  return 7;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* baddie anim update: fires vtable[0x13] when flag set */
+extern void **lbl_803DCAB8;
+#pragma peephole off
+#pragma scheduling off
+int fn_8020032C(int p1, int p2)
+{
+  int obj_b8 = *(int *)(p1 + 0xb8);
+  if ((s8)*(u8 *)(p2 + 0x27b) != 0) {
+    (*(void (**)(int, s16, int, int))((char *)*lbl_803DCAB8 + 0x4c))(
+        p1, *(s16 *)(obj_b8 + 0x3f0), -1, 0);
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

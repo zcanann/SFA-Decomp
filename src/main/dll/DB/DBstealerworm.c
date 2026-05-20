@@ -1167,6 +1167,102 @@ void SB_ShipGun_free(int param_1) {
     ((SBShipGunFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(param_1);
 }
 
+/* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+#pragma peephole off
+int SB_Galleon_setScale(int obj) {
+    s8 *p = (s8*)((int**)obj)[0xb8/4];
+    int s = p[0x29];
+    if (s != 1) {
+        if (s >= 2) {
+            Sfx_PlayFromObject(obj, 0x3f);
+        }
+        p[0x2b] = p[0x2b] + 1;
+        return 1;
+    }
+    {
+        int t = p[0x7a];
+        if (t == 0 || t == 1 || t == 2) {
+            p[0x7c] = p[0x7c] + 1;
+            return 1;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+
+/* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
+extern undefined4 *pDll_expgfx;
+extern u8 framesThisStep;
+extern f32 lbl_803E5738;
+extern f32 lbl_803E56CC;
+extern f32 lbl_803E56F0;
+extern f32 lbl_803E56C8;
+#pragma peephole off
+#pragma scheduling off
+void SB_Galleon_hitDetect(int obj) {
+    int *p = ((int**)obj)[0xb8/4];
+    u8 i;
+    struct {
+        u8 pad[6];
+        u16 mode;
+        f32 a;
+        f32 b;
+        f32 c;
+        f32 d;
+    } stk;
+    if (*(u8*)((char*)p + 0x85) != 0 && *(int*)((char*)p + 0x4c) != 0) {
+        stk.a = lbl_803E5738;
+        stk.mode = 0xc0a;
+        stk.b = lbl_803E56CC;
+        stk.c = lbl_803E56F0;
+        stk.d = lbl_803E56C8;
+        for (i = 0; i < framesThisStep; i = i + 1) {
+            (**(code **)(*pDll_expgfx + 8))(*(int*)((char*)p + 0x4c), 0x7aa, stk.pad, 2, 0xffffffff, 0);
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
+extern void textureFree(void *tex);
+extern void Music_Trigger(s32 snd, s32 mode);
+extern int lbl_803DDC18;
+extern int lbl_803DDC1C;
+void SB_Galleon_free(int obj, int p2) {
+    u8 *p = (u8*)((int**)obj)[0xb8/4];
+    if (lbl_803DDC18 != 0) {
+        textureFree((void*)lbl_803DDC18);
+        lbl_803DDC18 = 0;
+    }
+    if (lbl_803DDC1C != 0) {
+        textureFree((void*)lbl_803DDC1C);
+        lbl_803DDC1C = 0;
+    }
+    ObjGroup_RemoveObject(obj, 3);
+    if (p[0x80] != 0 && p2 == 0) {
+        p[0x80] = 0;
+    }
+    lbl_803DDC20 = 0;
+    Music_Trigger(*(s32*)(p + 0x9c), 0);
+    Music_Trigger(*(s32*)(p + 0x98), 0);
+    GameBit_Set(0xac8, 1);
+}
+
+/* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
+extern void ObjMsg_AllocQueue(int obj, int n);
+extern f32 lbl_803E5830;
+extern f32 lbl_803E5838;
+void SB_ShipHead_init(int obj) {
+    f32 *p = (f32*)((int**)obj)[0xb8/4];
+    ObjGroup_AddObject(obj, 3);
+    ObjMsg_AllocQueue(obj, 10);
+    *(s8*)((char*)p + 4) = 4;
+    p[0xc/4] = p[0xc/4] + lbl_803E5830;
+    p[0x8/4] = p[0x8/4] + lbl_803E5838;
+}
+
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
 #pragma peephole off
