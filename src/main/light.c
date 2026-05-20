@@ -60,96 +60,31 @@ extern f32 lbl_803E6DBC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void vfpblock1_update(void)
+extern int Obj_GetPlayerObject(void);
+extern f32 Vec_distance(void *a, void *b);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 lbl_803E6100;
+
+#pragma scheduling off
+#pragma peephole off
+void vfpblock1_update(int obj)
 {
-  uint uVar1;
-  int iVar2;
-  uint uVar3;
-  short sVar4;
-  short sVar5;
-  short sVar6;
-  short sVar7;
-  char cVar8;
-  int iVar9;
-  int iVar10;
-  
-  uVar1 = FUN_80286838();
-  iVar10 = *(int *)(uVar1 + 0x4c);
-  iVar9 = *(int *)(uVar1 + 0xb8);
-  iVar2 = FUN_80017a98();
-  *(byte *)(uVar1 + 0xaf) = *(byte *)(uVar1 + 0xaf) | 8;
-  if (iVar2 != 0) {
-    uVar3 = FUN_80017690(0x507);
-    sVar4 = (short)uVar3;
-    uVar3 = FUN_80017690(0x508);
-    sVar5 = (short)uVar3;
-    uVar3 = FUN_80017690(0x509);
-    sVar6 = (short)uVar3;
-    uVar3 = FUN_80017690(0x50a);
-    sVar7 = (short)uVar3;
-    cVar8 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(uVar1 + 0xac));
-    if (cVar8 == '\x02') {
-      sVar4 = 1;
-      sVar5 = 1;
-      sVar6 = 1;
-      sVar7 = 1;
-    }
-    if ((((sVar4 != 0) && (sVar5 != 0)) && (sVar6 != 0)) &&
-       (((sVar7 != 0 && (*(short *)(iVar9 + 10) == 0)) && (uVar3 = FUN_80017690(0x4ee), uVar3 == 0))
-       )) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))(4,uVar1,0xffffffff);
-      FUN_80017698(0x4ee,1);
-    }
-    if (((char)*(byte *)(iVar9 + 0x1c) < '\0') ||
-       (((*(byte *)(iVar9 + 0x1c) >> 6 & 1) != 0 && (*(short *)(iVar9 + 10) == 0)))) {
-      *(float *)(uVar1 + 0x10) = *(float *)(iVar10 + 0xc) + lbl_803E6D84;
-      *(byte *)(iVar9 + 0x1c) = *(byte *)(iVar9 + 0x1c) & 0x7f;
-      *(byte *)(iVar9 + 0x1c) = *(byte *)(iVar9 + 0x1c) & 0xbf;
-      *(undefined2 *)(iVar9 + 10) = 4;
-    }
-    sVar4 = *(short *)(iVar9 + 10);
-    if (sVar4 != 0) {
-      if (((sVar4 == 4) || (3 < sVar4)) || (sVar4 < 3)) {
-        *(byte *)(uVar1 + 0xaf) = *(byte *)(uVar1 + 0xaf) & 0xf7;
-        if ((*(byte *)(uVar1 + 0xaf) & 1) == 0) {
-          uVar3 = FUN_80017690((int)*(short *)(iVar9 + 0xe));
-          if (uVar3 != 0) {
-            *(undefined2 *)(iVar9 + 10) = 3;
-            *(undefined4 *)(uVar1 + 0x10) = *(undefined4 *)(iVar10 + 0xc);
-          }
+    int player = (int)Obj_GetPlayerObject();
+    f32 dist = Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18));
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0) {
+        if (dist < lbl_803E6100) {
+            Sfx_PlayFromObject(obj, 0x110);
         }
-        else {
-          FUN_80006ba8(0,0x100);
-          (**(code **)(*DAT_803dd6d4 + 0x48))(1,uVar1,0xffffffff);
-          *(undefined2 *)(iVar9 + 10) = 3;
-          FUN_80006824(uVar1,0x113);
-          FUN_8000680c(uVar1,8);
-          FUN_80017698((int)*(short *)(iVar9 + 0xe),1);
+    } else {
+        if (dist >= lbl_803E6100) {
+            Sfx_StopObjectChannel(obj, 0x40);
         }
-      }
-      else {
-        *(byte *)(uVar1 + 0xaf) = *(byte *)(uVar1 + 0xaf) & 0xf7;
-        if ((*(byte *)(uVar1 + 0xaf) & 1) == 0) {
-          uVar3 = FUN_80017690((int)*(short *)(iVar9 + 0xe));
-          if (uVar3 == 0) {
-            *(undefined2 *)(iVar9 + 10) = 4;
-            *(float *)(uVar1 + 0x10) = *(float *)(iVar10 + 0xc) + lbl_803E6D84;
-          }
-        }
-        else {
-          FUN_80006ba8(0,0x100);
-          (**(code **)(*DAT_803dd6d4 + 0x48))(0,uVar1,0xffffffff);
-          *(undefined2 *)(iVar9 + 10) = 4;
-          FUN_80006824(uVar1,0x113);
-          FUN_8000680c(uVar1,8);
-          FUN_80017698((int)*(short *)(iVar9 + 0xe),0);
-        }
-      }
     }
-  }
-  FUN_80286884();
-  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -238,7 +173,7 @@ void FUN_801fbd90(uint param_1)
   FUN_80017a98();
   sVar1 = *(short *)(param_1 + 0x46);
   if (sVar1 == 0x3b7) {
-    vfpblock1_update();
+    vfpblock1_update((int)param_1);
   }
   else if (sVar1 == 0x3bf) {
     FUN_801f5070(param_1);
@@ -1178,3 +1113,4 @@ void vfpdoorswitch_render(void) { objRenderFn_8003b8f4(lbl_803E611C); }
 void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 #pragma peephole reset
 #pragma scheduling reset
+
