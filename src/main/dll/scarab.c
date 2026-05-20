@@ -3154,6 +3154,61 @@ int fn_8015E044(int* obj, u8* state)
     return 0;
 }
 
+extern void* lbl_803AC5D0[];
+extern int fn_8016032C(int* obj, u8* state);
+extern int fn_801601C4(int* obj, u8* state);
+extern int fn_8016043C(int* obj, u8* state);
+extern int fn_801605D4(short* out, u8* obj);
+int fn_80160690(short* out, u8* obj);
+int fn_801605A8(short* out, u8* obj);
+int fn_80160534(int* obj);
+int fn_8016052C(void);
+int fn_8016050C(int p1, u8* obj);
+int fn_801603E8(int* obj, u8* obj2);
+
+extern void* lbl_803AC5B0[];
+extern void* lbl_803AC598[];
+extern int fn_8015E8BC(int* obj, u8* state);
+extern int fn_8015E798(int* obj, u8* state);
+extern int fn_8015E5DC(short* out, u8* obj);
+extern int fn_8015E520(int* obj, u8* state);
+extern int fn_8015E3A0(int* obj, u8* state);
+extern int fn_8015E210(int* obj, u8* state);
+extern int fn_8015E0C8(int* obj, u8* state);
+extern int fn_8015DF20(int* obj, u8* state);
+extern int fn_8015DC04(int* obj, u8* state);
+
+void dll_CE_initialise(void)
+{
+    lbl_803AC5B0[0] = (void*)fn_8015E8BC;
+    lbl_803AC5B0[1] = (void*)fn_8015E798;
+    lbl_803AC5B0[2] = (void*)fn_8015E5DC;
+    lbl_803AC5B0[3] = (void*)fn_8015E520;
+    lbl_803AC5B0[4] = (void*)fn_8015E3A0;
+    lbl_803AC5B0[5] = (void*)fn_8015E210;
+    lbl_803AC5B0[6] = (void*)fn_8015E0C8;
+    lbl_803AC598[0] = (void*)fn_8015E044;
+    lbl_803AC598[1] = (void*)fn_8015E00C;
+    lbl_803AC598[2] = (void*)fn_8015DF20;
+    lbl_803AC598[3] = (void*)fn_8015DEB4;
+    lbl_803AC598[4] = (void*)fn_8015DE50;
+    lbl_803AC598[5] = (void*)fn_8015DC04;
+}
+
+void dll_CB_initialise(void)
+{
+    ((void**)lbl_803AC5E8)[0] = (void*)fn_80160690;
+    ((void**)lbl_803AC5E8)[1] = (void*)fn_801605D4;
+    ((void**)lbl_803AC5E8)[2] = (void*)fn_801605A8;
+    ((void**)lbl_803AC5E8)[3] = (void*)fn_80160534;
+    lbl_803AC5D0[0] = (void*)fn_8016052C;
+    lbl_803AC5D0[1] = (void*)fn_8016050C;
+    lbl_803AC5D0[2] = (void*)fn_8016043C;
+    lbl_803AC5D0[3] = (void*)fn_801603E8;
+    lbl_803AC5D0[4] = (void*)fn_8016032C;
+    lbl_803AC5D0[5] = (void*)fn_801601C4;
+}
+
 #pragma peephole reset
 int fn_80160534(int* obj)
 {
