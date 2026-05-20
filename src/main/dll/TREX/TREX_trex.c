@@ -1848,7 +1848,20 @@ void ShipBattle_render(void) {}
 void ShipBattle_update(void) {}
 void shop_buyItem(void) {}
 void shop_free(int obj) {}
-void shop_func0B(int obj) {}
+extern int* lbl_803DCA54;
+
+#pragma scheduling off
+#pragma peephole off
+void shop_func0B(int* obj, int v, int p3)
+{
+    s8* state = *(s8**)((char*)obj + 0xb8);
+    state[0] = (s8)v;
+    if (v != 0) {
+        ((void(*)(int, int*, int))((void**)*lbl_803DCA54)[18])(p3, obj, -1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 /* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
  * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */
 #pragma scheduling off
