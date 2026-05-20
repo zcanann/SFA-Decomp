@@ -728,6 +728,16 @@ void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v =
 #pragma peephole off
 int fn_801793A4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x274) == 0; }
 
+extern void sidekickball_free(int obj);
+void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
+
+extern f32 lbl_803E36A0;
+void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    if (*(int *)((char *)obj + 0xF8) == 0 || visible == -1) {
+        objRenderFn_8003b8f4(lbl_803E36A0);
+    }
+}
+
 extern f32 lbl_803E369C;
 extern void ObjHits_DisableObject(int* obj);
 extern void ObjHits_EnableObject(int* obj);
