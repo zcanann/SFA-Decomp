@@ -1781,10 +1781,40 @@ void shop_func0B(int obj) {}
 void shop_func15(int obj) {}
 void shop_func16(int obj) {}
 void shop_func17(int obj) {}
-int  shop_getItemField4(void) { return 0; }
-int  shop_getItemMinPrice(void) { return 0; }
-int  shop_getItemPrice(void) { return 0; }
-int  shop_getItemTextId(void) { return 0; }
+/* shop_getItem* helpers — table lookup */
+extern u8 lbl_80327FD0[];
+#pragma peephole off
+#pragma scheduling off
+int shop_getItemPrice(int p, int idx)
+{
+    if (idx >= 0 && idx < 0x3c) {
+        return lbl_80327FD0[idx * 0xc];
+    }
+    return 0;
+}
+s16 shop_getItemTextId(int p, int idx)
+{
+    if (idx >= 0 && idx < 0x3c) {
+        return *(s16 *)(lbl_80327FD0 + idx * 0xc + 0xa);
+    }
+    return 0;
+}
+u8 shop_getItemField4(int p, int idx)
+{
+    if (idx >= 0 && idx < 0x3c) {
+        return *(u8 *)(lbl_80327FD0 + idx * 0xc + 0x4);
+    }
+    return 0;
+}
+u8 shop_getItemMinPrice(int p, int idx)
+{
+    if (idx >= 0 && idx < 0x3c) {
+        return *(u8 *)(lbl_80327FD0 + idx * 0xc + 0x5);
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
 void shop_init(int obj, int objDef) {}
 int  shop_isItemAvailable(void) { return 0; }
 int  shop_isItemBought(void) { return 0; }
