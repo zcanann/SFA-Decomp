@@ -438,7 +438,7 @@ extern int *gObjectTriggerInterface;
 #pragma scheduling off
 #pragma peephole off
 void dimdismountpoint_func11(int obj, int flag) {
-    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(flag ? 2 : 3, obj, -1);
+    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))((flag ^ 1) + 2, obj, -1);
 }
 #pragma peephole reset
 #pragma scheduling reset
