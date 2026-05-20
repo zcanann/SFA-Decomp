@@ -5011,5 +5011,28 @@ void flamethrowerspe_setScale(int *obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3) {
     *(s16*)((char*)obj + 0x2) = a;
     *(s16*)((char*)obj + 0x0) = b;
 }
+
+void staff_func12(int *obj, s32 delta) {
+    s16 *p = (s16*)((char*)((int**)obj)[0xb8/4] + 0x88);
+    s32 v;
+    *p = (s16)(*p + delta);
+    v = *p;
+    if (v < 0) {
+        v = 0;
+    } else if (v > 0xff) {
+        v = 0xff;
+    }
+    *p = (s16)v;
+}
+
+void staff_func14(int *obj, f32 *outA, f32 *outB) {
+    int *state = ((int**)obj)[0xb8/4];
+    outA[0] = *(f32*)((char*)state + 0x54);
+    outA[1] = *(f32*)((char*)state + 0x5c);
+    outA[2] = *(f32*)((char*)state + 0x64);
+    outB[0] = *(f32*)((char*)state + 0x6c);
+    outB[1] = *(f32*)((char*)state + 0x74);
+    outB[2] = *(f32*)((char*)state + 0x7c);
+}
 #pragma peephole reset
 #pragma scheduling reset
