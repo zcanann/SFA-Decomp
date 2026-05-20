@@ -90,22 +90,22 @@ void dfpstatue1_hitDetect(void) {}
 void dfpstatue1_update(int obj) { dfpstatue1_updateState(obj); }
 
 #pragma scheduling off
-void dfpstatue1_init(undefined2 *obj, int mapData)
+void dfpstatue1_init(DfpStatue1Object *obj, DfpStatue1MapData *mapData)
 {
-  DfpStatue1State *state = *(DfpStatue1State **)(obj + 0x5c);
-  s16 yaw = (s16)((s8)*(u8 *)(mapData + 0x18) << 8);
+  DfpStatue1State *state = obj->state;
+  s16 yaw = (s16)(mapData->yawByte << 8);
 
-  *obj = yaw;
-  *(undefined4 (**)(int, undefined4, int))(obj + 0x5e) = sfxplayer_updateState;
-  state->effectPairCount = *(u8 *)(mapData + 0x19);
-  state->triggerSfxId = *(s16 *)(mapData + 0x1e);
-  state->loopSfxId = *(s16 *)(mapData + 0x20);
+  obj->yaw = yaw;
+  obj->updateState = sfxplayer_updateState;
+  state->effectPairCount = mapData->effectPairCount;
+  state->triggerSfxId = mapData->triggerSfxId;
+  state->loopSfxId = mapData->loopSfxId;
   if (GameBit_Get((int)state->loopSfxId) != 0) {
     state->loopActive = 1;
   }
   state->loopSfxStopTimer = 0;
   state->stateFlags = 0;
-  obj[0x58] = (u16)(obj[0x58] | 0x4000);
+  obj->objectFlags |= 0x4000;
 }
 #pragma scheduling reset
 
