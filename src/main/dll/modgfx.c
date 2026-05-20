@@ -4629,6 +4629,32 @@ void dll_0B_initialise(void)
     }
 }
 
+extern u8 lbl_8039BE98[];
+void dll_0B_func0F(int p1, int p2, int p3, int p4, int p5)
+{
+    u8 *p = lbl_8039BE98;
+    f32 fz;
+    f32 fz2;
+    memset(p, 0, 96);
+    p[88] = p2;
+    *(int*)(p + 4) = p1;
+    *(s16*)(p + 68) = (u8)p2;
+    fz = lbl_803DF430;
+    *(f32*)(p + 44) = fz;
+    *(f32*)(p + 48) = fz;
+    *(f32*)(p + 52) = fz;
+    *(f32*)(p + 32) = fz;
+    *(f32*)(p + 36) = fz;
+    *(f32*)(p + 40) = fz;
+    fz2 = lbl_803DF434;
+    *(f32*)(p + 56) = fz2;
+    *(int*)(p + 64) = p4;
+    *(int*)(p + 60) = p5;
+    p[89] = p3;
+    p[90] = 0;
+    p[91] = 0;
+}
+
 void dll_0B_func0A(s16 *p)
 {
     int **arr = (int**)lbl_8039C1F8;
