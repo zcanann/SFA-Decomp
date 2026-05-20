@@ -46,7 +46,7 @@ s32 SB_Galleon_func0B(int *obj);
 int SB_Galleon_setScale(int obj);
 int SB_Galleon_getExtraSize(void);
 int SB_Galleon_func08(void);
-void SB_Galleon_free(void);
+void SB_Galleon_free(int obj, int p2);
 void SB_Galleon_render(void);
 void SB_Galleon_hitDetect(void);
 void SB_Galleon_update(void);

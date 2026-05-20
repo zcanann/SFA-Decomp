@@ -1191,6 +1191,31 @@ int SB_Galleon_setScale(int obj) {
 }
 #pragma peephole reset
 
+/* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
+extern void textureFree(void *tex);
+extern void Music_Trigger(s32 snd, s32 mode);
+extern int lbl_803DDC18;
+extern int lbl_803DDC1C;
+void SB_Galleon_free(int obj, int p2) {
+    u8 *p = (u8*)((int**)obj)[0xb8/4];
+    if (lbl_803DDC18 != 0) {
+        textureFree((void*)lbl_803DDC18);
+        lbl_803DDC18 = 0;
+    }
+    if (lbl_803DDC1C != 0) {
+        textureFree((void*)lbl_803DDC1C);
+        lbl_803DDC1C = 0;
+    }
+    ObjGroup_RemoveObject(obj, 3);
+    if (p[0x80] != 0 && p2 == 0) {
+        p[0x80] = 0;
+    }
+    lbl_803DDC20 = 0;
+    Music_Trigger(*(s32*)(p + 0x9c), 0);
+    Music_Trigger(*(s32*)(p + 0x98), 0);
+    GameBit_Set(0xac8, 1);
+}
+
 /* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
 extern void ObjMsg_AllocQueue(int obj, int n);
 extern f32 lbl_803E5830;
