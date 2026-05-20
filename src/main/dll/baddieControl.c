@@ -3139,6 +3139,52 @@ void CameraModeCrawl_init(void)
         memset((void*)lbl_803DD598, 0, 12);
     }
 }
+
+extern u32 lbl_803DD5A0;
+extern u32 lbl_803DD5C8;
+extern f32 lbl_803E1B98;
+extern f32 lbl_803E1B9C;
+extern u32 lbl_803DD588;
+
+void CameraModePerv_init(int *obj)
+{
+    if (lbl_803DD5C8 == 0) {
+        lbl_803DD5C8 = (u32)mmAlloc(8, 15, 0);
+    }
+    *(f32*)lbl_803DD5C8 = lbl_803E1B98;
+    *(f32*)((char*)lbl_803DD5C8 + 4) = *(f32*)((char*)((int**)obj)[0xA4/4] + 0x1C) - lbl_803E1B9C;
+}
+
+void CameraModeCannon_init(int *p1, int unused, int *p3)
+{
+    if (lbl_803DD5A0 == 0) {
+        lbl_803DD5A0 = (u32)mmAlloc(4, 15, 0);
+    }
+    if (p3 != NULL) {
+        *(int*)lbl_803DD5A0 = *p3;
+    } else {
+        *(int*)lbl_803DD5A0 = 0;
+    }
+    *(s16*)((char*)p1 + 2) = 2800;
+}
+
+void CameraModeWorldMap_copyToCurrent(int *p1, int kind)
+{
+    if (kind == 0) {
+        if (p1 == NULL) return;
+        *((u8*)lbl_803DD588 + 8) = *(u8*)p1;
+        return;
+    }
+    if (kind < 0) return;
+    if (kind >= 3) return;
+    if (p1 == NULL) return;
+    *(int*)((char*)lbl_803DD588 + 0x10) = *p1;
+    if (kind == 1) {
+        *((u8*)lbl_803DD588 + 0x14) = 20;
+    } else {
+        *((u8*)lbl_803DD588 + 0x14) = 1;
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset
 
