@@ -280,6 +280,20 @@ void dll_19A_initialise(void) {}
 int dll_19A_getExtraSize(void) { return 0x4; }
 int dll_19A_func08(void) { return 0x0; }
 
+#pragma scheduling off
+#pragma peephole off
+void dll_19A_init(int obj, s8 *def) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
+    *(int *)((char *)obj + 0xF8) = 0;
+    *(s16 *)state = 100;
+    *(s16 *)((char *)state + 2) = 0;
+    *(u8 *)((char *)obj + 0x37) = 0xFF;
+    *(u8 *)((char *)obj + 0x36) = 0xFF;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5180;
 extern void objRenderFn_8003b8f4(f32);
