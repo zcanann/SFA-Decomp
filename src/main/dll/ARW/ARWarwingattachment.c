@@ -1543,3 +1543,31 @@ void fn_801F1EF4(s16* a, s8* b)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* EN v1.0 0x801F1BF0  size: 144b  Render gate: when obj->_f8 implies
+ * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
+ * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
+extern f32 lbl_803E5D80;
+#pragma scheduling off
+#pragma peephole off
+void fn_801F1BF0(int *obj, int p1, int p2, int p3, int p4, s8 visible)
+{
+    s32 v;
+    if (*(int*)((char*)obj + 0xf8) != 0) {
+        v = visible;
+        if (v != -1) return;
+    } else {
+        v = visible;
+        if (v == 0) return;
+    }
+    if (*(s16*)(*(char**)((char*)obj + 0x50) + 0x48) == 2) {
+        if (*(s16*)((char*)obj + 0xb4) == -1) {
+            *(u32*)(*(char**)((char*)obj + 0x64) + 0x30) &= ~0x1000;
+        } else {
+            *(u32*)(*(char**)((char*)obj + 0x64) + 0x30) |= 0x1000;
+        }
+    }
+    objRenderFn_8003b8f4(lbl_803E5D80);
+}
+#pragma peephole reset
+#pragma scheduling reset
