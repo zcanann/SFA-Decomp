@@ -4611,6 +4611,33 @@ void dll_0D_func05(u8 v) {
 
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
+extern void *lbl_8039C2C0[];
+extern void *lbl_803DD2A4;
+extern void *lbl_803DD2A8;
+extern void mm_free(void *p);
+extern void textureFree(void *resource);
+#pragma peephole off
+#pragma scheduling off
+void dll_18_release(void)
+{
+    int i;
+    void **p;
+    void *zero;
+    i = 0;
+    p = lbl_8039C2C0;
+    zero = NULL;
+    do {
+        if (*p != NULL) mm_free(*p);
+        *p = zero;
+        p++;
+        i++;
+    } while (i < 7);
+    if (lbl_803DD2A4 != NULL) textureFree(lbl_803DD2A4);
+    if (lbl_803DD2A8 != NULL) textureFree(lbl_803DD2A8);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole off
 #pragma scheduling off
 void fn_800A0FD0(ModgfxState *state)
