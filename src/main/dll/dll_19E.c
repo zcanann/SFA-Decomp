@@ -132,58 +132,24 @@ void dfsh_objcreator_update(undefined8 param_1,undefined8 param_2,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DFSH_LaserBeam_init(int param_1,int param_2)
-{
-  int *piVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar4 = *(int *)(param_1 + 0xb8);
-  if (*(int *)(param_2 + 0x14) != 0x4ca62) {
-    *(undefined2 *)(iVar4 + 0x6a) = *(undefined2 *)(param_2 + 0x1a);
-    *(undefined2 *)(iVar4 + 0x6e) = 0xffff;
-    *(float *)(iVar4 + 0x24) =
-         lbl_803E5B30 /
-         (lbl_803E5B30 +
-         (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x24)) - DOUBLE_803e5b38));
-    *(undefined4 *)(iVar4 + 0x28) = 0xffffffff;
-    iVar3 = *(int *)(param_1 + 0xf4);
-    if ((iVar3 == 0) && (*(short *)(param_2 + 0x18) != 1)) {
-      (**(code **)(*DAT_803dd6d4 + 0x1c))(iVar4);
-      *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
+extern undefined4 *gModgfxInterface;
+extern void *lbl_803DDBB8;
+extern void Resource_Release(void *handle);
+extern void textureFree(void *tex);
+#pragma scheduling off
+#pragma peephole off
+void DFSH_LaserBeam_init(int *obj) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    ((void (*)(int *))((void **)*gModgfxInterface)[6])(obj);
+    Resource_Release(lbl_803DDBB8);
+    lbl_803DDBB8 = NULL;
+    if (*(void **)state != NULL) {
+        textureFree(*(void **)state);
     }
-    else if ((iVar3 != 0) && ((int)*(short *)(param_2 + 0x18) != iVar3 + -1)) {
-      (**(code **)(*DAT_803dd6d4 + 0x24))(iVar4);
-      if (*(short *)(param_2 + 0x18) != -1) {
-        (**(code **)(*DAT_803dd6d4 + 0x1c))(iVar4,param_2);
-      }
-      *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
-    }
-    if (*(short *)(param_1 + 0x46) != 0x1d9) {
-      *(undefined *)(iVar4 + 0x144) = 1;
-    }
-    if (*(int *)(iVar4 + 0x140) == 0) {
-      iVar3 = param_1;
-      if (*(char *)(iVar4 + 0x144) != '\0') {
-        iVar3 = 0;
-      }
-      piVar1 = FUN_80017624(iVar3,'\x01');
-      *(int **)(iVar4 + 0x140) = piVar1;
-      if (*(int *)(iVar4 + 0x140) != 0) {
-        FUN_800175b0(*(int *)(iVar4 + 0x140),2);
-        FUN_8001759c(*(int *)(iVar4 + 0x140),0x96,0x32,0xff,0xff);
-        FUN_800175d0((double)lbl_803E5B48,(double)lbl_803E5B4C,*(int *)(iVar4 + 0x140));
-      }
-    }
-    *(undefined *)(param_1 + 0x36) = 0;
-    *(undefined *)(param_1 + 0x37) = 0;
-    uVar2 = randomGetRange(0xb4,0xf0);
-    *(float *)(iVar4 + 0x148) =
-         (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5b40);
-  }
-  return;
+    *(void **)state = NULL;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
