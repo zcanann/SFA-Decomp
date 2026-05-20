@@ -4584,7 +4584,7 @@ static u8 sProjgfxStringPad2[] = { 0, 0, 0, 0, 0, 0 };
 extern u8 lbl_803DD282;
 extern u8 lbl_803DD298;
 extern u8 lbl_803DD2C0;
-extern void fn_800A1040(int a, int b);
+extern void fn_800A1040(s16 a, int b);
 extern u16 lbl_8039C2E0[];
 
 void dll_0B_func0B(void) {
@@ -4616,8 +4616,35 @@ extern void *lbl_803DD2A4;
 extern void *lbl_803DD2A8;
 extern void mm_free(void *p);
 extern void textureFree(void *resource);
+extern int *lbl_8039C1F8[];
+extern void Obj_FreeObject(void *obj);
 #pragma peephole off
 #pragma scheduling off
+void fn_800A1040(s16 p1, int p2)
+{
+    int **arr = (int**)lbl_8039C1F8;
+    int i;
+    for (i = 0; i < 50; i++) {
+        if (arr[i] == NULL) continue;
+        if ((s16)p1 != *(s16*)((char*)arr[i] + 268) && p2 == 0) continue;
+        if (*(void**)((char*)arr[i] + 160) != NULL) {
+            mm_free(*(void**)((char*)arr[i] + 160));
+        }
+        if (*(void**)arr[i] != NULL) {
+            Obj_FreeObject(*(void**)arr[i]);
+        }
+        *(int*)((char*)arr[i] + 300) = 0;
+        if (*(u8*)((char*)arr[i] + 319) == 0 && *(void**)((char*)arr[i] + 152) != NULL) {
+            textureFree(*(void**)((char*)arr[i] + 152));
+        }
+        if (*(u8*)((char*)arr[i] + 319) == 0) {
+            *(int*)((char*)arr[i] + 152) = 0;
+        }
+        mm_free(arr[i]);
+        arr[i] = NULL;
+    }
+}
+
 void dll_18_release(void)
 {
     int i;
