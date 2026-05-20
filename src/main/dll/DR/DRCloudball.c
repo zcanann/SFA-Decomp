@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRCloudball.h"
+#include "main/objanim.h"
 
 extern f32 sqrtf(f32 x);
 extern f32 sin(double x);
@@ -11,13 +12,12 @@ extern int Obj_GetActiveModel(int obj);
 extern int Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 dx, f32 dz);
 extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern void ObjAnim_SampleRootCurvePhase(f32 distance, int obj, f32 *out);
-extern void ObjAnim_AdvanceCurrentMove(int obj, f32 phase, f32 dt, int flag);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
 extern f32 getXZDistance(int *p1, int *p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
 extern void objFn_800972dc(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
+typedef void (*ObjAnimAdvanceObjectFirstFn)(int obj, f32 phase, f32 dt, int flags);
 
 extern f32 timeDelta;
 extern u16 lbl_803E5A70;
@@ -73,8 +73,8 @@ void spscarab_update(int param_1)
     distance = sqrtf(*(f32 *)(param_1 + 0x24) * *(f32 *)(param_1 + 0x24) +
                      *(f32 *)(param_1 + 0x2c) * *(f32 *)(param_1 + 0x2c));
 
-    ObjAnim_SampleRootCurvePhase(distance, param_1, &phase);
-    ObjAnim_AdvanceCurrentMove(param_1, phase, timeDelta, 0);
+    ObjAnim_SampleRootCurvePhase(distance, (ObjAnimComponent *)param_1, &phase);
+    ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)(param_1, phase, timeDelta, 0);
 
     if (*(f32 *)(param_1 + 0x10) < *(f32 *)(p_b8 + 0)) {
         *(f32 *)(param_1 + 0x10) = *(f32 *)(p_b8 + 0);

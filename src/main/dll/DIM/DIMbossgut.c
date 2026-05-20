@@ -1,10 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMbossgut.h"
+#include "main/objanim.h"
 
 extern void objSetSlot(void *obj, int resourceId);
-extern undefined4 ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg,
-                                             void *eventList);
-extern undefined4 ObjAnim_SetCurrentMove(int objAnimArg, int moveId, f32 moveProgress, int flags);
 extern void objRenderFn_8003b8f4(int obj, undefined4 param_2, undefined4 param_3,
                                  undefined4 param_4, undefined4 param_5, double scale);
 typedef undefined4 (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg, double moveStepScale,
