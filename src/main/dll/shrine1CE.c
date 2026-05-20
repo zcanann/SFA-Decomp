@@ -40,7 +40,7 @@ extern f32 lbl_803E5E4C;
 /*
  * --INFO--
  *
- * Function: fn_801CBD88
+ * Function: dll_19B_update
  * EN v1.0 Address: 0x801CBD88
  * EN v1.0 Size: 2124b
  * EN v1.1 Address: 0x801CC33C
@@ -50,7 +50,7 @@ extern f32 lbl_803E5E4C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801CBD88(void)
+void dll_19B_update(void)
 {
   int iVar1;
   uint uVar2;
@@ -395,21 +395,21 @@ void FUN_801cc868(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801CC724(void) {}
-void fn_801CC728(void) {}
-void fn_801CC73C(void) {}
-void fn_801CC770(void) {}
-void fn_801CC990(void) {}
-void fn_801CC994(void) {}
-void fn_801CCA2C(void) {}
-void fn_801CCF9C(void) {}
-void fn_801CCFA0(void) {}
+void dll_19B_release(void) {}
+void dll_19B_initialise(void) {}
+void dll_19C_free(void) {}
+void dll_19C_hitDetect(void) {}
+void dll_19C_release(void) {}
+void dll_19C_initialise(void) {}
+void dll_19D_render(void) {}
+void dll_19D_release(void) {}
+void dll_19D_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801CC72C(void) { return 0x8; }
-int fn_801CC734(void) { return 0x0; }
-int fn_801CC998(void) { return 0x38; }
-int fn_801CC9A0(void) { return 0x0; }
+int dll_19C_getExtraSize(void) { return 0x8; }
+int dll_19C_func08(void) { return 0x0; }
+int dll_19D_getExtraSize(void) { return 0x38; }
+int dll_19D_func08(void) { return 0x0; }
 int dll_19E_getExtraSize(void) { return 0x10; }
 int dll_19E_func08(void) { return 0x1; }
 
@@ -417,24 +417,24 @@ int dll_19E_func08(void) { return 0x1; }
 extern f32 lbl_803E51B0;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
-void fn_801CC740(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0); }
+void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0); }
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
-void fn_801CC578(void) {}
-void fn_801CC774(void) {}
-void fn_801CCB44(void) {}
+void dll_19B_init(void) {}
+void dll_19C_update(void) {}
+void dll_19D_update(void) {}
 
 extern undefined4 *lbl_803DCA78;
 
 /*
- * Function: fn_801CC950
+ * Function: dll_19C_init
  * EN v1.0 Address: 0x801CC950
  * EN v1.0 Size: 64b
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801CC950(int obj, u8 *initData)
+void dll_19C_init(int obj, u8 *initData)
 {
     register int self = obj;
     register int state = *(int *)(self + 0xb8);
@@ -450,13 +450,13 @@ void fn_801CC950(int obj, u8 *initData)
 #pragma scheduling reset
 
 /*
- * Function: fn_801CC9A8
+ * Function: dll_19D_free
  * EN v1.0 Address: 0x801CC9A8
  * EN v1.0 Size: 132b
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801CC9A8(int obj)
+void dll_19D_free(int obj)
 {
     register int self = obj;
     register int state = *(int *)(self + 0xb8);
@@ -472,13 +472,13 @@ void fn_801CC9A8(int obj)
 extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
 
 /*
- * Function: fn_801CCECC
+ * Function: dll_19D_init
  * EN v1.0 Address: 0x801CCECC
  * EN v1.0 Size: 208b
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801CCECC(int obj)
+void dll_19D_init(int obj)
 {
     register int self = obj;
     register int state2 = *(int *)(self + 0x4c);
@@ -507,13 +507,13 @@ extern f32 lbl_803E51B8;
 extern f64 lbl_803E51C0;
 
 /*
- * Function: fn_801CCA30
+ * Function: dll_19D_hitDetect
  * EN v1.0 Address: 0x801CCA30
  * EN v1.0 Size: 276b
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801CCA30(int obj)
+void dll_19D_hitDetect(int obj)
 {
     register int self = obj;
     register int state = *(int *)(self + 0xb8);

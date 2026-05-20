@@ -26,7 +26,7 @@ extern undefined4 DAT_803de860;
 /*
  * --INFO--
  *
- * Function: FUN_801cba98
+ * Function: dll_19B_SeqFn
  * EN v1.0 Address: 0x801CBA98
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x801CBBE8
@@ -36,7 +36,7 @@ extern undefined4 DAT_803de860;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cba98(undefined2 *param_1,int param_2)
+void dll_19B_SeqFn(undefined2 *param_1,int param_2)
 {
 }
 
@@ -298,15 +298,15 @@ void FUN_801cc230(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801CBD84(void) {}
+void dll_19B_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801CBD14(void) { return 0x18; }
-int fn_801CBD1C(void) { return 0x0; }
+int dll_19B_getExtraSize(void) { return 0x18; }
+int dll_19B_func08(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5188;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
-void fn_801CBD54(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5188); }
+void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5188); }
 #pragma peephole reset

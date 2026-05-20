@@ -269,20 +269,20 @@ void FUN_801cad80(undefined8 param_1,double param_2,undefined8 param_3,undefined
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801CB7A0(void) {}
-void fn_801CB7A4(void) {}
-void fn_801CB7B8(void) {}
-void fn_801CB7EC(void) {}
-void fn_801CBA90(void) {}
-void fn_801CBA94(void) {}
+void dll_199_release(void) {}
+void dll_199_initialise(void) {}
+void dll_19A_free(void) {}
+void dll_19A_hitDetect(void) {}
+void dll_19A_release(void) {}
+void dll_19A_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801CB7A8(void) { return 0x4; }
-int fn_801CB7B0(void) { return 0x0; }
+int dll_19A_getExtraSize(void) { return 0x4; }
+int dll_19A_func08(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5180;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
-void fn_801CB7BC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5180); }
+void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5180); }
 #pragma peephole reset
