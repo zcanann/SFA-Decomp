@@ -977,3 +977,59 @@ int GameUI_run(void)
     npcTalkFn_8012e880();
     return 0;
 }
+
+extern u8 lbl_803A8C78[];
+extern int lbl_803A9038[];
+extern u8 lbl_8031B5D8[];
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8012F9B4(int idx, s16 target, s8 flag)
+{
+    void *entry = &lbl_8031B5D8[idx * 16];
+    s16 *cursor = (s16 *)((char *)entry + 4);
+    int count = cMenuSetItems(*(int *)entry, flag);
+    s16 pos = *cursor;
+    u8 i;
+
+    for (i = 0; i < count; i++) {
+        s16 lookup = pos;
+        if (lbl_803A8C78[lookup] != 0 && lbl_803A9038[lookup] == target) {
+            *cursor = pos;
+            return;
+        }
+        pos++;
+        if (pos >= count) {
+            pos = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8012FA70(int idx, s8 flag)
+{
+    void *entry = &lbl_8031B5D8[idx * 16];
+    s16 *cursor = (s16 *)((char *)entry + 4);
+    int count = cMenuSetItems(*(int *)entry, flag);
+    s16 pos = *cursor;
+    u8 prev = 1;
+    u8 i;
+
+    for (i = 0; i < count * 2; i++) {
+        u8 b = lbl_803A8C78[(s16)pos];
+        if (b != 0 && (prev != 0 || i >= count)) {
+            *cursor = pos;
+            return;
+        }
+        prev = b;
+        pos++;
+        if (pos >= count) {
+            pos = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
