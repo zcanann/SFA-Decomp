@@ -33,7 +33,7 @@ extern void voxmaps_resetLoadedMaps(void);
 
 extern void *gCamcontrolHandlers[20];
 extern CamcontrolHandlerEntry *gCamcontrolHandlerEntries[20];
-extern u8 lbl_803A4278[];
+extern u8 gCamcontrolStateStorage[];
 extern undefined4* DAT_803dd738;
 extern undefined4 gCamcontrolTargetChanged;
 extern short* gCamcontrolTargetReticle;
@@ -55,12 +55,12 @@ extern short* gCamcontrolState;
 extern char sCamcontrolTriggeredCamActionLoadWarning[];
 extern f64 DOUBLE_803e22d0;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DD4D4;
-extern f32 lbl_803DD4D8;
-extern f32 lbl_803DD4DC;
-extern f32 lbl_803DD4E0;
-extern f32 lbl_803DD4E4;
-extern f32 lbl_803DD4E8;
+extern f32 gCamcontrolSavedFocusWorldZ;
+extern f32 gCamcontrolSavedFocusWorldY;
+extern f32 gCamcontrolSavedFocusWorldX;
+extern f32 gCamcontrolSavedFocusLocalZ;
+extern f32 gCamcontrolSavedFocusLocalY;
+extern f32 gCamcontrolSavedFocusLocalX;
 extern f32 lbl_803E1630;
 extern f32 lbl_803E1680;
 extern f32 lbl_803E22AC;
@@ -754,12 +754,12 @@ void Camera_update(void)
     *(undefined4 *)((char *)pCamera + 0x11c) = 0;
   }
   else {
-    lbl_803DD4E8 = *(float *)(psVar3 + 6);
-    lbl_803DD4E4 = *(float *)(psVar3 + 8);
-    lbl_803DD4E0 = *(float *)(psVar3 + 10);
-    lbl_803DD4DC = *(float *)(psVar3 + 0xc);
-    lbl_803DD4D8 = *(float *)(psVar3 + 0xe);
-    lbl_803DD4D4 = *(float *)(psVar3 + 0x10);
+    gCamcontrolSavedFocusLocalX = *(float *)(psVar3 + 6);
+    gCamcontrolSavedFocusLocalY = *(float *)(psVar3 + 8);
+    gCamcontrolSavedFocusLocalZ = *(float *)(psVar3 + 10);
+    gCamcontrolSavedFocusWorldX = *(float *)(psVar3 + 0xc);
+    gCamcontrolSavedFocusWorldY = *(float *)(psVar3 + 0xe);
+    gCamcontrolSavedFocusWorldZ = *(float *)(psVar3 + 0x10);
     camcontrol_updateMoveAverage((int)pCamera,(int)psVar3);
     if (*(u8 *)((char *)pCamera + 0x13d) != 0) {
       *(float *)(psVar3 + 0xc) = *(float *)((char *)pCamera + 0xdc);
@@ -833,12 +833,12 @@ void Camera_update(void)
     *(float *)((char *)pCamera + 0xbc) = *(float *)((char *)pCamera + 0x1c);
     *(float *)((char *)pCamera + 0xc0) = *(float *)((char *)pCamera + 0x20);
     *(undefined *)((char *)pCamera + 0x140) = 0;
-    *(float *)(psVar3 + 6) = lbl_803DD4E8;
-    *(float *)(psVar3 + 8) = lbl_803DD4E4;
-    *(float *)(psVar3 + 10) = lbl_803DD4E0;
-    *(float *)(psVar3 + 0xc) = lbl_803DD4DC;
-    *(float *)(psVar3 + 0xe) = lbl_803DD4D8;
-    *(float *)(psVar3 + 0x10) = lbl_803DD4D4;
+    *(float *)(psVar3 + 6) = gCamcontrolSavedFocusLocalX;
+    *(float *)(psVar3 + 8) = gCamcontrolSavedFocusLocalY;
+    *(float *)(psVar3 + 10) = gCamcontrolSavedFocusLocalZ;
+    *(float *)(psVar3 + 0xc) = gCamcontrolSavedFocusWorldX;
+    *(float *)(psVar3 + 0xe) = gCamcontrolSavedFocusWorldY;
+    *(float *)(psVar3 + 0x10) = gCamcontrolSavedFocusWorldZ;
     if (*(short **)(psVar3 + 0x18) != (short *)0x0) {
       *psVar3 = *psVar3 - **(short **)(psVar3 + 0x18);
     }
@@ -850,7 +850,7 @@ void Camera_update(void)
 
 #pragma scheduling off
 #pragma peephole off
-void *Camera_func08(void)
+void *Camera_getDefaultHandlerEntry(void)
 {
   int i;
 
@@ -900,7 +900,7 @@ void Camera_release(void)
 
 void Camera_initialise(void)
 {
-  pCamera = lbl_803A4278;
+  pCamera = gCamcontrolStateStorage;
   memset((void *)pCamera,0,0x144);
   voxmaps_initialise();
   gCamcontrolActiveActionId = -1;

@@ -75,7 +75,7 @@ void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2);
 void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *data,
                     undefined4 blendFrames,undefined queueMode);
 void Camera_update(void);
-void *Camera_func08(void);
+void *Camera_getDefaultHandlerEntry(void);
 void *Camera_GetFollowPos(void);
 u32 Camera_getMode(void);
 u32 Camera_get(void);
