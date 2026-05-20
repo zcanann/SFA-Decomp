@@ -1796,7 +1796,7 @@
  *   slot 05: 0x80209044 laser_hitDetectUnsupported
  *   slot 06: 0x80209018 laser_renderUnsupported
  *   slot 07: 0x80208FEC laser_freeUnsupported
- *   slot 08: 0x80208FE4 laser_func08
+ *   slot 08: 0x80208FE4 laser_getObjectTypeId
  *   slot 09: 0x80208FDC laser_getExtraSizeUnsupported
  * - DLL 0x0237: gLaserObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80209308 laserObj_initialise
@@ -1806,7 +1806,7 @@
  *   slot 05: 0x802090C0 laserObj_hitDetect
  *   slot 06: 0x802090BC laserObj_render
  *   slot 07: 0x802090B8 laserObj_free
- *   slot 08: 0x802090B0 laserObj_func08
+ *   slot 08: 0x802090B0 laserObj_getObjectTypeId
  *   slot 09: 0x802090A8 laserObj_getExtraSize
  * - DLL 0x0238: gFireObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8020980C fireObj_initialise
@@ -1826,7 +1826,7 @@
  *   slot 05: 0x80209850 textblockObj_hitDetect
  *   slot 06: 0x8020984C textblockObj_render
  *   slot 07: 0x80209820 textblockObj_freeUnsupported
- *   slot 08: 0x80209818 textblockObj_func08
+ *   slot 08: 0x80209818 textblockObj_getObjectTypeId
  *   slot 09: 0x80209810 textblockObj_getExtraSize
  * - DLL 0x023A: gPlatform1ObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80209954 platform1_initialise

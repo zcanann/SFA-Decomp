@@ -9,12 +9,12 @@ extern char sTextBlockObjInitNoLongerSupported[];
 extern ObjectDescriptor gTextBlockObjDescriptor;
 
 int textblockObj_getExtraSize(void);
-int textblockObj_func08(void);
+int textblockObj_getObjectTypeId(void);
 void textblockObj_freeUnsupported(void);
 void textblockObj_render(void);
 void textblockObj_hitDetect(void);
 void textblockObj_updateUnsupported(void);
-void textblockObj_init(void);
+void textblockObj_initUnsupported(void);
 void textblockObj_release(void);
 void textblockObj_initialise(void);
 

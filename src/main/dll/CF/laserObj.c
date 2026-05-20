@@ -14,7 +14,7 @@ int laserObj_getExtraSize(void)
   return sizeof(LaserState);
 }
 
-int laserObj_func08(void)
+int laserObj_getObjectTypeId(void)
 {
   return 0;
 }
@@ -128,6 +128,6 @@ ObjectDescriptor gLaserObjDescriptor = {
     laserObj_hitDetect,
     laserObj_render,
     laserObj_free,
-    (ObjectDescriptorCallback)laserObj_func08,
+    (ObjectDescriptorCallback)laserObj_getObjectTypeId,
     laserObj_getExtraSize,
 };

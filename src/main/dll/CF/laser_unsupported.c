@@ -9,7 +9,7 @@ int laser_getExtraSizeUnsupported(void)
   return 0;
 }
 
-int laser_func08(void)
+int laser_getObjectTypeId(void)
 {
   return 0;
 }
@@ -67,7 +67,7 @@ ObjectDescriptor gLaserUnsupportedObjDescriptor = {
     laser_hitDetectUnsupported,
     laser_renderUnsupported,
     laser_freeUnsupported,
-    (ObjectDescriptorCallback)laser_func08,
+    (ObjectDescriptorCallback)laser_getObjectTypeId,
     laser_getExtraSizeUnsupported,
 };
 

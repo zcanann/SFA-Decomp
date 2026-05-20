@@ -56,7 +56,7 @@
  * - slot 05: 0x802090C0 laserObj_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802090BC laserObj_render stub=blr ref=render (stub)
  * - slot 07: 0x802090B8 laserObj_free stub=blr ref=free (stub)
- * - slot 08: 0x802090B0 laserObj_func08 stub=const 0
+ * - slot 08: 0x802090B0 laserObj_getObjectTypeId stub=const 0
  * - slot 09: 0x802090A8 laserObj_getExtraSize stub=const 6 ref=getExtraSize (stub)
  */
 

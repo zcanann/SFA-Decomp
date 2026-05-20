@@ -29,7 +29,7 @@
  * - slot 05: 0x80209850 textblockObj_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8020984C textblockObj_render stub=blr ref=render (stub)
  * - slot 07: 0x80209820 textblockObj_freeUnsupported ref=free
- * - slot 08: 0x80209818 textblockObj_func08 stub=const 0
+ * - slot 08: 0x80209818 textblockObj_getObjectTypeId stub=const 0
  * - slot 09: 0x80209810 textblockObj_getExtraSize stub=const 0 ref=getExtraSize (stub)
  *
  * Reference-only hints:

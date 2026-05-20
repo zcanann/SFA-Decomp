@@ -73,7 +73,7 @@ extern ObjectDescriptor gLaserUnsupportedObjDescriptor;
 extern ObjectDescriptor gLaserObjDescriptor;
 
 int laser_getExtraSizeUnsupported(void);
-int laser_func08(void);
+int laser_getObjectTypeId(void);
 void laser_freeUnsupported(void);
 void laser_renderUnsupported(void);
 void laser_hitDetectUnsupported(void);
@@ -82,7 +82,7 @@ void laser_init(void);
 void laser_releaseUnsupported(void);
 void laser_initialiseUnsupported(void);
 int laserObj_getExtraSize(void);
-int laserObj_func08(void);
+int laserObj_getObjectTypeId(void);
 void laserObj_free(void);
 void laserObj_render(void);
 void laserObj_hitDetect(void);

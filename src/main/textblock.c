@@ -8,7 +8,7 @@ int textblockObj_getExtraSize(void)
   return 0;
 }
 
-int textblockObj_func08(void)
+int textblockObj_getObjectTypeId(void)
 {
   return 0;
 }
@@ -103,7 +103,7 @@ ObjectDescriptor gTextBlockObjDescriptor = {
     textblockObj_hitDetect,
     textblockObj_render,
     textblockObj_freeUnsupported,
-    (ObjectDescriptorCallback)textblockObj_func08,
+    (ObjectDescriptorCallback)textblockObj_getObjectTypeId,
     textblockObj_getExtraSize,
 };
 
