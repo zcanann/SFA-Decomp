@@ -361,6 +361,7 @@ int mmsh_scales_getExtraSize(void) { return 0x140; }
 int mmsh_scales_func08(void) { return 0xb; }
 int mmsh_waterspike_getExtraSize(void) { return 0x0; }
 int mmsh_waterspike_func08(void) { return 0x0; }
+void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {}
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4F68;
