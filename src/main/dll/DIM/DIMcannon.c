@@ -1956,6 +1956,31 @@ int dimlogfire_func08(void) { return 0x1; }
 extern u32 lbl_803DDB48;
 void imspaceringgen_free(void) { lbl_803DDB48 = 0x0; }
 
+/* Init: clear obj->_F4 and record obj globally in lbl_803DDB48. */
+void imspaceringgen_init(int *obj) {
+    *(s32*)((char*)obj + 0xf4) = 0;
+    lbl_803DDB48 = (u32)obj;
+}
+
+/* If obj->_F4 == 0, set it to 1; else early-return. */
+void imanimspacecraft_update(int *obj) {
+    if (*(s32*)((char*)obj + 0xf4) != 0) return;
+    *(s32*)((char*)obj + 0xf4) = 1;
+}
+
+/* Free: call vtable[6] on obj through global dll-services pointer. */
+extern void *lbl_803DCA78;
+void imanimspacecraft_free(int *obj) {
+    (*(void (***)(int*))lbl_803DCA78)[6](obj);
+}
+
+/* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
+int imanimspacecraft_setScale(int *obj, int bitIdx) {
+    u32 mask = 1 << bitIdx;
+    if (((u8*)((int**)obj)[0xb8/4])[2] & mask) return 1;
+    return 0;
+}
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4780;
 extern void objRenderFn_8003b8f4(f32);
