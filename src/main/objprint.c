@@ -3021,6 +3021,7 @@ void* objFindTexture(void* obj, int target) {
 
 /* 60b objRenderShadow guard. */
 extern void objRenderShadow(void* obj);
+#pragma scheduling off
 void objRenderShadowIfVisible(void* obj) {
     void** arr = *(void***)((char*)obj + 0x7C);
     s8 idx = *(s8*)((char*)obj + 0xAD);
@@ -3028,3 +3029,4 @@ void objRenderShadowIfVisible(void* obj) {
         objRenderShadow(obj);
     }
 }
+#pragma scheduling reset
