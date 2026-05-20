@@ -375,9 +375,59 @@ extern void *lbl_803DCA6C;
 extern void *lbl_803DCA68;
 extern int lbl_803DC0BC;
 extern f32 sqrtf(f32 x);
+extern f32 lbl_803E5AE8;
+extern f32 lbl_803E5AEC;
+extern f32 lbl_803E5AF8;
+extern f32 lbl_803E5B20;
+extern f32 lbl_803E5B74;
+extern f32 lbl_803E5B8C;
+extern f32 lbl_803E5BB0;
 extern f32 lbl_803E5BB8;
 extern f32 lbl_803E5BA8;
-extern f32 lbl_803E5AEC;
+extern f32 lbl_803E5BE4;
+extern f32 lbl_803E5BF4;
+extern f32 lbl_803E5BFC;
+extern f32 lbl_803E5C00;
+extern f32 lbl_803E5C10;
+extern f32 lbl_803E5C14;
+extern f32 lbl_803E5C34;
+extern f32 lbl_803E5C38;
+extern f32 lbl_803E5C3C;
+extern f32 lbl_803E5C40;
+extern f32 lbl_803E5C44;
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801EC928
+ * EN v1.0 Address: 0x801EC928
+ * EN v1.0 Size: 148b
+ */
+void fn_801EC928(int p1, int p2)
+{
+    f32 fa, fz;
+    *(f32 *)(p2 + 0x4b0) = lbl_803E5C3C;
+    *(f32 *)(p2 + 0x530) = lbl_803E5C38;
+    *(f32 *)(p2 + 0x534) = lbl_803E5BF4;
+    *(f32 *)(p2 + 0x538) = lbl_803E5B74;
+    *(f32 *)(p2 + 0x53c) = lbl_803E5C14;
+    *(f32 *)(p2 + 0x548) = lbl_803E5BFC;
+    *(f32 *)(p2 + 0x54c) = lbl_803E5BE4;
+    *(f32 *)(p2 + 0x540) = lbl_803E5B20;
+    *(f32 *)(p2 + 0x544) = lbl_803E5AF8;
+    fa = lbl_803E5C40;
+    *(f32 *)(p2 + 0x57c) = fa;
+    *(f32 *)(p2 + 0x580) = fa;
+    *(f32 *)(p2 + 0x554) = lbl_803E5C44;
+    *(f32 *)(p2 + 0x550) = lbl_803E5C10;
+    *(f32 *)(p2 + 0x570) = lbl_803E5BB8;
+    fz = lbl_803E5BA8;
+    *(f32 *)(p2 + 0x558) = fz;
+    *(f32 *)(p2 + 0x578) = lbl_803E5B8C;
+    *(f32 *)(p2 + 0x574) = lbl_803E5BB0;
+    *(f32 *)(p2 + 0x56c) = lbl_803E5C00;
+    *(f32 *)(p2 + 0x4ac) = fz;
+}
 
 /*
  * --INFO--
