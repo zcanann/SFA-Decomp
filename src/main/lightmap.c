@@ -2821,11 +2821,11 @@ int setWidescreen(u8 v) {
 #pragma scheduling reset
 
 /* Toggle renderFlags + env byte for "draw lights" / "draw clouds-and-lights". */
-extern void *saveGame_getEnv(void);
+extern void *saveGameGetEnvState(void);
 #pragma scheduling off
 #pragma peephole off
 void setDrawLights(int v) {
-    void *env = saveGame_getEnv();
+    void *env = saveGameGetEnvState();
     if (v != 0) {
         renderFlags |= 0x40;
         *(u8 *)((char *)env + 0x40) |= 0x8;
@@ -2835,7 +2835,7 @@ void setDrawLights(int v) {
     }
 }
 void setDrawCloudsAndLights(int v) {
-    void *env = saveGame_getEnv();
+    void *env = saveGameGetEnvState();
     if (v != 0) {
         renderFlags |= 0x50;
         *(u8 *)((char *)env + 0x40) |= 0x9;

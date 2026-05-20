@@ -18,8 +18,8 @@ extern void setDrawLights(int arg);
 extern void setIsOvercast(int arg);
 extern void memCardFn_8007dd04(u8 retry);
 extern void loadSaveSettings(void);
-extern int titleLoadSaveFiles(void);
-extern void gameplay_capturePreviewSettings(void);
+extern int saveFn_800e8508(void);
+extern void titleDoLoadSave(void);
 extern float titleScreenGetCamProgress(void);
 extern void Movie_SetVolumeFade(int volume, int fadeFrames);
 extern void titleScreenFn_80130464(u8 v);
@@ -115,7 +115,7 @@ static void TitleMenu_ReloadSaveSettings(void)
 {
   int result;
 
-  result = titleLoadSaveFiles();
+  result = saveFn_800e8508();
   if ((result == 0) && (lbl_803DB424 != 0)) {
     memCardFn_8007dd04(1);
   }
@@ -163,7 +163,7 @@ int TitleMenu_run(void)
     buttons = mmSetFreeDelay(0);
     mapUnload(0x3d,0x20000000);
     mmSetFreeDelay(buttons);
-    gameplay_capturePreviewSettings();
+    titleDoLoadSave();
     return 0;
   }
 

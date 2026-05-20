@@ -19,12 +19,12 @@ void FUN_800e8630(int param_1);
 void FUN_800e8794(undefined2 param_1);
 int FUN_800e87a0(void);
 undefined4 * FUN_800e87a8(void);
-int titleLoadSaveFiles(void);
-void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,undefined8 param_3,
+int saveFn_800e8508(void);
+void gplaySaveGame(undefined8 param_1,double param_2,undefined8 param_3,
                                           undefined8 param_4,undefined8 param_5,
                                           undefined8 param_6,undefined8 param_7,
                                           undefined8 param_8,byte param_9);
-void gameplay_capturePreviewSettings(void);
+void titleDoLoadSave(void);
 void saveGame_save(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                    undefined8 param_5,undefined8 param_6,undefined8 param_7,
                    undefined8 param_8);

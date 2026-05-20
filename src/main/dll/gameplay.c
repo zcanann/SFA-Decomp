@@ -1416,7 +1416,7 @@ undefined4 * FUN_800e87a8(void)
 /*
  * --INFO--
  *
- * Function: titleLoadSaveFiles
+ * Function: saveFn_800e8508
  * EN v1.0 Address: 0x800E8508
  * EN v1.0 Size: 152b
  * EN v1.1 Address: 0x800E878C
@@ -1432,7 +1432,7 @@ extern u8 saveData[228];
 
 #pragma scheduling off
 #pragma peephole off
-int titleLoadSaveFiles(void)
+int saveFn_800e8508(void)
 {
   int iVar1;
 
@@ -1455,7 +1455,7 @@ int titleLoadSaveFiles(void)
 /*
  * --INFO--
  *
- * Function: gameplay_applyPreviewSettingsForSlot
+ * Function: gplaySaveGame
  * EN v1.0 Address: 0x800E85A0
  * EN v1.0 Size: 204b
  * EN v1.1 Address: 0x800E8824
@@ -1465,7 +1465,7 @@ int titleLoadSaveFiles(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,undefined8 param_3,
+void gplaySaveGame(undefined8 param_1,double param_2,undefined8 param_3,
                                           undefined8 param_4,undefined8 param_5,
                                           undefined8 param_6,undefined8 param_7,
                                           undefined8 param_8,byte param_9)
@@ -1495,7 +1495,7 @@ void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,unde
 /*
  * --INFO--
  *
- * Function: gameplay_capturePreviewSettings
+ * Function: titleDoLoadSave
  * EN v1.0 Address: 0x800E866C
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x800E88F0
@@ -1507,7 +1507,7 @@ void gameplay_applyPreviewSettingsForSlot(undefined8 param_1,double param_2,unde
  */
 #pragma scheduling off
 #pragma peephole off
-void gameplay_capturePreviewSettings(void)
+void titleDoLoadSave(void)
 {
   FUN_80244e58(0,0);
   DAT_803dc4f0 = (undefined)((int)(*((byte *)DAT_803de110 + 0x21) & 0x60) >> 5);
