@@ -605,9 +605,12 @@ void* fn_801638BC(f32* p_pos)
  * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
 #pragma scheduling off
 void tumbleweedbush_setScale(u8* obj, void* match) {
-    u8* sub = *(u8**)(obj + 0xb8);
-    int i = 0;
-    void** p = (void**)sub;
+    void** p;
+    u8* sub;
+    int i;
+    sub = *(u8**)(obj + 0xb8);
+    i = 0;
+    p = (void**)sub;
     while (i < (int)sub[0x50]) {
         if (*(void**)((char*)p + 0xc) == match) {
             *(void**)((char*)p + 0xc) = NULL;

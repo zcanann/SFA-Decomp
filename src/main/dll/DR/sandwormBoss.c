@@ -3336,7 +3336,7 @@ void cfprisonguard_hitDetect(int* obj)
 void gcrobotlightbea_free(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
-    if (state[0] != 0) {
+    if (*(void**)state != NULL) {
         fn_8001CB3C(state);
     }
     if (*(int**)((char*)obj + 196) != NULL) {
@@ -3402,7 +3402,7 @@ int gunpowderbarrel_canBeGrabbed(int* obj)
     int result = 0;
     if (*(u8*)((char*)state + 21) == 0 &&
         *(f32*)((char*)state + 24) == lbl_803E42C0 &&
-        ((int(*)(void))((void**)*(int**)&lbl_803DCAC0)[5])() == 0) {
+        ((int(*)(void))(*(*(void****)&lbl_803DCAC0))[5])() == 0) {
         result = 1;
     }
     return result;
