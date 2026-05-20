@@ -1503,11 +1503,11 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
 void pauseMenuInit(void)
 {
     void* obj = Obj_GetPlayerObject();
-    int   i;
+    int   i = 0;
     void**slot = lbl_803A9410;
     void**type = lbl_8031BF90;
 
-    for (i = 0; i < 6; i++) {
+    for (; i < 6; i++) {
         if (i < 4 && *slot == NULL) {
             *slot = Obj_SetupObject(Obj_AllocObjectSetup(0x20, *type), 4, -1, -1, 0);
             ((f32*)*slot)[3] = 0.0f;
@@ -1735,14 +1735,14 @@ void pauseMenuDrawText(void)
     cur = (s16)lbl_803DD774;
     mirrored = cur;
     if (lbl_803DD774 > 0x7f) {
-        mirrored = (s16)(0xff - cur);
+        mirrored = (s16)(0xff - lbl_803DD774);
     }
     alpha = (s16)(mirrored * 0xf);
     if (alpha > 0xff) alpha = 0xff;
 
     target = cur;
     if (lbl_803DD774 > 0x7f) {
-        target = (s16)(0xff - cur);
+        target = (s16)(0xff - lbl_803DD774);
     }
     target = (s16)(target - 0x14);
     if (target < 0) target = 0;
@@ -1755,10 +1755,8 @@ void pauseMenuDrawText(void)
 
     {
         s16 width = (s16)(v[2] - v[3]);
-        s16 calc  = (s16)(width + 0x28);
-        s16 blit_x;
-        if (calc >= target) blit_x = target;
-        else                blit_x = calc;
+        s16 blit_x = width + 0x28;
+        if (blit_x >= target) blit_x = target;
         if (blit_x < 0) blit_x = 0;
         *(s16*)((u8*)sprite + 0x8)  = (s16)(blit_x & 0xfffe);
         *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
