@@ -31,11 +31,13 @@ extern f32 lbl_803E51DC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void fn_801CCFB4(int param_1)
 {
   (*(code *)(*(int *)lbl_803DCA7C + 0x18))(param_1);
   (*(code *)(*(int *)lbl_803DCA78 + 0x18))(param_1);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
