@@ -896,3 +896,31 @@ void shopitem_free(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *lbl_803AD068[8];
+extern void *lbl_803DDC58;
+extern void fn_801E7124(int);
+extern void objAnimFn_801e6d08(int);
+extern void fn_801E6B10(int);
+extern void fn_801E69C8(int);
+extern void fn_801E6990(int);
+extern void fn_801E67BC(int);
+extern void fn_801E66EC(int);
+extern void fn_801E66E4(int);
+extern void fn_801E66DC(int);
+
+#pragma scheduling off
+#pragma peephole off
+void shopkeeper_initialise(void) {
+    lbl_803AD068[0] = (void *)fn_801E7124;
+    lbl_803AD068[1] = (void *)objAnimFn_801e6d08;
+    lbl_803AD068[2] = (void *)fn_801E6B10;
+    lbl_803AD068[3] = (void *)fn_801E69C8;
+    lbl_803AD068[4] = (void *)fn_801E6990;
+    lbl_803AD068[5] = (void *)fn_801E67BC;
+    lbl_803AD068[6] = (void *)fn_801E66EC;
+    lbl_803AD068[7] = (void *)fn_801E66E4;
+    lbl_803DDC58 = (void *)fn_801E66DC;
+}
+#pragma peephole reset
+#pragma scheduling reset
