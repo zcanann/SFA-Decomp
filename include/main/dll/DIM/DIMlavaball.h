@@ -91,7 +91,7 @@ void mmp_trenchfx_free(int obj);
 void mmp_trenchfx_render(void);
 void mmp_trenchfx_hitDetect(void);
 void mmp_trenchfx_update(void);
-void mmp_trenchfx_init(void);
+void mmp_trenchfx_init(int obj, int data);
 void mmp_trenchfx_release(void);
 void mmp_trenchfx_initialise(void);
 

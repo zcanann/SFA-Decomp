@@ -1378,6 +1378,30 @@ void mmp_trenchfx_free(int obj) {
     (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
 }
 
+extern f32 lbl_803E45C0;
+#pragma scheduling off
+#pragma peephole off
+void mmp_trenchfx_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    s16 v;
+    *(s16 *)state = *(s16 *)(data + 0x24);
+    *(u16 *)(state + 2) = (u16)((*(u8 *)(data + 0x1C)) << 2);
+    *(u16 *)(state + 4) = (u16)((*(u8 *)(data + 0x1D)) << 2);
+    *(u16 *)(state + 6) = (u16)((*(u8 *)(data + 0x1E)) << 2);
+    v = (s16)(((s32)*(s8 *)(data + 0x19)) << 8);
+    *(s16 *)(state + 0xC) = v;
+    *(s16 *)(obj + 4) = v;
+    v = (s16)(((s32)*(s8 *)(data + 0x1A)) << 8);
+    *(s16 *)(state + 0xA) = v;
+    *(s16 *)(obj + 2) = v;
+    v = (s16)(((s32)*(s8 *)(data + 0x1B)) << 8);
+    *(s16 *)(state + 0x8) = v;
+    *(s16 *)obj = v;
+    *(f32 *)(obj + 8) = lbl_803E45C0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* ObjGroup_RemoveObject + vtable[4] tail-call. */
 extern int *lbl_803DCAC0;
 #pragma scheduling off
