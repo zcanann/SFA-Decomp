@@ -1181,3 +1181,42 @@ f32 dll_19_func0B(int *obj) { return *(f32*)((char*)((int**)obj)[0xb8/4] + 0x3e4
 /* misc 8b leaves */
 void fn_80113F94(int *p, f32 v) { *(f32*)((char*)p + 0x614) = v; }
 void dll_2E_func04(int *p, int v) { *(int*)((char*)p + 0x608) = v; }
+
+void dll_2E_func08(int obj, int v1, int v2) {
+    *(int *)(obj + 0x618) = v1;
+    *(int *)(obj + 0x61c) = v2;
+    *(int *)(obj + 0x620) = v1;
+}
+
+u16 dll_19_func0A(int obj) {
+    void *p = *(void **)(obj + 0x4c);
+    if (p != NULL) return *(u16 *)((char *)p + 0x34);
+    return 0xd2;
+}
+
+extern void *memcpy(void *dst, const void *src, u32 n);
+extern u8 lbl_8031A0E0[];
+#pragma scheduling off
+#pragma peephole off
+void dll_2E_func09(int obj, void *src1, void *src2) {
+    if (src1 == NULL) src1 = lbl_8031A0E0;
+    if (src2 == NULL) src2 = lbl_8031A0E0;
+    memcpy((char *)obj + 0x5bc, src1, (u32)*(u8 *)(obj + 0x610) * 2);
+    memcpy((char *)obj + 0x5da, src2, (u32)*(u8 *)(obj + 0x610) * 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *lbl_803DCA9C;
+extern f32 lbl_803E1C88;
+#pragma scheduling off
+#pragma peephole off
+f32 dll_2E_func0B(int obj, int arg) {
+    int r = (*(int (*)(int))(*(int *)(*lbl_803DCA9C + 0x40)))(arg);
+    if (r > -1) {
+        return (*(f32 (*)(int, int))(*(int *)(*lbl_803DCA9C + 0x24)))(obj, r);
+    }
+    return lbl_803E1C88;
+}
+#pragma peephole reset
+#pragma scheduling reset

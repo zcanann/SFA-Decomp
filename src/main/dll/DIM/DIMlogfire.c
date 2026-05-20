@@ -835,13 +835,56 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 #pragma scheduling reset
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
+extern void disableHeavyFog(void);
+extern int *lbl_803DCA68;
+extern u32 GameBit_Get(int id);
+extern int *lbl_803DCA54;
+extern int *lbl_803DCA74;
 #pragma scheduling off
+#pragma peephole off
+void animsharpclaw_free(int obj) {
+    char *inner = *(char **)(obj + 0xb8);
+    int child = *(int *)(obj + 0xc8);
+    if (child != 0) {
+        ObjLink_DetachChild(obj, child);
+        Obj_FreeObject(child);
+    }
+    (*(void (*)(char *))(*(int *)(*lbl_803DCA54 + 0x24)))(inner);
+    (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCA74 + 0x8)))(obj, 0xffff, 0, 0, 0);
+    Sfx_StopObjectChannel(obj, 0x7f);
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
+void ccgasventcontrol_free(int obj) {
+    char *inner = *(char **)(obj + 0xb8);
+    u8 t = *(u8 *)inner;
+    if (t == 3 || t == 4) {
+        disableHeavyFog();
+    }
+    (*(void (*)(void))(*(int *)(*lbl_803DCA68 + 0x60)))();
+}
+void ccgasventcontrol_init(int obj, u8 *p) {
+    char *inner = *(char **)(obj + 0xb8);
+    *(void **)((char *)obj + 0xbc) = (void *)CCGasVentControl_SeqFn;
+    *(s16 *)obj = (s16)((u32)p[0x1a] << 8);
+    if (GameBit_Get(0xa3) != 0) {
+        *(u8 *)inner = 7;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 int MoonSeedPlantingSpot_SeqFn(int obj)
 {
     obj = *(int *)(obj + 0xb8);
     *(u8 *)(obj + 1) = (u8)((uint)*(u8 *)(obj + 1) | 1);
     return 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */

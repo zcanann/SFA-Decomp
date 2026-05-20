@@ -4584,7 +4584,7 @@ static u8 sProjgfxStringPad2[] = { 0, 0, 0, 0, 0, 0 };
 extern u8 lbl_803DD282;
 extern u8 lbl_803DD298;
 extern u8 lbl_803DD2C0;
-extern void fn_800A1040(int a, int b);
+extern void fn_800A1040(s16 a, int b);
 extern u16 lbl_8039C2E0[];
 
 void dll_0B_func0B(void) {
@@ -4607,6 +4607,118 @@ void dll_0D_func05(u8 v) {
         lbl_803DD298 = v;
     }
 }
+#pragma peephole reset
+
+extern f32 lbl_803DF430;
+extern f32 lbl_803DF434;
+extern void *lbl_8039C2C0[];
+extern void *lbl_803DD2A4;
+extern void *lbl_803DD2A8;
+extern void mm_free(void *p);
+extern void textureFree(void *resource);
+extern int *lbl_8039C1F8[];
+extern void Obj_FreeObject(void *obj);
+#pragma peephole off
+#pragma scheduling off
+void fn_800A1040(s16 p1, int p2)
+{
+    int **arr = (int**)lbl_8039C1F8;
+    int i;
+    for (i = 0; i < 50; i++) {
+        if (arr[i] == NULL) continue;
+        if ((s16)p1 != *(s16*)((char*)arr[i] + 268) && p2 == 0) continue;
+        if (*(void**)((char*)arr[i] + 160) != NULL) {
+            mm_free(*(void**)((char*)arr[i] + 160));
+        }
+        if (*(void**)arr[i] != NULL) {
+            Obj_FreeObject(*(void**)arr[i]);
+        }
+        *(int*)((char*)arr[i] + 300) = 0;
+        if (*(u8*)((char*)arr[i] + 319) == 0 && *(void**)((char*)arr[i] + 152) != NULL) {
+            textureFree(*(void**)((char*)arr[i] + 152));
+        }
+        if (*(u8*)((char*)arr[i] + 319) == 0) {
+            *(int*)((char*)arr[i] + 152) = 0;
+        }
+        mm_free(arr[i]);
+        arr[i] = NULL;
+    }
+}
+
+void dll_18_release(void)
+{
+    int i;
+    void **p;
+    void *zero;
+    i = 0;
+    p = lbl_8039C2C0;
+    zero = NULL;
+    do {
+        if (*p != NULL) mm_free(*p);
+        *p = zero;
+        p++;
+        i++;
+    } while (i < 7);
+    if (lbl_803DD2A4 != NULL) textureFree(lbl_803DD2A4);
+    if (lbl_803DD2A8 != NULL) textureFree(lbl_803DD2A8);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_800A0FD0(ModgfxState *state)
+{
+    ModgfxVertexData *dst = state->vertexBuffers[state->activeVertexBufferIndex];
+    ModgfxVertexData *src = state->baseVertexData;
+    int i;
+    for (i = 0; i < state->vertexCount; i++) {
+        dst->posX = src->posX;
+        dst->posY = src->posY;
+        dst->posZ = src->posZ;
+        dst->colorR = src->colorR;
+        dst->colorG = src->colorG;
+        dst->colorB = src->colorB;
+        dst->alpha = src->alpha;
+        dst++;
+        src++;
+    }
+}
+
+void fn_800A0478(ModgfxState *state)
+{
+    ModgfxVertexData *src = state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
+    ModgfxVertexData *dst = state->baseVertexData;
+    f32 f1;
+    f32 f0;
+    int i;
+    for (i = 0; i < state->vertexCount; i++) {
+        dst->posX = src->posX;
+        dst->posY = src->posY;
+        dst->posZ = src->posZ;
+        dst->colorR = src->colorR;
+        dst->colorG = src->colorG;
+        dst->colorB = src->colorB;
+        dst->alpha = src->alpha;
+        dst++;
+        src++;
+    }
+    f1 = lbl_803DF434;
+    *(f32*)((char*)state + 0x30) = f1;
+    *(f32*)((char*)state + 0x34) = f1;
+    *(f32*)((char*)state + 0x38) = f1;
+    f0 = lbl_803DF430;
+    *(f32*)((char*)state + 0x3C) = f0;
+    *(f32*)((char*)state + 0x40) = f0;
+    *(f32*)((char*)state + 0x44) = f0;
+    *(f32*)((char*)state + 0x48) = f1;
+    *(f32*)((char*)state + 0x4C) = f1;
+    *(f32*)((char*)state + 0x50) = f1;
+    *(f32*)((char*)state + 0x54) = f0;
+    *(f32*)((char*)state + 0x58) = f0;
+    *(f32*)((char*)state + 0x5C) = f0;
+}
+#pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off

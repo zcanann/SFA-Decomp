@@ -3276,6 +3276,26 @@ void CameraModeArwing_init(int *obj, int mode, int unused)
     *(f32*)((char*)obj + 0x20) = *(f32*)((char*)a4 + 0x20) + *(f32*)((char*)lbl_803A43C0 + 56);
 }
 
+extern u8 lbl_80319FB8[];
+extern u8 lbl_803DD5D2;
+extern u8 lbl_803DD5D1;
+extern u8 lbl_803DD5D0;
+extern f32 lbl_803E1BE0;
+extern f32 lbl_803DB9D8;
+void CameraModeTitle_init(int *obj)
+{
+    lbl_803DD5D2 = 4;
+    lbl_803DD5D1 = 4;
+    lbl_803DB9D8 = lbl_803E1BE0;
+    lbl_803DD5D0 = 0;
+    *(f32*)((char*)obj + 12) = *(f32*)(lbl_80319FB8 + 4 * 20 + 0);
+    *(f32*)((char*)obj + 16) = *(f32*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 4);
+    *(f32*)((char*)obj + 20) = *(f32*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 8);
+    *(s16*)((char*)obj + 0) = (s16)*(u16*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 12);
+    *(s16*)((char*)obj + 2) = (s16)*(u16*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 14);
+    *(s16*)((char*)obj + 4) = (s16)*(u16*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 16);
+}
+
 extern u32 lbl_803DD5C0;
 extern f32 lbl_803E1B5C;
 void dll_54_init(int *p1, int unused, int *p3)

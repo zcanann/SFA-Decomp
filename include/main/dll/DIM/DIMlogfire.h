@@ -36,7 +36,7 @@ undefined4 FUN_801aa4a4(void);
 
 int animsharpclaw_getExtraSize(void);
 int animsharpclaw_func08(void);
-void animsharpclaw_free(void);
+void animsharpclaw_free(int obj);
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void animsharpclaw_hitDetect(void);
 void animsharpclaw_update(void);
@@ -66,11 +66,11 @@ void ccgasvent_update(void);
 void ccgasvent_init(int x);
 
 int ccgasventcontrol_getExtraSize(void);
-void ccgasventcontrol_free(void);
+void ccgasventcontrol_free(int obj);
 int CCGasVentControl_SeqFn(int obj);
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void ccgasventcontrol_update(void);
-void ccgasventcontrol_init(void);
+void ccgasventcontrol_init(int obj, u8 *p);
 
 int dimlogfire_getExtraSize(void);
 int dimlogfire_func08(void);
