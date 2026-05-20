@@ -1187,3 +1187,11 @@ void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32
 void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4B90); }
 void fn_801B9CC8(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4B98); }
 #pragma peephole reset
+
+/* fn_801B8B48: stash obj->f10 into *(obj->p_B8), then bump obj->f10 by a constant step. */
+extern f32 lbl_803E4AD8;
+void fn_801B8B48(void* obj)
+{
+    *(*(f32**)((char*)obj + 0xB8)) = *(f32*)((char*)obj + 0x10);
+    *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) + lbl_803E4AD8;
+}
