@@ -876,7 +876,7 @@ extern void fn_8001CB3C(void *p);
 void SpiritDoorLock_free(int obj) {
     void *inner = *(void **)(obj + 0xb8);
     if (*(void **)inner != NULL) {
-        fn_8001CB3C(*(void **)inner);
+        fn_8001CB3C(inner);
     }
 }
 #pragma peephole reset
