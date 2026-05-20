@@ -639,3 +639,25 @@ void WeirdUnusedMenu_release(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u32 lbl_803DD720;
+extern u16 lbl_803DD710;
+extern u8 lbl_803DD713;
+extern u32 lbl_8031AD20[];
+extern u32 lbl_8031AD98[];
+extern u32 textureLoadAsset(int);
+extern u32 gameTextGet(int);
+#pragma scheduling off
+#pragma peephole off
+void WeirdUnusedMenu_initialise(void) {
+    lbl_803DD71C = textureLoadAsset(0x31e);
+    lbl_803DD718 = textureLoadAsset(0x310);
+    lbl_803DD714 = textureLoadAsset(0x31f);
+    lbl_803DD720 = gameTextGet(0);
+    (*(void (*)(u32 *, int, int, u32 *, int, int, int, int, int, int, int, int))(*(int *)(*lbl_803DCAA0 + 0x4)))(
+        lbl_8031AD20, 2, 0, lbl_8031AD98, 0, 0, 0x5b, 0x45, 0x30, 0xff, 0xd7, 0x3d);
+    lbl_803DD710 = 0;
+    lbl_803DD713 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
