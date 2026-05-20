@@ -564,7 +564,7 @@ update_action:
     if ((int)*(u16 *)(state + 0x8e) <= (int)(u32)framesThisStep) {
         return 2;
     }
-    *(u16 *)(state + 0x8e) -= (u32)framesThisStep;
+    *(u16 *)(state + 0x8e) -= framesThisStep;
     return 0;
 }
 #pragma pop
