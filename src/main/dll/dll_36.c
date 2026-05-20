@@ -12,7 +12,7 @@ extern void gameTextShow(int id);
 extern void gameTextShowStr(void *str, int id, int x, int y);
 extern void *gameTextGetStr(int id);
 extern f32 fn_80293E80(f32 x);
-extern void fn_801358A8(void);
+extern void nameEntryTextDrawFunc(void);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenShowCopyright(u8 arg);
 
@@ -55,7 +55,7 @@ void EnterSaveNameScreen_render(void)
   int i;
 
   buf[1] = 0;
-  gameTextSetDrawFunc(fn_801358A8);
+  gameTextSetDrawFunc(nameEntryTextDrawFunc);
   titleScreenPositionElements(lbl_803E1D80, lbl_803E1D84);
   fn_80135814((int)(lbl_803DD6E0 + (f32)lbl_803DD6DC - lbl_803E1D88), 0);
   gameTextBoxFn_80134d40(0xff, 1, 1);
