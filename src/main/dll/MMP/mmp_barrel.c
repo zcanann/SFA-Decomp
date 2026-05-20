@@ -1347,6 +1347,31 @@ extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);
 #pragma peephole off
 #pragma scheduling off
+void visanimator_init(int *obj, int *desc)
+{
+    u8 *vstate;
+    u32 gate;
+    u8 tmp;
+    int sv;
+    *(u16*)((char*)obj + 0xB0) |= 0x6000;
+    vstate = (u8*)((int**)obj)[0xB8/4];
+    sv = *(s8*)((char*)desc + 0x1B);
+    ((s8*)vstate)[1] = (s8)sv;
+    vstate[4] = (u8)(1 << *(u8*)((char*)desc + 0x1C));
+    gate = (u32)GameBit_Get(*(s16*)((char*)desc + 0x18));
+    if ((vstate[4] & gate) != 0) {
+        ((s8*)vstate)[1] = ((s8*)vstate)[1] ^ 1;
+    }
+    mapGetBlock(objPosToMapBlockIdx((double)*(f32*)((char*)obj + 0xC),
+                                     (double)*(f32*)((char*)obj + 0x10),
+                                     (double)*(f32*)((char*)obj + 0x14)));
+    gate = (u32)GameBit_Get(*(s16*)((char*)desc + 0x18));
+    tmp = (u8)(vstate[4] & gate);
+    vstate[2] = tmp;
+    vstate[3] = tmp;
+    vstate[0] |= 1;
+}
+
 void visanimator_update(int *obj)
 {
     int *state = ((int**)obj)[0x4C / 4];
