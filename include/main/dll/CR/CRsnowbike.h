@@ -38,7 +38,7 @@ void sc_levelcontrol_initialise(void);
 int sc_musictree_getExtraSize(void);
 int sc_musictree_func08(void);
 void sc_musictree_free(void);
-void sc_musictree_render(void);
+void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void sc_musictree_hitDetect(void);
 void sc_musictree_update(void);
 void sc_musictree_init(void);
