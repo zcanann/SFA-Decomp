@@ -731,6 +731,18 @@ int fn_801793A4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x274) == 0; }
 extern void sidekickball_free(int obj);
 void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
 
+extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+void doorf4_free(int obj) {
+    int *state = *(int **)(obj + 0xB8);
+    if (*(u16 *)((char *)state + 0x1C) != 0) {
+        if (Sfx_IsPlayingFromObject(obj, *(u16 *)((char *)state + 0x1C)) != 0) {
+            Sfx_StopFromObject(obj, *(u16 *)((char *)state + 0x1C));
+        }
+    }
+    ObjGroup_RemoveObject(obj, 14);
+}
+
 extern f32 lbl_803E36A0;
 void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (*(int *)((char *)obj + 0xF8) == 0 || visible == -1) {
