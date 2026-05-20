@@ -1366,7 +1366,7 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
-extern void fn_801A6C28(int);
+extern int fn_801A6C28(int obj, int p2, u8 *p3);
 
 extern int *lbl_803DCA54;
 #pragma scheduling off
@@ -1429,6 +1429,37 @@ void mmp_gyservent_update(int obj) {
 #pragma scheduling reset
 
 #pragma scheduling off
+int fn_801A6C28(int obj, int p2, u8 *p3) {
+    int state = *(int *)(obj + 0xB8);
+    int def = *(int *)(obj + 0x4C);
+    int i;
+    int j;
+    if (*(u8 *)state == 0) {
+        if (GameBit_Get(*(s16 *)(def + 0x18)) != 0) {
+            *(u8 *)state = 2;
+        }
+    }
+    for (i = 0; i < p3[0x8B]; i++) {
+        switch ((s32)p3[0x81 + i]) {
+        case 2:
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x70B, 0, 2, -1, 0);
+            for (j = 0; j < 0x28; j++) {
+                (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x70C, 0, 2, -1, 0);
+            }
+            break;
+        case 1:
+            *(u8 *)state = 1;
+            if (*(s16 *)(def + 0x1A) != -1) {
+                GameBit_Set(*(s16 *)(def + 0x1A), 1);
+            }
+            break;
+        }
+    }
+    return *(u8 *)state != 2;
+}
+#pragma scheduling reset
+
+#pragma scheduling off
 #pragma peephole off
 void MMP_levelcontrol_init(int obj) {
     *(u16 *)(obj + 0xB0) |= 0x6000;
@@ -1458,7 +1489,7 @@ void MoonSeedBush_init(int obj, int data) {
     int state = *(int *)(obj + 0xB8);
     *(u8 *)(state + 1) = 1;
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1F)) << 8);
-    *(void (**)(int))(obj + 0xBC) = fn_801A6C28;
+    *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801A6C28;
     *(u16 *)(obj + 0xB0) |= 0x2000;
     *(f32 *)(obj + 8) = (f32)(u32)(*(u8 *)(data + 0x21)) * lbl_803E44D4;
     if (*(f32 *)(obj + 8) == lbl_803E44D8) {
