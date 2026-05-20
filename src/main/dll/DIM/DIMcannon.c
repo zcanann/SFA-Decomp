@@ -2043,6 +2043,22 @@ int fn_801B0784(int obj, int delta) {
     return inner[0x1c] == 0 ? 1 : 0;
 }
 
+extern f32 lbl_803E47C0;
+#pragma scheduling off
+#pragma peephole off
+void imspacering_init(s16 *obj, s8 *p) {
+    obj[0] = (s16)((s32)p[0x18] << 8);
+    *(int *)((char *)obj + 0xf4) = randomGetRange(0, 1);
+}
+void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    if (visible != 0 && (inner[8] != 0 || *(u8 *)(obj + 0x36) != 0)) {
+        objRenderFn_8003b8f4(lbl_803E47C0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void Obj_FreeObject(void *o);
 extern void ModelLightStruct_free(void *light);
 extern void mm_free(void *p);
