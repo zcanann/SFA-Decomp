@@ -1669,3 +1669,62 @@ void fn_801B5A38(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* dimwooddoor2 variant: trigger-init that loads a different float into the
+ * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
+extern f32 lbl_803E49F0;
+#pragma scheduling off
+void fn_801B5CA8(undefined2 *param_1, int param_2)
+{
+    uint uVar1;
+    int iVar2;
+
+    *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
+    param_1[0x58] = param_1[0x58] | 0x2000;
+    iVar2 = *(int *)(param_1 + 0x5c);
+    *(undefined *)(iVar2 + 9) = 1;
+    uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x1e));
+    if (uVar1 != 0) {
+        *(undefined *)(iVar2 + 9) = 0;
+        *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) =
+             *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0xfffe;
+        *(undefined *)(param_1 + 0x1b) = 0;
+    }
+    *(float *)(iVar2 + 4) = lbl_803E49F0;
+    return;
+}
+#pragma scheduling reset
+
+/* explosion_free: model-light release if present. */
+extern void ModelLightStruct_free(void *);
+void explosion_free(int obj)
+{
+    void *p = *(void **)(*(int *)(obj + 0xb8) + 0xa40);
+    if (p != NULL) {
+        ModelLightStruct_free(p);
+    }
+}
+
+/* explosion_func08: tile/index lookup capped by table count. */
+#pragma scheduling off
+int explosion_func08(int obj)
+{
+    int idx = (int)*(short *)(*(int *)(obj + 0x4c) + 0x1c) & 3;
+    if (idx >= (int)*(char *)(*(int *)(obj + 0x50) + 0x55)) {
+        idx = 0;
+    }
+    return (idx << 11) | 0x400;
+}
+#pragma scheduling reset
+
+/* dim_levelcontrol_free: gameplay music + time-of-day reset. */
+extern void Music_Trigger(s32 triggerId, s32 mode);
+extern void timeOfDayFn_80055000(void);
+#pragma scheduling off
+void dim_levelcontrol_free(int p1)
+{
+    Music_Trigger(0xa1, 0);
+    Music_Trigger(0xed, 0);
+    timeOfDayFn_80055000();
+}
+#pragma scheduling reset
