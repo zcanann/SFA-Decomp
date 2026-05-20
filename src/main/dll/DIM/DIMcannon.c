@@ -2049,6 +2049,10 @@ int fn_801B0784(int obj, int delta) {
 
 extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
+extern void *Obj_GetPlayerObject(void);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void fn_801AF568(int *obj);
+extern void fn_801AF6DC(int *obj);
 #pragma scheduling off
 #pragma peephole off
 void link_levcontrol_free(int obj) {
@@ -2057,6 +2061,23 @@ void link_levcontrol_free(int obj) {
         case 0x48:
         case 0x49: Music_Trigger(0x36, 0); break;
     }
+}
+void link_levcontrol_update(int *obj) {
+    s8 *inner = *(s8 **)((char *)obj + 0xb8);
+    f32 *player = (f32 *)Obj_GetPlayerObject();
+    if (player == NULL) return;
+
+    if ((s32)inner[0] != (s32)*((s8 *)obj + 0xac)) {
+        if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
+            fn_801AF6DC(obj);
+        } else {
+            return;
+        }
+    }
+    if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
+        fn_801AF568(obj);
+    }
+    inner[0] = (s8)coordsToMapCell(player[3], player[5]);
 }
 void link_levcontrol_init(int *obj) {
     s8 *inner = *(s8 **)((char *)obj + 0xb8);
