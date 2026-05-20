@@ -914,6 +914,7 @@ void saveFileSelect_init(void) {}
  * EN v1.0 Size: 216b
  */
 #pragma scheduling off
+#pragma peephole off
 void saveSelectSetupMenuItems(void **p) {
     int i = 0;
     int off1 = 0;
@@ -938,6 +939,7 @@ void saveSelectSetupMenuItems(void **p) {
         i++;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 void saveSelectGoToChapterSelect(void) {}
 /*
