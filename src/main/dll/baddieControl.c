@@ -3231,6 +3231,51 @@ void CameraModeArwing_copyToCurrent(void *p1, u32 kind)
     *(f32*)((char*)lbl_803A43C0 + 0x40) = ((f32*)p1)[1];
 }
 
+extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
+extern f32 lbl_803E1BA4;
+extern f32 lbl_803E1BC0;
+extern f32 lbl_803E1BC4;
+extern f32 lbl_803E1BC8;
+extern f32 lbl_803E1BCC;
+extern f32 lbl_803E1BD0;
+extern f32 lbl_803E1BD4;
+extern f32 lbl_803E1BD8;
+extern f32 lbl_803E1BDC;
+void CameraModeArwing_init(int *obj, int mode, int unused)
+{
+    int *a4 = ((int**)obj)[0xA4/4];
+    f32 fc;
+    f32 fc2;
+    if (mode != 1) {
+        *(f32*)((char*)lbl_803A43C0 + 12) = *(f32*)((char*)a4 + 0x18);
+        *(f32*)((char*)lbl_803A43C0 + 16) = *(f32*)((char*)a4 + 0x1C);
+        *(f32*)((char*)lbl_803A43C0 + 20) = *(f32*)((char*)a4 + 0x20);
+    }
+    *(f32*)((char*)lbl_803A43C0 + 48) = lbl_803E1BA4;
+    *(f32*)((char*)lbl_803A43C0 + 52) = lbl_803E1BC0;
+    *(f32*)((char*)lbl_803A43C0 + 56) = lbl_803E1BC4;
+    PSVECAdd((f32*)((char*)a4 + 0x18), (f32*)((char*)lbl_803A43C0 + 48), (f32*)((char*)obj + 0x18));
+    *(u8*)((char*)lbl_803A43C0 + 0x5E) = 1;
+    *(f32*)((char*)lbl_803A43C0 + 68) = lbl_803E1BC8;
+    *(f32*)((char*)lbl_803A43C0 + 72) = lbl_803E1BCC;
+    *(f32*)((char*)lbl_803A43C0 + 76) = lbl_803E1BD0;
+    *(f32*)((char*)lbl_803A43C0 + 36) = lbl_803E1BD4;
+    *(f32*)((char*)lbl_803A43C0 + 40) = lbl_803E1BD8;
+    fc = lbl_803E1BA4;
+    *(f32*)((char*)lbl_803A43C0 + 44) = fc;
+    fc2 = lbl_803E1BDC;
+    *(f32*)((char*)lbl_803A43C0 + 64) = fc2;
+    *(f32*)((char*)lbl_803A43C0 + 60) = fc2;
+    *(u8*)((char*)lbl_803A43C0 + 0x5B) = 90;
+    *(u8*)((char*)lbl_803A43C0 + 0x5A) = 100;
+    *(f32*)((char*)lbl_803A43C0 + 8) = fc;
+    *(f32*)((char*)lbl_803A43C0 + 4) = fc;
+    *(f32*)((char*)lbl_803A43C0 + 0) = fc;
+    *(f32*)((char*)obj + 0x18) = *(f32*)((char*)a4 + 0x18);
+    *(f32*)((char*)obj + 0x1C) = *(f32*)((char*)a4 + 0x1C);
+    *(f32*)((char*)obj + 0x20) = *(f32*)((char*)a4 + 0x20) + *(f32*)((char*)lbl_803A43C0 + 56);
+}
+
 extern u32 lbl_803DD5C0;
 extern f32 lbl_803E1B5C;
 void dll_54_init(int *p1, int unused, int *p3)
