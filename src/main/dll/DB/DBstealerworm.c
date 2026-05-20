@@ -1305,6 +1305,7 @@ int SB_Galleon_modelMtxFn(int *obj) {
 #pragma peephole reset
 
 /* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
+#pragma peephole off
 int SB_Galleon_func0E(int *obj) {
     s8 *p = (s8*)((int**)obj)[0xb8/4];
     int x;
@@ -1317,3 +1318,4 @@ int SB_Galleon_func0E(int *obj) {
     }
     return 0x640;
 }
+#pragma peephole reset
