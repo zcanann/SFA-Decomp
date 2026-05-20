@@ -930,7 +930,7 @@ void saveSelectSetupMenuItems(void **p) {
             *(int *)((char *)*p + off2 + 0x10) = -1;
         } else {
             *(u16 *)((char *)*p + off2) = (u16)i;
-            *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) & ~0x4);
+            *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) & ~0x2);
             *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) | 0x1);
             *(int *)((char *)*p + off2 + 0x10) = -1;
         }
