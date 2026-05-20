@@ -302,8 +302,26 @@ void FUN_801c6358(int param_1)
 
 extern void Music_Trigger(int trackId, int restart);
 extern void ModelLightStruct_free(void *p);
+extern void lightFn_8001db6c(int handle, int flag, f32 v);
+extern void objParticleFn_80099d84(int obj, int kind, int h, f32 a, f32 b);
+extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 scale);
+extern f32 lbl_803E4FC8;
 #pragma scheduling off
 #pragma peephole off
+void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    void **inner = *(void ***)((char *)obj + 0xb8);
+    if (visible == 0) {
+        if (*inner != NULL) {
+            lightFn_8001db6c((int)*inner, 0, lbl_803E4FC8);
+        }
+        return;
+    }
+    if (*inner != NULL) {
+        lightFn_8001db6c((int)*inner, 1, lbl_803E4FC8);
+    }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E4FC8);
+    objParticleFn_80099d84(obj, 7, (int)*inner, lbl_803E4FC8, lbl_803E4FC8);
+}
 void ecsh_shrine_free(int *obj) {
     int *inner = *(int **)((char *)obj + 0xb8);
     Music_Trigger(0xd8, 0);
