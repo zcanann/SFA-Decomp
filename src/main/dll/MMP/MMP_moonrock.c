@@ -137,9 +137,9 @@ extern f32 lbl_803E40BC;
 #pragma peephole off
 void sfxplayerObj_init(u8* obj, u8* data) {
     u8* sub = *(u8**)(obj + 0xb8);
-    s8 type;
+    int type;
     *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
-    type = (s8)data[0x1d];
+    type = data[0x1d];
     switch (type) {
     case 0: {
         s16 bit = *(s16*)(data + 0x18);
