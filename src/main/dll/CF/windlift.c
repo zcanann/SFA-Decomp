@@ -1453,6 +1453,7 @@ void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c) {
 extern f32 lbl_803E3A8C;
 extern f32 lbl_803E3A90;
 #pragma scheduling off
+#pragma peephole off
 void portalspelldoor_init(u8* obj, u8* data) {
     u8* sub = *(u8**)(obj + 0xb8);
     *(s16*)obj = (s16)((s32)(s8)data[0x18] << 8);
@@ -1465,6 +1466,7 @@ void portalspelldoor_init(u8* obj, u8* data) {
     }
     *(s32*)(sub + 0x8) = -1;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* LanternFireFly_setScale: subtract sub->_54..5c from vec[0..2] (overwriting
