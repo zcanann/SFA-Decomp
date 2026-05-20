@@ -801,8 +801,8 @@ extern f32 lbl_803E3684;
 extern f32 lbl_803E364C;
 extern f32 lbl_803E3650;
 extern void fn_80178338(void);
-extern double fn_80293E80(double x);
-extern double sin(double x);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
 
 void doorf4_init(int *obj, int *params)
 {
