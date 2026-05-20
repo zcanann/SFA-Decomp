@@ -330,16 +330,3 @@ void DFSH_LaserBeam_hitDetect(void) {}
 int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
 int DFSH_LaserBeam_func08(void) { return 0x0; }
 
-#pragma scheduling off
-#pragma peephole off
-void dfsh_objcreator_init(int *obj, int *def) {
-    int *state = *(int **)((char *)obj + 0xb8);
-    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x1e) << 8);
-    *(int *)((char *)obj + 0xf8) = 0;
-    *(s16 *)state = 100;
-    *(s16 *)((char *)state + 2) = 0;
-    *(u8 *)((char *)obj + 0x37) = 0xff;
-    *(u8 *)((char *)obj + 0x36) = 0xff;
-}
-#pragma peephole reset
-#pragma scheduling reset
