@@ -2609,6 +2609,7 @@ void babycloudrunner_func08(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 void babycloudrunner_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   s32 isVisible;
@@ -2619,6 +2620,7 @@ void babycloudrunner_render(int param_1,int param_2,int param_3,int param_4,int 
   }
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
