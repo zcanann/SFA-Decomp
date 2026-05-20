@@ -1677,13 +1677,13 @@ extern f32 lbl_803E49F0;
 extern void* Obj_GetPlayerObject(void);
 extern void fn_801B5F1C(int obj, u8* sub);
 extern void fn_801B5D48(int obj, u8* sub);
-extern int fn_80296458(void* player);
+extern int EmissionController_IsLingering(void* player);
 extern void fn_80065574(int a, int b, int c);
 
 /* dimmagicbridge_update: scroll the two UV channels (via fn_801B5F1C and
  * fn_801B5D48), then either fire the death VFX (fn_80065574(0x11, 0, 0))
- * when sub->_5f is set or, when GameBit 0x1ef is on and the player passes
- * fn_80296458, latch GameBit 0x1e8. */
+ * when sub->_5f is set or, when GameBit 0x1ef is on and the player's
+ * emission controller is lingering, latch GameBit 0x1e8. */
 #pragma scheduling off
 void dimmagicbridge_update(int obj)
 {
@@ -1695,7 +1695,7 @@ void dimmagicbridge_update(int obj)
     fn_801B5D48(obj, sub);
     if (sub[0x5f] == 0) {
         if (GameBit_Get(0x1ef) != 0) {
-            if (fn_80296458(player) != 0) {
+            if (EmissionController_IsLingering(player) != 0) {
                 GameBit_Set(0x1e8, 1);
             }
         }
