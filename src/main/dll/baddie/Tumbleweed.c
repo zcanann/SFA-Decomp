@@ -3697,20 +3697,17 @@ extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 int fn_80138920(u8* obj, int arg1, int arg2)
 {
     u8* b = *(u8**)(obj + 0xb8);
+    s16 v;
     if ((u32)((b[0x58] >> 6) & 1) != 0u) return 0;
-    {
-        s16 v = *(s16*)(obj + 0xa0);
-        if (v < 48) {
-            if (v >= 41) goto fail;
-            goto play;
+    v = *(s16*)(obj + 0xa0);
+    if (v < 48) {
+        if (v >= 41) {
+            return 0;
         }
     }
-play:
     if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) return 0;
     objAudioFn_800393f8(obj, b + 936, arg1, arg2, -1, 0);
     return 1;
-fail:
-    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3808,7 +3805,7 @@ void titleScreenFn_801368a4(s8 arg)
     u8 cur = lbl_803DD991;
     if (arg == (s8)cur) return;
     lbl_803DBC09 = cur;
-    lbl_803DD991 = (u8)arg;
+    lbl_803DD991 = arg;
 }
 
 /* EN v1.0 0x801368C4  size: 16b  Two-byte state push (no equality
