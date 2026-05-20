@@ -36,6 +36,7 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f4;
 extern int *gObjectTriggerInterface;
 extern int *lbl_803DCA74;
+#define gTitleMenuControlInterface lbl_803DCA74
 extern f64 DOUBLE_803e5bd0;
 extern f64 DOUBLE_803e5c08;
 extern f32 lbl_803DC074;
@@ -96,7 +97,7 @@ void mmsh_shrine_init(undefined2 *param_1,int param_2)
 void mmsh_scales_free(int param_1,int param_2)
 {
   (**(code **)(*gObjectTriggerInterface + 0x24))(*(undefined4 *)(param_1 + 0xb8));
-  (**(code **)(*lbl_803DCA74 + 8))(param_1,0xffff,0,0,0);
+  (**(code **)(*gTitleMenuControlInterface + 8))(param_1,0xffff,0,0,0);
   if ((*(int *)(param_1 + 200) != 0) && (param_2 == 0)) {
     Obj_FreeObject();
   }

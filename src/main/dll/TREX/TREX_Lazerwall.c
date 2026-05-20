@@ -17,6 +17,7 @@ extern void hudFn_8011f6f0(int x);
 extern void hudFn_8011f38c(int x);
 
 extern undefined4 *lbl_803DCA74;
+#define gTitleMenuControlInterface lbl_803DCA74
 extern undefined4 *gRomCurveInterface;
 extern undefined4 *gMapEventInterface;
 
@@ -152,7 +153,7 @@ int fn_801E69C8(int arg1)
         (*(void (**)(int, int, int))(*(int *)*gMapEventInterface + 0x50))(
             (s32)*(s8 *)(arg1 + 0xac), 6, 0);
 
-        (*(void (**)(int, int, int, int, int))(*(int *)*lbl_803DCA74 + 0x4))(0, 0xf3, 0, 0, 0);
+        (*(void (**)(int, int, int, int, int))(*(int *)*gTitleMenuControlInterface + 0x4))(0, 0xf3, 0, 0, 0);
     }
 
     return 0;

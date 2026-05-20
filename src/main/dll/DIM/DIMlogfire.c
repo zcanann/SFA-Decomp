@@ -840,6 +840,7 @@ extern int *gGameUIInterface;
 extern u32 GameBit_Get(int id);
 extern int *gObjectTriggerInterface;
 extern int *lbl_803DCA74;
+#define gTitleMenuControlInterface lbl_803DCA74
 #pragma scheduling off
 #pragma peephole off
 void animsharpclaw_free(int obj) {
@@ -850,7 +851,7 @@ void animsharpclaw_free(int obj) {
         Obj_FreeObject(child);
     }
     (*(void (*)(char *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
-    (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCA74 + 0x8)))(obj, 0xffff, 0, 0, 0);
+    (*(void (*)(int, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
 #pragma peephole reset

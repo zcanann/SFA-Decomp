@@ -3359,6 +3359,7 @@ int dll_19_func1B(int p)
 extern void Sfx_StopObjectChannel(int *p1, int channel);
 extern void voxmaps_freeRouteWork(void *p);
 extern void **lbl_803DCA74;
+#define gTitleMenuControlInterface lbl_803DCA74
 extern void mm_free(u32);
 void dll_19_func12(int *p1, int *p2, u8 flag)
 {
@@ -3367,11 +3368,11 @@ void dll_19_func12(int *p1, int *p2, u8 flag)
         s16 v;
         v = *(s16*)((char*)p2 + 1020);
         if (v != 0) {
-            (*(void(**)(int*, u16, int, int, int))((char*)*lbl_803DCA74 + 8))(p1, (u16)v, 0, 0, 0);
+            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(p1, (u16)v, 0, 0, 0);
         }
         v = *(s16*)((char*)p2 + 1018);
         if (v != 0) {
-            (*(void(**)(int*, u16, int, int, int))((char*)*lbl_803DCA74 + 8))(p1, (u16)v, 0, 0, 0);
+            (*(void(**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(p1, (u16)v, 0, 0, 0);
         }
     }
     voxmaps_freeRouteWork((char*)p2 + 900);

@@ -31,6 +31,7 @@ extern int playerGetMoney(void *playerObj);
 extern void *gScreenTransitionInterface;
 extern void *gObjectTriggerInterface;
 extern void *lbl_803DCA74;
+#define gTitleMenuControlInterface lbl_803DCA74
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern s16 lbl_803DC0A0[1];
@@ -384,7 +385,7 @@ void objCbSet30sTimer_801e75ec(void *obj)
         GameBit_Set(0x626, 1);
         target = state->linkedTarget;
         (**(code ***)((char *)target + 0x68))[0x4c / 4](target, state->digitCount);
-        (*(code **)lbl_803DCA74)[0x4 / 4](0, 0xf5, 0, 0, 0);
+        (*(code **)gTitleMenuControlInterface)[0x4 / 4](0, 0xf5, 0, 0, 0);
     } else {
         hudFn_8011f38c(0);
     }

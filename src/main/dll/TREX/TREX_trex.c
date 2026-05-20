@@ -1704,6 +1704,7 @@ extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
 extern int* gObjectTriggerInterface;
 extern int* lbl_803DCA74;
+#define gTitleMenuControlInterface lbl_803DCA74
 extern int* gExpgfxInterface;
 extern int* gModgfxInterface;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
@@ -1971,7 +1972,7 @@ void ShipBattle_free(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
     ((void(*)(int*))((void**)*gObjectTriggerInterface)[9])(state);
-    ((void(*)(int*, int, int, int, int))((void**)*lbl_803DCA74)[2])(obj, 0xffff, 0, 0, 0);
+    ((void(*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
     {
         int light = *(int*)((char*)obj + 248);
         if (light != 0) {

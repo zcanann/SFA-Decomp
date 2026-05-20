@@ -7,6 +7,7 @@ extern void saveSelectGoToChooseSlot(int arg);
 extern u8 lbl_803DB424;
 extern TitleMenuControl *gScreenTransitionInterface;
 extern TitleMenuControl *lbl_803DCA70;
+#define gTitleMenuControlInterface lbl_803DCA70
 extern u8 lbl_803DD6C4;
 extern u8 lbl_803DD6CC;
 extern u8 lbl_803DD6CD;
@@ -43,10 +44,10 @@ void saveSelectSetSlot(int param_1, int param_2)
     lbl_803DD6CD = 1;
     Sfx_PlayFromObject(0, 0x418);
     ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](0x14, 1);
-    ((void (**)(int))lbl_803DCA70->vtable)[7](0);
-    ((void (**)(int))lbl_803DCA70->vtable)[7](1);
-    ((void (**)(int))lbl_803DCA70->vtable)[7](2);
-    ((void (**)(int))lbl_803DCA70->vtable)[7](3);
+    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
+    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);
+    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](2);
+    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](3);
     lbl_803DD6CF = 0x23;
     lbl_803DD6C4 = param_2;
   }
