@@ -868,3 +868,20 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4FF8); }
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void ecsh_creator_init(s16 *obj, s8 *def) {
+    s16 *inner = *(s16 **)((char *)obj + 0xb8);
+    obj[0] = (s16)((s32)def[0x1e] << 8);
+    *(int *)((char *)obj + 0xf8) = 0;
+    inner[0] = 100;
+    inner[1] = 0;
+    *(u8 *)((char *)obj + 0x37) = 0xff;
+    *(u8 *)((char *)obj + 0x36) = 0xff;
+    inner[2] = *(s16 *)(def + 0x18);
+    inner[4] = 2;
+    inner[4] = inner[4] + (u8)def[0x20];
+}
+#pragma peephole reset
+#pragma scheduling reset

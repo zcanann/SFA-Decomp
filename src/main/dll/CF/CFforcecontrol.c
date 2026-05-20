@@ -850,15 +850,28 @@ void deathseq_free(int* obj)
     deathRenderFn_8001fd98(obj);
 }
 
+#pragma scheduling off
+#pragma peephole off
 void deathgas_init(int* obj)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    register int* state = *(int**)((char*)obj + 0xb8);
     *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
     *(f32*)((char*)state + 8) = lbl_803E3CC0;
     if (*(s16*)((char*)obj + 0x46) != 2103) return;
-    *(u8*)((char*)state + 12) = (u8)(*(u8*)((char*)state + 12) | 0x20);
+    {
+        register u32 b;
+        register u32 one;
+        one = 1;
+        asm {
+            lbz b, 12(state)
+            rlwimi b, one, 5, 26, 26
+            stb b, 12(state)
+        }
+    }
     *(f32*)((char*)state + 8) = *(f32*)((char*)obj + 64);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void fuelcell_init(int* obj)
 {

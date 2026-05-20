@@ -1269,6 +1269,7 @@ void SB_ShipHead_init(int obj) {
 
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
+#pragma scheduling off
 #pragma peephole off
 void SB_ShipGun_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     s8 *p = (s8*)((int**)obj)[0xb8/4];
@@ -1283,6 +1284,7 @@ void SB_ShipGun_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     }
 }
 #pragma peephole reset
+#pragma scheduling reset
 
 /* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
 #pragma peephole off

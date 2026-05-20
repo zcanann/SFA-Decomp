@@ -26,6 +26,7 @@ extern int gSfxplayerEffectHandles[8];
  * PAL Size: TODO
  */
 #pragma peephole off
+#pragma scheduling off
 undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
 {
   int event;
@@ -72,6 +73,7 @@ undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
   }
   return 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--

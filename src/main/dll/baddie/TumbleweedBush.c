@@ -886,10 +886,10 @@ extern s8 lbl_803DD911;
 
 void fn_80131F0C(void)
 {
-    int i;
+    int i = 0;
     u32* p = (u32*)lbl_803A9DB8;
     s16* assetIds = (s16*)lbl_8031C2A8;
-    for (i = 0; i < 6; i++) {
+    for (; i < 6; i++) {
         if (*p == 0) {
             *p = (u32)textureLoadAsset(*assetIds);
         }
@@ -900,9 +900,9 @@ void fn_80131F0C(void)
 
 void Link_release(void)
 {
-    int i;
+    int i = 0;
     u8* p = linkTextures;
-    for (i = 0; i < 6; i++) {
+    for (; i < 6; i++) {
         textureFree(*(void**)p);
         p += 8;
     }
@@ -911,9 +911,9 @@ void Link_release(void)
 
 void TitleMenuItem_release(void)
 {
-    int i;
+    int i = 0;
     u32* p = (u32*)lbl_803A9DB8;
-    for (i = 0; i < 6; i++) {
+    for (; i < 6; i++) {
         textureFree((void*)*p);
         *p = 0;
         p++;
@@ -922,9 +922,9 @@ void TitleMenuItem_release(void)
 
 void Link_free(void)
 {
-    int i;
+    int i = 0;
     u8* p = lbl_803A9458;
-    for (i = 0; i < (s8)lbl_803DD911; i++) {
+    for (; i < (s8)lbl_803DD911; i++) {
         if (*(void**)(p + 16) != NULL) {
             textureFree(*(void**)(p + 16));
         }
