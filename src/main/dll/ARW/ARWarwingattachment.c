@@ -1717,3 +1717,41 @@ void dll_200_init(int* obj, int* arg)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void playerAddRemoveMagic(int player, int amount);
+extern void fn_80296474(int player, int a, int b);
+extern void GameBit_Set(int slot, int val);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801F2974(int* arg0, int arg1, int* arg2)
+{
+    int player;
+    int state;
+    int i;
+
+    player = Obj_GetPlayerObject();
+    state = *(int*)((char*)arg0 + 0xb8);
+    *(u8*)((char*)arg0 + 0xaf) = (u8)(*(u8*)((char*)arg0 + 0xaf) | 8);
+
+    for (i = 0; i < (int)*(u8*)((char*)arg2 + 0x8b); i++) {
+        u8 mode = *(u8*)((char*)state + 0x25);
+        if (mode == 1) {
+            if (*(u8*)((char*)arg2 + 0x81 + i) == 4) {
+                playerAddRemoveMagic(player, 5);
+            }
+        } else if (mode != 2) {
+            u8 v = *(u8*)((char*)arg2 + 0x81 + i);
+            if (v == 1) {
+                GameBit_Set(208, 1);
+                *(u8*)((char*)state + 0x24) = 1;
+            } else if (v == 2) {
+                fn_80296474(player, 0, 1);
+                playerAddRemoveMagic(player, 5);
+            }
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
