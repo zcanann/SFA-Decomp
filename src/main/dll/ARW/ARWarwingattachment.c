@@ -1570,6 +1570,20 @@ void WM_colrise_init(s16 *a, s8 *b) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int *lbl_803DCA78;
+extern void ModelLightStruct_free(void *light);
+#pragma scheduling off
+#pragma peephole off
+void lightsource_free(int obj) {
+    int state = *(int *)(obj + 0xb8);
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    if (*(void **)state != 0) {
+        ModelLightStruct_free(*(void **)state);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
