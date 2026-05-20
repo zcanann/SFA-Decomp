@@ -1726,8 +1726,8 @@ extern void GameBit_Set(int slot, int val);
 #pragma peephole off
 int fn_801F2974(int* arg0, int arg1, int* arg2)
 {
-    int player;
     int state;
+    int player;
     int i;
 
     player = Obj_GetPlayerObject();
@@ -1736,12 +1736,13 @@ int fn_801F2974(int* arg0, int arg1, int* arg2)
 
     for (i = 0; i < (int)*(u8*)((char*)arg2 + 0x8b); i++) {
         u8 mode = *(u8*)((char*)state + 0x25);
+        int idx = i + 0x81;
         if (mode == 1) {
-            if (*(u8*)((char*)arg2 + 0x81 + i) == 4) {
+            if (*((u8*)arg2 + idx) == 4) {
                 playerAddRemoveMagic(player, 5);
             }
         } else if (mode != 2) {
-            u8 v = *(u8*)((char*)arg2 + 0x81 + i);
+            u8 v = *((u8*)arg2 + idx);
             if (v == 1) {
                 GameBit_Set(208, 1);
                 *(u8*)((char*)state + 0x24) = 1;
