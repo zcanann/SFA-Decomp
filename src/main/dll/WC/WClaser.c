@@ -246,18 +246,18 @@ void WM_seqobject_free(void) {}
 void WM_seqobject_hitDetect(void) {}
 void WM_seqobject_release(void) {}
 void WM_seqobject_initialise(void) {}
-void fn_801F0950(void) {}
-void fn_801F0998(void) {}
-void fn_801F0ADC(void) {}
-void fn_801F0AE0(void) {}
+void dll_1FB_free_nop(void) {}
+void dll_1FB_hitDetect_nop(void) {}
+void dll_1FB_release_nop(void) {}
+void dll_1FB_initialise_nop(void) {}
 void LaserBeam_render(void) {}
 void LaserBeam_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int WM_seqobject_getExtraSize(void) { return 0x1; }
 int WM_seqobject_func08(void) { return 0x0; }
-int fn_801F0940(void) { return 0xc; }
-int fn_801F0948(void) { return 0x0; }
+int dll_1FB_getExtraSize_ret_12(void) { return 0xc; }
+int dll_1FB_func08_ret_0(void) { return 0x0; }
 int LaserBeam_getExtraSize(void) { return 0x50; }
 int LaserBeam_func08(void) { return 0x0; }
 
