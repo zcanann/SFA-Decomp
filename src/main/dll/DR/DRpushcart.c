@@ -954,6 +954,40 @@ extern f32 lbl_803E5A28;
 extern void *allocModelStruct_800139e8(int, int);
 extern void dll_2E_func05(int, int, int, int, int);
 extern void fn_801E76A0(int);
+extern void *Obj_GetActiveModel(int);
+extern void ObjModel_SetPostRenderCallback(void *, void *);
+extern void ObjGroup_AddObject(int, int);
+extern void fn_801F4C28(int, int);
+extern void fn_801E86F4(int);
+extern int *pDll_expgfx;
+
+#pragma scheduling off
+#pragma peephole off
+void shopitem_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(u16 *)(obj + 0xB0) |= 0x2000;
+    *(void (**)(int))(obj + 0xBC) = fn_801E86F4;
+    *(s8 *)(obj + 0xAD) = (s8)*(s8 *)(data + 0x18);
+    *(s16 *)obj = (s16)((*(u8 *)(data + 0x1A)) << 8);
+    *(s16 *)(obj + 2) = (s16)((*(u8 *)(data + 0x1B)) << 8);
+    if ((s32)*(s8 *)(obj + 0xAD) >= (s32)*(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(s8 *)(obj + 0xAD) = 0;
+    }
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x467:
+        fn_801F4C28(obj, state);
+        break;
+    case 0x462:
+        (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x3F1, 0, 4, -1, 0);
+        break;
+    case 0x468:
+        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), (void *)fn_801E832C);
+        ObjGroup_AddObject(obj, 0x4F);
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
