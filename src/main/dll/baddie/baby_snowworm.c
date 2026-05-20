@@ -1047,7 +1047,7 @@ void fn_8012DDB8(u32 val)
     _fn_8012DDB8_zero:
         li      m, 0
     _fn_8012DDB8_store:
-        sth     m, lbl_803DD776 (r2)
+        sth     m, lbl_803DD776
     }
 }
 #pragma peephole reset
@@ -1057,7 +1057,7 @@ void fn_8012DDB8(u32 val)
 extern u8    framesThisStep;
 extern s32   lbl_803DBA5C;
 extern f32   lbl_803DBAA4;
-extern void**gCameraInterface;     /* (*vtable)[] dispatcher singleton */
+extern void **gCameraInterface;     /* (*vtable)[] dispatcher singleton */
 extern u8    lbl_803DD75B;
 extern u8    lbl_803DD77F;
 extern s32   lbl_803DD7E0;
