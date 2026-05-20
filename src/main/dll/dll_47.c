@@ -1000,10 +1000,10 @@ void saveSelectGoToChooseSlot(int arg) {
     saveSelectSetupMenuItems((void **)p);
 
     for (i = 0; i < 1; i++) {
-        if ((&lbl_803DB9FC)[i] == 3) {
-            p->entries[0].pad18[2] = -1;
-        } else {
+        if ((&lbl_803DB9FC)[i] != 3) {
             p->entries[0].pad18[2] = 3;
+        } else {
+            p->entries[0].pad18[2] = -1;
         }
     }
 
