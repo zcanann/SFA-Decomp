@@ -1461,6 +1461,30 @@ void LanternFireFly_setScale(u8* obj, f32* vec) {
 }
 #pragma scheduling reset
 
+/* LanternFireFly_free: free the light struct at sub[0] if present, then
+ * (when p2==0 and the freshly-cleared sub[0] is NULL and mode bits 6..7
+ * aren't 1) reset lbl_803DDAD8 to 0; finally ObjGroup_RemoveObject(obj, 0x30)
+ * and dispatch vtable[6] of *lbl_803DCA78. */
+extern void ModelLightStruct_free(void* p);
+extern u8 lbl_803DDAD8;
+extern void *lbl_803DCA78;
+#pragma scheduling off
+#pragma peephole off
+void LanternFireFly_free(u8* obj, int p2) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    if (*(void**)sub != NULL) {
+        ModelLightStruct_free(*(void**)sub);
+        *(void**)sub = NULL;
+    }
+    if (p2 == 0 && *(void**)sub != NULL && ((sub[0x70] >> 6) & 3) != 1) {
+        lbl_803DDAD8 = 0;
+    }
+    ObjGroup_RemoveObject(obj, 0x30);
+    (*(void (***)(u8*))lbl_803DCA78)[6](obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 ObjectDescriptor gDummy108ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)Dummy108_initialise,
