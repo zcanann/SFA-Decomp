@@ -7,7 +7,7 @@
 // - gSH_thorntailObjDescriptor @ 0x80327438
 //
 // Descriptor slots:
-// - 3: sh_thorntail_init (0x801D66E0)
+// - 3: SHthorntail_init (0x801D66E0)
 // - 4: SHthorntail_update (0x801D5F58)
 // - 6: SHthorntail_render (0x801D5ED4)
 // - 7: SHthorntail_free (0x801D5E94)

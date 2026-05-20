@@ -312,7 +312,7 @@ void SHthorntail_update(SHthorntailObject *obj)
 /*
  * --INFO--
  *
- * Function: sh_thorntail_init
+ * Function: SHthorntail_init
  * EN v1.0 Address: 0x801D66E0
  * EN v1.0 Size: 564b
  * EN v1.1 Address: TODO
@@ -324,7 +324,7 @@ void SHthorntail_update(SHthorntailObject *obj)
  */
 #pragma scheduling off
 #pragma peephole off
-void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
+void SHthorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
 {
   SHthorntailRuntime *runtime;
   uint randomTime;

@@ -38,7 +38,7 @@
  *
  * EN descriptor slot map:
  * - descriptor=0x80327438 gSH_thorntailObjDescriptor (slots=10, mask=0001101101)
- * - slot 03: 0x801D66E0 sh_thorntail_init ref=init
+ * - slot 03: 0x801D66E0 SHthorntail_init ref=init
  * - slot 04: 0x801D5F58 SHthorntail_update ref=update
  * - slot 06: 0x801D5ED4 SHthorntail_render ref=render
  * - slot 07: 0x801D5E94 SHthorntail_free ref=free

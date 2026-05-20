@@ -17,7 +17,7 @@ extern f32 lbl_803E5498;
 /*
  * --INFO--
  *
- * Function: SHthorntail_init
+ * Function: SClantern_advanceAnimEvents
  * EN v1.0 Address: 0x801D6C04
  * EN v1.0 Size: 340b
  * EN v1.1 Address: TODO
@@ -29,7 +29,7 @@ extern f32 lbl_803E5498;
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 SHthorntail_init(f32 moveStepScale, int obj)
+undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
   undefined4 advanceResult;
   s8 *event;
