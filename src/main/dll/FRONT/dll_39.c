@@ -92,7 +92,7 @@ extern u8 framesThisStep;
 extern f32 timeDelta;
 extern undefined4 *lbl_803DCA4C;
 extern undefined4 *lbl_803DCA50;
-extern undefined4 *lbl_803DCAA0;
+extern undefined4 *gTitleMenuLinkInterface;
 extern int lbl_803DD5F8;
 extern s8 lbl_803DD5FC;
 extern f32 lbl_803DD600;
@@ -433,8 +433,8 @@ void TitleMenu_render(u8 *param_1)
                 lbl_803E1D18);
     gameTextBoxFn_80134d40(0,0,0);
     (*(code *)(*lbl_803DCA4C + 0x18))();
-    (*(code *)(*lbl_803DCAA0 + 0x30))(0xff);
-    (*(code *)(*lbl_803DCAA0 + 0x10))(param_1);
+    (*(code *)(*gTitleMenuLinkInterface + 0x30))(0xff);
+    (*(code *)(*gTitleMenuLinkInterface + 0x10))(param_1);
     gameTextSetDrawFunc(0);
     titleScreenShowCopyright(gAttractMoviePlaybackEnabled);
   }

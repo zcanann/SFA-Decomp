@@ -53,7 +53,7 @@ extern u8 lbl_803DD680;
 extern s32 lbl_803DD698;
 extern u8 lbl_803DD6F8;
 extern TitleMenuControl *lbl_803DCA50;
-extern TitleMenuControl *lbl_803DCAA0;
+extern TitleMenuControl *gTitleMenuLinkInterface;
 extern f64 lbl_803E1D28;
 
 static int TitleMenu_GetMenuId(void)
@@ -68,33 +68,33 @@ static void TitleMenu_SetMenuState(int state, int arg)
 
 static int TitleMenu_GetFadeState(void)
 {
-  return (*(int (*)(void))((int)lbl_803DCAA0->vtable + 0xc))();
+  return (*(int (*)(void))((int)gTitleMenuLinkInterface->vtable + 0xc))();
 }
 
 static u8 TitleMenu_GetSelection(void)
 {
-  return (*(u8 (*)(void))((int)lbl_803DCAA0->vtable + 0x14))();
+  return (*(u8 (*)(void))((int)gTitleMenuLinkInterface->vtable + 0x14))();
 }
 
 static void TitleMenu_BindEntries(void)
 {
-  (*(void (*)(TitleMenuTextEntry *))((int)lbl_803DCAA0->vtable + 0x2c))(lbl_8031A214);
+  (*(void (*)(TitleMenuTextEntry *))((int)gTitleMenuLinkInterface->vtable + 0x2c))(lbl_8031A214);
 }
 
 static void TitleMenu_ClearPanel(void)
 {
-  (*(void (*)(void))((int)lbl_803DCAA0->vtable + 8))();
+  (*(void (*)(void))((int)gTitleMenuLinkInterface->vtable + 8))();
 }
 
 static void TitleMenu_OpenPanel(void)
 {
   (*(void (*)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
-      ((int)lbl_803DCAA0->vtable + 4))(lbl_8031A214,9,5,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
+      ((int)gTitleMenuLinkInterface->vtable + 4))(lbl_8031A214,9,5,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
 }
 
 static void TitleMenu_SetPanelSelection(int selection)
 {
-  (*(void (*)(int))((int)lbl_803DCAA0->vtable + 0x18))(selection);
+  (*(void (*)(int))((int)gTitleMenuLinkInterface->vtable + 0x18))(selection);
 }
 
 static void TitleMenu_SetEntryHighlight(int entry)
@@ -353,7 +353,7 @@ void TitleMenu_setSelection(int selection)
   u8 v = (u8)selection;
   gTitleMenuSelection = v;
   lbl_803DD615 = 0xff;
-  (*(*(void (**)(int))((int)lbl_803DCAA0->vtable + 0x18)))(v);
+  (*(*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18)))(v);
 }
 #pragma peephole reset
 #pragma scheduling reset

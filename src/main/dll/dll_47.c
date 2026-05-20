@@ -23,8 +23,8 @@ extern u8 saveFileSelect_saveCheatProgress;
 extern u8 saveFileSelect_cheatInputTimer;
 extern TitleMenuControl *lbl_803DCA4C;
 extern TitleMenuControl *lbl_803DCA70;
-extern TitleMenuControl *lbl_803DCAA0;
-extern TitleMenuControl *lbl_803DCAA4;
+extern TitleMenuControl *gTitleMenuLinkInterface;
+extern TitleMenuControl *gTitleMenuItemInterface;
 extern int lbl_803DD6A0;
 extern void *lbl_803DD6AC;
 extern void *lbl_803DD6B8;
@@ -988,7 +988,7 @@ void saveSelectGoToChooseSlot(int arg) {
     u8 i;
 
     if (lbl_803DB9FB != -1) {
-        ((void (**)(void))lbl_803DCAA0->vtable)[2]();
+        ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
     }
     lbl_803DB9FB = 0;
     saveFileSelect_currentSlotIndex = 0;
@@ -1006,11 +1006,11 @@ void saveSelectGoToChooseSlot(int arg) {
     }
 
     ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
-        lbl_803DCAA0->vtable)[1](
+        gTitleMenuLinkInterface->vtable)[1](
         p->entries, p->count, 0, 0, 5, 4, 0x14, 0xc8,
         0xff, 0xff, 0xff, 0xff);
 
-    ((void (**)(int))lbl_803DCAA0->vtable)[6](0);
+    ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](0);
 
     lbl_803DD6CE = 2;
     if (lbl_803DB424 == 0) {
@@ -1041,7 +1041,7 @@ void saveSelectScreenFree(int param_1) {
     }
     lbl_803DD6A0 = 0;
     if (lbl_803DB9FB != -1) {
-        ((void (**)(void))lbl_803DCAA0->vtable)[2]();
+        ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
         lbl_803DB9FB = -1;
     }
     if (saveFileSelect_saveSlotsBase != NULL) {
@@ -1070,7 +1070,7 @@ void saveSelectScreenFree(int param_1) {
         doNothing_onSaveSelectScreenExit();
     }
     if (lbl_803DD6B8 != NULL) {
-        ((void (**)(void))lbl_803DCAA4->vtable)[4]();
+        ((void (**)(void))gTitleMenuItemInterface->vtable)[4]();
         lbl_803DD6B8 = NULL;
     }
 }

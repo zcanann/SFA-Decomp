@@ -47,24 +47,24 @@ extern u8 lbl_803DD680;
 extern s32 lbl_803DD698;
 extern s32 lbl_803DD658;
 extern TitleMenuControl *lbl_803DCA4C;
-extern TitleMenuControl *lbl_803DCAA0;
+extern TitleMenuControl *gTitleMenuLinkInterface;
 extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D18;
 
 static void TitleMenu_OpenPanel(TitleMenuTextEntry *entries, int count)
 {
   ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
-      lbl_803DCAA0->vtable)[1](entries,count,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
+      gTitleMenuLinkInterface->vtable)[1](entries,count,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
 }
 
 static void TitleMenu_SetPanelSelection(int selection)
 {
-  ((void (**)(int))lbl_803DCAA0->vtable)[6](selection);
+  ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](selection);
 }
 
 static void TitleMenu_BindEntries(TitleMenuTextEntry *entries)
 {
-  ((void (**)(TitleMenuTextEntry *))lbl_803DCAA0->vtable)[11](entries);
+  ((void (**)(TitleMenuTextEntry *))gTitleMenuLinkInterface->vtable)[11](entries);
 }
 
 static void TitleMenu_SetEntryHighlight(void)
