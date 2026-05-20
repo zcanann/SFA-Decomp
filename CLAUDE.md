@@ -83,6 +83,61 @@ For `rlwimi` (bit insert vs MWCC's `andi+ori`):
 }
 ```
 
+**`asm { }` blocks wreck nearby FP scheduling.** MWCC treats the block as an
+opaque barrier and reschedules surrounding FP work around it. In a function
+that mixes float stores with a bit-clear, an inline asm rlwimi can shift every
+later `lfs`/`stfs` and tank the overall match. Use `asm { }` only in functions
+that don't otherwise use FP regs, or place it adjacent to function entry/exit.
+
+## Caller-side width controls extsb/extsh emission
+
+| Source pattern | Emits |
+|---|---|
+| `void f(s8 type) { *p = type; if (type==2)... }` | `stb r4` + `extsb r0,r4; cmpwi r0,2` |
+| `void f(int type) { *p = (s8)type; if (type==2)... }` | `extsb r0,r4; stb r0` + `cmpwi r4,2` |
+| `void f(s16 v) { arr[i] = v; }` (with `u16 arr[]`) | `clrlwi r4,r4,16; sthx` |
+| `void f(int v) { arr[i] = (s16)v; }` (with `s16 arr[]`) | `extsh r4,r4; sthx` |
+
+Rule: when target's extsb/extsh appears on the *parameter side*, widen the
+param type to `int` and cast at the use site. The narrow param type pushes
+extension to the *use side* instead. For half-word stores, the array element
+type also matters — `s16[]` triggers `extsh`, `u16[]` triggers `clrlwi`.
+
+## FP compare operand order picks the load registers
+
+`fcmpo cr0, f1, f0` puts the LHS of the C compare in f1 and the RHS in f0,
+which then drives the order of the two `lfs` instructions before it. If the
+residual diff shows the two `lfs` lines swapped, flip the compare:
+`a <= b` → `b >= a`. Booleans are identical; codegen is not.
+
+## `extern T lbl[]` for `.data` labels, scalar for `.sdata`
+
+| Section | Declaration | Addressing |
+|---|---|---|
+| `.sdata` / `.sdata2` / `.sbss` | `extern int lbl_xxx;` | `lwz r3, lbl@sda21(r0)` |
+| `.data` (anything not sdata) | `extern int lbl_xxx[];` | `lis ha; addi lo` |
+
+Writing the scalar form for a `.data` symbol mis-emits sda21 and breaks every
+load/store of it. Check `config/GSAE01/symbols.txt` for the section.
+
+## `#pragma dont_inline on` for callees that live in the same TU
+
+With `-inline auto`, MWCC inlines small functions into their callers within
+the same `.c`. If the target binary keeps the `bl callee`, the caller will
+never match. Wrap the callee:
+```c
+#pragma dont_inline on
+void small_helper(...) { ... }
+#pragma dont_inline reset
+```
+
+## `for (i=0; i<n; i++) { use(*p); p++; }` vs `*p++`
+
+MWCC emits a `bdnz` countdown loop only when the increment and the
+dereference are separate statements. `*p++` merges them and the loop loses
+the tight `lwz; addi; cmpw; b` body that target uses. Keep `*p` and `p++`
+on separate lines inside the loop body.
+
 ## Drift handling (Ghidra-imported `FUN_xxx` don't match v1.0)
 
 Many `.c` files were imported from a v1.1 Ghidra session and have wrong

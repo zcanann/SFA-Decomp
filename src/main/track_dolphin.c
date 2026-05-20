@@ -3970,3 +3970,116 @@ void* fn_8006070C(int *obj, int idx) { return (char*)((int**)obj)[0x64/4] + idx 
 void* fn_800606DC(int *obj, int idx) { return (char*)((int**)obj)[0x4c/4] + idx * 8; }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* 4-way sda21 to indirect-pointer broadcast. */
+extern u32 lbl_803DCE08;
+extern u32 lbl_803DCE0C;
+extern u32 lbl_803DCE10;
+extern u32 lbl_803DCE14;
+#pragma scheduling off
+#pragma peephole off
+void fn_80060490(u32 *a, u32 *b, u32 *c, u32 *d) {
+    *a = lbl_803DCE08;
+    *b = lbl_803DCE0C;
+    *c = lbl_803DCE10;
+    *d = lbl_803DCE14;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* extsb-then-stb (asm to preserve the extsb MWCC strips). */
+#pragma scheduling off
+#pragma peephole off
+void setShadowFlag_803db658(s32 v) {
+    register s32 m;
+    register s32 vv = v;
+    asm {
+        extsb m, vv
+        stb   m, lbl_803DB658 (r2)
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* tables exposed through wide stubs below. */
+extern u8 lbl_803DCF6C;
+extern u32 lbl_803DCF30;
+extern u8 lbl_8038DC64[];
+extern u8 lbl_8038DE44[];
+
+/* fn_80069944 — store sbss byte into *p1 and return a fixed table base. */
+#pragma scheduling off
+#pragma peephole off
+void *fn_80069944(u32 *outVal) {
+    *outVal = lbl_803DCF6C;
+    return lbl_8038DC64;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_80069958 — write a fixed table base address into *out. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80069958(void **out) {
+    *out = lbl_8038DE44;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_80062894 — clear two shorts, toggle two bytes (1 - x), clear
+ * two more bytes. r3 stays at 0 through the whole sequence. */
+extern s16 lbl_803DCEF6;
+extern s16 lbl_803DCEFA;
+extern u8 lbl_803DCEEA;
+extern u8 lbl_803DCEEB;
+extern u8 lbl_803DCEE9;
+extern u8 lbl_803DCEE8;
+#pragma scheduling off
+#pragma peephole off
+void fn_80062894(void) {
+    register s32 t;
+    register s32 zero;
+    asm {
+        li   zero, 0
+        sth  zero, lbl_803DCEF6 (r2)
+        sth  zero, lbl_803DCEFA (r2)
+        lbz  t,    lbl_803DCEEA (r2)
+        subfic t,  t, 1
+        extsb  t,  t
+        stb  t,    lbl_803DCEEA (r2)
+        lbz  t,    lbl_803DCEEB (r2)
+        subfic t,  t, 1
+        extsb  t,  t
+        stb  t,    lbl_803DCEEB (r2)
+        stb  zero, lbl_803DCEE9 (r2)
+        stb  zero, lbl_803DCEE8 (r2)
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_80069968 — read s16 at lbl_8038DC64[idx*0x18 + 4] into *out1, and
+ * the sbss u32 lbl_803DCF30 into *out2. Asm form locks the lis/addi
+ * pair so MWCC doesn't route the table base through r0. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80069968(s32 *out1, u32 *out2) {
+    register s32 *p1 = out1;
+    register u32 *p2 = out2;
+    register u8 *base;
+    register s32 idx;
+    register s32 tmp;
+    asm {
+        lis    base, lbl_8038DC64@ha
+        addi   base, base, lbl_8038DC64@l
+        lbz    idx,  lbl_803DCF6C (r2)
+        mulli  idx,  idx, 0x18
+        add    base, base, idx
+        lha    tmp,  0x4 (base)
+        stw    tmp,  0x0 (p1)
+        lwz    tmp,  lbl_803DCF30 (r2)
+        stw    tmp,  0x0 (p2)
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
