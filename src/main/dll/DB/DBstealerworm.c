@@ -1153,3 +1153,67 @@ void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
+void SB_Propeller_hitDetect(int param_1) {
+    if (*(s16*)(param_1 + 0x46) != 0x69c) return;
+    *(s16*)(param_1 + 4) = *(s16*)(lbl_803DDC40 + 4);
+}
+
+/* SB_ShipGun_free: vtable method @ 0x18 on global object manager. */
+extern undefined4* lbl_803DCA78;
+typedef void (*SBShipGunFreeFn)(int);
+void SB_ShipGun_free(int param_1) {
+    ((SBShipGunFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(param_1);
+}
+
+/* SB_ShipGun_render: conditional render with multiple flag checks. */
+extern f32 lbl_803E5888;
+#pragma peephole off
+void SB_ShipGun_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    s8 *p = (s8*)((int**)obj)[0xb8/4];
+    void *o30 = *(void**)((char*)obj + 0x30);
+    s32 v;
+    if (o30 != NULL) {
+        if (*(s16*)((char*)o30 + 0x46) == 0x139) return;
+    }
+    v = visible;
+    if (v != 0 && p[0xc] != 0 && ((u8*)p)[0xd] != 0) {
+        objRenderFn_8003b8f4(lbl_803E5888);
+    }
+}
+#pragma peephole reset
+
+/* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
+#pragma peephole off
+#pragma scheduling off
+int SB_Galleon_modelMtxFn(int *obj) {
+    u8 *p = (u8*)((int**)obj)[0xb8/4];
+    u8 b = p[0x29];
+    if ((s8)b == 0) {
+        if (*(s16*)(p + 0x26) > 0) return -2;
+    }
+    if ((s8)b == 1) {
+        int t = (s8)p[0x7a];
+        if (t == 2) return -1;
+        if (t == 3) return -1;
+        if (t == 5) return -1;
+    }
+    return (s8)b;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
+int SB_Galleon_func0E(int *obj) {
+    s8 *p = (s8*)((int**)obj)[0xb8/4];
+    int x;
+    if (p[0x29] == 1) {
+        x = p[0x7c];
+        if (x >= 5) {
+            x = x - 5;
+        }
+        return (6 - x) * 0x5a;
+    }
+    return 0x640;
+}

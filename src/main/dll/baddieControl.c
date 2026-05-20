@@ -3129,3 +3129,57 @@ void fn_801106B8(void) { mm_free(lbl_803DD5C0); lbl_803DD5C0 = 0; }
 void CameraModePerv_free(void) { mm_free(lbl_803DD5C8); lbl_803DD5C8 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* vtable[15] singleton call */
+extern void **lbl_803DCA50;
+void fn_80112514(void)
+{
+  (*(void (**)(void))((char *)*lbl_803DCA50 + 0x3c))();
+}
+
+/* baddie spawn/visibility predicate */
+extern int objPosToMapBlockIdx(double x, double y, double z);
+#pragma peephole off
+#pragma scheduling off
+int fn_80113278(int p1, int p2, u8 b)
+{
+  if (b != 0 && (s8)*(u8 *)(p2 + 0x354) <= 0 && *(u8 *)(p1 + 0x36) == 0) {
+    return 0;
+  }
+  if (*(void **)(p1 + 0x30) == NULL) {
+    if (objPosToMapBlockIdx((double)*(f32 *)(p1 + 0xc),
+                            (double)*(f32 *)(p1 + 0x10),
+                            (double)*(f32 *)(p1 + 0x14)) < 0) {
+      return 0;
+    }
+  }
+  return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* baddie state reset */
+extern void ObjHits_SetHitVolumeSlot(void *obj, int animObjId, int frame, int flags);
+extern f32 lbl_803E1C2C;
+#pragma peephole off
+#pragma scheduling off
+void fn_801132F4(int p1, int p2, s8 b, f32 fval)
+{
+  f32 fz;
+  *(u32 *)p2 |= 0x8000;
+  *(u16 *)(p2 + 0x330) = 0;
+  if (*(void **)(p1 + 0x54) != NULL) {
+    ObjHits_SetHitVolumeSlot((void *)p1, 0, 0, -1);
+  }
+  if (b != -1) {
+    *(s8 *)(p2 + 0x25f) = b;
+  }
+  *(f32 *)(p2 + 0x2a4) = fval;
+  fz = lbl_803E1C2C;
+  *(f32 *)(p2 + 0x290) = fz;
+  *(f32 *)(p2 + 0x28c) = fz;
+  *(int *)(p2 + 0x31c) = 0;
+  *(int *)(p2 + 0x318) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

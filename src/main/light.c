@@ -1085,14 +1085,6 @@ int vfpcoreplat_func08(void) { return 0x0; }
 int dll_224_getExtraSize_ret_6(void) { return 0x6; }
 int dll_224_func08_ret_0(void) { return 0x0; }
 
-/* empty render with the s8-visible compare still emitted (no body, no call). */
-asm void fn_801FD38C(void) {
-    nofralloc
-    extsb r0, r8
-    cmpwi r0, 0
-    blr
-}
-
 /* "tail-call into (**lbl_803DCA78)[6]" free stub. */
 extern int *lbl_803DCA78;
 void vfpplatform_free(int obj) {
