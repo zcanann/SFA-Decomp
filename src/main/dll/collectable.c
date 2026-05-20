@@ -2970,7 +2970,7 @@ void trickyFn_80144f50(int obj, int state) {
         if (trickyFn_8013b368(obj, lbl_803E247C, state) != 1) {
             *(f32*)(state + 0x740) -= timeDelta;
             if (*(f32*)(state + 0x740) <= lbl_803E23DC) {
-                *(f32*)(state + 0x740) = (f32)randomGetRange(0x1f4, 0x2ee);
+                *(f32*)(state + 0x740) = (f32)(int)randomGetRange(0x1f4, 0x2ee);
                 sfxState = *(int*)(obj + 0xb8);
                 sfxDisabled = (*(u8*)(sfxState + 0x58) >> 6) & 1;
                 if ((sfxDisabled == 0) &&
