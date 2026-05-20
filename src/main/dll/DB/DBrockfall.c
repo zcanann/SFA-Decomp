@@ -24,6 +24,9 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803de890;
 extern f32 lbl_803E6310;
+extern undefined4 *pDll_expgfx;
+extern f32 lbl_803E56B0;
+extern f32 lbl_803E56B4;
 
 /*
  * --INFO--
@@ -54,6 +57,122 @@ void paymentkiosk_init(int obj, u8 *initData)
     *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
     secondaryFlag = (*(short *)(self + 0x46) == 0x476) ? 1 : 0;
     *(u8 *)(state + 1) = (u8)secondaryFlag;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct FEseqobjectEffectParams {
+  s16 xRot;
+  s16 yRot;
+  s16 variant;
+  s16 pad06;
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z;
+} FEseqobjectEffectParams;
+
+static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams *params)
+{
+  (*(void (**)(int, int, FEseqobjectEffectParams *, int, int, int))(*pDll_expgfx + 0x8))
+      (obj, 0x85, params, 1, -1, 0);
+}
+
+static int FEseqobject_findControlObject(void)
+{
+  int count;
+  int i;
+  int found;
+  int *objects;
+
+  objects = (int *)ObjGroup_GetObjects(3, &count);
+  found = 0;
+  for (i = 0; i < count; i++) {
+    int obj = objects[i];
+    if (*(s16 *)(obj + 0x46) == 0xf7) {
+      found = obj;
+      i = count;
+    }
+  }
+  return found;
+}
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801DF4AC(int obj, undefined4 unused, u8 *setup)
+{
+  FEseqobjectEffectParams effect;
+  register int self = obj;
+  register u8 *setupData = setup;
+  int i;
+  int msg;
+  uint sender;
+  uint param;
+  int controlObj;
+  f32 zero;
+  f32 one;
+
+  zero = lbl_803E56B0;
+  one = lbl_803E56B4;
+  controlObj = 0;
+  for (i = 0; i < setupData[0x8b]; i++) {
+    effect.x = zero;
+    effect.y = zero;
+    effect.z = zero;
+    effect.scale = one;
+    effect.yRot = 0;
+    effect.xRot = 0;
+    effect.variant = 0;
+
+    switch (setupData[i + 0x81]) {
+      case 1:
+        GameBit_Set(0x75, 1);
+        break;
+      case 2:
+        effect.variant = 0;
+        FEseqobject_spawnEffect(self, &effect);
+        break;
+      case 3:
+        effect.variant = 1;
+        FEseqobject_spawnEffect(self, &effect);
+        break;
+      case 4:
+        effect.variant = 2;
+        FEseqobject_spawnEffect(self, &effect);
+        break;
+      case 5:
+        effect.variant = 3;
+        FEseqobject_spawnEffect(self, &effect);
+        break;
+      case 6:
+        effect.variant = 4;
+        FEseqobject_spawnEffect(self, &effect);
+        break;
+    }
+  }
+
+  while (ObjMsg_Pop((void *)self, (uint *)&msg, &sender, &param) != 0) {
+    if ((setupData[0x90] & 0x80) == 0) {
+      if (msg == 0xf000b) {
+        controlObj = FEseqobject_findControlObject();
+        if (controlObj != 0) {
+          ObjMsg_SendToObject((void *)controlObj, 0x130001, (void *)self, 0);
+        }
+      } else if (msg == 0xf000c) {
+        controlObj = FEseqobject_findControlObject();
+        if (controlObj != 0) {
+          ObjMsg_SendToObject((void *)controlObj, 0x130002, (void *)self, 0);
+        }
+      } else if (msg == 0xf000d) {
+        controlObj = FEseqobject_findControlObject();
+        if (controlObj != 0) {
+          ObjMsg_SendToObject((void *)controlObj, 0x130003, (void *)self, 0);
+        }
+      }
+    }
+  }
+  setupData[0x56] = 0;
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -297,7 +416,6 @@ int fn_801DF9BC(void) { return 0x0; }
 int fn_801DF9C4(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E56B4;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E56B8;
 extern f32 lbl_803E56C0;
@@ -314,7 +432,6 @@ void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_801DF4AC(void);
 extern undefined4 *lbl_803DCA54;
 
 /*
@@ -327,7 +444,7 @@ extern undefined4 *lbl_803DCA54;
 void FEseqobject_init(int obj)
 {
     *(short *)obj = 0;
-    *(void (**)(void))(obj + 0xbc) = fn_801DF4AC;
+    *(void (**)(void))(obj + 0xbc) = (void (*)(void))fn_801DF4AC;
     ObjMsg_AllocQueue((void *)obj, 0xa);
 }
 #pragma peephole reset
