@@ -2454,6 +2454,8 @@ extern int lbl_803DCEC8;
 extern s8 lbl_8030E55C[];
 extern void gameTextLoadDir(int dirId);
 
+#pragma peephole off
+#pragma scheduling off
 void gameTextLoadForMap_800571f0(u8 force) {
 	int curVal = lbl_803DCEC8;
 	if (curVal == -1) return;
@@ -2466,4 +2468,6 @@ void gameTextLoadForMap_800571f0(u8 force) {
 		gameTextLoadDir(entry);
 	}
 }
+#pragma peephole reset
+#pragma scheduling reset
 
