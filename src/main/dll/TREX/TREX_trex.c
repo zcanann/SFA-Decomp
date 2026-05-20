@@ -2026,21 +2026,21 @@ int shop_getItemPrice(int p, int idx)
 s16 shop_getItemTextId(int p, int idx)
 {
     if (idx >= 0 && idx < 0x3c) {
-        return *(s16 *)(lbl_80327FD0 + idx * 0xc + 0xa);
+        return *(s16 *)&lbl_80327FD0[idx * 0xc + 0xa];
     }
     return 0;
 }
 u8 shop_getItemField4(int p, int idx)
 {
     if (idx >= 0 && idx < 0x3c) {
-        return *(u8 *)(lbl_80327FD0 + idx * 0xc + 0x4);
+        return lbl_80327FD0[idx * 0xc + 0x4];
     }
     return 0;
 }
 u8 shop_getItemMinPrice(int p, int idx)
 {
     if (idx >= 0 && idx < 0x3c) {
-        return *(u8 *)(lbl_80327FD0 + idx * 0xc + 0x5);
+        return lbl_80327FD0[idx * 0xc + 0x5];
     }
     return 0;
 }
