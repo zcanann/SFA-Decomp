@@ -26,7 +26,7 @@ extern undefined4 fn_80293E80();
 extern undefined4 sin();
 extern uint FUN_80294c90();
 extern int FUN_80294c98();
-extern undefined4 fn_80296BD4();
+extern undefined4 cameraGetPrevPos2();
 
 extern undefined4* lbl_803DCA50;
 extern f32* lbl_803DD568;
@@ -219,7 +219,7 @@ void CameraModeCombat_update(void)
             *(undefined *)((int)psVar4 + 0x13b) = 0x30;
             *(undefined *)(psVar4 + 0x9e) = 1;
             if (dVar11 <= dVar14) {
-              fn_80296BD4(iVar8,&fStack_118,&uStack_114,&uStack_110);
+              cameraGetPrevPos2(iVar8,&fStack_118,&uStack_114,&uStack_110);
               dVar16 = (double)(lbl_803E18D4 * local_124 + *(float *)(iVar8 + 0x18));
               dVar15 = (double)(lbl_803E18D8 + local_120);
               dVar14 = (double)(lbl_803E18D4 * local_128 + *(float *)(iVar8 + 0x20));

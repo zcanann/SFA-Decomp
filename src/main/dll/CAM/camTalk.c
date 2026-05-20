@@ -23,7 +23,7 @@ extern double FUN_80293900();
 extern f32 fn_80293E80(f32);
 extern f32 sqrtf(f32 value);
 extern f32 sin(f32);
-extern void fn_80296BD4(int obj, float *x, float *y, float *z);
+extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
 
 extern int *lbl_803DCA50;
 extern u8* lbl_803DD540;
@@ -252,7 +252,7 @@ void firstPersonPlaceCamera(int param_1,int param_2)
   float local_1c[3];
 
   if (*(short *)(self + 0x44) == 1) {
-    fn_80296BD4(self,&local_28,&local_24,&local_20);
+    cameraGetPrevPos2(self,&local_28,&local_24,&local_20);
     if (((param_2 != 0) || (*(float *)(lbl_803DD548 + 0x120) != local_28)) ||
        (*(float *)(lbl_803DD548 + 0x128) != local_20)) {
       *(float *)(lbl_803DD548 + 0x130) = local_24;
