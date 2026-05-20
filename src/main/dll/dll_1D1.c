@@ -14,7 +14,7 @@ extern f32 lbl_803E51FC;
 /*
  * --INFO--
  *
- * Function: fn_801CD7DC
+ * Function: TreeBird_SeqFn
  * EN v1.0 Address: 0x801CD7DC
  * EN v1.0 Size: 620b
  * EN v1.1 Address: 0x801CD80C
@@ -24,7 +24,7 @@ extern f32 lbl_803E51FC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_801CD7DC(int obj, int param_2, int data)
+int TreeBird_SeqFn(int obj, int param_2, int data)
 {
   int i;
   int j;

@@ -274,7 +274,7 @@ void dfropenode_initialise(void)
 /*
  * --INFO--
  *
- * Function: fn_801C26E0
+ * Function: DFSH_Door2Speci_SeqFn
  * EN v1.0 Address: 0x801C26E0
  * EN v1.0 Size: 316b
  * EN v1.1 Address: TODO
@@ -286,7 +286,7 @@ void dfropenode_initialise(void)
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_801C26E0(int obj)
+int DFSH_Door2Speci_SeqFn(int obj)
 {
   int *texture;
   DFDoorSpeciExtra *extra;
