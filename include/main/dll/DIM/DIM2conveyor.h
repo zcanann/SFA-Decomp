@@ -29,7 +29,7 @@ void dimbridgecogmai_init(int *obj, int *def);
 void dimbridgecogmai_initialise(void);
 
 void dimdismountpoint_func11(int obj, int flag);
-void dimdismountpoint_setScale(void);
+int dimdismountpoint_setScale(int obj);
 int dimdismountpoint_getExtraSize(void);
 void dimdismountpoint_free(int obj);
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
