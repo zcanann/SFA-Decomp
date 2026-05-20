@@ -3970,13 +3970,14 @@ extern u8 lbl_803DD928;
 #pragma scheduling off
 u8 fn_801334E0(void)
 {
-    u8 act = 0;
+    u32 act = 0;
     if (lbl_803DD944 == 2 && lbl_803DBBB0 != 0) {
         act = 1;
     }
-    if (act == 0) return act;
+    act = (u8)act;
+    if (act == 0) return (u8)act;
     lbl_803DD928 = 5;
-    return act;
+    return (u8)act;
 }
 #pragma scheduling reset
 #pragma peephole reset
