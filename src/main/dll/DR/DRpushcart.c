@@ -944,3 +944,33 @@ void shopkeeper_initialise(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void hudFn_8011f38c(int);
+typedef struct {
+    u8 flag_80 : 1;
+    u8 flag_40 : 1;
+    u8 _rest : 6;
+} PushcartState97;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801E8660(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    int def = *(int *)(obj + 0x4C);
+    PushcartState97 *b = (PushcartState97 *)(state + 0x97);
+    if (b->flag_40 == 0) {
+        int *vptr = *(int **)(state + 0x90);
+        int *cls = **(int ***)((char *)vptr + 0x68);
+        if ((*(int (*)(int *, int))cls[0x2C / 4])(vptr, *(u8 *)(def + 0x19)) != 0) {
+            b->flag_80 = 1;
+        }
+    }
+    hudFn_8011f38c(0);
+    {
+        int *vptr2 = *(int **)(state + 0x90);
+        int *cls2 = **(int ***)((char *)vptr2 + 0x68);
+        (*(void (*)(int *, int))cls2[0x40 / 4])(vptr2, -1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
