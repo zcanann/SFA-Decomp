@@ -796,5 +796,56 @@ void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
     *(f32*)((char*)state + 696) = *(f32*)((char*)obj + 20);
 }
 
+extern f32 lbl_803E3654;
+extern f32 lbl_803E3684;
+extern f32 lbl_803E364C;
+extern f32 lbl_803E3650;
+extern void fn_80178338(void);
+extern double fn_80293E80(double x);
+extern double sin(double x);
+
+void doorf4_init(int *obj, int *params)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    s16 type;
+
+    ObjMsg_AllocQueue(obj, 4);
+    *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
+    *(void **)((char *)obj + 0xbc) = (void *)fn_80178338;
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    state[4] = *(s16 *)((char *)params + 0x1e);
+    state[6] = *(s16 *)((char *)params + 0x20);
+    *(f32 *)((char *)state + 0xc) = lbl_803E3654;
+
+    type = *(s16 *)((char *)obj + 0x46);
+    switch (type) {
+    case 193:
+    case 196:
+        state[5] = 68;
+        break;
+    case 200:
+        *(f32 *)((char *)state + 0xc) = lbl_803E3684;
+        break;
+    case 283:
+        state[5] = 152;
+        break;
+    case 318:
+    case 890:
+        *(s16 *)((char *)state + 0x1c) = 830;
+        *(s16 *)((char *)state + 0x1e) = 831;
+        break;
+    default:
+        state[5] = -1;
+    }
+
+    ObjGroup_AddObject(obj, 14);
+
+    *(f32 *)state = fn_80293E80((f32) * (s16 *)obj * lbl_803E364C / lbl_803E3650);
+    *(f32 *)((char *)state + 4) = sin((f32) * (s16 *)obj * lbl_803E364C / lbl_803E3650);
+    *(f32 *)((char *)state + 8) = -(*(f32 *)state * *(f32 *)((char *)obj + 12) +
+                                    *(f32 *)((char *)state + 4) * *(f32 *)((char *)obj + 20));
+}
+
 #pragma peephole reset
 #pragma scheduling reset
