@@ -1167,6 +1167,23 @@ void SB_ShipGun_free(int param_1) {
     ((SBShipGunFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(param_1);
 }
 
+/* SB_ShipGun_render: conditional render with multiple flag checks. */
+extern f32 lbl_803E5888;
+#pragma peephole off
+void SB_ShipGun_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    s8 *p = (s8*)((int**)obj)[0xb8/4];
+    void *o30 = *(void**)((char*)obj + 0x30);
+    s32 v;
+    if (o30 != NULL) {
+        if (*(s16*)((char*)o30 + 0x46) == 0x139) return;
+    }
+    v = visible;
+    if (v != 0 && p[0xc] != 0 && ((u8*)p)[0xd] != 0) {
+        objRenderFn_8003b8f4(lbl_803E5888);
+    }
+}
+#pragma peephole reset
+
 /* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
 #pragma peephole off
 #pragma scheduling off
