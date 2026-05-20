@@ -1289,24 +1289,24 @@ int vfpminifire_func08(void) { return 0x0; }
 void vfpminifire_hitDetect(void) {}
 void vfpminifire_release(void) {}
 void vfpminifire_initialise(void) {}
-int fn_801FA6FC(void) { return 0x4; }
-int fn_801FA704(void) { return 0x0; }
-void fn_801FA73C(void) {}
-void fn_801FA740(void) {}
-void fn_801FA868(void) {}
-void fn_801FA86C(void) {}
+int dll_219_getExtraSize_ret_4(void) { return 0x4; }
+int dll_219_func08_ret_0(void) { return 0x0; }
+void dll_219_render_nop(void) {}
+void dll_219_hitDetect_nop(void) {}
+void dll_219_release_nop(void) {}
+void dll_219_initialise_nop(void) {}
 int vfpstatueball_getExtraSize(void) { return 0xc; }
 int vfpstatueball_func08(void) { return 0x0; }
 void vfpstatueball_render(void) {}
 void vfpstatueball_hitDetect(void) {}
 void vfpstatueball_release(void) {}
 void vfpstatueball_initialise(void) {}
-int fn_801FAC6C(void) { return 0x4; }
-int fn_801FAC74(void) { return 0x0; }
-void fn_801FACAC(void) {}
-void fn_801FACB0(void) {}
-void fn_801FAFE4(void) {}
-void fn_801FAFE8(void) {}
+int dll_21B_getExtraSize_ret_4(void) { return 0x4; }
+int dll_21B_func08_ret_0(void) { return 0x0; }
+void dll_21B_render_nop(void) {}
+void dll_21B_hitDetect_nop(void) {}
+void dll_21B_release_nop(void) {}
+void dll_21B_initialise_nop(void) {}
 int fn_801FAFEC(void) { return 0x0; }
 int vfpladders_getExtraSize(void) { return 0x8; }
 int vfpladders_func08(void) { return 0x0; }
