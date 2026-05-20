@@ -2989,6 +2989,23 @@ extern u8 lbl_803DCC0C;
 extern u8 lbl_803DCC0D;
 extern void objRenderModel(int *obj, int **table);
 extern void objRenderFn_80041018(int *obj);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
+extern void Sfx_PlayFromObjectChannel(int obj, int ch, int sfxId);
+extern f32 lbl_803DE9C8;
+extern f32 lbl_803DE99C;
+#pragma scheduling off
+#pragma peephole off
+void objAudioFn_80039270(int obj, void *p, int sfxId) {
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+        Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
+        *(f32 *)((char *)p + 0xc) = lbl_803DE9C8;
+        *(s16 *)((char *)p + 0x14) = -0x500;
+        *(u8 *)p = 1;
+        *(f32 *)((char *)p + 4) = lbl_803DE99C;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void objRenderFn_8003b8f4(int *obj) {
