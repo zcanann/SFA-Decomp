@@ -19,6 +19,8 @@ extern f32 lbl_803E4BB4;
 extern f32 lbl_803E4BB8;
 extern f32 lbl_803E4BBC;
 
+#pragma scheduling off
+#pragma peephole off
 void texscroll2_setScale(int obj, s8 scale)
 {
   s8 *state;
@@ -30,6 +32,8 @@ void texscroll2_setScale(int obj, s8 scale)
   state[0x12] = scale;
   state[0x10] = 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -186,6 +190,36 @@ int texscroll2_getExtraSize(void) { return 0x18; }
 int texscroll2_func08(void) { return 0x0; }
 int texscroll_getExtraSize(void) { return 0x1c; }
 int texscroll_func08(void) { return 0x0; }
+
+#pragma scheduling off
+#pragma peephole off
+void waveanimator_modelMtxFn(int obj, int a, int b, int c) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    u32 v;
+    v = (u32)*(u8 *)((char *)state + 0x34) | 4;
+    *(u8 *)((char *)state + 0x34) = (u8)v;
+    *(u8 *)((char *)state + 0x36) = (u8)a;
+    *(u8 *)((char *)state + 0x37) = (u8)b;
+    *(u8 *)((char *)state + 0x38) = (u8)c;
+}
+
+void texscroll_init(int obj, s8 *def, int flag) {
+    s16 *state = *(s16 **)((char *)obj + 0xB8);
+    if (state == NULL) return;
+    *(s16 *)((char *)state + 2) = 1;
+    *(s16 *)((char *)state + 4) = (s16)(s32)def[0x1E];
+    *(s16 *)((char *)state + 6) = (s16)(s32)def[0x1F];
+    *(int *)((char *)state + 0xC) = 0;
+    *(u8 *)((char *)state + 0x18) = 0;
+    *(s16 *)((char *)state + 0x14) = *(s16 *)((char *)def + 0x1A);
+    if (flag == 0) {
+        *(s16 *)((char *)state + 8) = 0;
+        *(s16 *)((char *)state + 0xA) = 0;
+    }
+    *(s16 *)((char *)state + 2) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3F30;
