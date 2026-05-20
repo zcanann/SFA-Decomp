@@ -10,6 +10,7 @@
 #define ROMCURVE_LINK_ID_STRIDE sizeof(u32)
 #define ROMCURVE_LINK_COUNT 4
 #define ROMCURVE_LINK_ID_NONE 0xffffffff
+#define ROMCURVE_TYPE_ACTION 0x15
 
 typedef struct RomCurveDef {
   u8 pad00[0x08];
@@ -17,7 +18,9 @@ typedef struct RomCurveDef {
   f32 y;
   f32 z;
   u32 id;
-  u8 pad18[ROMCURVE_LINK_FLAGS_OFFSET - 0x18];
+  s8 action;
+  s8 type;
+  u8 pad1A;
   s8 blockedLinkMask;
   u32 linkIds[ROMCURVE_LINK_COUNT];
 } RomCurveDef;

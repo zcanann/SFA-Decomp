@@ -4460,17 +4460,19 @@ int isCheatActive(u8 idx) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* curves_findByAction: scan gRomCurveTable for entry where _19 == 0x15 && _18 == act, return _14. */
+/* curves_findByAction: scan gRomCurveTable for matching action curves, return curve id. */
 #pragma scheduling off
 #pragma peephole off
 int curves_findByAction(int act) {
-    RomCurveDef **base = gRomCurveTable;
+    RomCurveDef **base;
     int i;
+
+    base = gRomCurveTable;
     for (i = gRomCurveCount; i > 0; i--) {
         RomCurveDef *c = *base;
-        if ((s8)*((u8*)c + 0x19) == 0x15) {
-            if ((s8)*((u8*)c + 0x18) == act) {
-                return *(int*)((char*)c + 0x14);
+        if (c->type == ROMCURVE_TYPE_ACTION) {
+            if (c->action == act) {
+                return c->id;
             }
         }
         base++;
