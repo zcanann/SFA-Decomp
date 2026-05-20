@@ -5,7 +5,7 @@
 extern undefined4 Sfx_PlayAtPositionFromObject();
 extern undefined4 Sfx_PlayFromObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 objGetAnimStateField35c_2();
+extern uint objGetAnimStateFlags(int obj,u32 mask);
 extern undefined4 FUN_8028683c();
 extern undefined4 Obj_GetPlayerObject();
 
@@ -110,7 +110,7 @@ undefined4 playerFn_801d6d58(void)
 
   (*(code *)(*lbl_803DCAAC + 0x74))();
   playerObj = Obj_GetPlayerObject();
-  objGetAnimStateField35c_2(playerObj,0xff);
+  objGetAnimStateFlags(playerObj,0xff);
   return 2;
 }
 #pragma peephole reset
