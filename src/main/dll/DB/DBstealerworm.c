@@ -1310,13 +1310,15 @@ int SB_Galleon_modelMtxFn(int *obj) {
 #pragma peephole off
 int SB_Galleon_func0E(int *obj) {
     s8 *p = (s8*)((int**)obj)[0xb8/4];
-    int x;
+    int x, y;
     if (p[0x29] == 1) {
         x = p[0x7c];
         if (x >= 5) {
-            x = x - 5;
+            y = x - 5;
+        } else {
+            y = x;
         }
-        return (6 - x) * 0x5a;
+        return (6 - y) * 0x5a;
     }
     return 0x640;
 }
