@@ -2043,6 +2043,19 @@ int fn_801B0784(int obj, int delta) {
     return inner[0x1c] == 0 ? 1 : 0;
 }
 
+extern void Music_Trigger(int id, int p2);
+#pragma scheduling off
+#pragma peephole off
+void link_levcontrol_free(int obj) {
+    switch ((s32)*(s8 *)(obj + 0xac)) {
+        case 0x45: Music_Trigger(0xda, 0); break;
+        case 0x48:
+        case 0x49: Music_Trigger(0x36, 0); break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern f32 lbl_803E47C0;
 #pragma scheduling off
 #pragma peephole off
