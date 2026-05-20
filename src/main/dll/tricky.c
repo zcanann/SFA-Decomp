@@ -1874,7 +1874,7 @@ void GameUI_airMeterSetField24(float v) {
     *(f32 *)((char *)p + 0x24) = v;
 }
 
-/* fn_8011DD30: init / setup */
+/* cutSceneFn_8011dd30: init / setup */
 extern void cutsceneFadeInOut(int x);
 extern void setTimeStop(int x);
 extern void pauseMenuInit(void);
@@ -1885,7 +1885,7 @@ extern f32 lbl_803DD764;
 extern int lbl_803DD8DC;
 extern int lbl_803DD7D8;
 #pragma scheduling off
-void fn_8011DD30(void) {
+void cutSceneFn_8011dd30(void) {
     cutsceneFadeInOut(1);
     setTimeStop(0xff);
     pauseMenuInit();
