@@ -3231,6 +3231,33 @@ void CameraModeArwing_copyToCurrent(void *p1, u32 kind)
     *(f32*)((char*)lbl_803A43C0 + 0x40) = ((f32*)p1)[1];
 }
 
+extern u32 lbl_803DD5C0;
+extern f32 lbl_803E1B5C;
+void dll_54_init(int *p1, int unused, int *p3)
+{
+    if (lbl_803DD5C0 == 0) {
+        lbl_803DD5C0 = (u32)mmAlloc(40, 15, 0);
+    }
+    memset((void*)lbl_803DD5C0, 0, 40);
+    *(f32*)((char*)lbl_803DD5C0 + 16) = lbl_803E1B5C;
+    *(u8*)((char*)lbl_803DD5C0 + 12) = 0;
+    if (p3 != NULL) {
+        *(f32*)((char*)p1 + 12) = *(f32*)((char*)p3 + 24);
+        *(f32*)((char*)p1 + 16) = *(f32*)((char*)p3 + 28);
+        *(f32*)((char*)p1 + 20) = *(f32*)((char*)p3 + 32);
+        *(s16*)((char*)p1 + 0) = *(s16*)((char*)p3 + 0);
+        *(s16*)((char*)p1 + 2) = *(s16*)((char*)p3 + 2);
+        *(s16*)((char*)p1 + 4) = *(s16*)((char*)p3 + 4);
+        *(f32*)((char*)p1 + 180) = *(f32*)((char*)p3 + 180);
+    }
+    *(f32*)((char*)lbl_803DD5C0 + 20) = *(f32*)((char*)p1 + 24);
+    *(f32*)((char*)lbl_803DD5C0 + 24) = *(f32*)((char*)p1 + 28);
+    *(f32*)((char*)lbl_803DD5C0 + 28) = *(f32*)((char*)p1 + 32);
+    *(s16*)((char*)lbl_803DD5C0 + 32) = *(s16*)((char*)p1 + 0);
+    *(s16*)((char*)lbl_803DD5C0 + 34) = *(s16*)((char*)p1 + 2);
+    *(s16*)((char*)lbl_803DD5C0 + 36) = *(s16*)((char*)p1 + 4);
+}
+
 int dll_19_func1B(int p)
 {
     s16 v = *(s16*)((char*)p + 0x46);
