@@ -579,8 +579,10 @@ void dimicewall_init(int obj, s8 *p) {
     *(u16 *)(obj + 0xb0) |= 0x4000;
 }
 void dimgate_init(int obj, s8 *p_unused_passthrough) {
-    char *param = *(char **)(obj + 0x4c);
-    char *inner = *(char **)(obj + 0xb8);
+    char *inner;
+    char *param;
+    param = *(char **)(obj + 0x4c);
+    inner = *(char **)(obj + 0xb8);
     if (GameBit_Get(*(s16 *)(param + 0x1e)) != 0) {
         inner[0] = 2;
         *(f32 *)(obj + 0x98) = lbl_803E4878;
