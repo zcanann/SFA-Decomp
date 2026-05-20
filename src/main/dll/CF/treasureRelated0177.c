@@ -85,17 +85,16 @@ extern f64 lbl_803E3DB8;
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void dll_127_update(int obj)
 {
-  int timer;
   int flags;
 
   if (*(void **)(obj + 0x54) == 0) {
     return;
   }
-  timer = *(short *)(obj + 0xf8);
-  if (timer > 0) {
-    *(short *)(obj + 0xf8) = timer - framesThisStep;
+  if (*(short *)(obj + 0xf8) > 0) {
+    *(short *)(obj + 0xf8) -= framesThisStep;
   }
   flags = *(short *)(*(int *)(obj + 0x54) + 0x60) & 8;
   if (flags == 0) {
@@ -106,6 +105,7 @@ void dll_127_update(int obj)
   }
   *(short *)(obj + 0xf8) = 100;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
