@@ -2430,6 +2430,7 @@ extern int lbl_803DB648;
 extern void* lbl_803DCEA0;
 extern void* lbl_80386468[];
 
+#pragma scheduling off
 void* mapBlockFn_800592e4(void) {
 	char* p = (char*)lbl_803822A0[0];
 	int v = *(s16*)(p + 0x594);
@@ -2449,6 +2450,7 @@ void* mapBlockFn_800592e4(void) {
 		return res;
 	}
 }
+#pragma scheduling reset
 
 /* 104b conditional gameTextLoadDir caller. */
 extern int lbl_803DCEC4;
