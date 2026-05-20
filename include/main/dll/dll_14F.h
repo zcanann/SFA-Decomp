@@ -31,7 +31,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 int trickywarp_getExtraSize(void);
 void trickywarp_free(int obj);
-void trickywarp_update();
+void trickywarp_update(int obj);
 void trickywarp_init(s16 *obj, u8 *param_2);
 void FUN_801804a0(short *param_1,int param_2);
 void FUN_801804a4(int param_1);

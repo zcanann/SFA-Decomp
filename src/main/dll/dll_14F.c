@@ -1631,7 +1631,6 @@ void duster_hitDetect(int obj) {
 
 extern void MagicPlant_update();
 extern void MagicPlant_init();
-extern void trickywarp_update();
 extern void trickyguard_update();
 extern void StayPoint_update();
 extern void duster_update();
@@ -1639,6 +1638,27 @@ extern void duster_init();
 extern void curvefish_update();
 extern f32 lbl_803E3928;
 extern f64 lbl_803E3918;
+extern int fn_8017FFD0(int obj, int state);
+
+#pragma scheduling off
+void trickywarp_update(int obj) {
+  int state;
+  int r;
+  state = *(int *)(obj + 0xb8);
+  r = fn_8017FFD0(obj, state);
+  if (r != 0) {
+    if (*(u8 *)(state + 1) == 0) {
+      *(u8 *)(state + 1) = 1;
+      ObjGroup_AddObject(obj, 0x4b);
+    }
+  } else {
+    if (*(u8 *)(state + 1) != 0) {
+      *(u8 *)(state + 1) = 0;
+      ObjGroup_RemoveObject(obj, 0x4b);
+    }
+  }
+}
+#pragma scheduling reset
 
 #pragma scheduling off
 void curvefish_init(int obj, u8 *param_2) {
