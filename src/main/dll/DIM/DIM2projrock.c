@@ -1228,6 +1228,29 @@ void fn_801B9E18(void* obj, void* p)
 #pragma scheduling reset
 #pragma peephole reset
 
+/* dim2lavacontrol_setScale: every-frame tick — if not already "armed" (bit 0 of
+ *   sub.b2 is clear), decrement sub.b0 counter; when it hits 0 set the armed bit
+ *   and tell the game-event tracker (via param.s16_1E) that this trigger fired. */
+#pragma peephole off
+#pragma scheduling off
+void dim2lavacontrol_setScale(void* obj)
+{
+    void* sub = *(void**)((char*)obj + 0xB8);
+    if (((s32)*(s8*)((char*)sub + 0x2) & 1) == 0) {
+        void* p = *(void**)((char*)obj + 0x4C);
+        s8 cnt = *(s8*)((char*)sub + 0x0);
+        if ((s32)cnt > 0) {
+            *(u8*)((char*)sub + 0x0) = (u8)(cnt - 1);
+            if (*(s8*)((char*)sub + 0x0) == 0) {
+                *(s8*)((char*)sub + 0x2) = (s8)(*(u8*)((char*)sub + 0x2) | 1);
+                GameBit_Set(*(s16*)((char*)p + 0x1E), 1);
+            }
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* dim2lavacontrol_free: stop lava sfx, kill the lava music track, refresh time-of-day. */
 extern void fn_8004C1E4(int sfxId, f32 vol);
 extern void Music_Trigger(int trackId, int restart);

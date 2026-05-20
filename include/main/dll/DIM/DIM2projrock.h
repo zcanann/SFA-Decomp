@@ -56,7 +56,7 @@ void dim2icicle_init(void);
 void dim2icicle_release(void);
 void dim2icicle_initialise(void);
 
-void dim2lavacontrol_setScale(void);
+void dim2lavacontrol_setScale(void* obj);
 int dim2lavacontrol_getExtraSize(void);
 void dim2lavacontrol_free(void);
 void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
