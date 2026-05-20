@@ -1996,13 +1996,17 @@ void imanimspacecraft_init(int *obj) {
 #pragma scheduling reset
 
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
+#pragma scheduling off
+#pragma peephole off
 int imanimspacecraft_setScale(int *obj, int bitIdx) {
-    u8 *p;
-    obj = (int*)((int**)obj)[0xb8/4];
-    p = (u8*)obj;
-    if (p[2] & (1 << bitIdx)) return 1;
+    u8 *p = (u8*)*(int**)((char*)obj + 0xb8);
+    if ((p[2] & (1 << bitIdx)) != 0) {
+        return 1;
+    }
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
 void lavaball1bf_func11(int *obj) {
