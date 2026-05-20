@@ -1261,7 +1261,9 @@ extern int *gMapEventInterface;
 extern int lbl_803DDCC8;
 extern void spellStoneUseFn_801fd270(void *obj);
 #pragma scheduling off
-void dll_224_update(void *obj) {
+#pragma peephole off
+void dll_224_update(void *param_1) {
+    void *obj = param_1;
     int v;
     v = (*(int (**)(int))(*(int *)gMapEventInterface + 0x40))((s8)*((s8 *)obj + 0xac));
     v = (u8)v;
@@ -1281,6 +1283,7 @@ void dll_224_update(void *obj) {
     }
     spellStoneUseFn_801fd270(obj);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
