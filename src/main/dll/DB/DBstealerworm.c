@@ -1166,3 +1166,17 @@ typedef void (*SBShipGunFreeFn)(int);
 void SB_ShipGun_free(int param_1) {
     ((SBShipGunFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(param_1);
 }
+
+/* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
+int SB_Galleon_func0E(int *obj) {
+    s8 *p = (s8*)((int**)obj)[0xb8/4];
+    int x;
+    if (p[0x29] == 1) {
+        x = p[0x7c];
+        if (x >= 5) {
+            x = x - 5;
+        }
+        return (6 - x) * 0x5a;
+    }
+    return 0x640;
+}
