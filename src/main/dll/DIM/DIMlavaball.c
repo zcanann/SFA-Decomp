@@ -1388,3 +1388,18 @@ void mmp_moonrock_free(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A80F0(int obj, u8 flag) {
+    int state = *(int *)(obj + 0xB8);
+    if (flag != 0) {
+        *(u16 *)(state + 0x24) |= 0x4;
+        *(u8 *)(obj + 0xAF) |= 0x8;
+    } else {
+        *(u16 *)(state + 0x24) &= ~0x4;
+        *(u8 *)(obj + 0xAF) &= ~0x8;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
