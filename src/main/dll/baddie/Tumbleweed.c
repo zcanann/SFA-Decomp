@@ -3700,11 +3700,17 @@ int fn_80138920(u8* obj, int arg1, int arg2)
     if ((u32)((b[0x58] >> 6) & 1) != 0u) return 0;
     {
         s16 v = *(s16*)(obj + 0xa0);
-        if (v < 48 && v >= 41) return 0;
+        if (v < 48) {
+            if (v >= 41) goto fail;
+            goto play;
+        }
     }
+play:
     if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) return 0;
     objAudioFn_800393f8(obj, b + 936, arg1, arg2, -1, 0);
     return 1;
+fail:
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
