@@ -89,6 +89,7 @@ void dfpstatue1_hitDetect(void) {}
 
 void dfpstatue1_update(DfpStatue1Object *obj) { dfpstatue1_updateState(obj); }
 
+#pragma peephole off
 #pragma scheduling off
 void dfpstatue1_init(DfpStatue1Object *obj, DfpStatue1MapData *mapData)
 {
@@ -108,6 +109,7 @@ void dfpstatue1_init(DfpStatue1Object *obj, DfpStatue1MapData *mapData)
   obj->objectFlags |= 0x4000;
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 void dfpstatue1_release(void) {}
 void dfpstatue1_initialise(void) {}
