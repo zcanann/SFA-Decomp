@@ -1532,3 +1532,14 @@ extern void Resource_Release(u32);
 void LaserBeam_release(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* EN v1.0 0x801F1EF4  size: 32b  Stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801F1EF4(s16* a, s8* b)
+{
+    a[0] = (s16)((s32)b[0x18] << 8);
+    a[1] = -0x8000;
+}
+#pragma peephole reset
+#pragma scheduling reset

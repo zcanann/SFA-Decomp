@@ -4579,3 +4579,32 @@ char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer 
 static u8 sProjgfxStringPad1[] = { 0, 0, 0 };
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
 static u8 sProjgfxStringPad2[] = { 0, 0, 0, 0, 0, 0 };
+
+/* Small stub recoveries (drifted unit, add-as-new). */
+extern u8 lbl_803DD282;
+extern u8 lbl_803DD298;
+extern u8 lbl_803DD2C0;
+extern void fn_800A1040(int a, int b);
+extern u16 lbl_8039C2E0[];
+
+void dll_0B_func0B(void) {
+    lbl_803DD282 = lbl_803DD282 + 1;
+}
+
+#pragma scheduling off
+void dll_0B_func06(void) {
+    fn_800A1040(0, 1);
+}
+
+void dll_0B_release(void) {
+    fn_800A1040(0, 1);
+}
+#pragma scheduling reset
+
+#pragma peephole off
+void dll_0D_func05(u8 v) {
+    if (v == 0 || v >= 0xa) {
+        lbl_803DD298 = v;
+    }
+}
+#pragma peephole reset
