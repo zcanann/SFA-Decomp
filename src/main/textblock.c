@@ -64,7 +64,7 @@ void textblockObj_updateUnsupported(void)
 /*
  * --INFO--
  *
- * Function: textblockObj_init
+ * Function: textblockObj_initUnsupported
  * EN v1.0 Address: 0x80209880
  * EN v1.0 Size: 44b
  * EN v1.1 Address: TODO
@@ -74,7 +74,7 @@ void textblockObj_updateUnsupported(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void textblockObj_init(void)
+void textblockObj_initUnsupported(void)
 {
   OSReport(sTextBlockObjInitNoLongerSupported);
   return;
@@ -98,7 +98,7 @@ ObjectDescriptor gTextBlockObjDescriptor = {
     textblockObj_initialise,
     textblockObj_release,
     0,
-    textblockObj_init,
+    textblockObj_initUnsupported,
     textblockObj_updateUnsupported,
     textblockObj_hitDetect,
     textblockObj_render,

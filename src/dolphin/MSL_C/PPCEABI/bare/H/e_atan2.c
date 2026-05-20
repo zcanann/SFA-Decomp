@@ -65,7 +65,7 @@ void Vec_scale(void* v_in, void* v_out, float s) {
 }
 
 float Vec_lengthSquared(void* v) {
-    Vec3f* vec = v;
+    volatile Vec3f* vec = v;
     return vec->z * vec->z + (vec->x * vec->x + vec->y * vec->y);
 }
 

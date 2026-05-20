@@ -20,7 +20,7 @@
  * - EN xref: 0x80209054 laser_updateUnsupported + 0xC
  * - EN xref: 0x8020982C textblockObj_freeUnsupported + 0xC
  * - EN xref: 0x80209860 textblockObj_updateUnsupported + 0xC
- * - EN xref: 0x8020988C textblockObj_init + 0xC
+ * - EN xref: 0x8020988C textblockObj_initUnsupported + 0xC
  *
  * Current EN relationship:
  * - the retail textblock.c string backs both the unsupported laser wrappers and
