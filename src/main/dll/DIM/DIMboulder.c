@@ -1089,7 +1089,7 @@ void magiclight_free(int obj) {
     int *inner = *(int **)(obj + 0xb8);
     if (*(s16 *)(obj + 0x46) != 0x172) {
         if ((s8)*(s8 *)((char *)inner + 0xb) != 0) {
-            getLActions(0, (int *)obj, *(u16 *)((char *)inner + 8), 0, 0, 0);
+            getLActions(0, (int *)obj, (u16)*(s16 *)((char *)inner + 8), 0, 0, 0);
         }
         (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
     }
