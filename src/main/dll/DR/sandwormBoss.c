@@ -3220,6 +3220,32 @@ int cfprisoncage_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x128) ret
 u32 fn_801A0174(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x8) >> 7) & 1; }
 u32 gunpowderbarrel_isHeld(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x4a) >> 5) & 1; }
 
+/* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
+extern u32 GameBit_Get(int);
+extern void* Obj_GetPlayerObject(void);
+extern void fn_80296A24(void*, int);
+#pragma peephole off
+int fn_8019FC84(int *obj, int p2, void *p3) {
+    char *p = *(char**)((char*)obj + 0xb8);
+    if (*(s8*)(p + 0x74) != 0) return 0;
+    if (*(u8*)((char*)p3 + 0x80) == 2) {
+        *(u8*)(p + 0x74) = 1;
+        fn_80296A24(Obj_GetPlayerObject(), 2);
+    }
+    return 0;
+}
+#pragma peephole reset
+
+/* GameBit-gated byte write. */
+#pragma scheduling off
+int fn_801A04F4(int p1, int p2, void *p3) {
+    if (GameBit_Get(0x4d) != 0) {
+        *(u8*)((char*)p3 + 0x90) = 4;
+    }
+    return 0;
+}
+#pragma scheduling reset
+
 /* plain forwarder. */
 extern void waterSpellStone1Fn_8019b4c8(void);
 void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
