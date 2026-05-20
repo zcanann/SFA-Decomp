@@ -476,7 +476,7 @@ void FireFlyLantern_free(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int Obj_IsLoadingLocked(void);
+extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int loadObjectAtObject(int *obj);
 extern f32 lbl_803E3AE8;
