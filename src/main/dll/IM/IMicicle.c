@@ -1353,6 +1353,7 @@ int attractor_setScale(int *obj) {
 #pragma peephole reset
 
 /* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
+#pragma scheduling off
 #pragma peephole off
 void attractor_init(s16 *obj, void *data) {
     ObjGroup_AddObject(obj, 0x1e);
@@ -1363,6 +1364,7 @@ void attractor_init(s16 *obj, void *data) {
     }
 }
 #pragma peephole reset
+#pragma scheduling reset
 
 /* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
 extern uint GameBit_Get(int eventId);
