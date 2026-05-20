@@ -1079,7 +1079,7 @@ extern int *lbl_803DCA68;
 extern u32 lbl_803DDCC8;
 extern f32 lbl_803E6150;
 
-void fn_801FD270(int obj) {
+void spellStoneUseFn_801fd270(int obj) {
     int *state = *(int **)(obj + 0xB8);
     s16 cond = 1;
     void *player = Obj_GetPlayerObject();

@@ -1259,7 +1259,7 @@ void dll_224_hitDetect(void *obj) {
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 extern int *lbl_803DCAAC;
 extern int lbl_803DDCC8;
-extern void fn_801FD270(void *obj);
+extern void spellStoneUseFn_801fd270(void *obj);
 #pragma scheduling off
 void dll_224_update(void *obj) {
     int v;
@@ -1279,7 +1279,7 @@ void dll_224_update(void *obj) {
             lbl_803DDCC8 = 0x123;
             break;
     }
-    fn_801FD270(obj);
+    spellStoneUseFn_801fd270(obj);
 }
 #pragma scheduling reset
 
