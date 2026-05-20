@@ -322,21 +322,6 @@ void dfsh_objcreator_initialise(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
-void dfsh_objcreator_init(int obj, s8 *def) {
-    int *state = *(int **)((char *)obj + 0xB8);
-    *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
-    *(int *)((char *)obj + 0xF8) = 0;
-    *(s16 *)state = 100;
-    *(s16 *)((char *)state + 2) = 0;
-    *(u8 *)((char *)obj + 0x37) = 0xFF;
-    *(u8 *)((char *)obj + 0x36) = 0xFF;
-}
-#pragma peephole reset
-#pragma scheduling reset
-
-
 /* Trivial 4b 0-arg blr leaves. */
 void DFSH_LaserBeam_render(void) {}
 void DFSH_LaserBeam_hitDetect(void) {}
