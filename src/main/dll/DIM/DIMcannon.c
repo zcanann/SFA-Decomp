@@ -143,7 +143,7 @@ extern int imicepillar_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void imicepillar_render(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -2009,12 +2009,14 @@ int lavaball1bf_setScale(int *obj) {
 #pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E4768;
 extern f32 lbl_803E4780;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4788;
 extern f32 lbl_803E47B8;
 extern f32 lbl_803E4810;
 #pragma peephole off
+void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4768); }
 void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4780); }
 void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4788); }
 void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E47B8); }
