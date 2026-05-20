@@ -451,6 +451,7 @@ void DIMbossspit_updateBurst(undefined8 param_1,undefined8 param_2,undefined8 pa
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void DIMbossspit_free(int param_1)
 {
   uint uVar1;
@@ -462,6 +463,7 @@ void DIMbossspit_free(int param_1)
   (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(param_1);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
