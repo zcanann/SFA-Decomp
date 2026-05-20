@@ -13094,6 +13094,6 @@ u8 getNextTaskHintText(void) { u8 *p = (u8*)getLastSavedGameTexts(); return p[5]
 /* conditional init/free pair. */
 #pragma scheduling off
 #pragma peephole off
-void gplayClearRestartPoint(void) { if (pRestartPoint != 0) { mm_free(pRestartPoint); pRestartPoint = 0; } }
+void SaveGame_gplayClearRestartPoint(void) { if (pRestartPoint != 0) { mm_free(pRestartPoint); pRestartPoint = 0; } }
 #pragma peephole reset
 #pragma scheduling reset
