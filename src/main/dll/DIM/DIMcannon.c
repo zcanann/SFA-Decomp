@@ -1974,6 +1974,27 @@ void imanimspacecraft_free(int *obj) {
     (*(void (***)(int*))lbl_803DCA78)[6](obj);
 }
 
+extern void fn_801AE184(void);
+extern f32 lbl_803E4784;
+extern char lbl_803AC948[];
+#pragma scheduling off
+#pragma peephole off
+void imanimspacecraft_init(int *obj) {
+    f32 v;
+    *(int *)((char *)obj + 0xbc) = (int)&fn_801AE184;
+    v = lbl_803E4784;
+    *(f32 *)(lbl_803AC948 + 0xc) = v;
+    *(f32 *)(lbl_803AC948 + 0x10) = v;
+    *(f32 *)(lbl_803AC948 + 0x14) = v;
+    GameBit_Set(0xbeb, 1);
+    GameBit_Set(0xbec, 1);
+    GameBit_Set(0xbed, 1);
+    GameBit_Set(0xbee, 1);
+    GameBit_Set(0xbef, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
 int imanimspacecraft_setScale(int *obj, int bitIdx) {
     u8 *p;
