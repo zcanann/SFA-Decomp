@@ -3231,6 +3231,31 @@ void CameraModeArwing_copyToCurrent(void *p1, u32 kind)
     *(f32*)((char*)lbl_803A43C0 + 0x40) = ((f32*)p1)[1];
 }
 
+extern void Sfx_StopObjectChannel(int *p1, int channel);
+extern void voxmaps_freeRouteWork(void *p);
+extern void **lbl_803DCA74;
+extern void mm_free(u32);
+void dll_19_func12(int *p1, int *p2, u8 flag)
+{
+    Sfx_StopObjectChannel(p1, 127);
+    if ((*(u8*)((char*)p2 + 1028) & flag) == 0) {
+        s16 v;
+        v = *(s16*)((char*)p2 + 1020);
+        if (v != 0) {
+            (*(void(**)(int*, u16, int, int, int))((char*)*lbl_803DCA74 + 8))(p1, (u16)v, 0, 0, 0);
+        }
+        v = *(s16*)((char*)p2 + 1018);
+        if (v != 0) {
+            (*(void(**)(int*, u16, int, int, int))((char*)*lbl_803DCA74 + 8))(p1, (u16)v, 0, 0, 0);
+        }
+    }
+    voxmaps_freeRouteWork((char*)p2 + 900);
+    if (*(u32*)((char*)p2 + 988) != 0) {
+        mm_free(*(u32*)((char*)p2 + 988));
+        *(int*)((char*)p2 + 988) = 0;
+    }
+}
+
 extern u32 lbl_803DD5B8;
 extern s16 getAngle(f32 dx, f32 dz);
 void CameraModeCloudRunner_init(int *p1, s16 p2, f32 *p3)
