@@ -93,74 +93,33 @@ extern f32 lbl_803E3BF0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cannonclaw_update(short *param_1)
+/* Actual cannonclaw_update is 188b — trigger-once cannon-arm awakener.
+ * The 668b "Ghidra body" was misattributed; replaced with the right one. */
+extern void getTrickyObject(void);
+extern void* ObjList_FindObjectById(int id);
+extern void ObjAnim_SetCurrentMove(void* obj, int move, f32 weight, int flag);
+extern void ObjAnim_AdvanceCurrentMove(void* obj, int flag, f32 weight, f32 dt);
+extern f32 timeDelta;
+extern f32 lbl_803E2F34;
+extern f32 lbl_803E2F38;
+#pragma scheduling off
+void cannonclaw_update(u8* obj)
 {
-  undefined4 uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar4 = *(int *)(param_1 + 0x5c);
-  iVar3 = *(int *)(iVar4 + 0x40c);
-  iVar2 = *(int *)(param_1 + 0x26);
-  if (*(int *)(param_1 + 0x7a) == 0) {
-    if (*(int *)(iVar3 + 0x34) == 0) {
-      FUN_80162ec0(param_1);
+    u8* trickyState;
+    getTrickyObject();
+    trickyState = (u8*)ObjList_FindObjectById(0x1723);
+    if (*(s32*)(obj + 0xf4) != 0) return;
+    if (*(s16*)(obj + 0xa0) != 0x208) {
+        ObjAnim_SetCurrentMove(obj, 0x208, lbl_803E2F34, 0);
     }
-    else {
-      (**(code **)(*DAT_803dd70c + 8))
-                ((double)lbl_803E3B54,(double)lbl_803E3B54,param_1,iVar4,&DAT_803ad270,
-                 &DAT_803ad258);
-      (**(code **)(**(int **)(*(int *)(iVar3 + 0x38) + 0x68) + 0x24))
-                ((double)*(float *)(iVar3 + 0x48),*(int *)(iVar3 + 0x38),param_1 + 6,param_1 + 8,
-                 param_1 + 10);
-      (**(code **)(*DAT_803dd738 + 0x54))
-                (param_1,iVar4,iVar4 + 0x35c,(int)*(short *)(iVar4 + 0x3f4),iVar4 + 0x405,0,0,0);
-      iVar2 = (**(code **)(*DAT_803dd738 + 0x50))
-                        (param_1,iVar4,iVar4 + 0x35c,(int)*(short *)(iVar4 + 0x3f4),&DAT_80320d30,
-                         &DAT_80320da8,3,0);
-      if (iVar2 == 0xe) {
-        *(undefined *)(iVar4 + 0x405) = 2;
-        uVar1 = FUN_80017a98();
-        *(undefined4 *)(iVar4 + 0x2d0) = uVar1;
-      }
-      if ((*(int *)(iVar4 + 0x2d0) == 0) && (*(char *)(iVar4 + 0x354) != '\0')) {
-        *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) =
-             *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0xfffe;
-        iVar2 = (**(code **)(*DAT_803dd738 + 0x48))
-                          ((double)(float)((double)CONCAT44(0x43300000,
-                                                            (uint)*(ushort *)(iVar4 + 0x3fe)) -
-                                          DOUBLE_803e3ba8),param_1,iVar4,0x8000);
-        if (iVar2 != 0) {
-          *(int *)(iVar4 + 0x2d0) = iVar2;
-          *(undefined *)(iVar4 + 0x349) = 0;
-        }
-      }
-      else {
-        *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) =
-             *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) | 1;
-        iVar2 = (**(code **)(*DAT_803dd738 + 0x44))
-                          ((double)(float)((double)CONCAT44(0x43300000,
-                                                            (uint)*(ushort *)(iVar4 + 0x3fe)) -
-                                          DOUBLE_803e3ba8),param_1,iVar4,1);
-        if (iVar2 != 0) {
-          *(undefined4 *)(iVar4 + 0x2d0) = 0;
-        }
-      }
-    }
-  }
-  else {
-    iVar3 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar2 + 0x14));
-    if (iVar3 != 0) {
-      (**(code **)(*DAT_803dd738 + 0x58))
-                ((double)lbl_803E3BC0,param_1,iVar2,iVar4,10,6,0x10e,0x36);
-      *(undefined2 *)(iVar4 + 0x270) = 1;
-      *(undefined *)(iVar4 + 0x27b) = 1;
-      *(undefined *)(param_1 + 0x1b) = 0;
-    }
-  }
-  return;
+    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E2F38, timeDelta);
+    if (trickyState == NULL) return;
+    if (GameBit_Get(*(s16*)(*(u8**)(trickyState + 0x4c) + 0x1a)) == 0) return;
+    *(s32*)(obj + 0xf4) = 1;
+    *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 0x8);
+    ObjHits_DisableObject(obj);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
