@@ -74,7 +74,7 @@ void wmlasertarget_free(void);
 void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void wmlasertarget_hitDetect(void);
 void wmlasertarget_update(void);
-void wmlasertarget_init(void);
+void wmlasertarget_init(char *obj, s8 *p);
 void wmlasertarget_release(void);
 void wmlasertarget_initialise(void);
 

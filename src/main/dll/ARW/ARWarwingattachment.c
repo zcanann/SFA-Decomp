@@ -1479,6 +1479,21 @@ void WM_colrise_initialise(void) {}
 void wmtorch_hitDetect(void) {}
 void wmtorch_release(void) {}
 void wmtorch_initialise(void) {}
+#pragma peephole off
+void wmtorch_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
+    if (visible == 0) return;
+}
+#pragma peephole reset
+
+extern u32 Resource_Acquire(int id, int mode);
+extern u32 lbl_803DDC80;
+#pragma scheduling off
+#pragma peephole off
+void LaserBeam_initialise(void) {
+    lbl_803DDC80 = Resource_Acquire(0x81, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void lightsource_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
@@ -1540,6 +1555,79 @@ void dll_1FF_init(s16* a, s8* b)
 {
     a[0] = (s16)((s32)b[0x18] << 8);
     a[1] = -0x8000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void WM_colrise_init(s16 *a, s8 *b) {
+    s16 *inner = *(s16 **)((char*)a + 0xb8);
+    *(void **)((char*)a + 0xbc) = (void *)WM_colrise_SeqFn;
+    a[0] = (s16)((s32)b[0x18] << 8);
+    *inner = *(s16 *)(b + 0x1e);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int GameBit_Get(int id);
+#pragma scheduling off
+#pragma peephole off
+void wmlasertarget_init(char *obj, s8 *p) {
+    char *inner = *(char **)(obj + 0xb8);
+    obj[0xad] = (s8)GameBit_Get(*(s16 *)(p + 0x1e));
+    *(s16 *)inner = *(s16 *)(p + 0x1a);
+    inner[2] = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int Obj_GetPlayerObject(void);
+extern f32 Vec_distance(f32 *a, f32 *b);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 lbl_803E5DE8;
+#pragma scheduling off
+#pragma peephole off
+void wmtorch_update(int obj) {
+    int state = *(int *)(obj + 0xb8);
+    if (*(u8 *)(state + 0xc) == 2) {
+        *(s16 *)obj += 0x32;
+    }
+    if (Vec_distance((f32 *)(Obj_GetPlayerObject() + 0x18), (f32 *)(obj + 0x18)) < lbl_803E5DE8) {
+        Sfx_PlayFromObject(obj, 0x72);
+    } else {
+        Sfx_StopObjectChannel(obj, 0x40);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *lbl_803DCA7C;
+extern int *lbl_803DCA78;
+extern void Obj_FreeObject(void *o);
+#pragma scheduling off
+#pragma peephole off
+void wmtorch_free(int obj, int mode) {
+    int state = *(int *)(obj + 0xb8);
+    if (mode == 0 && *(void **)state != 0) {
+        Obj_FreeObject(*(void **)state);
+    }
+    (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x14)))(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void ModelLightStruct_free(void *light);
+#pragma scheduling off
+#pragma peephole off
+void lightsource_free(int obj) {
+    int state = *(int *)(obj + 0xb8);
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    if (*(void **)state != 0) {
+        ModelLightStruct_free(*(void **)state);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
