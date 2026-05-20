@@ -4444,9 +4444,9 @@ void projgfx_func06_nop(void) {}
 void projgfx_func05_nop(void) {}
 void projgfx_onMapSetup(void) {}
 void projgfx_initialise(void) {}
-void dll_0D_func03_nop(void) {}
-void dll_0D_release_nop(void) {}
-void dll_0D_initialise_nop(void) {}
+void playerShadow_func03_nop(void) {}
+void playerShadow_release_nop(void) {}
+void playerShadow_initialise_nop(void) {}
 void dll_18_func08_nop(void) {}
 void dll_18_func06_nop(void) {}
 void dll_18_func04_nop(void) {}
@@ -4582,7 +4582,7 @@ static u8 sProjgfxStringPad2[] = { 0, 0, 0, 0, 0, 0 };
 
 /* Small stub recoveries (drifted unit, add-as-new). */
 extern u8 lbl_803DD282;
-extern u8 lbl_803DD298;
+extern u8 gPlayerShadowMode;
 extern u8 lbl_803DD2C0;
 extern void fn_800A1040(s16 a, int b);
 extern u16 lbl_8039C2E0[];
@@ -4602,9 +4602,9 @@ void dll_0B_release(void) {
 #pragma scheduling reset
 
 #pragma peephole off
-void dll_0D_func05(u8 v) {
+void playerShadow_setMode(u8 v) {
     if (v == 0 || v >= 0xa) {
-        lbl_803DD298 = v;
+        gPlayerShadowMode = v;
     }
 }
 #pragma peephole reset
