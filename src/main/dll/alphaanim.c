@@ -630,7 +630,14 @@ void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 
 extern void OSReport(const char* fmt, ...);
 extern const char sSeqObjNeedBitUsedBitFormat[];
-extern void fn_8017C7A4(int* obj);
+extern const char sSeqObjNeedBitClearDuringSequenceFormat[];
+extern const char lbl_80321208[];
+extern int GameBit_Set(int eventId, int value);
+extern int warpToMap(int id, int flags);
+extern int **gObjectTriggerInterface;
+extern int fn_8017C2D4(int* obj, int* anim, u8* buf);
+extern int fn_8017C7A4(int* obj, int* anim, u8* buf);
+extern int fn_8017CBDC(int* obj, int* anim, u8* buf);
 
 void fn_8017C294(int* obj)
 {
@@ -653,6 +660,56 @@ void seqobj2_init(int* obj, int* def)
     }
     ObjGroup_AddObject(obj, 15);
     *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x6000);
+}
+
+int fn_8017C7A4(int* obj, int* anim, u8* buf)
+{
+    int* state = *(int**)((char*)obj + 0x4c);
+    int* flagPtr = *(int**)((char*)obj + 0xb8);
+    int i;
+    for (i = 0; i < buf[0x8b]; i++) {
+        s8 op = (s8)buf[0x81 + i];
+        if (op == 1) {
+            GameBit_Set(*(s16*)((char*)state + 0x18), 1);
+            OSReport(lbl_80321208, *(int*)((char*)state + 0x14));
+        } else if (op == 0) {
+            GameBit_Set(*(s16*)((char*)state + 0x1a), 0);
+            OSReport(sSeqObjNeedBitClearDuringSequenceFormat, *(int*)((char*)state + 0x14));
+        }
+    }
+    *(u8*)flagPtr = (u8)(*(u8*)flagPtr | 2);
+    return 0;
+}
+
+int fn_8017C2D4(int* obj, int* anim, u8* buf)
+{
+    int* state;
+    int* flagPtr;
+    int i;
+    if (*(s16*)((char*)obj + 0xb4) == -1) {
+        return 0;
+    }
+    state = *(int**)((char*)obj + 0x4c);
+    flagPtr = *(int**)((char*)obj + 0xb8);
+    buf[0x56] = 0;
+    for (i = 0; i < buf[0x8b]; i++) {
+        s8 op = (s8)buf[0x81 + i];
+        if (op == 2) {
+            u8 v = *((u8*)state + 0x24);
+            if (v != 0) {
+                warpToMap(v, 0);
+            }
+        } else if (op == 1) {
+            u8 flags = *((u8*)state + 0x1d);
+            if ((flags & 1) == 0 && (flags & 2) != 0) {
+                GameBit_Set(*(s16*)((char*)state + 0x18), 1);
+            }
+        } else if (op == 3) {
+            ((void(*)(int, int, int, int))((int*)(*gObjectTriggerInterface))[0x50/4])(86, 1, 0, 0);
+        }
+    }
+    *(u8*)flagPtr = (u8)(*(u8*)flagPtr | 4);
+    return 0;
 }
 
 #pragma peephole reset
