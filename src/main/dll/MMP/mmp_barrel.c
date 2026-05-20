@@ -1346,6 +1346,7 @@ u8 groundanimator_func0B(int *obj)
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);
 extern void fn_801923F8(void);
+extern void fn_80193DBC(void *block, int *obj, u8 *vstate, int *desc);
 extern u8 lbl_803DDAE8;
 #pragma peephole off
 #pragma scheduling off
@@ -1370,6 +1371,44 @@ void waveanimator_init(int *obj, int *desc)
     }
     ObjGroup_AddObject(obj, 27);
     lbl_803DDAE8++;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void hitanimator_init(int *obj, int *desc)
+{
+    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    void *block;
+    u8 g;
+    s8 init_bit;
+    init_bit = (s8)(*(u8*)((char*)desc + 0x1C) & 1);
+    ((s8*)vstate)[0] = init_bit;
+    vstate[1] = 0;
+    if (GameBit_Get(*(s16*)((char*)desc + 0x18)) != 0) {
+        ((s8*)vstate)[0] = ((s8*)vstate)[0] ^ 1;
+        if (*(u8*)((char*)desc + 0x1A) == 1) {
+            vstate[1] |= 1;
+        }
+    }
+    block = mapGetBlock(objPosToMapBlockIdx(
+        (double)*(f32*)((char*)obj + 0xC),
+        (double)*(f32*)((char*)obj + 0x10),
+        (double)*(f32*)((char*)obj + 0x14)));
+    if (block != NULL) {
+        if ((*(u8*)((char*)desc + 0x1C) & 4) != 0 && *(u8*)((char*)desc + 0x1B) != 0) {
+            fn_80193DBC(block, obj, vstate, desc);
+        }
+    }
+    vstate[1] |= 2;
+    if ((*(u8*)((char*)desc + 0x1C) & 4) != 0) {
+        vstate[1] |= 4;
+    }
+    g = (u8)GameBit_Get(*(s16*)((char*)desc + 0x18));
+    vstate[2] = g;
+    vstate[3] = g;
+    *(u16*)((char*)obj + 0xB0) |= 0x6000;
 }
 #pragma scheduling reset
 #pragma peephole reset
