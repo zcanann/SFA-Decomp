@@ -100,7 +100,7 @@ void dll_115_update(int obj)
     if (eventId != -1) {
       GameBit_Set(eventId, 1);
     }
-    state[1] &= 0xfe;
+    state[1] = (u8)(state[1] & ~1);
     state[0]++;
   }
   if ((s8)state[0] == 9) {
@@ -995,7 +995,7 @@ void appleontree_free(int *obj) {
 void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     u8 *inner = *(u8 **)(obj + 0xb8);
     if ((inner[0x5a] & 2) == 0) {
-        ((void (*)(f32))objRenderFn_8003b8f4)(lbl_803E37C8);
+        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E37C8);
     }
 }
 #pragma peephole reset

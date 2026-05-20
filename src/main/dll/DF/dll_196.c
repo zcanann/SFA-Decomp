@@ -38,6 +38,7 @@ extern f32 lbl_803E4E24;
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 int dfropenode_syncRopeToEndpoints(int obj)
 {
   DFropenodeExtra *extra;
@@ -63,7 +64,7 @@ int dfropenode_syncRopeToEndpoints(int obj)
   } else {
     endObj = baseObj;
     baseObj = *(int *)*(int *)(baseObj + 0xb8);
-    if (baseObj == 0) {
+    if ((void *)baseObj == NULL) {
       return 0;
     }
     extra = *(DFropenodeExtra **)(baseObj + 0xb8);

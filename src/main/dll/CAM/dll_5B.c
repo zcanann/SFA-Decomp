@@ -266,7 +266,7 @@ void CameraModeViewfinder_free(int param_1)
   int iVar2;
   int local_18 [5];
   
-  *(ushort *)(*(int *)(param_1 + 0xa4) + 6) = *(ushort *)(*(int *)(param_1 + 0xa4) + 6) & 0xbfff;
+  *(ushort *)(*(int *)(param_1 + 0xa4) + 6) = *(ushort *)(*(int *)(param_1 + 0xa4) + 6) & ~0x4000;
   FUN_80053bf0(0);
   iVar2 = *(int *)(param_1 + 0xa4);
   if (iVar2 != 0) {
