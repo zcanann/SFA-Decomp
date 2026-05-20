@@ -959,7 +959,7 @@ extern u16 playerGetMoney(void *player);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void dll_2E_func03(int, int);
 extern void shopKeeperRotateFn_801e7c4c(int, void *, int);
-extern int *lbl_803DCA8C;
+extern int *gPlayerInterface;
 
 typedef struct {
     u8 bit80 : 1;
@@ -997,7 +997,7 @@ void shopkeeper_update(int obj) {
         *(int *)(state + 0x9B4) = ObjGroup_FindNearestObject(9, obj, &dist);
     }
     *(s16 *)(state + 0x9C8) = (s16)playerGetMoney(player);
-    ((void (*)(int, int, void *, void *, f32, f32))(*(int *)((int)*lbl_803DCA8C + 8)))
+    ((void (*)(int, int, void *, void *, f32, f32))(*(int *)((int)*gPlayerInterface + 8)))
         (obj, state, lbl_803AD068, &lbl_803DDC58, timeDelta, timeDelta);
     dll_2E_func03(obj, state + 0x35C);
     characterDoEyeAnims(obj, state + 0x980);

@@ -120,7 +120,7 @@ extern undefined4 gDIMbossAnimController[];
 extern undefined4 lbl_802C2338[];
 extern void (*gDIMbossAnimTable[])(void);
 extern void (*gDIMbossHitDetectAnimTable[])(void);
-extern int lbl_803DCA8C;
+extern int gPlayerInterface;
 extern undefined4* gObjectTriggerInterface;
 extern undefined4* lbl_803DCAB8;
 extern void *gDIMbossHitEffectResource;
@@ -558,7 +558,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
  */
 void DIMboss_hitDetect(DIMbossObject *obj)
 {
-  (*(code *)(*(int *)lbl_803DCA8C + 0xc))(obj,obj->runtime,gDIMbossHitDetectAnimTable);
+  (*(code *)(*(int *)gPlayerInterface + 0xc))(obj,obj->runtime,gDIMbossHitDetectAnimTable);
 }
 
 /*
@@ -713,7 +713,7 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
       (obj,param_2,runtime,0xc,6,0x102,animFlags,lbl_803E4C28);
   obj->updateState = DIMboss_updateState;
   runtime->phase = DIMBOSS_PHASE_START;
-  (*(code *)(*(int *)lbl_803DCA8C + 0x14))(obj,runtime,0);
+  (*(code *)(*(int *)gPlayerInterface + 0x14))(obj,runtime,0);
   runtime->field270 = 0;
   runtime->animMode = 3;
   obj->objectFlags = (u8)(obj->objectFlags | 0x88);

@@ -74,7 +74,7 @@ extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de800;
 extern undefined4 DAT_803de804;
 extern undefined4 DAT_803de808;
-extern void *lbl_803DCA8C;
+extern void *gPlayerInterface;
 extern void *lbl_803DCAB8;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
@@ -126,7 +126,7 @@ extern f32 playerMapOffsetZ;
 int DIMbosstonsil_updateHitReaction(void *obj,u8 *state,int param_3)
 {
   if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
-    (*(void (***)(void *,u8 *,int))lbl_803DCA8C)[5](obj,state,1);
+    (*(void (***)(void *,u8 *,int))gPlayerInterface)[5](obj,state,1);
   }
   if ((s8)state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] != 0) {
     return 1;
@@ -151,7 +151,7 @@ int DIMbosstonsil_enableHitReaction(void *obj,u8 *state)
 {
   if ((s8)state[DIMBOSSTONSIL_STUN_READY_OFFSET] != 0) {
     state[DIMBOSSTONSIL_ACTIVE_OFFSET] = 1;
-    (*(void (***)(void *,u8 *,int))lbl_803DCA8C)[5](obj,state,0);
+    (*(void (***)(void *,u8 *,int))gPlayerInterface)[5](obj,state,0);
   }
   return 0;
 }
@@ -292,7 +292,7 @@ void DIMbosstonsil_checkHit(void *obj,u8 *state)
       else {
         lbl_803DDB98 = lbl_803E4C90;
       }
-      (*(void (***)(void *,u8 *,int))lbl_803DCA8C)[5](obj,state,1);
+      (*(void (***)(void *,u8 *,int))gPlayerInterface)[5](obj,state,1);
       *(s16 *)(state + 0x270) = 1;
       ObjMsg_SendToObject(hitObj,DIMBOSSTONSIL_ADVANCE_MSG,obj,0);
     }

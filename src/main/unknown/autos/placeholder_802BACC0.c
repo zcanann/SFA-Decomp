@@ -3,7 +3,7 @@
 extern void GameBit_Set(int eventId, int value);
 extern void ObjGroup_RemoveObject(int obj, int group);
 
-extern undefined4 *lbl_803DCA8C;
+extern undefined4 *gPlayerInterface;
 extern undefined4 *gPathControlInterface;
 extern f32 lbl_803E8234;
 extern f32 lbl_803E8258;
@@ -158,7 +158,7 @@ int ddh_cc_initinterrupts(int obj, undefined4 unused, int setup)
     if (mode == 3) {
         *(u8 *)(setup + 0x56) = 0;
         *(u8 *)(state + 0x27a) = 1;
-        (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, 7);
+        (*(void (*)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, 7);
     } else if (mode < 3) {
         if (mode == 1) {
             *(u8 *)(setup + 0x56) = 0;
@@ -169,7 +169,7 @@ int ddh_cc_initinterrupts(int obj, undefined4 unused, int setup)
             } else {
                 animState = 6;
             }
-            (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, animState);
+            (*(void (*)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, animState);
         } else if (mode == 0) {
             *(u8 *)(setup + 0x56) = 0;
             if (*(s16 *)(obj + 0xb4) == -1) {
@@ -178,14 +178,14 @@ int ddh_cc_initinterrupts(int obj, undefined4 unused, int setup)
                     *(u8 *)(state + 0xa8e) |= 0x20;
                 }
             }
-            (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, 1);
+            (*(void (*)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, 1);
         }
     } else if (mode == 5) {
         *(u8 *)(setup + 0x56) = 0;
-        (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, 2);
+        (*(void (*)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, 2);
     } else if (mode < 5) {
         *(u8 *)(setup + 0x56) = 0;
-        (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, 7);
+        (*(void (*)(int, int, int))(*gPlayerInterface + 0x14))(obj, state, 7);
     }
 
     (*(void (*)(int, int))(*gPathControlInterface + 0x20))(obj, state + 4);

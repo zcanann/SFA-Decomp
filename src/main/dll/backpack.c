@@ -13,7 +13,7 @@ extern void ObjHits_SetHitVolumeSlot(int obj, int a, int b, int c);
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 extern void* lbl_803DCAB8;
-extern void* lbl_803DCA8C;
+extern void* gPlayerInterface;
 extern void* gPathControlInterface;
 extern void* pDll_expgfx;
 extern f32 lbl_803E2FC8;
@@ -413,7 +413,7 @@ int fn_801650D8(int obj, int target) {
     int *aux = *(int**)(obj + 0xb8);
     if ((s8)*(u8*)(target + 0x27a) != 0) {
         (*(int(**)(int, int, int, int))(*(int*)lbl_803DCAB8 + 0x4c))(obj, (int)*(s16*)((char*)aux + 0x3f0), -1, 0);
-        (*(int(**)(int, int, int, int, int))(*(int*)lbl_803DCA8C + 0x58))(obj, target, 0x3c, 0xa, 0);
+        (*(int(**)(int, int, int, int, int))(*(int*)gPlayerInterface + 0x58))(obj, target, 0x3c, 0xa, 0);
         GameBit_Set((int)*(s16*)((char*)aux + 0x3f2), 1);
         *(u8*)((char*)aux + 0x405) = 0;
     }

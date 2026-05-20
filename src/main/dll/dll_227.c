@@ -11,7 +11,7 @@ extern void fn_8001D9F4(void *p1, void *p2, void *p3, void *p4);
 extern void fn_8001D71C(void *p1, u8 a, u8 b, u8 c, int d);
 extern int randomGetRange(int min, int max);
 
-extern void *lbl_803DCA8C;
+extern void *gPlayerInterface;
 extern void *gObjectTriggerInterface;
 extern void *lbl_803DCAB8;
 extern int lbl_803DDBB0;
@@ -65,7 +65,7 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
 #pragma scheduling off
 void DIMbosstonsil_hitDetect(void *obj)
 {
-    (*(void (***)(void *, void *, int *))lbl_803DCA8C)[3](obj, *(void **)((char *)obj + 0xb8), &lbl_803DDBB0);
+    (*(void (***)(void *, void *, int *))gPlayerInterface)[3](obj, *(void **)((char *)obj + 0xb8), &lbl_803DDBB0);
 }
 #pragma scheduling reset
 #pragma peephole reset

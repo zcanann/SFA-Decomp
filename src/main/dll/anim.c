@@ -4167,7 +4167,7 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma scheduling reset
 
 extern int *gExpgfxInterface;
-extern int *lbl_803DCA8C;
+extern int *gPlayerInterface;
 extern int lbl_803AD0F4[];
 extern void fn_801FF884(void);
 #pragma scheduling off
@@ -4184,7 +4184,7 @@ void chuka_hitDetect(int obj) {
 }
 void dbstealerworm_hitDetect(int obj) {
     int *inner = *(int **)(obj + 0xb8);
-    (*(void (*)(int, int *, int *))(*(int *)(*lbl_803DCA8C + 0xc)))(obj, inner, lbl_803AD0F4);
+    (*(void (*)(int, int *, int *))(*(int *)(*gPlayerInterface + 0xc)))(obj, inner, lbl_803AD0F4);
 }
 void GCRobotBlast_init(int obj, s8 *p) {
     char *inner = *(char **)(obj + 0xb8);

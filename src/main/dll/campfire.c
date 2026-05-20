@@ -64,7 +64,7 @@ extern f32 lbl_803DDA98;
 extern void* lbl_803AC680[];
 extern void* lbl_803AC698[];
 extern undefined4* pDll_expgfx;
-extern undefined4* lbl_803DCA8C;
+extern undefined4* gPlayerInterface;
 extern undefined4* gMapEventInterface;
 extern undefined4* lbl_803DCAB8;
 extern undefined4* lbl_803DDA90;
@@ -371,7 +371,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
     if (iVar5 != 0) {
       if ((iVar5 != 0x10) && (iVar5 != 0x11)) {
         objLightFn_8009a1dc((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,3,0);
-        (**(code **)(*lbl_803DCA8C + 0x14))(puVar3,param_3,4);
+        (**(code **)(*gPlayerInterface + 0x14))(puVar3,param_3,4);
         *(char *)(param_3 + 0x354) = *(char *)(param_3 + 0x354) + -1;
         Obj_SetModelColorFadeRecursive(puVar3,0xf,200,0,0,1);
         Sfx_PlayFromObject((uint)puVar3,0x22);
@@ -388,7 +388,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
     if (iVar5 != 0) {
       if (iVar5 == 0x11) {
         if (*(short *)(param_3 + 0x270) != 1) {
-          (**(code **)(*lbl_803DCA8C + 0x14))(puVar3,param_3,6);
+          (**(code **)(*gPlayerInterface + 0x14))(puVar3,param_3,6);
           *(undefined *)(param_3 + 0x27b) = 1;
           *(undefined *)(param_3 + 0x27a) = 1;
           *(undefined2 *)(param_3 + 0x270) = 1;
@@ -405,7 +405,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
         DAT_803ad2c8 = 0;
         (**(code **)(*lbl_803DDA90 + 4))(0,1,&DAT_803ad2c8,0x401,0xffffffff,&local_34);
         fn_802961FC(uVar4,2);
-        (**(code **)(*lbl_803DCA8C + 0x14))(puVar3,param_3,5);
+        (**(code **)(*gPlayerInterface + 0x14))(puVar3,param_3,5);
         objLightFn_8009a1dc((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,4,0);
         Sfx_PlayFromObject((uint)puVar3,0x255);
       }
@@ -552,7 +552,7 @@ void kaldachom_update(int param_1)
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
         if (*(short *)(iVar9 + 0x274) != 6) {
-          (**(code **)(*lbl_803DCA8C + 0x30))((double)timeDelta,param_1,iVar9,5);
+          (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
         }
         iVar8 = (**(code **)(*lbl_803DCAB8 + 0x48))
                           ((double)(float)((double)CONCAT44(0x43300000,
@@ -580,11 +580,11 @@ void kaldachom_update(int param_1)
         fn_8016855C(param_1,iVar9,iVar9);
         (**(code **)(*lbl_803DCAB8 + 0x2c))((double)lbl_803E3060,param_1,iVar9,0xffffffff);
         if (*(short *)(iVar9 + 0x274) != 6) {
-          (**(code **)(*lbl_803DCA8C + 0x30))((double)timeDelta,param_1,iVar9,5);
+          (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
         }
         *(undefined4 *)(iVar9 + 0x3e0) = *(undefined4 *)(param_1 + 0xc0);
         *(undefined4 *)(param_1 + 0xc0) = 0;
-        (**(code **)(*lbl_803DCA8C + 8))
+        (**(code **)(*gPlayerInterface + 8))
                   ((double)timeDelta,(double)timeDelta,param_1,iVar9,&lbl_803AC698,
                    &lbl_803AC680);
         *(undefined4 *)(param_1 + 0xc0) = *(undefined4 *)(iVar9 + 0x3e0);
@@ -641,7 +641,7 @@ void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3)
   ObjAnim_SetCurrentMove(iVar2,4,lbl_803E3060,0x10);
   *(float *)(iVar2 + 0x98) = lbl_803E307C;
   *(byte *)(iVar2 + 0xaf) = *(byte *)(iVar2 + 0xaf) | 8;
-  (**(code **)(*lbl_803DCA8C + 0x14))(iVar2,iVar6,0);
+  (**(code **)(*gPlayerInterface + 0x14))(iVar2,iVar6,0);
   *(undefined2 *)(iVar6 + 0x270) = 0;
   *(float *)(iVar6 + 0x2a0) = lbl_803E307C;
   *(float *)(iVar6 + 0x280) = lbl_803E3060;

@@ -20,7 +20,7 @@ extern void DIMbosstonsil_enableHitReaction(void);
 extern void DIMbosstonsil_chooseHitReaction(void);
 extern void DIMbosstonsil_startIdleHitReaction(void);
 
-extern undefined4* lbl_803DCA8C;
+extern undefined4* gPlayerInterface;
 extern undefined4* lbl_803DCAB8;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
@@ -58,7 +58,7 @@ void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
   }
   (*(code *)(*lbl_803DCAB8 + 0x58))(lbl_803E4CCC,obj,param_2,state,2,2,0x102,variant);
   *(void (**)(void))(obj + 0xbc) = (void (*)(void))dll_DIM_BossGutSpik_update;
-  (*(code *)(*lbl_803DCA8C + 0x14))(obj,state,0);
+  (*(code *)(*gPlayerInterface + 0x14))(obj,state,0);
   *(s16 *)(state + 0x270) = 0;
   gDIMbosstonsilRoutePhase = (s8)GameBit_Get(0x20c);
   if (gDIMbosstonsilRoutePhase < 3) {

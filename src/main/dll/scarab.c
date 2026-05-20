@@ -3046,13 +3046,13 @@ int fn_801603E8(int* obj, u8* obj2) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* dll_CB_hitDetect (60B). Vtable dispatch through lbl_803DCA8C with extra args (obj->b8, lbl_803AC5E8). */
+/* dll_CB_hitDetect (60B). Vtable dispatch through gPlayerInterface with extra args (obj->b8, lbl_803AC5E8). */
 extern u8 lbl_803AC5E8[];
-extern undefined4* lbl_803DCA8C;
+extern undefined4* gPlayerInterface;
 #pragma scheduling off
 void dll_CB_hitDetect(int* obj) {
     void* a = *(void**)((char*)obj + 0xb8);
-    (*(code*)((char*)(*lbl_803DCA8C) + 0xc))(obj, a, lbl_803AC5E8);
+    (*(code*)((char*)(*gPlayerInterface) + 0xc))(obj, a, lbl_803AC5E8);
 }
 #pragma scheduling reset
 
@@ -3093,7 +3093,7 @@ int fn_80160690(short* out, u8* obj) {
     *(s8*)(obj + 0x25f) = 1;
     out[2] = *(s16*)(obj + 0x19e);
     out[1] = *(s16*)(obj + 0x19c);
-    (*(code*)((char*)(*lbl_803DCA8C) + 0x30))(out, obj, 5);
+    (*(code*)((char*)(*gPlayerInterface) + 0x30))(out, obj, 5);
     return 0;
 }
 #pragma scheduling reset
@@ -3111,7 +3111,7 @@ int fn_8015DE50(int* obj, u8* state)
     int* sub = *(int**)((char*)obj + 0xb8);
     if ((s8)state[635] != 0) {
         f32 fz;
-        ((void(*)(int*, u8*, int))((void**)*lbl_803DCA8C)[5])(obj, state, 1);
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
         {
             f32* p = *(f32**)((char*)sub + 1036);
             fz = lbl_803E2DC8;
@@ -3145,7 +3145,7 @@ int fn_8015E044(int* obj, u8* state)
             f32 fz = lbl_803E2DC8;
             *(f32*)((char*)state + 644) = fz;
             *(f32*)((char*)state + 640) = fz;
-            ((void(*)(int*, u8*, int))((void**)*lbl_803DCA8C)[5])(obj, state, 0);
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
         }
         if ((s8)state[838] != 0) {
             return 6;
@@ -3254,7 +3254,7 @@ int fn_80160534(int* obj)
 int fn_80161468(int* obj, u8* state)
 {
     if ((s8)state[635] != 0) {
-        ((void(*)(int*, u8*, int))((void**)*lbl_803DCA8C)[5])(obj, state, 9);
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 9);
     }
     if ((s8)state[838] != 0) {
         return 1;

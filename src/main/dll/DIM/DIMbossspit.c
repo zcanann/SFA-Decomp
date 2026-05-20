@@ -10,7 +10,7 @@ extern f32 lbl_803DDBA4;
 extern u8 lbl_803DDBA8[8];
 extern u8 lbl_803DDBB0[8];
 extern u8 *lbl_803DCAB8;
-extern u8 *lbl_803DCA8C;
+extern u8 *gPlayerInterface;
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CB4;
@@ -123,7 +123,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *up
   *(u32 *)(state + DIMBOSSSPIT_SAVED_OBJ_FIELD_C0_OFFSET) = *(u32 *)(obj + 0xC0);
   *(u32 *)(obj + 0xC0) = 0;
 
-  (*(void (**)(u8 *, u8 *, double, double, u8 *, u8 *))(*(int *)lbl_803DCA8C + 0x8))(
+  (*(void (**)(u8 *, u8 *, double, double, u8 *, u8 *))(*(int *)gPlayerInterface + 0x8))(
       obj, updateState, (double)timeDelta, (double)timeDelta, lbl_803DDBB0, lbl_803DDBA8);
 
   *(u32 *)(obj + 0xC0) = *(u32 *)(state + DIMBOSSSPIT_SAVED_OBJ_FIELD_C0_OFFSET);
