@@ -156,3 +156,28 @@ void FUN_801c5c2c(int param_1)
   }
   return;
 }
+
+extern int lbl_803DDBC4;
+#pragma scheduling off
+#pragma peephole off
+void ecsh_shrine_modelMtxFn(int *p1, u8 *p2) {
+    int *obj = (int *)lbl_803DDBC4;
+    int *inner;
+    if (obj == NULL) return;
+    inner = *(int **)((char *)obj + 0xb8);
+    *p2 = *(u8 *)((char *)inner + 0x2e);
+    *p1 = *(s16 *)((char *)inner + 0x24);
+}
+void ecsh_shrine_func0E(u8 v) {
+    int *obj = (int *)lbl_803DDBC4;
+    int *inner;
+    if (obj == NULL) return;
+    inner = *(int **)((char *)obj + 0xb8);
+    if ((u32)(u8)v == *(u8 *)((char *)inner + 0x2e)) {
+        *(s16 *)((char *)inner + 0x26) = 1;
+    } else {
+        *(s16 *)((char *)inner + 0x26) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
