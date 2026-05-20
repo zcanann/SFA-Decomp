@@ -1401,6 +1401,32 @@ extern void fn_801A6638(int);
 extern f32 lbl_803E44C8;
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
+extern u8 framesThisStep;
+extern u32 randomGetRange(int min, int max);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern int *pDll_expgfx;
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_gyservent_update(int obj) {
+    int def = *(int *)(obj + 0x4C);
+    if (GameBit_Get(*(s16 *)(def + 0x1E)) != 0) return;
+    *(int *)(obj + 0xF4) -= framesThisStep;
+    if (*(int *)(obj + 0xF4) < 0) {
+        *(int *)(obj + 0xF4) = randomGetRange(0x46, 0xF0);
+        *(int *)(obj + 0xF8) = randomGetRange(0x1E, 0x3C);
+    }
+    if (*(int *)(obj + 0xF8) == 0) return;
+    *(int *)(obj + 0xF8) -= framesThisStep;
+    if (*(int *)(obj + 0xF8) <= 0) {
+        *(int *)(obj + 0xF8) = 0;
+    } else {
+        (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x724, 0, 2, -1, 0);
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x450);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
