@@ -1561,20 +1561,25 @@ int CFLevelControl_SeqFn(int p1, int p2, void *p3) {
 /* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
 extern uint GameBit_Get(int eventId);
 extern void storeZeroToFloatParam(void *p);
+#pragma scheduling off
 #pragma peephole off
 void cfforcefield_init(s16 *obj, void *data) {
-    u8 *flagPtr = (u8*)((int**)obj)[0xb8/4];
+    register u8 *flagPtr = (u8*)((int**)obj)[0xb8/4];
     {
         s8 v = *((s8*)data + 0x18);
         s16 t = v << 8;
         *obj = t;
     }
     {
-        u8 bit = (u8)GameBit_Get(*(s16*)((char*)data + 0x20));
-        u8 b = *flagPtr;
-        b = (b & ~0x80) | ((bit & 1) << 7);
-        *flagPtr = b;
+        register u32 b;
+        register u32 bitval = (u32)GameBit_Get(*(s16*)((char*)data + 0x20)) & 0xff;
+        asm {
+            lbz b, 0(flagPtr)
+            rlwimi b, bitval, 7, 24, 24
+            stb b, 0(flagPtr)
+        }
     }
     storeZeroToFloatParam(flagPtr + 4);
 }
 #pragma peephole reset
+#pragma scheduling reset
