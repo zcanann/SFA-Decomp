@@ -1743,11 +1743,15 @@ void Fall_Ladders_free(int obj) {
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
 extern f32 lbl_803E3B68;
+#pragma scheduling off
+#pragma peephole off
 void coldwatercontrol_init(int obj) {
     int *p = ((int**)obj)[0xb8/4];
     *(f32*)p = lbl_803E3B68;
-    *(u16*)((char*)obj + 0xb0) = *(u16*)((char*)obj + 0xb0) | 0x6000;
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
