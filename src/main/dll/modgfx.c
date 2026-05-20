@@ -4641,35 +4641,35 @@ void dll_0B_func0A(s16 *p)
     *p = -1;
 }
 
-void dll_0B_func0C(int p1, int p2)
+void dll_0B_func0C(void *p1, int p2)
 {
     int **arr = (int**)lbl_8039C1F8;
     int i;
     for (i = 0; i < 50; i++) {
-        if (arr[i] != NULL && arr[i][1] == p1) {
-            *(u8*)((char*)arr[i] + 315) = (u8)p2;
+        if (arr[i] != NULL && *(void**)((char*)arr[i] + 4) == p1) {
+            *(u8*)((char*)arr[i] + 315) = p2;
         }
     }
 }
 
-void dll_0B_func0D(int p1)
+void dll_0B_func0D(void *p1)
 {
     int **arr = (int**)lbl_8039C1F8;
     int i;
     for (i = 0; i < 50; i++) {
-        if (arr[i] != NULL && arr[i][1] == p1) {
+        if (arr[i] != NULL && *(void**)((char*)arr[i] + 4) == p1) {
             *(u8*)((char*)arr[i] + 314) = 1;
         }
     }
 }
 
-void dll_0B_func07(int p1)
+void dll_0B_func07(void *p1)
 {
     int **arr = (int**)lbl_8039C1F8;
     int i;
     for (i = 0; i < 50; i++) {
         if (arr[i] == NULL) continue;
-        if (arr[i][1] != p1) continue;
+        if (*(void**)((char*)arr[i] + 4) != p1) continue;
         if (*(void**)arr[i] != NULL) {
             Obj_FreeObject(*(void**)arr[i]);
         }
