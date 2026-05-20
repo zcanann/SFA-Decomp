@@ -852,16 +852,13 @@ void Camera_update(void)
 #pragma peephole off
 void *Camera_func08(void)
 {
-  CamcontrolHandlerEntry **entry;
   int i;
 
   i = 0;
-  entry = gCamcontrolHandlerEntries;
   for (; i < gCamcontrolHandlerCount; i++) {
-    if ((*entry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
-      return *entry;
+    if (gCamcontrolHandlerEntries[i]->actionId == CAMCONTROL_ACTION_DEFAULT) {
+      return gCamcontrolHandlerEntries[i];
     }
-    entry++;
   }
   return NULL;
 }
