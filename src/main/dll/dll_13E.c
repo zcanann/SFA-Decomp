@@ -6,7 +6,7 @@ extern f32 lbl_803E369C;
 extern f32 lbl_803E36A4;
 extern f32 lbl_803E36A8;
 extern f32 lbl_803E36AC;
-extern u8 *lbl_803DCAA8;
+extern u8 *gPathControlInterface;
 
 extern u8 *Obj_GetPlayerObject(void);
 extern u8 *getTrickyObject(void);
@@ -98,7 +98,7 @@ void sidekickball_update(u8 *self)
 
   /* vtable calls at +0x10, +0x14, +0x18 */
   {
-    u8 *vt = (u8 *)*(int *)lbl_803DCAA8;
+    u8 *vt = (u8 *)*(int *)gPathControlInterface;
     ((void (*)(u8 *, u8 *, f32))*(void **)(vt + 0x10))(self, state, timeDelta);
     ((void (*)(u8 *, u8 *))*(void **)(vt + 0x14))(self, state);
     ((void (*)(u8 *, u8 *, f32))*(void **)(vt + 0x18))(self, state, timeDelta);

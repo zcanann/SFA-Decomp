@@ -38,7 +38,7 @@ extern void bombplantspore_updateDrift(void *obj, void *state);
 
 extern void *lbl_803DCA54;
 extern void *lbl_803DCA78;
-extern void *lbl_803DCAA8;
+extern void *gPathControlInterface;
 extern void *pDll_expgfx;
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -168,9 +168,9 @@ void bombplantspore_update(void *obj) {
             objMove(*(f32 *)((u8 *)obj + 0x24) * timeDelta,
                     *(f32 *)((u8 *)obj + 0x28) * timeDelta,
                     *(f32 *)((u8 *)obj + 0x2c) * timeDelta, obj);
-            (*(void (***)(f32, void *, void *))lbl_803DCAA8)[4](timeDelta, obj, (u8 *)state + 4);
-            (*(void (***)(void *, void *))lbl_803DCAA8)[5](obj, (u8 *)state + 4);
-            (*(void (***)(f32, void *, void *))lbl_803DCAA8)[6](timeDelta, obj, (u8 *)state + 4);
+            (*(void (***)(f32, void *, void *))gPathControlInterface)[4](timeDelta, obj, (u8 *)state + 4);
+            (*(void (***)(void *, void *))gPathControlInterface)[5](obj, (u8 *)state + 4);
+            (*(void (***)(f32, void *, void *))gPathControlInterface)[6](timeDelta, obj, (u8 *)state + 4);
             if (hitObj != NULL &&
                 (hitId = *(s16 *)((u8 *)hitObj + 0x46), hitId != 0x36d) &&
                 hitId != 0x198 && hitId != 0x63c) {
@@ -229,11 +229,11 @@ void bombplantspore_init(void *obj, void *param2) {
     *(f32 *)((u8 *)state + 0x280) =
         (*(f64 *)randAsDouble - lbl_803E53A0) / lbl_803E5390;
 
-    (*(void (***)(void *, int, int, int))lbl_803DCAA8)[1](
+    (*(void (***)(void *, int, int, int))gPathControlInterface)[1](
         (u8 *)state + 0x8, 0, 0x40002, 1);
-    (*(void (***)(void *, int, u8 *, u8 *, u8 *))lbl_803DCAA8)[3](
+    (*(void (***)(void *, int, u8 *, u8 *, u8 *))gPathControlInterface)[3](
         (u8 *)state + 0x8, 1, lbl_80326D98, &lbl_803DBFC0, events);
-    (*(void (***)(void *, void *))lbl_803DCAA8)[8](obj, (u8 *)state + 0x8);
+    (*(void (***)(void *, void *))gPathControlInterface)[8](obj, (u8 *)state + 0x8);
     (*(void (***)(void *, int, int, int, int, int))pDll_expgfx)[2](
         obj, 0x3f1, 0, 4, -1, 0);
 

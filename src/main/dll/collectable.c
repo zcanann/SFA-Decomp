@@ -235,7 +235,7 @@ extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
-extern void *lbl_803DCAA8;
+extern void *gPathControlInterface;
 extern u16 lbl_803E23C0;
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E8;
@@ -1260,12 +1260,12 @@ void Tricky_init(int obj)
   model = Obj_GetActiveModel(obj);
   *(u8 *)(*(int *)(model + 0x34) + 8) = *(u8 *)(state + 0x82c);
   pathState = state + 0xf8;
-  (*(void (**)(int,int,int,int))(*(int *)lbl_803DCAA8 + 4))(pathState,1,0xa7,1);
-  (*(void (**)(int,int,char *,undefined4 *,int))(*(int *)lbl_803DCAA8 + 8))
+  (*(void (**)(int,int,int,int))(*(int *)gPathControlInterface + 4))(pathState,1,0xa7,1);
+  (*(void (**)(int,int,char *,undefined4 *,int))(*(int *)gPathControlInterface + 8))
       (pathState,1,lbl_8031D300,&lbl_803DBC48,2);
-  (*(void (**)(int,int,char *,undefined4 *,u16 *))(*(int *)lbl_803DCAA8 + 0xc))
+  (*(void (**)(int,int,char *,undefined4 *,u16 *))(*(int *)gPathControlInterface + 0xc))
       (pathState,2,lbl_8031D2E8,&lbl_803DBC40,startPath);
-  (*(void (**)(int,int))(*(int *)lbl_803DCAA8 + 0x20))(obj,pathState);
+  (*(void (**)(int,int))(*(int *)gPathControlInterface + 0x20))(obj,pathState);
   doNothing_onTrickyInit();
   walkgroupFindExitPointFn_800dc398();
   *(u8 *)(state + 0x374) = 2;
@@ -1752,11 +1752,11 @@ void fn_8014A5FC(int obj,int state)
     }
   }
 
-  (*(void (**)(f32,int,int))(*(int *)lbl_803DCAA8 + 0x10))(timeDelta,obj,state + 4);
+  (*(void (**)(f32,int,int))(*(int *)gPathControlInterface + 0x10))(timeDelta,obj,state + 4);
   if ((*(u32 *)(state + 0x2e4) & 4) != 0) {
-    (*(void (**)(int,int))(*(int *)lbl_803DCAA8 + 0x14))(obj,state + 4);
+    (*(void (**)(int,int))(*(int *)gPathControlInterface + 0x14))(obj,state + 4);
   }
-  (*(void (**)(f32,int,int))(*(int *)lbl_803DCAA8 + 0x18))(timeDelta,obj,state + 4);
+  (*(void (**)(f32,int,int))(*(int *)gPathControlInterface + 0x18))(timeDelta,obj,state + 4);
 
   if (((*(s8 *)(state + 0x25f) != 0) &&
        ((*(u32 *)(state + 0x2e4) & TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK) == 0)) &&

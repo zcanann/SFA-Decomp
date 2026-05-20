@@ -403,7 +403,7 @@ extern f32 lbl_803E5B98;
 extern int GameBit_Set(int bit, int val);
 extern void *mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int lbl_80328590[];
-extern void *lbl_803DCAA8;
+extern void *gPathControlInterface;
 
 /*
  * --INFO--
@@ -439,7 +439,7 @@ void SnowBike_func15(int obj)
         *(f32 *)(t + 0x494) = zero;
         *(f32 *)(t + 0x498) = zero;
         *(f32 *)(t + 0x49c) = zero;
-        (*(void (**)(int, int))((char *)*(int *)lbl_803DCAA8 + 0x20))(obj, t + 0x178);
+        (*(void (**)(int, int))((char *)*(int *)gPathControlInterface + 0x20))(obj, t + 0x178);
         *(f32 *)(*(int *)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
         *(f32 *)(*(int *)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
         *(f32 *)(*(int *)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);

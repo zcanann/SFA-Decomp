@@ -9,7 +9,7 @@ extern int fn_801EC870(int p1, int p2);
 extern void hitDetectFn_800658a4(int p1, f32 x, f32 y, f32 z, f32 *out, int flag);
 
 extern undefined4 *lbl_803DCA6C;
-extern undefined4 *lbl_803DCAA8;
+extern undefined4 *gPathControlInterface;
 extern f32 timeDelta;
 
 extern f32 lbl_803E5AE8; /* 0.0f  */
@@ -195,7 +195,7 @@ int fn_801EAAC0(int obj, int state)
         *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xc);
         *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x10);
         *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x14);
-        (*(void (**)(int, int))(*lbl_803DCAA8 + 0x20))(obj, state + DRSHACKLE_ATTACHMENT_OFFSET);
+        (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, state + DRSHACKLE_ATTACHMENT_OFFSET);
         *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = *(f32 *)(obj + 0xc);
         *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = *(f32 *)(obj + 0x10);
         *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = *(f32 *)(obj + 0x14);
@@ -232,7 +232,7 @@ int fn_801EAAC0(int obj, int state)
     *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xc);
     *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x10);
     *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x14);
-    (*(void (**)(int, int))(*lbl_803DCAA8 + 0x20))(obj, state + DRSHACKLE_ATTACHMENT_OFFSET);
+    (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, state + DRSHACKLE_ATTACHMENT_OFFSET);
     *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = *(f32 *)(obj + 0xc);
     *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = *(f32 *)(obj + 0x10);
     *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = *(f32 *)(obj + 0x14);

@@ -15,7 +15,7 @@ extern void fn_80165C8C(int obj, int sub);
 extern void fn_80166444(int obj, int sub);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
-extern void *lbl_803DCAA8;
+extern void *gPathControlInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
@@ -93,7 +93,7 @@ undefined4 fn_8016558C(int obj, int param_2)
     *(u8 *)(*(int *)(objLocal + 0x54) + 0x6d) = LANDED_ARWING_HIT_VOLUME_FRAME;
     ObjHits_RegisterActiveHitVolumeObject(objLocal);
 
-    (*(code *)(*(int *)lbl_803DCAA8 + 0x18))(objLocal, stateWord + 4, (double)timeDelta);
+    (*(code *)(*(int *)gPathControlInterface + 0x18))(objLocal, stateWord + 4, (double)timeDelta);
 
     if (*(u8 *)(sub + 0x90) != LANDED_ARWING_SCRIPT_MODE) {
         if ((u32)playerObj != 0 &&

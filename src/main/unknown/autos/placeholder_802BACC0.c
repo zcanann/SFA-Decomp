@@ -4,7 +4,7 @@ extern void GameBit_Set(int eventId, int value);
 extern void ObjGroup_RemoveObject(int obj, int group);
 
 extern undefined4 *lbl_803DCA8C;
-extern undefined4 *lbl_803DCAA8;
+extern undefined4 *gPathControlInterface;
 extern f32 lbl_803E8234;
 extern f32 lbl_803E8258;
 extern f32 lbl_803E827C;
@@ -188,7 +188,7 @@ int ddh_cc_initinterrupts(int obj, undefined4 unused, int setup)
         (*(void (*)(int, int, int))(*lbl_803DCA8C + 0x14))(obj, state, 7);
     }
 
-    (*(void (*)(int, int))(*lbl_803DCAA8 + 0x20))(obj, state + 4);
+    (*(void (*)(int, int))(*gPathControlInterface + 0x20))(obj, state + 4);
     *(f32 *)(state + 0x294) = lbl_803E8234;
     *(f32 *)(state + 0x284) = lbl_803E8234;
     *(f32 *)(state + 0x280) = lbl_803E8234;

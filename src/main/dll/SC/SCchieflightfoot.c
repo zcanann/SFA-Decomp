@@ -42,7 +42,7 @@ extern undefined4* pDll_expgfx;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
-extern SHthorntailPathControlInterface **lbl_803DCAA8;
+extern SHthorntailPathControlInterface **gPathControlInterface;
 extern f32 timeDelta;
 extern f64 lbl_803E5428;
 extern f64 lbl_803E5440;
@@ -64,7 +64,7 @@ extern f32 lbl_803E5484;
 extern f32 lbl_803E5488;
 extern f64 lbl_803E5490;
 
-#define gSHthorntailPathControlInterface lbl_803DCAA8
+#define gSHthorntailPathControlInterface gPathControlInterface
 
 typedef struct SHthorntailDustEffectParams {
   undefined2 flags;

@@ -14,7 +14,7 @@ extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 extern void* lbl_803DCAB8;
 extern void* lbl_803DCA8C;
-extern void* lbl_803DCAA8;
+extern void* gPathControlInterface;
 extern void* pDll_expgfx;
 extern f32 lbl_803E2FC8;
 extern f32 lbl_803E2FCC;
@@ -188,7 +188,7 @@ void tumbleweed_updateStateMachine(int obj) {
             }
         }
         tumbleweed_updateRollingMotion(obj, aux);
-        (*(int(**)(int, int, f32))(*(int*)lbl_803DCAA8 + 0x18))(obj, aux, timeDelta);
+        (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
         *(f32*)(aux + 0x2a0) = *(f32*)(aux + 0x2a0) - timeDelta;
         if (*(f32*)(aux + 0x2a0) >= lbl_803E2F68) {
             if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
@@ -231,7 +231,7 @@ void tumbleweed_updateStateMachine(int obj) {
                 }
             }
             fn_80163990(obj, aux);
-            (*(int(**)(int, int, f32))(*(int*)lbl_803DCAA8 + 0x18))(obj, aux, timeDelta);
+            (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
         }
     } else if (state == 4) {
         while (ObjMsg_Pop(obj, &popMsg, (u32*)0, (u32*)0) != 0) {
@@ -300,9 +300,9 @@ void tumbleweed_init(int obj, int defData) {
     *(f32*)(aux + 0x270) = *(f32*)(aux + 0x26c) / (f32)(s32)randomGetRange(0xc8, 0x1f4);
     *(u32*)(aux + 0x284) = 0;
     *(f32*)(obj + 0x8) = lbl_803E2FD0;
-    (*(int(**)(int, int, int, int))(*(int*)lbl_803DCAA8 + 0x4))(aux, 0, 0x40000, 1);
-    (*(int(**)(int, int, void*, void*, int))(*(int*)lbl_803DCAA8 + 0x8))(aux, 1, lbl_80320288, lbl_803DBD40, 8);
-    (*(int(**)(int, int))(*(int*)lbl_803DCAA8 + 0x20))(obj, aux);
+    (*(int(**)(int, int, int, int))(*(int*)gPathControlInterface + 0x4))(aux, 0, 0x40000, 1);
+    (*(int(**)(int, int, void*, void*, int))(*(int*)gPathControlInterface + 0x8))(aux, 1, lbl_80320288, lbl_803DBD40, 8);
+    (*(int(**)(int, int))(*(int*)gPathControlInterface + 0x20))(obj, aux);
     *(u8*)(aux + 0x278) = 0;
     *(f32*)(aux + 0x2a0) = lbl_803E2FB4 + (f32)(s32)randomGetRange(-0x12c, 0x12c);
     ObjGroup_AddObject(obj, 3);

@@ -9,7 +9,7 @@ extern void GameBit_Set(int eventId,int value);
 extern void Model_GetVertexPosition(int modelData,int vertexIndex,float *outPosition);
 extern undefined4 objParticleFn_80097734();
 
-extern undefined4* lbl_803DCAA8;
+extern undefined4* gPathControlInterface;
 extern s32 lbl_80329B78[];
 extern f32 timeDelta;
 extern f32 lbl_803E648C;
@@ -79,9 +79,9 @@ void dfptargetblock_update(int param_1)
         }
       }
       else if (state->controlId != 0) {
-        (*(code *)(*lbl_803DCAA8 + 0x10))((double)timeDelta,param_1);
-        (*(code *)(*lbl_803DCAA8 + 0x14))(param_1,state->controlId);
-        (*(code *)(*lbl_803DCAA8 + 0x18))((double)timeDelta,param_1,state->controlId);
+        (*(code *)(*gPathControlInterface + 0x10))((double)timeDelta,param_1);
+        (*(code *)(*gPathControlInterface + 0x14))(param_1,state->controlId);
+        (*(code *)(*gPathControlInterface + 0x18))((double)timeDelta,param_1,state->controlId);
       }
     }
   }
