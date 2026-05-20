@@ -1393,6 +1393,39 @@ void MoonSeedBush_update(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int getSaveGameLoadStatus(void);
+extern int mapGetDirIdx(int);
+extern void unlockLevel(int, int, int);
+extern void Music_Trigger(int, int);
+extern void fn_801A6638(int);
+extern f32 lbl_803E44C8;
+extern f32 lbl_803DDB28;
+extern int lbl_803DDB2C;
+
+#pragma scheduling off
+#pragma peephole off
+void MMP_levelcontrol_init(int obj) {
+    *(u16 *)(obj + 0xB0) |= 0x6000;
+    if (getSaveGameLoadStatus() != 0) {
+        *(int *)(obj + 0xF4) = 2;
+    } else {
+        *(int *)(obj + 0xF4) = 1;
+    }
+    *(u32 *)(obj + 0xF8) = GameBit_Get(0xF33);
+    *(void (**)(int))(obj + 0xBC) = fn_801A6638;
+    unlockLevel(mapGetDirIdx(0x12), 0, 0);
+    lbl_803DDB28 = lbl_803E44C8;
+    lbl_803DDB2C = 0;
+    Music_Trigger(0xCC, 0);
+    Music_Trigger(0xDB, 0);
+    Music_Trigger(0xF2, 0);
+    Music_Trigger(0xCE, 0);
+    Music_Trigger(0xC2, 0);
+    GameBit_Set(0xDCF, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void MoonSeedBush_init(int obj, int data) {
