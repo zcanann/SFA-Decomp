@@ -1354,3 +1354,46 @@ int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+int arrayIndexOf(int *arr, int count, int target)
+{
+    int idx = 0;
+    int i;
+    for (i = 0; i < count; i++) {
+        int v = *arr;
+        arr++;
+        if (v == target) return idx;
+        idx++;
+    }
+    return -1;
+}
+
+extern f32 timeDelta;
+#pragma peephole off
+#pragma scheduling off
+int timerCountDown(f32 *p)
+{
+    if (*p == lbl_803DEFA0) return 0;
+    *p = *p - timeDelta;
+    if (*p > lbl_803DEFA0) return 0;
+    *p = lbl_803DEFA0;
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern u8 lbl_803DD124;
+extern int lbl_8039A664[][2];
+#pragma peephole off
+#pragma scheduling off
+void ObjSeq_preempt(int a, int b)
+{
+    u8 c = lbl_803DD124;
+    int i = (s8)c;
+    if (i >= 40) return;
+    lbl_8039A664[i][0] = a;
+    lbl_8039A664[i][1] = b;
+    lbl_803DD124++;
+}
+#pragma scheduling reset
+#pragma peephole reset
