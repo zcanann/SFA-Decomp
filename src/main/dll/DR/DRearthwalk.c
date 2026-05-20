@@ -708,12 +708,14 @@ void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 }
 
 /* 48b: free if 0x4000 flag set. */
+#pragma peephole off
 void sh_staffhaze_update(int obj)
 {
   if ((*(short*)(obj + 6) & 0x4000) != 0) {
     Obj_FreeObject(obj);
   }
 }
+#pragma peephole reset
 
 /* 120b: tick a float timer; on wrap optionally trigger an effect. */
 int fn_801DA954(int obj)
