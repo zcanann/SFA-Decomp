@@ -299,13 +299,14 @@ void firstPersonPlaceCamera(int param_1,int param_2)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void firstPersonExit(short *param_1)
 {
+  register short *self = param_1;
   float fVar1;
   float fVar2;
   short sVar3;
   int iVar4;
-  double dVar5;
   float local_24[3];
   undefined auStack_28[4];
   undefined4 local_18;
@@ -313,25 +314,24 @@ void firstPersonExit(short *param_1)
   undefined4 local_10;
   uint uStack_c;
 
-  iVar4 = *(int *)(param_1 + 0x52);
-  *(float *)(lbl_803DD548 + 0x10) = *(float *)(param_1 + 0xc);
+  iVar4 = *(int *)(self + 0x52);
+  *(float *)(lbl_803DD548 + 0x10) = *(float *)(self + 0xc);
   fVar1 = lbl_803E17C4;
   *(float *)(lbl_803DD548 + 0x18) = lbl_803E17C4;
   *(float *)(lbl_803DD548 + 0x1c) = fVar1;
-  *(float *)(lbl_803DD548 + 0x20) = *(float *)(param_1 + 0xe);
+  *(float *)(lbl_803DD548 + 0x20) = *(float *)(self + 0xe);
   *(float *)(lbl_803DD548 + 0x28) = fVar1;
   *(float *)(lbl_803DD548 + 0x2c) = fVar1;
-  *(float *)(lbl_803DD548 + 0x30) = *(float *)(param_1 + 0x10);
+  *(float *)(lbl_803DD548 + 0x30) = *(float *)(self + 0x10);
   *(float *)(lbl_803DD548 + 0x38) = fVar1;
   *(float *)(lbl_803DD548 + 0x3c) = fVar1;
-  camcontrol_getTargetPosition((int)param_1,iVar4,local_24,auStack_28);
+  camcontrol_getTargetPosition((int)self,iVar4,local_24,auStack_28);
   *(float *)(lbl_803DD548 + 0x14) = local_24[0];
   *(float *)(lbl_803DD548 + 0x24) = local_24[1];
   *(float *)(lbl_803DD548 + 0x34) = local_24[2];
   fVar1 = *(float *)(lbl_803DD548 + 0x14) - *(float *)(lbl_803DD548 + 0x10);
   fVar2 = *(float *)(lbl_803DD548 + 0x34) - *(float *)(lbl_803DD548 + 0x30);
-  dVar5 = (double)sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
-  *(float *)(lbl_803DD548 + 0x118) = (float)dVar5;
+  *(float *)(lbl_803DD548 + 0x118) = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
   *(int *)(lbl_803DD548 + 0xfc) = (int)(lbl_803DD548 + 0x40);
   *(int *)(lbl_803DD548 + 0x100) = (int)(lbl_803DD548 + 0x50);
   *(undefined4 *)(lbl_803DD548 + 0x104) = 0;
@@ -339,7 +339,7 @@ void firstPersonExit(short *param_1)
   *(undefined4 *)(lbl_803DD548 + 0xf8) = 0;
   *(code **)(lbl_803DD548 + 0x10c) = (code *)curveFn_80010dc0;
   *(void **)(lbl_803DD548 + 0x110) = curveFn_80010d54;
-  uStack_14 = (int)*param_1 ^ 0x80000000;
+  uStack_14 = (int)*self ^ 0x80000000;
   local_18 = 0x43300000;
   *(float *)(lbl_803DD548 + 0x40) =
       (float)((double)CONCAT44(0x43300000,uStack_14) - lbl_803E17D8);
@@ -362,7 +362,7 @@ void firstPersonExit(short *param_1)
       *(float *)(lbl_803DD548 + 0x40) = *(float *)(lbl_803DD548 + 0x40) + lbl_803E17D0;
     }
   }
-  uStack_c = (int)param_1[1] ^ 0x80000000;
+  uStack_c = (int)self[1] ^ 0x80000000;
   local_10 = 0x43300000;
   *(float *)(lbl_803DD548 + 0x50) =
       (float)((double)CONCAT44(0x43300000,uStack_c) - lbl_803E17D8);
@@ -383,6 +383,7 @@ void firstPersonExit(short *param_1)
   }
   curvesMove(lbl_803DD548 + 0x78);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 
