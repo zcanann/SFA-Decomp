@@ -771,8 +771,6 @@ void FUN_801883bc(short *param_1,int param_2)
  */
 void infopoint_hitDetect(void)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
-  return;
 }
 
 /*
@@ -1733,3 +1731,69 @@ void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 void flammablevine_free(int x) { ObjGroup_RemoveObject(x, 0x31); }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Fall_Ladders_free: vtable method @ 0x18 on global manager. */
+extern undefined4* lbl_803DCA78;
+typedef void (*FallLaddersFreeFn)(int);
+#pragma scheduling off
+void Fall_Ladders_free(int obj) {
+    ((FallLaddersFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(obj);
+}
+#pragma scheduling reset
+
+/* coldwatercontrol_init: set float field + OR flag bits. */
+extern f32 lbl_803E3B68;
+void coldwatercontrol_init(int obj) {
+    int *p = ((int**)obj)[0xb8/4];
+    *(f32*)p = lbl_803E3B68;
+    *(u16*)((char*)obj + 0xb0) = *(u16*)((char*)obj + 0xb0) | 0x6000;
+}
+
+/* landed_arwing_free: free child object + detach link. */
+extern void Obj_FreeObject(int obj);
+void landed_arwing_free(int obj) {
+    int *p = ((int**)obj)[0xb8/4];
+    if (p[0x10/4] != 0) {
+        Obj_FreeObject(p[0x10/4]);
+        ObjLink_DetachChild(obj, p[0x10/4]);
+    }
+}
+
+/* landed_arwing_render: visible-guarded render with extra call. */
+extern f32 lbl_803E3BA4;
+extern void fn_801889C8(int obj);
+#pragma peephole off
+void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    s32 v = visible;
+    if (v != 0) {
+        objRenderFn_8003b8f4(lbl_803E3BA4);
+        fn_801889C8(obj);
+    }
+}
+#pragma peephole reset
+
+/* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
+extern void buttonDisable(int p1, int mask);
+extern undefined4* lbl_803DCA54;
+typedef void (*InfoPtUpdateFn)(int, int, int);
+#pragma peephole off
+void infopoint_update(int obj) {
+    if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
+        buttonDisable(0, 0x100);
+        ((InfoPtUpdateFn)(*(u32*)(*lbl_803DCA54 + 0x48)))(0, obj, -1);
+    }
+}
+#pragma peephole reset
+
+/* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
+extern void unlockLevel(int a, int b, int c);
+extern void fn_80188CC0(void);
+void landed_arwing_init(int obj, int param) {
+    int *p = ((int**)obj)[0xb8/4];
+    *(u16*)((char*)obj + 0xb0) = *(u16*)((char*)obj + 0xb0) | 0x2000;
+    *(s8*)((char*)p + 0x16) = 1;
+    if (GameBit_Get(*(s16*)((char*)param + 0x1c)) == 0) {
+        unlockLevel(0, 0, 1);
+    }
+    *(void(**)(void))((char*)obj + 0xbc) = fn_80188CC0;
+}

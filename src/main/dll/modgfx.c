@@ -4608,3 +4608,20 @@ void dll_0D_func05(u8 v) {
     }
 }
 #pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void partfx_initialise(void) {
+    u16 *p;
+    int i;
+    p = lbl_8039C2E0 + 0x14;
+    i = 0x14;
+    while ((s8)i != 0) {
+        p = p - 1;
+        i = i - 1;
+        *p = 0;
+    }
+    lbl_803DD2C0 = 0;
+}
+#pragma scheduling reset
+#pragma peephole reset

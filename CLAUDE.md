@@ -60,6 +60,17 @@ Heuristic before reaching for `asm { }`:
    `char buf[N]; buf[0] = arr[i];` emits a spurious `extsb`; `u8 buf[N];`
    doesn't. See `6863ffe7` and the related dll_36 commits.
 
+8. **Wrap dead-stored stack locals in a `struct` when only the buffer head is
+   passed to a callee.** Pattern: function builds `auStack_28[6]; u16 mode;
+   f32 a,b,c,d;` on the stack, fills the f32 slots from globals, then passes
+   `auStack_28` (just the head) to a virtual call — MWCC sees the per-field
+   writes as dead (the call only "sees" a 6-byte buffer) and eliminates every
+   `stfs`. Wrapping them as one struct with a `pad[6]` then passing
+   `&stk.pad` keeps the stores alive because MWCC treats the whole struct as
+   live through the address-taken `pad` member. Took
+   `SB_Galleon_hitDetect` from 63% → 93.8% (commit `8b37ec0c`). Combine with
+   `#pragma scheduling off` to align the `lfs`/`stfs` order.
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
