@@ -208,26 +208,29 @@ void dimbossgut2_updateTracking(ushort *param_1,int param_2)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void dimbossgut2_free(int param_9)
 {
+  int obj = param_9;
   uint uVar1;
   int iVar2;
   void *childObj;
 
-  iVar2 = *(int *)(param_9 + 0xb8);
+  iVar2 = *(int *)(obj + 0xb8);
   uVar1 = *(uint *)(*(int *)(iVar2 + 0x40c) + 0x18);
   if (uVar1 != 0) {
     ModelLightStruct_free((void *)uVar1);
   }
-  ObjGroup_RemoveObject(param_9,3);
-  childObj = *(void **)(param_9 + 200);
+  ObjGroup_RemoveObject(obj,3);
+  childObj = *(void **)(obj + 200);
   if (childObj != 0) {
     Obj_FreeObject((int)childObj);
-    *(undefined4 *)(param_9 + 200) = 0;
+    *(undefined4 *)(obj + 200) = 0;
   }
-  (*(void (*)(int,int,int))(*(int *)(*gBaddieControlInterface + 0x40)))(param_9,iVar2,0);
+  (*(void (*)(int,int,int))(*(int *)(*gBaddieControlInterface + 0x40)))(obj,iVar2,0);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -451,17 +454,20 @@ void DIMbossspit_updateBurst(undefined8 param_1,undefined8 param_2,undefined8 pa
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void DIMbossspit_free(int param_1)
 {
+  int obj = param_1;
   uint uVar1;
 
-  uVar1 = *(uint *)(*(int *)(param_1 + 0xb8) + 4);
+  uVar1 = *(uint *)(*(int *)(obj + 0xb8) + 4);
   if (uVar1 != 0) {
     ModelLightStruct_free((void *)uVar1);
   }
-  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(param_1);
+  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -686,16 +692,17 @@ void dimbossfire_hitDetect(void) {}
 #pragma peephole off
 void dimbossfire_free(int obj)
 {
+  int o = obj;
   int state;
   void *light;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)(o + 0xb8);
   light = *(void **)(state + 0x10);
   if (light != 0) {
     ModelLightStruct_free(light);
     *(undefined4 *)(state + 0x10) = 0;
   }
-  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(o);
 }
 #pragma peephole reset
 #pragma scheduling reset
