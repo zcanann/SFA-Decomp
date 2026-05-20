@@ -1357,6 +1357,15 @@ void streamCb_80080384(void)
     }
 }
 
+#pragma peephole off
+#pragma scheduling off
+void s16toFloat(f32 *p, s16 val)
+{
+    *p = (f32)val;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern int objModelGetVecFn_800395d8(int obj, int idx);
 #pragma peephole off
 #pragma scheduling off
