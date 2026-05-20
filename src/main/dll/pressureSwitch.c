@@ -604,6 +604,7 @@ void swarmbaddie_initialise(void) {}
 void wispbaddie_hitDetect(void) {}
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void mm_free(void *p);
 
 #pragma scheduling off
@@ -629,6 +630,15 @@ void wispbaddie_free(int obj) {
         *state = NULL;
     }
 }
+void hagabon_free(int obj) {
+    void **state = *(void ***)(obj + 0xB8);
+    ObjGroup_RemoveObject(obj, 3);
+    Sfx_StopFromObject(obj, 0x236);
+    if (*state != NULL) {
+        mm_free(*state);
+        *state = NULL;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -640,7 +650,7 @@ int swarmbaddie_func08(void) { return 0x9; }
 int wispbaddie_getExtraSize(void) { return 0x2c; }
 int wispbaddie_func08(void) { return 0x9; }
 
-extern void hagabon_free(void);
+extern void hagabon_free(int obj);
 extern void hagabon_render(void);
 extern void hagabon_hitDetect(int obj);
 extern void hagabon_update(void);
