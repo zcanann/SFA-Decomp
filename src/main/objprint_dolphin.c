@@ -4414,3 +4414,16 @@ u32 isRomListLoading(void) { return lbl_803DCC74; }
 extern u32 lbl_803DCC70;
 void clearForceLoadImmediately(void) { lbl_803DCC70 = 0x0; }
 void setForceLoadImmediately(void) { lbl_803DCC70 = 0x1; }
+
+extern u8 lbl_803DCC28;
+extern u8 lbl_803DCC58;
+#pragma scheduling off
+#pragma peephole off
+void fn_800412B8(u8 r, u8 g, u8 b) {
+    lbl_803DCC28 = 1;
+    lbl_803DCC58 = r;
+    (&lbl_803DCC58)[1] = g;
+    (&lbl_803DCC58)[2] = b;
+}
+#pragma peephole reset
+#pragma scheduling reset

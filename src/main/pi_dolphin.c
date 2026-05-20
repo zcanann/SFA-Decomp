@@ -5304,3 +5304,32 @@ void disableHeavyFog(void) { lbl_803DCD28 = 0x0; }
 extern f32 lbl_803DCD44;
 extern f32 lbl_803DCD40;
 void fn_8004C234(f32 *p1, f32 *p2) { *p1 = lbl_803DCD44; *p2 = lbl_803DCD40; }
+
+extern u32 lbl_803DB5EC;
+extern f32 lbl_803DB5F0;
+extern f32 lbl_803DEAC8;
+#pragma scheduling off
+#pragma peephole off
+void fn_8004C1E4(u8 b, f32 scale) {
+    ((u8*)&lbl_803DB5EC)[3] = b;
+    lbl_803DB5F0 = scale;
+    if (scale > lbl_803DEAC8) {
+        lbl_803DB5F0 = lbl_803DEAC8;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void *fn_8004B118(int *p) {
+    int idx = *(s16*)((char*)p + 0x2c);
+    if (idx < *(s16*)((char*)p + 0x2a)) {
+        void **arr = *(void***)((char*)p + 8);
+        *(s16*)((char*)p + 0x2c) = idx + 1;
+        return arr[idx];
+    }
+    return NULL;
+}
+#pragma peephole reset
+#pragma scheduling reset

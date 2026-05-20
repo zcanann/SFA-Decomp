@@ -655,9 +655,20 @@ void dimbosscrackpar_release(void) {}
 void dimbosscrackpar_initialise(void) {}
 
 extern f32 lbl_803E4D98;
-extern void fn_801C02B8(int *obj);
+extern undefined4 *gPartfxInterface;
 #pragma scheduling off
 #pragma peephole off
+int fn_801C02B8(int *obj) {
+    int *side = *(int **)((char *)obj + 0x4c);
+    if (GameBit_Get(*(s16 *)((char *)side + 0x1e)) == 0) {
+        return 0;
+    }
+    (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
+        obj, *(s16 *)((char *)side + 0x1a) + 1222, 0, 2, -1, 0);
+    (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
+        obj, 1224, 0, 2, -1, 0);
+    return 0;
+}
 void dimbosscrackpar_free(int *obj) {
     (*(void (*)(int *))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
