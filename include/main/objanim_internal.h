@@ -194,8 +194,8 @@ typedef struct ObjAnimEventList {
   s16 rootPitch;
   s16 rootRoll;
   u8 rootCurveValid;
-  u8 triggeredIds[OBJANIM_EVENT_TRIGGER_CAPACITY];
-  u8 triggerCount;
+  s8 triggeredIds[OBJANIM_EVENT_TRIGGER_CAPACITY];
+  s8 triggerCount;
 } ObjAnimEventList;
 
 static inline ObjAnimBank *ObjAnim_GetActiveBank(ObjAnimComponent *objAnim) {

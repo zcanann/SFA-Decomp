@@ -174,32 +174,29 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,Obj
   ObjAnimState *state;
   int previousEventFrame;
   int currentEventFrame;
-  char triggerSlot;
+  s8 triggerSlot;
   float fVar4;
   float fVar5;
   float fVar6;
   int moveWrappedOrEnded;
   int eventByteOffset;
   int eventCountdown;
-  int *piVar10;
   int iVar11;
   int eventIndex;
-  byte eventScanFlags;
+  int eventScanFlags;
   s16 eventWord;
-  u8 eventId;
-  u16 eventFrame;
+  int eventId;
+  int eventFrame;
   double local_28;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
   moveWrappedOrEnded = 0;
   bank = ObjAnim_GetActiveBank(objAnim);
-  piVar10 = (int *)bank;
   if (bank->animDef->moveCount == 0) {
     moveWrappedOrEnded = 0;
   }
   else {
     state = bank->activeState;
-    iVar11 = (int)state;
     state->step = moveStepScale * state->segmentLength;
     if (state->eventCountdown != 0) {
       if ((state->flags & OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP) != 0) {
@@ -282,16 +279,19 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,Obj
       if (iVar11 != 0) {
         previousEventFrame = (int)(gObjAnimEventFrameScale * fVar4);
         currentEventFrame = (int)(gObjAnimEventFrameScale * objAnim->activeMoveProgress);
-        eventScanFlags = currentEventFrame < previousEventFrame;
+        eventScanFlags = OBJANIM_EVENT_SCAN_FORWARD;
+        if (currentEventFrame < previousEventFrame) {
+          eventScanFlags |= OBJANIM_EVENT_SCAN_WRAPPED;
+        }
         if (moveStepScale * deltaTime < gObjAnimProgressZero) {
-          eventScanFlags = eventScanFlags | 2;
+          eventScanFlags |= OBJANIM_EVENT_SCAN_REVERSE;
         }
         eventIndex = 0;
         eventByteOffset = 0;
         while ((eventIndex < iVar11 && (events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY))) {
           eventWord = *(s16 *)((u8 *)eventTable->entries + eventByteOffset);
           eventFrame = eventWord & OBJANIM_EVENT_FRAME_MASK;
-          eventId = eventWord >> OBJANIM_EVENT_ID_SHIFT & OBJANIM_EVENT_ID_MASK;
+          eventId = (eventWord >> OBJANIM_EVENT_ID_SHIFT) & OBJANIM_EVENT_ID_MASK;
           if (eventId != OBJANIM_EVENT_ID_NONE) {
             if (((eventScanFlags == OBJANIM_EVENT_SCAN_FORWARD) &&
                 (previousEventFrame <= (int)eventFrame)) &&

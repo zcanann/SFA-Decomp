@@ -107,7 +107,7 @@ void SHthorntail_update(SHthorntailObject *obj)
   undefined4 in_r10;
   int iVar9;
   int iVar10;
-  u8 *eventId;
+  s8 *eventId;
   double extraout_f1;
   double dVar11;
   double extraout_f1_00;
