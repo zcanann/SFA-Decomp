@@ -1956,8 +1956,29 @@ typedef struct {
     u8 bit7 : 1;
     u8 bits_0to6 : 7;
 } _Obj8011F70C;
+#pragma scheduling off
+#pragma peephole off
 void GameUI_airMeterSetShutdown(void) {
     _Obj8011F70C *p = (_Obj8011F70C *)airMeter;
     if (p == 0) return;
     p->bit7 = 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void GameUI_airMeterRun(int v) {
+    int *m = (int *)airMeter;
+    int clamped;
+    if (m == NULL) return;
+    if (v < 0) clamped = 0;
+    else if (v > m[1]) clamped = m[1];
+    else clamped = v;
+    if (m[0x10] == 1) {
+        clamped = clamped * 0x9e / m[1];
+    }
+    m[3] = clamped;
+}
+#pragma peephole reset
+#pragma scheduling reset
