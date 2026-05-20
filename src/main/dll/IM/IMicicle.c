@@ -1413,8 +1413,36 @@ void exploded_update(int *obj) {
 /* fn_801A3E9C: forward decl (think-routine pointer used by slidingdoor_init). */
 extern void fn_801A3E9C(void);
 extern f32 lbl_803E43C0;
+extern f32 lbl_803E4428;
 extern void* Obj_GetPlayerObject(void);
 extern int atan2i(int y, int x);
+extern void fn_801A4DB8(u8* obj, u8* data, int extra, u8* sub);
+
+/* exploded_init: store (s8)data[0x18] at obj->_ad, convert (s8)data[0x3d]
+ * to f32 and stash (obj->_50->_04 * raw) / lbl_803E4428 at obj+0x8, then
+ * invoke fn_801A4DB8(obj, data, ?, sub). Finally, set sub[0x69] = 1 if any
+ * of the 6 halfwords at data+0x20..+0x2a is non-zero, else 0. */
+#pragma scheduling off
+#pragma peephole off
+void exploded_init(u8* obj, u8* data, int extra) {
+    u8* sub;
+    *(s8*)(obj + 0xad) = (s8)data[0x18];
+    sub = *(u8**)(obj + 0xb8);
+    *(f32*)(obj + 0x8) = (*(f32*)((char*)(*(u8**)(obj + 0x50)) + 4) * (f32)(s32)(s8)data[0x3d]) / lbl_803E4428;
+    fn_801A4DB8(obj, data, extra, sub);
+    if (*(s16*)(data + 0x20) != 0 ||
+        *(s16*)(data + 0x22) != 0 ||
+        *(s16*)(data + 0x24) != 0 ||
+        *(s16*)(data + 0x26) != 0 ||
+        *(s16*)(data + 0x28) != 0 ||
+        *(s16*)(data + 0x2a) != 0) {
+        sub[0x69] = 1;
+    } else {
+        sub[0x69] = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* attractor_func0B: dispatch on (s8)obj->_4c->_19 — state 0/3+ store NULL,
  * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
