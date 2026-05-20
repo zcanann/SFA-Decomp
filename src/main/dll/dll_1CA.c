@@ -47,7 +47,7 @@ extern f32 lbl_803E5DDC;
 /*
  * --INFO--
  *
- * Function: FUN_801ca5b4
+ * Function: dll_197_init
  * EN v1.0 Address: 0x801CA5B4
  * EN v1.0 Size: 1148b
  * EN v1.1 Address: 0x801CA6BC
@@ -57,7 +57,7 @@ extern f32 lbl_803E5DDC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ca5b4(uint param_1)
+void dll_197_init(uint param_1)
 {
   int iVar1;
   bool bVar4;
@@ -486,18 +486,18 @@ void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801CA710(void) {}
-void fn_801CA714(void) {}
+void dll_197_release(void) {}
+void dll_197_initialise(void) {}
 void nwsh_levcon_hitDetect(void) {}
 void nwsh_levcon_release(void) {}
 void nwsh_levcon_initialise(void) {}
-void fn_801CAD7C(void) {}
+void dll_199_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int nwsh_levcon_getExtraSize(void) { return 0x0; }
 int nwsh_levcon_func08(void) { return 0x0; }
-int fn_801CACD4(void) { return 0x14; }
-int fn_801CACDC(void) { return 0x0; }
+int dll_199_getExtraSize(void) { return 0x14; }
+int dll_199_func08(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5150;
@@ -505,5 +505,5 @@ extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
 #pragma peephole off
 void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5150); }
-void fn_801CAD4C(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5158); }
+void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5158); }
 #pragma peephole reset

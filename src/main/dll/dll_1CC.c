@@ -30,7 +30,7 @@ extern f32 lbl_803E5E0C;
 /*
  * --INFO--
  *
- * Function: FUN_801cad80
+ * Function: dll_199_update
  * EN v1.0 Address: 0x801CAD80
  * EN v1.0 Size: 2556b
  * EN v1.1 Address: 0x801CB334
@@ -40,7 +40,7 @@ extern f32 lbl_803E5E0C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cad80(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+void dll_199_update(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   int iVar1;

@@ -54,7 +54,7 @@ extern f32 lbl_803E5DCC;
 /*
  * --INFO--
  *
- * Function: FUN_801c9660
+ * Function: DBSH_Symbol_SeqFn
  * EN v1.0 Address: 0x801C9660
  * EN v1.0 Size: 2276b
  * EN v1.1 Address: 0x801C9C14
@@ -64,7 +64,7 @@ extern f32 lbl_803E5DCC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c9660(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -398,7 +398,7 @@ void dbsh_symbol_free(void)
 /*
  * --INFO--
  *
- * Function: FUN_801ca0e0
+ * Function: dbsh_symbol_render
  * EN v1.0 Address: 0x801CA0E0
  * EN v1.0 Size: 92b
  * EN v1.1 Address: 0x801CA418
@@ -408,7 +408,7 @@ void dbsh_symbol_free(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ca0e0(undefined4 param_1)
+void dbsh_symbol_render(undefined4 param_1)
 {
   (**(code **)(*DAT_803dd6fc + 0x18))();
   (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
@@ -520,17 +520,17 @@ void FUN_801ca13c(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801CA104(void) {}
+void dll_197_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801C9E54(void) { return 0x10; }
-int fn_801C9E5C(void) { return 0x1; }
+int dll_197_getExtraSize(void) { return 0x10; }
+int dll_197_func08(void) { return 0x1; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E5104;
 extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma peephole off
-void dbsh_symbol_render(void) { objRenderFn_8003b8f4(lbl_803E5104); }
+void dll_197_render(void) { objRenderFn_8003b8f4(lbl_803E5104); }
 #pragma peephole reset
 #pragma scheduling reset
