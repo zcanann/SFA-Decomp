@@ -1582,6 +1582,27 @@ void wmlasertarget_init(char *obj, s8 *p) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int Obj_GetPlayerObject(void);
+extern f32 Vec_distance(f32 *a, f32 *b);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 lbl_803E5DE8;
+#pragma scheduling off
+#pragma peephole off
+void wmtorch_update(int obj) {
+    int state = *(int *)(obj + 0xb8);
+    if (*(u8 *)(state + 0xc) == 2) {
+        *(s16 *)obj += 0x32;
+    }
+    if (Vec_distance((f32 *)(Obj_GetPlayerObject() + 0x18), (f32 *)(obj + 0x18)) < lbl_803E5DE8) {
+        Sfx_PlayFromObject(obj, 0x72);
+    } else {
+        Sfx_StopObjectChannel(obj, 0x40);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern int *lbl_803DCA7C;
 extern int *lbl_803DCA78;
 extern void Obj_FreeObject(void *o);
