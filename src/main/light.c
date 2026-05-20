@@ -1123,6 +1123,19 @@ extern void objRenderFn_8003b8f4(f32);
 void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6128); }
 #pragma peephole reset
 
+extern f32 lbl_803E610C;
+#pragma scheduling off
+#pragma peephole off
+void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    int state = *(int *)(obj + 0xB8);
+    s32 v = visible;
+    if (v != 0 && *(u8 *)(state + 3) != 0x63) {
+        objRenderFn_8003b8f4(lbl_803E610C);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E611C;
 extern f32 lbl_803E6140;
