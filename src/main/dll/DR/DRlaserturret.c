@@ -24,7 +24,7 @@ extern void *objFindTexture(void *obj, int idx, int flags);
 extern int hitDetectFn_80065e50(void *obj, float x, float y, float z, void *out, int p5, int p6);
 extern void hudFn_8011f38c(int);
 extern void hudFn_8011f6f0(int);
-extern double fn_801E7C4C(void *obj, void *playerObj, int p3);
+extern double shopKeeperRotateFn_801e7c4c(void *obj, void *playerObj, int p3);
 extern float fn_80293E80(double);
 extern int playerGetMoney(void *playerObj);
 
@@ -82,7 +82,7 @@ int fn_801E6B10(void *obj, void *param2)
         }
         return 7;
     }
-    fn_801E7C4C(obj, playerObj, 0);
+    shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
     *(f32 *)((char *)obj + 0x10) =
         state->bobAmplitude *
             fn_80293E80(
@@ -112,11 +112,11 @@ int fn_801E6B10(void *obj, void *param2)
 /*
  * --INFO--
  *
- * Function: fn_801E6D08
+ * Function: objAnimFn_801e6d08
  * EN v1.0 Address: 0x801E6D08
  * EN v1.0 Size: 1052b
  */
-int fn_801E6D08(void *obj, void *param2)
+int objAnimFn_801e6d08(void *obj, void *param2)
 {
     void *playerObj;
     DRLaserTurretState *state;
@@ -184,7 +184,7 @@ int fn_801E6D08(void *obj, void *param2)
         return 7;
     }
     {
-        float t = (float)fn_801E7C4C(obj, playerObj, 0);
+        float t = (float)shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
         float target;
         if (t > lbl_803E5A18) {
             target = lbl_803E5A14;
@@ -367,11 +367,11 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
 /*
  * --INFO--
  *
- * Function: fn_801E75EC
+ * Function: objCbSet30sTimer_801e75ec
  * EN v1.0 Address: 0x801E75EC
  * EN v1.0 Size: 180b
  */
-void fn_801E75EC(void *obj)
+void objCbSet30sTimer_801e75ec(void *obj)
 {
     DRLaserTurretState *state;
 

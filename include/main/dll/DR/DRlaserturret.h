@@ -28,9 +28,9 @@ typedef struct DRLaserTurretState {
 } DRLaserTurretState;
 
 int fn_801E6B10(void *obj, void *param2);
-int fn_801E6D08(void *obj, void *param2);
+int objAnimFn_801e6d08(void *obj, void *param2);
 int fn_801E7124(void *obj);
 int fn_801E71A4(void *obj, void *param2, int dispatch);
-void fn_801E75EC(void *obj);
+void objCbSet30sTimer_801e75ec(void *obj);
 
 #endif /* MAIN_DLL_DR_DRLASERTURRET_H_ */
