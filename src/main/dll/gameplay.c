@@ -13073,6 +13073,35 @@ void clearSaveGameLoadingFlag(void) { lbl_803DD488 = 0x0; }
 s32 Carryable_isHeld(u8 *obj) { return *(s8*)(obj + 0x5); }
 s32 Carryable_getFlag01(u8 *state) { return state[7] & 1; }
 
+void Carryable_setFlag08(u8 *state, u8 enable)
+{
+  if (enable != 0) {
+    state[7] |= 8;
+  } else {
+    state[7] &= ~8;
+  }
+}
+
+s32 Carryable_getFlag04(u8 *state) { return (state[7] & 4) != 0; }
+
+void Carryable_setFlag04(u8 *state, u8 enable)
+{
+  if (enable != 0) {
+    state[7] |= 4;
+  } else {
+    state[7] &= ~4;
+  }
+}
+
+void Carryable_setFlag02Inverted(u8 *state, u8 clear)
+{
+  if (clear != 0) {
+    state[7] &= ~2;
+  } else {
+    state[7] |= 2;
+  }
+}
+
 /* misc 8b leaves */
 u8 Carryable_getSurfaceType(u8 *state) { return state[8]; }
 
