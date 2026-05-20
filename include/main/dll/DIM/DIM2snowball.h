@@ -61,7 +61,7 @@ void dim2snowball_free(void);
 void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2snowball_hitDetect(void);
 void dim2snowball_update(void);
-void dim2snowball_init(void);
+void dim2snowball_init(int* obj, int* def);
 void dim2snowball_release(void);
 void dim2snowball_initialise(void);
 int dll_1DA_getExtraSize(void);

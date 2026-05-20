@@ -1253,4 +1253,102 @@ void dll_1DA_hitDetect(int obj) {
     }
 }
 #pragma peephole reset
+
+extern int ObjList_FindObjectById(int id);
+extern void mm_free(void* p);
+extern u8 lbl_803DBF20;
+
+/* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
+ * return 1 if result == 0 else 0. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801B6D40(int* obj, int v)
+{
+    s8* state = *(s8**)((char*)obj + 0xb8);
+    state[2] = (s8)(state[2] - v);
+    return state[2] == 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    *p1 = (int*)((char*)state + 12);
+    *p2 = (int*)((char*)state + 812);
+    *p3 = (int*)((char*)state + 1612);
+    if (p4 != NULL) {
+        *p4 = (int*)((char*)state + 2412);
+    }
+    return *(u8*)((char*)state + 2470);
+}
+
+void dll_1D6_free(int* obj)
+{
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    if ((state[29] & 4) != 0) {
+        state[29] = (u8)(state[29] & ~4);
+    }
+    mm_free(*(void**)state);
+    mm_free(*(void**)((char*)state + 4));
+    (&lbl_803DBF20)[state[31]] = 0;
+}
+
+void dim2pathgenerator_init(int* obj, int* def)
+{
+    int* state;
+    *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
+    state = *(int**)((char*)obj + 0xb8);
+    *(s16*)((char*)state + 2464) = *(s16*)((char*)def + 24);
+    *(s16*)((char*)state + 2462) = (s16)*(u8*)((char*)def + 29);
+    *(s16*)((char*)state + 2466) = (s16)*(u16*)((char*)def + 30);
+    {
+        s16 v = *(s16*)((char*)def + 32);
+        if (v == -1) {
+            *(s16*)((char*)state + 2468) = (s16)*(u16*)((char*)def + 30);
+        } else {
+            *(s16*)((char*)state + 2468) = v;
+        }
+    }
+    *(u8*)((char*)state + 2471) = (u8)(*(u8*)((char*)state + 2471) | 4);
+    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x2000);
+}
+
+void dimtruthhornice_init(int* obj, int* def)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    *(s8*)((char*)state + 2) = (s8)*(s16*)((char*)def + 26);
+    *(s16*)state = *(s16*)((char*)def + 30);
+    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
+    {
+        s16 slot = *(s16*)state;
+        if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
+            ObjHits_DisableObject(obj);
+            *(s8*)((char*)state + 3) = 2;
+            *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+        }
+    }
+}
+
+void dim2snowball_init(int* obj, int* def)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    *(int*)((char*)state + 160) = *(int*)((char*)def + 20);
+    *(u8*)((char*)state + 172) = (u8)(*(u8*)((char*)state + 172) | 4);
+    *(int*)((char*)def + 20) = -1;
+    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+    *(s8*)((char*)obj + 54) = 0;
+    {
+        int* p = *(int**)((char*)obj + 100);
+        if (p != NULL) {
+            *(int*)((char*)p + 48) = *(int*)((char*)p + 48) | 0xA10;
+        }
+    }
+    *(int**)((char*)state + 156) = (int*)ObjList_FindObjectById(*(int*)((char*)state + 160));
+    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x2000);
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling reset
