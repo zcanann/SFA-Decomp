@@ -760,6 +760,28 @@ void effectbox_hitDetect(void) {}
 void effectbox_release(void) {}
 void effectbox_initialise(void) {}
 
+extern void fn_8002B860(int obj);
+#pragma scheduling off
+#pragma peephole off
+void effectbox_init(int obj, int *def) {
+    s16 bit;
+    u32 v;
+    if (*(int *)((char *)obj + 0xF4) == 0) {
+        fn_8002B860(obj);
+    }
+    *(int *)((char *)obj + 0xF4) = 1;
+    bit = *(s16 *)((char *)def + 0x20);
+    if (bit > -1) {
+        *(int *)((char *)obj + 0xF8) = (int)bit;
+    } else {
+        *(int *)((char *)obj + 0xF8) = -1;
+    }
+    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x6000;
+    *(u16 *)((char *)obj + 0xB0) = (u16)v;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int effectbox_getExtraSize(void) { return 0x0; }
 int effectbox_func08(void) { return 0x0; }

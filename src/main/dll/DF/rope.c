@@ -683,6 +683,7 @@ void dimbossfire_hitDetect(void) {}
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void dimbossfire_free(int obj)
 {
   int state;
@@ -696,6 +697,7 @@ void dimbossfire_free(int obj)
   }
   (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 void dimbossfire_render(int p1,int p2,int p3,int p4,int p5,s8 visible)
