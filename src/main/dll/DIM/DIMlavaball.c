@@ -1379,3 +1379,20 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z) {
     *(f32 *)(obj + 0x14) = z;
     saveGame_saveObjectPos(obj);
 }
+
+/* "tail-call into (**lbl_803DCA78)[6]" free stub. */
+extern int *lbl_803DCA78;
+void mmp_trenchfx_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+
+/* ObjGroup_RemoveObject + vtable[4] tail-call. */
+extern int *lbl_803DCAC0;
+#pragma scheduling off
+#pragma peephole off
+void mmp_moonrock_free(int obj) {
+    ObjGroup_RemoveObject((uint)obj, 4);
+    (*(void (*)(int))(*(int *)(*lbl_803DCAC0 + 0x10)))(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
