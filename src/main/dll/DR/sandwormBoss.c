@@ -3355,7 +3355,7 @@ void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void cfprisoncage_hitDetect(int* obj)
 {
-    f32 pos_x, pos_y, pos_z;
+    f32 pos_z, pos_y, pos_x;
     if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos_x, &pos_y, &pos_z) != 0) {
         fn_80096F9C(&pos_x, 8, 200, 128, 0);
     }

@@ -225,8 +225,31 @@ int skeetlawall_getExtraSize(void) { return 0x7; }
 int skeetlawall_func08(void) { return 0x0; }
 
 extern void skeetlawall_setScale(void);
-extern void skeetlawall_render(void);
-extern void skeetlawall_init(void);
+
+extern f32 lbl_803E3058;
+extern void objRenderFn_8003b8f4(f32);
+#pragma scheduling off
+#pragma peephole off
+void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    if (visible != 0) {
+        if (*(int *)((char *)obj + 0xF4) == 0) {
+            objRenderFn_8003b8f4(lbl_803E3058);
+        }
+    }
+}
+
+void skeetlawall_init(int obj, u8 *def) {
+    u8 *state = *(u8 **)((char *)obj + 0xB8);
+    state[0] = def[0x18];
+    state[1] = def[0x19];
+    state[2] = def[0x1A];
+    state[3] = def[0x1B];
+    state[4] = def[0x1C];
+    state[5] = def[0x1D];
+    state[6] = def[0x1E];
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
     {

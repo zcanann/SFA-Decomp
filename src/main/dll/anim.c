@@ -4334,5 +4334,44 @@ void dfpobjcreator_free(int obj, int flag) {
         }
     }
 }
+
+extern void fn_801FE31C(int obj, int *state);
+void dbegg_init(int obj) {
+    int *q;
+    fn_801FE31C(obj, *(int **)((char *)obj + 0xB8));
+    ObjMsg_AllocQueue(obj, 8);
+    q = *(int **)((char *)obj + 0x64);
+    if (q != NULL) {
+        *(u32 *)((char *)q + 0x30) |= 0x4008;
+    }
+}
+
+extern int *gModgfxInterface;
+void DFP_Torch_free(int obj) {
+    (*(void (**)(int))(*(int *)gModgfxInterface + 0x18))(obj);
+    (*(void (**)(int))(*(int *)gExpgfxInterface + 0x18))(obj);
+}
+
+void dfpobjcreator_init(int obj, s8 *def) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
+    *(s16 *)((char *)state + 0xC) = *(s16 *)((char *)def + 0x18);
+    *(s16 *)((char *)state + 0xE) = *(s16 *)((char *)def + 0x1C);
+    *(s16 *)((char *)state + 0x10) = *(s16 *)((char *)state + 0xE);
+    *(s16 *)((char *)state + 0x12) = (s16)(s32)def[0x1F];
+    *(s16 *)((char *)state + 0x14) = (s16)((s32)(u8)def[0x20] << 1);
+    *(s16 *)((char *)state + 0x16) = 100;
+}
+
+void dfplevelcontrol_setScale(int unused, u8 *out) {
+    s16 *p = lbl_80329848;
+    s16 i;
+    for (i = 0; i < 9; i = (s16)(i + 3)) {
+        out[i] = (u8)p[0];
+        out[(s16)(i + 1)] = (u8)p[1];
+        out[(s16)(i + 2)] = (u8)p[2];
+        p += 3;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset

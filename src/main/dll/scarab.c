@@ -2987,11 +2987,14 @@ void chukchuk_setScale(int obj, int v) {
 
 /* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
 #pragma scheduling off
+#pragma peephole off
 void iceball_init(void *obj) {
-    *(int*)((char*)obj + 0xf4) = 0xb4;
-    ObjHits_DisableObject((int)obj);
-    *(u8*)((char*)obj + 0x36) = 0xff;
+    char *p = (char*)obj;
+    *(int*)(p + 0xf4) = 0xb4;
+    ObjHits_DisableObject((int)p);
+    *(u8*)(p + 0x36) = 0xff;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* fn_8016050C (32B). Returns 3 if (s8)obj[0x354] < 1 else 6. */
