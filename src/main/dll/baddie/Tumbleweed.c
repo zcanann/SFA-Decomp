@@ -3739,6 +3739,45 @@ int fn_80138920(u8* obj, int arg1, int arg2)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int gameTimerIsRunning(void);
+extern void gameTimerRun(void *obj);
+extern int sprintf(char *buf, const char *fmt, ...);
+extern f32 lbl_803E22A0;
+extern char lbl_803DBBF0[];
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80133F70(void *obj)
+{
+    char buf[12];
+    f32 threshold;
+    int a;
+    int b;
+    int c;
+    void *player;
+    void *nearest;
+
+    threshold = lbl_803E22A0;
+    a = 0;
+    b = 0;
+    c = 0;
+    if (gameTimerIsRunning()) {
+        gameTimerRun(obj);
+    }
+    player = (void *)Obj_GetPlayerObject();
+    nearest = (void *)ObjGroup_FindNearestObject(9, player, &threshold);
+    if (nearest != NULL) {
+        ((void (*)(void *, int *, int *, int *))((void **)*(int **)((char *)nearest + 0x68))[21])(nearest, &a, &b, &c);
+    }
+    b = c - (b - a);
+    if (b < 0) {
+        b = 0;
+    }
+    sprintf(buf, lbl_803DBBF0, b);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 extern void viewFn_80129c74(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
