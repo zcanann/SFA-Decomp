@@ -1811,7 +1811,7 @@ void landed_arwing_init(int obj, int param) {
 extern int *lbl_803DCAC0;
 #pragma scheduling off
 #pragma peephole off
-void dll_109_init(int obj, s8 *p) {
+void dll_109_init(int obj, u8 *p) {
     *(s16 *)obj = (s16)((s32)p[0x1a] << 8);
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
     (*(void (*)(int, int *, int))(*(int *)(*lbl_803DCAC0 + 0x4)))(obj, *(int **)(obj + 0xb8), 0x21);
