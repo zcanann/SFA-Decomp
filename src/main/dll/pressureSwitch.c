@@ -603,6 +603,17 @@ void swarmbaddie_release(void) {}
 void swarmbaddie_initialise(void) {}
 void wispbaddie_hitDetect(void) {}
 
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+#pragma scheduling off
+#pragma peephole off
+void hagabon_hitDetect(int obj) {
+    if (*(u32 *)(*(int *)(obj + 0x54) + 0x50) != 0) {
+        Sfx_PlayFromObject(obj, 0x32B);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int hagabon_getExtraSize(void) { return 0x28; }
 int hagabon_func08(void) { return 0xb; }
@@ -613,7 +624,7 @@ int wispbaddie_func08(void) { return 0x9; }
 
 extern void hagabon_free(void);
 extern void hagabon_render(void);
-extern void hagabon_hitDetect(void);
+extern void hagabon_hitDetect(int obj);
 extern void hagabon_update(void);
 extern void hagabon_init(void);
 extern void swarmbaddie_free(void);
