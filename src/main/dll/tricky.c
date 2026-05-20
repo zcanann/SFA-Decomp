@@ -1969,6 +1969,36 @@ void GameUI_airMeterSetShutdown(void) {
 extern void *textureLoadAsset(int id);
 extern f32 lbl_803E1E3C;
 extern int lbl_803A9398[];
+
+extern int *lbl_803DCAAC;
+extern u8 lbl_803DB424;
+extern int lbl_803DD8DC;
+extern int lbl_803DD7D8;
+extern f32 lbl_803DD764;
+extern f32 lbl_803E1E60;
+extern void pauseMenuInit(void);
+extern int getCurGameText(void);
+extern void gameTextLoadDir(int);
+#pragma scheduling off
+#pragma peephole off
+void showDeathMenu(void) {
+    int *o = (int *)*lbl_803DCAAC;
+    int *r = (int *)(*(int (*)(int *))(*(int *)((char *)o + 0x8c)))(o);
+    pauseMenuInit();
+    if (*((u8 *)r + 9) != 0) {
+        pauseMenuState = 8;
+    } else if (lbl_803DB424 != 0) {
+        pauseMenuState = 9;
+    } else {
+        pauseMenuState = 0xa;
+    }
+    lbl_803DD8DC = getCurGameText();
+    gameTextLoadDir(0xb);
+    lbl_803DD764 = lbl_803E1E60;
+    lbl_803DD7D8 = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void GameUI_func15(s16 a, int b, int c) {
