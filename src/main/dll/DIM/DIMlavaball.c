@@ -1366,7 +1366,7 @@ void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 
 extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
-extern void fn_801A6C28(int);
+extern void MoonSeedBush_SeqFn(int);
 
 extern int *lbl_803DCA54;
 #pragma scheduling off
@@ -1397,7 +1397,7 @@ extern int getSaveGameLoadStatus(void);
 extern int mapGetDirIdx(int);
 extern void unlockLevel(int, int, int);
 extern void Music_Trigger(int, int);
-extern void fn_801A6638(int);
+extern void MMP_LevelControl_SeqFn(int);
 extern f32 lbl_803E44C8;
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
@@ -1438,7 +1438,7 @@ void MMP_levelcontrol_init(int obj) {
         *(int *)(obj + 0xF4) = 1;
     }
     *(u32 *)(obj + 0xF8) = GameBit_Get(0xF33);
-    *(void (**)(int))(obj + 0xBC) = fn_801A6638;
+    *(void (**)(int))(obj + 0xBC) = MMP_LevelControl_SeqFn;
     unlockLevel(mapGetDirIdx(0x12), 0, 0);
     lbl_803DDB28 = lbl_803E44C8;
     lbl_803DDB2C = 0;
@@ -1458,7 +1458,7 @@ void MoonSeedBush_init(int obj, int data) {
     int state = *(int *)(obj + 0xB8);
     *(u8 *)(state + 1) = 1;
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1F)) << 8);
-    *(void (**)(int))(obj + 0xBC) = fn_801A6C28;
+    *(void (**)(int))(obj + 0xBC) = MoonSeedBush_SeqFn;
     *(u16 *)(obj + 0xB0) |= 0x2000;
     *(f32 *)(obj + 8) = (f32)(u32)(*(u8 *)(data + 0x21)) * lbl_803E44D4;
     if (*(f32 *)(obj + 8) == lbl_803E44D8) {
