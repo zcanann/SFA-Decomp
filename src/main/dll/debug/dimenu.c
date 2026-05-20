@@ -647,6 +647,29 @@ extern u32 lbl_8031AD20[];
 extern u32 lbl_8031AD98[];
 extern u32 textureLoadAsset(int);
 extern u32 gameTextGet(int);
+extern int Obj_GetPlayerObject(void);
+extern u8 framesThisStep;
+extern void loadUiDll(int);
+#pragma scheduling off
+#pragma peephole off
+int Dummy39_run(void) {
+    s32 v;
+    u8 cur;
+    Obj_GetPlayerObject();
+    v = framesThisStep;
+    if (v > 3) v = 3;
+    cur = lbl_803DD728;
+    if ((s8)cur > 0) {
+        lbl_803DD728 = (s8)(cur - v);
+        if ((s8)lbl_803DD728 <= 0) {
+            loadUiDll(1);
+            warpToMap(0x60, 1);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void WeirdUnusedMenu_initialise(void) {
