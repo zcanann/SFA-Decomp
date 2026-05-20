@@ -2159,7 +2159,7 @@ extern int *allocModelStruct2(int p1, int p2);
 extern void tailFn_80026c38(int *p, f32 a, f32 b, f32 c);
 extern int baddieAfterUpdateBonesCb(void);
 extern f32 lbl_803E2CBC;
-extern int *pDll_expgfx;
+extern int *gPartfxInterface;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 lbl_8031FD48[];
 
@@ -2293,9 +2293,9 @@ void fn_8015A77C(int *obj, int *st) {
     }
     if (flag != 0) {
         if (*(u16*)((char*)st + 0x338) != 0) {
-            (*(void (**)(int*, int, int, int, int, int))(*pDll_expgfx + 0x8))(obj, 0x802, 0, 2, -1, 0);
+            (*(void (**)(int*, int, int, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x802, 0, 2, -1, 0);
         } else {
-            (*(void (**)(int*, int, int, int, int, int))(*pDll_expgfx + 0x8))(obj, 0x809, 0, 2, -1, 0);
+            (*(void (**)(int*, int, int, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x809, 0, 2, -1, 0);
         }
     }
 }

@@ -40,7 +40,7 @@ extern undefined4 DAT_80326930;
 extern undefined4 DAT_80326932;
 extern f32 lbl_80325D68[];
 extern undefined4* DAT_803dd6f8;
-extern void *pDll_expgfx;
+extern void *gPartfxInterface;
 extern f64 DOUBLE_803e5a28;
 extern f64 lbl_803E4DC8;
 extern f32 timeDelta;
@@ -124,10 +124,10 @@ void dimbossfire_update(int param_1)
         iVar3 = 0;
         do {
           if (*(short *)(iVar4 + 0x1a) == 0) {
-            (*(void (***)(int, int, int, int, int, int))pDll_expgfx)[2](param_1,0x4cc,0,2,0xffffffff,0);
+            (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4cc,0,2,0xffffffff,0);
           }
           else {
-            (*(void (***)(int, int, int, int, int, int))pDll_expgfx)[2](param_1,0x4c9,0,2,0xffffffff,0);
+            (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4c9,0,2,0xffffffff,0);
           }
           iVar3 = iVar3 + 1;
         } while (iVar3 < 0x32);
@@ -162,12 +162,12 @@ void dimbossfire_update(int param_1)
     }
     *(float *)(pbVar5 + 4) = *(float *)(pbVar5 + 4) - timeDelta;
     if (*(float *)(pbVar5 + 4) > lbl_803E4DA0) {
-      (*(void (***)(int, int, int, int, int, int))pDll_expgfx)[2](param_1,0x4ca,0,2,0xffffffff,0);
+      (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4ca,0,2,0xffffffff,0);
       if (*(short *)(iVar4 + 0x1a) == 0) {
-        (*(void (***)(int, int, int, int, int, int))pDll_expgfx)[2](param_1,0x4cd,0,2,0xffffffff,0);
+        (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4cd,0,2,0xffffffff,0);
       }
       else {
-        (*(void (***)(int, int, int, int, int, int))pDll_expgfx)[2](param_1,0x4cb,0,2,0xffffffff,0);
+        (*(void (***)(int, int, int, int, int, int))gPartfxInterface)[2](param_1,0x4cb,0,2,0xffffffff,0);
       }
     }
     else {

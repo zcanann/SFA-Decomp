@@ -1016,7 +1016,7 @@ extern void ObjModel_SetPostRenderCallback(void *, void *);
 extern void ObjGroup_AddObject(int, int);
 extern void fn_801F4C28(int, int);
 extern void fn_801E86F4(int);
-extern int *pDll_expgfx;
+extern int *gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1035,7 +1035,7 @@ void shopitem_init(int obj, int data) {
         fn_801F4C28(obj, state);
         break;
     case 0x462:
-        (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x3F1, 0, 4, -1, 0);
+        (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x3F1, 0, 4, -1, 0);
         break;
     case 0x468:
         ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), (void *)fn_801E832C);

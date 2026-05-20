@@ -24,7 +24,7 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803de890;
 extern f32 lbl_803E6310;
-extern undefined4 *pDll_expgfx;
+extern undefined4 *gPartfxInterface;
 extern f32 lbl_803E56B0;
 extern f32 lbl_803E56B4;
 
@@ -74,7 +74,7 @@ typedef struct FEseqobjectEffectParams {
 
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams *params)
 {
-  (*(void (**)(int, int, FEseqobjectEffectParams *, int, int, int))(*pDll_expgfx + 0x8))
+  (*(void (**)(int, int, FEseqobjectEffectParams *, int, int, int))(*gPartfxInterface + 0x8))
       (obj, 0x85, params, 1, -1, 0);
 }
 

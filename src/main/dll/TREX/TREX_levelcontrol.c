@@ -389,7 +389,7 @@ void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8); }
 #pragma peephole reset
 
-extern undefined4 *pDll_expgfx;
+extern undefined4 *gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E58BC;
@@ -401,15 +401,15 @@ extern void fn_80098928(int *obj, f32 f, int a, int b, int c, int d);
 void SB_CannonBall_update(int *obj) {
     int *state = *(int **)((char *)obj + 0xb8);
     if ((*(s8 *)((char *)state + 0x1a) & 2) != 0) {
-        (*((void (***)(int *, int, int, int, int, int))pDll_expgfx))[2](obj, 170, 0, 1, -1, 0);
-        (*((void (***)(int *, int, int, int, int, int))pDll_expgfx))[2](obj, 170, 0, 1, -1, 0);
-        (*((void (***)(int *, int, int, int, int, int))pDll_expgfx))[2](obj, 170, 0, 1, -1, 0);
+        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, 170, 0, 1, -1, 0);
+        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, 170, 0, 1, -1, 0);
+        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, 170, 0, 1, -1, 0);
         *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) & ~2);
     } else {
         fn_80098928(obj, lbl_803E58BC, 4, 389, 5, 0);
         fn_80098928(obj, lbl_803E58BC, 4, 389, 5, 0);
     }
-    (*((void (***)(int *, int, int, int, int, int))pDll_expgfx))[2](obj, 169, 0, 1, -1, 0);
+    (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, 169, 0, 1, -1, 0);
     *(s16 *)((char *)obj + 2) = (s16)(*(s16 *)((char *)obj + 2) + 4000);
     if ((*(s8 *)((char *)state + 0x1a) & 1) == 0) {
         *(f32 *)state = *(f32 *)((char *)obj + 0x24);
@@ -484,14 +484,14 @@ void SB_CannonBall_hitDetect(int *obj) {
     {
         int i;
         for (i = 50; i != 0; i--) {
-            (*((void (***)(int *, int, int, int, int, int))pDll_expgfx))[2](
+            (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
                 obj, 167, 0, 1, -1, 0);
         }
     }
     {
         int i;
         for (i = 10; i != 0; i--) {
-            (*((void (***)(int *, int, int, int, int, int))pDll_expgfx))[2](
+            (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
                 obj, 171, 0, 1, -1, 0);
         }
     }

@@ -63,7 +63,7 @@ extern f32 lbl_803DDA94;
 extern f32 lbl_803DDA98;
 extern void* lbl_803AC680[];
 extern void* lbl_803AC698[];
-extern undefined4* pDll_expgfx;
+extern undefined4* gPartfxInterface;
 extern undefined4* gPlayerInterface;
 extern undefined4* gMapEventInterface;
 extern undefined4* gBaddieControlInterface;
@@ -152,7 +152,7 @@ void kaldaChomFn_8016821c(int param_1,int *param_2)
   Sfx_PlayFromObject(param_1,0x276);
   iVar2 = 0x28;
   do {
-    (**(code **)(*pDll_expgfx + 8))(param_1,0x717,0,4,0xffffffff,&lbl_803DDA94);
+    (**(code **)(*gPartfxInterface + 8))(param_1,0x717,0,4,0xffffffff,&lbl_803DDA94);
     iVar2 = iVar2 + -1;
   } while (iVar2 != 0);
   if ((*param_2 == 0) && (cVar1 = Obj_IsLoadingLocked(), cVar1 != '\0')) {
@@ -279,7 +279,7 @@ void fn_8016855C(undefined4 param_1,undefined4 param_2,int param_3)
     *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xffffff7f;
     Sfx_PlayFromObject(iVar1,0x274);
     for (iVar3 = (2 - (uint)*(byte *)(iVar5 + 0x4a)) * 10; iVar3 != 0; iVar3 = iVar3 + -1) {
-      (**(code **)(*pDll_expgfx + 8))(iVar1,0x711,0,4,0xffffffff,&lbl_803DDA98);
+      (**(code **)(*gPartfxInterface + 8))(iVar1,0x711,0,4,0xffffffff,&lbl_803DDA98);
     }
   }
   if ((*(uint *)(param_3 + 0x314) & 0x40) != 0) {
@@ -298,7 +298,7 @@ void fn_8016855C(undefined4 param_1,undefined4 param_2,int param_3)
     *(undefined *)(iVar5 + 0x4a) = 3;
     iVar4 = 10;
     do {
-      (**(code **)(*pDll_expgfx + 8))(iVar1,0x710,0,4,0xffffffff,&lbl_803DDA98);
+      (**(code **)(*gPartfxInterface + 8))(iVar1,0x710,0,4,0xffffffff,&lbl_803DDA98);
       iVar4 = iVar4 + -1;
     } while (iVar4 != 0);
     *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffffbff;

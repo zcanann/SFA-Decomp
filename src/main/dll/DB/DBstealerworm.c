@@ -1192,7 +1192,7 @@ int SB_Galleon_setScale(int obj) {
 #pragma peephole reset
 
 /* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
-extern undefined4 *pDll_expgfx;
+extern undefined4 *gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E5738;
 extern f32 lbl_803E56CC;
@@ -1218,7 +1218,7 @@ void SB_Galleon_hitDetect(int obj) {
         stk.c = lbl_803E56F0;
         stk.d = lbl_803E56C8;
         for (i = 0; i < framesThisStep; i = i + 1) {
-            (**(code **)(*pDll_expgfx + 8))(*(int*)((char*)p + 0x4c), 0x7aa, stk.pad, 2, 0xffffffff, 0);
+            (**(code **)(*gPartfxInterface + 8))(*(int*)((char*)p + 0x4c), 0x7aa, stk.pad, 2, 0xffffffff, 0);
         }
     }
 }

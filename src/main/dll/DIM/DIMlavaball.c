@@ -1404,7 +1404,7 @@ extern int lbl_803DDB2C;
 extern u8 framesThisStep;
 extern u32 randomGetRange(int min, int max);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern int *pDll_expgfx;
+extern int *gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1421,7 +1421,7 @@ void mmp_gyservent_update(int obj) {
     if (*(int *)(obj + 0xF8) <= 0) {
         *(int *)(obj + 0xF8) = 0;
     } else {
-        (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x724, 0, 2, -1, 0);
+        (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x724, 0, 2, -1, 0);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x450);
     }
 }
@@ -1448,9 +1448,9 @@ int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
             }
             break;
         case 2:
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x70B, 0, 2, -1, 0);
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x70B, 0, 2, -1, 0);
             for (j = 0; j < 0x28; j++) {
-                (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x70C, 0, 2, -1, 0);
+                (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x70C, 0, 2, -1, 0);
             }
             break;
         }

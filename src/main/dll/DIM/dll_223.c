@@ -79,7 +79,7 @@ extern void *gBaddieControlInterface;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
-extern void *pDll_expgfx;
+extern void *gPartfxInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C94;
@@ -265,9 +265,9 @@ void DIMbosstonsil_checkHit(void *obj,u8 *state)
       pos[1] = modelPos[2];
       pos[2] = playerMapOffsetZ + modelPos[3];
     }
-    (*(void (***)(void *,int,undefined4 *,int,int,int))pDll_expgfx)[2]
+    (*(void (***)(void *,int,undefined4 *,int,int,int))gPartfxInterface)[2]
         (obj,DIMBOSSTONSIL_HIT_EFFECT_ID,effect,0x200001,-1,0);
-    (*(void (***)(void *,int,undefined4 *,int,int,int))pDll_expgfx)[2]
+    (*(void (***)(void *,int,undefined4 *,int,int,int))gPartfxInterface)[2]
         (obj,DIMBOSSTONSIL_HIT_EFFECT_ALT_ID,effect,0x200001,-1,0);
     objLightFn_8009a1dc(obj,lbl_803E4CA4,effect,3,0);
     Sfx_PlayFromObject(obj,DIMBOSSTONSIL_PRIMARY_HIT_SFX);

@@ -9,7 +9,7 @@ extern int voxmaps_traceLine(void *from, void *to, void *out, int param4, int pa
 
 extern undefined4 *gExpgfxInterface;
 extern undefined4 *gModgfxInterface;
-extern undefined4 *pDll_expgfx;
+extern undefined4 *gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E51C8;
 extern f32 lbl_803E51CC;
@@ -116,7 +116,7 @@ void dll_19E_render(int param_1, undefined4 param_2, undefined4 param_3, undefin
     gfxVec[0] = lbl_803E51D8;
     gfxVec[1] = lbl_803E51DC;
     gfxVec[2] = lbl_803E51D8;
-    (**(code **)(*pDll_expgfx + 0x8))(param_1, 0x1f7, gfxVec, 0x12, 0xffffffff, 0);
+    (**(code **)(*gPartfxInterface + 0x8))(param_1, 0x1f7, gfxVec, 0x12, 0xffffffff, 0);
   }
   *(short *)(state + 4) = (short)(randomGetRange(-10, 10) + 0x3c);
 end:

@@ -39,7 +39,7 @@ extern void bombplantspore_updateDrift(void *obj, void *state);
 extern void *gObjectTriggerInterface;
 extern void *gExpgfxInterface;
 extern void *gPathControlInterface;
-extern void *pDll_expgfx;
+extern void *gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern u8 lbl_80326D98[];
@@ -88,7 +88,7 @@ void bombplantspore_update(void *obj) {
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < 10; i++) {
                     objFn_800972dc(lbl_803E53B0, lbl_803E53B8, obj, 5, 7, 1, 0x3c, 0, 0);
-                    (*(void (***)(void *, int, int, int, int, int))pDll_expgfx)[2](
+                    (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
                 }
                 lightFn_8001db6c(lbl_803E53AC, *(void **)((u8 *)state + 0x270), 0);
@@ -199,7 +199,7 @@ void bombplantspore_update(void *obj) {
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < 10; i++) {
                     objFn_800972dc(lbl_803E53B0, lbl_803E53B8, obj, 5, 7, 1, 0x3c, 0, 0);
-                    (*(void (***)(void *, int, int, int, int, int))pDll_expgfx)[2](
+                    (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
                 }
                 lightFn_8001db6c(lbl_803E53AC, *(void **)((u8 *)state + 0x270), 0);
@@ -234,7 +234,7 @@ void bombplantspore_init(void *obj, void *param2) {
     (*(void (***)(void *, int, u8 *, u8 *, u8 *))gPathControlInterface)[3](
         (u8 *)state + 0x8, 1, lbl_80326D98, &lbl_803DBFC0, events);
     (*(void (***)(void *, void *))gPathControlInterface)[8](obj, (u8 *)state + 0x8);
-    (*(void (***)(void *, int, int, int, int, int))pDll_expgfx)[2](
+    (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
         obj, 0x3f1, 0, 4, -1, 0);
 
     light = objCreateLight(obj, 1);

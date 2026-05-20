@@ -107,7 +107,7 @@ extern undefined4 DAT_803ddef4;
 extern undefined4 DAT_803ddef8;
 extern undefined4 DAT_cc008000;
 extern u8 gExpgfxStaticPoolFrameFlags[];
-extern undefined4* pDll_expgfx;
+extern undefined4* gPartfxInterface;
 extern u8 lbl_803DC7B0;
 extern u8 lbl_803DD253;
 extern u8 lbl_803DD254;
@@ -1671,7 +1671,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
       poolIndex--;
       gExpgfxStaticPoolFrameFlags[(u8)poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
     }
-    (*(code *)(*pDll_expgfx + 0xc))(0);
+    (*(code *)(*gPartfxInterface + 0xc))(0);
     lbl_803DD254 = 1;
   }
   return;

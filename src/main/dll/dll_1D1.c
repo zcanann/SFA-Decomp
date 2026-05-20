@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1D1.h"
 
-extern undefined4 *pDll_expgfx;
+extern undefined4 *gPartfxInterface;
 extern undefined4 *gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, float arg);
@@ -39,19 +39,19 @@ int TreeBird_SeqFn(int obj, int param_2, int data)
       j = 100;
       if (*(short *)(obj + 0x46) == 0x5d) {
         do {
-          (*(code *)(*pDll_expgfx + 8))(obj, 0xd3, 0, 1, -1, 0);
+          (*(code *)(*gPartfxInterface + 8))(obj, 0xd3, 0, 1, -1, 0);
           j--;
         } while (j != 0);
       }
       else if (*(short *)(state + 2) == 0) {
         do {
-          (*(code *)(*pDll_expgfx + 8))(obj, 0xcd, 0, 1, -1, 0);
+          (*(code *)(*gPartfxInterface + 8))(obj, 0xcd, 0, 1, -1, 0);
           j--;
         } while (j != 0);
       }
       else if (*(short *)(state + 2) == 1) {
         do {
-          (*(code *)(*pDll_expgfx + 8))(obj, 0xcf, 0, 1, -1, 0);
+          (*(code *)(*gPartfxInterface + 8))(obj, 0xcf, 0, 1, -1, 0);
           j--;
         } while (j != 0);
       }
@@ -60,7 +60,7 @@ int TreeBird_SeqFn(int obj, int param_2, int data)
       if (cmd == 1) {
         j = 200;
         do {
-          (*(code *)(*pDll_expgfx + 8))(obj, 0xcc, 0, 1, -1, 0);
+          (*(code *)(*gPartfxInterface + 8))(obj, 0xcc, 0, 1, -1, 0);
           j--;
         } while (j != 0);
       }
@@ -70,19 +70,19 @@ int TreeBird_SeqFn(int obj, int param_2, int data)
       j = 5;
       if (*(short *)(obj + 0x46) == 0x5d) {
         do {
-          (*(code *)(*pDll_expgfx + 8))(obj, 0xd4, 0, 1, -1, 0);
+          (*(code *)(*gPartfxInterface + 8))(obj, 0xd4, 0, 1, -1, 0);
           j--;
         } while (j != 0);
       }
       else if (*(short *)(state + 2) == 0) {
         do {
-          (*(code *)(*pDll_expgfx + 8))(obj, 0xce, 0, 1, -1, 0);
+          (*(code *)(*gPartfxInterface + 8))(obj, 0xce, 0, 1, -1, 0);
           j--;
         } while (j != 0);
       }
       else if (*(short *)(state + 2) == 1) {
         do {
-          (*(code *)(*pDll_expgfx + 8))(obj, 0xd0, 0, 1, -1, 0);
+          (*(code *)(*gPartfxInterface + 8))(obj, 0xd0, 0, 1, -1, 0);
           j--;
         } while (j != 0);
       }

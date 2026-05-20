@@ -207,7 +207,7 @@ extern f32 lbl_803DD024;
 extern f32 lbl_803DD034;
 extern f32 lbl_803DD038;
 extern void* gSHthorntailAnimationInterface;
-extern undefined4* pDll_expgfx;
+extern undefined4* gPartfxInterface;
 extern undefined4* gWaterfxInterface;
 extern undefined4 lbl_803DCFF0;
 extern u8 lbl_803DCFF8;

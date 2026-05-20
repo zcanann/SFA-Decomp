@@ -16,7 +16,7 @@ extern void *gObjectTriggerInterface;
 extern void *gBaddieControlInterface;
 extern int lbl_803DDBB0;
 extern f32 lbl_803DDBA4;
-extern void *pDll_expgfx;
+extern void *gPartfxInterface;
 extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CC8;
 
@@ -39,10 +39,10 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
             ObjPath_GetPointWorldPosition(obj, 1, &outX, &outY, &outZ, 0);
-            (*(void (***)(void *, int, int *, int, int, int))pDll_expgfx)[2](obj, 0x4bd, &local_8, 0x200001, -1, 0);
+            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, &local_8, 0x200001, -1, 0);
 
             ObjPath_GetPointWorldPosition(obj, 0, &outX, &outY, &outZ, 0);
-            (*(void (***)(void *, int, int *, int, int, int))pDll_expgfx)[2](obj, 0x4bd, &local_8, 0x200001, -1, 0);
+            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, &local_8, 0x200001, -1, 0);
 
             if (gDIMbosstonsilLight != 0 && *((u8 *)gDIMbosstonsilLight + 0x2f8) != 0 && *((u8 *)gDIMbosstonsilLight + 0x4c) != 0) {
                 lightVecFn_8001dd88(outX, outY, outZ);

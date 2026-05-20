@@ -62,7 +62,7 @@ extern void s16toFloat(void *timer,int duration);
 extern void storeZeroToFloatParam(void *timer);
 
 extern undefined4 DAT_803dc070;
-extern undefined4 *pDll_expgfx;
+extern undefined4 *gPartfxInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern PollenFragmentConfig *lbl_8032059C[];
@@ -774,7 +774,7 @@ void pollenfragment_init(int obj,int config)
   }
   spawnCount = 4;
   do {
-    (*(code *)(*pDll_expgfx + 8))(obj,(int)*(short *)(state[7] + 6),0,1,0xffffffff,0);
+    (*(code *)(*gPartfxInterface + 8))(obj,(int)*(short *)(state[7] + 6),0,1,0xffffffff,0);
     keepSpawning = spawnCount != 0;
     spawnCount = spawnCount + -1;
   } while (keepSpawning);

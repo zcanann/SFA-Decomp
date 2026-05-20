@@ -36,9 +36,9 @@
  *   reconciles callback slots at 0x8009E004 expgfx_ownerFree3, 0x8009E024
  *   expgfx_func0B_nop, 0x8009E028 expgfx_func0A_nop,
  *   0x8009E02C expgfx_func09, and 0x8009EEB8 expgfx_free2.
- * - pDll_expgfx @ 0x803DCA88 matches Rena's debug-side loaded-DLL global and
- *   is the shared function-table anchor used by DFP helpers, SHthorntail dust
- *   effects, and expgfx_updateFrameState.
+ * - gPartfxInterface @ 0x803DCA88 is the DLL 0x0E partfx function-table
+ *   anchor used by DFP helpers, SHthorntail dust effects, and
+ *   expgfx_updateFrameState.
  *
  * Reference-side path hints:
  * - reference configure path: dll/expgfx.c

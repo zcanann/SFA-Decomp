@@ -6,7 +6,7 @@ extern void ObjHits_SetHitVolumeSlot(u8 *obj,int param_2,int param_3,int param_4
 
 extern undefined4 *gObjectTriggerInterface;
 extern undefined4 *gExpgfxInterface;
-extern undefined4 *pDll_expgfx;
+extern undefined4 *gPartfxInterface;
 
 static inline DfpPowerSlState *dfppowersl_getState(u8 *obj)
 {
@@ -41,9 +41,9 @@ void dfppowersl_render(u8 *obj)
   if ((u32)powerSl != 0) {
     state = dfppowersl_getState(powerSl);
     if (GameBit_Get(state->eventId) == 0) {
-      ((DfpPowerSlSpawnFn)(*(u32 *)(*pDll_expgfx + 8)))(powerSl,state->spawnObjectId,0,
+      ((DfpPowerSlSpawnFn)(*(u32 *)(*gPartfxInterface + 8)))(powerSl,state->spawnObjectId,0,
                                                          DFPPOWERSL_SPAWN_MODE_PRELOAD,0xffffffff,0);
-      ((DfpPowerSlSpawnFn)(*(u32 *)(*pDll_expgfx + 8)))(powerSl,state->spawnObjectId,0,
+      ((DfpPowerSlSpawnFn)(*(u32 *)(*gPartfxInterface + 8)))(powerSl,state->spawnObjectId,0,
                                                          DFPPOWERSL_SPAWN_MODE_ACTIVE,0xffffffff,0);
     }
   }

@@ -502,7 +502,7 @@ void dll_19D_init(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern undefined4 *pDll_expgfx;
+extern undefined4 *gPartfxInterface;
 extern f32 lbl_803E51B8;
 extern f64 lbl_803E51C0;
 
@@ -532,9 +532,9 @@ void dll_19D_hitDetect(int obj)
     if (linkSubObj == 0) return;
     if (*(short *)(linkSubObj + 0x46) == 0x248) return;
 
-    (*(code *)((char *)*(int *)pDll_expgfx + 0x8))(self, 0x2a0, vec, 1, -1, 0);
-    (*(code *)((char *)*(int *)pDll_expgfx + 0x8))(self, 0x2a0, vec, 1, -1, 0);
-    (*(code *)((char *)*(int *)pDll_expgfx + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+    (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+    (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+    (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
     *(short *)(state + 0x32) = 0x32;
 }
 #pragma peephole reset

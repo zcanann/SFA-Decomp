@@ -1290,14 +1290,14 @@ void dim2lavacontrol_free(void)
  *     (bytes 0xC..0xE) to (u8)(int)lbl_803E4B9C via three independent fctiwz casts,
  *     else do the same dest writes (different scheduling).
  *   - Then if (distance² from player to obj position < lbl_803E4BA0) and sub.f24
- *     decremented by timeDelta is < lbl_803E4B9C, call pDll_expgfx->vt[2] with
+ *     decremented by timeDelta is < lbl_803E4B9C, call gPartfxInterface->vt[2] with
  *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
 extern void* objFindTexture(void* obj, int a, int b);
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 extern f32 timeDelta;
-extern int* pDll_expgfx;
+extern int* gPartfxInterface;
 #pragma peephole off
 #pragma scheduling off
 void dll_1DF_update(void* obj)
@@ -1327,7 +1327,7 @@ void dll_1DF_update(void* obj)
     t = *(f32*)((char*)sub + 0x24) - timeDelta;
     *(f32*)((char*)sub + 0x24) = t;
     if (t >= lbl_803E4B9C) return;
-    fn = (void (*)(void*, int, int, int, int, int))((int**)*pDll_expgfx)[0][2];
+    fn = (void (*)(void*, int, int, int, int, int))((int**)*gPartfxInterface)[0][2];
     fn(obj, 525, 0, 2, -1, 0);
     *(f32*)((char*)sub + 0x24) = lbl_803E4BA4;
 }
