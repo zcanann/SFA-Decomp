@@ -1318,5 +1318,11 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma peephole off
 #pragma scheduling off
 u8 wallanimator_modelMtxFn(int *obj) { return (u8)*(s16 *)((char *)((int **)obj)[0x4c/4] + 0x1c); }
+void waveanimator_setScale(int *obj, f32 fval)
+{
+  int *p = ((int **)obj)[0xb8 / 4];
+  *((u8 *)p + 0x34) |= 1;
+  *(f32 *)((char *)p + 0x30) = fval;
+}
 #pragma peephole reset
 #pragma scheduling reset

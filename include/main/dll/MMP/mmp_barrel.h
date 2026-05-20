@@ -10,7 +10,7 @@ extern ObjectDescriptor14 gGroundAnimatorObjDescriptor;
 
 u8 waveanimator_modelMtxFn(int *obj);
 void waveanimator_func0B(undefined2 *param_1,int param_2);
-void waveanimator_setScale(void);
+void waveanimator_setScale(int *obj, f32 fval);
 void FUN_80192488(void);
 void FUN_80192618(int param_1);
 void FUN_80192640(int param_1);
