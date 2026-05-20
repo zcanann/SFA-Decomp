@@ -794,6 +794,43 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
 void fn_801EE668(void) {}
 void fn_801EEB50(void) {}
 
+extern f32 lbl_803E5C74;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32 *mtx);
+extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudRunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    f32 *state = *(f32 **)(obj + 0xB8);
+    f32 mtx[16];
+    if (visible == -1) {
+        objRenderFn_8003b8f4(lbl_803E5C74);
+        ObjPath_GetPointWorldPosition(obj, 3, state, state + 1, state + 2, 0);
+        if (*(void **)(obj + 0x30) != NULL) {
+            *state = *state - playerMapOffsetX;
+            state[2] = state[2] - playerMapOffsetZ;
+            Obj_BuildInverseWorldTransformMatrix(*(int *)(obj + 0x30), mtx);
+            PSMTXMultVec(mtx, state, state);
+        }
+    } else if (visible != 0) {
+        objRenderFn_8003b8f4(lbl_803E5C74);
+        ObjPath_GetPointWorldPosition(obj, 3, state, state + 1, state + 2, 0);
+        if (*(void **)(obj + 0x30) != NULL) {
+            *state = *state - playerMapOffsetX;
+            state[2] = state[2] - playerMapOffsetZ;
+            Obj_BuildInverseWorldTransformMatrix(*(int *)(obj + 0x30), mtx);
+            PSMTXMultVec(mtx, state, state);
+        }
+    } else {
+        *state = *(f32 *)(obj + 0xC);
+        state[1] = *(f32 *)(obj + 0x10);
+        state[2] = *(f32 *)(obj + 0x14);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern int Obj_GetPlayerObject(void);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
@@ -865,5 +902,4 @@ void SB_CloudRunner_init(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_CloudRunner_render(void) {}
 void SB_CloudRunner_update(void) {}
