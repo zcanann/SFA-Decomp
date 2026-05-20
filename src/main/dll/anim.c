@@ -4245,3 +4245,23 @@ void fn_80204B6C(int p1)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
+extern void *Obj_GetPlayerObject(void);
+extern void fn_802960E8(void *playerObj, int p2);
+extern f32 timeDelta;
+#pragma peephole off
+#pragma scheduling off
+int fn_802044EC(int p1)
+{
+  int p_b8 = *(int *)(p1 + 0xb8);
+  void *player = Obj_GetPlayerObject();
+  s16 v = *(s16 *)p_b8;
+  if (v > 0) {
+    *(s16 *)p_b8 = v - (int)timeDelta;
+    fn_802960E8(player, 0x51e);
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
