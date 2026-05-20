@@ -2984,7 +2984,7 @@ void chukchuk_setScale(int obj, int v) {
 #pragma peephole reset
 
 /* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
-void iceball_init(int *obj) {
+void iceball_init(void *obj) {
     *(int*)((char*)obj + 0xf4) = 0xb4;
     ObjHits_DisableObject((int)obj);
     *(u8*)((char*)obj + 0x36) = 0xff;
@@ -3009,6 +3009,17 @@ int fn_8015E00C(int p1, u8 *obj) {
     if ((s8)obj[0x354] < 1) return 3;
     if ((s8)obj[0x346] != 0) return 6;
     return 0;
+}
+#pragma peephole reset
+
+/* fn_80160D48 (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
+extern f32 lbl_803E2E8C;
+#pragma peephole off
+void fn_80160D48(int* obj, int p2, int p3, int p4, int p5, s8 visible) {
+    s32 v = visible;
+    if (v != 0 && *(int*)((char*)obj + 0xf4) == 0) {
+        objRenderFn_8003b8f4(lbl_803E2E8C);
+    }
 }
 #pragma peephole reset
 
