@@ -4233,3 +4233,15 @@ int fn_80200410(int p1, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
+extern void **lbl_803DCA78;
+#pragma peephole off
+#pragma scheduling off
+void fn_80204B6C(int p1)
+{
+  (*(void (**)(int))((char *)*lbl_803DCA78 + 0x18))(p1);
+  getLActions(p1, p1, 0, 0, 0, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
