@@ -1091,3 +1091,56 @@ void crrockfall_release(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* fn_801ADD28: if extra->p && vtable(p,0x38)()==2, call fn_801AD7E4 with 9 args. */
+extern void fn_801AD7E4(void *a, void *b, int c, int d, int e, int f, int g, int h, int i);
+#pragma scheduling off
+#pragma peephole off
+void fn_801ADD28(void *obj) {
+    void **extra = *(void ***)((char *)obj + 0xb8);
+    void *p = *extra;
+    if (p != NULL) {
+        if ((*(int (**)(void *))(**(int **)((char *)p + 0x68) + 0x38))(p) == 2) {
+            fn_801AD7E4(obj, *extra, 0, 0, 0, 0, 0, 0, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_801AC6C4: set extra bit-0; scan arr for value==2 and clear two GameBits. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801AC6C4(void *obj, int arg2, u8 *arg3) {
+    int i;
+    *(u32 *)((char *)*(void **)((char *)obj + 0xb8) + 4) |= 1;
+    for (i = 0; i < arg3[0x8b]; i++) {
+        if (arg3[i + 0x81] == 2) {
+            GameBit_Set(888, 0);
+            GameBit_Set(953, 0);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_801AE088: install callback, configure sub-obj, init extra fields from arg. */
+extern void fn_801AD930(void);
+#pragma scheduling off
+#pragma peephole off
+void fn_801AE088(void *obj, void *arg2) {
+    void *extra;
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801AD930;
+    if (*(void **)((char *)obj + 0x64) != NULL) {
+        *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x4000;
+        *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3a) = 100;
+        *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3b) = 150;
+    }
+    extra = *(void **)((char *)obj + 0xb8);
+    *(u32 *)extra = 0;
+    *(u8 *)((char *)extra + 0x21) = *(u8 *)((char *)arg2 + 0x27);
+    *(u8 *)((char *)extra + 0x20) = 0xff;
+}
+#pragma peephole reset
+#pragma scheduling reset

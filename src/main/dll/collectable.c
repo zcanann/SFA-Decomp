@@ -2819,13 +2819,12 @@ int Tricky_func12(int *obj) {
 #pragma scheduling off
 int Tricky_func10(int *obj,int targetObj) {
     int *state = (int*)obj[0xb8/4];
-    u32 objBlocked = *(u16*)((u8*)obj + 0xb0) & 0x1000;
+    s32 objBlocked = *(u16*)((u8*)obj + 0xb0) & 0x1000;
 
     if (objBlocked != 0) {
         return 0;
     }
-    if ((state[0x54/4] & 0x10) == 0) {
-        s32 clearTargetAnim;
+    if (((u32)state[0x54/4] & 0x10) == 0) {
         void *currentTarget;
         void *nextTarget;
 
@@ -2833,9 +2832,8 @@ int Tricky_func10(int *obj,int targetObj) {
         currentTarget = (void *)state[0x28/4];
         nextTarget = (void *)(targetObj + 0x18);
         if (currentTarget != nextTarget) {
-            clearTargetAnim = -1025;
             state[0x28/4] = (int)nextTarget;
-            state[0x54/4] = state[0x54/4] & clearTargetAnim;
+            state[0x54/4] = state[0x54/4] & ~0x400;
             *(s16*)((u8*)state + 0xd2) = 0;
         }
         *((u8*)state + 10) = 0;

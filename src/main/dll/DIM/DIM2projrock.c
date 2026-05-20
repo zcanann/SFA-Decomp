@@ -1195,3 +1195,103 @@ void fn_801B8B48(void* obj)
     *(*(f32**)((char*)obj + 0xB8)) = *(f32*)((char*)obj + 0x10);
     *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) + lbl_803E4AD8;
 }
+
+/* fn_801B9E18: similar romlist param init, but reads three u8 fields, packs to s16
+ *              fields, and on a u8 flag does a u32→f32 conversion (MWCC emits the
+ *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
+ *              obj[8]. Also sets obj[0xB8]→f10 from a constant and OR-merges flags
+ *              into obj[0x64]->u32_30 (0x810) and obj[0xB0]'s u16 (0x2000). */
+extern f32 lbl_803E4BA8;
+extern f32 lbl_803E4BAC;
+#pragma peephole off
+#pragma scheduling off
+void fn_801B9E18(void* obj, void* p)
+{
+    u32 flag;
+    void* p50;
+    void* p64;
+    *(s16*)((char*)obj + 0x4) = (s16)((u32)*(u8*)((char*)p + 0x18) << 8);
+    *(s16*)((char*)obj + 0x2) = (s16)((u32)*(u8*)((char*)p + 0x19) << 8);
+    *(s16*)((char*)obj + 0x0) = (s16)((u32)*(u8*)((char*)p + 0x1A) << 8);
+    flag = *(u8*)((char*)p + 0x1B);
+    if (flag != 0) {
+        p50 = *(void**)((char*)obj + 0x50);
+        *(f32*)((char*)obj + 0x8) = *(f32*)((char*)p50 + 4) * ((f32)flag / lbl_803E4BA8);
+    }
+    *(f32*)((char*)*(void**)((char*)obj + 0xB8) + 0x10) = lbl_803E4BAC;
+    p64 = *(void**)((char*)obj + 0x64);
+    if (p64 != 0) {
+        *(u32*)((char*)p64 + 0x30) |= 0x810;
+    }
+    *(u16*)((char*)obj + 0xB0) |= 0x2000;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* fn_801B9CFC: per-frame texture-color update + proximity-driven expgfx trigger.
+ *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
+ *     (bytes 0xC..0xE) to (u8)(int)lbl_803E4B9C via three independent fctiwz casts,
+ *     else do the same dest writes (different scheduling).
+ *   - Then if (distance² from player to obj position < lbl_803E4BA0) and sub.f24
+ *     decremented by timeDelta is < lbl_803E4B9C, call pDll_expgfx->vt[2] with
+ *     (obj, 525, 0, 2, -1, 0) and reset sub.f24 to lbl_803E4BA4. */
+extern void* objFindTexture(void* obj, int a, int b);
+extern void* Obj_GetPlayerObject(void);
+extern f32 vec3f_distanceSquared(f32* a, f32* b);
+extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
+extern f32 timeDelta;
+extern int* pDll_expgfx;
+#pragma peephole off
+#pragma scheduling off
+void fn_801B9CFC(void* obj)
+{
+    void* sub = *(void**)((char*)obj + 0xB8);
+    void* tex;
+    void* player;
+    f32 dist;
+    f32 t;
+    void (*fn)(void*, int, int, int, int, int);
+
+    tex = objFindTexture(obj, 0, 0);
+    if (tex != 0) {
+        if (*(s16*)((char*)obj + 0x46) == 209) {
+            *(u8*)((char*)tex + 0xC) = (u8)(int)lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xD) = (u8)(int)lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xE) = (u8)(int)lbl_803E4B9C;
+        } else {
+            *(u8*)((char*)tex + 0xC) = (u8)(int)lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xD) = (u8)(int)lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xE) = (u8)(int)lbl_803E4B9C;
+        }
+    }
+    player = Obj_GetPlayerObject();
+    dist = vec3f_distanceSquared((f32*)((char*)player + 0x18), (f32*)((char*)obj + 0x18));
+    if (dist >= lbl_803E4BA0) return;
+    t = *(f32*)((char*)sub + 0x24) - timeDelta;
+    *(f32*)((char*)sub + 0x24) = t;
+    if (t >= lbl_803E4B9C) return;
+    fn = (void (*)(void*, int, int, int, int, int))((int**)*pDll_expgfx)[0][2];
+    fn(obj, 525, 0, 2, -1, 0);
+    *(f32*)((char*)sub + 0x24) = lbl_803E4BA4;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* fn_801B8EF8: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
+ *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
+#pragma peephole off
+#pragma scheduling off
+void fn_801B8EF8(void* obj, void* p)
+{
+    void* sub = *(void**)((char*)obj + 0xB8);
+    s16 t = (s16)((s32)*(s8*)((char*)p + 0x18) << 8);
+    *(s16*)((char*)obj + 0x0) = t;
+    if (GameBit_Get(*(s16*)((char*)p + 0x1E)) != 0) {
+        *(u8*)((char*)sub + 0x4) = 2;
+    } else {
+        *(u8*)((char*)sub + 0x4) = 1;
+    }
+    *(u16*)((char*)obj + 0xB0) |= 0x2000;
+}
+#pragma scheduling reset
+#pragma peephole reset
