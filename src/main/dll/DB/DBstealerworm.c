@@ -1167,6 +1167,26 @@ void SB_ShipGun_free(int param_1) {
     ((SBShipGunFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(param_1);
 }
 
+/* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
+#pragma peephole off
+#pragma scheduling off
+int SB_Galleon_modelMtxFn(int *obj) {
+    u8 *p = (u8*)((int**)obj)[0xb8/4];
+    u8 b = p[0x29];
+    if ((s8)b == 0) {
+        if (*(s16*)(p + 0x26) > 0) return -2;
+    }
+    if ((s8)b == 1) {
+        int t = (s8)p[0x7a];
+        if (t == 2) return -1;
+        if (t == 3) return -1;
+        if (t == 5) return -1;
+    }
+    return (s8)b;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
 int SB_Galleon_func0E(int *obj) {
     s8 *p = (s8*)((int**)obj)[0xb8/4];
