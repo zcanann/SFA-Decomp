@@ -1329,6 +1329,20 @@ void waveanimator_setScale(int *obj, f32 fval)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 lbl_803E3F98;
+#pragma peephole off
+#pragma scheduling off
+u8 groundanimator_func0B(int *obj)
+{
+    int *p1 = ((int **)obj)[0xB8 / 4];
+    f32 v = *(f32 *)((char *)p1 + 0xC);
+    int *p2 = ((int **)obj)[0x4C / 4];
+    u8 byte = *(u8 *)((char *)p2 + 0x20);
+    return v > lbl_803E3F98 * (f32)byte;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern u8 lbl_803DDAE8;
 extern void *lbl_803DDAEC;
 extern void *lbl_803DDAF0;

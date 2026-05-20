@@ -55,7 +55,7 @@ void alphaanimator_release(void);
 void alphaanimator_initialise(void);
 
 u8 groundanimator_modelMtxFn(int *obj);
-void groundanimator_func0B(void);
+u8 groundanimator_func0B(int *obj);
 void groundanimator_setScale(void);
 int groundanimator_getExtraSize(void);
 void groundanimator_free(void);
