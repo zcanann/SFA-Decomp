@@ -803,7 +803,7 @@ extern f64 fabs(f64 x);
 
 #pragma scheduling off
 #pragma peephole off
-void matrixFn_8006ff0c(double fov, double aspect, double near, double far, double scale,
+void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
                        float *mat, short *out)
 {
     f32 angle;
