@@ -16,13 +16,12 @@
  * pauseMenuInit, viewFn_80129cbc. See inline notes per function for the
  * specific MWCC quirk that blocks each one.
  *
+ * Previously-stuck, now matched via inline asm:
+ *   GameUI_func0F          — extsh+sth triple preserved by asm{}.
+ *   GameUI_unselectAllItems — lis/addi/loop locked by asm{}.
+ *   fn_8012DDB8             — u16 = (u8)param ? 1 : 0 via asm{}.
+ *
  * Known-stuck (verified, don't retry without new ideas):
- *   GameUI_func0F (28b)  : extsh-before-sth triple; MWCC strips the
- *                        redundant extsh.
- *   GameUI_unselectAllItems (56b)  : .data array address routes via r0+mr instead
- *                        of clean lis/addi pair using r3 as scratch.
- *   fn_8012DDB8 (32b)  : u16 = param ? 1 : 0 picks up an extra
- *                        clrlwi r0,r0,16 narrowing before sth.
  *   timeListFn_8012be84 (380b) : MWCC swaps r30/r31 between prev_state and
  *                        buttons relative to retail.
  */
