@@ -319,6 +319,8 @@ void FUN_801f4bb8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wmlevelcontrol_update(int obj)
 {
   uint areaId;
@@ -356,6 +358,8 @@ void wmlevelcontrol_update(int obj)
   *(uint *)(state + 6) = *(uint *)(state + 6) + 1;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
