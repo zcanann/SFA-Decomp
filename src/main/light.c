@@ -1124,6 +1124,22 @@ void vfpplatform_init(int obj, int data) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int *lbl_803DCA7C;
+extern u32 lbl_803DDCC0;
+extern void Resource_Release(u32);
+#pragma scheduling off
+#pragma peephole off
+void vfpdraghead_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x14)))(obj);
+    if (lbl_803DDCC0 != 0) {
+        Resource_Release(lbl_803DDCC0);
+    }
+    lbl_803DDCC0 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;
 extern void objRenderFn_8003b8f4(f32);
