@@ -40,7 +40,7 @@ void waveanimator_free(int *obj);
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void waveanimator_hitDetect(void);
 void waveanimator_update(void);
-void waveanimator_init(void);
+void waveanimator_init(int *obj, int *desc);
 void waveanimator_release(void);
 void waveanimator_initialise(void);
 

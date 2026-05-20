@@ -1345,6 +1345,35 @@ u8 groundanimator_func0B(int *obj)
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);
+extern void fn_801923F8(void);
+extern u8 lbl_803DDAE8;
+#pragma peephole off
+#pragma scheduling off
+void waveanimator_init(int *obj, int *desc)
+{
+    int *vstate = ((int**)obj)[0xB8/4];
+    f32 fz;
+    vstate[6]  = *(s8 *)((char*)desc + 0x20);
+    vstate[0]  = *(s16*)((char*)desc + 0x18);
+    vstate[1]  = *(s16*)((char*)desc + 0x1A);
+    vstate[2]  = *(s8 *)((char*)desc + 0x1C);
+    vstate[3]  = *(s8 *)((char*)desc + 0x1D);
+    *(f32*)((char*)vstate + 0x10) = (f32)*(s8*)((char*)desc + 0x1E);
+    *(f32*)((char*)vstate + 0x14) = (f32)*(s8*)((char*)desc + 0x1F);
+    vstate[7]  = *(s8 *)((char*)desc + 0x21);
+    vstate[8]  = *(s8 *)((char*)desc + 0x22);
+    fz = lbl_803E3F70;
+    *(f32*)((char*)vstate + 0x2C) = fz;
+    *(f32*)((char*)vstate + 0x30) = fz;
+    if (lbl_803DDAE8 == 0) {
+        fn_801923F8();
+    }
+    ObjGroup_AddObject(obj, 27);
+    lbl_803DDAE8++;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole off
 #pragma scheduling off
 void visanimator_init(int *obj, int *desc)
@@ -1399,7 +1428,6 @@ void visanimator_update(int *obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern u8 lbl_803DDAE8;
 extern void *lbl_803DDAEC;
 extern void *lbl_803DDAF0;
 extern void *lbl_803DDAF4;
