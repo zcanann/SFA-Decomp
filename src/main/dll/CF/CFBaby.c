@@ -1809,13 +1809,14 @@ void landed_arwing_init(int obj, int param) {
 #pragma scheduling reset
 
 extern int *lbl_803DCAC0;
+#define gCarryableInterface lbl_803DCAC0
 #pragma scheduling off
 #pragma peephole off
 void dll_109_init(int obj, u8 *p) {
     *(s16 *)obj = (s16)((s32)p[0x1a] << 8);
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
-    (*(void (*)(int, int *, int))(*(int *)(*lbl_803DCAC0 + 0x4)))(obj, *(int **)(obj + 0xb8), 0x21);
-    (*(void (*)(int *, int))(*(int *)(*lbl_803DCAC0 + 0x2c)))(*(int **)(obj + 0xb8), 1);
+    (*(void (*)(int, int *, int))(*(int *)(*gCarryableInterface + 0x4)))(obj, *(int **)(obj + 0xb8), 0x21);
+    (*(void (*)(int *, int))(*(int *)(*gCarryableInterface + 0x2c)))(*(int **)(obj + 0xb8), 1);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1851,7 +1852,7 @@ int InfoPoint_SeqFn(int obj, int unused, u8 *p3) {
 extern int *lbl_803DCAC0;
 #pragma scheduling off
 void dll_109_free(int obj) {
-    (*(void (*)(int))(*(int *)(*lbl_803DCAC0 + 0x10)))(obj);
+    (*(void (*)(int))(*(int *)(*gCarryableInterface + 0x10)))(obj);
 }
 #pragma scheduling reset
 
@@ -1861,7 +1862,7 @@ extern f32 lbl_803E3B40;
 void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     int *inner = *(int **)(obj + 0xb8);
     if (*(u8 *)((char *)inner + 0xa) == 0) {
-        if ((*(int (*)(int, s32))(*(int *)(*lbl_803DCAC0 + 0xc)))(obj, visible) != 0) {
+        if ((*(int (*)(int, s32))(*(int *)(*gCarryableInterface + 0xc)))(obj, visible) != 0) {
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E3B40);
         }
     }

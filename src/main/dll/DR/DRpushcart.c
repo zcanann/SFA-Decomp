@@ -70,6 +70,7 @@ extern undefined4* DAT_803dd72c;
 extern undefined4* DAT_803dd734;
 extern undefined4 DAT_803de8d8;
 extern undefined4* lbl_803DCAB4;
+#define gBoneParticleEffectInterface lbl_803DCAB4
 extern f64 DOUBLE_803e6698;
 extern f64 DOUBLE_803e66f0;
 extern f32 lbl_803DC074;
@@ -523,7 +524,7 @@ void shopkeeper_render(int param_1, int param_2, int param_3, int param_4, int p
         dll_2E_func06(param_1, iVar1 + 0x35c, 0);
     }
     if ((*(u8 *)(iVar1 + 0x9d4) & 0x20) != 0) {
-        (*(void (*)(int, int, float *, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(param_1, 0x7ef, local_18, 0x50, 0);
+        (*(void (*)(int, int, float *, int, int))(*(int *)(*gBoneParticleEffectInterface + 0xc)))(param_1, 0x7ef, local_18, 0x50, 0);
     }
 }
 #pragma peephole reset

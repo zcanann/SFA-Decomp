@@ -382,6 +382,7 @@ int gunpowderbarrel_getExtraSize(void)
 }
 
 extern undefined4* lbl_803DCAC0;
+#define gCarryableInterface lbl_803DCAC0
 extern undefined4* gExpgfxInterface;
 extern int Obj_IsObjectAlive(void* obj);
 extern void ObjLink_DetachChild(int obj, void* child);
@@ -398,7 +399,7 @@ void gunpowderbarrel_free(int param_1, int param_2)
   int extra;
   void* child;
   extra = *(int*)(param_1 + 0xb8);
-  (*(code*)(*(int *)lbl_803DCAC0 + 0x10))(param_1);
+  (*(code*)(*(int *)gCarryableInterface + 0x10))(param_1);
   child = *(void**)(extra + 0x10);
   if (child != 0 && param_2 == 0) {
     if (Obj_IsObjectAlive(child) != 0) {
@@ -439,7 +440,7 @@ void gunpowderbarrel_render(int param_1, undefined4 param_2, undefined4 param_3,
     *(short*)(param_1 + 4) = 0;
     *(short*)(param_1 + 2) = 0;
   }
-  result = (int)(*(code *)(*(int *)lbl_803DCAC0 + 0xc))(param_1, param_6);
+  result = (int)(*(code *)(*(int *)gCarryableInterface + 0xc))(param_1, param_6);
   if (result != 0 || param_6 == -1) {
     objRenderFn_8003b8f4((void*)param_1, param_2, param_3, param_4, param_5,
                           (double)lbl_803E42DC);

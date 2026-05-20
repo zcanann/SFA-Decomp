@@ -105,6 +105,7 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd70c;
 extern undefined4* gMapEventInterface;
 extern undefined4* lbl_803DCAB4;
+#define gBoneParticleEffectInterface lbl_803DCAB4
 extern undefined4* DAT_803dd738;
 extern u32 gDIMbossSequenceFlags;
 extern undefined4 DAT_803de808;
@@ -195,13 +196,13 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
     for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
       switch(animUpdate->eventIds[eventIndex]) {
       case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
-        (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
-        (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x800,0,100,0);
-        (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
+        (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x800,0,100,0);
+        (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x800,0,100,0);
+        (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x7ff,0,100,0);
         puVar7 = (undefined4 *)0x0;
         puVar8 = (undefined4 *)0x64;
         puVar9 = (undefined4 *)0x0;
-        (*(code *)(*lbl_803DCAB4 + 0xc))(puVar3,0x7ff,0,100,0);
+        (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x7ff,0,100,0);
         iVar4 = Obj_GetActiveModel((int)puVar3);
         ObjModel_ClearRenderAttachment(iVar4);
         Music_Trigger(0x27,1);

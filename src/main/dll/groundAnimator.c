@@ -36,6 +36,7 @@ extern void dll_115_seqFn(void);
 
 extern undefined4* gObjectTriggerInterface;
 extern undefined4* lbl_803DCAC0;
+#define gCarryableInterface lbl_803DCAC0
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd718;
@@ -263,7 +264,7 @@ int wm_column_func08(void)
 void wm_column_free(int obj)
 {
   ObjGroup_RemoveObject(obj, 4);
-  (*(GroundAnimatorFreeFn *)(*lbl_803DCAC0 + 0x10))(obj);
+  (*(GroundAnimatorFreeFn *)(*gCarryableInterface + 0x10))(obj);
 }
 
 /*
@@ -283,7 +284,7 @@ void wm_column_free(int obj)
 #pragma peephole off
 void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  if ((*(GroundAnimatorVisibleFn *)(*lbl_803DCAC0 + 0xc))(param_1, visible) != 0) {
+  if ((*(GroundAnimatorVisibleFn *)(*gCarryableInterface + 0xc))(param_1, visible) != 0) {
     objRenderFn_8003b8f4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
   }
 }
@@ -334,7 +335,7 @@ void wm_column_update(int obj)
 
   state = *(int *)(obj + 0xb8);
   nearest = lbl_803E37BC;
-  if ((*(GroundAnimatorAnimStateFn *)(*lbl_803DCAC0 + 8))(obj, *(int *)(obj + 0xb8)) != 0) {
+  if ((*(GroundAnimatorAnimStateFn *)(*gCarryableInterface + 8))(obj, *(int *)(obj + 0xb8)) != 0) {
     if ((*(int *)(obj + 0xf4) & 2) != 0) {
       objects = ObjList_GetObjects(&i, &count);
       for (; i < count; i++) {
@@ -352,11 +353,11 @@ void wm_column_update(int obj)
     ObjGroup_FindNearestObject(0x10, obj, &nearest);
     playerFlags = playerGetStateFlag310(playerFlags);
     if (((playerFlags & 0x4000) != 0) && (nearest > lbl_803E37C4)) {
-      (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 0);
+      (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 0);
       setAButtonIcon(5);
       *(u32 *)(obj + 0xf4) |= 1;
     } else {
-      (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 1);
+      (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 1);
     }
     *(u32 *)(obj + 0xf4) &= ~2;
   } else {
@@ -382,10 +383,10 @@ void wm_column_update(int obj)
     }
     playerFlags = playerGetStateFlag310(Obj_GetPlayerObject());
     if ((playerFlags & 0x4000) != 0) {
-      (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 0);
+      (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 0);
       *(u32 *)(obj + 0xf4) |= 2;
     } else {
-      (*(GroundAnimatorSetVisibleFn *)(*lbl_803DCAC0 + 0x24))(state, 1);
+      (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 1);
       *(u32 *)(obj + 0xf4) &= ~2;
     }
     *(u32 *)(obj + 0xf4) &= ~1;
@@ -419,7 +420,7 @@ void wm_column_init(short *obj, int mapData)
   if (*(s8 *)((int)obj + 0xad) >= *(s8 *)(*(int *)((int)obj + 0x50) + 0x55)) {
     *(u8 *)((int)obj + 0xad) = 0;
   }
-  (*(GroundAnimatorInitAnimFn *)(*lbl_803DCAC0 + 4))(obj, state, 0x32);
+  (*(GroundAnimatorInitAnimFn *)(*gCarryableInterface + 4))(obj, state, 0x32);
   ObjGroup_AddObject((int)obj, 4);
 }
 #pragma peephole reset

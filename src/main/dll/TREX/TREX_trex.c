@@ -1722,6 +1722,7 @@ extern f32 lbl_803E5960;
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
 extern int* lbl_803DCAB4;
+#define gBoneParticleEffectInterface lbl_803DCAB4
 extern int Stack_IsEmpty(int stack);
 extern int Stack_Pop(int stack, int *out);
 int fn_801E5060(int p1, int p2, int p3);
@@ -1794,7 +1795,7 @@ int fn_801E66EC(int arg1, int arg2)
 
     if (*(s8 *)(arg2 + 0x27a) != 0) {
         if ((*(u16 *)(arg1 + 0xb0) & 0x800) != 0) {
-            ((void (*)(int, int, f32 *, int, int))((void **)*lbl_803DCAB4)[3])(
+            ((void (*)(int, int, f32 *, int, int))((void **)*gBoneParticleEffectInterface)[3])(
                 arg1, 2031, &local, 80, 0);
         }
     }
