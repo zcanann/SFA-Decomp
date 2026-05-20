@@ -82,6 +82,20 @@ Heuristic before reaching for `asm { }`:
    *without* intermediates don't need this — args pass through naturally.
    Picked up several 100% matches in TREX_trex and DIMcannon batches.
 
+10. **`(u32)` cast on a u8/u16 before int→f32 conversion** forces the unsigned
+    path. The signed int→f32 path emits `xoris + lfd + fsubs` against a
+    compiler-internal `@xxx` magic constant; the unsigned path uses the
+    project's named `lbl_xxx` f64 magic (matching target). When converting an
+    unsigned byte/halfword to float, write `(f32)(u32)obj->u8field` rather
+    than `(f32)obj->u8field`. Picked up MoonSeedBush_init in DIMlavaball.
+
+11. **`extern int fn(...)` for callees whose return is treated as `int`** —
+    even if conceptually the return is a byte. Declaring `extern u8 fn(...)`
+    triggers a spurious `clrlwi r3, r3, 24` after every call to zero-extend
+    the result, which target omits. Check the asm — if there's no `clrlwi`
+    after the call, the project treats the return as `int`. Picked up
+    `MMP_levelcontrol_init` in DIMlavaball via `extern int getSaveGameLoadStatus`.
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
