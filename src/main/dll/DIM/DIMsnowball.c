@@ -1233,3 +1233,43 @@ extern void objRenderFn_8003b8f4(f32);
 void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Drift-recovery: add new fns with v1.0 names. */
+extern void envFxActFn_800887f8(int a);
+extern void Music_Trigger(int a, int b);
+extern void spawnExplosion(f32 size, int a, int b, int c, int d, int e, int f, int g);
+extern int fn_801AA734(int* obj);
+extern f32 lbl_803E46C8;
+
+#pragma scheduling off
+#pragma peephole off
+
+void ccsharpclawpad_init(int* obj, int* def)
+{
+    *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 24) << 8);
+    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
+}
+
+void cclevcontrol_free(void)
+{
+    envFxActFn_800887f8(0);
+    Music_Trigger(200, 0);
+}
+
+void cclightfoot_init(int* obj, int* def)
+{
+    *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
+    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
+    *(void**)((char*)obj + 188) = (void*)fn_801AA734;
+}
+
+int fn_801ABA84(int p1, int p2, u8* state)
+{
+    if (state[139] != 0) {
+        spawnExplosion(lbl_803E46C8, 1, 1, 0, 1, 1, 1, 0);
+    }
+    return 0;
+}
+
+#pragma peephole reset
+#pragma scheduling reset
