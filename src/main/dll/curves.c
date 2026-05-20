@@ -4223,6 +4223,24 @@ void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
   return;
 }
 
+/* fn_800E7C84: extended dll_15_func04 — same fields plus a second signed
+ * byte at obj[0x263] and OR-in 0x02000008 on the flags word at obj[0]. */
+#pragma scheduling off
+#pragma peephole off
+void fn_800E7C84(u8* obj, int a, u32 b, u32 c, int d, int e)
+{
+    obj[0x25c] &= 0xf0;
+    obj[0x25c] = (u8)(obj[0x25c] | (a & 0xf));
+    *(s8*)(obj + 0x25d) = (s8)d;
+    *(s8*)(obj + 0x263) = (s8)e;
+    *(u32*)(obj + 0xdc) = b;
+    *(u32*)(obj + 0xe0) = c;
+    *(u32*)obj |= 0x02000008;
+    obj[0x264] = 0xa;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* dll_15_func04: write the per-slot config block on obj+0x25c..+0x264:
  * replace low 4 bits of obj[0x25c] with (a & 0xf), set obj[0x25d] = (s8)d,
  * stash two u32s at +0xdc/+0xe0, OR-in bit 3 of obj[0], and set obj[0x264]=10. */
