@@ -470,6 +470,7 @@ int sc_cloudrunnera_func08(void) { return 0xb; }
 extern uint GameBit_Get(int id);
 extern int *gObjectTriggerInterface;
 extern int *lbl_803DCA74;
+#define gTitleMenuControlInterface lbl_803DCA74
 #pragma scheduling off
 #pragma peephole off
 int fn_801DD170(void) {
@@ -480,7 +481,7 @@ int fn_801DD170(void) {
 void sc_cloudrunnera_free(int *obj) {
     void *inner = *(void **)((char *)obj + 0xb8);
     ((void (*)(void *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
-    ((void (*)(int *, int, int, int, int))(*(int *)(*lbl_803DCA74 + 0x8)))(obj, 0xffff, 0, 0, 0);
+    ((void (*)(int *, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
