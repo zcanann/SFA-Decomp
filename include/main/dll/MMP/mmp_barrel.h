@@ -36,7 +36,7 @@ void FUN_80193ba8(int param_1);
 
 int waveanimator_getExtraSize(void);
 int waveanimator_func08(void);
-void waveanimator_free(void);
+void waveanimator_free(int *obj);
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void waveanimator_hitDetect(void);
 void waveanimator_update(void);
@@ -55,7 +55,7 @@ void alphaanimator_release(void);
 void alphaanimator_initialise(void);
 
 u8 groundanimator_modelMtxFn(int *obj);
-void groundanimator_func0B(void);
+u8 groundanimator_func0B(int *obj);
 void groundanimator_setScale(void);
 int groundanimator_getExtraSize(void);
 void groundanimator_free(void);

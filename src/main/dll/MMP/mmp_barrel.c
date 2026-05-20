@@ -1328,3 +1328,35 @@ void waveanimator_setScale(int *obj, f32 fval)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E3F98;
+#pragma peephole off
+#pragma scheduling off
+u8 groundanimator_func0B(int *obj)
+{
+    int *p1 = ((int **)obj)[0xB8 / 4];
+    f32 v = *(f32 *)((char *)p1 + 0xC);
+    int *p2 = ((int **)obj)[0x4C / 4];
+    u8 byte = *(u8 *)((char *)p2 + 0x20);
+    return v > lbl_803E3F98 * (f32)byte;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern u8 lbl_803DDAE8;
+extern void *lbl_803DDAEC;
+extern void *lbl_803DDAF0;
+extern void *lbl_803DDAF4;
+#pragma peephole off
+#pragma scheduling off
+void waveanimator_free(int *obj)
+{
+    if (--lbl_803DDAE8 == 0) {
+        if (lbl_803DDAF4 != NULL) mm_free(lbl_803DDAF4);
+        if (lbl_803DDAF0 != NULL) mm_free(lbl_803DDAF0);
+        if (lbl_803DDAEC != NULL) mm_free(lbl_803DDAEC);
+    }
+    ObjGroup_RemoveObject(obj, 27);
+}
+#pragma scheduling reset
+#pragma peephole reset
