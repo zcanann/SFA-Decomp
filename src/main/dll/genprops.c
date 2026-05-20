@@ -4530,7 +4530,7 @@ extern void fn_8017140C();
 extern void fn_80171470();
 extern void fn_8017151C();
 extern void fn_801718D0();
-extern u8 fn_80170380[];
+extern u8 staffFn_80170380[];
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -4846,14 +4846,14 @@ ObjectDescriptor gShieldObjDescriptor = {
 };
 
 u32 jumptable_80320AA0[] = {
-    (u32)(fn_80170380 + 0x10C),
-    (u32)(fn_80170380 + 0x184),
-    (u32)(fn_80170380 + 0x35C),
-    (u32)(fn_80170380 + 0x3D0),
-    (u32)(fn_80170380 + 0x584),
-    (u32)(fn_80170380 + 0x550),
-    (u32)(fn_80170380 + 0x65C),
-    (u32)(fn_80170380 + 0x84),
+    (u32)(staffFn_80170380 + 0x10C),
+    (u32)(staffFn_80170380 + 0x184),
+    (u32)(staffFn_80170380 + 0x35C),
+    (u32)(staffFn_80170380 + 0x3D0),
+    (u32)(staffFn_80170380 + 0x584),
+    (u32)(staffFn_80170380 + 0x550),
+    (u32)(staffFn_80170380 + 0x65C),
+    (u32)(staffFn_80170380 + 0x84),
 };
 
 ObjectDescriptor12 gCurveObjDescriptor = {
@@ -4982,7 +4982,7 @@ int collectible_setScale(int *obj) { return *(int*)((char*)obj + 0xf4); }
 /* misc 16b 4-insn patterns. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8016E81C(int *obj) { s32 v = 0x0; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x48) = v; }
+void objSetAnimField48to0(int *obj) { s32 v = 0x0; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x48) = v; }
 void flamethrowerspe_func0B(int *obj) { s32 v = 0x1; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x10) = v; }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4990,14 +4990,14 @@ void flamethrowerspe_func0B(int *obj) { s32 v = 0x1; *(s32*)((char*)((int**)obj)
 extern void quakeSpellFn_8016cee8(int *obj, int x);
 #pragma scheduling off
 #pragma peephole off
-void fn_8016EB50(int *obj) { quakeSpellFn_8016cee8(obj, *(int*)((char*)obj + 0xc4)); }
+void playerRenderQuakeSpell(int *obj) { quakeSpellFn_8016cee8(obj, *(int*)((char*)obj + 0xc4)); }
 #pragma peephole reset
 #pragma scheduling reset
 
 /* state-byte setters / leaf writers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8016D9EC(int *obj, u8 a, u8 b) {
+void staffSetGlow(int *obj, u8 a, u8 b) {
     u8 *state = (u8*)((int**)obj)[0xb8/4];
     state[0xbb] = a;
     state[0xba] = b;
