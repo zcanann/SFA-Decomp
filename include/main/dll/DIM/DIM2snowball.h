@@ -41,7 +41,7 @@ int dim_tricky_func08(void);
 void dim_tricky_free(void);
 void dim_tricky_render(void);
 void dim_tricky_hitDetect(void);
-void dim_tricky_update(void);
+void dim_tricky_update(int* obj);
 void dim_tricky_init(int *obj);
 
 void dim2conveyor_setScale(void);

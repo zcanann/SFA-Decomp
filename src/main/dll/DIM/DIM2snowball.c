@@ -1257,6 +1257,7 @@ void dll_1DA_hitDetect(int obj) {
 extern int ObjList_FindObjectById(int id);
 extern void mm_free(void* p);
 extern u8 lbl_803DBF20;
+extern int* getTrickyObject(void);
 
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if result == 0 else 0. */
@@ -1348,6 +1349,31 @@ void dim2snowball_init(int* obj, int* def)
     }
     *(int**)((char*)state + 156) = (int*)ObjList_FindObjectById(*(int*)((char*)state + 160));
     *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x2000);
+}
+
+void dim_tricky_update(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    int* trickyObj = getTrickyObject();
+    if (trickyObj == NULL) return;
+    switch (*(u8*)state) {
+        case 0:
+            if (GameBit_Get(0xa1b) != 0) {
+                GameBit_Set(0x4e4, 0);
+                GameBit_Set(0x4e5, 0);
+                *(s8*)state = 1;
+            }
+            break;
+        case 1:
+            *(s8*)state = 2;
+            break;
+        case 2:
+            ((void(*)(int*, int*))((void**)*(*(int***)((char*)trickyObj + 104)))[14])(trickyObj, obj);
+            *(s8*)state = 3;
+            break;
+        case 3:
+            break;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
