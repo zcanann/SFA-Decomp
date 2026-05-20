@@ -1058,10 +1058,53 @@ void crrockfall_initialise(void) { lbl_803DDB40 = 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E46D8;
+extern f32 lbl_803E4708;
+extern f32 lbl_803E473C;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E46D8); }
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    if (inner[0xc] != 3 && visible != 0) {
+        objRenderFn_8003b8f4(lbl_803E4708);
+    }
+}
+void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    if (*(s16 *)(obj + 0x46) == 0x172 && visible != 0) {
+        objRenderFn_8003b8f4(lbl_803E473C);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern unsigned int *lbl_803DCA54;
+extern int *lbl_803DCA78;
+#pragma scheduling off
+#pragma peephole off
+void magiclight_free(int obj) {
+    int *inner = *(int **)(obj + 0xb8);
+    if (*(s16 *)(obj + 0x46) != 0x172) {
+        if ((s8)*(s8 *)((char *)inner + 0xb) != 0) {
+            getLActions(0, (int *)obj, (u16)*(s16 *)((char *)inner + 8), 0, 0, 0);
+        }
+        (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    }
+}
+void magiclight_update(int obj) {
+    if (*(s16 *)(obj + 0x46) != 0x172 && *(int *)(obj + 0xf4) == 0) {
+        *(s16 *)obj = 0;
+        *(s16 *)(obj + 2) = 0;
+        *(s16 *)(obj + 4) = 0;
+        (*(void (*)(int, int, int))(*(int *)(*lbl_803DCA54 + 0x48)))(0, obj, -1);
+        *(int *)(obj + 0xf4) = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off

@@ -1410,6 +1410,34 @@ void exploded_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+/* fn_801A3E9C: forward decl (think-routine pointer used by slidingdoor_init). */
+extern void fn_801A3E9C(void);
+extern f32 lbl_803E43C0;
+
+/* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
+ * fn_801A3E9C as obj->thinkRoutine; convert data[0x21] to f32, scale by
+ * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
+ * obj->_b8->_0. */
+#pragma scheduling off
+#pragma peephole off
+void slidingdoor_init(u8* obj, u8* data) {
+    register u32 flag = 0;
+    u8* sub;
+    u8 b;
+    f32 v;
+    *(u32*)(obj + 0xf4) = flag;
+    *(s16*)obj = (s16)(data[0x1f] << 8);
+    *(void(**)(void))(obj + 0xbc) = fn_801A3E9C;
+    v = (f32)(u32)data[0x21] * lbl_803E43C0;
+    *(f32*)(obj + 0x8) = v;
+    *(f32*)(obj + 0x8) = *(f32*)(obj + 0x8) * *(f32*)((char*)(*(u8**)(obj + 0x50)) + 4);
+    sub = *(u8**)(obj + 0xb8);
+    b = sub[0];
+    sub[0] = (u8)((b & ~0xE0) | (flag << 5));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* CFLevelControl_SeqFn: loop through u8 array at +0x81 of param 3; on element==1, do game state setup. */
 extern void GameBit_Set(int eventId, int value);
 extern void loadMapAndParent(int mapId);
