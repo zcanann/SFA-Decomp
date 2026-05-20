@@ -1802,6 +1802,23 @@ void landed_arwing_init(int obj, int param) {
     *(void(**)(void))((char*)obj + 0xbc) = fn_80188CC0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_80188398(int obj, int unused, u8 *p3) {
+    s16 *inner = *(s16 **)((char *)obj + 0xb8);
+    int i;
+    for (i = 0; i < p3[0x8b]; i++) {
+        switch (p3[0x81 + i]) {
+            case 1: inner[0xb] = (s16)0xff; break;
+            case 2: inner[0xb] = 0; break;
+            case 5: break;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern int *lbl_803DCAC0;
 #pragma scheduling off
 void fn_80187BB0(int obj) {
