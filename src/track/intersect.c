@@ -206,7 +206,7 @@ extern f32 lbl_803DD020;
 extern f32 lbl_803DD024;
 extern f32 lbl_803DD034;
 extern f32 lbl_803DD038;
-extern undefined4* lbl_803DCA58;
+extern void* gSHthorntailAnimationInterface;
 extern undefined4* pDll_expgfx;
 extern undefined4* gWaterfxInterface;
 extern undefined4 lbl_803DCFF0;
@@ -1110,7 +1110,6 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
     extern Mtx lbl_80396850;
     extern Mtx lbl_80396820;
     extern f32 lbl_8030EAA0[3][3];
-    extern void* gSHthorntailAnimationInterface;
     extern int ObjModel_GetRenderOp(void* model, int slot);
     extern int* Shader_getLayer(void* op, int slot);
     extern void* textureIdxToPtr(int idx);
@@ -5914,7 +5913,6 @@ void fn_8007BD8C(int handle1, int handle2)
     extern GXColor lbl_803DD01C;
     extern Mtx lbl_80396820;
     extern f32 lbl_8030EA10[3][3];
-    extern void* gSHthorntailAnimationInterface;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
@@ -6160,7 +6158,6 @@ void gxTextureSetupFn_8007cf7c(void)
     extern GXColor lbl_803DD01C;
     extern u8 lbl_803DB678;
     extern f32 gSynthDelayedActionWord0;
-    extern void* gSHthorntailAnimationInterface;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;

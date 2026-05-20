@@ -46,7 +46,6 @@ extern undefined4 FUN_802924c4();
 extern undefined4 FUN_80293f90();
 
 extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dca58;
 extern undefined4 DAT_803de768;
 extern undefined4 DAT_803de76c;
 extern undefined4 DAT_803de770;
