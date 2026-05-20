@@ -797,9 +797,9 @@ extern f32 lbl_803DEE7C;
 extern f32 Gq;
 extern f32 lbl_803DD03C;
 extern int lbl_803968C0[];
-extern f64 fn_80293E80(f64 x);
-extern f64 sin(f64 x);
-extern f64 fabs(f64 x);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 fabs(f32 x);
 
 #pragma scheduling off
 #pragma peephole off
