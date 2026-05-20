@@ -1640,6 +1640,7 @@ extern f32 lbl_803E5D80;
 #pragma peephole off
 void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
+    extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
     s32 v;
     if (*(int*)((char*)obj + 0xf8) != 0) {
         v = visible;
@@ -1655,7 +1656,7 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
             *(u32*)(*(char**)((char*)obj + 0x64) + 0x30) |= 0x1000;
         }
     }
-    objRenderFn_8003b8f4(lbl_803E5D80);
+    objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5D80);
 }
 #pragma peephole reset
 #pragma scheduling reset
