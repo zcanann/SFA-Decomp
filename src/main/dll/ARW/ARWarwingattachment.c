@@ -1596,3 +1596,35 @@ void fn_801F2BA0(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* EN v1.0 0x801F2DBC  size: 188b  Init: write a function pointer
+ * (fn_801F2A70) into obj->_bc and prime obj->_b8 (the body block) with
+ * fixed bytes, the three float position-quaternion from arg+8/c/10,
+ * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
+extern void fn_801F2A70(void);
+extern f32 lbl_803E5D98;
+#pragma scheduling off
+#pragma peephole off
+void fn_801F2DBC(int* obj, int* arg)
+{
+    u8* b;
+    *(int*)((char*)obj + 0xf4) = 0;
+    *(s16*)obj = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)fn_801F2A70;
+    b = *(u8**)((char*)obj + 0xb8);
+    *(u8*)(b + 0x26) = (u8)*(s16*)arg;
+    *(u32*)(b + 0x1c) = 0;
+    *(s16*)(b + 0x18) = 0;
+    *(f32*)(b + 0x0) = *(f32*)((char*)arg + 0x8);
+    *(f32*)(b + 0x4) = *(f32*)((char*)arg + 0xc);
+    *(f32*)(b + 0x8) = *(f32*)((char*)arg + 0x10);
+    *(u8*)(b + 0x24) = (u8)GameBit_Get(0xd0);
+    *(u8*)(b + 0x27) = 0;
+    *(u8*)(b + 0x22) = 1;
+    *(u8*)(b + 0x23) = 0xc;
+    *(s16*)(b + 0x20) = 0x12c;
+    *(f32*)(b + 0xc) = lbl_803E5D98;
+    *(f32*)(b + 0x14) = lbl_803E5DC0;
+}
+#pragma peephole reset
+#pragma scheduling reset
