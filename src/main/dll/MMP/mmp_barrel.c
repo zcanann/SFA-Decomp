@@ -1375,6 +1375,30 @@ void waveanimator_init(int *obj, int *desc)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern f32 lbl_803E3FB8;
+#pragma peephole off
+#pragma scheduling off
+void groundanimator_init(int *obj, int *desc)
+{
+    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    vstate[0x2B] = (u8)*(s16*)((char*)desc + 0x1E);
+    *(f32*)(vstate + 0x18) = (f32)*(u8*)((char*)desc + 0x27);
+    *(f32*)(vstate + 0x10) = lbl_803E3FB8;
+    *(f32*)(vstate + 0x14) = (f32)*(u8*)((char*)desc + 0x26);
+    if (*(u8*)((char*)desc + 0x25) != 0) {
+        if (GameBit_Get(*(s16*)((char*)desc + 0x18)) != 0) {
+            *(f32*)(vstate + 0xC) = lbl_803E3F98 * (f32)*(u8*)((char*)desc + 0x20);
+            vstate[0x2D] |= 2;
+        }
+    }
+    ObjGroup_AddObject(obj, 49);
+    if (*(u8*)((char*)desc + 0x21) > 1) {
+        *(u8*)((char*)desc + 0x21) = 0;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole off
 #pragma scheduling off
 void hitanimator_init(int *obj, int *desc)
