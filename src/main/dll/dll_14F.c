@@ -1531,8 +1531,10 @@ extern void objRenderFn_8003b8f4(int obj, float arg);
 extern f32 lbl_803E3858;
 extern f32 lbl_803E38B0;
 
+#pragma scheduling off
 void MagicPlant_free(int obj, int param_2) {
-  int *state = *(int **)(obj + 0xb8);
+  int *state;
+  state = *(int **)(obj + 0xb8);
   ObjGroup_RemoveObject(obj, 0x34);
   ObjGroup_RemoveObject(obj, 0x3e);
   if (*(u8 *)(obj + 0xeb) != 0) {
@@ -1542,8 +1544,10 @@ void MagicPlant_free(int obj, int param_2) {
     }
   }
 }
+#pragma scheduling reset
 
 #pragma peephole off
+#pragma scheduling off
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   int *state;
   int s0;
@@ -1553,11 +1557,14 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   if (v != 0) {
     objRenderFn_8003b8f4(obj, lbl_803E3858);
     s0 = *state;
-    if (s0 != 0 && *(int *)(s0 + 0xc4) != 0) {
-      ObjPath_GetPointWorldPosition(obj, 0, (float *)(s0 + 0xc), (float *)(s0 + 0x10), (float *)(s0 + 0x14), 0);
+    if (s0 != 0) {
+      if (*(int *)(s0 + 0xc4) != 0) {
+        ObjPath_GetPointWorldPosition(obj, 0, (float *)(s0 + 0xc), (float *)(s0 + 0x10), (float *)(s0 + 0x14), 0);
+      }
     }
   }
 }
+#pragma scheduling reset
 #pragma peephole reset
 
 void trickywarp_free(int obj) {
@@ -1584,23 +1591,49 @@ void trickyguard_init(s16 *obj, u8 *param_2) {
   *(u16 *)((char *)obj + 0xb0) = (u16)v;
 }
 
+#pragma scheduling off
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   int state;
   s32 v;
   state = *(int *)(obj + 0xb8);
   v = visible;
-  if (v != 0 && *(u8 *)(state + 0x1b) != 0 && *(u8 *)(state + 0x1c) == 0) {
-    objRenderFn_8003b8f4(obj, lbl_803E38B0);
+  if (v != 0) {
+    if (*(u8 *)(state + 0x1b) != 0) {
+      if (*(u8 *)(state + 0x1c) == 0) {
+        objRenderFn_8003b8f4(obj, lbl_803E38B0);
+      }
+    }
   }
 }
+#pragma scheduling reset
 #pragma peephole reset
+
+extern int objBboxFn_800640cc(f32 *from, f32 *to, f32 radius, int mode, void *hit,
+                              void *obj, int flags, int mask, int arg9, int arg10);
+extern f32 lbl_803E38B4;
+
+#pragma scheduling off
+void duster_hitDetect(int obj) {
+  int state;
+  u8 hit[0x54];
+  int r;
+  state = *(int *)(obj + 0xb8);
+  r = objBboxFn_800640cc((f32 *)(obj + 128), (f32 *)(obj + 12),
+                         lbl_803E38B4, 2, hit, (void *)obj, 8, -1, 255, 0);
+  if (r != 0) {
+    *(u8 *)(state + 0x1a) = 1;
+  }
+  *(f32 *)(obj + 128) = *(f32 *)(obj + 12);
+  *(f32 *)(obj + 132) = *(f32 *)(obj + 16);
+  *(f32 *)(obj + 136) = *(f32 *)(obj + 20);
+}
+#pragma scheduling reset
 
 extern void MagicPlant_update();
 extern void MagicPlant_init();
 extern void trickywarp_update();
 extern void trickyguard_update();
 extern void StayPoint_update();
-extern void duster_hitDetect();
 extern void duster_update();
 extern void duster_init();
 extern void curvefish_update();
