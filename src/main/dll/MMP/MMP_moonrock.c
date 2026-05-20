@@ -63,25 +63,37 @@ extern f32 lbl_803E4D54;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void lightning_free(int param_1,int param_2)
+/* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
+extern void mm_free(void* p);
+#pragma scheduling off
+void lightning_free(u8* obj, int p2)
 {
-  uint uVar1;
-  int *piVar2;
-  
-  piVar2 = *(int **)(param_1 + 0xb8);
-  *piVar2 = (int)*(char *)(param_2 + 0x19);
-  piVar2[2] = (int)*(short *)(param_2 + 0x1a) << 8;
-  *(char *)(piVar2 + 1) = (char)*(undefined2 *)(param_2 + 0x1c);
-  piVar2[3] = (int)*(char *)(param_2 + 0x18) << 8;
-  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x1e));
-  *(byte *)(piVar2 + 5) = (byte)((uVar1 & 1) << 6) | *(byte *)(piVar2 + 5) & 0xbf;
-  if ((uVar1 & 1) != 0) {
-    piVar2[4] = piVar2[2];
-    *(byte *)(piVar2 + 5) = *(byte *)(piVar2 + 5) & 0xdf | 0x20;
-  }
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x4000;
-  return;
+    u8* state = *(u8**)(obj + 0xb8);
+    void* h;
+    ObjGroup_RemoveObject(obj, 0x48);
+    h = *(void**)state;
+    if (h != NULL) {
+        mm_free(h);
+    }
+}
+#pragma scheduling reset
+
+/* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
+ * renderFn_8008f904(handle). */
+extern void renderFn_8008f904(u32 handle);
+void lightning_render(u8* obj)
+{
+    u32 handle = *(u32*)(*(u8**)(obj + 0xb8));
+    if (handle != 0) {
+        renderFn_8008f904(handle);
+    }
+}
+
+/* WaterFallSpray_free: forward to vtable[6] of *lbl_803DCA78 with obj. */
+extern void *lbl_803DCA78;
+void WaterFallSpray_free(u8* obj)
+{
+    (*(void (***)(u8*))lbl_803DCA78)[6](obj);
 }
 
 /*
