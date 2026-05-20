@@ -1232,19 +1232,20 @@ int fn_8007FE04(int *arr, int *count_ptr, int target)
 {
     int n = *count_ptr;
     int *p = arr;
-    int idx = 0;
-    int i;
-    for (i = 0; i < n; i++) {
-        if (*p == target) goto found;
+    int i = 0;
+    int j;
+    for (j = 0; j < n; j++) {
+        int v = *p;
         p++;
-        idx++;
+        if (v == target) goto found;
+        i++;
     }
-    idx = -1;
+    i = -1;
 found:
-    if (idx == -1) return -1;
-    arr[idx] = arr[n - 1];
+    if (i == -1) return -1;
+    arr[i] = arr[n - 1];
     (*count_ptr)--;
-    return idx;
+    return i;
 }
 
 /* fn_80080360 (36b): write u16 indexed by signed byte * 2 */
@@ -1327,11 +1328,16 @@ extern f32 timeDelta;
 #pragma scheduling off
 int timerCountDown(f32 *p)
 {
-    if (*p == lbl_803DEFA0) return 0;
-    *p = *p - timeDelta;
-    if (*p > lbl_803DEFA0) return 0;
-    *p = lbl_803DEFA0;
-    return 1;
+    f32 v = *p;
+    f32 zero = lbl_803DEFA0;
+    if (v != zero) {
+        *p = v - timeDelta;
+        if (*p <= zero) {
+            *p = zero;
+            return 1;
+        }
+    }
+    return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1388,7 +1394,6 @@ int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
     int lo, hi, mid, v;
     int i;
     if (count <= 16) {
-        if (count == 0) return 0;
         for (i = 0; i < count; i++) {
             if ((*arr)[0] == key) return (*arr)[1];
             arr++;
