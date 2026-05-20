@@ -11,6 +11,7 @@
 #define TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK 0x28000002
 #define TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR 0x10
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
+#define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
 
 extern undefined4 FUN_800067e8();
 extern bool FUN_800067f0();
@@ -1578,7 +1579,7 @@ int fn_8014A150(int obj,int state,void *from,void *to)
   s16 fromGrid[4];
   Vec probe;
   Vec delta;
-  u8 bboxHit[116];
+  u8 bboxHit[TRICKY_BBOX_HIT_SCRATCH_SIZE];
   s16 setupId;
   u8 visible;
   int keepGroundOffset;
@@ -1634,7 +1635,7 @@ void fn_8014A304(f32 radius,int obj,int state)
   Vec probe;
   u32 visibilityBits[4];
   Vec delta;
-  u8 bboxHit[84];
+  u8 bboxHit[TRICKY_BBOX_HIT_SCRATCH_SIZE];
   s16 baseAngle;
   int i;
   u8 visible;
