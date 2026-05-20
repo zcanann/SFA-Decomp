@@ -3110,6 +3110,38 @@ void CameraModeCloudRunner_copyToCurrent(void) {}
 void CameraModePerv_copyToCurrent(void) {}
 void CameraModeArwing_free(void) {}
 
+extern void *mmAlloc(int size, int heap, int flags);
+extern void *memset(void *dst, int val, u32 n);
+extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern f32 lbl_803E1A88;
+extern u32 lbl_803DD590;
+extern u32 lbl_803DD598;
+#pragma peephole off
+#pragma scheduling off
+void CameraModeTitle_loadVolumes(void)
+{
+    u8 *save = getSaveFileStruct();
+    audioSetVolumes(save[10], 1000, 1, 0, 0);
+}
+
+void dll_4F_init(void)
+{
+    if (lbl_803DD590 == 0) {
+        lbl_803DD590 = (u32)mmAlloc(8, 15, 0);
+    }
+    *(f32*)((char*)lbl_803DD590 + 4) = lbl_803E1A88;
+}
+
+void CameraModeCrawl_init(void)
+{
+    if (lbl_803DD598 == 0) {
+        lbl_803DD598 = (u32)mmAlloc(12, 15, 0);
+        memset((void*)lbl_803DD598, 0, 12);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* misc 8b leaves */
 extern f32 lbl_803DB9D8;
 f32 titleScreenGetCamProgress(void) { return lbl_803DB9D8; }
