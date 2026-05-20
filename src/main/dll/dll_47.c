@@ -1031,8 +1031,8 @@ void saveSelectGoToChooseSlot(int arg) {
 #pragma scheduling off
 #pragma peephole off
 void saveSelectScreenFree(int param_1) {
-    int i;
     void **p;
+    int i;
     void *zero;
 
     if (lbl_8031A804[0] != NULL) {

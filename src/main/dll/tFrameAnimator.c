@@ -207,6 +207,19 @@ int levelname_getExtraSize(void) { return 0x18; }
 int levelname_func08(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
+#pragma scheduling off
+#pragma peephole off
+int ProjectileSwitch_func08(int *obj) {
+    int v = (int)*(u8 *)((char *)*(int **)((char *)obj + 0x4c) + 0x1e) >> 2;
+    int max = *(s8 *)((char *)*(int **)((char *)obj + 0x50) + 0x55);
+    if (v >= max) {
+        v = 0;
+    }
+    return ((u32)v << 11) | 0x400;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)area_initialise,
