@@ -1637,7 +1637,23 @@ extern void StayPoint_update();
 extern void duster_update();
 extern void duster_init();
 extern void curvefish_update();
-extern void curvefish_init();
+extern f32 lbl_803E3928;
+extern f64 lbl_803E3918;
+
+#pragma scheduling off
+void curvefish_init(int obj, u8 *param_2) {
+  int state;
+  u32 v;
+  state = *(int *)(obj + 0xb8);
+  v = *(u16 *)(obj + 0xb0);
+  v |= 0x6000;
+  *(u16 *)(obj + 0xb0) = (u16)v;
+  *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) *
+                      ((f32)(u32)param_2[0x18] / lbl_803E3928);
+  *(u8 *)(state + 0x108) = 1;
+  *(f32 *)(state + 0x110) = (f32)(u32)param_2[0x19] / lbl_803E3928;
+}
+#pragma scheduling reset
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
