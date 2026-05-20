@@ -134,15 +134,20 @@ typedef struct ExpgfxPoolSourcePosition {
   f32 z;
 } ExpgfxPoolSourcePosition;
 
+typedef struct ExpgfxTrackedSourceFrameMask {
+  u32 high;
+  u32 low;
+} ExpgfxTrackedSourceFrameMask;
+
 /*
  * Retail warning strings call this structure "exptab". The key fields are
  * still only partially understood, but the table's role and lifetime rules
  * are stable enough to stop treating it as raw integer arrays.
  */
 typedef struct ExpgfxTableEntry {
-  int key0;
-  int key1;
-  int textureOrResource;
+  uint key0;
+  uint key1;
+  uint textureOrResource;
   u16 refCount;
   s16 slotType;
 } ExpgfxTableEntry;

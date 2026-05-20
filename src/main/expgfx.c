@@ -178,7 +178,7 @@ extern f32 lbl_803E00A8;
 extern u8 gExpgfxStaticData[];
 extern u8 gExpgfxRuntimeData[];
 extern u32 gExpgfxTrackedPoolSourceIds[];
-extern u32 gExpgfxTrackedSourceFrameMasks[];
+extern ExpgfxTrackedSourceFrameMask gExpgfxTrackedSourceFrameMasks[];
 extern s16 gExpgfxStaticPoolSlotTypeIds[];
 extern int gExpgfxTextureFreeInProgress;
 extern volatile s16 gExpgfxSequenceCounter;
@@ -787,7 +787,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   ExpgfxSourceObject *source;
   u32 bit;
   s32 highBit;
-  u32 *sourceMasks;
+  ExpgfxTrackedSourceFrameMask *sourceMasks;
   u32 maskHigh;
   u32 maskLow;
   u64 trackedPoolFrameMask;
@@ -805,9 +805,9 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       s16 signedPoolIndex = poolIndex;
       bit = 1 << (signedPoolIndex >> 1);
       highBit = (s32)bit >> 0x1f;
-      sourceMasks = &gExpgfxTrackedSourceFrameMasks[((u32)(signedPoolIndex & 1)) * 2];
-      maskHigh = sourceMasks[0];
-      maskLow = sourceMasks[1];
+      sourceMasks = &gExpgfxTrackedSourceFrameMasks[(u32)(signedPoolIndex & 1)];
+      maskHigh = sourceMasks->high;
+      maskLow = sourceMasks->low;
       trackedPoolFrameMask = CONCAT44(highBit & maskHigh,bit & maskLow);
       if (trackedPoolFrameMask != 0) {
         gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
