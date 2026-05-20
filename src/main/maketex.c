@@ -1364,6 +1364,25 @@ void s16toFloat(f32 *p, s16 val)
     *p = (f32)val;
 }
 
+extern u8 lbl_803DD0B4;
+int ObjSeq_func23(int unused, int x)
+{
+    u8 v;
+    int bit;
+    if (x == 1) {
+        bit = 0;
+        v = lbl_803DD0B4;
+        v = (v & ~0x80) | (bit << 7);
+        lbl_803DD0B4 = v;
+    } else if (x == 0) {
+        bit = 1;
+        v = lbl_803DD0B4;
+        v = (v & ~0x80) | (bit << 7);
+        lbl_803DD0B4 = v;
+    }
+    return 0;
+}
+
 int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
 {
     int lo, hi, mid, v;

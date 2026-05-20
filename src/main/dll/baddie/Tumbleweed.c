@@ -3690,6 +3690,27 @@ void fn_80137998(void)
 #pragma peephole reset
 #pragma scheduling reset
 
+/* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
+ * 4 RGBA bytes + 0 terminator) into the debug log; aborts when the
+ * record counter at lbl_803DD9E4 has already exceeded 0xFA. */
+extern int lbl_803DD9E4;
+#pragma scheduling off
+void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
+{
+    int n;
+    u8* p;
+    n = lbl_803DD9E4 + 1;
+    lbl_803DD9E4 = n;
+    if (n > 0xfa) return;
+    p = (u8*)debugLogEnd; debugLogEnd = p + 1; *p = 0x81;
+    p = (u8*)debugLogEnd; debugLogEnd = p + 1; *p = r;
+    p = (u8*)debugLogEnd; debugLogEnd = p + 1; *p = g;
+    p = (u8*)debugLogEnd; debugLogEnd = p + 1; *p = b;
+    p = (u8*)debugLogEnd; debugLogEnd = p + 1; *p = a;
+    p = (u8*)debugLogEnd; debugLogEnd = p + 1; *p = 0;
+}
+#pragma scheduling reset
+
 extern int  Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 

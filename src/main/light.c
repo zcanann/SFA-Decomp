@@ -1051,6 +1051,31 @@ void vfpplatform_init(int obj, int data) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 lbl_803E6144;
+extern f32 lbl_803E6148;
+extern int return0_801FD13C(void);
+extern u32 GameBit_Get(int);
+
+#pragma scheduling off
+#pragma peephole off
+void vfpcoreplat_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
+    *(s16 *)state = *(s16 *)(data + 0x20);
+    *(int (**)(void))(obj + 0xBC) = return0_801FD13C;
+    if (*(s16 *)(obj + 0x46) == 0x3cb) {
+        if (GameBit_Get(0x4e9) != 0) {
+            *(f32 *)(obj + 8) = lbl_803E6144 * *(f32 *)(*(int *)(obj + 0x50) + 4);
+        }
+        if (GameBit_Get(0x63c) != 0) {
+            *(f32 *)(obj + 8) = lbl_803E6148 * *(f32 *)(*(int *)(obj + 0x50) + 4);
+        }
+    }
+    *(u16 *)(obj + 0xB0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern int *lbl_803DCA7C;
 extern u32 lbl_803DDCC0;
 extern void Resource_Release(u32);
@@ -1114,7 +1139,6 @@ void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u32 GameBit_Get(int);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void fn_801FC378(int obj);
 
