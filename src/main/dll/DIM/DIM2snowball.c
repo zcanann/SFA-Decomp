@@ -1228,3 +1228,29 @@ void dim_tricky_render(void) { objRenderFn_8003b8f4(lbl_803E4A38); }
 void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, 0x16); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int ObjHits_GetPriorityHit(int obj, void **outHitObj, int *outSphereIdx, uint *outHitVolume);
+extern float Vec_distance(float *a, float *b);
+extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern void *Obj_GetPlayerObject(void);
+extern f32 lbl_803E4ADC;
+
+/* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801B87DC(int obj) {
+    void *hi;
+    void *player;
+    f32 scale;
+    int hit = ObjHits_GetPriorityHit(obj, &hi, NULL, NULL);
+    if (hit == 0xE) {
+        player = Obj_GetPlayerObject();
+        Vec_distance((float*)(obj + 0x18), (float*)((int)player + 0x18));
+        scale = lbl_803E4ADC;
+        *(f32*)(obj + 0x24) = *(f32*)((int)hi + 0x24) * scale;
+        *(f32*)(obj + 0x2c) = *(f32*)((int)hi + 0x2c) * scale;
+        Sfx_PlayFromObject(obj, 0x1f9);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

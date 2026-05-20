@@ -77,7 +77,7 @@ void mmp_asteroid_re_initialise(void);
 
 int mmp_moonrock_getExtraSize(void);
 int mmp_moonrock_func08(void);
-void mmp_moonrock_free(void);
+void mmp_moonrock_free(int obj);
 void mmp_moonrock_render(void);
 void mmp_moonrock_hitDetect(void);
 void mmp_moonrock_update(void);
@@ -87,7 +87,7 @@ void mmp_moonrock_initialise(void);
 
 int mmp_trenchfx_getExtraSize(void);
 int mmp_trenchfx_func08(void);
-void mmp_trenchfx_free(void);
+void mmp_trenchfx_free(int obj);
 void mmp_trenchfx_render(void);
 void mmp_trenchfx_hitDetect(void);
 void mmp_trenchfx_update(void);
@@ -101,7 +101,7 @@ void mmp_gyservent_free(void);
 void mmp_gyservent_render(void);
 void mmp_gyservent_hitDetect(void);
 void mmp_gyservent_update(void);
-void mmp_gyservent_init(void);
+void mmp_gyservent_init(int obj);
 void mmp_gyservent_release(void);
 void mmp_gyservent_initialise(void);
 

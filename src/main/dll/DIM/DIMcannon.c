@@ -1976,10 +1976,37 @@ void imanimspacecraft_free(int *obj) {
 
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
 int imanimspacecraft_setScale(int *obj, int bitIdx) {
-    u32 mask = 1 << bitIdx;
-    if (((u8*)((int**)obj)[0xb8/4])[2] & mask) return 1;
+    u8 *p;
+    obj = (int*)((int**)obj)[0xb8/4];
+    p = (u8*)obj;
+    if (p[2] & (1 << bitIdx)) return 1;
     return 0;
 }
+
+/* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
+void lavaball1bf_func11(int *obj) {
+    s16 *p = (s16*)((int**)obj)[0xb8/4];
+    if (p[10] == 0) return;
+    if (p[11] == 0) return;
+    p[11] = 0;
+}
+
+/* lavaball1bf "request" hook: set pending if gated, return success. */
+#pragma scheduling off
+#pragma peephole off
+int lavaball1bf_setScale(int *obj) {
+    s16 *p;
+    obj = (int*)((int**)obj)[0xb8/4];
+    p = (s16*)obj;
+    if (p[10] == 0) return 0;
+    if (p[11] == 0) {
+        p[11] = 1;
+        return 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4780;

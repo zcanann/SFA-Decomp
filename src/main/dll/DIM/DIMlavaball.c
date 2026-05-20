@@ -1363,3 +1363,54 @@ extern f32 lbl_803E44F8;
 void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E44D0); }
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E44F8); }
 #pragma peephole reset
+
+extern void saveGame_saveObjectPos(int obj);
+void fn_801A80C4(int obj, f32 x, f32 y, f32 z) {
+    *(f32 *)(obj + 0xC) = x;
+    *(f32 *)(obj + 0x10) = y;
+    *(f32 *)(obj + 0x14) = z;
+    saveGame_saveObjectPos(obj);
+}
+
+/* "tail-call into (**lbl_803DCA78)[6]" free stub. */
+extern int *lbl_803DCA78;
+void mmp_trenchfx_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+
+/* ObjGroup_RemoveObject + vtable[4] tail-call. */
+extern int *lbl_803DCAC0;
+#pragma scheduling off
+#pragma peephole off
+void mmp_moonrock_free(int obj) {
+    ObjGroup_RemoveObject((uint)obj, 4);
+    (*(void (*)(int))(*(int *)(*lbl_803DCAC0 + 0x10)))(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A80F0(int obj, u8 flag) {
+    int state = *(int *)(obj + 0xB8);
+    if (flag != 0) {
+        *(u16 *)(state + 0x24) |= 0x4;
+        *(u8 *)(obj + 0xAF) |= 0x8;
+    } else {
+        *(u16 *)(state + 0x24) &= ~0x4;
+        *(u8 *)(obj + 0xAF) &= ~0x8;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_gyservent_init(int obj) {
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+    *(u32 *)(obj + 0xf4) = randomGetRange(0xa, 0xc8);
+    *(u8 *)(obj + 0x36) = 0;
+    *(u8 *)(obj + 0xaf) &= ~0x8;
+}
+#pragma peephole reset
+#pragma scheduling reset
