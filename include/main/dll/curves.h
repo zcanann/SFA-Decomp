@@ -54,6 +54,7 @@ int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3
                                     int param_5);
 f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
 int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId);
+int curves_getIds_18(RomCurveDef *curve,int excludeLinkId,int *outIds);
 int RomCurve_getRandomUnblockedLink(RomCurveDef *curve,int excludeLinkId);
 RomCurveDef *RomCurve_getById(uint curveId);
 void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 param_4,

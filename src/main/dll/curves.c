@@ -2367,6 +2367,52 @@ int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId)
 /*
  * --INFO--
  *
+ * Function: curves_getIds_18
+ * EN v1.0 Address: 0x800E4E64
+ * EN v1.0 Size: 156b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+int curves_getIds_18(RomCurveDef *curve,int excludeLinkId,int *outIds)
+{
+  int link;
+  int count;
+
+  count = 0;
+  link = curve->linkIds[0];
+  if ((-1 < link) && (link != excludeLinkId)) {
+    outIds[count++] = link;
+  }
+
+  link = curve->linkIds[1];
+  if ((-1 < link) && (link != excludeLinkId)) {
+    outIds[count++] = link;
+  }
+
+  link = curve->linkIds[2];
+  if ((-1 < link) && (link != excludeLinkId)) {
+    outIds[count++] = link;
+  }
+
+  link = curve->linkIds[3];
+  if ((-1 < link) && (link != excludeLinkId)) {
+    outIds[count++] = link;
+  }
+
+  return count;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
  * Function: RomCurve_getRandomUnblockedLink
  * EN v1.0 Address: 0x800E4F00
  * EN v1.0 Size: 316b
