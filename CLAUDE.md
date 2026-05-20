@@ -71,6 +71,17 @@ Heuristic before reaching for `asm { }`:
    `SB_Galleon_hitDetect` from 63% → 93.8% (commit `8b37ec0c`). Combine with
    `#pragma scheduling off` to align the `lfs`/`stfs` order.
 
+9. **Declare `objRenderFn` (and similar dispatchers) with the full 6-arg
+   signature** `void (*)(int *obj, int a, int b, int c, int d, f32 e)` via a
+   function-pointer cast at the call site **when there's an intermediate call
+   between entry and the dispatch**. Without the full signature MWCC sees only
+   `r3` as live across the intermediate call and re-spills/reloads `r4..r7,f1`,
+   which scrambles register allocation around the dispatch. With the full
+   sig, MWCC preserves `r3..r7,f1` across the intermediate call and the
+   dispatch lands on target's exact instruction sequence. Simple render fns
+   *without* intermediates don't need this — args pass through naturally.
+   Picked up several 100% matches in TREX_trex and DIMcannon batches.
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
