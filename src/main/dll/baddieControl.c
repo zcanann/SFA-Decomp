@@ -3173,19 +3173,26 @@ extern f32 lbl_803E1A28;
 extern f32 lbl_803E1A80;
 void CameraModeWorldMap_init(int *obj)
 {
-    int zero;
+    register u32 b;
+    register u32 bitval;
+    register u8 *p;
     if (lbl_803DD588 == 0) {
         lbl_803DD588 = (u32)mmAlloc(24, 15, 0);
     }
     *(f32*)lbl_803DD588 = lbl_803E1A40;
     *(f32*)((char*)lbl_803DD588 + 4) = lbl_803E1A28;
-    zero = 0;
-    *((u8*)lbl_803DD588 + 8) = (u8)zero;
-    *((u8*)lbl_803DD588 + 9) = (u8)zero;
-    *((u8*)lbl_803DD588 + 21) = (*((u8*)lbl_803DD588 + 21) & ~0x80) | (((u8)zero & 1) << 7);
+    *((u8*)lbl_803DD588 + 8) = 0;
+    *((u8*)lbl_803DD588 + 9) = 0;
+    p = (u8*)lbl_803DD588;
+    bitval = 0;
+    asm {
+        lbz b, 21(p)
+        rlwimi b, bitval, 7, 24, 24
+        stb b, 21(p)
+    }
     *(s16*)((char*)lbl_803DD588 + 10) = 1;
-    *((u8*)lbl_803DD588 + 20) = (u8)zero;
-    *(int*)((char*)lbl_803DD588 + 16) = zero;
+    *((u8*)lbl_803DD588 + 20) = 0;
+    *(int*)((char*)lbl_803DD588 + 16) = 0;
     *(f32*)((char*)obj + 0xB4) = lbl_803E1A80;
     *(s16*)obj = -32768;
 }
