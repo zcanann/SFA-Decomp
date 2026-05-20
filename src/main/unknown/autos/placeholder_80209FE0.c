@@ -270,7 +270,7 @@ extern undefined4 FUN_80081120();
 extern undefined4 FUN_80081124();
 extern undefined4 FUN_80081128();
 extern undefined4 FUN_8008112c();
-extern undefined4 gameplay_registerDebugOption();
+extern undefined4 saveFileStruct_unlockCheat();
 extern undefined4 FUN_800e8630();
 extern ushort FUN_800ea9ac();
 extern undefined4 FUN_801141dc();

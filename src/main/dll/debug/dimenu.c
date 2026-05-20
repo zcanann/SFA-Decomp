@@ -22,10 +22,10 @@ extern undefined4 FUN_80053c98();
 extern undefined4 FUN_8005d018();
 extern undefined4 FUN_8005d090();
 extern undefined4 FUN_8005d17c();
-extern undefined4 gameplay_setDebugOptionEnabled();
-extern undefined4 isCheatActive();
+extern undefined4 saveFileStruct_setCheatActive();
+extern undefined4 saveFileStruct_isCheatActive();
 extern uint isCheatUnlocked();
-extern u8 *gameplay_getPreviewSettings();
+extern u8 *getSaveFileStruct();
 extern void saveGame_save();
 extern undefined4 FUN_8011bfc8();
 extern undefined4 languageMenuInit();
@@ -290,7 +290,7 @@ int FUN_8011d11c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
           else {
             uVar5 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[iVar4]);
             uVar2 = countLeadingZeros(uVar5);
-            gameplay_setDebugOptionEnabled(3,(char)(uVar2 >> 5));
+            saveFileStruct_setCheatActive(3,(char)(uVar2 >> 5));
           }
         }
       }
@@ -364,7 +364,7 @@ void FUN_8011d67c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   uVar1 = (**(code **)(*DAT_803dd6cc + 0xc))(0x14,5);
   FUN_80017488(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x15);
   DAT_803de38c = 0;
-  DAT_803de388 = (undefined4)gameplay_getPreviewSettings();
+  DAT_803de388 = (undefined4)getSaveFileStruct();
   if (DAT_803de378 == '\0') {
     OptionsScreen_render();
   }

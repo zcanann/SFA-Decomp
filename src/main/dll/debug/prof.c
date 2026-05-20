@@ -3,7 +3,7 @@
 
 extern undefined4 FUN_800067b4();
 extern undefined4 FUN_80006824();
-extern undefined4 isCheatActive();
+extern undefined4 saveFileStruct_isCheatActive();
 extern uint isCheatUnlocked();
 extern undefined4 OptionsScreen_render();
 extern bool FUN_80245dbc();
@@ -103,7 +103,7 @@ void FUN_8011c860(void)
     PTR_DAT_8031b938[(uint)DAT_8031b940 * 0x3c + -0x5d] = DAT_8031b940 - 1;
     *(ushort *)(PTR_DAT_8031b938 + (uint)DAT_8031b940 * 0x3c + -0x26) =
          *(ushort *)(PTR_DAT_8031b938 + (uint)DAT_8031b940 * 0x3c + -0x26) & 0xbfff;
-    uVar2 = isCheatActive(3);
+    uVar2 = saveFileStruct_isCheatActive(3);
     uVar1 = countLeadingZeros(uVar2);
     DAT_803a9434 = (**(code **)(*DAT_803dd724 + 0xc))(0x36b,0x23,0,1,(int)(short)(uVar1 >> 5));
   }

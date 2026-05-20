@@ -977,7 +977,7 @@ extern undefined uRam803de10d;
 /*
  * --INFO--
  *
- * Function: isCheatActive
+ * Function: saveFileStruct_isCheatActive
  * EN v1.0 Address: 0x800E7E94
  * EN v1.0 Size: 68b
  * EN v1.1 Address: 0x800E8118
@@ -987,7 +987,7 @@ extern undefined uRam803de10d;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 isCheatActive(uint param_1)
+undefined4 saveFileStruct_isCheatActive(uint param_1)
 {
   uint uVar1;
   
@@ -1002,7 +1002,7 @@ undefined4 isCheatActive(uint param_1)
 /*
  * --INFO--
  *
- * Function: gameplay_registerDebugOption
+ * Function: saveFileStruct_unlockCheat
  * EN v1.0 Address: 0x800E7ED8
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x800E815C
@@ -1012,7 +1012,7 @@ undefined4 isCheatActive(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gameplay_registerDebugOption(uint param_1)
+void saveFileStruct_unlockCheat(uint param_1)
 {
   gGameplayRegisteredDebugOptions = gGameplayRegisteredDebugOptions | 1 << (param_1 & 0xff);
   return;
@@ -1039,7 +1039,7 @@ uint isCheatUnlocked(uint param_1)
 /*
  * --INFO--
  *
- * Function: gameplay_resetPreviewColor
+ * Function: saveFileStruct_resetVolumes
  * EN v1.0 Address: 0x800E7F1C
  * EN v1.0 Size: 28b
  * EN v1.1 Address: 0x800E81A0
@@ -1049,7 +1049,7 @@ uint isCheatUnlocked(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gameplay_resetPreviewColor(void)
+void saveFileStruct_resetVolumes(void)
 {
   gGameplayPreviewColorRed = 0x7f;
   gGameplayPreviewColorGreen = 0x7f;
@@ -1060,7 +1060,7 @@ void gameplay_resetPreviewColor(void)
 /*
  * --INFO--
  *
- * Function: gameplay_getPreviewSettings
+ * Function: getSaveFileStruct
  * EN v1.0 Address: 0x800E7F38
  * EN v1.0 Size: 12b
  * EN v1.1 Address: 0x800E81BC
@@ -1070,7 +1070,7 @@ void gameplay_resetPreviewColor(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u8 * gameplay_getPreviewSettings(void)
+u8 * getSaveFileStruct(void)
 {
   return &gGameplayPreviewSettings;
 }
@@ -1428,7 +1428,7 @@ undefined4 * FUN_800e87a8(void)
  */
 extern int maybeTryLoadSave(int a);
 extern void *memset(void *dst, int val, u32 n);
-extern u8 lbl_803A31C4[228];
+extern u8 saveData[228];
 
 #pragma scheduling off
 #pragma peephole off
@@ -1436,16 +1436,16 @@ int titleLoadSaveFiles(void)
 {
   int iVar1;
 
-  iVar1 = maybeTryLoadSave((int)lbl_803A31C4);
-  if ((iVar1 == 0) || (lbl_803A31C4[0] == '\0')) {
-    memset(lbl_803A31C4, 0, 0xE4);
-    lbl_803A31C4[6] = 0;
-    lbl_803A31C4[2] = 1;
-    lbl_803A31C4[8] = 1;
-    lbl_803A31C4[0] = 1;
-    lbl_803A31C4[10] = 0x7F;
-    lbl_803A31C4[11] = 0x7F;
-    lbl_803A31C4[12] = 0x7F;
+  iVar1 = maybeTryLoadSave((int)saveData);
+  if ((iVar1 == 0) || (saveData[0] == '\0')) {
+    memset(saveData, 0, 0xE4);
+    saveData[6] = 0;
+    saveData[2] = 1;
+    saveData[8] = 1;
+    saveData[0] = 1;
+    saveData[10] = 0x7F;
+    saveData[11] = 0x7F;
+    saveData[12] = 0x7F;
   }
   return iVar1;
 }

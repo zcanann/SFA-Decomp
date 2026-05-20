@@ -3,11 +3,11 @@
 
 #include "ghidra_import.h"
 
-undefined4 isCheatActive(uint param_1);
-void gameplay_registerDebugOption(uint param_1);
+undefined4 saveFileStruct_isCheatActive(uint param_1);
+void saveFileStruct_unlockCheat(uint param_1);
 uint isCheatUnlocked(uint param_1);
-void gameplay_resetPreviewColor(void);
-u8 * gameplay_getPreviewSettings(void);
+void saveFileStruct_resetVolumes(void);
+u8 * getSaveFileStruct(void);
 void loadSaveSettings(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                       undefined8 param_5,undefined8 param_6,undefined8 param_7,
                       undefined8 param_8);

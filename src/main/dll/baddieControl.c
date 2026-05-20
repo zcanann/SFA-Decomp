@@ -47,7 +47,7 @@ extern int FUN_8005b398();
 extern uint FUN_8005d06c();
 extern int FUN_800620e8();
 extern int FUN_8007f810();
-extern u8 *gameplay_getPreviewSettings();
+extern u8 *getSaveFileStruct();
 extern undefined4 camcontrol_traceMove();
 extern undefined4 camcontrol_traceFromTarget();
 extern undefined4 camcontrol_getTargetPosition();
@@ -1954,7 +1954,7 @@ void FUN_80110b94(char param_1)
         FUN_800067c0((int *)0xc1,1);
       }
       else {
-        puVar1 = gameplay_getPreviewSettings();
+        puVar1 = getSaveFileStruct();
         FUN_80117c30(0,1000);
         FUN_8000676c((uint)(byte)puVar1[10],1000,1,0,0);
       }
@@ -1984,7 +1984,7 @@ void FUN_80110c58(void)
 {
   undefined1 *puVar1;
   
-  puVar1 = gameplay_getPreviewSettings();
+  puVar1 = getSaveFileStruct();
   FUN_8000676c((uint)(byte)puVar1[10],1000,1,0,0);
   return;
 }
@@ -2019,7 +2019,7 @@ void FUN_80110c90(ushort *param_1)
     DAT_803de248 = '\0';
   }
   if (DAT_803de24a != DAT_803de249) {
-    puVar3 = gameplay_getPreviewSettings();
+    puVar3 = getSaveFileStruct();
     lbl_803DC638 = lbl_803DC638 + lbl_803E2868;
     if (lbl_803DC638 < lbl_803E2860) {
       if (DAT_803de24a == 4) {

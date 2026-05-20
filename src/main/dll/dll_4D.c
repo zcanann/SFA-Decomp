@@ -11,7 +11,7 @@ extern u8 lbl_803DD706;
 extern u8 *lbl_803DD708;
 extern int lbl_803A87D0[8];
 
-extern int isCheatActive(int);
+extern int saveFileStruct_isCheatActive(int);
 extern int isCheatUnlocked(int);
 
 /*
@@ -40,7 +40,7 @@ void languageMenuInit(void) {
         p->entries[p->count - 1].flags &= ~0x4000;
 
         lbl_803A87D0[1] = ((int (**)(int, int, int, int, s16))lbl_803DCAA4->vtable)[3](
-            0x36b, 0x23, 0, 1, (s16)(isCheatActive(3) == 0));
+            0x36b, 0x23, 0, 1, (s16)(saveFileStruct_isCheatActive(3) == 0));
     } else {
         p->entries[p->count - 2].pad18[3] = -1;
         p->entries[p->count - 1].flags |= 0x4000;

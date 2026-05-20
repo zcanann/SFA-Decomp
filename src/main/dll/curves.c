@@ -4297,7 +4297,7 @@ uint FUN_800e6680(char param_1,uint param_2)
 /*
  * --INFO--
  *
- * Function: gameplay_setDebugOptionEnabled
+ * Function: saveFileStruct_setCheatActive
  * EN v1.0 Address: 0x800E6734
  * EN v1.0 Size: 64b
  * EN v1.1 Address: 0x800E80C4
@@ -4307,21 +4307,21 @@ uint FUN_800e6680(char param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct GameplayDebugOptions {
+typedef struct SaveData {
   u8 pad00[0x10];
   u32 registeredOptions;
   u32 enabledOptions;
-} GameplayDebugOptions;
+} SaveData;
 
-extern GameplayDebugOptions lbl_803A31C4;
+extern SaveData saveData;
 #pragma scheduling off
 #pragma peephole off
-void gameplay_setDebugOptionEnabled(uint param_1,u8 param_2)
+void saveFileStruct_setCheatActive(uint param_1,u8 param_2)
 {
   u32 registeredOptions;
   u32 optionMask;
   u32 enabledOptions;
-  GameplayDebugOptions *debugOptions = &lbl_803A31C4;
+  SaveData *debugOptions = &saveData;
 
   registeredOptions = debugOptions->registeredOptions;
   optionMask = 1 << (param_1 & 0xff);
@@ -4371,15 +4371,15 @@ extern void **lbl_803DCA50;
 #pragma peephole off
 void loadSaveSettings(void)
 {
-  setWidescreen(*((u8 *)&lbl_803A31C4 + 6));
-  setSubtitlesEnabled(*((u8 *)&lbl_803A31C4 + 2));
-  setRumbleEnabled(*((u8 *)&lbl_803A31C4 + 8));
-  audioSetSoundMode(*((u8 *)&lbl_803A31C4 + 9), 0);
-  (*(void (**)(u8))((char *)*lbl_803DCA68 + 0x50))(*((u8 *)&lbl_803A31C4 + 3));
-  (*(void (**)(u8))((char *)*lbl_803DCA50 + 0x6c))(*((u8 *)&lbl_803A31C4 + 4));
-  audioSetVolumes(*((u8 *)&lbl_803A31C4 + 11), 10, 0, 1, 0);
-  audioSetVolumes(*((u8 *)&lbl_803A31C4 + 10), 10, 1, 0, 0);
-  audioSetVolumes(*((u8 *)&lbl_803A31C4 + 12), 10, 0, 0, 1);
+  setWidescreen(*((u8 *)&saveData + 6));
+  setSubtitlesEnabled(*((u8 *)&saveData + 2));
+  setRumbleEnabled(*((u8 *)&saveData + 8));
+  audioSetSoundMode(*((u8 *)&saveData + 9), 0);
+  (*(void (**)(u8))((char *)*lbl_803DCA68 + 0x50))(*((u8 *)&saveData + 3));
+  (*(void (**)(u8))((char *)*lbl_803DCA50 + 0x6c))(*((u8 *)&saveData + 4));
+  audioSetVolumes(*((u8 *)&saveData + 11), 10, 0, 1, 0);
+  audioSetVolumes(*((u8 *)&saveData + 10), 10, 1, 0, 0);
+  audioSetVolumes(*((u8 *)&saveData + 12), 10, 0, 0, 1);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4392,8 +4392,8 @@ extern u32 lbl_803DD474;
 extern u32 lbl_803DD470;
 void RomCurve_func0D(u32 *p1, u32 *p2) { *p1 = lbl_803DD474; *p2 = lbl_803DD470; }
 
-/* gameplay_getPreviewSettings: return &lbl_803A31C4 (lis/addi). */
-void* gameplay_getPreviewSettings(void) { return &lbl_803A31C4; }
+/* getSaveFileStruct: return &saveData (lis/addi). */
+void* getSaveFileStruct(void) { return &saveData; }
 
 /* getLastSavedGameTexts: return (u8*)&lbl_803A32A8 + 0x558. Array form forces lis/addi. */
 extern u8 lbl_803A32A8[];
@@ -4409,11 +4409,11 @@ void* RomCurve_getCurves(int *outCount) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* gameplay_resetPreviewColor: 3 byte stores at +0xa..0xc of lbl_803A31C4 = 0x7f. */
+/* saveFileStruct_resetVolumes: 3 byte stores at +0xa..0xc of saveData = 0x7f. */
 #pragma scheduling off
 #pragma peephole off
-void gameplay_resetPreviewColor(void) {
-    u8 *p = (u8*)&lbl_803A31C4;
+void saveFileStruct_resetVolumes(void) {
+    u8 *p = (u8*)&saveData;
     p[0xa] = 0x7f;
     p[0xb] = 0x7f;
     p[0xc] = 0x7f;
@@ -4425,7 +4425,7 @@ void gameplay_resetPreviewColor(void) {
 #pragma scheduling off
 #pragma peephole off
 int isCheatUnlocked(u8 idx) {
-    GameplayDebugOptions *p = &lbl_803A31C4;
+    SaveData *p = &saveData;
     u32 reg = p->registeredOptions;
     u32 mask = 1 << idx;
     return reg & mask;
@@ -4433,11 +4433,11 @@ int isCheatUnlocked(u8 idx) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* gameplay_registerDebugOption: set bit (1 << (idx & 0xff)) in registeredOptions. */
+/* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredOptions. */
 #pragma scheduling off
 #pragma peephole off
-void gameplay_registerDebugOption(u8 idx) {
-    GameplayDebugOptions *p = &lbl_803A31C4;
+void saveFileStruct_unlockCheat(u8 idx) {
+    SaveData *p = &saveData;
     u32 reg = p->registeredOptions;
     u32 mask = 1 << idx;
     p->registeredOptions = reg | mask;
@@ -4445,11 +4445,11 @@ void gameplay_registerDebugOption(u8 idx) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* isCheatActive: return 1 if both registered AND enabled have bit (1<<idx) set, else 0. */
+/* saveFileStruct_isCheatActive: return 1 if both registered AND enabled have bit (1<<idx) set, else 0. */
 #pragma scheduling off
 #pragma peephole off
-int isCheatActive(u8 idx) {
-    GameplayDebugOptions *p = &lbl_803A31C4;
+int saveFileStruct_isCheatActive(u8 idx) {
+    SaveData *p = &saveData;
     u32 reg = p->registeredOptions;
     u32 mask = 1 << idx;
     if ((reg & mask) != 0 && (p->enabledOptions & mask) != 0) {
