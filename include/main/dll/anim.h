@@ -165,7 +165,7 @@ void dbegg_free(void);
 void dbegg_render(void);
 void dbegg_hitDetect(void);
 void dbegg_update(void);
-void dbegg_init(void);
+void dbegg_init(int obj);
 void dbegg_release(void);
 void dbegg_initialise(void);
 
@@ -211,7 +211,7 @@ void dbholecontrol1_init(void);
 void dbholecontrol1_release(void);
 void dbholecontrol1_initialise(void);
 
-void dfplevelcontrol_setScale(void);
+void dfplevelcontrol_setScale(int unused, u8 *out);
 int dfplevelcontrol_getExtraSize(void);
 int dfplevelcontrol_func08(void);
 void dfplevelcontrol_free(int x);
@@ -228,7 +228,7 @@ void dfpobjcreator_free(int obj, int flag);
 void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dfpobjcreator_hitDetect(void);
 void dfpobjcreator_update(void);
-void dfpobjcreator_init(void);
+void dfpobjcreator_init(int obj, s8 *def);
 void dfpobjcreator_release(void);
 void dfpobjcreator_initialise(void);
 
@@ -244,7 +244,7 @@ void dfpseqpoint_initialise(void);
 
 int DFP_Torch_getExtraSize(void);
 int DFP_Torch_func08(void);
-void DFP_Torch_free(void);
+void DFP_Torch_free(int obj);
 void DFP_Torch_render(void);
 void DFP_Torch_hitDetect(void);
 void DFP_Torch_update(void);
