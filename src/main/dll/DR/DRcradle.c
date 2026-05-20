@@ -401,6 +401,56 @@ extern f32 lbl_803E5B90;
 extern f32 lbl_803E5B94;
 extern f32 lbl_803E5B98;
 extern int GameBit_Set(int bit, int val);
+extern void *mapRomListFindItem(int a, int b, int c, int d, int e);
+extern int lbl_80328590[];
+extern void *lbl_803DCAA8;
+
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_func15
+ * EN v1.0 Address: 0x801ECA64
+ * EN v1.0 Size: 352b
+ */
+#pragma peephole off
+#pragma scheduling off
+void SnowBike_func15(int obj)
+{
+    int t = *(int *)(obj + 0xb8);
+    int *table;
+    void *found;
+    f32 zero;
+
+    table = (int *)((int)lbl_80328590 + (int)(*(u8 *)(t + 0x434)) * 12);
+    found = mapRomListFindItem(table[*(u8 *)(t + 0x435)], 0, 0, 0, 0);
+    if (found != NULL) {
+        if (*(u8 *)(t + 0x434) != 0) {
+            *(f32 *)(obj + 0xc) = *(f32 *)((char *)found + 0x8);
+            *(f32 *)(obj + 0x10) = *(f32 *)((char *)found + 0xc);
+            *(f32 *)(obj + 0x14) = *(f32 *)((char *)found + 0x10);
+            *(s16 *)(obj + 0x0) = (s16)((*(u8 *)((char *)found + 0x29)) << 8);
+        }
+        (*(void (**)(int, int, int))((char *)*(int *)lbl_803DCA6C + 0x10))(obj, t + 0x28, 0);
+        *(f32 *)(t + 0xc) = *(f32 *)(obj + 0xc);
+        *(f32 *)(t + 0x10) = *(f32 *)(obj + 0x10);
+        *(f32 *)(t + 0x14) = *(f32 *)(obj + 0x14);
+        *(s16 *)(t + 0x0) = *(s16 *)(obj + 0x0);
+        zero = lbl_803E5AE8;
+        *(f32 *)(t + 0x494) = zero;
+        *(f32 *)(t + 0x498) = zero;
+        *(f32 *)(t + 0x49c) = zero;
+        (*(void (**)(int, int))((char *)*(int *)lbl_803DCAA8 + 0x20))(obj, t + 0x178);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x1c) = *(f32 *)(obj + 0x18);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x20) = *(f32 *)(obj + 0x1c);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x24) = *(f32 *)(obj + 0x20);
+        *(s8 *)(t + 0x3d3) = 1;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 extern void setMatrixFromObjectPos(void *mtx, s16 *vec);
 extern void mtxRotateByVec3s(void *mtx, s16 *vec);
