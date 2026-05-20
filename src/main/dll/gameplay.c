@@ -13071,9 +13071,10 @@ void clearSaveGameLoadingFlag(void) { lbl_803DD488 = 0x0; }
 
 /* 12b 3-insn patterns. */
 s32 Carryable_isHeld(u8 *obj) { return *(s8*)(obj + 0x5); }
+s32 Carryable_getFlag01(u8 *state) { return state[7] & 1; }
 
 /* misc 8b leaves */
-u8 dll_2F_getField8(u8 *p) { return p[8]; }
+u8 Carryable_getSurfaceType(u8 *state) { return state[8]; }
 
 /* if (lbl) fn(lbl); */
 extern u32 pRestartPoint;
