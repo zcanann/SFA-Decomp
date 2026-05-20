@@ -722,6 +722,8 @@ void sh_staffhaze_update(int obj)
 #pragma peephole reset
 
 /* 120b: tick a float timer; on wrap optionally trigger an effect. */
+#pragma scheduling off
+#pragma peephole off
 int fn_801DA954(int obj)
 {
   int extra = *(int*)(obj + 0xb8);
@@ -734,6 +736,8 @@ int fn_801DA954(int obj)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
 #pragma scheduling off
