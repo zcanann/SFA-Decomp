@@ -103,6 +103,7 @@ extern f32 timeDelta;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
 #pragma scheduling off
+#pragma peephole off
 void cannonclaw_update(u8* obj)
 {
     u8* trickyState;
@@ -119,6 +120,7 @@ void cannonclaw_update(u8* obj)
     *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 0x8);
     ObjHits_DisableObject(obj);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
