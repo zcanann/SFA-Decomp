@@ -425,12 +425,14 @@ extern void ObjGroup_RemoveObject(int obj, int flag);
  * EN v1.0 Address: 0x8018259C
  * EN v1.0 Size: 80b
  */
+#pragma scheduling off
 void smallbasket_free(int param_1)
 {
   (*(code *)(*(int *)lbl_803DCA7C + 0x18))(param_1);
   Resource_Release(lbl_803DDAC0);
   ObjGroup_RemoveObject(param_1, 0x10);
 }
+#pragma scheduling reset
 
 extern undefined4* lbl_803DCAAC;
 extern f32 lbl_803E3938;
