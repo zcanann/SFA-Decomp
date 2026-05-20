@@ -1479,6 +1479,11 @@ void WM_colrise_initialise(void) {}
 void wmtorch_hitDetect(void) {}
 void wmtorch_release(void) {}
 void wmtorch_initialise(void) {}
+#pragma peephole off
+void wmtorch_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
+    if (visible == 0) return;
+}
+#pragma peephole reset
 void lightsource_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
