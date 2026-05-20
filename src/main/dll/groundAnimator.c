@@ -261,11 +261,15 @@ int wm_column_func08(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wm_column_free(int obj)
 {
   ObjGroup_RemoveObject(obj, 4);
   (*(GroundAnimatorFreeFn *)(*gCarryableInterface + 0x10))(obj);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
