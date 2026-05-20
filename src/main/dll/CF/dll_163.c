@@ -397,3 +397,13 @@ void staffactivated_render(void) { objRenderFn_8003b8f4(lbl_803E3BBC); }
 void staffactivated_free(int x) { ObjGroup_RemoveObject(x, 0x41); }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8018A20C(int *obj, int v) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    *(int *)((char *)state + 0x14) = v;
+    *(u8 *)((char *)state + 0x1c) = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
