@@ -916,3 +916,33 @@ void RollingBarrel_free(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Obj_GetPlayerObject(void);
+extern void getEnvfxAct(int obj, int player, int id, int p);
+extern void MMP_levelcontrol_update(int obj);
+
+#pragma scheduling off
+#pragma peephole off
+int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
+{
+    int player;
+    int i;
+
+    player = Obj_GetPlayerObject();
+    seq[0x56] = 0;
+    for (i = 0; i < seq[0x8b]; i++) {
+        u8 v = seq[0x81 + i];
+        switch (v) {
+        case 1:
+            getEnvfxAct(obj, player, 315, 0);
+            break;
+        case 2:
+            getEnvfxAct(obj, player, 312, 0);
+            break;
+        }
+    }
+    MMP_levelcontrol_update(obj);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
