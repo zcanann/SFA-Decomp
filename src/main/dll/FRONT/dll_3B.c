@@ -46,7 +46,7 @@ extern u8 lbl_803DD652;
 extern u8 lbl_803DD680;
 extern s32 lbl_803DD698;
 extern s32 lbl_803DD658;
-extern TitleMenuControl *lbl_803DCA4C;
+extern TitleMenuControl *gScreenTransitionInterface;
 extern TitleMenuControl *gTitleMenuLinkInterface;
 extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D18;
@@ -83,7 +83,7 @@ static void TitleMenu_SetEntryHighlight(void)
 
 static void TitleMenu_PlayPopup(int id, int arg)
 {
-  ((void (**)(int, int))lbl_803DCA4C->vtable)[3](id,arg);
+  ((void (**)(int, int))gScreenTransitionInterface->vtable)[3](id,arg);
 }
 
 /*

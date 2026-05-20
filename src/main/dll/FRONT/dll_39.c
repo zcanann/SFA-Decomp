@@ -90,7 +90,7 @@ extern void VIWaitForRetrace(void);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern undefined4 *lbl_803DCA4C;
+extern undefined4 *gScreenTransitionInterface;
 extern undefined4 *gCameraInterface;
 extern undefined4 *gTitleMenuLinkInterface;
 extern int lbl_803DD5F8;
@@ -164,7 +164,7 @@ int n_rareware_frameStart(void)
     lbl_803DD60A = 1;
   }
   if ((s8)lbl_803DD60A != 0) {
-    (*(code *)(*lbl_803DCA4C + 8))(0x1e,1);
+    (*(code *)(*gScreenTransitionInterface + 8))(0x1e,1);
     lbl_803DD609 = 0x2d;
     lbl_803DD608 = 1;
   }
@@ -432,7 +432,7 @@ void TitleMenu_render(u8 *param_1)
     titleScreenPositionElements(lbl_803E1D10 + (f32)(lbl_803DD616 * 0x1a4) / lbl_803E1D14,
                 lbl_803E1D18);
     gameTextBoxFn_80134d40(0,0,0);
-    (*(code *)(*lbl_803DCA4C + 0x18))();
+    (*(code *)(*gScreenTransitionInterface + 0x18))();
     (*(code *)(*gTitleMenuLinkInterface + 0x30))(0xff);
     (*(code *)(*gTitleMenuLinkInterface + 0x10))(param_1);
     gameTextSetDrawFunc(0);

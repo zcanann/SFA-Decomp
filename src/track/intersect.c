@@ -6986,7 +6986,7 @@ void showMemCardError(int param_1)
  * Per-frame "blocking" dialog renderer driven by the card-write retry
  * loops in _saveGame/DBC0/DC5C/DD04. Pumps 60 frames of the GX/dialog
  * pipeline; on each frame either lets the active controller draw its own
- * popup (lbl_803DCA4C[0]->vtbl[1]) or falls back to hudDrawColored over the
+ * popup (gScreenTransitionInterface[0]->vtbl[1]) or falls back to hudDrawColored over the
  * cached prompt id in lbl_803DB708, then routes the OK/Cancel/back text
  * to gameTextFn_80016810 based on the dialog kind passed in.
  */
@@ -6999,7 +6999,7 @@ void cardShowLoadingMsg(u8 kind)
     extern void mmFreeTick(int);
     extern void waitNextFrame(void);
     extern int fn_8001FD88(int**);
-    extern void** lbl_803DCA4C;
+    extern void** gScreenTransitionInterface;
     extern f32 lbl_803DEF98;
     extern f32 lbl_803DEF9C;
     extern void drawRect(int, int, f32, f32);
@@ -7029,7 +7029,7 @@ void cardShowLoadingMsg(u8 kind)
         waitNextFrame();
         count = fn_8001FD88(&buttons) & 0xFF;
         if ((u32)count != 0) {
-            draw = (void (*)(int, int, int))((void**)*lbl_803DCA4C)[1];
+            draw = (void (*)(int, int, int))((void**)*gScreenTransitionInterface)[1];
             draw(0, 0, 0);
             rectAlpha = lbl_803DEF98;
             drawRect(0x280, 0x1E0, rectAlpha, rectAlpha);

@@ -28,7 +28,7 @@ extern double shopKeeperRotateFn_801e7c4c(void *obj, void *playerObj, int p3);
 extern float fn_80293E80(double);
 extern int playerGetMoney(void *playerObj);
 
-extern void *lbl_803DCA4C;
+extern void *gScreenTransitionInterface;
 extern void *gObjectTriggerInterface;
 extern void *lbl_803DCA74;
 extern u8 framesThisStep;
@@ -332,7 +332,7 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
         btn = getButtonsJustPressed(0);
         if ((btn & 0x200) != 0) {
             state->flags = state->flags | DR_LASERTURRET_FLAG_CONFIRM_PROMPT;
-            (*(code **)lbl_803DCA4C)[0x8 / 4](0x1e, 1);
+            (*(code **)gScreenTransitionInterface)[0x8 / 4](0x1e, 1);
             return 1;
         }
     }

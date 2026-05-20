@@ -21,7 +21,7 @@ extern u8 saveFileSelect_saveDirty;
 extern u8 saveFileSelect_debugCheatProgress;
 extern u8 saveFileSelect_saveCheatProgress;
 extern u8 saveFileSelect_cheatInputTimer;
-extern TitleMenuControl *lbl_803DCA4C;
+extern TitleMenuControl *gScreenTransitionInterface;
 extern TitleMenuControl *lbl_803DCA70;
 extern TitleMenuControl *gTitleMenuLinkInterface;
 extern TitleMenuControl *gTitleMenuItemInterface;
