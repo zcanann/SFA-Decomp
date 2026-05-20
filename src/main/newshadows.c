@@ -2914,3 +2914,25 @@ void *textureAlloc512(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Draw the reflection texture and copy to the reflection2 region. */
+extern f32 lbl_803DED28;
+extern void drawTexture(void *p, int a, int b, f32 f1, f32 f2);
+extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
+extern void GXSetTexCopyDst(u16 wd, u16 ht, int fmt, u8 mipmap);
+extern void GXCopyTex(void *dest, u8 clear);
+extern void GXPreLoadEntireTexture(void *obj, void *region);
+#pragma scheduling off
+#pragma peephole off
+void drawReflectionTexture(void)
+{
+    drawTexture((void *)lbl_803DCF7C, 0xff, 0x40, lbl_803DED28, lbl_803DED28);
+    GXSetTexCopySrc(0, 0, 0x50, 0x3c);
+    GXSetTexCopyDst(0x50, 0x3c, 4, 0);
+    GXCopyTex((char *)lbl_803DCFE4 + 0x60, 1);
+    if (*(u8 *)(lbl_803DCFE4 + 0x48) != 0) {
+        GXPreLoadEntireTexture((char *)lbl_803DCFE4 + 0x20, *(void **)(lbl_803DCFE4 + 0x40));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
