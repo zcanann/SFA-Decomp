@@ -179,5 +179,15 @@ void ecsh_shrine_func0E(u8 v) {
         *(s16 *)((char *)inner + 0x26) = 0;
     }
 }
+
+extern s16 lbl_80326238[];
+extern f32 lbl_80326208[];
+void ecsh_shrine_render2(u8 idx, f32 a, f32 b) {
+    int v;
+    if ((int *)lbl_803DDBC4 == NULL) return;
+    v = (s32)lbl_80326238[(u32)idx] * 8;
+    *(f32 *)((char *)lbl_80326208 + v) = a;
+    *(f32 *)((char *)lbl_80326208 + v + 4) = b;
+}
 #pragma peephole reset
 #pragma scheduling reset
