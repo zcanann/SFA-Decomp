@@ -31,7 +31,7 @@ extern int characterDoEyeAnims(void *obj, void *p2);
 extern int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, void *p5);
 extern void fn_8002B6D8(void *obj, int arg1, int arg2, int arg3, int arg4, int arg5);
 extern int cMenuGetSelectedItem(void);
-extern int fn_8011F3A8(s16 *outTrigger);
+extern int getYButtonItem(s16 *outTrigger);
 extern void *getTrickyObject(void);
 extern int fn_802964F0(void *obj, int param);
 extern void *ObjGroup_FindNearestObject(int group, void *obj, f32 *distanceOut);
@@ -482,7 +482,7 @@ void fn_801D44A4(void *obj, void *state)
     case 1:
       *(u8 *)((u8 *)obj + 0xaf) &= ~0x8;
       if (cMenuGetSelectedItem() == -1) {
-        if (fn_8011F3A8(&triggerId) == 0 || triggerId != 0x66d) {
+        if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d) {
           tricky = getTrickyObject();
           if (tricky != NULL &&
               getXZDistance((f32 *)((u8 *)tricky + 0x18), (f32 *)((u8 *)obj + 0x18)) <

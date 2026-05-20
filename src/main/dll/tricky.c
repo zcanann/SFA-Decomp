@@ -1813,33 +1813,33 @@ void fn_8011F6D4(u32 x) {
     lbl_803DD76E = (s16)(u8)x;
 }
 
-/* fn_8011F3E0: extsh + sth aButtonIcon */
+/* forceAButtonIcon: extsh + sth aButtonIcon */
 extern s16 aButtonIcon;
 #pragma peephole off
 #pragma scheduling off
-void fn_8011F3E0(int x) {
+void forceAButtonIcon(int x) {
     aButtonIcon = (s16)x;
 }
 #pragma scheduling on
 #pragma peephole on
 
-/* fn_8011F394: zero out two halfwords */
-extern s16 lbl_803DD874;
-extern u16 lbl_803DD884;
+/* resetYbutton: zero out two halfwords */
+extern s16 yButtonItemTextureId;
+extern u16 yButtonState;
 #pragma scheduling off
-void fn_8011F394(void) {
-    lbl_803DD884 = 0;
-    lbl_803DD874 = -1;
+void resetYbutton(void) {
+    yButtonState = 0;
+    yButtonItemTextureId = -1;
 }
 #pragma scheduling on
 
-/* fn_8011F3C8: stb if zero */
-extern u8 lbl_803DD7AC;
+/* setBButtonIcon: stb if zero */
+extern u8 bButtonIcon;
 #pragma peephole off
 #pragma scheduling off
-void fn_8011F3C8(int x) {
-    if (lbl_803DD7AC == 0) {
-        lbl_803DD7AC = (u8)x;
+void setBButtonIcon(int x) {
+    if (bButtonIcon == 0) {
+        bButtonIcon = (u8)x;
     }
 }
 #pragma scheduling on
@@ -1867,9 +1867,9 @@ void fn_8011F6E0(u8 a, u8 b, s16 c) {
 }
 
 /* GameUI_airMeterSetField24: store float at *p + 0x24 if p non-null */
-extern void *lbl_803DD7D0;
+extern void *airMeter;
 void GameUI_airMeterSetField24(float v) {
-    void *p = lbl_803DD7D0;
+    void *p = airMeter;
     if (p == 0) return;
     *(f32 *)((char *)p + 0x24) = v;
 }
@@ -1937,27 +1937,27 @@ void arwingHudSetVisible(u32 x) {
 #pragma scheduling on
 #pragma peephole on
 
-/* fn_8011F3A8: read lbl_DD884; if non-zero, set *out = yButtonItem; return lbl_DD884 */
+/* getYButtonItem: read yButtonState; if non-zero, set *out = yButtonItem; return yButtonState */
 extern u16 yButtonItem;
 #pragma peephole off
-u16 fn_8011F3A8(s16 *out) {
+u16 getYButtonItem(s16 *out) {
     s32 t;
-    if (lbl_803DD884 != 0) {
+    if (yButtonState != 0) {
         t = (s16)yButtonItem;
         *out = (s16)t;
     }
-    return lbl_803DD884;
+    return yButtonState;
 }
 #pragma peephole on
 
-/* GameUI_airMeterSetFlag80: set bit 7 of (*p)+0x44 if p non-null — uses bitfield insert (rlwimi) */
+/* GameUI_airMeterSetShutdown: set bit 7 of (*p)+0x44 if p non-null — uses bitfield insert (rlwimi) */
 typedef struct {
     char pad[0x44];
     u8 bit7 : 1;
     u8 bits_0to6 : 7;
 } _Obj8011F70C;
-void GameUI_airMeterSetFlag80(void) {
-    _Obj8011F70C *p = (_Obj8011F70C *)lbl_803DD7D0;
+void GameUI_airMeterSetShutdown(void) {
+    _Obj8011F70C *p = (_Obj8011F70C *)airMeter;
     if (p == 0) return;
     p->bit7 = 1;
 }
