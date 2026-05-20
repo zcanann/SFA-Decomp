@@ -3098,6 +3098,121 @@ int fn_80160690(short* out, u8* obj) {
 }
 #pragma scheduling reset
 
+extern void Obj_FreeObject(int* obj);
+extern f32 lbl_803E2DC8;
+extern u8 framesThisStep;
+
+/* Drift-recovery: add new fns with v1.0 names to capture asm symbols. */
+#pragma scheduling off
+#pragma peephole off
+
+int fn_8015DE50(int* obj, u8* state)
+{
+    int* sub = *(int**)((char*)obj + 0xb8);
+    if ((s8)state[635] != 0) {
+        f32 fz;
+        ((void(*)(int*, u8*, int))((void**)*lbl_803DCA8C)[5])(obj, state, 1);
+        {
+            f32* p = *(f32**)((char*)sub + 1036);
+            fz = lbl_803E2DC8;
+            p[0] = fz;
+            p[1] = fz;
+        }
+    }
+    return 0;
+}
+
+int fn_8015DEB4(int* obj, u8* state)
+{
+    u8* sub;
+    if ((s8)state[635] != 0) {
+        sub = *(u8**)((char*)obj + 0xb8);
+        sub[1029] = 0;
+        if (*(s16*)(sub + 1012) != -1) {
+            GameBit_Set(*(s16*)(sub + 1012), 0);
+        }
+        if (*(s16*)(sub + 1010) != -1) {
+            GameBit_Set(*(s16*)(sub + 1010), 1);
+        }
+    }
+    return 0;
+}
+
+int fn_8015E044(int* obj, u8* state)
+{
+    if (*(int**)((char*)state + 720) != NULL) {
+        if ((s8)state[635] != 0) {
+            f32 fz = lbl_803E2DC8;
+            *(f32*)((char*)state + 644) = fz;
+            *(f32*)((char*)state + 640) = fz;
+            ((void(*)(int*, u8*, int))((void**)*lbl_803DCA8C)[5])(obj, state, 0);
+        }
+        if ((s8)state[838] != 0) {
+            return 6;
+        }
+    }
+    return 0;
+}
+
+#pragma peephole reset
+int fn_80160534(int* obj)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    if (*(u8*)((char*)obj + 54) >= framesThisStep) {
+        *(u8*)((char*)obj + 54) = *(u8*)((char*)obj + 54) - framesThisStep;
+    } else {
+        *(u8*)((char*)obj + 54) = 0;
+    }
+    if (*(u8*)((char*)obj + 54) == 0) {
+        GameBit_Set(*(s16*)(sub + 1012), 0);
+        GameBit_Set(*(s16*)(sub + 1010), 1);
+    }
+    return 0;
+}
+#pragma peephole off
+
+int fn_80161468(int* obj, u8* state)
+{
+    if ((s8)state[635] != 0) {
+        ((void(*)(int*, u8*, int))((void**)*lbl_803DCA8C)[5])(obj, state, 9);
+    }
+    if ((s8)state[838] != 0) {
+        return 1;
+    }
+    return 0;
+}
+
+void dll_CB_free(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 3);
+    {
+        int* sub = *(int**)((char*)obj + 200);
+        if (sub != NULL) {
+            Obj_FreeObject(sub);
+            *(int**)((char*)obj + 200) = NULL;
+        }
+    }
+    ((void(*)(int*, int*, int))((void**)*lbl_803DCAB8)[16])(obj, state, 1);
+}
+
+void dll_CE_free(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 3);
+    {
+        int* sub = *(int**)((char*)obj + 200);
+        if (sub != NULL) {
+            Obj_FreeObject(sub);
+            *(int**)((char*)obj + 200) = NULL;
+        }
+    }
+    ((void(*)(int*, int*, int))((void**)*lbl_803DCAB8)[16])(obj, state, 32);
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
     {
         0,
