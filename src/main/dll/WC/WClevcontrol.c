@@ -816,6 +816,25 @@ void SB_CloudRunner_free(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_CloudRunner_init(void) {}
+extern void *textureLoadAsset(int id);
+extern void *Resource_Acquire(int id, int mode);
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudRunner_init(int *obj) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    *(void **)((char *)obj + 0xbc) = (void *)SB_CloudRunner_SeqFn;
+    *(f32 *)((char *)state + 0x4c) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)state + 0x50) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)state + 0x54) = *(f32 *)((char *)obj + 0x14);
+    *(u8 *)((char *)state + 0x64) = 100;
+    *(s16 *)obj = 0x4000;
+    *(void **)((char *)state + 0x18) = textureLoadAsset(342);
+    *(void **)((char *)state + 0x1c) = textureLoadAsset(3085);
+    *(void **)((char *)state + 0x14) = Resource_Acquire(121, 1);
+    ObjHits_SetTargetMask(obj, 1);
+    ObjGroup_AddObject(obj, 10);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_CloudRunner_render(void) {}
 void SB_CloudRunner_update(void) {}
