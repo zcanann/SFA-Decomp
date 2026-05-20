@@ -475,3 +475,32 @@ void FireFlyLantern_free(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int loadObjectAtObject(int *obj);
+extern f32 lbl_803E3AE8;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801871C8(int *obj) {
+    u8 *q;
+    if (Obj_IsLoadingLocked() == 0) return 0;
+    q = (u8 *)Obj_AllocObjectSetup(36, 1084);
+    *(s16 *)q = 1084;
+    *(u8 *)(q + 2) = 9;
+    *(u8 *)(q + 4) = 2;
+    *(u8 *)(q + 6) = 0xff;
+    *(u8 *)(q + 5) = 4;
+    *(u8 *)(q + 7) = 8;
+    *(f32 *)(q + 8) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)(q + 12) = lbl_803E3AE8 + *(f32 *)((char *)obj + 0x10);
+    *(f32 *)(q + 16) = *(f32 *)((char *)obj + 0x14);
+    *(u8 *)(q + 0x19) = 4;
+    *(s16 *)(q + 0x1a) = 0x514;
+    *(s16 *)(q + 0x1c) = 40;
+    *(u8 *)(q + 0x18) = 30;
+    return loadObjectAtObject(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
