@@ -1159,3 +1159,10 @@ void SB_Propeller_hitDetect(int param_1) {
     if (*(s16*)(param_1 + 0x46) != 0x69c) return;
     *(s16*)(param_1 + 4) = *(s16*)(lbl_803DDC40 + 4);
 }
+
+/* SB_ShipGun_free: vtable method @ 0x18 on global object manager. */
+extern undefined4* lbl_803DCA78;
+typedef void (*SBShipGunFreeFn)(int);
+void SB_ShipGun_free(int param_1) {
+    ((SBShipGunFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(param_1);
+}
