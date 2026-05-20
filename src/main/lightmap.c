@@ -2811,6 +2811,22 @@ void *fn_8005AFA0(void) {
     return lbl_80386468;
 }
 
+extern f32 lbl_803DEBB4;
+extern f32 fastFloorf(f32 v);
+#pragma scheduling off
+#pragma peephole off
+void fn_8005B0A8(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z) {
+    s32 ix, iz;
+    f32 s;
+    ix = (s32)fastFloorf(x / lbl_803DEBB4);
+    iz = (s32)fastFloorf(z / lbl_803DEBB4);
+    s = lbl_803DEBB4;
+    *outX = s * (f32)ix;
+    *outZ = s * (f32)iz;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* Drop-arg-1 trampoline:  fn(_, a, b, c) -> fn_800704FC(a, b, c). */
 extern void fn_800704FC(int a, int b, int c);
 #pragma scheduling off
