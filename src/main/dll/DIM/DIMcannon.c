@@ -2132,8 +2132,22 @@ extern void Obj_FreeObject(void *o);
 extern void ModelLightStruct_free(void *light);
 extern void mm_free(void *p);
 
+extern f32 lbl_803E4814;
 #pragma scheduling off
 #pragma peephole off
+void lavaball1bf_init(s16 *obj, u8 *p) {
+    u8 *inner;
+    obj[0] = (s16)((s32)p[0x1c] << 8);
+    inner = *(u8 **)((char *)obj + 0xb8);
+    *(f32 *)(inner + 0x10) = (f32)*(s16 *)(p + 0x18);
+    *(f32 *)(inner + 0xc) = lbl_803E4814;
+    *(s16 *)(inner + 0x14) = p[0x1d];
+    inner[0x18] = (u8)GameBit_Get((int)*(s16 *)(p + 0x22));
+    if (*(s16 *)(p + 0x24) == -1 && inner[0x18] == 0) {
+        inner[0x1b] = 1;
+    }
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+}
 void lavaball1bf_free(int obj, int mode) {
     void **inner = *(void ***)(obj + 0xb8);
     if (mode == 0 && inner[2] != 0) {
