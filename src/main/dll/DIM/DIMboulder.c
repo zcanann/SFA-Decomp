@@ -1219,3 +1219,34 @@ void dll_16C_init(void *obj, void *arg2) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern float Vec_distance(float *a, float *b);
+extern f32 lbl_803E4738;
+#pragma scheduling off
+#pragma peephole off
+int fn_801AD440(int *obj) {
+    int *state;
+    int *player;
+    f32 dist;
+
+    if (*(s16 *)((char *)obj + 0x46) == 370) return 0;
+
+    state = *(int **)((char *)obj + 0xb8);
+    player = (int *)Obj_GetPlayerObject();
+    dist = Vec_distance((f32 *)((char *)player + 0x18), (f32 *)((char *)obj + 0x18));
+
+    if (dist < *(f32 *)state) {
+        if (*(s8 *)((char *)state + 0xb) == 0) {
+            *(s8 *)((char *)state + 0xb) = 1;
+            getLActions(obj, obj, (u16) * (s16 *)((char *)state + 6), 0, 0, 0);
+        }
+    } else if (dist > *(f32 *)state + lbl_803E4738) {
+        if (*(s8 *)((char *)state + 0xb) != 0) {
+            *(s8 *)((char *)state + 0xb) = 0;
+            getLActions(obj, obj, (u16) * (s16 *)((char *)state + 8), 0, 0, 0);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
