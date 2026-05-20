@@ -3012,6 +3012,36 @@ int fn_8015E00C(int p1, u8 *obj) {
 }
 #pragma peephole reset
 
+/* fn_80161130 (92B). If obj2->27b != 0, clear obj->b8->405, call GameBit_Set twice. */
+extern void GameBit_Set(int eventId, int value);
+#pragma peephole off
+#pragma scheduling off
+int fn_80161130(int* obj, u8* obj2) {
+    u8* x = *(u8**)((char*)obj + 0xb8);
+    if ((s8)obj2[0x27b] != 0) {
+        *(u8*)(x + 0x405) = 0;
+        GameBit_Set(*(s16*)(x + 0x3f4), 0);
+        GameBit_Set(*(s16*)(x + 0x3f2), 1);
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* fn_801603E8 (84B). If obj2->27b != 0, vtable call through lbl_803DCAB8 with (obj, *(s16*)(x+0x3f0), -1, 0). */
+extern undefined4* lbl_803DCAB8;
+#pragma peephole off
+#pragma scheduling off
+int fn_801603E8(int* obj, u8* obj2) {
+    u8* x = *(u8**)((char*)obj + 0xb8);
+    if ((s8)obj2[0x27b] != 0) {
+        (*(code*)((char*)(*lbl_803DCAB8) + 0x4c))(obj, *(s16*)(x + 0x3f0), -1, 0);
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* fn_80160D88 (60B). Vtable dispatch through lbl_803DCA8C with extra args (obj->b8, lbl_803AC5E8). */
 extern u8 lbl_803AC5E8[];
 extern undefined4* lbl_803DCA8C;
