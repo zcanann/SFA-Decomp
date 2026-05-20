@@ -1763,6 +1763,7 @@ void landed_arwing_free(int obj) {
 extern f32 lbl_803E3BA4;
 extern void fn_801889C8(int obj);
 #pragma peephole off
+#pragma scheduling off
 void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     s32 v = visible;
     if (v != 0) {
@@ -1770,6 +1771,7 @@ void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
         fn_801889C8(obj);
     }
 }
+#pragma scheduling reset
 #pragma peephole reset
 
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
