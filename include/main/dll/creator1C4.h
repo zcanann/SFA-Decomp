@@ -15,7 +15,7 @@ void gpsh_objcreator_free(void);
 void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void gpsh_objcreator_hitDetect(void);
 void gpsh_objcreator_update(void);
-void gpsh_objcreator_init(void);
+void gpsh_objcreator_init(int *obj, int *def);
 void gpsh_objcreator_release(void);
 void gpsh_objcreator_initialise(void);
 
