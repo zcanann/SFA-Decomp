@@ -1089,9 +1089,10 @@ void getColor803dd01c(u8* param_1)
 #pragma scheduling off
 void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
 {
-    lbl_803DDC9C.r = param_1;
-    lbl_803DDC9C.g = param_2;
-    lbl_803DDC9C.b = param_3;
+    extern GXColor lbl_803DD01C;
+    lbl_803DD01C.r = param_1;
+    lbl_803DD01C.g = param_2;
+    lbl_803DD01C.b = param_3;
 }
 #pragma scheduling reset
 
