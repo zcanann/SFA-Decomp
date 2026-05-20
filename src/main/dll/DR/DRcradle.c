@@ -396,6 +396,53 @@ extern f32 lbl_803E5C3C;
 extern f32 lbl_803E5C40;
 extern f32 lbl_803E5C44;
 
+extern void setMatrixFromObjectPos(void *mtx, s16 *vec);
+extern void mtxRotateByVec3s(void *mtx, s16 *vec);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801EC7A0
+ * EN v1.0 Address: 0x801EC7A0
+ * EN v1.0 Size: 208b
+ */
+#pragma peephole off
+#pragma scheduling off
+void fn_801EC7A0(int p1, int p2)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+
+    v.mat[1] = lbl_803E5AE8;
+    v.mat[2] = lbl_803E5AE8;
+    v.mat[3] = lbl_803E5AE8;
+    v.mat[0] = lbl_803E5AEC;
+
+    v.angles[0] = *(s16 *)(p2 + 0x40e);
+    v.angles[1] = 0;
+    v.angles[2] = 0;
+    setMatrixFromObjectPos((void *)(p2 + 0x6c), v.angles);
+
+    v.angles[0] = -*(s16 *)(p2 + 0x40e);
+    v.angles[1] = 0;
+    v.angles[2] = 0;
+    mtxRotateByVec3s((void *)(p2 + 0xac), v.angles);
+
+    v.angles[0] = *(s16 *)(p2 + 0x40c);
+    v.angles[1] = 0;
+    v.angles[2] = 0;
+    setMatrixFromObjectPos((void *)(p2 + 0xec), v.angles);
+
+    v.angles[0] = -*(s16 *)(p2 + 0x40c);
+    v.angles[1] = 0;
+    v.angles[2] = 0;
+    mtxRotateByVec3s((void *)(p2 + 0x12c), v.angles);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /*
  * --INFO--
  *
