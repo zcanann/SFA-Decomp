@@ -1157,6 +1157,26 @@ void dim2icicle_free(void) {}
 void dim2icicle_hitDetect(void) {}
 void dim2icicle_release(void) {}
 void dim2icicle_initialise(void) {}
+
+extern u32 GameBit_Get(int id);
+extern f32 lbl_803E4B80;
+#pragma scheduling off
+#pragma peephole off
+void dim2icicle_init(int obj, s8 *p) {
+    char *inner = *(char **)(obj + 0xb8);
+    if (GameBit_Get(*(s16 *)(p + 0x1e)) != 0) {
+        inner[6] = 2;
+        *(u8 *)(obj + 0x36) = 0;
+    } else {
+        inner[6] = 0;
+        *(u8 *)(obj + 0x36) = 0xff;
+    }
+    *(s16 *)obj = (s16)((s32)p[0x18] << 8);
+    *(f32 *)(obj + 0x28) = lbl_803E4B80;
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dll_1DF_free(void) {}
 void dll_1DF_hitDetect(void) {}
 void dll_1DF_release(void) {}
@@ -1240,7 +1260,7 @@ void dim2lavacontrol_setScale(void* obj)
         void* p = *(void**)((char*)obj + 0x4C);
         s8 cnt = *(s8*)((char*)sub + 0x0);
         if ((s32)cnt > 0) {
-            *(u8*)((char*)sub + 0x0) = (u8)(cnt - 1);
+            *(s8*)((char*)sub + 0x0) = cnt - 1;
             if (*(s8*)((char*)sub + 0x0) == 0) {
                 *(s8*)((char*)sub + 0x2) = (s8)(*(u8*)((char*)sub + 0x2) | 1);
                 GameBit_Set(*(s16*)((char*)p + 0x1E), 1);

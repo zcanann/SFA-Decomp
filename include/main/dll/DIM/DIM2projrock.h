@@ -52,7 +52,7 @@ void dim2icicle_free(void);
 void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2icicle_hitDetect(void);
 void dim2icicle_update(void);
-void dim2icicle_init(void);
+void dim2icicle_init(int obj, s8 *p);
 void dim2icicle_release(void);
 void dim2icicle_initialise(void);
 
