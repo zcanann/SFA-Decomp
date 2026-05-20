@@ -33,7 +33,7 @@ extern double FUN_80293900();
 
 extern undefined4 DAT_80322fb8;
 extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dca60;
+extern undefined4 gNewCloudsInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
@@ -871,7 +871,7 @@ void FUN_80196244(undefined2 *param_1,int param_2)
   DAT_803de780 = 0;
   if ((*(byte *)(param_2 + 0x3c) & 2) != 0) {
     (**(code **)(*DAT_803dd728 + 4))(iVar4,0,0x40002,1);
-    (**(code **)(*DAT_803dd728 + 0xc))(iVar4,1,&DAT_80322fb8,&DAT_803dca60,local_18);
+    (**(code **)(*DAT_803dd728 + 0xc))(iVar4,1,&DAT_80322fb8,&gNewCloudsInterface,local_18);
     (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar4);
   }
   return;

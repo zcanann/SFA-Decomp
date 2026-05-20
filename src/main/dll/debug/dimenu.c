@@ -101,7 +101,7 @@ void OptionsScreen_render(void)
 {
 }
 
-extern void **lbl_803DCA4C;
+extern void **gScreenTransitionInterface;
 extern void gameTextLoadDir(int);
 extern u8 lbl_803DD70C;
 extern u32 lbl_803DD708;
@@ -115,7 +115,7 @@ extern void fn_8011C7B4(void);
 #pragma peephole off
 void OptionsScreen_initialise(void)
 {
-    ((void (*)(int, int))((void **)*lbl_803DCA4C)[3])(20, 5);
+    ((void (*)(int, int))((void **)*gScreenTransitionInterface)[3])(20, 5);
     gameTextLoadDir(21);
     lbl_803DD70C = 0;
     lbl_803DD708 = (u32)getSaveFileStruct();
