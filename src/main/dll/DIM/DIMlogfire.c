@@ -838,6 +838,23 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 extern void disableHeavyFog(void);
 extern int *lbl_803DCA68;
 extern u32 GameBit_Get(int id);
+extern int *lbl_803DCA54;
+extern int *lbl_803DCA74;
+#pragma scheduling off
+#pragma peephole off
+void animsharpclaw_free(int obj) {
+    char *inner = *(char **)(obj + 0xb8);
+    int child = *(int *)(obj + 0xc8);
+    if (child != 0) {
+        ObjLink_DetachChild(obj, child);
+        Obj_FreeObject(child);
+    }
+    (*(void (*)(char *))(*(int *)(*lbl_803DCA54 + 0x24)))(inner);
+    (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCA74 + 0x8)))(obj, 0xffff, 0, 0, 0);
+    Sfx_StopObjectChannel(obj, 0x7f);
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void ccgasventcontrol_free(int obj) {
