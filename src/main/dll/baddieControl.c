@@ -3231,6 +3231,39 @@ void CameraModeArwing_copyToCurrent(void *p1, u32 kind)
     *(f32*)((char*)lbl_803A43C0 + 0x40) = ((f32*)p1)[1];
 }
 
+int dll_19_func1B(int p)
+{
+    s16 v = *(s16*)((char*)p + 0x46);
+    switch (v) {
+        case 341:
+        case 365:
+        case 368:
+        case 474:
+        case 512:
+        case 588:
+        case 589:
+        case 635:
+        case 636:
+        case 653:
+        case 658:
+        case 683:
+        case 697:
+        case 714:
+        case 774:
+        case 823:
+        case 864:
+        case 905:
+        case 906:
+        case 1197:
+        case 1209:
+        case 1235:
+        case 1276:
+        case 1286:
+            return 1;
+    }
+    return 0;
+}
+
 extern void Sfx_StopObjectChannel(int *p1, int channel);
 extern void voxmaps_freeRouteWork(void *p);
 extern void **lbl_803DCA74;
