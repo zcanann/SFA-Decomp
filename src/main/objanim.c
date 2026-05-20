@@ -579,117 +579,125 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   bank = ObjAnim_GetActiveBank(objAnim);
   piVar12 = (int *)bank;
   animDef = bank->animDef;
-  if (animDef->moveCount != 0) {
-    state = bank->currentState;
-    fVar5 = objAnim->rootMotionScale;
-    fVar3 = distance * (fVar5 / objAnim->modelInstance->rootMotionScaleBase);
-    pfVar15 = (float *)0x0;
-    if (state->eventState != 0) {
-      in_f7 = (float)(u32)state->eventState / gObjAnimEventStepScale;
-      in_f8 = gObjAnimProgressOne - in_f7;
-      if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
-        iVar13 = (int)animDef->moveData[state->blendCacheSlot];
-      }
-      else {
-        iVar13 = (int)state->blendMoveCache[state->blendCacheSlot] +
-                 OBJANIM_CACHED_MOVE_DATA_OFFSET;
-      }
-      if (*(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
-        pfVar16 = (float *)(iVar13 + *(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
-        in_f6 = *pfVar16 * fVar5;
-        pfVar15 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
-        if (((*(short *)pfVar15 == 0) && (pfVar15 = pfVar16 + 2, *(short *)pfVar15 == 0)) &&
-           (pfVar15 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET),
-           *(short *)pfVar15 == 0)) {
-          pfVar15 = (float *)0x0;
-        }
-        if (pfVar15 != (float *)0x0) {
-          pfVar15 = (float *)((int)pfVar15 + 2);
-        }
-      }
-    }
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
-      iVar17 = (int)animDef->moveData[state->moveCacheSlot];
-    }
-    else {
-      iVar17 = (int)state->moveCache[state->moveCacheSlot] +
+  if (animDef->moveCount == 0) {
+    return 0;
+  }
+  state = bank->currentState;
+  fVar5 = objAnim->rootMotionScale;
+  fVar3 = distance * (fVar5 / objAnim->modelInstance->rootMotionScaleBase);
+  pfVar15 = (float *)0x0;
+  if (state->eventState != 0) {
+    in_f7 = (float)(u32)state->eventState / gObjAnimEventStepScale;
+    in_f8 = gObjAnimProgressOne - in_f7;
+    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+      iVar13 = (int)state->blendMoveCache[state->blendCacheSlot] +
                OBJANIM_CACHED_MOVE_DATA_OFFSET;
     }
-    if (*(short *)(iVar17 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
-      pfVar16 = (float *)(iVar17 + *(short *)(iVar17 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
-      fVar7 = *pfVar16 * fVar5;
-      uVar10 = (int)*(short *)(pfVar16 + 1) - 1;
-      pfVar14 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
-      if ((*(short *)pfVar14 == 0) && (pfVar14 = pfVar16 + 2, *(short *)pfVar14 == 0)) {
-        pfVar14 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET);
-      }
-      if (*(short *)pfVar14 != 0) {
-        sVar6 = *(short *)((int)pfVar14 + uVar10 * 2 + 2);
-        if (sVar6 < 0) {
-          fVar7 = -fVar7;
+    else {
+      iVar13 = (int)animDef->moveData[state->blendCacheSlot];
+    }
+    if (*(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
+      pfVar16 = (float *)(iVar13 + *(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
+      in_f6 = *pfVar16 * fVar5;
+      pfVar15 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+      if (*(short *)pfVar15 == 0) {
+        pfVar15 = (float *)((int)pfVar15 + 2);
+        if (*(short *)pfVar15 == 0) {
+          pfVar15 = (float *)((int)pfVar15 + 2);
+          if (*(short *)pfVar15 == 0) {
+            pfVar15 = (float *)0x0;
+          }
         }
-        if (sVar6 != 0) {
-          fVar4 = (float)(s32)uVar10;
-          fVar8 = gObjAnimProgressOne / fVar4;
-          fVar4 = fVar4 * objAnim->currentMoveProgress;
-          uVar11 = (int)fVar4;
-          fVar4 = fVar4 - (float)(s32)uVar11;
-          if (pfVar15 == (float *)0x0) {
-            fVar1 = fVar7 * (float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 2);
-            fVar2 = fVar7 * (float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 4);
+      }
+      if (pfVar15 != (float *)0x0) {
+        pfVar15 = (float *)((int)pfVar15 + 2);
+      }
+    }
+  }
+  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    iVar17 = (int)state->moveCache[state->moveCacheSlot] +
+             OBJANIM_CACHED_MOVE_DATA_OFFSET;
+  }
+  else {
+    iVar17 = (int)animDef->moveData[state->moveCacheSlot];
+  }
+  if (*(short *)(iVar17 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
+    pfVar16 = (float *)(iVar17 + *(short *)(iVar17 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
+    fVar7 = *pfVar16 * fVar5;
+    uVar10 = (int)*(short *)(pfVar16 + 1) - 1;
+    pfVar14 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+    if (*(short *)pfVar14 == 0) {
+      pfVar14 = (float *)((int)pfVar14 + 2);
+      if (*(short *)pfVar14 == 0) {
+        pfVar14 = (float *)((int)pfVar14 + 2);
+      }
+    }
+    if (*(short *)pfVar14 != 0) {
+      sVar6 = *(short *)((int)pfVar14 + uVar10 * 2 + 2);
+      if (sVar6 < 0) {
+        fVar7 = -fVar7;
+      }
+      if (sVar6 != 0) {
+        fVar4 = (float)(s32)uVar10;
+        fVar8 = gObjAnimProgressOne / fVar4;
+        fVar4 = fVar4 * objAnim->currentMoveProgress;
+        uVar11 = (int)fVar4;
+        fVar4 = fVar4 - (float)(s32)uVar11;
+        if (pfVar15 == (float *)0x0) {
+          fVar1 = fVar7 * (float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 2);
+          fVar2 = fVar7 * (float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 4);
+        }
+        else {
+          if (*(short *)((int)pfVar15 + uVar10 * 2) < 0) {
+            in_f6 = -in_f6;
           }
-          else {
-            if (*(short *)((int)pfVar15 + uVar10 * 2) < 0) {
-              in_f6 = -in_f6;
+          iVar17 = uVar11 * 2;
+          fVar1 = in_f6 * (in_f7 * (float)*(s16 *)((int)pfVar15 + iVar17)) +
+                  fVar7 * (in_f8 * (float)*(s16 *)((int)pfVar14 + iVar17 + 2));
+          fVar2 = in_f6 *
+                      (in_f7 * (float)*(s16 *)((int)pfVar15 + iVar17 + 2)) +
+                  fVar7 * (in_f8 * (float)*(s16 *)((int)pfVar14 + iVar17 + 4));
+        }
+        fVar5 = fVar3 + fVar4 * (fVar2 - fVar1) + fVar1;
+        fVar4 = -(fVar8 * fVar4 - fVar8);
+        bVar9 = false;
+        do {
+          if (fVar2 <= fVar5) {
+            uVar11 = uVar11 + 1;
+            if ((int)uVar10 <= (int)uVar11) {
+              uVar11 = 0;
             }
-            iVar17 = uVar11 * 2;
-            fVar1 = in_f6 * (in_f7 * (float)*(s16 *)((int)pfVar15 + iVar17)) +
-                    fVar7 * (in_f8 * (float)*(s16 *)((int)pfVar14 + iVar17 + 2));
-            fVar2 = in_f6 *
-                        (in_f7 * (float)*(s16 *)((int)pfVar15 + iVar17 + 2)) +
-                    fVar7 * (in_f8 * (float)*(s16 *)((int)pfVar14 + iVar17 + 4));
-          }
-          fVar5 = fVar3 + fVar4 * (fVar2 - fVar1) + fVar1;
-          fVar4 = -(fVar8 * fVar4 - fVar8);
-          bVar9 = false;
-          do {
-            if (fVar2 <= fVar5) {
-              uVar11 = uVar11 + 1;
-              if ((int)uVar10 <= (int)uVar11) {
-                uVar11 = 0;
-              }
-              if (pfVar15 == (float *)0x0) {
-                fVar3 = fVar7 *
-                        ((float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 4) -
-                         (float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 2));
-              }
-              else {
-                iVar17 = uVar11 * 2;
-                fVar3 = fVar7 *
-                            ((float)*(s16 *)((int)pfVar14 + iVar17 + 4) -
-                             (float)*(s16 *)((int)pfVar14 + iVar17 + 2)) *
-                            in_f8 +
-                        in_f6 *
-                            ((float)((s16 *)((int)pfVar15 + iVar17))[1] -
-                             (float)*(s16 *)((int)pfVar15 + iVar17)) *
-                            in_f7;
-              }
-              fVar4 = fVar4 + fVar8;
-              fVar1 = fVar2;
-              fVar2 = fVar2 + fVar3;
+            if (pfVar15 == (float *)0x0) {
+              fVar3 = fVar7 *
+                      ((float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 4) -
+                       (float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 2));
             }
             else {
-              fVar4 = fVar4 - (fVar8 * (fVar2 - fVar5)) / (fVar2 - fVar1);
-              bVar9 = true;
+              iVar17 = uVar11 * 2;
+              fVar3 = fVar7 *
+                          ((float)*(s16 *)((int)pfVar14 + iVar17 + 4) -
+                           (float)*(s16 *)((int)pfVar14 + iVar17 + 2)) *
+                          in_f8 +
+                      in_f6 *
+                          ((float)((s16 *)((int)pfVar15 + iVar17))[1] -
+                           (float)*(s16 *)((int)pfVar15 + iVar17)) *
+                          in_f7;
             }
-          } while (!bVar9);
-          if (phaseOut != (float *)0x0) {
-            *phaseOut = fVar4;
+            fVar4 = fVar4 + fVar8;
+            fVar1 = fVar2;
+            fVar2 = fVar2 + fVar3;
           }
-          return 1;
+          else {
+            fVar4 = fVar4 - (fVar8 * (fVar2 - fVar5)) / (fVar2 - fVar1);
+            bVar9 = true;
+          }
+        } while (!bVar9);
+        if (phaseOut != (float *)0x0) {
+          *phaseOut = fVar4;
         }
-        return 0;
+        return 1;
       }
+      return 0;
     }
   }
   return 0;
