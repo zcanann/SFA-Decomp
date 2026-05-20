@@ -949,6 +949,63 @@ void shopkeeper_initialise(void) {
 #pragma scheduling reset
 
 extern void hudFn_8011f38c(int);
+extern void *Obj_GetPlayerObject(void);
+extern f32 lbl_803E5A20;
+extern f32 timeDelta;
+extern f32 lbl_803E59DC;
+extern void gameTextShow(int);
+extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32 *out);
+extern u16 playerGetMoney(void *player);
+extern void characterDoEyeAnims(int obj, int p2);
+extern void dll_2E_func03(int, int);
+extern void shopKeeperRotateFn_801e7c4c(int, void *, int);
+extern int *lbl_803DCA8C;
+
+typedef struct {
+    u8 bit80 : 1;
+    u8 bit40 : 1;
+    u8 bit20 : 1;
+    u8 bit10 : 1;
+    u8 bit08 : 1;
+    u8 bit04 : 1;
+    u8 bit02 : 1;
+    u8 bit01 : 1;
+} BitsAt9D4;
+
+#pragma scheduling off
+#pragma peephole off
+void shopkeeper_update(int obj) {
+    void *player;
+    int state;
+    f32 dist;
+    player = Obj_GetPlayerObject();
+    state = *(int *)(obj + 0xB8);
+    dist = lbl_803E5A20;
+    *(u8 *)(state + 0x9D4) &= ~0x20;
+    if (*(f32 *)(state + 0x9C4) > lbl_803E59DC) {
+        gameTextShow(0x433);
+        *(f32 *)(state + 0x9C4) = *(f32 *)(state + 0x9C4) - timeDelta;
+        if (*(f32 *)(state + 0x9C4) < lbl_803E59DC) {
+            *(f32 *)(state + 0x9C4) = lbl_803E59DC;
+        }
+    }
+    if ((*(u8 *)(state + 0x9D4) & 0x04) != 0) {
+        shopKeeperRotateFn_801e7c4c(obj, player, 1);
+    }
+    *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4);
+    if (*(int *)(state + 0x9B4) == 0) {
+        *(int *)(state + 0x9B4) = ObjGroup_FindNearestObject(9, obj, &dist);
+    }
+    *(s16 *)(state + 0x9C8) = (s16)playerGetMoney(player);
+    ((void (*)(int, int, void *, void *, f32, f32))(*(int *)((int)*lbl_803DCA8C + 8)))
+        (obj, state, lbl_803AD068, &lbl_803DDC58, timeDelta, timeDelta);
+    dll_2E_func03(obj, state + 0x35C);
+    characterDoEyeAnims(obj, state + 0x980);
+    *(u8 *)(obj + 0x36) = *(u8 *)(state + 0x9D6);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern f32 lbl_803E59F0;
 extern f32 lbl_803E5A28;
 extern void *allocModelStruct_800139e8(int, int);
