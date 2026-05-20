@@ -1702,6 +1702,12 @@ extern f32 lbl_803E5920;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
+extern int* lbl_803DCA78;
+extern int* lbl_803DCA7C;
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
+extern int GameBit_Get(int);
+int fn_801E5060(int p1, int p2, int p3);
 #pragma peephole off
 void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58E8); }
 void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5920); }
@@ -1747,7 +1753,15 @@ int SB_SeqDoor_SeqFn(int p1, int p2, int p3)
 #pragma peephole reset
 void Lamp_SeqFn(void) {}
 void fn_801E66EC(void) {}
-void Lamp_free(void) {}
+#pragma scheduling off
+#pragma peephole off
+void Lamp_free(int* obj)
+{
+    Sfx_StopObjectChannel(obj, 64);
+    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void Lamp_init(void) {}
 void Lamp_update(void) {}
 #pragma peephole off
@@ -1790,14 +1804,44 @@ void SB_KyteCage_free(int* obj)
 #pragma scheduling reset
 void SB_KyteCage_init(void) {}
 void SB_KyteCage_update(void) {}
-void SB_MiniFire_free(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_MiniFire_free(int* obj)
+{
+    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+    ((void(*)(int*))((void**)*lbl_803DCA7C)[6])(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_MiniFire_init(void) {}
 void SB_MiniFire_render(void) {}
 void SB_MiniFire_update(void) {}
-void SB_SeqDoor_init(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_SeqDoor_init(int* obj, int* def)
+{
+    *(void**)((char*)obj + 0xbc) = (void*)fn_801E5060;
+    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+    {
+        s8 b = *(s8*)((char*)def + 25);
+        *(s8*)((char*)obj + 0xad) = (s8)(((u32)-b | (u32)b) >> 31);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_SeqDoor_update(void) {}
 void SB_ShipGunBroke_render(void) {}
-void SB_ShipGunBroke_update(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_ShipGunBroke_update(int* obj)
+{
+    int* p = *(int**)((char*)obj + 76);
+    if ((u32)GameBit_Get(*(s16*)((char*)p + 30)) != 0u) {
+        Sfx_PlayFromObject(obj, 52);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void ShipBattle_free(void) {}
 void ShipBattle_init(void) {}
 void ShipBattle_render(void) {}
@@ -1905,5 +1949,13 @@ int shop_isItemBought(int p, int idx)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void shop_setStateField1(void) {}
+#pragma scheduling off
+#pragma peephole off
+void shop_setStateField1(int* obj, int v)
+{
+    s8* state = *(s8**)((char*)obj + 0xb8);
+    state[1] = (s8)v;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void shop_update(int obj) {}
