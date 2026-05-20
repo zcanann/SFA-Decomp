@@ -1550,16 +1550,16 @@ void MagicPlant_free(int obj, int param_2) {
 #pragma scheduling off
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   int *state;
-  int s0;
+  void *s0;
   s32 v;
   state = *(int **)(obj + 0xb8);
   v = visible;
   if (v != 0) {
     objRenderFn_8003b8f4(obj, lbl_803E3858);
-    s0 = *state;
-    if (s0 != 0) {
-      if (*(int *)(s0 + 0xc4) != 0) {
-        ObjPath_GetPointWorldPosition(obj, 0, (float *)(s0 + 0xc), (float *)(s0 + 0x10), (float *)(s0 + 0x14), 0);
+    s0 = *(void **)state;
+    if (s0 != NULL) {
+      if (*(void **)((char *)s0 + 0xc4) != NULL) {
+        ObjPath_GetPointWorldPosition(obj, 0, (float *)((char *)s0 + 0xc), (float *)((char *)s0 + 0x10), (float *)((char *)s0 + 0x14), 0);
       }
     }
   }
