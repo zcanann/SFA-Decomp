@@ -1105,6 +1105,19 @@ extern void mm_free(void* p);
 #pragma scheduling off
 #pragma peephole off
 
+extern void fn_8018F2D8(int* obj);
+
+int fn_8018FB84(int* obj, int p2, u8* state)
+{
+    u8 i;
+    for (i = 0; i < state[139]; i++) {
+        if ((s32)state[i + 129] == 1) {
+            fn_8018F2D8(obj);
+        }
+    }
+    return 0;
+}
+
 int lfxemitter_setScale(void) { return -1; }
 
 void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
