@@ -3132,7 +3132,7 @@ void CameraModePerv_free(void) { mm_free(lbl_803DD5C8); lbl_803DD5C8 = 0; }
 
 /* vtable[15] singleton call */
 extern void **lbl_803DCA50;
-void fn_80112514(void)
+void dll_19_func11(void)
 {
   (*(void (**)(void))((char *)*lbl_803DCA50 + 0x3c))();
 }
@@ -3141,7 +3141,7 @@ void fn_80112514(void)
 extern int objPosToMapBlockIdx(double x, double y, double z);
 #pragma peephole off
 #pragma scheduling off
-int fn_80113278(int p1, int p2, u8 b)
+int dll_19_func0E(int p1, int p2, u8 b)
 {
   if (b != 0 && (s8)*(u8 *)(p2 + 0x354) <= 0 && *(u8 *)(p1 + 0x36) == 0) {
     return 0;
@@ -3162,7 +3162,7 @@ int fn_80113278(int p1, int p2, u8 b)
 extern f32 lbl_803E1C2C;
 #pragma peephole off
 #pragma scheduling off
-f32 fn_80111E48(int obj)
+f32 dll_19_func1A(int obj)
 {
   int p_b8 = *(int *)(obj + 0xb8);
   int p_4c = *(int *)(obj + 0x4c);
@@ -3186,7 +3186,7 @@ f32 fn_80111E48(int obj)
 extern void ObjHits_SetHitVolumeSlot(void *obj, int animObjId, int frame, int flags);
 #pragma peephole off
 #pragma scheduling off
-void fn_801132F4(int p1, int p2, s8 b, f32 fval)
+void dll_19_func0D(int p1, int p2, s8 b, f32 fval)
 {
   f32 fz;
   *(u32 *)p2 |= 0x8000;

@@ -76,7 +76,7 @@ extern f32 lbl_803E294C;
 /*
  * --INFO--
  *
- * Function: FUN_80113504
+ * Function: dll_19_func0F
  * EN v1.0 Address: 0x80113504
  * EN v1.0 Size: 188b
  * EN v1.1 Address: 0x80113590
@@ -86,7 +86,7 @@ extern f32 lbl_803E294C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80113504(double param_1,int param_2,uint *param_3,char param_4)
+void dll_19_func0F(double param_1,int param_2,uint *param_3,char param_4)
 {
   float fVar1;
   
@@ -1168,15 +1168,15 @@ void FUN_80114b10(int param_1,undefined4 *param_2,undefined2 param_3,undefined2 
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_80113F84(void) {}
-void fn_80113F88(void) {}
+void dll_19_func04_nop(void) {}
+void dll_19_func03_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_80113D5C(void) { return 0x0; }
+int dll_19_func09_ret_0(void) { return 0x0; }
 int dll_2E_func0F_ret_0(void) { return 0x0; }
 
 /* 12b chained getters. */
-f32 fn_8011383C(int *obj) { return *(f32*)((char*)((int**)obj)[0xb8/4] + 0x3e4); }
+f32 dll_19_func0B(int *obj) { return *(f32*)((char*)((int**)obj)[0xb8/4] + 0x3e4); }
 
 /* misc 8b leaves */
 void fn_80113F94(int *p, f32 v) { *(f32*)((char*)p + 0x614) = v; }
