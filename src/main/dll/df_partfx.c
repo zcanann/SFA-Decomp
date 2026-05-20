@@ -1704,6 +1704,10 @@ extern f32 lbl_803DD428;
 extern u8 lbl_803DD42C;
 extern u8 lbl_803DD42E;
 extern void player_followCurve(int* obj, int* state, int p5, f32 a, f32 b, f32 t);
+extern f32 lbl_803E05B4;
+extern f32 lbl_803E05B8;
+extern int* Resource_Acquire(int id, int kind);
+extern void Resource_Release(int* res);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1811,6 +1815,14 @@ void screenTransition_Do(int duration, int type)
     lbl_803DD428 = lbl_803E0560;
     lbl_803DD42C = (u8)type;
     lbl_803DD42E = 0;
+}
+
+void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
+{
+    if (*(f32*)((char*)state + 664) > lbl_803E05B4) {
+        f32 q = (f2 * f1) / f3;
+        *(s16*)obj = (s32)((f32)*(s16*)obj + lbl_803E05B8 * q);
+    }
 }
 
 void player_updateCurve(int* obj, int* state, f32 t)
