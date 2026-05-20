@@ -606,6 +606,11 @@ void wispbaddie_hitDetect(void) {}
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
 extern void mm_free(void *p);
+extern void objRenderFn_8003b8f4(f32);
+extern void objParticleFn_80099d84(int obj, int p2, int p3, f32 f1, f32 f2);
+extern f32 lbl_803E2650;
+extern f32 lbl_803E2654;
+extern f64 lbl_803E2640; /* int->float magic */
 
 #pragma scheduling off
 #pragma peephole off
@@ -639,6 +644,24 @@ void hagabon_free(int obj) {
         *state = NULL;
     }
 }
+void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    int state = *(int *)(obj + 0xB8);
+    s32 v = visible;
+    if (v != 0) {
+        if (*(int *)(obj + 0xF4) == 0) {
+            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
+                (obj, p2, p3, p4, p5, lbl_803E2650);
+            if ((*(u8 *)(state + 0x26) & 0x10) != 0) {
+                objParticleFn_80099d84(obj, 3, 0, lbl_803E2650,
+                    (f32)(u32)*(u8 *)(obj + 0x36) / lbl_803E2654);
+            }
+            if ((*(u8 *)(state + 0x26) & 0x08) != 0) {
+                objParticleFn_80099d84(obj, 4, 0, lbl_803E2650,
+                    (f32)(u32)*(u8 *)(obj + 0x36) / lbl_803E2654);
+            }
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -651,7 +674,7 @@ int wispbaddie_getExtraSize(void) { return 0x2c; }
 int wispbaddie_func08(void) { return 0x9; }
 
 extern void hagabon_free(int obj);
-extern void hagabon_render(void);
+extern void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void hagabon_hitDetect(int obj);
 extern void hagabon_update(void);
 extern void hagabon_init(void);
