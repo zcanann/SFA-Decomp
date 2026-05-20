@@ -1037,8 +1037,8 @@ void crrockfall_hitDetect(void) {}
 void magiclight_hitDetect(void) {}
 void magiclight_release(void) {}
 void magiclight_initialise(void) {}
-void fn_801AE0E4(void) {}
-void fn_801AE0E8(void) {}
+void dll_16C_release(void) {}
+void dll_16C_initialise(void) {}
 void imicepillar_free(void) {}
 
 /* 8b "li r3, N; blr" returners. */
@@ -1047,8 +1047,8 @@ int imicemountain_func08(void) { return 0x0; }
 int crrockfall_getExtraSize(void) { return 0x14; }
 int crrockfall_func08(void) { return 0x0; }
 int magiclight_func08(void) { return 0x0; }
-int fn_801ADB70(void) { return 0x24; }
-int fn_801ADB78(void) { return 0x3; }
+int dll_16C_getExtraSize(void) { return 0x24; }
+int dll_16C_func08(void) { return 0x3; }
 int imicepillar_getExtraSize(void) { return 0x4; }
 int imicepillar_func08(void) { return 0x0; }
 
@@ -1075,7 +1075,7 @@ int magiclight_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x172)
 extern void Obj_FreeObject(int*);
 #pragma scheduling off
 #pragma peephole off
-void fn_801ADB80(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) Obj_FreeObject(p); }
+void dll_16C_free(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) Obj_FreeObject(p); }
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1092,11 +1092,11 @@ void crrockfall_release(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801ADD28: if extra->p && vtable(p,0x38)()==2, call fn_801AD7E4 with 9 args. */
+/* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, call fn_801AD7E4 with 9 args. */
 extern void fn_801AD7E4(void *a, void *b, int c, int d, int e, int f, int g, int h, int i);
 #pragma scheduling off
 #pragma peephole off
-void fn_801ADD28(void *obj) {
+void dll_16C_hitDetect(void *obj) {
     void **extra = *(void ***)((char *)obj + 0xb8);
     void *p = *extra;
     if (p != NULL) {
@@ -1108,10 +1108,10 @@ void fn_801ADD28(void *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801AC6C4: set extra bit-0; scan arr for value==2 and clear two GameBits. */
+/* IMIceMountain_SeqFn: set extra bit-0; scan arr for value==2 and clear two GameBits. */
 #pragma scheduling off
 #pragma peephole off
-int fn_801AC6C4(void *obj, int arg2, u8 *arg3) {
+int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3) {
     int i;
     *(u32 *)((char *)*(void **)((char *)obj + 0xb8) + 4) |= 1;
     for (i = 0; i < arg3[0x8b]; i++) {
@@ -1125,13 +1125,13 @@ int fn_801AC6C4(void *obj, int arg2, u8 *arg3) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801AE088: install callback, configure sub-obj, init extra fields from arg. */
-extern void fn_801AD930(void);
+/* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
+extern void dll_16C_SeqFn(void);
 #pragma scheduling off
 #pragma peephole off
-void fn_801AE088(void *obj, void *arg2) {
+void dll_16C_init(void *obj, void *arg2) {
     void *extra;
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801AD930;
+    *(void **)((char *)obj + 0xbc) = (void *)dll_16C_SeqFn;
     if (*(void **)((char *)obj + 0x64) != NULL) {
         *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x4000;
         *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3a) = 100;

@@ -51,6 +51,7 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 int imicemountain_getExtraSize(void);
 int imicemountain_func08(void);
 void imicemountain_free(void);
+int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3);
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void imicemountain_hitDetect(void);
 void imicemountain_update(void);
@@ -75,6 +76,14 @@ void magiclight_update(void);
 void magiclight_init(void);
 void magiclight_release(void);
 void magiclight_initialise(void);
+
+int dll_16C_getExtraSize(void);
+int dll_16C_func08(void);
+void dll_16C_free(int *obj);
+void dll_16C_hitDetect(void *obj);
+void dll_16C_init(void *obj, void *arg2);
+void dll_16C_release(void);
+void dll_16C_initialise(void);
 
 int imicepillar_getExtraSize(void);
 int imicepillar_func08(void);
