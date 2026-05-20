@@ -1273,6 +1273,26 @@ void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
 #pragma scheduling reset
 #pragma peephole reset
 
+/* fn_8007FE04 (112b): array remove-and-swap by value */
+int fn_8007FE04(int *arr, int *count_ptr, int target)
+{
+    int n = *count_ptr;
+    int *p = arr;
+    int idx = 0;
+    int i;
+    for (i = 0; i < n; i++) {
+        if (*p == target) goto found;
+        p++;
+        idx++;
+    }
+    idx = -1;
+found:
+    if (idx == -1) return -1;
+    arr[idx] = arr[n - 1];
+    (*count_ptr)--;
+    return idx;
+}
+
 /* fn_80080360 (36b): write u16 indexed by signed byte * 2 */
 #pragma peephole off
 #pragma scheduling off
