@@ -3336,7 +3336,7 @@ void cfprisonguard_hitDetect(int* obj)
 void gcrobotlightbea_free(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
-    if (state[0] != 0) {
+    if (*(void**)state != NULL) {
         fn_8001CB3C(state);
     }
     if (*(int**)((char*)obj + 196) != NULL) {
