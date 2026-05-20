@@ -2418,6 +2418,8 @@ extern f32 lbl_803DCE60;
 extern f32 lbl_803DCE64;
 extern void doPendingMapLoads(void);
 
+#pragma peephole off
+#pragma scheduling off
 void loadMapForCameraPos(float x, float y, float z) {
 	if ((renderFlags & 2) != 0 && (renderFlags & 0x800) == 0) return;
 	lbl_803DCE64 = x;
@@ -2428,6 +2430,8 @@ void loadMapForCameraPos(float x, float y, float z) {
 		doPendingMapLoads();
 	}
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 80b current map block lookup. */
 extern int lbl_803DB648;
