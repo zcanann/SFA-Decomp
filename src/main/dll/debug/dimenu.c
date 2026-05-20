@@ -624,3 +624,18 @@ extern void textureFree(u32);
 void Dummy39_release(void) { textureFree(lbl_803DD72C); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
+extern int *lbl_803DCAA0;
+extern void warpToMap(int mapId, int spawnId);
+#pragma scheduling off
+#pragma peephole off
+void WeirdUnusedMenu_release(void) {
+    textureFree(lbl_803DD71C);
+    textureFree(lbl_803DD718);
+    textureFree(lbl_803DD714);
+    warpToMap(0, 1);
+    (*(void (*)(void))(*(int *)(*lbl_803DCAA0 + 0x8)))();
+}
+#pragma peephole reset
+#pragma scheduling reset
