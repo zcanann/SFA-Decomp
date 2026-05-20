@@ -190,11 +190,12 @@ void FUN_801d2dd4(undefined2 *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void bombplantspore_free(void *obj)
 {
   void *state;
   void *light;
-  
+
   state = *(void **)((u8 *)obj + 0xb8);
   (*(void (***)(void *))lbl_803DCA78)[5](obj);
   light = *(void **)((u8 *)state + 0x270);
@@ -203,6 +204,7 @@ void bombplantspore_free(void *obj)
     *(void **)((u8 *)state + 0x270) = NULL;
   }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
