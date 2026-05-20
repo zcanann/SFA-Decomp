@@ -1956,6 +1956,18 @@ int dimlogfire_func08(void) { return 0x1; }
 extern u32 lbl_803DDB48;
 void imspaceringgen_free(void) { lbl_803DDB48 = 0x0; }
 
+/* Init: clear obj->_F4 and record obj globally in lbl_803DDB48. */
+void imspaceringgen_init(int *obj) {
+    *(s32*)((char*)obj + 0xf4) = 0;
+    lbl_803DDB48 = (u32)obj;
+}
+
+/* If obj->_F4 == 0, set it to 1; else early-return. */
+void imanimspacecraft_update(int *obj) {
+    if (*(s32*)((char*)obj + 0xf4) != 0) return;
+    *(s32*)((char*)obj + 0xf4) = 1;
+}
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4780;
 extern void objRenderFn_8003b8f4(f32);
