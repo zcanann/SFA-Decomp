@@ -1425,6 +1425,47 @@ void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void *Obj_GetPlayerObject(void);
+extern void mathFn_80021ac8(void *in, void *out);
+extern f32 lbl_803E4554;
+extern f32 lbl_803E456C;
+extern f32 lbl_803E4570;
+extern f32 lbl_803E4574;
+extern f32 lbl_803E4578;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A7CC4(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    struct {
+        s16 a;
+        s16 b;
+        s16 c;
+        s16 _pad;
+        f32 d;
+        f32 e;
+        f32 f;
+        f32 g;
+    } stk;
+    int *player = (int *)Obj_GetPlayerObject();
+    int *playerState = *(int **)((char *)player + 0xB8);
+    f32 c1 = lbl_803E4554;
+    *(f32 *)(obj + 0x24) = c1;
+    *(f32 *)(obj + 0x28) = lbl_803E4570 * *(f32 *)((char *)playerState + 0x298) + lbl_803E456C;
+    *(f32 *)(obj + 0x2C) = lbl_803E4578 * *(f32 *)((char *)playerState + 0x298) + lbl_803E4574;
+    stk.e = c1;
+    stk.f = c1;
+    stk.g = c1;
+    stk.d = lbl_803E457C;
+    stk.c = 0;
+    stk.b = 0;
+    stk.a = *(s16 *)player;
+    mathFn_80021ac8(&stk, (void *)(obj + 0x24));
+    *(u16 *)(state + 0x24) |= 0x40;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_801A80F0(int obj, u8 flag) {
