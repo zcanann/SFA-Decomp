@@ -920,6 +920,38 @@ void RollingBarrel_free(int obj) {
 extern int Obj_GetPlayerObject(void);
 extern void getEnvfxAct(int obj, int player, int id, int p);
 extern void MMP_levelcontrol_update(int obj);
+extern int fn_8001CC9C(int obj, int a, int b, int c, int d);
+extern f32 lbl_803E4430;
+extern f32 lbl_803E4448;
+
+#pragma scheduling off
+#pragma peephole off
+void SpiritDoorLock_init(int obj, int *params, int mode)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    f32 mult;
+
+    *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
+    state[3] = *(s16 *)((char *)params + 0x1a);
+    state[2] = 0;
+
+    mult = (f32)*(s8 *)((char *)params + 0x19) * lbl_803E4448;
+    if (mult < lbl_803E4430) {
+        mult = lbl_803E4440;
+    }
+    *(f32 *)((char *)obj + 8) = (*(f32 **)((char *)obj + 0x50))[1] * mult;
+    state[1] = 0;
+
+    ObjHits_DisableObject(obj);
+    *(u8 *)((char *)state + 0x10) &= ~0x80;
+
+    if (mode == 0) {
+        *(u8 *)((char *)obj + 0x36) = 0;
+        state[0] = fn_8001CC9C(obj, 255, 0, 77, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
