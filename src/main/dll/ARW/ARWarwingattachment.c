@@ -1559,6 +1559,17 @@ void dll_1FF_init(s16* a, s8* b)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+void WM_colrise_init(s16 *a, s8 *b) {
+    s16 *inner = *(s16 **)((char*)a + 0xb8);
+    *(void **)((char*)a + 0xbc) = (void *)WM_colrise_SeqFn;
+    a[0] = (s16)((s32)b[0x18] << 8);
+    *inner = *(s16 *)(b + 0x1e);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
