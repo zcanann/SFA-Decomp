@@ -1716,7 +1716,23 @@ void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void Flag_init(void) {}
 void Flag_update(void) {}
 void fn_801E4AC0(void) {}
-void fn_801E4F14(void) {}
+/* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
+ * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801E4F14(int* obj, int p2, void* state)
+{
+    int v = *(int*)((char*)obj + 0xf4);
+    if (v > 0) {
+        *(int*)((char*)obj + 0xf4) = v - 1;
+    }
+    *(u8*)((char*)obj + 0xaf) |= 0x8;
+    *(s16*)((char*)state + 0x6e) = -2;
+    *(u8*)((char*)state + 0x56) = 0;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma peephole off
 #pragma scheduling off
 int fn_801E5060(int p1, int p2, int p3)
