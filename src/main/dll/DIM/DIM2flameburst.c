@@ -1674,24 +1674,19 @@ void dll_1CE_free(void) {
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
 extern f32 lbl_803E49F0;
 #pragma scheduling off
-void dll_1CE_init(undefined2 *param_1, int param_2)
+void dll_1CE_init(u8* obj, u8* params)
 {
-    uint uVar1;
-    int iVar2;
-
-    *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
-    param_1[0x58] = param_1[0x58] | 0x2000;
-    iVar2 = *(int *)(param_1 + 0x5c);
-    *(undefined *)(iVar2 + 9) = 1;
-    uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x1e));
-    if (uVar1 != 0) {
-        *(undefined *)(iVar2 + 9) = 0;
-        *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) =
-             *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0xfffe;
-        *(undefined *)(param_1 + 0x1b) = 0;
+    u8* sub;
+    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x2000);
+    sub = *(u8**)(obj + 0xb8);
+    sub[9] = 1;
+    if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
+        sub[9] = 0;
+        *(s16*)(*(u8**)(obj + 0x54) + 0x60) = (s16)(*(s16*)(*(u8**)(obj + 0x54) + 0x60) & ~1);
+        *(u8*)(obj + 0x36) = 0;
     }
-    *(float *)(iVar2 + 4) = lbl_803E49F0;
-    return;
+    *(f32*)(sub + 4) = lbl_803E49F0;
 }
 #pragma scheduling reset
 
