@@ -207,30 +207,6 @@ int levelname_getExtraSize(void) { return 0x18; }
 int levelname_func08(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
-extern void GameBit_Set(int eventId, int value);
-
-#pragma scheduling off
-#pragma peephole off
-int fn_8017A048(int *obj, int unused, int *p3) {
-    int *state = *(int **)((char *)obj + 0xb8);
-    int i;
-    int count = *(s8 *)((char *)p3 + 0x8b);
-    if (count <= 0) return 0;
-    for (i = 0; i < count; i++) {
-        if (*(u8 *)((char *)p3 + 0x81 + i) == 1) {
-            s16 gbId = *(s16 *)((char *)state + 0xe);
-            if (gbId != -1) {
-                GameBit_Set(gbId, 1);
-            }
-            *(u8 *)((char *)state + 0x14) = 1;
-            return 4;
-        }
-    }
-    return 0;
-}
-#pragma peephole reset
-#pragma scheduling reset
-
 #pragma scheduling off
 #pragma peephole off
 int ProjectileSwitch_func08(int *obj) {
@@ -240,6 +216,25 @@ int ProjectileSwitch_func08(int *obj) {
         v = 0;
     }
     return ((u32)v << 11) | 0x400;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8017A048(int obj, int unused, u8 *setupData) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    int i;
+    for (i = 0; i < setupData[0x8B]; i++) {
+        if (setupData[0x81 + i] == 1) {
+            if (*(s16 *)((char *)state + 0xE) != -1) {
+                GameBit_Set(*(s16 *)((char *)state + 0xE), 1);
+            }
+            *(u8 *)((char *)state + 0x14) = 1;
+            return 4;
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

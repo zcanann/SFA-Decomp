@@ -914,10 +914,11 @@ void saveFileSelect_init(void) {}
  * EN v1.0 Size: 216b
  */
 #pragma scheduling off
+#pragma peephole off
 void saveSelectSetupMenuItems(void **p) {
-    int i = 0;
     int off1 = 0;
     int off2 = 0;
+    int i = 0;
     char *base;
     while (i < (int)*(u8 *)((char *)p + 0x4)) {
         base = (char *)saveFileSelect_saveSlotsBase;
@@ -929,7 +930,7 @@ void saveSelectSetupMenuItems(void **p) {
             *(int *)((char *)*p + off2 + 0x10) = -1;
         } else {
             *(u16 *)((char *)*p + off2) = (u16)i;
-            *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) & ~0x4);
+            *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) & ~0x2);
             *(u16 *)((char *)*p + off2 + 0x16) = (u16)(*(u16 *)((char *)*p + off2 + 0x16) | 0x1);
             *(int *)((char *)*p + off2 + 0x10) = -1;
         }
@@ -938,6 +939,7 @@ void saveSelectSetupMenuItems(void **p) {
         i++;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 void saveSelectGoToChapterSelect(void) {}
 /*

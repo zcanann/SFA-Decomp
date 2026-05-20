@@ -104,3 +104,18 @@ void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
 void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_801CF78C(void);
+#pragma scheduling off
+#pragma peephole off
+void nw_tricky_init(int *obj) {
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801CF78C;
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
+}
+void nw_animice_init(int *obj) {
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801CFB24;
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
+    ObjGroup_AddObject(obj, 0x3d);
+}
+#pragma peephole reset
+#pragma scheduling reset

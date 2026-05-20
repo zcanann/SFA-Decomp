@@ -101,6 +101,38 @@ void OptionsScreen_render(void)
 {
 }
 
+extern void **lbl_803DCA4C;
+extern void gameTextLoadDir(int);
+extern u8 lbl_803DD70C;
+extern u32 lbl_803DD708;
+extern u8 lbl_803DD706;
+extern u8 lbl_803DD705;
+extern u8 lbl_803DD6F9;
+extern u8 lbl_803DD6F8;
+extern void fn_8011CA74(void);
+extern void fn_8011C7B4(void);
+#pragma scheduling off
+#pragma peephole off
+void OptionsScreen_initialise(void)
+{
+    ((void (*)(int, int))((void **)*lbl_803DCA4C)[3])(20, 5);
+    gameTextLoadDir(21);
+    lbl_803DD70C = 0;
+    lbl_803DD708 = (u32)getSaveFileStruct();
+    if (lbl_803DD6F8 == 0) {
+        fn_8011CA74();
+    } else if (lbl_803DD6F8 == 1) {
+        fn_8011C7B4();
+    } else {
+        languageMenuInit();
+    }
+    lbl_803DD706 = 2;
+    lbl_803DD705 = 0;
+    lbl_803DD6F9 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
