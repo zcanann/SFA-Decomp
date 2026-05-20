@@ -3075,6 +3075,19 @@ int fn_801605A8(short *out, u8 *obj) {
     out[1] = *(s16*)(obj + 0x19c);
     return 0;
 }
+
+/* fn_80160690 (96B). Like fn_801605A8 but with extra stfs at 0x2a0 and a vtable call. */
+int fn_80160690(short* out, u8* obj) {
+    f32 f = lbl_803E2E68;
+    *(f32*)(obj + 0x280) = f;
+    *(f32*)(obj + 0x284) = f;
+    *(f32*)(obj + 0x2a0) = f;
+    *(s8*)(obj + 0x25f) = 1;
+    out[2] = *(s16*)(obj + 0x19e);
+    out[1] = *(s16*)(obj + 0x19c);
+    (*(code*)((char*)(*lbl_803DCA8C) + 0x30))(out, obj, 5);
+    return 0;
+}
 #pragma scheduling reset
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
