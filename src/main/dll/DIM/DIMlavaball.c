@@ -1483,6 +1483,48 @@ void MMP_levelcontrol_init(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void fn_801A6F4C(int);
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_asteroid_re_init(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    *(u16 *)(obj + 0xB0) |= 0x6000;
+    *(void (**)(int))(obj + 0xBC) = fn_801A6F4C;
+    *(u8 *)state = 0;
+    *(u8 *)(state + 2) = (u8)GameBit_Get(0x88C);
+    *(u8 *)(state + 1) = (u8)GameBit_Get(0x87B);
+    switch ((s32)*(u8 *)(state + 1)) {
+    case 0:
+        *(u8 *)(obj + 0x36) = 0;
+        *(u8 *)(obj + 0xAD) = 0;
+        break;
+    case 1:
+        *(u8 *)(obj + 0x36) = 0xFF;
+        *(u8 *)state = 4;
+        *(u8 *)(obj + 0xAD) = 1;
+        *(u8 *)state |= 0x40;
+        break;
+    case 2:
+        *(u8 *)(obj + 0x36) = 0xFF;
+        *(u8 *)state = 4;
+        *(u8 *)(obj + 0xAD) = 1;
+        break;
+    case 3:
+        *(u8 *)(obj + 0x36) = 0xFF;
+        *(u8 *)state = 4;
+        *(u8 *)(obj + 0xAD) = 1;
+        break;
+    }
+    {
+        f32 v = *(f32 *)(obj + 0x10);
+        *(f32 *)(state + 0xC) = v;
+        *(f32 *)(state + 0x10) = v;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void MoonSeedBush_init(int obj, int data) {
