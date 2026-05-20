@@ -1801,3 +1801,10 @@ void landed_arwing_init(int obj, int param) {
     }
     *(void(**)(void))((char*)obj + 0xbc) = fn_80188CC0;
 }
+
+extern int *lbl_803DCAC0;
+#pragma scheduling off
+void fn_80187BB0(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCAC0 + 0x10)))(obj);
+}
+#pragma scheduling reset
