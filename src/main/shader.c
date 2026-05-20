@@ -2399,6 +2399,7 @@ extern void* lbl_80386468[];
 extern void defStartFn_8005972c(void* p1, void* p2, int idx, int flag);
 extern void mm_free(void* p);
 
+#pragma scheduling off
 void fn_80059A50(int idx) {
 	void* p = lbl_80386468[idx];
 	if (p != 0) {
@@ -2407,6 +2408,7 @@ void fn_80059A50(int idx) {
 		lbl_80386468[idx] = 0;
 	}
 }
+#pragma scheduling reset
 
 /* 96b camera-pos gated load. */
 extern f32 lbl_803DCE5C;
