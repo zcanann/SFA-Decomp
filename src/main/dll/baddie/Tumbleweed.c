@@ -3739,6 +3739,45 @@ int fn_80138920(u8* obj, int arg1, int arg2)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int obj, int b, int c, int d, int e);
+extern f32 lbl_803E2208;
+extern f32 lbl_803E2284;
+extern f32 lbl_803E2288;
+extern f32 lbl_803E228C;
+extern f32 lbl_803E2290;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80133818(void)
+{
+    f32 a;
+    f32 b;
+    f32 c;
+    f32 d;
+    f32 e;
+    u8 i;
+
+    a = lbl_803E2284;
+    b = lbl_803E2288;
+    c = lbl_803E2208;
+    d = lbl_803E228C;
+    e = lbl_803E2290;
+    for (i = 0; i < 2; i++) {
+        lbl_803DBBC8[i] = (void *)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
+        *(f32 *)((char *)lbl_803DBBC8[i] + 0xc) = a;
+        *(f32 *)((char *)lbl_803DBBC8[i] + 0x10) = b;
+        *(f32 *)((char *)lbl_803DBBC8[i] + 0xc) = c;
+        *(f32 *)((char *)lbl_803DBBC8[i] + 0x10) = c;
+        *(f32 *)((char *)lbl_803DBBC8[i] + 0x14) = d;
+        *(u16 *)lbl_803DBBC8[i] = 2000;
+        *(u16 *)((char *)lbl_803DBBC8[i] + 2) = 0;
+        *(f32 *)((char *)lbl_803DBBC8[i] + 8) = e;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern int gameTimerIsRunning(void);
 extern void gameTimerRun(void *obj);
 extern int sprintf(char *buf, const char *fmt, ...);
