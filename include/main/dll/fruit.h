@@ -20,6 +20,7 @@ typedef struct DfpTargetBlockAudioState {
   u8 unk09[0x5B];
   s16 stateSfxId;
   s16 completionSfxId;
+  s8 floorPointCount;
   u8 mode;
   u8 stateSfxReady;
   u8 completionSfxReady;
