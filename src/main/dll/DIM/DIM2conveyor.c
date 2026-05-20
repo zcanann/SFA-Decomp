@@ -45,6 +45,7 @@ extern int *mapGetBlock(int idx);
 #pragma scheduling off
 #pragma peephole off
 void dimlavasmash_init(s16 *obj, s8 *def) {
+    int *block;
     char *inner;
     obj[0] = (s16)((s32)def[0x18] << 8);
     *(int *)((char *)obj + 0xbc) = (int)&fn_801B3458;
@@ -53,7 +54,7 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
     *(s8 *)(inner + 0) = (s8)*(s16 *)(def + 0x1c);
     *(u8 *)(inner + 2) = (u8)GameBit_Get(*(s16 *)(def + 0x1e));
     if (*(u8 *)(inner + 2) == 1) {
-        int *block = mapGetBlock(objPosToMapBlockIdx(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14)));
+        block = mapGetBlock(objPosToMapBlockIdx(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14)));
         if (block != NULL) {
             fn_801B3344(block, 1, *(u8 *)(inner + 1));
             fn_801B3344(block, 0, *(u8 *)(inner + 1) + 1);
@@ -64,7 +65,7 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
         s16 *p = *(s16 **)((char *)obj + 0x54);
         p[0x30] = (s16)(p[0x30] & ~1);
     }
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
 }
 #pragma peephole reset
 #pragma scheduling reset
