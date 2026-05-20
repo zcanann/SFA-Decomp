@@ -43,7 +43,7 @@ int SB_Galleon_func0E(int *obj);
 u8 SB_Galleon_render2(int *obj);
 int SB_Galleon_modelMtxFn(int *obj);
 s32 SB_Galleon_func0B(int *obj);
-void SB_Galleon_setScale(void);
+int SB_Galleon_setScale(int obj);
 int SB_Galleon_getExtraSize(void);
 int SB_Galleon_func08(void);
 void SB_Galleon_free(void);

@@ -1167,6 +1167,30 @@ void SB_ShipGun_free(int param_1) {
     ((SBShipGunFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(param_1);
 }
 
+/* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+#pragma peephole off
+int SB_Galleon_setScale(int obj) {
+    s8 *p = (s8*)((int**)obj)[0xb8/4];
+    int s = p[0x29];
+    if (s != 1) {
+        if (s >= 2) {
+            Sfx_PlayFromObject(obj, 0x3f);
+        }
+        p[0x2b] = p[0x2b] + 1;
+        return 1;
+    }
+    {
+        int t = p[0x7a];
+        if (t == 0 || t == 1 || t == 2) {
+            p[0x7c] = p[0x7c] + 1;
+            return 1;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
 #pragma peephole off
