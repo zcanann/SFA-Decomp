@@ -416,3 +416,27 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5650); }
 #pragma peephole reset
+
+extern void Music_Trigger(int track, int param);
+extern void fn_8011F6D4(int p);
+#pragma scheduling off
+void sc_totembond_free(int obj) {
+    Music_Trigger(240, 0);
+    fn_8011F6D4(0);
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void sc_totembond_init(int obj, int p2) {
+    int *state;
+    u32 v;
+    s16 hi = (s16)(u16)((s32)*(s16 *)obj / 8192);
+    state = *(int **)((char *)obj + 0xB8);
+    *(s16 *)((char *)state + 0x24) = hi;
+    *(void (**)(void))((char *)obj + 0xBC) = (void (*)(void))sc_totempuzzle_processAnimEvents;
+    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x6000;
+    *(u16 *)((char *)obj + 0xB0) = (u16)v;
+}
+#pragma peephole reset
+#pragma scheduling reset
