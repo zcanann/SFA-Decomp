@@ -834,9 +834,9 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801A9468: leaf flag-set on obj's extra struct, returns 0. */
+/* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 #pragma scheduling off
-int fn_801A9468(int obj)
+int MoonSeedPlantingSpot_SeqFn(int obj)
 {
     obj = *(int *)(obj + 0xb8);
     *(u8 *)(obj + 1) = (u8)((uint)*(u8 *)(obj + 1) | 1);
@@ -844,12 +844,12 @@ int fn_801A9468(int obj)
 }
 #pragma scheduling reset
 
-/* fn_801A9FA8: trampoline to fn_801A9FD0 passing (obj, obj->extra), returns 0. */
-extern int fn_801A9FD0(int obj, int extra);
+/* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
+extern int CCGasVentControlFn_801a9fd0(int obj, int extra);
 #pragma scheduling off
-int fn_801A9FA8(int obj)
+int CCGasVentControl_SeqFn(int obj)
 {
-    fn_801A9FD0(obj, *(int *)(obj + 0xb8));
+    CCGasVentControlFn_801a9fd0(obj, *(int *)(obj + 0xb8));
     return 0;
 }
 #pragma scheduling reset

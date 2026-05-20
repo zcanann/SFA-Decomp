@@ -51,6 +51,7 @@ void MoonSeedPlantingSpot_setScale(void);
 int MoonSeedPlantingSpot_getExtraSize(void);
 int MoonSeedPlantingSpot_func08(void);
 void MoonSeedPlantingSpot_free(int x);
+int MoonSeedPlantingSpot_SeqFn(int obj);
 void MoonSeedPlantingSpot_render(void);
 void MoonSeedPlantingSpot_hitDetect(void);
 void MoonSeedPlantingSpot_update(void);
@@ -66,6 +67,7 @@ void ccgasvent_init(int x);
 
 int ccgasventcontrol_getExtraSize(void);
 void ccgasventcontrol_free(void);
+int CCGasVentControl_SeqFn(int obj);
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void ccgasventcontrol_update(void);
 void ccgasventcontrol_init(void);
