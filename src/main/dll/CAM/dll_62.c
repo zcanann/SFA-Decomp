@@ -8,7 +8,7 @@ extern f32 fn_80293E80();
 extern f32 sin();
 
 extern u8 framesThisStep;
-extern undefined4* lbl_803DCA50;
+extern undefined4* gCameraInterface;
 extern f32* lbl_803DD578;
 extern f64 lbl_803E1990;
 extern f64 lbl_803E1998;
@@ -135,7 +135,7 @@ void CameraModeClimb_update(short *param_1)
   *(undefined4 *)(param_1 + 0x10) = local_c0;
   uStack60 = (uint)*(ushort *)(lbl_803DD578 + 0xc);
   local_40 = 0x43300000;
-  (**(code **)(*lbl_803DCA50 + 0x38))
+  (**(code **)(*gCameraInterface + 0x38))
             ((double)(float)((double)CONCAT44(0x43300000,uStack60) - lbl_803E1998),param_1,
              &local_cc,&local_d0,&local_d4,&local_d8,0);
   uVar3 = getAngle((double)local_cc,(double)local_d4);

@@ -28,7 +28,7 @@ extern uint FUN_80294c90();
 extern int FUN_80294c98();
 extern undefined4 cameraGetPrevPos2();
 
-extern undefined4* lbl_803DCA50;
+extern undefined4* gCameraInterface;
 extern f32* lbl_803DD568;
 extern s32 lbl_803DD56C;
 extern f32* lbl_803DD570;
@@ -163,9 +163,9 @@ void CameraModeCombat_update(void)
       if (*(int *)(psVar4 + 0x8e) != 0) {
         if (((*(byte *)(*(int *)(psVar4 + 0x8e) + 0xaf) & 0x40) != 0) ||
            ((*(byte *)((int)psVar4 + 0x141) & 2) != 0)) goto LAB_8010cfb8;
-        (**(code **)(*lbl_803DCA50 + 0x48))(0);
+        (**(code **)(*gCameraInterface + 0x48))(0);
       }
-      (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
+      (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
     }
     else {
       iVar6 = *(int *)(psVar4 + 0x8e);
@@ -174,9 +174,9 @@ void CameraModeCombat_update(void)
         if (iVar6 != 0) {
           if (((*(byte *)(iVar6 + 0xaf) & 0x40) != 0) || ((*(byte *)((int)psVar4 + 0x141) & 2) != 0)
              ) goto LAB_8010cfb8;
-          (**(code **)(*lbl_803DCA50 + 0x48))(0);
+          (**(code **)(*gCameraInterface + 0x48))(0);
         }
-        (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
+        (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
       }
       else {
         iVar9 = *(int *)(iVar6 + 0x74);
@@ -408,18 +408,18 @@ void CameraModeCombat_update(void)
               if (*(int *)(psVar4 + 0x8e) != 0) {
                 if (((*(byte *)(*(int *)(psVar4 + 0x8e) + 0xaf) & 0x40) != 0) ||
                    ((*(byte *)((int)psVar4 + 0x141) & 2) != 0)) goto LAB_8010cfb8;
-                (**(code **)(*lbl_803DCA50 + 0x48))(0);
+                (**(code **)(*gCameraInterface + 0x48))(0);
               }
-              (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
+              (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
             }
           }
           else {
             if (*(int *)(psVar4 + 0x8e) != 0) {
               if (((*(byte *)(*(int *)(psVar4 + 0x8e) + 0xaf) & 0x40) != 0) ||
                  ((*(byte *)((int)psVar4 + 0x141) & 2) != 0)) goto LAB_8010cfb8;
-              (**(code **)(*lbl_803DCA50 + 0x48))(0);
+              (**(code **)(*gCameraInterface + 0x48))(0);
             }
-            (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
+            (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
           }
         }
       }
@@ -429,9 +429,9 @@ void CameraModeCombat_update(void)
     if (*(int *)(psVar4 + 0x8e) != 0) {
       if (((*(byte *)(*(int *)(psVar4 + 0x8e) + 0xaf) & 0x40) != 0) ||
          ((*(byte *)((int)psVar4 + 0x141) & 2) != 0)) goto LAB_8010cfb8;
-      (**(code **)(*lbl_803DCA50 + 0x48))(0);
+      (**(code **)(*gCameraInterface + 0x48))(0);
     }
-    (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
+    (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
   }
 LAB_8010cfb8:
   FUN_8028688c();

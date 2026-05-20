@@ -7,7 +7,7 @@ extern undefined4 camcontrol_getTargetPosition();
 extern double FUN_80247f54();
 extern double FUN_80293900();
 
-extern int *lbl_803DCA50;
+extern int *gCameraInterface;
 extern f32 *cameraMtxVar57;
 extern f64 DOUBLE_803e1698;
 extern f64 DOUBLE_803e16f8;
@@ -65,7 +65,7 @@ void firstperson_updatePosition(int param_1,short *param_2)
   float local_30;
   float local_2c;
   
-  (**(code **)(*lbl_803DCA50 + 0x38))
+  (**(code **)(*gCameraInterface + 0x38))
             ((double)gCamcontrolModeSettings[0x23],param_1,&local_2c,&local_30,&local_34,&local_38,
              1);
   local_38 = local_34 * local_34 + local_2c * local_2c + local_30 * local_30;
@@ -84,7 +84,7 @@ void firstperson_updatePosition(int param_1,short *param_2)
     *(undefined4 *)(param_1 + 0xb8) = *(undefined4 *)(param_1 + 0x18);
     *(undefined4 *)(param_1 + 0xbc) = *(undefined4 *)(param_1 + 0x1c);
     *(undefined4 *)(param_1 + 0xc0) = *(undefined4 *)(param_1 + 0x20);
-    (**(code **)(*lbl_803DCA50 + 0x38))
+    (**(code **)(*gCameraInterface + 0x38))
               ((double)gCamcontrolModeSettings[0x23],param_1,&local_2c,&local_30,&local_34,
                &local_38,1);
     local_38 = local_34 * local_34 + local_2c * local_2c + local_30 * local_30;
@@ -192,7 +192,7 @@ void firstperson_loadSettings(int param_1)
   double dVar3;
   int iVar4;
   
-  iVar4 = (**(code **)(*lbl_803DCA50 + 0xc))();
+  iVar4 = (**(code **)(*gCameraInterface + 0xc))();
   gCamcontrolModeSettings[0x24] = gCamcontrolModeSettings[0x23];
   gCamcontrolModeSettings[0xf] = gCamcontrolModeSettings[2];
   gCamcontrolModeSettings[0x11] = gCamcontrolModeSettings[3];

@@ -6,7 +6,7 @@ extern f32 curveFn_80010dc0(f32 param_1, float *param_2, float *param_3);
 extern undefined4 FUN_80017814();
 extern f32 sqrtf(f32 x);
 
-extern int *lbl_803DCA50;
+extern int *gCameraInterface;
 extern undefined4 lbl_803DD560;
 extern f64 lbl_803E18A0;
 extern f32 timeDelta;
@@ -178,7 +178,7 @@ void cameraModeTestStrengthFn_8010b238(f32 param_1,short *param_2,undefined4 *pa
   fVar3 = *(float *)(lbl_803DD560 + 0x24) - *(float *)(lbl_803DD560 + 0x20);
   dVar4 = sqrtf((double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2));
   *(float *)(lbl_803DD560 + 0x60) = (float)dVar4;
-  (**(code **)(*lbl_803DCA50 + 0x34))
+  (**(code **)(*gCameraInterface + 0x34))
             ((double)*(float *)(lbl_803DD560 + 0x60),(double)lbl_803E18B0,(double)lbl_803E18B4,
              (double)lbl_803E18B4,(double)lbl_803E18B8,lbl_803DD560 + 0x48);
   return;

@@ -12,7 +12,7 @@ extern void memset(void *dst, int val, int size);
 
 extern f32 *lbl_803DD578;
 extern f32 *lbl_803DD584;
-extern undefined4 **lbl_803DCA50;
+extern undefined4 **gCameraInterface;
 
 extern f32 lbl_803E19B8;
 extern f32 lbl_803E19BC;
@@ -57,9 +57,9 @@ void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
     case 1:
     default:
         memset(lbl_803DD578, 0, 0x38);
-        iVar2 = ((code)((*lbl_803DCA50)[6]))();
+        iVar2 = ((code)((*gCameraInterface)[6]))();
         ((code)(*(undefined4 **)((undefined4 *)iVar2)[1])[8])(&local_58, &local_5c, &local_60, &local_64, &local_68);
-        ((code)((*lbl_803DCA50)[14]))(
+        ((code)((*gCameraInterface)[14]))(
             (f32)*(u16 *)((u8 *)lbl_803DD578 + 0x30),
             param_1, local_28, local_24, local_20, local_1c, 0);
         *(s16 *)((u8 *)lbl_803DD578 + 0x32) = (s16)local_68;

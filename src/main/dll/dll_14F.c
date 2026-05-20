@@ -1531,13 +1531,13 @@ int fn_801804C8(u8* obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* lbl_803DCA50: vtable pointer used for state-machine dispatches. */
-extern void *lbl_803DCA50;
+/* gCameraInterface: vtable pointer used for state-machine dispatches. */
+extern void *gCameraInterface;
 
 /* fn_8017F8C8: vtable[0x13]() with obj passed through implicitly, return 0. */
 #pragma scheduling off
 int fn_8017F8C8(u8* obj) {
-    (*(void (***)(u8*))lbl_803DCA50)[0x13](obj);
+    (*(void (***)(u8*))gCameraInterface)[0x13](obj);
     return 0;
 }
 #pragma scheduling reset

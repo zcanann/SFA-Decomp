@@ -91,7 +91,7 @@ extern void VIWaitForRetrace(void);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern undefined4 *lbl_803DCA4C;
-extern undefined4 *lbl_803DCA50;
+extern undefined4 *gCameraInterface;
 extern undefined4 *gTitleMenuLinkInterface;
 extern int lbl_803DD5F8;
 extern s8 lbl_803DD5FC;
@@ -426,7 +426,7 @@ void TitleMenu_render(u8 *param_1)
     return;
   }
 
-  menuAction = (*(code *)(*lbl_803DCA50 + 0x10))();
+  menuAction = (*(code *)(*gCameraInterface + 0x10))();
   if (menuAction == 0x57) {
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
     titleScreenPositionElements(lbl_803E1D10 + (f32)(lbl_803DD616 * 0x1a4) / lbl_803E1D14,

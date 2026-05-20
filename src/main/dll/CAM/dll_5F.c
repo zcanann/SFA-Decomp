@@ -19,7 +19,7 @@ extern undefined4 FUN_80286888();
 extern undefined4 sqrtf();
 
 extern u8 framesThisStep;
-extern int *lbl_803DCA50;
+extern int *gCameraInterface;
 extern undefined4* gRomCurveInterface;
 extern undefined4* lbl_803DD560;
 extern f64 lbl_803E18A0;
@@ -272,7 +272,7 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
                  (float *)(psVar3 + 10),*(int *)(psVar3 + 0x18));
   }
   else {
-    (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0,0xff);
+    (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
   }
   FUN_80286888();
   return;
@@ -377,7 +377,7 @@ void CameraModeCombat_free(int obj)
   register u32 b;
   register u32 bitval;
   if (*(void **)(obj + 0x11c) != NULL) {
-    (*(void (**)(int))((char *)*(int *)lbl_803DCA50 + 0x48))(0);
+    (*(void (**)(int))((char *)*(int *)gCameraInterface + 0x48))(0);
   }
   mm_free(lbl_803DD568);
   *(int *)&lbl_803DD568 = 0;

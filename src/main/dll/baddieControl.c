@@ -3467,10 +3467,10 @@ void CameraModePerv_free(void) { mm_free(lbl_803DD5C8); lbl_803DD5C8 = 0; }
 #pragma scheduling reset
 
 /* vtable[15] singleton call */
-extern void **lbl_803DCA50;
+extern void **gCameraInterface;
 void dll_19_func11(void)
 {
-  (*(void (**)(void))((char *)*lbl_803DCA50 + 0x3c))();
+  (*(void (**)(void))((char *)*gCameraInterface + 0x3c))();
 }
 
 /* baddie spawn/visibility predicate */

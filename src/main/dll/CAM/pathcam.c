@@ -13,7 +13,7 @@ extern f32 curveFn_80010dc0(f32 param_1, f32 *param_2, f32 *param_3);
 extern undefined4 curveFn_80010320(f32 param_1, f32 *param_2);
 extern void mm_free(void *ptr);
 
-extern int *lbl_803DCA50;
+extern int *gCameraInterface;
 extern f32 *cameraMtxVar57;
 extern undefined4 lbl_803DD538;
 extern f64 DOUBLE_803e1698;
@@ -172,7 +172,7 @@ void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3)
                                     *(float *)(param_1 + 0x10),(float *)(param_1 + 6),
                                     (float *)(param_1 + 8),(float *)(param_1 + 10),
                                     *(int *)(param_1 + 0x18));
-    (**(code **)(*lbl_803DCA50 + 0x38))
+    (**(code **)(*gCameraInterface + 0x38))
               ((double)gCamcontrolModeSettings[0x23],param_1,auStack_4c,&local_50,auStack_54,
                &local_58,0);
     local_50 = *(float *)(param_1 + 8) - (*(float *)(psVar7 + 8) + gCamcontrolModeSettings[0x23]);
@@ -339,7 +339,7 @@ void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param
   Obj_TransformLocalPointToWorld((double)work.sampleX,(double)work.sampleY,(double)work.sampleZ,
                                  &work.worldX,&work.worldY,work.worldZ,work.model);
   work.targetObj = param_4;
-  iVar1 = (*(code *)(*lbl_803DCA50 + 0x18))();
+  iVar1 = (*(code *)(*gCameraInterface + 0x18))();
   (*(code *)(**(int **)(iVar1 + 4) + 0x14))(&work,param_4);
   Obj_TransformLocalPointToWorld(work.sampleX,work.sampleY,work.sampleZ,
                                  &work.targetX,&work.targetY,work.targetZ,work.model);

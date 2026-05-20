@@ -1221,7 +1221,7 @@ f32 dll_2E_func0B(int obj, int arg) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern undefined4 *lbl_803DCA50;
+extern undefined4 *gCameraInterface;
 extern void *seqFn_800394a0(void);
 extern void objFn_8003acfc(int *obj, int *types, int count, char *out);
 extern void fn_8003A9C0(char *p, int count, s16 a, s16 b);
@@ -1234,7 +1234,7 @@ void fn_80114B1C(int *obj) {
     types = (int *)seqFn_800394a0();
     state = *(int **)((char *)obj + 0xb8);
 
-    (*((void (***)(int))lbl_803DCA50))[18](0);
+    (*((void (***)(int))gCameraInterface))[18](0);
 
     *(u8 *)((char *)state + 0x600) = 0;
     objFn_8003acfc(obj, types, *(u8 *)((char *)state + 0x610), (char *)state + 0x1c);

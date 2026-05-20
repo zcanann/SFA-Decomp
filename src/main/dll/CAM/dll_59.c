@@ -16,7 +16,7 @@ extern double sqrtf();
 extern undefined4 fn_80293E80();
 extern undefined4 sin();
 
-extern undefined4* lbl_803DCA50;
+extern undefined4* gCameraInterface;
 extern undefined4* lbl_803DD538;
 extern f32* lbl_803DD540;
 extern f64 lbl_803E1750;

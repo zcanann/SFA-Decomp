@@ -9,7 +9,7 @@ extern void Matrix_TransformPoint(void *mtx, float x, float y, float z, float *o
 extern void PSVECAdd(const void *a, const void *b, void *ab);
 extern float powfBitEstimate(float x, float y);
 
-extern void **lbl_803DCA50;
+extern void **gCameraInterface;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E5AE8;
@@ -195,8 +195,8 @@ void fn_801EC1AC(int param_1, int param_2)
         vec_args[1] = *(f32 *)(param_2 + 0x49c);
         vec_args[2] = (f32)(s32)*(s16 *)(param_1 + 0x4);
         vec_args[3] = (f32)(s32)*(s16 *)(param_1 + 0x2);
-        (*(void (**)(void *, int, void *))(((void **)*lbl_803DCA50)[0x60 / 4]))(
-            vec_args, 0x10, *lbl_803DCA50);
+        (*(void (**)(void *, int, void *))(((void **)*gCameraInterface)[0x60 / 4]))(
+            vec_args, 0x10, *gCameraInterface);
     }
 
     /* Clamp 0x494 to [-0x47c, 0x47c] */

@@ -10,7 +10,7 @@ extern undefined4 FUN_80286880();
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
 
-extern int *lbl_803DCA50;
+extern int *gCameraInterface;
 extern u8 *lbl_803DD538;
 extern f64 DOUBLE_803e23d0;
 
@@ -196,7 +196,7 @@ checkActiveTarget:
 checkOverrideFlag:
     if ((*(byte *)(param_1 + 0x141) & 2) != 0) {
 sendFollowAction:
-      (*(code *)(*lbl_803DCA50 + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
+      (*(code *)(*gCameraInterface + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
       goto done;
     }
     if ((((buttons & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
@@ -204,7 +204,7 @@ sendFollowAction:
       local_28.x = *(float *)(lbl_803DD538 + 4);
       local_28.z = *(float *)(lbl_803DD538 + 0xc);
       local_28.y = (s16)*(float *)(lbl_803DD538 + 0x10);
-      (*(code *)(*lbl_803DCA50 + 0x1c))(0x44,1,0,0xc,&local_28,0,0xff);
+      (*(code *)(*gCameraInterface + 0x1c))(0x44,1,0,0xc,&local_28,0,0xff);
     }
   }
 done:

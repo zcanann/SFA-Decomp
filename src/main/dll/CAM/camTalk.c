@@ -25,7 +25,7 @@ extern f32 sqrtf(f32 value);
 extern f32 sin(f32);
 extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
 
-extern int *lbl_803DCA50;
+extern int *gCameraInterface;
 extern u8* lbl_803DD540;
 extern u8* lbl_803DD548;
 extern f64 lbl_803E17B8;
@@ -109,7 +109,7 @@ void CameraModeBike_update(short *param_1)
   uint uStack_4c;
   longlong local_48;
   
-  (*(code *)(*lbl_803DCA50 + 0x18))();
+  (*(code *)(*gCameraInterface + 0x18))();
   puVar5 = *(ushort **)(param_1 + 0x52);
   if (puVar5 != (ushort *)0x0) {
     *(float *)(param_1 + 0x5a) = lbl_803E1784;

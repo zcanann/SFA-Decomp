@@ -43,7 +43,7 @@ extern undefined4 FUN_80294c64();
 extern undefined4 FUN_80294d00();
 
 extern u8 framesThisStep;
-extern undefined4* lbl_803DCA50;
+extern undefined4* gCameraInterface;
 extern undefined4* gRomCurveInterface;
 extern undefined4* lbl_803DD548;
 extern f32* lbl_803DD550;
@@ -231,7 +231,7 @@ void CameraModeViewfinder_copyToCurrent(undefined2 *param_1)
 {
   undefined2 *puVar1;
   
-  puVar1 = (undefined2 *)(**(code **)(*lbl_803DCA50 + 0xc))();
+  puVar1 = (undefined2 *)(**(code **)(*gCameraInterface + 0xc))();
   if ((puVar1 != (undefined2 *)0x0) && (param_1 != (undefined2 *)0x0)) {
     *puVar1 = *param_1;
     puVar1[1] = param_1[1];
@@ -426,7 +426,7 @@ void CameraModeDebug_update(short *param_1)
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   }
   else {
-    (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0,0xff);
+    (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
   }
   return;
 }
@@ -571,7 +571,7 @@ void CameraModeStatic_update(short *param_1)
   double dVar7;
   
   if (*(byte *)((int)lbl_803DD558 + 0xf5) != 0) {
-    (**(code **)(*lbl_803DCA50 + 0x1c))(0x42,0,1,0,0,0,0xff);
+    (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
   }
   else {
     iVar3 = *(int *)(param_1 + 0x52);

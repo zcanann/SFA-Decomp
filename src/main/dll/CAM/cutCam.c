@@ -40,7 +40,7 @@ extern int objFn_80296700(int);
 extern undefined4 DAT_803a4ed8;
 extern undefined4 gCamcontrolTargetTypeMask;
 extern undefined4* DAT_803dd6d0;
-extern int *lbl_803DCA50;
+extern int *gCameraInterface;
 extern undefined4 gCamcontrolTargetState;
 extern undefined4 DAT_803de143;
 extern undefined4 DAT_803de144;
@@ -292,7 +292,7 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
     goto check_action_44;
 action_49:
     cameraSetInterpMode(1);
-    (*(code *)(*lbl_803DCA50 + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
+    (*(code *)(*gCameraInterface + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
     goto done;
 check_action_44:
     if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
@@ -302,7 +302,7 @@ check_action_44:
       local_18 = (longlong)(int)cameraMtxVar57[0x23];
       local_24.height = (undefined2)(int)cameraMtxVar57[0x23];
       cameraSetInterpMode(0);
-      (*(code *)(*lbl_803DCA50 + 0x1c))(0x44,1,0,0xc,&local_24,0xf,0xfe);
+      (*(code *)(*gCameraInterface + 0x1c))(0x44,1,0,0xc,&local_24,0xf,0xfe);
     }
     else {
       iVar3 = getCurSeqNo();
@@ -311,7 +311,7 @@ check_action_44:
         local_28.action = 5;
         local_28.enabled = 1;
         local_28.immediate = 1;
-        (*(code *)(*lbl_803DCA50 + 0x1c))(0x43,1,0,4,&local_28,0,0xff);
+        (*(code *)(*gCameraInterface + 0x1c))(0x43,1,0,4,&local_28,0,0xff);
       }
     }
     goto done;

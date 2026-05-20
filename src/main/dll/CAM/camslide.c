@@ -12,7 +12,7 @@ extern f32 fn_80293E80(f32 x);
 extern f32 fn_802966F4(int obj);
 
 extern u8 framesThisStep;
-extern int *lbl_803DCA50;
+extern int *gCameraInterface;
 extern f32 *cameraMtxVar57;
 extern f64 DOUBLE_803e1698;
 extern f32 lbl_803E168C;
@@ -85,7 +85,7 @@ void camslide_update(int param_1,int param_2)
   undefined4 local_50;
   float fStack_4c;
   
-  (**(code **)(*lbl_803DCA50 + 0x38))
+  (**(code **)(*gCameraInterface + 0x38))
             ((double)gCamcontrolModeSettings[0x23],param_1,&local_b0,&local_b4,&local_b8,
              &local_bc,0);
   local_bc = local_b8 * local_b8 + local_b0 * local_b0 + local_b4 * local_b4;

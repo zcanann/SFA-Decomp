@@ -52,18 +52,18 @@ extern u8 lbl_803DD652;
 extern u8 lbl_803DD680;
 extern s32 lbl_803DD698;
 extern u8 lbl_803DD6F8;
-extern TitleMenuControl *lbl_803DCA50;
+extern TitleMenuControl *gCameraInterface;
 extern TitleMenuControl *gTitleMenuLinkInterface;
 extern f64 lbl_803E1D28;
 
 static int TitleMenu_GetMenuId(void)
 {
-  return (*(int (*)(void))((int)lbl_803DCA50->vtable + 0x10))();
+  return (*(int (*)(void))((int)gCameraInterface->vtable + 0x10))();
 }
 
 static void TitleMenu_SetMenuState(int state, int arg)
 {
-  (*(void (*)(int, int))((int)lbl_803DCA50->vtable + 0x60))(state,arg);
+  (*(void (*)(int, int))((int)gCameraInterface->vtable + 0x60))(state,arg);
 }
 
 static int TitleMenu_GetFadeState(void)

@@ -1057,7 +1057,7 @@ void fn_8012DDB8(u32 val)
 extern u8    framesThisStep;
 extern s32   lbl_803DBA5C;
 extern f32   lbl_803DBAA4;
-extern void**lbl_803DCA50;     /* (*vtable)[] dispatcher singleton */
+extern void**gCameraInterface;     /* (*vtable)[] dispatcher singleton */
 extern u8    lbl_803DD75B;
 extern u8    lbl_803DD77F;
 extern s32   lbl_803DD7E0;
@@ -1215,14 +1215,14 @@ void viewFn_80129c74(void)
 
 /* EN v1.0 0x8012DF14  size: 84b  Death sequence trigger: latches the
  * "dead/cleanup" byte at lbl_803DD75B and dispatches vtable slot +0x24
- * on the singleton at lbl_803DCA50 with the worm-death event id 0x94,
+ * on the singleton at gCameraInterface with the worm-death event id 0x94,
  * then runs the standard player-input-disable + alpha-fade-to-FF pair. */
 #pragma scheduling off
 #pragma peephole off
 void timeListFn_8012df14(void)
 {
     lbl_803DD75B = 1;
-    (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(1, 0x94, 1);
+    (*(void(**)(s32, s32, s32))((char*)*gCameraInterface + 0x24))(1, 0x94, 1);
     cutsceneFadeInOut(1);
     setTimeStop(0xff);
 }
@@ -1369,7 +1369,7 @@ void timeListFn_8012be84(void)
         }
         lbl_803DD75B = 0;
         cutsceneFadeInOut(0);
-        (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(3, 0x80, 1);
+        (*(void(**)(s32, s32, s32))((char*)*gCameraInterface + 0x24))(3, 0x80, 1);
         pauseMenuFrameCounter = 0x3c;
         Sfx_PlayFromObject(0, 0x418);
     }
@@ -1377,7 +1377,7 @@ void timeListFn_8012be84(void)
         buttonDisable(0, 0x200);
         lbl_803DD75B = 0;
         cutsceneFadeInOut(0);
-        (*(void(**)(s32, s32, s32))((char*)*lbl_803DCA50 + 0x24))(3, 0x80, 1);
+        (*(void(**)(s32, s32, s32))((char*)*gCameraInterface + 0x24))(3, 0x80, 1);
         pauseMenuFrameCounter = 0x3c;
         Sfx_PlayFromObject(0, 0x419);
     }
@@ -1571,7 +1571,7 @@ void npcTalkFn_8012e880(void)
     Obj_GetPlayerObject();
     if ((s8)lbl_803DD7A8 != 0) {
         if (lbl_803DD8C8 != 0) {
-            (*(void(**)(s32, s32))((char*)*lbl_803DCA50 + 0x5c))(0x41, 1);
+            (*(void(**)(s32, s32))((char*)*gCameraInterface + 0x5c))(0x41, 1);
         }
         lbl_803DD8D0 = 0xff;
     } else {

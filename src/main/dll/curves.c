@@ -4427,7 +4427,7 @@ extern void setRumbleEnabled(u8 value);
 extern void audioSetSoundMode(u8 mode, u8 secondary);
 extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
 extern void **lbl_803DCA68;
-extern void **lbl_803DCA50;
+extern void **gCameraInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -4438,7 +4438,7 @@ void loadSaveSettings(void)
   setRumbleEnabled(*((u8 *)&saveData + 8));
   audioSetSoundMode(*((u8 *)&saveData + 9), 0);
   (*(void (**)(u8))((char *)*lbl_803DCA68 + 0x50))(*((u8 *)&saveData + 3));
-  (*(void (**)(u8))((char *)*lbl_803DCA50 + 0x6c))(*((u8 *)&saveData + 4));
+  (*(void (**)(u8))((char *)*gCameraInterface + 0x6c))(*((u8 *)&saveData + 4));
   audioSetVolumes(*((u8 *)&saveData + 11), 10, 0, 1, 0);
   audioSetVolumes(*((u8 *)&saveData + 10), 10, 1, 0, 0);
   audioSetVolumes(*((u8 *)&saveData + 12), 10, 0, 0, 1);
