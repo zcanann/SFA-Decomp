@@ -2970,11 +2970,61 @@ extern void Camera_DisableViewYOffset(void);
 void fn_8015DAC8(void) { fn_8015DAE8(); }
 void iceball_free(void) { Camera_DisableViewYOffset(); }
 
-extern void chukchuk_setScale(void);
 extern void chukchuk_update(void);
 extern void chukchuk_init(void);
 extern void iceball_update(undefined2 *param_1,int param_2);
-extern void iceball_init(void);
+
+/* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, 0x26b). */
+#pragma peephole off
+void chukchuk_setScale(int obj, int v) {
+    if ((v & 0xff) == 0x80) {
+        Sfx_PlayFromObject(obj, 0x26b);
+    }
+}
+#pragma peephole reset
+
+/* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
+void iceball_init(int *obj) {
+    *(int*)((char*)obj + 0xf4) = 0xb4;
+    ObjHits_DisableObject((int)obj);
+    *(u8*)((char*)obj + 0x36) = 0xff;
+}
+
+/* fn_8016050C (32B). Returns 3 if (s8)obj[0x354] < 1 else 6. */
+#pragma peephole off
+int fn_8016050C(int p1, u8 *obj) {
+    if ((s8)obj[0x354] < 1) return 3;
+    return 6;
+}
+/* fn_80161244 (32B). Returns 5 if (s8)obj[0x354] < 1 else 1. */
+int fn_80161244(int p1, u8 *obj) {
+    if ((s8)obj[0x354] < 1) return 5;
+    return 1;
+}
+#pragma peephole reset
+
+/* fn_8015E00C (56B). Two-tier select: <1 -> 3, else if obj[0x346]!=0 -> 6 else 0. */
+#pragma peephole off
+int fn_8015E00C(int p1, u8 *obj) {
+    if ((s8)obj[0x354] < 1) return 3;
+    if ((s8)obj[0x346] != 0) return 6;
+    return 0;
+}
+#pragma peephole reset
+
+/* fn_801605A8 (44B). Writes float+state fields into obj and copies two halfwords to out. */
+extern f32 lbl_803E2E68;
+#pragma scheduling off
+int fn_801605A8(short *out, u8 *obj) {
+    f32 f = lbl_803E2E68;
+    *(f32*)(obj + 0x280) = f;
+    *(f32*)(obj + 0x284) = f;
+    *(s8 *)(obj + 0x25f) = 1;
+    out[2] = *(s16*)(obj + 0x19e);
+    out[1] = *(s16*)(obj + 0x19c);
+    return 0;
+}
+#pragma scheduling reset
 
 ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
     {
