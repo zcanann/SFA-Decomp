@@ -48,7 +48,7 @@ extern undefined4 DAT_803dcc38;
 extern undefined4 DAT_803dcc40;
 extern undefined4 DAT_803dcc44;
 extern undefined4 DAT_803dcc54;
-extern void *lbl_803DCA54;
+extern void *gObjectTriggerInterface;
 extern void *gMapEventInterface;
 extern u8 lbl_803DBFC8;
 extern u8 lbl_803DBFCC;
@@ -393,15 +393,15 @@ void sh_queenearthwalker_update(void *obj)
     switch (action) {
       case 1:
         target = ObjGroup_FindNearestObject(0xf, obj, NULL);
-        (*(void (***)(void *, int))lbl_803DCA54)[0x15](target, 0x1324);
-        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](1, target, 0x10);
+        (*(void (***)(void *, int))gObjectTriggerInterface)[0x15](target, 0x1324);
+        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](1, target, 0x10);
         *(u8 *)((u8 *)state + 0x2) |= 0xc;
         *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFC8;
         break;
       case 2:
         if (GameBit_Get(0xc2) == 6) {
-          (*(void (***)(void *, int))lbl_803DCA54)[0x15](obj, 0x18f6);
-          (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](6, obj, 1);
+          (*(void (***)(void *, int))gObjectTriggerInterface)[0x15](obj, 0x18f6);
+          (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](6, obj, 1);
           *(u8 *)state = 3;
         } else {
           if (GameBit_Get(0xbf) != 0) {
@@ -413,14 +413,14 @@ void sh_queenearthwalker_update(void *obj)
         break;
       case 3:
       case 4:
-        (*(void (***)(void *, int))lbl_803DCA54)[0x15](obj, 0x18f6);
-        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](6, obj, 1);
+        (*(void (***)(void *, int))gObjectTriggerInterface)[0x15](obj, 0x18f6);
+        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](6, obj, 1);
         *(u8 *)state = 3;
         break;
       case 8:
         target = ObjGroup_FindNearestObject(0xf, obj, NULL);
-        (*(void (***)(void *, int))lbl_803DCA54)[0x15](target, 0x6a4);
-        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](7, target, 8);
+        (*(void (***)(void *, int))gObjectTriggerInterface)[0x15](target, 0x6a4);
+        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](7, target, 8);
         *(u8 *)state = 4;
         *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFE8;
         break;
@@ -450,7 +450,7 @@ void sh_queenearthwalker_update(void *obj)
     if (ObjTrigger_IsSet(obj) != 0 && *(u8 *)(*(int *)((u8 *)obj + 0x78) + 0x4) != 4) {
       eventIndex = (u8)randomGetRange(1, **(u8 **)((u8 *)state + 0x38));
       *(u8 *)((u8 *)state + 0x2) |= 0x2;
-      (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](
+      (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](
           ((u8 *)*(u8 **)((u8 *)state + 0x38))[eventIndex], obj, -1);
     }
   }
@@ -475,7 +475,7 @@ void queenFeedFn_801d44a4(void *obj, void *state)
   switch (*(u8 *)state) {
     case 0:
       if (GameBit_Get(0xbf) != 0) {
-        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](1, obj, -1);
+        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](1, obj, -1);
         *(u8 *)state = 1;
       }
       break;
@@ -504,18 +504,18 @@ void queenFeedFn_801d44a4(void *obj, void *state)
         if (total != 6) {
           *(u8 *)((u8 *)state + 0x2) |= 0x2;
           if (randomGetRange(0, 1) != 0) {
-            (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](3, obj, -1);
+            (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](3, obj, -1);
           } else {
-            (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](4, obj, -1);
+            (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](4, obj, -1);
           }
         } else {
-          (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](5, obj, -1);
+          (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](5, obj, -1);
           *(u8 *)state = 2;
         }
       }
       break;
     case 2:
-      (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](6, obj, -1);
+      (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](6, obj, -1);
       GameBit_Set(0x9e, 1);
       *(u8 *)state = 3;
       break;

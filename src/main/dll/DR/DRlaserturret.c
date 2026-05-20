@@ -29,7 +29,7 @@ extern float fn_80293E80(double);
 extern int playerGetMoney(void *playerObj);
 
 extern void *lbl_803DCA4C;
-extern void *lbl_803DCA54;
+extern void *gObjectTriggerInterface;
 extern void *lbl_803DCA74;
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -102,7 +102,7 @@ int fn_801E6B10(void *obj, void *param2)
             buttonDisable(0, 0x100);
         } else {
             rng = randomGetRange(0, 2);
-            (*(code **)lbl_803DCA54)[0x48 / 4](rng, obj, -1);
+            (*(code **)gObjectTriggerInterface)[0x48 / 4](rng, obj, -1);
             buttonDisable(0, 0x100);
         }
     }
@@ -232,7 +232,7 @@ int objAnimFn_801e6d08(void *obj, void *param2)
     state->bobPhase = (u16)sum;
     if (ObjTrigger_IsSet(obj) != 0) {
         rng = randomGetRange(0, 2);
-        (*(code **)lbl_803DCA54)[0x48 / 4](rng, obj, -1);
+        (*(code **)gObjectTriggerInterface)[0x48 / 4](rng, obj, -1);
     }
     return 0;
 }

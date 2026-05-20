@@ -1702,7 +1702,7 @@ extern f32 lbl_803E5920;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
-extern int* lbl_803DCA54;
+extern int* gObjectTriggerInterface;
 extern int* lbl_803DCA74;
 extern int* lbl_803DCA78;
 extern int* lbl_803DCA7C;
@@ -1969,7 +1969,7 @@ extern int* lbl_803DCA74;
 void ShipBattle_free(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
-    ((void(*)(int*))((void**)*lbl_803DCA54)[9])(state);
+    ((void(*)(int*))((void**)*gObjectTriggerInterface)[9])(state);
     ((void(*)(int*, int, int, int, int))((void**)*lbl_803DCA74)[2])(obj, 0xffff, 0, 0, 0);
     {
         int light = *(int*)((char*)obj + 248);
@@ -2005,7 +2005,7 @@ void shop_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern int* lbl_803DCA54;
+extern int* gObjectTriggerInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -2014,7 +2014,7 @@ void shop_func0B(int* obj, int v, int p3)
     s8* state = *(s8**)((char*)obj + 0xb8);
     state[0] = (s8)v;
     if (v != 0) {
-        ((void(*)(int, int*, int))((void**)*lbl_803DCA54)[18])(p3, obj, -1);
+        ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(p3, obj, -1);
     }
 }
 #pragma peephole reset

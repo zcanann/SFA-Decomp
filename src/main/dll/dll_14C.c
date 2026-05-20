@@ -8,7 +8,7 @@ extern void GameBit_Set(int eventId, int value);
 extern u32  randomGetRange(int min, int max);
 
 extern f32 lbl_803E384C;
-extern void *lbl_803DCA54;
+extern void *gObjectTriggerInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -73,7 +73,7 @@ void dll_FC_update(int param_1)
       }
       *(byte *)(param_1 + 0xaf) |= 0x08;
       pbState[2] = 1;
-      (*(void (***)(byte, int, int))lbl_803DCA54)[0x12](pbState[1], param_1, -1);
+      (*(void (***)(byte, int, int))gObjectTriggerInterface)[0x12](pbState[1], param_1, -1);
     } else {
       *(byte *)(*(int *)(pbState + 4) + 0xaf) |= 0x20;
       *(byte *)(param_1 + 0xaf) &= ~0x08;

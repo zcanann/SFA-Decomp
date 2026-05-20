@@ -36,7 +36,7 @@ extern int randomGetRange(int min, int max);
 extern void bombplantspore_startDriftBurst(void *obj, void *state);
 extern void bombplantspore_updateDrift(void *obj, void *state);
 
-extern void *lbl_803DCA54;
+extern void *gObjectTriggerInterface;
 extern void *lbl_803DCA78;
 extern void *gPathControlInterface;
 extern void *pDll_expgfx;
@@ -270,9 +270,9 @@ void bombplantingspot_update(void *obj) {
     if (ObjTrigger_IsSetById(obj, 0x66c) != 0) {
         gameBitDecrement(0x66c);
         GameBit_Set(*(s16 *)((u8 *)pState + 0x1e), 1);
-        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](1, obj, -1);
+        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](1, obj, -1);
     } else if ((*(u8 *)((u8 *)obj + 0xaf) & 0x4) != 0 && GameBit_Get(0x196) == 0) {
-        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12](0, obj, -1);
+        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](0, obj, -1);
         GameBit_Set(0x196, 1);
     }
 

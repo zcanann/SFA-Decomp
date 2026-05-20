@@ -1778,14 +1778,14 @@ void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 extern void buttonDisable(int p1, int mask);
-extern undefined4* lbl_803DCA54;
+extern undefined4* gObjectTriggerInterface;
 typedef void (*InfoPtUpdateFn)(int, int, int);
 #pragma scheduling off
 #pragma peephole off
 void infopoint_update(int obj) {
     if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
         buttonDisable(0, 0x100);
-        ((InfoPtUpdateFn)(*(u32*)(*lbl_803DCA54 + 0x48)))(0, obj, -1);
+        ((InfoPtUpdateFn)(*(u32*)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
     }
 }
 #pragma peephole reset

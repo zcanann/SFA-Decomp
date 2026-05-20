@@ -20,7 +20,7 @@ extern undefined4 objRenderFn_8003b8f4(double scale);
 extern undefined4 unlockLevel(int param_1,int param_2,int param_3);
 extern undefined4 envFxActFn_800887f8(int param_1);
 
-extern FireObjectInterface **lbl_803DCA54;
+extern FireObjectInterface **gObjectTriggerInterface;
 extern FireEventInterface **gMapEventInterface;
 extern f32 lbl_803E64D8;
 
@@ -190,7 +190,7 @@ void fireObj_hitDetect(void)
 #pragma peephole off
 void fireObj_update(FireObject *obj)
 {
-  (*lbl_803DCA54)->refresh(0,obj,0xffffffff);
+  (*gObjectTriggerInterface)->refresh(0,obj,0xffffffff);
   return;
 }
 #pragma peephole reset

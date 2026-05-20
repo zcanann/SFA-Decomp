@@ -34,7 +34,7 @@ extern uint playerGetStateFlag310(int obj);
 extern void setAButtonIcon(int param_1);
 extern void dll_115_seqFn(void);
 
-extern undefined4* lbl_803DCA54;
+extern undefined4* gObjectTriggerInterface;
 extern undefined4* lbl_803DCAC0;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
@@ -103,8 +103,8 @@ void dll_115_update(int obj)
     state[0]++;
   }
   if ((s8)state[0] == 9) {
-    (*(GroundAnimatorActivateFn *)(*lbl_803DCA54 + 0x54))(obj, *(s16 *)(mapData + 0x3c));
-    (*(GroundAnimatorRefreshFn *)(*lbl_803DCA54 + 0x48))
+    (*(GroundAnimatorActivateFn *)(*gObjectTriggerInterface + 0x54))(obj, *(s16 *)(mapData + 0x3c));
+    (*(GroundAnimatorRefreshFn *)(*gObjectTriggerInterface + 0x48))
         (*(u8 *)(mapData + 0x3a), obj, *(u8 *)(mapData + 0x3b));
   } else if ((((s8)state[0] < 8) || ((s8)state[0] >= 0xb)) &&
              (*(s16 *)(mapData + state[0] * 2 + 0x28) == -1)) {
@@ -112,7 +112,7 @@ void dll_115_update(int obj)
   } else if ((((s8)state[0] < 8) || ((s8)state[0] >= 0xb)) &&
              ((u32)GameBit_Get(*(s16 *)(mapData + state[0] * 2 + 0x28)) != 0) &&
              ((s8)*(u8 *)(mapData + state[0] + 0x40) != -1)) {
-    (*(GroundAnimatorRefreshFn *)(*lbl_803DCA54 + 0x48))
+    (*(GroundAnimatorRefreshFn *)(*gObjectTriggerInterface + 0x48))
         ((s8)*(u8 *)(mapData + state[0] + 0x40), obj, -1);
   }
   {

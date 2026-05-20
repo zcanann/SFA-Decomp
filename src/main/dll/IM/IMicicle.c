@@ -1417,8 +1417,8 @@ extern f32 lbl_803E4428;
 extern void* Obj_GetPlayerObject(void);
 extern int atan2i(int y, int x);
 extern void fn_801A4DB8(u8* obj, u8* data, int extra, u8* sub);
-/* lbl_803DCA54: pointer to a vtable (used for state-machine dispatches). */
-extern u32 *lbl_803DCA54;
+/* gObjectTriggerInterface: pointer to a vtable (used for state-machine dispatches). */
+extern u32 *gObjectTriggerInterface;
 
 /* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
  * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
@@ -1436,13 +1436,13 @@ void slidingdoor_update(u8* obj) {
     if (*(s16*)(data + 0x1c) != 0) {
         u32 mode = (u32)((sub[0] >> 5) & 7);
         if (mode != 0) {
-            (*(void (***)(u8*))lbl_803DCA54)[0x15](obj);
+            (*(void (***)(u8*))gObjectTriggerInterface)[0x15](obj);
         }
     }
     {
         s8 id = (s8)data[0x1e];
         if (id != -1) {
-            (*(void (***)(s8, u8*, int))lbl_803DCA54)[0x12](id, obj, -1);
+            (*(void (***)(s8, u8*, int))gObjectTriggerInterface)[0x12](id, obj, -1);
         }
     }
     *(u32*)(obj + 0xf4) = 1;

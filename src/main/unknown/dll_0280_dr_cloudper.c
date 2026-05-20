@@ -13,7 +13,7 @@
 // - map data byte +0x19 is a cloud selector. When it matches game bit 0x7A9, init toggles
 //   the DAT_803DCAAC world effect hook for the object's model id.
 // - drcloudper_selectActiveCloud writes map data byte +0x19 back to game bit 0x7A9 and
-//   raises the object-trigger callback through DAT_803DCA54.
+//   raises the object-trigger callback through gObjectTriggerInterface.
 //
 // Descriptor slots:
 // - 0: drcloudper_initialise (0x8022142C)

@@ -12,7 +12,7 @@ extern void fn_8001D71C(void *p1, u8 a, u8 b, u8 c, int d);
 extern int randomGetRange(int min, int max);
 
 extern void *lbl_803DCA8C;
-extern void *lbl_803DCA54;
+extern void *gObjectTriggerInterface;
 extern void *lbl_803DCAB8;
 extern int lbl_803DDBB0;
 extern f32 lbl_803DDBA4;
@@ -95,7 +95,7 @@ void DIMbosstonsil_update(void *obj)
         *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)r4_loc + 0x8);
         *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)r4_loc + 0xc);
         *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)r4_loc + 0x10);
-        (*(void (***)(int, void *, int))lbl_803DCA54)[0x12]((s8) * (s8 *)((char *)r4_loc + 0x2e), obj, -1);
+        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12]((s8) * (s8 *)((char *)r4_loc + 0x2e), obj, -1);
         *(int *)((char *)obj + 0xf8) = 1;
         return;
     }

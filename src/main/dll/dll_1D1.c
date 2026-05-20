@@ -2,7 +2,7 @@
 #include "main/dll/dll_1D1.h"
 
 extern undefined4 *pDll_expgfx;
-extern undefined4 *lbl_803DCA54;
+extern undefined4 *gObjectTriggerInterface;
 extern uint GameBit_Get(int eventId);
 extern void objRenderFn_8003b8f4(int obj, float arg);
 extern int ObjGroup_FindNearestObject(int group, int obj, float *outDist);
@@ -157,12 +157,12 @@ void treebird_update(int obj)
   }
   else if (*(u8 *)(state + 6) == 0) {
     if (*(short *)(state + 4) != 0) {
-      (*(code *)(*lbl_803DCA54 + 0x54))();
-      (*(code *)(*lbl_803DCA54 + 0x48))((int)*(short *)(state + 2), obj, 1);
+      (*(code *)(*gObjectTriggerInterface + 0x54))();
+      (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(short *)(state + 2), obj, 1);
       *(u8 *)(state + 6) = 1;
     }
     else if (GameBit_Get((int)*(short *)state) != 0) {
-      (*(code *)(*lbl_803DCA54 + 0x48))((int)*(short *)(state + 2), obj, -1);
+      (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(short *)(state + 2), obj, -1);
       *(u8 *)(state + 6) = 1;
     }
   }

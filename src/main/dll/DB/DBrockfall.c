@@ -432,7 +432,7 @@ void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern undefined4 *lbl_803DCA54;
+extern undefined4 *gObjectTriggerInterface;
 
 /*
  * Function: FEseqobject_init
@@ -462,7 +462,7 @@ void FEseqobject_update(int obj)
     register int self = obj;
     *(short *)self = 0x2000;
     if (GameBit_Get(0x75) == 0) {
-        (*(void (**)(int, int, int))((char *)*(int *)lbl_803DCA54 + 0x48))(0, self, -1);
+        (*(void (**)(int, int, int))((char *)*(int *)gObjectTriggerInterface + 0x48))(0, self, -1);
     }
 }
 #pragma peephole reset

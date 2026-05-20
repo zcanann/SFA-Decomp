@@ -17,7 +17,7 @@ extern float sqrtf(float x);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern void *lbl_803DCA54;
+extern void *gObjectTriggerInterface;
 
 extern f64 lbl_803E3DE0;
 extern f32 lbl_803E3DE8;
@@ -132,12 +132,12 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x409:
-        (**(void(***)(int, int, int))(*(int *)lbl_803DCA54 + 0x48))(0, obj, -1);
+        (**(void(***)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
         break;
     case 0x6be:
         if ((GameBit_Get(*(short *)(state + 0x3a)) != 0) && (*(u8 *)(state + 0x3e) == 0)) {
             *(u8 *)(state + 0x3e) = 1;
-            (**(void(***)(int, int, int))(*(int *)lbl_803DCA54 + 0x48))(0, obj, -1);
+            (**(void(***)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
         }
         break;
     case 0x4bf:

@@ -121,7 +121,7 @@ extern undefined4 lbl_802C2338[];
 extern void (*gDIMbossAnimTable[])(void);
 extern void (*gDIMbossHitDetectAnimTable[])(void);
 extern int lbl_803DCA8C;
-extern undefined4* lbl_803DCA54;
+extern undefined4* gObjectTriggerInterface;
 extern undefined4* lbl_803DCAB8;
 extern void *gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
@@ -602,7 +602,7 @@ void DIMboss_update(DIMbossObject *obj)
       obj->posX = config->spawnX;
       obj->posY = config->spawnY;
       obj->posZ = config->spawnZ;
-      (*(code *)(*lbl_803DCA54 + 0x48))((int)config->animObjId,obj,0xffffffff);
+      (*(code *)(*gObjectTriggerInterface + 0x48))((int)config->animObjId,obj,0xffffffff);
       obj->updateInitialized = 1;
     }
     else {

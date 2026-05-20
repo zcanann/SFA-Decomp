@@ -22,7 +22,7 @@ extern void SH_LevelControl_doEarlyScenes(int param_1, uint *param_2);
 extern void objRenderFn_8003b8f4(f32);
 
 extern undefined4 *gMapEventInterface;
-extern undefined4 *lbl_803DCA54;
+extern undefined4 *gObjectTriggerInterface;
 extern f32 lbl_803E54B4;
 extern f32 lbl_803E54C8;
 extern f32 timeDelta;
@@ -155,7 +155,7 @@ void sh_levelcontrol_update(int param_1)
         buttonDisable(0, 0x1000);
         iVar1 = Obj_GetPlayerObject();
         if ((*(ushort *)(iVar1 + 0xb0) & 0x1000) == 0) {
-          (*(code *)(*lbl_803DCA54 + 0x48))(7, param_1, 0xffffffff);
+          (*(code *)(*gObjectTriggerInterface + 0x48))(7, param_1, 0xffffffff);
           GameBit_Set(0xdff, 1);
         }
       }
@@ -214,7 +214,7 @@ void sh_levelcontrol_update(int param_1)
         buttonDisable(0, 0x1000);
         iVar1 = Obj_GetPlayerObject();
         if ((*(ushort *)(iVar1 + 0xb0) & 0x1000) == 0) {
-          (*(code *)(*lbl_803DCA54 + 0x48))(4, param_1, 0xffffffff);
+          (*(code *)(*gObjectTriggerInterface + 0x48))(4, param_1, 0xffffffff);
           GameBit_Set(0x177, 1);
         }
       }

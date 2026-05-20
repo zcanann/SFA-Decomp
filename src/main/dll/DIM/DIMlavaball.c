@@ -1368,7 +1368,7 @@ extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
 extern int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3);
 
-extern int *lbl_803DCA54;
+extern int *gObjectTriggerInterface;
 #pragma scheduling off
 #pragma peephole off
 void MoonSeedBush_update(int obj) {
@@ -1378,14 +1378,14 @@ void MoonSeedBush_update(int obj) {
     if ((*(u8 *)(state + 1) & 1) == 0) return;
     if (*(s16 *)(def + 0x1C) != 0 && *(u8 *)state != 0) {
         v = *(u8 *)(def + 0x20);
-        (*(int (*)(int, int))(*(int *)(*lbl_803DCA54 + 0x54)))(obj, *(s16 *)(def + 0x1C));
+        (*(int (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x54)))(obj, *(s16 *)(def + 0x1C));
     } else {
         v = -1;
     }
     {
         s32 idx = (s32)(s8)*(u8 *)(def + 0x1E);
         if (idx != -1) {
-            (*(int (*)(int, int, int))(*(int *)(*lbl_803DCA54 + 0x48)))(idx, obj, v);
+            (*(int (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(idx, obj, v);
         }
     }
     *(u8 *)(state + 1) &= ~1;
