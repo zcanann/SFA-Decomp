@@ -1179,7 +1179,7 @@ void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     int state = *(int *)(obj + 0xB8);
     s32 v = visible;
     if (v != 0 && *(u8 *)(state + 3) != 0x63) {
-        objRenderFn_8003b8f4(lbl_803E610C);
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E610C);
     }
 }
 #pragma peephole reset
