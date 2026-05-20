@@ -560,3 +560,21 @@ void cfforcefield_hitDetect(void) {}
 int explodable_getExtraSize(void) { return 0x6e8; }
 int cfforcefield_getExtraSize(void) { return 0x8; }
 int cfforcefield_func08(void) { return 0x0; }
+
+extern void Obj_FreeObject(int obj);
+#pragma scheduling off
+#pragma peephole off
+void explodable_free(int obj, int flag) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    int *p;
+    int i;
+    ObjGroup_RemoveObject(obj, 33);
+    if (flag != 0) return;
+    for (i = 0, p = state; i < 15; i++, p++) {
+        if (*(int *)((char *)p + 0x690) != 0) {
+            Obj_FreeObject(*(int *)((char *)p + 0x690));
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
