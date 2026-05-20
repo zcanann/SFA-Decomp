@@ -531,3 +531,64 @@ ObjectDescriptor gWispBaddieObjDescriptor = {
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8014FF20(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8014FEF8(int p1, int *p2, int p3, int code) {
+    if (code == 0x10) {
+        *(u32 *)((char *)p2 + 0x2e8) |= 0x20;
+    } else {
+        *(u32 *)((char *)p2 + 0x2e8) |= 0x8;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_8014CF7C(int a, int b, int c, int d, f32 e, f32 f);
+#pragma scheduling off
+#pragma peephole off
+void fn_8014FF24(int a, int b) {
+    f32 *p = *(f32 **)((char *)b + 0x29c);
+    fn_8014CF7C(a, b, 0xf, 0, p[3], p[5]);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E2728;
+extern f32 lbl_803E272C;
+extern f32 lbl_803E2730;
+extern f32 lbl_803E2734;
+extern f32 lbl_803E2738;
+extern f32 lbl_803E273C;
+#pragma scheduling off
+#pragma peephole off
+void fn_8014FF58(int unused, char *p) {
+    f32 v1c;
+    *(f32 *)(p + 0x2ac) = lbl_803E2728;
+    *(u32 *)(p + 0x2e4) = 1;
+    *(u32 *)(p + 0x2e4) |= 0x80;
+    *(f32 *)(p + 0x308) = lbl_803E272C;
+    *(f32 *)(p + 0x300) = lbl_803E2730;
+    *(f32 *)(p + 0x304) = lbl_803E2734;
+    *(u8 *)(p + 0x320) = 0;
+    v1c = lbl_803E2738;
+    *(f32 *)(p + 0x314) = v1c;
+    *(u8 *)(p + 0x321) = 0;
+    *(f32 *)(p + 0x318) = lbl_803E273C;
+    *(u8 *)(p + 0x322) = 0;
+    *(f32 *)(p + 0x31c) = v1c;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern char lbl_8031F16C[];
+#pragma scheduling off
+#pragma peephole off
+void fn_801504BC(int obj, int delta) {
+    char *inner = *(char **)(obj + 0xb8);
+    u8 *ptr = *(u8 **)(lbl_8031F16C + (u8)inner[0x33b] * 0x28 + 4);
+    inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
+    inner[0x33e] = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
