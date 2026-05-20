@@ -372,7 +372,7 @@ void SnowBike_modelMtxFn(int obj, f32 *x, f32 *y, f32 *z)
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void mm_free(void *p);
 extern void *gCheckpointInterface;
-extern void *lbl_803DCA68;
+extern void *gGameUIInterface;
 extern int lbl_803DC0BC;
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E5AE8;
@@ -597,8 +597,8 @@ void SnowBike_setType(int obj, int type)
             *(f32 *)(t + 0x4c0) = lbl_803E5AEC;
             *(f32 *)(t + 0x4bc) = lbl_803E5B94;
             if (*(s8 *)(t + 0x421) == 2) {
-                (*(void (**)(int, int))((char *)*(int *)lbl_803DCA68 + 0x58))((int)*(f32 *)(t + 0x4b8), 0x5cd);
-                (*(void (**)(f32))((char *)*(int *)lbl_803DCA68 + 0x68))(lbl_803E5B98);
+                (*(void (**)(int, int))((char *)*(int *)gGameUIInterface + 0x58))((int)*(f32 *)(t + 0x4b8), 0x5cd);
+                (*(void (**)(f32))((char *)*(int *)gGameUIInterface + 0x68))(lbl_803E5B98);
             }
         }
         if (*(s16 *)(obj + 0x46) == 0x72) {
@@ -751,7 +751,7 @@ void SnowBike_free(int obj)
     }
     bit = (*(u8 *)(t + 0x428) >> 5) & 1;
     if (bit != 0) {
-        (*(void (**)(void))((char *)*(int *)lbl_803DCA68 + 0x60))();
+        (*(void (**)(void))((char *)*(int *)gGameUIInterface + 0x60))();
     }
 }
 #pragma scheduling reset

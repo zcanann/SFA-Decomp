@@ -1075,7 +1075,7 @@ void vfpcoreplat_init(int obj, int data) {
 }
 
 extern void GameBit_Set(int eventId, int value);
-extern int *lbl_803DCA68;
+extern int *gGameUIInterface;
 extern u32 lbl_803DDCC8;
 extern f32 lbl_803E6150;
 
@@ -1091,7 +1091,7 @@ void spellStoneUseFn_801fd270(int obj) {
     if (*(u8 *)((char *)state + 4) == 0) {
         if ((s16)cond != 0) {
             *(u8 *)(obj + 0xAF) &= ~0x08;
-            if ((*(int (*)(u32))(*(int *)(*lbl_803DCA68 + 0x20)))(lbl_803DDCC8) != 0) {
+            if ((*(int (*)(u32))(*(int *)(*gGameUIInterface + 0x20)))(lbl_803DDCC8) != 0) {
                 if (Vec_distance((void *)(obj + 0x18), (char *)player + 0x18) < lbl_803E6150) {
                     GameBit_Set(*(s16 *)state, 1);
                     *(u8 *)((char *)state + 4) = 1;

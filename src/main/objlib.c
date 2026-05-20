@@ -109,7 +109,7 @@ typedef struct ObjTriggerInterface {
   int (*isTriggerSet)(int eventId);
 } ObjTriggerInterface;
 
-extern ObjTriggerInterface **lbl_803DCA68;
+extern ObjTriggerInterface **gGameUIInterface;
 extern void *lbl_803DCBC8[2];
 extern void *lbl_803DCBD0[2];
 extern void *lbl_803DCBD8;
@@ -2668,7 +2668,7 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
   flagEnabled = triggerFlags & OBJTRIGGER_ID_ENABLE_FLAG;
   if (flagEnabled != 0) {
     flagBlocked = triggerFlags & OBJTRIGGER_ID_BLOCK_FLAG;
-    if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isTriggerSet((int)param_2), iVar1 != 0)) {
+    if ((flagBlocked == 0) && (iVar1 = (*gGameUIInterface)->isTriggerSet((int)param_2), iVar1 != 0)) {
       iVar1 = objGetAnimState80A(Obj_GetPlayerObject());
       if (iVar1 == OBJTRIGGER_PLAYER_STATE_NONE) {
         buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
@@ -2713,7 +2713,7 @@ undefined4 ObjTrigger_IsSet(int param_1)
     flagEnabled = triggerFlags & OBJTRIGGER_CURRENT_ENABLE_FLAG;
     if (flagEnabled != 0) {
       flagBlocked = triggerFlags & OBJTRIGGER_CURRENT_BLOCK_FLAG;
-      if ((flagBlocked == 0) && (iVar1 = (*lbl_803DCA68)->isCurrentTriggerClear(), iVar1 == 0)) {
+      if ((flagBlocked == 0) && (iVar1 = (*gGameUIInterface)->isCurrentTriggerClear(), iVar1 == 0)) {
         iVar1 = objGetAnimState80A(Obj_GetPlayerObject());
         if ((iVar1 == OBJTRIGGER_PLAYER_STATE_NONE) || (iVar1 == OBJTRIGGER_PLAYER_STATE_CLEAR)) {
           buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);

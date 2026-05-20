@@ -4579,16 +4579,16 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* UIController vtable dispatch via lbl_803DCA68 */
-extern int *lbl_803DCA68;
+/* UIController dispatch through the shared GameUI interface. */
+extern int *gGameUIInterface;
 extern u8 gameTimerIsRunning(void *p, int a, int b);
 extern void hudNumberFn_80014060(void *p);
 extern void gameTimerRun(void *p);
 void UIController_frameStart(void) {
-    (**(void (**)(void))(*lbl_803DCA68 + 0x4))();
+    (**(void (**)(void))(*gGameUIInterface + 0x4))();
 }
 void UIController_frameEnd(void) {
-    (**(void (**)(void))(*lbl_803DCA68 + 0x8))();
+    (**(void (**)(void))(*gGameUIInterface + 0x8))();
 }
 #pragma peephole off
 #pragma scheduling off
@@ -4597,7 +4597,7 @@ void UIController_render(void *p, int a, int b) {
         gameTimerRun(p);
     }
     hudNumberFn_80014060(p);
-    (**(void (**)(void *, int, int))(*lbl_803DCA68 + 0xc))(p, a, b);
+    (**(void (**)(void *, int, int))(*gGameUIInterface + 0xc))(p, a, b);
 }
 #pragma scheduling on
 #pragma peephole on

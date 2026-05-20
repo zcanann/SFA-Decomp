@@ -6,7 +6,7 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void objRenderFn_80041018(int obj);
 
-extern LaserTriggerInterface **lbl_803DCA68;
+extern LaserTriggerInterface **gGameUIInterface;
 extern LaserEventInterface **gMapEventInterface;
 
 int laserObj_getExtraSize(void)
@@ -54,7 +54,7 @@ void laserObj_update(LaserObject *obj)
     switch (mode) {
       case LASEROBJ_MODE_SEQUENCE_A:
         state = obj->state;
-        eventReady = (*lbl_803DCA68)->isEventReady(LASEROBJ_SEQUENCE_A_EVENT);
+        eventReady = (*gGameUIInterface)->isEventReady(LASEROBJ_SEQUENCE_A_EVENT);
         if (eventReady != 0) {
           GameBit_Set((int)state->primarySequenceId,1);
           GameBit_Set((int)state->secondarySequenceId,0);
@@ -64,7 +64,7 @@ void laserObj_update(LaserObject *obj)
         break;
       case LASEROBJ_MODE_SEQUENCE_B:
         state = obj->state;
-        eventReady = (*lbl_803DCA68)->isEventReady(LASEROBJ_SEQUENCE_B_EVENT);
+        eventReady = (*gGameUIInterface)->isEventReady(LASEROBJ_SEQUENCE_B_EVENT);
         if (eventReady != 0) {
           GameBit_Set((int)state->primarySequenceId,1);
           GameBit_Set((int)state->secondarySequenceId,0);

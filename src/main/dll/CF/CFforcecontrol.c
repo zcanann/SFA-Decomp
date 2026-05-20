@@ -868,7 +868,7 @@ void fuelcell_init(int* obj)
 }
 
 extern void disableHeavyFog(void);
-extern int* lbl_803DCA68;
+extern int* gGameUIInterface;
 
 void deathgas_free(int* obj)
 {
@@ -880,7 +880,7 @@ void deathgas_free(int* obj)
         }
     }
     if (((u32)state[12] >> 6) & 1u) {
-        ((void(*)(void))((void**)*lbl_803DCA68)[24])();
+        ((void(*)(void))((void**)*gGameUIInterface)[24])();
     }
 }
 

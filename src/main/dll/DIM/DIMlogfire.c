@@ -836,7 +836,7 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
-extern int *lbl_803DCA68;
+extern int *gGameUIInterface;
 extern u32 GameBit_Get(int id);
 extern int *gObjectTriggerInterface;
 extern int *lbl_803DCA74;
@@ -863,7 +863,7 @@ void ccgasventcontrol_free(int obj) {
     if (t == 3 || t == 4) {
         disableHeavyFog();
     }
-    (*(void (*)(void))(*(int *)(*lbl_803DCA68 + 0x60)))();
+    (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
 }
 void ccgasventcontrol_init(int obj, u8 *p) {
     char *inner = *(char **)(obj + 0xb8);
