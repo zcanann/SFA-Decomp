@@ -4474,7 +4474,7 @@ extern void mikabomb_update(uint param_1,int param_2);
 extern void mikabomb_init();
 extern int mikabomb_func08();
 extern int mikabomb_getExtraSize();
-extern void mikabombshadow_render();
+void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void mikabombshadow_update();
 extern void mikabombshadow_init();
 extern void StaticCamera_init();
@@ -4482,7 +4482,7 @@ extern void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visib
 extern void StaticCamera_free(int x);
 extern void gcbaddieshield_render();
 extern void gcbaddieshield_update();
-extern void gcbaddieshield_init();
+void gcbaddieshield_init(int *obj, void *initData);
 extern void baddieinterestp_update();
 extern void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void animatedobj_free();
@@ -5033,6 +5033,22 @@ void staff_func14(int *obj, f32 *outA, f32 *outB) {
     outB[0] = *(f32*)((char*)state + 0x6c);
     outB[1] = *(f32*)((char*)state + 0x74);
     outB[2] = *(f32*)((char*)state + 0x7c);
+}
+
+void gcbaddieshield_init(int *obj, void *initData) {
+    int v = *(s16*)((char*)initData + 0x1a);
+    *(f32*)((int**)obj)[0xb8/4] = (f32)v;
+}
+
+extern void objShadowFn_80062498(int *obj, int p2, int p3, u8 frames);
+extern u8 framesThisStep;
+void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    s32 v = visible;
+    if (v != 0) {
+        if (*(void**)((char*)(*(int**)((char*)obj + 0x64)) + 0xc) != NULL) {
+            objShadowFn_80062498(obj, 0, 0, framesThisStep);
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
