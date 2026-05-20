@@ -4494,10 +4494,11 @@ void *fn_800DB0E0(int pos, int p4_filter, int p5_filter) {
     int *bestHit;
     s16 gbId;
     f32 minDist;
-    list = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&count);
+    int **tmp = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&count);
     minDist = lbl_803E05F8;
     bestHit = 0;
     i = 0;
+    list = tmp;
     for (; i < count; i++) {
         hit = *list;
         if (hit != 0
