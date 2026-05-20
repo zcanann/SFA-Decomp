@@ -4435,7 +4435,8 @@ void RomCurve_setA4(void *a, void *b) {
 #pragma scheduling on
 #pragma peephole on
 
-/* fn_800DA928: clamp + curveFn call ? 99% match, f1 vs f2 reg alloc */
+/* fn_800DA928: clamp + curveFn call. */
+#pragma scheduling off
 void fn_800DA928(float *p) {
     if (*p <= lbl_803E05F0) {
         *p = lbl_803E05F4;
@@ -4444,6 +4445,7 @@ void fn_800DA928(float *p) {
     }
     curveFn_80010320(p);
 }
+#pragma scheduling reset
 
 /* UIController vtable dispatch via lbl_803DCA68 */
 extern int *lbl_803DCA68;
