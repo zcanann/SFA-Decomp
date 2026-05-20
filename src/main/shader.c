@@ -2318,9 +2318,11 @@ extern int lbl_803DCE68;
 extern f32 lbl_803DEBC8;
 
 void fn_80056B8C(int idx, float* out1, float* out2) {
-	float* p = (float*)(lbl_803DCE68 + (idx << 4));
-	*out1 = p[0] / lbl_803DEBC8;
-	*out2 = ((float*)(lbl_803DCE68 + (idx << 4)))[1] / lbl_803DEBC8;
+	f32 divisor = lbl_803DEBC8;
+	f32* p2;
+	*out1 = *(f32*)(lbl_803DCE68 + (idx << 4)) / divisor;
+	p2 = (f32*)(lbl_803DCE68 + (idx << 4));
+	*out2 = p2[1] / divisor;
 }
 
 /* 52b layer clamp pair. */
