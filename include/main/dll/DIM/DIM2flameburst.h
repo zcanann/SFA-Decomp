@@ -71,5 +71,13 @@ void dimmagicbridge_update(void);
 void dimmagicbridge_init(void);
 void dimmagicbridge_release(void);
 void dimmagicbridge_initialise(void);
+int dll_1CE_getExtraSize(void);
+int dll_1CE_func08(void);
+void dll_1CE_free(void);
+void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_1CE_hitDetect(void);
+void dll_1CE_init(undefined2 *param_1, int param_2);
+void dll_1CE_release(void);
+void dll_1CE_initialise(void);
 
 #endif /* MAIN_DLL_DIM_DIM2FLAMEBURST_H_ */

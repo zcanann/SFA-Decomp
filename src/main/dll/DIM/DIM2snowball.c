@@ -1151,19 +1151,19 @@ void FUN_801b7fd0(undefined2 *param_1,int param_2)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801B6B54(void) {}
-void fn_801B6B88(void) {}
-void fn_801B6B8C(void) {}
-void fn_801B6C24(void) {}
-void fn_801B6C28(void) {}
+void dll_1CF_free(void) {}
+void dll_1CF_hitDetect(void) {}
+void dll_1CF_update(void) {}
+void dll_1CF_release(void) {}
+void dll_1CF_initialise(void) {}
 void dim_tricky_free(void) {}
 void dim_tricky_hitDetect(void) {}
 void dim2conveyor_hitDetect(void) {}
 void dim2conveyor_release(void) {}
 void dim2conveyor_initialise(void) {}
-void fn_801B765C(void) {}
-void fn_801B7D40(void) {}
-void fn_801B7D44(void) {}
+void dll_1D6_hitDetect(void) {}
+void dll_1D6_release(void) {}
+void dll_1D6_initialise(void) {}
 void dim2snowball_free(void) {}
 void dim2snowball_hitDetect(void) {}
 void dim2snowball_release(void) {}
@@ -1176,15 +1176,15 @@ void dim2pathgenerator_initialise(void) {}
 void dll_1DA_free(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801B6B44(void) { return 0x0; }
-int fn_801B6B4C(void) { return 0x0; }
+int dll_1CF_getExtraSize(void) { return 0x0; }
+int dll_1CF_func08(void) { return 0x0; }
 int dim_tricky_getExtraSize(void) { return 0x1; }
 int dim_tricky_func08(void) { return 0x0; }
 int dimtruthhornice_getExtraSize(void) { return 0x8; }
 int dim2conveyor_getExtraSize(void) { return 0x14; }
 int dim2conveyor_func08(void) { return 0x0; }
-int fn_801B75B8(void) { return 0x20; }
-int fn_801B75C0(void) { return 0x0; }
+int dll_1D6_getExtraSize(void) { return 0x20; }
+int dll_1D6_func08(void) { return 0x0; }
 int dim2snowball_getExtraSize(void) { return 0xb0; }
 int dim2snowball_func08(void) { return 0x0; }
 int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
@@ -1207,9 +1207,9 @@ extern f32 lbl_803E4A78;
 extern f32 lbl_803E4AA0;
 extern f32 lbl_803E4AD8;
 #pragma peephole off
-void fn_801B6B58(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A30); }
+void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A30); }
 void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A58); }
-void fn_801B762C(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A78); }
+void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A78); }
 void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4AA0); }
 void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4AD8); }
 #pragma peephole reset

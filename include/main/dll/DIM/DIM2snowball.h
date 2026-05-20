@@ -69,5 +69,19 @@ int dll_1DA_func08(void);
 void dll_1DA_free(void);
 void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_1DA_hitDetect(int obj);
+int dll_1CF_getExtraSize(void);
+int dll_1CF_func08(void);
+void dll_1CF_free(void);
+void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_1CF_hitDetect(void);
+void dll_1CF_update(void);
+void dll_1CF_release(void);
+void dll_1CF_initialise(void);
+int dll_1D6_getExtraSize(void);
+int dll_1D6_func08(void);
+void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_1D6_hitDetect(void);
+void dll_1D6_release(void);
+void dll_1D6_initialise(void);
 
 #endif /* MAIN_DLL_DIM_DIM2SNOWBALL_H_ */

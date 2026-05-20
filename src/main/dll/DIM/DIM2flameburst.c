@@ -1625,9 +1625,9 @@ void dimwooddoor2_free(void) {}
 void dimwooddoor2_hitDetect(void) {}
 void dimwooddoor2_release(void) {}
 void dimwooddoor2_initialise(void) {}
-void fn_801B5A9C(void) {}
-void fn_801B5D40(void) {}
-void fn_801B5D44(void) {}
+void dll_1CE_hitDetect(void) {}
+void dll_1CE_release(void) {}
+void dll_1CE_initialise(void) {}
 void dimmagicbridge_free(void) {}
 void dimmagicbridge_hitDetect(void) {}
 void dimmagicbridge_release(void) {}
@@ -1637,8 +1637,8 @@ void dimmagicbridge_initialise(void) {}
 int explosion_getExtraSize(void) { return 0xa60; }
 int dimwooddoor2_getExtraSize(void) { return 0xc; }
 int dimwooddoor2_func08(void) { return 0x0; }
-int fn_801B5A28(void) { return 0xc; }
-int fn_801B5A30(void) { return 0x0; }
+int dll_1CE_getExtraSize(void) { return 0xc; }
+int dll_1CE_func08(void) { return 0x0; }
 int dimmagicbridge_getExtraSize(void) { return 0x68; }
 int dimmagicbridge_func08(void) { return 0x0; }
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
@@ -1651,7 +1651,7 @@ extern f32 lbl_803E4A18;
 extern f32 lbl_803E4A20;
 #pragma peephole off
 void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E49D0); }
-void fn_801B5A6C(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E49E8); }
+void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E49E8); }
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A18); }
 void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A20); }
 #pragma peephole reset
@@ -1661,7 +1661,7 @@ extern u32 lbl_803DDB78;
 extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
-void fn_801B5A38(void) {
+void dll_1CE_free(void) {
     if (lbl_803DDB78 != 0) {
         Resource_Release(lbl_803DDB78);
     }
@@ -1674,7 +1674,7 @@ void fn_801B5A38(void) {
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
 extern f32 lbl_803E49F0;
 #pragma scheduling off
-void fn_801B5CA8(undefined2 *param_1, int param_2)
+void dll_1CE_init(undefined2 *param_1, int param_2)
 {
     uint uVar1;
     int iVar2;
