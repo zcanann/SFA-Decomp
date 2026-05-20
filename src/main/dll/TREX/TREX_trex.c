@@ -1702,6 +1702,8 @@ extern f32 lbl_803E5920;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
+extern int* lbl_803DCA54;
+extern int* lbl_803DCA74;
 extern int* lbl_803DCA78;
 extern int* lbl_803DCA7C;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
@@ -1867,7 +1869,23 @@ void SB_MiniFire_free(int* obj)
 #pragma peephole reset
 #pragma scheduling reset
 void SB_MiniFire_init(void) {}
-void SB_MiniFire_render(void) {}
+extern void fn_80053ED0(int);
+extern void fn_80053EBC(int);
+extern f32 lbl_803E5928;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) {
+        fn_80053ED0(8);
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5928);
+        fn_80053EBC(8);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_MiniFire_update(void) {}
 #pragma scheduling off
 #pragma peephole off
@@ -1883,7 +1901,19 @@ void SB_SeqDoor_init(int* obj, int* def)
 #pragma peephole reset
 #pragma scheduling reset
 void SB_SeqDoor_update(void) {}
-void SB_ShipGunBroke_render(void) {}
+extern f32 lbl_803E59C0;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_ShipGunBroke_render(int* obj, int p2, int p3, int p4, int p5)
+{
+    int* p = *(int**)((char*)obj + 76);
+    if ((u32)GameBit_Get(*(s16*)((char*)p + 30)) != 0u) {
+        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E59C0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void SB_ShipGunBroke_update(int* obj)
@@ -1895,7 +1925,24 @@ void SB_ShipGunBroke_update(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void ShipBattle_free(void) {}
+extern int* lbl_803DCA74;
+
+#pragma scheduling off
+#pragma peephole off
+void ShipBattle_free(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    ((void(*)(int*))((void**)*lbl_803DCA54)[9])(state);
+    ((void(*)(int*, int, int, int, int))((void**)*lbl_803DCA74)[2])(obj, 0xffff, 0, 0, 0);
+    {
+        int light = *(int*)((char*)obj + 248);
+        if (light != 0) {
+            ModelLightStruct_free((int*)light);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void ShipBattle_init(void) {}
 #pragma scheduling off
 #pragma peephole off
