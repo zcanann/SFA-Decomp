@@ -1484,6 +1484,16 @@ void wmtorch_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
     if (visible == 0) return;
 }
 #pragma peephole reset
+
+extern u32 Resource_Acquire(int id, int mode);
+extern u32 lbl_803DDC80;
+#pragma scheduling off
+#pragma peephole off
+void LaserBeam_initialise(void) {
+    lbl_803DDC80 = Resource_Acquire(0x81, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void lightsource_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
