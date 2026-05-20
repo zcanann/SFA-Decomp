@@ -904,17 +904,17 @@ void SaveSelectScreen_freeTextBuffers(void) {
 #pragma scheduling reset
 
 /* Stubs for as-yet-unmatched functions. */
-void fn_8011A0DC(void) {}
-void fn_8011A280(void) {}
+void saveSelectOpenFile(void) {}
+void saveFileSelect_init(void) {}
 /*
  * --INFO--
  *
- * Function: fn_8011A410
+ * Function: saveSelectSetupMenuItems
  * EN v1.0 Address: 0x8011A410
  * EN v1.0 Size: 216b
  */
 #pragma scheduling off
-void fn_8011A410(void **p) {
+void saveSelectSetupMenuItems(void **p) {
     int i = 0;
     int off1 = 0;
     int off2 = 0;
@@ -939,16 +939,16 @@ void fn_8011A410(void **p) {
     }
 }
 #pragma scheduling reset
-void fn_8011A4E8(void) {}
+void saveSelectGoToChapterSelect(void) {}
 /*
  * --INFO--
  *
- * Function: fn_8011A70C
+ * Function: saveSelectFn_8011a70c
  * EN v1.0 Address: 0x8011A70C
  * EN v1.0 Size: 216b
  */
 #pragma scheduling off
-void fn_8011A70C(void) {
+void saveSelectFn_8011a70c(void) {
     int i;
     int off;
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
@@ -994,8 +994,8 @@ void saveSelectGoToChooseSlot(int arg) {
     saveFileSelect_currentSlotIndex = 0;
     p = &lbl_8031A7BC[0];
 
-    fn_8011A70C();
-    fn_8011A410((void **)p);
+    saveSelectFn_8011a70c();
+    saveSelectSetupMenuItems((void **)p);
 
     for (i = 0; i < 1; i++) {
         if ((&lbl_803DB9FC)[i] == 3) {
@@ -1014,7 +1014,7 @@ void saveSelectGoToChooseSlot(int arg) {
 
     lbl_803DD6CE = 2;
     if (lbl_803DB424 == 0) {
-        fn_8011A4E8();
+        saveSelectGoToChapterSelect();
     }
 }
 #pragma peephole reset
