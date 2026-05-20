@@ -1347,6 +1347,8 @@ extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);
 extern void fn_801923F8(void);
 extern void fn_80193DBC(void *block, int *obj, u8 *vstate, int *desc);
+extern int fn_80065640(void);
+extern void fn_80065574(int a, int b, int c);
 extern u8 lbl_803DDAE8;
 #pragma peephole off
 #pragma scheduling off
@@ -1371,6 +1373,59 @@ void waveanimator_init(int *obj, int *desc)
     }
     ObjGroup_AddObject(obj, 27);
     lbl_803DDAE8++;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void hitanimator_update(int *obj)
+{
+    int *state = ((int**)obj)[0x4C/4];
+    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    void *block;
+    block = mapGetBlock(objPosToMapBlockIdx(
+        (double)*(f32*)((char*)obj + 0xC),
+        (double)*(f32*)((char*)obj + 0x10),
+        (double)*(f32*)((char*)obj + 0x14)));
+    if (block == NULL) {
+        vstate[1] &= ~1;
+        vstate[1] |= 4;
+        return;
+    }
+    vstate[2] = (u8)GameBit_Get(*(s16*)((char*)state + 0x18));
+    if (vstate[3] != vstate[2]) {
+        ((s8*)vstate)[0] = ((s8*)vstate)[0] ^ 1;
+        if (*(u8*)((char*)state + 0x1A) == 1) {
+            vstate[1] |= 1;
+        }
+        if ((*(u8*)((char*)state + 0x1C) & 8) != 0) {
+            vstate[1] |= 2;
+        }
+        if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
+            vstate[1] |= 4;
+        }
+    }
+    vstate[3] = vstate[2];
+    if ((*(u8*)((char*)state + 0x1C) & 8) != 0) {
+        if (fn_80065640() != 0) {
+            vstate[1] |= 2;
+        }
+        if ((vstate[1] & 2) != 0) {
+            if (fn_80065640() == 0) {
+                fn_80065574(*(u8*)((char*)state + 0x1D), *(int*)((char*)obj + 0x30), ((s8*)vstate)[0]);
+                vstate[1] &= ~2;
+            }
+        }
+    }
+    if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
+        if (*(u8*)((char*)state + 0x1B) != 0) {
+            if ((vstate[1] & 4) != 0) {
+                fn_80193DBC(block, obj, vstate, state);
+                vstate[1] &= ~4;
+            }
+        }
+    }
 }
 #pragma scheduling reset
 #pragma peephole reset
