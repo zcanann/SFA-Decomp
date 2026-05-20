@@ -27,15 +27,17 @@ extern undefined4 DAT_803ddb38;
  * 0x10 directly. Tail: if state->_0e & 0x40 (which 0x68 includes), set
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
-void transporter_init(int obj, s8 *params)
+#pragma peephole off
+#pragma scheduling off
+void transporter_init(int obj, u8 *params)
 {
-  s8 *state;
+  u8 *state;
   int id;
 
-  state = *(s8 **)(obj + 0xb8);
+  state = *(u8 **)(obj + 0xb8);
   *(s16 *)(state + 8) = 400;
   *(s8 *)(state + 0xe) = 0;
-  *(s16 *)obj = (s16)((s32)params[0x18] << 8);
+  *(s16 *)obj = (s16)((u16)(params[0x18] << 8));
   *(int *)(obj + 0xf4) = 0;
   *(void **)(obj + 0xbc) = (void *)Transporter_SeqFn;
   *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
@@ -101,6 +103,8 @@ void transporter_init(int obj, s8 *params)
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
   }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
