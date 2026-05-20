@@ -12,5 +12,7 @@ void FUN_801cc600(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_801cc868(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
+int dll_19E_getExtraSize(void);
+int dll_19E_func08(void);
 
 #endif /* MAIN_DLL_SHRINE1CE_H_ */

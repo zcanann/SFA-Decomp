@@ -21,7 +21,7 @@ extern f32 lbl_803E51DC;
 /*
  * --INFO--
  *
- * Function: fn_801CCFB4
+ * Function: dll_19E_free
  * EN v1.0 Address: 0x801CCFB4
  * EN v1.0 Size: 84b
  * EN v1.1 Address: 0x801CCFE4
@@ -32,7 +32,7 @@ extern f32 lbl_803E51DC;
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_801CCFB4(int param_1)
+void dll_19E_free(int param_1)
 {
   (*(code *)(*(int *)lbl_803DCA7C + 0x18))(param_1);
   (*(code *)(*(int *)lbl_803DCA78 + 0x18))(param_1);
@@ -42,7 +42,7 @@ void fn_801CCFB4(int param_1)
 /*
  * --INFO--
  *
- * Function: fn_801CD008
+ * Function: dll_19E_render
  * EN v1.0 Address: 0x801CD008
  * EN v1.0 Size: 588b
  * EN v1.1 Address: 0x801CD0F8
@@ -52,7 +52,7 @@ void fn_801CCFB4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801CD008(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+void dll_19E_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                  undefined4 param_5, char param_6)
 {
   int state;
@@ -125,4 +125,4 @@ end:
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801CD254(void) {}
+void dll_19E_hitDetect(void) {}

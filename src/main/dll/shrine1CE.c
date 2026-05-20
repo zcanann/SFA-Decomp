@@ -410,8 +410,8 @@ int fn_801CC72C(void) { return 0x8; }
 int fn_801CC734(void) { return 0x0; }
 int fn_801CC998(void) { return 0x38; }
 int fn_801CC9A0(void) { return 0x0; }
-int fn_801CCFA4(void) { return 0x10; }
-int fn_801CCFAC(void) { return 0x1; }
+int dll_19E_getExtraSize(void) { return 0x10; }
+int dll_19E_func08(void) { return 0x1; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E51B0;

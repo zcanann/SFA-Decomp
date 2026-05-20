@@ -8,5 +8,7 @@ void FUN_801cd258(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  int param_9);
 void FUN_801cd428(undefined4 param_1);
 void FUN_801cd484(int param_1);
+void dll_19E_release(void);
+void dll_19E_initialise(void);
 
 #endif /* MAIN_DLL_DLL_1D0_H_ */

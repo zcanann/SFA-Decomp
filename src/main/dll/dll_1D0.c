@@ -193,5 +193,5 @@ void FUN_801cd484(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801CD7D4(void) {}
-void fn_801CD7D8(void) {}
+void dll_19E_release(void) {}
+void dll_19E_initialise(void) {}
