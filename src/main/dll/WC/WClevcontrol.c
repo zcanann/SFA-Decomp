@@ -794,7 +794,28 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
 void fn_801EE668(void) {}
 void SB_CloudRunner_SeqFn(void) {}
 void fn_801EEB50(void) {}
-void SB_CloudRunner_free(void) {}
+extern int *lbl_803DCA78;
+extern void textureFree(void *tex);
+extern void Resource_Release(void *handle);
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudRunner_free(int *obj) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    ((void (*)(int *))((void **)*lbl_803DCA78)[6])(obj);
+    if (*(void **)((char *)state + 0x18) != NULL) {
+        textureFree(*(void **)((char *)state + 0x18));
+        *(void **)((char *)state + 0x18) = NULL;
+    }
+    if (*(void **)((char *)state + 0x1c) != NULL) {
+        textureFree(*(void **)((char *)state + 0x1c));
+        *(void **)((char *)state + 0x1c) = NULL;
+    }
+    Resource_Release(*(void **)((char *)state + 0x14));
+    *(void **)((char *)state + 0x14) = NULL;
+    ObjGroup_RemoveObject(obj, 10);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_CloudRunner_init(void) {}
 void SB_CloudRunner_render(void) {}
 void SB_CloudRunner_update(void) {}
