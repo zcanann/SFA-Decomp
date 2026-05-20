@@ -188,29 +188,29 @@ extern volatile s32 lbl_803DB700;
 extern u32 lbl_803DD004;
 extern u8 lbl_803DD019;
 extern u8 lbl_803DD01A;
-extern GXColor lbl_803DDC9C;
-extern u8 lbl_803DDC88;
+extern GXColor lbl_803DD01C;
+extern u8 lbl_803DD008;
 extern u8 lbl_803DD009;
 extern u8 lbl_803DD00A;
 extern u8 lbl_803DD00B;
-extern u32 lbl_803DDCB0;
-extern u32 lbl_803DDCAC;
-extern u32 lbl_803DDCA8;
+extern u32 lbl_803DD030;
+extern u32 lbl_803DD02C;
+extern u32 lbl_803DD028;
 extern u8 lbl_803DD059;
-extern u32 lbl_803DDCC8;
+extern u32 lbl_803DD048;
 extern u32 lbl_803DD04C;
-extern u32 lbl_803DDCD0;
+extern u32 lbl_803DD050;
 extern u32 lbl_803DD054;
 extern u8 lbl_803DD011;
-extern f32 lbl_803DDCA0;
-extern f32 lbl_803DDCA4;
+extern f32 lbl_803DD020;
+extern f32 lbl_803DD024;
 extern f32 lbl_803DD034;
-extern f32 lbl_803DDCB8;
+extern f32 lbl_803DD038;
 extern undefined4* lbl_803DCA58;
 extern undefined4* pDll_expgfx;
 extern undefined4* gWaterfxInterface;
 extern undefined4 lbl_803DCFF0;
-extern undefined4 lbl_803DCFF8;
+extern u8 lbl_803DCFF8;
 extern u8 lbl_803DCFF9;
 extern u16 lbl_803DD000;
 extern u16 lbl_803DD002;
@@ -615,8 +615,8 @@ void mapInitFn_8006fccc(void)
     extern u8 lbl_80391DC0[];
     extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
     extern u32 fn_80054ED0(int);
-    extern u32 lbl_803DDC74;
-    extern u8 lbl_803DDC78, lbl_803DCFF9, lbl_803DCFFA;
+    extern u32 lbl_803DCFF4;
+    extern u8 lbl_803DCFF8, lbl_803DCFF9, lbl_803DCFFA;
     int i;
     u8* base = lbl_80391DC0;
     u8* a = base + 0x1020;
@@ -652,8 +652,8 @@ void mapInitFn_8006fccc(void)
     *(f32*)(base + 0x0C) = lbl_803DFAE4;
     lbl_803DCFFA = 0;
     lbl_803DCFF9 = 0;
-    lbl_803DDC78 = 0;
-    lbl_803DDC74 = 0;
+    lbl_803DCFF8 = 0;
+    lbl_803DCFF4 = 0;
 }
 #pragma scheduling reset
 
@@ -976,8 +976,8 @@ void setHudOpacity(u8 param_1)
 #pragma scheduling off
 void _gxSetFogParams(void)
 {
-    GXColor c = lbl_803DDC9C;
-    GXSetFog(GX_FOG_PERSP_EXP, lbl_803DDCA4, lbl_803DDCA0, lbl_803DDCB8, lbl_803DD034, c);
+    GXColor c = lbl_803DD01C;
+    GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
 #pragma scheduling reset
 
@@ -1056,9 +1056,9 @@ void fogFn_80070404(f32 a, f32 b)
 #pragma scheduling off
 void getColor803dd01c(u8* param_1)
 {
-    param_1[0] = lbl_803DDC9C.r;
-    param_1[1] = lbl_803DDC9C.g;
-    param_1[2] = lbl_803DDC9C.b;
+    param_1[0] = lbl_803DD01C.r;
+    param_1[1] = lbl_803DD01C.g;
+    param_1[2] = lbl_803DD01C.b;
 }
 #pragma scheduling reset
 
@@ -1102,7 +1102,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEE4;
     extern u32 lbl_803DB6F4, lbl_803DB6F8;
-    extern u32 lbl_803DD01C;
+    extern GXColor lbl_803DD01C;
     extern u8 lbl_803DB678;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
@@ -1158,7 +1158,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
     GXSetTexCoordGen2(3, 1, 4, 0x21, 0, 0x7d);
 
     if (isHeavyFogEnabled() != 0) {
-        *(u32*)&k_color = lbl_803DD01C;
+        *(u32*)&k_color = *(u32*)&lbl_803DD01C;
         ((u8*)&lbl_803DB6F4)[0] = ((u8*)&lbl_803DD01C)[0];
         ((u8*)&lbl_803DB6F4)[1] = ((u8*)&lbl_803DD01C)[1];
         ((u8*)&lbl_803DB6F4)[2] = ((u8*)&lbl_803DD01C)[2];
@@ -4557,14 +4557,14 @@ void gxDebugTextureFn_80078c1c(void)
 #pragma scheduling off
 void fn_80078DFC(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0, 10, 0xF);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 0, 5, 7);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0xF, 0, 10, 0xF);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 0, 5, 7);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
@@ -4586,14 +4586,14 @@ void fn_80078DFC(void)
 #pragma scheduling off
 void fn_80078ED0(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0xF, 10, 4, 0xF);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 5, 2, 7);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0xF, 10, 4, 0xF);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 5, 2, 7);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
@@ -4615,19 +4615,19 @@ void fn_80078ED0(void)
 #pragma scheduling off
 void textRenderSetup(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 4, 0xF, 0xF, 0xF);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 2, 4, 7);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 4, 0xF, 0xF, 0xF);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 2, 4, 7);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DD02C, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
-    lbl_803DDCAC += 1;
+    lbl_803DD02C += 1;
     lbl_803DD00A += 1;
-    lbl_803DDCA8 += 1;
+    lbl_803DD028 += 1;
 }
 #pragma scheduling reset
 
@@ -4647,14 +4647,14 @@ void textRenderSetup(void)
 #pragma scheduling off
 void fn_800790AC(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 4);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 7, 7, 2);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0xF, 0xF, 0xF, 4);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 7, 7, 2);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
@@ -4676,14 +4676,14 @@ void fn_800790AC(void)
 #pragma scheduling off
 void fn_80079180(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 10);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 7, 7, 5);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0xF, 0xF, 0xF, 10);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 7, 7, 5);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
@@ -4705,14 +4705,14 @@ void fn_80079180(void)
 #pragma scheduling off
 void gxTexColorFn_80079254(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, 0xFF, 0xFF, 4);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0, 4, 0xF);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 0, 2, 7);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0xF, 0, 4, 0xF);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 0, 2, 7);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
@@ -4734,29 +4734,29 @@ void gxTexColorFn_80079254(void)
 #pragma scheduling off
 void fn_80079328(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 8);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 7, 7, 4);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0xF, 0xF, 0xF, 8);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 7, 7, 4);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
-    lbl_803DDCA8 += 1;
-    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0, 8, 3, 0xF);
-    GXSetTevAlphaIn(lbl_803DDCB0, 0, 4, 1, 7);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
-    lbl_803DDCB0 += 1;
+    lbl_803DD028 += 1;
+    GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0, 8, 3, 0xF);
+    GXSetTevAlphaIn(lbl_803DD030, 0, 4, 1, 7);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DD02C, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
-    lbl_803DDCAC += 1;
+    lbl_803DD02C += 1;
     lbl_803DD00A += 1;
-    lbl_803DDCA8 += 1;
+    lbl_803DD028 += 1;
 }
 #pragma scheduling reset
 
@@ -4776,18 +4776,18 @@ void fn_80079328(void)
 #pragma scheduling off
 void gxTextureFn_800794e0(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0xF, 0xF, 0xF, 4);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 4, 2, 7);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0xF, 0xF, 0xF, 4);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 4, 2, 7);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DD02C, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
-    lbl_803DDCA8 += 1;
-    lbl_803DDCAC += 1;
+    lbl_803DD028 += 1;
+    lbl_803DD02C += 1;
     lbl_803DD00A += 1;
 }
 #pragma scheduling reset
@@ -4808,18 +4808,18 @@ void gxTextureFn_800794e0(void)
 #pragma scheduling off
 void textRenderSetupFn_800795e8(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 0xFF);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0xF, 8, 4, 0xF);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 4, 2, 7);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0xF, 8, 4, 0xF);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 4, 2, 7);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DD02C, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
-    lbl_803DDCA8 += 1;
-    lbl_803DDCAC += 1;
+    lbl_803DD028 += 1;
+    lbl_803DD02C += 1;
     lbl_803DD00A += 1;
 }
 #pragma scheduling reset
@@ -4840,18 +4840,18 @@ void textRenderSetupFn_800795e8(void)
 #pragma scheduling off
 void geomDrawFn_800796f0(void)
 {
-    GXSetTevOrder(lbl_803DDCB0, lbl_803DDCAC, lbl_803DDCA8, 4);
-    GXSetTevDirect(lbl_803DDCB0);
-    GXSetTevColorIn(lbl_803DDCB0, 0xF, 8, 10, 0xF);
-    GXSetTevAlphaIn(lbl_803DDCB0, 7, 4, 5, 7);
-    GXSetTevSwapMode(lbl_803DDCB0, 0, 0);
-    GXSetTevColorOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DDCB0, 0, 0, 0, 1, 0);
-    GXSetTexCoordGen2(lbl_803DDCAC, 1, 4, 0x3C, 0, 0x7D);
-    lbl_803DDCB0 += 1;
+    GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 4);
+    GXSetTevDirect(lbl_803DD030);
+    GXSetTevColorIn(lbl_803DD030, 0xF, 8, 10, 0xF);
+    GXSetTevAlphaIn(lbl_803DD030, 7, 4, 5, 7);
+    GXSetTevSwapMode(lbl_803DD030, 0, 0);
+    GXSetTevColorOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DD030, 0, 0, 0, 1, 0);
+    GXSetTexCoordGen2(lbl_803DD02C, 1, 4, 0x3C, 0, 0x7D);
+    lbl_803DD030 += 1;
     lbl_803DD00B += 1;
-    lbl_803DDCA8 += 1;
-    lbl_803DDCAC += 1;
+    lbl_803DD028 += 1;
+    lbl_803DD02C += 1;
     lbl_803DD00A += 1;
     lbl_803DD009 += 1;
 }
@@ -4933,13 +4933,13 @@ void textRenderSetupFn_80079804(void)
  */
 void textureSetupFn_800799c0(void)
 {
-    lbl_803DDC88 = 0;
+    lbl_803DD008 = 0;
     lbl_803DD009 = 0;
     lbl_803DD00A = 0;
     lbl_803DD00B = 0;
-    lbl_803DDCB0 = 0;
-    lbl_803DDCAC = 0;
-    lbl_803DDCA8 = 0;
+    lbl_803DD030 = 0;
+    lbl_803DD02C = 0;
+    lbl_803DD028 = 0;
 }
 
 /*
@@ -5911,7 +5911,7 @@ void fn_8007BD8C(int handle1, int handle2)
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DEF64;
     extern u32 lbl_803DB690, lbl_803DB694, lbl_803DB698;
-    extern u32 lbl_803DD01C;
+    extern GXColor lbl_803DD01C;
     extern Mtx lbl_80396820;
     extern f32 lbl_8030EA10[3][3];
     extern void* gSHthorntailAnimationInterface;
@@ -6157,7 +6157,7 @@ void gxTextureSetupFn_8007cf7c(void)
     extern f32 lbl_803DEF40, lbl_803DEF88;
     extern u8 lbl_803DEF81[8];
     extern u32 lbl_803DB67C;
-    extern u32 lbl_803DD01C;
+    extern GXColor lbl_803DD01C;
     extern u8 lbl_803DB678;
     extern f32 gSynthDelayedActionWord0;
     extern void* gSHthorntailAnimationInterface;
@@ -6487,9 +6487,9 @@ void saveFn_8007d960(u32 param_1)
         return;
     }
     lbl_803DD04C = 0;
-    lbl_803DDCC8 = 0;
+    lbl_803DD048 = 0;
     lbl_803DD054 = 0;
-    lbl_803DDCD0 = 0;
+    lbl_803DD050 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
