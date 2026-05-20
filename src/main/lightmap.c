@@ -2696,6 +2696,39 @@ void FUN_8005e1d8(undefined4 param_1,undefined4 param_2,int param_3)
 extern u32 lbl_8037E0C0[];
 extern s32 lbl_803DCE30;
 extern void sceneDrawTransparentPolys(void);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern int Camera_GetViewMatrix(void);
+extern void PSMTXMultVec(int m, f32 *in, f32 *out);
+#pragma scheduling off
+#pragma peephole off
+void renderShadowType3(u8 *obj, u32 b, s32 offset) {
+    f32 stk[3];
+    s32 t, v;
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    if (*(int *)(obj + 0x30) != 0) {
+        stk[0] = *(f32 *)(obj + 0x18);
+        stk[1] = *(f32 *)(obj + 0x1c);
+        stk[2] = *(f32 *)(obj + 0x20);
+    } else {
+        stk[0] = *(f32 *)(obj + 0x18) - playerMapOffsetX;
+        stk[1] = *(f32 *)(obj + 0x1c);
+        stk[2] = *(f32 *)(obj + 0x20) - playerMapOffsetZ;
+    }
+    PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
+    t = (s32)-stk[2] + offset;
+    if (t < 0) v = 0;
+    else if (t > 0x7ffffff) v = 0x7ffffff;
+    else v = t;
+    lbl_8037E0C0[lbl_803DCE30 * 4]     = (u32)obj;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_8005DE94(u32 a, u32 b, f32 *p) {
