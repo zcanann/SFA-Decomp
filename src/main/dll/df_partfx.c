@@ -1666,7 +1666,9 @@ int Dummy04_func03_ret_m1(void) { return -0x1; }
 
 /* sda21 writers. */
 extern u8 lbl_803DD42F;
+#pragma peephole off
 void setScreenTransitionPause(u32 pause) { lbl_803DD42F = (u8)pause; }
+#pragma peephole reset
 
 /* fcmp-eq-to-bool. */
 extern f32 lbl_803E0558;
@@ -1691,6 +1693,95 @@ void player_clearXZvel(int *obj, int *state) {
 extern u32 lbl_8039CA98[];
 extern void *lbl_803DD41C;
 extern void *lbl_803DD418;
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
+extern int* lbl_803DCA9C;
+extern f32 lbl_803E0588;
+extern f32 lbl_803E0564;
+extern f32 lbl_803E0560;
+extern f32 lbl_803DD424;
+extern f32 lbl_803DD428;
+extern u8 lbl_803DD42C;
+extern u8 lbl_803DD42E;
+
+#pragma scheduling off
+#pragma peephole off
+void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable)
+{
+    int mask = 1 << bit;
+    int flags = *(int*)((char*)state + 788);
+    if ((flags & mask) != 0) {
+        *(int*)((char*)state + 788) = flags & ~mask;
+        Sfx_PlayFromObject(obj, (u16)sfxTable[idx]);
+    }
+}
+
+void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable)
+{
+    int mask = 1 << bit;
+    int flags = *(int*)((char*)state + 788);
+    if ((flags & mask) != 0) {
+        *(int*)((char*)state + 788) = flags & ~mask;
+        Sfx_PlayFromObject(obj, (u16)sfxTable[idx]);
+    }
+}
+
+void player_render2(int* obj, int* state, f32 f1, f32 f2)
+{
+    f32 cur = *(f32*)((char*)state + 680);
+    f32 new_ = f2 * f1 + cur;
+    if (new_ > lbl_803E0588) {
+        new_ = lbl_803E0588;
+    }
+    {
+        f32 delta = new_ - cur;
+        if (delta > lbl_803E0570) {
+            *(s16*)obj = *(s16*)obj + (s32)(*(f32*)((char*)state + 768) * delta);
+        }
+    }
+    *(f32*)((char*)state + 680) = new_;
+}
+
+void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
+{
+    f32 cur = *(f32*)((char*)state + 684);
+    f32 new_ = f2 * f1 + cur;
+    if (new_ > lbl_803E0588) {
+        new_ = lbl_803E0588;
+    }
+    {
+        f32 delta = new_ - cur;
+        if (delta > lbl_803E0570) {
+            f32 scale = *(f32*)((char*)state + 756);
+            *(f32*)((char*)mtx + 12) = scale * delta + *(f32*)((char*)mtx + 12);
+            *(f32*)((char*)mtx + 16) = scale * delta + *(f32*)((char*)mtx + 16);
+            *(f32*)((char*)mtx + 20) = scale * delta + *(f32*)((char*)mtx + 20);
+        }
+    }
+    *(f32*)((char*)state + 684) = new_;
+}
+
+void player_findCurve(int* obj, int* state, int p3)
+{
+    int tmp = p3;
+    *(int**)((char*)state + 828) = (int*)((int(*)(int*, int, int, f32, f32, f32))
+        ((void**)*lbl_803DCA9C)[5])(&tmp, 1,
+            (s8)*(s8*)((char*)state + 836),
+            *(f32*)((char*)obj + 12),
+            *(f32*)((char*)obj + 16),
+            *(f32*)((char*)obj + 20));
+}
+
+void screenTransitionFn_800d7b04(int duration, int type)
+{
+    lbl_803DD420 = lbl_803E0558;
+    lbl_803DD424 = lbl_803E0564 / (f32)duration;
+    lbl_803DD428 = lbl_803E0560;
+    lbl_803DD42C = (u8)type;
+    lbl_803DD42E = 5;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void Checkpoint_initialise(void) {
