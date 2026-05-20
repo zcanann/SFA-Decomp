@@ -484,8 +484,9 @@ void SnowBike_free(int obj)
 
     t = *(int *)(obj + 0xb8);
     ObjGroup_RemoveObject(obj, 0xa);
+    i = 0;
     p = (char *)t;
-    for (i = 0; i < 9; i++) {
+    for (; i < 9; i++) {
         mm_free(*(void **)(p + 0x4c8));
         p += 8;
     }
