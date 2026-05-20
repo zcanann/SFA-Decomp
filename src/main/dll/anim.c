@@ -4182,6 +4182,10 @@ void chuka_hitDetect(int obj) {
     if ((*(s16 *)((char *)light + 6) & 0x40) == 0) return;
     inner[1] = 0;
 }
+void dbstealerworm_hitDetect(int obj) {
+    int *inner = *(int **)(obj + 0xb8);
+    (*(void (*)(int, int *, int *))(*(int *)(*lbl_803DCA8C + 0xc)))(obj, inner, lbl_803AD0F4);
+}
 void GCRobotBlast_init(int obj, s8 *p) {
     char *inner = *(char **)(obj + 0xb8);
     *(int *)inner = (s8)p[0x19];

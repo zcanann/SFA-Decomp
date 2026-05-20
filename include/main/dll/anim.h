@@ -195,7 +195,7 @@ int dbstealerworm_getExtraSize(void);
 int dbstealerworm_func08(void);
 void dbstealerworm_free(void);
 void dbstealerworm_render(void);
-void dbstealerworm_hitDetect(void);
+void dbstealerworm_hitDetect(int obj);
 void dbstealerworm_update(void);
 void dbstealerworm_init(void);
 void dbstealerworm_release(void);
