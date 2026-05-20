@@ -2408,7 +2408,9 @@ extern void defStartFn_8005972c(void* p1, void* p2, int idx, int flag);
 extern void mm_free(void* p);
 
 #pragma scheduling off
-void fn_80059A50(int idx) {
+#pragma peephole off
+void fn_80059A50(int param_1) {
+	int idx = param_1;
 	void* p = lbl_80386468[idx];
 	if (p != 0) {
 		defStartFn_8005972c(p, lbl_803822C8 + idx * 0x8C, idx, 1);
@@ -2416,6 +2418,7 @@ void fn_80059A50(int idx) {
 		lbl_80386468[idx] = 0;
 	}
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* 96b camera-pos gated load. */

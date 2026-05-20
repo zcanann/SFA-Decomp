@@ -1890,8 +1890,9 @@ void SB_FireBall_update(void) {}
 #pragma peephole off
 void SB_KyteCage_free(int* obj)
 {
-    if (**(void***)((char*)obj + 0xb8) != NULL) {
-        ObjLink_DetachChild(obj);
+    void *child = **(void***)((char*)obj + 0xb8);
+    if (child != NULL) {
+        ObjLink_DetachChild(obj, child);
     }
 }
 #pragma peephole reset

@@ -24,8 +24,10 @@ typedef struct DimSnowballDef {
 } DimSnowballDef;
 
 #pragma scheduling off
-void dimsnowball_init(register DimSnowballObject *obj, DimSnowballDef *def)
+#pragma peephole off
+void dimsnowball_init(DimSnowballObject *param_1, DimSnowballDef *def)
 {
+    DimSnowballObject *obj = param_1;
     DimSnowballState *state;
     register u32 flags;
 
@@ -43,6 +45,7 @@ void dimsnowball_init(register DimSnowballObject *obj, DimSnowballDef *def)
     asm { clrlwi flags, flags, 16 }
     obj->flags = flags;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 void dimsnowball_release(void)
