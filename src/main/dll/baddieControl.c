@@ -3230,6 +3230,33 @@ void CameraModeArwing_copyToCurrent(void *p1, u32 kind)
     *(f32*)((char*)lbl_803A43C0 + 0x3C) = ((f32*)p1)[0];
     *(f32*)((char*)lbl_803A43C0 + 0x40) = ((f32*)p1)[1];
 }
+
+extern u8 lbl_803DD5D2;
+extern u8 lbl_803DD5D1;
+extern u8 lbl_803DD5D0;
+extern f32 lbl_803E1BE0;
+extern f32 lbl_803E1BE4;
+extern f32 lbl_803DB9D8;
+extern void Movie_SetVolumeFade(int p1, int p2);
+extern void Music_Trigger(int id, int mode);
+void CameraModeTitle_moveCam(u8 newCam)
+{
+    if (newCam == lbl_803DD5D2) return;
+    if (lbl_803DD5D1 == 4) {
+        if (lbl_803E1BE0 == lbl_803DB9D8) {
+            Music_Trigger(190, 1);
+            Music_Trigger(193, 1);
+        } else {
+            u8 *save = getSaveFileStruct();
+            Movie_SetVolumeFade(0, 1000);
+            audioSetVolumes(save[10], 1000, 1, 0, 0);
+        }
+    }
+    lbl_803DD5D1 = lbl_803DD5D2;
+    lbl_803DD5D2 = newCam;
+    lbl_803DB9D8 = lbl_803E1BE4;
+    lbl_803DD5D0 = 1;
+}
 #pragma scheduling reset
 #pragma peephole reset
 
