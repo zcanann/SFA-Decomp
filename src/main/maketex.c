@@ -1242,3 +1242,44 @@ extern u32 lbl_803DB71C;
 void seqClearTaskTexts(void) { u32 v = -0x1; lbl_803DB714 = v; lbl_803DB71C = v; }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_803DD0F8;
+extern f32 lbl_803DD0F4;
+extern f32 lbl_803DD0F0;
+extern f32 lbl_803DD0EC;
+extern s16 lbl_803DD0E8;
+extern s16 lbl_803DD0E6;
+extern s16 lbl_803DD0E4;
+extern f32 lbl_803DD0E0;
+extern s16 lbl_8030ECF8[];
+
+/* fn_80080150 (28b): float-not-equal predicate */
+int fn_80080150(f32 *p) { return lbl_803DEFA0 != *p; }
+
+/* fn_8008020C (40b): record positional + flags */
+#pragma peephole off
+#pragma scheduling off
+void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
+{
+    lbl_803DD0F8 = 1;
+    lbl_803DD0F4 = x;
+    lbl_803DD0F0 = y;
+    lbl_803DD0EC = z;
+    lbl_803DD0E8 = a;
+    lbl_803DD0E6 = b;
+    lbl_803DD0E4 = c;
+    lbl_803DD0E0 = w;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* fn_80080360 (36b): write u16 indexed by signed byte * 2 */
+#pragma peephole off
+#pragma scheduling off
+int fn_80080360(int p, int val)
+{
+    lbl_8030ECF8[(s8)*(u8 *)(p + 0x57)] = (s16)val;
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
