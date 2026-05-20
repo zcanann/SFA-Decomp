@@ -4026,6 +4026,61 @@ void fn_80069958(void **out) {
 #pragma peephole reset
 #pragma scheduling reset
 
+/* mapBlockFn_80060678 — return top byte of obj[0x10]
+ * (clrrwi 24 + srwi 24). */
+#pragma scheduling off
+#pragma peephole off
+u32 mapBlockFn_80060678(int *obj)
+{
+    register u32 r;
+    register u32 t;
+    register int *o = obj;
+    asm {
+        lwz    t, 0x10 (o)
+        clrrwi t, t, 24
+        srwi   r, t, 24
+    }
+    return r;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* mapGetBlocks — write a fixed table base and an sbss u32 into two
+ * out-pointers. */
+extern u8 lbl_803822B4[];
+extern u32 lbl_803DCE9C;
+#pragma scheduling off
+#pragma peephole off
+void mapGetBlocks(void **outPtr, u32 *outVal)
+{
+    register void **p1 = outPtr;
+    register u32 *p2 = outVal;
+    register u32 t;
+    register u32 scratch;
+    asm {
+        lis  scratch, lbl_803822B4@ha
+        addi t, scratch, lbl_803822B4@l
+        stw  t, 0x0 (p1)
+        lwz  t, lbl_803DCE9C (r2)
+        stw  t, 0x0 (p2)
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* playerShadowFn_80062a30 — if obj[0x64] non-NULL, clear bits 0x2020 in
+ * its u32 at +0x30. */
+#pragma scheduling off
+#pragma peephole off
+void playerShadowFn_80062a30(int *obj)
+{
+    int *p = *(int**)((char*)obj + 0x64);
+    if (p == NULL) return;
+    *(u32*)((char*)p + 0x30) &= ~0x2020;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* fn_80060668 — extract bits 8-15 of obj[0x10] as a byte
  * (target uses rlwinm 8,15 + srwi 16). */
 #pragma scheduling off
