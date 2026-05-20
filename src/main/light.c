@@ -1092,6 +1092,34 @@ void vfpdraghead_free(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void ObjHits_SetHitVolumeSlot(int obj, int slot, int p3, int p4);
+extern void *Resource_Acquire(int id, int mode);
+extern f32 lbl_803E6138;
+
+#pragma scheduling off
+#pragma peephole off
+void vfpdraghead_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    if (*(s16 *)(obj + 0x46) == 0x3c5) {
+        *(s16 *)(state + 6) = 0x78;
+        *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) * lbl_803E6138;
+        ObjHits_SetHitVolumeSlot(obj, 0xE, 1, 0);
+    } else {
+        *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
+    }
+    *(s16 *)state = *(s16 *)(data + 0x1e);
+    *(s16 *)(state + 2) = *(s16 *)(data + 0x20);
+    *(s16 *)(state + 4) = 0x64;
+    *(u8 *)(state + 0xB) = (u8)*(s16 *)(data + 0x1a);
+    if (*(s8 *)(data + 0x19) == 1) {
+        *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) * lbl_803E6138;
+    }
+    *(u16 *)(obj + 0xB0) |= 0x6000;
+    lbl_803DDCC0 = (u32)Resource_Acquire(0xA5, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void fn_801FC6F4(int);
 #pragma scheduling off
 #pragma peephole off
