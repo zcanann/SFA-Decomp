@@ -8,7 +8,7 @@ extern int objPosToMapBlockIdx(double x, double y, double z);
 extern int fn_801EC870(int p1, int p2);
 extern void hitDetectFn_800658a4(int p1, f32 x, f32 y, f32 z, f32 *out, int flag);
 
-extern undefined4 *lbl_803DCA6C;
+extern undefined4 *gCheckpointInterface;
 extern undefined4 *gPathControlInterface;
 extern f32 timeDelta;
 
@@ -83,13 +83,13 @@ int fn_801EA854(int obj, int state)
         fade = lbl_803E5AE8;
     }
 
-    iVar4 = (*(int (**)(int, int, u8, int, int, f32))(*lbl_803DCA6C + 0x18))(
+    iVar4 = (*(int (**)(int, int, u8, int, int, f32))(*gCheckpointInterface + 0x18))(
         state, state + DRSHACKLE_COLLIDER_OFFSET, *(u8 *)(state + DRSHACKLE_COLLIDER_MODE_OFFSET),
         1, 0, fade);
 
-    (*(void (**)(int, int))(*lbl_803DCA6C + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
+    (*(void (**)(int, int))(*gCheckpointInterface + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
 
-    (*(void (**)(int))(*lbl_803DCA6C + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
+    (*(void (**)(int))(*gCheckpointInterface + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
 
     if (iVar4 != 0) {
         *(f32 *)(state + DRSHACKLE_SWING_BLEND_OFFSET) = lbl_803E5AE8;
@@ -175,12 +175,12 @@ int fn_801EAAC0(int obj, int state)
             *(f32 *)(state + 0x498) = zero;
         }
         *(f32 *)(state + DRSHACKLE_LAST_PITCH_OFFSET) = -fn_801EA678(obj, state);
-        iVar4 = (*(int (**)(int, int, f32, u8, int, int))(*lbl_803DCA6C + 0x18))(
+        iVar4 = (*(int (**)(int, int, f32, u8, int, int))(*gCheckpointInterface + 0x18))(
             state, state + DRSHACKLE_COLLIDER_OFFSET,
             -*(f32 *)(state + DRSHACKLE_LAST_PITCH_OFFSET) * timeDelta,
             *(u8 *)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1, 0);
-        (*(void (**)(int, int))(*lbl_803DCA6C + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
-        (*(void (**)(int))(*lbl_803DCA6C + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
+        (*(void (**)(int, int))(*gCheckpointInterface + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
+        (*(void (**)(int))(*gCheckpointInterface + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
         if (iVar4 != 0) {
             return 0;
         }
@@ -217,11 +217,11 @@ int fn_801EAAC0(int obj, int state)
     }
 
     /* iVar3 <= -1 path */
-    iVar4 = (*(int (**)(int, int, f32, u8, int, int))(*lbl_803DCA6C + 0x18))(
+    iVar4 = (*(int (**)(int, int, f32, u8, int, int))(*gCheckpointInterface + 0x18))(
         state, state + DRSHACKLE_COLLIDER_OFFSET, timeDelta * fn_801EA678(obj, state),
         *(u8 *)(state + DRSHACKLE_COLLIDER_MODE_OFFSET), 1, 0);
-    (*(void (**)(int, int))(*lbl_803DCA6C + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
-    (*(void (**)(int))(*lbl_803DCA6C + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
+    (*(void (**)(int, int))(*gCheckpointInterface + 0x14))(obj, state + DRSHACKLE_COLLIDER_OFFSET);
+    (*(void (**)(int))(*gCheckpointInterface + 0x2c))(state + DRSHACKLE_COLLIDER_OFFSET);
     if (iVar4 != 0) {
         return 0;
     }

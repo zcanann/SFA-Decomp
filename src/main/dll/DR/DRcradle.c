@@ -371,7 +371,7 @@ void SnowBike_modelMtxFn(int obj, f32 *x, f32 *y, f32 *z)
 
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void mm_free(void *p);
-extern void *lbl_803DCA6C;
+extern void *gCheckpointInterface;
 extern void *lbl_803DCA68;
 extern int lbl_803DC0BC;
 extern f32 sqrtf(f32 x);
@@ -430,7 +430,7 @@ void SnowBike_func15(int obj)
             *(f32 *)(obj + 0x14) = *(f32 *)((char *)found + 0x10);
             *(s16 *)(obj + 0x0) = (s16)((*(u8 *)((char *)found + 0x29)) << 8);
         }
-        (*(void (**)(int, int, int))((char *)*(int *)lbl_803DCA6C + 0x10))(obj, t + 0x28, 0);
+        (*(void (**)(int, int, int))((char *)*(int *)gCheckpointInterface + 0x10))(obj, t + 0x28, 0);
         *(f32 *)(t + 0xc) = *(f32 *)(obj + 0xc);
         *(f32 *)(t + 0x10) = *(f32 *)(obj + 0x10);
         *(f32 *)(t + 0x14) = *(f32 *)(obj + 0x14);
@@ -698,7 +698,7 @@ u32 SnowBike_setScale(int obj)
 #pragma scheduling off
 void fn_801EC9BC(int obj)
 {
-    (*(void (**)(int))((char *)*(int *)lbl_803DCA6C + 0x34))(*(int *)(obj + 0xb8) + 0x28);
+    (*(void (**)(int))((char *)*(int *)gCheckpointInterface + 0x34))(*(int *)(obj + 0xb8) + 0x28);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -714,7 +714,7 @@ void fn_801EC9BC(int obj)
 #pragma scheduling off
 u32 fn_801EC9F4(int obj)
 {
-    int result = (*(int (**)(int))((char *)*(int *)lbl_803DCA6C + 0x34))(*(int *)(obj + 0xb8) + 0x28);
+    int result = (*(int (**)(int))((char *)*(int *)gCheckpointInterface + 0x34))(*(int *)(obj + 0xb8) + 0x28);
     if (result == 3) {
         if (lbl_803DC0BC == -1) {
             return 1;
