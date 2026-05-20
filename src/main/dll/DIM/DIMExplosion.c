@@ -610,7 +610,7 @@ void dimbarrier_init(int obj, s8 *p) {
 int fn_801B17F4(int obj, int delta) {
     s8 *inner = *(s8 **)(obj + 0xb8);
     inner[0] = (s8)(inner[0] - delta);
-    return inner[0] == 0 ? 1 : 0;
+    return inner[0] <= 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
