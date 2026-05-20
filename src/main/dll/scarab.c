@@ -3012,6 +3012,16 @@ int fn_8015E00C(int p1, u8 *obj) {
 }
 #pragma peephole reset
 
+/* fn_80160D88 (60B). Vtable dispatch through lbl_803DCA8C with extra args (obj->b8, lbl_803AC5E8). */
+extern u8 lbl_803AC5E8[];
+extern undefined4* lbl_803DCA8C;
+#pragma scheduling off
+void fn_80160D88(int* obj) {
+    void* a = *(void**)((char*)obj + 0xb8);
+    (*(code*)((char*)(*lbl_803DCA8C) + 0xc))(obj, a, lbl_803AC5E8);
+}
+#pragma scheduling reset
+
 /* fn_80160D48 (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
 extern f32 lbl_803E2E8C;
 #pragma peephole off
