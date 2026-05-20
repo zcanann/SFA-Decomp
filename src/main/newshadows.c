@@ -2936,3 +2936,31 @@ void drawReflectionTexture(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Copy the frame buffer into both reflection textures, optionally preload. */
+extern u32 lbl_803DCFDC;
+extern void GXInvalidateTexAll(void);
+extern void GXPixModeSync(void);
+#pragma scheduling off
+#pragma peephole off
+void updateReflectionTextures(void)
+{
+    GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
+    GXSetTexCopyDst(0x140, 0xf0, 4, 1);
+    GXCopyTex((char *)lbl_803DCF7C + 0x60, 0);
+    GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
+    GXSetTexCopyDst(0x140, 0xf0, 0x11, 1);
+    GXCopyTex((char *)lbl_803DCFDC + 0x60, 0);
+    if (*(u8 *)(lbl_803DCF7C + 0x48) != 0) {
+        GXPreLoadEntireTexture((char *)lbl_803DCF7C + 0x20, *(void **)(lbl_803DCF7C + 0x40));
+    }
+    if (*(u8 *)(lbl_803DCFDC + 0x48) != 0) {
+        GXPreLoadEntireTexture((char *)lbl_803DCFDC + 0x20, *(void **)(lbl_803DCFDC + 0x40));
+    }
+    if (*(u8 *)(lbl_803DCF7C + 0x48) == 0 || *(u8 *)(lbl_803DCFDC + 0x48) == 0) {
+        GXInvalidateTexAll();
+    }
+    GXPixModeSync();
+}
+#pragma peephole reset
+#pragma scheduling reset
