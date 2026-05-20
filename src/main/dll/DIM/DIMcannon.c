@@ -2048,6 +2048,7 @@ int fn_801B0784(int obj, int delta) {
 #pragma peephole reset
 
 extern void Music_Trigger(int id, int p2);
+extern int getSaveGameLoadStatus(void);
 #pragma scheduling off
 #pragma peephole off
 void link_levcontrol_free(int obj) {
@@ -2055,6 +2056,18 @@ void link_levcontrol_free(int obj) {
         case 0x45: Music_Trigger(0xda, 0); break;
         case 0x48:
         case 0x49: Music_Trigger(0x36, 0); break;
+    }
+}
+void link_levcontrol_init(int *obj) {
+    s8 *inner = *(s8 **)((char *)obj + 0xb8);
+    inner[0] = -1;
+    *(int *)(inner + 4) = -1;
+    *(int *)(inner + 8) = -1;
+    *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+    if (getSaveGameLoadStatus() != 0) {
+        *(int *)((char *)obj + 0xf4) = 2;
+    } else {
+        *(int *)((char *)obj + 0xf4) = 1;
     }
 }
 #pragma peephole reset
