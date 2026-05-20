@@ -23,6 +23,9 @@ extern undefined4 FUN_801ce340();
 extern int FUN_801ce424();
 extern undefined4 FUN_801ce638();
 
+extern int* getTrickyObject(void);
+extern void Sfx_StopObjectChannel(int *p1, int channel);
+
 extern ObjHitReactEntry DAT_80327400;
 extern ObjHitReactEntry DAT_80327414;
 extern undefined4 DAT_80327468;
@@ -124,6 +127,23 @@ int nw_tricky_getExtraSize(void)
 {
   return 8;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801CF78C
+ * EN v1.0 Address: 0x801CF78C
+ * EN v1.0 Size: 44b
+ */
+#pragma peephole off
+#pragma scheduling off
+int fn_801CF78C(void)
+{
+    Sfx_StopObjectChannel(getTrickyObject(), 16);
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
