@@ -2989,6 +2989,19 @@ extern u8 lbl_803DCC0C;
 extern u8 lbl_803DCC0D;
 extern void objRenderModel(int *obj, int **table);
 extern void objRenderFn_80041018(int *obj);
+#pragma scheduling off
+#pragma peephole off
+void fn_8003A9C0(char *p, int count, s16 a, s16 b) {
+    int i;
+    if (count <= 0) return;
+    for (i = 0; i < count; i++) {
+        *(s16 *)(p + 0x14) = a;
+        *(s16 *)(p + 0x44) = b;
+        p += 0x60;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
 extern void Sfx_PlayFromObjectChannel(int obj, int ch, int sfxId);
 extern f32 lbl_803DE9C8;
