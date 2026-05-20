@@ -2937,8 +2937,8 @@ void chukchuk_initialise(void) {}
 void iceball_hitDetect(void) {}
 void iceball_release(void) {}
 void iceball_initialise(void) {}
-void fn_80160CB4(void) {}
-void fn_801610A0(void) {}
+void dll_CB_func0B_nop(void) {}
+void dll_CB_release_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_8015EF58(void) { return 0x41c; }
@@ -2948,12 +2948,12 @@ int chukchuk_func08(void) { return 0x0; }
 int iceball_getExtraSize(void) { return 0x2; }
 int iceball_func08(void) { return 0x0; }
 int fn_8016052C(void) { return 0x6; }
-int fn_80160CC4(void) { return 0x410; }
-int fn_80160CCC(void) { return 0x14b; }
+int dll_CB_getExtraSize_ret_1040(void) { return 0x410; }
+int dll_CB_func08_ret_331(void) { return 0x14b; }
 
 /* Pattern wrappers. */
 s16 fn_8015EF4C(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
-s16 fn_80160CB8(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+s16 dll_CB_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E2E30;
@@ -3046,20 +3046,20 @@ int fn_801603E8(int* obj, u8* obj2) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_80160D88 (60B). Vtable dispatch through lbl_803DCA8C with extra args (obj->b8, lbl_803AC5E8). */
+/* dll_CB_hitDetect (60B). Vtable dispatch through lbl_803DCA8C with extra args (obj->b8, lbl_803AC5E8). */
 extern u8 lbl_803AC5E8[];
 extern undefined4* lbl_803DCA8C;
 #pragma scheduling off
-void fn_80160D88(int* obj) {
+void dll_CB_hitDetect(int* obj) {
     void* a = *(void**)((char*)obj + 0xb8);
     (*(code*)((char*)(*lbl_803DCA8C) + 0xc))(obj, a, lbl_803AC5E8);
 }
 #pragma scheduling reset
 
-/* fn_80160D48 (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
+/* dll_CB_render (64B). Render variant: if visible && !obj->f4 then objRenderFn(lbl_803E2E8C). */
 extern f32 lbl_803E2E8C;
 #pragma peephole off
-void fn_80160D48(int* obj, int p2, int p3, int p4, int p5, s8 visible) {
+void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible) {
     s32 v = visible;
     if (v != 0) {
         switch (*(int*)((char*)obj + 0xf4)) {
