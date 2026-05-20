@@ -24,7 +24,7 @@
  * EN slot map with reference-only names by slot index:
  * - slot 00: 0x802098B0 textblockObj_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x802098AC textblockObj_release stub=blr ref=release (stub)
- * - slot 03: 0x80209880 textblockObj_initUnsupported ref=init
+ * - slot 03: 0x80209880 textblockObj_init ref=init
  * - slot 04: 0x80209854 textblockObj_updateUnsupported ref=update
  * - slot 05: 0x80209850 textblockObj_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8020984C textblockObj_render stub=blr ref=render (stub)
