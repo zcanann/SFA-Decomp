@@ -7,7 +7,7 @@
 
 extern undefined4 ABS();
 extern int Camera_GetViewMatrix(void);
-extern int fn_80008B4C(int param_1);
+extern int renderModeSetOrGet(int mode);
 extern int FUN_80006714();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068d4();
@@ -1078,7 +1078,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   PSMTXCopy((void *)viewMatrix, lbl_803967C0);
   fn_8007D670();
   _gxSetFogParams();
-  if ((short)fn_80008B4C(-1) == 1) {
+  if ((short)renderModeSetOrGet(-1) == 1) {
     return;
   }
   cameraSlot = Camera_GetCurrentViewSlot();
@@ -1646,7 +1646,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
   f32 frameStep;
   f32 frameValue;
 
-  renderMode = fn_80008B4C(EXPGFX_INVALID_SLOT_TYPE);
+  renderMode = renderModeSetOrGet(EXPGFX_INVALID_SLOT_TYPE);
   if ((short)renderMode != 1) {
     frameValue = lbl_803DD25C + (frameStep = timeDelta);
     lbl_803DD25C = frameValue;
