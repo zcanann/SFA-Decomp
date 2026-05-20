@@ -1191,6 +1191,19 @@ int SB_Galleon_setScale(int obj) {
 }
 #pragma peephole reset
 
+/* SB_ShipHead_init: add to group, alloc msg queue, set state + bias positions. */
+extern void ObjMsg_AllocQueue(int obj, int n);
+extern f32 lbl_803E5830;
+extern f32 lbl_803E5838;
+void SB_ShipHead_init(int obj) {
+    f32 *p = (f32*)((int**)obj)[0xb8/4];
+    ObjGroup_AddObject(obj, 3);
+    ObjMsg_AllocQueue(obj, 10);
+    *(s8*)((char*)p + 4) = 4;
+    p[0xc/4] = p[0xc/4] + lbl_803E5830;
+    p[0x8/4] = p[0x8/4] + lbl_803E5838;
+}
+
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
 #pragma peephole off

@@ -65,7 +65,7 @@ int SB_ShipHead_func08(void);
 void SB_ShipHead_free(int obj);
 void SB_ShipHead_render(void);
 void SB_ShipHead_update(void);
-void SB_ShipHead_init(void);
+void SB_ShipHead_init(int obj);
 
 int SB_ShipMast_getExtraSize(void);
 int SB_ShipMast_func08(void);
