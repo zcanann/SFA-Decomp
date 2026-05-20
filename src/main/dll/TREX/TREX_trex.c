@@ -1805,9 +1805,36 @@ void ShipBattle_update(void) {}
 void shop_buyItem(void) {}
 void shop_free(int obj) {}
 void shop_func0B(int obj) {}
-void shop_func15(int obj) {}
-void shop_func16(int obj) {}
-void shop_func17(int obj) {}
+/* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
+ * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */
+#pragma scheduling off
+#pragma peephole off
+void shop_func15(int* obj, int v)
+{
+    s8* b = *(s8**)((char*)obj + 0xb8);
+    b[2] = 0;
+    b[3] = 0;
+    b[4] = (s8)v;
+}
+/* EN v1.0 0x801E607C  size: 40b  Increment-and-store: obj->_b8[2] += p3,
+ * obj->_b8[3] += p2. */
+void shop_func16(int* obj, int p2, int p3)
+{
+    s8* b = *(s8**)((char*)obj + 0xb8);
+    b[2] = (s8)(b[2] + p3);
+    b[3] = (s8)(b[3] + p2);
+}
+/* EN v1.0 0x801E6050  size: 44b  Triple s8 fan-out: write obj->_b8[2/3/4]
+ * (sign-extended) into *out_b3, *out_b2, *out_b4. */
+void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
+{
+    s8* b = *(s8**)((char*)obj + 0xb8);
+    *out_b2 = b[2];
+    *out_b3 = b[3];
+    *out_b4 = b[4];
+}
+#pragma peephole reset
+#pragma scheduling reset
 /* shop_getItem* helpers — table lookup */
 extern u8 lbl_80327FD0[];
 #pragma peephole off
@@ -1843,7 +1870,40 @@ u8 shop_getItemMinPrice(int p, int idx)
 #pragma scheduling reset
 #pragma peephole reset
 void shop_init(int obj, int objDef) {}
-int  shop_isItemAvailable(void) { return 0; }
-int  shop_isItemBought(void) { return 0; }
+/* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
+ * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
+ * unset.  (i.e. open by default, gated when slot != -1.) */
+extern void* Obj_GetPlayerObject(void);
+extern int GameBit_Get(int);
+#pragma scheduling off
+#pragma peephole off
+int shop_isItemAvailable(int p, int idx)
+{
+    s16 slot;
+    int result;
+    Obj_GetPlayerObject();
+    result = 0;
+    slot = *(s16 *)(lbl_80327FD0 + idx * 0xc + 0x6);
+    if (slot == -1 || (u32)GameBit_Get(slot) != 0u) {
+        result = 1;
+    }
+    return result;
+}
+/* EN v1.0 0x801E62F0  size: 104b  Returns 1 when shop item's "bought"
+ * GameBit (slot at lbl_80327FD0[idx*12 + 8]) is set; else 0. */
+int shop_isItemBought(int p, int idx)
+{
+    s16 slot;
+    int result;
+    Obj_GetPlayerObject();
+    result = 0;
+    slot = *(s16 *)(lbl_80327FD0 + idx * 0xc + 0x8);
+    if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
+        result = 1;
+    }
+    return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void shop_setStateField1(void) {}
 void shop_update(int obj) {}

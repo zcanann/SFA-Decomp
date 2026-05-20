@@ -76,8 +76,8 @@ int shop_func08(void);
 int shop_getExtraSize(void);
 s32 shop_setScale(int *obj);
 void shop_func0B(int obj);
-void shop_func15(int obj);
-void shop_func16(int obj);
-void shop_func17(int obj);
+void shop_func15(int* obj, int v);
+void shop_func16(int* obj, int p2, int p3);
+void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4);
 
 #endif /* MAIN_DLL_TREX_TREX_TREX_H_ */
