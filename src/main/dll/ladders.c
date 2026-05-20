@@ -563,6 +563,41 @@ void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
 void cannonclaw_init(s16 *dst, void* src) { s8 v = *((s8*)src + 0x28); s16 t = v << 8; *dst = t; }
 #pragma peephole reset
 
+/* fn_801638BC: scan all type-0x31 objects, pick the closest one whose
+ * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
+ * the supplied position vector). Returns NULL if no match. */
+extern void* ObjGroup_GetObjects(int type, int* outCount);
+extern f32 vec3f_distanceSquared(f32* p1, f32* p2);
+extern f32 lbl_803E2F58;
+#pragma scheduling off
+void* fn_801638BC(f32* p_pos)
+{
+    int count;
+    void** list;
+    f32 bestDist;
+    void* bestObj;
+    int i;
+    bestDist = lbl_803E2F58;
+    bestObj = NULL;
+    list = (void**)ObjGroup_GetObjects(0x31, &count);
+    i = 0;
+    while (i < count) {
+        if (*(s16*)((char*)*list + 0x46) == 0x3fb) {
+            if (((u8*)(*(u8**)((char*)*list + 0xb8)))[0x278] > 1) {
+                f32 d = vec3f_distanceSquared((f32*)((char*)*list + 0x18), p_pos);
+                if (d < bestDist) {
+                    bestDist = d;
+                    bestObj = *list;
+                }
+            }
+        }
+        list = (void**)((char*)list + 4);
+        i++;
+    }
+    return bestObj;
+}
+#pragma scheduling reset
+
 /* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
  * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
 #pragma scheduling off
