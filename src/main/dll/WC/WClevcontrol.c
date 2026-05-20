@@ -792,8 +792,37 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
 /* Stubs to align function set with v1.0 asm. Bodies are large state
  * machines / inits and need real reverse-engineering. */
 void fn_801EE668(void) {}
-void SB_CloudRunner_SeqFn(void) {}
 void fn_801EEB50(void) {}
+
+extern int Obj_GetPlayerObject(void);
+extern void SB_CloudRunner_onSeqFree(void);
+extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
+extern void fn_80295918(int player, int p2, f32 p3);
+#pragma scheduling off
+#pragma peephole off
+int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    int player = Obj_GetPlayerObject();
+    int i;
+    *(void (**)(void))((char *)setupData + 0xE8) = SB_CloudRunner_onSeqFree;
+    *(f32 *)((char *)state + 0x4C) = *(f32 *)(obj + 0xC);
+    *(f32 *)((char *)state + 0x50) = *(f32 *)(obj + 0x10);
+    *(f32 *)((char *)state + 0x54) = *(f32 *)(obj + 0x14);
+    *(s16 *)((char *)state + 0x2C) = (s16)(*(s16 *)obj - 0x4000);
+    *(s16 *)((char *)state + 0x2E) = *(s16 *)(obj + 0x4);
+    for (i = 0; i < setupData[0x8B]; i++) {
+        if (setupData[0x81 + i] == 1) {
+            objHitDetectFn_80062e84(player, *(int *)((char *)state + 0x10), 0);
+            fn_80295918(player, 5, lbl_803E5C70);
+            *(u8 *)((char *)state + 0x6E) = 1;
+        }
+    }
+    setupData[0x56] = 0;
+    *(s16 *)((char *)obj + 6) &= ~0x4000;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern int *gExpgfxInterface;
 extern void textureFree(void *tex);
 extern void Resource_Release(void *handle);
