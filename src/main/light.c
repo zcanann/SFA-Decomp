@@ -1114,3 +1114,34 @@ void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 #pragma peephole reset
 #pragma scheduling reset
 
+extern u32 GameBit_Get(int);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void fn_801FC378(int obj);
+
+typedef struct {
+    s16 gameBitId;
+    u8 activated:1;
+    u8 _state2_lo:7;
+} VfpDoorSwitchState;
+
+#pragma scheduling off
+#pragma peephole off
+void vfpdoorswitch_update(int obj)
+{
+    VfpDoorSwitchState *state;
+    if (*(s16 *)(obj + 0x46) != 0x3e7) {
+        fn_801FC378(obj);
+        return;
+    }
+    state = *(VfpDoorSwitchState **)(obj + 0xB8);
+    if (state->activated != 0) return;
+    if (GameBit_Get(state->gameBitId) == 0) return;
+    Sfx_PlayFromObject(0, 0x109);
+    Sfx_PlayFromObject(obj, 0x10d);
+    Sfx_PlayFromObject(obj, 0x494);
+    Obj_SetActiveModelIndex(obj, 1);
+    state->activated = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
