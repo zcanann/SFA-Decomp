@@ -36,7 +36,7 @@ void FUN_80193ba8(int param_1);
 
 int waveanimator_getExtraSize(void);
 int waveanimator_func08(void);
-void waveanimator_free(void);
+void waveanimator_free(int *obj);
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void waveanimator_hitDetect(void);
 void waveanimator_update(void);
