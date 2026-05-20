@@ -1698,10 +1698,12 @@ extern int* lbl_803DCA9C;
 extern f32 lbl_803E0588;
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
+extern f32 lbl_803E055C;
 extern f32 lbl_803DD424;
 extern f32 lbl_803DD428;
 extern u8 lbl_803DD42C;
 extern u8 lbl_803DD42E;
+extern void player_followCurve(int* obj, int* state, int p5, f32 a, f32 b, f32 t);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1778,6 +1780,52 @@ void screenTransitionFn_800d7b04(int duration, int type)
     lbl_803DD428 = lbl_803E0560;
     lbl_803DD42C = (u8)type;
     lbl_803DD42E = 5;
+}
+
+void screenTransition_fadeFrom(int duration, int type, f32 from)
+{
+    lbl_803DD420 = lbl_803E0558 * from;
+    lbl_803DD424 = -(lbl_803E055C * from) / (f32)duration;
+    lbl_803DD428 = lbl_803E0560;
+    lbl_803DD42C = (u8)type;
+    lbl_803DD42E = 1;
+}
+
+void screenTransition_screenFade(int duration, int type)
+{
+    if (lbl_803DD424 >= lbl_803E0560 || lbl_803E0560 == lbl_803DD420) {
+        lbl_803DD420 = lbl_803E0558;
+    }
+    lbl_803DD424 = lbl_803E0564 / (f32)duration;
+    lbl_803DD428 = lbl_803E0560;
+    lbl_803DD42C = (u8)type;
+    lbl_803DD42E = 1;
+}
+
+void screenTransition_Do(int duration, int type)
+{
+    if (lbl_803DD424 <= lbl_803E0560 || lbl_803E0558 == lbl_803DD420) {
+        lbl_803DD420 = lbl_803E0560;
+    }
+    lbl_803DD424 = lbl_803E055C / (f32)duration;
+    lbl_803DD428 = lbl_803E0560;
+    lbl_803DD42C = (u8)type;
+    lbl_803DD42E = 0;
+}
+
+void player_updateCurve(int* obj, int* state, f32 t)
+{
+    int idx = *(int*)((char*)state + 828);
+    if (idx == -1) {
+        *(f32*)((char*)state + 700) = lbl_803E0570;
+    } else {
+        int* curve = ((int*(*)(int))((void**)*lbl_803DCA9C)[7])(idx);
+        if (curve == NULL) {
+            *(f32*)((char*)state + 700) = lbl_803E0570;
+        } else {
+            player_followCurve(obj, state, 1, *(f32*)((char*)curve + 8), *(f32*)((char*)curve + 16), t);
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
