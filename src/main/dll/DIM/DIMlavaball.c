@@ -1368,6 +1368,31 @@ extern f32 lbl_803E44D4;
 extern f32 lbl_803E44D8;
 extern void fn_801A6C28(int);
 
+extern int *lbl_803DCA54;
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedBush_update(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    int def = *(int *)(obj + 0x4C);
+    int v;
+    if ((*(u8 *)(state + 1) & 1) == 0) return;
+    if (*(s16 *)(def + 0x1C) != 0 && *(u8 *)state != 0) {
+        v = *(u8 *)(def + 0x20);
+        (*(int (*)(int, int))(*(int *)(*lbl_803DCA54 + 0x54)))(obj, *(s16 *)(def + 0x1C));
+    } else {
+        v = -1;
+    }
+    {
+        s32 idx = (s32)(s8)*(u8 *)(def + 0x1E);
+        if (idx != -1) {
+            (*(int (*)(int, int, int))(*(int *)(*lbl_803DCA54 + 0x48)))(idx, obj, v);
+        }
+    }
+    *(u8 *)(state + 1) &= ~1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void MoonSeedBush_init(int obj, int data) {
