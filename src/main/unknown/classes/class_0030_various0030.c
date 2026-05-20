@@ -1831,10 +1831,10 @@
  * - DLL 0x023A: gPlatform1ObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80209954 platform1_initialise
  *   slot 01: 0x80209950 platform1_release
- *   slot 03: 0x80209924 platform1_initUnsupported
- *   slot 04: 0x802098F8 platform1_updateUnsupported
+ *   slot 03: 0x80209924 platform1_init
+ *   slot 04: 0x802098F8 platform1_controlUnsupported
  *   slot 05: 0x802098F4 platform1_hitDetect
- *   slot 06: 0x802098C8 platform1_renderUnsupported
+ *   slot 06: 0x802098C8 platform1_drawUnsupported
  *   slot 07: 0x802098C4 platform1_free
  *   slot 08: 0x802098BC platform1_func08
  *   slot 09: 0x802098B4 platform1_getExtraSize

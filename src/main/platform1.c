@@ -19,7 +19,7 @@ void platform1_free(void)
 
 #pragma scheduling off
 #pragma peephole off
-void platform1_renderUnsupported(void)
+void platform1_drawUnsupported(void)
 {
   OSReport(sPlatform1DrawNoLongerSupported);
   return;
@@ -29,13 +29,13 @@ void platform1_hitDetect(void)
 {
 }
 
-void platform1_updateUnsupported(void)
+void platform1_controlUnsupported(void)
 {
   OSReport(sPlatform1ControlNoLongerSupported);
   return;
 }
 
-void platform1_initUnsupported(void)
+void platform1_init(void)
 {
   OSReport(sPlatform1InitNoLongerSupported);
   return;
@@ -59,10 +59,10 @@ ObjectDescriptor gPlatform1ObjDescriptor = {
     platform1_initialise,
     platform1_release,
     0,
-    platform1_initUnsupported,
-    platform1_updateUnsupported,
+    platform1_init,
+    platform1_controlUnsupported,
     platform1_hitDetect,
-    platform1_renderUnsupported,
+    platform1_drawUnsupported,
     platform1_free,
     (ObjectDescriptorCallback)platform1_func08,
     platform1_getExtraSize,

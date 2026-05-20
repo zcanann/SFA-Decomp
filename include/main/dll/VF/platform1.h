@@ -36,10 +36,10 @@ extern ObjectDescriptor gPlatform1ObjDescriptor;
 int platform1_getExtraSize(void);
 int platform1_func08(void);
 void platform1_free(void);
-void platform1_renderUnsupported(void);
+void platform1_drawUnsupported(void);
 void platform1_hitDetect(void);
-void platform1_updateUnsupported(void);
-void platform1_initUnsupported(void);
+void platform1_controlUnsupported(void);
+void platform1_init(void);
 void platform1_release(void);
 void platform1_initialise(void);
 void platform1_control(undefined8 param_1,double param_2,double param_3,undefined8 param_4,

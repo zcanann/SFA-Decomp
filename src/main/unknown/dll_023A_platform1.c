@@ -20,10 +20,10 @@
  * EN slot map with reference-only names by slot index:
  * - slot 00: 0x80209954 platform1_initialise stub=blr ref=initialise (stub)
  * - slot 01: 0x80209950 platform1_release stub=blr ref=release (stub)
- * - slot 03: 0x80209924 platform1_initUnsupported ref=init
- * - slot 04: 0x802098F8 platform1_updateUnsupported ref=update
+ * - slot 03: 0x80209924 platform1_init ref=init
+ * - slot 04: 0x802098F8 platform1_controlUnsupported ref=update
  * - slot 05: 0x802098F4 platform1_hitDetect stub=blr ref=hitDetect (stub)
- * - slot 06: 0x802098C8 platform1_renderUnsupported ref=render
+ * - slot 06: 0x802098C8 platform1_drawUnsupported ref=render
  * - slot 07: 0x802098C4 platform1_free stub=blr ref=free (stub)
  * - slot 08: 0x802098BC platform1_func08 stub=const 0
  * - slot 09: 0x802098B4 platform1_getExtraSize stub=const 0 ref=getExtraSize (stub)

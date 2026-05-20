@@ -58,10 +58,10 @@
 - `platform1_getExtraSize@0x802098B4-0x802098BC` size=`0x8`
 - `platform1_func08@0x802098BC-0x802098C4` size=`0x8`
 - `platform1_free@0x802098C4-0x802098C8` size=`0x4`
-- `platform1_renderUnsupported@0x802098C8-0x802098F4` size=`0x2C`
+- `platform1_drawUnsupported@0x802098C8-0x802098F4` size=`0x2C`
 - `platform1_hitDetect@0x802098F4-0x802098F8` size=`0x4`
-- `platform1_updateUnsupported@0x802098F8-0x80209924` size=`0x2C`
-- `platform1_initUnsupported@0x80209924-0x80209950` size=`0x2C`
+- `platform1_controlUnsupported@0x802098F8-0x80209924` size=`0x2C`
+- `platform1_init@0x80209924-0x80209950` size=`0x2C`
 - `platform1_release@0x80209950-0x80209954` size=`0x4`
 - `platform1_initialise@0x80209954-0x80209958` size=`0x4`
 - ... (+2 more functions)
