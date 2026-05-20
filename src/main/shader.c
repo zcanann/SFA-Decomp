@@ -2308,10 +2308,12 @@ void* fn_80056684(int idx) {
 
 /* 32b two-stage table lookup via lis/addi/lwz. */
 extern int lbl_803822A0[5];
+#pragma scheduling off
 void* fn_80059334(int a, int b) {
 	int* base = (int*)lbl_803822A0[0];
 	return (char*)base + (a + (b << 4)) * 12;
 }
+#pragma scheduling reset
 
 /* 48b paired float reads scaled by sda21 constant. */
 extern int lbl_803DCE68;
