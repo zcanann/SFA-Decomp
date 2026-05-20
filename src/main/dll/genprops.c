@@ -4507,7 +4507,7 @@ void staff_func11(int *obj, s32 v);
 extern void staff_func12();
 extern s16 staff_func13(int *obj);
 extern void staff_func14();
-extern void staff_func15();
+void staff_func15(int *obj, s16 idx, f32 f1, f32 f2);
 extern s32 staff_func16(int *obj);
 extern void fireball_free();
 extern void fireball_render();
@@ -5049,6 +5049,25 @@ void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
             objShadowFn_80062498(obj, 0, 0, framesThisStep);
         }
     }
+}
+
+void staff_func15(int *obj, s16 idx, f32 f1, f32 f2) {
+    u8 *slot = (u8*)((int**)obj)[0xb8/4];
+    u8 *state = slot;
+    if ((slot[0x14] & 0x2) != 0) {
+        slot += 0x18;
+        if ((slot[0x14] & 0x2) != 0) {
+            slot += 0x18;
+        }
+    }
+    slot[0x14] = (u8)(slot[0x14] | 0x3);
+    *(f32*)(slot + 0x4) = f1;
+    *(f32*)(slot + 0x8) = f2;
+    *(s16*)(slot + 0xc) = 0;
+    *(s16*)(slot + 0xe) = 0;
+    *(s16*)(slot + 0x12) = 0;
+    *(s16*)(slot + 0x10) = idx;
+    *(void**)(state + 0x48) = slot;
 }
 #pragma peephole reset
 #pragma scheduling reset
