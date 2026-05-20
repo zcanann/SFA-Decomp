@@ -3157,3 +3157,29 @@ int fn_80113278(int p1, int p2, u8 b)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* baddie state reset */
+extern void ObjHits_SetHitVolumeSlot(void *obj, int animObjId, int frame, int flags);
+extern f32 lbl_803E1C2C;
+#pragma peephole off
+#pragma scheduling off
+void fn_801132F4(int p1, int p2, s8 b, f32 fval)
+{
+  f32 fz;
+  *(u32 *)p2 |= 0x8000;
+  *(u16 *)(p2 + 0x330) = 0;
+  if (*(void **)(p1 + 0x54) != NULL) {
+    ObjHits_SetHitVolumeSlot((void *)p1, 0, 0, -1);
+  }
+  if (b != -1) {
+    *(s8 *)(p2 + 0x25f) = b;
+  }
+  *(f32 *)(p2 + 0x2a4) = fval;
+  fz = lbl_803E1C2C;
+  *(f32 *)(p2 + 0x290) = fz;
+  *(f32 *)(p2 + 0x28c) = fz;
+  *(int *)(p2 + 0x31c) = 0;
+  *(int *)(p2 + 0x318) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
