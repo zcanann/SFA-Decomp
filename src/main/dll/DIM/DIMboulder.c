@@ -1085,6 +1085,38 @@ extern unsigned int *gObjectTriggerInterface;
 extern int *gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
+extern int hitDetectFn_80065e50(int obj, int **listOut, int p3, int p4, f32 x, f32 y, f32 z);
+extern f32 lbl_803E4700;
+extern f32 lbl_803E4704;
+f32 fn_801ACCFC(int obj) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    int *list;
+    int count;
+    int i;
+    int bestIdx;
+    f32 bestDist;
+    f32 limit;
+    count = hitDetectFn_80065e50(obj, &list, 0, 0,
+                                  *(f32 *)((char *)obj + 0xC),
+                                  *(f32 *)((char *)obj + 0x10),
+                                  *(f32 *)((char *)obj + 0x14));
+    bestDist = lbl_803E4700;
+    bestIdx = -1;
+    limit = lbl_803E4704;
+    for (i = 0; i < count; i++) {
+        f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)list[i];
+        if (dy > limit && dy < bestDist) {
+            bestDist = dy;
+            bestIdx = i;
+        }
+    }
+    if (bestIdx != -1) {
+        *(u8 *)((char *)state + 0xE) = 1;
+        return *(f32 *)list[bestIdx];
+    }
+    return *(f32 *)((char *)obj + 0x10);
+}
+
 void magiclight_free(int obj) {
     int *inner = *(int **)(obj + 0xb8);
     if (*(s16 *)(obj + 0x46) != 0x172) {

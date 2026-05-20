@@ -896,3 +896,41 @@ int CCGasVentControl_SeqFn(int obj)
     return 0;
 }
 #pragma scheduling reset
+
+extern u8 *Obj_AllocObjectSetup(int size, int type);
+extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
+#pragma scheduling off
+#pragma peephole off
+int fn_801A8F88(int *obj, int *p2) {
+    int i;
+    int count = *(s8 *)((char *)p2 + 0x8b);
+    for (i = 0; i < count; i++) {
+        switch (*(u8 *)((char *)p2 + 0x81 + i)) {
+        case 1: {
+            int *attached;
+            u8 *setup;
+            *(int *)((char *)obj + 0xf8) = 779;
+            attached = *(int **)((char *)obj + 0xc8);
+            if (attached != NULL) {
+                ObjLink_DetachChild(obj, attached);
+                Obj_FreeObject(attached);
+            }
+            setup = Obj_AllocObjectSetup(32, *(int *)((char *)obj + 0xf8));
+            ObjLink_AttachChild(obj, Obj_SetupObject(setup, 4, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30)), 0);
+            break;
+        }
+        case 2: {
+            int *attached = *(int **)((char *)obj + 0xc8);
+            if (attached != NULL) {
+                ObjLink_DetachChild(obj, attached);
+                Obj_FreeObject(attached);
+            }
+            *(int *)((char *)obj + 0xf8) = -1;
+            break;
+        }
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

@@ -561,3 +561,12 @@ extern f32 lbl_803E4004;
 void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3FF8); }
 void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4004); }
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void wallanimator_free(int obj) {
+    ObjGroup_RemoveObject(obj, 0x23);
+    ObjGroup_RemoveObject(obj, 0x31);
+}
+#pragma peephole reset
+#pragma scheduling reset
