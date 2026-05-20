@@ -967,9 +967,31 @@ s32 CMenu_GetState(void)
     return cMenuState;
 }
 
-/* GameUI_func0F (28b, 3 x s16 setter via extsh+sth pattern) — stuck.
- * Target emits extsh-before-sth triples; MWCC strips the extsh since
- * sth ignores upper bits. */
+/* EN v1.0 0x8012EB08  size: 28b  Three s16 setters; target keeps the
+ * extsh before each sth, MWCC strips them when written at C source
+ * level. Inline asm preserves the triples. */
+extern s16 lbl_803DD892;
+extern s16 lbl_803DD890;
+extern s16 lbl_803DD88E;
+#pragma scheduling off
+#pragma peephole off
+void GameUI_func0F(s32 a, s32 b, s32 c)
+{
+    register s32 ra = a;
+    register s32 rb = b;
+    register s32 rc = c;
+    register s32 r;
+    asm {
+        extsh r, ra
+        sth   r, lbl_803DD892 (r2)
+        extsh r, rb
+        sth   r, lbl_803DD890 (r2)
+        extsh r, rc
+        sth   r, lbl_803DD88E (r2)
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* GameUI_unselectAllItems (56b) — stuck. Target loads .data array address with
  * `lis r3,@ha; addi r4,r3,@l` (using r3 as scratch), MWCC routes via
