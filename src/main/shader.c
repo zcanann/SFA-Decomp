@@ -2489,3 +2489,13 @@ void gameTextLoadForMap_800571f0(u8 force) {
 #pragma peephole reset
 #pragma scheduling reset
 
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80056BBC(int idx, int a, int b, int p4, int p5) {
+    int base = lbl_803DCE68 + idx * 16;
+    *(s16*)(base + 8) = (s16)((a << 16) / (p4 >> 6));
+    *(s16*)(base + 10) = (s16)((b << 16) / (p5 >> 6));
+}
+#pragma peephole reset
+#pragma scheduling reset
