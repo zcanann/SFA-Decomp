@@ -48,7 +48,7 @@ int SB_Galleon_getExtraSize(void);
 int SB_Galleon_func08(void);
 void SB_Galleon_free(int obj, int p2);
 void SB_Galleon_render(void);
-void SB_Galleon_hitDetect(void);
+void SB_Galleon_hitDetect(int obj);
 void SB_Galleon_update(void);
 void SB_Galleon_init(void);
 void SB_Galleon_release(void);
