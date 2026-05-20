@@ -788,10 +788,60 @@ void clearScreenWidth(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void matrixFn_8006ff0c(double param_1,double param_2,double param_3,double param_4,double param_5,
-                 float *param_6,short *param_7)
+extern f32 lbl_803DEE68;
+extern f32 lbl_803DEE6C;
+extern f32 lbl_803DEE70;
+extern f32 lbl_803DEE74;
+extern f32 lbl_803DEE78;
+extern f32 lbl_803DEE7C;
+extern f32 Gq;
+extern f32 lbl_803DD03C;
+extern int lbl_803968C0[];
+extern f64 fn_80293E80(f64 x);
+extern f64 sin(f64 x);
+extern f64 fabs(f64 x);
+
+#pragma scheduling off
+#pragma peephole off
+void matrixFn_8006ff0c(double fov, double aspect, double near, double far, double scale,
+                       float *mat, short *out)
 {
+    f32 angle;
+    f32 tan;
+    int i;
+
+    fn_80070234((f32 *)mat);
+
+    angle = (f32)(s32)(lbl_803DEE6C * fov) * lbl_803DEE68 / lbl_803DEE70;
+    tan = sin(angle) / fn_80293E80(angle);
+    mat[0] = tan / aspect;
+    mat[5] = tan;
+    mat[10] = -near / (far - near);
+    mat[11] = lbl_803DEE74;
+    mat[14] = -near * far / (far - near);
+    mat[15] = lbl_803DEE78;
+
+    for (i = 0; i < 16; i++) {
+        mat[i] = mat[i] * scale;
+    }
+
+    if (out != NULL) {
+        if ((f32)(near + far) <= lbl_803DEE7C) {
+            *out = (s16)0xFFFF;
+        } else {
+            *out = (s16)(s32)(Gq / (near + far));
+            if (*out == 0) {
+                *out = 1;
+            }
+        }
+    }
+    lbl_803DD038 = fabs(near);
+    lbl_803DD034 = fabs(far);
+    C_MTXPerspective((void *)lbl_803968C0, fov, aspect, lbl_803DD038, lbl_803DD034);
+    lbl_803DD03C = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
