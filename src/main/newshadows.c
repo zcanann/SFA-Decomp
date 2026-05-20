@@ -2882,3 +2882,21 @@ void findSomething(void *needle)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Cycles a 3-element table, then samples 3 fields from obj->0x64 ptr block. */
+extern u8 lbl_803DCF8C;
+extern u32 lbl_8038E1DC[3];
+#pragma scheduling off
+#pragma peephole off
+void objShadowFn_8006c5f0(int obj, u32 *outTable, f32 *outF, int *outX, int *outY)
+{
+    int idx = (lbl_803DCF8C + 1) % 3;
+    int *p;
+    *outTable = lbl_8038E1DC[idx];
+    p = (int *)*(int *)(obj + 0x64);
+    *outF = *(f32 *)p;
+    *outX = (int)*(f32 *)(*(int *)(obj + 0x64) + 0x14);
+    *outY = (int)*(f32 *)(*(int *)(obj + 0x64) + 0x18);
+}
+#pragma peephole reset
+#pragma scheduling reset
