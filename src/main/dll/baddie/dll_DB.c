@@ -726,6 +726,7 @@ extern s16 cMenuFadeCounter;
 extern s8  lbl_803DD8F0;
 extern s16 lbl_803DD8F2;
 extern s8  lbl_803DD8F4;
+extern s8  lbl_803DD8F5;
 extern s8  lbl_803DD8E8;
 extern u8  lbl_803DD8F8;
 extern u8  lbl_803DD8F9;
@@ -733,6 +734,8 @@ extern s16 lbl_803DD90C;
 extern s16 lbl_803DD90E;
 extern s8  lbl_803DD912;
 extern u8  lbl_803A9458[0x960];
+extern u8  lbl_8031C1B4[0x30];
+extern void getScreenResolution(void);
 
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
 void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
@@ -771,9 +774,26 @@ void GameUI_initialise(void) {}
 void fn_8012FEE8(void) {}
 void fn_80130034(void) {}
 void fn_8013006C(void) {}
-void fn_801300A4(void) {}
-void Menu_initialise(void) {}
-void fn_80130124(void) {}
+#pragma scheduling off
+#pragma peephole off
+void fn_801300A4(int unused, int v) {
+    getScreenResolution();
+    lbl_803DD8F2 = (s16)v;
+    lbl_803DD8F0 = 0;
+    lbl_803DD8F4 = -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+void Menu_initialise(void) {
+    lbl_803DD8F0 = 0;
+    lbl_803DD8F2 = 0;
+    lbl_803DD8F4 = 0;
+    lbl_803DD8F5 = 0;
+    lbl_803DD8E8 = 0;
+}
+u16 fn_80130124(void) {
+    return *(u16*)(lbl_803A9458 + lbl_803DD912 * 0x3c + 2);
+}
 void fn_80130144(void) {}
 void fn_801302C0(void) {}
 void fn_80130484(void) {}
