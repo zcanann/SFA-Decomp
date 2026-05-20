@@ -1315,9 +1315,9 @@ void fn_80148C18(int obj,int state)
 }
 #pragma scheduling reset
 
-/* fn_80148D8C: 828b - handle Tricky's completed-command fade and reward spawning. */
+/* trickyFn_80148d8c: 828b - handle Tricky's completed-command fade and reward spawning. */
 #pragma scheduling off
-void fn_80148D8C(int obj,int state)
+void trickyFn_80148d8c(int obj,int state)
 {
   int setup;
   int alpha;
@@ -1355,20 +1355,20 @@ void fn_80148D8C(int obj,int state)
     Sfx_PlayFromObject(obj,0x233);
     if (randomGetRange(0,100) > 50) {
       if ((*(u32 *)(state + 0x2e4) & 0x100000) != 0) {
-        fn_80149CEC(obj,state,*(u8 *)(state + 0x2f5),0,4);
+        collectibleFn_80149cec(obj,state,*(u8 *)(state + 0x2f5),0,4);
       }
       else {
         spawnBits = *(s16 *)(setup + 0x22) & 0xf00;
         if (spawnBits != 0) {
-          fn_80149CEC(obj,state,spawnBits,0,1);
+          collectibleFn_80149cec(obj,state,spawnBits,0,1);
         }
         spawnBits = *(s16 *)(setup + 0x22) & 0xf000;
         if (spawnBits != 0) {
-          fn_80149CEC(obj,state,spawnBits,0,2);
+          collectibleFn_80149cec(obj,state,spawnBits,0,2);
         }
         spawnBits = *(s16 *)(setup + 0x22) & 0xff;
         if (spawnBits != 0) {
-          fn_80149CEC(obj,state,spawnBits,0,3);
+          collectibleFn_80149cec(obj,state,spawnBits,0,3);
         }
       }
     }
@@ -1412,9 +1412,9 @@ void fn_80148D8C(int obj,int state)
 }
 #pragma scheduling reset
 
-/* fn_80149CEC: 876b - spawn or reposition Tricky reward objects from packed command bits. */
+/* collectibleFn_80149cec: 876b - spawn or reposition Tricky reward objects from packed command bits. */
 #pragma scheduling off
-int fn_80149CEC(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mode)
+int collectibleFn_80149cec(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mode)
 {
   struct TrickyRewardSpawnTail {
     u32 pair;
@@ -3014,10 +3014,10 @@ void fn_80144F50(int obj, int state) {
 #pragma scheduling reset
 
 
-/* fn_80149BB4: 312b - flag bits to byte field. */
+/* frozenEnemyFn_80149bb4: 312b - flag bits to byte field. */
 #pragma peephole off
 #pragma scheduling off
-void fn_80149BB4(int *obj, u32 flags, s16 val, f32 f) {
+void frozenEnemyFn_80149bb4(int *obj, u32 flags, s16 val, f32 f) {
     *((u8*)obj + 0x2f1) = 0;
     if ((flags & 0x2) != 0) {
         *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x20);

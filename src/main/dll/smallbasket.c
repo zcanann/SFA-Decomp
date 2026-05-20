@@ -2157,7 +2157,7 @@ extern u8 lbl_8031FC2C[];
 extern int fn_8014D08C(int *obj, int *st, int p3, f32 f, int p5, int p6);
 extern int *allocModelStruct2(int p1, int p2);
 extern void tailFn_80026c38(int *p, f32 a, f32 b, f32 c);
-extern int fn_8014D0F0(void);
+extern int baddieAfterUpdateBonesCb(void);
 extern f32 lbl_803E2CBC;
 extern int *pDll_expgfx;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -2333,7 +2333,7 @@ void fn_8015A424(int *obj, int *st) {
     *(int**)((char*)st + 0x36c) = allocModelStruct2((int)lbl_8031FC2C, 5);
     tailFn_80026c38(*(int**)((char*)st + 0x36c), lbl_803E2C8C, lbl_803E2C90, lbl_803E2C94);
     *(u32*)((char*)st + 0x2e8) = *(u32*)((char*)st + 0x2e8) | 0x100;
-    *(int*)((char*)obj + 0x108) = (int)&fn_8014D0F0;
+    *(int*)((char*)obj + 0x108) = (int)&baddieAfterUpdateBonesCb;
 }
 #pragma peephole reset
 #pragma scheduling reset
