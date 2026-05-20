@@ -1570,6 +1570,18 @@ void WM_colrise_init(s16 *a, s8 *b) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int GameBit_Get(int id);
+#pragma scheduling off
+#pragma peephole off
+void wmlasertarget_init(char *obj, s8 *p) {
+    char *inner = *(char **)(obj + 0xb8);
+    obj[0xad] = (s8)GameBit_Get(*(s16 *)(p + 0x1e));
+    *(s16 *)inner = *(s16 *)(p + 0x1a);
+    inner[2] = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern int *lbl_803DCA78;
 extern void ModelLightStruct_free(void *light);
 #pragma scheduling off
