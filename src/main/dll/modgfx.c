@@ -4629,6 +4629,40 @@ void dll_0B_initialise(void)
     }
 }
 
+void dll_0B_func0A(s16 *p)
+{
+    int **arr = (int**)lbl_8039C1F8;
+    int i;
+    for (i = 0; i < 50; i++) {
+        if (arr[i] != NULL && *p == *(s16*)((char*)arr[i] + 268)) {
+            *(u8*)((char*)arr[i] + 314) = 1;
+        }
+    }
+    *p = -1;
+}
+
+void dll_0B_func0C(int p1, int p2)
+{
+    int **arr = (int**)lbl_8039C1F8;
+    int i;
+    for (i = 0; i < 50; i++) {
+        if (arr[i] != NULL && arr[i][1] == p1) {
+            *(u8*)((char*)arr[i] + 315) = (u8)p2;
+        }
+    }
+}
+
+void dll_0B_func0D(int p1)
+{
+    int **arr = (int**)lbl_8039C1F8;
+    int i;
+    for (i = 0; i < 50; i++) {
+        if (arr[i] != NULL && arr[i][1] == p1) {
+            *(u8*)((char*)arr[i] + 314) = 1;
+        }
+    }
+}
+
 void dll_0B_func07(int p1)
 {
     int **arr = (int**)lbl_8039C1F8;
