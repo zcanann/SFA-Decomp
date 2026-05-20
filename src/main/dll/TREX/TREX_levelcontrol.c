@@ -388,3 +388,37 @@ extern f32 lbl_803E58D8;
 void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58B0); }
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8); }
 #pragma peephole reset
+
+extern u8 *objCreateLight(int *obj, int v);
+extern void modelLightStruct_setField50(u8 *p, int v);
+extern void modelLightStruct_setColorsA8AC(u8 *p, int a, int b, int c, int d);
+extern void lightSetFieldBC_8001db14(u8 *p, int v);
+extern void lightDistAttenFn_8001dc38(u8 *p, f32 a, f32 b);
+extern void Sfx_PlayFromObject(int *obj, int sfxId);
+extern f32 lbl_803E58C8;
+extern f32 lbl_803E58CC;
+extern f32 lbl_803E58D0;
+#pragma scheduling off
+#pragma peephole off
+void SB_CannonBall_init(int *obj) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (*(u8 **)((char *)state + 0x20) == NULL) {
+        *(u8 **)((char *)state + 0x20) = objCreateLight(obj, 1);
+        if (*(u8 **)((char *)state + 0x20) != NULL) {
+            modelLightStruct_setField50(*(u8 **)((char *)state + 0x20), 2);
+            modelLightStruct_setColorsA8AC(*(u8 **)((char *)state + 0x20), 200, 60, 0, 0);
+            lightSetFieldBC_8001db14(*(u8 **)((char *)state + 0x20), 1);
+            lightDistAttenFn_8001dc38(*(u8 **)((char *)state + 0x20), lbl_803E58C8, lbl_803E58CC);
+        }
+    }
+    {
+        int *p = *(int **)((char *)obj + 0x54);
+        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~1);
+    }
+    *(f32 *)((char *)obj + 0x8) = *(f32 *)((char *)obj + 0x8) * lbl_803E58D0;
+    *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) | 2);
+    Sfx_PlayFromObject(obj, 53);
+    Sfx_PlayFromObject(obj, 714);
+}
+#pragma peephole reset
+#pragma scheduling reset
