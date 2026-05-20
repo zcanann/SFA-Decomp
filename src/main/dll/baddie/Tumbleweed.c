@@ -3739,6 +3739,48 @@ int fn_80138920(u8* obj, int arg1, int arg2)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
+extern void viewFn_80129c74(void);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void objRender(int a, int b, int c, int d, void *obj, int f);
+extern int *Obj_GetActiveModel(void *obj);
+extern u8 lbl_803DD92A;
+extern int lbl_803DD934;
+extern f32 lbl_803E2278;
+extern f32 lbl_803E227C;
+extern f32 lbl_803E2280;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80133718(void)
+{
+    int b;
+    int count;
+    int *model;
+
+    viewFn_80129cbc(lbl_803E227C, lbl_803E2278, lbl_803E2280);
+    b = (lbl_803DD92A >> 3) & 1;
+    if (b != 0) {
+        if ((s8) * (u8 *)((char *)lbl_803DBBC8[1] + 173) == 0) {
+            Sfx_PlayFromObject(0, 1009);
+        }
+    }
+    *(s8 *)((char *)lbl_803DBBC8[1] + 173) = (s8)b;
+    count = 2;
+    if (lbl_803DD934 == 0) {
+        count = 1;
+    }
+    for (b = 0; (u8)b < count; b++) {
+        objRender(0, 0, 0, 0, lbl_803DBBC8[b], 1);
+        model = Obj_GetActiveModel(lbl_803DBBC8[b]);
+        *(u16 *)((char *)model + 24) = (u16)(*(u16 *)((char *)model + 24) & ~0x8);
+        *(u8 *)((char *)lbl_803DBBC8[b] + 55) = 255;
+    }
+    viewFn_80129c74();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at minimapTexture and lbl_803DD940 (the first only if
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
