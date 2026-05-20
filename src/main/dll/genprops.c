@@ -4976,8 +4976,9 @@ void fn_8016EB50(int *obj) { quakeSpellFn_8016cee8(obj, *(int*)((char*)obj + 0xc
 #pragma scheduling off
 #pragma peephole off
 void fn_8016D9EC(int *obj, u8 a, u8 b) {
-    *(u8*)((char*)((int**)obj)[0xb8/4] + 0xbb) = a;
-    *(u8*)((char*)((int**)obj)[0xb8/4] + 0xba) = b;
+    u8 *state = (u8*)((int**)obj)[0xb8/4];
+    state[0xbb] = a;
+    state[0xba] = b;
 }
 
 void staff_func10(int *obj, s32 v) {
@@ -4985,12 +4986,13 @@ void staff_func10(int *obj, s32 v) {
 }
 
 void staff_func11(int *obj, s32 v) {
+    s16 *p = (s16*)((char*)((int**)obj)[0xb8/4] + 0x88);
     if (v > 0xff) v = 0xff;
-    *(s16*)((char*)((int**)obj)[0xb8/4] + 0x88) = (s16)v;
+    *p = (s16)v;
 }
 
-void collectible_func0E(int *obj, u8 v) {
-    *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1e) = v;
+void collectible_func0E(int *obj, u32 v) {
+    *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1e) = (u8)v;
 }
 
 void collectible_render2(int *obj, f32 f1, f32 f2, f32 f3) {
