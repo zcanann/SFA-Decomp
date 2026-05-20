@@ -83,6 +83,74 @@ For `rlwimi` (bit insert vs MWCC's `andi+ori`):
 }
 ```
 
+**Warning: `asm { }` blocks wreck nearby FP scheduling.** MWCC treats an
+`asm` block as an opaque barrier and spills every live FP register across it.
+In a function that mixes float work with a bit-clear, dropping in a 3-line
+rlwimi `asm` block can drop the overall match from ~30% to <15% because every
+following `lfs`/`stfs` shifts. Only reach for `asm` blocks in:
+- functions that don't otherwise use FP regs, or
+- positions near the function entry/exit where no live FP values surround them.
+See the failed `fn_801EC870` attempt in DRcradle (b5b60577..d9ab458b).
+
+## Sign/zero extension recipes (extsh, extsb on caller-side widths)
+
+Two patterns from DRcradle/maketex (e4126ea5) where the param type controls
+whether MWCC emits an extension instruction:
+
+1. **`extsb r0, r4` before a byte store + `cmpwi r4, 2`**: target stores the
+   sign-extended low byte but compares the wider int. Source is `int param`,
+   not `s8 param`:
+   ```c
+   void f(int obj, int type) {            // NOT s8 type
+       *(s8 *)(t + 0x421) = (s8)type;     // → extsb + stb
+       if (type == 2) ...                 // → cmpwi r4, 2 (no extsb)
+   }
+   ```
+   With `s8 type`, MWCC stores r4 raw (`stb r4`) and `extsb`+`cmpwi` the
+   compare side. See `SnowBike_setType` 95.1% → 100%.
+
+2. **`extsh r4, r4` before a `sthx` half-word store**: target sign-extends the
+   value before the indexed store. Pure `s16 val` param does NOT trigger
+   extsh (it emits `clrlwi` = zero-extend). Use `int val` + `(s16)val` cast,
+   AND declare the destination array as `s16[]` not `u16[]`:
+   ```c
+   extern s16 lbl_xxx[];                 // s16, not u16
+   int f(int p, int val) {                // int, not s16
+       lbl_xxx[idx] = (s16)val;           // → extsh + sthx
+   }
+   ```
+   See `fn_80080360` 0% → 100%.
+
+## Compare operand order changes which F register holds which value
+
+`fcmpo cr0, f1, f0` orders the operands. The C operand on the LEFT of the
+compare lands in f1; the RIGHT lands in f0. So `lbl <= *p` and `*p >= lbl`
+have the same boolean result but emit different `lfs` orderings, which cascade
+into different `cror` patterns and bring the match from 11% to 100% (or vice
+versa). When residual diff shows `lfs f1` and `lfs f0` swapped, flip the
+compare operand order. See `objAnimFn_8013a3f0` (5a838940) and
+`SnowBike_func12` partial.
+
+## Forcing `lis + addi` for `.data` labels (not `sda21`)
+
+For globals in `.data` (large data, not `.sdata`/`.sdata2`), target uses
+`lis ha; addi lo` (32-bit absolute). MWCC emits `sda21` (small-data) by
+default when you write `extern int lbl_80328590;`. Declare as an **array**
+to force the absolute form:
+```c
+extern int lbl_80328590[];     // → lis + addi
+extern int lbl_80328590;       // → sda21 (wrong for .data)
+```
+See `SnowBike_func15` (fcbf1d4d).
+
+## `#pragma dont_inline on` is essential when call sites land in the same TU
+
+If function `A` calls function `B` and both live in the same `.c`, MWCC with
+`-inline auto` will inline `B` into `A` and the asm for `A` won't match the
+target's `bl B`. Wrap `B` with `#pragma dont_inline on / reset`. This unlocked
+`SnowBike_setType` (244b) which kept inlining the 184b `fn_801EC870`. See
+DRcradle commits (6e7203a0).
+
 ## Drift handling (Ghidra-imported `FUN_xxx` don't match v1.0)
 
 Many `.c` files were imported from a v1.1 Ghidra session and have wrong
