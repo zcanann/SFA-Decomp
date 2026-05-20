@@ -833,3 +833,23 @@ void ccgasvent_free(int x) { ObjGroup_RemoveObject(x, 0x3f); }
 void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* fn_801A9468: leaf flag-set on obj's extra struct, returns 0. */
+#pragma scheduling off
+int fn_801A9468(int obj)
+{
+    obj = *(int *)(obj + 0xb8);
+    *(u8 *)(obj + 1) = (u8)((uint)*(u8 *)(obj + 1) | 1);
+    return 0;
+}
+#pragma scheduling reset
+
+/* fn_801A9FA8: trampoline to fn_801A9FD0 passing (obj, obj->extra), returns 0. */
+extern int fn_801A9FD0(int obj, int extra);
+#pragma scheduling off
+int fn_801A9FA8(int obj)
+{
+    fn_801A9FD0(obj, *(int *)(obj + 0xb8));
+    return 0;
+}
+#pragma scheduling reset
