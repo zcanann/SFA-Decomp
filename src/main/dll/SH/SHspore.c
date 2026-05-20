@@ -330,7 +330,7 @@ void sh_queenearthwalker_update(void *obj)
   if ((*(u8 *)((u8 *)state + 0x2) & 0x1) != 0) {
     switch (action) {
       case 0:
-        fn_801D44A4(obj, state);
+        queenFeedFn_801d44a4(obj, state);
         break;
       case 1:
         if (GameBit_Get(0x193) != 0) {
@@ -346,7 +346,7 @@ void sh_queenearthwalker_update(void *obj)
         fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
         break;
       case 2:
-        fn_801D4364(obj, state);
+        openPortalFn_801d4364(obj, state);
         break;
       case 3:
         if (GameBit_Get(0x13f) != 0) {
@@ -465,7 +465,7 @@ void sh_queenearthwalker_update(void *obj)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_801D44A4(void *obj, void *state)
+void queenFeedFn_801d44a4(void *obj, void *state)
 {
   s16 triggerId;
   s32 total;
@@ -540,7 +540,7 @@ void fn_801D44A4(void *obj, void *state)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_801D4364(void *obj, void *state)
+void openPortalFn_801d4364(void *obj, void *state)
 {
   void *player;
 

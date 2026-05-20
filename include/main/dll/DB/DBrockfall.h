@@ -11,11 +11,11 @@ typedef struct FEseqobjectState {
 } FEseqobjectState;
 
 void paymentkiosk_init(int obj, u8 *initData);
-int fn_801DF4AC(int obj, undefined4 unused, u8 *setup);
+int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup);
 void FEseqobject_init(int obj);
 void FEseqobject_update(int obj);
-int fn_801DF9AC(void *p1, void *p2, u8 *p3);
-void fn_801DFA08(int obj);
+int dll_144_SeqFn(void *p1, void *p2, u8 *p3);
+void dll_144_init(int obj);
 void paymentkiosk_release(void);
 void paymentkiosk_initialise(void);
 void FUN_801df45c(undefined2 *param_1);

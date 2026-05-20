@@ -10,8 +10,8 @@ void FUN_801d4810(short *param_1,int param_2);
 void FUN_801d4814(short *param_1,byte *param_2);
 int sh_queenearthwalker_getExtraSize(void);
 void sh_queenearthwalker_update(void *obj);
-void fn_801D44A4(void *obj, void *state);
-void fn_801D4364(void *obj, void *state);
+void queenFeedFn_801d44a4(void *obj, void *state);
+void openPortalFn_801d4364(void *obj, void *state);
 void sh_queenearthwalker_init(void *obj, void *param2);
 
 #endif /* MAIN_DLL_SH_SHSPORE_H_ */

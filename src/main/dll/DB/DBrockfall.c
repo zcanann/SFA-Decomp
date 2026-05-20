@@ -41,7 +41,7 @@ extern f32 lbl_803E56B4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void fn_801DF1EC(void);
+extern void PaymentKiosk_SeqFn(void);
 #pragma scheduling off
 #pragma peephole off
 void paymentkiosk_init(int obj, u8 *initData)
@@ -50,7 +50,7 @@ void paymentkiosk_init(int obj, u8 *initData)
     register int state = *(int *)(self + 0xb8);
     u32 secondaryFlag;
 
-    *(void (**)(void))(self + 0xbc) = fn_801DF1EC;
+    *(void (**)(void))(self + 0xbc) = PaymentKiosk_SeqFn;
     *(short *)self = (short)((int)(signed char)initData[0x18] << 8);
     *(u8 *)state = 0;
     *(u16 *)(self + 0xb0) = (u16)((u32)*(u16 *)(self + 0xb0) | 0x6000);
@@ -99,7 +99,7 @@ static int FEseqobject_findControlObject(void)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801DF4AC(int obj, undefined4 unused, u8 *setup)
+int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup)
 {
   FEseqobjectEffectParams effect;
   register int self = obj;
@@ -401,19 +401,19 @@ void FElevControl_hitDetect(void) {}
 void FElevControl_update(void) {}
 void FElevControl_release(void) {}
 void FElevControl_initialise(void) {}
-void fn_801DF9CC(void) {}
-void fn_801DFA00(void) {}
-void fn_801DFA04(void) {}
-void fn_801DFA20(void) {}
-void fn_801DFA24(void) {}
+void dll_144_free(void) {}
+void dll_144_hitDetect(void) {}
+void dll_144_update(void) {}
+void dll_144_release(void) {}
+void dll_144_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_func08(void) { return 0x0; }
 int FElevControl_getExtraSize(void) { return 0x0; }
 int FElevControl_func08(void) { return 0x0; }
-int fn_801DF9BC(void) { return 0x0; }
-int fn_801DF9C4(void) { return 0x0; }
+int dll_144_getExtraSize(void) { return 0x0; }
+int dll_144_func08(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
@@ -422,7 +422,7 @@ extern f32 lbl_803E56C0;
 #pragma peephole off
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E56B4); }
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E56B8); }
-void fn_801DF9D0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E56C0); }
+void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E56C0); }
 #pragma peephole reset
 
 /* call(x, N) wrappers. */
@@ -444,7 +444,7 @@ extern undefined4 *lbl_803DCA54;
 void FEseqobject_init(int obj)
 {
     *(short *)obj = 0;
-    *(void (**)(void))(obj + 0xbc) = (void (*)(void))fn_801DF4AC;
+    *(void (**)(void))(obj + 0xbc) = (void (*)(void))FEseqobject_SeqFn;
     ObjMsg_AllocQueue((void *)obj, 0xa);
 }
 #pragma peephole reset
@@ -469,13 +469,13 @@ void FEseqobject_update(int obj)
 #pragma scheduling reset
 
 /*
- * Function: fn_801DF9AC
+ * Function: dll_144_SeqFn
  * EN v1.0 Address: 0x801DF9AC
  * EN v1.0 Size: 16b
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_801DF9AC(void *p1, void *p2, u8 *p3)
+int dll_144_SeqFn(void *p1, void *p2, u8 *p3)
 {
     p3[0x56] = 0;
     return 0;
@@ -484,16 +484,16 @@ int fn_801DF9AC(void *p1, void *p2, u8 *p3)
 #pragma scheduling reset
 
 /*
- * Function: fn_801DFA08
+ * Function: dll_144_init
  * EN v1.0 Address: 0x801DFA08
  * EN v1.0 Size: 24b
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801DFA08(int obj)
+void dll_144_init(int obj)
 {
     *(short *)obj = 0;
-    *(int (**)(void *, void *, u8 *))(obj + 0xbc) = fn_801DF9AC;
+    *(int (**)(void *, void *, u8 *))(obj + 0xbc) = dll_144_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
