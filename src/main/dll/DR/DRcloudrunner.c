@@ -468,12 +468,19 @@ int sc_cloudrunnera_getExtraSize(void) { return 0x140; }
 int sc_cloudrunnera_func08(void) { return 0xb; }
 
 extern uint GameBit_Get(int id);
+extern int *gObjectTriggerInterface;
+extern int *lbl_803DCA74;
 #pragma scheduling off
 #pragma peephole off
 int fn_801DD170(void) {
     int r;
     if (GameBit_Get(0x639) != 0) { r = 0; } else { r = 1; }
     return r;
+}
+void sc_cloudrunnera_free(int *obj) {
+    void *inner = *(void **)((char *)obj + 0xb8);
+    ((void (*)(void *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
+    ((void (*)(int *, int, int, int, int))(*(int *)(*lbl_803DCA74 + 0x8)))(obj, 0xffff, 0, 0, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
