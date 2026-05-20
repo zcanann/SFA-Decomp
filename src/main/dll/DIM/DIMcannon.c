@@ -2189,3 +2189,39 @@ void imspacethruster_free(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *gPartfxInterface;
+extern int Sfx_PlayFromObject(int *obj, int sfxId);
+extern void Sfx_StopObjectChannel(int *obj, int channel);
+#pragma scheduling off
+#pragma peephole off
+int fn_801B0670(int *obj, int unused, int *p3) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)state + 0x1a) == 1) {
+        Sfx_PlayFromObject(obj, 114);
+    } else {
+        Sfx_StopObjectChannel(obj, 64);
+    }
+    switch (*(u8 *)((char *)p3 + 0x80)) {
+    case 1:
+        *(u8 *)((char *)state + 0x1b) = (u8)(*(u8 *)((char *)state + 0x1b) ^ 1);
+        break;
+    case 2:
+        GameBit_Set(46, 1);
+        break;
+    case 3:
+        *(u8 *)((char *)state + 0x1a) = 4;
+        break;
+    }
+    if (*(u8 *)((char *)state + 0x1b) != 0) {
+        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
+            obj, 215, 0, 0, -1, 0);
+        Sfx_StopObjectChannel(obj, 5);
+    } else {
+        Sfx_StopObjectChannel(obj, 1);
+    }
+    *(u8 *)((char *)p3 + 0x80) = 0;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
