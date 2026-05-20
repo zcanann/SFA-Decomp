@@ -1364,6 +1364,32 @@ void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E44F8); }
 #pragma peephole reset
 
+extern f32 lbl_803E44D4;
+extern f32 lbl_803E44D8;
+extern void fn_801A6C28(int);
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedBush_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(u8 *)(state + 1) = 1;
+    *(s16 *)obj = (s16)((*(u8 *)(data + 0x1F)) << 8);
+    *(void (**)(int))(obj + 0xBC) = fn_801A6C28;
+    *(u16 *)(obj + 0xB0) |= 0x2000;
+    *(f32 *)(obj + 8) = (f32)(u32)(*(u8 *)(data + 0x21)) * lbl_803E44D4;
+    if (*(f32 *)(obj + 8) == lbl_803E44D8) {
+        *(f32 *)(obj + 8) = lbl_803E44D0;
+    }
+    *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
+    if (*(s16 *)(data + 0x1a) != -1) {
+        *(u8 *)state = (u8)GameBit_Get(*(s16 *)(data + 0x1a));
+    } else {
+        *(u8 *)state = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void saveGame_saveObjectPos(int obj);
 void fn_801A80C4(int obj, f32 x, f32 y, f32 z) {
     *(f32 *)(obj + 0xC) = x;
