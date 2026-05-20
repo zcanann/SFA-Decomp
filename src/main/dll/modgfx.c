@@ -4620,6 +4620,15 @@ extern int *lbl_8039C1F8[];
 extern void Obj_FreeObject(void *obj);
 #pragma peephole off
 #pragma scheduling off
+void dll_0B_initialise(void)
+{
+    int **arr = (int**)lbl_8039C1F8;
+    int i;
+    for (i = 0; i < 50; i++) {
+        arr[i] = NULL;
+    }
+}
+
 void dll_0B_func07(int p1)
 {
     int **arr = (int**)lbl_8039C1F8;
