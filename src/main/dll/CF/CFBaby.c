@@ -1801,3 +1801,64 @@ void landed_arwing_init(int obj, int param) {
     }
     *(void(**)(void))((char*)obj + 0xbc) = fn_80188CC0;
 }
+
+extern int *lbl_803DCAC0;
+#pragma scheduling off
+#pragma peephole off
+void fn_80187EA8(int obj, s8 *p) {
+    *(s16 *)obj = (s16)((s32)p[0x1a] << 8);
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    (*(void (*)(int, int *, int))(*(int *)(*lbl_803DCAC0 + 0x4)))(obj, *(int **)(obj + 0xb8), 0x21);
+    (*(void (*)(int *, int))(*(int *)(*lbl_803DCAC0 + 0x2c)))(*(int **)(obj + 0xb8), 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80188798(f32 *p, f32 *hi, f32 *lo) {
+    f32 v;
+    v = p[0]; if (v > hi[0]) hi[0] = v; else if (v < lo[0]) lo[0] = v;
+    v = p[1]; if (v > hi[1]) hi[1] = v; else if (v < lo[1]) lo[1] = v;
+    v = p[2]; if (v > hi[2]) hi[2] = v; else if (v < lo[2]) lo[2] = v;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80188398(int obj, int unused, u8 *p3) {
+    s16 *inner = *(s16 **)((char *)obj + 0xb8);
+    int i;
+    for (i = 0; i < p3[0x8b]; i++) {
+        switch (p3[0x81 + i]) {
+            case 1: inner[0xb] = (s16)0xff; break;
+            case 2: inner[0xb] = 0; break;
+            case 5: break;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *lbl_803DCAC0;
+#pragma scheduling off
+void fn_80187BB0(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCAC0 + 0x10)))(obj);
+}
+#pragma scheduling reset
+
+extern f32 lbl_803E3B40;
+#pragma scheduling off
+#pragma peephole off
+void fn_80187BE0(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    int *inner = *(int **)(obj + 0xb8);
+    if (*(u8 *)((char *)inner + 0xa) == 0) {
+        if ((*(int (*)(int, s32))(*(int *)(*lbl_803DCAC0 + 0xc)))(obj, visible) != 0) {
+            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E3B40);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
