@@ -1256,6 +1256,17 @@ void fn_801FD398(void *obj) {
     }
 }
 
+/* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
+int fn_801FD4A8(void *obj, int x) {
+    s8 *extra = *(s8 **)((char *)obj + 0xb8);
+    if (extra != NULL) {
+        int v = extra[4] - x;
+        extra[4] = (s8)v;
+        return !extra[4];
+    }
+    return 0;
+}
+
 /* fn_801FD464: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off
 #pragma peephole off
