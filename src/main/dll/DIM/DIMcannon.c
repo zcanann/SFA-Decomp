@@ -2061,11 +2061,29 @@ void link_levcontrol_free(int obj) {
 #pragma scheduling reset
 
 extern f32 lbl_803E47C0;
+extern u8 framesThisStep;
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 #pragma scheduling off
 #pragma peephole off
 void imspacering_init(s16 *obj, s8 *p) {
     obj[0] = (s16)((s32)p[0x18] << 8);
     *(int *)((char *)obj + 0xf4) = randomGetRange(0, 1);
+}
+void imspacering_update(s16 *obj) {
+    s16 *inner = *(s16 **)((char *)obj + 0x4c);
+    if (*(int *)((char *)obj + 0xf4) != 0) {
+        obj[0] = (s16)(obj[0] + inner[0xd] * framesThisStep);
+    } else {
+        obj[1] = (s16)(obj[1] + inner[0xd] * framesThisStep);
+    }
+    obj[2] = (s16)(obj[2] + inner[0xe] * framesThisStep);
+    if (lbl_803DDB48 != 0) {
+        *((u8 *)obj + 0x36) = *((u8 *)lbl_803DDB48 + 0x36);
+        objMove((int)obj,
+            *(f32 *)((char *)lbl_803DDB48 + 0xc) - *(f32 *)((char *)obj + 0xc),
+            *(f32 *)((char *)lbl_803DDB48 + 0x10) - *(f32 *)((char *)obj + 0x10),
+            *(f32 *)((char *)lbl_803DDB48 + 0x14) - *(f32 *)((char *)obj + 0x14));
+    }
 }
 void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     u8 *inner = *(u8 **)(obj + 0xb8);
