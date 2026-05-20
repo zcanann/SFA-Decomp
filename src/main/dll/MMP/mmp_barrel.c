@@ -1346,7 +1346,7 @@ u8 groundanimator_func0B(int *obj)
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);
 extern void fn_801923F8(void);
-extern void fn_80193DBC(void *block, int *obj, u8 *vstate, int *desc);
+extern void hitAnimatorFn_80193dbc(void *block, int *obj, u8 *vstate, int *desc);
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
 extern u8 lbl_803DDAE8;
@@ -1421,7 +1421,7 @@ void hitanimator_update(int *obj)
     if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
         if (*(u8*)((char*)state + 0x1B) != 0) {
             if ((vstate[1] & 4) != 0) {
-                fn_80193DBC(block, obj, vstate, state);
+                hitAnimatorFn_80193dbc(block, obj, vstate, state);
                 vstate[1] &= ~4;
             }
         }
@@ -1477,7 +1477,7 @@ void hitanimator_init(int *obj, int *desc)
         (double)*(f32*)((char*)obj + 0x14)));
     if (block != NULL) {
         if ((*(u8*)((char*)desc + 0x1C) & 4) != 0 && *(u8*)((char*)desc + 0x1B) != 0) {
-            fn_80193DBC(block, obj, vstate, desc);
+            hitAnimatorFn_80193dbc(block, obj, vstate, desc);
         }
     }
     vstate[1] |= 2;
