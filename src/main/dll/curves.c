@@ -4345,3 +4345,91 @@ void curves_initialise(void) { gRomCurveCount = 0x0; }
 extern u32 lbl_803DD474;
 extern u32 lbl_803DD470;
 void RomCurve_func0D(u32 *p1, u32 *p2) { *p1 = lbl_803DD474; *p2 = lbl_803DD470; }
+
+/* gameplay_getPreviewSettings: return &lbl_803A31C4 (lis/addi). */
+void* gameplay_getPreviewSettings(void) { return &lbl_803A31C4; }
+
+/* getLastSavedGameTexts: return (u8*)&lbl_803A32A8 + 0x558. Array form forces lis/addi. */
+extern u8 lbl_803A32A8[];
+void* getLastSavedGameTexts(void) { return lbl_803A32A8 + 0x558; }
+
+/* RomCurve_getCurves: *outCount = gRomCurveCount; return gRomCurveTable. */
+#pragma scheduling off
+#pragma peephole off
+void* RomCurve_getCurves(int *outCount) {
+    *outCount = gRomCurveCount;
+    return gRomCurveTable;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* gameplay_resetPreviewColor: 3 byte stores at +0xa..0xc of lbl_803A31C4 = 0x7f. */
+#pragma scheduling off
+#pragma peephole off
+void gameplay_resetPreviewColor(void) {
+    u8 *p = (u8*)&lbl_803A31C4;
+    p[0xa] = 0x7f;
+    p[0xb] = 0x7f;
+    p[0xc] = 0x7f;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* isCheatUnlocked: return registeredOptions & (1 << (idx & 0xff)). */
+#pragma scheduling off
+#pragma peephole off
+int isCheatUnlocked(u8 idx) {
+    GameplayDebugOptions *p = &lbl_803A31C4;
+    u32 reg = p->registeredOptions;
+    u32 mask = 1 << idx;
+    return reg & mask;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* gameplay_registerDebugOption: set bit (1 << (idx & 0xff)) in registeredOptions. */
+#pragma scheduling off
+#pragma peephole off
+void gameplay_registerDebugOption(u8 idx) {
+    GameplayDebugOptions *p = &lbl_803A31C4;
+    u32 reg = p->registeredOptions;
+    u32 mask = 1 << idx;
+    p->registeredOptions = reg | mask;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* isCheatActive: return 1 if both registered AND enabled have bit (1<<idx) set, else 0. */
+#pragma scheduling off
+#pragma peephole off
+int isCheatActive(u8 idx) {
+    GameplayDebugOptions *p = &lbl_803A31C4;
+    u32 reg = p->registeredOptions;
+    u32 mask = 1 << idx;
+    if ((reg & mask) != 0 && (p->enabledOptions & mask) != 0) {
+        return 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* curves_findByAction: scan gRomCurveTable for entry where _19 == 0x15 && _18 == act, return _14. */
+#pragma scheduling off
+#pragma peephole off
+int curves_findByAction(int act) {
+    RomCurveDef **base = gRomCurveTable;
+    int i;
+    for (i = gRomCurveCount; i > 0; i--) {
+        RomCurveDef *c = *base;
+        if ((s8)*((u8*)c + 0x19) == 0x15) {
+            if ((s8)*((u8*)c + 0x18) == act) {
+                return *(int*)((char*)c + 0x14);
+            }
+        }
+        base++;
+    }
+    return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
