@@ -3231,6 +3231,36 @@ void CameraModeArwing_copyToCurrent(void *p1, u32 kind)
     *(f32*)((char*)lbl_803A43C0 + 0x40) = ((f32*)p1)[1];
 }
 
+extern u32 lbl_803DD5B8;
+extern s16 getAngle(f32 dx, f32 dz);
+void CameraModeCloudRunner_init(int *p1, s16 p2, f32 *p3)
+{
+    int *p1_a4 = ((int**)p1)[0xA4/4];
+    if (lbl_803DD5B8 == 0) {
+        lbl_803DD5B8 = (u32)mmAlloc(16, 15, 0);
+    }
+    if (p3 != NULL) {
+        ((f32*)lbl_803DD5B8)[0] = p3[0];
+        ((f32*)lbl_803DD5B8)[1] = p3[1];
+        ((f32*)lbl_803DD5B8)[2] = p3[2];
+        ((f32*)lbl_803DD5B8)[3] = p3[3];
+    } else {
+        ((f32*)lbl_803DD5B8)[0] = *(f32*)((char*)p1_a4 + 0x18);
+        ((f32*)lbl_803DD5B8)[1] = *(f32*)((char*)p1_a4 + 0x1C);
+        ((f32*)lbl_803DD5B8)[2] = *(f32*)((char*)p1_a4 + 0x20);
+        ((f32*)lbl_803DD5B8)[3] = (f32)p2;
+    }
+    getAngle(
+        *(f32*)((char*)p1 + 0x18) - ((f32*)lbl_803DD5B8)[0],
+        *(f32*)((char*)p1 + 0x20) - ((f32*)lbl_803DD5B8)[2]);
+    {
+        int *a4 = ((int**)p1)[0xA4/4];
+        getAngle(
+            *(f32*)((char*)a4 + 0x18) - ((f32*)lbl_803DD5B8)[0],
+            *(f32*)((char*)a4 + 0x20) - ((f32*)lbl_803DD5B8)[2]);
+    }
+}
+
 extern u8 lbl_803DD5D2;
 extern u8 lbl_803DD5D1;
 extern u8 lbl_803DD5D0;
