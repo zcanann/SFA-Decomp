@@ -411,8 +411,107 @@ int smallbasket_getExtraSize(void)
 
 extern void smallbasket_init();
 extern void smallbasket_update();
-extern void smallbasket_render();
-extern void smallbasket_free();
+extern void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                              undefined4 param_5, char param_6);
+extern undefined4* lbl_803DCA7C;
+extern void* lbl_803DDAC0;
+extern void Resource_Release(void* handle);
+extern void ObjGroup_RemoveObject(int obj, int flag);
+
+/*
+ * --INFO--
+ *
+ * Function: smallbasket_free
+ * EN v1.0 Address: 0x8018259C
+ * EN v1.0 Size: 80b
+ */
+void smallbasket_free(int param_1)
+{
+  (*(code *)(*(int *)lbl_803DCA7C + 0x18))(param_1);
+  Resource_Release(lbl_803DDAC0);
+  ObjGroup_RemoveObject(param_1, 0x10);
+}
+
+extern undefined4* lbl_803DCAAC;
+extern f32 lbl_803E3938;
+extern f32 lbl_803E3950;
+extern f32 lbl_803E3958;
+extern f32 lbl_803E3974;
+extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
+                                 undefined4 p5, double scale);
+extern void* Obj_GetPlayerObject(void);
+extern void mathFn_80021ac8(void* in, void* out);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80182504
+ * EN v1.0 Address: 0x80182504
+ * EN v1.0 Size: 144b
+ */
+void fn_80182504(int param_1)
+{
+  struct LocalArgs {
+    short f8;
+    short fa;
+    short fc;
+    short pad_e;
+    float f10;
+    float f14;
+    float f18;
+    float f1c;
+  } local;
+  int extra;
+  short* player;
+  extra = *(int*)(param_1 + 0xb8);
+  player = (short*)Obj_GetPlayerObject();
+  *(char*)(extra + 6) = 0;
+  *(char*)(extra + 5) = 0;
+  *(char*)(extra + 9) = 1;
+  *(float*)(param_1 + 0x28) = lbl_803E3958;
+  *(float*)(param_1 + 0x2c) = lbl_803E3974;
+  local.f14 = lbl_803E3938;
+  local.f18 = lbl_803E3938;
+  local.f1c = lbl_803E3938;
+  local.f10 = lbl_803E3950;
+  local.fc = 0;
+  local.fa = 0;
+  local.f8 = *player;
+  mathFn_80021ac8(&local.f8, (void*)(param_1 + 0x24));
+}
+
+/*
+ * --INFO--
+ *
+ * Function: smallbasket_render
+ * EN v1.0 Address: 0x801825EC
+ * EN v1.0 Size: 252b
+ */
+void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
+                        undefined4 param_5, char param_6)
+{
+  int extra;
+  int result;
+  short field_a;
+  extra = *(int*)(param_1 + 0xb8);
+  result = (int)(*(code *)(*(int *)lbl_803DCAAC + 0x68))(
+    *(int*)(*(int*)(param_1 + 0x4c) + 0x14));
+  if (result == 0) {
+    *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+  } else {
+    field_a = *(short*)(extra + 0xa);
+    if (field_a != 0 && field_a <= 0x32) {
+      *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+    } else if (*(int*)(extra + 0x14) != 0) {
+      *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+    } else if (*(int*)(param_1 + 0xf8) != 0 && param_6 != -1) {
+      *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;
+    } else {
+      objRenderFn_8003b8f4((void*)param_1, param_2, param_3, param_4, param_5,
+                            (double)lbl_803E3950);
+    }
+  }
+}
 
 ObjectDescriptor gSmallBasketObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

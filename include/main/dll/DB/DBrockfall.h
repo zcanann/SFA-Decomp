@@ -10,7 +10,11 @@ typedef struct FEseqobjectState {
   u8 promptState;
 } FEseqobjectState;
 
-void paymentkiosk_init(int param_1);
+void paymentkiosk_init(int obj, u8 *initData);
+void FEseqobject_init(int obj);
+void FEseqobject_update(int obj);
+int fn_801DF9AC(void *p1, void *p2, u8 *p3);
+void fn_801DFA08(int obj);
 void paymentkiosk_release(void);
 void paymentkiosk_initialise(void);
 void FUN_801df45c(undefined2 *param_1);

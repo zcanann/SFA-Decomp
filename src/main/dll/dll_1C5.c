@@ -39,6 +39,12 @@ extern f32 lbl_803E5D18;
 extern f32 lbl_803E5D1C;
 extern f32 lbl_803E5D20;
 
+extern f32 lbl_803E5064;
+extern f32 lbl_803E5068;
+extern f32 lbl_803E5084;
+extern undefined4 lbl_803DDBC8;
+extern int randomGetRange(int min, int max);
+
 /*
  * --INFO--
  *
@@ -95,6 +101,51 @@ void FUN_801c83d4(int param_1)
 void ecsh_cup_release(void)
 {
 }
+
+/*
+ * --INFO--
+ *
+ * Function: ecsh_cup_init
+ * EN v1.0 Address: 0x801C8A34
+ * EN v1.0 Size: 300b
+ */
+#pragma peephole off
+#pragma scheduling off
+void ecsh_cup_init(int obj, int p2)
+{
+    int t;
+    f32 ftmp;
+
+    t = *(int *)(obj + 0xb8);
+    ftmp = lbl_803E5064;
+    lbl_803DDBC8 = 0;
+    *(f32 *)(t + 0x0) = *(f32 *)(obj + 0xc);
+    *(f32 *)(t + 0x4) = *(f32 *)(obj + 0x10);
+    *(f32 *)(t + 0x8) = *(f32 *)(obj + 0x14);
+    *(f32 *)(t + 0x18) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E5084;
+    {
+        f32 fz = lbl_803E5068;
+        *(f32 *)(t + 0xc) = fz;
+        *(f32 *)(t + 0x10) = fz;
+        *(f32 *)(t + 0x14) = fz;
+    }
+    *(int *)(t + 0x24) = 0;
+    *(int *)(t + 0x28) = *(s16 *)(p2 + 0x1a);
+    *(f32 *)(t + 0x20) = (f32)randomGetRange(0, 0x258);
+    *(s16 *)(t + 0x2c) = (s16)randomGetRange(-0x320, 0x320);
+    *(u8 *)(t + 0x2e) = 1;
+    *(u8 *)(obj + 0x37) = 0;
+    *(f32 *)(t + 0x1c) = lbl_803E5068;
+    if (lbl_803DDBC8 == 0) {
+        lbl_803DDBC8 = ObjGroup_FindNearestObject(0xb, obj, &ftmp);
+    }
+    ObjHits_EnableObject(obj);
+    ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+    ObjHits_SyncObjectPositionIfDirty(obj);
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -349,3 +400,92 @@ void FUN_801c8484(short *param_1)
   }
   return;
 }
+
+extern void *Obj_GetPlayerObject(void);
+extern double fn_80293E80(double v);
+extern void ObjAnim_AdvanceCurrentMove(int obj, void *p2, float f1, float f2);
+extern double getAngle(float dx, float dz);
+extern double Vec_xzDistance(float *a, float *b);
+extern f32 timeDelta;
+extern f32 lbl_803E50A0;
+extern f32 lbl_803E50A4;
+extern f32 lbl_803E50A8;
+extern f32 lbl_803E50AC;
+extern f32 lbl_803E50B0;
+extern f32 lbl_803E50B4;
+extern f32 lbl_803E50B8;
+extern f32 lbl_803E50BC;
+extern f32 lbl_803E50C0;
+extern f32 lbl_803E50C4;
+extern f32 lbl_803E50C8;
+extern f64 lbl_803E50D0;
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801C8B68
+ * EN v1.0 Address: 0x801C8B68
+ * EN v1.0 Size: 852b
+ */
+#pragma peephole off
+#pragma scheduling off
+void fn_801C8B68(int obj)
+{
+    register int self = obj;
+    register int state2 = *(int *)(self + 0x4c);
+    register int state = *(int *)(self + 0xb8);
+    void *player = Obj_GetPlayerObject();
+    int local_var;
+    double dist;
+    double angA, angB;
+    int delta;
+
+    if ((*(short *)(self + 0x6) & 0x4000) != 0) {
+        *(short *)self = 0;
+        *(float *)(self + 0x10) = *(float *)(state2 + 0xc);
+        return;
+    }
+
+    *(short *)(state + 0xe) = (short)(
+        (int)*(short *)(state + 0xe)
+        + (int)(lbl_803E50A0 * timeDelta));
+    *(short *)(state + 0x10) = (short)(
+        (int)*(short *)(state + 0x10)
+        + (int)(lbl_803E50A4 * timeDelta));
+    *(short *)(state + 0x12) = (short)(
+        (int)*(short *)(state + 0x12)
+        + (int)(lbl_803E50A8 * timeDelta));
+
+    *(float *)(self + 0x10) = lbl_803E50AC + (*(float *)(state2 + 0xc) +
+        fn_80293E80((double)((lbl_803E50B0 * ((double)(int)*(short *)(state + 0xe) - lbl_803E50D0)) / lbl_803E50B4)));
+    angA = fn_80293E80((double)((lbl_803E50B0 * ((double)(int)*(short *)(state + 0x10) - lbl_803E50D0)) / lbl_803E50B4));
+    angB = fn_80293E80((double)((lbl_803E50B0 * ((double)(int)*(short *)(state + 0xe) - lbl_803E50D0)) / lbl_803E50B4));
+    *(short *)(self + 0x4) = (short)(int)(lbl_803E50B8 * (angA + angB));
+    angA = fn_80293E80((double)((lbl_803E50B0 * ((double)(int)*(short *)(state + 0x12) - lbl_803E50D0)) / lbl_803E50B4));
+    angB = fn_80293E80((double)((lbl_803E50B0 * ((double)(int)*(short *)(state + 0xe) - lbl_803E50D0)) / lbl_803E50B4));
+    *(short *)(self + 0x2) = (short)(int)(lbl_803E50B8 * (angA + angB));
+
+    ObjAnim_AdvanceCurrentMove(self, &local_var, lbl_803E50BC, timeDelta);
+
+    if (player == NULL) return;
+
+    {
+        float dx = *(float *)(self + 0x18) - *(float *)((int)player + 0x18);
+        float dz = *(float *)(self + 0x20) - *(float *)((int)player + 0x20);
+        int ang = (int)getAngle(dx, dz);
+        delta = (int)(u16)ang - (int)(u16)*(short *)self;
+        if (delta > 0x8000) delta -= 0x10000;
+        if (delta < -0x8000) delta += 0x10000;
+        *(short *)self = (short)(
+            (int)*(short *)self
+            + (int)((float)((double)delta - lbl_803E50D0) * timeDelta / lbl_803E50C0));
+    }
+    dist = Vec_xzDistance((float *)(self + 0x18), (float *)((int)player + 0x18));
+    if (dist <= (double)lbl_803E50C4) {
+        *(u8 *)(self + 0x36) = (u8)(int)(lbl_803E50C8 * (dist / lbl_803E50C4));
+    } else {
+        *(u8 *)(self + 0x36) = 0xff;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset

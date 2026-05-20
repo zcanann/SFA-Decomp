@@ -55,11 +55,81 @@ extern f32 lbl_803E5BF8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void MMSH_Shrine_SeqFn(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                       undefined2 *param_9,int param_10,undefined4 param_11,undefined4 param_12,
-                       undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void MMSH_Shrine_SeqFn(undefined4 param_1,undefined4 param_2,int param_3)
 {
+  int iVar1;
+  int iVar2;
+  uint uVar3;
+  int iVar4;
+  int *piVar5;
+
+  iVar1 = FUN_8028683c();
+  piVar5 = *(int **)(iVar1 + 0xb8);
+  iVar2 = FUN_80017a98();
+  *(undefined2 *)(param_3 + 0x70) = 0xffff;
+  *(undefined *)(param_3 + 0x56) = 0;
+  for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar4 = iVar4 + 1) {
+    switch(*(undefined *)(param_3 + iVar4 + 0x81)) {
+    case 1:
+      piVar5[6] = piVar5[6] | 2;
+      break;
+    case 2:
+      piVar5[6] = piVar5[6] & 0xfffffffd;
+      if ((piVar5[6] & 0x20U) != 0) {
+        FUN_8011eb10(0);
+        piVar5[6] = piVar5[6] & 0xffffffdf;
+      }
+      break;
+    case 3:
+      piVar5[4] = (int)lbl_803E5BEC;
+      break;
+    case 4:
+      piVar5[4] = (int)lbl_803E5BF0;
+      break;
+    case 5:
+      piVar5[4] = (int)-(float)piVar5[4];
+      piVar5[3] = (int)-(float)piVar5[4];
+      break;
+    case 6:
+      piVar5[4] = (int)((float)piVar5[4] * lbl_803E5BF4);
+      break;
+    case 7:
+      FUN_80294ccc(iVar2,4,1);
+      GameBit_Set(0x12a,1);
+      GameBit_Set(0xff,1);
+      (**(code **)(*DAT_803dd72c + 0x44))(0xb,3);
+      break;
+    case 8:
+      piVar5[4] = (int)((float)piVar5[4] * lbl_803E5BF8);
+      break;
+    case 0xe:
+      *(ushort *)(iVar1 + 6) = *(ushort *)(iVar1 + 6) | 0x4000;
+      if (*piVar5 != 0) {
+        FUN_800175cc((double)lbl_803E5BE8,*piVar5,'\0');
+      }
+      break;
+    case 0xf:
+      *(ushort *)(iVar1 + 6) = *(ushort *)(iVar1 + 6) & 0xbfff;
+      if (*piVar5 != 0) {
+        FUN_800175cc((double)lbl_803E5BE8,*piVar5,'\0');
+      }
+    }
+    *(undefined *)(param_3 + iVar4 + 0x81) = 0;
+  }
+  if (((piVar5[6] & 2U) == 0) || (uVar3 = FUN_801c4de0(iVar1), (uVar3 & 0xff) == 0)) {
+    piVar5[6] = piVar5[6] | 1;
+  }
+  else {
+    FUN_8011eb10(0);
+    piVar5[6] = piVar5[6] & 0xffffffdd;
+    *(undefined *)(piVar5 + 9) = 3;
+    GameBit_Set(0xe82,0);
+    GameBit_Set(0xe83,0);
+    GameBit_Set(0xe84,0);
+    GameBit_Set(0xe85,0);
+  }
+  FUN_80286888();
+  return;
 }
 
 /*
@@ -196,96 +266,6 @@ undefined4 FUN_801c4de0(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801c4f4c
- * EN v1.0 Address: 0x801C4F4C
- * EN v1.0 Size: 1092b
- * EN v1.1 Address: 0x801C50C4
- * EN v1.1 Size: 616b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c4f4c(undefined4 param_1,undefined4 param_2,int param_3)
-{
-  int iVar1;
-  int iVar2;
-  uint uVar3;
-  int iVar4;
-  int *piVar5;
-  
-  iVar1 = FUN_8028683c();
-  piVar5 = *(int **)(iVar1 + 0xb8);
-  iVar2 = FUN_80017a98();
-  *(undefined2 *)(param_3 + 0x70) = 0xffff;
-  *(undefined *)(param_3 + 0x56) = 0;
-  for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar4 = iVar4 + 1) {
-    switch(*(undefined *)(param_3 + iVar4 + 0x81)) {
-    case 1:
-      piVar5[6] = piVar5[6] | 2;
-      break;
-    case 2:
-      piVar5[6] = piVar5[6] & 0xfffffffd;
-      if ((piVar5[6] & 0x20U) != 0) {
-        FUN_8011eb10(0);
-        piVar5[6] = piVar5[6] & 0xffffffdf;
-      }
-      break;
-    case 3:
-      piVar5[4] = (int)lbl_803E5BEC;
-      break;
-    case 4:
-      piVar5[4] = (int)lbl_803E5BF0;
-      break;
-    case 5:
-      piVar5[4] = (int)-(float)piVar5[4];
-      piVar5[3] = (int)-(float)piVar5[4];
-      break;
-    case 6:
-      piVar5[4] = (int)((float)piVar5[4] * lbl_803E5BF4);
-      break;
-    case 7:
-      FUN_80294ccc(iVar2,4,1);
-      GameBit_Set(0x12a,1);
-      GameBit_Set(0xff,1);
-      (**(code **)(*DAT_803dd72c + 0x44))(0xb,3);
-      break;
-    case 8:
-      piVar5[4] = (int)((float)piVar5[4] * lbl_803E5BF8);
-      break;
-    case 0xe:
-      *(ushort *)(iVar1 + 6) = *(ushort *)(iVar1 + 6) | 0x4000;
-      if (*piVar5 != 0) {
-        FUN_800175cc((double)lbl_803E5BE8,*piVar5,'\0');
-      }
-      break;
-    case 0xf:
-      *(ushort *)(iVar1 + 6) = *(ushort *)(iVar1 + 6) & 0xbfff;
-      if (*piVar5 != 0) {
-        FUN_800175cc((double)lbl_803E5BE8,*piVar5,'\0');
-      }
-    }
-    *(undefined *)(param_3 + iVar4 + 0x81) = 0;
-  }
-  if (((piVar5[6] & 2U) == 0) || (uVar3 = FUN_801c4de0(iVar1), (uVar3 & 0xff) == 0)) {
-    piVar5[6] = piVar5[6] | 1;
-  }
-  else {
-    FUN_8011eb10(0);
-    piVar5[6] = piVar5[6] & 0xffffffdd;
-    *(undefined *)(piVar5 + 9) = 3;
-    GameBit_Set(0xe82,0);
-    GameBit_Set(0xe83,0);
-    GameBit_Set(0xe84,0);
-    GameBit_Set(0xe85,0);
-  }
-  FUN_80286888();
-  return;
-}
-
-/*
- * --INFO--
- *
  * Function: mmsh_shrine_getExtraSize
  * EN v1.0 Address: 0x801C4D78
  * EN v1.0 Size: 8b
@@ -333,5 +313,90 @@ int mmsh_shrine_func08(void)
  * PAL Size: TODO
  */
 void mmsh_shrine_hitDetect(void)
+{
+}
+
+extern void lightFn_8001db6c(int p1, int p2, f32 f);
+extern void fn_8011F6D4(int p);
+extern void ModelLightStruct_free(void *p);
+extern void Music_Trigger(int id, int p2);
+extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4,
+                                  undefined4 p5, f32 f);
+extern void objParticleFn_80099d84(int p1, int p2, int p3, f32 f1, f32 f2);
+extern f32 lbl_803E4F50;
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_shrine_free
+ * EN v1.0 Address: 0x801C4D88
+ * EN v1.0 Size: 220b
+ */
+#pragma peephole off
+#pragma scheduling off
+void mmsh_shrine_free(int obj)
+{
+    int t = *(int *)(obj + 0xb8);
+    if ((*(int *)(t + 0x18) & 0x20) != 0) {
+        fn_8011F6D4(0);
+        *(int *)(t + 0x18) = *(int *)(t + 0x18) & 0xffffffdf;
+    }
+    if (*(void **)t != NULL) {
+        ModelLightStruct_free(*(void **)t);
+        *(int *)t = 0;
+    }
+    Music_Trigger(0xd8, 0);
+    Music_Trigger(0xd9, 0);
+    Music_Trigger(0x8, 0);
+    Music_Trigger(0xa, 0);
+    GameBit_Set(0xefa, 0);
+    GameBit_Set(0xcbb, 1);
+    GameBit_Set(0xe82, 0);
+    GameBit_Set(0xe83, 0);
+    GameBit_Set(0xe84, 0);
+    GameBit_Set(0xe85, 0);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_shrine_render
+ * EN v1.0 Address: 0x801C4E64
+ * EN v1.0 Size: 184b
+ */
+#pragma peephole off
+#pragma scheduling off
+void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
+                        char flag)
+{
+    int t = *(int *)(obj + 0xb8);
+    if (flag == 0) {
+        if (*(void **)t != NULL) {
+            lightFn_8001db6c(*(int *)t, 0, lbl_803E4F50);
+        }
+    } else {
+        if (*(void **)t != NULL) {
+            lightFn_8001db6c(*(int *)t, 1, lbl_803E4F50);
+        }
+        objRenderFn_8003b8f4(obj, a2, a3, a4, a5, lbl_803E4F50);
+        objParticleFn_80099d84(obj, 7, *(int *)t, lbl_803E4F50, lbl_803E4F50);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_shrine_update
+ * EN v1.0 Address: 0x801C4F20
+ * EN v1.0 Size: 952b
+ *
+ * TODO: this stub exists so the function set aligns with v1.0 asm. Body
+ * needs to be filled in from the asm (state machine on extra->field_0x24).
+ */
+void mmsh_shrine_update(int param_1)
 {
 }

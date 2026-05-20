@@ -2287,5 +2287,181 @@ int return0_8005669C(void) { return 0x0; }
 /* 12b 3-insn patterns. */
 extern s8 curMapLayer;
 extern s8 lbl_803DCEA4;
+extern s16 lbl_803DCEB4;
+extern s16 lbl_803DCEB6;
+extern u32 renderFlags;
 s32 getCurMapLayer(void) { return curMapLayer; }
 s32 getCurMapType(void) { return lbl_803DCEA4; }
+
+/* 20b reset triplet. */
+void mapReloadWithFadeout(void) {
+	lbl_803DCEA4 = 0;
+	lbl_803DCEB6 = 0;
+	lbl_803DCEB4 = 0;
+}
+
+/* 16b sda lookup. */
+extern int lbl_803DCE6C;
+void* fn_80056684(int idx) {
+	return (void*)(lbl_803DCE6C + (idx << 4));
+}
+
+/* 32b two-stage table lookup via lis/addi/lwz. */
+extern int lbl_803822A0[5];
+void* fn_80059334(int a, int b) {
+	int* base = (int*)lbl_803822A0[0];
+	return (char*)base + (a + (b << 4)) * 12;
+}
+
+/* 48b paired float reads scaled by sda21 constant. */
+extern int lbl_803DCE68;
+extern f32 lbl_803DEBC8;
+
+void fn_80056B8C(int idx, float* out1, float* out2) {
+	float* p = (float*)(lbl_803DCE68 + (idx << 4));
+	*out1 = p[0] / lbl_803DEBC8;
+	*out2 = ((float*)(lbl_803DCE68 + (idx << 4)))[1] / lbl_803DEBC8;
+}
+
+/* 52b layer clamp pair. */
+void goToPrevMapLayer(void) {
+	curMapLayer = curMapLayer - 1;
+	if (curMapLayer < -2) {
+		curMapLayer = -2;
+	}
+	renderFlags |= 0x4000;
+}
+
+void goToNextMapLayer(void) {
+	curMapLayer = curMapLayer + 1;
+	if (curMapLayer > 2) {
+		curMapLayer = 2;
+	}
+	renderFlags |= 0x4000;
+}
+
+/* 132b per-block flag scan. */
+typedef struct {
+	u32 field_0;
+	s16 field_4;
+	u16 field_6;
+} BlockEntry;
+
+extern BlockEntry lbl_8038224C[8];
+extern s8 lbl_803DCDEC;
+
+void mapBlockFn_80059c2c(u8* outFlags) {
+	int outer;
+	for (outer = 0; outer < 0x78; outer++) {
+		int i;
+		int found = -1;
+		s8 limit = lbl_803DCDEC;
+		for (i = 0; i < limit; i++) {
+			if (lbl_8038224C[i].field_0 != 0 && lbl_8038224C[i].field_4 == outer) {
+				found = i;
+				break;
+			}
+		}
+		if (found == -1) {
+			outFlags[outer] = 0;
+		} else {
+			outFlags[outer] = 1;
+		}
+	}
+}
+
+/* 136b 5-plane view-frustum sphere visibility test. */
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803DEBCC;
+extern char gViewFrustumPlanes[];
+
+int ViewFrustum_IsSphereVisible(float* center, float radius) {
+	u8 i;
+	for (i = 0; i < 5; i++) {
+		float* plane = (float*)(gViewFrustumPlanes + i * 0x14);
+		float dot = plane[0] * (center[0] - playerMapOffsetX)
+		          + center[1] * plane[1]
+		          + plane[2] * (center[2] - playerMapOffsetZ)
+		          + plane[3];
+		if (radius + dot < lbl_803DEBCC) return 0;
+	}
+	return 1;
+}
+
+/* 112b indexed teardown/free of map block. */
+extern char lbl_803822C8[];
+extern void* lbl_80386468[];
+extern void defStartFn_8005972c(void* p1, void* p2, int idx, int flag);
+extern void mm_free(void* p);
+
+void fn_80059A50(int idx) {
+	void* p = lbl_80386468[idx];
+	if (p != 0) {
+		defStartFn_8005972c(p, lbl_803822C8 + idx * 0x8C, idx, 1);
+		mm_free(lbl_80386468[idx]);
+		lbl_80386468[idx] = 0;
+	}
+}
+
+/* 96b camera-pos gated load. */
+extern f32 lbl_803DCE5C;
+extern f32 lbl_803DCE60;
+extern f32 lbl_803DCE64;
+extern void doPendingMapLoads(void);
+
+void loadMapForCameraPos(float x, float y, float z) {
+	if ((renderFlags & 2) != 0 && (renderFlags & 0x800) == 0) return;
+	lbl_803DCE64 = x;
+	lbl_803DCE60 = y;
+	lbl_803DCE5C = z;
+	renderFlags |= 2;
+	if ((renderFlags & 0x800) != 0) {
+		doPendingMapLoads();
+	}
+}
+
+/* 80b current map block lookup. */
+extern int lbl_803DB648;
+extern void* lbl_803DCEA0;
+extern void* lbl_80386468[];
+
+void* mapBlockFn_800592e4(void) {
+	char* p = (char*)lbl_803822A0[0];
+	int v = *(s16*)(p + 0x594);
+	if (v < 0) {
+		v = lbl_803DB648;
+	}
+	if (v < 0) {
+		return 0;
+	}
+	{
+		void* res = lbl_80386468[v];
+		if (res == 0) {
+			return res;
+		}
+		lbl_803DB648 = v;
+		lbl_803DCEA0 = res;
+		return res;
+	}
+}
+
+/* 104b conditional gameTextLoadDir caller. */
+extern int lbl_803DCEC4;
+extern int lbl_803DCEC8;
+extern s8 lbl_8030E55C[];
+extern void gameTextLoadDir(int dirId);
+
+void gameTextLoadForMap_800571f0(u8 force) {
+	int curVal = lbl_803DCEC8;
+	if (curVal == -1) return;
+	if (curVal == lbl_803DCEC4 && force == 0) return;
+	lbl_803DCEC4 = curVal;
+	if (curVal >= 0x76) return;
+	{
+		s8 entry = lbl_8030E55C[curVal];
+		if (entry == -1) return;
+		gameTextLoadDir(entry);
+	}
+}
+

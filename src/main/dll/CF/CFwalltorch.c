@@ -35,7 +35,7 @@ extern f32 FLOAT_803e4b30;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80190bd4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void fn_80190BD4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -333,6 +333,89 @@ int transporter_getExtraSize(void)
 {
   return 0x10;
 }
+
+extern void objRenderFn_80041018(int obj);
+extern uint GameBit_Get(int eventId);
+extern void fn_8019098C(int obj);
+extern void fn_8019042C(int obj);
+extern short lbl_803DCEB8;
+
+/*
+ * --INFO--
+ *
+ * Function: transporter_update
+ * EN v1.0 Address: 0x80191658
+ * EN v1.0 Size: 72b
+ */
+#pragma peephole off
+#pragma scheduling off
+void transporter_update(int obj)
+{
+    register int self = obj;
+    register int state2 = *(int *)(self + 0x4c);
+    if ((int)(signed char)*(u8 *)(state2 + 0x1a) != -1) {
+        fn_8019098C(self);
+    }
+    fn_8019042C(self);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: transporter_hitDetect
+ * EN v1.0 Address: 0x801914AC
+ * EN v1.0 Size: 428b
+ */
+#pragma peephole off
+#pragma scheduling off
+void transporter_hitDetect(int obj)
+{
+    register int self = obj;
+    register int state2 = *(int *)(self + 0x4c);
+    register int state = *(int *)(self + 0xb8);
+
+    if ((int)lbl_803DCEB8 > -1) {
+        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xffffffe7);
+        *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) | 1);
+        if (*(u32 *)(self + 0x74) != 0) {
+            objRenderFn_80041018(self);
+        }
+        return;
+    }
+
+    if ((int)(signed char)*(u8 *)(state2 + 0x1a) != -1
+        && (*(u8 *)(state + 0xe) & 0x20) == 0) {
+        if (*(u8 *)(state + 0xd) != 0 || *(u8 *)(state + 0xc) != 0) {
+            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
+            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & 0xfffffffe);
+        } else if ((int)*(short *)(state2 + 0x20) != -1
+                   && GameBit_Get((int)*(short *)(state2 + 0x20)) == 0) {
+            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xfffffff7);
+            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x10);
+            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & 0xfffffffe);
+        } else {
+            *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xffffffe7);
+            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) | 1);
+        }
+        if (*(u32 *)(self + 0x74) != 0) {
+            objRenderFn_80041018(self);
+        }
+        return;
+    }
+
+    /* Branch C */
+    if ((*(u8 *)(state + 0xe) & 0x40) != 0) {
+        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
+    } else {
+        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xfffffff7);
+        *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x10);
+    }
+    *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & 0xfffffffe);
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--

@@ -2969,3 +2969,62 @@ void fn_8003B608(s16 a, s16 b, s16 c) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* 12b "*p = -1" */
+void fn_80039264(s32* p) {
+    *p = -1;
+}
+
+/* 12b sda accessor return */
+extern int lbl_802CAE88[10];
+void* seqFn_800394a0(void) {
+    return lbl_802CAE88;
+}
+
+/* 40b 4-byte field setter triplet+flag. */
+extern u8 lbl_803DCC09;
+extern u8 lbl_803DCC0A;
+extern u8 lbl_803DCC0B;
+extern u8 lbl_803DCC0C;
+extern u8 lbl_803DCC0D;
+void fn_8003B5E0(u8 a, u8 b, u8 c, u8 d) {
+    lbl_803DCC0D = a;
+    lbl_803DCC0C = b;
+    lbl_803DCC0B = c;
+    lbl_803DCC09 = 1;
+    lbl_803DCC0A = d;
+}
+
+/* 100b texture lookup by byte tag. */
+void* objFindTexture(void* obj, int target) {
+    void* result = NULL;
+    void* p50 = *(void**)((char*)obj + 0x50);
+    if (p50 != NULL) {
+        u8* entries = *(u8**)((char*)p50 + 0xC);
+        if (entries == NULL) return NULL;
+        {
+            s8 count = *(s8*)((char*)p50 + 0x59);
+            int offset = 0;
+            int i;
+            for (i = 0; i < count; i++) {
+                if (target == entries[0]) {
+                    char* base = *(char**)((char*)obj + 0x70);
+                    result = base + offset;
+                }
+                entries += 2;
+                offset += 0x10;
+            }
+        }
+    }
+    return result;
+}
+
+/* 60b objRenderShadow guard. */
+extern void objRenderShadow(void* obj);
+void objRenderShadowIfVisible(void* obj) {
+    void** arr = *(void***)((char*)obj + 0x7C);
+    s8 idx = *(s8*)((char*)obj + 0xAD);
+    if (arr[idx] != NULL) {
+        objRenderShadow(obj);
+    }
+}

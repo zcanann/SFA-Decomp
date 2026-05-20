@@ -4015,10 +4015,11 @@ void FUN_80170f64(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3420;
 void checkpoint4_render(int param_1)
 {
-  FUN_8003b818(param_1);
-  return;
+  objRenderFn_8003b8f4(lbl_803E3420);
 }
 
 /*
@@ -4501,8 +4502,8 @@ extern void staff_release();
 extern void staff_initialise();
 extern void staff_modelMtxFn();
 extern void staff_hitDetectGeometry();
-extern void staff_func10();
-extern void staff_func11();
+void staff_func10(int *obj, s32 v);
+void staff_func11(int *obj, s32 v);
 extern void staff_func12();
 extern s16 staff_func13(int *obj);
 extern void staff_func14();
@@ -4513,7 +4514,7 @@ extern void fireball_render();
 extern void fireball_hitDetect();
 extern void fireball_update();
 extern void fireball_init();
-extern void flamethrowerspe_setScale();
+void flamethrowerspe_setScale(int *obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3);
 extern void flamethrowerspe_func0B(int *obj);
 extern void flamethrowerspe_render(void);
 extern void flamethrowerspe_update();
@@ -4969,5 +4970,46 @@ extern void quakeSpellFn_8016cee8(int *obj, int x);
 #pragma scheduling off
 #pragma peephole off
 void fn_8016EB50(int *obj) { quakeSpellFn_8016cee8(obj, *(int*)((char*)obj + 0xc4)); }
+#pragma peephole reset
+#pragma scheduling reset
+
+/* state-byte setters / leaf writers. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8016D9EC(int *obj, u8 a, u8 b) {
+    u8 *state = (u8*)((int**)obj)[0xb8/4];
+    state[0xbb] = a;
+    state[0xba] = b;
+}
+
+void staff_func10(int *obj, s32 v) {
+    *(s16*)((char*)((int**)obj)[0xb8/4] + 0xb2) = (s16)v;
+}
+
+void staff_func11(int *obj, s32 v) {
+    s16 *p = (s16*)((char*)((int**)obj)[0xb8/4] + 0x88);
+    if (v > 0xff) v = 0xff;
+    *p = (s16)v;
+}
+
+void collectible_func0E(int *obj, u32 v) {
+    *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1e) = (u8)v;
+}
+
+void collectible_render2(int *obj, f32 f1, f32 f2, f32 f3) {
+    s32 v = 0x8;
+    *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1d) = (u8)v;
+    *(f32*)((char*)obj + 0x24) = f1;
+    *(f32*)((char*)obj + 0x28) = f2;
+    *(f32*)((char*)obj + 0x2c) = f3;
+}
+
+void flamethrowerspe_setScale(int *obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3) {
+    *(f32*)((char*)obj + 0xc) = f1;
+    *(f32*)((char*)obj + 0x10) = f2;
+    *(f32*)((char*)obj + 0x14) = f3;
+    *(s16*)((char*)obj + 0x2) = a;
+    *(s16*)((char*)obj + 0x0) = b;
+}
 #pragma peephole reset
 #pragma scheduling reset

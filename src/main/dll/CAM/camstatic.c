@@ -7,7 +7,7 @@ extern double FUN_800176f4();
 extern int FUN_80017730();
 extern undefined4 camcontrol_traceMove();
 extern undefined4 camcontrol_updateTargetAction();
-extern undefined4 FUN_801043bc();
+extern undefined4 camMoveFn_80104040();
 extern undefined4 camcontrol_updateModeSettings();
 extern undefined4 camcontrol_updateVerticalBounds();
 extern undefined4 camslide_update();
@@ -120,7 +120,7 @@ void camstatic_update(short *param_1)
 LAB_80105bbc:
   *(undefined *)(param_1 + 0x9f) = 0;
   camcontrol_updateModeSettings((int)param_1);
-  FUN_801043bc();
+  camMoveFn_80104040();
   firstperson_updatePosition((int)param_1,psVar4);
   FUN_800068f8((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
                (double)*(float *)(param_1 + 10),(float *)(param_1 + 0xc),(float *)(param_1 + 0xe),

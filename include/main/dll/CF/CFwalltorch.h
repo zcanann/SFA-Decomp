@@ -9,14 +9,14 @@ extern ObjectDescriptor gCflightwallObjDescriptor;
 extern ObjectDescriptor gBarrelPadObjDescriptor;
 extern ObjectDescriptor gCF_DoorLightObjDescriptor;
 
-void FUN_80190bd4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void fn_80190BD4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 int transporter_getExtraSize(void);
 void transporter_render(void);
-void transporter_hitDetect(void);
-void transporter_update(void);
+void transporter_hitDetect(int obj);
+void transporter_update(int obj);
 void transporter_init(void);
 
 int cflightwall_getExtraSize(void);

@@ -94,3 +94,130 @@ Commit when both are true:
 - The result is plausible original source or materially improves the ability to recover it.
 
 Less process is intentional. Use judgment, move fast, and avoid spending an hour proving a bad assumption.
+
+## Ghidra Drift Playbook (add-new-function pattern)
+
+The Ghidra-imported `dll_XXX.c` files are usually decomp'd from a different snapshot
+than the v1.0 `.s` we're matching against. Symptom: the report says "1 stub" but
+when you read the asm you find 3-5 stubs, and the src functions (often named
+`FUN_801cXXXX`) are at addresses INSIDE the asm symbol ranges - Ghidra split
+them differently than the binary did.
+
+**Do not** try to fix the misaligned `FUN_xxx` functions in place. Compile order
+matters less than you think. Instead use the **add-new-function** pattern:
+
+1. Read `build/GSAE01/asm/main/dll/<unit>.s` and list `^\.fn` symbols + sizes.
+   That is the canonical function set.
+2. List the src's current function set (`grep -nE "^void|^int|^undefined" src/...`).
+3. For each asm symbol missing from src, ADD a new function with that exact name
+   to the bottom of the src file. The src file's existing `FUN_xxx` functions
+   can stay - they're dead/unreferenced or referenced only externally.
+4. Read the asm body for the new function and translate to C. Cargo-cult call
+   patterns from already-matched files:
+   - `(*(code *)(*(int *)lbl_XXX + offset))(args)` for vtable calls through
+     SDA21 pointer-to-pointer.
+   - `extern int Obj_IsObjectAlive(void* obj);` style — check `src/main/dll/*.c`
+     for existing extern declarations.
+   - `(double)lbl_SDA_FLOAT` for f1 args to functions that take a `double`.
+   - `*(unsigned char*)(p + off)` instead of `*(char*)(p + off)` when the asm
+     reads with `lbz; cmplwi` (no `extsb.`).
+5. Build, check the report, commit per-function gains. Even a partial fuzzy
+   match (50-90%) is real progress and unblocks the unit from "0 of N matched"
+   purgatory.
+
+For deeper structural fixes (where the asm body of one symbol corresponds to a
+`FUN_xxx` source function, just renamed), see `dbbc5ba9 Restructure laser19F`:
+move the `FUN_xxx` body into the right symbol with the right signature, delete
+the `FUN_xxx`, drop its `.h` declaration. Keep `FUN_xxx` only if other `.c`
+files extern-reference it (e.g. shrine.c calls FUN_801c4b14).
+
+Wins seen in practice: byte-exact matches when the body lines up well, ~50-99%
+fuzzy otherwise. The remaining MWCC-vs-target diffs are usually unimportant
+scheduling choices (`extsb.` vs `extsb + cmplwi`, `lis r3` order vs `slwi r0`,
+epilog reordering of `lwz r0` vs saved-reg restores) that we can't trivially
+force from C source.
+
+## Forcing MWCC instruction selection: the asm{} + register trick
+
+When a function reports 80-99% fuzzy and the diff shows MWCC picking a
+"compressed" form where target uses a longer encoding, the residual is almost
+always one of these instruction-selection mismatches:
+
+| Source pattern | MWCC picks | Target picks |
+|---|---|---|
+| `x &= 0xfffffbff;` (single bit clear) | `rlwinm r0,r0,0,22,20` (1 instr) | `li r0,-1025; and r0,r3,r0` (2 instr) |
+| `byte = (b & ~M) \| ((v & 1) << S);` | `andi.; ori` (constant collapse) | `li r3, v; rlwimi r0,r3,S,...` |
+| `(s8)b != 0` (then branch) | `extsb.; beq` (fused, 1 instr) | `extsb r0,r8; cmpwi r0,0; beq` (2-3 instr) |
+| `if (*(int*)p != 0)` | `cmpwi` (signed) | `cmplwi` (unsigned) — use `*(void**)p != NULL` |
+
+`#pragma peephole off` + `#pragma scheduling off` around the function fixes the
+`extsb./extsh.`/peephole cases (huge win — took dll_198 from low-90s to 100% on
+3 of its 6 functions). It does **not** fix the rlwinm-vs-li-and or
+andi+ori-vs-rlwimi cases — those are instruction-selection, not peephole.
+
+For the instruction-selection ones, the only reliable workaround is an inline
+`asm { }` block with `register` variables. The pattern:
+
+```c
+{
+    register u32 m, v;        // m wins r0, v wins r3 (declaration order)
+    register int pReg = p;    // forces parameter into a fixed register
+    /* normal C statements that precede the bit-op stay outside the asm */
+    asm {
+        lwz v, 0x54(pReg)
+        li m, -1025           // force the "long" form
+        and m, v, m
+        stw m, 0x54(pReg)
+    }
+    /* normal C resumes */
+}
+```
+
+**Critical: declaration order chooses the register.** MWCC's allocator picks
+volatile regs roughly in declaration order. Swap `register u32 m;` /
+`register u32 v;` declarations to swap which goes to r0 vs r3 in the asm.
+This is how `CameraModeCombat_free` and `fn_80189BE4` were taken from low-80s
+to 100% — same source body, just reordered the two `register` lines until the
+register assignment matched target.
+
+For `rlwimi` (bit insert vs MWCC's andi+ori), the asm form is:
+
+```c
+{
+    register u32 b;
+    register u32 bitval;
+    /* set bitval to the 0/1 value to insert */
+    bitval = 1;
+    asm {
+        lbz b, 0x1d(t)
+        rlwimi b, bitval, 5, 26, 26   // insert bit at position 5 (0x20)
+        stb b, 0x1d(t)
+    }
+}
+```
+
+### When to NOT use this
+
+- The diff is only scheduling reorder (mr/li swap, lfs/fmr swap before a call,
+  prologue save order). `#pragma peephole off` is enough or there's nothing
+  reasonable from source.
+- The diff is missing or wrong function bodies (FUN_xxx vs target symbol).
+  Restructure source first — asm tricks won't help if the function isn't even
+  there.
+- Function is below ~50% fuzzy. Solve the bulk of the body first, then come
+  back for the asm{} polish.
+
+### Cheap pre-check before reaching for asm{}
+
+Try these one-line source rewrites first; sometimes they're enough on their own:
+- `& 0xff7f` → `& ~0x80`         (often gives `rlwinm` where literal gives `andi`)
+- `*(int*)p != 0` → `*(void**)p != NULL`   (signed → unsigned compare)
+- `if (v <= K) return v; return K;` → `if (v > K) v = K; return v;`
+  (gives `blelr` from a single value-clamp)
+- For a constant reused across N consecutive stores, lift to a local:
+  `f32 fz = lbl_xxx; *p1 = fz; *p2 = fz; *p3 = fz;` so MWCC CSEs across the
+  stores instead of reloading.
+- Swap declaration order of two `int` locals whose addresses are passed to an
+  out-param function. The compiler allocates stack offsets in declaration
+  order; if target wants `&objectIndex` at sp+8 and `&objectCount` at sp+0xc,
+  declare objectCount first.

@@ -38,11 +38,25 @@ extern f32 lbl_803E6310;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void paymentkiosk_init(int param_1)
+extern void fn_801DF1EC(void);
+#pragma scheduling off
+#pragma peephole off
+void paymentkiosk_init(int obj, u8 *initData)
 {
-  FUN_8003b818(param_1);
-  return;
+    register int self = obj;
+    register int state = *(int *)(self + 0xb8);
+    u32 secondaryFlag;
+
+    *(void (**)(void))(self + 0xbc) = fn_801DF1EC;
+    *(short *)self = (short)((int)(signed char)initData[0x18] << 8);
+    *(u8 *)state = 0;
+    *(u16 *)(self + 0xb0) = (u16)((u32)*(u16 *)(self + 0xb0) | 0x6000);
+    *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
+    secondaryFlag = (*(short *)(self + 0x46) == 0x476) ? 1 : 0;
+    *(u8 *)(state + 1) = (u8)secondaryFlag;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -297,6 +311,73 @@ void fn_801DF9D0(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 #pragma scheduling off
 #pragma peephole off
 void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_801DF4AC(void);
+extern undefined4 *lbl_803DCA54;
+
+/*
+ * Function: FEseqobject_init
+ * EN v1.0 Address: 0x801DF8F4
+ * EN v1.0 Size: 56b
+ */
+#pragma scheduling off
+#pragma peephole off
+void FEseqobject_init(int obj)
+{
+    *(short *)obj = 0;
+    *(void (**)(void))(obj + 0xbc) = fn_801DF4AC;
+    ObjMsg_AllocQueue((void *)obj, 0xa);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * Function: FEseqobject_update
+ * EN v1.0 Address: 0x801DF894
+ * EN v1.0 Size: 96b
+ */
+#pragma scheduling off
+#pragma peephole off
+void FEseqobject_update(int obj)
+{
+    register int self = obj;
+    *(short *)self = 0x2000;
+    if (GameBit_Get(0x75) == 0) {
+        (*(void (**)(int, int, int))((char *)*(int *)lbl_803DCA54 + 0x48))(0, self, -1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * Function: fn_801DF9AC
+ * EN v1.0 Address: 0x801DF9AC
+ * EN v1.0 Size: 16b
+ */
+#pragma scheduling off
+#pragma peephole off
+int fn_801DF9AC(void *p1, void *p2, u8 *p3)
+{
+    p3[0x56] = 0;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * Function: fn_801DFA08
+ * EN v1.0 Address: 0x801DFA08
+ * EN v1.0 Size: 24b
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_801DFA08(int obj)
+{
+    *(short *)obj = 0;
+    *(int (**)(void *, void *, u8 *))(obj + 0xbc) = fn_801DF9AC;
+}
 #pragma peephole reset
 #pragma scheduling reset
 

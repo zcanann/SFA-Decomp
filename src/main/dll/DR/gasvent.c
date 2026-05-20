@@ -380,3 +380,73 @@ int gunpowderbarrel_getExtraSize(void)
 {
   return 0x58;
 }
+
+extern undefined4* lbl_803DCAC0;
+extern undefined4* lbl_803DCA78;
+extern int Obj_IsObjectAlive(void* obj);
+extern void ObjLink_DetachChild(int obj, void* child);
+
+/*
+ * --INFO--
+ *
+ * Function: gunpowderbarrel_free
+ * EN v1.0 Address: 0x801A189C
+ * EN v1.0 Size: 196b
+ */
+void gunpowderbarrel_free(int param_1, int param_2)
+{
+  int extra;
+  void* child;
+  extra = *(int*)(param_1 + 0xb8);
+  (*(code*)(*(int *)lbl_803DCAC0 + 0x10))(param_1);
+  child = *(void**)(extra + 0x10);
+  if (child != 0 && param_2 == 0) {
+    if (Obj_IsObjectAlive(child) != 0) {
+      ObjLink_DetachChild(param_1, *(void**)(extra + 0x10));
+      *(int*)(extra + 0x10) = 0;
+    }
+  }
+  ObjGroup_RemoveObject(param_1, 0x19);
+  ObjGroup_RemoveObject(param_1, 0x16);
+  if (*(unsigned char*)(extra + 0x17) != 0) {
+    (*(code*)(*(int *)lbl_803DCA78 + 0x18))(param_1);
+  }
+}
+
+extern f32 lbl_803E42DC;
+
+/*
+ * --INFO--
+ *
+ * Function: gunpowderbarrel_render
+ * EN v1.0 Address: 0x801A1960
+ * EN v1.0 Size: 256b
+ */
+void gunpowderbarrel_render(int param_1, undefined4 param_2, undefined4 param_3,
+                            undefined4 param_4, undefined4 param_5, char param_6)
+{
+  int extra;
+  int result;
+  int childObj;
+  extra = *(int*)(param_1 + 0xb8);
+  if (*(char*)(extra + 0x17) != 0) {
+    return;
+  }
+  if ((*(unsigned char*)(extra + 0x4a) >> 5) & 1) {
+    return;
+  }
+  if (*(char*)(extra + 0x15) != 0) {
+    *(short*)(param_1 + 4) = 0;
+    *(short*)(param_1 + 2) = 0;
+  }
+  result = (int)(*(code *)(*(int *)lbl_803DCAC0 + 0xc))(param_1, param_6);
+  if (result != 0 || param_6 == -1) {
+    objRenderFn_8003b8f4((void*)param_1, param_2, param_3, param_4, param_5,
+                          (double)lbl_803E42DC);
+  }
+  childObj = *(int*)(extra + 0x10);
+  if (childObj != 0) {
+    (*(code *)(*(int *)(*(int *)(childObj + 0x68)) + 0x10))(
+        childObj, param_2, param_3, param_4, param_5, param_6);
+  }
+}

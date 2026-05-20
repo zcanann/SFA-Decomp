@@ -40,7 +40,7 @@ extern f32 lbl_803E5E4C;
 /*
  * --INFO--
  *
- * Function: FUN_801cbd88
+ * Function: fn_801CBD88
  * EN v1.0 Address: 0x801CBD88
  * EN v1.0 Size: 2124b
  * EN v1.1 Address: 0x801CC33C
@@ -50,7 +50,7 @@ extern f32 lbl_803E5E4C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cbd88(void)
+void fn_801CBD88(void)
 {
   int iVar1;
   uint uVar2;
@@ -419,3 +419,123 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void fn_801CC740(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E51B0); }
 #pragma peephole reset
+
+/* Stubs to align function set with v1.0 asm. */
+void fn_801CC578(void) {}
+void fn_801CC774(void) {}
+void fn_801CCB44(void) {}
+
+extern undefined4 *lbl_803DCA78;
+
+/*
+ * Function: fn_801CC950
+ * EN v1.0 Address: 0x801CC950
+ * EN v1.0 Size: 64b
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_801CC950(int obj, u8 *initData)
+{
+    register int self = obj;
+    register int state = *(int *)(self + 0xb8);
+    *(short *)self = (short)((int)(signed char)initData[0x1e] << 8);
+    *(int *)(self + 0xf8) = 0;
+    *(short *)(state + 4) = 0x64;
+    *(short *)(state + 6) = 0;
+    *(int *)state = 0;
+    *(u8 *)(self + 0x37) = 0xff;
+    *(u8 *)(self + 0x36) = 0xff;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * Function: fn_801CC9A8
+ * EN v1.0 Address: 0x801CC9A8
+ * EN v1.0 Size: 132b
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_801CC9A8(int obj)
+{
+    register int self = obj;
+    register int state = *(int *)(self + 0xb8);
+    if ((*(u8 *)(state + 0x36) & 2) == 0) {
+        getLActions(self, self, 1, 0, 0, 0);
+        *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 0x2);
+    }
+    (*(void (**)(int))((char *)*(int *)lbl_803DCA78 + 0x18))(self);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
+
+/*
+ * Function: fn_801CCECC
+ * EN v1.0 Address: 0x801CCECC
+ * EN v1.0 Size: 208b
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_801CCECC(int obj)
+{
+    register int self = obj;
+    register int state2 = *(int *)(self + 0x4c);
+    int slot;
+
+    if ((int)(signed char)*(u8 *)(state2 + 0x19) != 0) {
+        slot = 3;
+    } else {
+        slot = 1;
+    }
+    ObjHits_SetHitVolumeSlot(self, 0xe, slot, 0);
+
+    if ((int)(signed char)*(u8 *)(state2 + 0x19) == 1) {
+        getLActions(self, self, 0x203, 0, 0, 0);
+    } else if ((int)(signed char)*(u8 *)(state2 + 0x19) == 2) {
+        getLActions(self, self, 0x204, 0, 0, 0);
+    } else {
+        getLActions(self, self, 0x201, 0, 0, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern undefined4 *pDll_expgfx;
+extern f32 lbl_803E51B8;
+extern f64 lbl_803E51C0;
+
+/*
+ * Function: fn_801CCA30
+ * EN v1.0 Address: 0x801CCA30
+ * EN v1.0 Size: 276b
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_801CCA30(int obj)
+{
+    register int self = obj;
+    register int state = *(int *)(self + 0xb8);
+    int state2 = *(int *)(self + 0x4c);
+    float vec[4];
+    int linkObj;
+    int linkSubObj;
+
+    vec[3] = lbl_803E51B8;
+    vec[2] = lbl_803E51B8;
+    vec[1] = lbl_803E51B8;
+    vec[0] = (float)((double)(int)(signed char)*(u8 *)(state2 + 0x19) - lbl_803E51C0);
+
+    linkObj = *(int *)(self + 0x54);
+    linkSubObj = *(int *)(linkObj + 0x50);
+    if (linkSubObj == 0) return;
+    if (*(short *)(linkSubObj + 0x46) == 0x248) return;
+
+    (*(code *)((char *)*(int *)pDll_expgfx + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+    (*(code *)((char *)*(int *)pDll_expgfx + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+    (*(code *)((char *)*(int *)pDll_expgfx + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+    *(short *)(state + 0x32) = 0x32;
+}
+#pragma peephole reset
+#pragma scheduling reset

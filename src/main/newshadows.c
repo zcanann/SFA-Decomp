@@ -2775,3 +2775,91 @@ extern void mm_free(u32);
 void fn_8006CB24(void) { mm_free(lbl_803DCFBC); lbl_803DCFBC = 0; }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Three-out info getter:  *p1 = &lbl; *p2 = 4; *p3 = 8; */
+extern u8 lbl_8038E1E8[0x80];
+#pragma scheduling off
+#pragma peephole off
+void fn_8006C4C0(int *p1, int *p2, int *p3)
+{
+    *p1 = (int)lbl_8038E1E8;
+    *p2 = 4;
+    *p3 = 8;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Two-out info getter:  *p1 = &lbl; *p2 = 0x10; */
+extern u8 lbl_8038E268[0x40];
+#pragma scheduling off
+#pragma peephole off
+void textureFn_8006c4e0(int *p1, int *p2)
+{
+    *p1 = (int)lbl_8038E268;
+    *p2 = 0x10;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Trivial GXLoadTexObj wrapper at offset 0x20 of sda21 pointer. */
+extern u32 lbl_803DCFD0;
+extern void GXLoadTexObj(void *obj, int id);
+extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
+#pragma scheduling off
+#pragma peephole off
+void fn_8006C678(int id)
+{
+    GXLoadTexObj((char *)lbl_803DCFD0 + 0x20, id);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* PreLoaded-or-direct wrapper based on byte 0x48 of sda21 pointer.  Variant A. */
+extern u32 lbl_803DCFCC;
+#pragma scheduling off
+#pragma peephole off
+void fn_8006C6A4(int id)
+{
+    register int idCopy = id;
+    char *p = (char *)lbl_803DCFCC;
+    if (*(u8 *)(p + 0x48) != 0) {
+        GXLoadTexObjPreLoaded(p + 0x20, *(void **)(p + 0x40), idCopy);
+    } else {
+        GXLoadTexObj(p + 0x20, idCopy);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* PreLoaded-or-direct wrapper using lbl_803DCF7C as base. */
+#pragma scheduling off
+#pragma peephole off
+void selectReflectionTexture(int id)
+{
+    register int idCopy = id;
+    char *p = (char *)lbl_803DCF7C;
+    if (*(u8 *)(p + 0x48) != 0) {
+        GXLoadTexObjPreLoaded(p + 0x20, *(void **)(p + 0x40), idCopy);
+    } else {
+        GXLoadTexObj(p + 0x20, idCopy);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* PreLoaded-or-direct wrapper using lbl_803DCFE4 as base. */
+extern u32 lbl_803DCFE4;
+#pragma scheduling off
+#pragma peephole off
+void textureFn_8006c75c(int id)
+{
+    register int idCopy = id;
+    char *p = (char *)lbl_803DCFE4;
+    if (*(u8 *)(p + 0x48) != 0) {
+        GXLoadTexObjPreLoaded(p + 0x20, *(void **)(p + 0x40), idCopy);
+    } else {
+        GXLoadTexObj(p + 0x20, idCopy);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
