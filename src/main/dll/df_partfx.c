@@ -1686,3 +1686,17 @@ void player_clearXZvel(int *obj, int *state) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Checkpoint table initialiser. */
+extern u32 lbl_8039CA98[];
+extern void *lbl_803DD41C;
+extern void *lbl_803DD418;
+#pragma scheduling off
+#pragma peephole off
+void Checkpoint_initialise(void) {
+    lbl_803DD410 = 0;
+    lbl_803DD41C = lbl_8039CA98;
+    lbl_803DD418 = (void*)((u8*)lbl_8039CA98 + 0x28);
+}
+#pragma peephole reset
+#pragma scheduling reset

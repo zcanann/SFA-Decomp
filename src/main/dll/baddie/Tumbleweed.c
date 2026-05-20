@@ -3542,7 +3542,7 @@ int titlescreen_func08(u8* obj)
     return 0;
 }
 
-extern void titlescreen_free(void);
+extern void titlescreen_free(u8* obj);
 extern void titlescreen_render(void);
 extern void titlescreen_update(void);
 extern void titlescreen_init(void);
@@ -3895,3 +3895,61 @@ void fn_80133934(void)
         lbl_803DD92C = NULL;
     }
 }
+
+/* EN v1.0 0x801375A0  size: 40b  Reset debug log/print state: rewind
+ * debugLogEnd to the start of the buffer and reload the print x/y
+ * coordinates from saved values. */
+extern u32 lbl_803DDA00;
+extern u32 lbl_803DDA08;
+extern u16 debugPrintXpos;
+extern u16 debugPrintYpos;
+#pragma scheduling off
+#pragma peephole off
+void fn_801375A0(void) {
+    u32 yp;
+    u32 xp;
+    debugLogEnd = debugLogBuffer;
+    yp = lbl_803DDA08 & 0xffff;
+    debugPrintYpos = (u16)yp;
+    xp = lbl_803DDA00 & 0xffff;
+    debugPrintXpos = (u16)xp;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58. */
+void fn_80138908(int *obj, int v) {
+    u8* x = *(u8**)((char*)obj + 0xb8);
+    u8 b = *(u8*)(x + 0x58);
+    *(u8*)(x + 0x58) = (u8)((b & ~0x40) | (((u8)v & 1) << 6));
+}
+
+/* EN v1.0 0x80135BF0  size: 60b  titlescreen_free: if obj->_46 == 0x77d,
+ * trigger Music_Trigger(0x3a, 0) and clear lbl_803DD993. */
+extern void Music_Trigger(s32 triggerId, s32 mode);
+#pragma peephole off
+void titlescreen_free(u8* obj) {
+    if (*(s16*)(obj + 0x46) == 0x77d) {
+        Music_Trigger(0x3a, 0);
+        lbl_803DD993 = 0;
+    }
+}
+#pragma peephole reset
+
+/* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
+ * the thread at &lbl_803AB118. */
+extern u8 lbl_803AB118[];
+extern s16 lbl_803DDA40;
+extern u32 lbl_803DDA3C;
+extern u32 lbl_803DDA38;
+extern u32 lbl_803DDA34;
+extern void OSResumeThread(u8* thread);
+#pragma scheduling off
+void fn_801388D0(s16 a, u32 b, u32 c, u32 d) {
+    lbl_803DDA40 = a;
+    lbl_803DDA3C = b;
+    lbl_803DDA38 = c;
+    lbl_803DDA34 = d;
+    OSResumeThread(lbl_803AB118);
+}
+#pragma scheduling reset

@@ -2716,3 +2716,63 @@ u32 isOvercast(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Toggle a renderFlags bit based on a boolean argument. */
+#pragma scheduling off
+#pragma peephole off
+void gameFlagFn_8005cd24(int v) {
+    if (v != 0) renderFlags |= 0x20000;
+    else        renderFlags &= ~0x20000;
+}
+void titleScreenFn_8005cdd4(int v) {
+    if (v != 0) renderFlags &= ~0x2000;
+    else        renderFlags |= 0x2000;
+}
+void gameFlagFn_8005ce6c(int v) {
+    if (v != 0) renderFlags |= 0x20;
+    else        renderFlags &= ~0x20;
+}
+void setIsOvercast(int v) {
+    if (v != 0) renderFlags |= 0x40000;
+    else        renderFlags &= ~0x40000;
+}
+void fn_8005CECC(int v) {
+    if (v != 0) renderFlags |= 0x80000;
+    else        renderFlags &= ~0x80000;
+}
+void setPendingMapLoad(int v) {
+    if (v != 0) renderFlags |= 0x1000;
+    else        renderFlags &= ~0x1000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Return address of a global block. */
+extern u8 lbl_80386468[0x100];
+void *fn_8005AFA0(void) {
+    return lbl_80386468;
+}
+
+/* Drop-arg-1 trampoline:  fn(_, a, b, c) -> fn_800704FC(a, b, c). */
+extern void fn_800704FC(int a, int b, int c);
+#pragma scheduling off
+#pragma peephole off
+void fn_8005D0BC(int unused, int a, int b, int c) {
+    fn_800704FC(a, b, c);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Drop-arg-1 trampoline:  fn(_, a, b, c, d) -> _gxSetTevColor1/2(a, b, c, d). */
+extern void _gxSetTevColor1(int a, int b, int c, int d);
+extern void _gxSetTevColor2(int a, int b, int c, int d);
+#pragma scheduling off
+#pragma peephole off
+void _textSetColor(int unused, int a, int b, int c, int d) {
+    _gxSetTevColor1(a, b, c, d);
+}
+void setTextColor(int unused, int a, int b, int c, int d) {
+    _gxSetTevColor2(a, b, c, d);
+}
+#pragma peephole reset
+#pragma scheduling reset
