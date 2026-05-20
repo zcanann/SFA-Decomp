@@ -484,3 +484,87 @@ int dimcannon_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1d6) return
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int ObjHits_GetPriorityHit(int obj, int *out, int *a, int *b);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern int mapGetBlock(void);
+extern int mapBlockFn_800606ec(int arg1, int idx);
+extern int mapBlockFn_80060678(void);
+extern int fn_8006070C(int arg1, int idx);
+extern int Shader_getLayer(int layer, int idx);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801B3344(int arg1, int arg2, int arg3)
+{
+    int i;
+    int *block;
+    int *layer;
+    int got;
+    for (i = 0; i < (int)*(u16 *)((char *)arg1 + 0x9a); i++) {
+        block = (int *)mapBlockFn_800606ec(arg1, i);
+        got = mapBlockFn_80060678();
+        if (arg3 == got) {
+            if (arg2 != 0) {
+                block[0x10/4] = block[0x10/4] & ~2;
+                block[0x10/4] = block[0x10/4] & ~1;
+            } else {
+                block[0x10/4] = block[0x10/4] | 2;
+                block[0x10/4] = block[0x10/4] | 1;
+            }
+        }
+    }
+    for (i = 0; i < (int)*(u8 *)((char *)arg1 + 0xa2); i++) {
+        layer = (int *)fn_8006070C(arg1, i);
+        if (arg3 == (int)*(u8 *)((char *)Shader_getLayer((int)layer, 0) + 5)) {
+            if (arg2 != 0) {
+                layer[0x3c/4] = layer[0x3c/4] & ~2;
+            } else {
+                layer[0x3c/4] = layer[0x3c/4] | 2;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801B3458(int obj, int p2, int *r5_arg)
+{
+    int *def;
+    int hit;
+    int block;
+    int *state;
+    state = *(int **)((char *)obj + 0xb8);
+    def = *(int **)((char *)obj + 0x4c);
+    if (*(u8 *)((char *)state + 2) == 0) {
+        if (GameBit_Get(*(s16 *)((char *)def + 0x20)) != 0) {
+            *(s16 *)((char *)*(int *)((char *)obj + 0x54) + 0x60) =
+                (s16)(*(s16 *)((char *)*(int *)((char *)obj + 0x54) + 0x60) | 1);
+            if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) {
+                if (*(s16 *)((char *)hit + 0x46) == 397) {
+                    *(u8 *)((char *)state + 2) = 2;
+                    Sfx_PlayFromObject(obj, 705);
+                    objPosToMapBlockIdx(*(f32 *)((char *)obj + 0xc),
+                                        *(f32 *)((char *)obj + 0x10),
+                                        *(f32 *)((char *)obj + 0x14));
+                    block = mapGetBlock();
+                    if ((void *)block != NULL) {
+                        fn_801B3344(block, 1, *(u8 *)((char *)state + 1));
+                        fn_801B3344(block, 0, *(u8 *)((char *)state + 1) + 1);
+                    }
+                }
+            }
+        }
+    } else {
+        if (*(u8 *)((char *)r5_arg + 0x80) == 1) {
+            GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            *(u8 *)((char *)state + 2) = 1;
+        }
+    }
+    return *(u8 *)((char *)state + 2) == 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

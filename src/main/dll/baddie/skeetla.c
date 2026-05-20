@@ -21,14 +21,14 @@ extern void fn_800DA928(int p1, f32 p2);
 /* fn_80139834  addr=0x80139834  size=0xFC  linkage=global */
 #pragma peephole off
 #pragma scheduling off
-int fn_80139834(double param_1, int param_2, int param_3)
+int fn_80139834(f32 param_1, int param_2, int param_3)
 {
     f32 maxSq, dist, f29_val;
     int result = 0;
     int iter;
     f32 tmp;
 
-    tmp = lbl_803E244C * ((f32)param_1 * timeDelta);
+    tmp = lbl_803E244C * (param_1 * timeDelta);
     maxSq = tmp * tmp;
     dist = getXZDistance((f32 *)(param_3 + 0x68), (f32 *)(param_2 + 0x18));
     if (*(int *)(param_3 + 0x80) != 0) {

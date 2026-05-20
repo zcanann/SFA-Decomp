@@ -310,3 +310,12 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5188); }
 #pragma peephole reset
+
+extern undefined4 *gModgfxInterface;
+#pragma scheduling off
+#pragma peephole off
+void dll_19B_free(int *obj) {
+    ((void (*)(int *))((void **)*gModgfxInterface)[6])(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset

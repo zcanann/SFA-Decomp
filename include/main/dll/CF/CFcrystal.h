@@ -31,7 +31,7 @@ u8 LanternFireFly_modelMtxFn(int *obj);
 
 int FireFlyLantern_getExtraSize(void);
 int FireFlyLantern_func08(void);
-void FireFlyLantern_free(void);
+void FireFlyLantern_free(int obj);
 void FireFlyLantern_render(void);
 void FireFlyLantern_update(void);
 void FireFlyLantern_init(int param_1,int param_2);

@@ -575,12 +575,15 @@ void* fn_801638BC(f32* p_pos)
     int count;
     void** list;
     f32 bestDist;
-    void* bestObj;
     int i;
+    void* bestObj;
     bestDist = lbl_803E2F58;
     bestObj = NULL;
-    list = (void**)ObjGroup_GetObjects(0x31, &count);
-    i = 0;
+    {
+        void **tmp = (void**)ObjGroup_GetObjects(0x31, &count);
+        i = 0;
+        list = tmp;
+    }
     while (i < count) {
         if (*(s16*)((char*)*list + 0x46) == 0x3fb) {
             if (((u8*)(*(u8**)((char*)*list + 0xb8)))[0x278] > 1) {

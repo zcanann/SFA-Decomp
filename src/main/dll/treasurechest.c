@@ -248,3 +248,13 @@ ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
     },
     0,
 };
+
+extern undefined4 *gPlayerInterface;
+#pragma scheduling off
+#pragma peephole off
+void fn_80167550(int *obj) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    ((void (*)(int *, int *, int))((void **)*gPlayerInterface)[5])(obj, state, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset

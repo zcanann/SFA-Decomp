@@ -507,3 +507,12 @@ extern f32 lbl_803E5158;
 void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5150); }
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5158); }
 #pragma peephole reset
+
+extern void Music_Trigger(int track, int param);
+extern int GameBit_Set(int eventId, int value);
+#pragma scheduling off
+void nwsh_levcon_free(int obj) {
+    Music_Trigger(6, 0);
+    GameBit_Set(3837, 0);
+}
+#pragma scheduling reset

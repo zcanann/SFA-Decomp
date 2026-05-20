@@ -1662,3 +1662,23 @@ void iceblast_init(int obj, s16 *p) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void warpToMap(int mapId, int flag);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80176FC4(int *obj, int unused, int *arg2) {
+    int *p = *(int **)((char *)obj + 0x4c);
+    if (*(s8 *)((char *)p + 0x1d) != 2) {
+        if (*(u8 *)((char *)arg2 + 0x80) == 1) {
+            int v = (s8)*(u8 *)((char *)p + 0x1a);
+            if (v > -1) {
+                warpToMap(v, 1);
+                *(u8 *)((char *)arg2 + 0x80) = 0;
+            }
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

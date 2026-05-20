@@ -45,7 +45,7 @@ extern f32 lbl_803E5C60;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ecsh_shrine_func0B(int param_1,int param_2)
+void FUN_dropped_ecsh_shrine_func0B(int param_1,int param_2)
 {
   ObjHits_EnableObject(param_1);
   *(undefined4 *)(param_1 + 0xf4) = 0;
@@ -53,6 +53,32 @@ void ecsh_shrine_func0B(int param_1,int param_2)
        CONCAT22(*(undefined2 *)(param_2 + 0x1c),*(undefined2 *)(param_2 + 0x1a));
   return;
 }
+
+extern void *lbl_803DDBC4;
+extern s16 lbl_80326238[];
+extern u8 lbl_80326208[];
+#pragma scheduling off
+#pragma peephole off
+void ecsh_shrine_func0B(u8 idx, f32 *out1, f32 *out2) {
+    int *obj;
+    int j;
+    if (lbl_803DDBC4 == NULL) return;
+    j = lbl_80326238[idx];
+    *out1 = *(f32 *)((char *)lbl_80326208 + j * 8);
+    j = lbl_80326238[idx];
+    *out2 = *(f32 *)((char *)lbl_80326208 + j * 8 + 4);
+    (void)obj;
+}
+
+void ecsh_shrine_setScale(s16 *out) {
+    int *obj = (int *)lbl_803DDBC4;
+    int *state;
+    if (obj == NULL) return;
+    state = *(int **)((char *)obj + 0xB8);
+    *out = *(s16 *)((char *)state + 0x20);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

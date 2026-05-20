@@ -774,3 +774,44 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5554); }
 #pragma peephole reset
+
+extern void fn_8003B608(int a, int b, int c);
+extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
+extern f32 lbl_803E558C;
+#pragma scheduling off
+#pragma peephole off
+void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    int *def = *(int **)((char *)obj + 0x4C);
+    int *state = *(int **)((char *)obj + 0xB8);
+    int i;
+    if (visible == 0) return;
+    fn_8003B608((int)*(u8 *)((char *)def + 0x20), (int)*(u8 *)((char *)def + 0x21), (int)*(u8 *)((char *)def + 0x22));
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E558C);
+    if ((*(u8 *)((char *)state + 0x4C) & 0x80) == 0) return;
+    for (i = 0; i < 3; i++) {
+        ObjPath_GetPointWorldPosition(obj, i,
+            (f32 *)((char *)state + 12),
+            (f32 *)((char *)state + 16),
+            (f32 *)((char *)state + 20),
+            0);
+        state = (int *)((char *)state + 12);
+    }
+    *(int *)((char *)obj + 0xF8) = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void gameTimerStop(void);
+extern void disableHeavyFog(void);
+extern void Music_Trigger(int track, int param);
+#pragma scheduling off
+void sc_levelcontrol_free(int obj) {
+    gameTimerStop();
+    disableHeavyFog();
+    Music_Trigger(196, 0);
+    Music_Trigger(54, 0);
+    Music_Trigger(239, 0);
+    Music_Trigger(34, 0);
+    Music_Trigger(199, 0);
+}
+#pragma scheduling reset

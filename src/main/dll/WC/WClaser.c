@@ -267,3 +267,20 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5CF8); }
 #pragma peephole reset
+
+extern u8 lbl_803DDC78;
+#pragma scheduling off
+#pragma peephole off
+int fn_801F06D8(int p1, int p2, u8 *arg3) {
+    int i;
+    for (i = 0; i < (int)arg3[0x8b]; i++) {
+        if (arg3[0x81 + i] == 1) {
+            lbl_803DDC78 = (u8)(1 - lbl_803DDC78);
+        }
+    }
+    arg3[0x80] = 0;
+    arg3[0x56] = 0;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

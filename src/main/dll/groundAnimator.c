@@ -261,11 +261,15 @@ int wm_column_func08(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wm_column_free(int obj)
 {
   ObjGroup_RemoveObject(obj, 4);
   (*(GroundAnimatorFreeFn *)(*gCarryableInterface + 0x10))(obj);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -476,8 +480,8 @@ ObjectDescriptor gWM_ColumnObjDescriptor = {
 
 extern void appleontree_init();
 extern u8 appleontree_update[];
-extern void appleontree_render();
-extern void appleontree_free();
+extern void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+extern void appleontree_free(int *obj);
 extern int appleontree_getExtraSize(void);
 extern void appleontree_setScale(void);
 extern void appleontree_func0B(int obj, float *pos);
@@ -980,3 +984,19 @@ int appleontree_getExtraSize(void) { return 0x64; }
 
 /* Pattern wrappers. */
 u8 appleontree_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x3a); }
+
+extern void ***gExpgfxInterface;
+extern f32 lbl_803E37C8;
+#pragma scheduling off
+#pragma peephole off
+void appleontree_free(int *obj) {
+    ((void (*)(int*))(*gExpgfxInterface)[5])(obj);
+}
+void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    if ((inner[0x5a] & 2) == 0) {
+        ((void (*)(f32))objRenderFn_8003b8f4)(lbl_803E37C8);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

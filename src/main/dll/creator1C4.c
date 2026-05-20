@@ -318,3 +318,33 @@ void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5058); }
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5060); }
 #pragma peephole reset
+
+extern undefined4 *gExpgfxInterface;
+#pragma scheduling off
+#pragma peephole off
+void ecsh_cup_free(int *obj) {
+    ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
+}
+void gpsh_scene_init(int *obj, int *def) {
+    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
+    *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)obj + 0x1c) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)obj + 0x20) = *(f32 *)((char *)obj + 0x14);
+    *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+}
+void gpsh_objcreator_init(int *obj, int *def) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    int zero = 0;
+    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x1e) << 8);
+    *(int *)((char *)obj + 0xf8) = zero;
+    *(u8 *)((char *)state + 4) = (u8)*(s16 *)((char *)def + 0x1a);
+    {
+        u8 v = *(u8 *)((char *)state + 5);
+        v = (u8)((v & ~0x80) | ((zero & 1) << 7));
+        *(u8 *)((char *)state + 5) = v;
+    }
+    *(u8 *)((char *)obj + 0x37) = 0xff;
+    *(u8 *)((char *)obj + 0x36) = 0xff;
+}
+#pragma peephole reset
+#pragma scheduling reset

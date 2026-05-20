@@ -387,3 +387,25 @@ extern void FireFlyFn_801f4f88(int *obj);
 int fn_801F4C04(int *obj) { FireFlyFn_801f4f88(obj); return 0; }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_801F48C0(void);
+extern f32 lbl_803E5E98;
+extern f32 lbl_803E5EA4;
+extern void objRenderFn_8003b8f4(f32);
+#pragma scheduling off
+#pragma peephole off
+void wmgeneralscales_init(int *obj) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801F48C0;
+    *(f32 *)state = lbl_803E5E98;
+    *(u8 *)((char *)state + 4) = 1;
+    *(int *)((char *)obj + 0xc8) = 0;
+}
+void wmgeneralscales_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)state + 4) == 1) return;
+    if (visible == 0) return;
+    objRenderFn_8003b8f4(lbl_803E5EA4);
+}
+#pragma peephole reset
+#pragma scheduling reset

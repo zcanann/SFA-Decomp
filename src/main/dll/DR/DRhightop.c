@@ -729,3 +729,34 @@ void FUN_801ebd94(short *param_1,int param_2)
   param_1[2] = sVar3;
   return;
 }
+
+extern undefined4 *gPathControlInterface;
+extern f32 lbl_803E5AE8;
+extern f32 lbl_803E5B9C;
+extern f32 lbl_803E5B74;
+#pragma scheduling off
+#pragma peephole off
+void fn_801EB334(int *obj) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (((*(u8 *)((char *)state + 0x428) >> 1) & 1) == 0) {
+        f32 fz = lbl_803E5AE8;
+        *(f32 *)((char *)state + 0x494) = fz;
+        *(f32 *)((char *)state + 0x498) = fz;
+        *(f32 *)((char *)state + 0x49c) = lbl_803E5B9C;
+        *(u8 *)((char *)state + 0x428) = (u8)(*(u8 *)((char *)state + 0x428) & ~0x80);
+        *(f32 *)((char *)state + 0x424) = fz;
+        *(s16 *)((char *)state + 0x40e) = *(s16 *)obj;
+        *(s16 *)((char *)state + 0x40c) = *(s16 *)obj;
+        *(f32 *)((char *)state + 0x430) = lbl_803E5B74;
+    }
+    ObjHits_EnableObject(obj);
+    (*(void (**)(int *, char *))(*(int *)*gPathControlInterface + 32))(obj, (char *)state + 0x178);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x10) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x14) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x18) = *(f32 *)((char *)obj + 0x14);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x1c) = *(f32 *)((char *)obj + 0x18);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x20) = *(f32 *)((char *)obj + 0x1c);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x24) = *(f32 *)((char *)obj + 0x20);
+}
+#pragma peephole reset
+#pragma scheduling reset

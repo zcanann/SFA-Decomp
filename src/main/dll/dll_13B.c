@@ -494,3 +494,15 @@ void kaldachompspit_hitDetect(void) {}
 /* 8b "li r3, N; blr" returners. */
 int kaldachompspit_getExtraSize(void) { return 0x4; }
 int kaldachompspit_func08(void) { return 0x0; }
+
+extern void ModelLightStruct_free(void *p);
+#pragma scheduling off
+#pragma peephole off
+void kaldachompspit_free(int *obj) {
+    void *p = *(void **)*(void **)((char *)obj + 0xb8);
+    if (p != NULL) {
+        ModelLightStruct_free(p);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
