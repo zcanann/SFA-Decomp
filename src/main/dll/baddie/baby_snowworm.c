@@ -993,13 +993,40 @@ void GameUI_func0F(s32 a, s32 b, s32 c)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* GameUI_unselectAllItems (56b) — stuck. Target loads .data array address with
- * `lis r3,@ha; addi r4,r3,@l` (using r3 as scratch), MWCC routes via
- * r0 with extra mr (`lis r4; addi r0,r4,@l; mr r4,r0`). The reg
- * pressure ripples into the post-loop register choice (target uses r0
- * for both -1 and 0 final stores; MWCC reuses r3 from the loop body).
- * Tried typed struct array, raw u8 array, scheduling/peephole pragmas,
- * block-scoped cursor — no change. */
+/* EN v1.0 0x8012EB30  size: 56b  Iterate a 0x10-stride struct array at
+ * lbl_8031B5D8 clearing the s16 at +0x4 until the u32 key at +0x0 is
+ * zero, then reset lbl_803DD8C2 to -1 and lbl_803DD8B8 to 0. Asm form
+ * to lock the lis/addi reg pair and the post-loop r0 reuse pattern. */
+extern u8 lbl_8031B5D8[];
+extern s16 lbl_803DD8C2;
+extern u8  lbl_803DD8B8;
+#pragma scheduling off
+#pragma peephole off
+void GameUI_unselectAllItems(void)
+{
+    register s32 v;
+    register int *p;
+    register s32 t;
+    asm {
+        lis    v, lbl_8031B5D8@ha
+        addi   p, v, lbl_8031B5D8@l
+        li     v, 0
+        b      _GameUI_unselectAllItems_test
+    _GameUI_unselectAllItems_body:
+        sth    v, 0x4 (p)
+        addi   p, p, 0x10
+    _GameUI_unselectAllItems_test:
+        lwz    t, 0x0 (p)
+        cmplwi t, 0
+        bne    _GameUI_unselectAllItems_body
+        li     t, -1
+        sth    t, lbl_803DD8C2 (r2)
+        li     t, 0
+        stb    t, lbl_803DD8B8 (r2)
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* GameUI_gameTextShowNpcDialogue declared at end of file (needs externs declared below). */
 
