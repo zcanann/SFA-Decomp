@@ -38,7 +38,7 @@ extern int *Obj_GetActiveModel(int obj);
 extern void *Obj_GetPlayerObject(void);
 extern void Obj_UpdateObject(ObjAnimComponent *obj,ObjModelInstance *modelInstance);
 extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
-extern void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2);
+extern void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix);
 extern undefined4 FUN_80045328();
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void fileLoadToBufferOffset(int fileId,void *dst,int offset,int size);
@@ -269,8 +269,8 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
     *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10c) = 0;
     *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10d) = 10;
     *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10f) = 0;
-    ObjHitbox_UpdateRotatedBounds((short *)param_1,1);
-    ObjHitbox_UpdateRotatedBounds((short *)param_1,1);
+    ObjHitbox_UpdateRotatedBounds((ObjHitbox *)param_1,1);
+    ObjHitbox_UpdateRotatedBounds((ObjHitbox *)param_1,1);
   }
   return uVar1 + 0x110;
 }
@@ -1416,7 +1416,7 @@ void ObjHitReact_UpdateResetObjects(void)
   objectOffset = 0;
   objectIndex = objectOffset;
   for (; objectOffset < gObjHitReactResetObjectCount; objectOffset = objectOffset + 1) {
-    ObjHitbox_UpdateRotatedBounds(*(short **)((int)gObjHitReactResetObjects + objectIndex),1);
+    ObjHitbox_UpdateRotatedBounds(*(ObjHitbox **)((int)gObjHitReactResetObjects + objectIndex),1);
     objectIndex = objectIndex + 4;
   }
   return;

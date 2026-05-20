@@ -1336,7 +1336,7 @@ void ObjHits_TickPriorityHitCooldowns(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2)
+void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix)
 {
   typedef struct HitboxTransform {
     short x;
@@ -1347,64 +1347,56 @@ void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2)
     float radiusY;
     float radiusZ;
   } HitboxTransform;
-  int iVar1;
-  int iVar2;
+  ObjHitboxTransformState *transformState;
+  int matrixBase;
   HitboxTransform local_28;
   
-  iVar1 = *(int *)((char *)param_1 + OBJHITBOX_TRANSFORM_STATE_OFFSET);
-  if (iVar1 != 0) {
-    if (param_2 != 0) {
-      *(byte *)(iVar1 + OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET) =
-          (*(byte *)(iVar1 + OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET) + 1) & 1;
+  transformState = hitbox->transformState;
+  if (transformState != 0) {
+    if (advanceMatrix != 0) {
+      transformState->activeMatrixIndex = (transformState->activeMatrixIndex + 1) & 1;
     }
-    iVar2 = iVar1 + (uint)*(byte *)(iVar1 + OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET) *
-                         OBJHITBOX_STATE_MATRIX_STRIDE;
-    local_28.x = -*param_1;
-    if ((*(short *)(*(int *)((char *)param_1 + OBJHITBOX_DEF_OFFSET) +
-                    OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_CLAMP_Y) != 0) {
+    matrixBase = (int)&transformState->matrices[transformState->activeMatrixIndex];
+    local_28.x = -hitbox->rotationX;
+    if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
       local_28.y = 0;
     }
     else {
-      local_28.y = -param_1[1];
+      local_28.y = -hitbox->rotationY;
     }
-    if ((*(short *)(*(int *)((char *)param_1 + OBJHITBOX_DEF_OFFSET) +
-                    OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_CLAMP_Z) != 0) {
+    if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Z) != 0) {
       local_28.z = 0;
     }
     else {
-      local_28.z = -param_1[2];
+      local_28.z = -hitbox->rotationZ;
     }
     local_28.scale = gObjHitsScalarOne;
-    local_28.radiusX = -*(float *)((char *)param_1 + OBJHITBOX_RADIUS_X_OFFSET);
-    local_28.radiusY = -*(float *)((char *)param_1 + OBJHITBOX_RADIUS_Y_OFFSET);
-    local_28.radiusZ = -*(float *)((char *)param_1 + OBJHITBOX_RADIUS_Z_OFFSET);
-    mtxRotateByVec3s((float *)iVar2,&local_28);
-    local_28.x = *param_1;
-    if ((*(short *)(*(int *)((char *)param_1 + OBJHITBOX_DEF_OFFSET) +
-                    OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_CLAMP_Y) != 0) {
+    local_28.radiusX = -hitbox->radiusX;
+    local_28.radiusY = -hitbox->radiusY;
+    local_28.radiusZ = -hitbox->radiusZ;
+    mtxRotateByVec3s((float *)matrixBase,&local_28);
+    local_28.x = hitbox->rotationX;
+    if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
       local_28.y = 0;
     }
     else {
-      local_28.y = param_1[1];
+      local_28.y = hitbox->rotationY;
     }
-    if ((*(short *)(*(int *)((char *)param_1 + OBJHITBOX_DEF_OFFSET) +
-                    OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_CLAMP_Z) != 0) {
+    if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Z) != 0) {
       local_28.z = 0;
     }
     else {
-      local_28.z = param_1[2];
+      local_28.z = hitbox->rotationZ;
     }
     local_28.scale = gObjHitsScalarOne;
-    local_28.radiusX = *(float *)((char *)param_1 + OBJHITBOX_RADIUS_X_OFFSET);
-    local_28.radiusY = *(float *)((char *)param_1 + OBJHITBOX_RADIUS_Y_OFFSET);
-    local_28.radiusZ = *(float *)((char *)param_1 + OBJHITBOX_RADIUS_Z_OFFSET);
+    local_28.radiusX = hitbox->radiusX;
+    local_28.radiusY = hitbox->radiusY;
+    local_28.radiusZ = hitbox->radiusZ;
     setMatrixFromObjectPos(
-        (float *)(iVar1 + (*(byte *)(iVar1 + OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET) + 2) *
-                              OBJHITBOX_STATE_MATRIX_STRIDE),
+        (float *)&transformState->matrices[transformState->activeMatrixIndex + 2],
         &local_28);
-    if (*(char *)(iVar1 + OBJHITBOX_STATE_RESET_FRAMES_OFFSET) != '\0') {
-      *(char *)(iVar1 + OBJHITBOX_STATE_RESET_FRAMES_OFFSET) =
-          *(char *)(iVar1 + OBJHITBOX_STATE_RESET_FRAMES_OFFSET) + -1;
+    if (transformState->resetFrames != 0) {
+      transformState->resetFrames = transformState->resetFrames + -1;
     }
   }
   return;

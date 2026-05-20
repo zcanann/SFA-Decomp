@@ -56,6 +56,42 @@
 
 extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
 
+typedef struct ObjHitboxDef {
+  u8 pad00[OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET];
+  s16 distanceCache;
+  s16 radius;
+  s16 verticalMin;
+  s16 verticalMax;
+  u16 flags;
+  u8 shapeFlags;
+  u8 pad63[OBJHITBOX_DEF_HIT_TYPE_OFFSET - 0x63];
+  s8 hitType;
+  u8 hitPriority;
+  u8 pad6E[OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET - 0x6E];
+  u8 skipObjectPairs;
+  u8 skipSkeletonPairs;
+} ObjHitboxDef;
+
+typedef struct ObjHitboxTransformState {
+  u8 matrices[4][OBJHITBOX_STATE_MATRIX_STRIDE];
+  u8 pad100[OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET - 0x100];
+  u8 activeMatrixIndex;
+  s8 resetFrames;
+} ObjHitboxTransformState;
+
+typedef struct ObjHitbox {
+  s16 rotationX;
+  s16 rotationY;
+  s16 rotationZ;
+  u8 pad06[OBJHITBOX_RADIUS_X_OFFSET - 6];
+  f32 radiusX;
+  f32 radiusY;
+  f32 radiusZ;
+  u8 pad24[OBJHITBOX_DEF_OFFSET - 0x24];
+  ObjHitboxDef *def;
+  ObjHitboxTransformState *transformState;
+} ObjHitbox;
+
 typedef struct ObjHitsSweepEntry {
   float minX;
   float maxX;
@@ -127,7 +163,7 @@ uint ObjHits_TestTaperedCapsule3D(float pointRadius,float baseRadius,float tipRa
                                   float *axial,float *dist2,float *sumR);
 void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount);
 void ObjHits_TickPriorityHitCooldowns(void);
-void ObjHitbox_UpdateRotatedBounds(short *param_1,int param_2);
+void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix);
 u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                            undefined8 param_5,undefined8 param_6,undefined8 param_7,
                            undefined8 param_8,undefined4 param_9,undefined4 param_10,
