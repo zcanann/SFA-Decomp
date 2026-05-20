@@ -260,12 +260,14 @@ void CameraModeViewfinder_copyToCurrent(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void CameraModeViewfinder_free(int param_1)
 {
   int iVar1;
   int iVar2;
   int local_18 [5];
-  
+
   *(ushort *)(*(int *)(param_1 + 0xa4) + 6) = *(ushort *)(*(int *)(param_1 + 0xa4) + 6) & ~0x4000;
   FUN_80053bf0(0);
   iVar2 = *(int *)(param_1 + 0xa4);
@@ -288,6 +290,8 @@ void CameraModeViewfinder_free(int param_1)
   FUN_800810d8((double)lbl_803E17E0);
   return;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
