@@ -1603,7 +1603,7 @@ void wmtorch_update(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *lbl_803DCA7C;
+extern int *gModgfxInterface;
 extern int *gExpgfxInterface;
 extern void Obj_FreeObject(void *o);
 #pragma scheduling off
@@ -1613,7 +1613,7 @@ void wmtorch_free(int obj, int mode) {
     if (mode == 0 && *(void **)state != 0) {
         Obj_FreeObject(*(void **)state);
     }
-    (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x18)))(obj);
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
 }
 #pragma peephole reset

@@ -1104,14 +1104,14 @@ void spellStoneUseFn_801fd270(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *lbl_803DCA7C;
+extern int *gModgfxInterface;
 extern u32 lbl_803DDCC0;
 extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
 void vfpdraghead_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
-    (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x14)))(obj);
+    (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x14)))(obj);
     if (lbl_803DDCC0 != 0) {
         Resource_Release(lbl_803DDCC0);
     }

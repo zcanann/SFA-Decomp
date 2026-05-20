@@ -1705,7 +1705,7 @@ extern f32 lbl_803E59C8;
 extern int* gObjectTriggerInterface;
 extern int* lbl_803DCA74;
 extern int* gExpgfxInterface;
-extern int* lbl_803DCA7C;
+extern int* gModgfxInterface;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern int GameBit_Get(int);
@@ -1901,7 +1901,7 @@ void SB_KyteCage_update(void) {}
 void SB_MiniFire_free(int* obj)
 {
     ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
-    ((void(*)(int*))((void**)*lbl_803DCA7C)[6])(obj);
+    ((void(*)(int*))((void**)*gModgfxInterface)[6])(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -8,7 +8,7 @@ extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *from, void *to, void *out, int param4, int param5);
 
 extern undefined4 *gExpgfxInterface;
-extern undefined4 *lbl_803DCA7C;
+extern undefined4 *gModgfxInterface;
 extern undefined4 *pDll_expgfx;
 extern u8 framesThisStep;
 extern f32 lbl_803E51C8;
@@ -34,7 +34,7 @@ extern f32 lbl_803E51DC;
 #pragma scheduling off
 void dll_19E_free(int param_1)
 {
-  (*(code *)(*(int *)lbl_803DCA7C + 0x18))(param_1);
+  (*(code *)(*(int *)gModgfxInterface + 0x18))(param_1);
   (*(code *)(*(int *)gExpgfxInterface + 0x18))(param_1);
 }
 #pragma scheduling reset
