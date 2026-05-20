@@ -611,6 +611,17 @@ extern void objParticleFn_80099d84(int obj, int p2, int p3, f32 f1, f32 f2);
 extern f32 lbl_803E2650;
 extern f32 lbl_803E2654;
 extern f64 lbl_803E2640; /* int->float magic */
+extern f32 lbl_803E266C;
+extern f32 lbl_803E2670;
+extern f32 lbl_803E2674;
+extern f32 lbl_803E2698;
+extern f32 lbl_803E26B4;
+extern f32 lbl_803E26CC;
+extern int lbl_803DBC78;
+extern void *mmAlloc(int size, int heap, int flags);
+extern void *memset(void *dst, int val, u32 n);
+extern int *lbl_803DCA9C;
+extern int lbl_803DBC70;
 
 #pragma scheduling off
 #pragma peephole off
@@ -642,6 +653,45 @@ void hagabon_free(int obj) {
     if (*state != NULL) {
         mm_free(*state);
         *state = NULL;
+    }
+}
+void swarmbaddie_init(int obj, int data, int skip_alloc) {
+    int state = *(int *)(obj + 0xB8);
+    *(f32 *)(state + 8) = (f32)(s32)*(s16 *)(data + 0x1A) / lbl_803E26CC;
+    *(f32 *)(state + 0x14) = lbl_803E2698 * (f32)(s32)*(s8 *)(data + 0x19);
+    *(f32 *)(state + 0x18) = lbl_803E26B4;
+    if (skip_alloc == 0) {
+        *(void **)state = mmAlloc(0x108, 0x1A, 0);
+        if (*(void **)state != NULL) {
+            memset(*(void **)state, 0, 0x108);
+        }
+        if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*lbl_803DCA9C + 0x8C)))
+                (*(void **)state, obj, *(f32 *)(state + 0x14), &lbl_803DBC78, -1) == 0) {
+            *(u8 *)(state + 0x1C) |= 0x1;
+        }
+        Sfx_PlayFromObject(obj, 0x23A);
+    }
+    *(u16 *)(obj + 0xB0) |= 0x2000;
+}
+void hagabon_init(int obj, int data, int skip_alloc) {
+    int state = *(int *)(obj + 0xB8);
+    *(f32 *)(state + 8) = (f32)(s32)*(s16 *)(data + 0x1A) / lbl_803E266C;
+    *(f32 *)(state + 0xC) = lbl_803E2670;
+    *(f32 *)(state + 0x18) = lbl_803E2674 * (f32)(s32)*(s8 *)(data + 0x19);
+    if (skip_alloc == 0) {
+        *(void **)state = mmAlloc(0x108, 0x1A, 0);
+        if (*(void **)state != NULL) {
+            memset(*(void **)state, 0, 0x108);
+        }
+        if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*lbl_803DCA9C + 0x8C)))
+                (*(void **)state, obj, *(f32 *)(state + 0x18), &lbl_803DBC70, -1) == 0) {
+            *(u8 *)(state + 0x26) |= 0x1;
+        }
+    }
+    if (*(s16 *)(data + 0x20) != -1) {
+        if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
+            *(int *)(obj + 0xF4) = 1;
+        }
     }
 }
 void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
@@ -677,11 +727,11 @@ extern void hagabon_free(int obj);
 extern void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void hagabon_hitDetect(int obj);
 extern void hagabon_update(void);
-extern void hagabon_init(void);
+extern void hagabon_init(int obj, int data, int skip_alloc);
 extern void swarmbaddie_free(int obj);
 extern void swarmbaddie_render(void);
 extern void swarmbaddie_update(void);
-extern void swarmbaddie_init(void);
+extern void swarmbaddie_init(int obj, int data, int skip_alloc);
 
 ObjectDescriptor gHagabonObjDescriptor = {
     0,
