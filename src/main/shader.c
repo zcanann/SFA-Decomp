@@ -2354,6 +2354,7 @@ typedef struct {
 extern BlockEntry lbl_8038224C[8];
 extern s8 lbl_803DCDEC;
 
+#pragma scheduling off
 void mapBlockFn_80059c2c(u8* outFlags) {
 	int outer;
 	for (outer = 0; outer < 0x78; outer++) {
@@ -2373,6 +2374,7 @@ void mapBlockFn_80059c2c(u8* outFlags) {
 		}
 	}
 }
+#pragma scheduling reset
 
 /* 136b 5-plane view-frustum sphere visibility test. */
 extern f32 playerMapOffsetX;
