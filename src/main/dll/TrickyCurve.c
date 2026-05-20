@@ -584,3 +584,23 @@ int TrickyCurve_getExtraSize(void) { return 0x14; }
 int TrickyCurve_func08(void) { return 0x0; }
 int sfxplayer_getExtraSize(void) { return 0xa; }
 int sfxplayer_func08(void) { return 0x0; }
+
+extern void fn_80206C18(int *obj);
+extern void fn_80206968(int *obj);
+#pragma scheduling off
+#pragma peephole off
+void TrickyCurve_update(int *obj) {
+    u8 *inner = *(u8 **)((char *)obj + 0xb8);
+    u32 state = inner[0xe];
+    if (state == 0) {
+        TrickyCurve_updateBurstTrigger();
+    } else if (state == 1) {
+        TrickyCurve_updateCooldownTrigger();
+    } else if (state == 2) {
+        fn_80206C18(obj);
+    } else if (state == 3) {
+        fn_80206968(obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
