@@ -4504,9 +4504,9 @@ extern void staff_modelMtxFn();
 extern void staff_hitDetectGeometry();
 void staff_func10(int *obj, s32 v);
 void staff_func11(int *obj, s32 v);
-extern void staff_func12();
+void staff_func12(int *obj, s32 delta);
 extern s16 staff_func13(int *obj);
-extern void staff_func14();
+void staff_func14(int *obj, f32 *outA, f32 *outB);
 extern void staff_func15();
 extern s32 staff_func16(int *obj);
 extern void fireball_free();
@@ -4918,13 +4918,34 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
+typedef struct StaffState {
+    u8 pad00[0x54];
+    f32 geometryPointAX;
+    u8 pad58[4];
+    f32 geometryPointAY;
+    u8 pad60[4];
+    f32 geometryPointAZ;
+    u8 pad68[4];
+    f32 geometryPointBX;
+    u8 pad70[4];
+    f32 geometryPointBY;
+    u8 pad78[4];
+    f32 geometryPointBZ;
+    u8 pad80[8];
+    s16 hitReactValue;
+    u8 pad8A[0x28];
+    s16 fieldB2;
+    u8 padB4[5];
+    s8 fieldB9;
+} StaffState;
+
 /* Pattern wrappers. */
-s16 staff_func13(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x88); }
+s16 staff_func13(int *obj) { return ((StaffState*)((int**)obj)[0xb8/4])->hitReactValue; }
 u8 fn_8016F16C(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x71); }
 u8 collectible_func0F(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1e); }
 
 /* 16b chained patterns. */
-s32 staff_func16(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0xb9); }
+s32 staff_func16(int *obj) { return ((StaffState*)((int**)obj)[0xb8/4])->fieldB9; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E31E8;
@@ -4983,11 +5004,11 @@ void fn_8016D9EC(int *obj, u8 a, u8 b) {
 }
 
 void staff_func10(int *obj, s32 v) {
-    *(s16*)((char*)((int**)obj)[0xb8/4] + 0xb2) = (s16)v;
+    ((StaffState*)((int**)obj)[0xb8/4])->fieldB2 = (s16)v;
 }
 
 void staff_func11(int *obj, s32 v) {
-    s16 *p = (s16*)((char*)((int**)obj)[0xb8/4] + 0x88);
+    s16 *p = &((StaffState*)((int**)obj)[0xb8/4])->hitReactValue;
     if (v > 0xff) v = 0xff;
     *p = (s16)v;
 }
@@ -5013,7 +5034,7 @@ void flamethrowerspe_setScale(int *obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3) {
 }
 
 void staff_func12(int *obj, s32 delta) {
-    s16 *p = (s16*)((char*)((int**)obj)[0xb8/4] + 0x88);
+    s16 *p = &((StaffState*)((int**)obj)[0xb8/4])->hitReactValue;
     s32 v;
     *p = (s16)(*p + delta);
     v = *p;
@@ -5026,13 +5047,13 @@ void staff_func12(int *obj, s32 delta) {
 }
 
 void staff_func14(int *obj, f32 *outA, f32 *outB) {
-    int *state = ((int**)obj)[0xb8/4];
-    outA[0] = *(f32*)((char*)state + 0x54);
-    outA[1] = *(f32*)((char*)state + 0x5c);
-    outA[2] = *(f32*)((char*)state + 0x64);
-    outB[0] = *(f32*)((char*)state + 0x6c);
-    outB[1] = *(f32*)((char*)state + 0x74);
-    outB[2] = *(f32*)((char*)state + 0x7c);
+    StaffState *state = ((StaffState**)(obj))[0xb8/4];
+    outA[0] = state->geometryPointAX;
+    outA[1] = state->geometryPointAY;
+    outA[2] = state->geometryPointAZ;
+    outB[0] = state->geometryPointBX;
+    outB[1] = state->geometryPointBY;
+    outB[2] = state->geometryPointBZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
