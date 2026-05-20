@@ -60,7 +60,7 @@ extern f32 lbl_803E6DBC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int Obj_GetPlayerObject(void);
+extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -1072,6 +1072,34 @@ void vfpcoreplat_init(int obj, int data) {
         }
     }
     *(u16 *)(obj + 0xB0) |= 0x2000;
+}
+
+extern void GameBit_Set(int eventId, int value);
+extern int *lbl_803DCA68;
+extern u32 lbl_803DDCC8;
+extern f32 lbl_803E6150;
+
+void fn_801FD270(int obj) {
+    int *state = *(int **)(obj + 0xB8);
+    s16 cond = 1;
+    void *player = Obj_GetPlayerObject();
+    if (player == NULL) return;
+    if (*(s16 *)((char *)state + 2) != -1) {
+        cond = (s16)GameBit_Get(*(s16 *)((char *)state + 2));
+    }
+    if ((s16)GameBit_Get(*(s16 *)state) != 0) return;
+    if (*(u8 *)((char *)state + 4) == 0) {
+        if ((s16)cond != 0) {
+            *(u8 *)(obj + 0xAF) &= ~0x08;
+            if ((*(int (*)(u32))(*(int *)(*lbl_803DCA68 + 0x20)))(lbl_803DDCC8) != 0) {
+                if (Vec_distance((void *)(obj + 0x18), (char *)player + 0x18) < lbl_803E6150) {
+                    GameBit_Set(*(s16 *)state, 1);
+                    *(u8 *)((char *)state + 4) = 1;
+                    *(u8 *)(obj + 0xAF) |= 0x08;
+                }
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
