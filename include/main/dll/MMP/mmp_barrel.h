@@ -9,8 +9,9 @@ extern ObjectDescriptor gAlphaAnimatorObjDescriptor;
 extern ObjectDescriptor14 gGroundAnimatorObjDescriptor;
 
 u8 waveanimator_modelMtxFn(int *obj);
-void waveanimator_func0B(undefined2 *param_1,int param_2);
+void waveanimator_func0B(int *obj);
 void waveanimator_setScale(int *obj, f32 fval);
+u8 wallanimator_func0B(int *obj);
 void FUN_80192488(void);
 void FUN_80192618(int param_1);
 void FUN_80192640(int param_1);
@@ -45,7 +46,7 @@ void waveanimator_initialise(void);
 
 int alphaanimator_getExtraSize(void);
 int alphaanimator_func08(void);
-void alphaanimator_free(void);
+void alphaanimator_free(int *obj);
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void alphaanimator_hitDetect(void);
 void alphaanimator_update(void);
