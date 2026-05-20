@@ -4,9 +4,7 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-void imicepillar_render(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9);
+void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FUN_801ae184(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,char param_6);
 void FUN_801ae2ec(undefined2 *param_1);

@@ -2308,15 +2308,18 @@ void* fn_80056684(int idx) {
 
 /* 32b two-stage table lookup via lis/addi/lwz. */
 extern int lbl_803822A0[5];
+#pragma scheduling off
 void* fn_80059334(int a, int b) {
 	int* base = (int*)lbl_803822A0[0];
 	return (char*)base + (a + (b << 4)) * 12;
 }
+#pragma scheduling reset
 
 /* 48b paired float reads scaled by sda21 constant. */
 extern int lbl_803DCE68;
 extern f32 lbl_803DEBC8;
 
+#pragma scheduling off
 void fn_80056B8C(int idx, float* out1, float* out2) {
 	f32 divisor = lbl_803DEBC8;
 	f32* p2;
@@ -2324,6 +2327,7 @@ void fn_80056B8C(int idx, float* out1, float* out2) {
 	p2 = (f32*)(lbl_803DCE68 + (idx << 4));
 	*out2 = p2[1] / divisor;
 }
+#pragma scheduling reset
 
 /* 52b layer clamp pair. */
 #pragma scheduling off
@@ -2382,6 +2386,7 @@ extern f32 playerMapOffsetZ;
 extern f32 lbl_803DEBCC;
 extern char gViewFrustumPlanes[];
 
+#pragma scheduling off
 int ViewFrustum_IsSphereVisible(float* center, float radius) {
 	u8 i;
 	for (i = 0; i < 5; i++) {
@@ -2394,6 +2399,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius) {
 	}
 	return 1;
 }
+#pragma scheduling reset
 
 /* 112b indexed teardown/free of map block. */
 extern char lbl_803822C8[];

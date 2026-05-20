@@ -60,7 +60,7 @@ extern f32 lbl_803E6DBC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int Obj_GetPlayerObject(void);
+extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -1073,6 +1073,34 @@ void vfpcoreplat_init(int obj, int data) {
     }
     *(u16 *)(obj + 0xB0) |= 0x2000;
 }
+
+extern void GameBit_Set(int eventId, int value);
+extern int *lbl_803DCA68;
+extern u32 lbl_803DDCC8;
+extern f32 lbl_803E6150;
+
+void fn_801FD270(int obj) {
+    int *state = *(int **)(obj + 0xB8);
+    s16 cond = 1;
+    void *player = Obj_GetPlayerObject();
+    if (player == NULL) return;
+    if (*(s16 *)((char *)state + 2) != -1) {
+        cond = (s16)GameBit_Get(*(s16 *)((char *)state + 2));
+    }
+    if ((s16)GameBit_Get(*(s16 *)state) != 0) return;
+    if (*(u8 *)((char *)state + 4) == 0) {
+        if ((s16)cond != 0) {
+            *(u8 *)(obj + 0xAF) &= ~0x08;
+            if ((*(int (*)(u32))(*(int *)(*lbl_803DCA68 + 0x20)))(lbl_803DDCC8) != 0) {
+                if (Vec_distance((void *)(obj + 0x18), (char *)player + 0x18) < lbl_803E6150) {
+                    GameBit_Set(*(s16 *)state, 1);
+                    *(u8 *)((char *)state + 4) = 1;
+                    *(u8 *)(obj + 0xAF) |= 0x08;
+                }
+            }
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1213,6 +1241,50 @@ void vfpdoorswitch_init(int obj, int data) {
         *(u8 *)(obj + 0xAD) = 1;
     }
     *(u16 *)(obj + 0xB0) |= 0x2000;
+}
+
+extern int Camera_GetCurrentViewSlot(void);
+extern void PSVECSubtract(void *a, void *b, void *ab);
+extern void PSVECNormalize(void *in, void *out);
+extern void PSVECScale(void *in, void *out, f32 scale);
+extern void PSVECAdd(void *a, void *b, void *ab);
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern f32 lbl_803E6118;
+extern f32 lbl_803E6120;
+extern f32 lbl_803E6124;
+extern f32 timeDelta;
+
+void fn_801FC378(int obj)
+{
+    VfpDoorSwitchState *state = *(VfpDoorSwitchState **)(obj + 0xB8);
+    int camView = Camera_GetCurrentViewSlot();
+
+    if (state->activated == 0) {
+        if (GameBit_Get(state->gameBitId) != 0) {
+            Sfx_PlayFromObject(0, 0x109);
+            Sfx_PlayFromObject(obj, 0x10D);
+            Sfx_PlayFromObject(obj, 0x494);
+            state->activated = 1;
+        }
+    }
+    if (state->activated != 0) {
+        ObjAnim_AdvanceCurrentMove(lbl_803E6118, timeDelta, obj, NULL);
+        if (state->unkflag2 == 0) {
+            if (*(f32 *)(obj + 0x98) >= lbl_803E611C) {
+                f32 vec[3];
+                PSVECSubtract((void *)(camView + 0xC), (void *)(obj + 0xC), vec);
+                PSVECNormalize(vec, vec);
+                PSVECScale(vec, vec, lbl_803E6120);
+                PSVECAdd((void *)(obj + 0xC), vec, (void *)(obj + 0xC));
+                *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xC);
+                *(f32 *)(obj + 0x1C) = *(f32 *)(obj + 0x10);
+                *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+                spawnExplosion(obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
+                state->unkflag2 = 1;
+                *(s16 *)(obj + 6) |= 0x4000;
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

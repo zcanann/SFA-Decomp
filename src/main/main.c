@@ -1287,12 +1287,81 @@ void dll_224_update(void *obj) {
 int fn_801FD4A8(void *obj, int x) {
     s8 *extra = *(s8 **)((char *)obj + 0xb8);
     if (extra != NULL) {
-        int v = extra[4] - x;
-        extra[4] = (s8)v;
-        return !extra[4];
+        s8 v = extra[4] - x;
+        extra[4] = v;
+        return extra[4] == 0 ? 1 : 0;
     }
     return 0;
 }
+
+int dbegg_setScale(int obj) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    return inner[0x118] != 3 ? 1 : 0;
+}
+
+#pragma scheduling off
+#pragma peephole off
+int dbegg_func0B(int obj, f32 *v) {
+    char *inner = *(char **)(obj + 0xb8);
+    if (*(u8 *)(inner + 0x118) != 0xb) return 0;
+    *(f32 *)(inner + 0x10c) = v[0];
+    *(f32 *)(inner + 0x110) = v[1];
+    *(f32 *)(inner + 0x114) = v[2];
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u32 Resource_Acquire(int id, int mode);
+extern u32 lbl_803DDCD8;
+#pragma scheduling off
+#pragma peephole off
+void vfplavastar_initialise(void) {
+    lbl_803DDCD8 = 0;
+    lbl_803DDCD8 = Resource_Acquire(0xa6, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *lbl_803DCA78;
+extern int *lbl_803DCA7C;
+#pragma scheduling off
+#pragma peephole off
+void vfplavastar_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x14)))(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_8003B608(int r, int g, int b);
+extern f32 lbl_803E6168;
+extern void objRenderFn_8003b8f4(f32);
+#pragma scheduling off
+#pragma peephole off
+void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    if (visible != 0) {
+        fn_8003B608(0xff, 0xe6, 0xd7);
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E6168);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E61CC;
+#pragma scheduling off
+#pragma peephole off
+void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    if (visible != 0) {
+        u32 t = inner[0x118];
+        if (t != 0xc && t != 4 && t != 0xb) {
+            objRenderFn_8003b8f4(lbl_803E61CC);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off

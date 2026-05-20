@@ -1956,8 +1956,101 @@ typedef struct {
     u8 bit7 : 1;
     u8 bits_0to6 : 7;
 } _Obj8011F70C;
+#pragma scheduling off
+#pragma peephole off
 void GameUI_airMeterSetShutdown(void) {
     _Obj8011F70C *p = (_Obj8011F70C *)airMeter;
     if (p == 0) return;
     p->bit7 = 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void *textureLoadAsset(int id);
+extern f32 lbl_803E1E3C;
+extern int lbl_803A9398[];
+
+extern void textureFree(int handle);
+extern void mm_free(void *p);
+#pragma scheduling off
+#pragma peephole off
+void GameUI_airMeterShutdown(void) {
+    int *m = (int *)airMeter;
+    if (m == NULL) return;
+    *(u8 *)((char *)m + 0x18) = 0;
+    switch (m[0x10]) {
+        case 0:
+            textureFree(m[0xb]);
+            textureFree(m[0xc]);
+            break;
+        case 1:
+            textureFree(m[0xc]);
+            textureFree(m[0xd]);
+            textureFree(m[0xe]);
+            textureFree(m[0xf]);
+            break;
+    }
+    mm_free(airMeter);
+    airMeter = NULL;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *lbl_803DCAAC;
+extern u8 lbl_803DB424;
+extern int lbl_803DD8DC;
+extern int lbl_803DD7D8;
+extern f32 lbl_803DD764;
+extern f32 lbl_803E1E60;
+extern void pauseMenuInit(void);
+extern int getCurGameText(void);
+extern void gameTextLoadDir(int);
+#pragma scheduling off
+#pragma peephole off
+void showDeathMenu(void) {
+    int *o = (int *)*lbl_803DCAAC;
+    int *r = (int *)(*(int (*)(int *))(*(int *)((char *)o + 0x8c)))(o);
+    pauseMenuInit();
+    if (*((u8 *)r + 9) != 0) {
+        pauseMenuState = 8;
+    } else if (lbl_803DB424 != 0) {
+        pauseMenuState = 9;
+    } else {
+        pauseMenuState = 0xa;
+    }
+    lbl_803DD8DC = getCurGameText();
+    gameTextLoadDir(0xb);
+    lbl_803DD764 = lbl_803E1E60;
+    lbl_803DD7D8 = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
+void GameUI_func15(s16 a, int b, int c) {
+    void *t = textureLoadAsset(a);
+    lbl_803A9398[0] = (int)t;
+    if (t == NULL) return;
+    lbl_803A9398[1] = b;
+    *(s16 *)((char *)lbl_803A9398 + 0xc) = (s16)c;
+    *(f32 *)((char *)lbl_803A9398 + 0x8) = lbl_803E1E3C;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void GameUI_airMeterRun(int v) {
+    int *m = (int *)airMeter;
+    int clamped;
+    if (m == NULL) return;
+    if (v < 0) clamped = 0;
+    else if (v > m[1]) clamped = m[1];
+    else clamped = v;
+    if (m[0x10] == 1) {
+        clamped = clamped * 0x9e / m[1];
+    }
+    m[3] = clamped;
+}
+#pragma peephole reset
+#pragma scheduling reset

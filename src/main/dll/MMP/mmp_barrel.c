@@ -1343,7 +1343,209 @@ u8 groundanimator_func0B(int *obj)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern int objPosToMapBlockIdx(double x, double y, double z);
+extern void *mapGetBlock(int idx);
+extern void fn_801923F8(void);
+extern void fn_80193DBC(void *block, int *obj, u8 *vstate, int *desc);
+extern int fn_80065640(void);
+extern void fn_80065574(int a, int b, int c);
 extern u8 lbl_803DDAE8;
+#pragma peephole off
+#pragma scheduling off
+void waveanimator_init(int *obj, int *desc)
+{
+    int *vstate = ((int**)obj)[0xB8/4];
+    f32 fz;
+    vstate[6]  = *(s8 *)((char*)desc + 0x20);
+    vstate[0]  = *(s16*)((char*)desc + 0x18);
+    vstate[1]  = *(s16*)((char*)desc + 0x1A);
+    vstate[2]  = *(s8 *)((char*)desc + 0x1C);
+    vstate[3]  = *(s8 *)((char*)desc + 0x1D);
+    *(f32*)((char*)vstate + 0x10) = (f32)*(s8*)((char*)desc + 0x1E);
+    *(f32*)((char*)vstate + 0x14) = (f32)*(s8*)((char*)desc + 0x1F);
+    vstate[7]  = *(s8 *)((char*)desc + 0x21);
+    vstate[8]  = *(s8 *)((char*)desc + 0x22);
+    fz = lbl_803E3F70;
+    *(f32*)((char*)vstate + 0x2C) = fz;
+    *(f32*)((char*)vstate + 0x30) = fz;
+    if (lbl_803DDAE8 == 0) {
+        fn_801923F8();
+    }
+    ObjGroup_AddObject(obj, 27);
+    lbl_803DDAE8++;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void hitanimator_update(int *obj)
+{
+    int *state = ((int**)obj)[0x4C/4];
+    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    void *block;
+    block = mapGetBlock(objPosToMapBlockIdx(
+        (double)*(f32*)((char*)obj + 0xC),
+        (double)*(f32*)((char*)obj + 0x10),
+        (double)*(f32*)((char*)obj + 0x14)));
+    if (block == NULL) {
+        vstate[1] &= ~1;
+        vstate[1] |= 4;
+        return;
+    }
+    vstate[2] = (u8)GameBit_Get(*(s16*)((char*)state + 0x18));
+    if (vstate[3] != vstate[2]) {
+        ((s8*)vstate)[0] = ((s8*)vstate)[0] ^ 1;
+        if (*(u8*)((char*)state + 0x1A) == 1) {
+            vstate[1] |= 1;
+        }
+        if ((*(u8*)((char*)state + 0x1C) & 8) != 0) {
+            vstate[1] |= 2;
+        }
+        if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
+            vstate[1] |= 4;
+        }
+    }
+    vstate[3] = vstate[2];
+    if ((*(u8*)((char*)state + 0x1C) & 8) != 0) {
+        if (fn_80065640() != 0) {
+            vstate[1] |= 2;
+        }
+        if ((vstate[1] & 2) != 0) {
+            if (fn_80065640() == 0) {
+                fn_80065574(*(u8*)((char*)state + 0x1D), *(int*)((char*)obj + 0x30), ((s8*)vstate)[0]);
+                vstate[1] &= ~2;
+            }
+        }
+    }
+    if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
+        if (*(u8*)((char*)state + 0x1B) != 0) {
+            if ((vstate[1] & 4) != 0) {
+                fn_80193DBC(block, obj, vstate, state);
+                vstate[1] &= ~4;
+            }
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern f32 lbl_803E3FB8;
+#pragma peephole off
+#pragma scheduling off
+void groundanimator_init(int *obj, int *desc)
+{
+    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    vstate[0x2B] = (u8)*(s16*)((char*)desc + 0x1E);
+    *(f32*)(vstate + 0x18) = (f32)*(u8*)((char*)desc + 0x27);
+    *(f32*)(vstate + 0x10) = lbl_803E3FB8;
+    *(f32*)(vstate + 0x14) = (f32)*(u8*)((char*)desc + 0x26);
+    if (*(u8*)((char*)desc + 0x25) != 0) {
+        if (GameBit_Get(*(s16*)((char*)desc + 0x18)) != 0) {
+            *(f32*)(vstate + 0xC) = lbl_803E3F98 * (f32)*(u8*)((char*)desc + 0x20);
+            vstate[0x2D] |= 2;
+        }
+    }
+    ObjGroup_AddObject(obj, 49);
+    if (*(u8*)((char*)desc + 0x21) > 1) {
+        *(u8*)((char*)desc + 0x21) = 0;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void hitanimator_init(int *obj, int *desc)
+{
+    u8 *vstate = (u8*)((int**)obj)[0xB8/4];
+    void *block;
+    u8 g;
+    s8 init_bit;
+    init_bit = (s8)(*(u8*)((char*)desc + 0x1C) & 1);
+    ((s8*)vstate)[0] = init_bit;
+    vstate[1] = 0;
+    if (GameBit_Get(*(s16*)((char*)desc + 0x18)) != 0) {
+        ((s8*)vstate)[0] = ((s8*)vstate)[0] ^ 1;
+        if (*(u8*)((char*)desc + 0x1A) == 1) {
+            vstate[1] |= 1;
+        }
+    }
+    block = mapGetBlock(objPosToMapBlockIdx(
+        (double)*(f32*)((char*)obj + 0xC),
+        (double)*(f32*)((char*)obj + 0x10),
+        (double)*(f32*)((char*)obj + 0x14)));
+    if (block != NULL) {
+        if ((*(u8*)((char*)desc + 0x1C) & 4) != 0 && *(u8*)((char*)desc + 0x1B) != 0) {
+            fn_80193DBC(block, obj, vstate, desc);
+        }
+    }
+    vstate[1] |= 2;
+    if ((*(u8*)((char*)desc + 0x1C) & 4) != 0) {
+        vstate[1] |= 4;
+    }
+    g = (u8)GameBit_Get(*(s16*)((char*)desc + 0x18));
+    vstate[2] = g;
+    vstate[3] = g;
+    *(u16*)((char*)obj + 0xB0) |= 0x6000;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void visanimator_init(int *obj, int *desc)
+{
+    u8 *vstate;
+    u32 gate;
+    u8 tmp;
+    int sv;
+    *(u16*)((char*)obj + 0xB0) |= 0x6000;
+    vstate = (u8*)((int**)obj)[0xB8/4];
+    sv = *(s8*)((char*)desc + 0x1B);
+    ((s8*)vstate)[1] = (s8)sv;
+    vstate[4] = (u8)(1 << *(u8*)((char*)desc + 0x1C));
+    gate = (u32)GameBit_Get(*(s16*)((char*)desc + 0x18));
+    if ((vstate[4] & gate) != 0) {
+        ((s8*)vstate)[1] = ((s8*)vstate)[1] ^ 1;
+    }
+    mapGetBlock(objPosToMapBlockIdx((double)*(f32*)((char*)obj + 0xC),
+                                     (double)*(f32*)((char*)obj + 0x10),
+                                     (double)*(f32*)((char*)obj + 0x14)));
+    gate = (u32)GameBit_Get(*(s16*)((char*)desc + 0x18));
+    tmp = (u8)(vstate[4] & gate);
+    vstate[2] = tmp;
+    vstate[3] = tmp;
+    vstate[0] |= 1;
+}
+
+void visanimator_update(int *obj)
+{
+    int *state = ((int**)obj)[0x4C / 4];
+    u8 *vstate = (u8*)((int**)obj)[0xB8 / 4];
+    int idx = objPosToMapBlockIdx((double)*(f32*)((char*)obj + 0xC),
+                                  (double)*(f32*)((char*)obj + 0x10),
+                                  (double)*(f32*)((char*)obj + 0x14));
+    if (mapGetBlock(idx) == NULL) {
+        vstate[0] |= 1;
+        return;
+    }
+    {
+        int gate = GameBit_Get(*(s16*)((char*)state + 0x18));
+        vstate[2] = (u8)(vstate[4] & gate);
+        if (vstate[3] != vstate[2]) {
+            ((s8*)vstate)[1] = (s8)(((s8*)vstate)[1] ^ 1);
+            vstate[0] |= 1;
+        }
+        vstate[3] = vstate[2];
+        if (vstate[0] & 1) {
+            vstate[0] &= ~1;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern void *lbl_803DDAEC;
 extern void *lbl_803DDAF0;
 extern void *lbl_803DDAF4;

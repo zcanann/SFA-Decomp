@@ -1672,7 +1672,61 @@ void dll_1CE_free(void) {
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */
+extern f32 lbl_803E49D4;
 extern f32 lbl_803E49F0;
+extern void* Obj_GetPlayerObject(void);
+extern void fn_801B5F1C(int obj, u8* sub);
+extern void fn_801B5D48(int obj, u8* sub);
+extern int fn_80296458(void* player);
+extern void fn_80065574(int a, int b, int c);
+
+/* dimmagicbridge_update: scroll the two UV channels (via fn_801B5F1C and
+ * fn_801B5D48), then either fire the death VFX (fn_80065574(0x11, 0, 0))
+ * when sub->_5f is set or, when GameBit 0x1ef is on and the player passes
+ * fn_80296458, latch GameBit 0x1e8. */
+#pragma scheduling off
+void dimmagicbridge_update(int obj)
+{
+    u8* sub;
+    void* player;
+    player = Obj_GetPlayerObject();
+    sub = *(u8**)((u8*)obj + 0xb8);
+    fn_801B5F1C(obj, sub);
+    fn_801B5D48(obj, sub);
+    if (sub[0x5f] == 0) {
+        if (GameBit_Get(0x1ef) != 0) {
+            if (fn_80296458(player) != 0) {
+                GameBit_Set(0x1e8, 1);
+            }
+        }
+    } else {
+        fn_80065574(0x11, 0, 0);
+    }
+}
+#pragma scheduling reset
+
+/* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
+ * and using mask 0x6000 + initial state byte 3 at +0. */
+#pragma scheduling off
+void dimwooddoor2_init(u8* obj, u8* params)
+{
+    u8* sub;
+    f32 fz;
+    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
+    sub = *(u8**)(obj + 0xb8);
+    sub[0] = 3;
+    fz = lbl_803E49D4;
+    *(f32*)(sub + 4) = fz;
+    *(f32*)(sub + 8) = fz;
+    if (GameBit_Get(*(s16*)(params + 0x1e)) != 0) {
+        sub[0] = 0;
+        *(s16*)(*(u8**)(obj + 0x54) + 0x60) = (s16)(*(s16*)(*(u8**)(obj + 0x54) + 0x60) & ~1);
+        *(u8*)(obj + 0x36) = 0;
+    }
+}
+#pragma scheduling reset
+
 #pragma scheduling off
 void dll_1CE_init(u8* obj, u8* params)
 {
@@ -1728,34 +1782,31 @@ void dim_levelcontrol_free(int p1)
  * through objFindTexture + framesThisStep instead of FUN_80039520/DAT_803dc070. */
 extern void *objFindTexture(int obj, int a, int b);
 extern u8 framesThisStep;
-void fn_801B5F1C(int param_1, int param_2)
+#pragma scheduling off
+void fn_801B5F1C(int param_1, u8* obj)
 {
-    int iVar1;
-    uint uVar2;
+    u8* tex;
+    s32 v;
 
-    iVar1 = (int)objFindTexture(param_1, 0, 0);
-    *(short *)(iVar1 + 10) = *(short *)(iVar1 + 10) + 0x14;
-    if (10000 < *(short *)(iVar1 + 10)) {
-        *(short *)(iVar1 + 10) = *(short *)(iVar1 + 10) + -10000;
+    tex = (u8*)objFindTexture(param_1, 0, 0);
+    *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x14);
+    if (*(s16*)(tex + 10) > 10000) {
+        *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) - 10000);
     }
-    *(short *)(iVar1 + 8) = *(short *)(iVar1 + 8) + 10;
-    if (10000 < *(short *)(iVar1 + 8)) {
-        *(short *)(iVar1 + 8) = *(short *)(iVar1 + 8) + -10000;
+    *(s16*)(tex + 8) = (s16)(*(s16*)(tex + 8) + 10);
+    if (*(s16*)(tex + 8) > 10000) {
+        *(s16*)(tex + 8) = (s16)(*(s16*)(tex + 8) - 10000);
     }
-    iVar1 = (int)objFindTexture(param_1, 1, 0);
-    *(short *)(iVar1 + 10) = *(short *)(iVar1 + 10) + 0x1e;
-    if (10000 < *(short *)(iVar1 + 10)) {
-        *(short *)(iVar1 + 10) = *(short *)(iVar1 + 10) + -10000;
+    tex = (u8*)objFindTexture(param_1, 1, 0);
+    *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) + 0x1e);
+    if (*(s16*)(tex + 10) > 10000) {
+        *(s16*)(tex + 10) = (s16)(*(s16*)(tex + 10) - 10000);
     }
-    uVar2 = (uint)*(ushort *)(param_2 + 0x60) + (uint)framesThisStep * 0x100;
-    if (0xffff < uVar2) {
-        uVar2 = uVar2 - 0xffff;
-    }
-    *(short *)(param_2 + 0x60) = (short)uVar2;
-    uVar2 = (uint)*(ushort *)(param_2 + 0x62) + (uint)framesThisStep * 0x80;
-    if (0xffff < uVar2) {
-        uVar2 = uVar2 - 0xffff;
-    }
-    *(short *)(param_2 + 0x62) = (short)uVar2;
-    return;
+    v = (s32)*(u16*)(obj + 0x60) + (s32)framesThisStep * 0x100;
+    if (v > 0xffff) v = v - 0xffff;
+    *(u16*)(obj + 0x60) = (u16)v;
+    v = (s32)*(u16*)(obj + 0x62) + (s32)framesThisStep * 0x80;
+    if (v > 0xffff) v = v - 0xffff;
+    *(u16*)(obj + 0x62) = (u16)v;
 }
+#pragma scheduling reset

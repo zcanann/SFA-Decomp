@@ -2987,13 +2987,90 @@ extern u8 lbl_803DCC0A;
 extern u8 lbl_803DCC0B;
 extern u8 lbl_803DCC0C;
 extern u8 lbl_803DCC0D;
-void fn_8003B5E0(u8 a, u8 b, u8 c, u8 d) {
-    lbl_803DCC0D = a;
-    lbl_803DCC0C = b;
-    lbl_803DCC0B = c;
+extern void objRenderModel(int *obj, int **table);
+extern void objRenderFn_80041018(int *obj);
+
+#pragma scheduling off
+#pragma peephole off
+void *objModelGetVecFn_800395d8(void *obj, int target) {
+    void *result = NULL;
+    void *m = *(void **)((char *)obj + 0x50);
+    if (m != NULL) {
+        int entryIdx = 0, vecOffset = 0;
+        int count = *(u8 *)((char *)m + 0x5a);
+        int i;
+        if (count > 0) {
+            for (i = 0; i < count; i++) {
+                u8 *entries = *(u8 **)((char *)m + 0x10);
+                int adj = (s8)*(s8 *)((char *)obj + 0xad) + entryIdx;
+                if (entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target) {
+                    result = (char *)*(void **)((char *)obj + 0x6c) + vecOffset;
+                }
+                entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+                vecOffset += 0x12;
+            }
+        }
+    }
+    return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8003A9C0(char *p, int count, s16 a, s16 b) {
+    int i;
+    if (count <= 0) return;
+    for (i = 0; i < count; i++) {
+        *(s16 *)(p + 0x14) = a;
+        *(s16 *)(p + 0x44) = b;
+        p += 0x60;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
+extern void Sfx_PlayFromObjectChannel(int obj, int ch, int sfxId);
+extern f32 lbl_803DE9C8;
+extern f32 lbl_803DE99C;
+#pragma scheduling off
+#pragma peephole off
+void objAudioFn_80039270(int obj, void *p, int sfxId) {
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+        Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
+        *(f32 *)((char *)p + 0xc) = lbl_803DE9C8;
+        *(s16 *)((char *)p + 0x14) = -0x500;
+        *(u8 *)p = 1;
+        *(f32 *)((char *)p + 4) = lbl_803DE99C;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
+void objRenderFn_8003b8f4(int *obj) {
+    int **table = (int **)obj[0x7c / 4];
+    if (table[(s8)*(s8 *)((char *)obj + 0xad)] != NULL) {
+        objRenderModel(obj, table);
+        if (*(void **)((char *)obj + 0x74) != NULL) {
+            objRenderFn_80041018(obj);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8003B5E0(int a, int b, int c, u8 d) {
+    lbl_803DCC0D = (u8)a;
+    lbl_803DCC0C = (u8)b;
+    lbl_803DCC0B = (u8)c;
     lbl_803DCC09 = 1;
     lbl_803DCC0A = d;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 100b texture lookup by byte tag. */
 #pragma peephole off

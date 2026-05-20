@@ -3104,6 +3104,191 @@ void CameraModeArwing_release(void) {}
 void CameraModeArwing_initialise(void) {}
 void CameraModeTitle_release(void) {}
 void CameraModeTitle_initialise(void) {}
+void CameraModeForceBehind_copyToCurrent(void) {}
+void CameraModeForceBehind_free(void) {}
+void CameraModeCloudRunner_copyToCurrent(void) {}
+void CameraModePerv_copyToCurrent(void) {}
+void CameraModeArwing_free(void) {}
+
+extern void *mmAlloc(int size, int heap, int flags);
+extern void *memset(void *dst, int val, u32 n);
+extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern f32 lbl_803E1A88;
+extern u32 lbl_803DD590;
+extern u32 lbl_803DD598;
+#pragma peephole off
+#pragma scheduling off
+void CameraModeTitle_loadVolumes(void)
+{
+    u8 *save = getSaveFileStruct();
+    audioSetVolumes(save[10], 1000, 1, 0, 0);
+}
+
+void dll_4F_init(void)
+{
+    if (lbl_803DD590 == 0) {
+        lbl_803DD590 = (u32)mmAlloc(8, 15, 0);
+    }
+    *(f32*)((char*)lbl_803DD590 + 4) = lbl_803E1A88;
+}
+
+void CameraModeCrawl_init(void)
+{
+    if (lbl_803DD598 == 0) {
+        lbl_803DD598 = (u32)mmAlloc(12, 15, 0);
+        memset((void*)lbl_803DD598, 0, 12);
+    }
+}
+
+extern u32 lbl_803DD5A0;
+extern u32 lbl_803DD5C8;
+extern f32 lbl_803E1B98;
+extern f32 lbl_803E1B9C;
+extern u32 lbl_803DD588;
+
+void CameraModePerv_init(int *obj)
+{
+    if (lbl_803DD5C8 == 0) {
+        lbl_803DD5C8 = (u32)mmAlloc(8, 15, 0);
+    }
+    *(f32*)lbl_803DD5C8 = lbl_803E1B98;
+    *(f32*)((char*)lbl_803DD5C8 + 4) = *(f32*)((char*)((int**)obj)[0xA4/4] + 0x1C) - lbl_803E1B9C;
+}
+
+void CameraModeCannon_init(int *p1, int unused, int *p3)
+{
+    if (lbl_803DD5A0 == 0) {
+        lbl_803DD5A0 = (u32)mmAlloc(4, 15, 0);
+    }
+    if (p3 != NULL) {
+        *(int*)lbl_803DD5A0 = *p3;
+    } else {
+        *(int*)lbl_803DD5A0 = 0;
+    }
+    *(s16*)((char*)p1 + 2) = 2800;
+}
+
+extern f32 lbl_803E1A40;
+extern f32 lbl_803E1A28;
+extern f32 lbl_803E1A80;
+void CameraModeWorldMap_init(int *obj)
+{
+    int zero;
+    if (lbl_803DD588 == 0) {
+        lbl_803DD588 = (u32)mmAlloc(24, 15, 0);
+    }
+    *(f32*)lbl_803DD588 = lbl_803E1A40;
+    *(f32*)((char*)lbl_803DD588 + 4) = lbl_803E1A28;
+    zero = 0;
+    *((u8*)lbl_803DD588 + 8) = (u8)zero;
+    *((u8*)lbl_803DD588 + 9) = (u8)zero;
+    *((u8*)lbl_803DD588 + 21) = (*((u8*)lbl_803DD588 + 21) & ~0x80) | (((u8)zero & 1) << 7);
+    *(s16*)((char*)lbl_803DD588 + 10) = 1;
+    *((u8*)lbl_803DD588 + 20) = (u8)zero;
+    *(int*)((char*)lbl_803DD588 + 16) = zero;
+    *(f32*)((char*)obj + 0xB4) = lbl_803E1A80;
+    *(s16*)obj = -32768;
+}
+
+void CameraModeWorldMap_copyToCurrent(int *p1, int kind)
+{
+    if (kind == 0) {
+        if (p1 == NULL) return;
+        *((u8*)lbl_803DD588 + 8) = *(u8*)p1;
+        return;
+    }
+    if (kind < 0) return;
+    if (kind >= 3) return;
+    if (p1 == NULL) return;
+    *(int*)((char*)lbl_803DD588 + 0x10) = *p1;
+    if (kind == 1) {
+        *((u8*)lbl_803DD588 + 0x14) = 20;
+    } else {
+        *((u8*)lbl_803DD588 + 0x14) = 1;
+    }
+}
+
+extern f32 lbl_803A43C0[];
+void CameraModeArwing_copyToCurrent(void *p1, u32 kind)
+{
+    if (kind == 12) {
+        lbl_803A43C0[0] = ((f32*)p1)[0];
+        lbl_803A43C0[1] = ((f32*)p1)[1];
+        lbl_803A43C0[2] = ((f32*)p1)[2];
+        return;
+    }
+    if (kind == 6) {
+        *(s16*)((char*)lbl_803A43C0 + 0x54) = ((s16*)p1)[0];
+        *(s16*)((char*)lbl_803A43C0 + 0x56) = ((s16*)p1)[1];
+        *(s16*)((char*)lbl_803A43C0 + 0x58) = ((s16*)p1)[2];
+        return;
+    }
+    if (kind == 4) {
+        *(f32*)((char*)lbl_803A43C0 + 0x38) = ((f32*)p1)[0];
+        return;
+    }
+    *(f32*)((char*)lbl_803A43C0 + 0x3C) = ((f32*)p1)[0];
+    *(f32*)((char*)lbl_803A43C0 + 0x40) = ((f32*)p1)[1];
+}
+
+extern u32 lbl_803DD5B8;
+extern s16 getAngle(f32 dx, f32 dz);
+void CameraModeCloudRunner_init(int *p1, s16 p2, f32 *p3)
+{
+    int *p1_a4 = ((int**)p1)[0xA4/4];
+    if (lbl_803DD5B8 == 0) {
+        lbl_803DD5B8 = (u32)mmAlloc(16, 15, 0);
+    }
+    if (p3 != NULL) {
+        ((f32*)lbl_803DD5B8)[0] = p3[0];
+        ((f32*)lbl_803DD5B8)[1] = p3[1];
+        ((f32*)lbl_803DD5B8)[2] = p3[2];
+        ((f32*)lbl_803DD5B8)[3] = p3[3];
+    } else {
+        ((f32*)lbl_803DD5B8)[0] = *(f32*)((char*)p1_a4 + 0x18);
+        ((f32*)lbl_803DD5B8)[1] = *(f32*)((char*)p1_a4 + 0x1C);
+        ((f32*)lbl_803DD5B8)[2] = *(f32*)((char*)p1_a4 + 0x20);
+        ((f32*)lbl_803DD5B8)[3] = (f32)p2;
+    }
+    getAngle(
+        *(f32*)((char*)p1 + 0x18) - ((f32*)lbl_803DD5B8)[0],
+        *(f32*)((char*)p1 + 0x20) - ((f32*)lbl_803DD5B8)[2]);
+    {
+        int *a4 = ((int**)p1)[0xA4/4];
+        getAngle(
+            *(f32*)((char*)a4 + 0x18) - ((f32*)lbl_803DD5B8)[0],
+            *(f32*)((char*)a4 + 0x20) - ((f32*)lbl_803DD5B8)[2]);
+    }
+}
+
+extern u8 lbl_803DD5D2;
+extern u8 lbl_803DD5D1;
+extern u8 lbl_803DD5D0;
+extern f32 lbl_803E1BE0;
+extern f32 lbl_803E1BE4;
+extern f32 lbl_803DB9D8;
+extern void Movie_SetVolumeFade(int p1, int p2);
+extern void Music_Trigger(int id, int mode);
+void CameraModeTitle_moveCam(u8 newCam)
+{
+    if (newCam == lbl_803DD5D2) return;
+    if (lbl_803DD5D1 == 4) {
+        if (lbl_803E1BE0 == lbl_803DB9D8) {
+            Music_Trigger(190, 1);
+            Music_Trigger(193, 1);
+        } else {
+            u8 *save = getSaveFileStruct();
+            Movie_SetVolumeFade(0, 1000);
+            audioSetVolumes(save[10], 1000, 1, 0, 0);
+        }
+    }
+    lbl_803DD5D1 = lbl_803DD5D2;
+    lbl_803DD5D2 = newCam;
+    lbl_803DB9D8 = lbl_803E1BE4;
+    lbl_803DD5D0 = 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /* misc 8b leaves */
 extern f32 lbl_803DB9D8;
@@ -3125,6 +3310,7 @@ void dll_4F_func05(void) { mm_free(lbl_803DD590); lbl_803DD590 = 0; }
 void CameraModeCrawl_free(void) { mm_free(lbl_803DD598); lbl_803DD598 = 0; }
 void CameraModeCannon_free(void) { mm_free(lbl_803DD5A0); lbl_803DD5A0 = 0; }
 void fn_801101E8(void) { mm_free(lbl_803DD5B8); lbl_803DD5B8 = 0; }
+void CameraModeCloudRunner_free(void) { mm_free(lbl_803DD5B8); lbl_803DD5B8 = 0; }
 void dll_54_func05(void) { mm_free(lbl_803DD5C0); lbl_803DD5C0 = 0; }
 void CameraModePerv_free(void) { mm_free(lbl_803DD5C8); lbl_803DD5C8 = 0; }
 #pragma peephole reset

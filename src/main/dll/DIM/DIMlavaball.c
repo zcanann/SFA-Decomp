@@ -1364,6 +1364,116 @@ void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E44F8); }
 #pragma peephole reset
 
+extern f32 lbl_803E44D4;
+extern f32 lbl_803E44D8;
+extern void fn_801A6C28(int);
+
+extern int *lbl_803DCA54;
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedBush_update(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    int def = *(int *)(obj + 0x4C);
+    int v;
+    if ((*(u8 *)(state + 1) & 1) == 0) return;
+    if (*(s16 *)(def + 0x1C) != 0 && *(u8 *)state != 0) {
+        v = *(u8 *)(def + 0x20);
+        (*(int (*)(int, int))(*(int *)(*lbl_803DCA54 + 0x54)))(obj, *(s16 *)(def + 0x1C));
+    } else {
+        v = -1;
+    }
+    {
+        s32 idx = (s32)(s8)*(u8 *)(def + 0x1E);
+        if (idx != -1) {
+            (*(int (*)(int, int, int))(*(int *)(*lbl_803DCA54 + 0x48)))(idx, obj, v);
+        }
+    }
+    *(u8 *)(state + 1) &= ~1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int getSaveGameLoadStatus(void);
+extern int mapGetDirIdx(int);
+extern void unlockLevel(int, int, int);
+extern void Music_Trigger(int, int);
+extern void fn_801A6638(int);
+extern f32 lbl_803E44C8;
+extern f32 lbl_803DDB28;
+extern int lbl_803DDB2C;
+extern u8 framesThisStep;
+extern u32 randomGetRange(int min, int max);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern int *pDll_expgfx;
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_gyservent_update(int obj) {
+    int def = *(int *)(obj + 0x4C);
+    if (GameBit_Get(*(s16 *)(def + 0x1E)) != 0) return;
+    *(int *)(obj + 0xF4) -= framesThisStep;
+    if (*(int *)(obj + 0xF4) < 0) {
+        *(int *)(obj + 0xF4) = randomGetRange(0x46, 0xF0);
+        *(int *)(obj + 0xF8) = randomGetRange(0x1E, 0x3C);
+    }
+    if (*(int *)(obj + 0xF8) == 0) return;
+    *(int *)(obj + 0xF8) -= framesThisStep;
+    if (*(int *)(obj + 0xF8) <= 0) {
+        *(int *)(obj + 0xF8) = 0;
+    } else {
+        (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x724, 0, 2, -1, 0);
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x450);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void MMP_levelcontrol_init(int obj) {
+    *(u16 *)(obj + 0xB0) |= 0x6000;
+    if (getSaveGameLoadStatus() != 0) {
+        *(int *)(obj + 0xF4) = 2;
+    } else {
+        *(int *)(obj + 0xF4) = 1;
+    }
+    *(u32 *)(obj + 0xF8) = GameBit_Get(0xF33);
+    *(void (**)(int))(obj + 0xBC) = fn_801A6638;
+    unlockLevel(mapGetDirIdx(0x12), 0, 0);
+    lbl_803DDB28 = lbl_803E44C8;
+    lbl_803DDB2C = 0;
+    Music_Trigger(0xCC, 0);
+    Music_Trigger(0xDB, 0);
+    Music_Trigger(0xF2, 0);
+    Music_Trigger(0xCE, 0);
+    Music_Trigger(0xC2, 0);
+    GameBit_Set(0xDCF, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedBush_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(u8 *)(state + 1) = 1;
+    *(s16 *)obj = (s16)((*(u8 *)(data + 0x1F)) << 8);
+    *(void (**)(int))(obj + 0xBC) = fn_801A6C28;
+    *(u16 *)(obj + 0xB0) |= 0x2000;
+    *(f32 *)(obj + 8) = (f32)(u32)(*(u8 *)(data + 0x21)) * lbl_803E44D4;
+    if (*(f32 *)(obj + 8) == lbl_803E44D8) {
+        *(f32 *)(obj + 8) = lbl_803E44D0;
+    }
+    *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
+    if (*(s16 *)(data + 0x1a) != -1) {
+        *(u8 *)state = (u8)GameBit_Get(*(s16 *)(data + 0x1a));
+    } else {
+        *(u8 *)state = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void saveGame_saveObjectPos(int obj);
 void fn_801A80C4(int obj, f32 x, f32 y, f32 z) {
     *(f32 *)(obj + 0xC) = x;
@@ -1378,6 +1488,30 @@ void mmp_trenchfx_free(int obj) {
     (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
 }
 
+extern f32 lbl_803E45C0;
+#pragma scheduling off
+#pragma peephole off
+void mmp_trenchfx_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    s16 v;
+    *(s16 *)state = *(s16 *)(data + 0x24);
+    *(u16 *)(state + 2) = (u16)((*(u8 *)(data + 0x1C)) << 2);
+    *(u16 *)(state + 4) = (u16)((*(u8 *)(data + 0x1D)) << 2);
+    *(u16 *)(state + 6) = (u16)((*(u8 *)(data + 0x1E)) << 2);
+    v = (s16)(((s32)*(s8 *)(data + 0x19)) << 8);
+    *(s16 *)(state + 0xC) = v;
+    *(s16 *)(obj + 4) = v;
+    v = (s16)(((s32)*(s8 *)(data + 0x1A)) << 8);
+    *(s16 *)(state + 0xA) = v;
+    *(s16 *)(obj + 2) = v;
+    v = (s16)(((s32)*(s8 *)(data + 0x1B)) << 8);
+    *(s16 *)(state + 0x8) = v;
+    *(s16 *)obj = v;
+    *(f32 *)(obj + 8) = lbl_803E45C0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* ObjGroup_RemoveObject + vtable[4] tail-call. */
 extern int *lbl_803DCAC0;
 #pragma scheduling off
@@ -1385,6 +1519,59 @@ extern int *lbl_803DCAC0;
 void mmp_moonrock_free(int obj) {
     ObjGroup_RemoveObject((uint)obj, 4);
     (*(void (*)(int))(*(int *)(*lbl_803DCAC0 + 0x10)))(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E457C;
+#pragma scheduling off
+#pragma peephole off
+void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    if ((*(int (*)(int, int))(*(int *)(*lbl_803DCAC0 + 0xC)))(obj, (s32)visible) != 0) {
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
+            (obj, p2, p3, p4, p5, lbl_803E457C);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void *Obj_GetPlayerObject(void);
+extern void mathFn_80021ac8(void *in, void *out);
+extern f32 lbl_803E4554;
+extern f32 lbl_803E456C;
+extern f32 lbl_803E4570;
+extern f32 lbl_803E4574;
+extern f32 lbl_803E4578;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A7CC4(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    struct {
+        s16 a;
+        s16 b;
+        s16 c;
+        s16 _pad;
+        f32 d;
+        f32 e;
+        f32 f;
+        f32 g;
+    } stk;
+    int *player = (int *)Obj_GetPlayerObject();
+    int *playerState = *(int **)((char *)player + 0xB8);
+    f32 c1 = lbl_803E4554;
+    *(f32 *)(obj + 0x24) = c1;
+    *(f32 *)(obj + 0x28) = lbl_803E4570 * *(f32 *)((char *)playerState + 0x298) + lbl_803E456C;
+    *(f32 *)(obj + 0x2C) = lbl_803E4578 * *(f32 *)((char *)playerState + 0x298) + lbl_803E4574;
+    stk.e = c1;
+    stk.f = c1;
+    stk.g = c1;
+    stk.d = lbl_803E457C;
+    stk.c = 0;
+    stk.b = 0;
+    stk.a = *(s16 *)player;
+    mathFn_80021ac8(&stk, (void *)(obj + 0x24));
+    *(u16 *)(state + 0x24) |= 0x40;
 }
 #pragma peephole reset
 #pragma scheduling reset

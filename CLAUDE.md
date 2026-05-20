@@ -71,6 +71,31 @@ Heuristic before reaching for `asm { }`:
    `SB_Galleon_hitDetect` from 63% → 93.8% (commit `8b37ec0c`). Combine with
    `#pragma scheduling off` to align the `lfs`/`stfs` order.
 
+9. **Declare `objRenderFn` (and similar dispatchers) with the full 6-arg
+   signature** `void (*)(int *obj, int a, int b, int c, int d, f32 e)` via a
+   function-pointer cast at the call site **when there's an intermediate call
+   between entry and the dispatch**. Without the full signature MWCC sees only
+   `r3` as live across the intermediate call and re-spills/reloads `r4..r7,f1`,
+   which scrambles register allocation around the dispatch. With the full
+   sig, MWCC preserves `r3..r7,f1` across the intermediate call and the
+   dispatch lands on target's exact instruction sequence. Simple render fns
+   *without* intermediates don't need this — args pass through naturally.
+   Picked up several 100% matches in TREX_trex and DIMcannon batches.
+
+10. **`(u32)` cast on a u8/u16 before int→f32 conversion** forces the unsigned
+    path. The signed int→f32 path emits `xoris + lfd + fsubs` against a
+    compiler-internal `@xxx` magic constant; the unsigned path uses the
+    project's named `lbl_xxx` f64 magic (matching target). When converting an
+    unsigned byte/halfword to float, write `(f32)(u32)obj->u8field` rather
+    than `(f32)obj->u8field`. Picked up MoonSeedBush_init in DIMlavaball.
+
+11. **`extern int fn(...)` for callees whose return is treated as `int`** —
+    even if conceptually the return is a byte. Declaring `extern u8 fn(...)`
+    triggers a spurious `clrlwi r3, r3, 24` after every call to zero-extend
+    the result, which target omits. Check the asm — if there's no `clrlwi`
+    after the call, the project treats the return as `int`. Picked up
+    `MMP_levelcontrol_init` in DIMlavaball via `extern int getSaveGameLoadStatus`.
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when

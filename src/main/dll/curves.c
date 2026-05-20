@@ -4223,6 +4223,68 @@ void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined
   return;
 }
 
+/* dll_15_func07: early-out unless flags bits 0x04000000 and 0x00002000 are
+ * set; bail if obj[0x25b] isn't 1 or 2; otherwise OR-in 0x01 (when bit 0x4)
+ * and 0x20 (when bit 0x01000000) into the mask, then forward to
+ * hitDetectFn_800691c0(arg1, obj+0x240, mask, 1). */
+extern void hitDetectFn_800691c0(void* a, void* b, u8 mask, int e);
+#pragma scheduling off
+#pragma peephole off
+void dll_15_func07(void* arg1, u8* obj)
+{
+    u32 flags;
+    s8 type;
+    u8 mask;
+    mask = 0;
+    flags = *(u32*)obj;
+    if ((s32)(flags & 0x04000000) == 0) return;
+    if ((s32)(flags & 0x00002000) != 0) {
+        type = *(s8*)(obj + 0x25b);
+        if (type != 1 && type != 2) return;
+        if ((s32)(flags & 0x00000004) != 0) mask = (u8)(mask | 0x1);
+        if ((s32)(flags & 0x01000000) != 0) mask = (u8)(mask | 0x20);
+        hitDetectFn_800691c0(arg1, obj + 0x240, mask, 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_800E7C84: extended dll_15_func04 — same fields plus a second signed
+ * byte at obj[0x263] and OR-in 0x02000008 on the flags word at obj[0]. */
+#pragma scheduling off
+#pragma peephole off
+void fn_800E7C84(u8* obj, int a, u32 b, u32 c, int d, int e)
+{
+    obj[0x25c] &= 0xf0;
+    obj[0x25c] = (u8)(obj[0x25c] | (a & 0xf));
+    *(s8*)(obj + 0x25d) = (s8)d;
+    *(s8*)(obj + 0x263) = (s8)e;
+    *(u32*)(obj + 0xdc) = b;
+    *(u32*)(obj + 0xe0) = c;
+    *(u32*)obj |= 0x02000008;
+    obj[0x264] = 0xa;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* dll_15_func04: write the per-slot config block on obj+0x25c..+0x264:
+ * replace low 4 bits of obj[0x25c] with (a & 0xf), set obj[0x25d] = (s8)d,
+ * stash two u32s at +0xdc/+0xe0, OR-in bit 3 of obj[0], and set obj[0x264]=10. */
+#pragma scheduling off
+#pragma peephole off
+void dll_15_func04(u8* obj, int a, u32 b, u32 c, int d)
+{
+    obj[0x25c] &= 0xf0;
+    obj[0x25c] = (u8)(obj[0x25c] | (a & 0xf));
+    *(s8*)(obj + 0x25d) = (s8)d;
+    *(u32*)(obj + 0xdc) = b;
+    *(u32*)(obj + 0xe0) = c;
+    *(u32*)obj |= 0x8;
+    obj[0x264] = 0xa;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *

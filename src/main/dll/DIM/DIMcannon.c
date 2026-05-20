@@ -143,7 +143,7 @@ extern int imicepillar_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void imicepillar_render(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
@@ -2009,12 +2009,14 @@ int lavaball1bf_setScale(int *obj) {
 #pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E4768;
 extern f32 lbl_803E4780;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4788;
 extern f32 lbl_803E47B8;
 extern f32 lbl_803E4810;
 #pragma peephole off
+void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4768); }
 void imanimspacecraft_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4780); }
 void imspacethruster_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4788); }
 void imspacering_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E47B8); }
@@ -2034,3 +2036,65 @@ int lavaball1be_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) retu
 /* chained byte mask. */
 u32 imanimspacecraft_func0B(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x3) & 0x4; }
 u32 lavaball1be_func11(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x10) & 0x10; }
+
+int fn_801B0784(int obj, int delta) {
+    s8 *inner = *(s8 **)(obj + 0xb8);
+    inner[0x1c] = (s8)(inner[0x1c] - delta);
+    return inner[0x1c] == 0 ? 1 : 0;
+}
+
+extern void Music_Trigger(int id, int p2);
+#pragma scheduling off
+#pragma peephole off
+void link_levcontrol_free(int obj) {
+    switch ((s32)*(s8 *)(obj + 0xac)) {
+        case 0x45: Music_Trigger(0xda, 0); break;
+        case 0x48:
+        case 0x49: Music_Trigger(0x36, 0); break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E47C0;
+#pragma scheduling off
+#pragma peephole off
+void imspacering_init(s16 *obj, s8 *p) {
+    obj[0] = (s16)((s32)p[0x18] << 8);
+    *(int *)((char *)obj + 0xf4) = randomGetRange(0, 1);
+}
+void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    if (visible != 0 && (inner[8] != 0 || *(u8 *)(obj + 0x36) != 0)) {
+        objRenderFn_8003b8f4(lbl_803E47C0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Obj_FreeObject(void *o);
+extern void ModelLightStruct_free(void *light);
+extern void mm_free(void *p);
+
+#pragma scheduling off
+#pragma peephole off
+void lavaball1bf_free(int obj, int mode) {
+    void **inner = *(void ***)(obj + 0xb8);
+    if (mode == 0 && inner[2] != 0) {
+        Obj_FreeObject(inner[2]);
+    }
+}
+void lavaball1be_free(int obj) {
+    void **inner = *(void ***)(obj + 0xb8);
+    if (inner[1] != 0) {
+        ModelLightStruct_free(inner[1]);
+        inner[1] = 0;
+    }
+}
+void imspacethruster_free(int obj) {
+    void **inner = *(void ***)(obj + 0xb8);
+    if (inner[1] != 0) mm_free(inner[1]);
+    if (inner[2] != 0) mm_free(inner[2]);
+}
+#pragma peephole reset
+#pragma scheduling reset
