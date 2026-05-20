@@ -6,7 +6,7 @@
 void dfsh_objcreator_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
-void DFSH_LaserBeam_init(int param_1,int param_2);
+void DFSH_LaserBeam_init(int *obj);
 void FUN_801c4098(int param_1);
 void FUN_801c40c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

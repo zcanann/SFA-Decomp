@@ -697,6 +697,8 @@ extern int lbl_803DDC00;
 extern f32 timeDelta;
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
+#pragma scheduling off
+#pragma peephole off
 void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5)
 {
   float local[3];
@@ -706,6 +708,8 @@ void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, u
   local[2] = lbl_803E551C;
   fn_80098B18(obj, *(float*)(obj + 8), 4, 0, 0, (int)&local[0]);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 48b: free if 0x4000 flag set. */
 #pragma peephole off
@@ -718,6 +722,8 @@ void sh_staffhaze_update(int obj)
 #pragma peephole reset
 
 /* 120b: tick a float timer; on wrap optionally trigger an effect. */
+#pragma scheduling off
+#pragma peephole off
 int fn_801DA954(int obj)
 {
   int extra = *(int*)(obj + 0xb8);
@@ -730,6 +736,8 @@ int fn_801DA954(int obj)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
 #pragma scheduling off
@@ -743,17 +751,21 @@ int fn_801DA9CC(int obj)
 #pragma scheduling reset
 
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
+#pragma scheduling off
+#pragma peephole off
 void sh_beacon_free(int obj, int param_2)
 {
   int extra = *(int*)(obj + 0xb8);
   (*(code*)(*(int*)gExpgfxInterface + 0x18))(obj);
   if (param_2 == 0) {
-    int p = *(int*)extra;
-    if (p != 0 && (*(unsigned short*)(p + 0xb0) & 0x40) == 0) {
-      Obj_FreeObject(obj);
+    void *p = *(void**)extra;
+    if (p != NULL && (*(unsigned short*)((char*)p + 0xb0) & 0x40) == 0) {
+      Obj_FreeObject((int)p);
     }
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 56b: single-call hit-effect poll. */
 #pragma scheduling off
