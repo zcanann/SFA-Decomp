@@ -138,63 +138,17 @@ extern char s_opening_bnr_8030f718[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void saveCb_8007e77c(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+extern int lbl_803DD044;
+extern void *memcpy(void *dst, const void *src, u32 n);
+#pragma peephole off
+#pragma scheduling off
+int saveCb_8007e77c(u8 idx, int unused, void *dst)
 {
-  char cVar3;
-  uint uVar1;
-  undefined4 uVar2;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  undefined8 uVar7;
-  undefined4 local_28;
-  int local_24 [9];
-  
-  cVar3 = FUN_80286840();
-  gameTextFn_80017434(0);
-  iVar5 = 0;
-  do {
-    FUN_80006c1c();
-    FUN_80017810();
-    FUN_8004600c();
-    uVar1 = FUN_80017658(local_24);
-    if ((uVar1 & 0xff) == 0) {
-      local_28 = DAT_803dc368;
-      uVar2 = newshadows_getShadowRenderTexture();
-      FUN_800709e4(uVar2,0,0,&local_28,0x200,0);
-    }
-    else {
-      (**(code **)(*DAT_803dd6cc + 4))(0,0,0);
-      param_2 = (double)lbl_803DFC18;
-      FUN_800709dc(param_2,param_2,0x280,0x1e0);
-      iVar6 = 0;
-      for (iVar4 = 0; iVar4 < (int)(uVar1 & 0xff); iVar4 = iVar4 + 1) {
-        FUN_8003b818(*(int *)(local_24[0] + iVar6));
-        iVar6 = iVar6 + 4;
-      }
-      FUN_80006b58();
-    }
-    uVar7 = FUN_80017484(0xff,0xff,0xff,0xff);
-    if (cVar3 == '\x01') {
-      uVar7 = FUN_80006c84(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x323,0,200
-                          );
-    }
-    else if (cVar3 == '\x02') {
-      uVar7 = FUN_80006c84(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x573,0,200
-                          );
-    }
-    else {
-      uVar7 = FUN_80006c84(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x56c,0,200
-                          );
-    }
-    FUN_800174b8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-    FUN_80045c4c('\x01');
-    iVar5 = iVar5 + 1;
-  } while (iVar5 < 0x3c);
-  FUN_8028688c();
-  return;
+    memcpy(dst, (void *)(lbl_803DD044 + idx * 1772 + 2640), 1772);
+    return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
