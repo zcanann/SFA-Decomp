@@ -160,5 +160,21 @@ void barrelpad_init(s16 *obj, u8 *def) {
     }
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
 }
+
+extern f32 lbl_803E3EEC;
+extern f32 lbl_803E3EF0;
+void cflightwall_init(s16 *obj, u8 *def) {
+    obj[2] = (s16)((s32)def[0x18] << 8);
+    obj[1] = (s16)((s32)def[0x19] << 8);
+    obj[0] = (s16)((s32)def[0x1a] << 8);
+    if (def[0x1b] != 0) {
+        *(f32 *)((char *)obj + 8) = (f32)(u32)def[0x1b] / lbl_803E3EEC;
+        if (*(f32 *)((char *)obj + 8) == lbl_803E3EF0) {
+            *(f32 *)((char *)obj + 8) = lbl_803E3EE8;
+        }
+        *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * *(f32 *)((char *)*(int **)((char *)obj + 0x50) + 4);
+    }
+    *(u16 *)((char *)obj + 0xb0) |= 0xA000;
+}
 #pragma peephole reset
 #pragma scheduling reset
