@@ -897,37 +897,38 @@ int CCGasVentControl_SeqFn(int obj)
 }
 #pragma scheduling reset
 
-extern u8 *Obj_AllocObjectSetup(int size, int type);
-extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
+
 #pragma scheduling off
 #pragma peephole off
-int fn_801A8F88(int *obj, int *p2) {
+int fn_801A8F88(int obj, int arg2)
+{
     int i;
-    int count = *(s8 *)((char *)p2 + 0x8b);
-    for (i = 0; i < count; i++) {
-        switch (*(u8 *)((char *)p2 + 0x81 + i)) {
-        case 1: {
-            int *attached;
-            u8 *setup;
-            *(int *)((char *)obj + 0xf8) = 779;
-            attached = *(int **)((char *)obj + 0xc8);
-            if (attached != NULL) {
-                ObjLink_DetachChild(obj, attached);
-                Obj_FreeObject(attached);
+    void *state;
+    int alloc;
+    for (i = 0; i < (int)*(u8 *)(arg2 + 0x8b); i++) {
+        u8 v = *(u8 *)(arg2 + (i + 0x81));
+        switch (v) {
+        case 1:
+            *(int *)(obj + 0xf8) = 779;
+            state = *(void **)(obj + 0xc8);
+            if (state != NULL) {
+                ObjLink_DetachChild(obj, (int)state);
+                Obj_FreeObject((int)state);
             }
-            setup = Obj_AllocObjectSetup(32, *(int *)((char *)obj + 0xf8));
-            ObjLink_AttachChild(obj, Obj_SetupObject(setup, 4, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30)), 0);
+            alloc = Obj_AllocObjectSetup(32, *(int *)(obj + 0xf8));
+            alloc = Obj_SetupObject(alloc, 4, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+            ObjLink_AttachChild(obj, alloc, 0);
             break;
-        }
-        case 2: {
-            int *attached = *(int **)((char *)obj + 0xc8);
-            if (attached != NULL) {
-                ObjLink_DetachChild(obj, attached);
-                Obj_FreeObject(attached);
+        case 2:
+            state = *(void **)(obj + 0xc8);
+            if (state != NULL) {
+                ObjLink_DetachChild(obj, (int)state);
+                Obj_FreeObject((int)state);
             }
-            *(int *)((char *)obj + 0xf8) = -1;
+            *(int *)(obj + 0xf8) = -1;
             break;
-        }
         }
     }
     return 0;
