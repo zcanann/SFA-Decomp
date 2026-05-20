@@ -1413,6 +1413,38 @@ void exploded_update(int *obj) {
 /* fn_801A3E9C: forward decl (think-routine pointer used by slidingdoor_init). */
 extern void fn_801A3E9C(void);
 extern f32 lbl_803E43C0;
+extern void* Obj_GetPlayerObject(void);
+extern int atan2i(int y, int x);
+
+/* attractor_func0B: dispatch on (s8)obj->_4c->_19 — state 0/3+ store NULL,
+ * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
+ * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
+#pragma scheduling off
+#pragma peephole off
+void attractor_func0B(u8* obj, void** out) {
+    void* result = NULL;
+    s8 state = *(s8*)((char*)(*(u8**)(obj + 0x4c)) + 0x19);
+    switch (state) {
+    case 0:
+        break;
+    case 1:
+        result = obj;
+        break;
+    case 2: {
+        u8* player = (u8*)Obj_GetPlayerObject();
+        int angle = atan2i(
+            (int)(*(f32*)(player + 0xc) - *(f32*)(obj + 0xc)),
+            (int)(*(f32*)(player + 0x14) - *(f32*)(obj + 0x14))
+        );
+        *(s16*)obj = (s16)(angle + 0x8000);
+        result = obj;
+        break;
+    }
+    }
+    *out = result;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
  * fn_801A3E9C as obj->thinkRoutine; convert data[0x21] to f32, scale by
