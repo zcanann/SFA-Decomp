@@ -1382,6 +1382,41 @@ int timerCountDown(f32 *p)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern u8 AudioStream_IsPreparing(void);
+extern void doNothing_8000CF54(int);
+extern void gameTextLoadTaskText(int);
+extern void subtitleFn_8001b700(void);
+extern void textFn_8001bb78(int);
+extern u32 lbl_803DB718;
+void streamCb_80080384(void)
+{
+    AudioStream_IsPreparing();
+    doNothing_8000CF54(0);
+    if ((s32)lbl_803DB71C != -1) {
+        gameTextLoadTaskText(lbl_803DB71C);
+        lbl_803DB71C = -1;
+        lbl_803DB714 = -1;
+    } else if ((s32)lbl_803DB718 != -1) {
+        subtitleFn_8001b700();
+        textFn_8001bb78(lbl_803DB718);
+        lbl_803DB718 = -1;
+    }
+}
+
+extern int objModelGetVecFn_800395d8(int obj, int idx);
+#pragma peephole off
+#pragma scheduling off
+void objModelResetVecFn_80080548(int obj)
+{
+    s16 *v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
+    if (v != NULL) {
+        v[1] = 0;
+        v[0] = 0;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern u8 lbl_803DD124;
 extern int lbl_8039A664[][2];
 #pragma peephole off
