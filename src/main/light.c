@@ -1141,11 +1141,13 @@ void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void fn_801FC378(int obj);
+extern int ObjAnim_SetMoveProgress(f32 progress, ObjAnimComponent *anim);
 
 typedef struct {
     s16 gameBitId;
     u8 activated:1;
-    u8 _state2_lo:7;
+    u8 unkflag2:1;
+    u8 _state2_lo:6;
 } VfpDoorSwitchState;
 
 #pragma scheduling off
@@ -1165,6 +1167,24 @@ void vfpdoorswitch_update(int obj)
     Sfx_PlayFromObject(obj, 0x494);
     Obj_SetActiveModelIndex(obj, 1);
     state->activated = 1;
+}
+
+void vfpdoorswitch_init(int obj, int data) {
+    VfpDoorSwitchState *state = *(VfpDoorSwitchState **)(obj + 0xB8);
+    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
+    *(s16 *)(obj + 4) = (s16)(((s32)*(s8 *)(data + 0x19)) << 8);
+    *(s16 *)(obj + 2) = *(s16 *)(data + 0x1c);
+    state->gameBitId = *(s16 *)(data + 0x1e);
+    if (GameBit_Get(state->gameBitId) != 0) {
+        ObjAnim_SetMoveProgress(lbl_803E611C, (ObjAnimComponent *)obj);
+        state->activated = 1;
+        state->unkflag2 = 1;
+        *(s16 *)(obj + 6) |= 0x4000;
+    }
+    if (*(s16 *)(obj + 0x46) == 0x3e7 && state->activated != 0) {
+        *(u8 *)(obj + 0xAD) = 1;
+    }
+    *(u16 *)(obj + 0xB0) |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
