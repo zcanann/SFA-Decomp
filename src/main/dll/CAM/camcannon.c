@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camcannon.h"
 
-extern double fn_80010C50();
-extern double curveFn_80010dc0();
+extern f32 fn_80010C50(f32 param_1, float *param_2, float *param_3);
+extern f32 curveFn_80010dc0(f32 param_1, float *param_2, float *param_3);
 extern undefined4 FUN_80017814();
 extern f32 sqrtf(f32 x);
 
@@ -40,9 +40,9 @@ uint fn_8010AEA8(short *param_1,uint param_2)
   double dVar3;
   undefined8 local_28;
   
-  *(undefined4 *)(lbl_803DD560 + 0x14) = *(undefined4 *)(param_1 + 6);
-  *(undefined4 *)(lbl_803DD560 + 0x1c) = *(undefined4 *)(param_1 + 8);
-  *(undefined4 *)(lbl_803DD560 + 0x24) = *(undefined4 *)(param_1 + 10);
+  *(float *)(lbl_803DD560 + 0x14) = *(float *)(param_1 + 6);
+  *(float *)(lbl_803DD560 + 0x1c) = *(float *)(param_1 + 8);
+  *(float *)(lbl_803DD560 + 0x24) = *(float *)(param_1 + 10);
   dVar2 = lbl_803E18A0;
   *(float *)(lbl_803DD560 + 0x2c) =
        (float)((double)CONCAT44(0x43300000,(int)*param_1 ^ 0x80000000) - lbl_803E18A0);
@@ -50,7 +50,7 @@ uint fn_8010AEA8(short *param_1,uint param_2)
        (float)((double)CONCAT44(0x43300000,(int)param_1[1] ^ 0x80000000) - dVar2);
   local_28 = (double)CONCAT44(0x43300000,(int)param_1[2] ^ 0x80000000);
   *(float *)(lbl_803DD560 + 0x3c) = (float)(local_28 - dVar2);
-  *(undefined4 *)(lbl_803DD560 + 0x44) = *(undefined4 *)(param_1 + 0x5a);
+  *(float *)(lbl_803DD560 + 0x44) = *(float *)(param_1 + 0x5a);
   dVar2 = (double)lbl_803E1888;
   if (dVar2 != (double)*(float *)(lbl_803DD560 + 0x60)) {
     dVar2 = (double)(float)((double)*(float *)(lbl_803DD560 + 0x5c) /
@@ -73,13 +73,13 @@ uint fn_8010AEA8(short *param_1,uint param_2)
   if ((double)lbl_803E188C < dVar2) {
     dVar2 = (double)lbl_803E188C;
   }
-  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x10));
+  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x10),(float *)0x0);
   *(float *)(param_1 + 6) = (float)dVar3;
-  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x18));
+  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x18),(float *)0x0);
   *(float *)(param_1 + 8) = (float)dVar3;
-  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x20));
+  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x20),(float *)0x0);
   *(float *)(param_1 + 10) = (float)dVar3;
-  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x40));
+  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x40),(float *)0x0);
   *(float *)(param_1 + 0x5a) = (float)dVar3;
   fVar1 = *(float *)(lbl_803DD560 + 0x28) - *(float *)(lbl_803DD560 + 0x2c);
   if ((lbl_803E1890 < fVar1) || (fVar1 < lbl_803E1894)) {
@@ -115,15 +115,15 @@ uint fn_8010AEA8(short *param_1,uint param_2)
     }
   }
   if ((param_2 & 1) == 0) {
-    dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x28));
+    dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x28),(float *)0x0);
     *param_1 = (short)(int)dVar3;
   }
   if ((param_2 & 2) == 0) {
-    dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x30));
+    dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x30),(float *)0x0);
     param_1[1] = (short)(int)dVar3;
   }
   if ((param_2 & 4) == 0) {
-    dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x38));
+    dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x38),(float *)0x0);
     param_1[2] = (short)(int)dVar3;
   }
   return ((uint)(byte)(((double)lbl_803E188C <= dVar2) << 1) << 0x1c) >> 0x1d;
@@ -151,9 +151,9 @@ void cameraModeTestStrengthFn_8010b238(f32 param_1,short *param_2,undefined4 *pa
   double dVar4;
   
   *(undefined *)(lbl_803DD560 + 100) = 0;
-  *(undefined4 *)(lbl_803DD560 + 0x10) = *(undefined4 *)(param_2 + 6);
-  *(undefined4 *)(lbl_803DD560 + 0x18) = *(undefined4 *)(param_2 + 8);
-  *(undefined4 *)(lbl_803DD560 + 0x20) = *(undefined4 *)(param_2 + 10);
+  *(float *)(lbl_803DD560 + 0x10) = *(float *)(param_2 + 6);
+  *(float *)(lbl_803DD560 + 0x18) = *(float *)(param_2 + 8);
+  *(float *)(lbl_803DD560 + 0x20) = *(float *)(param_2 + 10);
   dVar4 = lbl_803E18A0;
   *(float *)(lbl_803DD560 + 0x28) =
        (float)((double)CONCAT44(0x43300000,(int)*param_2 ^ 0x80000000) - lbl_803E18A0);
@@ -161,7 +161,7 @@ void cameraModeTestStrengthFn_8010b238(f32 param_1,short *param_2,undefined4 *pa
        (float)((double)CONCAT44(0x43300000,(int)param_2[1] ^ 0x80000000) - dVar4);
   *(float *)(lbl_803DD560 + 0x38) =
        (float)((double)CONCAT44(0x43300000,(int)param_2[2] ^ 0x80000000) - dVar4);
-  *(undefined4 *)(lbl_803DD560 + 0x40) = *(undefined4 *)(param_2 + 0x5a);
+  *(float *)(lbl_803DD560 + 0x40) = *(float *)(param_2 + 0x5a);
   *(undefined4 *)(lbl_803DD560 + 0x14) = *param_3;
   *(undefined4 *)(lbl_803DD560 + 0x1c) = param_3[1];
   *(undefined4 *)(lbl_803DD560 + 0x24) = param_3[2];
