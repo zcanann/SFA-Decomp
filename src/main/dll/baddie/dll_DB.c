@@ -728,13 +728,13 @@ extern s16 lbl_803DD8F2;
 extern s8  lbl_803DD8F4;
 extern s8  lbl_803DD8F5;
 extern s8  lbl_803DD8E8;
-extern u8  lbl_803DD8F8;
-extern u8  lbl_803DD8F9;
-extern s16 lbl_803DD90C;
-extern s16 lbl_803DD90E;
-extern s8  lbl_803DD912;
+extern u8  linkFlag_803dd8f8;
+extern u8  linkIsRotated;
+extern s16 linkItemOpacity;
+extern s16 linkCount_803dd90e;
+extern s8  linkSelected;
 extern u8  lbl_803A9458[0x960];
-extern u8  lbl_8031C1B4[0x30];
+extern u8  linkTextures[0x30];
 extern void getScreenResolution(void);
 
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
@@ -754,29 +754,29 @@ void Menu_func03(int v) { lbl_803DD8F2 = (s16)v; lbl_803DD8F0 = 0; lbl_803DD8F4 
 #pragma peephole reset
 #pragma scheduling reset
 void Menu_release(void) {}
-void titleScreenFn_80130464(u8 v) { lbl_803DD8F8 = v; }
-void setLinkNotRotated(void) { lbl_803DD8F9 = 0; }
-void setLinkIsRotated(void) { lbl_803DD8F9 = 1; }
-u8   Link_func0C(void) { return (u8)lbl_803DD90E; }
+void titleScreenFn_80130464(u8 v) { linkFlag_803dd8f8 = v; }
+void setLinkNotRotated(void) { linkIsRotated = 0; }
+void setLinkIsRotated(void) { linkIsRotated = 1; }
+u8   Link_func0C(void) { return (u8)linkCount_803dd90e; }
 void Link_func0A(int idx, s8 v) { *(s8*)(lbl_803A9458 + idx * 60 + 0x1e) = v; }
 s32  Link_func09(int idx) { return *(s8*)(lbl_803A9458 + idx * 60 + 0x1e); }
-void Link_setOpacity(u8 v) { lbl_803DD90C = v; }
+void Link_setOpacity(u8 v) { linkItemOpacity = v; }
 #pragma peephole off
-void Link_setSelected(int v) { lbl_803DD912 = (s8)v; }
+void Link_setSelected(int v) { linkSelected = (s8)v; }
 #pragma peephole reset
-s32  Link_getSelected(void) { return lbl_803DD912; }
+s32  Link_getSelected(void) { return linkSelected; }
 
 /* Stubs added to align function set with v1.0 asm. Source had many Ghidra
  * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
  * asm symbol set is fully present so future hunters can fill bodies. */
-void fn_8012FCEC(void) {}
+void textureFreeFn_8012fcec(void) {}
 void GameUI_initialise(void) {}
-void fn_8012FEE8(void) {}
-void fn_80130034(void) {}
-void fn_8013006C(void) {}
+void Menu_func08(void) {}
+void Menu_func06(void) {}
+void Menu_func05(void) {}
 #pragma scheduling off
 #pragma peephole off
-void fn_801300A4(int unused, int v) {
+void Menu_func04(int unused, int v) {
     getScreenResolution();
     lbl_803DD8F2 = (s16)v;
     lbl_803DD8F0 = 0;
@@ -792,11 +792,11 @@ void Menu_initialise(void) {
     lbl_803DD8E8 = 0;
 }
 u16 fn_80130124(void) {
-    return *(u16*)(lbl_803A9458 + lbl_803DD912 * 0x3c + 2);
+    return *(u16*)(lbl_803A9458 + linkSelected * 0x3c + 2);
 }
-void fn_80130144(void) {}
-void fn_801302C0(void) {}
-void fn_80130484(void) {}
-void fn_80130578(void) {}
+void linkInitTextures(void) {}
+void linkDrawFn_801302c0(void) {}
+void linkDrawFn_80130484(void) {}
+void Link_func0F(void) {}
 void Link_copy(void) {}
-void fn_801306E4(void) {}
+void Link_func0B(void) {}

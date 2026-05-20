@@ -842,7 +842,7 @@ void Dummy3E_release(void) {}
 /* EN v1.0 0x80132020  size: 4b   Empty no-op. */
 void Dummy3E_initialise(void) {}
 
-extern u8  lbl_8031C1B4[0x30];
+extern u8  linkTextures[0x30];
 extern s16 lbl_8031C2A8[6];
 extern u8  lbl_803A9DB8[0x18];
 extern void mm_free(void);
