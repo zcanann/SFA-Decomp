@@ -772,8 +772,24 @@ s32  Link_getSelected(void) { return linkSelected; }
 void textureFreeFn_8012fcec(void) {}
 void GameUI_initialise(void) {}
 void Menu_func08(void) {}
-void Menu_func06(void) {}
-void Menu_func05(void) {}
+#pragma scheduling off
+#pragma peephole off
+void Menu_func05(int arg1, int unused2, int arg3, int arg4) {
+    if (arg4 == (s32)lbl_803DD8F0) {
+        lbl_803DD8F5 = (s8)arg1;
+    }
+    lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + arg3);
+    lbl_803DD8F0++;
+}
+void Menu_func06(int arg1, int unused2, int unused3, int arg4, int arg5) {
+    if (arg5 == (s32)lbl_803DD8F0) {
+        lbl_803DD8F5 = (s8)arg1;
+    }
+    lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + arg4);
+    lbl_803DD8F0++;
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void Menu_func04(int unused, int v) {
