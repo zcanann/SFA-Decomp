@@ -1102,6 +1102,56 @@ void pollenfragment_release(void) {}
 void pollenfragment_initialise(void) {}
 void mikabomb_hitDetect(void) {}
 
+extern int *lbl_803DCA78;
+extern int *lbl_803DCA7C;
+extern f32 lbl_803E313C;
+#pragma scheduling off
+#pragma peephole off
+void pinponspike_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+void pollen_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+void pinponspike_init(int obj) {
+    *(int *)(obj + 0xf4) = 0;
+    ObjHits_DisableObject(obj);
+    *(u8 *)(obj + 0x36) = 0xff;
+    Sfx_PlayFromObject(obj, 0x278);
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+}
+void pollen_hitDetect(int obj) {
+    int p = *(int *)(obj + 0x54);
+    if ((s8)*(s8 *)(p + 0xad) != 0) {
+        *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)(obj + 0x54) + 0x3c);
+        *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)(obj + 0x54) + 0x40);
+        *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)(obj + 0x54) + 0x44);
+        *(f32 *)(obj + 0x24) = lbl_803E313C;
+        *(f32 *)(obj + 0x28) = lbl_803E313C;
+        *(f32 *)(obj + 0x2c) = lbl_803E313C;
+        *(u8 *)(obj + 0x36) = 0;
+        ObjHits_DisableObject(obj);
+    }
+}
+void pollenfragment_free(int obj) {
+    int *inner = *(int **)(obj + 0xb8);
+    if ((void *)inner[6] != NULL) {
+        ModelLightStruct_free((void *)inner[6]);
+        inner[6] = 0;
+    }
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+void mikabomb_free(int obj, int mode) {
+    void **inner = *(void ***)(obj + 0xb8);
+    if (inner[0] != NULL && mode == 0) {
+        Obj_FreeObject(inner[0]);
+        inner[0] = NULL;
+    }
+    (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x18)))(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int pinponspike_getExtraSize(void) { return 0x0; }
 int pinponspike_func08(void) { return 0x0; }
@@ -1126,11 +1176,11 @@ extern void kaldachompspit_hitDetect(void);
 extern void kaldachompspit_update(void);
 extern int kaldachompspit_func08(void);
 extern int kaldachompspit_getExtraSize(void);
-extern void pinponspike_free(void);
+extern void pinponspike_free(int obj);
 extern void pinponspike_update(void);
-extern void pinponspike_init(void);
-extern void pollen_free(void);
-extern void pollen_hitDetect(void);
+extern void pinponspike_init(int obj);
+extern void pollen_free(int obj);
+extern void pollen_hitDetect(int obj);
 extern void pollen_update(void);
 extern void pollen_init(void);
 
@@ -1253,7 +1303,7 @@ PollenFragmentConfig *lbl_8032059C[] = {
     &lbl_80320588,
 };
 
-extern void pollenfragment_free(void);
+extern void pollenfragment_free(int obj);
 extern void pollenfragment_render(void);
 extern void pollenfragment_hitDetect(void);
 extern void pollenfragment_update(void);
