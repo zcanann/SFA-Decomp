@@ -2324,6 +2324,7 @@ void fn_80056B8C(int idx, float* out1, float* out2) {
 }
 
 /* 52b layer clamp pair. */
+#pragma scheduling off
 void goToPrevMapLayer(void) {
 	curMapLayer = curMapLayer - 1;
 	if (curMapLayer < -2) {
@@ -2339,6 +2340,7 @@ void goToNextMapLayer(void) {
 	}
 	renderFlags |= 0x4000;
 }
+#pragma scheduling reset
 
 /* 132b per-block flag scan. */
 typedef struct {
