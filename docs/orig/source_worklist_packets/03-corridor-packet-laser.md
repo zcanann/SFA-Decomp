@@ -28,7 +28,7 @@
 - `laser_releaseUnsupported@0x802090A0-0x802090A4` size=`0x4`
 - `laser_initialiseUnsupported@0x802090A4-0x802090A8` size=`0x4`
 - `laserObj_getExtraSize@0x802090A8-0x802090B0` size=`0x8`
-- `laserObj_func08@0x802090B0-0x802090B8` size=`0x8`
+- `laserObj_getObjectTypeId@0x802090B0-0x802090B8` size=`0x8`
 - `laserObj_free@0x802090B8-0x802090BC` size=`0x4`
 - `laserObj_render@0x802090BC-0x802090C0` size=`0x4`
 - `laserObj_hitDetect@0x802090C0-0x802090C4` size=`0x4`
@@ -47,7 +47,7 @@
 - `fireObj_release@0x80209808-0x8020980C` size=`0x4`
 - `fireObj_initialise@0x8020980C-0x80209810` size=`0x4`
 - `textblockObj_getExtraSize@0x80209810-0x80209818` size=`0x8`
-- `textblockObj_func08@0x80209818-0x80209820` size=`0x8`
+- `textblockObj_getObjectTypeId@0x80209818-0x80209820` size=`0x8`
 - `textblockObj_freeUnsupported@0x80209820-0x8020984C` size=`0x2C`
 - `textblockObj_render@0x8020984C-0x80209850` size=`0x4`
 - `textblockObj_hitDetect@0x80209850-0x80209854` size=`0x4`

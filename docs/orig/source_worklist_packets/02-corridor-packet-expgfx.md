@@ -6,17 +6,24 @@
 - suggested path: `dll/expgfx.c`
 - split status: `single-split`
 - retail bundles: `4`
-- current seed: `0x8009DDEC-0x8009FCDC` size=`0x1EF0`
-- xref count: `4`
+- current seed: `0x8009B0E0-0x8009FCDC` size=`0x4BFC`
+- xref count: `6`
 
 ## Why
 - Retail seed is best treated as one packet inside a debug-side source corridor containing `objlib.c`, `objprint.c`, `objprint_dolphin.c`, `pi_dolphin.c`, `rcp_dolphin.c`.
 
 ## EN Xref Functions
+- `expgfxRemove@0x8009B0E0-0x8009B254`
+- `expgfxRemoveAll@0x8009B254-0x8009B3BC`
 - `expgfx_addToTable@0x8009DDEC-0x8009DF0C`
 - `expgfx_addremove@0x8009F2CC-0x8009FCDC`
 
 ## Current Seed Functions
+- `expgfxRemove@0x8009B0E0-0x8009B254` size=`0x174`
+- `expgfxRemoveAll@0x8009B254-0x8009B3BC` size=`0x168`
+- `expgfxGetSlot@0x8009B3BC-0x8009B6D4` size=`0x318`
+- `expgfx_initSlotQuad@0x8009B6D4-0x8009B9C8` size=`0x2F4`
+- `expgfx_updateActivePools@0x8009B9C8-0x8009DDEC` size=`0x2424`
 - `expgfx_addToTable@0x8009DDEC-0x8009DF0C` size=`0x120`
 - `expgfx_updateSourceFrameFlags@0x8009DF0C-0x8009E004` size=`0xF8`
 - `expgfx_ownerFree3@0x8009E004-0x8009E024` size=`0x20`
@@ -33,6 +40,11 @@
 - `expgfx_addremove@0x8009F2CC-0x8009FCDC` size=`0xA10`
 
 ## Suggested Inspection Window
+- `expgfxRemove@0x8009B0E0-0x8009B254` size=`0x174`
+- `expgfxRemoveAll@0x8009B254-0x8009B3BC` size=`0x168`
+- `expgfxGetSlot@0x8009B3BC-0x8009B6D4` size=`0x318`
+- `expgfx_initSlotQuad@0x8009B6D4-0x8009B9C8` size=`0x2F4`
+- `expgfx_updateActivePools@0x8009B9C8-0x8009DDEC` size=`0x2424`
 - `expgfx_addToTable@0x8009DDEC-0x8009DF0C` size=`0x120`
 - `expgfx_updateSourceFrameFlags@0x8009DF0C-0x8009E004` size=`0xF8`
 - `expgfx_ownerFree3@0x8009E004-0x8009E024` size=`0x20`
@@ -50,7 +62,7 @@
 
 ## Corridor Context
 - previous corridor: `objlib.c`, `objprint.c`, `objprint_dolphin.c`, `pi_dolphin.c`, `rcp_dolphin.c`, ... (+11 more)
-- next corridor: `modgfx.c`, `modelfx.c`, `dim_partfx.c`, `df_partfx.c`, `objfsa.c`, ... (+117 more)
+- next corridor: `modgfx.c`, `modelfx.c`, `dim_partfx.c`, `df_partfx.c`, `objfsa.c`, ... (+5 more)
 
 ## Recommended Next Steps
 - Work the whole corridor packet instead of asserting a narrow final boundary immediately.
