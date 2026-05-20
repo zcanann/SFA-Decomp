@@ -244,6 +244,26 @@ int ProjectileSwitch_func08(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int GameBit_Set(int eventId, int value);
+#pragma scheduling off
+#pragma peephole off
+int fn_8017A048(int obj, int unused, u8 *setupData) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    int i;
+    for (i = 0; i < setupData[0x8B]; i++) {
+        if (setupData[0x81 + i] == 1) {
+            if (*(s16 *)((char *)state + 0xE) != -1) {
+                GameBit_Set(*(s16 *)((char *)state + 0xE), 1);
+            }
+            *(u8 *)((char *)state + 0x14) = 1;
+            return 4;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)area_initialise,
