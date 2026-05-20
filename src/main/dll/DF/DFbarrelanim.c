@@ -178,6 +178,8 @@ int dfropenode_func11(int obj)
   return (s16)(bit == 0);
 }
 
+#pragma peephole off
+#pragma scheduling off
 void dfropenode_func10(int obj, int value)
 {
   u32 bit;
@@ -195,6 +197,8 @@ void dfropenode_func10(int obj, int value)
     extra->hidden = bitByte;
   }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
