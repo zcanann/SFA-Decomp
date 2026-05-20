@@ -2319,6 +2319,7 @@ void* fn_80059334(int a, int b) {
 extern int lbl_803DCE68;
 extern f32 lbl_803DEBC8;
 
+#pragma scheduling off
 void fn_80056B8C(int idx, float* out1, float* out2) {
 	f32 divisor = lbl_803DEBC8;
 	f32* p2;
@@ -2326,6 +2327,7 @@ void fn_80056B8C(int idx, float* out1, float* out2) {
 	p2 = (f32*)(lbl_803DCE68 + (idx << 4));
 	*out2 = p2[1] / divisor;
 }
+#pragma scheduling reset
 
 /* 52b layer clamp pair. */
 #pragma scheduling off
