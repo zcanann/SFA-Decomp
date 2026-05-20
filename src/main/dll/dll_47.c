@@ -885,12 +885,12 @@ void FUN_8011c080(void)
 /*
  * --INFO--
  *
- * Function: SaveSelectScreen_freeTextBuffers
+ * Function: SaveSelectScreen_release
  * EN v1.0 Address: 0x8011B354
  * EN v1.0 Size: 96b
  */
 #pragma scheduling off
-void SaveSelectScreen_freeTextBuffers(void) {
+void SaveSelectScreen_release(void) {
     int i = 0;
     void **p = lbl_803A8658;
     void *zero = NULL;
@@ -1024,13 +1024,13 @@ void saveSelectGoToChooseSlot(int arg) {
 /*
  * --INFO--
  *
- * Function: SaveSelectScreen_release
+ * Function: saveSelectScreenFree
  * EN v1.0 Address: 0x8011A914
  * EN v1.0 Size: 316b
  */
 #pragma scheduling off
 #pragma peephole off
-void SaveSelectScreen_release(int param_1) {
+void saveSelectScreenFree(int param_1) {
     int i;
     void **p;
     void *zero;
@@ -1081,4 +1081,4 @@ void SaveSelectScreen_run(void) {}
 void SaveSelectScreen_initialise(void) {}
 
 /* Trivial 4b 0-arg blr leaves. */
-void SaveSelectScreen_frameEnd(void) {}
+void SaveSelectScreen_frameEnd_nop(void) {}
