@@ -3357,12 +3357,19 @@ typedef struct ObjLibFlagByte {
     u8 rest : 7;
 } ObjLibFlagByte;
 
-extern ObjLibFlagByte lbl_803DCC00;
+extern u8 lbl_803DCC00;
 #pragma scheduling off
 #pragma peephole off
 void fn_80038F1C(int a, int b) {
+    register u32 m;
+    register u32 v;
     if ((int)(u8)a != 0) return;
-    lbl_803DCC00.highBit = b;
+    v = b;
+    asm {
+        lbz m, lbl_803DCC00
+        rlwimi m, v, 7, 24, 24
+        stb m, lbl_803DCC00
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
