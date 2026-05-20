@@ -149,7 +149,7 @@ extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern u32 randomGetRange(int min, int max);
 extern void playerAddMoney(int player, u8 b);
-extern int fn_801843C0(int obj);
+extern int objHitboxFn_801843c0(int obj);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern int ViewFrustum_IsSphereVisible(f32 *pos, f32 radius);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void *out, int p5, int p6);
@@ -244,7 +244,7 @@ void scarab_update(int param_1)
         *(s16 *)(param_1 + 0x4) =
             (s16)(*(s16 *)(param_1 + 0x4) +
                   (s16)(*(s16 *)(p_b8 + 0x16) * (s32)framesThisStep));
-        if (fn_801843C0(param_1) != 0) {
+        if (objHitboxFn_801843c0(param_1) != 0) {
             v30 = 1;
         }
         if (v30 == 0) {

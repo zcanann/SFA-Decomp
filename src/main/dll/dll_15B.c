@@ -17,7 +17,7 @@ extern f32 lbl_803E39AC;
 extern f64 lbl_803E39C8;
 extern f32 lbl_803E39E8;
 extern f32 lbl_803E39F4;
-extern void fn_80183B04(void);
+extern void LargeCrate_SeqFn(void);
 
 /*
  * --INFO--
@@ -45,7 +45,7 @@ void largecrate_init(int obj, u8 *initData)
   constArrB[2] = *(int *)((char *)&lbl_802C228C + 8);
 
   state = *(int *)(obj + 0xb8);
-  *(void (**)(void))(obj + 0xbc) = fn_80183B04;
+  *(void (**)(void))(obj + 0xbc) = LargeCrate_SeqFn;
   *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
   *(short *)(state + 0xe) = *(short *)(initData + 0x1e);
 
@@ -125,11 +125,11 @@ void largecrate_initialise(void)
 /*
  * --INFO--
  *
- * Function: fn_801843C0
+ * Function: objHitboxFn_801843c0
  * EN v1.0 Address: 0x801843C0
  * EN v1.0 Size: 572b
  */
-int fn_801843C0(int obj)
+int objHitboxFn_801843c0(int obj)
 {
   int state;
   float locA[3], locB[3], locC[3];
