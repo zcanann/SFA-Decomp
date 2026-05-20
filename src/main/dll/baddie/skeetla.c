@@ -10,10 +10,46 @@ void fn_8013939C(void) {
   /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
 }
 
+extern f32 lbl_803E244C;
+extern f32 lbl_803E2448;
+extern f32 lbl_803E23F8;
+extern f32 lbl_803E2424;
+extern f32 timeDelta;
+extern f32 getXZDistance(f32 *a, f32 *b);
+extern void fn_800DA928(int p1, f32 p2);
+
 /* fn_80139834  addr=0x80139834  size=0xFC  linkage=global */
-void fn_80139834(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+#pragma peephole off
+#pragma scheduling off
+int fn_80139834(double param_1, int param_2, int param_3)
+{
+    f32 maxSq, dist, f29_val;
+    int result = 0;
+    int iter;
+    f32 tmp;
+
+    tmp = lbl_803E244C * ((f32)param_1 * timeDelta);
+    maxSq = tmp * tmp;
+    dist = getXZDistance((f32 *)(param_3 + 0x68), (f32 *)(param_2 + 0x18));
+    if (*(int *)(param_3 + 0x80) != 0) {
+        f29_val = lbl_803E2448;
+    } else {
+        f29_val = lbl_803E23F8;
+    }
+    iter = 0;
+    while (dist <= lbl_803E2424 || dist <= maxSq) {
+        result = 1;
+        fn_800DA928(param_3, f29_val);
+        dist = getXZDistance((f32 *)(param_3 + 0x68), (f32 *)(param_2 + 0x18));
+        iter++;
+        if (iter > 4) {
+            return 1;
+        }
+    }
+    return result;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /* fn_80139930  addr=0x80139930  size=0x15C  linkage=global */
 void fn_80139930(void) {
