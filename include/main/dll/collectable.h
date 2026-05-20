@@ -35,8 +35,8 @@ void Tricky_update(int obj);
 void fn_80148C18(int obj,int state);
 void fn_80148D8C(int obj,int state);
 int fn_80149CEC(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mode);
-int fn_8014A150(int obj,int state,void *from,void *to);
-void fn_8014A304(float radius,int obj,int state);
+int baddieTargetFn_8014a150(int obj,int state,void *from,void *to);
+void baddieFn_8014a304(float radius,int obj,int state);
 void fn_8014A5FC(int obj,int state);
 void fn_8014A86C(int obj,int state,float *nearestFloorY,float *nearestSpecialY);
 void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char doRender);
@@ -46,7 +46,7 @@ void FUN_80146f94(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_80146f98(int param_1);
 void FUN_80146f9c(void);
 void FUN_80146fa0(void);
-void fn_8014A058(int obj,int state);
+void baddieInstantiateWeapon(int obj,int state);
 void FUN_80146fa4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10,undefined4 param_11,undefined4 param_12,

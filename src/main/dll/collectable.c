@@ -1537,9 +1537,9 @@ int fn_80149CEC(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mode)
 }
 #pragma scheduling reset
 
-/* fn_8014A058: 248b - refresh Tricky's attached child object when its setup id changes. */
+/* baddieInstantiateWeapon: 248b - refresh Tricky's attached child object when its setup id changes. */
 #pragma scheduling off
-void fn_8014A058(int obj,int state)
+void baddieInstantiateWeapon(int obj,int state)
 {
   int parentSetup;
   int child;
@@ -1569,10 +1569,10 @@ void fn_8014A058(int obj,int state)
 }
 #pragma scheduling reset
 
-/* fn_8014A150: 436b - line-of-sight and bbox visibility check between Tricky and a target. */
+/* baddieTargetFn_8014a150: 436b - line-of-sight and bbox visibility check between Tricky and a target. */
 #pragma scheduling off
 #pragma peephole off
-int fn_8014A150(int obj,int state,void *from,void *to)
+int baddieTargetFn_8014a150(int obj,int state,void *from,void *to)
 {
   u8 traceHit[4];
   s16 toGrid[4];
@@ -1624,10 +1624,10 @@ int fn_8014A150(int obj,int state,void *from,void *to)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_8014A304: 760b - update Tricky's four quadrant line-of-sight state bits. */
+/* baddieFn_8014a304: 760b - update Tricky's four quadrant line-of-sight state bits. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8014A304(f32 radius,int obj,int state)
+void baddieFn_8014a304(f32 radius,int obj,int state)
 {
   u8 traceHit[4];
   s16 probeGrid[4];
