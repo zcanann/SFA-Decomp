@@ -865,3 +865,22 @@ extern void Sfx_RemoveLoopedObjectSound(int x, int y);
 void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E5A30;
+extern void objRenderFn_8003b8f4(f32);
+extern void fn_801E83B0(int obj, int, int, int, int);
+
+#pragma scheduling off
+#pragma peephole off
+void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    s32 v = visible;
+    if (v != 0) {
+        if (*(s16 *)(obj + 0x46) == 0x468) {
+            fn_801E83B0(obj, 0, 0, 0, 0);
+        } else {
+            objRenderFn_8003b8f4(lbl_803E5A30);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
