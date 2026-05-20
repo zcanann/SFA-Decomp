@@ -1271,5 +1271,21 @@ int fn_801ABA84(int p1, int p2, u8* state)
     return 0;
 }
 
+/* ObjLink_DetachChild and Obj_FreeObject already declared in earlier extern blocks */
+
+void cclightfoot_free(int* obj, int p2)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    int* sub = (int*)state[0];
+    if (sub != NULL) {
+        if (*(void**)((char*)obj + 200) != NULL) {
+            ObjLink_DetachChild(obj, sub);
+        }
+        if (p2 == 0) {
+            Obj_FreeObject((int*)state[0]);
+        }
+    }
+}
+
 #pragma peephole reset
 #pragma scheduling reset
