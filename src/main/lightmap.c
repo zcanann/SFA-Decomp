@@ -2693,6 +2693,40 @@ void FUN_8005e1d8(undefined4 param_1,undefined4 param_2,int param_3)
 }
 
 
+extern u32 renderFlags;
+extern s8 lbl_803DCEA4;
+extern int lbl_803DCEA8;
+extern void Camera_UpdateProjection(int a, int b);
+extern void Camera_EnableViewYOffset(void);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern int Camera_GetCurrentViewSlot(void);
+extern void playerVecFn_8005a9b0(void);
+extern void updateLights(void);
+extern void sceneDraw(void);
+extern void screenFn_8000e944(int v);
+#pragma scheduling off
+#pragma peephole off
+void sceneRender(void) {
+    renderFlags |= 0x21;
+    if (lbl_803DCEA4 == 1 || lbl_803DCEA4 == 3) {
+        renderFlags &= 0xfffffffe;
+    }
+    Camera_UpdateProjection(0, 0);
+    updateVisibleGeometry();
+    playerVecFn_8005a9b0();
+    Camera_EnableViewYOffset();
+    Camera_UpdateViewMatrices();
+    Camera_RebuildProjectionMatrix();
+    updateLights();
+    lbl_803DCEA8 = Camera_GetCurrentViewSlot();
+    sceneDraw();
+    screenFn_8000e944(0);
+    renderFlags &= 0xfffffffd;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* Trivial 4b 0-arg blr leaves. */
 void doNothing_beforeTitleScreen(void) {}
 void doNothing_8005D148(void) {}
