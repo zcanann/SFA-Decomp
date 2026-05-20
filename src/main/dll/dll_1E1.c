@@ -442,3 +442,38 @@ extern void objRenderFn_8003b8f4(f32);
 void bombplant_render(void) { objRenderFn_8003b8f4(lbl_803E5370); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *getTrickyObject(void);
+extern void trickyImpress(void *trickyObj);
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void fn_801D29E4(int *obj, int *p2);
+extern f32 lbl_803E5378;
+#pragma scheduling off
+#pragma peephole off
+void fn_801D2B70(int *obj, int unused, int *p3) {
+    int *p4 = *(int **)((char *)obj + 0x4c);
+    void *trickyObj = getTrickyObject();
+    s16 gbId;
+    int i;
+    if (trickyObj != NULL) {
+        trickyImpress(trickyObj);
+    }
+    Sfx_PlayFromObject(obj, 0xa3);
+    {
+        int *p = *(int **)((char *)obj + 0x54);
+        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) | 0x40);
+    }
+    spawnExplosion((int)obj, lbl_803E5378, 0, 1, 1, 1, 0, 1, 0);
+    *(u8 *)((char *)p3 + 0x14) = 1;
+    *(u8 *)((char *)p3 + 0x15) = (u8)(*(u8 *)((char *)p3 + 0x15) | 2);
+    gbId = *(s16 *)((char *)p4 + 0x1c);
+    if (gbId != -1) {
+        GameBit_Set(gbId, 0);
+    } else {
+        for (i = 0; i < 3; i++) {
+            fn_801D29E4(obj, p3);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
