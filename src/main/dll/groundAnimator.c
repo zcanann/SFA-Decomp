@@ -100,7 +100,7 @@ void dll_115_update(int obj)
     if (eventId != -1) {
       GameBit_Set(eventId, 1);
     }
-    state[1] &= 0xfe;
+    state[1] = (u8)(state[1] & ~1);
     state[0]++;
   }
   if ((s8)state[0] == 9) {
