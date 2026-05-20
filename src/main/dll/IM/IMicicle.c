@@ -1366,6 +1366,50 @@ void attractor_init(s16 *obj, void *data) {
 #pragma peephole reset
 #pragma scheduling reset
 
+/* exploded_update: switch on state at obj->_b8->_69; case 1 calls fn_801A5298. Then countdown timer at _5c/_58 with framesThisStep, updates _36 byte and flags _06. */
+extern u8 framesThisStep;
+extern int fn_801A5298(void *p1, void *state);
+#pragma scheduling off
+#pragma peephole off
+void exploded_update(int *obj) {
+    int *o = obj;
+    int *state = (int*)o[0xb8/4];
+    u8 stateVal = *((u8*)state + 0x69);
+    int flag;
+    switch (stateVal) {
+    case 0:
+        break;
+    case 1:
+        if (fn_801A5298(o, state) != 0) {
+            *((u8*)state + 0x69) = 0;
+        }
+        break;
+    case 2:
+        break;
+    }
+    if (state[0x5c/4] != -1) {
+        s32 newVal = state[0x58/4] + framesThisStep;
+        state[0x58/4] = newVal;
+        if (newVal >= state[0x5c/4]) {
+            state[0x5c/4] = -1;
+            *((u8*)o + 0x36) = 0;
+            *(s16*)((char*)o + 0x6) = (s16)(*(s16*)((char*)o + 0x6) | 0x4000);
+            flag = 1;
+        } else {
+            s32 diff = state[0x5c/4] - newVal;
+            if (diff < 0xff) {
+                *((u8*)o + 0x36) = (u8)diff;
+            }
+            flag = 0;
+        }
+        if (flag != 0) {
+            *((u8*)state + 0x69) = 2;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* fn_801A4524: loop through u8 array at +0x81 of param 3; on element==1, do game state setup. */
 extern void GameBit_Set(int eventId, int value);
 extern void loadMapAndParent(int mapId);
