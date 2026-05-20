@@ -980,9 +980,11 @@ void fn_8011A70C(void) {
  * EN v1.0 Address: 0x8011A7E4
  * EN v1.0 Size: 304b
  */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void saveSelectGoToChooseSlot(int arg) {
+    SaveSelectPanel *p;
     u8 i;
 
     if (lbl_803DB9FB != -1) {
@@ -990,21 +992,22 @@ void saveSelectGoToChooseSlot(int arg) {
     }
     lbl_803DB9FB = 0;
     saveFileSelect_currentSlotIndex = 0;
+    p = &lbl_8031A7BC[0];
 
     fn_8011A70C();
-    fn_8011A410((void **)&lbl_8031A7BC[0]);
+    fn_8011A410((void **)p);
 
     for (i = 0; i < 1; i++) {
-        if (((int *)&lbl_803DB9FC)[i] == 3) {
-            lbl_8031A7BC[0].entries[0].pad18[2] = -1;
+        if ((&lbl_803DB9FC)[i] == 3) {
+            p->entries[0].pad18[2] = -1;
         } else {
-            lbl_8031A7BC[0].entries[0].pad18[2] = 3;
+            p->entries[0].pad18[2] = 3;
         }
     }
 
     ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
         lbl_803DCAA0->vtable)[1](
-        lbl_8031A7BC[0].entries, lbl_8031A7BC[0].count, 0, 0, 5, 4, 0x14, 0xc8,
+        p->entries, p->count, 0, 0, 5, 4, 0x14, 0xc8,
         0xff, 0xff, 0xff, 0xff);
 
     ((void (**)(int))lbl_803DCAA0->vtable)[6](0);
@@ -1016,6 +1019,7 @@ void saveSelectGoToChooseSlot(int arg) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
