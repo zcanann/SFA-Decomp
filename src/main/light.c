@@ -1093,6 +1093,18 @@ asm void fn_801FD38C(void) {
     blr
 }
 
+/* "tail-call into (**lbl_803DCA78)[6]" free stub. */
+extern int *lbl_803DCA78;
+void vfpplatform_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+void vfpdoorswitch_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+void vfpcoreplat_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;
 extern void objRenderFn_8003b8f4(f32);
