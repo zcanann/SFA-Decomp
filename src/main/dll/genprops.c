@@ -4427,9 +4427,9 @@ void shield_release(void) {}
 void shield_initialise(void) {}
 void curve_setScale(void) {}
 void curve_free(void) {}
-void fn_80171518(void) {}
-void fn_801719D8(void) {}
-void fn_801719DC(void) {}
+void dll_F7_hitDetect(void) {}
+void dll_F7_release(void) {}
+void dll_F7_initialise(void) {}
 void checkpoint4_setScale(void) {}
 void checkpoint4_free(void) {}
 void checkpoint4_hitDetect(void) {}
@@ -4461,8 +4461,8 @@ int shield_func08(void) { return 0x0; }
 int curve_func11(void) { return 0x0; }
 int curve_getExtraSize(void) { return 0x0; }
 int curve_func08(void) { return 0x0; }
-int fn_801713FC(void) { return 0xc; }
-int fn_80171404(void) { return 0x2; }
+int dll_F7_getExtraSize(void) { return 0xc; }
+int dll_F7_func08(void) { return 0x2; }
 int checkpoint4_getExtraSize(void) { return 0x40; }
 int checkpoint4_func08(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
@@ -4526,10 +4526,10 @@ extern void shield_init();
 extern void curve_init();
 extern void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void restartmarker_init();
-extern void fn_8017140C();
-extern void fn_80171470();
-extern void fn_8017151C();
-extern void fn_801718D0();
+extern void dll_F7_free();
+extern void dll_F7_render();
+extern void dll_F7_update();
+extern void dll_F7_init();
 extern u8 staffFn_80170380[];
 
 ObjectDescriptor gMikaBombObjDescriptor = {
@@ -4886,18 +4886,18 @@ ObjectDescriptor gReStartMarkerObjDescriptor = {
     0,
 };
 
-ObjectDescriptor lbl_80320B38 = {
+ObjectDescriptor dll_F7 = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)fn_801719DC,
-    (ObjectDescriptorCallback)fn_801719D8,
+    (ObjectDescriptorCallback)dll_F7_initialise,
+    (ObjectDescriptorCallback)dll_F7_release,
     0,
-    (ObjectDescriptorCallback)fn_801718D0,
-    (ObjectDescriptorCallback)fn_8017151C,
-    (ObjectDescriptorCallback)fn_80171518,
-    (ObjectDescriptorCallback)fn_80171470,
-    (ObjectDescriptorCallback)fn_8017140C,
-    (ObjectDescriptorCallback)fn_80171404,
-    fn_801713FC,
+    (ObjectDescriptorCallback)dll_F7_init,
+    (ObjectDescriptorCallback)dll_F7_update,
+    (ObjectDescriptorCallback)dll_F7_hitDetect,
+    (ObjectDescriptorCallback)dll_F7_render,
+    (ObjectDescriptorCallback)dll_F7_free,
+    (ObjectDescriptorCallback)dll_F7_func08,
+    dll_F7_getExtraSize,
 };
 
 ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {

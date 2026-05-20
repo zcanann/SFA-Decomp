@@ -145,6 +145,11 @@ void FUN_80171354(int param_1,int param_2);
 void FUN_801713ac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
+int dll_F7_getExtraSize(void);
+int dll_F7_func08(void);
+void dll_F7_hitDetect(void);
+void dll_F7_release(void);
+void dll_F7_initialise(void);
 
 extern ObjectDescriptor gMikaBombObjDescriptor;
 extern ObjectDescriptor gMikaBombShadowObjDescriptor;
@@ -160,7 +165,7 @@ extern ObjectDescriptor gShieldObjDescriptor;
 extern ObjectDescriptor13 gFlameThrowerSpeObjDescriptor;
 extern ObjectDescriptor12 gCurveObjDescriptor;
 extern ObjectDescriptor gReStartMarkerObjDescriptor;
-extern ObjectDescriptor lbl_80320B38;
+extern ObjectDescriptor dll_F7;
 extern ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor;
 
 #endif /* MAIN_DLL_GENPROPS_H_ */
