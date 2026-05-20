@@ -1123,12 +1123,14 @@ void pinponspike_init(int obj) {
 void pollen_hitDetect(int obj) {
     int p = *(int *)(obj + 0x54);
     if ((s8)*(s8 *)(p + 0xad) != 0) {
+        f32 fz;
         *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)(obj + 0x54) + 0x3c);
         *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)(obj + 0x54) + 0x40);
         *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)(obj + 0x54) + 0x44);
-        *(f32 *)(obj + 0x24) = lbl_803E313C;
-        *(f32 *)(obj + 0x28) = lbl_803E313C;
-        *(f32 *)(obj + 0x2c) = lbl_803E313C;
+        fz = lbl_803E313C;
+        *(f32 *)(obj + 0x24) = fz;
+        *(f32 *)(obj + 0x28) = fz;
+        *(f32 *)(obj + 0x2c) = fz;
         *(u8 *)(obj + 0x36) = 0;
         ObjHits_DisableObject(obj);
     }
