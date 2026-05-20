@@ -134,7 +134,7 @@ extern void objSetAnimSpeedTo1(void *obj);
 extern void objAudioFn_800393f8(int obj, void *p2, int p3, int p4, int p5, int p6);
 
 extern char lbl_8031D2E8[];
-extern void **lbl_803DCA9C;
+extern void **gRomCurveInterface;
 extern f32 timeDelta;
 extern double fn_80293E80(double);
 extern double sin(double);
@@ -202,7 +202,7 @@ void trickyFlame(int p1, int p2) {
             }
             *(u8 *)(p2 + 0xa) = 1;
         } else {
-            *(int *)(p2 + 0x720) = (*(int (**)(int))((char *)*lbl_803DCA9C + 0x1c))(*(int *)(*(int *)(p2 + 0x71c) + 0x1c));
+            *(int *)(p2 + 0x720) = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(*(int *)(*(int *)(p2 + 0x71c) + 0x1c));
             if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x720) + 0x8)) {
                 register u32 m, v;
                 register int pReg = p2;

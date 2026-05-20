@@ -1207,14 +1207,14 @@ void dll_2E_func09(int obj, void *src1, void *src2) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *lbl_803DCA9C;
+extern int *gRomCurveInterface;
 extern f32 lbl_803E1C88;
 #pragma scheduling off
 #pragma peephole off
 f32 dll_2E_func0B(int obj, int arg) {
-    int r = (*(int (*)(int))(*(int *)(*lbl_803DCA9C + 0x40)))(arg);
+    int r = (*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x40)))(arg);
     if (r > -1) {
-        return (*(f32 (*)(int, int))(*(int *)(*lbl_803DCA9C + 0x24)))(obj, r);
+        return (*(f32 (*)(int, int))(*(int *)(*gRomCurveInterface + 0x24)))(obj, r);
     }
     return lbl_803E1C88;
 }

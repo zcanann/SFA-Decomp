@@ -44,7 +44,7 @@ extern undefined4 FUN_80294d00();
 
 extern u8 framesThisStep;
 extern undefined4* lbl_803DCA50;
-extern undefined4* lbl_803DCA9C;
+extern undefined4* gRomCurveInterface;
 extern undefined4* lbl_803DD548;
 extern f32* lbl_803DD550;
 extern undefined4* lbl_803DD558;
@@ -695,7 +695,7 @@ void fn_8010A47C(undefined4 param_1,undefined4 param_2,uint param_3)
       for (iVar5 = 0; iVar5 < 5; iVar5 = iVar5 + 1) {
         if ((((-1 < *(int *)(iVar4 + iVar5 * 4 + 0x1c)) &&
              (((int)*(char *)(iVar4 + 0x1b) & 1 << iVar5) != 0)) &&
-            (iVar2 = (**(code **)(*lbl_803DCA9C + 0x1c))(), iVar2 != 0)) &&
+            (iVar2 = (**(code **)(*gRomCurveInterface + 0x1c))(), iVar2 != 0)) &&
            (((*(byte *)(iVar2 + 0x31) == param_3 || (*(byte *)(iVar2 + 0x32) == param_3)) ||
             (*(byte *)(iVar2 + 0x33) == param_3)))) {
           bVar1 = false;

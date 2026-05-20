@@ -1694,7 +1694,7 @@ extern u32 lbl_8039CA98[];
 extern void *lbl_803DD41C;
 extern void *lbl_803DD418;
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern int* lbl_803DCA9C;
+extern int* gRomCurveInterface;
 extern f32 lbl_803E0588;
 extern f32 lbl_803E0564;
 extern f32 lbl_803E0560;
@@ -1770,7 +1770,7 @@ void player_findCurve(int* obj, int* state, int p3)
 {
     int tmp = p3;
     *(int**)((char*)state + 828) = (int*)((int(*)(int*, int, int, f32, f32, f32))
-        ((void**)*lbl_803DCA9C)[5])(&tmp, 1,
+        ((void**)*gRomCurveInterface)[5])(&tmp, 1,
             (s8)*(s8*)((char*)state + 836),
             *(f32*)((char*)obj + 12),
             *(f32*)((char*)obj + 16),
@@ -1831,7 +1831,7 @@ void player_updateCurve(int* obj, int* state, f32 t)
     if (idx == -1) {
         *(f32*)((char*)state + 700) = lbl_803E0570;
     } else {
-        int* curve = ((int*(*)(int))((void**)*lbl_803DCA9C)[7])(idx);
+        int* curve = ((int*(*)(int))((void**)*gRomCurveInterface)[7])(idx);
         if (curve == NULL) {
             *(f32*)((char*)state + 700) = lbl_803E0570;
         } else {

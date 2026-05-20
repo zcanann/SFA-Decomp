@@ -229,7 +229,7 @@ void pathcam_buildWindowSamples(undefined4 param_1,undefined4 param_2,float *par
 
 extern char sPathCamNeedTwoControlPointsError[];
 extern void debugPrintf(const char *fmt, ...);
-extern void *lbl_803DCA9C;
+extern void *gRomCurveInterface;
 
 /*
  * --INFO--
@@ -257,7 +257,7 @@ void pathcam_findTaggedNodeWindow(int node, int *out, u8 tag)
     for (i = 0; i < 5; i++) {
         int idx = *(int *)((u8 *)cur + 0x1c);
         if (idx > -1) {
-            p = (int *)(**(int *(**)(int))(*(int *)lbl_803DCA9C + 0x1c))(idx);
+            p = (int *)(**(int *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(idx);
             if (p != 0) {
                 if (*(u8 *)((u8 *)p + 0x31) == tag ||
                     *(u8 *)((u8 *)p + 0x32) == tag ||
@@ -274,7 +274,7 @@ void pathcam_findTaggedNodeWindow(int node, int *out, u8 tag)
     }
 
     if (out[2] > -1) {
-        p = (int *)(**(int *(**)(int))(*(int *)lbl_803DCA9C + 0x1c))(out[2]);
+        p = (int *)(**(int *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(out[2]);
         if (p != 0) {
             if (*(u8 *)((u8 *)p + 0x31) == tag ||
                 *(u8 *)((u8 *)p + 0x32) == tag ||
@@ -283,7 +283,7 @@ void pathcam_findTaggedNodeWindow(int node, int *out, u8 tag)
                 for (i = 0; i < 5; i++) {
                     int idx = *(int *)((u8 *)cur + 0x1c);
                     if (idx > -1 && ((s8)*(u8 *)(node + 0x1b) & (1 << i)) == 0) {
-                        int *p2 = (int *)(**(int *(**)(int))(*(int *)lbl_803DCA9C + 0x1c))(idx);
+                        int *p2 = (int *)(**(int *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(idx);
                         if (p2 != 0 && (
                             *(u8 *)((u8 *)p2 + 0x31) == tag ||
                             *(u8 *)((u8 *)p2 + 0x32) == tag ||

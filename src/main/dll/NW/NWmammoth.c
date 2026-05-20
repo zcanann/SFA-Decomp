@@ -47,7 +47,7 @@ extern u32 GameBit_Get(int bit);
 extern f32 Vec_distance(int a, int b);
 extern void EdibleMushroom_SeqFn(void);
 
-extern void *lbl_803DCA9C;
+extern void *gRomCurveInterface;
 
 extern f32 lbl_803E5288;
 extern f32 lbl_803E52A0;
@@ -120,7 +120,7 @@ void ediblemushroom_init(int obj, int aux)
         if (v < 6) {
             if (v >= 4) {
                 *(u8 *)(state + 0x137) |= 2;
-                (**(void(***)(int, int, f32, int *, int))(*(int *)lbl_803DCA9C + 0x8c))(
+                (**(void(***)(int, int, f32, int *, int))(*(int *)gRomCurveInterface + 0x8c))(
                     state, obj, lbl_803E52EC, &local_x, -1);
                 *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x68);
                 *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x70);

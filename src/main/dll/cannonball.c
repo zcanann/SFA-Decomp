@@ -13,7 +13,7 @@ extern void fn_80139834();
 extern void trickyMove();
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
-extern undefined4 *lbl_803DCA9C;
+extern undefined4 *gRomCurveInterface;
 extern f32 timeDelta;
 extern f64 lbl_803E2460;
 extern f32 lbl_803E23DC;
@@ -66,20 +66,20 @@ void trickyFn_80141290(int param_1, int param_2)
     iVar3 = fn_800DBCFC((float *)(iVar3 + 0x18), (void *)0x0);
     if (iVar3 == iVar8) {
       fVar11 = *(float *)(iVar6 + 0x700);
-      (**(code **)(*lbl_803DCA9C + 0x54))(fVar11, 0);
-      fVar2 = (float)(**(code **)(*lbl_803DCA9C + 0x1c))();
-      (**(code **)(*lbl_803DCA9C + 0x60))(fVar11, 0);
-      fVar1 = (float)(**(code **)(*lbl_803DCA9C + 0x1c))();
+      (**(code **)(*gRomCurveInterface + 0x54))(fVar11, 0);
+      fVar2 = (float)(**(code **)(*gRomCurveInterface + 0x1c))();
+      (**(code **)(*gRomCurveInterface + 0x60))(fVar11, 0);
+      fVar1 = (float)(**(code **)(*gRomCurveInterface + 0x1c))();
       dVar13 = getXZDistance((float *)(*(int *)(iVar6 + 4) + 0x18), (float *)((int)fVar2 + 8));
       dVar12 = getXZDistance((float *)(*(int *)(iVar6 + 4) + 0x18), (float *)((int)fVar1 + 8));
       if (dVar13 <= dVar12) {
-        (**(code **)(*lbl_803DCA9C + 0x60))(fVar1, 0);
-        fVar4 = (float)(**(code **)(*lbl_803DCA9C + 0x1c))();
+        (**(code **)(*gRomCurveInterface + 0x60))(fVar1, 0);
+        fVar4 = (float)(**(code **)(*gRomCurveInterface + 0x1c))();
         *(undefined4 *)(iVar6 + 0x4a0) = 1;
       }
       else {
-        (**(code **)(*lbl_803DCA9C + 0x54))(fVar2, 0);
-        fVar4 = (float)(**(code **)(*lbl_803DCA9C + 0x1c))();
+        (**(code **)(*gRomCurveInterface + 0x54))(fVar2, 0);
+        fVar4 = (float)(**(code **)(*gRomCurveInterface + 0x1c))();
         *(undefined4 *)(iVar6 + 0x4a0) = 0;
         fVar1 = fVar2;
       }
@@ -141,12 +141,12 @@ void trickyFn_80141290(int param_1, int param_2)
       }
     }
     if (iVar8 != 0) {
-      fVar1 = (float)(**(code **)(*lbl_803DCA9C + 0x1c))(local_48[0]);
+      fVar1 = (float)(**(code **)(*gRomCurveInterface + 0x1c))(local_48[0]);
       dVar12 = getXZDistance((float *)(*(int *)(iVar6 + 0x24) + 0x18), (float *)((int)fVar1 + 8));
       piVar7 = local_48;
       dVar13 = dVar12;
       for (iVar9 = 1; piVar7 = piVar7 + 1, iVar9 < iVar8; iVar9 = iVar9 + 1) {
-        fVar2 = (float)(**(code **)(*lbl_803DCA9C + 0x1c))(*piVar7);
+        fVar2 = (float)(**(code **)(*gRomCurveInterface + 0x1c))(*piVar7);
         dVar12 = getXZDistance((float *)(*(int *)(iVar6 + 0x24) + 0x18), (float *)((int)fVar2 + 8));
         if (dVar12 < dVar13) {
           fVar1 = fVar2;

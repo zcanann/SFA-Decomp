@@ -620,7 +620,7 @@ extern f32 lbl_803E26CC;
 extern int lbl_803DBC78;
 extern void *mmAlloc(int size, int heap, int flags);
 extern void *memset(void *dst, int val, u32 n);
-extern int *lbl_803DCA9C;
+extern int *gRomCurveInterface;
 extern int lbl_803DBC70;
 
 #pragma scheduling off
@@ -665,7 +665,7 @@ void swarmbaddie_init(int obj, int data, int skip_alloc) {
         if (*(void **)state != NULL) {
             memset(*(void **)state, 0, 0x108);
         }
-        if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*lbl_803DCA9C + 0x8C)))
+        if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*gRomCurveInterface + 0x8C)))
                 (*(void **)state, obj, *(f32 *)(state + 0x14), &lbl_803DBC78, -1) == 0) {
             *(u8 *)(state + 0x1C) |= 0x1;
         }
@@ -683,7 +683,7 @@ void hagabon_init(int obj, int data, int skip_alloc) {
         if (*(void **)state != NULL) {
             memset(*(void **)state, 0, 0x108);
         }
-        if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*lbl_803DCA9C + 0x8C)))
+        if ((u8)(*(int (*)(void *, int, f32, void *, int))(*(int *)((int)*gRomCurveInterface + 0x8C)))
                 (*(void **)state, obj, *(f32 *)(state + 0x18), &lbl_803DBC70, -1) == 0) {
             *(u8 *)(state + 0x26) |= 0x1;
         }

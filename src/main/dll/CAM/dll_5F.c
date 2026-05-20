@@ -20,7 +20,7 @@ extern undefined4 sqrtf();
 
 extern u8 framesThisStep;
 extern int *lbl_803DCA50;
-extern undefined4* lbl_803DCA9C;
+extern undefined4* gRomCurveInterface;
 extern undefined4* lbl_803DD560;
 extern f64 lbl_803E18A0;
 extern f32 lbl_803E1888;
@@ -117,8 +117,8 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
   if (*(char *)((int)lbl_803DD560 + 0x65) == '\0') {
     iVar13 = *(int *)(psVar3 + 0x52);
     getButtonsJustPressed(0);
-    uVar4 = (**(code **)(*lbl_803DCA9C + 0x1c))(lbl_803DD560[3]);
-    uVar5 = (**(code **)(*lbl_803DCA9C + 0x1c))(lbl_803DD560[2]);
+    uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
+    uVar5 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
     uVar15 = pathcam_findTaggedNodeWindow(extraout_f1,param_2,param_3,param_4,param_5,param_6,
                                           param_7,param_8,uVar5,local_98,lbl_803DD560[1],in_r6,
                                           in_r7,in_r8,in_r9,in_r10);
@@ -143,7 +143,7 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
         }
         else {
           lbl_803DD560[3] = local_80;
-          uVar4 = (**(code **)(*lbl_803DCA9C + 0x1c))(lbl_803DD560[3]);
+          uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
           pathcam_findTaggedNodeWindow(extraout_f1_02,dVar17,dVar18,param_4,param_5,param_6,param_7,
                                        param_8,uVar4,local_88,lbl_803DD560[1],pfVar8,pfVar9,
                                        pfVar10,pfVar11,pfVar12);
@@ -152,7 +152,7 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
           }
           else {
             lbl_803DD560[2] = local_90;
-            uVar4 = (**(code **)(*lbl_803DCA9C + 0x1c))(lbl_803DD560[2]);
+            uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
             pathcam_findTaggedNodeWindow(extraout_f1_03,dVar17,dVar18,param_4,param_5,param_6,
                                          param_7,param_8,uVar4,local_98,lbl_803DD560[1],pfVar8,
                                          pfVar9,pfVar10,pfVar11,pfVar12);
@@ -168,7 +168,7 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
     }
     else if (-1 < local_88[0]) {
       lbl_803DD560[3] = local_88[0];
-      uVar4 = (**(code **)(*lbl_803DCA9C + 0x1c))(lbl_803DD560[3]);
+      uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
       pathcam_findTaggedNodeWindow(extraout_f1_00,dVar17,dVar18,param_4,param_5,param_6,param_7,
                                    param_8,uVar4,local_88,lbl_803DD560[1],pfVar8,pfVar9,pfVar10,
                                    pfVar11,pfVar12);
@@ -177,7 +177,7 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
       }
       else {
         lbl_803DD560[2] = local_98[0];
-        uVar4 = (**(code **)(*lbl_803DCA9C + 0x1c))(lbl_803DD560[2]);
+        uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
         pathcam_findTaggedNodeWindow(extraout_f1_01,dVar17,dVar18,param_4,param_5,param_6,param_7,
                                      param_8,uVar4,local_98,lbl_803DD560[1],pfVar8,pfVar9,
                                      pfVar10,pfVar11,pfVar12);
@@ -199,7 +199,7 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
     *(float *)(psVar3 + 0xe) = (float)dVar14;
     dVar14 = mathFn_80010ee0(dVar16,afStack_c8,(float *)0x0);
     *(float *)(psVar3 + 0x10) = (float)dVar14;
-    iVar6 = (**(code **)(*lbl_803DCA9C + 0x1c))(lbl_803DD560[2]);
+    iVar6 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
     bVar2 = *(byte *)(iVar6 + 0x3b);
     if ((bVar2 & 1) == 0) {
       dVar14 = mathFn_80010c64(dVar16,afStack_d8,(float *)0x0);

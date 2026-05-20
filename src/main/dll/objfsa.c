@@ -4447,7 +4447,7 @@ void fn_800DA928(float *p) {
 }
 #pragma scheduling reset
 
-extern void **lbl_803DCA9C;
+extern void **gRomCurveInterface;
 extern f32 lbl_803E05F8;
 
 #pragma scheduling off
@@ -4456,7 +4456,7 @@ void *fn_800DAFDC(int pos, int p4_filter, int p5_filter) {
     int count;
     int *hit;
     int *bestHit;
-    int **list = (int **)(*(void *(**)(int *))((int)*lbl_803DCA9C + 0x10))(&count);
+    int **list = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&count);
     f32 minDist = lbl_803E05F8;
     int i;
     bestHit = 0;
@@ -4494,7 +4494,7 @@ void *fn_800DB0E0(int pos, int p4_filter, int p5_filter) {
     int *bestHit;
     s16 gbId;
     f32 minDist;
-    list = (int **)(*(void *(**)(int *))((int)*lbl_803DCA9C + 0x10))(&count);
+    list = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&count);
     minDist = lbl_803E05F8;
     bestHit = 0;
     i = 0;
