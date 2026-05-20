@@ -489,7 +489,45 @@ extern int ObjHits_GetPriorityHit(int obj, int *out, int *a, int *b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int mapGetBlock(void);
-extern void fn_801B3344(int block, int a, int b);
+extern int mapBlockFn_800606ec(int arg1, int idx);
+extern int mapBlockFn_80060678(void);
+extern int fn_8006070C(int arg1, int idx);
+extern int Shader_getLayer(int layer, int idx);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801B3344(int arg1, int arg2, int arg3)
+{
+    int i;
+    int *block;
+    int *layer;
+    int got;
+    for (i = 0; i < (int)*(u16 *)((char *)arg1 + 0x9a); i++) {
+        block = (int *)mapBlockFn_800606ec(arg1, i);
+        got = mapBlockFn_80060678();
+        if (arg3 == got) {
+            if (arg2 != 0) {
+                block[0x10/4] = block[0x10/4] & ~2;
+                block[0x10/4] = block[0x10/4] & ~1;
+            } else {
+                block[0x10/4] = block[0x10/4] | 2;
+                block[0x10/4] = block[0x10/4] | 1;
+            }
+        }
+    }
+    for (i = 0; i < (int)*(u8 *)((char *)arg1 + 0xa2); i++) {
+        layer = (int *)fn_8006070C(arg1, i);
+        if (arg3 == (int)*(u8 *)((char *)Shader_getLayer((int)layer, 0) + 5)) {
+            if (arg2 != 0) {
+                layer[0x3c/4] = layer[0x3c/4] & ~2;
+            } else {
+                layer[0x3c/4] = layer[0x3c/4] | 2;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
