@@ -3129,3 +3129,11 @@ void fn_801106B8(void) { mm_free(lbl_803DD5C0); lbl_803DD5C0 = 0; }
 void CameraModePerv_free(void) { mm_free(lbl_803DD5C8); lbl_803DD5C8 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* vtable[15] singleton call */
+extern void **lbl_803DCA50;
+void fn_80112514(void)
+{
+  (*(void (**)(void))((char *)*lbl_803DCA50 + 0x3c))();
+}
+#pragma scheduling reset
