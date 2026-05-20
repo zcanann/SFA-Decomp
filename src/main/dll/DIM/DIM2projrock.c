@@ -1228,6 +1228,20 @@ void fn_801B9E18(void* obj, void* p)
 #pragma scheduling reset
 #pragma peephole reset
 
+/* dim2lavacontrol_free: stop lava sfx, kill the lava music track, refresh time-of-day. */
+extern void fn_8004C1E4(int sfxId, f32 vol);
+extern void Music_Trigger(int trackId, int restart);
+extern void timeOfDayFn_80055000(void);
+extern f32 lbl_803E4B90;
+#pragma scheduling off
+void dim2lavacontrol_free(void)
+{
+    fn_8004C1E4(0xC0, lbl_803E4B90);
+    Music_Trigger(0xC4, 0);
+    timeOfDayFn_80055000();
+}
+#pragma scheduling reset
+
 /* fn_801B9CFC: per-frame texture-color update + proximity-driven expgfx trigger.
  *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
  *     (bytes 0xC..0xE) to (u8)(int)lbl_803E4B9C via three independent fctiwz casts,
