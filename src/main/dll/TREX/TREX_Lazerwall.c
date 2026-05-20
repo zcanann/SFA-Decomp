@@ -53,14 +53,14 @@ int fn_801E67BC(int arg1, int arg2)
 
     if (*(s8 *)(arg2 + 0x27a) != 0) {
         if (Stack_IsEmpty(*(int *)(state + 0x9b0)) != 0) {
-            int found = (*(int (**)(u32 *, int, int, f32, f32, f32))(*(int *)*gRomCurveInterface + 0x14))(
+            int found = (*(int (**)(u32 *, int, int, f32, f32, f32))((char *)*gRomCurveInterface + 0x14))(
                 head, 2, -1,
                 *(f32 *)(playerObj + 0xc),
                 *(f32 *)(playerObj + 0x10),
                 *(f32 *)(playerObj + 0x14));
 
             if (found != -1) {
-                hit = (*(int (**)(void))(*(int *)*gRomCurveInterface + 0x1c))();
+                hit = (*(int (**)(void))((char *)*gRomCurveInterface + 0x1c))();
                 *(f32 *)(arg1 + 0xc) = *(f32 *)(hit + 0x8);
                 *(f32 *)(arg1 + 0x10) = lbl_803E59E0 + *(f32 *)(hit + 0xc);
                 *(f32 *)(arg1 + 0x14) = *(f32 *)(hit + 0x10);
@@ -150,10 +150,10 @@ int fn_801E69C8(int arg1)
 
         hudFn_8011f38c(2);
 
-        (*(void (**)(int, int, int))(*(int *)*gMapEventInterface + 0x50))(
+        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(
             (s32)*(s8 *)(arg1 + 0xac), 6, 0);
 
-        (*(void (**)(int, int, int, int, int))(*(int *)*gTitleMenuControlInterface + 0x4))(0, 0xf3, 0, 0, 0);
+        (*(void (**)(int, int, int, int, int))((char *)*gTitleMenuControlInterface + 0x4))(0, 0xf3, 0, 0, 0);
     }
 
     return 0;
