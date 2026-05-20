@@ -94,26 +94,28 @@ extern f32 lbl_803E4C5C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void waveanimator_func0B(undefined2 *param_1,int param_2)
+#pragma peephole off
+#pragma scheduling off
+void waveanimator_func0B(int *obj)
 {
-  uint uVar1;
-  undefined4 *puVar2;
-  
-  puVar2 = *(undefined4 **)(param_1 + 0x5c);
-  *puVar2 = 0;
-  *param_1 = (short)((int)*(char *)(param_2 + 0x19) << 9);
-  puVar2[2] = (int)*(short *)(param_2 + 0x1a) << 8;
-  *(char *)(puVar2 + 1) = (char)*(undefined2 *)(param_2 + 0x1c);
-  puVar2[3] = (int)*(char *)(param_2 + 0x18) << 8;
-  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x1e));
-  *(byte *)(puVar2 + 5) = (byte)((uVar1 & 1) << 6) | *(byte *)(puVar2 + 5) & 0xbf;
-  if ((uVar1 & 1) != 0) {
-    puVar2[4] = puVar2[2];
-    *(byte *)(puVar2 + 5) = *(byte *)(puVar2 + 5) & 0xdf | 0x20;
-  }
-  param_1[0x58] = param_1[0x58] | 0x2000;
-  param_1[0x58] = param_1[0x58] | 0x4000;
-  return;
+    int *p = ((int **)obj)[0xb8 / 4];
+    *((u8 *)p + 0x34) |= 2;
+}
+
+u8 wallanimator_func0B(int *obj)
+{
+    int *p = ((int **)obj)[0xb8 / 4];
+    return *p >= 3000;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern void mm_free(void *p);
+void alphaanimator_free(int *obj)
+{
+    int *o = ((int **)obj)[0xb8 / 4];
+    void *p = *(void **)((char *)o + 0x10);
+    if (p != NULL) mm_free(p);
 }
 
 /*
