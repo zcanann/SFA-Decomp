@@ -2776,3 +2776,27 @@ void setTextColor(int unused, int a, int b, int c, int d) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Map-block accessors backed by a per-layer table + indirect block list. */
+extern void *lbl_803822B4[];     /* layer -> block-index-table */
+extern u8 lbl_803DCE98;          /* count of allocated blocks */
+extern void **lbl_803DCE9C;      /* block array */
+#pragma scheduling off
+#pragma peephole off
+void *mapGetBlockIdx(int layer) {
+    return lbl_803822B4[layer];
+}
+void *mapGetBlock(int i) {
+    if (i < 0 || i >= lbl_803DCE98) return 0;
+    return lbl_803DCE9C[i];
+}
+void *mapGetBlockAtPos(int x, int y, int layer) {
+    s8 *table = (s8 *)lbl_803822B4[layer];
+    s8 idx;
+    if (x < 0 || y < 0 || x >= 0x10 || y >= 0x10) return 0;
+    idx = table[x + (y << 4)];
+    if (idx < 0 || idx >= lbl_803DCE98) return 0;
+    return lbl_803DCE9C[idx];
+}
+#pragma peephole reset
+#pragma scheduling reset
