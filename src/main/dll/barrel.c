@@ -678,7 +678,46 @@ int cannonclaw_getExtraSize(void) { return 0x0; }
 int cannonclaw_func08(void) { return 0x0; }
 
 /* plain forwarder. */
-extern void fn_80162FC0(void);
+extern void fn_80162518(void);
+extern void fn_801622D4(void);
+extern void fn_80161F0C(void);
+extern void fn_80161DA8(void);
+extern void fn_80161C44(void);
+extern void fn_80161AF8(void);
+extern void fn_80161880(void);
+extern void fn_8016176C(void);
+extern void fn_801616AC(void);
+extern void fn_801615C8(void);
+extern void fn_801614D4(void);
+extern void fn_80161468(void);
+extern void fn_80161264(void);
+extern void fn_80161244(void);
+extern void fn_8016118C(void);
+extern void fn_80161130(void);
+extern void *lbl_803AC610[11];
+extern void *lbl_803AC5F8[6];
+#pragma scheduling off
+#pragma peephole off
+void fn_80162FC0(void) {
+    lbl_803AC610[0] = (void *)fn_80162518;
+    lbl_803AC610[1] = (void *)fn_801622D4;
+    lbl_803AC610[2] = (void *)fn_80161F0C;
+    lbl_803AC610[3] = (void *)fn_80161DA8;
+    lbl_803AC610[4] = (void *)fn_80161C44;
+    lbl_803AC610[5] = (void *)fn_80161AF8;
+    lbl_803AC610[6] = (void *)fn_80161880;
+    lbl_803AC610[7] = (void *)fn_8016176C;
+    lbl_803AC610[8] = (void *)fn_801616AC;
+    lbl_803AC610[9] = (void *)fn_801615C8;
+    lbl_803AC5F8[0] = (void *)fn_801614D4;
+    lbl_803AC5F8[1] = (void *)fn_80161468;
+    lbl_803AC5F8[2] = (void *)fn_80161264;
+    lbl_803AC5F8[3] = (void *)fn_80161244;
+    lbl_803AC5F8[4] = (void *)fn_8016118C;
+    lbl_803AC5F8[5] = (void *)fn_80161130;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void grimble_initialise(void) { fn_80162FC0(); }
 
 extern void grimble_free(void);
