@@ -1363,6 +1363,33 @@ void s16toFloat(f32 *p, s16 val)
 {
     *p = (f32)val;
 }
+
+int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
+{
+    int lo, hi, mid, v;
+    int i;
+    if (count <= 16) {
+        if (count == 0) return 0;
+        for (i = 0; i < count; i++) {
+            if ((*arr)[0] == key) return (*arr)[1];
+            arr++;
+        }
+        return 0;
+    }
+    lo = 0;
+    hi = count;
+    do {
+        mid = (lo + hi) >> 1;
+        v = arr[mid][0];
+        if (key <= v) {
+            if (key == v) return arr[mid][1];
+            hi = mid;
+        } else {
+            lo = mid;
+        }
+    } while (hi > lo);
+    return 0;
+}
 #pragma scheduling reset
 #pragma peephole reset
 
