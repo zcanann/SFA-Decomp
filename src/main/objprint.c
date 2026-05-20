@@ -2987,13 +2987,33 @@ extern u8 lbl_803DCC0A;
 extern u8 lbl_803DCC0B;
 extern u8 lbl_803DCC0C;
 extern u8 lbl_803DCC0D;
-void fn_8003B5E0(u8 a, u8 b, u8 c, u8 d) {
-    lbl_803DCC0D = a;
-    lbl_803DCC0C = b;
-    lbl_803DCC0B = c;
+extern void objRenderModel(int *obj, int **table);
+extern void objRenderFn_80041018(int *obj);
+#pragma scheduling off
+#pragma peephole off
+void objRenderFn_8003b8f4(int *obj) {
+    int **table = (int **)obj[0x7c / 4];
+    if (table[(s8)*(s8 *)((char *)obj + 0xad)] != NULL) {
+        objRenderModel(obj, table);
+        if (*(void **)((char *)obj + 0x74) != NULL) {
+            objRenderFn_80041018(obj);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8003B5E0(int a, int b, int c, u8 d) {
+    lbl_803DCC0D = (u8)a;
+    lbl_803DCC0C = (u8)b;
+    lbl_803DCC0B = (u8)c;
     lbl_803DCC09 = 1;
     lbl_803DCC0A = d;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 100b texture lookup by byte tag. */
 #pragma peephole off
