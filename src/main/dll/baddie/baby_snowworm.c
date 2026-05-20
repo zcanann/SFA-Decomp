@@ -981,10 +981,29 @@ s32 CMenu_GetState(void)
 
 /* GameUI_gameTextShowNpcDialogue declared at end of file (needs externs declared below). */
 
-/* fn_8012DDB8 (32b, u16 = param ? 1 : 0) — close but MWCC inserts an
- * extra `clrlwi r0,r0,16` to narrow the int ternary result before the
- * sth, even with peephole/scheduling off. Target skips that mask
- * because sth ignores upper bits. Skipped. */
+/* EN v1.0 0x8012DDB8  size: 32b  Set lbl_803DD776 to 1 if (u8)param is
+ * nonzero else 0. Asm block avoids MWCC's spurious clrlwi r0,r0,16
+ * narrow before sth that bites the plain `lbl = val ? 1 : 0;` form. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012DDB8(u32 val)
+{
+    register u32 m;
+    register u32 v = val;
+    asm {
+        clrlwi  m, v, 24
+        cmplwi  m, 0
+        beq     _fn_8012DDB8_zero
+        li      m, 1
+        b       _fn_8012DDB8_store
+    _fn_8012DDB8_zero:
+        li      m, 0
+    _fn_8012DDB8_store:
+        sth     m, lbl_803DD776 (r2)
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Wider sbss/sdata extents touched by the larger v1.0 leaves below. */
 extern u8    framesThisStep;
