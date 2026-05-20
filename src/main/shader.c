@@ -2318,12 +2318,15 @@ extern int lbl_803DCE68;
 extern f32 lbl_803DEBC8;
 
 void fn_80056B8C(int idx, float* out1, float* out2) {
-	float* p = (float*)(lbl_803DCE68 + (idx << 4));
-	*out1 = p[0] / lbl_803DEBC8;
-	*out2 = ((float*)(lbl_803DCE68 + (idx << 4)))[1] / lbl_803DEBC8;
+	f32 divisor = lbl_803DEBC8;
+	f32* p2;
+	*out1 = *(f32*)(lbl_803DCE68 + (idx << 4)) / divisor;
+	p2 = (f32*)(lbl_803DCE68 + (idx << 4));
+	*out2 = p2[1] / divisor;
 }
 
 /* 52b layer clamp pair. */
+#pragma scheduling off
 void goToPrevMapLayer(void) {
 	curMapLayer = curMapLayer - 1;
 	if (curMapLayer < -2) {
@@ -2339,6 +2342,7 @@ void goToNextMapLayer(void) {
 	}
 	renderFlags |= 0x4000;
 }
+#pragma scheduling reset
 
 /* 132b per-block flag scan. */
 typedef struct {
@@ -2350,6 +2354,7 @@ typedef struct {
 extern BlockEntry lbl_8038224C[8];
 extern s8 lbl_803DCDEC;
 
+#pragma scheduling off
 void mapBlockFn_80059c2c(u8* outFlags) {
 	int outer;
 	for (outer = 0; outer < 0x78; outer++) {
@@ -2369,6 +2374,7 @@ void mapBlockFn_80059c2c(u8* outFlags) {
 		}
 	}
 }
+#pragma scheduling reset
 
 /* 136b 5-plane view-frustum sphere visibility test. */
 extern f32 playerMapOffsetX;
@@ -2395,6 +2401,7 @@ extern void* lbl_80386468[];
 extern void defStartFn_8005972c(void* p1, void* p2, int idx, int flag);
 extern void mm_free(void* p);
 
+#pragma scheduling off
 void fn_80059A50(int idx) {
 	void* p = lbl_80386468[idx];
 	if (p != 0) {
@@ -2403,6 +2410,7 @@ void fn_80059A50(int idx) {
 		lbl_80386468[idx] = 0;
 	}
 }
+#pragma scheduling reset
 
 /* 96b camera-pos gated load. */
 extern f32 lbl_803DCE5C;
@@ -2410,6 +2418,8 @@ extern f32 lbl_803DCE60;
 extern f32 lbl_803DCE64;
 extern void doPendingMapLoads(void);
 
+#pragma peephole off
+#pragma scheduling off
 void loadMapForCameraPos(float x, float y, float z) {
 	if ((renderFlags & 2) != 0 && (renderFlags & 0x800) == 0) return;
 	lbl_803DCE64 = x;
@@ -2420,12 +2430,15 @@ void loadMapForCameraPos(float x, float y, float z) {
 		doPendingMapLoads();
 	}
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 80b current map block lookup. */
 extern int lbl_803DB648;
 extern void* lbl_803DCEA0;
 extern void* lbl_80386468[];
 
+#pragma scheduling off
 void* mapBlockFn_800592e4(void) {
 	char* p = (char*)lbl_803822A0[0];
 	int v = *(s16*)(p + 0x594);
@@ -2445,6 +2458,7 @@ void* mapBlockFn_800592e4(void) {
 		return res;
 	}
 }
+#pragma scheduling reset
 
 /* 104b conditional gameTextLoadDir caller. */
 extern int lbl_803DCEC4;
@@ -2452,6 +2466,8 @@ extern int lbl_803DCEC8;
 extern s8 lbl_8030E55C[];
 extern void gameTextLoadDir(int dirId);
 
+#pragma peephole off
+#pragma scheduling off
 void gameTextLoadForMap_800571f0(u8 force) {
 	int curVal = lbl_803DCEC8;
 	if (curVal == -1) return;
@@ -2464,4 +2480,6 @@ void gameTextLoadForMap_800571f0(u8 force) {
 		gameTextLoadDir(entry);
 	}
 }
+#pragma peephole reset
+#pragma scheduling reset
 
