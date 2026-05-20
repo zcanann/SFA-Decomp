@@ -1323,6 +1323,33 @@ void vfplavastar_initialise(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int *lbl_803DCA78;
+extern int *lbl_803DCA7C;
+#pragma scheduling off
+#pragma peephole off
+void vfplavastar_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x14)))(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E61CC;
+extern void objRenderFn_8003b8f4(f32);
+#pragma scheduling off
+#pragma peephole off
+void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    if (visible != 0) {
+        u32 t = inner[0x118];
+        if (t != 0xc && t != 4 && t != 0xb) {
+            objRenderFn_8003b8f4(lbl_803E61CC);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off
 #pragma peephole off
