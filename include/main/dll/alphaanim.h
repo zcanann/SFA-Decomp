@@ -47,7 +47,7 @@ void seqobj2_free(int x);
 void seqobj2_render(void);
 void seqobj2_hitDetect(void);
 void seqobj2_update(void);
-void seqobj2_init(void);
+void seqobj2_init(int* obj, int* def);
 void SeqObj2_release(void);
 void SeqObj2_initialise(void);
 

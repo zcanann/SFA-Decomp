@@ -628,11 +628,31 @@ void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 #pragma scheduling off
 #pragma peephole off
 
+extern void OSReport(const char* fmt, ...);
+extern const char sSeqObjNeedBitUsedBitFormat[];
+extern void fn_8017C7A4(int* obj);
+
 void fn_8017C294(int* obj)
 {
     if (obj != NULL) {
         ((void(*)(int*, int*, int))((void**)*(*(int***)((char*)obj + 104)))[1])(obj, *(int**)((char*)obj + 76), 0);
     }
+}
+
+void seqobj2_init(int* obj, int* def)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    OSReport(sSeqObjNeedBitUsedBitFormat, *(int*)((char*)def + 20), *(s16*)((char*)def + 26), *(s16*)((char*)def + 24));
+    *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
+    *(void**)((char*)obj + 188) = (void*)fn_8017C7A4;
+    if (*(s16*)((char*)def + 32) > -1) {
+        s16 slot = *(s16*)((char*)def + 24);
+        if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
+            *(u8*)state = (u8)(*(u8*)state | 1);
+        }
+    }
+    ObjGroup_AddObject(obj, 15);
+    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x6000);
 }
 
 #pragma peephole reset
