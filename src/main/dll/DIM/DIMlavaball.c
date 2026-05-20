@@ -1364,14 +1364,6 @@ void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E44F8); }
 #pragma peephole reset
 
-/* empty render with the s8-visible compare still emitted (no body, no call). */
-asm void mmp_trenchfx_render(void) {
-    nofralloc
-    extsb r0, r8
-    cmpwi r0, 0
-    blr
-}
-
 extern void saveGame_saveObjectPos(int obj);
 void fn_801A80C4(int obj, f32 x, f32 y, f32 z) {
     *(f32 *)(obj + 0xC) = x;
