@@ -3136,4 +3136,24 @@ void fn_80112514(void)
 {
   (*(void (**)(void))((char *)*lbl_803DCA50 + 0x3c))();
 }
+
+/* baddie spawn/visibility predicate */
+extern int objPosToMapBlockIdx(double x, double y, double z);
+#pragma peephole off
+#pragma scheduling off
+int fn_80113278(int p1, int p2, u8 b)
+{
+  if (b != 0 && (s8)*(u8 *)(p2 + 0x354) <= 0 && *(u8 *)(p1 + 0x36) == 0) {
+    return 0;
+  }
+  if (*(void **)(p1 + 0x30) == NULL) {
+    if (objPosToMapBlockIdx((double)*(f32 *)(p1 + 0xc),
+                            (double)*(f32 *)(p1 + 0x10),
+                            (double)*(f32 *)(p1 + 0x14)) < 0) {
+      return 0;
+    }
+  }
+  return 1;
+}
+#pragma peephole reset
 #pragma scheduling reset
