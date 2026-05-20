@@ -2319,3 +2319,15 @@ void dll_98_func01_nop(void) {}
 void dll_98_func00_nop(void) {}
 void dll_99_func01_nop(void) {}
 void dll_99_func00_nop(void) {}
+
+/* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
+ * the same large-struct + vtable-call pattern as foodbag's func03s; matching
+ * bodies needs proper struct recovery as follow-up. */
+void dll_92_func03(int param_1, int param_2, int param_3, unsigned int param_4) {}
+void dll_93_func03(int param_1, int param_2, int param_3, unsigned int param_4) {}
+void dll_94_func03(int param_1, int param_2, int param_3, unsigned int param_4) {}
+void dll_95_func03(int param_1, int param_2, int param_3, unsigned int param_4) {}
+void dll_96_func03(int param_1, int param_2, int param_3, unsigned int param_4) {}
+void dll_97_func03(int param_1, int param_2, int param_3, unsigned int param_4) {}
+void dll_98_func03(int param_1, int param_2, int param_3, unsigned int param_4) {}
+void dll_99_func03(int param_1, int param_2, int param_3, unsigned int param_4) {}
