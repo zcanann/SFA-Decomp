@@ -44,7 +44,7 @@ void audioFn_8027b42c(u16 voiceId, u16 a, u16 b, u16 c)
  * EN v1.1 Size: 156b
  */
 #pragma dont_inline on
-void fn_8027B690(u16 *list, u16 a, u16 b, u16 c)
+void audioFn_8027b690(u16 *list, u16 a, u16 b, u16 c)
 {
     while (*list != 0xffff) {
         u16 v = *list;
@@ -92,12 +92,12 @@ int sndPushGroup(u8 *groupBase, u32 groupId, u32 stream, u32 sdi, u32 tableSet)
 
             preloadList = groupBase + *(u32 *)(group + 0xc);
             if (dataInsertSDir(sdi, hwInitStream(stream)) != 0) {
-                fn_8027B690((u16 *)preloadList, sdi, 1, 0);
+                audioFn_8027b690((u16 *)preloadList, sdi, 1, 0);
             }
-            fn_8027B690((u16 *)(groupBase + *(u32 *)(group + 8)), tableSet, 0, 0);
-            fn_8027B690((u16 *)(groupBase + *(u32 *)(group + 0x10)), tableSet, 4, 0);
-            fn_8027B690((u16 *)(groupBase + *(u32 *)(group + 0x14)), tableSet, 2, 0);
-            fn_8027B690((u16 *)(groupBase + *(u32 *)(group + 0x18)), tableSet, 3, 0);
+            audioFn_8027b690((u16 *)(groupBase + *(u32 *)(group + 8)), tableSet, 0, 0);
+            audioFn_8027b690((u16 *)(groupBase + *(u32 *)(group + 0x10)), tableSet, 4, 0);
+            audioFn_8027b690((u16 *)(groupBase + *(u32 *)(group + 0x14)), tableSet, 2, 0);
+            audioFn_8027b690((u16 *)(groupBase + *(u32 *)(group + 0x18)), tableSet, 3, 0);
             if (*(u16 *)(group + 6) == 1) {
                 u16 *fxData = (u16 *)(groupBase + *(u32 *)(group + 0x1c));
                 dataInsertFX(groupId, fxData + 2, fxData[0]);
