@@ -2872,7 +2872,7 @@ void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
                 return;
             }
             state[0x700/4] = fn_800DB0E0((void *)(targetObj + 0x18), -1, 3);
-            *(f32*)((u8*)state + 0x710) = (f32)randomGetRange(0x168, 0x28);
+            *(f32*)((u8*)state + 0x710) = (f32)(int)randomGetRange(0x168, 0x28);
             *((u8*)state + 8) = 5;
             state[0x24/4] = targetObj;
             nextTarget = (void *)(state[0x700/4] + 8);
