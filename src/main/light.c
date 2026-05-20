@@ -1085,12 +1085,97 @@ int vfpcoreplat_func08(void) { return 0x0; }
 int dll_224_getExtraSize_ret_6(void) { return 0x6; }
 int dll_224_func08_ret_0(void) { return 0x0; }
 
+/* empty render with the s8-visible compare still emitted (no body, no call). */
+asm void fn_801FD38C(void) {
+    nofralloc
+    extsb r0, r8
+    cmpwi r0, 0
+    blr
+}
+
+/* "tail-call into (**lbl_803DCA78)[6]" free stub. */
+extern int *lbl_803DCA78;
+void vfpplatform_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+void vfpdoorswitch_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+void vfpcoreplat_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+
+#pragma scheduling off
+#pragma peephole off
+void vfpblock1_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
+    *(s16 *)state = *(s16 *)(data + 0x1e);
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+}
+void vfpplatform_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
+    *(s16 *)state = *(s16 *)(data + 0x20);
+    *(u8 *)(state + 2) = 0;
+    *(u8 *)(state + 3) = *(u8 *)(data + 0x19);
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *lbl_803DCA7C;
+extern u32 lbl_803DDCC0;
+extern void Resource_Release(u32);
+#pragma scheduling off
+#pragma peephole off
+void vfpdraghead_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x14)))(obj);
+    if (lbl_803DDCC0 != 0) {
+        Resource_Release(lbl_803DDCC0);
+    }
+    lbl_803DDCC0 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_801FC6F4(int);
+#pragma scheduling off
+#pragma peephole off
+void seqpoint_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(void (**)(int))(obj + 0xBC) = fn_801FC6F4;
+    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
+    *(f32 *)state = (f32)*(s16 *)(data + 0x1a);
+    *(s16 *)(state + 8) = *(s16 *)(data + 0x1c);
+    *(u8 *)(state + 0xe) = *(u8 *)(data + 0x19);
+    *(s16 *)(state + 4) = *(s16 *)(data + 0x1e);
+    *(s16 *)(state + 6) = *(s16 *)(data + 0x20);
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6128); }
 #pragma peephole reset
+
+extern f32 lbl_803E610C;
+#pragma scheduling off
+#pragma peephole off
+void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    int state = *(int *)(obj + 0xB8);
+    s32 v = visible;
+    if (v != 0 && *(u8 *)(state + 3) != 0x63) {
+        objRenderFn_8003b8f4(lbl_803E610C);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E611C;
