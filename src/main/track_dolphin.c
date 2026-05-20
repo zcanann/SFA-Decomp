@@ -4026,6 +4026,38 @@ void fn_80069958(void **out) {
 #pragma peephole reset
 #pragma scheduling reset
 
+/* fn_80062894 — clear two shorts, toggle two bytes (1 - x), clear
+ * two more bytes. r3 stays at 0 through the whole sequence. */
+extern s16 lbl_803DCEF6;
+extern s16 lbl_803DCEFA;
+extern u8 lbl_803DCEEA;
+extern u8 lbl_803DCEEB;
+extern u8 lbl_803DCEE9;
+extern u8 lbl_803DCEE8;
+#pragma scheduling off
+#pragma peephole off
+void fn_80062894(void) {
+    register s32 t;
+    register s32 zero;
+    asm {
+        li   zero, 0
+        sth  zero, lbl_803DCEF6 (r2)
+        sth  zero, lbl_803DCEFA (r2)
+        lbz  t,    lbl_803DCEEA (r2)
+        subfic t,  t, 1
+        extsb  t,  t
+        stb  t,    lbl_803DCEEA (r2)
+        lbz  t,    lbl_803DCEEB (r2)
+        subfic t,  t, 1
+        extsb  t,  t
+        stb  t,    lbl_803DCEEB (r2)
+        stb  zero, lbl_803DCEE9 (r2)
+        stb  zero, lbl_803DCEE8 (r2)
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* fn_80069968 — read s16 at lbl_8038DC64[idx*0x18 + 4] into *out1, and
  * the sbss u32 lbl_803DCF30 into *out2. Asm form locks the lis/addi
  * pair so MWCC doesn't route the table base through r0. */
