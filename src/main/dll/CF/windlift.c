@@ -1497,7 +1497,7 @@ void LanternFireFly_free(u8* obj, int p2) {
         ModelLightStruct_free(*(void**)sub);
         *(void**)sub = NULL;
     }
-    if (p2 == 0 && *(void**)sub != NULL && ((sub[0x70] >> 6) & 3) != 1) {
+    if (p2 == 0 && *(void**)sub != NULL && ((sub[0x70] >> 6) & 3) != 1u) {
         lbl_803DDAD8 = 0;
     }
     ObjGroup_RemoveObject(obj, 0x30);
