@@ -2989,6 +2989,33 @@ extern u8 lbl_803DCC0C;
 extern u8 lbl_803DCC0D;
 extern void objRenderModel(int *obj, int **table);
 extern void objRenderFn_80041018(int *obj);
+
+#pragma scheduling off
+#pragma peephole off
+void *objModelGetVecFn_800395d8(void *obj, int target) {
+    void *result = NULL;
+    void *m = *(void **)((char *)obj + 0x50);
+    if (m != NULL) {
+        int entryIdx = 0, vecOffset = 0;
+        int count = *(u8 *)((char *)m + 0x5a);
+        int i;
+        if (count > 0) {
+            for (i = 0; i < count; i++) {
+                u8 *entries = *(u8 **)((char *)m + 0x10);
+                int adj = (s8)*(s8 *)((char *)obj + 0xad) + entryIdx;
+                if (entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target) {
+                    result = (char *)*(void **)((char *)obj + 0x6c) + vecOffset;
+                }
+                entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+                vecOffset += 0x12;
+            }
+        }
+    }
+    return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_8003A9C0(char *p, int count, s16 a, s16 b) {
