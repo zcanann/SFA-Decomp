@@ -2725,12 +2725,12 @@ void FUN_8006dca8(undefined8 param_1,double param_2,undefined4 param_3,undefined
 
 /* sda21 accessors. */
 extern u32 lbl_803DCFD4;
-extern u32 lbl_803DCF7C;
+extern char *lbl_803DCF7C;
 extern u32 lbl_803DCF94;
 extern u32 lbl_803DCF98;
 extern u32 lbl_803DCF90;
 u32 textureFn_8006c5c4(void) { return lbl_803DCFD4; }
-u32 getLastRenderedFrame(void) { return lbl_803DCF7C; }
+u32 getLastRenderedFrame(void) { return (u32)lbl_803DCF7C; }
 u32 getTextureFn_8006c744(void) { return lbl_803DCF94; }
 u32 fn_8006C74C(void) { return lbl_803DCF98; }
 u32 fn_8006C754(void) { return lbl_803DCF90; }
@@ -2917,7 +2917,7 @@ void *textureAlloc512(void)
 
 /* Draw the reflection texture and copy to the reflection2 region. */
 extern f32 lbl_803DED28;
-extern void drawTexture(void *p, int a, int b, f32 f1, f32 f2);
+extern void drawTexture(void *p, f32 f1, f32 f2, int a, int b);
 extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
 extern void GXSetTexCopyDst(u16 wd, u16 ht, int fmt, u8 mipmap);
 extern void GXCopyTex(void *dest, u8 clear);
@@ -2926,7 +2926,7 @@ extern void GXPreLoadEntireTexture(void *obj, void *region);
 #pragma peephole off
 void drawReflectionTexture(void)
 {
-    drawTexture((void *)lbl_803DCF7C, 0xff, 0x40, lbl_803DED28, lbl_803DED28);
+    drawTexture(lbl_803DCF7C, lbl_803DED28, lbl_803DED28, 0xff, 0x40);
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, 4, 0);
     GXCopyTex((char *)lbl_803DCFE4 + 0x60, 1);
