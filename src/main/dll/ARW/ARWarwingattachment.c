@@ -1582,7 +1582,22 @@ void wmlasertarget_init(char *obj, s8 *p) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int *lbl_803DCA7C;
 extern int *lbl_803DCA78;
+extern void Obj_FreeObject(void *o);
+#pragma scheduling off
+#pragma peephole off
+void wmtorch_free(int obj, int mode) {
+    int state = *(int *)(obj + 0xb8);
+    if (mode == 0 && *(void **)state != 0) {
+        Obj_FreeObject(*(void **)state);
+    }
+    (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x14)))(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void ModelLightStruct_free(void *light);
 #pragma scheduling off
 #pragma peephole off
