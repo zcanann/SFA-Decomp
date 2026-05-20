@@ -1776,7 +1776,18 @@ void SB_FireBall_init(int p)
 #pragma scheduling reset
 #pragma peephole reset
 void SB_FireBall_update(void) {}
-void SB_KyteCage_free(void) {}
+/* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
+ * call ObjLink_DetachChild(obj). */
+#pragma scheduling off
+#pragma peephole off
+void SB_KyteCage_free(int* obj)
+{
+    if (**(void***)((char*)obj + 0xb8) != NULL) {
+        ObjLink_DetachChild(obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_KyteCage_init(void) {}
 void SB_KyteCage_update(void) {}
 void SB_MiniFire_free(void) {}
