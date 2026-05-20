@@ -56,8 +56,8 @@ void fn_80139930(void) {
   /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
 }
 
-/* fn_80139A8C  addr=0x80139A8C  size=0x964  linkage=global */
-void fn_80139A8C(void) {
+/* trickyMove  addr=0x80139A8C  size=0x964  linkage=global */
+void trickyMove(void) {
   /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
 }
 

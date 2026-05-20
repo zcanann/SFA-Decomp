@@ -47,8 +47,8 @@ fn_80143C04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
             int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
             undefined4 param_15,undefined4 param_16);
 undefined4 fn_80143DD4(int param_1,int *param_2);
-void fn_801441C0(int param_1,int param_2);
+void objAnimFn_801441c0(int param_1,int param_2);
 void fn_801444A4(int param_1,int param_2);
-undefined4 fn_8014460C(int param_1,int *param_2);
+undefined4 trickyFoodFn_8014460c(int param_1,int *param_2);
 
 #endif /* MAIN_DLL_GRENADE_H_ */

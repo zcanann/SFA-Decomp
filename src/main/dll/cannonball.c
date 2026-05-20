@@ -10,7 +10,7 @@ extern void fn_800DA928(float *p, float v);
 extern void fn_800DA980();
 extern int fn_800DBCFC(float *pos, void *flag);
 extern void fn_80139834();
-extern void fn_80139A8C();
+extern void trickyMove();
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
 extern undefined4 *lbl_803DCA9C;
@@ -170,7 +170,7 @@ void fn_80141290(int param_1, int param_2)
     }
     *(float *)(iVar6 + 0x14) = fVar1;
     fn_80139834(iVar3, iVar6 + 0x420, (double)*(float *)(iVar6 + 0x14));
-    fn_80139A8C(iVar3, iVar6 + 0x488);
+    trickyMove(iVar3, iVar6 + 0x488);
     iVar8 = fn_800DBCFC((float *)(iVar3 + 0x18), (void *)0x0);
     if (iVar8 == 0) {
       *(uint *)(iVar6 + 0x54) = *(uint *)(iVar6 + 0x54) | 0x10;

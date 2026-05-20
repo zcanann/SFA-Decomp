@@ -538,7 +538,7 @@ void fn_80142524(undefined8 param_1,undefined8 param_2,double param_3,undefined8
             *(uint *)(iVar5 + 0x54) = *(uint *)(iVar5 + 0x54) | 0x10000;
           }
         }
-        iVar5 = fn_8014460C((int)param_9,param_10);
+        iVar5 = trickyFoodFn_8014460c((int)param_9,param_10);
         if ((iVar5 == 0) &&
            (iVar5 = trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,
                                  param_7,param_8,param_9,param_10,iVar6,param_12,param_13,param_14,
@@ -843,7 +843,7 @@ bool fn_80142D2C(undefined8 param_1,undefined8 param_2,double param_3,undefined8
   local_20 = DAT_802c2964;
   local_1c = DAT_802c2968;
   local_18 = DAT_802c296c;
-  iVar1 = fn_8014460C(param_9,param_10);
+  iVar1 = trickyFoodFn_8014460c(param_9,param_10);
   if (iVar1 != 0) {
     param_10[0x1c8] = (int)lbl_803E306C;
     param_10[0x15] = param_10[0x15] & 0xffffffef;
@@ -903,7 +903,7 @@ undefined4 fn_80142EB0(int param_1,int *param_2)
   undefined4 local_18;
   undefined4 local_14;
   
-  iVar3 = fn_8014460C(param_1,param_2);
+  iVar3 = trickyFoodFn_8014460c(param_1,param_2);
   if (iVar3 == 0) {
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
     sVar1 = *(short *)(param_1 + 0xa0);
@@ -978,7 +978,7 @@ fn_801430E0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
   bool bVar4;
   uint uVar2;
   
-  iVar1 = fn_8014460C(param_9,param_10);
+  iVar1 = trickyFoodFn_8014460c(param_9,param_10);
   if ((iVar1 == 0) &&
      (cVar3 = trickyFn_8013b368((double)lbl_803E30A8,param_2,param_3,param_4,param_5,param_6,param_7,
                            param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
@@ -989,7 +989,7 @@ fn_801430E0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
         fn_801444A4(param_9,(int)param_10);
       }
       else {
-        fn_801441C0(param_9,(int)param_10);
+        objAnimFn_801441c0(param_9,(int)param_10);
       }
     }
     else {
@@ -1026,7 +1026,7 @@ undefined4 fn_80143210(int param_1,int *param_2)
   short sVar1;
   int iVar2;
   
-  iVar2 = fn_8014460C(param_1,param_2);
+  iVar2 = trickyFoodFn_8014460c(param_1,param_2);
   if (iVar2 != 0) {
     return 1;
   }
@@ -1068,7 +1068,7 @@ undefined4 fn_801432CC(int param_1,int *param_2)
   short sVar1;
   int iVar2;
   
-  iVar2 = fn_8014460C(param_1,param_2);
+  iVar2 = trickyFoodFn_8014460c(param_1,param_2);
   if (iVar2 != 0) {
     return 1;
   }
@@ -1110,7 +1110,7 @@ undefined4 fn_80143388(int param_1,int *param_2)
   int iVar1;
   int iVar3;
 
-  iVar1 = fn_8014460C(param_1,param_2);
+  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
   if (iVar1 != 0) {
     return 1;
   }
@@ -1125,7 +1125,7 @@ undefined4 fn_80143388(int param_1,int *param_2)
       }
     }
   }
-  iVar1 = fn_8014460C(param_1,param_2);
+  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
   if (iVar1 != 0) {
     return 1;
   }
@@ -1164,7 +1164,7 @@ undefined4 fn_801434B0(int param_1,int *param_2)
   float local_18;
   int local_14;
   
-  iVar5 = fn_8014460C(param_1,param_2);
+  iVar5 = trickyFoodFn_8014460c(param_1,param_2);
   if (iVar5 == 0) {
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
     sVar2 = *(short *)(param_1 + 0xa0);
@@ -1266,7 +1266,7 @@ fn_801437D4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
   double dVar6;
   char local_28 [28];
   
-  iVar2 = fn_8014460C(param_9,param_10);
+  iVar2 = trickyFoodFn_8014460c(param_9,param_10);
   if (iVar2 == 0) {
     iVar2 = FUN_8012efc4();
     if (iVar2 == 0xc1) {
@@ -1368,7 +1368,7 @@ undefined4 fn_80143B04(int param_1,int *param_2)
 {
   int iVar1;
 
-  iVar1 = fn_8014460C(param_1,param_2);
+  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
   if (iVar1 != 0) {
     return 1;
   }
@@ -1401,7 +1401,7 @@ undefined4 fn_80143B78(int param_1,int *param_2)
 {
   int iVar1;
 
-  iVar1 = fn_8014460C(param_1,param_2);
+  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
   if (iVar1 != 0) {
     return 1;
   }
@@ -1517,7 +1517,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
   int iVar1;
   uint uVar3;
 
-  iVar1 = fn_8014460C(param_1,param_2);
+  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
   if (iVar1 != 0) {
     return 1;
   }
@@ -1588,7 +1588,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
         fn_801444A4(param_1,(int)param_2);
       }
       else {
-        fn_801441C0(param_1,(int)param_2);
+        objAnimFn_801441c0(param_1,(int)param_2);
       }
     }
     else {
@@ -1613,7 +1613,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: fn_801441C0
+ * Function: objAnimFn_801441c0
  * EN v1.0 Address: 0x80144DC0
  * EN v1.0 Size: 692b
  * EN v1.1 Address: 0x80144548
@@ -1625,7 +1625,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801441C0(int param_1,int param_2)
+void objAnimFn_801441c0(int param_1,int param_2)
 {
   short *psVar1;
   int iVar2;
@@ -1768,7 +1768,7 @@ void fn_801444A4(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: fn_8014460C
+ * Function: trickyFoodFn_8014460c
  * EN v1.0 Address: 0x801451DC
  * EN v1.0 Size: 1244b
  * EN v1.1 Address: 0x80144994
@@ -1780,7 +1780,7 @@ void fn_801444A4(int param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 fn_8014460C(int param_1,int *param_2)
+undefined4 trickyFoodFn_8014460c(int param_1,int *param_2)
 {
   bool bVar1;
   char cVar2;

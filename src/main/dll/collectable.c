@@ -114,9 +114,9 @@ extern void gameBitIncrement(int eventId);
 extern u32 GameBit_Get(int bit);
 extern void GameBit_Set(int eventId,int value);
 extern undefined8 FUN_80135d54();
-extern void fn_801389E0(int param_1,int param_2,int *param_3);
+extern void objAnimFreeChildren(int param_1,int param_2,int *param_3);
 extern void trickyImpress(int obj);
-extern int fn_8014460C(int obj,int state);
+extern int trickyFoodFn_8014460c(int obj,int state);
 extern void fn_80145304(void);
 extern void objAnimFn_8013a3f0(int obj,int animId,f32 blend,int flags);
 extern undefined4 FUN_80135f38();
@@ -1203,9 +1203,9 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
     }
   }
   doNothing_onTrickyFree();
-  fn_801389E0(obj,state,(int *)(state + 0x7a8));
-  fn_801389E0(obj,state,(int *)(state + 0x7b0));
-  fn_801389E0(obj,state,(int *)(state + 0x7b8));
+  objAnimFreeChildren(obj,state,(int *)(state + 0x7a8));
+  objAnimFreeChildren(obj,state,(int *)(state + 0x7b0));
+  objAnimFreeChildren(obj,state,(int *)(state + 0x7b8));
   if (*(int *)(state + 0x7cc) != 0) {
     ObjLink_DetachChild(obj,*(int *)(state + 0x7cc));
     Obj_FreeObject(*(int *)(state + 0x7cc));
@@ -2960,7 +2960,7 @@ void fn_80144F50(int obj, int state) {
     int sfxDisabled;
     u32 transitionFlag;
 
-    if (fn_8014460C(obj, state) == 0) {
+    if (trickyFoodFn_8014460c(obj, state) == 0) {
         *(f32*)(state + 0x72c) =
             *(f32*)(obj + 0x18) - fn_80293E80((lbl_803E2454 * (f32)*(s16*)obj) / lbl_803E2458);
         *(f32*)(state + 0x730) = *(f32*)(obj + 0x1c);
