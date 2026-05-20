@@ -2816,35 +2816,50 @@ void fn_8006C678(int id)
 
 /* PreLoaded-or-direct wrapper based on byte 0x48 of sda21 pointer.  Variant A. */
 extern u32 lbl_803DCFCC;
+#pragma scheduling off
+#pragma peephole off
 void fn_8006C6A4(int id)
 {
-    void *p = (void *)lbl_803DCFCC;
-    if (*((u8 *)p + 0x48) != 0) {
-        GXLoadTexObjPreLoaded((char *)p + 0x20, *(void **)((char *)p + 0x40), id);
+    register int idCopy = id;
+    char *p = (char *)lbl_803DCFCC;
+    if (*(u8 *)(p + 0x48) != 0) {
+        GXLoadTexObjPreLoaded(p + 0x20, *(void **)(p + 0x40), idCopy);
     } else {
-        GXLoadTexObj((char *)p + 0x20, id);
+        GXLoadTexObj(p + 0x20, idCopy);
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* PreLoaded-or-direct wrapper using lbl_803DCF7C as base. */
+#pragma scheduling off
+#pragma peephole off
 void selectReflectionTexture(int id)
 {
-    void *p = (void *)lbl_803DCF7C;
-    if (*((u8 *)p + 0x48) != 0) {
-        GXLoadTexObjPreLoaded((char *)p + 0x20, *(void **)((char *)p + 0x40), id);
+    register int idCopy = id;
+    char *p = (char *)lbl_803DCF7C;
+    if (*(u8 *)(p + 0x48) != 0) {
+        GXLoadTexObjPreLoaded(p + 0x20, *(void **)(p + 0x40), idCopy);
     } else {
-        GXLoadTexObj((char *)p + 0x20, id);
+        GXLoadTexObj(p + 0x20, idCopy);
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* PreLoaded-or-direct wrapper using lbl_803DCFE4 as base. */
 extern u32 lbl_803DCFE4;
+#pragma scheduling off
+#pragma peephole off
 void textureFn_8006c75c(int id)
 {
-    void *p = (void *)lbl_803DCFE4;
-    if (*((u8 *)p + 0x48) != 0) {
-        GXLoadTexObjPreLoaded((char *)p + 0x20, *(void **)((char *)p + 0x40), id);
+    register int idCopy = id;
+    char *p = (char *)lbl_803DCFE4;
+    if (*(u8 *)(p + 0x48) != 0) {
+        GXLoadTexObjPreLoaded(p + 0x20, *(void **)(p + 0x40), idCopy);
     } else {
-        GXLoadTexObj((char *)p + 0x20, id);
+        GXLoadTexObj(p + 0x20, idCopy);
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
