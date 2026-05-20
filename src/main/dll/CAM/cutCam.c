@@ -8,6 +8,7 @@ extern undefined4 FUN_80006a88();
 extern undefined4 FUN_80006a8c();
 extern ushort FUN_80006be8();
 extern uint FUN_80006c00();
+extern f32 curveFn_80010dc0(f32 param_1,float *param_2,float *param_3);
 extern ushort getPadFn_80014d9c(int controller);
 extern ushort getButtonsJustPressed(int controller);
 extern uint FUN_80017730();
@@ -50,7 +51,11 @@ extern undefined4* gCamcontrolState;
 extern u8 lbl_803DD528;
 extern undefined4* gCamcontrolModeSettings;
 extern f32 *cameraMtxVar57;
+extern u8 framesThisStep;
 extern f64 DOUBLE_803e2318;
+extern f64 lbl_803E1698;
+extern f32 lbl_803E16A4;
+extern f32 lbl_803E16AC;
 extern f32 lbl_803DE1A4;
 extern f32 lbl_803E2304;
 extern f32 lbl_803E2308;
@@ -569,8 +574,74 @@ void camMoveFn_80104040(void)
  *
  * TODO: stub. Body adjusts gCamcontrolModeSettings fields with clamping.
  */
-void camcontrol_updateModeSettings(void)
+void camcontrol_updateModeSettings(int camera)
 {
+  f32 blend;
+  float curve[4];
+  undefined4 local_18;
+  uint uStack_14;
+  undefined4 local_10;
+  uint uStack_c;
+  
+  if (*(s16 *)((int)cameraMtxVar57 + 0x82) != 0) {
+    *(u16 *)((int)cameraMtxVar57 + 0x82) =
+         *(s16 *)((int)cameraMtxVar57 + 0x82) - (u16)framesThisStep;
+    if (*(s16 *)((int)cameraMtxVar57 + 0x82) < 0) {
+      *(undefined2 *)((int)cameraMtxVar57 + 0x82) = 0;
+    }
+    uStack_14 = (int)*(s16 *)(cameraMtxVar57 + 0x21) -
+                (int)*(s16 *)((int)cameraMtxVar57 + 0x82) ^ 0x80000000;
+    local_18 = 0x43300000;
+    uStack_c = (int)*(s16 *)(cameraMtxVar57 + 0x21) ^ 0x80000000;
+    local_10 = 0x43300000;
+    curve[0] = lbl_803E16AC;
+    curve[1] = lbl_803E16A4;
+    curve[2] = lbl_803E16AC;
+    curve[3] = lbl_803E16AC;
+    blend = curveFn_80010dc0((float)(*(f64 *)&local_18 - lbl_803E1698) /
+                             (float)(*(f64 *)&local_10 - lbl_803E1698),curve,(float *)0x0);
+    cameraMtxVar57[0x23] =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0x25] -
+                                         (double)cameraMtxVar57[0x24]) +
+                 (double)cameraMtxVar57[0x24]);
+    cameraMtxVar57[0] =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0xc] -
+                                         (double)cameraMtxVar57[0xb]) +
+                 (double)cameraMtxVar57[0xb]);
+    cameraMtxVar57[1] =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0xe] -
+                                         (double)cameraMtxVar57[0xd]) +
+                 (double)cameraMtxVar57[0xd]);
+    cameraMtxVar57[2] =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0x10] -
+                                         (double)cameraMtxVar57[0xf]) +
+                 (double)cameraMtxVar57[0xf]);
+    cameraMtxVar57[3] =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0x12] -
+                                         (double)cameraMtxVar57[0x11]) +
+                 (double)cameraMtxVar57[0x11]);
+    cameraMtxVar57[4] =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0x14] -
+                                         (double)cameraMtxVar57[0x13]) +
+                 (double)cameraMtxVar57[0x13]);
+    cameraMtxVar57[5] =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0x16] -
+                                         (double)cameraMtxVar57[0x15]) +
+                 (double)cameraMtxVar57[0x15]);
+    cameraMtxVar57[6] =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0x18] -
+                                         (double)cameraMtxVar57[0x17]) +
+                 (double)cameraMtxVar57[0x17]);
+    cameraMtxVar57[7] =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0x1a] -
+                                         (double)cameraMtxVar57[0x19]) +
+                 (double)cameraMtxVar57[0x19]);
+    *(float *)(camera + 0xb4) =
+         (float)(blend * (double)(float)((double)cameraMtxVar57[0x1c] -
+                                         (double)cameraMtxVar57[0x1b]) +
+                 (double)cameraMtxVar57[0x1b]);
+  }
+  return;
 }
 
 

@@ -8,8 +8,9 @@ extern int FUN_80017730();
 extern undefined4 camcontrol_traceMove();
 extern undefined4 camcontrol_updateTargetAction();
 extern undefined4 camMoveFn_80104040();
-extern undefined4 camcontrol_updateModeSettings();
-extern undefined4 camcontrol_updateVerticalBounds();
+extern void camcontrol_updateModeSettings(int camera);
+extern void camcontrol_updateVerticalBounds(int camera,int flags,s8 param_3,float *upperBound,
+                                            float *lowerBound);
 extern undefined4 camslide_update();
 extern undefined4 firstperson_updatePosition();
 extern int FUN_80294cb0();
@@ -126,7 +127,7 @@ LAB_80105bbc:
                (double)*(float *)(param_1 + 10),(float *)(param_1 + 0xc),(float *)(param_1 + 0xe),
                (float *)(param_1 + 0x10),*(int *)(param_1 + 0x18));
   camslide_update((int)param_1,(int)psVar4);
-  camcontrol_updateVerticalBounds(param_1,1,8,(float *)(gCamcontrolModeSettings + 0xa0),
+  camcontrol_updateVerticalBounds((int)param_1,1,8,(float *)(gCamcontrolModeSettings + 0xa0),
                                   (float *)(gCamcontrolModeSettings + 0xa4));
   fVar1 = lbl_803E232C;
   if (*(char *)(gCamcontrolModeSettings + 0xc6) < '\0') {

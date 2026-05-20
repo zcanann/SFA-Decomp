@@ -23,7 +23,7 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
 void camcontrol_updateTargetAction(int param_1,int param_2);
 void cameraFn_80103b40(void);
 void camMoveFn_80104040(void);
-void camcontrol_updateModeSettings(void);
+void camcontrol_updateModeSettings(int camera);
 void doNothing_80103660(void);
 
 #endif /* MAIN_DLL_CAM_CUTCAM_H_ */

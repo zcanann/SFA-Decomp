@@ -3,8 +3,9 @@
 
 #include "ghidra_import.h"
 
-void camcontrol_updateModeSettings(int param_1);
-void camcontrol_updateVerticalBounds(undefined4 param_1,undefined4 param_2,undefined param_3,
-                                     float *param_4,float *param_5);
+void camcontrol_updateVerticalBounds(int camera,int flags,s8 param_3,float *upperBound,
+                                     float *lowerBound);
+void CameraModeNormal_func0A(float *distanceOut,float *yOffsetOut,float *zOffsetOut,
+                             float *xAngleOut,float *targetHeightOut);
 
 #endif /* MAIN_DLL_CAM_ATTENTION_H_ */
