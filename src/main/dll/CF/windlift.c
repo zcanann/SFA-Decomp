@@ -1453,6 +1453,7 @@ void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c) {
 extern f32 lbl_803E3A8C;
 extern f32 lbl_803E3A90;
 #pragma scheduling off
+#pragma peephole off
 void portalspelldoor_init(u8* obj, u8* data) {
     u8* sub = *(u8**)(obj + 0xb8);
     *(s16*)obj = (s16)((s32)(s8)data[0x18] << 8);
@@ -1465,6 +1466,7 @@ void portalspelldoor_init(u8* obj, u8* data) {
     }
     *(s32*)(sub + 0x8) = -1;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* LanternFireFly_setScale: subtract sub->_54..5c from vec[0..2] (overwriting
@@ -1497,7 +1499,7 @@ void LanternFireFly_free(u8* obj, int p2) {
         ModelLightStruct_free(*(void**)sub);
         *(void**)sub = NULL;
     }
-    if (p2 == 0 && *(void**)sub != NULL && ((sub[0x70] >> 6) & 3) != 1) {
+    if (p2 == 0 && *(void**)sub != NULL && ((sub[0x70] >> 6) & 3) != 1u) {
         lbl_803DDAD8 = 0;
     }
     ObjGroup_RemoveObject(obj, 0x30);

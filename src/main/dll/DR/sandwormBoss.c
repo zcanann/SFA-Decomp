@@ -3432,3 +3432,38 @@ void cfguardian_hitDetect(int *obj) {
     *(f32*)((char*)obj + 0x84) = *(f32*)((char*)obj + 0x10);
     *(f32*)((char*)obj + 0x88) = *(f32*)((char*)obj + 0x14);
 }
+
+extern int *gRomCurveInterface;
+#pragma scheduling off
+#pragma peephole off
+int *fn_8019B3F8(int *obj, int p2, int *outVec, int p4) {
+    int *result = NULL;
+    int local[2];
+    int found;
+
+    if (p4 == 1) {
+        local[0] = 0;
+        local[1] = 0;
+    } else {
+        local[0] = 25;
+        local[1] = 21;
+    }
+
+    found = (*(int (***)(int *, int, int, f32, f32, f32))gRomCurveInterface)[5](
+        local, 2, p2,
+        *(f32 *)((char *)obj + 0xc),
+        *(f32 *)((char *)obj + 0x10),
+        *(f32 *)((char *)obj + 0x14));
+
+    if (found > -1) {
+        result = (int *)(*(int *(***)(void))gRomCurveInterface)[7]();
+        if (outVec != NULL) {
+            *(f32 *)((char *)outVec + 0) = *(f32 *)((char *)result + 8);
+            *(f32 *)((char *)outVec + 4) = *(f32 *)((char *)result + 12);
+            *(f32 *)((char *)outVec + 8) = *(f32 *)((char *)result + 16);
+        }
+    }
+    return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
