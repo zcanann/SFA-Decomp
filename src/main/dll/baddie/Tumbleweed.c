@@ -3959,3 +3959,24 @@ void fn_801388D0(s16 a, u32 b, u32 c, u32 d) {
     OSResumeThread(lbl_803AB118);
 }
 #pragma scheduling reset
+
+/* EN v1.0 0x801334E0  size: 60b  Gate: when lbl_803DD944 == 2 (s8 compare)
+ * and lbl_803DBBB0 != 0, latch lbl_803DD928 = 5 and return 1; else
+ * return 0 without touching the latch. */
+extern s8 lbl_803DD944;
+extern u8 lbl_803DBBB0;
+extern u8 lbl_803DD928;
+#pragma peephole off
+#pragma scheduling off
+u8 fn_801334E0(void)
+{
+    u8 act = 0;
+    if (lbl_803DD944 == 2 && lbl_803DBBB0 != 0) {
+        act = 1;
+    }
+    if (act == 0) return act;
+    lbl_803DD928 = 5;
+    return act;
+}
+#pragma scheduling reset
+#pragma peephole reset
