@@ -1571,3 +1571,28 @@ void fn_801F1BF0(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* EN v1.0 0x801F2BA0  size: 192b  Render gate: when visible != 0 and
+ * lbl_803DCAAC vtable[0x40] applied to obj->_ac returns 4, gate on
+ * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
+extern undefined4* lbl_803DCAAC;
+extern int GameBit_Get(int);
+extern f32 lbl_803E5DC0;
+#pragma scheduling off
+#pragma peephole off
+void fn_801F2BA0(int* obj, int p1, int p2, int p3, int p4, s8 visible)
+{
+    extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
+    s32 v = visible;
+    int areaId;
+    if (v == 0) return;
+    areaId = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)((char*)obj + 0xac));
+    if ((u8)areaId == 4) {
+        if ((u32)GameBit_Get(0x2bd) == 0u) return;
+        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5DC0);
+        return;
+    }
+    objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5DC0);
+}
+#pragma peephole reset
+#pragma scheduling reset
