@@ -570,7 +570,6 @@ void fn_8006FC00(int param_1)
     u8* b;
     extern u8 lbl_80392DE0[];
     extern u8 lbl_80391DE0[];
-    extern u8 lbl_803DDC78;
     extern u8 lbl_803DCFFA;
 
     lbl_803DCFFA = (u8)param_1;
@@ -579,17 +578,7 @@ void fn_8006FC00(int param_1)
     }
     a = lbl_80392DE0;
     b = lbl_80391DE0;
-    for (i = 0; i < 16; i++) {
-        a[0x033] = 0;  b[0x0E] = 0;
-        a[0x06B] = 0;  b[0x1E] = 0;
-        a[0x0A3] = 0;  b[0x2E] = 0;
-        a[0x0DB] = 0;  b[0x3E] = 0;
-        a[0x113] = 0;  b[0x4E] = 0;
-        a[0x14B] = 0;  b[0x5E] = 0;
-        a[0x183] = 0;  b[0x6E] = 0;
-        a[0x1BB] = 0;  b[0x7E] = 0;
-        a += 0x1C0;
-        b += 0x80;
+    for (i = 0; i < 32; i++) {
         a[0x033] = 0;  b[0x0E] = 0;
         a[0x06B] = 0;  b[0x1E] = 0;
         a[0x0A3] = 0;  b[0x2E] = 0;
@@ -602,7 +591,7 @@ void fn_8006FC00(int param_1)
         b += 0x80;
     }
     lbl_803DCFF9 = 0;
-    lbl_803DDC78 = 0;
+    *(u8*)&lbl_803DCFF8 = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
