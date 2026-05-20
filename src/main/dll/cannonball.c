@@ -28,7 +28,7 @@ extern f32 lbl_803E250C;
 /*
  * --INFO--
  *
- * Function: fn_80141290
+ * Function: trickyFn_80141290
  * EN v1.0 Address: 0x80141290
  * EN v1.0 Size: 1520b
  * EN v1.1 Address: 0x80141618
@@ -38,7 +38,7 @@ extern f32 lbl_803E250C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80141290(int param_1, int param_2)
+void trickyFn_80141290(int param_1, int param_2)
 {
   float fVar1;
   float fVar2;

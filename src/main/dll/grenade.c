@@ -328,7 +328,7 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
 /*
  * --INFO--
  *
- * Function: fn_80141FEC
+ * Function: trickyFn_80141fec
  * EN v1.0 Address: 0x80142100
  * EN v1.0 Size: 1948b
  * EN v1.1 Address: 0x80142374
@@ -338,7 +338,7 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80141FEC(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void trickyFn_80141fec(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined4 *param_10,undefined4 param_11,undefined4 param_12,
                  byte param_13,uint param_14,undefined4 param_15,undefined4 param_16)
@@ -492,7 +492,7 @@ void fn_80141FEC(undefined8 param_1,undefined8 param_2,double param_3,undefined8
 /*
  * --INFO--
  *
- * Function: fn_80142524
+ * Function: trickyFn_80142524
  * EN v1.0 Address: 0x8014289C
  * EN v1.0 Size: 1752b
  * EN v1.1 Address: 0x801428AC
@@ -502,7 +502,7 @@ void fn_80141FEC(undefined8 param_1,undefined8 param_2,double param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80142524(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void trickyFn_80142524(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int *param_10,undefined4 param_11,undefined4 param_12,
                  byte param_13,uint param_14,undefined4 param_15,undefined4 param_16)
@@ -661,7 +661,7 @@ void fn_80142524(undefined8 param_1,undefined8 param_2,double param_3,undefined8
 /*
  * --INFO--
  *
- * Function: fn_80142A14
+ * Function: trickyFn_80142a14
  * EN v1.0 Address: 0x80142F74
  * EN v1.0 Size: 492b
  * EN v1.1 Address: 0x80142D9C
@@ -672,7 +672,7 @@ void fn_80142524(undefined8 param_1,undefined8 param_2,double param_3,undefined8
  * PAL Size: TODO
  */
 undefined4
-fn_80142A14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+trickyFn_80142a14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             int param_10,undefined4 param_11,undefined4 param_12,byte param_13,uint param_14,
             undefined4 param_15,undefined4 param_16)
@@ -724,7 +724,7 @@ fn_80142A14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
 /*
  * --INFO--
  *
- * Function: fn_80142B6C
+ * Function: trickyFlameFn_80142b6c
  * EN v1.0 Address: 0x80143160
  * EN v1.0 Size: 616b
  * EN v1.1 Address: 0x80142EF4
@@ -734,7 +734,7 @@ fn_80142A14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80142B6C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void trickyFlameFn_80142b6c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   uint uVar1;
@@ -811,7 +811,7 @@ void fn_80142B6C(undefined8 param_1,double param_2,double param_3,undefined8 par
 /*
  * --INFO--
  *
- * Function: fn_80142D2C
+ * Function: trickyFoodFn_80142d2c
  * EN v1.0 Address: 0x801433C8
  * EN v1.0 Size: 556b
  * EN v1.1 Address: 0x801430B4
@@ -821,7 +821,7 @@ void fn_80142B6C(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool fn_80142D2C(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+bool trickyFoodFn_80142d2c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int *param_10,undefined4 param_11,undefined4 param_12,byte param_13,
                  uint param_14,undefined4 param_15,undefined4 param_16)
@@ -881,7 +881,7 @@ LAB_801431cc:
 /*
  * --INFO--
  *
- * Function: fn_80142EB0
+ * Function: trickyFn_80142eb0
  * EN v1.0 Address: 0x801435F4
  * EN v1.0 Size: 608b
  * EN v1.1 Address: 0x80143238
@@ -891,7 +891,7 @@ LAB_801431cc:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_80142EB0(int param_1,int *param_2)
+undefined4 trickyFn_80142eb0(int param_1,int *param_2)
 {
   short sVar1;
   bool bVar2;
@@ -957,7 +957,7 @@ undefined4 fn_80142EB0(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: fn_801430E0
+ * Function: trickyFn_801430e0
  * EN v1.0 Address: 0x80143854
  * EN v1.0 Size: 448b
  * EN v1.1 Address: 0x80143468
@@ -968,7 +968,7 @@ undefined4 fn_80142EB0(int param_1,int *param_2)
  * PAL Size: TODO
  */
 undefined4
-fn_801430E0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+trickyFn_801430e0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
             undefined4 param_15,undefined4 param_16)
@@ -1009,7 +1009,7 @@ fn_801430E0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
 /*
  * --INFO--
  *
- * Function: fn_80143210
+ * Function: trickyFn_80143210
  * EN v1.0 Address: 0x80143A14
  * EN v1.0 Size: 168b
  * EN v1.1 Address: 0x80143598
@@ -1021,7 +1021,7 @@ fn_801430E0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 para
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 fn_80143210(int param_1,int *param_2)
+undefined4 trickyFn_80143210(int param_1,int *param_2)
 {
   short sVar1;
   int iVar2;
@@ -1051,7 +1051,7 @@ undefined4 fn_80143210(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: fn_801432CC
+ * Function: trickyFn_801432cc
  * EN v1.0 Address: 0x80143ABC
  * EN v1.0 Size: 168b
  * EN v1.1 Address: 0x80143654
@@ -1063,7 +1063,7 @@ undefined4 fn_80143210(int param_1,int *param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 fn_801432CC(int param_1,int *param_2)
+undefined4 trickyFn_801432cc(int param_1,int *param_2)
 {
   short sVar1;
   int iVar2;
@@ -1093,7 +1093,7 @@ undefined4 fn_801432CC(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: fn_80143388
+ * Function: trickyFn_80143388
  * EN v1.0 Address: 0x80143B64
  * EN v1.0 Size: 256b
  * EN v1.1 Address: 0x80143710
@@ -1105,7 +1105,7 @@ undefined4 fn_801432CC(int param_1,int *param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 fn_80143388(int param_1,int *param_2)
+undefined4 trickyFn_80143388(int param_1,int *param_2)
 {
   int iVar1;
   int iVar3;
@@ -1142,7 +1142,7 @@ undefined4 fn_80143388(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: fn_801434B0
+ * Function: trickyFn_801434b0
  * EN v1.0 Address: 0x80143C64
  * EN v1.0 Size: 972b
  * EN v1.1 Address: 0x80143838
@@ -1152,7 +1152,7 @@ undefined4 fn_80143388(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fn_801434B0(int param_1,int *param_2)
+undefined4 trickyFn_801434b0(int param_1,int *param_2)
 {
   char cVar1;
   short sVar2;
@@ -1241,7 +1241,7 @@ undefined4 fn_801434B0(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: fn_801437D4
+ * Function: trickyFoodFn_801437d4
  * EN v1.0 Address: 0x80144030
  * EN v1.0 Size: 1136b
  * EN v1.1 Address: 0x80143B5C
@@ -1252,7 +1252,7 @@ undefined4 fn_801434B0(int param_1,int *param_2)
  * PAL Size: TODO
  */
 undefined4
-fn_801437D4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+trickyFoodFn_801437d4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int *param_10)
 {
   float fVar1;
@@ -1352,7 +1352,7 @@ fn_801437D4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
 /*
  * --INFO--
  *
- * Function: fn_80143B04
+ * Function: trickyFn_80143b04
  * EN v1.0 Address: 0x801444A0
  * EN v1.0 Size: 104b
  * EN v1.1 Address: 0x80143E8C
@@ -1364,7 +1364,7 @@ fn_801437D4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 fn_80143B04(int param_1,int *param_2)
+undefined4 trickyFn_80143b04(int param_1,int *param_2)
 {
   int iVar1;
 
@@ -1385,7 +1385,7 @@ undefined4 fn_80143B04(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: fn_80143B78
+ * Function: trickyFn_80143b78
  * EN v1.0 Address: 0x80144508
  * EN v1.0 Size: 344b
  * EN v1.1 Address: 0x80143F00
@@ -1397,7 +1397,7 @@ undefined4 fn_80143B04(int param_1,int *param_2)
  */
 #pragma peephole off
 #pragma scheduling off
-undefined4 fn_80143B78(int param_1,int *param_2)
+undefined4 trickyFn_80143b78(int param_1,int *param_2)
 {
   int iVar1;
 
@@ -1421,7 +1421,7 @@ undefined4 fn_80143B78(int param_1,int *param_2)
 /*
  * --INFO--
  *
- * Function: fn_80143C04
+ * Function: trickyFn_80143c04
  * EN v1.0 Address: 0x80144660
  * EN v1.0 Size: 676b
  * EN v1.1 Address: 0x80143F8C
@@ -1432,7 +1432,7 @@ undefined4 fn_80143B78(int param_1,int *param_2)
  * PAL Size: TODO
  */
 undefined4
-fn_80143C04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+trickyFn_80143c04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
             undefined4 param_15,undefined4 param_16)

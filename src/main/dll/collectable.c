@@ -117,7 +117,7 @@ extern undefined8 FUN_80135d54();
 extern void objAnimFreeChildren(int param_1,int param_2,int *param_3);
 extern void trickyImpress(int obj);
 extern int trickyFoodFn_8014460c(int obj,int state);
-extern void fn_80145304(void);
+extern void tricky_SeqFn(void);
 extern void objAnimFn_8013a3f0(int obj,int animId,f32 blend,int flags);
 extern undefined4 FUN_80135f38();
 extern undefined4 FUN_80136310();
@@ -1234,7 +1234,7 @@ void Tricky_init(int obj)
   if (GameBit_Get(0x25) != 0) {
     GameBit_Set(0x3f8,1);
   }
-  *(void (**)(void))(obj + 0xbc) = fn_80145304;
+  *(void (**)(void))(obj + 0xbc) = tricky_SeqFn;
   ObjGroup_AddObject(obj,1);
   trickyVoxAllocFn_8004b5d4((void *)(state + 0x538));
   trickyVoxAllocFn_8004b5d4((void *)(state + 0x568));
@@ -2711,10 +2711,10 @@ u8 Tricky_render2(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x0); 
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_80145AD0: 24b - signed-byte load and store, return 1. */
+/* Tricky_func18: 24b - signed-byte load and store, return 1. */
 #pragma peephole off
 #pragma scheduling off
-int fn_80145AD0(int *obj, int *out) {
+int Tricky_func18(int *obj, int *out) {
     *out = *((s8*)obj[0xb8/4] + 0xd);
     return 1;
 }
@@ -2730,10 +2730,10 @@ extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int par
 extern int fn_800DB0E0(void *pos,int param_2,int param_3);
 extern f32 lbl_803E23DC;
 
-/* fn_801451D8: 300b - seed Tricky's path state and ensure the helper object exists. */
+/* trickyFn_801451d8: 300b - seed Tricky's path state and ensure the helper object exists. */
 #pragma peephole off
 #pragma scheduling off
-int fn_801451D8(int obj,int state) {
+int trickyFn_801451d8(int obj,int state) {
     u8 pathBytes[16];
     u32 pathByte = fn_800DBCFC((void *)(obj + 0x18), 0);
 
@@ -2952,9 +2952,9 @@ int fn_80144E40(int *obj, int *p) {
 }
 #pragma scheduling reset
 
-/* fn_80144F50: 648b - update Tricky's water/out-of-water probe and animation. */
+/* trickyFn_80144f50: 648b - update Tricky's water/out-of-water probe and animation. */
 #pragma scheduling off
-void fn_80144F50(int obj, int state) {
+void trickyFn_80144f50(int obj, int state) {
     int sfxState;
     int isInWater;
     int sfxDisabled;

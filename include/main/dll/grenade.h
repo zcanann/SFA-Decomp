@@ -7,42 +7,42 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                      ushort *param_9,undefined4 *param_10,int param_11,undefined4 param_12,
                      byte param_13,uint param_14,undefined4 param_15,undefined4 param_16);
-void fn_80141FEC(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void trickyFn_80141fec(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined4 *param_10,undefined4 param_11,undefined4 param_12,
                  byte param_13,uint param_14,undefined4 param_15,undefined4 param_16);
-void fn_80142524(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+void trickyFn_80142524(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int *param_10,undefined4 param_11,undefined4 param_12,
                  byte param_13,uint param_14,undefined4 param_15,undefined4 param_16);
 undefined4
-fn_80142A14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+trickyFn_80142a14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             int param_10,undefined4 param_11,undefined4 param_12,byte param_13,uint param_14,
             undefined4 param_15,undefined4 param_16);
-void fn_80142B6C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void trickyFlameFn_80142b6c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-bool fn_80142D2C(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+bool trickyFoodFn_80142d2c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int *param_10,undefined4 param_11,undefined4 param_12,byte param_13,
                  uint param_14,undefined4 param_15,undefined4 param_16);
-undefined4 fn_80142EB0(int param_1,int *param_2);
+undefined4 trickyFn_80142eb0(int param_1,int *param_2);
 undefined4
-fn_801430E0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+trickyFn_801430e0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
             undefined4 param_15,undefined4 param_16);
-undefined4 fn_80143210(int param_1,int *param_2);
-undefined4 fn_801432CC(int param_1,int *param_2);
-undefined4 fn_80143388(int param_1,int *param_2);
-undefined4 fn_801434B0(int param_1,int *param_2);
+undefined4 trickyFn_80143210(int param_1,int *param_2);
+undefined4 trickyFn_801432cc(int param_1,int *param_2);
+undefined4 trickyFn_80143388(int param_1,int *param_2);
+undefined4 trickyFn_801434b0(int param_1,int *param_2);
 undefined4
-fn_801437D4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+trickyFoodFn_801437d4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int *param_10);
-undefined4 fn_80143B04(int param_1,int *param_2);
-undefined4 fn_80143B78(int param_1,int *param_2);
+undefined4 trickyFn_80143b04(int param_1,int *param_2);
+undefined4 trickyFn_80143b78(int param_1,int *param_2);
 undefined4
-fn_80143C04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
+trickyFn_80143c04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
             int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
             undefined4 param_15,undefined4 param_16);
