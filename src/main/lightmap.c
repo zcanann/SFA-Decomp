@@ -2693,6 +2693,30 @@ void FUN_8005e1d8(undefined4 param_1,undefined4 param_2,int param_3)
 }
 
 
+extern u32 lbl_8037E0C0[];
+extern s32 lbl_803DCE30;
+extern void sceneDrawTransparentPolys(void);
+#pragma scheduling off
+#pragma peephole off
+void fn_8005DE94(u32 a, u32 b, f32 *p) {
+    s32 t, v;
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    t = (s32)-p[2];
+    if (t < 0) v = 0;
+    else if (t > 0x7ffffff) v = 0x7ffffff;
+    else v = t;
+    lbl_8037E0C0[lbl_803DCE30 * 4]     = a;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = b;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | 0x38000000;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 7;
+    lbl_803DCE30++;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern u32 renderFlags;
 extern s8 lbl_803DCEA4;
 extern int lbl_803DCEA8;
