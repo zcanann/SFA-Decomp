@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/SHspore.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_8001759c();
@@ -35,8 +36,6 @@ extern void *getTrickyObject(void);
 extern int fn_802964F0(void *obj, int param);
 extern void *ObjGroup_FindNearestObject(int group, void *obj, f32 *distanceOut);
 extern int ObjTrigger_IsSet(void *obj);
-extern void ObjAnim_SetCurrentMove(void *obj, int moveId, f32 progress, int flags);
-extern void ObjAnim_AdvanceCurrentMove(void *obj, void *events, f32 stepScale, f32 deltaTime);
 extern int RandomTimer_UpdateRangeTrigger(f32 *state, f32 min, f32 max);
 extern void Sfx_PlayFromObject(void *obj, int sfxId);
 extern short FUN_8011e824();
@@ -441,9 +440,9 @@ void sh_queenearthwalker_update(void *obj)
   currentMove = *(s16 *)((u8 *)obj + 0xa0);
   targetMove = lbl_80326E18[*(u8 *)state];
   if (currentMove != targetMove) {
-    ObjAnim_SetCurrentMove(obj, targetMove, lbl_803E53F8, 0);
+    ObjAnim_SetCurrentMove((int)obj, targetMove, lbl_803E53F8, 0);
   }
-  ObjAnim_AdvanceCurrentMove(obj, NULL, lbl_80326E24[*(u8 *)state], timeDelta);
+  ObjAnim_AdvanceCurrentMove(lbl_80326E24[*(u8 *)state], timeDelta, (int)obj, NULL);
 
   stateFlags = *(u8 *)((u8 *)state + 0x2);
   if ((stateFlags & 0x10) == 0) {

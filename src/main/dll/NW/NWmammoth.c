@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/NW/NWmammoth.h"
+#include "main/objanim.h"
 #include "main/objanim_internal.h"
 
 extern undefined4 FUN_80006824();
@@ -43,8 +44,6 @@ extern f32 FLOAT_803e5f8c;
 
 extern void *Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int bit);
-extern void ObjAnim_SetCurrentMove(int obj, int move, f32 f, int p4);
-extern void ObjAnim_AdvanceCurrentMove(int obj, void *out, f32 a, f32 b);
 extern f32 Vec_distance(int a, int b);
 extern void EdibleMushroom_SeqFn(void);
 
@@ -98,7 +97,7 @@ void ediblemushroom_init(int obj, int aux)
         ((f32)*(u8 *)(aux + 0x1c) / lbl_803E52E8);
 
     ObjAnim_SetCurrentMove(obj, 1, lbl_803E5288, 0);
-    ObjAnim_AdvanceCurrentMove(obj, &animEvents, lbl_803E52A8, lbl_803E52A8);
+    ObjAnim_AdvanceCurrentMove(lbl_803E52A8, lbl_803E52A8, obj, &animEvents);
     *(f32 *)(state + 0x118) = animEvents.rootDeltaX;
     if (*(f32 *)(state + 0x118) < lbl_803E5288) {
         *(f32 *)(state + 0x118) = -*(f32 *)(state + 0x118);
@@ -107,7 +106,7 @@ void ediblemushroom_init(int obj, int aux)
     *(f32 *)(state + 0x118) = *(f32 *)(state + 0x118) + lbl_803E52A0;
 
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E5288, 0);
-    ObjAnim_AdvanceCurrentMove(obj, &animEvents, lbl_803E52A8, lbl_803E52A8);
+    ObjAnim_AdvanceCurrentMove(lbl_803E52A8, lbl_803E52A8, obj, &animEvents);
     *(f32 *)(state + 0x11c) = animEvents.rootDeltaZ;
     if (*(f32 *)(state + 0x11c) < lbl_803E5288) {
         *(f32 *)(state + 0x11c) = -*(f32 *)(state + 0x11c);

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/CFlevelControl.h"
+#include "main/objanim.h"
 
 extern void *Obj_GetPlayerObject(void);
 extern void *Camera_GetCurrentViewSlot(void);
@@ -8,7 +9,6 @@ extern u32 GameBit_Set(int bit, int value);
 extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
 extern int  ObjHits_GetPriorityHit(int obj, undefined4 *outHit, int *outIdx, u32 *outVol);
 extern void Obj_FreeObject(int obj);
-extern void ObjAnim_AdvanceCurrentMove(int obj, int p2, double p3, double p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int  randomGetRange(int lo, int hi);
 extern int  objFindTexture(int p1, int p2, int p3);
@@ -118,10 +118,10 @@ void cfccrate_update(int obj)
     case 0x65c:
         break;
     case 0x65d:
-        ObjAnim_AdvanceCurrentMove(obj, 0, (double)lbl_803E3DF8, (double)timeDelta);
+        ObjAnim_AdvanceCurrentMove(lbl_803E3DF8, timeDelta, obj, NULL);
         break;
     case 0x6b4:
-        ObjAnim_AdvanceCurrentMove(obj, 0, (double)lbl_803E3DF8, (double)timeDelta);
+        ObjAnim_AdvanceCurrentMove(lbl_803E3DF8, timeDelta, obj, NULL);
         break;
     case 0x708:
         if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) != 0) {
