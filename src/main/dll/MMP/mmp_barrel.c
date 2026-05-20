@@ -1182,7 +1182,7 @@ void FUN_80193a50(undefined4 param_1,undefined4 param_2,char *param_3,int param_
         else {
           *(uint *)(iVar3 + 0x10) = *(uint *)(iVar3 + 0x10) & 0xfffffffd;
           if ((*(byte *)(param_4 + 0x1c) & 2) != 0) {
-            *(uint *)(iVar3 + 0x10) = *(uint *)(iVar3 + 0x10) & 0xfffffffe;
+            *(uint *)(iVar3 + 0x10) = *(uint *)(iVar3 + 0x10) & ~1;
           }
         }
       }

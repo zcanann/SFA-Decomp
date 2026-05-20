@@ -389,12 +389,12 @@ void transporter_hitDetect(int obj)
         && (*(u8 *)(state + 0xe) & 0x20) == 0) {
         if (*(u8 *)(state + 0xd) != 0 || *(u8 *)(state + 0xc) != 0) {
             *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
-            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & 0xfffffffe);
+            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & ~1);
         } else if ((int)*(short *)(state2 + 0x20) != -1
                    && GameBit_Get((int)*(short *)(state2 + 0x20)) == 0) {
             *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xfffffff7);
             *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x10);
-            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & 0xfffffffe);
+            *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & ~1);
         } else {
             *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xffffffe7);
             *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) | 1);
@@ -412,7 +412,7 @@ void transporter_hitDetect(int obj)
         *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) & 0xfffffff7);
         *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x10);
     }
-    *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & 0xfffffffe);
+    *(u8 *)(state + 0xe) = (u8)((u32)*(u8 *)(state + 0xe) & ~1);
 }
 #pragma scheduling reset
 #pragma peephole reset

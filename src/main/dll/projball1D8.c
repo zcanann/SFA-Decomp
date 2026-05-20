@@ -170,7 +170,7 @@ void nw_levcontrol_update(int param_1)
           }
         }
         else {
-          pfVar10[2] = (float)((uint)fVar6 & 0xfffffffe);
+          pfVar10[2] = (float)((uint)fVar6 & ~1);
           pfVar10[2] = (float)((uint)pfVar10[2] | 2);
           FUN_80006b54(0x15,(uint)*(byte *)((int)pfVar10 + 5));
           FUN_80006b50();

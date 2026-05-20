@@ -1411,7 +1411,7 @@ void fn_8005C8CC(void)
 {
   DAT_803dda68 = DAT_803dda68 | 0x21;
   if ((DAT_803ddb24 == '\x01') || (DAT_803ddb24 == '\x03')) {
-    DAT_803dda68 = DAT_803dda68 & 0xfffffffe;
+    DAT_803dda68 = DAT_803dda68 & ~1;
   }
   FUN_8000694c();
   updateVisibleGeometry();

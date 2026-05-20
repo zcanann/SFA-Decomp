@@ -3826,7 +3826,7 @@ void FUN_80064030(undefined4 param_1,undefined4 param_2,int param_3)
         for (uVar16 = 0; (int)uVar16 < (int)(uint)*(ushort *)(iVar10 + 10); uVar16 = uVar16 + 1) {
           iVar6 = (uVar16 & 3) * 2;
           iVar4 = ((int)uVar16 >> 2) * 0x20;
-          iVar12 = (uint)*(ushort *)(iVar10 + 10) * (uVar15 & 0xfffffffc) * 2;
+          iVar12 = (uint)*(ushort *)(iVar10 + 10) * (uVar15 & ~3) * 2;
           uVar2 = *(ushort *)(iVar10 + iVar6 + iVar4 + iVar5 + iVar12 + 0x60);
           uVar3 = *(ushort *)(iVar11 + iVar6 + iVar4 + iVar5 + iVar12 + 0x60);
           *(ushort *)(param_3 + iVar6 + iVar4 + iVar5 + iVar12 + 0x60) =

@@ -104,7 +104,7 @@ void FUN_801b365c(undefined4 param_1,undefined4 param_2,uint param_3)
       }
       else {
         *(uint *)(iVar3 + 0x10) = *(uint *)(iVar3 + 0x10) & 0xfffffffd;
-        *(uint *)(iVar3 + 0x10) = *(uint *)(iVar3 + 0x10) & 0xfffffffe;
+        *(uint *)(iVar3 + 0x10) = *(uint *)(iVar3 + 0x10) & ~1;
       }
     }
   }

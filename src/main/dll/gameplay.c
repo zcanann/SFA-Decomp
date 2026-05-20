@@ -1729,7 +1729,7 @@ int FUN_800e8d6c(uint param_1,byte param_2,uint param_3,undefined *param_4)
         if (uVar8 == 0) goto LAB_800e8c5c;
         do {
           *(uint *)(puVar5 + 0x1c) =
-               *(uint *)(puVar6 + (iVar7 + -1) * 8 + 0x1c) & 0xfffffffe |
+               *(uint *)(puVar6 + (iVar7 + -1) * 8 + 0x1c) & ~1 |
                *(uint *)(puVar5 + 0x1c) & 1;
           puVar5[0x1f] = puVar6[(iVar7 + -1) * 8 + 0x1f] & 1 | puVar5[0x1f] & 0xfe;
           puVar5[0x20] = puVar5[0x18];
@@ -1737,7 +1737,7 @@ int FUN_800e8d6c(uint param_1,byte param_2,uint param_3,undefined *param_4)
           puVar5[0x22] = puVar5[0x1a];
           puVar5[0x23] = puVar5[0x1b];
           *(uint *)(puVar5 + 0x14) =
-               *(uint *)(puVar6 + (iVar7 + -2) * 8 + 0x1c) & 0xfffffffe |
+               *(uint *)(puVar6 + (iVar7 + -2) * 8 + 0x1c) & ~1 |
                *(uint *)(puVar5 + 0x14) & 1;
           puVar5[0x17] = puVar6[(iVar7 + -2) * 8 + 0x1f] & 1 | puVar5[0x17] & 0xfe;
           puVar5[0x18] = puVar5[0x10];
@@ -1751,7 +1751,7 @@ int FUN_800e8d6c(uint param_1,byte param_2,uint param_3,undefined *param_4)
         for (uVar3 = uVar3 & 1; uVar3 != 0; uVar3 = uVar3 - 1) {
 LAB_800e8c5c:
           *(uint *)(puVar5 + 0x1c) =
-               *(uint *)(puVar6 + (iVar7 + -1) * 8 + 0x1c) & 0xfffffffe |
+               *(uint *)(puVar6 + (iVar7 + -1) * 8 + 0x1c) & ~1 |
                *(uint *)(puVar5 + 0x1c) & 1;
           puVar5[0x1f] = puVar6[(iVar7 + -1) * 8 + 0x1f] & 1 | puVar5[0x1f] & 0xfe;
           puVar5[0x20] = puVar5[0x18];

@@ -167,7 +167,7 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
         param_9[3] = param_9[3] | 0x4000;
         *param_9 = 0;
         *(undefined *)(iVar6 + 0x24) = 2;
-        *(uint *)(iVar6 + 0x18) = *(uint *)(iVar6 + 0x18) & 0xfffffffe;
+        *(uint *)(iVar6 + 0x18) = *(uint *)(iVar6 + 0x18) & ~1;
         FUN_80017698(0xae6,1);
         (**(code **)(*DAT_803dd6d4 + 0x48))(2,param_9,0xffffffff);
       }
@@ -200,7 +200,7 @@ void FUN_801c5448(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   else if (bVar1 == 5) {
     *(undefined *)(iVar6 + 0x24) = 0;
-    *(uint *)(iVar6 + 0x18) = *(uint *)(iVar6 + 0x18) & 0xfffffffe;
+    *(uint *)(iVar6 + 0x18) = *(uint *)(iVar6 + 0x18) & ~1;
     param_9[3] = param_9[3] & 0xbfff;
     FUN_80017698(299,0);
     FUN_80017698(0xae4,0);

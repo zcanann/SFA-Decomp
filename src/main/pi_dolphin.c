@@ -1243,7 +1243,7 @@ void FUN_80045328(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                      param_12,param_11,param_13,param_14,param_15,param_16);
       }
       else {
-        uVar1 = param_12 + 0x1f & 0xffffffe0;
+        uVar1 = param_12 + 0x1f & ~0x1f;
         uVar3 = FUN_80017830(uVar1,0x7d7d7d7d);
         FUN_802420b0(uVar3,uVar1);
         FUN_80006c30(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,aiStack_58,uVar3,

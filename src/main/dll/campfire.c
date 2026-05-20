@@ -270,7 +270,7 @@ void fn_8016855C(undefined4 param_1,undefined4 param_2,int param_3)
                                 (int)*(char *)(*(int *)(iVar1 + 0x4c) + 0x28) ^ 0x80000000) -
               DOUBLE_803E3070) / lbl_803E30A4;
   if ((*(uint *)(param_3 + 0x314) & 1) != 0) {
-    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffffffe;
+    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & ~1;
     Sfx_PlayFromObject(iVar1,0x273);
   }
   if ((*(uint *)(param_3 + 0x314) & 0x80) != 0) {

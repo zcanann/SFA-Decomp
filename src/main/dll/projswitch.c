@@ -350,7 +350,7 @@ void FUN_8014d7b8(uint param_1)
     uVar1 = *(uint *)(iVar3 + 0x2e8);
     if ((uVar1 & 3) != 0) {
       if ((uVar1 & 1) != 0) {
-        *(uint *)(iVar3 + 0x2e8) = uVar1 & 0xfffffffe;
+        *(uint *)(iVar3 + 0x2e8) = uVar1 & ~1;
         *(uint *)(iVar3 + 0x2e8) = *(uint *)(iVar3 + 0x2e8) | 2;
       }
       if (*(int *)(iVar3 + 0x368) == 0) {

@@ -1863,7 +1863,7 @@ FUN_802014c8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   iVar2 = *(int *)(iVar2 + 0x40c);
   *(byte *)(iVar2 + 0x14) = *(byte *)(iVar2 + 0x14) | 2;
   if ((*(uint *)(param_10 + 0x314) & 1) != 0) {
-    *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & 0xfffffffe;
+    *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & ~1;
     *(byte *)(iVar2 + 0x14) = *(byte *)(iVar2 + 0x14) | 1;
   }
   if (*(char *)(param_10 + 0x346) != '\0') {

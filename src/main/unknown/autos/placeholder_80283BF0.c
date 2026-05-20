@@ -92,7 +92,7 @@ void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 cal
     offset = aramGetStreamBufferAddress(stream, stack);
     uploadSize += streamPos & 0x1f;
     streamPos &= 0xffffffe0;
-    size = (uploadSize + 0x1f) & 0xffffffe0;
+    size = (uploadSize + 0x1f) & ~0x1f;
     uploadDest += streamPos;
     DCStoreRange((void *)uploadDest, size);
     aramUploadData(uploadDest, offset + streamPos, size, 1, uploadCallback, uploadCallbackArg);

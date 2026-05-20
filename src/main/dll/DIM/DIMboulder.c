@@ -419,7 +419,7 @@ void FUN_801acda4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_801ac490(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_10,
                  param_11,param_12,param_13,param_14,param_15,param_16);
   }
-  *(uint *)(iVar4 + 4) = *(uint *)(iVar4 + 4) & 0xfffffffe;
+  *(uint *)(iVar4 + 4) = *(uint *)(iVar4 + 4) & ~1;
   if (lbl_803E5374 < *(float *)(iVar4 + 0x10)) {
     uVar5 = FUN_80017484(0xff,0xff,0xff,0xff);
     FUN_80006c88(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x351);

@@ -354,7 +354,7 @@ FUN_801628c4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   (**(code **)(*DAT_803dd70c + 0x20))(param_1,param_9,param_10,0);
   if ((*(uint *)(param_10 + 0x314) & 1) != 0) {
-    *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & 0xfffffffe;
+    *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & ~1;
     FUN_80006824(param_9,0x27b);
   }
   uStack_2c = *(char *)(iVar4 + 0x45) * -2 + 1U ^ 0x80000000;
@@ -464,7 +464,7 @@ FUN_80162b78(undefined8 param_1,double param_2,double param_3,undefined8 param_4
          ((uint)(byte)((*(float *)(iVar3 + 0x54) <= *(float *)(iVar3 + 0x48)) << 1) << 0x1c) >> 0x1d
         ) || (*(char *)(param_10 + 0x346) == '\0')) {
       if ((*(uint *)(param_10 + 0x314) & 1) != 0) {
-        *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & 0xfffffffe;
+        *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & ~1;
         FUN_80006824(param_9,0x27b);
       }
       (**(code **)(**(int **)(*(int *)(iVar3 + 0x38) + 0x68) + 0x24))

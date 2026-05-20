@@ -1405,7 +1405,7 @@ void trickyFn_80148d8c(int obj,int state)
             (lbl_803E2570 * (f32)*(s16 *)(setup + 0x2c));
       }
       *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) & 0xfffff7ff;
-      *(u32 *)(state + 0x2e8) = *(u32 *)(state + 0x2e8) & 0xfffffffc;
+      *(u32 *)(state + 0x2e8) = *(u32 *)(state + 0x2e8) & ~3;
     }
   }
 }
