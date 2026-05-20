@@ -309,6 +309,33 @@ int warpstonelift_getExtraSize(void) { return 0x1; }
 int warpstonelift_func08(void) { return 0x0; }
 int sh_staff_getExtraSize(void) { return 0x74; }
 
+extern s32 lbl_803DC058[2];
+extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
+#pragma scheduling off
+#pragma peephole off
+void warpstonelift_init(int obj, s8 *def) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    int i;
+    *(s16 *)obj = (s16)((s32)def[0x18] << 8);
+    *(int *)((char *)obj + 0xF4) = 0;
+    for (i = 0; i < 2; i++) {
+        if (GameBit_Get(lbl_803DC058[i]) != 0) {
+            *(u8 *)state = (u8)(i + 1);
+        }
+    }
+    switch (*(u8 *)state) {
+    case 0:
+    case 2:
+        fn_8002B6D8(obj, 0, 0, 0, 0, 3);
+        break;
+    case 1:
+        fn_8002B6D8(obj, 0, 0, 0, 0, 4);
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 #pragma peephole off
 void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E54C8); }
