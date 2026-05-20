@@ -982,8 +982,8 @@ void FUN_8016725c(void)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_80166F28(void) {}
+void dll_D3_hitDetect_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_80166C7C(void) { return 0x4a4; }
-int fn_80166C84(void) { return 0x49; }
+int dll_D3_getExtraSize_ret_1188(void) { return 0x4a4; }
+int dll_D3_func08_ret_73(void) { return 0x49; }

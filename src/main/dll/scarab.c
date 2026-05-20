@@ -2927,9 +2927,9 @@ FUN_80161ea0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8015DAC4(void) {}
-void fn_8015F090(void) {}
-void fn_8015F4FC(void) {}
+void dll_CA_release_nop(void) {}
+void dll_CE_hitDetect_nop(void) {}
+void dll_CE_release_nop(void) {}
 void chukchuk_free(void) {}
 void chukchuk_hitDetect(void) {}
 void chukchuk_release(void) {}
@@ -2941,8 +2941,8 @@ void dll_CB_func0B_nop(void) {}
 void dll_CB_release_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_8015EF58(void) { return 0x41c; }
-int fn_8015EF60(void) { return 0x49; }
+int dll_CE_getExtraSize_ret_1052(void) { return 0x41c; }
+int dll_CE_func08_ret_73(void) { return 0x49; }
 int chukchuk_getExtraSize(void) { return 0x18; }
 int chukchuk_func08(void) { return 0x0; }
 int iceball_getExtraSize(void) { return 0x2; }
@@ -2952,7 +2952,7 @@ int dll_CB_getExtraSize_ret_1040(void) { return 0x410; }
 int dll_CB_func08_ret_331(void) { return 0x14b; }
 
 /* Pattern wrappers. */
-s16 fn_8015EF4C(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+s16 dll_CE_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
 s16 dll_CB_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -2967,7 +2967,7 @@ void iceball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 /* plain forwarder. */
 extern void fn_8015DAE8(void);
 extern void Camera_DisableViewYOffset(void);
-void fn_8015DAC8(void) { fn_8015DAE8(); }
+void dll_CA_initialise(void) { fn_8015DAE8(); }
 void iceball_free(void) { Camera_DisableViewYOffset(); }
 
 extern void chukchuk_update(void);
