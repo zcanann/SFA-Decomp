@@ -25,7 +25,7 @@ void dimbridgecogmai_free(int obj);
 void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dimbridgecogmai_hitDetect(void);
 void dimbridgecogmai_update(void);
-void dimbridgecogmai_init(void);
+void dimbridgecogmai_init(int *obj, int *def);
 void dimbridgecogmai_initialise(void);
 
 void dimdismountpoint_func11(int obj, int flag);
