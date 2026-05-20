@@ -1556,7 +1556,9 @@ extern f32 lbl_803E3858;
 extern f32 lbl_803E38B0;
 
 #pragma scheduling off
-void MagicPlant_free(int obj, int param_2) {
+#pragma peephole off
+void MagicPlant_free(int param_1, int param_2) {
+  int obj = param_1;
   int *state;
   state = *(int **)(obj + 0xb8);
   ObjGroup_RemoveObject(obj, 0x34);
@@ -1637,7 +1639,9 @@ extern int objBboxFn_800640cc(f32 *from, f32 *to, f32 radius, int mode, void *hi
 extern f32 lbl_803E38B4;
 
 #pragma scheduling off
-void duster_hitDetect(int obj) {
+#pragma peephole off
+void duster_hitDetect(int param_1) {
+  int obj = param_1;
   int state;
   u8 hit[0x54];
   int r;
@@ -1651,6 +1655,7 @@ void duster_hitDetect(int obj) {
   *(f32 *)(obj + 132) = *(f32 *)(obj + 16);
   *(f32 *)(obj + 136) = *(f32 *)(obj + 20);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 extern void MagicPlant_update();
@@ -1665,7 +1670,9 @@ extern f64 lbl_803E3918;
 extern int fn_8017FFD0(int obj, int state);
 
 #pragma scheduling off
-void trickywarp_update(int obj) {
+#pragma peephole off
+void trickywarp_update(int param_1) {
+  int obj = param_1;
   int state;
   int r;
   state = *(int *)(obj + 0xb8);
@@ -1682,6 +1689,7 @@ void trickywarp_update(int obj) {
     }
   }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
