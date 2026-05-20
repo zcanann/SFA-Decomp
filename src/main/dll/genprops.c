@@ -4015,10 +4015,11 @@ void FUN_80170f64(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern void objRenderFn_8003b8f4(f32);
+extern f32 lbl_803E3420;
 void checkpoint4_render(int param_1)
 {
-  FUN_8003b818(param_1);
-  return;
+  objRenderFn_8003b8f4(lbl_803E3420);
 }
 
 /*
