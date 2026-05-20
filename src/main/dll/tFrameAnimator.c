@@ -207,8 +207,6 @@ int levelname_getExtraSize(void) { return 0x18; }
 int levelname_func08(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
-extern void GameBit_Set(int eventId, int value);
-
 #pragma scheduling off
 #pragma peephole off
 int ProjectileSwitch_func08(int *obj) {
