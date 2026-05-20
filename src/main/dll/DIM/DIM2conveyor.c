@@ -456,5 +456,27 @@ extern int *gObjectTriggerInterface;
 void dimdismountpoint_func11(int obj, int flag) {
     (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))((flag ^ 1) + 2, obj, -1);
 }
+
+extern int Obj_GetPlayerObject(void);
+extern f32 lbl_803E4908;
+int dimdismountpoint_setScale(int obj) {
+    int *player = (int *)Obj_GetPlayerObject();
+    int *state = *(int **)((char *)obj + 0xB8);
+    f32 result;
+    int side;
+
+    result = *(f32 *)((char *)state + 0xC) +
+             (*(f32 *)((char *)state + 8) * *(f32 *)((char *)player + 0x14) +
+              (*(f32 *)((char *)state + 0) * *(f32 *)((char *)player + 0xC) +
+               *(f32 *)((char *)state + 4) * *(f32 *)((char *)player + 0x10)));
+
+    if (result >= lbl_803E4908) {
+        side = 0;
+    } else {
+        side = 1;
+    }
+    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(side, obj, -1);
+    return side;
+}
 #pragma peephole reset
 #pragma scheduling reset
