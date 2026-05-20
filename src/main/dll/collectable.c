@@ -2774,12 +2774,14 @@ int fn_801451D8(int obj,int state) {
 #pragma peephole reset
 
 /* Tricky_func11: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
+#pragma scheduling off
 void Tricky_func11(int *obj) {
     int *p = (int*)obj[0xb8/4];
     if (GameBit_Get(0x4e4)) {
         p[0x54/4] |= 0x10000;
     }
 }
+#pragma scheduling reset
 
 /* Tricky_func13: 40b - lbz/cmplwi(8/0xe) selector returning 1 or 0. */
 #pragma peephole off
