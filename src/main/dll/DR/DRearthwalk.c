@@ -756,11 +756,13 @@ void sh_beacon_free(int obj, int param_2)
 }
 
 /* 56b: single-call hit-effect poll. */
+#pragma scheduling off
 void sh_emptytumblew_update(int obj)
 {
   ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
                                               &lbl_803DDC00);
 }
+#pragma scheduling reset
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
