@@ -3207,6 +3207,29 @@ void CameraModeWorldMap_copyToCurrent(int *p1, int kind)
         *((u8*)lbl_803DD588 + 0x14) = 1;
     }
 }
+
+extern f32 lbl_803A43C0[];
+void CameraModeArwing_copyToCurrent(void *p1, u32 kind)
+{
+    if (kind == 12) {
+        lbl_803A43C0[0] = ((f32*)p1)[0];
+        lbl_803A43C0[1] = ((f32*)p1)[1];
+        lbl_803A43C0[2] = ((f32*)p1)[2];
+        return;
+    }
+    if (kind == 6) {
+        *(s16*)((char*)lbl_803A43C0 + 0x54) = ((s16*)p1)[0];
+        *(s16*)((char*)lbl_803A43C0 + 0x56) = ((s16*)p1)[1];
+        *(s16*)((char*)lbl_803A43C0 + 0x58) = ((s16*)p1)[2];
+        return;
+    }
+    if (kind == 4) {
+        *(f32*)((char*)lbl_803A43C0 + 0x38) = ((f32*)p1)[0];
+        return;
+    }
+    *(f32*)((char*)lbl_803A43C0 + 0x3C) = ((f32*)p1)[0];
+    *(f32*)((char*)lbl_803A43C0 + 0x40) = ((f32*)p1)[1];
+}
 #pragma scheduling reset
 #pragma peephole reset
 
