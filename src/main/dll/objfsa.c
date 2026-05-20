@@ -28,7 +28,7 @@ extern undefined4 FUN_800d8240();
 extern int RomCurve_projectPointToAdjacentWindow();
 extern int curves_distFn15();
 extern int RomCurve_findByIdWithIndex();
-extern void *gRomCurveTable[];
+extern void *romCurves[];
 extern undefined4 RomCurve_getAdjacentWindow();
 extern f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
 extern int FUN_80286818();
@@ -2634,7 +2634,7 @@ FUN_800dd62c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
         param_12 = 0;
         while (param_12 <= param_13) {
           param_10 = param_13 + param_12 >> 1;
-          fVar3 = (float)(int)gRomCurveTable[param_10];
+          fVar3 = (float)(int)romCurves[param_10];
           if (*(uint *)((int)fVar3 + 0x14) < uVar1) {
             param_12 = param_10 + 1;
           }
@@ -2972,7 +2972,7 @@ FUN_800ddf8c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
         iVar3 = 0;
         while (iVar3 <= (int)fVar4) {
           iVar2 = (int)fVar4 + iVar3 >> 1;
-          fVar6 = (float)(int)gRomCurveTable[iVar2];
+          fVar6 = (float)(int)romCurves[iVar2];
           if (*(uint *)((int)fVar6 + 0x14) < uVar5) {
             iVar3 = iVar2 + 1;
           }
@@ -3220,7 +3220,7 @@ void FUN_800de9a0(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
   local_b4 = piVar2[5];
   dVar14 = dVar13;
   FUN_80006a68(&local_bc,asStack_cc);
-  piVar8 = (int *)gRomCurveTable;
+  piVar8 = (int *)romCurves;
   for (iVar7 = 0; iVar7 < DAT_803de0f0; iVar7 = iVar7 + 1) {
     iVar6 = *piVar8;
     iVar5 = 0;
@@ -3420,7 +3420,7 @@ void FUN_800dece0(void)
               iVar14 = iVar14 + -1;
               iVar25 = iVar14 * 4;
               local_6d4 = local_610[iVar14];
-              iVar19 = (int)gRomCurveTable[local_610[iVar14]];
+              iVar19 = (int)romCurves[local_610[iVar14]];
               dVar27 = (double)local_6b0[iVar14];
               if (*(char *)(iVar19 + 0x34) == '\x01') {
                 bVar4 = true;
@@ -3627,7 +3627,7 @@ int FUN_800df2a4(double param_1,double param_2,double param_3,int param_4,int pa
         iVar3 = 0;
         while (iVar3 <= iVar4) {
           iVar2 = iVar4 + iVar3 >> 1;
-          iVar5 = (int)gRomCurveTable[iVar2];
+          iVar5 = (int)romCurves[iVar2];
           if (*(uint *)(iVar5 + 0x14) < uVar6) {
             iVar3 = iVar2 + 1;
           }
@@ -3696,7 +3696,7 @@ uint FUN_800df46c(undefined8 param_1,double param_2,double param_3)
   uint local_84 [24];
   
   iVar5 = 0;
-  piVar2 = (int *)gRomCurveTable;
+  piVar2 = (int *)romCurves;
   iVar11 = 0;
   while ((iVar5 < DAT_803de0f0 && (iVar11 < 0x14))) {
     iVar4 = iVar11;
@@ -3726,7 +3726,7 @@ uint FUN_800df46c(undefined8 param_1,double param_2,double param_3)
       iVar5 = 0;
       while (iVar5 <= iVar4) {
         iVar3 = iVar4 + iVar5 >> 1;
-        iVar7 = (int)gRomCurveTable[iVar3];
+        iVar7 = (int)romCurves[iVar3];
         if (*(uint *)(iVar7 + 0x14) < local_84[0]) {
           iVar5 = iVar3 + 1;
         }
@@ -3752,7 +3752,7 @@ LAB_800e0fa8:
         iVar4 = DAT_803de0f0 + -1;
         while (iVar3 <= iVar4) {
           iVar7 = iVar4 + iVar3 >> 1;
-          iVar10 = (int)gRomCurveTable[iVar7];
+          iVar10 = (int)romCurves[iVar7];
           if (*(uint *)(iVar10 + 0x14) < uVar6) {
             iVar3 = iVar7 + 1;
           }
@@ -3906,7 +3906,7 @@ void FUN_800df660(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
           iVar9 = 0;
           while (iVar9 <= iVar11) {
             iVar14 = iVar11 + iVar9 >> 1;
-            iVar8 = (int)gRomCurveTable[iVar14];
+            iVar8 = (int)romCurves[iVar14];
             if (*(uint *)(iVar8 + 0x14) < uVar12) {
               iVar9 = iVar14 + 1;
             }
@@ -3970,7 +3970,7 @@ LAB_800e13a0:
       iVar8 = 0;
       while (iVar8 <= iVar10) {
         iVar11 = iVar10 + iVar8 >> 1;
-        iVar9 = (int)gRomCurveTable[iVar11];
+        iVar9 = (int)romCurves[iVar11];
         if (*(uint *)(iVar9 + 0x14) < uVar12) {
           iVar8 = iVar11 + 1;
         }
@@ -4035,7 +4035,7 @@ LAB_800e1564:
           iVar8 = 0;
           while (iVar8 <= iVar10) {
             iVar11 = iVar10 + iVar8 >> 1;
-            iVar14 = (int)gRomCurveTable[iVar11];
+            iVar14 = (int)romCurves[iVar11];
             if (*(uint *)(iVar14 + 0x14) < uVar12) {
               iVar8 = iVar11 + 1;
             }
@@ -4124,7 +4124,7 @@ void FUN_800dfc4c(double param_1,int param_2,float *param_3,float *param_4,float
     iVar5 = 0;
     while (iVar5 <= iVar6) {
       iVar7 = iVar6 + iVar5 >> 1;
-      iVar9 = (int)gRomCurveTable[iVar7];
+      iVar9 = (int)romCurves[iVar7];
       if (*(uint *)(iVar9 + 0x14) < uVar8) {
         iVar5 = iVar7 + 1;
       }
@@ -4254,7 +4254,7 @@ LAB_800e1c9c:
     projected = 0;
     while (projected <= linkCount) {
       mid = linkCount + projected >> 1;
-      curve = (int)gRomCurveTable[mid];
+      curve = (int)romCurves[mid];
       if (*(uint *)(curve + 0x14) < linkId) {
         projected = mid + 1;
       }
