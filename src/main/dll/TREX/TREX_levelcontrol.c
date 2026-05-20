@@ -389,12 +389,68 @@ void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8); }
 #pragma peephole reset
 
+extern undefined4 *pDll_expgfx;
+extern f32 timeDelta;
+extern f32 lbl_803E58B4;
+extern f32 lbl_803E58B8;
+extern void Obj_FreeObject(int *obj);
+#pragma scheduling off
+#pragma peephole off
+void SB_CannonBall_hitDetect(int *obj) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    f32 t = *(f32 *)((char *)state + 0x1c);
+
+    if (t > lbl_803E58B4) {
+        *(f32 *)((char *)state + 0x1c) = t - timeDelta;
+        if (*(f32 *)((char *)state + 0x1c) <= lbl_803E58B4) {
+            Obj_FreeObject(obj);
+        }
+        return;
+    }
+
+    {
+        int *side = *(int **)((char *)obj + 0x54);
+        int *target = *(int **)((char *)side + 0x50);
+        s16 type;
+        if (target == NULL) return;
+        type = *(s16 *)((char *)target + 0x46);
+        if (type == 281) return;
+        if (type == 275) return;
+    }
+
+    if (lbl_803E58B4 != t) return;
+
+    Sfx_PlayFromObject(obj, 797);
+    {
+        int *p = *(int **)((char *)obj + 0x54);
+        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~1);
+    }
+    *(f32 *)((char *)state + 0x1c) = lbl_803E58B8;
+    *(u8 *)((char *)obj + 0x36) = 25;
+
+    {
+        int i;
+        for (i = 50; i != 0; i--) {
+            (*((void (***)(int *, int, int, int, int, int))pDll_expgfx))[2](
+                obj, 167, 0, 1, -1, 0);
+        }
+    }
+    {
+        int i;
+        for (i = 10; i != 0; i--) {
+            (*((void (***)(int *, int, int, int, int, int))pDll_expgfx))[2](
+                obj, 171, 0, 1, -1, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern u8 *objCreateLight(int *obj, int v);
 extern void modelLightStruct_setField50(u8 *p, int v);
 extern void modelLightStruct_setColorsA8AC(u8 *p, int a, int b, int c, int d);
 extern void lightSetFieldBC_8001db14(u8 *p, int v);
 extern void lightDistAttenFn_8001dc38(u8 *p, f32 a, f32 b);
-extern void Sfx_PlayFromObject(int *obj, int sfxId);
 extern f32 lbl_803E58C8;
 extern f32 lbl_803E58CC;
 extern f32 lbl_803E58D0;
