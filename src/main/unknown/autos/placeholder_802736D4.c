@@ -20,7 +20,6 @@ extern void hwSetVolume(int slot, undefined4 mode, f32 front, f32 left, f32 righ
 
 extern u8 lbl_803BD150[];
 extern u8 dataSmpSDirTable[];
-extern u8 dataKeymapTable[];
 extern SynthJob synthJobTable[];
 extern u32 synthFlags;
 extern u16 dataKeymapNum;
@@ -109,7 +108,6 @@ void synthRefreshJobVolumes(void)
 
 int dataInsertKeymap(u16 keymapId, void *data)
 {
-    DataRefEntry *table;
     DataRefEntry *entry;
     u8 *tableBase;
     u16 count;
@@ -122,16 +120,15 @@ int dataInsertKeymap(u16 keymapId, void *data)
     tableBase = dataSmpSDirTable;
     sndBegin();
     count = dataKeymapNum;
-    table = (DataRefEntry *)(tableBase + 0x4600);
     key = keymapId;
-    entry = table;
+    entry = (DataRefEntry *)(tableBase + 0x4600);
     index = 0;
     while (index < count && entry->key < key) {
         entry++;
         index++;
     }
     if (index < count) {
-        entry = table + index;
+        entry = (DataRefEntry *)(tableBase + 0x4600 + index * sizeof(DataRefEntry));
         if (key == entry->key) {
             entry->refCount++;
             sndEnd();
@@ -142,7 +139,7 @@ int dataInsertKeymap(u16 keymapId, void *data)
             return 0;
         }
         moveCount = count - index;
-        move = (u32 *)(table + (count - 1));
+        move = (u32 *)(tableBase + 0x4600 + (count - 1) * sizeof(DataRefEntry));
         if (index <= (int)(count - 1)) {
             batches = moveCount >> 3;
             if (batches != 0) {
@@ -187,38 +184,40 @@ insert:
         }
         dataKeymapNum++;
     }
-    table[index].key = keymapId;
-    table[index].data = data;
-    table[index].refCount = 1;
+    entry = (DataRefEntry *)(tableBase + 0x4600 + index * sizeof(DataRefEntry));
+    entry->key = keymapId;
+    entry->data = data;
+    entry->refCount = 1;
     sndEnd();
     return 1;
 }
 
 int dataRemoveKeymap(u32 keymapId)
 {
-    DataRefEntry *table;
     DataRefEntry *entry;
+    u8 *tableBase;
     u16 count;
     int index;
     int moveCount;
+    u32 key;
     u16 refs;
 
+    tableBase = dataSmpSDirTable;
     sndBegin();
     count = dataKeymapNum;
-    table = (DataRefEntry *)dataKeymapTable;
-    keymapId &= 0xffff;
-    entry = table;
+    key = keymapId & 0xffff;
+    entry = (DataRefEntry *)(tableBase + 0x4600);
     index = 0;
-    while (index < count && entry->key != keymapId) {
+    while (index < count && entry->key != key) {
         entry++;
         index++;
     }
     if (index != count) {
-        entry = table + index;
+        entry = (DataRefEntry *)(tableBase + 0x4600 + index * sizeof(DataRefEntry));
         refs = entry->refCount - 1;
         entry->refCount = refs;
         if (refs == 0) {
-            entry = table + index + 1;
+            entry = (DataRefEntry *)(tableBase + 0x4600 + (index + 1) * sizeof(DataRefEntry));
             moveCount = count - (index + 1);
             while (moveCount > 0) {
                 entry[-1] = entry[0];
