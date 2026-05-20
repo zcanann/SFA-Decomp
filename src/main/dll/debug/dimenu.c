@@ -670,6 +670,27 @@ int Dummy39_run(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern s16 lbl_803DD8C2;
+extern void Sfx_PlayFromObjectLimited(int obj, u16 sfx, int);
+#pragma scheduling off
+#pragma peephole off
+void cMenuPlaySelectedItemSfx(int obj) {
+    int sfx = 0;
+    switch (lbl_803DD8C2) {
+        case 0: sfx = 0x3FB; break;
+        case 5: sfx = 0x3FA; break;
+        case 1: sfx = 0x3F8; break;
+        case 4: sfx = 0x3F9; break;
+        case 2: sfx = 0x3F7; break;
+        case 3: sfx = 0x3FC; break;
+    }
+    if (sfx != 0) {
+        Sfx_PlayFromObjectLimited(obj, (u16)sfx, 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void WeirdUnusedMenu_initialise(void) {
