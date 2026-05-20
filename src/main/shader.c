@@ -2382,6 +2382,7 @@ extern f32 playerMapOffsetZ;
 extern f32 lbl_803DEBCC;
 extern char gViewFrustumPlanes[];
 
+#pragma scheduling off
 int ViewFrustum_IsSphereVisible(float* center, float radius) {
 	u8 i;
 	for (i = 0; i < 5; i++) {
@@ -2394,6 +2395,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius) {
 	}
 	return 1;
 }
+#pragma scheduling reset
 
 /* 112b indexed teardown/free of map block. */
 extern char lbl_803822C8[];
