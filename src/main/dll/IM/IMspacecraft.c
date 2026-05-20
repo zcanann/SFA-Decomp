@@ -857,3 +857,62 @@ extern f32 lbl_803E44C4;
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4440); }
 void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E44C4); }
 #pragma peephole reset
+
+extern f32 lbl_803E4474;
+#pragma scheduling off
+#pragma peephole off
+void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    if (visible != 0 && inner[0x114] < 1) {
+        objRenderFn_8003b8f4(lbl_803E4474);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_8001CB3C(void *p);
+#pragma scheduling off
+#pragma peephole off
+void SpiritDoorLock_free(int obj) {
+    void *inner = *(void **)(obj + 0xb8);
+    if (*(void **)inner != NULL) {
+        fn_8001CB3C(*(void **)inner);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E44C0;
+extern f32 lbl_803DDB28;
+extern int lbl_803DDB2C;
+extern void Music_Trigger(int id, int p2);
+#pragma scheduling off
+#pragma peephole off
+void MMP_levelcontrol_free(int obj) {
+    lbl_803DDB28 = lbl_803E44C0;
+    lbl_803DDB2C = 0;
+    Music_Trigger(0xd5, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 lbl_803DDB20;
+#pragma scheduling off
+#pragma peephole off
+void RollingBarrel_free(int obj) {
+    char *inner = *(char **)(obj + 0xb8);
+    int count;
+    int *arr = ObjGroup_GetObjects(0x2f, &count);
+    int i;
+    for (i = 0; i < count; i++) {
+        if (arr[i] == obj) {
+            ObjGroup_RemoveObject(obj, 0x2f);
+            break;
+        }
+    }
+    if (inner[0x114] == 1) {
+        lbl_803DDB20 = lbl_803DDB20 - 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
