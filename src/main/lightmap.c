@@ -2693,6 +2693,97 @@ void FUN_8005e1d8(undefined4 param_1,undefined4 param_2,int param_3)
 }
 
 
+extern u32 lbl_8037E0C0[];
+extern s32 lbl_803DCE30;
+extern void sceneDrawTransparentPolys(void);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern int Camera_GetViewMatrix(void);
+extern void PSMTXMultVec(int m, f32 *in, f32 *out);
+#pragma scheduling off
+#pragma peephole off
+void renderShadowType3(u8 *obj, u32 b, s32 offset) {
+    f32 stk[3];
+    s32 t, v;
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    if (*(int *)(obj + 0x30) != 0) {
+        stk[0] = *(f32 *)(obj + 0x18);
+        stk[1] = *(f32 *)(obj + 0x1c);
+        stk[2] = *(f32 *)(obj + 0x20);
+    } else {
+        stk[0] = *(f32 *)(obj + 0x18) - playerMapOffsetX;
+        stk[1] = *(f32 *)(obj + 0x1c);
+        stk[2] = *(f32 *)(obj + 0x20) - playerMapOffsetZ;
+    }
+    PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
+    t = (s32)-stk[2] + offset;
+    if (t < 0) v = 0;
+    else if (t > 0x7ffffff) v = 0x7ffffff;
+    else v = t;
+    lbl_8037E0C0[lbl_803DCE30 * 4]     = (u32)obj;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8005DE94(u32 a, u32 b, f32 *p) {
+    s32 t, v;
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    t = (s32)-p[2];
+    if (t < 0) v = 0;
+    else if (t > 0x7ffffff) v = 0x7ffffff;
+    else v = t;
+    lbl_8037E0C0[lbl_803DCE30 * 4]     = a;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = b;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | 0x38000000;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 7;
+    lbl_803DCE30++;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u32 renderFlags;
+extern s8 lbl_803DCEA4;
+extern int lbl_803DCEA8;
+extern void Camera_UpdateProjection(int a, int b);
+extern void Camera_EnableViewYOffset(void);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern int Camera_GetCurrentViewSlot(void);
+extern void playerVecFn_8005a9b0(void);
+extern void updateLights(void);
+extern void sceneDraw(void);
+extern void screenFn_8000e944(int v);
+#pragma scheduling off
+#pragma peephole off
+void sceneRender(void) {
+    renderFlags |= 0x21;
+    if (lbl_803DCEA4 == 1 || lbl_803DCEA4 == 3) {
+        renderFlags &= 0xfffffffe;
+    }
+    Camera_UpdateProjection(0, 0);
+    updateVisibleGeometry();
+    playerVecFn_8005a9b0();
+    Camera_EnableViewYOffset();
+    Camera_UpdateViewMatrices();
+    Camera_RebuildProjectionMatrix();
+    updateLights();
+    lbl_803DCEA8 = Camera_GetCurrentViewSlot();
+    sceneDraw();
+    screenFn_8000e944(0);
+    renderFlags &= 0xfffffffd;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* Trivial 4b 0-arg blr leaves. */
 void doNothing_beforeTitleScreen(void) {}
 void doNothing_8005D148(void) {}
@@ -2752,6 +2843,22 @@ extern u8 lbl_80386468[0x100];
 void *fn_8005AFA0(void) {
     return lbl_80386468;
 }
+
+extern f32 lbl_803DEBB4;
+extern f32 fastFloorf(f32 v);
+#pragma scheduling off
+#pragma peephole off
+void fn_8005B0A8(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z) {
+    s32 ix, iz;
+    f32 s;
+    ix = (s32)fastFloorf(x / lbl_803DEBB4);
+    iz = (s32)fastFloorf(z / lbl_803DEBB4);
+    s = lbl_803DEBB4;
+    *outX = s * (f32)ix;
+    *outZ = s * (f32)iz;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Drop-arg-1 trampoline:  fn(_, a, b, c) -> fn_800704FC(a, b, c). */
 extern void fn_800704FC(int a, int b, int c);
