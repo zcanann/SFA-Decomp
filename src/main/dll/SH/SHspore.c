@@ -33,7 +33,7 @@ extern void fn_8002B6D8(void *obj, int arg1, int arg2, int arg3, int arg4, int a
 extern int cMenuGetSelectedItem(void);
 extern int getYButtonItem(s16 *outTrigger);
 extern void *getTrickyObject(void);
-extern int fn_802964F0(void *obj, int param);
+extern int playerHasSpell(void *obj, int param);
 extern void *ObjGroup_FindNearestObject(int group, void *obj, f32 *distanceOut);
 extern int ObjTrigger_IsSet(void *obj);
 extern int RandomTimer_UpdateRangeTrigger(f32 *state, f32 min, f32 max);
@@ -552,7 +552,7 @@ void fn_801D4364(void *obj, void *state)
     *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFDC;
   } else if (GameBit_Get(0x5bd) != 0) {
     *(u8 *)((u8 *)obj + 0xaf) |= 0x8;
-    if (fn_802964F0(player, 3) != 0 &&
+    if (playerHasSpell(player, 3) != 0 &&
         getXZDistance((f32 *)((u8 *)player + 0x18), (f32 *)((u8 *)obj + 0x18)) < lbl_803E53FC) {
       GameBit_Set(0x23b, 1);
     }

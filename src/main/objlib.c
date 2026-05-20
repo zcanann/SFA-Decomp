@@ -64,7 +64,7 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern undefined4 FUN_802949e8();
 extern f32 sin(f32 x);
-extern int fn_80295CD4(int obj);
+extern int playerIsDisguised(int obj);
 extern int objGetAnimState80A(void *obj);
 
 #define OBJGROUP_COUNT 0x54
@@ -2305,7 +2305,7 @@ bool ObjTrigger_UpdateIdBlockFlag(int param_1)
   byte flags;
   
   iVar1 = (int)Obj_GetPlayerObject();
-  iVar1 = fn_80295CD4(iVar1);
+  iVar1 = playerIsDisguised(iVar1);
   if (iVar1 != 0) {
     flags = *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) | OBJTRIGGER_ID_BLOCK_FLAG;
     *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) = flags;

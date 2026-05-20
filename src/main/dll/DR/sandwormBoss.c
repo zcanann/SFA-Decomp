@@ -3223,14 +3223,14 @@ u32 gunpowderbarrel_isHeld(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x4
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 extern u32 GameBit_Get(int);
 extern void* Obj_GetPlayerObject(void);
-extern void fn_80296A24(void*, int);
+extern void playerAddRemoveMagic(void*, int);
 #pragma peephole off
 int fn_8019FC84(int *obj, int p2, void *p3) {
     char *p = *(char**)((char*)obj + 0xb8);
     if (*(s8*)(p + 0x74) != 0) return 0;
     if (*(u8*)((char*)p3 + 0x80) == 2) {
         *(u8*)(p + 0x74) = 1;
-        fn_80296A24(Obj_GetPlayerObject(), 2);
+        playerAddRemoveMagic(Obj_GetPlayerObject(), 2);
     }
     return 0;
 }
