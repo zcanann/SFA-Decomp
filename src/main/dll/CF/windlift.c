@@ -1437,6 +1437,30 @@ int portalspelldoor_func08(void) { return 0x0; }
 int LanternFireFly_getExtraSize(void) { return 0x74; }
 int LanternFireFly_func08(void) { return 0x0; }
 
+/* LanternFireFly_modelMtxFn: receives (obj, f1, f2, f3) and stores the
+ * three floats into obj->_b8 at +0x54/+0x58/+0x5c. */
+void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    *(f32*)(sub + 0x54) = a;
+    *(f32*)(sub + 0x58) = b;
+    *(f32*)(sub + 0x5c) = c;
+}
+
+/* LanternFireFly_setScale: subtract sub->_54..5c from vec[0..2] (overwriting
+ * vec), copy the result to sub->_34..3c, set sub->_6c = 4. */
+#pragma scheduling off
+void LanternFireFly_setScale(u8* obj, f32* vec) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    vec[0] = vec[0] - *(f32*)(sub + 0x54);
+    vec[1] = vec[1] - *(f32*)(sub + 0x58);
+    vec[2] = vec[2] - *(f32*)(sub + 0x5c);
+    *(f32*)(sub + 0x34) = vec[0];
+    *(f32*)(sub + 0x38) = vec[1];
+    *(f32*)(sub + 0x3c) = vec[2];
+    sub[0x6c] = 4;
+}
+#pragma scheduling reset
+
 ObjectDescriptor gDummy108ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)Dummy108_initialise,
