@@ -4307,3 +4307,32 @@ int fn_802044EC(int p1)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern s16 lbl_80329848[];
+#pragma scheduling off
+#pragma peephole off
+void dfplevelcontrol_initialise(void) {
+    s16 *p = lbl_80329848;
+    p[0] = 1;
+    p[1] = 2;
+    p[2] = 3;
+    p[3] = 0;
+    p[4] = 0;
+    p[5] = 0;
+    p[6] = 0;
+    p[7] = 0;
+    p[8] = 0;
+}
+
+extern void Obj_FreeObject(int obj);
+void dfpobjcreator_free(int obj, int flag) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    if (flag == 0) {
+        if (*(void **)state != NULL) {
+            Obj_FreeObject(*(int *)state);
+            *(int *)state = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

@@ -2355,3 +2355,11 @@ void Rcp_DisableBlurFilter(void) { bEnableBlurFilter = 0x0; }
 
 /* misc 8b leaves */
 void fn_800541A4(s16 *p, s16 v) { *(s16*)((char*)p + 0x14) = v; }
+
+extern u32 lbl_803DCDA8;
+extern u32 lbl_803DCDB0;
+extern u32 lbl_803DCDB4;
+
+void fn_80053ED0(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 | bits; }
+void fn_80053EBC(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 & ~bits; }
+void fn_800542F4(void) { lbl_803DCDA8 = 0; lbl_803DCDB4 = 0; lbl_803DCDB0 = 0; }
