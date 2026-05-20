@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRlaserturret.h"
+#include "main/objanim.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -16,7 +17,6 @@ extern uint GameBit_Get(int bit);
 extern int GameBit_Set(int bit, int value);
 extern int randomGetRange(int lo, int hi);
 extern void *Obj_GetPlayerObject(void);
-extern void ObjAnim_SetCurrentMove(void *obj, int mode, float val, uint flags);
 extern void ObjHits_DisableObject(void *);
 extern void ObjHits_EnableObject(void *);
 extern int ObjTrigger_IsSet(void *);
@@ -70,7 +70,7 @@ int fn_801E6B10(void *obj, void *param2)
     state->promptState = 0xff;
     *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
     if (*(s16 *)((char *)obj + 0xa0) != 0) {
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E59DC, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E59DC, 0);
     }
     ObjHits_EnableObject(obj);
     *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) & ~0x08;
@@ -142,12 +142,12 @@ int fn_801E6D08(void *obj, void *param2)
         if (*(s8 *)((char *)param2 + 0x346) != 0) {
             if (*(s16 *)((char *)obj + 0xa0) == 0x11) {
                 if (*(f32 *)((char *)param2 + 0x2a0) > lbl_803E59DC) {
-                    ObjAnim_SetCurrentMove(obj, 0x12, 0.0f, 0);
+                    ObjAnim_SetCurrentMove((int)obj, 0x12, 0.0f, 0);
                     goto L_DE8;
                 }
             }
             if (*(s16 *)((char *)obj + 0xa0) != 0) {
-                ObjAnim_SetCurrentMove(obj, 0, lbl_803E59DC, 0);
+                ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E59DC, 0);
             }
         L_DE8:
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
@@ -157,7 +157,7 @@ int fn_801E6D08(void *obj, void *param2)
         }
     } else {
         if (*(s16 *)((char *)obj + 0xa0) != 0x12 && *(s16 *)((char *)obj + 0xa0) != 0) {
-            ObjAnim_SetCurrentMove(obj, 0, lbl_803E59DC, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E59DC, 0);
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
         }
     }
@@ -166,11 +166,11 @@ int fn_801E6D08(void *obj, void *param2)
         (state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) == 0) {
         Sfx_PlayFromObject((int)obj, 0x40d);
         if (*(s16 *)((char *)obj + 0xa0) == 0x12) {
-            ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E5A08, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E5A08, 0);
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803E5A0C;
         } else {
             rng = randomGetRange(0, 1);
-            ObjAnim_SetCurrentMove(obj, (int)lbl_803DC0A0[rng], lbl_803E59DC, 0);
+            ObjAnim_SetCurrentMove((int)obj, (int)lbl_803DC0A0[rng], lbl_803E59DC, 0);
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803DC0A4[rng];
         }
         state->flags = state->flags | DR_LASERTURRET_FLAG_ACTION_ACTIVE;

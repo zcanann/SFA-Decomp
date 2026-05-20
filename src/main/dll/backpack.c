@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/backpack.h"
+#include "main/objanim.h"
 
 extern void tumbleweed_updateStateMachine(int obj);
 extern void tumbleweed_updateTargetedStateMachine(int obj);
@@ -38,7 +39,6 @@ extern void gameBitIncrement(int eventId);
 extern int ObjMsg_Pop(int obj, u32 *outMessage, u32 *outSender, u32 *outParam);
 extern void ObjMsg_SendToObject(int obj, int message, int sender, int *param);
 extern void ObjMsg_SendToObjects(int targetId, u32 flags, void *sender, u32 message, u32 param);
-extern void ObjAnim_SetCurrentMove(int obj, int moveId, f32 moveProgress, int flags);
 extern void tumbleweed_updateRollingMotion(int obj, int aux);
 extern void fn_80163990(int obj, int aux);
 extern void fn_80165B3C(int obj, int state);

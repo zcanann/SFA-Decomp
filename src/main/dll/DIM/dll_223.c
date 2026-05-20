@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/dll_223.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006b14();
@@ -35,7 +36,6 @@ extern undefined4 FUN_801bbd68();
 extern undefined4 FUN_801bbea0();
 extern undefined4 DIMboss_updateState();
 extern void *Obj_GetPlayerObject(void);
-extern int ObjAnim_SetCurrentMove(void *obj, int moveId, f32 moveProgress, int flags);
 extern int ObjHits_GetPriorityHit(void *obj, void **hitObj, int *outModelPart, int *outIndex);
 extern void objLightFn_8009a1dc(void *obj, f32 param_2, void *param_3, int param_4, int param_5);
 extern void Sfx_PlayFromObject(void *obj, int sfxId);
@@ -182,25 +182,25 @@ int DIMbosstonsil_chooseHitReaction(void *obj,u8 *state)
     switch (moveId) {
     case 0:
       if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
-        ObjAnim_SetCurrentMove(obj,1,lbl_803E4C90,0);
+        ObjAnim_SetCurrentMove((int)obj,1,lbl_803E4C90,0);
         state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
       }
       break;
     case 1:
       if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
-        ObjAnim_SetCurrentMove(obj,3,lbl_803E4C90,0);
+        ObjAnim_SetCurrentMove((int)obj,3,lbl_803E4C90,0);
         state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
       }
       break;
     case 2:
       if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
-        ObjAnim_SetCurrentMove(obj,2,lbl_803E4C90,0);
+        ObjAnim_SetCurrentMove((int)obj,2,lbl_803E4C90,0);
         state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
       }
       break;
     default:
       if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
-        ObjAnim_SetCurrentMove(obj,4,lbl_803E4C90,0);
+        ObjAnim_SetCurrentMove((int)obj,4,lbl_803E4C90,0);
         state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
       }
       break;
@@ -226,7 +226,7 @@ int DIMbosstonsil_chooseHitReaction(void *obj,u8 *state)
 int DIMbosstonsil_startIdleHitReaction(void *obj,u8 *state)
 {
   if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
-    ObjAnim_SetCurrentMove(obj,0,lbl_803E4C90,0);
+    ObjAnim_SetCurrentMove((int)obj,0,lbl_803E4C90,0);
     state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
   }
   *(f32 *)(state + DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET) = lbl_803E4C98;
