@@ -3853,6 +3853,31 @@ void WarpstoneUI_release(void)
     textureFree(lbl_803DD980);
 }
 
+/* EN v1.0 0x801347A4  size: 100b  Per-frame integrator with clamp.
+ * Adds (or subtracts, when lbl_803DD988 != 0) lbl_803E22D8*timeDelta
+ * to lbl_803DD97C, then clamps to [lbl_803E22E0, lbl_803E22DC]. */
+extern f32 lbl_803E22D8;
+extern f32 lbl_803E22DC;
+extern f32 timeDelta;
+#pragma scheduling off
+int WarpstoneUI_frameStart(void)
+{
+    f32 v;
+    if (lbl_803DD988 == 0) {
+        lbl_803DD97C = lbl_803DD97C - (lbl_803E22D8 * timeDelta);
+    } else {
+        lbl_803DD97C = lbl_803DD97C + (lbl_803E22D8 * timeDelta);
+    }
+    v = lbl_803DD97C;
+    if (lbl_803E22DC < v) {
+        lbl_803DD97C = lbl_803E22DC;
+    } else if (lbl_803E22E0 > v) {
+        lbl_803DD97C = lbl_803E22E0;
+    }
+    return 0;
+}
+#pragma scheduling reset
+
 /* EN v1.0 0x80134834  size: 60b  Acquire two buffer slots and prime
  * the float at lbl_803DD97C with the constant from lbl_803E22E0. */
 #pragma scheduling off
@@ -3926,7 +3951,9 @@ void fn_801375A0(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58. */
+/* EN v1.0 0x80138908  size: 24b  Bit setter at bit 6 (0x40) of obj->_b8->_58.
+ * 83% — target has a leading `clrlwi r4,r4,24` that MWCC elides since
+ * the rlwimi only uses bit 0 of r4. No C form found to force it. */
 void fn_80138908(int *obj, int v) {
     u8* x = *(u8**)((char*)obj + 0xb8);
     u8 b = *(u8*)(x + 0x58);
