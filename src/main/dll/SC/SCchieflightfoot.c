@@ -21,8 +21,8 @@ extern void characterDoEyeAnims(int obj,int collisionShapeState);
 extern void fn_8003B228(int obj,int collisionShapeState);
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 extern void objAudioFn_8006ef38(int obj,int joint,int pointCount,int pathPoints,int scratch,f32 scaleX,f32 scaleY);
-extern undefined4 fn_80114F64();
-extern undefined4 fn_8011507C();
+extern undefined4 dll_2E_func05();
+extern undefined4 dll_2E_func08();
 extern void dll_2E_func03(SHthorntailObject *obj,SHthorntailRuntime *runtime);
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
@@ -369,8 +369,8 @@ void sh_thorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
                                                       gSHthorntailPathData,local_28);
   (*gSHthorntailPathControlInterface)->bindObject(obj,moveScratch);
   *(code **)((int)obj + 0xbc) = (code *)SHthorntail_updateLevelControlState;
-  fn_80114F64((int)obj,(int)runtime,0xffffdc72,0x2aaa,3);
-  fn_8011507C((int)runtime,400,0x78);
+  dll_2E_func05((int)obj,(int)runtime,0xffffdc72,0x2aaa,3);
+  dll_2E_func08((int)runtime,400,0x78);
   ObjGroup_AddObject((int)obj,0x4d);
 }
 #pragma peephole reset

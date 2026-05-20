@@ -1173,7 +1173,7 @@ void fn_80113F88(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_80113D5C(void) { return 0x0; }
-int fn_80113F8C(void) { return 0x0; }
+int dll_2E_func0F_ret_0(void) { return 0x0; }
 
 /* 12b chained getters. */
 f32 fn_8011383C(int *obj) { return *(f32*)((char*)((int**)obj)[0xb8/4] + 0x3e4); }
