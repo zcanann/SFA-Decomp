@@ -395,6 +395,8 @@ extern f32 lbl_803E5C38;
 extern f32 lbl_803E5C3C;
 extern f32 lbl_803E5C40;
 extern f32 lbl_803E5C44;
+extern f32 lbl_803E5C48;
+extern f32 lbl_803E5B70;
 
 extern void setMatrixFromObjectPos(void *mtx, s16 *vec);
 extern void mtxRotateByVec3s(void *mtx, s16 *vec);
@@ -515,6 +517,34 @@ void fn_801EC928(int p1, int p2)
     *(f32 *)(p2 + 0x56c) = lbl_803E5C00;
     *(f32 *)(p2 + 0x4ac) = fz;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_func12
+ * EN v1.0 Address: 0x801ECC38
+ * EN v1.0 Size: 92b
+ */
+#pragma peephole off
+#pragma scheduling off
+void SnowBike_func12(int obj, f32 *outFloat, s32 *outBool)
+{
+    int t = *(int *)(obj + 0xb8);
+    f32 v, r;
+    *outFloat = *(f32 *)(t + 0x414) / lbl_803E5C48;
+    v = *outFloat;
+    r = lbl_803E5B70;
+    if (v >= r) {
+        r = lbl_803E5AEC;
+        if (v <= r) {
+            r = v;
+        }
+    }
+    *outFloat = r;
+    *outBool = *(f32 *)(t + 0x414) < lbl_803E5AE8;
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
