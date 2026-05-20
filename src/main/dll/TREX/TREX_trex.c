@@ -1719,6 +1719,11 @@ extern void fn_80098928(int* obj, f32 f, int a, int b, int c, int d);
 extern f32 lbl_803E5998;
 extern f32 lbl_803E595C;
 extern f32 lbl_803E5960;
+extern f32 lbl_803E59D8;
+extern f32 lbl_803E59DC;
+extern int* lbl_803DCAB4;
+extern int Stack_IsEmpty(int stack);
+extern int Stack_Pop(int stack, int *out);
 int fn_801E5060(int p1, int p2, int p3);
 void fn_801E5A2C(void);
 #pragma peephole off
@@ -1775,7 +1780,39 @@ int SB_SeqDoor_SeqFn(int p1, int p2, int p3)
 #pragma scheduling reset
 #pragma peephole reset
 void Lamp_SeqFn(void) {}
-void fn_801E66EC(void) {}
+#pragma scheduling off
+#pragma peephole off
+int fn_801E66EC(int arg1, int arg2)
+{
+    int state;
+    f32 local;
+    int stk;
+    int popOut;
+
+    state = *(int *)(arg1 + 0xb8);
+    local = lbl_803E59D8;
+
+    if (*(s8 *)(arg2 + 0x27a) != 0) {
+        if ((*(u16 *)(arg1 + 0xb0) & 0x800) != 0) {
+            ((void (*)(int, int, f32 *, int, int))((void **)*lbl_803DCAB4)[3])(
+                arg1, 2031, &local, 80, 0);
+        }
+    }
+
+    *(u8 *)(state + 0x9d6) = 0;
+    *(f32 *)(arg2 + 0x280) = lbl_803E59DC;
+    if (*(u8 *)(state + 0x9d6) == 0) {
+        stk = *(int *)(state + 0x9b0);
+        popOut = 0;
+        if (Stack_IsEmpty(stk) == 0) {
+            Stack_Pop(stk, &popOut);
+        }
+        return popOut + 1;
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
 void Lamp_free(int* obj)
