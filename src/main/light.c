@@ -1140,6 +1140,23 @@ void vfpdraghead_free(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void fn_801FC6F4(int);
+#pragma scheduling off
+#pragma peephole off
+void seqpoint_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(void (**)(int))(obj + 0xBC) = fn_801FC6F4;
+    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
+    *(f32 *)state = (f32)*(s16 *)(data + 0x1a);
+    *(s16 *)(state + 8) = *(s16 *)(data + 0x1c);
+    *(u8 *)(state + 0xe) = *(u8 *)(data + 0x19);
+    *(s16 *)(state + 4) = *(s16 *)(data + 0x1e);
+    *(s16 *)(state + 6) = *(s16 *)(data + 0x20);
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;
 extern void objRenderFn_8003b8f4(f32);
