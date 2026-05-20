@@ -1047,7 +1047,7 @@ void fn_8012DDB8(u32 val)
     _fn_8012DDB8_zero:
         li      m, 0
     _fn_8012DDB8_store:
-        sth     m, lbl_803DD776 (r2)
+        sth     m, lbl_803DD776
     }
 }
 #pragma peephole reset
