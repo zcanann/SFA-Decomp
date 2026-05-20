@@ -1542,23 +1542,23 @@ int collectibleFn_80149cec(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mo
 void baddieInstantiateWeapon(int obj,int state)
 {
   int parentSetup;
-  int child;
+  void *child;
   int setup;
 
   parentSetup = *(int *)(obj + 0x4c);
   if ((*(s16 *)(state + 0x2b4) != *(s16 *)(state + 0x2b6)) &&
       (*(u8 *)(obj + 0x36) != 0)) {
-    child = *(int *)(obj + 0xc8);
-    if (child != 0) {
-      ObjLink_DetachChild(obj,child);
-      Obj_FreeObject(child);
+    child = *(void **)(obj + 0xc8);
+    if (child != NULL) {
+      ObjLink_DetachChild(obj, (int)child);
+      Obj_FreeObject((int)child);
     }
     if (Obj_IsLoadingLocked() != 0) {
       if (*(s16 *)(state + 0x2b6) > 0) {
         setup = Obj_AllocObjectSetup(0x20);
         *(u8 *)(setup + 5) = *(u8 *)(setup + 5) | (*(u8 *)(parentSetup + 5) & 0x18);
-        child = Obj_SetupObject(setup,4,*(s8 *)(obj + 0xac),-1,*(int *)(obj + 0x30));
-        ObjLink_AttachChild(obj,child,0);
+        child = (void *)Obj_SetupObject(setup,4,*(s8 *)(obj + 0xac),-1,*(int *)(obj + 0x30));
+        ObjLink_AttachChild(obj, (int)child, 0);
         *(s16 *)(state + 0x2b4) = *(s16 *)(state + 0x2b6);
       }
     }
