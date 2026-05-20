@@ -752,16 +752,48 @@ void fn_801EEDE0(int *src, f32 *out_x, f32 *out_y, f32 *out_z) {
     *out_z = *(f32*)((char*)src + 0x14);
 }
 
+/* virtual call through obj[0xb8][0x10] context, vtable double-deref at +0x68 */
+void fn_801EED24(void *obj) {
+    void* this_ = *(void**)((char*)(*(void**)((char*)obj + 0xb8)) + 0x10);
+    void* vt = *(void**)*(void**)((char*)this_ + 0x68);
+    void (*fn)(void*) = *(void(**)(void*))((char*)vt + 0x24);
+    fn(this_);
+}
+
+/* copy 3 floats from obj->b8 [0x4c..0x54] to out args */
+void fn_801EED5C(int *obj, f32 *x, f32 *y, f32 *z) {
+    char* p = *(char**)((char*)obj + 0xb8);
+    *x = *(f32*)(p + 0x4c);
+    *y = *(f32*)(p + 0x50);
+    *z = *(f32*)(p + 0x54);
+}
+
+extern void objSetMtxFn_800412d4();
+#pragma scheduling off
+void fn_801EED80(void *obj) {
+    objSetMtxFn_800412d4(ObjPath_GetPointModelMtx((int)obj, 3));
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+void fn_801EEDC0(int p1, f32 *out, int *outInt) {
+    *out = lbl_803E5C70;
+    *outInt = 0;
+}
+#pragma scheduling reset
+
+void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
+    f32* p = *(f32**)((char*)obj + 0xb8);
+    *x = p[0];
+    *y = p[1];
+    *z = p[2];
+}
+
 /* Stubs to align function set with v1.0 asm. Bodies are large state
  * machines / inits and need real reverse-engineering. */
 void fn_801EE668(void) {}
 void fn_801EEA68(void) {}
 void fn_801EEB50(void) {}
-void fn_801EED24(void) {}
-void fn_801EED5C(void) {}
-void fn_801EED80(void) {}
-void fn_801EEDC0(void) {}
-void fn_801EEE0C(void) {}
 void SB_CloudRunner_free(void) {}
 void SB_CloudRunner_init(void) {}
 void SB_CloudRunner_render(void) {}
