@@ -3104,6 +3104,11 @@ void CameraModeArwing_release(void) {}
 void CameraModeArwing_initialise(void) {}
 void CameraModeTitle_release(void) {}
 void CameraModeTitle_initialise(void) {}
+void CameraModeForceBehind_copyToCurrent(void) {}
+void CameraModeForceBehind_free(void) {}
+void CameraModeCloudRunner_copyToCurrent(void) {}
+void CameraModePerv_copyToCurrent(void) {}
+void CameraModeArwing_free(void) {}
 
 /* misc 8b leaves */
 extern f32 lbl_803DB9D8;
@@ -3125,6 +3130,7 @@ void dll_4F_func05(void) { mm_free(lbl_803DD590); lbl_803DD590 = 0; }
 void CameraModeCrawl_free(void) { mm_free(lbl_803DD598); lbl_803DD598 = 0; }
 void CameraModeCannon_free(void) { mm_free(lbl_803DD5A0); lbl_803DD5A0 = 0; }
 void fn_801101E8(void) { mm_free(lbl_803DD5B8); lbl_803DD5B8 = 0; }
+void CameraModeCloudRunner_free(void) { mm_free(lbl_803DD5B8); lbl_803DD5B8 = 0; }
 void dll_54_func05(void) { mm_free(lbl_803DD5C0); lbl_803DD5C0 = 0; }
 void CameraModePerv_free(void) { mm_free(lbl_803DD5C8); lbl_803DD5C8 = 0; }
 #pragma peephole reset
