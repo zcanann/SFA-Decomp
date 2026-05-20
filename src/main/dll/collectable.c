@@ -1542,23 +1542,23 @@ int collectibleFn_80149cec(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mo
 void baddieInstantiateWeapon(int obj,int state)
 {
   int parentSetup;
-  int child;
+  void *child;
   int setup;
 
   parentSetup = *(int *)(obj + 0x4c);
   if ((*(s16 *)(state + 0x2b4) != *(s16 *)(state + 0x2b6)) &&
       (*(u8 *)(obj + 0x36) != 0)) {
-    child = *(int *)(obj + 0xc8);
-    if (child != 0) {
-      ObjLink_DetachChild(obj,child);
-      Obj_FreeObject(child);
+    child = *(void **)(obj + 0xc8);
+    if (child != NULL) {
+      ObjLink_DetachChild(obj, (int)child);
+      Obj_FreeObject((int)child);
     }
     if (Obj_IsLoadingLocked() != 0) {
       if (*(s16 *)(state + 0x2b6) > 0) {
         setup = Obj_AllocObjectSetup(0x20);
         *(u8 *)(setup + 5) = *(u8 *)(setup + 5) | (*(u8 *)(parentSetup + 5) & 0x18);
-        child = Obj_SetupObject(setup,4,*(s8 *)(obj + 0xac),-1,*(int *)(obj + 0x30));
-        ObjLink_AttachChild(obj,child,0);
+        child = (void *)Obj_SetupObject(setup,4,*(s8 *)(obj + 0xac),-1,*(int *)(obj + 0x30));
+        ObjLink_AttachChild(obj, (int)child, 0);
         *(s16 *)(state + 0x2b4) = *(s16 *)(state + 0x2b6);
       }
     }
@@ -2872,7 +2872,7 @@ void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
                 return;
             }
             state[0x700/4] = fn_800DB0E0((void *)(targetObj + 0x18), -1, 3);
-            *(f32*)((u8*)state + 0x710) = (f32)randomGetRange(0x168, 0x28);
+            *(f32*)((u8*)state + 0x710) = (f32)(int)randomGetRange(0x168, 0x28);
             *((u8*)state + 8) = 5;
             state[0x24/4] = targetObj;
             nextTarget = (void *)(state[0x700/4] + 8);
@@ -2970,7 +2970,7 @@ void trickyFn_80144f50(int obj, int state) {
         if (trickyFn_8013b368(obj, lbl_803E247C, state) != 1) {
             *(f32*)(state + 0x740) -= timeDelta;
             if (*(f32*)(state + 0x740) <= lbl_803E23DC) {
-                *(f32*)(state + 0x740) = (f32)randomGetRange(0x1f4, 0x2ee);
+                *(f32*)(state + 0x740) = (f32)(int)randomGetRange(0x1f4, 0x2ee);
                 sfxState = *(int*)(obj + 0xb8);
                 sfxDisabled = (*(u8*)(sfxState + 0x58) >> 6) & 1;
                 if ((sfxDisabled == 0) &&

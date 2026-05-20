@@ -179,7 +179,7 @@ void FUN_801b3a28(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbridgecogmai_release(int param_1)
+void FUN_dropped_dimbridgecogmai_release(int param_1)
 {
   int iVar1;
   
@@ -253,7 +253,7 @@ undefined4 FUN_801b3af4(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimdismountpoint_func08(int param_1)
+void FUN_dropped_dimdismountpoint_func08(int param_1)
 {
   ObjGroup_RemoveObject(param_1,0xf);
   return;
@@ -398,5 +398,47 @@ void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 #pragma peephole off
 void dimbridgecogmai_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
+#pragma peephole reset
+#pragma scheduling reset
+
+void dimbridgecogmai_release(void) {}
+int dimdismountpoint_func08(void) { return 0; }
+
+extern f32 lbl_803E490C;
+extern void objRenderFn_80041018(int obj);
+#pragma scheduling off
+#pragma peephole off
+void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    if (visible == 0 || *(int *)(obj + 0xf8) != 0) {
+        if (*(int *)(obj + 0xf8) != 0) {
+            objRenderFn_80041018(obj);
+        }
+    } else {
+        objRenderFn_8003b8f4(lbl_803E490C);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801B3768(int obj, int p2, char *r5) {
+    char *param = *(char **)(obj + 0x4c);
+    r5[0x56] = 0;
+    if ((*(u8 *)(param + 0x1d) & 0x2) != 0 && *(u8 *)(r5 + 0x80) == 1) {
+        GameBit_Set(*(s16 *)(param + 0x18), 1);
+        *(u8 *)(r5 + 0x80) = 0;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *lbl_803DCA54;
+#pragma scheduling off
+#pragma peephole off
+void dimdismountpoint_func11(int obj, int flag) {
+    (*(void (*)(int, int, int))(*(int *)(*lbl_803DCA54 + 0x48)))(flag ? 2 : 3, obj, -1);
+}
 #pragma peephole reset
 #pragma scheduling reset

@@ -1437,6 +1437,75 @@ int portalspelldoor_func08(void) { return 0x0; }
 int LanternFireFly_getExtraSize(void) { return 0x74; }
 int LanternFireFly_func08(void) { return 0x0; }
 
+/* LanternFireFly_modelMtxFn: receives (obj, f1, f2, f3) and stores the
+ * three floats into obj->_b8 at +0x54/+0x58/+0x5c. */
+void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    *(f32*)(sub + 0x54) = a;
+    *(f32*)(sub + 0x58) = b;
+    *(f32*)(sub + 0x5c) = c;
+}
+
+/* portalspelldoor_init: byte<<8 / halfword<<8 stash at obj+0..+2, prime
+ * obj+8 with lbl_803E3A8C, derive sub+4 = obj->_a8 * obj+8 * lbl_803E3A90,
+ * GameBit-gated bit-set on obj+6 (0x4000) and obj+b0 (0xe000), then
+ * latch sub+8 = -1. */
+extern f32 lbl_803E3A8C;
+extern f32 lbl_803E3A90;
+#pragma scheduling off
+void portalspelldoor_init(u8* obj, u8* data) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    *(s16*)obj = (s16)((s32)(s8)data[0x18] << 8);
+    *(s16*)(obj + 0x2) = (s16)((s32)*(s16*)(data + 0x1c) << 8);
+    *(f32*)(obj + 0x8) = lbl_803E3A8C;
+    *(f32*)(sub + 0x4) = *(f32*)(obj + 0xa8) * *(f32*)(obj + 0x8) * lbl_803E3A90;
+    if (GameBit_Get(*(s16*)(data + 0x1e)) != 0) {
+        *(s16*)(obj + 0x6) = (s16)(*(s16*)(obj + 0x6) | 0x4000);
+        *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0xe000);
+    }
+    *(s32*)(sub + 0x8) = -1;
+}
+#pragma scheduling reset
+
+/* LanternFireFly_setScale: subtract sub->_54..5c from vec[0..2] (overwriting
+ * vec), copy the result to sub->_34..3c, set sub->_6c = 4. */
+#pragma scheduling off
+void LanternFireFly_setScale(u8* obj, f32* vec) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    vec[0] = vec[0] - *(f32*)(sub + 0x54);
+    vec[1] = vec[1] - *(f32*)(sub + 0x58);
+    vec[2] = vec[2] - *(f32*)(sub + 0x5c);
+    *(f32*)(sub + 0x34) = vec[0];
+    *(f32*)(sub + 0x38) = vec[1];
+    *(f32*)(sub + 0x3c) = vec[2];
+    sub[0x6c] = 4;
+}
+#pragma scheduling reset
+
+/* LanternFireFly_free: free the light struct at sub[0] if present, then
+ * (when p2==0 and the freshly-cleared sub[0] is NULL and mode bits 6..7
+ * aren't 1) reset lbl_803DDAD8 to 0; finally ObjGroup_RemoveObject(obj, 0x30)
+ * and dispatch vtable[6] of *lbl_803DCA78. */
+extern void ModelLightStruct_free(void* p);
+extern u8 lbl_803DDAD8;
+extern void *lbl_803DCA78;
+#pragma scheduling off
+#pragma peephole off
+void LanternFireFly_free(u8* obj, int p2) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    if (*(void**)sub != NULL) {
+        ModelLightStruct_free(*(void**)sub);
+        *(void**)sub = NULL;
+    }
+    if (p2 == 0 && *(void**)sub != NULL && ((sub[0x70] >> 6) & 3) != 1) {
+        lbl_803DDAD8 = 0;
+    }
+    ObjGroup_RemoveObject(obj, 0x30);
+    (*(void (***)(u8*))lbl_803DCA78)[6](obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 ObjectDescriptor gDummy108ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)Dummy108_initialise,

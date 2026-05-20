@@ -96,6 +96,70 @@ void WaterFallSpray_free(u8* obj)
     (*(void (***)(u8*))lbl_803DCA78)[6](obj);
 }
 
+/* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
+ * obj+0xf4, install fn_80197DB0 as the think routine at obj+0xbc, then
+ * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
+extern int fn_80197DB0(int *obj);
+#pragma scheduling off
+#pragma peephole off
+void WaterFallSpray_init(u8* obj, u8* data) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    s16 a, b, c;
+    int v;
+    a = (s16)((s32)(s8)data[0x1a] << 8);
+    *(s16*)(obj + 0x4) = a;
+    b = (s16)((s32)(s8)data[0x1b] << 8);
+    *(s16*)(obj + 0x2) = b;
+    c = (s16)((s32)(s8)data[0x1c] << 8);
+    *(s16*)(obj + 0x0) = c;
+    *(u32*)(obj + 0xf4) = 0;
+    *(int(**)(int*))(obj + 0xbc) = fn_80197DB0;
+    v = *(int*)((char*)(*(u8**)(obj + 0x4c)) + 0x14);
+    if (v < 0x4BE5E) {
+        if (v >= 0x4BE5C) {
+            *(u32*)(sub + 0) = 0x489;
+            *(u32*)(sub + 4) = 0x48a;
+            return;
+        }
+    }
+    *(u32*)(sub + 0) = 0x2af;
+    *(u32*)(sub + 4) = 0x2b2;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* sfxplayerObj_init: prime obj->_b0 with bits 0x6000, then dispatch on
+ * (s8)data->_1d: case 0 stores GameBit_Get(data->_18) at sub[0] if the
+ * event id is positive; case 2 computes randomGetRange(data->_1e, data->_1f)
+ * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
+extern f32 lbl_803E40BC;
+#pragma scheduling off
+#pragma peephole off
+void sfxplayerObj_init(u8* obj, u8* data) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    s8 type;
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
+    type = (s8)data[0x1d];
+    switch (type) {
+    case 0: {
+        s16 bit = *(s16*)(data + 0x18);
+        if (bit > 0) {
+            *(int*)sub = GameBit_Get(bit);
+        }
+        break;
+    }
+    case 1:
+        break;
+    case 2: {
+        int v = randomGetRange(data[0x1e], data[0x1f]);
+        *(f32*)sub = (f32)v * lbl_803E40BC;
+        break;
+    }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
  * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */

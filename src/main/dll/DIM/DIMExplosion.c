@@ -557,3 +557,60 @@ void dimsnowball1c2_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
 void dimgate_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4878); }
 void dimbarrier_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4898); }
 #pragma peephole reset
+
+extern u32 GameBit_Get(int id);
+#pragma scheduling off
+#pragma peephole off
+void dimsnowball1c2_init(int obj, u8 *p) {
+    char *inner;
+    *(s16 *)obj = (s16)((u32)p[0x1c] << 8);
+    inner = *(char **)(obj + 0xb8);
+    *(s16 *)(inner + 2) = *(s16 *)(p + 0x18);
+    *(s16 *)inner = *(s16 *)(p + 0x18);
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+}
+void dimicewall_init(int obj, s8 *p) {
+    char *inner = *(char **)(obj + 0xb8);
+    inner[0] = (s8)*(s16 *)(p + 0x1a);
+    if (*(s16 *)(p + 0x1e) != -1) {
+        inner[1] = (u8)GameBit_Get(*(s16 *)(p + 0x1e));
+    }
+    *(s16 *)obj = (s16)((s32)p[0x18] << 8);
+    *(u16 *)(obj + 0xb0) |= 0x4000;
+}
+void dimgate_init(int obj, s8 *p_unused_passthrough) {
+    char *param = *(char **)(obj + 0x4c);
+    char *inner = *(char **)(obj + 0xb8);
+    if (GameBit_Get(*(s16 *)(param + 0x1e)) != 0) {
+        inner[0] = 2;
+        *(f32 *)(obj + 0x98) = lbl_803E4878;
+    } else {
+        inner[0] = 0;
+    }
+    *(void **)(obj + 0xbc) = (void *)fn_801B15D8;
+    *(s16 *)obj = (s16)((s32)param[0x18] << 8);
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+}
+void dimbarrier_init(int obj, s8 *p) {
+    char *inner;
+    *(s16 *)obj = (s16)((s32)p[0x18] << 8);
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+    inner = *(char **)(obj + 0xb8);
+    inner[3] = 1;
+    inner[2] = 0;
+    if (GameBit_Get(*(s16 *)(p + 0x1e)) != 0) {
+        char *o54 = *(char **)(obj + 0x54);
+        inner[3] = 0;
+        *(s16 *)(o54 + 0x60) = (s16)(*(s16 *)(o54 + 0x60) & ~1);
+        *(u8 *)(obj + 0x36) = 0;
+        inner[2] = 2;
+    }
+}
+
+int fn_801B17F4(int obj, int delta) {
+    s8 *inner = *(s8 **)(obj + 0xb8);
+    inner[0] = (s8)(inner[0] - delta);
+    return inner[0] == 0 ? 1 : 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

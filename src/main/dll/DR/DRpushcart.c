@@ -74,6 +74,7 @@ extern f64 DOUBLE_803e6698;
 extern f64 DOUBLE_803e66f0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E59D8;
+extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E6670;
 extern f32 lbl_803E6674;
 extern f32 lbl_803E6688;
@@ -509,22 +510,24 @@ void shopkeeper_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void shopkeeper_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
+#pragma scheduling off
+#pragma peephole off
+void shopkeeper_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  int iVar1;
-  float local_18 [4];
-  
-  iVar1 = *(int *)(param_1 + 0xb8);
-  local_18[0] = lbl_803E59D8;
-  if ((*(short *)(iVar1 + 0x274) != 7) && (visible != 0)) {
-    FUN_8003b818(param_1);
-    dll_2E_func06(param_1,iVar1 + 0x35c,0);
-  }
-  if ((*(byte *)(iVar1 + 0x9d4) & 0x20) != 0) {
-    (**(code **)(*lbl_803DCAB4 + 0xc))(param_1,0x7ef,local_18,0x50,0);
-  }
-  return;
+    int iVar1 = *(int *)(param_1 + 0xb8);
+    float local_18[4];
+    local_18[0] = lbl_803E59D8;
+    if (*(s16 *)(iVar1 + 0x274) != 7 && visible != 0) {
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
+            (param_1, param_2, param_3, param_4, param_5, lbl_803E59D8);
+        dll_2E_func06(param_1, iVar1 + 0x35c, 0);
+    }
+    if ((*(u8 *)(iVar1 + 0x9d4) & 0x20) != 0) {
+        (*(void (*)(int, int, float *, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(param_1, 0x7ef, local_18, 0x50, 0);
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -892,6 +895,198 @@ void shopitem_free(int obj) {
     (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x14)))(obj);
     if (*(s16 *)(obj + 0x46) == 0x468) {
         ObjGroup_RemoveObject(obj, 0x4F);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void *lbl_803AD068[8];
+extern void *lbl_803DDC58;
+extern void fn_801E7124(int);
+extern void objAnimFn_801e6d08(int);
+extern void fn_801E6B10(int);
+extern void fn_801E69C8(int);
+extern void fn_801E6990(int);
+extern void fn_801E67BC(int);
+extern void fn_801E66EC(int);
+extern void fn_801E66E4(int);
+extern void fn_801E66DC(int);
+
+extern void GXSetBlendMode(int type, int src, int dst, int op);
+extern void gxSetZMode_(u32 a, int b, u32 c);
+extern void gxSetPeControl_ZCompLoc_(u32 a);
+extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801E832C(int obj) {
+    if (*(u8 *)(obj + 0x37) == 0xFF) {
+        GXSetBlendMode(0, 1, 0, 5);
+    } else {
+        GXSetBlendMode(1, 4, 1, 5);
+    }
+    gxSetZMode_(1, 3, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void shopkeeper_initialise(void) {
+    lbl_803AD068[0] = (void *)fn_801E7124;
+    lbl_803AD068[1] = (void *)objAnimFn_801e6d08;
+    lbl_803AD068[2] = (void *)fn_801E6B10;
+    lbl_803AD068[3] = (void *)fn_801E69C8;
+    lbl_803AD068[4] = (void *)fn_801E6990;
+    lbl_803AD068[5] = (void *)fn_801E67BC;
+    lbl_803AD068[6] = (void *)fn_801E66EC;
+    lbl_803AD068[7] = (void *)fn_801E66E4;
+    lbl_803DDC58 = (void *)fn_801E66DC;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void hudFn_8011f38c(int);
+extern void *Obj_GetPlayerObject(void);
+extern f32 lbl_803E5A20;
+extern f32 timeDelta;
+extern f32 lbl_803E59DC;
+extern void gameTextShow(int);
+extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32 *out);
+extern u16 playerGetMoney(void *player);
+extern void characterDoEyeAnims(int obj, int p2);
+extern void dll_2E_func03(int, int);
+extern void shopKeeperRotateFn_801e7c4c(int, void *, int);
+extern int *lbl_803DCA8C;
+
+typedef struct {
+    u8 bit80 : 1;
+    u8 bit40 : 1;
+    u8 bit20 : 1;
+    u8 bit10 : 1;
+    u8 bit08 : 1;
+    u8 bit04 : 1;
+    u8 bit02 : 1;
+    u8 bit01 : 1;
+} BitsAt9D4;
+
+#pragma scheduling off
+#pragma peephole off
+void shopkeeper_update(int obj) {
+    void *player;
+    int state;
+    f32 dist;
+    player = Obj_GetPlayerObject();
+    state = *(int *)(obj + 0xB8);
+    dist = lbl_803E5A20;
+    *(u8 *)(state + 0x9D4) &= ~0x20;
+    if (*(f32 *)(state + 0x9C4) > lbl_803E59DC) {
+        gameTextShow(0x433);
+        *(f32 *)(state + 0x9C4) = *(f32 *)(state + 0x9C4) - timeDelta;
+        if (*(f32 *)(state + 0x9C4) < lbl_803E59DC) {
+            *(f32 *)(state + 0x9C4) = lbl_803E59DC;
+        }
+    }
+    if ((*(u8 *)(state + 0x9D4) & 0x04) != 0) {
+        shopKeeperRotateFn_801e7c4c(obj, player, 1);
+    }
+    *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4);
+    if (*(int *)(state + 0x9B4) == 0) {
+        *(int *)(state + 0x9B4) = ObjGroup_FindNearestObject(9, obj, &dist);
+    }
+    *(s16 *)(state + 0x9C8) = (s16)playerGetMoney(player);
+    ((void (*)(int, int, void *, void *, f32, f32))(*(int *)((int)*lbl_803DCA8C + 8)))
+        (obj, state, lbl_803AD068, &lbl_803DDC58, timeDelta, timeDelta);
+    dll_2E_func03(obj, state + 0x35C);
+    characterDoEyeAnims(obj, state + 0x980);
+    *(u8 *)(obj + 0x36) = *(u8 *)(state + 0x9D6);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E59F0;
+extern f32 lbl_803E5A28;
+extern void *allocModelStruct_800139e8(int, int);
+extern void dll_2E_func05(int, int, int, int, int);
+extern void fn_801E76A0(int);
+extern void *Obj_GetActiveModel(int);
+extern void ObjModel_SetPostRenderCallback(void *, void *);
+extern void ObjGroup_AddObject(int, int);
+extern void fn_801F4C28(int, int);
+extern void fn_801E86F4(int);
+extern int *pDll_expgfx;
+
+#pragma scheduling off
+#pragma peephole off
+void shopitem_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(u16 *)(obj + 0xB0) |= 0x2000;
+    *(void (**)(int))(obj + 0xBC) = fn_801E86F4;
+    *(s8 *)(obj + 0xAD) = (s8)*(s8 *)(data + 0x18);
+    *(s16 *)obj = (s16)((*(u8 *)(data + 0x1A)) << 8);
+    *(s16 *)(obj + 2) = (s16)((*(u8 *)(data + 0x1B)) << 8);
+    if ((s32)*(s8 *)(obj + 0xAD) >= (s32)*(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(s8 *)(obj + 0xAD) = 0;
+    }
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x467:
+        fn_801F4C28(obj, state);
+        break;
+    case 0x462:
+        (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x3F1, 0, 4, -1, 0);
+        break;
+    case 0x468:
+        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), (void *)fn_801E832C);
+        ObjGroup_AddObject(obj, 0x4F);
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void shopkeeper_init(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    *(u16 *)(obj + 0xB0) |= 0x2000;
+    *(void (**)(int))(obj + 0xBC) = fn_801E76A0;
+    *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
+    *(f32 *)(state + 0x9B8) = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
+    *(void **)(state + 0x9B0) = allocModelStruct_800139e8(4, 4);
+    *(u8 *)(state + 0x9D6) = 0xFF;
+    *(f32 *)(state + 0x9C4) = lbl_803E5A28;
+    dll_2E_func05(obj, state + 0x35C, -0x1C71, 0x3555, 2);
+    *(u8 *)(state + 0x96D) |= 0x12;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct {
+    u8 flag_80 : 1;
+    u8 flag_40 : 1;
+    u8 _rest : 6;
+} PushcartState97;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801E8660(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    int def = *(int *)(obj + 0x4C);
+    PushcartState97 *b = (PushcartState97 *)(state + 0x97);
+    if (b->flag_40 == 0) {
+        int *vptr = *(int **)(state + 0x90);
+        int *cls = **(int ***)((char *)vptr + 0x68);
+        if ((*(int (*)(int *, int))cls[0x2C / 4])(vptr, *(u8 *)(def + 0x19)) != 0) {
+            b->flag_80 = 1;
+        }
+    }
+    hudFn_8011f38c(0);
+    {
+        int *vptr2 = *(int **)(state + 0x90);
+        int *cls2 = **(int ***)((char *)vptr2 + 0x68);
+        (*(void (*)(int *, int))cls2[0x40 / 4])(vptr2, -1);
     }
 }
 #pragma peephole reset

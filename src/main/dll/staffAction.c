@@ -987,3 +987,39 @@ void dll_D3_hitDetect_nop(void) {}
 /* 8b "li r3, N; blr" returners. */
 int dll_D3_getExtraSize_ret_1188(void) { return 0x4a4; }
 int dll_D3_func08_ret_73(void) { return 0x49; }
+
+extern int *lbl_803DCAB8;
+#pragma scheduling off
+#pragma peephole off
+void dll_D3_free(int obj) {
+    int *inner = *(int **)(obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 3);
+    if (*(void **)(obj + 0xc8) != NULL) {
+        Obj_FreeObject(*(void **)(obj + 0xc8));
+        *(int *)(obj + 0xc8) = 0;
+    }
+    (*(void (*)(int, int *, int))(*(int *)(*lbl_803DCAB8 + 0x40)))(obj, inner, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Vec3_Normalize(f32 *v);
+extern void Vec3_Cross(f32 *a, f32 *b, f32 *out);
+#pragma scheduling off
+#pragma peephole off
+void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
+    f32 fwd[3];
+    f32 upRecomputed[3];
+    f32 rt[3];
+    fwd[0] = forward[0]; fwd[1] = forward[1]; fwd[2] = forward[2];
+    Vec3_Normalize(fwd);
+    Vec3_Cross(up, fwd, rt);
+    Vec3_Normalize(rt);
+    Vec3_Cross(rt, fwd, upRecomputed);
+    Vec3_Normalize(upRecomputed);
+    out[0] = -rt[0]; out[1] = -rt[1]; out[2] = -rt[2];
+    out[3] = -upRecomputed[0]; out[4] = -upRecomputed[1]; out[5] = -upRecomputed[2];
+    out[6] = -fwd[0]; out[7] = -fwd[1]; out[8] = -fwd[2];
+}
+#pragma peephole reset
+#pragma scheduling reset

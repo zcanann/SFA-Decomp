@@ -2704,3 +2704,16 @@ void Effect20_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int Checkpoint_func09_ret_1(void) { return 0x1; }
+
+#pragma peephole off
+#pragma scheduling off
+void Checkpoint_onGameLoop(void)
+{
+    u32 tmp = lbl_803DD418;
+    lbl_803DD418 = lbl_803DD41C;
+    lbl_803DD41C = tmp;
+    lbl_803DD414 = lbl_803DD416;
+    lbl_803DD416 = 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
