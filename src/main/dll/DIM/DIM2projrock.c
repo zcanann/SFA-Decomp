@@ -1195,3 +1195,22 @@ void fn_801B8B48(void* obj)
     *(*(f32**)((char*)obj + 0xB8)) = *(f32*)((char*)obj + 0x10);
     *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) + lbl_803E4AD8;
 }
+
+/* fn_801B8EF8: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
+ *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
+#pragma peephole off
+#pragma scheduling off
+void fn_801B8EF8(void* obj, void* p)
+{
+    void* sub = *(void**)((char*)obj + 0xB8);
+    s16 t = (s16)((s32)*(s8*)((char*)p + 0x18) << 8);
+    *(s16*)((char*)obj + 0x0) = t;
+    if (GameBit_Get(*(s16*)((char*)p + 0x1E)) != 0) {
+        *(u8*)((char*)sub + 0x4) = 2;
+    } else {
+        *(u8*)((char*)sub + 0x4) = 1;
+    }
+    *(u16*)((char*)obj + 0xB0) |= 0x2000;
+}
+#pragma scheduling reset
+#pragma peephole reset
