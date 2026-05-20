@@ -572,7 +572,6 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   float *pfVar15;
   float *pfVar16;
   int iVar17;
-  int iVar18;
   float in_f6;
   float in_f7;
   float in_f8;
@@ -580,21 +579,19 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   bank = ObjAnim_GetActiveBank(objAnim);
   piVar12 = (int *)bank;
   animDef = bank->animDef;
-  iVar17 = (int)animDef;
   if (animDef->moveCount != 0) {
     state = bank->currentState;
-    iVar18 = (int)state;
     fVar5 = objAnim->rootMotionScale;
     fVar3 = distance * (fVar5 / objAnim->modelInstance->rootMotionScaleBase);
     pfVar15 = (float *)0x0;
     if (state->eventState != 0) {
       in_f7 = (float)(u32)state->eventState / gObjAnimEventStepScale;
       in_f8 = gObjAnimProgressOne - in_f7;
-      if ((*(ushort *)(iVar17 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
-        iVar13 = *(int *)(*(int *)(iVar17 + 100) + (uint)*(ushort *)(iVar18 + 0x48) * 4);
+      if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
+        iVar13 = (int)animDef->moveData[state->blendCacheSlot];
       }
       else {
-        iVar13 = *(int *)(iVar18 + (uint)*(ushort *)(iVar18 + 0x48) * 4 + 0x24) +
+        iVar13 = (int)state->blendMoveCache[state->blendCacheSlot] +
                  OBJANIM_CACHED_MOVE_DATA_OFFSET;
       }
       if (*(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
@@ -611,11 +608,11 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
         }
       }
     }
-    if ((*(ushort *)(iVar17 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
-      iVar17 = *(int *)(*(int *)(iVar17 + 100) + (uint)*(ushort *)(iVar18 + 0x44) * 4);
+    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
+      iVar17 = (int)animDef->moveData[state->moveCacheSlot];
     }
     else {
-      iVar17 = *(int *)(iVar18 + (uint)*(ushort *)(iVar18 + 0x44) * 4 + 0x1c) +
+      iVar17 = (int)state->moveCache[state->moveCacheSlot] +
                OBJANIM_CACHED_MOVE_DATA_OFFSET;
     }
     if (*(short *)(iVar17 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
@@ -741,7 +738,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   undefined uVar17;
   undefined4 uVar18;
   int iVar21;
-  int *piVar22;
   int iVar23;
   int iVar24;
   int iVar25;
@@ -768,7 +764,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   }
   objAnim = (ObjAnimComponent *)objAnimArg;
   bank = ObjAnim_GetActiveBank(objAnim);
-  piVar22 = (int *)bank;
   animDef = bank->animDef;
   if ((animDef->moveCount != 0) &&
      (state = bank->currentState, iVar24 = (int)state, iVar24 != 0)) {
@@ -903,11 +898,11 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
           }
         }
       }
-      if ((*(ushort *)(*piVar22 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
-        iVar23 = *(int *)(*(int *)(*piVar22 + 100) + (uint)*(ushort *)(iVar24 + 0x44) * 4);
+      if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
+        iVar23 = (int)animDef->moveData[state->moveCacheSlot];
       }
       else {
-        iVar23 = *(int *)(iVar24 + (uint)*(ushort *)(iVar24 + 0x44) * 4 + 0x1c) + 0x80;
+        iVar23 = (int)state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
       }
       if (*(short *)(iVar23 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) == 0) {
         eventList->rootCurveValid = 0;
@@ -929,14 +924,15 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
         iVar30 = 0;
         fVar11 = gObjAnimProgressZero;
         fVar13 = gObjAnimProgressOne;
-        if (*(ushort *)(iVar24 + 0x5a) != 0) {
-          local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(uint)*(ushort *)(iVar24 + 0x5a));
+        if (state->eventState != 0) {
+          local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(uint)state->eventState);
           fVar11 = (float)(local_30 - gObjAnimU32ToDoubleBias) / gObjAnimEventStepScale;
-          if ((*(ushort *)(*piVar22 + 2) & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
-            iVar24 = *(int *)(*(int *)(*piVar22 + 100) + (uint)*(ushort *)(iVar24 + 0x48) * 4);
+          if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
+            iVar24 = (int)animDef->moveData[state->blendCacheSlot];
           }
           else {
-            iVar24 = *(int *)(iVar24 + (uint)*(ushort *)(iVar24 + 0x48) * 4 + 0x24) + 0x80;
+            iVar24 = (int)state->blendMoveCache[state->blendCacheSlot] +
+                     OBJANIM_CACHED_MOVE_DATA_OFFSET;
           }
           iVar30 = iVar24 + *(short *)(iVar24 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) +
                    OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET;
