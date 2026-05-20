@@ -1256,6 +1256,33 @@ void fn_801FD398(void *obj) {
     }
 }
 
+/* fn_801FD3C4: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
+extern int *lbl_803DCAAC;
+extern int lbl_803DDCC8;
+extern void fn_801FD270(void *obj);
+#pragma scheduling off
+void fn_801FD3C4(void *obj) {
+    int v;
+    v = (*(int (**)(int))(*(int *)lbl_803DCAAC + 0x40))((s8)*((s8 *)obj + 0xac));
+    v = (u8)v;
+    switch (v) {
+        case 1:
+            lbl_803DDCC8 = 0x123;
+            break;
+        case 2:
+            lbl_803DDCC8 = 0x83b;
+            break;
+        case 3:
+            lbl_803DDCC8 = 0x83c;
+            break;
+        default:
+            lbl_803DDCC8 = 0x123;
+            break;
+    }
+    fn_801FD270(obj);
+}
+#pragma scheduling reset
+
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
 int fn_801FD4A8(void *obj, int x) {
     s8 *extra = *(s8 **)((char *)obj + 0xb8);
