@@ -1617,6 +1617,24 @@ int iceblast_getExtraSize(void) { return 0x4; }
 int iceblast_func08(void) { return 0x0; }
 int flameblast_getExtraSize(void) { return 0x14; }
 
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+extern f32 lbl_803E3618;
+extern f32 lbl_803E3620;
+extern f32 lbl_803E3628;
+extern f32 lbl_803E362C;
+#pragma scheduling off
+#pragma peephole off
+void flameblast_render(int *obj) {
+    f32 vec[3];
+    f32 f = lbl_803E362C * *(f32 *)*(int **)((char *)obj + 0xb8) + lbl_803E3628;
+    vec[0] = lbl_803E3618;
+    vec[1] = lbl_803E3620;
+    vec[2] = lbl_803E3618;
+    fn_80098B18((int)obj, f, 2, 0, 0, (int)vec);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 16b chained patterns. */
 #pragma scheduling off
 #pragma peephole off
