@@ -213,7 +213,7 @@ void FUN_dropped_dimbridgecogmai_release(int param_1)
   
   if ((*(char **)(param_1 + 0xb8))[2] == '\x01') {
     *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
   }
   else if (*(int *)(param_1 + 0xf4) == 0) {
     iVar1 = (int)**(char **)(param_1 + 0xb8);

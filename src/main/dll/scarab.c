@@ -1936,7 +1936,7 @@ void FUN_80160464(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         param_9[0x7a] = 0;
         param_9[0x7b] = 0x78;
         *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
-             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & 0xfffe;
+             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1;
       }
     }
     else {
@@ -1945,7 +1945,7 @@ void FUN_80160464(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       param_9[0x7a] = 0;
       param_9[0x7b] = 0x78;
       *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
-           *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & 0xfffe;
+           *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1;
     }
   }
   return;
@@ -2130,7 +2130,7 @@ FUN_80160aa4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
     *(undefined *)(param_10 + 0x25f) = 0;
     *(undefined *)(param_10 + 0x349) = 0;
     *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
     uVar2 = 0;
   }

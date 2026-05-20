@@ -689,7 +689,7 @@ void FUN_801ad350(undefined8 param_1,double param_2,double param_3,double param_
         }
       }
       if (*(int *)(iVar12 + 0x50) != 0) {
-        *(ushort *)(iVar12 + 0x60) = *(ushort *)(iVar12 + 0x60) & 0xfffe;
+        *(ushort *)(iVar12 + 0x60) = *(ushort *)(iVar12 + 0x60) & ~1;
         *(undefined *)(piVar13 + 3) = 3;
         FUN_8000680c(uVar7,8);
         if (*(short *)(uVar7 + 0x46) == 0x67) {

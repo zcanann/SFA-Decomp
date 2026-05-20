@@ -472,7 +472,7 @@ void FUN_8016a708(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         param_9[0x7a] = 0;
         param_9[0x7b] = 0x78;
         *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
-             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & 0xfffe;
+             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1;
         for (local_58 = 0; local_58 < 0x19; local_58 = local_58 + 1) {
           (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,&local_58);
         }
@@ -484,7 +484,7 @@ void FUN_8016a708(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       param_9[0x7a] = 0;
       param_9[0x7b] = 0x78;
       *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
-           *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & 0xfffe;
+           *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1;
       for (local_54[0] = 0; local_54[0] < 0x19; local_54[0] = local_54[0] + 1) {
         (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,local_54);
       }

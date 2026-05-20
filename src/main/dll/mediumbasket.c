@@ -1360,7 +1360,7 @@ FUN_8015d324(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(byte *)(*(int *)(iVar1 + 0x40c) + 0x44) = *(byte *)(*(int *)(iVar1 + 0x40c) + 0x44) | 0xc;
   if (*(char *)(param_10 + 0x27a) != '\0') {
     *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
     *(float *)(param_10 + 0x2a0) = lbl_803E39D0;
     *(float *)(param_10 + 0x280) = lbl_803E39AC;
   }

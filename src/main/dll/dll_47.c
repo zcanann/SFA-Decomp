@@ -319,7 +319,7 @@ void FUN_8011a6b4(int *param_1)
     if (*(char *)(DAT_803de328 + iVar1 + 0x20) == '\0') {
       *(undefined2 *)(*param_1 + iVar2) = 0x39d;
       iVar4 = iVar2 + 0x16;
-      *(ushort *)(*param_1 + iVar4) = *(ushort *)(*param_1 + iVar4) & 0xfffe;
+      *(ushort *)(*param_1 + iVar4) = *(ushort *)(*param_1 + iVar4) & ~1;
       *(ushort *)(*param_1 + iVar4) = *(ushort *)(*param_1 + iVar4) | 2;
       *(undefined4 *)(*param_1 + iVar2 + 0x10) = 0xffffffff;
     }

@@ -1178,7 +1178,7 @@ void explosion_release(uint param_1)
       iVar4 = 0;
     }
     *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
     *(char *)(param_1 + 0x36) = (char)iVar4;
   }
   return;
@@ -1214,7 +1214,7 @@ void FUN_801b57b4(undefined2 *param_1,int param_2)
   if (uVar2 != 0) {
     *puVar3 = 0;
     *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & ~1;
     *(undefined *)(param_1 + 0x1b) = 0;
   }
   return;
@@ -1296,7 +1296,7 @@ void FUN_801b5870(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (*(char *)(param_9 + 0x1b) != '\0') {
     if ((*(char *)((int)pfVar8 + 9) < '\x01') &&
        (*(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
-             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & 0xfffe, *(char *)(pfVar8 + 2) == '\x01')
+             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1, *(char *)(pfVar8 + 2) == '\x01')
        ) {
       param_2 = (double)pfVar8[1];
       *pfVar8 = (float)(param_2 * (double)lbl_803DC074 + (double)*pfVar8);
@@ -1383,7 +1383,7 @@ void FUN_801b5b00(undefined2 *param_1,int param_2)
   if (uVar1 != 0) {
     *(undefined *)(iVar2 + 9) = 0;
     *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & ~1;
     *(undefined *)(param_1 + 0x1b) = 0;
   }
   *(float *)(iVar2 + 4) = lbl_803E5688;

@@ -488,7 +488,7 @@ void dbegg_update(void)
         uVar6 = FUN_80006c00(0);
         if ((uVar6 & 0x100) == 0) {
           *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) =
-               *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) & 0xfffe;
+               *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) & ~1;
           ObjMsg_SendToObject(dVar12,dVar14,dVar15,in_f4,in_f5,in_f6,in_f7,in_f8,iVar4,0x100008,
                        (uint)psVar3,0x38000,in_r7,in_r8,in_r9,in_r10);
           *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
@@ -681,7 +681,7 @@ void dbegg_update(void)
             *(byte *)((int)psVar3 + 0xaf) = *(byte *)((int)psVar3 + 0xaf) | 8;
             runtimeState->state = 6;
             *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) =
-                 *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) & 0xfffe;
+                 *(ushort *)(*(int *)(psVar3 + 0x2a) + 0x60) & ~1;
           }
         }
       }

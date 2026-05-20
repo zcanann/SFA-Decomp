@@ -470,7 +470,7 @@ void FUN_801757ac(undefined8 param_1,double param_2,undefined4 param_3,undefined
     iVar13 = piVar6[0x13];
     uVar3 = *(ushort *)(piVar6[0x2e] + 0x100);
     if ((uVar3 & 1) != 0) {
-      *(ushort *)(piVar6[0x2e] + 0x100) = uVar3 & 0xfffe;
+      *(ushort *)(piVar6[0x2e] + 0x100) = uVar3 & ~1;
       uVar8 = (uint)*(short *)(iVar13 + 0x18);
       if (-1 < (int)uVar8) {
         sVar2 = *(short *)((int)piVar6 + 0x46);
@@ -1306,7 +1306,7 @@ void FUN_8017726c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       if (dVar13 < (double)(float)((double)CONCAT44(0x43300000,uStack_4c) - dVar12)) {
         iVar6 = *(int *)(iVar10 + 0x54);
         *(char *)(iVar6 + 0x71) = *(char *)(iVar6 + 0x71) + '\x01';
-        *(ushort *)(iVar6 + 0x60) = *(ushort *)(iVar6 + 0x60) & 0xfffe;
+        *(ushort *)(iVar6 + 0x60) = *(ushort *)(iVar6 + 0x60) & ~1;
         *(char *)(*(int *)(iVar4 + 0x54) + 0x71) = *(char *)(*(int *)(iVar4 + 0x54) + 0x71) + '\x01'
         ;
       }
@@ -1387,7 +1387,7 @@ void FUN_8017726c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     uVar11 = extraout_f1;
     for (iVar6 = 0; iVar6 < *(char *)(iVar8 + 0x71); iVar6 = iVar6 + 1) {
       if (*(int *)(iVar10 + 0x7c) == iVar4) {
-        *(ushort *)(iVar9 + 0x60) = *(ushort *)(iVar9 + 0x60) & 0xfffe;
+        *(ushort *)(iVar9 + 0x60) = *(ushort *)(iVar9 + 0x60) & ~1;
         uVar11 = FUN_80017ac8(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4);
       }
       iVar10 = iVar10 + 4;

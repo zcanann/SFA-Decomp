@@ -716,7 +716,7 @@ void FUN_801bc6cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         *(undefined *)(iVar6 + 0x349) = 0;
         (**(code **)(*DAT_803dd70c + 0x14))(uVar3,iVar6,0);
         *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) =
-             *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & 0xfffe;
+             *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & ~1;
         *(byte *)(uVar3 + 0xaf) = *(byte *)(uVar3 + 0xaf) | 8;
         *(byte *)(uVar3 + 0xaf) = *(byte *)(uVar3 + 0xaf) & 0x7f;
         uVar8 = GameBit_Set(0x20e,1);

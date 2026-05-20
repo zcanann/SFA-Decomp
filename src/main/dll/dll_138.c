@@ -401,7 +401,7 @@ LAB_80175568:
                   }
                 }
                 else if (uVar1 == 0x7df) {
-                  *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) & 0xfffe;
+                  *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) & ~1;
                   if ((int)local_e7 == (uint)*(byte *)(iVar7 + 0x144)) {
                     puVar6 = (undefined4 *)FUN_80039520((int)puVar3,0);
                     if (puVar6 != (undefined4 *)0x0) {

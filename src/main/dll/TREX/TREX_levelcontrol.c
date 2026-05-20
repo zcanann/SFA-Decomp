@@ -137,7 +137,7 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
     cVar1 = *(char *)((int)piVar10 + 10);
     if (cVar1 == '\x03') {
       *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) =
-           *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & 0xfffe;
+           *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & ~1;
       if (*(char *)(piVar10 + 3) == '\0') {
         FUN_8008112c((double)lbl_803E6528,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                      uVar3,1,1,1,0,1,1,0);
@@ -163,7 +163,7 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
               }
             }
             *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) =
-                 *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & 0xfffe;
+                 *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & ~1;
           }
         }
         else {
@@ -284,7 +284,7 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
     }
     else if (cVar1 == '\x05') {
       *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) =
-           *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & 0xfffe;
+           *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & ~1;
       if ((iVar5 != 0) &&
          (iVar5 = (**(code **)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
         if (*(char *)(iVar11 + 0x19) == '\0') {

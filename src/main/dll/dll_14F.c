@@ -499,7 +499,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
           *(char *)(param_9 + 0x1b) = (char)iVar7;
         }
         *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
-             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & 0xfffe;
+             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1;
       }
       else if (cVar2 < '\x02') {
         if (cVar2 == '\0') {

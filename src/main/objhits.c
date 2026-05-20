@@ -2006,11 +2006,11 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
       else {
         if (((*(ushort *)(iVar25 + 0x60) & 0x80) != 0) &&
            (iVar14 = *(int *)(iVar14 + 0x54), iVar14 != 0)) {
-          *(ushort *)(iVar14 + 0x60) = *(ushort *)(iVar14 + 0x60) & 0xfffe;
+          *(ushort *)(iVar14 + 0x60) = *(ushort *)(iVar14 + 0x60) & ~1;
         }
         if (((*(ushort *)(iVar24 + 0x60) & 0x80) != 0) &&
            (iVar14 = *(int *)(iVar15 + 0x54), iVar14 != 0)) {
-          *(ushort *)(iVar14 + 0x60) = *(ushort *)(iVar14 + 0x60) & 0xfffe;
+          *(ushort *)(iVar14 + 0x60) = *(ushort *)(iVar14 + 0x60) & ~1;
         }
       }
     }

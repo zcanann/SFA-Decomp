@@ -62,7 +62,7 @@ void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8
       lbl_803DE824 = lbl_803E5928;
       *(undefined *)(param_12 + 0x349) = 0;
       *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-           *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
+           *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
       *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
       GameBit_Set(0x20e,0);
       if (DAT_803de814 < '\a') {
@@ -92,7 +92,7 @@ void dll_DIM_BossGutSpik_update(undefined8 param_1,undefined8 param_2,undefined8
     lbl_803DE818 = lbl_803E5928;
     *(undefined *)(param_12 + 0x349) = 0;
     *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
     *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
     GameBit_Set(0x20e,0);
     if (DAT_803de814 == '\x03') {

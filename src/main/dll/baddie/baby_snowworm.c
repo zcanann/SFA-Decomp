@@ -1697,7 +1697,7 @@ void perspectiveFn_80129db4(void)
  * current bbox into stack slots 0x14..0x8. Calls gameTextFn_80019804(1).
  *
  * Computes blit_x = clamp((v[0x10] - v[0x14] + 0x28), 0, target_y);
- * stores blit_x & 0xfffe at sprite+0x8, and 0x140 - (blit_x>>1) at
+ * stores blit_x & ~1 at sprite+0x8, and 0x140 - (blit_x>>1) at
  * sprite+0x14. Re-issues gameTextFn_8001984c with subbatch 2 and runs
  * gameTextSetColor(0xff, 0xff, 0xff, alpha) to commit the colour, also
  * latches alpha into sprite+0x1e.
@@ -1758,7 +1758,7 @@ void pauseMenuDrawText(void)
         s16 blit_x = width + 0x28;
         if (blit_x >= target) blit_x = target;
         if (blit_x < 0) blit_x = 0;
-        *(s16*)((u8*)sprite + 0x8)  = (s16)(blit_x & 0xfffe);
+        *(s16*)((u8*)sprite + 0x8)  = (s16)(blit_x & ~1);
         *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (blit_x >> 1));
     }
 

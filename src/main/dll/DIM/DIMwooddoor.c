@@ -124,7 +124,7 @@ void FUN_801b2098(uint param_1)
       iVar3 = 0;
     }
     *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
     *(char *)(param_1 + 0x36) = (char)iVar3;
     *psVar6 = *psVar6 - (ushort)DAT_803dc070;
     if (*psVar6 < 1) {
@@ -191,7 +191,7 @@ void FUN_801b21cc(undefined2 *param_1,int param_2)
   if (uVar1 != 0) {
     *(undefined *)(iVar2 + 3) = 0;
     *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & ~1;
     *(undefined *)(param_1 + 0x1b) = 0;
     *(undefined *)(iVar2 + 2) = 2;
   }

@@ -736,7 +736,7 @@ void FUN_801b9914(uint param_1)
         *(short *)(pfVar7 + 1) = (short)uVar3;
         *(undefined *)((int)pfVar7 + 6) = 3;
         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-             *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 0xfffe;
+             *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
         FUN_80006824(param_1,0xa4);
         return;
       }

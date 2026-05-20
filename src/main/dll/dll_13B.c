@@ -445,7 +445,7 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(undefined *)(param_9 + 0x36) = 0;
   *(undefined4 *)(param_9 + 0xf4) = 0xdc;
   *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
+       *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
   if (*piVar2 != 0) {
     FUN_800175cc((double)lbl_803E3D78,*piVar2,'\0');
   }

@@ -186,7 +186,7 @@ void FUN_801e4378(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
        && (dVar4 == dVar5)) {
       FUN_80006824(param_9,0x31d);
       *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-           *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
+           *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
       *(float *)(iVar3 + 0x1c) = lbl_803E6550;
       *(undefined *)(param_9 + 0x36) = 0x19;
       iVar3 = 0x32;
@@ -267,7 +267,7 @@ void FUN_801e451c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   if (*(short *)(pfVar3 + 6) < 0x10) {
     *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
   }
   else {
     *(undefined *)(*(int *)(param_9 + 0x54) + 0x6e) = 5;
@@ -310,7 +310,7 @@ void FUN_801e481c(uint param_1)
     }
   }
   *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 0xfffe;
+       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
   *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6568;
   *(byte *)(iVar2 + 0x1a) = *(byte *)(iVar2 + 0x1a) | 2;
   FUN_80006824(param_1,0x35);
@@ -379,7 +379,7 @@ void FUN_801e4950(int param_1)
   
   iVar1 = *(int *)(param_1 + 0x54);
   if (*(int *)(iVar1 + 0x50) != 0) {
-    *(ushort *)(iVar1 + 0x60) = *(ushort *)(iVar1 + 0x60) & 0xfffe;
+    *(ushort *)(iVar1 + 0x60) = *(ushort *)(iVar1 + 0x60) & ~1;
     iVar1 = 0x32;
     do {
       (**(code **)(*DAT_803dd708 + 8))(param_1,0xa7,0,1,0xffffffff,0);
@@ -441,7 +441,7 @@ void FUN_801e4a14(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       (**(code **)(*DAT_803dd708 + 8))(param_9,0xa9,auStack_28,1,0xffffffff,0);
       if (*(short *)(piVar1 + 1) < 0x10) {
         *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) =
-             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & 0xfffe;
+             *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) & ~1;
       }
       else {
         *(undefined *)(*(int *)(param_9 + 0x2a) + 0x6e) = 5;
@@ -533,7 +533,7 @@ void FUN_801e4cd8(uint param_1)
       FUN_80006824(param_1,0x36);
     }
     *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 0xfffe;
+         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
     *(float *)(iVar2 + 0x20) = lbl_803E6588;
     *(undefined *)(param_1 + 0x36) = 0;
     FUN_80081114(param_1,2);
@@ -657,7 +657,7 @@ void FUN_801e50a4(int param_1)
   
   iVar2 = *(int *)(param_1 + 0xb8);
   *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & 0xfffe;
+       *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
   *(ushort *)(*(int *)(param_1 + 0x54) + 0xb2) = *(ushort *)(*(int *)(param_1 + 0x54) + 0xb2) | 1;
   if (*(int *)(iVar2 + 0x18) == 0) {
     piVar1 = FUN_80017624(param_1,'\x01');
