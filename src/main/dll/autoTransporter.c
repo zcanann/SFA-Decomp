@@ -727,5 +727,52 @@ void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v =
 #pragma scheduling off
 #pragma peephole off
 int fn_801793A4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x274) == 0; }
+
+extern f32 lbl_803E369C;
+extern void ObjHits_DisableObject(int* obj);
+extern void ObjHits_EnableObject(int* obj);
+extern void ObjHits_SyncObjectPositionIfDirty(int* obj);
+
+void fn_8017962C(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    u8 b = *(u8*)((char*)state + 628);
+    if (b != 3 && b != 2) return;
+    *(f32*)((char*)state + 620) = lbl_803E369C;
+}
+
+int fn_80179650(int* obj)
+{
+    int r = 0;
+    u8 b = *(u8*)((char*)*(int**)((char*)obj + 0xb8) + 628);
+    if (b == 2 || b == 1) r = 1;
+    return r;
+}
+
+void fn_80179678(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    *(f32*)((char*)state + 620) = lbl_803E369C;
+    *(u8*)((char*)state + 628) = 0;
+    ObjHits_DisableObject(obj);
+    *(u8*)((char*)state + 603) = 0;
+}
+
+void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    *(u8*)((char*)state + 628) = 3;
+    *(f32*)((char*)state + 620) = lbl_803E369C;
+    *(f32*)((char*)obj + 36) = a;
+    *(f32*)((char*)obj + 40) = b;
+    *(f32*)((char*)obj + 44) = c;
+    ObjHits_EnableObject(obj);
+    ObjHits_SyncObjectPositionIfDirty(obj);
+    *(u8*)((char*)state + 603) = 1;
+    *(f32*)((char*)state + 688) = *(f32*)((char*)obj + 12);
+    *(f32*)((char*)state + 692) = *(f32*)((char*)obj + 16);
+    *(f32*)((char*)state + 696) = *(f32*)((char*)obj + 20);
+}
+
 #pragma peephole reset
 #pragma scheduling reset

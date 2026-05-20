@@ -1002,3 +1002,39 @@ void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, 0x1a); }
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
 u32 dimbossicesmash_func08(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 11) | 0x400; }
+
+/* Drift-recovery: add new fns with v1.0 names. */
+extern int* lbl_803DCA78;
+extern void disableHeavyFog(void);
+
+#pragma scheduling off
+#pragma peephole off
+
+void dimbossicesmash_free(int* obj)
+{
+    ((void(*)(int*))((void**)*lbl_803DCA78)[5])(obj);
+}
+
+void fogcontrol_free(int* obj)
+{
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    if (((u32)state[4] >> 7) & 1u) {
+        disableHeavyFog();
+    }
+}
+
+void explodeanimator_init(int* obj, int* def)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    int v;
+    if ((u32)GameBit_Get(*(s16*)((char*)def + 50)) != 0u) {
+        v = 1;
+    } else {
+        v = 0;
+    }
+    *(u8*)((char*)state + 2) = (u8)v;
+    ObjGroup_AddObject(obj, 26);
+}
+
+#pragma peephole reset
+#pragma scheduling reset

@@ -1622,3 +1622,48 @@ int enemy_func08(void) { return 0x14b; }
 
 /* 12b 3-insn patterns. */
 void fn_8014C66C(int *obj, int x) { *(int*)((char*)((int**)obj)[0xb8/4] + 0x29c) = x; }
+
+/* Drift-recovery: add new fns with v1.0 names. */
+extern void* Obj_GetPlayerObject(void);
+extern f32 lbl_803E2574;
+extern f32 lbl_803E2598;
+
+#pragma scheduling off
+#pragma peephole off
+
+void fn_8014C5C0(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    *(s16*)((char*)state + 688) = 0;
+}
+
+void fn_8014C63C(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    *(void**)((char*)state + 668) = Obj_GetPlayerObject();
+}
+
+u8 fn_8014C4D8(int* obj)
+{
+    int* state;
+    u8 result;
+    if (obj != NULL) {
+        state = *(int**)((char*)obj + 0xb8);
+        if (state != NULL) {
+            f32 val = *(f32*)((char*)state + 728);
+            if (val != lbl_803E2574) {
+                result = (u8)((s32)(val / lbl_803E2598) + 1);
+            } else {
+                result = 0;
+            }
+        } else {
+            result = 0;
+        }
+    } else {
+        result = 0;
+    }
+    return result;
+}
+
+#pragma peephole reset
+#pragma scheduling reset

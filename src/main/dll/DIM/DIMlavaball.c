@@ -1441,16 +1441,16 @@ int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
     }
     for (i = 0; i < p3[0x8B]; i++) {
         switch ((s32)p3[0x81 + i]) {
-        case 2:
-            (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x70B, 0, 2, -1, 0);
-            for (j = 0; j < 0x28; j++) {
-                (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x70C, 0, 2, -1, 0);
-            }
-            break;
         case 1:
             *(u8 *)state = 1;
             if (*(s16 *)(def + 0x1A) != -1) {
                 GameBit_Set(*(s16 *)(def + 0x1A), 1);
+            }
+            break;
+        case 2:
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x70B, 0, 2, -1, 0);
+            for (j = 0; j < 0x28; j++) {
+                (*(int (*)(int, int, int, int, int, int))(*(int *)(*pDll_expgfx + 0x8)))(obj, 0x70C, 0, 2, -1, 0);
             }
             break;
         }

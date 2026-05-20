@@ -28,19 +28,19 @@ void FUN_801905c4(int param_1);
 
 int areafxemit_getExtraSize(void);
 int areafxemit_func08(void);
-void areafxemit_free(void);
-void areafxemit_render(void);
+void areafxemit_free(int* obj);
+void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void areafxemit_hitDetect(void);
 void areafxemit_update(void);
 void areafxemit_init(void);
 void areafxemit_release(void);
 void areafxemit_initialise(void);
 
-void lfxemitter_func0B(void);
-void lfxemitter_setScale(void);
+int lfxemitter_func0B(int* obj);
+int lfxemitter_setScale(void);
 int lfxemitter_getExtraSize(void);
 int lfxemitter_func08(void);
-void lfxemitter_free(void);
+void lfxemitter_free(int* obj);
 void lfxemitter_render(void);
 void lfxemitter_hitDetect(void);
 void lfxemitter_update(void);

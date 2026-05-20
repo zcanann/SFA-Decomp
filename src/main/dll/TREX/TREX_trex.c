@@ -1702,6 +1702,30 @@ extern f32 lbl_803E5920;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
+extern int* lbl_803DCA54;
+extern int* lbl_803DCA74;
+extern int* lbl_803DCA78;
+extern int* lbl_803DCA7C;
+extern void Sfx_StopObjectChannel(int* obj, int channel);
+extern void Sfx_PlayFromObject(int* obj, int sfxId);
+extern int GameBit_Get(int);
+extern void GameBit_Set(int slot, int val);
+extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
+extern void ObjGroup_RemoveObject(int* obj, int group);
+extern void ModelLightStruct_free(int* p);
+extern void skyFn_80088c94(int a, int b);
+extern void Music_Trigger(int a, int b);
+extern void fn_80098928(int* obj, f32 f, int a, int b, int c, int d);
+extern f32 lbl_803E5998;
+extern f32 lbl_803E595C;
+extern f32 lbl_803E5960;
+extern f32 lbl_803E59D8;
+extern f32 lbl_803E59DC;
+extern int* lbl_803DCAB4;
+extern int Stack_IsEmpty(int stack);
+extern int Stack_Pop(int stack, int *out);
+int fn_801E5060(int p1, int p2, int p3);
+void fn_801E5A2C(void);
 #pragma peephole off
 void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58E8); }
 void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5920); }
@@ -1713,7 +1737,17 @@ void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src
  * definition so future hunters can fill bodies one at a time. */
-void Flag_init(void) {}
+#pragma scheduling off
+#pragma peephole off
+void Flag_init(int* obj, int* def)
+{
+    if (*(s16*)((char*)obj + 0x46) != 0x803) {
+        *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803E5998, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void Flag_update(void) {}
 void SB_KyteCage_SeqFn(void) {}
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
@@ -1746,9 +1780,66 @@ int SB_SeqDoor_SeqFn(int p1, int p2, int p3)
 #pragma scheduling reset
 #pragma peephole reset
 void Lamp_SeqFn(void) {}
-void fn_801E66EC(void) {}
-void Lamp_free(void) {}
-void Lamp_init(void) {}
+#pragma scheduling off
+#pragma peephole off
+int fn_801E66EC(int arg1, int arg2)
+{
+    int state;
+    f32 local;
+    int stk;
+    int popOut;
+
+    state = *(int *)(arg1 + 0xb8);
+    local = lbl_803E59D8;
+
+    if (*(s8 *)(arg2 + 0x27a) != 0) {
+        if ((*(u16 *)(arg1 + 0xb0) & 0x800) != 0) {
+            ((void (*)(int, int, f32 *, int, int))((void **)*lbl_803DCAB4)[3])(
+                arg1, 2031, &local, 80, 0);
+        }
+    }
+
+    *(u8 *)(state + 0x9d6) = 0;
+    *(f32 *)(arg2 + 0x280) = lbl_803E59DC;
+    if (*(u8 *)(state + 0x9d6) == 0) {
+        stk = *(int *)(state + 0x9b0);
+        popOut = 0;
+        if (Stack_IsEmpty(stk) == 0) {
+            Stack_Pop(stk, &popOut);
+        }
+        return popOut + 1;
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+#pragma scheduling off
+#pragma peephole off
+void Lamp_free(int* obj)
+{
+    Sfx_StopObjectChannel(obj, 64);
+    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
+void Lamp_init(int* obj, int* def)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if (*(s16*)((char*)obj + 0x46) == 996) {
+        *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
+    } else {
+        *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+    }
+    *(s16*)((char*)obj + 2) = 0;
+    *(s16*)((char*)obj + 4) = 0;
+    *(int*)((char*)obj + 248) = 0;
+    *(s8*)state = 1;
+    *(void**)((char*)obj + 0xbc) = (void*)fn_801E5A2C;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void Lamp_update(void) {}
 #pragma peephole off
 #pragma scheduling off
@@ -1761,7 +1852,22 @@ void SB_CageKyte_init(int p)
 #pragma peephole reset
 void SB_CageKyte_render(void) {}
 void SB_CageKyte_update(void) {}
-void SB_CloudBall_free(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudBall_free(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+    {
+        int* child = *(int**)((char*)state + 24);
+        if (child != NULL) {
+            ModelLightStruct_free(child);
+            *(int**)((char*)state + 24) = NULL;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_CloudBall_hitDetect(void) {}
 void SB_CloudBall_init(void) {}
 void SB_CloudBall_update(void) {}
@@ -1790,21 +1896,129 @@ void SB_KyteCage_free(int* obj)
 #pragma scheduling reset
 void SB_KyteCage_init(void) {}
 void SB_KyteCage_update(void) {}
-void SB_MiniFire_free(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_MiniFire_free(int* obj)
+{
+    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+    ((void(*)(int*))((void**)*lbl_803DCA7C)[6])(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_MiniFire_init(void) {}
-void SB_MiniFire_render(void) {}
+extern void fn_80053ED0(int);
+extern void fn_80053EBC(int);
+extern f32 lbl_803E5928;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) {
+        fn_80053ED0(8);
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5928);
+        fn_80053EBC(8);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_MiniFire_update(void) {}
-void SB_SeqDoor_init(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_SeqDoor_init(int* obj, int* def)
+{
+    *(void**)((char*)obj + 0xbc) = (void*)fn_801E5060;
+    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+    {
+        s8 b = *(s8*)((char*)def + 25);
+        *(s8*)((char*)obj + 0xad) = (s8)(((u32)-b | (u32)b) >> 31);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_SeqDoor_update(void) {}
-void SB_ShipGunBroke_render(void) {}
-void SB_ShipGunBroke_update(void) {}
-void ShipBattle_free(void) {}
+extern f32 lbl_803E59C0;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_ShipGunBroke_render(int* obj, int p2, int p3, int p4, int p5)
+{
+    int* p = *(int**)((char*)obj + 76);
+    if ((u32)GameBit_Get(*(s16*)((char*)p + 30)) != 0u) {
+        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E59C0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
+void SB_ShipGunBroke_update(int* obj)
+{
+    int* p = *(int**)((char*)obj + 76);
+    if ((u32)GameBit_Get(*(s16*)((char*)p + 30)) != 0u) {
+        Sfx_PlayFromObject(obj, 52);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+extern int* lbl_803DCA74;
+
+#pragma scheduling off
+#pragma peephole off
+void ShipBattle_free(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    ((void(*)(int*))((void**)*lbl_803DCA54)[9])(state);
+    ((void(*)(int*, int, int, int, int))((void**)*lbl_803DCA74)[2])(obj, 0xffff, 0, 0, 0);
+    {
+        int light = *(int*)((char*)obj + 248);
+        if (light != 0) {
+            ModelLightStruct_free((int*)light);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void ShipBattle_init(void) {}
-void ShipBattle_render(void) {}
+#pragma scheduling off
+#pragma peephole off
+void ShipBattle_render(int* obj)
+{
+    objRenderFn_8003b8f4(lbl_803E595C);
+    if (*(s16*)((char*)obj + 0x46) == 369) {
+        fn_80098928(obj, lbl_803E5960, 4, 389, 5, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void ShipBattle_update(void) {}
 void shop_buyItem(void) {}
-void shop_free(int obj) {}
-void shop_func0B(int obj) {}
+#pragma scheduling off
+#pragma peephole off
+void shop_free(int* obj)
+{
+    skyFn_80088c94(7, 0);
+    ObjGroup_RemoveObject(obj, 9);
+    Music_Trigger(144, 0);
+    GameBit_Set(3838, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+extern int* lbl_803DCA54;
+
+#pragma scheduling off
+#pragma peephole off
+void shop_func0B(int* obj, int v, int p3)
+{
+    s8* state = *(s8**)((char*)obj + 0xb8);
+    state[0] = (s8)v;
+    if (v != 0) {
+        ((void(*)(int, int*, int))((void**)*lbl_803DCA54)[18])(p3, obj, -1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 /* EN v1.0 0x801E60A4  size: 28b  shop state reset/seed: zero obj->_b8[2]
  * and obj->_b8[3], stash (s8)v in obj->_b8[4]. */
 #pragma scheduling off
@@ -1849,21 +2063,21 @@ int shop_getItemPrice(int p, int idx)
 s16 shop_getItemTextId(int p, int idx)
 {
     if (idx >= 0 && idx < 0x3c) {
-        return *(s16 *)(lbl_80327FD0 + idx * 0xc + 0xa);
+        return *(s16 *)&lbl_80327FD0[idx * 0xc + 0xa];
     }
     return 0;
 }
 u8 shop_getItemField4(int p, int idx)
 {
     if (idx >= 0 && idx < 0x3c) {
-        return *(u8 *)(lbl_80327FD0 + idx * 0xc + 0x4);
+        return lbl_80327FD0[idx * 0xc + 0x4];
     }
     return 0;
 }
 u8 shop_getItemMinPrice(int p, int idx)
 {
     if (idx >= 0 && idx < 0x3c) {
-        return *(u8 *)(lbl_80327FD0 + idx * 0xc + 0x5);
+        return lbl_80327FD0[idx * 0xc + 0x5];
     }
     return 0;
 }
@@ -1905,5 +2119,13 @@ int shop_isItemBought(int p, int idx)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void shop_setStateField1(void) {}
+#pragma scheduling off
+#pragma peephole off
+void shop_setStateField1(int* obj, int v)
+{
+    s8* state = *(s8**)((char*)obj + 0xb8);
+    state[1] = (s8)v;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void shop_update(int obj) {}

@@ -1254,6 +1254,8 @@ void SB_Galleon_free(int obj, int p2) {
 extern void ObjMsg_AllocQueue(int obj, int n);
 extern f32 lbl_803E5830;
 extern f32 lbl_803E5838;
+#pragma scheduling off
+#pragma peephole off
 void SB_ShipHead_init(int obj) {
     f32 *p = (f32*)((int**)obj)[0xb8/4];
     ObjGroup_AddObject(obj, 3);
@@ -1262,6 +1264,8 @@ void SB_ShipHead_init(int obj) {
     p[0xc/4] = p[0xc/4] + lbl_803E5830;
     p[0x8/4] = p[0x8/4] + lbl_803E5838;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
@@ -1301,6 +1305,7 @@ int SB_Galleon_modelMtxFn(int *obj) {
 #pragma peephole reset
 
 /* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
+#pragma peephole off
 int SB_Galleon_func0E(int *obj) {
     s8 *p = (s8*)((int**)obj)[0xb8/4];
     int x;
@@ -1313,3 +1318,4 @@ int SB_Galleon_func0E(int *obj) {
     }
     return 0x640;
 }
+#pragma peephole reset

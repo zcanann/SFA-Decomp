@@ -1640,6 +1640,7 @@ extern f32 lbl_803E5D80;
 #pragma peephole off
 void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
+    extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
     s32 v;
     if (*(int*)((char*)obj + 0xf8) != 0) {
         v = visible;
@@ -1655,7 +1656,7 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
             *(u32*)(*(char**)((char*)obj + 0x64) + 0x30) |= 0x1000;
         }
     }
-    objRenderFn_8003b8f4(lbl_803E5D80);
+    objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5D80);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1713,6 +1714,45 @@ void dll_200_init(int* obj, int* arg)
     *(s16*)(b + 0x20) = 0x12c;
     *(f32*)(b + 0xc) = lbl_803E5D98;
     *(f32*)(b + 0x14) = lbl_803E5DC0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void playerAddRemoveMagic(int player, int amount);
+extern void fn_80296474(int player, int a, int b);
+extern void GameBit_Set(int slot, int val);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801F2974(int* arg0, int arg1, int* arg2)
+{
+    int state;
+    int player;
+    int i;
+
+    player = Obj_GetPlayerObject();
+    state = *(int*)((char*)arg0 + 0xb8);
+    *(u8*)((char*)arg0 + 0xaf) = (u8)(*(u8*)((char*)arg0 + 0xaf) | 8);
+
+    for (i = 0; i < (int)*(u8*)((char*)arg2 + 0x8b); i++) {
+        u8 mode = *(u8*)((char*)state + 0x25);
+        int idx = i + 0x81;
+        if (mode == 1) {
+            if (*((u8*)arg2 + idx) == 4) {
+                playerAddRemoveMagic(player, 5);
+            }
+        } else if (mode != 2) {
+            u8 v = *((u8*)arg2 + idx);
+            if (v == 1) {
+                GameBit_Set(208, 1);
+                *(u8*)((char*)state + 0x24) = 1;
+            } else if (v == 2) {
+                fn_80296474(player, 0, 1);
+                playerAddRemoveMagic(player, 5);
+            }
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -1097,6 +1097,66 @@ LAB_801910d0:
 }
 
 
+/* Drift-recovery: add new fns with v1.0 names. */
+extern u8 lbl_803AC7B0[];
+extern int* lbl_803DCA78;
+extern void mm_free(void* p);
+
+#pragma scheduling off
+#pragma peephole off
+
+extern void fn_8018F2D8(int* obj);
+
+int fn_8018FB84(int* obj, int p2, u8* state)
+{
+    u8 i;
+    for (i = 0; i < state[139]; i++) {
+        if ((s32)state[i + 129] == 1) {
+            fn_8018F2D8(obj);
+        }
+    }
+    return 0;
+}
+
+int lfxemitter_setScale(void) { return -1; }
+
+void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0) {
+    }
+}
+
+void lfxemitter_initialise(void)
+{
+    *(s16*)(lbl_803AC7B0 + 14) = 10000;
+}
+
+int lfxemitter_func0B(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    int v = *(int*)((char*)state + 264);
+    return (u32)(-v | v) >> 31;
+}
+
+void areafxemit_free(int* obj)
+{
+    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+}
+
+void lfxemitter_free(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    int* ptr = *(int**)((char*)state + 264);
+    if (ptr != NULL) {
+        mm_free(ptr);
+    }
+    ObjGroup_RemoveObject(obj, 28);
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+
 /* Trivial 4b 0-arg blr leaves. */
 void fxemit_release(void) {}
 void fxemit_initialise(void) {}

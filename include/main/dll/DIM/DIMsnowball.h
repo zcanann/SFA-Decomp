@@ -41,7 +41,9 @@ void FUN_801ac060(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 
 int ccsharpclawpad_getExtraSize(void);
 void ccsharpclawpad_update(void);
-void ccsharpclawpad_init(void);
+void ccsharpclawpad_init(int* obj, int* def);
+void cclightfoot_init(int* obj, int* def);
+int fn_801ABA84(int p1, int p2, unsigned char* state);
 
 int ccpedstal_getExtraSize(void);
 void ccpedstal_update(void);

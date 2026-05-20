@@ -1974,6 +1974,27 @@ void imanimspacecraft_free(int *obj) {
     (*(void (***)(int*))lbl_803DCA78)[6](obj);
 }
 
+extern void fn_801AE184(void);
+extern f32 lbl_803E4784;
+extern char lbl_803AC948[];
+#pragma scheduling off
+#pragma peephole off
+void imanimspacecraft_init(int *obj) {
+    f32 v;
+    *(int *)((char *)obj + 0xbc) = (int)&fn_801AE184;
+    v = lbl_803E4784;
+    *(f32 *)(lbl_803AC948 + 0xc) = v;
+    *(f32 *)(lbl_803AC948 + 0x10) = v;
+    *(f32 *)(lbl_803AC948 + 0x14) = v;
+    GameBit_Set(0xbeb, 1);
+    GameBit_Set(0xbec, 1);
+    GameBit_Set(0xbed, 1);
+    GameBit_Set(0xbee, 1);
+    GameBit_Set(0xbef, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
 int imanimspacecraft_setScale(int *obj, int bitIdx) {
     u8 *p;
@@ -2037,13 +2058,22 @@ int lavaball1be_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) retu
 u32 imanimspacecraft_func0B(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x3) & 0x4; }
 u32 lavaball1be_func11(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x10) & 0x10; }
 
+#pragma peephole off
+#pragma scheduling off
 int fn_801B0784(int obj, int delta) {
     s8 *inner = *(s8 **)(obj + 0xb8);
     inner[0x1c] = (s8)(inner[0x1c] - delta);
-    return inner[0x1c] == 0 ? 1 : 0;
+    return inner[0x1c] <= 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 extern void Music_Trigger(int id, int p2);
+extern int getSaveGameLoadStatus(void);
+extern void *Obj_GetPlayerObject(void);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void fn_801AF568(int *obj);
+extern void fn_801AF6DC(int *obj);
 #pragma scheduling off
 #pragma peephole off
 void link_levcontrol_free(int obj) {
@@ -2053,15 +2083,62 @@ void link_levcontrol_free(int obj) {
         case 0x49: Music_Trigger(0x36, 0); break;
     }
 }
+void link_levcontrol_update(int *obj) {
+    s8 *inner = *(s8 **)((char *)obj + 0xb8);
+    f32 *player = (f32 *)Obj_GetPlayerObject();
+    if (player == NULL) return;
+
+    if ((s32)inner[0] != (s32)*((s8 *)obj + 0xac)) {
+        if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
+            fn_801AF6DC(obj);
+        } else {
+            return;
+        }
+    }
+    if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
+        fn_801AF568(obj);
+    }
+    inner[0] = (s8)coordsToMapCell(player[3], player[5]);
+}
+void link_levcontrol_init(int *obj) {
+    s8 *inner = *(s8 **)((char *)obj + 0xb8);
+    inner[0] = -1;
+    *(int *)(inner + 4) = -1;
+    *(int *)(inner + 8) = -1;
+    *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+    if (getSaveGameLoadStatus() != 0) {
+        *(int *)((char *)obj + 0xf4) = 2;
+    } else {
+        *(int *)((char *)obj + 0xf4) = 1;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E47C0;
+extern u8 framesThisStep;
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 #pragma scheduling off
 #pragma peephole off
 void imspacering_init(s16 *obj, s8 *p) {
     obj[0] = (s16)((s32)p[0x18] << 8);
     *(int *)((char *)obj + 0xf4) = randomGetRange(0, 1);
+}
+void imspacering_update(s16 *obj) {
+    s16 *inner = *(s16 **)((char *)obj + 0x4c);
+    if (*(int *)((char *)obj + 0xf4) != 0) {
+        obj[0] = (s16)(obj[0] + inner[0xd] * framesThisStep);
+    } else {
+        obj[1] = (s16)(obj[1] + inner[0xd] * framesThisStep);
+    }
+    obj[2] = (s16)(obj[2] + inner[0xe] * framesThisStep);
+    if (lbl_803DDB48 != 0) {
+        *((u8 *)obj + 0x36) = *((u8 *)lbl_803DDB48 + 0x36);
+        objMove((int)obj,
+            *(f32 *)((char *)lbl_803DDB48 + 0xc) - *(f32 *)((char *)obj + 0xc),
+            *(f32 *)((char *)lbl_803DDB48 + 0x10) - *(f32 *)((char *)obj + 0x10),
+            *(f32 *)((char *)lbl_803DDB48 + 0x14) - *(f32 *)((char *)obj + 0x14));
+    }
 }
 void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     u8 *inner = *(u8 **)(obj + 0xb8);
@@ -2076,8 +2153,22 @@ extern void Obj_FreeObject(void *o);
 extern void ModelLightStruct_free(void *light);
 extern void mm_free(void *p);
 
+extern f32 lbl_803E4814;
 #pragma scheduling off
 #pragma peephole off
+void lavaball1bf_init(s16 *obj, u8 *p) {
+    u8 *inner;
+    obj[0] = (s16)((s32)p[0x1c] << 8);
+    inner = *(u8 **)((char *)obj + 0xb8);
+    *(f32 *)(inner + 0x10) = (f32)*(s16 *)(p + 0x18);
+    *(f32 *)(inner + 0xc) = lbl_803E4814;
+    *(s16 *)(inner + 0x14) = p[0x1d];
+    inner[0x18] = (u8)GameBit_Get((int)*(s16 *)(p + 0x22));
+    if (*(s16 *)(p + 0x24) == -1 && inner[0x18] == 0) {
+        inner[0x1b] = 1;
+    }
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+}
 void lavaball1bf_free(int obj, int mode) {
     void **inner = *(void ***)(obj + 0xb8);
     if (mode == 0 && inner[2] != 0) {
