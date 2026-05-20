@@ -1343,6 +1343,37 @@ u8 groundanimator_func0B(int *obj)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern int objPosToMapBlockIdx(double x, double y, double z);
+extern void *mapGetBlock(int idx);
+#pragma peephole off
+#pragma scheduling off
+void visanimator_update(int *obj)
+{
+    int *state = ((int**)obj)[0x4C / 4];
+    u8 *vstate = (u8*)((int**)obj)[0xB8 / 4];
+    int idx = objPosToMapBlockIdx((double)*(f32*)((char*)obj + 0xC),
+                                  (double)*(f32*)((char*)obj + 0x10),
+                                  (double)*(f32*)((char*)obj + 0x14));
+    if (mapGetBlock(idx) == NULL) {
+        vstate[0] |= 1;
+        return;
+    }
+    {
+        int gate = GameBit_Get(*(s16*)((char*)state + 0x18));
+        vstate[2] = (u8)(vstate[4] & gate);
+        if (vstate[3] != vstate[2]) {
+            ((s8*)vstate)[1] = (s8)(((s8*)vstate)[1] ^ 1);
+            vstate[0] |= 1;
+        }
+        vstate[3] = vstate[2];
+        if (vstate[0] & 1) {
+            vstate[0] &= ~1;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern u8 lbl_803DDAE8;
 extern void *lbl_803DDAEC;
 extern void *lbl_803DDAF0;
