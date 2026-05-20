@@ -839,8 +839,8 @@ extern void disableHeavyFog(void);
 extern int *gGameUIInterface;
 extern u32 GameBit_Get(int id);
 extern int *gObjectTriggerInterface;
-extern int *lbl_803DCA74;
-#define gTitleMenuControlInterface lbl_803DCA74
+extern int *gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 #pragma scheduling off
 #pragma peephole off
 void animsharpclaw_free(int obj) {

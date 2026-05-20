@@ -1703,8 +1703,8 @@ extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
 extern int* gObjectTriggerInterface;
-extern int* lbl_803DCA74;
-#define gTitleMenuControlInterface lbl_803DCA74
+extern int* gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern int* gExpgfxInterface;
 extern int* gModgfxInterface;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
@@ -1964,7 +1964,7 @@ void SB_ShipGunBroke_update(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern int* lbl_803DCA74;
+extern int* gTitleMenuControlInterfaceCopy;
 
 #pragma scheduling off
 #pragma peephole off

@@ -3365,8 +3365,8 @@ int dll_19_func1B(int p)
 
 extern void Sfx_StopObjectChannel(int *p1, int channel);
 extern void voxmaps_freeRouteWork(void *p);
-extern void **lbl_803DCA74;
-#define gTitleMenuControlInterface lbl_803DCA74
+extern void **gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern void mm_free(u32);
 void dll_19_func12(int *p1, int *p2, u8 flag)
 {

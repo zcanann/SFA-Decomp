@@ -30,8 +30,8 @@ extern int playerGetMoney(void *playerObj);
 
 extern void *gScreenTransitionInterface;
 extern void *gObjectTriggerInterface;
-extern void *lbl_803DCA74;
-#define gTitleMenuControlInterface lbl_803DCA74
+extern void *gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern s16 lbl_803DC0A0[1];

@@ -6,8 +6,7 @@ extern void saveSelectGoToChooseSlot(int arg);
 
 extern u8 lbl_803DB424;
 extern TitleMenuControl *gScreenTransitionInterface;
-extern TitleMenuControl *lbl_803DCA70;
-#define gTitleMenuControlInterface lbl_803DCA70
+extern TitleMenuControl *gTitleMenuControlInterface;
 extern u8 lbl_803DD6C4;
 extern u8 lbl_803DD6CC;
 extern u8 lbl_803DD6CD;

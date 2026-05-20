@@ -35,8 +35,8 @@ extern undefined4 DAT_803dc071;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f4;
 extern int *gObjectTriggerInterface;
-extern int *lbl_803DCA74;
-#define gTitleMenuControlInterface lbl_803DCA74
+extern int *gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern f64 DOUBLE_803e5bd0;
 extern f64 DOUBLE_803e5c08;
 extern f32 lbl_803DC074;
