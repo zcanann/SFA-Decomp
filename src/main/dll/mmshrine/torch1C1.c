@@ -282,7 +282,7 @@ void FUN_801c6358(int param_1)
 {
   uint uVar1;
   uint *puVar2;
-  
+
   puVar2 = *(uint **)(param_1 + 0xb8);
   FUN_800067c0((int *)0xd8,0);
   FUN_800067c0((int *)0xd9,0);
@@ -299,6 +299,28 @@ void FUN_801c6358(int param_1)
   GameBit_Set(0xa7f,1);
   return;
 }
+
+extern void Music_Trigger(int trackId, int restart);
+extern void ModelLightStruct_free(void *p);
+#pragma scheduling off
+#pragma peephole off
+void ecsh_shrine_free(int *obj) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    Music_Trigger(0xd8, 0);
+    Music_Trigger(0xd9, 0);
+    Music_Trigger(0x08, 0);
+    Music_Trigger(0x0d, 0);
+    if (*inner != 0) {
+        ModelLightStruct_free((void *)*inner);
+        *inner = 0;
+    }
+    ObjGroup_RemoveObject((int)obj, 0xb);
+    GameBit_Set(0xefa, 0);
+    GameBit_Set(0xcbb, 1);
+    GameBit_Set(0xa7f, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
