@@ -3255,6 +3255,18 @@ extern int* lbl_803DCA78;
 extern int fn_801A04F4(int p1, int p2, void* p3);
 extern f32 lbl_803E42B8;
 extern f32 lbl_803E42C0;
+extern f32 lbl_803E4130;
+extern f32 lbl_803E416C;
+extern void fn_8001CB3C(int* p);
+/* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
+extern void dll_2E_func06(int* a, int* b, int c);
+extern void fn_80096F9C(f32* p, int a, int b, int c, int d);
+extern void* Obj_GetPlayerObject(void);
+extern f32 fn_80296214(void* p);
+/* ObjMsg_AllocQueue already declared as undefined */
+extern int fn_8019FC84(int* obj, int p2, void* p3);
+extern void Music_Trigger(int a, int b);
+extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
 #pragma scheduling off
 #pragma peephole off
@@ -3320,6 +3332,96 @@ void cfprisonguard_hitDetect(int* obj)
     int* state = *(int**)((char*)obj + 0xb8);
     if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) == 19) {
         *(s8*)((char*)state + 55) = 7;
+    }
+}
+
+void gcrobotlightbea_free(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if (state[0] != 0) {
+        fn_8001CB3C(state);
+    }
+    if (*(int**)((char*)obj + 196) != NULL) {
+        ObjLink_DetachChild(*(int**)((char*)obj + 196), obj);
+    }
+}
+
+void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if ((s32)visible != 0) {
+        objRenderFn_8003b8f4(lbl_803E4130);
+        dll_2E_func06(obj, state, 0);
+    }
+}
+
+void cfprisoncage_hitDetect(int* obj)
+{
+    f32 pos_x, pos_y, pos_z;
+    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos_x, &pos_y, &pos_z) != 0) {
+        fn_80096F9C(&pos_x, 8, 200, 128, 0);
+    }
+}
+
+void windlift_free(int* obj)
+{
+    void* p = Obj_GetPlayerObject();
+    if (p == NULL || fn_80296214(p) == lbl_803E416C) {
+        Music_Trigger(189, 0);
+    }
+    ObjGroup_RemoveObject(obj, 73);
+}
+
+void cfguardian_free(int* obj, int p2)
+{
+    char* state = *(char**)((char*)obj + 0xb8);
+    if (p2 == 0) {
+        int i;
+        for (i = 0; i < 6; i++) {
+            int* sub = *(int**)(state + 1676);
+            if (sub != NULL) {
+                Obj_FreeObject(sub);
+            }
+            state += 4;
+        }
+    }
+}
+
+void gunpowderbarrel_setScale(int* obj, f32* params)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if (*(u8*)((char*)state + 21) != 0) return;
+    if (*(u8*)((char*)state + 23) != 0) return;
+    *(f32*)((char*)state + 36) = *(f32*)((char*)state + 36) + params[1];
+    *(f32*)((char*)state + 32) = *(f32*)((char*)state + 32) + params[0];
+    *(f32*)((char*)state + 40) = *(f32*)((char*)state + 40) + params[2];
+    *(u8*)((char*)state + 73) = (u8)(*(u8*)((char*)state + 73) | 1);
+}
+
+int gunpowderbarrel_canBeGrabbed(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    int result = 0;
+    if (*(u8*)((char*)state + 21) == 0 &&
+        *(f32*)((char*)state + 24) == lbl_803E42C0 &&
+        ((int(*)(void))((void**)*(int**)&lbl_803DCAC0)[5])() == 0) {
+        result = 1;
+    }
+    return result;
+}
+
+void cfprisonuncle_init(int* obj)
+{
+    int* state;
+    ObjMsg_AllocQueue(obj, 1);
+    *(void**)((char*)obj + 188) = (void*)fn_8019FC84;
+    state = *(int**)((char*)obj + 0xb8);
+    *(int*)((char*)state + 100) = 464;
+    *(int*)((char*)state + 104) = 465;
+    *(s16*)((char*)state + 112) = 0;
+    *(s8*)((char*)state + 116) = 0;
+    if ((u32)GameBit_Get(77) != 0u) {
+        GameBit_Set(80, 1);
     }
 }
 
