@@ -1313,3 +1313,10 @@ void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3F78); }
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3FC4); }
 #pragma peephole reset
+
+/* wall variant: hashes lha to byte */
+#pragma peephole off
+#pragma scheduling off
+u8 wallanimator_modelMtxFn(int *obj) { return (u8)*(s16 *)((char *)((int **)obj)[0x4c/4] + 0x1c); }
+#pragma peephole reset
+#pragma scheduling reset
