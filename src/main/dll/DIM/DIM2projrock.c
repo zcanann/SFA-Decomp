@@ -1196,6 +1196,38 @@ void fn_801B8B48(void* obj)
     *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) + lbl_803E4AD8;
 }
 
+/* fn_801B9E18: similar romlist param init, but reads three u8 fields, packs to s16
+ *              fields, and on a u8 flag does a u32→f32 conversion (MWCC emits the
+ *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
+ *              obj[8]. Also sets obj[0xB8]→f10 from a constant and OR-merges flags
+ *              into obj[0x64]->u32_30 (0x810) and obj[0xB0]'s u16 (0x2000). */
+extern f32 lbl_803E4BA8;
+extern f32 lbl_803E4BAC;
+#pragma peephole off
+#pragma scheduling off
+void fn_801B9E18(void* obj, void* p)
+{
+    u32 flag;
+    void* p50;
+    void* p64;
+    *(s16*)((char*)obj + 0x4) = (s16)((u32)*(u8*)((char*)p + 0x18) << 8);
+    *(s16*)((char*)obj + 0x2) = (s16)((u32)*(u8*)((char*)p + 0x19) << 8);
+    *(s16*)((char*)obj + 0x0) = (s16)((u32)*(u8*)((char*)p + 0x1A) << 8);
+    flag = *(u8*)((char*)p + 0x1B);
+    if (flag != 0) {
+        p50 = *(void**)((char*)obj + 0x50);
+        *(f32*)((char*)obj + 0x8) = *(f32*)((char*)p50 + 4) * ((f32)flag / lbl_803E4BA8);
+    }
+    *(f32*)((char*)*(void**)((char*)obj + 0xB8) + 0x10) = lbl_803E4BAC;
+    p64 = *(void**)((char*)obj + 0x64);
+    if (p64 != 0) {
+        *(u32*)((char*)p64 + 0x30) |= 0x810;
+    }
+    *(u16*)((char*)obj + 0xB0) |= 0x2000;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* fn_801B8EF8: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
  *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
 #pragma peephole off
