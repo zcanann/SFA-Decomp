@@ -38,7 +38,7 @@ void portalspelldoor_free(void);
 void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void portalspelldoor_hitDetect(void);
 void portalspelldoor_update(void);
-void portalspelldoor_init(void);
+void portalspelldoor_init(u8* obj, u8* data);
 void portalspelldoor_release(void);
 void portalspelldoor_initialise(void);
 

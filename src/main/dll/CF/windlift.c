@@ -1446,6 +1446,27 @@ void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c) {
     *(f32*)(sub + 0x5c) = c;
 }
 
+/* portalspelldoor_init: byte<<8 / halfword<<8 stash at obj+0..+2, prime
+ * obj+8 with lbl_803E3A8C, derive sub+4 = obj->_a8 * obj+8 * lbl_803E3A90,
+ * GameBit-gated bit-set on obj+6 (0x4000) and obj+b0 (0xe000), then
+ * latch sub+8 = -1. */
+extern f32 lbl_803E3A8C;
+extern f32 lbl_803E3A90;
+#pragma scheduling off
+void portalspelldoor_init(u8* obj, u8* data) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    *(s16*)obj = (s16)((s32)(s8)data[0x18] << 8);
+    *(s16*)(obj + 0x2) = (s16)((s32)*(s16*)(data + 0x1c) << 8);
+    *(f32*)(obj + 0x8) = lbl_803E3A8C;
+    *(f32*)(sub + 0x4) = *(f32*)(obj + 0xa8) * *(f32*)(obj + 0x8) * lbl_803E3A90;
+    if (GameBit_Get(*(s16*)(data + 0x1e)) != 0) {
+        *(s16*)(obj + 0x6) = (s16)(*(s16*)(obj + 0x6) | 0x4000);
+        *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0xe000);
+    }
+    *(s32*)(sub + 0x8) = -1;
+}
+#pragma scheduling reset
+
 /* LanternFireFly_setScale: subtract sub->_54..5c from vec[0..2] (overwriting
  * vec), copy the result to sub->_34..3c, set sub->_6c = 4. */
 #pragma scheduling off
