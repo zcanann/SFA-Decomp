@@ -3397,16 +3397,20 @@ void CameraModeCloudRunner_init(int *p1, s16 p2, f32 *p3)
     if (lbl_803DD5B8 == 0) {
         lbl_803DD5B8 = (u32)mmAlloc(16, 15, 0);
     }
-    if (p3 != NULL) {
-        ((f32*)lbl_803DD5B8)[0] = p3[0];
-        ((f32*)lbl_803DD5B8)[1] = p3[1];
-        ((f32*)lbl_803DD5B8)[2] = p3[2];
-        ((f32*)lbl_803DD5B8)[3] = p3[3];
-    } else {
-        ((f32*)lbl_803DD5B8)[0] = *(f32*)((char*)p1_a4 + 0x18);
-        ((f32*)lbl_803DD5B8)[1] = *(f32*)((char*)p1_a4 + 0x1C);
-        ((f32*)lbl_803DD5B8)[2] = *(f32*)((char*)p1_a4 + 0x20);
-        ((f32*)lbl_803DD5B8)[3] = (f32)p2;
+    {
+        f32 v;
+        if (p3 != NULL) {
+            ((f32*)lbl_803DD5B8)[0] = p3[0];
+            ((f32*)lbl_803DD5B8)[1] = p3[1];
+            ((f32*)lbl_803DD5B8)[2] = p3[2];
+            v = p3[3];
+        } else {
+            ((f32*)lbl_803DD5B8)[0] = *(f32*)((char*)p1_a4 + 0x18);
+            ((f32*)lbl_803DD5B8)[1] = *(f32*)((char*)p1_a4 + 0x1C);
+            ((f32*)lbl_803DD5B8)[2] = *(f32*)((char*)p1_a4 + 0x20);
+            v = (f32)p2;
+        }
+        ((f32*)lbl_803DD5B8)[3] = v;
     }
     getAngle(
         *(f32*)((char*)p1 + 0x18) - ((f32*)lbl_803DD5B8)[0],
