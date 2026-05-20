@@ -3595,14 +3595,14 @@ void titlescreen_release(void)
     lbl_803DD9D4 = NULL;
     i = 0;
     p = lbl_803A9F98;
-    while (i < 19) {
+    do {
         if (*p != NULL) {
             textureFree(*p);
             *p = NULL;
         }
         p++;
         i++;
-    }
+    } while (i < 19);
     lbl_803DD992 = 0;
 }
 #pragma peephole reset
