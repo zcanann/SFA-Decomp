@@ -2321,11 +2321,12 @@ extern f32 lbl_803DEBC8;
 
 #pragma scheduling off
 void fn_80056B8C(int idx, float* out1, float* out2) {
-	f32 divisor = lbl_803DEBC8;
-	f32* p2;
-	*out1 = *(f32*)(lbl_803DCE68 + (idx << 4)) / divisor;
-	p2 = (f32*)(lbl_803DCE68 + (idx << 4));
-	*out2 = p2[1] / divisor;
+	f32 divisor;
+	char* base;
+	idx <<= 4;
+	*out1 = *(f32*)(lbl_803DCE68 + idx) / (divisor = lbl_803DEBC8);
+	base = (char*)lbl_803DCE68 + idx;
+	*out2 = *(f32*)(base + 4) / divisor;
 }
 #pragma scheduling reset
 
