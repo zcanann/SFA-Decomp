@@ -3158,7 +3158,7 @@ extern void* lbl_803AC5D0[];
 extern int fn_8016032C(int* obj, u8* state);
 extern int fn_801601C4(int* obj, u8* state);
 extern int fn_8016043C(int* obj, u8* state);
-extern int fn_801605D4(short* out, u8* obj);
+extern int fn_801605D4(int* obj, u8* def);
 int fn_80160690(short* out, u8* obj);
 int fn_801605A8(short* out, u8* obj);
 int fn_80160534(int* obj);
@@ -3194,6 +3194,31 @@ void dll_CE_initialise(void)
     lbl_803AC598[4] = (void*)fn_8015DE50;
     lbl_803AC598[5] = (void*)fn_8015DC04;
 }
+
+extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
+extern f32 lbl_803E2E68;
+extern f32 lbl_803E2E8C;
+extern f32 lbl_803E2E90;
+extern f32 lbl_803E2E94;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801605D4(int* obj, u8* def)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if ((s8)def[634] != 0) {
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803E2E68, 0);
+        *(s8*)(def + 838) = 0;
+    }
+    *(s8*)(def + 607) = 1;
+    *(s16*)((char*)obj + 4) = *(s16*)(def + 414);
+    *(s16*)((char*)obj + 2) = *(s16*)(def + 412);
+    ((void(*)(int*, u8*, int*, f32, f32))((void**)*lbl_803DCAB8)[4])(obj, def, state, lbl_803E2E8C, lbl_803E2E90);
+    *(f32*)(def + 672) = lbl_803E2E94 * *(f32*)(def + 640);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 void dll_CB_initialise(void)
 {
