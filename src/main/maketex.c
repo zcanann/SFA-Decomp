@@ -1328,11 +1328,16 @@ extern f32 timeDelta;
 #pragma scheduling off
 int timerCountDown(f32 *p)
 {
-    if (*p == lbl_803DEFA0) return 0;
-    *p = *p - timeDelta;
-    if (*p > lbl_803DEFA0) return 0;
-    *p = lbl_803DEFA0;
-    return 1;
+    f32 v = *p;
+    f32 zero = lbl_803DEFA0;
+    if (v != zero) {
+        *p = v - timeDelta;
+        if (*p <= zero) {
+            *p = zero;
+            return 1;
+        }
+    }
+    return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
