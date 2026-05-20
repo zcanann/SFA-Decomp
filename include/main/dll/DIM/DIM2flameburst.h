@@ -43,8 +43,8 @@ void FUN_801b6130(int param_1);
 void FUN_801b63c0(void);
 
 int explosion_getExtraSize(void);
-int explosion_func08(void);
-void explosion_free(void);
+int explosion_func08(int obj);
+void explosion_free(int obj);
 void explosion_render(void);
 void explosion_hitDetect(void);
 void explosion_update(void);
