@@ -822,7 +822,7 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
     mat[15] = lbl_803DEE78;
 
     for (i = 0; i < 16; i++) {
-        mat[i] = mat[i] * scale;
+        mat[i] *= scale;
     }
 
     if (out != NULL) {
