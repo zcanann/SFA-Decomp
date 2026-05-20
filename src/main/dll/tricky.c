@@ -1966,6 +1966,22 @@ void GameUI_airMeterSetShutdown(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void *textureLoadAsset(int id);
+extern f32 lbl_803E1E3C;
+extern int lbl_803A9398[];
+#pragma scheduling off
+#pragma peephole off
+void GameUI_func15(s16 a, int b, int c) {
+    void *t = textureLoadAsset(a);
+    lbl_803A9398[0] = (int)t;
+    if (t == NULL) return;
+    lbl_803A9398[1] = b;
+    *(s16 *)((char *)lbl_803A9398 + 0xc) = (s16)c;
+    *(f32 *)((char *)lbl_803A9398 + 0x8) = lbl_803E1E3C;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void GameUI_airMeterRun(int v) {
