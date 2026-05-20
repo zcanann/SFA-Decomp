@@ -2977,8 +2977,10 @@ extern void iceball_update(undefined2 *param_1,int param_2);
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, 0x26b). */
 #pragma peephole off
 void chukchuk_setScale(int obj, int v) {
-    if ((v & 0xff) == 0x80) {
+    switch ((u8)v) {
+    case 0x80:
         Sfx_PlayFromObject(obj, 0x26b);
+        break;
     }
 }
 #pragma peephole reset
