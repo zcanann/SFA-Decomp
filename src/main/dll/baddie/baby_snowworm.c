@@ -1480,10 +1480,10 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
 #pragma scheduling reset
 
 /* EN v1.0 0x8012C558  size: 340b  Snowworm scene shutdown / setup.
- * Logic-only — MWCC parallelizes the two .bss address loads (slot
- * cursor and type cursor) via `addi r0,r3,@lo; mr rN,r0` per address
- * instead of the clean `lis r3,@ha; addi rN,r3,@lo` pair-per-address
- * that retail emits. Pragmas don't disable the routing.
+ * 97% — residual is MWCC routing the two .bss address loads via
+ * `addi r0,r3,@lo; mr rN,r0` per address instead of the clean
+ * `lis r3,@ha; addi rN,r3,@lo` pair-per-address (plus a r30/r31
+ * swap between obj and i). Pragmas don't disable the routing.
  *
  * Walks 6 candidate slots (lbl_803A9410[i]) but only acts on the first
  * 4. For each empty slot, allocates a 0x20-byte block via
