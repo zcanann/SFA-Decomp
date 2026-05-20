@@ -2584,10 +2584,10 @@ void FUN_8019e964(undefined8 param_1,double param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void babycloudrunner_func08(int param_1)
+void babycloudrunner_init(int param_1)
 {
   undefined4 *puVar1;
-  
+
   puVar1 = *(undefined4 **)(param_1 + 0xb8);
   *puVar1 = 0;
   puVar1[1] = 0;
@@ -3249,6 +3249,82 @@ int fn_801A04F4(int p1, int p2, void *p3) {
 /* plain forwarder. */
 extern void waterSpellStone1Fn_8019b4c8(void);
 void cfguardian_update(void) { waterSpellStone1Fn_8019b4c8(); }
+
+/* Drift-recovery: add new fns with v1.0 names. */
+extern int* lbl_803DCA78;
+extern int fn_801A04F4(int p1, int p2, void* p3);
+extern f32 lbl_803E42B8;
+extern f32 lbl_803E42C0;
+
+#pragma scheduling off
+#pragma peephole off
+
+int babycloudrunner_func08(void) { return 0; }
+
+void spiritdoorspirit_init(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    *(s8*)state = 0;
+    *(s8*)((char*)obj + 54) = 0;
+}
+
+int babycloudrunner_setScale(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    return !(*(u8*)((char*)state + 556) & 1);
+}
+
+void cfperch_init(int* obj)
+{
+    *(int*)((char*)obj + 244) = 1;
+    *(void**)((char*)obj + 188) = (void*)fn_801A04F4;
+}
+
+void cfmaincrystal_free(int* obj)
+{
+    ((void(*)(int*))((void**)*lbl_803DCA78)[5])(obj);
+}
+
+void cfperch_free(int* obj)
+{
+    ObjMsg_SendToObjects(62, 0, obj, 0x40001, 0);
+}
+
+void babycloudrunner_free(int* obj)
+{
+    ObjGroup_RemoveObject(obj, 32);
+    ObjGroup_RemoveObject(obj, 3);
+}
+
+void gcrobotlightbea_init(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    state[0] = 0;
+    state[1] = 0;
+    ObjHits_EnableObject(obj);
+    *(u8*)((char*)obj + 54) = 0x80;
+}
+
+void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if ((s32)visible != 0) {
+        if (*(u8*)state != 0) {
+            objRenderFn_8003b8f4(lbl_803E42B8);
+        }
+    }
+}
+
+void cfprisonguard_hitDetect(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) == 19) {
+        *(s8*)((char*)state + 55) = 7;
+    }
+}
+
+#pragma peephole reset
+#pragma scheduling reset
 
 /* copy 3 floats within same struct */
 void cfguardian_hitDetect(int *obj) {

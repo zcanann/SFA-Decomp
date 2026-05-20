@@ -90,7 +90,8 @@ void FUN_8019e7cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 void FUN_8019e964(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9);
-void babycloudrunner_func08(int param_1);
+int babycloudrunner_func08(void);
+void babycloudrunner_init(int param_1);
 void babycloudrunner_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8019ec44(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
