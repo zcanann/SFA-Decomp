@@ -1303,3 +1303,54 @@ int fn_80080360(int p, int val)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern s16 lbl_8039A3B0[];
+#pragma peephole off
+#pragma scheduling off
+int animatedObjGetSeqId(int obj)
+{
+    return lbl_8039A3B0[(s8)*(u8 *)(obj + 0x57)] - 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void ObjSeq_yield(int obj, int val)
+{
+    *(int *)(obj + 0x74) = val;
+    *(u8 *)(obj + 0x90) = (u8)(*(u8 *)(obj + 0x90) | 0x40);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern int lbl_803DB72C;
+extern int lbl_803DD07C;
+extern u8 lbl_803DD078;
+#pragma peephole off
+#pragma scheduling off
+int ObjSeq_SetObjs(int a, int b, int c)
+{
+    u8 v = (u8)c;
+    lbl_803DB72C = a;
+    lbl_803DD07C = b;
+    lbl_803DD078 = v;
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern u8 lbl_803DD0D9;
+extern f32 lbl_803994EC[];
+#pragma peephole off
+#pragma scheduling off
+int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
+{
+    lbl_803DD0D9 = 1;
+    lbl_803994EC[0] = x;
+    lbl_803994EC[1] = y;
+    lbl_803994EC[2] = z;
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
