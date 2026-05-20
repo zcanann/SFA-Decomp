@@ -1533,10 +1533,10 @@ void LaserBeam_release(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = 0;
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x801F1EF4  size: 32b  Stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
+/* dll_1FF_init: stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801F1EF4(s16* a, s8* b)
+void dll_1FF_init(s16* a, s8* b)
 {
     a[0] = (s16)((s32)b[0x18] << 8);
     a[1] = -0x8000;
@@ -1544,13 +1544,13 @@ void fn_801F1EF4(s16* a, s8* b)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x801F1BF0  size: 144b  Render gate: when obj->_f8 implies
+/* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
 extern f32 lbl_803E5D80;
 #pragma scheduling off
 #pragma peephole off
-void fn_801F1BF0(int *obj, int p1, int p2, int p3, int p4, s8 visible)
+void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     s32 v;
     if (*(int*)((char*)obj + 0xf8) != 0) {
@@ -1572,7 +1572,7 @@ void fn_801F1BF0(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x801F2BA0  size: 192b  Render gate: when visible != 0 and
+/* dll_200_render: when visible != 0 and
  * lbl_803DCAAC vtable[0x40] applied to obj->_ac returns 4, gate on
  * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
 extern undefined4* lbl_803DCAAC;
@@ -1580,7 +1580,7 @@ extern int GameBit_Get(int);
 extern f32 lbl_803E5DC0;
 #pragma scheduling off
 #pragma peephole off
-void fn_801F2BA0(int* obj, int p1, int p2, int p3, int p4, s8 visible)
+void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
     s32 v = visible;
@@ -1597,20 +1597,20 @@ void fn_801F2BA0(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x801F2DBC  size: 188b  Init: write a function pointer
- * (fn_801F2A70) into obj->_bc and prime obj->_b8 (the body block) with
+/* dll_200_init: write a function pointer
+ * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-extern void fn_801F2A70(void);
+extern void dll_200_SeqFn(void);
 extern f32 lbl_803E5D98;
 #pragma scheduling off
 #pragma peephole off
-void fn_801F2DBC(int* obj, int* arg)
+void dll_200_init(int* obj, int* arg)
 {
     u8* b;
     *(int*)((char*)obj + 0xf4) = 0;
     *(s16*)obj = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)fn_801F2A70;
+    *(void**)((char*)obj + 0xbc) = (void*)dll_200_SeqFn;
     b = *(u8**)((char*)obj + 0xb8);
     *(u8*)(b + 0x26) = (u8)*(s16*)arg;
     *(u32*)(b + 0x1c) = 0;
