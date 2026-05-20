@@ -1334,8 +1334,21 @@ void vfplavastar_free(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E61CC;
+extern void fn_8003B608(int r, int g, int b);
+extern f32 lbl_803E6168;
 extern void objRenderFn_8003b8f4(f32);
+#pragma scheduling off
+#pragma peephole off
+void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    if (visible != 0) {
+        fn_8003B608(0xff, 0xe6, 0xd7);
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E6168);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E61CC;
 #pragma scheduling off
 #pragma peephole off
 void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
