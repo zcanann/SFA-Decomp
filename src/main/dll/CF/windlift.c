@@ -1485,10 +1485,10 @@ void LanternFireFly_setScale(u8* obj, f32* vec) {
 /* LanternFireFly_free: free the light struct at sub[0] if present, then
  * (when p2==0 and the freshly-cleared sub[0] is NULL and mode bits 6..7
  * aren't 1) reset lbl_803DDAD8 to 0; finally ObjGroup_RemoveObject(obj, 0x30)
- * and dispatch vtable[6] of *lbl_803DCA78. */
+ * and dispatch vtable[6] of *gExpgfxInterface. */
 extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
-extern void *lbl_803DCA78;
+extern void *gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void LanternFireFly_free(u8* obj, int p2) {
@@ -1501,7 +1501,7 @@ void LanternFireFly_free(u8* obj, int p2) {
         lbl_803DDAD8 = 0;
     }
     ObjGroup_RemoveObject(obj, 0x30);
-    (*(void (***)(u8*))lbl_803DCA78)[6](obj);
+    (*(void (***)(u8*))gExpgfxInterface)[6](obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

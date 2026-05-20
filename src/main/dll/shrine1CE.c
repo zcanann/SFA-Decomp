@@ -425,7 +425,7 @@ void dll_19B_init(void) {}
 void dll_19C_update(void) {}
 void dll_19D_update(void) {}
 
-extern undefined4 *lbl_803DCA78;
+extern undefined4 *gExpgfxInterface;
 
 /*
  * Function: dll_19C_init
@@ -464,7 +464,7 @@ void dll_19D_free(int obj)
         getLActions(self, self, 1, 0, 0, 0);
         *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 0x2);
     }
-    (*(void (**)(int))((char *)*(int *)lbl_803DCA78 + 0x18))(self);
+    (*(void (**)(int))((char *)*(int *)gExpgfxInterface + 0x18))(self);
 }
 #pragma peephole reset
 #pragma scheduling reset

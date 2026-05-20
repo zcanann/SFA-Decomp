@@ -60,7 +60,7 @@ extern undefined4 DAT_803de810;
 extern undefined4 DAT_803de814;
 extern f64 DOUBLE_803e5990;
 extern f64 DOUBLE_803e59f0;
-extern undefined4* lbl_803DCA78;
+extern undefined4* gExpgfxInterface;
 extern undefined4* lbl_803DCAB8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DE818;
@@ -459,7 +459,7 @@ void DIMbossspit_free(int param_1)
   if (uVar1 != 0) {
     ModelLightStruct_free((void *)uVar1);
   }
-  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(param_1);
+  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(param_1);
   return;
 }
 #pragma scheduling reset
@@ -674,7 +674,7 @@ void dimbossfire_free(int obj)
     ModelLightStruct_free(light);
     *(undefined4 *)(state + 0x10) = 0;
   }
-  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 #pragma scheduling reset
 

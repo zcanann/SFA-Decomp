@@ -1082,7 +1082,7 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma scheduling reset
 
 extern unsigned int *gObjectTriggerInterface;
-extern int *lbl_803DCA78;
+extern int *gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void magiclight_free(int obj) {
@@ -1091,7 +1091,7 @@ void magiclight_free(int obj) {
         if ((s8)*(s8 *)((char *)inner + 0xb) != 0) {
             getLActions(0, (int *)obj, (u16)*(s16 *)((char *)inner + 8), 0, 0, 0);
         }
-        (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+        (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
     }
 }
 void magiclight_update(int obj) {

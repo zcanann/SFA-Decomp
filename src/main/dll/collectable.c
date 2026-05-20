@@ -223,7 +223,7 @@ extern undefined4 DAT_803e31f8;
 extern char sSidekickCommandDebugTextBlock[];
 extern undefined4 lbl_803DDA48;
 extern int lbl_803DDA54;
-extern undefined4* lbl_803DCA78;
+extern undefined4* gExpgfxInterface;
 extern int *gMapEventInterface;
 extern undefined4 lbl_803DBC40;
 extern undefined4 lbl_803DBC48;
@@ -1183,7 +1183,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   freeAndNull((void *)(state + 0x688));
   freeAndNull((void *)(state + 0x6b8));
   ObjGroup_RemoveObject(obj,1);
-  (**(code **)(*lbl_803DCA78 + 0x14))(obj);
+  (**(code **)(*gExpgfxInterface + 0x14))(obj);
   if ((shouldKeepFlameChildren == 0) && ((*(uint *)(state + 0x54) & 0x800) != 0)) {
     *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffff7ff;
     *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x1000;

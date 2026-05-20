@@ -4166,14 +4166,14 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *lbl_803DCA78;
+extern int *gExpgfxInterface;
 extern int *lbl_803DCA8C;
 extern int lbl_803AD0F4[];
 extern void fn_801FF884(void);
 #pragma scheduling off
 #pragma peephole off
 void chuka_free(int obj) {
-    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 void chuka_hitDetect(int obj) {
     int *inner = *(int **)(obj + 0xb8);
@@ -4282,7 +4282,7 @@ int fn_80200410(int p1, int p2)
 #pragma scheduling off
 void fn_80204B6C(int p1)
 {
-  (*(void (**)(int))((char *)*lbl_803DCA78 + 0x18))(p1);
+  (*(void (**)(int))((char *)*gExpgfxInterface + 0x18))(p1);
   getLActions(p1, p1, 0, 0, 0, 0);
 }
 #pragma peephole reset

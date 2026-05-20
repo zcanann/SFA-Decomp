@@ -1969,9 +1969,9 @@ void imanimspacecraft_update(int *obj) {
 }
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
-extern void *lbl_803DCA78;
+extern void *gExpgfxInterface;
 void imanimspacecraft_free(int *obj) {
-    (*(void (***)(int*))lbl_803DCA78)[6](obj);
+    (*(void (***)(int*))gExpgfxInterface)[6](obj);
 }
 
 extern void fn_801AE184(void);

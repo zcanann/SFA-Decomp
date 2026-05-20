@@ -1102,16 +1102,16 @@ void pollenfragment_release(void) {}
 void pollenfragment_initialise(void) {}
 void mikabomb_hitDetect(void) {}
 
-extern int *lbl_803DCA78;
+extern int *gExpgfxInterface;
 extern int *lbl_803DCA7C;
 extern f32 lbl_803E313C;
 #pragma scheduling off
 #pragma peephole off
 void pinponspike_free(int obj) {
-    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 void pollen_free(int obj) {
-    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 void pinponspike_init(int obj) {
     *(int *)(obj + 0xf4) = 0;
@@ -1139,7 +1139,7 @@ void pollenfragment_free(int obj) {
         ModelLightStruct_free((void *)inner[6]);
         inner[6] = 0;
     }
-    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 void mikabomb_free(int obj, int mode) {
     void **inner = *(void ***)(obj + 0xb8);

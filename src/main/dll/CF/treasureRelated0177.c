@@ -43,7 +43,7 @@ extern void* SUB42();
 extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* lbl_803DCA78;
+extern undefined4* gExpgfxInterface;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e4a08;
 extern f32 FLOAT_803dc074;
@@ -385,7 +385,7 @@ void campfire_free(int obj)
   void *effect;
 
   state = *(void ***)(obj + 0xb8);
-  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
   effect = *state;
   if (effect != 0) {
     ModelLightStruct_free(effect);
@@ -455,7 +455,7 @@ int cfccrate_func08(void) { return 0x1; }
 #pragma scheduling off
 void cfccrate_free(int obj)
 {
-  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 #pragma scheduling reset
 

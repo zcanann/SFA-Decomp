@@ -5,7 +5,7 @@ extern u32 GameBit_Get(int eventId);
 extern void ObjHits_SetHitVolumeSlot(u8 *obj,int param_2,int param_3,int param_4);
 
 extern undefined4 *gObjectTriggerInterface;
-extern undefined4 *lbl_803DCA78;
+extern undefined4 *gExpgfxInterface;
 extern undefined4 *pDll_expgfx;
 
 static inline DfpPowerSlState *dfppowersl_getState(u8 *obj)
@@ -23,7 +23,7 @@ int dfppowersl_getExtraSize(void)
 void dfppowersl_free(u8 *obj)
 {
   if (obj != 0) {
-    ((DfpPowerSlFreeFn)(*(u32 *)(*lbl_803DCA78 + 0x18)))(obj);
+    ((DfpPowerSlFreeFn)(*(u32 *)(*gExpgfxInterface + 0x18)))(obj);
   }
   return;
 }

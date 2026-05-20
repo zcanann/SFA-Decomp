@@ -7,7 +7,7 @@ extern int randomGetRange(int min, int max);
 extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *from, void *to, void *out, int param4, int param5);
 
-extern undefined4 *lbl_803DCA78;
+extern undefined4 *gExpgfxInterface;
 extern undefined4 *lbl_803DCA7C;
 extern undefined4 *pDll_expgfx;
 extern u8 framesThisStep;
@@ -35,7 +35,7 @@ extern f32 lbl_803E51DC;
 void dll_19E_free(int param_1)
 {
   (*(code *)(*(int *)lbl_803DCA7C + 0x18))(param_1);
-  (*(code *)(*(int *)lbl_803DCA78 + 0x18))(param_1);
+  (*(code *)(*(int *)gExpgfxInterface + 0x18))(param_1);
 }
 #pragma scheduling reset
 
@@ -105,7 +105,7 @@ void dll_19E_render(int param_1, undefined4 param_2, undefined4 param_3, undefin
     voxmaps_worldToGrid(midB, gridB);
     if (voxmaps_traceLine(gridB, gridB, auStack_28, 0, 0) == 0) {
       *(char *)(state + 0xa) = 0;
-      (**(code **)(*lbl_803DCA78 + 0x14))(param_1);
+      (**(code **)(*gExpgfxInterface + 0x14))(param_1);
     }
   }
   if (*(short *)(state + 4) > 0) {

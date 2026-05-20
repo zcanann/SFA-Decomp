@@ -37,7 +37,7 @@ extern void bombplantspore_startDriftBurst(void *obj, void *state);
 extern void bombplantspore_updateDrift(void *obj, void *state);
 
 extern void *gObjectTriggerInterface;
-extern void *lbl_803DCA78;
+extern void *gExpgfxInterface;
 extern void *gPathControlInterface;
 extern void *pDll_expgfx;
 extern u8 framesThisStep;
@@ -85,7 +85,7 @@ void bombplantspore_update(void *obj) {
             if (poppedMessage == detonateMessage) {
                 gameBitIncrement(0x66c);
                 Sfx_PlayFromObject(obj, 0xa7);
-                (*(void (***)(void *))lbl_803DCA78)[5](obj);
+                (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < 10; i++) {
                     objFn_800972dc(lbl_803E53B0, lbl_803E53B8, obj, 5, 7, 1, 0x3c, 0, 0);
                     (*(void (***)(void *, int, int, int, int, int))pDll_expgfx)[2](
@@ -196,7 +196,7 @@ void bombplantspore_update(void *obj) {
             *(f32 *)((u8 *)state + 0x274) -= timeDelta;
             if (*(f32 *)((u8 *)state + 0x274) <= lbl_803E5394) {
                 Sfx_PlayFromObject(obj, 0xa2);
-                (*(void (***)(void *))lbl_803DCA78)[5](obj);
+                (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < 10; i++) {
                     objFn_800972dc(lbl_803E53B0, lbl_803E53B8, obj, 5, 7, 1, 0x3c, 0, 0);
                     (*(void (***)(void *, int, int, int, int, int))pDll_expgfx)[2](

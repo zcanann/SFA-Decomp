@@ -1635,7 +1635,7 @@ void iceblast_render(void) { objRenderFn_8003b8f4(lbl_803E3600); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *lbl_803DCA78;
+extern int *gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void WarpPoint_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
@@ -1647,7 +1647,7 @@ void invhit_free(int obj) {
     char *inner = *(char **)(obj + 0xb8);
     switch (*(u8 *)(inner + 8)) {
         case 4:
-            (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+            (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
             break;
     }
 }

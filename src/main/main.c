@@ -1323,12 +1323,12 @@ void vfplavastar_initialise(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *lbl_803DCA78;
+extern int *gExpgfxInterface;
 extern int *lbl_803DCA7C;
 #pragma scheduling off
 #pragma peephole off
 void vfplavastar_free(int obj) {
-    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
     (*(void (*)(int))(*(int *)(*lbl_803DCA7C + 0x14)))(obj);
 }
 #pragma peephole reset

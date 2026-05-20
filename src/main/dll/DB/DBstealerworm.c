@@ -1161,10 +1161,10 @@ void SB_Propeller_hitDetect(int param_1) {
 }
 
 /* SB_ShipGun_free: vtable method @ 0x18 on global object manager. */
-extern undefined4* lbl_803DCA78;
+extern undefined4* gExpgfxInterface;
 typedef void (*SBShipGunFreeFn)(int);
 void SB_ShipGun_free(int param_1) {
-    ((SBShipGunFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(param_1);
+    ((SBShipGunFreeFn)(*(u32*)(*gExpgfxInterface + 0x18)))(param_1);
 }
 
 /* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */

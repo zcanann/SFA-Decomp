@@ -794,14 +794,14 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
 void fn_801EE668(void) {}
 void SB_CloudRunner_SeqFn(void) {}
 void fn_801EEB50(void) {}
-extern int *lbl_803DCA78;
+extern int *gExpgfxInterface;
 extern void textureFree(void *tex);
 extern void Resource_Release(void *handle);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudRunner_free(int *obj) {
     int *state = *(int **)((char *)obj + 0xb8);
-    ((void (*)(int *))((void **)*lbl_803DCA78)[6])(obj);
+    ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
     if (*(void **)((char *)state + 0x18) != NULL) {
         textureFree(*(void **)((char *)state + 0x18));
         *(void **)((char *)state + 0x18) = NULL;

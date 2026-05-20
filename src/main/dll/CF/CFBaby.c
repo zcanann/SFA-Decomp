@@ -1733,11 +1733,11 @@ void flammablevine_free(int x) { ObjGroup_RemoveObject(x, 0x31); }
 #pragma scheduling reset
 
 /* Fall_Ladders_free: vtable method @ 0x18 on global manager. */
-extern undefined4* lbl_803DCA78;
+extern undefined4* gExpgfxInterface;
 typedef void (*FallLaddersFreeFn)(int);
 #pragma scheduling off
 void Fall_Ladders_free(int obj) {
-    ((FallLaddersFreeFn)(*(u32*)(*lbl_803DCA78 + 0x18)))(obj);
+    ((FallLaddersFreeFn)(*(u32*)(*gExpgfxInterface + 0x18)))(obj);
 }
 #pragma scheduling reset
 

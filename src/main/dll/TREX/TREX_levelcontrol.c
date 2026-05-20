@@ -25,7 +25,7 @@ extern undefined4 FUN_80286888();
 extern double FUN_80293900();
 
 extern undefined4 DAT_803dc070;
-extern undefined4* lbl_803DCA78;
+extern undefined4* gExpgfxInterface;
 extern undefined4* DAT_803dd708;
 extern f32 lbl_803E6520;
 extern f32 lbl_803E6524;
@@ -363,7 +363,7 @@ void SB_CannonBall_free(int obj)
   int state;
 
   state = *(int *)(obj + 0xb8);
-  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
   if (*(void **)(state + 0x20) != 0) {
     ModelLightStruct_free(*(void **)(state + 0x20));
     *(undefined4 *)(state + 0x20) = 0;
@@ -377,7 +377,7 @@ int SB_FireBall_func08(void) { return 0x0; }
 
 void SB_FireBall_free(int obj)
 {
-  (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */

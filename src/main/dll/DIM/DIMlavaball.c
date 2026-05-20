@@ -1555,10 +1555,10 @@ void fn_801A80C4(int obj, f32 x, f32 y, f32 z) {
     saveGame_saveObjectPos(obj);
 }
 
-/* "tail-call into (**lbl_803DCA78)[6]" free stub. */
-extern int *lbl_803DCA78;
+/* "tail-call into (**gExpgfxInterface)[6]" free stub. */
+extern int *gExpgfxInterface;
 void mmp_trenchfx_free(int obj) {
-    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 
 extern f32 lbl_803E45C0;

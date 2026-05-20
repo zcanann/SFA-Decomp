@@ -687,7 +687,7 @@ extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefine
 extern void Obj_FreeObject(int obj);
 extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d,
                                                        int e, void* f);
-extern undefined4* lbl_803DCA78;
+extern undefined4* gExpgfxInterface;
 extern f32 lbl_803E5518;
 extern f32 lbl_803E551C;
 extern f32 lbl_803E5520;
@@ -746,7 +746,7 @@ int fn_801DA9CC(int obj)
 void sh_beacon_free(int obj, int param_2)
 {
   int extra = *(int*)(obj + 0xb8);
-  (*(code*)(*(int*)lbl_803DCA78 + 0x18))(obj);
+  (*(code*)(*(int*)gExpgfxInterface + 0x18))(obj);
   if (param_2 == 0) {
     int p = *(int*)extra;
     if (p != 0 && (*(unsigned short*)(p + 0xb0) & 0x40) == 0) {

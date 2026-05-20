@@ -180,7 +180,7 @@ void FUN_80173364(short *param_1,int param_2)
 {
 }
 
-extern void *lbl_803DCA78;
+extern void *gExpgfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -189,7 +189,7 @@ void magicdust_free(int param_1)
   if (*(uint *)(param_1 + 0xc4) != 0) {
     ObjLink_DetachChild(*(int *)(param_1 + 0xc4), param_1);
   }
-  (*(void (***)(int))lbl_803DCA78)[6](param_1);
+  (*(void (***)(int))gExpgfxInterface)[6](param_1);
   return;
 }
 #pragma peephole reset

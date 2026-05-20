@@ -1704,7 +1704,7 @@ extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
 extern int* gObjectTriggerInterface;
 extern int* lbl_803DCA74;
-extern int* lbl_803DCA78;
+extern int* gExpgfxInterface;
 extern int* lbl_803DCA7C;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
@@ -1818,7 +1818,7 @@ int fn_801E66EC(int arg1, int arg2)
 void Lamp_free(int* obj)
 {
     Sfx_StopObjectChannel(obj, 64);
-    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+    ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1857,7 +1857,7 @@ void SB_CageKyte_update(void) {}
 void SB_CloudBall_free(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
-    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+    ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
     {
         int* child = *(int**)((char*)state + 24);
         if (child != NULL) {
@@ -1900,7 +1900,7 @@ void SB_KyteCage_update(void) {}
 #pragma peephole off
 void SB_MiniFire_free(int* obj)
 {
-    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+    ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
     ((void(*)(int*))((void**)*lbl_803DCA7C)[6])(obj);
 }
 #pragma peephole reset

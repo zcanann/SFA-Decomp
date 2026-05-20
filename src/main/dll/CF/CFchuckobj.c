@@ -1099,7 +1099,7 @@ LAB_801910d0:
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];
-extern int* lbl_803DCA78;
+extern int* gExpgfxInterface;
 extern void mm_free(void* p);
 
 #pragma scheduling off
@@ -1141,7 +1141,7 @@ int lfxemitter_func0B(int* obj)
 
 void areafxemit_free(int* obj)
 {
-    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+    ((void(*)(int*))((void**)*gExpgfxInterface)[6])(obj);
 }
 
 void lfxemitter_free(int* obj)

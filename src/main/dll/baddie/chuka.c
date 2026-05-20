@@ -2,7 +2,7 @@
 #include "main/dll/baddie/chuka.h"
 #include "main/dll/baddie/chukachuck.h"
 
-extern undefined4* lbl_803DCA78;
+extern undefined4* gExpgfxInterface;
 extern u8 gChukaModeTable[9];
 extern f32 lbl_803E63F8;
 extern f32 lbl_803E63FC;
@@ -81,7 +81,7 @@ void dfpfloorbar_free(int *obj)
   DfpFloorbarState *state;
 
   state = (DfpFloorbarState *)obj[0x2e];
-  ((DfpFloorbarFreeFn)(*(u32 *)(*lbl_803DCA78 + 0x18)))(obj);
+  ((DfpFloorbarFreeFn)(*(u32 *)(*gExpgfxInterface + 0x18)))(obj);
   state->linkedObject = NULL;
   return;
 }

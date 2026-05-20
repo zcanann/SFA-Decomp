@@ -89,11 +89,11 @@ void lightning_render(u8* obj)
     }
 }
 
-/* WaterFallSpray_free: forward to vtable[6] of *lbl_803DCA78 with obj. */
-extern void *lbl_803DCA78;
+/* WaterFallSpray_free: forward to vtable[6] of *gExpgfxInterface with obj. */
+extern void *gExpgfxInterface;
 void WaterFallSpray_free(u8* obj)
 {
-    (*(void (***)(u8*))lbl_803DCA78)[6](obj);
+    (*(void (***)(u8*))gExpgfxInterface)[6](obj);
 }
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
