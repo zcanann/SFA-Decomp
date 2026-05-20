@@ -1707,7 +1707,18 @@ extern int* lbl_803DCA7C;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern int GameBit_Get(int);
+extern void GameBit_Set(int slot, int val);
+extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
+extern void ObjGroup_RemoveObject(int* obj, int group);
+extern void ModelLightStruct_free(int* p);
+extern void skyFn_80088c94(int a, int b);
+extern void Music_Trigger(int a, int b);
+extern void fn_80098928(int* obj, f32 f, int a, int b, int c, int d);
+extern f32 lbl_803E5998;
+extern f32 lbl_803E595C;
+extern f32 lbl_803E5960;
 int fn_801E5060(int p1, int p2, int p3);
+void fn_801E5A2C(void);
 #pragma peephole off
 void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58E8); }
 void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5920); }
@@ -1719,7 +1730,17 @@ void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 /* Stubs added to align function set with v1.0 asm. Source had Ghidra FUN_xxx
  * splits at wrong addresses; these stubs ensure every asm symbol has a src
  * definition so future hunters can fill bodies one at a time. */
-void Flag_init(void) {}
+#pragma scheduling off
+#pragma peephole off
+void Flag_init(int* obj, int* def)
+{
+    if (*(s16*)((char*)obj + 0x46) != 0x803) {
+        *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 0x18) << 8);
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803E5998, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void Flag_update(void) {}
 void SB_KyteCage_SeqFn(void) {}
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
@@ -1762,7 +1783,24 @@ void Lamp_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void Lamp_init(void) {}
+#pragma scheduling off
+#pragma peephole off
+void Lamp_init(int* obj, int* def)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if (*(s16*)((char*)obj + 0x46) == 996) {
+        *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
+    } else {
+        *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+    }
+    *(s16*)((char*)obj + 2) = 0;
+    *(s16*)((char*)obj + 4) = 0;
+    *(int*)((char*)obj + 248) = 0;
+    *(s8*)state = 1;
+    *(void**)((char*)obj + 0xbc) = (void*)fn_801E5A2C;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void Lamp_update(void) {}
 #pragma peephole off
 #pragma scheduling off
@@ -1775,7 +1813,22 @@ void SB_CageKyte_init(int p)
 #pragma peephole reset
 void SB_CageKyte_render(void) {}
 void SB_CageKyte_update(void) {}
-void SB_CloudBall_free(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudBall_free(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    ((void(*)(int*))((void**)*lbl_803DCA78)[6])(obj);
+    {
+        int* child = *(int**)((char*)state + 24);
+        if (child != NULL) {
+            ModelLightStruct_free(child);
+            *(int**)((char*)state + 24) = NULL;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_CloudBall_hitDetect(void) {}
 void SB_CloudBall_init(void) {}
 void SB_CloudBall_update(void) {}
@@ -1844,10 +1897,30 @@ void SB_ShipGunBroke_update(int* obj)
 #pragma scheduling reset
 void ShipBattle_free(void) {}
 void ShipBattle_init(void) {}
-void ShipBattle_render(void) {}
+#pragma scheduling off
+#pragma peephole off
+void ShipBattle_render(int* obj)
+{
+    objRenderFn_8003b8f4(lbl_803E595C);
+    if (*(s16*)((char*)obj + 0x46) == 369) {
+        fn_80098928(obj, lbl_803E5960, 4, 389, 5, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void ShipBattle_update(void) {}
 void shop_buyItem(void) {}
-void shop_free(int obj) {}
+#pragma scheduling off
+#pragma peephole off
+void shop_free(int* obj)
+{
+    skyFn_80088c94(7, 0);
+    ObjGroup_RemoveObject(obj, 9);
+    Music_Trigger(144, 0);
+    GameBit_Set(3838, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern int* lbl_803DCA54;
 
 #pragma scheduling off
