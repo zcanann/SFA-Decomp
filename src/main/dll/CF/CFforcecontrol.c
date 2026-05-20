@@ -829,3 +829,43 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3D60); }
 #pragma peephole reset
+
+/* Drift-recovery: add new fns with v1.0 names. */
+extern void setScreenTransitionPause(int v);
+extern void setPendingMapLoad(int v);
+extern void deathRenderFn_8001fd98(int* obj);
+extern void* Obj_GetActiveModel(void);
+extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
+extern f32 lbl_803E3CC0;
+extern int fuelcell_func0B(int* obj);
+extern void fuelcell_modelMtxFn(void);
+
+#pragma scheduling off
+#pragma peephole off
+
+void deathseq_free(int* obj)
+{
+    setScreenTransitionPause(0);
+    setPendingMapLoad(0);
+    deathRenderFn_8001fd98(obj);
+}
+
+void deathgas_init(int* obj)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
+    *(f32*)((char*)state + 8) = lbl_803E3CC0;
+    if (*(s16*)((char*)obj + 0x46) != 2103) return;
+    *(u8*)((char*)state + 12) = (u8)(*(u8*)((char*)state + 12) | 0x20);
+    *(f32*)((char*)state + 8) = *(f32*)((char*)obj + 64);
+}
+
+void fuelcell_init(int* obj)
+{
+    *(void**)((char*)obj + 188) = (void*)fuelcell_func0B;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(), (void*)fuelcell_modelMtxFn);
+    ObjMsg_AllocQueue(obj, 2);
+}
+
+#pragma peephole reset
+#pragma scheduling reset
