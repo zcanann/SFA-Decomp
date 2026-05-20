@@ -9,7 +9,7 @@ extern f32 lbl_803DDBA0;
 extern f32 lbl_803DDBA4;
 extern u8 lbl_803DDBA8[8];
 extern u8 lbl_803DDBB0[8];
-extern u8 *lbl_803DCAB8;
+extern u8 *gBaddieControlInterface;
 extern u8 *gPlayerInterface;
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C9C;
@@ -63,10 +63,10 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *up
 
   updateState[DIMBOSSSPIT_EFFECT_ACTIVE_OFFSET] = 1;
 
-  (*(void (**)(u8 *, u8 *, double, int))(*(int *)lbl_803DCAB8 + 0x2C))(
+  (*(void (**)(u8 *, u8 *, double, int))(*(int *)gBaddieControlInterface + 0x2C))(
       obj, updateState, (double)timer, 1);
 
-  vt = (u8 *)*(int *)lbl_803DCAB8;
+  vt = (u8 *)*(int *)gBaddieControlInterface;
   ((void (*)(u8 *, u8 *, u8 *, s16, u8 *, int, int, int))*(void **)(vt + 0x54))(
       obj, updateState, state + DIMBOSSSPIT_ANIM_POINTS_OFFSET,
       *(s16 *)(state + DIMBOSSSPIT_ANIM_FRAME_OFFSET),

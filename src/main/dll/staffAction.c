@@ -988,7 +988,7 @@ void dll_D3_hitDetect_nop(void) {}
 int dll_D3_getExtraSize_ret_1188(void) { return 0x4a4; }
 int dll_D3_func08_ret_73(void) { return 0x49; }
 
-extern int *lbl_803DCAB8;
+extern int *gBaddieControlInterface;
 #pragma scheduling off
 #pragma peephole off
 void dll_D3_free(int obj) {
@@ -998,7 +998,7 @@ void dll_D3_free(int obj) {
         Obj_FreeObject(*(void **)(obj + 0xc8));
         *(int *)(obj + 0xc8) = 0;
     }
-    (*(void (*)(int, int *, int))(*(int *)(*lbl_803DCAB8 + 0x40)))(obj, inner, 0);
+    (*(void (*)(int, int *, int))(*(int *)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset

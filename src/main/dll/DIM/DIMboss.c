@@ -122,7 +122,7 @@ extern void (*gDIMbossAnimTable[])(void);
 extern void (*gDIMbossHitDetectAnimTable[])(void);
 extern int gPlayerInterface;
 extern undefined4* gObjectTriggerInterface;
-extern undefined4* lbl_803DCAB8;
+extern undefined4* gBaddieControlInterface;
 extern void *gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
 extern f32 lbl_803E4BD8;
@@ -494,7 +494,7 @@ void DIMboss_free(DIMbossObject *obj)
     Obj_FreeObject(childObject);
     obj->childObject = NULL;
   }
-  (*(code *)(*lbl_803DCAB8 + 0x40))(obj,runtime,0x20);
+  (*(code *)(*gBaddieControlInterface + 0x40))(obj,runtime,0x20);
   if (gDIMbossHitEffectResource != 0) {
     Resource_Release(gDIMbossHitEffectResource);
   }
@@ -607,7 +607,7 @@ void DIMboss_update(DIMbossObject *obj)
     }
     else {
       if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_START_MOVE) != 0) {
-        (*(code *)(*lbl_803DCAB8 + 0x28))
+        (*(code *)(*gBaddieControlInterface + 0x28))
                   (obj,runtime,runtime->moveScratch,(int)runtime->activeMoveId,
                    &runtime->hitReactMode,0,0,0,1);
         runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_START_MOVE;
@@ -709,7 +709,7 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   if (param_3 != 0) {
     animFlags |= 1;
   }
-  ((DIMbossAnimSetupFn)(*(code *)(*lbl_803DCAB8 + 0x58)))
+  ((DIMbossAnimSetupFn)(*(code *)(*gBaddieControlInterface + 0x58)))
       (obj,param_2,runtime,0xc,6,0x102,animFlags,lbl_803E4C28);
   obj->updateState = DIMboss_updateState;
   runtime->phase = DIMBOSS_PHASE_START;

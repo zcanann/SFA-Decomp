@@ -66,7 +66,7 @@ extern void* lbl_803AC698[];
 extern undefined4* pDll_expgfx;
 extern undefined4* gPlayerInterface;
 extern undefined4* gMapEventInterface;
-extern undefined4* lbl_803DCAB8;
+extern undefined4* gBaddieControlInterface;
 extern undefined4* lbl_803DDA90;
 extern f64 DOUBLE_803e3d00;
 extern f64 DOUBLE_803e3d08;
@@ -361,11 +361,11 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
     dVar8 = (double)sqrtf((double)(local_38 * local_38 + local_40 * local_40 + local_3c * local_3c));
     *(float *)(param_3 + 0x2c0) = (float)dVar8;
   }
-  (**(code **)(*lbl_803DCAB8 + 0x54))
+  (**(code **)(*gBaddieControlInterface + 0x54))
             (puVar3,param_3,iVar7 + 0x35c,(int)*(short *)(iVar7 + 0x3f4),0,0,0,4);
-  (**(code **)(*lbl_803DCAB8 + 0x14))(puVar3,uVar4,4,local_44,auStack70,auStack72);
+  (**(code **)(*gBaddieControlInterface + 0x14))(puVar3,uVar4,4,local_44,auStack70,auStack72);
   if ((local_44[0] == 1) || (local_44[0] == 2)) {
-    iVar5 = (**(code **)(*lbl_803DCAB8 + 0x50))
+    iVar5 = (**(code **)(*gBaddieControlInterface + 0x50))
                       (puVar3,param_3,iVar7 + 0x35c,(int)*(short *)(iVar7 + 0x3f4),0,0,1,
                        &DAT_803ad2c8);
     if (iVar5 != 0) {
@@ -382,7 +382,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
     }
   }
   else {
-    iVar5 = (**(code **)(*lbl_803DCAB8 + 0x50))
+    iVar5 = (**(code **)(*gBaddieControlInterface + 0x50))
                       (puVar3,param_3,iVar7 + 0x35c,(int)*(short *)(iVar7 + 0x3f4),0,0,1,
                        &DAT_803ad2c8);
     if (iVar5 != 0) {
@@ -462,7 +462,7 @@ void kaldachom_free(int param_1)
   
   uVar1 = *(undefined4 *)(param_1 + 0xb8);
   ObjGroup_RemoveObject(param_1,3);
-  (*(code *)(*lbl_803DCAB8 + 0x40))(param_1,uVar1,0x20);
+  (*(code *)(*gBaddieControlInterface + 0x40))(param_1,uVar1,0x20);
   return;
 }
 
@@ -534,7 +534,7 @@ void kaldachom_update(int param_1)
   iVar9 = *(int *)(param_1 + 0xb8);
   iVar8 = *(int *)(param_1 + 0x4c);
   if (*(int *)(param_1 + 0xf4) == 0) {
-    iVar8 = (**(code **)(*lbl_803DCAB8 + 0x30))(param_1,iVar9,0);
+    iVar8 = (**(code **)(*gBaddieControlInterface + 0x30))(param_1,iVar9,0);
     if (iVar8 == 0) {
       *(undefined2 *)(iVar9 + 0x402) = 0;
     }
@@ -554,12 +554,12 @@ void kaldachom_update(int param_1)
         if (*(short *)(iVar9 + 0x274) != 6) {
           (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
         }
-        iVar8 = (**(code **)(*lbl_803DCAB8 + 0x48))
+        iVar8 = (**(code **)(*gBaddieControlInterface + 0x48))
                           ((double)(float)((double)CONCAT44(0x43300000,
                                                             (uint)*(ushort *)(iVar9 + 0x3fe)) -
                                           lbl_803E3068),param_1,iVar9,0x8000);
         if (iVar8 != 0) {
-          (**(code **)(*lbl_803DCAB8 + 0x28))
+          (**(code **)(*gBaddieControlInterface + 0x28))
                     (param_1,iVar9,iVar9 + 0x35c,(int)*(short *)(iVar9 + 0x3f4),0,0,0,4,0xffffffff);
           *(undefined *)(iVar9 + 0x349) = 0;
           *(undefined2 *)(iVar9 + 0x402) = 1;
@@ -578,7 +578,7 @@ void kaldachom_update(int param_1)
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
         fn_8016855C(param_1,iVar9,iVar9);
-        (**(code **)(*lbl_803DCAB8 + 0x2c))((double)lbl_803E3060,param_1,iVar9,0xffffffff);
+        (**(code **)(*gBaddieControlInterface + 0x2c))((double)lbl_803E3060,param_1,iVar9,0xffffffff);
         if (*(short *)(iVar9 + 0x274) != 6) {
           (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
         }
@@ -594,7 +594,7 @@ void kaldachom_update(int param_1)
   else if ((*(short *)(iVar9 + 0x270) != 3) &&
           (iVar1 = (**(code **)(*gMapEventInterface + 0x68))(*(undefined4 *)(iVar8 + 0x14)), iVar1 != 0))
   {
-    (**(code **)(*lbl_803DCAB8 + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
+    (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
     *(undefined2 *)(iVar9 + 0x402) = 0;
     Sfx_PlayFromObject(param_1,0x270);
     ObjAnim_SetCurrentMove(param_1,4,lbl_803E3060,0x10);
@@ -635,7 +635,7 @@ void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3)
   if (param_3 != 0) {
     uVar4 = 7;
   }
-  (**(code **)(*lbl_803DCAB8 + 0x58))((double)lbl_803E30C8,iVar2,(int)uVar7,iVar6,8,6,0,uVar4);
+  (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,iVar2,(int)uVar7,iVar6,8,6,0,uVar4);
   *(undefined4 *)(iVar2 + 0xbc) = 0;
   puVar5 = *(undefined4 **)(iVar6 + 0x40c);
   ObjAnim_SetCurrentMove(iVar2,4,lbl_803E3060,0x10);

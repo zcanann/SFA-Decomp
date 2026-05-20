@@ -21,7 +21,7 @@ extern void DIMbosstonsil_chooseHitReaction(void);
 extern void DIMbosstonsil_startIdleHitReaction(void);
 
 extern undefined4* gPlayerInterface;
-extern undefined4* lbl_803DCAB8;
+extern undefined4* gBaddieControlInterface;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
@@ -56,7 +56,7 @@ void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
   if (isAltVariant != 0) {
     variant = variant | 1;
   }
-  (*(code *)(*lbl_803DCAB8 + 0x58))(lbl_803E4CCC,obj,param_2,state,2,2,0x102,variant);
+  (*(code *)(*gBaddieControlInterface + 0x58))(lbl_803E4CCC,obj,param_2,state,2,2,0x102,variant);
   *(void (**)(void))(obj + 0xbc) = (void (*)(void))dll_DIM_BossGutSpik_update;
   (*(code *)(*gPlayerInterface + 0x14))(obj,state,0);
   *(s16 *)(state + 0x270) = 0;

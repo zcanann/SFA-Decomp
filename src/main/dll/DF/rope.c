@@ -61,7 +61,7 @@ extern undefined4 DAT_803de814;
 extern f64 DOUBLE_803e5990;
 extern f64 DOUBLE_803e59f0;
 extern undefined4* gExpgfxInterface;
-extern undefined4* lbl_803DCAB8;
+extern undefined4* gBaddieControlInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DE818;
 extern f32 lbl_803DE81C;
@@ -225,7 +225,7 @@ void dimbossgut2_free(int param_9)
     Obj_FreeObject((int)childObj);
     *(undefined4 *)(param_9 + 200) = 0;
   }
-  (*(void (*)(int,int,int))(*(int *)(*lbl_803DCAB8 + 0x40)))(param_9,iVar2,0);
+  (*(void (*)(int,int,int))(*(int *)(*gBaddieControlInterface + 0x40)))(param_9,iVar2,0);
   return;
 }
 #pragma scheduling reset

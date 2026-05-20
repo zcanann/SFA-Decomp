@@ -75,7 +75,7 @@ extern undefined4 DAT_803de800;
 extern undefined4 DAT_803de804;
 extern undefined4 DAT_803de808;
 extern void *gPlayerInterface;
-extern void *lbl_803DCAB8;
+extern void *gBaddieControlInterface;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
@@ -177,7 +177,7 @@ int DIMbosstonsil_chooseHitReaction(void *obj,u8 *state)
 
   if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
     lbl_803DDB9C = lbl_803DDBA0;
-    (*(void (***)(void *,void *,int,s16 *,s16 *,s16 *))lbl_803DCAB8)[5]
+    (*(void (***)(void *,void *,int,s16 *,s16 *,s16 *))gBaddieControlInterface)[5]
         (obj,Obj_GetPlayerObject(),4,&moveId,&unused1,&unused2);
     switch (moveId) {
     case 0:

@@ -13,7 +13,7 @@ extern int randomGetRange(int min, int max);
 
 extern void *gPlayerInterface;
 extern void *gObjectTriggerInterface;
-extern void *lbl_803DCAB8;
+extern void *gBaddieControlInterface;
 extern int lbl_803DDBB0;
 extern f32 lbl_803DDBA4;
 extern void *pDll_expgfx;
@@ -103,13 +103,13 @@ void DIMbosstonsil_update(void *obj)
     if ((*(u16 *)((char *)r30 + 0x400) & 0x2) != 0) {
         lbl_803DDBA4 = lbl_803E4CC8;
         s32_temp = 1;
-        (*(void (***)(int, void *, void *, int, void *, int, int, int, int *))lbl_803DCAB8)[0xa](
+        (*(void (***)(int, void *, void *, int, void *, int, int, int, int *))gBaddieControlInterface)[0xa](
             0, r30, (char *)r30 + 0x35c, *(s16 *)((char *)r30 + 0x3f4),
             (char *)r30 + 0x405, 0, 0, 0, &s32_temp);
         *(u16 *)((char *)r30 + 0x400) = (u16)(*(u16 *)((char *)r30 + 0x400) & ~0x2);
     }
 
-    if ((*(int (***)(void *, void *, int))lbl_803DCAB8)[0xc](obj, r30, 1) == 0) return;
+    if ((*(int (***)(void *, void *, int))gBaddieControlInterface)[0xc](obj, r30, 1) == 0) return;
 
     *(void **)((char *)r30 + 0x2d0) = Obj_GetPlayerObject();
     dimBossTonsil_newState_hitFightMain(obj, 0, r30, r30);

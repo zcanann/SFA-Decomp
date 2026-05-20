@@ -4245,14 +4245,14 @@ int fn_80200460(int p1, int p2)
 #pragma scheduling reset
 
 /* baddie anim update: fires vtable[0x13] when flag set */
-extern void **lbl_803DCAB8;
+extern void **gBaddieControlInterface;
 #pragma peephole off
 #pragma scheduling off
 int fn_8020032C(int p1, int p2)
 {
   int obj_b8 = *(int *)(p1 + 0xb8);
   if ((s8)*(u8 *)(p2 + 0x27b) != 0) {
-    (*(void (**)(int, s16, int, int))((char *)*lbl_803DCAB8 + 0x4c))(
+    (*(void (**)(int, s16, int, int))((char *)*gBaddieControlInterface + 0x4c))(
         p1, *(s16 *)(obj_b8 + 0x3f0), -1, 0);
   }
   return 0;

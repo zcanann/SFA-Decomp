@@ -3032,14 +3032,14 @@ int fn_80161130(int* obj, u8* obj2) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_801603E8 (84B). If obj2->27b != 0, vtable call through lbl_803DCAB8 with (obj, *(s16*)(x+0x3f0), -1, 0). */
-extern undefined4* lbl_803DCAB8;
+/* fn_801603E8 (84B). If obj2->27b != 0, vtable call through gBaddieControlInterface with (obj, *(s16*)(x+0x3f0), -1, 0). */
+extern undefined4* gBaddieControlInterface;
 #pragma peephole off
 #pragma scheduling off
 int fn_801603E8(int* obj, u8* obj2) {
     u8* x = *(u8**)((char*)obj + 0xb8);
     if ((s8)obj2[0x27b] != 0) {
-        (*(code*)((char*)(*lbl_803DCAB8) + 0x4c))(obj, *(s16*)(x + 0x3f0), -1, 0);
+        (*(code*)((char*)(*gBaddieControlInterface) + 0x4c))(obj, *(s16*)(x + 0x3f0), -1, 0);
     }
     return 0;
 }
@@ -3213,7 +3213,7 @@ int fn_801605D4(int* obj, u8* def)
     *(s8*)(def + 607) = 1;
     *(s16*)((char*)obj + 4) = *(s16*)(def + 414);
     *(s16*)((char*)obj + 2) = *(s16*)(def + 412);
-    ((void(*)(int*, u8*, int*, f32, f32))((void**)*lbl_803DCAB8)[4])(obj, def, state, lbl_803E2E8C, lbl_803E2E90);
+    ((void(*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, def, state, lbl_803E2E8C, lbl_803E2E90);
     *(f32*)(def + 672) = lbl_803E2E94 * *(f32*)(def + 640);
     return 0;
 }
@@ -3273,7 +3273,7 @@ void dll_CB_free(int* obj)
             *(int**)((char*)obj + 200) = NULL;
         }
     }
-    ((void(*)(int*, int*, int))((void**)*lbl_803DCAB8)[16])(obj, state, 1);
+    ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, state, 1);
 }
 
 void dll_CE_free(int* obj)
@@ -3287,7 +3287,7 @@ void dll_CE_free(int* obj)
             *(int**)((char*)obj + 200) = NULL;
         }
     }
-    ((void(*)(int*, int*, int))((void**)*lbl_803DCAB8)[16])(obj, state, 32);
+    ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, state, 32);
 }
 
 #pragma peephole reset
