@@ -2900,3 +2900,17 @@ void objShadowFn_8006c5f0(int obj, u32 *outTable, f32 *outF, int *outX, int *out
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Allocate a 512x512 texture (1bpp?), set field, flush. */
+extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+#pragma scheduling off
+#pragma peephole off
+void *textureAlloc512(void)
+{
+    void *tex = textureAlloc(0x200, 0x200, 1, 0, 0, 0, 0, 0, 0);
+    *(s16 *)((char *)tex + 0xe) = 1;
+    DCFlushRange((char *)tex + 0x60, *(u32 *)((char *)tex + 0x44));
+    return tex;
+}
+#pragma peephole reset
+#pragma scheduling reset
