@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/campfire.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 Sfx_PlayFromObject();
@@ -10,7 +11,6 @@ extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern undefined4 Resource_Acquire();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int objAnimArg,int moveId,int flags);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern undefined4 Obj_SetModelColorFadeRecursive();
@@ -597,7 +597,7 @@ void kaldachom_update(int param_1)
     (**(code **)(*lbl_803DCAB8 + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
     *(undefined2 *)(iVar9 + 0x402) = 0;
     Sfx_PlayFromObject(param_1,0x270);
-    ObjAnim_SetCurrentMove((double)lbl_803E3060,param_1,4,0x10);
+    ObjAnim_SetCurrentMove(param_1,4,lbl_803E3060,0x10);
     *(undefined *)(iVar9 + 0x346) = 0;
     *(undefined *)(param_1 + 0x36) = 0xff;
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
@@ -638,7 +638,7 @@ void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3)
   (**(code **)(*lbl_803DCAB8 + 0x58))((double)lbl_803E30C8,iVar2,(int)uVar7,iVar6,8,6,0,uVar4);
   *(undefined4 *)(iVar2 + 0xbc) = 0;
   puVar5 = *(undefined4 **)(iVar6 + 0x40c);
-  ObjAnim_SetCurrentMove((double)lbl_803E3060,iVar2,4,0x10);
+  ObjAnim_SetCurrentMove(iVar2,4,lbl_803E3060,0x10);
   *(float *)(iVar2 + 0x98) = lbl_803E307C;
   *(byte *)(iVar2 + 0xaf) = *(byte *)(iVar2 + 0xaf) | 8;
   (**(code **)(*lbl_803DCA8C + 0x14))(iVar2,iVar6,0);

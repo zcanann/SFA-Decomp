@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
+#include "main/objanim.h"
 
 #define TRICKY_STATE_FLAG_FLOOR_RESPONSE 0x00100000
 #define TRICKY_STATE_FLAG_SPECIAL_FLOOR_RESPONSE 0x08000000
@@ -51,7 +52,6 @@ extern int ObjList_FindObjectById(int objId);
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern int getTrickyObject(void);
-extern undefined4 ObjAnim_SetCurrentMove(f32 moveProgress,int obj,int moveId,int flags);
 extern undefined4 FUN_800305c4();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
@@ -1288,7 +1288,7 @@ void fn_80148C18(int obj,int state)
     moveId = *(u8 *)(state + 0x320);
     *(f32 *)(state + 0x308) = lbl_803E256C / (lbl_803E2570 * *(f32 *)(state + 0x314));
     *(u8 *)(state + 0x323) = 1;
-    ObjAnim_SetCurrentMove(lbl_803E2574,obj,moveId,0x10);
+    ObjAnim_SetCurrentMove(obj,moveId,lbl_803E2574,0x10);
     if (*(int *)(obj + 0x54) != 0) {
       *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
     }
@@ -1303,7 +1303,7 @@ void fn_80148C18(int obj,int state)
   else {
     *(f32 *)(state + 0x308) = lbl_803E2578;
     *(u8 *)(state + 0x323) = 0;
-    ObjAnim_SetCurrentMove(lbl_803E2574,obj,0,0);
+    ObjAnim_SetCurrentMove(obj,0,lbl_803E2574,0);
     if (*(int *)(obj + 0x54) != 0) {
       *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
     }
@@ -1347,7 +1347,7 @@ void fn_80148D8C(int obj,int state)
     moveId = *(u8 *)(state + 0x321);
     *(f32 *)(state + 0x308) = lbl_803E256C / (lbl_803E2570 * *(f32 *)(state + 0x318));
     *(u8 *)(state + 0x323) = 1;
-    ObjAnim_SetCurrentMove(lbl_803E2574,obj,moveId,0);
+    ObjAnim_SetCurrentMove(obj,moveId,lbl_803E2574,0);
     if (*(int *)(obj + 0x54) != 0) {
       *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
     }

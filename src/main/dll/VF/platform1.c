@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/VF/platform1.h"
+#include "main/objanim.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
 extern undefined4 Sfx_PlayFromObject();
@@ -11,7 +12,6 @@ extern uint randomGetRange();
 extern uint FUN_80017a98();
 extern int ObjList_GetObjects();
 extern int FUN_8002fc3c();
-extern undefined4 ObjAnim_SetCurrentMove();
 extern undefined4 FUN_80080eec();
 extern undefined4 FUN_8011e800();
 extern undefined4 setAButtonIcon();
@@ -241,12 +241,10 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       if (state->linkedObject != 0) {
         *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E6300;
         *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = fVar1;
-        ObjAnim_SetCurrentMove((double)*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,
-                     param_4,param_5,param_6,param_7,param_8,uVar3,PLATFORM1_ACTIVE_MODEL_ID,0,
-                     param_12,param_13,param_14,param_15,param_16);
-        ObjAnim_SetCurrentMove((double)*(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET),param_2,
-                     param_3,param_4,param_5,param_6,param_7,param_8,state->linkedObject,
-                     PLATFORM1_IDLE_MODEL_ID,0,param_12,param_13,param_14,param_15,param_16);
+        ObjAnim_SetCurrentMove(uVar3,PLATFORM1_ACTIVE_MODEL_ID,
+                     *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),0);
+        ObjAnim_SetCurrentMove(state->linkedObject,PLATFORM1_IDLE_MODEL_ID,
+                     *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET),0);
         state->prevTrackOffset = state->currentTrackOffset;
       }
     }
@@ -278,15 +276,13 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       (**(code **)(param_16 + 0x1c))(0x48,1,3);
     }
     if (*(short *)(uVar3 + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_ACTIVE_MODEL_ID) {
-      ObjAnim_SetCurrentMove((double)*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,
-                   param_4,param_5,param_6,param_7,param_8,uVar3,PLATFORM1_ACTIVE_MODEL_ID,0,
-                   param_12,param_13,param_14,param_15,param_16);
+      ObjAnim_SetCurrentMove(uVar3,PLATFORM1_ACTIVE_MODEL_ID,
+                   *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),0);
     }
     iVar4 = state->linkedObject;
     if (*(short *)(iVar4 + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_IDLE_MODEL_ID) {
-      ObjAnim_SetCurrentMove((double)*(float *)(iVar4 + PLATFORM1_TRACK_VALUE_OFFSET),param_2,param_3,param_4,
-                   param_5,param_6,param_7,param_8,iVar4,PLATFORM1_IDLE_MODEL_ID,0,param_12,
-                   param_13,param_14,param_15,param_16);
+      ObjAnim_SetCurrentMove(iVar4,PLATFORM1_IDLE_MODEL_ID,
+                   *(float *)(iVar4 + PLATFORM1_TRACK_VALUE_OFFSET),0);
     }
     *(undefined2 *)(param_11 + 0x6e) = 0xffff;
     *(undefined *)(param_11 + 0x56) = 0;
