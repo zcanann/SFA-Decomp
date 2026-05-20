@@ -399,6 +399,46 @@ extern f32 lbl_803E5C44;
 /*
  * --INFO--
  *
+ * Function: fn_801EC870
+ * EN v1.0 Address: 0x801EC870
+ * EN v1.0 Size: 184b
+ */
+void fn_801EC870(int p1, int p2)
+{
+    f32 fz, fa, fb, fc;
+    *(f32 *)(p2 + 0x52c) = lbl_803E5C34;
+    *(f32 *)(p2 + 0x530) = lbl_803E5C38;
+    *(f32 *)(p2 + 0x534) = lbl_803E5BF4;
+    fz = lbl_803E5AE8;
+    *(f32 *)(p2 + 0x414) = fz;
+    *(f32 *)(p2 + 0x584) = fz;
+    *(f32 *)(p2 + 0x548) = lbl_803E5BFC;
+    *(f32 *)(p2 + 0x54c) = lbl_803E5BE4;
+    *(f32 *)(p2 + 0x540) = lbl_803E5B20;
+    *(f32 *)(p2 + 0x544) = lbl_803E5AF8;
+    *(f32 *)(p2 + 0x558) = lbl_803E5BA8;
+    *(f32 *)(p2 + 0x56c) = lbl_803E5C00;
+    *(u8 *)(p2 + 0x428) &= ~0x80;
+    *(f32 *)(p2 + 0x430) = fz;
+    fa = *(f32 *)(p2 + 0x470);
+    *(f32 *)(p2 + 0x464) = fa;
+    *(f32 *)(p2 + 0x47c) = fa;
+    fb = *(f32 *)(p2 + 0x474);
+    *(f32 *)(p2 + 0x468) = fb;
+    *(f32 *)(p2 + 0x480) = fb;
+    fc = *(f32 *)(p2 + 0x478);
+    *(f32 *)(p2 + 0x46c) = fc;
+    *(f32 *)(p2 + 0x484) = fc;
+    *(u8 *)(p2 + 0x428) &= ~0x40;
+    *(u8 *)(p2 + 0x428) &= ~0x10;
+    *(int *)(p2 + 0x42c) = 0;
+    *(f32 *)(p2 + 0x3e4) = fz;
+    *(f32 *)(p2 + 0x3e0) = lbl_803E5AEC;
+}
+
+/*
+ * --INFO--
+ *
  * Function: fn_801EC928
  * EN v1.0 Address: 0x801EC928
  * EN v1.0 Size: 148b
