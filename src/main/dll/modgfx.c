@@ -4620,6 +4620,28 @@ extern int *lbl_8039C1F8[];
 extern void Obj_FreeObject(void *obj);
 #pragma peephole off
 #pragma scheduling off
+void dll_0B_func07(int p1)
+{
+    int **arr = (int**)lbl_8039C1F8;
+    int i;
+    for (i = 0; i < 50; i++) {
+        if (arr[i] == NULL) continue;
+        if (arr[i][1] != p1) continue;
+        if (*(void**)arr[i] != NULL) {
+            Obj_FreeObject(*(void**)arr[i]);
+        }
+        *(int*)((char*)arr[i] + 300) = 0;
+        if (*(u8*)((char*)arr[i] + 319) == 0 && *(void**)((char*)arr[i] + 152) != NULL) {
+            textureFree(*(void**)((char*)arr[i] + 152));
+        }
+        if (*(u8*)((char*)arr[i] + 319) == 0) {
+            *(int*)((char*)arr[i] + 152) = 0;
+        }
+        mm_free(arr[i]);
+        arr[i] = NULL;
+    }
+}
+
 void fn_800A1040(s16 p1, int p2)
 {
     int **arr = (int**)lbl_8039C1F8;
