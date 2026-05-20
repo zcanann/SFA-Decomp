@@ -1518,6 +1518,19 @@ int trickywarp_getExtraSize(void) { return 0x64; }
 int duster_getExtraSize(void) { return 0x20; }
 int curvefish_getExtraSize(void) { return 0x120; }
 
+/* fn_801804C8: clear bit 0x80 of obj->_b8->_1e, return 0. 63% — target
+ * uses rlwimi-with-r4=0 which MWCC won't pick from C (collapses to
+ * rlwinm+clrlwi). asm{} block tried but messed up reg-alloc worse. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801804C8(u8* obj) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    sub[0x1e] = (u8)(sub[0x1e] & ~0x80);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* state encode: ((obj->_X)->_Y << shift) | const. */
 u32 MagicPlant_func08(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x1c) << 11) | 0x400; }
 
