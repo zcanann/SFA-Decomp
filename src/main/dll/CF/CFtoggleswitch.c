@@ -664,3 +664,34 @@ int deathgas_getExtraSize(void) { return 0x10; }
 void trickyguardspot_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void ObjGroup_AddObject(int obj, int g);
+extern void objSetHintTextIdx(int obj, int idx);
+
+#pragma scheduling off
+#pragma peephole off
+void trickyguardspot_init(int obj, s8 *def) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    ObjGroup_AddObject(obj, 30);
+    *(int *)state = (int)(u8)def[0x19] * 60;
+    *(s16 *)obj = (s16)(s32)def[0x18];
+}
+
+void infotext_init(int obj, s8 *def) {
+    u32 v;
+    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x6000;
+    *(u16 *)((char *)obj + 0xB0) = (u16)v;
+    *(s16 *)obj = (s16)((s32)(u8)def[0x18] << 8);
+    objSetHintTextIdx(obj, (int)(u8)def[0x19]);
+}
+
+void cctestinfot_init(int obj, s8 *def) {
+    u32 v;
+    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x6000;
+    *(u16 *)((char *)obj + 0xB0) = (u16)v;
+    *(s16 *)obj = (s16)((s32)(u8)def[0x1A] << 8);
+    *(s16 *)((char *)obj + 2) = (s16)((s32)(u8)def[0x19] << 8);
+    *(s16 *)((char *)obj + 4) = (s16)((s32)(u8)def[0x18] << 8);
+}
+#pragma peephole reset
+#pragma scheduling reset
