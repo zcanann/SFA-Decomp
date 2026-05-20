@@ -1851,3 +1851,35 @@ void Checkpoint_initialise(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
+typedef struct CheckpointSlot {
+    u32 key;
+    void *entry;
+} CheckpointSlot;
+extern CheckpointSlot lbl_8039C458[];
+#pragma scheduling off
+#pragma peephole off
+void Checkpoint_Add(int *entry) {
+    int i = 0;
+    CheckpointSlot *p = lbl_8039C458;
+    int count = lbl_803DD410;
+    while (i < count && (u32)entry[5] > p[i].key) {
+        i++;
+    }
+    {
+        CheckpointSlot *end = &lbl_8039C458[count];
+        int remaining = count - i;
+        while (remaining > 0) {
+            end->entry = (end - 1)->entry;
+            end->key   = (end - 1)->key;
+            end--;
+            remaining--;
+        }
+    }
+    lbl_803DD410 = count + 1;
+    lbl_8039C458[i].entry = entry;
+    lbl_8039C458[i].key   = entry[5];
+}
+#pragma peephole reset
+#pragma scheduling reset
