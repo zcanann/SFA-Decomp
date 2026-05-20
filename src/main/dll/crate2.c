@@ -36,27 +36,27 @@ extern DfpObjectInterface **lbl_803DCA54;
  * PAL Size: TODO
  */
 #pragma dont_inline on
-void dfpstatue1_updateState(int obj)
+void dfpstatue1_updateState(DfpStatue1Object *obj)
 {
   DfpStatue1State *state;
   s16 loopBit;
 
-  state = *(DfpStatue1State **)(obj + 0xb8);
+  state = obj->state;
   loopBit = (s16)GameBit_Get(state->loopSfxId);
   if ((state->loopActive == 0) && (loopBit != 0) &&
       (GameBit_Get(0xedf) != 0)) {
-    (*lbl_803DCA54)->refresh(0,obj,0xffffffff);
+    (*lbl_803DCA54)->refresh(0,(int)obj,0xffffffff);
     state->loopActive = 1;
   }
   if ((state->stateFlags != 0) && (state->loopActive != 0) && (GameBit_Get(0xedf) != 0)) {
     GameBit_Set(state->loopSfxId,0);
-    (*lbl_803DCA54)->refresh(1,obj,0xffffffff);
+    (*lbl_803DCA54)->refresh(1,(int)obj,0xffffffff);
     state->loopActive = 0;
     state->stateFlags = 0;
   }
   if (state->loopSfxStopTimer != 0) {
     state->loopSfxStopTimer = (s16)((float)state->loopSfxStopTimer - timeDelta);
-    Sfx_KeepAliveLoopedObjectSound(obj,0x458);
+    Sfx_KeepAliveLoopedObjectSound((int)obj,0x458);
     if (state->loopSfxStopTimer <= 0) {
       state->loopSfxStopTimer = 0;
       switch (state->loopSfxId) {
@@ -87,7 +87,7 @@ void dfpstatue1_free(void) {}
 void dfpstatue1_render(void) {}
 void dfpstatue1_hitDetect(void) {}
 
-void dfpstatue1_update(int obj) { dfpstatue1_updateState(obj); }
+void dfpstatue1_update(DfpStatue1Object *obj) { dfpstatue1_updateState(obj); }
 
 #pragma scheduling off
 void dfpstatue1_init(DfpStatue1Object *obj, DfpStatue1MapData *mapData)

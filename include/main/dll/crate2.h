@@ -36,7 +36,7 @@ typedef struct DfpStatue1Object {
   undefined4 (*updateState)(int obj, undefined4 param_2, int hitState);
 } DfpStatue1Object;
 
-void dfpstatue1_updateState(int obj);
+void dfpstatue1_updateState(DfpStatue1Object *obj);
 
 extern char sDfperchwitchInitNoLongerSupported[];
 extern ObjectDescriptor gDfpstatue1ObjDescriptor;
@@ -57,7 +57,7 @@ int dfpstatue1_func08(void);
 void dfpstatue1_free(void);
 void dfpstatue1_render(void);
 void dfpstatue1_hitDetect(void);
-void dfpstatue1_update(int obj);
+void dfpstatue1_update(DfpStatue1Object *obj);
 void dfpstatue1_init(DfpStatue1Object *obj, DfpStatue1MapData *mapData);
 void dfpstatue1_release(void);
 void dfpstatue1_initialise(void);
