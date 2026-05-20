@@ -1715,12 +1715,12 @@ void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
  * definition so future hunters can fill bodies one at a time. */
 void Flag_init(void) {}
 void Flag_update(void) {}
-void fn_801E4AC0(void) {}
+void SB_KyteCage_SeqFn(void) {}
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
 #pragma scheduling off
 #pragma peephole off
-int fn_801E4F14(int* obj, int p2, void* state)
+int SB_CageKyte_SeqFn(int* obj, int p2, void* state)
 {
     int v = *(int*)((char*)obj + 0xf4);
     if (v > 0) {
@@ -1735,7 +1735,7 @@ int fn_801E4F14(int* obj, int p2, void* state)
 #pragma scheduling reset
 #pragma peephole off
 #pragma scheduling off
-int fn_801E5060(int p1, int p2, int p3)
+int SB_SeqDoor_SeqFn(int p1, int p2, int p3)
 {
     if (*(s16 *)((char *)p1 + 0x46) != 0x173) {
         *(s16 *)((char *)p3 + 0x6e) = -2;
@@ -1745,7 +1745,7 @@ int fn_801E5060(int p1, int p2, int p3)
 }
 #pragma scheduling reset
 #pragma peephole reset
-void fn_801E5A2C(void) {}
+void Lamp_SeqFn(void) {}
 void fn_801E66EC(void) {}
 void Lamp_free(void) {}
 void Lamp_init(void) {}
@@ -1754,7 +1754,7 @@ void Lamp_update(void) {}
 #pragma scheduling off
 void SB_CageKyte_init(int p)
 {
-    *(void **)((char *)p + 0xbc) = (void *)fn_801E4F14;
+    *(void **)((char *)p + 0xbc) = (void *)SB_CageKyte_SeqFn;
     *(u16 *)((char *)p + 0xb0) = (u16)((u32)*(u16 *)((char *)p + 0xb0) | 0x6000u);
 }
 #pragma scheduling reset
