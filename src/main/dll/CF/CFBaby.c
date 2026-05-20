@@ -1780,6 +1780,7 @@ void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 extern void buttonDisable(int p1, int mask);
 extern undefined4* lbl_803DCA54;
 typedef void (*InfoPtUpdateFn)(int, int, int);
+#pragma scheduling off
 #pragma peephole off
 void infopoint_update(int obj) {
     if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
@@ -1788,10 +1789,13 @@ void infopoint_update(int obj) {
     }
 }
 #pragma peephole reset
+#pragma scheduling reset
 
 /* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
 extern void unlockLevel(int a, int b, int c);
 extern void Landed_Arwing_SeqFn(void);
+#pragma scheduling off
+#pragma peephole off
 void landed_arwing_init(int obj, int param) {
     int *p = ((int**)obj)[0xb8/4];
     *(u16*)((char*)obj + 0xb0) = *(u16*)((char*)obj + 0xb0) | 0x2000;
@@ -1801,6 +1805,8 @@ void landed_arwing_init(int obj, int param) {
     }
     *(void(**)(void))((char*)obj + 0xbc) = Landed_Arwing_SeqFn;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern int *lbl_803DCAC0;
 #pragma scheduling off
