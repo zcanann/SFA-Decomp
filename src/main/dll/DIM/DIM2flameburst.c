@@ -1707,6 +1707,7 @@ void dimmagicbridge_update(int obj)
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
+#pragma peephole off
 #pragma scheduling off
 void dimwooddoor2_init(u8* obj, u8* params)
 {
@@ -1726,7 +1727,9 @@ void dimwooddoor2_init(u8* obj, u8* params)
     }
 }
 #pragma scheduling reset
+#pragma peephole reset
 
+#pragma peephole off
 #pragma scheduling off
 void dll_1CE_init(u8* obj, u8* params)
 {
@@ -1743,6 +1746,7 @@ void dll_1CE_init(u8* obj, u8* params)
     *(f32*)(sub + 4) = lbl_803E49F0;
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 /* explosion_free: model-light release if present. */
 extern void ModelLightStruct_free(void *);
