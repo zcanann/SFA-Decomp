@@ -25,7 +25,7 @@ extern f32 FLOAT_803e4b30;
 /*
  * --INFO--
  *
- * Function: FUN_80190bd4
+ * Function: Transporter_SeqFn
  * EN v1.0 Address: 0x80190BD4
  * EN v1.0 Size: 4684b
  * EN v1.1 Address: 0x80191150
@@ -35,7 +35,7 @@ extern f32 FLOAT_803e4b30;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80190BD4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void Transporter_SeqFn(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -336,8 +336,8 @@ int transporter_getExtraSize(void)
 
 extern void objRenderFn_80041018(int obj);
 extern uint GameBit_Get(int eventId);
-extern void fn_8019098C(int obj);
-extern void fn_8019042C(int obj);
+extern void warpPadPlayerStandingOn(int obj);
+extern void warpPadFn_8019042c(int obj);
 extern short lbl_803DCEB8;
 
 /*
@@ -354,9 +354,9 @@ void transporter_update(int obj)
     register int self = obj;
     register int state2 = *(int *)(self + 0x4c);
     if ((int)(signed char)*(u8 *)(state2 + 0x1a) != -1) {
-        fn_8019098C(self);
+        warpPadPlayerStandingOn(self);
     }
-    fn_8019042C(self);
+    warpPadFn_8019042c(self);
 }
 #pragma scheduling reset
 #pragma peephole reset

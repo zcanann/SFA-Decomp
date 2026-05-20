@@ -13,7 +13,7 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
-extern undefined4 fn_8017BCF8();
+extern undefined4 Lock_DoorLock_SeqFn();
 
 extern undefined4* DAT_803dd6d4;
 
@@ -37,7 +37,7 @@ void doorlock_init(short *obj,int config)
   *obj = (short)((byte)*(byte *)(config + 0x18) << 8);
   obj[1] = (short)((byte)*(byte *)(config + 0x19) << 8);
   obj[2] = (short)((byte)*(byte *)(config + 0x1a) << 8);
-  *(code *)(obj + 0x5e) = fn_8017BCF8;
+  *(code *)(obj + 0x5e) = Lock_DoorLock_SeqFn;
   *(undefined *)((int)obj + 0xad) = *(undefined *)(config + 0x21);
   if (!(*(char *)((int)obj + 0xad) < *(char *)(*(int *)(obj + 0x28) + 0x55))) {
     *(undefined *)((int)obj + 0xad) = 0;

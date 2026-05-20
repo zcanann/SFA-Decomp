@@ -1410,7 +1410,7 @@ void exploded_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801A4524: loop through u8 array at +0x81 of param 3; on element==1, do game state setup. */
+/* CFLevelControl_SeqFn: loop through u8 array at +0x81 of param 3; on element==1, do game state setup. */
 extern void GameBit_Set(int eventId, int value);
 extern void loadMapAndParent(int mapId);
 extern void unlockLevel(int a, int b, int c);
@@ -1418,7 +1418,7 @@ extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int b);
 #pragma scheduling off
 #pragma peephole off
-int fn_801A4524(int p1, int p2, void *p3) {
+int CFLevelControl_SeqFn(int p1, int p2, void *p3) {
     int i;
     u8 *base = (u8*)p3;
     for (i = 0; i < (int)base[0x8b]; i++) {

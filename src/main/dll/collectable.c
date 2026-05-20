@@ -155,7 +155,7 @@ extern undefined4 FUN_8015a4c4();
 extern undefined4 FUN_8015b2cc();
 extern undefined4 FUN_801778d0();
 extern void objSetAnimSpeedTo1(int param_1);
-extern f32 fn_801948C0(int obj,int param_2);
+extern f32 objFn_801948c0(int obj,int param_2);
 extern double FUN_80194a70();
 extern undefined4 FUN_8020a568();
 extern undefined4 FUN_80247eb8();
@@ -1947,7 +1947,7 @@ void Tricky_hitDetect(int obj)
   if ((*(u8 *)(state + 0x58) >> 5 & 1) != 0) {
     objects = ObjGroup_GetObjects(0x51,count);
     for (i = 0; i < count[0]; i++) {
-      height = fn_801948C0(*objects,3);
+      height = objFn_801948c0(*objects,3);
       if (*(s32 *)(state + 0x5c) == -1) {
         dy = height - *(f32 *)(obj + 0x10);
         if (dy < lbl_803E23DC) {

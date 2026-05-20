@@ -447,11 +447,11 @@ extern void mathFn_80021ac8(void* in, void* out);
 /*
  * --INFO--
  *
- * Function: fn_80182504
+ * Function: objThrowFn_80182504
  * EN v1.0 Address: 0x80182504
  * EN v1.0 Size: 144b
  */
-void fn_80182504(int param_1)
+void objThrowFn_80182504(int param_1)
 {
   struct LocalArgs {
     short f8;
