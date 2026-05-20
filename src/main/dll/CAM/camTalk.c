@@ -240,17 +240,19 @@ void CameraModeBike_init(int param_1)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void firstPersonPlaceCamera(int param_1,int param_2)
 {
+  register int self = param_1;
   int *puVar1;
   int iVar2;
   float local_20;
   float local_24;
   float local_28;
   float local_1c[3];
-  
-  if (*(short *)(param_1 + 0x44) == 1) {
-    fn_80296BD4(param_1,&local_28,&local_24,&local_20);
+
+  if (*(short *)(self + 0x44) == 1) {
+    fn_80296BD4(self,&local_28,&local_24,&local_20);
     if (((param_2 != 0) || (*(float *)(lbl_803DD548 + 0x120) != local_28)) ||
        (*(float *)(lbl_803DD548 + 0x128) != local_20)) {
       *(float *)(lbl_803DD548 + 0x130) = local_24;
@@ -260,23 +262,27 @@ void firstPersonPlaceCamera(int param_1,int param_2)
     *(float *)(lbl_803DD548 + 0x128) = local_20;
   }
   else {
-    *(float *)(lbl_803DD548 + 0x120) = *(float *)(param_1 + 0x18);
-    *(float *)(lbl_803DD548 + 0x124) = lbl_803E17C0 + *(float *)(param_1 + 0x1c);
-    *(float *)(lbl_803DD548 + 0x128) = *(float *)(param_1 + 0x20);
+    *(float *)(lbl_803DD548 + 0x120) = *(float *)(self + 0x18);
+    *(float *)(lbl_803DD548 + 0x124) = lbl_803E17C0 + *(float *)(self + 0x1c);
+    *(float *)(lbl_803DD548 + 0x128) = *(float *)(self + 0x20);
     *(float *)(lbl_803DD548 + 0x130) = *(float *)(lbl_803DD548 + 0x124);
   }
   puVar1 = (int *)getSbGalleon();
-  if ((puVar1 != (int *)0x0) && (iVar2 = fn_801E12DC(puVar1), iVar2 == 2)) {
-    local_1c[0] = *(float *)(param_1 + 0x18) - *(float *)(puVar1 + 6);
-    local_1c[1] = (lbl_803E17C0 + *(float *)(param_1 + 0x1c)) - *(float *)(puVar1 + 7);
-    local_1c[2] = *(float *)(param_1 + 0x20) - *(float *)(puVar1 + 8);
-    mathFn_80021ac8(puVar1,local_1c);
-    *(float *)(lbl_803DD548 + 0x120) = *(float *)(puVar1 + 6) + local_1c[0];
-    *(float *)(lbl_803DD548 + 0x124) = *(float *)(puVar1 + 7) + local_1c[1];
-    *(float *)(lbl_803DD548 + 0x128) = *(float *)(puVar1 + 8) + local_1c[2];
+  if (puVar1 != (int *)0x0) {
+    iVar2 = fn_801E12DC(puVar1);
+    if (iVar2 == 2) {
+      local_1c[0] = *(float *)(self + 0x18) - *(float *)(puVar1 + 6);
+      local_1c[1] = (lbl_803E17C0 + *(float *)(self + 0x1c)) - *(float *)(puVar1 + 7);
+      local_1c[2] = *(float *)(self + 0x20) - *(float *)(puVar1 + 8);
+      mathFn_80021ac8(puVar1,local_1c);
+      *(float *)(lbl_803DD548 + 0x120) = *(float *)(puVar1 + 6) + local_1c[0];
+      *(float *)(lbl_803DD548 + 0x124) = *(float *)(puVar1 + 7) + local_1c[1];
+      *(float *)(lbl_803DD548 + 0x128) = *(float *)(puVar1 + 8) + local_1c[2];
+    }
   }
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
