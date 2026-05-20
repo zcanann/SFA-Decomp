@@ -3402,7 +3402,7 @@ int gunpowderbarrel_canBeGrabbed(int* obj)
     int result = 0;
     if (*(u8*)((char*)state + 21) == 0 &&
         *(f32*)((char*)state + 24) == lbl_803E42C0 &&
-        ((int(*)(void))((void**)*(int**)&lbl_803DCAC0)[5])() == 0) {
+        ((int(*)(void))(*(*(void****)&lbl_803DCAC0))[5])() == 0) {
         result = 1;
     }
     return result;
