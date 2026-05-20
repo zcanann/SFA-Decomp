@@ -4447,10 +4447,10 @@ void projgfx_initialise(void) {}
 void playerShadow_func03_nop(void) {}
 void playerShadow_release_nop(void) {}
 void playerShadow_initialise_nop(void) {}
-void dll_18_func08_nop(void) {}
-void dll_18_func06_nop(void) {}
-void dll_18_func04_nop(void) {}
-void dll_18_func03_nop(void) {}
+void boneParticleEffect_func08_nop(void) {}
+void boneParticleEffect_func06_nop(void) {}
+void boneParticleEffect_func04_nop(void) {}
+void boneParticleEffect_func03_nop(void) {}
 void partfx_onMapSetup(void) {}
 void Effect1_func03_nop(void) {}
 void Effect1_release(void) {}
@@ -4736,7 +4736,7 @@ void fn_800A1040(s16 p1, int p2)
     }
 }
 
-void dll_18_release(void)
+void boneParticleEffect_release(void)
 {
     int i;
     void **p;
