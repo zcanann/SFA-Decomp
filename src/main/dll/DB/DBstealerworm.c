@@ -1153,3 +1153,9 @@ void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
+void SB_Propeller_hitDetect(int param_1) {
+    if (*(s16*)(param_1 + 0x46) != 0x69c) return;
+    *(s16*)(param_1 + 4) = *(s16*)(lbl_803DDC40 + 4);
+}
