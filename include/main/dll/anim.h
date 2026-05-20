@@ -224,7 +224,7 @@ void dfplevelcontrol_initialise(void);
 
 int dfpobjcreator_getExtraSize(void);
 int dfpobjcreator_func08(void);
-void dfpobjcreator_free(void);
+void dfpobjcreator_free(int obj, int flag);
 void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dfpobjcreator_hitDetect(void);
 void dfpobjcreator_update(void);
