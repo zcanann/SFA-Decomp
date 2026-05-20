@@ -924,6 +924,44 @@ extern int fn_8001CC9C(int obj, int a, int b, int c, int d);
 extern f32 lbl_803E4430;
 extern f32 lbl_803E4448;
 
+extern int lbl_803E4460;
+extern int lbl_803E4464;
+extern f32 lbl_803E4468;
+extern f32 lbl_803E447C;
+extern f32 lbl_803E44B8;
+extern int *gRomCurveInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void RollingBarrel_init(int obj, int *params)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int tmp[2];
+
+    tmp[0] = lbl_803E4460;
+    tmp[1] = lbl_803E4464;
+    params[5] = -1;
+    *(s16 *)((char *)obj + 6) = (s16)(*(s16 *)((char *)obj + 6) & ~0x4000);
+    *(s16 *)((char *)obj + 4) = 0x4000;
+
+    *(f32 *)((char *)obj + 12) = *(f32 *)((char *)params + 8);
+    *(f32 *)((char *)obj + 24) = *(f32 *)((char *)params + 8);
+    *(f32 *)((char *)obj + 16) = *(f32 *)((char *)params + 12);
+    *(f32 *)((char *)obj + 28) = *(f32 *)((char *)params + 12);
+    *(f32 *)((char *)obj + 20) = *(f32 *)((char *)params + 16);
+    *(f32 *)((char *)obj + 32) = *(f32 *)((char *)params + 16);
+
+    *(f32 *)((char *)state + 0x10c) = (f32) * (s16 *)((char *)params + 0x1a) / lbl_803E447C;
+    *(f32 *)((char *)state + 0x108) = (f32) * (s16 *)((char *)params + 0x1c) / lbl_803E447C;
+    *(u8 *)((char *)state + 0x114) = 0;
+    *(u8 *)((char *)state + 0x115) = 1;
+    *(f32 *)((char *)state + 0x110) = lbl_803E4468;
+
+    ((void (*)(int *, int, int *, int, f32))((void **)*gRomCurveInterface)[35])(state, obj, tmp, -1, lbl_803E44B8);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void SpiritDoorLock_init(int obj, int *params, int mode)
