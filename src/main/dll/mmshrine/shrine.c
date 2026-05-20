@@ -367,3 +367,16 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4F68); }
 #pragma peephole reset
+
+extern void ObjHits_EnableObject(int obj);
+#pragma scheduling off
+#pragma peephole off
+void mmsh_waterspike_init(int obj, s16 *def) {
+    ObjHits_EnableObject(obj);
+    *(int *)((char *)obj + 0xF4) = 0;
+    *(u32 *)((char *)obj + 0xF8) =
+        ((u32)(u16)*(s16 *)((char *)def + 0x1C) << 16) |
+        (u32)(u16)*(s16 *)((char *)def + 0x1A);
+}
+#pragma peephole reset
+#pragma scheduling reset
