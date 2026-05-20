@@ -1247,3 +1247,11 @@ extern void Resource_Release(u32);
 void vfplavastar_release(void) { Resource_Release(lbl_803DDCD8); lbl_803DDCD8 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* fn_801FD398: render iff obj->field_0x74 set. */
+extern void objRenderFn_80041018(void *obj);
+void fn_801FD398(void *obj) {
+    if (*(void **)((char *)obj + 0x74) != NULL) {
+        objRenderFn_80041018(obj);
+    }
+}
