@@ -2996,6 +2996,8 @@ void fn_8003B5E0(u8 a, u8 b, u8 c, u8 d) {
 }
 
 /* 100b texture lookup by byte tag. */
+#pragma peephole off
+#pragma scheduling off
 void* objFindTexture(void* obj, int target) {
     void* result = NULL;
     void* p50 = *(void**)((char*)obj + 0x50);
@@ -3003,7 +3005,7 @@ void* objFindTexture(void* obj, int target) {
         u8* entries = *(u8**)((char*)p50 + 0xC);
         if (entries == NULL) return NULL;
         {
-            s8 count = *(s8*)((char*)p50 + 0x59);
+            u8 count = *(u8*)((char*)p50 + 0x59);
             int offset = 0;
             int i;
             for (i = 0; i < count; i++) {
@@ -3018,6 +3020,8 @@ void* objFindTexture(void* obj, int target) {
     }
     return result;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 60b objRenderShadow guard. */
 extern void objRenderShadow(void* obj);
