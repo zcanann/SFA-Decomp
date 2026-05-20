@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/duster.h"
+#include "main/objanim.h"
 
 #pragma scheduling off
 #pragma peephole off
@@ -13,7 +14,6 @@ extern undefined4 fn_80017A88();
 extern void* Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern uint Obj_IsLoadingLocked();
-extern void ObjAnim_SetCurrentMove(uint obj, int mode, float val, uint flags);
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern void ObjHits_DisableObject(int);
 extern void ObjHits_EnableObject(int);
@@ -820,7 +820,7 @@ void fn_8015625C(ushort *param_9,int param_10)
     Sfx_PlayFromObject((uint)param_9,0x262);
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-    ObjAnim_SetCurrentMove((uint)param_9,3,lbl_803E3730,(uint)*(byte *)(param_10 + 0x323));
+    ObjAnim_SetCurrentMove((int)param_9,3,lbl_803E3730,(uint)*(byte *)(param_10 + 0x323));
   }
   fVar1 = lbl_803E3730;
   if (*(float *)(param_10 + 0x324) <= lbl_803E3730) {
@@ -916,7 +916,7 @@ void fn_8015652C(ushort *param_9,int param_10)
     Sfx_PlayFromObject((uint)param_9,0x262);
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-    ObjAnim_SetCurrentMove((uint)param_9,0,lbl_803E3730,(uint)*(byte *)(param_10 + 0x323));
+    ObjAnim_SetCurrentMove((int)param_9,0,lbl_803E3730,(uint)*(byte *)(param_10 + 0x323));
   }
   if (*(float *)(param_10 + 0x324) <= lbl_803E3730) {
     *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) & 0xfffeffff;

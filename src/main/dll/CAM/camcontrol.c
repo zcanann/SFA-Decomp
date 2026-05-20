@@ -191,7 +191,7 @@ void camcontrol_updateTargetFeedback(void)
       }
     }
     else {
-      ObjAnim_SetMoveProgress((double)lbl_803E22B0,(ObjAnimComponent *)psVar6);
+      ObjAnim_SetMoveProgress(lbl_803E22B0,(ObjAnimComponent *)psVar6);
     }
   }
   iVar11 = Obj_IsObjectAlive(*(int *)(gCamcontrolState + 0x128));

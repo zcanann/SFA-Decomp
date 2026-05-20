@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/newSeqObj.h"
+#include "main/objanim.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -11,8 +12,6 @@ extern void fn_8015039C(void *p1, void *p2);
 extern u32 fn_8014FFB4(void *p1, void *p2, int p3);
 extern void fn_8014D08C(void *p1, void *p2, int p3, int p4, f32 f1, int p6);
 extern void fn_8014CF7C(void *p1, void *p2, int p3, int p4, f32 f1, f32 f2);
-extern void ObjAnim_SetMoveProgress(void *obj, f32 progress);
-extern void ObjAnim_SetCurrentMove(void *obj, int move, f32 f1, int p4);
 
 extern u8 lbl_8031DD30[];
 extern f32 timeDelta;
@@ -95,8 +94,9 @@ void fn_80150EDC(void *p1, void *p2) {
             fn_8014D08C(p1, p2, *(u8 *)(row + 0x8), 0,
                         *(f32 *)(r28 + (cur338 << 4)),
                         (u8)*(u32 *)(row + 0x4));
-            ObjAnim_SetMoveProgress(p1,
-                *(f32 *)(table + (*(u8 *)(r28 + (*(u16 *)((u8 *)p2 + 0x338) << 4) + 0x8) << 2)));
+            ObjAnim_SetMoveProgress(
+                *(f32 *)(table + (*(u8 *)(r28 + (*(u16 *)((u8 *)p2 + 0x338) << 4) + 0x8) << 2)),
+                (ObjAnimComponent *)p1);
             *(u16 *)((u8 *)p2 + 0x338) =
                 *(u8 *)(r28 + (*(u16 *)((u8 *)p2 + 0x338) << 4) + 0x9);
         } else {
@@ -108,12 +108,13 @@ void fn_80150EDC(void *p1, void *p2) {
             *(u8 *)((u8 *)p2 + 0x2f4) = 0;
             if (v8 == 0) {
                 *(u8 *)((u8 *)p2 + 0x323) = 3;
-                ObjAnim_SetCurrentMove(p1, *(u8 *)((u8 *)r30 + 0x2c), lbl_803E2740, 0);
+                ObjAnim_SetCurrentMove((int)p1, *(u8 *)((u8 *)r30 + 0x2c), lbl_803E2740, 0);
             } else {
                 fn_8014D08C(p1, p2, v8, 0,
                             *(f32 *)((u8 *)r29 + idx2a0 * 0xc), 0xb);
-                ObjAnim_SetMoveProgress(p1,
-                    *(f32 *)(table + (*(u8 *)((u8 *)r29 + (*(u16 *)((u8 *)p2 + 0x2a0)) * 0xc + 0x8) << 2)));
+                ObjAnim_SetMoveProgress(
+                    *(f32 *)(table + (*(u8 *)((u8 *)r29 + (*(u16 *)((u8 *)p2 + 0x2a0)) * 0xc + 0x8) << 2)),
+                    (ObjAnimComponent *)p1);
             }
         }
     }

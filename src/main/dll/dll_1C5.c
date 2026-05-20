@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1C5.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_800067e8();
 extern void* FUN_80017624();
@@ -403,7 +404,6 @@ void FUN_801c8484(short *param_1)
 
 extern void *Obj_GetPlayerObject(void);
 extern double fn_80293E80(double v);
-extern void ObjAnim_AdvanceCurrentMove(int obj, void *p2, float f1, float f2);
 extern double getAngle(float dx, float dz);
 extern double Vec_xzDistance(float *a, float *b);
 extern f32 timeDelta;
@@ -465,7 +465,7 @@ void fn_801C8B68(int obj)
     angB = fn_80293E80((double)((lbl_803E50B0 * ((double)(int)*(short *)(state + 0xe) - lbl_803E50D0)) / lbl_803E50B4));
     *(short *)(self + 0x2) = (short)(int)(lbl_803E50B8 * (angA + angB));
 
-    ObjAnim_AdvanceCurrentMove(self, &local_var, lbl_803E50BC, timeDelta);
+    ObjAnim_AdvanceCurrentMove(lbl_803E50BC, timeDelta, self, (ObjAnimEventList *)&local_var);
 
     if (player == NULL) return;
 
