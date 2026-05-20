@@ -4026,6 +4026,25 @@ void fn_80069958(void **out) {
 #pragma peephole reset
 #pragma scheduling reset
 
+/* fn_80060668 — extract bits 8-15 of obj[0x10] as a byte
+ * (target uses rlwinm 8,15 + srwi 16). */
+#pragma scheduling off
+#pragma peephole off
+u32 fn_80060668(int *obj)
+{
+    register u32 r;
+    register u32 t;
+    register int *o = obj;
+    asm {
+        lwz    t, 0x10 (o)
+        rlwinm t, t, 0, 8, 15
+        srwi   r, t, 16
+    }
+    return r;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* fn_80062894 — clear two shorts, toggle two bytes (1 - x), clear
  * two more bytes. r3 stays at 0 through the whole sequence. */
 extern s16 lbl_803DCEF6;
