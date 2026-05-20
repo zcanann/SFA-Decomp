@@ -1717,20 +1717,48 @@ void Flag_init(void) {}
 void Flag_update(void) {}
 void fn_801E4AC0(void) {}
 void fn_801E4F14(void) {}
-void fn_801E5060(void) {}
+#pragma peephole off
+#pragma scheduling off
+int fn_801E5060(int p1, int p2, int p3)
+{
+    if (*(s16 *)((char *)p1 + 0x46) != 0x173) {
+        *(s16 *)((char *)p3 + 0x6e) = -2;
+    }
+    *(u8 *)((char *)p3 + 0x56) = 0;
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
 void fn_801E5A2C(void) {}
 void fn_801E66EC(void) {}
 void Lamp_free(void) {}
 void Lamp_init(void) {}
 void Lamp_update(void) {}
-void SB_CageKyte_init(void) {}
+#pragma peephole off
+#pragma scheduling off
+void SB_CageKyte_init(int p)
+{
+    *(void **)((char *)p + 0xbc) = (void *)fn_801E4F14;
+    *(u16 *)((char *)p + 0xb0) = (u16)((u32)*(u16 *)((char *)p + 0xb0) | 0x6000u);
+}
+#pragma scheduling reset
+#pragma peephole reset
 void SB_CageKyte_render(void) {}
 void SB_CageKyte_update(void) {}
 void SB_CloudBall_free(void) {}
 void SB_CloudBall_hitDetect(void) {}
 void SB_CloudBall_init(void) {}
 void SB_CloudBall_update(void) {}
-void SB_FireBall_init(void) {}
+#pragma peephole off
+#pragma scheduling off
+void SB_FireBall_init(int p)
+{
+    int *state = *(int **)(p + 0xb8);
+    *(int *)((char *)p + 0xf4) = 0x4b0;
+    *(u8 *)((char *)state + 0x14) = 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
 void SB_FireBall_update(void) {}
 void SB_KyteCage_free(void) {}
 void SB_KyteCage_init(void) {}
