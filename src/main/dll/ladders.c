@@ -604,7 +604,23 @@ void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
 void cannonclaw_init(s16 *dst, void* src) { s8 v = *((s8*)src + 0x28); s16 t = v << 8; *dst = t; }
 #pragma peephole reset
 
-extern void tumbleweedbush_setScale(void);
+/* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
+ * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
+#pragma scheduling off
+void tumbleweedbush_setScale(u8* obj, void* match) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    int i = 0;
+    void** p = (void**)sub;
+    while (i < (int)sub[0x50]) {
+        if (*(void**)((char*)p + 0xc) == match) {
+            *(void**)((char*)p + 0xc) = NULL;
+        }
+        p = (void**)((char*)p + 4);
+        i++;
+    }
+}
+#pragma scheduling reset
+
 extern void tumbleweedbush_update(void);
 extern void tumbleweedbush_init(void);
 
