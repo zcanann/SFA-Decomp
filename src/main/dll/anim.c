@@ -4150,7 +4150,50 @@ extern f32 lbl_803E63B8;
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6390); }
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6398); }
 void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E63B8); }
+void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 #pragma peephole reset
+
+extern f32 lbl_803E6278;
+#pragma scheduling off
+#pragma peephole off
+void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    u32 t = inner[8];
+    if (t != 0 && t != 4) {
+        objRenderFn_8003b8f4(lbl_803E6278);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *lbl_803DCA78;
+extern int *lbl_803DCA8C;
+extern int lbl_803AD0F4[];
+extern void fn_801FF884(void);
+#pragma scheduling off
+#pragma peephole off
+void chuka_free(int obj) {
+    (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+}
+void chuka_hitDetect(int obj) {
+    int *inner = *(int **)(obj + 0xb8);
+    int *light = (int *)inner[1];
+    if (light == NULL) return;
+    if ((*(s16 *)((char *)light + 6) & 0x40) == 0) return;
+    inner[1] = 0;
+}
+void dbstealerworm_hitDetect(int obj) {
+    int *inner = *(int **)(obj + 0xb8);
+    (*(void (*)(int, int *, int *))(*(int *)(*lbl_803DCA8C + 0xc)))(obj, inner, lbl_803AD0F4);
+}
+void GCRobotBlast_init(int obj, s8 *p) {
+    char *inner = *(char **)(obj + 0xb8);
+    *(int *)inner = (s8)p[0x19];
+    inner[4] &= ~0x80;
+    *(void (**)(void))((char *)obj + 0xbc) = fn_801FF884;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
@@ -4235,7 +4278,6 @@ int fn_80200410(int p1, int p2)
 #pragma scheduling reset
 
 /* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
-extern void **lbl_803DCA78;
 #pragma peephole off
 #pragma scheduling off
 void fn_80204B6C(int p1)
