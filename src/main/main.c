@@ -1255,3 +1255,19 @@ void fn_801FD398(void *obj) {
         objRenderFn_80041018(obj);
     }
 }
+
+/* fn_801FD464: init extra-data fields from other; set obj->0xaf bit 3. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801FD464(void *obj, void *other) {
+    s16 *extra = *(s16 **)((char *)obj + 0xb8);
+    s16 v = (s16)((s8)*((s8 *)other + 0x18) << 8);
+    u8 t;
+    *(s16 *)obj = v;
+    *(s16 *)((char *)extra + 0) = *(s16 *)((char *)other + 0x1e);
+    *(s16 *)((char *)extra + 2) = *(s16 *)((char *)other + 0x20);
+    t = (u8)(*(u8 *)((char *)obj + 0xaf) | 0x8);
+    *(u8 *)((char *)obj + 0xaf) = t;
+}
+#pragma peephole reset
+#pragma scheduling reset
