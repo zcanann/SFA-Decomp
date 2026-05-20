@@ -27,7 +27,7 @@ u8 sc_levelcontrol_func11(int *obj);
 void sc_levelcontrol_setScale(void);
 int sc_levelcontrol_getExtraSize(void);
 int sc_levelcontrol_func08(void);
-void sc_levelcontrol_free(void);
+void sc_levelcontrol_free(int obj);
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void sc_levelcontrol_hitDetect(void);
 void sc_levelcontrol_update(void);

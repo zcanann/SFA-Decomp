@@ -774,3 +774,18 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5554); }
 #pragma peephole reset
+
+extern void gameTimerStop(void);
+extern void disableHeavyFog(void);
+extern void Music_Trigger(int track, int param);
+#pragma scheduling off
+void sc_levelcontrol_free(int obj) {
+    gameTimerStop();
+    disableHeavyFog();
+    Music_Trigger(196, 0);
+    Music_Trigger(54, 0);
+    Music_Trigger(239, 0);
+    Music_Trigger(34, 0);
+    Music_Trigger(199, 0);
+}
+#pragma scheduling reset
