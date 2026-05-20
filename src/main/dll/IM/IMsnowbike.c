@@ -311,6 +311,62 @@ int sh_staff_getExtraSize(void) { return 0x74; }
 
 extern s32 lbl_803DC058[2];
 extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
+extern void Music_Trigger(int track, int param);
+extern int getSaveGameLoadStatus(void);
+extern void timeOfDayFn_80055000(void);
+extern void SH_LevelControl_SeqFn(void);
+extern f32 lbl_803E54C0;
+extern s16 lbl_80327618_ids[];
+
+#pragma scheduling off
+#pragma peephole off
+void sh_levelcontrol_init(int obj) {
+    int *state = *(int **)((char *)obj + 0xB8);
+    int i;
+    s16 *bitIds;
+    u32 v;
+
+    *(void (**)(void))((char *)obj + 0xBC) = SH_LevelControl_SeqFn;
+    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x4000;
+    *(u16 *)((char *)obj + 0xB0) = (u16)v;
+    *(int *)((char *)obj + 0xF8) = 3;
+
+    if (getSaveGameLoadStatus() != 0) {
+        *(int *)((char *)obj + 0xF4) = 2;
+    } else {
+        *(int *)((char *)obj + 0xF4) = 1;
+    }
+
+    *(s16 *)((char *)state + 0x10) = -1;
+    *(f32 *)((char *)state + 0xC) = lbl_803E54C0;
+
+    if (GameBit_Get(0x611) != 0) {
+        *(int *)state |= 0x40;
+    }
+
+    *(u8 *)((char *)state + 5) = (*(int (**)(int))((char *)*gMapEventInterface + 0x40))((int)*(s8 *)((char *)obj + 0xAC));
+
+    *(s16 *)((char *)state + 0x12) = -1;
+    Music_Trigger(34, 0);
+    Music_Trigger(49, 0);
+    Music_Trigger(178, 0);
+    Music_Trigger(196, 0);
+    Music_Trigger(166, 0);
+    Music_Trigger(172, 0);
+    Music_Trigger(168, 0);
+    GameBit_Set(3213, 1);
+
+    if (GameBit_Get(319) == 0) {
+        bitIds = lbl_80327618_ids;
+        for (i = 0; i < 18; i++) {
+            GameBit_Set(*bitIds, 0);
+            bitIds++;
+        }
+    }
+    timeOfDayFn_80055000();
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void warpstonelift_init(int obj, s8 *def) {
