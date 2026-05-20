@@ -1417,6 +1417,38 @@ extern f32 lbl_803E4428;
 extern void* Obj_GetPlayerObject(void);
 extern int atan2i(int y, int x);
 extern void fn_801A4DB8(u8* obj, u8* data, int extra, u8* sub);
+/* lbl_803DCA54: pointer to a vtable (used for state-machine dispatches). */
+extern u32 *lbl_803DCA54;
+
+/* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
+ * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
+ * bits 5..7 are set, dispatch vtable[0x15] on the event. Then if
+ * (s8)data->_1e is not -1, dispatch vtable[0x12] with the id, obj, -1.
+ * Finally latch obj->_f4 = 1. */
+#pragma scheduling off
+#pragma peephole off
+void slidingdoor_update(u8* obj) {
+    u8* sub;
+    u8* data;
+    if (*(s32*)(obj + 0xf4) != 0) return;
+    sub = *(u8**)(obj + 0xb8);
+    data = *(u8**)(obj + 0x4c);
+    if (*(s16*)(data + 0x1c) != 0) {
+        u32 mode = (u32)((sub[0] >> 5) & 7);
+        if (mode != 0) {
+            (*(void (***)(u8*))lbl_803DCA54)[0x15](obj);
+        }
+    }
+    {
+        s8 id = (s8)data[0x1e];
+        if (id != -1) {
+            (*(void (***)(s8, u8*, int))lbl_803DCA54)[0x12](id, obj, -1);
+        }
+    }
+    *(u32*)(obj + 0xf4) = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* exploded_init: store (s8)data[0x18] at obj->_ad, convert (s8)data[0x3d]
  * to f32 and stash (obj->_50->_04 * raw) / lbl_803E4428 at obj+0x8, then
