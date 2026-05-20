@@ -2873,7 +2873,7 @@ void findSomething(void *needle)
 {
     int i;
     u8 *p;
-    for (i = 0, p = lbl_8038DF48; i < 0x25; ++i, p += 0x14) {
+    for (i = 0, p = lbl_8038DF48; i < 0x25; p += 0x14, ++i) {
         if (p[0x10] != 0 && (void *)p == needle) {
             lbl_8038DF48[i * 0x14 + 0x10] = 0;
             return;
