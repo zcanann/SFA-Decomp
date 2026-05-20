@@ -404,6 +404,22 @@ void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
 void dimbridgecogmai_release(void) {}
 int dimdismountpoint_func08(void) { return 0; }
 
+extern int fn_801B3768(int obj, int p2, char *r5);
+#pragma scheduling off
+#pragma peephole off
+void dimbridgecogmai_init(int *obj, int *def) {
+    *(u8 *)*(int **)((char *)obj + 0xb8) = 100;
+    *(s16 *)obj = (s16)((u32)*(u8 *)((char *)def + 0x1c) << 8);
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801B3768;
+    ObjGroup_AddObject(obj, 15);
+    if ((u8)GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
+        *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x8000);
+    }
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern f32 lbl_803E490C;
 extern void objRenderFn_80041018(int obj);
 #pragma scheduling off
