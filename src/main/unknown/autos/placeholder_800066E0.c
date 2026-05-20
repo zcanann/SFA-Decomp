@@ -1445,14 +1445,16 @@ FUN_80006788(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 u32 audioFlagFn_8000a188(u32 mask)
 {
-    u32 managed = gAudioManagedChannelMask & mask;
+    s32 managed = gAudioManagedChannelMask & mask;
     if (managed == 0) {
         return 1;
     }
     return (gAudioActiveChannelMask & mask) != 0;
 }
+#pragma peephole reset
 
 /*
  * --INFO--

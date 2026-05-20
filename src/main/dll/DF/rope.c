@@ -207,12 +207,13 @@ void dimbossgut2_updateTracking(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void dimbossgut2_free(int param_9)
 {
   uint uVar1;
   int iVar2;
   void *childObj;
-  
+
   iVar2 = *(int *)(param_9 + 0xb8);
   uVar1 = *(uint *)(*(int *)(iVar2 + 0x40c) + 0x18);
   if (uVar1 != 0) {
@@ -227,6 +228,7 @@ void dimbossgut2_free(int param_9)
   (*(void (*)(int,int,int))(*(int *)(*lbl_803DCAB8 + 0x40)))(param_9,iVar2,0);
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -448,10 +450,11 @@ void DIMbossspit_updateBurst(undefined8 param_1,undefined8 param_2,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void DIMbossspit_free(int param_1)
 {
   uint uVar1;
-  
+
   uVar1 = *(uint *)(*(int *)(param_1 + 0xb8) + 4);
   if (uVar1 != 0) {
     ModelLightStruct_free((void *)uVar1);
@@ -459,6 +462,7 @@ void DIMbossspit_free(int param_1)
   (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(param_1);
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -658,6 +662,7 @@ void dimbossfire_hitDetect(void) {}
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void dimbossfire_free(int obj)
 {
   int state;
@@ -671,6 +676,7 @@ void dimbossfire_free(int obj)
   }
   (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
 }
+#pragma scheduling reset
 
 void dimbossfire_render(int p1,int p2,int p3,int p4,int p5,s8 visible)
 {

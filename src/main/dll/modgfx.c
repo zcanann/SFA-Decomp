@@ -4614,8 +4614,8 @@ void dll_0D_func05(u8 v) {
 void partfx_initialise(void) {
     u16 *p;
     int i;
-    p = lbl_8039C2E0 + 0x14;
     i = 0x14;
+    p = lbl_8039C2E0 + 0x14;
     while ((s8)i != 0) {
         p = p - 1;
         i = i - 1;

@@ -29,7 +29,7 @@ int DIMSnowHorn1_func20(void) { return 0; }
  * Returns floored neg-velocity-Y in *out, or a constant if mode != 10;
  * also returns f1 = constant.
  */
-void DIMSnowHorn1_func19(int obj, f32 *out)
+f32 DIMSnowHorn1_func19(int obj, f32 *out)
 {
     int state = *(int *)(obj + 0xb8);
     if (*(s16 *)(state + 0x274) == 0xa) {
@@ -37,8 +37,7 @@ void DIMSnowHorn1_func19(int obj, f32 *out)
     } else {
         *out = lbl_803E827C;
     }
-    /* f1 return clobbered by caller via convention (f1 = lbl_803E8234) */
-    (void)lbl_803E8234;
+    return lbl_803E8234;
 }
 
 /*
