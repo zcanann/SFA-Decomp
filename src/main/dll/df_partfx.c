@@ -1663,3 +1663,26 @@ f32 screenTransition_getAlpha(void) { return lbl_803DD420; }
 
 /* Pattern wrappers. */
 int Dummy04_func03_ret_m1(void) { return -0x1; }
+
+/* sda21 writers. */
+extern u8 lbl_803DD42F;
+void setScreenTransitionPause(u32 pause) { lbl_803DD42F = (u8)pause; }
+
+/* fcmp-eq-to-bool. */
+extern f32 lbl_803E0558;
+u32 isScreenTransitionActive(void) { return lbl_803E0558 == lbl_803DD420; }
+
+/* multi-store leaf (single float broadcast). */
+#pragma scheduling off
+#pragma peephole off
+extern f32 lbl_803E0570;
+void player_clearXZvel(int *obj, int *state) {
+    f32 z = lbl_803E0570;
+    *(f32*)((char*)obj + 0x24) = z;
+    *(f32*)((char*)obj + 0x2c) = z;
+    *(f32*)((char*)state + 0x294) = z;
+    *(f32*)((char*)state + 0x280) = z;
+    *(f32*)((char*)state + 0x284) = z;
+}
+#pragma peephole reset
+#pragma scheduling reset
