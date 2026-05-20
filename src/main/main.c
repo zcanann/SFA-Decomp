@@ -1376,5 +1376,21 @@ void dll_224_init(void *obj, void *other) {
     t = (u8)(*(u8 *)((char *)obj + 0xaf) | 0x8);
     *(u8 *)((char *)obj + 0xaf) = t;
 }
+
+void vfpflamepoint_init(int *obj, s8 *def) {
+    register u32 b;
+    register u32 bitval;
+    register s8 *inner = *(s8 **)((char *)obj + 0xb8);
+    inner[4] = (s8)*(s16 *)(def + 0x1a);
+    bitval = (u8)*(s16 *)(def + 0x1c);
+    asm {
+        lbz b, 5(inner)
+        rlwimi b, bitval, 6, 25, 25
+        stb b, 5(inner)
+    }
+    *(s16 *)inner = *(s16 *)(def + 0x1e);
+    *(s16 *)(inner + 2) = *(s16 *)(def + 0x20);
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+}
 #pragma peephole reset
 #pragma scheduling reset
