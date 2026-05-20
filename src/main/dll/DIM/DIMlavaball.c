@@ -1403,3 +1403,14 @@ void fn_801A80F0(int obj, u8 flag) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_gyservent_init(int obj) {
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+    *(u32 *)(obj + 0xf4) = randomGetRange(0xa, 0xc8);
+    *(u8 *)(obj + 0x36) = 0;
+    *(u8 *)(obj + 0xaf) &= ~0x8;
+}
+#pragma peephole reset
+#pragma scheduling reset

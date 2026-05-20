@@ -101,7 +101,7 @@ void mmp_gyservent_free(void);
 void mmp_gyservent_render(void);
 void mmp_gyservent_hitDetect(void);
 void mmp_gyservent_update(void);
-void mmp_gyservent_init(void);
+void mmp_gyservent_init(int obj);
 void mmp_gyservent_release(void);
 void mmp_gyservent_initialise(void);
 
