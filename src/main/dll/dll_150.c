@@ -434,7 +434,7 @@ void smallbasket_free(int param_1)
 }
 #pragma scheduling reset
 
-extern undefined4* lbl_803DCAAC;
+extern undefined4* gMapEventInterface;
 extern f32 lbl_803E3938;
 extern f32 lbl_803E3950;
 extern f32 lbl_803E3958;
@@ -496,7 +496,7 @@ void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, und
   int result;
   short field_a;
   extra = *(int*)(param_1 + 0xb8);
-  result = (int)(*(code *)(*(int *)lbl_803DCAAC + 0x68))(
+  result = (int)(*(code *)(*(int *)gMapEventInterface + 0x68))(
     *(int*)(*(int*)(param_1 + 0x4c) + 0x14));
   if (result == 0) {
     *(short*)(param_1 + 6) = *(short*)(param_1 + 6) | 0x4000;

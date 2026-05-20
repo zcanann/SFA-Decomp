@@ -1996,7 +1996,7 @@ void GameUI_airMeterShutdown(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *lbl_803DCAAC;
+extern int *gMapEventInterface;
 extern u8 lbl_803DB424;
 extern int lbl_803DD8DC;
 extern int lbl_803DD7D8;
@@ -2008,7 +2008,7 @@ extern void gameTextLoadDir(int);
 #pragma scheduling off
 #pragma peephole off
 void showDeathMenu(void) {
-    int *o = (int *)*lbl_803DCAAC;
+    int *o = (int *)*gMapEventInterface;
     int *r = (int *)(*(int (*)(int *))(*(int *)((char *)o + 0x8c)))(o);
     pauseMenuInit();
     if (*((u8 *)r + 9) != 0) {

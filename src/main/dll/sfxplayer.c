@@ -13,7 +13,7 @@ extern void timerSetToCountUp(void);
 extern void TrickyCurve_activateEffectHandleRing(void);
 extern void TrickyCurve_updateEffectHandleRing(int obj);
 
-extern undefined4* lbl_803DCAAC;
+extern undefined4* gMapEventInterface;
 
 #define SFXPLAYER_OBJECT_MAP_ID_OFFSET 0xAC
 #define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
@@ -71,7 +71,7 @@ void sfxplayer_update(int obj)
       flags->bit40 = 0;
       GameBit_Set(state->eventId,1);
       GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE,0);
-      mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET));
+      mode = (*(code *)(*gMapEventInterface + 0x40))((int)*(char *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET));
       if (mode == SFXPLAYER_MODE_SINGLE) {
         GameBit_Set(SFXPLAYER_GAMEBIT_SINGLE_COMPLETE,1);
       }
@@ -81,7 +81,7 @@ void sfxplayer_update(int obj)
       if (flags->bit80 != 0) {
         flags->bit80 = 0;
         if (flags->bit10 != 0) {
-          mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET));
+          mode = (*(code *)(*gMapEventInterface + 0x40))((int)*(char *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET));
           if (mode == SFXPLAYER_MODE_SINGLE) {
             gameTimerInit(SFXPLAYER_TIMER_ID,SFXPLAYER_TIMER_SHORT_FRAMES);
           }
@@ -117,7 +117,7 @@ void sfxplayer_update(int obj)
           hitObj = 0;
           hitType = ObjHits_GetPriorityHit(handles[1],&hitObj,(int *)0x0,(uint *)0x0);
           if (hitType == SFXPLAYER_HIT_TYPE_RING_TARGET) {
-            mode = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET));
+            mode = (*(code *)(*gMapEventInterface + 0x40))((int)*(char *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET));
             if ((mode == SFXPLAYER_MODE_SINGLE) || (*(int *)((int)hitObj + 0xf4) == i)) {
               if (handles[0] != 0) {
                 Obj_FreeObject(handles[0]);

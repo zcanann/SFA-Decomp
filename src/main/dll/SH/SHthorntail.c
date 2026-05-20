@@ -21,7 +21,7 @@ extern f32 lbl_803E5438;
 extern f64 lbl_803E5440;
 extern char sSHthorntailSourceFile[];
 extern char sThorntailEnteredInvalidState[];
-extern SHthorntailEventInterface **lbl_803DCAAC;
+extern SHthorntailEventInterface **gMapEventInterface;
 
 /*
  * --INFO--
@@ -196,7 +196,7 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
     if (gameBitValue == 0) {
       gameBitValue = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_EVENT_GAMEBIT);
       if (gameBitValue != 0) {
-        (*lbl_803DCAAC)->triggerEvent(SHTHORNTAIL_ROOT_MODE3_TRIGGER_EVENT,
+        (*gMapEventInterface)->triggerEvent(SHTHORNTAIL_ROOT_MODE3_TRIGGER_EVENT,
                                       SHTHORNTAIL_ROOT_MODE3_TRIGGER_ARG);
         runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
       }
@@ -297,7 +297,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
       triggerEventId = GameBit_Get(SHTHORNTAIL_ROOT_MODE2_TRIGGER_SELECTOR_GAMEBIT);
       triggerIsSet = GameBit_Get(triggerEventId);
       if (triggerIsSet != 0) {
-        (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT,0);
+        (*gMapEventInterface)->setAnimEvent((int)obj->animObjId,SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT,0);
         runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
         randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
         runtime->idleTimer = (float)randomTime;
@@ -312,7 +312,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
           (objectTriggerIsSet = ObjTrigger_IsSet((int)obj), objectTriggerIsSet != 0)) {
         runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
         runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
-        (*lbl_803DCAAC)->setAnimEvent((int)obj->animObjId,SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT,1);
+        (*gMapEventInterface)->setAnimEvent((int)obj->animObjId,SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT,1);
         GameBit_Set(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION7_GAMEBIT,1);
         return;
       }

@@ -49,7 +49,7 @@ extern undefined4 DAT_803dcc40;
 extern undefined4 DAT_803dcc44;
 extern undefined4 DAT_803dcc54;
 extern void *lbl_803DCA54;
-extern void *lbl_803DCAAC;
+extern void *gMapEventInterface;
 extern u8 lbl_803DBFC8;
 extern u8 lbl_803DBFCC;
 extern u8 lbl_803DBFD0;
@@ -325,7 +325,7 @@ void sh_queenearthwalker_update(void *obj)
   state = *(void **)((u8 *)obj + 0xb8);
   *(u8 *)((u8 *)state + 0x2) &= ~0x20;
   actionParam = *(s8 *)((u8 *)obj + 0xac);
-  action = (*(u8 (***)(s8))lbl_803DCAAC)[0x10](actionParam);
+  action = (*(u8 (***)(s8))gMapEventInterface)[0x10](actionParam);
 
   if ((*(u8 *)((u8 *)state + 0x2) & 0x1) != 0) {
     switch (action) {

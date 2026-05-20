@@ -21,7 +21,7 @@ extern void SH_LevelControl_doThornTailEvents(int param_1, uint *param_2);
 extern void SH_LevelControl_doEarlyScenes(int param_1, uint *param_2);
 extern void objRenderFn_8003b8f4(f32);
 
-extern undefined4 *lbl_803DCAAC;
+extern undefined4 *gMapEventInterface;
 extern undefined4 *lbl_803DCA54;
 extern f32 lbl_803E54B4;
 extern f32 lbl_803E54C8;
@@ -64,48 +64,48 @@ void sh_levelcontrol_update(int param_1)
   iVar1 = GameBit_Get(0x3aa);
   if (iVar1 != 0) {
     if (*(char *)(param_1 + 0xac) == 8) {
-      cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1d);
+      cVar4 = (*(code *)(*gMapEventInterface + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1d);
       if (cVar4 == '\0') {
-        (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1d, 1);
+        (*(code *)(*gMapEventInterface + 0x50))((int)*(char *)(param_1 + 0xac), 0x1d, 1);
       }
     }
     else {
-      cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1d);
+      cVar4 = (*(code *)(*gMapEventInterface + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1d);
       if (cVar4 != '\0') {
-        (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1d, 0);
+        (*(code *)(*gMapEventInterface + 0x50))((int)*(char *)(param_1 + 0xac), 0x1d, 0);
       }
     }
   }
   iVar1 = GameBit_Get(0x3b8);
   if (iVar1 != 0) {
-    cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1c);
+    cVar4 = (*(code *)(*gMapEventInterface + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1c);
     if (cVar4 == '\0') {
-      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1c, 1);
+      (*(code *)(*gMapEventInterface + 0x50))((int)*(char *)(param_1 + 0xac), 0x1c, 1);
     }
   }
   else {
-    cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1c);
+    cVar4 = (*(code *)(*gMapEventInterface + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1c);
     if (cVar4 != '\0') {
-      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1c, 0);
+      (*(code *)(*gMapEventInterface + 0x50))((int)*(char *)(param_1 + 0xac), 0x1c, 0);
     }
   }
   iVar1 = GameBit_Get(999);
   if ((iVar1 != 0) &&
-     (cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1b),
+     (cVar4 = (*(code *)(*gMapEventInterface + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1b),
      cVar4 == '\0')) {
-    (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1b, 1);
+    (*(code *)(*gMapEventInterface + 0x50))((int)*(char *)(param_1 + 0xac), 0x1b, 1);
   }
   iVar1 = GameBit_Get(0x11);
   if (iVar1 != 0) {
-    cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1a);
+    cVar4 = (*(code *)(*gMapEventInterface + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1a);
     if (cVar4 == '\0') {
-      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1a, 1);
+      (*(code *)(*gMapEventInterface + 0x50))((int)*(char *)(param_1 + 0xac), 0x1a, 1);
     }
   }
   else {
-    cVar4 = (*(code *)(*lbl_803DCAAC + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1a);
+    cVar4 = (*(code *)(*gMapEventInterface + 0x4c))((int)*(char *)(param_1 + 0xac), 0x1a);
     if (cVar4 != '\0') {
-      (*(code *)(*lbl_803DCAAC + 0x50))((int)*(char *)(param_1 + 0xac), 0x1a, 0);
+      (*(code *)(*gMapEventInterface + 0x50))((int)*(char *)(param_1 + 0xac), 0x1a, 0);
     }
   }
   switch (*(undefined *)((int)puVar5 + 5)) {

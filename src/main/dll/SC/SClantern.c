@@ -10,7 +10,7 @@ extern undefined4 FUN_8028683c();
 extern undefined4 Obj_GetPlayerObject();
 
 extern ObjAnimEventList gSClanternObjAnimEvents;
-extern undefined4* lbl_803DCAAC;
+extern undefined4* gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E5498;
 
@@ -108,7 +108,7 @@ undefined4 playerFn_801d6d58(void)
 {
   undefined4 playerObj;
 
-  (*(code *)(*lbl_803DCAAC + 0x74))();
+  (*(code *)(*gMapEventInterface + 0x74))();
   playerObj = Obj_GetPlayerObject();
   objGetAnimStateFlags(playerObj,0xff);
   return 2;

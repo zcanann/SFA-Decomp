@@ -7,7 +7,7 @@ extern void GameBit_Set(int eventId,int value);
 extern void objRenderFn_80041018(int obj);
 
 extern LaserTriggerInterface **lbl_803DCA68;
-extern LaserEventInterface **lbl_803DCAAC;
+extern LaserEventInterface **gMapEventInterface;
 
 int laserObj_getExtraSize(void)
 {
@@ -50,7 +50,7 @@ void laserObj_update(LaserObject *obj)
   }
   objRenderFn_80041018((int)obj);
   if ((obj->statusFlags & LASER_OBJECT_STATUS_ACTIVE) != 0) {
-    mode = (u8)(*lbl_803DCAAC)->getMode((int)obj->modeIndex);
+    mode = (u8)(*gMapEventInterface)->getMode((int)obj->modeIndex);
     switch (mode) {
       case LASEROBJ_MODE_SEQUENCE_A:
         state = obj->state;
@@ -70,9 +70,9 @@ void laserObj_update(LaserObject *obj)
           GameBit_Set((int)state->secondarySequenceId,0);
           state->sequenceLatched = 1;
           obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
-          (*lbl_803DCAAC)->setMode(LASEROBJ_SEQUENCE_B_TRIGGER_A,
+          (*gMapEventInterface)->setMode(LASEROBJ_SEQUENCE_B_TRIGGER_A,
                                    LASEROBJ_SEQUENCE_B_TRIGGER_A_VALUE);
-          (*lbl_803DCAAC)->setMode(LASEROBJ_SEQUENCE_B_TRIGGER_B,
+          (*gMapEventInterface)->setMode(LASEROBJ_SEQUENCE_B_TRIGGER_B,
                                    LASEROBJ_SEQUENCE_B_TRIGGER_B_VALUE);
         }
         break;

@@ -12,7 +12,7 @@ extern void SH_LevelControl_setMusic(void *p);
 #define SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE 1
 #define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS 0x20000000
 
-extern SCTotemLogPuzzleEventInterface **lbl_803DCAAC;
+extern SCTotemLogPuzzleEventInterface **gMapEventInterface;
 
 /*
  * --INFO--
@@ -70,17 +70,17 @@ void mapUnloadFn_801d7c94(void *obj, void *p2)
 
     if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET) {
         ac = puzzleObj->animId;
-        (*lbl_803DCAAC)->setAnimEvent(ac, 1, 0);
+        (*gMapEventInterface)->setAnimEvent(ac, 1, 0);
         ac = puzzleObj->animId;
-        (*lbl_803DCAAC)->setAnimEvent(ac, 4, 0);
+        (*gMapEventInterface)->setAnimEvent(ac, 4, 0);
         ac = puzzleObj->animId;
-        (*lbl_803DCAAC)->setAnimEvent(ac, 6, 0);
+        (*gMapEventInterface)->setAnimEvent(ac, 6, 0);
         ac = puzzleObj->animId;
-        (*lbl_803DCAAC)->setAnimEvent(ac, 7, 0);
+        (*gMapEventInterface)->setAnimEvent(ac, 7, 0);
         ac = puzzleObj->animId;
-        (*lbl_803DCAAC)->setAnimEvent(ac, 8, 0);
+        (*gMapEventInterface)->setAnimEvent(ac, 8, 0);
         ac = puzzleObj->animId;
-        (*lbl_803DCAAC)->setAnimEvent(ac, 9, 0);
+        (*gMapEventInterface)->setAnimEvent(ac, 9, 0);
         mapUnload(0x13, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
         mapUnload(0x41, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
         mapUnload(0x43, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
@@ -90,15 +90,15 @@ void mapUnloadFn_801d7c94(void *obj, void *p2)
         goto dec;
     }
     ac = puzzleObj->animId;
-    (*lbl_803DCAAC)->setAnimEvent(ac, 0, 1);
+    (*gMapEventInterface)->setAnimEvent(ac, 0, 1);
     ac = puzzleObj->animId;
-    (*lbl_803DCAAC)->setAnimEvent(ac, 2, 1);
+    (*gMapEventInterface)->setAnimEvent(ac, 2, 1);
     ac = puzzleObj->animId;
-    (*lbl_803DCAAC)->setAnimEvent(ac, 3, 1);
+    (*gMapEventInterface)->setAnimEvent(ac, 3, 1);
     ac = puzzleObj->animId;
-    (*lbl_803DCAAC)->setAnimEvent(ac, 5, 1);
+    (*gMapEventInterface)->setAnimEvent(ac, 5, 1);
     ac = puzzleObj->animId;
-    (*lbl_803DCAAC)->setAnimEvent(ac, 0xa, 1);
+    (*gMapEventInterface)->setAnimEvent(ac, 0xa, 1);
 dec:
     runtime->eventCountdown--;
 }

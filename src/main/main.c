@@ -1257,13 +1257,13 @@ void dll_224_hitDetect(void *obj) {
 }
 
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-extern int *lbl_803DCAAC;
+extern int *gMapEventInterface;
 extern int lbl_803DDCC8;
 extern void spellStoneUseFn_801fd270(void *obj);
 #pragma scheduling off
 void dll_224_update(void *obj) {
     int v;
-    v = (*(int (**)(int))(*(int *)lbl_803DCAAC + 0x40))((s8)*((s8 *)obj + 0xac));
+    v = (*(int (**)(int))(*(int *)gMapEventInterface + 0x40))((s8)*((s8 *)obj + 0xac));
     v = (u8)v;
     switch (v) {
         case 1:

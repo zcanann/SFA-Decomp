@@ -65,7 +65,7 @@ extern void* lbl_803AC680[];
 extern void* lbl_803AC698[];
 extern undefined4* pDll_expgfx;
 extern undefined4* lbl_803DCA8C;
-extern undefined4* lbl_803DCAAC;
+extern undefined4* gMapEventInterface;
 extern undefined4* lbl_803DCAB8;
 extern undefined4* lbl_803DDA90;
 extern f64 DOUBLE_803e3d00;
@@ -592,7 +592,7 @@ void kaldachom_update(int param_1)
     }
   }
   else if ((*(short *)(iVar9 + 0x270) != 3) &&
-          (iVar1 = (**(code **)(*lbl_803DCAAC + 0x68))(*(undefined4 *)(iVar8 + 0x14)), iVar1 != 0))
+          (iVar1 = (**(code **)(*gMapEventInterface + 0x68))(*(undefined4 *)(iVar8 + 0x14)), iVar1 != 0))
   {
     (**(code **)(*lbl_803DCAB8 + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
     *(undefined2 *)(iVar9 + 0x402) = 0;

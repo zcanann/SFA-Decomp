@@ -1661,9 +1661,9 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 #pragma scheduling reset
 
 /* dll_200_render: when visible != 0 and
- * lbl_803DCAAC vtable[0x40] applied to obj->_ac returns 4, gate on
+ * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
  * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
-extern undefined4* lbl_803DCAAC;
+extern undefined4* gMapEventInterface;
 extern int GameBit_Get(int);
 extern f32 lbl_803E5DC0;
 #pragma scheduling off
@@ -1674,7 +1674,7 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     s32 v = visible;
     int areaId;
     if (v == 0) return;
-    areaId = (*(code *)(*lbl_803DCAAC + 0x40))((int)*(char *)((char*)obj + 0xac));
+    areaId = (*(code *)(*gMapEventInterface + 0x40))((int)*(char *)((char*)obj + 0xac));
     if ((u8)areaId == 4) {
         if ((u32)GameBit_Get(0x2bd) == 0u) return;
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5DC0);

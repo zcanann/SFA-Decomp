@@ -15,7 +15,7 @@ u8 gDfpfloorbarModeTable[12] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
 };
-extern undefined4 *lbl_803DCAAC;
+extern undefined4 *gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E6408;
 extern f32 lbl_803E640C;
@@ -57,7 +57,7 @@ void dfpfloorbar_update(int param_1)
     f32 zDelta;
 
     mode = *(s8 *)(param_1 + 0xac);
-    mode = (*(code *)(*lbl_803DCAAC + 0x40))(mode);
+    mode = (*(code *)(*gMapEventInterface + 0x40))(mode);
 
     switch ((u8)mode) {
         case 1:

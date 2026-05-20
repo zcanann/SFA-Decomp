@@ -18,7 +18,7 @@ extern void hudFn_8011f38c(int x);
 
 extern undefined4 *lbl_803DCA74;
 extern undefined4 *lbl_803DCA9C;
-extern undefined4 *lbl_803DCAAC;
+extern undefined4 *gMapEventInterface;
 
 extern f32 lbl_803E59DC;
 extern f32 lbl_803E59E0;
@@ -149,7 +149,7 @@ int fn_801E69C8(int arg1)
 
         hudFn_8011f38c(2);
 
-        (*(void (**)(int, int, int))(*(int *)*lbl_803DCAAC + 0x50))(
+        (*(void (**)(int, int, int))(*(int *)*gMapEventInterface + 0x50))(
             (s32)*(s8 *)(arg1 + 0xac), 6, 0);
 
         (*(void (**)(int, int, int, int, int))(*(int *)*lbl_803DCA74 + 0x4))(0, 0xf3, 0, 0, 0);

@@ -163,7 +163,7 @@ extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DCAA0;
 extern f32 lbl_803DCAA4;
-extern f32 lbl_803DCAAC;
+extern f32 gMapEventInterface;
 extern f32 lbl_803DCAB4;
 extern f32 lbl_803DCAC0;
 extern f32 lbl_803DCAC4;

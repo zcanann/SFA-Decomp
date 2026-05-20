@@ -15,7 +15,7 @@ extern void objRenderFn_8003b8f4(void *obj,undefined4 param_2,undefined4 param_3
 extern int spellstone_idleCallback(void);
 
 extern s16 lbl_803DC228;
-extern undefined4 *lbl_803DCAAC;
+extern undefined4 *gMapEventInterface;
 extern f32 lbl_803E6750;
 extern f32 lbl_803E6754;
 extern f32 lbl_803E6758;
@@ -94,7 +94,7 @@ void spellstone_update(SpellStoneObject *obj)
     GameBit_Set(*(&lbl_803DC228 + def->eventIndex),1);
     obj->flags = (s16)(obj->flags | 0x4000);
     objRemoveFromListFn_8002ce88(obj);
-    (*(code *)(*lbl_803DCAAC + 0x44))(0x1d,2);
+    (*(code *)(*gMapEventInterface + 0x44))(0x1d,2);
   }
   else {
     eventActive = GameBit_Get(def->activeEvent);

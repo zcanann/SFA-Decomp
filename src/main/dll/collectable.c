@@ -224,7 +224,7 @@ extern char sSidekickCommandDebugTextBlock[];
 extern undefined4 lbl_803DDA48;
 extern int lbl_803DDA54;
 extern undefined4* lbl_803DCA78;
-extern int *lbl_803DCAAC;
+extern int *gMapEventInterface;
 extern undefined4 lbl_803DBC40;
 extern undefined4 lbl_803DBC48;
 extern f64 DOUBLE_803e30f0;
@@ -1245,7 +1245,7 @@ void Tricky_init(int obj)
   trickyVoxAllocFn_8004b5d4((void *)(state + 0x658));
   trickyVoxAllocFn_8004b5d4((void *)(state + 0x688));
   trickyVoxAllocFn_8004b5d4((void *)(state + 0x6b8));
-  *(int *)(state + 0) = (*(int (**)(void))(*(int *)lbl_803DCAAC + 0x94))();
+  *(int *)(state + 0) = (*(int (**)(void))(*(int *)gMapEventInterface + 0x94))();
   *(int *)(state + 4) = Obj_GetPlayerObject();
   *(u8 *)(state + 8) = 0;
   *(u8 *)(state + 0xb) = 0;
@@ -1402,7 +1402,7 @@ void trickyFn_80148d8c(int obj,int state)
     }
     else {
       if (*(s16 *)(setup + 0x2c) != 0) {
-        (*(void (**)(f32))(*(int *)lbl_803DCAAC + 0x64))
+        (*(void (**)(f32))(*(int *)gMapEventInterface + 0x64))
             (lbl_803E2570 * (f32)*(s16 *)(setup + 0x2c));
       }
       *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) & 0xfffff7ff;
