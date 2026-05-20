@@ -1751,13 +1751,15 @@ void coldwatercontrol_init(int obj) {
 
 /* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
+#pragma scheduling off
 void landed_arwing_free(int obj) {
     int *p = ((int**)obj)[0xb8/4];
-    if (p[0x10/4] != 0) {
+    if (*(void**)&p[0x10/4] != NULL) {
         Obj_FreeObject(p[0x10/4]);
         ObjLink_DetachChild(obj, p[0x10/4]);
     }
 }
+#pragma scheduling reset
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 extern f32 lbl_803E3BA4;
