@@ -4528,6 +4528,34 @@ void *fn_800DB0E0(int pos, int p4_filter, int p5_filter) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern u32 randomGetRange(int min, int max);
+
+#pragma scheduling off
+#pragma peephole off
+int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx) {
+    int candidates[4];
+    int count = 0;
+    int mask = 1;
+    int neighbor;
+    int i;
+    for (i = 0; i < 4; i++) {
+        neighbor = *(int *)(curve + 0x1C + i * 4);
+        if (neighbor > -1 && ((s32)*(s8 *)(curve + 0x1B) & mask) == 0 && neighbor != exclude) {
+            candidates[count] = neighbor;
+            count++;
+        }
+        mask <<= 1;
+    }
+    if (count == 0) return -1;
+    if (pickIdx > count - 1) pickIdx = count - 1;
+    if (pickIdx == -1) {
+        pickIdx = (int)randomGetRange(0, count - 1);
+    }
+    return candidates[pickIdx];
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* UIController vtable dispatch via lbl_803DCA68 */
 extern int *lbl_803DCA68;
 extern u8 gameTimerIsRunning(void *p, int a, int b);
