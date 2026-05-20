@@ -751,17 +751,21 @@ int fn_801DA9CC(int obj)
 #pragma scheduling reset
 
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
+#pragma scheduling off
+#pragma peephole off
 void sh_beacon_free(int obj, int param_2)
 {
   int extra = *(int*)(obj + 0xb8);
   (*(code*)(*(int*)gExpgfxInterface + 0x18))(obj);
   if (param_2 == 0) {
-    int p = *(int*)extra;
-    if (p != 0 && (*(unsigned short*)(p + 0xb0) & 0x40) == 0) {
-      Obj_FreeObject(obj);
+    void *p = *(void**)extra;
+    if (p != NULL && (*(unsigned short*)((char*)p + 0xb0) & 0x40) == 0) {
+      Obj_FreeObject((int)p);
     }
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 56b: single-call hit-effect poll. */
 #pragma scheduling off
