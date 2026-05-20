@@ -4,6 +4,26 @@ Short field-tested reference for getting MWCC-compiled C to match the target
 binary. Read in 60 seconds, apply in the order they appear; the later sections
 are more invasive.
 
+## Prime directive: recover plausible C, not byte-perfect asm
+
+The goal of this project is plausible original source. A function at **80-99%
+fuzzy from clean C is more valuable than a 100% byte match achieved by inline
+`asm { }` blocks**. The asm-block recipes below exist for a small number of
+genuine MWCC instruction-selection bugs — they are **not** the default tool
+for "the diff is still red." If a residual won't yield to the one-liners and
+source-form tweaks in the next two sections, commit the partial and move on.
+Inline asm in production source is a code smell; we'll only keep it where a
+clear MWCC compiler quirk leaves no C alternative.
+
+Heuristic before reaching for `asm { }`:
+- Is the residual a single instruction / register-allocation choice? → leave at
+  partial, commit, move on.
+- Is the function ≥80% fuzzy on clean C? → leave at partial, commit, move on.
+- Does target's behaviour require an instruction MWCC literally cannot pick
+  from any C input (e.g. specific `rlwimi` bit insert, `cmplwi` on a value
+  MWCC sign-extends)? → only then is asm justified, and call it out in the
+  commit message.
+
 ## High-impact one-liners (try first when a function is already 80-95%)
 
 1. **`#pragma peephole off` + `#pragma scheduling off`** around the function
@@ -41,6 +61,14 @@ are more invasive.
    doesn't. See `6863ffe7` and the related dll_36 commits.
 
 ## Last-resort: inline `asm { }` blocks with `register` variables
+
+**Read the Prime Directive at the top of this file first.** Use this only when
+the residual is a true MWCC instruction-selection bug (e.g. specific `rlwimi`
+bit insert, register-allocation order that nothing in C controls). A clean C
+function at 85-99% beats an asm-forced 100% every time on this project.
+Recent over-use note: leaving 9 functions matched via `asm { extsb / lis /
+addi }` looks like a win on the report but leaves source nobody would
+recognise as the original — that's not the goal.
 
 When MWCC won't pick `rlwimi` / `li +/- N; and` / `cmplwi` from any C form,
 drop an inline `asm` block. The pattern:

@@ -708,8 +708,6 @@ void FUN_801a45d0(short *param_1,undefined4 *param_2)
  */
 void cflevelcontrol_free(int param_1)
 {
-  ObjGroup_RemoveObject(param_1,0x1e);
-  return;
 }
 
 /*
@@ -1341,4 +1339,78 @@ u32 exploded_func08(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 1
 /* byte-to-short shift8 pattern. */
 #pragma peephole off
 void cfmagicwall_init(s16 *dst, void* src) { s8 v = *((s8*)src + 0x18); s16 t = v << 8; *dst = t; }
+#pragma peephole reset
+
+/* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
+#pragma peephole off
+int attractor_setScale(int *obj) {
+    int *p = (int*)((int**)obj)[0x4c/4];
+    if ((s8)*((u8*)p + 0x19) != 0) {
+        return *(s16*)((char*)p + 0x1a);
+    }
+    return 0;
+}
+#pragma peephole reset
+
+/* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
+#pragma scheduling off
+#pragma peephole off
+void attractor_init(s16 *obj, void *data) {
+    ObjGroup_AddObject(obj, 0x1e);
+    {
+        s8 v = *((s8*)data + 0x18);
+        s16 t = v << 8;
+        *obj = t;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_801A4524: loop through u8 array at +0x81 of param 3; on element==1, do game state setup. */
+extern void GameBit_Set(int eventId, int value);
+extern void loadMapAndParent(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern int mapGetDirIdx(int mapId);
+extern void lockLevel(int dirIdx, int b);
+#pragma scheduling off
+#pragma peephole off
+int fn_801A4524(int p1, int p2, void *p3) {
+    int i;
+    u8 *base = (u8*)p3;
+    for (i = 0; i < (int)base[0x8b]; i++) {
+        int v = base[0x81 + i];
+        switch (v) {
+        case 1:
+            GameBit_Set(0xdcb, 1);
+            GameBit_Set(0x4a3, 0);
+            loadMapAndParent(0x2b);
+            unlockLevel(0, 0, 1);
+            lockLevel(mapGetDirIdx(0x2b), 0);
+            break;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
+extern uint GameBit_Get(int eventId);
+extern void storeZeroToFloatParam(void *p);
+#pragma peephole off
+void cfforcefield_init(s16 *obj, void *data) {
+    u8 *flagPtr = (u8*)((int**)obj)[0xb8/4];
+    {
+        s8 v = *((s8*)data + 0x18);
+        s16 t = v << 8;
+        *obj = t;
+    }
+    {
+        u8 bit = (u8)GameBit_Get(*(s16*)((char*)data + 0x20));
+        u8 b = *flagPtr;
+        b = (b & ~0x80) | ((bit & 1) << 7);
+        *flagPtr = b;
+    }
+    storeZeroToFloatParam(flagPtr + 4);
+}
 #pragma peephole reset
