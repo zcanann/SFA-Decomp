@@ -1287,12 +1287,41 @@ void dll_224_update(void *obj) {
 int fn_801FD4A8(void *obj, int x) {
     s8 *extra = *(s8 **)((char *)obj + 0xb8);
     if (extra != NULL) {
-        int v = extra[4] - x;
-        extra[4] = (s8)v;
-        return !extra[4];
+        s8 v = extra[4] - x;
+        extra[4] = v;
+        return extra[4] == 0 ? 1 : 0;
     }
     return 0;
 }
+
+int dbegg_setScale(int obj) {
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    return inner[0x118] != 3 ? 1 : 0;
+}
+
+#pragma scheduling off
+#pragma peephole off
+int dbegg_func0B(int obj, f32 *v) {
+    char *inner = *(char **)(obj + 0xb8);
+    if (*(u8 *)(inner + 0x118) != 0xb) return 0;
+    *(f32 *)(inner + 0x10c) = v[0];
+    *(f32 *)(inner + 0x110) = v[1];
+    *(f32 *)(inner + 0x114) = v[2];
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u32 Resource_Acquire(int id, int mode);
+extern u32 lbl_803DDCD8;
+#pragma scheduling off
+#pragma peephole off
+void vfplavastar_initialise(void) {
+    lbl_803DDCD8 = 0;
+    lbl_803DDCD8 = Resource_Acquire(0xa6, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off
