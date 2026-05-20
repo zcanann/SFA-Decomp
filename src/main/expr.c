@@ -7,7 +7,7 @@ extern undefined4 FUN_8003b818();
 /*
  * --INFO--
  *
- * Function: FUN_801feb30
+ * Function: dbegg_update
  * EN v1.0 Address: 0x801FEB30
  * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x801FF044
@@ -17,7 +17,7 @@ extern undefined4 FUN_8003b818();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801feb30(int param_1)
+void dbegg_update(int param_1)
 {
   AnimBehaviorObject *obj;
   AnimBehaviorState *runtimeState;

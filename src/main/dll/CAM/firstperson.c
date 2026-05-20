@@ -4,7 +4,7 @@
 extern undefined4 FUN_800068f4();
 extern double FUN_800176f4();
 extern undefined4 camcontrol_getTargetPosition();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern double FUN_80293900();
 
 extern int *gCameraInterface;
@@ -137,7 +137,7 @@ void firstperson_updatePosition(int param_1,short *param_2)
     local_2c = local_2c / fVar1;
     local_34 = local_34 / fVar1;
   }
-  dVar3 = FUN_80247f54((float *)(param_2 + 0x12));
+  dVar3 = SeekTwiceBeforeRead((float *)(param_2 + 0x12));
   fVar1 = (float)(dVar3 * (double)(lbl_803E2384 * lbl_803DC074));
   if (fVar1 < lbl_803E2324) {
     fVar1 = lbl_803E2324;

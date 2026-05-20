@@ -17,7 +17,7 @@ extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247edc();
 extern undefined4 FUN_80247ef8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern undefined4 Camera_GetCurrentViewSlot();
 extern undefined4 FUN_8028688c();
 extern undefined4 FUN_80293130();
@@ -331,7 +331,7 @@ void CameraModeCombat_update(void)
                                     (double)lbl_803E1908,(double)timeDelta);
               local_108 = (float)((double)*(float *)(psVar4 + 0xe) - dVar14);
               FUN_80247eb8(&local_10c,(float *)(psVar4 + 0xc),afStack_100);
-              dVar14 = FUN_80247f54(afStack_100);
+              dVar14 = SeekTwiceBeforeRead(afStack_100);
               if ((double)lbl_803E18C4 < dVar14) {
                 FUN_80247ef8(afStack_100,afStack_100);
               }

@@ -19,7 +19,7 @@ extern void enemy_free(double param_1,double param_2,ushort *param_3,int param_4
                        char param_6);
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern undefined4 FUN_80293474();
 extern double FUN_80293900();
 extern uint countLeadingZeros();
@@ -447,7 +447,7 @@ void FUN_80153738(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   local_28 = *(float *)(iVar3 + 0xc) - *(float *)(param_9 + 6);
   local_24 = (lbl_803E3570 + *(float *)(iVar3 + 0x10)) - *(float *)(param_9 + 8);
   local_20 = *(float *)(iVar3 + 0x14) - *(float *)(param_9 + 10);
-  FUN_80247f54(&local_28);
+  SeekTwiceBeforeRead(&local_28);
   param_10[0xcb] = (float)param_10[0xcb] + lbl_803DC074;
   if ((param_10[0xd0] != 0) || (lbl_803E3560 < (float)param_10[0xcb])) {
     param_10[0xb9] = param_10[0xb9] | 0x10000;
@@ -704,7 +704,7 @@ void FUN_80153e5c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   local_34 = *(float *)(param_9 + 6) - *(float *)(iVar3 + 0xc);
   local_30 = *(float *)(param_9 + 8) - *(float *)(iVar3 + 0x10);
   local_2c = *(float *)(param_9 + 10) - *(float *)(iVar3 + 0x14);
-  dVar7 = FUN_80247f54(&local_34);
+  dVar7 = SeekTwiceBeforeRead(&local_34);
   if (((double)lbl_803E3598 <= dVar7) ||
      ((*(ushort *)(*(int *)(param_10 + 0x29c) + 0xb0) & 0x1000) != 0)) {
     cVar5 = '\0';

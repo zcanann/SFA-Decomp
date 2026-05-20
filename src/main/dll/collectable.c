@@ -133,7 +133,6 @@ extern void fn_80139164(int obj,int state);
 extern int trickyFn_8013b368();
 extern int trickyGrowl();
 extern int FUN_801451dc();
-extern undefined4 FUN_8014a9f0();
 extern undefined4 FUN_8014fef8();
 extern byte FUN_80150620();
 extern undefined4 FUN_801523bc();
@@ -159,7 +158,7 @@ extern f32 objFn_801948c0(int obj,int param_2);
 extern double FUN_80194a70();
 extern undefined4 FUN_8020a568();
 extern undefined4 FUN_80247eb8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern undefined4 FUN_80286830();
 extern uint FUN_80286834();
 extern undefined8 FUN_8028683c();
@@ -2468,7 +2467,7 @@ void FUN_80147884(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     local_78 = param_12[2];
     FUN_80006a68(&local_80,asStack_94);
     FUN_80247eb8(param_11,&local_80,afStack_8c);
-    dVar6 = FUN_80247f54(afStack_8c);
+    dVar6 = SeekTwiceBeforeRead(afStack_8c);
     if (dVar6 < (double)lbl_803E3244) {
       if (piVar3[0xc] == 0) {
         cVar4 = FUN_80006a64(dVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -2597,7 +2596,7 @@ void FUN_80147a70(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
     FUN_80006a68(&local_e0,asStack_104);
     FUN_80247eb8((float *)(piVar3 + 6),&local_e0,afStack_fc);
-    dVar8 = FUN_80247f54(afStack_fc);
+    dVar8 = SeekTwiceBeforeRead(afStack_fc);
     if (dVar9 <= dVar8) {
       cVar5 = '\0';
     }
@@ -2658,7 +2657,7 @@ void FUN_80147d2c(int param_1,int param_2)
     }
   }
   else {
-    FUN_8014a9f0(param_1,param_2,&local_24,&local_28);
+    objAnimFn_8014a9f0(param_1,param_2,&local_24,&local_28);
     if ((*(uint *)(param_2 + 0x2e4) & 0x8000000) == 0) {
       if ((*(uint *)(param_2 + 0x2e4) & 0x20000000) == 0) {
         local_24 = local_24 - *(float *)(param_1 + 0x10);

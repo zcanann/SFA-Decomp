@@ -86,7 +86,7 @@ extern undefined4 FUN_8020a488();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247edc();
 extern undefined4 FUN_80247ef8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern undefined8 FUN_80286830();
 extern undefined8 FUN_80286834();
 extern undefined8 FUN_80286838();
@@ -280,7 +280,7 @@ extern undefined4 PTR_DAT_8032a154;
 /*
  * --INFO--
  *
- * Function: FUN_801feb30
+ * Function: dbegg_update
  * EN v1.0 Address: 0x801FEB30
  * EN v1.0 Size: 3464b
  * EN v1.1 Address: 0x801FF168
@@ -290,7 +290,7 @@ extern undefined4 PTR_DAT_8032a154;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801feb30(void)
+void dbegg_update(void)
 {
   AnimBehaviorObject *obj;
   AnimBehaviorConfig *config;
@@ -632,7 +632,7 @@ void FUN_801feb30(void)
         dVar14 = -dVar14;
       }
       if (lbl_803E6EF4 <= (float)(dVar14 + dVar12)) {
-        dVar15 = FUN_80247f54((float *)(psVar3 + 0x12));
+        dVar15 = SeekTwiceBeforeRead((float *)(psVar3 + 0x12));
         dVar14 = (double)lbl_803E6EF8;
         local_30 = (double)(longlong)(int)(dVar15 / dVar14);
         for (iVar5 = 0; iVar5 < (int)(dVar15 / dVar14); iVar5 = iVar5 + 1) {

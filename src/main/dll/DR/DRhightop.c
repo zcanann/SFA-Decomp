@@ -32,7 +32,7 @@ extern undefined4 FUN_801ecdec();
 extern undefined4 FUN_801ed004();
 extern undefined4 FUN_80247edc();
 extern undefined4 FUN_80247ef8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern double FUN_80247f90();
 extern undefined4 FUN_80293130();
 extern double FUN_80293900();
@@ -421,7 +421,7 @@ void FUN_801eb708(uint param_1,int param_2)
     }
     else {
       dVar6 = (double)lbl_803DC074;
-      dVar5 = FUN_80247f54((float *)(param_2 + 0x494));
+      dVar5 = SeekTwiceBeforeRead((float *)(param_2 + 0x494));
       dVar3 = DOUBLE_803e6798;
       local_20 = (double)CONCAT44(0x43300000,
                                   (int)(*(float *)(param_2 + 0x4c0) * (float)(dVar6 * dVar5)) ^

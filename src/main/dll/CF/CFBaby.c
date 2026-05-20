@@ -61,7 +61,7 @@ extern undefined4 FUN_8013651c();
 extern undefined4 FUN_8020a758();
 extern undefined4 FUN_8020a75c();
 extern undefined4 FUN_80247edc();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern int FUN_80286834();
 extern int FUN_80286840();
 extern undefined4 FUN_80286880();
@@ -1185,13 +1185,13 @@ void FUN_80188b14(short *param_1,int param_2)
     }
     FUN_80247edc((double)*(float *)(param_1 + 4),pfVar3,pfVar3);
     FUN_80247edc((double)*(float *)(param_1 + 4),pfVar3 + 3,pfVar3 + 3);
-    dVar6 = FUN_80247f54(pfVar3 + 3);
-    dVar7 = FUN_80247f54(pfVar3);
+    dVar6 = SeekTwiceBeforeRead(pfVar3 + 3);
+    dVar7 = SeekTwiceBeforeRead(pfVar3);
     if (dVar7 <= dVar6) {
-      dVar6 = FUN_80247f54(pfVar3 + 3);
+      dVar6 = SeekTwiceBeforeRead(pfVar3 + 3);
     }
     else {
-      dVar6 = FUN_80247f54(pfVar3);
+      dVar6 = SeekTwiceBeforeRead(pfVar3);
     }
     pfVar3[6] = (float)dVar6;
   }

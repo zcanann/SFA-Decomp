@@ -202,7 +202,7 @@ extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247edc();
 extern undefined4 FUN_80247ef8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern double FUN_80247f90();
 extern undefined4 FUN_8025cdec();
 extern undefined4 FUN_8025d80c();

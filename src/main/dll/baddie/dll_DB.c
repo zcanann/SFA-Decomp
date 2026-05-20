@@ -82,7 +82,7 @@ extern f32 FLOAT_803e2e68;
 /*
  * --INFO--
  *
- * Function: FUN_8012fcec
+ * Function: textureFreeFn_8012fcec
  * EN v1.0 Address: 0x8012FCEC
  * EN v1.0 Size: 192b
  * EN v1.1 Address: 0x8012FD0C
@@ -92,7 +92,7 @@ extern f32 FLOAT_803e2e68;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8012fcec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void textureFreeFn_8012fcec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,short param_10)
 {
@@ -769,7 +769,6 @@ s32  Link_getSelected(void) { return linkSelected; }
 /* Stubs added to align function set with v1.0 asm. Source had many Ghidra
  * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
  * asm symbol set is fully present so future hunters can fill bodies. */
-void textureFreeFn_8012fcec(void) {}
 void GameUI_initialise(void) {}
 void Menu_func08(void) {}
 #pragma scheduling off

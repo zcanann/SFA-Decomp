@@ -67,7 +67,7 @@ extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247edc();
 extern undefined4 FUN_80247ef8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern int FUN_80249300();
 extern int FUN_802493c8();
 extern int FUN_80249610();

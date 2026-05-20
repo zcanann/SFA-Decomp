@@ -46,7 +46,6 @@ extern undefined4 FUN_800810f4();
 extern undefined4 FUN_80081118();
 extern undefined4 FUN_8013651c();
 extern int FUN_80184600();
-extern undefined4 FUN_801847e8();
 extern undefined4 FUN_80247eb8();
 extern int FUN_80286838();
 extern undefined4 FUN_8028683c();

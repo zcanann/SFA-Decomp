@@ -11,7 +11,7 @@ extern f32 lbl_803E6EB4;
 /*
  * --INFO--
  *
- * Function: FUN_801feb30
+ * Function: dbegg_update
  * EN v1.0 Address: 0x801FEB30
  * EN v1.0 Size: 320b
  * EN v1.1 Address: 0x801FF094
@@ -21,7 +21,7 @@ extern f32 lbl_803E6EB4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801feb30(int *param_1)
+void dbegg_update(int *param_1)
 {
   AnimBehaviorObject *obj;
   AnimBehaviorState *runtimeState;

@@ -7,7 +7,7 @@ extern undefined4 FUN_8003b818();
 /*
  * --INFO--
  *
- * Function: FUN_801d1e24
+ * Function: enemymushroom_update
  * EN v1.0 Address: 0x801D1E24
  * EN v1.0 Size: 92b
  * EN v1.1 Address: 0x801D23AC
@@ -17,7 +17,7 @@ extern undefined4 FUN_8003b818();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d1e24(int param_1)
+void enemymushroom_update(int param_1)
 {
   char in_r8;
   int iVar1;

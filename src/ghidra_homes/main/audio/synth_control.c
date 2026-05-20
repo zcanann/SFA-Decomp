@@ -16,7 +16,6 @@
 extern undefined4 FUN_80271b90();
 extern undefined4 FUN_802765bc();
 extern uint FUN_8027976c();
-extern undefined4 FUN_80282618();
 extern undefined4 FUN_802836ac();
 
 extern undefined4 DAT_803bdfc4;
@@ -43,11 +42,11 @@ void FUN_80272714();
 
 void FUN_802721a0(int param_1,int param_2)
 {
-  FUN_80282618(7,param_1,param_2);
-  FUN_80282618(10,param_1,param_2);
-  FUN_80282618(0x5b,param_1,param_2);
-  FUN_80282618(0x80,param_1,param_2);
-  FUN_80282618(0x84,param_1,param_2);
+  inpGetDoppler(7,param_1,param_2);
+  inpGetDoppler(10,param_1,param_2);
+  inpGetDoppler(0x5b,param_1,param_2);
+  inpGetDoppler(0x80,param_1,param_2);
+  inpGetDoppler(0x84,param_1,param_2);
   return;
 }
 

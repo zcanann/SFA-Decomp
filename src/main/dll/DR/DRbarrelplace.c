@@ -11,7 +11,7 @@ extern undefined4 FUN_80017778();
 extern undefined4 FUN_800723a0();
 extern int FUN_8007f3c8();
 extern undefined4 FUN_801ebd94();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 
 extern undefined4 DAT_8032919c;
 extern f64 DOUBLE_803e6798;
@@ -95,7 +95,7 @@ void SnowBike_update(short *param_1)
         (((*(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & 8) != 0 &&
          (iVar7 = FUN_8007f3c8((int *)&DAT_8032919c,10,(int)*(short *)(iVar7 + 0x46)), iVar7 == -1))
         )) || ((*(int *)(iVar8 + 0x42c) != 0 && (*(float *)(iVar8 + 0x3e0) <= lbl_803E6784)))) {
-      dVar9 = FUN_80247f54((float *)(param_1 + 0x12));
+      dVar9 = SeekTwiceBeforeRead((float *)(param_1 + 0x12));
       if ((double)lbl_803E6784 < dVar9) {
         if ((*(byte *)(iVar8 + 0x428) >> 1 & 1) == 0) {
           FUN_80006b94((double)(float)((double)lbl_803E685C * dVar9));

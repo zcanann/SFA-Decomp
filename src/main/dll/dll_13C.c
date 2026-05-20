@@ -51,7 +51,6 @@ extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247edc();
 extern undefined4 FUN_80247ef8();
-extern undefined4 FUN_80247f54();
 extern int FUN_8028683c();
 extern int FUN_80286840();
 extern undefined4 FUN_80286888();
@@ -992,7 +991,7 @@ void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
           ObjPath_GetPointWorldPosition(iVar3,0,&local_68,&local_64,&local_60,0);
         }
         FUN_80247eb8(&local_68,(float *)(param_9 + 0xc),&local_50);
-        FUN_80247f54(&local_50);
+        SeekTwiceBeforeRead(&local_50);
         FUN_80247ef8(&local_50,&local_50);
         FUN_80247eb8(&local_50,(float *)(piVar5 + 3),afStack_5c);
         piVar5[3] = (int)local_50;

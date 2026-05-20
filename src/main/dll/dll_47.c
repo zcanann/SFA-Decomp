@@ -139,7 +139,7 @@ extern int sprintf(char *dst, const char *fmt, ...);
 /*
  * --INFO--
  *
- * Function: FUN_8011a0dc
+ * Function: saveSelectOpenFile
  * EN v1.0 Address: 0x8011A0DC
  * EN v1.0 Size: 444b
  * EN v1.1 Address: 0x8011A254
@@ -149,7 +149,7 @@ extern int sprintf(char *dst, const char *fmt, ...);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011a0dc(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
+void saveSelectOpenFile(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined param_10)
 {
@@ -804,7 +804,7 @@ int FUN_8011b5d4(undefined8 param_1,double param_2,undefined8 param_3,undefined8
           }
         }
         else if (DAT_803dc65b == '\x04') {
-          FUN_8011a0dc(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,cVar6);
+          saveSelectOpenFile(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,cVar6);
         }
       }
     }
@@ -904,7 +904,6 @@ void SaveSelectScreen_release(void) {
 #pragma scheduling reset
 
 /* Stubs for as-yet-unmatched functions. */
-void saveSelectOpenFile(void) {}
 void saveFileSelect_init(void) {}
 /*
  * --INFO--

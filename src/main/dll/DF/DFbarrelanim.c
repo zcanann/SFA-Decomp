@@ -23,7 +23,7 @@ extern void *mmAlloc(int size, int heap, int flags);
 extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247edc();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 

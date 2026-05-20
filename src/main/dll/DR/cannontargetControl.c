@@ -45,7 +45,7 @@ extern undefined4 FUN_8020a90c();
 extern undefined4 FUN_8020a910();
 extern uint FUN_8020a914();
 extern byte FUN_8020a91c();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_80286884();
 extern undefined4 FUN_80293f90();
@@ -450,7 +450,7 @@ void FUN_801a1fb8(int *param_1)
         *(float *)(iVar6 + 0x24) = fVar1 * *(float *)(iVar6 + 0x24);
         *(float *)(iVar6 + 0x28) = fVar1 * *(float *)(iVar6 + 0x28);
         if (lbl_803E4FCC < *(float *)(iVar6 + 0x54)) {
-          dVar7 = FUN_80247f54((float *)(iVar6 + 0x20));
+          dVar7 = SeekTwiceBeforeRead((float *)(iVar6 + 0x20));
           if ((double)lbl_803DCAEC < dVar7) {
             FUN_80006824((uint)param_1,0x446);
           }

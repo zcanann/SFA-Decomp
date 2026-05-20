@@ -16,7 +16,7 @@ extern f32 FLOAT_803e5f9c;
 /*
  * --INFO--
  *
- * Function: FUN_801d1e24
+ * Function: enemymushroom_update
  * EN v1.0 Address: 0x801D1E24
  * EN v1.0 Size: 404b
  * EN v1.1 Address: 0x801D21EC
@@ -26,7 +26,7 @@ extern f32 FLOAT_803e5f9c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d1e24(undefined2 *param_1,undefined4 *param_2,int param_3)
+void enemymushroom_update(undefined2 *param_1,undefined4 *param_2,int param_3)
 {
   uint uVar1;
   int iVar2;

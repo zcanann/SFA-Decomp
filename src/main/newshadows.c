@@ -57,7 +57,7 @@ extern undefined4 FUN_80247b70();
 extern undefined4 FUN_80247dfc();
 extern undefined4 FUN_80247edc();
 extern undefined4 FUN_80247ef8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern double FUN_80247f90();
 extern undefined4 FUN_80258c24();
 extern undefined4 FUN_80258c48();
@@ -606,7 +606,7 @@ void newshadows_renderQueuedShadowCasters(void)
             local_258 = lbl_803DF9C8 * local_24c + lbl_803DF9CC * local_234;
             local_254 = lbl_803DF9C8 * local_248 + lbl_803DF9CC * local_230;
             local_250 = lbl_803DF9C8 * local_244 + lbl_803DF9CC * local_22c;
-            dVar22 = FUN_80247f54(&local_258);
+            dVar22 = SeekTwiceBeforeRead(&local_258);
             if ((double)lbl_803DF9A8 < dVar22) {
               FUN_80247edc((double)(float)((double)lbl_803DF9AC / dVar22),&local_258,&local_234);
             }

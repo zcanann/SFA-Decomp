@@ -13,7 +13,7 @@ extern undefined4 FUN_80056a50();
 extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247ef8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern void *Camera_GetCurrentViewSlot(void);
 extern f32 Camera_GetFovY(void);
 extern void Camera_SetViewportYOffset(s32 yOffset);
@@ -85,7 +85,7 @@ void camcontrol_applyState(short *param_1)
   psVar3[2] = param_1[2];
   if (*(char *)((int)param_1 + 0x143) < '\0') {
     FUN_80247eb8((float *)(param_1 + 0xc),(float *)(psVar3 + 6),&local_38);
-    dVar5 = FUN_80247f54(&local_38);
+    dVar5 = SeekTwiceBeforeRead(&local_38);
     if ((double)lbl_803E22B0 < dVar5) {
       FUN_80247ef8(&local_38,&local_38);
     }

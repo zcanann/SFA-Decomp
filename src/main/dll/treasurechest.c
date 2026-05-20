@@ -34,7 +34,7 @@ extern f32 lbl_803E3CCC;
 /*
  * --INFO--
  *
- * Function: FUN_80166f2c
+ * Function: dll_D3_update
  * EN v1.0 Address: 0x80166F2C
  * EN v1.0 Size: 256b
  * EN v1.1 Address: 0x801672E4
@@ -44,7 +44,7 @@ extern f32 lbl_803E3CCC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80166f2c(float *param_1,float *param_2,float *param_3)
+void dll_D3_update(float *param_1,float *param_2,float *param_3)
 {
   float local_38;
   float local_34;

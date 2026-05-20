@@ -66,7 +66,7 @@ extern undefined4 FUN_8015b34c();
 extern undefined4 FUN_80247944();
 extern undefined4 FUN_80247cd8();
 extern undefined4 FUN_80247ef8();
-extern double FUN_80247f54();
+extern double SeekTwiceBeforeRead();
 extern undefined4 FUN_80247f90();
 extern undefined4 FUN_80247fb0();
 extern ulonglong FUN_8028682c();
@@ -108,7 +108,7 @@ extern f32 lbl_803E3280;
 /*
  * --INFO--
  *
- * Function: FUN_8014a9f0
+ * Function: objAnimFn_8014a9f0
  * EN v1.0 Address: 0x8014A9F0
  * EN v1.0 Size: 360b
  * EN v1.1 Address: 0x8014ACCC
@@ -118,7 +118,7 @@ extern f32 lbl_803E3280;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8014a9f0(int param_1,int param_2,float *param_3,float *param_4)
+void objAnimFn_8014a9f0(int param_1,int param_2,float *param_3,float *param_4)
 {
   float fVar1;
   float fVar2;
@@ -1396,7 +1396,7 @@ void FUN_8014ccb8(double param_1,double param_2,double param_3,int param_4,int p
   undefined4 local_70;
   uint uStack_6c;
   
-  dVar2 = FUN_80247f54((float *)(param_5 + 0x2b8));
+  dVar2 = SeekTwiceBeforeRead((float *)(param_5 + 0x2b8));
   if (dVar2 <= (double)lbl_803E31FC) {
     local_b0 = lbl_803E31FC;
     local_ac = lbl_803E31FC;
@@ -1409,7 +1409,7 @@ void FUN_8014ccb8(double param_1,double param_2,double param_3,int param_4,int p
     local_a8 = *(float *)(param_5 + 0x2c0) * local_a8;
     FUN_80247ef8(&local_b0,&local_b0);
   }
-  dVar3 = FUN_80247f54(param_6);
+  dVar3 = SeekTwiceBeforeRead(param_6);
   if (dVar3 <= (double)lbl_803E31FC) {
     local_bc = lbl_803E31FC;
     local_b8 = lbl_803E31FC;
@@ -1422,7 +1422,7 @@ void FUN_8014ccb8(double param_1,double param_2,double param_3,int param_4,int p
     local_b4 = param_6[2] * local_b4;
   }
   FUN_80247fb0(&local_b0,&local_bc,afStack_c8);
-  dVar4 = FUN_80247f54(afStack_c8);
+  dVar4 = SeekTwiceBeforeRead(afStack_c8);
   if ((double)lbl_803E31FC < dVar4) {
     FUN_80247f90(&local_b0,&local_bc);
     dVar4 = (double)FUN_80292754();
