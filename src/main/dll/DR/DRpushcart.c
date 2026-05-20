@@ -74,6 +74,7 @@ extern f64 DOUBLE_803e6698;
 extern f64 DOUBLE_803e66f0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E59D8;
+extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E6670;
 extern f32 lbl_803E6674;
 extern f32 lbl_803E6688;
@@ -509,22 +510,24 @@ void shopkeeper_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void shopkeeper_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
+#pragma scheduling off
+#pragma peephole off
+void shopkeeper_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  int iVar1;
-  float local_18 [4];
-  
-  iVar1 = *(int *)(param_1 + 0xb8);
-  local_18[0] = lbl_803E59D8;
-  if ((*(short *)(iVar1 + 0x274) != 7) && (visible != 0)) {
-    FUN_8003b818(param_1);
-    dll_2E_func06(param_1,iVar1 + 0x35c,0);
-  }
-  if ((*(byte *)(iVar1 + 0x9d4) & 0x20) != 0) {
-    (**(code **)(*lbl_803DCAB4 + 0xc))(param_1,0x7ef,local_18,0x50,0);
-  }
-  return;
+    int iVar1 = *(int *)(param_1 + 0xb8);
+    float local_18[4];
+    local_18[0] = lbl_803E59D8;
+    if (*(s16 *)(iVar1 + 0x274) != 7 && visible != 0) {
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
+            (param_1, param_2, param_3, param_4, param_5, lbl_803E59D8);
+        dll_2E_func06(param_1, iVar1 + 0x35c, 0);
+    }
+    if ((*(u8 *)(iVar1 + 0x9d4) & 0x20) != 0) {
+        (*(void (*)(int, int, float *, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(param_1, 0x7ef, local_18, 0x50, 0);
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
