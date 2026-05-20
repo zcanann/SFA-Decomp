@@ -96,6 +96,39 @@ void WaterFallSpray_free(u8* obj)
     (*(void (***)(u8*))lbl_803DCA78)[6](obj);
 }
 
+/* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
+ * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
+ * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */
+extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
+extern void Sfx_StopFromObject(u8* obj, u16 sfx);
+#pragma scheduling off
+#pragma peephole off
+void sfxplayerObj_free(u8* obj)
+{
+    u8* data = *(u8**)(obj + 0x4c);
+    u8* sub = *(u8**)(obj + 0xb8);
+    u8 flag = sub[4];
+    if ((flag & 1) == 0) return;
+    sub[4] = (u8)(flag & ~1);
+    if (data[0x1d] == 1) {
+        u16 sfx1 = *(u16*)(data + 0x1a);
+        if (sfx1 != 0) Sfx_RemoveLoopedObjectSound(obj, sfx1);
+        {
+            u16 sfx2 = *(u16*)(data + 0x22);
+            if (sfx2 != 0) Sfx_RemoveLoopedObjectSound(obj, sfx2);
+        }
+    } else {
+        u16 sfx1 = *(u16*)(data + 0x1a);
+        if (sfx1 != 0) Sfx_StopFromObject(obj, sfx1);
+        {
+            u16 sfx2 = *(u16*)(data + 0x22);
+            if (sfx2 != 0) Sfx_StopFromObject(obj, sfx2);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
