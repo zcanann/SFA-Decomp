@@ -2206,7 +2206,6 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void ObjHits_RegisterActiveHitVolumeObject(int obj)
 {
   int *entry;
@@ -2214,7 +2213,7 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj)
 
   index = 0;
   entry = gObjHitsActiveHitVolumeObjects;
-  while (index < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT && *entry != 0) {
+  while (index < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT && (uint)*entry != 0) {
     entry = entry + 1;
     index = index + 1;
   }
@@ -2225,7 +2224,6 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj)
   gObjHitsActiveHitVolumeObjects[index] = obj;
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
