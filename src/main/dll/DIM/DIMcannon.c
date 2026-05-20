@@ -2042,3 +2042,30 @@ int fn_801B0784(int obj, int delta) {
     inner[0x1c] = (s8)(inner[0x1c] - delta);
     return inner[0x1c] == 0 ? 1 : 0;
 }
+
+extern void Obj_FreeObject(void *o);
+extern void ModelLightStruct_free(void *light);
+extern void mm_free(void *p);
+
+#pragma scheduling off
+#pragma peephole off
+void lavaball1bf_free(int obj, int mode) {
+    void **inner = *(void ***)(obj + 0xb8);
+    if (mode == 0 && inner[2] != 0) {
+        Obj_FreeObject(inner[2]);
+    }
+}
+void lavaball1be_free(int obj) {
+    void **inner = *(void ***)(obj + 0xb8);
+    if (inner[1] != 0) {
+        ModelLightStruct_free(inner[1]);
+        inner[1] = 0;
+    }
+}
+void imspacethruster_free(int obj) {
+    void **inner = *(void ***)(obj + 0xb8);
+    if (inner[1] != 0) mm_free(inner[1]);
+    if (inner[2] != 0) mm_free(inner[2]);
+}
+#pragma peephole reset
+#pragma scheduling reset
