@@ -1248,20 +1248,20 @@ void vfplavastar_release(void) { Resource_Release(lbl_803DDCD8); lbl_803DDCD8 = 
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801FD398: render iff obj->field_0x74 set. */
+/* dll_224_hitDetect: render iff obj->field_0x74 set. */
 extern void objRenderFn_80041018(void *obj);
-void fn_801FD398(void *obj) {
+void dll_224_hitDetect(void *obj) {
     if (*(void **)((char *)obj + 0x74) != NULL) {
         objRenderFn_80041018(obj);
     }
 }
 
-/* fn_801FD3C4: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
+/* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
 extern int *lbl_803DCAAC;
 extern int lbl_803DDCC8;
 extern void fn_801FD270(void *obj);
 #pragma scheduling off
-void fn_801FD3C4(void *obj) {
+void dll_224_update(void *obj) {
     int v;
     v = (*(int (**)(int))(*(int *)lbl_803DCAAC + 0x40))((s8)*((s8 *)obj + 0xac));
     v = (u8)v;
@@ -1294,10 +1294,10 @@ int fn_801FD4A8(void *obj, int x) {
     return 0;
 }
 
-/* fn_801FD464: init extra-data fields from other; set obj->0xaf bit 3. */
+/* dll_224_init: init extra-data fields from other; set obj->0xaf bit 3. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801FD464(void *obj, void *other) {
+void dll_224_init(void *obj, void *other) {
     s16 *extra = *(s16 **)((char *)obj + 0xb8);
     s16 v = (s16)((s8)*((s8 *)other + 0x18) << 8);
     u8 t;
