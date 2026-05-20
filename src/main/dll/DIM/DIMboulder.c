@@ -1092,6 +1092,22 @@ void crrockfall_release(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
+/* fn_801ADD28: if extra->p && vtable(p,0x38)()==2, call fn_801AD7E4 with 9 args. */
+extern void fn_801AD7E4(void *a, void *b, int c, int d, int e, int f, int g, int h, int i);
+#pragma scheduling off
+#pragma peephole off
+void fn_801ADD28(void *obj) {
+    void **extra = *(void ***)((char *)obj + 0xb8);
+    void *p = *extra;
+    if (p != NULL) {
+        if ((*(int (**)(void *))(**(int **)((char *)p + 0x68) + 0x38))(p) == 2) {
+            fn_801AD7E4(obj, *extra, 0, 0, 0, 0, 0, 0, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* fn_801AC6C4: set extra bit-0; scan arr for value==2 and clear two GameBits. */
 #pragma scheduling off
 #pragma peephole off
