@@ -78,7 +78,7 @@ void mmp_asteroid_re_initialise(void);
 int mmp_moonrock_getExtraSize(void);
 int mmp_moonrock_func08(void);
 void mmp_moonrock_free(int obj);
-void mmp_moonrock_render(void);
+void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_moonrock_hitDetect(void);
 void mmp_moonrock_update(void);
 void mmp_moonrock_init(void);
