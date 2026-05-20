@@ -3093,9 +3093,9 @@ void CameraModeForceBehind_initialise(void) {}
 void fn_801101E4(void) {}
 void CameraModeCloudRunner_release(void) {}
 void CameraModeCloudRunner_initialise(void) {}
-void fn_801106B4(void) {}
-void fn_80110C78(void) {}
-void fn_80110C7C(void) {}
+void dll_54_func06_nop(void) {}
+void dll_54_release_nop(void) {}
+void dll_54_initialise_nop(void) {}
 void fn_80110C80(void) {}
 void CameraModePerv_release(void) {}
 void CameraModePerv_initialise(void) {}
@@ -3125,7 +3125,7 @@ void dll_4F_func05(void) { mm_free(lbl_803DD590); lbl_803DD590 = 0; }
 void CameraModeCrawl_free(void) { mm_free(lbl_803DD598); lbl_803DD598 = 0; }
 void CameraModeCannon_free(void) { mm_free(lbl_803DD5A0); lbl_803DD5A0 = 0; }
 void fn_801101E8(void) { mm_free(lbl_803DD5B8); lbl_803DD5B8 = 0; }
-void fn_801106B8(void) { mm_free(lbl_803DD5C0); lbl_803DD5C0 = 0; }
+void dll_54_func05(void) { mm_free(lbl_803DD5C0); lbl_803DD5C0 = 0; }
 void CameraModePerv_free(void) { mm_free(lbl_803DD5C8); lbl_803DD5C8 = 0; }
 #pragma peephole reset
 #pragma scheduling reset
