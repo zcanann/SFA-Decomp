@@ -2036,3 +2036,9 @@ int lavaball1be_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) retu
 /* chained byte mask. */
 u32 imanimspacecraft_func0B(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x3) & 0x4; }
 u32 lavaball1be_func11(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x10) & 0x10; }
+
+int fn_801B0784(int obj, int delta) {
+    s8 *inner = *(s8 **)(obj + 0xb8);
+    inner[0x1c] = (s8)(inner[0x1c] - delta);
+    return inner[0x1c] == 0 ? 1 : 0;
+}
