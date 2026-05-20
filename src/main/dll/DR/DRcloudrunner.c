@@ -467,6 +467,17 @@ int sc_totempole_func08(void) { return 0x0; }
 int sc_cloudrunnera_getExtraSize(void) { return 0x140; }
 int sc_cloudrunnera_func08(void) { return 0xb; }
 
+extern uint GameBit_Get(int id);
+#pragma scheduling off
+#pragma peephole off
+int fn_801DD170(void) {
+    int r;
+    if (GameBit_Get(0x639) != 0) { r = 0; } else { r = 1; }
+    return r;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E55D0;
 extern void objRenderFn_8003b8f4(f32);
