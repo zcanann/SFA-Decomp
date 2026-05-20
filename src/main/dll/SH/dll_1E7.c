@@ -205,12 +205,10 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   s16 facingAngle;
   s8 behaviorState;
   f32 distanceSq;
-  short *objWords;
 
-  objWords = (short *)object;
   if (config->leashRadiusByte != '\0') {
     value = Obj_GetPlayerObject();
-    distanceSq = getXZDistance((Vec *)(objWords + 0xc),(Vec *)(value + 0x18));
+    distanceSq = getXZDistance(&object->pos,(Vec *)(value + 0x18));
     if (distanceSq < lbl_803E5424) {
       behaviorState = runtime->behaviorState;
       if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
@@ -222,11 +220,11 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
       }
       return nextState;
     }
-    distanceSq = getXZDistance((Vec *)(objWords + 0xc),&config->homePos);
+    distanceSq = getXZDistance(&object->pos,&config->homePos);
     if (distanceSq > (float)(s32)(config->leashRadiusByte * config->leashRadiusByte)) {
-      value = getAngle(*(float *)(objWords + 6) - config->homePos.x,
-                          *(float *)(objWords + 10) - config->homePos.z);
-      facingAngle = *objWords;
+      value = getAngle(object->modelPos.x - config->homePos.x,
+                       object->modelPos.z - config->homePos.z);
+      facingAngle = object->facingAngle;
       angleDelta = (short)value - (u16)facingAngle;
       if (0x8000 < angleDelta) {
         angleDelta = angleDelta - 0xFFFF;
@@ -239,8 +237,8 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
         value = -value;
       }
       if (0x20 < value) {
-        value = getAngle(*(float *)(objWords + 6) - config->homePos.x,
-                            *(float *)(objWords + 10) - config->homePos.z);
+        value = getAngle(object->modelPos.x - config->homePos.x,
+                         object->modelPos.z - config->homePos.z);
         OSReport(sSHthorntailAngleYawDebug,(u16)value,facingAngle);
         behaviorState = runtime->behaviorState;
         if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
@@ -250,9 +248,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
         return SHTHORNTAIL_STATE_CLOSE_ATTACK;
       }
     }
-    value = ViewFrustum_IsSphereVisible((Vec *)(objWords + 6),
-                                        *(float *)(objWords + 0x54) *
-                                            *(float *)(objWords + 4));
+    value = ViewFrustum_IsSphereVisible(&object->modelPos,object->cullRadius * object->modelScale);
     if (value == 0) {
       nextState = SHTHORNTAIL_STATE_CLOSE_ATTACK;
     }
