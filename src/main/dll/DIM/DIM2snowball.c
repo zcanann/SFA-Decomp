@@ -1351,6 +1351,15 @@ void dim2snowball_init(int* obj, int* def)
     *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x2000);
 }
 
+void dll_1CF_init(int* obj, int* def)
+{
+    if ((u32)GameBit_Get(*(s16*)((char*)def + 30)) != 0u) {
+        *(s16*)((char*)obj + 2) = (s16)(((s32)*(s16*)((char*)def + 26) << 13) / 45);
+    }
+    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0xe000);
+}
+
 void dim_tricky_update(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
