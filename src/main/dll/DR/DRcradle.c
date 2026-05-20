@@ -395,6 +395,109 @@ extern f32 lbl_803E5C38;
 extern f32 lbl_803E5C3C;
 extern f32 lbl_803E5C40;
 extern f32 lbl_803E5C44;
+extern f32 lbl_803E5C48;
+extern f32 lbl_803E5B70;
+extern f32 lbl_803E5B90;
+extern f32 lbl_803E5B94;
+extern f32 lbl_803E5B98;
+extern int GameBit_Set(int bit, int val);
+extern void *mapRomListFindItem(int a, int b, int c, int d, int e);
+extern int lbl_80328590[];
+extern void *lbl_803DCAA8;
+
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_func15
+ * EN v1.0 Address: 0x801ECA64
+ * EN v1.0 Size: 352b
+ */
+#pragma peephole off
+#pragma scheduling off
+void SnowBike_func15(int obj)
+{
+    int t = *(int *)(obj + 0xb8);
+    int *table;
+    void *found;
+    f32 zero;
+
+    table = (int *)((int)lbl_80328590 + (int)(*(u8 *)(t + 0x434)) * 12);
+    found = mapRomListFindItem(table[*(u8 *)(t + 0x435)], 0, 0, 0, 0);
+    if (found != NULL) {
+        if (*(u8 *)(t + 0x434) != 0) {
+            *(f32 *)(obj + 0xc) = *(f32 *)((char *)found + 0x8);
+            *(f32 *)(obj + 0x10) = *(f32 *)((char *)found + 0xc);
+            *(f32 *)(obj + 0x14) = *(f32 *)((char *)found + 0x10);
+            *(s16 *)(obj + 0x0) = (s16)((*(u8 *)((char *)found + 0x29)) << 8);
+        }
+        (*(void (**)(int, int, int))((char *)*(int *)lbl_803DCA6C + 0x10))(obj, t + 0x28, 0);
+        *(f32 *)(t + 0xc) = *(f32 *)(obj + 0xc);
+        *(f32 *)(t + 0x10) = *(f32 *)(obj + 0x10);
+        *(f32 *)(t + 0x14) = *(f32 *)(obj + 0x14);
+        *(s16 *)(t + 0x0) = *(s16 *)(obj + 0x0);
+        zero = lbl_803E5AE8;
+        *(f32 *)(t + 0x494) = zero;
+        *(f32 *)(t + 0x498) = zero;
+        *(f32 *)(t + 0x49c) = zero;
+        (*(void (**)(int, int))((char *)*(int *)lbl_803DCAA8 + 0x20))(obj, t + 0x178);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x1c) = *(f32 *)(obj + 0x18);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x20) = *(f32 *)(obj + 0x1c);
+        *(f32 *)(*(int *)(obj + 0x54) + 0x24) = *(f32 *)(obj + 0x20);
+        *(s8 *)(t + 0x3d3) = 1;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern void setMatrixFromObjectPos(void *mtx, s16 *vec);
+extern void mtxRotateByVec3s(void *mtx, s16 *vec);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801EC7A0
+ * EN v1.0 Address: 0x801EC7A0
+ * EN v1.0 Size: 208b
+ */
+#pragma peephole off
+#pragma scheduling off
+void fn_801EC7A0(int p1, int p2)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+
+    v.mat[1] = lbl_803E5AE8;
+    v.mat[2] = lbl_803E5AE8;
+    v.mat[3] = lbl_803E5AE8;
+    v.mat[0] = lbl_803E5AEC;
+
+    v.angles[0] = *(s16 *)(p2 + 0x40e);
+    v.angles[1] = 0;
+    v.angles[2] = 0;
+    setMatrixFromObjectPos((void *)(p2 + 0x6c), v.angles);
+
+    v.angles[0] = -*(s16 *)(p2 + 0x40e);
+    v.angles[1] = 0;
+    v.angles[2] = 0;
+    mtxRotateByVec3s((void *)(p2 + 0xac), v.angles);
+
+    v.angles[0] = *(s16 *)(p2 + 0x40c);
+    v.angles[1] = 0;
+    v.angles[2] = 0;
+    setMatrixFromObjectPos((void *)(p2 + 0xec), v.angles);
+
+    v.angles[0] = -*(s16 *)(p2 + 0x40c);
+    v.angles[1] = 0;
+    v.angles[2] = 0;
+    mtxRotateByVec3s((void *)(p2 + 0x12c), v.angles);
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -403,6 +506,7 @@ extern f32 lbl_803E5C44;
  * EN v1.0 Address: 0x801EC870
  * EN v1.0 Size: 184b
  */
+#pragma dont_inline on
 void fn_801EC870(int p1, int p2)
 {
     f32 fz, fa, fb, fc;
@@ -435,6 +539,7 @@ void fn_801EC870(int p1, int p2)
     *(f32 *)(p2 + 0x3e4) = fz;
     *(f32 *)(p2 + 0x3e0) = lbl_803E5AEC;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -468,6 +573,70 @@ void fn_801EC928(int p1, int p2)
     *(f32 *)(p2 + 0x56c) = lbl_803E5C00;
     *(f32 *)(p2 + 0x4ac) = fz;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_setType
+ * EN v1.0 Address: 0x801ECC94
+ * EN v1.0 Size: 244b
+ */
+#pragma peephole off
+#pragma scheduling off
+void SnowBike_setType(int obj, int type)
+{
+    int t = *(int *)(obj + 0xb8);
+    u32 bit;
+    *(s8 *)(t + 0x421) = (s8)type;
+    if (type == 2) {
+        GameBit_Set(*(s16 *)(t + 0x448), 1);
+        fn_801EC870(obj, t);
+        bit = (*(u8 *)(t + 0x428) >> 5) & 1;
+        if (bit != 0) {
+            *(f32 *)(t + 0x4b8) = lbl_803E5B90;
+            *(f32 *)(t + 0x4c0) = lbl_803E5AEC;
+            *(f32 *)(t + 0x4bc) = lbl_803E5B94;
+            if (*(s8 *)(t + 0x421) == 2) {
+                (*(void (**)(int, int))((char *)*(int *)lbl_803DCA68 + 0x58))((int)*(f32 *)(t + 0x4b8), 0x5cd);
+                (*(void (**)(f32))((char *)*(int *)lbl_803DCA68 + 0x68))(lbl_803E5B98);
+            }
+        }
+        if (*(s16 *)(obj + 0x46) == 0x72) {
+            *(s8 *)(*(int *)(obj + 0x54) + 0x6a) = 0x14;
+            *(s8 *)(*(int *)(obj + 0x54) + 0x6b) = 0x14;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: SnowBike_func12
+ * EN v1.0 Address: 0x801ECC38
+ * EN v1.0 Size: 92b
+ */
+#pragma peephole off
+#pragma scheduling off
+void SnowBike_func12(int obj, f32 *outFloat, s32 *outBool)
+{
+    int t = *(int *)(obj + 0xb8);
+    f32 v, r;
+    *outFloat = *(f32 *)(t + 0x414) / lbl_803E5C48;
+    v = *outFloat;
+    r = lbl_803E5B70;
+    if (v >= r) {
+        r = lbl_803E5AEC;
+        if (v <= r) {
+            r = v;
+        }
+    }
+    *outFloat = r;
+    *outBool = *(f32 *)(t + 0x414) < lbl_803E5AE8;
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--

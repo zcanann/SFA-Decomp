@@ -4474,7 +4474,7 @@ extern void mikabomb_update(uint param_1,int param_2);
 extern void mikabomb_init();
 extern int mikabomb_func08();
 extern int mikabomb_getExtraSize();
-extern void mikabombshadow_render();
+void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void mikabombshadow_update();
 extern void mikabombshadow_init();
 extern void StaticCamera_init();
@@ -4482,7 +4482,7 @@ extern void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visib
 extern void StaticCamera_free(int x);
 extern void gcbaddieshield_render();
 extern void gcbaddieshield_update();
-extern void gcbaddieshield_init();
+void gcbaddieshield_init(int *obj, void *initData);
 extern void baddieinterestp_update();
 extern void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void animatedobj_free();
@@ -4507,7 +4507,7 @@ void staff_func11(int *obj, s32 v);
 void staff_func12(int *obj, s32 delta);
 extern s16 staff_func13(int *obj);
 void staff_func14(int *obj, f32 *outA, f32 *outB);
-extern void staff_func15();
+void staff_func15(int *obj, s16 idx, f32 f1, f32 f2);
 extern s32 staff_func16(int *obj);
 extern void fireball_free();
 extern void fireball_render();
@@ -5054,6 +5054,41 @@ void staff_func14(int *obj, f32 *outA, f32 *outB) {
     outB[0] = state->geometryPointBX;
     outB[1] = state->geometryPointBY;
     outB[2] = state->geometryPointBZ;
+}
+
+void gcbaddieshield_init(int *obj, void *initData) {
+    int v = *(s16*)((char*)initData + 0x1a);
+    *(f32*)((int**)obj)[0xb8/4] = (f32)v;
+}
+
+extern void objShadowFn_80062498(int *obj, int p2, int p3, u8 frames);
+extern u8 framesThisStep;
+void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    s32 v = visible;
+    if (v != 0) {
+        if (*(void**)((char*)(*(int**)((char*)obj + 0x64)) + 0xc) != NULL) {
+            objShadowFn_80062498(obj, 0, 0, framesThisStep);
+        }
+    }
+}
+
+void staff_func15(int *obj, s16 idx, f32 f1, f32 f2) {
+    u8 *slot = (u8*)((int**)obj)[0xb8/4];
+    u8 *state = slot;
+    if ((slot[0x14] & 0x2) != 0) {
+        slot += 0x18;
+        if ((slot[0x14] & 0x2) != 0) {
+            slot += 0x18;
+        }
+    }
+    slot[0x14] = (u8)(slot[0x14] | 0x3);
+    *(f32*)(slot + 0x4) = f1;
+    *(f32*)(slot + 0x8) = f2;
+    *(s16*)(slot + 0xc) = 0;
+    *(s16*)(slot + 0xe) = 0;
+    *(s16*)(slot + 0x12) = 0;
+    *(s16*)(slot + 0x10) = idx;
+    *(void**)(state + 0x48) = slot;
 }
 #pragma peephole reset
 #pragma scheduling reset

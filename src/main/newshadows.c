@@ -2863,3 +2863,54 @@ void textureFn_8006c75c(int id)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Linear search by pointer identity through 0x25 array of 0x14-byte entries.
+ * Clears the +0x10 flag byte when the entry matches the needle. */
+extern u8 lbl_8038DF48[0x294];
+#pragma scheduling off
+#pragma peephole off
+void findSomething(void *needle)
+{
+    int i;
+    u8 *p;
+    for (i = 0, p = lbl_8038DF48; i < 0x25; ++i, p += 0x14) {
+        if (p[0x10] != 0 && (void *)p == needle) {
+            lbl_8038DF48[i * 0x14 + 0x10] = 0;
+            return;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Cycles a 3-element table, then samples 3 fields from obj->0x64 ptr block. */
+extern u8 lbl_803DCF8C;
+extern u32 lbl_8038E1DC[3];
+#pragma scheduling off
+#pragma peephole off
+void objShadowFn_8006c5f0(int obj, u32 *outTable, f32 *outF, int *outX, int *outY)
+{
+    int idx = (lbl_803DCF8C + 1) % 3;
+    int *p;
+    *outTable = lbl_8038E1DC[idx];
+    p = (int *)*(int *)(obj + 0x64);
+    *outF = *(f32 *)p;
+    *outX = (int)*(f32 *)(*(int *)(obj + 0x64) + 0x14);
+    *outY = (int)*(f32 *)(*(int *)(obj + 0x64) + 0x18);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Allocate a 512x512 texture (1bpp?), set field, flush. */
+extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+#pragma scheduling off
+#pragma peephole off
+void *textureAlloc512(void)
+{
+    void *tex = textureAlloc(0x200, 0x200, 1, 0, 0, 0, 0, 0, 0);
+    *(s16 *)((char *)tex + 0xe) = 1;
+    DCFlushRange((char *)tex + 0x60, *(u32 *)((char *)tex + 0x44));
+    return tex;
+}
+#pragma peephole reset
+#pragma scheduling reset
