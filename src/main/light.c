@@ -1105,6 +1105,17 @@ void vfpcoreplat_free(int obj) {
     (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
 }
 
+#pragma scheduling off
+#pragma peephole off
+void vfpblock1_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
+    *(s16 *)state = *(s16 *)(data + 0x1e);
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;
 extern void objRenderFn_8003b8f4(f32);
