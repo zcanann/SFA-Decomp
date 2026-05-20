@@ -1113,6 +1113,14 @@ void vfpblock1_init(int obj, int data) {
     *(s16 *)state = *(s16 *)(data + 0x1e);
     *(u16 *)(obj + 0xb0) |= 0x6000;
 }
+void vfpplatform_init(int obj, int data) {
+    int state = *(int *)(obj + 0xB8);
+    *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
+    *(s16 *)state = *(s16 *)(data + 0x20);
+    *(u8 *)(state + 2) = 0;
+    *(u8 *)(state + 3) = *(u8 *)(data + 0x19);
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
