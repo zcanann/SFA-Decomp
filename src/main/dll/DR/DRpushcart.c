@@ -909,6 +909,26 @@ extern void fn_801E66EC(int);
 extern void fn_801E66E4(int);
 extern void fn_801E66DC(int);
 
+extern void GXSetBlendMode(int type, int src, int dst, int op);
+extern void gxSetZMode_(u32 a, int b, u32 c);
+extern void gxSetPeControl_ZCompLoc_(u32 a);
+extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801E832C(int obj) {
+    if (*(u8 *)(obj + 0x37) == 0xFF) {
+        GXSetBlendMode(0, 1, 0, 5);
+    } else {
+        GXSetBlendMode(1, 4, 1, 5);
+    }
+    gxSetZMode_(1, 3, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void shopkeeper_initialise(void) {
