@@ -949,6 +949,29 @@ void shopkeeper_initialise(void) {
 #pragma scheduling reset
 
 extern void hudFn_8011f38c(int);
+extern f32 lbl_803E59F0;
+extern f32 lbl_803E5A28;
+extern void *allocModelStruct_800139e8(int, int);
+extern void dll_2E_func05(int, int, int, int, int);
+extern void fn_801E76A0(int);
+
+#pragma scheduling off
+#pragma peephole off
+void shopkeeper_init(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    *(u16 *)(obj + 0xB0) |= 0x2000;
+    *(void (**)(int))(obj + 0xBC) = fn_801E76A0;
+    *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
+    *(f32 *)(state + 0x9B8) = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
+    *(void **)(state + 0x9B0) = allocModelStruct_800139e8(4, 4);
+    *(u8 *)(state + 0x9D6) = 0xFF;
+    *(f32 *)(state + 0x9C4) = lbl_803E5A28;
+    dll_2E_func05(obj, state + 0x35C, -0x1C71, 0x3555, 2);
+    *(u8 *)(state + 0x96D) |= 0x12;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 typedef struct {
     u8 flag_80 : 1;
     u8 flag_40 : 1;
