@@ -4447,6 +4447,43 @@ void fn_800DA928(float *p) {
 }
 #pragma scheduling reset
 
+extern void **lbl_803DCA9C;
+extern f32 lbl_803E05F8;
+
+#pragma scheduling off
+#pragma peephole off
+void *fn_800DAFDC(int pos, int p4_filter, int p5_filter) {
+    int count;
+    int *hit;
+    int *bestHit;
+    int **list = (int **)(*(void *(**)(int *))((int)*lbl_803DCA9C + 0x10))(&count);
+    f32 minDist = lbl_803E05F8;
+    int i;
+    bestHit = 0;
+    for (i = count; i > 0; i--) {
+        hit = *list;
+        if (hit != 0
+            && (s8)*((u8 *)hit + 0x19) == 0x24
+            && (p4_filter == -1 || *((u8 *)hit + 3) == p4_filter)
+            && (p5_filter == -1 || (s8)*((u8 *)hit + 0x1A) == p5_filter)) {
+            f32 dx = *(f32 *)pos - *(f32 *)((char *)hit + 8);
+            f32 dy = *(f32 *)(pos + 4) - *(f32 *)((char *)hit + 0xC);
+            f32 dz = *(f32 *)(pos + 8) - *(f32 *)((char *)hit + 0x10);
+            f32 d = dy * dy;
+            d += dx * dx;
+            d += dz * dz;
+            if (d < minDist) {
+                minDist = d;
+                bestHit = hit;
+            }
+        }
+        list++;
+    }
+    return bestHit;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* UIController vtable dispatch via lbl_803DCA68 */
 extern int *lbl_803DCA68;
 extern u8 gameTimerIsRunning(void *p, int a, int b);
