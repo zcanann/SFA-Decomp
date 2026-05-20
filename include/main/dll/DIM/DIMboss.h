@@ -167,7 +167,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,
 void DIMboss_func0B(void);
 int DIMboss_setScale(DIMbossObject *obj);
 int DIMboss_getExtraSize(void);
-int DIMboss_func08(void);
+int DIMboss_getObjectTypeId(void);
 void DIMboss_free(DIMbossObject *obj);
 void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                     undefined4 param_5,char shouldRender);

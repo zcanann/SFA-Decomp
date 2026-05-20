@@ -217,7 +217,7 @@
  *   slot 05: 0x801BD414 DIMboss_hitDetect
  *   slot 06: 0x801BD364 DIMboss_render
  *   slot 07: 0x801BD260 DIMboss_free
- *   slot 08: 0x801BD258 DIMboss_func08
+ *   slot 08: 0x801BD258 DIMboss_getObjectTypeId
  *   slot 09: 0x801BD250 DIMboss_getExtraSize
  * - DLL 0x01E1: gDIM_BossGutObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801BDCF4 DIMbossgut_initialise

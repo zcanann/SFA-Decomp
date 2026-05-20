@@ -115,11 +115,11 @@ extern f32 lbl_803E58E4;
 extern f32 lbl_803E58E8;
 extern f32 lbl_803E58EC;
 extern f32 lbl_803E5908;
-extern undefined4 lbl_803AC9AC[];
-extern undefined4 lbl_803AC9DC[];
+extern undefined4 gDIMbossRenderMtx[];
+extern undefined4 gDIMbossAnimController[];
 extern undefined4 lbl_802C2338[];
-extern void (*lbl_803AD000[])(void);
-extern void (*lbl_803AD018[])(void);
+extern void (*gDIMbossAnimTable[])(void);
+extern void (*gDIMbossHitDetectAnimTable[])(void);
 extern int lbl_803DCA8C;
 extern undefined4* lbl_803DCA54;
 extern undefined4* lbl_803DCAB8;
@@ -188,10 +188,10 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
   runtime->phase = DIMBOSS_PHASE_START;
   ((DIMbossMapAreaTriggerFn)(*(code *)(*lbl_803DCAAC + 0x50)))(DIMBOSS_MAP_DIR,5,0);
   if (obj->renderPause == 0) {
-    puVar7 = lbl_803AC9DC;
+    puVar7 = gDIMbossAnimController;
     puVar8 = (undefined4 *)0x1;
     puVar9 = (undefined4 *)0x1;
-    dll_2E_func07(puVar3,animUpdate,(float *)lbl_803AC9DC,1,1);
+    dll_2E_func07(puVar3,animUpdate,(float *)gDIMbossAnimController,1,1);
     for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
       switch(animUpdate->eventIds[eventIndex]) {
       case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
@@ -443,7 +443,7 @@ int DIMboss_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: DIMboss_func08
+ * Function: DIMboss_getObjectTypeId
  * EN v1.0 Address: 0x801BD258
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -453,7 +453,7 @@ int DIMboss_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DIMboss_func08(void)
+int DIMboss_getObjectTypeId(void)
 {
   return DIMBOSS_OBJECT_TYPE_ID;
 }
@@ -534,7 +534,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
     }
     objRenderFn_8003b8f4((double)lbl_803E4C44);
     fn_801BB598(obj,runtime);
-    dll_2E_func06(obj,lbl_803AC9DC,0);
+    dll_2E_func06(obj,gDIMbossAnimController,0);
     effect = runtime->topState->effect;
     if (((effect != NULL) && (effect->active != 0)) && (effect->visible != 0)) {
       queueGlowRender();
@@ -558,7 +558,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
  */
 void DIMboss_hitDetect(DIMbossObject *obj)
 {
-  (*(code *)(*(int *)lbl_803DCA8C + 0xc))(obj,obj->runtime,lbl_803AD018);
+  (*(code *)(*(int *)lbl_803DCA8C + 0xc))(obj,obj->runtime,gDIMbossHitDetectAnimTable);
 }
 
 /*
@@ -632,10 +632,10 @@ void DIMboss_update(DIMbossObject *obj)
         if (topState->stompDustDelay != 0) {
           topState->stompDustDelay--;
           if (topState->stompDustDelay == 0) {
-            Obj_BuildWorldTransformMatrix(obj,lbl_803AC9AC,0);
+            Obj_BuildWorldTransformMatrix(obj,gDIMbossRenderMtx,0);
             targetModel = Obj_GetActiveModel(obj);
             ObjModel_EnableDefaultRenderCallback
-                      ((double)(obj->modelScale * obj->baseScale),obj,targetModel,lbl_803AC9AC,1);
+                      ((double)(obj->modelScale * obj->baseScale),obj,targetModel,gDIMbossRenderMtx,1);
           }
         }
         if (((topState->steamSfxPending >> 7) & 1) != 0) {
@@ -661,8 +661,8 @@ void DIMboss_update(DIMbossObject *obj)
           *(undefined4 *)((int)childObject + 0x30) = obj->facingAngle;
         }
         fn_801BC7E4(obj,0,runtime,runtime);
-        dll_2E_func04(lbl_803AC9DC,runtime->targetModel);
-        dll_2E_func03(obj,lbl_803AC9DC);
+        dll_2E_func04(gDIMbossAnimController,runtime->targetModel);
+        dll_2E_func03(obj,gDIMbossAnimController);
         warpDarkIceMines_801bbb44(obj,runtime);
       }
     }
@@ -733,9 +733,9 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   lbl_803DDB84 = 0;
   gDIMbossSequenceFlags = 0;
   GameBit_Set(0x4e4,1);
-  dll_2E_func05(obj,lbl_803AC9DC,0xffffd8e4,0x1c71,6);
-  dll_2E_func09(lbl_803AC9DC,&localVec,&localVec,6);
-  animFlagsByte = (u8 *)((int)lbl_803AC9DC + 0x611);
+  dll_2E_func05(obj,gDIMbossAnimController,0xffffd8e4,0x1c71,6);
+  dll_2E_func09(gDIMbossAnimController,&localVec,&localVec,6);
+  animFlagsByte = (u8 *)((int)gDIMbossAnimController + 0x611);
   *animFlagsByte |= 8;
   *animFlagsByte &= 0xfe;
   topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
@@ -796,7 +796,7 @@ ObjectDescriptor12 gDIM_BossObjDescriptor = {
     (ObjectDescriptorCallback)DIMboss_hitDetect,
     (ObjectDescriptorCallback)DIMboss_render,
     (ObjectDescriptorCallback)DIMboss_free,
-    (ObjectDescriptorCallback)DIMboss_func08,
+    (ObjectDescriptorCallback)DIMboss_getObjectTypeId,
     DIMboss_getExtraSize,
     (ObjectDescriptorCallback)DIMboss_setScale,
     (ObjectDescriptorCallback)DIMboss_func0B,
@@ -808,7 +808,7 @@ void DIMboss_initialiseAnimTables(void)
 {
   void (**table)(void);
 
-  table = lbl_803AD018;
+  table = gDIMbossHitDetectAnimTable;
   table[0] = fn_801BB2B0;
   table[1] = fn_801BB1EC;
   table[2] = fn_801BB0D8;
@@ -822,7 +822,7 @@ void DIMboss_initialiseAnimTables(void)
   table[10] = fn_801BA780;
   table[11] = fn_801BA654;
 
-  table = lbl_803AD000;
+  table = gDIMbossAnimTable;
   table[0] = fn_801BA5F0;
   table[1] = fn_801BA5A8;
   table[2] = fn_801BA590;

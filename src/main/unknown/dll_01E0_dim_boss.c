@@ -14,7 +14,7 @@
 // - 5: DIMboss_hitDetect (0x801BD414)
 // - 6: DIMboss_render (0x801BD364)
 // - 7: DIMboss_free (0x801BD260)
-// - 8: DIMboss_func08 (0x801BD258)
+// - 8: DIMboss_getObjectTypeId (0x801BD258)
 // - 9: DIMboss_getExtraSize (0x801BD250)
 // - 10: DIMboss_setScale (0x801BD244)
 // - 11: DIMboss_func0B (0x801BD240)
