@@ -304,7 +304,7 @@ void SnowBike_initialise(void) {
 #pragma scheduling reset
 
 #pragma peephole off
-void fn_801EE088(int *obj) {
+void SB_CloudRunner_onSeqFree(int *obj) {
     int *p = (int*)obj[0xb8/4];
     *(f32*)((char*)p + 0x4c) = *(f32*)((char*)obj + 0xc);
     *(f32*)((char*)p + 0x50) = *(f32*)((char*)obj + 0x10);

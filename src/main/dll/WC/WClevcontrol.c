@@ -753,7 +753,7 @@ void fn_801EEDE0(int *src, f32 *out_x, f32 *out_y, f32 *out_z) {
 }
 
 /* virtual call through obj[0xb8][0x10] context, vtable double-deref at +0x68 */
-void fn_801EED24(void *obj) {
+void shipBattleFn_801eed24(void *obj) {
     void* this_ = *(void**)((char*)(*(void**)((char*)obj + 0xb8)) + 0x10);
     void* vt = *(void**)*(void**)((char*)this_ + 0x68);
     void (*fn)(void*) = *(void(**)(void*))((char*)vt + 0x24);
@@ -792,7 +792,7 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
 /* Stubs to align function set with v1.0 asm. Bodies are large state
  * machines / inits and need real reverse-engineering. */
 void fn_801EE668(void) {}
-void fn_801EEA68(void) {}
+void SB_CloudRunner_SeqFn(void) {}
 void fn_801EEB50(void) {}
 void SB_CloudRunner_free(void) {}
 void SB_CloudRunner_init(void) {}
