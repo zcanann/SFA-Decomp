@@ -101,7 +101,7 @@ extern f32 FLOAT_803e49a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void deathgas_free(short *param_1,int param_2)
+void deathseq_init(short *param_1,int param_2)
 {
   uint uVar1;
   int iVar2;
@@ -865,6 +865,23 @@ void fuelcell_init(int* obj)
     *(void**)((char*)obj + 188) = (void*)fuelcell_func0B;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(), (void*)fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
+}
+
+extern void disableHeavyFog(void);
+extern int* lbl_803DCA68;
+
+void deathgas_free(int* obj)
+{
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    u8 flags = state[12];
+    if (((u32)flags >> 7) & 1u) {
+        if (!(((u32)flags >> 5) & 1u)) {
+            disableHeavyFog();
+        }
+    }
+    if (((u32)state[12] >> 6) & 1u) {
+        ((void(*)(void))((void**)*lbl_803DCA68)[24])();
+    }
 }
 
 #pragma peephole reset
