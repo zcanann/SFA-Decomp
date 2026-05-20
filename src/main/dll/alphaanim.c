@@ -623,3 +623,17 @@ void immultiseq_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* Drift-recovery: add new fns with v1.0 names. */
+#pragma scheduling off
+#pragma peephole off
+
+void fn_8017C294(int* obj)
+{
+    if (obj != NULL) {
+        ((void(*)(int*, int*, int))((void**)*(*(int***)((char*)obj + 104)))[1])(obj, *(int**)((char*)obj + 76), 0);
+    }
+}
+
+#pragma peephole reset
+#pragma scheduling reset
