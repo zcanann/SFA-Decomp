@@ -1232,19 +1232,20 @@ int fn_8007FE04(int *arr, int *count_ptr, int target)
 {
     int n = *count_ptr;
     int *p = arr;
-    int idx = 0;
-    int i;
-    for (i = 0; i < n; i++) {
-        if (*p == target) goto found;
+    int i = 0;
+    int j;
+    for (j = 0; j < n; j++) {
+        int v = *p;
         p++;
-        idx++;
+        if (v == target) goto found;
+        i++;
     }
-    idx = -1;
+    i = -1;
 found:
-    if (idx == -1) return -1;
-    arr[idx] = arr[n - 1];
+    if (i == -1) return -1;
+    arr[i] = arr[n - 1];
     (*count_ptr)--;
-    return idx;
+    return i;
 }
 
 /* fn_80080360 (36b): write u16 indexed by signed byte * 2 */
