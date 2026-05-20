@@ -8,7 +8,7 @@ extern ObjectDescriptor gDIM2IceFloeObjDescriptor;
 extern ObjectDescriptor gDIM2IcicleObjDescriptor;
 extern ObjectDescriptor12 gDIM2LavaControlObjDescriptor;
 
-void FUN_801b8860(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void dll_1DA_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_801b8c60(int param_1);
 void FUN_801b8c88(uint param_1);
@@ -62,5 +62,25 @@ void dim2lavacontrol_free(void);
 void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2lavacontrol_update(void);
 void dim2lavacontrol_init(void);
+void dll_1DA_init(void* obj);
+void dll_1DA_release(void);
+void dll_1DA_initialise(void);
+int dll_1DB_getExtraSize(void);
+int dll_1DB_func08(void);
+void dll_1DB_free(void);
+void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_1DB_hitDetect(void);
+void dll_1DB_init(void* obj, void* p);
+void dll_1DB_release(void);
+void dll_1DB_initialise(void);
+int dll_1DF_getExtraSize(void);
+int dll_1DF_func08(void);
+void dll_1DF_free(void);
+void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_1DF_hitDetect(void);
+void dll_1DF_update(void* obj);
+void dll_1DF_init(void* obj, void* p);
+void dll_1DF_release(void);
+void dll_1DF_initialise(void);
 
 #endif /* MAIN_DLL_DIM_DIM2PROJROCK_H_ */

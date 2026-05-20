@@ -95,7 +95,7 @@ extern undefined uRam803dcb93;
 /*
  * --INFO--
  *
- * Function: FUN_801b8860
+ * Function: dll_1DA_update
  * EN v1.0 Address: 0x801B8860
  * EN v1.0 Size: 1024b
  * EN v1.1 Address: 0x801B8980
@@ -105,7 +105,7 @@ extern undefined uRam803dcb93;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b8860(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void dll_1DA_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   byte bVar1;
@@ -1143,12 +1143,12 @@ void FUN_801ba45c(int param_1)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_801B8B68(void) {}
-void fn_801B8B6C(void) {}
-void fn_801B8B80(void) {}
-void fn_801B8BB4(void) {}
-void fn_801B8F74(void) {}
-void fn_801B8F78(void) {}
+void dll_1DA_release(void) {}
+void dll_1DA_initialise(void) {}
+void dll_1DB_free(void) {}
+void dll_1DB_hitDetect(void) {}
+void dll_1DB_release(void) {}
+void dll_1DB_initialise(void) {}
 void dim2icefloe_free(void) {}
 void dim2icefloe_hitDetect(void) {}
 void dim2icefloe_release(void) {}
@@ -1157,21 +1157,21 @@ void dim2icicle_free(void) {}
 void dim2icicle_hitDetect(void) {}
 void dim2icicle_release(void) {}
 void dim2icicle_initialise(void) {}
-void fn_801B9CC4(void) {}
-void fn_801B9CF8(void) {}
-void fn_801B9EC4(void) {}
-void fn_801B9EC8(void) {}
+void dll_1DF_free(void) {}
+void dll_1DF_hitDetect(void) {}
+void dll_1DF_release(void) {}
+void dll_1DF_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801B8B70(void) { return 0x8; }
-int fn_801B8B78(void) { return 0x0; }
+int dll_1DB_getExtraSize(void) { return 0x8; }
+int dll_1DB_func08(void) { return 0x0; }
 int dim2icefloe_getExtraSize(void) { return 0xbc; }
 int dim2icefloe_func08(void) { return 0x0; }
 int dim2icicle_getExtraSize(void) { return 0xc; }
 int dim2icicle_func08(void) { return 0x0; }
 int dim2lavacontrol_getExtraSize(void) { return 0x10; }
-int fn_801B9CB4(void) { return 0x28; }
-int fn_801B9CBC(void) { return 0x0; }
+int dll_1DF_getExtraSize(void) { return 0x28; }
+int dll_1DF_func08(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4B08;
@@ -1181,22 +1181,22 @@ extern f32 lbl_803E4B68;
 extern f32 lbl_803E4B90;
 extern f32 lbl_803E4B98;
 #pragma peephole off
-void fn_801B8B84(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4B08); }
+void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4B08); }
 void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4B30); }
 void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4B68); }
 void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4B90); }
-void fn_801B9CC8(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4B98); }
+void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4B98); }
 #pragma peephole reset
 
-/* fn_801B8B48: stash obj->f10 into *(obj->p_B8), then bump obj->f10 by a constant step. */
+/* dll_1DA_init: stash obj->f10 into *(obj->p_B8), then bump obj->f10 by a constant step. */
 extern f32 lbl_803E4AD8;
-void fn_801B8B48(void* obj)
+void dll_1DA_init(void* obj)
 {
     *(*(f32**)((char*)obj + 0xB8)) = *(f32*)((char*)obj + 0x10);
     *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) + lbl_803E4AD8;
 }
 
-/* fn_801B9E18: similar romlist param init, but reads three u8 fields, packs to s16
+/* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
  *              fields, and on a u8 flag does a u32→f32 conversion (MWCC emits the
  *              magic-2^52 trick using a 2^52 constant) to scale obj[0x50]->f4 into
  *              obj[8]. Also sets obj[0xB8]→f10 from a constant and OR-merges flags
@@ -1205,7 +1205,7 @@ extern f32 lbl_803E4BA8;
 extern f32 lbl_803E4BAC;
 #pragma peephole off
 #pragma scheduling off
-void fn_801B9E18(void* obj, void* p)
+void dll_1DF_init(void* obj, void* p)
 {
     u32 flag;
     void* p50;
@@ -1265,7 +1265,7 @@ void dim2lavacontrol_free(void)
 }
 #pragma scheduling reset
 
-/* fn_801B9CFC: per-frame texture-color update + proximity-driven expgfx trigger.
+/* dll_1DF_update: per-frame texture-color update + proximity-driven expgfx trigger.
  *   - objFindTexture(obj,0,0); if non-null and obj.s16_46 == 209 set tex.color
  *     (bytes 0xC..0xE) to (u8)(int)lbl_803E4B9C via three independent fctiwz casts,
  *     else do the same dest writes (different scheduling).
@@ -1280,7 +1280,7 @@ extern f32 timeDelta;
 extern int* pDll_expgfx;
 #pragma peephole off
 #pragma scheduling off
-void fn_801B9CFC(void* obj)
+void dll_1DF_update(void* obj)
 {
     void* sub = *(void**)((char*)obj + 0xB8);
     void* tex;
@@ -1314,11 +1314,11 @@ void fn_801B9CFC(void* obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_801B8EF8: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
+/* dll_1DB_init: read romlist params, set s16 at obj[0] and a u8 flag on obj->sub_B8
  *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
 #pragma peephole off
 #pragma scheduling off
-void fn_801B8EF8(void* obj, void* p)
+void dll_1DB_init(void* obj, void* p)
 {
     void* sub = *(void**)((char*)obj + 0xB8);
     s16 t = (s16)((s32)*(s8*)((char*)p + 0x18) << 8);

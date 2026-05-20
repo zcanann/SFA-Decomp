@@ -1173,7 +1173,7 @@ void dim2pathgenerator_render(void) {}
 void dim2pathgenerator_hitDetect(void) {}
 void dim2pathgenerator_release(void) {}
 void dim2pathgenerator_initialise(void) {}
-void fn_801B87A8(void) {}
+void dll_1DA_free(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int fn_801B6B44(void) { return 0x0; }
@@ -1189,8 +1189,8 @@ int dim2snowball_getExtraSize(void) { return 0xb0; }
 int dim2snowball_func08(void) { return 0x0; }
 int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
 int dim2pathgenerator_func08(void) { return 0x0; }
-int fn_801B8798(void) { return 0x8; }
-int fn_801B87A0(void) { return 0x0; }
+int dll_1DA_getExtraSize(void) { return 0x8; }
+int dll_1DA_func08(void) { return 0x0; }
 
 /* 16b chained patterns. */
 #pragma scheduling off
@@ -1211,7 +1211,7 @@ void fn_801B6B58(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = v
 void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A58); }
 void fn_801B762C(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4A78); }
 void dim2snowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4AA0); }
-void fn_801B87AC(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4AD8); }
+void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4AD8); }
 #pragma peephole reset
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -1238,7 +1238,7 @@ extern f32 lbl_803E4ADC;
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801B87DC(int obj) {
+void dll_1DA_hitDetect(int obj) {
     void *hi;
     void *player;
     f32 scale;
