@@ -2792,7 +2792,7 @@ void *mapGetBlock(int i) {
 }
 void *mapGetBlockAtPos(int x, int y, int layer) {
     s8 *table = (s8 *)lbl_803822B4[layer];
-    s8 idx;
+    s32 idx;
     if (x < 0 || y < 0 || x >= 0x10 || y >= 0x10) return 0;
     idx = table[x + (y << 4)];
     if (idx < 0 || idx >= lbl_803DCE98) return 0;
