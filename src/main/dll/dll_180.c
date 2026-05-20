@@ -6,6 +6,7 @@ extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80190148();
 extern undefined4 FUN_801905c4();
 extern undefined4 FUN_80190bd4();
+extern void Transporter_SeqFn(void);
 
 extern undefined4 DAT_803ddb38;
 
@@ -14,62 +15,91 @@ extern undefined4 DAT_803ddb38;
  *
  * Function: transporter_init
  * EN v1.0 Address: 0x801916A0
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x80191A28
- * EN v1.1 Size: 428b
+ * EN v1.0 Size: 976b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
+ *
+ * Recovered: large switch on params[20] (32-bit id) that sets bits in
+ * state->_0e per map/area id. Six GameBit-guarded cases set bit 0x20 only
+ * when any of 3 listed event bits is set; the rest set 0x68, 0x08, 0x30, or
+ * 0x10 directly. Tail: if state->_0e & 0x40 (which 0x68 includes), set
+ * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
-void transporter_init(int param_1)
+void transporter_init(int obj, s8 *params)
 {
-  uint uVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(param_1 + 0xb8);
-  if (DAT_803ddb38 < 0) {
-    if ((*(char *)(*(int *)(param_1 + 0x4c) + 0x1a) == -1) || ((*(byte *)(iVar2 + 0xe) & 0x20) != 0)
-       ) {
-      if ((*(byte *)(iVar2 + 0xe) & 0x40) == 0) {
-        *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
-        *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
-      }
-      else {
-        *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
-      }
-      *(byte *)(iVar2 + 0xe) = *(byte *)(iVar2 + 0xe) & 0xfe;
+  s8 *state;
+  int id;
+
+  state = *(s8 **)(obj + 0xb8);
+  *(s16 *)(state + 8) = 400;
+  *(s8 *)(state + 0xe) = 0;
+  *(s16 *)obj = (s16)((s32)params[0x18] << 8);
+  *(int *)(obj + 0xf4) = 0;
+  *(void **)(obj + 0xbc) = (void *)Transporter_SeqFn;
+  *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+
+  id = *(int *)(params + 0x14);
+  switch (id) {
+  case 0x4670D:
+  case 0x4827E:
+  case 0x49267:
+  case 0x4CB6A:
+  case 0x4CB84:
+    *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x68);
+    break;
+  case 0x48506:
+  case 0x45753:
+  case 0x463C0:
+  case 0x45DD6:
+  case 0x4977D:
+  case 0x49C33:
+  case 0x4B666:
+  case 0x4B667:
+    *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x08);
+    break;
+  case 0x4C986:
+    *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x30);
+    break;
+  case 0x47064:
+    *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x10);
+    break;
+  case 0x43F83:
+    if (GameBit_Get(2984) != 0 || GameBit_Get(790) != 0 || GameBit_Get(1297) != 0) {
+      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
     }
-    else {
-      if ((*(char *)(iVar2 + 0xd) == '\0') && (*(char *)(iVar2 + 0xc) == '\0')) {
-        uVar1 = (uint)*(short *)(*(int *)(param_1 + 0x4c) + 0x20);
-        if ((uVar1 == 0xffffffff) || (uVar1 = GameBit_Get(uVar1), uVar1 != 0)) {
-          *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xe7;
-          *(byte *)(iVar2 + 0xe) = *(byte *)(iVar2 + 0xe) | 1;
-        }
-        else {
-          *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
-          *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
-          *(byte *)(iVar2 + 0xe) = *(byte *)(iVar2 + 0xe) & 0xfe;
-        }
-      }
-      else {
-        *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
-        *(byte *)(iVar2 + 0xe) = *(byte *)(iVar2 + 0xe) & 0xfe;
-      }
-      if (*(int *)(param_1 + 0x74) != 0) {
-        FUN_800400b0();
-      }
+    break;
+  case 0x2BA7:
+    if (GameBit_Get(3069) != 0 || GameBit_Get(666) != 0 || GameBit_Get(667) != 0) {
+      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
     }
+    break;
+  case 0x46A40:
+    if (GameBit_Get(255) != 0 || GameBit_Get(2208) != 0 || GameBit_Get(2210) != 0) {
+      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+    }
+    break;
+  case 0x497F4:
+    if (GameBit_Get(3182) != 0 || GameBit_Get(3184) != 0 || GameBit_Get(3185) != 0) {
+      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+    }
+    break;
+  case 0x4800C:
+    if (GameBit_Get(3205) != 0 || GameBit_Get(3253) != 0 || GameBit_Get(3254) != 0) {
+      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+    }
+    break;
+  case 0x4A533:
+    if (GameBit_Get(372) != 0 || GameBit_Get(3255) != 0 || GameBit_Get(3256) != 0) {
+      *(u8 *)(state + 0xe) = (u8)(*(u8 *)(state + 0xe) | 0x20);
+    }
+    break;
   }
-  else {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xe7;
-    *(byte *)(iVar2 + 0xe) = *(byte *)(iVar2 + 0xe) | 1;
-    if (*(int *)(param_1 + 0x74) != 0) {
-      FUN_800400b0();
-    }
+
+  if ((*(u8 *)(state + 0xe) & 0x40) != 0) {
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
   }
-  return;
 }
 
 /*
