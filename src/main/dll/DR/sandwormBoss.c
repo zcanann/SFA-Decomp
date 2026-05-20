@@ -140,7 +140,7 @@ extern undefined4 DAT_80323890;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dca88;
 extern undefined4 DAT_803dca90;
-extern undefined4 DAT_803dca98;
+extern undefined4 gWaterfxInterface;
 extern undefined4 DAT_803dcab0;
 extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6d4;
