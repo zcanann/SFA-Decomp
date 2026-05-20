@@ -1771,3 +1771,16 @@ void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     }
 }
 #pragma peephole reset
+
+/* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
+extern void unlockLevel(int a, int b, int c);
+extern void fn_80188CC0(void);
+void landed_arwing_init(int obj, int param) {
+    int *p = ((int**)obj)[0xb8/4];
+    *(u16*)((char*)obj + 0xb0) = *(u16*)((char*)obj + 0xb0) | 0x2000;
+    *(s8*)((char*)p + 0x16) = 1;
+    if (GameBit_Get(*(s16*)((char*)param + 0x1c)) == 0) {
+        unlockLevel(0, 0, 1);
+    }
+    *(void(**)(void))((char*)obj + 0xbc) = fn_80188CC0;
+}
