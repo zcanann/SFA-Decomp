@@ -4609,6 +4609,64 @@ void dll_0D_func05(u8 v) {
 }
 #pragma peephole reset
 
+extern f32 lbl_803DF430;
+extern f32 lbl_803DF434;
+#pragma peephole off
+#pragma scheduling off
+void fn_800A0FD0(ModgfxState *state)
+{
+    ModgfxVertexData *dst = state->vertexBuffers[state->activeVertexBufferIndex];
+    ModgfxVertexData *src = state->baseVertexData;
+    int i;
+    for (i = 0; i < state->vertexCount; i++) {
+        dst->posX = src->posX;
+        dst->posY = src->posY;
+        dst->posZ = src->posZ;
+        dst->colorR = src->colorR;
+        dst->colorG = src->colorG;
+        dst->colorB = src->colorB;
+        dst->alpha = src->alpha;
+        dst++;
+        src++;
+    }
+}
+
+void fn_800A0478(ModgfxState *state)
+{
+    ModgfxVertexData *src = state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
+    ModgfxVertexData *dst = state->baseVertexData;
+    f32 f1;
+    f32 f0;
+    int i;
+    for (i = 0; i < state->vertexCount; i++) {
+        dst->posX = src->posX;
+        dst->posY = src->posY;
+        dst->posZ = src->posZ;
+        dst->colorR = src->colorR;
+        dst->colorG = src->colorG;
+        dst->colorB = src->colorB;
+        dst->alpha = src->alpha;
+        dst++;
+        src++;
+    }
+    f1 = lbl_803DF434;
+    *(f32*)((char*)state + 0x30) = f1;
+    *(f32*)((char*)state + 0x34) = f1;
+    *(f32*)((char*)state + 0x38) = f1;
+    f0 = lbl_803DF430;
+    *(f32*)((char*)state + 0x3C) = f0;
+    *(f32*)((char*)state + 0x40) = f0;
+    *(f32*)((char*)state + 0x44) = f0;
+    *(f32*)((char*)state + 0x48) = f1;
+    *(f32*)((char*)state + 0x4C) = f1;
+    *(f32*)((char*)state + 0x50) = f1;
+    *(f32*)((char*)state + 0x54) = f0;
+    *(f32*)((char*)state + 0x58) = f0;
+    *(f32*)((char*)state + 0x5C) = f0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole off
 #pragma scheduling off
 void partfx_initialise(void) {
