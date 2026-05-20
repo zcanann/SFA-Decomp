@@ -1091,3 +1091,23 @@ void crrockfall_release(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* fn_801AE088: install callback, configure sub-obj, init extra fields from arg. */
+extern void fn_801AD930(void);
+#pragma scheduling off
+#pragma peephole off
+void fn_801AE088(void *obj, void *arg2) {
+    void *extra;
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801AD930;
+    if (*(void **)((char *)obj + 0x64) != NULL) {
+        *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x4000;
+        *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3a) = 100;
+        *(u8 *)(*(char **)((char *)obj + 0x64) + 0x3b) = 150;
+    }
+    extra = *(void **)((char *)obj + 0xb8);
+    *(u32 *)extra = 0;
+    *(u8 *)((char *)extra + 0x21) = *(u8 *)((char *)arg2 + 0x27);
+    *(u8 *)((char *)extra + 0x20) = 0xff;
+}
+#pragma peephole reset
+#pragma scheduling reset
