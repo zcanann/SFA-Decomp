@@ -1808,3 +1808,17 @@ void fn_80187BB0(int obj) {
     (*(void (*)(int))(*(int *)(*lbl_803DCAC0 + 0x10)))(obj);
 }
 #pragma scheduling reset
+
+extern f32 lbl_803E3B40;
+#pragma scheduling off
+#pragma peephole off
+void fn_80187BE0(int obj, int p1, int p2, int p3, int p4, s8 visible) {
+    int *inner = *(int **)(obj + 0xb8);
+    if (*(u8 *)((char *)inner + 0xa) == 0) {
+        if ((*(int (*)(int, s32))(*(int *)(*lbl_803DCAC0 + 0xc)))(obj, visible) != 0) {
+            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E3B40);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
