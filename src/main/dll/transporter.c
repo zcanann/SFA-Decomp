@@ -1634,3 +1634,31 @@ void invhit_render(void) { objRenderFn_8003b8f4(lbl_803E35E8); }
 void iceblast_render(void) { objRenderFn_8003b8f4(lbl_803E3600); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *lbl_803DCA78;
+#pragma scheduling off
+#pragma peephole off
+void WarpPoint_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
+    int *p = *(int **)((char *)obj + 0x4c);
+    if (visible == 0) return;
+    if (*(s8 *)((char *)p + 0x1d) == 1) return;
+}
+void invhit_free(int obj) {
+    char *inner = *(char **)(obj + 0xb8);
+    switch (*(u8 *)(inner + 8)) {
+        case 4:
+            (*(void (*)(int))(*(int *)(*lbl_803DCA78 + 0x18)))(obj);
+            break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void iceblast_init(int obj, s16 *p) {
+    *(f32 *)*(char **)(obj + 0xb8) = (f32)*(s16 *)((char *)p + 0x1a);
+    ObjHits_SetTargetMask(obj, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
