@@ -71,7 +71,7 @@ void mmp_asteroid_re_free(void);
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_asteroid_re_hitDetect(void);
 void mmp_asteroid_re_update(void);
-void mmp_asteroid_re_init(void);
+void mmp_asteroid_re_init(int obj);
 void mmp_asteroid_re_release(void);
 void mmp_asteroid_re_initialise(void);
 
