@@ -2473,5 +2473,18 @@ void* textureIdxToPtr(int idx) {
     if (i < 0 || i >= lbl_803DCDBC) return NULL;
     return *(void**)((u8*)lbl_803DCDC4 + i * 16 + 4);
 }
+
+void* getLoadedTexture(int key) {
+    u8 *iter = (u8 *)lbl_803DCDC4;
+    int count = lbl_803DCDBC;
+    int i;
+    for (i = 0; i < count; i++) {
+        if (*(int *)iter == key) {
+            return *(void **)((u8 *)lbl_803DCDC4 + i * 16 + 4);
+        }
+        iter += 16;
+    }
+    return NULL;
+}
 #pragma scheduling reset
 #pragma peephole reset
