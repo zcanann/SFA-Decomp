@@ -2513,3 +2513,82 @@ int fn_80157CDC(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E2B98;
+extern f32 lbl_803E2BB8;
+extern f32 lbl_803E2BD4;
+extern f32 lbl_803E2BE4;
+extern f32 lbl_803E2BE8;
+extern f32 lbl_803E2BEC;
+extern f32 lbl_803E2BF0;
+extern f32 lbl_803E2BF4;
+extern f32 lbl_803E2BF8;
+extern f32 lbl_803E2BFC;
+extern f32 lbl_803E2C00;
+extern f32 lbl_803E2C04;
+extern f32 lbl_803E2C08;
+extern f32 lbl_803E2C0C;
+
+/* fn_80159654: smallbasket variant init. Dispatches on obj->modelType
+ * (offset 0x46) — values 0x6a2/0x6a3/0x6a4 each pick a different float +
+ * byte tuple to seed state[0x2a8..0x322]. The trailing block sets
+ * shared state floats and computes obj[0x8] from (s8)params[0x28]. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80159654(s16* obj, u8* state) {
+    u8* params = *(u8**)((u8*)obj + 0x4c);
+    *(u32*)(state + 0x2e4) = 0xb;
+    *(u32*)(state + 0x2e4) |= 0x40b0;
+    *(u32*)(state + 0x2e4) |= 0x40001040;
+    switch ((s16)obj[0x46/2]) {
+    case 0x6a3:
+        *(f32*)(state + 0x2ac) = lbl_803E2BE4;
+        *(f32*)(state + 0x2a8) = lbl_803E2BB8;
+        *(u16*)(state + 0x2b0) = 0x1e;
+        state[0x33b] = 0;
+        state[0x320] = 9;
+        *(f32*)(state + 0x314) = lbl_803E2BE8;
+        state[0x321] = 0xc;
+        *(f32*)(state + 0x318) = lbl_803E2BEC;
+        state[0x322] = 9;
+        *(f32*)(state + 0x31c) = lbl_803E2BE8;
+        *(u32*)(state + 0x2e4) |= 0x400;
+        break;
+    case 0x6a2:
+        *(f32*)(state + 0x2ac) = lbl_803E2BF0;
+        *(f32*)(state + 0x2a8) = lbl_803E2BB8;
+        *(u16*)(state + 0x2b0) = 0x32;
+        state[0x33b] = 1;
+        state[0x320] = 0xe;
+        *(f32*)(state + 0x314) = lbl_803E2BE8;
+        state[0x321] = 0xd;
+        *(f32*)(state + 0x318) = lbl_803E2BEC;
+        state[0x322] = 0xe;
+        *(f32*)(state + 0x31c) = lbl_803E2BE8;
+        *(u32*)(state + 0x2e4) |= 0xc00;
+        break;
+    case 0x6a4:
+        *(f32*)(state + 0x2ac) = lbl_803E2BF4;
+        *(f32*)(state + 0x2a8) = lbl_803E2BF8;
+        *(u16*)(state + 0x2b0) = 0xf;
+        state[0x33b] = 2;
+        state[0x320] = 0xd;
+        *(f32*)(state + 0x314) = lbl_803E2BE8;
+        state[0x321] = 0x10;
+        *(f32*)(state + 0x318) = lbl_803E2BEC;
+        state[0x322] = 0xd;
+        *(f32*)(state + 0x31c) = lbl_803E2BE8;
+        *(u32*)(state + 0x2e4) |= 0xc00;
+        break;
+    }
+    *(f32*)(state + 0x308) = lbl_803E2BD4;
+    *(f32*)(state + 0x300) = lbl_803E2BFC;
+    *(f32*)(state + 0x304) = lbl_803E2C00;
+    *(f32*)(state + 0x2fc) = *(f32*)(state + 0x2fc) * lbl_803E2C04;
+    if ((s8)params[0x2e] != -1) {
+        *(u32*)(state + 0x2dc) |= 1;
+    }
+    *(f32*)((u8*)obj + 0x8) = lbl_803E2C08 + ((f32)(s32)(s8)params[0x28] / lbl_803E2C0C);
+}
+#pragma peephole reset
+#pragma scheduling reset
