@@ -4425,5 +4425,15 @@ void fn_800412B8(u8 r, u8 g, u8 b) {
     (&lbl_803DCC58)[1] = g;
     (&lbl_803DCC58)[2] = b;
 }
+
+extern s32 lbl_803DB5B0;
+int lockLevel(s32 val, int idx) {
+    s32 cur = (&lbl_803DB5B0)[idx];
+    if (cur == -2) {
+        (&lbl_803DB5B0)[idx] = val;
+        return -1;
+    }
+    return cur;
+}
 #pragma peephole reset
 #pragma scheduling reset

@@ -4525,7 +4525,10 @@ extern void shield_update();
 extern void shield_init();
 extern void curve_init();
 extern void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-extern void restartmarker_init();
+void restartmarker_init(int *obj, int *state) {
+    *(s16*)obj = (s16)(*(u8*)((char*)state + 0x18) << 8);
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x4000);
+}
 extern void dll_F7_free();
 extern void dll_F7_render();
 extern void dll_F7_update();
