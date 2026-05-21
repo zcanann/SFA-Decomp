@@ -2112,3 +2112,50 @@ void fn_8015D098(int obj, int p2, int p3)
 #pragma fp_contract reset
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma fp_contract off
+int fn_8015B7EC(int obj, int p2)
+{
+  extern int *gPlayerInterface;
+  extern int *gBaddieControlInterface;
+  extern f32 timeDelta;
+  extern f32 lbl_803E2D00;
+  extern f32 lbl_803E2D14;
+  extern f32 lbl_803E2D24;
+  int sub = *(int *)(obj + 0xb8);
+
+  if (*(int *)(p2 + 0x2d0) == 0) return 0;
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
+    *(f32 *)(p2 + 0x284) = lbl_803E2D14;
+    *(f32 *)(p2 + 0x280) = lbl_803E2D14;
+    if ((u32)*(u8 *)(sub + 0x406) > 50) {
+      if (*(f32 *)(p2 + 0x2c0) < lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe)
+          || (*(u8 *)(sub + 0x404) & 0x2) != 0) {
+        (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 0);
+      } else {
+        (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 1);
+      }
+    } else {
+      (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 1);
+    }
+  }
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x346) == 0) return 0;
+
+  (**(void (**)(int, int, int, f32))((char *)(*gPlayerInterface) + 0x30))(obj, p2, 4, timeDelta);
+  if (((u8)(**(int (**)(int, int, f32))((char *)(*gBaddieControlInterface) + 0x18))(obj, p2, lbl_803E2D00) & 1) == 0) {
+    return 5;
+  }
+
+  if (*(f32 *)(p2 + 0x2c0) < lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe)
+      || (*(u8 *)(sub + 0x404) & 0x2) != 0) {
+    return 8;
+  }
+  return 7;
+}
+#pragma fp_contract reset
+#pragma peephole reset
+#pragma scheduling reset
