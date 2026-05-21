@@ -13166,6 +13166,11 @@ void screens_initialise(void) {
     lbl_803DD4A4 = 0;
     lbl_803DD4A8 = 0;
 }
+extern u8 *lbl_803DD498;
+void updateSavedHealth(void) {
+    int idx = *(u8*)((char*)lbl_803A32A8 + 0x20) * 12;
+    *((u8*)lbl_803A32A8 + idx) = lbl_803DD498[idx];
+}
 #pragma peephole reset
 #pragma scheduling reset
 

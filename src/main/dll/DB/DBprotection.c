@@ -823,3 +823,10 @@ LAB_801e1614:
 
 /* 16b chained patterns. */
 s32 fn_801E12DC(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x70); }
+
+void fn_801E1568(int *obj) {
+    char *state = *(char**)((char*)obj + 0xb8);
+    *(f32*)(state + 0x2c) = *(f32*)((char*)obj + 0xc);
+    *(f32*)(state + 0x30) = *(f32*)((char*)obj + 0x10);
+    *(f32*)(state + 0x34) = *(f32*)((char*)obj + 0x14);
+}

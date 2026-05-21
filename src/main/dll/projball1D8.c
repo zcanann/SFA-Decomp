@@ -218,3 +218,10 @@ int sh_tricky_getExtraSize(void)
 {
   return 1;
 }
+
+#pragma scheduling off
+int EdibleMushroom_SeqFn(int *obj) {
+    *(u8*)(*(int*)((char*)obj + 0xb8) + 0x139) = 1;
+    return 0;
+}
+#pragma scheduling reset

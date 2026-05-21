@@ -939,3 +939,5 @@ void FUN_801bbf98(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+
+int fn_801BA590(int unused, int *p) { return *(s8*)((char*)p + 0x346) != 0; }
