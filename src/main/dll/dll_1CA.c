@@ -533,3 +533,16 @@ void nwsh_levcon_init(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *gModgfxInterface;
+extern void *gTitleMenuControlInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_199_free(int *obj) {
+    ((void(*)(int*))((void**)*(void**)gModgfxInterface)[6])(obj);
+    ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
+    ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
