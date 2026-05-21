@@ -1654,10 +1654,8 @@ void baddieFn_8014a304(f32 radius,int obj,int state)
   f32 maxDistance;
   s16 setupId;
 
-  visibilityBits[0] = lbl_802C21F0[0];
-  visibilityBits[1] = lbl_802C21F0[1];
-  visibilityBits[2] = lbl_802C21F0[2];
-  visibilityBits[3] = lbl_802C21F0[3];
+  *(longlong *)&visibilityBits[0] = *(longlong *)&lbl_802C21F0[0];
+  *(longlong *)&visibilityBits[2] = *(longlong *)&lbl_802C21F0[2];
   probe.x = *(f32 *)(obj + 0xc);
   probe.y = lbl_803E25A0 + *(f32 *)(obj + 0x10);
   probe.z = *(f32 *)(obj + 0x14);
