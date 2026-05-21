@@ -832,6 +832,49 @@ void FUN_801544a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+extern f32 lbl_803E28B0;
+extern f32 lbl_803E28BC;
+extern f32 lbl_803E28D0;
+extern f32 lbl_803E28DC;
+extern f32 lbl_803E28E0;
+extern f32 lbl_803E28E4;
+extern f32 lbl_803E28E8;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801534D8(int obj, int state)
+{
+    f32 lblBC;
+    f32 lblB0;
+    f32 lblD0;
+
+    *(f32*)(state + 0x2ac) = lbl_803E28DC;
+    *(u32*)(state + 0x2e4) = 0x1009;
+    *(f32*)(state + 0x308) = lbl_803E28E0;
+    *(f32*)(state + 0x300) = lbl_803E28E4;
+    *(f32*)(state + 0x304) = lbl_803E28E8;
+    *(u8*)(state + 0x320) = 0;
+    lblBC = lbl_803E28BC;
+    *(f32*)(state + 0x314) = lblBC;
+    *(u8*)(state + 0x321) = 1;
+    lblD0 = lbl_803E28D0;
+    *(f32*)(state + 0x318) = lblD0;
+    *(u8*)(state + 0x322) = 0;
+    *(f32*)(state + 0x31c) = lblBC;
+    lblB0 = lbl_803E28B0;
+    *(f32*)(state + 0x324) = lblB0;
+    *(f32*)(state + 0x328) = lblB0;
+    *(f32*)(state + 0x32c) = lblB0;
+    *(f32*)(state + 0x2fc) = lblD0;
+    if (*(s16*)(obj + 0x46) == 0x7c6) {
+        *(u8*)(state + 0x33b) = 1;
+    } else {
+        *(u8*)(state + 0x33b) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern f32 lbl_803E286C;
 extern f32 lbl_803E2894;
 extern f32 lbl_803E28B0;
