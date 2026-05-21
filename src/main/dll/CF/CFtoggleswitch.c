@@ -696,6 +696,46 @@ void cctestinfot_init(int obj, s8 *def) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int playerIsDisguised(void);
+extern void Obj_SetActiveModelIndex(int *obj, int idx);
+extern u8 fn_801334E0(void);
+extern void showHelpText(s16 id);
+extern f32 timeDelta;
+extern f32 lbl_803E3C88;
+extern f32 lbl_803E3C8C;
+
+#pragma scheduling off
+#pragma peephole off
+void cctestinfot_update(int *obj) {
+    extern void *Obj_GetPlayerObject(void);
+    u8 *sub = *(u8**)((char*)obj + 0xb8);
+    Obj_GetPlayerObject();
+    if (sub[4] != 0) {
+        if (playerIsDisguised() == 0) {
+            sub[4] = 0;
+        }
+    } else {
+        if (playerIsDisguised() != 0) {
+            sub[4] = 1;
+        }
+    }
+    objSetHintTextIdx((int)obj, sub[4]);
+    Obj_SetActiveModelIndex(obj, sub[4]);
+    if (ObjTrigger_IsSet((int)obj) != 0 && fn_801334E0() == 0) {
+        *(f32*)sub = lbl_803E3C88;
+    }
+    if (*(f32*)sub > lbl_803E3C8C) {
+        if ((*(u8*)((char*)obj + 0xaf) & 4) == 0) {
+            *(f32*)sub = lbl_803E3C8C;
+        } else {
+            *(f32*)sub = *(f32*)sub - timeDelta;
+            showHelpText(*(s16*)((char*)*(int**)((char*)obj + 0x50) + 0x7c + sub[4] * 2));
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern int Obj_GetActiveModel(int *obj);
 extern int *ObjModel_GetRenderOpTextureRefs(int model, int idx);
 extern u32 GameBit_Get(int eventId);
