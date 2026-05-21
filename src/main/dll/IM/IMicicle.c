@@ -1214,7 +1214,7 @@ void FUN_801a5420(undefined2 *param_1,int param_2,int param_3)
   uStack_3c = (int)*(short *)(param_3 + 0x20) ^ 0x80000000;
   local_40 = 0x43300000;
   *(float *)(param_1 + 0x12) =
-       (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e50a8) / lbl_803E5098;
+       (f32)(s32)uStack_3c / lbl_803E5098;
   uStack_34 = (int)*(short *)(param_3 + 0x22) ^ 0x80000000;
   local_38 = 0x43300000;
   *(float *)(param_1 + 0x14) = (float)((double)CONCAT44(0x43300000,uStack_34) - dVar2) / fVar1;
@@ -1245,7 +1245,7 @@ void FUN_801a5420(undefined2 *param_1,int param_2,int param_3)
   uStack_14 = (int)*(short *)(param_3 + 0x32) ^ 0x80000000;
   local_18 = 0x43300000;
   *(float *)(param_2 + 0x24) =
-       (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e50a8) / lbl_803E509C;
+       (f32)(s32)uStack_14 / lbl_803E509C;
   uStack_1c = (int)*(short *)(param_3 + 0x34) ^ 0x80000000;
   local_20 = 0x43300000;
   *(float *)(param_2 + 0x28) = (float)((double)CONCAT44(0x43300000,uStack_1c) - dVar2) / fVar1;

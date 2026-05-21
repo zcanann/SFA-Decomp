@@ -612,7 +612,7 @@ void FUN_80153be0(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(float *)(iVar4 + 0x28) =
            lbl_803E358C *
            ((lbl_803E3588 + *(float *)(*(int *)(param_10 + 0x29c) + 0x10) +
-            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3590)) -
+            (f32)(s32)(uVar2)) -
            *(float *)(puVar3 + 6));
       *(float *)(iVar4 + 0x2c) =
            fVar1 * (*(float *)(*(int *)(param_10 + 0x29c) + 0x14) - *(float *)(puVar3 + 8));
@@ -790,9 +790,7 @@ void FUN_80153e5c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - lbl_803DC074;
   if (*(float *)(param_10 + 0x324) <= lbl_803E35B8) {
     uStack_14 = randomGetRange(0x96,300);
-    uStack_14 = uStack_14 ^ 0x80000000;
-    local_18 = 0x43300000;
-    *(float *)(param_10 + 0x324) = (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e3590)
+    *(float *)(param_10 + 0x324) = (f32)(s32)uStack_14
     ;
     FUN_80006824((uint)param_9,0x245);
   }

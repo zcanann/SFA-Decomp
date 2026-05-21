@@ -599,7 +599,7 @@ FUN_801a7874(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       *pbVar4 = *pbVar4 | 0x50;
       uVar2 = randomGetRange(10,0x3c);
       *(float *)(pbVar4 + 8) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5188);
+           (f32)(s32)(uVar2);
       pbVar4[1] = 1;
       param_1 = GameBit_Set(0x87b,(uint)pbVar4[1]);
     }
@@ -752,7 +752,7 @@ void FUN_801a7a94(undefined8 param_1,double param_2,double param_3,undefined8 pa
        *(float *)(pbVar4 + 8) < lbl_803E51B0)) {
       uVar2 = randomGetRange(10,0x3c);
       *(float *)(pbVar4 + 8) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5188);
+           (f32)(s32)(uVar2);
       (**(code **)(*DAT_803dd708 + 8))(param_9,0x71e,0,1,0xffffffff,0);
     }
   }

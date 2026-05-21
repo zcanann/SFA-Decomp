@@ -1455,7 +1455,7 @@ void FUN_801b0388(undefined2 *param_1,uint param_2,uint param_3)
   
   piVar2 = *(int **)(param_1 + 0x5c);
   dVar4 = (double)(lbl_803E5470 *
-                  (float)((double)CONCAT44(0x43300000,param_3 ^ 0x80000000) - DOUBLE_803e5480));
+                  (f32)(s32)(param_3));
   uVar1 = *(undefined4 *)(*piVar2 + 0xc);
   *(undefined4 *)(param_1 + 0xc) = uVar1;
   *(undefined4 *)(param_1 + 6) = uVar1;
@@ -1475,7 +1475,7 @@ void FUN_801b0388(undefined2 *param_1,uint param_2,uint param_3)
   dVar3 = (double)FUN_80293f90();
   *(float *)(param_1 + 0x12) = (float)(dVar4 * -dVar3);
   *(float *)(param_1 + 0x14) =
-       lbl_803E5470 * (float)((double)CONCAT44(0x43300000,param_2 ^ 0x80000000) - DOUBLE_803e5480)
+       lbl_803E5470 * (f32)(s32)(param_2)
   ;
   dVar3 = (double)FUN_80294964();
   *(float *)(param_1 + 0x16) = (float)(dVar4 * -dVar3);
@@ -1711,11 +1711,11 @@ void FUN_801b0a1c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     uStack_4c = (int)*(short *)(param_10 + 0x1a) ^ 0x80000000;
     local_50 = 0x43300000;
     dVar7 = (double)(lbl_803E5470 *
-                    (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e5480));
+                    (f32)(s32)uStack_4c);
     uStack_44 = (int)*(short *)(param_10 + 0x1c) ^ 0x80000000;
     local_48 = 0x43300000;
     dVar6 = (double)(lbl_803E5470 *
-                    (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e5480));
+                    (f32)(s32)uStack_44);
     piVar4[2] = *(int *)(param_9 + 8);
     piVar4[3] = *(int *)(param_10 + 0x14);
     *(undefined4 *)(param_10 + 0x14) = 0xffffffff;

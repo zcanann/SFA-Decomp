@@ -871,8 +871,7 @@ void FUN_801f1ac0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uStack_14 = (uint)DAT_803dc070;
     local_18 = 0x43300000;
     ObjAnim_AdvanceCurrentMove((double)lbl_803E6A34,
-                               (double)(float)((double)CONCAT44(0x43300000,uStack_14) -
-                                               DOUBLE_803e6a38),param_9,(ObjAnimEventList *)0x0);
+                               (f64)(f32)(s32)uStack_14,param_9,(ObjAnimEventList *)0x0);
   }
   else {
     if (*(short *)(param_9 + 0xa0) != 2) {
@@ -881,8 +880,7 @@ void FUN_801f1ac0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uStack_14 = (uint)DAT_803dc070;
     local_18 = 0x43300000;
     ObjAnim_AdvanceCurrentMove((double)lbl_803E6A34,
-                               (double)(float)((double)CONCAT44(0x43300000,uStack_14) -
-                                               DOUBLE_803e6a38),param_9,(ObjAnimEventList *)0x0);
+                               (f64)(f32)(s32)uStack_14,param_9,(ObjAnimEventList *)0x0);
   }
   if (((*(byte *)(param_9 + 0xaf) & 1) == 0) || (uVar1 = FUN_80017690(0x2fb), uVar1 != 0)) {
     if (((*(byte *)(param_9 + 0xaf) & 1) != 0) &&

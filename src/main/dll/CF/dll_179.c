@@ -91,15 +91,15 @@ void cfccrate_render(int param_1,int param_2)
   iVar6 = *(int *)(param_1 + 0x54);
   uStack_3c = (int)*(short *)(iVar6 + 0x5a) ^ 0x80000000;
   local_40 = 0x43300000;
-  iVar5 = (int)((float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e4a40) * fVar2);
+  iVar5 = (int)((f32)(s32)uStack_3c * fVar2);
   local_38 = (longlong)iVar5;
   uStack_2c = (int)*(short *)(iVar6 + 0x5c) ^ 0x80000000;
   local_30 = 0x43300000;
-  iVar1 = (int)((float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e4a40) * fVar2);
+  iVar1 = (int)((f32)(s32)uStack_2c * fVar2);
   local_28 = (double)(longlong)iVar1;
   uStack_1c = (int)*(short *)(iVar6 + 0x5e) ^ 0x80000000;
   local_20 = 0x43300000;
-  iVar6 = (int)((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e4a40) * fVar2);
+  iVar6 = (int)((f32)(s32)uStack_1c * fVar2);
   local_18 = (longlong)iVar6;
   ObjHitbox_SetCapsuleBounds(param_1,(short)iVar5,(short)iVar1,(short)iVar6);
   piVar7[1] = (int)FLOAT_803e4a18;
@@ -117,7 +117,7 @@ void cfccrate_render(int param_1,int param_2)
     uStack_1c = uStack_1c ^ 0x80000000;
     local_20 = 0x43300000;
     local_28 = (double)CONCAT44(0x43300000,uStack_1c);
-    FUN_800175d0((double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e4a40),
+    FUN_800175d0((double)(f32)(s32)uStack_1c,
                  (double)(FLOAT_803e4a28 + (float)(local_28 - DOUBLE_803e4a40)),*piVar7);
     iVar5 = (**(code **)(*DAT_803dd6d8 + 0x24))(auStack_48);
     if (iVar5 == 0) {

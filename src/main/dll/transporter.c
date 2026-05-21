@@ -753,12 +753,12 @@ LAB_801767e4:
     trackDolphin_buildSweptBounds(&uStack_e8,(float *)(iVar14 + 0x78),local_90,&local_120,4);
     uStack_5c = local_e4 ^ 0x80000000;
     local_60 = 0x43300000;
-    local_e4 = (uint)((float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e4210) -
+    local_e4 = (uint)((f32)(s32)uStack_5c -
                      lbl_803E4254);
     local_58 = (longlong)(int)local_e4;
     uStack_4c = local_d8 ^ 0x80000000;
     local_50 = 0x43300000;
-    local_d8 = (uint)((float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e4210) +
+    local_d8 = (uint)((f32)(s32)uStack_4c +
                      lbl_803E4254);
     local_48 = (double)(longlong)(int)local_d8;
     FUN_80063a74(iVar4,&uStack_e8,1,'\x01');
@@ -808,8 +808,7 @@ LAB_801767e4:
       *(float *)(iVar14 + 0xf4) = lbl_803E41C0;
     }
     else {
-      local_48 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-      *(float *)(iVar14 + 0xf4) = (float)(in_f31 / (double)(float)(local_48 - DOUBLE_803e4210));
+      *(float *)(iVar14 + 0xf4) = (float)(in_f31 / (double)(f32)(s32)(uVar6));
     }
     if ((uVar12 == 0) || (lbl_803E41C0 < *(float *)(iVar14 + 0x110))) {
       if ((*(ushort *)(iVar14 + 0x100) & 4) == 0) {
@@ -819,8 +818,7 @@ LAB_801767e4:
     }
     else {
       *(float *)(iVar4 + 0x28) = lbl_803E41C0;
-      local_48 = (double)CONCAT44(0x43300000,uVar12 ^ 0x80000000);
-      *(float *)(iVar4 + 0x10) = lbl_803E4224 + local_128 / (float)(local_48 - DOUBLE_803e4210);
+      *(float *)(iVar4 + 0x10) = lbl_803E4224 + local_128 / (f32)(s32)(uVar12);
       *(ushort *)(iVar14 + 0x100) = *(ushort *)(iVar14 + 0x100) & 0xfff3;
     }
   }

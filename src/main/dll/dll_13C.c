@@ -174,8 +174,7 @@ void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
   undefined8 local_40;
   
   piVar4 = *(int **)(param_9 + 0x5c);
-  local_48 = (double)CONCAT44(0x43300000,*(uint *)(param_9 + 0x7a) ^ 0x80000000);
-  *(int *)(param_9 + 0x7a) = (int)((float)(local_48 - DOUBLE_803e3d80) - lbl_803DC074);
+  *(int *)(param_9 + 0x7a) = (int)((f32)(s32)(*(uint *)(param_9 + 0x7a)) - lbl_803DC074);
   if (*(int *)(param_9 + 0x7a) < 0) {
     uVar5 = FUN_8000680c((int)param_9,0x7f);
     FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
@@ -325,7 +324,7 @@ void kaldachompspit_init(uint param_1)
       FUN_80017594(*piVar3,0,0xff,0,0xff);
     }
     uVar1 = (uint)(lbl_803E3DA4 * *(float *)(param_1 + 8));
-    FUN_800175d0((double)(float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e3d80),
+    FUN_800175d0((double)(f32)(s32)(uVar1),
                  (double)(float)((double)CONCAT44(0x43300000,uVar1 + 0x28 ^ 0x80000000) -
                                 DOUBLE_803e3d80),*piVar3);
     FUN_800175bc(*piVar3,1);
@@ -750,15 +749,15 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
         uVar2 = randomGetRange(0xffffffce,0x32);
         *(float *)(puVar3 + 0x12) =
              lbl_803E3DDC *
-             (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3de8) +
+             (f32)(s32)(uVar2) +
              *(float *)(param_9 + 0x24);
         uVar2 = randomGetRange(0xffffffce,0x32);
         *(float *)(puVar3 + 0x14) =
              lbl_803E3DE0 *
-             (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3de8) +
+             (f32)(s32)(uVar2) +
              *(float *)(param_9 + 0x28);
         uVar2 = randomGetRange(0xffffffce,0x32);
-        param_2 = (double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3de8)
+        param_2 = (double)(f32)(s32)(uVar2)
         ;
         param_1 = (double)lbl_803E3DDC;
         *(float *)(puVar3 + 0x16) = (float)(param_1 * param_2 + (double)*(float *)(param_9 + 0x2c));

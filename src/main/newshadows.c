@@ -1852,12 +1852,8 @@ void FUN_8006bce4(void)
   dVar19 = DOUBLE_803dfa48;
   while ((iVar11 < 0x32 && (uVar15 < 10000))) {
     uStack_dc = randomGetRange(8,0x10);
-    uStack_dc = uStack_dc ^ 0x80000000;
-    local_e0 = 0x43300000;
     *pfVar14 = (float)((double)CONCAT44(0x43300000,uStack_dc) - dVar19);
     uStack_d4 = randomGetRange(5,10);
-    uStack_d4 = uStack_d4 ^ 0x80000000;
-    local_d8 = 0x43300000;
     pfVar14[3] = (float)(dVar18 * (double)(float)((double)CONCAT44(0x43300000,uStack_d4) - dVar19));
     uVar15 = randomGetRange(0x14,0x32);
     local_d0 = (double)CONCAT44(0x43300000,uVar15 ^ 0x80000000);
@@ -1870,8 +1866,6 @@ void FUN_8006bce4(void)
       local_d0 = (double)CONCAT44(0x43300000,uVar10 ^ 0x80000000);
       *pfVar9 = (float)(dVar20 * (double)(float)(local_d0 - dVar19));
       uStack_d4 = randomGetRange(0,999);
-      uStack_d4 = uStack_d4 ^ 0x80000000;
-      local_d8 = 0x43300000;
       *pfVar12 = (float)(dVar20 * (double)(float)((double)CONCAT44(0x43300000,uStack_d4) - dVar19));
       bVar4 = false;
       iVar7 = 0;

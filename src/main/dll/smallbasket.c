@@ -335,9 +335,7 @@ void FUN_801571c4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - lbl_803DC074;
   if (*(float *)(param_10 + 0x324) <= lbl_803E37B0) {
     uStack_14 = randomGetRange(0x3c,0x78);
-    uStack_14 = uStack_14 ^ 0x80000000;
-    local_18 = 0x43300000;
-    *(float *)(param_10 + 0x324) = (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e37b8)
+    *(float *)(param_10 + 0x324) = (f32)(s32)uStack_14
     ;
   }
   if (lbl_803E37B0 == *(float *)(param_10 + 0x328)) {
@@ -470,7 +468,7 @@ void FUN_8015750c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   local_40 = (double)CONCAT44(0x43300000,uStack_34);
   local_38 = 0x43300000;
   fVar1 = (float)(local_40 - DOUBLE_803e37f0);
-  if (lbl_803E37B0 == (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e37f0)) {
+  if (lbl_803E37B0 == (f32)(s32)uStack_34) {
     fVar1 = lbl_803E37D0;
   }
   dVar15 = (double)(fVar1 / lbl_803E37D0);
@@ -478,7 +476,7 @@ void FUN_8015750c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   if (*(float *)(iVar10 + 0x324) <= lbl_803E37B0) {
     uStack_34 = randomGetRange(0x3c,0x78);
     uStack_34 = uStack_34 ^ 0x80000000;
-    *(float *)(iVar10 + 0x324) = (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e37b8);
+    *(float *)(iVar10 + 0x324) = (f32)(s32)uStack_34;
   }
   local_38 = 0x43300000;
   if (lbl_803E37B0 == *(float *)(iVar10 + 0x328)) {
@@ -519,7 +517,7 @@ void FUN_8015750c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     uVar5 = FUN_80017730();
     uStack_34 = (uVar5 & 0xffff) - (uint)*puVar3 ^ 0x80000000;
     local_38 = 0x43300000;
-    fVar1 = (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e37b8);
+    fVar1 = (f32)(s32)uStack_34;
     if (lbl_803E37C4 < fVar1) {
       fVar1 = lbl_803E37C0 + fVar1;
     }
@@ -651,7 +649,7 @@ void FUN_80157b68(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (*(float *)(param_10 + 0x324) <= lbl_803E37B0) {
     uVar5 = randomGetRange(0x3c,0x78);
     *(float *)(param_10 + 0x324) =
-         (float)((double)CONCAT44(0x43300000,uVar5 ^ 0x80000000) - DOUBLE_803e37b8);
+         (f32)(s32)(uVar5);
   }
   if (lbl_803E37B0 == *(float *)(param_10 + 0x328)) {
     bVar3 = false;

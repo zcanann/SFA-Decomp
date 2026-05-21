@@ -111,9 +111,8 @@ void dfsh_shrine_render(ushort *param_1)
       if ((int)uVar2 < -0x8000) {
         uVar2 = uVar2 + 0xffff;
       }
-      local_30 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
       *param_1 = *param_1 +
-                 (short)(int)(((float)(local_30 - DOUBLE_803e5b18) * lbl_803DC074) /
+                 (short)(int)(((f32)(s32)(uVar2) * lbl_803DC074) /
                              lbl_803E5B08);
       dVar5 = (double)FUN_80017710((float *)(param_1 + 0xc),(float *)(iVar1 + 0x18));
       if ((double)lbl_803E5B0C < dVar5) {
@@ -334,7 +333,7 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         FUN_80006824((uint)param_9,0x343);
         uVar5 = randomGetRange(500,1000);
         *(float *)(iVar11 + 8) =
-             (float)((double)CONCAT44(0x43300000,uVar5 ^ 0x80000000) - DOUBLE_803e5b18);
+             (f32)(s32)(uVar5);
       }
       if ((*(byte *)((int)param_9 + 0xaf) & 1) != 0) {
         FUN_80017698(0x589,0);

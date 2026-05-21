@@ -2195,13 +2195,13 @@ void FUN_800401a0(float *param_1,float *param_2,short *param_3,int param_4,ushor
   
   uStack_24 = (int)*param_3 ^ 0x80000000;
   local_28 = 0x43300000;
-  local_8c = (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803df6c0);
+  local_8c = (f32)(s32)uStack_24;
   uStack_1c = (int)param_3[1] ^ 0x80000000;
   local_20 = 0x43300000;
-  local_88 = (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803df6c0);
+  local_88 = (f32)(s32)uStack_1c;
   uStack_14 = (int)param_3[2] ^ 0x80000000;
   local_18 = 0x43300000;
-  local_84 = (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803df6c0);
+  local_84 = (f32)(s32)uStack_14;
   if (param_6 != 0) {
     local_8c = local_8c * lbl_803DF6D8;
     local_88 = local_88 * lbl_803DF6D8;

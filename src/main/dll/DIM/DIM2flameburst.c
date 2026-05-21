@@ -641,8 +641,7 @@ void FUN_801b45b0(undefined8 param_1,double param_2,double param_3,double param_
             dVar12 = (double)pfVar11[7];
             iVar8 = *(int *)(uVar3 + 0xb8);
             uVar6 = randomGetRange(0xfffffffb,3);
-            local_38 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-            param_2 = (double)(float)(local_38 - DOUBLE_803e55e0);
+            param_2 = (double)(f32)(s32)(uVar6);
             local_e4 = pfVar11[3] *
                        (float)((double)lbl_803E55F4 * param_2 + (double)lbl_803E55C4);
             local_e0 = lbl_803E55F8;
@@ -661,12 +660,11 @@ void FUN_801b45b0(undefined8 param_1,double param_2,double param_3,double param_
             local_e0 = local_e0 + pfVar11[1];
             local_dc = local_dc + pfVar11[2];
             uVar6 = randomGetRange(0xc0,0x100);
-            local_48 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
             if (*(byte *)(iVar8 + 0xa58) < 0x32) {
               param_2 = (double)local_e4;
               param_3 = (double)local_e0;
               param_4 = (double)local_dc;
-              FUN_801b40f0((double)((float)(dVar12 * (double)(float)(local_48 - DOUBLE_803e55e0)) *
+              FUN_801b40f0((double)((float)(dVar12 * (double)(f32)(s32)(uVar6)) *
                                    lbl_803E560C),param_2,param_3,param_4);
             }
             pfVar11[8] = pfVar11[9];
@@ -889,8 +887,7 @@ void FUN_801b4f60(void)
     dVar11 = (double)lbl_803E5640;
   }
   else {
-    local_48 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar2 + 0x1a) ^ 0x80000000);
-    dVar11 = (double)((float)(local_48 - DOUBLE_803e55e0) * lbl_803E560C);
+    dVar11 = (double)((f32)(s32)((int)*(short *)(iVar2 + 0x1a)) * lbl_803E560C);
     if ((double)lbl_803E5640 < dVar11) {
       dVar11 = (double)lbl_803E5640;
     }
@@ -929,8 +926,7 @@ void FUN_801b4f60(void)
     for (iVar7 = 0; iVar7 < iVar4; iVar7 = iVar7 + 1) {
       if (*(char *)(iVar8 + 0xa5c) == '\0') {
         uVar6 = randomGetRange(0x14,0x28);
-        local_38 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-        local_b0 = lbl_803E5654 * lbl_803E5658 * (float)(local_38 - DOUBLE_803e55e0) +
+        local_b0 = lbl_803E5654 * lbl_803E5658 * (f32)(s32)(uVar6) +
                    lbl_803E5654;
         iVar1 = iVar7 >> 0x1f;
         uVar6 = (iVar1 * 4 | (uint)(iVar7 * 0x40000000 + iVar1) >> 0x1e) - iVar1 & 0xff;
@@ -938,38 +934,31 @@ void FUN_801b4f60(void)
         local_b4 = local_b0 * (float)(&DAT_8032616c)[uVar6 * 3];
         local_b0 = local_b0 * (float)(&DAT_80326170)[uVar6 * 3];
         uStack_3c = randomGetRange(0,0x8000);
-        uStack_3c = uStack_3c ^ 0x80000000;
-        local_40 = 0x43300000;
         PSVECDotProduct((double)(float)(DOUBLE_803e5600 *
                                     (double)(((float)((double)CONCAT44(0x43300000,uStack_3c) -
                                                      DOUBLE_803e55e0) - lbl_803E5660) /
                                             lbl_803E565C)),afStack_7c,0x7a);
         uVar6 = randomGetRange(0,0x8000);
-        local_48 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
         PSVECDotProduct((double)(float)(DOUBLE_803e5600 *
-                                    (double)(((float)(local_48 - DOUBLE_803e55e0) - lbl_803E5660)
+                                    (double)(((f32)(s32)(uVar6) - lbl_803E5660)
                                             / lbl_803E565C)),afStack_ac,0x78);
         FUN_80247618(afStack_ac,afStack_7c,afStack_7c);
         FUN_80247cd8(afStack_7c,&local_b8,&local_b8);
       }
       else {
         uVar6 = randomGetRange(0x14,0x28);
-        local_48 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-        local_b8 = lbl_803E5654 * lbl_803E5658 * (float)(local_48 - DOUBLE_803e55e0) +
+        local_b8 = lbl_803E5654 * lbl_803E5658 * (f32)(s32)(uVar6) +
                    lbl_803E5654;
         local_b4 = lbl_803E55F8;
         local_b0 = lbl_803E55F8;
         uStack_3c = randomGetRange(0x2000,0x6000);
-        uStack_3c = uStack_3c ^ 0x80000000;
-        local_40 = 0x43300000;
         PSVECDotProduct((double)(float)(DOUBLE_803e5600 *
                                     (double)((float)((double)CONCAT44(0x43300000,uStack_3c) -
                                                     DOUBLE_803e55e0) / lbl_803E565C)),afStack_7c,
                      0x7a);
         uVar6 = randomGetRange(0,0xffff);
-        local_38 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
         PSVECDotProduct((double)(float)(DOUBLE_803e5600 *
-                                    (double)((float)(local_38 - DOUBLE_803e55e0) / lbl_803E5608)),
+                                    (double)((f32)(s32)(uVar6) / lbl_803E5608)),
                      afStack_ac,0x79);
         FUN_80247618(afStack_ac,afStack_7c,afStack_7c);
         FUN_80247cd8(afStack_7c,&local_b8,&local_b8);

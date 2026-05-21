@@ -786,7 +786,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     local_40 = 0x43300000;
     iVar2 = (int)-((float)((double)CONCAT44(0x43300000,fStack_44) - DOUBLE_803e64c0) *
                    lbl_803DC074 -
-                  (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e64c0));
+                  (f32)(s32)uStack_3c);
     local_38 = (longlong)iVar2;
     *(short *)(uVar1 + 4) = (short)iVar2;
   }
@@ -814,7 +814,7 @@ void FUN_801e2708(int param_1,int param_2)
   
   pfVar2 = *(float **)(param_1 + 0xb8);
   uVar1 = randomGetRange(0x5a,0xf0);
-  *pfVar2 = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e64c0);
+  *pfVar2 = (f32)(s32)(uVar1);
   pfVar2[1] = lbl_803E64A8;
   pfVar2[2] = 1.68156e-42;
   *(undefined *)(pfVar2 + 3) = 4;
@@ -1076,17 +1076,13 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
       puVar6 = FUN_80017aa4(0x18,0x138);
       *(float *)(puVar6 + 4) = lbl_803E64EC + *(float *)(iVar2 + 0x18);
       uStack_5c = randomGetRange(0xfffffffa,6);
-      uStack_5c = uStack_5c ^ 0x80000000;
-      local_60 = 0x43300000;
       *(float *)(puVar6 + 6) =
            lbl_803E64E0 +
            *(float *)(iVar2 + 0x1c) +
-           (float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e64f8);
+           (f32)(s32)uStack_5c;
       uStack_54 = randomGetRange(0xfffffffa,6);
-      uStack_54 = uStack_54 ^ 0x80000000;
-      local_58 = 0x43300000;
       dVar12 = (double)(*(float *)(iVar2 + 0x20) +
-                       (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e64f8));
+                       (f32)(s32)uStack_54);
       *(float *)(puVar6 + 8) = (float)((double)lbl_803E64F0 + dVar12);
       *(undefined *)(puVar6 + 2) = 2;
       *(undefined *)((int)puVar6 + 5) = 1;

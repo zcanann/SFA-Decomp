@@ -330,9 +330,7 @@ void magicdust_init(int param_1,int param_2)
   local_54[0] = DAT_803e4144;
   uVar3 = randomGetRange(0,0xffff);
   uStack_44 = randomGetRange(0x27,0x2c);
-  uStack_44 = uStack_44 ^ 0x80000000;
-  local_48 = 0x43300000;
-  dVar7 = (double)((float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e4198) /
+  dVar7 = (double)((f32)(s32)uStack_44 /
                   lbl_803E417C);
   uStack_3c = uVar3 ^ 0x80000000;
   local_40 = 0x43300000;
@@ -341,10 +339,8 @@ void magicdust_init(int param_1,int param_2)
   dVar6 = (double)FUN_80294964();
   *(float *)(param_1 + 0x2c) = (float)(dVar7 * dVar6);
   uStack_34 = randomGetRange(0x28,0x32);
-  uStack_34 = uStack_34 ^ 0x80000000;
-  local_38 = 0x43300000;
   *(float *)(param_1 + 0x28) =
-       (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e4198) / lbl_803E4188;
+       (f32)(s32)uStack_34 / lbl_803E4188;
   sVar1 = *(short *)(param_2 + 0x2e);
   if (sVar1 == 1) {
     *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
@@ -367,10 +363,8 @@ void magicdust_init(int param_1,int param_2)
     *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
     *(undefined *)(param_1 + 0x36) = 1;
     uStack_34 = randomGetRange(0x8c,0x96);
-    uStack_34 = uStack_34 ^ 0x80000000;
-    local_38 = 0x43300000;
     *(float *)(param_1 + 0x28) =
-         -((float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e4198) / lbl_803E4188);
+         -((f32)(s32)uStack_34 / lbl_803E4188);
   }
   *(undefined *)(param_1 + 0xad) = *(undefined *)(param_2 + 0x26);
   if (*(char *)(*(int *)(param_1 + 0x50) + 0x55) <= *(char *)(param_1 + 0xad)) {

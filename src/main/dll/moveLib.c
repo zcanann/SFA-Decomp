@@ -1093,7 +1093,7 @@ void FUN_801145b0(undefined4 param_1,undefined4 param_2,int param_3,float *param
         local_5c[1] = 176.0;
         uStack_4c = (int)sVar1 ^ 0x80000000;
         local_50 = 0x43300000;
-        iVar3 = (int)((float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e2918) +
+        iVar3 = (int)((f32)(s32)uStack_54 +
                      (float)((double)((lbl_803E2938 +
                                       (float)((double)CONCAT44(0x43300000,uStack_4c) -
                                              DOUBLE_803e2918)) *

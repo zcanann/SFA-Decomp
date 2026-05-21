@@ -639,7 +639,7 @@ void FUN_801ef3f8(ushort *param_1,undefined4 param_2,int param_3,undefined4 para
     local_30 = 0x43300000;
     *(float *)(iVar7 + 0x5c) =
          *(float *)(iVar7 + 0x5c) +
-         ((float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e6938) * lbl_803DC074) /
+         ((f32)(s32)uStack_2c * lbl_803DC074) /
          lbl_803E6954;
     uStack_24 = (int)(short)param_1[1] ^ 0x80000000;
     local_28 = 0x43300000;

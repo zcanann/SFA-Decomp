@@ -212,13 +212,11 @@ void wmworm_update(void)
       local_40 = (longlong)iVar3;
       uStack_34 = (uint)*(byte *)((int)&local_78 + iVar7 + 1);
       local_38 = 0x43300000;
-      iVar1 = (int)(dVar10 * (double)(float)((double)CONCAT44(0x43300000,uStack_34) -
-                                            DOUBLE_803e6ae8));
+      iVar1 = (int)(dVar10 * (f64)(f32)(s32)uStack_34);
       local_30 = (longlong)iVar1;
       uStack_24 = (uint)*(byte *)((int)&local_78 + iVar7 + 2);
       local_28 = 0x43300000;
-      iVar7 = (int)(dVar10 * (double)(float)((double)CONCAT44(0x43300000,uStack_24) -
-                                            DOUBLE_803e6ae8));
+      iVar7 = (int)(dVar10 * (f64)(f32)(s32)uStack_24);
       local_20 = (longlong)iVar7;
       FUN_80017594(*piVar8,(char)iVar3,(char)iVar1,(char)iVar7,0xff);
       FUN_800175bc(*piVar8,1);

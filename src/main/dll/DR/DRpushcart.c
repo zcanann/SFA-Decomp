@@ -751,18 +751,15 @@ void FUN_801e8300(void)
         dVar11 = (double)fVar1;
         local_7c = iVar3;
         uVar7 = randomGetRange(0,2000);
-        local_50 = (double)CONCAT44(0x43300000,uVar7 - 1000 ^ 0x80000000);
-        local_88 = (float)(dVar11 * (double)(float)(local_50 - DOUBLE_803e66f0) + (double)local_88);
+        local_88 = (float)(dVar11 * (double)(f32)(s32)(uVar7 - 1000) + (double)local_88);
         uVar7 = randomGetRange(0,2000);
         uStack_44 = uVar7 - 1000 ^ 0x80000000;
         local_48 = 0x43300000;
-        local_84 = (float)(dVar11 * (double)(float)((double)CONCAT44(0x43300000,uStack_44) -
-                                                   DOUBLE_803e66f0) + (double)local_84);
+        local_84 = (float)(dVar11 * (f64)(f32)(s32)uStack_44 + (double)local_84);
         uVar7 = randomGetRange(0,2000);
         uStack_3c = uVar7 - 1000 ^ 0x80000000;
         local_40 = 0x43300000;
-        local_80 = (float)(dVar11 * (double)(float)((double)CONCAT44(0x43300000,uStack_3c) -
-                                                   DOUBLE_803e66f0) + (double)local_80);
+        local_80 = (float)(dVar11 * (f64)(f32)(s32)uStack_3c + (double)local_80);
         uVar8 = FUN_80081030((double)lbl_803E66E0,(double)lbl_803E66E4,iVar3 + 0xc,&local_88,
                              0x14,0x40,0);
         *(undefined4 *)(iVar5 + 0x98) = uVar8;

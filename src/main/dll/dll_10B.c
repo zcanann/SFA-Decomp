@@ -103,7 +103,7 @@ void FUN_80154870(ushort *param_1,undefined4 *param_2)
   uStack_1c = (int)(short)param_1[1] ^ 0x80000000;
   local_20 = 0x43300000;
   iVar1 = (int)-(float)((double)lbl_803E3654 * dVar5 -
-                       (double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e3640));
+                       (double)(f32)(s32)uStack_1c);
   local_18 = (longlong)iVar1;
   param_1[1] = (ushort)iVar1;
   enemy_free((double)lbl_803E365C,(double)lbl_803E362C,param_1,(int)param_2,0xf,'\0');
@@ -131,7 +131,7 @@ void FUN_80154870(ushort *param_1,undefined4 *param_2)
   uStack_1c = (int)(short)param_1[1] ^ 0x80000000;
   local_20 = 0x43300000;
   iVar1 = (int)((double)lbl_803E3654 * dVar5 +
-               (double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e3640));
+               (double)(f32)(s32)uStack_1c);
   local_28 = (longlong)iVar1;
   param_1[1] = (ushort)iVar1;
   FUN_80154af4(param_1,(int)param_2);
@@ -194,7 +194,7 @@ void FUN_80154b88(ushort *param_1,undefined4 *param_2)
   uStack_1c = (int)(short)param_1[1] ^ 0x80000000;
   local_20 = 0x43300000;
   iVar2 = (int)-(float)((double)lbl_803E3654 * dVar6 -
-                       (double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e3640));
+                       (double)(f32)(s32)uStack_1c);
   local_18 = (longlong)iVar2;
   param_1[1] = (ushort)iVar2;
   fVar1 = lbl_803E3628;
@@ -250,7 +250,7 @@ void FUN_80154b88(ushort *param_1,undefined4 *param_2)
   uStack_1c = (int)(short)param_1[1] ^ 0x80000000;
   local_20 = 0x43300000;
   iVar2 = (int)((double)lbl_803E3654 * dVar6 +
-               (double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e3640));
+               (double)(f32)(s32)uStack_1c);
   local_28 = (longlong)iVar2;
   param_1[1] = (ushort)iVar2;
   FUN_80154af4(param_1,(int)param_2);
@@ -297,7 +297,7 @@ void FUN_80154f8c(int param_1,int param_2)
   *(float *)(param_2 + 0x330) = lbl_803E368C;
   uVar2 = randomGetRange(0x32,0x4b);
   *(float *)(param_2 + 0x2fc) =
-       lbl_803E3690 * (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3640);
+       lbl_803E3690 * (f32)(s32)(uVar2);
   return;
 }
 

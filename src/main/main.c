@@ -638,16 +638,16 @@ void FUN_801fe084(int param_1,int param_2)
   uVar2 = randomGetRange(10,0x19);
   dVar1 = DOUBLE_803e6e50;
   *pfVar3 = lbl_803E6E4C *
-            (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e6e50);
+            (f32)(s32)(uVar2);
   *(undefined2 *)((int)pfVar3 + 0xe) = 0x14;
   *(float *)(param_1 + 0x10) =
        *(float *)(param_2 + 0xc) +
        (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000) - dVar1);
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
   uVar2 = randomGetRange(0x1e,0x3c);
-  pfVar3[1] = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e6e50);
+  pfVar3[1] = (f32)(s32)(uVar2);
   uVar2 = randomGetRange(100,200);
-  pfVar3[2] = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e6e50);
+  pfVar3[2] = (f32)(s32)(uVar2);
   return;
 }
 
@@ -975,7 +975,7 @@ void FUN_801fe540(short *param_1,undefined4 *param_2)
   uStack_1c = (uint)config->speedScaleByte;
   local_20 = 0x43300000;
   *(float *)(param_1 + 4) =
-       (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6e70) * lbl_803E6E68;
+       (f32)(s32)uStack_1c * lbl_803E6E68;
   *(float *)(param_1 + 4) = *(float *)(param_1 + 4) * *(float *)(*(int *)(param_1 + 0x28) + 4);
   uVar3 = GameBit_Get((int)config->primaryConditionId);
   if (uVar3 == 0) {
@@ -1218,7 +1218,7 @@ void FUN_801fe924(void)
       uStack_6c = (uint)config->forceRadiusByte;
       local_70 = 0x43300000;
       dVar10 = (double)(lbl_803E6E88 *
-                       (float)((double)CONCAT44(0x43300000,uStack_6c) - DOUBLE_803e6e70));
+                       (f32)(s32)uStack_6c);
       if (dVar8 < dVar10) {
         dVar10 = (double)((float)((double)(float)(dVar10 - dVar8) / dVar10) *
                          lbl_803E6E8C * *(float *)(psVar7 + 4));
@@ -1240,8 +1240,7 @@ void FUN_801fe924(void)
     local_70 = 0x43300000;
     dVar12 = (double)CONCAT44(0x43300000,uStack_6c) - DOUBLE_803e6ea8;
     *pfVar5 = -(lbl_803E6E98 *
-                (float)(dVar9 / (double)(float)((double)CONCAT44(0x43300000,uStack_6c) -
-                                               DOUBLE_803e6ea8)) - *pfVar5);
+                (float)(dVar9 / (f64)(f32)(s32)uStack_6c) - *pfVar5);
     pfVar5[2] = -(fVar1 * (float)(dVar11 / (double)(float)dVar12) - pfVar5[2]);
     fVar1 = lbl_803E6E9C;
     *pfVar5 = *pfVar5 * lbl_803E6E9C;
