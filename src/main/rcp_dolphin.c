@@ -2725,6 +2725,57 @@ void *textureAlloc(u16 w, u16 h, u8 fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10
     return obj;
 }
 
+extern void findSomething(int);
+extern void mm_free(void *);
+void textureFree(u8 *tex) {
+    int i;
+    u8 *iter;
+    u8 *next;
+    int count;
+    if (tex == (u8 *)*(void **)((u8 *)lbl_803DCDC4 + 4)) return;
+    if (tex == NULL) {
+        tex[75] = 10;
+        return;
+    }
+    if (*(u16 *)(tex + 14) == 0) {
+        tex[75] = 10;
+        return;
+    }
+    if (tex[73] != 0 && *(u16 *)(tex + 14) <= 1) {
+        tex[75] = 10;
+    }
+    *(u16 *)(tex + 14) = *(u16 *)(tex + 14) - 1;
+    if (*(u16 *)(tex + 14) != 0) return;
+    i = 0;
+    count = lbl_803DCDBC;
+    if (count <= 0) return;
+    {
+        u8 *entry = (u8 *)lbl_803DCDC4;
+        do {
+            if (*(u8 **)(entry + 4) == tex) {
+                iter = *(u8 **)tex;
+                while (iter != NULL) {
+                    if ((u32)iter < 0x80000000 || (u32)iter > 0x81800000) iter = NULL;
+                    if ((u32)iter < 0x80000000 || (u32)iter >= 0xa0000000) iter = NULL;
+                    if (iter == NULL) break;
+                    next = *(u8 **)iter;
+                    if (iter[72] != 0) findSomething(*(int *)(iter + 64));
+                    if (iter[73] == 0) mm_free(iter);
+                    iter = next;
+                }
+                if (tex[72] != 0) findSomething(*(int *)(tex + 64));
+                if (tex[73] == 0) mm_free(tex);
+                *(int *)((u8 *)lbl_803DCDC4 + i * 16) = -1;
+                *(u8 **)((u8 *)lbl_803DCDC4 + i * 16 + 4) = NULL;
+                return;
+            }
+            entry += 16;
+            i++;
+            count--;
+        } while (count != 0);
+    }
+}
+
 #pragma peephole reset
 #pragma scheduling reset
 int textureCrazyPointerFollowFn_80054c30(int *p, int n) {
