@@ -795,3 +795,37 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3508); }
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80174588(int obj, int p2)
+{
+  extern int *objFindTexture(int, int, int);
+  int data = *(int *)(obj + 0x4c);
+
+  switch (*(int *)(data + 0x14)) {
+    case 0x4992C:
+      *(u8 *)(p2 + 0x144) = 10;
+      break;
+    case 0x4995D:
+      *(u8 *)(p2 + 0x144) = 11;
+      *(u8 *)(obj + 0xad) = 1;
+      break;
+    case 0x4995E:
+      *(u8 *)(p2 + 0x144) = 12;
+      *(u8 *)(obj + 0xad) = 1;
+      break;
+  }
+
+  if (GameBit_Get(*(s16 *)(data + 0x18)) != 0) {
+    int *tex;
+    *(u16 *)(p2 + 0x100) = (u16)(*(u16 *)(p2 + 0x100) | 0x80);
+    tex = objFindTexture(obj, 0, 0);
+    if (tex != NULL) {
+      *tex = 256;
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
