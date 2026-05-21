@@ -529,7 +529,20 @@ void kaldachom_update(int param_1)
   
   iVar9 = *(int *)(param_1 + 0xb8);
   iVar8 = *(int *)(param_1 + 0x4c);
-  if (*(int *)(param_1 + 0xf4) == 0) {
+  if (*(int *)(param_1 + 0xf4) != 0) {
+    if ((*(short *)(iVar9 + 0x270) != 3) &&
+        (iVar1 = (**(code **)(*gMapEventInterface + 0x68))(*(undefined4 *)(iVar8 + 0x14)), iVar1 != 0))
+    {
+      (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
+      *(undefined2 *)(iVar9 + 0x402) = 0;
+      Sfx_PlayFromObject(param_1,0x270);
+      ObjAnim_SetCurrentMove(param_1,4,lbl_803E3060,0x10);
+      *(undefined *)(iVar9 + 0x346) = 0;
+      *(undefined *)(param_1 + 0x36) = 0xff;
+      *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+    }
+  }
+  else {
     iVar8 = (**(code **)(*gBaddieControlInterface + 0x30))(param_1,iVar9,0);
     if (iVar8 == 0) {
       *(undefined2 *)(iVar9 + 0x402) = 0;
@@ -578,17 +591,6 @@ void kaldachom_update(int param_1)
         *(undefined4 *)(param_1 + 0xc0) = *(undefined4 *)(iVar9 + 0x3e0);
       }
     }
-  }
-  else if ((*(short *)(iVar9 + 0x270) != 3) &&
-          (iVar1 = (**(code **)(*gMapEventInterface + 0x68))(*(undefined4 *)(iVar8 + 0x14)), iVar1 != 0))
-  {
-    (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
-    *(undefined2 *)(iVar9 + 0x402) = 0;
-    Sfx_PlayFromObject(param_1,0x270);
-    ObjAnim_SetCurrentMove(param_1,4,lbl_803E3060,0x10);
-    *(undefined *)(iVar9 + 0x346) = 0;
-    *(undefined *)(param_1 + 0x36) = 0xff;
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
   }
   return;
 }
