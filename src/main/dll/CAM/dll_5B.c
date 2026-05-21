@@ -474,64 +474,36 @@ void CameraModeDebug_init(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80109B04(undefined8 param_1,double param_2,double param_3)
+void *fn_80109B04(int filter1, int filter2, f32 x, f32 y, f32 z)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  int *piVar4;
-  int iVar5;
-  int iVar6;
-  double extraout_f1;
-  double dVar7;
-  double in_f28;
-  double dVar8;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  double dVar9;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar10;
-  int local_68 [12];
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  uVar10 = FUN_8028683c();
-  dVar9 = (double)lbl_803E1878;
-  dVar8 = extraout_f1;
-  piVar4 = ObjGroup_GetObjects(7,local_68);
-  for (iVar6 = 0; iVar6 < local_68[0]; iVar6 = iVar6 + 1) {
-    iVar5 = *piVar4;
-    if ((((int)*(short *)(iVar5 + 0x44) == (int)uVar10) &&
-        ((uint)*(byte *)(*(int *)(iVar5 + 0x4c) + 0x18) == (uint)((ulonglong)uVar10 >> 0x20))) &&
-       (fVar1 = (float)(dVar8 - (double)*(float *)(iVar5 + 0x18)),
-       fVar2 = (float)(param_2 - (double)*(float *)(iVar5 + 0x1c)),
-       fVar3 = (float)(param_3 - (double)*(float *)(iVar5 + 0x20)),
-       dVar7 = sqrtf((double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2)), dVar7 < dVar9)
-       ) {
-      dVar9 = dVar7;
+    void *best;
+    double bestDist;
+    int count;
+    int *list;
+    int i;
+    int *obj;
+    f32 dx, dy, dz;
+    double dist;
+
+    bestDist = lbl_803E1878;
+    best = NULL;
+    list = (int *)ObjGroup_GetObjects(7, &count);
+    for (i = 0; i < count; i++) {
+        obj = (int *)*list;
+        if (*(s16 *)((char *)obj + 0x44) == filter2 &&
+            *(u8 *)(*(int *)((char *)obj + 0x4c) + 0x18) == filter1) {
+            dx = x - *(f32 *)((char *)obj + 0x18);
+            dy = y - *(f32 *)((char *)obj + 0x1c);
+            dz = z - *(f32 *)((char *)obj + 0x20);
+            dist = sqrtf((double)(dy*dy + dx*dx + dz*dz));
+            if (dist < bestDist) {
+                bestDist = dist;
+                best = obj;
+            }
+        }
+        list++;
     }
-    piVar4 = piVar4 + 1;
-  }
-  FUN_80286888();
-  return;
+    return best;
 }
 
 /*
