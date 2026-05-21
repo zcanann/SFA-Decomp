@@ -280,3 +280,45 @@ void spitembeam_initialise(void) {}
 /* 8b "li r3, N; blr" returners. */
 int spitembeam_getExtraSize(void) { return 0x0; }
 int spitembeam_func08(void) { return 0x0; }
+
+extern f32 lbl_803E5AA0;
+extern f32 lbl_803E5ABC;
+extern f32 lbl_803E5AC0;
+extern f32 lbl_803E5AC4;
+extern f32 lbl_803E5AC8;
+extern f32 lbl_803E5ACC;
+extern f32 lbl_803DC0B0;
+extern f32 lbl_803DC0B4;
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern void *Obj_GetPlayerObject(void);
+extern unsigned long randomGetRange(int a, int b);
+
+#pragma scheduling off
+#pragma peephole off
+void spdrape_init(int *obj, u8 *def) {
+    f32 *state;
+    int *player;
+    state = *(f32 **)((char *)obj + 0xb8);
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
+    if (*(s16 *)((char *)def + 0x1a) != 0) {
+        *(f32 *)((char *)obj + 8) = (f32)(s32)*(s16 *)((char *)def + 0x1a) / lbl_803E5AC4 * lbl_803E5AC0;
+    }
+    state[0] = lbl_803E5ABC;
+    state[1] = fn_80293E80(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
+    state[2] = sin(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
+    state[3] = -(state[1] * *(f32 *)((char *)obj + 0xc) + state[2] * *(f32 *)((char *)obj + 0x14));
+    *(s16 *)((char *)state + 0x14) = (s16)randomGetRange(0xb4, 0x12c);
+    player = (int *)Obj_GetPlayerObject();
+    if (player != NULL) {
+        if (state[2] * *(f32 *)((char *)player + 0x14) + state[1] * *(f32 *)((char *)player + 0xc) + state[3] < lbl_803E5AA0) {
+            *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;
+        } else {
+            *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B4;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
