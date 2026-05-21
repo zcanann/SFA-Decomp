@@ -5,6 +5,8 @@
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor gWaterFallSprayObjDescriptor;
+extern ObjectDescriptor gLightningObjDescriptor;
+extern ObjectDescriptor gSfxPlayerObjDescriptor;
 
 void lightning_free(u8 *obj, int p2);
 void lightning_render(u8 *obj);
