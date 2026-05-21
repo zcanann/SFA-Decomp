@@ -1966,6 +1966,24 @@ void fn_8015AE68(int* obj, u8* state) {
 
 #pragma scheduling off
 #pragma peephole off
+extern f32 lbl_803E2D38;
+extern f32 lbl_803E2D14;
+
+int fn_8015BEF4(int* obj, u8* state) {
+    u8* t = *(u8**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
+    t[0x44] |= 4;
+    *(f32*)((char*)state + 0x2a0) = lbl_803E2D38;
+    if ((s8)state[634] != 0) {
+        ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2D14, 0);
+        state[838] = 0;
+    }
+    state[845] = 1;
+    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
+    return 0;
+}
+
+#pragma scheduling off
+#pragma peephole off
 int fn_8015B524(int* obj, u8* state) {
     if ((s8)state[635] != 0) {
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 3);
