@@ -1287,5 +1287,30 @@ void cclightfoot_free(int* obj, int p2)
     }
 }
 
+extern void fn_80088870(void *a, void *b, void *c, void *d);
+extern int getSaveGameLoadStatus(void);
+extern void getEnvfxActImmediately(void *obj, void *target, int animId, int flags);
+extern void getEnvfxAct(int obj, int target, int id, int p);
+extern int *gMapEventInterface;
+extern int lbl_80323548[];
+extern f32 lbl_803E46D4;
+
+void cclevcontrol_init(int *obj) {
+    int *state;
+    state = *(int **)((char *)obj + 0xb8);
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801ABA84;
+    fn_80088870((char *)lbl_80323548 + 0x38, lbl_80323548, (char *)lbl_80323548 + 0x70, (char *)lbl_80323548 + 0xa8);
+    if (getSaveGameLoadStatus() != 0) {
+        envFxActFn_800887f8(0x3f);
+        getEnvfxActImmediately((void *)0, (void *)0, 0x242, 0);
+    } else {
+        envFxActFn_800887f8(0x1f);
+        getEnvfxAct(0, 0, 0x242, 0);
+    }
+    *(f32 *)state = lbl_803E46D4;
+    state[2] = -1;
+    state[3] = (u32)(u8)((int (*)(int))((int **)*gMapEventInterface)[0x10])(((s8 *)obj)[0xac]);
+}
+
 #pragma peephole reset
 #pragma scheduling reset
