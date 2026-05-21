@@ -1024,6 +1024,7 @@ extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
 extern void fn_8015355C(int obj, int p2);
 extern int* gPartfxInterface;
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_8015355C(int obj, int p2)
@@ -1057,6 +1058,7 @@ void fn_8015355C(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off
