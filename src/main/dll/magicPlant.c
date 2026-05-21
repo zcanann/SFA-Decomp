@@ -832,6 +832,41 @@ void FUN_801544a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+extern f32 lbl_803E28F4;
+extern f32 lbl_803E290C;
+extern f32 lbl_803E2910;
+extern f32 lbl_803E2924;
+extern f32 lbl_803E2928;
+extern f32 lbl_803E292C;
+extern f32 lbl_803E2930;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80153C90(int unused, int p2)
+{
+    f32 ten;
+    f32 oc;
+    *(f32*)(p2 + 0x2ac) = lbl_803E2924;
+    *(int*)(p2 + 0x2e4) = 1;
+    *(f32*)(p2 + 0x308) = lbl_803E28F4;
+    *(f32*)(p2 + 0x300) = lbl_803E2928;
+    *(f32*)(p2 + 0x304) = lbl_803E292C;
+    *(u8*)(p2 + 0x320) = 0;
+    ten = lbl_803E2910;
+    *(f32*)(p2 + 0x314) = ten;
+    *(u8*)(p2 + 0x321) = 7;
+    oc = lbl_803E290C;
+    *(f32*)(p2 + 0x318) = oc;
+    *(u8*)(p2 + 0x322) = 0;
+    *(f32*)(p2 + 0x31c) = ten;
+    *(u8*)(p2 + 0x33a) = 0;
+    *(u8*)(p2 + 0x33b) = 0;
+    *(f32*)(p2 + 0x324) = lbl_803E2930;
+    *(f32*)(p2 + 0x2fc) = oc;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
