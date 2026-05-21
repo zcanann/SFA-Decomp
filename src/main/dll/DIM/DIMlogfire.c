@@ -844,11 +844,13 @@ extern int *gTitleMenuControlInterfaceCopy;
 #pragma scheduling off
 #pragma peephole off
 void animsharpclaw_free(int obj) {
-    char *inner = *(char **)(obj + 0xb8);
-    int child = *(int *)(obj + 0xc8);
-    if (child != 0) {
-        ObjLink_DetachChild(obj, child);
-        Obj_FreeObject(child);
+    char *inner;
+    int *child;
+    inner = *(char **)(obj + 0xb8);
+    child = *(int **)(obj + 0xc8);
+    if (child != NULL) {
+        ObjLink_DetachChild(obj, (int)child);
+        Obj_FreeObject((int)child);
     }
     (*(void (*)(char *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
     (*(void (*)(int, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
