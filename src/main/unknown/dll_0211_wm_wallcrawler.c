@@ -27,7 +27,7 @@
  * - slot 05: 0x801F817C wmwallcrawler_hitDetect ref=hitDetect
  * - slot 06: 0x801F80EC wmwallcrawler_render ref=render
  * - slot 07: 0x801F80C8 wmwallcrawler_free ref=free
- * - slot 08: 0x801F80C0 wmwallcrawler_func08 stub=const 0
+ * - slot 08: 0x801F80C0 wmwallcrawler_getObjectTypeId stub=const 0
  * - slot 09: 0x801F80B8 wmwallcrawler_getExtraSize stub=const 668 ref=getExtraSize (stub)
  *
  * Reference-only hints:

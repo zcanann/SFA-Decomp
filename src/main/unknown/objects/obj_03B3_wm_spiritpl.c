@@ -57,7 +57,7 @@
  * - slot 05: 0x801F5B0C wmspiritplace_hitDetect ref=hitDetect
  * - slot 06: 0x801F5B00 wmspiritplace_render ref=render
  * - slot 07: 0x801F5AFC wmspiritplace_free stub=blr ref=free (stub)
- * - slot 08: 0x801F5AF4 wmspiritplace_func08 stub=const 0
+ * - slot 08: 0x801F5AF4 wmspiritplace_getObjectTypeId stub=const 0
  * - slot 09: 0x801F5AEC wmspiritplace_getExtraSize stub=const 24 ref=getExtraSize (stub)
  */
 

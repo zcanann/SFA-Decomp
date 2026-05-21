@@ -57,7 +57,7 @@
  * - slot 05: 0x801F7D78 wmplanets_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F7D48 wmplanets_render ref=render
  * - slot 07: 0x801F7D44 wmplanets_free stub=blr ref=free (stub)
- * - slot 08: 0x801F7D3C wmplanets_func08 stub=const 0
+ * - slot 08: 0x801F7D3C wmplanets_getObjectTypeId stub=const 0
  * - slot 09: 0x801F7D34 wmplanets_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 

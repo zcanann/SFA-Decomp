@@ -15,7 +15,7 @@
 // - 5: firefly_hitDetect (0x801F5424)
 // - 6: firefly_render (0x801F5420)
 // - 7: firefly_free (0x801F53D8)
-// - 8: firefly_func08 (0x801F53D0)
+// - 8: firefly_getObjectTypeId (0x801F53D0)
 // - 9: firefly_getExtraSize (0x801F53C8)
 //
 // Reference-only object parameter hints:

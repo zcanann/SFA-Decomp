@@ -1336,14 +1336,14 @@ void FUN_801f5070(uint param_1)
 
 /* Pattern wrappers. */
 int firefly_getExtraSize(void) { return 0x88; }
-int firefly_func08(void) { return 0x0; }
+int firefly_getObjectTypeId(void) { return 0x0; }
 void firefly_render(void) {}
 void firefly_hitDetect(void) {}
 void firefly_release(void) {}
 void firefly_initialise(void) {}
 void fn_801F568C(void) {}
 int wmspiritplace_getExtraSize(void) { return 0x18; }
-int wmspiritplace_func08(void) { return 0x0; }
+int wmspiritplace_getObjectTypeId(void) { return 0x0; }
 void wmspiritplace_free(void) {}
 void wmspiritplace_release(void) {}
 void wmspiritplace_initialise(void) {}
@@ -1354,29 +1354,29 @@ void wmseqpoint_hitDetect(void) {}
 void wmseqpoint_release(void) {}
 void wmseqpoint_initialise(void) {}
 int wmsun_getExtraSize(void) { return 0x10; }
-int wmsun_func08(void) { return 0x0; }
+int wmsun_getObjectTypeId(void) { return 0x0; }
 void wmsun_hitDetect(void) {}
 void wmsun_release(void) {}
 void wmsun_initialise(void) {}
 int wmspiritset_getExtraSize(void) { return 0x2; }
-int wmspiritset_func08(void) { return 0x0; }
+int wmspiritset_getObjectTypeId(void) { return 0x0; }
 void wmspiritset_free(void) {}
 void wmspiritset_hitDetect(void) {}
 void wmspiritset_update(void) {}
 void wmspiritset_release(void) {}
 void wmspiritset_initialise(void) {}
 int wmplanets_getExtraSize(void) { return 0x1c; }
-int wmplanets_func08(void) { return 0x0; }
+int wmplanets_getObjectTypeId(void) { return 0x0; }
 void wmplanets_free(void) {}
 void wmplanets_hitDetect(void) {}
 void wmplanets_release(void) {}
 void wmplanets_initialise(void) {}
 int wmwallcrawler_getExtraSize(void) { return 0x29c; }
-int wmwallcrawler_func08(void) { return 0x0; }
+int wmwallcrawler_getObjectTypeId(void) { return 0x0; }
 void wmwallcrawler_release(void) {}
 void wmwallcrawler_initialise(void) {}
 int wmnewcrystal_getExtraSize(void) { return 0x6c; }
-int wmnewcrystal_func08(void) { return 0x0; }
+int wmnewcrystal_getObjectTypeId(void) { return 0x0; }
 void wmnewcrystal_free(void) {}
 void wmnewcrystal_hitDetect(void) {}
 void wmnewcrystal_update(void) {}

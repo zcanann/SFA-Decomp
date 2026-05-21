@@ -26,7 +26,7 @@
  * - slot 05: 0x801F73D0 wmsun_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F7340 wmsun_render ref=render
  * - slot 07: 0x801F7300 wmsun_free ref=free
- * - slot 08: 0x801F72F8 wmsun_func08 stub=const 0
+ * - slot 08: 0x801F72F8 wmsun_getObjectTypeId stub=const 0
  * - slot 09: 0x801F72F0 wmsun_getExtraSize stub=const 16 ref=getExtraSize (stub)
  *
  * Reference-only hints:

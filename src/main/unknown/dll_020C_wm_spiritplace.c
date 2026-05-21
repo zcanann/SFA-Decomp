@@ -15,7 +15,7 @@
 // - 5: wmspiritplace_hitDetect (0x801F5B0C)
 // - 6: wmspiritplace_render (0x801F5B00)
 // - 7: wmspiritplace_free (0x801F5AFC)
-// - 8: wmspiritplace_func08 (0x801F5AF4)
+// - 8: wmspiritplace_getObjectTypeId (0x801F5AF4)
 // - 9: wmspiritplace_getExtraSize (0x801F5AEC)
 //
 // Reference-only object parameter hints:

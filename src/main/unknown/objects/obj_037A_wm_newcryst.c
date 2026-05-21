@@ -58,7 +58,7 @@
  * - slot 05: 0x801F9784 wmnewcrystal_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F9760 wmnewcrystal_render ref=render
  * - slot 07: 0x801F975C wmnewcrystal_free stub=blr ref=free (stub)
- * - slot 08: 0x801F9754 wmnewcrystal_func08 stub=const 0
+ * - slot 08: 0x801F9754 wmnewcrystal_getObjectTypeId stub=const 0
  * - slot 09: 0x801F974C wmnewcrystal_getExtraSize stub=const 108 ref=getExtraSize (stub)
  */
 

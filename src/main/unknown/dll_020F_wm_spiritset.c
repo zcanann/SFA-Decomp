@@ -25,7 +25,7 @@
  * - slot 05: 0x801F7CEC wmspiritset_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F7C64 wmspiritset_render ref=render
  * - slot 07: 0x801F7C60 wmspiritset_free stub=blr ref=free (stub)
- * - slot 08: 0x801F7C58 wmspiritset_func08 stub=const 0
+ * - slot 08: 0x801F7C58 wmspiritset_getObjectTypeId stub=const 0
  * - slot 09: 0x801F7C50 wmspiritset_getExtraSize stub=const 2 ref=getExtraSize (stub)
  *
  * Reference-only hints:

@@ -465,7 +465,7 @@
  *   slot 05: 0x801F9784 wmnewcrystal_hitDetect
  *   slot 06: 0x801F9760 wmnewcrystal_render
  *   slot 07: 0x801F975C wmnewcrystal_free
- *   slot 08: 0x801F9754 wmnewcrystal_func08
+ *   slot 08: 0x801F9754 wmnewcrystal_getObjectTypeId
  *   slot 09: 0x801F974C wmnewcrystal_getExtraSize
  * - DLL 0x0262: gDrakorMissileObjDescriptor (slots=14, mask=11011111111111)
  *   slot 00: 0x80218B20 drakormissile_initialise

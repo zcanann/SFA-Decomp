@@ -1481,7 +1481,7 @@
  *   slot 05: 0x801F5424 firefly_hitDetect
  *   slot 06: 0x801F5420 firefly_render
  *   slot 07: 0x801F53D8 firefly_free
- *   slot 08: 0x801F53D0 firefly_func08
+ *   slot 08: 0x801F53D0 firefly_getObjectTypeId
  *   slot 09: 0x801F53C8 firefly_getExtraSize
  * - DLL 0x020C: gWM_spiritplaceObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F6548 wmspiritplace_initialise
@@ -1491,7 +1491,7 @@
  *   slot 05: 0x801F5B0C wmspiritplace_hitDetect
  *   slot 06: 0x801F5B00 wmspiritplace_render
  *   slot 07: 0x801F5AFC wmspiritplace_free
- *   slot 08: 0x801F5AF4 wmspiritplace_func08
+ *   slot 08: 0x801F5AF4 wmspiritplace_getObjectTypeId
  *   slot 09: 0x801F5AEC wmspiritplace_getExtraSize
  * - DLL 0x020D: gWM_seqpointObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F6E88 wmseqpoint_initialise
@@ -1511,7 +1511,7 @@
  *   slot 05: 0x801F73D0 wmsun_hitDetect
  *   slot 06: 0x801F7340 wmsun_render
  *   slot 07: 0x801F7300 wmsun_free
- *   slot 08: 0x801F72F8 wmsun_func08
+ *   slot 08: 0x801F72F8 wmsun_getObjectTypeId
  *   slot 09: 0x801F72F0 wmsun_getExtraSize
  * - DLL 0x020F: gWM_SpiritSetObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F7D30 wmspiritset_initialise
@@ -1521,7 +1521,7 @@
  *   slot 05: 0x801F7CEC wmspiritset_hitDetect
  *   slot 06: 0x801F7C64 wmspiritset_render
  *   slot 07: 0x801F7C60 wmspiritset_free
- *   slot 08: 0x801F7C58 wmspiritset_func08
+ *   slot 08: 0x801F7C58 wmspiritset_getObjectTypeId
  *   slot 09: 0x801F7C50 wmspiritset_getExtraSize
  * - DLL 0x0210: gWM_PlanetsObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F7FF0 wmplanets_initialise
@@ -1531,7 +1531,7 @@
  *   slot 05: 0x801F7D78 wmplanets_hitDetect
  *   slot 06: 0x801F7D48 wmplanets_render
  *   slot 07: 0x801F7D44 wmplanets_free
- *   slot 08: 0x801F7D3C wmplanets_func08
+ *   slot 08: 0x801F7D3C wmplanets_getObjectTypeId
  *   slot 09: 0x801F7D34 wmplanets_getExtraSize
  * - DLL 0x0211: gWM_WallCrawlerObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F9438 wmwallcrawler_initialise
@@ -1541,7 +1541,7 @@
  *   slot 05: 0x801F817C wmwallcrawler_hitDetect
  *   slot 06: 0x801F80EC wmwallcrawler_render
  *   slot 07: 0x801F80C8 wmwallcrawler_free
- *   slot 08: 0x801F80C0 wmwallcrawler_func08
+ *   slot 08: 0x801F80C0 wmwallcrawler_getObjectTypeId
  *   slot 09: 0x801F80B8 wmwallcrawler_getExtraSize
  * - DLL 0x0213: lbl_80328E28 (slots=1, mask=0)
  * - DLL 0x0216: gVFP_LevelControlObjDescriptor (slots=10, mask=1101111111)

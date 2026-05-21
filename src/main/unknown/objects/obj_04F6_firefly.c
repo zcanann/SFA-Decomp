@@ -57,7 +57,7 @@
  * - slot 05: 0x801F5424 firefly_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F5420 firefly_render stub=blr ref=render (stub)
  * - slot 07: 0x801F53D8 firefly_free ref=free
- * - slot 08: 0x801F53D0 firefly_func08 stub=const 0
+ * - slot 08: 0x801F53D0 firefly_getObjectTypeId stub=const 0
  * - slot 09: 0x801F53C8 firefly_getExtraSize stub=const 136 ref=getExtraSize (stub)
  */
 
