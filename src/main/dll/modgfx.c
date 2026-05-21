@@ -4815,9 +4815,10 @@ void fn_800A02DC(ModgfxState* state, f32* in)
 #pragma scheduling off
 void fn_800A0FD0(ModgfxState *state)
 {
-    ModgfxVertexData *dst = state->vertexBuffers[state->activeVertexBufferIndex];
-    ModgfxVertexData *src = state->baseVertexData;
     int i;
+    ModgfxVertexData *src;
+    ModgfxVertexData *dst = state->vertexBuffers[state->activeVertexBufferIndex];
+    src = state->baseVertexData;
     for (i = 0; i < state->vertexCount; i++) {
         dst->posX = src->posX;
         dst->posY = src->posY;
