@@ -62,6 +62,9 @@ extern f32 lbl_803E36E4;
 extern f32 lbl_803E36E8;
 extern f32 lbl_803E36EC;
 extern f32 lbl_803E36F0;
+extern f32 lbl_803E2A54;
+extern f32 lbl_803E2A60;
+extern f32 lbl_803E2A80;
 extern f32 lbl_803E36F4;
 extern f32 lbl_803E36F8;
 extern f32 lbl_803E3708;
@@ -680,28 +683,28 @@ void fn_80156010(uint param_9,int param_10)
   double dVar3;
   
   bVar1 = false;
-  *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - lbl_803DC074;
-  if ((double)*(float *)(param_10 + 0x324) <= (double)lbl_803E36F8) {
+  *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - timeDelta;
+  if (*(float *)(param_10 + 0x324) <= lbl_803E2A60) {
     bVar1 = true;
-    *(float *)(param_10 + 0x324) = lbl_803E36F8;
+    *(float *)(param_10 + 0x324) = lbl_803E2A60;
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
     sVar2 = *(short *)(param_9 + 0xa0);
     if (sVar2 == 4) {
       pollenFn_80155b10(param_9,param_10);
-      *(float *)(param_10 + 0x324) = lbl_803E3718;
-      fn_8014D08C(param_9,param_10,5,lbl_803E36EC,0,0);
+      *(float *)(param_10 + 0x324) = lbl_803E2A80;
+      fn_8014D08C(param_9,param_10,5,lbl_803E2A54,0,0);
     }
     else if ((sVar2 == 5) && (bVar1)) {
-      fn_8014D08C(param_9,param_10,6,lbl_803E36EC,0,0);
+      fn_8014D08C(param_9,param_10,6,lbl_803E2A54,0,0);
       Sfx_PlayFromObject(param_9,0x24c);
     }
     else if (sVar2 == 6) {
-      fn_8014D08C(param_9,param_10,2,lbl_803E36EC,0,0);
-      *(float *)(param_10 + 0x324) = lbl_803E3718;
+      fn_8014D08C(param_9,param_10,2,lbl_803E2A54,0,0);
+      *(float *)(param_10 + 0x324) = lbl_803E2A80;
     }
     else if (((sVar2 == 2) && (bVar1)) && ((*(uint *)(param_10 + 0x2dc) & 0x4000000) != 0)) {
-      fn_8014D08C(param_9,param_10,4,lbl_803E36EC,0,0);
+      fn_8014D08C(param_9,param_10,4,lbl_803E2A54,0,0);
       dVar3 = (double)Sfx_PlayFromObject(param_9,0x24b);
     }
   }
