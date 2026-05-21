@@ -1608,3 +1608,55 @@ void fn_801859D4(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_803DBDB0;
+extern u8 lbl_803DBDB4;
+extern u8 lbl_803DBDB8;
+
+#pragma scheduling off
+#pragma peephole off
+void scarab_init(int *obj, u8 *def) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    int *model;
+    state[0x24] = 0;
+    *(s16 *)((char *)state + 0x14) = *(s16 *)((char *)def + 0x1a);
+    *(s16 *)((char *)state + 0x16) = (s16)randomGetRange(0x3e8, 0xfa0);
+    *(s16 *)((char *)state + 0x1c) = (s16)randomGetRange(0x32, 0x64);
+    *(f32 *)((char *)state + 0xc) = *(f32 *)((char *)def + 0xc);
+    model = (int *)Obj_GetActiveModel(obj);
+    switch (*(s16 *)((char *)obj + 0x46)) {
+    case 0x3d3:
+        *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = (&lbl_803DBDB0)[randomGetRange(0, 2)];
+        *(s16 *)((char *)state + 0x1e) = 0x41;
+        *(s16 *)((char *)state + 0x20) = 4;
+        *(s16 *)((char *)state + 0x22) = 2;
+        state[0x27] = 0;
+        break;
+    case 0x3d4:
+        *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = (&lbl_803DBDB4)[randomGetRange(0, 1)];
+        *(s16 *)((char *)state + 0x1e) = 0x42;
+        *(s16 *)((char *)state + 0x20) = 1;
+        *(s16 *)((char *)state + 0x22) = 5;
+        state[0x27] = 1;
+        break;
+    case 0x3d5:
+        *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = (&lbl_803DBDB8)[randomGetRange(0, 3)];
+        *(s16 *)((char *)state + 0x1e) = 0x43;
+        *(s16 *)((char *)state + 0x20) = 2;
+        *(s16 *)((char *)state + 0x22) = 4;
+        state[0x27] = 2;
+        break;
+    case 0x3d7:
+        break;
+    default:
+        *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = 5;
+        *(s16 *)((char *)state + 0x1e) = 0x44;
+        *(s16 *)((char *)state + 0x20) = 6;
+        *(s16 *)((char *)state + 0x22) = 1;
+        state[0x27] = 3;
+        break;
+    }
+    ObjMsg_AllocQueue(obj, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
