@@ -2506,3 +2506,62 @@ void fn_80056BBC(int idx, int a, int b, int p4, int p5) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803DEBB4;
+extern s8 lbl_803DB624;
+extern int lbl_803DCE78;
+extern int* gMapEventInterface;
+extern f32 fastFloorf(f32 v);
+extern int mapCoordsToId(int x, int z, int layer);
+extern int getDataFileSize(int kind);
+extern void getTabEntry(int base, int kind, int offset, int size);
+
+#pragma scheduling off
+#pragma peephole off
+void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
+{
+    int layer;
+    int tabEntry;
+    int mapId;
+    int mapY;
+    s8* arr;
+
+    layer = 0;
+    arr = &lbl_803DB624;
+    if (arr[0] != mapType) {
+        layer = 1;
+        if (arr[1] != mapType) {
+            layer = 2;
+            if (arr[2] != mapType) {
+                layer = 3;
+                if (arr[3] != mapType) {
+                    layer = 4;
+                    if (arr[4] != mapType) {
+                        layer = 5;
+                    }
+                }
+            }
+        }
+    }
+    curMapLayer = 0;
+    mapY = (s32)fastFloorf(c / lbl_803DEBB4);
+    mapId = mapCoordsToId((s32)fastFloorf(a / lbl_803DEBB4), mapY, layer);
+    if (mapId < 0 || mapId >= (getDataFileSize(0x1f) >> 5)) {
+        lbl_803DCEA4 = 0;
+    } else {
+        tabEntry = lbl_803DCE78;
+        getTabEntry(tabEntry, 0x1f, mapId << 5, 0x20);
+        lbl_803DCEA4 = *(s8*)(tabEntry + 0x1c);
+    }
+    lbl_803DCEB4 = 0;
+    if (lbl_803DCEA4 == 1) {
+        lbl_803DCEB6 = (s16)mapId;
+        lbl_803DCEB4 = *(s16*)(tabEntry + 0x1e);
+    }
+    *outMapId = mapId;
+    if (mapId != -1) {
+        *outEvent = (s32)*(s8*)((*(int(**)(void))(*gMapEventInterface + 0x90))() + 0xe);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
