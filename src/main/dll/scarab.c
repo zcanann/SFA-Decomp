@@ -3695,3 +3695,80 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };
+
+extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32);
+extern f32 lbl_803E2EB0;
+extern f32 lbl_803E2EB4;
+extern f32 lbl_803E2EBC;
+extern f32 lbl_803E2EC0;
+extern f32 lbl_803E2EC4;
+extern f32 lbl_803E2EC8;
+extern f32 lbl_803E2ECC;
+
+/* fn_80161264: scarab AI proximity gate. If no current target, dispatches
+ * vtable[5](obj, state, 0) and returns 1. Else (unless state mode 6 means
+ * already engaged) reads the angle from the obj to the target; when within
+ * a +/-90° wedge the planar distance term is the constant lbl_803E2EB0,
+ * otherwise it's sqrtf(dx*dx + dz*dz) - lbl_803E2EB4. The signed magnitude
+ * drives three threshold checks against lbl_803E2EBC/EC0/EC4 that issue
+ * vtable[5] calls with mode 6 (close), 1 (medium-out), or 1 (close-in)
+ * depending on the current mode at state[0x274] and the latch byte at
+ * state[0x346]. When mode == 1, picks one of two scalars (lbl_803E2EC8 or
+ * lbl_803E2ECC) for state[0x2a0]. Returns 0. */
+#pragma scheduling off
+#pragma peephole off
+int fn_80161264(int* obj, u8* state) {
+    int* target;
+    f32 dx;
+    f32 dz;
+    f32 mag;
+    s16 mode;
+    f32 magAbs;
+
+    target = *(int**)(state + 0x2d0);
+    if (target == NULL) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        return 1;
+    }
+    mode = *(s16*)(state + 0x274);
+    if (mode == 6) return 0;
+    dx = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)target + 0xc);
+    dz = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)target + 0x14);
+    {
+        s16 ang = (s16)getAngle(dx, dz);
+        u16 rel = (u16)((s16)((s32)ang - (s32)*(s16*)obj));
+        if (rel > 0x4000 && rel < 0xc000) {
+            mag = lbl_803E2EB0;
+        } else {
+            mag = sqrtf(dx * dx + dz * dz) - lbl_803E2EB4;
+        }
+    }
+    magAbs = mag < lbl_803E2EB8 ? -mag : mag;
+    if (magAbs < lbl_803E2EBC) {
+        if (mode == 1 || (mode == 5 && (s8)state[0x346] != 0)) {
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 6);
+            goto post;
+        }
+    }
+    if (mode == 1) goto post;
+    if (mag > lbl_803E2EC0) {
+        if (mode != 4 && (mode != 5 || (s8)state[0x346] != 0)) {
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+        }
+    }
+    if (mag < lbl_803E2EC4) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+    }
+post:
+    if (*(s16*)(state + 0x274) == 1) {
+        if (mag > lbl_803E2EB8) {
+            *(f32*)(state + 0x2a0) = lbl_803E2EC8;
+        } else {
+            *(f32*)(state + 0x2a0) = lbl_803E2ECC;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
