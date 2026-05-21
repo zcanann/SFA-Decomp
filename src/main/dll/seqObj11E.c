@@ -180,6 +180,34 @@ void FUN_80152194(int param_1,int param_2)
 
 #pragma scheduling off
 #pragma peephole off
+void fn_80152440(int obj, int p, int p3, int msg)
+{
+  extern void Sfx_PlayFromObject(int obj, int sfx);
+  extern void fn_8014D08C(int obj, int p, int type, int move, u8 flag, f32 t);
+  extern f32 lbl_803E2810;
+  extern f32 lbl_803E2814;
+  int sub;
+  f32 fz;
+
+  sub = *(int *)(obj + 0x4c);
+  if (msg == 16) return;
+  if (msg == 17) return;
+  Sfx_PlayFromObject(obj, 35);
+  Sfx_PlayFromObject(obj, 795);
+  *(u32 *)(p + 0x2e8) |= 0x8;
+  *(f32 *)(p + 0x32c) = (f32)(u32)(u16)*(s16 *)(sub + 0x2c);
+  fn_8014D08C(obj, p, 1, 0, 0, lbl_803E2810);
+  *(u32 *)(p + 0x2e4) &= 0xffffffdf;
+  fz = lbl_803E2814;
+  *(f32 *)(obj + 0x2c) = lbl_803E2814;
+  *(f32 *)(obj + 0x28) = fz;
+  *(f32 *)(obj + 0x24) = fz;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 int fn_80152370(int obj, int p2)
 {
   extern void *Obj_GetPlayerObject(void);
