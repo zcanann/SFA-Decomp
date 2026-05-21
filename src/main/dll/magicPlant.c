@@ -831,3 +831,27 @@ void FUN_801544a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80153b00(param_9,param_10);
   return;
 }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80152FA8(int obj, int p2, int unused, int msgFlag)
+{
+  if (*(u8 *)(p2 + 0x33b) != 0) {
+    if (msgFlag == 16) {
+      *(u32 *)(p2 + 0x2e8) = *(u32 *)(p2 + 0x2e8) | 0x28;
+      Sfx_PlayFromObject(obj, 603);
+      *(s16 *)(p2 + 0x2b0) = 0;
+    }
+  } else if (msgFlag != 17) {
+    if (msgFlag == 16) {
+      *(u32 *)(p2 + 0x2e8) = *(u32 *)(p2 + 0x2e8) | 0x20;
+    } else {
+      *(u32 *)(p2 + 0x2e8) = *(u32 *)(p2 + 0x2e8) | 0x8;
+      Sfx_PlayFromObject(obj, 603);
+      *(s16 *)(p2 + 0x2b0) = 0;
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
