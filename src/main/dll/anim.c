@@ -4581,7 +4581,7 @@ void dbstealerworm_free(int *obj) {
     int *p40c = *(int**)(sub + 0x40c);
     ObjGroup_RemoveObject(obj, 3);
     Stack_Free((int*)p40c[9]);
-    if (*(int*)((char*)obj + 0xc8) != 0) {
+    if (*(void**)((char*)obj + 0xc8) != NULL) {
         Obj_FreeObject(*(int*)((char*)obj + 0xc8));
         *(int*)((char*)obj + 0xc8) = 0;
     }
