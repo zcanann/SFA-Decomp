@@ -91,3 +91,38 @@ void FUN_8011bfc8(int param_1,int param_2)
   }
   return;
 }
+
+extern int fn_8011C7B4(void);
+extern int fn_8011CA74(void);
+extern int languageMenuInit(void);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern int* gScreenTransitionInterface;
+extern u8 lbl_803DD704;
+extern u8 lbl_803DD705;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8011C51C(int p1, int p2)
+{
+    if (p1 == 1) {
+        switch (p2) {
+        case 0:
+            fn_8011CA74();
+            return 1;
+        case 2:
+            fn_8011C7B4();
+            return 1;
+        case 3:
+            languageMenuInit();
+            return 1;
+        }
+    } else if (p1 == 0) {
+        Sfx_PlayFromObject(0, 0x100);
+        (*(void(**)(int, int))(*gScreenTransitionInterface + 0x8))(0x14, 5);
+        lbl_803DD704 = 0x23;
+        lbl_803DD705 = 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
