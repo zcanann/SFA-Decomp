@@ -4556,13 +4556,14 @@ extern void objRemoveFromListFn_8002ce88(int *obj);
 #pragma peephole off
 void dbholecontrol1_update(int *obj) {
     extern int *gObjectTriggerInterface;
+    extern uint GameBit_Get(int);
     u8 *def;
     def = *(u8**)((char*)obj + 0x4c);
     if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
         objRemoveFromListFn_8002ce88(obj);
         *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
     } else if (GameBit_Get(*(s16*)(def + 0x20)) != 0) {
-        ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])((s8)def[0x19], obj, -1);
+        ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])(*(s8*)(def + 0x19), obj, -1);
     }
 }
 #pragma peephole reset
