@@ -348,7 +348,7 @@ extern void objRenderFn_80041018(int *obj);
 #pragma peephole off
 void dll_FC_hitDetect(int *obj) {
     int *state = (int *)obj[0x50/4];
-    if ((state[0x44/4] & 1) == 0) return;
+    if (((u32)state[0x44/4] & 1u) == 0u) return;
     if (*(void**)((char*)obj + 0x74) == NULL) return;
     objRenderFn_80041018(obj);
 }
