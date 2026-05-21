@@ -471,6 +471,26 @@ void dimcannon_initialise(void) {}
 void dimlavasmash_free(void) {}
 void dimlavasmash_hitDetect(void) {}
 
+#pragma scheduling off
+#pragma peephole off
+void dimlavasmash_update(int *obj) {
+    extern int *gObjectTriggerInterface;
+    u8 *sub;
+    int *p;
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (sub[2] == 1) {
+        p = *(int**)((char*)obj + 0x54);
+        *(s16*)((char*)p + 0x60) = (s16)(*(s16*)((char*)p + 0x60) & ~1);
+    } else if (*(int*)((char*)obj + 0xf4) == 0) {
+        if ((s8)sub[0] != -1) {
+            ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])((s8)sub[0], obj, -1);
+        }
+        *(int*)((char*)obj + 0xf4) = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int dimlavasmash_getExtraSize(void) { return 0x3; }
 int dimlavasmash_getObjectTypeId(void) { return 0x0; }
