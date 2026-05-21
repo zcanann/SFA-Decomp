@@ -64,6 +64,9 @@ extern f32 lbl_803E36EC;
 extern f32 lbl_803E36F0;
 extern f32 lbl_803E2A54;
 extern f32 lbl_803E2A60;
+extern f32 lbl_803E2A70;
+extern f32 lbl_803E2A74;
+extern f32 lbl_803E2A78;
 extern f32 lbl_803E2A80;
 extern f32 lbl_803E36F4;
 extern f32 lbl_803E36F8;
@@ -565,7 +568,7 @@ void timeOfDayFn_80155cf8(int param_9,int param_10)
   float local_18 [4];
 
   (*(code *)(*(int *)gSHthorntailAnimationInterface + 0x14))(local_18);
-  if ((local_18[0] >= lbl_803E3708) && (local_18[0] <= lbl_803E370C)) {
+  if ((local_18[0] >= lbl_803E2A70) && (local_18[0] <= lbl_803E2A74)) {
     bVar1 = 1;
   }
   else {
@@ -574,12 +577,12 @@ void timeOfDayFn_80155cf8(int param_9,int param_10)
   if ((bVar1 != 0) && (*(byte *)(param_10 + 0x33a) == 0)) {
     *(undefined *)(param_10 + 0x33a) = 1;
     *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) | 0x10000;
-    fn_8014D08C(param_9,param_10,1,lbl_803E3710,0,0);
+    fn_8014D08C(param_9,param_10,1,lbl_803E2A78,0,0);
   }
   else if ((bVar1 == 0) && (*(byte *)(param_10 + 0x33a) == 2)) {
     *(undefined *)(param_10 + 0x33a) = 1;
     *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) | 0x10000;
-    fn_8014D08C(param_9,param_10,3,lbl_803E3710,0,0);
+    fn_8014D08C(param_9,param_10,3,lbl_803E2A78,0,0);
   }
   return;
 }
