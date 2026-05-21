@@ -57,7 +57,7 @@
  * - slot 05: 0x802086C4 dfptargetblock_hitDetect ref=hitDetect
  * - slot 06: 0x80208674 dfptargetblock_render ref=render
  * - slot 07: 0x80208670 dfptargetblock_free stub=blr ref=free (stub)
- * - slot 08: 0x80208668 dfptargetblock_func08 stub=const 0
+ * - slot 08: 0x80208668 dfptargetblock_getObjectTypeId stub=const 0
  * - slot 09: 0x80208660 dfptargetblock_getExtraSize stub=const 108 ref=getExtraSize (stub)
  */
 

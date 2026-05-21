@@ -107,7 +107,7 @@ int dfptargetblock_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: dfptargetblock_func08
+ * Function: dfptargetblock_getObjectTypeId
  * EN v1.0 Address: 0x80208668
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80208754
@@ -117,7 +117,7 @@ int dfptargetblock_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfptargetblock_func08(void)
+int dfptargetblock_getObjectTypeId(void)
 {
   return 0;
 }

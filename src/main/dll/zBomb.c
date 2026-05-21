@@ -191,7 +191,7 @@ ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
         (ObjectDescriptorCallback)dfptargetblock_hitDetect,
         (ObjectDescriptorCallback)dfptargetblock_render,
         (ObjectDescriptorCallback)dfptargetblock_free,
-        (ObjectDescriptorCallback)dfptargetblock_func08,
+        (ObjectDescriptorCallback)dfptargetblock_getObjectTypeId,
         dfptargetblock_getExtraSize,
     },
     0,

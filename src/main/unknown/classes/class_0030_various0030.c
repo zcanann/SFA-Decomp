@@ -1786,7 +1786,7 @@
  *   slot 05: 0x802086C4 dfptargetblock_hitDetect
  *   slot 06: 0x80208674 dfptargetblock_render
  *   slot 07: 0x80208670 dfptargetblock_free
- *   slot 08: 0x80208668 dfptargetblock_func08
+ *   slot 08: 0x80208668 dfptargetblock_getObjectTypeId
  *   slot 09: 0x80208660 dfptargetblock_getExtraSize
  * - DLL 0x0236: gLaserUnsupportedObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802090A4 laser_initialiseUnsupported

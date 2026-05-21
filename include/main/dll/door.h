@@ -23,7 +23,7 @@ typedef struct DfpTargetBlockCollisionPoints {
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
                                            DfpTargetBlockCollisionPoints *collisionPoints);
 int dfptargetblock_getExtraSize(void);
-int dfptargetblock_func08(void);
+int dfptargetblock_getObjectTypeId(void);
 void dfptargetblock_free(void);
 void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
