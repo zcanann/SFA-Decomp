@@ -333,15 +333,18 @@ void gpsh_scene_init(int *obj, int *def) {
     *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
 }
 void gpsh_objcreator_init(int *obj, int *def) {
-    int *state = *(int **)((char *)obj + 0xb8);
-    int zero = 0;
+    register u32 zero;
+    register int *state;
+    register u32 b;
+    state = *(int **)((char *)obj + 0xb8);
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x1e) << 8);
+    zero = 0;
     *(int *)((char *)obj + 0xf8) = zero;
     *(u8 *)((char *)state + 4) = (u8)*(s16 *)((char *)def + 0x1a);
-    {
-        u8 v = *(u8 *)((char *)state + 5);
-        v = (u8)((v & ~0x80) | ((zero & 1) << 7));
-        *(u8 *)((char *)state + 5) = v;
+    asm {
+        lbz b, 5(state)
+        rlwimi b, zero, 7, 24, 24
+        stb b, 5(state)
     }
     *(u8 *)((char *)obj + 0x37) = 0xff;
     *(u8 *)((char *)obj + 0x36) = 0xff;
