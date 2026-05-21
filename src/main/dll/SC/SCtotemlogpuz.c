@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
-extern int GameBit_Get(int bit);
+extern uint GameBit_Get(int bit);
 extern int GameBit_Set(int bit, int value);
 extern int mapUnload(int id, int flags);
 extern int Music_Trigger(int id, int value);
