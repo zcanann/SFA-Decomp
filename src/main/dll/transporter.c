@@ -1738,6 +1738,29 @@ extern void mathFn_80021ac8(void *in, void *out);
 
 #pragma scheduling off
 #pragma peephole off
+void WarpPoint_init(int *obj, u8 *def) {
+    s16 *state = *(s16 **)((char *)obj + 0xb8);
+    *(void **)((char *)obj + 0xbc) = (void *)fn_80176FC4;
+    *(s16 *)obj = (s16)((u32)def[0x18] << 8);
+    state[0] = 0x1e;
+    *(f32 *)((char *)state + 8) = (f32)((s32)*(s8 *)((char *)def + 0x1e) << 2);
+    state[1] = *(s16 *)((char *)def + 0x20);
+    state[2] = (s16)(s32)*(s8 *)((char *)def + 0x1b);
+    if (*(s8 *)((char *)def + 0x1c) != 0) {
+        *(u8 *)((char *)state + 0xc) = 0;
+    } else {
+        *(u8 *)((char *)state + 0xc) = 1;
+    }
+    if (*(s8 *)((char *)def + 0x1d) == 2) {
+        state[0] = 0;
+    }
+    if (*(int *)((char *)def + 0x14) == 0x4B675 || *(int *)((char *)def + 0x14) == 0x46882) {
+        *(u8 *)((char *)def + 0x1f) = 1;
+    } else {
+        *(u8 *)((char *)def + 0x1f) = 0;
+    }
+}
+
 void iceblast_update(int *obj) {
     int *path;
     int *def;
