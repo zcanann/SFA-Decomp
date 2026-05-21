@@ -2952,6 +2952,7 @@ int fn_80144E40(int *obj, int *p) {
 #pragma scheduling reset
 
 /* trickyFn_80144f50: 648b - update Tricky's water/out-of-water probe and animation. */
+#pragma peephole off
 #pragma scheduling off
 void trickyFn_80144f50(int obj, int state) {
     int sfxState;
@@ -3011,6 +3012,7 @@ void trickyFn_80144f50(int obj, int state) {
     }
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 
 /* frozenEnemyFn_80149bb4: 312b - flag bits to byte field. */
