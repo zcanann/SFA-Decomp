@@ -3552,18 +3552,14 @@ f32 dll_19_func1A(int obj)
 {
   int p_b8 = *(int *)(obj + 0xb8);
   int p_4c = *(int *)(obj + 0x4c);
-  s8 numer;
-  u8 denom;
-  f32 result;
-
-  numer = *(s8 *)(p_b8 + 0x354);
-  denom = *(u8 *)(p_4c + 0x32);
-  if (denom != 0 && numer != 0) {
-    result = (f32)numer / (f32)denom;
-  } else {
-    result = lbl_803E1C2C;
+  u8 denom = *(u8 *)(p_4c + 0x32);
+  if (denom != 0) {
+    s8 numer = *(s8 *)(p_b8 + 0x354);
+    if (numer != 0) {
+      return (f32)numer / (f32)denom;
+    }
   }
-  return result;
+  return lbl_803E1C2C;
 }
 #pragma peephole reset
 #pragma scheduling reset
