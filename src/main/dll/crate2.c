@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/crate2.h"
+#include "main/dll/sfxplayer.h"
 
 extern undefined8 FUN_80006824();
 extern byte FUN_80006b44();
@@ -15,7 +16,6 @@ extern int ObjHits_GetPriorityHit();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
-extern int gSfxplayerEffectHandles[8];
 extern undefined4* DAT_803dd72c;
 extern undefined4 sfxplayer_updateEffectHandlePositions();
 extern f32 timeDelta;

@@ -5,7 +5,6 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b4c();
 extern undefined4 FUN_80017ac8();
 extern void GameBit_Set(int eventId,int value);
-extern int gSfxplayerEffectHandles[8];
 
 #define SFXPLAYER_EVENT_ACTIVATE 1
 #define SFXPLAYER_EVENT_DEACTIVATE 2

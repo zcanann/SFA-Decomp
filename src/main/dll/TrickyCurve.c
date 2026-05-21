@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/TrickyCurve.h"
+#include "main/dll/sfxplayer.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
@@ -17,7 +18,6 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80294c40();
 extern int FUN_80294d6c();
 
-extern int gSfxplayerEffectHandles[8];
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd72c;
