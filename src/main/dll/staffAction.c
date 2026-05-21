@@ -1007,9 +1007,9 @@ extern void Vec3_Cross(f32 *a, f32 *b, f32 *out);
 #pragma scheduling off
 #pragma peephole off
 void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
-    f32 fwd[3];
-    f32 upRecomputed[3];
     f32 rt[3];
+    f32 upRecomputed[3];
+    f32 fwd[3];
     fwd[0] = forward[0]; fwd[1] = forward[1]; fwd[2] = forward[2];
     Vec3_Normalize(fwd);
     Vec3_Cross(up, fwd, rt);
