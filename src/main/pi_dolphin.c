@@ -5364,5 +5364,18 @@ void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e) {
 }
 
 void *Shader_getLayer(char *base, int idx) { return base + idx * 8 + 0x24; }
+
+extern u8 lbl_803DCCB0;
+extern void gxPerfFn_8004a77c(int);
+void gxTransformFn_8004a83c(void) {
+    lbl_803DCCB0 = 0;
+    gxPerfFn_8004a77c(0);
+}
+
+extern void *mmAlloc(int size, int align, int zone);
+extern void *lbl_803DCD10;
+void allocSomething32bytes(void) {
+    lbl_803DCD10 = mmAlloc(0x20, 0xff, 0);
+}
 #pragma peephole reset
 #pragma scheduling reset

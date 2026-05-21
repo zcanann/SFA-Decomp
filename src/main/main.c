@@ -1351,11 +1351,14 @@ void fn_801FE31C(int obj, u8 *state) {
     if (state[0x118] == 5) {
         ObjGroup_AddObject(obj, 36);
     }
-    *(f32 *)(obj + 0x24) = lbl_803E61C8;
-    *(f32 *)(obj + 0x28) = lbl_803E61C8;
-    *(f32 *)(obj + 0x2c) = lbl_803E61C8;
-    *(int *)(obj + 0xf8) = 0;
-    *(f32 *)state = lbl_803E61C8;
+    {
+        f32 fz = lbl_803E61C8;
+        *(f32 *)(obj + 0x24) = fz;
+        *(f32 *)(obj + 0x28) = fz;
+        *(f32 *)(obj + 0x2c) = fz;
+        *(int *)(obj + 0xf8) = 0;
+        *(f32 *)state = fz;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

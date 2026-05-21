@@ -408,11 +408,10 @@ void dbsh_symbol_free(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dbsh_symbol_render(undefined4 param_1)
-{
-  (**(code **)(*DAT_803dd6fc + 0x18))();
-  (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
-  return;
+extern f32 lbl_803E5104;
+extern void objRenderFn_8003b8f4(f32);
+void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
+    objRenderFn_8003b8f4(lbl_803E5104);
 }
 
 /*
