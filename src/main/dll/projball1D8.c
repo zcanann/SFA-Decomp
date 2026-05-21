@@ -226,7 +226,7 @@ int EdibleMushroom_SeqFn(int *obj) {
 }
 #pragma scheduling reset
 
-extern int GameBit_Get(int id);
+extern uint GameBit_Get(int id);
 
 #pragma scheduling off
 #pragma peephole off
