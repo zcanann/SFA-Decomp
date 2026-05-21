@@ -548,9 +548,7 @@ void kaldachom_update(int param_1)
         *(float *)(iVar8 + 0x34) = *(float *)(iVar8 + 0x34) - timeDelta;
         if (*(float *)(iVar8 + 0x34) <= lbl_803E3060) {
           Sfx_PlayFromObject(param_1,0x271);
-          uVar2 = randomGetRange(300,600);
-          *(float *)(iVar8 + 0x34) =
-               (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803E3070);
+          *(float *)(iVar8 + 0x34) = (f32)(int)randomGetRange(300,600);
         }
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
@@ -652,11 +650,9 @@ void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3)
   *(undefined4 *)(iVar6 + 0x2d0) = uVar4;
   *(undefined *)(iVar6 + 0x25f) = 0;
   ObjHits_DisableObject(iVar2);
-  uVar3 = randomGetRange(300,600);
-  puVar5[0xd] = (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803E3070);
-  uVar3 = randomGetRange(0,499);
+  puVar5[0xd] = (f32)(int)randomGetRange(300,600);
   dVar1 = DOUBLE_803E3070;
-  puVar5[0xe] = (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803E3070);
+  puVar5[0xe] = (f32)(int)randomGetRange(0,499);
   puVar5[0xf] = lbl_803E3060;
   *puVar5 = 0;
   *(ushort *)(iVar2 + 0xb0) = *(ushort *)(iVar2 + 0xb0) | 0x2000;
