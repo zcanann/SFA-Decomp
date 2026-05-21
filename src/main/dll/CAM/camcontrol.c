@@ -52,7 +52,6 @@ extern s32 gCamcontrolQueuedActionId;
 extern CamcontrolHandlerEntry *gCamcontrolCurrentHandler;
 extern u8 gCamcontrolHandlerCount;
 extern short* gCamcontrolState;
-extern char sCamcontrolTriggeredCamActionLoadWarning[];
 extern f64 DOUBLE_803e22d0;
 extern f32 lbl_803DC074;
 extern f32 gCamcontrolSavedFocusWorldZ;

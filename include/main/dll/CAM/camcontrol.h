@@ -57,6 +57,8 @@ typedef struct CamcontrolHandlerEntry {
 #define CAMCONTROL_DEFAULT_BLEND_FRAMES 0x78
 #define CAMCONTROL_QUEUE_SENTINEL 0xFF
 
+extern char sCamcontrolTriggeredCamActionLoadWarning[];
+
 void camcontrol_updateTargetFeedback(void);
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
                                     float *outZ,float *outDistanceXZ,int useWorldPosition);
