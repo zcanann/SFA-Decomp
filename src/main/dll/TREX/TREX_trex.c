@@ -1940,7 +1940,22 @@ void SB_SeqDoor_init(int* obj, int* def)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_SeqDoor_update(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_SeqDoor_update(int *obj)
+{
+    if (*(s16 *)((char *)obj + 0x46) == 371) {
+        if (*(int *)((char *)obj + 0xf4) == 0) {
+            if (GameBit_Get(2635) != 0) {
+                ((void (*)(int, int *, int))((void **)*gObjectTriggerInterface)[18])(0, obj, -1);
+                *(int *)((char *)obj + 0xf4) = 1;
+            }
+        }
+    }
+    *(u8 *)((char *)obj + 0xaf) |= 0x10;
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern f32 lbl_803E59C0;
 
 #pragma scheduling off
