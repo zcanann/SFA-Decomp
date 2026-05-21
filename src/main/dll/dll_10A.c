@@ -492,3 +492,42 @@ void FUN_80154cc8(uint param_1,int param_2,undefined4 param_3,int param_4)
   }
   return;
 }
+
+extern f32 lbl_803E2978;
+extern f32 lbl_803E297C;
+extern f32 lbl_803E2954;
+extern f32 lbl_803E2980;
+extern f32 lbl_803E2984;
+extern f32 lbl_803E2988;
+extern f32 lbl_803E294C;
+extern f32 lbl_803E298C;
+extern f32 lbl_803E2958;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801542AC(int unused, u8* state) {
+    f32 fz;
+    f32 fc;
+    *(f32*)((char*)state + 684) = lbl_803E2978;
+    *(int*)((char*)state + 740) = 173;
+    *(f32*)((char*)state + 776) = lbl_803E297C;
+    *(f32*)((char*)state + 768) = lbl_803E2954;
+    *(f32*)((char*)state + 772) = lbl_803E2980;
+    state[800] = 0;
+    fz = lbl_803E2984;
+    *(f32*)((char*)state + 788) = fz;
+    state[801] = 7;
+    *(f32*)((char*)state + 792) = lbl_803E2988;
+    state[802] = 0;
+    *(f32*)((char*)state + 796) = fz;
+    fc = lbl_803E294C;
+    *(f32*)((char*)state + 804) = fc;
+    *(f32*)((char*)state + 808) = fc;
+    *(f32*)((char*)state + 812) = fc;
+    state[826] = 0;
+    state[827] = 0;
+    *(f32*)((char*)state + 816) = lbl_803E298C;
+    *(f32*)((char*)state + 764) = lbl_803E2958;
+}
+#pragma peephole reset
+#pragma scheduling reset
