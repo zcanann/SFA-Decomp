@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/dll_62.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,float *outX,float *outY,float *outZ,int obj);
 extern uint getAngle();
 extern undefined4 camcontrol_traceMove();

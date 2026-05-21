@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camcannon.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern f32 fn_80010C50(f32 param_1, float *param_2, float *param_3);
 extern f32 curveFn_80010dc0(f32 param_1, float *param_2, float *param_3);
 extern undefined4 FUN_80017814();

@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/LGT/LGTpointlight.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern int objCreateLight();
 extern void modelLightStruct_setField50();
 extern void lightVecFn_8001dd88();

@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRcradle.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();

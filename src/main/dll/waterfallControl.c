@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/waterfallControl.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_800632d8();

@@ -2,6 +2,9 @@
 #include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/DFbarrelanim.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 typedef struct DFropenodeExtra {
   void *linkedObj;
   f32 minX;

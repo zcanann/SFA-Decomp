@@ -4,6 +4,9 @@
 #include "main/objhits.h"
 #include "main/objlib.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 typedef struct ObjLibRegionList ObjLibRegionList;
 
 extern s16 getAngle(f32 deltaX, f32 deltaZ);

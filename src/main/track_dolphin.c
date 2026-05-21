@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/track_dolphin.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 ABS();
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800068ec();

@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/cannonball.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern bool Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern double getXZDistance(float *a, float *b);
 extern u32 randomGetRange(int min, int max);
