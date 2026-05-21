@@ -4158,6 +4158,18 @@ void fn_80069968(s32 *out1, u32 *out2) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern u8 lbl_803DCF4F;
+extern u8 lbl_803DCF4D;
+#pragma scheduling off
+#pragma peephole off
+int fn_80065640(void) {
+    int r = 0;
+    if ((s8)lbl_803DCF4E != 0 || (s8)lbl_803DCF4F != 0 || lbl_803DCF4D != 0) r = 1;
+    return r;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern int lbl_803DCF48;
 #pragma scheduling off
 #pragma peephole off
