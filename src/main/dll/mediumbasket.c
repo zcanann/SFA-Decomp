@@ -1928,6 +1928,20 @@ s16 dll_CA_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x2
 
 extern f32 lbl_803E2CD8;
 extern f32 timeDelta;
+extern int* gPlayerInterface;
+
+int fn_8015B748(int* obj, u8* state) {
+    int* sub = *(int**)((char*)obj + 0xb8);
+    if ((s8)state[852] < 1) return 3;
+    if ((s8)state[838] == 0) return 0;
+    if (*(s16*)((char*)state + 628) != 12) return 8;
+    if (*(u8*)((char*)sub + 1030) > 50) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+    } else {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+    }
+    return 0;
+}
 
 #pragma scheduling off
 #pragma peephole off
