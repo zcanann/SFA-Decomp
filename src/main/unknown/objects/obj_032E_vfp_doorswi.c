@@ -57,7 +57,7 @@
  * - slot 05: 0x801FC558 vfpdoorswitch_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801FC534 vfpdoorswitch_render ref=render
  * - slot 07: 0x801FC504 vfpdoorswitch_free ref=free
- * - slot 08: 0x801FC4FC vfpdoorswitch_func08 stub=const 0
+ * - slot 08: 0x801FC4FC vfpdoorswitch_getObjectTypeId stub=const 0
  * - slot 09: 0x801FC4F4 vfpdoorswitch_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

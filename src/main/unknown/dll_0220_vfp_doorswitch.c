@@ -16,5 +16,5 @@
 // - 5: vfpdoorswitch_hitDetect (0x801FC558)
 // - 6: vfpdoorswitch_render (0x801FC534)
 // - 7: vfpdoorswitch_free (0x801FC504)
-// - 8: vfpdoorswitch_func08 (0x801FC4FC)
+// - 8: vfpdoorswitch_getObjectTypeId (0x801FC4FC)
 // - 9: vfpdoorswitch_getExtraSize (0x801FC4F4)

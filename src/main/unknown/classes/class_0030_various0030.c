@@ -1602,7 +1602,7 @@
  *   slot 05: 0x801FBDE4 vfpplatform_hitDetect
  *   slot 06: 0x801FBDA4 vfpplatform_render
  *   slot 07: 0x801FBD74 vfpplatform_free
- *   slot 08: 0x801FBD6C vfpplatform_func08
+ *   slot 08: 0x801FBD6C vfpplatform_getObjectTypeId
  *   slot 09: 0x801FBD64 vfpplatform_getExtraSize
  * - DLL 0x0220: gVFP_DoorSwitchObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FC6F0 vfpdoorswitch_initialise
@@ -1612,7 +1612,7 @@
  *   slot 05: 0x801FC558 vfpdoorswitch_hitDetect
  *   slot 06: 0x801FC534 vfpdoorswitch_render
  *   slot 07: 0x801FC504 vfpdoorswitch_free
- *   slot 08: 0x801FC4FC vfpdoorswitch_func08
+ *   slot 08: 0x801FC4FC vfpdoorswitch_getObjectTypeId
  *   slot 09: 0x801FC4F4 vfpdoorswitch_getExtraSize
  * - DLL 0x0221: gSeqPointObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FCCE4 seqpoint_initialise
@@ -1622,7 +1622,7 @@
  *   slot 05: 0x801FC9A8 seqpoint_hitDetect
  *   slot 06: 0x801FC978 seqpoint_render
  *   slot 07: 0x801FC974 seqpoint_free
- *   slot 08: 0x801FC96C seqpoint_func08
+ *   slot 08: 0x801FC96C seqpoint_getObjectTypeId
  *   slot 09: 0x801FC964 seqpoint_getExtraSize
  * - DLL 0x0222: gVFPDragHeadObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FD138 vfpdraghead_initialise
@@ -1632,7 +1632,7 @@
  *   slot 05: 0x801FCD68 vfpdraghead_hitDetect
  *   slot 06: 0x801FCD64 vfpdraghead_render
  *   slot 07: 0x801FCCF8 vfpdraghead_free
- *   slot 08: 0x801FCCF0 vfpdraghead_func08
+ *   slot 08: 0x801FCCF0 vfpdraghead_getObjectTypeId
  *   slot 09: 0x801FCCE8 vfpdraghead_getExtraSize
  * - DLL 0x0223: gVFP_coreplatObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FD26C vfpcoreplat_initialise
@@ -1642,7 +1642,7 @@
  *   slot 05: 0x801FD1A8 vfpcoreplat_hitDetect
  *   slot 06: 0x801FD184 vfpcoreplat_render
  *   slot 07: 0x801FD154 vfpcoreplat_free
- *   slot 08: 0x801FD14C vfpcoreplat_func08
+ *   slot 08: 0x801FD14C vfpcoreplat_getObjectTypeId
  *   slot 09: 0x801FD144 vfpcoreplat_getExtraSize
  * - DLL 0x0225: gVFP_flamepointObjDescriptor (slots=10, mask=0001100001)
  *   slot 03: 0x801FD66C vfpflamepoint_init

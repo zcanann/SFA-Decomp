@@ -62,7 +62,7 @@
  * - slot 05: 0x801FC9A8 seqpoint_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801FC978 seqpoint_render ref=render
  * - slot 07: 0x801FC974 seqpoint_free stub=blr ref=free (stub)
- * - slot 08: 0x801FC96C seqpoint_func08 stub=const 0
+ * - slot 08: 0x801FC96C seqpoint_getObjectTypeId stub=const 0
  * - slot 09: 0x801FC964 seqpoint_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 

@@ -15,7 +15,7 @@
 // - 5: seqpoint_hitDetect (0x801FC9A8)
 // - 6: seqpoint_render (0x801FC978)
 // - 7: seqpoint_free (0x801FC974)
-// - 8: seqpoint_func08 (0x801FC96C)
+// - 8: seqpoint_getObjectTypeId (0x801FC96C)
 // - 9: seqpoint_getExtraSize (0x801FC964)
 //
 // Reference-only object parameter hints:

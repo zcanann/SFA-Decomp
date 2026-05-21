@@ -1007,16 +1007,16 @@ void dll_224_free_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int vfpplatform_getExtraSize(void) { return 0x6; }
-int vfpplatform_func08(void) { return 0x0; }
+int vfpplatform_getObjectTypeId(void) { return 0x0; }
 int vfpdoorswitch_getExtraSize(void) { return 0x4; }
-int vfpdoorswitch_func08(void) { return 0x0; }
+int vfpdoorswitch_getObjectTypeId(void) { return 0x0; }
 int seqpoint_getExtraSize(void) { return 0x10; }
-int seqpoint_func08(void) { return 0x0; }
+int seqpoint_getObjectTypeId(void) { return 0x0; }
 int vfpdraghead_getExtraSize(void) { return 0xc; }
-int vfpdraghead_func08(void) { return 0x0; }
+int vfpdraghead_getObjectTypeId(void) { return 0x0; }
 int return0_801FD13C(void) { return 0x0; }
 int vfpcoreplat_getExtraSize(void) { return 0x4; }
-int vfpcoreplat_func08(void) { return 0x0; }
+int vfpcoreplat_getObjectTypeId(void) { return 0x0; }
 int dll_224_getExtraSize_ret_6(void) { return 0x6; }
 int dll_224_func08_ret_0(void) { return 0x0; }
 
