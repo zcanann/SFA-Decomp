@@ -815,10 +815,10 @@ struct WCPartfxArgs {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801EEB50(int obj, u8 *state) {
+void fn_801EEB50(int obj, u8 *state) {
     int hitObj;
-    struct WCPartfxArgs args;
     f32 pos[3];
+    struct WCPartfxArgs args;
     int i;
 
     if (ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &pos[0], &pos[1], &pos[2]) != 0) {
@@ -847,7 +847,6 @@ int fn_801EEB50(int obj, u8 *state) {
             }
         }
     }
-    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -985,7 +984,7 @@ void SB_CloudRunner_update(int obj)
     setAButtonIcon(6);
     *(int *)(state + 0x70) = (int)(s8)padGetStickX(0);
     *(int *)(state + 0x74) = (int)(s8)padGetStickY(0);
-    if (*(int *)(state + 0x10) == 0) {
+    if (*(void **)(state + 0x10) == NULL) {
         int count;
         int *objs = (int *)ObjGroup_GetObjects(3, &count);
         int i;
