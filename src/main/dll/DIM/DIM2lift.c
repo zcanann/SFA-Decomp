@@ -1096,8 +1096,9 @@ int fn_801BA4B8(int obj, int p2)
     ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xE0000, obj, 0);
     GameBit_Set(*(s16 *)(sub + 0x3f4), 0);
     GameBit_Set(*(s16 *)(sub + 0x3f2), 1);
-    if (*(int *)(obj + 0x4c) == 0) {
+    if (*(void **)(obj + 0x4c) == NULL) {
       Obj_FreeObject(obj);
+      return 0;
     }
   }
   return 0;
