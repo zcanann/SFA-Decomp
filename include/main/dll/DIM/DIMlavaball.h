@@ -88,7 +88,7 @@ void mmp_moonrock_initialise(void);
 int mmp_trenchfx_getExtraSize(void);
 int mmp_trenchfx_func08(void);
 void mmp_trenchfx_free(int obj);
-void mmp_trenchfx_render(void);
+void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_trenchfx_hitDetect(void);
 void mmp_trenchfx_update(void);
 void mmp_trenchfx_init(int obj, int data);

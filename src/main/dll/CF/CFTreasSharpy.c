@@ -440,3 +440,7 @@ int fxemit_func08(void)
 void fxemit_hitDetect(void)
 {
 }
+
+#pragma peephole off
+void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+#pragma peephole reset

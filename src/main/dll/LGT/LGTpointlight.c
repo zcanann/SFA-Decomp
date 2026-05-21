@@ -187,3 +187,7 @@ void wmworm_hitDetect(void) {}
 /* 8b "li r3, N; blr" returners. */
 int wmworm_getExtraSize(void) { return 0x1c; }
 int wmworm_func08(void) { return 0x0; }
+
+#pragma peephole off
+void wmworm_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+#pragma peephole reset

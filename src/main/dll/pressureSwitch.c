@@ -723,13 +723,18 @@ int swarmbaddie_func08(void) { return 0x9; }
 int wispbaddie_getExtraSize(void) { return 0x2c; }
 int wispbaddie_func08(void) { return 0x9; }
 
+#pragma peephole off
+void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+#pragma peephole reset
+
 extern void hagabon_free(int obj);
 extern void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void hagabon_hitDetect(int obj);
 extern void hagabon_update(void);
 extern void hagabon_init(int obj, int data, int skip_alloc);
 extern void swarmbaddie_free(int obj);
-extern void swarmbaddie_render(void);
+extern void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void swarmbaddie_update(void);
 extern void swarmbaddie_init(int obj, int data, int skip_alloc);
 
