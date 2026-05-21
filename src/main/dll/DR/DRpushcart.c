@@ -833,7 +833,7 @@ void FUN_801e85b8(int param_1)
 void FUN_801e8658(int param_1)
 {
   char in_r8;
-  
+
   if (in_r8 != '\0') {
     if (*(short *)(param_1 + 0x46) == 0x468) {
       FUN_801e8300();
@@ -844,6 +844,63 @@ void FUN_801e8658(int param_1)
   }
   return;
 }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801E86F4(int obj, int p2, int p3)
+{
+  extern void fn_801E8660(void);
+  extern void ObjAnim_AdvanceCurrentMove(int obj, int x, f32 a, f32 b);
+  extern void fn_801F4D54(int obj, int sub);
+  extern void fn_801F4ECC(int obj, int sub);
+  extern f32 mathFn_80010ee0(int p, int m, f32 t);
+  extern int getAngle(f32 a, f32 b);
+  extern int *gPartfxInterface;
+  extern f32 lbl_803E5A30;
+  extern f32 lbl_803E5A60;
+  extern f32 timeDelta;
+  int sub = *(int *)(obj + 0xb8);
+
+  *(int *)(p3 + 0xe8) = (int)&fn_801E8660;
+  *(s16 *)(p3 + 0x6e) = (s16)(*(s16 *)(p3 + 0x6e) & ~4);
+  *(s16 *)(p3 + 0x70) = (s16)(*(s16 *)(p3 + 0x70) & ~4);
+
+  if (*(int *)(*(int *)(obj + 0x7c) + (s32)(s8)*(u8 *)(obj + 0xad) * 4) != 0) {
+    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5A60, timeDelta);
+  }
+
+  if (*(s16 *)(obj + 0x46) != 1127) return 0;
+
+  {
+    f32 t = *(f32 *)(sub + 0x40);
+    if (t > lbl_803E5A30) {
+      u32 v;
+      *(f32 *)(sub + 0x40) = t - lbl_803E5A30;
+      v = *(u8 *)(sub + 0x68);
+      if (v < 4) {
+        fn_801F4D54(obj, sub);
+      } else {
+        *(u8 *)(sub + 0x68) = (u8)(v + 1);
+      }
+      fn_801F4ECC(obj, sub);
+    }
+  }
+  {
+    *(f32 *)(obj + 0xc) = mathFn_80010ee0(sub + 4, 0, *(f32 *)(sub + 0x40));
+    *(f32 *)(obj + 0x10) = mathFn_80010ee0(sub + 0x14, 0, *(f32 *)(sub + 0x40));
+    *(f32 *)(obj + 0x14) = mathFn_80010ee0(sub + 0x24, 0, *(f32 *)(sub + 0x40));
+    *(f32 *)(sub + 0x40) = *(f32 *)(sub + 0x44) * timeDelta + *(f32 *)(sub + 0x40);
+    *(s16 *)(obj + 0) = (s16)getAngle(
+        *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
+        *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+    (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 415, 0, 1, -1, 0);
+    (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 416, 0, 1, -1, 0);
+  }
+  return 0;
+}
+
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1016,7 +1073,7 @@ extern void *Obj_GetActiveModel(int);
 extern void ObjModel_SetPostRenderCallback(void *, void *);
 extern void ObjGroup_AddObject(int, int);
 extern void fn_801F4C28(int, int);
-extern void fn_801E86F4(int);
+extern int fn_801E86F4(int, int, int);
 extern int *gPartfxInterface;
 
 #pragma scheduling off
@@ -1024,7 +1081,7 @@ extern int *gPartfxInterface;
 void shopitem_init(int obj, int data) {
     int state = *(int *)(obj + 0xB8);
     *(u16 *)(obj + 0xB0) |= 0x2000;
-    *(void (**)(int))(obj + 0xBC) = fn_801E86F4;
+    *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E86F4;
     *(s8 *)(obj + 0xAD) = (s8)*(s8 *)(data + 0x18);
     *(s16 *)obj = (s16)((*(u8 *)(data + 0x1A)) << 8);
     *(s16 *)(obj + 2) = (s16)((*(u8 *)(data + 0x1B)) << 8);
