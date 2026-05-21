@@ -5419,3 +5419,31 @@ void initViewport(void) {
     C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
 }
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8004AAD4(u8* arr, int size, int idx) {
+    u32 key;
+    u16 val;
+    int half;
+    int child;
+    u8* p;
+    p = arr + idx * 8;
+    key = *(u32*)p;
+    val = *(u16*)(p + 4);
+    half = size >> 1;
+    while (idx <= half) {
+        child = idx + idx;
+        if (child < size && *(u32*)(arr + child * 8) < *(u32*)(arr + (child + 1) * 8)) {
+            child++;
+        }
+        if (key >= *(u32*)(arr + child * 8)) break;
+        *(u32*)(arr + idx * 8) = *(u32*)(arr + child * 8);
+        *(u16*)(arr + idx * 8 + 4) = *(u16*)(arr + child * 8 + 4);
+        idx = child;
+    }
+    *(u32*)(arr + idx * 8) = key;
+    *(u16*)(arr + idx * 8 + 4) = val;
+}
+#pragma peephole reset
+#pragma scheduling reset
