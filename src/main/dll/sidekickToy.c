@@ -1667,3 +1667,24 @@ u8 fn_8014C4D8(int* obj)
 
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
+{
+  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern f32 lbl_803E256C;
+  extern f32 lbl_803E2570;
+  extern f32 lbl_803E2574;
+  void *sub;
+
+  *(f32 *)(p2 + 0x308) = lbl_803E256C / (lbl_803E2570 * mult);
+  *(u8 *)(p2 + 0x323) = c;
+  ObjAnim_SetCurrentMove(obj, (u8)a, b, lbl_803E2574);
+  sub = *(void **)(obj + 0x54);
+  if (sub != NULL) {
+    *(u8 *)((char *)sub + 0x70) = 0;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
