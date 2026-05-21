@@ -124,7 +124,7 @@ void SB_FireBall_hitDetect(int *obj)
 {
     int *params = *(int **)((char *)obj + 0x54);
     int i;
-    if (*(int *)((char *)params + 0x50) == 0) return;
+    if (*(void **)((char *)params + 0x50) == NULL) return;
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
     for (i = 50; i != 0; i--) {
         ((void (*)(int *, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 167, 0, 1, -1, 0);
@@ -2024,7 +2024,7 @@ void SB_SeqDoor_update(int *obj)
 {
     if (*(s16 *)((char *)obj + 0x46) == 371) {
         if (*(int *)((char *)obj + 0xf4) == 0) {
-            if (GameBit_Get(2635) != 0) {
+            if ((u32)GameBit_Get(2635) != 0u) {
                 ((void (*)(int, int *, int))((void **)*gObjectTriggerInterface)[18])(0, obj, -1);
                 *(int *)((char *)obj + 0xf4) = 1;
             }
