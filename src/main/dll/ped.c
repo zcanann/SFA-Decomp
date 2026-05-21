@@ -264,5 +264,7 @@ void nw_geyser_init(int obj)
   *(ushort *)(obj + 0xb0) = (ushort)(*(ushort *)(obj + 0xb0) | 0x6000);
   *(void **)(obj + 0xbc) = NW_geyser_SeqFn;
 }
+
+char *fn_801CDE70(int *obj) { return *(char **)((char *)obj + 0xb8) + 0xc; }
 #pragma peephole reset
 #pragma scheduling reset

@@ -13059,6 +13059,9 @@ int Dummy6C_func03_ret_0(void) { return 0x0; }
 extern u8 lbl_803DD488;
 u8 getSaveGameLoadStatus(void) { return lbl_803DD488; }
 
+void setSaveGameLoadingFlag(void) { if (lbl_803DD488 == 2) lbl_803DD488 = 1; }
+s32 isSaveGameLoading(void) { return lbl_803DD488 == 2; }
+
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
@@ -13133,6 +13136,13 @@ extern u16 lbl_803A32A8[];
 #pragma peephole off
 void fn_800E84D8(s16 v) { *(s16 *)((char *)lbl_803A32A8 + 0x6a4) = v; }
 void *SaveGame_getLast(void) { return lbl_803A32A8; }
+s32 saveGameGetField6A4(void) { return *(s16 *)((char *)lbl_803A32A8 + 0x6a4); }
+void *saveGameGetEnvState(void) { return (char *)lbl_803A32A8 + 0x6a8; }
+f32 SaveGame_getPlayTime(void) { return *(f32 *)((char *)lbl_803A32A8 + 0x560); }
+void *SaveGame_getTrickyEnergy(void) { return (char *)lbl_803A32A8 + 0x18; }
+void SaveGame_setCharacter(u8 c) { *(u8 *)((char *)lbl_803A32A8 + 0x20) = c; }
+u8 SaveGame_getCurChar(void) { return *(u8 *)((char *)lbl_803A32A8 + 0x20); }
+char *getSaveFileName(void) { return (char *)lbl_803A32A8 + 0x1c; }
 #pragma peephole reset
 #pragma scheduling reset
 
