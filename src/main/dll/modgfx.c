@@ -4667,13 +4667,13 @@ void dll_0B_func0A(s16 *p)
     *p = -1;
 }
 
-void dll_0B_func0C(void *p1, int p2)
+void dll_0B_func0C(void *p1, char p2)
 {
     int **arr = (int**)lbl_8039C1F8;
     int i;
     for (i = 0; i < 50; i++) {
         if (arr[i] != NULL && *(void**)((char*)arr[i] + 4) == p1) {
-            *(u8*)((char*)arr[i] + 315) = p2;
+            *(char*)((char*)arr[i] + 315) = p2;
         }
     }
 }

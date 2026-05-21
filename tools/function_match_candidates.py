@@ -90,9 +90,7 @@ def describe_first_gap(target: list[str], current: list[str]) -> str:
     return "no sequence gap"
 
 
-def resolve_unit(version: str, unit_name: str) -> tuple[Path, Path]:
-    config_path = Path("build") / version / "config.json"
-    config = json.loads(config_path.read_text())
+def resolve_unit(config: dict, unit_name: str) -> tuple[Path, Path]:
     unit = next(
         (u for u in config["units"] if unit_name in (u["name"], u.get("object", ""))),
         None,
@@ -106,40 +104,100 @@ def resolve_unit(version: str, unit_name: str) -> tuple[Path, Path]:
     return target, current
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("unit")
-    parser.add_argument("-v", "--version", default="GSAE01")
-    parser.add_argument("--min-size", type=int, default=64)
-    parser.add_argument("--min-sequence", type=float, default=75.0)
-    parser.add_argument("--max-aligned", type=float, default=80.0)
-    parser.add_argument("--symbol", help="Only report one function symbol")
-    parser.add_argument("--details", action="store_true", help="Print first SequenceMatcher gap per row")
-    args = parser.parse_args()
+def iter_units(config: dict):
+    for unit in config["units"]:
+        target = Path(unit["object"])
+        current = Path(target.as_posix().replace("/obj/", "/src/"))
+        if target.exists() and current.exists():
+            yield unit["name"], target, current
 
-    target_obj, current_obj = resolve_unit(args.version, args.unit)
-    objdump = find_objdump()
+
+def collect_rows(
+    objdump: str,
+    unit_name: str,
+    target_obj: Path,
+    current_obj: Path,
+    symbol: str | None,
+    min_size: int,
+    min_sequence: float,
+    max_aligned: float,
+):
     target_syms = disasm_symbols(objdump, target_obj)
     current_syms = disasm_symbols(objdump, current_obj)
 
     rows = []
     for sym, target_instrs in target_syms.items():
-        if args.symbol is not None and sym != args.symbol:
+        if symbol is not None and sym != symbol:
             continue
         current_instrs = current_syms.get(sym, [])
         size = len(target_instrs) * 4
-        if size < args.min_size:
+        if size < min_size:
             continue
         aligned = aligned_score(target_instrs, current_instrs)
         sequence = sequence_score(target_instrs, current_instrs)
-        if sequence >= args.min_sequence and aligned <= args.max_aligned:
+        if sequence >= min_sequence and aligned <= max_aligned:
             first_gap = describe_first_gap(target_instrs, current_instrs)
-            rows.append((sequence - aligned, sequence, aligned, size, sym, first_gap))
+            rows.append((sequence - aligned, sequence, aligned, size, unit_name, sym, first_gap))
+    return rows
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("unit", nargs="?")
+    parser.add_argument("-v", "--version", default="GSAE01")
+    parser.add_argument("--min-size", type=int, default=64)
+    parser.add_argument("--min-sequence", type=float, default=75.0)
+    parser.add_argument("--max-aligned", type=float, default=80.0)
+    parser.add_argument("--symbol", help="Only report one function symbol")
+    parser.add_argument("--all", action="store_true", help="Scan every configured unit")
+    parser.add_argument("--limit", type=int, default=0, help="Maximum rows to print")
+    parser.add_argument("--details", action="store_true", help="Print first SequenceMatcher gap per row")
+    args = parser.parse_args()
+    if args.all and args.unit:
+        parser.error("pass either a unit or --all, not both")
+    if not args.all and not args.unit:
+        parser.error("unit is required unless --all is passed")
+
+    config_path = Path("build") / args.version / "config.json"
+    config = json.loads(config_path.read_text())
+    objdump = find_objdump()
+
+    rows = []
+    if args.all:
+        for unit_name, target_obj, current_obj in iter_units(config):
+            rows.extend(
+                collect_rows(
+                    objdump,
+                    unit_name,
+                    target_obj,
+                    current_obj,
+                    args.symbol,
+                    args.min_size,
+                    args.min_sequence,
+                    args.max_aligned,
+                )
+            )
+    else:
+        target_obj, current_obj = resolve_unit(config, args.unit)
+        rows.extend(
+            collect_rows(
+                objdump,
+                args.unit,
+                target_obj,
+                current_obj,
+                args.symbol,
+                args.min_size,
+                args.min_sequence,
+                args.max_aligned,
+            )
+        )
 
     rows.sort(reverse=True)
-    print(f"{'sym':<40} {'sz':>6} {'aligned':>8} {'seq':>8} {'gap':>8}")
-    for gap, sequence, aligned, size, sym, first_gap in rows:
-        print(f"{sym:<40} {size:>6} {aligned:>8.1f} {sequence:>8.1f} {gap:>8.1f}")
+    if args.limit > 0:
+        rows = rows[: args.limit]
+    print(f"{'unit':<32} {'sym':<40} {'sz':>6} {'aligned':>8} {'seq':>8} {'gap':>8}")
+    for gap, sequence, aligned, size, unit_name, sym, first_gap in rows:
+        print(f"{unit_name:<32} {sym:<40} {size:>6} {aligned:>8.1f} {sequence:>8.1f} {gap:>8.1f}")
         if args.details:
             print(f"  first-gap: {first_gap}")
     return 0
