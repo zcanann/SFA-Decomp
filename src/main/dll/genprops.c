@@ -4501,6 +4501,20 @@ void dll_F7_free(int obj)
 }
 #pragma scheduling reset
 
+extern void *gObjectTriggerInterface;
+extern void *gTitleMenuControlInterfaceCopy;
+extern void Sfx_StopObjectChannel(int *obj, int channel);
+
+#pragma scheduling off
+#pragma peephole off
+void dim2roofrub_free(int *obj) {
+    ((void(*)(void*))((void**)*(void**)gObjectTriggerInterface)[9])(*(void**)((char*)obj + 0xb8));
+    ((void(*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
+    Sfx_StopObjectChannel(obj, 0x7f);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int checkpoint4_getExtraSize(void) { return 0x40; }
 int checkpoint4_getObjectTypeId(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
@@ -4527,7 +4541,6 @@ extern void animatedobj_free();
 extern void animatedobj_render();
 extern void animatedobj_update();
 extern void animatedobj_init();
-extern void dim2roofrub_free();
 extern void dim2roofrub_render();
 extern void dim2roofrub_update();
 extern void dim2roofrub_init();
