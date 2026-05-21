@@ -1976,12 +1976,12 @@ int fn_802015EC(int obj, int p)
   *(f32 *)(p + 0x280) = lbl_803E62A8;
   *(f32 *)(p + 0x284) = lbl_803E62A8;
   {
-    int p2d0 = *(int *)(p + 0x2d0);
-    if (p2d0 == 0 || (**(int (**)(int))(*(int *)(*(int *)(p2d0 + 0x68)) + 0x20))(p2d0) == 0) {
+    void *p2d0 = *(void **)(p + 0x2d0);
+    if (p2d0 == NULL || (**(int (**)(void *))(*(int *)(*(int *)((char *)p2d0 + 0x68)) + 0x20))(p2d0) == 0) {
       *(u8 *)(sub_40c + 0x34) = 1;
     }
   }
-  if (*(int *)(sub_40c + 0x18) == 0) {
+  if (*(void **)(sub_40c + 0x18) == NULL) {
     s16 r26 = *(s16 *)(sub_40c + 0x1c);
     if (r26 != -1) {
       int sp_handle;
