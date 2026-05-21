@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_800066E0.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80017438();
