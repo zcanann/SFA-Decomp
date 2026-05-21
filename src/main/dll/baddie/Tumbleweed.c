@@ -4177,3 +4177,80 @@ void fn_80137D28(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80138FA8(int p1, int p2, f32 maxRadius)
+{
+  extern int dll_19_func1B(int);
+  extern int *gBaddieControlInterface;
+  extern int *gMapEventInterface;
+  extern f32 fn_8014C5D0(int);
+  extern int *ObjGroup_GetObjects(int, int *);
+  extern int ObjGroup_ContainsObject(int, int);
+  extern f32 vec3f_distanceSquared(int, int);
+  extern f32 lbl_803E23DC;
+  int closest = 0;
+  f32 bestDistSq;
+  int count;
+  int *objs;
+  int i;
+
+  bestDistSq = maxRadius;
+  objs = ObjGroup_GetObjects(3, &count);
+  bestDistSq = bestDistSq * bestDistSq;
+
+  for (i = 0; i < count; i++) {
+    int obj = *objs;
+    int *data;
+    f32 obj_extra;
+    int v1, v2;
+    s32 g1, g2;
+
+    if (dll_19_func1B(obj) != 0) {
+      obj_extra = (**(f32 (**)(int))((char *)(*gBaddieControlInterface) + 0x60))(obj);
+    } else {
+      obj_extra = fn_8014C5D0(obj);
+    }
+
+    data = (int *)*(int *)(obj + 0x4c);
+    g1 = *(s16 *)((char *)data + 0x18);
+    if (g1 == -1) {
+      v1 = 0;
+    } else {
+      v1 = GameBit_Get(g1);
+    }
+    g2 = *(s16 *)((char *)data + 0x1a);
+    if (g2 == -1) {
+      v2 = 1;
+    } else {
+      v2 = GameBit_Get(g2);
+    }
+
+    if (ObjGroup_ContainsObject(obj, 49) == 0 &&
+        obj_extra > lbl_803E23DC &&
+        v1 == 0 &&
+        v2 != 0) {
+      if (*(s16 *)(obj + 0x46) != 2129) {
+        if ((**(int (**)(int))((char *)(*gMapEventInterface) + 0x68))(*(int *)((char *)data + 0x14)) != 0) {
+          int skip = 0;
+          if (p2 == 0) {
+            s16 m = *(s16 *)(obj + 0x46);
+            if (m == 1022 || m == 1239 || m == 636 || m == 593) skip = 1;
+          }
+          if (!skip) {
+            f32 dist = vec3f_distanceSquared(p1 + 0x18, obj + 0x18);
+            if (dist < bestDistSq) {
+              bestDistSq = dist;
+              closest = *objs;
+            }
+          }
+        }
+      }
+    }
+    objs++;
+  }
+  return closest;
+}
+#pragma peephole reset
+#pragma scheduling reset

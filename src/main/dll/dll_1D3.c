@@ -379,3 +379,64 @@ int nw_mammoth_getExtraSize(void)
 {
   return 0x48c;
 }
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801CEE0C(int p1, int p2)
+{
+  extern int fn_801CE078(int);
+  extern int ObjTrigger_IsSetById(int, int);
+  extern int gameBitDecrement(int);
+  extern int *gObjectTriggerInterface;
+  extern int lbl_803DBF70;
+  extern int lbl_803DBF74;
+  extern int lbl_803DBF78;
+  extern int lbl_803DBF7C;
+
+  if (fn_801CE078(p1) != 0) return;
+
+  switch (*(u8 *)(p2 + 0x408)) {
+    case 0:
+      *(int *)(p2 + 0x48) = (int)&lbl_803DBF70;
+      if (GameBit_Get(211) != 0) {
+        *(u8 *)(p2 + 0x408) = 1;
+      }
+      break;
+    case 1:
+      *(int *)(p2 + 0x48) = (int)&lbl_803DBF74;
+      {
+        int v = GameBit_Get(1400);
+        if (v == 1) {
+          *(u8 *)(p2 + 0x408) = 2;
+        } else if (v > 1) {
+          *(u8 *)(p2 + 0x408) = 3;
+        } else if (v == 0) {
+          if (ObjTrigger_IsSetById(p1, 1398) != 0) {
+            GameBit_Set(1400, 1);
+            gameBitDecrement(1398);
+            (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(2, p1, -1);
+            *(u8 *)(p2 + 0x43c) = (u8)(*(u8 *)(p2 + 0x43c) | 0x10);
+            *(u8 *)(p2 + 0x408) = 2;
+          }
+        } else {
+          *(u8 *)(p2 + 0x408) = 3;
+        }
+      }
+      break;
+    case 2:
+      *(int *)(p2 + 0x48) = (int)&lbl_803DBF78;
+      if (ObjTrigger_IsSetById(p1, 1398) != 0) {
+        GameBit_Set(1400, 2);
+        gameBitDecrement(1398);
+        (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(4, p1, -1);
+        *(u8 *)(p2 + 0x408) = 3;
+        *(u8 *)(p2 + 0x43c) = (u8)(*(u8 *)(p2 + 0x43c) | 0x10);
+      }
+      break;
+    case 3:
+      *(int *)(p2 + 0x48) = (int)&lbl_803DBF7C;
+      break;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
