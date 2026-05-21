@@ -2796,8 +2796,8 @@ int fn_80202720(int obj, int p)
   extern f32 lbl_803E62F4;
   extern f32 lbl_803E634C;
   int sub;
-  int p4c;
   int sub_40c;
+  int p4c;
 
   sub = *(int *)(obj + 0xb8);
   p4c = *(int *)(obj + 0x4c);
@@ -2824,7 +2824,7 @@ int fn_80202720(int obj, int p)
     *(u8 *)(p + 0x349) = 0;
     *(s16 *)(sub + 0x402) = 0;
     *(u8 *)(sub + 0x404) |= *(u8 *)(p4c + 0x2b);
-    if (*(int *)(sub_40c + 0x18) != 0) {
+    if (*(void **)(sub_40c + 0x18) != NULL) {
       ObjMsg_SendToObject(*(int *)(sub_40c + 0x18), 17, obj, 19);
       *(int *)(sub_40c + 0x18) = 0;
       *(s16 *)(sub_40c + 0x1c) = -1;
