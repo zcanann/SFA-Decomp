@@ -1310,6 +1310,68 @@ LAB_80186804:
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_801862CC(int obj, int p)
+{
+  extern void *Resource_Acquire(int id, int a);
+  extern void *lbl_803DDAD0;
+  extern void *lbl_803DDAD4;
+  extern f32 lbl_803E3A78;
+  extern f32 lbl_803E3A80;
+  extern f32 lbl_803E3A84;
+  int sub;
+  int p54;
+  int p64;
+
+  sub = *(int *)(obj + 0xb8);
+  *(s16 *)(obj + 0) = 0;
+  p54 = *(int *)(obj + 0x54);
+  *(int *)(p54 + 0x4c) = 16;
+  p54 = *(int *)(obj + 0x54);
+  *(int *)(p54 + 0x48) = 16;
+  ObjHits_DisableObject(obj);
+  ObjGroup_AddObject(obj, 16);
+  *(s16 *)(sub + 0x10) = 0;
+  *(u8 *)(sub + 0x23) = 0;
+  {
+    s16 v = *(s16 *)(p + 0x1c);
+    if (v == 0) {
+      *(int *)(sub + 4) = 0;
+    } else {
+      *(int *)(sub + 4) = v * 0x34BC0;
+    }
+  }
+  *(int *)(sub + 0) = 0;
+  *(u8 *)(sub + 0x25) = 0;
+  lbl_803DDAD0 = Resource_Acquire(91, 1);
+  lbl_803DDAD4 = Resource_Acquire(170, 1);
+  *(s16 *)(sub + 0x16) = 100;
+  *(s16 *)(sub + 0x18) = 400;
+  *(s16 *)(obj + 0) = (s16)(*(char *)(p + 0x18) << 8);
+  *(s16 *)(sub + 0x14) = *(s16 *)(p + 0x1e);
+  *(s16 *)(sub + 0x12) = *(s16 *)(p + 0x20);
+  if (*(s16 *)(sub + 0x12) == 0) {
+    *(s16 *)(sub + 0x12) = 30;
+  }
+  *(s16 *)(sub + 0x1a) = 800;
+  *(s16 *)(sub + 0x1e) = 0;
+  *(u8 *)(sub + 0x26) = 0xff;
+  *(u8 *)(sub + 0x27) = 0;
+  if (*(char *)(p + 0x19) != '\0') {
+    *(f32 *)(sub + 8) = lbl_803E3A80 * (f32)(s32)*(char *)(p + 0x19);
+  } else {
+    *(f32 *)(sub + 8) = lbl_803E3A84;
+  }
+  *(int *)(obj + 0xf4) = 0;
+  if (*(void **)(obj + 0x64) != NULL) {
+    p64 = *(int *)(obj + 0x64);
+    *(u32 *)(p64 + 0x30) |= 0x8000;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
