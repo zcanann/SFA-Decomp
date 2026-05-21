@@ -2889,6 +2889,36 @@ int isInBounds(f32 x, f32 z) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void **lbl_803DCE9C;
+#pragma scheduling off
+#pragma peephole off
+int objPosToMapBlockIdx(f32 x, f32 y, f32 z) {
+    int ix = (int)(fastFloorf(x / lbl_803DEBB4) - (f32)lbl_803DCDD0);
+    int iz = (int)(fastFloorf(z / lbl_803DEBB4) - (f32)lbl_803DCDD4);
+    int linear;
+    void **p;
+    int i;
+    if (ix < 0 || ix >= 16) return -1;
+    if (iz < 0 || iz >= 16) return -1;
+    linear = ix + (iz << 4);
+    p = &lbl_803822B4[0];
+    for (i = 0; i < 5; i++) {
+        s8 *table = (s8 *)*p;
+        int idx = table[linear];
+        if (idx > -1) {
+            int *block = (int *)lbl_803DCE9C[idx];
+            if (y > (f32)(*(s16 *)((char *)block + 138) - 50) &&
+                y < (f32)(*(s16 *)((char *)block + 140) + 50)) {
+                return table[linear];
+            }
+        }
+        p++;
+    }
+    return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* Drop-arg-1 trampoline:  fn(_, a, b, c) -> fn_800704FC(a, b, c). */
 extern void fn_800704FC(int a, int b, int c);
 #pragma scheduling off
