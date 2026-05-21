@@ -154,11 +154,7 @@ void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefine
         if (dVar10 < (double)(float)piVar7[1]) {
           piVar7[1] = (int)(float)dVar10;
         }
-        local_74[2] = piVar7[4] ^ 0x80000000;
-        local_74[1] = 0x43300000;
-        iVar4 = (int)((float)((double)CONCAT44(0x43300000,local_74[2]) - dVar11) + (float)piVar7[1])
-        ;
-        local_68 = (double)(longlong)iVar4;
+        iVar4 = (int)((f32)(s32)piVar7[4] + (f32)piVar7[1]);
         piVar7[4] = iVar4;
         if (0x7ef3 < piVar7[4]) {
           FUN_80006b4c();
@@ -186,25 +182,15 @@ void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefine
         if (dVar12 < (double)(float)piVar7[1]) {
           piVar7[1] = (int)(float)((double)(float)piVar7[1] - (double)lbl_803E5D94);
         }
-        local_68 = (double)CONCAT44(0x43300000,piVar7[4] ^ 0x80000000);
-        local_74[2] = piVar7[5] ^ 0x80000000;
-        local_74[1] = 0x43300000;
-        param_2 = (double)lbl_803DC074;
-        iVar4 = FUN_8002fc3c((double)(float)((double)((float)(local_68 - dVar11) -
-                                                     (float)((double)CONCAT44(0x43300000,local_74[2]
-                                                                             ) - dVar11)) / dVar9),
+        param_2 = (f64)lbl_803DC074;
+        iVar4 = FUN_8002fc3c((f64)(f32)((f64)((f32)(s32)piVar7[4] - (f32)(s32)piVar7[5]) / dVar9),
                              param_2);
         if ((iVar4 != 0) && (*(float *)(uVar3 + 0x98) < lbl_803E5D84)) {
           *(float *)(uVar3 + 0x98) = lbl_803E5D9C + *(float *)(uVar3 + 0x98);
         }
         if (*piVar7 != 0) {
-          local_68 = (double)CONCAT44(0x43300000,piVar7[4] ^ 0x80000000);
-          local_74[2] = piVar7[5] ^ 0x80000000;
-          local_74[1] = 0x43300000;
-          param_2 = (double)lbl_803DC074;
-          iVar4 = FUN_8002fc3c((double)(-((float)(local_68 - DOUBLE_803e5da8) -
-                                         (float)((double)CONCAT44(0x43300000,local_74[2]) -
-                                                DOUBLE_803e5da8)) / lbl_803E5D98),param_2);
+          param_2 = (f64)lbl_803DC074;
+          iVar4 = FUN_8002fc3c((f64)(-((f32)(s32)piVar7[4] - (f32)(s32)piVar7[5]) / lbl_803E5D98),param_2);
           if (iVar4 != 0) {
             fVar1 = *(float *)(*piVar7 + 0x98);
             if (fVar1 < lbl_803E5D84) {
@@ -218,13 +204,11 @@ void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefine
       if ((float)piVar7[3] < lbl_803E5D84) {
         if (lbl_803E5D84 <= (float)piVar7[1]) {
           uVar5 = randomGetRange(0x78,0xf0);
-          local_68 = (double)CONCAT44(0x43300000,uVar5 ^ 0x80000000);
-          piVar7[3] = (int)(float)(local_68 - DOUBLE_803e5da8);
+          piVar7[3] = (int)(f32)(s32)uVar5;
         }
         else {
           uVar5 = randomGetRange(0x28,100);
-          local_68 = (double)CONCAT44(0x43300000,uVar5 ^ 0x80000000);
-          piVar7[3] = (int)(float)(local_68 - DOUBLE_803e5da8);
+          piVar7[3] = (int)(f32)(s32)uVar5;
         }
         FUN_80006824(uVar3,0x13a);
       }
@@ -232,13 +216,11 @@ void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefine
       if ((float)piVar7[2] < lbl_803E5D84) {
         if ((float)piVar7[1] <= lbl_803E5D84) {
           uVar3 = randomGetRange(0x78,0xf0);
-          local_68 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-          piVar7[2] = (int)(float)(local_68 - DOUBLE_803e5da8);
+          piVar7[2] = (int)(f32)(s32)uVar3;
         }
         else {
           uVar3 = randomGetRange(0x28,100);
-          local_68 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-          piVar7[2] = (int)(float)(local_68 - DOUBLE_803e5da8);
+          piVar7[2] = (int)(f32)(s32)uVar3;
         }
         FUN_80006824(uVar2,0x4a3);
       }
