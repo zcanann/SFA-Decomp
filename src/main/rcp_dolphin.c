@@ -2392,6 +2392,18 @@ void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area) {
     bBiggerBlurFilter = bigger;
 }
 
+extern u8 lbl_803DCD68;
+extern u8 lbl_803DCD69;
+extern u8 lbl_803DCD6A;
+extern void GXSetNumTexGens(u8 n);
+extern void GXSetNumTevStages(u8 n);
+extern void GXSetNumIndStages(u8 n);
+void textureFn_800528bc(void) {
+    GXSetNumTexGens(lbl_803DCD69);
+    GXSetNumTevStages(lbl_803DCD6A);
+    GXSetNumIndStages(lbl_803DCD68);
+}
+
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 void fn_80054F74(int *p, f32 *vec) {

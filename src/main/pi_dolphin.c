@@ -5377,5 +5377,15 @@ extern void *lbl_803DCD10;
 void allocSomething32bytes(void) {
     lbl_803DCD10 = mmAlloc(0x20, 0xff, 0);
 }
+
+extern u32 lbl_8035F0A8[];
+extern u32 lbl_8035F3E8[];
+u32 getDataFileSize(int idx) {
+    if (lbl_8035F3E8[idx] != 0) {
+        return lbl_8035F0A8[idx];
+    }
+    *(u8 *)0 = 0;
+    return 0;
+}
 #pragma peephole reset
 #pragma scheduling reset

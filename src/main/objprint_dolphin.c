@@ -4450,5 +4450,12 @@ u32 getLoadedFileFlags(void) {
     OSRestoreInterrupts(s);
     return v;
 }
+
+extern s16 lbl_8035F548[];
+s32 mapCheckCurBlocks(int v) {
+    if (((s16*)((char*)lbl_8035F548 + 0x4a))[0] == v) return 0;
+    if (((s16*)((char*)lbl_8035F548 + 0x8e))[0] == v) return 1;
+    return -1;
+}
 #pragma peephole reset
 #pragma scheduling reset

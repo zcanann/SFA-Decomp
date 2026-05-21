@@ -13191,6 +13191,10 @@ void SaveGame_resetObjGroups(int idx) {
     if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
     lbl_803A2FBC[idx] = 0;
 }
+extern s16 lbl_803119E0[];
+u8 getCurTaskHintTextMap(void) {
+    return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
+}
 #pragma peephole reset
 #pragma scheduling reset
 
