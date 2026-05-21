@@ -4519,6 +4519,31 @@ void drakorenergy_free(void) {}
 void drakorenergy_hitDetect(void) {}
 void drakorenergy_release(void) {}
 void drakorenergy_initialise(void) {}
+
+extern f32 lbl_803E627C;
+extern f32 lbl_803E62A0;
+
+#pragma scheduling off
+#pragma peephole off
+void drakorenergy_init(int *obj, u8 *init) {
+    u8 *sub;
+    f32 fz;
+    sub = *(u8**)((char*)obj + 0xb8);
+    sub[8] = 5;
+    *(f32*)((char*)obj + 0xc) = *(f32*)(init + 8);
+    *(f32*)((char*)obj + 0x10) = *(f32*)(init + 0xc);
+    *(f32*)((char*)obj + 0x14) = *(f32*)(init + 0x10);
+    fz = lbl_803E627C;
+    *(f32*)((char*)obj + 0x2c) = fz;
+    *(f32*)((char*)obj + 0x24) = fz;
+    *(f32*)((char*)obj + 0x28) = lbl_803E62A0;
+    *(int*)(sub + 4) = randomGetRange(0, 0xffff);
+    if (GameBit_Get(*(s16*)(init + 0x20)) != 0) {
+        sub[8] = 4;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dbstealerworm_release(void) {}
 void dbholecontrol1_hitDetect(void) {}
 void dbholecontrol1_release(void) {}

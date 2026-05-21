@@ -186,7 +186,7 @@ int drakorenergy_func08(void);
 void drakorenergy_free(void);
 void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void drakorenergy_hitDetect(void);
-void drakorenergy_init(void);
+void drakorenergy_init(int *obj, u8 *init);
 void drakorenergy_release(void);
 void drakorenergy_initialise(void);
 
