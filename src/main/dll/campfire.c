@@ -550,9 +550,7 @@ void kaldachom_update(int param_1)
           (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
         }
         iVar8 = (**(code **)(*gBaddieControlInterface + 0x48))
-                          ((double)(float)((double)CONCAT44(0x43300000,
-                                                            (uint)*(ushort *)(iVar9 + 0x3fe)) -
-                                          lbl_803E3068),param_1,iVar9,0x8000);
+                          ((f64)(f32)(u32)*(u16 *)(iVar9 + 0x3fe),param_1,iVar9,0x8000);
         if (iVar8 != 0) {
           (**(code **)(*gBaddieControlInterface + 0x28))
                     (param_1,iVar9,iVar9 + 0x35c,(int)*(short *)(iVar9 + 0x3f4),0,0,0,4,0xffffffff);
@@ -564,11 +562,7 @@ void kaldachom_update(int param_1)
         iVar8 = *(int *)(iVar9 + 0x40c);
         piVar3 = (int *)objFindTexture(param_1,0,0);
         *(short *)(iVar8 + 0x48) = *(short *)(iVar8 + 0x48) + 0x1000;
-        dVar10 = (double)fn_80293E80((double)((lbl_803E30B4 *
-                                              (float)((double)CONCAT44(0x43300000,
-                                                                       (int)*(short *)(iVar8 + 0x48)
-                                                                       ^ 0x80000000) -
-                                                     DOUBLE_803E3070)) / lbl_803E30B8));
+        dVar10 = (f64)fn_80293E80((f64)((lbl_803E30B4 * (f32)(s32)*(s16 *)(iVar8 + 0x48)) / lbl_803E30B8));
         *piVar3 = (int)(lbl_803E30B0 * (float)((double)lbl_803E3078 + dVar10));
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
