@@ -4182,6 +4182,14 @@ void FUN_80171240(int param_1,int param_2)
   return;
 }
 
+void siderepel_init(int param_1, int param_2) {
+    *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0xe000;
+    ObjGroup_AddObject(param_1, 0x40);
+    if (*(int *)(param_1 + 0x54) != 0) {
+        ObjHitbox_SetSphereRadius(param_1, (short)((int)(uint)*(ushort *)(param_2 + 0x18) >> 3));
+    }
+}
+
 /*
  * --INFO--
  *
