@@ -3532,7 +3532,7 @@ extern int *gObjectTriggerInterface;
 extern f32 lbl_803E42B4;
 #pragma scheduling off
 #pragma peephole off
-void cfprisoncage_init(int *obj, s8 *def) {
+void cfprisoncage_init(int *obj, u8 *def) {
     ObjMsg_AllocQueue(obj, 1);
     *(s16 *)obj = (s16)((s32)def[0x1a] << 8);
     *(int *)((char *)obj + 0xf4) = 1;
