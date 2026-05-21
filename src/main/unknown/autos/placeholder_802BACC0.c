@@ -15,6 +15,9 @@ extern void setMatrixFromObjectPos(void *matrix, void *packedTransform);
 extern void Matrix_TransformPoint(double x, double y, double z, void *matrix, undefined4 outX,
                                   undefined4 outY, undefined4 outZ);
 
+#pragma peephole off
+#pragma scheduling off
+
 /*
  * Empty stub.
  */
