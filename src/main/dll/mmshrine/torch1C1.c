@@ -328,9 +328,9 @@ void ecsh_shrine_free(int *obj) {
     Music_Trigger(0xd9, 0);
     Music_Trigger(0x08, 0);
     Music_Trigger(0x0d, 0);
-    if (*inner != 0) {
-        ModelLightStruct_free((void *)*inner);
-        *inner = 0;
+    if (*(void **)inner != NULL) {
+        ModelLightStruct_free(*(void **)inner);
+        *(void **)inner = NULL;
     }
     ObjGroup_RemoveObject((int)obj, 0xb);
     GameBit_Set(0xefa, 0);
