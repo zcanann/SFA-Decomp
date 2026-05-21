@@ -1092,7 +1092,7 @@ void fn_801F20D4(int obj)
   extern f32 lbl_803E5D9C;
   extern f32 lbl_803E5DA0;
   extern void GameBit_Set(int slot, int val);
-  extern int GameBit_Get(int id);
+  extern uint GameBit_Get(int id);
   int sub;
   int stk[3];
 
@@ -1108,12 +1108,12 @@ void fn_801F20D4(int obj)
     if (*(s16 *)(obj + 0xa0) != 7) {
       ObjAnim_SetCurrentMove(obj, 7, lbl_803E5D98, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(s32)(u32)framesThisStep - lbl_803E5DA0);
+    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(u32)framesThisStep);
   } else {
     if (*(s16 *)(obj + 0xa0) != 2) {
       ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(s32)(u32)framesThisStep - lbl_803E5DA0);
+    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(u32)framesThisStep);
   }
   if ((*(u8 *)(obj + 0xaf) & 0x1) != 0 && GameBit_Get(763) == 0) {
     GameBit_Set(763, 1);
@@ -1290,14 +1290,14 @@ void fn_801F27E4(int obj)
   extern f32 lbl_803E5D9C;
   extern f32 lbl_803E5DA0;
   extern void GameBit_Set(int slot, int val);
-  extern int GameBit_Get(int id);
+  extern uint GameBit_Get(int id);
   int sub;
 
   sub = *(int *)(obj + 0xb8);
   if (*(s16 *)(obj + 0xa0) != 2) {
     ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
   }
-  ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(s32)(u32)framesThisStep - lbl_803E5DA0);
+  ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(u32)framesThisStep);
   *(u8 *)(sub + 0x24) = 1;
   if (*(u8 *)(sub + 0x24) == 0) {
     if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
