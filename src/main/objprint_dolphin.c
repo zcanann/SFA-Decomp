@@ -4583,3 +4583,25 @@ void tex1tab1readCb(s32 result, void *fileInfo)
         }
     }
 }
+
+void tex1tab2readCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        mm_free((void *)lbl_8035F3E8[78]);
+        lbl_8035F3E8[78] = 0;
+        lbl_80345F70[78] = 0;
+        if (lbl_803DCC80 & 0x8000) {
+            lbl_803DCC84 |= 0x8000;
+            lbl_80345F70[76] = 0;
+        }
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x8000) {
+            lbl_803DCC84 |= 0x8000;
+            lbl_80345F70[76] = 0;
+        }
+    }
+}
