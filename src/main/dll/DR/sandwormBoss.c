@@ -2582,7 +2582,7 @@ void FUN_8019e964(undefined8 param_1,double param_2,undefined8 param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void babycloudrunner_init(int param_1)
+void babycloudrunner_init_OLD_v1_1(int param_1)
 {
   undefined4 *puVar1;
 
@@ -2593,6 +2593,66 @@ void babycloudrunner_init(int param_1)
   *(undefined *)(param_1 + 0x36) = 0x80;
   return;
 }
+
+extern void fn_8019E81C(int *obj);
+extern f32 lbl_803E422C;
+extern f32 lbl_803E4244;
+extern f32 lbl_803E4258;
+extern u8 lbl_803DBE28;
+extern u8 lbl_803DBE30;
+extern void storeZeroToFloatParam(void* p);
+extern uint GameBit_Get(int eventId);
+extern int objRemoveFromListFn_8002ce88(int *obj);
+
+#pragma scheduling off
+#pragma peephole off
+void babycloudrunner_init(int *obj, u8 *def) {
+    u8 *sub;
+
+    ObjHits_EnableObject(obj);
+    ObjMsg_AllocQueue(obj, 4);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019E81C;
+    *(s16*)obj = (s16)(def[0x1d] << 8);
+    ObjGroup_AddObject(obj, 3);
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(int*)(sub + 0xb0) = 0;
+    *(int*)(sub + 0xb4) = 0;
+    *(int*)(sub + 0xb8) = 0;
+    *(int*)(sub + 0xbc) = 0;
+    *(int*)(sub + 0xc0) = 0;
+    *(int*)(sub + 0xc4) = def[0x1c];
+    *(int*)(sub + 0xcc) = 0;
+    storeZeroToFloatParam(sub);
+    *(int*)(sub + 0x114) = 0;
+    *(s16*)(sub + 0xd0) = *(s16*)obj;
+    sub[0x22c] = 0;
+    *(f32*)(sub + 0xa8) = lbl_803E422C;
+    *(int*)(sub + 0x230) = 0;
+    if (GameBit_Get(*(s16*)(def + 0x22)) != 0) {
+        ObjHits_DisableObject(obj);
+        *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+        sub[0x22c] = (u8)(sub[0x22c] & ~1);
+        objRemoveFromListFn_8002ce88(obj);
+        ObjGroup_RemoveObject(obj, 3);
+    } else {
+        *(int*)(sub + 0x234) = *(s16*)(def + 0x22) - 0x2fc;
+        if (*(s16*)((char*)obj + 0x46) == 0x788) {
+            *(int*)(sub + 0x234) = -1;
+            *(f32*)(sub + 0x23c) = lbl_803E4244;
+            *(void**)(sub + 0x240) = &lbl_803DBE30;
+        } else {
+            if (*(int*)(sub + 0x234) < 0 || *(int*)(sub + 0x234) > 4) {
+                *(int*)(sub + 0x230) = 3;
+            }
+            *(f32*)(sub + 0x23c) = lbl_803E4258;
+            *(void**)(sub + 0x240) = &lbl_803DBE28;
+            ObjGroup_AddObject(obj, 0x20);
+        }
+        sub[0x244] = (u8)(sub[0x244] & ~0x80);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3136,8 +3196,6 @@ extern GuardianVec lbl_802C22CC;
 extern u8 lbl_8032284C[];
 extern f32 lbl_803E4110;
 extern void fn_8019C3A0(int *obj);
-extern uint GameBit_Get(int eventId);
-extern void objRemoveFromListFn_8002ce88(int *obj);
 extern void dll_2E_func0A(int a, int *obj);
 extern void dll_2E_func05(int *obj, u8 *sub, int c, int d, int e);
 extern void dll_2E_func08(u8 *sub, int b, int c);
