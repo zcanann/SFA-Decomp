@@ -782,7 +782,105 @@ void sh_emptytumblew_update(int obj)
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
 void fn_801DA284(int obj) {}
-void fn_801DA4A8(int obj) {}
-void sh_staff_update(int obj) {}
+
+extern void *Obj_GetPlayerObject(void);
+extern f32 getXZDistance(f32 *a, f32 *b);
+extern void *fn_802966CC(int player);
+extern int fn_80295CF4(int player, int a);
+extern void ObjAnim_SetMoveProgress(int obj, f32 p);
+extern int ObjTrigger_IsSet(int obj);
+extern int Obj_IsLoadingLocked(void);
+extern int *Obj_AllocObjectSetup(int a, int b);
+extern int loadObjectAtObject(int obj, int *setup);
+extern void mapUnload(int idx, int flags);
+extern void loadMapAndParent(int mapId);
+extern void hudFn_8011f38c(int a);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int *gObjectTriggerInterface;
+extern f32 lbl_803E54D0;
+extern f32 lbl_803E54D4;
+extern f32 lbl_803E54D8;
+extern f32 lbl_803E54E0;
+extern f32 lbl_803E550C;
+extern f32 lbl_803E5510;
+extern f32 lbl_803E5514;
+extern void fn_801DA284(int obj);
+extern void fn_801DA4A8(int obj, int state, int a);
+
+#pragma scheduling off
+#pragma peephole off
+void sh_staff_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    int player = (int)Obj_GetPlayerObject();
+    f32 dist = getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18));
+    u8 mode = *(u8 *)state;
+
+    if (mode == 0) {
+        if (player == 0) goto end;
+        if (fn_802966CC(player) == 0) goto end;
+        if (GameBit_Get(0x18b) != 0) {
+            fn_801DA4A8(obj, *(int *)(obj + 0xb8), 0);
+        } else {
+            int loadResult;
+            fn_80295CF4(player, 0);
+            ObjAnim_SetMoveProgress(obj, lbl_803E54D0);
+            *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
+            *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
+            *(void (**)(int))(obj + 0xbc) = fn_801DA284;
+            *(u8 *)state = 1;
+            if (Obj_IsLoadingLocked() == 0) {
+                loadResult = 0;
+            } else {
+                int *newSetup = Obj_AllocObjectSetup(0x20, 0x659);
+                *(u8 *)((char *)newSetup + 4) = 2;
+                *(u8 *)((char *)newSetup + 7) = 0xff;
+                loadResult = loadObjectAtObject(obj, newSetup);
+            }
+            *(int *)(state + 0x38) = loadResult;
+            *(f32 *)(state + 0x70) = lbl_803E550C;
+        }
+    } else if (mode == 1) {
+        if (ObjTrigger_IsSet(obj) != 0) {
+            int target = ObjGroup_FindNearestObject(0xf, (u32)obj, 0);
+            ((void (*)(int, int, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(0, target, -1);
+            *(u8 *)state = 2;
+            *(f32 *)(state + 4) = lbl_803E54E0;
+            GameBit_Set(0x18b, 1);
+        } else if (dist > lbl_803E5510) {
+            if (*(u8 *)(state + 3) != 0) {
+                *(u8 *)(state + 3) = 0;
+                mapUnload(0x13, 0x20000000);
+            }
+        } else if (dist < lbl_803E5514) {
+            if (*(u8 *)(state + 3) == 0) {
+                *(u8 *)(state + 3) = 1;
+                loadMapAndParent(8);
+            }
+        }
+    } else {
+        if (*(u8 *)(state + 3) != 0) {
+            *(u8 *)(state + 3) = 0;
+            mapUnload(0x13, 0x20000000);
+            GameBit_Set(0x3b8, 1);
+        }
+    }
+end:
+    hudFn_8011f38c(0);
+    *(f32 *)(state + 0x6c) = lbl_803E54D8 * timeDelta + *(f32 *)(state + 0x6c);
+    if (*(f32 *)(state + 0x6c) > lbl_803E54D0) {
+        *(f32 *)(state + 0x6c) = lbl_803E54D4;
+    }
+    *(f32 *)(state + 0x70) = lbl_803E54D8 * timeDelta + *(f32 *)(state + 0x70);
+    if (*(f32 *)(state + 0x70) > lbl_803E54D0) {
+        *(f32 *)(state + 0x70) = lbl_803E54D4;
+        if (*(u8 *)state == 1) {
+            Sfx_PlayFromObject(obj, 0x3fe);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void sh_beacon_init(int obj, int defData) {}
 void sh_beacon_update(int obj) {}
