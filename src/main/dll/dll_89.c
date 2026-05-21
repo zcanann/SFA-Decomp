@@ -1,3 +1,5 @@
+#include "main/dll/dll_89.h"
+
 /*
  * Manual recovery stub based on claimed split coverage and the surrounding
  * second anonymous corridor.
@@ -19,7 +21,6 @@
  */
 
 
-extern char sProjdfp1rDoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1

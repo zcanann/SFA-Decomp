@@ -1,3 +1,5 @@
+#include "main/dll/dll_7D.h"
+
 /*
  * Manual recovery stub based on claimed split coverage and the surrounding
  * early anonymous corridor.
@@ -20,7 +22,6 @@
 
 
 
-extern char sProjteslaDoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_FALSE_RETURN 0
