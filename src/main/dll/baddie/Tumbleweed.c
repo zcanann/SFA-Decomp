@@ -4254,3 +4254,49 @@ int fn_80138FA8(int p1, int p2, f32 maxRadius)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80138D7C(int obj, int p2)
+{
+  extern int *gObjectTriggerInterface;
+  extern void *Obj_GetActiveModel(int);
+  extern void Obj_SetModelColorOverrideRecursive(int, int, int, int, int, int);
+  extern f32 timeDelta;
+  extern f32 lbl_803E23DC;
+  extern f32 lbl_803E23E0;
+  extern f32 lbl_803E23E8;
+  extern f32 lbl_803E2408;
+  extern f32 lbl_803E240C;
+  u8 ratio = (u8)((s32)(s8)*(u8 *)(*(int *)(p2 + 0) + 2) / 5);
+
+  if (*(u8 *)(p2 + 0x82c) != ratio) {
+    f32 t;
+    if (GameBit_Get(1005) == 0) {
+      GameBit_Set(1005, 1);
+      (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(5, obj, -1);
+      *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x4000;
+      *(f32 *)(p2 + 0x828) = *(f32 *)(p2 + 0x828) + lbl_803E2408;
+    }
+    *(f32 *)(p2 + 0x828) = *(f32 *)(p2 + 0x828) - timeDelta;
+    t = *(f32 *)(p2 + 0x828);
+    if (t <= lbl_803E2408) {
+      if (t > lbl_803E23DC) {
+        f32 alpha;
+        if (t > lbl_803E23E0) {
+          alpha = lbl_803E23E8 - (t - lbl_803E23E0) / lbl_803E23E0;
+        } else {
+          *(u8 *)(*(int *)((char *)Obj_GetActiveModel(obj) + 0x34) + 8) = ratio;
+          alpha = *(f32 *)(p2 + 0x828) / lbl_803E23E0;
+        }
+        Obj_SetModelColorOverrideRecursive(obj, 255, 255, 255, (s32)(lbl_803E240C * alpha), 1);
+      } else {
+        *(u8 *)(p2 + 0x82c) = ratio;
+        Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
+      }
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
