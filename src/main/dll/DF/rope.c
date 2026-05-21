@@ -535,17 +535,10 @@ void DIMbossspit_update(undefined8 param_1,undefined8 param_2,undefined8 param_3
     ObjHitbox_SetSphereRadius((int)param_9,10);
     *(float *)(param_9 + 0x14) = -(lbl_803E59F8 * lbl_803DC074 - *(float *)(param_9 + 0x14));
     *(float *)(param_9 + 0x14) = *(float *)(param_9 + 0x14) * lbl_803E59FC;
-    dVar1 = DOUBLE_803e59f0;
-    *param_9 = (short)(int)(lbl_803E5A00 * lbl_803DC074 +
-                           (float)((double)CONCAT44(0x43300000,(int)*param_9 ^ 0x80000000) -
-                                  DOUBLE_803e59f0));
+    *param_9 = (short)(int)(lbl_803E5A00 * lbl_803DC074 + (f32)(s32)*param_9);
     fVar2 = lbl_803E5A04;
-    param_9[2] = (short)(int)(lbl_803E5A04 * lbl_803DC074 +
-                             (float)((double)CONCAT44(0x43300000,(int)param_9[2] ^ 0x80000000) -
-                                    dVar1));
-    param_9[1] = (short)(int)(fVar2 * lbl_803DC074 +
-                             (float)((double)CONCAT44(0x43300000,(int)param_9[1] ^ 0x80000000) -
-                                    dVar1));
+    param_9[2] = (short)(int)(lbl_803E5A04 * lbl_803DC074 + (f32)(s32)param_9[2]);
+    param_9[1] = (short)(int)(fVar2 * lbl_803DC074 + (f32)(s32)param_9[1]);
     FUN_80017a88((double)(*(float *)(param_9 + 0x12) * lbl_803DC074),
                  (double)(*(float *)(param_9 + 0x14) * lbl_803DC074),
                  (double)(*(float *)(param_9 + 0x16) * lbl_803DC074),(int)param_9);
