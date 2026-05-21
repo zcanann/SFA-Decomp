@@ -570,3 +570,27 @@ void wallanimator_free(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void wallanimator_init(s16* obj, s16* p2)
+{
+    register int* state = *(int**)((char*)obj + 0xb8);
+
+    *obj = (s16)p2[0x24 / 2];
+    ObjGroup_AddObject((int)obj, 0x23);
+    ObjGroup_AddObject((int)obj, 0x31);
+    if (GameBit_Get((int)p2[0x18 / 2]) != 0) {
+        register u32 b;
+        register u32 bitval;
+        bitval = 1;
+        asm {
+            lbz b, 0x4(state)
+            rlwimi b, bitval, 7, 24, 24
+            stb b, 0x4(state)
+        }
+        *state = 0xbb8;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
