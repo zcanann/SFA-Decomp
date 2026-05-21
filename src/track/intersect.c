@@ -180,7 +180,15 @@ extern undefined4 DAT_80397338;
 extern undefined4 lbl_803DB65C;
 extern undefined4 lbl_803DB660;
 extern undefined4 lbl_803DB668;
-extern undefined4 lbl_803DB6D4;
+extern GXColor lbl_803DB6D0;
+extern GXColor lbl_803DB6D4;
+extern GXColor lbl_803DB6D8;
+extern GXColor lbl_803DB6DC;
+extern GXColor lbl_803DB6E0;
+extern GXColor lbl_803DB6E4;
+extern GXColor lbl_803DB6E8;
+extern GXColor lbl_803DB6EC;
+extern GXColor lbl_803DB6F0;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
 extern u8 lbl_803DC2D9;
@@ -1374,7 +1382,6 @@ void screenImageDraw(u8 alpha)
 {
     extern f32 lbl_803DEEE4, lbl_803DEEEC, lbl_803DEEF0;
     extern f32 gSynthVoiceSlots;
-    extern u32 lbl_803DB6E0, lbl_803DB6E4, lbl_803DB6E8, lbl_803DB6EC, lbl_803DB6F0;
     extern f32 lbl_8030EA70[3][3];
     extern f32 lbl_8030EA88[3][3];
     extern Mtx hudMatrix;
@@ -1394,22 +1401,17 @@ void screenImageDraw(u8 alpha)
     int handle;
     f32 fA;
     f32 fB;
-    GXColor temp_color;
 
     fn_8006CABC(&fA, &fB);
     getTextureFn_8006c5e4(&handle);
     updateReflectionTextures();
     selectReflectionTexture(0);
     selectTexture(handle, 1);
-    ((u8*)&lbl_803DB6E4)[3] = alpha;
-    *(u32*)&temp_color = lbl_803DB6E4;
-    GXSetTevKColor(0, temp_color);
-    *(u32*)&temp_color = lbl_803DB6E8;
-    GXSetTevKColor(1, temp_color);
-    *(u32*)&temp_color = lbl_803DB6EC;
-    GXSetTevKColor(2, temp_color);
-    *(u32*)&temp_color = lbl_803DB6F0;
-    GXSetTevKColor(3, temp_color);
+    lbl_803DB6E4.a = alpha;
+    GXSetTevKColor(0, lbl_803DB6E4);
+    GXSetTevKColor(1, lbl_803DB6E8);
+    GXSetTevKColor(2, lbl_803DB6EC);
+    GXSetTevKColor(3, lbl_803DB6F0);
 
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
@@ -1497,8 +1499,7 @@ void screenImageDraw(u8 alpha)
     /* Stage 6 */
     GXSetTevKColorSel(6, 0xF);
     GXSetTevKAlphaSel(6, 0x4);
-    *(u32*)&temp_color = lbl_803DB6E0;
-    GXSetTevColor(3, temp_color);
+    GXSetTevColor(3, lbl_803DB6E0);
     GXSetTevOrder(6, 0xFF, 0xFF, 0xFF);
     GXSetTevDirect(6);
     GXSetTevColorIn(6, 0xE, 0xF, 0, 4);
@@ -1594,7 +1595,6 @@ void screenImageDraw(u8 alpha)
 #pragma scheduling off
 void doSpiritVisionFilter(void)
 {
-    extern u32 lbl_803DB6D0, lbl_803DB6D4, lbl_803DB6D8, lbl_803DB6DC;
     extern Mtx hudMatrix;
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
@@ -1604,7 +1604,6 @@ void doSpiritVisionFilter(void)
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    GXColor temp;
 
     updateReflectionTextures();
     selectReflectionTexture(0);
@@ -1615,14 +1614,10 @@ void doSpiritVisionFilter(void)
 
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
-    *(u32*)&temp = lbl_803DB6D0;
-    GXSetTevKColor(0, temp);
-    *(u32*)&temp = lbl_803DB6D4;
-    GXSetTevKColor(1, temp);
-    *(u32*)&temp = lbl_803DB6D8;
-    GXSetTevKColor(2, temp);
-    *(u32*)&temp = lbl_803DB6DC;
-    GXSetTevColor(1, temp);
+    GXSetTevKColor(0, lbl_803DB6D0);
+    GXSetTevKColor(1, lbl_803DB6D4);
+    GXSetTevKColor(2, lbl_803DB6D8);
+    GXSetTevColor(1, lbl_803DB6DC);
 
     GXSetNumTexGens(1);
     GXSetNumIndStages(0);
