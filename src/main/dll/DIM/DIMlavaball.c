@@ -1429,6 +1429,7 @@ void mmp_gyservent_update(int obj) {
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
     int state = *(int *)(obj + 0xB8);
     int def = *(int *)(obj + 0x4C);
@@ -1457,6 +1458,7 @@ int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
     }
     return *(u8 *)state != 2;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
