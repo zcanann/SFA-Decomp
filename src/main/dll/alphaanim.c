@@ -594,6 +594,39 @@ void SeqObj2_initialise(void) {}
 void immultiseq_hitDetect(void) {}
 void immultiseq_release(void) {}
 void immultiseq_initialise(void) {}
+
+extern int fn_8017CBDC(int* obj, int* anim, u8* buf);
+extern uint GameBit_Get(int eventId);
+
+#pragma scheduling off
+#pragma peephole off
+void immultiseq_init(int *obj, u8 *params) {
+    u8 *sub;
+    int i;
+    u8 *p;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(s16*)obj = (s16)((s8)params[0x28] << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8017CBDC;
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
+    *(u8*)((char*)obj + 0xad) = (u8)(s8)params[0x2a];
+    if ((s8)*(u8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
+        *(u8*)((char*)obj + 0xad) = 0;
+    }
+    ObjGroup_AddObject(obj, 0xf);
+    i = 0;
+    p = params;
+    while (i < 4) {
+        if ((uint)((params[0x30] >> (i + 4)) & 1) == GameBit_Get(*(s16*)(p + 0x18))) {
+            break;
+        }
+        p += 2;
+        i++;
+    }
+    *sub = (u8)i;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dll_115_hitDetect_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */

@@ -57,7 +57,7 @@ void immultiseq_free(int x);
 void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void immultiseq_hitDetect(void);
 void immultiseq_update(void);
-void immultiseq_init(void);
+void immultiseq_init(int *obj, u8 *params);
 void immultiseq_release(void);
 void immultiseq_initialise(void);
 
