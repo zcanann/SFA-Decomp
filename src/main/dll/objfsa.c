@@ -4468,8 +4468,9 @@ void *fn_800DAFDC(int pos, int p4_filter, int p5_filter) {
             && (p5_filter == -1 || (s8)*((u8 *)hit + 0x1A) == p5_filter)) {
             f32 dx = *(f32 *)pos - *(f32 *)((char *)hit + 8);
             f32 dy = *(f32 *)(pos + 4) - *(f32 *)((char *)hit + 0xC);
+            f32 d;
             f32 dz = *(f32 *)(pos + 8) - *(f32 *)((char *)hit + 0x10);
-            f32 d = dy * dy;
+            d = dy * dy;
             d += dx * dx;
             d += dz * dz;
             if (d < minDist) {
@@ -4511,8 +4512,9 @@ void *fn_800DB0E0(int pos, int p4_filter, int p5_filter) {
                 if (gbId == -1 || GameBit_Get(gbId) == 0) {
                     f32 dx = *(f32 *)pos - *(f32 *)((char *)hit + 8);
                     f32 dy = *(f32 *)(pos + 4) - *(f32 *)((char *)hit + 0xC);
+                    f32 d;
                     f32 dz = *(f32 *)(pos + 8) - *(f32 *)((char *)hit + 0x10);
-                    f32 d = dy * dy;
+                    d = dy * dy;
                     d += dx * dx;
                     d += dz * dz;
                     if (d < minDist) {
