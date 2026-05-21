@@ -404,14 +404,12 @@ extern f32 lbl_803E54A0;
 void warpstone_hitDetect(int obj)
 {
     int *state = *(int **)((char *)obj + 0xb8);
+    f32 pos[3];
     int p[3];
-    f32 x;
-    f32 y;
-    f32 z;
 
-    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &x, &y, &z) != 0) {
-        x += playerMapOffsetX;
-        z += playerMapOffsetZ;
+    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos[0], &pos[1], &pos[2]) != 0) {
+        pos[0] += playerMapOffsetX;
+        pos[2] += playerMapOffsetZ;
         objLightFn_8009a1dc(obj, p, 1, 0, lbl_803E54A0);
         if (randFn_80080100(3) != 0) {
             Sfx_PlayFromObject(obj, 700);
