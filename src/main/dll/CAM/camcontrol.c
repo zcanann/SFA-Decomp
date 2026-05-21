@@ -727,9 +727,9 @@ void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *
 void Camera_update(void)
 {
   short *psVar3;
-  int textActive;
+  u8 textActive;
   undefined4 uVar2;
-  
+
   if (gameTextFn_80134be8() != 0) {
     textActive = 1;
   }
