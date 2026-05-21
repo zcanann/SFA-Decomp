@@ -751,8 +751,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   int iVar25;
   int iVar26;
   float *pfVar27;
-  short *psVar28;
-  byte bVar29;
+  short *axisSamples;
+  byte eventScanFlags;
   int iVar30;
   double dVar31;
   undefined8 local_48;
@@ -760,10 +760,10 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   undefined8 local_30;
   undefined8 local_20;
   ObjAnimEventList *eventList;
-  float *pfVar20;
+  float *rootDeltaOut;
 
   eventList = events;
-  pfVar20 = (float *)events;
+  rootDeltaOut = (float *)events;
   dVar31 = (double)lbl_803DE90C;
   uVar18 = 0;
   if ((dVar31 <= moveStepScale) &&
@@ -863,9 +863,9 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
         if (iVar23 != 0) {
           iVar30 = (int)(gObjAnimEventFrameScale * fVar4);
           iVar26 = (int)(gObjAnimEventFrameScale * objAnim->currentMoveProgress);
-          bVar29 = iVar26 < iVar30;
+          eventScanFlags = iVar26 < iVar30;
           if (fVar3 < gObjAnimProgressZero) {
-            bVar29 = bVar29 | 2;
+            eventScanFlags = eventScanFlags | 2;
           }
           iVar25 = 0;
           iVar21 = 0;
@@ -876,25 +876,25 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
             uVar16 = uVar16 >> OBJANIM_EVENT_ID_SHIFT & OBJANIM_EVENT_ID_MASK;
             if (uVar16 != OBJANIM_EVENT_ID_NONE) {
               uVar17 = (undefined)uVar16;
-              if (((bVar29 == OBJANIM_EVENT_SCAN_FORWARD) && (iVar30 <= (int)uVar15)) &&
+              if (((eventScanFlags == OBJANIM_EVENT_SCAN_FORWARD) && (iVar30 <= (int)uVar15)) &&
                   ((int)uVar15 < iVar26)) {
                 cVar2 = eventList->triggerCount;
                 eventList->triggerCount = cVar2 + '\x01';
                 eventList->triggeredIds[(u8)cVar2] = uVar17;
               }
-              if ((bVar29 == OBJANIM_EVENT_SCAN_WRAPPED) &&
+              if ((eventScanFlags == OBJANIM_EVENT_SCAN_WRAPPED) &&
                   ((iVar30 <= (int)uVar15 || ((int)uVar15 < iVar26)))) {
                 cVar2 = eventList->triggerCount;
                 eventList->triggerCount = cVar2 + '\x01';
                 eventList->triggeredIds[(u8)cVar2] = uVar17;
               }
-              if (((bVar29 == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) &&
+              if (((eventScanFlags == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) &&
                   (iVar26 < (int)uVar15)) && ((int)uVar15 <= iVar30)) {
                 cVar2 = eventList->triggerCount;
                 eventList->triggerCount = cVar2 + '\x01';
                 eventList->triggeredIds[(u8)cVar2] = uVar17;
               }
-              if ((bVar29 == OBJANIM_EVENT_SCAN_REVERSE) &&
+              if ((eventScanFlags == OBJANIM_EVENT_SCAN_REVERSE) &&
                   ((iVar26 < (int)uVar15 || ((int)uVar15 <= iVar30)))) {
                 cVar2 = eventList->triggerCount;
                 eventList->triggerCount = cVar2 + '\x01';
@@ -921,7 +921,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
         fVar5 = *pfVar27;
         fVar6 = objAnim->rootMotionScale;
         iVar23 = (int)*(short *)(pfVar27 + 1);
-        psVar28 = (short *)((int)pfVar27 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+        axisSamples = (short *)((int)pfVar27 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
         local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,iVar23 - 1U ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
         fVar7 = (float)(local_30 - gObjAnimS32ToDoubleBias) * fVar4;
         uVar15 = (uint)fVar7;
@@ -948,15 +948,15 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
         }
         iVar26 = 0;
         iVar24 = (iVar23 - 1U) * 2;
-        pfVar27 = pfVar20;
+        pfVar27 = rootDeltaOut;
         do {
-          if (*psVar28 == 0) {
-            psVar28 = psVar28 + 1;
+          if (*axisSamples == 0) {
+            axisSamples = axisSamples + 1;
             if (iVar30 != 0) {
               iVar30 = iVar30 + 2;
             }
             if (iVar26 < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT) {
-              *pfVar20 = gObjAnimProgressZero;
+              *rootDeltaOut = gObjAnimProgressZero;
             }
             else {
               *(undefined2 *)((int)pfVar27 + 6) = 0;
@@ -966,7 +966,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
             if (iVar30 != 0) {
               iVar30 = iVar30 + 2;
             }
-            local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)psVar28[uVar15 + 1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
+            local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)axisSamples[uVar15 + 1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
             fVar9 = fVar13 * (float)(local_30 - gObjAnimS32ToDoubleBias);
             if (iVar30 != 0) {
               local_38 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
@@ -974,7 +974,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
               fVar9 = fVar11 * (float)(local_38 - gObjAnimS32ToDoubleBias) + fVar9;
             }
             fVar10 = fVar13 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                                       (int)(psVar28 + uVar15 + 1)[1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR)
+                                                       (int)(axisSamples + uVar15 + 1)[1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR)
                                      - gObjAnimS32ToDoubleBias);
             if (iVar30 != 0) {
               local_48 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
@@ -982,7 +982,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
               fVar10 = fVar11 * (float)(local_48 - gObjAnimS32ToDoubleBias) + fVar10;
             }
             fVar12 = fVar13 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                                       (int)psVar28[uVar16 + 1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
+                                                       (int)axisSamples[uVar16 + 1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                                      gObjAnimS32ToDoubleBias);
             if (iVar30 != 0) {
               fVar12 = fVar11 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
@@ -990,7 +990,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
                                                          OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias) + fVar12;
             }
             fVar14 = fVar13 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                                       (int)(psVar28 + uVar16 + 1)[1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR)
+                                                       (int)(axisSamples + uVar16 + 1)[1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR)
                                      - gObjAnimS32ToDoubleBias);
             if (iVar30 != 0) {
               local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
@@ -1000,7 +1000,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
             fVar12 = (fVar8 - (float)dVar1) * (fVar14 - fVar12) + fVar12;
             if (fVar3 <= gObjAnimProgressZero) {
               if (fVar4 < objAnim->currentMoveProgress) {
-                local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)psVar28[iVar23] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
+                local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)axisSamples[iVar23] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
                 fVar12 = -(fVar13 * (float)(local_20 - gObjAnimS32ToDoubleBias) - fVar12);
                 if (iVar30 != 0) {
                   local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
@@ -1010,7 +1010,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
               }
             }
             else if (objAnim->currentMoveProgress < fVar4) {
-              local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)psVar28[iVar23] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
+              local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)axisSamples[iVar23] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
               fVar12 = fVar13 * (float)(local_20 - gObjAnimS32ToDoubleBias) + fVar12;
               if (iVar30 != 0) {
                 local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)*(short *)(iVar24 + iVar30) ^ OBJANIM_S32_DOUBLE_BIAS_XOR
@@ -1020,17 +1020,17 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
             }
             fVar12 = fVar12 - ((fVar7 - (float)dVar31) * (fVar10 - fVar9) + fVar9);
             if (iVar26 < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT) {
-              *pfVar20 = fVar12 * fVar5 * fVar6;
+              *rootDeltaOut = fVar12 * fVar5 * fVar6;
             }
             else {
               *(short *)((int)pfVar27 + 6) = (short)(int)fVar12;
             }
-            psVar28 = psVar28 + iVar23 + 1;
+            axisSamples = axisSamples + iVar23 + 1;
             if (iVar30 != 0) {
               iVar30 = iVar30 + iVar23 * 2;
             }
           }
-          pfVar20 = pfVar20 + 1;
+          rootDeltaOut = rootDeltaOut + 1;
           pfVar27 = (float *)((int)pfVar27 + 2);
           iVar26 = iVar26 + 1;
         } while (iVar26 < OBJANIM_ROOT_CURVE_AXIS_COUNT);

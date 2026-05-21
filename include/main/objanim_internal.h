@@ -113,6 +113,12 @@ typedef struct ObjAnimRootCurveAxis {
   s16 samples[1];
 } ObjAnimRootCurveAxis;
 
+/*
+ * Root curves are packed by axis after the scale/sample-count header.  An axis
+ * with firstSample == 0 occupies only that first s16; otherwise it is followed
+ * by sampleCount additional s16 samples. Translation axes emit scaled floats,
+ * while rotation axes emit raw s16 deltas into ObjAnimEventList.
+ */
 typedef struct ObjAnimRootCurve {
   f32 scale;
   s16 sampleCount;
