@@ -602,5 +602,10 @@ void TrickyCurve_update(int *obj) {
         fn_80206968(obj);
     }
 }
+
+extern int *gExpgfxInterface;
+void TrickyCurve_free(int obj) {
+    ((void (*)(int))((void**)*gExpgfxInterface)[6])(obj);
+}
 #pragma peephole reset
 #pragma scheduling reset
