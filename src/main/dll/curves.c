@@ -3,6 +3,9 @@
 #include "main/dll/curves.h"
 #include <string.h>
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800068f4();
 extern undefined4 FUN_800068f8();

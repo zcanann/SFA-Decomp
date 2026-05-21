@@ -2,6 +2,9 @@
 #include "main/expgfx.h"
 #include "main/lightmap.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern uint FUN_80006914();
 extern undefined4 FUN_80006934();

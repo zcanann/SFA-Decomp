@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_13C.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_800067e8();
 extern undefined8 FUN_8000680c();
 extern undefined4 FUN_80006814();
