@@ -396,8 +396,8 @@ void fn_8016A660(int obj)
   extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
   extern f32 lbl_803E3144;
   extern f32 lbl_803E3148;
-  int sub;
   int i;
+  int sub;
   u8 *no;
 
   sub = *(int *)(obj + 0xb8);
