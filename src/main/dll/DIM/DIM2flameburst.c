@@ -1633,6 +1633,79 @@ void dimmagicbridge_hitDetect(void) {}
 void dimmagicbridge_release(void) {}
 void dimmagicbridge_initialise(void) {}
 
+extern f32 lbl_803E4A10;
+extern void fn_801B602C(int obj);
+extern int Obj_GetActiveModel(int obj);
+extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
+extern void fn_80065574(int a, int b, int c);
+
+#pragma peephole off
+#pragma scheduling off
+void dimmagicbridge_init(u8* obj, u8* params) {
+    u8* sub;
+    int model;
+    int modelData;
+    s32 minY;
+    int i;
+    int j;
+    int stable;
+    f32* p;
+    f32 a, b;
+    int v;
+    s16 hh;
+
+    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
+    *(void**)(obj + 0xbc) = (void*)&fn_801B602C;
+    sub = *(u8**)(obj + 0xb8);
+    minY = 0;
+    model = Obj_GetActiveModel((int)obj);
+    modelData = *(int*)model;
+
+    i = 0;
+    while (i < *(u16*)(modelData + 0xe4)) {
+        v = ObjModel_GetCurrentVertexCoords(model, i);
+        hh = *(s16*)(v + 4);
+        if (hh < minY) {
+            minY = hh;
+        }
+        i++;
+    }
+
+    stable = 0;
+    while (stable == 0) {
+        stable = 1;
+        j = 0;
+        p = (f32*)sub;
+        while (j < (int)sub[0x4f] - 1) {
+            a = p[1];
+            b = p[2];
+            if (a < b) {
+                p[1] = b;
+                p[2] = (f32)(s32)a;
+                stable = 0;
+            }
+            p++;
+            j++;
+        }
+    }
+
+    sub[0x4f] = 0xa;
+    *(f32*)sub = (f32)minY;
+
+    if (GameBit_Get(0x1e9) != 0) {
+        sub[0x5f] = 1;
+    }
+    if (sub[0x5f] != 0) {
+        for (i = 0; i < (int)sub[0x4f]; i++) {
+            sub[0x50 + i] = 0xff;
+            sub[0x40 + i] = 1;
+            fn_80065574(0x11, 0, 0);
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* 8b "li r3, N; blr" returners. */
 int explosion_getExtraSize(void) { return 0xa60; }
 int dimwooddoor2_getExtraSize(void) { return 0xc; }
