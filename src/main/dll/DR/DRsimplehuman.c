@@ -277,6 +277,41 @@ void spitembeam_hitDetect(void) {}
 void spitembeam_release(void) {}
 void spitembeam_initialise(void) {}
 
+extern int* ObjGroup_FindNearestObject(int group, int *obj, f32 *dist);
+extern int* objFindTexture(int *obj, int a, int b);
+extern f32 lbl_803E5AD8;
+
+#pragma scheduling off
+#pragma peephole off
+void spitembeam_update(int *obj) {
+    int *target;
+    u8 *def;
+    int *tex;
+    f32 d;
+
+    target = *(int**)((char*)obj + 0xf4);
+    def = *(u8**)((char*)obj + 0x4c);
+    d = lbl_803E5AD8;
+    if (target == NULL) {
+        *(int**)((char*)obj + 0xf4) = ObjGroup_FindNearestObject(9, obj, &d);
+    } else {
+        if (((int(*)(int*, s16))((int**)*(int**)((char*)target + 0x68))[10])(target, *(s16*)(def + 0x1a)) == 0
+            || ((int(*)(int*, s16))((int**)*(int**)((char*)target + 0x68))[11])(target, *(s16*)(def + 0x1a)) != 0) {
+            *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+            *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
+        }
+        tex = objFindTexture(obj, 0, 0);
+        if (tex != NULL) {
+            *(s16*)((char*)tex + 8) = (s16)(*(s16*)((char*)tex + 8) + 8);
+            if (*(s16*)((char*)tex + 8) > 0x400) {
+                *(s16*)((char*)tex + 8) = (s16)(*(s16*)((char*)tex + 8) - 0x400);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int spitembeam_getExtraSize(void) { return 0x0; }
 int spitembeam_getObjectTypeId(void) { return 0x0; }
