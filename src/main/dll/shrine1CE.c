@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/shrine1CE.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 getLActions();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();

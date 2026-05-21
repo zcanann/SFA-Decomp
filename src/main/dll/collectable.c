@@ -3,6 +3,9 @@
 #include "main/dll/collectable.h"
 #include "main/objanim.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 #define TRICKY_STATE_FLAG_FLOOR_RESPONSE 0x00100000
 #define TRICKY_STATE_FLAG_SPECIAL_FLOOR_RESPONSE 0x08000000
 #define TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE 0x10000000

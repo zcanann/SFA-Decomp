@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/camslide.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern double FUN_800176f4();
 extern uint getAngle();
 extern void mtxRotateByVec3s(void *matrix,void *angles);
