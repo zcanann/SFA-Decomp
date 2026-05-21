@@ -54,6 +54,88 @@ void FUN_80191f54(int param_1)
   return;
 }
 
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern void* mapGetBlock(int idx);
+extern int* getTablesBinEntry(int id);
+extern void* getLoadedTexture(int id);
+extern void* fn_8006070C(void* block, int idx);
+extern void fn_80056BBC(int slot, int a, int b, int c, int d, int e, int f, int g, int h);
+extern int fn_80056BF4(int a, int b, int c, int d, int e, int f, int g, int h);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80191F54(int obj, int* state)
+{
+    int* def;
+    void* block;
+    int* tables;
+    void* tex;
+    int i, j;
+    void* sub;
+    void* entry;
+    int t1, t2;
+
+    def = *(int**)((char*)obj + 0x4c);
+    block = mapGetBlock(objPosToMapBlockIdx(
+        *(f32*)((char*)obj + 0xc),
+        *(f32*)((char*)obj + 0x10),
+        *(f32*)((char*)obj + 0x14)));
+    if (block == NULL) {
+        *(u8*)((char*)state + 0x10) = 1;
+        return;
+    }
+    tables = (int*)getTablesBinEntry(0xe);
+    if (tables == NULL) return;
+    tex = getLoadedTexture(-tables[(s32)*(s16*)((char*)def + 0x18)]);
+    if (tex == NULL) return;
+
+    for (i = 0; i < (s32)*(u8*)((char*)block + 0xa2); i++) {
+        sub = fn_8006070C(block, i);
+        entry = sub;
+        for (j = 0; j < (s32)*(u8*)((char*)sub + 0x41); j++) {
+            if (*(void**)((char*)entry + 0x24) == tex) {
+                t1 = (s32)(u32)*(u16*)((char*)tex + 0xa) << 6;
+                t2 = (s32)(u32)*(u16*)((char*)tex + 0xc) << 6;
+                if (*(u8*)((char*)entry + 0x2a) != 0xff) {
+                    int v = *(int*)((char*)*(int**)((char*)obj + 0x4c) + 0x14);
+                    if (v == 0x49b2f || v == 0x49b67) {
+                        if (GameBit_Get(*(int*)((char*)state + 0x8)) != 0) {
+                            fn_80056BBC(
+                                (s32)*(u8*)((char*)entry + 0x2a),
+                                (s32)*(s8*)((char*)state + 0x11),
+                                (s32)*(s8*)((char*)state + 0x12),
+                                t1, t2,
+                                (s32)*(s8*)((char*)state + 0x13),
+                                (s32)*(s8*)((char*)state + 0x14),
+                                t1, t2);
+                        }
+                    } else {
+                        fn_80056BBC(
+                            (s32)*(u8*)((char*)entry + 0x2a),
+                            (s32)*(s8*)((char*)state + 0x11),
+                            (s32)*(s8*)((char*)state + 0x12),
+                            t1, t2,
+                            (s32)*(s8*)((char*)state + 0x13),
+                            (s32)*(s8*)((char*)state + 0x14),
+                            t1, t2);
+                    }
+                } else {
+                    *(u8*)((char*)entry + 0x2a) = (u8)fn_80056BF4(
+                        (s32)*(s8*)((char*)state + 0x11),
+                        (s32)*(s8*)((char*)state + 0x12),
+                        t1, t2,
+                        (s32)*(s8*)((char*)state + 0x13),
+                        (s32)*(s8*)((char*)state + 0x14),
+                        t1, t2);
+                }
+            }
+            entry = (void*)((char*)entry + 8);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
