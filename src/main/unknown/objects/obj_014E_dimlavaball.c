@@ -44,7 +44,7 @@
  * - slot 05: 0x801B0398 lavaball1bf_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B0368 lavaball1bf_render ref=render
  * - slot 07: 0x801B0330 lavaball1bf_free ref=free
- * - slot 08: 0x801B0328 lavaball1bf_func08 stub=const 0
+ * - slot 08: 0x801B0328 lavaball1bf_getObjectTypeId stub=const 0
  * - slot 09: 0x801B0320 lavaball1bf_getExtraSize stub=const 28 ref=getExtraSize (stub)
  * - slot 10: 0x801B02E4 lavaball1bf_setScale ref=setScale
  * - slot 11: 0x801B02BC lavaball1bf_func11

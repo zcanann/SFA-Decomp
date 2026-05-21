@@ -58,7 +58,7 @@
  * - slot 05: 0x801B1624 dimgate_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B15F4 dimgate_render ref=render
  * - slot 07: 0x801B15F0 dimgate_free stub=blr ref=free (stub)
- * - slot 08: 0x801B15E8 dimgate_func08 stub=const 0
+ * - slot 08: 0x801B15E8 dimgate_getObjectTypeId stub=const 0
  * - slot 09: 0x801B15E0 dimgate_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 

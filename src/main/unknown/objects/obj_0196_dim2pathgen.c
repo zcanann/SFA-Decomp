@@ -44,7 +44,7 @@
  * - slot 05: 0x801B83C8 dim2pathgenerator_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B83C4 dim2pathgenerator_render stub=blr ref=render (stub)
  * - slot 07: 0x801B83C0 dim2pathgenerator_free stub=blr ref=free (stub)
- * - slot 08: 0x801B83B8 dim2pathgenerator_func08 stub=const 0
+ * - slot 08: 0x801B83B8 dim2pathgenerator_getObjectTypeId stub=const 0
  * - slot 09: 0x801B83B0 dim2pathgenerator_getExtraSize stub=const 2472 ref=getExtraSize (stub)
  * - slot 10: 0x801B837C dim2pathgenerator_getCurveVals ref=setScale
  */

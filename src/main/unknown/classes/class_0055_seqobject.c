@@ -79,7 +79,7 @@
  *   slot 05: 0x801B3834 dimbridgecogmai_hitDetect
  *   slot 06: 0x801B3804 dimbridgecogmai_render
  *   slot 07: 0x801B37E0 dimbridgecogmai_free
- *   slot 08: 0x801B37D8 dimbridgecogmai_func08
+ *   slot 08: 0x801B37D8 dimbridgecogmai_getObjectTypeId
  *   slot 09: 0x801B37D0 dimbridgecogmai_getExtraSize
  */
 

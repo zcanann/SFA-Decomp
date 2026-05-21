@@ -48,7 +48,7 @@
  * - slot 05: 0x801B2C64 dimcannon_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B2BCC dimcannon_render ref=render
  * - slot 07: 0x801B2B68 dimcannon_free ref=free
- * - slot 08: 0x801B2B4C dimcannon_func08
+ * - slot 08: 0x801B2B4C dimcannon_getObjectTypeId
  * - slot 09: 0x801B2B30 dimcannon_getExtraSize ref=getExtraSize
  */
 

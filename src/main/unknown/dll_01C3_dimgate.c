@@ -14,5 +14,5 @@
 // - 5: dimgate_hitDetect (0x801B1624)
 // - 6: dimgate_render (0x801B15F4)
 // - 7: dimgate_free (0x801B15F0)
-// - 8: dimgate_func08 (0x801B15E8)
+// - 8: dimgate_getObjectTypeId (0x801B15E8)
 // - 9: dimgate_getExtraSize (0x801B15E0)

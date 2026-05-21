@@ -1948,9 +1948,9 @@ int imspaceringgen_getObjectTypeId(void) { return 0x0; }
 int linkb_levcontrol_getExtraSize(void) { return 0x10; }
 int link_levcontrol_getExtraSize(void) { return 0x10; }
 int lavaball1bf_getExtraSize(void) { return 0x1c; }
-int lavaball1bf_func08(void) { return 0x0; }
+int lavaball1bf_getObjectTypeId(void) { return 0x0; }
 int dimlogfire_getExtraSize(void) { return 0x24; }
-int dimlogfire_func08(void) { return 0x1; }
+int dimlogfire_getObjectTypeId(void) { return 0x1; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DDB48;
@@ -2053,7 +2053,7 @@ void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 #pragma scheduling off
 #pragma peephole off
 int lavaball1be_getExtraSize(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) return 0x0; return 0x14; }
-int lavaball1be_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) return 0x0; return 0x2; }
+int lavaball1be_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x1fa) return 0x0; return 0x2; }
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset

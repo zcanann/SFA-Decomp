@@ -14,5 +14,5 @@
 // - 5: dimbarrier_hitDetect (0x801B1B84)
 // - 6: dimbarrier_render (0x801B1B54)
 // - 7: dimbarrier_free (0x801B1B50)
-// - 8: dimbarrier_func08 (0x801B1B48)
+// - 8: dimbarrier_getObjectTypeId (0x801B1B48)
 // - 9: dimbarrier_getExtraSize (0x801B1B40)

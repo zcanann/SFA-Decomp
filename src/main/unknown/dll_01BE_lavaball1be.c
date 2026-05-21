@@ -14,7 +14,7 @@
 // - 5: lavaball1be_hitDetect (0x801AFC8C)
 // - 6: lavaball1be_render (0x801AFC0C)
 // - 7: lavaball1be_free (0x801AFBCC)
-// - 8: lavaball1be_func08 (0x801AFBB0)
+// - 8: lavaball1be_getObjectTypeId (0x801AFBB0)
 // - 9: lavaball1be_getExtraSize (0x801AFB94)
 // - 10: lavaball1be_setScale (0x801AF9E4)
 // - 11: lavaball1be_func11 (0x801AFB84)

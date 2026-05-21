@@ -1184,14 +1184,14 @@ void dll_1DF_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_1DB_getExtraSize(void) { return 0x8; }
-int dll_1DB_func08(void) { return 0x0; }
+int dll_1DB_getObjectTypeId(void) { return 0x0; }
 int dim2icefloe_getExtraSize(void) { return 0xbc; }
-int dim2icefloe_func08(void) { return 0x0; }
+int dim2icefloe_getObjectTypeId(void) { return 0x0; }
 int dim2icicle_getExtraSize(void) { return 0xc; }
-int dim2icicle_func08(void) { return 0x0; }
+int dim2icicle_getObjectTypeId(void) { return 0x0; }
 int dim2lavacontrol_getExtraSize(void) { return 0x10; }
 int dll_1DF_getExtraSize(void) { return 0x28; }
-int dll_1DF_func08(void) { return 0x0; }
+int dll_1DF_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4B08;

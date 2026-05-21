@@ -14,7 +14,7 @@
 // - 5: dimdismountpoint_hitDetect (0x801B3BD4)
 // - 6: dimdismountpoint_render (0x801B3B84)
 // - 7: dimdismountpoint_free (0x801B3B60)
-// - 8: dimdismountpoint_func08 (0x801B3B58)
+// - 8: dimdismountpoint_getObjectTypeId (0x801B3B58)
 // - 9: dimdismountpoint_getExtraSize (0x801B3B50)
 // - 10: dimdismountpoint_setScale (0x801B3AAC)
 // - 11: dimdismountpoint_func11 (0x801B3A68)

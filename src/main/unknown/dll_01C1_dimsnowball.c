@@ -14,5 +14,5 @@
 // - 5: dimsnowball_hitDetect (0x801B0E18)
 // - 6: dimsnowball_render (0x801B0DE8)
 // - 7: dimsnowball_free (0x801B0DE4)
-// - 8: dimsnowball_func08 (0x801B0DDC)
+// - 8: dimsnowball_getObjectTypeId (0x801B0DDC)
 // - 9: dimsnowball_getExtraSize (0x801B0DD4)

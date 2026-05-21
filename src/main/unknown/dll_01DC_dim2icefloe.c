@@ -14,5 +14,5 @@
 // - 5: dim2icefloe_hitDetect (0x801B8FC0)
 // - 6: dim2icefloe_render (0x801B8F90)
 // - 7: dim2icefloe_free (0x801B8F8C)
-// - 8: dim2icefloe_func08 (0x801B8F84)
+// - 8: dim2icefloe_getObjectTypeId (0x801B8F84)
 // - 9: dim2icefloe_getExtraSize (0x801B8F7C)

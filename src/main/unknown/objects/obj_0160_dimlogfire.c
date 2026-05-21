@@ -55,7 +55,7 @@
  * - slot 04: 0x801B0924 dimlogfire_update ref=update
  * - slot 06: 0x801B0848 dimlogfire_render ref=render
  * - slot 07: 0x801B07C0 dimlogfire_free ref=free
- * - slot 08: 0x801B07B8 dimlogfire_func08 stub=const 1
+ * - slot 08: 0x801B07B8 dimlogfire_getObjectTypeId stub=const 1
  * - slot 09: 0x801B07B0 dimlogfire_getExtraSize stub=const 36 ref=getExtraSize (stub)
  */
 

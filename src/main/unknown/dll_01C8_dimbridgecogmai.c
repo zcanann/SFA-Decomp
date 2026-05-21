@@ -14,5 +14,5 @@
 // - 5: dimbridgecogmai_hitDetect (0x801B3834)
 // - 6: dimbridgecogmai_render (0x801B3804)
 // - 7: dimbridgecogmai_free (0x801B37E0)
-// - 8: dimbridgecogmai_func08 (0x801B37D8)
+// - 8: dimbridgecogmai_getObjectTypeId (0x801B37D8)
 // - 9: dimbridgecogmai_getExtraSize (0x801B37D0)

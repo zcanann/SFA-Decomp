@@ -14,5 +14,5 @@
 // - 5: explosion_hitDetect (0x801B4804)
 // - 6: explosion_render (0x801B4330)
 // - 7: explosion_free (0x801B4300)
-// - 8: explosion_func08 (0x801B42D0)
+// - 8: explosion_getObjectTypeId (0x801B42D0)
 // - 9: explosion_getExtraSize (0x801B42C8)

@@ -54,7 +54,7 @@
  * - slot 05: 0x801B6C64 dim_tricky_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B6C40 dim_tricky_render ref=render
  * - slot 07: 0x801B6C3C dim_tricky_free stub=blr ref=free (stub)
- * - slot 08: 0x801B6C34 dim_tricky_func08 stub=const 0
+ * - slot 08: 0x801B6C34 dim_tricky_getObjectTypeId stub=const 0
  * - slot 09: 0x801B6C2C dim_tricky_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 

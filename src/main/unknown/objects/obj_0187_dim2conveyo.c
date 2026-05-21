@@ -56,7 +56,7 @@
  * - slot 05: 0x801B7314 dim2conveyor_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B72E4 dim2conveyor_render ref=render
  * - slot 07: 0x801B72C0 dim2conveyor_free ref=free
- * - slot 08: 0x801B72B8 dim2conveyor_func08 stub=const 0
+ * - slot 08: 0x801B72B8 dim2conveyor_getObjectTypeId stub=const 0
  * - slot 09: 0x801B72B0 dim2conveyor_getExtraSize stub=const 20 ref=getExtraSize (stub)
  * - slot 10: 0x801B7154 dim2conveyor_setScale ref=setScale
  */

@@ -14,5 +14,5 @@
 // - 5: dimlavasmash_hitDetect (0x801B35C4)
 // - 6: dimlavasmash_render (0x801B3584)
 // - 7: dimlavasmash_free (0x801B3580)
-// - 8: dimlavasmash_func08 (0x801B3578)
+// - 8: dimlavasmash_getObjectTypeId (0x801B3578)
 // - 9: dimlavasmash_getExtraSize (0x801B3570)

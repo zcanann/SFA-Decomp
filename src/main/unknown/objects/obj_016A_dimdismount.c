@@ -56,7 +56,7 @@
  * - slot 05: 0x801B3BD4 dimdismountpoint_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B3B84 dimdismountpoint_render ref=render
  * - slot 07: 0x801B3B60 dimdismountpoint_free ref=free
- * - slot 08: 0x801B3B58 dimdismountpoint_func08 stub=const 0
+ * - slot 08: 0x801B3B58 dimdismountpoint_getObjectTypeId stub=const 0
  * - slot 09: 0x801B3B50 dimdismountpoint_getExtraSize stub=const 16 ref=getExtraSize (stub)
  * - slot 10: 0x801B3AAC dimdismountpoint_setScale ref=setScale
  * - slot 11: 0x801B3A68 dimdismountpoint_func11

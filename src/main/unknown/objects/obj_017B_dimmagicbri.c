@@ -56,7 +56,7 @@
  * - slot 05: 0x801B61A8 dimmagicbridge_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B6178 dimmagicbridge_render ref=render
  * - slot 07: 0x801B6174 dimmagicbridge_free stub=blr ref=free (stub)
- * - slot 08: 0x801B616C dimmagicbridge_func08 stub=const 0
+ * - slot 08: 0x801B616C dimmagicbridge_getObjectTypeId stub=const 0
  * - slot 09: 0x801B6164 dimmagicbridge_getExtraSize stub=const 104 ref=getExtraSize (stub)
  */
 

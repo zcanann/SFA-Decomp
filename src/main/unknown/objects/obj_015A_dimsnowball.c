@@ -44,7 +44,7 @@
  * - slot 05: 0x801B142C dimsnowball1c2_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B13FC dimsnowball1c2_render ref=render
  * - slot 07: 0x801B13F8 dimsnowball1c2_free stub=blr ref=free (stub)
- * - slot 08: 0x801B13F0 dimsnowball1c2_func08 stub=const 0
+ * - slot 08: 0x801B13F0 dimsnowball1c2_getObjectTypeId stub=const 0
  * - slot 09: 0x801B13E8 dimsnowball1c2_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

@@ -419,7 +419,7 @@
  *   slot 05: 0x801B6C64 dim_tricky_hitDetect
  *   slot 06: 0x801B6C40 dim_tricky_render
  *   slot 07: 0x801B6C3C dim_tricky_free
- *   slot 08: 0x801B6C34 dim_tricky_func08
+ *   slot 08: 0x801B6C34 dim_tricky_getObjectTypeId
  *   slot 09: 0x801B6C2C dim_tricky_getExtraSize
  * - DLL 0x01D2: gWorldPlanetObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8020D9E0 worldplanet_initialise

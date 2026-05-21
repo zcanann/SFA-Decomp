@@ -14,5 +14,5 @@
 // - 5: dim2icicle_hitDetect (0x801B9440)
 // - 6: dim2icicle_render (0x801B9410)
 // - 7: dim2icicle_free (0x801B940C)
-// - 8: dim2icicle_func08 (0x801B9404)
+// - 8: dim2icicle_getObjectTypeId (0x801B9404)
 // - 9: dim2icicle_getExtraSize (0x801B93FC)

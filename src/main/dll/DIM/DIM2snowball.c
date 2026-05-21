@@ -1177,20 +1177,20 @@ void dll_1DA_free(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_1CF_getExtraSize(void) { return 0x0; }
-int dll_1CF_func08(void) { return 0x0; }
+int dll_1CF_getObjectTypeId(void) { return 0x0; }
 int dim_tricky_getExtraSize(void) { return 0x1; }
-int dim_tricky_func08(void) { return 0x0; }
+int dim_tricky_getObjectTypeId(void) { return 0x0; }
 int dimtruthhornice_getExtraSize(void) { return 0x8; }
 int dim2conveyor_getExtraSize(void) { return 0x14; }
-int dim2conveyor_func08(void) { return 0x0; }
+int dim2conveyor_getObjectTypeId(void) { return 0x0; }
 int dll_1D6_getExtraSize(void) { return 0x20; }
-int dll_1D6_func08(void) { return 0x0; }
+int dll_1D6_getObjectTypeId(void) { return 0x0; }
 int dim2snowball_getExtraSize(void) { return 0xb0; }
-int dim2snowball_func08(void) { return 0x0; }
+int dim2snowball_getObjectTypeId(void) { return 0x0; }
 int dim2pathgenerator_getExtraSize(void) { return 0x9a8; }
-int dim2pathgenerator_func08(void) { return 0x0; }
+int dim2pathgenerator_getObjectTypeId(void) { return 0x0; }
 int dll_1DA_getExtraSize(void) { return 0x8; }
-int dll_1DA_func08(void) { return 0x0; }
+int dll_1DA_getObjectTypeId(void) { return 0x0; }
 
 /* 16b chained patterns. */
 #pragma scheduling off

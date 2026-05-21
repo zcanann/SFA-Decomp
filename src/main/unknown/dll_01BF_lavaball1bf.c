@@ -14,7 +14,7 @@
 // - 5: lavaball1bf_hitDetect (0x801B0398)
 // - 6: lavaball1bf_render (0x801B0368)
 // - 7: lavaball1bf_free (0x801B0330)
-// - 8: lavaball1bf_func08 (0x801B0328)
+// - 8: lavaball1bf_getObjectTypeId (0x801B0328)
 // - 9: lavaball1bf_getExtraSize (0x801B0320)
 // - 10: lavaball1bf_setScale (0x801B02E4)
 // - 11: lavaball1bf_func11 (0x801B02BC)

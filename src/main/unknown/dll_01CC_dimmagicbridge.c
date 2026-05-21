@@ -14,5 +14,5 @@
 // - 5: dimmagicbridge_hitDetect (0x801B61A8)
 // - 6: dimmagicbridge_render (0x801B6178)
 // - 7: dimmagicbridge_free (0x801B6174)
-// - 8: dimmagicbridge_func08 (0x801B616C)
+// - 8: dimmagicbridge_getObjectTypeId (0x801B616C)
 // - 9: dimmagicbridge_getExtraSize (0x801B6164)

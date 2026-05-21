@@ -14,5 +14,5 @@
 // - 5: dimcannon_hitDetect (0x801B2C64)
 // - 6: dimcannon_render (0x801B2BCC)
 // - 7: dimcannon_free (0x801B2B68)
-// - 8: dimcannon_func08 (0x801B2B4C)
+// - 8: dimcannon_getObjectTypeId (0x801B2B4C)
 // - 9: dimcannon_getExtraSize (0x801B2B30)

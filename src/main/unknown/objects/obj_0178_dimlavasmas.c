@@ -57,7 +57,7 @@
  * - slot 05: 0x801B35C4 dimlavasmash_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B3584 dimlavasmash_render ref=render
  * - slot 07: 0x801B3580 dimlavasmash_free stub=blr ref=free (stub)
- * - slot 08: 0x801B3578 dimlavasmash_func08 stub=const 0
+ * - slot 08: 0x801B3578 dimlavasmash_getObjectTypeId stub=const 0
  * - slot 09: 0x801B3570 dimlavasmash_getExtraSize stub=const 3 ref=getExtraSize (stub)
  */
 

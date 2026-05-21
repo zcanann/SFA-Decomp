@@ -1104,14 +1104,14 @@
  *   slot 05: 0x801AFC8C lavaball1be_hitDetect
  *   slot 06: 0x801AFC0C lavaball1be_render
  *   slot 07: 0x801AFBCC lavaball1be_free
- *   slot 08: 0x801AFBB0 lavaball1be_func08
+ *   slot 08: 0x801AFBB0 lavaball1be_getObjectTypeId
  *   slot 09: 0x801AFB94 lavaball1be_getExtraSize
  * - DLL 0x01C0: gDIMLogFireObjDescriptor (slots=10, mask=0001101111)
  *   slot 03: 0x801B0BE8 dimlogfire_init
  *   slot 04: 0x801B0924 dimlogfire_update
  *   slot 06: 0x801B0848 dimlogfire_render
  *   slot 07: 0x801B07C0 dimlogfire_free
- *   slot 08: 0x801B07B8 dimlogfire_func08
+ *   slot 08: 0x801B07B8 dimlogfire_getObjectTypeId
  *   slot 09: 0x801B07B0 dimlogfire_getExtraSize
  * - DLL 0x01C1: gDIMSnowBallObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B13E4 dimsnowball_initialise
@@ -1121,7 +1121,7 @@
  *   slot 05: 0x801B0E18 dimsnowball_hitDetect
  *   slot 06: 0x801B0DE8 dimsnowball_render
  *   slot 07: 0x801B0DE4 dimsnowball_free
- *   slot 08: 0x801B0DDC dimsnowball_func08
+ *   slot 08: 0x801B0DDC dimsnowball_getObjectTypeId
  *   slot 09: 0x801B0DD4 dimsnowball_getExtraSize
  * - DLL 0x01C3: gDIMGateObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B17F0 dimgate_initialise
@@ -1131,7 +1131,7 @@
  *   slot 05: 0x801B1624 dimgate_hitDetect
  *   slot 06: 0x801B15F4 dimgate_render
  *   slot 07: 0x801B15F0 dimgate_free
- *   slot 08: 0x801B15E8 dimgate_func08
+ *   slot 08: 0x801B15E8 dimgate_getObjectTypeId
  *   slot 09: 0x801B15E0 dimgate_getExtraSize
  * - DLL 0x01C4: gDIMIceWallObjDescriptor (slots=10, mask=0001100001)
  *   slot 03: 0x801B1AB8 dimicewall_init
@@ -1145,7 +1145,7 @@
  *   slot 05: 0x801B1B84 dimbarrier_hitDetect
  *   slot 06: 0x801B1B54 dimbarrier_render
  *   slot 07: 0x801B1B50 dimbarrier_free
- *   slot 08: 0x801B1B48 dimbarrier_func08
+ *   slot 08: 0x801B1B48 dimbarrier_getObjectTypeId
  *   slot 09: 0x801B1B40 dimbarrier_getExtraSize
  * - DLL 0x01C6: gDIMCannonObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B3340 dimcannon_initialise
@@ -1155,7 +1155,7 @@
  *   slot 05: 0x801B2C64 dimcannon_hitDetect
  *   slot 06: 0x801B2BCC dimcannon_render
  *   slot 07: 0x801B2B68 dimcannon_free
- *   slot 08: 0x801B2B4C dimcannon_func08
+ *   slot 08: 0x801B2B4C dimcannon_getObjectTypeId
  *   slot 09: 0x801B2B30 dimcannon_getExtraSize
  * - DLL 0x01C7: gDIMLavaSmashObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B3764 dimlavasmash_initialise
@@ -1165,7 +1165,7 @@
  *   slot 05: 0x801B35C4 dimlavasmash_hitDetect
  *   slot 06: 0x801B3584 dimlavasmash_render
  *   slot 07: 0x801B3580 dimlavasmash_free
- *   slot 08: 0x801B3578 dimlavasmash_func08
+ *   slot 08: 0x801B3578 dimlavasmash_getObjectTypeId
  *   slot 09: 0x801B3570 dimlavasmash_getExtraSize
  * - DLL 0x01C9: gDIMDismountPointObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x801B3DE0 dimdismountpoint_initialise
@@ -1175,7 +1175,7 @@
  *   slot 05: 0x801B3BD4 dimdismountpoint_hitDetect
  *   slot 06: 0x801B3B84 dimdismountpoint_render
  *   slot 07: 0x801B3B60 dimdismountpoint_free
- *   slot 08: 0x801B3B58 dimdismountpoint_func08
+ *   slot 08: 0x801B3B58 dimdismountpoint_getObjectTypeId
  *   slot 09: 0x801B3B50 dimdismountpoint_getExtraSize
  * - DLL 0x01CA: gExplosionObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B56B8 explosion_initialise
@@ -1185,7 +1185,7 @@
  *   slot 05: 0x801B4804 explosion_hitDetect
  *   slot 06: 0x801B4330 explosion_render
  *   slot 07: 0x801B4300 explosion_free
- *   slot 08: 0x801B42D0 explosion_func08
+ *   slot 08: 0x801B42D0 explosion_getObjectTypeId
  *   slot 09: 0x801B42C8 explosion_getExtraSize
  * - DLL 0x01CB: gDIMWoodDoor2ObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B5A24 dimwooddoor2_initialise
@@ -1195,7 +1195,7 @@
  *   slot 05: 0x801B5800 dimwooddoor2_hitDetect
  *   slot 06: 0x801B57D0 dimwooddoor2_render
  *   slot 07: 0x801B57CC dimwooddoor2_free
- *   slot 08: 0x801B57C4 dimwooddoor2_func08
+ *   slot 08: 0x801B57C4 dimwooddoor2_getObjectTypeId
  *   slot 09: 0x801B57BC dimwooddoor2_getExtraSize
  * - DLL 0x01CC: gDIMMagicBridgeObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B63F0 dimmagicbridge_initialise
@@ -1205,7 +1205,7 @@
  *   slot 05: 0x801B61A8 dimmagicbridge_hitDetect
  *   slot 06: 0x801B6178 dimmagicbridge_render
  *   slot 07: 0x801B6174 dimmagicbridge_free
- *   slot 08: 0x801B616C dimmagicbridge_func08
+ *   slot 08: 0x801B616C dimmagicbridge_getObjectTypeId
  *   slot 09: 0x801B6164 dimmagicbridge_getExtraSize
  * - DLL 0x01D1: gDIMTruthHornIceObjDescriptor (slots=10, mask=0001100001)
  *   slot 03: 0x801B70C4 dimtruthhornice_init
@@ -1229,7 +1229,7 @@
  *   slot 05: 0x801B7314 dim2conveyor_hitDetect
  *   slot 06: 0x801B72E4 dim2conveyor_render
  *   slot 07: 0x801B72C0 dim2conveyor_free
- *   slot 08: 0x801B72B8 dim2conveyor_func08
+ *   slot 08: 0x801B72B8 dim2conveyor_getObjectTypeId
  *   slot 09: 0x801B72B0 dim2conveyor_getExtraSize
  * - DLL 0x01D7: gDIM2SnowBallObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B8378 dim2snowball_initialise
@@ -1239,7 +1239,7 @@
  *   slot 05: 0x801B7D8C dim2snowball_hitDetect
  *   slot 06: 0x801B7D5C dim2snowball_render
  *   slot 07: 0x801B7D58 dim2snowball_free
- *   slot 08: 0x801B7D50 dim2snowball_func08
+ *   slot 08: 0x801B7D50 dim2snowball_getObjectTypeId
  *   slot 09: 0x801B7D48 dim2snowball_getExtraSize
  * - DLL 0x01D9: gDIM2PrisonMammothObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802BC740 dim2prisonmammoth_initialise
@@ -1259,7 +1259,7 @@
  *   slot 05: 0x801B8FC0 dim2icefloe_hitDetect
  *   slot 06: 0x801B8F90 dim2icefloe_render
  *   slot 07: 0x801B8F8C dim2icefloe_free
- *   slot 08: 0x801B8F84 dim2icefloe_func08
+ *   slot 08: 0x801B8F84 dim2icefloe_getObjectTypeId
  *   slot 09: 0x801B8F7C dim2icefloe_getExtraSize
  * - DLL 0x01DD: gDIM2IcicleObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B980C dim2icicle_initialise
@@ -1269,7 +1269,7 @@
  *   slot 05: 0x801B9440 dim2icicle_hitDetect
  *   slot 06: 0x801B9410 dim2icicle_render
  *   slot 07: 0x801B940C dim2icicle_free
- *   slot 08: 0x801B9404 dim2icicle_func08
+ *   slot 08: 0x801B9404 dim2icicle_getObjectTypeId
  *   slot 09: 0x801B93FC dim2icicle_getExtraSize
  * - DLL 0x01DE: gDIM2LavaControlObjDescriptor (slots=11, mask=00011011011)
  *   slot 03: 0x801B9B80 dim2lavacontrol_init

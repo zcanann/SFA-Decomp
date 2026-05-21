@@ -57,7 +57,7 @@
  * - slot 05: 0x801B1B84 dimbarrier_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B1B54 dimbarrier_render ref=render
  * - slot 07: 0x801B1B50 dimbarrier_free stub=blr ref=free (stub)
- * - slot 08: 0x801B1B48 dimbarrier_func08 stub=const 0
+ * - slot 08: 0x801B1B48 dimbarrier_getObjectTypeId stub=const 0
  * - slot 09: 0x801B1B40 dimbarrier_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

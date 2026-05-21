@@ -14,5 +14,5 @@
 // - 5: dimwooddoor2_hitDetect (0x801B5800)
 // - 6: dimwooddoor2_render (0x801B57D0)
 // - 7: dimwooddoor2_free (0x801B57CC)
-// - 8: dimwooddoor2_func08 (0x801B57C4)
+// - 8: dimwooddoor2_getObjectTypeId (0x801B57C4)
 // - 9: dimwooddoor2_getExtraSize (0x801B57BC)

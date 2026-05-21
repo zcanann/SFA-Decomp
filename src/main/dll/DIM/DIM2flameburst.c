@@ -1636,11 +1636,11 @@ void dimmagicbridge_initialise(void) {}
 /* 8b "li r3, N; blr" returners. */
 int explosion_getExtraSize(void) { return 0xa60; }
 int dimwooddoor2_getExtraSize(void) { return 0xc; }
-int dimwooddoor2_func08(void) { return 0x0; }
+int dimwooddoor2_getObjectTypeId(void) { return 0x0; }
 int dll_1CE_getExtraSize(void) { return 0xc; }
-int dll_1CE_func08(void) { return 0x0; }
+int dll_1CE_getObjectTypeId(void) { return 0x0; }
 int dimmagicbridge_getExtraSize(void) { return 0x68; }
-int dimmagicbridge_func08(void) { return 0x0; }
+int dimmagicbridge_getObjectTypeId(void) { return 0x0; }
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -1758,9 +1758,9 @@ void explosion_free(int obj)
     }
 }
 
-/* explosion_func08: tile/index lookup capped by table count. */
+/* explosion_getObjectTypeId: tile/index lookup capped by table count. */
 #pragma scheduling off
-int explosion_func08(int obj)
+int explosion_getObjectTypeId(int obj)
 {
     int idx = (int)*(short *)(*(int *)(obj + 0x4c) + 0x1c) & 3;
     if (idx >= (int)*(char *)(*(int *)(obj + 0x50) + 0x55)) {

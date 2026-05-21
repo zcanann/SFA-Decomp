@@ -350,7 +350,7 @@ int dimsnowball_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: dimsnowball_func08
+ * Function: dimsnowball_getObjectTypeId
  * EN v1.0 Address: 0x801B0DDC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x801B0F58
@@ -360,7 +360,7 @@ int dimsnowball_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dimsnowball_func08(void)
+int dimsnowball_getObjectTypeId(void)
 {
   return 2;
 }

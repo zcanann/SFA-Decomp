@@ -271,7 +271,7 @@ undefined4 FUN_801b3af4(int param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: dimdismountpoint_func08
+ * Function: dimdismountpoint_getObjectTypeId
  * EN v1.0 Address: 0x801B3B58
  * EN v1.0 Size: 36b
  * EN v1.1 Address: 0x801B3D94
@@ -281,7 +281,7 @@ undefined4 FUN_801b3af4(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_dropped_dimdismountpoint_func08(int param_1)
+void FUN_dropped_dimdismountpoint_getObjectTypeId(int param_1)
 {
   ObjGroup_RemoveObject(param_1,0xf);
   return;
@@ -411,7 +411,7 @@ void dimdismountpoint_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
-int dimbridgecogmai_func08(void) { return 0x0; }
+int dimbridgecogmai_getObjectTypeId(void) { return 0x0; }
 int dimdismountpoint_getExtraSize(void) { return 0x10; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -430,7 +430,7 @@ void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
 #pragma scheduling reset
 
 void dimbridgecogmai_release(void) {}
-int dimdismountpoint_func08(void) { return 0; }
+int dimdismountpoint_getObjectTypeId(void) { return 0; }
 
 extern int fn_801B3768(int obj, int p2, char *r5);
 #pragma scheduling off

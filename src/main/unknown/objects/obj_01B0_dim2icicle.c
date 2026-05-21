@@ -56,7 +56,7 @@
  * - slot 05: 0x801B9440 dim2icicle_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801B9410 dim2icicle_render ref=render
  * - slot 07: 0x801B940C dim2icicle_free stub=blr ref=free (stub)
- * - slot 08: 0x801B9404 dim2icicle_func08 stub=const 0
+ * - slot 08: 0x801B9404 dim2icicle_getObjectTypeId stub=const 0
  * - slot 09: 0x801B93FC dim2icicle_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

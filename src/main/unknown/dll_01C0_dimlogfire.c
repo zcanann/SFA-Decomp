@@ -11,5 +11,5 @@
 // - 4: dimlogfire_update (0x801B0924)
 // - 6: dimlogfire_render (0x801B0848)
 // - 7: dimlogfire_free (0x801B07C0)
-// - 8: dimlogfire_func08 (0x801B07B8)
+// - 8: dimlogfire_getObjectTypeId (0x801B07B8)
 // - 9: dimlogfire_getExtraSize (0x801B07B0)
