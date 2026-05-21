@@ -4300,3 +4300,93 @@ int fn_80138D7C(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
+extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E23E0;
+extern f32 lbl_803E23E4;
+extern f32 lbl_803E23E8;
+extern f32 lbl_803E23EC;
+extern f32 lbl_803E23F0;
+extern f32 lbl_803E23F4;
+extern f32 lbl_803E23F8;
+extern f64 lbl_803E2400;
+
+/* fn_80138B60: weighted blend-channel animator. On state[0x82e] bit 0x80,
+ * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
+ * the active flag. While bit 0x40 is set, ramps state[0x830] toward
+ * (s8)data[0] / (s8)data[1] with acceleration lbl_803E23E4 and damping
+ * lbl_803E23F0, clamps to [0, lbl_803E23E8], and pushes the result to the
+ * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80138B60(int obj, register u8* state) {
+    extern void* Obj_GetActiveModel(int obj);
+    int model;
+    f32 target;
+    Obj_GetActiveModel(obj);
+    if ((state[0x82e] & 0x80) != 0) {
+        model = (int)Obj_GetActiveModel(obj);
+        ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
+        *(f32*)(state + 0x830) = lbl_803E23E0;
+        ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
+        {
+            register int v = 0;
+            register u32 b;
+            asm {
+                lbz b, 0x82e(state)
+                rlwimi b, v, 7, 24, 24
+                stb b, 0x82e(state)
+            }
+        }
+        {
+            register int v = 1;
+            register u32 b;
+            asm {
+                lbz b, 0x82e(state)
+                rlwimi b, v, 6, 25, 25
+                stb b, 0x82e(state)
+            }
+        }
+    }
+    if ((state[0x82e] & 0x40) != 0) {
+        u8* data = *(u8**)(state + 0);
+        target = (f32)(u32)data[0] / (f32)(u32)data[1];
+        if (target > *(f32*)(state + 0x830)) {
+            *(f32*)(state + 0x834) = lbl_803E23E4 * timeDelta + *(f32*)(state + 0x834);
+            *(f32*)(state + 0x830) = *(f32*)(state + 0x834) * timeDelta + *(f32*)(state + 0x830);
+            if (*(f32*)(state + 0x830) > lbl_803E23E8) {
+                *(f32*)(state + 0x834) = lbl_803E23DC;
+                *(f32*)(state + 0x830) = lbl_803E23E8;
+            } else if (*(f32*)(state + 0x830) > target) {
+                if (*(f32*)(state + 0x834) < lbl_803E23EC) {
+                    *(f32*)(state + 0x834) = lbl_803E23DC;
+                    *(f32*)(state + 0x830) = target;
+                } else {
+                    *(f32*)(state + 0x834) = *(f32*)(state + 0x834) * lbl_803E23F0;
+                }
+            }
+        } else if (target < *(f32*)(state + 0x830)) {
+            *(f32*)(state + 0x834) = *(f32*)(state + 0x834) - lbl_803E23E4 * timeDelta;
+            *(f32*)(state + 0x830) = *(f32*)(state + 0x834) * timeDelta + *(f32*)(state + 0x830);
+            if (*(f32*)(state + 0x830) < lbl_803E23DC) {
+                *(f32*)(state + 0x834) = lbl_803E23DC;
+                *(f32*)(state + 0x830) = lbl_803E23DC;
+            }
+            if (*(f32*)(state + 0x830) < target) {
+                if (*(f32*)(state + 0x834) > lbl_803E23F4) {
+                    *(f32*)(state + 0x834) = lbl_803E23DC;
+                    *(f32*)(state + 0x830) = target;
+                } else {
+                    *(f32*)(state + 0x834) = *(f32*)(state + 0x834) * lbl_803E23F0;
+                }
+            }
+        }
+        ObjModel_SetBlendChannelWeight(
+            (int)Obj_GetActiveModel(obj), 1,
+            lbl_803E23F8 * *(f32*)(state + 0x830) - lbl_803E23E8);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
