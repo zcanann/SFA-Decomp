@@ -59,7 +59,7 @@
  * - slot 05: 0x80183C98 largecrate_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80183B8C largecrate_render ref=render
  * - slot 07: 0x80183B54 largecrate_free ref=free
- * - slot 08: 0x80183B4C largecrate_func08 stub=const 0
+ * - slot 08: 0x80183B4C largecrate_getObjectTypeId stub=const 0
  * - slot 09: 0x80183B44 largecrate_getExtraSize stub=const 44 ref=getExtraSize (stub)
  */
 

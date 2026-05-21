@@ -409,7 +409,7 @@ int fxemit_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: fxemit_func08
+ * Function: fxemit_getObjectTypeId
  * EN v1.0 Address: 0x8018EC28
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8018ED58
@@ -419,7 +419,7 @@ int fxemit_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fxemit_func08(void)
+int fxemit_getObjectTypeId(void)
 {
   return 0;
 }

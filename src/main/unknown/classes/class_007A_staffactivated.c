@@ -30,7 +30,7 @@
  *   slot 04: 0x8018A284 staffactivated_update
  *   slot 06: 0x8018A260 staffactivated_render
  *   slot 07: 0x8018A23C staffactivated_free
- *   slot 08: 0x8018A234 staffactivated_func08
+ *   slot 08: 0x8018A234 staffactivated_getObjectTypeId
  *   slot 09: 0x8018A22C staffactivated_getExtraSize
  */
 

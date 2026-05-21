@@ -822,7 +822,7 @@ void dll_127_hitDetect_nop(void) {}
 /* 8b "li r3, N; blr" returners. */
 int fuelcell_getExtraSize(void) { return 0x60; }
 int deathseq_getExtraSize(void) { return 0x24; }
-int deathseq_func08(void) { return 0x0; }
+int deathseq_getObjectTypeId(void) { return 0x0; }
 int dll_127_getExtraSize_ret_0(void) { return 0x0; }
 int dll_127_func08_ret_19(void) { return 0x13; }
 

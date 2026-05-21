@@ -15,5 +15,5 @@
 // - 5: flammablevine_hitDetect (0x801876A4)
 // - 6: flammablevine_render (0x80187674)
 // - 7: flammablevine_free (0x80187650)
-// - 8: flammablevine_func08 (0x80187648)
+// - 8: flammablevine_getObjectTypeId (0x80187648)
 // - 9: flammablevine_getExtraSize (0x80187640)

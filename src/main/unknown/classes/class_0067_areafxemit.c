@@ -29,7 +29,7 @@
  *   slot 05: 0x8018FC4C areafxemit_hitDetect
  *   slot 06: 0x8018FC40 areafxemit_render
  *   slot 07: 0x8018FC10 areafxemit_free
- *   slot 08: 0x8018FC08 areafxemit_func08
+ *   slot 08: 0x8018FC08 areafxemit_getObjectTypeId
  *   slot 09: 0x8018FC00 areafxemit_getExtraSize
  */
 

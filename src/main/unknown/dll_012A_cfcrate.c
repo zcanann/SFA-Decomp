@@ -14,5 +14,5 @@
 // - 5: cfccrate_hitDetect (0x8018D8D8)
 // - 6: cfccrate_render (0x8018D728)
 // - 7: cfccrate_free (0x8018D6F8)
-// - 8: cfccrate_func08 (0x8018D6F0)
+// - 8: cfccrate_getObjectTypeId (0x8018D6F0)
 // - 9: cfccrate_getExtraSize (0x8018D6E8)

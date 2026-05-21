@@ -381,7 +381,7 @@ int largecrate_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: largecrate_func08
+ * Function: largecrate_getObjectTypeId
  * EN v1.0 Address: 0x80183B4C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80183F44
@@ -391,7 +391,7 @@ int largecrate_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int largecrate_func08(void)
+int largecrate_getObjectTypeId(void)
 {
   return 0;
 }

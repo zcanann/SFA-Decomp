@@ -363,7 +363,7 @@ int staffactivated_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: staffactivated_func08
+ * Function: staffactivated_getObjectTypeId
  * EN v1.0 Address: 0x8018A234
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8018A440
@@ -373,7 +373,7 @@ int staffactivated_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int staffactivated_func08(void)
+int staffactivated_getObjectTypeId(void)
 {
   return 0x40;
 }

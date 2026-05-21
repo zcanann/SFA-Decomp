@@ -16,7 +16,7 @@
 // - 5: LanternFireFly_hitDetect (0x80186BC4)
 // - 6: LanternFireFly_render (0x80186B94)
 // - 7: LanternFireFly_free (0x80186AEC)
-// - 8: LanternFireFly_func08 (0x80186AE4)
+// - 8: LanternFireFly_getObjectTypeId (0x80186AE4)
 // - 9: LanternFireFly_getExtraSize (0x80186ADC)
 // - 10: LanternFireFly_setScale (0x80186878)
 // - 11: LanternFireFly_func0B (0x80186718)

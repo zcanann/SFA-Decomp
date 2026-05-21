@@ -11,5 +11,5 @@
 // - 4: campfire_update (0x8018CFA4)
 // - 6: campfire_render (0x8018CF40)
 // - 7: campfire_free (0x8018CEF4)
-// - 8: campfire_func08 (0x8018CEEC)
+// - 8: campfire_getObjectTypeId (0x8018CEEC)
 // - 9: campfire_getExtraSize (0x8018CEE4)

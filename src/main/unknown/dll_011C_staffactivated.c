@@ -11,5 +11,5 @@
 // - 4: staffactivated_update (0x8018A284)
 // - 6: staffactivated_render (0x8018A260)
 // - 7: staffactivated_free (0x8018A23C)
-// - 8: staffactivated_func08 (0x8018A234)
+// - 8: staffactivated_getObjectTypeId (0x8018A234)
 // - 9: staffactivated_getExtraSize (0x8018A22C)

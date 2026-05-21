@@ -59,7 +59,7 @@
  * - slot 04: 0x8018A284 staffactivated_update ref=update
  * - slot 06: 0x8018A260 staffactivated_render ref=render
  * - slot 07: 0x8018A23C staffactivated_free ref=free
- * - slot 08: 0x8018A234 staffactivated_func08 stub=const 64
+ * - slot 08: 0x8018A234 staffactivated_getObjectTypeId stub=const 64
  * - slot 09: 0x8018A22C staffactivated_getExtraSize stub=const 36 ref=getExtraSize (stub)
  */
 

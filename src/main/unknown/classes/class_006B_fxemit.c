@@ -27,7 +27,7 @@
  *   slot 05: 0x8018EC94 fxemit_hitDetect
  *   slot 06: 0x8018EC88 fxemit_render
  *   slot 07: 0x8018EC34 fxemit_free
- *   slot 08: 0x8018EC2C fxemit_func08
+ *   slot 08: 0x8018EC2C fxemit_getObjectTypeId
  *   slot 09: 0x8018EC24 fxemit_getExtraSize
  */
 

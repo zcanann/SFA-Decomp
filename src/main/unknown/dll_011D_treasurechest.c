@@ -14,5 +14,5 @@
 // - 5: treasurechest_hitDetect (0x8018AA0C)
 // - 6: treasurechest_render (0x8018A9E8)
 // - 7: treasurechest_free (0x8018A9C4)
-// - 8: treasurechest_func08 (0x8018A9BC)
+// - 8: treasurechest_getObjectTypeId (0x8018A9BC)
 // - 9: treasurechest_getExtraSize (0x8018A9B4)

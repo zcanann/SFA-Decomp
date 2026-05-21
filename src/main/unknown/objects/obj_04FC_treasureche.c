@@ -58,7 +58,7 @@
  * - slot 05: 0x8018AA0C treasurechest_hitDetect ref=hitDetect
  * - slot 06: 0x8018A9E8 treasurechest_render ref=render
  * - slot 07: 0x8018A9C4 treasurechest_free ref=free
- * - slot 08: 0x8018A9BC treasurechest_func08 stub=const 0
+ * - slot 08: 0x8018A9BC treasurechest_getObjectTypeId stub=const 0
  * - slot 09: 0x8018A9B4 treasurechest_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 

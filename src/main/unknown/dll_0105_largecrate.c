@@ -14,5 +14,5 @@
 // - 5: largecrate_hitDetect (0x80183C98)
 // - 6: largecrate_render (0x80183B8C)
 // - 7: largecrate_free (0x80183B54)
-// - 8: largecrate_func08 (0x80183B4C)
+// - 8: largecrate_getObjectTypeId (0x80183B4C)
 // - 9: largecrate_getExtraSize (0x80183B44)

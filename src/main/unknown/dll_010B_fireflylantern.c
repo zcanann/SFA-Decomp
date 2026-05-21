@@ -13,5 +13,5 @@
 // - 4: FireFlyLantern_update (0x80187440)
 // - 6: FireFlyLantern_render (0x8018741C)
 // - 7: FireFlyLantern_free (0x801873D8)
-// - 8: FireFlyLantern_func08 (0x801873D0)
+// - 8: FireFlyLantern_getObjectTypeId (0x801873D0)
 // - 9: FireFlyLantern_getExtraSize (0x801873C8)

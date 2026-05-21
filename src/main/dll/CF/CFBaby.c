@@ -1702,7 +1702,7 @@ void decoration11a_update(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int flammablevine_getExtraSize(void) { return 0x14; }
-int flammablevine_func08(void) { return 0x0; }
+int flammablevine_getObjectTypeId(void) { return 0x0; }
 int dll_109_getExtraSize_ret_16(void) { return 0x10; }
 int dll_109_func08_ret_0(void) { return 0x0; }
 int return0_80187F30(void) { return 0x0; }

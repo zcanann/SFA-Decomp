@@ -15,5 +15,5 @@
 // - 5: deathseq_hitDetect (0x8018C82C)
 // - 6: deathseq_render (0x8018C828)
 // - 7: deathseq_free (0x8018C7E8)
-// - 8: deathseq_func08 (0x8018C7E0)
+// - 8: deathseq_getObjectTypeId (0x8018C7E0)
 // - 9: deathseq_getExtraSize (0x8018C7D8)

@@ -14,5 +14,5 @@
 // - 5: fxemit_hitDetect (0x8018EC94)
 // - 6: fxemit_render (0x8018EC88)
 // - 7: fxemit_free (0x8018EC34)
-// - 8: fxemit_func08 (0x8018EC2C)
+// - 8: fxemit_getObjectTypeId (0x8018EC2C)
 // - 9: fxemit_getExtraSize (0x8018EC24)

@@ -267,7 +267,7 @@
  *   slot 05: 0x8018C82C deathseq_hitDetect
  *   slot 06: 0x8018C828 deathseq_render
  *   slot 07: 0x8018C7E8 deathseq_free
- *   slot 08: 0x8018C7E0 deathseq_func08
+ *   slot 08: 0x8018C7E0 deathseq_getObjectTypeId
  *   slot 09: 0x8018C7D8 deathseq_getExtraSize
  * - DLL 0x0119: gColdWaterControlObjDescriptor (slots=10, mask=0001100001)
  *   slot 03: 0x80188378 coldwatercontrol_init

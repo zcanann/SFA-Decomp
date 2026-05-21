@@ -57,7 +57,7 @@
  * - slot 05: 0x801864DC portalspelldoor_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801864AC portalspelldoor_render ref=render
  * - slot 07: 0x801864A8 portalspelldoor_free stub=blr ref=free (stub)
- * - slot 08: 0x801864A0 portalspelldoor_func08 stub=const 0
+ * - slot 08: 0x801864A0 portalspelldoor_getObjectTypeId stub=const 0
  * - slot 09: 0x80186498 portalspelldoor_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 

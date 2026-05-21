@@ -1211,6 +1211,6 @@ void lfxemitter_release(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int areafxemit_getExtraSize(void) { return 0x20; }
-int areafxemit_func08(void) { return 0x0; }
+int areafxemit_getObjectTypeId(void) { return 0x0; }
 int lfxemitter_getExtraSize(void) { return 0x124; }
-int lfxemitter_func08(void) { return 0x0; }
+int lfxemitter_getObjectTypeId(void) { return 0x0; }

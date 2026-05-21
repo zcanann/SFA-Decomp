@@ -24,7 +24,7 @@
  *   slot 04: 0x8018CFA4 campfire_update
  *   slot 06: 0x8018CF40 campfire_render
  *   slot 07: 0x8018CEF4 campfire_free
- *   slot 08: 0x8018CEEC campfire_func08
+ *   slot 08: 0x8018CEEC campfire_getObjectTypeId
  *   slot 09: 0x8018CEE4 campfire_getExtraSize
  */
 

@@ -68,7 +68,7 @@
  * - slot 05: 0x8018D8D8 cfccrate_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8018D728 cfccrate_render ref=render
  * - slot 07: 0x8018D6F8 cfccrate_free ref=free
- * - slot 08: 0x8018D6F0 cfccrate_func08 stub=const 1
+ * - slot 08: 0x8018D6F0 cfccrate_getObjectTypeId stub=const 1
  * - slot 09: 0x8018D6E8 cfccrate_getExtraSize stub=const 76 ref=getExtraSize (stub)
  */
 

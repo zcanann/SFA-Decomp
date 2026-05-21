@@ -14,5 +14,5 @@
 // - 5: portalspelldoor_hitDetect (0x801864DC)
 // - 6: portalspelldoor_render (0x801864AC)
 // - 7: portalspelldoor_free (0x801864A8)
-// - 8: portalspelldoor_func08 (0x801864A0)
+// - 8: portalspelldoor_getObjectTypeId (0x801864A0)
 // - 9: portalspelldoor_getExtraSize (0x80186498)

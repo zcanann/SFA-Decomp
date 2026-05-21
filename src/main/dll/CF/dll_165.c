@@ -141,7 +141,7 @@ int treasurechest_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: treasurechest_func08
+ * Function: treasurechest_getObjectTypeId
  * EN v1.0 Address: 0x8018A9BC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x8018ABDC
@@ -151,7 +151,7 @@ int treasurechest_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int treasurechest_func08(void)
+int treasurechest_getObjectTypeId(void)
 {
   return 0;
 }

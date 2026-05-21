@@ -525,7 +525,7 @@
  *   slot 05: 0x801876A4 flammablevine_hitDetect
  *   slot 06: 0x80187674 flammablevine_render
  *   slot 07: 0x80187650 flammablevine_free
- *   slot 08: 0x80187648 flammablevine_func08
+ *   slot 08: 0x80187648 flammablevine_getObjectTypeId
  *   slot 09: 0x80187640 flammablevine_getExtraSize
  * - DLL 0x00F2: gIceblastObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80178048 iceblast_initialise
@@ -569,7 +569,7 @@
  *   slot 05: 0x80183C98 largecrate_hitDetect
  *   slot 06: 0x80183B8C largecrate_render
  *   slot 07: 0x80183B54 largecrate_free
- *   slot 08: 0x80183B4C largecrate_func08
+ *   slot 08: 0x80183B4C largecrate_getObjectTypeId
  *   slot 09: 0x80183B44 largecrate_getExtraSize
  * - DLL 0x0106: gScarabObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x801856C4 scarab_init
@@ -602,7 +602,7 @@
  *   slot 04: 0x80187440 FireFlyLantern_update
  *   slot 06: 0x8018741C FireFlyLantern_render
  *   slot 07: 0x801873D8 FireFlyLantern_free
- *   slot 08: 0x801873D0 FireFlyLantern_func08
+ *   slot 08: 0x801873D0 FireFlyLantern_getObjectTypeId
  *   slot 09: 0x801873C8 FireFlyLantern_getExtraSize
  * - DLL 0x010C: gLanternFireFlyObjDescriptor (slots=13, mask=1101111111111)
  *   slot 00: 0x801871C4 LanternFireFly_initialise
@@ -612,7 +612,7 @@
  *   slot 05: 0x80186BC4 LanternFireFly_hitDetect
  *   slot 06: 0x80186B94 LanternFireFly_render
  *   slot 07: 0x80186AEC LanternFireFly_free
- *   slot 08: 0x80186AE4 LanternFireFly_func08
+ *   slot 08: 0x80186AE4 LanternFireFly_getObjectTypeId
  *   slot 09: 0x80186ADC LanternFireFly_getExtraSize
  * - DLL 0x010D: gPortalSpellDoorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80186700 portalspelldoor_initialise
@@ -622,7 +622,7 @@
  *   slot 05: 0x801864DC portalspelldoor_hitDetect
  *   slot 06: 0x801864AC portalspelldoor_render
  *   slot 07: 0x801864A8 portalspelldoor_free
- *   slot 08: 0x801864A0 portalspelldoor_func08
+ *   slot 08: 0x801864A0 portalspelldoor_getObjectTypeId
  *   slot 09: 0x80186498 portalspelldoor_getExtraSize
  * - DLL 0x010F: gMMP_BridgeObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8017BCF4 mmp_bridge_initialise
@@ -642,7 +642,7 @@
  *   slot 05: 0x8018AA0C treasurechest_hitDetect
  *   slot 06: 0x8018A9E8 treasurechest_render
  *   slot 07: 0x8018A9C4 treasurechest_free
- *   slot 08: 0x8018A9BC treasurechest_func08
+ *   slot 08: 0x8018A9BC treasurechest_getObjectTypeId
  *   slot 09: 0x8018A9B4 treasurechest_getExtraSize
  * - DLL 0x0120: gTrickyGuardSpotObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x8018B990 trickyguardspot_init
@@ -664,7 +664,7 @@
  *   slot 05: 0x8018D8D8 cfccrate_hitDetect
  *   slot 06: 0x8018D728 cfccrate_render
  *   slot 07: 0x8018D6F8 cfccrate_free
- *   slot 08: 0x8018D6F0 cfccrate_func08
+ *   slot 08: 0x8018D6F0 cfccrate_getObjectTypeId
  *   slot 09: 0x8018D6E8 cfccrate_getExtraSize
  * - DLL 0x012E: gCflightwallObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80191B5C cflightwall_initialise

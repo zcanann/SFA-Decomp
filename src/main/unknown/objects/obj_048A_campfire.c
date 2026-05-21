@@ -41,7 +41,7 @@
  * - slot 04: 0x8018CFA4 campfire_update ref=update
  * - slot 06: 0x8018CF40 campfire_render ref=render
  * - slot 07: 0x8018CEF4 campfire_free ref=free
- * - slot 08: 0x8018CEEC campfire_func08 stub=const 1
+ * - slot 08: 0x8018CEEC campfire_getObjectTypeId stub=const 1
  * - slot 09: 0x8018CEE4 campfire_getExtraSize stub=const 20 ref=getExtraSize (stub)
  */
 

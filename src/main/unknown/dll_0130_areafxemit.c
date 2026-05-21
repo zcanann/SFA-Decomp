@@ -14,5 +14,5 @@
 // - 5: areafxemit_hitDetect (0x8018FC4C)
 // - 6: areafxemit_render (0x8018FC40)
 // - 7: areafxemit_free (0x8018FC10)
-// - 8: areafxemit_func08 (0x8018FC08)
+// - 8: areafxemit_getObjectTypeId (0x8018FC08)
 // - 9: areafxemit_getExtraSize (0x8018FC00)

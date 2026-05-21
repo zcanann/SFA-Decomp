@@ -14,5 +14,5 @@
 // - 5: kt_torch_hitDetect (0x8018D4F0)
 // - 6: kt_torch_render (0x8018D4C0)
 // - 7: kt_torch_free (0x8018D4BC)
-// - 8: kt_torch_func08 (0x8018D4B4)
+// - 8: kt_torch_getObjectTypeId (0x8018D4B4)
 // - 9: kt_torch_getExtraSize (0x8018D4AC)

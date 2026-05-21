@@ -1494,9 +1494,9 @@ int dll_107_func08_ret_0(void) { return 0x0; }
 int Dummy108_getExtraSize(void) { return 0x0; }
 int Dummy108_func08_ret_0(void) { return 0x0; }
 int portalspelldoor_getExtraSize(void) { return 0x10; }
-int portalspelldoor_func08(void) { return 0x0; }
+int portalspelldoor_getObjectTypeId(void) { return 0x0; }
 int LanternFireFly_getExtraSize(void) { return 0x74; }
-int LanternFireFly_func08(void) { return 0x0; }
+int LanternFireFly_getObjectTypeId(void) { return 0x0; }
 
 /* LanternFireFly_modelMtxFn: receives (obj, f1, f2, f3) and stores the
  * three floats into obj->_b8 at +0x54/+0x58/+0x5c. */
