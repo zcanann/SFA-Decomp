@@ -516,3 +516,20 @@ void nwsh_levcon_free(int obj) {
     GameBit_Set(3837, 0);
 }
 #pragma scheduling reset
+
+extern void NWSH_levcon_SeqFn(int p1, int p2, void *p3);
+extern int mapGetDirIdx(int mapId);
+extern void unlockLevel(int a, int b, int c);
+
+#pragma scheduling off
+#pragma peephole off
+void nwsh_levcon_init(int *obj) {
+    *(void**)((char*)obj + 0xbc) = (void*)&NWSH_levcon_SeqFn;
+    unlockLevel(mapGetDirIdx(0x28), 1, 0);
+    Music_Trigger(6, 1);
+    *(int*)((char*)obj + 0xf4) = 1;
+    GameBit_Set(0xea2, 1);
+    GameBit_Set(0xefd, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
