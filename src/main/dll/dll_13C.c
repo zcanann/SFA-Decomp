@@ -759,8 +759,7 @@ void pollenfragment_init(int obj,int config)
   }
   else {
     randomValue = randomGetRange(0xb4,300);
-    *(float *)(state + 2) =
-        (float)((double)CONCAT44(0x43300000,randomValue ^ 0x80000000) - lbl_803E3190);
+    *(float *)(state + 2) = (float)(int)randomValue;
   }
   pollenType = *(byte *)(config + 0x19);
   if ((char)pollenType < '\0') {
@@ -1308,9 +1307,21 @@ PollenFragmentConfig *lbl_8032059C[] = {
 };
 
 extern void pollenfragment_free(int obj);
-extern void pollenfragment_render(void);
 extern void pollenfragment_hitDetect(void);
 extern void pollenfragment_update(void);
+extern int fn_80080150(int p);
+extern void objRenderFn_8003b8f4(f32 f);
+extern f32 lbl_803E3158;
+
+#pragma scheduling off
+#pragma peephole off
+void pollenfragment_render(int *obj, int p2, int p3, int p4, int p5) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (fn_80080150((int)((char *)state + 0x20)) != 0) return;
+    ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3158);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
