@@ -317,3 +317,33 @@ int fn_80167AE4(int* obj, u8* state) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80167988(int obj, int p2)
+{
+  extern void ObjHits_DisableObject(int);
+  extern void Obj_FreeObject(int);
+  extern f32 lbl_803E3078;
+  extern f32 lbl_803E307C;
+  int sub = *(int *)(obj + 0xb8);
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
+    *(u8 *)(*(int *)(sub + 0x40c) + 0x4b) = 0;
+    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 7);
+    ObjHits_DisableObject(obj);
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
+    *(u16 *)(sub + 0x400) = (u16)(*(u16 *)(sub + 0x400) | 0x20);
+    *(f32 *)(sub + 0x3e8) = lbl_803E3078;
+    *(f32 *)(sub + 0x3ec) = lbl_803E307C;
+  } else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
+    if (*(int *)(obj + 0x4c) == 0) {
+      Obj_FreeObject(obj);
+      return 0;
+    }
+    return 4;
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
