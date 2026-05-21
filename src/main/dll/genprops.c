@@ -4182,6 +4182,28 @@ void FUN_80171240(int param_1,int param_2)
   return;
 }
 
+extern f32 lbl_803E33F4;
+extern f32 lbl_803E33F8;
+
+#pragma scheduling off
+#pragma peephole off
+void curve_init(int *obj, u8 *params) {
+    *(s16*)obj = (s16)((s8)params[0x2c] << 8);
+    *(s16*)((char*)obj + 2) = (s16)((s8)params[0x2d] << 8);
+    if ((s8)params[0x19] == 8 || (s8)params[0x19] == 0x1a) {
+        *(s16*)((char*)obj + 4) = *(s16*)(params + 0x38);
+    }
+    if ((s8)params[0x19] == 0x15) {
+        *(f32*)((char*)obj + 8) = lbl_803E33F4;
+    } else if ((s8)params[0x19] == 0x16) {
+        *(f32*)((char*)obj + 8) = lbl_803E33F8;
+    } else {
+        *(f32*)((char*)obj + 8) = *(f32*)(*(int*)((char*)obj + 0x50) + 4);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void siderepel_init(int param_1, int param_2) {
     *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0xe000;
     ObjGroup_AddObject(param_1, 0x40);
@@ -4582,7 +4604,6 @@ extern void shield_free();
 extern void shield_render();
 extern void shield_update();
 extern void shield_init();
-extern void curve_init();
 extern void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void restartmarker_init(int *obj, int *state) {
     *(s16*)obj = (s16)(*(u8*)((char*)state + 0x18) << 8);
