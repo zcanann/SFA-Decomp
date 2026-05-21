@@ -1836,7 +1836,7 @@
  *   slot 05: 0x802098F4 platform1_hitDetect
  *   slot 06: 0x802098C8 platform1_drawUnsupported
  *   slot 07: 0x802098C4 platform1_free
- *   slot 08: 0x802098BC platform1_func08
+ *   slot 08: 0x802098BC platform1_getObjectTypeId
  *   slot 09: 0x802098B4 platform1_getExtraSize
  * - DLL 0x023B: gDfplightniObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x80209DF0 dfplightni_init

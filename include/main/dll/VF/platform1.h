@@ -34,7 +34,7 @@ extern char sPlatform1InitNoLongerSupported[];
 extern ObjectDescriptor gPlatform1ObjDescriptor;
 
 int platform1_getExtraSize(void);
-int platform1_func08(void);
+int platform1_getObjectTypeId(void);
 void platform1_free(void);
 void platform1_drawUnsupported(void);
 void platform1_hitDetect(void);

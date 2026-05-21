@@ -25,7 +25,7 @@
  * - slot 05: 0x802098F4 platform1_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802098C8 platform1_drawUnsupported ref=render
  * - slot 07: 0x802098C4 platform1_free stub=blr ref=free (stub)
- * - slot 08: 0x802098BC platform1_func08 stub=const 0
+ * - slot 08: 0x802098BC platform1_getObjectTypeId stub=const 0
  * - slot 09: 0x802098B4 platform1_getExtraSize stub=const 0 ref=getExtraSize (stub)
  *
  * Reference-only hints:

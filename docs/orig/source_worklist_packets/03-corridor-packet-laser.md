@@ -56,7 +56,7 @@
 - `textblockObj_release@0x802098AC-0x802098B0` size=`0x4`
 - `textblockObj_initialise@0x802098B0-0x802098B4` size=`0x4`
 - `platform1_getExtraSize@0x802098B4-0x802098BC` size=`0x8`
-- `platform1_func08@0x802098BC-0x802098C4` size=`0x8`
+- `platform1_getObjectTypeId@0x802098BC-0x802098C4` size=`0x8`
 - `platform1_free@0x802098C4-0x802098C8` size=`0x4`
 - `platform1_drawUnsupported@0x802098C8-0x802098F4` size=`0x2C`
 - `platform1_hitDetect@0x802098F4-0x802098F8` size=`0x4`

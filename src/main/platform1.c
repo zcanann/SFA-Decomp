@@ -8,7 +8,7 @@ int platform1_getExtraSize(void)
   return 0;
 }
 
-int platform1_func08(void)
+int platform1_getObjectTypeId(void)
 {
   return 0;
 }
@@ -64,7 +64,7 @@ ObjectDescriptor gPlatform1ObjDescriptor = {
     platform1_hitDetect,
     platform1_drawUnsupported,
     platform1_free,
-    (ObjectDescriptorCallback)platform1_func08,
+    (ObjectDescriptorCallback)platform1_getObjectTypeId,
     platform1_getExtraSize,
 };
 
