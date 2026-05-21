@@ -70,6 +70,7 @@ extern f32 lbl_803E2A74;
 extern f32 lbl_803E2A78;
 extern f32 lbl_803E2A7C;
 extern f32 lbl_803E2A80;
+extern f32 lbl_803E2B18;
 extern f32 lbl_803E36F4;
 extern f32 lbl_803E36F8;
 extern f32 lbl_803E3708;
@@ -1290,10 +1291,12 @@ void fn_80156DA0(int param_9,int param_10)
           fn_8014D08C(param_9,param_10,0,lbl_803E3760,0,1);
         }
         else {
+          float fz;
           fn_8014D08C(param_9,param_10,1,lbl_803E3764,0,0);
-          *(float *)(param_9 + 0x24) = lbl_803E36F8;
-          *(float *)(param_9 + 0x28) = lbl_803E36F8;
-          *(float *)(param_9 + 0x2c) = lbl_803E36F8;
+          fz = lbl_803E2B18;
+          *(float *)(param_9 + 0x24) = fz;
+          *(float *)(param_9 + 0x28) = fz;
+          *(float *)(param_9 + 0x2c) = fz;
           uVar3 = (ushort)randomGetRange(0,1);
           *(undefined2 *)(param_10 + 0x338) = (ushort)((uVar3 - 1) * 0x12c);
         }
