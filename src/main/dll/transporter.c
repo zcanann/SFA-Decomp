@@ -1606,6 +1606,42 @@ void iceblast_hitDetect(void) {}
 void iceblast_release(void) {}
 void iceblast_initialise(void) {}
 
+extern unsigned long GameBit_Set(int eventId, int value);
+extern int saveGame_saveObjectPos(int *obj);
+extern int lbl_803DDAB8;
+extern int lbl_803AC6E0[];
+
+#pragma scheduling off
+#pragma peephole off
+void pushable_free(int *obj) {
+    u8 *def = *(u8**)((char*)obj + 0x4c);
+    u8 *sub = *(u8**)((char*)obj + 0xb8);
+    s16 type = *(s16*)((char*)obj + 0x46);
+    int v;
+
+    switch (type) {
+    case 0x21e:
+        GameBit_Set(*(s16*)(sub + 0xac), 0);
+        break;
+    case 0x411:
+        GameBit_Set(*(s16*)(sub + 0xac), 0);
+        break;
+    default:
+        if (*(s16*)(def + 0x18) > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub[0x146] != 0) {
+            saveGame_saveObjectPos(obj);
+        }
+        break;
+    }
+    if ((*(u16*)(sub + 0x100) & 1) != 0) {
+        v = lbl_803DDAB8;
+        lbl_803DDAB8 = v + 1;
+        lbl_803AC6E0[v] = *(int*)(def + 0x14);
+    }
+    ObjGroup_RemoveObject(obj, 5);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int pushable_getExtraSize(void) { return 0x148; }
 int pushable_getObjectTypeId(void) { return 0x48; }
