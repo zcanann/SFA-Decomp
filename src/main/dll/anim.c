@@ -4818,3 +4818,50 @@ void dfplevelcontrol_setScale(int unused, u8 *out) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802028C0(int obj, int p2)
+{
+  extern void ObjHits_EnableObject(int);
+  extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
+  extern int *gPlayerInterface;
+  extern int lbl_80329640;
+  extern f32 lbl_803E6350;
+  extern f32 lbl_803E6354;
+  extern f32 lbl_803E6358;
+  int sub = *(int *)(obj + 0xb8);
+  int sub_40c = *(int *)(sub + 0x40c);
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    *(u8 *)(p2 + 0x25f) = 1;
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
+    *(u8 *)(obj + 0x36) = 255;
+    *(u8 *)(p2 + 0x34d) = 1;
+    *(f32 *)(p2 + 0x2a0) = lbl_803E6350 + (f32)(u32)*(u8 *)(sub + 0x406) / lbl_803E6354;
+    ObjHits_EnableObject(obj);
+    *(int *)(sub_40c + 0x18) = 0;
+    *(s16 *)(sub_40c + 0x1c) = -1;
+  } else {
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+  }
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
+    *(s16 *)(sub + 0x402) = 1;
+    *(u8 *)(sub_40c + 0x34) = 1;
+  }
+
+  if ((*(u32 *)(p2 + 0x314) & 0x200) != 0) {
+    *(u32 *)(p2 + 0x314) = *(u32 *)(p2 + 0x314) & ~0x200;
+    *(u8 *)(sub_40c + 0x14) = (u8)(*(u8 *)(sub_40c + 0x14) | 0x4);
+  }
+
+  if (*(f32 *)(obj + 0x98) < lbl_803E6358) {
+    *(u8 *)(sub_40c + 0x14) = (u8)(*(u8 *)(sub_40c + 0x14) | 0x2);
+  }
+
+  (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, &lbl_80329640);
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
