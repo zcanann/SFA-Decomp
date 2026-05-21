@@ -1565,6 +1565,41 @@ void pressureswitch_free(void) {}
 void pressureswitch_hitDetect(void) {}
 void pressureswitch_release(void) {}
 void pressureswitch_initialise(void) {}
+
+extern int PressureSwitch_SeqFn(int p1, int p2, void* p3);
+extern f32 lbl_803E5D78;
+
+#pragma scheduling off
+#pragma peephole off
+void pressureswitch_init(int *obj, u8 *init) {
+    u8 *sub;
+    int mapId;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(void**)((char*)obj + 0xbc) = (void*)&PressureSwitch_SeqFn;
+    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    *(s16*)(sub + 2) = (s16)(*(s16*)(init + 0x1e) * 0x3c);
+    sub[1] = 0;
+    mapId = *(int*)(*(int*)((char*)obj + 0x4c) + 0x14);
+    if (mapId == 0x1f1a) {
+        *(s16*)(sub + 4) = 0xf45;
+    } else if (mapId == 0x47293) {
+        *(s16*)(sub + 4) = 0xf46;
+    } else {
+        *(s16*)(sub + 4) = -1;
+    }
+    if (*(s16*)(sub + 4) != -1) {
+        if (GameBit_Get(*(s16*)(sub + 4)) != 0) {
+            sub[6] = (u8)(sub[6] | 0x40);
+        }
+    }
+    if (GameBit_Get(*(s16*)(init + 0x1c)) != 0) {
+        *(f32*)((char*)obj + 0x10) = *(f32*)(init + 0xc) - lbl_803E5D78;
+        sub[0] = 0x1e;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dll_1FF_free_nop(void) {}
 void dll_1FF_hitDetect_nop(void) {}
 void dll_1FF_release_nop(void) {}
