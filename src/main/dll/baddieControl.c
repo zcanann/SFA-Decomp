@@ -3117,6 +3117,57 @@ void dll_4F_init(void)
     *(f32*)((char*)lbl_803DD590 + 4) = lbl_803E1A88;
 }
 
+extern f32 curveFn_80010dc0(f32 *pts, int mode, f32 t);
+extern f32 sin(f32);
+extern f32 fn_80293E80(f32);
+extern f32 timeDelta;
+extern f32 lbl_803E1A8C;
+extern f32 lbl_803E1A90;
+extern f32 lbl_803E1A94;
+extern f32 lbl_803E1A98;
+extern f32 lbl_803E1A9C;
+extern f32 lbl_803E1AA0;
+extern f32 lbl_803E1AA4;
+extern f32 lbl_803E1AA8;
+extern f32 lbl_803E1AAC;
+extern f32 lbl_803E1AB0;
+extern f32 lbl_803E1AB4;
+
+void dll_4F_update(int *obj) {
+    f32 pts[4];
+    f32 fz;
+    f32 sn;
+    f32 cs;
+    s16 a;
+    int *r30;
+
+    pts[0] = lbl_803E1A88;
+    pts[1] = lbl_803E1A8C;
+    pts[2] = lbl_803E1A88;
+    pts[3] = lbl_803E1A88;
+    fz = curveFn_80010dc0(pts, 0, *(f32*)((char*)lbl_803DD590 + 4));
+    r30 = *(int**)((char*)obj + 0xa4);
+    a = (s16)(0x8000 - *(s16*)r30);
+    a = (s16)(a + (s32)(lbl_803E1A90 * fz));
+    {
+        f32 t = (lbl_803E1A94 * (f32)(s32)a) / lbl_803E1A98;
+        sn = sin(t);
+        cs = fn_80293E80(t);
+    }
+    *(f32*)((char*)obj + 0xc) = *(f32*)((char*)r30 + 0x18) + (lbl_803E1A9C * sn - lbl_803E1AA0 * cs);
+    *(f32*)((char*)obj + 0x14) = *(f32*)((char*)r30 + 0x20) + (lbl_803E1A9C * cs + lbl_803E1AA0 * sn);
+    *(f32*)((char*)obj + 0x10) = (lbl_803E1AA4 + *(f32*)((char*)r30 + 0x1c)) - lbl_803E1AA8 * fz;
+    *(s16*)((char*)obj + 2) = (s16)(0x11c6 - (s32)(lbl_803E1AA4 * (lbl_803E1AAC * fz)));
+    *(s16*)obj = (s16)(a + 0x1ffe);
+    *(s16*)((char*)obj + 4) = 0;
+    *(u8*)((char*)obj + 0x13b) = 0;
+    *(f32*)((char*)obj + 0xb4) = lbl_803E1AB0;
+    *(f32*)((char*)lbl_803DD590 + 4) = lbl_803E1AB4 * timeDelta + *(f32*)((char*)lbl_803DD590 + 4);
+    if (*(f32*)((char*)lbl_803DD590 + 4) > lbl_803E1A8C) {
+        *(f32*)((char*)lbl_803DD590 + 4) = lbl_803E1A8C;
+    }
+}
+
 void CameraModeCrawl_init(void)
 {
     if (lbl_803DD598 == 0) {
