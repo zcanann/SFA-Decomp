@@ -1073,3 +1073,34 @@ int fn_801BA5F0(int* obj) {
         default: return 2;
     }
 }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801BA4B8(int obj, int p2)
+{
+  extern void *Obj_GetPlayerObject(void);
+  extern void ObjHits_DisableObject(int);
+  extern void Obj_FreeObject(int);
+  int sub;
+
+  Obj_GetPlayerObject();
+  sub = *(int *)(obj + 0xb8);
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
+    *(int *)(p2 + 0x2d0) = 0;
+    *(u8 *)(p2 + 0x25f) = 0;
+    *(u8 *)(p2 + 0x349) = 0;
+    ObjHits_DisableObject(obj);
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x80);
+    ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xE0000, obj, 0);
+    GameBit_Set(*(s16 *)(sub + 0x3f4), 0);
+    GameBit_Set(*(s16 *)(sub + 0x3f2), 1);
+    if (*(int *)(obj + 0x4c) == 0) {
+      Obj_FreeObject(obj);
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
