@@ -36,6 +36,8 @@ extern DfpObjectInterface **gObjectTriggerInterface;
  * PAL Size: TODO
  */
 #pragma dont_inline on
+#pragma peephole off
+#pragma scheduling off
 void dfpstatue1_updateState(DfpStatue1Object *obj)
 {
   DfpStatue1State *state;
@@ -76,6 +78,8 @@ void dfpstatue1_updateState(DfpStatue1Object *obj)
     }
   }
 }
+#pragma scheduling reset
+#pragma peephole reset
 #pragma dont_inline reset
 
 
