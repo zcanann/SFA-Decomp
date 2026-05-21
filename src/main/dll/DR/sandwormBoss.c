@@ -3522,3 +3522,49 @@ void cfmaincrystal_update(int *obj) {
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8019D578(int p1, int unused, int p3)
+{
+  extern int ObjMsg_Pop(int, int *, int *, int *);
+  int sub = *(int *)(p1 + 0xb8);
+  int msgFlag = 0;
+  int msgType;
+  int msgArg;
+  int i;
+
+  while (ObjMsg_Pop(p1, &msgType, &msgArg, &msgFlag) != 0) {
+    switch (msgType) {
+      case 0x110001:
+        if (*(s16 *)(sub + 0) == 84 && *(s16 *)(p3 + 0x58) > 175) {
+          ObjMsg_SendToObject((void *)msgArg, 0x110001, p1, 0);
+        }
+        break;
+      case 0x110002:
+        if (*(s16 *)(sub + 0) == 85 && *(s16 *)(p3 + 0x58) > 175) {
+          ObjMsg_SendToObject((void *)msgArg, 0x110002, p1, 0);
+        }
+        break;
+      case 0x110003:
+        if (*(s16 *)(sub + 0) == 86 && *(s16 *)(p3 + 0x58) > 175) {
+          ObjMsg_SendToObject((void *)msgArg, 0x110003, p1, 0);
+        }
+        break;
+      case 0xA0005:
+        GameBit_Set(*(s16 *)(sub + 0), 1);
+        break;
+    }
+  }
+
+  for (i = 0; i < (s32)*(u8 *)(p3 + 0x8b); i++) {
+    if (*(u8 *)(p3 + 0x81 + i) == 1) {
+      if (GameBit_Get(84) != 0 && GameBit_Get(85) != 0 && GameBit_Get(86) != 0) {
+        GameBit_Set(1248, 1);
+      }
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
