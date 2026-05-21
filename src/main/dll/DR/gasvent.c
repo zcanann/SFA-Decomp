@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/gasvent.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern int FUN_80017a90();
 extern int FUN_80017a98();

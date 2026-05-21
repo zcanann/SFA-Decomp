@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/anim.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 getLActions();
@@ -1148,7 +1151,7 @@ undefined4 FUN_8020040c(int param_1,int param_2)
 {
   float fVar1;
   int iVar2;
-  
+
   iVar2 = *(int *)(param_1 + 0xb8);
   if (*(char *)(param_2 + 0x27b) != '\0') {
     (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,1);
@@ -1160,6 +1163,62 @@ undefined4 FUN_8020040c(int param_1,int param_2)
   }
   return 0;
 }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802002C4(int obj, int p)
+{
+  extern int *gPlayerInterface;
+  extern f32 lbl_803E62A8;
+  float fz;
+  int b8;
+
+  b8 = *(int *)(obj + 0xb8);
+  if (*(char *)(p + 0x27b) != '\0') {
+    (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, p, 1);
+    b8 = *(int *)(b8 + 0x40c);
+    fz = lbl_803E62A8;
+    *(float *)(b8 + 0xc) = lbl_803E62A8;
+    *(float *)(b8 + 0x10) = fz;
+    *(float *)(b8 + 4) = fz;
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80200380(int obj, int p)
+{
+  extern int *gPlayerInterface;
+  extern f32 lbl_803E62A8;
+  int b8;
+  float fz;
+  s8 flag2;
+
+  b8 = *(int *)(obj + 0xb8);
+  if (*(char *)(p + 0x27b) != '\0') {
+    b8 = *(int *)(b8 + 0x40c);
+    fz = lbl_803E62A8;
+    *(float *)(b8 + 0xc) = lbl_803E62A8;
+    *(float *)(b8 + 0x10) = fz;
+    *(float *)(b8 + 4) = fz;
+    (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, p, 6);
+  } else {
+    flag2 = *(char *)(p + 0x346);
+    if (flag2 != 0) {
+      if (*(u8 *)(obj + 0x36) == 0) {
+        if (flag2 != 0) {
+          return 7;
+        }
+      }
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2405,6 +2464,31 @@ void FUN_80202414(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(undefined *)(iVar1 + 0x14) = 0;
   return;
 }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80202524(int obj, int p)
+{
+  extern void ObjHits_EnableObject(int obj);
+  extern void ObjHits_SetHitVolumeSlot(int obj, int slot, int a, int b);
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern f32 lbl_803E62A8;
+  extern f32 lbl_803E62F4;
+
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjHits_EnableObject(obj);
+  }
+  ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+  *(f32 *)(p + 0x2a0) = lbl_803E62F4;
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 5, lbl_803E62A8, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  *(s8 *)(p + 0x34d) = 1;
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3965,6 +4049,28 @@ void FUN_80204f7c(int param_1)
   }
   return;
 }
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80205024(int obj, char *p)
+{
+  extern int return0_80204B54(void);
+  extern f32 lbl_803E63A8;
+  int b8;
+
+  b8 = *(int *)(obj + 0xb8);
+  *(int *)(obj + 0xbc) = (int)return0_80204B54;
+  *(s16 *)(obj + 0) = (s16)(*(char *)(p + 0x18) << 8);
+  *(s16 *)(b8 + 4) = 0;
+  *(s16 *)(b8 + 6) = *(s16 *)(p + 0x20);
+  *(s16 *)(b8 + 8) = *(s16 *)(p + 0x1e);
+  *(f32 *)(b8 + 0) = (f32)*(s16 *)(p + 0x1a);
+  *(u8 *)(b8 + 12) = (u8)*(s16 *)(p + 0x1c);
+  *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E63A8;
+  *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

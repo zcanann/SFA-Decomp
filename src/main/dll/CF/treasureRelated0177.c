@@ -2,6 +2,9 @@
 #include "main/dll/CF/treasureRelated0177.h"
 #include "main/objanim.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined8 FUN_80006894();
 extern undefined4 FUN_800068a0();
 extern undefined4 FUN_800068cc();

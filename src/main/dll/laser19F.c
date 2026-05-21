@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/laser19F.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined8 FUN_80006b14();
 extern char FUN_80006bd0();
 extern undefined4 FUN_800175cc();

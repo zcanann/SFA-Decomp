@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMboss.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800069b8();

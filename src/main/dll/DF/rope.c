@@ -2,6 +2,9 @@
 #include "main/dll/DF/rope.h"
 #include "main/dll/dll_18E.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();
 extern int FUN_80006a10();

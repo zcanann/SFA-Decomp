@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRearthwalk.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern double FUN_80017708();

@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/IM/IMicicle.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80006958();

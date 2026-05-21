@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_14D.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);

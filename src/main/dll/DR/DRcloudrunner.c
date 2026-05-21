@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRcloudrunner.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern double FUN_80006b34();
 extern uint FUN_80017690();

@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/objhits.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined8 memcpy();
 extern undefined4 Obj_TransformWorldVectorToLocal();
 extern undefined4 Obj_TransformWorldPointToLocal();

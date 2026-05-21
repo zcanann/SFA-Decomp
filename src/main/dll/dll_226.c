@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b94();
 extern undefined4 GameBit_Set(int eventId, int value);

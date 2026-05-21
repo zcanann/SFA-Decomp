@@ -2,6 +2,9 @@
 #include "main/dll/CAM/pathcam.h"
 #include "string.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,
                                            int model);
 extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,

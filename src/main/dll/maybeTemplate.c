@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/maybeTemplate.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 FUN_80006c64();

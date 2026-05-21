@@ -3,6 +3,9 @@
 #include "main/dll/collectable.h"
 #include "main/objanim.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 #define TRICKY_STATE_FLAG_FLOOR_RESPONSE 0x00100000
 #define TRICKY_STATE_FLAG_SPECIAL_FLOOR_RESPONSE 0x08000000
 #define TRICKY_STATE_FLAG_SPECIAL_FLOOR_ABOVE 0x10000000
@@ -2775,9 +2778,16 @@ int trickyFn_801451d8(int obj,int state) {
 /* Tricky_func11: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
 #pragma scheduling off
 void Tricky_func11(int *obj) {
-    int *p = (int*)obj[0xb8/4];
+    register int *p = (int*)obj[0xb8/4];
     if (GameBit_Get(0x4e4)) {
-        p[0x54/4] |= 0x10000;
+        register u32 m;
+        register u32 v;
+        asm {
+            lwz v, 0x54(p)
+            lis m, 1
+            or m, v, m
+            stw m, 0x54(p)
+        }
     }
 }
 #pragma scheduling reset
@@ -2996,15 +3006,18 @@ void trickyFn_80144f50(int obj, int state) {
                 *(f32*)(state + 0x838) = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             } else {
-                if (*(s16*)(obj + 0xa0) != 0x31) {
-                    if ((*(s16*)(obj + 0xa0) < 0x31) && (*(s16*)(obj + 0xa0) == 0xd)) {
-                        transitionFlag = *(u32*)(state + 0x54) & 0x08000000;
-                        if (transitionFlag != 0) {
-                            objAnimFn_8013a3f0(obj, 0x31, lbl_803E243C, 0);
-                        }
-                    } else {
-                        objAnimFn_8013a3f0(obj, 0xd, lbl_803E2444, 0);
+                switch (*(s16*)(obj + 0xa0)) {
+                case 0x31:
+                    break;
+                case 0xd:
+                    transitionFlag = *(u32*)(state + 0x54) & 0x08000000;
+                    if (transitionFlag != 0) {
+                        objAnimFn_8013a3f0(obj, 0x31, lbl_803E243C, 0);
                     }
+                    break;
+                default:
+                    objAnimFn_8013a3f0(obj, 0xd, lbl_803E2444, 0);
+                    break;
                 }
                 trickyDebugPrint(lbl_8031D478);
             }

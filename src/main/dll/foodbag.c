@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/foodbag.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern u32 randomGetRange(int min, int max);
 extern undefined8 FUN_8028681c();
 extern undefined8 FUN_80286834();
