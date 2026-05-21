@@ -313,7 +313,7 @@ void spdrape_init(int *obj, u8 *def) {
     *(s16 *)((char *)state + 0x14) = (s16)randomGetRange(0xb4, 0x12c);
     player = (int *)Obj_GetPlayerObject();
     if (player != NULL) {
-        if (state[2] * *(f32 *)((char *)player + 0x14) + state[1] * *(f32 *)((char *)player + 0xc) + state[3] < lbl_803E5AA0) {
+        if (state[1] * *(f32 *)((char *)player + 0xc) + state[2] * *(f32 *)((char *)player + 0x14) + state[3] < lbl_803E5AA0) {
             *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;
         } else {
             *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B4;
