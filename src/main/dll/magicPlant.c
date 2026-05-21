@@ -842,6 +842,31 @@ extern f32 lbl_803E28E8;
 
 #pragma scheduling off
 #pragma peephole off
+void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
+{
+    if (*(s16*)(obj + 0xa0) == 1) {
+        if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+            return;
+        }
+    }
+    if (msgFlag == 0x10) {
+        *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x20;
+    } else {
+        *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x8;
+        if (p6 > (s32)*(u16*)(state + 0x2b0)) {
+            Sfx_PlayFromObject(obj, 0x246);
+            *(s16*)(state + 0x2b0) = 0;
+        } else {
+            Sfx_PlayFromObject(obj, 0x247);
+            *(u16*)(state + 0x2b0) = (u16)(*(u16*)(state + 0x2b0) - p6);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void fn_801534D8(int obj, int state)
 {
     f32 lblBC;
