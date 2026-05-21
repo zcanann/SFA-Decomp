@@ -1106,6 +1106,54 @@ void SB_ShipMast_init(void) {}
 void SB_ShipMast_release(void) {}
 void SB_ShipMast_initialise(void) {}
 
+extern void ObjAnim_SetCurrentMove(int *obj, int a, f32 b, int c);
+extern void ObjAnim_AdvanceCurrentMove(int *obj, int a, f32 b, f32 c);
+extern f32 lbl_803E586C;
+extern f32 lbl_803E5870;
+extern f32 lbl_803E5874;
+extern f32 lbl_803E5878;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_ShipMast_update(int *obj) {
+    extern u8 framesThisStep;
+    int *parent;
+    int pf4;
+    f32 speed;
+
+    parent = *(int**)((char*)obj + 0x30);
+    if (parent == NULL) return;
+    pf4 = *(int*)((char*)parent + 0xf4);
+    *(f32*)((char*)obj + 0xc) = lbl_803E586C;
+    *(f32*)((char*)obj + 0x10) = lbl_803E586C;
+    *(f32*)((char*)obj + 0x14) = lbl_803E586C;
+    if (*(s16*)((char*)*(int**)((char*)obj + 0x30) + 0x46) == 0x139) {
+        if (pf4 >= 0xa && pf4 < 0xd) {
+            if (*(s16*)((char*)obj + 0xa0) != 0) {
+                ObjAnim_SetCurrentMove(obj, 0, lbl_803E586C, 0);
+            }
+            if (pf4 >= 0xc) {
+                speed = lbl_803E5870;
+            } else {
+                speed = lbl_803E5874;
+            }
+        } else {
+            if (*(s16*)((char*)obj + 0xa0) != 1) {
+                ObjAnim_SetCurrentMove(obj, 1, lbl_803E586C, 0);
+            }
+            speed = lbl_803E5878;
+        }
+    } else {
+        if (*(s16*)((char*)obj + 0xa0) != 1) {
+            ObjAnim_SetCurrentMove(obj, 1, lbl_803E586C, 0);
+        }
+        speed = lbl_803E5878;
+    }
+    ObjAnim_AdvanceCurrentMove(obj, 0, speed, (f32)(u32)framesThisStep);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int SB_Galleon_getExtraSize(void) { return 0xb4; }
 int SB_Galleon_getObjectTypeId(void) { return 0x0; }
