@@ -1265,7 +1265,7 @@ extern void spellStoneUseFn_801fd270(void *obj);
 void dll_224_update(void *param_1) {
     void *obj = param_1;
     int v;
-    v = (*(int (**)(int))(*(int *)gMapEventInterface + 0x40))((s8)*((s8 *)obj + 0xac));
+    v = (*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*((s8 *)obj + 0xac));
     v = (u8)v;
     switch (v) {
         case 1:
