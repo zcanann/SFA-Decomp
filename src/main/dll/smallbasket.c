@@ -2592,3 +2592,38 @@ void fn_80159654(s16* obj, u8* state) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 fn_8014C11C(int obj, u8 flag, int maxCount, void* buf, f32 dist);
+extern int lbl_803AC4A8[];
+extern void* gCameraInterface;
+extern f32 lbl_803E2B80;
+
+/* fn_80157988: nearby-object scan. Asks fn_8014C11C for up to 40 objects
+ * within lbl_803E2B80, walks the result array of (obj, ?) pairs, and if
+ * any entry's modelType is 0x6a3 with state[0x2dc] bit 0x20000000 set
+ * AND bits 0x1800 clear, latches "found" and exits. If nothing matched,
+ * fires gCameraInterface vtable[0x24/4] with (0, 0, 0). */
+#pragma scheduling off
+#pragma peephole off
+void fn_80157988(int obj) {
+    u8 count = (u8)fn_8014C11C(obj, 0, 0x28, lbl_803AC4A8, lbl_803E2B80);
+    u8 noMatch = 1;
+    if (count >= 1) {
+        u8 i;
+        for (i = 0; (u32)i < (u32)count; i++) {
+            int e = lbl_803AC4A8[(u32)i * 2];
+            if (*(s16*)((char*)e + 0x46) == 0x6a3) {
+                u32 flags = *(u32*)((char*)*(int**)((char*)e + 0xb8) + 0x2dc);
+                if ((flags & 0x20000000) != 0 && (flags & 0x1800) == 0) {
+                    i = count;
+                    noMatch = 0;
+                }
+            }
+        }
+    }
+    if (noMatch != 0) {
+        ((void(*)(int, int, int))((int*)*(int*)gCameraInterface)[0x24/4])(0, 0, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
