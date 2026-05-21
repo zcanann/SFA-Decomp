@@ -51,7 +51,7 @@
  * - slot 05: 0x801F9D98 vfpobjcreator_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F9D8C vfpobjcreator_render ref=render
  * - slot 07: 0x801F9D88 vfpobjcreator_free stub=blr ref=free (stub)
- * - slot 08: 0x801F9D80 vfpobjcreator_func08 stub=const 0
+ * - slot 08: 0x801F9D80 vfpobjcreator_getObjectTypeId stub=const 0
  * - slot 09: 0x801F9D78 vfpobjcreator_getExtraSize stub=const 10 ref=getExtraSize (stub)
  */
 

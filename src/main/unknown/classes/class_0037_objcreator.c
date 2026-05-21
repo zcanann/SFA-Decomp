@@ -74,7 +74,7 @@
  *   slot 05: 0x801F9D98 vfpobjcreator_hitDetect
  *   slot 06: 0x801F9D8C vfpobjcreator_render
  *   slot 07: 0x801F9D88 vfpobjcreator_free
- *   slot 08: 0x801F9D80 vfpobjcreator_func08
+ *   slot 08: 0x801F9D80 vfpobjcreator_getObjectTypeId
  *   slot 09: 0x801F9D78 vfpobjcreator_getExtraSize
  * - DLL 0x022A: gDFP_ObjCreatorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80204B50 dfpobjcreator_initialise

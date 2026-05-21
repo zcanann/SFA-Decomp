@@ -56,7 +56,7 @@
  * - slot 05: 0x801FB9F0 vfpblock1_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801FB9EC vfpblock1_render stub=blr ref=render (stub)
  * - slot 07: 0x801FB9BC vfpblock1_free ref=free
- * - slot 08: 0x801FB9B4 vfpblock1_func08 stub=const 0
+ * - slot 08: 0x801FB9B4 vfpblock1_getObjectTypeId stub=const 0
  * - slot 09: 0x801FB9AC vfpblock1_getExtraSize stub=const 2 ref=getExtraSize (stub)
  */
 

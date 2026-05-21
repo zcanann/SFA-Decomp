@@ -15,7 +15,7 @@
 // - 5: vfplevelcontrol_hitDetect (0x801F9994)
 // - 6: vfplevelcontrol_render (0x801F9990)
 // - 7: vfplevelcontrol_free (0x801F994C)
-// - 8: vfplevelcontrol_func08 (0x801F9944)
+// - 8: vfplevelcontrol_getObjectTypeId (0x801F9944)
 // - 9: vfplevelcontrol_getExtraSize (0x801F993C)
 //
 // Reference-only object parameter hints:

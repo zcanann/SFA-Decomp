@@ -1383,18 +1383,18 @@ void wmnewcrystal_update(void) {}
 void wmnewcrystal_release(void) {}
 void wmnewcrystal_initialise(void) {}
 int vfplevelcontrol_getExtraSize(void) { return 0x1c; }
-int vfplevelcontrol_func08(void) { return 0x0; }
+int vfplevelcontrol_getObjectTypeId(void) { return 0x0; }
 void vfplevelcontrol_render(void) {}
 void vfplevelcontrol_hitDetect(void) {}
 void vfplevelcontrol_release(void) {}
 int vfpobjcreator_getExtraSize(void) { return 0xa; }
-int vfpobjcreator_func08(void) { return 0x0; }
+int vfpobjcreator_getObjectTypeId(void) { return 0x0; }
 void vfpobjcreator_free(void) {}
 void vfpobjcreator_hitDetect(void) {}
 void vfpobjcreator_release(void) {}
 void vfpobjcreator_initialise(void) {}
 int vfpminifire_getExtraSize(void) { return 0xc; }
-int vfpminifire_func08(void) { return 0x0; }
+int vfpminifire_getObjectTypeId(void) { return 0x0; }
 void vfpminifire_hitDetect(void) {}
 void vfpminifire_release(void) {}
 void vfpminifire_initialise(void) {}
@@ -1405,7 +1405,7 @@ void dll_219_hitDetect_nop(void) {}
 void dll_219_release_nop(void) {}
 void dll_219_initialise_nop(void) {}
 int vfpstatueball_getExtraSize(void) { return 0xc; }
-int vfpstatueball_func08(void) { return 0x0; }
+int vfpstatueball_getObjectTypeId(void) { return 0x0; }
 void vfpstatueball_render(void) {}
 void vfpstatueball_hitDetect(void) {}
 void vfpstatueball_release(void) {}
@@ -1418,16 +1418,16 @@ void dll_21B_release_nop(void) {}
 void dll_21B_initialise_nop(void) {}
 int fn_801FAFEC(void) { return 0x0; }
 int vfpladders_getExtraSize(void) { return 0x8; }
-int vfpladders_func08(void) { return 0x0; }
+int vfpladders_getObjectTypeId(void) { return 0x0; }
 void vfpladders_render(void) {}
 void vfpladders_hitDetect(void) {}
 void vfpladders_release(void) {}
 void vfpladders_initialise(void) {}
 int vfplift_getExtraSize(void) { return 0x20; }
-int vfplift_func08(void) { return 0x0; }
+int vfplift_getObjectTypeId(void) { return 0x0; }
 void vfplift_release(void) {}
 void vfplift_initialise(void) {}
 int vfpblock1_getExtraSize(void) { return 0x2; }
-int vfpblock1_func08(void) { return 0x0; }
+int vfpblock1_getObjectTypeId(void) { return 0x0; }
 void vfpblock1_render(void) {}
 void vfpblock1_hitDetect(void) {}

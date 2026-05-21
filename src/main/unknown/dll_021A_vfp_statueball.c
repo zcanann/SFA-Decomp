@@ -15,5 +15,5 @@
 // - 5: vfpstatueball_hitDetect (0x801FA8B4)
 // - 6: vfpstatueball_render (0x801FA8B0)
 // - 7: vfpstatueball_free (0x801FA880)
-// - 8: vfpstatueball_func08 (0x801FA878)
+// - 8: vfpstatueball_getObjectTypeId (0x801FA878)
 // - 9: vfpstatueball_getExtraSize (0x801FA870)

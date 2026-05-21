@@ -26,7 +26,7 @@
  * - slot 05: 0x801FB038 vfpladders_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801FB034 vfpladders_render stub=blr ref=render (stub)
  * - slot 07: 0x801FB004 vfpladders_free ref=free
- * - slot 08: 0x801FAFFC vfpladders_func08 stub=const 0
+ * - slot 08: 0x801FAFFC vfpladders_getObjectTypeId stub=const 0
  * - slot 09: 0x801FAFF4 vfpladders_getExtraSize stub=const 8 ref=getExtraSize (stub)
  *
  * Reference-only hints:

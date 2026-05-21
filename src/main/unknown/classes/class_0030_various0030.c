@@ -1552,7 +1552,7 @@
  *   slot 05: 0x801F9994 vfplevelcontrol_hitDetect
  *   slot 06: 0x801F9990 vfplevelcontrol_render
  *   slot 07: 0x801F994C vfplevelcontrol_free
- *   slot 08: 0x801F9944 vfplevelcontrol_func08
+ *   slot 08: 0x801F9944 vfplevelcontrol_getObjectTypeId
  *   slot 09: 0x801F993C vfplevelcontrol_getExtraSize
  * - DLL 0x021A: gVFP_statueballObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FAC68 vfpstatueball_initialise
@@ -1562,7 +1562,7 @@
  *   slot 05: 0x801FA8B4 vfpstatueball_hitDetect
  *   slot 06: 0x801FA8B0 vfpstatueball_render
  *   slot 07: 0x801FA880 vfpstatueball_free
- *   slot 08: 0x801FA878 vfpstatueball_func08
+ *   slot 08: 0x801FA878 vfpstatueball_getObjectTypeId
  *   slot 09: 0x801FA870 vfpstatueball_getExtraSize
  * - DLL 0x021C: gVFP_LaddersObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FB21C vfpladders_initialise
@@ -1572,7 +1572,7 @@
  *   slot 05: 0x801FB038 vfpladders_hitDetect
  *   slot 06: 0x801FB034 vfpladders_render
  *   slot 07: 0x801FB004 vfpladders_free
- *   slot 08: 0x801FAFFC vfpladders_func08
+ *   slot 08: 0x801FAFFC vfpladders_getObjectTypeId
  *   slot 09: 0x801FAFF4 vfpladders_getExtraSize
  * - DLL 0x021D: gVFPLiftObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FB9A8 vfplift_initialise
@@ -1582,7 +1582,7 @@
  *   slot 05: 0x801FB78C vfplift_hitDetect
  *   slot 06: 0x801FB768 vfplift_render
  *   slot 07: 0x801FB738 vfplift_free
- *   slot 08: 0x801FB730 vfplift_func08
+ *   slot 08: 0x801FB730 vfplift_getObjectTypeId
  *   slot 09: 0x801FB728 vfplift_getExtraSize
  * - DLL 0x021E: gVFP_Block1ObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FBAC4 vfpblock1_initialise
@@ -1592,7 +1592,7 @@
  *   slot 05: 0x801FB9F0 vfpblock1_hitDetect
  *   slot 06: 0x801FB9EC vfpblock1_render
  *   slot 07: 0x801FB9BC vfpblock1_free
- *   slot 08: 0x801FB9B4 vfpblock1_func08
+ *   slot 08: 0x801FB9B4 vfpblock1_getObjectTypeId
  *   slot 09: 0x801FB9AC vfpblock1_getExtraSize
  * - DLL 0x021F: gVFP_PlatformObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FC374 vfpplatform_initialise

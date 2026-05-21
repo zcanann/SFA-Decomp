@@ -15,5 +15,5 @@
 // - 5: vfpblock1_hitDetect (0x801FB9F0)
 // - 6: vfpblock1_render (0x801FB9EC)
 // - 7: vfpblock1_free (0x801FB9BC)
-// - 8: vfpblock1_func08 (0x801FB9B4)
+// - 8: vfpblock1_getObjectTypeId (0x801FB9B4)
 // - 9: vfpblock1_getExtraSize (0x801FB9AC)

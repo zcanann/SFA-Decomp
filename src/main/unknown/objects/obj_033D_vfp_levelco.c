@@ -56,7 +56,7 @@
  * - slot 05: 0x801F9994 vfplevelcontrol_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F9990 vfplevelcontrol_render stub=blr ref=render (stub)
  * - slot 07: 0x801F994C vfplevelcontrol_free ref=free
- * - slot 08: 0x801F9944 vfplevelcontrol_func08 stub=const 0
+ * - slot 08: 0x801F9944 vfplevelcontrol_getObjectTypeId stub=const 0
  * - slot 09: 0x801F993C vfplevelcontrol_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 

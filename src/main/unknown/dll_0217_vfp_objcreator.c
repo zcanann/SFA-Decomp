@@ -15,5 +15,5 @@
 // - 5: vfpobjcreator_hitDetect (0x801F9D98)
 // - 6: vfpobjcreator_render (0x801F9D8C)
 // - 7: vfpobjcreator_free (0x801F9D88)
-// - 8: vfpobjcreator_func08 (0x801F9D80)
+// - 8: vfpobjcreator_getObjectTypeId (0x801F9D80)
 // - 9: vfpobjcreator_getExtraSize (0x801F9D78)
