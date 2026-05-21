@@ -2035,6 +2035,7 @@ void expgfx_onMapSetup(void)
   u32 *poolActiveMasks;
   u8 *poolActiveCounts;
   register s16 *poolSlotTypeIds;
+  register s16 *poolSlotTypeIdBase;
   u8 *poolSourceModes;
   u32 *poolSourceIds;
   int groupIndex;
@@ -2048,8 +2049,8 @@ void expgfx_onMapSetup(void)
   poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
   poolActiveCounts = expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
   asm {
-    lis poolSlotTypeIds, gExpgfxStaticPoolSlotTypeIds@ha
-    addi poolSlotTypeIds, poolSlotTypeIds, gExpgfxStaticPoolSlotTypeIds@l
+    lis poolSlotTypeIdBase, gExpgfxStaticPoolSlotTypeIds@ha
+    addi poolSlotTypeIds, poolSlotTypeIdBase, gExpgfxStaticPoolSlotTypeIds@l
     lis poolFrameFlags, gExpgfxStaticPoolFrameFlags@ha
     addi poolFrameFlags, poolFrameFlags, gExpgfxStaticPoolFrameFlags@l
   }
