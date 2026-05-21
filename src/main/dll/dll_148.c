@@ -125,7 +125,7 @@ void pressureswitchfb_update(void)
         if ((bVar4) && (iVar12 != iVar8)) {
           uStack_34 = (uint)*(byte *)(iVar16 + 0x1d);
           local_38 = 0x43300000;
-          if ((float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e4408) <
+          if ((f32)(s32)uStack_34 <
               *(float *)(iVar12 + 0x10) - *(float *)(uVar6 + 0x10)) {
             iVar13 = *(int *)(uVar6 + 0xb8);
             uVar7 = 0;
@@ -202,7 +202,7 @@ void pressureswitchfb_update(void)
         uStack_34 = (uint)*(byte *)(iVar16 + 0x1c);
         local_38 = 0x43300000;
         fVar3 = *(float *)(pcVar15 + 0x7c) -
-                (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e4408);
+                (f32)(s32)uStack_34;
         fVar2 = *(float *)(uVar6 + 0x10);
         if (fVar3 <= fVar2) {
           *(float *)(uVar6 + 0x10) = -(*(float *)(pcVar15 + 0x80) * lbl_803DC074 - fVar2);
