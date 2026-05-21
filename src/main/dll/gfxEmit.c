@@ -556,3 +556,66 @@ int collectible_getObjectTypeId(void)
 void collectible_hitDetect(void)
 {
 }
+
+extern uint GameBit_Get(int);
+extern f64 sin(f64);
+extern f64 fn_80293E80(f64);
+extern void objFn_800972dc(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
+extern int* gPartfxInterface;
+extern f32 lbl_803E3454;
+extern f32 lbl_803E3458;
+extern f32 lbl_803E345C;
+extern f32 lbl_803E3460;
+extern f32 lbl_803E3484;
+extern f32 lbl_803E3488;
+extern f32 lbl_803E348C;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80172680(int obj, int unused, u8* data)
+{
+    int* state = *(int**)(obj + 0xb8);
+    f32 buf[6];
+    int i;
+    int j;
+    f32 s_val;
+    f32 c_val;
+
+    if (*(s16*)((char*)state + 0x14) != -1) {
+        *(u8*)((char*)state + 0x1e) = (u8)(GameBit_Get((s32)*(s16*)((char*)state + 0x14)) == 0);
+    }
+    if (*(u8*)((char*)state + 0x1e) == 0) {
+        if (*(s16*)(obj + 0x46) == 0x6a6) {
+            objFn_800972dc(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
+        }
+    }
+
+    data[0x56] = 0;
+    for (i = 0; i < (s32)data[0x8b]; i++) {
+        u8 cmd = data[0x81 + i];
+        if (cmd == 1) {
+            s_val = lbl_803E3484 * (f32)sin((f64)lbl_803E3488);
+            c_val = lbl_803E3484 * (f32)fn_80293E80((f64)lbl_803E3488);
+            *(u8*)((char*)*(int**)(obj + 0xb8) + 0x1d) = 8;
+            *(f32*)(obj + 0x24) = c_val;
+            *(f32*)(obj + 0x28) = lbl_803E3460;
+            *(f32*)(obj + 0x2c) = s_val;
+            *(u8*)((char*)*(int**)(obj + 0xb8) + 0x1d) = 8;
+            *(f32*)(obj + 0x24) = lbl_803E348C;
+            *(f32*)(obj + 0x28) = lbl_803E3460;
+            *(f32*)(obj + 0x2c) = lbl_803E345C;
+        } else if (cmd == 2) {
+            *(u8*)((char*)state + 0x3e) = 1;
+        } else if (cmd == 3) {
+            for (j = 0; j < 10; j++) {
+                buf[3] = lbl_803E345C;
+                buf[4] = lbl_803E345C;
+                buf[5] = lbl_803E345C;
+                (*(void(**)(int, int, f32*, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x7ef, buf, 1, -1, 0);
+            }
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
