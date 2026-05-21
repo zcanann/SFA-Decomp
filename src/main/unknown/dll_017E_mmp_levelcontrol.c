@@ -15,5 +15,5 @@
 // - 5: MMP_levelcontrol_hitDetect (0x801A6774)
 // - 6: MMP_levelcontrol_render (0x801A6744)
 // - 7: MMP_levelcontrol_free (0x801A670C)
-// - 8: MMP_levelcontrol_func08 (0x801A6704)
+// - 8: MMP_levelcontrol_getObjectTypeId (0x801A6704)
 // - 9: MMP_levelcontrol_getExtraSize (0x801A66FC)

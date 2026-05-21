@@ -27,7 +27,7 @@
  *   slot 05: 0x801AE130 imicepillar_hitDetect
  *   slot 06: 0x801AE100 imicepillar_render
  *   slot 07: 0x801AE0FC imicepillar_free
- *   slot 08: 0x801AE0F4 imicepillar_func08
+ *   slot 08: 0x801AE0F4 imicepillar_getObjectTypeId
  *   slot 09: 0x801AE0EC imicepillar_getExtraSize
  */
 

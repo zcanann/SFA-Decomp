@@ -1043,14 +1043,14 @@ void imicepillar_free(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int imicemountain_getExtraSize(void) { return 0x14; }
-int imicemountain_func08(void) { return 0x0; }
+int imicemountain_getObjectTypeId(void) { return 0x0; }
 int crrockfall_getExtraSize(void) { return 0x14; }
-int crrockfall_func08(void) { return 0x0; }
-int magiclight_func08(void) { return 0x0; }
+int crrockfall_getObjectTypeId(void) { return 0x0; }
+int magiclight_getObjectTypeId(void) { return 0x0; }
 int dll_16C_getExtraSize(void) { return 0x24; }
-int dll_16C_func08(void) { return 0x3; }
+int dll_16C_getObjectTypeId(void) { return 0x3; }
 int imicepillar_getExtraSize(void) { return 0x4; }
-int imicepillar_func08(void) { return 0x0; }
+int imicepillar_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
 extern u32 lbl_803DDB40;

@@ -127,7 +127,7 @@ extern f32 lbl_803E54A0;
 extern f32 lbl_803E54AC;
 
 extern void imicepillar_free(void);
-extern int imicepillar_func08(void);
+extern int imicepillar_getObjectTypeId(void);
 extern int imicepillar_getExtraSize(void);
 
 /*
@@ -1911,7 +1911,7 @@ ObjectDescriptor gIMIcePillarObjDescriptor = {
     (ObjectDescriptorCallback)imicepillar_hitDetect,
     (ObjectDescriptorCallback)imicepillar_render,
     (ObjectDescriptorCallback)imicepillar_free,
-    (ObjectDescriptorCallback)imicepillar_func08,
+    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
     imicepillar_getExtraSize,
 };
 
@@ -1938,13 +1938,13 @@ void lavaball1bf_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int imanimspacecraft_getExtraSize(void) { return 0x4; }
-int imanimspacecraft_func08(void) { return 0x0; }
+int imanimspacecraft_getObjectTypeId(void) { return 0x0; }
 int imspacethruster_getExtraSize(void) { return 0xc; }
-int imspacethruster_func08(void) { return 0x0; }
+int imspacethruster_getObjectTypeId(void) { return 0x0; }
 int imspacering_getExtraSize(void) { return 0x0; }
-int imspacering_func08(void) { return 0x0; }
+int imspacering_getObjectTypeId(void) { return 0x0; }
 int imspaceringgen_getExtraSize(void) { return 0xc; }
-int imspaceringgen_func08(void) { return 0x0; }
+int imspaceringgen_getObjectTypeId(void) { return 0x0; }
 int linkb_levcontrol_getExtraSize(void) { return 0x10; }
 int link_levcontrol_getExtraSize(void) { return 0x10; }
 int lavaball1bf_getExtraSize(void) { return 0x1c; }

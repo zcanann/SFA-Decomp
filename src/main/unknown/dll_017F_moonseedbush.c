@@ -17,5 +17,5 @@
 // - 5: MoonSeedBush_hitDetect (0x801A6DA0)
 // - 6: MoonSeedBush_render (0x801A6D70)
 // - 7: MoonSeedBush_free (0x801A6D6C)
-// - 8: MoonSeedBush_func08 (0x801A6D64)
+// - 8: MoonSeedBush_getObjectTypeId (0x801A6D64)
 // - 9: MoonSeedBush_getExtraSize (0x801A6D5C)

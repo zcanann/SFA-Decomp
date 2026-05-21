@@ -15,5 +15,5 @@
 // - 5: SpiritDoorLock_hitDetect (0x801A5858)
 // - 6: SpiritDoorLock_render (0x801A5828)
 // - 7: SpiritDoorLock_free (0x801A57F8)
-// - 8: SpiritDoorLock_func08 (0x801A57F0)
+// - 8: SpiritDoorLock_getObjectTypeId (0x801A57F0)
 // - 9: SpiritDoorLock_getExtraSize (0x801A57E8)

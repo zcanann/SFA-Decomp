@@ -14,5 +14,5 @@
 // - 5: imspacering_hitDetect (0x801AE9C8)
 // - 6: imspacering_render (0x801AE998)
 // - 7: imspacering_free (0x801AE994)
-// - 8: imspacering_func08 (0x801AE98C)
+// - 8: imspacering_getObjectTypeId (0x801AE98C)
 // - 9: imspacering_getExtraSize (0x801AE984)

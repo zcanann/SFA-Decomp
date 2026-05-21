@@ -56,7 +56,7 @@
  * - slot 05: 0x801A7120 mmp_asteroid_re_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A70F0 mmp_asteroid_re_render ref=render
  * - slot 07: 0x801A70EC mmp_asteroid_re_free stub=blr ref=free (stub)
- * - slot 08: 0x801A70E4 mmp_asteroid_re_func08 stub=const 0
+ * - slot 08: 0x801A70E4 mmp_asteroid_re_getObjectTypeId stub=const 0
  * - slot 09: 0x801A70DC mmp_asteroid_re_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 

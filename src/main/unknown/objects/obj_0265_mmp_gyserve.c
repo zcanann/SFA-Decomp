@@ -56,7 +56,7 @@
  * - slot 05: 0x801A8E3C mmp_gyservent_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A8E38 mmp_gyservent_render stub=blr ref=render (stub)
  * - slot 07: 0x801A8E34 mmp_gyservent_free stub=blr ref=free (stub)
- * - slot 08: 0x801A8E2C mmp_gyservent_func08 stub=const 0
+ * - slot 08: 0x801A8E2C mmp_gyservent_getObjectTypeId stub=const 0
  * - slot 09: 0x801A8E24 mmp_gyservent_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

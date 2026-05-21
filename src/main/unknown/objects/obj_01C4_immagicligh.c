@@ -58,7 +58,7 @@
  * - slot 05: 0x801AD608 magiclight_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801AD5CC magiclight_render ref=render
  * - slot 07: 0x801AD550 magiclight_free ref=free
- * - slot 08: 0x801AD548 magiclight_func08 stub=const 0
+ * - slot 08: 0x801AD548 magiclight_getObjectTypeId stub=const 0
  * - slot 09: 0x801AD52C magiclight_getExtraSize ref=getExtraSize
  */
 

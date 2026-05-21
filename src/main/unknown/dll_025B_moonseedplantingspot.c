@@ -25,7 +25,7 @@
  * - slot 05: 0x801A970C MoonSeedPlantingSpot_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A95C8 MoonSeedPlantingSpot_render ref=render
  * - slot 07: 0x801A95A4 MoonSeedPlantingSpot_free ref=free
- * - slot 08: 0x801A959C MoonSeedPlantingSpot_func08 stub=const 1
+ * - slot 08: 0x801A959C MoonSeedPlantingSpot_getObjectTypeId stub=const 1
  * - slot 09: 0x801A9594 MoonSeedPlantingSpot_getExtraSize stub=const 24 ref=getExtraSize (stub)
  * - slot 10: 0x801A949C MoonSeedPlantingSpot_setScale ref=setScale
  * - slot 11: 0x801A9494 MoonSeedPlantingSpot_func0B stub=const 0

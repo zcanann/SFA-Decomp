@@ -14,5 +14,5 @@
 // - 5: imspacethruster_hitDetect (0x801AE590)
 // - 6: imspacethruster_render (0x801AE560)
 // - 7: imspacethruster_free (0x801AE518)
-// - 8: imspacethruster_func08 (0x801AE510)
+// - 8: imspacethruster_getObjectTypeId (0x801AE510)
 // - 9: imspacethruster_getExtraSize (0x801AE508)

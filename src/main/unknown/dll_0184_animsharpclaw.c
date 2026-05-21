@@ -14,5 +14,5 @@
 // - 5: animsharpclaw_hitDetect (0x801A9178)
 // - 6: animsharpclaw_render (0x801A9148)
 // - 7: animsharpclaw_free (0x801A90A0)
-// - 8: animsharpclaw_func08 (0x801A9098)
+// - 8: animsharpclaw_getObjectTypeId (0x801A9098)
 // - 9: animsharpclaw_getExtraSize (0x801A9090)

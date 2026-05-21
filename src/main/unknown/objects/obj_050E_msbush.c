@@ -58,7 +58,7 @@
  * - slot 05: 0x801A6DA0 MoonSeedBush_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A6D70 MoonSeedBush_render ref=render
  * - slot 07: 0x801A6D6C MoonSeedBush_free stub=blr ref=free (stub)
- * - slot 08: 0x801A6D64 MoonSeedBush_func08 stub=const 0
+ * - slot 08: 0x801A6D64 MoonSeedBush_getObjectTypeId stub=const 0
  * - slot 09: 0x801A6D5C MoonSeedBush_getExtraSize stub=const 2 ref=getExtraSize (stub)
  */
 

@@ -59,7 +59,7 @@
  *   slot 05: 0x801AC78C imicemountain_hitDetect
  *   slot 06: 0x801AC75C imicemountain_render
  *   slot 07: 0x801AC758 imicemountain_free
- *   slot 08: 0x801AC750 imicemountain_func08
+ *   slot 08: 0x801AC750 imicemountain_getObjectTypeId
  *   slot 09: 0x801AC748 imicemountain_getExtraSize
  * - DLL 0x017E: gMMP_levelcontrolObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A6C24 MMP_levelcontrol_initialise
@@ -69,7 +69,7 @@
  *   slot 05: 0x801A6774 MMP_levelcontrol_hitDetect
  *   slot 06: 0x801A6744 MMP_levelcontrol_render
  *   slot 07: 0x801A670C MMP_levelcontrol_free
- *   slot 08: 0x801A6704 MMP_levelcontrol_func08
+ *   slot 08: 0x801A6704 MMP_levelcontrol_getObjectTypeId
  *   slot 09: 0x801A66FC MMP_levelcontrol_getExtraSize
  * - DLL 0x0198: gNWSH_levconObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801CA9BC nwsh_levcon_initialise

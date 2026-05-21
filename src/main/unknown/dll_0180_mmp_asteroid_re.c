@@ -14,5 +14,5 @@
 // - 5: mmp_asteroid_re_hitDetect (0x801A7120)
 // - 6: mmp_asteroid_re_render (0x801A70F0)
 // - 7: mmp_asteroid_re_free (0x801A70EC)
-// - 8: mmp_asteroid_re_func08 (0x801A70E4)
+// - 8: mmp_asteroid_re_getObjectTypeId (0x801A70E4)
 // - 9: mmp_asteroid_re_getExtraSize (0x801A70DC)

@@ -130,7 +130,7 @@
  *   slot 05: 0x801A6DA0 MoonSeedBush_hitDetect
  *   slot 06: 0x801A6D70 MoonSeedBush_render
  *   slot 07: 0x801A6D6C MoonSeedBush_free
- *   slot 08: 0x801A6D64 MoonSeedBush_func08
+ *   slot 08: 0x801A6D64 MoonSeedBush_getObjectTypeId
  *   slot 09: 0x801A6D5C MoonSeedBush_getExtraSize
  */
 

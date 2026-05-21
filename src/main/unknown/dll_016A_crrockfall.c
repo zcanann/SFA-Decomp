@@ -14,5 +14,5 @@
 // - 5: crrockfall_hitDetect (0x801ACE1C)
 // - 6: crrockfall_render (0x801ACDDC)
 // - 7: crrockfall_free (0x801ACDD8)
-// - 8: crrockfall_func08 (0x801ACDD0)
+// - 8: crrockfall_getObjectTypeId (0x801ACDD0)
 // - 9: crrockfall_getExtraSize (0x801ACDC8)

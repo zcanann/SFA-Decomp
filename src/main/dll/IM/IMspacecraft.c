@@ -839,11 +839,11 @@ void MMP_levelcontrol_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int SpiritDoorLock_getExtraSize(void) { return 0x14; }
-int SpiritDoorLock_func08(void) { return 0x0; }
+int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
 int RollingBarrel_getExtraSize(void) { return 0x118; }
-int RollingBarrel_func08(void) { return 0x0; }
+int RollingBarrel_getObjectTypeId(void) { return 0x0; }
 int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
-int MMP_levelcontrol_func08(void) { return 0x0; }
+int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
 extern s16 lbl_803DDB20;

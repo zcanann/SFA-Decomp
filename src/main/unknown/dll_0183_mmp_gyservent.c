@@ -14,5 +14,5 @@
 // - 5: mmp_gyservent_hitDetect (0x801A8E3C)
 // - 6: mmp_gyservent_render (0x801A8E38)
 // - 7: mmp_gyservent_free (0x801A8E34)
-// - 8: mmp_gyservent_func08 (0x801A8E2C)
+// - 8: mmp_gyservent_getObjectTypeId (0x801A8E2C)
 // - 9: mmp_gyservent_getExtraSize (0x801A8E24)

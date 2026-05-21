@@ -14,5 +14,5 @@
 // - 5: imicepillar_hitDetect (0x801AE130)
 // - 6: imicepillar_render (0x801AE100)
 // - 7: imicepillar_free (0x801AE0FC)
-// - 8: imicepillar_func08 (0x801AE0F4)
+// - 8: imicepillar_getObjectTypeId (0x801AE0F4)
 // - 9: imicepillar_getExtraSize (0x801AE0EC)

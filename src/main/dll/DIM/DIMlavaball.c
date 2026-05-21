@@ -1345,15 +1345,15 @@ void mmp_gyservent_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int MoonSeedBush_getExtraSize(void) { return 0x2; }
-int MoonSeedBush_func08(void) { return 0x0; }
+int MoonSeedBush_getObjectTypeId(void) { return 0x0; }
 int mmp_asteroid_re_getExtraSize(void) { return 0x1c; }
-int mmp_asteroid_re_func08(void) { return 0x0; }
+int mmp_asteroid_re_getObjectTypeId(void) { return 0x0; }
 int mmp_moonrock_getExtraSize(void) { return 0x30; }
-int mmp_moonrock_func08(void) { return 0x0; }
+int mmp_moonrock_getObjectTypeId(void) { return 0x0; }
 int mmp_trenchfx_getExtraSize(void) { return 0x30; }
-int mmp_trenchfx_func08(void) { return 0x0; }
+int mmp_trenchfx_getObjectTypeId(void) { return 0x0; }
 int mmp_gyservent_getExtraSize(void) { return 0x0; }
-int mmp_gyservent_func08(void) { return 0x0; }
+int mmp_gyservent_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E44D0;

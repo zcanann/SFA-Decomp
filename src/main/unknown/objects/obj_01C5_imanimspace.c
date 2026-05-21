@@ -58,7 +58,7 @@
  * - slot 05: 0x801AE468 imanimspacecraft_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801AE438 imanimspacecraft_render ref=render
  * - slot 07: 0x801AE408 imanimspacecraft_free ref=free
- * - slot 08: 0x801AE400 imanimspacecraft_func08 stub=const 0
+ * - slot 08: 0x801AE400 imanimspacecraft_getObjectTypeId stub=const 0
  * - slot 09: 0x801AE3F8 imanimspacecraft_getExtraSize stub=const 4 ref=getExtraSize (stub)
  * - slot 10: 0x801AE158 imanimspacecraft_setScale ref=setScale
  * - slot 11: 0x801AE148 imanimspacecraft_func0B

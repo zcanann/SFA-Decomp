@@ -14,5 +14,5 @@
 // - 5: magiclight_hitDetect (0x801AD608)
 // - 6: magiclight_render (0x801AD5CC)
 // - 7: magiclight_free (0x801AD550)
-// - 8: magiclight_func08 (0x801AD548)
+// - 8: magiclight_getObjectTypeId (0x801AD548)
 // - 9: magiclight_getExtraSize (0x801AD52C)

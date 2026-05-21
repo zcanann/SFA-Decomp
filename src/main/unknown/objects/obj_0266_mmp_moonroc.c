@@ -56,7 +56,7 @@
  * - slot 05: 0x801A821C mmp_moonrock_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A81A0 mmp_moonrock_render ref=render
  * - slot 07: 0x801A8158 mmp_moonrock_free ref=free
- * - slot 08: 0x801A8150 mmp_moonrock_func08 stub=const 0
+ * - slot 08: 0x801A8150 mmp_moonrock_getObjectTypeId stub=const 0
  * - slot 09: 0x801A8148 mmp_moonrock_getExtraSize stub=const 48 ref=getExtraSize (stub)
  */
 

@@ -14,5 +14,5 @@
 // - 5: mmp_trenchfx_hitDetect (0x801A8A8C)
 // - 6: mmp_trenchfx_render (0x801A8A80)
 // - 7: mmp_trenchfx_free (0x801A8A50)
-// - 8: mmp_trenchfx_func08 (0x801A8A48)
+// - 8: mmp_trenchfx_getObjectTypeId (0x801A8A48)
 // - 9: mmp_trenchfx_getExtraSize (0x801A8A40)

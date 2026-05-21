@@ -841,7 +841,7 @@
  *   slot 05: 0x801A5858 SpiritDoorLock_hitDetect
  *   slot 06: 0x801A5828 SpiritDoorLock_render
  *   slot 07: 0x801A57F8 SpiritDoorLock_free
- *   slot 08: 0x801A57F0 SpiritDoorLock_func08
+ *   slot 08: 0x801A57F0 SpiritDoorLock_getObjectTypeId
  *   slot 09: 0x801A57E8 SpiritDoorLock_getExtraSize
  * - DLL 0x016B: gMagicLightObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801AD7E0 magiclight_initialise
@@ -851,7 +851,7 @@
  *   slot 05: 0x801AD608 magiclight_hitDetect
  *   slot 06: 0x801AD5CC magiclight_render
  *   slot 07: 0x801AD550 magiclight_free
- *   slot 08: 0x801AD548 magiclight_func08
+ *   slot 08: 0x801AD548 magiclight_getObjectTypeId
  *   slot 09: 0x801AD52C magiclight_getExtraSize
  * - DLL 0x016E: gIMAnimSpaceCraftObjDescriptor (slots=13, mask=1101111111111)
  *   slot 00: 0x801AE504 imanimspacecraft_initialise
@@ -861,7 +861,7 @@
  *   slot 05: 0x801AE468 imanimspacecraft_hitDetect
  *   slot 06: 0x801AE438 imanimspacecraft_render
  *   slot 07: 0x801AE408 imanimspacecraft_free
- *   slot 08: 0x801AE400 imanimspacecraft_func08
+ *   slot 08: 0x801AE400 imanimspacecraft_getObjectTypeId
  *   slot 09: 0x801AE3F8 imanimspacecraft_getExtraSize
  * - DLL 0x016F: gIMSpaceThrusterObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801AE980 imspacethruster_initialise
@@ -871,7 +871,7 @@
  *   slot 05: 0x801AE590 imspacethruster_hitDetect
  *   slot 06: 0x801AE560 imspacethruster_render
  *   slot 07: 0x801AE518 imspacethruster_free
- *   slot 08: 0x801AE510 imspacethruster_func08
+ *   slot 08: 0x801AE510 imspacethruster_getObjectTypeId
  *   slot 09: 0x801AE508 imspacethruster_getExtraSize
  * - DLL 0x0170: gIMSpaceRingObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801AEAE0 imspacering_initialise
@@ -881,7 +881,7 @@
  *   slot 05: 0x801AE9C8 imspacering_hitDetect
  *   slot 06: 0x801AE998 imspacering_render
  *   slot 07: 0x801AE994 imspacering_free
- *   slot 08: 0x801AE98C imspacering_func08
+ *   slot 08: 0x801AE98C imspacering_getObjectTypeId
  *   slot 09: 0x801AE984 imspacering_getExtraSize
  * - DLL 0x0171: gIMSpaceRingGenObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801AEE28 imspaceringgen_initialise
@@ -891,7 +891,7 @@
  *   slot 05: 0x801AEB4C imspaceringgen_hitDetect
  *   slot 06: 0x801AEB00 imspaceringgen_render
  *   slot 07: 0x801AEAF4 imspaceringgen_free
- *   slot 08: 0x801AEAEC imspaceringgen_func08
+ *   slot 08: 0x801AEAEC imspaceringgen_getObjectTypeId
  *   slot 09: 0x801AEAE4 imspaceringgen_getExtraSize
  * - DLL 0x0178: gDFSH_ShrineObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C3614 dfsh_shrine_initialise
@@ -922,7 +922,7 @@
  *   slot 05: 0x801A6050 RollingBarrel_hitDetect
  *   slot 06: 0x801A600C RollingBarrel_render
  *   slot 07: 0x801A5F80 RollingBarrel_free
- *   slot 08: 0x801A5F78 RollingBarrel_func08
+ *   slot 08: 0x801A5F78 RollingBarrel_getObjectTypeId
  *   slot 09: 0x801A5F70 RollingBarrel_getExtraSize
  * - DLL 0x0180: gMMP_asteroid_reObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A78C4 mmp_asteroid_re_initialise
@@ -932,7 +932,7 @@
  *   slot 05: 0x801A7120 mmp_asteroid_re_hitDetect
  *   slot 06: 0x801A70F0 mmp_asteroid_re_render
  *   slot 07: 0x801A70EC mmp_asteroid_re_free
- *   slot 08: 0x801A70E4 mmp_asteroid_re_func08
+ *   slot 08: 0x801A70E4 mmp_asteroid_re_getObjectTypeId
  *   slot 09: 0x801A70DC mmp_asteroid_re_getExtraSize
  * - DLL 0x0182: gMMP_moonrockObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A8A3C mmp_moonrock_initialise
@@ -942,7 +942,7 @@
  *   slot 05: 0x801A821C mmp_moonrock_hitDetect
  *   slot 06: 0x801A81A0 mmp_moonrock_render
  *   slot 07: 0x801A8158 mmp_moonrock_free
- *   slot 08: 0x801A8150 mmp_moonrock_func08
+ *   slot 08: 0x801A8150 mmp_moonrock_getObjectTypeId
  *   slot 09: 0x801A8148 mmp_moonrock_getExtraSize
  * - DLL 0x0183: gMMP_gyserventObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A8F84 mmp_gyservent_initialise
@@ -952,7 +952,7 @@
  *   slot 05: 0x801A8E3C mmp_gyservent_hitDetect
  *   slot 06: 0x801A8E38 mmp_gyservent_render
  *   slot 07: 0x801A8E34 mmp_gyservent_free
- *   slot 08: 0x801A8E2C mmp_gyservent_func08
+ *   slot 08: 0x801A8E2C mmp_gyservent_getObjectTypeId
  *   slot 09: 0x801A8E24 mmp_gyservent_getExtraSize
  * - DLL 0x018C: gMMSH_ShrineObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C539C mmsh_shrine_initialise

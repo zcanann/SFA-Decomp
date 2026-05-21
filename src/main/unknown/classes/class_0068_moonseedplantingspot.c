@@ -28,7 +28,7 @@
  *   slot 05: 0x801A970C MoonSeedPlantingSpot_hitDetect
  *   slot 06: 0x801A95C8 MoonSeedPlantingSpot_render
  *   slot 07: 0x801A95A4 MoonSeedPlantingSpot_free
- *   slot 08: 0x801A959C MoonSeedPlantingSpot_func08
+ *   slot 08: 0x801A959C MoonSeedPlantingSpot_getObjectTypeId
  *   slot 09: 0x801A9594 MoonSeedPlantingSpot_getExtraSize
  */
 

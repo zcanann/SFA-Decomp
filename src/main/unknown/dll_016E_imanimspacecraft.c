@@ -14,7 +14,7 @@
 // - 5: imanimspacecraft_hitDetect (0x801AE468)
 // - 6: imanimspacecraft_render (0x801AE438)
 // - 7: imanimspacecraft_free (0x801AE408)
-// - 8: imanimspacecraft_func08 (0x801AE400)
+// - 8: imanimspacecraft_getObjectTypeId (0x801AE400)
 // - 9: imanimspacecraft_getExtraSize (0x801AE3F8)
 // - A: imanimspacecraft_setScale (0x801AE158)
 // - B: imanimspacecraft_func0B (0x801AE148)

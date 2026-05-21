@@ -57,7 +57,7 @@
  * - slot 05: 0x801A5858 SpiritDoorLock_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A5828 SpiritDoorLock_render ref=render
  * - slot 07: 0x801A57F8 SpiritDoorLock_free ref=free
- * - slot 08: 0x801A57F0 SpiritDoorLock_func08 stub=const 0
+ * - slot 08: 0x801A57F0 SpiritDoorLock_getObjectTypeId stub=const 0
  * - slot 09: 0x801A57E8 SpiritDoorLock_getExtraSize stub=const 20 ref=getExtraSize (stub)
  */
 

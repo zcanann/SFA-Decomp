@@ -44,7 +44,7 @@
  * - slot 05: 0x801AE130 imicepillar_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801AE100 imicepillar_render ref=render
  * - slot 07: 0x801AE0FC imicepillar_free stub=blr ref=free (stub)
- * - slot 08: 0x801AE0F4 imicepillar_func08 stub=const 0
+ * - slot 08: 0x801AE0F4 imicepillar_getObjectTypeId stub=const 0
  * - slot 09: 0x801AE0EC imicepillar_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

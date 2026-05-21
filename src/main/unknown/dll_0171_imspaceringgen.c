@@ -14,5 +14,5 @@
 // - 5: imspaceringgen_hitDetect (0x801AEB4C)
 // - 6: imspaceringgen_render (0x801AEB00)
 // - 7: imspaceringgen_free (0x801AEAF4)
-// - 8: imspaceringgen_func08 (0x801AEAEC)
+// - 8: imspaceringgen_getObjectTypeId (0x801AEAEC)
 // - 9: imspaceringgen_getExtraSize (0x801AEAE4)

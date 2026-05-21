@@ -28,7 +28,7 @@
  *   slot 05: 0x801ACE1C crrockfall_hitDetect
  *   slot 06: 0x801ACDDC crrockfall_render
  *   slot 07: 0x801ACDD8 crrockfall_free
- *   slot 08: 0x801ACDD0 crrockfall_func08
+ *   slot 08: 0x801ACDD0 crrockfall_getObjectTypeId
  *   slot 09: 0x801ACDC8 crrockfall_getExtraSize
  */
 

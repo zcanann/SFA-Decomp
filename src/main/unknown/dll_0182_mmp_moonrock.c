@@ -14,5 +14,5 @@
 // - 5: mmp_moonrock_hitDetect (0x801A821C)
 // - 6: mmp_moonrock_render (0x801A81A0)
 // - 7: mmp_moonrock_free (0x801A8158)
-// - 8: mmp_moonrock_func08 (0x801A8150)
+// - 8: mmp_moonrock_getObjectTypeId (0x801A8150)
 // - 9: mmp_moonrock_getExtraSize (0x801A8148)

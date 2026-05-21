@@ -17,7 +17,7 @@
 // - 5: RollingBarrel_hitDetect (0x801A6050)
 // - 6: RollingBarrel_render (0x801A600C)
 // - 7: RollingBarrel_free (0x801A5F80)
-// - 8: RollingBarrel_func08 (0x801A5F78)
+// - 8: RollingBarrel_getObjectTypeId (0x801A5F78)
 // - 9: RollingBarrel_getExtraSize (0x801A5F70)
 //
 // Reference-only object parameter hints:

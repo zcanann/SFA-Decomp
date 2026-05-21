@@ -46,7 +46,7 @@
  * - slot 05: 0x801ACE1C crrockfall_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801ACDDC crrockfall_render ref=render
  * - slot 07: 0x801ACDD8 crrockfall_free stub=blr ref=free (stub)
- * - slot 08: 0x801ACDD0 crrockfall_func08 stub=const 0
+ * - slot 08: 0x801ACDD0 crrockfall_getObjectTypeId stub=const 0
  * - slot 09: 0x801ACDC8 crrockfall_getExtraSize stub=const 20 ref=getExtraSize (stub)
  */
 
