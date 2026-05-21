@@ -2587,7 +2587,7 @@ int fn_80202294(int obj, int p)
 {
   extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void *Obj_GetPlayerObject(void);
-  extern u16 lbl_80329650[];
+  extern int lbl_80329650[];
   extern int Stack_IsFull(int sp);
   extern void Stack_Push(int sp, int *args);
   extern f32 lbl_803E62A8;
@@ -2604,16 +2604,16 @@ int fn_80202294(int obj, int p)
     int r;
     int player_c8;
     *(u32 *)(p + 0x2d0) = 0;
-    if (*(int *)(sub_40c + 0x18) != 0) {
+    if (*(void **)(sub_40c + 0x18) != NULL) {
       ObjMsg_SendToObject(*(int *)(sub_40c + 0x18), 17, obj, 16);
       *(int *)(sub_40c + 0x18) = 0;
     }
     player_c8 = *(int *)((char *)Obj_GetPlayerObject() + 0xc8);
     r = (**(int (**)(int))(*(int *)(player_c8 + 0x68) + 0x44))(player_c8);
     if (r != 0) {
-      Sfx_PlayFromObject(obj, lbl_80329650[randomGetRange(3, 4)]);
+      Sfx_PlayFromObject(obj, (u16)lbl_80329650[randomGetRange(3, 4)]);
     } else {
-      Sfx_PlayFromObject(obj, lbl_80329650[randomGetRange(0, 2)]);
+      Sfx_PlayFromObject(obj, (u16)lbl_80329650[randomGetRange(0, 2)]);
     }
     frame[0] = *(int *)(sub_40c + 0x28);
     frame[1] = *(int *)(sub_40c + 0x2c);
