@@ -834,7 +834,7 @@ void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 extern void setScreenTransitionPause(int v);
 extern void setPendingMapLoad(int v);
 extern void deathRenderFn_8001fd98(int* obj);
-extern void* Obj_GetActiveModel(void);
+extern void* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern f32 lbl_803E3CC0;
 extern int fuelcell_func0B(int* obj);
@@ -876,7 +876,7 @@ void deathgas_init(int* obj)
 void fuelcell_init(int* obj)
 {
     *(void**)((char*)obj + 188) = (void*)fuelcell_func0B;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(), (void*)fuelcell_modelMtxFn);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), (void*)fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
 }
 
