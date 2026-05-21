@@ -184,10 +184,9 @@ void CameraModeCombat_update(void)
       else {
         iVar9 = *(int *)(iVar6 + 0x74);
         if (iVar9 != 0) {
-          local_80 = (double)CONCAT44(0x43300000,
+          dVar14 = (double)(f32)(s32)(
                                       (uint)*(byte *)(*(int *)(*(int *)(iVar6 + 0x50) + 0x40) + 0xd)
-                                      << 2 ^ 0x80000000);
-          dVar14 = (double)(float)(local_80 - lbl_803E1938);
+                                      << 2);
           uVar7 = getButtonsJustPressed(0);
           if (((uVar7 & 0x200) == 0) || (uVar7 = FUN_80294c90(iVar8), uVar7 == 0)) {
             local_120 = lbl_803E18D0 + *(float *)(iVar8 + 0x1c);
@@ -236,70 +235,58 @@ void CameraModeCombat_update(void)
               }
               if (iVar9 < 0x2329) {
                 if (iVar9 < -9000) {
-                  local_70 = (double)CONCAT44(0x43300000,iVar9 + 9000U ^ 0x80000000);
-                  dVar12 = FUN_800176f4((double)(float)(local_70 - lbl_803E1938),
+                  dVar12 = FUN_800176f4((double)(f32)(s32)(iVar9 + 9000U),
                                         (double)lbl_803E18DC,(double)timeDelta);
                   uStack_74 = (int)*psVar4 ^ 0x80000000;
                   local_78 = 0x43300000;
-                  iVar10 = (int)((double)(float)((double)CONCAT44(0x43300000,uStack_74) -
-                                                lbl_803E1938) - dVar12);
+                  iVar10 = (int)((f64)(f32)(s32)uStack_74 - dVar12);
                   local_80 = (double)(longlong)iVar10;
                   *psVar4 = (short)iVar10;
                 }
               }
               else {
-                local_80 = (double)CONCAT44(0x43300000,iVar9 - 9000U ^ 0x80000000);
-                dVar12 = FUN_800176f4((double)(float)(local_80 - lbl_803E1938),
+                dVar12 = FUN_800176f4((double)(f32)(s32)(iVar9 - 9000U),
                                       (double)lbl_803E18DC,(double)timeDelta);
                 uStack_74 = (int)*psVar4 ^ 0x80000000;
                 local_78 = 0x43300000;
-                *psVar4 = (short)(int)((double)(float)((double)CONCAT44(0x43300000,uStack_74) -
-                                                      lbl_803E1938) - dVar12);
+                *psVar4 = (short)(int)((f64)(f32)(s32)uStack_74 - dVar12);
               }
               if ((iVar9 < 3000) && (0 < iVar9)) {
                 if (((lbl_803DD56C < 3000) && (iVar9 < 1000)) && (iVar9 < lbl_803DD56C)) {
-                  local_70 = (double)CONCAT44(0x43300000,-iVar9 - 3000U ^ 0x80000000);
-                  dVar12 = FUN_800176f4((double)(float)(local_70 - lbl_803E1938),
+                  dVar12 = FUN_800176f4((double)(f32)(s32)(-iVar9 - 3000U),
                                         (double)lbl_803E18E0,(double)timeDelta);
                   uStack_74 = (int)*psVar4 ^ 0x80000000;
                   local_78 = 0x43300000;
-                  iVar10 = (int)((double)(float)((double)CONCAT44(0x43300000,uStack_74) -
-                                                lbl_803E1938) + dVar12);
+                  iVar10 = (int)((f64)(f32)(s32)uStack_74 + dVar12);
                   local_80 = (double)(longlong)iVar10;
                   *psVar4 = (short)iVar10;
                 }
                 else {
-                  local_70 = (double)CONCAT44(0x43300000,3000U - iVar9 ^ 0x80000000);
-                  dVar12 = FUN_800176f4((double)(float)(local_70 - lbl_803E1938),
+                  dVar12 = FUN_800176f4((double)(f32)(s32)(3000U - iVar9),
                                         (double)lbl_803E18E0,(double)timeDelta);
                   uStack_74 = (int)*psVar4 ^ 0x80000000;
                   local_78 = 0x43300000;
-                  iVar10 = (int)((double)(float)((double)CONCAT44(0x43300000,uStack_74) -
-                                                lbl_803E1938) + dVar12);
+                  iVar10 = (int)((f64)(f32)(s32)uStack_74 + dVar12);
                   local_80 = (double)(longlong)iVar10;
                   *psVar4 = (short)iVar10;
                 }
               }
               else if ((-3000 < iVar9) && (iVar9 < 0)) {
                 if (((lbl_803DD56C < -2999) || (iVar9 < -999)) || (iVar9 <= lbl_803DD56C)) {
-                  local_70 = (double)CONCAT44(0x43300000,-iVar9 - 3000U ^ 0x80000000);
-                  dVar12 = FUN_800176f4((double)(float)(local_70 - lbl_803E1938),
+                  dVar12 = FUN_800176f4((double)(f32)(s32)(-iVar9 - 3000U),
                                         (double)lbl_803E18E0,(double)timeDelta);
                   uStack_74 = (int)*psVar4 ^ 0x80000000;
                   local_78 = 0x43300000;
-                  iVar10 = (int)((double)(float)((double)CONCAT44(0x43300000,uStack_74) -
-                                                lbl_803E1938) + dVar12);
+                  iVar10 = (int)((f64)(f32)(s32)uStack_74 + dVar12);
                   local_80 = (double)(longlong)iVar10;
                   *psVar4 = (short)iVar10;
                 }
                 else {
-                  local_70 = (double)CONCAT44(0x43300000,3000U - iVar9 ^ 0x80000000);
-                  dVar12 = FUN_800176f4((double)(float)(local_70 - lbl_803E1938),
+                  dVar12 = FUN_800176f4((double)(f32)(s32)(3000U - iVar9),
                                         (double)lbl_803E18E0,(double)timeDelta);
                   uStack_74 = (int)*psVar4 ^ 0x80000000;
                   local_78 = 0x43300000;
-                  iVar10 = (int)((double)(float)((double)CONCAT44(0x43300000,uStack_74) -
-                                                lbl_803E1938) + dVar12);
+                  iVar10 = (int)((f64)(f32)(s32)uStack_74 + dVar12);
                   local_80 = (double)(longlong)iVar10;
                   *psVar4 = (short)iVar10;
                 }
@@ -311,8 +298,7 @@ void CameraModeCombat_update(void)
               if (9000 < iVar10) {
                 iVar10 = 9000;
               }
-              local_70 = (double)CONCAT44(0x43300000,9000U - iVar10 ^ 0x80000000);
-              dVar13 = (double)((float)(local_70 - lbl_803E1938) / lbl_803E18E4);
+              dVar13 = (double)((f32)(s32)(9000U - iVar10) / lbl_803E18E4);
               lbl_803DD56C = iVar9;
               dVar12 = FUN_800176f4((double)(lbl_803E18E8 - lbl_803DD568[1]),
                                     (double)lbl_803E18EC,(double)timeDelta);
@@ -374,8 +360,7 @@ void CameraModeCombat_update(void)
               if ((int)uVar7 < -0x8000) {
                 uVar7 = uVar7 + 0xffff;
               }
-              local_70 = (double)CONCAT44(0x43300000,uVar7 ^ 0x80000000);
-              dVar14 = FUN_800176f4((double)(float)(local_70 - lbl_803E1938),
+              dVar14 = FUN_800176f4((double)(f32)(s32)(uVar7),
                                     (double)lbl_803E1920,(double)timeDelta);
               uStack_74 = (int)psVar4[1] ^ 0x80000000;
               local_78 = 0x43300000;
