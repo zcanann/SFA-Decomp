@@ -2863,6 +2863,32 @@ void fn_8005B0A8(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int lbl_803DCDD0;
+extern int lbl_803DCDD4;
+extern void *lbl_803822B4[];
+#pragma scheduling off
+#pragma peephole off
+int isInBounds(f32 x, f32 z) {
+    int ix = (int)(fastFloorf(x / lbl_803DEBB4) - (f32)lbl_803DCDD0);
+    int iz = (int)(fastFloorf(z / lbl_803DEBB4) - (f32)lbl_803DCDD4);
+    int linear;
+    void **p;
+    if (ix < 0 || ix >= 16) return -1;
+    if (iz < 0 || iz >= 16) return -1;
+    linear = ix + (iz << 4);
+    {
+        int i;
+        p = &lbl_803822B4[0];
+        for (i = 0; i < 5; i++) {
+            if (((s8 *)*p)[linear] > -1) return 1;
+            p++;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* Drop-arg-1 trampoline:  fn(_, a, b, c) -> fn_800704FC(a, b, c). */
 extern void fn_800704FC(int a, int b, int c);
 #pragma scheduling off
