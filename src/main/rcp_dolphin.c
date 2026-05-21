@@ -2525,5 +2525,22 @@ void* textureLoadAsset(int asset) {
     loadTextureFile(&out, asset);
     return out;
 }
+
+extern f32 distortionFilterVector[3];
+extern f32 distortionFilterAngle1;
+extern f32 distortionFilterAngle2;
+extern u8 distortionFilterColor[3];
+extern u8 bEnableDistortionFilter;
+void turnOnDistortionFilter(f32 *vec, u8 *color, f32 angle2, f32 angle1) {
+    distortionFilterVector[0] = vec[0];
+    distortionFilterVector[1] = vec[1];
+    distortionFilterVector[2] = vec[2];
+    distortionFilterAngle2 = angle2;
+    distortionFilterColor[0] = color[0];
+    distortionFilterColor[1] = color[1];
+    distortionFilterColor[2] = color[2];
+    distortionFilterAngle1 = angle1;
+    bEnableDistortionFilter = 1;
+}
 #pragma scheduling reset
 #pragma peephole reset
