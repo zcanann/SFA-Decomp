@@ -647,7 +647,7 @@ void baddieUpdateWhileFrozen_80155e10(uint param_9,int param_10,undefined4 param
  */
 void fn_80155F20(int param_9,int param_10)
 {
-  *(float *)(param_10 + 0x324) = lbl_803E36F8;
+  *(float *)(param_10 + 0x324) = lbl_803E2A60;
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
     if (*(byte *)(param_10 + 0x33a) == 1) {
       if (*(short *)(param_9 + 0xa0) == 1) {
