@@ -4176,8 +4176,9 @@ void chuka_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 void chuka_hitDetect(int obj) {
+    int *light;
     int *inner = *(int **)(obj + 0xb8);
-    int *light = (int *)inner[1];
+    light = (int *)inner[1];
     if (light == NULL) return;
     if ((*(s16 *)((char *)light + 6) & 0x40) == 0) return;
     inner[1] = 0;
