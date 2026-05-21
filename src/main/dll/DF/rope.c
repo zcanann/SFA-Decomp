@@ -246,15 +246,15 @@ void dimbossgut2_free(int param_9)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   u8 *light;
-  s32 isVisible;
-  
+
   light = *(u8 **)(param_1 + 0xb8);
-  isVisible = visible;
-  if (isVisible != 0) {
-    objRenderFn_8003b8f4(lbl_803E4CF0);
+  if (visible != 0) {
+    ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(param_1, param_2, param_3, param_4, param_5, lbl_803E4CF0);
     light = *(u8 **)(*(int *)(light + 0x40c) + 0x18);
     if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0)) {
       queueGlowRender(light);
@@ -262,6 +262,8 @@ void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int para
   }
   return;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
