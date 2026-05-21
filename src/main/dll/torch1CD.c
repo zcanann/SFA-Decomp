@@ -16,29 +16,105 @@ extern undefined4 FUN_80055ef0();
 extern undefined4 FUN_801caeb0();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern void getEnvfxAct(int obj, int target, int id, int p);
+extern void GameBit_Set(int eventId, int value);
+extern int return0_8005669C(int);
+extern int *gTitleMenuControlInterface;
 
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dc270;
 extern undefined4* DAT_803dd6f0;
 extern undefined4* DAT_803dd6fc;
 extern undefined4 DAT_803de860;
+extern int lbl_803DB610;
+extern int lbl_803DDBE0;
 
 /*
  * --INFO--
  *
  * Function: dll_19B_SeqFn
  * EN v1.0 Address: 0x801CBA98
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CBBE8
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 636b
  */
-void dll_19B_SeqFn(undefined2 *param_1,int param_2)
+#pragma peephole off
+#pragma scheduling off
+void dll_19B_SeqFn(int obj, int unused, u8 *buf)
 {
+    int state;
+    int i;
+
+    state = *(int *)(obj + 0xb8);
+    *(s16 *)(buf + 0x6e) = -1;
+    buf[0x56] = 0;
+
+    if (*(s16 *)(state + 0xa) != 0) {
+        *(s16 *)(state + 0x8) += *(s16 *)(state + 0xa);
+        if (*(s16 *)(state + 0x8) <= 1 && *(s16 *)(state + 0xa) <= 0) {
+            *(s16 *)(state + 0x8) = 1;
+            *(s16 *)(state + 0xa) = 0;
+        } else if (*(s16 *)(state + 0x8) >= 0x46 && *(s16 *)(state + 0xa) >= 0) {
+            *(s16 *)(state + 0x8) = 0x46;
+            *(s16 *)(state + 0xa) = 0;
+        }
+        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38/4](3, (u8)*(s16 *)(state + 0x8));
+    }
+
+    for (i = 0; i < (int)buf[0x8b]; i++) {
+        switch (buf[0x81 + i]) {
+        case 1:
+            getEnvfxAct(obj, obj, 0xc3, 0);
+            break;
+        case 2:
+            if (lbl_803DB610 == -1) {
+                getEnvfxAct(obj, obj, 0x14, 0);
+            } else {
+                getEnvfxAct(obj, obj, lbl_803DB610 & 0xffff, 0);
+            }
+            break;
+        case 3:
+            *(u8 *)(state + 0x14) = 1;
+            break;
+        case 4:
+            *(u8 *)(state + 0x13) = 4;
+            *(u8 *)(state + 0x14) = 2;
+            GameBit_Set(0x129, 1);
+            GameBit_Set(0x1d2, 0);
+            GameBit_Set(0x126, 1);
+            *(s16 *)(state + 0xa) = -3;
+            break;
+        case 5:
+            *(u8 *)(state + 0x13) = 6;
+            *(u8 *)(state + 0x14) = 3;
+            *(s16 *)(state + 0xa) = -3;
+            GameBit_Set(0x129, 1);
+            break;
+        case 6:
+            GameBit_Set(0x1d2, 1);
+            break;
+        case 7:
+            GameBit_Set(0x1d2, 0);
+            *(s16 *)(state + 0xa) = -3;
+            break;
+        case 8:
+            GameBit_Set(0x128, 1);
+            if (lbl_803DDBE0 == 0) {
+                lbl_803DDBE0 = return0_8005669C(1);
+            }
+            break;
+        case 9:
+            GameBit_Set(0x127, 1);
+            break;
+        case 0xb:
+            *(s16 *)(state + 0x8) = 100;
+            ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18/4]
+                (3, 0x2d, 0x50, (u8)*(s16 *)(state + 0x8), 0);
+            break;
+        }
+        buf[0x81 + i] = 0;
+    }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--

@@ -2709,7 +2709,7 @@ void renderShadowType3(u8 *obj, u32 b, s32 offset) {
         sceneDrawTransparentPolys();
         lbl_803DCE30 = 0;
     }
-    if (*(int *)(obj + 0x30) != 0) {
+    if (*(void **)(obj + 0x30) != NULL) {
         stk[0] = *(f32 *)(obj + 0x18);
         stk[1] = *(f32 *)(obj + 0x1c);
         stk[2] = *(f32 *)(obj + 0x20);

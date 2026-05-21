@@ -410,7 +410,7 @@ void SB_CannonBall_update(int *obj) {
         fn_80098928(obj, lbl_803E58BC, 4, 389, 5, 0);
     }
     (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, 169, 0, 1, -1, 0);
-    *(s16 *)((char *)obj + 2) = (s16)(*(s16 *)((char *)obj + 2) + 4000);
+    *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + 4000;
     if ((*(s8 *)((char *)state + 0x1a) & 1) == 0) {
         *(f32 *)state = *(f32 *)((char *)obj + 0x24);
         *(f32 *)((char *)state + 4) = *(f32 *)((char *)obj + 0x28);
@@ -420,9 +420,12 @@ void SB_CannonBall_update(int *obj) {
         *(f32 *)((char *)state + 0x10) = *(f32 *)((char *)obj + 0x10);
         *(f32 *)((char *)state + 0x14) = *(f32 *)((char *)obj + 0x14);
     }
-    *(f32 *)((char *)state + 0xc) = (f32)(lbl_803E58C0 * (f64)(*(f32 *)state * timeDelta) + (f64)*(f32 *)((char *)state + 0xc));
-    *(f32 *)((char *)state + 0x10) = (f32)(lbl_803E58C0 * (f64)(*(f32 *)((char *)state + 4) * timeDelta) + (f64)*(f32 *)((char *)state + 0x10));
-    *(f32 *)((char *)state + 0x14) = (f32)(lbl_803E58C0 * (f64)(*(f32 *)((char *)state + 8) * timeDelta) + (f64)*(f32 *)((char *)state + 0x14));
+    {
+        f64 scale = lbl_803E58C0;
+        *(f32 *)((char *)state + 0xc) = (f32)(scale * (f64)(*(f32 *)state * timeDelta) + (f64)*(f32 *)((char *)state + 0xc));
+        *(f32 *)((char *)state + 0x10) = (f32)(scale * (f64)(*(f32 *)((char *)state + 4) * timeDelta) + (f64)*(f32 *)((char *)state + 0x10));
+        *(f32 *)((char *)state + 0x14) = (f32)(scale * (f64)(*(f32 *)((char *)state + 8) * timeDelta) + (f64)*(f32 *)((char *)state + 0x14));
+    }
     *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)state + 0xc);
     *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)state + 0x10);
     *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)state + 0x14);
@@ -436,12 +439,12 @@ void SB_CannonBall_update(int *obj) {
         *(u8 *)((char *)p + 0x6f) = 1;
         *(int *)((char *)p + 0x48) = 16;
         *(int *)((char *)p + 0x4c) = 16;
-        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) | 1);
+        *(s16 *)((char *)p + 0x60) = *(s16 *)((char *)p + 0x60) | 1;
     } else {
         int *p = *(int **)((char *)obj + 0x54);
-        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~1);
+        *(s16 *)((char *)p + 0x60) = *(s16 *)((char *)p + 0x60) & ~1;
     }
-    *(s16 *)((char *)state + 0x18) = (s16)(*(s16 *)((char *)state + 0x18) + (s16)framesThisStep);
+    *(s16 *)((char *)state + 0x18) = *(s16 *)((char *)state + 0x18) + framesThisStep;
 }
 #pragma peephole reset
 #pragma scheduling reset
