@@ -4156,3 +4156,24 @@ u8 fn_801334E0(void)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern void OSSetErrorHandler(int kind, void *handler);
+extern void OSCreateThread(u8 *thread, void *entry, void *arg, void *stack_top, int stack_size, int prio, int flags);
+extern void fn_80137DF8(void);
+extern u8 lbl_803AB428[];
+#pragma scheduling off
+#pragma peephole off
+void fn_80137D28(void)
+{
+  OSSetErrorHandler(0, (void *)fn_801388D0);
+  OSSetErrorHandler(1, (void *)fn_801388D0);
+  OSSetErrorHandler(2, (void *)fn_801388D0);
+  OSSetErrorHandler(11, (void *)fn_801388D0);
+  OSSetErrorHandler(13, (void *)fn_801388D0);
+  OSSetErrorHandler(15, (void *)fn_801388D0);
+  OSSetErrorHandler(3, (void *)fn_801388D0);
+  OSSetErrorHandler(5, (void *)fn_801388D0);
+  OSCreateThread(lbl_803AB118, (void *)fn_80137DF8, 0, lbl_803AB428 + 4096, 4096, 0, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
