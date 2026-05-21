@@ -72,7 +72,7 @@ extern char sLaserInitNoLongerSupported[];
 extern ObjectDescriptor gLaserUnsupportedObjDescriptor;
 extern ObjectDescriptor gLaserObjDescriptor;
 
-int laser_getExtraSizeUnsupported(void);
+int laser_getExtraSize(void);
 int laser_getObjectTypeId(void);
 void laser_freeUnsupported(void);
 void laser_renderUnsupported(void);
