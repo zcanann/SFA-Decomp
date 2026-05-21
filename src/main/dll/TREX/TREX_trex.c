@@ -1956,7 +1956,24 @@ void SB_KyteCage_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_KyteCage_init(void) {}
+extern void SB_KyteCage_SeqFn(void);
+
+#pragma scheduling off
+#pragma peephole off
+void SB_KyteCage_init(int *obj, int *params)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    *(void (**)(void))((char *)obj + 0xbc) = SB_KyteCage_SeqFn;
+    *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
+    *(u8 *)((char *)state + 0x4) = 0;
+    if (GameBit_Get(117) == 0) {
+        getLActions(obj, obj, 88, 0, 0, 0);
+        getLActions(obj, obj, 109, 0, 0, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_KyteCage_update(void) {}
 #pragma scheduling off
 #pragma peephole off
