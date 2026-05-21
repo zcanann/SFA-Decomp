@@ -356,3 +356,27 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5E74); }
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void wmworm_init(s16* obj, s8* p2)
+{
+    int* state;
+
+    *obj = 0;
+    state = *(int**)((char*)obj + 0xb8);
+    *(f32*)state = (f32)((s32)*(s8*)(p2 + 0x18) << 2);
+    *(s16*)((char*)state + 0x4) = *(s16*)(p2 + 0x1a);
+    *(s16*)((char*)state + 0x8) = *(s16*)(p2 + 0x1c);
+    *(s16*)((char*)state + 0xc) = 0;
+    if (*(s16*)((char*)state + 0x8) < 1) {
+        *(int*)((char*)obj + 0xf4) = (int)*(s16*)((char*)state + 0x8);
+    } else {
+        *(int*)((char*)obj + 0xf4) = 0;
+    }
+    *(f32*)((char*)state + 0x10) = *(f32*)((char*)obj + 0xc);
+    *(f32*)((char*)state + 0x14) = *(f32*)((char*)obj + 0x10);
+    *(f32*)((char*)state + 0x18) = *(f32*)((char*)obj + 0x14);
+}
+#pragma peephole reset
+#pragma scheduling reset
