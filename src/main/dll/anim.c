@@ -1151,7 +1151,7 @@ undefined4 FUN_8020040c(int param_1,int param_2)
 {
   float fVar1;
   int iVar2;
-  
+
   iVar2 = *(int *)(param_1 + 0xb8);
   if (*(char *)(param_2 + 0x27b) != '\0') {
     (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,1);
@@ -1163,6 +1163,29 @@ undefined4 FUN_8020040c(int param_1,int param_2)
   }
   return 0;
 }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802002C4(int obj, int p)
+{
+  extern int *gPlayerInterface;
+  extern f32 lbl_803E62A8;
+  float fz;
+  int b8;
+
+  b8 = *(int *)(obj + 0xb8);
+  if (*(char *)(p + 0x27b) != '\0') {
+    (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, p, 1);
+    b8 = *(int *)(b8 + 0x40c);
+    fz = lbl_803E62A8;
+    *(float *)(b8 + 0xc) = lbl_803E62A8;
+    *(float *)(b8 + 0x10) = fz;
+    *(float *)(b8 + 4) = fz;
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
