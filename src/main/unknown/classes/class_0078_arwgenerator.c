@@ -27,7 +27,7 @@
  *   slot 05: 0x8023199C arwgenerato_hitDetect
  *   slot 06: 0x80231978 arwgenerato_render
  *   slot 07: 0x80231974 arwgenerato_free
- *   slot 08: 0x8023196C arwgenerato_func08
+ *   slot 08: 0x8023196C arwgenerato_getObjectTypeId
  *   slot 09: 0x80231964 arwgenerato_getExtraSize
  */
 

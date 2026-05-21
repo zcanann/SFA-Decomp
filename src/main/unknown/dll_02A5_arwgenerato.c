@@ -22,5 +22,5 @@
 // - 5: arwgenerato_hitDetect (0x8023199C)
 // - 6: arwgenerato_render (0x80231978)
 // - 7: arwgenerato_free (0x80231974)
-// - 8: arwgenerato_func08 (0x8023196C)
+// - 8: arwgenerato_getObjectTypeId (0x8023196C)
 // - 9: arwgenerato_getExtraSize (0x80231964)

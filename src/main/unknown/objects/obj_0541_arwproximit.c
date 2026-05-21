@@ -55,7 +55,7 @@
  * - slot 05: 0x80233280 arwproximit_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80233200 arwproximit_render ref=render
  * - slot 07: 0x802331C0 arwproximit_free ref=free
- * - slot 08: 0x802331B8 arwproximit_func08 stub=const 0
+ * - slot 08: 0x802331B8 arwproximit_getObjectTypeId stub=const 0
  * - slot 09: 0x802331B0 arwproximit_getExtraSize stub=const 24 ref=getExtraSize (stub)
  */
 

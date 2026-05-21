@@ -16,7 +16,7 @@
 // - 5: pointlight_hitDetect (0x80233BE0)
 // - 6: pointlight_render (0x80233B98)
 // - 7: pointlight_free (0x80233B50)
-// - 8: pointlight_func08 (0x80233B48)
+// - 8: pointlight_getObjectTypeId (0x80233B48)
 // - 9: pointlight_getExtraSize (0x80233B40)
 
 // Helpers:

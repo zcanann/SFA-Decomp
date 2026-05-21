@@ -150,7 +150,7 @@
  *   slot 05: 0x80230A74 arwlevelcon_hitDetect
  *   slot 06: 0x80230A50 arwlevelcon_render
  *   slot 07: 0x80230A20 arwlevelcon_free
- *   slot 08: 0x80230A18 arwlevelcon_func08
+ *   slot 08: 0x80230A18 arwlevelcon_getObjectTypeId
  *   slot 09: 0x80230A10 arwlevelcon_getExtraSize
  * - DLL 0x02BB: gGF_LevelConObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80239DD4 gf_levelcon_initialise

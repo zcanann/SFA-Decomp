@@ -29,7 +29,7 @@
 // - 5: arwingandrossstuff_hitDetect (0x8022E6B0)
 // - 6: arwingandrossstuff_render (0x8022E680)
 // - 7: arwingandrossstuff_free (0x8022E640)
-// - 8: arwingandrossstuff_func08 (0x8022E638)
+// - 8: arwingandrossstuff_getObjectTypeId (0x8022E638)
 // - 9: arwingandrossstuff_getExtraSize (0x8022E630)
 // - helper: arwprojectile_createLinkedEffect (0x8022E418)
 // - helper: arwprojectile_placeForward (0x8022E54C)

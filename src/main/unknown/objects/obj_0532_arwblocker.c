@@ -58,7 +58,7 @@
  * - slot 05: 0x80233960 arwblocker_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8023393C arwblocker_render ref=render
  * - slot 07: 0x80233938 arwblocker_free stub=blr ref=free (stub)
- * - slot 08: 0x80233930 arwblocker_func08 stub=const 0
+ * - slot 08: 0x80233930 arwblocker_getObjectTypeId stub=const 0
  * - slot 09: 0x80233928 arwblocker_getExtraSize stub=const 2 ref=getExtraSize (stub)
  */
 

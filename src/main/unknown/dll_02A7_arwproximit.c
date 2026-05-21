@@ -16,7 +16,7 @@
 // - 5: arwproximit_hitDetect (0x80233280)
 // - 6: arwproximit_render (0x80233200)
 // - 7: arwproximit_free (0x802331C0)
-// - 8: arwproximit_func08 (0x802331B8)
+// - 8: arwproximit_getObjectTypeId (0x802331B8)
 // - 9: arwproximit_getExtraSize (0x802331B0)
 
 // Runtime shape:

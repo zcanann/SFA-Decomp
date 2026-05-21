@@ -57,7 +57,7 @@
  * - slot 05: 0x80230A74 arwlevelcon_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80230A50 arwlevelcon_render ref=render
  * - slot 07: 0x80230A20 arwlevelcon_free ref=free
- * - slot 08: 0x80230A18 arwlevelcon_func08 stub=const 0
+ * - slot 08: 0x80230A18 arwlevelcon_getObjectTypeId stub=const 0
  * - slot 09: 0x80230A10 arwlevelcon_getExtraSize stub=const 36 ref=getExtraSize (stub)
  */
 

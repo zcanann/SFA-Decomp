@@ -26,5 +26,5 @@
 // - 5: ring_hitDetect (0x8022FED0)
 // - 6: ring_render (0x8022FE50)
 // - 7: ring_free (0x8022FE10)
-// - 8: ring_func08 (0x8022FE08)
+// - 8: ring_getObjectTypeId (0x8022FE08)
 // - 9: ring_getExtraSize (0x8022FE00)

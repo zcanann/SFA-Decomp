@@ -61,7 +61,7 @@
  * - slot 05: 0x8022F5C0 arwbombcoll_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8022F59C arwbombcoll_render ref=render
  * - slot 07: 0x8022F598 arwbombcoll_free stub=blr ref=free (stub)
- * - slot 08: 0x8022F590 arwbombcoll_func08 stub=const 0
+ * - slot 08: 0x8022F590 arwbombcoll_getObjectTypeId stub=const 0
  * - slot 09: 0x8022F588 arwbombcoll_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

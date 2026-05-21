@@ -16,7 +16,7 @@
 // - 5: arwblocker_hitDetect (0x80233960)
 // - 6: arwblocker_render (0x8023393C)
 // - 7: arwblocker_free (0x80233938)
-// - 8: arwblocker_func08 (0x80233930)
+// - 8: arwblocker_getObjectTypeId (0x80233930)
 // - 9: arwblocker_getExtraSize (0x80233928)
 
 // Helpers:

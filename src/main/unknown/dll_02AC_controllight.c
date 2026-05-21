@@ -15,7 +15,7 @@
 // - 5: controllight_hitDetect (0x80234C28)
 // - 6: controllight_render (0x80234C24)
 // - 7: controllight_free (0x80234C20)
-// - 8: controllight_func08 (0x80234C18)
+// - 8: controllight_getObjectTypeId (0x80234C18)
 // - 9: controllight_getExtraSize (0x80234C10)
 
 // Runtime shape:

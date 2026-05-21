@@ -47,7 +47,7 @@
  * - slot 05: 0x80233BE0 pointlight_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80233B98 pointlight_render ref=render
  * - slot 07: 0x80233B50 pointlight_free ref=free
- * - slot 08: 0x80233B48 pointlight_func08 stub=const 0
+ * - slot 08: 0x80233B48 pointlight_getObjectTypeId stub=const 0
  * - slot 09: 0x80233B40 pointlight_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

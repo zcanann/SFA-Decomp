@@ -485,7 +485,7 @@
  *   slot 05: 0x8022E6B0 arwingandrossstuff_hitDetect
  *   slot 06: 0x8022E680 arwingandrossstuff_render
  *   slot 07: 0x8022E640 arwingandrossstuff_free
- *   slot 08: 0x8022E638 arwingandrossstuff_func08
+ *   slot 08: 0x8022E638 arwingandrossstuff_getObjectTypeId
  *   slot 09: 0x8022E630 arwingandrossstuff_getExtraSize
  * - DLL 0x029C: gARWArwingBoObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8022F144 arwarwingbo_initialise
@@ -495,7 +495,7 @@
  *   slot 05: 0x8022EE2C arwarwingbo_hitDetect
  *   slot 06: 0x8022EDFC arwarwingbo_render
  *   slot 07: 0x8022EDB4 arwarwingbo_free
- *   slot 08: 0x8022EDAC arwarwingbo_func08
+ *   slot 08: 0x8022EDAC arwarwingbo_getObjectTypeId
  *   slot 09: 0x8022EDA4 arwarwingbo_getExtraSize
  * - DLL 0x029D: gARWArwingGuObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8022F528 arwarwinggu_initialise
@@ -505,7 +505,7 @@
  *   slot 05: 0x8022F364 arwarwinggu_hitDetect
  *   slot 06: 0x8022F360 arwarwinggu_render
  *   slot 07: 0x8022F35C arwarwinggu_free
- *   slot 08: 0x8022F354 arwarwinggu_func08
+ *   slot 08: 0x8022F354 arwarwinggu_getObjectTypeId
  *   slot 09: 0x8022F300 arwarwinggu_getExtraSize
  * - DLL 0x02A2: gARWSpeedStrObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80231024 arwspeedstr_initialise
@@ -515,7 +515,7 @@
  *   slot 05: 0x80230E64 arwspeedstr_hitDetect
  *   slot 06: 0x80230E40 arwspeedstr_render
  *   slot 07: 0x80230E3C arwspeedstr_free
- *   slot 08: 0x80230E34 arwspeedstr_func08
+ *   slot 08: 0x80230E34 arwspeedstr_getObjectTypeId
  *   slot 09: 0x80230E2C arwspeedstr_getExtraSize
  * - DLL 0x02B0: gBrokenPipeObjDescriptor (slots=10, mask=0001100001)
  *   slot 03: 0x80236194 brokenpipe_init

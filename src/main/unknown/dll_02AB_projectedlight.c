@@ -15,7 +15,7 @@
 // - 5: projectedlight_hitDetect (0x802347A4)
 // - 6: projectedlight_render (0x802347A0)
 // - 7: projectedlight_free (0x80234758)
-// - 8: projectedlight_func08 (0x80234750)
+// - 8: projectedlight_getObjectTypeId (0x80234750)
 // - 9: projectedlight_getExtraSize (0x80234748)
 
 // Runtime shape:

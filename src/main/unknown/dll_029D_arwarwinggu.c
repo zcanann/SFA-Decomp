@@ -23,6 +23,6 @@
 // - 5: arwarwinggu_hitDetect (0x8022F364)
 // - 6: arwarwinggu_render (0x8022F360)
 // - 7: arwarwinggu_free (0x8022F35C)
-// - 8: arwarwinggu_func08 (0x8022F354)
+// - 8: arwarwinggu_getObjectTypeId (0x8022F354)
 // - 9: arwarwinggu_getExtraSize (0x8022F300)
 // - helper: arwarwinggu_setActiveVisible (0x8022F1D8)

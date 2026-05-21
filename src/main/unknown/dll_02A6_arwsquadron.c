@@ -30,7 +30,7 @@
 // - 5: arwsquadron_hitDetect (0x8023282C)
 // - 6: arwsquadron_render (0x80232808)
 // - 7: arwsquadron_free (0x80232804)
-// - 8: arwsquadron_func08 (0x802327FC)
+// - 8: arwsquadron_getObjectTypeId (0x802327FC)
 // - 9: arwsquadron_getExtraSize (0x802327F4)
 // - helper: arwsquadron_emitEffects (0x80231A90)
 // - helper: arwsquadron_applyCommandParams (0x80231C90)

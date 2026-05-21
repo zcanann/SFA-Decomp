@@ -59,7 +59,7 @@
  * - slot 05: 0x8022F364 arwarwinggu_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8022F360 arwarwinggu_render stub=blr ref=render (stub)
  * - slot 07: 0x8022F35C arwarwinggu_free stub=blr ref=free (stub)
- * - slot 08: 0x8022F354 arwarwinggu_func08 stub=const 0
+ * - slot 08: 0x8022F354 arwarwinggu_getObjectTypeId stub=const 0
  * - slot 09: 0x8022F300 arwarwinggu_getExtraSize ref=getExtraSize
  */
 

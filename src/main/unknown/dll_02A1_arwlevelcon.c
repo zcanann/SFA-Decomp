@@ -28,7 +28,7 @@
 // - 5: arwlevelcon_hitDetect (0x80230A74)
 // - 6: arwlevelcon_render (0x80230A50)
 // - 7: arwlevelcon_free (0x80230A20)
-// - 8: arwlevelcon_func08 (0x80230A18)
+// - 8: arwlevelcon_getObjectTypeId (0x80230A18)
 // - 9: arwlevelcon_getExtraSize (0x80230A10)
 // - callback: arwlevelcon_commitRingChoice (0x802308B4)
 // - callback: arwlevelcon_ringEventCallback (0x80230904)

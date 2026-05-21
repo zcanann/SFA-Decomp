@@ -44,7 +44,7 @@
  * - slot 05: 0x802347A4 projectedlight_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802347A0 projectedlight_render stub=blr ref=render (stub)
  * - slot 07: 0x80234758 projectedlight_free ref=free
- * - slot 08: 0x80234750 projectedlight_func08 stub=const 0
+ * - slot 08: 0x80234750 projectedlight_getObjectTypeId stub=const 0
  * - slot 09: 0x80234748 projectedlight_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

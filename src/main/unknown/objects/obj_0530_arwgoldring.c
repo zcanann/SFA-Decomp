@@ -60,7 +60,7 @@
  * - slot 05: 0x8022FED0 ring_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8022FE50 ring_render ref=render
  * - slot 07: 0x8022FE10 ring_free ref=free
- * - slot 08: 0x8022FE08 ring_func08 stub=const 0
+ * - slot 08: 0x8022FE08 ring_getObjectTypeId stub=const 0
  * - slot 09: 0x8022FE00 ring_getExtraSize stub=const 36 ref=getExtraSize (stub)
  */
 

@@ -29,7 +29,7 @@
  *   slot 05: 0x80233BE0 pointlight_hitDetect
  *   slot 06: 0x80233B98 pointlight_render
  *   slot 07: 0x80233B50 pointlight_free
- *   slot 08: 0x80233B48 pointlight_func08
+ *   slot 08: 0x80233B48 pointlight_getObjectTypeId
  *   slot 09: 0x80233B40 pointlight_getExtraSize
  * - DLL 0x02AA: gDirectionalLightObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80234744 directionallight_initialise
@@ -39,7 +39,7 @@
  *   slot 05: 0x8023442C directionallight_hitDetect
  *   slot 06: 0x80234408 directionallight_render
  *   slot 07: 0x802343D8 directionallight_free
- *   slot 08: 0x802343D0 directionallight_func08
+ *   slot 08: 0x802343D0 directionallight_getObjectTypeId
  *   slot 09: 0x802343C8 directionallight_getExtraSize
  */
 

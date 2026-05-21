@@ -24,5 +24,5 @@
 // - 5: arwarwing_hitDetect (0x8022D908)
 // - 6: arwarwing_render (0x8022D7C8)
 // - 7: arwarwing_free (0x8022D780)
-// - 8: arwarwing_func08 (0x8022D778)
+// - 8: arwarwing_getObjectTypeId (0x8022D778)
 // - 9: arwarwing_getExtraSize (0x8022D770)

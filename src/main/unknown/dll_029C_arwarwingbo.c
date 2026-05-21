@@ -23,6 +23,6 @@
 // - 5: arwarwingbo_hitDetect (0x8022EE2C)
 // - 6: arwarwingbo_render (0x8022EDFC)
 // - 7: arwarwingbo_free (0x8022EDB4)
-// - 8: arwarwingbo_func08 (0x8022EDAC)
+// - 8: arwarwingbo_getObjectTypeId (0x8022EDAC)
 // - 9: arwarwingbo_getExtraSize (0x8022EDA4)
 // - helper: arwarwingbo_setActiveVisible (0x8022F148)

@@ -46,7 +46,7 @@
  * - slot 05: 0x8023442C directionallight_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80234408 directionallight_render ref=render
  * - slot 07: 0x802343D8 directionallight_free ref=free
- * - slot 08: 0x802343D0 directionallight_func08 stub=const 0
+ * - slot 08: 0x802343D0 directionallight_getObjectTypeId stub=const 0
  * - slot 09: 0x802343C8 directionallight_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 

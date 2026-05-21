@@ -15,7 +15,7 @@
 // - 5: directionallight_hitDetect (0x8023442C)
 // - 6: directionallight_render (0x80234408)
 // - 7: directionallight_free (0x802343D8)
-// - 8: directionallight_func08 (0x802343D0)
+// - 8: directionallight_getObjectTypeId (0x802343D0)
 // - 9: directionallight_getExtraSize (0x802343C8)
 
 // Helpers:

@@ -2303,7 +2303,7 @@
  *   slot 05: 0x8022D908 arwarwing_hitDetect
  *   slot 06: 0x8022D7C8 arwarwing_render
  *   slot 07: 0x8022D780 arwarwing_free
- *   slot 08: 0x8022D778 arwarwing_func08
+ *   slot 08: 0x8022D778 arwarwing_getObjectTypeId
  *   slot 09: 0x8022D770 arwarwing_getExtraSize
  * - DLL 0x029D: gARWArwingGuObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8022F528 arwarwinggu_initialise
@@ -2313,7 +2313,7 @@
  *   slot 05: 0x8022F364 arwarwinggu_hitDetect
  *   slot 06: 0x8022F360 arwarwinggu_render
  *   slot 07: 0x8022F35C arwarwinggu_free
- *   slot 08: 0x8022F354 arwarwinggu_func08
+ *   slot 08: 0x8022F354 arwarwinggu_getObjectTypeId
  *   slot 09: 0x8022F300 arwarwinggu_getExtraSize
  * - DLL 0x029F: gARWBombCollObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8022F9FC arwbombcoll_initialise
@@ -2323,7 +2323,7 @@
  *   slot 05: 0x8022F5C0 arwbombcoll_hitDetect
  *   slot 06: 0x8022F59C arwbombcoll_render
  *   slot 07: 0x8022F598 arwbombcoll_free
- *   slot 08: 0x8022F590 arwbombcoll_func08
+ *   slot 08: 0x8022F590 arwbombcoll_getObjectTypeId
  *   slot 09: 0x8022F588 arwbombcoll_getExtraSize
  * - DLL 0x02A0: gRingObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802308B0 ring_initialise
@@ -2333,7 +2333,7 @@
  *   slot 05: 0x8022FED0 ring_hitDetect
  *   slot 06: 0x8022FE50 ring_render
  *   slot 07: 0x8022FE10 ring_free
- *   slot 08: 0x8022FE08 ring_func08
+ *   slot 08: 0x8022FE08 ring_getObjectTypeId
  *   slot 09: 0x8022FE00 ring_getExtraSize
  * - DLL 0x02A8: gARWBlockerObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80233B08 arwblocker_initialise
@@ -2343,7 +2343,7 @@
  *   slot 05: 0x80233960 arwblocker_hitDetect
  *   slot 06: 0x8023393C arwblocker_render
  *   slot 07: 0x80233938 arwblocker_free
- *   slot 08: 0x80233930 arwblocker_func08
+ *   slot 08: 0x80233930 arwblocker_getObjectTypeId
  *   slot 09: 0x80233928 arwblocker_getExtraSize
  * - DLL 0x02AC: gControlLightObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80234DC4 controllight_initialise
@@ -2353,7 +2353,7 @@
  *   slot 05: 0x80234C28 controllight_hitDetect
  *   slot 06: 0x80234C24 controllight_render
  *   slot 07: 0x80234C20 controllight_free
- *   slot 08: 0x80234C18 controllight_func08
+ *   slot 08: 0x80234C18 controllight_getObjectTypeId
  *   slot 09: 0x80234C10 controllight_getExtraSize
  * - DLL 0x02AD: gSoftBodyObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80235024 softbody_initialise

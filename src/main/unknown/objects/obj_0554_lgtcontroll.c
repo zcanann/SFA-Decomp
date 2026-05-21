@@ -56,7 +56,7 @@
  * - slot 05: 0x80234C28 controllight_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80234C24 controllight_render stub=blr ref=render (stub)
  * - slot 07: 0x80234C20 controllight_free stub=blr ref=free (stub)
- * - slot 08: 0x80234C18 controllight_func08 stub=const 0
+ * - slot 08: 0x80234C18 controllight_getObjectTypeId stub=const 0
  * - slot 09: 0x80234C10 controllight_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

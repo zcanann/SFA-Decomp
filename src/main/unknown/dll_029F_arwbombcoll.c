@@ -25,5 +25,5 @@
 // - 5: arwbombcoll_hitDetect (0x8022F5C0)
 // - 6: arwbombcoll_render (0x8022F59C)
 // - 7: arwbombcoll_free (0x8022F598)
-// - 8: arwbombcoll_func08 (0x8022F590)
+// - 8: arwbombcoll_getObjectTypeId (0x8022F590)
 // - 9: arwbombcoll_getExtraSize (0x8022F588)
