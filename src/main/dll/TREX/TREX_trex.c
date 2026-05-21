@@ -2004,7 +2004,53 @@ void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_MiniFire_update(void) {}
+extern f32 lbl_803E592C;
+extern f64 lbl_803E5940;
+extern f32 lbl_803E5930;
+extern f32 lbl_803E5934;
+extern f32 lbl_803E5938;
+extern f32 lbl_803E593C;
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern void Obj_FreeObject(int obj);
+#pragma scheduling off
+#pragma peephole off
+void SB_MiniFire_update(int obj)
+{
+    f32 buf[8];
+    int dt;
+    *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
+    buf[3] = lbl_803E592C;
+    buf[4] = lbl_803E592C;
+    buf[5] = lbl_803E592C;
+    buf[2] = lbl_803E5928;
+    if (*(int *)(obj + 0xf4) <= 0x3c) {
+        buf[2] = (f32)*(int *)(obj + 0xf4) / lbl_803E5930;
+        *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E5934 * buf[2]);
+    }
+    *(s16 *)((char *)buf + 4) = 0;
+    *(s16 *)((char *)buf + 2) = 0;
+    *(s16 *)((char *)buf + 0) = 0;
+    ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa0, buf, 1, -1, 0);
+    buf[3] = (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80)) / lbl_803E5938;
+    buf[4] = (*(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84)) / lbl_803E5938;
+    buf[5] = (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)) / lbl_803E5938;
+    ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa0, buf, 1, -1, 0);
+    buf[3] = buf[3] * lbl_803E593C;
+    buf[4] = buf[4] * lbl_803E593C;
+    buf[5] = buf[5] * lbl_803E593C;
+    ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa0, buf, 1, -1, 0);
+    *(s16 *)obj = *(s16 *)obj + framesThisStep * 0x374;
+    *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + framesThisStep * 0x12c;
+    *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - framesThisStep;
+    if (*(int *)(obj + 0xf4) < 0) {
+        Obj_FreeObject(obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void SB_SeqDoor_init(int* obj, int* def)
