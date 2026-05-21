@@ -5098,3 +5098,29 @@ void staff_func15(int *obj, s16 idx, f32 f1, f32 f2) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+
+#pragma scheduling off
+#pragma peephole off
+int* fn_801702D4(int* obj, f32 fv) {
+    void* alloc;
+    int* new_obj;
+    if ((u8)Obj_IsLoadingLocked() == 0) return NULL;
+    alloc = Obj_AllocObjectSetup(36, 2102);
+    *(f32*)((char*)alloc + 8) = *(f32*)((char*)obj + 24);
+    *(f32*)((char*)alloc + 12) = *(f32*)((char*)obj + 28);
+    *(f32*)((char*)alloc + 16) = *(f32*)((char*)obj + 32);
+    *(u8*)((char*)alloc + 4) = 1;
+    *(u8*)((char*)alloc + 5) = 1;
+    *(u8*)((char*)alloc + 7) = 255;
+    new_obj = Obj_SetupObject(alloc, 5, -1, -1, (void*)0);
+    if (new_obj != NULL) {
+        *(f32*)((char*)new_obj + 8) = fv;
+    }
+    return new_obj;
+}
+#pragma peephole reset
+#pragma scheduling reset
