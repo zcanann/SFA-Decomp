@@ -3568,3 +3568,16 @@ int fn_8019D578(int p1, int unused, int p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void cfperch_update(int *obj) {
+    if (*(int *)((char *)obj + 0xf4) != 0) {
+        if (GameBit_Get(0x50) == 0) {
+            ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])(0, obj, -1);
+        }
+    }
+    *(int *)((char *)obj + 0xf4) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
