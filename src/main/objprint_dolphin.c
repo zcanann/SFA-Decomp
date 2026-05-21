@@ -4509,3 +4509,33 @@ void *getCurrentDataFile(int id) {
     }
     return NULL;
 }
+
+extern u32 lbl_803DCC84;
+extern void *lbl_803DCC8C;
+extern u32 lbl_8035F3E8[];
+extern u32 lbl_80345F70[];
+extern void mm_free(void *);
+extern void AtomicSList_Push(void *list, void *item);
+extern int DVDClose(void *fileInfo);
+
+void tex0tab1readCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        mm_free((void *)lbl_8035F3E8[36]);
+        lbl_8035F3E8[36] = 0;
+        lbl_80345F70[36] = 0;
+        if (lbl_803DCC80 & 0x400) {
+            lbl_803DCC84 |= 0x400;
+            lbl_80345F70[36] = 0;
+        }
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x400) {
+            lbl_803DCC84 |= 0x400;
+            lbl_80345F70[36] = 0;
+        }
+    }
+}
