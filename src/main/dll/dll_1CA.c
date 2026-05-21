@@ -520,6 +520,24 @@ void nwsh_levcon_free(int obj) {
 extern void NWSH_levcon_SeqFn(int p1, int p2, void *p3);
 extern int mapGetDirIdx(int mapId);
 extern void unlockLevel(int a, int b, int c);
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(int a, int b, int c, int d);
+
+#pragma scheduling off
+#pragma peephole off
+void nwsh_levcon_update(int *obj) {
+    if (*(int*)((char*)obj + 0xf4) != 0) {
+        *(int*)((char*)obj + 0xf4) = *(int*)((char*)obj + 0xf4) - 1;
+        if (*(int*)((char*)obj + 0xf4) == 0) {
+            skyFn_80088c94(7, 1);
+            getEnvfxAct(0, 0, 0xd1, 0);
+            getEnvfxAct(0, 0, 0xd6, 0);
+            getEnvfxAct(0, 0, 0x222, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
