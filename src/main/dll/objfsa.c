@@ -153,11 +153,8 @@ void player_setScale(ushort *param_1,int param_2,uint param_3)
       uVar1 = uVar1 + 0xffff;
     }
     *param_1 = *param_1 +
-               (short)(int)(((float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
-                                    DOUBLE_803e1218) * lbl_803DC074) /
-                           (lbl_803E1204 *
-                           (float)((double)CONCAT44(0x43300000,param_3 ^ 0x80000000) -
-                                  DOUBLE_803e1218)));
+               (short)(int)(((f32)(s32)uVar1 * lbl_803DC074) /
+                           (lbl_803E1204 * (f32)(s32)param_3));
   }
   return;
 }

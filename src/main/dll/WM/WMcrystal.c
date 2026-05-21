@@ -113,10 +113,8 @@ void sc_totempuzzle_update(void)
           if (*(short *)(iVar7 + SC_TOTEMPUZZLE_STATE_STEP_OFFSET) == SC_TOTEMPUZZLE_FORWARD_STEP) {
             iVar8 = iVar8 + 1;
             if (puVar6 == puVar2) {
-              local_20 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar5 + 0x10) ^ 0x80000000);
-              *(float *)(iVar5 + 0xc) = FLOAT_803e6288 * (float)(local_20 - DOUBLE_803e62a8);
-              local_28 = (double)(longlong)(int)*(float *)(iVar5 + 0xc);
-              *puVar2 = (short)(int)*(float *)(iVar5 + 0xc);
+              *(f32 *)(iVar5 + 0xc) = FLOAT_803e6288 * (f32)(s32)*(s16 *)(iVar5 + 0x10);
+              *puVar2 = (short)(int)*(f32 *)(iVar5 + 0xc);
               bVar1 = true;
             }
           }
@@ -127,10 +125,8 @@ void sc_totempuzzle_update(void)
         else if (*(short *)(iVar7 + SC_TOTEMPUZZLE_STATE_STEP_OFFSET) == SC_TOTEMPUZZLE_REVERSE_STEP) {
           iVar8 = iVar8 + 1;
           if (puVar6 == puVar2) {
-            local_28 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar5 + 0x10) + 1U ^ 0x80000000);
-            *(float *)(iVar5 + 0xc) = FLOAT_803e6288 * (float)(local_28 - DOUBLE_803e62a8);
-            local_20 = (double)(longlong)(int)*(float *)(iVar5 + 0xc);
-            *puVar2 = (short)(int)*(float *)(iVar5 + 0xc);
+            *(f32 *)(iVar5 + 0xc) = FLOAT_803e6288 * (f32)(s32)((int)*(s16 *)(iVar5 + 0x10) + 1);
+            *puVar2 = (short)(int)*(f32 *)(iVar5 + 0xc);
             bVar1 = true;
           }
         }
