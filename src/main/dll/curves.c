@@ -2810,24 +2810,11 @@ void curves_countRandomPoints(int obj,uint *curve)
       *(undefined *)((int)puVar5 + 0x261) = 0;
     }
     else {
-      uStack_7c = uVar7 ^ 0x80000000;
-      local_80 = 0x43300000;
-      *(float *)(iVar2 + 0x1c) =
-           (float)(dVar12 / (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - DOUBLE_803e12f0
-                                           ));
-      local_78 = 0x43300000;
-      *(float *)(puVar5 + 0x68) =
-           (float)(dVar15 / (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - dVar11));
-      local_70 = 0x43300000;
-      *(float *)(puVar5 + 0x69) =
-           (float)(dVar14 / (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - dVar11));
-      local_68 = 0x43300000;
-      *(float *)(puVar5 + 0x6a) =
-           (float)(dVar13 / (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - dVar11));
-      *(undefined *)((int)puVar5 + 0x261) = 1;
-      uStack_74 = uStack_7c;
-      uStack_6c = uStack_7c;
-      uStack_64 = uStack_7c;
+      *(f32 *)(iVar2 + 0x1c) = (f32)(dVar12 / (f64)(f32)(s32)uVar7);
+      *(f32 *)(puVar5 + 0x68) = (f32)(dVar15 / (f64)(f32)(s32)uVar7);
+      *(f32 *)(puVar5 + 0x69) = (f32)(dVar14 / (f64)(f32)(s32)uVar7);
+      *(f32 *)(puVar5 + 0x6a) = (f32)(dVar13 / (f64)(f32)(s32)uVar7);
+      *(u8 *)((int)puVar5 + 0x261) = 1;
     }
     dVar14 = (double)(*(float *)(puVar5[1] + 0x2c) - *(float *)(puVar5[1] + 8));
     dVar13 = (double)(local_94[3] - local_94[0]);
