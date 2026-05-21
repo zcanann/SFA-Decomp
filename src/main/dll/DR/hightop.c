@@ -1173,7 +1173,7 @@ void Trigger_release(void) {}
 void Trigger_initialise(void) {}
 
 extern void objSetSlot(void* obj, int slot);
-extern uint GameBit_Get(int eventId);
+extern int GameBit_Get(int eventId);
 extern f32 lbl_803E40F8;
 
 #pragma peephole off
@@ -1193,9 +1193,13 @@ void Trigger_init(u8* obj, u8* params) {
         *(s16*)obj = (s16)(params[0x3d] << 8);
         *(f32*)(obj + 8) = t / lbl_803E40F8;
         break;
-    case 0x4c:
+    default:
         *(s16*)(sub + 0x82) = *(s16*)(params + 0x48);
         objFn_80198fa4(obj, params);
+        break;
+    case 0x230:
+        *(f32*)(sub + 4) = (f32)(s32)(params[0x3a] * 2);
+        *(f32*)(sub + 4) = *(f32*)(sub + 4) * *(f32*)(sub + 4);
         break;
     case 0x4d:
         *(s16*)obj = (s16)(params[0x3d] << 8);
@@ -1204,10 +1208,6 @@ void Trigger_init(u8* obj, u8* params) {
         break;
     case 0x51:
     case 0xf4:
-        break;
-    case 0x230:
-        *(f32*)(sub + 4) = (f32)(s32)(params[0x3a] * 2);
-        *(f32*)(sub + 4) = *(f32*)(sub + 4) * *(f32*)(sub + 4);
         break;
     case 0x54:
         *(s16*)(sub + 0x82) = *(s16*)(params + 0x48);
