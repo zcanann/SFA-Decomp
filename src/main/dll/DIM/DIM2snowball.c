@@ -1400,6 +1400,41 @@ void dll_1CF_init(int* obj, int* def)
     *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0xe000);
 }
 
+extern f32 lbl_803E4A28;
+extern int getSaveGameLoadStatus(void);
+extern void gameBitFn_800ea2e0(int n);
+extern int *gMapEventInterface;
+extern void unlockLevel(int a, int b, int c);
+void dim_levelcontrol_init(int *obj) {
+    u8 *state;
+    int i;
+    randomGetRange(0, 11);
+    state = *(u8 **)((char *)obj + 0xb8);
+    state[8] = 0;
+    *(f32 *)state = lbl_803E4A28;
+    if (getSaveGameLoadStatus() != 0) {
+        *(int *)((char *)obj + 0xf4) = 2;
+    } else {
+        *(int *)((char *)obj + 0xf4) = 1;
+    }
+    for (i = 1; i <= 38; i++) {
+        gameBitFn_800ea2e0(i);
+    }
+    state[12] = (u8)GameBit_Get(220);
+    GameBit_Set(3850, 0);
+    if (GameBit_Get(2205) != 0 && GameBit_Get(2213) == 0) {
+        GameBit_Set(2205, 0);
+    }
+    state[14] = (u8)((state[14] & ~0x80) | (((u32)GameBit_Get(3339) & 1) << 7));
+    state[14] = (u8)((state[14] & ~0x40) | (((u32)GameBit_Get(3340) & 1) << 6));
+    state[14] = (u8)((state[14] & ~0x20) | (((u32)GameBit_Get(3341) & 1) << 5));
+    state[14] = (u8)((state[14] & ~0x10) | (((u32)GameBit_Get(3342) & 1) << 4));
+    state[14] = (u8)((state[14] & ~0x08) | (((u32)GameBit_Get(2593) & 1) << 3));
+    ((void(*)(int, int))((void **)*gMapEventInterface)[17])((s32)*(s8 *)((char *)obj + 172), 1);
+    *(u16 *)((char *)obj + 176) = (u16)(*(u16 *)((char *)obj + 176) | 0x6000);
+    unlockLevel(0, 0, 1);
+}
+
 void dim_tricky_update(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
