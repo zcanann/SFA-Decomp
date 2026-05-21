@@ -468,6 +468,31 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
 void dimcannon_hitDetect(void) {}
 void dimcannon_release(void) {}
 void dimcannon_initialise(void) {}
+
+extern void objRenderFn_8003b8f4(f32 x);
+extern f32 lbl_803E48E8;
+
+#pragma scheduling off
+#pragma peephole off
+void dimcannon_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    u8 *def;
+    u8 *sub;
+    s16 saved;
+
+    def = *(u8**)((char*)obj + 0x4c);
+    if (*(s16*)((char*)obj + 0x46) == 0x1d6) {
+        objRenderFn_8003b8f4(lbl_803E48E8);
+    } else {
+        sub = *(u8**)((char*)obj + 0xb8);
+        saved = *(s16*)obj;
+        *(s16*)obj = (s16)((s8)def[0x28] << 8);
+        objRenderFn_8003b8f4(lbl_803E48E8);
+        *(s16*)obj = saved;
+        ObjPath_GetPointWorldPosition((int)obj, 0, (f32*)(sub + 0x8c), (f32*)(sub + 0x90), (f32*)(sub + 0x94), 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dimlavasmash_free(void) {}
 void dimlavasmash_hitDetect(void) {}
 
