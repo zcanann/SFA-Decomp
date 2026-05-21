@@ -34,7 +34,7 @@
  *   slot 05: 0x801C3BAC dfsh_objcreator_hitDetect
  *   slot 06: 0x801C3B7C dfsh_objcreator_render
  *   slot 07: 0x801C3B78 dfsh_objcreator_free
- *   slot 08: 0x801C3B70 dfsh_objcreator_func08
+ *   slot 08: 0x801C3B70 dfsh_objcreator_getObjectTypeId
  *   slot 09: 0x801C3B68 dfsh_objcreator_getExtraSize
  * - DLL 0x0191: gECSH_CreatorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C70EC ecsh_creator_initialise
@@ -44,7 +44,7 @@
  *   slot 05: 0x801C6E50 ecsh_creator_hitDetect
  *   slot 06: 0x801C6E20 ecsh_creator_render
  *   slot 07: 0x801C6E1C ecsh_creator_free
- *   slot 08: 0x801C6E14 ecsh_creator_func08
+ *   slot 08: 0x801C6E14 ecsh_creator_getObjectTypeId
  *   slot 09: 0x801C6E0C ecsh_creator_getExtraSize
  * - DLL 0x0193: gGPSH_ObjCreatorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C82C4 gpsh_objcreator_initialise
@@ -54,7 +54,7 @@
  *   slot 05: 0x801C80C8 gpsh_objcreator_hitDetect
  *   slot 06: 0x801C8098 gpsh_objcreator_render
  *   slot 07: 0x801C8094 gpsh_objcreator_free
- *   slot 08: 0x801C808C gpsh_objcreator_func08
+ *   slot 08: 0x801C808C gpsh_objcreator_getObjectTypeId
  *   slot 09: 0x801C8084 gpsh_objcreator_getExtraSize
  * - DLL 0x01F9: gWM_ObjCreatorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801EFF78 WM_ObjCreator_initialise

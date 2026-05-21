@@ -281,7 +281,7 @@ void dll_19A_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_19A_getExtraSize(void) { return 0x4; }
-int dll_19A_func08(void) { return 0x0; }
+int dll_19A_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
 #pragma peephole off

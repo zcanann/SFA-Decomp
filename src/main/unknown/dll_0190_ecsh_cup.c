@@ -14,5 +14,5 @@
 // - 5: ecsh_cup_hitDetect (0x801C83CC)
 // - 6: ecsh_cup_render (0x801C839C)
 // - 7: ecsh_cup_free (0x801C836C)
-// - 8: ecsh_cup_func08 (0x801C8364)
+// - 8: ecsh_cup_getObjectTypeId (0x801C8364)
 // - 9: ecsh_cup_getExtraSize (0x801C835C)

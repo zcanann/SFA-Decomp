@@ -342,5 +342,5 @@ void DFSH_LaserBeam_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int DFSH_LaserBeam_getExtraSize(void) { return 0x4c; }
-int DFSH_LaserBeam_func08(void) { return 0x0; }
+int DFSH_LaserBeam_getObjectTypeId(void) { return 0x0; }
 

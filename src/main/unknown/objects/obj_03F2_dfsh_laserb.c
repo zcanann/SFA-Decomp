@@ -56,7 +56,7 @@
  * - slot 05: 0x801C3EB4 DFSH_LaserBeam_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801C3EB0 DFSH_LaserBeam_render stub=blr ref=render (stub)
  * - slot 07: 0x801C3E4C DFSH_LaserBeam_init ref=free
- * - slot 08: 0x801C3E44 DFSH_LaserBeam_func08 stub=const 0
+ * - slot 08: 0x801C3E44 DFSH_LaserBeam_getObjectTypeId stub=const 0
  * - slot 09: 0x801C3E3C DFSH_LaserBeam_getExtraSize stub=const 76 ref=getExtraSize (stub)
  */
 

@@ -14,7 +14,7 @@
 // - 5: dfropenode_hitDetect (0x801C2274)
 // - 6: dfropenode_render (0x801C1F5C)
 // - 7: dfropenode_free (0x801C1EAC)
-// - 8: dfropenode_func08 (0x801C1EA4)
+// - 8: dfropenode_getObjectTypeId (0x801C1EA4)
 // - 9: dfropenode_getExtraSize (0x801C1E9C)
 // - 10: dfropenode_setScale (0x801C1BC8)
 // - 11: dfropenode_func0B (0x801C1B04)

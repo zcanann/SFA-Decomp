@@ -901,7 +901,7 @@
  *   slot 05: 0x801C2F20 dfsh_shrine_hitDetect
  *   slot 06: 0x801C2E68 dfsh_shrine_render
  *   slot 07: 0x801C2DD4 dfsh_shrine_free
- *   slot 08: 0x801C2DCC dfsh_shrine_func08
+ *   slot 08: 0x801C2DCC dfsh_shrine_getObjectTypeId
  *   slot 09: 0x801C2DC4 dfsh_shrine_getExtraSize
  * - DLL 0x017B: gDFSH_LaserBeamObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C4660 DFSH_LaserBeam_initialise
@@ -911,7 +911,7 @@
  *   slot 05: 0x801C3EB4 DFSH_LaserBeam_hitDetect
  *   slot 06: 0x801C3EB0 DFSH_LaserBeam_render
  *   slot 07: 0x801C3E4C DFSH_LaserBeam_init
- *   slot 08: 0x801C3E44 DFSH_LaserBeam_func08
+ *   slot 08: 0x801C3E44 DFSH_LaserBeam_getObjectTypeId
  *   slot 09: 0x801C3E3C DFSH_LaserBeam_getExtraSize
  * - DLL 0x017C: lbl_803230F8 (slots=1, mask=0)
  * - DLL 0x017D: gRollingBarrelObjDescriptor (slots=10, mask=1101111111)
@@ -962,7 +962,7 @@
  *   slot 05: 0x801C4F1C mmsh_shrine_hitDetect
  *   slot 06: 0x801C4E64 mmsh_shrine_render
  *   slot 07: 0x801C4D88 mmsh_shrine_free
- *   slot 08: 0x801C4D80 mmsh_shrine_func08
+ *   slot 08: 0x801C4D80 mmsh_shrine_getObjectTypeId
  *   slot 09: 0x801C4D78 mmsh_shrine_getExtraSize
  * - DLL 0x018E: gMMSH_WaterSpikeObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C598C mmsh_waterspike_initialise
@@ -972,7 +972,7 @@
  *   slot 05: 0x801C57AC mmsh_waterspike_hitDetect
  *   slot 06: 0x801C57A0 mmsh_waterspike_render
  *   slot 07: 0x801C579C mmsh_waterspike_free
- *   slot 08: 0x801C5794 mmsh_waterspike_func08
+ *   slot 08: 0x801C5794 mmsh_waterspike_getObjectTypeId
  *   slot 09: 0x801C578C mmsh_waterspike_getExtraSize
  * - DLL 0x018F: gECSH_ShrineObjDescriptor (slots=15, mask=110111111111111)
  *   slot 00: 0x801C6E08 ecsh_shrine_initialise
@@ -982,7 +982,7 @@
  *   slot 05: 0x801C60B4 ecsh_shrine_hitDetect
  *   slot 06: 0x801C5FFC ecsh_shrine_render
  *   slot 07: 0x801C5F50 ecsh_shrine_free
- *   slot 08: 0x801C5F48 ecsh_shrine_func08
+ *   slot 08: 0x801C5F48 ecsh_shrine_getObjectTypeId
  *   slot 09: 0x801C5F40 ecsh_shrine_getExtraSize
  * - DLL 0x0190: gECSH_CupObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C8B64 ecsh_cup_initialise
@@ -992,7 +992,7 @@
  *   slot 05: 0x801C83CC ecsh_cup_hitDetect
  *   slot 06: 0x801C839C ecsh_cup_render
  *   slot 07: 0x801C836C ecsh_cup_free
- *   slot 08: 0x801C8364 ecsh_cup_func08
+ *   slot 08: 0x801C8364 ecsh_cup_getObjectTypeId
  *   slot 09: 0x801C835C ecsh_cup_getExtraSize
  * - DLL 0x0192: gGPSH_ShrineObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C8080 gpsh_shrine_initialise
@@ -1002,7 +1002,7 @@
  *   slot 05: 0x801C7720 gpsh_shrine_hitDetect
  *   slot 06: 0x801C7668 gpsh_shrine_render
  *   slot 07: 0x801C75B8 gpsh_shrine_free
- *   slot 08: 0x801C75B0 gpsh_shrine_func08
+ *   slot 08: 0x801C75B0 gpsh_shrine_getObjectTypeId
  *   slot 09: 0x801C75A8 gpsh_shrine_getExtraSize
  * - DLL 0x0194: gGPSH_SceneObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C8358 gpsh_scene_initialise
@@ -1012,7 +1012,7 @@
  *   slot 05: 0x801C830C gpsh_scene_hitDetect
  *   slot 06: 0x801C82DC gpsh_scene_render
  *   slot 07: 0x801C82D8 gpsh_scene_free
- *   slot 08: 0x801C82D0 gpsh_scene_func08
+ *   slot 08: 0x801C82D0 gpsh_scene_getObjectTypeId
  *   slot 09: 0x801C82C8 gpsh_scene_getExtraSize
  * - DLL 0x0195: gDBSH_ShrineObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801C965C dbsh_shrine_initialise
@@ -1022,7 +1022,7 @@
  *   slot 05: 0x801C91AC dbsh_shrine_hitDetect
  *   slot 06: 0x801C90F4 dbsh_shrine_render
  *   slot 07: 0x801C9050 dbsh_shrine_free
- *   slot 08: 0x801C9048 dbsh_shrine_func08
+ *   slot 08: 0x801C9048 dbsh_shrine_getObjectTypeId
  *   slot 09: 0x801C9040 dbsh_shrine_getExtraSize
  * - DLL 0x0196: gDBSH_SymbolObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x801C9DE4 dbsh_symbol_init

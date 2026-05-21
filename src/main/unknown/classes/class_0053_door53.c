@@ -120,7 +120,7 @@
  *   slot 05: 0x801C2860 dfsh_door2speci_hitDetect
  *   slot 06: 0x801C2830 dfsh_door2speci_render
  *   slot 07: 0x801C282C dfsh_door2speci_free
- *   slot 08: 0x801C2824 dfsh_door2speci_func08
+ *   slot 08: 0x801C2824 dfsh_door2speci_getObjectTypeId
  *   slot 09: 0x801C281C dfsh_door2speci_getExtraSize
  * - DLL 0x017F: gMoonSeedBushObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A6F48 MoonSeedBush_initialise

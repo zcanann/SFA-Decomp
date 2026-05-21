@@ -14,5 +14,5 @@
 // - 5: dfsh_door2speci_hitDetect (0x801C2860)
 // - 6: dfsh_door2speci_render (0x801C2830)
 // - 7: dfsh_door2speci_free (0x801C282C)
-// - 8: dfsh_door2speci_func08 (0x801C2824)
+// - 8: dfsh_door2speci_getObjectTypeId (0x801C2824)
 // - 9: dfsh_door2speci_getExtraSize (0x801C281C)

@@ -495,9 +495,9 @@ void dll_199_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int nwsh_levcon_getExtraSize(void) { return 0x0; }
-int nwsh_levcon_func08(void) { return 0x0; }
+int nwsh_levcon_getObjectTypeId(void) { return 0x0; }
 int dll_199_getExtraSize(void) { return 0x14; }
-int dll_199_func08(void) { return 0x0; }
+int dll_199_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5150;

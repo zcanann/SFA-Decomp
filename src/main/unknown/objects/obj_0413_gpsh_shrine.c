@@ -57,7 +57,7 @@
  * - slot 05: 0x801C7720 gpsh_shrine_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801C7668 gpsh_shrine_render ref=render
  * - slot 07: 0x801C75B8 gpsh_shrine_free ref=free
- * - slot 08: 0x801C75B0 gpsh_shrine_func08 stub=const 0
+ * - slot 08: 0x801C75B0 gpsh_shrine_getObjectTypeId stub=const 0
  * - slot 09: 0x801C75A8 gpsh_shrine_getExtraSize stub=const 24 ref=getExtraSize (stub)
  */
 

@@ -233,7 +233,7 @@ int ecsh_shrine_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: ecsh_shrine_func08
+ * Function: ecsh_shrine_getObjectTypeId
  * EN v1.0 Address: 0x801C5F48
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -243,7 +243,7 @@ int ecsh_shrine_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int ecsh_shrine_func08(void)
+int ecsh_shrine_getObjectTypeId(void)
 {
   return 0;
 }

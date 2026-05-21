@@ -861,9 +861,9 @@ void gpsh_shrine_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int ecsh_creator_getExtraSize(void) { return 0xa; }
-int ecsh_creator_func08(void) { return 0x0; }
+int ecsh_creator_getObjectTypeId(void) { return 0x0; }
 int gpsh_shrine_getExtraSize(void) { return 0x18; }
-int gpsh_shrine_func08(void) { return 0x0; }
+int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;

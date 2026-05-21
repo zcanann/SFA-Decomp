@@ -302,11 +302,11 @@ void ecsh_cup_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int gpsh_objcreator_getExtraSize(void) { return 0x8; }
-int gpsh_objcreator_func08(void) { return 0x0; }
+int gpsh_objcreator_getObjectTypeId(void) { return 0x0; }
 int gpsh_scene_getExtraSize(void) { return 0x0; }
-int gpsh_scene_func08(void) { return 0x0; }
+int gpsh_scene_getObjectTypeId(void) { return 0x0; }
 int ecsh_cup_getExtraSize(void) { return 0x30; }
-int ecsh_cup_func08(void) { return 0x0; }
+int ecsh_cup_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5048;

@@ -51,7 +51,7 @@
  * - slot 05: 0x801C80C8 gpsh_objcreator_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801C8098 gpsh_objcreator_render ref=render
  * - slot 07: 0x801C8094 gpsh_objcreator_free stub=blr ref=free (stub)
- * - slot 08: 0x801C808C gpsh_objcreator_func08 stub=const 0
+ * - slot 08: 0x801C808C gpsh_objcreator_getObjectTypeId stub=const 0
  * - slot 09: 0x801C8084 gpsh_objcreator_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

@@ -547,9 +547,9 @@ void dfsh_objcreator_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int SpiritPrize_getExtraSize(void) { return 0x14c; }
-int SpiritPrize_func08(void) { return 0x8; }
+int SpiritPrize_getObjectTypeId(void) { return 0x8; }
 int dfsh_objcreator_getExtraSize(void) { return 0x4; }
-int dfsh_objcreator_func08(void) { return 0x0; }
+int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4EB8;

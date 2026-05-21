@@ -431,7 +431,7 @@ int dfsh_shrine_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: dfsh_shrine_func08
+ * Function: dfsh_shrine_getObjectTypeId
  * EN v1.0 Address: 0x801C2DCC
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -441,7 +441,7 @@ int dfsh_shrine_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfsh_shrine_func08(void)
+int dfsh_shrine_getObjectTypeId(void)
 {
   return 0;
 }

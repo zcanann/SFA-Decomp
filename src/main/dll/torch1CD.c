@@ -378,7 +378,7 @@ void dll_19B_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_19B_getExtraSize(void) { return 0x18; }
-int dll_19B_func08(void) { return 0x0; }
+int dll_19B_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5188;

@@ -14,5 +14,5 @@
 // - 5: nwsh_levcon_hitDetect (0x801CA8BC)
 // - 6: nwsh_levcon_render (0x801CA88C)
 // - 7: nwsh_levcon_free (0x801CA858)
-// - 8: nwsh_levcon_func08 (0x801CA850)
+// - 8: nwsh_levcon_getObjectTypeId (0x801CA850)
 // - 9: nwsh_levcon_getExtraSize (0x801CA848)

@@ -56,7 +56,7 @@
  * - slot 05: 0x801C830C gpsh_scene_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801C82DC gpsh_scene_render ref=render
  * - slot 07: 0x801C82D8 gpsh_scene_free stub=blr ref=free (stub)
- * - slot 08: 0x801C82D0 gpsh_scene_func08 stub=const 0
+ * - slot 08: 0x801C82D0 gpsh_scene_getObjectTypeId stub=const 0
  * - slot 09: 0x801C82C8 gpsh_scene_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

@@ -45,7 +45,7 @@
  * - slot 05: 0x801C2274 dfropenode_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801C1F5C dfropenode_render ref=render
  * - slot 07: 0x801C1EAC dfropenode_free ref=free
- * - slot 08: 0x801C1EA4 dfropenode_func08 stub=const 0
+ * - slot 08: 0x801C1EA4 dfropenode_getObjectTypeId stub=const 0
  * - slot 09: 0x801C1E9C dfropenode_getExtraSize stub=const 52 ref=getExtraSize (stub)
  * - slot 10: 0x801C1BC8 dfropenode_setScale ref=setScale
  * - slot 11: 0x801C1B04 dfropenode_func0B

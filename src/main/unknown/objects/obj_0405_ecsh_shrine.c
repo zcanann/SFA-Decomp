@@ -57,7 +57,7 @@
  * - slot 05: 0x801C60B4 ecsh_shrine_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801C5FFC ecsh_shrine_render ref=render
  * - slot 07: 0x801C5F50 ecsh_shrine_free ref=free
- * - slot 08: 0x801C5F48 ecsh_shrine_func08 stub=const 0
+ * - slot 08: 0x801C5F48 ecsh_shrine_getObjectTypeId stub=const 0
  * - slot 09: 0x801C5F40 ecsh_shrine_getExtraSize stub=const 56 ref=getExtraSize (stub)
  * - slot 10: 0x801C5F24 ecsh_shrine_setScale ref=setScale
  * - slot 11: 0x801C5ED8 ecsh_shrine_func0B

@@ -14,5 +14,5 @@
 // - 5: mmsh_scales_hitDetect (0x801C5470)
 // - 6: mmsh_scales_render (0x801C5440)
 // - 7: mmsh_scales_free (0x801C53B0)
-// - 8: mmsh_scales_func08 (0x801C53A8)
+// - 8: mmsh_scales_getObjectTypeId (0x801C53A8)
 // - 9: mmsh_scales_getExtraSize (0x801C53A0)

@@ -14,5 +14,5 @@
 // - 5: gpsh_shrine_hitDetect (0x801C7720)
 // - 6: gpsh_shrine_render (0x801C7668)
 // - 7: gpsh_shrine_free (0x801C75B8)
-// - 8: gpsh_shrine_func08 (0x801C75B0)
+// - 8: gpsh_shrine_getObjectTypeId (0x801C75B0)
 // - 9: gpsh_shrine_getExtraSize (0x801C75A8)

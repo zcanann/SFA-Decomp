@@ -14,7 +14,7 @@
 // - 5: ecsh_shrine_hitDetect (0x801C60B4)
 // - 6: ecsh_shrine_render (0x801C5FFC)
 // - 7: ecsh_shrine_free (0x801C5F50)
-// - 8: ecsh_shrine_func08 (0x801C5F48)
+// - 8: ecsh_shrine_getObjectTypeId (0x801C5F48)
 // - 9: ecsh_shrine_getExtraSize (0x801C5F40)
 // - 10: ecsh_shrine_setScale (0x801C5F24)
 // - 11: ecsh_shrine_func0B (0x801C5ED8)

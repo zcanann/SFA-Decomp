@@ -176,7 +176,7 @@ int dbsh_shrine_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: dbsh_shrine_func08
+ * Function: dbsh_shrine_getObjectTypeId
  * EN v1.0 Address: 0x801C9048
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -186,7 +186,7 @@ int dbsh_shrine_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dbsh_shrine_func08(void)
+int dbsh_shrine_getObjectTypeId(void)
 {
   return 0;
 }

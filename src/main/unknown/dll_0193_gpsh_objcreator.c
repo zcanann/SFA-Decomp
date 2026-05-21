@@ -14,5 +14,5 @@
 // - 5: gpsh_objcreator_hitDetect (0x801C80C8)
 // - 6: gpsh_objcreator_render (0x801C8098)
 // - 7: gpsh_objcreator_free (0x801C8094)
-// - 8: gpsh_objcreator_func08 (0x801C808C)
+// - 8: gpsh_objcreator_getObjectTypeId (0x801C808C)
 // - 9: gpsh_objcreator_getExtraSize (0x801C8084)

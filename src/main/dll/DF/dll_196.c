@@ -154,7 +154,7 @@ int dfropenode_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: dfropenode_func08
+ * Function: dfropenode_getObjectTypeId
  * EN v1.0 Address: 0x801C1EA4
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -164,7 +164,7 @@ int dfropenode_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int dfropenode_func08(void)
+int dfropenode_getObjectTypeId(void)
 {
   return 0;
 }

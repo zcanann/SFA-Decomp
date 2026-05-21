@@ -14,5 +14,5 @@
 // - 5: ecsh_creator_hitDetect (0x801C6E50)
 // - 6: ecsh_creator_render (0x801C6E20)
 // - 7: ecsh_creator_free (0x801C6E1C)
-// - 8: ecsh_creator_func08 (0x801C6E14)
+// - 8: ecsh_creator_getObjectTypeId (0x801C6E14)
 // - 9: ecsh_creator_getExtraSize (0x801C6E0C)

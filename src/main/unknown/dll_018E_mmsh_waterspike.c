@@ -14,5 +14,5 @@
 // - 5: mmsh_waterspike_hitDetect (0x801C57AC)
 // - 6: mmsh_waterspike_render (0x801C57A0)
 // - 7: mmsh_waterspike_free (0x801C579C)
-// - 8: mmsh_waterspike_func08 (0x801C5794)
+// - 8: mmsh_waterspike_getObjectTypeId (0x801C5794)
 // - 9: mmsh_waterspike_getExtraSize (0x801C578C)

@@ -526,7 +526,7 @@ void dll_197_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_197_getExtraSize(void) { return 0x10; }
-int dll_197_func08(void) { return 0x1; }
+int dll_197_getObjectTypeId(void) { return 0x1; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E5104;

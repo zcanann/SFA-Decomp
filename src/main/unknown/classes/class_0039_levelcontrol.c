@@ -79,7 +79,7 @@
  *   slot 05: 0x801CA8BC nwsh_levcon_hitDetect
  *   slot 06: 0x801CA88C nwsh_levcon_render
  *   slot 07: 0x801CA858 nwsh_levcon_free
- *   slot 08: 0x801CA850 nwsh_levcon_func08
+ *   slot 08: 0x801CA850 nwsh_levcon_getObjectTypeId
  *   slot 09: 0x801CA848 nwsh_levcon_getExtraSize
  * - DLL 0x01AE: gSH_LevelControlObjDescriptor (slots=10, mask=0001100101)
  *   slot 03: 0x801D96B4 sh_levelcontrol_init

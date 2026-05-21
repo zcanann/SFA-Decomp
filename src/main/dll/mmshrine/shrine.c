@@ -361,9 +361,9 @@ void mmsh_waterspike_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int mmsh_scales_getExtraSize(void) { return 0x140; }
-int mmsh_scales_func08(void) { return 0xb; }
+int mmsh_scales_getObjectTypeId(void) { return 0xb; }
 int mmsh_waterspike_getExtraSize(void) { return 0x0; }
-int mmsh_waterspike_func08(void) { return 0x0; }
+int mmsh_waterspike_getObjectTypeId(void) { return 0x0; }
 #pragma peephole off
 void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 #pragma peephole reset

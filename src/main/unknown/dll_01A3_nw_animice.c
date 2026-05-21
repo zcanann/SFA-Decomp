@@ -14,5 +14,5 @@
 // - 5: nw_animice_hitDetect (0x801CFB64)
 // - 6: nw_animice_render (0x801CFB60)
 // - 7: nw_animice_free (0x801CFB3C)
-// - 8: nw_animice_func08 (0x801CFB34)
+// - 8: nw_animice_getObjectTypeId (0x801CFB34)
 // - 9: nw_animice_getExtraSize (0x801CFB2C)

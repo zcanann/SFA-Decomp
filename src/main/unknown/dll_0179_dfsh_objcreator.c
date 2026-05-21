@@ -14,5 +14,5 @@
 // - 5: dfsh_objcreator_hitDetect (0x801C3BAC)
 // - 6: dfsh_objcreator_render (0x801C3B7C)
 // - 7: dfsh_objcreator_free (0x801C3B78)
-// - 8: dfsh_objcreator_func08 (0x801C3B70)
+// - 8: dfsh_objcreator_getObjectTypeId (0x801C3B70)
 // - 9: dfsh_objcreator_getExtraSize (0x801C3B68)

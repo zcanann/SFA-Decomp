@@ -14,5 +14,5 @@
 // - 5: gpsh_scene_hitDetect (0x801C830C)
 // - 6: gpsh_scene_render (0x801C82DC)
 // - 7: gpsh_scene_free (0x801C82D8)
-// - 8: gpsh_scene_func08 (0x801C82D0)
+// - 8: gpsh_scene_getObjectTypeId (0x801C82D0)
 // - 9: gpsh_scene_getExtraSize (0x801C82C8)

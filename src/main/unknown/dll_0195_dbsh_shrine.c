@@ -14,5 +14,5 @@
 // - 5: dbsh_shrine_hitDetect (0x801C91AC)
 // - 6: dbsh_shrine_render (0x801C90F4)
 // - 7: dbsh_shrine_free (0x801C9050)
-// - 8: dbsh_shrine_func08 (0x801C9048)
+// - 8: dbsh_shrine_getObjectTypeId (0x801C9048)
 // - 9: dbsh_shrine_getExtraSize (0x801C9040)

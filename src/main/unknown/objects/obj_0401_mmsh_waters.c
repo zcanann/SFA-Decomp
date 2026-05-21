@@ -56,7 +56,7 @@
  * - slot 05: 0x801C57AC mmsh_waterspike_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801C57A0 mmsh_waterspike_render ref=render
  * - slot 07: 0x801C579C mmsh_waterspike_free stub=blr ref=free (stub)
- * - slot 08: 0x801C5794 mmsh_waterspike_func08 stub=const 0
+ * - slot 08: 0x801C5794 mmsh_waterspike_getObjectTypeId stub=const 0
  * - slot 09: 0x801C578C mmsh_waterspike_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

@@ -358,7 +358,7 @@
  *   slot 05: 0x801CFB64 nw_animice_hitDetect
  *   slot 06: 0x801CFB60 nw_animice_render
  *   slot 07: 0x801CFB3C nw_animice_free
- *   slot 08: 0x801CFB34 nw_animice_func08
+ *   slot 08: 0x801CFB34 nw_animice_getObjectTypeId
  *   slot 09: 0x801CFB2C nw_animice_getExtraSize
  * - DLL 0x01A4: gNW_iceObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x801CFD44 nw_ice_init

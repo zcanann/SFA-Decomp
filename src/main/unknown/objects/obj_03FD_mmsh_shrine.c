@@ -57,7 +57,7 @@
  * - slot 05: 0x801C4F1C mmsh_shrine_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801C4E64 mmsh_shrine_render ref=render
  * - slot 07: 0x801C4D88 mmsh_shrine_free ref=free
- * - slot 08: 0x801C4D80 mmsh_shrine_func08 stub=const 0
+ * - slot 08: 0x801C4D80 mmsh_shrine_getObjectTypeId stub=const 0
  * - slot 09: 0x801C4D78 mmsh_shrine_getExtraSize stub=const 40 ref=getExtraSize (stub)
  */
 

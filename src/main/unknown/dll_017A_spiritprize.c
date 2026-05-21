@@ -17,5 +17,5 @@
 // - 5: SpiritPrize_hitDetect (0x801C370C)
 // - 6: SpiritPrize_render (0x801C3684)
 // - 7: SpiritPrize_free (0x801C3628)
-// - 8: SpiritPrize_func08 (0x801C3620)
+// - 8: SpiritPrize_getObjectTypeId (0x801C3620)
 // - 9: SpiritPrize_getExtraSize (0x801C3618)

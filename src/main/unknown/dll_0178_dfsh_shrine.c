@@ -14,5 +14,5 @@
 // - 5: dfsh_shrine_hitDetect (0x801C2F20)
 // - 6: dfsh_shrine_render (0x801C2E68)
 // - 7: dfsh_shrine_free (0x801C2DD4)
-// - 8: dfsh_shrine_func08 (0x801C2DCC)
+// - 8: dfsh_shrine_getObjectTypeId (0x801C2DCC)
 // - 9: dfsh_shrine_getExtraSize (0x801C2DC4)

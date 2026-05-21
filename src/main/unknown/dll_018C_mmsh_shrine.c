@@ -14,5 +14,5 @@
 // - 5: mmsh_shrine_hitDetect (0x801C4F1C)
 // - 6: mmsh_shrine_render (0x801C4E64)
 // - 7: mmsh_shrine_free (0x801C4D88)
-// - 8: mmsh_shrine_func08 (0x801C4D80)
+// - 8: mmsh_shrine_getObjectTypeId (0x801C4D80)
 // - 9: mmsh_shrine_getExtraSize (0x801C4D78)
