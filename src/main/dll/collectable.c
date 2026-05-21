@@ -1330,7 +1330,7 @@ void trickyFn_80148d8c(int obj,int state)
 {
   int setup;
   int alpha;
-  int tricky;
+  void *tricky;
   u32 spawnBits;
   u8 moveId;
 
@@ -1338,9 +1338,9 @@ void trickyFn_80148d8c(int obj,int state)
   *(u8 *)(state + 0x2ef) = 0;
   if (((*(u32 *)(state + 0x2dc) & 0x800) != 0) &&
       ((*(u32 *)(state + 0x2e0) & 0x800) == 0)) {
-    tricky = getTrickyObject();
-    if (tricky != 0) {
-      trickyImpress(tricky);
+    tricky = (void *)getTrickyObject();
+    if (tricky != NULL) {
+      trickyImpress((int)tricky);
     }
     if ((*(u32 *)(state + 0x2e4) & 0x40000000) == 0) {
       if (*(s16 *)(setup + 0x18) != -1) {
