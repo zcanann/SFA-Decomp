@@ -460,6 +460,29 @@ void sc_totempole_free(void) {}
 void sc_totempole_hitDetect(void) {}
 void sc_totempole_release(void) {}
 void sc_totempole_initialise(void) {}
+
+#pragma peephole off
+#pragma scheduling off
+void sc_totempole_init(u8* obj, u8* params) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    switch (*(int*)(params + 0x14)) {
+    case 0x44909:
+        *(s16*)sub = 0x83;
+        break;
+    case 0x4490C:
+        *(s16*)sub = 0x81;
+        break;
+    case 0x4490F:
+        *(s16*)sub = 0x82;
+        break;
+    case 0x44916:
+        *(s16*)sub = 0x84;
+        break;
+    }
+    *(s16*)obj = (s16)(params[0x1a] << 8);
+}
+#pragma scheduling reset
+#pragma peephole reset
 void sc_cloudrunnera_hitDetect(void) {}
 void sc_cloudrunnera_release(void) {}
 void sc_cloudrunnera_initialise(void) {}
