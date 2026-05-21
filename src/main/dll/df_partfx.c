@@ -1756,12 +1756,10 @@ void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
     }
     {
         f32 delta = new_ - cur;
-        if (delta > lbl_803E0570) {
-            f32 scale = *(f32*)((char*)state + 756);
-            *(f32*)((char*)mtx + 12) = scale * delta + *(f32*)((char*)mtx + 12);
-            *(f32*)((char*)mtx + 16) = scale * delta + *(f32*)((char*)mtx + 16);
-            *(f32*)((char*)mtx + 20) = scale * delta + *(f32*)((char*)mtx + 20);
-        }
+        if (delta <= lbl_803E0570) return;
+        *(f32*)((char*)mtx + 12) = *(f32*)((char*)state + 756) * delta + *(f32*)((char*)mtx + 12);
+        *(f32*)((char*)mtx + 16) = *(f32*)((char*)state + 760) * delta + *(f32*)((char*)mtx + 16);
+        *(f32*)((char*)mtx + 20) = *(f32*)((char*)state + 764) * delta + *(f32*)((char*)mtx + 20);
     }
     *(f32*)((char*)state + 684) = new_;
 }
