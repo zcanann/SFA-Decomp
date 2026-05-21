@@ -1918,7 +1918,7 @@ void infopoint_init(int *obj, u8 *def) {
     *(int *)(state + 4) = **(int **)((char *)txt + 8);
     *(int *)(state + 0xc) = 100;
     *(int *)state = (int)txt;
-    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x1c) << 8);
+    *(s16 *)obj = (s16)((s32)*(u8 *)((char *)def + 0x1c) << 8);
     *(int *)(state + 0x18) = 2;
     *(u8 *)(state + 0x10) = *(u8 *)((char *)def + 0x1b);
     *(s16 *)(state + 0x16) = 0;
