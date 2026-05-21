@@ -3778,11 +3778,11 @@ void fn_80133818(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int gameTimerIsRunning(void);
+extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void *obj);
 extern int sprintf(char *buf, const char *fmt, ...);
 extern f32 lbl_803E22A0;
-extern char lbl_803DBBF0[];
+__declspec(section ".sdata") extern char lbl_803DBBF0[];
 
 #pragma scheduling off
 #pragma peephole off
@@ -3806,7 +3806,7 @@ void fn_80133F70(void *obj)
     player = (void *)Obj_GetPlayerObject();
     nearest = (void *)ObjGroup_FindNearestObject(9, player, &threshold);
     if (nearest != NULL) {
-        ((void (*)(void *, int *, int *, int *))((void **)*(int **)((char *)nearest + 0x68))[21])(nearest, &a, &b, &c);
+        ((void (*)(void *, int *, int *, int *))(*(void ***)*(void **)((char *)nearest + 0x68))[21])(nearest, &a, &b, &c);
     }
     b = c - (b - a);
     if (b < 0) {
