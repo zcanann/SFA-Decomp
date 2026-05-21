@@ -424,7 +424,7 @@ void sc_totempuzzle_init(u8* obj, u8* params) {
     f32 fz;
 
     sub = *(u8**)(obj + 0xb8);
-    obj[0xad] = (u8)((s8)params[0x1b]);
+    *(s8*)(obj + 0xad) = (s8)params[0x1b];
     if ((s8)obj[0xad] < 0 || (s8)obj[0xad] > 5) {
         obj[0xad] = 0;
     }
