@@ -1227,7 +1227,6 @@ void Tricky_init(int obj)
   int model;
   int pathState;
   u32 modelVariant;
-  u8 enabledBit;
   u16 startPath[4];
 
   state = *(int *)(obj + 0xb8);
@@ -1271,8 +1270,16 @@ void Tricky_init(int obj)
   doNothing_onTrickyInit();
   walkgroupFindExitPointFn_800dc398();
   *(u8 *)(state + 0x374) = 2;
-  enabledBit = 1;
-  *(u8 *)(state + 0x82e) = (*(u8 *)(state + 0x82e) & 0x7f) | (enabledBit << 7);
+  {
+    register u32 flags;
+    register u32 enabledBit;
+    enabledBit = 1;
+    asm {
+      lbz flags, 0x82e(r31)
+      rlwimi flags, enabledBit, 7, 24, 24
+      stb flags, 0x82e(r31)
+    }
+  }
   *(s8 *)(state + 0xd) = -1;
 }
 #pragma scheduling reset
