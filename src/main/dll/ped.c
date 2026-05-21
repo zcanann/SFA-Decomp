@@ -242,7 +242,7 @@ void FUN_801ce008(int param_1)
   return;
 }
 
-extern void NW_geyser_SeqFn(void);
+extern int NW_geyser_SeqFn(int *obj, int p2, void *p3);
 
 /*
  * --INFO--
@@ -271,6 +271,26 @@ extern int *gMapEventInterface;
 void nw_geyser_free(int *obj) {
     ((void (*)(int, int, int))((void**)*gMapEventInterface)[20])(
         *(s8*)((char*)obj + 0xac), 0x1f, 0);
+}
+
+extern int objFindTexture(int *obj, int idx, int p3);
+extern f32 lbl_803E5200;
+extern f32 timeDelta;
+
+int NW_geyser_SeqFn(int *obj, int p2, void *p3) {
+    int *tex0;
+    if (GameBit_Get(0xa) != 0) {
+        *(u8 *)((char *)p3 + 0x90) = (u8)(*(u8 *)((char *)p3 + 0x90) | 4);
+    }
+    tex0 = (int *)objFindTexture(obj, 0, 0);
+    objFindTexture(obj, 1, 0);
+    *(s16 *)((char *)tex0 + 0xa) = (s16)(*(s16 *)((char *)tex0 + 0xa) + (s32)(lbl_803E5200 * timeDelta));
+    if (*(s16 *)((char *)tex0 + 0xa) > 0x4e80) {
+        *(s16 *)((char *)tex0 + 0xa) -= 0x4e80;
+    }
+    *(s16 *)((char *)p3 + 0x6e) = (s16)(*(s16 *)((char *)p3 + 0x70) & ~0x40);
+    *(u8 *)((char *)p3 + 0x56) = 0;
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
