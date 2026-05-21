@@ -4828,3 +4828,48 @@ void partfx_initialise(void) {
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_800A081C(int p1, int p2, int mode)
+{
+  extern void mathFn_80021ac8(void *, f32 *);
+  extern f32 lbl_803DD284;
+  extern f32 lbl_803DF430;
+  extern f32 lbl_803DF434;
+
+  if (mode == 1) {
+    if (*(s16 *)((char *)p1 + (s32)*(s16 *)(p1 + 0xfc) * 2 + 0xee) != 0) {
+      *(f32 *)(p1 + 0x24) = *(f32 *)(p2 + 0x4) / (f32)(s32)*(s16 *)(p1 + 0xfe);
+      *(f32 *)(p1 + 0x28) = *(f32 *)(p2 + 0x8) / (f32)(s32)*(s16 *)(p1 + 0xfe);
+      *(f32 *)(p1 + 0x2c) = *(f32 *)(p2 + 0xc) / (f32)(s32)*(s16 *)(p1 + 0xfe);
+    } else {
+      u32 flags = *(u32 *)(p1 + 0xa4);
+      if ((flags & 0x4) != 0 || (flags & 0x80000) != 0) {
+        s16 buf[6];
+        f32 *fbuf = (f32 *)&buf[2];
+        s16 v = *(s16 *)*(int *)(p1 + 0x4);
+        fbuf[3] = lbl_803DF430;
+        fbuf[2] = lbl_803DF430;
+        fbuf[1] = lbl_803DF430;
+        fbuf[0] = lbl_803DF434;
+        buf[2] = v;
+        buf[1] = v;
+        buf[0] = v;
+        mathFn_80021ac8(buf, (f32 *)(p2 + 0x4));
+      }
+      *(f32 *)(p1 + 0x24) = *(f32 *)(p2 + 0x4);
+      *(f32 *)(p1 + 0x28) = *(f32 *)(p2 + 0x8);
+      *(f32 *)(p1 + 0x2c) = *(f32 *)(p2 + 0xc);
+    }
+    *(f32 *)(p1 + 0x60) = *(f32 *)(p1 + 0x60) + *(f32 *)(p1 + 0x24);
+    *(f32 *)(p1 + 0x64) = *(f32 *)(p1 + 0x64) + *(f32 *)(p1 + 0x28);
+    *(f32 *)(p1 + 0x68) = *(f32 *)(p1 + 0x68) + *(f32 *)(p1 + 0x2c);
+  } else {
+    *(f32 *)(p1 + 0x60) = *(f32 *)(p1 + 0x24) * lbl_803DD284 + *(f32 *)(p1 + 0x60);
+    *(f32 *)(p1 + 0x64) = *(f32 *)(p1 + 0x28) * lbl_803DD284 + *(f32 *)(p1 + 0x64);
+    *(f32 *)(p1 + 0x68) = *(f32 *)(p1 + 0x2c) * lbl_803DD284 + *(f32 *)(p1 + 0x68);
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
