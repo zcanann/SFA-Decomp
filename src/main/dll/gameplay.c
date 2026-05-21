@@ -13127,3 +13127,16 @@ u8 getNextTaskHintText(void) { u8 *p = (u8*)getLastSavedGameTexts(); return p[5]
 void SaveGame_gplayClearRestartPoint(void) { if (pRestartPoint != 0) { mm_free(pRestartPoint); pRestartPoint = 0; } }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u16 lbl_803A32A8[];
+#pragma scheduling off
+#pragma peephole off
+void fn_800E84D8(s16 v) { *(s16 *)((char *)lbl_803A32A8 + 0x6a4) = v; }
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void *fn_800E888C(u8 a, u8 b) { return (char *)saveData + a * 40 + b * 8 + 28; }
+#pragma peephole reset
+#pragma scheduling reset
