@@ -1631,9 +1631,10 @@ void pushable_free(int *obj) {
         break;
     }
     if ((*(u16*)(sub + 0x100) & 1) != 0) {
+        int val = *(int*)(def + 0x14);
         v = lbl_803DDAB8;
         lbl_803DDAB8 = v + 1;
-        lbl_803AC6E0[v] = *(int*)(def + 0x14);
+        lbl_803AC6E0[v] = val;
     }
     ObjGroup_RemoveObject(obj, 5);
 }
