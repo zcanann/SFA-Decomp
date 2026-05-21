@@ -1968,6 +1968,33 @@ void fn_8015AE68(int* obj, u8* state) {
 #pragma peephole off
 extern f32 lbl_803E2D38;
 extern f32 lbl_803E2D14;
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+
+void fn_8015CB0C(int* obj, int* state) {
+    void* alloc;
+    int* new_obj;
+    if ((u8)Obj_IsLoadingLocked() != 0) {
+        alloc = Obj_AllocObjectSetup(36, 100);
+        *(f32*)((char*)alloc + 8) = *(f32*)((char*)state + 20);
+        *(f32*)((char*)alloc + 12) = *(f32*)((char*)state + 24);
+        *(f32*)((char*)alloc + 16) = *(f32*)((char*)state + 28);
+        *(u8*)((char*)alloc + 4) = 1;
+        *(u8*)((char*)alloc + 5) = 1;
+        *(u8*)((char*)alloc + 6) = 255;
+        *(u8*)((char*)alloc + 7) = 255;
+        *(s16*)((char*)alloc + 30) = -1;
+        *(s16*)((char*)alloc + 32) = -1;
+        new_obj = Obj_SetupObject(alloc, 5, -1, -1, (void*)0);
+        if (new_obj != NULL) {
+            *(f32*)((char*)new_obj + 0x24) = *(f32*)((char*)state + 56);
+            *(f32*)((char*)new_obj + 0x28) = *(f32*)((char*)state + 60);
+            *(f32*)((char*)new_obj + 0x2c) = *(f32*)((char*)state + 64);
+            *(int**)((char*)new_obj + 0xc4) = obj;
+        }
+    }
+}
 
 int fn_8015BEF4(int* obj, u8* state) {
     u8* t = *(u8**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
