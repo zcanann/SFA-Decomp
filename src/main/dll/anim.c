@@ -1187,6 +1187,39 @@ int fn_802002C4(int obj, int p)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+int fn_80200380(int obj, int p)
+{
+  extern int *gPlayerInterface;
+  extern f32 lbl_803E62A8;
+  int b8;
+  float fz;
+  s8 flag2;
+
+  b8 = *(int *)(obj + 0xb8);
+  if (*(char *)(p + 0x27b) != '\0') {
+    b8 = *(int *)(b8 + 0x40c);
+    fz = lbl_803E62A8;
+    *(float *)(b8 + 0xc) = lbl_803E62A8;
+    *(float *)(b8 + 0x10) = fz;
+    *(float *)(b8 + 4) = fz;
+    (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, p, 6);
+  } else {
+    flag2 = *(char *)(p + 0x346);
+    if (flag2 != 0) {
+      if (*(u8 *)(obj + 0x36) == 0) {
+        if (flag2 != 0) {
+          return 7;
+        }
+      }
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
