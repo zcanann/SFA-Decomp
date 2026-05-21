@@ -1835,3 +1835,43 @@ f32 fn_8014C920(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
+extern void* gRomCurveInterface;
+extern u8 lbl_803DBC58;
+extern f32 lbl_803E25DC;
+
+/* fn_8014C064: pre-curve probe + state-bit gate. If state's 0x2000 bit is
+ * set, ask baddieTargetFn_8014a150 whether the target is locked on; on hit,
+ * leave state[0x2dc] alone. Otherwise dispatch gRomCurveInterface's vtable
+ * entry 0x8c with (data, obj, lbl_803E25DC, &lbl_803DBC58, -1) and toggle
+ * the 0x2000 bit based on the u8 result. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8014C064(int obj) {
+    u8* state = *(u8**)(obj + 0xb8);
+    u8* data = *(u8**)state;
+    if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
+        if ((u8)baddieTargetFn_8014a150(obj, state, (f32*)(obj + 0x18), data + 0x68) != 0) {
+            return;
+        }
+    }
+    if ((u8)(*(u8(**)(u8*, int, f32, u8*, int))(*(int*)gRomCurveInterface + 0x8c))(
+            *(u8**)state, obj, lbl_803E25DC, &lbl_803DBC58, -1) != 0) {
+        {
+            register u32 m;
+            register u32 v;
+            register u8* statePtr = state;
+            asm {
+                lwz v, 0x2dc(statePtr)
+                li m, -0x2001
+                and m, v, m
+                stw m, 0x2dc(statePtr)
+            }
+        }
+    } else {
+        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x2000;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
