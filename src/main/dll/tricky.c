@@ -1972,6 +1972,7 @@ extern int lbl_803A9398[];
 
 extern void textureFree(int handle);
 extern void mm_free(void *p);
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void GameUI_airMeterShutdown(void) {
@@ -1992,6 +1993,39 @@ void GameUI_airMeterShutdown(void) {
     }
     mm_free(airMeter);
     airMeter = NULL;
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma dont_inline reset
+
+extern void *mmAlloc(int size, int type, int x);
+extern void *memset(void *p, int v, int n);
+extern f32 lbl_803E1E68;
+
+#pragma scheduling off
+#pragma peephole off
+void GameUI_initAirMeter(int a, int b) {
+    int *m;
+    if (airMeter == NULL) {
+    } else if ((((_Obj8011F70C*)airMeter)->bit7) != 0) {
+        GameUI_airMeterShutdown();
+    } else {
+        return;
+    }
+    m = (int*)mmAlloc(0x48, 0x19, 0);
+    memset(m, 0, 0x48);
+    m[0] = 0;
+    m[1] = a;
+    m[2] = 0;
+    m[0xc] = (int)textureLoadAsset(b);
+    *(u16*)((char*)m + 0x2c) = (u16)b;
+    m[0xd] = (int)textureLoadAsset(0x5d4);
+    m[0xe] = (int)textureLoadAsset(0x5d3);
+    m[0xf] = (int)textureLoadAsset(0x5d2);
+    airMeter = m;
+    *(u8*)((char*)m + 0x18) = 0;
+    *(f32*)((char*)m + 0x24) = lbl_803E1E68;
+    m[0x10] = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
