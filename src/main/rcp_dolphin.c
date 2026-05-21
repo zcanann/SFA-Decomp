@@ -2392,6 +2392,33 @@ void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area) {
     bBiggerBlurFilter = bigger;
 }
 
+extern u8 lbl_803DCD68;
+extern u8 lbl_803DCD69;
+extern u8 lbl_803DCD6A;
+extern void GXSetNumTexGens(u8 n);
+extern void GXSetNumTevStages(u8 n);
+extern void GXSetNumIndStages(u8 n);
+void textureFn_800528bc(void) {
+    GXSetNumTexGens(lbl_803DCD69);
+    GXSetNumTevStages(lbl_803DCD6A);
+    GXSetNumIndStages(lbl_803DCD68);
+}
+
+extern u8 *saveGameGetEnvState(void);
+extern s32 lbl_803DCE00;
+#pragma peephole off
+void timeOfDayFn_80055000(void) {
+    u8 *p = saveGameGetEnvState();
+    lbl_803DCE00 = -1;
+    p[0x40] = (u8)(p[0x40] & ~0x20);
+}
+void timeOfDayFn_80055038(void) {
+    u8 *p = saveGameGetEnvState();
+    lbl_803DCE00 = 1;
+    p[0x40] = (u8)(p[0x40] | 0x20);
+}
+#pragma peephole reset
+
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 void fn_80054F74(int *p, f32 *vec) {

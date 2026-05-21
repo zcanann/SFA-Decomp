@@ -465,5 +465,6 @@ extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
 void enemy_release(void) { if (lbl_803DDA50 != 0) { Resource_Release(lbl_803DDA50); lbl_803DDA50 = 0; } }
+void enemy_initialise(void) { if (lbl_803DDA50 == 0) lbl_803DDA50 = Resource_Acquire(0x5a, 1); }
 #pragma peephole reset
 #pragma scheduling reset

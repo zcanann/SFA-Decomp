@@ -173,3 +173,13 @@ int magiccavebottom_getExtraSize(void)
 {
   return 1;
 }
+
+extern void GameBit_Set(int eventId, int value);
+extern void Music_Trigger(s32 triggerId, s32 mode);
+#pragma scheduling off
+void magiccavebottom_free(int obj) {
+    (void)obj;
+    GameBit_Set(0xefb, 0);
+    Music_Trigger(0x2f, 0);
+}
+#pragma scheduling reset

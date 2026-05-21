@@ -124,7 +124,7 @@ void SB_FireBall_hitDetect(int *obj)
 {
     int *params = *(int **)((char *)obj + 0x54);
     int i;
-    if (*(int *)((char *)params + 0x50) == 0) return;
+    if (*(void **)((char *)params + 0x50) == NULL) return;
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
     for (i = 50; i != 0; i--) {
         ((void (*)(int *, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 167, 0, 1, -1, 0);
@@ -1890,7 +1890,7 @@ void SB_CloudBall_hitDetect(int *obj)
     int *params = *(int **)((char *)obj + 0x54);
     int *target = *(int **)((char *)params + 0x50);
 
-    if (target == NULL) return;
+    if ((void *)target == NULL) return;
     if (*(f32 *)((char *)state + 0x20) != lbl_803E58EC) return;
     if (*(s16 *)((char *)target + 0x46) == 142) {
         Sfx_PlayFromObject(obj, 54);
@@ -1921,9 +1921,9 @@ void SB_CloudBall_init(int *obj)
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
     params = *(int **)((char *)obj + 0x54);
     *(u16 *)((char *)params + 0xb2) = (u16)(*(u16 *)((char *)params + 0xb2) | 1);
-    if (state[6] == 0) {
+    if (((void **)state)[6] == NULL) {
         state[6] = objCreateLight(obj, 1);
-        if (state[6] != 0) {
+        if (((void **)state)[6] != NULL) {
             modelLightStruct_setField50(state[6], 2);
             modelLightStruct_setColorsA8AC(state[6], 0, 90, 150, 0);
             lightSetFieldBC_8001db14(state[6], 1);
@@ -1969,7 +1969,7 @@ void SB_KyteCage_init(int *obj, int *params)
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
     *(u8 *)((char *)state + 0x4) = 0;
-    if (GameBit_Get(117) == 0) {
+    if ((u32)GameBit_Get(117) == 0u) {
         getLActions(obj, obj, 88, 0, 0, 0);
         getLActions(obj, obj, 109, 0, 0, 0);
     }
@@ -2024,7 +2024,7 @@ void SB_SeqDoor_update(int *obj)
 {
     if (*(s16 *)((char *)obj + 0x46) == 371) {
         if (*(int *)((char *)obj + 0xf4) == 0) {
-            if (GameBit_Get(2635) != 0) {
+            if ((u32)GameBit_Get(2635) != 0u) {
                 ((void (*)(int, int *, int))((void **)*gObjectTriggerInterface)[18])(0, obj, -1);
                 *(int *)((char *)obj + 0xf4) = 1;
             }

@@ -412,3 +412,11 @@ int largecrate_func08(void)
 void largecrate_hitDetect(void)
 {
 }
+
+extern int *gModgfxInterface;
+extern int lbl_803DDAC8;
+extern void Resource_Release(int res);
+void largecrate_free(int obj) {
+    ((void (*)(int))((void**)*gModgfxInterface)[6])(obj);
+    Resource_Release(lbl_803DDAC8);
+}
