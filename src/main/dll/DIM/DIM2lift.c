@@ -997,6 +997,28 @@ void FUN_801bbf98(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 int fn_801BA590(int unused, int *p) { return *(s8*)((char*)p + 0x346) != 0; }
 
+extern f32 lbl_803E4BD8;
+extern void ObjAnim_SetCurrentMove(int *obj, int n, f32 v, int m);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801BB2B0(int* obj, u8* state) {
+    if ((s8)state[634] != 0) {
+        f32 fz;
+        if ((s8)state[634] != 0) {
+            ObjAnim_SetCurrentMove(obj, 1, lbl_803E4BD8, 0);
+            state[838] = 0;
+        }
+        fz = lbl_803E4BD8;
+        *(f32*)((char*)state + 0x280) = fz;
+        *(f32*)((char*)state + 0x284) = fz;
+        *(s16*)((char*)obj + 0xa2) = -1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int fn_801BA5F0(int* obj) {
     int* state = *(int**)((char*)obj + 0xb8);
     switch (*(s16*)((char*)state + 0x402)) {
