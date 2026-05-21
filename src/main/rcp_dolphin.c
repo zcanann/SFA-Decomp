@@ -2593,5 +2593,36 @@ void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2) {
     if (y2 < 0) y2 = 0;
     GXSetScissor(x, y, x2 - x, y2 - y);
 }
+
+#pragma peephole reset
+#pragma scheduling reset
+int textureCrazyPointerFollowFn_80054c30(int *p, int n) {
+    int limit = *(u16 *)((char *)p + 16);
+    int q;
+    if (n >= limit) n = limit - 1;
+    n >>= 8;
+    if (n <= 0) return (int)p;
+    q = (u32)n >> 3;
+    if (q != 0) {
+        do {
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+        } while (--q != 0);
+    }
+    n = n & 7;
+    if (n == 0) return (int)p;
+    do {
+        p = *(int **)p;
+    } while (--n != 0);
+    return (int)p;
+}
+#pragma peephole off
+#pragma scheduling off
 #pragma scheduling reset
 #pragma peephole reset
