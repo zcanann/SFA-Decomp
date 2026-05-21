@@ -2572,6 +2572,62 @@ void FUN_802026cc(undefined4 param_1,undefined4 param_2,int param_3)
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_80202720(int obj, int p)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern int *gPlayerInterface;
+  extern int lbl_80329640[];
+  extern f32 lbl_803E62A8;
+  extern f32 lbl_803E62C8;
+  extern f32 lbl_803E62F4;
+  extern f32 lbl_803E634C;
+  int sub;
+  int p4c;
+  int sub_40c;
+
+  sub = *(int *)(obj + 0xb8);
+  p4c = *(int *)(obj + 0x4c);
+  sub_40c = *(int *)(sub + 0x40c);
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 14, lbl_803E62A8, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  *(u8 *)(obj + 0xaf) |= 0x8;
+  if (*(f32 *)(obj + 0x98) > lbl_803E634C) {
+    *(u8 *)(sub_40c + 0x14) |= 0x2;
+    ObjHits_DisableObject(obj);
+  }
+  if (*(char *)(p + 0x27a) != '\0') {
+    *(f32 *)(p + 0x2a0) = lbl_803E62F4;
+    *(f32 *)(p + 0x280) = lbl_803E62A8;
+  }
+  if (*(s8 *)(p + 0x346) != 0) {
+    Sfx_PlayFromObject(obj, 490);
+    *(f32 *)(sub_40c + 4) = lbl_803E62C8;
+    ObjAnim_SetCurrentMove(obj, 8, lbl_803E62A8, 0);
+    *(u32 *)(p + 0x2d0) = 0;
+    *(u8 *)(p + 0x25f) = 0;
+    *(u8 *)(p + 0x349) = 0;
+    *(s16 *)(sub + 0x402) = 0;
+    *(u8 *)(sub + 0x404) |= *(u8 *)(p4c + 0x2b);
+    if (*(int *)(sub_40c + 0x18) != 0) {
+      ObjMsg_SendToObject(*(int *)(sub_40c + 0x18), 17, obj, 19);
+      *(int *)(sub_40c + 0x18) = 0;
+      *(s16 *)(sub_40c + 0x1c) = -1;
+    }
+    if ((*(u8 *)(sub_40c + 0x15) & 0x2) == 0) {
+      *(u8 *)(obj + 0xaf) |= 0x8;
+    }
+    *(u8 *)(sub_40c + 0x34) = 1;
+  }
+  (**(int (**)(int, int, int, int, int *))(*gPlayerInterface + 0x34))(obj, p, 7, 0, lbl_80329640);
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
