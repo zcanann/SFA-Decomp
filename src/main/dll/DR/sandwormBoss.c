@@ -3261,6 +3261,56 @@ void babycloudrunner_initialise(void) {}
 void cfprisonguard_free(void) {}
 void cfprisonguard_release(void) {}
 void cfprisonguard_initialise(void) {}
+
+extern f32 lbl_803E4268;
+extern f32 Vec_distance(void *a, void *b);
+extern int fn_800956F4(void *vec, f32 r);
+extern int objGetAnimState80A(void *obj);
+extern int *gObjectTriggerInterface;
+extern void *Obj_GetPlayerObject(void);
+
+#pragma scheduling off
+#pragma peephole off
+void cfprisonguard_update(int *obj) {
+    u8 *sub;
+    int *player;
+    u8 *def;
+    int bit44;
+    f32 dist;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    player = (int*)Obj_GetPlayerObject();
+    def = *(u8**)((char*)obj + 0x4c);
+    if (((u32)sub[0x39] >> 7) & 1u) {
+        sub[0x39] = (u8)(sub[0x39] & ~0x80);
+    }
+    if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+        *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+        ObjHits_DisableObject(obj);
+        objRemoveFromListFn_8002ce88(obj);
+        return;
+    }
+    bit44 = GameBit_Get(0x44);
+    dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
+    if (sub[0x38] == 1) {
+        fn_800956F4((char*)obj + 0xc, lbl_803E4268);
+        ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(0, obj, -1);
+        sub[0x38] = 2;
+    }
+    if (bit44 == 0) {
+        if ((s8)sub[0x37] != 4) {
+            if (dist >= (f32)(s32)*(s16*)(def + 0x1a)) {
+                if (fn_800956F4((char*)obj + 0xc, lbl_803E4268) == 0) return;
+            }
+        }
+        if (objGetAnimState80A(player) != 0x40) {
+            ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(1, obj, -1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void cfprisonuncle_free(void) {}
 void cfprisonuncle_hitDetect(void) {}
 void cfprisonuncle_release(void) {}
