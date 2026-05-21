@@ -1310,7 +1310,7 @@ void FUN_8000676c(uint param_1,uint param_2,int param_3,int param_4,int param_5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void audioStopByMask(u32 mask)
+void audioStopByMask(int mask)
 {
     if ((mask & 4) != 0) {
         Sfx_StopAllObjectSounds();
