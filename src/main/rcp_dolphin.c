@@ -2617,7 +2617,7 @@ void gxColorFn_800523d0(void) {
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 extern void GXSetTevColor(int id, int *color);
@@ -2656,9 +2656,9 @@ void gxFn_80052dc0(void) {
     GXSetCurrentMtx(0);
 }
 void gxTextureFn_80052638(int *param) {
-    int color;
-    int v1;
     int sel;
+    int v1;
+    int color;
     GXSetTevDirect(lbl_803DCD90);
     color = param[0];
     GXSetTevColor(1, &color);
@@ -2674,7 +2674,7 @@ void gxTextureFn_80052638(int *param) {
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 extern void GXSetTevKAlphaSel(int tev, int sel);
@@ -2697,7 +2697,7 @@ void textureFn_800524ec(int *param) {
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 void gxColorFn_80052764(int *param) {
@@ -2720,7 +2720,7 @@ void gxColorFn_80052764(int *param) {
     GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD6A++;
 }
 
 extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
