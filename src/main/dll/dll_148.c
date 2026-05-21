@@ -559,6 +559,68 @@ void mmp_bridge_hitDetect(void) {}
 void mmp_bridge_release(void) {}
 void mmp_bridge_initialise(void) {}
 
+extern f32 lbl_803E3778;
+extern void pressureswitchfb_updateStateMode(int obj, int p2, int stateParam);
+extern int *objFindTexture(int *obj, int a, int b);
+extern u32 GameBit_Get(int eventId);
+
+#pragma scheduling off
+#pragma peephole off
+void pressureswitchfb_init(u8* obj, u8* params) {
+    u8* sub;
+    int *tex;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(s16*)obj = (s16)(params[0x18] << 8);
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
+    obj[0xad] = (u8)(s8)params[0x19];
+    if ((s8)obj[0xad] >= *(s8*)(*(int*)(obj + 0x50) + 0x55)) {
+        obj[0xad] = 0;
+    }
+    *(f32*)(sub + 0x80) = lbl_803E3778;
+    if (*(s16*)(obj + 0x46) == 0x77b) {
+        sub[0x84] = (u8)(sub[0x84] | 0x80);
+        sub[0x84] = (u8)(sub[0x84] | 0x40);
+        sub[0x84] = (u8)(sub[0x84] | 0x20);
+        *(f32*)(sub + 0x80) = lbl_803E3778;
+    }
+    *(f32*)(sub + 0x7c) = *(f32*)(params + 0xc);
+    if (GameBit_Get(*(s16*)(params + 0x1a)) != 0) {
+        *(f32*)(obj + 0x10) = *(f32*)(sub + 0x7c) - (f32)(u32)params[0x1c];
+        sub[0] = 0x1e;
+        sub[0x84] = (u8)(sub[0x84] & ~0x20);
+        switch (*(s16*)(obj + 0x46)) {
+        case 0x19f:
+        case 0x26c:
+        case 0x274:
+        case 0x545:
+            break;
+        default:
+            sub[0x84] = (u8)(sub[0x84] | 0x10);
+        }
+        if ((sub[0x84] >> 7) & 1) {
+            tex = objFindTexture((int*)obj, 0, 0);
+            if (tex != NULL) {
+                *tex = 0x100;
+            }
+        }
+    }
+    ObjGroup_AddObject(obj, 0x53);
+    *(int*)(sub + 4) = 0;
+    *(int*)(sub + 8) = 0;
+    *(int*)(sub + 0xc) = 0;
+    *(int*)(sub + 0x10) = 0;
+    *(int*)(sub + 0x14) = 0;
+    *(int*)(sub + 0x18) = 0;
+    *(int*)(sub + 0x1c) = 0;
+    *(int*)(sub + 0x20) = 0;
+    *(int*)(sub + 0x24) = 0;
+    *(int*)(sub + 0x28) = 0;
+    *(void**)(obj + 0xbc) = (void*)&pressureswitchfb_updateStateMode;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void) { return 0x0; }
