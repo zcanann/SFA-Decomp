@@ -577,6 +577,61 @@ FUN_801bb2a0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_801BB3E8(int obj, u8 flag)
+{
+  extern int objCreateLight(int, int);
+  extern void modelLightStruct_setField50(int, int);
+  extern void lightVecFn_8001dd88(int, f32, f32, f32);
+  extern void modelLightStruct_setColorsA8AC(int, int, int, int, int);
+  extern void modelLightStruct_setColors100104(int, int, int, int, int);
+  extern void fn_8001D730(int, int, int, int, int, int, f32);
+  extern void lightDistAttenFn_8001dc38(int, f32, f32);
+  extern void lightSetField4D(int, int);
+  extern void lightFn_8001db6c(int, int, f32);
+  extern void lightSetFieldB0(int, int, int, int, int);
+  extern void fn_8001D9E0(int, int, int, int, int);
+  extern void lightFn_8001d620(int, int, int);
+  extern void lightSetField2FB(int, int);
+  extern void fn_8001D714(int, f32);
+  extern f32 lbl_803E4BBC;
+  extern f32 lbl_803E4BD8;
+  extern f32 lbl_803E4C28;
+  extern f32 lbl_803E4C2C;
+  extern f32 lbl_803E4C30;
+  int *slot = (int *)(*(int *)(*(int *)(obj + 0xb8) + 0x40c));
+
+  if (*(void **)slot != NULL) return;
+
+  slot[0] = objCreateLight(0, 1);
+  if (*(void **)slot == NULL) return;
+
+  modelLightStruct_setField50(slot[0], 2);
+  lightVecFn_8001dd88(slot[0], ((f32 *)slot)[0x16], ((f32 *)slot)[0x17], ((f32 *)slot)[0x18]);
+
+  if (flag != 0) {
+    modelLightStruct_setColorsA8AC(slot[0], 0, 255, 0, 255);
+    modelLightStruct_setColors100104(slot[0], 0, 255, 0, 255);
+    fn_8001D730(slot[0], 0, 0, 255, 0, 192, lbl_803E4C28);
+  } else {
+    modelLightStruct_setColorsA8AC(slot[0], 255, 0, 0, 255);
+    modelLightStruct_setColors100104(slot[0], 255, 0, 0, 255);
+    fn_8001D730(slot[0], 0, 255, 0, 0, 192, lbl_803E4C2C);
+  }
+
+  lightDistAttenFn_8001dc38(slot[0], lbl_803E4C2C, lbl_803E4C30);
+  lightSetField4D(slot[0], 1);
+  lightFn_8001db6c(slot[0], 1, lbl_803E4BD8);
+  lightSetFieldB0(slot[0], 64, 0, 0, 64);
+  fn_8001D9E0(slot[0], 64, 0, 0, 64);
+  lightFn_8001d620(slot[0], 2, 40);
+  lightSetField2FB(slot[0], 1);
+  fn_8001D714(slot[0], lbl_803E4BBC);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
