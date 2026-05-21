@@ -52,6 +52,7 @@ extern f32 lbl_803E36B8;
 extern f32 lbl_803E36BC;
 extern f32 lbl_803E36C0;
 extern f32 lbl_803E36C4;
+extern f32 lbl_803E2A30;
 extern f32 lbl_803E36C8;
 extern f32 lbl_803E36CC;
 extern f32 lbl_803E36D0;
@@ -366,9 +367,9 @@ void fn_80155884(int *param_9,int param_10)
   }
   else if ((*(short *)(*(int *)(param_10 + 0x29c) + 0x44) == 1) &&
           (iVar1 = (int)fn_80295CBC(*(int *)(param_10 + 0x29c)), iVar1 != 0)) {
-    fn_80154FB4((int)param_9,param_10,0x19,lbl_803E36C8);
+    fn_80154FB4((int)param_9,param_10,0x19,lbl_803E2A30);
     if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-      fn_8014D08C((int)param_9,param_10,0,lbl_803E36C8,0,0);
+      fn_8014D08C((int)param_9,param_10,0,lbl_803E2A30,0,0);
       Sfx_PlayFromObject((uint)param_9,0x252);
     }
   }
