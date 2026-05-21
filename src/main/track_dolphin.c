@@ -4242,3 +4242,44 @@ void fn_80063368(int target) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_803DCE06;
+extern int lbl_80382038[];
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803DEBCC;
+extern char gViewFrustumPlanes[];
+
+#pragma scheduling off
+#pragma peephole off
+void queueGlowRender(int* obj)
+{
+    u8 i;
+    u8 visible;
+    u8 idx;
+
+    if (lbl_803DCE06 >= 100) return;
+
+    for (i = 0; i < 5; i++) {
+        f32* plane = (f32*)(gViewFrustumPlanes + i * 0x14);
+        f32 dot = plane[0] * (*(f32*)((char*)obj + 0x10) - playerMapOffsetX)
+                + *(f32*)((char*)obj + 0x14) * plane[1]
+                + plane[2] * (*(f32*)((char*)obj + 0x18) - playerMapOffsetZ)
+                + plane[3];
+        if (lbl_803DEBCC + dot < lbl_803DEBCC) {
+            visible = 0;
+            goto check;
+        }
+    }
+    visible = 1;
+check:
+    if (visible == 0 && *(u8*)((char*)obj + 0x2f9) == 0) return;
+    if (visible == 0) {
+        *(s8*)((char*)obj + 0x2fa) = -0x10;
+    }
+    idx = lbl_803DCE06;
+    lbl_803DCE06 = (u8)(idx + 1);
+    lbl_80382038[idx] = (int)obj;
+}
+#pragma peephole reset
+#pragma scheduling reset
