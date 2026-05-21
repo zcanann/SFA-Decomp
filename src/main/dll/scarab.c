@@ -813,6 +813,56 @@ FUN_8015e488(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_8015E5DC(short *obj, u8 *p)
+{
+  extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
+  extern f32 lbl_803E2DC8;
+  extern f32 lbl_803E2DDC;
+  extern f32 lbl_803E2DE0;
+  int sub;
+  int *objs;
+  int i;
+  int count;
+
+  sub = *(int *)((char *)obj + 0xb8);
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjHits_EnableObject(obj);
+  }
+  ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+  *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6c) = 10;
+  *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6d) = 1;
+  ObjHits_RegisterActiveHitVolumeObject(obj);
+  if (*(char *)(p + 0x27a) != '\0') {
+    objs = ObjList_GetObjects(&i, &count);
+    for (; i < count; i++) {
+      int o = objs[i];
+      if (o != (int)obj && *(s16 *)(o + 0x46) == 774) {
+        (**(void (**)(int, int, int))(*(int *)(o + 0x68) + 0x24))(o, 129, 0);
+      }
+    }
+    if (randomGetRange(0, 1) != 0) {
+      if (*(char *)(p + 0x27a) != '\0') {
+        ObjAnim_SetCurrentMove(obj, 6, lbl_803E2DC8, 0);
+        *(s8 *)(p + 0x346) = 0;
+      }
+    } else {
+      if (*(char *)(p + 0x27a) != '\0') {
+        ObjAnim_SetCurrentMove(obj, 7, lbl_803E2DC8, 0);
+        *(s8 *)(p + 0x346) = 0;
+      }
+    }
+    *(s8 *)(p + 0x34d) = 1;
+    *(f32 *)(p + 0x2a0) = lbl_803E2DDC + (f32)(u32)*(u8 *)(sub + 0x406) / lbl_803E2DE0;
+  }
+  *(f32 *)(p + 0x280) = lbl_803E2DC8;
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
