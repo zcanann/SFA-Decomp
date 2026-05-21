@@ -2191,6 +2191,18 @@ void imspacethruster_free(int obj) {
     if (inner[1] != 0) mm_free(inner[1]);
     if (inner[2] != 0) mm_free(inner[2]);
 }
+
+void dimlogfire_free(int *obj, int mode) {
+    void **inner = *(void ***)((char *)obj + 0xb8);
+    (*(void (***)(void*))gExpgfxInterface)[6](inner);
+    if (inner[1] != NULL && mode == 0) {
+        Obj_FreeObject(inner[1]);
+    }
+    ObjGroup_RemoveObject(obj, 0x31);
+    if (inner[0] != NULL) {
+        ModelLightStruct_free(inner[0]);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
