@@ -3742,11 +3742,11 @@ int *fn_8019B3F8(int *obj, int p2, int *outVec, int p4) {
         local[1] = 21;
     }
 
-    found = (*(int (***)(int *, int, int, f32, f32, f32))gRomCurveInterface)[5](
-        local, 2, p2,
+    found = (*(int (***)(f32, f32, f32, int *, int, int))gRomCurveInterface)[5](
         *(f32 *)((char *)obj + 0xc),
         *(f32 *)((char *)obj + 0x10),
-        *(f32 *)((char *)obj + 0x14));
+        *(f32 *)((char *)obj + 0x14),
+        local, 2, p2);
 
     if (found > -1) {
         result = (int *)(*(int *(***)(void))gRomCurveInterface)[7]();
