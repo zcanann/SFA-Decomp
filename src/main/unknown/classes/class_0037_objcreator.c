@@ -94,7 +94,7 @@
  *   slot 05: 0x80219C6C drcreator_hitDetect
  *   slot 06: 0x80219C68 drcreator_render
  *   slot 07: 0x80219C64 drcreator_free
- *   slot 08: 0x80219C5C drcreator_func08
+ *   slot 08: 0x80219C5C drcreator_getObjectTypeId
  *   slot 09: 0x80219C54 drcreator_getExtraSize
  */
 

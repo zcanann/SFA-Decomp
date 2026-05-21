@@ -44,7 +44,7 @@
  * - slot 05: 0x802151EC ktrex_hitDetect ref=hitDetect
  * - slot 06: 0x80214F20 ktrex_render ref=render
  * - slot 07: 0x80214E34 ktrex_free ref=free
- * - slot 08: 0x80214E2C ktrex_func08 stub=const 73
+ * - slot 08: 0x80214E2C ktrex_getObjectTypeId stub=const 73
  * - slot 09: 0x80214E24 ktrex_getExtraSize stub=const 1444 ref=getExtraSize (stub)
  * - slot 10: 0x80214E14 ktrex_setScale ref=setScale
  * - slot 11: 0x80214E10 ktrex_func0B stub=blr

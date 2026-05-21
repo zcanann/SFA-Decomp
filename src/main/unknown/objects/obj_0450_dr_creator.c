@@ -52,7 +52,7 @@
  * - slot 05: 0x80219C6C drcreator_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80219C68 drcreator_render stub=blr ref=render (stub)
  * - slot 07: 0x80219C64 drcreator_free stub=blr ref=free (stub)
- * - slot 08: 0x80219C5C drcreator_func08 stub=const 0
+ * - slot 08: 0x80219C5C drcreator_getObjectTypeId stub=const 0
  * - slot 09: 0x80219C54 drcreator_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 

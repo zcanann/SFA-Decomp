@@ -23,6 +23,6 @@
 // - 5: drearthcal_hitDetect (0x80221450)
 // - 6: drearthcal_render (0x8022144C)
 // - 7: drearthcal_free (0x80221448)
-// - 8: drearthcal_func08 (0x80221440)
+// - 8: drearthcal_getObjectTypeId (0x80221440)
 // - 9: drearthcal_getExtraSize (0x80221438)
 // - 10: drearthcal_setScale (0x80221430)

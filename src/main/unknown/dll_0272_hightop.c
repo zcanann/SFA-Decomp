@@ -15,7 +15,7 @@
 // - 5: hightop_hitDetect (0x8021EB18)
 // - 6: hightop_render (0x8021E9AC)
 // - 7: hightop_free (0x8021E95C)
-// - 8: hightop_func08 (0x8021E954)
+// - 8: hightop_getObjectTypeId (0x8021E954)
 // - 9: hightop_getExtraSize (0x8021E94C)
 // - 10: hightop_setScale (0x8021E944)
 // - 11: hightop_func0B (0x8021E93C)

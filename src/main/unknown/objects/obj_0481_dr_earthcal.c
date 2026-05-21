@@ -57,7 +57,7 @@
  * - slot 05: 0x80221450 drearthcal_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8022144C drearthcal_render stub=blr ref=render (stub)
  * - slot 07: 0x80221448 drearthcal_free stub=blr ref=free (stub)
- * - slot 08: 0x80221440 drearthcal_func08 stub=const 0
+ * - slot 08: 0x80221440 drearthcal_getObjectTypeId stub=const 0
  * - slot 09: 0x80221438 drearthcal_getExtraSize stub=const 1 ref=getExtraSize (stub)
  * - slot 10: 0x80221430 drearthcal_setScale stub=const 1 ref=setScale (stub)
  */

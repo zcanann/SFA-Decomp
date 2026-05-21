@@ -22,5 +22,5 @@
 // - 5: drlightbea_hitDetect (0x80220A68)
 // - 6: drlightbea_render (0x80220858)
 // - 7: drlightbea_free (0x80220818)
-// - 8: drlightbea_func08 (0x80220810)
+// - 8: drlightbea_getObjectTypeId (0x80220810)
 // - 9: drlightbea_getExtraSize (0x80220808)

@@ -20,7 +20,7 @@
  * - slot 05: 0x80215A80 ktrexfloorswitch_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80215A50 ktrexfloorswitch_render ref=render
  * - slot 07: 0x80215A4C ktrexfloorswitch_free stub=blr ref=free (stub)
- * - slot 08: 0x80215A44 ktrexfloorswitch_func08 stub=const 0
+ * - slot 08: 0x80215A44 ktrexfloorswitch_getObjectTypeId stub=const 0
  * - slot 09: 0x80215A3C ktrexfloorswitch_getExtraSize stub=const 20 ref=getExtraSize (stub)
  *
  * Reference-only hints:

@@ -131,7 +131,7 @@ undefined4 firepipe_stateCallback(FirePipeObject *obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-int firepipe_func08(void)
+int firepipe_getObjectTypeId(void)
 {
     return 1;
 }
@@ -335,6 +335,6 @@ ObjectDescriptor gFirePipeObjDescriptor = {
     0,
     (ObjectDescriptorCallback)firepipe_render,
     (ObjectDescriptorCallback)firepipe_free,
-    (ObjectDescriptorCallback)firepipe_func08,
+    (ObjectDescriptorCallback)firepipe_getObjectTypeId,
     firepipe_getExtraSize,
 };

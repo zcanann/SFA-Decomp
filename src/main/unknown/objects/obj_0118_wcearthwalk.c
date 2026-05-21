@@ -59,7 +59,7 @@
  * - slot 05: 0x80223184 earthwalker_hitDetect ref=hitDetect
  * - slot 06: 0x8022312C earthwalker_render ref=render
  * - slot 07: 0x80223128 earthwalker_free stub=blr ref=free (stub)
- * - slot 08: 0x80223120 earthwalker_func08 stub=const 0
+ * - slot 08: 0x80223120 earthwalker_getObjectTypeId stub=const 0
  * - slot 09: 0x80223118 earthwalker_getExtraSize stub=const 1632 ref=getExtraSize (stub)
  */
 

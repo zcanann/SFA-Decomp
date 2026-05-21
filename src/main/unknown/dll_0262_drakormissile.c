@@ -20,7 +20,7 @@
  * - slot 05: 0x802185C8 drakormissile_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80218474 drakormissile_render ref=render
  * - slot 07: 0x8021841C drakormissile_free ref=free
- * - slot 08: 0x80218414 drakormissile_func08 stub=const 2
+ * - slot 08: 0x80218414 drakormissile_getObjectTypeId stub=const 2
  * - slot 09: 0x8021840C drakormissile_getExtraSize stub=const 56 ref=getExtraSize (stub)
  * - slot 10: 0x802183F4 drakormissile_setScale ref=setScale
  * - slot 11: 0x802180C8 drakormissile_func0B ref=slot0B

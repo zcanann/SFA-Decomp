@@ -57,7 +57,7 @@
  * - slot 05: 0x80221740 barrelgener_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80221710 barrelgener_render ref=render
  * - slot 07: 0x802216EC barrelgener_free ref=free
- * - slot 08: 0x802216E4 barrelgener_func08 stub=const 0
+ * - slot 08: 0x802216E4 barrelgener_getObjectTypeId stub=const 0
  * - slot 09: 0x802216DC barrelgener_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 

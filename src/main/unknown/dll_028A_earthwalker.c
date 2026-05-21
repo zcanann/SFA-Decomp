@@ -26,5 +26,5 @@
 // - 5: earthwalker_hitDetect (0x80223184)
 // - 6: earthwalker_render (0x8022312C)
 // - 7: earthwalker_free (0x80223128)
-// - 8: earthwalker_func08 (0x80223120)
+// - 8: earthwalker_getObjectTypeId (0x80223120)
 // - 9: earthwalker_getExtraSize (0x80223118)

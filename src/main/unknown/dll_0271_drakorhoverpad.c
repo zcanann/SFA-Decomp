@@ -15,7 +15,7 @@
 // - 5: drakorhoverpad_hitDetect (0x8021C83C)
 // - 6: drakorhoverpad_render (0x8021C6E0)
 // - 7: drakorhoverpad_free (0x8021C6A4)
-// - 8: drakorhoverpad_func08 (0x8021C69C)
+// - 8: drakorhoverpad_getObjectTypeId (0x8021C69C)
 // - 9: drakorhoverpad_getExtraSize (0x8021C694)
 // - 10: drakorhoverpad_setScale (0x8021B5C8)
 // - 11: drakorhoverpad_func0B (0x8021B5C0)

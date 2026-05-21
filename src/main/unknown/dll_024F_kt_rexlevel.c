@@ -20,7 +20,7 @@
  * - slot 05: 0x80211CD4 ktrexlevel_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80211CA4 ktrexlevel_render ref=render
  * - slot 07: 0x80211C34 ktrexlevel_free ref=free
- * - slot 08: 0x80211C2C ktrexlevel_func08 stub=const 0
+ * - slot 08: 0x80211C2C ktrexlevel_getObjectTypeId stub=const 0
  * - slot 09: 0x80211C24 ktrexlevel_getExtraSize stub=const 4 ref=getExtraSize (stub)
  *
  * Reference-only hints:

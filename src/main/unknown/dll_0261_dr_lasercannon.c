@@ -20,7 +20,7 @@
  * - slot 05: 0x80217444 drlasercannon_hitDetect ref=hitDetect
  * - slot 06: 0x802173D0 drlasercannon_render ref=render
  * - slot 07: 0x80217364 drlasercannon_free ref=free
- * - slot 08: 0x8021735C drlasercannon_func08 stub=const 0
+ * - slot 08: 0x8021735C drlasercannon_getObjectTypeId stub=const 0
  * - slot 09: 0x80217354 drlasercannon_getExtraSize stub=const 428 ref=getExtraSize (stub)
  *
  * Reference-only hints:

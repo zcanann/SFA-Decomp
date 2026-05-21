@@ -120,7 +120,7 @@
  *   slot 05: 0x80211CD4 ktrexlevel_hitDetect
  *   slot 06: 0x80211CA4 ktrexlevel_render
  *   slot 07: 0x80211C34 ktrexlevel_free
- *   slot 08: 0x80211C2C ktrexlevel_func08
+ *   slot 08: 0x80211C2C ktrexlevel_getObjectTypeId
  *   slot 09: 0x80211C24 ktrexlevel_getExtraSize
  * - DLL 0x025D: gCrCloudRaceObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80210BE4 crcloudrace_initialise

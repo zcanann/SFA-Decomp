@@ -24,5 +24,5 @@
 // - 5: barrelgener_hitDetect (0x80221740)
 // - 6: barrelgener_render (0x80221710)
 // - 7: barrelgener_free (0x802216EC)
-// - 8: barrelgener_func08 (0x802216E4)
+// - 8: barrelgener_getObjectTypeId (0x802216E4)
 // - 9: barrelgener_getExtraSize (0x802216DC)

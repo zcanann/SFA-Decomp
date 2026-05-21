@@ -60,7 +60,7 @@
  * - slot 04: 0x80220288 firepipe_update ref=update
  * - slot 06: 0x802201E0 firepipe_render ref=render
  * - slot 07: 0x80220164 firepipe_free ref=free
- * - slot 08: 0x8022015C firepipe_func08 stub=const 1
+ * - slot 08: 0x8022015C firepipe_getObjectTypeId stub=const 1
  * - slot 09: 0x80220130 firepipe_getExtraSize stub=const 68 ref=getExtraSize (stub)
  */
 

@@ -1898,7 +1898,7 @@
  *   slot 05: 0x80216794 ktlazerwall_hitDetect
  *   slot 06: 0x80216670 ktlazerwall_render
  *   slot 07: 0x80216630 ktlazerwall_free
- *   slot 08: 0x80216628 ktlazerwall_func08
+ *   slot 08: 0x80216628 ktlazerwall_getObjectTypeId
  *   slot 09: 0x80216620 ktlazerwall_getExtraSize
  * - DLL 0x0253: gKtLazerlightObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80216D14 ktlazerlight_initialise
@@ -1908,7 +1908,7 @@
  *   slot 05: 0x80216B8C ktlazerlight_hitDetect
  *   slot 06: 0x80216B88 ktlazerlight_render
  *   slot 07: 0x80216B58 ktlazerlight_free
- *   slot 08: 0x80216B50 ktlazerlight_func08
+ *   slot 08: 0x80216B50 ktlazerlight_getObjectTypeId
  *   slot 09: 0x80216B48 ktlazerlight_getExtraSize
  * - DLL 0x0256: gDIMSnowHorn1ObjDescriptor (slots=24, mask=110111111111111111111111)
  *   slot 00: 0x802BBFF0 DIMSnowHorn1_initialise
@@ -1988,7 +1988,7 @@
  *   slot 05: 0x80217444 drlasercannon_hitDetect
  *   slot 06: 0x802173D0 drlasercannon_render
  *   slot 07: 0x80217364 drlasercannon_free
- *   slot 08: 0x8021735C drlasercannon_func08
+ *   slot 08: 0x8021735C drlasercannon_getObjectTypeId
  *   slot 09: 0x80217354 drlasercannon_getExtraSize
  * - DLL 0x0263: gGmMazeWellObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x80218E90 gmmazewell_init
@@ -2004,7 +2004,7 @@
  *   slot 05: 0x802195B8 kytesmum_hitDetect
  *   slot 06: 0x80219588 kytesmum_render
  *   slot 07: 0x80219550 kytesmum_free
- *   slot 08: 0x80219548 kytesmum_func08
+ *   slot 08: 0x80219548 kytesmum_getObjectTypeId
  *   slot 09: 0x80219540 kytesmum_getExtraSize
  * - DLL 0x0268: gDrCageControlObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8021A428 explodeplan_initialise
@@ -2014,7 +2014,7 @@
  *   slot 05: 0x8021A28C explodeplan_hitDetect
  *   slot 06: 0x8021A25C explodeplan_render
  *   slot 07: 0x8021A258 explodeplan_free
- *   slot 08: 0x8021A250 explodeplan_func08
+ *   slot 08: 0x8021A250 explodeplan_getObjectTypeId
  *   slot 09: 0x8021A248 explodeplan_getExtraSize
  * - DLL 0x0269: gExplodePlanObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8021A138 cagecontrol_initialise
@@ -2024,7 +2024,7 @@
  *   slot 05: 0x8021A04C cagecontrol_hitDetect
  *   slot 06: 0x8021A01C cagecontrol_render
  *   slot 07: 0x8021A018 cagecontrol_free
- *   slot 08: 0x8021A010 cagecontrol_func08
+ *   slot 08: 0x8021A010 cagecontrol_getObjectTypeId
  *   slot 09: 0x8021A008 cagecontrol_getExtraSize
  * - DLL 0x026B: gDrChimmeyObjDescriptor (slots=10, mask=0001101001)
  *   slot 03: 0x8021A5D8 drchimmey_init
@@ -2039,7 +2039,7 @@
  *   slot 05: 0x8021A80C drcagewith_hitDetect
  *   slot 06: 0x8021A714 drcagewith_render
  *   slot 07: 0x8021A694 drcagewith_free
- *   slot 08: 0x8021A68C drcagewith_func08
+ *   slot 08: 0x8021A68C drcagewith_getObjectTypeId
  *   slot 09: 0x8021A684 drcagewith_getExtraSize
  * - DLL 0x026E: gDrShackleObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x8021B354 drshackle_initialise
@@ -2049,7 +2049,7 @@
  *   slot 05: 0x8021B0BC drshackle_hitDetect
  *   slot 06: 0x8021B008 drshackle_render
  *   slot 07: 0x8021AFE4 drshackle_free
- *   slot 08: 0x8021AFDC drshackle_func08
+ *   slot 08: 0x8021AFDC drshackle_getObjectTypeId
  *   slot 09: 0x8021AFD4 drshackle_getExtraSize
  * - DLL 0x026F: gDrGeneratorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8021F8C8 drgenerator_initialise
@@ -2059,7 +2059,7 @@
  *   slot 05: 0x8021F440 drgenerator_hitDetect
  *   slot 06: 0x8021F410 drgenerator_render
  *   slot 07: 0x8021F3EC drgenerator_free
- *   slot 08: 0x8021F3E4 drgenerator_func08
+ *   slot 08: 0x8021F3E4 drgenerator_getObjectTypeId
  *   slot 09: 0x8021F3DC drgenerator_getExtraSize
  * - DLL 0x0271: gDrakorHoverPadObjDescriptor (slots=24, mask=110111111111111111111111)
  *   slot 00: 0x8021CF5C drakorhoverpad_initialise
@@ -2069,7 +2069,7 @@
  *   slot 05: 0x8021C83C drakorhoverpad_hitDetect
  *   slot 06: 0x8021C6E0 drakorhoverpad_render
  *   slot 07: 0x8021C6A4 drakorhoverpad_free
- *   slot 08: 0x8021C69C drakorhoverpad_func08
+ *   slot 08: 0x8021C69C drakorhoverpad_getObjectTypeId
  *   slot 09: 0x8021C694 drakorhoverpad_getExtraSize
  * - DLL 0x0272: gHighTopObjDescriptor (slots=24, mask=110111111111111111111111)
  *   slot 00: 0x8021F2B0 hightop_initialise
@@ -2079,14 +2079,14 @@
  *   slot 05: 0x8021EB18 hightop_hitDetect
  *   slot 06: 0x8021E9AC hightop_render
  *   slot 07: 0x8021E95C hightop_free
- *   slot 08: 0x8021E954 hightop_func08
+ *   slot 08: 0x8021E954 hightop_getObjectTypeId
  *   slot 09: 0x8021E94C hightop_getExtraSize
  * - DLL 0x0273: gFirePipeObjDescriptor (slots=10, mask=0001101111)
  *   slot 03: 0x802202B8 firepipe_init
  *   slot 04: 0x80220288 firepipe_update
  *   slot 06: 0x802201E0 firepipe_render
  *   slot 07: 0x80220164 firepipe_free
- *   slot 08: 0x8022015C firepipe_func08
+ *   slot 08: 0x8022015C firepipe_getObjectTypeId
  *   slot 09: 0x80220130 firepipe_getExtraSize
  * - DLL 0x0279: gDrEnergyDiscObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80220804 drenergydisc_initialise
@@ -2096,7 +2096,7 @@
  *   slot 05: 0x80220620 drenergydisc_hitDetect
  *   slot 06: 0x8022061C drenergydisc_render
  *   slot 07: 0x80220618 drenergydisc_free
- *   slot 08: 0x80220610 drenergydisc_func08
+ *   slot 08: 0x80220610 drenergydisc_getObjectTypeId
  *   slot 09: 0x80220608 drenergydisc_getExtraSize
  * - DLL 0x027B: lbl_8032AD00 (slots=1, mask=0)
  * - DLL 0x027C: gDrLightBeaObjDescriptor (slots=10, mask=1101111111)
@@ -2107,7 +2107,7 @@
  *   slot 05: 0x80220A68 drlightbea_hitDetect
  *   slot 06: 0x80220858 drlightbea_render
  *   slot 07: 0x80220818 drlightbea_free
- *   slot 08: 0x80220810 drlightbea_func08
+ *   slot 08: 0x80220810 drlightbea_getObjectTypeId
  *   slot 09: 0x80220808 drlightbea_getExtraSize
  * - DLL 0x027E: gDrMusicContObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80221174 drmusiccont_initialise
@@ -2117,7 +2117,7 @@
  *   slot 05: 0x80220B30 drmusiccont_hitDetect
  *   slot 06: 0x80220B00 drmusiccont_render
  *   slot 07: 0x80220AE0 drmusiccont_free
- *   slot 08: 0x80220AD8 drmusiccont_func08
+ *   slot 08: 0x80220AD8 drmusiccont_getObjectTypeId
  *   slot 09: 0x80220AD0 drmusiccont_getExtraSize
  * - DLL 0x0280: gDrCloudPerObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x8022142C drcloudper_initialise
@@ -2127,7 +2127,7 @@
  *   slot 05: 0x802212CC drcloudper_hitDetect
  *   slot 06: 0x802212C8 drcloudper_render
  *   slot 07: 0x8022128C drcloudper_free
- *   slot 08: 0x80221284 drcloudper_func08
+ *   slot 08: 0x80221284 drcloudper_getObjectTypeId
  *   slot 09: 0x8022127C drcloudper_getExtraSize
  * - DLL 0x0281: gDrEarthCalObjDescriptor (slots=11, mask=11011111111)
  *   slot 00: 0x8022166C drearthcal_initialise
@@ -2137,7 +2137,7 @@
  *   slot 05: 0x80221450 drearthcal_hitDetect
  *   slot 06: 0x8022144C drearthcal_render
  *   slot 07: 0x80221448 drearthcal_free
- *   slot 08: 0x80221440 drearthcal_func08
+ *   slot 08: 0x80221440 drearthcal_getObjectTypeId
  *   slot 09: 0x80221438 drearthcal_getExtraSize
  * - DLL 0x0282: gBarrelGenerObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80221974 barrelgener_initialise
@@ -2147,7 +2147,7 @@
  *   slot 05: 0x80221740 barrelgener_hitDetect
  *   slot 06: 0x80221710 barrelgener_render
  *   slot 07: 0x802216EC barrelgener_free
- *   slot 08: 0x802216E4 barrelgener_func08
+ *   slot 08: 0x802216E4 barrelgener_getObjectTypeId
  *   slot 09: 0x802216DC barrelgener_getExtraSize
  * - DLL 0x0283: gDrBarrelGrObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80223000 drbarrelgr_initialise
@@ -2157,7 +2157,7 @@
  *   slot 05: 0x802229C8 drbarrelgr_hitDetect
  *   slot 06: 0x80222844 drbarrelgr_render
  *   slot 07: 0x802227FC drbarrelgr_free
- *   slot 08: 0x802227F4 drbarrelgr_func08
+ *   slot 08: 0x802227F4 drbarrelgr_getObjectTypeId
  *   slot 09: 0x802227EC drbarrelgr_getExtraSize
  * - DLL 0x0287: gSPScarabObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801E9324 spscarab_initialise
@@ -2197,7 +2197,7 @@
  *   slot 05: 0x80223184 earthwalker_hitDetect
  *   slot 06: 0x8022312C earthwalker_render
  *   slot 07: 0x80223128 earthwalker_free
- *   slot 08: 0x80223120 earthwalker_func08
+ *   slot 08: 0x80223120 earthwalker_getObjectTypeId
  *   slot 09: 0x80223118 earthwalker_getExtraSize
  * - DLL 0x028C: gWCBouncyCraObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802242A4 wcbouncycra_initialise

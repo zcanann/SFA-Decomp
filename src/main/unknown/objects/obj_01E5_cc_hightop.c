@@ -58,7 +58,7 @@
  * - slot 05: 0x8021EB18 hightop_hitDetect ref=hitDetect
  * - slot 06: 0x8021E9AC hightop_render ref=render
  * - slot 07: 0x8021E95C hightop_free ref=free
- * - slot 08: 0x8021E954 hightop_func08 stub=const 67
+ * - slot 08: 0x8021E954 hightop_getObjectTypeId stub=const 67
  * - slot 09: 0x8021E94C hightop_getExtraSize stub=const 3148 ref=getExtraSize (stub)
  * - slot 10: 0x8021E944 hightop_setScale stub=const 0 ref=setScale (stub)
  * - slot 11: 0x8021E93C hightop_func0B stub=const 1

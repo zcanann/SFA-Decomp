@@ -475,7 +475,7 @@
  *   slot 05: 0x802185C8 drakormissile_hitDetect
  *   slot 06: 0x80218474 drakormissile_render
  *   slot 07: 0x8021841C drakormissile_free
- *   slot 08: 0x80218414 drakormissile_func08
+ *   slot 08: 0x80218414 drakormissile_getObjectTypeId
  *   slot 09: 0x8021840C drakormissile_getExtraSize
  * - DLL 0x029B: gArwingAndrossStuffObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8022ECDC arwingandrossstuff_initialise

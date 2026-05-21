@@ -20,7 +20,7 @@
  * - slot 05: 0x80216D64 ktfallingrocks_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80216D58 ktfallingrocks_render ref=render
  * - slot 07: 0x80216D28 ktfallingrocks_free ref=free
- * - slot 08: 0x80216D20 ktfallingrocks_func08 stub=const 0
+ * - slot 08: 0x80216D20 ktfallingrocks_getObjectTypeId stub=const 0
  * - slot 09: 0x80216D18 ktfallingrocks_getExtraSize stub=const 0 ref=getExtraSize (stub)
  *
  * Reference-only hints:

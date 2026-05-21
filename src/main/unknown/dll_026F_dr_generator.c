@@ -16,5 +16,5 @@
 // - 5: drgenerator_hitDetect (0x8021F440)
 // - 6: drgenerator_render (0x8021F410)
 // - 7: drgenerator_free (0x8021F3EC)
-// - 8: drgenerator_func08 (0x8021F3E4)
+// - 8: drgenerator_getObjectTypeId (0x8021F3E4)
 // - 9: drgenerator_getExtraSize (0x8021F3DC)

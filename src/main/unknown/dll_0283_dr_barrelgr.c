@@ -25,5 +25,5 @@
 // - 5: drbarrelgr_hitDetect (0x802229C8)
 // - 6: drbarrelgr_render (0x80222844)
 // - 7: drbarrelgr_free (0x802227FC)
-// - 8: drbarrelgr_func08 (0x802227F4)
+// - 8: drbarrelgr_getObjectTypeId (0x802227F4)
 // - 9: drbarrelgr_getExtraSize (0x802227EC)

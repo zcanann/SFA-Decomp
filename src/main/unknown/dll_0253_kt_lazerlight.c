@@ -20,7 +20,7 @@
  * - slot 05: 0x80216B8C ktlazerlight_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80216B88 ktlazerlight_render stub=blr ref=render (stub)
  * - slot 07: 0x80216B58 ktlazerlight_free ref=free
- * - slot 08: 0x80216B50 ktlazerlight_func08 stub=const 0
+ * - slot 08: 0x80216B50 ktlazerlight_getObjectTypeId stub=const 0
  * - slot 09: 0x80216B48 ktlazerlight_getExtraSize stub=const 20 ref=getExtraSize (stub)
  *
  * Reference-only hints:

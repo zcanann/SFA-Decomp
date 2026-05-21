@@ -57,7 +57,7 @@
  * - slot 05: 0x8021F440 drgenerator_hitDetect ref=hitDetect
  * - slot 06: 0x8021F410 drgenerator_render ref=render
  * - slot 07: 0x8021F3EC drgenerator_free ref=free
- * - slot 08: 0x8021F3E4 drgenerator_func08 stub=const 0
+ * - slot 08: 0x8021F3E4 drgenerator_getObjectTypeId stub=const 0
  * - slot 09: 0x8021F3DC drgenerator_getExtraSize stub=const 412 ref=getExtraSize (stub)
  */
 

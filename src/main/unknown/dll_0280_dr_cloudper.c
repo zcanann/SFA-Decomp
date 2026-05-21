@@ -23,7 +23,7 @@
 // - 5: drcloudper_hitDetect (0x802212CC)
 // - 6: drcloudper_render (0x802212C8)
 // - 7: drcloudper_free (0x8022128C)
-// - 8: drcloudper_func08 (0x80221284)
+// - 8: drcloudper_getObjectTypeId (0x80221284)
 // - 9: drcloudper_getExtraSize (0x8022127C)
 // - 10: drcloudper_setScale (0x80221178)
 // - 11: drcloudper_selectActiveCloud (0x8022121C)

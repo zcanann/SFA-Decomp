@@ -57,7 +57,7 @@
  * - slot 05: 0x8021B0BC drshackle_hitDetect ref=hitDetect
  * - slot 06: 0x8021B008 drshackle_render ref=render
  * - slot 07: 0x8021AFE4 drshackle_free ref=free
- * - slot 08: 0x8021AFDC drshackle_func08 stub=const 0
+ * - slot 08: 0x8021AFDC drshackle_getObjectTypeId stub=const 0
  * - slot 09: 0x8021AFD4 drshackle_getExtraSize stub=const 32 ref=getExtraSize (stub)
  * - slot 10: 0x8021AD84 drshackle_setScale ref=setScale
  * - slot 11: 0x8021AD74 drshackle_func0B

@@ -58,7 +58,7 @@
  * - slot 05: 0x8021A80C drcagewith_hitDetect ref=hitDetect
  * - slot 06: 0x8021A714 drcagewith_render ref=render
  * - slot 07: 0x8021A694 drcagewith_free ref=free
- * - slot 08: 0x8021A68C drcagewith_func08 stub=const 0
+ * - slot 08: 0x8021A68C drcagewith_getObjectTypeId stub=const 0
  * - slot 09: 0x8021A684 drcagewith_getExtraSize stub=const 52 ref=getExtraSize (stub)
  * - slot 10: 0x8021A62C drcagewith_setScale ref=setScale
  */

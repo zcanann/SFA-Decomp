@@ -57,7 +57,7 @@
  * - slot 05: 0x8021A28C explodeplan_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8021A25C explodeplan_render ref=render
  * - slot 07: 0x8021A258 explodeplan_free stub=blr ref=free (stub)
- * - slot 08: 0x8021A250 explodeplan_func08 stub=const 0
+ * - slot 08: 0x8021A250 explodeplan_getObjectTypeId stub=const 0
  * - slot 09: 0x8021A248 explodeplan_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

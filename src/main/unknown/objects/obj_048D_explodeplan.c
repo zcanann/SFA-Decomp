@@ -58,7 +58,7 @@
  * - slot 05: 0x8021A04C cagecontrol_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8021A01C cagecontrol_render ref=render
  * - slot 07: 0x8021A018 cagecontrol_free stub=blr ref=free (stub)
- * - slot 08: 0x8021A010 cagecontrol_func08 stub=const 0
+ * - slot 08: 0x8021A010 cagecontrol_getObjectTypeId stub=const 0
  * - slot 09: 0x8021A008 cagecontrol_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

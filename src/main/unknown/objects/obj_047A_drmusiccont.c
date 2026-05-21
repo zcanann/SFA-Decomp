@@ -56,7 +56,7 @@
  * - slot 05: 0x80220B30 drmusiccont_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80220B00 drmusiccont_render ref=render
  * - slot 07: 0x80220AE0 drmusiccont_free ref=free
- * - slot 08: 0x80220AD8 drmusiccont_func08 stub=const 0
+ * - slot 08: 0x80220AD8 drmusiccont_getObjectTypeId stub=const 0
  * - slot 09: 0x80220AD0 drmusiccont_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

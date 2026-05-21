@@ -25,5 +25,5 @@
 // - 5: drmusiccont_hitDetect (0x80220B30)
 // - 6: drmusiccont_render (0x80220B00)
 // - 7: drmusiccont_free (0x80220AE0)
-// - 8: drmusiccont_func08 (0x80220AD8)
+// - 8: drmusiccont_getObjectTypeId (0x80220AD8)
 // - 9: drmusiccont_getExtraSize (0x80220AD0)

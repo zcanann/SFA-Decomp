@@ -27,7 +27,7 @@
  *   slot 05: 0x802151EC ktrex_hitDetect
  *   slot 06: 0x80214F20 ktrex_render
  *   slot 07: 0x80214E34 ktrex_free
- *   slot 08: 0x80214E2C ktrex_func08
+ *   slot 08: 0x80214E2C ktrex_getObjectTypeId
  *   slot 09: 0x80214E24 ktrex_getExtraSize
  */
 

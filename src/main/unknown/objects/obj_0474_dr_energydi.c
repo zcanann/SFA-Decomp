@@ -56,7 +56,7 @@
  * - slot 05: 0x80220620 drenergydisc_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8022061C drenergydisc_render stub=blr ref=render (stub)
  * - slot 07: 0x80220618 drenergydisc_free stub=blr ref=free (stub)
- * - slot 08: 0x80220610 drenergydisc_func08 stub=const 0
+ * - slot 08: 0x80220610 drenergydisc_getObjectTypeId stub=const 0
  * - slot 09: 0x80220608 drenergydisc_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 

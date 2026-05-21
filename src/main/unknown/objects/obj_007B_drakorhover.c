@@ -57,7 +57,7 @@
  * - slot 05: 0x8021C83C drakorhoverpad_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8021C6E0 drakorhoverpad_render ref=render
  * - slot 07: 0x8021C6A4 drakorhoverpad_free ref=free
- * - slot 08: 0x8021C69C drakorhoverpad_func08 stub=const 0
+ * - slot 08: 0x8021C69C drakorhoverpad_getObjectTypeId stub=const 0
  * - slot 09: 0x8021C694 drakorhoverpad_getExtraSize stub=const 380 ref=getExtraSize (stub)
  * - slot 10: 0x8021B5C8 drakorhoverpad_setScale ref=setScale
  * - slot 11: 0x8021B5C0 drakorhoverpad_func0B stub=const 1

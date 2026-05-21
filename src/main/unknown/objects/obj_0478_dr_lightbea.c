@@ -56,7 +56,7 @@
  * - slot 05: 0x80220A68 drlightbea_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80220858 drlightbea_render ref=render
  * - slot 07: 0x80220818 drlightbea_free ref=free
- * - slot 08: 0x80220810 drlightbea_func08 stub=const 0
+ * - slot 08: 0x80220810 drlightbea_getObjectTypeId stub=const 0
  * - slot 09: 0x80220808 drlightbea_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

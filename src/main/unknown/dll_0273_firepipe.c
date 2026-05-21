@@ -27,5 +27,5 @@
 // - 4: firepipe_update (0x80220288)
 // - 6: firepipe_render (0x802201E0)
 // - 7: firepipe_free (0x80220164)
-// - 8: firepipe_func08 (0x8022015C)
+// - 8: firepipe_getObjectTypeId (0x8022015C)
 // - 9: firepipe_getExtraSize (0x80220130)

@@ -21,5 +21,5 @@
 // - 5: drenergydisc_hitDetect (0x80220620)
 // - 6: drenergydisc_render (0x8022061C)
 // - 7: drenergydisc_free (0x80220618)
-// - 8: drenergydisc_func08 (0x80220610)
+// - 8: drenergydisc_getObjectTypeId (0x80220610)
 // - 9: drenergydisc_getExtraSize (0x80220608)

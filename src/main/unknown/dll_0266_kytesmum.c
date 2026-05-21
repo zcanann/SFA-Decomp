@@ -20,7 +20,7 @@
  * - slot 05: 0x802195B8 kytesmum_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80219588 kytesmum_render ref=render
  * - slot 07: 0x80219550 kytesmum_free ref=free
- * - slot 08: 0x80219548 kytesmum_func08 stub=const 67
+ * - slot 08: 0x80219548 kytesmum_getObjectTypeId stub=const 67
  * - slot 09: 0x80219540 kytesmum_getExtraSize stub=const 1772 ref=getExtraSize (stub)
  *
  * Reference-only hints:
