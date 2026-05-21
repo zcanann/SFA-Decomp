@@ -387,6 +387,46 @@ int FUN_8016a534(double param_1,double param_2,float *param_3,float *param_4,cha
   return iVar1;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_8016A660(int obj)
+{
+  extern u8 Obj_IsLoadingLocked(void);
+  extern u8 *Obj_AllocObjectSetup(int size, int type);
+  extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
+  extern f32 lbl_803E3144;
+  extern f32 lbl_803E3148;
+  int sub;
+  int i;
+  u8 *no;
+
+  sub = *(int *)(obj + 0xb8);
+  if (Obj_IsLoadingLocked() == 0) return;
+  i = 5;
+  do {
+    no = Obj_AllocObjectSetup(0x24, 0x482);
+    *(f32 *)(no + 8) = *(f32 *)(obj + 0xc);
+    *(f32 *)(no + 12) = *(f32 *)(obj + 0x10);
+    *(f32 *)(no + 16) = *(f32 *)(obj + 0x14);
+    *(u8 *)(no + 4) = 1;
+    *(u8 *)(no + 5) = 1;
+    *(u8 *)(no + 6) = 0xff;
+    *(u8 *)(no + 7) = 0xff;
+    no = Obj_SetupObject(no, 5, -1, -1, 0);
+    if (no != 0) {
+      *(s16 *)(no + 2) = 0;
+      *(s16 *)(no + 0) = (s16)randomGetRange(0, 0xffff);
+      *(f32 *)(no + 0x24) = lbl_803E3144 * (f32)(s32)randomGetRange(-50, 50) + *(f32 *)(obj + 0x24);
+      *(f32 *)(no + 0x28) = lbl_803E3148 * (f32)(s32)randomGetRange(-50, 50) + *(f32 *)(obj + 0x28);
+      *(f32 *)(no + 0x2c) = lbl_803E3144 * (f32)(s32)randomGetRange(-50, 50) + *(f32 *)(obj + 0x2c);
+      *(int *)(no + 0xc4) = obj;
+    }
+  } while (i-- != 0);
+  *(s16 *)(sub + 0x12) = 60;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
