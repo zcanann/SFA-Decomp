@@ -3444,6 +3444,39 @@ void spiritdoorspirit_init(int* obj)
     *(s8*)((char*)obj + 54) = 0;
 }
 
+extern f32 lbl_803DBE78;
+extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
+
+#pragma scheduling off
+#pragma peephole off
+void spiritdoorspirit_update(int *obj) {
+    u8 *sub;
+    u8 *def;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    def = *(u8**)((char*)obj + 0x4c);
+    if (sub[0] == 0) {
+        sub[0] = (u8)(GameBit_Get(*(s16*)(def + 0x1e)) == 0);
+        if (sub[0] != 0) {
+            ObjGroup_AddObject(obj, 0x4e);
+        }
+        if (*(u8*)((char*)obj + 0x36) != 0) {
+            *(u8*)((char*)obj + 0x36) = (u8)(*(u8*)((char*)obj + 0x36) - 1);
+        }
+    } else {
+        fn_80098B18((int)obj, lbl_803DBE78, 5, 0, 0, 0);
+        sub[0] = (u8)(GameBit_Get(*(s16*)(def + 0x1e)) == 0);
+        if (sub[0] == 0) {
+            ObjGroup_RemoveObject(obj, 0x4e);
+        }
+        if (*(u8*)((char*)obj + 0x36) < 0xff) {
+            *(u8*)((char*)obj + 0x36) = (u8)(*(u8*)((char*)obj + 0x36) + 1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int babycloudrunner_setScale(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
