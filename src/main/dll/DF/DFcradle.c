@@ -92,9 +92,7 @@ void dimbossfire_update(int param_1)
   if ((int)*(short *)(iVar4 + 0x20) == 0xffffffff) {
     *(float *)(pbVar5 + 0xc) = *(float *)(pbVar5 + 0xc) - timeDelta;
     if (*(float *)(pbVar5 + 0xc) <= lbl_803E4DA0) {
-      uVar1 = randomGetRange(0xf0,0x1e0);
-      *(float *)(pbVar5 + 0xc) =
-           (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - lbl_803E4DC8);
+      *(float *)(pbVar5 + 0xc) = (f32)(int)randomGetRange(0xf0,0x1e0);
       *pbVar5 = *pbVar5 | 1;
       *(float *)(pbVar5 + 4) = lbl_80325D68[pbVar5[1]];
       *(float *)(pbVar5 + 8) = *(float *)(pbVar5 + 4);
