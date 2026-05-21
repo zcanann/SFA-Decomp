@@ -4462,3 +4462,19 @@ s32 mapCheckCurBlocks(int v) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_80345E10[];
+void *getCurrentDataFile(int id) {
+    u8 *base = lbl_80345E10;
+    switch (id) {
+        case 14: return &base[0x2c0];
+        case 26: return &base[0x8200];
+        case 33: return &base[0xc200];
+        case 36: return &base[0x10200];
+        case 38: return &base[0xa200];
+        case 42: return &base[0x170e0];
+        case 47: return &base[0x14200];
+        case 80: return *(void **)&base[0x19718];
+    }
+    return NULL;
+}
