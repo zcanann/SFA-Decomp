@@ -2586,5 +2586,14 @@ void resetLotsOfRenderVars(void) {
     lbl_803DCD48 = 0;
     lbl_803DCD30 = 0;
 }
+
+extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2) {
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x2 < 0) x2 = 0;
+    if (y2 < 0) y2 = 0;
+    GXSetScissor(x, y, x2 - x, y2 - y);
+}
 #pragma scheduling reset
 #pragma peephole reset
