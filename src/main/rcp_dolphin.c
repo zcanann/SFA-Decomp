@@ -2428,6 +2428,36 @@ void fn_80054F74(int *p, f32 *vec) {
 }
 #pragma scheduling reset
 
+extern u8 lbl_803879A0[];
+extern u8 *lbl_803DCE78;
+extern s16 lbl_803DCEBA;
+extern u8 lbl_803DCEBC;
+extern u8 lbl_803DCEBD;
+extern void *gScreenTransitionInterface;
+extern int getTabEntry(void *p, int sz, int off, int unk);
+extern void Pause_SetDisabled(int);
+
+#pragma scheduling off
+#pragma peephole off
+void warpToMap(int idx, s8 transType) {
+    u8 *p = lbl_803DCE78;
+    getTabEntry(p, 28, idx << 4, 16);
+    *(f32 *)(lbl_803879A0 + 0) = *(f32 *)(p + 0);
+    *(f32 *)(lbl_803879A0 + 4) = *(f32 *)(p + 4);
+    *(f32 *)(lbl_803879A0 + 8) = *(f32 *)(p + 8);
+    *(s16 *)(lbl_803879A0 + 12) = *(s16 *)(p + 12);
+    *(s16 *)(lbl_803879A0 + 14) = *(s16 *)(p + 14);
+    lbl_803DCEBA = (s16)idx;
+    lbl_803DCEBD = 1;
+    *(s8 *)&lbl_803DCEBC = transType;
+    if (transType != 0) {
+        (*(void (***)(int, int))gScreenTransitionInterface)[2](2, 1);
+    }
+    Pause_SetDisabled(1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern u8 lbl_8037E000[];
 
 #pragma scheduling off
