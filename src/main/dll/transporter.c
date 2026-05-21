@@ -1729,3 +1729,57 @@ void flameblast_update(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E3604;
+extern f32 lbl_803E3608;
+extern f32 lbl_803E360C;
+extern void *Obj_GetPlayerObject(void);
+extern void mathFn_80021ac8(void *in, void *out);
+
+#pragma scheduling off
+#pragma peephole off
+void iceblast_update(int *obj) {
+    int *path;
+    int *def;
+    f32 *state;
+    int *player;
+    struct { s16 dir[3]; s16 pad; f32 pos[4]; } vec;
+    player = (int *)Obj_GetPlayerObject();
+    state = *(f32 **)((char *)obj + 0xb8);
+    def = *(int **)((char *)obj + 0x4c);
+    if (player == NULL) return;
+    path = *(int **)((char *)player + 0xc8);
+    if (path == NULL) return;
+    *(s16 *)((char *)obj + 4) = *(s16 *)((char *)path + 4);
+    *(s16 *)((char *)obj + 2) = *(s16 *)((char *)path + 2);
+    *(s16 *)obj = *(s16 *)path;
+    ObjHits_SetHitVolumeSlot(obj, 0x10, *(s8 *)((char *)def + 0x19) != 0 ? 3 : 1, 0);
+    state[0] = state[0] - timeDelta;
+    {
+        f32 zero = lbl_803E3604;
+        if (state[0] <= zero) {
+            state[0] = state[0] + lbl_803E3608;
+            *(f32 *)((char *)obj + 0x24) = zero;
+            *(f32 *)((char *)obj + 0x2c) = zero;
+            *(f32 *)((char *)obj + 0x28) = lbl_803E360C;
+            vec.pos[1] = zero;
+            vec.pos[2] = zero;
+            vec.pos[3] = zero;
+            vec.pos[0] = lbl_803E3600;
+        vec.dir[2] = *(s16 *)((char *)path + 4);
+        vec.dir[1] = *(s16 *)((char *)path + 2);
+        vec.dir[0] = *(s16 *)path;
+            mathFn_80021ac8(&vec, (f32 *)((char *)obj + 0x24));
+            ObjPath_GetPointWorldPosition((int)path, 0, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14), 0);
+            ObjHits_EnableObject((u32)obj);
+        }
+    }
+    *(f32 *)((char *)obj + 0x80) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)obj + 0x84) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)obj + 0x88) = *(f32 *)((char *)obj + 0x14);
+    *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)obj + 0x24) * timeDelta + *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)obj + 0x2c) * timeDelta + *(f32 *)((char *)obj + 0x14);
+}
+#pragma peephole reset
+#pragma scheduling reset
