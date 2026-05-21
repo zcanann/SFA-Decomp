@@ -1016,3 +1016,67 @@ int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern s16 lbl_803DDB20;
+extern f32 lbl_803E4468;
+extern f32 lbl_803E446C;
+extern f32 lbl_803E4470;
+extern f32 lbl_803E4474;
+extern f32 lbl_803E4478;
+extern f32 lbl_803E447C;
+extern f32 lbl_803E4480;
+extern f32 lbl_803E4484;
+extern f64 lbl_803E4488;
+extern f64 lbl_803E4490;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 f1);
+extern void CameraShake_Start(int obj, f32 a, f32 b, f32 c);
+extern void doRumble(f32 v);
+extern f32 Vec_distance(f32* a, f32* b);
+
+/* fn_801A5D88: bomb-detonation routine. Increments lbl_803DDB20, plays
+ * sfx 0x106, then spawns the appropriate explosion variant (first blast
+ * has p9=1, subsequent blasts have p9=0) with a random size/orientation.
+ * Latches state bits, sets the hitbox radius from data byte 0x62 scaled
+ * by lbl_803E446C, and if the player isn't in the immunity flag and is
+ * within lbl_803E4470 radius fires a falloff-scaled CameraShake and
+ * doRumble. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801A5D88(int obj) {
+    int state = *(int*)(obj + 0xb8);
+    u32 r;
+    u32 r2;
+    int player;
+    f32 dist;
+    f32 falloff;
+    lbl_803DDB20 = lbl_803DDB20 + 1;
+    Sfx_PlayFromObject(obj, 0x106);
+    if (lbl_803DDB20 > 1) {
+        r = randomGetRange(0, 1);
+        r2 = randomGetRange(0x32, 0x3c);
+        spawnExplosion(obj, 1, 1, 0, r & 0xff, 0, 0, 0,
+                       (f32)((f64)CONCAT44(0x43300000, r2 ^ 0x80000000) - lbl_803E4488));
+    } else {
+        r = randomGetRange(0, 1);
+        r2 = randomGetRange(0x32, 0x3c);
+        spawnExplosion(obj, 1, 1, 0, r & 0xff, 0, 1, 0,
+                       (f32)((f64)CONCAT44(0x43300000, r2 ^ 0x80000000) - lbl_803E4488));
+    }
+    *(u8*)(state + 0x114) = 1;
+    *(f32*)(state + 0x110) = lbl_803E4468;
+    *(s16*)(obj + 6) = (s16)(*(s16*)(obj + 6) | 0x4000);
+    ObjHitbox_SetSphereRadius(obj, (s16)(s32)(lbl_803E446C *
+        (f32)((f64)CONCAT44(0x43300000, (u32)*(u8*)(*(int*)(obj + 0x50) + 0x62)) - lbl_803E4490)));
+    player = (int)Obj_GetPlayerObject();
+    if ((*(u16*)(player + 0xb0) & 0x1000) == 0) {
+        dist = Vec_distance((f32*)(obj + 0x18), (f32*)(player + 0x18));
+        if (dist <= lbl_803E4470) {
+            falloff = lbl_803E4474 - dist / lbl_803E4470;
+            CameraShake_Start(obj, lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);
+            doRumble(lbl_803E4484 * falloff);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
