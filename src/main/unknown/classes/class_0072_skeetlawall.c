@@ -27,7 +27,7 @@
  *   slot 05: 0x80167714 skeetlawall_hitDetect
  *   slot 06: 0x801676D4 skeetlawall_render
  *   slot 07: 0x801676D0 skeetlawall_free
- *   slot 08: 0x801676C8 skeetlawall_func08
+ *   slot 08: 0x801676C8 skeetlawall_getObjectTypeId
  *   slot 09: 0x801676C0 skeetlawall_getExtraSize
  */
 

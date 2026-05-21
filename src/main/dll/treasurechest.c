@@ -222,7 +222,7 @@ void skeetlawall_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int skeetlawall_getExtraSize(void) { return 0x7; }
-int skeetlawall_func08(void) { return 0x0; }
+int skeetlawall_getObjectTypeId(void) { return 0x0; }
 
 extern void skeetlawall_setScale(void);
 
@@ -265,7 +265,7 @@ ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
         (ObjectDescriptorCallback)skeetlawall_hitDetect,
         (ObjectDescriptorCallback)skeetlawall_render,
         (ObjectDescriptorCallback)skeetlawall_free,
-        (ObjectDescriptorCallback)skeetlawall_func08,
+        (ObjectDescriptorCallback)skeetlawall_getObjectTypeId,
         skeetlawall_getExtraSize,
         (ObjectDescriptorCallback)skeetlawall_setScale,
     },

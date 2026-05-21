@@ -15,6 +15,6 @@
 // - 5: skeetlawall_hitDetect (0x80167714)
 // - 6: skeetlawall_render (0x801676D4)
 // - 7: skeetlawall_free (0x801676D0)
-// - 8: skeetlawall_func08 (0x801676C8)
+// - 8: skeetlawall_getObjectTypeId (0x801676C8)
 // - 9: skeetlawall_getExtraSize (0x801676C0)
 // - A: skeetlawall_setScale (0x801675E0)

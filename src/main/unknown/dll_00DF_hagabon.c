@@ -15,5 +15,5 @@
 // - 5: hagabon_hitDetect (0x8014E88C)
 // - 6: hagabon_render (0x8014E7A4)
 // - 7: hagabon_free (0x8014E744)
-// - 8: hagabon_func08 (0x8014E73C)
+// - 8: hagabon_getObjectTypeId (0x8014E73C)
 // - 9: hagabon_getExtraSize (0x8014E734)

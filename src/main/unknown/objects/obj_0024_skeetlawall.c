@@ -44,7 +44,7 @@
  * - slot 05: 0x80167714 skeetlawall_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801676D4 skeetlawall_render ref=render
  * - slot 07: 0x801676D0 skeetlawall_free stub=blr ref=free (stub)
- * - slot 08: 0x801676C8 skeetlawall_func08 stub=const 0
+ * - slot 08: 0x801676C8 skeetlawall_getObjectTypeId stub=const 0
  * - slot 09: 0x801676C0 skeetlawall_getExtraSize stub=const 7 ref=getExtraSize (stub)
  * - slot 10: 0x801675E0 skeetlawall_setScale ref=setScale
  */

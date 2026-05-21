@@ -675,7 +675,7 @@ int fn_801627EC(void) { return 0x0; }
 int grimble_getExtraSize(void) { return 0x46c; }
 int grimble_getObjectTypeId(void) { return 0x59; }
 int cannonclaw_getExtraSize(void) { return 0x0; }
-int cannonclaw_func08(void) { return 0x0; }
+int cannonclaw_getObjectTypeId(void) { return 0x0; }
 
 /* plain forwarder. */
 extern void fn_80162518(void);

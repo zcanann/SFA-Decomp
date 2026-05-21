@@ -717,11 +717,11 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 
 /* 8b "li r3, N; blr" returners. */
 int hagabon_getExtraSize(void) { return 0x28; }
-int hagabon_func08(void) { return 0xb; }
+int hagabon_getObjectTypeId(void) { return 0xb; }
 int swarmbaddie_getExtraSize(void) { return 0x24; }
-int swarmbaddie_func08(void) { return 0x9; }
+int swarmbaddie_getObjectTypeId(void) { return 0x9; }
 int wispbaddie_getExtraSize(void) { return 0x2c; }
-int wispbaddie_func08(void) { return 0x9; }
+int wispbaddie_getObjectTypeId(void) { return 0x9; }
 
 #pragma peephole off
 void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
@@ -751,7 +751,7 @@ ObjectDescriptor gHagabonObjDescriptor = {
     (ObjectDescriptorCallback)hagabon_hitDetect,
     (ObjectDescriptorCallback)hagabon_render,
     (ObjectDescriptorCallback)hagabon_free,
-    (ObjectDescriptorCallback)hagabon_func08,
+    (ObjectDescriptorCallback)hagabon_getObjectTypeId,
     hagabon_getExtraSize,
 };
 
@@ -768,6 +768,6 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     (ObjectDescriptorCallback)swarmbaddie_hitDetect,
     (ObjectDescriptorCallback)swarmbaddie_render,
     (ObjectDescriptorCallback)swarmbaddie_free,
-    (ObjectDescriptorCallback)swarmbaddie_func08,
+    (ObjectDescriptorCallback)swarmbaddie_getObjectTypeId,
     swarmbaddie_getExtraSize,
 };

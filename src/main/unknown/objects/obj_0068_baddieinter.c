@@ -56,7 +56,7 @@
  * - slot 05: 0x8016BB54 baddieinterestp_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8016BB24 baddieinterestp_render ref=render
  * - slot 07: 0x8016BB20 baddieinterestp_free stub=blr ref=free (stub)
- * - slot 08: 0x8016BB18 baddieinterestp_func08 stub=const 0
+ * - slot 08: 0x8016BB18 baddieinterestp_getObjectTypeId stub=const 0
  * - slot 09: 0x8016BB10 baddieinterestp_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

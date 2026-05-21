@@ -15,5 +15,5 @@
 // - 5: wispbaddie_hitDetect (0x8014F9E4)
 // - 6: wispbaddie_render (0x8014F9D8)
 // - 7: wispbaddie_free (0x8014F990)
-// - 8: wispbaddie_func08 (0x8014F988)
+// - 8: wispbaddie_getObjectTypeId (0x8014F988)
 // - 9: wispbaddie_getExtraSize (0x8014F980)

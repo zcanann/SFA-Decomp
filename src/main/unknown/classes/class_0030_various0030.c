@@ -445,7 +445,7 @@
  *   slot 05: 0x8016B9F0 gcbaddieshield_hitDetect
  *   slot 06: 0x8016B9B0 gcbaddieshield_render
  *   slot 07: 0x8016B9AC gcbaddieshield_free
- *   slot 08: 0x8016B9A4 gcbaddieshield_func08
+ *   slot 08: 0x8016B9A4 gcbaddieshield_getObjectTypeId
  *   slot 09: 0x8016B99C gcbaddieshield_getExtraSize
  * - DLL 0x00DE: gBaddieInterestPObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8016BE6C baddieinterestp_initialise
@@ -455,7 +455,7 @@
  *   slot 05: 0x8016BB54 baddieinterestp_hitDetect
  *   slot 06: 0x8016BB24 baddieinterestp_render
  *   slot 07: 0x8016BB20 baddieinterestp_free
- *   slot 08: 0x8016BB18 baddieinterestp_func08
+ *   slot 08: 0x8016BB18 baddieinterestp_getObjectTypeId
  *   slot 09: 0x8016BB10 baddieinterestp_getExtraSize
  * - DLL 0x00DF: gHagabonObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8014EE88 hagabon_initialise
@@ -465,7 +465,7 @@
  *   slot 05: 0x8014E88C hagabon_hitDetect
  *   slot 06: 0x8014E7A4 hagabon_render
  *   slot 07: 0x8014E744 hagabon_free
- *   slot 08: 0x8014E73C hagabon_func08
+ *   slot 08: 0x8014E73C hagabon_getObjectTypeId
  *   slot 09: 0x8014E734 hagabon_getExtraSize
  * - DLL 0x00E0: gSwarmBaddieObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8014F61C swarmbaddie_initialise
@@ -475,7 +475,7 @@
  *   slot 05: 0x8014F248 swarmbaddie_hitDetect
  *   slot 06: 0x8014F23C swarmbaddie_render
  *   slot 07: 0x8014F1F4 swarmbaddie_free
- *   slot 08: 0x8014F1EC swarmbaddie_func08
+ *   slot 08: 0x8014F1EC swarmbaddie_getObjectTypeId
  *   slot 09: 0x8014F1E4 swarmbaddie_getExtraSize
  * - DLL 0x00E1: gWispBaddieObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8014FEF4 wispbaddie_initialise
@@ -485,7 +485,7 @@
  *   slot 05: 0x8014F9E4 wispbaddie_hitDetect
  *   slot 06: 0x8014F9D8 wispbaddie_render
  *   slot 07: 0x8014F990 wispbaddie_free
- *   slot 08: 0x8014F988 wispbaddie_func08
+ *   slot 08: 0x8014F988 wispbaddie_getObjectTypeId
  *   slot 09: 0x8014F980 wispbaddie_getExtraSize
  * - DLL 0x00E3: gFireballObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80170000 fireball_initialise

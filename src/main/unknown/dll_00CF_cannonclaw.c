@@ -15,5 +15,5 @@
 // - 5: cannonclaw_hitDetect (0x801630E8)
 // - 6: cannonclaw_render (0x801630A8)
 // - 7: cannonclaw_free (0x801630A4)
-// - 8: cannonclaw_func08 (0x8016309C)
+// - 8: cannonclaw_getObjectTypeId (0x8016309C)
 // - 9: cannonclaw_getExtraSize (0x80163094)

@@ -14,5 +14,5 @@
 // - 5: baddieinterestp_hitDetect (0x8016BB54)
 // - 6: baddieinterestp_render (0x8016BB24)
 // - 7: baddieinterestp_free (0x8016BB20)
-// - 8: baddieinterestp_func08 (0x8016BB18)
+// - 8: baddieinterestp_getObjectTypeId (0x8016BB18)
 // - 9: baddieinterestp_getExtraSize (0x8016BB10)

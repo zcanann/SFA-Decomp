@@ -4447,9 +4447,9 @@ int mikabombshadow_getObjectTypeId(void) { return 0x0; }
 int StaticCamera_getExtraSize(void) { return 0x8; }
 int StaticCamera_getObjectTypeId(void) { return 0x0; }
 int gcbaddieshield_getExtraSize(void) { return 0x8; }
-int gcbaddieshield_func08(void) { return 0x0; }
+int gcbaddieshield_getObjectTypeId(void) { return 0x0; }
 int baddieinterestp_getExtraSize(void) { return 0x0; }
-int baddieinterestp_func08(void) { return 0x0; }
+int baddieinterestp_getObjectTypeId(void) { return 0x0; }
 int animatedobj_getExtraSize(void) { return 0x140; }
 int dim2roofrub_getExtraSize(void) { return 0x140; }
 int depthoffieldpoint_getExtraSize(void) { return 0x3; }
@@ -4590,7 +4590,7 @@ ObjectDescriptor gGCbaddieShieldObjDescriptor = {
     (ObjectDescriptorCallback)gcbaddieshield_hitDetect,
     (ObjectDescriptorCallback)gcbaddieshield_render,
     (ObjectDescriptorCallback)gcbaddieshield_free,
-    (ObjectDescriptorCallback)gcbaddieshield_func08,
+    (ObjectDescriptorCallback)gcbaddieshield_getObjectTypeId,
     gcbaddieshield_getExtraSize,
 };
 
@@ -4604,7 +4604,7 @@ ObjectDescriptor gBaddieInterestPObjDescriptor = {
     (ObjectDescriptorCallback)baddieinterestp_hitDetect,
     (ObjectDescriptorCallback)baddieinterestp_render,
     (ObjectDescriptorCallback)baddieinterestp_free,
-    (ObjectDescriptorCallback)baddieinterestp_func08,
+    (ObjectDescriptorCallback)baddieinterestp_getObjectTypeId,
     baddieinterestp_getExtraSize,
 };
 

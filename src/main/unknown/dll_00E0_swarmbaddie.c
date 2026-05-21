@@ -15,5 +15,5 @@
 // - 5: swarmbaddie_hitDetect (0x8014F248)
 // - 6: swarmbaddie_render (0x8014F23C)
 // - 7: swarmbaddie_free (0x8014F1F4)
-// - 8: swarmbaddie_func08 (0x8014F1EC)
+// - 8: swarmbaddie_getObjectTypeId (0x8014F1EC)
 // - 9: swarmbaddie_getExtraSize (0x8014F1E4)

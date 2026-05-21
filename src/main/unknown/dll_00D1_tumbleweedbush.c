@@ -15,6 +15,6 @@
 // - 5: tumbleweedbush_hitDetect (0x8016353C)
 // - 6: tumbleweedbush_render (0x8016350C)
 // - 7: tumbleweedbush_free (0x80163508)
-// - 8: tumbleweedbush_func08 (0x80163500)
+// - 8: tumbleweedbush_getObjectTypeId (0x80163500)
 // - 9: tumbleweedbush_getExtraSize (0x801634F8)
 // - A: tumbleweedbush_setScale (0x801634BC)

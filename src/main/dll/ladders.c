@@ -544,7 +544,7 @@ void tumbleweedbush_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int tumbleweedbush_getExtraSize(void) { return 0x54; }
-int tumbleweedbush_func08(void) { return 0x0; }
+int tumbleweedbush_getObjectTypeId(void) { return 0x0; }
 
 /* 16b chained patterns. */
 #pragma scheduling off
@@ -640,7 +640,7 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
         (ObjectDescriptorCallback)tumbleweedbush_hitDetect,
         (ObjectDescriptorCallback)tumbleweedbush_render,
         (ObjectDescriptorCallback)tumbleweedbush_free,
-        (ObjectDescriptorCallback)tumbleweedbush_func08,
+        (ObjectDescriptorCallback)tumbleweedbush_getObjectTypeId,
         tumbleweedbush_getExtraSize,
         (ObjectDescriptorCallback)tumbleweedbush_setScale,
     },

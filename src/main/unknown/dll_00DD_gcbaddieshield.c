@@ -14,5 +14,5 @@
 // - 5: gcbaddieshield_hitDetect (0x8016B9F0)
 // - 6: gcbaddieshield_render (0x8016B9B0)
 // - 7: gcbaddieshield_free (0x8016B9AC)
-// - 8: gcbaddieshield_func08 (0x8016B9A4)
+// - 8: gcbaddieshield_getObjectTypeId (0x8016B9A4)
 // - 9: gcbaddieshield_getExtraSize (0x8016B99C)

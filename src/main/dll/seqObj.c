@@ -69,7 +69,7 @@ extern void wispbaddie_free(void);
 extern void wispbaddie_render(void);
 extern void wispbaddie_hitDetect(void);
 extern void wispbaddie_init(void);
-extern int wispbaddie_func08(void);
+extern int wispbaddie_getObjectTypeId(void);
 extern int wispbaddie_getExtraSize(void);
 
 /*
@@ -524,7 +524,7 @@ ObjectDescriptor gWispBaddieObjDescriptor = {
     (ObjectDescriptorCallback)wispbaddie_hitDetect,
     (ObjectDescriptorCallback)wispbaddie_render,
     (ObjectDescriptorCallback)wispbaddie_free,
-    (ObjectDescriptorCallback)wispbaddie_func08,
+    (ObjectDescriptorCallback)wispbaddie_getObjectTypeId,
     wispbaddie_getExtraSize,
 };
 
