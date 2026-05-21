@@ -998,10 +998,27 @@ void FUN_801bbf98(undefined8 param_1,double param_2,double param_3,undefined8 pa
 int fn_801BA590(int unused, int *p) { return *(s8*)((char*)p + 0x346) != 0; }
 
 extern f32 lbl_803E4BD8;
+extern f32 lbl_803E4C24;
 extern void ObjAnim_SetCurrentMove(int *obj, int n, f32 v, int m);
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+extern void** gPlayerInterface;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801BB1EC(int* obj, u8* state, f32 weight) {
+    if ((s8)state[634] != 0) {
+        ObjAnim_SetCurrentMove(obj, 2, lbl_803E4BD8, 0);
+        state[838] = 0;
+    }
+    *(f32*)((char*)state + 0x2a0) = lbl_803E4C24;
+    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[8])(obj, state, weight, 1);
+    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, weight, 4);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
