@@ -3757,7 +3757,7 @@ int fn_80161264(int* obj, u8* state) {
         return 1;
     }
     mode = *(s16*)(state + 0x274);
-    if (mode == 6) return 0;
+    if (mode != 6) {
     dx = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)target + 0xc);
     dz = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)target + 0x14);
     {
@@ -3792,6 +3792,7 @@ post:
         } else {
             *(f32*)(state + 0x2a0) = lbl_803E2ECC;
         }
+    }
     }
     return 0;
 }
