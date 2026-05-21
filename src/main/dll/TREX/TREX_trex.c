@@ -2058,6 +2058,7 @@ extern f32 timeDelta;
 #pragma peephole off
 void SB_KyteCage_update(int obj)
 {
+    extern uint GameBit_Get(int);
     int state = *(int *)(obj + 0xb8);
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
     if (*(void **)state == NULL) {
