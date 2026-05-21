@@ -2409,6 +2409,74 @@ FUN_80202004(double param_1,double param_2,undefined8 param_3,double param_4,ush
   return uVar2;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_802020B0(int obj, int p2)
+{
+  extern void ObjHits_DisableObject(int);
+  extern void ObjGroup_RemoveObject(int, int);
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
+  extern int gameBitIncrement(int);
+  extern void Obj_FreeObject(int);
+  extern void Stack_Pop(int, int *);
+  extern int Stack_IsEmpty(int);
+  extern int *gMapEventInterface;
+  extern int *gPlayerInterface;
+  extern int lbl_80329634;
+  extern int lbl_80329640;
+  extern f32 lbl_803E62A8;
+  extern f32 lbl_803E6334;
+  extern f32 lbl_803E6338;
+  extern f32 lbl_803E633C;
+
+  int sub = *(int *)(obj + 0xb8);
+  int data = *(int *)(obj + 0x4c);
+  int sub_40c = *(int *)(sub + 0x40c);
+
+  *(s8 *)(p2 + 0x34d) = 0x11;
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    *(f32 *)(p2 + 0x284) = lbl_803E62A8;
+    *(f32 *)(p2 + 0x280) = lbl_803E62A8;
+    *(int *)(p2 + 0x2d0) = 0;
+    *(u8 *)(p2 + 0x25f) = 1;
+    *(u8 *)(p2 + 0x349) = 0;
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
+    ObjHits_DisableObject(obj);
+    ObjGroup_RemoveObject(obj, 3);
+    if (*(int *)(sub_40c + 0x18) != 0) {
+      ObjMsg_SendToObject((void *)*(int *)(sub_40c + 0x18), 17, obj, 16);
+      *(s16 *)(sub_40c + 0x1c) = -1;
+      *(int *)(sub_40c + 0x18) = 0;
+    }
+  }
+  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    ObjAnim_SetCurrentMove(obj, 1, lbl_803E62A8, 0);
+    *(u8 *)(p2 + 0x346) = 0;
+  }
+  *(f32 *)(p2 + 0x2a0) = lbl_803E6334;
+  if (*(f32 *)(obj + 0x98) > lbl_803E6338) {
+    int local;
+    gameBitIncrement(*(s16 *)(data + 0x18));
+    if (*(int *)(data + 0x14) == -1) {
+      Obj_FreeObject(obj);
+      return 0;
+    }
+    while (Stack_IsEmpty(*(int *)(sub_40c + 0x24)) == 0) {
+      Stack_Pop(*(int *)(sub_40c + 0x24), &local);
+    }
+    if (*(s16 *)(data + 0x2c) == 0) {
+      (**(void (**)(int, f32))((char *)(*gMapEventInterface) + 0x64))(*(int *)(data + 0x14), lbl_803E633C);
+    }
+    *(u8 *)(sub + 0x404) = (u8)(*(u8 *)(sub + 0x404) | *(u8 *)(data + 0x2b));
+    (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 0, 2, &lbl_80329634);
+    (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, &lbl_80329640);
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
