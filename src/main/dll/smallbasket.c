@@ -2538,7 +2538,7 @@ extern f32 lbl_803E2C0C;
 void fn_80159654(s16* obj, u8* state) {
     u8* params = *(u8**)((u8*)obj + 0x4c);
     *(u32*)(state + 0x2e4) = 0xb;
-    *(u32*)(state + 0x2e4) |= 0x40b0;
+    *(u32*)(state + 0x2e4) |= 0x400b0;
     *(u32*)(state + 0x2e4) |= 0x40001040;
     switch ((s16)obj[0x46/2]) {
     case 0x6a3:
