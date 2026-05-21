@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/CAM/camcontrol.h"
 #include "main/dll/dll_B7.h"
 
 extern void Resource_Release(void *handle);
@@ -6,22 +7,11 @@ extern void *Resource_Acquire(int id, int mode);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(int size, int heap, int flags);
 
-extern void *gCamcontrolHandlerEntries[20];
-extern void *pCamera;
-extern void *gCamcontrolCurrentHandler;
-extern int gCamcontrolActiveActionId;
-extern int gCamcontrolCurrentHandlerIndex;
-extern u8 gCamcontrolHandlerCount;
-extern s8 gCamcontrolQueuedActionPriority;
-extern s8 gCamcontrolQueuedActionStartFlags;
-extern int gCamcontrolActiveActionStartFlags;
-extern int gCamcontrolActiveActionPriority;
-
 #pragma scheduling off
 #pragma peephole off
 void camcontrol_activateHandler(u32 actionId, void *actionData)
 {
-  void *entry;
+  CamcontrolHandlerEntry *entry;
   int idx;
   int n;
   int priority;
@@ -44,7 +34,7 @@ void camcontrol_activateHandler(u32 actionId, void *actionData)
 
   idx = 0;
   {
-    void **p = gCamcontrolHandlerEntries;
+    CamcontrolHandlerEntry **p = gCamcontrolHandlerEntries;
     n = gCamcontrolHandlerCount;
     for (; idx < n; idx++) {
       if ((u16)actionId != *(u16 *)*p) {
@@ -59,7 +49,7 @@ found:
   gCamcontrolCurrentHandlerIndex = idx;
 
   if (idx == -1) {
-    void *new_entry;
+    CamcontrolHandlerEntry *new_entry;
     priority = gCamcontrolQueuedActionPriority;
     new_entry = mmAlloc(0xC, 0xF, 0);
     n = gCamcontrolHandlerCount;

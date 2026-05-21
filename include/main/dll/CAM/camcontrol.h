@@ -58,6 +58,24 @@ typedef struct CamcontrolHandlerEntry {
 #define CAMCONTROL_QUEUE_SENTINEL 0xFF
 
 extern char sCamcontrolTriggeredCamActionLoadWarning[];
+extern CamcontrolHandlerEntry *gCamcontrolHandlerEntries[20];
+extern CamcontrolHandlerEntry *gCamcontrolCurrentHandler;
+extern u32 gCamcontrolActiveActionId;
+extern int gCamcontrolActiveActionStartFlags;
+extern int gCamcontrolActiveActionPriority;
+extern int gCamcontrolCurrentHandlerIndex;
+extern u8 gCamcontrolHandlerCount;
+extern s8 gCamcontrolQueuedActionPriority;
+extern s8 gCamcontrolQueuedActionStartFlags;
+extern u8 gCamcontrolQueuedActionMode;
+extern s32 gCamcontrolQueuedActionBlendFrames;
+extern u8 gCamcontrolQueuedActionPending;
+extern void *gCamcontrolQueuedActionData;
+extern s32 gCamcontrolQueuedActionId;
+extern int gCamcontrolSavedActionStartFlags;
+extern int gCamcontrolSavedActionPriority;
+extern int gCamcontrolSavedActionId;
+extern u8 *pCamera;
 
 void camcontrol_updateTargetFeedback(void);
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,

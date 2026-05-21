@@ -32,25 +32,12 @@ extern void voxmaps_initialise(void);
 extern void voxmaps_resetLoadedMaps(void);
 
 extern void *gCamcontrolHandlers[20];
-extern CamcontrolHandlerEntry *gCamcontrolHandlerEntries[20];
 extern u8 gCamcontrolStateStorage[];
 extern undefined4* DAT_803dd738;
 extern undefined4 gCamcontrolTargetChanged;
 extern short* gCamcontrolTargetReticle;
 extern undefined4 DAT_803de140;
 extern undefined4 gCamcontrolTargetState;
-extern int gCamcontrolSavedActionStartFlags;
-extern int gCamcontrolSavedActionPriority;
-extern int gCamcontrolSavedActionId;
-extern u8 gCamcontrolQueuedActionMode;
-extern s32 gCamcontrolQueuedActionBlendFrames;
-extern s8 gCamcontrolQueuedActionPriority;
-extern s8 gCamcontrolQueuedActionStartFlags;
-extern u8 gCamcontrolQueuedActionPending;
-extern void *gCamcontrolQueuedActionData;
-extern s32 gCamcontrolQueuedActionId;
-extern CamcontrolHandlerEntry *gCamcontrolCurrentHandler;
-extern u8 gCamcontrolHandlerCount;
 extern short* gCamcontrolState;
 extern f64 DOUBLE_803e22d0;
 extern f32 lbl_803DC074;
@@ -77,11 +64,6 @@ extern u16 lbl_803DB992;
 extern undefined lbl_803DD4CA;
 extern s8 lbl_803DD4CB;
 extern undefined4 lbl_803DD4CC;
-extern int gCamcontrolCurrentHandlerIndex;
-
-extern u32 gCamcontrolActiveActionId;
-extern u8 *pCamera;
-
 /*
  * --INFO--
  *

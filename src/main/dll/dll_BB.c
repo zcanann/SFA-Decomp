@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/CAM/camcontrol.h"
 #include "main/dll/dll_BB.h"
 
 extern undefined4 FUN_800068d8();
@@ -22,20 +23,8 @@ extern void camcontrol_activateHandler(u32 actionId,void *actionData);
 
 extern undefined4 DAT_803de138;
 extern undefined4 gCamcontrolState;
-extern u8 *pCamera;
 extern f64 DOUBLE_803e22d0;
 extern f32 lbl_803DC074;
-extern undefined4 gCamcontrolSavedActionStartFlags;
-extern undefined4 gCamcontrolSavedActionPriority;
-extern undefined4 gCamcontrolSavedActionId;
-extern u8 gCamcontrolQueuedActionMode;
-extern s32 gCamcontrolQueuedActionBlendFrames;
-extern u8 gCamcontrolQueuedActionPending;
-extern void *gCamcontrolQueuedActionData;
-extern undefined4 gCamcontrolActiveActionStartFlags;
-extern undefined4 gCamcontrolActiveActionPriority;
-extern undefined4 gCamcontrolQueuedActionId;
-extern undefined4 gCamcontrolActiveActionId;
 extern f32 lbl_803DE148;
 extern f32 lbl_803E162C;
 extern f32 lbl_803E1630;
