@@ -635,6 +635,39 @@ void FUN_8005fdec(void)
 {
 }
 
+extern void GXLoadPosMtxImm(void *mtx, int slot);
+extern void PSMTXCopy(void *src, void *dst);
+extern void GXLoadNrmMtxImm(void *mtx, int slot);
+extern void PSMTXConcat(void *a, void *b, void *out);
+extern void GXLoadTexMtxImm(void *mtx, int slot, int type);
+extern void GXSetArray(int attr, void *base, int stride);
+extern f32 lbl_803DEBCC;
+extern u8 lbl_803967F0[];
+
+#pragma scheduling off
+#pragma peephole off
+void setupToRenderMapBlock(int *block, void *posMtx) {
+    f32 out[12];
+    f32 tmp[12];
+    f32 fc;
+
+    GXLoadPosMtxImm(posMtx, 0);
+    PSMTXCopy(posMtx, tmp);
+    fc = lbl_803DEBCC;
+    tmp[3] = fc;
+    tmp[7] = fc;
+    tmp[11] = fc;
+    GXLoadNrmMtxImm(tmp, 0);
+    PSMTXConcat(lbl_803967F0, posMtx, out);
+    GXLoadTexMtxImm(out, 0x24, 0);
+    GXSetArray(9, *(void **)((char *)block + 0x58), 6);
+    GXSetArray(11, *(void **)((char *)block + 0x5C), 2);
+    GXSetArray(13, *(void **)((char *)block + 0x60), 4);
+    GXSetArray(14, *(void **)((char *)block + 0x60), 4);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
