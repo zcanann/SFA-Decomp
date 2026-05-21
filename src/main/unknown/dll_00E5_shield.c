@@ -15,5 +15,5 @@
 // - 5: shield_hitDetect (0x80170F6C)
 // - 6: shield_render (0x80170AF0)
 // - 7: shield_free (0x80170A8C)
-// - 8: shield_func08 (0x80170A84)
+// - 8: shield_getObjectTypeId (0x80170A84)
 // - 9: shield_getExtraSize (0x80170A7C)

@@ -57,7 +57,7 @@
  * - slot 05: 0x8016F7F4 fireball_hitDetect ref=hitDetect
  * - slot 06: 0x8016F5BC fireball_render ref=render
  * - slot 07: 0x8016F55C fireball_free ref=free
- * - slot 08: 0x8016F554 fireball_func08 stub=const 0
+ * - slot 08: 0x8016F554 fireball_getObjectTypeId stub=const 0
  * - slot 09: 0x8016F54C fireball_getExtraSize stub=const 116 ref=getExtraSize (stub)
  */
 

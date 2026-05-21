@@ -714,7 +714,7 @@ void doorf4_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int doorf4_getExtraSize(void) { return 0x24; }
-int doorf4_func08(void) { return 0x1; }
+int doorf4_getObjectTypeId(void) { return 0x1; }
 int sidekickball_getExtraSize(void) { return 0x2cc; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */

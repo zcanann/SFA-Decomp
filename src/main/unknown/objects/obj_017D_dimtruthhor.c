@@ -72,7 +72,7 @@
  * - slot 05: 0x80172C20 collectible_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80172B1C collectible_render ref=render
  * - slot 07: 0x80172AD4 collectible_free ref=free
- * - slot 08: 0x80172ACC collectible_func08 stub=const 19
+ * - slot 08: 0x80172ACC collectible_getObjectTypeId stub=const 19
  * - slot 09: 0x80172AC4 collectible_getExtraSize stub=const 696 ref=getExtraSize (stub)
  * - slot 10: 0x80171E54 collectible_setScale ref=setScale
  * - slot 11: 0x80171DF8 collectible_func0B

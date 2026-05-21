@@ -16,7 +16,7 @@
 // - 5: flamethrowerspe_hitDetect (0x80170068)
 // - 6: flamethrowerspe_render (0x80170044)
 // - 7: flamethrowerspe_free (0x80170040)
-// - 8: flamethrowerspe_func08 (0x80170038)
+// - 8: flamethrowerspe_getObjectTypeId (0x80170038)
 // - 9: flamethrowerspe_getExtraSize (0x80170030)
 // - A: flamethrowerspe_setScale (0x80170018)
 // - B: flamethrowerspe_func0B (0x80170008)

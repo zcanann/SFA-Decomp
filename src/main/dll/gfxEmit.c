@@ -525,7 +525,7 @@ int collectible_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: collectible_func08
+ * Function: collectible_getObjectTypeId
  * EN v1.0 Address: 0x80172E3C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x80172D78
@@ -535,7 +535,7 @@ int collectible_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int collectible_func08(void)
+int collectible_getObjectTypeId(void)
 {
   return 0x13;
 }

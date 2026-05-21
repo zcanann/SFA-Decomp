@@ -15,7 +15,7 @@
 // - 5: staff_hitDetect (0x8016EBF8)
 // - 6: staff_render (0x8016EBF4)
 // - 7: staff_free (0x8016EB84)
-// - 8: staff_func08 (0x8016EB7C)
+// - 8: staff_getObjectTypeId (0x8016EB7C)
 // - 9: staff_getExtraSize (0x8016EB74)
 // - A: staff_setScale (0x8016EB4C)
 // - B: staff_func0B (0x8016EB48)

@@ -40,7 +40,7 @@
  *   slot 05: 0x80179068 doorf4_hitDetect
  *   slot 06: 0x80179038 doorf4_render
  *   slot 07: 0x80178FD4 doorf4_free
- *   slot 08: 0x80178FCC doorf4_func08
+ *   slot 08: 0x80178FCC doorf4_getObjectTypeId
  *   slot 09: 0x80178FC4 doorf4_getExtraSize
  */
 

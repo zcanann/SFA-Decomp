@@ -60,7 +60,7 @@
  * - slot 05: 0x80170F6C shield_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80170AF0 shield_render ref=render
  * - slot 07: 0x80170A8C shield_free ref=free
- * - slot 08: 0x80170A84 shield_func08 stub=const 0
+ * - slot 08: 0x80170A84 shield_getObjectTypeId stub=const 0
  * - slot 09: 0x80170A7C shield_getExtraSize stub=const 96 ref=getExtraSize (stub)
  */
 

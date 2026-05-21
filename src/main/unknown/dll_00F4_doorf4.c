@@ -14,5 +14,5 @@
 // - 5: doorf4_hitDetect (0x80179068)
 // - 6: doorf4_render (0x80179038)
 // - 7: doorf4_free (0x80178FD4)
-// - 8: doorf4_func08 (0x80178FCC)
+// - 8: doorf4_getObjectTypeId (0x80178FCC)
 // - 9: doorf4_getExtraSize (0x80178FC4)

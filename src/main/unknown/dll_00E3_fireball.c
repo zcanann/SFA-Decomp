@@ -15,5 +15,5 @@
 // - 5: fireball_hitDetect (0x8016F7F4)
 // - 6: fireball_render (0x8016F5BC)
 // - 7: fireball_free (0x8016F55C)
-// - 8: fireball_func08 (0x8016F554)
+// - 8: fireball_getObjectTypeId (0x8016F554)
 // - 9: fireball_getExtraSize (0x8016F54C)

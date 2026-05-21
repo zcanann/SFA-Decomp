@@ -4454,18 +4454,18 @@ int animatedobj_getExtraSize(void) { return 0x140; }
 int dim2roofrub_getExtraSize(void) { return 0x140; }
 int depthoffieldpoint_getExtraSize(void) { return 0x3; }
 int staff_getExtraSize(void) { return 0xc0; }
-int staff_func08(void) { return 0x9; }
+int staff_getObjectTypeId(void) { return 0x9; }
 int fireball_getExtraSize(void) { return 0x74; }
-int fireball_func08(void) { return 0x0; }
+int fireball_getObjectTypeId(void) { return 0x0; }
 int flamethrowerspe_getExtraSize(void) { return 0x14; }
-int flamethrowerspe_func08(void) { return 0x0; }
+int flamethrowerspe_getObjectTypeId(void) { return 0x0; }
 int shield_getExtraSize(void) { return 0x60; }
-int shield_func08(void) { return 0x0; }
+int shield_getObjectTypeId(void) { return 0x0; }
 int curve_func11(void) { return 0x0; }
 int curve_getExtraSize(void) { return 0x0; }
-int curve_func08(void) { return 0x0; }
+int curve_getObjectTypeId(void) { return 0x0; }
 int dll_F7_getExtraSize(void) { return 0xc; }
-int dll_F7_func08(void) { return 0x2; }
+int dll_F7_getObjectTypeId(void) { return 0x2; }
 int checkpoint4_getExtraSize(void) { return 0x40; }
 int checkpoint4_getObjectTypeId(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
@@ -4749,7 +4749,7 @@ ObjectDescriptor23 gStaffObjDescriptor = {
     (ObjectDescriptorCallback)staff_hitDetect,
     (ObjectDescriptorCallback)staff_render,
     (ObjectDescriptorCallback)staff_free,
-    (ObjectDescriptorCallback)staff_func08,
+    (ObjectDescriptorCallback)staff_getObjectTypeId,
     staff_getExtraSize,
     (ObjectDescriptorCallback)staff_setScale,
     (ObjectDescriptorCallback)staff_func0B,
@@ -4783,7 +4783,7 @@ ObjectDescriptor10WithPadding gFireballObjDescriptor = {
         (ObjectDescriptorCallback)fireball_hitDetect,
         (ObjectDescriptorCallback)fireball_render,
         (ObjectDescriptorCallback)fireball_free,
-        (ObjectDescriptorCallback)fireball_func08,
+        (ObjectDescriptorCallback)fireball_getObjectTypeId,
         fireball_getExtraSize,
     },
     0,
@@ -4811,7 +4811,7 @@ ObjectDescriptor13 gFlameThrowerSpeObjDescriptor = {
     (ObjectDescriptorCallback)flamethrowerspe_hitDetect,
     (ObjectDescriptorCallback)flamethrowerspe_render,
     (ObjectDescriptorCallback)flamethrowerspe_free,
-    (ObjectDescriptorCallback)flamethrowerspe_func08,
+    (ObjectDescriptorCallback)flamethrowerspe_getObjectTypeId,
     flamethrowerspe_getExtraSize,
     (ObjectDescriptorCallback)flamethrowerspe_setScale,
     (ObjectDescriptorCallback)flamethrowerspe_func0B,
@@ -4847,7 +4847,7 @@ ObjectDescriptor gShieldObjDescriptor = {
     (ObjectDescriptorCallback)shield_hitDetect,
     (ObjectDescriptorCallback)shield_render,
     (ObjectDescriptorCallback)shield_free,
-    (ObjectDescriptorCallback)shield_func08,
+    (ObjectDescriptorCallback)shield_getObjectTypeId,
     shield_getExtraSize,
 };
 
@@ -4872,7 +4872,7 @@ ObjectDescriptor12 gCurveObjDescriptor = {
     0,
     (ObjectDescriptorCallback)curve_render,
     (ObjectDescriptorCallback)curve_free,
-    (ObjectDescriptorCallback)curve_func08,
+    (ObjectDescriptorCallback)curve_getObjectTypeId,
     curve_getExtraSize,
     (ObjectDescriptorCallback)curve_setScale,
     (ObjectDescriptorCallback)curve_func11,
@@ -4902,7 +4902,7 @@ ObjectDescriptor dll_F7 = {
     (ObjectDescriptorCallback)dll_F7_hitDetect,
     (ObjectDescriptorCallback)dll_F7_render,
     (ObjectDescriptorCallback)dll_F7_free,
-    (ObjectDescriptorCallback)dll_F7_func08,
+    (ObjectDescriptorCallback)dll_F7_getObjectTypeId,
     dll_F7_getExtraSize,
 };
 

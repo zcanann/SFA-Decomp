@@ -16,7 +16,7 @@
 // - 5: collectible_hitDetect (0x80172C20)
 // - 6: collectible_render (0x80172B1C)
 // - 7: collectible_free (0x80172AD4)
-// - 8: collectible_func08 (0x80172ACC)
+// - 8: collectible_getObjectTypeId (0x80172ACC)
 // - 9: collectible_getExtraSize (0x80172AC4)
 // - A: collectible_setScale (0x80171E54)
 // - B: collectible_func0B (0x80171DF8)

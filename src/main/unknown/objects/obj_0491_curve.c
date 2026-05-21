@@ -43,7 +43,7 @@
  * - slot 03: 0x80171350 curve_init ref=init
  * - slot 06: 0x80171320 curve_render ref=render
  * - slot 07: 0x8017131C curve_free stub=blr ref=free (stub)
- * - slot 08: 0x80171314 curve_func08 stub=const 0
+ * - slot 08: 0x80171314 curve_getObjectTypeId stub=const 0
  * - slot 09: 0x8017130C curve_getExtraSize stub=const 0 ref=getExtraSize (stub)
  * - slot 10: 0x80171308 curve_setScale stub=blr ref=setScale (stub)
  * - slot 11: 0x80171300 curve_func11 stub=const 0

@@ -495,7 +495,7 @@
  *   slot 05: 0x8016F7F4 fireball_hitDetect
  *   slot 06: 0x8016F5BC fireball_render
  *   slot 07: 0x8016F55C fireball_free
- *   slot 08: 0x8016F554 fireball_func08
+ *   slot 08: 0x8016F554 fireball_getObjectTypeId
  *   slot 09: 0x8016F54C fireball_getExtraSize
  * - DLL 0x00E4: gFlameThrowerSpeObjDescriptor (slots=13, mask=1101111111111)
  *   slot 00: 0x801702D0 flamethrowerspe_initialise
@@ -505,7 +505,7 @@
  *   slot 05: 0x80170068 flamethrowerspe_hitDetect
  *   slot 06: 0x80170044 flamethrowerspe_render
  *   slot 07: 0x80170040 flamethrowerspe_free
- *   slot 08: 0x80170038 flamethrowerspe_func08
+ *   slot 08: 0x80170038 flamethrowerspe_getObjectTypeId
  *   slot 09: 0x80170030 flamethrowerspe_getExtraSize
  * - DLL 0x00E5: gShieldObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801712FC shield_initialise
@@ -515,7 +515,7 @@
  *   slot 05: 0x80170F6C shield_hitDetect
  *   slot 06: 0x80170AF0 shield_render
  *   slot 07: 0x80170A8C shield_free
- *   slot 08: 0x80170A84 shield_func08
+ *   slot 08: 0x80170A84 shield_getObjectTypeId
  *   slot 09: 0x80170A7C shield_getExtraSize
  * - DLL 0x00E7: gFlammableVineObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80187B9C flammablevine_initialise
@@ -535,7 +535,7 @@
  *   slot 05: 0x80177E60 iceblast_hitDetect
  *   slot 06: 0x80177E3C iceblast_render
  *   slot 07: 0x80177E38 iceblast_free
- *   slot 08: 0x80177E30 iceblast_func08
+ *   slot 08: 0x80177E30 iceblast_getObjectTypeId
  *   slot 09: 0x80177E28 iceblast_getExtraSize
  * - DLL 0x00F3: gFlameblastObjDescriptor (slots=10, mask=0001101001)
  *   slot 03: 0x801782C8 flameblast_init
@@ -550,7 +550,7 @@
  *   slot 05: 0x80179068 doorf4_hitDetect
  *   slot 06: 0x80179038 doorf4_render
  *   slot 07: 0x80178FD4 doorf4_free
- *   slot 08: 0x80178FCC doorf4_func08
+ *   slot 08: 0x80178FCC doorf4_getObjectTypeId
  *   slot 09: 0x80178FC4 doorf4_getExtraSize
  * - DLL 0x0102: gStayPointObjDescriptor (slots=10, mask=0001100000)
  *   slot 03: 0x801804B4 StayPoint_init

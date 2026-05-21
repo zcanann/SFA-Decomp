@@ -1608,13 +1608,13 @@ void iceblast_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int pushable_getExtraSize(void) { return 0x148; }
-int pushable_func08(void) { return 0x48; }
+int pushable_getObjectTypeId(void) { return 0x48; }
 int WarpPoint_getExtraSize(void) { return 0x10; }
 int WarpPoint_getObjectTypeId(void) { return 0x1; }
 int invhit_getExtraSize(void) { return 0xc; }
 int invhit_getObjectTypeId(void) { return 0x0; }
 int iceblast_getExtraSize(void) { return 0x4; }
-int iceblast_func08(void) { return 0x0; }
+int iceblast_getObjectTypeId(void) { return 0x0; }
 int flameblast_getExtraSize(void) { return 0x14; }
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);

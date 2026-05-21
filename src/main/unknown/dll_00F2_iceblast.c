@@ -15,5 +15,5 @@
 // - 5: iceblast_hitDetect (0x80177E60)
 // - 6: iceblast_render (0x80177E3C)
 // - 7: iceblast_free (0x80177E38)
-// - 8: iceblast_func08 (0x80177E30)
+// - 8: iceblast_getObjectTypeId (0x80177E30)
 // - 9: iceblast_getExtraSize (0x80177E28)

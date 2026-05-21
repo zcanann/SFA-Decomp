@@ -23,7 +23,7 @@
  *   slot 03: 0x80171350 curve_init
  *   slot 06: 0x80171320 curve_render
  *   slot 07: 0x8017131C curve_free
- *   slot 08: 0x80171314 curve_func08
+ *   slot 08: 0x80171314 curve_getObjectTypeId
  *   slot 09: 0x8017130C curve_getExtraSize
  */
 

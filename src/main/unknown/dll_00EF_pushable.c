@@ -13,7 +13,7 @@
 // - 5: pushable_hitDetect (0x801760E4)
 // - 6: pushable_render (0x80175FB8)
 // - 7: pushable_free (0x80175EC8)
-// - 8: pushable_func08 (0x80175EC0)
+// - 8: pushable_getObjectTypeId (0x80175EC0)
 // - 9: pushable_getExtraSize (0x80175EB8)
 // - A: pushable_setScale (0x801755CC)
 // - B: pushable_func0B (0x8017554C)
