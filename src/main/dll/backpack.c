@@ -353,7 +353,7 @@ void tumbleweed_updateEffects(int obj) {
             } while (i != 0);
             break;
         }
-        Sfx_PlayFromObject(obj, 0x27d);
+        Sfx_PlayFromObject(obj, TUMBLEWEED_SFX_BURST);
         state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_BURST);
     }
 
@@ -384,17 +384,17 @@ void tumbleweed_updateEffects(int obj) {
     if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_HIT_PULSE) != 0 &&
         (*(u16*)(obj + 0xb0) & 0x800) != 0) {
         u32 r;
-        ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
         r = state->hitPulseCounter;
         r = r + 1;
         state->hitPulseCounter = r;
         r = (u8)r;
-        if ((int)r % 6 != 0) {
+        if ((int)r % TUMBLEWEED_HIT_PULSE_PERIOD != 0) {
             fn_80098B18(obj, *(f32*)(obj + 0x8), 1, 0, 0, 0);
         } else {
-            fn_80098B18(obj, *(f32*)(obj + 0x8), 1, 3, 0, 0);
+            fn_80098B18(obj, *(f32*)(obj + 0x8), 1, TUMBLEWEED_HIT_PULSE_ALT_STYLE, 0, 0);
         }
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x451);
+        Sfx_KeepAliveLoopedObjectSound(obj, TUMBLEWEED_SFX_HIT_LOOP);
     }
 }
 #pragma pop
