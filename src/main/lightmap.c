@@ -2695,6 +2695,7 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int Camera_GetViewMatrix(void);
 extern void PSMTXMultVec(int m, f32 *in, f32 *out);
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void renderShadowType3(u8 *obj, u32 b, s32 offset) {
@@ -2723,6 +2724,7 @@ void renderShadowType3(u8 *obj, u32 b, s32 offset) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -2741,6 +2743,58 @@ void fn_8005DE94(u32 a, u32 b, f32 *p) {
     lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | 0x38000000;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 7;
     lbl_803DCE30++;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u32 lbl_803868D8[];
+extern int lbl_803DCDF0;
+extern s16 lbl_803DCEAE;
+extern int *gModgfxInterface;
+extern void objRender(int a, int b, int c, int d, void *obj, int f);
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+
+#pragma scheduling off
+#pragma peephole off
+void renderObjects(s8 *arg0) {
+    int i;
+    int idx;
+    u8 *obj;
+    u8 *state;
+    u32 flags;
+    int *p;
+    int slot;
+    int *objects;
+
+    objects = ObjList_GetObjects((int *)0, (int *)0);
+    for (i = 1; i < (int)lbl_803DCEAE; i++) {
+        idx = lbl_803868D8[i] & 0x3ff;
+        obj = (u8 *)objects[idx];
+        state = *(u8 **)(obj + 0x50);
+        flags = *(u32 *)(state + 0x44);
+        if ((flags & 0x800) != 0 || (state[0x5f] & 0x10) != 0) {
+            if (arg0[idx] != 0 && lbl_803DCDF0 < 0x14) {
+                slot = lbl_803DCDF0;
+                lbl_803DCDF0 = slot + 1;
+                lbl_8037E0C0[slot + 0x1045] = (u32)obj;
+            }
+        } else {
+            if ((flags & 0x100) == 0) {
+                (*(void (**)(int, int, int, int, void *))(*gModgfxInterface + 0x1c))(0, 0, 0, 1, obj);
+            }
+            objRender(0, 0, 0, 0, obj, 1);
+            p = *(int **)(obj + 0x64);
+            if (p != NULL && p[3] != 0) {
+                renderShadowType3(obj, 0x13, 0);
+                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 2;
+                lbl_803DCE30++;
+            } else if (*(s16 *)(state + 0x48) == 3 && (*(s16 *)(obj + 6) & 0x4000) == 0 && (p[12] & 0x4)) {
+                renderShadowType3(obj, 0x13, 0);
+                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 3;
+                lbl_803DCE30++;
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
