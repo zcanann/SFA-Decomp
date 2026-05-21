@@ -1158,8 +1158,10 @@ int fn_8018FB84(int* obj, int p2, u8* state)
 {
     u8 i;
     for (i = 0; i < state[139]; i++) {
-        if ((s32)state[i + 129] == 1) {
+        switch ((s32)state[i + 129]) {
+        case 1:
             fn_8018F2D8(obj);
+            break;
         }
     }
     return 0;
