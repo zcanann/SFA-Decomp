@@ -3,6 +3,18 @@
 
 #include "ghidra_import.h"
 
+extern char sProjdummyDoNoLongerSupported[];
+extern char sProjmagicstreamDoNoLongerSupported[];
+extern char sProjmagicemmit1DoNoLongerSupported[];
+extern char sProjroombeamDoNoLongerSupported[];
+extern char sProjlightning1DoNoLongerSupported[];
+extern char sProjlightning2DoNoLongerSupported[];
+extern char sProjlightning3DoNoLongerSupported[];
+extern char sProjlightning4DoNoLongerSupported[];
+extern char sProjlightning5DoNoLongerSupported[];
+extern char sProjlightning7DoNoLongerSupported[];
+extern char sProjlightning6DoNoLongerSupported[];
+
 void FUN_80100550(double param_1,undefined4 param_2,undefined param_3,int param_4,undefined4 param_5
                  );
 void projdummy_release(void);

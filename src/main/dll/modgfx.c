@@ -4530,7 +4530,6 @@ void dll_0B_func10(void)
 #pragma scheduling reset
 
 /* OSReport(literal) wrapper. */
-extern char sProjgfxReleaseDoNoLongerSupported[];
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
 #pragma peephole off
@@ -4540,8 +4539,6 @@ void projgfx_release_doUnsupported(void) { OSReport(sProjgfxReleaseDoNoLongerSup
 
 /* OSReport-stub returns. */
 extern void OSReport(const char *fmt, ...);
-extern char sProjgfxRayhitDoNoLongerSupported[];
-extern char sProjgfxSetzscaleDoNoLongerSupported[];
 
 #define PROJGFX_UNSUPPORTED_FALSE_RETURN 0
 

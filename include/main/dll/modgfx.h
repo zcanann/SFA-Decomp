@@ -6,6 +6,9 @@
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor11 projgfx_funcs;
+extern char sProjgfxReleaseDoNoLongerSupported[];
+extern char sProjgfxRayhitDoNoLongerSupported[];
+extern char sProjgfxSetzscaleDoNoLongerSupported[];
 
 void expgfx_initialise(void);
 void modgfx_releaseExpgfxPools(undefined8 param_1,undefined8 param_2,undefined8 param_3,

@@ -101,17 +101,6 @@ void projlightning6_initialise(void) {}
 
 /* OSReport-stub returns. */
 extern void OSReport(const char *fmt, ...);
-extern char sProjdummyDoNoLongerSupported[];
-extern char sProjmagicstreamDoNoLongerSupported[];
-extern char sProjmagicemmit1DoNoLongerSupported[];
-extern char sProjroombeamDoNoLongerSupported[];
-extern char sProjlightning1DoNoLongerSupported[];
-extern char sProjlightning2DoNoLongerSupported[];
-extern char sProjlightning3DoNoLongerSupported[];
-extern char sProjlightning4DoNoLongerSupported[];
-extern char sProjlightning5DoNoLongerSupported[];
-extern char sProjlightning7DoNoLongerSupported[];
-extern char sProjlightning6DoNoLongerSupported[];
 #pragma scheduling off
 #pragma peephole off
 int projdummy_doUnsupported(void) { OSReport(sProjdummyDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
