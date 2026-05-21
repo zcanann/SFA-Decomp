@@ -129,14 +129,9 @@ void CameraModeBike_update(short *param_1)
          lbl_803E1790 *
          (lbl_803E1794 * *(float *)(lbl_803DD540 + 0x1c) - *(float *)(lbl_803DD540 + 0x20)) +
          *(float *)(lbl_803DD540 + 0x20);
-    uStack_94 = (int)*param_1 ^ 0x80000000;
-    local_98 = 0x43300000;
-    iVar1 = (int)((float)((double)CONCAT44(0x43300000,uStack_94) - lbl_803E17B8) +
-                 *(float *)(lbl_803DD540 + 0x20));
-    local_90 = (longlong)iVar1;
+    iVar1 = (int)((f32)(s32)*param_1 + *(f32 *)(lbl_803DD540 + 0x20));
     *param_1 = (short)iVar1;
-    iVar1 = (int)(lbl_803E1798 - *(float *)(lbl_803DD540 + 0x30));
-    local_88 = (longlong)iVar1;
+    iVar1 = (int)(lbl_803E1798 - *(f32 *)(lbl_803DD540 + 0x30));
     sVar4 = (short)iVar1 - param_1[1];
     if (0x8000 < sVar4) {
       sVar4 = sVar4 + 1;
@@ -145,22 +140,10 @@ void CameraModeBike_update(short *param_1)
       sVar4 = sVar4 + -1;
     }
     param_1[1] = param_1[1] + (sVar4 >> 3);
-    uStack_7c = (int)*param_1 - 0x4000U ^ 0x80000000;
-    local_80 = 0x43300000;
-    dVar6 = (double)fn_80293E80((double)(lbl_803E179C *
-        (float)((double)CONCAT44(0x43300000,uStack_7c) - lbl_803E17B8) / lbl_803E17A0));
-    uStack_74 = (int)*param_1 - 0x4000U ^ 0x80000000;
-    local_78 = 0x43300000;
-    dVar7 = (double)sin((double)(lbl_803E179C *
-        (float)((double)CONCAT44(0x43300000,uStack_74) - lbl_803E17B8) / lbl_803E17A0));
-    uStack_6c = (int)param_1[1] ^ 0x80000000;
-    local_70 = 0x43300000;
-    dVar8 = (double)sin((double)(lbl_803E179C *
-        (float)((double)CONCAT44(0x43300000,uStack_6c) - lbl_803E17B8) / lbl_803E17A0));
-    uStack_64 = (int)param_1[1] ^ 0x80000000;
-    local_68 = 0x43300000;
-    dVar9 = (double)fn_80293E80((double)(lbl_803E179C *
-        (float)((double)CONCAT44(0x43300000,uStack_64) - lbl_803E17B8) / lbl_803E17A0));
+    dVar6 = (f64)fn_80293E80((f64)(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0));
+    dVar7 = (f64)sin((f64)(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0));
+    dVar8 = (f64)sin((f64)(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0));
+    dVar9 = (f64)fn_80293E80((f64)(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0));
     fVar2 = -*(float *)(lbl_803DD540 + 0x24) / lbl_803E17A4;
     fVar3 = lbl_803E1780;
     if ((lbl_803E1780 <= fVar2) && (fVar3 = fVar2, lbl_803E1788 < fVar2)) {
@@ -184,14 +167,7 @@ void CameraModeBike_update(short *param_1)
     if (sVar4 < -0x8000) {
       sVar4 = sVar4 + -1;
     }
-    uStack_54 = (int)sVar4 ^ 0x80000000;
-    local_58 = 0x43300000;
-    uStack_4c = (int)param_1[2] ^ 0x80000000;
-    local_50 = 0x43300000;
-    iVar1 = (int)((float)((double)CONCAT44(0x43300000,uStack_54) - lbl_803E17B8) * timeDelta
-                  * lbl_803E17B4 +
-                 (float)((double)CONCAT44(0x43300000,uStack_4c) - lbl_803E17B8));
-    local_48 = (longlong)iVar1;
+    iVar1 = (int)((f32)(s32)sVar4 * timeDelta * lbl_803E17B4 + (f32)(s32)param_1[2]);
     param_1[2] = (short)iVar1;
     Obj_TransformWorldPointToLocal((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
                  (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
