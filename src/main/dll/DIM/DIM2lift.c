@@ -997,6 +997,71 @@ void FUN_801bbf98(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 int fn_801BA590(int unused, int *p) { return *(s8*)((char*)p + 0x346) != 0; }
 
+extern f32 lbl_803E4BD8;
+extern f32 lbl_803E4C24;
+extern void ObjAnim_SetCurrentMove(int *obj, int n, f32 v, int m);
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+extern void** gPlayerInterface;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801BB1EC(int* obj, u8* state, f32 weight) {
+    if ((s8)state[634] != 0) {
+        ObjAnim_SetCurrentMove(obj, 2, lbl_803E4BD8, 0);
+        state[838] = 0;
+    }
+    *(f32*)((char*)state + 0x2a0) = lbl_803E4C24;
+    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[8])(obj, state, weight, 1);
+    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, weight, 4);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801BB328(int* obj, f32* p2) {
+    int* o;
+    void* alloc;
+    if ((u8)Obj_IsLoadingLocked() != 0) {
+        alloc = Obj_AllocObjectSetup(36, 656);
+        *(f32*)((char*)alloc + 8) = *(f32*)((char*)obj + 0xc);
+        *(f32*)((char*)alloc + 0xc) = *(f32*)((char*)obj + 0x10);
+        *(f32*)((char*)alloc + 0x10) = *(f32*)((char*)obj + 0x14);
+        *(u8*)((char*)alloc + 4) = 1;
+        *(u8*)((char*)alloc + 5) = 1;
+        *(u8*)((char*)alloc + 6) = 255;
+        *(u8*)((char*)alloc + 7) = 255;
+        *(s16*)((char*)alloc + 0x1e) = -1;
+        *(s16*)((char*)alloc + 0x20) = -1;
+        o = Obj_SetupObject(alloc, 5, -1, -1, (void*)0);
+        if (o != NULL) {
+            *(f32*)((char*)o + 0x24) = p2[0];
+            *(f32*)((char*)o + 0x28) = p2[1];
+            *(f32*)((char*)o + 0x2c) = p2[2];
+        }
+    }
+}
+
+int fn_801BB2B0(int* obj, u8* state) {
+    if ((s8)state[634] != 0) {
+        f32 fz;
+        if ((s8)state[634] != 0) {
+            ObjAnim_SetCurrentMove(obj, 1, lbl_803E4BD8, 0);
+            state[838] = 0;
+        }
+        fz = lbl_803E4BD8;
+        *(f32*)((char*)state + 0x280) = fz;
+        *(f32*)((char*)state + 0x284) = fz;
+        *(s16*)((char*)obj + 0xa2) = -1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int fn_801BA5F0(int* obj) {
     int* state = *(int**)((char*)obj + 0xb8);
     switch (*(s16*)((char*)state + 0x402)) {

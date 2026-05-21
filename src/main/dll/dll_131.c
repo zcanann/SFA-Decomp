@@ -272,3 +272,48 @@ void fn_80167B60(int obj, int p)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E3060;
+extern f32 lbl_803E3080;
+extern f32 timeDelta;
+extern void** gPlayerInterface;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80167A60(int* obj, u8* state) {
+    f32* t = *(f32**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
+    if (*(s16*)((char*)state + 628) == 6) {
+        f32 zero;
+        if ((s8)state[635] != 0) {
+            *(f32*)((char*)t + 0x44) = lbl_803E3080;
+        }
+        zero = lbl_803E3060;
+        if (*(f32*)((char*)t + 0x44) != zero) {
+            *(f32*)((char*)t + 0x44) = *(f32*)((char*)t + 0x44) - timeDelta;
+            if (*(f32*)((char*)t + 0x44) < zero) {
+                *(f32*)((char*)t + 0x44) = zero;
+            }
+        } else {
+            return 6;
+        }
+    } else {
+        if ((s8)state[838] != 0) return 6;
+    }
+    return 0;
+}
+
+int fn_80167AE4(int* obj, u8* state) {
+    if (*(void**)((char*)state + 0x2d0) != NULL) {
+        if ((s8)state[635] != 0) {
+            f32 fz = lbl_803E3060;
+            *(f32*)((char*)state + 0x284) = fz;
+            *(f32*)((char*)state + 0x280) = fz;
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        } else if ((s8)state[838] != 0) {
+            return 6;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
