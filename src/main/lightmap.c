@@ -3091,3 +3091,51 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     Camera_ApplyFullViewport();
 }
 #pragma scheduling reset
+
+extern int* lbl_80386468_table[0x78];
+extern void* lbl_803DCEA0;
+
+#pragma scheduling off
+#pragma peephole off
+int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage)
+{
+    int outer;
+    int* page;
+    int* p;
+    int inner_idx;
+    int total_offset;
+    u16 limit;
+    int sz;
+
+    for (outer = 0; outer < 0x78; outer++) {
+        page = lbl_80386468_table[outer];
+        if (page == NULL) continue;
+
+        lbl_803DCEA0 = page;
+        p = (int*)*(int*)((char*)page + 0x20);
+        inner_idx = 0;
+        total_offset = 0;
+        limit = *(u16*)((char*)page + 0x8);
+
+        while (total_offset < (int)limit) {
+            if (*(u32*)((char*)p + 0x14) == (u32)needle) {
+                if (out_idx != NULL) *out_idx = inner_idx;
+                if (out_outer != NULL) *out_outer = outer;
+                if (out_type != NULL) {
+                    *out_type = (int)*(s8*)((char*)lbl_803DCEA0 + 0x19);
+                }
+                if (out_lastpage != NULL) {
+                    *out_lastpage = (outer >= 0x50) ? 1 : 0;
+                }
+                return p;
+            }
+            sz = (int)*(u8*)((char*)p + 0x2) << 2;
+            total_offset += sz;
+            p = (int*)((char*)p + sz);
+            inner_idx++;
+        }
+    }
+    return NULL;
+}
+#pragma peephole reset
+#pragma scheduling reset
