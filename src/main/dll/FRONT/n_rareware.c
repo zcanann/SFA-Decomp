@@ -65,7 +65,7 @@ extern f32 lbl_803E1D0C;
 #pragma peephole off
 void runLoadingScreens(void)
 {
-  int alpha;
+  u8 alpha;
   int textureSlot;
   u8 loadingStatus;
   uint color;
