@@ -373,3 +373,87 @@ extern void loadUiDll(s32);
 void fn_801D70B4(void) { loadUiDll(0x1); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void ObjLink_DetachChild(int obj, int child);
+extern void Obj_FreeObject(int obj);
+
+#pragma scheduling off
+#pragma peephole off
+void warpstone_free(int obj, int mode)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (state[0] != 0 && mode == 0) {
+        ObjLink_DetachChild(obj, state[0]);
+        Obj_FreeObject(state[0]);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int ObjHits_GetPriorityHitWithPosition(int obj, int a, int b, int c, f32 *x, f32 *y, f32 *z);
+extern void objLightFn_8009a1dc(int obj, int *p, int x, int y, f32 light);
+extern int randFn_80080100(int max);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void objAudioFn_800393f8(int obj, int *p, int a, int b, int c, int d);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E54A0;
+
+#pragma scheduling off
+#pragma peephole off
+void warpstone_hitDetect(int obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int p[3];
+    f32 x;
+    f32 y;
+    f32 z;
+
+    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &x, &y, &z) != 0) {
+        x += playerMapOffsetX;
+        z += playerMapOffsetZ;
+        objLightFn_8009a1dc(obj, p, 1, 0, lbl_803E54A0);
+        if (randFn_80080100(3) != 0) {
+            Sfx_PlayFromObject(obj, 700);
+        } else {
+            Sfx_PlayFromObject(obj, 700);
+        }
+        objAudioFn_800393f8(obj, state + 5, 171, -1280, -1, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objRenderFn_8003b8f4(f32);
+extern int Obj_GetPlayerObject(void);
+extern int fn_80296464(void);
+extern int *Obj_GetActiveModel(int player);
+extern void fn_80295B2C(int player, f32 x, f32 y, f32 z);
+extern void playerRender(int player, int p2, int p3, int p4, int p5, int last);
+extern f32 lbl_803E549C;
+
+#pragma scheduling off
+#pragma peephole off
+void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int player;
+    int *model;
+    f32 x;
+    f32 y;
+    f32 z;
+    s32 v = visible;
+    if (v != 0) {
+        objRenderFn_8003b8f4(lbl_803E549C);
+        player = Obj_GetPlayerObject();
+        if (player != 0 && fn_80296464() != 0) {
+            model = Obj_GetActiveModel(player);
+            *(u16 *)((char *)model + 24) = (u16)(*(u16 *)((char *)model + 24) & ~0x8);
+            ObjPath_GetPointWorldPosition(obj, *(u8 *)((char *)state + 8), &x, &y, &z, 0);
+            fn_80295B2C(player, x, y, z);
+            playerRender(player, p2, p3, p4, p5, -1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
