@@ -227,6 +227,8 @@ int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
  * EN v1.0 Address: 0x8017A8F4
  * EN v1.0 Size: 556b
  */
+#pragma peephole off
+#pragma scheduling off
 void InvisibleHitSwitch_update(int obj)
 {
   int state2;
@@ -292,3 +294,5 @@ void InvisibleHitSwitch_update(int obj)
     }
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
