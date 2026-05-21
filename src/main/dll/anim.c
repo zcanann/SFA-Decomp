@@ -4818,3 +4818,100 @@ void dfplevelcontrol_setScale(int unused, u8 *out) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802028C0(int obj, int p2)
+{
+  extern void ObjHits_EnableObject(int);
+  extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
+  extern int *gPlayerInterface;
+  extern int lbl_80329640;
+  extern f32 lbl_803E6350;
+  extern f32 lbl_803E6354;
+  extern f32 lbl_803E6358;
+  int sub = *(int *)(obj + 0xb8);
+  int sub_40c = *(int *)(sub + 0x40c);
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    *(u8 *)(p2 + 0x25f) = 1;
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
+    *(u8 *)(obj + 0x36) = 255;
+    *(u8 *)(p2 + 0x34d) = 1;
+    *(f32 *)(p2 + 0x2a0) = lbl_803E6350 + (f32)(u32)*(u8 *)(sub + 0x406) / lbl_803E6354;
+    ObjHits_EnableObject(obj);
+    *(int *)(sub_40c + 0x18) = 0;
+    *(s16 *)(sub_40c + 0x1c) = -1;
+  } else {
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+  }
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
+    *(s16 *)(sub + 0x402) = 1;
+    *(u8 *)(sub_40c + 0x34) = 1;
+  }
+
+  if ((*(u32 *)(p2 + 0x314) & 0x200) != 0) {
+    *(u32 *)(p2 + 0x314) = *(u32 *)(p2 + 0x314) & ~0x200;
+    *(u8 *)(sub_40c + 0x14) = (u8)(*(u8 *)(sub_40c + 0x14) | 0x4);
+  }
+
+  if (*(f32 *)(obj + 0x98) < lbl_803E6358) {
+    *(u8 *)(sub_40c + 0x14) = (u8)(*(u8 *)(sub_40c + 0x14) | 0x2);
+  }
+
+  (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, &lbl_80329640);
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80203DA0(int obj, int unused, int p3)
+{
+  extern u8 Obj_IsLoadingLocked(void);
+  extern void *mapRomListFindItem(int, int, int, int, int);
+  extern int Obj_AllocObjectSetup(int, int);
+  extern void memcpy(int, void *, int);
+  extern void loadObjectAtObject(int, int);
+  extern int *ObjGroup_GetObjects(int, int *);
+  extern void ObjGroup_RemoveObject(int, int);
+  extern void ObjMsg_SendToObjects(int, int, int, int, int);
+  extern int lbl_803DDCE0;
+  int data = *(int *)(obj + 0x4c);
+  int i;
+
+  for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+    void *res;
+    int newObj;
+    if (*(u8 *)(p3 + 0x81 + i) != 1) continue;
+    if (GameBit_Get((s32)(s8)*(u8 *)(data + 0x19) + 2601) != 0) continue;
+    if (Obj_IsLoadingLocked() == 0) continue;
+    res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
+    if (res == NULL) continue;
+    newObj = Obj_AllocObjectSetup(56, 1337);
+    memcpy(newObj, res, 56);
+    *(f32 *)(newObj + 8) = *(f32 *)(obj + 0xc);
+    *(f32 *)(newObj + 12) = *(f32 *)(obj + 0x10);
+    *(f32 *)(newObj + 16) = *(f32 *)(obj + 0x14);
+    *(int *)(newObj + 20) = -1;
+    *(s16 *)(newObj + 26) = 149;
+    loadObjectAtObject(obj, newObj);
+  }
+
+  if (GameBit_Get(*(s16 *)(data + 0x1e)) != 0 || lbl_803DDCE0 != 0) {
+    int count;
+    int *objs = ObjGroup_GetObjects(36, &count);
+    ObjMsg_SendToObjects(0, 3, obj, 17, 0);
+    while (count != 0) {
+      ObjGroup_RemoveObject(*objs, 36);
+      objs++;
+      count--;
+    }
+    return 4;
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

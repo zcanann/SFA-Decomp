@@ -4498,7 +4498,7 @@ extern void dim2roofrub_update();
 extern void dim2roofrub_init();
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
-extern void staff_free();
+extern void staff_free(int *obj);
 extern void staff_update();
 extern void staff_init();
 extern void staff_release();
@@ -5121,6 +5121,25 @@ int* fn_801702D4(int* obj, f32 fv) {
         *(f32*)((char*)new_obj + 8) = fv;
     }
     return new_obj;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void mm_free(int *p);
+extern int *gExpgfxInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void staff_free(int *obj) {
+    u8 *p;
+    int i;
+    i = 0;
+    p = *(u8 **)((char *)obj + 0xb8);
+    for (; i < 3; i++) {
+        mm_free(*(int **)p);
+        p += 0x18;
+    }
+    ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset
