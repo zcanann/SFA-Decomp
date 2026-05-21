@@ -4193,13 +4193,15 @@ void objFn_80065604(void) {
 #pragma scheduling off
 #pragma peephole off
 void fn_80063368(int target) {
+    int idx, zero;
     s16 i;
-    int idx = 0;
-    int zero = 0;
-    for (i = 0; i < 64; i++) {
-        int *p = (int *)((char *)&lbl_803DCF48 + idx);
-        if (*p == target) {
-            *(u8 *)((char *)p + 0x14) = (u8)zero;
+    i = 0;
+    idx = 0;
+    zero = idx;
+    for ( ; i < 64; i++) {
+        u32 *p = (u32 *)(lbl_803DCF48 + idx);
+        if (*p == (u32)target) {
+            ((u8 *)p)[0x14] = (u8)zero;
         }
         idx += 24;
     }
