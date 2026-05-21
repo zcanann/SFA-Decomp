@@ -3166,3 +3166,41 @@ int fn_800399C0(s16 *curve, s16 *state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8003A168(int p1, int p2)
+{
+    s16* found = NULL;
+    int* table;
+    int k;
+    int n;
+    int i;
+    int j;
+
+    table = *(int**)(p1 + 0x50);
+    if (table != NULL) {
+        i = 0;
+        j = 0;
+        n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+        for (k = 0; k < n; k++) {
+            u8* data = *(u8**)((char*)table + 0x10);
+            s32 offset = *(s8*)(p1 + 0xad);
+            if (data[(offset + i) + 1] != 0xff && data[i] == 0) {
+                found = (s16*)((char*)*(void**)(p1 + 0x6c) + j);
+            }
+            i = i + *(s8*)((char*)table + 0x55) + 1;
+            j += 0x12;
+        }
+    }
+    if (found == NULL) return;
+    if (found[0] != 0) {
+        found[0] = (s16)((s32)found[0] * 3 / 4);
+    }
+    if (found[1] != 0) {
+        found[1] = (s16)((s32)found[1] * 3 / 4);
+    }
+    *(s16*)(p2 + 0x1a) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
