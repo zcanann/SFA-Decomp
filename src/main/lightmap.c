@@ -3047,3 +3047,47 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     shaderFn_8005e348(obj, newR, state, p3);
 }
 #pragma scheduling reset
+
+extern void fn_8000F8F8(void);
+extern void Camera_ApplyFullViewport(void);
+extern int mapBlockRender_setShader(int p1, int* obj, int* state);
+extern void mapBlockRender_callList(int p1, int p2, int* obj, int v, int* state, float* p3);
+
+#pragma scheduling off
+void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
+{
+    int state[5];
+    int countShifted;
+    int newR;
+    int v;
+    int byteOff;
+    int* base;
+    int cursor;
+    int nibble;
+    int i;
+    int byteOff2;
+
+    fn_8000F8F8();
+    countShifted = (int)*(u16*)((char*)obj + 0x86) << 3;
+    modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x7c), countShifted, countShifted);
+    modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
+    state[4] += 4;
+    newR = mapBlockRender_setShader(1, obj, state);
+    state[4] += 4;
+    mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
+    cursor = state[4] + 4;
+    byteOff = cursor >> 3;
+    v = *(u8*)(state[0] + byteOff);
+    base = (int*)(state[0] + byteOff);
+    v = v | ((u32)*(u8*)((char*)base + 1) << 8);
+    v = v | ((u32)*(u8*)((char*)base + 2) << 16);
+    state[4] += 8;
+    nibble = (v >> (cursor & 7)) & 0xf;
+    for (i = 0; i < nibble; i++) {
+        *(volatile int*)&state[4] += 8;
+    }
+    state[4] += 4;
+    mapBlockRender_callList(1, 1, obj, newR, state, p3);
+    Camera_ApplyFullViewport();
+}
+#pragma scheduling reset
