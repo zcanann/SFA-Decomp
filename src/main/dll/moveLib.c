@@ -726,6 +726,65 @@ undefined4 FUN_80114340(int param_1,undefined2 *param_2)
   return uVar1;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
+{
+  extern void fn_800218AC(int, int);
+  extern f32 fn_80114224(int, int, int, int, int);
+  extern f32 curveFn_80010dc0(int, int, f32);
+  extern u8 framesThisStep;
+  extern f32 lbl_803E1C90;
+  extern f32 lbl_803E1CA0;
+  extern f32 lbl_803E1CA4;
+  int ret = 0;
+
+  if (p2 != 0) {
+    s16 tmp[3];
+    *(f32 *)(p3 + 0x18) = lbl_803E1CA0;
+    *(f32 *)(p3 + 0x1c) = lbl_803E1C90;
+    *(f32 *)(p3 + 0x20) = lbl_803E1C90;
+    *(f32 *)(p3 + 0x24) = lbl_803E1CA0;
+    *(f32 *)(p3 + 0x28) = lbl_803E1C90;
+    *(f32 *)(p3 + 0x2c) = lbl_803E1C90;
+    fn_800218AC(p1, p3 + 0x18);
+    tmp[2] = 0;
+    tmp[1] = (s16)(s8)*(u8 *)(p2 + 0x2d);
+    tmp[0] = (s16)(s8)*(u8 *)(p2 + 0x2c);
+    fn_800218AC((int)tmp, p3 + 0x24);
+    *(f32 *)p4 = lbl_803E1C90;
+    *(f32 *)(p3 + 0x34) = fn_80114224(p3, p3 + 0x18, p3 + 0xc, p3 + 0x24, 10);
+  } else {
+    *(f32 *)p4 = *(f32 *)p4 + p5 * (f32)(u32)framesThisStep / *(f32 *)(p3 + 0x34);
+    if (*(f32 *)p4 > lbl_803E1CA4) {
+      ret = 1;
+      *(f32 *)p4 = lbl_803E1CA4;
+    }
+  }
+
+  {
+    f32 buf[4];
+    buf[0] = *(f32 *)(p3 + 0x00);
+    buf[1] = *(f32 *)(p3 + 0x0c);
+    buf[2] = *(f32 *)(p3 + 0x18);
+    buf[3] = *(f32 *)(p3 + 0x24);
+    *(f32 *)(p1 + 0x0c) = curveFn_80010dc0((int)buf, 0, *(f32 *)p4);
+    buf[0] = *(f32 *)(p3 + 0x04);
+    buf[1] = *(f32 *)(p3 + 0x10);
+    buf[2] = *(f32 *)(p3 + 0x1c);
+    buf[3] = *(f32 *)(p3 + 0x28);
+    *(f32 *)(p1 + 0x10) = curveFn_80010dc0((int)buf, 0, *(f32 *)p4);
+    buf[0] = *(f32 *)(p3 + 0x08);
+    buf[1] = *(f32 *)(p3 + 0x14);
+    buf[2] = *(f32 *)(p3 + 0x20);
+    buf[3] = *(f32 *)(p3 + 0x2c);
+    *(f32 *)(p1 + 0x14) = curveFn_80010dc0((int)buf, 0, *(f32 *)p4);
+  }
+  return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
