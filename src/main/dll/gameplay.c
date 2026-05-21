@@ -13187,6 +13187,10 @@ void mapClearBit(int idx, int bit) {
     if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
     lbl_803A2FBC[idx] &= ~(1 << bit);
 }
+void SaveGame_resetObjGroups(int idx) {
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    lbl_803A2FBC[idx] = 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
 

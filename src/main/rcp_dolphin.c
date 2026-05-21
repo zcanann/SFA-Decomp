@@ -2381,4 +2381,12 @@ void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area) {
     bBlurFilterUseArea = useArea;
     bBiggerBlurFilter = bigger;
 }
+
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+void fn_80054F74(int *p, f32 *vec) {
+    if (*(void**)((char*)p + 0x30) != NULL) return;
+    vec[0] = vec[0] + playerMapOffsetX;
+    vec[2] = vec[2] + playerMapOffsetZ;
+}
 #pragma scheduling reset

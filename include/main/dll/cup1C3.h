@@ -10,7 +10,7 @@ void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefine
 void FUN_801c9f44(void);
 void FUN_801c9f64(int param_1);
 void FUN_801c9f84(uint param_1);
-void dbsh_symbol_render(undefined4 param_1);
+void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FUN_801ca13c(int param_1);
 int dbsh_symbol_getExtraSize(void);
 void dbsh_symbol_free(void);
