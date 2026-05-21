@@ -4326,7 +4326,7 @@ void fn_80138B60(int obj, register u8* state) {
     int model;
     f32 target;
     Obj_GetActiveModel(obj);
-    if ((state[0x82e] & 0x80) != 0) {
+    if (((state[0x82e] >> 7) & 1) != 0) {
         model = (int)Obj_GetActiveModel(obj);
         ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
         *(f32*)(state + 0x830) = lbl_803E23E0;
