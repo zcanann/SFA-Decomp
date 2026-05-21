@@ -3325,6 +3325,24 @@ void cfperch_initialise(void) {}
 void cfprisoncage_free(void) {}
 void cfprisoncage_release(void) {}
 void cfprisoncage_initialise(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+void cfprisoncage_update(int *obj) {
+    extern int *gObjectTriggerInterface;
+    int v;
+    if (*(int*)((char*)obj + 0xf4) != 0) {
+        switch (*(s16*)((char*)obj + 0x46)) {
+        case 0x128: v = 1; break;
+        case 0x127: v = 0; break;
+        default:    v = 1; break;
+        }
+        ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])(v, obj, -1);
+        *(int*)((char*)obj + 0xf4) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void spiritdoorspirit_hitDetect(void) {}
 void spiritdoorspirit_release(void) {}
 void spiritdoorspirit_initialise(void) {}
