@@ -996,3 +996,15 @@ void FUN_801bbf98(undefined8 param_1,double param_2,double param_3,undefined8 pa
 }
 
 int fn_801BA590(int unused, int *p) { return *(s8*)((char*)p + 0x346) != 0; }
+
+int fn_801BA5F0(int* obj) {
+    int* state = *(int**)((char*)obj + 0xb8);
+    switch (*(s16*)((char*)state + 0x402)) {
+        case 1: return 5;
+        case 2: return 6;
+        case 4: return 4;
+        case 0: return 2;
+        case 3: return 2;
+        default: return 2;
+    }
+}

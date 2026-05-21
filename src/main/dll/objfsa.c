@@ -4654,3 +4654,38 @@ void fn_800D9EE8(float *p) {
     }
 }
 
+
+#pragma scheduling off
+#pragma peephole off
+int fn_800DB240(int p1, f32 *outVec, u16 id)
+{
+  extern f32 vec3f_distanceSquared(int, int);
+  extern char lbl_8039CAE8[];
+  u8 i;
+  char *entry;
+  f32 d1;
+
+  for (i = 0; i < 256; i++) {
+    if (*(u16 *)(lbl_8039CAE8 + (u32)i * 48 + 36) == id) break;
+  }
+
+  entry = lbl_8039CAE8 + (u32)i * 48;
+
+  outVec[0] = (f32)(s32)*(s16 *)(entry + 38);
+  outVec[1] = *(f32 *)(p1 + 4);
+  outVec[2] = (f32)(s32)*(s16 *)(entry + 40);
+  d1 = vec3f_distanceSquared(p1, (int)outVec);
+
+  outVec[0] = (f32)(s32)*(s16 *)(entry + 42);
+  outVec[2] = (f32)(s32)*(s16 *)(entry + 44);
+
+  if (vec3f_distanceSquared(p1, (int)outVec) < d1) {
+    return 1;
+  }
+
+  outVec[0] = (f32)(s32)*(s16 *)(entry + 38);
+  outVec[2] = (f32)(s32)*(s16 *)(entry + 40);
+  return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
