@@ -1586,6 +1586,53 @@ void WM_colrise_initialise(void) {}
 void wmtorch_hitDetect(void) {}
 void wmtorch_release(void) {}
 void wmtorch_initialise(void) {}
+
+extern f32 lbl_803E5DEC;
+extern f32 lbl_803E5DF0;
+extern f32 lbl_803E5DF4;
+extern f32 lbl_803E5DF8;
+extern u32 Resource_Acquire(int id, int mode);
+extern void Resource_Release(u32);
+
+#pragma peephole off
+#pragma scheduling off
+void wmtorch_init(u8* obj, u8* params) {
+    u8* sub;
+    u32 res;
+    f32 v[5];
+
+    sub = *(u8**)(obj + 0xb8);
+    if (*(s16*)(params + 0x1a) != 0) {
+        *(f32*)(sub + 4) = (f32)(s32)*(s16*)(params + 0x1a);
+    } else {
+        *(f32*)(sub + 4) = lbl_803E5DEC;
+    }
+    if (*(s16*)(params + 0x1c) != 0) {
+        *(s16*)(sub + 0xa) = *(s16*)(params + 0x1c);
+    } else {
+        *(s16*)(sub + 0xa) = 0x8c;
+    }
+    sub[0xc] = params[0x19];
+    v[4] = lbl_803E5DF0;
+    if (sub[0xc] == 0) {
+        res = Resource_Acquire(0x69, 1);
+        *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
+        ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 1, v, 0x10004, -1, 0);
+    } else if (sub[0xc] == 0x7f) {
+        res = Resource_Acquire(0x69, 1);
+        *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
+        ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 2, v, 0x10004, -1, 0);
+    } else {
+        res = Resource_Acquire(0x63, 1);
+        *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
+        ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 2, v, 0x10004, -1, 0);
+    }
+    *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF8;
+    Resource_Release(res);
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x2000);
+}
+#pragma scheduling reset
+#pragma peephole reset
 #pragma peephole off
 void wmtorch_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
     if (visible == 0) return;
