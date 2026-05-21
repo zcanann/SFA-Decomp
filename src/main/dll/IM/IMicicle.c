@@ -1295,6 +1295,49 @@ void cfmagicwall_initialise(void) {}
 void cflevelcontrol_hitDetect(void) {}
 void cflevelcontrol_release(void) {}
 void cflevelcontrol_initialise(void) {}
+
+extern void storeZeroToFloatParam(void* p);
+extern void s16toFloat(void* p, int duration);
+extern int CFLevelControl_SeqFn(int p1, int p2, void *p3);
+extern void GameBit_Set(int eventId, int value);
+extern uint GameBit_Get(int eventId);
+extern void objSetSlot(void *obj, int resourceId);
+extern s16 lbl_80323008[];
+extern int *gMapEventInterface;
+
+#pragma peephole off
+#pragma scheduling off
+void cflevelcontrol_init(u8* obj, u8* params) {
+    u8* sub;
+    int i;
+    s16* p;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(int*)(sub + 8) = 0;
+    sub[0xd] = (u8)-1;
+    storeZeroToFloatParam(sub);
+    s16toFloat(sub, 0x1e0);
+    sub[0xc] = (u8)(sub[0xc] & ~0x40);
+    *(void**)(obj + 0xbc) = (void*)&CFLevelControl_SeqFn;
+    GameBit_Set(0x983, *(int*)(*(int*)(obj + 0x4c) + 0x14) != 0x2cef ? 1 : 0);
+    if (GameBit_Get(0x2fe) == 0) {
+        p = lbl_80323008;
+        for (i = 0; i < 0x17; i++) {
+            GameBit_Set(*p, 0);
+            p++;
+        }
+    }
+    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 4, 0);
+    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 0x11, 0);
+    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 0x15, 0);
+    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 0x16, 0);
+    sub[0xc] = (u8)((sub[0xc] & ~0x20) | (((u8)GameBit_Get(0x974) & 1) << 5));
+    sub[0xc] = (u8)((sub[0xc] & ~0x10) | (((u8)GameBit_Get(0x975) & 1) << 4));
+    objSetSlot(obj, 0x51);
+    sub[0xc] = (u8)(sub[0xc] | 0x08);
+}
+#pragma scheduling reset
+#pragma peephole reset
 void exploded_free(void) {}
 void exploded_hitDetect(void) {}
 void exploded_release(void) {}
