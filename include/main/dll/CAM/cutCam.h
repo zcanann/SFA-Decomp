@@ -12,7 +12,7 @@ typedef struct CamcontrolAction43Payload {
 typedef struct CamcontrolAction44Payload {
   f32 distance;
   f32 yOffset;
-  undefined2 height;
+  s16 height;
 } CamcontrolAction44Payload;
 
 undefined4

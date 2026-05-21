@@ -275,9 +275,9 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
   CamcontrolAction44Payload local_24;
   longlong local_18;
   
-  if (*(int *)(param_2 + 0xc0) == 0) {
+  if (*(void **)(param_2 + 0xc0) == NULL) {
     uVar2 = getButtonsJustPressed(0);
-    if (*(int *)(param_1 + 0x124) != 0) {
+    if (*(void **)(param_1 + 0x124) != NULL) {
       sVar1 = *(short *)(*(int *)(param_1 + 0x124) + 0x44);
       if (((sVar1 == 0x1c) || (sVar1 == 0x2a)) && (*(short *)(param_2 + 0x44) == 1)) {
         iVar3 = objFn_80296700(param_2);
@@ -300,14 +300,14 @@ check_action_44:
       local_24.distance = *cameraMtxVar57;
       local_24.yOffset = cameraMtxVar57[2];
       local_18 = (longlong)(int)cameraMtxVar57[0x23];
-      local_24.height = (undefined2)(int)cameraMtxVar57[0x23];
+      local_24.height = (int)cameraMtxVar57[0x23];
       cameraSetInterpMode(0);
       (*(code *)(*gCameraInterface + 0x1c))(0x44,1,0,0xc,&local_24,0xf,0xfe);
     }
     else {
       iVar3 = getCurSeqNo();
       if (((iVar3 == 0) && (uVar2 = getPadFn_80014d9c(0), (uVar2 & 0x40) != 0)) &&
-         ((*(ushort *)(param_1 + 6) & 4) == 0)) {
+         ((*(short *)(param_1 + 6) & 4) == 0)) {
         local_28.action = 5;
         local_28.enabled = 1;
         local_28.immediate = 1;
