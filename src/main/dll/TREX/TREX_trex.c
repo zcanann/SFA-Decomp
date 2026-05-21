@@ -116,20 +116,25 @@ extern undefined4 uRam803de8d4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_FireBall_hitDetect(int param_1)
+extern int *gPartfxInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_FireBall_hitDetect(int *obj)
 {
-  uint uVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
-  uVar1 = *(uint *)(iVar2 + 0x20);
-  if (uVar1 != 0) {
-    FUN_80017620(uVar1);
-    *(undefined4 *)(iVar2 + 0x20) = 0;
-  }
-  return;
+    int *params = *(int **)((char *)obj + 0x54);
+    int i;
+    if (*(int *)((char *)params + 0x50) == 0) return;
+    *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
+    for (i = 50; i != 0; i--) {
+        ((void (*)(int *, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 167, 0, 1, -1, 0);
+    }
+    for (i = 10; i != 0; i--) {
+        ((void (*)(int *, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 171, 0, 1, -1, 0);
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
