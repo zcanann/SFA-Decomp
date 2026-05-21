@@ -1219,7 +1219,7 @@
  *   slot 05: 0x8020C2BC worldasteroids_hitDetect
  *   slot 06: 0x8020C28C worldasteroids_render
  *   slot 07: 0x8020C288 worldasteroids_free
- *   slot 08: 0x8020C280 worldasteroids_func08
+ *   slot 08: 0x8020C280 worldasteroids_getObjectTypeId
  *   slot 09: 0x8020C278 worldasteroids_getExtraSize
  * - DLL 0x01D5: gDIM2ConveyorObjDescriptor (slots=11, mask=11011111111)
  *   slot 00: 0x801B75B4 dim2conveyor_initialise
@@ -1410,7 +1410,7 @@
  *   slot 05: 0x801F0B4C LaserBeam_hitDetect
  *   slot 06: 0x801F0B48 LaserBeam_render
  *   slot 07: 0x801F0AF4 LaserBeam_init
- *   slot 08: 0x801F0AEC LaserBeam_func08
+ *   slot 08: 0x801F0AEC LaserBeam_getObjectTypeId
  *   slot 09: 0x801F0AE4 LaserBeam_getExtraSize
  * - DLL 0x01FD: gWM_LaserTargetObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F20D0 wmlasertarget_initialise
@@ -1420,7 +1420,7 @@
  *   slot 05: 0x801F1F60 wmlasertarget_hitDetect
  *   slot 06: 0x801F1F30 wmlasertarget_render
  *   slot 07: 0x801F1F2C wmlasertarget_free
- *   slot 08: 0x801F1F24 wmlasertarget_func08
+ *   slot 08: 0x801F1F24 wmlasertarget_getObjectTypeId
  *   slot 09: 0x801F1F1C wmlasertarget_getExtraSize
  * - DLL 0x0201: gWM_colriseObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F30D8 WM_colrise_initialise
@@ -1430,7 +1430,7 @@
  *   slot 05: 0x801F2EDC WM_colrise_hitDetect
  *   slot 06: 0x801F2EAC WM_colrise_render
  *   slot 07: 0x801F2EA8 WM_colrise_free
- *   slot 08: 0x801F2EA0 WM_colrise_func08_ret_0
+ *   slot 08: 0x801F2EA0 WM_colrise_getObjectTypeId
  *   slot 09: 0x801F2E98 WM_colrise_getExtraSize
  * - DLL 0x0204: gWM_TorchObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F33B0 wmtorch_initialise
@@ -1440,7 +1440,7 @@
  *   slot 05: 0x801F316C wmtorch_hitDetect
  *   slot 06: 0x801F3160 wmtorch_render
  *   slot 07: 0x801F30EC wmtorch_free
- *   slot 08: 0x801F30E4 wmtorch_func08
+ *   slot 08: 0x801F30E4 wmtorch_getObjectTypeId
  *   slot 09: 0x801F30DC wmtorch_getExtraSize
  * - DLL 0x0205: lbl_80328AD8 (slots=1, mask=0)
  * - DLL 0x0206: gLightSourceObjDescriptor (slots=10, mask=1101111111)
@@ -1451,7 +1451,7 @@
  *   slot 05: 0x801F34A8 lightsource_hitDetect
  *   slot 06: 0x801F3410 lightsource_render
  *   slot 07: 0x801F33C4 lightsource_free
- *   slot 08: 0x801F33BC lightsource_func08
+ *   slot 08: 0x801F33BC lightsource_getObjectTypeId
  *   slot 09: 0x801F33B4 lightsource_getExtraSize
  * - DLL 0x0207: gWM_WormObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F3F14 wmworm_initialise
@@ -1461,7 +1461,7 @@
  *   slot 05: 0x801F3C78 wmworm_hitDetect
  *   slot 06: 0x801F3C6C wmworm_render
  *   slot 07: 0x801F3C3C wmworm_free
- *   slot 08: 0x801F3C34 wmworm_func08
+ *   slot 08: 0x801F3C34 wmworm_getObjectTypeId
  *   slot 09: 0x801F3C2C wmworm_getExtraSize
  * - DLL 0x020A: gWM_GeneralScalesObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F4C00 wmgeneralscales_initialise
@@ -1471,7 +1471,7 @@
  *   slot 05: 0x801F4BC8 wmgeneralscales_hitDetect
  *   slot 06: 0x801F4B88 wmgeneralscales_render
  *   slot 07: 0x801F4B5C wmgeneralscales_free
- *   slot 08: 0x801F4B54 wmgeneralscales_func08
+ *   slot 08: 0x801F4B54 wmgeneralscales_getObjectTypeId
  *   slot 09: 0x801F4B4C wmgeneralscales_getExtraSize
  * - DLL 0x020B: gFireFlyObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F5688 firefly_initialise

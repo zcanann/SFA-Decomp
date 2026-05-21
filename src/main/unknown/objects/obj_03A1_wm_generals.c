@@ -57,7 +57,7 @@
  * - slot 05: 0x801F4BC8 wmgeneralscales_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F4B88 wmgeneralscales_render ref=render
  * - slot 07: 0x801F4B5C wmgeneralscales_free ref=free
- * - slot 08: 0x801F4B54 wmgeneralscales_func08 stub=const 9
+ * - slot 08: 0x801F4B54 wmgeneralscales_getObjectTypeId stub=const 9
  * - slot 09: 0x801F4B4C wmgeneralscales_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

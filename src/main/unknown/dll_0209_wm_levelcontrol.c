@@ -15,5 +15,5 @@
 // - 5: wmlevelcontrol_hitDetect (0x801F44B0)
 // - 6: wmlevelcontrol_render (0x801F4480)
 // - 7: wmlevelcontrol_free (0x801F442C)
-// - 8: wmlevelcontrol_func08 (0x801F4424)
+// - 8: wmlevelcontrol_getObjectTypeId (0x801F4424)
 // - 9: wmlevelcontrol_getExtraSize (0x801F441C)

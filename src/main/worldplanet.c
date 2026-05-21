@@ -11,7 +11,7 @@ int worldplanet_getExtraSize(void)
   return sizeof(WorldPlanetState);
 }
 
-int worldplanet_func08(void)
+int worldplanet_getObjectTypeId(void)
 {
   return 0;
 }

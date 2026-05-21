@@ -110,7 +110,7 @@
  *   slot 05: 0x801F44B0 wmlevelcontrol_hitDetect
  *   slot 06: 0x801F4480 wmlevelcontrol_render
  *   slot 07: 0x801F442C wmlevelcontrol_free
- *   slot 08: 0x801F4424 wmlevelcontrol_func08
+ *   slot 08: 0x801F4424 wmlevelcontrol_getObjectTypeId
  *   slot 09: 0x801F441C wmlevelcontrol_getExtraSize
  * - DLL 0x024F: gKtRexLevelObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80211F34 ktrexlevel_initialise

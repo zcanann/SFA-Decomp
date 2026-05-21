@@ -17,5 +17,5 @@
 // - 5: pressureswitch_hitDetect (0x801F1668)
 // - 6: pressureswitch_render (0x801F1638)
 // - 7: pressureswitch_free (0x801F1634)
-// - 8: pressureswitch_func08 (0x801F162C)
+// - 8: pressureswitch_getObjectTypeId (0x801F162C)
 // - 9: pressureswitch_getExtraSize (0x801F1624)

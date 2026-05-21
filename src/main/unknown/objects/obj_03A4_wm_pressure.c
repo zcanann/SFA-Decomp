@@ -51,7 +51,7 @@
  * - slot 05: 0x801F1668 pressureswitch_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F1638 pressureswitch_render ref=render
  * - slot 07: 0x801F1634 pressureswitch_free stub=blr ref=free (stub)
- * - slot 08: 0x801F162C pressureswitch_func08 stub=const 0
+ * - slot 08: 0x801F162C pressureswitch_getObjectTypeId stub=const 0
  * - slot 09: 0x801F1624 pressureswitch_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

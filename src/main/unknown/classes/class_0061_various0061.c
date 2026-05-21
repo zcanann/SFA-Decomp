@@ -429,7 +429,7 @@
  *   slot 05: 0x8020C9C8 worldplanet_hitDetect
  *   slot 06: 0x8020C998 worldplanet_render
  *   slot 07: 0x8020C974 worldplanet_free
- *   slot 08: 0x8020C96C worldplanet_func08
+ *   slot 08: 0x8020C96C worldplanet_getObjectTypeId
  *   slot 09: 0x8020C964 worldplanet_getExtraSize
  * - DLL 0x01D3: gWorldObjObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8020F210 worldobj_initialise
@@ -439,7 +439,7 @@
  *   slot 05: 0x8020DFA4 worldobj_hitDetect
  *   slot 06: 0x8020DD9C worldobj_render
  *   slot 07: 0x8020DD38 worldobj_free
- *   slot 08: 0x8020DD18 worldobj_func08
+ *   slot 08: 0x8020DD18 worldobj_getObjectTypeId
  *   slot 09: 0x8020DD10 worldobj_getExtraSize
  * - DLL 0x01F4: gLampObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x801E5D64 Lamp_init

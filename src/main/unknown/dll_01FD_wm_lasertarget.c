@@ -15,5 +15,5 @@
 // - 5: wmlasertarget_hitDetect (0x801F1F60)
 // - 6: wmlasertarget_render (0x801F1F30)
 // - 7: wmlasertarget_free (0x801F1F2C)
-// - 8: wmlasertarget_func08 (0x801F1F24)
+// - 8: wmlasertarget_getObjectTypeId (0x801F1F24)
 // - 9: wmlasertarget_getExtraSize (0x801F1F1C)

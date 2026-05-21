@@ -15,5 +15,5 @@
 // - 5: WM_colrise_hitDetect (0x801F2EDC)
 // - 6: WM_colrise_render (0x801F2EAC)
 // - 7: WM_colrise_free (0x801F2EA8)
-// - 8: WM_colrise_func08_ret_0 (0x801F2EA0)
+// - 8: WM_colrise_getObjectTypeId (0x801F2EA0)
 // - 9: WM_colrise_getExtraSize (0x801F2E98)

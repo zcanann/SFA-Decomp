@@ -1605,18 +1605,18 @@ void lightsource_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int pressureswitch_getExtraSize(void) { return 0x8; }
-int pressureswitch_func08(void) { return 0x0; }
+int pressureswitch_getObjectTypeId(void) { return 0x0; }
 int dll_1FF_getExtraSize_ret_8(void) { return 0x8; }
 int wmlasertarget_getExtraSize(void) { return 0x4; }
-int wmlasertarget_func08(void) { return 0x0; }
+int wmlasertarget_getObjectTypeId(void) { return 0x0; }
 int dll_200_getExtraSize_ret_40(void) { return 0x28; }
 int dll_200_func08_ret_1(void) { return 0x1; }
 int WM_colrise_getExtraSize(void) { return 0x4; }
-int WM_colrise_func08_ret_0(void) { return 0x0; }
+int WM_colrise_getObjectTypeId(void) { return 0x0; }
 int wmtorch_getExtraSize(void) { return 0x10; }
-int wmtorch_func08(void) { return 0x1; }
+int wmtorch_getObjectTypeId(void) { return 0x1; }
 int lightsource_getExtraSize(void) { return 0x1c; }
-int lightsource_func08(void) { return 0x1; }
+int lightsource_getObjectTypeId(void) { return 0x1; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5D58;

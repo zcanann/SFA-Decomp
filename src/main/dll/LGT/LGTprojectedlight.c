@@ -372,7 +372,7 @@ void wmgeneralscales_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int wmgeneralscales_getExtraSize(void) { return 0x8; }
-int wmgeneralscales_func08(void) { return 0x9; }
+int wmgeneralscales_getObjectTypeId(void) { return 0x9; }
 
 extern void ObjLink_DetachChild(int *parent, int *child);
 #pragma scheduling off

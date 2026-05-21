@@ -30,7 +30,7 @@ int worldasteroids_getExtraSize(void)
   return sizeof(WorldAsteroidsState);
 }
 
-int worldasteroids_func08(void)
+int worldasteroids_getObjectTypeId(void)
 {
   return 0;
 }
@@ -161,6 +161,6 @@ ObjectDescriptor gWorldAsteroidsObjDescriptor = {
     (ObjectDescriptorCallback)worldasteroids_hitDetect,
     (ObjectDescriptorCallback)worldasteroids_render,
     (ObjectDescriptorCallback)worldasteroids_free,
-    (ObjectDescriptorCallback)worldasteroids_func08,
+    (ObjectDescriptorCallback)worldasteroids_getObjectTypeId,
     worldasteroids_getExtraSize,
 };

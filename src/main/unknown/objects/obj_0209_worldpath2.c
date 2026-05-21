@@ -68,7 +68,7 @@
  * - slot 05: 0x8020DFA4 worldobj_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8020DD9C worldobj_render ref=render
  * - slot 07: 0x8020DD38 worldobj_free ref=free
- * - slot 08: 0x8020DD18 worldobj_func08
+ * - slot 08: 0x8020DD18 worldobj_getObjectTypeId
  * - slot 09: 0x8020DD10 worldobj_getExtraSize stub=const 644 ref=getExtraSize (stub)
  */
 

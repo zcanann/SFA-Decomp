@@ -15,5 +15,5 @@
 // - 5: wmgeneralscales_hitDetect (0x801F4BC8)
 // - 6: wmgeneralscales_render (0x801F4B88)
 // - 7: wmgeneralscales_free (0x801F4B5C)
-// - 8: wmgeneralscales_func08 (0x801F4B54)
+// - 8: wmgeneralscales_getObjectTypeId (0x801F4B54)
 // - 9: wmgeneralscales_getExtraSize (0x801F4B4C)

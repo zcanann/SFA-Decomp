@@ -56,7 +56,7 @@
  * - slot 05: 0x801F44B0 wmlevelcontrol_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F4480 wmlevelcontrol_render ref=render
  * - slot 07: 0x801F442C wmlevelcontrol_free ref=free
- * - slot 08: 0x801F4424 wmlevelcontrol_func08 stub=const 0
+ * - slot 08: 0x801F4424 wmlevelcontrol_getObjectTypeId stub=const 0
  * - slot 09: 0x801F441C wmlevelcontrol_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 

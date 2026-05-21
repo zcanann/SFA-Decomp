@@ -259,7 +259,7 @@ int WM_seqobject_getObjectTypeId(void) { return 0x0; }
 int dll_1FB_getExtraSize_ret_12(void) { return 0xc; }
 int dll_1FB_func08_ret_0(void) { return 0x0; }
 int LaserBeam_getExtraSize(void) { return 0x50; }
-int LaserBeam_func08(void) { return 0x0; }
+int LaserBeam_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5CF8;

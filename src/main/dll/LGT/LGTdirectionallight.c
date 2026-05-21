@@ -350,7 +350,7 @@ void wmlevelcontrol_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
-int wmlevelcontrol_func08(void) { return 0x0; }
+int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5E74;

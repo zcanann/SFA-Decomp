@@ -57,7 +57,7 @@
  * - slot 05: 0x801F0B4C LaserBeam_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F0B48 LaserBeam_render stub=blr ref=render (stub)
  * - slot 07: 0x801F0AF4 LaserBeam_init ref=free
- * - slot 08: 0x801F0AEC LaserBeam_func08 stub=const 0
+ * - slot 08: 0x801F0AEC LaserBeam_getObjectTypeId stub=const 0
  * - slot 09: 0x801F0AE4 LaserBeam_getExtraSize stub=const 80 ref=getExtraSize (stub)
  */
 
