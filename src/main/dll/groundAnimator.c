@@ -737,6 +737,53 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+/* fn_8017DAF0: ground-animator collectable hit handler. When player is in
+ * range, either send a trigger event (first contact) or apply healing +
+ * particle FX + sfx + free-or-disable. */
+extern f32 Vec_xzDistance(float *a, float *b);
+extern void playerAddHealth(int player, u16 amount);
+extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Obj_FreeObject(int obj);
+extern f32 lbl_803E37C8;
+extern f32 lbl_803E37EC;
+extern f32 lbl_803E37F0;
+#pragma scheduling off
+#pragma peephole off
+void fn_8017DAF0(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int player = Obj_GetPlayerObject();
+
+    if (Vec_xzDistance((float *)(player + 0x18), (float *)(obj + 0x18)) >= lbl_803E37EC) return;
+    if (Vec_distance((float *)(player + 0x18), (float *)(obj + 0x18)) >= lbl_803E37F0) return;
+
+    if (GameBit_Get(0x90f) == 0) {
+        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x7c))(0x444, 0, 0);
+        *(s16 *)(state + 0x5c) = -1;
+        *(s16 *)(state + 0x5e) = 0;
+        *(f32 *)(state + 0x60) = lbl_803E37C8;
+        ObjMsg_SendToObject(player, 0x7000a, obj, (int *)(state + 0x5c));
+        GameBit_Set(0x90f, 1);
+        *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 4);
+    } else {
+        playerAddHealth(player, *(u16 *)(state + 0x38));
+        itemPickupDoParticleFx(obj, lbl_803E37C8, 0xff, 0x28);
+        Sfx_PlayFromObject(obj, 0x58);
+        state = *(int *)(obj + 0xb8);
+        if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+            Obj_FreeObject(obj);
+        } else {
+            if (*(void **)(obj + 0x54) != NULL) {
+                ObjHits_DisableObject(obj);
+            }
+            *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 2);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
