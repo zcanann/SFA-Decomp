@@ -2229,3 +2229,35 @@ int fn_801B0670(int *obj, int unused, int *p3) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void queueGlowRender(int *obj);
+extern f32 lbl_803E4820;
+
+#pragma scheduling off
+#pragma peephole off
+void dimlogfire_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    int *state;
+    int *subobj;
+    if ((s32)visible != 0) {
+        state = *(int **)((char *)obj + 0xb8);
+        subobj = (int *)state[1];
+        if (subobj != NULL) {
+            int *p = *(int **)((char *)subobj + 0x7c);
+            int idx = (s32)*(s8 *)((char *)subobj + 0xad);
+            int *q = ((int **)p)[idx];
+            *(u16 *)((char *)q + 0x18) = (u16)(*(u16 *)((char *)q + 0x18) & ~0x8);
+            *(u8 *)((char *)(int *)state[1] + 0x37) = *(u8 *)((char *)obj + 0x37);
+            ((void (*)(int *, f32))objRenderFn_8003b8f4)((int *)state[1], lbl_803E4820);
+        }
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4820);
+        if (*(void **)state != NULL) {
+            if (*(u8 *)((char *)*(void **)state + 0x2f8) != 0) {
+                if (*(u8 *)((char *)*(void **)state + 0x4c) != 0) {
+                    queueGlowRender(*(int **)state);
+                }
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

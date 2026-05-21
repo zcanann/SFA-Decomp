@@ -1688,3 +1688,46 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f64 lbl_803E25E0;
+extern f32 lbl_803E257C;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8014C540(int* obj, int* p4, f32* p5, f32* p6) {
+    int* state;
+    f32 fz;
+    if (obj != NULL) {
+        state = *(int**)((char*)obj + 0xb8);
+        if (state != NULL) {
+            *p5 = (f32)(u32)*(u8*)((char*)state + 755) / lbl_803E257C;
+            *p6 = (f32)(u32)*(u8*)((char*)state + 756);
+            *p4 = *(u8*)((char*)state + 754);
+            return;
+        }
+    }
+    fz = lbl_803E2574;
+    *p5 = fz;
+    *p6 = fz;
+    *p4 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+f32 fn_8014C5D0(int obj) {
+    int* state = *(int**)(obj + 0xb8);
+    u16 a, b;
+    if (state == NULL) return lbl_803E2574;
+    a = *(u16*)((char*)state + 690);
+    if (a != 0) {
+        b = *(u16*)((char*)state + 688);
+        if (b != 0) {
+            return (f32)((double)b - lbl_803E25E0) / (f32)((double)a - lbl_803E25E0);
+        }
+    }
+    return lbl_803E2574;
+}
+#pragma peephole reset
+#pragma scheduling reset

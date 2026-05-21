@@ -254,61 +254,55 @@ void kaldaChomFn_80168374(int param_1,int param_2,char param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8016855C(undefined4 param_1,undefined4 param_2,int param_3)
+#pragma scheduling off
+#pragma peephole off
+void fn_8016855C(int obj, int p2, int p3)
 {
-  int iVar1;
-  undefined uVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  undefined8 uVar6;
+  extern int kaldaChomFn_80168374(int, int, int);
+  int sub_40c = *(int *)(p2 + 0x40c);
 
-  uVar6 = _savegpr_27();
-  iVar1 = (int)((ulonglong)uVar6 >> 0x20);
-  iVar4 = (int)uVar6;
-  iVar5 = *(int *)(iVar4 + 0x40c);
-  lbl_803DDA98 =
-       lbl_803E30A0 +
-       (float)((double)CONCAT44(0x43300000,
-                                (int)*(char *)(*(int *)(iVar1 + 0x4c) + 0x28) ^ 0x80000000) -
-              DOUBLE_803E3070) / lbl_803E30A4;
-  if ((*(uint *)(param_3 + 0x314) & 1) != 0) {
-    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & ~1;
-    Sfx_PlayFromObject(iVar1,0x273);
+  lbl_803DDA98 = lbl_803E30A0 + (f32)(s32)(s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x28) / lbl_803E30A4;
+
+  if ((*(u32 *)(p3 + 0x314) & 0x1) != 0) {
+    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x1;
+    Sfx_PlayFromObject(obj, 627);
   }
-  if ((*(uint *)(param_3 + 0x314) & 0x80) != 0) {
-    uVar2 = randomGetRange(0,2);
-    *(undefined *)(iVar5 + 0x4a) = uVar2;
-    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xffffff7f;
-    Sfx_PlayFromObject(iVar1,0x274);
-    for (iVar3 = (2 - (uint)*(byte *)(iVar5 + 0x4a)) * 10; iVar3 != 0; iVar3 = iVar3 + -1) {
-      (**(code **)(*gPartfxInterface + 8))(iVar1,0x711,0,4,0xffffffff,&lbl_803DDA98);
+  if ((*(u32 *)(p3 + 0x314) & 0x80) != 0) {
+    int n;
+    *(u8 *)(sub_40c + 0x4a) = (u8)randomGetRange(0, 2);
+    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x80;
+    Sfx_PlayFromObject(obj, 628);
+    for (n = (2 - (s32)*(u8 *)(sub_40c + 0x4a)) * 10; n != 0; n--) {
+      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+          obj, 1809, 0, 4, -1, (int)&lbl_803DDA98);
     }
   }
-  if ((*(uint *)(param_3 + 0x314) & 0x40) != 0) {
-    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xffffffbf;
-    kaldaChomFn_80168374(iVar1,iVar4,0);
+  if ((*(u32 *)(p3 + 0x314) & 0x40) != 0) {
+    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x40;
+    kaldaChomFn_80168374(obj, p2, 0);
   }
-  if ((*(uint *)(param_3 + 0x314) & 0x800) != 0) {
-    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffff7ff;
-    kaldaChomFn_80168374(iVar1,iVar4,1);
+  if ((*(u32 *)(p3 + 0x314) & 0x20) != 0) {
+    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x20;
+    kaldaChomFn_80168374(obj, p2, 1);
   }
-  if ((*(uint *)(param_3 + 0x314) & 0x200) != 0) {
-    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffffdff;
-    Sfx_PlayFromObject(iVar1,0x275);
+  if ((*(u32 *)(p3 + 0x314) & 0x200) != 0) {
+    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x200;
+    Sfx_PlayFromObject(obj, 629);
   }
-  if ((*(uint *)(param_3 + 0x314) & 0x400) != 0) {
-    *(undefined *)(iVar5 + 0x4a) = 3;
-    iVar4 = 10;
+  if ((*(u32 *)(p3 + 0x314) & 0x400) != 0) {
+    int n;
+    *(u8 *)(sub_40c + 0x4a) = 3;
+    n = 10;
     do {
-      (**(code **)(*gPartfxInterface + 8))(iVar1,0x710,0,4,0xffffffff,&lbl_803DDA98);
-      iVar4 = iVar4 + -1;
-    } while (iVar4 != 0);
-    *(uint *)(param_3 + 0x314) = *(uint *)(param_3 + 0x314) & 0xfffffbff;
+      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+          obj, 1808, 0, 4, -1, (int)&lbl_803DDA98);
+      n--;
+    } while (n != 0);
+    *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x400;
   }
-  _restgpr_27();
-  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

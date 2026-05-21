@@ -1929,6 +1929,103 @@ s16 dll_CA_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x2
 extern f32 lbl_803E2CD8;
 extern f32 timeDelta;
 extern int* gPlayerInterface;
+extern f32 lbl_803E2CE8;
+extern f32 lbl_803E2CEC;
+extern f32 lbl_803E2CF0;
+extern f32 lbl_803E2CF4;
+extern f32 lbl_803E2CF8;
+extern f32 lbl_803E2CFC;
+extern int* Obj_GetActiveModel(int* obj);
+extern void ObjModel_SetRenderCallback(int* model, void* cb);
+extern void renderWhirlpool(void);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015AE68(int* obj, u8* state) {
+    f32 fz;
+    *(f32*)((char*)state + 684) = lbl_803E2CE8;
+    state[827] = (u8)(int)*(f32*)((char*)state + 680);
+    *(f32*)((char*)state + 680) = lbl_803E2CEC;
+    *(int*)((char*)state + 740) = 0x42001;
+    *(f32*)((char*)state + 776) = lbl_803E2CF0;
+    *(f32*)((char*)state + 768) = lbl_803E2CF4;
+    *(f32*)((char*)state + 772) = lbl_803E2CF8;
+    state[800] = 0;
+    fz = lbl_803E2CFC;
+    *(f32*)((char*)state + 788) = fz;
+    state[801] = 5;
+    *(f32*)((char*)state + 792) = fz;
+    state[802] = 7;
+    *(f32*)((char*)state + 796) = fz;
+    state[826] = 1;
+    state[827] = 0;
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), (void*)renderWhirlpool);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+extern f32 lbl_803E2D38;
+extern f32 lbl_803E2D14;
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+
+void fn_8015CB0C(int* obj, int* state) {
+    void* alloc;
+    int* new_obj;
+    if ((u8)Obj_IsLoadingLocked() != 0) {
+        alloc = Obj_AllocObjectSetup(36, 100);
+        *(f32*)((char*)alloc + 8) = *(f32*)((char*)state + 20);
+        *(f32*)((char*)alloc + 12) = *(f32*)((char*)state + 24);
+        *(f32*)((char*)alloc + 16) = *(f32*)((char*)state + 28);
+        *(u8*)((char*)alloc + 4) = 1;
+        *(u8*)((char*)alloc + 5) = 1;
+        *(u8*)((char*)alloc + 6) = 255;
+        *(u8*)((char*)alloc + 7) = 255;
+        *(s16*)((char*)alloc + 30) = -1;
+        *(s16*)((char*)alloc + 32) = -1;
+        new_obj = Obj_SetupObject(alloc, 5, -1, -1, (void*)0);
+        if (new_obj != NULL) {
+            *(f32*)((char*)new_obj + 0x24) = *(f32*)((char*)state + 56);
+            *(f32*)((char*)new_obj + 0x28) = *(f32*)((char*)state + 60);
+            *(f32*)((char*)new_obj + 0x2c) = *(f32*)((char*)state + 64);
+            *(int**)((char*)new_obj + 0xc4) = obj;
+        }
+    }
+}
+
+int fn_8015BEF4(int* obj, u8* state) {
+    u8* t = *(u8**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
+    t[0x44] |= 4;
+    *(f32*)((char*)state + 0x2a0) = lbl_803E2D38;
+    if ((s8)state[634] != 0) {
+        ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E2D14, 0);
+        state[838] = 0;
+    }
+    state[845] = 1;
+    ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
+    return 0;
+}
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8015B524(int* obj, u8* state) {
+    if ((s8)state[635] != 0) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 3);
+    }
+    if ((s8)state[838] != 0) {
+        if (*(s16*)((char*)state + 628) == 3) {
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        } else {
+            return 8;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 int fn_8015B748(int* obj, u8* state) {
     int* sub = *(int**)((char*)obj + 0xb8);
@@ -2011,6 +2108,53 @@ void fn_8015D098(int obj, int p2, int p3)
     *(u8 *)(p3 + 0x349) = 0;
     *(s16 *)(p2 + 0x402) = 1;
   }
+}
+#pragma fp_contract reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma fp_contract off
+int fn_8015B7EC(int obj, int p2)
+{
+  extern int *gPlayerInterface;
+  extern int *gBaddieControlInterface;
+  extern f32 timeDelta;
+  extern f32 lbl_803E2D00;
+  extern f32 lbl_803E2D14;
+  extern f32 lbl_803E2D24;
+  int sub = *(int *)(obj + 0xb8);
+
+  if (*(int *)(p2 + 0x2d0) == 0) return 0;
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
+    *(f32 *)(p2 + 0x284) = lbl_803E2D14;
+    *(f32 *)(p2 + 0x280) = lbl_803E2D14;
+    if ((u32)*(u8 *)(sub + 0x406) > 50) {
+      if (*(f32 *)(p2 + 0x2c0) < lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe)
+          || (*(u8 *)(sub + 0x404) & 0x2) != 0) {
+        (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 0);
+      } else {
+        (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 1);
+      }
+    } else {
+      (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, 1);
+    }
+  }
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x346) == 0) return 0;
+
+  (**(void (**)(int, int, int, f32))((char *)(*gPlayerInterface) + 0x30))(obj, p2, 4, timeDelta);
+  if (((u8)(**(int (**)(int, int, f32))((char *)(*gBaddieControlInterface) + 0x18))(obj, p2, lbl_803E2D00) & 1) == 0) {
+    return 5;
+  }
+
+  if (*(f32 *)(p2 + 0x2c0) < lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe)
+      || (*(u8 *)(sub + 0x404) & 0x2) != 0) {
+    return 8;
+  }
+  return 7;
 }
 #pragma fp_contract reset
 #pragma peephole reset

@@ -1225,7 +1225,7 @@ extern void pinponspike_init(int obj);
 extern void pollen_free(int obj);
 extern void pollen_hitDetect(int obj);
 extern void pollen_update(void);
-extern void pollen_init(void);
+extern void pollen_init(int *obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -1379,3 +1379,29 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
     pollenfragment_getExtraSize,
 };
+
+extern f32 lbl_803E313C;
+extern f32 lbl_803E3148;
+
+#pragma scheduling off
+#pragma peephole off
+void pollen_init(int *obj) {
+    s16 *state = *(s16 **)((char *)obj + 0xb8);
+    state[0] = (s16)randomGetRange(-0x8000, 0x7fff);
+    *(f32 *)((char *)state + 0xc) = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
+    *(s16 *)((char *)state + 4) = (s16)randomGetRange(-0x8000, 0x7fff);
+    *(f32 *)((char *)state + 8) = lbl_803E313C;
+    *(s16 *)((char *)state + 6) = (s16)randomGetRange(0xe6, 0x1f4);
+    *(s16 *)((char *)state + 0x10) = 0;
+    *(s16 *)((char *)state + 0x12) = 0;
+    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ObjHits_DisableObject(obj);
+    {
+        int *p = *(int **)((char *)obj + 0x64);
+        if (p != NULL) {
+            *(int *)((char *)p + 0x30) = *(int *)((char *)p + 0x30) | 0x810;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

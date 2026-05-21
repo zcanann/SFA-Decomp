@@ -1678,6 +1678,34 @@ void FUN_8015fae4(int param_1)
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_8015FBEC(int obj)
+{
+  extern int *gPartfxInterface;
+  extern void Camera_EnableViewYOffset(void);
+  extern void CameraShake_SetAllMagnitudes(f32);
+  extern f32 lbl_803E2E50;
+  s16 mode = *(s16 *)(obj + 0x46);
+  int i;
+
+  if (mode == 715) {
+    for (i = 0; i < 25; i++) {
+      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 834, 0, 1, -1, 0);
+    }
+  } else if (mode == 100 || mode == 778) {
+    for (i = 0; i < 25; i++) {
+      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 836, 0, 1, -1, 0);
+    }
+  }
+
+  Sfx_PlayFromObject(obj, 618);
+  Camera_EnableViewYOffset();
+  CameraShake_SetAllMagnitudes(lbl_803E2E50);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *

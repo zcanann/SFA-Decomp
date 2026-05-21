@@ -1536,3 +1536,32 @@ void vfpflamepoint_init(int *obj, s8 *def) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int objBboxFn_800640cc(f32 radius, void *from, void *to, int mode, void *hit, int obj, int p7, int p8, int p9, int p10);
+extern f32 lbl_803E6218;
+extern f32 lbl_803E621C;
+
+#pragma scheduling off
+#pragma peephole off
+void dbegg_hitDetect(int *obj) {
+    int hit;
+    u8 *state;
+    hit = ObjHits_GetPriorityHit((int)obj, 0, 0, 0);
+    state = *(u8 **)((char *)obj + 0xb8);
+    if (hit == 0x12) {
+        if (state[0x118] != 4) {
+            Obj_GetPlayerObject();
+        }
+    }
+    if (state[0x118] != 9) {
+        if (objBboxFn_800640cc(lbl_803E6218, (char *)obj + 0x80, (char *)obj + 0xc, 1, NULL, (int)obj, 8, -1, 0xff, 0) != 0) {
+            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) - lbl_803E621C * *(f32 *)((char *)obj + 0x24);
+            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) - lbl_803E621C * *(f32 *)((char *)obj + 0x2c);
+        }
+    }
+    *(f32 *)((char *)obj + 0x80) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)obj + 0x84) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)obj + 0x88) = *(f32 *)((char *)obj + 0x14);
+}
+#pragma peephole reset
+#pragma scheduling reset

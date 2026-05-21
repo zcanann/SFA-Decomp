@@ -224,7 +224,7 @@ void skeetlawall_initialise(void) {}
 int skeetlawall_getExtraSize(void) { return 0x7; }
 int skeetlawall_getObjectTypeId(void) { return 0x0; }
 
-extern void skeetlawall_setScale(void);
+extern void skeetlawall_setScale(int *obj, f32 *outVec, u8 *outByte);
 
 extern f32 lbl_803E3058;
 extern void objRenderFn_8003b8f4(f32);
@@ -278,6 +278,21 @@ extern undefined4 *gPlayerInterface;
 void fn_80167550(int *obj) {
     int *state = *(int **)((char *)obj + 0xb8);
     ((void (*)(int *, int *, int))((void **)*gPlayerInterface)[5])(obj, state, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void skeetlawall_setScale(int *obj, f32 *outVec, u8 *outByte) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    outVec[0] = *(f32 *)((char *)obj + 0x18) - (f32)(u32)state[0];
+    outVec[1] = *(f32 *)((char *)obj + 0x18) + (f32)(u32)state[1];
+    outVec[2] = *(f32 *)((char *)obj + 0x20) + (f32)(u32)state[2];
+    outVec[3] = *(f32 *)((char *)obj + 0x20) - (f32)(u32)state[3];
+    outVec[4] = *(f32 *)((char *)obj + 0x1c) + (f32)(u32)state[4];
+    outVec[5] = *(f32 *)((char *)obj + 0x1c) - (f32)(u32)state[5];
+    outByte[0] = state[6];
 }
 #pragma peephole reset
 #pragma scheduling reset

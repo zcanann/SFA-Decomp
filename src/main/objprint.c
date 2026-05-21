@@ -3114,3 +3114,55 @@ void objRenderShadowIfVisible(void* obj) {
     }
 }
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_800399C0(s16 *curve, s16 *state)
+{
+  extern f32 curveFn_80010dc0(int, int, f32);
+  extern f32 timeDelta;
+  extern f32 lbl_803DE99C;
+  extern f32 lbl_803DE9A4;
+  extern f32 lbl_803DE9D8;
+  extern f32 lbl_803DE9DC;
+  extern f32 lbl_803DE9E0;
+  f32 buf[4];
+  f32 ratio;
+  s16 lo;
+  s16 hi;
+
+  buf[0] = lbl_803DE9D8;
+  buf[1] = lbl_803DE9D8;
+  buf[2] = lbl_803DE9DC;
+  buf[3] = lbl_803DE9E0;
+
+  lo = curve[10];
+  hi = curve[11];
+  if (lo == hi) {
+    return 1;
+  }
+
+  ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
+
+  if (ratio > lbl_803DE99C) {
+    ratio = lbl_803DE99C;
+  } else if (ratio < lbl_803DE9A4) {
+    ratio = lbl_803DE9A4;
+  }
+
+  {
+    f32 rate = curveFn_80010dc0((int)buf, 0, ratio);
+    if (curve[10] < curve[11]) {
+      rate = -rate;
+    }
+    state[1] = (s16)(s32)((f32)(s32)state[1] + rate * timeDelta);
+  }
+
+  if (lbl_803DE99C != ratio && state[1] < 8191 && state[1] > -8191) {
+    return 0;
+  }
+  state[1] = curve[10];
+  return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
