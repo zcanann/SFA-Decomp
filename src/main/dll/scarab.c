@@ -3310,6 +3310,22 @@ int fn_8015E044(int* obj, u8* state)
     return 0;
 }
 
+int fn_8016118C(int* obj, u8* state)
+{
+    if ((s8)state[0x27b] != 0) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 8);
+        *(int*)((char*)state + 0x2d0) = 0;
+        state[0x25f] = 0;
+        state[0x349] = 0;
+        ObjHits_DisableObject((int)obj);
+        *(u8*)((char*)obj + 0xaf) |= 8;
+    }
+    if (*(u8*)((char*)obj + 0x36) != 0) return 0;
+    if (*(void**)((char*)obj + 0x4c) != NULL) return 6;
+    Obj_FreeObject(obj);
+    return 0;
+}
+
 extern void* lbl_803AC5D0[];
 extern int fn_8016032C(int* obj, u8* state);
 extern int fn_801601C4(int* obj, u8* state);
