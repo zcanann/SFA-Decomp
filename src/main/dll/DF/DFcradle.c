@@ -365,10 +365,9 @@ void ccriverflow_init(short *obj,int params)
     **(undefined **)(obj + 0x5c) = 1;
   }
   *obj = (ushort)*(byte *)(params + 0x18) << 8;
-  *(undefined4 *)(obj + 4) = *(undefined4 *)(*(int *)(obj + 0x28) + 4);
+  *(float *)(obj + 4) = *(float *)(*(int *)(obj + 0x28) + 4);
   *(float *)(obj + 4) =
-       (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(params + 0x19)) - lbl_803E4DD8) *
-       lbl_803E4DD0 + *(float *)(obj + 4);
+       (f32)(u32)*(byte *)(params + 0x19) * lbl_803E4DD0 + *(float *)(obj + 4);
   if (*(float *)(obj + 4) < lbl_803E4DD4) {
     *(float *)(obj + 4) = lbl_803E4DD4;
   }
