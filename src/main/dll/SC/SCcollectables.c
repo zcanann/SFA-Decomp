@@ -382,7 +382,7 @@ extern void Obj_FreeObject(int obj);
 void warpstone_free(int obj, int mode)
 {
     int *state = *(int **)((char *)obj + 0xb8);
-    if (state[0] != 0 && mode == 0) {
+    if (*(void **)state != NULL && mode == 0) {
         ObjLink_DetachChild(obj, state[0]);
         Obj_FreeObject(state[0]);
     }
