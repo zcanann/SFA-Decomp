@@ -4283,3 +4283,33 @@ check:
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_803DCE98;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80060BB0(void)
+{
+    int i;
+    int j;
+    int byteOff;
+    int innerOff;
+    int* blk;
+    char* arr;
+
+    byteOff = 0;
+    for (i = 0; i < (int)lbl_803DCE98; i++) {
+        blk = *(int**)((char*)&lbl_803DCE9C + byteOff);
+        if (blk != NULL) {
+            innerOff = 0;
+            for (j = 0; j < (int)*(u8*)((char*)blk + 0xa1); j++) {
+                arr = *(char**)((char*)blk + 0x68);
+                arr[innerOff + 0x12] = 0;
+                innerOff += 0x1c;
+            }
+        }
+        byteOff += 4;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
