@@ -211,9 +211,7 @@ void dimbossfire_init(int obj,undefined4 param_2,int param_3)
   ObjHitbox_SetSphereRadius(obj,0);
   ObjHits_DisableObject(obj);
   if (param_3 == 0) {
-    uVar1 = randomGetRange(0xf0,0x1e0);
-    *(float *)(state + 0xc) =
-         (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - lbl_803E4DC8);
+    *(float *)(state + 0xc) = (f32)(int)randomGetRange(0xf0,0x1e0);
     uVar2 = randomGetRange(0,9);
     *(undefined *)(state + 1) = uVar2;
   }
