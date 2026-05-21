@@ -705,6 +705,32 @@ LAB_801ffe48:
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_801FF884(int obj, int unused, int p3)
+{
+  extern void objFn_800972dc(int, int, int, int, int, int, int, f32, f32);
+  extern f32 lbl_803E6270;
+  extern f32 lbl_803E6274;
+  int sub = *(int *)(obj + 0xb8);
+  int i;
+
+  for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+    *(u8 *)(sub + 4) = (u8)((*(u8 *)(sub + 4) & ~0x80) | ((*(u8 *)(p3 + 0x81 + i) & 1) << 7));
+  }
+
+  if ((*(u8 *)(sub + 4) & 0x80) != 0) {
+    int s = *(int *)(sub + 0);
+    if (s >= 0 && s < 2) {
+      objFn_800972dc(obj, 7, 5, 6, 100, 0, 0x200000, lbl_803E6270, lbl_803E6274);
+      objFn_800972dc(obj, 6, 1, 6, 100, 0, 0x200000, lbl_803E6270, lbl_803E6274);
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
@@ -4507,7 +4533,7 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 extern int *gExpgfxInterface;
 extern int *gPlayerInterface;
 extern int lbl_803AD0F4[];
-extern void fn_801FF884(void);
+extern int fn_801FF884(int, int, int);
 #pragma scheduling off
 #pragma peephole off
 void chuka_free(int obj) {
@@ -4539,7 +4565,7 @@ void GCRobotBlast_init(int obj, s8 *p) {
             stb b, 4(t)
         }
     }
-    *(void (**)(void))((char *)obj + 0xbc) = fn_801FF884;
+    *(void (**)(void))((char *)obj + 0xbc) = (void (*)(void))fn_801FF884;
 }
 #pragma peephole reset
 #pragma scheduling reset
