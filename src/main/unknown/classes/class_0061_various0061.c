@@ -383,7 +383,7 @@
  *   slot 05: 0x801D759C warpstone_hitDetect
  *   slot 06: 0x801D74C4 warpstone_render
  *   slot 07: 0x801D7478 warpstone_free
- *   slot 08: 0x801D7470 warpstone_func08
+ *   slot 08: 0x801D7470 warpstone_getObjectTypeId
  *   slot 09: 0x801D7468 warpstone_getExtraSize
  * - DLL 0x01B1: gSH_staffObjDescriptor (slots=10, mask=0000101101)
  *   slot 04: 0x801DA608 sh_staff_update
@@ -401,7 +401,7 @@
  *   slot 05: 0x801DCA28 sc_totempole_hitDetect
  *   slot 06: 0x801DC9F8 sc_totempole_render
  *   slot 07: 0x801DC9F4 sc_totempole_free
- *   slot 08: 0x801DC9EC sc_totempole_func08
+ *   slot 08: 0x801DC9EC sc_totempole_getObjectTypeId
  *   slot 09: 0x801DC9E4 sc_totempole_getExtraSize
  * - DLL 0x01BA: gSC_totempuzzleObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801DDA24 sc_totempuzzle_initialise
@@ -411,7 +411,7 @@
  *   slot 05: 0x801DD468 sc_totempuzzle_hitDetect
  *   slot 06: 0x801DD438 sc_totempuzzle_render
  *   slot 07: 0x801DD434 sc_totempuzzle_free
- *   slot 08: 0x801DD42C sc_totempuzzle_func08
+ *   slot 08: 0x801DD42C sc_totempuzzle_getObjectTypeId
  *   slot 09: 0x801DD424 sc_totempuzzle_getExtraSize
  * - DLL 0x01D0: gDIM_trickyObjDescriptor (slots=10, mask=0001111111)
  *   slot 03: 0x801B6D30 dim_tricky_init

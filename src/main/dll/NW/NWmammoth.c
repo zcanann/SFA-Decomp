@@ -364,7 +364,7 @@ int enemymushroom_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: enemymushroom_func08
+ * Function: enemymushroom_getObjectTypeId
  * EN v1.0 Address: 0x801D1D60
  * EN v1.0 Size: 20b
  * EN v1.1 Address: TODO
@@ -374,7 +374,7 @@ int enemymushroom_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int enemymushroom_func08(int obj)
+int enemymushroom_getObjectTypeId(int obj)
 {
   return (*(byte *)(*(int *)(obj + 0x4c) + 0x1f) << 0xb) | 0x400;
 }

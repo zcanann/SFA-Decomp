@@ -306,7 +306,7 @@ void warpstonelift_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int warpstonelift_getExtraSize(void) { return 0x1; }
-int warpstonelift_func08(void) { return 0x0; }
+int warpstonelift_getObjectTypeId(void) { return 0x0; }
 int sh_staff_getExtraSize(void) { return 0x74; }
 
 extern s32 lbl_803DC058[2];

@@ -56,7 +56,7 @@
  * - slot 05: 0x801D759C warpstone_hitDetect ref=hitDetect
  * - slot 06: 0x801D74C4 warpstone_render ref=render
  * - slot 07: 0x801D7478 warpstone_free ref=free
- * - slot 08: 0x801D7470 warpstone_func08 stub=const 72
+ * - slot 08: 0x801D7470 warpstone_getObjectTypeId stub=const 72
  * - slot 09: 0x801D7468 warpstone_getExtraSize stub=const 216 ref=getExtraSize (stub)
  */
 

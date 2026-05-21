@@ -14,5 +14,5 @@
 // - 5: sc_totempuzzle_hitDetect (0x801DD468)
 // - 6: sc_totempuzzle_render (0x801DD438)
 // - 7: sc_totempuzzle_free (0x801DD434)
-// - 8: sc_totempuzzle_func08 (0x801DD42C)
+// - 8: sc_totempuzzle_getObjectTypeId (0x801DD42C)
 // - 9: sc_totempuzzle_getExtraSize (0x801DD424)

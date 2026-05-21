@@ -82,7 +82,7 @@ int sc_totempuzzle_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: sc_totempuzzle_func08
+ * Function: sc_totempuzzle_getObjectTypeId
  * EN v1.0 Address: 0x801DD42C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -92,7 +92,7 @@ int sc_totempuzzle_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int sc_totempuzzle_func08(void)
+int sc_totempuzzle_getObjectTypeId(void)
 {
   return 0;
 }

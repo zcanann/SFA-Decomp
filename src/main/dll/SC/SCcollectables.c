@@ -351,7 +351,7 @@ int warpstone_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: warpstone_func08
+ * Function: warpstone_getObjectTypeId
  * EN v1.0 Address: 0x801D7470
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -361,7 +361,7 @@ int warpstone_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int warpstone_func08(void)
+int warpstone_getObjectTypeId(void)
 {
   return 0x48;
 }

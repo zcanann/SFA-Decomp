@@ -385,7 +385,7 @@ int bombplant_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: bombplant_func08
+ * Function: bombplant_getObjectTypeId
  * EN v1.0 Address: 0x801D2B3C
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -395,7 +395,7 @@ int bombplant_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int bombplant_func08(void)
+int bombplant_getObjectTypeId(void)
 {
   return 0;
 }

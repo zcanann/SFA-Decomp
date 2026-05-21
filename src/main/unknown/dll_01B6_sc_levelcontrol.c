@@ -14,7 +14,7 @@
 // - 5: sc_levelcontrol_hitDetect (0x801DB3A4)
 // - 6: sc_levelcontrol_render (0x801DB374)
 // - 7: sc_levelcontrol_free (0x801DB314)
-// - 8: sc_levelcontrol_func08 (0x801DB30C)
+// - 8: sc_levelcontrol_getObjectTypeId (0x801DB30C)
 // - 9: sc_levelcontrol_getExtraSize (0x801DB304)
 // - 10: sc_levelcontrol_setScale (0x801DB1F8)
 // - 11: sc_levelcontrol_func11 (0x801DB1EC)

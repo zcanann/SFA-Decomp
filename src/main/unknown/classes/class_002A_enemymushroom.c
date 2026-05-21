@@ -26,7 +26,7 @@
  *   slot 05: 0x801D1E20 enemymushroom_hitDetect
  *   slot 06: 0x801D1DBC enemymushroom_render
  *   slot 07: 0x801D1D74 enemymushroom_free
- *   slot 08: 0x801D1D60 enemymushroom_func08
+ *   slot 08: 0x801D1D60 enemymushroom_getObjectTypeId
  *   slot 09: 0x801D1D58 enemymushroom_getExtraSize
  */
 

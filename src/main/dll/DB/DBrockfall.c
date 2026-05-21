@@ -411,7 +411,7 @@ void dll_144_initialise(void) {}
 int FEseqobject_getExtraSize(void) { return 0x1; }
 int FEseqobject_getObjectTypeId(void) { return 0x0; }
 int FElevControl_getExtraSize(void) { return 0x0; }
-int FElevControl_func08(void) { return 0x0; }
+int FElevControl_getObjectTypeId(void) { return 0x0; }
 int dll_144_getExtraSize(void) { return 0x0; }
 int dll_144_func08(void) { return 0x0; }
 
@@ -508,6 +508,6 @@ ObjectDescriptor gFElevControlObjDescriptor = {
     (ObjectDescriptorCallback)FElevControl_hitDetect,
     (ObjectDescriptorCallback)FElevControl_render,
     (ObjectDescriptorCallback)FElevControl_free,
-    (ObjectDescriptorCallback)FElevControl_func08,
+    (ObjectDescriptorCallback)FElevControl_getObjectTypeId,
     FElevControl_getExtraSize,
 };

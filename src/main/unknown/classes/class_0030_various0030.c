@@ -1059,7 +1059,7 @@
  *   slot 05: 0x801D9860 warpstonelift_hitDetect
  *   slot 06: 0x801D9830 warpstonelift_render
  *   slot 07: 0x801D982C warpstonelift_free
- *   slot 08: 0x801D9824 warpstonelift_func08
+ *   slot 08: 0x801D9824 warpstonelift_getObjectTypeId
  *   slot 09: 0x801D981C warpstonelift_getExtraSize
  * - DLL 0x01B3: gSH_BeaconObjDescriptor (slots=10, mask=0001100101)
  *   slot 03: 0x801DAE90 sh_beacon_init
@@ -1074,7 +1074,7 @@
  *   slot 05: 0x801DDE64 sc_totembond_hitDetect
  *   slot 06: 0x801DDE34 sc_totembond_render
  *   slot 07: 0x801DDE04 sc_totembond_free
- *   slot 08: 0x801DDDFC sc_totembond_func08
+ *   slot 08: 0x801DDDFC sc_totembond_getObjectTypeId
  *   slot 09: 0x801DDDF4 sc_totembond_getExtraSize
  * - DLL 0x01BC: gSC_totemstrengthObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801DF10C sc_totemstrength_initialise
@@ -1084,7 +1084,7 @@
  *   slot 05: 0x801DEE8C sc_totemstrength_hitDetect
  *   slot 06: 0x801DEE68 sc_totemstrength_render
  *   slot 07: 0x801DEE64 sc_totemstrength_free
- *   slot 08: 0x801DEE5C sc_totemstrength_func08
+ *   slot 08: 0x801DEE5C sc_totemstrength_getObjectTypeId
  *   slot 09: 0x801DEE54 sc_totemstrength_getExtraSize
  * - DLL 0x01BD: gPaymentKioskObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801DF4A8 paymentkiosk_initialise
@@ -1094,7 +1094,7 @@
  *   slot 05: 0x801DF324 paymentkiosk_hitDetect
  *   slot 06: 0x801DF318 paymentkiosk_render
  *   slot 07: 0x801DF314 paymentkiosk_free
- *   slot 08: 0x801DF30C paymentkiosk_func08
+ *   slot 08: 0x801DF30C paymentkiosk_getObjectTypeId
  *   slot 09: 0x801DF304 paymentkiosk_getExtraSize
  * - DLL 0x01BE: gLavaBall1BEObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x801B02B8 lavaball1be_initialise

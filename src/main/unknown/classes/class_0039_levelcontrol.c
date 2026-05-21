@@ -41,7 +41,7 @@
  *   slot 05: 0x801DF978 FElevControl_hitDetect
  *   slot 06: 0x801DF948 FElevControl_render
  *   slot 07: 0x801DF944 FElevControl_free
- *   slot 08: 0x801DF93C FElevControl_func08
+ *   slot 08: 0x801DF93C FElevControl_getObjectTypeId
  *   slot 09: 0x801DF934 FElevControl_getExtraSize
  * - DLL 0x0145: gCloudPrisonControlObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8019AE30 cloudprisoncontrol_initialise
@@ -94,7 +94,7 @@
  *   slot 05: 0x801DB3A4 sc_levelcontrol_hitDetect
  *   slot 06: 0x801DB374 sc_levelcontrol_render
  *   slot 07: 0x801DB314 sc_levelcontrol_free
- *   slot 08: 0x801DB30C sc_levelcontrol_func08
+ *   slot 08: 0x801DB30C sc_levelcontrol_getObjectTypeId
  *   slot 09: 0x801DB304 sc_levelcontrol_getExtraSize
  * - DLL 0x01CD: gDIM_LevelControlObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x801B69AC dim_levelcontrol_init

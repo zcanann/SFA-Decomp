@@ -14,5 +14,5 @@
 // - 5: warpstone_hitDetect (0x801D759C)
 // - 6: warpstone_render (0x801D74C4)
 // - 7: warpstone_free (0x801D7478)
-// - 8: warpstone_func08 (0x801D7470)
+// - 8: warpstone_getObjectTypeId (0x801D7470)
 // - 9: warpstone_getExtraSize (0x801D7468)

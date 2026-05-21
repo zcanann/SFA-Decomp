@@ -14,5 +14,5 @@
 // - 5: paymentkiosk_hitDetect (0x801DF324)
 // - 6: paymentkiosk_render (0x801DF318)
 // - 7: paymentkiosk_free (0x801DF314)
-// - 8: paymentkiosk_func08 (0x801DF30C)
+// - 8: paymentkiosk_getObjectTypeId (0x801DF30C)
 // - 9: paymentkiosk_getExtraSize (0x801DF304)

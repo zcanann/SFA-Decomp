@@ -12,5 +12,5 @@
 // - 5: bombplant_hitDetect (0x801D2B6C)
 // - 6: bombplant_render (0x801D2B48)
 // - 7: bombplant_free (0x801D2B44)
-// - 8: bombplant_func08 (0x801D2B3C)
+// - 8: bombplant_getObjectTypeId (0x801D2B3C)
 // - 9: bombplant_getExtraSize (0x801D2B34)

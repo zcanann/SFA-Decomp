@@ -14,5 +14,5 @@
 // - 5: sc_totembond_hitDetect (0x801DDE64)
 // - 6: sc_totembond_render (0x801DDE34)
 // - 7: sc_totembond_free (0x801DDE04)
-// - 8: sc_totembond_func08 (0x801DDDFC)
+// - 8: sc_totembond_getObjectTypeId (0x801DDDFC)
 // - 9: sc_totembond_getExtraSize (0x801DDDF4)

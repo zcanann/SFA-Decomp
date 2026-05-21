@@ -14,5 +14,5 @@
 // - 5: sc_cloudrunnera_hitDetect (0x801DCD1C)
 // - 6: sc_cloudrunnera_render (0x801DCCEC)
 // - 7: sc_cloudrunnera_free (0x801DCC80)
-// - 8: sc_cloudrunnera_func08 (0x801DCC78)
+// - 8: sc_cloudrunnera_getObjectTypeId (0x801DCC78)
 // - 9: sc_cloudrunnera_getExtraSize (0x801DCC70)

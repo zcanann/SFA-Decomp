@@ -51,7 +51,7 @@
  * - slot 05: 0x801DC30C sc_musictree_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801DC244 sc_musictree_render ref=render
  * - slot 07: 0x801DC240 sc_musictree_free stub=blr ref=free (stub)
- * - slot 08: 0x801DC238 sc_musictree_func08 stub=const 0
+ * - slot 08: 0x801DC238 sc_musictree_getObjectTypeId stub=const 0
  * - slot 09: 0x801DC230 sc_musictree_getExtraSize stub=const 80 ref=getExtraSize (stub)
  */
 

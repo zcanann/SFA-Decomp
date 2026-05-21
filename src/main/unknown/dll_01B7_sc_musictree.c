@@ -14,5 +14,5 @@
 // - 5: sc_musictree_hitDetect (0x801DC30C)
 // - 6: sc_musictree_render (0x801DC244)
 // - 7: sc_musictree_free (0x801DC240)
-// - 8: sc_musictree_func08 (0x801DC238)
+// - 8: sc_musictree_getObjectTypeId (0x801DC238)
 // - 9: sc_musictree_getExtraSize (0x801DC230)

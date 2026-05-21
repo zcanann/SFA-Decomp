@@ -57,7 +57,7 @@
  * - slot 05: 0x801DEE8C sc_totemstrength_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801DEE68 sc_totemstrength_render ref=render
  * - slot 07: 0x801DEE64 sc_totemstrength_free stub=blr ref=free (stub)
- * - slot 08: 0x801DEE5C sc_totemstrength_func08 stub=const 0
+ * - slot 08: 0x801DEE5C sc_totemstrength_getObjectTypeId stub=const 0
  * - slot 09: 0x801DEE54 sc_totemstrength_getExtraSize stub=const 52 ref=getExtraSize (stub)
  */
 

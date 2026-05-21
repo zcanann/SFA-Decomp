@@ -15,5 +15,5 @@
 // - 5: FElevControl_hitDetect (0x801DF978)
 // - 6: FElevControl_render (0x801DF948)
 // - 7: FElevControl_free (0x801DF944)
-// - 8: FElevControl_func08 (0x801DF93C)
+// - 8: FElevControl_getObjectTypeId (0x801DF93C)
 // - 9: FElevControl_getExtraSize (0x801DF934)

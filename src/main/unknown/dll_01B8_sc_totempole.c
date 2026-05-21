@@ -14,5 +14,5 @@
 // - 5: sc_totempole_hitDetect (0x801DCA28)
 // - 6: sc_totempole_render (0x801DC9F8)
 // - 7: sc_totempole_free (0x801DC9F4)
-// - 8: sc_totempole_func08 (0x801DC9EC)
+// - 8: sc_totempole_getObjectTypeId (0x801DC9EC)
 // - 9: sc_totempole_getExtraSize (0x801DC9E4)

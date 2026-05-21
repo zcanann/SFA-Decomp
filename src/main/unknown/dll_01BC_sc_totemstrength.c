@@ -14,5 +14,5 @@
 // - 5: sc_totemstrength_hitDetect (0x801DEE8C)
 // - 6: sc_totemstrength_render (0x801DEE68)
 // - 7: sc_totemstrength_free (0x801DEE64)
-// - 8: sc_totemstrength_func08 (0x801DEE5C)
+// - 8: sc_totemstrength_getObjectTypeId (0x801DEE5C)
 // - 9: sc_totemstrength_getExtraSize (0x801DEE54)

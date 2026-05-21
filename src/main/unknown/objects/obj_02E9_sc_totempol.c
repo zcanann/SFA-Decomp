@@ -56,7 +56,7 @@
  * - slot 05: 0x801DCA28 sc_totempole_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801DC9F8 sc_totempole_render ref=render
  * - slot 07: 0x801DC9F4 sc_totempole_free stub=blr ref=free (stub)
- * - slot 08: 0x801DC9EC sc_totempole_func08 stub=const 0
+ * - slot 08: 0x801DC9EC sc_totempole_getObjectTypeId stub=const 0
  * - slot 09: 0x801DC9E4 sc_totempole_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 
