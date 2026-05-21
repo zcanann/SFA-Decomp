@@ -25,7 +25,7 @@ extern double FUN_80293900();
 extern undefined4 FUN_80294d60();
 extern uint FUN_80294db4();
 extern uint countLeadingZeros();
-extern int GameBit_Get(int eventId);
+extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern f32 Vec_distance(float *posA, float *posB);
@@ -755,8 +755,8 @@ void fn_8017DAF0(int obj)
     int state = *(int *)(obj + 0xb8);
     int player = Obj_GetPlayerObject();
 
-    if (Vec_xzDistance((float *)(player + 0x18), (float *)(obj + 0x18)) >= lbl_803E37EC) return;
-    if (Vec_distance((float *)(player + 0x18), (float *)(obj + 0x18)) >= lbl_803E37F0) return;
+    if (!(Vec_xzDistance((float *)(player + 0x18), (float *)(obj + 0x18)) < lbl_803E37EC)) return;
+    if (!(Vec_distance((float *)(player + 0x18), (float *)(obj + 0x18)) < lbl_803E37F0)) return;
 
     if (GameBit_Get(0x90f) == 0) {
         (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x7c))(0x444, 0, 0);
