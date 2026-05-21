@@ -55,7 +55,7 @@
  * - slot 05: 0x8019A3B0 Trigger_hitDetect ref=hitDetect
  * - slot 06: 0x8019A3AC Trigger_render stub=blr ref=render (stub)
  * - slot 07: 0x8019A310 Trigger_free ref=free
- * - slot 08: 0x8019A308 Trigger_func08 stub=const 0
+ * - slot 08: 0x8019A308 Trigger_getObjectTypeId stub=const 0
  * - slot 09: 0x8019A300 Trigger_getExtraSize stub=const 172 ref=getExtraSize (stub)
  */
 

@@ -20,15 +20,15 @@
  *
  * Descriptor slot maps:
  * - DLL 0x0126: gTriggerObjDescriptor (slots=10, mask=1101111111)
- *   slot 00: 0x8019AFF4 trigger_initialise
- *   slot 01: 0x8019AFF0 trigger_release
- *   slot 03: 0x8019AE20 trigger_init
- *   slot 04: 0x8019AE1C trigger_update
- *   slot 05: 0x8019A92C trigger_hitDetect
- *   slot 06: 0x8019A928 trigger_render
- *   slot 07: 0x8019A88C trigger_free
- *   slot 08: 0x8019A884 trigger_func08
- *   slot 09: 0x8019A87C trigger_getExtraSize
+ *   slot 00: 0x8019AA78 Trigger_initialise
+ *   slot 01: 0x8019AA74 Trigger_release
+ *   slot 03: 0x8019A8A4 Trigger_init
+ *   slot 04: 0x8019A8A0 Trigger_update
+ *   slot 05: 0x8019A3B0 Trigger_hitDetect
+ *   slot 06: 0x8019A3AC Trigger_render
+ *   slot 07: 0x8019A310 Trigger_free
+ *   slot 08: 0x8019A308 Trigger_getObjectTypeId
+ *   slot 09: 0x8019A300 Trigger_getExtraSize
  */
 
 #if 0
