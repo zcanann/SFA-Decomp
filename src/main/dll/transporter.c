@@ -1735,9 +1735,17 @@ extern f32 lbl_803E3608;
 extern f32 lbl_803E360C;
 extern void *Obj_GetPlayerObject(void);
 extern void mathFn_80021ac8(void *in, void *out);
+extern f32 lbl_803E3638;
 
 #pragma scheduling off
 #pragma peephole off
+void flameblast_init(int *obj, u8 *def) {
+    f32 *state = *(f32 **)((char *)obj + 0xb8);
+    fn_8017805C(obj, state);
+    state[0] = lbl_803E3638 * (f32)(s32)*(s16 *)((char *)def + 0x1a);
+    *(u8 *)((char *)state + 0x11) = 2;
+}
+
 void WarpPoint_init(int *obj, u8 *def) {
     s16 *state = *(s16 **)((char *)obj + 0xb8);
     *(void **)((char *)obj + 0xbc) = (void *)fn_80176FC4;
