@@ -2999,15 +2999,18 @@ void trickyFn_80144f50(int obj, int state) {
                 *(f32*)(state + 0x838) = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
             } else {
-                if (*(s16*)(obj + 0xa0) != 0x31) {
-                    if ((*(s16*)(obj + 0xa0) < 0x31) && (*(s16*)(obj + 0xa0) == 0xd)) {
-                        transitionFlag = *(u32*)(state + 0x54) & 0x08000000;
-                        if (transitionFlag != 0) {
-                            objAnimFn_8013a3f0(obj, 0x31, lbl_803E243C, 0);
-                        }
-                    } else {
-                        objAnimFn_8013a3f0(obj, 0xd, lbl_803E2444, 0);
+                switch (*(s16*)(obj + 0xa0)) {
+                case 0x31:
+                    break;
+                case 0xd:
+                    transitionFlag = *(u32*)(state + 0x54) & 0x08000000;
+                    if (transitionFlag != 0) {
+                        objAnimFn_8013a3f0(obj, 0x31, lbl_803E243C, 0);
                     }
+                    break;
+                default:
+                    objAnimFn_8013a3f0(obj, 0xd, lbl_803E2444, 0);
+                    break;
                 }
                 trickyDebugPrint(lbl_8031D478);
             }
