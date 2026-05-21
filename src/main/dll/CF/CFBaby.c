@@ -1899,3 +1899,30 @@ void Fall_Ladders_init(int *obj, s8 *def) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int textureLoadAsset(int id);
+extern int *gameTextGet(int id);
+extern int lbl_803219A0[];
+extern int lbl_80321990[];
+#pragma scheduling off
+#pragma peephole off
+void infopoint_init(int *obj, u8 *def) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    int *txt;
+    *(int *)((char *)obj + 0xbc) = (int)InfoPoint_SeqFn;
+    if (*(void **)lbl_803219A0 == NULL) {
+        *(int *)lbl_803219A0 = textureLoadAsset(616);
+    }
+    *(int *)(state + 8) = (int)lbl_80321990;
+    txt = gameTextGet(*(u16 *)((char *)def + 0x18));
+    *(int *)(state + 4) = **(int **)((char *)txt + 8);
+    *(int *)(state + 0xc) = 100;
+    *(int *)state = (int)txt;
+    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x1c) << 8);
+    *(int *)(state + 0x18) = 2;
+    *(u8 *)(state + 0x10) = *(u8 *)((char *)def + 0x1b);
+    *(s16 *)(state + 0x16) = 0;
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
