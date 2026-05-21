@@ -3311,7 +3311,36 @@ int fn_8015E044(int* obj, u8* state)
 }
 
 extern f32 lbl_803E2DD8;
+extern f32 lbl_803E2E7C;
+extern f64 lbl_803E2E80;
+extern f32 lbl_803E2E88;
 extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
+
+int fn_8016032C(int* obj, u8* state)
+{
+    if ((s8)state[635] != 0) {
+        f32 fz;
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        fz = lbl_803E2E7C;
+        *(f32*)((char*)obj + 0x28) = fz;
+        *(f32*)((char*)state + 0x280) = fz;
+        *(f32*)((char*)state + 0x294) = fz;
+    }
+    if (*(f32*)((char*)obj + 0x28) < lbl_803E2E80) {
+        f32 fz = lbl_803E2E68;
+        *(f32*)((char*)obj + 0x28) = fz;
+        *(f32*)((char*)state + 0x280) = fz;
+        *(f32*)((char*)state + 0x294) = fz;
+        return 6;
+    }
+    {
+        f32 d = lbl_803E2E88;
+        *(f32*)((char*)obj + 0x28) = *(f32*)((char*)obj + 0x28) / d;
+        *(f32*)((char*)state + 0x280) = *(f32*)((char*)state + 0x280) / d;
+        *(f32*)((char*)state + 0x294) = *(f32*)((char*)state + 0x294) / d;
+    }
+    return 0;
+}
 
 int fn_8015E520(int* obj, u8* state)
 {
