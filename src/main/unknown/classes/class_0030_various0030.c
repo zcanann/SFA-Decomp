@@ -2412,7 +2412,7 @@
  *   slot 05: 0x80135CC4 titlescreen_hitDetect
  *   slot 06: 0x80135C2C titlescreen_render
  *   slot 07: 0x80135BF0 titlescreen_free
- *   slot 08: 0x80135BCC titlescreen_func08
+ *   slot 08: 0x80135BCC titlescreen_getObjectTypeId
  *   slot 09: 0x80135BC4 titlescreen_getExtraSize
  */
 

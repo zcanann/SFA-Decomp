@@ -16,5 +16,5 @@
 // - 5: titlescreen_hitDetect (0x80135CC4)
 // - 6: titlescreen_render (0x80135C2C)
 // - 7: titlescreen_free (0x80135BF0)
-// - 8: titlescreen_func08 (0x80135BCC)
+// - 8: titlescreen_getObjectTypeId (0x80135BCC)
 // - 9: titlescreen_getExtraSize (0x80135BC4)

@@ -3533,9 +3533,9 @@ int titlescreen_getExtraSize(void) { return 56; }
 /* EN v1.0 0x80135CC4  size: 4b   titlescreen_hitDetect (empty stub). */
 void titlescreen_hitDetect(void) {}
 
-/* EN v1.0 0x80135BCC  size: 36b  titlescreen_func08: returns 74 if
+/* EN v1.0 0x80135BCC  size: 36b  titlescreen_getObjectTypeId: returns 74 if
  * obj->_46 (s16) is in [1917, 1920], else returns 0. */
-int titlescreen_func08(u8* obj)
+int titlescreen_getObjectTypeId(u8* obj)
 {
     s16 v = *(s16*)(obj + 0x46);
     if (v >= 1917 && v < 1921) return 74;
@@ -3563,7 +3563,7 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
         (ObjectDescriptorCallback)titlescreen_hitDetect,
         (ObjectDescriptorCallback)titlescreen_render,
         (ObjectDescriptorCallback)titlescreen_free,
-        (ObjectDescriptorCallback)titlescreen_func08,
+        (ObjectDescriptorCallback)titlescreen_getObjectTypeId,
         titlescreen_getExtraSize,
     },
     0,
