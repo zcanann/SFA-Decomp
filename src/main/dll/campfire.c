@@ -109,6 +109,9 @@ extern f32 lbl_803E30C4;
 extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
 
+#pragma peephole off
+#pragma scheduling off
+
 extern void fn_80167764(void);
 extern void fn_801678E4(void);
 extern void fn_8016792C(void);

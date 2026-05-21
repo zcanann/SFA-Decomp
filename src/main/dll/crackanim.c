@@ -342,7 +342,17 @@ extern void dll_FC_initialise_nop(void);
 extern void dll_FC_release_nop(void);
 extern void dll_FC_init(void);
 extern void dll_FC_update(void);
-extern void dll_FC_hitDetect(void);
+extern void dll_FC_hitDetect(int *obj);
+
+extern void objRenderFn_80041018(int *obj);
+#pragma peephole off
+void dll_FC_hitDetect(int *obj) {
+    int *state = (int *)obj[0x50/4];
+    if ((state[0x44/4] & 1) == 0) return;
+    if (*(void**)((char*)obj + 0x74) == NULL) return;
+    objRenderFn_80041018(obj);
+}
+#pragma peephole reset
 
 ObjectDescriptor gDllFCObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

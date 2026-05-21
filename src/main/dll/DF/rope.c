@@ -664,7 +664,7 @@ extern undefined4 *gPartfxInterface;
 #pragma peephole off
 int fn_801C02B8(int *obj) {
     int *side = *(int **)((char *)obj + 0x4c);
-    if (GameBit_Get(*(s16 *)((char *)side + 0x1e)) == 0) {
+    if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) == 0u) {
         return 0;
     }
     (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
