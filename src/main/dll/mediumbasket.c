@@ -2126,7 +2126,7 @@ int fn_8015B7EC(int obj, int p2)
   extern f32 lbl_803E2D24;
   int sub = *(int *)(obj + 0xb8);
 
-  if (*(int *)(p2 + 0x2d0) == 0) return 0;
+  if (*(void **)(p2 + 0x2d0) == NULL) return 0;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
     *(f32 *)(p2 + 0x284) = lbl_803E2D14;
