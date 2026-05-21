@@ -15,5 +15,5 @@
 // - 5: mikabombshadow_hitDetect (0x8016B76C)
 // - 6: mikabombshadow_render (0x8016B724)
 // - 7: mikabombshadow_free (0x8016B720)
-// - 8: mikabombshadow_func08 (0x8016B718)
+// - 8: mikabombshadow_getObjectTypeId (0x8016B718)
 // - 9: mikabombshadow_getExtraSize (0x8016B710)

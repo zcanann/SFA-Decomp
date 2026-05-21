@@ -252,7 +252,7 @@
  *   slot 05: 0x801695D0 kaldachompme_hitDetect
  *   slot 06: 0x801695A0 kaldachompme_render
  *   slot 07: 0x8016959C kaldachompme_free
- *   slot 08: 0x80169594 kaldachompme_func08
+ *   slot 08: 0x80169594 kaldachompme_getObjectTypeId
  *   slot 09: 0x8016958C kaldachompme_getExtraSize
  * - DLL 0x0100: gTrickyWarpObjDescriptor (slots=10, mask=0001100101)
  *   slot 03: 0x80180218 trickywarp_init

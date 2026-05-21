@@ -56,7 +56,7 @@
  * - slot 05: 0x8015F73C chukchuk_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8015F70C chukchuk_render ref=render
  * - slot 07: 0x8015F708 chukchuk_free stub=blr ref=free (stub)
- * - slot 08: 0x8015F700 chukchuk_func08 stub=const 0
+ * - slot 08: 0x8015F700 chukchuk_getObjectTypeId stub=const 0
  * - slot 09: 0x8015F6F8 chukchuk_getExtraSize stub=const 24 ref=getExtraSize (stub)
  * - slot 10: 0x8015F6C4 chukchuk_setScale ref=setScale
  */

@@ -15,5 +15,5 @@
 // - 5: grimble_hitDetect (0x80162C08)
 // - 6: grimble_render (0x80162B0C)
 // - 7: grimble_free (0x80162AB0)
-// - 8: grimble_func08 (0x80162AA8)
+// - 8: grimble_getObjectTypeId (0x80162AA8)
 // - 9: grimble_getExtraSize (0x80162AA0)

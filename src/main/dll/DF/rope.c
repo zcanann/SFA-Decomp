@@ -731,7 +731,7 @@ void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if
 /* 8b "li r3, N; blr" returners. */
 int dimbossgut2_setScale(void) { return 0x0; }
 int dimbossgut2_getExtraSize(void) { return 0x42c; }
-int dimbossgut2_func08(void) { return 0x49; }
+int dimbossgut2_getObjectTypeId(void) { return 0x49; }
 int DIMbossspit_getExtraSize(void) { return 0x8; }
 int DIMbossspit_func08(void) { return 0x0; }
 int magicmaker_getExtraSize(void) { return 0x0; }

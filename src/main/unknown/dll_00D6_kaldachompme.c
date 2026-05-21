@@ -15,5 +15,5 @@
 // - 5: kaldachompme_hitDetect (0x801695D0)
 // - 6: kaldachompme_render (0x801695A0)
 // - 7: kaldachompme_free (0x8016959C)
-// - 8: kaldachompme_func08 (0x80169594)
+// - 8: kaldachompme_getObjectTypeId (0x80169594)
 // - 9: kaldachompme_getExtraSize (0x8016958C)

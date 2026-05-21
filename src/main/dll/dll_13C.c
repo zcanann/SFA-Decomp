@@ -1197,13 +1197,13 @@ void mikabomb_free(int obj, int mode) {
 
 /* 8b "li r3, N; blr" returners. */
 int pinponspike_getExtraSize(void) { return 0x0; }
-int pinponspike_func08(void) { return 0x0; }
+int pinponspike_getObjectTypeId(void) { return 0x0; }
 int pollen_getExtraSize(void) { return 0x14; }
-int pollen_func08(void) { return 0x0; }
+int pollen_getObjectTypeId(void) { return 0x0; }
 int pollenfragment_getExtraSize(void) { return 0x28; }
-int pollenfragment_func08(void) { return 0x0; }
+int pollenfragment_getObjectTypeId(void) { return 0x0; }
 int mikabomb_getExtraSize(void) { return 0x10; }
-int mikabomb_func08(void) { return 0x0; }
+int mikabomb_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3138;
@@ -1217,7 +1217,7 @@ void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_hitDetect(void);
 extern void kaldachompspit_update(void);
-extern int kaldachompspit_func08(void);
+extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 extern void pinponspike_free(int obj);
 extern void pinponspike_update(void);
@@ -1240,7 +1240,7 @@ ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     (ObjectDescriptorCallback)kaldachompspit_hitDetect,
     (ObjectDescriptorCallback)kaldachompspit_render,
     (ObjectDescriptorCallback)kaldachompspit_free,
-    (ObjectDescriptorCallback)kaldachompspit_func08,
+    (ObjectDescriptorCallback)kaldachompspit_getObjectTypeId,
     kaldachompspit_getExtraSize,
 };
 
@@ -1257,7 +1257,7 @@ ObjectDescriptor gPinPonSpikeObjDescriptor = {
     (ObjectDescriptorCallback)pinponspike_hitDetect,
     (ObjectDescriptorCallback)pinponspike_render,
     (ObjectDescriptorCallback)pinponspike_free,
-    (ObjectDescriptorCallback)pinponspike_func08,
+    (ObjectDescriptorCallback)pinponspike_getObjectTypeId,
     pinponspike_getExtraSize,
 };
 
@@ -1274,7 +1274,7 @@ ObjectDescriptor gPollenObjDescriptor = {
     (ObjectDescriptorCallback)pollen_hitDetect,
     (ObjectDescriptorCallback)pollen_render,
     (ObjectDescriptorCallback)pollen_free,
-    (ObjectDescriptorCallback)pollen_func08,
+    (ObjectDescriptorCallback)pollen_getObjectTypeId,
     pollen_getExtraSize,
 };
 
@@ -1376,6 +1376,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
     (ObjectDescriptorCallback)pollenfragment_hitDetect,
     (ObjectDescriptorCallback)pollenfragment_render,
     (ObjectDescriptorCallback)pollenfragment_free,
-    (ObjectDescriptorCallback)pollenfragment_func08,
+    (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
     pollenfragment_getExtraSize,
 };

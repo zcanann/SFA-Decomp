@@ -56,7 +56,7 @@
  * - slot 05: 0x801695D0 kaldachompme_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801695A0 kaldachompme_render ref=render
  * - slot 07: 0x8016959C kaldachompme_free stub=blr ref=free (stub)
- * - slot 08: 0x80169594 kaldachompme_func08 stub=const 0
+ * - slot 08: 0x80169594 kaldachompme_getObjectTypeId stub=const 0
  * - slot 09: 0x8016958C kaldachompme_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 

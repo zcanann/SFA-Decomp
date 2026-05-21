@@ -14,5 +14,5 @@
 // - 5: DIMbossgut_hitDetect (0x801BDC84)
 // - 6: DIMbossgut_render (0x801BDC0C)
 // - 7: DIMbossgut_free (0x801BDC08)
-// - 8: DIMbossgut_func08 (0x801BDC00)
+// - 8: DIMbossgut_getObjectTypeId (0x801BDC00)
 // - 9: DIMbossgut_getExtraSize (0x801BDBF8)

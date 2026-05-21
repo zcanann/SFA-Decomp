@@ -435,7 +435,7 @@
  *   slot 05: 0x8016A9C4 pollenfragment_hitDetect
  *   slot 06: 0x8016A954 pollenfragment_render
  *   slot 07: 0x8016A8F0 pollenfragment_free
- *   slot 08: 0x8016A8E8 pollenfragment_func08
+ *   slot 08: 0x8016A8E8 pollenfragment_getObjectTypeId
  *   slot 09: 0x8016A8E0 pollenfragment_getExtraSize
  * - DLL 0x00DD: gGCbaddieShieldObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8016BB0C gcbaddieshield_initialise

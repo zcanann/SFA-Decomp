@@ -15,5 +15,5 @@
 // - 5: pollenfragment_hitDetect (0x8016A9C4)
 // - 6: pollenfragment_render (0x8016A954)
 // - 7: pollenfragment_free (0x8016A8F0)
-// - 8: pollenfragment_func08 (0x8016A8E8)
+// - 8: pollenfragment_getObjectTypeId (0x8016A8E8)
 // - 9: pollenfragment_getExtraSize (0x8016A8E0)

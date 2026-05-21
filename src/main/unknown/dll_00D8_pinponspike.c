@@ -15,5 +15,5 @@
 // - 5: pinponspike_hitDetect (0x8016A09C)
 // - 6: pinponspike_render (0x8016A098)
 // - 7: pinponspike_free (0x8016A068)
-// - 8: pinponspike_func08 (0x8016A060)
+// - 8: pinponspike_getObjectTypeId (0x8016A060)
 // - 9: pinponspike_getExtraSize (0x8016A058)

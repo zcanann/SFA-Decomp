@@ -14,7 +14,7 @@
 // - 5: DIMbosstonsil_hitDetect (0x801BEA3C)
 // - 6: DIMbosstonsil_render (0x801BE8F8)
 // - 7: DIMbosstonsil_free (0x801BE88C)
-// - 8: DIMbosstonsil_func08 (0x801BE884)
+// - 8: DIMbosstonsil_getObjectTypeId (0x801BE884)
 // - 9: DIMbosstonsil_getExtraSize (0x801BE87C)
 // - 10: DIMbosstonsil_setScale (0x801BE870)
 // - 11: DIMbosstonsil_func0B (0x801BE86C)

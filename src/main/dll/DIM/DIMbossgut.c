@@ -25,7 +25,7 @@ int DIMbossgut_updateState(int obj, int param_2, void *state)
 #pragma scheduling reset
 
 int DIMbossgut_getExtraSize(void) { return 0x0; }
-int DIMbossgut_func08(void) { return 0x0; }
+int DIMbossgut_getObjectTypeId(void) { return 0x0; }
 void DIMbossgut_free(void) {}
 
 #pragma scheduling off
@@ -76,6 +76,6 @@ ObjectDescriptor gDIM_BossGutObjDescriptor = {
     (ObjectDescriptorCallback)DIMbossgut_hitDetect,
     (ObjectDescriptorCallback)DIMbossgut_render,
     (ObjectDescriptorCallback)DIMbossgut_free,
-    (ObjectDescriptorCallback)DIMbossgut_func08,
+    (ObjectDescriptorCallback)DIMbossgut_getObjectTypeId,
     DIMbossgut_getExtraSize,
 };

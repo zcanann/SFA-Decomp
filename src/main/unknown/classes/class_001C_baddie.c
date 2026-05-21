@@ -97,7 +97,7 @@
  *   slot 05: 0x8014D430 enemy_hitDetect
  *   slot 06: 0x8014D29C enemy_render
  *   slot 07: 0x8014D164 enemy_free
- *   slot 08: 0x8014D15C enemy_func08
+ *   slot 08: 0x8014D15C enemy_getObjectTypeId
  *   slot 09: 0x8014D154 Baddie_EnemygetExtraSize
  * - DLL 0x00CC: gChukChukObjDescriptor (slots=11, mask=11011111111)
  *   slot 00: 0x8015FBE8 chukchuk_initialise
@@ -107,7 +107,7 @@
  *   slot 05: 0x8015F73C chukchuk_hitDetect
  *   slot 06: 0x8015F70C chukchuk_render
  *   slot 07: 0x8015F708 chukchuk_free
- *   slot 08: 0x8015F700 chukchuk_func08
+ *   slot 08: 0x8015F700 chukchuk_getObjectTypeId
  *   slot 09: 0x8015F6F8 chukchuk_getExtraSize
  * - DLL 0x00CD: gIceBallObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801601C0 iceball_initialise
@@ -117,7 +117,7 @@
  *   slot 05: 0x8015FFC4 iceball_hitDetect
  *   slot 06: 0x8015FF94 iceball_render
  *   slot 07: 0x8015FF74 iceball_free
- *   slot 08: 0x8015FF6C iceball_func08
+ *   slot 08: 0x8015FF6C iceball_getObjectTypeId
  *   slot 09: 0x8015FF64 iceball_getExtraSize
  * - DLL 0x00D0: gGrimbleObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80162FA0 grimble_initialise
@@ -127,7 +127,7 @@
  *   slot 05: 0x80162C08 grimble_hitDetect
  *   slot 06: 0x80162B0C grimble_render
  *   slot 07: 0x80162AB0 grimble_free
- *   slot 08: 0x80162AA8 grimble_func08
+ *   slot 08: 0x80162AA8 grimble_getObjectTypeId
  *   slot 09: 0x80162AA0 grimble_getExtraSize
  * - DLL 0x00D5: gKaldaChomObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x801692A4 kaldachom_initialise
@@ -137,7 +137,7 @@
  *   slot 05: 0x80168D08 kaldachom_hitDetect
  *   slot 06: 0x80168BFC kaldachom_render
  *   slot 07: 0x80168BA0 kaldachom_free
- *   slot 08: 0x80168B98 kaldachom_func08
+ *   slot 08: 0x80168B98 kaldachom_getObjectTypeId
  *   slot 09: 0x80168B90 kaldachom_getExtraSize
  * - DLL 0x00D7: gKaldaChompSpitObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80169EF0 kaldachompspit_initialise
@@ -147,7 +147,7 @@
  *   slot 05: 0x801698E4 kaldachompspit_hitDetect
  *   slot 06: 0x8016984C kaldachompspit_render
  *   slot 07: 0x8016981C kaldachompspit_free
- *   slot 08: 0x80169814 kaldachompspit_func08
+ *   slot 08: 0x80169814 kaldachompspit_getObjectTypeId
  *   slot 09: 0x8016980C kaldachompspit_getExtraSize
  * - DLL 0x00D8: gPinPonSpikeObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8016A3C4 pinponspike_initialise
@@ -157,7 +157,7 @@
  *   slot 05: 0x8016A09C pinponspike_hitDetect
  *   slot 06: 0x8016A098 pinponspike_render
  *   slot 07: 0x8016A068 pinponspike_free
- *   slot 08: 0x8016A060 pinponspike_func08
+ *   slot 08: 0x8016A060 pinponspike_getObjectTypeId
  *   slot 09: 0x8016A058 pinponspike_getExtraSize
  * - DLL 0x00D9: gPollenObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8016A8DC pollen_initialise
@@ -167,7 +167,7 @@
  *   slot 05: 0x8016A438 pollen_hitDetect
  *   slot 06: 0x8016A408 pollen_render
  *   slot 07: 0x8016A3D8 pollen_free
- *   slot 08: 0x8016A3D0 pollen_func08
+ *   slot 08: 0x8016A3D0 pollen_getObjectTypeId
  *   slot 09: 0x8016A3C8 pollen_getExtraSize
  * - DLL 0x00DA: gPollenFragmentObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8016B22C pollenfragment_initialise
@@ -177,7 +177,7 @@
  *   slot 05: 0x8016A9C4 pollenfragment_hitDetect
  *   slot 06: 0x8016A954 pollenfragment_render
  *   slot 07: 0x8016A8F0 pollenfragment_free
- *   slot 08: 0x8016A8E8 pollenfragment_func08
+ *   slot 08: 0x8016A8E8 pollenfragment_getObjectTypeId
  *   slot 09: 0x8016A8E0 pollenfragment_getExtraSize
  * - DLL 0x00DB: gMikaBombObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8016B70C mikabomb_initialise
@@ -187,7 +187,7 @@
  *   slot 05: 0x8016B2DC mikabomb_hitDetect
  *   slot 06: 0x8016B2AC mikabomb_render
  *   slot 07: 0x8016B240 mikabomb_free
- *   slot 08: 0x8016B238 mikabomb_func08
+ *   slot 08: 0x8016B238 mikabomb_getObjectTypeId
  *   slot 09: 0x8016B230 mikabomb_getExtraSize
  * - DLL 0x00DC: gMikaBombShadowObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8016B894 mikabombshadow_initialise
@@ -197,7 +197,7 @@
  *   slot 05: 0x8016B76C mikabombshadow_hitDetect
  *   slot 06: 0x8016B724 mikabombshadow_render
  *   slot 07: 0x8016B720 mikabombshadow_free
- *   slot 08: 0x8016B718 mikabombshadow_func08
+ *   slot 08: 0x8016B718 mikabombshadow_getObjectTypeId
  *   slot 09: 0x8016B710 mikabombshadow_getExtraSize
  * - DLL 0x01B5: gLightFootObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802B970C lightfoot_initialise
@@ -207,7 +207,7 @@
  *   slot 05: 0x802B8B48 lightfoot_hitDetect
  *   slot 06: 0x802B8B08 lightfoot_render
  *   slot 07: 0x802B8A68 lightfoot_free
- *   slot 08: 0x802B8A60 lightfoot_func08
+ *   slot 08: 0x802B8A60 lightfoot_getObjectTypeId
  *   slot 09: 0x802B8A58 lightfoot_getExtraSize
  * - DLL 0x01E0: gDIM_BossObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x801BDAD4 DIMboss_initialise
@@ -227,7 +227,7 @@
  *   slot 05: 0x801BDC84 DIMbossgut_hitDetect
  *   slot 06: 0x801BDC0C DIMbossgut_render
  *   slot 07: 0x801BDC08 DIMbossgut_free
- *   slot 08: 0x801BDC00 DIMbossgut_func08
+ *   slot 08: 0x801BDC00 DIMbossgut_getObjectTypeId
  *   slot 09: 0x801BDBF8 DIMbossgut_getExtraSize
  * - DLL 0x01E2: gDIM_BossTonsilObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x801BEE64 DIMbosstonsil_initialise
@@ -237,7 +237,7 @@
  *   slot 05: 0x801BEA3C DIMbosstonsil_hitDetect
  *   slot 06: 0x801BE8F8 DIMbosstonsil_render
  *   slot 07: 0x801BE88C DIMbosstonsil_free
- *   slot 08: 0x801BE884 DIMbosstonsil_func08
+ *   slot 08: 0x801BE884 DIMbosstonsil_getObjectTypeId
  *   slot 09: 0x801BE87C DIMbosstonsil_getExtraSize
  * - DLL 0x01E3: gDIM_BossGut2ObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x801BF8D4 dimbossgut2_initialise
@@ -247,7 +247,7 @@
  *   slot 05: 0x801BF3E4 dimbossgut2_hitDetect
  *   slot 06: 0x801BF37C dimbossgut2_render
  *   slot 07: 0x801BF2F0 dimbossgut2_free
- *   slot 08: 0x801BF2E8 dimbossgut2_func08
+ *   slot 08: 0x801BF2E8 dimbossgut2_getObjectTypeId
  *   slot 09: 0x801BF2E0 dimbossgut2_getExtraSize
  * - DLL 0x0242: gDBstealerwormObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x80203C58 dbstealerworm_initialise
@@ -257,7 +257,7 @@
  *   slot 05: 0x80203634 dbstealerworm_hitDetect
  *   slot 06: 0x802034C4 dbstealerworm_render
  *   slot 07: 0x8020343C dbstealerworm_free
- *   slot 08: 0x80203434 dbstealerworm_func08
+ *   slot 08: 0x80203434 dbstealerworm_getObjectTypeId
  *   slot 09: 0x8020342C dbstealerworm_getExtraSize
  * - DLL 0x025C: gSnowClawObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802106BC snowclaw_initialise
@@ -267,7 +267,7 @@
  *   slot 05: 0x8020FDB0 snowclaw_hitDetect
  *   slot 06: 0x8020FB2C snowclaw_render
  *   slot 07: 0x8020FB00 snowclaw_free
- *   slot 08: 0x8020FAF8 snowclaw_func08
+ *   slot 08: 0x8020FAF8 snowclaw_getObjectTypeId
  *   slot 09: 0x8020FAF0 snowclaw_getExtraSize
  */
 

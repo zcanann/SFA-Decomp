@@ -15,7 +15,7 @@
 // - 5: kaldachom_hitDetect (0x80168D08)
 // - 6: kaldachom_render (0x80168BFC)
 // - 7: kaldachom_free (0x80168BA0)
-// - 8: kaldachom_func08 (0x80168B98)
+// - 8: kaldachom_getObjectTypeId (0x80168B98)
 // - 9: kaldachom_getExtraSize (0x80168B90)
 // - A: kaldachom_setScale (0x80168B84)
 // - B: kaldachom_func0B (0x80168B80)

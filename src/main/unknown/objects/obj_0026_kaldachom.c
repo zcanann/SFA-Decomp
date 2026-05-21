@@ -56,7 +56,7 @@
  * - slot 05: 0x80168D08 kaldachom_hitDetect stub=blr ref=p_hitDetect (stub)
  * - slot 06: 0x80168BFC kaldachom_render ref=p_render
  * - slot 07: 0x80168BA0 kaldachom_free ref=p_free
- * - slot 08: 0x80168B98 kaldachom_func08 stub=const 73
+ * - slot 08: 0x80168B98 kaldachom_getObjectTypeId stub=const 73
  * - slot 09: 0x80168B90 kaldachom_getExtraSize stub=const 1116 ref=p_getExtraSize (stub)
  * - slot 10: 0x80168B84 kaldachom_setScale ref=setScale
  * - slot 11: 0x80168B80 kaldachom_func0B stub=blr

@@ -170,7 +170,7 @@ int DIMbosstonsil_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: DIMbosstonsil_func08
+ * Function: DIMbosstonsil_getObjectTypeId
  * EN v1.0 Address: 0x801BE884
  * EN v1.0 Size: 8b
  * EN v1.1 Address: TODO
@@ -180,7 +180,7 @@ int DIMbosstonsil_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DIMbosstonsil_func08(void)
+int DIMbosstonsil_getObjectTypeId(void)
 {
   return DIMBOSSTONSIL_OBJECT_TYPE;
 }

@@ -673,7 +673,7 @@ void cannonclaw_hitDetect(void) {}
 /* 8b "li r3, N; blr" returners. */
 int fn_801627EC(void) { return 0x0; }
 int grimble_getExtraSize(void) { return 0x46c; }
-int grimble_func08(void) { return 0x59; }
+int grimble_getObjectTypeId(void) { return 0x59; }
 int cannonclaw_getExtraSize(void) { return 0x0; }
 int cannonclaw_func08(void) { return 0x0; }
 
@@ -766,6 +766,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     (ObjectDescriptorCallback)grimble_hitDetect,
     (ObjectDescriptorCallback)grimble_render,
     (ObjectDescriptorCallback)grimble_free,
-    (ObjectDescriptorCallback)grimble_func08,
+    (ObjectDescriptorCallback)grimble_getObjectTypeId,
     grimble_getExtraSize,
 };

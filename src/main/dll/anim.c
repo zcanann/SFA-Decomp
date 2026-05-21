@@ -4456,7 +4456,7 @@ int GCRobotBlast_func08_ret_0(void) { return 0x0; }
 int drakorenergy_getExtraSize(void) { return 0xc; }
 int drakorenergy_func08(void) { return 0x0; }
 int dbstealerworm_getExtraSize(void) { return 0x460; }
-int dbstealerworm_func08(void) { return 0x49; }
+int dbstealerworm_getObjectTypeId(void) { return 0x49; }
 int dbholecontrol1_getExtraSize(void) { return 0xc; }
 int dbholecontrol1_func08(void) { return 0x0; }
 int dfplevelcontrol_getExtraSize(void) { return 0xc; }

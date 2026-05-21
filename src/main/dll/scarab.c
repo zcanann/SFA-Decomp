@@ -3097,9 +3097,9 @@ void dll_CB_release_nop(void) {}
 int dll_CE_getExtraSize_ret_1052(void) { return 0x41c; }
 int dll_CE_func08_ret_73(void) { return 0x49; }
 int chukchuk_getExtraSize(void) { return 0x18; }
-int chukchuk_func08(void) { return 0x0; }
+int chukchuk_getObjectTypeId(void) { return 0x0; }
 int iceball_getExtraSize(void) { return 0x2; }
-int iceball_func08(void) { return 0x0; }
+int iceball_getObjectTypeId(void) { return 0x0; }
 int fn_8016052C(void) { return 0x6; }
 int dll_CB_getExtraSize_ret_1040(void) { return 0x410; }
 int dll_CB_func08_ret_331(void) { return 0x14b; }
@@ -3547,7 +3547,7 @@ ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
         (ObjectDescriptorCallback)chukchuk_hitDetect,
         (ObjectDescriptorCallback)chukchuk_render,
         (ObjectDescriptorCallback)chukchuk_free,
-        (ObjectDescriptorCallback)chukchuk_func08,
+        (ObjectDescriptorCallback)chukchuk_getObjectTypeId,
         chukchuk_getExtraSize,
         (ObjectDescriptorCallback)chukchuk_setScale,
     },
@@ -3567,6 +3567,6 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_hitDetect,
     (ObjectDescriptorCallback)iceball_render,
     (ObjectDescriptorCallback)iceball_free,
-    (ObjectDescriptorCallback)iceball_func08,
+    (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };

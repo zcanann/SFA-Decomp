@@ -72,7 +72,7 @@
  * - slot 05: 0x8014D430 enemy_hitDetect ref=EnemyhitDetect
  * - slot 06: 0x8014D29C enemy_render ref=Enemyrender
  * - slot 07: 0x8014D164 enemy_free ref=Enemyfree
- * - slot 08: 0x8014D15C enemy_func08 stub=const 331
+ * - slot 08: 0x8014D15C enemy_getObjectTypeId stub=const 331
  * - slot 09: 0x8014D154 Baddie_EnemygetExtraSize stub=const 880 ref=EnemygetExtraSize (stub)
  */
 

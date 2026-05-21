@@ -15,5 +15,5 @@
 // - 5: kaldachompspit_hitDetect (0x801698E4)
 // - 6: kaldachompspit_render (0x8016984C)
 // - 7: kaldachompspit_free (0x8016981C)
-// - 8: kaldachompspit_func08 (0x80169814)
+// - 8: kaldachompspit_getObjectTypeId (0x80169814)
 // - 9: kaldachompspit_getExtraSize (0x8016980C)

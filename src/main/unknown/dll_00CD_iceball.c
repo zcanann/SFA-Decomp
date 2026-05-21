@@ -16,5 +16,5 @@
 // - 5: iceball_hitDetect (0x8015FFC4)
 // - 6: iceball_render (0x8015FF94)
 // - 7: iceball_free (0x8015FF74)
-// - 8: iceball_func08 (0x8015FF6C)
+// - 8: iceball_getObjectTypeId (0x8015FF6C)
 // - 9: iceball_getExtraSize (0x8015FF64)

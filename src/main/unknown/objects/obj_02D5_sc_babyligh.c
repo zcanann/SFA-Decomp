@@ -60,7 +60,7 @@
  * - slot 05: 0x802B8B48 lightfoot_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802B8B08 lightfoot_render ref=render
  * - slot 07: 0x802B8A68 lightfoot_free ref=free
- * - slot 08: 0x802B8A60 lightfoot_func08 stub=const 331
+ * - slot 08: 0x802B8A60 lightfoot_getObjectTypeId stub=const 331
  * - slot 09: 0x802B8A58 lightfoot_getExtraSize stub=const 1088 ref=getExtraSize (stub)
  */
 

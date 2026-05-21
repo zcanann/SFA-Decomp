@@ -24,7 +24,7 @@
  * - slot 05: 0x8020FDB0 snowclaw_hitDetect ref=hitDetect
  * - slot 06: 0x8020FB2C snowclaw_render ref=render
  * - slot 07: 0x8020FB00 snowclaw_free ref=free
- * - slot 08: 0x8020FAF8 snowclaw_func08 stub=const 3
+ * - slot 08: 0x8020FAF8 snowclaw_getObjectTypeId stub=const 3
  * - slot 09: 0x8020FAF0 snowclaw_getExtraSize stub=const 176 ref=getExtraSize (stub)
  *
  * Reference-only hints:

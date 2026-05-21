@@ -14,5 +14,5 @@
 // - 5: lightfoot_hitDetect (0x802B8B48)
 // - 6: lightfoot_render (0x802B8B08)
 // - 7: lightfoot_free (0x802B8A68)
-// - 8: lightfoot_func08 (0x802B8A60)
+// - 8: lightfoot_getObjectTypeId (0x802B8A60)
 // - 9: lightfoot_getExtraSize (0x802B8A58)

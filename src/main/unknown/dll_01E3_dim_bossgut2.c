@@ -14,7 +14,7 @@
 // - 5: dimbossgut2_hitDetect (0x801BF3E4)
 // - 6: dimbossgut2_render (0x801BF37C)
 // - 7: dimbossgut2_free (0x801BF2F0)
-// - 8: dimbossgut2_func08 (0x801BF2E8)
+// - 8: dimbossgut2_getObjectTypeId (0x801BF2E8)
 // - 9: dimbossgut2_getExtraSize (0x801BF2E0)
 // - 10: dimbossgut2_setScale (0x801BF2D8)
 // - 11: dimbossgut2_func11 (0x801BF2D4)

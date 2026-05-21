@@ -444,7 +444,7 @@ void kaldachom_func0B(void) {}
 /* 8b "li r3, N; blr" returners and small wrappers. */
 s16 kaldachom_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
 int kaldachom_getExtraSize(void) { return 0x45c; }
-int kaldachom_func08(void) { return 0x49; }
+int kaldachom_getObjectTypeId(void) { return 0x49; }
 
 /*
  * --INFO--
@@ -698,7 +698,7 @@ ObjectDescriptor12 gKaldaChomObjDescriptor = {
     (ObjectDescriptorCallback)kaldachom_hitDetect,
     (ObjectDescriptorCallback)kaldachom_render,
     (ObjectDescriptorCallback)kaldachom_free,
-    (ObjectDescriptorCallback)kaldachom_func08,
+    (ObjectDescriptorCallback)kaldachom_getObjectTypeId,
     kaldachom_getExtraSize,
     (ObjectDescriptorCallback)kaldachom_setScale,
     (ObjectDescriptorCallback)kaldachom_func0B,

@@ -16,7 +16,7 @@
 // - 5: dbstealerworm_hitDetect (0x80203634)
 // - 6: dbstealerworm_render (0x802034C4)
 // - 7: dbstealerworm_free (0x8020343C)
-// - 8: dbstealerworm_func08 (0x80203434)
+// - 8: dbstealerworm_getObjectTypeId (0x80203434)
 // - 9: dbstealerworm_getExtraSize (0x8020342C)
 // - 10: DBstealerworm_setScale (0x80203420)
 // - 11: dbstealerworm_func0B (0x8020338C)

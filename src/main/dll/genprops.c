@@ -4443,7 +4443,7 @@ void setuppoint_init(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int mikabombshadow_getExtraSize(void) { return 0x4; }
-int mikabombshadow_func08(void) { return 0x0; }
+int mikabombshadow_getObjectTypeId(void) { return 0x0; }
 int StaticCamera_getExtraSize(void) { return 0x8; }
 int StaticCamera_func08(void) { return 0x0; }
 int gcbaddieshield_getExtraSize(void) { return 0x8; }
@@ -4475,7 +4475,7 @@ extern void mikabomb_render();
 extern void mikabomb_hitDetect();
 extern void mikabomb_update(uint param_1,int param_2);
 extern void mikabomb_init();
-extern int mikabomb_func08();
+extern int mikabomb_getObjectTypeId();
 extern int mikabomb_getExtraSize();
 void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void mikabombshadow_update();
@@ -4548,7 +4548,7 @@ ObjectDescriptor gMikaBombObjDescriptor = {
     (ObjectDescriptorCallback)mikabomb_hitDetect,
     (ObjectDescriptorCallback)mikabomb_render,
     (ObjectDescriptorCallback)mikabomb_free,
-    (ObjectDescriptorCallback)mikabomb_func08,
+    (ObjectDescriptorCallback)mikabomb_getObjectTypeId,
     mikabomb_getExtraSize,
 };
 
@@ -4562,7 +4562,7 @@ ObjectDescriptor gMikaBombShadowObjDescriptor = {
     (ObjectDescriptorCallback)mikabombshadow_hitDetect,
     (ObjectDescriptorCallback)mikabombshadow_render,
     (ObjectDescriptorCallback)mikabombshadow_free,
-    (ObjectDescriptorCallback)mikabombshadow_func08,
+    (ObjectDescriptorCallback)mikabombshadow_getObjectTypeId,
     mikabombshadow_getExtraSize,
 };
 

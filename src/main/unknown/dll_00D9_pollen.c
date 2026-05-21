@@ -15,5 +15,5 @@
 // - 5: pollen_hitDetect (0x8016A438)
 // - 6: pollen_render (0x8016A408)
 // - 7: pollen_free (0x8016A3D8)
-// - 8: pollen_func08 (0x8016A3D0)
+// - 8: pollen_getObjectTypeId (0x8016A3D0)
 // - 9: pollen_getExtraSize (0x8016A3C8)

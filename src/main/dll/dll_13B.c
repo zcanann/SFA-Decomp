@@ -119,7 +119,7 @@ int kaldachompme_getExtraSize(void)
   return 0x10;
 }
 
-int kaldachompme_func08(void)
+int kaldachompme_getObjectTypeId(void)
 {
   return 0;
 }
@@ -210,7 +210,7 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
     (ObjectDescriptorCallback)kaldachompme_hitDetect,
     (ObjectDescriptorCallback)kaldachompme_render,
     (ObjectDescriptorCallback)kaldachompme_free,
-    (ObjectDescriptorCallback)kaldachompme_func08,
+    (ObjectDescriptorCallback)kaldachompme_getObjectTypeId,
     kaldachompme_getExtraSize,
 };
 
@@ -493,7 +493,7 @@ void kaldachompspit_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int kaldachompspit_getExtraSize(void) { return 0x4; }
-int kaldachompspit_func08(void) { return 0x0; }
+int kaldachompspit_getObjectTypeId(void) { return 0x0; }
 
 extern void ModelLightStruct_free(void *p);
 #pragma scheduling off
