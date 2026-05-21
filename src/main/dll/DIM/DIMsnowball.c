@@ -1455,6 +1455,42 @@ void fn_801AB800(int obj, u8* state2) {
 
 extern int* gWaterfxInterface;
 extern f32 lbl_803E4670;
+extern f32 lbl_803E4664;
+extern f32 lbl_803E4668;
+extern f32 timeDelta;
+extern uint GameBit_Get(int eventId);
+extern unsigned long GameBit_Set(int eventId, int value);
+extern f32 vec3f_distanceSquared(f32* p1, f32* p2);
+extern void ObjAnim_AdvanceCurrentMove(void* obj, int flag, f32 weight, f32 dt);
+extern void characterDoEyeAnims(int obj, void* p);
+extern void *Obj_GetPlayerObject(void);
+extern void ObjHits_DisableObject_xx(int *obj);
+
+#pragma scheduling off
+#pragma peephole off
+void ccqueen_update(int *obj) {
+    u8 *sub;
+    int *player;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (GameBit_Get(0x1c2) == 0 && GameBit_Get(0xa3) != 0) {
+        player = (int*)Obj_GetPlayerObject();
+        if (vec3f_distanceSquared((f32*)((char*)obj + 0x18), (f32*)((char*)player + 0x18)) < lbl_803E4664) {
+            GameBit_Set(0x1c2, 1);
+        }
+    }
+    if (GameBit_Get(0x1c3) != 0) {
+        *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+        *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
+        ObjHits_DisableObject(obj);
+    } else {
+        ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E4668, timeDelta);
+        dll_2E_func03(obj, sub);
+        characterDoEyeAnims((int)obj, sub + 0x624);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* fn_801AA734: ccqueen seqFn dispatcher. Walks the (u8)data[0x8b] command
  * bytes at data[0x81..]: cmd=1 detaches obj's child via ObjLink_DetachChild
