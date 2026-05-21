@@ -258,13 +258,13 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
             extra->effectMode = 1;
             extra->effectScale = lbl_803DC340;
             break;
-        case 0x730:
-            extra->effectType = 0xc;
+        case 0x731:
+            extra->effectType = 0xd;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
-        case 0x731:
-            extra->effectType = 0xd;
+        case 0x730:
+            extra->effectType = 0xc;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
