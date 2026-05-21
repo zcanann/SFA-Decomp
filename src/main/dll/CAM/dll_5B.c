@@ -125,22 +125,17 @@ void firstPersonDoControls(short *param_1)
   if ((dVar7 <= dVar6) && (dVar7 = dVar6, (double)lbl_803E17E8 < dVar6)) {
     dVar7 = (double)lbl_803E17E8;
   }
-  dVar6 = FUN_800176f4((double)((float)((double)CONCAT44(0x43300000,(int)cVar3 ^ 0x80000000) -
-                                       lbl_803E17D8) *
-                                -(float)((double)lbl_803E17F0 * dVar7 - (double)lbl_803E17EC) -
-                               *(float *)(lbl_803DD548 + 0x11c)),(double)lbl_803E17F4,
-                       (double)timeDelta);
+  dVar6 = FUN_800176f4((f64)((f32)(s32)cVar3 *
+                                -(f32)((f64)lbl_803E17F0 * dVar7 - (f64)lbl_803E17EC) -
+                               *(f32 *)(lbl_803DD548 + 0x11c)),(f64)lbl_803E17F4,
+                       (f64)timeDelta);
   *(float *)(lbl_803DD548 + 0x11c) = (float)((double)*(float *)(lbl_803DD548 + 0x11c) + dVar6);
   if ((lbl_803E17F8 < *(float *)(lbl_803DD548 + 0x11c)) &&
      (*(float *)(lbl_803DD548 + 0x11c) < lbl_803E17FC)) {
     *(float *)(lbl_803DD548 + 0x11c) = lbl_803E17C4;
   }
-  fVar1 = lbl_803E1800 *
-          ((float)((double)CONCAT44(0x43300000,(int)cVar4 ^ 0x80000000) - lbl_803E17D8) /
-          lbl_803E1804);
-  *param_1 = (short)(int)(*(float *)(lbl_803DD548 + 0x11c) * timeDelta +
-                         (float)((double)CONCAT44(0x43300000,(int)*param_1 ^ 0x80000000) -
-                                lbl_803E17D8));
+  fVar1 = lbl_803E1800 * ((f32)(s32)cVar4 / lbl_803E1804);
+  *param_1 = (short)(int)(*(f32 *)(lbl_803DD548 + 0x11c) * timeDelta + (f32)(s32)*param_1);
   sVar2 = (short)(int)fVar1 - param_1[1];
   if (0x8000 < sVar2) {
     sVar2 = sVar2 + 1;
@@ -148,13 +143,11 @@ void firstPersonDoControls(short *param_1)
   if (sVar2 < -0x8000) {
     sVar2 = sVar2 + -1;
   }
-  dVar7 = FUN_800176f4((double)(float)((double)CONCAT44(0x43300000,(int)sVar2 ^ 0x80000000) -
-                                      lbl_803E17D8),
-                       (double)(lbl_803E17E8 /
-                               (float)((double)lbl_803E180C * dVar7 + (double)lbl_803E1808)),
-                       (double)timeDelta);
-  param_1[1] = (short)(int)((double)(float)((double)CONCAT44(0x43300000,(int)param_1[1] ^ 0x80000000
-                                                            ) - lbl_803E17D8) + dVar7);
+  dVar7 = FUN_800176f4((f64)(f32)(s32)sVar2,
+                       (f64)(lbl_803E17E8 /
+                               (f32)((f64)lbl_803E180C * dVar7 + (f64)lbl_803E1808)),
+                       (f64)timeDelta);
+  param_1[1] = (short)(int)((f64)(f32)(s32)param_1[1] + dVar7);
   if (0x3c00 < param_1[1]) {
     param_1[1] = 0x3c00;
   }
@@ -174,9 +167,8 @@ void firstPersonDoControls(short *param_1)
   if (*(char *)(lbl_803DD548 + 0x12d) < '\0') {
     dVar7 = (double)*(float *)(param_1 + 0x5a);
     cVar3 = FUN_80006bb8(0);
-    local_38 = (double)CONCAT44(0x43300000,-(int)cVar3 ^ 0x80000000);
-    dVar6 = (double)(float)((double)(lbl_803E1810 * (float)(local_38 - lbl_803E17D8)) *
-                            (double)timeDelta + dVar7);
+    dVar6 = (f64)(f32)((f64)(lbl_803E1810 * (f32)(s32)(-(int)cVar3)) *
+                            (f64)timeDelta + dVar7);
     dVar7 = FUN_800069f8();
     FUN_800810d8(dVar7);
     dVar7 = (double)lbl_803E17FC;
