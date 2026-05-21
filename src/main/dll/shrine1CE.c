@@ -424,13 +424,67 @@ void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
-void dll_19C_update(void) {}
 void dll_19D_update(void) {}
+
+extern u8 framesThisStep;
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern int Resource_Acquire(int id, int mode);
+extern void Resource_Release(int handle);
+extern f32 lbl_803E51B4;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_19C_update(int *obj) {
+    u8 *def;
+    u8 *sub;
+    int res;
+    void *setup;
+
+    def = *(u8**)((char*)obj + 0x4c);
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (*(int*)((char*)obj + 0xf8) != 0) {
+        if (GameBit_Get(0x1d4) != 0) {
+            *(int*)((char*)obj + 0xf8) = 0;
+        }
+    }
+    if (*(int*)((char*)obj + 0xf8) == 0) {
+        if (GameBit_Get(0x1d3) != 0) {
+            res = Resource_Acquire(0x82, 1);
+            ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);
+            ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
+            Sfx_PlayFromObject(0, 0xaf);
+            Resource_Release(res);
+            *(s16*)(sub + 6) = 1;
+            *(int*)((char*)obj + 0xf8) = 1;
+        }
+    }
+    if (*(s16*)(sub + 6) != 0) {
+        *(s16*)(sub + 4) = (s16)(*(s16*)(sub + 4) - *(s16*)(sub + 6) * framesThisStep);
+    }
+    if (*(s16*)(sub + 4) <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0) {
+        setup = Obj_AllocObjectSetup(0x18, 0x248);
+        *(f32*)((char*)setup + 8) = *(f32*)(def + 8);
+        *(f32*)((char*)setup + 0xc) = lbl_803E51B4 + *(f32*)(def + 0xc);
+        *(f32*)((char*)setup + 0x10) = *(f32*)(def + 0x10);
+        *(s16*)setup = 0x248;
+        *(int*)((char*)setup + 0x14) = -1;
+        *(u8*)((char*)setup + 4) = def[4];
+        *(u8*)((char*)setup + 5) = def[5];
+        *(u8*)((char*)setup + 6) = def[6];
+        *(u8*)((char*)setup + 7) = def[7];
+        Obj_SetupObject(setup, 5, (s8)*(s8*)((char*)obj + 0xac), -1, *(void**)((char*)obj + 0x30));
+        *(s16*)(sub + 4) = 0x64;
+        *(s16*)(sub + 6) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 extern void dll_19B_SeqFn(int p1, int p2, void *p3);
 extern int GameBit_Set(int eventId, int value);
-extern int Resource_Acquire(int id, int mode);
-extern void Resource_Release(int handle);
 extern void *gTitleMenuControlInterface;
 
 #pragma scheduling off
