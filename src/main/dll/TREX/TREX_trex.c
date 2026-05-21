@@ -1857,7 +1857,9 @@ void SB_CageKyte_init(int p)
 }
 #pragma scheduling reset
 #pragma peephole reset
-void SB_CageKyte_render(void) {}
+#pragma peephole off
+void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+#pragma peephole reset
 void SB_CageKyte_update(void) {}
 #pragma scheduling off
 #pragma peephole off

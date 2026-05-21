@@ -1120,12 +1120,7 @@ int fn_8018FB84(int* obj, int p2, u8* state)
 
 int lfxemitter_setScale(void) { return -1; }
 
-void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0) {
-    }
-}
+void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 
 void lfxemitter_initialise(void)
 {
