@@ -1080,7 +1080,7 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 void fn_801F20D4(int obj)
 {
   extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
-  extern void ObjAnim_AdvanceCurrentMove(int obj, int n, f32 v, f32 t);
+  extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
   extern void *Obj_GetPlayerObject(void);
   extern int *gGameUIInterface;
   extern int lbl_802C247C[];
@@ -1106,12 +1106,12 @@ void fn_801F20D4(int obj)
     if (*(s16 *)(obj + 0xa0) != 7) {
       ObjAnim_SetCurrentMove(obj, 7, lbl_803E5D98, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(u32)framesThisStep);
+    ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
   } else {
     if (*(s16 *)(obj + 0xa0) != 2) {
       ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(u32)framesThisStep);
+    ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
   }
   if ((*(u8 *)(obj + 0xaf) & 0x1) != 0 && GameBit_Get(763) == 0) {
     GameBit_Set(763, 1);
@@ -1278,7 +1278,7 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
 void fn_801F27E4(int obj)
 {
   extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
-  extern void ObjAnim_AdvanceCurrentMove(int obj, int n, f32 v, f32 t);
+  extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
   extern void *Obj_GetPlayerObject(void);
   extern int fn_80296A14(void);
   extern int *gObjectTriggerInterface;
@@ -1295,7 +1295,7 @@ void fn_801F27E4(int obj)
   if (*(s16 *)(obj + 0xa0) != 2) {
     ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
   }
-  ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(u32)framesThisStep);
+  ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
   *(u8 *)(sub + 0x24) = 1;
   if (*(u8 *)(sub + 0x24) == 0) {
     if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
