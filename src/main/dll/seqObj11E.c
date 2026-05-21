@@ -441,6 +441,41 @@ FUN_80152a30(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 #pragma scheduling off
 #pragma peephole off
+void fn_80152A94(int obj, int p)
+{
+  extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
+  extern f32 lbl_803E2814;
+  extern f32 lbl_803E2820;
+  extern f32 lbl_803E2850;
+  extern f32 lbl_803E2854;
+  extern f32 lbl_803E2858;
+  extern f32 lbl_803E285C;
+  extern f32 lbl_803E2860;
+  f32 fz;
+
+  *(f32 *)(p + 0x2ac) = lbl_803E2850;
+  *(u32 *)(p + 0x2e4) = 41;
+  *(u32 *)(p + 0x2e4) |= 0x7000;
+  *(u32 *)(p + 0x2e4) |= 0x20000;
+  *(f32 *)(p + 0x308) = lbl_803E2854;
+  *(f32 *)(p + 0x300) = lbl_803E2858;
+  *(f32 *)(p + 0x304) = lbl_803E285C;
+  *(u8 *)(p + 0x320) = 0;
+  fz = lbl_803E2820;
+  *(f32 *)(p + 0x314) = fz;
+  *(u8 *)(p + 0x321) = 0;
+  *(f32 *)(p + 0x318) = fz;
+  *(u8 *)(p + 0x322) = 0;
+  *(f32 *)(p + 0x31c) = fz;
+  *(f32 *)(p + 0x32c) = lbl_803E2814;
+  *(f32 *)(obj + 0xa8) = lbl_803E2860;
+  Sfx_AddLoopedObjectSound(obj, 232);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void fn_80152B2C(int obj, int p, int param3, int msg)
 {
   extern void Sfx_PlayFromObject(int obj, int sfx);
