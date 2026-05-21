@@ -62,7 +62,7 @@ void MoonSeedPlantingSpot_initialise(void);
 int ccgasvent_getExtraSize(void);
 void ccgasvent_free(int x);
 void ccgasvent_render(void);
-void ccgasvent_update(void);
+void ccgasvent_update(int *obj);
 void ccgasvent_init(int x);
 
 int ccgasventcontrol_getExtraSize(void);
