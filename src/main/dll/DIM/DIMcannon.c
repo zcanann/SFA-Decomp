@@ -2237,7 +2237,7 @@ void imspacethruster_free(int obj) {
 
 void dimlogfire_free(int *obj, int mode) {
     void **inner = *(void ***)((char *)obj + 0xb8);
-    (*(void (***)(void*))gExpgfxInterface)[6](inner);
+    (*(void (***)(int*))gExpgfxInterface)[6](obj);
     if (inner[1] != NULL && mode == 0) {
         Obj_FreeObject(inner[1]);
     }
