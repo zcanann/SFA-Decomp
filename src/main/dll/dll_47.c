@@ -3,6 +3,9 @@
 #include "main/dll/FRONT/frontend_control.h"
 #include "main/dll/FRONT/title_menu.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 typedef struct SaveSelectPanel {
     TitleMenuTextEntry *entries;
     u8 count;

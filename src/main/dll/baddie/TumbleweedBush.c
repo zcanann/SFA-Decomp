@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/TumbleweedBush.h"
 
+#pragma peephole off
+#pragma scheduling off
+
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_800067b0();
 extern undefined4 FUN_80006818();

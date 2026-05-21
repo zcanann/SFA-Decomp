@@ -3,6 +3,9 @@
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
