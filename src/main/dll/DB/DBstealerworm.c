@@ -1107,7 +1107,7 @@ void SB_ShipMast_release(void) {}
 void SB_ShipMast_initialise(void) {}
 
 extern void ObjAnim_SetCurrentMove(int *obj, int a, f32 b, int c);
-extern void ObjAnim_AdvanceCurrentMove(int *obj, int a, f32 b, f32 c);
+extern void ObjAnim_AdvanceCurrentMove(int *obj, f32 b, f32 c, int a);
 extern f32 lbl_803E586C;
 extern f32 lbl_803E5870;
 extern f32 lbl_803E5874;
@@ -1149,7 +1149,7 @@ void SB_ShipMast_update(int *obj) {
         }
         speed = lbl_803E5878;
     }
-    ObjAnim_AdvanceCurrentMove(obj, 0, speed, (f32)(u32)framesThisStep);
+    ObjAnim_AdvanceCurrentMove(obj, speed, (f32)(u32)framesThisStep, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset

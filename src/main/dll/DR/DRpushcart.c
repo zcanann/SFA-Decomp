@@ -900,7 +900,7 @@ void FUN_801e8658(int param_1)
 int fn_801E86F4(int obj, int p2, int p3)
 {
   extern void fn_801E8660(void);
-  extern void ObjAnim_AdvanceCurrentMove(int obj, int x, f32 a, f32 b);
+  extern void ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, int x);
   extern void fn_801F4D54(int obj, int sub);
   extern void fn_801F4ECC(int obj, int sub);
   extern f32 mathFn_80010ee0(int p, int m, f32 t);
@@ -916,7 +916,7 @@ int fn_801E86F4(int obj, int p2, int p3)
   *(s16 *)(p3 + 0x70) = (s16)(*(s16 *)(p3 + 0x70) & ~4);
 
   if (*(int *)(*(int *)(obj + 0x7c) + (s32)(s8)*(u8 *)(obj + 0xad) * 4) != 0) {
-    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5A60, timeDelta);
+    ObjAnim_AdvanceCurrentMove(obj, lbl_803E5A60, timeDelta, 0);
   }
 
   if (*(s16 *)(obj + 0x46) != 1127) return 0;
@@ -1101,7 +1101,7 @@ void shopkeeper_update(int obj) {
         shopKeeperRotateFn_801e7c4c(obj, player, 1);
     }
     *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4);
-    if (*(int *)(state + 0x9B4) == 0) {
+    if (*(void **)(state + 0x9B4) == NULL) {
         *(int *)(state + 0x9B4) = ObjGroup_FindNearestObject(9, obj, &dist);
     }
     *(s16 *)(state + 0x9C8) = (s16)playerGetMoney(player);
