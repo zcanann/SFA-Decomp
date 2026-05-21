@@ -166,3 +166,11 @@ bool FUN_80118574(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
     return 0;
 }
+
+extern int OSSendMessage(void *q, void *msg, int flags);
+extern u32 lbl_803A5CEC[];
+#pragma scheduling off
+void PrepareReady(void *msg) {
+    OSSendMessage(lbl_803A5CEC, msg, 1);
+}
+#pragma scheduling reset

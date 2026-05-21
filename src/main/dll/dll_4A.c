@@ -245,3 +245,8 @@ EnterSaveNameScreen_run(undefined4 param_1,undefined4 param_2,int param_3,undefi
   }
   return 0;
 }
+
+extern int *gTitleMenuLinkInterface;
+void EnterSaveNameScreen_release(void) {
+    ((void (*)(void))((void**)*gTitleMenuLinkInterface)[2])();
+}
