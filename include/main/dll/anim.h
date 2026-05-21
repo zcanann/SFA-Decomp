@@ -193,7 +193,7 @@ void drakorenergy_initialise(void);
 s16 DBstealerworm_setScale(int *obj);
 int dbstealerworm_getExtraSize(void);
 int dbstealerworm_func08(void);
-void dbstealerworm_free(void);
+void dbstealerworm_free(int *obj);
 void dbstealerworm_render(void);
 void dbstealerworm_hitDetect(int obj);
 void dbstealerworm_update(void);

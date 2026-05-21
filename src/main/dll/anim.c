@@ -4524,6 +4524,25 @@ void dbholecontrol1_release(void) {}
 void dbholecontrol1_initialise(void) {}
 
 extern int fn_80203DA0(int obj, int unused, int p3);
+extern void Stack_Free(int *stack);
+extern void Obj_FreeObject(int obj);
+extern void **gBaddieControlInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void dbstealerworm_free(int *obj) {
+    u8 *sub = *(u8**)((char*)obj + 0xb8);
+    int *p40c = *(int**)(sub + 0x40c);
+    ObjGroup_RemoveObject(obj, 3);
+    Stack_Free((int*)p40c[9]);
+    if (*(int*)((char*)obj + 0xc8) != 0) {
+        Obj_FreeObject(*(int*)((char*)obj + 0xc8));
+        *(int*)((char*)obj + 0xc8) = 0;
+    }
+    ((void(*)(int*, u8*, int))((void**)*gBaddieControlInterface)[16])(obj, sub, 3);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
