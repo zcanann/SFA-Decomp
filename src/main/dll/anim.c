@@ -4865,3 +4865,53 @@ int fn_802028C0(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80203DA0(int obj, int unused, int p3)
+{
+  extern u8 Obj_IsLoadingLocked(void);
+  extern void *mapRomListFindItem(int, int, int, int, int);
+  extern int Obj_AllocObjectSetup(int, int);
+  extern void memcpy(int, void *, int);
+  extern void loadObjectAtObject(int, int);
+  extern int *ObjGroup_GetObjects(int, int *);
+  extern void ObjGroup_RemoveObject(int, int);
+  extern void ObjMsg_SendToObjects(int, int, int, int, int);
+  extern int lbl_803DDCE0;
+  int data = *(int *)(obj + 0x4c);
+  int i;
+
+  for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+    void *res;
+    int newObj;
+    if (*(u8 *)(p3 + 0x81 + i) != 1) continue;
+    if (GameBit_Get((s32)(s8)*(u8 *)(data + 0x19) + 2601) != 0) continue;
+    if (Obj_IsLoadingLocked() == 0) continue;
+    res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
+    if (res == NULL) continue;
+    newObj = Obj_AllocObjectSetup(56, 1337);
+    memcpy(newObj, res, 56);
+    *(f32 *)(newObj + 8) = *(f32 *)(obj + 0xc);
+    *(f32 *)(newObj + 12) = *(f32 *)(obj + 0x10);
+    *(f32 *)(newObj + 16) = *(f32 *)(obj + 0x14);
+    *(int *)(newObj + 20) = -1;
+    *(s16 *)(newObj + 26) = 149;
+    loadObjectAtObject(obj, newObj);
+  }
+
+  if (GameBit_Get(*(s16 *)(data + 0x1e)) != 0 || lbl_803DDCE0 != 0) {
+    int count;
+    int *objs = ObjGroup_GetObjects(36, &count);
+    ObjMsg_SendToObjects(0, 3, obj, 17, 0);
+    while (count != 0) {
+      ObjGroup_RemoveObject(*objs, 36);
+      objs++;
+      count--;
+    }
+    return 4;
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
