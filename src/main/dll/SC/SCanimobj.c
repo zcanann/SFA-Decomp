@@ -164,6 +164,24 @@ int sh_levelcontrol_getExtraSize(void)
   return 0x14;
 }
 
+extern void envFxActFn_800887f8(int);
+extern u32 GameBit_Get(int);
+extern int GameBit_Set(int, int);
+extern void *gGameUIInterface;
+
+#pragma scheduling off
+void sh_levelcontrol_free(void)
+{
+    envFxActFn_800887f8(0);
+    if (GameBit_Get(0x13F) == 0) {
+        (*(void (***)(void))gGameUIInterface)[0x19]();
+    }
+    if (GameBit_Get(0x193) != 0) {
+        GameBit_Set(0x194, 0);
+    }
+}
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
