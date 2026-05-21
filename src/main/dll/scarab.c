@@ -3310,6 +3310,27 @@ int fn_8015E044(int* obj, u8* state)
     return 0;
 }
 
+extern f32 lbl_803E2DD8;
+extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
+
+int fn_8015E520(int* obj, u8* state)
+{
+    if ((s8)state[634] != 0) {
+        ObjHits_EnableObject(obj);
+    }
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6c) = 10;
+    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+    *(f32*)((char*)state + 0x2a0) = lbl_803E2DD8;
+    if ((s8)state[634] != 0) {
+        ObjAnim_SetCurrentMove(obj, 5, lbl_803E2DC8, 0);
+        state[838] = 0;
+    }
+    state[845] = 1;
+    return 0;
+}
+
 int fn_8016118C(int* obj, u8* state)
 {
     if ((s8)state[0x27b] != 0) {
