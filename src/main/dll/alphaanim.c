@@ -668,13 +668,16 @@ int fn_8017C7A4(int* obj, int* anim, u8* buf)
     int* flagPtr = *(int**)((char*)obj + 0xb8);
     int i;
     for (i = 0; i < buf[0x8b]; i++) {
-        s8 op = (s8)buf[0x81 + i];
-        if (op == 1) {
-            GameBit_Set(*(s16*)((char*)state + 0x18), 1);
-            OSReport(lbl_80321208, *(int*)((char*)state + 0x14));
-        } else if (op == 0) {
+        int op = buf[0x81 + i];
+        switch (op) {
+        case 0:
             GameBit_Set(*(s16*)((char*)state + 0x1a), 0);
             OSReport(sSeqObjNeedBitClearDuringSequenceFormat, *(int*)((char*)state + 0x14));
+            break;
+        case 1:
+            GameBit_Set(*(s16*)((char*)state + 0x18), 1);
+            OSReport(lbl_80321208, *(int*)((char*)state + 0x14));
+            break;
         }
     }
     *(u8*)flagPtr = (u8)(*(u8*)flagPtr | 2);
