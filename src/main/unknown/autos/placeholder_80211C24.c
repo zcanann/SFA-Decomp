@@ -63,7 +63,7 @@ int hightop_stateHandler08(int obj, u8 *p2) {
     }
     if (*(s16 *)((char *)obj + 0xa0) == 10) {
         if (*(f32 *)(p2 + 0x2a0) < lbl_803E6AA8) {
-            if (*(f32 *)((char *)obj + 0x98) < lbl_803E6AA8) {
+            if (*(f32 *)((char *)obj + 0x98) < lbl_803E6AC4) {
                 ObjAnim_SetCurrentMove(obj, 0, lbl_803E6AA8, 0);
                 *(f32 *)(p2 + 0x2a0) = lbl_803E6AC8;
                 return 8;
