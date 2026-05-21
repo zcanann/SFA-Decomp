@@ -3199,19 +3199,21 @@ void CameraModeWorldMap_init(int *obj)
 
 void CameraModeWorldMap_copyToCurrent(int *p1, int kind)
 {
-    if (kind == 0) {
+    switch (kind) {
+    case 0:
         if (p1 == NULL) return;
         *((u8*)lbl_803DD588 + 8) = *(u8*)p1;
         return;
-    }
-    if (kind < 0) return;
-    if (kind >= 3) return;
-    if (p1 == NULL) return;
-    *(int*)((char*)lbl_803DD588 + 0x10) = *p1;
-    if (kind == 1) {
-        *((u8*)lbl_803DD588 + 0x14) = 20;
-    } else {
-        *((u8*)lbl_803DD588 + 0x14) = 1;
+    case 1:
+    case 2:
+        if (p1 == NULL) return;
+        *(int*)((char*)lbl_803DD588 + 0x10) = *p1;
+        if (kind == 1) {
+            *((u8*)lbl_803DD588 + 0x14) = 20;
+        } else {
+            *((u8*)lbl_803DD588 + 0x14) = 1;
+        }
+        return;
     }
 }
 
