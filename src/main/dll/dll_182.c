@@ -261,6 +261,40 @@ void texscroll2_free(void) {}
 void texscroll2_hitDetect(void) {}
 void texscroll2_release(void) {}
 void texscroll2_initialise(void) {}
+
+extern uint GameBit_Get(int eventId);
+
+#pragma scheduling off
+#pragma peephole off
+void texscroll2_update(int *obj) {
+    u8 *sub;
+    int *block;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    block = (int*)mapGetBlock(objPosToMapBlockIdx(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14)));
+    {
+        int mapId = *(int*)(*(int*)((char*)obj + 0x4c) + 0x14);
+        if (mapId == 0x49b2f || mapId == 0x49b67) {
+            if (block != NULL) {
+                if ((int)GameBit_Get(*(int*)(sub + 8)) != *(int*)(sub + 0xc) && sub[0x10] == 0) {
+                    fn_80191F54((int)obj, (int*)sub);
+                    sub[0x10] = 0;
+                }
+            }
+        }
+    }
+    *(int*)(sub + 0xc) = GameBit_Get(*(int*)(sub + 8));
+    if (block == NULL) {
+        sub[0x10] = 1;
+    } else {
+        if (sub[0x10] != 0) {
+            fn_80191F54((int)obj, (int*)sub);
+            sub[0x10] = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void texscroll_free(void) {}
 void texscroll_hitDetect(void) {}
 void texscroll_update(void) {}
