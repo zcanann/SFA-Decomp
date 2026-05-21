@@ -1023,6 +1023,48 @@ void fogcontrol_free(int* obj)
     }
 }
 
+extern f32 lbl_803E4070;
+extern f32 lbl_803E4074;
+extern f32 lbl_803E4078;
+extern f32 lbl_803E407C;
+extern void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e);
+
+void fogcontrol_init(u8* obj, u8* params) {
+    u8* sub;
+    int v;
+    f32 c, d, e1;
+    f32 lerp_val;
+    f32 fa, fb, fc, fd, fe;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x4000);
+    sub[4] = (u8)(sub[4] & ~0x80);
+    sub[4] = (u8)(sub[4] & ~0x40);
+    *(f32*)sub = lbl_803E4070;
+    if ((params[0x1a] & 0x08) != 0) {
+        if (*(s16*)(params + 0x18) == -1) {
+            v = 1;
+        } else {
+            v = (u8)GameBit_Get(*(s16*)(params + 0x18));
+        }
+        if ((u8)v != 0) {
+            sub[4] = (u8)(sub[4] | 0x40);
+            sub[4] = (u8)(sub[4] | 0x80);
+            *(f32*)sub = lbl_803E4074;
+            c = (f32)(s32)*(s16*)(params + 0x1c);
+            d = (f32)(s32)*(s16*)(params + 0x20);
+            lerp_val = *(f32*)sub * (c - d) + d;
+            fa = *(f32*)(obj + 0x10) + lerp_val;
+            e1 = (f32)(s32)*(s16*)(params + 0x1e);
+            fb = e1 + fa - c;
+            fc = (f32)(s32)*(s16*)(params + 0x24);
+            fd = (f32)(s32)*(s16*)(params + 0x22) / lbl_803E4078;
+            fe = lbl_803E407C;
+            enableHeavyFog((u8)(params[0x1a] & 1), fa, fb, fc, fd, fe);
+        }
+    }
+}
+
 void explodeanimator_init(int* obj, int* def)
 {
     int* state = *(int**)((char*)obj + 0xb8);
