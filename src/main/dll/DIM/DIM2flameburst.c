@@ -1116,7 +1116,30 @@ void FUN_801b5628(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern void textureFree(int tex);
+extern int lbl_803AC960[4];
+
+#pragma scheduling off
+#pragma peephole off
 void explosion_release(uint param_1)
+{
+    int i;
+    int** p;
+
+    i = 0;
+    p = (int**)lbl_803AC960;
+    for (; i < 4; i++) {
+        if (*p != NULL) {
+            textureFree((int)*p);
+            *p = NULL;
+        }
+        p++;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void fn_explosion_release_v11_unused(uint param_1)
 {
   short sVar1;
   float fVar2;
@@ -1125,7 +1148,7 @@ void explosion_release(uint param_1)
   int iVar5;
   char *pcVar6;
   short *psVar7;
-  
+
   psVar7 = *(short **)(param_1 + 0x4c);
   pcVar6 = *(char **)(param_1 + 0xb8);
   FUN_8002fc3c((double)*(float *)(pcVar6 + 4),(double)lbl_803DC074);
