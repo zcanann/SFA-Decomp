@@ -781,7 +781,100 @@ void sh_emptytumblew_update(int obj)
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
-void fn_801DA284(int obj) {}
+extern int *gGameUIInterface;
+extern int Obj_IsLoadingLocked(void);
+extern int *Obj_AllocObjectSetup(int a, int b);
+extern int loadObjectAtObject(int obj, int *setup);
+extern void hudFn_8011f38c(int a);
+extern void fn_801DA4A8(int obj, int state, int a);
+extern f32 lbl_803E54D0;
+extern f32 lbl_803E54D4;
+extern f32 lbl_803E54D8;
+extern f32 lbl_803E54E0;
+extern f32 lbl_803E5508;
+#pragma scheduling off
+#pragma peephole off
+int fn_801DA284(int obj, int unused, u8 *buf)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+    int *p;
+
+    p = (int *)state;
+    for (i = 0; i < 10; i++) {
+        if (*(u8 *)(state + 0x60 + i) != 0) {
+            int loadResult;
+            if (Obj_IsLoadingLocked() == 0) {
+                loadResult = 0;
+            } else {
+                int *newSetup = Obj_AllocObjectSetup(0x20, 0x659);
+                *(u8 *)((char *)newSetup + 4) = 2;
+                *(u8 *)((char *)newSetup + 7) = 0xff;
+                loadResult = loadObjectAtObject(obj, newSetup);
+            }
+            *(int *)((char *)p + 0x38) = loadResult;
+            *(u8 *)(state + 0x60 + i) = 0;
+        }
+        p = (int *)((char *)p + 4);
+    }
+
+    for (i = 0; i < (int)buf[0x8b]; i++) {
+        u8 v = buf[0x81 + i];
+        if (v > 0xc) continue;
+        switch (v) {
+        case 0:
+            *(u8 *)state = 3;
+            break;
+        case 1:
+            *(u8 *)(state + 1) = 1;
+            break;
+        case 2:
+            *(u8 *)(state + 1) = 0;
+            break;
+        case 3:
+            fn_801DA4A8(obj, state, 1);
+            break;
+        case 4:
+            *(u8 *)state = 4;
+            break;
+        case 5:
+            hudFn_8011f38c(1);
+            break;
+        case 6:
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 1);
+            break;
+        case 7:
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 4);
+            break;
+        case 8:
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0x10);
+            *(f32 *)(state + 4) = lbl_803E54E0;
+            break;
+        case 9:
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0x20);
+            *(f32 *)(state + 4) = lbl_803E54D4;
+            break;
+        case 0xa:
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0x10);
+            *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0xa);
+            *(f32 *)(state + 4) = lbl_803E5508;
+            break;
+        }
+    }
+
+    if (*(u8 *)(state + 1) != 0) {
+        ((void (*)(s16, int, int))((int *)*gGameUIInterface)[0x34 / 4])
+            (*(s16 *)(*(int *)(obj + 0x50) + 0x7e), 0xa0, 0x8c);
+    }
+    *(f32 *)(state + 0x6c) = lbl_803E54D8 * timeDelta + *(f32 *)(state + 0x6c);
+    if (*(f32 *)(state + 0x6c) > lbl_803E54D0) {
+        *(f32 *)(state + 0x6c) = lbl_803E54D4;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+extern f32 lbl_803E5508;
 
 extern void *Obj_GetPlayerObject(void);
 extern f32 getXZDistance(f32 *a, f32 *b);
@@ -804,8 +897,6 @@ extern f32 lbl_803E54E0;
 extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;
-extern void fn_801DA284(int obj);
-extern void fn_801DA4A8(int obj, int state, int a);
 
 #pragma scheduling off
 #pragma peephole off
@@ -828,7 +919,7 @@ void sh_staff_update(int obj)
             ObjAnim_SetMoveProgress(obj, lbl_803E54D0);
             *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
             *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
-            *(void (**)(int))(obj + 0xbc) = fn_801DA284;
+            *(int (**)(int, int, u8 *))(obj + 0xbc) = fn_801DA284;
             *(u8 *)state = 1;
             if (Obj_IsLoadingLocked() == 0) {
                 loadResult = 0;
