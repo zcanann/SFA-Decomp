@@ -2865,7 +2865,7 @@ int Tricky_func10(int *obj,int targetObj) {
 #pragma peephole off
 #pragma scheduling off
 void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
-    int *state = (int*)obj[0xb8/4];
+    register int *state = (int*)obj[0xb8/4];
 
     if (commandEnabled != 0) {
         if (*((u8*)state + 8) == 5) {
@@ -2875,7 +2875,6 @@ void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
         } else {
             u32 busy = state[0x54/4] & 0x10;
             void *nextTarget;
-            s32 clearTargetAnim;
 
             if (busy != 0) {
                 return;
@@ -2886,16 +2885,28 @@ void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
             state[0x24/4] = targetObj;
             nextTarget = (void *)(state[0x700/4] + 8);
             if ((void *)state[0x28/4] != nextTarget) {
-                clearTargetAnim = -1025;
+                register u32 m;
+                register u32 v;
                 state[0x28/4] = (int)nextTarget;
-                state[0x54/4] = state[0x54/4] & clearTargetAnim;
+                asm {
+                    lwz v, 0x54(state)
+                    li m, -1025
+                    and m, v, m
+                    stw m, 0x54(state)
+                }
                 *(s16*)((u8*)state + 0xd2) = 0;
             }
             *((u8*)state + 10) = 0;
         }
     } else {
-        u32 queuedTargetMask = 0x10000;
-        state[0x54/4] = state[0x54/4] | queuedTargetMask;
+        register u32 m;
+        register u32 v;
+        asm {
+            lwz v, 0x54(state)
+            lis m, 1
+            or m, v, m
+            stw m, 0x54(state)
+        }
     }
 }
 #pragma scheduling reset
