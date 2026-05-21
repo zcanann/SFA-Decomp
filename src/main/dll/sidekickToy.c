@@ -1646,23 +1646,21 @@ void fn_8014C63C(int* obj)
 u8 fn_8014C4D8(int* obj)
 {
     int* state;
-    u8 result;
-    if (obj != NULL) {
-        state = *(int**)((char*)obj + 0xb8);
-        if (state != NULL) {
-            f32 val = *(f32*)((char*)state + 728);
-            if (val != lbl_803E2574) {
-                result = (u8)((s32)(val / lbl_803E2598) + 1);
-            } else {
-                result = 0;
-            }
-        } else {
-            result = 0;
-        }
-    } else {
-        result = 0;
-    }
-    return result;
+    f32 val;
+    if (obj == NULL) goto null_obj;
+    state = *(int**)((char*)obj + 0xb8);
+    goto have_state;
+null_obj:
+    return 0;
+have_state:
+    if (state == NULL) goto null_state;
+    val = *(f32*)((char*)state + 728);
+    if (val == lbl_803E2574) goto fpu_zero;
+    return (u8)((s32)(val / lbl_803E2598) + 1);
+fpu_zero:
+    return 0;
+null_state:
+    return 0;
 }
 
 #pragma peephole reset
