@@ -171,19 +171,17 @@ void dimbossgut2_updateTracking(ushort *param_1,int param_2)
     }
     *param_1 = uVar3;
     iVar5 = (int)sVar4;
-    *(float *)(iVar8 + 4) =
-         *(float *)(iVar8 + 4) +
-         (float)((double)CONCAT44(0x43300000,iVar5 >> 4 ^ 0x80000000) - DOUBLE_803e5990);
-    if (*(float *)(iVar8 + 0x10) < lbl_803E59AC) {
-      *(float *)(iVar8 + 0x10) = *(float *)(iVar8 + 0x10) + lbl_803E59B0;
+    *(f32 *)(iVar8 + 4) =
+         *(f32 *)(iVar8 + 4) + (f32)(s32)(iVar5 >> 4);
+    if (*(f32 *)(iVar8 + 0x10) < lbl_803E59AC) {
+      *(f32 *)(iVar8 + 0x10) = *(f32 *)(iVar8 + 0x10) + lbl_803E59B0;
     }
     iVar5 = iVar5 / 0xb6 + (iVar5 >> 0x1f);
     uVar2 = iVar5 - (iVar5 >> 0x1f);
     if ((int)uVar2 < 0) {
       uVar2 = -uVar2;
     }
-    fVar1 = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5990) *
-            lbl_803E596C;
+    fVar1 = (f32)(s32)uVar2 * lbl_803E596C;
     if (lbl_803E5988 < fVar1) {
       *(float *)(iVar8 + 0x10) = *(float *)(iVar8 + 0x10) / fVar1;
       *(float *)(iVar8 + 8) = *(float *)(iVar8 + 8) + lbl_803E59B4;
@@ -411,12 +409,8 @@ void DIMbossspit_updateBurst(undefined8 param_1,undefined8 param_2,undefined8 pa
   *psVar3 = *psVar3 + (ushort)DAT_803dc070;
   uVar1 = (uint)*psVar3;
   if ((int)uVar1 < 0x201) {
-    uStack_1c = uVar1 ^ 0x80000000;
-    local_20 = 0x43300000;
-    iVar2 = (int)(lbl_803E59E0 *
-                 (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e59f0) * lbl_803E59E4)
-    ;
-    local_18 = (double)(longlong)iVar2;
+    iVar2 = (int)(lbl_803E59E0 * (f32)(s32)uVar1 * lbl_803E59E4);
+    local_18 = (f64)(longlong)iVar2;
     iVar2 = 0xff - iVar2;
     local_28[0] = 0x94 - ((int)uVar1 >> 2);
     if (iVar2 < 0) {
@@ -426,8 +420,7 @@ void DIMbossspit_updateBurst(undefined8 param_1,undefined8 param_2,undefined8 pa
         psVar3[3] = 0;
       }
       *(undefined *)(param_9 + 0x1b) = 0;
-      local_18 = (double)CONCAT44(0x43300000,local_28[0] + -0x40 >> 1 ^ 0x80000000);
-      if (lbl_803E59E8 < (float)(local_18 - DOUBLE_803e59f0)) {
+      if (lbl_803E59E8 < (f32)(s32)(local_28[0] + -0x40 >> 1)) {
         ObjHits_SetHitVolumeSlot((int)param_9,9,1,0);
         ObjHitbox_SetSphereRadius((int)param_9,(short)(local_28[0] + -0x40 >> 1));
       }
