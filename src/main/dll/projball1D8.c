@@ -225,3 +225,20 @@ int EdibleMushroom_SeqFn(int *obj) {
     return 0;
 }
 #pragma scheduling reset
+
+extern int GameBit_Get(int id);
+
+#pragma scheduling off
+#pragma peephole off
+void sh_tricky_init(int* obj)
+{
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    if (GameBit_Get(0xbf) != 0) {
+        *state = 4;
+    } else {
+        *state = 0;
+    }
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
+}
+#pragma peephole reset
+#pragma scheduling reset
