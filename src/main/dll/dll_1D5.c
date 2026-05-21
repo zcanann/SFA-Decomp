@@ -324,3 +324,11 @@ LAB_801cf840:
   }
   return;
 }
+
+extern void GameBit_Set(int eventId, int value);
+#pragma scheduling off
+void nw_tricky_free(int obj) {
+    (void)obj;
+    GameBit_Set(0x4e4, 1);
+}
+#pragma scheduling reset

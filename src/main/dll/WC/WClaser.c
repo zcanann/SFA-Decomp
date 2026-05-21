@@ -282,5 +282,11 @@ int fn_801F06D8(int p1, int p2, u8 *arg3) {
     arg3[0x56] = 0;
     return 0;
 }
+
+void WM_seqobject_init(int *obj, s8 *def) {
+    *(s16*)obj = (s16)((s32)def[0x18] << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)fn_801F06D8;
+    *(int*)((char*)obj + 0xf8) = 0x14;
+}
 #pragma peephole reset
 #pragma scheduling reset
