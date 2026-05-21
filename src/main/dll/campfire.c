@@ -231,8 +231,7 @@ void kaldaChomFn_80168374(int param_1,int param_2,char param_3)
       *(float *)(iVar4 + 0x28) =
            (float)((double)(((float)((double)lbl_803E30A8 * dVar6 +
                                     (double)*(float *)(*(int *)(param_2 + 0x2d0) + 0x10)) +
-                            (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
-                                   DOUBLE_803E3070)) - *(float *)(iVar3 + 0xc)) / dVar5);
+                            (f32)(s32)(uVar1)) - *(float *)(iVar3 + 0xc)) / dVar5);
       *(float *)(iVar4 + 0x2c) =
            (float)((double)(*(float *)(*(int *)(param_2 + 0x2d0) + 0x14) - *(float *)(iVar3 + 0x10))
                   / dVar5);

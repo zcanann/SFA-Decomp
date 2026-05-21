@@ -471,11 +471,9 @@ int FUN_8005b024(void)
   double dVar3;
   
   dVar3 = (double)FUN_802924c4();
-  iVar2 = (int)(dVar3 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda50 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar2 = (int)(dVar3 - (double)(f32)(s32)(DAT_803dda50));
   dVar3 = (double)FUN_802924c4();
-  iVar1 = (int)(dVar3 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda54 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar1 = (int)(dVar3 - (double)(f32)(s32)(DAT_803dda54));
   if ((iVar2 < 0) || (0xf < iVar2)) {
     iVar2 = -1;
   }
@@ -539,11 +537,9 @@ undefined4 FUN_8005b220(void)
   double dVar4;
   
   dVar4 = (double)FUN_802924c4();
-  iVar3 = (int)(dVar4 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda50 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar3 = (int)(dVar4 - (double)(f32)(s32)(DAT_803dda50));
   dVar4 = (double)FUN_802924c4();
-  iVar1 = (int)(dVar4 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda54 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar1 = (int)(dVar4 - (double)(f32)(s32)(DAT_803dda54));
   if ((iVar3 < 0) || (0xf < iVar3)) {
     uVar2 = 0xffffffff;
   }
@@ -605,11 +601,9 @@ int FUN_8005b398(undefined8 param_1,double param_2)
   undefined8 local_30;
   
   dVar5 = (double)FUN_802924c4();
-  iVar3 = (int)(dVar5 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda50 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar3 = (int)(dVar5 - (double)(f32)(s32)(DAT_803dda50));
   dVar5 = (double)FUN_802924c4();
-  iVar4 = (int)(dVar5 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda54 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar4 = (int)(dVar5 - (double)(f32)(s32)(DAT_803dda54));
   if ((((-1 < iVar3) && (iVar3 < 0x10)) && (-1 < iVar4)) && (iVar4 < 0x10)) {
     iVar3 = iVar3 + iVar4 * 0x10;
     piVar2 = &DAT_80382f14;

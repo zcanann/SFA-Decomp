@@ -1753,8 +1753,7 @@ ushort FUN_80061198(int param_1,int param_2)
                   (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 0x36) ^ 0x80000000) -
                          DOUBLE_803df8e0));
   uVar2 = FUN_80061024(param_1,(uint)*(byte *)(iVar3 + 0x3a));
-  uVar1 = (ushort)(int)((double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
-                                       DOUBLE_803df8e0) * dVar4);
+  uVar1 = (ushort)(int)((double)(f32)(s32)(uVar2) * dVar4);
   if ((short)uVar1 < 0x100) {
     if ((short)uVar1 < 0) {
       uVar1 = 0;

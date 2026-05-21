@@ -1451,8 +1451,7 @@ void FUN_8011f04c(undefined4 param_1,undefined4 *param_2)
       DAT_803aa088 = *param_2;
       DAT_803aa094 = 0;
       FUN_800709e8((double)lbl_803E2C24,
-                   (double)(float)((double)CONCAT44(0x43300000,DAT_803de3c0 + 0xafU ^ 0x80000000) -
-                                  DOUBLE_803e2af8),-0x7fc55f78,(int)(float)param_2[2],0x100);
+                   (double)(f32)(s32)(DAT_803de3c0 + 0xafU),-0x7fc55f78,(int)(float)param_2[2],0x100);
     }
   }
   return;

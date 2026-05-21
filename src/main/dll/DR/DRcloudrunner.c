@@ -302,7 +302,7 @@ void FUN_801dc6e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   param_9[0x7d] = 0;
   param_9[0x58] = param_9[0x58] | 0x2000;
   uVar2 = randomGetRange(1,99);
-  FUN_800305f8((double)((float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e6260) /
+  FUN_800305f8((double)((f32)(s32)(uVar2) /
                        lbl_803E6254),param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                param_9,0,0,param_12,param_13,param_14,param_15,param_16);
   FUN_8002fc3c((double)lbl_803E6224,(double)lbl_803E6224);

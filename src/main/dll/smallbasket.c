@@ -924,8 +924,7 @@ void FUN_80158344(undefined8 param_1,double param_2,double param_3,undefined8 pa
       uVar1 = randomGetRange(0xfffffff6,10);
       *(float *)(iVar3 + 0x28) =
            (float)((double)((lbl_803E3820 + *(float *)(*(int *)(param_10 + 0x29c) + 0x10) +
-                            (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
-                                   DOUBLE_803e3830)) - *(float *)(puVar2 + 6)) / dVar6);
+                            (f32)(s32)(uVar1)) - *(float *)(puVar2 + 6)) / dVar6);
       *(float *)(iVar3 + 0x2c) =
            (float)((double)(*(float *)(*(int *)(param_10 + 0x29c) + 0x14) - *(float *)(puVar2 + 8))
                   / dVar6);

@@ -299,7 +299,7 @@ void FUN_801b1a10(undefined8 param_1,undefined8 param_2,double param_3,undefined
         puVar6[0xd] = (ushort)*(byte *)(iVar5 + 0x1a);
         uVar4 = randomGetRange(0,100);
         dVar3 = DOUBLE_803e5508;
-        dVar8 = (double)((float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803e5500)
+        dVar8 = (double)((f32)(s32)(uVar4)
                         / lbl_803E54FC);
         puVar6[0xe] = (short)(int)((double)(float)((double)CONCAT44(0x43300000,
                                                                     (uint)*(byte *)(iVar5 + 0x1b)) -

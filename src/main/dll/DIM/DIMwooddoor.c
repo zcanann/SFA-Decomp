@@ -390,8 +390,7 @@ void FUN_801b2644(void)
       dVar15 = dVar16;
     }
     iVar7 = (uint)*(byte *)(iVar12 + 0x2b) * 2;
-    if (((dVar15 < (double)(float)((double)CONCAT44(0x43300000,iVar7 * iVar7 ^ 0x80000000) -
-                                  DOUBLE_803e5558)) || (fVar3 < lbl_803DCB7C)) ||
+    if (((dVar15 < (double)(f32)(s32)(iVar7 * iVar7)) || (fVar3 < lbl_803DCB7C)) ||
        ((*(ushort *)(iVar8 + 0xb0) & 0x1000) != 0)) {
       *(undefined *)(iVar13 + 0xad) = 0;
     }

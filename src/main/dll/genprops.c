@@ -2149,9 +2149,7 @@ void FUN_8016dddc(void)
         local_c8 = (double)(longlong)(int)uVar14;
         uStack_bc = uVar14 ^ 0x80000000;
         local_c0 = 0x43300000;
-        dVar21 = (double)(float)(dVar25 - (double)(float)((double)CONCAT44(0x43300000,
-                                                                           uVar14 ^ 0x80000000) -
-                                                         DOUBLE_803e3fb0));
+        dVar21 = (double)(float)(dVar25 - (double)(f32)(s32)(uVar14));
         uVar15 = (uint)((float)(dVar26 - dVar25) / lbl_803E3F44);
         local_b8 = (double)(longlong)(int)uVar15;
         if (uVar15 == 0) {
@@ -3238,10 +3236,8 @@ void FUN_8016fc50(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                    (double)(*(float *)(param_9 + 0x16) * lbl_803DC074),(int)param_9);
       ObjHitbox_SetSphereRadius((int)param_9,
                    (short)(int)(*(float *)(iVar4 + 0xc) *
-                               (((float)((double)CONCAT44(0x43300000,DAT_803dc9cc ^ 0x80000000) -
-                                        DOUBLE_803e4030) - *(float *)(iVar4 + 4)) /
-                               (float)((double)CONCAT44(0x43300000,DAT_803dc9cc ^ 0x80000000) -
-                                      DOUBLE_803e4030))));
+                               (((f32)(s32)(DAT_803dc9cc) - *(float *)(iVar4 + 4)) /
+                               (f32)(s32)(DAT_803dc9cc))));
     }
     else {
       uVar5 = ObjHits_DisableObject((int)param_9);

@@ -48,10 +48,10 @@ void enemymushroom_update(undefined2 *param_1,undefined4 *param_2,int param_3)
     *param_2 = FLOAT_803e5f94;
     uVar1 = randomGetRange(0,100);
     param_2[2] = FLOAT_803e5f98 +
-                 (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e5fa0);
+                 (f32)(s32)(uVar1);
     uVar1 = randomGetRange(0xffffff9c,100);
     param_2[1] = FLOAT_803e5f9c *
-                 (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e5fa0) +
+                 (f32)(s32)(uVar1) +
                  (float)param_2[3];
     param_2[4] = (float)param_2[1] / (float)param_2[2];
   }

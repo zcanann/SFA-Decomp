@@ -378,8 +378,7 @@ double FUN_801e7be8(ushort *param_1,int param_2,int param_3)
       else {
         iVar4 = iVar4 + -0x2000;
       }
-      *param_1 = (ushort)(int)((float)((double)CONCAT44(0x43300000,iVar4 >> 3 ^ 0x80000000) -
-                                      DOUBLE_803e6698) * lbl_803DC074 +
+      *param_1 = (ushort)(int)((f32)(s32)(iVar4 >> 3) * lbl_803DC074 +
                               (float)((double)CONCAT44(0x43300000,(int)(short)*param_1 ^ 0x80000000)
                                      - DOUBLE_803e6698));
     }

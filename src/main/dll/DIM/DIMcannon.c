@@ -1885,7 +1885,7 @@ void FUN_801b0df4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uVar3 = randomGetRange(0,0x3c);
     *(float *)(iVar8 + 0xc) =
          *(float *)(iVar8 + 0x10) +
-         (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e54b0);
+         (f32)(s32)(uVar3);
   }
   return;
 }

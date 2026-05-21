@@ -989,7 +989,7 @@ undefined4 FUN_8007f818(int param_1)
   if ((DAT_803ddd14 == 0) && (cVar3 = FUN_80006884(), cVar3 == '\0')) {
     lbl_803DDCF4 =
          (float)(&DAT_8039ae0c)[param_1] -
-         (float)((double)CONCAT44(0x43300000,DAT_803dc388 ^ 0x80000000) - DOUBLE_803dfc38);
+         (f32)(s32)(DAT_803dc388);
     if (lbl_803DFC30 != lbl_803DDCF4) {
       DAT_803dc384 = param_1;
     }

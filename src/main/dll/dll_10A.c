@@ -223,7 +223,7 @@ void FUN_80154290(undefined8 param_1,undefined8 param_2,double param_3,undefined
   param_10[0xcc] = (float)param_10[0xcc] - lbl_803DC074;
   if ((float)param_10[0xcc] <= lbl_803E35E4) {
     uVar3 = randomGetRange(0x3c,0x78);
-    param_10[0xcc] = (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e35f8);
+    param_10[0xcc] = (f32)(s32)(uVar3);
     FUN_80006824((uint)param_9,0x25e);
   }
   if (*(char *)((int)param_10 + 0x33b) != '\0') {

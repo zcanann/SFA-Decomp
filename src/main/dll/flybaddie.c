@@ -169,7 +169,7 @@ void FUN_801c9680(undefined8 param_1,double param_2,double param_3,undefined8 pa
             FUN_80006824((uint)param_9,0x343);
             uVar4 = randomGetRange(500,1000);
             *(float *)(iVar6 + 8) =
-                 (float)((double)CONCAT44(0x43300000,uVar4 ^ 0x80000000) - DOUBLE_803e5d68);
+                 (f32)(s32)(uVar4);
           }
           if ((*(byte *)((int)param_9 + 0xaf) & 1) != 0) {
             cVar5 = (**(code **)(*DAT_803dd72c + 0x4c))((int)*(char *)(param_9 + 0x56),1);

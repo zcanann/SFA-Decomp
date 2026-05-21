@@ -1432,7 +1432,7 @@ void FUN_8010fb90(int param_1,uint param_2,undefined4 *param_3)
     *DAT_803de230 = *(undefined4 *)(iVar2 + 0x18);
     DAT_803de230[1] = *(undefined4 *)(iVar2 + 0x1c);
     DAT_803de230[2] = *(undefined4 *)(iVar2 + 0x20);
-    fVar1 = (float)((double)CONCAT44(0x43300000,param_2 ^ 0x80000000) - DOUBLE_803e27b8);
+    fVar1 = (f32)(s32)(param_2);
   }
   else {
     *DAT_803de230 = *param_3;

@@ -291,64 +291,55 @@ void FUN_801e1884(int param_1,int param_2)
                              (float)((double)CONCAT44(0x43300000,
                                                       (uint)DAT_803dccec - (uint)DAT_803dcce8 ^
                                                       0x80000000) - DOUBLE_803e6458) +
-                            (float)((double)CONCAT44(0x43300000,DAT_803dcce8 ^ 0x80000000) -
-                                   DOUBLE_803e6458));
+                            (f32)(s32)(DAT_803dcce8));
   bRam803de8b9 = (byte)(int)(lbl_803DE8A8 *
                              (float)((double)CONCAT44(0x43300000,
                                                       (uint)bRam803dcced - (uint)bRam803dcce9 ^
                                                       0x80000000) - DOUBLE_803e6458) +
-                            (float)((double)CONCAT44(0x43300000,bRam803dcce9 ^ 0x80000000) -
-                                   DOUBLE_803e6458));
+                            (f32)(s32)(bRam803dcce9));
   bRam803de8ba = (byte)(int)(lbl_803DE8A8 *
                              (float)((double)CONCAT44(0x43300000,
                                                       (uint)bRam803dccee - (uint)bRam803dccea ^
                                                       0x80000000) - DOUBLE_803e6458) +
-                            (float)((double)CONCAT44(0x43300000,bRam803dccea ^ 0x80000000) -
-                                   DOUBLE_803e6458));
+                            (f32)(s32)(bRam803dccea));
   skyFn_800895e0(7,DAT_803de8b8,bRam803de8b9,bRam803de8ba,0x40,0x40);
   DAT_803de8b4 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)DAT_803dcce4 - (uint)DAT_803dcce0 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,DAT_803dcce0 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(DAT_803dcce0));
   uRam803de8b5 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)bRam803dcce5 - (uint)bRam803dcce1 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,bRam803dcce1 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(bRam803dcce1));
   uRam803de8b6 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)bRam803dcce6 - (uint)bRam803dcce2 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,bRam803dcce2 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(bRam803dcce2));
   FUN_80080f74(7,DAT_803de8b4,uRam803de8b5,uRam803de8b6);
   DAT_803de8b0 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)DAT_803dccf4 - (uint)DAT_803dccf0 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,DAT_803dccf0 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(DAT_803dccf0));
   uRam803de8b1 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)bRam803dccf5 - (uint)bRam803dccf1 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,bRam803dccf1 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(bRam803dccf1));
   uRam803de8b2 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)bRam803dccf6 - (uint)bRam803dccf2 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,bRam803dccf2 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(bRam803dccf2));
   FUN_80080f78(7,DAT_803de8b0,uRam803de8b1,uRam803de8b2);
   DAT_803de8ad = (undefined)(int)(lbl_803DE8A8 * lbl_803E6478 + lbl_803E6488);
   FUN_80080f68(1);

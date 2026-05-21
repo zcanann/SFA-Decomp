@@ -253,7 +253,7 @@ undefined4 FUN_80117c30(uint param_1,int param_2)
       param_2 = 0;
     }
     FUN_80243e74();
-    DAT_803a6a98 = (float)((double)CONCAT44(0x43300000,param_1 ^ 0x80000000) - DOUBLE_803e29c8);
+    DAT_803a6a98 = (f32)(s32)(param_1);
     if (param_2 == 0) {
       DAT_803a6aa0 = 0;
       DAT_803a6a94 = DAT_803a6a98;
@@ -261,8 +261,7 @@ undefined4 FUN_80117c30(uint param_1,int param_2)
     else {
       DAT_803a6aa0 = param_2 << 5;
       DAT_803a6a9c = (DAT_803a6a98 - DAT_803a6a94) /
-                     (float)((double)CONCAT44(0x43300000,DAT_803a6aa0 ^ 0x80000000) -
-                            DOUBLE_803e29c8);
+                     (f32)(s32)(DAT_803a6aa0);
     }
     FUN_80243e9c();
     uVar1 = 1;

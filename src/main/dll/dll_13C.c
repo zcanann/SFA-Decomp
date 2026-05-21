@@ -325,8 +325,7 @@ void kaldachompspit_init(uint param_1)
     }
     uVar1 = (uint)(lbl_803E3DA4 * *(float *)(param_1 + 8));
     FUN_800175d0((double)(f32)(s32)(uVar1),
-                 (double)(float)((double)CONCAT44(0x43300000,uVar1 + 0x28 ^ 0x80000000) -
-                                DOUBLE_803e3d80),*piVar3);
+                 (double)(f32)(s32)(uVar1 + 0x28),*piVar3);
     FUN_800175bc(*piVar3,1);
     FUN_800175cc((double)lbl_803E3D78,*piVar3,'\x01');
     FUN_8001753c(*piVar3,1,3);
