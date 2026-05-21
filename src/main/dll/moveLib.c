@@ -726,6 +726,64 @@ undefined4 FUN_80114340(int param_1,undefined2 *param_2)
   return uVar1;
 }
 
+extern f32 curveFn_80010dc0(f32* points, int unused, f32 t);
+extern f32 sqrtf(f32 x);
+extern f64 lbl_803E1C98;
+
+#pragma scheduling off
+#pragma peephole off
+f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
+{
+    extern f32 lbl_803E1C90;
+    f32 prev_x, prev_y, prev_z;
+    f32 cur_x, cur_y, cur_z;
+    f32 dx, dy, dz;
+    f32 total;
+    f32 t;
+    f32 buf[4];
+    int i;
+
+    prev_x = *(f32*)(p1 + 0);
+    prev_y = *(f32*)(p1 + 4);
+    prev_z = *(f32*)(p1 + 8);
+    total = lbl_803E1C90;
+
+    for (i = 1; i <= n; i++) {
+        t = (f32)((f64)CONCAT44(0x43300000, i ^ 0x80000000) - lbl_803E1C98) /
+            (f32)((f64)CONCAT44(0x43300000, n ^ 0x80000000) - lbl_803E1C98);
+
+        buf[0] = *(f32*)(p1 + 0);
+        buf[1] = *(f32*)(p3 + 0);
+        buf[2] = *(f32*)(p2 + 0);
+        buf[3] = *(f32*)(p4 + 0);
+        cur_x = curveFn_80010dc0(buf, 0, t);
+        dx = cur_x - prev_x;
+
+        buf[0] = *(f32*)(p1 + 4);
+        buf[1] = *(f32*)(p3 + 4);
+        buf[2] = *(f32*)(p2 + 4);
+        buf[3] = *(f32*)(p4 + 4);
+        cur_y = curveFn_80010dc0(buf, 0, t);
+        dy = cur_y - prev_y;
+
+        buf[0] = *(f32*)(p1 + 8);
+        buf[1] = *(f32*)(p3 + 8);
+        buf[2] = *(f32*)(p2 + 8);
+        buf[3] = *(f32*)(p4 + 8);
+        cur_z = curveFn_80010dc0(buf, 0, t);
+        dz = cur_z - prev_z;
+
+        total += sqrtf(dx * dx + dy * dy + dz * dz);
+        prev_x = cur_x;
+        prev_y = cur_y;
+        prev_z = cur_z;
+    }
+
+    return total;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
