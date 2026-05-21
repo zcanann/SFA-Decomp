@@ -722,3 +722,33 @@ void magiccavetop_init(int *obj, s8 *def) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void stopRumble2(void);
+extern void *Obj_GetPlayerObject(void);
+extern void *fn_802966CC(void *player);
+extern void staffSetGlow(void *a, int b, int c);
+extern int mapGetDirIdx(int mapId);
+extern void mapUnload(int idx, int flags);
+#pragma scheduling off
+#pragma peephole off
+void magiccavetop_free(int *obj) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *def = *(u8 **)((char *)obj + 0x4c);
+    void *p;
+    void *r;
+    stopRumble2();
+    p = Obj_GetPlayerObject();
+    if (p != NULL) {
+        r = fn_802966CC(p);
+        if (r != NULL) {
+            staffSetGlow(r, 5, 0);
+        }
+    }
+    if (state[0] == 1) {
+        if (def[0x22] == 0) {
+            mapUnload(mapGetDirIdx(def[0x1f]), 0x20000000);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
