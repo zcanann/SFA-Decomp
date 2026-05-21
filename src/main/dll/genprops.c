@@ -4484,7 +4484,7 @@ extern void StaticCamera_init();
 extern void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void StaticCamera_free(int x);
 extern void gcbaddieshield_render();
-extern void gcbaddieshield_update();
+extern void gcbaddieshield_update(int *obj);
 void gcbaddieshield_init(int *obj, void *initData);
 extern void baddieinterestp_update();
 extern void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -5127,9 +5127,33 @@ int* fn_801702D4(int* obj, f32 fv) {
 
 extern void mm_free(int *p);
 extern int *gExpgfxInterface;
+extern f32 lbl_803E31FC;
+extern f32 lbl_803E3200;
+extern f32 lbl_803E3204;
+extern f32 lbl_803E3208;
+extern f32 lbl_803E320C;
+extern f32 lbl_803E3210;
+extern f32 timeDelta;
+extern void Obj_FreeObject(int *obj);
 
 #pragma scheduling off
 #pragma peephole off
+void gcbaddieshield_update(int *obj) {
+    f32 *state = *(f32 **)((char *)obj + 0xb8);
+    state[0] = state[0] - timeDelta;
+    if (state[0] <= lbl_803E31FC) {
+        Obj_FreeObject(obj);
+        return;
+    }
+    *(s16 *)obj = (s16)(*(s16 *)obj + (s32)(lbl_803E3200 * timeDelta));
+    *(s16 *)((char *)obj + 4) = (s16)(*(s16 *)((char *)obj + 4) + (s32)(lbl_803E3204 * timeDelta));
+    if (state[0] <= lbl_803E3208) {
+        *(u8 *)((char *)obj + 0x36) = (u8)(s32)(lbl_803E320C * (state[0] * lbl_803E3210));
+    } else {
+        *(u8 *)((char *)obj + 0x36) = 0xff;
+    }
+}
+
 void staff_free(int *obj) {
     u8 *p;
     int i;
