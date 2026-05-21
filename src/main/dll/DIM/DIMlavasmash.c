@@ -188,7 +188,7 @@ void dimlogfire_init(void)
     iVar2 = piVar3[1];
     if (iVar2 != 0) {
       iVar2 = *(int *)(*(int *)(iVar2 + 0x7c) + *(char *)(iVar2 + 0xad) * 4);
-      *(ushort *)(iVar2 + 0x18) = *(ushort *)(iVar2 + 0x18) & 0xfff7;
+      *(ushort *)(iVar2 + 0x18) = *(ushort *)(iVar2 + 0x18) & ~0x8;
       *(undefined *)(piVar3[1] + 0x37) = *(undefined *)(iVar1 + 0x37);
       FUN_8003b818(piVar3[1]);
     }

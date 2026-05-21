@@ -155,7 +155,7 @@ void dimbossgut2_updateTracking(ushort *param_1,int param_2)
     iVar5 = FUN_80006a10((double)*(float *)(iVar8 + 0x10),pfVar7);
     if (((iVar5 != 0) || (pfVar7[4] != 0.0)) &&
        (cVar6 = (**(code **)(*DAT_803dd71c + 0x90))(pfVar7), cVar6 != '\0')) {
-      *(ushort *)(param_2 + 0x400) = *(ushort *)(param_2 + 0x400) & 0xfff7;
+      *(ushort *)(param_2 + 0x400) = *(ushort *)(param_2 + 0x400) & ~0x8;
     }
     iVar5 = FUN_80017730();
     uVar3 = (short)iVar5 + 0x8000;

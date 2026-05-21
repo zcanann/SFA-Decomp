@@ -1792,7 +1792,7 @@ void FUN_8019d874(undefined4 param_1,undefined4 param_2,int param_3)
     switch(*(undefined4 *)(iVar12 + 0xc4)) {
     case 0:
     case 8:
-      *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xfffd;
+      *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x2;
       uVar7 = Obj_GetYawDeltaToObject(puVar5,iVar6,(float *)0x0);
       FUN_8003add8(puVar5,iVar6,iVar12 + 0x3c,0x28,0,3);
       *puVar5 = *puVar5 + ((short)uVar7 >> 3) + (ushort)((short)uVar7 < 0 && (uVar7 & 7) != 0);
@@ -1804,7 +1804,7 @@ void FUN_8019d874(undefined4 param_1,undefined4 param_2,int param_3)
       }
       break;
     case 5:
-      *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xfffd;
+      *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x2;
       iVar13 = FUN_80017a90();
       uVar7 = Obj_GetYawDeltaToObject(puVar5,iVar13,(float *)0x0);
       uVar8 = FUN_80017a90();

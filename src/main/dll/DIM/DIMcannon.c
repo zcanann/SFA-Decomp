@@ -203,7 +203,7 @@ void FUN_801ae184(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
                      (uint)*(byte *)(puVar8 + 8),1);
       }
       else {
-        puVar3[3] = puVar3[3] & 0xfff7;
+        puVar3[3] = puVar3[3] & ~0x8;
       }
       if ((param_6 != '\0') && (*(char *)(puVar8 + 8) != '\0')) {
         uVar1 = *(undefined *)((int)puVar3 + 0x37);

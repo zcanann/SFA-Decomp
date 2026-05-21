@@ -2462,7 +2462,7 @@ void FUN_80161290(short *param_1)
         (**(code **)(*DAT_803dd738 + 0x28))
                   (param_1,iVar3,iVar3 + 0x35c,(int)*(short *)(iVar3 + 0x3f4),iVar3 + 0x405,0,0,0,1)
         ;
-        *(ushort *)(iVar3 + 0x400) = *(ushort *)(iVar3 + 0x400) & 0xfffd;
+        *(ushort *)(iVar3 + 0x400) = *(ushort *)(iVar3 + 0x400) & ~0x2;
       }
       iVar2 = (**(code **)(*DAT_803dd738 + 0x30))(param_1,iVar3,1);
       if (iVar2 != 0) {
@@ -2472,7 +2472,7 @@ void FUN_80161290(short *param_1)
           iVar2 = FUN_80006a10((double)*(float *)(iVar3 + 0x280),pfVar4);
           if (((iVar2 != 0) || (pfVar4[4] != 0.0)) &&
              (cVar1 = (**(code **)(*DAT_803dd71c + 0x90))(pfVar4), cVar1 != '\0')) {
-            *(ushort *)(iVar3 + 0x400) = *(ushort *)(iVar3 + 0x400) & 0xfff7;
+            *(ushort *)(iVar3 + 0x400) = *(ushort *)(iVar3 + 0x400) & ~0x8;
           }
           *(float *)(iVar3 + 0x280) = lbl_803E3B30;
           iVar2 = FUN_80017730();

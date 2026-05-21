@@ -326,7 +326,7 @@ void FUN_8011a6b4(int *param_1)
     else {
       *(short *)(*param_1 + iVar2) = (short)iVar3;
       iVar4 = iVar2 + 0x16;
-      *(ushort *)(*param_1 + iVar4) = *(ushort *)(*param_1 + iVar4) & 0xfffd;
+      *(ushort *)(*param_1 + iVar4) = *(ushort *)(*param_1 + iVar4) & ~0x2;
       *(ushort *)(*param_1 + iVar4) = *(ushort *)(*param_1 + iVar4) | 1;
       *(undefined4 *)(*param_1 + iVar2 + 0x10) = 0xffffffff;
     }

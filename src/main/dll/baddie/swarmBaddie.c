@@ -224,7 +224,7 @@ void drawFn_80125424(void)
       *(undefined *)((&DAT_803aa058)[uVar6] + 0x37) = 0xff;
       FUN_8003b878(0,0,0,0,(&DAT_803aa058)[uVar6],1);
       iVar4 = FUN_80017a54((&DAT_803aa058)[uVar6]);
-      *(ushort *)(iVar4 + 0x18) = *(ushort *)(iVar4 + 0x18) & 0xfff7;
+      *(ushort *)(iVar4 + 0x18) = *(ushort *)(iVar4 + 0x18) & ~0x8;
     }
     FUN_80006954(0);
     if (DAT_803de460 != 0) {

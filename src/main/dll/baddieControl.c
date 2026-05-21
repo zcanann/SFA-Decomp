@@ -2554,7 +2554,7 @@ void FUN_80111aec(void)
       else if (lbl_803E28C0 < *(float *)(iVar12 + 1000)) {
         iVar6 = *(int *)(uVar4 + 0x4c);
         *(float *)(iVar12 + 1000) = fVar2;
-        *(ushort *)(iVar12 + 0x400) = *(ushort *)(iVar12 + 0x400) & 0xffbf;
+        *(ushort *)(iVar12 + 0x400) = *(ushort *)(iVar12 + 0x400) & ~0x40;
         *(undefined *)(iVar7 + 0x354) = 0;
         *(undefined *)(uVar4 + 0x36) = 0;
         *(undefined4 *)(uVar4 + 0xf4) = 1;
@@ -2567,11 +2567,11 @@ void FUN_80111aec(void)
       }
     }
     else {
-      *(ushort *)(iVar12 + 0x400) = uVar1 & 0xffdf;
+      *(ushort *)(iVar12 + 0x400) = uVar1 & ~0x20;
       *(ushort *)(iVar12 + 0x400) = *(ushort *)(iVar12 + 0x400) | 0x40;
       if (lbl_803E28C0 < *(float *)(iVar12 + 1000)) {
         *(float *)(iVar12 + 1000) = fVar2;
-        *(ushort *)(iVar12 + 0x400) = *(ushort *)(iVar12 + 0x400) & 0xffbf;
+        *(ushort *)(iVar12 + 0x400) = *(ushort *)(iVar12 + 0x400) & ~0x40;
       }
     }
   }

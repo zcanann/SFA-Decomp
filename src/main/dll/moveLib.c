@@ -278,7 +278,7 @@ void FUN_80113758(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
       *(undefined2 *)(param_3 + 0x274) = param_6;
       *(undefined4 *)(param_3 + 0x2d0) = 0;
       *(undefined2 *)(iVar5 + 0x6e) = 0xffff;
-      *(ushort *)(iVar5 + 0x6e) = *(ushort *)(iVar5 + 0x6e) & 0xffbf;
+      *(ushort *)(iVar5 + 0x6e) = *(ushort *)(iVar5 + 0x6e) & ~0x40;
       *(undefined *)(param_3 + 0x25f) = 0;
       GameBit_Set((int)*(short *)(param_3 + 0x3f4),0);
     }
@@ -450,7 +450,7 @@ void FUN_80113e58(undefined4 param_1,undefined4 param_2,uint param_3,undefined2 
     }
     *param_5 = (short)uVar6;
     if (((uVar6 & 0xffff) < 0x31c4) || (0xce3b < (uVar6 & 0xffff))) {
-      *(ushort *)(iVar8 + 0x400) = *(ushort *)(iVar8 + 0x400) & 0xffef;
+      *(ushort *)(iVar8 + 0x400) = *(ushort *)(iVar8 + 0x400) & ~0x10;
     }
     else {
       *(ushort *)(iVar8 + 0x400) = *(ushort *)(iVar8 + 0x400) | 0x10;

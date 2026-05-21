@@ -1054,7 +1054,7 @@ void FUN_800602d4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   *(undefined4 *)(param_9 + 0x74) = 0;
   *(undefined2 *)(param_9 + 0x9e) = 0;
-  *(ushort *)(param_9 + 4) = *(ushort *)(param_9 + 4) & 0xffbf;
+  *(ushort *)(param_9 + 4) = *(ushort *)(param_9 + 4) & ~0x40;
   return;
 }
 

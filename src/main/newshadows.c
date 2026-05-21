@@ -295,7 +295,7 @@ void newshadows_captureProjectedShadow(ushort *object)
     FUN_80040cd0(0);
     *(float *)(object + 4) = (float)dVar5;
     iVar2 = FUN_80017a54((int)object);
-    *(ushort *)(iVar2 + 0x18) = *(ushort *)(iVar2 + 0x18) & 0xfff7;
+    *(ushort *)(iVar2 + 0x18) = *(ushort *)(iVar2 + 0x18) & ~0x8;
     FUN_8006f8fc(1,3,1);
     FUN_80259400(0x100,0xb0,0x80,0x80);
     FUN_80259504(0x80,0x80,0x2a,0);

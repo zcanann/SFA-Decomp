@@ -493,7 +493,7 @@ LAB_801761f4:
   if ((lbl_803E4220 < fVar4 * fVar4 + fVar5 * fVar5) &&
      ((*(ushort *)(iVar15 + 0x100) & 0x20) != 0)) {
     FUN_80006824((uint)piVar6,100);
-    *(ushort *)(iVar15 + 0x100) = *(ushort *)(iVar15 + 0x100) & 0xffdf;
+    *(ushort *)(iVar15 + 0x100) = *(ushort *)(iVar15 + 0x100) & ~0x20;
   }
 LAB_801762c4:
   *(ushort *)(iVar15 + 0x100) = *(ushort *)(iVar15 + 0x100) & 0xf0ff;
@@ -864,7 +864,7 @@ void FUN_801765c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   iVar5 = *(int *)(param_9 + 0x4c);
   iVar6 = *(int *)(param_9 + 0xb8);
-  *(ushort *)(iVar6 + 0x100) = *(ushort *)(iVar6 + 0x100) & 0xfffd;
+  *(ushort *)(iVar6 + 0x100) = *(ushort *)(iVar6 + 0x100) & ~0x2;
   *(byte *)(iVar6 + 0x114) = *(byte *)(iVar6 + 0x114) & 0x7f;
   dVar7 = (double)lbl_803E41C0;
   if (dVar7 != (double)*(float *)(param_9 + 0x28)) {

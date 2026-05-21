@@ -765,7 +765,7 @@ void FUN_801457a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   objAudioFn_8006ef38((double)lbl_803E3078,(double)lbl_803E3078,uVar3,param_11 + 0xf0,1,
                (int)(piVar11 + 0x1f6),(int)(piVar11 + 0x3e));
   if ((piVar11[0x15] & 1U) != 0) {
-    *(ushort *)(param_11 + 0x6e) = *(ushort *)(param_11 + 0x6e) & 0xffbf;
+    *(ushort *)(param_11 + 0x6e) = *(ushort *)(param_11 + 0x6e) & ~0x40;
     FUN_8003b280(uVar3,(int)(piVar11 + 0xde));
     (**(code **)(*DAT_803dd6d4 + 0x78))(uVar3,param_11,1,0xf,0x1e,0,0);
   }

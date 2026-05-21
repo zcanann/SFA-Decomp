@@ -622,7 +622,7 @@ void FUN_80132288(void)
     iVar1 = (uint)bVar3 * 4;
     FUN_8003b878(0,0,0,0,*(int *)(&DAT_803dc830 + iVar1),1);
     iVar2 = FUN_80017a54(*(int *)(&DAT_803dc830 + iVar1));
-    *(ushort *)(iVar2 + 0x18) = *(ushort *)(iVar2 + 0x18) & 0xfff7;
+    *(ushort *)(iVar2 + 0x18) = *(ushort *)(iVar2 + 0x18) & ~0x8;
     *(undefined *)(*(int *)(&DAT_803dc830 + iVar1) + 0x37) = 0xff;
   }
   FUN_80129fb0();

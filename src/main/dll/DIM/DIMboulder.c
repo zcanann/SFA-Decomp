@@ -1019,7 +1019,7 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     if (iVar4 != 0) {
       *(uint *)(iVar4 + 0x30) = *(uint *)(iVar4 + 0x30) | 0x1000;
     }
-    *(ushort *)(param_11 + 0x6e) = *(ushort *)(param_11 + 0x6e) & 0xfffb;
+    *(ushort *)(param_11 + 0x6e) = *(ushort *)(param_11 + 0x6e) & ~0x4;
     *(undefined *)(param_11 + 0x80) = 0;
   }
   if ((iVar6 != 0) && (iVar6 = (**(code **)(**(int **)(iVar6 + 0x68) + 0x38))(iVar6), iVar6 == 2)) {

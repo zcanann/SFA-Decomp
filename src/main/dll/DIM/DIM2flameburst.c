@@ -1512,7 +1512,7 @@ undefined4 FUN_801b5df0(int param_1,undefined4 param_2,int param_3)
   
   iVar4 = *(int *)(param_1 + 0xb8);
   *(undefined *)(param_3 + 0x56) = 0;
-  *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xffbf;
+  *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x40;
   FUN_801b5d00(param_1,iVar4);
   if (*(char *)(param_3 + 0x80) == '\x01') {
     *(undefined *)(param_3 + 0x80) = 0;

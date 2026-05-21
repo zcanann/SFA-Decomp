@@ -925,7 +925,7 @@ void FUN_801a8454(int param_1)
     FUN_80017a88((double)(*(float *)(param_1 + 0x24) * lbl_803DC074),
                  (double)(*(float *)(param_1 + 0x28) * lbl_803DC074),
                  (double)(*(float *)(param_1 + 0x2c) * lbl_803DC074),param_1);
-    *(ushort *)(iVar4 + 0x24) = *(ushort *)(iVar4 + 0x24) & 0xff7f;
+    *(ushort *)(iVar4 + 0x24) = *(ushort *)(iVar4 + 0x24) & ~0x80;
     iVar3 = FUN_801a8168((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10),
                          (double)*(float *)(param_1 + 0x14),
                          (double)(float)((double)lbl_803E5200 + (double)*(float *)(param_1 + 0x10)
@@ -1181,7 +1181,7 @@ void FUN_801a8b20(int param_1,char param_2)
     *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     return;
   }
-  *(ushort *)(iVar1 + 0x24) = *(ushort *)(iVar1 + 0x24) & 0xfffb;
+  *(ushort *)(iVar1 + 0x24) = *(ushort *)(iVar1 + 0x24) & ~0x4;
   *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
   return;
 }

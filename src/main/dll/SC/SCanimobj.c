@@ -198,7 +198,7 @@ void FUN_801d7768(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
     iVar2 = FUN_80017a98();
     if ((iVar2 != 0) && (uVar3 = FUN_80294cb8(iVar2), uVar3 != 0)) {
       iVar4 = FUN_80017a54(iVar2);
-      *(ushort *)(iVar4 + 0x18) = *(ushort *)(iVar4 + 0x18) & 0xfff7;
+      *(ushort *)(iVar4 + 0x18) = *(ushort *)(iVar4 + 0x18) & ~0x8;
       ObjPath_GetPointWorldPosition(iVar1,(uint)*(byte *)(iVar5 + 8),&local_38,&local_34,local_30,0);
       FUN_80294be0((double)local_38,(double)local_34,(double)local_30[0],iVar2);
       FUN_802950c8(iVar2,(int)uVar6,param_3,param_4,param_5,-1);

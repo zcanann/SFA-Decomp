@@ -103,7 +103,7 @@ undefined4 FUN_801ce07c(int param_1,undefined4 param_2,int param_3)
   if (0x4e80 < *(short *)(iVar2 + 10)) {
     *(short *)(iVar2 + 10) = *(short *)(iVar2 + 10) + -0x4e80;
   }
-  *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x70) & 0xffbf;
+  *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x70) & ~0x40;
   *(undefined *)(param_3 + 0x56) = 0;
   return 0;
 }
@@ -206,8 +206,8 @@ undefined4 FUN_801ce244(short *param_1,undefined4 param_2,int param_3)
   }
   if ((*(byte *)(iVar1 + 0x43c) & 4) != 0) {
     *(float *)(iVar1 + 0x18) = lbl_803E5EA4;
-    *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xfff7;
-    *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & 0xffbf;
+    *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x8;
+    *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x40;
     FUN_801ce340(param_1,iVar1,1);
   }
   objAudioFn_8006ef38((double)lbl_803E5EA8,(double)lbl_803E5EA8,param_1,iVar1 + 0x440,8,iVar1 + 0x45c,

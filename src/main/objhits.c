@@ -3064,14 +3064,14 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
           sweepPtrs[slotCount]->maxX = *(float *)(obj + 0x18) + *(float *)(objState + 0x38);
           slotCount++;
         }
-        *(ushort *)(objState + 0x60) = *(ushort *)(objState + 0x60) & 0xfff7;
+        *(ushort *)(objState + 0x60) = *(ushort *)(objState + 0x60) & ~0x8;
         *(undefined *)(objState + 0xad) = 0;
         *(undefined *)(objState + 0xac) = 0xff;
         *(undefined4 *)objState = 0;
         attachedObj = *(int *)(obj + 0xc8);
         if ((attachedObj != 0) && (*(short *)(attachedObj + 0x44) == 0x2d)) {
           attachedState = *(int *)(attachedObj + 0x54);
-          *(ushort *)(attachedState + 0x60) = *(ushort *)(attachedState + 0x60) & 0xfff7;
+          *(ushort *)(attachedState + 0x60) = *(ushort *)(attachedState + 0x60) & ~0x8;
           *(undefined *)(attachedState + 0xad) = 0;
           *(undefined *)(attachedState + 0xac) = 0xff;
           *(undefined4 *)attachedState = 0;
