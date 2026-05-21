@@ -318,3 +318,24 @@ FUN_80168368(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   *(float *)(param_10 + 0x280) = lbl_803E3CF8;
   return 0;
 }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80167E3C(int obj, int p2)
+{
+  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern f32 lbl_803E3060;
+  extern f32 lbl_803E3090;
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    ObjAnim_SetCurrentMove(obj, 3, 0, lbl_803E3060);
+    *(u8 *)(p2 + 0x346) = 0;
+    Sfx_PlayFromObject(obj, 631);
+  }
+  *(s8 *)(p2 + 0x34d) = 3;
+  *(f32 *)(p2 + 0x2a0) = lbl_803E3090;
+  *(f32 *)(p2 + 0x280) = lbl_803E3060;
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
