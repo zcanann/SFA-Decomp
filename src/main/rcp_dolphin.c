@@ -2594,6 +2594,32 @@ void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2) {
     GXSetScissor(x, y, x2 - x, y2 - y);
 }
 
+extern void GXSetTevDirect(int tev);
+extern void GXSetTevOrder(int tev, int tc, int tm, int color);
+extern void GXSetTevSwapMode(int tev, int ras, int tex);
+extern void GXSetTevColorIn(int tev, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int tev, int a, int b, int c, int d);
+extern void GXSetTevColorOp(int tev, int op, int bias, int scale, int clamp, int outreg);
+extern void GXSetTevAlphaOp(int tev, int op, int bias, int scale, int clamp, int outreg);
+extern int lbl_803DCD90;
+void gxColorFn_800523d0(void) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xa);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 5);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xa, 0xf);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 0, 5, 7);
+    }
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
+
 extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
 extern void *mmAlloc(u32 size, int type, int p3);
 extern void *memset(void *, int, u32);
