@@ -15,5 +15,5 @@
 // - 5: invhit_hitDetect (0x80177814)
 // - 6: invhit_render (0x801777F0)
 // - 7: invhit_free (0x801777AC)
-// - 8: invhit_func08 (0x801777A4)
+// - 8: invhit_getObjectTypeId (0x801777A4)
 // - 9: invhit_getExtraSize (0x8017779C)

@@ -47,7 +47,7 @@
  * - slot 05: 0x8017A0DC levelname_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8017A0D8 levelname_render stub=blr ref=render (stub)
  * - slot 07: 0x8017A0D4 levelname_free stub=blr ref=free (stub)
- * - slot 08: 0x8017A0CC levelname_func08 stub=const 0
+ * - slot 08: 0x8017A0CC levelname_getObjectTypeId stub=const 0
  * - slot 09: 0x8017A0C4 levelname_getExtraSize stub=const 24 ref=getExtraSize (stub)
  */
 

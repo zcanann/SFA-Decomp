@@ -15,5 +15,5 @@
 // - 5: infopoint_hitDetect (0x8018843C)
 // - 6: infopoint_render (0x8018840C)
 // - 7: infopoint_free (0x80188408)
-// - 8: infopoint_func08 (0x80188400)
+// - 8: infopoint_getObjectTypeId (0x80188400)
 // - 9: infopoint_getExtraSize (0x801883F8)

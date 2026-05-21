@@ -27,7 +27,7 @@
  *   slot 05: 0x8018843C infopoint_hitDetect
  *   slot 06: 0x8018840C infopoint_render
  *   slot 07: 0x80188408 infopoint_free
- *   slot 08: 0x80188400 infopoint_func08
+ *   slot 08: 0x80188400 infopoint_getObjectTypeId
  *   slot 09: 0x801883F8 infopoint_getExtraSize
  */
 

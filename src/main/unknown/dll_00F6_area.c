@@ -14,5 +14,5 @@
 // - 5: area_hitDetect (0x8017A024)
 // - 6: area_render (0x8017A020)
 // - 7: area_free (0x8017A01C)
-// - 8: area_func08 (0x8017A014)
+// - 8: area_getObjectTypeId (0x8017A014)
 // - 9: area_getExtraSize (0x8017A00C)

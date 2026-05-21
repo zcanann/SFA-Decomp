@@ -15,6 +15,6 @@
 // - 5: checkpoint4_hitDetect (0x80171A1C)
 // - 6: checkpoint4_render (0x801719F8)
 // - 7: checkpoint4_free (0x801719F4)
-// - 8: checkpoint4_func08 (0x801719EC)
+// - 8: checkpoint4_getObjectTypeId (0x801719EC)
 // - 9: checkpoint4_getExtraSize (0x801719E4)
 // - 10: checkpoint4_setScale (0x801719E0)

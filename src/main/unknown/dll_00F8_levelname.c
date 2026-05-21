@@ -15,5 +15,5 @@
 // - 5: levelname_hitDetect (0x8017A0DC)
 // - 6: levelname_render (0x8017A0D8)
 // - 7: levelname_free (0x8017A0D4)
-// - 8: levelname_func08 (0x8017A0CC)
+// - 8: levelname_getObjectTypeId (0x8017A0CC)
 // - 9: levelname_getExtraSize (0x8017A0C4)

@@ -26,7 +26,7 @@
  *   slot 05: 0x80171A1C checkpoint4_hitDetect
  *   slot 06: 0x801719F8 checkpoint4_render
  *   slot 07: 0x801719F4 checkpoint4_free
- *   slot 08: 0x801719EC checkpoint4_func08
+ *   slot 08: 0x801719EC checkpoint4_getObjectTypeId
  *   slot 09: 0x801719E4 checkpoint4_getExtraSize
  *   slot 10: 0x801719E0 checkpoint4_setScale
  */

@@ -44,7 +44,7 @@
  * - slot 05: 0x8016B8FC StaticCamera_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8016B8CC StaticCamera_render ref=render
  * - slot 07: 0x8016B8A8 StaticCamera_free ref=free
- * - slot 08: 0x8016B8A0 StaticCamera_func08 stub=const 0
+ * - slot 08: 0x8016B8A0 StaticCamera_getObjectTypeId stub=const 0
  * - slot 09: 0x8016B898 StaticCamera_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

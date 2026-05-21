@@ -27,7 +27,7 @@
  *   slot 05: 0x80177814 invhit_hitDetect
  *   slot 06: 0x801777F0 invhit_render
  *   slot 07: 0x801777AC invhit_free
- *   slot 08: 0x801777A4 invhit_func08
+ *   slot 08: 0x801777A4 invhit_getObjectTypeId
  *   slot 09: 0x8017779C invhit_getExtraSize
  */
 

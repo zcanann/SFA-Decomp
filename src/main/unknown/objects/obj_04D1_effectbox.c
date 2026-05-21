@@ -44,7 +44,7 @@
  * - slot 05: 0x80173FE0 effectbox_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80173FB0 effectbox_render ref=render
  * - slot 07: 0x80173F90 effectbox_free ref=free
- * - slot 08: 0x80173F88 effectbox_func08 stub=const 0
+ * - slot 08: 0x80173F88 effectbox_getObjectTypeId stub=const 0
  * - slot 09: 0x80173F80 effectbox_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

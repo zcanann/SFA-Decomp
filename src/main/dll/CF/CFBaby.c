@@ -1710,7 +1710,7 @@ int Fall_Ladders_getExtraSize(void) { return 0xc; }
 int Fall_Ladders_func08_ret_0(void) { return 0x0; }
 int coldwatercontrol_getExtraSize(void) { return 0x8; }
 int infopoint_getExtraSize(void) { return 0x20; }
-int infopoint_func08(void) { return 0x0; }
+int infopoint_getObjectTypeId(void) { return 0x0; }
 int decoration11a_getExtraSize(void) { return 0x1c; }
 int landed_arwing_getExtraSize(void) { return 0x1c; }
 

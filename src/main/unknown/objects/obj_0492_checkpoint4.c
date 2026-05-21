@@ -44,7 +44,7 @@
  * - slot 05: 0x80171A1C checkpoint4_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801719F8 checkpoint4_render ref=render
  * - slot 07: 0x801719F4 checkpoint4_free stub=blr ref=free (stub)
- * - slot 08: 0x801719EC checkpoint4_func08 stub=const 16
+ * - slot 08: 0x801719EC checkpoint4_getObjectTypeId stub=const 16
  * - slot 09: 0x801719E4 checkpoint4_getExtraSize stub=const 64 ref=getExtraSize (stub)
  * - slot 10: 0x801719E0 checkpoint4_setScale stub=blr ref=setScale (stub)
  */

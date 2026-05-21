@@ -15,5 +15,5 @@
 // - 5: effectbox_hitDetect (0x80173FE0)
 // - 6: effectbox_render (0x80173FB0)
 // - 7: effectbox_free (0x80173F90)
-// - 8: effectbox_func08 (0x80173F88)
+// - 8: effectbox_getObjectTypeId (0x80173F88)
 // - 9: effectbox_getExtraSize (0x80173F80)

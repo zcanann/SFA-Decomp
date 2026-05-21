@@ -45,7 +45,7 @@
  * - slot 05: 0x8018843C infopoint_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8018840C infopoint_render ref=render
  * - slot 07: 0x80188408 infopoint_free stub=blr ref=free (stub)
- * - slot 08: 0x80188400 infopoint_func08 stub=const 0
+ * - slot 08: 0x80188400 infopoint_getObjectTypeId stub=const 0
  * - slot 09: 0x801883F8 infopoint_getExtraSize stub=const 32 ref=getExtraSize (stub)
  */
 

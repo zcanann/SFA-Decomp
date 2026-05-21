@@ -4445,7 +4445,7 @@ void setuppoint_init(void) {}
 int mikabombshadow_getExtraSize(void) { return 0x4; }
 int mikabombshadow_getObjectTypeId(void) { return 0x0; }
 int StaticCamera_getExtraSize(void) { return 0x8; }
-int StaticCamera_func08(void) { return 0x0; }
+int StaticCamera_getObjectTypeId(void) { return 0x0; }
 int gcbaddieshield_getExtraSize(void) { return 0x8; }
 int gcbaddieshield_func08(void) { return 0x0; }
 int baddieinterestp_getExtraSize(void) { return 0x0; }
@@ -4467,7 +4467,7 @@ int curve_func08(void) { return 0x0; }
 int dll_F7_getExtraSize(void) { return 0xc; }
 int dll_F7_func08(void) { return 0x2; }
 int checkpoint4_getExtraSize(void) { return 0x40; }
-int checkpoint4_func08(void) { return 0x10; }
+int checkpoint4_getObjectTypeId(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
 
 extern void mikabomb_free();
@@ -4576,7 +4576,7 @@ ObjectDescriptor gStaticCameraObjDescriptor = {
     (ObjectDescriptorCallback)StaticCamera_hitDetect,
     (ObjectDescriptorCallback)StaticCamera_render,
     (ObjectDescriptorCallback)StaticCamera_free,
-    (ObjectDescriptorCallback)StaticCamera_func08,
+    (ObjectDescriptorCallback)StaticCamera_getObjectTypeId,
     StaticCamera_getExtraSize,
 };
 
@@ -4917,7 +4917,7 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
         (ObjectDescriptorCallback)checkpoint4_hitDetect,
         (ObjectDescriptorCallback)checkpoint4_render,
         (ObjectDescriptorCallback)checkpoint4_free,
-        (ObjectDescriptorCallback)checkpoint4_func08,
+        (ObjectDescriptorCallback)checkpoint4_getObjectTypeId,
         checkpoint4_getExtraSize,
         (ObjectDescriptorCallback)checkpoint4_setScale,
     },

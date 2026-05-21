@@ -27,7 +27,7 @@
  *   slot 05: 0x8017A024 area_hitDetect
  *   slot 06: 0x8017A020 area_render
  *   slot 07: 0x8017A01C area_free
- *   slot 08: 0x8017A014 area_func08
+ *   slot 08: 0x8017A014 area_getObjectTypeId
  *   slot 09: 0x8017A00C area_getExtraSize
  */
 

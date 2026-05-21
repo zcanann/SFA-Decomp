@@ -26,7 +26,7 @@
  *   slot 05: 0x80173FE0 effectbox_hitDetect
  *   slot 06: 0x80173FB0 effectbox_render
  *   slot 07: 0x80173F90 effectbox_free
- *   slot 08: 0x80173F88 effectbox_func08
+ *   slot 08: 0x80173F88 effectbox_getObjectTypeId
  *   slot 09: 0x80173F80 effectbox_getExtraSize
  */
 

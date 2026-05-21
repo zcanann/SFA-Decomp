@@ -787,7 +787,7 @@ void effectbox_init(int obj, int *def) {
 
 /* 8b "li r3, N; blr" returners. */
 int effectbox_getExtraSize(void) { return 0x0; }
-int effectbox_func08(void) { return 0x0; }
+int effectbox_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3508;

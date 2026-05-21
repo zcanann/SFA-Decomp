@@ -180,7 +180,7 @@ LAB_8017a09c:
 
 
 int area_getExtraSize(void) { return 0x0; }
-int area_func08(void) { return 0x0; }
+int area_getObjectTypeId(void) { return 0x0; }
 void area_free(void) {}
 void area_render(void) {}
 void area_hitDetect(void) {}
@@ -204,7 +204,7 @@ void ProjectileSwitch_free(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int levelname_getExtraSize(void) { return 0x18; }
-int levelname_func08(void) { return 0x0; }
+int levelname_getObjectTypeId(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
 #pragma scheduling off
@@ -249,6 +249,6 @@ ObjectDescriptor gAreaObjDescriptor = {
     (ObjectDescriptorCallback)area_hitDetect,
     (ObjectDescriptorCallback)area_render,
     (ObjectDescriptorCallback)area_free,
-    (ObjectDescriptorCallback)area_func08,
+    (ObjectDescriptorCallback)area_getObjectTypeId,
     area_getExtraSize,
 };

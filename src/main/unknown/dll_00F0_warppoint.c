@@ -12,7 +12,7 @@
 // - 3: WarpPoint_init (0x801776C0)
 // - 4: WarpPoint_update (0x80177060)
 // - 6: WarpPoint_render (0x80177040)
-// - 8: WarpPoint_func08 (0x80177038)
+// - 8: WarpPoint_getObjectTypeId (0x80177038)
 // - 9: WarpPoint_getExtraSize (0x80177030)
 //
 // Reference-only object parameter hints:

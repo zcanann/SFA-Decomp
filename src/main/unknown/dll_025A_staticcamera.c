@@ -16,7 +16,7 @@
  * - 5: StaticCamera_hitDetect (0x8016B8FC)
  * - 6: StaticCamera_render (0x8016B8CC)
  * - 7: StaticCamera_free (0x8016B8A8)
- * - 8: StaticCamera_func08 (0x8016B8A0)
+ * - 8: StaticCamera_getObjectTypeId (0x8016B8A0)
  * - 9: StaticCamera_getExtraSize (0x8016B898)
  *
  * Reference-only objparam fields:

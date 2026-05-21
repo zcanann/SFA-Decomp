@@ -27,7 +27,7 @@
  *   slot 05: 0x8017A0DC levelname_hitDetect
  *   slot 06: 0x8017A0D8 levelname_render
  *   slot 07: 0x8017A0D4 levelname_free
- *   slot 08: 0x8017A0CC levelname_func08
+ *   slot 08: 0x8017A0CC levelname_getObjectTypeId
  *   slot 09: 0x8017A0C4 levelname_getExtraSize
  */
 

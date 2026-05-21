@@ -26,7 +26,7 @@
  *   slot 05: 0x8016B8FC StaticCamera_hitDetect
  *   slot 06: 0x8016B8CC StaticCamera_render
  *   slot 07: 0x8016B8A8 StaticCamera_free
- *   slot 08: 0x8016B8A0 StaticCamera_func08
+ *   slot 08: 0x8016B8A0 StaticCamera_getObjectTypeId
  *   slot 09: 0x8016B898 StaticCamera_getExtraSize
  */
 
