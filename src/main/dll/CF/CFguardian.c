@@ -262,3 +262,70 @@ int scarab_getExtraSize(void)
 void scarab_free(void)
 {
 }
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801845FC(int obj, int p2, u8 mode, int p3)
+{
+  extern int getAngle(f32, f32);
+  extern f32 sqrtf(f32);
+  extern void mathFn_80021ac8(void *, f32 *);
+  extern f32 lbl_803E39F8;
+  extern f32 lbl_803E39FC;
+  extern f32 lbl_803E3A00;
+  int sub = *(int *)(obj + 0xb8);
+  f32 buf[4];
+  f32 magic[4];
+  s16 hwords[6];
+
+  if (mode == 1) {
+    buf[0] = *(f32 *)(p2 + 0x4);
+    buf[1] = *(f32 *)(p2 + 0x8);
+    buf[2] = *(f32 *)(p2 + 0xc);
+  } else if (mode == 0) {
+    buf[0] = *(f32 *)(p3 + 0x0);
+    buf[1] = *(f32 *)(p3 + 0x4);
+    buf[2] = *(f32 *)(p3 + 0x8);
+  } else if (mode == 2) {
+    *(f32 *)(obj + 0x24) = *(f32 *)(p3 + 0x0);
+    *(f32 *)(obj + 0x2c) = *(f32 *)(p3 + 0x8);
+    {
+      f32 sq = *(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24)
+             + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c);
+      f32 d = (sq == lbl_803E39F8) ? sq : sqrtf(sq);
+      d = lbl_803E39FC * d;
+      *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) / d;
+      *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) / d;
+      *(f32 *)(sub + 0) = *(f32 *)(obj + 0x24);
+      *(f32 *)(sub + 4) = *(f32 *)(obj + 0x2c);
+      *(s16 *)(obj + 0) = (s16)getAngle(-*(f32 *)(p3 + 0x0), -*(f32 *)(p3 + 0x8));
+    }
+    return;
+  }
+
+  magic[3] = lbl_803E39F8;
+  magic[2] = lbl_803E39F8;
+  magic[1] = lbl_803E39F8;
+  magic[0] = lbl_803E3A00;
+  hwords[5] = 0;
+  hwords[4] = 0;
+  hwords[3] = *(s16 *)(obj + 0);
+  /* hwords[0..2] alias magic[0]'s prefix or are stack-adjacent — laid out so struct passed at hwords+0x6 covers magic too */
+
+  mathFn_80021ac8(&hwords[3], buf);
+
+  if (p2 == 0) {
+    *(s16 *)(obj + 4) = 0;
+    *(s16 *)(obj + 2) = (s16)getAngle(*(f32 *)(p3 + 0x0) + *(f32 *)(p3 + 0x8), *(f32 *)(p3 + 0x4));
+    if (*(s16 *)(obj + 2) < 0) {
+      *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) * -1);
+    }
+    *(s16 *)(obj + 0) = (s16)getAngle(*(f32 *)(p3 + 0x0), *(f32 *)(p3 + 0x8));
+  } else {
+    s16 a = (s16)getAngle(buf[0], buf[1]);
+    *(s16 *)(obj + 2) = (s16)getAngle(buf[2], buf[1]);
+    *(s16 *)(obj + 4) = a;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
