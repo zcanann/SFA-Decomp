@@ -2336,9 +2336,8 @@ void FUN_800dbc68(void)
         iVar7 = (int)((float)(local_b8 - dVar25) + (float)(dVar29 / dVar31));
         local_c0 = (double)(longlong)iVar7;
         puVar12[0x2c] = (short)iVar7;
-        bVar1 = iVar24 != 100;
         iVar24 = iVar24 + 1;
-      } while (bVar1);
+      } while (iVar24 != 101);
       FUN_800723a0();
 LAB_800dd65c:
       iVar24 = 0;
@@ -2393,9 +2392,8 @@ LAB_800dd65c:
         iVar7 = (int)((float)(local_b8 - dVar25) - (float)(dVar29 / dVar31));
         local_c0 = (double)(longlong)iVar7;
         puVar12[0x2e] = (short)iVar7;
-        bVar1 = iVar24 != 100;
         iVar24 = iVar24 + 1;
-      } while (bVar1);
+      } while (iVar24 != 101);
       FUN_800723a0();
 LAB_800dd85c:
       puVar12 = puVar12 + 0x18;

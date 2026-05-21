@@ -598,7 +598,8 @@ void FUN_801eba80(int param_1,int param_2)
       (**(code **)(*DAT_803dd708 + 8))(param_1,0x552,0,4,0xffffffff,0);
       (**(code **)(*DAT_803dd708 + 8))(param_1,0x554,0,4,0xffffffff,0);
       uVar5 = 0x32 / DAT_803dc070;
-      while (bVar1 = uVar5 != 0, uVar5 = uVar5 - 1, bVar1) {
+      while (uVar5 != 0) {
+        uVar5 = uVar5 - 1;
         (**(code **)(*DAT_803dd708 + 8))(param_1,0x553,0,2,0xffffffff,0);
       }
       *(float *)(param_2 + 0x3e4) = lbl_803E678C;

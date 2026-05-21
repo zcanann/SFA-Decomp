@@ -397,9 +397,8 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         iVar3 = 9;
         do {
           (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5fd,&local_78,2,0xffffffff,0);
-          bVar1 = iVar3 != 0;
           iVar3 = iVar3 + -1;
-        } while (bVar1);
+        } while (iVar3 != -1);
       }
       else {
         uVar11 = FUN_80017698(0x468,1);
@@ -409,9 +408,8 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         iVar3 = 9;
         do {
           (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5fd,&local_78,2,0xffffffff,0);
-          bVar1 = iVar3 != 0;
           iVar3 = iVar3 + -1;
-        } while (bVar1);
+        } while (iVar3 != -1);
       }
       FUN_80017698((int)psVar9[5],1);
       FUN_80006824(uVar2,0x1c9);
