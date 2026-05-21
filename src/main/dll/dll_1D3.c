@@ -440,3 +440,38 @@ void fn_801CEE0C(int p1, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801CED2C(int p1, int p2)
+{
+  extern int ObjTrigger_IsSetById(int, int);
+  extern int lbl_803DBFB4;
+  extern int lbl_803DBFB8;
+  extern int lbl_803DBFBC;
+
+  switch (*(u8 *)(p2 + 0x408)) {
+    case 4:
+      *(int *)(p2 + 0x48) = (int)&lbl_803DBFB4;
+      if (ObjTrigger_IsSetById(p1, 418) != 0) {
+        *(u8 *)(p2 + 0x43c) = (u8)(*(u8 *)(p2 + 0x43c) | 0x10);
+        GameBit_Set(413, 1);
+        GameBit_Set(419, 1);
+        GameBit_Set(3813, 1);
+        GameBit_Set(3814, 1);
+        *(u8 *)(p2 + 0x408) = 5;
+      }
+      break;
+    case 5:
+      *(int *)(p2 + 0x48) = (int)&lbl_803DBFB8;
+      if (GameBit_Get(415) != 0) {
+        *(u8 *)(p2 + 0x408) = 6;
+      }
+      break;
+    case 6:
+      *(int *)(p2 + 0x48) = (int)&lbl_803DBFBC;
+      break;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
