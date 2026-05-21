@@ -13085,7 +13085,9 @@ void Carryable_setFlag08(u8 *state, u8 enable)
   }
 }
 
+#pragma peephole off
 s32 Carryable_getFlag04(u8 *state) { return (state[7] & 4) != 0; }
+#pragma peephole reset
 
 void Carryable_setFlag04(u8 *state, u8 enable)
 {
