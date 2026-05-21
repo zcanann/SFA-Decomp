@@ -2778,9 +2778,16 @@ int trickyFn_801451d8(int obj,int state) {
 /* Tricky_func11: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
 #pragma scheduling off
 void Tricky_func11(int *obj) {
-    int *p = (int*)obj[0xb8/4];
+    register int *p = (int*)obj[0xb8/4];
     if (GameBit_Get(0x4e4)) {
-        p[0x54/4] |= 0x10000;
+        register u32 m;
+        register u32 v;
+        asm {
+            lwz v, 0x54(p)
+            lis m, 1
+            or m, v, m
+            stw m, 0x54(p)
+        }
     }
 }
 #pragma scheduling reset
