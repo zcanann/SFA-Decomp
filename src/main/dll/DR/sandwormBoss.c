@@ -3599,3 +3599,92 @@ void cfmaincrystal_init(int *obj, u8 *def) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void* Obj_GetPlayerObject(void);
+extern void mathFn_80021ac8(s16* rotIn, f32* outVec);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void saveGame_saveObjectPos(int obj);
+extern int barrelgener_getLinkId(int barrel);
+extern f32 lbl_803E42C0;
+extern f32 lbl_803E42C4;
+extern f32 lbl_803E42C8;
+extern f32 lbl_803E42CC;
+extern f32 lbl_803E42D0;
+extern f32 lbl_803E42D4;
+extern f32 lbl_803E42D8;
+extern f32 lbl_803E42DC;
+
+/* fn_801A0C14: gunpowder-barrel "throw at target" launch. Seeds state's
+ * launch velocity (state+0x20..28) from a per-axis pair scaled by the
+ * player's strength (player_state[0x298]), or a fixed pair when the flag
+ * is clear. Builds a rotation-vec from state[0x50], runs the 3-vec rotor
+ * via mathFn_80021ac8, sets thrown/inflight flags, plays sfx 0xd3. When
+ * state[0x48] bit 0x40 is set, looks up the linked barrel by data[0x1a]
+ * (or the nearest one if 0), temporarily moves obj to that barrel's
+ * position so saveGame_saveObjectPos latches the target slot, then
+ * restores. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801A0C14(int obj, u8 flag) {
+    u8* state = *(u8**)(obj + 0xb8);
+    u8* playerState;
+    s16 stk[8];
+    f32 fz;
+    int target;
+    f32 sx, sy, sz;
+
+    playerState = *(u8**)((u8*)Obj_GetPlayerObject() + 0xb8);
+    *(f32*)(state + 0x20) = lbl_803E42C0;
+    if (flag != 0) {
+        *(f32*)(state + 0x24) = lbl_803E42C8 * *(f32*)(playerState + 0x298) + lbl_803E42C4;
+        *(f32*)(state + 0x28) = lbl_803E42D0 * *(f32*)(playerState + 0x298) + lbl_803E42CC;
+    } else {
+        *(f32*)(state + 0x24) = lbl_803E42D4;
+        *(f32*)(state + 0x28) = lbl_803E42D8;
+    }
+    fz = lbl_803E42C0;
+    *(f32*)((u8*)stk + 0xc) = fz;
+    *(f32*)((u8*)stk + 0x10) = fz;
+    *(f32*)((u8*)stk + 0x14) = fz;
+    *(f32*)((u8*)stk + 0x8) = lbl_803E42DC;
+    stk[2] = 0;
+    stk[1] = 0;
+    stk[0] = *(s16*)(state + 0x50);
+    mathFn_80021ac8(stk, (f32*)(state + 0x20));
+    state[0x49] = (u8)(state[0x49] | 1);
+    Sfx_PlayFromObject(obj, 0xd3);
+    state[0x49] = (u8)(state[0x49] | 2);
+    if ((state[0x48] & 0x40) != 0) {
+        u8* params = *(u8**)(obj + 0x4c);
+        target = 0;
+        if (*(s16*)(params + 0x1a) != 0) {
+            int count;
+            int* barrels = (int*)ObjGroup_GetObjects(0x3a, &count);
+            int i;
+            int* p = barrels;
+            for (i = 0; i < count; i++) {
+                if (*(s16*)(params + 0x1a) == barrelgener_getLinkId(*p)) {
+                    target = barrels[i];
+                    break;
+                }
+                p++;
+            }
+        } else {
+            target = ObjGroup_FindNearestObject(0x3a, obj, (f32*)0);
+        }
+        if (target != 0) {
+            sx = *(f32*)(obj + 0xc);
+            sy = *(f32*)(obj + 0x10);
+            sz = *(f32*)(obj + 0x14);
+            *(f32*)(obj + 0xc) = *(f32*)(target + 0xc);
+            *(f32*)(obj + 0x10) = *(f32*)(target + 0x10);
+            *(f32*)(obj + 0x14) = *(f32*)(target + 0x14);
+            saveGame_saveObjectPos(obj);
+            *(f32*)(obj + 0xc) = sx;
+            *(f32*)(obj + 0x10) = sy;
+            *(f32*)(obj + 0x14) = sz;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
