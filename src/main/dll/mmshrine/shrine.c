@@ -387,3 +387,43 @@ void mmsh_waterspike_init(int obj, s16 *def) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E4F78;
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 *Obj_AllocObjectSetup(int size, int type);
+extern u8 *Obj_SetupObject(u8 *no, int a, int b, int c, int d);
+#pragma scheduling off
+#pragma peephole off
+void mmsh_scales_init(int *obj, s16 *def) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *no;
+    int active;
+    *(s16 *)(state + 106) = def[13];
+    *(s16 *)(state + 110) = -1;
+    *(f32 *)(state + 36) = lbl_803E4F68 / (lbl_803E4F68 + (f32)(u32)*(u8 *)((char *)def + 36));
+    *(int *)(state + 40) = -1;
+    active = *(int *)((char *)obj + 0xf4);
+    if (active == 0 && def[12] != 1) {
+        ((void(*)(u8 *))((void **)*gObjectTriggerInterface)[7])(state);
+        *(int *)((char *)obj + 0xf4) = (int)def[12] + 1;
+    } else if (active != 0 && def[12] != active - 1) {
+        ((void(*)(u8 *))((void **)*gObjectTriggerInterface)[9])(state);
+        if (def[12] != -1) {
+            ((void(*)(u8 *, s16 *))((void **)*gObjectTriggerInterface)[7])(state, def);
+        }
+        *(int *)((char *)obj + 0xf4) = (int)def[12] + 1;
+    }
+    if (Obj_IsLoadingLocked() == 0) return;
+    no = Obj_AllocObjectSetup(0x24, 0x1b8);
+    *(f32 *)(no + 8) = *(f32 *)((char *)obj + 12);
+    *(f32 *)(no + 12) = *(f32 *)((char *)obj + 16);
+    *(f32 *)(no + 16) = *(f32 *)((char *)obj + 20);
+    no[4] = 32;
+    no[5] = 4;
+    no[7] = 0xff;
+    no = Obj_SetupObject(no, 5, -1, -1, 0);
+    *(u8 **)((char *)obj + 200) = no;
+    *(f32 *)(*(u8 **)((char *)obj + 200) + 8) = *(f32 *)(*(u8 **)((char *)obj + 200) + 8) * lbl_803E4F78;
+}
+#pragma peephole reset
+#pragma scheduling reset
