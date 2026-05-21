@@ -14,5 +14,5 @@
 // - 5: dimbossicesmash_hitDetect (0x8019698C)
 // - 6: dimbossicesmash_render (0x8019695C)
 // - 7: dimbossicesmash_free (0x8019692C)
-// - 8: dimbossicesmash_func08 (0x80196918)
+// - 8: dimbossicesmash_getObjectTypeId (0x80196918)
 // - 9: dimbossicesmash_getExtraSize (0x80196910)

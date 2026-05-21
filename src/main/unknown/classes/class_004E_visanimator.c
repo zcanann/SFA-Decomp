@@ -27,7 +27,7 @@
  *   slot 05: 0x80194254 visanimator_hitDetect
  *   slot 06: 0x80194250 visanimator_render
  *   slot 07: 0x8019424C visanimator_free
- *   slot 08: 0x80194244 visanimator_func08
+ *   slot 08: 0x80194244 visanimator_getObjectTypeId
  *   slot 09: 0x8019423C visanimator_getExtraSize
  */
 

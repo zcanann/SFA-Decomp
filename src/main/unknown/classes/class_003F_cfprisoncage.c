@@ -28,7 +28,7 @@
  *   slot 05: 0x801A07DC cfprisoncage_hitDetect
  *   slot 06: 0x801A07AC cfprisoncage_render
  *   slot 07: 0x801A07A8 cfprisoncage_free
- *   slot 08: 0x801A078C cfprisoncage_func08
+ *   slot 08: 0x801A078C cfprisoncage_getObjectTypeId
  *   slot 09: 0x801A0784 cfprisoncage_getExtraSize
  */
 

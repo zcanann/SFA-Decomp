@@ -14,5 +14,5 @@
 // - 5: cfpowerbase_hitDetect (0x8019D778)
 // - 6: cfpowerbase_render (0x8019D748)
 // - 7: cfpowerbase_free (0x8019D744)
-// - 8: cfpowerbase_func08 (0x8019D73C)
+// - 8: cfpowerbase_getObjectTypeId (0x8019D73C)
 // - 9: cfpowerbase_getExtraSize (0x8019D734)

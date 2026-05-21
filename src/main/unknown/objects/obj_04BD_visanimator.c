@@ -44,7 +44,7 @@
  * - slot 05: 0x80194254 visanimator_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80194250 visanimator_render stub=blr ref=render (stub)
  * - slot 07: 0x8019424C visanimator_free stub=blr ref=free (stub)
- * - slot 08: 0x80194244 visanimator_func08 stub=const 0
+ * - slot 08: 0x80194244 visanimator_getObjectTypeId stub=const 0
  * - slot 09: 0x8019423C visanimator_getExtraSize stub=const 5 ref=getExtraSize (stub)
  */
 

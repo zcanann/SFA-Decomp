@@ -164,11 +164,11 @@ void cf_doorlight_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int cflightwall_getExtraSize(void) { return 0x0; }
-int cflightwall_func08(void) { return 0x0; }
+int cflightwall_getObjectTypeId(void) { return 0x0; }
 int barrelpad_getExtraSize(void) { return 0x0; }
-int barrelpad_func08(void) { return 0x0; }
+int barrelpad_getObjectTypeId(void) { return 0x0; }
 int cf_doorlight_getExtraSize(void) { return 0x18; }
-int cf_doorlight_func08(void) { return 0x0; }
+int cf_doorlight_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3EE8;

@@ -27,7 +27,7 @@
  *   slot 05: 0x80192AD8 alphaanimator_hitDetect
  *   slot 06: 0x80192AA8 alphaanimator_render
  *   slot 07: 0x80192A78 alphaanimator_free
- *   slot 08: 0x80192A70 alphaanimator_func08
+ *   slot 08: 0x80192A70 alphaanimator_getObjectTypeId
  *   slot 09: 0x80192A68 alphaanimator_getExtraSize
  */
 

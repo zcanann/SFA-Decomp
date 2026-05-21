@@ -14,5 +14,5 @@
 // - 5: slidingdoor_hitDetect (0x801A40A8)
 // - 6: slidingdoor_render (0x801A4078)
 // - 7: slidingdoor_free (0x801A4074)
-// - 8: slidingdoor_func08 (0x801A406C)
+// - 8: slidingdoor_getObjectTypeId (0x801A406C)
 // - 9: slidingdoor_getExtraSize (0x801A4064)

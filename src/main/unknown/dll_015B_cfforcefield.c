@@ -14,5 +14,5 @@
 // - 5: cfforcefield_hitDetect (0x801A39CC)
 // - 6: cfforcefield_render (0x801A39C8)
 // - 7: cfforcefield_free (0x801A39C4)
-// - 8: cfforcefield_func08 (0x801A39BC)
+// - 8: cfforcefield_getObjectTypeId (0x801A39BC)
 // - 9: cfforcefield_getExtraSize (0x801A39B4)

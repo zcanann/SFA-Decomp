@@ -57,7 +57,7 @@
  * - slot 05: 0x80191D18 cf_doorlight_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80191D14 cf_doorlight_render stub=blr ref=render (stub)
  * - slot 07: 0x80191D10 cf_doorlight_free stub=blr ref=free (stub)
- * - slot 08: 0x80191D08 cf_doorlight_func08 stub=const 0
+ * - slot 08: 0x80191D08 cf_doorlight_getObjectTypeId stub=const 0
  * - slot 09: 0x80191D00 cf_doorlight_getExtraSize stub=const 24 ref=getExtraSize (stub)
  */
 

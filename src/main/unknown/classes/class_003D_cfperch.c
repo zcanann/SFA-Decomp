@@ -27,7 +27,7 @@
  *   slot 05: 0x801A0584 cfperch_hitDetect
  *   slot 06: 0x801A0580 cfperch_render
  *   slot 07: 0x801A0548 cfperch_free
- *   slot 08: 0x801A0540 cfperch_func08
+ *   slot 08: 0x801A0540 cfperch_getObjectTypeId
  *   slot 09: 0x801A0538 cfperch_getExtraSize
  */
 

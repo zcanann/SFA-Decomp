@@ -68,7 +68,7 @@
  * - slot 05: 0x80191AA8 cflightwall_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80191A84 cflightwall_render ref=render
  * - slot 07: 0x80191A80 cflightwall_free stub=blr ref=free (stub)
- * - slot 08: 0x80191A78 cflightwall_func08 stub=const 0
+ * - slot 08: 0x80191A78 cflightwall_getObjectTypeId stub=const 0
  * - slot 09: 0x80191A70 cflightwall_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

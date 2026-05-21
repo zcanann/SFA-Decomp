@@ -48,7 +48,7 @@
  * - slot 05: 0x8019EC30 babycloudrunner_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8019EC00 babycloudrunner_render ref=render
  * - slot 07: 0x8019EBC4 babycloudrunner_free ref=free
- * - slot 08: 0x8019EBBC babycloudrunner_func08 stub=const 0
+ * - slot 08: 0x8019EBBC babycloudrunner_getObjectTypeId stub=const 0
  * - slot 09: 0x8019EBB4 babycloudrunner_getExtraSize stub=const 584 ref=getExtraSize (stub)
  * - slot 10: 0x8019E804 babycloudrunner_setScale ref=setScale
  * - slot 11: 0x8019E6C8 babycloudrunner_func0B

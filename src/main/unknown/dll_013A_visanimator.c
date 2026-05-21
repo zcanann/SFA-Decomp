@@ -14,5 +14,5 @@
 // - 5: visanimator_hitDetect (0x80194254)
 // - 6: visanimator_render (0x80194250)
 // - 7: visanimator_free (0x8019424C)
-// - 8: visanimator_func08 (0x80194244)
+// - 8: visanimator_getObjectTypeId (0x80194244)
 // - 9: visanimator_getExtraSize (0x8019423C)

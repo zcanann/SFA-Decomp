@@ -45,7 +45,7 @@
  * - slot 05: 0x8019FED8 cfprisonuncle_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8019FCF4 cfprisonuncle_render ref=render
  * - slot 07: 0x8019FCF0 cfprisonuncle_free stub=blr ref=free (stub)
- * - slot 08: 0x8019FCE8 cfprisonuncle_func08 stub=const 9
+ * - slot 08: 0x8019FCE8 cfprisonuncle_getObjectTypeId stub=const 9
  * - slot 09: 0x8019FCE0 cfprisonuncle_getExtraSize stub=const 168 ref=getExtraSize (stub)
  */
 

@@ -13,5 +13,5 @@
 // - 4: MagicPlant_update (0x8017FA10)
 // - 6: MagicPlant_render (0x8017F994)
 // - 7: MagicPlant_free (0x8017F918)
-// - 8: MagicPlant_func08 (0x8017F904)
+// - 8: MagicPlant_getObjectTypeId (0x8017F904)
 // - 9: MagicPlant_getExtraSize (0x8017F8FC)

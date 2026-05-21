@@ -1302,13 +1302,13 @@ void exploded_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int slidingdoor_getExtraSize(void) { return 0x1; }
-int slidingdoor_func08(void) { return 0x0; }
+int slidingdoor_getObjectTypeId(void) { return 0x0; }
 int attractor_getExtraSize(void) { return 0x0; }
-int attractor_func08(void) { return 0x0; }
+int attractor_getObjectTypeId(void) { return 0x0; }
 int cfmagicwall_getExtraSize(void) { return 0x0; }
-int cfmagicwall_func08(void) { return 0x0; }
+int cfmagicwall_getObjectTypeId(void) { return 0x0; }
 int cflevelcontrol_getExtraSize(void) { return 0x10; }
-int cflevelcontrol_func08(void) { return 0x0; }
+int cflevelcontrol_getObjectTypeId(void) { return 0x0; }
 int exploded_getExtraSize(void) { return 0x6c; }
 
 /* Pattern wrappers. */
@@ -1337,7 +1337,7 @@ void attractor_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
 #pragma scheduling reset
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
-u32 exploded_func08(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 11) | 0x400; }
+u32 exploded_getObjectTypeId(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 11) | 0x400; }
 
 /* byte-to-short shift8 pattern. */
 #pragma peephole off

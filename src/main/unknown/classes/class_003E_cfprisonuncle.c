@@ -27,7 +27,7 @@
  *   slot 05: 0x8019FED8 cfprisonuncle_hitDetect
  *   slot 06: 0x8019FCF4 cfprisonuncle_render
  *   slot 07: 0x8019FCF0 cfprisonuncle_free
- *   slot 08: 0x8019FCE8 cfprisonuncle_func08
+ *   slot 08: 0x8019FCE8 cfprisonuncle_getObjectTypeId
  *   slot 09: 0x8019FCE0 cfprisonuncle_getExtraSize
  */
 

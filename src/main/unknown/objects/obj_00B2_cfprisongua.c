@@ -57,7 +57,7 @@
  * - slot 05: 0x8019F9F8 cfprisonguard_hitDetect ref=hitDetect
  * - slot 06: 0x8019F93C cfprisonguard_render ref=render
  * - slot 07: 0x8019F938 cfprisonguard_free stub=blr ref=free (stub)
- * - slot 08: 0x8019F930 cfprisonguard_func08 stub=const 73
+ * - slot 08: 0x8019F930 cfprisonguard_getObjectTypeId stub=const 73
  * - slot 09: 0x8019F928 cfprisonguard_getExtraSize stub=const 60 ref=getExtraSize (stub)
  */
 

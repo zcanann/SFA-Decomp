@@ -27,7 +27,7 @@
  *   slot 05: 0x80196300 explodeanimator_hitDetect
  *   slot 06: 0x801962FC explodeanimator_render
  *   slot 07: 0x801962D8 explodeanimator_free
- *   slot 08: 0x801962D0 explodeanimator_func08
+ *   slot 08: 0x801962D0 explodeanimator_getObjectTypeId
  *   slot 09: 0x801962C8 explodeanimator_getExtraSize
  */
 

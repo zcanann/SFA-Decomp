@@ -14,5 +14,5 @@
 // - 5: cfprisonguard_hitDetect (0x8019F9F8)
 // - 6: cfprisonguard_render (0x8019F93C)
 // - 7: cfprisonguard_free (0x8019F938)
-// - 8: cfprisonguard_func08 (0x8019F930)
+// - 8: cfprisonguard_getObjectTypeId (0x8019F930)
 // - 9: cfprisonguard_getExtraSize (0x8019F928)

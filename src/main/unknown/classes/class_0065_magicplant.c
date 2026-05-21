@@ -24,7 +24,7 @@
  *   slot 04: 0x8017FA10 MagicPlant_update
  *   slot 06: 0x8017F994 MagicPlant_render
  *   slot 07: 0x8017F918 MagicPlant_free
- *   slot 08: 0x8017F904 MagicPlant_func08
+ *   slot 08: 0x8017F904 MagicPlant_getObjectTypeId
  *   slot 09: 0x8017F8FC MagicPlant_getExtraSize
  */
 

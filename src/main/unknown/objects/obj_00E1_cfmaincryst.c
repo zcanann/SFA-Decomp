@@ -56,7 +56,7 @@
  * - slot 05: 0x8019E2A0 cfmaincrystal_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8019E270 cfmaincrystal_render ref=render
  * - slot 07: 0x8019E240 cfmaincrystal_free ref=free
- * - slot 08: 0x8019E238 cfmaincrystal_func08 stub=const 1
+ * - slot 08: 0x8019E238 cfmaincrystal_getObjectTypeId stub=const 1
  * - slot 09: 0x8019E230 cfmaincrystal_getExtraSize stub=const 352 ref=getExtraSize (stub)
  */
 

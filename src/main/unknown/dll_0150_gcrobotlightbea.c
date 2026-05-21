@@ -14,5 +14,5 @@
 // - 5: gcrobotlightbea_hitDetect (0x801A01E8)
 // - 6: gcrobotlightbea_render (0x801A01E4)
 // - 7: gcrobotlightbea_free (0x801A0194)
-// - 8: gcrobotlightbea_func08 (0x801A018C)
+// - 8: gcrobotlightbea_getObjectTypeId (0x801A018C)
 // - 9: gcrobotlightbea_getExtraSize (0x801A0184)

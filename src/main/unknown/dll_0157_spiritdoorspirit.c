@@ -14,5 +14,5 @@
 // - 5: spiritdoorspirit_hitDetect (0x801A0A0C)
 // - 6: spiritdoorspirit_render (0x801A09C8)
 // - 7: spiritdoorspirit_free (0x801A09A4)
-// - 8: spiritdoorspirit_func08 (0x801A099C)
+// - 8: spiritdoorspirit_getObjectTypeId (0x801A099C)
 // - 9: spiritdoorspirit_getExtraSize (0x801A0994)

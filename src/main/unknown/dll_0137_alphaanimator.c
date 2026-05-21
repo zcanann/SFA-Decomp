@@ -14,5 +14,5 @@
 // - 5: alphaanimator_hitDetect (0x80192AD8)
 // - 6: alphaanimator_render (0x80192AA8)
 // - 7: alphaanimator_free (0x80192A78)
-// - 8: alphaanimator_func08 (0x80192A70)
+// - 8: alphaanimator_getObjectTypeId (0x80192A70)
 // - 9: alphaanimator_getExtraSize (0x80192A68)

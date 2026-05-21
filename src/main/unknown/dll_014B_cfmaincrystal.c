@@ -14,5 +14,5 @@
 // - 5: cfmaincrystal_hitDetect (0x8019E2A0)
 // - 6: cfmaincrystal_render (0x8019E270)
 // - 7: cfmaincrystal_free (0x8019E240)
-// - 8: cfmaincrystal_func08 (0x8019E238)
+// - 8: cfmaincrystal_getObjectTypeId (0x8019E238)
 // - 9: cfmaincrystal_getExtraSize (0x8019E230)

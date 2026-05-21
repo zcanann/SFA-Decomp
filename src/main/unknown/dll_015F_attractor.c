@@ -14,7 +14,7 @@
 // - 5: attractor_hitDetect (0x801A4320)
 // - 6: attractor_render (0x801A42F0)
 // - 7: attractor_free (0x801A42CC)
-// - 8: attractor_func08 (0x801A42C4)
+// - 8: attractor_getObjectTypeId (0x801A42C4)
 // - 9: attractor_getExtraSize (0x801A42BC)
 // - A: attractor_setScale (0x801A4298)
 // - B: attractor_func0B (0x801A41D8)

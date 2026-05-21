@@ -29,7 +29,7 @@
  *   slot 05: 0x8019EC30 babycloudrunner_hitDetect
  *   slot 06: 0x8019EC00 babycloudrunner_render
  *   slot 07: 0x8019EBC4 babycloudrunner_free
- *   slot 08: 0x8019EBBC babycloudrunner_func08
+ *   slot 08: 0x8019EBBC babycloudrunner_getObjectTypeId
  *   slot 09: 0x8019EBB4 babycloudrunner_getExtraSize
  */
 

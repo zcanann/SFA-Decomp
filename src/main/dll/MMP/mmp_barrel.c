@@ -1286,13 +1286,13 @@ void visanimator_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int waveanimator_getExtraSize(void) { return 0x3c; }
-int waveanimator_func08(void) { return 0x0; }
+int waveanimator_getObjectTypeId(void) { return 0x0; }
 int alphaanimator_getExtraSize(void) { return 0x1c; }
-int alphaanimator_func08(void) { return 0x0; }
+int alphaanimator_getObjectTypeId(void) { return 0x0; }
 int groundanimator_getExtraSize(void) { return 0x30; }
 int hitanimator_getExtraSize(void) { return 0x4; }
 int visanimator_getExtraSize(void) { return 0x5; }
-int visanimator_func08(void) { return 0x0; }
+int visanimator_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
 u8 groundanimator_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }

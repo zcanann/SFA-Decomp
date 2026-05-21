@@ -14,5 +14,5 @@
 // - 5: texframeanimator_hitDetect (0x801971D0)
 // - 6: texframeanimator_render (0x801971A0)
 // - 7: texframeanimator_free (0x8019719C)
-// - 8: texframeanimator_func08 (0x80197194)
+// - 8: texframeanimator_getObjectTypeId (0x80197194)
 // - 9: texframeanimator_getExtraSize (0x8019718C)

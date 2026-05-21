@@ -14,5 +14,5 @@
 // - 5: windlift_hitDetect (0x8019CD94)
 // - 6: windlift_render (0x8019CD64)
 // - 7: windlift_free (0x8019CD08)
-// - 8: windlift_func08 (0x8019CD00)
+// - 8: windlift_getObjectTypeId (0x8019CD00)
 // - 9: windlift_getExtraSize (0x8019CCF8)

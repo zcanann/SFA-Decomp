@@ -14,5 +14,5 @@
 // - 5: cfmagicwall_hitDetect (0x801A43C4)
 // - 6: cfmagicwall_render (0x801A4394)
 // - 7: cfmagicwall_free (0x801A4390)
-// - 8: cfmagicwall_func08 (0x801A4388)
+// - 8: cfmagicwall_getObjectTypeId (0x801A4388)
 // - 9: cfmagicwall_getExtraSize (0x801A4380)

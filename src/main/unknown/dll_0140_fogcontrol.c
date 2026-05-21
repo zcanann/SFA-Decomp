@@ -11,5 +11,5 @@
 // - 4: fogcontrol_update (0x80197474)
 // - 5: fogcontrol_hitDetect (0x80197470)
 // - 7: fogcontrol_free (0x8019743C)
-// - 8: fogcontrol_func08 (0x80197434)
+// - 8: fogcontrol_getObjectTypeId (0x80197434)
 // - 9: fogcontrol_getExtraSize (0x8019742C)

@@ -57,7 +57,7 @@
  * - slot 05: 0x80191B98 barrelpad_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80191B74 barrelpad_render ref=render
  * - slot 07: 0x80191B70 barrelpad_free stub=blr ref=free (stub)
- * - slot 08: 0x80191B68 barrelpad_func08 stub=const 0
+ * - slot 08: 0x80191B68 barrelpad_getObjectTypeId stub=const 0
  * - slot 09: 0x80191B60 barrelpad_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

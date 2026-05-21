@@ -559,7 +559,7 @@ void cfforcefield_hitDetect(void) {}
 /* 8b "li r3, N; blr" returners. */
 int explodable_getExtraSize(void) { return 0x6e8; }
 int cfforcefield_getExtraSize(void) { return 0x8; }
-int cfforcefield_func08(void) { return 0x0; }
+int cfforcefield_getObjectTypeId(void) { return 0x0; }
 
 extern void Obj_FreeObject(int obj);
 #pragma scheduling off

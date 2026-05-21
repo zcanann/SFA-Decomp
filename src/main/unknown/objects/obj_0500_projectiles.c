@@ -47,7 +47,7 @@
  * - slot 05: 0x8017A418 ProjectileSwitch_hitDetect ref=hitDetect
  * - slot 06: 0x8017A38C ProjectileSwitch_render ref=render
  * - slot 07: 0x8017A388 ProjectileSwitch_free stub=blr ref=free (stub)
- * - slot 08: 0x8017A358 ProjectileSwitch_func08
+ * - slot 08: 0x8017A358 ProjectileSwitch_getObjectTypeId
  * - slot 09: 0x8017A350 ProjectileSwitch_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

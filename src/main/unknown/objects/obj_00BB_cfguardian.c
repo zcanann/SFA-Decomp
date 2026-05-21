@@ -57,7 +57,7 @@
  * - slot 05: 0x8019C564 cfguardian_hitDetect ref=hitDetect
  * - slot 06: 0x8019C50C cfguardian_render ref=render
  * - slot 07: 0x8019C4AC cfguardian_free ref=free
- * - slot 08: 0x8019C4A4 cfguardian_func08 stub=const 65
+ * - slot 08: 0x8019C4A4 cfguardian_getObjectTypeId stub=const 65
  * - slot 09: 0x8019C49C cfguardian_getExtraSize stub=const 2716 ref=getExtraSize (stub)
  * - slot 10: 0x8019AF4C cfguardian_setScale ref=setScale
  */

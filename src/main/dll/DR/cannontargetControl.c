@@ -312,7 +312,7 @@ int blasted_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: blasted_func08
+ * Function: blasted_getObjectTypeId
  * EN v1.0 Address: 0x801A24B0
  * EN v1.0 Size: 8b
  * EN v1.1 Address: 0x801A2698
@@ -322,7 +322,7 @@ int blasted_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int blasted_func08(void)
+int blasted_getObjectTypeId(void)
 {
   return 0;
 }

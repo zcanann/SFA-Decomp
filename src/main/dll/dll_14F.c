@@ -1543,7 +1543,7 @@ int fn_8017F8C8(u8* obj) {
 #pragma scheduling reset
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
-u32 MagicPlant_func08(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x1c) << 11) | 0x400; }
+u32 MagicPlant_getObjectTypeId(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x1c) << 11) | 0x400; }
 
 /* obj->u16_X |= MASK */
 #pragma peephole off
@@ -1715,7 +1715,7 @@ ObjectDescriptor gMagicPlantObjDescriptor = {
     0,
     (ObjectDescriptorCallback)MagicPlant_render,
     (ObjectDescriptorCallback)MagicPlant_free,
-    (ObjectDescriptorCallback)MagicPlant_func08,
+    (ObjectDescriptorCallback)MagicPlant_getObjectTypeId,
     MagicPlant_getExtraSize,
 };
 

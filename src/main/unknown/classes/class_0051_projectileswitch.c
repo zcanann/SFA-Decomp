@@ -28,7 +28,7 @@
  *   slot 05: 0x8017A418 ProjectileSwitch_hitDetect
  *   slot 06: 0x8017A38C ProjectileSwitch_render
  *   slot 07: 0x8017A388 ProjectileSwitch_free
- *   slot 08: 0x8017A358 ProjectileSwitch_func08
+ *   slot 08: 0x8017A358 ProjectileSwitch_getObjectTypeId
  *   slot 09: 0x8017A350 ProjectileSwitch_getExtraSize
  * - DLL 0x00FA: gInvisibleHitSwitchObjDescriptor @ 0x80321050 (slots=10, mask=0001100001)
  *   slot 03: 0x8017AB20 InvisibleHitSwitch_init

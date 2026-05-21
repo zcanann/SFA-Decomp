@@ -46,7 +46,7 @@
  * - slot 05: 0x8019698C dimbossicesmash_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8019695C dimbossicesmash_render ref=render
  * - slot 07: 0x8019692C dimbossicesmash_free ref=free
- * - slot 08: 0x80196918 dimbossicesmash_func08
+ * - slot 08: 0x80196918 dimbossicesmash_getObjectTypeId
  * - slot 09: 0x80196910 dimbossicesmash_getExtraSize stub=const 672 ref=getExtraSize (stub)
  */
 

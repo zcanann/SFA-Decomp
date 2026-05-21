@@ -14,6 +14,6 @@
 // - 5: texscroll2_hitDetect (0x80192178)
 // - 6: texscroll2_render (0x80192148)
 // - 7: texscroll2_free (0x80192144)
-// - 8: texscroll2_func08 (0x8019213C)
+// - 8: texscroll2_getObjectTypeId (0x8019213C)
 // - 9: texscroll2_getExtraSize (0x80192134)
 // - 10: texscroll2_setScale (0x80191F2C)

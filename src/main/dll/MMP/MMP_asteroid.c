@@ -976,12 +976,12 @@ void fogcontrol_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int explodeanimator_getExtraSize(void) { return 0x4; }
-int explodeanimator_func08(void) { return 0x0; }
+int explodeanimator_getObjectTypeId(void) { return 0x0; }
 int dimbossicesmash_getExtraSize(void) { return 0x2a0; }
 int texframeanimator_getExtraSize(void) { return 0x18; }
-int texframeanimator_func08(void) { return 0x0; }
+int texframeanimator_getObjectTypeId(void) { return 0x0; }
 int fogcontrol_getExtraSize(void) { return 0x8; }
-int fogcontrol_func08(void) { return 0x0; }
+int fogcontrol_getObjectTypeId(void) { return 0x0; }
 int lightning_getExtraSize(void) { return 0x28; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -1001,7 +1001,7 @@ void explodeanimator_free(int x) { ObjGroup_RemoveObject(x, 0x1a); }
 #pragma scheduling reset
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
-u32 dimbossicesmash_func08(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 11) | 0x400; }
+u32 dimbossicesmash_getObjectTypeId(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 11) | 0x400; }
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern int* gExpgfxInterface;

@@ -44,7 +44,7 @@
  * - slot 05: 0x80192AD8 alphaanimator_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80192AA8 alphaanimator_render ref=render
  * - slot 07: 0x80192A78 alphaanimator_free ref=free
- * - slot 08: 0x80192A70 alphaanimator_func08 stub=const 0
+ * - slot 08: 0x80192A70 alphaanimator_getObjectTypeId stub=const 0
  * - slot 09: 0x80192A68 alphaanimator_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 

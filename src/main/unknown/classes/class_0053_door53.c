@@ -109,7 +109,7 @@
  *   slot 05: 0x801A40A8 slidingdoor_hitDetect
  *   slot 06: 0x801A4078 slidingdoor_render
  *   slot 07: 0x801A4074 slidingdoor_free
- *   slot 08: 0x801A406C slidingdoor_func08
+ *   slot 08: 0x801A406C slidingdoor_getObjectTypeId
  *   slot 09: 0x801A4064 slidingdoor_getExtraSize
  * - DLL 0x0176: lbl_80325F20 (slots=1, mask=0)
  * - DLL 0x0177: gDFSH_Door2SpeciObjDescriptor (slots=10, mask=1101111111)

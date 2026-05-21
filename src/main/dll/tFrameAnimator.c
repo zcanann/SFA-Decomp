@@ -209,7 +209,7 @@ int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
 #pragma scheduling off
 #pragma peephole off
-int ProjectileSwitch_func08(int *obj) {
+int ProjectileSwitch_getObjectTypeId(int *obj) {
     int v = (int)*(u8 *)((char *)*(int **)((char *)obj + 0x4c) + 0x1e) >> 2;
     int max = *(s8 *)((char *)*(int **)((char *)obj + 0x50) + 0x55);
     if (v >= max) {

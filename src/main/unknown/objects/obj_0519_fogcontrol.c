@@ -41,7 +41,7 @@
  * - slot 04: 0x80197474 fogcontrol_update ref=update
  * - slot 05: 0x80197470 fogcontrol_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 07: 0x8019743C fogcontrol_free ref=free
- * - slot 08: 0x80197434 fogcontrol_func08 stub=const 0
+ * - slot 08: 0x80197434 fogcontrol_getObjectTypeId stub=const 0
  * - slot 09: 0x8019742C fogcontrol_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

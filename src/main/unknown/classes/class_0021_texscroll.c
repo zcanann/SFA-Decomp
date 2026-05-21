@@ -28,7 +28,7 @@
  *   slot 05: 0x80192178 texscroll2_hitDetect
  *   slot 06: 0x80192148 texscroll2_render
  *   slot 07: 0x80192144 texscroll2_free
- *   slot 08: 0x8019213C texscroll2_func08
+ *   slot 08: 0x8019213C texscroll2_getObjectTypeId
  *   slot 09: 0x80192134 texscroll2_getExtraSize
  *   slot 10: 0x80191F2C texscroll2_setScale
  * - DLL 0x0135: gTexscrollObjDescriptor @ 0x80322140 (slots=10, mask=1101111111)
@@ -39,7 +39,7 @@
  *   slot 05: 0x80192328 texscroll_hitDetect
  *   slot 06: 0x801922F8 texscroll_render
  *   slot 07: 0x801922F4 texscroll_free
- *   slot 08: 0x801922EC texscroll_func08
+ *   slot 08: 0x801922EC texscroll_getObjectTypeId
  *   slot 09: 0x801922E4 texscroll_getExtraSize
  */
 

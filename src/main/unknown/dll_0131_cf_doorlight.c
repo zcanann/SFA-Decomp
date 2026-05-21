@@ -14,5 +14,5 @@
 // - 5: cf_doorlight_hitDetect (0x80191D18)
 // - 6: cf_doorlight_render (0x80191D14)
 // - 7: cf_doorlight_free (0x80191D10)
-// - 8: cf_doorlight_func08 (0x80191D08)
+// - 8: cf_doorlight_getObjectTypeId (0x80191D08)
 // - 9: cf_doorlight_getExtraSize (0x80191D00)

@@ -14,5 +14,5 @@
 // - 5: cloudprisoncontrol_hitDetect (0x8019AAC0)
 // - 6: cloudprisoncontrol_render (0x8019AA90)
 // - 7: cloudprisoncontrol_free (0x8019AA8C)
-// - 8: cloudprisoncontrol_func08 (0x8019AA84)
+// - 8: cloudprisoncontrol_getObjectTypeId (0x8019AA84)
 // - 9: cloudprisoncontrol_getExtraSize (0x8019AA7C)

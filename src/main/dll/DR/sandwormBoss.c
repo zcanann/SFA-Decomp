@@ -2572,7 +2572,7 @@ void FUN_8019e964(undefined8 param_1,double param_2,undefined8 param_3,undefined
 /*
  * --INFO--
  *
- * Function: babycloudrunner_func08
+ * Function: babycloudrunner_getObjectTypeId
  * EN v1.0 Address: 0x8019EBBC
  * EN v1.0 Size: 68b
  * EN v1.1 Address: 0x801A0A24
@@ -3165,25 +3165,25 @@ void spiritdoorspirit_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int cfguardian_getExtraSize(void) { return 0xa9c; }
-int cfguardian_func08(void) { return 0x41; }
+int cfguardian_getObjectTypeId(void) { return 0x41; }
 int windlift_getExtraSize(void) { return 0x178; }
-int windlift_func08(void) { return 0x0; }
+int windlift_getObjectTypeId(void) { return 0x0; }
 int cfpowerbase_getExtraSize(void) { return 0x6; }
-int cfpowerbase_func08(void) { return 0x1; }
+int cfpowerbase_getObjectTypeId(void) { return 0x1; }
 int cfmaincrystal_getExtraSize(void) { return 0x160; }
-int cfmaincrystal_func08(void) { return 0x1; }
+int cfmaincrystal_getObjectTypeId(void) { return 0x1; }
 int babycloudrunner_getExtraSize(void) { return 0x248; }
 int cfprisonguard_getExtraSize(void) { return 0x3c; }
-int cfprisonguard_func08(void) { return 0x49; }
+int cfprisonguard_getObjectTypeId(void) { return 0x49; }
 int cfprisonuncle_getExtraSize(void) { return 0xa8; }
-int cfprisonuncle_func08(void) { return 0x9; }
+int cfprisonuncle_getObjectTypeId(void) { return 0x9; }
 int gcrobotlightbea_getExtraSize(void) { return 0xc; }
-int gcrobotlightbea_func08(void) { return 0x0; }
+int gcrobotlightbea_getObjectTypeId(void) { return 0x0; }
 int cfperch_getExtraSize(void) { return 0x0; }
-int cfperch_func08(void) { return 0x0; }
+int cfperch_getObjectTypeId(void) { return 0x0; }
 int cfprisoncage_getExtraSize(void) { return 0x0; }
 int spiritdoorspirit_getExtraSize(void) { return 0x1; }
-int spiritdoorspirit_func08(void) { return 0x0; }
+int spiritdoorspirit_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4190;
@@ -3209,7 +3209,7 @@ void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, 0x4e); }
 #pragma peephole off
 #pragma scheduling off
 #pragma peephole off
-int cfprisoncage_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x128) return 0x8; return 0x0; }
+int cfprisoncage_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x128) return 0x8; return 0x0; }
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
@@ -3269,7 +3269,7 @@ extern int ObjHits_GetPriorityHitWithPosition(int* obj, int a, int b, int c, f32
 #pragma scheduling off
 #pragma peephole off
 
-int babycloudrunner_func08(void) { return 0; }
+int babycloudrunner_getObjectTypeId(void) { return 0; }
 
 void spiritdoorspirit_init(int* obj)
 {

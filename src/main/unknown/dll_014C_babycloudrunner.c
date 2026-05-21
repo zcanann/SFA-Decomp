@@ -14,7 +14,7 @@
 // - 5: babycloudrunner_hitDetect (0x8019EC30)
 // - 6: babycloudrunner_render (0x8019EC00)
 // - 7: babycloudrunner_free (0x8019EBC4)
-// - 8: babycloudrunner_func08 (0x8019EBBC)
+// - 8: babycloudrunner_getObjectTypeId (0x8019EBBC)
 // - 9: babycloudrunner_getExtraSize (0x8019EBB4)
 // - A: babycloudrunner_setScale (0x8019E804)
 // - B: babycloudrunner_func0B (0x8019E6C8)

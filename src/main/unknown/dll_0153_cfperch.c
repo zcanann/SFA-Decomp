@@ -14,5 +14,5 @@
 // - 5: cfperch_hitDetect (0x801A0584)
 // - 6: cfperch_render (0x801A0580)
 // - 7: cfperch_free (0x801A0548)
-// - 8: cfperch_func08 (0x801A0540)
+// - 8: cfperch_getObjectTypeId (0x801A0540)
 // - 9: cfperch_getExtraSize (0x801A0538)

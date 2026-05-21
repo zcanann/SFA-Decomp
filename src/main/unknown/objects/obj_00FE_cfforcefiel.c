@@ -56,7 +56,7 @@
  * - slot 05: 0x801A39CC cfforcefield_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A39C8 cfforcefield_render stub=blr ref=render (stub)
  * - slot 07: 0x801A39C4 cfforcefield_free stub=blr ref=free (stub)
- * - slot 08: 0x801A39BC cfforcefield_func08 stub=const 0
+ * - slot 08: 0x801A39BC cfforcefield_getObjectTypeId stub=const 0
  * - slot 09: 0x801A39B4 cfforcefield_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

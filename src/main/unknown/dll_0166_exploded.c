@@ -14,6 +14,6 @@
 // - 5: exploded_hitDetect (0x801A5294)
 // - 6: exploded_render (0x801A5264)
 // - 7: exploded_free (0x801A5260)
-// - 8: exploded_func08 (0x801A524C)
+// - 8: exploded_getObjectTypeId (0x801A524C)
 // - 9: exploded_getExtraSize (0x801A5244)
 // - A: exploded_setScale (0x801A5238)

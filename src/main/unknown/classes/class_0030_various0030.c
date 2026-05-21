@@ -674,7 +674,7 @@
  *   slot 05: 0x80191AA8 cflightwall_hitDetect
  *   slot 06: 0x80191A84 cflightwall_render
  *   slot 07: 0x80191A80 cflightwall_free
- *   slot 08: 0x80191A78 cflightwall_func08
+ *   slot 08: 0x80191A78 cflightwall_getObjectTypeId
  *   slot 09: 0x80191A70 cflightwall_getExtraSize
  * - DLL 0x0131: gCF_DoorLightObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80191F28 cf_doorlight_initialise
@@ -684,7 +684,7 @@
  *   slot 05: 0x80191D18 cf_doorlight_hitDetect
  *   slot 06: 0x80191D14 cf_doorlight_render
  *   slot 07: 0x80191D10 cf_doorlight_free
- *   slot 08: 0x80191D08 cf_doorlight_func08
+ *   slot 08: 0x80191D08 cf_doorlight_getObjectTypeId
  *   slot 09: 0x80191D00 cf_doorlight_getExtraSize
  * - DLL 0x013F: gTexFrameAnimatorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80197428 texframeanimator_initialise
@@ -694,7 +694,7 @@
  *   slot 05: 0x801971D0 texframeanimator_hitDetect
  *   slot 06: 0x801971A0 texframeanimator_render
  *   slot 07: 0x8019719C texframeanimator_free
- *   slot 08: 0x80197194 texframeanimator_func08
+ *   slot 08: 0x80197194 texframeanimator_getObjectTypeId
  *   slot 09: 0x8019718C texframeanimator_getExtraSize
  * - DLL 0x0143: gFEseqobjectObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801DF930 FEseqobject_initialise
@@ -714,7 +714,7 @@
  *   slot 05: 0x8019C564 cfguardian_hitDetect
  *   slot 06: 0x8019C50C cfguardian_render
  *   slot 07: 0x8019C4AC cfguardian_free
- *   slot 08: 0x8019C4A4 cfguardian_func08
+ *   slot 08: 0x8019C4A4 cfguardian_getObjectTypeId
  *   slot 09: 0x8019C49C cfguardian_getExtraSize
  * - DLL 0x0149: gWindLiftObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8019D574 windlift_initialise
@@ -724,7 +724,7 @@
  *   slot 05: 0x8019CD94 windlift_hitDetect
  *   slot 06: 0x8019CD64 windlift_render
  *   slot 07: 0x8019CD08 windlift_free
- *   slot 08: 0x8019CD00 windlift_func08
+ *   slot 08: 0x8019CD00 windlift_getObjectTypeId
  *   slot 09: 0x8019CCF8 windlift_getExtraSize
  * - DLL 0x014A: gCFPowerBaseObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8019D9EC cfpowerbase_initialise
@@ -734,7 +734,7 @@
  *   slot 05: 0x8019D778 cfpowerbase_hitDetect
  *   slot 06: 0x8019D748 cfpowerbase_render
  *   slot 07: 0x8019D744 cfpowerbase_free
- *   slot 08: 0x8019D73C cfpowerbase_func08
+ *   slot 08: 0x8019D73C cfpowerbase_getObjectTypeId
  *   slot 09: 0x8019D734 cfpowerbase_getExtraSize
  * - DLL 0x014B: gCFMainCrystalObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8019E3F0 cfmaincrystal_initialise
@@ -744,7 +744,7 @@
  *   slot 05: 0x8019E2A0 cfmaincrystal_hitDetect
  *   slot 06: 0x8019E270 cfmaincrystal_render
  *   slot 07: 0x8019E240 cfmaincrystal_free
- *   slot 08: 0x8019E238 cfmaincrystal_func08
+ *   slot 08: 0x8019E238 cfmaincrystal_getObjectTypeId
  *   slot 09: 0x8019E230 cfmaincrystal_getExtraSize
  * - DLL 0x014E: gCFPrisonGuardObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8019FC80 cfprisonguard_initialise
@@ -754,7 +754,7 @@
  *   slot 05: 0x8019F9F8 cfprisonguard_hitDetect
  *   slot 06: 0x8019F93C cfprisonguard_render
  *   slot 07: 0x8019F938 cfprisonguard_free
- *   slot 08: 0x8019F930 cfprisonguard_func08
+ *   slot 08: 0x8019F930 cfprisonguard_getObjectTypeId
  *   slot 09: 0x8019F928 cfprisonguard_getExtraSize
  * - DLL 0x0150: gGCRobotLightBeaObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A04F0 gcrobotlightbea_initialise
@@ -764,7 +764,7 @@
  *   slot 05: 0x801A01E8 gcrobotlightbea_hitDetect
  *   slot 06: 0x801A01E4 gcrobotlightbea_render
  *   slot 07: 0x801A0194 gcrobotlightbea_free
- *   slot 08: 0x801A018C gcrobotlightbea_func08
+ *   slot 08: 0x801A018C gcrobotlightbea_getObjectTypeId
  *   slot 09: 0x801A0184 gcrobotlightbea_getExtraSize
  * - DLL 0x0157: gSpiritDoorSpiritObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A0B10 spiritdoorspirit_initialise
@@ -774,7 +774,7 @@
  *   slot 05: 0x801A0A0C spiritdoorspirit_hitDetect
  *   slot 06: 0x801A09C8 spiritdoorspirit_render
  *   slot 07: 0x801A09A4 spiritdoorspirit_free
- *   slot 08: 0x801A099C spiritdoorspirit_func08
+ *   slot 08: 0x801A099C spiritdoorspirit_getObjectTypeId
  *   slot 09: 0x801A0994 spiritdoorspirit_getExtraSize
  * - DLL 0x0158: gGunPowderBarrelObjDescriptor (slots=11, mask=00011111011)
  *   slot 03: 0x801A25E8 gunpowderbarrel_init
@@ -791,7 +791,7 @@
  *   slot 05: 0x801A2924 blasted_hitDetect
  *   slot 06: 0x801A28E4 blasted_render
  *   slot 07: 0x801A28E0 blasted_free
- *   slot 08: 0x801A28D8 blasted_func08
+ *   slot 08: 0x801A28D8 blasted_getObjectTypeId
  *   slot 09: 0x801A28D0 blasted_getExtraSize
  * - DLL 0x015B: gCFForceFieldObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A3E98 cfforcefield_initialise
@@ -801,7 +801,7 @@
  *   slot 05: 0x801A39CC cfforcefield_hitDetect
  *   slot 06: 0x801A39C8 cfforcefield_render
  *   slot 07: 0x801A39C4 cfforcefield_free
- *   slot 08: 0x801A39BC cfforcefield_func08
+ *   slot 08: 0x801A39BC cfforcefield_getObjectTypeId
  *   slot 09: 0x801A39B4 cfforcefield_getExtraSize
  * - DLL 0x015F: gAttractorObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x801A437C attractor_initialise
@@ -811,7 +811,7 @@
  *   slot 05: 0x801A4320 attractor_hitDetect
  *   slot 06: 0x801A42F0 attractor_render
  *   slot 07: 0x801A42CC attractor_free
- *   slot 08: 0x801A42C4 attractor_func08
+ *   slot 08: 0x801A42C4 attractor_getObjectTypeId
  *   slot 09: 0x801A42BC attractor_getExtraSize
  * - DLL 0x0162: gCFMagicWallObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A4520 cfmagicwall_initialise
@@ -821,7 +821,7 @@
  *   slot 05: 0x801A43C4 cfmagicwall_hitDetect
  *   slot 06: 0x801A4394 cfmagicwall_render
  *   slot 07: 0x801A4390 cfmagicwall_free
- *   slot 08: 0x801A4388 cfmagicwall_func08
+ *   slot 08: 0x801A4388 cfmagicwall_getObjectTypeId
  *   slot 09: 0x801A4380 cfmagicwall_getExtraSize
  * - DLL 0x0164: gCFLevelControlObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A4DB4 cflevelcontrol_initialise
@@ -831,7 +831,7 @@
  *   slot 05: 0x801A4608 cflevelcontrol_hitDetect
  *   slot 06: 0x801A45D8 cflevelcontrol_render
  *   slot 07: 0x801A45D4 cflevelcontrol_free
- *   slot 08: 0x801A45CC cflevelcontrol_func08
+ *   slot 08: 0x801A45CC cflevelcontrol_getObjectTypeId
  *   slot 09: 0x801A45C4 cflevelcontrol_getExtraSize
  * - DLL 0x0167: gSpiritDoorLockObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801A5D84 SpiritDoorLock_initialise

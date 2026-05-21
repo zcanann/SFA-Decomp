@@ -45,7 +45,7 @@
  * - slot 05: 0x80192328 texscroll_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801922F8 texscroll_render ref=render
  * - slot 07: 0x801922F4 texscroll_free stub=blr ref=free (stub)
- * - slot 08: 0x801922EC texscroll_func08 stub=const 0
+ * - slot 08: 0x801922EC texscroll_getObjectTypeId stub=const 0
  * - slot 09: 0x801922E4 texscroll_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 

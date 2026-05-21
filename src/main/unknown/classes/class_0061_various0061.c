@@ -292,7 +292,7 @@
  *   slot 05: 0x80191AA8 cflightwall_hitDetect
  *   slot 06: 0x80191A84 cflightwall_render
  *   slot 07: 0x80191A80 cflightwall_free
- *   slot 08: 0x80191A78 cflightwall_func08
+ *   slot 08: 0x80191A78 cflightwall_getObjectTypeId
  *   slot 09: 0x80191A70 cflightwall_getExtraSize
  * - DLL 0x012F: gBarrelPadObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80191CFC barrelpad_initialise
@@ -302,7 +302,7 @@
  *   slot 05: 0x80191B98 barrelpad_hitDetect
  *   slot 06: 0x80191B74 barrelpad_render
  *   slot 07: 0x80191B70 barrelpad_free
- *   slot 08: 0x80191B68 barrelpad_func08
+ *   slot 08: 0x80191B68 barrelpad_getObjectTypeId
  *   slot 09: 0x80191B60 barrelpad_getExtraSize
  * - DLL 0x0172: gLINKBLevControlObjDescriptor (slots=10, mask=0001100001)
  *   slot 03: 0x801AF38C linkb_levcontrol_init

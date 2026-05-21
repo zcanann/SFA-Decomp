@@ -56,7 +56,7 @@
  * - slot 05: 0x801A0A0C spiritdoorspirit_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A09C8 spiritdoorspirit_render ref=render
  * - slot 07: 0x801A09A4 spiritdoorspirit_free ref=free
- * - slot 08: 0x801A099C spiritdoorspirit_func08 stub=const 0
+ * - slot 08: 0x801A099C spiritdoorspirit_getObjectTypeId stub=const 0
  * - slot 09: 0x801A0994 spiritdoorspirit_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 

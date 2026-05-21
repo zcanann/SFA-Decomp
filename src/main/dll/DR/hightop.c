@@ -1179,7 +1179,7 @@ void cloudprisoncontrol_release(void) {}
 int Trigger_getExtraSize(void) { return 0xac; }
 int Trigger_getObjectTypeId(void) { return 0x0; }
 int cloudprisoncontrol_getExtraSize(void) { return 0x0; }
-int cloudprisoncontrol_func08(void) { return 0x0; }
+int cloudprisoncontrol_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
 extern u8 lbl_803DBE08;

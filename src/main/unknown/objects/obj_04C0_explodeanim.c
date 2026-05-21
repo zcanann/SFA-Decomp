@@ -44,7 +44,7 @@
  * - slot 05: 0x80196300 explodeanimator_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801962FC explodeanimator_render stub=blr ref=render (stub)
  * - slot 07: 0x801962D8 explodeanimator_free ref=free
- * - slot 08: 0x801962D0 explodeanimator_func08 stub=const 0
+ * - slot 08: 0x801962D0 explodeanimator_getObjectTypeId stub=const 0
  * - slot 09: 0x801962C8 explodeanimator_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

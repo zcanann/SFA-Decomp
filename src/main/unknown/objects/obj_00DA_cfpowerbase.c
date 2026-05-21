@@ -56,7 +56,7 @@
  * - slot 05: 0x8019D778 cfpowerbase_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8019D748 cfpowerbase_render ref=render
  * - slot 07: 0x8019D744 cfpowerbase_free stub=blr ref=free (stub)
- * - slot 08: 0x8019D73C cfpowerbase_func08 stub=const 1
+ * - slot 08: 0x8019D73C cfpowerbase_getObjectTypeId stub=const 1
  * - slot 09: 0x8019D734 cfpowerbase_getExtraSize stub=const 6 ref=getExtraSize (stub)
  */
 

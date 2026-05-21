@@ -14,5 +14,5 @@
 // - 5: blasted_hitDetect (0x801A2924)
 // - 6: blasted_render (0x801A28E4)
 // - 7: blasted_free (0x801A28E0)
-// - 8: blasted_func08 (0x801A28D8)
+// - 8: blasted_getObjectTypeId (0x801A28D8)
 // - 9: blasted_getExtraSize (0x801A28D0)

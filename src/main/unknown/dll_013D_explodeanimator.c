@@ -14,5 +14,5 @@
 // - 5: explodeanimator_hitDetect (0x80196300)
 // - 6: explodeanimator_render (0x801962FC)
 // - 7: explodeanimator_free (0x801962D8)
-// - 8: explodeanimator_func08 (0x801962D0)
+// - 8: explodeanimator_getObjectTypeId (0x801962D0)
 // - 9: explodeanimator_getExtraSize (0x801962C8)

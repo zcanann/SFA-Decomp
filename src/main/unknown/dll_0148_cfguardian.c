@@ -14,6 +14,6 @@
 // - 5: cfguardian_hitDetect (0x8019C564)
 // - 6: cfguardian_render (0x8019C50C)
 // - 7: cfguardian_free (0x8019C4AC)
-// - 8: cfguardian_func08 (0x8019C4A4)
+// - 8: cfguardian_getObjectTypeId (0x8019C4A4)
 // - 9: cfguardian_getExtraSize (0x8019C49C)
 // - A: cfguardian_setScale (0x8019AF4C)

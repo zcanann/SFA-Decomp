@@ -14,5 +14,5 @@
 // - 5: texscroll_hitDetect (0x80192328)
 // - 6: texscroll_render (0x801922F8)
 // - 7: texscroll_free (0x801922F4)
-// - 8: texscroll_func08 (0x801922EC)
+// - 8: texscroll_getObjectTypeId (0x801922EC)
 // - 9: texscroll_getExtraSize (0x801922E4)

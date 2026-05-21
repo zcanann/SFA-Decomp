@@ -14,7 +14,7 @@
 // - 5: waveanimator_hitDetect (0x80192880)
 // - 6: waveanimator_render (0x80192850)
 // - 7: waveanimator_free (0x801927D4)
-// - 8: waveanimator_func08 (0x801927CC)
+// - 8: waveanimator_getObjectTypeId (0x801927CC)
 // - 9: waveanimator_getExtraSize (0x801927C4)
 // - A: waveanimator_setScale (0x801923DC)
 // - B: waveanimator_func0B (0x801923C4)

@@ -14,5 +14,5 @@
 // - 5: barrelpad_hitDetect (0x80191B98)
 // - 6: barrelpad_render (0x80191B74)
 // - 7: barrelpad_free (0x80191B70)
-// - 8: barrelpad_func08 (0x80191B68)
+// - 8: barrelpad_getObjectTypeId (0x80191B68)
 // - 9: barrelpad_getExtraSize (0x80191B60)

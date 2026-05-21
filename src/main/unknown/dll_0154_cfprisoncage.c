@@ -14,5 +14,5 @@
 // - 5: cfprisoncage_hitDetect (0x801A07DC)
 // - 6: cfprisoncage_render (0x801A07AC)
 // - 7: cfprisoncage_free (0x801A07A8)
-// - 8: cfprisoncage_func08 (0x801A078C)
+// - 8: cfprisoncage_getObjectTypeId (0x801A078C)
 // - 9: cfprisoncage_getExtraSize (0x801A0784)

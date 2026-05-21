@@ -58,7 +58,7 @@
  *   slot 05: 0x801A5294 exploded_hitDetect
  *   slot 06: 0x801A5264 exploded_render
  *   slot 07: 0x801A5260 exploded_free
- *   slot 08: 0x801A524C exploded_func08
+ *   slot 08: 0x801A524C exploded_getObjectTypeId
  *   slot 09: 0x801A5244 exploded_getExtraSize
  */
 

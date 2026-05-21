@@ -15,5 +15,5 @@
 // - 5: ProjectileSwitch_hitDetect (0x8017A418)
 // - 6: ProjectileSwitch_render (0x8017A38C)
 // - 7: ProjectileSwitch_free (0x8017A388)
-// - 8: ProjectileSwitch_func08 (0x8017A358)
+// - 8: ProjectileSwitch_getObjectTypeId (0x8017A358)
 // - 9: ProjectileSwitch_getExtraSize (0x8017A350)

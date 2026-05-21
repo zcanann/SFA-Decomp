@@ -27,7 +27,7 @@
  *   slot 05: 0x80192880 waveanimator_hitDetect
  *   slot 06: 0x80192850 waveanimator_render
  *   slot 07: 0x801927D4 waveanimator_free
- *   slot 08: 0x801927CC waveanimator_func08
+ *   slot 08: 0x801927CC waveanimator_getObjectTypeId
  *   slot 09: 0x801927C4 waveanimator_getExtraSize
  */
 

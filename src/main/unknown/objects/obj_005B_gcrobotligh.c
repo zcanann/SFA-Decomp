@@ -56,7 +56,7 @@
  * - slot 05: 0x801A01E8 gcrobotlightbea_hitDetect ref=hitDetect
  * - slot 06: 0x801A01E4 gcrobotlightbea_render stub=blr ref=render (stub)
  * - slot 07: 0x801A0194 gcrobotlightbea_free ref=free
- * - slot 08: 0x801A018C gcrobotlightbea_func08 stub=const 0
+ * - slot 08: 0x801A018C gcrobotlightbea_getObjectTypeId stub=const 0
  * - slot 09: 0x801A0184 gcrobotlightbea_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

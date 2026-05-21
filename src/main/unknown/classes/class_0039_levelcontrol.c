@@ -51,7 +51,7 @@
  *   slot 05: 0x8019AAC0 cloudprisoncontrol_hitDetect
  *   slot 06: 0x8019AA90 cloudprisoncontrol_render
  *   slot 07: 0x8019AA8C cloudprisoncontrol_free
- *   slot 08: 0x8019AA84 cloudprisoncontrol_func08
+ *   slot 08: 0x8019AA84 cloudprisoncontrol_getObjectTypeId
  *   slot 09: 0x8019AA7C cloudprisoncontrol_getExtraSize
  * - DLL 0x0169: gIMIceMountainObjDescriptor (slots=10, mask=0001111111)
  *   slot 03: 0x801AC9C0 imicemountain_init

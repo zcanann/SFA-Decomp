@@ -57,7 +57,7 @@
  * - slot 05: 0x8019CD94 windlift_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8019CD64 windlift_render ref=render
  * - slot 07: 0x8019CD08 windlift_free ref=free
- * - slot 08: 0x8019CD00 windlift_func08 stub=const 0
+ * - slot 08: 0x8019CD00 windlift_getObjectTypeId stub=const 0
  * - slot 09: 0x8019CCF8 windlift_getExtraSize stub=const 376 ref=getExtraSize (stub)
  */
 

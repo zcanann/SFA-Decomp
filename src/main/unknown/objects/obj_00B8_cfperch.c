@@ -45,7 +45,7 @@
  * - slot 05: 0x801A0584 cfperch_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801A0580 cfperch_render stub=blr ref=render (stub)
  * - slot 07: 0x801A0548 cfperch_free ref=free
- * - slot 08: 0x801A0540 cfperch_func08 stub=const 0
+ * - slot 08: 0x801A0540 cfperch_getObjectTypeId stub=const 0
  * - slot 09: 0x801A0538 cfperch_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

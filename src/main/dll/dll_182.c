@@ -187,9 +187,9 @@ void texscroll_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int texscroll2_getExtraSize(void) { return 0x18; }
-int texscroll2_func08(void) { return 0x0; }
+int texscroll2_getObjectTypeId(void) { return 0x0; }
 int texscroll_getExtraSize(void) { return 0x1c; }
-int texscroll_func08(void) { return 0x0; }
+int texscroll_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
 #pragma peephole off

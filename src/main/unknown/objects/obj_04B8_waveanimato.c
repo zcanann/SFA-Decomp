@@ -44,7 +44,7 @@
  * - slot 05: 0x80192880 waveanimator_hitDetect ref=hitDetect
  * - slot 06: 0x80192850 waveanimator_render ref=render
  * - slot 07: 0x801927D4 waveanimator_free ref=free
- * - slot 08: 0x801927CC waveanimator_func08 stub=const 0
+ * - slot 08: 0x801927CC waveanimator_getObjectTypeId stub=const 0
  * - slot 09: 0x801927C4 waveanimator_getExtraSize stub=const 60 ref=getExtraSize (stub)
  * - slot 10: 0x801923DC waveanimator_setScale ref=setScale
  * - slot 11: 0x801923C4 waveanimator_func0B

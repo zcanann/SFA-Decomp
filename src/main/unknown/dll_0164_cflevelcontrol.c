@@ -14,5 +14,5 @@
 // - 5: cflevelcontrol_hitDetect (0x801A4608)
 // - 6: cflevelcontrol_render (0x801A45D8)
 // - 7: cflevelcontrol_free (0x801A45D4)
-// - 8: cflevelcontrol_func08 (0x801A45CC)
+// - 8: cflevelcontrol_getObjectTypeId (0x801A45CC)
 // - 9: cflevelcontrol_getExtraSize (0x801A45C4)
