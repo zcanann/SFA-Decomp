@@ -651,6 +651,84 @@ void FUN_801fe084(int param_1,int param_2)
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_801FE16C(int obj)
+{
+  extern void ObjGroup_RemoveObject(int, int);
+  extern void ObjGroup_AddObject(int, int);
+  extern void ObjHits_DisableObject(int);
+  extern void ObjHits_EnableObject(int);
+  extern int gameBitIncrement(int);
+  extern void objRemoveFromListFn_8002ce88(int);
+  extern void mathFn_80021ac8(void *, int);
+  extern int ObjMsg_Pop(int, int *, int *, int *);
+  extern f32 lbl_803E61C8;
+  extern f32 lbl_803E61CC;
+
+  int sub;
+  int data;
+  u32 msgType = 0;
+  int msgFlag = 0;
+  int msgArg;
+
+  sub = *(int *)(obj + 0xb8);
+  data = *(int *)(obj + 0x4c);
+
+  while (ObjMsg_Pop(obj, (int *)&msgType, &msgArg, &msgFlag) != 0) {
+    if (msgType == 17) {
+      switch (msgFlag) {
+        case 18:
+          if ((*(u8 *)(sub + 0x119) & 0x20) == 0) {
+            ObjGroup_RemoveObject(obj, 36);
+          }
+          ObjHits_DisableObject(obj);
+          *(u8 *)(sub + 0x118) = 11;
+          *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
+          break;
+        case 17: {
+          f32 buf[6];
+          s16 *hbuf = (s16 *)buf;
+          f32 v;
+          *(f32 *)(obj + 0x24) = *(f32 *)(sub + 0x10c);
+          *(f32 *)(obj + 0x28) = *(f32 *)(sub + 0x110);
+          *(f32 *)(obj + 0x2c) = -*(f32 *)(sub + 0x114);
+          v = lbl_803E61C8;
+          buf[5] = v;
+          buf[4] = v;
+          buf[3] = v;
+          buf[2] = lbl_803E61CC;
+          hbuf[2] = 0;
+          hbuf[1] = 0;
+          hbuf[0] = *(s16 *)msgArg;
+          mathFn_80021ac8(buf, obj + 0x24);
+          break;
+        }
+        case 16:
+          ObjGroup_AddObject(obj, 36);
+          /* fallthrough */
+        case 20:
+          *(u8 *)(sub + 0x118) = 5;
+          *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
+          ObjHits_EnableObject(obj);
+          break;
+        case 19:
+          GameBit_Set(*(s16 *)(data + 0x1e), 1);
+          if (*(s16 *)(data + 0x2c) > 0) {
+            gameBitIncrement(*(s16 *)(data + 0x2c));
+          }
+          objRemoveFromListFn_8002ce88(obj);
+          *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+          ObjGroup_RemoveObject(obj, 36);
+          break;
+      }
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
