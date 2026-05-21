@@ -3314,7 +3314,25 @@ extern f32 lbl_803E2DD8;
 extern f32 lbl_803E2E7C;
 extern f64 lbl_803E2E80;
 extern f32 lbl_803E2E88;
+extern f32 lbl_803E2EB8;
+extern f32 lbl_803E2EE8;
 extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
+
+int fn_801616AC(int* obj, u8* state)
+{
+    int* sub = *(int**)((char*)obj + 0xb8);
+    if ((s8)state[634] != 0) {
+        ObjAnim_SetCurrentMove(obj, 8, lbl_803E2EB8, 0);
+        state[838] = 0;
+    }
+    *(f32*)((char*)state + 0x2a0) = lbl_803E2EE8;
+    if ((*(int*)((char*)state + 0x314) & 0x200) != 0) {
+        Sfx_PlayFromObject(obj, 563);
+        *(int*)((char*)state + 0x314) &= ~0x200;
+        ((void(*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, *(s16*)((char*)sub + 0x3f0), -1, 1);
+    }
+    return 0;
+}
 
 int fn_8016032C(int* obj, u8* state)
 {
