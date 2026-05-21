@@ -3536,7 +3536,7 @@ f32 dll_19_func1A(int obj)
 extern void ObjHits_SetHitVolumeSlot(void *obj, int animObjId, int frame, int flags);
 #pragma peephole off
 #pragma scheduling off
-void dll_19_func0D(int p1, int p2, s8 b, f32 fval)
+void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
 {
   f32 fz;
   *(u32 *)p2 |= 0x8000;
