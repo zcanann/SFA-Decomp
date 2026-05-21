@@ -2926,7 +2926,12 @@ extern void GXPreLoadEntireTexture(void *obj, void *region);
 #pragma peephole off
 void drawReflectionTexture(void)
 {
-    drawTexture(lbl_803DCF7C, lbl_803DED28, lbl_803DED28, 0xff, 0x40);
+    register void *texture;
+    f32 scale = lbl_803DED28;
+    asm {
+        lwz texture, lbl_803DCF7C(r0)
+    }
+    drawTexture(texture, scale, scale, 0xff, 0x40);
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, 4, 0);
     GXCopyTex((char *)lbl_803DCFE4 + 0x60, 1);
