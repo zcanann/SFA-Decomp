@@ -542,6 +542,70 @@ void tumbleweedbush_hitDetect(void) {}
 void tumbleweedbush_release(void) {}
 void tumbleweedbush_initialise(void) {}
 
+extern f32 lbl_803E2F48;
+extern f32 lbl_803E2F4C;
+extern f32 lbl_803E2F50;
+extern f32 lbl_803E2F54;
+extern u8 lbl_803201E8[];
+extern void mathFn_80021ac8(void* obj, void* p);
+extern void *memcpy(void *dst, const void *src, int n);
+
+#pragma peephole off
+#pragma scheduling off
+void tumbleweedbush_init(u8* obj, u8* params, int param3) {
+    u8* sub;
+    f32 t;
+    int idx;
+    int i;
+    u8* p4;
+    u8* p12;
+    u8* pe;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(f32*)sub = lbl_803E2F48;
+    *(u16*)(sub + 8) = (u16)(params[0x1b] * 2);
+    sub[0x4c] = params[0x23];
+    *(s16*)(obj + 4) = (s16)((params[0x18] - 0x7f) << 7);
+    *(s16*)(obj + 2) = (s16)((params[0x19] - 0x7f) << 7);
+    *(s16*)obj = (s16)(params[0x1a] << 8);
+    *(f32*)(obj + 8) = *(f32*)(params + 0x1c);
+    t = *(f32*)(obj + 8);
+    ObjHitbox_SetCapsuleBounds(obj,
+        (s32)(lbl_803E2F4C * t),
+        (s32)(lbl_803E2F50 * t),
+        (s32)(lbl_803E2F54 * t));
+    switch (*(s16*)(obj + 0x46)) {
+    case 0x28d:
+    case 0x4b9:
+    case 0x4be:
+        sub[0x50] = 3;
+        idx = 0;
+        break;
+    case 0x3fd:
+        sub[0x50] = 3;
+        idx = 1;
+        break;
+    }
+    if (param3 == 0) {
+        p4 = sub;
+        pe = lbl_803201E8 + idx * 0x30;
+        p12 = sub;
+        for (i = 0; i < (int)sub[0x50]; i++) {
+            *(int*)(p4 + 0xc) = 0;
+            memcpy(p12 + 0x1c, pe, 0xc);
+            *(f32*)(p12 + 0x1c) = *(f32*)(p12 + 0x1c) * *(f32*)(obj + 8);
+            *(f32*)(p12 + 0x20) = *(f32*)(p12 + 0x20) * *(f32*)(obj + 8);
+            *(f32*)(p12 + 0x24) = *(f32*)(p12 + 0x24) * *(f32*)(obj + 8);
+            mathFn_80021ac8(obj, p12 + 0x1c);
+            p4 += 4;
+            pe += 0xc;
+            p12 += 0xc;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* 8b "li r3, N; blr" returners. */
 int tumbleweedbush_getExtraSize(void) { return 0x54; }
 int tumbleweedbush_getObjectTypeId(void) { return 0x0; }
@@ -624,7 +688,6 @@ void tumbleweedbush_setScale(u8* obj, void* match) {
 #pragma scheduling reset
 
 extern void tumbleweedbush_update(void);
-extern void tumbleweedbush_init(void);
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     {
