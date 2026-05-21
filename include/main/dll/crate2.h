@@ -43,7 +43,7 @@ extern ObjectDescriptor gDfpstatue1ObjDescriptor;
 extern ObjectDescriptor gDfperchwitchObjDescriptor;
 
 int dfperchwitch_getExtraSize(void);
-int dfperchwitch_func08(void);
+int dfperchwitch_getObjectTypeId(void);
 void dfperchwitch_free(void);
 void dfperchwitch_render(void);
 void dfperchwitch_hitDetect(void);
@@ -53,7 +53,7 @@ void dfperchwitch_release(void);
 void dfperchwitch_initialise(void);
 
 int dfpstatue1_getExtraSize(void);
-int dfpstatue1_func08(void);
+int dfpstatue1_getObjectTypeId(void);
 void dfpstatue1_free(void);
 void dfpstatue1_render(void);
 void dfpstatue1_hitDetect(void);

@@ -57,7 +57,7 @@
  * - slot 05: 0x802083C0 dfpstatue1_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802083BC dfpstatue1_render stub=blr ref=render (stub)
  * - slot 07: 0x802083B8 dfpstatue1_free stub=blr ref=free (stub)
- * - slot 08: 0x802083B0 dfpstatue1_func08 stub=const 0
+ * - slot 08: 0x802083B0 dfpstatue1_getObjectTypeId stub=const 0
  * - slot 09: 0x802083A8 dfpstatue1_getExtraSize stub=const 10 ref=getExtraSize (stub)
  */
 

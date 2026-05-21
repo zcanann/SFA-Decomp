@@ -84,7 +84,7 @@ void dfpstatue1_updateState(DfpStatue1Object *obj)
 
 
 int dfpstatue1_getExtraSize(void) { return 0xa; }
-int dfpstatue1_func08(void) { return 0x0; }
+int dfpstatue1_getObjectTypeId(void) { return 0x0; }
 
 /* Trivial 4b 0-arg blr leaves. */
 void dfpstatue1_free(void) {}
@@ -119,7 +119,7 @@ void dfpstatue1_release(void) {}
 void dfpstatue1_initialise(void) {}
 
 int dfperchwitch_getExtraSize(void) { return 0x0; }
-int dfperchwitch_func08(void) { return 0x0; }
+int dfperchwitch_getObjectTypeId(void) { return 0x0; }
 void dfperchwitch_free(void) {}
 void dfperchwitch_render(void) {}
 void dfperchwitch_hitDetect(void) {}
@@ -146,7 +146,7 @@ ObjectDescriptor gDfpstatue1ObjDescriptor = {
     (ObjectDescriptorCallback)dfpstatue1_hitDetect,
     (ObjectDescriptorCallback)dfpstatue1_render,
     (ObjectDescriptorCallback)dfpstatue1_free,
-    (ObjectDescriptorCallback)dfpstatue1_func08,
+    (ObjectDescriptorCallback)dfpstatue1_getObjectTypeId,
     dfpstatue1_getExtraSize,
 };
 
@@ -160,7 +160,7 @@ ObjectDescriptor gDfperchwitchObjDescriptor = {
     (ObjectDescriptorCallback)dfperchwitch_hitDetect,
     (ObjectDescriptorCallback)dfperchwitch_render,
     (ObjectDescriptorCallback)dfperchwitch_free,
-    (ObjectDescriptorCallback)dfperchwitch_func08,
+    (ObjectDescriptorCallback)dfperchwitch_getObjectTypeId,
     dfperchwitch_getExtraSize,
 };
 

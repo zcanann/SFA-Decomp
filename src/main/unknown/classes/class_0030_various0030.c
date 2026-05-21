@@ -1766,7 +1766,7 @@
  *   slot 05: 0x802083C0 dfpstatue1_hitDetect
  *   slot 06: 0x802083BC dfpstatue1_render
  *   slot 07: 0x802083B8 dfpstatue1_free
- *   slot 08: 0x802083B0 dfpstatue1_func08
+ *   slot 08: 0x802083B0 dfpstatue1_getObjectTypeId
  *   slot 09: 0x802083A8 dfpstatue1_getExtraSize
  * - DLL 0x0234: gDfperchwitchObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80208504 dfperchwitch_initialise
@@ -1776,7 +1776,7 @@
  *   slot 05: 0x802084A4 dfperchwitch_hitDetect
  *   slot 06: 0x802084A0 dfperchwitch_render
  *   slot 07: 0x8020849C dfperchwitch_free
- *   slot 08: 0x80208494 dfperchwitch_func08
+ *   slot 08: 0x80208494 dfperchwitch_getObjectTypeId
  *   slot 09: 0x8020848C dfperchwitch_getExtraSize
  * - DLL 0x0235: gDfptargetblockObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80208FD8 dfptargetblock_initialise
