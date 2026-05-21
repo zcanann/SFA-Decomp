@@ -4435,5 +4435,20 @@ int lockLevel(s32 val, int idx) {
     }
     return cur;
 }
+
+extern u32 lbl_803DCC80;
+extern int OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(int);
+void setLoadedFileFlags_blocks1(void) {
+    int s = OSDisableInterrupts();
+    lbl_803DCC80 |= 0x100000;
+    OSRestoreInterrupts(s);
+}
+u32 getLoadedFileFlags(void) {
+    int s = OSDisableInterrupts();
+    u32 v = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    return v;
+}
 #pragma peephole reset
 #pragma scheduling reset
