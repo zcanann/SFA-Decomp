@@ -1444,10 +1444,10 @@ void groundanimator_init(int *obj, int *desc)
             *(f32*)(vstate + 0xC) = lbl_803E3F98 * (f32)*(u8*)((char*)desc + 0x20);
             vstate[0x2D] |= 2;
         }
-    }
-    ObjGroup_AddObject(obj, 49);
-    if (*(u8*)((char*)desc + 0x21) > 1) {
-        *(u8*)((char*)desc + 0x21) = 0;
+        ObjGroup_AddObject(obj, 49);
+        if (*(u8*)((char*)desc + 0x21) > 1) {
+            *(u8*)((char*)desc + 0x21) = 0;
+        }
     }
 }
 #pragma scheduling reset
