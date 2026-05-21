@@ -3129,6 +3129,64 @@ void FUN_8019f1dc(void)
 /* Trivial 4b 0-arg blr leaves. */
 void cfguardian_release(void) {}
 void cfguardian_initialise(void) {}
+
+typedef struct { int a; int b; s16 c; } GuardianVec;
+extern GuardianVec lbl_802C22C0;
+extern GuardianVec lbl_802C22CC;
+extern u8 lbl_8032284C[];
+extern f32 lbl_803E4110;
+extern void fn_8019C3A0(int *obj);
+extern uint GameBit_Get(int eventId);
+extern void objRemoveFromListFn_8002ce88(int *obj);
+extern void dll_2E_func0A(int a, int *obj);
+extern void dll_2E_func05(int *obj, u8 *sub, int c, int d, int e);
+extern void dll_2E_func08(u8 *sub, int b, int c);
+extern void dll_2E_func09(u8 *sub, void *a, void *b, int c);
+extern void objSeqInitFn_80080078(u8 *p, int n);
+
+#pragma scheduling off
+#pragma peephole off
+void cfguardian_init(int *obj, u8 *params) {
+    u8 *sub;
+    GuardianVec stk1;
+    GuardianVec stk2;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    stk1 = lbl_802C22C0;
+    stk2 = lbl_802C22CC;
+    if (sub == NULL) return;
+    ObjMsg_AllocQueue(obj, 4);
+    sub[0xa80] = (u8)GameBit_Get(0x4b);
+    *(int*)((char*)obj + 0xf4) = 1;
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019C3A0;
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    *(int*)(sub + 0xa94) = 0;
+    *(f32*)(sub + 0x7fc) = lbl_803E4110;
+    *(int*)(sub + 0xa90) = 6;
+    sub[0xa9b] = 0;
+    sub[0x611] = (u8)(sub[0x611] | 0x28);
+    sub[0xa98] = 1;
+    sub[0xa99] = 0;
+    sub[0xa9a] = 0;
+    if (GameBit_Get(0x57) != 0) {
+        sub[0xa80] = 4;
+        if ((s8)params[0x19] == 0) {
+            *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+            objRemoveFromListFn_8002ce88(obj);
+        }
+    } else if (GameBit_Get(0x60) != 0 && (s8)params[0x19] == 0) {
+        sub[0xa80] = 4;
+        dll_2E_func0A(8, obj);
+    }
+    ObjHits_EnableObject(obj);
+    dll_2E_func05(obj, sub, -0x2000, 0x2800, 4);
+    dll_2E_func08(sub, 0x12c, 0x64);
+    dll_2E_func09(sub, &stk2, &stk1, 4);
+    objSeqInitFn_80080078(lbl_8032284C, 0xf);
+    sub[0x611] = (u8)(sub[0x611] | 0x2);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void windlift_hitDetect(void) {}
 void windlift_release(void) {}
 void windlift_initialise(void) {}
