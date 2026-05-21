@@ -984,7 +984,7 @@ void SB_CloudRunner_update(int obj)
     setAButtonIcon(6);
     *(int *)(state + 0x70) = (int)(s8)padGetStickX(0);
     *(int *)(state + 0x74) = (int)(s8)padGetStickY(0);
-    if (*(int *)(state + 0x10) == 0) {
+    if (*(void **)(state + 0x10) == NULL) {
         int count;
         int *objs = (int *)ObjGroup_GetObjects(3, &count);
         int i;
