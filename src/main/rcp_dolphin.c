@@ -2486,5 +2486,14 @@ void* getLoadedTexture(int key) {
     }
     return NULL;
 }
+
+extern int getLoadedFileFlags(int);
+extern void loadTextureFile(void **out, int asset);
+void* textureLoadAsset(int asset) {
+    void *out = NULL;
+    if (getLoadedFileFlags(0) & 0x100000) return NULL;
+    loadTextureFile(&out, asset);
+    return out;
+}
 #pragma scheduling reset
 #pragma peephole reset
