@@ -1214,6 +1214,8 @@ void cMenuUpdateAnims(void)
  * EN v1.0 Address: 0x801241CC
  * EN v1.0 Size: 0x110
  */
+#pragma peephole off
+#pragma scheduling off
 int trickyBitFn_801241cc(short* arr, sbyte flag)
 {
   short* entry;
@@ -1255,3 +1257,5 @@ int trickyBitFn_801241cc(short* arr, sbyte flag)
   }
   return count;
 }
+#pragma peephole reset
+#pragma scheduling reset
