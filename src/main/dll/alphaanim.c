@@ -604,7 +604,7 @@ int seqobj2_getObjectTypeId(void) { return 0x0; }
 int immultiseq_getExtraSize(void) { return 0x2; }
 int immultiseq_getObjectTypeId(void) { return 0x0; }
 int dll_115_getExtraSize_ret_2(void) { return 0x2; }
-int dll_115_func08_ret_0(void) { return 0x0; }
+int dll_115_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E37A0;

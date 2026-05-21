@@ -413,7 +413,7 @@ int FEseqobject_getObjectTypeId(void) { return 0x0; }
 int FElevControl_getExtraSize(void) { return 0x0; }
 int FElevControl_getObjectTypeId(void) { return 0x0; }
 int dll_144_getExtraSize(void) { return 0x0; }
-int dll_144_func08(void) { return 0x0; }
+int dll_144_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);

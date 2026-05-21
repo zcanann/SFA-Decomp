@@ -329,7 +329,7 @@ void dll_FC_free_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_FC_getExtraSize_ret_8(void) { return 0x8; }
-int dll_FC_func08_ret_0(void) { return 0x0; }
+int dll_FC_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3848;
@@ -364,6 +364,6 @@ ObjectDescriptor gDllFCObjDescriptor = {
     (ObjectDescriptorCallback)dll_FC_hitDetect,
     (ObjectDescriptorCallback)dll_FC_render,
     (ObjectDescriptorCallback)dll_FC_free_nop,
-    (ObjectDescriptorCallback)dll_FC_func08_ret_0,
+    (ObjectDescriptorCallback)dll_FC_getObjectTypeId,
     dll_FC_getExtraSize_ret_8,
 };

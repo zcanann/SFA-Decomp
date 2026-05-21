@@ -1490,7 +1490,7 @@ void portalspelldoor_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_107_getExtraSize_ret_44(void) { return 0x2c; }
-int dll_107_func08_ret_0(void) { return 0x0; }
+int dll_107_getObjectTypeId(void) { return 0x0; }
 int Dummy108_getExtraSize(void) { return 0x0; }
 int Dummy108_getObjectTypeId(void) { return 0x0; }
 int portalspelldoor_getExtraSize(void) { return 0x10; }

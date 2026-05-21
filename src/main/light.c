@@ -1018,7 +1018,7 @@ int return0_801FD13C(void) { return 0x0; }
 int vfpcoreplat_getExtraSize(void) { return 0x4; }
 int vfpcoreplat_getObjectTypeId(void) { return 0x0; }
 int dll_224_getExtraSize_ret_6(void) { return 0x6; }
-int dll_224_func08_ret_0(void) { return 0x0; }
+int dll_224_getObjectTypeId(void) { return 0x0; }
 
 /* "tail-call into (**gExpgfxInterface)[6]" free stub. */
 extern int *gExpgfxInterface;

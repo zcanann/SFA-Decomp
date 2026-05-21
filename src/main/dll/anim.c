@@ -4559,7 +4559,7 @@ int dfpobjcreator_getExtraSize(void) { return 0x1c; }
 int dfpobjcreator_getObjectTypeId(void) { return 0x0; }
 int return0_80204B54(void) { return 0x0; }
 int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
-int dll_22C_func08_ret_0(void) { return 0x0; }
+int dll_22C_getObjectTypeId(void) { return 0x0; }
 int doorswitch_getExtraSize(void) { return 0x0; }
 int doorswitch_getObjectTypeId(void) { return 0x0; }
 int dfpseqpoint_getExtraSize(void) { return 0x10; }

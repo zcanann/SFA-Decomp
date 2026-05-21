@@ -1610,7 +1610,7 @@ int dll_1FF_getExtraSize_ret_8(void) { return 0x8; }
 int wmlasertarget_getExtraSize(void) { return 0x4; }
 int wmlasertarget_getObjectTypeId(void) { return 0x0; }
 int dll_200_getExtraSize_ret_40(void) { return 0x28; }
-int dll_200_func08_ret_1(void) { return 0x1; }
+int dll_200_getObjectTypeId(void) { return 0x1; }
 int WM_colrise_getExtraSize(void) { return 0x4; }
 int WM_colrise_getObjectTypeId(void) { return 0x0; }
 int wmtorch_getExtraSize(void) { return 0x10; }
@@ -1633,7 +1633,7 @@ void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32
 #pragma peephole off
 #pragma scheduling off
 #pragma peephole off
-int dll_1FF_func08(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x146) return 0x2; return 0x0; }
+int dll_1FF_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x146) return 0x2; return 0x0; }
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset

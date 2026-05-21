@@ -1399,7 +1399,7 @@ void vfpminifire_hitDetect(void) {}
 void vfpminifire_release(void) {}
 void vfpminifire_initialise(void) {}
 int dll_219_getExtraSize_ret_4(void) { return 0x4; }
-int dll_219_func08_ret_0(void) { return 0x0; }
+int dll_219_getObjectTypeId(void) { return 0x0; }
 void dll_219_render_nop(void) {}
 void dll_219_hitDetect_nop(void) {}
 void dll_219_release_nop(void) {}
@@ -1411,7 +1411,7 @@ void vfpstatueball_hitDetect(void) {}
 void vfpstatueball_release(void) {}
 void vfpstatueball_initialise(void) {}
 int dll_21B_getExtraSize_ret_4(void) { return 0x4; }
-int dll_21B_func08_ret_0(void) { return 0x0; }
+int dll_21B_getObjectTypeId(void) { return 0x0; }
 void dll_21B_render_nop(void) {}
 void dll_21B_hitDetect_nop(void) {}
 void dll_21B_release_nop(void) {}

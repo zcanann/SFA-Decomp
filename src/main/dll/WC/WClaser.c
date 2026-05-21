@@ -257,7 +257,7 @@ void LaserBeam_hitDetect(void) {}
 int WM_seqobject_getExtraSize(void) { return 0x1; }
 int WM_seqobject_getObjectTypeId(void) { return 0x0; }
 int dll_1FB_getExtraSize_ret_12(void) { return 0xc; }
-int dll_1FB_func08_ret_0(void) { return 0x0; }
+int dll_1FB_getObjectTypeId(void) { return 0x0; }
 int LaserBeam_getExtraSize(void) { return 0x50; }
 int LaserBeam_getObjectTypeId(void) { return 0x0; }
 

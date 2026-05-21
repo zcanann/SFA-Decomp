@@ -164,7 +164,7 @@ extern void dll_14D_update();
 extern void dll_14D_hitDetect();
 extern void dll_14D_render();
 extern void dll_14D_free_nop();
-extern int dll_14D_func08_ret_0(void);
+extern int dll_14D_getObjectTypeId(void);
 extern int dll_14D_getExtraSize_ret_8(void);
 
 ObjectDescriptor gDll14DObjDescriptor = {
@@ -177,6 +177,6 @@ ObjectDescriptor gDll14DObjDescriptor = {
     (ObjectDescriptorCallback)dll_14D_hitDetect,
     (ObjectDescriptorCallback)dll_14D_render,
     (ObjectDescriptorCallback)dll_14D_free_nop,
-    (ObjectDescriptorCallback)dll_14D_func08_ret_0,
+    (ObjectDescriptorCallback)dll_14D_getObjectTypeId,
     dll_14D_getExtraSize_ret_8,
 };

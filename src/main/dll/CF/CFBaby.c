@@ -1704,7 +1704,7 @@ void decoration11a_update(void) {}
 int flammablevine_getExtraSize(void) { return 0x14; }
 int flammablevine_getObjectTypeId(void) { return 0x0; }
 int dll_109_getExtraSize_ret_16(void) { return 0x10; }
-int dll_109_func08_ret_0(void) { return 0x0; }
+int dll_109_getObjectTypeId(void) { return 0x0; }
 int return0_80187F30(void) { return 0x0; }
 int Fall_Ladders_getExtraSize(void) { return 0xc; }
 int Fall_Ladders_getObjectTypeId(void) { return 0x0; }

@@ -985,7 +985,7 @@ void dll_D3_hitDetect_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_D3_getExtraSize_ret_1188(void) { return 0x4a4; }
-int dll_D3_func08_ret_73(void) { return 0x49; }
+int dll_D3_getObjectTypeId(void) { return 0x49; }
 
 extern int *gBaddieControlInterface;
 #pragma scheduling off

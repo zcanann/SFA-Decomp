@@ -3123,14 +3123,14 @@ void dll_CB_release_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dll_CE_getExtraSize_ret_1052(void) { return 0x41c; }
-int dll_CE_func08_ret_73(void) { return 0x49; }
+int dll_CE_getObjectTypeId(void) { return 0x49; }
 int chukchuk_getExtraSize(void) { return 0x18; }
 int chukchuk_getObjectTypeId(void) { return 0x0; }
 int iceball_getExtraSize(void) { return 0x2; }
 int iceball_getObjectTypeId(void) { return 0x0; }
 int fn_8016052C(void) { return 0x6; }
 int dll_CB_getExtraSize_ret_1040(void) { return 0x410; }
-int dll_CB_func08_ret_331(void) { return 0x14b; }
+int dll_CB_getObjectTypeId(void) { return 0x14b; }
 
 /* Pattern wrappers. */
 s16 dll_CE_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
