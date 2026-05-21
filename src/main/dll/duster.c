@@ -67,6 +67,7 @@ extern f32 lbl_803E2A60;
 extern f32 lbl_803E2A70;
 extern f32 lbl_803E2A74;
 extern f32 lbl_803E2A78;
+extern f32 lbl_803E2A7C;
 extern f32 lbl_803E2A80;
 extern f32 lbl_803E36F4;
 extern f32 lbl_803E36F8;
@@ -606,18 +607,18 @@ void baddieUpdateWhileFrozen_80155e10(uint param_9,int param_10,undefined4 param
     *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 0x20;
   }
   else if (param_12 == 0x11) {
-    if ((*(char *)(param_10 + 0x33a) == '\x02') && (*(short *)(param_9 + 0xa0) != 5)) {
-      fn_8014D08C(param_9,param_10,5,lbl_803E3714,0,0);
+    if ((*(byte *)(param_10 + 0x33a) == 2) && (*(short *)(param_9 + 0xa0) != 5)) {
+      fn_8014D08C(param_9,param_10,5,lbl_803E2A7C,0,0);
     }
   }
   else if ((*(short *)(param_9 + 0xa0) == 5) || (*(short *)(param_9 + 0xa0) == 4)) {
-    if ((int)(uint)*(ushort *)(param_10 + 0x2b0) < param_14) {
+    if (param_14 > (int)(uint)*(ushort *)(param_10 + 0x2b0)) {
       *(undefined2 *)(param_10 + 0x2b0) = 0;
       Sfx_PlayFromObject(param_9,600);
       Sfx_PlayFromObject(param_9,0x22);
     }
     else {
-      *(ushort *)(param_10 + 0x2b0) = *(ushort *)(param_10 + 0x2b0) - (short)param_14;
+      *(ushort *)(param_10 + 0x2b0) = *(ushort *)(param_10 + 0x2b0) - param_14;
       Sfx_PlayFromObject(param_9,0x24f);
       Sfx_PlayFromObject(param_9,0x22);
     }
