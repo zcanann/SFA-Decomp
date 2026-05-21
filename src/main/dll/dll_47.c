@@ -918,10 +918,14 @@ void saveFileSelect_init(void) {}
 #pragma scheduling off
 #pragma peephole off
 void saveSelectSetupMenuItems(void **p) {
-    int off1 = 0;
-    int off2 = 0;
-    int i = 0;
+    int off1;
+    int off2;
+    int i;
     char *base;
+
+    i = 0;
+    off1 = 0;
+    off2 = off1;
     while (i < (int)*(u8 *)((char *)p + 0x4)) {
         base = (char *)saveFileSelect_saveSlotsBase;
         saveFileSelect_saveSlots = (FrontendSaveSlot *)base;
