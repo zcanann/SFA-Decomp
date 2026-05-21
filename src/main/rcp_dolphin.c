@@ -2594,6 +2594,30 @@ void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2) {
     GXSetScissor(x, y, x2 - x, y2 - y);
 }
 
+extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
+extern void *mmAlloc(u32 size, int type, int p3);
+extern void *memset(void *, int, u32);
+extern void textureFn_80053d58(void *obj);
+void *textureAlloc(u16 w, u16 h, u8 fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11) {
+    u8 *obj;
+    u32 size = GXGetTexBufferSize(w, h, fmt, mip, maxLod) + 96;
+    obj = (u8 *)mmAlloc(size, 6, 0);
+    if (obj == NULL) return NULL;
+    memset(obj, 0, 100);
+    *(u8 *)(obj + 22) = fmt;
+    *(u16 *)(obj + 10) = w;
+    *(u16 *)(obj + 12) = h;
+    *(u16 *)(obj + 16) = 1;
+    *(u16 *)(obj + 14) = 0;
+    *(u8 *)(obj + 23) = b8;
+    *(u8 *)(obj + 24) = b9;
+    *(u8 *)(obj + 25) = b10;
+    *(u8 *)(obj + 26) = b11;
+    *(int *)(obj + 80) = 0;
+    textureFn_80053d58(obj);
+    return obj;
+}
+
 #pragma peephole reset
 #pragma scheduling reset
 int textureCrazyPointerFollowFn_80054c30(int *p, int n) {
