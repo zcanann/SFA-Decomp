@@ -2648,3 +2648,74 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct { f32 v[15]; } _PlanePack;
+typedef struct { f32 v[5]; } _ScalePack;
+typedef struct { f32 x, y, z; } _Vec3;
+
+extern _PlanePack lbl_802C1E58;
+extern _ScalePack lbl_802C1E94;
+extern f32 lbl_803878D8[];
+extern f32 PostCB_803DEBF4;
+extern int* Obj_GetPlayerObject(void);
+extern int* Camera_GetCurrentViewSlot(void);
+extern f32* Camera_GetInverseViewRotationMatrix(void);
+extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void PSMTXMultVec(f32* mtx, _Vec3* in, f32* out);
+extern void PSVECScale(f32* in, _Vec3* out, f32 s);
+extern void PSVECAdd(_Vec3* a, _Vec3* b, _Vec3* out);
+extern f32 PSVECDotProduct(_Vec3* a, f32* b);
+extern void fn_8005A8A4(f32* planes, int count);
+
+#pragma scheduling off
+#pragma peephole off
+void playerVecFn_8005a9b0(void)
+{
+    _Vec3 camPos;
+    _Vec3 tmp;
+    _ScalePack scales;
+    _PlanePack planes;
+    int* player;
+    int* viewSlot;
+    f32* invRotMtx;
+    int i;
+    f32* outPtr;
+    f32* dirPtr;
+    f32* scalePtr;
+    f32 clipDist;
+
+    planes = lbl_802C1E58;
+    scales = lbl_802C1E94;
+    player = Obj_GetPlayerObject();
+    viewSlot = Camera_GetCurrentViewSlot();
+    camPos.x = *(f32*)((char*)viewSlot + 0x44) - playerMapOffsetX;
+    camPos.y = *(f32*)((char*)viewSlot + 0x48);
+    camPos.z = *(f32*)((char*)viewSlot + 0x4c) - playerMapOffsetZ;
+    invRotMtx = Camera_GetInverseViewRotationMatrix();
+    if (player != NULL) {
+        clipDist = -Camera_DistanceToCurrentViewPosition(
+            *(f32*)((char*)player + 0x18),
+            *(f32*)((char*)player + 0x1c),
+            *(f32*)((char*)player + 0x20));
+    } else {
+        clipDist = PostCB_803DEBF4;
+    }
+    scales.v[0] = clipDist;
+
+    i = 0;
+    outPtr = lbl_803878D8;
+    dirPtr = planes.v;
+    scalePtr = scales.v;
+    for (; i < 5; i++) {
+        PSMTXMultVec(invRotMtx, (_Vec3*)dirPtr, outPtr);
+        PSVECScale(outPtr, &tmp, *scalePtr);
+        PSVECAdd(&camPos, &tmp, &tmp);
+        outPtr[3] = -PSVECDotProduct(&tmp, outPtr);
+        outPtr += 5;
+        dirPtr += 3;
+        scalePtr++;
+    }
+    fn_8005A8A4(lbl_803878D8, 5);
+}
+#pragma peephole reset
+#pragma scheduling reset
