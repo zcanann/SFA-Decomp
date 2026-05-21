@@ -4750,6 +4750,44 @@ void boneParticleEffect_release(void)
     if (lbl_803DD2A4 != NULL) textureFree(lbl_803DD2A4);
     if (lbl_803DD2A8 != NULL) textureFree(lbl_803DD2A8);
 }
+
+typedef struct {
+    s16 a, b, c;
+    u16 pad;
+    s16 d, e;
+    u8 f, g, h, alpha;
+} ParticleSlot;
+extern ParticleSlot lbl_8030FFE8[];
+extern void *textureLoadAsset(int id);
+extern void *mmAlloc(int size, int align, int flag);
+
+void boneParticleEffect_initialise(void) {
+    int i;
+    int j;
+
+    lbl_803DD2A4 = textureLoadAsset(0x16b);
+    lbl_803DD2A8 = textureLoadAsset(0x201);
+    lbl_8039C2C0[0] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[1] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[2] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[3] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[4] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[5] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[6] = mmAlloc(0x140, 0x15, 0);
+    for (i = 0; i < 7; i++) {
+        for (j = 0; j < 20; j++) {
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].a = lbl_8030FFE8[j].a;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].b = lbl_8030FFE8[j].b;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].c = lbl_8030FFE8[j].c;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].d = lbl_8030FFE8[j].d;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].e = lbl_8030FFE8[j].e;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].f = lbl_8030FFE8[j].f;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].g = lbl_8030FFE8[j].g;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].h = lbl_8030FFE8[j].h;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].alpha = 0xff;
+        }
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset
 
