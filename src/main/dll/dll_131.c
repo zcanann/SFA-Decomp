@@ -337,7 +337,7 @@ int fn_80167988(int obj, int p2)
     *(f32 *)(sub + 0x3e8) = lbl_803E3078;
     *(f32 *)(sub + 0x3ec) = lbl_803E307C;
   } else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
-    if (*(int *)(obj + 0x4c) == 0) {
+    if (*(void **)(obj + 0x4c) == NULL) {
       Obj_FreeObject(obj);
       return 0;
     }

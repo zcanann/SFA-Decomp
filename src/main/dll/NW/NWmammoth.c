@@ -379,6 +379,21 @@ int enemymushroom_getObjectTypeId(int obj)
   return (*(byte *)(*(int *)(obj + 0x4c) + 0x1f) << 0xb) | 0x400;
 }
 
+extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
+extern f32 lbl_803E5310;
+
+#pragma scheduling off
+void enemymushroom_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
+{
+    void *state = *(void **)((char *)obj + 0xb8);
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5310);
+        ObjPath_GetPointWorldPosition(obj, 0, (char *)state + 0x20, (char *)state + 0x24, (char *)state + 0x28, 0);
+    }
+}
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
