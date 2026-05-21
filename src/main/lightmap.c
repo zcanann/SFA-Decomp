@@ -3004,3 +3004,46 @@ void setDrawCloudsAndLights(int v) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void modelRenderInstrsState_init(int* state, void* buf, int s1, int s2);
+extern void modelRenderInstrsState_setBit(int* state, int bit);
+extern void renderFn_8005e730(int* p1, int* obj, float* p3);
+extern int shaderFn_8005e560(int* obj, int* state);
+extern void shaderFn_8005e348(int* obj, int v, int* state, float* p3);
+
+#pragma scheduling off
+void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
+{
+    int state[5];
+    int countShifted;
+    int v;
+    int byteOff;
+    int* base;
+    int newR;
+    int nibble;
+    int i;
+    int cursor;
+
+    countShifted = (int)*(u16*)((char*)obj + 0x84) << 3;
+    modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x78), countShifted, countShifted);
+    modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
+    state[4] += 4;
+    renderFn_8005e730(p1, obj, p3);
+    newR = shaderFn_8005e560(obj, state);
+    state[4] += 4;
+    mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
+    cursor = state[4] + 4;
+    byteOff = cursor >> 3;
+    v = *(u8*)(state[0] + byteOff);
+    base = (int*)(state[0] + byteOff);
+    v = v | ((u32)*(u8*)((char*)base + 1) << 8);
+    v = v | ((u32)*(u8*)((char*)base + 2) << 16);
+    state[4] += 8;
+    nibble = (v >> (cursor & 7)) & 0xf;
+    for (i = 0; i < nibble; i++) {
+        *(volatile int*)&state[4] += 8;
+    }
+    state[4] += 4;
+    shaderFn_8005e348(obj, newR, state, p3);
+}
+#pragma scheduling reset
