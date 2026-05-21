@@ -1750,3 +1750,44 @@ f32 fn_8014C5D0(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 timeDelta;
+extern f32 sqrtf(f32);
+extern f32 powfBitEstimate(f32 base, f32 exp);
+
+/* fn_8014CB54: xz-plane physics step toward a target. Computes the planar
+ * distance to (tx,ty,tz), then nudges the obj's xz velocity (offsets 0x24,
+ * 0x2c) by timeDelta * speedScale * unitDir, clamped at +/-maxVel, with an
+ * optional drag pass. Returns the y-delta. */
+#pragma scheduling off
+#pragma peephole off
+f32 fn_8014CB54(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag) {
+    f32 dx = tx - *(f32*)(obj + 0x18);
+    f32 dy = ty - *(f32*)(obj + 0x1c);
+    f32 dz = tz - *(f32*)(obj + 0x20);
+    f32 dist = sqrtf(dx * dx + dz * dz);
+    if (dist > accel) {
+        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / dist));
+        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / dist));
+    } else if (dist > lbl_803E2574) {
+        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / accel));
+        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / accel));
+    }
+    if (*(f32*)(obj + 0x24) < -maxVel) {
+        *(f32*)(obj + 0x24) = -maxVel;
+    } else if (*(f32*)(obj + 0x24) > maxVel) {
+        *(f32*)(obj + 0x24) = maxVel;
+    }
+    if (*(f32*)(obj + 0x2c) < -maxVel) {
+        *(f32*)(obj + 0x2c) = -maxVel;
+    } else if (*(f32*)(obj + 0x2c) > maxVel) {
+        *(f32*)(obj + 0x2c) = maxVel;
+    }
+    if (lbl_803E2574 != drag) {
+        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) * powfBitEstimate(drag, timeDelta);
+        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) * powfBitEstimate(drag, timeDelta);
+    }
+    return dy;
+}
+#pragma peephole reset
+#pragma scheduling reset
