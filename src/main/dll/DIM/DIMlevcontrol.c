@@ -568,3 +568,20 @@ int fn_801B3458(int obj, int p2, int *r5_arg)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *gGameUIInterface;
+extern void *lbl_803DDB50;
+extern void Resource_Release(void *p);
+
+#pragma scheduling off
+#pragma peephole off
+void dimcannon_free(int *obj) {
+    if (*(s16 *)((char *)obj + 0x46) != 0x1d6) {
+        ((void (*)(void))((int **)*gGameUIInterface)[0x18])();
+        Resource_Release(lbl_803DDB50);
+        lbl_803DDB50 = NULL;
+    }
+    ObjGroup_RemoveObject(obj, 3);
+}
+#pragma peephole reset
+#pragma scheduling reset
