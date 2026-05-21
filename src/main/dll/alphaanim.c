@@ -718,5 +718,30 @@ int fn_8017C2D4(int* obj, int* anim, u8* buf)
     return 0;
 }
 
+int dll_115_seqFn(int *obj, int p2, void *p3) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    s16 *def = *(s16 **)((char *)obj + 0x4c);
+    *(s16 *)((char *)p3 + 0x6e) = *(s16 *)((char *)p3 + 0x70);
+    *(u8 *)((char *)p3 + 0x56) = 0;
+    if (*(s16 *)((char *)obj + 0xb4) == -1) {
+        return 0;
+    }
+    {
+        int v = state[0];
+        if (v >= 10 || v < 8) {
+            if (v + 1 < 8) {
+                s16 newId = *(s16 *)((char *)def + (v + 1) * 2 + 0x28);
+                if (newId != -1 && newId != *(s16 *)((char *)def + v * 2 + 0x28)) {
+                    if (GameBit_Get(newId) != 0) {
+                        ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(*(s16 *)((char *)obj + 0xb4));
+                    }
+                }
+            }
+        }
+    }
+    state[1] = (u8)(state[1] | 1);
+    return 0;
+}
+
 #pragma peephole reset
 #pragma scheduling reset
