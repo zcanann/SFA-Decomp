@@ -3212,6 +3212,31 @@ void chukchuk_free(void) {}
 void chukchuk_hitDetect(void) {}
 void chukchuk_release(void) {}
 void chukchuk_initialise(void) {}
+
+extern uint GameBit_Get(int eventId);
+
+#pragma peephole off
+#pragma scheduling off
+void chukchuk_init(u8* obj, u8* params) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    obj[0xaf] = (u8)(obj[0xaf] | 0x8);
+    *(s16*)(sub + 0xa) = *(s16*)(params + 0x18);
+    if (*(s16*)(sub + 0xa) != -1 && GameBit_Get(*(s16*)(sub + 0xa)) != 0) {
+        ObjHits_DisableObject(obj);
+        *(s16*)(obj + 6) = (s16)(*(s16*)(obj + 6) | 0x4000);
+        sub[0x12] = (u8)(sub[0x12] | 0x2);
+    } else {
+        *(u16*)(sub + 0xc) = (u16)(params[0x29] << 3);
+        *(s16*)(sub + 8) = *(s16*)(params + 0x22);
+        sub[0x13] = params[0x32];
+        *(u16*)(sub + 0xe) = (u16)((s8)params[0x28] * 0xb6);
+        sub[0x14] = params[0x2f];
+        sub[0x15] = params[0x27];
+        *(s16*)obj = (s16)((s8)params[0x2a] << 8);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
 void iceball_hitDetect(void) {}
 void iceball_release(void) {}
 void iceball_initialise(void) {}
@@ -3249,7 +3274,6 @@ void dll_CA_initialise(void) { fn_8015DAE8(); }
 void iceball_free(void) { Camera_DisableViewYOffset(); }
 
 extern void chukchuk_update(void);
-extern void chukchuk_init(void);
 extern void iceball_update(undefined2 *param_1,int param_2);
 
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, 0x26b). */
