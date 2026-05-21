@@ -345,9 +345,7 @@ void firstPersonExit(short *param_1)
       (float)((double)CONCAT44(0x43300000,uStack_14) - lbl_803E17D8);
   sVar3 = getAngle((double)(*(float *)(lbl_803DD548 + 0x14) - *(float *)(iVar4 + 0x18)),
                    (double)(*(float *)(lbl_803DD548 + 0x34) - *(float *)(iVar4 + 0x20)));
-  *(float *)(lbl_803DD548 + 0x44) =
-      (float)((double)CONCAT44(0x43300000,(int)(short)(-0x8000 - sVar3) ^ 0x80000000) -
-              lbl_803E17D8);
+  *(float *)(lbl_803DD548 + 0x44) = (float)(int)(short)(-0x8000 - sVar3);
   fVar1 = lbl_803E17C4;
   *(float *)(lbl_803DD548 + 0x48) = lbl_803E17C4;
   *(float *)(lbl_803DD548 + 0x4c) = fVar1;
