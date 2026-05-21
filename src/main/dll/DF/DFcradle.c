@@ -89,10 +89,10 @@ void dimbossfire_update(int param_1)
   
   pbVar5 = *(byte **)(param_1 + 0xb8);
   iVar4 = *(int *)(param_1 + 0x4c);
-  if ((int)*(short *)(iVar4 + 0x20) == 0xffffffff) {
-    *(float *)(pbVar5 + 0xc) = *(float *)(pbVar5 + 0xc) - timeDelta;
-    if (*(float *)(pbVar5 + 0xc) <= lbl_803E4DA0) {
-      *(float *)(pbVar5 + 0xc) = (f32)(int)randomGetRange(0xf0,0x1e0);
+  if ((int)*(short *)(iVar4 + 0x20) != 0xffffffff) {
+    uVar1 = GameBit_Get((int)*(short *)(iVar4 + 0x20));
+    if (uVar1 != 0) {
+      GameBit_Set((int)*(short *)(iVar4 + 0x20),0);
       *pbVar5 = *pbVar5 | 1;
       *(float *)(pbVar5 + 4) = lbl_80325D68[pbVar5[1]];
       *(float *)(pbVar5 + 8) = *(float *)(pbVar5 + 4);
@@ -103,9 +103,9 @@ void dimbossfire_update(int param_1)
     }
   }
   else {
-    uVar1 = GameBit_Get((int)*(short *)(iVar4 + 0x20));
-    if (uVar1 != 0) {
-      GameBit_Set((int)*(short *)(iVar4 + 0x20),0);
+    *(float *)(pbVar5 + 0xc) = *(float *)(pbVar5 + 0xc) - timeDelta;
+    if (*(float *)(pbVar5 + 0xc) <= lbl_803E4DA0) {
+      *(float *)(pbVar5 + 0xc) = (f32)(int)randomGetRange(0xf0,0x1e0);
       *pbVar5 = *pbVar5 | 1;
       *(float *)(pbVar5 + 4) = lbl_80325D68[pbVar5[1]];
       *(float *)(pbVar5 + 8) = *(float *)(pbVar5 + 4);
