@@ -657,11 +657,11 @@ void fn_80155F20(int param_9,int param_10)
       else if (*(short *)(param_9 + 0xa0) == 3) {
         *(undefined *)(param_10 + 0x33a) = 0;
         *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) | 0x10000;
-        fn_8014D08C(param_9,param_10,0,lbl_803E36EC,0,0);
+        fn_8014D08C(param_9,param_10,0,lbl_803E2A54,0,0);
       }
     }
     else if ((*(byte *)(param_10 + 0x33a) == 2) && (*(short *)(param_9 + 0xa0) != 2)) {
-      fn_8014D08C(param_9,param_10,2,lbl_803E36EC,0,0);
+      fn_8014D08C(param_9,param_10,2,lbl_803E2A54,0,0);
     }
   }
   timeOfDayFn_80155cf8(param_9,param_10);

@@ -4425,5 +4425,30 @@ void fn_800412B8(u8 r, u8 g, u8 b) {
     (&lbl_803DCC58)[1] = g;
     (&lbl_803DCC58)[2] = b;
 }
+
+extern s32 lbl_803DB5B0;
+int lockLevel(s32 val, int idx) {
+    s32 cur = (&lbl_803DB5B0)[idx];
+    if (cur == -2) {
+        (&lbl_803DB5B0)[idx] = val;
+        return -1;
+    }
+    return cur;
+}
+
+extern u32 lbl_803DCC80;
+extern int OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(int);
+void setLoadedFileFlags_blocks1(void) {
+    int s = OSDisableInterrupts();
+    lbl_803DCC80 |= 0x100000;
+    OSRestoreInterrupts(s);
+}
+u32 getLoadedFileFlags(void) {
+    int s = OSDisableInterrupts();
+    u32 v = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    return v;
+}
 #pragma peephole reset
 #pragma scheduling reset

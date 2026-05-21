@@ -122,14 +122,12 @@ void dll_14D_update(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_14D_init(int param_1)
+void dll_14D_init(int *obj)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
-    FUN_8003b818(param_1);
-  }
-  return;
+    char *p = *(char**)((char*)obj + 0xb8);
+    *p = 0;
+    *(u32*)(p + 4) = 0;
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x4000);
 }
 
 /*
@@ -158,7 +156,7 @@ void FUN_8017f290(int param_1)
 void dll_14D_release_nop(void) {}
 void dll_14D_initialise_nop(void) {}
 
-extern void dll_14D_init();
+extern void dll_14D_init(int *obj);
 extern void dll_14D_update();
 extern void dll_14D_hitDetect();
 extern void dll_14D_render();

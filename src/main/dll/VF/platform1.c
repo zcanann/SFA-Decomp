@@ -484,7 +484,7 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
 #pragma peephole off
 void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
-void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {}
+void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void sc_totemstrength_init(int *obj) {
     int *inner = *(int **)((char *)obj + 0xb8);
     *(int *)((char *)obj + 0xbc) = (int)&platform1_control;

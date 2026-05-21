@@ -672,8 +672,7 @@ int fn_801C02B8(int *obj) {
 void dimbosscrackpar_free(int *obj) {
     (*(void (*)(int *))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
-void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
-}
+void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void dimbosscrackpar_init(s16 *obj, s8 *def) {
     obj[0] = 0;
     *(f32 *)((char *)obj + 8) = lbl_803E4D98;
@@ -718,12 +717,9 @@ void dimbossfire_free(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-void dimbossfire_render(int p1,int p2,int p3,int p4,int p5,s8 visible)
-{
-  s32 isVisible = visible;
-  if (isVisible != 0) {
-  }
-}
+#pragma peephole off
+void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+#pragma peephole reset
 
 /* 8b "li r3, N; blr" returners. */
 int dimbossgut2_setScale(void) { return 0x0; }

@@ -116,20 +116,25 @@ extern undefined4 uRam803de8d4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_FireBall_hitDetect(int param_1)
+extern int *gPartfxInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_FireBall_hitDetect(int *obj)
 {
-  uint uVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
-  uVar1 = *(uint *)(iVar2 + 0x20);
-  if (uVar1 != 0) {
-    FUN_80017620(uVar1);
-    *(undefined4 *)(iVar2 + 0x20) = 0;
-  }
-  return;
+    int *params = *(int **)((char *)obj + 0x54);
+    int i;
+    if (*(int *)((char *)params + 0x50) == 0) return;
+    *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
+    for (i = 50; i != 0; i--) {
+        ((void (*)(int *, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 167, 0, 1, -1, 0);
+    }
+    for (i = 10; i != 0; i--) {
+        ((void (*)(int *, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 171, 0, 1, -1, 0);
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1852,7 +1857,9 @@ void SB_CageKyte_init(int p)
 }
 #pragma scheduling reset
 #pragma peephole reset
-void SB_CageKyte_render(void) {}
+#pragma peephole off
+void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
+#pragma peephole reset
 void SB_CageKyte_update(void) {}
 #pragma scheduling off
 #pragma peephole off
@@ -1870,8 +1877,62 @@ void SB_CloudBall_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_CloudBall_hitDetect(void) {}
-void SB_CloudBall_init(void) {}
+extern f32 lbl_803E58E8;
+extern f32 lbl_803E58EC;
+extern f32 lbl_803E58F0;
+extern void projectileParticleFxFn_80099660(int *obj, int a, f32 f);
+
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudBall_hitDetect(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *params = *(int **)((char *)obj + 0x54);
+    int *target = *(int **)((char *)params + 0x50);
+
+    if (target == NULL) return;
+    if (*(f32 *)((char *)state + 0x20) != lbl_803E58EC) return;
+    if (*(s16 *)((char *)target + 0x46) == 142) {
+        Sfx_PlayFromObject(obj, 54);
+    }
+    params = *(int **)((char *)obj + 0x54);
+    *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
+    *(f32 *)((char *)state + 0x20) = lbl_803E58F0;
+    *(u8 *)((char *)obj + 0x36) = 0;
+    projectileParticleFxFn_80099660(obj, 2, lbl_803E58E8);
+}
+#pragma peephole reset
+#pragma scheduling reset
+extern int objCreateLight(int *obj, int mode);
+extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setColorsA8AC(int light, int p, int r, int g, int p2);
+extern void lightSetFieldBC_8001db14(int light, int v);
+extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern f32 lbl_803E5910;
+extern f32 lbl_803E5914;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudBall_init(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *params = *(int **)((char *)obj + 0x54);
+
+    *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
+    params = *(int **)((char *)obj + 0x54);
+    *(u16 *)((char *)params + 0xb2) = (u16)(*(u16 *)((char *)params + 0xb2) | 1);
+    if (state[6] == 0) {
+        state[6] = objCreateLight(obj, 1);
+        if (state[6] != 0) {
+            modelLightStruct_setField50(state[6], 2);
+            modelLightStruct_setColorsA8AC(state[6], 0, 90, 150, 0);
+            lightSetFieldBC_8001db14(state[6], 1);
+            lightDistAttenFn_8001dc38(state[6], lbl_803E5910, lbl_803E5914);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_CloudBall_update(void) {}
 #pragma peephole off
 #pragma scheduling off
@@ -1897,7 +1958,24 @@ void SB_KyteCage_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_KyteCage_init(void) {}
+extern void SB_KyteCage_SeqFn(void);
+
+#pragma scheduling off
+#pragma peephole off
+void SB_KyteCage_init(int *obj, int *params)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    *(void (**)(void))((char *)obj + 0xbc) = SB_KyteCage_SeqFn;
+    *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
+    *(u8 *)((char *)state + 0x4) = 0;
+    if (GameBit_Get(117) == 0) {
+        getLActions(obj, obj, 88, 0, 0, 0);
+        getLActions(obj, obj, 109, 0, 0, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_KyteCage_update(void) {}
 #pragma scheduling off
 #pragma peephole off
@@ -1940,7 +2018,22 @@ void SB_SeqDoor_init(int* obj, int* def)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_SeqDoor_update(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_SeqDoor_update(int *obj)
+{
+    if (*(s16 *)((char *)obj + 0x46) == 371) {
+        if (*(int *)((char *)obj + 0xf4) == 0) {
+            if (GameBit_Get(2635) != 0) {
+                ((void (*)(int, int *, int))((void **)*gObjectTriggerInterface)[18])(0, obj, -1);
+                *(int *)((char *)obj + 0xf4) = 1;
+            }
+        }
+    }
+    *(u8 *)((char *)obj + 0xaf) |= 0x10;
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern f32 lbl_803E59C0;
 
 #pragma scheduling off
