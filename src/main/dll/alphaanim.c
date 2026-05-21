@@ -596,7 +596,34 @@ void immultiseq_release(void) {}
 void immultiseq_initialise(void) {}
 
 extern int fn_8017CBDC(int* obj, int* anim, u8* buf);
+extern int fn_8017C2D4(int* obj, int* anim, u8* buf);
 extern uint GameBit_Get(int eventId);
+
+#pragma scheduling off
+#pragma peephole off
+void seqobject_init(int *obj, u8 *params) {
+    u8 *sub;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(s16*)obj = (s16)(params[0x1c] << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8017C2D4;
+    *(u8*)((char*)obj + 0xad) = params[0x1f];
+    if ((s8)*(u8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
+        *(u8*)((char*)obj + 0xad) = 0;
+    }
+    ObjGroup_AddObject(obj, 0xf);
+    sub[0] = 0;
+    if (*(s16*)(params + 0x18) != -1 && GameBit_Get(*(s16*)(params + 0x18)) != 0) {
+        sub[0] = (u8)(sub[0] | 1);
+        if (*(s16*)(params + 0x20) != 0) {
+            sub[0] = (u8)(sub[0] | 2);
+        }
+    }
+    sub[1] = 0;
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x2000);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

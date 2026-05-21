@@ -39,7 +39,7 @@ int seqobject_func08(void);
 void seqobject_free(int x);
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void seqobject_update(void);
-void seqobject_init(void);
+void seqobject_init(int *obj, u8 *params);
 
 int seqobj2_getExtraSize(void);
 int seqobj2_func08(void);
