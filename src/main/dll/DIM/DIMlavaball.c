@@ -1486,6 +1486,76 @@ void MMP_levelcontrol_init(int obj) {
 extern void setDrawLights(int v);
 extern f32 lbl_803E44E8;
 
+extern int objPosToMapBlockIdx(double x, double y, double z);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int fn_801A78C8(int obj, f32 *out1, void *out2, f32 x, f32 y, f32 z, f32 y2);
+extern f32 lbl_803E4554;
+extern f32 lbl_803E455C;
+extern f32 lbl_803E4560;
+extern f32 lbl_803E4564;
+extern f32 lbl_803E4568;
+extern f32 timeDelta;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A7B10(int obj) {
+    int state = *(int *)(obj + 0xb8);
+    int auStack_14[1];
+    f32 local_18;
+    int idx;
+    f32 v;
+    int ret;
+    idx = objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    if (idx == -1) return;
+    ObjHits_SetHitVolumeSlot(obj, 14, 1, 0);
+    ObjHits_EnableObject(obj);
+    *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - lbl_803E455C * timeDelta;
+    {
+        f32 v1 = *(f32 *)(obj + 0x24);
+        f32 v2 = lbl_803E4560;
+        if ((lbl_803E4560 <= v1) && (v2 = v1, lbl_803E4564 < v1)) {
+            v2 = lbl_803E4564;
+        }
+        *(f32 *)(obj + 0x24) = v2;
+    }
+    {
+        f32 v1 = *(f32 *)(obj + 0x28);
+        f32 v2 = lbl_803E4560;
+        if ((lbl_803E4560 <= v1) && (v2 = v1, lbl_803E4564 < v1)) {
+            v2 = lbl_803E4564;
+        }
+        *(f32 *)(obj + 0x28) = v2;
+    }
+    {
+        f32 v1 = *(f32 *)(obj + 0x24);
+        f32 v2 = lbl_803E4560;
+        if ((lbl_803E4560 <= v1) && (v2 = v1, lbl_803E4564 < v1)) {
+            v2 = lbl_803E4564;
+        }
+        *(f32 *)(obj + 0x24) = v2;
+    }
+    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
+    *(u16 *)(state + 0x24) &= ~0x80;
+    ret = fn_801A78C8(obj, &local_18, auStack_14, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), lbl_803E4568 + *(f32 *)(obj + 0x10));
+    if (ret == 0) return;
+    if (ret == 2) {
+        f32 c = lbl_803E4554;
+        *(u16 *)(state + 0x24) |= 0x100;
+        *(f32 *)(obj + 0x24) = c;
+        *(f32 *)(obj + 0x28) = c;
+        *(f32 *)(obj + 0x2c) = c;
+    } else {
+        f32 c = lbl_803E4554;
+        *(u16 *)(state + 0x24) |= 0x180;
+        *(f32 *)(obj + 0x10) = local_18;
+        *(f32 *)(obj + 0x24) = c;
+        *(f32 *)(obj + 0x28) = c;
+        *(f32 *)(obj + 0x2c) = c;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 int fn_801A6F4C(int obj, int p2, int data) {
