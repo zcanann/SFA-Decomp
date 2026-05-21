@@ -5407,4 +5407,15 @@ void freeAndNull(void **p) {
         *p = NULL;
     }
 }
+
+extern f32 lbl_803DEA70;
+extern f32 lbl_803DEA78;
+extern f32 lbl_803DEA88;
+extern f32 lbl_803DEA8C;
+extern f32 lbl_803DEA90;
+extern f32 hudMatrix[];
+extern void C_MTXOrtho(f32 *mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+void initViewport(void) {
+    C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
+}
 #pragma scheduling reset

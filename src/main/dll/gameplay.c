@@ -13201,5 +13201,15 @@ u8 getCurTaskHintTextMap(void) {
 #pragma scheduling off
 #pragma peephole off
 void *fn_800E888C(u8 a, u8 b) { return (char *)saveData + a * 40 + b * 8 + 28; }
+
+void screens_remove(void) {
+    if (lbl_803DD4A0 != 0) {
+        mm_free(lbl_803DD4A0);
+        lbl_803DD4A0 = 0;
+        lbl_803DD4AC = (u32)-1;
+        lbl_803DD4A4 = 0;
+        lbl_803DD4A8 = 0;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset

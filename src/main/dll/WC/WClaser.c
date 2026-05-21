@@ -288,5 +288,26 @@ void WM_seqobject_init(int *obj, s8 *def) {
     *(void**)((char*)obj + 0xbc) = (void*)fn_801F06D8;
     *(int*)((char*)obj + 0xf8) = 0x14;
 }
+
+int dll_1FB_SeqFn(int *obj, int unused, s16 *p) {
+    int *state = *(int**)((char*)obj + 0xb8);
+    s16 v = *(s16*)((char*)state + 6);
+    if (v == 1 || v == 2) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+    }
+    *(s16*)((char*)p + 0x70) = -1;
+    *(u8*)((char*)p + 0x56) = 0;
+    return 0;
+}
+
+extern f32 lbl_803E5D00;
+void dll_1FB_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    u8 *state = *(u8**)((char*)obj + 0xb8);
+    if (visible != 0) {
+        if (state[9] == 0) {
+            objRenderFn_8003b8f4(lbl_803E5D00);
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
