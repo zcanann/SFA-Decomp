@@ -2542,5 +2542,49 @@ void turnOnDistortionFilter(f32 *vec, u8 *color, f32 angle2, f32 angle1) {
     distortionFilterAngle1 = angle1;
     bEnableDistortionFilter = 1;
 }
+
+extern int lbl_803DCD58, lbl_803DCD84;
+extern int lbl_803DCD54, lbl_803DCD80;
+extern int lbl_803DCD64, lbl_803DCD90;
+extern int lbl_803DCD5C, lbl_803DCD88;
+extern int lbl_803DCD60, lbl_803DCD8C;
+extern int lbl_803DCD50, lbl_803DCD7C;
+extern int lbl_803DCD4C, lbl_803DCD78;
+extern int lbl_803DCD74;
+extern int lbl_803DCD70;
+extern int lbl_803DCD6C;
+extern u8 lbl_803DCD6B, lbl_803DCD4B;
+extern u8 lbl_803DCD4A;
+extern u8 lbl_803DCD49;
+extern u8 lbl_803DCD48;
+extern u8 lbl_803DCD30;
+void resetLotsOfRenderVars(void) {
+    lbl_803DCD58 = 30;
+    lbl_803DCD84 = 30;
+    lbl_803DCD54 = 64;
+    lbl_803DCD80 = 64;
+    lbl_803DCD64 = 0;
+    lbl_803DCD90 = 0;
+    lbl_803DCD5C = 0;
+    lbl_803DCD88 = 0;
+    lbl_803DCD60 = 0;
+    lbl_803DCD8C = 0;
+    lbl_803DCD50 = 0;
+    lbl_803DCD7C = 0;
+    lbl_803DCD4C = 4;
+    lbl_803DCD78 = 4;
+    lbl_803DCD74 = 0;
+    lbl_803DCD70 = 12;
+    lbl_803DCD6C = 28;
+    lbl_803DCD6B = 0;
+    lbl_803DCD4B = 0;
+    lbl_803DCD6A = 0;
+    lbl_803DCD4A = 0;
+    lbl_803DCD69 = 0;
+    lbl_803DCD49 = 0;
+    lbl_803DCD68 = 0;
+    lbl_803DCD48 = 0;
+    lbl_803DCD30 = 0;
+}
 #pragma scheduling reset
 #pragma peephole reset
