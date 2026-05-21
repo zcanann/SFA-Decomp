@@ -3393,7 +3393,7 @@ void dll_19_func12(int *p1, int *p2, u8 flag)
 
 extern u32 lbl_803DD5B8;
 extern s16 getAngle(f32 dx, f32 dz);
-void CameraModeCloudRunner_init(int *p1, s16 p2, f32 *p3)
+void CameraModeCloudRunner_init(int *p1, int p2, f32 *p3)
 {
     int *p1_a4 = ((int**)p1)[0xA4/4];
     if (lbl_803DD5B8 == 0) {
