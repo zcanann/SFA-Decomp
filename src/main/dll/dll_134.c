@@ -404,3 +404,27 @@ int fn_80167DA4(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80167F58(int obj, int p2)
+{
+  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern void ObjHits_EnableObject(int);
+  extern s16 lbl_803203F8[];
+  extern f32 lbl_80320404[];
+  extern f32 lbl_803E3060;
+  int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    ObjAnim_SetCurrentMove(obj, lbl_803203F8[(s32)randomGetRange(0, 4)], 0, lbl_803E3060);
+    *(u8 *)(p2 + 0x346) = 0;
+    ObjHits_EnableObject(obj);
+    *(u8 *)(sub + 0x4a) = 4;
+  }
+  *(f32 *)(p2 + 0x2a0) = lbl_80320404[(u32)*(u8 *)(sub + 0x4a)];
+  *(u8 *)(p2 + 0x34d) = 1;
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
