@@ -1171,6 +1171,60 @@ void Trigger_render(void) {}
 void Trigger_update(void) {}
 void Trigger_release(void) {}
 void Trigger_initialise(void) {}
+
+extern void objSetSlot(void* obj, int slot);
+extern uint GameBit_Get(int eventId);
+extern f32 lbl_803E40F8;
+
+#pragma peephole off
+#pragma scheduling off
+void Trigger_init(u8* obj, u8* params) {
+    u8* sub;
+    f32 t;
+
+    objSetSlot(obj, 0x28);
+    sub = *(u8**)(obj + 0xb8);
+    switch (*(s16*)params) {
+    case 0x4b:
+        t = (f32)(s32)(params[0x3a] * 2);
+        *(f32*)(sub + 4) = t * t;
+        *(s16*)(obj + 4) = 0;
+        *(s16*)(obj + 2) = 0;
+        *(s16*)obj = (s16)(params[0x3d] << 8);
+        *(f32*)(obj + 8) = t / lbl_803E40F8;
+        break;
+    case 0x4c:
+        *(s16*)(sub + 0x82) = *(s16*)(params + 0x48);
+        objFn_80198fa4(obj, params);
+        break;
+    case 0x4d:
+        *(s16*)obj = (s16)(params[0x3d] << 8);
+        *(s16*)(obj + 2) = (s16)(params[0x3e] << 8);
+        *(s16*)(obj + 4) = 0;
+        break;
+    case 0x51:
+    case 0xf4:
+        break;
+    case 0x230:
+        *(f32*)(sub + 4) = (f32)(s32)(params[0x3a] * 2);
+        *(f32*)(sub + 4) = *(f32*)(sub + 4) * *(f32*)(sub + 4);
+        break;
+    case 0x54:
+        *(s16*)(sub + 0x82) = *(s16*)(params + 0x48);
+        *(s16*)(sub + 0x84) = *(s16*)(params + 0x4a);
+        *(s16*)(sub + 0x86) = *(s16*)(params + 0x4c);
+        *(s16*)(sub + 0x88) = *(s16*)(params + 0x4e);
+        sub[0x8a] = (u8)(sub[0x8a] & ~0x80);
+        break;
+    }
+    *(s16*)(sub + 0x80) = *(s16*)(params + 0x44);
+    if (GameBit_Get(*(s16*)(sub + 0x80)) == 1) {
+        sub[0] = (u8)(sub[0] | 0x04);
+    }
+    sub[0] = (u8)(sub[0] | 0x40);
+}
+#pragma scheduling reset
+#pragma peephole reset
 void cloudprisoncontrol_free(void) {}
 void cloudprisoncontrol_hitDetect(void) {}
 void cloudprisoncontrol_release(void) {}
