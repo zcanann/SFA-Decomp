@@ -2465,6 +2465,31 @@ void FUN_80202414(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_80202524(int obj, int p)
+{
+  extern void ObjHits_EnableObject(int obj);
+  extern void ObjHits_SetHitVolumeSlot(int obj, int slot, int a, int b);
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern f32 lbl_803E62A8;
+  extern f32 lbl_803E62F4;
+
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjHits_EnableObject(obj);
+  }
+  ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+  *(f32 *)(p + 0x2a0) = lbl_803E62F4;
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 5, lbl_803E62A8, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  *(s8 *)(p + 0x34d) = 1;
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
