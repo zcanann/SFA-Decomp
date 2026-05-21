@@ -653,7 +653,7 @@ void FUN_801fe084(int param_1,int param_2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801FE16C(int obj)
+void fn_801FE16C(int obj)
 {
   extern void ObjGroup_RemoveObject(int, int);
   extern void ObjGroup_AddObject(int, int);
@@ -694,9 +694,9 @@ int fn_801FE16C(int obj)
           *(f32 *)(obj + 0x28) = *(f32 *)(sub + 0x110);
           *(f32 *)(obj + 0x2c) = -*(f32 *)(sub + 0x114);
           v = lbl_803E61C8;
-          buf[5] = v;
-          buf[4] = v;
           buf[3] = v;
+          buf[4] = v;
+          buf[5] = v;
           buf[2] = lbl_803E61CC;
           hbuf[2] = 0;
           hbuf[1] = 0;
@@ -724,7 +724,6 @@ int fn_801FE16C(int obj)
       }
     }
   }
-  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
