@@ -1294,7 +1294,7 @@ extern void getEnvfxAct(int obj, int target, int id, int p);
 extern int *gMapEventInterface;
 extern int lbl_80323548[];
 extern f32 lbl_803E46D4;
-extern void fn_801AB700(void);
+extern void fn_801AB700(int obj, u8* state2);
 extern void fn_801AB800(void);
 extern void fn_8002B6D8(void *obj, int p2, int p3, int p4, int p5, int p6);
 
@@ -1369,6 +1369,46 @@ void fn_801AA878(u8* p1, int* p2, f32 v) {
         return;
     }
     p1[16] = 2;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void gameBitDecrement(int id);
+extern int** gObjectTriggerInterface;
+
+/* fn_801AB700: state2-driven model + trigger gate. If state2's gamebit at
+ * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
+ * Otherwise selects model 0, then consults gbit 0xa9: if set, clears the
+ * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
+ * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
+ * clear, sets the obj[0xaf] 0x10 flag instead. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801AB700(int obj, u8* state2) {
+    if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0) {
+        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
+        Obj_SetActiveModelIndex(obj, 1);
+    } else {
+        int doMark;
+        Obj_SetActiveModelIndex(obj, 0);
+        if (GameBit_Get(0xa9) != 0) {
+            *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) & ~0x10);
+            if (ObjTrigger_IsSetById(obj, 0xa9) != 0) {
+                (*(void(**)(int, int, int))(*(int*)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                gameBitDecrement(0xa9);
+                doMark = 1;
+                goto check;
+            }
+        } else {
+            *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 0x10);
+        }
+        doMark = 0;
+    check:
+        if (doMark != 0) {
+            state2[0x6] = (u8)(state2[0x6] | 1);
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
