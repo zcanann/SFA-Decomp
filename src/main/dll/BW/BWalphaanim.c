@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/BW/BWalphaanim.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_8000680c();
 extern char FUN_80006bc8();
 extern char FUN_80006bd0();

@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/dll_DA.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_80006c64();
 extern undefined4 FUN_80006c84();
 extern undefined4 FUN_80006c88();

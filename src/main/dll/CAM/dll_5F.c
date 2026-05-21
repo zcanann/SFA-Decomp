@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/dll_5F.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,float *outX,float *outY,float *outZ,int obj);
 extern double mathFn_80010c64();

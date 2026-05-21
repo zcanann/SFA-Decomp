@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_140.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern uint FUN_80006ba0();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
