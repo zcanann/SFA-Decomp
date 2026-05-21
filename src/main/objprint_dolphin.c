@@ -4463,6 +4463,37 @@ s32 mapCheckCurBlocks(int v) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 lbl_803DEA04;
+extern int *Obj_GetActiveModel(int *obj);
+extern void objRenderShadow2(int *obj, int *obj2, int model, int p4);
+extern void modelDoRenderInstrs(int *obj, int *obj2, int model, int p4);
+extern void objRenderChild(int *child, int *parent, int p3);
+void objRenderShadow(int *obj) {
+    if (*(f32 *)((char *)obj + 8) == lbl_803DEA04) {
+        curObjMtx = 0;
+        return;
+    }
+    {
+        int *m = (int *)*Obj_GetActiveModel(obj);
+        if (*(u8 *)((char *)m + 246) != 0) {
+            objRenderShadow2(obj, obj, (int)m, 1);
+        } else {
+            modelDoRenderInstrs(obj, obj, (int)m, 1);
+        }
+    }
+    if (*(s16 *)((char *)obj + 68) == 1) {
+        int i;
+        u8 *iter = (u8 *)obj;
+        for (i = 0; i < *(u8 *)((char *)obj + 235); i++) {
+            int *child = *(int **)(iter + 200);
+            if (child != NULL) {
+                objRenderChild(child, obj, 1);
+            }
+            iter += 4;
+        }
+    }
+}
+
 extern u8 lbl_80345E10[];
 void *getCurrentDataFile(int id) {
     u8 *base = lbl_80345E10;
