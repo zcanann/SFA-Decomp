@@ -14,5 +14,5 @@
 // - 5: magicmaker_hitDetect (0x801C0038)
 // - 6: magicmaker_render (0x801C0008)
 // - 7: magicmaker_free (0x801C0004)
-// - 8: magicmaker_func08 (0x801BFFFC)
+// - 8: magicmaker_getObjectTypeId (0x801BFFFC)
 // - 9: magicmaker_getExtraSize (0x801BFFF4)

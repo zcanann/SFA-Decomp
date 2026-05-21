@@ -20,7 +20,7 @@
  * - slot 05: 0x80210A98 crcloudrace_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80210A68 crcloudrace_render ref=render
  * - slot 07: 0x80210A64 crcloudrace_free stub=blr ref=free (stub)
- * - slot 08: 0x80210A5C crcloudrace_func08 stub=const 0
+ * - slot 08: 0x80210A5C crcloudrace_getObjectTypeId stub=const 0
  * - slot 09: 0x80210A54 crcloudrace_getExtraSize stub=const 16 ref=getExtraSize (stub)
  *
  * Reference-only hints:

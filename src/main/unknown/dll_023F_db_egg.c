@@ -15,7 +15,7 @@
 // - 5: dbegg_hitDetect (0x801FEA5C)
 // - 6: dbegg_render (0x801FEA0C)
 // - 7: dbegg_free (0x801FE9E8)
-// - 8: dbegg_func08 (0x801FE9E0)
+// - 8: dbegg_getObjectTypeId (0x801FE9E0)
 // - 9: dbegg_getExtraSize (0x801FE9D8)
 // - A: dbegg_setScale (0x801FE150)
 // - B: dbegg_func0B (0x801FE118)

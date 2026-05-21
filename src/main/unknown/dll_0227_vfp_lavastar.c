@@ -15,5 +15,5 @@
 // - 5: vfplavastar_hitDetect (0x801FDC24)
 // - 6: vfplavastar_render (0x801FDC20)
 // - 7: vfplavastar_free (0x801FDBCC)
-// - 8: vfplavastar_func08 (0x801FDBC4)
+// - 8: vfplavastar_getObjectTypeId (0x801FDBC4)
 // - 9: vfplavastar_getExtraSize (0x801FDBBC)

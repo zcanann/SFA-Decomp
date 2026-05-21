@@ -58,7 +58,7 @@
  * - slot 05: 0x801C0538 dimbossfire_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801C052C dimbossfire_render ref=render
  * - slot 07: 0x801C04C8 dimbossfire_free ref=free
- * - slot 08: 0x801C04C0 dimbossfire_func08 stub=const 0
+ * - slot 08: 0x801C04C0 dimbossfire_getObjectTypeId stub=const 0
  * - slot 09: 0x801C04B8 dimbossfire_getExtraSize stub=const 20 ref=getExtraSize (stub)
  */
 

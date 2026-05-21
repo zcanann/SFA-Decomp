@@ -14,5 +14,5 @@
 // - 5: dimbossfire_hitDetect (0x801C0538)
 // - 6: dimbossfire_render (0x801C052C)
 // - 7: dimbossfire_free (0x801C04C8)
-// - 8: dimbossfire_func08 (0x801C04C0)
+// - 8: dimbossfire_getObjectTypeId (0x801C04C0)
 // - 9: dimbossfire_getExtraSize (0x801C04B8)

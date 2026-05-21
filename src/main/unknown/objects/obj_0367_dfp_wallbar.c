@@ -56,7 +56,7 @@
  * - slot 05: 0x80205F8C chuka_hitDetect ref=hitDetect
  * - slot 06: 0x80205F88 chuka_render stub=blr ref=render (stub)
  * - slot 07: 0x80205F58 chuka_free ref=free
- * - slot 08: 0x80205F50 chuka_func08 stub=const 0
+ * - slot 08: 0x80205F50 chuka_getObjectTypeId stub=const 0
  * - slot 09: 0x80205F48 chuka_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

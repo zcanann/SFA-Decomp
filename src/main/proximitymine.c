@@ -19,7 +19,7 @@ int proximitymine_getExtraSize(void)
   return sizeof(ProximityMineState);
 }
 
-int proximitymine_func08(void)
+int proximitymine_getObjectTypeId(void)
 {
   return 0;
 }

@@ -19,7 +19,7 @@ int crcloudrace_getExtraSize(void)
   return sizeof(CrCloudRaceState);
 }
 
-int crcloudrace_func08(void)
+int crcloudrace_getObjectTypeId(void)
 {
   return 0;
 }
@@ -112,6 +112,6 @@ ObjectDescriptor gCrCloudRaceObjDescriptor = {
     (ObjectDescriptorCallback)crcloudrace_hitDetect,
     (ObjectDescriptorCallback)crcloudrace_render,
     (ObjectDescriptorCallback)crcloudrace_free,
-    (ObjectDescriptorCallback)crcloudrace_func08,
+    (ObjectDescriptorCallback)crcloudrace_getObjectTypeId,
     crcloudrace_getExtraSize,
 };

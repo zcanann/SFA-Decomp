@@ -60,7 +60,7 @@
  * - slot 05: 0x80203F80 dbholecontrol1_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80203F50 dbholecontrol1_render ref=render
  * - slot 07: 0x80203F2C dbholecontrol1_free ref=free
- * - slot 08: 0x80203F24 dbholecontrol1_func08 stub=const 0
+ * - slot 08: 0x80203F24 dbholecontrol1_getObjectTypeId stub=const 0
  * - slot 09: 0x80203F1C dbholecontrol1_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

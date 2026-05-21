@@ -4548,11 +4548,11 @@ void chuka_render(void) {}
 int GCRobotBlast_getExtraSize(void) { return 0x8; }
 int GCRobotBlast_func08_ret_0(void) { return 0x0; }
 int drakorenergy_getExtraSize(void) { return 0xc; }
-int drakorenergy_func08(void) { return 0x0; }
+int drakorenergy_getObjectTypeId(void) { return 0x0; }
 int dbstealerworm_getExtraSize(void) { return 0x460; }
 int dbstealerworm_getObjectTypeId(void) { return 0x49; }
 int dbholecontrol1_getExtraSize(void) { return 0xc; }
-int dbholecontrol1_func08(void) { return 0x0; }
+int dbholecontrol1_getObjectTypeId(void) { return 0x0; }
 int dfplevelcontrol_getExtraSize(void) { return 0xc; }
 int dfplevelcontrol_getObjectTypeId(void) { return 0x0; }
 int dfpobjcreator_getExtraSize(void) { return 0x1c; }
@@ -4568,7 +4568,7 @@ int DFP_Torch_getExtraSize(void) { return 0x10; }
 int DFP_Torch_getObjectTypeId(void) { return 0x1; }
 int return0_80205F40(void) { return 0x0; }
 int chuka_getExtraSize(void) { return 0xc; }
-int chuka_func08(void) { return 0x0; }
+int chuka_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
 s16 DBstealerworm_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }

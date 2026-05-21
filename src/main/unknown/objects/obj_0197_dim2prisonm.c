@@ -57,7 +57,7 @@
  * - slot 05: 0x802BC4F4 dim2prisonmammoth_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802BC4C4 dim2prisonmammoth_render ref=render
  * - slot 07: 0x802BC4C0 dim2prisonmammoth_free stub=blr ref=free (stub)
- * - slot 08: 0x802BC4B8 dim2prisonmammoth_func08 stub=const 0
+ * - slot 08: 0x802BC4B8 dim2prisonmammoth_getObjectTypeId stub=const 0
  * - slot 09: 0x802BC4B0 dim2prisonmammoth_getExtraSize stub=const 1540 ref=getExtraSize (stub)
  */
 

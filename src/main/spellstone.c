@@ -47,7 +47,7 @@ int spellstone_getExtraSize(void)
   return sizeof(SpellStoneState);
 }
 
-int spellstone_func08(void)
+int spellstone_getObjectTypeId(void)
 {
   return 0;
 }
@@ -157,7 +157,7 @@ ObjectDescriptor12 gSpellStoneObjDescriptor = {
     (ObjectDescriptorCallback)spellstone_hitDetect,
     (ObjectDescriptorCallback)spellstone_render,
     (ObjectDescriptorCallback)spellstone_free,
-    (ObjectDescriptorCallback)spellstone_func08,
+    (ObjectDescriptorCallback)spellstone_getObjectTypeId,
     spellstone_getExtraSize,
     (ObjectDescriptorCallback)spellstone_setState,
     (ObjectDescriptorCallback)spellstone_getState,

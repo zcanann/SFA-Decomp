@@ -57,7 +57,7 @@
  * - slot 05: 0x801FDF04 vfpspellplace_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801FDF00 vfpspellplace_render stub=blr ref=render (stub)
  * - slot 07: 0x801FDEFC vfpspellplace_free stub=blr ref=free (stub)
- * - slot 08: 0x801FDEF4 vfpspellplace_func08 stub=const 0
+ * - slot 08: 0x801FDEF4 vfpspellplace_getObjectTypeId stub=const 0
  * - slot 09: 0x801FDEEC vfpspellplace_getExtraSize stub=const 6 ref=getExtraSize (stub)
  */
 

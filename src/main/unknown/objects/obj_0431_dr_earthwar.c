@@ -57,7 +57,7 @@
  * - slot 05: 0x802BE17C DR_EarthWarrior_hitDetect ref=hitDetect
  * - slot 06: 0x802BE0B0 DR_EarthWarrior_render ref=render
  * - slot 07: 0x802BE020 DR_EarthWarrior_free ref=free
- * - slot 08: 0x802BE018 DR_EarthWarrior_func08 stub=const 67
+ * - slot 08: 0x802BE018 DR_EarthWarrior_getObjectTypeId stub=const 67
  * - slot 09: 0x802BE010 DR_EarthWarrior_getExtraSize stub=const 5372 ref=getExtraSize (stub)
  * - slot 10: 0x802BE008 DR_EarthWarrior_setScale stub=const 0 ref=setScale (stub)
  * - slot 11: 0x802BDFE8 DR_EarthWarrior_func11

@@ -14,5 +14,5 @@
 // - 5: dimbosscrackpar_hitDetect (0x801C03B0)
 // - 6: dimbosscrackpar_render (0x801C03A4)
 // - 7: dimbosscrackpar_free (0x801C0374)
-// - 8: dimbosscrackpar_func08 (0x801C036C)
+// - 8: dimbosscrackpar_getObjectTypeId (0x801C036C)
 // - 9: dimbosscrackpar_getExtraSize (0x801C0364)

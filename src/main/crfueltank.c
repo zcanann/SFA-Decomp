@@ -25,7 +25,7 @@ int crfueltank_getExtraSize(void)
   return sizeof(CrFuelTankState);
 }
 
-int crfueltank_func08(void)
+int crfueltank_getObjectTypeId(void)
 {
   return 0;
 }
@@ -144,6 +144,6 @@ ObjectDescriptor gCrFuelTankObjDescriptor = {
     (ObjectDescriptorCallback)crfueltank_hitDetect,
     (ObjectDescriptorCallback)crfueltank_render,
     (ObjectDescriptorCallback)crfueltank_free,
-    (ObjectDescriptorCallback)crfueltank_func08,
+    (ObjectDescriptorCallback)crfueltank_getObjectTypeId,
     crfueltank_getExtraSize,
 };

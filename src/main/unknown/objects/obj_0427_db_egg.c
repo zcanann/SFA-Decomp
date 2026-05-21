@@ -57,7 +57,7 @@
  * - slot 05: 0x801FEA5C dbegg_hitDetect ref=hitDetect
  * - slot 06: 0x801FEA0C dbegg_render ref=render
  * - slot 07: 0x801FE9E8 dbegg_free ref=free
- * - slot 08: 0x801FE9E0 dbegg_func08 stub=const 8
+ * - slot 08: 0x801FE9E0 dbegg_getObjectTypeId stub=const 8
  * - slot 09: 0x801FE9D8 dbegg_getExtraSize stub=const 292 ref=getExtraSize (stub)
  * - slot 10: 0x801FE150 dbegg_setScale ref=setScale
  * - slot 11: 0x801FE118 dbegg_func0B

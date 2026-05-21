@@ -15,5 +15,5 @@
 // - 5: VFP_lavapool_hitDetect_nop (0x801FDA9C)
 // - 6: VFP_lavapool_render (0x801FDA24)
 // - 7: VFP_lavapool_free_nop (0x801FDA20)
-// - 8: VFP_lavapool_func08_ret_0 (0x801FDA18)
+// - 8: VFP_lavapool_getObjectTypeId (0x801FDA18)
 // - 9: VFP_lavapool_getExtraSize_ret_24 (0x801FDA10)

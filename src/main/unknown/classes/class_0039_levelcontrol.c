@@ -130,7 +130,7 @@
  *   slot 05: 0x80210A98 crcloudrace_hitDetect
  *   slot 06: 0x80210A68 crcloudrace_render
  *   slot 07: 0x80210A64 crcloudrace_free
- *   slot 08: 0x80210A5C crcloudrace_func08
+ *   slot 08: 0x80210A5C crcloudrace_getObjectTypeId
  *   slot 09: 0x80210A54 crcloudrace_getExtraSize
  * - DLL 0x028D: gWCLevelContObjDescriptor (slots=24, mask=110111111111111111111111)
  *   slot 00: 0x802272C4 wclevelcont_initialise

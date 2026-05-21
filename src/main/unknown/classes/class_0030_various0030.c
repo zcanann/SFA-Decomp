@@ -1249,7 +1249,7 @@
  *   slot 05: 0x802BC4F4 dim2prisonmammoth_hitDetect
  *   slot 06: 0x802BC4C4 dim2prisonmammoth_render
  *   slot 07: 0x802BC4C0 dim2prisonmammoth_free
- *   slot 08: 0x802BC4B8 dim2prisonmammoth_func08
+ *   slot 08: 0x802BC4B8 dim2prisonmammoth_getObjectTypeId
  *   slot 09: 0x802BC4B0 dim2prisonmammoth_getExtraSize
  * - DLL 0x01DC: gDIM2IceFloeObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B93F8 dim2icefloe_initialise
@@ -1285,7 +1285,7 @@
  *   slot 05: 0x801C0538 dimbossfire_hitDetect
  *   slot 06: 0x801C052C dimbossfire_render
  *   slot 07: 0x801C04C8 dimbossfire_free
- *   slot 08: 0x801C04C0 dimbossfire_func08
+ *   slot 08: 0x801C04C0 dimbossfire_getObjectTypeId
  *   slot 09: 0x801C04B8 dimbossfire_getExtraSize
  * - DLL 0x01E8: gSB_GalleonObjDescriptor (slots=15, mask=110111111111111)
  *   slot 00: 0x801E256C SB_Galleon_initialise
@@ -1656,7 +1656,7 @@
  *   slot 05: 0x801FDA9C VFP_lavapool_hitDetect_nop
  *   slot 06: 0x801FDA24 VFP_lavapool_render
  *   slot 07: 0x801FDA20 VFP_lavapool_free_nop
- *   slot 08: 0x801FDA18 VFP_lavapool_func08_ret_0
+ *   slot 08: 0x801FDA18 VFP_lavapool_getObjectTypeId
  *   slot 09: 0x801FDA10 VFP_lavapool_getExtraSize_ret_24
  * - DLL 0x0227: gVFP_lavastarObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FDEB8 vfplavastar_initialise
@@ -1666,7 +1666,7 @@
  *   slot 05: 0x801FDC24 vfplavastar_hitDetect
  *   slot 06: 0x801FDC20 vfplavastar_render
  *   slot 07: 0x801FDBCC vfplavastar_free
- *   slot 08: 0x801FDBC4 vfplavastar_func08
+ *   slot 08: 0x801FDBC4 vfplavastar_getObjectTypeId
  *   slot 09: 0x801FDBBC vfplavastar_getExtraSize
  * - DLL 0x0228: gVFP_SpellPlaceObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FE114 vfpspellplace_initialise
@@ -1676,7 +1676,7 @@
  *   slot 05: 0x801FDF04 vfpspellplace_hitDetect
  *   slot 06: 0x801FDF00 vfpspellplace_render
  *   slot 07: 0x801FDEFC vfpspellplace_free
- *   slot 08: 0x801FDEF4 vfpspellplace_func08
+ *   slot 08: 0x801FDEF4 vfpspellplace_getObjectTypeId
  *   slot 09: 0x801FDEEC vfpspellplace_getExtraSize
  * - DLL 0x0229: gDFP_LevelControlObjDescriptor (slots=11, mask=11011111111)
  *   slot 00: 0x80204930 dfplevelcontrol_initialise
@@ -1736,7 +1736,7 @@
  *   slot 05: 0x80205F8C chuka_hitDetect
  *   slot 06: 0x80205F88 chuka_render
  *   slot 07: 0x80205F58 chuka_free
- *   slot 08: 0x80205F50 chuka_func08
+ *   slot 08: 0x80205F50 chuka_getObjectTypeId
  *   slot 09: 0x80205F48 chuka_getExtraSize
  * - DLL 0x0231: gTrickyCurveObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80207688 TrickyCurve_initialise
@@ -1746,7 +1746,7 @@
  *   slot 05: 0x802075B0 TrickyCurve_hitDetect
  *   slot 06: 0x802075AC TrickyCurve_render
  *   slot 07: 0x8020757C TrickyCurve_free
- *   slot 08: 0x80207574 TrickyCurve_func08
+ *   slot 08: 0x80207574 TrickyCurve_getObjectTypeId
  *   slot 09: 0x8020756C TrickyCurve_getExtraSize
  * - DLL 0x0232: gSfxplayerObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80208094 sfxplayer_initialise
@@ -1756,7 +1756,7 @@
  *   slot 05: 0x80207CE0 sfxplayer_hitDetect
  *   slot 06: 0x80207CDC sfxplayer_render
  *   slot 07: 0x80207C34 sfxplayer_free
- *   slot 08: 0x80207C2C sfxplayer_func08
+ *   slot 08: 0x80207C2C sfxplayer_getObjectTypeId
  *   slot 09: 0x80207C24 sfxplayer_getExtraSize
  * - DLL 0x0233: gDfpstatue1ObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80208488 dfpstatue1_initialise
@@ -1858,7 +1858,7 @@
  *   slot 05: 0x801FFA18 drakorenergy_hitDetect
  *   slot 06: 0x801FF9DC drakorenergy_render
  *   slot 07: 0x801FF9D8 drakorenergy_free
- *   slot 08: 0x801FF9D0 drakorenergy_func08
+ *   slot 08: 0x801FF9D0 drakorenergy_getObjectTypeId
  *   slot 09: 0x801FF9C8 drakorenergy_getExtraSize
  * - DLL 0x0243: gDBHoleControl1ObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80204094 dbholecontrol1_initialise
@@ -1868,7 +1868,7 @@
  *   slot 05: 0x80203F80 dbholecontrol1_hitDetect
  *   slot 06: 0x80203F50 dbholecontrol1_render
  *   slot 07: 0x80203F2C dbholecontrol1_free
- *   slot 08: 0x80203F24 dbholecontrol1_func08
+ *   slot 08: 0x80203F24 dbholecontrol1_getObjectTypeId
  *   slot 09: 0x80203F1C dbholecontrol1_getExtraSize
  * - DLL 0x024C: lbl_8032A110 (slots=1, mask=0)
  * - DLL 0x024D: gBossDrakorObjDescriptor (slots=10, mask=1101111101)
@@ -1888,7 +1888,7 @@
  *   slot 05: 0x8020BBB0 drakord_thornbush_hitDetect
  *   slot 06: 0x8020BB1C drakord_thornbush_render
  *   slot 07: 0x8020BAC4 drakord_thornbush_free
- *   slot 08: 0x8020BABC drakord_thornbush_func08
+ *   slot 08: 0x8020BABC drakord_thornbush_getObjectTypeId
  *   slot 09: 0x8020BAB4 drakord_thornbush_getExtraSize
  * - DLL 0x0252: gKtLazerwallObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80216B44 ktlazerwall_initialise
@@ -1918,7 +1918,7 @@
  *   slot 05: 0x802BB4B0 DIMSnowHorn1_hitDetect
  *   slot 06: 0x802BB3C0 DIMSnowHorn1_render
  *   slot 07: 0x802BB39C DIMSnowHorn1_free
- *   slot 08: 0x802BB394 DIMSnowHorn1_func08
+ *   slot 08: 0x802BB394 DIMSnowHorn1_getObjectTypeId
  *   slot 09: 0x802BB38C DIMSnowHorn1_getExtraSize
  * - DLL 0x0257: gDR_EarthWarriorObjDescriptor (slots=24, mask=110111111111111111111111)
  *   slot 00: 0x802BF04C DR_EarthWarrior_initialise
@@ -1928,7 +1928,7 @@
  *   slot 05: 0x802BE17C DR_EarthWarrior_hitDetect
  *   slot 06: 0x802BE0B0 DR_EarthWarrior_render
  *   slot 07: 0x802BE020 DR_EarthWarrior_free
- *   slot 08: 0x802BE018 DR_EarthWarrior_func08
+ *   slot 08: 0x802BE018 DR_EarthWarrior_getObjectTypeId
  *   slot 09: 0x802BE010 DR_EarthWarrior_getExtraSize
  * - DLL 0x0258: gDR_CloudRunnerObjDescriptor (slots=24, mask=110111111111111111111111)
  *   slot 00: 0x802C1804 DR_CloudRunner_initialise
@@ -1938,7 +1938,7 @@
  *   slot 05: 0x802C1040 DR_CloudRunner_hitDetect
  *   slot 06: 0x802C0F78 DR_CloudRunner_render
  *   slot 07: 0x802C0F14 DR_CloudRunner_free
- *   slot 08: 0x802C0F0C DR_CloudRunner_func08
+ *   slot 08: 0x802C0F0C DR_CloudRunner_getObjectTypeId
  *   slot 09: 0x802C0F04 DR_CloudRunner_getExtraSize
  * - DLL 0x0259: gSB_CloudRunnerObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801EF35C SB_CloudRunner_initialise
@@ -1958,7 +1958,7 @@
  *   slot 05: 0x80210CBC spellstone_hitDetect
  *   slot 06: 0x80210C7C spellstone_render
  *   slot 07: 0x80210C58 spellstone_free
- *   slot 08: 0x80210C50 spellstone_func08
+ *   slot 08: 0x80210C50 spellstone_getObjectTypeId
  *   slot 09: 0x80210C48 spellstone_getExtraSize
  * - DLL 0x025F: gCrFuelTankObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802110F4 crfueltank_initialise
@@ -1968,7 +1968,7 @@
  *   slot 05: 0x80210EA4 crfueltank_hitDetect
  *   slot 06: 0x80210EA0 crfueltank_render
  *   slot 07: 0x80210E9C crfueltank_free
- *   slot 08: 0x80210E94 crfueltank_func08
+ *   slot 08: 0x80210E94 crfueltank_getObjectTypeId
  *   slot 09: 0x80210E8C crfueltank_getExtraSize
  * - DLL 0x0260: gProximityMineObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80211C20 proximitymine_initialise
@@ -1978,7 +1978,7 @@
  *   slot 05: 0x8021133C proximitymine_hitDetect
  *   slot 06: 0x80211270 proximitymine_render
  *   slot 07: 0x8021123C proximitymine_free
- *   slot 08: 0x80211234 proximitymine_func08
+ *   slot 08: 0x80211234 proximitymine_getObjectTypeId
  *   slot 09: 0x8021122C proximitymine_getExtraSize
  * - DLL 0x0261: gDrLaserCannonObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80217F20 drlasercannon_initialise

@@ -57,7 +57,7 @@
  * - slot 05: 0x80210CBC spellstone_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80210C7C spellstone_render ref=render
  * - slot 07: 0x80210C58 spellstone_free ref=free
- * - slot 08: 0x80210C50 spellstone_func08 stub=const 0
+ * - slot 08: 0x80210C50 spellstone_getObjectTypeId stub=const 0
  * - slot 09: 0x80210C48 spellstone_getExtraSize stub=const 1 ref=getExtraSize (stub)
  * - slot 10: 0x80210C0C spellstone_setState ref=setState
  * - slot 11: 0x80210BF0 spellstone_getState ref=getState

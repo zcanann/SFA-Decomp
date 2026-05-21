@@ -1312,7 +1312,7 @@ int DR_EarthWarrior_func16(void) { return 0x0; }
 int DR_EarthWarrior_render2(void) { return 0x0; }
 int DR_EarthWarrior_setScale(void) { return 0x0; }
 int DR_EarthWarrior_getExtraSize(void) { return 0x14fc; }
-int DR_EarthWarrior_func08(void) { return 0x43; }
+int DR_EarthWarrior_getObjectTypeId(void) { return 0x43; }
 int fn_802BF728(void) { return 0x0; }
 void DR_CloudRunner_func21(void) {}
 int DR_CloudRunner_func20(void) { return 0x0; }
@@ -1320,7 +1320,7 @@ int DR_CloudRunner_func16(void) { return 0x0; }
 int DR_CloudRunner_render2(void) { return 0x0; }
 int DR_CloudRunner_setScale(void) { return 0x0; }
 int DR_CloudRunner_getExtraSize(void) { return 0xbc8; }
-int DR_CloudRunner_func08(void) { return 0x43; }
+int DR_CloudRunner_getObjectTypeId(void) { return 0x43; }
 void DR_CloudRunner_release(void) {}
 
 extern int GameBit_Get(int id);

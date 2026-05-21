@@ -16,5 +16,5 @@
 // - 5: vfpspellplace_hitDetect (0x801FDF04)
 // - 6: vfpspellplace_render (0x801FDF00)
 // - 7: vfpspellplace_free (0x801FDEFC)
-// - 8: vfpspellplace_func08 (0x801FDEF4)
+// - 8: vfpspellplace_getObjectTypeId (0x801FDEF4)
 // - 9: vfpspellplace_getExtraSize (0x801FDEEC)

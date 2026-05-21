@@ -57,7 +57,7 @@
  * - slot 05: 0x80207CE0 sfxplayer_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80207CDC sfxplayer_render stub=blr ref=render (stub)
  * - slot 07: 0x80207C34 sfxplayer_free ref=free
- * - slot 08: 0x80207C2C sfxplayer_func08 stub=const 0
+ * - slot 08: 0x80207C2C sfxplayer_getObjectTypeId stub=const 0
  * - slot 09: 0x80207C24 sfxplayer_getExtraSize stub=const 10 ref=getExtraSize (stub)
  */
 

@@ -231,7 +231,7 @@ int DIMSnowHorn1_getExtraSize(void) { return 0xd0c; }
 /*
  * Returns 0x43.
  */
-int DIMSnowHorn1_func08(void) { return 0x43; }
+int DIMSnowHorn1_getObjectTypeId(void) { return 0x43; }
 
 /*
  * Wrapper for ObjGroup_RemoveObject(obj, 0xa).

@@ -17,7 +17,7 @@
  * - slot 05: 0x8021133C proximitymine_hitDetect ref=hitDetect
  * - slot 06: 0x80211270 proximitymine_render ref=render
  * - slot 07: 0x8021123C proximitymine_free ref=free
- * - slot 08: 0x80211234 proximitymine_func08 stub=const 0
+ * - slot 08: 0x80211234 proximitymine_getObjectTypeId stub=const 0
  * - slot 09: 0x8021122C proximitymine_getExtraSize stub=const 52 ref=getExtraSize (stub)
  *
  * Reference-only hints:

@@ -733,13 +733,13 @@ int dimbossgut2_setScale(void) { return 0x0; }
 int dimbossgut2_getExtraSize(void) { return 0x42c; }
 int dimbossgut2_getObjectTypeId(void) { return 0x49; }
 int DIMbossspit_getExtraSize(void) { return 0x8; }
-int DIMbossspit_func08(void) { return 0x0; }
+int DIMbossspit_getObjectTypeId(void) { return 0x0; }
 int magicmaker_getExtraSize(void) { return 0x0; }
-int magicmaker_func08(void) { return 0x0; }
+int magicmaker_getObjectTypeId(void) { return 0x0; }
 int dimbosscrackpar_getExtraSize(void) { return 0x0; }
-int dimbosscrackpar_func08(void) { return 0x0; }
+int dimbosscrackpar_getObjectTypeId(void) { return 0x0; }
 int dimbossfire_getExtraSize(void) { return 0x14; }
-int dimbossfire_func08(void) { return 0x0; }
+int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4D88;

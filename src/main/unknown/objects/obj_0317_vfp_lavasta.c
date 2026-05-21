@@ -56,7 +56,7 @@
  * - slot 05: 0x801FDC24 vfplavastar_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801FDC20 vfplavastar_render stub=blr ref=render (stub)
  * - slot 07: 0x801FDBCC vfplavastar_free ref=free
- * - slot 08: 0x801FDBC4 vfplavastar_func08 stub=const 0
+ * - slot 08: 0x801FDBC4 vfplavastar_getObjectTypeId stub=const 0
  * - slot 09: 0x801FDBBC vfplavastar_getExtraSize stub=const 20 ref=getExtraSize (stub)
  */
 

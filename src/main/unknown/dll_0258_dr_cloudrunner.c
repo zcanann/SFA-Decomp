@@ -25,7 +25,7 @@
  * - slot 05: 0x802C1040 DR_CloudRunner_hitDetect ref=hitDetect
  * - slot 06: 0x802C0F78 DR_CloudRunner_render ref=render
  * - slot 07: 0x802C0F14 DR_CloudRunner_free ref=free
- * - slot 08: 0x802C0F0C DR_CloudRunner_func08 stub=const 67
+ * - slot 08: 0x802C0F0C DR_CloudRunner_getObjectTypeId stub=const 67
  * - slot 09: 0x802C0F04 DR_CloudRunner_getExtraSize stub=const 3016 ref=getExtraSize (stub)
  * - slot 10: 0x802C0EFC DR_CloudRunner_setScale stub=const 0 ref=setScale (stub)
  * - slot 11: 0x802C0EDC DR_CloudRunner_func11

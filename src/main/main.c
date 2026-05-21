@@ -1298,13 +1298,13 @@ void vfpspellplace_initialise(void) {}
 int vfpflamepoint_getExtraSize(void) { return 0x8; }
 int return1_801FDA08(void) { return 0x1; }
 int VFP_lavapool_getExtraSize_ret_24(void) { return 0x18; }
-int VFP_lavapool_func08_ret_0(void) { return 0x0; }
+int VFP_lavapool_getObjectTypeId(void) { return 0x0; }
 int vfplavastar_getExtraSize(void) { return 0x14; }
-int vfplavastar_func08(void) { return 0x0; }
+int vfplavastar_getObjectTypeId(void) { return 0x0; }
 int vfpspellplace_getExtraSize(void) { return 0x6; }
-int vfpspellplace_func08(void) { return 0x0; }
+int vfpspellplace_getObjectTypeId(void) { return 0x0; }
 int dbegg_getExtraSize(void) { return 0x124; }
-int dbegg_func08(void) { return 0x8; }
+int dbegg_getObjectTypeId(void) { return 0x8; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off

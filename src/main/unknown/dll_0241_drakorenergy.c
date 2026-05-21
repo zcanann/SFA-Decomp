@@ -25,7 +25,7 @@
  * - slot 05: 0x801FFA18 drakorenergy_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801FF9DC drakorenergy_render ref=render
  * - slot 07: 0x801FF9D8 drakorenergy_free stub=blr ref=free (stub)
- * - slot 08: 0x801FF9D0 drakorenergy_func08 stub=const 0
+ * - slot 08: 0x801FF9D0 drakorenergy_getObjectTypeId stub=const 0
  * - slot 09: 0x801FF9C8 drakorenergy_getExtraSize stub=const 12 ref=getExtraSize (stub)
  * - slot 10: 0x801FF9B4 DrakorEnergy_setScale ref=setScale
  * - slot 11: 0x801FF9B0 DrakorEnergy_func0B_nop stub=blr

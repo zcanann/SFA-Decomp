@@ -20,7 +20,7 @@
  * - slot 05: 0x80210EA4 crfueltank_hitDetect ref=hitDetect
  * - slot 06: 0x80210EA0 crfueltank_render stub=blr ref=render (stub)
  * - slot 07: 0x80210E9C crfueltank_free stub=blr ref=free (stub)
- * - slot 08: 0x80210E94 crfueltank_func08 stub=const 0
+ * - slot 08: 0x80210E94 crfueltank_getObjectTypeId stub=const 0
  * - slot 09: 0x80210E8C crfueltank_getExtraSize stub=const 16 ref=getExtraSize (stub)
  *
  * Reference-only hints:

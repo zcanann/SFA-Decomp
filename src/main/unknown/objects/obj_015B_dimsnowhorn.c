@@ -57,7 +57,7 @@
  * - slot 05: 0x802BB4B0 DIMSnowHorn1_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802BB3C0 DIMSnowHorn1_render ref=render
  * - slot 07: 0x802BB39C DIMSnowHorn1_free ref=free
- * - slot 08: 0x802BB394 DIMSnowHorn1_func08 stub=const 67
+ * - slot 08: 0x802BB394 DIMSnowHorn1_getObjectTypeId stub=const 67
  * - slot 09: 0x802BB38C DIMSnowHorn1_getExtraSize stub=const 3340 ref=getExtraSize (stub)
  * - slot 10: 0x802BB184 DIMSnowHorn1_setScale ref=setScale
  * - slot 11: 0x802BB164 gdev_cc_initinterrupts

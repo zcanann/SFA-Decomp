@@ -14,5 +14,5 @@
 // - 5: DIMbossspit_hitDetect (0x801BFC28)
 // - 6: DIMbossspit_render (0x801BFBC4)
 // - 7: DIMbossspit_free (0x801BFB70)
-// - 8: DIMbossspit_func08 (0x801BFB68)
+// - 8: DIMbossspit_getObjectTypeId (0x801BFB68)
 // - 9: DIMbossspit_getExtraSize (0x801BFB60)
