@@ -3655,6 +3655,64 @@ void FUN_80204320(int param_1)
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_80204320(int obj)
+{
+  extern void *Obj_GetPlayerObject(void);
+  extern u8 lbl_803DC182;
+  extern s16 lbl_80329848[];
+  int sub;
+  void *player;
+
+  sub = *(int *)(obj + 0xb8);
+  player = Obj_GetPlayerObject();
+  if (lbl_803DC182 != 0) {
+    s16 i;
+    s16 *arr = (s16 *)((char *)lbl_80329848 + 12);
+    arr[0] = 0;
+    arr[1] = 0;
+    arr[2] = 0;
+    arr = lbl_80329848;
+    for (i = 0; i < 6; i++) {
+      *arr = (s16)randomGetRange(1, 4);
+      arr++;
+    }
+    GameBit_Set(1508, 0);
+    *(s16 *)(sub + 0) = 0;
+    lbl_803DC182 = 0;
+  }
+  if (GameBit_Get(1507) == 0) {
+    if (GameBit_Get(1504) != 0 && GameBit_Get(1505) != 0) {
+      GameBit_Set(1507, 1);
+    }
+  }
+  if (GameBit_Get(3671) == 0) {
+    if (GameBit_Get(1589) != 0 && *(u8 *)(sub + 6) == 0) {
+      s16 i;
+      s16 *arr;
+      Sfx_PlayFromObject(0, 1095);
+      arr = lbl_80329848;
+      for (i = 0; i < 6; i++) {
+        *arr = (s16)randomGetRange(1, 4);
+        arr++;
+      }
+      GameBit_Set(1508, 1);
+      *(u8 *)(sub + 6) = 1;
+    } else if (GameBit_Get(1589) == 0 && *(u8 *)(sub + 6) == 1) {
+      *(u8 *)(sub + 6) = 0;
+      GameBit_Set(1508, 0);
+    }
+    if (GameBit_Get(1509) != 0) {
+      *(s16 *)(sub + 0) = 300;
+      ObjMsg_SendToObject(player, 0x60005, obj, 1);
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
