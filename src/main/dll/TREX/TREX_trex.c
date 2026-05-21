@@ -1875,7 +1875,32 @@ void SB_CloudBall_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_CloudBall_hitDetect(void) {}
+extern f32 lbl_803E58E8;
+extern f32 lbl_803E58EC;
+extern f32 lbl_803E58F0;
+extern void projectileParticleFxFn_80099660(int *obj, int a, f32 f);
+
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudBall_hitDetect(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *params = *(int **)((char *)obj + 0x54);
+    int *target = *(int **)((char *)params + 0x50);
+
+    if (target == NULL) return;
+    if (*(f32 *)((char *)state + 0x20) != lbl_803E58EC) return;
+    if (*(s16 *)((char *)target + 0x46) == 142) {
+        Sfx_PlayFromObject(obj, 54);
+    }
+    params = *(int **)((char *)obj + 0x54);
+    *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
+    *(f32 *)((char *)state + 0x20) = lbl_803E58F0;
+    *(u8 *)((char *)obj + 0x36) = 0;
+    projectileParticleFxFn_80099660(obj, 2, lbl_803E58E8);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_CloudBall_init(void) {}
 void SB_CloudBall_update(void) {}
 #pragma peephole off
