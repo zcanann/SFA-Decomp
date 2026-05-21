@@ -55,7 +55,7 @@ int MoonSeedPlantingSpot_SeqFn(int obj);
 void MoonSeedPlantingSpot_render(void);
 void MoonSeedPlantingSpot_hitDetect(void);
 void MoonSeedPlantingSpot_update(void);
-void MoonSeedPlantingSpot_init(void);
+void MoonSeedPlantingSpot_init(int *obj, u8 *init);
 void MoonSeedPlantingSpot_release(void);
 void MoonSeedPlantingSpot_initialise(void);
 

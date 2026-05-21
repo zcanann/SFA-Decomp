@@ -796,6 +796,70 @@ void animsharpclaw_initialise(void) {}
 void MoonSeedPlantingSpot_hitDetect(void) {}
 void MoonSeedPlantingSpot_release(void) {}
 void MoonSeedPlantingSpot_initialise(void) {}
+
+extern int MoonSeedPlantingSpot_SeqFn(int p1);
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedPlantingSpot_init(int *obj, u8 *init) {
+    u8 *sub;
+    int mapId;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(void**)((char*)obj + 0xbc) = (void*)&MoonSeedPlantingSpot_SeqFn;
+    *(s16*)obj = (s16)((s8)init[0x1f] << 8);
+    sub[0] = 0;
+    ObjGroup_AddObject((int)obj, 0x2e);
+    mapId = *(int*)(init + 0x14);
+    switch (mapId) {
+        case 0x41a59:
+            *(s16*)(sub + 8) = 0x867;
+            *(s16*)(sub + 0xa) = 0x858;
+            break;
+        case 0x41a5b:
+            *(s16*)(sub + 8) = 0x866;
+            *(s16*)(sub + 0xa) = 0x856;
+            break;
+        case 0x41a5c:
+            *(s16*)(sub + 8) = 0x868;
+            *(s16*)(sub + 0xa) = 0x85a;
+            break;
+        case 0x41a5d:
+            *(s16*)(sub + 8) = 0x869;
+            *(s16*)(sub + 0xa) = 0x864;
+            break;
+        case 0x43e04:
+            *(s16*)(sub + 8) = 0x9a2;
+            *(s16*)(sub + 0xa) = 0x99a;
+            break;
+        case 0x43e1f:
+            *(s16*)(sub + 8) = 0x9a3;
+            *(s16*)(sub + 0xa) = 0x99c;
+            break;
+        case 0x43e20:
+            *(s16*)(sub + 8) = 0x9a4;
+            *(s16*)(sub + 0xa) = 0x99e;
+            break;
+        case 0x43e21:
+            *(s16*)(sub + 8) = 0x9a5;
+            *(s16*)(sub + 0xa) = 0x9a0;
+            break;
+        case 0x476ae:
+            *(s16*)(sub + 8) = 0x3d5;
+            *(s16*)(sub + 0xa) = 0x3d2;
+            break;
+        case 0x4b26e:
+            *(s16*)(sub + 8) = 0xd4d;
+            *(s16*)(sub + 0xa) = 0xd4b;
+            break;
+        case 0x4bea3:
+            *(s16*)(sub + 8) = 0xe21;
+            *(s16*)(sub + 0xa) = 0xe10;
+            break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void ccgasvent_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */
