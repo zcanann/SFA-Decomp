@@ -1483,14 +1483,61 @@ void MMP_levelcontrol_init(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_801A6F4C(int);
+extern void setDrawLights(int v);
+extern f32 lbl_803E44E8;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801A6F4C(int obj, int p2, int data) {
+    u8 *state = *(u8 **)(obj + 0xb8);
+    int i;
+    *(u8 *)(data + 0x56) = 0;
+    for (i = 0; i < (int)*(u8 *)(data + 0x8b); i++) {
+        u8 type = *(u8 *)(data + i + 0x81);
+        switch (type) {
+        case 0:
+            setDrawLights(0);
+            break;
+        case 1:
+            state[0] = 13;
+            state[1] = 1;
+            GameBit_Set(0x87b, state[1]);
+            *(u8 *)(obj + 0x36) = 0xff;
+            break;
+        case 2:
+            state[0] = state[0] & ~9;
+            state[0] = state[0] | 0x30;
+            *(u8 *)(obj + 0xad) = 1;
+            break;
+        case 3: {
+            int r;
+            state[0] = state[0] & ~0x20;
+            state[0] = state[0] | 0x50;
+            r = (int)randomGetRange(10, 60);
+            *(f32 *)(state + 8) = (f32)r;
+            state[1] = 1;
+            GameBit_Set(0x87b, state[1]);
+            break;
+        }
+        case 4:
+            *(f32 *)(state + 4) = lbl_803E44E8;
+            setDrawLights(1);
+            break;
+        }
+    }
+    state[0] |= 0x80;
+    mmp_asteroid_re_update(obj);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
 void mmp_asteroid_re_init(int obj) {
     int state = *(int *)(obj + 0xB8);
     *(u16 *)(obj + 0xB0) |= 0x6000;
-    *(void (**)(int))(obj + 0xBC) = fn_801A6F4C;
+    *(int (**)(int, int, int))(obj + 0xBC) = fn_801A6F4C;
     *(u8 *)state = 0;
     *(u8 *)(state + 2) = (u8)GameBit_Get(0x88C);
     *(u8 *)(state + 1) = (u8)GameBit_Get(0x87B);
