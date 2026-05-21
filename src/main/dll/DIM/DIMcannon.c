@@ -2116,6 +2116,49 @@ void link_levcontrol_init(int *obj) {
         *(int *)((char *)obj + 0xf4) = 1;
     }
 }
+
+extern u8 lbl_803238D8[];
+extern void *gMapEventInterface;
+extern void fn_80088870(u8 *a, u8 *b, u8 *c, u8 *d);
+extern void envFxActFn_800887f8(int id);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+
+void linkb_levcontrol_init(int *obj) {
+    u8 *sub;
+    u8 *t;
+
+    t = lbl_803238D8;
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
+    if (GameBit_Get(0x36e) != 0) {
+        *(int*)sub = *(int*)sub & 4;
+    }
+    if (GameBit_Get(0x543) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x28);
+    } else if (GameBit_Get(0x387) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x20);
+    } else if (GameBit_Get(0x386) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x18);
+    } else if (GameBit_Get(0x385) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x10);
+    } else if (GameBit_Get(0x384) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x08);
+    }
+    fn_80088870(t + 0x38, t, t + 0x70, t + 0xa8);
+    if (getSaveGameLoadStatus() != 0) {
+        if ((u8)((int(*)(int, int))((void**)*(void**)gMapEventInterface)[19])((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
+            envFxActFn_800887f8(0x3f);
+        }
+        getEnvfxActImmediately(0, 0, 0x23c, 0);
+    } else {
+        if ((u8)((int(*)(int, int))((void**)*(void**)gMapEventInterface)[19])((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
+            envFxActFn_800887f8(0x1f);
+        }
+        getEnvfxAct(0, 0, 0x23c, 0);
+    }
+    *(s16*)(sub + 0xc) = 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
