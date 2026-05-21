@@ -607,5 +607,21 @@ extern int *gExpgfxInterface;
 void TrickyCurve_free(int obj) {
     ((void (*)(int))((void**)*gExpgfxInterface)[6])(obj);
 }
+
+void TrickyCurve_init(int *obj, u8 *def) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    state[0xc] = def[0x19];
+    *(s16 *)((char *)state + 4) = (s16)((s32)*(s8 *)((char *)def + 0x18) << 2);
+    *(s16 *)state = *(s16 *)((char *)def + 0x1a);
+    *(s16 *)((char *)state + 2) = *(s16 *)((char *)def + 0x1c);
+    state[0xe] = def[0x19];
+    state[0x10] = 0;
+    state[0x11] = 0;
+    state[0x12] = 0;
+    *(s16 *)((char *)state + 8) = *(s16 *)((char *)def + 0x20);
+    *(s16 *)((char *)state + 0xa) = *(s16 *)((char *)def + 0x1e);
+    *(s16 *)((char *)state + 6) = 0;
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
+}
 #pragma peephole reset
 #pragma scheduling reset
