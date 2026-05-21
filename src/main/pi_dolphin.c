@@ -5420,6 +5420,34 @@ void initViewport(void) {
 }
 #pragma scheduling reset
 
+extern int lbl_803DCD88;
+extern int lbl_803DCD8C;
+extern int lbl_803DCD90;
+extern u8 lbl_803DCD6A;
+extern void GXSetTevDirect(int);
+extern void GXSetTevOrder(int, int, int, int);
+extern void GXSetTevSwapMode(int, int, int);
+extern void GXSetTevColorIn(int, int, int, int, int);
+extern void GXSetTevAlphaIn(int, int, int, int, int);
+extern void GXSetTevColorOp(int, int, int, int, int, int);
+extern void GXSetTevAlphaOp(int, int, int, int, int, int);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80050F2C(void) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 255);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorIn(lbl_803DCD90, 15, 6, 8, 15);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_8004AAD4(u8* arr, int size, int idx) {
