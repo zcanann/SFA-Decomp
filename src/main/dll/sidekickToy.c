@@ -1688,3 +1688,23 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f64 lbl_803E25E0;
+
+#pragma scheduling off
+#pragma peephole off
+f32 fn_8014C5D0(int obj) {
+    int* state = *(int**)(obj + 0xb8);
+    u16 a, b;
+    if (state == NULL) return lbl_803E2574;
+    a = *(u16*)((char*)state + 690);
+    if (a != 0) {
+        b = *(u16*)((char*)state + 688);
+        if (b != 0) {
+            return (f32)((double)b - lbl_803E25E0) / (f32)((double)a - lbl_803E25E0);
+        }
+    }
+    return lbl_803E2574;
+}
+#pragma peephole reset
+#pragma scheduling reset
