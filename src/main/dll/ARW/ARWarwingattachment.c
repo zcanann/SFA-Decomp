@@ -1077,6 +1077,59 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_801F20D4(int obj)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern void ObjAnim_AdvanceCurrentMove(int obj, int n, f32 v, f32 t);
+  extern void *Obj_GetPlayerObject(void);
+  extern int *gGameUIInterface;
+  extern int lbl_802C247C[];
+  extern void buttonDisable(int a, int b);
+  extern u8 framesThisStep;
+  extern f32 lbl_803E5D98;
+  extern f32 lbl_803E5D9C;
+  extern f32 lbl_803E5DA0;
+  extern void GameBit_Set(int slot, int val);
+  extern int GameBit_Get(int id);
+  int sub;
+  int stk[3];
+
+  sub = *(int *)(obj + 0xb8);
+  Obj_GetPlayerObject();
+  stk[0] = lbl_802C247C[0];
+  stk[1] = lbl_802C247C[1];
+  stk[2] = lbl_802C247C[2];
+  if ((*(u8 *)(obj + 0xaf) & 0x8) != 0) {
+    *(u8 *)(obj + 0xaf) ^= 0x8;
+  }
+  if (GameBit_Get(763) == 0) {
+    if (*(s16 *)(obj + 0xa0) != 7) {
+      ObjAnim_SetCurrentMove(obj, 7, lbl_803E5D98, 0);
+    }
+    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(s32)(u32)framesThisStep - lbl_803E5DA0);
+  } else {
+    if (*(s16 *)(obj + 0xa0) != 2) {
+      ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
+    }
+    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(s32)(u32)framesThisStep - lbl_803E5DA0);
+  }
+  if ((*(u8 *)(obj + 0xaf) & 0x1) != 0 && GameBit_Get(763) == 0) {
+    GameBit_Set(763, 1);
+    *(u8 *)(sub + 0x27) = 0;
+    buttonDisable(0, 256);
+  } else if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
+    if ((**(int (**)(int *, int))(*gGameUIInterface + 0x24))(stk, 3) > -1) {
+      GameBit_Set(784, 1);
+      *(u8 *)(sub + 0x27) = *(u8 *)(sub + 0x27) + 1;
+      buttonDisable(0, 256);
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
