@@ -1173,7 +1173,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   int state;
   int i;
   int childSlot;
-  
+
   state = *(int *)(obj + 0xb8);
   freeAndNull((void *)(state + 0x538));
   freeAndNull((void *)(state + 0x568));
@@ -1185,7 +1185,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   freeAndNull((void *)(state + 0x688));
   freeAndNull((void *)(state + 0x6b8));
   ObjGroup_RemoveObject(obj,1);
-  (**(code **)(*gExpgfxInterface + 0x14))(obj);
+  ((void (**)(int))(*gExpgfxInterface))[5](obj);
   if ((shouldKeepFlameChildren == 0) && ((*(uint *)(state + 0x54) & 0x800) != 0)) {
     *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffff7ff;
     *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x1000;
