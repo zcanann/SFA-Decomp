@@ -814,9 +814,8 @@ void pollenfragment_init(int obj,int config)
   spawnCount = 4;
   do {
     (*(code *)(*gPartfxInterface + 8))(obj,(int)*(short *)(state[7] + 6),0,1,0xffffffff,0);
-    keepSpawning = spawnCount != 0;
     spawnCount = spawnCount + -1;
-  } while (keepSpawning);
+  } while (spawnCount != -1);
   if ((*(byte *)(state[7] + 0x12) >> 6 & 1) == 0) {
     *(float *)(state + 2) = lbl_803E319C;
   }
