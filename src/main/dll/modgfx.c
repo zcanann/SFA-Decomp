@@ -1159,6 +1159,7 @@ extern void* PTR_LAB_803108a0;
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void expgfx_initialise(void)
 {
   u8 *expgfxBase;
@@ -1218,6 +1219,7 @@ void expgfx_initialise(void)
   memset(expgfxBase + EXPGFX_EXPTAB_OFFSET, 0, 0x500);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -4333,6 +4335,7 @@ extern s16 lbl_803DD28A;
 extern ModgfxPendingSpawn *lbl_803DD28C;
 extern ModgfxPendingSpawn *lbl_803DD290;
 #pragma scheduling off
+#pragma peephole off
 s16 dll_0B_func18(void) { return lbl_803DD288; }
 void dll_0B_func17(u32 flags) { *(u32 *)(lbl_8039BE98 + 0x54) |= flags; }
 void dll_0B_func15(void *params) { memcpy(lbl_8039BE98 + 0x46, params, 0xe); }
@@ -4368,6 +4371,7 @@ void dll_0B_func10(void)
   lbl_803DD28C = cursor;
   lbl_803DD28A = 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* OSReport(literal) wrapper. */
@@ -4430,6 +4434,7 @@ void dll_0B_func0B(void) {
 }
 
 #pragma scheduling off
+#pragma peephole off
 void dll_0B_func06(void) {
     fn_800A1040(0, 1);
 }
@@ -4437,6 +4442,7 @@ void dll_0B_func06(void) {
 void dll_0B_release(void) {
     fn_800A1040(0, 1);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off
