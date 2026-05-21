@@ -3272,6 +3272,56 @@ void dll_CB_init(int *obj, u8 *params, int extra) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int fn_8016083C(int *obj, u8 *sub, u8 *sub2);
+extern f32 curveFn_80010320(int *p, f32 t);
+extern int getAngle(f32 a, f32 b);
+extern f32 lbl_803E2E98;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_CB_update(int *obj) {
+    extern int *gBaddieControlInterface;
+    extern int *gRomCurveInterface;
+    u8 *sub;
+    u8 *def;
+    int *path;
+    int one_local;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    def = *(u8**)((char*)obj + 0x4c);
+    if (*(int*)((char*)obj + 0xf4) != 0) return;
+    if (*(int*)((char*)obj + 0xf8) == 0) {
+        *(f32*)((char*)obj + 0xc) = *(f32*)(def + 8);
+        *(f32*)((char*)obj + 0x10) = *(f32*)(def + 0xc);
+        *(f32*)((char*)obj + 0x14) = *(f32*)(def + 0x10);
+        *(int*)((char*)obj + 0xf8) = 1;
+        return;
+    }
+    if ((*(u16*)(sub + 0x400) & 2) != 0) {
+        one_local = 1;
+        ((void(*)(u8*, u8*, s16, u8*, int, int, int, int*))((int**)*(int**)gBaddieControlInterface)[10])(sub, sub + 0x35c, *(s16*)(sub + 0x3f4), sub + 0x405, 0, 0, 0, &one_local);
+        *(u16*)(sub + 0x400) = (u16)(*(u16*)(sub + 0x400) & ~2);
+    }
+    if (((int(*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, sub, 1) == 0) return;
+    fn_8016083C(obj, sub, sub);
+    path = *(int**)(sub + 0x3dc);
+    if ((*(u16*)(sub + 0x400) & 8) == 0) return;
+    if (curveFn_80010320(path, *(f32*)(sub + 0x280)) != 0.0f || path[4] != 0) {
+        if ((u8)((int(*)(int*))((int**)*(int**)gRomCurveInterface)[36])(path) != 0) {
+            *(u16*)(sub + 0x400) = (u16)(*(u16*)(sub + 0x400) & ~8);
+        }
+    }
+    *(f32*)(sub + 0x280) = lbl_803E2E98;
+    *(s16*)obj = (s16)(getAngle(*(f32*)((char*)path + 0x74), *(f32*)((char*)path + 0x7c)) + 0x8000);
+    *(s16*)((char*)obj + 2) = (s16)(getAngle(*(f32*)((char*)path + 0x7c), *(f32*)((char*)path + 0x78)) + 0x4000);
+    *(s16*)((char*)obj + 4) = (s16)(getAngle(*(f32*)((char*)path + 0x78), *(f32*)((char*)path + 0x74)) + 0x4000);
+    *(f32*)((char*)obj + 0xc) = *(f32*)((char*)path + 0x68);
+    *(f32*)((char*)obj + 0x10) = *(f32*)((char*)path + 0x6c);
+    *(f32*)((char*)obj + 0x14) = *(f32*)((char*)path + 0x70);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int dll_CE_getExtraSize_ret_1052(void) { return 0x41c; }
 int dll_CE_getObjectTypeId(void) { return 0x49; }
