@@ -409,6 +409,29 @@ void dimdismountpoint_hitDetect(void) {}
 void dimdismountpoint_release(void) {}
 void dimdismountpoint_initialise(void) {}
 
+extern f32 lbl_803E4908;
+extern f32 lbl_803E4914;
+extern f32 lbl_803E4918;
+extern f32 fn_80293E80(f32 x);
+extern double sin(double);
+
+#pragma peephole off
+#pragma scheduling off
+void dimdismountpoint_init(u8* obj, u8* params) {
+    f32 *sub;
+
+    ObjGroup_AddObject(obj, 0x13);
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    sub = *(f32**)(obj + 0xb8);
+    sub[0] = fn_80293E80(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
+    sub[1] = lbl_803E4908;
+    sub[2] = sin(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
+    sub[3] = -(sub[0] * *(f32*)(obj + 0xc) + sub[1] * *(f32*)(obj + 0x10) + sub[2] * *(f32*)(obj + 0x14));
+    *(int*)(obj + 0xf8) = 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* 8b "li r3, N; blr" returners. */
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
 int dimbridgecogmai_getObjectTypeId(void) { return 0x0; }
