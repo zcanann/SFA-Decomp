@@ -4428,6 +4428,23 @@ void flamethrowerspe_initialise(void) {}
 void shield_hitDetect(void) {}
 void shield_release(void) {}
 void shield_initialise(void) {}
+
+extern void ModelLightStruct_free(void *p);
+extern int Sfx_StopFromObject(int obj, int sfxId);
+
+#pragma scheduling off
+void shield_free(int obj)
+{
+    void **state = *(void ***)((char *)obj + 0xB8);
+    if (state[0] != NULL) {
+        ModelLightStruct_free(state[0]);
+        state[0] = NULL;
+    }
+    Sfx_StopFromObject(obj, 0x42C);
+    Sfx_StopFromObject(obj, 0x42D);
+}
+#pragma scheduling reset
+
 void curve_setScale(void) {}
 void curve_free(void) {}
 void dll_F7_hitDetect(void) {}
