@@ -391,7 +391,7 @@ void warpstone_free(int obj, int mode)
 #pragma scheduling reset
 
 extern int ObjHits_GetPriorityHitWithPosition(int obj, int a, int b, int c, f32 *x, f32 *y, f32 *z);
-extern void objLightFn_8009a1dc(int obj, int *p, int x, int y, f32 light);
+extern void objLightFn_8009a1dc(int obj, f32 light, int *p, int x, int y);
 extern int randFn_80080100(int max);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objAudioFn_800393f8(int obj, int *p, int a, int b, int c, int d);
@@ -410,7 +410,7 @@ void warpstone_hitDetect(int obj)
     if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos[0], &pos[1], &pos[2]) != 0) {
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
-        objLightFn_8009a1dc(obj, p, 1, 0, lbl_803E54A0);
+        objLightFn_8009a1dc(obj, lbl_803E54A0, p, 1, 0);
         if (randFn_80080100(3) != 0) {
             Sfx_PlayFromObject(obj, 700);
         } else {
