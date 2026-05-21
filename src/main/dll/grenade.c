@@ -1160,10 +1160,12 @@ undefined4 trickyFn_801434b0(int param_1,int *param_2)
   int local_14;
   
   iVar5 = trickyFoodFn_8014460c(param_1,param_2);
-  if (iVar5 == 0) {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
-    sVar2 = *(short *)(param_1 + 0xa0);
-    if (sVar2 == 0x2a) {
+  if (iVar5 != 0) {
+    return 1;
+  }
+  *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
+  sVar2 = *(short *)(param_1 + 0xa0);
+  if (sVar2 == 0x2a) {
       param_2[0x1cf] = (int)((float)param_2[0x1cf] - lbl_803DC074);
       if ((float)param_2[0x1cf] <= lbl_803E306C) {
         if (((param_2[0x15] & 0x10000U) != 0) || (lbl_803E306C < (float)param_2[0x1c8])) {
@@ -1226,9 +1228,8 @@ undefined4 trickyFn_801434b0(int param_1,int *param_2)
         objAnimFn_8013a3f0(param_1,0,lbl_803E30D4,0);
         FUN_80146fa0();
       }
-      param_2[0x15] = param_2[0x15] & 0xffffffef;
-      *(undefined *)((int)param_2 + 10) = 0;
-    }
+    param_2[0x15] = param_2[0x15] & 0xffffffef;
+    *(undefined *)((int)param_2 + 10) = 0;
   }
   return 1;
 }
