@@ -28,6 +28,9 @@ extern f32 lbl_803E373C;
 extern f64 lbl_803E3740;
 extern f64 lbl_803E3748;
 
+#pragma peephole off
+#pragma scheduling off
+
 /*
  * --INFO--
  *
