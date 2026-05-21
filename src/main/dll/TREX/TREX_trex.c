@@ -1976,7 +1976,69 @@ void SB_KyteCage_init(int *obj, int *params)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_KyteCage_update(void) {}
+extern int *ObjList_GetObjects(int *out_head, int *out_count);
+extern void buttonDisable(int controller, int mask);
+extern int *objModelGetVecFn_800395d8(int obj, int idx);
+extern int ObjAnim_AdvanceCurrentMove(int obj, int a, f32 b, f32 dt);
+extern f32 lbl_803E5918;
+extern f32 lbl_803E591C;
+extern f32 timeDelta;
+#pragma scheduling off
+#pragma peephole off
+void SB_KyteCage_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
+    if (*(int *)state == 0) {
+        int *head;
+        int count;
+        int i;
+        head = ObjList_GetObjects(&i, &count);
+        for (i = 0; i < count; i++) {
+            int child = head[i];
+            if (*(s16 *)(child + 0x46) == 0x121) {
+                *(int *)state = child;
+                ObjLink_AttachChild(obj, *(int *)state, 1);
+                i = count;
+            }
+        }
+    }
+    if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+        if (GameBit_Get(0x92a) == 0) {
+            buttonDisable(0, 0x100);
+            ((void (*)(int, int))((void **)*gObjectTriggerInterface)[0x84/4])(obj, 0);
+            ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[0x48/4])(3, obj, -1);
+            GameBit_Set(0x92a, 1);
+            return;
+        }
+    }
+    if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+        buttonDisable(0, 0x100);
+        ((void (*)(int, int))((void **)*gObjectTriggerInterface)[0x84/4])(obj, 0);
+        if (*(u8 *)(state + 5) != 0) {
+            ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[0x48/4])(2, obj, -1);
+        } else {
+            ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[0x48/4])(1, obj, -1);
+            *(u8 *)(state + 5) = 1;
+        }
+    }
+    if (*(int *)(obj + 0x30) != 0) {
+        int kind = *(int *)(*(int *)(obj + 0x30) + 0xf4);
+        int *mvec = objModelGetVecFn_800395d8(obj, 0);
+        if (mvec != 0 && kind < 9 && *(s16 *)(obj + 0xa0) != 5) {
+            *(s16 *)((char *)mvec + 4) = *(s16 *)(*(int *)(obj + 0x30) + 4);
+            ObjAnim_SetCurrentMove((int *)obj, 5, lbl_803E591C, 0);
+        } else if (mvec != 0 && kind >= 9 && *(s16 *)(obj + 0xa0) != 9) {
+            *(s16 *)((char *)mvec + 4) = 0;
+            ObjAnim_SetCurrentMove((int *)obj, 9, lbl_803E591C, 0);
+        }
+    }
+    if (ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5918, timeDelta) != 0) {
+        Sfx_PlayFromObject((int *)obj, 0x315);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void SB_MiniFire_free(int* obj)
