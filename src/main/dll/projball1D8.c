@@ -242,3 +242,52 @@ void sh_tricky_init(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern char lbl_803269F8[];
+extern f32 lbl_803E5280;
+extern int* gMapEventInterface;
+extern void fn_80088870(char* a, char* b, char* c, char* d);
+extern int getSaveGameLoadStatus(void);
+extern void envFxActFn_800887f8(int id);
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern void getEnvfxAct(int a, int b, int c, int d);
+
+#pragma scheduling off
+#pragma peephole off
+void nw_levcontrol_init(int* obj)
+{
+    char* base = lbl_803269F8;
+    u8* state = *(u8**)((char*)obj + 0xb8);
+
+    Obj_GetPlayerObject();
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
+
+    if (GameBit_Get(0x19f) != 0) {
+        state[4] = 0xc;
+    } else if (GameBit_Get(0x19d) != 0) {
+        state[4] = 1;
+    } else {
+        state[4] = 0;
+    }
+
+    *(f32*)state = lbl_803E5280;
+
+    fn_80088870(base + 0x8c, base + 0x54, base + 0xc4, base + 0xfc);
+
+    if (getSaveGameLoadStatus() != 0) {
+        envFxActFn_800887f8(0x3f);
+        getEnvfxActImmediately(0, 0, 0x23c, 0);
+    } else {
+        envFxActFn_800887f8(0x1f);
+        getEnvfxAct(0, 0, 0x23c, 0);
+    }
+
+    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 0, 0);
+    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 2, 0);
+    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 5, 0);
+    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 10, 0);
+    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 0x1c, 0);
+    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 9, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
