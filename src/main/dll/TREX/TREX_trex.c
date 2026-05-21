@@ -2050,7 +2050,7 @@ void SB_KyteCage_init(int *obj, int *params)
 extern int *ObjList_GetObjects(int *out_head, int *out_count);
 extern void buttonDisable(int controller, int mask);
 extern int *objModelGetVecFn_800395d8(int obj, int idx);
-extern int ObjAnim_AdvanceCurrentMove(int obj, int a, f32 b, f32 dt);
+extern int ObjAnim_AdvanceCurrentMove(int obj, f32 b, f32 dt, int a);
 extern f32 lbl_803E5918;
 extern f32 lbl_803E591C;
 extern f32 timeDelta;
@@ -2105,7 +2105,7 @@ void SB_KyteCage_update(int obj)
             ObjAnim_SetCurrentMove((int *)obj, 9, lbl_803E591C, 0);
         }
     }
-    if (ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5918, timeDelta) != 0) {
+    if (ObjAnim_AdvanceCurrentMove(obj, lbl_803E5918, timeDelta, 0) != 0) {
         Sfx_PlayFromObject((int *)obj, 0x315);
     }
 }
