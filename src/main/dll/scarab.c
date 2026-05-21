@@ -737,9 +737,9 @@ int fn_8015E210(int *obj, u8 *p)
   if (*(char *)(p + 0x27a) != '\0') {
     objs = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
-      int o = objs[i];
-      if (o != (int)obj && *(s16 *)(o + 0x46) == 774) {
-        (**(void (**)(int, int, int))(*(int *)(o + 0x68) + 0x24))(o, 129, 0);
+      void *o = (void *)objs[i];
+      if (o != (void *)obj && *(s16 *)((char *)o + 0x46) == 774) {
+        (**(void (**)(void *, int, int))(*(int *)((char *)o + 0x68) + 0x24))(o, 129, 0);
       }
     }
     player_b8 = *(int **)((char *)Obj_GetPlayerObject() + 0xc8);
