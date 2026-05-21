@@ -76,7 +76,6 @@ extern f32 lbl_803DF5B8;
 extern f32 lbl_803DF5D8;
 extern f32 lbl_803DF5DC;
 extern f32 lbl_803DF5E0;
-extern char sObjHitsTooManyHitSpheresWarning[];
 extern undefined4 uRam803dd84c;
 extern undefined4 uRam803dd854;
 

@@ -160,9 +160,6 @@ extern f32 lbl_803DF630;
 extern f32 lbl_803DF634;
 extern f32 lbl_803DF638;
 
-extern char sObjMsgOverflowInObjectWarning[];
-extern char sObjAddObjectTypeReachedMaxTypes[];
-
 #define OBJMSG_QUEUE_OFFSET 0xdc
 #define OBJMSG_SEND_INCLUDE_SENDER 0x1
 #define OBJMSG_SEND_MATCH_ANY 0x2

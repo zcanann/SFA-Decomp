@@ -55,6 +55,7 @@
 #define OBJHITBOX_STATE_RESET_FRAMES_OFFSET 0x10D
 
 extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
+extern char sObjHitsTooManyHitSpheresWarning[];
 
 typedef struct ObjHitboxDef {
   u8 pad00[OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET];

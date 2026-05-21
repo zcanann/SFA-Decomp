@@ -8,6 +8,9 @@
 typedef struct ObjAnimBank ObjAnimBank;
 typedef void (*ObjContactCallback)(int objA,int objB);
 
+extern char sObjAddObjectTypeReachedMaxTypes[];
+extern char sObjMsgOverflowInObjectWarning[];
+
 int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2);
 void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3);
 void ObjHits_SetTargetMask(int param_1,undefined param_2);
