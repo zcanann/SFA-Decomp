@@ -1929,6 +1929,40 @@ s16 dll_CA_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x2
 extern f32 lbl_803E2CD8;
 extern f32 timeDelta;
 extern int* gPlayerInterface;
+extern f32 lbl_803E2CE8;
+extern f32 lbl_803E2CEC;
+extern f32 lbl_803E2CF0;
+extern f32 lbl_803E2CF4;
+extern f32 lbl_803E2CF8;
+extern f32 lbl_803E2CFC;
+extern int* Obj_GetActiveModel(int* obj);
+extern void ObjModel_SetRenderCallback(int* model, void* cb);
+extern void renderWhirlpool(void);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015AE68(int* obj, u8* state) {
+    f32 fz;
+    *(f32*)((char*)state + 684) = lbl_803E2CE8;
+    state[827] = (u8)(int)*(f32*)((char*)state + 680);
+    *(f32*)((char*)state + 680) = lbl_803E2CEC;
+    *(int*)((char*)state + 740) = 0x42001;
+    *(f32*)((char*)state + 776) = lbl_803E2CF0;
+    *(f32*)((char*)state + 768) = lbl_803E2CF4;
+    *(f32*)((char*)state + 772) = lbl_803E2CF8;
+    state[800] = 0;
+    fz = lbl_803E2CFC;
+    *(f32*)((char*)state + 788) = fz;
+    state[801] = 5;
+    *(f32*)((char*)state + 792) = fz;
+    state[802] = 7;
+    *(f32*)((char*)state + 796) = fz;
+    state[826] = 1;
+    state[827] = 0;
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), (void*)renderWhirlpool);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 int fn_8015B748(int* obj, u8* state) {
     int* sub = *(int**)((char*)obj + 0xb8);
