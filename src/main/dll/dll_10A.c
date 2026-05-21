@@ -232,6 +232,55 @@ void FUN_80154290(undefined8 param_1,undefined8 param_2,double param_3,undefined
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_80154328(int obj, int p)
+{
+  extern u32 randomGetRange(int min, int max);
+  extern void setMatrixFromObjectPos(void *mtx, s16 *args);
+  extern void Matrix_TransformPoint(void *mtx, f32 *in, f32 *out_x, f32 *out_z);
+  extern void Sfx_PlayAtPositionFromObject(int obj, int sfx, f32 x, f32 y, f32 z);
+  extern int *gWaterfxInterface;
+  extern f32 timeDelta;
+  extern f32 lbl_803E2990;
+  extern f32 lbl_803E2994;
+  extern f32 lbl_803E2998;
+  extern f32 lbl_803E299C;
+  extern f32 lbl_803E29A0;
+  extern f32 lbl_803E29A4;
+  s16 stk_in[7];
+  f32 stk_pos[3];
+  f32 stk_tx;
+  f32 stk_tz;
+  char stk_mtx[80];
+
+  *(f32 *)(p + 0x330) -= timeDelta;
+  if (*(f32 *)(p + 0x330) <= lbl_803E2990) {
+    *(f32 *)(p + 0x330) = (f32)(s32)randomGetRange(30, 60);
+    stk_pos[0] = *(f32 *)(obj + 0xc);
+    stk_pos[1] = lbl_803E2990;
+    stk_pos[2] = *(f32 *)(obj + 0x14);
+    stk_in[0] = *(s16 *)(obj + 0);
+    stk_in[1] = 0;
+    stk_in[2] = 0;
+    *(f32 *)(stk_in + 4) = lbl_803E2994;
+    setMatrixFromObjectPos(stk_mtx, stk_in);
+    stk_tx = (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C + lbl_803E2998;
+    stk_tz = (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C + lbl_803E29A0;
+    {
+      f32 ox, oz;
+      Matrix_TransformPoint(stk_mtx, &stk_tx, &ox, &oz);
+      (**(void (**)(int, int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface) + 0x14))(
+          0, 3, stk_tx, *(f32 *)(p + 0x32c), stk_tz, lbl_803E2990);
+    }
+    if ((f32)sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c)) > lbl_803E29A4) {
+      Sfx_PlayAtPositionFromObject(obj, 565, stk_pos[0], stk_pos[1], stk_pos[2]);
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
