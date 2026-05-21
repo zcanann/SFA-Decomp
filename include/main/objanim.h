@@ -8,6 +8,8 @@ typedef struct ObjAnimState ObjAnimState;
 typedef struct ObjAnimComponent ObjAnimComponent;
 typedef struct ObjAnimEventList ObjAnimEventList;
 
+extern char gObjAnimSetBlendMoveMissingAnimWarning[];
+
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,s16 eventState);
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);

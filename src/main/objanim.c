@@ -9,7 +9,6 @@ extern void ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef
 extern void ObjAnim_LoadMoveEvents(int objAnim,int objType,ObjAnimEventTable *eventTable,u32 moveId,
                                    int async);
 
-extern char gObjAnimSetBlendMoveMissingAnimWarning[];
 extern f64 gObjAnimU32ToDoubleBias;
 extern f64 gObjAnimS32ToDoubleBias;
 extern f32 gObjAnimProgressOne;
