@@ -2719,3 +2719,40 @@ void playerVecFn_8005a9b0(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int* lbl_803DCE9C;
+extern void setMapBlockFlag(void);
+extern void OSReport(const char* fmt, ...);
+extern char sTrackLoadBlockOverrunError[];
+
+#pragma scheduling off
+#pragma peephole off
+void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
+{
+    int i;
+    s16* arr;
+    int count;
+    s8* statusArr;
+
+    i = 0;
+    arr = lbl_803DCE94;
+    count = lbl_803DCE98;
+    for (; i < count; i++) {
+        if (*arr == -1) break;
+        arr++;
+    }
+    if (i == count) {
+        lbl_803DCE98 = (u8)(lbl_803DCE98 + 1);
+        if (lbl_803DCE98 == 0x40) {
+            OSReport(sTrackLoadBlockOverrunError);
+        }
+    }
+    statusArr = (s8*)lbl_803822B4[layer];
+    statusArr[slotIdx] = (s8)i;
+    lbl_803DCE9C[i] = (int)blk;
+    lbl_803DCE94[i] = (s16)blockId;
+    lbl_803DCE8C[i] = 1;
+    setMapBlockFlag();
+}
+#pragma peephole reset
+#pragma scheduling reset
