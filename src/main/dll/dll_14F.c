@@ -1715,7 +1715,7 @@ void trickyguard_update(int *obj) {
     int *def = *(int **)((char *)obj + 0x4c);
     *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
     if (*(s16 *)((char *)def + 0x1a) != -1) {
-        if ((int)GameBit_Get(*(s16 *)((char *)def + 0x1a)) == 0) return;
+        if ((u32)GameBit_Get(*(s16 *)((char *)def + 0x1a)) == 0) return;
     }
     tricky = (int *)getTrickyObject();
     if (tricky == NULL) return;
