@@ -96,6 +96,9 @@ extern f32 lbl_803E5920;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
+#pragma peephole off
+#pragma scheduling off
+
 #define DIMBOSSTONSIL_ACTIVE_OFFSET 0x27a
 #define DIMBOSSTONSIL_STUN_READY_OFFSET 0x27b
 #define DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET 0x2a0

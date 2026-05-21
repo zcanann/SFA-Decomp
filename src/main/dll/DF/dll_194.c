@@ -26,6 +26,9 @@ extern f32 lbl_803E4DFC;
 extern f32 lbl_803E4E18;
 extern f32 lbl_803E4E1C;
 
+#pragma peephole off
+#pragma scheduling off
+
 static inline f32 DFRope_S32AsFloat(s32 value) {
   u64 bits = CONCAT44(0x43300000, (u32)value ^ 0x80000000);
   return (f32)(*(f64 *)&bits - lbl_803E4DF0);
