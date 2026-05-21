@@ -438,6 +438,7 @@ extern f32 lbl_803E51B4;
 #pragma scheduling off
 #pragma peephole off
 void dll_19C_update(int *obj) {
+    extern uint GameBit_Get(int);
     u8 *def;
     u8 *sub;
     int res;
