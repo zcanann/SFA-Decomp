@@ -5475,3 +5475,59 @@ void fn_8004AAD4(u8* arr, int size, int idx) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void gxSetZMode_(int a, int b, int c);
+extern void GXSetAlphaUpdate(u8 v);
+extern void GXFlush(void);
+extern void GXGetFifoPtrs(void *fifo, void **out_g, void **out_p);
+extern int OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(int s);
+extern void Queue_Push(void *q, void *item);
+extern void GXEnableBreakPt(void *p);
+extern void GXSetDrawSync(u16 v);
+extern void GXCopyDisp(void *fb, u8 clear);
+extern void VISetBlack(int black);
+extern void *lbl_803DCCD4;
+extern void *lbl_803DCCD0;
+extern void *lbl_803DCCEC;
+extern void *lbl_803DCCE8;
+extern u8 lbl_803DCCA7;
+extern u16 lbl_803DB5CE;
+extern u8 lbl_803DB5CC;
+extern char lbl_8035F730[];
+int GXFlush_(u8 visible) {
+    void *fifo_get;
+    void *fifo_put;
+    void *item[3];
+    int s;
+    void *next;
+    gxSetZMode_(1, 3, 1);
+    GXSetAlphaUpdate(1);
+    GXFlush();
+    GXGetFifoPtrs(lbl_803DCCD4, &fifo_get, &fifo_put);
+    item[0] = fifo_put;
+    item[1] = (void *)0;
+    item[2] = lbl_803DCCD0;
+    s = OSDisableInterrupts();
+    Queue_Push(&lbl_8035F730[0], item);
+    if (lbl_803DCCA7 == 0) {
+        GXEnableBreakPt(fifo_put);
+        lbl_803DCCA7 = 1;
+    }
+    OSRestoreInterrupts(s);
+    GXSetDrawSync(lbl_803DB5CE);
+    GXCopyDisp(lbl_803DCCD0, 1);
+    GXFlush();
+    lbl_803DB5CE = (u16)(lbl_803DB5CE + 1);
+    next = lbl_803DCCEC;
+    if (lbl_803DCCD0 == next) next = lbl_803DCCE8;
+    lbl_803DCCD0 = next;
+    if (visible != 0 && lbl_803DB5CC != 0) {
+        lbl_803DB5CC = lbl_803DB5CC - 1;
+        if (lbl_803DB5CC == 0) {
+            VISetBlack(0);
+            lbl_803DB5CC = 0;
+        }
+    }
+    return 0;
+}
