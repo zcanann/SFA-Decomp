@@ -3181,10 +3181,10 @@ void CameraModeWorldMap_init(int *obj)
     }
     *(f32*)lbl_803DD588 = lbl_803E1A40;
     *(f32*)((char*)lbl_803DD588 + 4) = lbl_803E1A28;
-    *((u8*)lbl_803DD588 + 8) = 0;
-    *((u8*)lbl_803DD588 + 9) = 0;
-    p = (u8*)lbl_803DD588;
     bitval = 0;
+    *((u8*)lbl_803DD588 + 8) = bitval;
+    *((u8*)lbl_803DD588 + 9) = bitval;
+    p = (u8*)lbl_803DD588;
     asm {
         lbz b, 21(p)
         rlwimi b, bitval, 7, 24, 24
