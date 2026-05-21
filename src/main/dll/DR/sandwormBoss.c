@@ -3492,3 +3492,33 @@ int *fn_8019B3F8(int *obj, int p2, int *outVec, int p4) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_8019D9F0(int *obj);
+extern int *lbl_803DDB10;
+extern u8 framesThisStep;
+#pragma peephole off
+#pragma scheduling off
+void cfmaincrystal_update(int *obj) {
+    uint payload;
+    uint msgType;
+    uint srcObjId;
+    s8 t;
+    t = ((s8 *)*(int *)((char *)obj + 0x4c))[0x19];
+    switch (t) {
+    case 0:
+        fn_8019D9F0(obj);
+        break;
+    case 1:
+        payload = 0;
+        while (ObjMsg_Pop(obj, &msgType, &srcObjId, &payload) != 0) {
+            if (msgType == 0x110004) {
+                ObjMsg_SendToObject((void *)srcObjId, 0x110004, obj, 0);
+            }
+        }
+        lbl_803DDB10 = obj;
+        *(s16 *)obj = (s16)(*(s16 *)obj + (s32)framesThisStep * 0xb6);
+        break;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
