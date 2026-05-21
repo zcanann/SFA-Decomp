@@ -1617,16 +1617,14 @@ void trickyguard_init(s16 *obj, u8 *param_2) {
   *(u16 *)((char *)obj + 0xb0) = (u16)v;
 }
 
+#pragma peephole off
 #pragma scheduling off
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-  int state;
-  s32 v;
-  state = *(int *)(obj + 0xb8);
-  v = visible;
-  if (v != 0) {
+  int state = *(int *)(obj + 0xb8);
+  if (visible != 0) {
     if (*(u8 *)(state + 0x1b) != 0) {
       if (*(u8 *)(state + 0x1c) == 0) {
-        objRenderFn_8003b8f4(obj, lbl_803E38B0);
+        ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E38B0);
       }
     }
   }
