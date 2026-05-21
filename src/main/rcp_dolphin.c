@@ -2623,6 +2623,38 @@ void gxColorFn_800523d0(void) {
 extern void GXSetTevColor(int id, int *color);
 extern void GXSetTevKColorSel(int tev, int sel);
 extern void gxTextureFn_8004bf88(int *p, int a, int b, int *out_sel, int *out_other);
+
+extern f32 LastCommandWasRead_803DEB60;
+extern f32 sDvdfsCurrentDirEntry;
+extern f32 LastReadIssued_803DEB58[2];
+extern f32 lbl_803DEB7C;
+void gxFn_80052dc0(void) {
+    f32 omtx[4][4];
+    f32 pmtx[3][4];
+    GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60,
+                  sDvdfsCurrentDirEntry, sDvdfsCurrentDirEntry,
+                  LastCommandWasRead_803DEB60, LastReadIssued_803DEB58[1]);
+    GXSetScissor(0, 0, 32, 32);
+    GXSetDispCopySrc(0, 0, 32, 32);
+    GXSetDispCopyDst(32, 32);
+    GXSetTexCopySrc(0, 0, 32, 32);
+    C_MTXOrtho(omtx, LastReadIssued_803DEB58[1], lbl_803DEB7C,
+               LastReadIssued_803DEB58[1], lbl_803DEB7C,
+               LastReadIssued_803DEB58[1], LastReadIssued_803DEB58[0]);
+    GXSetProjection(omtx, 1);
+    GXSetBlendMode(0, 1, 0, 5);
+    gxSetZMode_(0, 2, 0);
+    GXSetCullMode(0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(10, 1);
+    PSMTXIdentity(pmtx);
+    GXLoadPosMtxImm(pmtx, 0);
+    GXLoadNrmMtxImm(pmtx, 0);
+    GXSetCurrentMtx(0);
+}
 void gxTextureFn_80052638(int *param) {
     int color;
     int v1;
