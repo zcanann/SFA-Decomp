@@ -53,6 +53,6 @@ int cclevcontrol_getExtraSize(void);
 void cclevcontrol_free(void);
 void cclevcontrol_render(void);
 void cclevcontrol_update(void);
-void cclevcontrol_init(void);
+void cclevcontrol_init(int *obj);
 
 #endif /* MAIN_DLL_DIM_DIMSNOWBALL_H_ */
