@@ -307,7 +307,7 @@ extern f32 lbl_803E520C;
 #pragma peephole off
 void fn_801CDF94(int obj, int state, int flag)
 {
-    if (flag != 0 && *(int*)(state + 0x28) != 0 && *(f32*)(state + 0x18) < lbl_803E5214) {
+    if (flag != 0 && *(void**)(state + 0x28) != NULL && *(f32*)(state + 0x18) < lbl_803E5214) {
         *(u8*)(state + 0x40c) = 1;
         *(f32*)(state + 0x410) = *(f32*)(*(int*)(state + 0x28) + 0xc);
         *(f32*)(state + 0x414) = *(f32*)(*(int*)(state + 0x28) + 0x10);
