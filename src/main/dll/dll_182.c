@@ -276,7 +276,7 @@ void texscroll2_update(int *obj) {
         int mapId = *(int*)(*(int*)((char*)obj + 0x4c) + 0x14);
         if (mapId == 0x49b2f || mapId == 0x49b67) {
             if (block != NULL) {
-                if ((int)GameBit_Get(*(int*)(sub + 8)) != *(int*)(sub + 0xc) && sub[0x10] == 0) {
+                if (GameBit_Get(*(int*)(sub + 8)) != *(uint*)(sub + 0xc) && sub[0x10] == 0) {
                     fn_80191F54((int)obj, (int*)sub);
                     sub[0x10] = 0;
                 }
