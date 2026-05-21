@@ -1232,6 +1232,36 @@ f32 curves_distFn0B(int param_1,uint param_2)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+int curves_isNotPoint(int *obj) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (*(int *)((char *)obj + 0x1c + i * 4) != -1 &&
+            (*(s8 *)((char *)obj + 0x1b) & (1 << i)) == 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int curves_isPoint(int *obj) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (*(int *)((char *)obj + 0x1c + i * 4) != -1 &&
+            (*(s8 *)((char *)obj + 0x1b) & (1 << i)) != 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
