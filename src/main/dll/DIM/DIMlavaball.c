@@ -1665,6 +1665,42 @@ void MoonSeedBush_init(int obj, int data) {
 #pragma scheduling reset
 
 extern void saveGame_saveObjectPos(int obj);
+
+extern int objBboxFn_800640cc(int *from, int *to, f32 radius, int mode, void *hit, int obj, int p7, int p8, int p9, int p10);
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern f32 lbl_803E454C;
+extern f32 lbl_803E4550;
+extern f32 lbl_803E4558;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A79E0(int obj) {
+    int auStack_14[21];
+    int local_18;
+    int *state;
+    int ret;
+    state = *(int **)(obj + 0xb8);
+    ret = ObjHits_GetPriorityHit(obj, &local_18, (int *)0, (int *)0);
+    if (ret == 0) {
+        ret = objBboxFn_800640cc((int *)(obj + 0x80), (int *)(obj + 0xc), lbl_803E454C, 1, auStack_14, obj, 1, -1, 0xff, 0);
+    }
+    if ((ret != 0) ||
+        ((*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0 && (*(u16 *)((char *)state + 0x24) & 0x40) != 0) ||
+         (*(u16 *)((char *)state + 0x24) & 0x100) != 0)) {
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + lbl_803E4550;
+        spawnExplosion(obj, lbl_803E4554, 1, 1, 0, 0, 0, 1, 0);
+        *(u16 *)((char *)state + 0x24) |= 0x200;
+        *(f32 *)((char *)state + 0x14) = lbl_803E4558;
+        *(u8 *)(obj + 0x36) = 0;
+        *(f32 *)(obj + 0xc) = *(f32 *)((char *)state + 0x18);
+        *(f32 *)(obj + 0x10) = *(f32 *)((char *)state + 0x1c);
+        *(f32 *)(obj + 0x14) = *(f32 *)((char *)state + 0x20);
+        saveGame_saveObjectPos(obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void fn_801A80C4(int obj, f32 x, f32 y, f32 z) {
     *(f32 *)(obj + 0xC) = x;
     *(f32 *)(obj + 0x10) = y;
