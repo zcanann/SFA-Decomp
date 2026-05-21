@@ -4173,6 +4173,25 @@ int fn_80065640(void) {
 extern int lbl_803DCF48;
 #pragma scheduling off
 #pragma peephole off
+void objFn_80065604(void) {
+    u32 cur;
+    int idx;
+    s16 i;
+    i = 0;
+    idx = 0;
+    do {
+        u8 *p = (u8 *)(lbl_803DCF48 + idx);
+        cur = p[20];
+        if (cur != 0) p[20]--;
+        idx += 24;
+        i++;
+    } while (i < 64);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void fn_80063368(int target) {
     s16 i;
     int idx = 0;
