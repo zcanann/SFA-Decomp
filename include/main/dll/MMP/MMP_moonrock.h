@@ -2,8 +2,21 @@
 #define MAIN_DLL_MMP_MMP_MOONROCK_H_
 
 #include "ghidra_import.h"
+#include "main/object_descriptor.h"
 
-void FUN_801978a8(int param_1,int param_2);
+extern ObjectDescriptor gWaterFallSprayObjDescriptor;
+
+void lightning_free(u8 *obj, int p2);
+void lightning_render(u8 *obj);
+void WaterFallSpray_free(u8 *obj);
+void WaterFallSpray_init(u8 *obj, u8 *data);
+void WaterFallSpray_render(void);
+int WaterFallSpray_getExtraSize(void);
+int fn_80197DB0(int *obj);
+void sfxplayerObj_init(u8 *obj, u8 *data);
+void sfxplayerObj_free(u8 *obj);
+int sfxplayerObj_getExtraSize(void);
+
 void FUN_80197960(int param_1);
 void FUN_80197990(int param_1);
 void FUN_80197c38(int param_1,int param_2);
