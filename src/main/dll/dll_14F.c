@@ -1657,7 +1657,51 @@ void duster_hitDetect(int param_1) {
 #pragma scheduling reset
 
 extern void MagicPlant_update();
-extern void MagicPlant_init();
+extern f32 lbl_803E385C;
+extern void *gMapEventInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void MagicPlant_init(int obj, u8 *params) {
+    int state;
+    s32 r;
+    f32 t;
+    int divisor;
+
+    state = *(int *)(obj + 0xb8);
+    ObjGroup_AddObject(obj, 52);
+    ObjGroup_AddObject(obj, 62);
+    r = ((int (**)(int))((int **)gMapEventInterface)[0])[26](*(int *)(params + 20));
+    if (r == 0) {
+        t = (f32)((int (**)(int))((int **)gMapEventInterface)[0])[27](*(int *)(params + 20));
+        divisor = *(u16 *)(params + 24);
+        if (divisor < 100) divisor = 100;
+        t = t / (f32)divisor;
+        if (t > lbl_803E3858) {
+            t = lbl_803E3858;
+        } else if (t < lbl_803E385C) {
+            t = lbl_803E385C;
+        }
+        *(f32 *)(state + 4) = lbl_803E3858 - t;
+    } else {
+        *(f32 *)(state + 4) = lbl_803E3858;
+    }
+    *(u8 *)(state + 15) = 0;
+    *(f32 *)(state + 8) = lbl_803E385C;
+    ObjAnim_SetMoveProgress((double)*(f32 *)(state + 4), (ObjAnimComponent *)obj);
+    *(s16 *)obj = (s16)((u32)params[29] << 8);
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+    *(s8 *)(obj + 0xad) = (s8)params[28];
+    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(u8 *)(obj + 0xad) = 0;
+    }
+    if (*(int *)(obj + 0x64) != 0) {
+        *(u32 *)(*(int *)(obj + 0x64) + 48) |= 0x810;
+    }
+    *(void **)(obj + 0xbc) = (void *)fn_8017F8C8;
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern void trickyguard_update();
 extern void StayPoint_update();
 extern void duster_update();
