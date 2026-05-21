@@ -2957,7 +2957,7 @@ int fn_80144E40(int *obj, int *p) {
 void trickyFn_80144f50(int obj, int state) {
     int sfxState;
     int isInWater;
-    int sfxDisabled;
+    u32 sfxDisabled;
     u32 transitionFlag;
 
     if (trickyFoodFn_8014460c(obj, state) == 0) {
