@@ -960,4 +960,74 @@ void SB_CloudRunner_init(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_CloudRunner_update(void) {}
+extern void setAButtonIcon(int idx);
+extern int padGetStickX(int controller);
+extern int padGetStickY(int controller);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f32 lbl_803E5CA0;
+extern f32 lbl_803E5CB8;
+extern f32 lbl_803E5CBC;
+extern f32 lbl_803E5CC0;
+extern void fn_801EE3B4(int obj, int state);
+extern void fn_801EE248(int obj, int state);
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudRunner_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int prevKey;
+
+    if (*(s8 *)(state + 0x6e) != 0 || *(s8 *)(obj + 0xac) != 0xb) {
+        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+        return;
+    }
+    setAButtonIcon(6);
+    *(int *)(state + 0x70) = (int)(s8)padGetStickX(0);
+    *(int *)(state + 0x74) = (int)(s8)padGetStickY(0);
+    if (*(int *)(state + 0x10) == 0) {
+        int count;
+        int *objs = (int *)ObjGroup_GetObjects(3, &count);
+        int i;
+        for (i = 0; i < count; i++) {
+            int o = objs[i];
+            if (*(s16 *)(o + 0x46) == 0x8e) {
+                *(int *)(state + 0x10) = o;
+                i = count;
+            }
+        }
+    }
+    *(int *)(obj + 0xf4) = 0;
+    prevKey = *(s8 *)(state + 0x65);
+    *(s8 *)(state + 0x64) = (s8)(*(s8 *)(state + 0x64) - framesThisStep);
+    if (*(s8 *)(state + 0x64) < 0) {
+        *(s8 *)(state + 0x64) = 0;
+    }
+    switch (*(s8 *)(state + 0x65)) {
+    case 0:
+        ((void (*)(int, int))fn_801EE668)(obj, state);
+        ((void (*)(int, int))fn_801EEB50)(obj, state);
+        break;
+    case 1:
+        fn_801EE3B4(obj, state);
+        break;
+    case 2:
+    case 3:
+        *(int *)(obj + 0xf4) = 1;
+        break;
+    }
+    *(f32 *)(state + 0x5c) = *(f32 *)(state + 0x5c) + (f32)(int)*(s16 *)(obj + 4) * timeDelta / lbl_803E5CBC;
+    *(f32 *)(state + 0x58) = *(f32 *)(state + 0x58) + (f32)(int)*(s16 *)(obj + 2) * timeDelta / lbl_803E5CBC;
+    *(f32 *)(state + 0x5c) = *(f32 *)(state + 0x5c) - timeDelta * (*(f32 *)(state + 0x5c) * lbl_803E5CC0);
+    *(f32 *)(state + 0x58) = *(f32 *)(state + 0x58) - timeDelta * (*(f32 *)(state + 0x58) * lbl_803E5CC0);
+    *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) - (int)(lbl_803E5CB8 * *(f32 *)(state + 0x58)));
+    *(f32 *)(obj + 0x10) = lbl_803E5CB8 * *(f32 *)(state + 0x58) + *(f32 *)(state + 0x50);
+    *(f32 *)(obj + 0x14) = lbl_803E5CB8 * *(f32 *)(state + 0x5c) + *(f32 *)(state + 0x54);
+    *(s16 *)(state + 0x6c) = (s16)(*(s16 *)(state + 0x6c) + framesThisStep);
+    if (*(s8 *)(state + 0x65) != prevKey) {
+        *(s16 *)(state + 0x6c) = 0;
+    }
+    ((void (*)(int, int))fn_801EE248)(obj, state);
+}
+#pragma peephole reset
+#pragma scheduling reset
