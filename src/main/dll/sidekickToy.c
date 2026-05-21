@@ -1743,7 +1743,7 @@ f32 fn_8014C5D0(int obj) {
     if (a != 0) {
         b = *(u16*)((char*)state + 688);
         if (b != 0) {
-            return (f32)((double)b - lbl_803E25E0) / (f32)((double)a - lbl_803E25E0);
+            return (f32)(u32)b / (f32)(u32)a;
         }
     }
     return lbl_803E2574;
