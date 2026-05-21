@@ -832,6 +832,11 @@ void FUN_801544a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+extern f32 lbl_803E286C;
+extern f32 lbl_803E2894;
+extern f32 lbl_803E28A0;
+extern f32 lbl_803E28A4;
+extern f32 lbl_803E28A8;
 extern f32 lbl_803E28F4;
 extern f32 lbl_803E290C;
 extern f32 lbl_803E2910;
@@ -839,6 +844,46 @@ extern f32 lbl_803E2924;
 extern f32 lbl_803E2928;
 extern f32 lbl_803E292C;
 extern f32 lbl_803E2930;
+
+extern void fn_80293018(int idx, f32* outA, f32* outB);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80152EC0(int obj, int state)
+{
+    f32 zero;
+    f32 lblA;
+    f32 a, b;
+
+    zero = lbl_803E286C;
+    *(f32*)(state + 0x2ac) = zero;
+    *(int*)(state + 0x2e4) = 1;
+    *(f32*)(state + 0x308) = lbl_803E28A0;
+    *(f32*)(state + 0x300) = lbl_803E28A4;
+    lblA = lbl_803E2894;
+    *(f32*)(state + 0x304) = lblA;
+    *(u8*)(state + 0x320) = 1;
+    *(f32*)(state + 0x314) = lblA;
+    *(u8*)(state + 0x321) = 3;
+    *(f32*)(state + 0x318) = lblA;
+    *(u8*)(state + 0x322) = 1;
+    *(f32*)(state + 0x31c) = lblA;
+    *(f32*)(state + 0x324) = *(f32*)(obj + 0xc);
+    *(f32*)(state + 0x328) = *(f32*)(obj + 0x10);
+    *(f32*)(state + 0x32c) = *(f32*)(obj + 0x14);
+    *(u8*)(state + 0x33a) = 0;
+    *(u8*)(state + 0x33b) = 0;
+    *(s16*)(state + 0x338) = 0;
+    *(f32*)(state + 0x330) = zero;
+    *(f32*)(state + 0x334) = zero;
+    *(f32*)(state + 0x2fc) = lbl_803E28A8;
+
+    fn_80293018((s32)(u32)*(u16*)(state + 0x338), &a, &b);
+    *(f32*)(obj + 0xc) = a * *(f32*)(state + 0x2a8) + *(f32*)(state + 0x324);
+    *(f32*)(obj + 0x14) = b * *(f32*)(state + 0x2a8) + *(f32*)(state + 0x32c);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int prio);
 extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
