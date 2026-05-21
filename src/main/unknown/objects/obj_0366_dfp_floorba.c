@@ -56,7 +56,7 @@
  * - slot 05: 0x80206500 dfpfloorbar_hitDetect ref=hitDetect
  * - slot 06: 0x802064D0 dfpfloorbar_render ref=render
  * - slot 07: 0x8020648C dfpfloorbar_free ref=free
- * - slot 08: 0x80206484 dfpfloorbar_func08 stub=const 0
+ * - slot 08: 0x80206484 dfpfloorbar_getObjectTypeId stub=const 0
  * - slot 09: 0x8020647C dfpfloorbar_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

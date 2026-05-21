@@ -15,6 +15,6 @@
 // - 5: dfplevelcontrol_hitDetect (0x802045E0)
 // - 6: dfplevelcontrol_render (0x802045DC)
 // - 7: dfplevelcontrol_free (0x802045B8)
-// - 8: dfplevelcontrol_func08 (0x802045B0)
+// - 8: dfplevelcontrol_getObjectTypeId (0x802045B0)
 // - 9: dfplevelcontrol_getExtraSize (0x802045A8)
 // - 10: dfplevelcontrol_setScale (0x80204548)

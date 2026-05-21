@@ -84,7 +84,7 @@
  *   slot 05: 0x802049D4 dfpobjcreator_hitDetect
  *   slot 06: 0x802049C8 dfpobjcreator_render
  *   slot 07: 0x80204980 dfpobjcreator_free
- *   slot 08: 0x80204978 dfpobjcreator_func08
+ *   slot 08: 0x80204978 dfpobjcreator_getObjectTypeId
  *   slot 09: 0x80204970 dfpobjcreator_getExtraSize
  * - DLL 0x0265: gDrCreatorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8021A004 drcreator_initialise

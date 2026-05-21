@@ -56,7 +56,7 @@
  * - slot 05: 0x802045E0 dfplevelcontrol_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802045DC dfplevelcontrol_render stub=blr ref=render (stub)
  * - slot 07: 0x802045B8 dfplevelcontrol_free ref=free
- * - slot 08: 0x802045B0 dfplevelcontrol_func08 stub=const 0
+ * - slot 08: 0x802045B0 dfplevelcontrol_getObjectTypeId stub=const 0
  * - slot 09: 0x802045A8 dfplevelcontrol_getExtraSize stub=const 12 ref=getExtraSize (stub)
  * - slot 10: 0x80204548 dfplevelcontrol_setScale ref=setScale
  */

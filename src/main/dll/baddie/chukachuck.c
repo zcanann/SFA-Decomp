@@ -238,7 +238,7 @@ ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor = {
         (ObjectDescriptorCallback)dfpfloorbar_hitDetect,
         (ObjectDescriptorCallback)dfpfloorbar_render,
         (ObjectDescriptorCallback)dfpfloorbar_free,
-        (ObjectDescriptorCallback)dfpfloorbar_func08,
+        (ObjectDescriptorCallback)dfpfloorbar_getObjectTypeId,
         dfpfloorbar_getExtraSize,
     },
     0,

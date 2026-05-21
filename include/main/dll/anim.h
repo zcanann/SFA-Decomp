@@ -148,7 +148,7 @@ void FUN_802051e0(uint param_1);
 extern char sDoorswitchInitNoLongerSupported[];
 
 int doorswitch_getExtraSize(void);
-int doorswitch_func08(void);
+int doorswitch_getObjectTypeId(void);
 void doorswitch_free(void);
 void doorswitch_render(void);
 void doorswitch_hitDetect(void);
@@ -213,7 +213,7 @@ void dbholecontrol1_initialise(void);
 
 void dfplevelcontrol_setScale(int unused, u8 *out);
 int dfplevelcontrol_getExtraSize(void);
-int dfplevelcontrol_func08(void);
+int dfplevelcontrol_getObjectTypeId(void);
 void dfplevelcontrol_free(int x);
 void dfplevelcontrol_render(void);
 void dfplevelcontrol_hitDetect(void);
@@ -223,7 +223,7 @@ void dfplevelcontrol_release(void);
 void dfplevelcontrol_initialise(void);
 
 int dfpobjcreator_getExtraSize(void);
-int dfpobjcreator_func08(void);
+int dfpobjcreator_getObjectTypeId(void);
 void dfpobjcreator_free(int obj, int flag);
 void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dfpobjcreator_hitDetect(void);
@@ -233,7 +233,7 @@ void dfpobjcreator_release(void);
 void dfpobjcreator_initialise(void);
 
 int dfpseqpoint_getExtraSize(void);
-int dfpseqpoint_func08(void);
+int dfpseqpoint_getObjectTypeId(void);
 void dfpseqpoint_free(void);
 void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dfpseqpoint_hitDetect(void);
@@ -243,7 +243,7 @@ void dfpseqpoint_release(void);
 void dfpseqpoint_initialise(void);
 
 int DFP_Torch_getExtraSize(void);
-int DFP_Torch_func08(void);
+int DFP_Torch_getObjectTypeId(void);
 void DFP_Torch_free(int obj);
 void DFP_Torch_render(void);
 void DFP_Torch_hitDetect(void);

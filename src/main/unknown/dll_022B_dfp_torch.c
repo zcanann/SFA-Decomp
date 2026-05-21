@@ -16,5 +16,5 @@
 // - 5: DFP_Torch_hitDetect (0x80205A90)
 // - 6: DFP_Torch_render (0x80205830)
 // - 7: DFP_Torch_free (0x802057DC)
-// - 8: DFP_Torch_func08 (0x802057D4)
+// - 8: DFP_Torch_getObjectTypeId (0x802057D4)
 // - 9: DFP_Torch_getExtraSize (0x802057CC)

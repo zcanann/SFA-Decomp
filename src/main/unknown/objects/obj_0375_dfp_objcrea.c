@@ -51,7 +51,7 @@
  * - slot 05: 0x802049D4 dfpobjcreator_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802049C8 dfpobjcreator_render ref=render
  * - slot 07: 0x80204980 dfpobjcreator_free ref=free
- * - slot 08: 0x80204978 dfpobjcreator_func08 stub=const 0
+ * - slot 08: 0x80204978 dfpobjcreator_getObjectTypeId stub=const 0
  * - slot 09: 0x80204970 dfpobjcreator_getExtraSize stub=const 28 ref=getExtraSize (stub)
  */
 

@@ -1686,7 +1686,7 @@
  *   slot 05: 0x802045E0 dfplevelcontrol_hitDetect
  *   slot 06: 0x802045DC dfplevelcontrol_render
  *   slot 07: 0x802045B8 dfplevelcontrol_free
- *   slot 08: 0x802045B0 dfplevelcontrol_func08
+ *   slot 08: 0x802045B0 dfplevelcontrol_getObjectTypeId
  *   slot 09: 0x802045A8 dfplevelcontrol_getExtraSize
  * - DLL 0x022B: gDFP_TorchObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80205F3C DFP_Torch_initialise
@@ -1696,7 +1696,7 @@
  *   slot 05: 0x80205A90 DFP_Torch_hitDetect
  *   slot 06: 0x80205830 DFP_Torch_render
  *   slot 07: 0x802057DC DFP_Torch_free
- *   slot 08: 0x802057D4 DFP_Torch_func08
+ *   slot 08: 0x802057D4 DFP_Torch_getObjectTypeId
  *   slot 09: 0x802057CC DFP_Torch_getExtraSize
  * - DLL 0x022D: gDFP_seqpointObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802057C8 dfpseqpoint_initialise
@@ -1706,7 +1706,7 @@
  *   slot 05: 0x80205450 dfpseqpoint_hitDetect
  *   slot 06: 0x80205420 dfpseqpoint_render
  *   slot 07: 0x8020541C dfpseqpoint_free
- *   slot 08: 0x80205414 dfpseqpoint_func08
+ *   slot 08: 0x80205414 dfpseqpoint_getObjectTypeId
  *   slot 09: 0x8020540C dfpseqpoint_getExtraSize
  * - DLL 0x022E: gDoorswitchObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80205164 doorswitch_initialise
@@ -1716,7 +1716,7 @@
  *   slot 05: 0x80205104 doorswitch_hitDetect
  *   slot 06: 0x80205100 doorswitch_render
  *   slot 07: 0x802050D4 doorswitch_free
- *   slot 08: 0x802050CC doorswitch_func08
+ *   slot 08: 0x802050CC doorswitch_getObjectTypeId
  *   slot 09: 0x802050C4 doorswitch_getExtraSize
  * - DLL 0x022F: gDfpfloorbarObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8020692C dfpfloorbar_initialise
@@ -1726,7 +1726,7 @@
  *   slot 05: 0x80206500 dfpfloorbar_hitDetect
  *   slot 06: 0x802064D0 dfpfloorbar_render
  *   slot 07: 0x8020648C dfpfloorbar_free
- *   slot 08: 0x80206484 dfpfloorbar_func08
+ *   slot 08: 0x80206484 dfpfloorbar_getObjectTypeId
  *   slot 09: 0x8020647C dfpfloorbar_getExtraSize
  * - DLL 0x0230: gChukaObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80206470 chuka_initialise

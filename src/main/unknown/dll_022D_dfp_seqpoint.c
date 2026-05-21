@@ -15,5 +15,5 @@
 // - 5: dfpseqpoint_hitDetect (0x80205450)
 // - 6: dfpseqpoint_render (0x80205420)
 // - 7: dfpseqpoint_free (0x8020541C)
-// - 8: dfpseqpoint_func08 (0x80205414)
+// - 8: dfpseqpoint_getObjectTypeId (0x80205414)
 // - 9: dfpseqpoint_getExtraSize (0x8020540C)
