@@ -4526,6 +4526,7 @@ extern f32 lbl_803E62A0;
 #pragma scheduling off
 #pragma peephole off
 void drakorenergy_init(int *obj, u8 *init) {
+    extern uint GameBit_Get(int);
     u8 *sub;
     f32 fz;
     sub = *(u8**)((char*)obj + 0xb8);
