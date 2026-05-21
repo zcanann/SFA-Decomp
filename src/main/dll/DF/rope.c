@@ -321,13 +321,9 @@ void dimbossgut2_update(ushort *param_1)
          (local_4c = pfVar4[3], uVar2 = randomGetRange(0x1e,0x3c),
          (int)uVar2 < (int)(uint)*(ushort *)((int)pfVar4 + 0x16))) {
         dVar7 = (double)(lbl_803E5978 * pfVar4[4]);
-        uStack_3c = (int)(short)*param_1 ^ 0x80000000;
-        local_40 = 0x43300000;
-        dVar6 = (double)FUN_80293f90();
+        dVar6 = (double)FUN_80293f90((f64)(f32)(s32)(short)*param_1);
         local_50 = -(float)(dVar7 * dVar6 - (double)*(float *)(param_1 + 6));
-        uStack_34 = (int)(short)*param_1 ^ 0x80000000;
-        local_38 = 0x43300000;
-        dVar6 = (double)FUN_80294964();
+        dVar6 = (double)FUN_80294964((f64)(f32)(s32)(short)*param_1);
         local_48 = -(float)(dVar7 * dVar6 - (double)*(float *)(param_1 + 10));
         local_54 = lbl_803E5984 * (lbl_803E5988 - (float)(dVar8 / (double)lbl_803E5974));
         (**(code **)(*DAT_803dd708 + 8))(param_1,0x32b,auStack_5c,1,0xffffffff,0);
