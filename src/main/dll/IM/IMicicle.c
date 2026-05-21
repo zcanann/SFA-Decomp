@@ -1419,7 +1419,7 @@ extern f32 lbl_803E43C0;
 extern f32 lbl_803E4428;
 extern void* Obj_GetPlayerObject(void);
 extern int atan2i(int y, int x);
-extern void fn_801A4DB8(u8* obj, u8* data, int extra, u8* sub);
+extern void fn_801A4DB8(int obj, int data, int extra, int sub);
 /* gObjectTriggerInterface: pointer to a vtable (used for state-machine dispatches). */
 extern u32 *gObjectTriggerInterface;
 
@@ -1464,7 +1464,7 @@ void exploded_init(u8* obj, u8* data, int extra) {
     *(s8*)(obj + 0xad) = (s8)data[0x18];
     sub = *(u8**)(obj + 0xb8);
     *(f32*)(obj + 0x8) = (*(f32*)((char*)(*(u8**)(obj + 0x50)) + 4) * (f32)(s32)(s8)data[0x3d]) / lbl_803E4428;
-    fn_801A4DB8(obj, data, extra, sub);
+    fn_801A4DB8((int)obj, (int)data, extra, (int)sub);
     if (*(s16*)(data + 0x20) != 0 ||
         *(s16*)(data + 0x22) != 0 ||
         *(s16*)(data + 0x24) != 0 ||
@@ -1586,6 +1586,68 @@ void cfforcefield_init(s16 *obj, void *data) {
         }
     }
     storeZeroToFloatParam(flagPtr + 4);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A4DB8(int p1, int p2, int flag, int p3)
+{
+  extern void Model_GetVertexPosition(int, int, f32 *);
+  extern void fn_801A4F90(int, int, int);
+  extern void fn_800218AC(int, int);
+  extern f32 lbl_803E43F0;
+  extern f32 lbl_803E43F4;
+
+  *(f32 *)(p1 + 0xc) = *(f32 *)(p2 + 0x8);
+  *(f32 *)(p1 + 0x10) = *(f32 *)(p2 + 0xc);
+  *(f32 *)(p1 + 0x14) = *(f32 *)(p2 + 0x10);
+
+  if (flag == 0) {
+    int *mesh;
+    f32 sum[3];
+    f32 pos[3];
+    int i;
+
+    *(f32 *)(p3 + 0) = lbl_803E43F0;
+    *(f32 *)(p3 + 4) = lbl_803E43F0;
+    *(f32 *)(p3 + 8) = lbl_803E43F0;
+    sum[0] = lbl_803E43F0;
+    sum[1] = lbl_803E43F0;
+    sum[2] = lbl_803E43F0;
+
+    mesh = *(int **)(*(int *)(*(int *)(p1 + 0x7c) + (u32)*(u8 *)(p2 + 0x18) * 4));
+    for (i = 0; i < *(u16 *)((char *)mesh + 0xe4); i++) {
+      Model_GetVertexPosition((int)mesh, i, pos);
+      sum[0] = pos[0] + sum[0];
+      sum[1] = pos[1] + sum[1];
+      sum[2] = pos[2] + sum[2];
+    }
+
+    *(f32 *)(p3 + 0) = sum[0] * (lbl_803E43F4 / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    *(f32 *)(p3 + 4) = sum[1] * (lbl_803E43F4 / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    *(f32 *)(p3 + 8) = sum[2] * (lbl_803E43F4 / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+  }
+
+  *(f32 *)(p3 + 0xc) = *(f32 *)(p3 + 0);
+  *(f32 *)(p3 + 0x10) = *(f32 *)(p3 + 4);
+  *(f32 *)(p3 + 0x14) = *(f32 *)(p3 + 8);
+  fn_801A4F90(p1, p3, p2);
+
+  {
+    f32 tv[3];
+    tv[0] = *(f32 *)(p3 + 0);
+    tv[1] = *(f32 *)(p3 + 4);
+    tv[2] = *(f32 *)(p3 + 8);
+    fn_800218AC(p1, (int)tv);
+    tv[0] = tv[0] * *(f32 *)(p1 + 0x8);
+    tv[1] = tv[1] * *(f32 *)(p1 + 0x8);
+    tv[2] = tv[2] * *(f32 *)(p1 + 0x8);
+  }
+
+  *(u8 *)(p3 + 0x67) = 255;
+  *(u8 *)(p3 + 0x66) = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

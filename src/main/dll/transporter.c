@@ -1700,3 +1700,32 @@ int fn_80176FC4(int *obj, int unused, int *arg2) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 timeDelta;
+extern f32 lbl_803E3630;
+extern f32 lbl_803E3634;
+extern int fn_8017805C(int *obj, f32 *state);
+
+#pragma scheduling off
+#pragma peephole off
+void flameblast_update(int *obj) {
+    f32 *state = *(f32 **)((char *)obj + 0xb8);
+    state[0] = state[0] + timeDelta;
+    if (state[0] > lbl_803E3630) {
+        state[0] = state[0] - lbl_803E3630;
+        if (fn_8017805C(obj, state) == 0) {
+            return;
+        }
+    } else {
+        if (state[0] > lbl_803E3634) {
+            if (*(u8 *)((char *)state + 0x11) == 0) {
+                ObjHits_SetHitVolumeSlot(obj, 0x1a, 1, 0);
+            }
+        }
+    }
+    *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)obj + 0x24) * state[0] + state[1];
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x28) * state[0] + state[2];
+    *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)obj + 0x2c) * state[0] + state[3];
+}
+#pragma peephole reset
+#pragma scheduling reset
