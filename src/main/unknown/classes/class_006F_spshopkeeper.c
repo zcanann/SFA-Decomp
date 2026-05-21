@@ -27,7 +27,7 @@
  *   slot 05: 0x801E808C shopkeeper_hitDetect
  *   slot 06: 0x801E7FEC shopkeeper_render
  *   slot 07: 0x801E7FC4 shopkeeper_free
- *   slot 08: 0x801E7FBC shopkeeper_func08
+ *   slot 08: 0x801E7FBC shopkeeper_getObjectTypeId
  *   slot 09: 0x801E7FB4 shopkeeper_getExtraSize
  */
 

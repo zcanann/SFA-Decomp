@@ -58,7 +58,7 @@
  * - slot 05: 0x801E20F4 SB_Galleon_hitDetect ref=hitDetect
  * - slot 06: 0x801E1FDC SB_Galleon_render ref=render
  * - slot 07: 0x801E1F18 SB_Galleon_free ref=free
- * - slot 08: 0x801E1F10 SB_Galleon_func08 stub=const 0
+ * - slot 08: 0x801E1F10 SB_Galleon_getObjectTypeId stub=const 0
  * - slot 09: 0x801E1F08 SB_Galleon_getExtraSize stub=const 180 ref=getExtraSize (stub)
  * - slot 10: 0x801E1E74 SB_Galleon_setScale ref=setScale
  * - slot 11: 0x801E1E64 SB_Galleon_func0B

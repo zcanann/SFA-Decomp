@@ -1295,7 +1295,7 @@
  *   slot 05: 0x801E20F4 SB_Galleon_hitDetect
  *   slot 06: 0x801E1FDC SB_Galleon_render
  *   slot 07: 0x801E1F18 SB_Galleon_free
- *   slot 08: 0x801E1F10 SB_Galleon_func08
+ *   slot 08: 0x801E1F10 SB_Galleon_getObjectTypeId
  *   slot 09: 0x801E1F08 SB_Galleon_getExtraSize
  * - DLL 0x01E9: gSB_PropellerObjDescriptor (slots=10, mask=0001111001)
  *   slot 03: 0x801E2A88 SB_Propeller_init
@@ -1308,7 +1308,7 @@
  *   slot 04: 0x801E2CE4 SB_ShipHead_update
  *   slot 06: 0x801E2B5C SB_ShipHead_render
  *   slot 07: 0x801E2B38 SB_ShipHead_free
- *   slot 08: 0x801E2B30 SB_ShipHead_func08
+ *   slot 08: 0x801E2B30 SB_ShipHead_getObjectTypeId
  *   slot 09: 0x801E2B28 SB_ShipHead_getExtraSize
  * - DLL 0x01EB: gSB_ShipMastObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801E3418 SB_ShipMast_initialise
@@ -1318,7 +1318,7 @@
  *   slot 05: 0x801E3300 SB_ShipMast_hitDetect
  *   slot 06: 0x801E32D0 SB_ShipMast_render
  *   slot 07: 0x801E32CC SB_ShipMast_free
- *   slot 08: 0x801E32C4 SB_ShipMast_func08
+ *   slot 08: 0x801E32C4 SB_ShipMast_getObjectTypeId
  *   slot 09: 0x801E32BC SB_ShipMast_getExtraSize
  * - DLL 0x01EC: gSB_ShipGunObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x801E3D14 SB_ShipGun_init
@@ -1334,7 +1334,7 @@
  *   slot 05: 0x801E4BD8 SB_KyteCage_hitDetect
  *   slot 06: 0x801E4BD4 SB_KyteCage_render
  *   slot 07: 0x801E4BA4 SB_KyteCage_free
- *   slot 08: 0x801E4B9C SB_KyteCage_func08
+ *   slot 08: 0x801E4B9C SB_KyteCage_getObjectTypeId
  *   slot 09: 0x801E4B94 SB_KyteCage_getExtraSize
  * - DLL 0x01F1: gSB_SeqDoorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801E5198 SB_SeqDoor_initialise
@@ -1344,7 +1344,7 @@
  *   slot 05: 0x801E50C8 SB_SeqDoor_hitDetect
  *   slot 06: 0x801E5098 SB_SeqDoor_render
  *   slot 07: 0x801E5094 SB_SeqDoor_free
- *   slot 08: 0x801E508C SB_SeqDoor_func08
+ *   slot 08: 0x801E508C SB_SeqDoor_getObjectTypeId
  *   slot 09: 0x801E5084 SB_SeqDoor_getExtraSize
  * - DLL 0x01F2: gSB_CageKyteObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801E505C SB_CageKyte_initialise
@@ -1354,7 +1354,7 @@
  *   slot 05: 0x801E4F70 SB_CageKyte_hitDetect
  *   slot 06: 0x801E4F64 SB_CageKyte_render
  *   slot 07: 0x801E4F60 SB_CageKyte_free
- *   slot 08: 0x801E4F58 SB_CageKyte_func08
+ *   slot 08: 0x801E4F58 SB_CageKyte_getObjectTypeId
  *   slot 09: 0x801E4F50 SB_CageKyte_getExtraSize
  * - DLL 0x01F4: gLampObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x801E5D64 Lamp_init
@@ -1370,7 +1370,7 @@
  *   slot 05: 0x801E5E08 Flag_hitDetect
  *   slot 06: 0x801E5DD8 Flag_render
  *   slot 07: 0x801E5DD4 Flag_free
- *   slot 08: 0x801E5DCC Flag_func08
+ *   slot 08: 0x801E5DCC Flag_getObjectTypeId
  *   slot 09: 0x801E5DC4 Flag_getExtraSize
  * - DLL 0x01F7: gSB_ShipGunBrokeObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801E604C SB_ShipGunBroke_initialise
@@ -1380,7 +1380,7 @@
  *   slot 05: 0x801E5FF8 SB_ShipGunBroke_hitDetect
  *   slot 06: 0x801E5F88 SB_ShipGunBroke_render
  *   slot 07: 0x801E5F84 SB_ShipGunBroke_free
- *   slot 08: 0x801E5F7C SB_ShipGunBroke_func08
+ *   slot 08: 0x801E5F7C SB_ShipGunBroke_getObjectTypeId
  *   slot 09: 0x801E5F74 SB_ShipGunBroke_getExtraSize
  * - DLL 0x01F8: gWM_GalleonObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F06D4 WM_Galleon_initialise
@@ -1390,7 +1390,7 @@
  *   slot 05: 0x801F02EC WM_Galleon_hitDetect
  *   slot 06: 0x801F022C WM_Galleon_render
  *   slot 07: 0x801F01CC WM_Galleon_free
- *   slot 08: 0x801F01C4 WM_Galleon_func08
+ *   slot 08: 0x801F01C4 WM_Galleon_getObjectTypeId
  *   slot 09: 0x801F01BC WM_Galleon_getExtraSize
  * - DLL 0x01FA: gWM_seqobjectObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F08FC WM_seqobject_initialise
@@ -1948,7 +1948,7 @@
  *   slot 05: 0x801EF020 SB_CloudRunner_hitDetect
  *   slot 06: 0x801EEEE0 SB_CloudRunner_render
  *   slot 07: 0x801EEE4C SB_CloudRunner_free
- *   slot 08: 0x801EEE44 SB_CloudRunner_func08
+ *   slot 08: 0x801EEE44 SB_CloudRunner_getObjectTypeId
  *   slot 09: 0x801EEE3C SB_CloudRunner_getExtraSize
  * - DLL 0x025E: gSpellStoneObjDescriptor (slots=12, mask=110111111111)
  *   slot 00: 0x80210E88 spellstone_initialise
@@ -2167,7 +2167,7 @@
  *   slot 05: 0x801E8EDC spscarab_hitDetect
  *   slot 06: 0x801E8ED8 spscarab_render
  *   slot 07: 0x801E8EB4 spscarab_free
- *   slot 08: 0x801E8EAC spscarab_func08
+ *   slot 08: 0x801E8EAC spscarab_getObjectTypeId
  *   slot 09: 0x801E8EA4 spscarab_getExtraSize
  * - DLL 0x0288: gSPDrapeObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801E97D8 spdrape_initialise
@@ -2177,7 +2177,7 @@
  *   slot 05: 0x801E9340 spdrape_hitDetect
  *   slot 06: 0x801E933C spdrape_render
  *   slot 07: 0x801E9338 spdrape_free
- *   slot 08: 0x801E9330 spdrape_func08
+ *   slot 08: 0x801E9330 spdrape_getObjectTypeId
  *   slot 09: 0x801E9328 spdrape_getExtraSize
  * - DLL 0x0289: gSPitembeamObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801E9918 spitembeam_initialise
@@ -2187,7 +2187,7 @@
  *   slot 05: 0x801E97F4 spitembeam_hitDetect
  *   slot 06: 0x801E97F0 spitembeam_render
  *   slot 07: 0x801E97EC spitembeam_free
- *   slot 08: 0x801E97E4 spitembeam_func08
+ *   slot 08: 0x801E97E4 spitembeam_getObjectTypeId
  *   slot 09: 0x801E97DC spitembeam_getExtraSize
  * - DLL 0x028A: gEarthWalkerObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802239A0 earthwalker_initialise

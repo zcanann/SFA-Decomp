@@ -56,7 +56,7 @@
  * - slot 05: 0x801E4F70 SB_CageKyte_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801E4F64 SB_CageKyte_render ref=render
  * - slot 07: 0x801E4F60 SB_CageKyte_free stub=blr ref=free (stub)
- * - slot 08: 0x801E4F58 SB_CageKyte_func08 stub=const 1
+ * - slot 08: 0x801E4F58 SB_CageKyte_getObjectTypeId stub=const 1
  * - slot 09: 0x801E4F50 SB_CageKyte_getExtraSize stub=const 2 ref=getExtraSize (stub)
  */
 

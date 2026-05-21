@@ -1675,24 +1675,24 @@ void shop_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int SB_CloudBall_getExtraSize(void) { return 0x24; }
-int SB_CloudBall_func08(void) { return 0x0; }
+int SB_CloudBall_getObjectTypeId(void) { return 0x0; }
 int SB_KyteCage_getExtraSize(void) { return 0x8; }
-int SB_KyteCage_func08(void) { return 0x0; }
+int SB_KyteCage_getObjectTypeId(void) { return 0x0; }
 int SB_CageKyte_getExtraSize(void) { return 0x2; }
-int SB_CageKyte_func08(void) { return 0x1; }
+int SB_CageKyte_getObjectTypeId(void) { return 0x1; }
 int SB_SeqDoor_getExtraSize(void) { return 0x0; }
-int SB_SeqDoor_func08(void) { return 0x0; }
+int SB_SeqDoor_getObjectTypeId(void) { return 0x0; }
 int SB_MiniFire_getExtraSize(void) { return 0x2; }
-int SB_MiniFire_func08(void) { return 0x0; }
+int SB_MiniFire_getObjectTypeId(void) { return 0x0; }
 int ShipBattle_getExtraSize(void) { return 0x140; }
-int ShipBattle_func08(void) { return 0xb; }
+int ShipBattle_getObjectTypeId(void) { return 0xb; }
 int Lamp_getExtraSize(void) { return 0x1; }
 int Flag_getExtraSize(void) { return 0x0; }
-int Flag_func08(void) { return 0x0; }
+int Flag_getObjectTypeId(void) { return 0x0; }
 int SB_ShipGunBroke_getExtraSize(void) { return 0x1; }
-int SB_ShipGunBroke_func08(void) { return 0x0; }
+int SB_ShipGunBroke_getObjectTypeId(void) { return 0x0; }
 int shop_getExtraSize(void) { return 0x5; }
-int shop_func08(void) { return 0x0; }
+int shop_getObjectTypeId(void) { return 0x0; }
 int fn_801E66DC(void) { return 0x0; }
 int fn_801E66E4(void) { return 0x0; }
 

@@ -27,7 +27,7 @@
  * - slot 05: 0x801E50C8 SB_SeqDoor_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801E5098 SB_SeqDoor_render ref=render
  * - slot 07: 0x801E5094 SB_SeqDoor_free stub=blr ref=free (stub)
- * - slot 08: 0x801E508C SB_SeqDoor_func08 stub=const 0
+ * - slot 08: 0x801E508C SB_SeqDoor_getObjectTypeId stub=const 0
  * - slot 09: 0x801E5084 SB_SeqDoor_getExtraSize stub=const 0 ref=getExtraSize (stub)
  *
  * Reference-only hints:

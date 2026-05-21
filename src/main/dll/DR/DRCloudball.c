@@ -36,7 +36,7 @@ extern f64 lbl_803E5A98; /* int->float magic 0x4330000000000000 */
 extern void spscarab_hitDetect(void);
 extern void spscarab_render(void);
 extern void spscarab_free(int x);
-extern int spscarab_func08(void);
+extern int spscarab_getObjectTypeId(void);
 extern int spscarab_getExtraSize(void);
 
 /*
@@ -208,7 +208,7 @@ ObjectDescriptor gSPScarabObjDescriptor = {
     (ObjectDescriptorCallback)spscarab_hitDetect,
     (ObjectDescriptorCallback)spscarab_render,
     (ObjectDescriptorCallback)spscarab_free,
-    (ObjectDescriptorCallback)spscarab_func08,
+    (ObjectDescriptorCallback)spscarab_getObjectTypeId,
     spscarab_getExtraSize,
 };
 
@@ -227,11 +227,11 @@ int spdrape_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: spdrape_func08
+ * Function: spdrape_getObjectTypeId
  * EN v1.0 Address: 0x801E9330
  * EN v1.0 Size: 8b
  */
-int spdrape_func08(void)
+int spdrape_getObjectTypeId(void)
 {
     return 0;
 }

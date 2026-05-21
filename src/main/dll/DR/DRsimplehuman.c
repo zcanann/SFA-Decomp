@@ -279,7 +279,7 @@ void spitembeam_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int spitembeam_getExtraSize(void) { return 0x0; }
-int spitembeam_func08(void) { return 0x0; }
+int spitembeam_getObjectTypeId(void) { return 0x0; }
 
 extern f32 lbl_803E5AA0;
 extern f32 lbl_803E5ABC;

@@ -45,7 +45,7 @@
  * - slot 05: 0x801E64BC shop_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801E648C shop_render ref=render
  * - slot 07: 0x801E6434 shop_free ref=free
- * - slot 08: 0x801E642C shop_func08 stub=const 0
+ * - slot 08: 0x801E642C shop_getObjectTypeId stub=const 0
  * - slot 09: 0x801E6424 shop_getExtraSize stub=const 5 ref=getExtraSize (stub)
  * - slot 10: 0x801E6414 shop_setScale ref=setScale
  * - slot 11: 0x801E63C0 shop_func0B

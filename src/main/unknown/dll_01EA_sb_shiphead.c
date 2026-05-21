@@ -13,5 +13,5 @@
 // - 4: SB_ShipHead_update (0x801E2CE4)
 // - 6: SB_ShipHead_render (0x801E2B5C)
 // - 7: SB_ShipHead_free (0x801E2B38)
-// - 8: SB_ShipHead_func08 (0x801E2B30)
+// - 8: SB_ShipHead_getObjectTypeId (0x801E2B30)
 // - 9: SB_ShipHead_getExtraSize (0x801E2B28)

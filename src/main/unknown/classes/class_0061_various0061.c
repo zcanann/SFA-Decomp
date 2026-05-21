@@ -455,7 +455,7 @@
  *   slot 05: 0x801E5E08 Flag_hitDetect
  *   slot 06: 0x801E5DD8 Flag_render
  *   slot 07: 0x801E5DD4 Flag_free
- *   slot 08: 0x801E5DCC Flag_func08
+ *   slot 08: 0x801E5DCC Flag_getObjectTypeId
  *   slot 09: 0x801E5DC4 Flag_getExtraSize
  * - DLL 0x0215: gWM_newcrystalObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F9800 wmnewcrystal_initialise

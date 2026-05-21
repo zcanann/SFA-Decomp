@@ -56,7 +56,7 @@
  * - slot 05: 0x801E9340 spdrape_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801E933C spdrape_render stub=blr ref=render (stub)
  * - slot 07: 0x801E9338 spdrape_free stub=blr ref=free (stub)
- * - slot 08: 0x801E9330 spdrape_func08 stub=const 0
+ * - slot 08: 0x801E9330 spdrape_getObjectTypeId stub=const 0
  * - slot 09: 0x801E9328 spdrape_getExtraSize stub=const 24 ref=getExtraSize (stub)
  */
 

@@ -16,5 +16,5 @@
 // - 5: WM_ObjCreator_hitDetect (0x801EF3A4)
 // - 6: WM_ObjCreator_render (0x801EF374)
 // - 7: WM_ObjCreator_free (0x801EF370)
-// - 8: WM_ObjCreator_func08 (0x801EF368)
+// - 8: WM_ObjCreator_getObjectTypeId (0x801EF368)
 // - 9: WM_ObjCreator_getExtraSize (0x801EF360)

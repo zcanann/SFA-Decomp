@@ -69,7 +69,7 @@
  * - slot 05: 0x801E8964 shopitem_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801E8910 shopitem_render ref=render
  * - slot 07: 0x801E88B8 shopitem_free ref=free
- * - slot 08: 0x801E88B0 shopitem_func08 stub=const 0
+ * - slot 08: 0x801E88B0 shopitem_getObjectTypeId stub=const 0
  * - slot 09: 0x801E88A8 shopitem_getExtraSize stub=const 236 ref=getExtraSize (stub)
  */
 

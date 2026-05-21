@@ -33,7 +33,7 @@
  *   slot 05: 0x801ECF94 SnowBike_hitDetect
  *   slot 06: 0x801ECEC4 SnowBike_render
  *   slot 07: 0x801ECE40 SnowBike_free
- *   slot 08: 0x801ECE38 SnowBike_func08
+ *   slot 08: 0x801ECE38 SnowBike_getObjectTypeId
  *   slot 09: 0x801ECE30 SnowBike_getExtraSize
  */
 

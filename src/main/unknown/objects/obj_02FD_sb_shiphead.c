@@ -53,7 +53,7 @@
  * - slot 04: 0x801E2CE4 SB_ShipHead_update
  * - slot 06: 0x801E2B5C SB_ShipHead_render
  * - slot 07: 0x801E2B38 SB_ShipHead_free
- * - slot 08: 0x801E2B30 SB_ShipHead_func08 stub=const 1
+ * - slot 08: 0x801E2B30 SB_ShipHead_getObjectTypeId stub=const 1
  * - slot 09: 0x801E2B28 SB_ShipHead_getExtraSize stub=const 16
  */
 

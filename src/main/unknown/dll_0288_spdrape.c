@@ -15,5 +15,5 @@
 // - 5: spdrape_hitDetect (0x801E9340)
 // - 6: spdrape_render (0x801E933C)
 // - 7: spdrape_free (0x801E9338)
-// - 8: spdrape_func08 (0x801E9330)
+// - 8: spdrape_getObjectTypeId (0x801E9330)
 // - 9: spdrape_getExtraSize (0x801E9328)

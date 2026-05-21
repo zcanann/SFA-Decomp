@@ -968,11 +968,11 @@ void spscarab_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int shopkeeper_getExtraSize(void) { return 0x9d8; }
-int shopkeeper_func08(void) { return 0x0; }
+int shopkeeper_getObjectTypeId(void) { return 0x0; }
 int shopitem_getExtraSize(void) { return 0xec; }
-int shopitem_func08(void) { return 0x0; }
+int shopitem_getObjectTypeId(void) { return 0x0; }
 int spscarab_getExtraSize(void) { return 0x14; }
-int spscarab_func08(void) { return 0x0; }
+int spscarab_getObjectTypeId(void) { return 0x0; }
 
 extern void Sfx_RemoveLoopedObjectSound(int x, int y);
 #pragma scheduling off

@@ -15,7 +15,7 @@
 // - 5: shop_hitDetect (0x801E64BC)
 // - 6: shop_render (0x801E648C)
 // - 7: shop_free (0x801E6434)
-// - 8: shop_func08 (0x801E642C)
+// - 8: shop_getObjectTypeId (0x801E642C)
 // - 9: shop_getExtraSize (0x801E6424)
 // - 10: shop_setScale (0x801E6414)
 // - 11: shop_func0B (0x801E63C0)

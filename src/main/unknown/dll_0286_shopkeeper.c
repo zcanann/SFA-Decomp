@@ -15,5 +15,5 @@
 // - 5: shopkeeper_hitDetect (0x801E808C)
 // - 6: shopkeeper_render (0x801E7FEC)
 // - 7: shopkeeper_free (0x801E7FC4)
-// - 8: shopkeeper_func08 (0x801E7FBC)
+// - 8: shopkeeper_getObjectTypeId (0x801E7FBC)
 // - 9: shopkeeper_getExtraSize (0x801E7FB4)

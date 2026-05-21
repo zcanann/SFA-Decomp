@@ -15,5 +15,5 @@
 // - 5: spitembeam_hitDetect (0x801E97F4)
 // - 6: spitembeam_render (0x801E97F0)
 // - 7: spitembeam_free (0x801E97EC)
-// - 8: spitembeam_func08 (0x801E97E4)
+// - 8: spitembeam_getObjectTypeId (0x801E97E4)
 // - 9: spitembeam_getExtraSize (0x801E97DC)

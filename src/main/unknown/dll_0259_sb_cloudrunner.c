@@ -16,5 +16,5 @@
 // - 5: SB_CloudRunner_hitDetect (0x801EF020)
 // - 6: SB_CloudRunner_render (0x801EEEE0)
 // - 7: SB_CloudRunner_free (0x801EEE4C)
-// - 8: SB_CloudRunner_func08 (0x801EEE44)
+// - 8: SB_CloudRunner_getObjectTypeId (0x801EEE44)
 // - 9: SB_CloudRunner_getExtraSize (0x801EEE3C)

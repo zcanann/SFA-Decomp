@@ -413,7 +413,7 @@ void WM_Galleon_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int WM_Galleon_getExtraSize(void) { return 0x10; }
-int WM_Galleon_func08(void) { return 0x0; }
+int WM_Galleon_getObjectTypeId(void) { return 0x0; }
 
 void WM_ObjCreator_init(int *obj, s8 *def) {
     s16 *state = *(s16**)((char*)obj + 0xb8);

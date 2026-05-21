@@ -334,7 +334,7 @@ void SnowBike_func16(void) {}
 int SnowBike_func0E(void) { return 0x2; }
 int SnowBike_render2(void) { return 0x0; }
 int SnowBike_getExtraSize(void) { return 0x59c; }
-int SnowBike_func08(void) { return 0x3; }
+int SnowBike_getObjectTypeId(void) { return 0x3; }
 
 /* Pattern wrappers. */
 u8 SnowBike_func0B(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x420); }

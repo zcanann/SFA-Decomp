@@ -15,5 +15,5 @@
 // - 5: spscarab_hitDetect (0x801E8EDC)
 // - 6: spscarab_render (0x801E8ED8)
 // - 7: spscarab_free (0x801E8EB4)
-// - 8: spscarab_func08 (0x801E8EAC)
+// - 8: spscarab_getObjectTypeId (0x801E8EAC)
 // - 9: spscarab_getExtraSize (0x801E8EA4)

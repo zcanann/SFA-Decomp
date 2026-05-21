@@ -57,7 +57,7 @@
  * - slot 05: 0x801E4BD8 SB_KyteCage_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801E4BD4 SB_KyteCage_render stub=blr ref=render (stub)
  * - slot 07: 0x801E4BA4 SB_KyteCage_free ref=free
- * - slot 08: 0x801E4B9C SB_KyteCage_func08 stub=const 0
+ * - slot 08: 0x801E4B9C SB_KyteCage_getObjectTypeId stub=const 0
  * - slot 09: 0x801E4B94 SB_KyteCage_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

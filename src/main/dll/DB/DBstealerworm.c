@@ -1121,12 +1121,12 @@ void SB_ShipMast_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int SB_Galleon_getExtraSize(void) { return 0xb4; }
-int SB_Galleon_func08(void) { return 0x0; }
+int SB_Galleon_getObjectTypeId(void) { return 0x0; }
 int SB_Propeller_getExtraSize(void) { return 0x10; }
 int SB_ShipHead_getExtraSize(void) { return 0x10; }
-int SB_ShipHead_func08(void) { return 0x1; }
+int SB_ShipHead_getObjectTypeId(void) { return 0x1; }
 int SB_ShipMast_getExtraSize(void) { return 0x0; }
-int SB_ShipMast_func08(void) { return 0x0; }
+int SB_ShipMast_getObjectTypeId(void) { return 0x0; }
 int SB_ShipGun_getExtraSize(void) { return 0x10; }
 
 /* sda21 accessors. */

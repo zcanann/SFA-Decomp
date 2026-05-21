@@ -50,7 +50,7 @@
  * - slot 05: 0x801E4640 SB_CloudBall_hitDetect ref=hitDetect
  * - slot 06: 0x801E4610 SB_CloudBall_render ref=render
  * - slot 07: 0x801E45BC SB_CloudBall_free ref=free
- * - slot 08: 0x801E45B4 SB_CloudBall_func08 stub=const 0
+ * - slot 08: 0x801E45B4 SB_CloudBall_getObjectTypeId stub=const 0
  * - slot 09: 0x801E45AC SB_CloudBall_getExtraSize stub=const 36 ref=getExtraSize (stub)
  */
 

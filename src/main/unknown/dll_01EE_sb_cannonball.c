@@ -25,7 +25,7 @@
  * - slot 05: 0x801E3DC4 SB_CannonBall_hitDetect ref=hitDetect
  * - slot 06: 0x801E3D94 SB_CannonBall_render ref=render
  * - slot 07: 0x801E3D40 SB_CannonBall_free ref=free
- * - slot 08: 0x801E3D38 SB_CannonBall_func08 stub=const 0
+ * - slot 08: 0x801E3D38 SB_CannonBall_getObjectTypeId stub=const 0
  * - slot 09: 0x801E3D30 SB_CannonBall_getExtraSize stub=const 36 ref=getExtraSize (stub)
  *
  * Reference-only hints:

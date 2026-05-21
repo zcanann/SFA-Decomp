@@ -16,5 +16,5 @@
 // - 5: WM_Galleon_hitDetect (0x801F02EC)
 // - 6: WM_Galleon_render (0x801F022C)
 // - 7: WM_Galleon_free (0x801F01CC)
-// - 8: WM_Galleon_func08 (0x801F01C4)
+// - 8: WM_Galleon_getObjectTypeId (0x801F01C4)
 // - 9: WM_Galleon_getExtraSize (0x801F01BC)

@@ -59,7 +59,7 @@
  * - slot 05: 0x801E569C ShipBattle_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801E5644 ShipBattle_render ref=render
  * - slot 07: 0x801E55C8 ShipBattle_free ref=free
- * - slot 08: 0x801E55C0 ShipBattle_func08 stub=const 11
+ * - slot 08: 0x801E55C0 ShipBattle_getObjectTypeId stub=const 11
  * - slot 09: 0x801E55B8 ShipBattle_getExtraSize stub=const 320 ref=getExtraSize (stub)
  */
 

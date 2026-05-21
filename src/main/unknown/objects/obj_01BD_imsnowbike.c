@@ -60,7 +60,7 @@
  * - slot 05: 0x801ECF94 SnowBike_hitDetect ref=hitDetect
  * - slot 06: 0x801ECEC4 SnowBike_render ref=render
  * - slot 07: 0x801ECE40 SnowBike_free ref=free
- * - slot 08: 0x801ECE38 SnowBike_func08 stub=const 3
+ * - slot 08: 0x801ECE38 SnowBike_getObjectTypeId stub=const 3
  * - slot 09: 0x801ECE30 SnowBike_getExtraSize stub=const 1436 ref=getExtraSize (stub)
  * - slot 10: 0x801ECE0C SnowBike_setScale ref=setScale
  * - slot 11: 0x801ECE00 SnowBike_func0B

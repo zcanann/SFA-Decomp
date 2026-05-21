@@ -20,5 +20,5 @@
 // - 5: shopitem_hitDetect (0x801E8964)
 // - 6: shopitem_render (0x801E8910)
 // - 7: shopitem_free (0x801E88B8)
-// - 8: shopitem_func08 (0x801E88B0)
+// - 8: shopitem_getObjectTypeId (0x801E88B0)
 // - 9: shopitem_getExtraSize (0x801E88A8)

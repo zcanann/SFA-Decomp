@@ -57,7 +57,7 @@
  * - slot 05: 0x801EF020 SB_CloudRunner_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801EEEE0 SB_CloudRunner_render ref=render
  * - slot 07: 0x801EEE4C SB_CloudRunner_free ref=free
- * - slot 08: 0x801EEE44 SB_CloudRunner_func08 stub=const 67
+ * - slot 08: 0x801EEE44 SB_CloudRunner_getObjectTypeId stub=const 67
  * - slot 09: 0x801EEE3C SB_CloudRunner_getExtraSize stub=const 132 ref=getExtraSize (stub)
  */
 

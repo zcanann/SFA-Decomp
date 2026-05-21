@@ -59,7 +59,7 @@
  * - slot 05: 0x801E5E08 Flag_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801E5DD8 Flag_render ref=render
  * - slot 07: 0x801E5DD4 Flag_free stub=blr ref=free (stub)
- * - slot 08: 0x801E5DCC Flag_func08 stub=const 0
+ * - slot 08: 0x801E5DCC Flag_getObjectTypeId stub=const 0
  * - slot 09: 0x801E5DC4 Flag_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

@@ -64,7 +64,7 @@
  *   slot 05: 0x801EF3A4 WM_ObjCreator_hitDetect
  *   slot 06: 0x801EF374 WM_ObjCreator_render
  *   slot 07: 0x801EF370 WM_ObjCreator_free
- *   slot 08: 0x801EF368 WM_ObjCreator_func08
+ *   slot 08: 0x801EF368 WM_ObjCreator_getObjectTypeId
  *   slot 09: 0x801EF360 WM_ObjCreator_getExtraSize
  * - DLL 0x0217: gVFP_ObjCreatorObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801FA224 vfpobjcreator_initialise
