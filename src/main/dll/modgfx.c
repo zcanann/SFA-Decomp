@@ -4753,6 +4753,64 @@ void boneParticleEffect_release(void)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern f32 lbl_803DF438;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_800A02DC(ModgfxState* state, f32* in)
+{
+    extern f32 lbl_803DD284;
+    s32 dx, dy;
+    ModgfxVertexData* cur;
+    ModgfxVertexData* prev;
+    u8 ovx, ovy;
+    int i;
+    int j;
+    ModgfxVertexData* slot;
+
+    dx = (s32)(lbl_803DF438 * (in[1] * lbl_803DD284));
+    dy = (s32)(lbl_803DF438 * (in[2] * lbl_803DD284));
+
+    cur = state->vertexBuffers[state->activeVertexBufferIndex];
+    prev = state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
+
+    ovx = 0;
+    ovy = 0;
+    for (i = 0; i < (s32)state->vertexCount; i++) {
+        cur->texCoordS = prev->texCoordS;
+        cur->texCoordT = prev->texCoordT;
+        cur->texCoordS = (s16)(cur->texCoordS + dx);
+        if ((s32)cur->texCoordS > 0x100) ovx = (u8)(ovx + 1);
+        if ((s32)cur->texCoordS < -0x100) ovx = (u8)(ovx + 1);
+        cur->texCoordT = (s16)(cur->texCoordT + dy);
+        if ((s32)cur->texCoordT > 0x100) ovy = (u8)(ovy + 1);
+        if ((s32)cur->texCoordT < -0x100) ovy = (u8)(ovy + 1);
+        cur++;
+        prev++;
+    }
+
+    slot = state->vertexBuffers[state->activeVertexBufferIndex];
+    for (j = 0; j < (s32)state->vertexCount; j++) {
+        if ((s32)ovx == (s32)state->vertexCount) {
+            if ((s32)slot->texCoordS > 0x100) {
+                slot->texCoordS -= 0x100;
+            } else {
+                slot->texCoordS += 0x100;
+            }
+        }
+        if ((s32)ovy == (s32)state->vertexCount) {
+            if ((s32)slot->texCoordT > 0x100) {
+                slot->texCoordT -= 0x100;
+            } else {
+                slot->texCoordT += 0x100;
+            }
+        }
+        slot++;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole off
 #pragma scheduling off
 void fn_800A0FD0(ModgfxState *state)
