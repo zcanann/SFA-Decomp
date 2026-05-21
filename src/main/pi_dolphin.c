@@ -5331,5 +5331,38 @@ void *fn_8004B118(int *p) {
     }
     return NULL;
 }
+
+extern u32 sMapFileNameIndexRemapTable[];
+extern u8 lbl_803DB5D0;
+extern u8 lbl_803DCD28;
+extern u8 lbl_803DCD31;
+extern f32 lbl_803DCD34;
+extern f32 lbl_803DCD38;
+extern f32 lbl_803DCD3C;
+extern f32 lbl_803DCD40;
+extern f32 lbl_803DCD44;
+
+int mapGetDirIdx(int idx) {
+    if (idx >= 0x4b) return 5;
+    return sMapFileNameIndexRemapTable[idx];
+}
+
+void setColor_803db5d0(u8 r, u8 g, u8 b) {
+    (&lbl_803DB5D0)[0] = r;
+    (&lbl_803DB5D0)[1] = g;
+    (&lbl_803DB5D0)[2] = b;
+}
+
+void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e) {
+    lbl_803DCD28 = 1;
+    lbl_803DCD44 = a;
+    lbl_803DCD40 = b;
+    lbl_803DCD3C = c;
+    lbl_803DCD38 = d;
+    lbl_803DCD34 = e;
+    lbl_803DCD31 = mode;
+}
+
+void *Shader_getLayer(char *base, int idx) { return base + idx * 8 + 0x24; }
 #pragma peephole reset
 #pragma scheduling reset

@@ -2366,3 +2366,19 @@ extern u32 lbl_803DCDB4;
 void fn_80053ED0(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 | bits; }
 void fn_80053EBC(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 & ~bits; }
 void fn_800542F4(void) { lbl_803DCDA8 = 0; lbl_803DCDB4 = 0; lbl_803DCDB0 = 0; }
+
+extern f32 lbl_803DCE50;
+extern f32 lbl_803DCE4C;
+extern f32 blurFilterArea;
+extern u8 bBlurFilterUseArea;
+extern u8 bBiggerBlurFilter;
+#pragma scheduling off
+void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area) {
+    bEnableBlurFilter = 1;
+    lbl_803DCE50 = a;
+    lbl_803DCE4C = b;
+    blurFilterArea = area;
+    bBlurFilterUseArea = useArea;
+    bBiggerBlurFilter = bigger;
+}
+#pragma scheduling reset

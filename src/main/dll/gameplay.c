@@ -13143,6 +13143,29 @@ void *SaveGame_getTrickyEnergy(void) { return (char *)lbl_803A32A8 + 0x18; }
 void SaveGame_setCharacter(u8 c) { *(u8 *)((char *)lbl_803A32A8 + 0x20) = c; }
 u8 SaveGame_getCurChar(void) { return *(u8 *)((char *)lbl_803A32A8 + 0x20); }
 char *getSaveFileName(void) { return (char *)lbl_803A32A8 + 0x1c; }
+void *SaveGame_getCurCharPos(void) {
+    int idx = *(u8 *)((char *)lbl_803A32A8 + 0x20);
+    return (char *)lbl_803A32A8 + idx * 16 + 0x684;
+}
+void *SaveGame_getCurCharacterState(void) {
+    int idx = *(u8 *)((char *)lbl_803A32A8 + 0x20);
+    return (char *)lbl_803A32A8 + idx * 12;
+}
+s32 SaveGame_gplayGetRestartGameNotCleared(void) { return pRestartPoint != 0; }
+extern u16 lbl_80311810[];
+u16 SaveGame_getMapObjGroupBit(int idx) { return lbl_80311810[idx]; }
+extern u8 lbl_803A319C[];
+void SaveGame_setMapActLut(int val, int idx) { *(u8 *)((char *)lbl_803A319C + idx - 0x50) = (u8)val; }
+extern u32 lbl_803DD4A0;
+extern u32 lbl_803DD4A4;
+extern u32 lbl_803DD4A8;
+extern u32 lbl_803DD4AC;
+void screens_initialise(void) {
+    lbl_803DD4AC = (u32)-1;
+    lbl_803DD4A0 = 0;
+    lbl_803DD4A4 = 0;
+    lbl_803DD4A8 = 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
