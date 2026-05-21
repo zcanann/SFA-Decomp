@@ -59,7 +59,7 @@
  * - slot 05: 0x80238428 cntcounter_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80238424 cntcounter_render stub=blr ref=render (stub)
  * - slot 07: 0x802383F0 cntcounter_free ref=free
- * - slot 08: 0x802383E8 cntcounter_func08 stub=const 0
+ * - slot 08: 0x802383E8 cntcounter_getObjectTypeId stub=const 0
  * - slot 09: 0x802383E0 cntcounter_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

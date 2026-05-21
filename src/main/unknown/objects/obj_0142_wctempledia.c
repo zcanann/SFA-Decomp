@@ -56,7 +56,7 @@
  * - slot 05: 0x802295A4 wctempledia_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80229574 wctempledia_render ref=render
  * - slot 07: 0x80229570 wctempledia_free stub=blr ref=free (stub)
- * - slot 08: 0x80229568 wctempledia_func08 stub=const 0
+ * - slot 08: 0x80229568 wctempledia_getObjectTypeId stub=const 0
  * - slot 09: 0x80229560 wctempledia_getExtraSize stub=const 20 ref=getExtraSize (stub)
  */
 

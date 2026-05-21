@@ -56,7 +56,7 @@
  * - slot 05: 0x80227718 wctile_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802276E8 wctile_render ref=render
  * - slot 07: 0x802276E4 wctile_free stub=blr ref=free (stub)
- * - slot 08: 0x802276B4 wctile_func08
+ * - slot 08: 0x802276B4 wctile_getObjectTypeId
  * - slot 09: 0x802276AC wctile_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

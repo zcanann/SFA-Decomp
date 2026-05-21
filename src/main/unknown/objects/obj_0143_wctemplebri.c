@@ -56,7 +56,7 @@
  * - slot 05: 0x80229DC0 wctemplebri_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80229D7C wctemplebri_render ref=render
  * - slot 07: 0x80229D78 wctemplebri_free stub=blr ref=free (stub)
- * - slot 08: 0x80229D48 wctemplebri_func08
+ * - slot 08: 0x80229D48 wctemplebri_getObjectTypeId
  * - slot 09: 0x80229D40 wctemplebri_getExtraSize stub=const 104 ref=getExtraSize (stub)
  */
 

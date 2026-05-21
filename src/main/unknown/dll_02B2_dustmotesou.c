@@ -16,5 +16,5 @@
 // - 5: dustmotesou_hitDetect (0x802375C0)
 // - 6: dustmotesou_render (0x802375B4)
 // - 7: dustmotesou_free (0x80237584)
-// - 8: dustmotesou_func08 (0x8023757C)
+// - 8: dustmotesou_getObjectTypeId (0x8023757C)
 // - 9: dustmotesou_getExtraSize (0x80237574)

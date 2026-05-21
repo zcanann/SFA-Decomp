@@ -28,7 +28,7 @@
 // - 5: wctemplebri_hitDetect (0x80229DC0)
 // - 6: wctemplebri_render (0x80229D7C)
 // - 7: wctemplebri_free (0x80229D78)
-// - 8: wctemplebri_func08 (0x80229D48)
+// - 8: wctemplebri_getObjectTypeId (0x80229D48)
 // - 9: wctemplebri_getExtraSize (0x80229D40)
 // - internal: wctemplebri_updateModelWarp (0x8022999C)
 // - callback: wctemplebri_interactCallback (0x80229AAC)

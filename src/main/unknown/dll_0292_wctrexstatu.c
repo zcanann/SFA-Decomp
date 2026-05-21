@@ -26,6 +26,6 @@
 // - 5: wctrexstatu_hitDetect (0x802282C0)
 // - 6: wctrexstatu_render (0x80228290)
 // - 7: wctrexstatu_free (0x8022828C)
-// - 8: wctrexstatu_func08 (0x8022825C)
+// - 8: wctrexstatu_getObjectTypeId (0x8022825C)
 // - 9: wctrexstatu_getExtraSize (0x80228254)
 // - callback: wctrexstatu_interactCallback (0x802281CC)

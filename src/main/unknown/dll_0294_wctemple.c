@@ -21,5 +21,5 @@
 // - 5: wctemple_hitDetect (0x80228B7C)
 // - 6: wctemple_render (0x80228B4C)
 // - 7: wctemple_free (0x80228B48)
-// - 8: wctemple_func08 (0x80228B40)
+// - 8: wctemple_getObjectTypeId (0x80228B40)
 // - 9: wctemple_getExtraSize (0x80228B38)

@@ -17,7 +17,7 @@
 // - 5: softbody_hitDetect (0x80234E20)
 // - 6: softbody_render (0x80234DF0)
 // - 7: softbody_free (0x80234DD8)
-// - 8: softbody_func08 (0x80234DD0)
+// - 8: softbody_getObjectTypeId (0x80234DD0)
 // - 9: softbody_getExtraSize (0x80234DC8)
 
 // Runtime shape:

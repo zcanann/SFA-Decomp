@@ -59,7 +59,7 @@
  * - slot 05: 0x80228B7C wctemple_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80228B4C wctemple_render ref=render
  * - slot 07: 0x80228B48 wctemple_free stub=blr ref=free (stub)
- * - slot 08: 0x80228B40 wctemple_func08 stub=const 0
+ * - slot 08: 0x80228B40 wctemple_getObjectTypeId stub=const 0
  * - slot 09: 0x80228B38 wctemple_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

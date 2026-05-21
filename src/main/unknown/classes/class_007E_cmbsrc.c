@@ -33,7 +33,7 @@
  *   slot 05: 0x80236C9C cmbsrc_hitDetect
  *   slot 06: 0x80236BE4 cmbsrc_render
  *   slot 07: 0x80236B80 cmbsrc_free
- *   slot 08: 0x80236B78 cmbsrc_func08
+ *   slot 08: 0x80236B78 cmbsrc_getObjectTypeId
  *   slot 09: 0x80236B70 cmbsrc_getExtraSize
  * - DLL 0x02B2: gDustMoteSouObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80237804 dustmotesou_initialise
@@ -43,7 +43,7 @@
  *   slot 05: 0x802375C0 dustmotesou_hitDetect
  *   slot 06: 0x802375B4 dustmotesou_render
  *   slot 07: 0x80237584 dustmotesou_free
- *   slot 08: 0x8023757C dustmotesou_func08
+ *   slot 08: 0x8023757C dustmotesou_getObjectTypeId
  *   slot 09: 0x80237574 dustmotesou_getExtraSize
  */
 

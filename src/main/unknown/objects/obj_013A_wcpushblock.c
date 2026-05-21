@@ -57,7 +57,7 @@
  * - slot 05: 0x80224460 wcpushblock_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80224430 wcpushblock_render ref=render
  * - slot 07: 0x8022442C wcpushblock_free stub=blr ref=free (stub)
- * - slot 08: 0x802243FC wcpushblock_func08
+ * - slot 08: 0x802243FC wcpushblock_getObjectTypeId
  * - slot 09: 0x802243F4 wcpushblock_getExtraSize stub=const 648 ref=getExtraSize (stub)
  */
 

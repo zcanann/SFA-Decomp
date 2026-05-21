@@ -56,7 +56,7 @@
  * - slot 05: 0x802354C8 waterflowwe_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80235498 waterflowwe_render ref=render
  * - slot 07: 0x80235480 waterflowwe_free ref=free
- * - slot 08: 0x80235478 waterflowwe_func08 stub=const 0
+ * - slot 08: 0x80235478 waterflowwe_getObjectTypeId stub=const 0
  * - slot 09: 0x80235470 waterflowwe_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

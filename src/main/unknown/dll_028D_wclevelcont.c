@@ -25,7 +25,7 @@
 // - 5: wclevelcont_hitDetect (0x80226D48)
 // - 6: wclevelcont_render (0x80226D18)
 // - 7: wclevelcont_free (0x80226C6C)
-// - 8: wclevelcont_func08 (0x80226C64)
+// - 8: wclevelcont_getObjectTypeId (0x80226C64)
 // - 9: wclevelcont_getExtraSize (0x80226C5C)
 // - internal: wclevelcont_syncProgressBits (0x80226D4C)
 // - 10: wclevelcont_setScale (0x80226B84)

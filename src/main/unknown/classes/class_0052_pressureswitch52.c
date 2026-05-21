@@ -40,7 +40,7 @@
  *   slot 05: 0x80227D5C wcpressures_hitDetect
  *   slot 06: 0x80227D2C wcpressures_render
  *   slot 07: 0x80227D08 wcpressures_free
- *   slot 08: 0x80227CDC wcpressures_func08
+ *   slot 08: 0x80227CDC wcpressures_getObjectTypeId
  *   slot 09: 0x80227CD4 wcpressures_getExtraSize
  */
 

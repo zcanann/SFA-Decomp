@@ -27,7 +27,7 @@
 // - 5: wctempledia_hitDetect (0x802295A4)
 // - 6: wctempledia_render (0x80229574)
 // - 7: wctempledia_free (0x80229570)
-// - 8: wctempledia_func08 (0x80229568)
+// - 8: wctempledia_getObjectTypeId (0x80229568)
 // - 9: wctempledia_getExtraSize (0x80229560)
 // - internal: wctempledia_syncPartVisibility (0x802293F8)
 // - callback: wctempledia_interactCallback (0x802294CC)

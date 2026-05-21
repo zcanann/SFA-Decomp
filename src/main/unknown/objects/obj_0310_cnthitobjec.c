@@ -58,7 +58,7 @@
  * - slot 05: 0x80238BC0 cnthitobjec_hitDetect ref=hitDetect
  * - slot 06: 0x80238B78 cnthitobjec_render ref=render
  * - slot 07: 0x80238B74 cnthitobjec_free stub=blr ref=free (stub)
- * - slot 08: 0x80238B6C cnthitobjec_func08 stub=const 0
+ * - slot 08: 0x80238B6C cnthitobjec_getObjectTypeId stub=const 0
  * - slot 09: 0x80238B64 cnthitobjec_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

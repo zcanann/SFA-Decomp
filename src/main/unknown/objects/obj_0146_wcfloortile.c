@@ -56,7 +56,7 @@
  * - slot 05: 0x8022A2DC wcfloortile_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8022A2AC wcfloortile_render ref=render
  * - slot 07: 0x8022A2A8 wcfloortile_free stub=blr ref=free (stub)
- * - slot 08: 0x8022A2A0 wcfloortile_func08 stub=const 0
+ * - slot 08: 0x8022A2A0 wcfloortile_getObjectTypeId stub=const 0
  * - slot 09: 0x8022A298 wcfloortile_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

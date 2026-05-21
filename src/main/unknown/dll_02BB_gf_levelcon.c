@@ -15,7 +15,7 @@
 // - 5: gf_levelcon_hitDetect (0x80239D7C)
 // - 6: gf_levelcon_render (0x80239D4C)
 // - 7: gf_levelcon_free (0x80239D28)
-// - 8: gf_levelcon_func08 (0x80239D20)
+// - 8: gf_levelcon_getObjectTypeId (0x80239D20)
 // - 9: gf_levelcon_getExtraSize (0x80239D18)
 
 // Helpers:

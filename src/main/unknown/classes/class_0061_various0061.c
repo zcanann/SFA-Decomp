@@ -537,7 +537,7 @@
  *   slot 05: 0x8023AA60 andross_hitDetect
  *   slot 06: 0x8023AA3C andross_render
  *   slot 07: 0x8023AA18 andross_free
- *   slot 08: 0x8023AA10 andross_func08
+ *   slot 08: 0x8023AA10 andross_getObjectTypeId
  *   slot 09: 0x8023AA08 andross_getExtraSize
  * - DLL 0x02BD: gAndrossHandObjDescriptor (slots=10, mask=0001111111)
  *   slot 03: 0x8023FBF4 androsshand_init
@@ -545,7 +545,7 @@
  *   slot 05: 0x8023F464 androsshand_hitDetect
  *   slot 06: 0x8023F440 androsshand_render
  *   slot 07: 0x8023F43C androsshand_free
- *   slot 08: 0x8023F434 androsshand_func08
+ *   slot 08: 0x8023F434 androsshand_getObjectTypeId
  *   slot 09: 0x8023F42C androsshand_getExtraSize
  * - DLL 0x02BE: gAndrossBrainObjDescriptor (slots=10, mask=0001111111)
  *   slot 03: 0x8023FFE0 androssbrain_init
@@ -553,7 +553,7 @@
  *   slot 05: 0x8023FD34 androssbrain_hitDetect
  *   slot 06: 0x8023FD10 androssbrain_render
  *   slot 07: 0x8023FD0C androssbrain_free
- *   slot 08: 0x8023FD04 androssbrain_func08
+ *   slot 08: 0x8023FD04 androssbrain_getObjectTypeId
  *   slot 09: 0x8023FCFC androssbrain_getExtraSize
  * - DLL 0x02BF: gAndrossLighObjDescriptor (slots=10, mask=0001111111)
  *   slot 03: 0x80240348 androssligh_init
@@ -561,7 +561,7 @@
  *   slot 05: 0x80240290 androssligh_hitDetect
  *   slot 06: 0x80240260 androssligh_render
  *   slot 07: 0x8024025C androssligh_free
- *   slot 08: 0x80240254 androssligh_func08
+ *   slot 08: 0x80240254 androssligh_getObjectTypeId
  *   slot 09: 0x8024024C androssligh_getExtraSize
  */
 

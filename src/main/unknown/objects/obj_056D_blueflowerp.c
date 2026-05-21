@@ -68,7 +68,7 @@
  * - slot 05: 0x80234E20 softbody_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80234DF0 softbody_render ref=render
  * - slot 07: 0x80234DD8 softbody_free ref=free
- * - slot 08: 0x80234DD0 softbody_func08 stub=const 0
+ * - slot 08: 0x80234DD0 softbody_getObjectTypeId stub=const 0
  * - slot 09: 0x80234DC8 softbody_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

@@ -23,5 +23,5 @@
 // - 5: wcpushblock_hitDetect (0x80224460)
 // - 6: wcpushblock_render (0x80224430)
 // - 7: wcpushblock_free (0x8022442C)
-// - 8: wcpushblock_func08 (0x802243FC)
+// - 8: wcpushblock_getObjectTypeId (0x802243FC)
 // - 9: wcpushblock_getExtraSize (0x802243F4)

@@ -58,7 +58,7 @@
  * - slot 05: 0x8023AA60 andross_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8023AA3C andross_render ref=render
  * - slot 07: 0x8023AA18 andross_free ref=free
- * - slot 08: 0x8023AA10 andross_func08 stub=const 0
+ * - slot 08: 0x8023AA10 andross_getObjectTypeId stub=const 0
  * - slot 09: 0x8023AA08 andross_getExtraSize stub=const 236 ref=getExtraSize (stub)
  */
 

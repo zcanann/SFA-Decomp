@@ -13,7 +13,7 @@
 // - 5: andross_hitDetect (0x8023AA60)
 // - 6: andross_render (0x8023AA3C)
 // - 7: andross_free (0x8023AA18)
-// - 8: andross_func08 (0x8023AA10)
+// - 8: andross_getObjectTypeId (0x8023AA10)
 // - 9: andross_getExtraSize (0x8023AA08)
 
 // Helpers:

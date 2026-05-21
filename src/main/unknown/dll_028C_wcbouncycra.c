@@ -23,5 +23,5 @@
 // - 5: wcbouncycra_hitDetect (0x802240D0)
 // - 6: wcbouncycra_render (0x802240A0)
 // - 7: wcbouncycra_free (0x8022409C)
-// - 8: wcbouncycra_func08 (0x80224094)
+// - 8: wcbouncycra_getObjectTypeId (0x80224094)
 // - 9: wcbouncycra_getExtraSize (0x8022408C)

@@ -13,7 +13,7 @@
 // - 5: androssbrain_hitDetect (0x8023FD34)
 // - 6: androssbrain_render (0x8023FD10)
 // - 7: androssbrain_free (0x8023FD0C)
-// - 8: androssbrain_func08 (0x8023FD04)
+// - 8: androssbrain_getObjectTypeId (0x8023FD04)
 // - 9: androssbrain_getExtraSize (0x8023FCFC)
 
 // Runtime shape:

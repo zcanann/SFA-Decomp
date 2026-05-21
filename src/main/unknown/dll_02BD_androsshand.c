@@ -14,7 +14,7 @@
 // - 5: androsshand_hitDetect (0x8023F464)
 // - 6: androsshand_render (0x8023F440)
 // - 7: androsshand_free (0x8023F43C)
-// - 8: androsshand_func08 (0x8023F434)
+// - 8: androsshand_getObjectTypeId (0x8023F434)
 // - 9: androsshand_getExtraSize (0x8023F42C)
 
 // Helpers:

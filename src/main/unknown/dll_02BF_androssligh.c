@@ -13,7 +13,7 @@
 // - 5: androssligh_hitDetect (0x80240290)
 // - 6: androssligh_render (0x80240260)
 // - 7: androssligh_free (0x8024025C)
-// - 8: androssligh_func08 (0x80240254)
+// - 8: androssligh_getObjectTypeId (0x80240254)
 // - 9: androssligh_getExtraSize (0x8024024C)
 
 // Helpers:

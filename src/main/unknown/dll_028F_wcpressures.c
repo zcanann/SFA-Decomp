@@ -27,6 +27,6 @@
 // - 5: wcpressures_hitDetect (0x80227D5C)
 // - 6: wcpressures_render (0x80227D2C)
 // - 7: wcpressures_free (0x80227D08)
-// - 8: wcpressures_func08 (0x80227CDC)
+// - 8: wcpressures_getObjectTypeId (0x80227CDC)
 // - 9: wcpressures_getExtraSize (0x80227CD4)
 // - callback: wcpressures_tileStateCallback (0x80227BB8)

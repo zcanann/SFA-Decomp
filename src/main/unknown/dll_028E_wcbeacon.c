@@ -21,6 +21,6 @@
 // - 3: wcbeacon_init (0x802275DC)
 // - 4: wcbeacon_update (0x80227388)
 // - 6: wcbeacon_render (0x80227358)
-// - 8: wcbeacon_func08 (0x80227328)
+// - 8: wcbeacon_getObjectTypeId (0x80227328)
 // - 9: wcbeacon_getExtraSize (0x80227320)
 // - interaction: wcbeacon_aButtonCallback (0x802272C8)

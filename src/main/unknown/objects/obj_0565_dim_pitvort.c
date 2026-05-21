@@ -60,7 +60,7 @@
  * - slot 05: 0x80237FF0 vortex_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80237848 vortex_render ref=render
  * - slot 07: 0x80237818 vortex_free ref=free
- * - slot 08: 0x80237810 vortex_func08 stub=const 0
+ * - slot 08: 0x80237810 vortex_getObjectTypeId stub=const 0
  * - slot 09: 0x80237808 vortex_getExtraSize stub=const 40 ref=getExtraSize (stub)
  */
 

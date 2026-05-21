@@ -15,7 +15,7 @@
 // - 5: waterflowwe_hitDetect (0x802354C8)
 // - 6: waterflowwe_render (0x80235498)
 // - 7: waterflowwe_free (0x80235480)
-// - 8: waterflowwe_func08 (0x80235478)
+// - 8: waterflowwe_getObjectTypeId (0x80235478)
 // - 9: waterflowwe_getExtraSize (0x80235470)
 
 // Helpers:

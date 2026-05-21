@@ -62,7 +62,7 @@
  *   slot 05: 0x80228618 suntemple_hitDetect
  *   slot 06: 0x802285E8 suntemple_render
  *   slot 07: 0x802285E4 suntemple_free
- *   slot 08: 0x802285DC suntemple_func08
+ *   slot 08: 0x802285DC suntemple_getObjectTypeId
  *   slot 09: 0x802285D4 suntemple_getExtraSize
  */
 

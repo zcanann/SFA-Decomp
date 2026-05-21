@@ -25,5 +25,5 @@
 // - 5: wctile_hitDetect (0x80227718)
 // - 6: wctile_render (0x802276E8)
 // - 7: wctile_free (0x802276E4)
-// - 8: wctile_func08 (0x802276B4)
+// - 8: wctile_getObjectTypeId (0x802276B4)
 // - 9: wctile_getExtraSize (0x802276AC)

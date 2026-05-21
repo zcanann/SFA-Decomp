@@ -52,7 +52,7 @@
  * - slot 05: 0x802375C0 dustmotesou_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x802375B4 dustmotesou_render ref=render
  * - slot 07: 0x80237584 dustmotesou_free ref=free
- * - slot 08: 0x8023757C dustmotesou_func08 stub=const 0
+ * - slot 08: 0x8023757C dustmotesou_getObjectTypeId stub=const 0
  * - slot 09: 0x80237574 dustmotesou_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

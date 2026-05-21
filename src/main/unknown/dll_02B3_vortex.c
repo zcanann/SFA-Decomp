@@ -16,5 +16,5 @@
 // - 5: vortex_hitDetect (0x80237FF0)
 // - 6: vortex_render (0x80237848)
 // - 7: vortex_free (0x80237818)
-// - 8: vortex_func08 (0x80237810)
+// - 8: vortex_getObjectTypeId (0x80237810)
 // - 9: vortex_getExtraSize (0x80237808)

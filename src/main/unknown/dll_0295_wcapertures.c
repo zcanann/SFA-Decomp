@@ -26,6 +26,6 @@
 // - 5: wcapertures_hitDetect (0x80229048)
 // - 6: wcapertures_render (0x80228F80)
 // - 7: wcapertures_free (0x80228F50)
-// - 8: wcapertures_func08 (0x80228F20)
+// - 8: wcapertures_getObjectTypeId (0x80228F20)
 // - 9: wcapertures_getExtraSize (0x80228F18)
 // - callback: wcapertures_interactCallback (0x80228EDC)

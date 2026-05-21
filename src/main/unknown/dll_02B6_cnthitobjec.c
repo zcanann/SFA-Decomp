@@ -16,7 +16,7 @@
 // - 5: cnthitobjec_hitDetect (0x80238BC0)
 // - 6: cnthitobjec_render (0x80238B78)
 // - 7: cnthitobjec_free (0x80238B74)
-// - 8: cnthitobjec_func08 (0x80238B6C)
+// - 8: cnthitobjec_getObjectTypeId (0x80238B6C)
 // - 9: cnthitobjec_getExtraSize (0x80238B64)
 
 // Helpers:

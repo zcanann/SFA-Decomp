@@ -2207,13 +2207,13 @@
  *   slot 05: 0x802240D0 wcbouncycra_hitDetect
  *   slot 06: 0x802240A0 wcbouncycra_render
  *   slot 07: 0x8022409C wcbouncycra_free
- *   slot 08: 0x80224094 wcbouncycra_func08
+ *   slot 08: 0x80224094 wcbouncycra_getObjectTypeId
  *   slot 09: 0x8022408C wcbouncycra_getExtraSize
  * - DLL 0x028E: gWCBeaconObjDescriptor (slots=10, mask=0001101011)
  *   slot 03: 0x802275DC wcbeacon_init
  *   slot 04: 0x80227388 wcbeacon_update
  *   slot 06: 0x80227358 wcbeacon_render
- *   slot 08: 0x80227328 wcbeacon_func08
+ *   slot 08: 0x80227328 wcbeacon_getObjectTypeId
  *   slot 09: 0x80227320 wcbeacon_getExtraSize
  * - DLL 0x0290: gWCPushBlockObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802251B0 wcpushblock_initialise
@@ -2223,7 +2223,7 @@
  *   slot 05: 0x80224460 wcpushblock_hitDetect
  *   slot 06: 0x80224430 wcpushblock_render
  *   slot 07: 0x8022442C wcpushblock_free
- *   slot 08: 0x802243FC wcpushblock_func08
+ *   slot 08: 0x802243FC wcpushblock_getObjectTypeId
  *   slot 09: 0x802243F4 wcpushblock_getExtraSize
  * - DLL 0x0291: gWCTileObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80227BB4 wctile_initialise
@@ -2233,7 +2233,7 @@
  *   slot 05: 0x80227718 wctile_hitDetect
  *   slot 06: 0x802276E8 wctile_render
  *   slot 07: 0x802276E4 wctile_free
- *   slot 08: 0x802276B4 wctile_func08
+ *   slot 08: 0x802276B4 wctile_getObjectTypeId
  *   slot 09: 0x802276AC wctile_getExtraSize
  * - DLL 0x0292: gWCTrexStatuObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80228474 wctrexstatu_initialise
@@ -2243,7 +2243,7 @@
  *   slot 05: 0x802282C0 wctrexstatu_hitDetect
  *   slot 06: 0x80228290 wctrexstatu_render
  *   slot 07: 0x8022828C wctrexstatu_free
- *   slot 08: 0x8022825C wctrexstatu_func08
+ *   slot 08: 0x8022825C wctrexstatu_getObjectTypeId
  *   slot 09: 0x80228254 wctrexstatu_getExtraSize
  * - DLL 0x0294: gWCTempleObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80228C64 wctemple_initialise
@@ -2253,7 +2253,7 @@
  *   slot 05: 0x80228B7C wctemple_hitDetect
  *   slot 06: 0x80228B4C wctemple_render
  *   slot 07: 0x80228B48 wctemple_free
- *   slot 08: 0x80228B40 wctemple_func08
+ *   slot 08: 0x80228B40 wctemple_getObjectTypeId
  *   slot 09: 0x80228B38 wctemple_getExtraSize
  * - DLL 0x0295: gWCApertureSObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802293F4 wcapertures_initialise
@@ -2263,7 +2263,7 @@
  *   slot 05: 0x80229048 wcapertures_hitDetect
  *   slot 06: 0x80228F80 wcapertures_render
  *   slot 07: 0x80228F50 wcapertures_free
- *   slot 08: 0x80228F20 wcapertures_func08
+ *   slot 08: 0x80228F20 wcapertures_getObjectTypeId
  *   slot 09: 0x80228F18 wcapertures_getExtraSize
  * - DLL 0x0296: gWCTempleDiaObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80229998 wctempledia_initialise
@@ -2273,7 +2273,7 @@
  *   slot 05: 0x802295A4 wctempledia_hitDetect
  *   slot 06: 0x80229574 wctempledia_render
  *   slot 07: 0x80229570 wctempledia_free
- *   slot 08: 0x80229568 wctempledia_func08
+ *   slot 08: 0x80229568 wctempledia_getObjectTypeId
  *   slot 09: 0x80229560 wctempledia_getExtraSize
  * - DLL 0x0297: gWCTempleBriObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8022A294 wctemplebri_initialise
@@ -2283,7 +2283,7 @@
  *   slot 05: 0x80229DC0 wctemplebri_hitDetect
  *   slot 06: 0x80229D7C wctemplebri_render
  *   slot 07: 0x80229D78 wctemplebri_free
- *   slot 08: 0x80229D48 wctemplebri_func08
+ *   slot 08: 0x80229D48 wctemplebri_getObjectTypeId
  *   slot 09: 0x80229D40 wctemplebri_getExtraSize
  * - DLL 0x0298: gWCFloorTileObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8022A66C wcfloortile_initialise
@@ -2293,7 +2293,7 @@
  *   slot 05: 0x8022A2DC wcfloortile_hitDetect
  *   slot 06: 0x8022A2AC wcfloortile_render
  *   slot 07: 0x8022A2A8 wcfloortile_free
- *   slot 08: 0x8022A2A0 wcfloortile_func08
+ *   slot 08: 0x8022A2A0 wcfloortile_getObjectTypeId
  *   slot 09: 0x8022A298 wcfloortile_getExtraSize
  * - DLL 0x029A: gARWArwingObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8022E414 arwarwing_initialise
@@ -2363,7 +2363,7 @@
  *   slot 05: 0x80234E20 softbody_hitDetect
  *   slot 06: 0x80234DF0 softbody_render
  *   slot 07: 0x80234DD8 softbody_free
- *   slot 08: 0x80234DD0 softbody_func08
+ *   slot 08: 0x80234DD0 softbody_getObjectTypeId
  *   slot 09: 0x80234DC8 softbody_getExtraSize
  * - DLL 0x02B3: gVortexObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802383DC vortex_initialise
@@ -2373,7 +2373,7 @@
  *   slot 05: 0x80237FF0 vortex_hitDetect
  *   slot 06: 0x80237848 vortex_render
  *   slot 07: 0x80237818 vortex_free
- *   slot 08: 0x80237810 vortex_func08
+ *   slot 08: 0x80237810 vortex_getObjectTypeId
  *   slot 09: 0x80237808 vortex_getExtraSize
  * - DLL 0x02B4: gCNTcounterObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80238528 cntcounter_initialise
@@ -2383,7 +2383,7 @@
  *   slot 05: 0x80238428 cntcounter_hitDetect
  *   slot 06: 0x80238424 cntcounter_render
  *   slot 07: 0x802383F0 cntcounter_free
- *   slot 08: 0x802383E8 cntcounter_func08
+ *   slot 08: 0x802383E8 cntcounter_getObjectTypeId
  *   slot 09: 0x802383E0 cntcounter_getExtraSize
  * - DLL 0x02B5: gTimerObjDescriptor (slots=10, mask=0001101101)
  *   slot 03: 0x80238A1C timer_init
@@ -2399,7 +2399,7 @@
  *   slot 05: 0x80238BC0 cnthitobjec_hitDetect
  *   slot 06: 0x80238B78 cnthitobjec_render
  *   slot 07: 0x80238B74 cnthitobjec_free
- *   slot 08: 0x80238B6C cnthitobjec_func08
+ *   slot 08: 0x80238B6C cnthitobjec_getObjectTypeId
  *   slot 09: 0x80238B64 cnthitobjec_getExtraSize
  * - DLL 0x02B7: gMCUpgradeObjDescriptor (slots=10, mask=0001100000)
  *   slot 03: 0x80239044 mcupgrade_init

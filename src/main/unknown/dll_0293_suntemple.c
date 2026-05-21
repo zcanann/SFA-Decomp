@@ -28,6 +28,6 @@
 // - 5: suntemple_hitDetect (0x80228618)
 // - 6: suntemple_render (0x802285E8)
 // - 7: suntemple_free (0x802285E4)
-// - 8: suntemple_func08 (0x802285DC)
+// - 8: suntemple_getObjectTypeId (0x802285DC)
 // - 9: suntemple_getExtraSize (0x802285D4)
 // - callback: suntemple_interactCallback (0x80228478)

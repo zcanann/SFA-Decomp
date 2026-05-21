@@ -53,7 +53,7 @@
  * - slot 03: 0x802275DC wcbeacon_init ref=init
  * - slot 04: 0x80227388 wcbeacon_update ref=update
  * - slot 06: 0x80227358 wcbeacon_render ref=render
- * - slot 08: 0x80227328 wcbeacon_func08
+ * - slot 08: 0x80227328 wcbeacon_getObjectTypeId
  * - slot 09: 0x80227320 wcbeacon_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

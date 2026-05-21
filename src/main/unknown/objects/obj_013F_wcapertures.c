@@ -56,7 +56,7 @@
  * - slot 05: 0x80229048 wcapertures_hitDetect ref=hitDetect
  * - slot 06: 0x80228F80 wcapertures_render ref=render
  * - slot 07: 0x80228F50 wcapertures_free ref=free
- * - slot 08: 0x80228F20 wcapertures_func08
+ * - slot 08: 0x80228F20 wcapertures_getObjectTypeId
  * - slot 09: 0x80228F18 wcapertures_getExtraSize stub=const 8 ref=getExtraSize (stub)
  */
 

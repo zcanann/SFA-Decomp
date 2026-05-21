@@ -140,7 +140,7 @@
  *   slot 05: 0x80226D48 wclevelcont_hitDetect
  *   slot 06: 0x80226D18 wclevelcont_render
  *   slot 07: 0x80226C6C wclevelcont_free
- *   slot 08: 0x80226C64 wclevelcont_func08
+ *   slot 08: 0x80226C64 wclevelcont_getObjectTypeId
  *   slot 09: 0x80226C5C wclevelcont_getExtraSize
  * - DLL 0x02A1: gARWLevelConObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80230E28 arwlevelcon_initialise
@@ -160,7 +160,7 @@
  *   slot 05: 0x80239D7C gf_levelcon_hitDetect
  *   slot 06: 0x80239D4C gf_levelcon_render
  *   slot 07: 0x80239D28 gf_levelcon_free
- *   slot 08: 0x80239D20 gf_levelcon_func08
+ *   slot 08: 0x80239D20 gf_levelcon_getObjectTypeId
  *   slot 09: 0x80239D18 gf_levelcon_getExtraSize
  */
 

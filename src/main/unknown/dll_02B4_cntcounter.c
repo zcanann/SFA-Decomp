@@ -15,7 +15,7 @@
 // - 5: cntcounter_hitDetect (0x80238428)
 // - 6: cntcounter_render (0x80238424)
 // - 7: cntcounter_free (0x802383F0)
-// - 8: cntcounter_func08 (0x802383E8)
+// - 8: cntcounter_getObjectTypeId (0x802383E8)
 // - 9: cntcounter_getExtraSize (0x802383E0)
 
 // Runtime shape:

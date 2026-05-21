@@ -16,7 +16,7 @@
 // - 5: cmbsrc_hitDetect (0x80236C9C)
 // - 6: cmbsrc_render (0x80236BE4)
 // - 7: cmbsrc_free (0x80236B80)
-// - 8: cmbsrc_func08 (0x80236B78)
+// - 8: cmbsrc_getObjectTypeId (0x80236B78)
 // - 9: cmbsrc_getExtraSize (0x80236B70)
 
 // Helpers:

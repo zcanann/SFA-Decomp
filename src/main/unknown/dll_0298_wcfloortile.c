@@ -26,5 +26,5 @@
 // - 5: wcfloortile_hitDetect (0x8022A2DC)
 // - 6: wcfloortile_render (0x8022A2AC)
 // - 7: wcfloortile_free (0x8022A2A8)
-// - 8: wcfloortile_func08 (0x8022A2A0)
+// - 8: wcfloortile_getObjectTypeId (0x8022A2A0)
 // - 9: wcfloortile_getExtraSize (0x8022A298)

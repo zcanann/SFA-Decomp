@@ -54,7 +54,7 @@
  * - slot 05: 0x8023FD34 androssbrain_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8023FD10 androssbrain_render ref=render
  * - slot 07: 0x8023FD0C androssbrain_free stub=blr ref=free (stub)
- * - slot 08: 0x8023FD04 androssbrain_func08 stub=const 0
+ * - slot 08: 0x8023FD04 androssbrain_getObjectTypeId stub=const 0
  * - slot 09: 0x8023FCFC androssbrain_getExtraSize stub=const 40 ref=getExtraSize (stub)
  */
 

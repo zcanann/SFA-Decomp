@@ -56,7 +56,7 @@
  * - slot 05: 0x802282C0 wctrexstatu_hitDetect ref=hitDetect
  * - slot 06: 0x80228290 wctrexstatu_render ref=render
  * - slot 07: 0x8022828C wctrexstatu_free stub=blr ref=free (stub)
- * - slot 08: 0x8022825C wctrexstatu_func08
+ * - slot 08: 0x8022825C wctrexstatu_getObjectTypeId
  * - slot 09: 0x80228254 wctrexstatu_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 
