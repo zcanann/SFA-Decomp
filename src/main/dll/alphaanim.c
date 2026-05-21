@@ -54,11 +54,11 @@ void doorlock_init(short *obj,int config)
     }
   }
   else if ((*(short *)(config + 0x26) & 1) != 0) {
-    if (*state == 0) {
-      *(undefined4 *)(obj + 0x7c) = 1;
+    if (*state != 0) {
+      *(undefined4 *)(obj + 0x7c) = 0;
     }
     else {
-      *(undefined4 *)(obj + 0x7c) = 0;
+      *(undefined4 *)(obj + 0x7c) = 1;
     }
   }
   return;
