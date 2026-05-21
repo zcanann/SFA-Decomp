@@ -510,37 +510,55 @@ void fn_801EC7A0(int p1, int p2)
  * EN v1.0 Size: 184b
  */
 #pragma dont_inline on
-void fn_801EC870(int p1, int p2)
+void fn_801EC870(int p1, register int p2_int)
 {
     f32 fz, fa, fb, fc;
-    *(f32 *)(p2 + 0x52c) = lbl_803E5C34;
-    *(f32 *)(p2 + 0x530) = lbl_803E5C38;
-    *(f32 *)(p2 + 0x534) = lbl_803E5BF4;
+    *(f32 *)(p2_int + 0x52c) = lbl_803E5C34;
+    *(f32 *)(p2_int + 0x530) = lbl_803E5C38;
+    *(f32 *)(p2_int + 0x534) = lbl_803E5BF4;
     fz = lbl_803E5AE8;
-    *(f32 *)(p2 + 0x414) = fz;
-    *(f32 *)(p2 + 0x584) = fz;
-    *(f32 *)(p2 + 0x548) = lbl_803E5BFC;
-    *(f32 *)(p2 + 0x54c) = lbl_803E5BE4;
-    *(f32 *)(p2 + 0x540) = lbl_803E5B20;
-    *(f32 *)(p2 + 0x544) = lbl_803E5AF8;
-    *(f32 *)(p2 + 0x558) = lbl_803E5BA8;
-    *(f32 *)(p2 + 0x56c) = lbl_803E5C00;
-    *(u8 *)(p2 + 0x428) &= ~0x80;
-    *(f32 *)(p2 + 0x430) = fz;
-    fa = *(f32 *)(p2 + 0x470);
-    *(f32 *)(p2 + 0x464) = fa;
-    *(f32 *)(p2 + 0x47c) = fa;
-    fb = *(f32 *)(p2 + 0x474);
-    *(f32 *)(p2 + 0x468) = fb;
-    *(f32 *)(p2 + 0x480) = fb;
-    fc = *(f32 *)(p2 + 0x478);
-    *(f32 *)(p2 + 0x46c) = fc;
-    *(f32 *)(p2 + 0x484) = fc;
-    *(u8 *)(p2 + 0x428) &= ~0x40;
-    *(u8 *)(p2 + 0x428) &= ~0x10;
-    *(int *)(p2 + 0x42c) = 0;
-    *(f32 *)(p2 + 0x3e4) = fz;
-    *(f32 *)(p2 + 0x3e0) = lbl_803E5AEC;
+    *(f32 *)(p2_int + 0x414) = fz;
+    *(f32 *)(p2_int + 0x584) = fz;
+    *(f32 *)(p2_int + 0x548) = lbl_803E5BFC;
+    *(f32 *)(p2_int + 0x54c) = lbl_803E5BE4;
+    *(f32 *)(p2_int + 0x540) = lbl_803E5B20;
+    *(f32 *)(p2_int + 0x544) = lbl_803E5AF8;
+    *(f32 *)(p2_int + 0x558) = lbl_803E5BA8;
+    *(f32 *)(p2_int + 0x56c) = lbl_803E5C00;
+    {
+        register u32 b;
+        register u32 v = 0;
+        asm {
+            lbz b, 0x428(p2_int)
+            rlwimi b, v, 7, 24, 24
+            stb b, 0x428(p2_int)
+        }
+    }
+    *(f32 *)(p2_int + 0x430) = fz;
+    fa = *(f32 *)(p2_int + 0x470);
+    *(f32 *)(p2_int + 0x464) = fa;
+    *(f32 *)(p2_int + 0x47c) = fa;
+    fb = *(f32 *)(p2_int + 0x474);
+    *(f32 *)(p2_int + 0x468) = fb;
+    *(f32 *)(p2_int + 0x480) = fb;
+    fc = *(f32 *)(p2_int + 0x478);
+    *(f32 *)(p2_int + 0x46c) = fc;
+    *(f32 *)(p2_int + 0x484) = fc;
+    {
+        register u32 b;
+        register u32 v = 0;
+        asm {
+            lbz b, 0x428(p2_int)
+            rlwimi b, v, 6, 25, 25
+            stb b, 0x428(p2_int)
+            lbz b, 0x428(p2_int)
+            rlwimi b, v, 4, 27, 27
+            stb b, 0x428(p2_int)
+            stw v, 0x42c(p2_int)
+        }
+    }
+    *(f32 *)(p2_int + 0x3e4) = fz;
+    *(f32 *)(p2_int + 0x3e0) = lbl_803E5AEC;
 }
 #pragma dont_inline reset
 
