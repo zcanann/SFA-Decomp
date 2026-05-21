@@ -1016,9 +1016,12 @@ void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
     Vec3_Normalize(rt);
     Vec3_Cross(rt, fwd, upRecomputed);
     Vec3_Normalize(upRecomputed);
-    out[0] = -rt[0]; out[1] = -rt[1]; out[2] = -rt[2];
-    out[3] = -upRecomputed[0]; out[4] = -upRecomputed[1]; out[5] = -upRecomputed[2];
-    out[6] = -fwd[0]; out[7] = -fwd[1]; out[8] = -fwd[2];
+    {
+        f32 (*mat)[4] = (f32 (*)[4])out;
+        mat[0][0] = -rt[0]; mat[0][1] = -rt[1]; mat[0][2] = -rt[2];
+        mat[1][0] = -upRecomputed[0]; mat[1][1] = -upRecomputed[1]; mat[1][2] = -upRecomputed[2];
+        mat[2][0] = -fwd[0]; mat[2][1] = -fwd[1]; mat[2][2] = -fwd[2];
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
