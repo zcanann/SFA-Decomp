@@ -4605,3 +4605,17 @@ void tex1tab2readCb(s32 result, void *fileInfo)
         }
     }
 }
+
+extern u32 lbl_803DCC74;
+
+void romListReadCb(s32 result, void *fileInfo)
+{
+    lbl_803DCC74 = 0;
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+}
