@@ -2316,3 +2316,21 @@ void dimlogfire_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int fn_8001DB64(int* p);
+extern f32 lbl_803E47F0;
+
+#pragma scheduling off
+#pragma peephole off
+void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if ((int*)state[1] != NULL) {
+        if (fn_8001DB64((int*)state[1]) != 0) {
+            queueGlowRender((int*)state[1]);
+        }
+    }
+    ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E47F0);
+}
+#pragma peephole reset
+#pragma scheduling reset
