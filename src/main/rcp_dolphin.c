@@ -2404,6 +2404,21 @@ void textureFn_800528bc(void) {
     GXSetNumIndStages(lbl_803DCD68);
 }
 
+extern u8 *saveGameGetEnvState(void);
+extern s32 lbl_803DCE00;
+#pragma peephole off
+void timeOfDayFn_80055000(void) {
+    u8 *p = saveGameGetEnvState();
+    lbl_803DCE00 = -1;
+    p[0x40] = (u8)(p[0x40] & ~0x20);
+}
+void timeOfDayFn_80055038(void) {
+    u8 *p = saveGameGetEnvState();
+    lbl_803DCE00 = 1;
+    p[0x40] = (u8)(p[0x40] | 0x20);
+}
+#pragma peephole reset
+
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 void fn_80054F74(int *p, f32 *vec) {

@@ -5387,5 +5387,17 @@ u32 getDataFileSize(int idx) {
     *(u8 *)0 = 0;
     return 0;
 }
+
+extern void VISetBlack(int);
+extern void VIFlush(void);
+extern u8 lbl_803DB5CC;
+#pragma peephole off
+void viFn_8004a56c(int val) {
+    int v = val;
+    VISetBlack(1);
+    VIFlush();
+    lbl_803DB5CC = (u8)v;
+}
+#pragma peephole reset
 #pragma peephole reset
 #pragma scheduling reset
