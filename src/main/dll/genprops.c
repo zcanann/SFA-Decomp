@@ -4466,6 +4466,24 @@ int curve_getExtraSize(void) { return 0x0; }
 int curve_getObjectTypeId(void) { return 0x0; }
 int dll_F7_getExtraSize(void) { return 0xc; }
 int dll_F7_getObjectTypeId(void) { return 0x2; }
+
+extern void *gModgfxInterface;
+extern void Resource_Release(int handle);
+extern int lbl_803DDAB0;
+extern int lbl_803DDAB4;
+
+#pragma scheduling off
+void dll_F7_free(int obj)
+{
+    (*(void (***)(int))gModgfxInterface)[6](obj);
+    Resource_Release(lbl_803DDAB0);
+    Resource_Release(lbl_803DDAB4);
+    lbl_803DDAB0 = 0;
+    lbl_803DDAB4 = 0;
+    ObjGroup_RemoveObject(obj, 0x3E);
+}
+#pragma scheduling reset
+
 int checkpoint4_getExtraSize(void) { return 0x40; }
 int checkpoint4_getObjectTypeId(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
