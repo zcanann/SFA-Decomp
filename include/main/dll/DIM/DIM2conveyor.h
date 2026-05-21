@@ -24,7 +24,7 @@ int dimbridgecogmai_func08(void);
 void dimbridgecogmai_free(int obj);
 void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dimbridgecogmai_hitDetect(void);
-void dimbridgecogmai_update(void);
+void dimbridgecogmai_update(int *obj);
 void dimbridgecogmai_init(int *obj, int *def);
 void dimbridgecogmai_initialise(void);
 
