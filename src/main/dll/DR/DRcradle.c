@@ -533,20 +533,16 @@ void fn_801EC870(int p1, register int p2_int)
             rlwimi b, v, 7, 24, 24
             stb b, 0x428(p2_int)
         }
-    }
-    *(f32 *)(p2_int + 0x430) = fz;
-    fa = *(f32 *)(p2_int + 0x470);
-    *(f32 *)(p2_int + 0x464) = fa;
-    *(f32 *)(p2_int + 0x47c) = fa;
-    fb = *(f32 *)(p2_int + 0x474);
-    *(f32 *)(p2_int + 0x468) = fb;
-    *(f32 *)(p2_int + 0x480) = fb;
-    fc = *(f32 *)(p2_int + 0x478);
-    *(f32 *)(p2_int + 0x46c) = fc;
-    *(f32 *)(p2_int + 0x484) = fc;
-    {
-        register u32 b;
-        register u32 v = 0;
+        *(f32 *)(p2_int + 0x430) = fz;
+        fa = *(f32 *)(p2_int + 0x470);
+        *(f32 *)(p2_int + 0x464) = fa;
+        *(f32 *)(p2_int + 0x47c) = fa;
+        fb = *(f32 *)(p2_int + 0x474);
+        *(f32 *)(p2_int + 0x468) = fb;
+        *(f32 *)(p2_int + 0x480) = fb;
+        fc = *(f32 *)(p2_int + 0x478);
+        *(f32 *)(p2_int + 0x46c) = fc;
+        *(f32 *)(p2_int + 0x484) = fc;
         asm {
             lbz b, 0x428(p2_int)
             rlwimi b, v, 6, 25, 25
