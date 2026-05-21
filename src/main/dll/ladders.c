@@ -610,6 +610,61 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3) {
 int tumbleweedbush_getExtraSize(void) { return 0x54; }
 int tumbleweedbush_getObjectTypeId(void) { return 0x0; }
 
+extern u8 lbl_803DDA80;
+extern void *gSHthorntailAnimationInterface;
+extern void *Obj_GetPlayerObject(void);
+extern void fn_80096F9C(int *p, int a, int b, int c, int d);
+extern int Sfx_PlayFromObject(int *obj, int sfx);
+extern s8 fn_801631C8(int *obj);
+extern float sqrtf(float x);
+
+#pragma scheduling off
+#pragma peephole off
+void tumbleweedbush_update(int *obj) {
+    u8 *sub;
+    int *player;
+    struct { int *hitObj; int extra; } hitInfo;
+    int hitData;
+    f32 dx, dy, d;
+    int i;
+    int j;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    player = (int*)Obj_GetPlayerObject();
+    if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hitInfo, &hitData) != 0) {
+        if (*(s16*)((char*)hitInfo.hitObj + 0x46) != 0x4ba) {
+            fn_80096F9C(&hitData, 8, 0xff, 0xff, 0x78);
+            Sfx_PlayFromObject(obj, 0x280);
+            for (i = 0; (u8)i < sub[0x50]; i++) {
+                int **slot = (int**)((char*)sub + (u8)i * 4 + 0xc);
+                if (*slot != NULL) {
+                    if (*(s16*)((char*)obj + 0x46) == 0x28d) {
+                        if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&hitInfo.extra) == 0) continue;
+                    }
+                    ((void(*)(int*))((void**)*(int*)((char*)*slot + 0x68))[10])(*slot);
+                }
+            }
+        }
+    }
+    dx = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)player + 0xc);
+    dy = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)player + 0x14);
+    d = sqrtf(dx * dx + dy * dy);
+    if ((u16)(s32)d < *(u16*)(sub + 8)) {
+        while ((s8)fn_801631C8(obj) != -1) {
+        }
+    }
+    for (j = 0; (u8)j < sub[0x50]; j++) {
+        int **slot = (int**)((char*)sub + (u8)j * 4 + 0xc);
+        if (*slot != NULL) {
+            if (((int(*)(int*))((void**)*(int*)((char*)*slot + 0x68))[8])(*slot) > 1) {
+                *slot = NULL;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 16b chained patterns. */
 #pragma scheduling off
 #pragma peephole off
@@ -687,7 +742,6 @@ void tumbleweedbush_setScale(u8* obj, void* match) {
 }
 #pragma scheduling reset
 
-extern void tumbleweedbush_update(void);
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     {
