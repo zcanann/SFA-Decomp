@@ -2725,6 +2725,40 @@ void *textureAlloc(u16 w, u16 h, u8 fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10
     return obj;
 }
 
+extern void GXInitTexObj(void *obj, void *img, u16 w, u16 h, int fmt, u8 ws, u8 wt, u8 mipmap);
+extern void GXInitTexObjLOD(void *obj, int mn, int mg, f32 minLod, f32 maxLod, f32 lodBias, u8 bclamp, u8 edgeLod, u8 aniso);
+extern void GXInitTexObjUserData(void *obj, void *udata);
+extern int GXGetTexObjFmt(void *obj);
+extern u16 GXGetTexObjWidth(void *obj);
+extern u16 GXGetTexObjHeight(void *obj);
+extern f32 lbl_803DEB98;
+extern f32 lbl_803DEB9C;
+void textureFn_80053d58(void *vobj) {
+    u8 *obj = (u8 *)vobj;
+    u8 mipmap = 0;
+    *(int *)(obj + 64) = 0;
+    obj[72] = 0;
+    if ((int)obj[29] - (int)obj[28] > 0) mipmap = 1;
+    GXInitTexObj((void *)(obj + 32), obj + 96,
+                 *(u16 *)(obj + 10), *(u16 *)(obj + 12),
+                 obj[22], obj[23], obj[24], mipmap);
+    if (mipmap != 0) {
+        GXInitTexObjLOD((void *)(obj + 32), obj[25], obj[26],
+                        (f32)(u32)obj[28], (f32)(s32)obj[29],
+                        lbl_803DEB98, 0, 0, 0);
+    } else {
+        GXInitTexObjLOD((void *)(obj + 32), obj[25], obj[26],
+                        lbl_803DEB9C, lbl_803DEB9C, lbl_803DEB9C, 0, 0, 0);
+    }
+    GXInitTexObjUserData((void *)(obj + 32), obj);
+    {
+        int fmt = GXGetTexObjFmt((void *)(obj + 32));
+        u16 w = GXGetTexObjWidth((void *)(obj + 32));
+        u16 h = GXGetTexObjHeight((void *)(obj + 32));
+        *(u32 *)(obj + 68) = GXGetTexBufferSize(w, h, fmt, 0, 0);
+    }
+}
+
 extern void findSomething(int);
 extern void mm_free(void *);
 void textureFree(u8 *tex) {
