@@ -333,3 +333,16 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
     if ((s32)visible >= 1) objRenderFn_8003b8f4(lbl_803E2F80);
 }
 #pragma peephole reset
+
+extern f32 lbl_803E2F98;
+extern f32 timeDelta;
+extern void ObjHits_DisableObject(int *obj);
+#pragma scheduling off
+void tumbleweed_render2(int *obj, int p2) {
+    int *state = *(int**)((char*)obj + 0xb8);
+    *(u8*)((char*)state + 0x278) = 6;
+    *(int*)((char*)state + 0x290) = p2;
+    *(f32*)((char*)state + 0x294) = timeDelta * lbl_803E2F98;
+    ObjHits_DisableObject(obj);
+}
+#pragma scheduling reset
