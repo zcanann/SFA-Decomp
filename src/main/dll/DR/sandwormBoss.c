@@ -3361,6 +3361,31 @@ void cfprisoncage_hitDetect(int* obj)
     }
 }
 
+extern void fn_801A0614(void);
+extern int *gObjectTriggerInterface;
+extern f32 lbl_803E42B4;
+#pragma scheduling off
+#pragma peephole off
+void cfprisoncage_init(int *obj, s8 *def) {
+    ObjMsg_AllocQueue(obj, 1);
+    *(s16 *)obj = (s16)((s32)def[0x1a] << 8);
+    *(int *)((char *)obj + 0xf4) = 1;
+    *(int *)((char *)obj + 0xbc) = (int)fn_801A0614;
+    if (*(s16 *)((char *)obj + 0x46) == 296) {
+        if (GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
+            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E42B4, 0);
+        } else {
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E42B4, 0);
+        }
+    } else {
+        if (GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
+            ((void (*)(int *, int))((int *)*gObjectTriggerInterface)[0x54/4])(obj, 60);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void windlift_free(int* obj)
 {
     void* p = Obj_GetPlayerObject();
