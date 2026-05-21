@@ -2436,15 +2436,16 @@ int fn_802020B0(int obj, int p2)
   *(s8 *)(p2 + 0x34d) = 0x11;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    *(f32 *)(p2 + 0x284) = lbl_803E62A8;
-    *(f32 *)(p2 + 0x280) = lbl_803E62A8;
+    f32 fz = lbl_803E62A8;
+    *(f32 *)(p2 + 0x284) = fz;
+    *(f32 *)(p2 + 0x280) = fz;
     *(int *)(p2 + 0x2d0) = 0;
     *(u8 *)(p2 + 0x25f) = 1;
     *(u8 *)(p2 + 0x349) = 0;
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
     ObjHits_DisableObject(obj);
     ObjGroup_RemoveObject(obj, 3);
-    if (*(int *)(sub_40c + 0x18) != 0) {
+    if (*(void **)(sub_40c + 0x18) != NULL) {
       ObjMsg_SendToObject((void *)*(int *)(sub_40c + 0x18), 17, obj, 16);
       *(s16 *)(sub_40c + 0x1c) = -1;
       *(int *)(sub_40c + 0x18) = 0;
