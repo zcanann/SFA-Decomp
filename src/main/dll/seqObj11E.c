@@ -381,6 +381,22 @@ FUN_80152a30(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   return uVar2;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_80152B2C(int obj, int p, int param3, int msg)
+{
+  extern void Sfx_PlayFromObject(int obj, int sfx);
+
+  if (msg == 16) return;
+  if (msg == 17) return;
+  Sfx_PlayFromObject(obj, 584);
+  *(s16 *)(p + 0x2b0) = 0;
+  *(u32 *)(p + 0x2e4) |= 0x20;
+  *(u32 *)(p + 0x2e8) |= 0x8;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
