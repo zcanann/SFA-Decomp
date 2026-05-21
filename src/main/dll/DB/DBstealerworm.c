@@ -1235,11 +1235,11 @@ extern int lbl_803DDC18;
 extern int lbl_803DDC1C;
 void SB_Galleon_free(int obj, int p2) {
     u8 *p = (u8*)((int**)obj)[0xb8/4];
-    if (lbl_803DDC18 != 0) {
+    if ((void*)lbl_803DDC18 != NULL) {
         textureFree((void*)lbl_803DDC18);
         lbl_803DDC18 = 0;
     }
-    if (lbl_803DDC1C != 0) {
+    if ((void*)lbl_803DDC1C != NULL) {
         textureFree((void*)lbl_803DDC1C);
         lbl_803DDC1C = 0;
     }
