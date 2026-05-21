@@ -1322,3 +1322,23 @@ int DR_CloudRunner_setScale(void) { return 0x0; }
 int DR_CloudRunner_getExtraSize(void) { return 0xbc8; }
 int DR_CloudRunner_func08(void) { return 0x43; }
 void DR_CloudRunner_release(void) {}
+
+extern int GameBit_Get(int id);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802BC36C(int* obj) {
+    int* sub = *(int**)((char*)obj + 76);
+    switch ((s8)*(s8*)((char*)sub + 25)) {
+        case 0:
+            if ((u32)GameBit_Get(548) != 0) return 3;
+            return 2;
+        case 1:
+            if ((u32)GameBit_Get(707) != 0) return 3;
+            return 3;
+        default:
+            return 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
