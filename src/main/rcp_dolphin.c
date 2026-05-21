@@ -2461,3 +2461,17 @@ void ShaderDef_free(int *def) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int lbl_803DCDBC;
+extern void *lbl_803DCDC4;
+#pragma peephole off
+#pragma scheduling off
+void* textureIdxToPtr(int idx) {
+    int i;
+    if ((u32)idx & 0x80000000) return (void*)idx;
+    i = idx - 1;
+    if (i < 0 || i >= lbl_803DCDBC) return NULL;
+    return *(void**)((u8*)lbl_803DCDC4 + i * 16 + 4);
+}
+#pragma scheduling reset
+#pragma peephole reset
