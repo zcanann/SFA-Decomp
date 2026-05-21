@@ -1608,6 +1608,41 @@ void wmlasertarget_free(void) {}
 void wmlasertarget_hitDetect(void) {}
 void wmlasertarget_release(void) {}
 void wmlasertarget_initialise(void) {}
+
+extern void Obj_SetActiveModelIndex(int *obj, int idx);
+
+#pragma scheduling off
+#pragma peephole off
+void wmlasertarget_update(int *obj) {
+    extern u8 framesThisStep;
+    extern void GameBit_Set(int slot, int val);
+    u8 *def;
+    u8 *sub;
+
+    def = *(u8**)((char*)obj + 0x4c);
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+        sub[2] = 1;
+        *(s16*)sub = *(s16*)(def + 0x1a);
+    }
+    if (*(s16*)sub <= 0 && sub[2] != 0) {
+        if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
+            Obj_SetActiveModelIndex(obj, 0);
+            GameBit_Set(*(s16*)(def + 0x1e), 0);
+            GameBit_Set(*(s16*)(def + 0x20), 0);
+        } else {
+            Obj_SetActiveModelIndex(obj, 1);
+            GameBit_Set(*(s16*)(def + 0x1e), 1);
+            GameBit_Set(*(s16*)(def + 0x20), 1);
+        }
+        sub[2] = 0;
+        *(s16*)sub = *(s16*)(def + 0x1a);
+    } else if (*(s16*)sub > 0) {
+        *(s16*)sub = (s16)(*(s16*)sub - framesThisStep);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dll_200_free_nop(void) {}
 void dll_200_hitDetect_nop(void) {}
 void dll_200_release_nop(void) {}
