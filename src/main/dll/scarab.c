@@ -3244,6 +3244,34 @@ void iceball_initialise(void) {}
 void dll_CB_func0B_nop(void) {}
 void dll_CB_release_nop(void) {}
 
+extern f32 lbl_803E2EA8;
+extern void dll_CB_seqFn(int p1, int p2, void *p3);
+
+#pragma scheduling off
+#pragma peephole off
+void dll_CB_init(int *obj, u8 *params, int extra) {
+    extern int *gBaddieControlInterface;
+    extern int *gPlayerInterface;
+    u8 *sub;
+    u32 flags;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    flags = 0x16;
+    if (extra != 0) flags = (u8)(flags | 1);
+    if ((params[0x2b] & 1) == 0) flags = (u8)(flags | 8);
+    *(s16*)((char*)obj + 2) = (s16)((s8)params[0x28] << 8);
+    *(s16*)((char*)obj + 4) = (s16)((s8)params[0x27] << 8);
+    ((void(*)(int*, u8*, u8*, int, int, int, u32, f32))((void**)*(int*)gBaddieControlInterface)[22])(obj, params, sub, 4, 6, 0x82, flags, lbl_803E2EA8);
+    *(void**)((char*)obj + 0xbc) = (void*)&dll_CB_seqFn;
+    ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, sub, 0);
+    *(s16*)(sub + 0x270) = 0;
+    if (*(u16*)(sub + 0x3fe) < 0x32) {
+        *(u16*)(sub + 0x3fe) = 0x32;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int dll_CE_getExtraSize_ret_1052(void) { return 0x41c; }
 int dll_CE_getObjectTypeId(void) { return 0x49; }
