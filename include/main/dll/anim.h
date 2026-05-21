@@ -197,7 +197,7 @@ void dbstealerworm_free(int *obj);
 void dbstealerworm_render(void);
 void dbstealerworm_hitDetect(int obj);
 void dbstealerworm_update(void);
-void dbstealerworm_init(void);
+void dbstealerworm_init(int *obj, u8 *def, int param3);
 void dbstealerworm_release(void);
 void dbstealerworm_initialise(void);
 

@@ -4528,6 +4528,51 @@ extern int fn_80203DA0(int obj, int unused, int p3);
 extern void Stack_Free(int *stack);
 extern void Obj_FreeObject(int obj);
 extern void **gBaddieControlInterface;
+extern int *gPlayerInterface;
+extern f32 lbl_803E62A8;
+extern f32 lbl_803E62FC;
+extern u8 lbl_80329514[];
+extern void *memset(void *dst, int v, int n);
+extern void ObjAnim_SetCurrentMove(void *obj, int move, f32 weight, int flag);
+
+#pragma scheduling off
+#pragma peephole off
+void dbstealerworm_init(int *obj, u8 *def, int param3) {
+    u8 *sub;
+    int *p40c;
+    u8 mode;
+    int r;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    mode = 6;
+    if (param3 != 0) {
+        mode = (u8)(mode | 1);
+    }
+    ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*gBaddieControlInterface)[22])(obj, def, sub, 0x10, 7, 0x10a, mode, lbl_803E62FC);
+    ObjGroup_AddObject(obj, 3);
+    *(int*)((char*)obj + 0xbc) = 0;
+    p40c = *(int**)(sub + 0x40c);
+    memset(p40c, 0, 0x50);
+    *(f32*)((char*)p40c + 8) = lbl_803E62FC;
+    *(int*)p40c = (int)&lbl_80329514[((s16)*(s16*)(def + 0x24)) * 8];
+    r = randomGetRange(0xa, 0x12c);
+    *(f32*)((char*)p40c + 0xc) = (f32)(s32)r;
+    *(u8*)((char*)p40c + 0x44) = (u8)((*(u8*)((char*)p40c + 0x44) & ~0x20) | ((def[0x2b] & 1) << 5));
+    *(u8*)((char*)p40c + 0x44) = (u8)(*(u8*)((char*)p40c + 0x44) | 0x10);
+    *(int*)((char*)p40c + 0x18) = 0;
+    ObjAnim_SetCurrentMove(obj, 8, lbl_803E62A8, 0);
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+    ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, sub, 3);
+    *(s16*)(sub + 0x270) = 0;
+    *(u8*)(sub + 0x25f) = 1;
+    ObjHits_EnableObject(obj);
+    ObjMsg_AllocQueue(obj, 4);
+    if (*(int*)((char*)obj + 0x64) != 0) {
+        *(int*)(*(int*)((char*)obj + 0x64) + 0x30) = *(int*)(*(int*)((char*)obj + 0x64) + 0x30) | 0x4008;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
