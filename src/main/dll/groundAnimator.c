@@ -233,7 +233,7 @@ int wm_column_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: wm_column_func08
+ * Function: wm_column_getObjectTypeId
  * EN v1.0 Address: 0x8017D3A0
  * EN v1.0 Size: 232b
  * EN v1.1 Address: 0x8017D4E8
@@ -243,7 +243,7 @@ int wm_column_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int wm_column_func08(void)
+int wm_column_getObjectTypeId(void)
 {
   return 0;
 }
@@ -474,7 +474,7 @@ ObjectDescriptor gWM_ColumnObjDescriptor = {
     (ObjectDescriptorCallback)wm_column_hitDetect,
     (ObjectDescriptorCallback)wm_column_render,
     (ObjectDescriptorCallback)wm_column_free,
-    (ObjectDescriptorCallback)wm_column_func08,
+    (ObjectDescriptorCallback)wm_column_getObjectTypeId,
     wm_column_getExtraSize,
 };
 

@@ -72,7 +72,7 @@
  * - slot 04: 0x8017C45C seqobject_update ref=update
  * - slot 06: 0x8017C42C seqobject_render ref=render
  * - slot 07: 0x8017C408 seqobject_free ref=free
- * - slot 08: 0x8017C400 seqobject_func08 stub=const 0
+ * - slot 08: 0x8017C400 seqobject_getObjectTypeId stub=const 0
  * - slot 09: 0x8017C3F8 seqobject_getExtraSize stub=const 3 ref=getExtraSize (stub)
  */
 

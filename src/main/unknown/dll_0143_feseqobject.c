@@ -15,5 +15,5 @@
 // - 5: FEseqobject_hitDetect (0x801DF890)
 // - 6: FEseqobject_render (0x801DF860)
 // - 7: FEseqobject_free (0x801DF85C)
-// - 8: FEseqobject_func08 (0x801DF854)
+// - 8: FEseqobject_getObjectTypeId (0x801DF854)
 // - 9: FEseqobject_getExtraSize (0x801DF84C)

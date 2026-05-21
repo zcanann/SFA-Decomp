@@ -27,7 +27,7 @@
  *   slot 05: 0x8017CD24 immultiseq_hitDetect
  *   slot 06: 0x8017CCF4 immultiseq_render
  *   slot 07: 0x8017CCD0 immultiseq_free
- *   slot 08: 0x8017CCC8 immultiseq_func08
+ *   slot 08: 0x8017CCC8 immultiseq_getObjectTypeId
  *   slot 09: 0x8017CCC0 immultiseq_getExtraSize
  */
 

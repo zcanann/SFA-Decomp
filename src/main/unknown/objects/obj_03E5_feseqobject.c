@@ -57,7 +57,7 @@
  * - slot 05: 0x801DF890 FEseqobject_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801DF860 FEseqobject_render ref=render
  * - slot 07: 0x801DF85C FEseqobject_free stub=blr ref=free (stub)
- * - slot 08: 0x801DF854 FEseqobject_func08 stub=const 0
+ * - slot 08: 0x801DF854 FEseqobject_getObjectTypeId stub=const 0
  * - slot 09: 0x801DF84C FEseqobject_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 

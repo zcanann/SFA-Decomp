@@ -16,5 +16,5 @@
 // - 5: WM_seqobject_hitDetect (0x801F0768)
 // - 6: WM_seqobject_render (0x801F0738)
 // - 7: WM_seqobject_free (0x801F0734)
-// - 8: WM_seqobject_func08 (0x801F072C)
+// - 8: WM_seqobject_getObjectTypeId (0x801F072C)
 // - 9: WM_seqobject_getExtraSize (0x801F0724)

@@ -63,7 +63,7 @@
  * - slot 05: 0x8017C8B4 seqobj2_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x8017C8B0 seqobj2_render stub=blr ref=render (stub)
  * - slot 07: 0x8017C88C seqobj2_free ref=free
- * - slot 08: 0x8017C884 seqobj2_func08 stub=const 0
+ * - slot 08: 0x8017C884 seqobj2_getObjectTypeId stub=const 0
  * - slot 09: 0x8017C87C seqobj2_getExtraSize stub=const 1 ref=getExtraSize (stub)
  */
 

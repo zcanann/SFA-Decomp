@@ -598,11 +598,11 @@ void dll_115_hitDetect_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int seqobject_getExtraSize(void) { return 0x3; }
-int seqobject_func08(void) { return 0x0; }
+int seqobject_getObjectTypeId(void) { return 0x0; }
 int seqobj2_getExtraSize(void) { return 0x1; }
-int seqobj2_func08(void) { return 0x0; }
+int seqobj2_getObjectTypeId(void) { return 0x0; }
 int immultiseq_getExtraSize(void) { return 0x2; }
-int immultiseq_func08(void) { return 0x0; }
+int immultiseq_getObjectTypeId(void) { return 0x0; }
 int dll_115_getExtraSize_ret_2(void) { return 0x2; }
 int dll_115_func08_ret_0(void) { return 0x0; }
 

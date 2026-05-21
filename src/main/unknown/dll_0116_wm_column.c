@@ -14,5 +14,5 @@
 // - 5: wm_column_hitDetect (0x8017D450)
 // - 6: wm_column_render (0x8017D3D4)
 // - 7: wm_column_free (0x8017D38C)
-// - 8: wm_column_func08 (0x8017D384)
+// - 8: wm_column_getObjectTypeId (0x8017D384)
 // - 9: wm_column_getExtraSize (0x8017D37C)

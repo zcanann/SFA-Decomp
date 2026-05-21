@@ -562,7 +562,7 @@ void mmp_bridge_initialise(void) {}
 /* 8b "li r3, N; blr" returners. */
 int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void) { return 0x0; }
-int mmp_bridge_func08(void) { return 0x0; }
+int mmp_bridge_getObjectTypeId(void) { return 0x0; }
 int doorlock_getExtraSize(void) { return 0x1; }
 
 /* render-with-fn(lbl) (no visibility check). */

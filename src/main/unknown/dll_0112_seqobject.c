@@ -11,5 +11,5 @@
 // - 4: seqobject_update (0x8017C45C)
 // - 6: seqobject_render (0x8017C42C)
 // - 7: seqobject_free (0x8017C408)
-// - 8: seqobject_func08 (0x8017C400)
+// - 8: seqobject_getObjectTypeId (0x8017C400)
 // - 9: seqobject_getExtraSize (0x8017C3F8)

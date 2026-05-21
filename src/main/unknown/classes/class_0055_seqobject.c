@@ -69,7 +69,7 @@
  *   slot 04: 0x8017C45C seqobject_update
  *   slot 06: 0x8017C42C seqobject_render
  *   slot 07: 0x8017C408 seqobject_free
- *   slot 08: 0x8017C400 seqobject_func08
+ *   slot 08: 0x8017C400 seqobject_getObjectTypeId
  *   slot 09: 0x8017C3F8 seqobject_getExtraSize
  * - DLL 0x01C8: gDIMBridgeCogMaiObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801B3A64 dimbridgecogmai_initialise

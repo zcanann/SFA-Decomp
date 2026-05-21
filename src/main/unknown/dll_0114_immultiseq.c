@@ -14,5 +14,5 @@
 // - 5: immultiseq_hitDetect (0x8017CD24)
 // - 6: immultiseq_render (0x8017CCF4)
 // - 7: immultiseq_free (0x8017CCD0)
-// - 8: immultiseq_func08 (0x8017CCC8)
+// - 8: immultiseq_getObjectTypeId (0x8017CCC8)
 // - 9: immultiseq_getExtraSize (0x8017CCC0)

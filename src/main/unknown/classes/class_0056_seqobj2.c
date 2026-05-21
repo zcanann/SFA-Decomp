@@ -37,7 +37,7 @@
  *   slot 05: 0x8017C8B4 seqobj2_hitDetect
  *   slot 06: 0x8017C8B0 seqobj2_render
  *   slot 07: 0x8017C88C seqobj2_free
- *   slot 08: 0x8017C884 seqobj2_func08
+ *   slot 08: 0x8017C884 seqobj2_getObjectTypeId
  *   slot 09: 0x8017C87C seqobj2_getExtraSize
  */
 

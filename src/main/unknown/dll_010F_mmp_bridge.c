@@ -14,5 +14,5 @@
 // - 5: mmp_bridge_hitDetect (0x8017BB98)
 // - 6: mmp_bridge_render (0x8017BB94)
 // - 7: mmp_bridge_free (0x8017BB90)
-// - 8: mmp_bridge_func08 (0x8017BB88)
+// - 8: mmp_bridge_getObjectTypeId (0x8017BB88)
 // - 9: mmp_bridge_getExtraSize (0x8017BB80)

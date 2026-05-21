@@ -632,7 +632,7 @@
  *   slot 05: 0x8017BB98 mmp_bridge_hitDetect
  *   slot 06: 0x8017BB94 mmp_bridge_render
  *   slot 07: 0x8017BB90 mmp_bridge_free
- *   slot 08: 0x8017BB88 mmp_bridge_func08
+ *   slot 08: 0x8017BB88 mmp_bridge_getObjectTypeId
  *   slot 09: 0x8017BB80 mmp_bridge_getExtraSize
  * - DLL 0x011D: gTreasureChestObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x8018ADB0 treasurechest_initialise
@@ -704,7 +704,7 @@
  *   slot 05: 0x801DF890 FEseqobject_hitDetect
  *   slot 06: 0x801DF860 FEseqobject_render
  *   slot 07: 0x801DF85C FEseqobject_free
- *   slot 08: 0x801DF854 FEseqobject_func08
+ *   slot 08: 0x801DF854 FEseqobject_getObjectTypeId
  *   slot 09: 0x801DF84C FEseqobject_getExtraSize
  * - DLL 0x0148: gCFGuardianObjDescriptor (slots=11, mask=11011111111)
  *   slot 00: 0x8019C780 cfguardian_initialise
@@ -1400,7 +1400,7 @@
  *   slot 05: 0x801F0768 WM_seqobject_hitDetect
  *   slot 06: 0x801F0738 WM_seqobject_render
  *   slot 07: 0x801F0734 WM_seqobject_free
- *   slot 08: 0x801F072C WM_seqobject_func08
+ *   slot 08: 0x801F072C WM_seqobject_getObjectTypeId
  *   slot 09: 0x801F0724 WM_seqobject_getExtraSize
  * - DLL 0x01FC: gLaserBeamObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F15E0 LaserBeam_initialise

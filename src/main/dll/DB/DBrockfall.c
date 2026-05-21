@@ -409,7 +409,7 @@ void dll_144_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int FEseqobject_getExtraSize(void) { return 0x1; }
-int FEseqobject_func08(void) { return 0x0; }
+int FEseqobject_getObjectTypeId(void) { return 0x0; }
 int FElevControl_getExtraSize(void) { return 0x0; }
 int FElevControl_func08(void) { return 0x0; }
 int dll_144_getExtraSize(void) { return 0x0; }
