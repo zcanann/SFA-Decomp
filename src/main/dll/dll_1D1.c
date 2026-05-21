@@ -11,6 +11,9 @@ extern void ObjPath_GetPointWorldPosition(int obj, int param2, float *outX, floa
 extern f32 lbl_803E51F8;
 extern f32 lbl_803E51FC;
 
+#pragma peephole off
+#pragma scheduling off
+
 /*
  * --INFO--
  *
