@@ -1487,7 +1487,7 @@ extern f32 timeDelta;
 extern uint GameBit_Get(int eventId);
 extern unsigned long GameBit_Set(int eventId, int value);
 extern f32 vec3f_distanceSquared(f32* p1, f32* p2);
-extern void ObjAnim_AdvanceCurrentMove(void* obj, int flag, f32 weight, f32 dt);
+extern void ObjAnim_AdvanceCurrentMove(void* obj, f32 weight, f32 dt, int flag);
 extern void characterDoEyeAnims(int obj, void* p);
 extern void *Obj_GetPlayerObject(void);
 extern void ObjHits_DisableObject_xx(int *obj);
@@ -1510,7 +1510,7 @@ void ccqueen_update(int *obj) {
         *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
         ObjHits_DisableObject(obj);
     } else {
-        ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E4668, timeDelta);
+        ObjAnim_AdvanceCurrentMove(obj, lbl_803E4668, timeDelta, 0);
         dll_2E_func03(obj, sub);
         characterDoEyeAnims((int)obj, sub + 0x624);
     }
