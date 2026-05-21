@@ -843,6 +843,41 @@ extern f32 lbl_803E2930;
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int prio);
 extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
 extern void fn_8015355C(int obj, int p2);
+extern int* gPartfxInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015355C(int obj, int p2)
+{
+    u8 count = 0;
+    switch (*(s16*)(obj + 0xa0)) {
+    case 1:
+        count = 1;
+        break;
+    case 2:
+        count = 1;
+        break;
+    case 3:
+        count = 1;
+        break;
+    case 5:
+        if ((*(u32*)(p2 + 0x2dc) & 0x80000000) != 0) {
+            count = 0xa;
+        }
+        break;
+    case 7:
+        break;
+    }
+    if (count != 0 && (*(u32*)(p2 + 0x2dc) & 0x40000000) == 0) {
+        u8 spawn = count;
+        while (spawn != 0) {
+            (*(void(**)(int, int, int, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x802, 0, 2, -1, 0);
+            spawn--;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
