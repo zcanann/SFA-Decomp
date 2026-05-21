@@ -325,3 +325,11 @@ void tumbleweed_func0B(int obj,float x,float y)
   *(float *)(extra + 0x288) = x;
   *(float *)(extra + 0x28c) = y;
 }
+
+extern f32 lbl_803E2F80;
+extern void objRenderFn_8003b8f4(f32);
+#pragma peephole off
+void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
+    if ((s32)visible >= 1) objRenderFn_8003b8f4(lbl_803E2F80);
+}
+#pragma peephole reset

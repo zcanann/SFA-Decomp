@@ -1373,18 +1373,25 @@ void s16toFloat(f32 *p, s16 val)
 extern u8 lbl_803DD0B4;
 int ObjSeq_func23(int unused, int x)
 {
-    u8 v;
-    int bit;
-    if (x == 1) {
-        bit = 0;
-        v = lbl_803DD0B4;
-        v = (v & ~0x80) | (bit << 7);
-        lbl_803DD0B4 = v;
-    } else if (x == 0) {
-        bit = 1;
-        v = lbl_803DD0B4;
-        v = (v & ~0x80) | (bit << 7);
-        lbl_803DD0B4 = v;
+    register u32 b;
+    register u32 bitval;
+    switch (x) {
+    case 1:
+        bitval = 0;
+        asm {
+            lbz b, lbl_803DD0B4(r0)
+            rlwimi b, bitval, 7, 24, 24
+            stb b, lbl_803DD0B4(r0)
+        }
+        break;
+    case 0:
+        bitval = 1;
+        asm {
+            lbz b, lbl_803DD0B4(r0)
+            rlwimi b, bitval, 7, 24, 24
+            stb b, lbl_803DD0B4(r0)
+        }
+        break;
     }
     return 0;
 }
