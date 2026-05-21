@@ -653,8 +653,8 @@ f32 SnowBike_func13(int obj, f32 *out)
     f32 r;
     *out = lbl_803E5BB8;
     r = sqrtf(*(f32 *)(t + 0x49c) * *(f32 *)(t + 0x49c)
-            + *(f32 *)(t + 0x494) * *(f32 *)(t + 0x494)
-            + *(f32 *)(t + 0x498) * *(f32 *)(t + 0x498)) * lbl_803E5BA8;
+            + (*(f32 *)(t + 0x494) * *(f32 *)(t + 0x494)
+             + *(f32 *)(t + 0x498) * *(f32 *)(t + 0x498))) * lbl_803E5BA8;
     if (r > lbl_803E5AEC) {
         r = lbl_803E5AEC;
     }
