@@ -2615,11 +2615,13 @@ void curves_remove(RomCurveDef *curve)
   if (index >= nRomCurves) {
     return;
   }
-  do {
-    *slot = slot[1];
-    slot = slot + 1;
-    remaining = remaining + -1;
-  } while (remaining > 0);
+  {
+    int i;
+    for (i = remaining; i > 0; i--) {
+      slot[0] = slot[1];
+      slot = slot + 1;
+    }
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
