@@ -1238,7 +1238,7 @@ void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 extern void envFxActFn_800887f8(int a);
 extern void Music_Trigger(int a, int b);
 extern void spawnExplosion(f32 size, int a, int b, int c, int d, int e, int f, int g);
-extern int fn_801AA734(int* obj);
+extern int fn_801AA734(int obj, int unused, u8* data);
 extern f32 lbl_803E46C8;
 
 #pragma scheduling off
@@ -1449,6 +1449,43 @@ void fn_801AB800(int obj, u8* state2) {
             state2[0x6] = (u8)(state2[0x6] | 1);
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int* gWaterfxInterface;
+extern f32 lbl_803E4670;
+
+/* fn_801AA734: ccqueen seqFn dispatcher. Walks the (u8)data[0x8b] command
+ * bytes at data[0x81..]: cmd=1 detaches obj's child via ObjLink_DetachChild
+ * (only when obj->_c8 != 0); cmd=2 dispatches gWaterfxInterface vtable[4]
+ * with the obj's xyz position and lbl_803E4670 as a 5-arg call. Returns 0. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801AA734(int obj, int unused, u8* data) {
+    int* state = *(int**)(obj + 0xb8);
+    if (data[0x8b] != 0) {
+        u8 i;
+        for (i = 0; (u32)i < (u32)data[0x8b]; i++) {
+            int cmd = data[0x81 + (u32)i];
+            switch (cmd) {
+            case 1:
+                if (*(int*)(obj + 0xc8) != 0) {
+                    ObjLink_DetachChild(obj, *(int*)state);
+                }
+                break;
+            case 2:
+                ((void(*)(int, f32, f32, f32, f32))((void**)*gWaterfxInterface)[4])(
+                    obj,
+                    *(f32*)(obj + 0x18),
+                    *(f32*)(obj + 0x1c),
+                    *(f32*)(obj + 0x20),
+                    lbl_803E4670);
+                break;
+            }
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
