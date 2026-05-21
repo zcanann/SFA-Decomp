@@ -4182,6 +4182,28 @@ void FUN_80171240(int param_1,int param_2)
   return;
 }
 
+extern f32 lbl_803E31D8;
+extern f32 lbl_803E31DC;
+extern f32 lbl_803E31E0;
+extern f32 lbl_803E31E4;
+
+#pragma scheduling off
+#pragma peephole off
+void mikabombshadow_update(int *obj) {
+    int *r4;
+    f32 t;
+    f32 f;
+
+    r4 = *(int**)((char*)obj + 0xc4);
+    t = lbl_803E31D8 - (*(f32*)((char*)r4 + 0x10) - *(f32*)((char*)obj + 0x10)) / *(f32*)*(int**)((char*)obj + 0xb8);
+    *(f32*)*(int**)((char*)obj + 0x64) = lbl_803E31DC * t + lbl_803E31D8;
+    f = t * lbl_803E31E0;
+    if (f > lbl_803E31D8) f = lbl_803E31D8;
+    *(s16*)((char*)*(int**)((char*)obj + 0x64) + 0x36) = (s16)(s32)(lbl_803E31E4 * f);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern f32 lbl_803E33F4;
 extern f32 lbl_803E33F8;
 
@@ -4557,7 +4579,6 @@ extern void mikabomb_init();
 extern int mikabomb_getObjectTypeId();
 extern int mikabomb_getExtraSize();
 void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void mikabombshadow_update();
 extern void mikabombshadow_init();
 extern void StaticCamera_init();
 extern void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
