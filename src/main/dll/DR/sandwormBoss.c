@@ -3481,6 +3481,57 @@ void gcrobotlightbea_init(int* obj)
     *(u8*)((char*)obj + 54) = 0x80;
 }
 
+extern f32 lbl_803E42A0;
+extern f32 lbl_803E42A4;
+extern f32 lbl_80322C38[];
+extern f32 lbl_803DBE58;
+extern f32 lbl_803DBE5C;
+extern void *fn_8001CC9C(int a, int b, int c, int d);
+extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
+extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
+extern void Obj_TransformLocalVectorByWorldMatrix(int *obj, void *out, void *in);
+extern void fn_80221DC0(void *dst, void *posA, void *posB, f32 factor);
+extern f32 PSVECDistance(void *a, void *b);
+extern void PSVECScale(void *in, void *out, f32 scale);
+extern void getAmbientColor(int mode, u8 *r, u8 *g, u8 *b);
+extern void modelLightStruct_setColorsA8AC(void *p, int r, int g, int b, int a);
+
+#pragma scheduling off
+#pragma peephole off
+void gcrobotlightbea_update(int *obj) {
+    void **sub;
+    f32 vec[3];
+    f32 vec2[3];
+    u8 b_byte, g_byte, r_byte;
+
+    sub = *(void***)((char*)obj + 0xb8);
+    if (sub[0] == NULL) {
+        sub[0] = fn_8001CC9C(0xfa, 0xfa, 0xfa, 1);
+        if (sub[0] != NULL) {
+            lightDistAttenFn_8001dc38(sub[0], lbl_803DBE58, lbl_803E42A0 + lbl_803DBE58);
+        }
+    }
+    ObjHits_SetHitVolumeSlot(obj, 0x17, 0, 0);
+    vec[0] = lbl_80322C38[0];
+    vec[1] = lbl_80322C38[1];
+    vec[2] = lbl_80322C38[2];
+    Obj_TransformLocalVectorByWorldMatrix(obj, vec, vec);
+    fn_80221DC0(vec2, (char*)obj + 0xc, vec, lbl_803DBE5C);
+    PSVECDistance((char*)obj + 0xc, vec2);
+    PSVECScale(lbl_80322C38, vec2, 0);
+    getAmbientColor(0, &r_byte, &g_byte, &b_byte);
+    if (sub[0] != NULL) {
+        modelLightStruct_setColorsA8AC(sub[0],
+            (s32)(lbl_803E42A4 * (f32)(u32)r_byte),
+            (s32)(lbl_803E42A4 * (f32)(u32)g_byte),
+            (s32)(lbl_803E42A4 * (f32)(u32)b_byte),
+            0xff);
+        lightVecFn_8001dd88(sub[0], vec2[0], vec2[1], vec2[2]);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int* state = *(int**)((char*)obj + 0xb8);
