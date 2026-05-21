@@ -1514,8 +1514,8 @@ void attractor_func0B(u8* obj, void** out) {
 #pragma peephole off
 void slidingdoor_init(u8* obj, u8* data) {
     register u32 flag = 0;
-    u8* sub;
-    u8 b;
+    register u8* sub;
+    register u32 b;
     f32 v;
     *(u32*)(obj + 0xf4) = flag;
     *(s16*)obj = (s16)(data[0x1f] << 8);
@@ -1524,8 +1524,11 @@ void slidingdoor_init(u8* obj, u8* data) {
     *(f32*)(obj + 0x8) = v;
     *(f32*)(obj + 0x8) = *(f32*)(obj + 0x8) * *(f32*)((char*)(*(u8**)(obj + 0x50)) + 4);
     sub = *(u8**)(obj + 0xb8);
-    b = sub[0];
-    sub[0] = (u8)((b & ~0xE0) | (flag << 5));
+    asm {
+        lbz b, 0(sub)
+        rlwimi b, flag, 5, 24, 26
+        stb b, 0(sub)
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
