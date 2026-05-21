@@ -2347,6 +2347,9 @@ void Rcp_SetSpiritVisionEnabled(u8 x) { bEnableSpiritVision = x; }
 void Rcp_SetMonochromeFilterEnabled(u8 x) { bEnableMonochromeFilter = x; }
 u8 Rcp_GetMotionBlurEnabled(void) { return bEnableMotionBlur; }
 
+extern f32 lbl_803DB62C;
+void setMotionBlur(u8 enabled, f32 amount) { bEnableMotionBlur = enabled; lbl_803DB62C = amount; }
+
 /* Pattern wrappers. */
 extern u8 bEnableDistortionFilter;
 extern u8 bEnableBlurFilter;

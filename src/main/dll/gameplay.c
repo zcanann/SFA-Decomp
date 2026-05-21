@@ -13132,6 +13132,7 @@ extern u16 lbl_803A32A8[];
 #pragma scheduling off
 #pragma peephole off
 void fn_800E84D8(s16 v) { *(s16 *)((char *)lbl_803A32A8 + 0x6a4) = v; }
+void *SaveGame_getLast(void) { return lbl_803A32A8; }
 #pragma peephole reset
 #pragma scheduling reset
 
