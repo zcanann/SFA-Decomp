@@ -2472,8 +2472,7 @@ void ShaderDef_free(int *def) {
         for (i = 0; i < 6; i++) {
             s = *(void **)(lbl_8037E000 + i * 0x1C);
             if (*(u16 *)((char *)s + 0xE) != 0 && s == p1) {
-                *(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE) =
-                    *(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE) - 1;
+                (*(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE))--;
                 break;
             }
         }
@@ -2483,8 +2482,7 @@ void ShaderDef_free(int *def) {
     for (i = 0; i < 6; i++) {
         s = *(void **)(lbl_8037E000 + i * 0x1C);
         if (*(u16 *)((char *)s + 0xE) != 0 && s == p2) {
-            *(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE) =
-                *(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE) - 1;
+            (*(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE))--;
             return;
         }
     }
