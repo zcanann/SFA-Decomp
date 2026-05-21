@@ -2,6 +2,9 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/CAM/dll_5B.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006824();

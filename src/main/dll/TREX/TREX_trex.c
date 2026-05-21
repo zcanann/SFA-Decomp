@@ -1933,7 +1933,80 @@ void SB_CloudBall_init(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_CloudBall_update(void) {}
+extern f32 lbl_803E58F4;
+extern f32 lbl_803E58F8;
+extern f32 lbl_803E58FC;
+extern f32 lbl_803E5900;
+extern f32 lbl_803E5904;
+extern f64 lbl_803E5908;
+extern f32 lbl_803E58E8_;  // dummy to avoid duplicate
+extern void Obj_FreeObject(int obj);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern void *Obj_GetPlayerObject(void);
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudBall_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int player = (int)Obj_GetPlayerObject();
+    if (*(f32 *)(state + 0x20) != lbl_803E58EC) {
+        *(f32 *)(state + 0x20) = *(f32 *)(state + 0x20) - timeDelta;
+        if (*(f32 *)(state + 0x20) <= lbl_803E58EC) {
+            *(f32 *)(state + 0x20) = lbl_803E58EC;
+            Obj_FreeObject(obj);
+        }
+    } else {
+        f32 stack_8, stack_c, stack_10;
+        *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+        *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
+        *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+        *(f32 *)(obj + 0x8) = lbl_803E58F8 * (f32)(int)randomGetRange(-0x64, 0x64) + lbl_803E58F4;
+        if (*(s8 *)(state + 0x1c) == 0) {
+            *(f32 *)state = *(f32 *)(obj + 0x24);
+            *(f32 *)(state + 0x4) = *(f32 *)(obj + 0x28);
+            *(f32 *)(state + 0x8) = *(f32 *)(obj + 0x2c);
+            *(u8 *)(state + 0x1c) = 1;
+            *(f32 *)(state + 0xc) = *(f32 *)(obj + 0xc);
+            *(f32 *)(state + 0x10) = *(f32 *)(obj + 0x10);
+            *(f32 *)(state + 0x14) = *(f32 *)(obj + 0x14);
+        }
+        *(f32 *)(state + 0xc) = lbl_803E58FC * (*(f32 *)state * timeDelta) + *(f32 *)(state + 0xc);
+        *(f32 *)(state + 0x10) = lbl_803E58FC * (*(f32 *)(state + 0x4) * timeDelta) + *(f32 *)(state + 0x10);
+        *(f32 *)(state + 0x14) = lbl_803E58FC * (*(f32 *)(state + 0x8) * timeDelta) + *(f32 *)(state + 0x14);
+        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xc);
+        *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x10);
+        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x14);
+        *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - framesThisStep;
+        if (*(int *)(obj + 0xf4) < 0 || (player != 0 && (*(u16 *)(player + 0xb0) & 0x1000) != 0)) {
+            if (*(f32 *)(state + 0x20) == lbl_803E58EC) {
+                *(u8 *)(obj + 0x36) = 0;
+                *(f32 *)(state + 0x20) = lbl_803E58F0;
+            }
+        }
+        *(s16 *)obj = (s16)getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
+                                     *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+        *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 5;
+        *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
+        *(int *)(*(int *)(obj + 0x54) + 0x48) = 0x10;
+        *(int *)(*(int *)(obj + 0x54) + 0x4c) = 0x10;
+        *(s16 *)(*(int *)(obj + 0x54) + 0x60) = (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) | 1);
+        if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0 && *(f32 *)(state + 0x20) == lbl_803E58EC) {
+            projectileParticleFxFn_80099660((int *)obj, 2, lbl_803E58E8);
+            *(f32 *)(state + 0x20) = lbl_803E58F0;
+            *(u8 *)(obj + 0x36) = 0;
+        }
+        stack_8 = lbl_803E5900 * -*(f32 *)state;
+        stack_c = lbl_803E5900 * -*(f32 *)(state + 0x4);
+        stack_10 = lbl_803E5900 * -*(f32 *)(state + 0x8);
+        fn_80098928((int *)obj, lbl_803E5904, 2, 0x156, 0xf, (int)&stack_8);
+        fn_80098928((int *)obj, lbl_803E5904, 2, 0x156, 0xf, (int)&stack_8);
+        fn_80098928((int *)obj, lbl_803E5904, 2, 0x156, 0xf, (int)&stack_8);
+        ((void (*)(int, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa8, 0, 2, -1, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma peephole off
 #pragma scheduling off
 void SB_FireBall_init(int p)
@@ -1989,7 +2062,7 @@ void SB_KyteCage_update(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
-    if (*(int *)state == 0) {
+    if (*(void **)state == NULL) {
         int *head;
         int count;
         int i;
@@ -2022,7 +2095,7 @@ void SB_KyteCage_update(int obj)
             *(u8 *)(state + 5) = 1;
         }
     }
-    if (*(int *)(obj + 0x30) != 0) {
+    if (*(void **)(obj + 0x30) != NULL) {
         int kind = *(int *)(*(int *)(obj + 0x30) + 0xf4);
         int *mvec = objModelGetVecFn_800395d8(obj, 0);
         if (mvec != 0 && kind < 9 && *(s16 *)(obj + 0xa0) != 5) {

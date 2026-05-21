@@ -92,9 +92,7 @@ void dimbossfire_update(int param_1)
   if ((int)*(short *)(iVar4 + 0x20) == 0xffffffff) {
     *(float *)(pbVar5 + 0xc) = *(float *)(pbVar5 + 0xc) - timeDelta;
     if (*(float *)(pbVar5 + 0xc) <= lbl_803E4DA0) {
-      uVar1 = randomGetRange(0xf0,0x1e0);
-      *(float *)(pbVar5 + 0xc) =
-           (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - lbl_803E4DC8);
+      *(float *)(pbVar5 + 0xc) = (f32)(int)randomGetRange(0xf0,0x1e0);
       *pbVar5 = *pbVar5 | 1;
       *(float *)(pbVar5 + 4) = lbl_80325D68[pbVar5[1]];
       *(float *)(pbVar5 + 8) = *(float *)(pbVar5 + 4);
@@ -211,9 +209,7 @@ void dimbossfire_init(int obj,undefined4 param_2,int param_3)
   ObjHitbox_SetSphereRadius(obj,0);
   ObjHits_DisableObject(obj);
   if (param_3 == 0) {
-    uVar1 = randomGetRange(0xf0,0x1e0);
-    *(float *)(state + 0xc) =
-         (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - lbl_803E4DC8);
+    *(float *)(state + 0xc) = (f32)(int)randomGetRange(0xf0,0x1e0);
     uVar2 = randomGetRange(0,9);
     *(undefined *)(state + 1) = uVar2;
   }
@@ -365,10 +361,9 @@ void ccriverflow_init(short *obj,int params)
     **(undefined **)(obj + 0x5c) = 1;
   }
   *obj = (ushort)*(byte *)(params + 0x18) << 8;
-  *(undefined4 *)(obj + 4) = *(undefined4 *)(*(int *)(obj + 0x28) + 4);
+  *(float *)(obj + 4) = *(float *)(*(int *)(obj + 0x28) + 4);
   *(float *)(obj + 4) =
-       (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(params + 0x19)) - lbl_803E4DD8) *
-       lbl_803E4DD0 + *(float *)(obj + 4);
+       (f32)(u32)*(byte *)(params + 0x19) * lbl_803E4DD0 + *(float *)(obj + 4);
   if (*(float *)(obj + 4) < lbl_803E4DD4) {
     *(float *)(obj + 4) = lbl_803E4DD4;
   }

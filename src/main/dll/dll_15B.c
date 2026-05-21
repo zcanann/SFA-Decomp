@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_15B.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern uint GameBit_Get(int eventId);
 extern void *Resource_Acquire(int resourceId, int mode);
 extern void ObjHits_DisableObject(u32 obj);

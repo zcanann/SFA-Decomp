@@ -178,6 +178,64 @@ void FUN_80152194(int param_1,int param_2)
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_80152440(int obj, int p, int p3, int msg)
+{
+  extern void Sfx_PlayFromObject(int obj, int sfx);
+  extern void fn_8014D08C(int obj, int p, int type, int move, u8 flag, f32 t);
+  extern f32 lbl_803E2810;
+  extern f32 lbl_803E2814;
+  int sub;
+  f32 fz;
+
+  sub = *(int *)(obj + 0x4c);
+  if (msg == 16) return;
+  if (msg == 17) return;
+  Sfx_PlayFromObject(obj, 35);
+  Sfx_PlayFromObject(obj, 795);
+  *(u32 *)(p + 0x2e8) |= 0x8;
+  *(f32 *)(p + 0x32c) = (f32)(u32)(u16)*(s16 *)(sub + 0x2c);
+  fn_8014D08C(obj, p, 1, 0, 0, lbl_803E2810);
+  *(u32 *)(p + 0x2e4) &= 0xffffffdf;
+  fz = lbl_803E2814;
+  *(f32 *)(obj + 0x2c) = lbl_803E2814;
+  *(f32 *)(obj + 0x28) = fz;
+  *(f32 *)(obj + 0x24) = fz;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80152370(int obj, int p2)
+{
+  extern void *Obj_GetPlayerObject(void);
+  extern u8 Obj_IsLoadingLocked(void);
+  extern u8 *Obj_AllocObjectSetup(int size, int type);
+  extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
+  int sub;
+  u8 *no;
+
+  sub = *(int *)(obj + 0x4c);
+  Obj_GetPlayerObject();
+  if (Obj_IsLoadingLocked() == 0) return 0;
+  no = Obj_AllocObjectSetup(36, p2);
+  *(s16 *)(no + 0) = (s16)p2;
+  *(u8 *)(no + 4) = *(u8 *)(sub + 4);
+  *(u8 *)(no + 6) = *(u8 *)(sub + 6);
+  *(u8 *)(no + 5) = 1;
+  *(u8 *)(no + 7) = *(u8 *)(sub + 7);
+  *(f32 *)(no + 8) = *(f32 *)(obj + 0xc);
+  *(f32 *)(no + 0xc) = *(f32 *)(obj + 0x10);
+  *(f32 *)(no + 0x10) = *(f32 *)(obj + 0x14);
+  *(u8 *)(no + 0x19) = 0;
+  *(s16 *)(no + 0x20) = 149;
+  return (int)Obj_SetupObject(no, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
@@ -380,6 +438,57 @@ FUN_80152a30(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   return uVar2;
 }
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80152A94(int obj, int p)
+{
+  extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
+  extern f32 lbl_803E2814;
+  extern f32 lbl_803E2820;
+  extern f32 lbl_803E2850;
+  extern f32 lbl_803E2854;
+  extern f32 lbl_803E2858;
+  extern f32 lbl_803E285C;
+  extern f32 lbl_803E2860;
+  f32 fz;
+
+  *(f32 *)(p + 0x2ac) = lbl_803E2850;
+  *(u32 *)(p + 0x2e4) = 41;
+  *(u32 *)(p + 0x2e4) |= 0x7000;
+  *(u32 *)(p + 0x2e4) |= 0x20000;
+  *(f32 *)(p + 0x308) = lbl_803E2854;
+  *(f32 *)(p + 0x300) = lbl_803E2858;
+  *(f32 *)(p + 0x304) = lbl_803E285C;
+  *(u8 *)(p + 0x320) = 0;
+  fz = lbl_803E2820;
+  *(f32 *)(p + 0x314) = fz;
+  *(u8 *)(p + 0x321) = 0;
+  *(f32 *)(p + 0x318) = fz;
+  *(u8 *)(p + 0x322) = 0;
+  *(f32 *)(p + 0x31c) = fz;
+  *(f32 *)(p + 0x32c) = lbl_803E2814;
+  *(f32 *)(obj + 0xa8) = lbl_803E2860;
+  Sfx_AddLoopedObjectSound(obj, 232);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80152B2C(int obj, int p, int param3, int msg)
+{
+  extern void Sfx_PlayFromObject(int obj, int sfx);
+
+  if (msg == 16) return;
+  if (msg == 17) return;
+  Sfx_PlayFromObject(obj, 584);
+  *(s16 *)(p + 0x2b0) = 0;
+  *(u32 *)(p + 0x2e4) |= 0x20;
+  *(u32 *)(p + 0x2e8) |= 0x8;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

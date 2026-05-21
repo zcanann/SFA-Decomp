@@ -60,7 +60,7 @@ void pollen_initialise(void);
 int pollenfragment_getExtraSize(void);
 int pollenfragment_func08(void);
 void pollenfragment_free(int obj);
-void pollenfragment_render(void);
+void pollenfragment_render(int *obj, int p2, int p3, int p4, int p5);
 void pollenfragment_hitDetect(void);
 void pollenfragment_update(void);
 void pollenfragment_init(int obj,int config);

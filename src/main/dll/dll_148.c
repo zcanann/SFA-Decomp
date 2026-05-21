@@ -580,3 +580,40 @@ void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
 void doorlock_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *objFindTexture(int *obj, int a, int b);
+extern u32 GameBit_Get(int eventId);
+#pragma scheduling off
+#pragma peephole off
+void mmp_bridge_init(int *obj) {
+    int *state = *(int **)((char *)obj + 0x4c);
+    int *tex = objFindTexture(obj, 0, 0);
+    if (tex != NULL) {
+        *(s16 *)((char *)tex + 8) = 0x800;
+    }
+    *(s16 *)obj = (s16)(*(s8 *)((char *)state + 0x18) << 8);
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    ObjHits_DisableObject((int)obj);
+    if (GameBit_Get(*(s16 *)((char *)state + 0x1e)) != 0) {
+        ObjHits_EnableObject((int)obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E3798;
+extern void objRenderFn_80041018(int *obj);
+#pragma scheduling off
+#pragma peephole off
+void doorlock_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    if (visible != 0) {
+        if (obj[0xf8/4] == 0) return;
+    }
+    if (obj[0xf8/4] != 0) {
+        objRenderFn_80041018(obj);
+    } else {
+        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3798);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

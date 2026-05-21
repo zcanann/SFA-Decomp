@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/objprint.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_8000681c();

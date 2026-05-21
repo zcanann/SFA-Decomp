@@ -2,6 +2,9 @@
 #include "main/dll/CAM/camdrakor.h"
 #include "main/dll/CAM/dll_60.h"
 
+
+#pragma peephole off
+#pragma scheduling off
 extern undefined4 Obj_TransformWorldPointToLocal();
 extern void* FUN_800069a8();
 extern uint getButtonsJustPressed();
