@@ -413,7 +413,7 @@ extern f32 lbl_803E4908;
 extern f32 lbl_803E4914;
 extern f32 lbl_803E4918;
 extern f32 fn_80293E80(f32 x);
-extern double sin(double);
+extern f32 sin(f32 x);
 extern uint GameBit_Get(int eventId);
 extern unsigned long GameBit_Set(int eventId, int value);
 
