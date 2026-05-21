@@ -2565,3 +2565,86 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int lbl_803822B4[5];
+extern s16* lbl_803DCE94;
+extern u8 lbl_803DCE98;
+extern u8* lbl_803DCE8C;
+extern int mapBlockFn_80059354(int p1, int p2, void* entry, int layer);
+extern int mapCheckCurBlocks(int v);
+extern void* MapBlock_loadFromFile(int blockId);
+extern void MapBlock_init(void* blk);
+extern int textureLoad(int id, int param);
+extern void MapBlock_initHits(void* blk, int blockId);
+extern void MapBlock_initShaders(void* blk);
+extern void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer);
+extern int return0_80060B90(void* blk);
+extern void DCStoreRange(void* p, int size);
+
+#pragma scheduling off
+#pragma peephole off
+int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
+{
+    int blockId;
+    char* entry;
+    s8* statusArr;
+    int slotIdx;
+    s16* arr;
+    int i;
+    void* blk;
+    int byteOff;
+
+    entry = (char*)lbl_803822A0[layer];
+    statusArr = (s8*)lbl_803822B4[layer];
+    slotIdx = p1 + (p2 << 4);
+    entry += slotIdx * 12;
+
+    mapBlockFn_80059354(p3, p4, entry, layer);
+
+    blockId = *(s16*)(entry + 6);
+    if (mapCheckCurBlocks(*(s8*)(entry + 9)) == -1) {
+        statusArr[slotIdx] = -1;
+        return 0;
+    }
+    if (blockId < 0) {
+        blockId = -1;
+    }
+    if (blockId < 0) {
+        statusArr[slotIdx] = (s8)blockId;
+        return 0;
+    }
+    statusArr[slotIdx] = -1;
+
+    arr = lbl_803DCE94;
+    for (i = 0; i < lbl_803DCE98; i++) {
+        if (*arr == blockId) {
+            lbl_803DCE8C[i]++;
+            statusArr[slotIdx] = (s8)i;
+            return 1;
+        }
+        arr++;
+    }
+
+    blk = MapBlock_loadFromFile(blockId);
+    if (blk == NULL) {
+        return 1;
+    }
+    MapBlock_init(blk);
+    i = 0;
+    byteOff = 0;
+    while (i < *(u8*)((char*)blk + 0xa0)) {
+        int v = *(int*)(*(int*)((char*)blk + 0x54) + byteOff);
+        v = -(int)((u32)v | 0x8000);
+        *(int*)(*(int*)((char*)blk + 0x54) + byteOff) = textureLoad(v, 0);
+        byteOff += 4;
+        i++;
+    }
+    MapBlock_initHits(blk, blockId);
+    MapBlock_initShaders(blk);
+    trackLoadBlockEnd(blk, blockId, slotIdx, layer);
+    *(int*)blk = return0_80060B90(blk);
+    DCStoreRange(blk, *(int*)((char*)blk + 0x8));
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
