@@ -478,11 +478,11 @@ void CameraModeCombat_init(int param_1,undefined4 param_2,undefined4 *param_3)
   lbl_803DD568[6] = fVar1;
   if (*(short *)(iVar5 + 0x44) == 1) {
     iVar4 = *(int *)(param_1 + 0x11c);
-    if (iVar4 == 0) {
+    if ((void *)iVar4 == NULL) {
       *(undefined *)((int)lbl_803DD568 + 0x12) = 1;
     }
     else {
-      if (*(int *)(iVar4 + 0x74) == 0) {
+      if (*(void **)(iVar4 + 0x74) == NULL) {
         fVar1 = *(float *)(iVar5 + 0x18) - *(float *)(iVar4 + 0x18);
         fVar2 = *(float *)(iVar5 + 0x20) - *(float *)(iVar4 + 0x20);
       }

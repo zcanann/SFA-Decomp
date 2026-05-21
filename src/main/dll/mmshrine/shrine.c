@@ -75,7 +75,7 @@ void mmsh_shrine_init(undefined2 *param_1,int param_2)
   GameBit_Set(299,0);
   GameBit_Set(0x12d,0);
   *(undefined4 *)(param_1 + 0x7a) = 1;
-  if (*piVar2 == 0) {
+  if (*(void **)piVar2 == NULL) {
     iVar1 = objCreateLight(0,1);
     *piVar2 = iVar1;
   }
