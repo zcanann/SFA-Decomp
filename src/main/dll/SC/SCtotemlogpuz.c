@@ -32,11 +32,9 @@ int SH_LevelControl_SeqFn(void *obj, void *unused, void *p3)
     updateState = (SCTotemLogPuzzleUpdateState *)p3;
     i = 0;
     while (i < (int)updateState->eventCount) {
-        if (updateState->eventHandled[i] != 0) {
-            i++;
-            continue;
+        if ((int)updateState->eventHandled[i] == 0) {
+            SH_LevelControl_setMusic(puzzleObj->runtime);
         }
-        SH_LevelControl_setMusic(puzzleObj->runtime);
         i++;
     }
     mapUnloadFn_801d7c94(obj, puzzleObj->runtime);

@@ -26,7 +26,7 @@ typedef struct SCTotemLogPuzzleObject {
 
 typedef struct SCTotemLogPuzzleUpdateState {
     u8 pad00[0x81];
-    u8 eventHandled[10];
+    s8 eventHandled[10];
     u8 eventCount;
 } SCTotemLogPuzzleUpdateState;
 
