@@ -1070,7 +1070,7 @@ void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     u8 *inner = *(u8 **)(obj + 0xb8);
     if (inner[0xc] != 3 && visible != 0) {
-        objRenderFn_8003b8f4(lbl_803E4708);
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4708);
     }
 }
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {

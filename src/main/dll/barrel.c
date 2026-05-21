@@ -741,10 +741,9 @@ void grimble_hitDetect(int obj) {
 }
 
 void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-    if (visible != 0) {
-        if (*(int *)((char *)obj + 0xF4) == 0) {
-            objRenderFn_8003b8f4(lbl_803E2F30);
-        }
+    s32 v = visible;
+    if (v != 0 && *(int *)((char *)obj + 0xF4) == 0) {
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E2F30);
     }
 }
 #pragma peephole reset

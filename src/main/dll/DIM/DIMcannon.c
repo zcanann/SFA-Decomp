@@ -2147,7 +2147,7 @@ void imspacering_update(s16 *obj) {
 void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     u8 *inner = *(u8 **)(obj + 0xb8);
     if (visible != 0 && (inner[8] != 0 || *(u8 *)(obj + 0x36) != 0)) {
-        objRenderFn_8003b8f4(lbl_803E47C0);
+        ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E47C0);
     }
 }
 #pragma peephole reset

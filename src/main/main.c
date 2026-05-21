@@ -1359,7 +1359,7 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     if (visible != 0) {
         u32 t = inner[0x118];
         if (t != 0xc && t != 4 && t != 0xb) {
-            objRenderFn_8003b8f4(lbl_803E61CC);
+            ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E61CC);
         }
     }
 }
