@@ -684,9 +684,8 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar2 = 2;
       do {
         param_1 = (**(code **)(*DAT_803dd708 + 8))(param_9,0x4ba,0,1,0xffffffff,0);
-        bVar1 = iVar2 != 0;
         iVar2 = iVar2 + -1;
-      } while (bVar1);
+      } while (iVar2 != -1);
     }
   }
   else {
@@ -762,9 +761,8 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
         *(float *)(puVar3 + 0x16) = (float)(param_1 * param_2 + (double)*(float *)(param_9 + 0x2c));
         *(int *)(puVar3 + 0x62) = param_9;
       }
-      bVar1 = iVar5 != 0;
       iVar5 = iVar5 + -1;
-    } while (bVar1);
+    } while (iVar5 != -1);
     *(undefined2 *)(iVar4 + 0x12) = 0x3c;
   }
   return;
@@ -1000,9 +998,8 @@ void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
             do {
               dVar7 = (double)(**(code **)(*DAT_803dd708 + 8))
                                         (param_9,(int)*(short *)(piVar5[7] + 8),0,1,0xffffffff,0);
-              bVar1 = iVar3 != 0;
               iVar3 = iVar3 + -1;
-            } while (bVar1);
+            } while (iVar3 != -1);
           }
           piVar5[2] = (int)lbl_803E3DF8;
           if ((uint)*(byte *)(param_9 + 0x1b) < (uint)DAT_803dc070 << 3) {
