@@ -13171,6 +13171,20 @@ void updateSavedHealth(void) {
     int idx = *(u8*)((char*)lbl_803A32A8 + 0x20) * 12;
     *((u8*)lbl_803A32A8 + idx) = lbl_803DD498[idx];
 }
+extern void *gameTextGet(int idx);
+extern void *getLastSavedGameTexts(void);
+void *saveGameGetCurHint(void) {
+    return gameTextGet((s32)*(u8*)((char*)getLastSavedGameTexts() + 0x5) + 0xf4);
+}
+extern u32 lbl_803A2FBC[];
+u32 SaveGame_mapGetObjGroups(int idx) {
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    return lbl_803A2FBC[idx];
+}
+void mapClearBit(int idx, int bit) {
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    lbl_803A2FBC[idx] &= ~(1 << bit);
+}
 #pragma peephole reset
 #pragma scheduling reset
 
