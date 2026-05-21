@@ -1651,6 +1651,70 @@ void WM_colrise_free(void) {}
 void WM_colrise_hitDetect(void) {}
 void WM_colrise_release(void) {}
 void WM_colrise_initialise(void) {}
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 timeDelta;
+extern f32 lbl_803E5DCC;
+extern f32 lbl_803E5DD0;
+extern f32 lbl_803E5DD4;
+extern f32 lbl_803E5DD8;
+extern f32 lbl_803E5DDC;
+extern f32 lbl_803E5DE0;
+
+#pragma scheduling off
+#pragma peephole off
+void WM_colrise_update(int *obj) {
+    u8 *def;
+    u8 *sub;
+    s32 reached;
+    f32 target;
+    int i;
+
+    def = *(u8**)((char*)obj + 0x4c);
+    sub = *(u8**)((char*)obj + 0xb8);
+    sub[2] = (u8)(sub[2] - 1);
+    if ((s8)sub[2] < 0) sub[2] = 0;
+    if ((s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f) > 0) {
+        for (i = 0; i < (s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f); i++) {
+            int *p = *(int**)((char*)*(int**)((char*)obj + 0x58) + 0x100 + i * 4);
+            if (*(f32*)((char*)p + 0x10) - *(f32*)((char*)obj + 0x10) > lbl_803E5DCC) {
+                sub[2] = 0x3c;
+            }
+        }
+    }
+    reached = 0;
+    if ((*(s16*)sub == -1 || GameBit_Get(*(s16*)sub) != 0) && (s8)sub[2] != 0) {
+        target = lbl_803E5DD0 + (lbl_803E5DD4 + *(f32*)(def + 0xc));
+        if (*(f32*)((char*)obj + 0x10) > target) {
+            *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) - lbl_803E5DD8 * timeDelta;
+            if (*(f32*)((char*)obj + 0x10) > target) {
+                *(f32*)((char*)obj + 0x10) = target;
+            }
+        } else {
+            *(f32*)((char*)obj + 0x10) = lbl_803E5DDC * timeDelta + *(f32*)((char*)obj + 0x10);
+            if (*(f32*)((char*)obj + 0x10) > target) {
+                *(f32*)((char*)obj + 0x10) = target;
+            } else {
+                reached = 1;
+            }
+        }
+    } else {
+        *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) - lbl_803E5DE0 * timeDelta;
+        if (*(f32*)((char*)obj + 0x10) < *(f32*)(def + 0xc)) {
+            *(f32*)((char*)obj + 0x10) = *(f32*)(def + 0xc);
+        } else {
+            reached = 1;
+        }
+    }
+    if ((s8)reached != 0) {
+        Sfx_PlayFromObject((int)obj, 0x7d);
+    } else {
+        Sfx_StopObjectChannel((int)obj, 8);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void wmtorch_hitDetect(void) {}
 void wmtorch_release(void) {}
 void wmtorch_initialise(void) {}
@@ -1806,8 +1870,6 @@ void wmlasertarget_init(char *obj, s8 *p) {
 
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 *a, f32 *b);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E5DE8;
 #pragma scheduling off
 #pragma peephole off
