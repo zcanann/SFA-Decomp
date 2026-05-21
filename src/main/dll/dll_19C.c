@@ -608,3 +608,24 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4EB8); }
 #pragma peephole reset
+
+extern void objParticleFn_80099d84(int *obj, int a, int b, f32 c, f32 d);
+
+#pragma scheduling off
+#pragma peephole off
+void SpiritPrize_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    u8 *sub;
+    s32 v;
+    sub = *(u8**)((char*)obj + 0xb8);
+    v = visible;
+    if (v != 0) {
+        objRenderFn_8003b8f4(lbl_803E4E98);
+        if (sub[0x144] != 0) {
+            objParticleFn_80099d84(obj, 7, *(int*)(sub + 0x140), lbl_803E4E98, lbl_803E4E98);
+        } else {
+            objParticleFn_80099d84(obj, 7, 0, lbl_803E4E98, lbl_803E4E98);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
