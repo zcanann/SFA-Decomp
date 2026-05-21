@@ -834,7 +834,7 @@ void FUN_801544a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80152FA8(int obj, int p2, int unused, int msgFlag)
+void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
 {
   if (*(u8 *)(p2 + 0x33b) != 0) {
     if (msgFlag == 16) {
@@ -851,7 +851,6 @@ int fn_80152FA8(int obj, int p2, int unused, int msgFlag)
       *(s16 *)(p2 + 0x2b0) = 0;
     }
   }
-  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
