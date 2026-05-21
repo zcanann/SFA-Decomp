@@ -1925,3 +1925,17 @@ int dll_CA_func08_ret_73(void) { return 0x49; }
 
 /* Pattern wrappers. */
 s16 dll_CA_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015AD60(int* obj, u8* state) {
+    if (state[827] == 0) {
+        ObjGroup_AddObject(obj, 80);
+        state[827] = 1;
+    }
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+    *(u8*)(*(int*)((char*)obj + 0x54) + 0x70) = 0;
+    *(s16*)((char*)obj + 0) -= 256;
+}
+#pragma peephole reset
+#pragma scheduling reset
