@@ -452,3 +452,58 @@ void fn_80152004(int obj, int *state) {
     Sfx_PlayFromObject(obj, 0x23);
     *(u32*)((char*)state + 0x2e8) |= 0x10;
 }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801511E8(int p1, int p2)
+{
+  extern void fn_8014D08C(int, int, int, int, int, f32);
+  extern f32 ObjAnim_SetMoveProgress(int, int, f32);
+  extern char lbl_8031F16C[];
+  extern char lbl_8031DD30[];
+  extern f32 lbl_803E27A4;
+  extern f32 lbl_803E27A8;
+  char *entry;
+  u32 idx;
+
+  entry = (char *)*(int *)(lbl_8031F16C + (u32)*(u8 *)(p2 + 0x33b) * 40 + 12);
+
+  {
+    f32 mult = *(f32 *)(p2 + 0x2ac);
+    f32 progress = (f32)(u32)*(u16 *)(p2 + 0x2a4);
+    if (progress > lbl_803E27A4 * mult) {
+      if (progress > lbl_803E27A8 * mult) {
+        *(u8 *)(p2 + 0x33a) = (u8)(*(u8 *)(entry + 8) + 2);
+      } else {
+        *(u8 *)(p2 + 0x33a) = (u8)(*(u8 *)(entry + 8) + 3);
+      }
+    }
+  }
+
+  while (1) {
+    *(u8 *)(p2 + 0x33a) = (u8)(*(u8 *)(p2 + 0x33a) + 1);
+    if (*(u8 *)(p2 + 0x33a) > *(u8 *)(entry + 8)) {
+      *(u8 *)(p2 + 0x33a) = 1;
+    }
+    idx = (u32)*(u8 *)(p2 + 0x33a) * 16;
+    if (*(int *)(entry + idx + 4) == 0) break;
+    if ((*(u32 *)(p2 + 0x2dc) & *(int *)(entry + idx + 4)) != 0) break;
+  }
+
+  idx = (u32)*(u8 *)(p2 + 0x33a) * 16;
+  *(u8 *)(p2 + 0x2f2) = *(u8 *)(entry + idx + 10);
+  *(u8 *)(p2 + 0x2f3) = *(u8 *)(entry + idx + 11);
+  *(u8 *)(p2 + 0x2f4) = *(u8 *)(entry + idx + 12);
+
+  fn_8014D08C(p1, p2, *(u8 *)(entry + idx + 8), 0, 3, *(f32 *)(entry + idx));
+
+  ObjAnim_SetMoveProgress(p1, 0, *(f32 *)(lbl_8031DD30 + (u32)*(u8 *)(entry + idx + 8) * 4));
+
+  *(u8 *)(p2 + 0x33a) = (u8)(*(u8 *)(p2 + 0x33a) + 1);
+  if (*(u8 *)(p2 + 0x33a) > *(u8 *)(entry + 8)) {
+    *(u8 *)(p2 + 0x33a) = 1;
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
