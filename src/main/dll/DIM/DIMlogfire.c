@@ -938,3 +938,33 @@ int fn_801A8F88(int obj, int arg2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E4610;
+extern f32 lbl_803E4614;
+extern int *gPartfxInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void ccgasvent_update(int *obj) {
+    f32 dist = lbl_803E4610;
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    if (GameBit_Get(0x1c0) != 0) {
+        ObjGroup_FindNearestObject(5, (uint)obj, &dist);
+        switch (state[0]) {
+        case 0:
+            if (dist >= lbl_803E4614) {
+                state[0] = 1;
+            }
+            break;
+        case 1:
+            if (dist < lbl_803E4614) {
+                state[0] = 0;
+            } else {
+                ((void (*)(int *, int, int, int, int, int))((int **)*gPartfxInterface)[2])(obj, 0x3df, 0, 0, -1, 0);
+            }
+            break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
