@@ -643,10 +643,7 @@ void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3)
   puVar5[0xf] = lbl_803E3060;
   *puVar5 = 0;
   *(ushort *)(iVar2 + 0xb0) = *(ushort *)(iVar2 + 0xb0) | 0x2000;
-  *(float *)(iVar2 + 8) =
-       lbl_803E30A0 +
-       (float)((double)CONCAT44(0x43300000,(int)*(char *)((int)uVar7 + 0x28) ^ 0x80000000) - dVar1)
-       / lbl_803E30A4;
+  *(f32 *)(iVar2 + 8) = lbl_803E30A0 + (f32)(s32)*(s8 *)((int)uVar7 + 0x28) / lbl_803E30A4;
   ObjHitbox_SetSphereRadius(iVar2,(int)(lbl_803E30CC * *(float *)(iVar2 + 8)));
   if (param_3 == 0) {
     lbl_803DDA90 = (undefined4 *)Resource_Acquire(0x5a,1);
