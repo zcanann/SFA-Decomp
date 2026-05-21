@@ -320,7 +320,18 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,
     if (((u32)clearActive & EXPGFX_BYTE_VALUE_MASK) != 0) {
       DCFlushRange(slot,EXPGFX_SLOT_SIZE);
     }
-    *poolActiveMask = *poolActiveMask & ~activeMask;
+    {
+      register u32 v;
+      register u32 m;
+      register u32 maskR = activeMask;
+      register u32 *p = poolActiveMask;
+      asm {
+        lwz v, 0(p)
+        nor m, maskR, maskR
+        and m, v, m
+        stw m, 0(p)
+      }
+    }
     poolActiveCount =
         (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET + poolIndex);
     (*poolActiveCount)--;

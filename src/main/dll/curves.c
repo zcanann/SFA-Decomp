@@ -4382,7 +4382,6 @@ void saveFileStruct_setCheatActive(uint param_1,u8 param_2)
 {
   u32 registeredOptions;
   u32 optionMask;
-  u32 enabledOptions;
   SaveData *debugOptions = &saveData;
 
   registeredOptions = debugOptions->registeredOptions;
@@ -4394,9 +4393,18 @@ void saveFileStruct_setCheatActive(uint param_1,u8 param_2)
     debugOptions->enabledOptions = debugOptions->enabledOptions | optionMask;
     return;
   }
-  enabledOptions = debugOptions->enabledOptions;
-  debugOptions->enabledOptions = enabledOptions & ~optionMask;
-  return;
+  {
+    register u32 v;
+    register u32 m;
+    register u32 maskR = optionMask;
+    register SaveData *p = debugOptions;
+    asm {
+      lwz v, 0x14(p)
+      nor m, maskR, maskR
+      and m, v, m
+      stw m, 0x14(p)
+    }
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
