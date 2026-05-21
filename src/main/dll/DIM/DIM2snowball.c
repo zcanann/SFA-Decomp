@@ -1229,6 +1229,48 @@ void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, 0x16); }
 #pragma peephole reset
 #pragma scheduling reset
 
+/* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
+extern void Music_Trigger(int trackId, int restart);
+#pragma peephole off
+#pragma scheduling off
+void dim2conveyor_setScale(int *obj, int unused, f32 *outX, f32 *outY) {
+    f32 *state = *(f32 **)((char *)obj + 0xb8);
+    int id;
+    if (*(int *)((char *)state + 0x10) == 0) {
+        Music_Trigger(0xdf, 1);
+    }
+    *(int *)((char *)state + 0x10) = 20;
+    id = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
+    switch (id) {
+    case 7849:
+        *outX = state[0];
+        *outY = state[1];
+        break;
+    case 0x49B23:
+        if (GameBit_Get(3164) != 0 && GameBit_Get(3163) == 0) {
+            *outX = state[0];
+            *outY = state[1];
+        }
+        if (GameBit_Get(3163) != 0 && GameBit_Get(3164) == 0) {
+            *outX = -state[0];
+            *outY = -state[1];
+        }
+        if (GameBit_Get(3163) != 0) {
+            GameBit_Set(3164, 0);
+        }
+        if (GameBit_Get(3163) == 0) {
+            GameBit_Set(3164, 1);
+        }
+        break;
+    default:
+        *outX = state[0];
+        *outY = state[1];
+        break;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern int ObjHits_GetPriorityHit(int obj, void **outHitObj, int *outSphereIdx, uint *outHitVolume);
 extern float Vec_distance(float *a, float *b);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
