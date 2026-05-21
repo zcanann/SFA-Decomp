@@ -538,6 +538,41 @@ void FUN_801c3b00(int param_1)
 void dfsh_shrine_hitDetect(void) {}
 void dfsh_shrine_release(void) {}
 void dfsh_shrine_initialise(void) {}
+
+extern void fn_801C2C68(int p1, int p2, void *p3);
+extern int mapGetDirIdx(int id);
+extern void unlockLevel(int idx, int a, int b);
+extern void *objCreateLight(int *obj, int v);
+extern f32 lbl_803E4E8C;
+
+#pragma scheduling off
+#pragma peephole off
+void dfsh_shrine_init(int *obj, u8 *init) {
+    u8 *sub;
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    *(s16*)(sub + 0x10) = 0xa;
+    if (*(s16*)(init + 0x1a) > 0) {
+        *(s16*)(sub + 0x10) = (s16)((s32)*(s16*)(init + 0x1a) >> 8);
+    }
+    sub[0x1a] = 4;
+    sub[0x1c] = (u8)(sub[0x1c] & ~0x80);
+    *(s16*)(sub + 0x12) = 0;
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_801C2C68;
+    ObjMsg_AllocQueue(obj, 4);
+    GameBit_Set(0x129, 1);
+    sub[0x1b] = 0;
+    *(f32*)(sub + 4) = lbl_803E4E8C;
+    unlockLevel(mapGetDirIdx(0x1f), 1, 0);
+    if (*(int*)sub == 0) {
+        *(int*)sub = (int)objCreateLight(NULL, 1);
+    }
+    *(int*)((char*)obj + 0xf4) = 1;
+    GameBit_Set(0xe70, 1);
+    GameBit_Set(0xefa, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SpiritPrize_hitDetect(void) {}
 void SpiritPrize_release(void) {}
 void SpiritPrize_initialise(void) {}
