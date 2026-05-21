@@ -54,7 +54,7 @@ void pollen_free(int obj);
 void pollen_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 void pollen_hitDetect(int obj);
 void pollen_update(void);
-void pollen_init(void);
+void pollen_init(int *obj);
 void pollen_release(void);
 void pollen_initialise(void);
 int pollenfragment_getExtraSize(void);
