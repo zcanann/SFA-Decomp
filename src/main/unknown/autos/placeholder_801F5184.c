@@ -1348,7 +1348,7 @@ void wmspiritplace_free(void) {}
 void wmspiritplace_release(void) {}
 void wmspiritplace_initialise(void) {}
 int wmseqpoint_getExtraSize(void) { return 0x10; }
-int wmseqpoint_func08(void) { return 0x0; }
+int wmseqpoint_getObjectTypeId(void) { return 0x0; }
 void wmseqpoint_free(void) {}
 void wmseqpoint_hitDetect(void) {}
 void wmseqpoint_release(void) {}

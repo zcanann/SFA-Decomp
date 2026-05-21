@@ -1501,7 +1501,7 @@
  *   slot 05: 0x801F6A84 wmseqpoint_hitDetect
  *   slot 06: 0x801F6A54 wmseqpoint_render
  *   slot 07: 0x801F6A50 wmseqpoint_free
- *   slot 08: 0x801F6A48 wmseqpoint_func08
+ *   slot 08: 0x801F6A48 wmseqpoint_getObjectTypeId
  *   slot 09: 0x801F6A40 wmseqpoint_getExtraSize
  * - DLL 0x020E: gWM_sunObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x801F7C4C wmsun_initialise

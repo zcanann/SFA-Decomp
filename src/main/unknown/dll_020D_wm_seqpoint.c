@@ -15,7 +15,7 @@
 // - 5: wmseqpoint_hitDetect (0x801F6A84)
 // - 6: wmseqpoint_render (0x801F6A54)
 // - 7: wmseqpoint_free (0x801F6A50)
-// - 8: wmseqpoint_func08 (0x801F6A48)
+// - 8: wmseqpoint_getObjectTypeId (0x801F6A48)
 // - 9: wmseqpoint_getExtraSize (0x801F6A40)
 //
 // Reference-only object parameter hints:

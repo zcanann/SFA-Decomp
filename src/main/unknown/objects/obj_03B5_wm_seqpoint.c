@@ -57,7 +57,7 @@
  * - slot 05: 0x801F6A84 wmseqpoint_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x801F6A54 wmseqpoint_render ref=render
  * - slot 07: 0x801F6A50 wmseqpoint_free stub=blr ref=free (stub)
- * - slot 08: 0x801F6A48 wmseqpoint_func08 stub=const 0
+ * - slot 08: 0x801F6A48 wmseqpoint_getObjectTypeId stub=const 0
  * - slot 09: 0x801F6A40 wmseqpoint_getExtraSize stub=const 16 ref=getExtraSize (stub)
  */
 
