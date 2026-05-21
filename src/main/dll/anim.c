@@ -4546,7 +4546,7 @@ void chuka_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int GCRobotBlast_getExtraSize(void) { return 0x8; }
-int GCRobotBlast_func08_ret_0(void) { return 0x0; }
+int GCRobotBlast_getObjectTypeId(void) { return 0x0; }
 int drakorenergy_getExtraSize(void) { return 0xc; }
 int drakorenergy_getObjectTypeId(void) { return 0x0; }
 int dbstealerworm_getExtraSize(void) { return 0x460; }

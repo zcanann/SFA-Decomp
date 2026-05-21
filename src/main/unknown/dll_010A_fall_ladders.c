@@ -15,5 +15,5 @@
 // - 5: Fall_Ladders_hitDetect (0x80187F7C)
 // - 6: Fall_Ladders_render (0x80187F78)
 // - 7: Fall_Ladders_free (0x80187F48)
-// - 8: Fall_Ladders_func08_ret_0 (0x80187F40)
+// - 8: Fall_Ladders_getObjectTypeId (0x80187F40)
 // - 9: Fall_Ladders_getExtraSize (0x80187F38)

@@ -56,7 +56,7 @@
  * - slot 05: 0x80187F7C Fall_Ladders_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80187F78 Fall_Ladders_render stub=blr ref=render (stub)
  * - slot 07: 0x80187F48 Fall_Ladders_free ref=free
- * - slot 08: 0x80187F40 Fall_Ladders_func08_ret_0 stub=const 0
+ * - slot 08: 0x80187F40 Fall_Ladders_getObjectTypeId stub=const 0
  * - slot 09: 0x80187F38 Fall_Ladders_getExtraSize stub=const 12 ref=getExtraSize (stub)
  */
 

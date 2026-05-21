@@ -15,5 +15,5 @@
 // - 5: Dummy108_hitDetect (0x80186484)
 // - 6: Dummy108_render (0x80186480)
 // - 7: Dummy108_free (0x8018647C)
-// - 8: Dummy108_func08_ret_0 (0x80186474)
+// - 8: Dummy108_getObjectTypeId (0x80186474)
 // - 9: Dummy108_getExtraSize (0x8018646C)

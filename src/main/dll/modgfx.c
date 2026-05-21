@@ -4482,7 +4482,7 @@ void Effect9_release(void) {}
 void Effect9_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int projgfx_func08_ret_0(void) { return 0x0; }
+int projgfx_getObjectTypeId(void) { return 0x0; }
 
 /* sda21 accessors. */
 extern u8 lbl_8039BE98[];
@@ -4568,7 +4568,7 @@ ObjectDescriptor11 projgfx_funcs = {
     (ObjectDescriptorCallback)projgfx_func05_nop,
     (ObjectDescriptorCallback)projgfx_func06_nop,
     (ObjectDescriptorCallback)projgfx_func07_nop,
-    (ObjectDescriptorCallback)projgfx_func08_ret_0,
+    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
     (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
     (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
 };

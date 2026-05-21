@@ -1707,7 +1707,7 @@ int dll_109_getExtraSize_ret_16(void) { return 0x10; }
 int dll_109_func08_ret_0(void) { return 0x0; }
 int return0_80187F30(void) { return 0x0; }
 int Fall_Ladders_getExtraSize(void) { return 0xc; }
-int Fall_Ladders_func08_ret_0(void) { return 0x0; }
+int Fall_Ladders_getObjectTypeId(void) { return 0x0; }
 int coldwatercontrol_getExtraSize(void) { return 0x8; }
 int infopoint_getExtraSize(void) { return 0x20; }
 int infopoint_getObjectTypeId(void) { return 0x0; }

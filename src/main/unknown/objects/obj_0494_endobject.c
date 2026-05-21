@@ -59,7 +59,7 @@
  * - slot 05: 0x80186484 Dummy108_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80186480 Dummy108_render stub=blr ref=render (stub)
  * - slot 07: 0x8018647C Dummy108_free stub=blr ref=free (stub)
- * - slot 08: 0x80186474 Dummy108_func08_ret_0 stub=const 0
+ * - slot 08: 0x80186474 Dummy108_getObjectTypeId stub=const 0
  * - slot 09: 0x8018646C Dummy108_getExtraSize stub=const 0 ref=getExtraSize (stub)
  */
 

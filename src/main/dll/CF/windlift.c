@@ -1492,7 +1492,7 @@ void portalspelldoor_initialise(void) {}
 int dll_107_getExtraSize_ret_44(void) { return 0x2c; }
 int dll_107_func08_ret_0(void) { return 0x0; }
 int Dummy108_getExtraSize(void) { return 0x0; }
-int Dummy108_func08_ret_0(void) { return 0x0; }
+int Dummy108_getObjectTypeId(void) { return 0x0; }
 int portalspelldoor_getExtraSize(void) { return 0x10; }
 int portalspelldoor_getObjectTypeId(void) { return 0x0; }
 int LanternFireFly_getExtraSize(void) { return 0x74; }
@@ -1582,7 +1582,7 @@ ObjectDescriptor gDummy108ObjDescriptor = {
     (ObjectDescriptorCallback)Dummy108_hitDetect,
     (ObjectDescriptorCallback)Dummy108_render,
     (ObjectDescriptorCallback)Dummy108_free,
-    (ObjectDescriptorCallback)Dummy108_func08_ret_0,
+    (ObjectDescriptorCallback)Dummy108_getObjectTypeId,
     Dummy108_getExtraSize,
 };
 

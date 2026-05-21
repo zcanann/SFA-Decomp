@@ -585,7 +585,7 @@
  *   slot 05: 0x80186484 Dummy108_hitDetect
  *   slot 06: 0x80186480 Dummy108_render
  *   slot 07: 0x8018647C Dummy108_free
- *   slot 08: 0x80186474 Dummy108_func08_ret_0
+ *   slot 08: 0x80186474 Dummy108_getObjectTypeId
  *   slot 09: 0x8018646C Dummy108_getExtraSize
  * - DLL 0x010A: gFall_LaddersObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80188248 Fall_Ladders_initialise
@@ -595,7 +595,7 @@
  *   slot 05: 0x80187F7C Fall_Ladders_hitDetect
  *   slot 06: 0x80187F78 Fall_Ladders_render
  *   slot 07: 0x80187F48 Fall_Ladders_free
- *   slot 08: 0x80187F40 Fall_Ladders_func08_ret_0
+ *   slot 08: 0x80187F40 Fall_Ladders_getObjectTypeId
  *   slot 09: 0x80187F38 Fall_Ladders_getExtraSize
  * - DLL 0x010B: gFireFlyLanternObjDescriptor (slots=10, mask=0001101111)
  *   slot 03: 0x80187524 FireFlyLantern_init
