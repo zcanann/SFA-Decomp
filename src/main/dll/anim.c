@@ -4522,6 +4522,21 @@ void dbstealerworm_release(void) {}
 void dbholecontrol1_hitDetect(void) {}
 void dbholecontrol1_release(void) {}
 void dbholecontrol1_initialise(void) {}
+
+extern int fn_80203DA0(int obj, int unused, int p3);
+
+#pragma scheduling off
+#pragma peephole off
+void dbholecontrol1_init(int *obj, u8 *params) {
+    int *sub = *(int**)((char*)obj + 0xb8);
+    ObjGroup_AddObject(obj, 0x1e);
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_80203DA0;
+    sub[0] = *(s16*)(params + 0x1a);
+    sub[1] = *(s16*)(params + 0x1c);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dfplevelcontrol_render(void) {}
 void dfplevelcontrol_hitDetect(void) {}
 void dfplevelcontrol_release(void) {}
