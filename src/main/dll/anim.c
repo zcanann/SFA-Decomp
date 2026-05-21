@@ -3751,9 +3751,10 @@ void FUN_80204320(int param_1)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80204320(int obj)
+void fn_80204320(int obj)
 {
   extern void *Obj_GetPlayerObject(void);
+  extern uint GameBit_Get(int);
   extern u8 lbl_803DC182;
   extern s16 lbl_80329848[];
   int sub;
@@ -3802,7 +3803,6 @@ int fn_80204320(int obj)
       ObjMsg_SendToObject(player, 0x60005, obj, 1);
     }
   }
-  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
