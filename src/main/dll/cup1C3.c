@@ -518,3 +518,44 @@ extern void objRenderFn_8003b8f4(f32);
 void dll_197_render(void) { objRenderFn_8003b8f4(lbl_803E5104); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E50EC;
+extern f32 lbl_803E5118;
+
+#pragma scheduling off
+#pragma peephole off
+void dbsh_symbol_init(int* obj)
+{
+    register u8* state = *(u8**)((char*)obj + 0xb8);
+    int* otherPtr;
+
+    *(f32*)(state + 0x4) = lbl_803E50EC;
+    *(int*)(state + 0x10) = 0;
+    *(int*)(state + 0x14) = 0;
+    *(s16*)(state + 0x1e) = 0;
+    *(int*)(state + 0x0) = 0;
+    {
+        register u32 bitval;
+        register u32 v;
+        bitval = 0;
+        asm {
+            lbz v, 0x20(state)
+            rlwimi v, bitval, 7, 24, 24
+            stb v, 0x20(state)
+        }
+        bitval = 1;
+        asm {
+            lbz v, 0x20(state)
+            rlwimi v, bitval, 6, 25, 25
+            stb v, 0x20(state)
+        }
+    }
+
+    *(f32*)((char*)obj + 0x10) -= lbl_803E5118;
+    *(int**)((char*)obj + 0xbc) = (int*)DBSH_Symbol_SeqFn;
+
+    otherPtr = *(int**)((char*)obj + 0x64);
+    *(int*)((char*)otherPtr + 0x30) = *(int*)((char*)otherPtr + 0x30) & -5;
+}
+#pragma peephole reset
+#pragma scheduling reset
