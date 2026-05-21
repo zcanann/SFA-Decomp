@@ -4662,6 +4662,26 @@ void dfpseqpoint_free(void) {}
 void dfpseqpoint_hitDetect(void) {}
 void dfpseqpoint_release(void) {}
 void dfpseqpoint_initialise(void) {}
+
+extern int fn_80205168(int p1, int p2, void *p3);
+
+#pragma scheduling off
+#pragma peephole off
+void dfpseqpoint_init(int *obj, u8 *init) {
+    u8 *sub;
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_80205168;
+    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    *(f32*)sub = (f32)(s32)*(s16*)(init + 0x1a);
+    *(s16*)(sub + 8) = *(s16*)(init + 0x1c);
+    sub[0xe] = init[0x19];
+    *(s16*)(sub + 4) = *(s16*)(init + 0x1e);
+    *(s16*)(sub + 6) = *(s16*)(init + 0x20);
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x2000);
+    sub[0xf] = (u8)(sub[0xf] & ~0x80);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void DFP_Torch_hitDetect(void) {}
 void DFP_Torch_release(void) {}
 void DFP_Torch_initialise(void) {}

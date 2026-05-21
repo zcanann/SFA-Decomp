@@ -238,7 +238,7 @@ void dfpseqpoint_free(void);
 void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dfpseqpoint_hitDetect(void);
 void dfpseqpoint_update(void);
-void dfpseqpoint_init(void);
+void dfpseqpoint_init(int *obj, u8 *init);
 void dfpseqpoint_release(void);
 void dfpseqpoint_initialise(void);
 
