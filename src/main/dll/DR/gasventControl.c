@@ -62,10 +62,10 @@ extern f32 lbl_803E5018;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void blasted_init(int param_1,int param_2)
+void fn_blasted_init_v11_unused(int param_1,int param_2)
 {
   int iVar1;
-  
+
   iVar1 = *(int *)(param_1 + 0xb8);
   *(byte *)(iVar1 + 7) = *(byte *)(iVar1 + 7) | 2;
   (**(code **)(*DAT_803dd740 + 4))(param_1,iVar1,5);
@@ -565,6 +565,39 @@ void explodable_free(int obj, int flag) {
         if (*(int *)((char *)p + 0x690) != 0) {
             Obj_FreeObject(*(int *)((char *)p + 0x690));
         }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objSetSlot(int* obj, int slot);
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern int fn_801A27B8(int* obj, int v);
+
+#pragma scheduling off
+#pragma peephole off
+void blasted_init(int param_1, int param_2)
+{
+    int* state = *(int**)(param_1 + 0xb8);
+    int* targ;
+    s16 gbid;
+
+    state[0xc / 4] = 0;
+    objSetSlot((int*)param_1, 0x51);
+    targ = *(int**)(param_1 + 0x54);
+    *(s16*)((char*)targ + 0x60) = (s16)(*(s16*)((char*)targ + 0x60) | 1);
+    *(u8*)((char*)state + 0x10) = (u8)*(s16*)(param_2 + 0x1a);
+    gbid = *(s16*)(param_2 + 0x20);
+    if (gbid != -1) {
+        *(u8*)((char*)state + 0x11) = (u8)GameBit_Get(gbid);
+        if (*(u8*)((char*)state + 0x11) != 0) {
+            Obj_SetActiveModelIndex((int*)param_1, (int)*(u8*)((char*)state + 0x11));
+        }
+    }
+    GameBit_Set(0x2de, 1);
+    *(s16*)param_1 = (s16)((s32)*(s8*)(param_2 + 0x18) << 8);
+    if (GameBit_Get(*(s16*)(param_2 + 0x1e)) != 0) {
+        state[0xc / 4] = fn_801A27B8((int*)param_1, (int)*(s16*)(param_2 + 0x1c));
     }
 }
 #pragma peephole reset
