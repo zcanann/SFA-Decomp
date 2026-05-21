@@ -1705,6 +1705,30 @@ void curvefish_init(int obj, u8 *param_2) {
 }
 #pragma scheduling reset
 
+extern void *getTrickyObject(void);
+extern void objRenderFn_80041018(int *obj);
+
+#pragma scheduling off
+#pragma peephole off
+void trickyguard_update(int *obj) {
+    int *tricky;
+    int *def = *(int **)((char *)obj + 0x4c);
+    *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+    if (*(s16 *)((char *)def + 0x1a) != -1) {
+        if ((int)GameBit_Get(*(s16 *)((char *)def + 0x1a)) == 0) return;
+    }
+    tricky = (int *)getTrickyObject();
+    if (tricky == NULL) return;
+    if ((u8)((int (*)(int *))(**(int ***)((char *)tricky + 0x68))[0x11])(tricky) != 0) return;
+    if ((*(u8 *)((char *)obj + 0xaf) & 0x04) != 0) {
+        ((void (*)(int *, int *, int, int))(**(int ***)((char *)tricky + 0x68))[0xa])(tricky, obj, 1, 3);
+    }
+    *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x08);
+    objRenderFn_80041018(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
