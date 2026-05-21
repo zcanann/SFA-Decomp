@@ -727,3 +727,37 @@ LAB_80152f28:
   FUN_8028688c();
   return;
 }
+
+extern f32 lbl_803E27F8;
+extern f32 lbl_803E27FC;
+extern f32 lbl_803E2800;
+extern f32 lbl_803E2804;
+extern f32 lbl_803E2808;
+extern f32 lbl_803E280C;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801522E0(int* obj, u8* state) {
+    int* sub = *(int**)((char*)obj + 0x4c);
+    f32 fz;
+    *(f32*)((char*)state + 684) = lbl_803E27F8;
+    *(f32*)((char*)state + 680) = lbl_803E27FC;
+    *(int*)((char*)state + 740) = 1;
+    *(int*)((char*)state + 740) |= 0xC80;
+    *(f32*)((char*)state + 776) = lbl_803E2800;
+    *(f32*)((char*)state + 768) = lbl_803E2804;
+    *(f32*)((char*)state + 772) = lbl_803E2808;
+    state[800] = 0;
+    fz = lbl_803E280C;
+    *(f32*)((char*)state + 788) = fz;
+    state[801] = 0;
+    *(f32*)((char*)state + 792) = fz;
+    state[802] = 0;
+    *(f32*)((char*)state + 796) = fz;
+    if ((s8)*((s8*)sub + 46) != -1) {
+        *(int*)((char*)state + 732) |= 1;
+    }
+    *(u8*)((char*)obj + 175) |= 8;
+}
+#pragma peephole reset
+#pragma scheduling reset
