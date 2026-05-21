@@ -1295,7 +1295,7 @@ extern int *gMapEventInterface;
 extern int lbl_80323548[];
 extern f32 lbl_803E46D4;
 extern void fn_801AB700(int obj, u8* state2);
-extern void fn_801AB800(void);
+extern void fn_801AB800(int obj, u8* state2);
 extern void fn_8002B6D8(void *obj, int p2, int p3, int p4, int p5, int p6);
 
 void ccpedstal_init(int *obj, u8 *params) {
@@ -1402,6 +1402,46 @@ void fn_801AB700(int obj, u8* state2) {
             }
         } else {
             *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 0x10);
+        }
+        doMark = 0;
+    check:
+        if (doMark != 0) {
+            state2[0x6] = (u8)(state2[0x6] | 1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int ObjTrigger_IsSet(int obj);
+extern void gameBitIncrement(int id);
+
+/* fn_801AB800: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
+ * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
+ * sets bit 8 again and selects model 0; if clear, selects model 1 and
+ * (when the obj's pending trigger is asserted) fires vtable[0x12] with
+ * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
+ * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
+ * match target's layout. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801AB800(int obj, u8* state2) {
+    if (GameBit_Get(0xdc5) != 0) {
+        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
+    } else {
+        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) & ~8);
+    }
+    if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0) {
+        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
+        Obj_SetActiveModelIndex(obj, 0);
+    } else {
+        int doMark;
+        Obj_SetActiveModelIndex(obj, 1);
+        if (ObjTrigger_IsSet(obj) != 0) {
+            (*(void(**)(int, int, int))(*(int*)gObjectTriggerInterface + 0x48))(1, obj, -1);
+            gameBitIncrement(0xa9);
+            doMark = 1;
+            goto check;
         }
         doMark = 0;
     check:
