@@ -792,7 +792,65 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
 /* Stubs to align function set with v1.0 asm. Bodies are large state
  * machines / inits and need real reverse-engineering. */
 void fn_801EE668(void) {}
-void fn_801EEB50(void) {}
+
+/* fn_801EEB50: priority-hit handler — when the laser hits an object whose
+ * type isn't 281 and isn't currently in fade state, fade it red, rumble,
+ * play SFX, gate further damage on a GameBit, then if the hit type is 154
+ * emit 3 partfx of effect 168 followed by a 10-shot burst of effect 169. */
+extern int ObjHits_GetPriorityHitWithPosition(int obj, int *outHit, int *p3, int *p4, f32 *outX, f32 *outY, f32 *outZ);
+extern int objGetFlagsE5_2(int obj);
+extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
+extern void doRumble(f32 val);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void GameBit_Set(int id, int v);
+extern void *gPartfxInterface;
+extern f32 lbl_803E5CB8;
+extern f32 lbl_803E5C74;
+
+struct WCPartfxArgs {
+    s16 v[3];
+    s16 _pad;
+    f32 scale;
+};
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801EEB50(int obj, u8 *state) {
+    int hitObj;
+    struct WCPartfxArgs args;
+    f32 pos[3];
+    int i;
+
+    if (ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &pos[0], &pos[1], &pos[2]) != 0) {
+        if (objGetFlagsE5_2(obj) == 0) {
+            if (*(s16 *)(hitObj + 0x46) != 281) {
+                Obj_SetModelColorFadeRecursive(obj, 175, 200, 0, 0, 1);
+                doRumble(lbl_803E5CB8);
+                Sfx_PlayFromObject(0, 293);
+                if (GameBit_Get(3870) != 0) {
+                    Sfx_PlayFromObject(obj, 1169);
+                }
+                *(s16 *)(obj + 2) = 4000;
+                state[0x65] = 1;
+                args.scale = lbl_803E5C74;
+                args.v[0] = 0;
+                args.v[1] = 0;
+                args.v[2] = 0;
+                if (*(s16 *)(hitObj + 0x46) == 154) {
+                    (*(void (**)(int, int, struct WCPartfxArgs *, u32, int, int))(*(int *)gPartfxInterface + 8))(obj, 168, &args, 0x200001, -1, 0);
+                    (*(void (**)(int, int, struct WCPartfxArgs *, u32, int, int))(*(int *)gPartfxInterface + 8))(obj, 168, &args, 0x200001, -1, 0);
+                    (*(void (**)(int, int, struct WCPartfxArgs *, u32, int, int))(*(int *)gPartfxInterface + 8))(obj, 168, &args, 0x200001, -1, 0);
+                    for (i = 0; i < 10; i++) {
+                        (*(void (**)(int, int, struct WCPartfxArgs *, u32, int, int))(*(int *)gPartfxInterface + 8))(obj, 169, &args, 0x200001, -1, 0);
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 extern f32 lbl_803E5C74;
 extern f32 playerMapOffsetX;
