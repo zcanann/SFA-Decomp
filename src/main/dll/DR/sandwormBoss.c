@@ -3581,3 +3581,21 @@ void cfperch_update(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void cfmaincrystal_init(int *obj, u8 *def) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
+    if (*(s8 *)((char *)def + 0x19) == 0) {
+        state[0x15c] = 0x28;
+        state[0x15d] = 0;
+        state[0x15e] = 0;
+        state[0x15f] = 0x46;
+        *(u8 *)((char *)obj + 0xad) = 1;
+        *(int *)((char *)state + 0x158) = 0;
+    }
+    ObjMsg_AllocQueue(obj, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
