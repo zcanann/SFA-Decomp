@@ -272,3 +272,24 @@ void fn_80167B60(int obj, int p)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E3060;
+extern void** gPlayerInterface;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80167AE4(int* obj, u8* state) {
+    if (*(void**)((char*)state + 0x2d0) != NULL) {
+        if ((s8)state[635] != 0) {
+            f32 fz = lbl_803E3060;
+            *(f32*)((char*)state + 0x284) = fz;
+            *(f32*)((char*)state + 0x280) = fz;
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        } else if ((s8)state[838] != 0) {
+            return 6;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
