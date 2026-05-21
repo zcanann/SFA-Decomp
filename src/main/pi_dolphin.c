@@ -5544,3 +5544,20 @@ void setDisplayCopyFilter(void) {
         GXSetCopyFilter(p[0x19], p + 0x1a, 1, lbl_803DB5D4);
     }
 }
+
+extern void GXLoadTexObj(void *obj, int id);
+extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
+extern void fn_80053C40(u8 *tex, void *out);
+extern u8 lbl_803779A0[];
+void textureFn_8004c264(u8 *tex, int mapId) {
+    if (tex == NULL) return;
+    if (tex[72] != 0) {
+        GXLoadTexObjPreLoaded(&tex[32], *(void **)(tex + 64), mapId);
+    } else {
+        GXLoadTexObj(&tex[32], mapId);
+    }
+    if (*(int *)(tex + 80) != 0) {
+        fn_80053C40(tex, lbl_803779A0);
+        GXLoadTexObj(lbl_803779A0, 1);
+    }
+}
