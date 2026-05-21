@@ -1458,7 +1458,10 @@ void portalspelldoor_init(u8* obj, u8* data) {
     *(s16*)obj = (s16)((s32)(s8)data[0x18] << 8);
     *(s16*)(obj + 0x2) = (s16)((s32)*(s16*)(data + 0x1c) << 8);
     *(f32*)(obj + 0x8) = lbl_803E3A8C;
-    *(f32*)(sub + 0x4) = *(f32*)(obj + 0xa8) * *(f32*)(obj + 0x8) * lbl_803E3A90;
+    {
+        f32 _ab = *(f32*)(obj + 0xa8) * *(f32*)(obj + 0x8);
+        *(f32*)(sub + 0x4) = _ab * lbl_803E3A90;
+    }
     if (GameBit_Get(*(s16*)(data + 0x1e)) != 0) {
         *(s16*)(obj + 0x6) = (s16)(*(s16*)(obj + 0x6) | 0x4000);
         *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0xe000);

@@ -5399,5 +5399,12 @@ void viFn_8004a56c(int val) {
     lbl_803DB5CC = (u8)v;
 }
 #pragma peephole reset
-#pragma peephole reset
+
+extern void mm_free(void *p);
+void freeAndNull(void **p) {
+    if (*p != NULL) {
+        mm_free(*p);
+        *p = NULL;
+    }
+}
 #pragma scheduling reset

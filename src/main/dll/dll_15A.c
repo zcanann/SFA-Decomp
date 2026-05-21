@@ -420,3 +420,13 @@ void largecrate_free(int obj) {
     ((void (*)(int))((void**)*gModgfxInterface)[6])(obj);
     Resource_Release(lbl_803DDAC8);
 }
+
+extern int *gCameraInterface;
+#pragma scheduling off
+int LargeCrate_SeqFn(int *obj) {
+    if (*(s16*)((char*)obj + 0xb4) != -1) {
+        ((void (*)(int*))((void**)*gCameraInterface)[19])(obj);
+    }
+    return 0;
+}
+#pragma scheduling reset

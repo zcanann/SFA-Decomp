@@ -446,3 +446,9 @@ void FUN_80151b1c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 void FUN_8015209c(int param_1,int param_2)
 {
 }
+
+extern void Sfx_PlayFromObject(int obj, int sfx);
+void fn_80152004(int obj, int *state) {
+    Sfx_PlayFromObject(obj, 0x23);
+    *(u32*)((char*)state + 0x2e8) |= 0x10;
+}
