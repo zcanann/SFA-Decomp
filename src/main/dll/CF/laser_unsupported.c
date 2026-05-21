@@ -4,7 +4,7 @@
 #include "main/object_descriptor.h"
 #include "main/textblock.h"
 
-int laser_getExtraSizeUnsupported(void)
+int laser_getExtraSize(void)
 {
   return 0;
 }
@@ -68,7 +68,7 @@ ObjectDescriptor gLaserUnsupportedObjDescriptor = {
     laser_renderUnsupported,
     laser_freeUnsupported,
     (ObjectDescriptorCallback)laser_getObjectTypeId,
-    laser_getExtraSizeUnsupported,
+    laser_getExtraSize,
 };
 
 char sTextBlockInitNoLongerSupported[] = "<textblock.c Init>No Longer supported \n";

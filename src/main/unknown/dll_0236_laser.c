@@ -26,7 +26,7 @@
  * - slot 06: 0x80209018 laser_renderUnsupported ref=render
  * - slot 07: 0x80208FEC laser_freeUnsupported ref=free
  * - slot 08: 0x80208FE4 laser_getObjectTypeId stub=const 0
- * - slot 09: 0x80208FDC laser_getExtraSizeUnsupported stub=const 0 ref=getExtraSize (stub)
+ * - slot 09: 0x80208FDC laser_getExtraSize stub=const 0 ref=getExtraSize (stub)
  *
  * Reference-only hints:
  * - reference DLL name: Laser

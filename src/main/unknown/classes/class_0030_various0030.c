@@ -1797,7 +1797,7 @@
  *   slot 06: 0x80209018 laser_renderUnsupported
  *   slot 07: 0x80208FEC laser_freeUnsupported
  *   slot 08: 0x80208FE4 laser_getObjectTypeId
- *   slot 09: 0x80208FDC laser_getExtraSizeUnsupported
+ *   slot 09: 0x80208FDC laser_getExtraSize
  * - DLL 0x0237: gLaserObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x80209308 laserObj_initialise
  *   slot 01: 0x80209304 laserObj_release
