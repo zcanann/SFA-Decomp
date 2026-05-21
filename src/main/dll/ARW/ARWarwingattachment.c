@@ -1572,8 +1572,9 @@ extern f32 lbl_803E5D78;
 #pragma scheduling off
 #pragma peephole off
 void pressureswitch_init(int *obj, u8 *init) {
+    extern uint GameBit_Get(int id);
     u8 *sub;
-    int mapId;
+    uint mapId;
 
     sub = *(u8**)((char*)obj + 0xb8);
     *(void**)((char*)obj + 0xbc) = (void*)&PressureSwitch_SeqFn;
@@ -1590,7 +1591,7 @@ void pressureswitch_init(int *obj, u8 *init) {
     }
     if (*(s16*)(sub + 4) != -1) {
         if (GameBit_Get(*(s16*)(sub + 4)) != 0) {
-            sub[6] = (u8)(sub[6] | 0x40);
+            sub[6] |= 0x40;
         }
     }
     if (GameBit_Get(*(s16*)(init + 0x1c)) != 0) {
