@@ -840,6 +840,24 @@ extern f32 lbl_803E2928;
 extern f32 lbl_803E292C;
 extern f32 lbl_803E2930;
 
+extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int prio);
+extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
+extern void fn_8015355C(int obj, int p2);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80153BFC(int obj, int p2)
+{
+    *(u8*)(p2 + 0x33b) = *(u8*)(p2 + 0x33b) & 0xbf;
+    if ((*(u32*)(p2 + 0x2dc) & 0x40000000) != 0 && *(s16*)(obj + 0xa0) != 1) {
+        Sfx_PlayFromObjectLimited(obj, 0x49c, 2);
+        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, p2, 1, lbl_803E290C, 0, 0);
+    }
+    fn_8015355C(obj, p2);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_80153C90(int unused, int p2)
