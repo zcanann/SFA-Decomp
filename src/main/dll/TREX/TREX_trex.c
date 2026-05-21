@@ -2062,7 +2062,7 @@ void SB_KyteCage_update(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
-    if (*(int *)state == 0) {
+    if (*(void **)state == NULL) {
         int *head;
         int count;
         int i;
@@ -2095,7 +2095,7 @@ void SB_KyteCage_update(int obj)
             *(u8 *)(state + 5) = 1;
         }
     }
-    if (*(int *)(obj + 0x30) != 0) {
+    if (*(void **)(obj + 0x30) != NULL) {
         int kind = *(int *)(*(int *)(obj + 0x30) + 0xf4);
         int *mvec = objModelGetVecFn_800395d8(obj, 0);
         if (mvec != 0 && kind < 9 && *(s16 *)(obj + 0xa0) != 5) {
