@@ -48,15 +48,15 @@ void dll_19B_SeqFn(int obj, int unused, u8 *buf)
     buf[0x56] = 0;
 
     if (*(s16 *)(state + 0xa) != 0) {
-        *(s16 *)(state + 0x8) = *(s16 *)(state + 0x8) + *(s16 *)(state + 0xa);
-        if (*(s16 *)(state + 0x8) < 2 && *(s16 *)(state + 0xa) < 1) {
+        *(s16 *)(state + 0x8) += *(s16 *)(state + 0xa);
+        if (*(s16 *)(state + 0x8) <= 1 && *(s16 *)(state + 0xa) <= 0) {
             *(s16 *)(state + 0x8) = 1;
             *(s16 *)(state + 0xa) = 0;
-        } else if (*(s16 *)(state + 0x8) > 0x45 && *(s16 *)(state + 0xa) > -1) {
+        } else if (*(s16 *)(state + 0x8) >= 0x46 && *(s16 *)(state + 0xa) >= 0) {
             *(s16 *)(state + 0x8) = 0x46;
             *(s16 *)(state + 0xa) = 0;
         }
-        (*(void (**)(int, u8))((int *)*gTitleMenuControlInterface)[0x38/4])(3, (u8)*(s16 *)(state + 0x8));
+        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38/4](3, (u8)*(s16 *)(state + 0x8));
     }
 
     for (i = 0; i < (int)buf[0x8b]; i++) {
@@ -106,7 +106,7 @@ void dll_19B_SeqFn(int obj, int unused, u8 *buf)
             break;
         case 0xb:
             *(s16 *)(state + 0x8) = 100;
-            (*(void (**)(int, int, int, u8, int))((int *)*gTitleMenuControlInterface)[0x18/4])
+            ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18/4]
                 (3, 0x2d, 0x50, (u8)*(s16 *)(state + 0x8), 0);
             break;
         }
