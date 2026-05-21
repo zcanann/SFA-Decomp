@@ -4589,3 +4589,34 @@ int curves_findByAction(int act) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* fn_800E1F3C: 2D segment-intersection predicate. Returns 1 if the
+ * segment between (f1, f3) and the origin in the xz-plane crosses the
+ * segment between a and b (each a curve-point struct with x at +0x8 and
+ * z at +0x10). Uses the standard sign-of-cross-product test on both
+ * pairs of endpoints. f2 and f4 args are ignored. */
+#pragma scheduling off
+#pragma peephole off
+int fn_800E1F3C(int* a, int* b, f32 f1, f32 f2, f32 f3, f32 f4) {
+    f32 ax = *(f32*)((u8*)a + 0x8);
+    f32 az = *(f32*)((u8*)a + 0x10);
+    f32 bx = *(f32*)((u8*)b + 0x8);
+    f32 bz = *(f32*)((u8*)b + 0x10);
+    f32 cross1 = bx * az - ax * bz;
+    f32 sum1 = cross1 + (f1 * (bz - az) + f3 * (ax - bx));
+    if (!((sum1 <= lbl_803E0638 && cross1 >= lbl_803E0638) ||
+          (sum1 >= lbl_803E0638 && cross1 < lbl_803E0638))) {
+        return 0;
+    }
+    {
+        f32 cross_a = -f3 * ax + f1 * az;
+        f32 cross_b = -f3 * bx + f1 * bz;
+        if ((cross_a <= lbl_803E0638 && cross_b >= lbl_803E0638) ||
+            (cross_a >= lbl_803E0638 && cross_b < lbl_803E0638)) {
+            return 1;
+        }
+        return 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
