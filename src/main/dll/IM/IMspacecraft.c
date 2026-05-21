@@ -905,13 +905,13 @@ void RollingBarrel_free(int obj) {
     int *arr = ObjGroup_GetObjects(0x2f, &count);
     int i;
     for (i = 0; i < count; i++) {
-        if (arr[i] == obj) {
+        if ((u32)obj == (u32)arr[i]) {
             ObjGroup_RemoveObject(obj, 0x2f);
             break;
         }
     }
-    if (inner[0x114] == 1) {
-        lbl_803DDB20 = lbl_803DDB20 - 1;
+    if (*(u8 *)(inner + 0x114) == 1) {
+        lbl_803DDB20 = (s16)(lbl_803DDB20 - 1);
     }
 }
 #pragma peephole reset

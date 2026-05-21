@@ -129,6 +129,53 @@ void fxemit_init(undefined4 param_1,undefined4 param_2,int param_3)
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_8018F148(int obj, int count)
+{
+  extern void mathFn_80021ac8(s16 *in, f32 *out);
+  extern int *gPartfxInterface;
+  extern u32 randomGetRange(int min, int max);
+  int sub;
+  s16 i;
+  struct {
+    s16 hw[6];
+    f32 vec[3];
+  } args;
+
+  sub = *(int *)(obj + 0xb8);
+  for (i = 0; i < count; i++) {
+    {
+      s16 sx = *(s16 *)(sub + 0x14);
+      args.vec[0] = (f32)(s32)(s16)randomGetRange(-sx, sx);
+    }
+    {
+      s16 sy = *(s16 *)(sub + 0x18);
+      args.vec[1] = (f32)(s32)(s16)randomGetRange(-sy, sy);
+    }
+    {
+      s16 sz = *(s16 *)(sub + 0x16);
+      args.vec[2] = (f32)(s32)(s16)randomGetRange(-sz, sz);
+    }
+    mathFn_80021ac8((s16 *)(sub + 0x1a), args.vec);
+    args.vec[0] += *(f32 *)(obj + 0xc);
+    args.vec[1] += *(f32 *)(obj + 0x10);
+    args.vec[2] += *(f32 *)(obj + 0x14);
+    {
+      u8 type = *(u8 *)(sub + 8);
+      if (type == 4 || type == 6) {
+        (*(void (**)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface) + 8))(
+            obj, *(u16 *)(sub + 0xa), &args, 0x200001, -1, 0);
+      } else {
+        (*(void (**)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface) + 8))(
+            obj, *(u16 *)(sub + 0xa), &args, 2, -1, 0);
+      }
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *

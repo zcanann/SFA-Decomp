@@ -1876,3 +1876,26 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void Obj_SetActiveModelIndex(int *obj, int idx);
+extern u32 GameBit_Get(int eventId);
+extern f64 lbl_803E3B60;
+#pragma scheduling off
+#pragma peephole off
+void Fall_Ladders_init(int *obj, s8 *def) {
+    s16 *state = *(s16 **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
+    state[3] = *(s16 *)((char *)def + 0x20);
+    state[2] = *(s16 *)((char *)def + 0x1e);
+    *(f32 *)state = (f32)(s32)*(s16 *)((char *)def + 0x1a);
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    *(int *)((char *)obj + 0xbc) = (int)return0_80187F30;
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)def + 0xc) + *(f32 *)state;
+    Obj_SetActiveModelIndex(obj, (s32)*(s8 *)((char *)def + 0x19));
+    *(u8 *)((char *)state + 8) = 0;
+    if (GameBit_Get(state[3]) == 0) {
+        *(u8 *)((char *)state + 9) = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

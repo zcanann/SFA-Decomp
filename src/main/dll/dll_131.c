@@ -210,3 +210,65 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
   }
   return 0;
 }
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80167B60(int obj, int p)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern void fn_80169360(int obj, int n);
+  extern int *gBaddieControlInterface;
+  extern f32 lbl_803E3060;
+  extern f32 lbl_803E3078;
+  extern f32 lbl_803E3084;
+  extern f32 lbl_803E3088;
+  extern f32 lbl_803E308C;
+  int b8;
+  int b8_40c;
+
+  b8 = *(int *)(obj + 0xb8);
+  *(s8 *)(p + 0x34d) = 3;
+  *(f32 *)(p + 0x2a0) = lbl_803E3084;
+  {
+    f32 fz = lbl_803E3060;
+    *(f32 *)(p + 0x280) = fz;
+    *(f32 *)(p + 0x284) = fz;
+    if (*(char *)(p + 0x27a) != '\0') {
+      ObjAnim_SetCurrentMove(obj, 5, fz, 0);
+      *(s8 *)(p + 0x346) = 0;
+    }
+  }
+  {
+    u32 v = *(u32 *)(p + 0x314);
+    if ((v & 0x1000) != 0) {
+      *(u32 *)(p + 0x314) = v & ~0x1000;
+      fn_80169360(obj, 2);
+    }
+  }
+  b8_40c = *(int *)(b8 + 0x40c);
+  if ((*(u8 *)(b8_40c + 0x4b) & 0x1) == 0) {
+    Sfx_PlayFromObject(obj, 628);
+    Sfx_PlayFromObject(obj, 631);
+    Sfx_PlayFromObject(obj, 562);
+    *(u8 *)(b8_40c + 0x4b) |= 0x1;
+    {
+      int r = 0;
+      if (*(s16 *)(b8 + 0x3f0) != 0) {
+        r = (int)(**(int (**)(int, int, int, int))(*(int *)(*gBaddieControlInterface) + 0x4c))(obj, 6, -1, 0);
+      }
+      if (r != 0) {
+        f32 fz = lbl_803E3060;
+        (**(void (**)(int, f32, f32, f32))(*(int *)(*(int *)(r + 0x68)) + 0x2c))(r, fz, lbl_803E3078, fz);
+      }
+    }
+  }
+  if ((*(u8 *)(b8_40c + 0x4b) & 0x2) == 0) {
+    if (*(f32 *)(obj + 0x98) > lbl_803E3088) {
+      Sfx_PlayFromObject(obj, 563);
+      *(u8 *)(b8_40c + 0x4b) |= 0x2;
+    }
+  }
+  *(u8 *)(obj + 0x36) = (u8)(s32)((lbl_803E3078 - *(f32 *)(obj + 0x98)) * lbl_803E308C);
+}
+#pragma peephole reset
+#pragma scheduling reset

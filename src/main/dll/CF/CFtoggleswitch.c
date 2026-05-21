@@ -695,3 +695,30 @@ void cctestinfot_init(int obj, s8 *def) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Obj_GetActiveModel(int *obj);
+extern int *ObjModel_GetRenderOpTextureRefs(int model, int idx);
+extern u32 GameBit_Get(int eventId);
+extern f32 lbl_803E3C4C;
+#pragma scheduling off
+#pragma peephole off
+void magiccavetop_init(int *obj, s8 *def) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *refs;
+    *(u16 *)((char *)obj + 0xb0) = (u16)((u32)*(u16 *)((char *)obj + 0xb0) | 0x6000);
+    if (GameBit_Get(*(s16 *)((char *)def + 0x1c)) != 0) {
+        *(f32 *)((char *)state + 4) = lbl_803E3C4C;
+    }
+    *(s16 *)obj = (s16)((s32)(u8)def[0x23] << 8);
+    refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
+    if (*(s16 *)((char *)def + 0x24) > 0) {
+        if (GameBit_Get(*(s16 *)((char *)def + 0x24)) != 0) {
+            *(u8 *)((char *)state + 1) = (u8)(*(u8 *)((char *)state + 1) | 0x0c);
+            *(u8 *)((char *)refs + 8) = 23;
+        } else {
+            *(u8 *)((char *)refs + 8) = 22;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
