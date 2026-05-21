@@ -797,14 +797,16 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
   extern f32 lbl_803E1CA4;
   int ret = 0;
 
-  if (p2 != 0) {
+  if ((void *)p2 != NULL) {
     s16 tmp[3];
-    *(f32 *)(p3 + 0x18) = lbl_803E1CA0;
-    *(f32 *)(p3 + 0x1c) = lbl_803E1C90;
-    *(f32 *)(p3 + 0x20) = lbl_803E1C90;
-    *(f32 *)(p3 + 0x24) = lbl_803E1CA0;
-    *(f32 *)(p3 + 0x28) = lbl_803E1C90;
-    *(f32 *)(p3 + 0x2c) = lbl_803E1C90;
+    f32 va = lbl_803E1CA0;
+    f32 vb = lbl_803E1C90;
+    *(f32 *)(p3 + 0x18) = va;
+    *(f32 *)(p3 + 0x1c) = vb;
+    *(f32 *)(p3 + 0x20) = vb;
+    *(f32 *)(p3 + 0x24) = va;
+    *(f32 *)(p3 + 0x28) = vb;
+    *(f32 *)(p3 + 0x2c) = vb;
     fn_800218AC(p1, p3 + 0x18);
     tmp[2] = 0;
     tmp[1] = (s16)(s8)*(u8 *)(p2 + 0x2d);
