@@ -1880,7 +1880,7 @@ void SB_CloudBall_free(int* obj)
 extern f32 lbl_803E58E8;
 extern f32 lbl_803E58EC;
 extern f32 lbl_803E58F0;
-extern void projectileParticleFxFn_80099660(int *obj, int a, f32 f);
+extern void projectileParticleFxFn_80099660(int *obj, f32 scale, int type);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1899,7 +1899,7 @@ void SB_CloudBall_hitDetect(int *obj)
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
     *(f32 *)((char *)state + 0x20) = lbl_803E58F0;
     *(u8 *)((char *)obj + 0x36) = 0;
-    projectileParticleFxFn_80099660(obj, 2, lbl_803E58E8);
+    projectileParticleFxFn_80099660(obj, lbl_803E58E8, 2);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1992,7 +1992,7 @@ void SB_CloudBall_update(int obj)
         *(int *)(*(int *)(obj + 0x54) + 0x4c) = 0x10;
         *(s16 *)(*(int *)(obj + 0x54) + 0x60) = (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) | 1);
         if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0 && *(f32 *)(state + 0x20) == lbl_803E58EC) {
-            projectileParticleFxFn_80099660((int *)obj, 2, lbl_803E58E8);
+            projectileParticleFxFn_80099660((int *)obj, lbl_803E58E8, 2);
             *(f32 *)(state + 0x20) = lbl_803E58F0;
             *(u8 *)(obj + 0x36) = 0;
         }
