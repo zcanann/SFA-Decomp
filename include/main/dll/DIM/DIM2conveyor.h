@@ -34,7 +34,7 @@ int dimdismountpoint_getExtraSize(void);
 void dimdismountpoint_free(int obj);
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void dimdismountpoint_hitDetect(void);
-void dimdismountpoint_update(void);
+void dimdismountpoint_update(int *obj);
 void dimdismountpoint_init(u8* obj, u8* params);
 void dimdismountpoint_release(void);
 void dimdismountpoint_initialise(void);

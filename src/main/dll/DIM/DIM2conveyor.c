@@ -409,6 +409,38 @@ void dimdismountpoint_hitDetect(void) {}
 void dimdismountpoint_release(void) {}
 void dimdismountpoint_initialise(void) {}
 
+extern int* ObjGroup_FindNearestObject(int group, int *obj, f32 *dist);
+extern void objRenderFn_80041018(int obj);
+extern f32 lbl_803E4910;
+
+#pragma scheduling off
+#pragma peephole off
+void dimdismountpoint_update(int *obj) {
+    extern uint GameBit_Get(int eventId);
+    int *nearest;
+    f32 d;
+
+    d = lbl_803E4910;
+    nearest = ObjGroup_FindNearestObject(0xa, obj, &d);
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+    if (GameBit_Get(0x3e3) != 0) {
+        *(u8*)((char*)obj + 0xe4) = 1;
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    } else {
+        *(u8*)((char*)obj + 0xe4) = 0;
+        if (nearest != NULL && ((int(*)(int*, int*))((int**)*(int**)((char*)nearest + 0x68))[8])(nearest, obj) != 0) {
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+        } else {
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+        }
+    }
+    if ((*(int*)(*(int*)((char*)obj + 0x50) + 0x44) & 1) != 0 && *(int*)((char*)obj + 0x74) != 0) {
+        objRenderFn_80041018((int)obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern f32 lbl_803E4908;
 extern f32 lbl_803E4914;
 extern f32 lbl_803E4918;
