@@ -339,3 +339,25 @@ int fn_80167E3C(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80167D10(int obj, int p2)
+{
+  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern f32 lbl_803E3060;
+  extern f32 lbl_803E3090;
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    ObjAnim_SetCurrentMove(obj, 8, 0, lbl_803E3060);
+    *(u8 *)(p2 + 0x346) = 0;
+    Sfx_PlayFromObject(obj, 631);
+  }
+  *(s16 *)(obj + 0) = (s16)(*(s16 *)(obj + 0) + 546);
+  *(s8 *)(p2 + 0x34d) = 1;
+  *(f32 *)(p2 + 0x2a0) = lbl_803E3090;
+  *(f32 *)(p2 + 0x280) = lbl_803E3060;
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
