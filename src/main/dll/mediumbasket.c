@@ -1964,6 +1964,24 @@ void fn_8015AE68(int* obj, u8* state) {
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+int fn_8015B524(int* obj, u8* state) {
+    if ((s8)state[635] != 0) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 3);
+    }
+    if ((s8)state[838] != 0) {
+        if (*(s16*)((char*)state + 628) == 3) {
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        } else {
+            return 8;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int fn_8015B748(int* obj, u8* state) {
     int* sub = *(int**)((char*)obj + 0xb8);
     if ((s8)state[852] < 1) return 3;
