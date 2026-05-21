@@ -2427,3 +2427,37 @@ void fn_80054F74(int *p, f32 *vec) {
     vec[2] = vec[2] + playerMapOffsetZ;
 }
 #pragma scheduling reset
+
+extern u8 lbl_8037E000[];
+
+#pragma scheduling off
+#pragma peephole off
+void ShaderDef_free(int *def) {
+    void *p1 = (void *)def[0];
+    void *p2;
+    int i;
+    void *s;
+
+    if (p1 != NULL) {
+        for (i = 0; i < 6; i++) {
+            s = *(void **)(lbl_8037E000 + i * 0x1C);
+            if (*(u16 *)((char *)s + 0xE) != 0 && s == p1) {
+                *(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE) =
+                    *(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE) - 1;
+                break;
+            }
+        }
+    }
+    p2 = (void *)def[1];
+    if (p2 == NULL) return;
+    for (i = 0; i < 6; i++) {
+        s = *(void **)(lbl_8037E000 + i * 0x1C);
+        if (*(u16 *)((char *)s + 0xE) != 0 && s == p2) {
+            *(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE) =
+                *(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE) - 1;
+            return;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
