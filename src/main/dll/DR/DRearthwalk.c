@@ -904,18 +904,18 @@ void sh_staff_update(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     int setup = *(int *)(obj + 0x4c);
-    int player = (int)Obj_GetPlayerObject();
-    f32 dist = getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18));
+    void *player = Obj_GetPlayerObject();
+    f32 dist = getXZDistance((f32 *)(obj + 0x18), (f32 *)((int)player + 0x18));
     u8 mode = *(u8 *)state;
 
     if (mode == 0) {
-        if (player == 0) goto end;
-        if (fn_802966CC(player) == 0) goto end;
+        if (player == NULL) goto end;
+        if (fn_802966CC((int)player) == 0) goto end;
         if (GameBit_Get(0x18b) != 0) {
             fn_801DA4A8(obj, *(int *)(obj + 0xb8), 0);
         } else {
             int loadResult;
-            fn_80295CF4(player, 0);
+            fn_80295CF4((int)player, 0);
             ObjAnim_SetMoveProgress(obj, lbl_803E54D0);
             *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
             *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
