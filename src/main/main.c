@@ -1302,6 +1302,63 @@ int dbegg_setScale(int obj) {
     return inner[0x118] != 3 ? 1 : 0;
 }
 
+/* fn_801FE31C: dbegg_init — set up dbegg from def fields, dispatch on def->_26 mode byte. */
+extern f32 lbl_803E61C8;
+extern f32 lbl_803E61D0;
+extern f64 lbl_803E61D8;
+extern int fn_801FE560(int obj, int *outIdx, int p3, f32 a, f32 b);
+extern int Obj_SetActiveModelIndex(int obj, int idx);
+#pragma scheduling off
+#pragma peephole off
+void fn_801FE31C(int obj, u8 *state) {
+    s8 *def;
+    int local_unused;
+
+    def = *(s8 **)(obj + 0x4c);
+    state[0x119] = 0;
+    *(s16 *)obj = (s16)((s32)def[0x1b] << 8);
+    *(s16 *)(obj + 2) = 0;
+    *(s16 *)(obj + 4) = 0;
+    *(f32 *)(obj + 8) = (f32)(u32)(u8)def[0x1a] * lbl_803E61D0;
+    *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
+    state[0x118] = (u8)(GameBit_Get(*(s16 *)(def + 0x1c)) != 0 ? 3 : 1);
+    if (state[0x118] == 1) {
+        if (fn_801FE560(obj, &local_unused, 1, lbl_803E61C8, lbl_803E61C8) == 0) {
+            state[0x118] = 2;
+        }
+    }
+    if (def[0x26] != 0) {
+        state[0x119] |= 1;
+        if ((u8)def[0x26] == 2) state[0x119] |= 2;
+        if ((u8)def[0x26] == 3) state[0x118] = 10;
+        if ((u8)def[0x26] == 4) {
+            state[0x119] |= 4;
+            state[0x119] = (u8)(state[0x119] & ~1);
+        }
+        if ((u8)def[0x26] == 5) {
+            state[0x119] |= 8;
+            state[0x119] |= 16;
+        }
+        if ((u8)def[0x26] == 6) {
+            Obj_SetActiveModelIndex(obj, 1);
+            state[0x119] |= 8;
+            state[0x119] |= 16;
+        }
+        if ((u8)def[0x26] == 7) state[0x119] |= 32;
+    }
+    state[0x118] = (u8)(GameBit_Get(*(s16 *)(def + 0x24)) != 0 ? 5 : 12);
+    if (state[0x118] == 5) {
+        ObjGroup_AddObject(obj, 36);
+    }
+    *(f32 *)(obj + 0x24) = lbl_803E61C8;
+    *(f32 *)(obj + 0x28) = lbl_803E61C8;
+    *(f32 *)(obj + 0x2c) = lbl_803E61C8;
+    *(int *)(obj + 0xf8) = 0;
+    *(f32 *)state = lbl_803E61C8;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 int dbegg_func0B(int obj, f32 *v) {
