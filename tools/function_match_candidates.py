@@ -79,6 +79,17 @@ def sequence_score(target: list[str], current: list[str]) -> float:
     return same / max(len(target), len(current)) * 100.0
 
 
+def describe_first_gap(target: list[str], current: list[str]) -> str:
+    matcher = difflib.SequenceMatcher(a=target, b=current, autojunk=False)
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag == "equal":
+            continue
+        target_text = target[i1] if i1 < i2 else "-"
+        current_text = current[j1] if j1 < j2 else "-"
+        return f"{tag} target[{i1}]={target_text} current[{j1}]={current_text}"
+    return "no sequence gap"
+
+
 def resolve_unit(version: str, unit_name: str) -> tuple[Path, Path]:
     config_path = Path("build") / version / "config.json"
     config = json.loads(config_path.read_text())
@@ -102,6 +113,8 @@ def main() -> int:
     parser.add_argument("--min-size", type=int, default=64)
     parser.add_argument("--min-sequence", type=float, default=75.0)
     parser.add_argument("--max-aligned", type=float, default=80.0)
+    parser.add_argument("--symbol", help="Only report one function symbol")
+    parser.add_argument("--details", action="store_true", help="Print first SequenceMatcher gap per row")
     args = parser.parse_args()
 
     target_obj, current_obj = resolve_unit(args.version, args.unit)
@@ -111,6 +124,8 @@ def main() -> int:
 
     rows = []
     for sym, target_instrs in target_syms.items():
+        if args.symbol is not None and sym != args.symbol:
+            continue
         current_instrs = current_syms.get(sym, [])
         size = len(target_instrs) * 4
         if size < args.min_size:
@@ -118,12 +133,15 @@ def main() -> int:
         aligned = aligned_score(target_instrs, current_instrs)
         sequence = sequence_score(target_instrs, current_instrs)
         if sequence >= args.min_sequence and aligned <= args.max_aligned:
-            rows.append((sequence - aligned, sequence, aligned, size, sym))
+            first_gap = describe_first_gap(target_instrs, current_instrs)
+            rows.append((sequence - aligned, sequence, aligned, size, sym, first_gap))
 
     rows.sort(reverse=True)
     print(f"{'sym':<40} {'sz':>6} {'aligned':>8} {'seq':>8} {'gap':>8}")
-    for gap, sequence, aligned, size, sym in rows:
+    for gap, sequence, aligned, size, sym, first_gap in rows:
         print(f"{sym:<40} {size:>6} {aligned:>8.1f} {sequence:>8.1f} {gap:>8.1f}")
+        if args.details:
+            print(f"  first-gap: {first_gap}")
     return 0
 
 
