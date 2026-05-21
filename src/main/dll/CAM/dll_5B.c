@@ -595,8 +595,7 @@ void CameraModeStatic_update(short *param_1)
     *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(*lbl_803DD558 + 0x18);
     *(undefined4 *)(param_1 + 0xe) = *(undefined4 *)(*lbl_803DD558 + 0x1c);
     *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(*lbl_803DD558 + 0x20);
-    *(float *)(param_1 + 0x5a) =
-         (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(iVar4 + 0x1a)) - lbl_803E1880);
+    *(float *)(param_1 + 0x5a) = (float)(uint)*(byte *)(iVar4 + 0x1a);
     dVar6 = (double)(*(float *)(param_1 + 0xc) - *(float *)(iVar3 + 0x18));
     dVar7 = (double)(*(float *)(param_1 + 0xe) - *(float *)(iVar3 + 0x1c));
     dVar5 = (double)(*(float *)(param_1 + 0x10) - *(float *)(iVar3 + 0x20));
