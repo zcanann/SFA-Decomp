@@ -1338,3 +1338,37 @@ void cclevcontrol_init(int *obj) {
 
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E4674;
+extern f32 lbl_803E4678;
+extern f32 lbl_803E467C;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801AA878(u8* p1, int* p2, f32 v) {
+    s16 t;
+    if (lbl_803E4674 == v) {
+        p1[16] = 12;
+        return;
+    }
+    if ((p1[17] & 2) != 0) {
+        p1[16] = 1;
+        return;
+    }
+    if (v < lbl_803E4678) {
+        t = *(s16*)((char*)p2 + 160);
+        if (t == 24 && *(f32*)((char*)p2 + 152) > lbl_803E467C) {
+            p1[16] = 8;
+            return;
+        }
+        if (t == 25) {
+            p1[16] = 5;
+            return;
+        }
+        p1[16] = 11;
+        return;
+    }
+    p1[16] = 2;
+}
+#pragma peephole reset
+#pragma scheduling reset

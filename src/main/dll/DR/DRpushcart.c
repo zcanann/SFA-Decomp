@@ -390,6 +390,60 @@ double FUN_801e7be8(ushort *param_1,int param_2,int param_3)
   return dVar5;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_801E7DC8(int p1, int p2, int count)
+{
+  extern u8 Obj_IsLoadingLocked(void);
+  extern void hitDetectFn_800658a4(int, int *, int, f32, f32, f32);
+  extern int Obj_AllocObjectSetup(int, int);
+  extern void Obj_SetupObject(int, int, int, int, int);
+  extern int *gMapEventInterface;
+  int i;
+  int local;
+  int o;
+
+  if (Obj_IsLoadingLocked() == 0) return;
+
+  (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(
+      (s32)(s8)*(u8 *)(p1 + 0xac), 6, 1);
+
+  hitDetectFn_800658a4(p1, &local, 0, *(f32 *)(p1 + 0xc), *(f32 *)(p1 + 0x10), *(f32 *)(p1 + 0x14));
+
+  for (i = 0; i < count; i++) {
+    o = Obj_AllocObjectSetup(36, 1151);
+    *(f32 *)(o + 8) = *(f32 *)(p1 + 0xc);
+    *(f32 *)(o + 12) = *(f32 *)(p1 + 0x10);
+    *(f32 *)(o + 16) = *(f32 *)(p1 + 0x14);
+    *(u8 *)(o + 24) = (u8)(s8)randomGetRange(-128, 127);
+    *(s16 *)(o + 26) = (s16)(s32)(*(f32 *)(p1 + 0x10) - *(f32 *)&local);
+    *(u8 *)(o + 5) = 1;
+    *(u8 *)(o + 7) = 255;
+    *(u8 *)(o + 4) = 16;
+    *(u8 *)(o + 6) = 6;
+    *(int *)(o + 20) = *(int *)(p2 + 0x9b4);
+    Obj_SetupObject(o, 5, (s32)(s8)*(u8 *)(p1 + 0xac), -1, *(int *)(p1 + 0x30));
+  }
+
+  for (i = 0; i < count; i++) {
+    o = Obj_AllocObjectSetup(36, 1151);
+    *(f32 *)(o + 8) = *(f32 *)(p1 + 0xc);
+    *(f32 *)(o + 12) = *(f32 *)(p1 + 0x10);
+    *(f32 *)(o + 16) = *(f32 *)(p1 + 0x14);
+    *(u8 *)(o + 24) = (u8)(s8)randomGetRange(-128, 127);
+    *(s16 *)(o + 26) = (s16)(s32)(*(f32 *)(p1 + 0x10) - *(f32 *)&local);
+    *(u8 *)(o + 5) = 1;
+    *(u8 *)(o + 7) = 255;
+    *(u8 *)(o + 4) = 16;
+    *(u8 *)(o + 6) = 6;
+    *(u8 *)(o + 25) = 1;
+    *(int *)(o + 20) = *(int *)(p2 + 0x9b4);
+    Obj_SetupObject(o, 5, (s32)(s8)*(u8 *)(p1 + 0xac), -1, *(int *)(p1 + 0x30));
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
