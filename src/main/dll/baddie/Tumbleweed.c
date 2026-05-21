@@ -3589,12 +3589,16 @@ extern void  textureFree(void*);
 #pragma peephole off
 void titlescreen_release(void)
 {
-    void** p;
+    register void** p;
+    register int tableBase;
     int i;
     textureFree(lbl_803DD9D4);
     lbl_803DD9D4 = NULL;
     i = 0;
-    p = lbl_803A9F98;
+    asm {
+        lis tableBase, lbl_803A9F98@ha
+        addi p, tableBase, lbl_803A9F98@l
+    }
     do {
         if (*p != NULL) {
             textureFree(*p);
