@@ -651,6 +651,48 @@ LAB_8018bc44:
 /* Trivial 4b 0-arg blr leaves. */
 void trickyguardspot_render(void) {}
 
+extern int* getTrickyObject(void);
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern void objRenderFn_80041018(int obj);
+extern u8 framesThisStep;
+
+#pragma scheduling off
+#pragma peephole off
+void trickyguardspot_update(int *obj) {
+    u8 *sub;
+    u8 *def;
+    int *tricky;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    def = *(u8**)((char*)obj + 0x4c);
+    tricky = getTrickyObject();
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+    sub[4] = (u8)(sub[4] & ~0x80);
+    if (tricky != NULL) {
+        if ((u8)((int(*)(int*))((int**)*(int**)((char*)tricky + 0x68))[17])(tricky) != 0) {
+            if (Vec_xzDistance((f32*)((char*)obj + 0x18), (f32*)((char*)tricky + 0x18)) < (f32)(s32)*(s16*)(def + 0x1a)) {
+                *(int*)sub = *(int*)sub - framesThisStep;
+                sub[4] = (u8)(sub[4] | 0x80);
+            }
+        }
+    }
+    if (*(int*)sub != 0) {
+        if (tricky != NULL && (u8)((int(*)(int*))((int**)*(int**)((char*)tricky + 0x68))[17])(tricky) == 0) {
+            if ((*(u8*)((char*)obj + 0xaf) & 4) != 0) {
+                ((void(*)(int*, int*, int, int))((int**)*(int**)((char*)tricky + 0x68))[10])(tricky, obj, 1, 3);
+            }
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+            objRenderFn_80041018((int)obj);
+        }
+    } else if (tricky != NULL) {
+        ((void(*)(int*))((int**)*(int**)((char*)tricky + 0x68))[15])(tricky);
+        *(int*)sub = def[0x19] * 0x3c;
+    }
+    GameBit_Set(*(s16*)(def + 0x1e), (sub[4] >> 7) & 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int magiccavetop_getExtraSize(void) { return 0xc; }
 int trickyguardspot_getExtraSize(void) { return 0x8; }
