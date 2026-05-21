@@ -2677,6 +2677,30 @@ void gxTextureFn_80052638(int *param) {
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
 
+extern void GXSetTevKAlphaSel(int tev, int sel);
+void gxColorFn_80052764(int *param) {
+    int sel_color;
+    int sel_alpha;
+    GXSetTevDirect(lbl_803DCD90);
+    gxTextureFn_8004bf88(param, 1, 1, &sel_color, &sel_alpha);
+    GXSetTevKAlphaSel(lbl_803DCD90, sel_alpha);
+    GXSetTevKColorSel(lbl_803DCD90, sel_color);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xe);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 6);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xe, 0xf);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 0, 6, 7);
+    }
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
+
 extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
 extern void *mmAlloc(u32 size, int type, int p3);
 extern void *memset(void *, int, u32);
