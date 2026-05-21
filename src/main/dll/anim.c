@@ -4025,6 +4025,28 @@ void FUN_80204f7c(int param_1)
   return;
 }
 
+#pragma scheduling off
+#pragma peephole off
+void fn_80205024(int obj, char *p)
+{
+  extern int return0_80204B54(void);
+  extern f32 lbl_803E63A8;
+  int b8;
+
+  b8 = *(int *)(obj + 0xb8);
+  *(int *)(obj + 0xbc) = (int)return0_80204B54;
+  *(s16 *)(obj + 0) = (s16)(*(char *)(p + 0x18) << 8);
+  *(s16 *)(b8 + 4) = 0;
+  *(s16 *)(b8 + 6) = *(s16 *)(p + 0x20);
+  *(s16 *)(b8 + 8) = *(s16 *)(p + 0x1e);
+  *(f32 *)(b8 + 0) = (f32)*(s16 *)(p + 0x1a);
+  *(u8 *)(b8 + 12) = (u8)*(s16 *)(p + 0x1c);
+  *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E63A8;
+  *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
