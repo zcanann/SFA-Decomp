@@ -1689,6 +1689,25 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
+extern void fn_8015983C(void);
+
+#pragma scheduling off
+void baddieAfterUpdateBonesCb(int obj, int *p2)
+{
+    int *state = *(int **)((char *)obj + 0xB8);
+    int v = *p2;
+    switch (*(s16 *)((char *)obj + 0x46)) {
+    case 0x7C8:
+        playerTailFn_80026b3c(p2, v, *(int *)((char *)state + 0x36C), (void *)fn_8015983C);
+        break;
+    default:
+        playerTailFn_80026b3c(p2, v, *(int *)((char *)state + 0x36C), NULL);
+        break;
+    }
+}
+#pragma scheduling reset
+
 extern f64 lbl_803E25E0;
 extern f32 lbl_803E257C;
 
