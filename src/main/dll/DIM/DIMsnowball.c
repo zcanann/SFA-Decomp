@@ -1455,6 +1455,32 @@ void fn_801AB800(int obj, u8* state2) {
 
 extern int* gWaterfxInterface;
 extern f32 lbl_803E4670;
+
+extern void dll_2E_func05(int *obj, u8 *sub, int a, int b, int c);
+extern void dll_2E_func08(u8 *sub, int a, int b);
+extern void dll_2E_func09(u8 *sub, void *a, void *b, int c);
+
+typedef struct { s16 v[3]; } _S16x3;
+extern _S16x3 lbl_803E4650;
+extern _S16x3 lbl_803E4658;
+
+#pragma scheduling off
+#pragma peephole off
+void ccqueen_init(int *obj, u8 *init) {
+    u8 *sub;
+    _S16x3 buf1;
+    _S16x3 buf2;
+    sub = *(u8**)((char*)obj + 0xb8);
+    buf2 = lbl_803E4650;
+    buf1 = lbl_803E4658;
+    *(s16*)obj = (s16)(init[0x1a] << 8);
+    dll_2E_func05(obj, sub, 0x71c7, 0x3555, 3);
+    dll_2E_func08(sub, 0x258, 0xf0);
+    dll_2E_func09(sub, &buf1, &buf2, 3);
+    sub[0x611] = (u8)(sub[0x611] | 0xa);
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern f32 lbl_803E4664;
 extern f32 lbl_803E4668;
 extern f32 timeDelta;
