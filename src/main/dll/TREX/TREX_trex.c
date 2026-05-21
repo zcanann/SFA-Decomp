@@ -1901,7 +1901,36 @@ void SB_CloudBall_hitDetect(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_CloudBall_init(void) {}
+extern int objCreateLight(int *obj, int mode);
+extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setColorsA8AC(int light, int p, int r, int g, int p2);
+extern void lightSetFieldBC_8001db14(int light, int v);
+extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern f32 lbl_803E5910;
+extern f32 lbl_803E5914;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_CloudBall_init(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *params = *(int **)((char *)obj + 0x54);
+
+    *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
+    params = *(int **)((char *)obj + 0x54);
+    *(u16 *)((char *)params + 0xb2) = (u16)(*(u16 *)((char *)params + 0xb2) | 1);
+    if (state[6] == 0) {
+        state[6] = objCreateLight(obj, 1);
+        if (state[6] != 0) {
+            modelLightStruct_setField50(state[6], 2);
+            modelLightStruct_setColorsA8AC(state[6], 0, 90, 150, 0);
+            lightSetFieldBC_8001db14(state[6], 1);
+            lightDistAttenFn_8001dc38(state[6], lbl_803E5910, lbl_803E5914);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_CloudBall_update(void) {}
 #pragma peephole off
 #pragma scheduling off
