@@ -43,7 +43,7 @@ void objFn_80198fa4(s16 *param_1, void *param_2)
     param_1[1] = (s16)(*(u8 *)((char *)param_2 + 0x3e) << 8);
     *(f32 *)(param_1 + 4) =
         *(f32 *)(*(int *)((char *)param_1 + 0x50) + 4) *
-        ((float)(s32)*(u8 *)((char *)param_2 + 0x3a)) * lbl_803E40DC;
+        ((float)(u32)*(u8 *)((char *)param_2 + 0x3a)) * lbl_803E40DC;
 
     vec[0] = param_1[0];
     vec[1] = param_1[1];
