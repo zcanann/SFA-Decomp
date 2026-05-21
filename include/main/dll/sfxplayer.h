@@ -40,6 +40,7 @@ typedef struct SfxplayerState {
 extern int gSfxplayerEffectHandles[8];
 
 void sfxplayer_update(int obj);
+void sfxplayer_updateEffectHandlePositions(short *obj);
 void sfxplayer_init(int obj,int config);
 void sfxplayer_release(void);
 void sfxplayer_initialise(void);
