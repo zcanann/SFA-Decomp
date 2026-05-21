@@ -642,6 +642,38 @@ extern int fn_8017C2D4(int* obj, int* anim, u8* buf);
 extern int fn_8017C7A4(int* obj, int* anim, u8* buf);
 extern int fn_8017CBDC(int* obj, int* anim, u8* buf);
 
+/* fn_8017CBDC: seqobj2 advance-state predicate. If obj has a trigger id
+ * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
+ * its GameBit, compare against the def[0x30] mask bit for that slot, and
+ * if the polarity flips (GameBit != mask bit) dispatch vtable[0x13] to
+ * advance. Always latches state[1] bit 0 before returning 0. */
+int fn_8017CBDC(int* obj, int* anim, u8* buf) {
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    u8* def = *(u8**)((char*)obj + 0x4c);
+    *(s16*)((char*)buf + 0x6e) = *(s16*)((char*)buf + 0x70);
+    *(u8*)((char*)buf + 0x56) = 0;
+    if (*(s16*)((char*)obj + 0xb4) == -1) {
+        return 0;
+    }
+    {
+        u32 v = state[0];
+        if (v != 4) {
+            u32 next = v + 1;
+            if ((s32)next < 4) {
+                s16 gbit = *(s16*)((char*)def + 0x20 + next * 2);
+                if (gbit != -1) {
+                    int bv = GameBit_Get(gbit);
+                    if ((u32)!(((u32)def[0x30] >> next) & 1) == (u32)bv) {
+                        ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(*(s16 *)((char *)obj + 0xb4));
+                    }
+                }
+            }
+        }
+    }
+    state[1] = (u8)(state[1] | 1);
+    return 0;
+}
+
 void fn_8017C294(int* obj)
 {
     if (obj != NULL) {
