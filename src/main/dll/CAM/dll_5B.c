@@ -20,6 +20,10 @@ extern char FUN_80006bc8();
 extern char FUN_80006bd0();
 extern uint FUN_80006c00();
 extern uint FUN_80006c10();
+extern u32 getButtonsHeld(int port);
+extern u32 getButtonsJustPressed(int port);
+extern char padGetCX(int port);
+extern char padGetCY(int port);
 extern double FUN_800176f4();
 extern uint getAngle();
 extern undefined4 FUN_80017814();
@@ -376,8 +380,8 @@ void CameraModeDebug_update(short *param_1)
   
   dVar10 = (double)lbl_803E1840;
   iVar6 = *(int *)(param_1 + 0x52);
-  uVar2 = FUN_80006c10(0);
-  uVar3 = FUN_80006c00(0);
+  uVar2 = getButtonsHeld(0);
+  uVar3 = getButtonsJustPressed(0);
   if ((uVar3 & 2) == 0) {
     if ((uVar2 & 8) != 0) {
       dVar10 = (double)(lbl_803E1844 * *lbl_803DD550);
@@ -406,8 +410,8 @@ void CameraModeDebug_update(short *param_1)
     if (lbl_803E1858 < *lbl_803DD550) {
       *lbl_803DD550 = lbl_803E1858;
     }
-    cVar4 = FUN_80006bc0(0);
-    cVar5 = FUN_80006bb8(0);
+    cVar4 = padGetCX(0);
+    cVar5 = padGetCY(0);
     *param_1 = *param_1 + cVar4 * -3;
     param_1[1] = param_1[1] + cVar5 * 3;
     dVar10 = (double)fn_80293E80();
@@ -425,7 +429,7 @@ void CameraModeDebug_update(short *param_1)
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   }
   else {
-    (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
+    (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
   }
   return;
 }
@@ -542,7 +546,7 @@ void CameraModeStatic_update(short *param_1)
   double dVar7;
   
   if (*(byte *)((int)lbl_803DD558 + 0xf5) != 0) {
-    (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
+    (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
   }
   else {
     iVar3 = *(int *)(param_1 + 0x52);
