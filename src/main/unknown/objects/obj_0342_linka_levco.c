@@ -57,7 +57,7 @@
  * - slot 05: 0x80209738 fireObj_hitDetect stub=blr ref=hitDetect (stub)
  * - slot 06: 0x80209714 fireObj_render ref=render
  * - slot 07: 0x80209710 fireObj_free stub=blr ref=free (stub)
- * - slot 08: 0x80209708 fireObj_func08 stub=const 0
+ * - slot 08: 0x80209708 fireObj_getObjectTypeId stub=const 0
  * - slot 09: 0x80209700 fireObj_getExtraSize stub=const 4 ref=getExtraSize (stub)
  */
 

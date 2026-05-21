@@ -33,7 +33,7 @@ extern ObjectDescriptor gFireObjDescriptor;
 
 undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 int fireObj_getExtraSize(void);
-int fireObj_func08(void);
+int fireObj_getObjectTypeId(void);
 void fireObj_free(void);
 void fireObj_render(void);
 void fireObj_hitDetect(void);

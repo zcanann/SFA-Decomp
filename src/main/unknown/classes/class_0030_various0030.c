@@ -1816,7 +1816,7 @@
  *   slot 05: 0x80209738 fireObj_hitDetect
  *   slot 06: 0x80209714 fireObj_render
  *   slot 07: 0x80209710 fireObj_free
- *   slot 08: 0x80209708 fireObj_func08
+ *   slot 08: 0x80209708 fireObj_getObjectTypeId
  *   slot 09: 0x80209700 fireObj_getExtraSize
  * - DLL 0x0239: gTextBlockObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802098B0 textblockObj_initialise

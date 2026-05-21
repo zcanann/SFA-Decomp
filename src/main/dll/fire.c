@@ -167,7 +167,7 @@ int fireObj_getExtraSize(void)
   return 4;
 }
 
-int fireObj_func08(void)
+int fireObj_getObjectTypeId(void)
 {
   return 0;
 }
@@ -236,6 +236,6 @@ ObjectDescriptor gFireObjDescriptor = {
     fireObj_hitDetect,
     fireObj_render,
     fireObj_free,
-    (ObjectDescriptorCallback)fireObj_func08,
+    (ObjectDescriptorCallback)fireObj_getObjectTypeId,
     fireObj_getExtraSize,
 };
