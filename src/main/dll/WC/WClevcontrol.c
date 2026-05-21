@@ -815,10 +815,10 @@ struct WCPartfxArgs {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801EEB50(int obj, u8 *state) {
+void fn_801EEB50(int obj, u8 *state) {
     int hitObj;
-    struct WCPartfxArgs args;
     f32 pos[3];
+    struct WCPartfxArgs args;
     int i;
 
     if (ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, 0, &pos[0], &pos[1], &pos[2]) != 0) {
@@ -847,7 +847,6 @@ int fn_801EEB50(int obj, u8 *state) {
             }
         }
     }
-    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
