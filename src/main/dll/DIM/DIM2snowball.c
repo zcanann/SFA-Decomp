@@ -1283,14 +1283,12 @@ extern f32 lbl_803E4ADC;
 void dll_1DA_hitDetect(int obj) {
     void *hi;
     void *player;
-    f32 scale;
     int hit = ObjHits_GetPriorityHit(obj, &hi, NULL, NULL);
     if (hit == 0xE) {
         player = Obj_GetPlayerObject();
         Vec_distance((float*)(obj + 0x18), (float*)((int)player + 0x18));
-        scale = lbl_803E4ADC;
-        *(f32*)(obj + 0x24) = *(f32*)((int)hi + 0x24) * scale;
-        *(f32*)(obj + 0x2c) = *(f32*)((int)hi + 0x2c) * scale;
+        *(f32*)(obj + 0x24) = *(f32*)((int)hi + 0x24) * lbl_803E4ADC;
+        *(f32*)(obj + 0x2c) = *(f32*)((int)hi + 0x2c) * lbl_803E4ADC;
         Sfx_PlayFromObject(obj, 0x1f9);
     }
 }
