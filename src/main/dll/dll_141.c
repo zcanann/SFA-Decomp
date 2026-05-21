@@ -798,20 +798,20 @@ void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80174588(int obj, int p2)
+void fn_80174588(int obj, int p2)
 {
   extern int *objFindTexture(int, int, int);
   int data = *(int *)(obj + 0x4c);
 
   switch (*(int *)(data + 0x14)) {
-    case 0x4992C:
+    case 0x49B2C:
       *(u8 *)(p2 + 0x144) = 10;
       break;
-    case 0x4995D:
+    case 0x49B5D:
       *(u8 *)(p2 + 0x144) = 11;
       *(u8 *)(obj + 0xad) = 1;
       break;
-    case 0x4995E:
+    case 0x49B5E:
       *(u8 *)(p2 + 0x144) = 12;
       *(u8 *)(obj + 0xad) = 1;
       break;
@@ -825,7 +825,6 @@ int fn_80174588(int obj, int p2)
       *tex = 256;
     }
   }
-  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
