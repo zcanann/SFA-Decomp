@@ -468,3 +468,56 @@ void enemy_release(void) { if (lbl_803DDA50 != 0) { Resource_Release(lbl_803DDA5
 void enemy_initialise(void) { if (lbl_803DDA50 == 0) lbl_803DDA50 = Resource_Acquire(0x5a, 1); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E256C;
+extern f32 lbl_803E25F8;
+extern f32 lbl_803E25FC;
+extern void objRenderFn_8003b8f4(f32 f);
+extern int objCreateLight(int a, int b);
+extern void objParticleFn_80099d84(int *obj, f32 f, int kind, f32 scale, int light);
+extern void Sfx_KeepAliveLoopedObjectSound(int *obj, int id);
+
+#pragma scheduling off
+#pragma peephole off
+void enemy_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (visible != 0) {
+        if (*(int *)((char *)obj + 0xf4) == 0) {
+            ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E256C);
+            {
+                u32 flags = *(u32 *)((char *)state + 0x2e8);
+                if ((flags & 3) != 0) {
+                    if ((flags & 1) != 0) {
+                        *(u32 *)((char *)state + 0x2e8) = flags & ~1;
+                        *(u32 *)((char *)state + 0x2e8) = *(u32 *)((char *)state + 0x2e8) | 2;
+                    }
+                    if (*(void **)((char *)state + 0x368) == NULL) {
+                        *(int *)((char *)state + 0x368) = objCreateLight(0, 1);
+                    }
+                    objParticleFn_80099d84(obj, lbl_803E256C, 3, *(f32 *)((char *)state + 0x30c),
+                                           *(int *)((char *)state + 0x368));
+                }
+            }
+            if ((*(u32 *)((char *)state + 0x2e8) & 4) != 0) {
+                if (*(void **)((char *)state + 0x368) == NULL) {
+                    *(int *)((char *)state + 0x368) = objCreateLight(0, 1);
+                }
+                objParticleFn_80099d84(obj, lbl_803E256C, 4, *(f32 *)((char *)state + 0x30c),
+                                       *(int *)((char *)state + 0x368));
+            }
+    if ((*(u32 *)((char *)state + 0x2e8) & 0x40) != 0) {
+        Sfx_KeepAliveLoopedObjectSound(obj, 158);
+        objParticleFn_80099d84(obj, lbl_803E256C, 5, *(f32 *)((char *)state + 0x30c), 0);
+    }
+    if ((*(u32 *)((char *)state + 0x2e8) & 0x80) != 0) {
+        Sfx_KeepAliveLoopedObjectSound(obj, 158);
+        objParticleFn_80099d84(obj, lbl_803E25F8, 6, *(f32 *)((char *)state + 0x30c), 0);
+    }
+    if ((*(u32 *)((char *)state + 0x2e8) & 0x100) != 0) {
+        objParticleFn_80099d84(obj, lbl_803E25FC, 7, *(f32 *)((char *)state + 0x30c), 0);
+    }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
