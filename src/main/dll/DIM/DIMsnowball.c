@@ -1294,6 +1294,30 @@ extern void getEnvfxAct(int obj, int target, int id, int p);
 extern int *gMapEventInterface;
 extern int lbl_80323548[];
 extern f32 lbl_803E46D4;
+extern void fn_801AB700(void);
+extern void fn_801AB800(void);
+extern void fn_8002B6D8(void *obj, int p2, int p3, int p4, int p5, int p6);
+
+void ccpedstal_init(int *obj, u8 *params) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((u32)params[0x1a] << 8);
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x4000);
+    switch (*(int *)(params + 0x14)) {
+    case 0x45f1a:
+        *(void **)state = (void *)fn_801AB800;
+        *(s16 *)(state + 4) = 0xaa;
+        fn_8002B6D8(obj, 0, 0, 0, 0, 3);
+        break;
+    case 0x45f1b:
+        *(void **)state = (void *)fn_801AB700;
+        *(s16 *)(state + 4) = 0xf1;
+        break;
+    case 0x45f1c:
+        *(void **)state = (void *)fn_801AB700;
+        *(s16 *)(state + 4) = 0xfe;
+        break;
+    }
+}
 
 void cclevcontrol_init(int *obj) {
     int *state;

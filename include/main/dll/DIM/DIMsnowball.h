@@ -47,7 +47,7 @@ int fn_801ABA84(int p1, int p2, unsigned char* state);
 
 int ccpedstal_getExtraSize(void);
 void ccpedstal_update(void);
-void ccpedstal_init(void);
+void ccpedstal_init(int *obj, u8 *params);
 
 int cclevcontrol_getExtraSize(void);
 void cclevcontrol_free(void);
