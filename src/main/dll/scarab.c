@@ -3310,6 +3310,90 @@ int fn_8015E044(int* obj, u8* state)
     return 0;
 }
 
+extern f32 lbl_803E2DD8;
+extern f32 lbl_803E2E7C;
+extern f64 lbl_803E2E80;
+extern f32 lbl_803E2E88;
+extern f32 lbl_803E2EB8;
+extern f32 lbl_803E2EE8;
+extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
+
+int fn_801616AC(int* obj, u8* state)
+{
+    int* sub = *(int**)((char*)obj + 0xb8);
+    if ((s8)state[634] != 0) {
+        ObjAnim_SetCurrentMove(obj, 8, lbl_803E2EB8, 0);
+        state[838] = 0;
+    }
+    *(f32*)((char*)state + 0x2a0) = lbl_803E2EE8;
+    if ((*(int*)((char*)state + 0x314) & 0x200) != 0) {
+        Sfx_PlayFromObject(obj, 563);
+        *(int*)((char*)state + 0x314) &= ~0x200;
+        ((void(*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, *(s16*)((char*)sub + 0x3f0), -1, 1);
+    }
+    return 0;
+}
+
+int fn_8016032C(int* obj, u8* state)
+{
+    if ((s8)state[635] != 0) {
+        f32 fz;
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        fz = lbl_803E2E7C;
+        *(f32*)((char*)obj + 0x28) = fz;
+        *(f32*)((char*)state + 0x280) = fz;
+        *(f32*)((char*)state + 0x294) = fz;
+    }
+    if (*(f32*)((char*)obj + 0x28) < lbl_803E2E80) {
+        f32 fz = lbl_803E2E68;
+        *(f32*)((char*)obj + 0x28) = fz;
+        *(f32*)((char*)state + 0x280) = fz;
+        *(f32*)((char*)state + 0x294) = fz;
+        return 6;
+    }
+    {
+        f32 d = lbl_803E2E88;
+        *(f32*)((char*)obj + 0x28) = *(f32*)((char*)obj + 0x28) / d;
+        *(f32*)((char*)state + 0x280) = *(f32*)((char*)state + 0x280) / d;
+        *(f32*)((char*)state + 0x294) = *(f32*)((char*)state + 0x294) / d;
+    }
+    return 0;
+}
+
+int fn_8015E520(int* obj, u8* state)
+{
+    if ((s8)state[634] != 0) {
+        ObjHits_EnableObject(obj);
+    }
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6c) = 10;
+    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+    *(f32*)((char*)state + 0x2a0) = lbl_803E2DD8;
+    if ((s8)state[634] != 0) {
+        ObjAnim_SetCurrentMove(obj, 5, lbl_803E2DC8, 0);
+        state[838] = 0;
+    }
+    state[845] = 1;
+    return 0;
+}
+
+int fn_8016118C(int* obj, u8* state)
+{
+    if ((s8)state[0x27b] != 0) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 8);
+        *(int*)((char*)state + 0x2d0) = 0;
+        state[0x25f] = 0;
+        state[0x349] = 0;
+        ObjHits_DisableObject((int)obj);
+        *(u8*)((char*)obj + 0xaf) |= 8;
+    }
+    if (*(u8*)((char*)obj + 0x36) != 0) return 0;
+    if (*(void**)((char*)obj + 0x4c) != NULL) return 6;
+    Obj_FreeObject(obj);
+    return 0;
+}
+
 extern void* lbl_803AC5D0[];
 extern int fn_8016032C(int* obj, u8* state);
 extern int fn_801601C4(int* obj, u8* state);
