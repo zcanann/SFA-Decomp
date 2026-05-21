@@ -2,8 +2,8 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
-extern undefined4 Sfx_PlayAtPositionFromObject();
-extern undefined4 Sfx_PlayFromObject();
+extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern uint objGetAnimStateFlags(int obj,u32 mask);
 extern undefined4 FUN_8028683c();
@@ -32,7 +32,7 @@ extern f32 lbl_803E5498;
 undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
   undefined4 advanceResult;
-  s8 *event;
+  register s8 *event;
   s16 *objYaw;
   int pointIndex;
   int i;
@@ -81,7 +81,7 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
   if (pointIndex != 0) {
     ObjPath_GetPointWorldPosition(obj,pointIndex - 1,&posX,&posY,&posZ,0);
     if (!((*(s16 *)(obj + 0xa0) == 0x1b) && (*(f32 *)(obj + 0x98) < lbl_803E5498))) {
-      Sfx_PlayAtPositionFromObject((double)posX,(double)posY,(double)posZ,obj,0x415);
+      Sfx_PlayAtPositionFromObject(obj,posX,posY,posZ,0x415);
     }
   }
   return advanceResult;

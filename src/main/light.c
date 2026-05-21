@@ -1079,25 +1079,29 @@ extern int *gGameUIInterface;
 extern u32 lbl_803DDCC8;
 extern f32 lbl_803E6150;
 
+typedef struct SpellStoneUseState {
+    s16 completeGameBit;
+    s16 requiredGameBit;
+    u8 used;
+} SpellStoneUseState;
+
 void spellStoneUseFn_801fd270(int obj) {
-    int *state = *(int **)(obj + 0xB8);
+    SpellStoneUseState *state = *(SpellStoneUseState **)(obj + 0xB8);
     s16 cond = 1;
     void *player = Obj_GetPlayerObject();
     if (player == NULL) return;
-    if (*(s16 *)((char *)state + 2) != -1) {
-        cond = (s16)GameBit_Get(*(s16 *)((char *)state + 2));
+    if (state->requiredGameBit != -1) {
+        cond = (s16)GameBit_Get(state->requiredGameBit);
     }
-    if ((s16)GameBit_Get(*(s16 *)state) != 0) return;
-    if (*(u8 *)((char *)state + 4) == 0) {
-        if ((s16)cond != 0) {
-            *(u8 *)(obj + 0xAF) &= ~0x08;
-            if ((*(int (*)(u32))(*(int *)(*gGameUIInterface + 0x20)))(lbl_803DDCC8) != 0) {
-                if (Vec_distance((void *)(obj + 0x18), (char *)player + 0x18) < lbl_803E6150) {
-                    GameBit_Set(*(s16 *)state, 1);
-                    *(u8 *)((char *)state + 4) = 1;
-                    *(u8 *)(obj + 0xAF) |= 0x08;
-                }
-            }
+    if ((s16)GameBit_Get(state->completeGameBit) != 0) return;
+    if (state->used != 0) return;
+    if ((s16)cond == 0) return;
+    *(u8 *)(obj + 0xAF) &= ~0x08;
+    if ((*(int (*)(u32))(*(int *)(*gGameUIInterface + 0x20)))(lbl_803DDCC8) != 0) {
+        if (Vec_distance((void *)(obj + 0x18), (char *)player + 0x18) < lbl_803E6150) {
+            GameBit_Set(state->completeGameBit, 1);
+            state->used = 1;
+            *(u8 *)(obj + 0xAF) |= 0x08;
         }
     }
 }
