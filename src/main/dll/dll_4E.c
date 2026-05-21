@@ -99,6 +99,74 @@ extern void Sfx_PlayFromObject(int obj, int sfx);
 extern int* gScreenTransitionInterface;
 extern u8 lbl_803DD704;
 extern u8 lbl_803DD705;
+extern int* gTitleMenuItemInterface;
+extern int* gTitleMenuLinkInterface;
+extern int* lbl_803A87D0[8];
+extern f32 lbl_803E1DD0;
+extern s8 lbl_803DBA28;
+extern void setWidescreen(u8 enabled);
+extern void stopRumble2(void);
+extern void setRumbleEnabled(u8 value);
+extern void doRumble(f32 val);
+extern void creditsStart(void);
+extern void Rcp_SetColorFilterEnabled(int enabled);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8011C318(int p1, int p2)
+{
+    int i;
+    int **ptr;
+    u8 newState;
+
+    if (lbl_803A87D0[p2] != NULL &&
+        (*(int(**)(int*))(*gTitleMenuItemInterface + 0x2c))(lbl_803A87D0[p2]) != 0) {
+        switch (p2) {
+        case 0:
+            setWidescreen((u8)(*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]));
+            break;
+        case 1:
+            newState = (u8)!(*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]);
+            if (newState == 0) {
+                stopRumble2();
+            }
+            setRumbleEnabled(newState);
+            if (newState != 0) {
+                doRumble(lbl_803E1DD0);
+            }
+            break;
+        case 2:
+            if ((*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]) == 0) {
+                creditsStart();
+                if (lbl_803DBA28 != -1) {
+                    (*(void(**)(void))(*gTitleMenuLinkInterface + 0x8))();
+                    lbl_803DBA28 = -1;
+                }
+                i = 0;
+                ptr = lbl_803A87D0;
+                for (; i < 8; i++) {
+                    if (*ptr != NULL) {
+                        (*(void(**)(int*))(*gTitleMenuItemInterface + 0x10))(*ptr);
+                        *ptr = NULL;
+                    }
+                    ptr++;
+                }
+            }
+            break;
+        case 3:
+            Rcp_SetColorFilterEnabled((*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]));
+            break;
+        }
+    }
+    if (p1 == 0) {
+        Sfx_PlayFromObject(0, 0x100);
+        (*(void(**)(int, int))(*gScreenTransitionInterface + 0x8))(0x14, 5);
+        lbl_803DD704 = 0x23;
+        lbl_803DD705 = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
