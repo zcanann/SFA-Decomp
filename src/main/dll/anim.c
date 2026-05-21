@@ -1931,6 +1931,68 @@ FUN_802014c8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int fn_802015EC(int obj, int p)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern int Stack_IsFull(int sp);
+  extern void Stack_Push(int sp, int *args);
+  extern f32 lbl_803E62A8;
+  int sub_40c;
+  int sub_40c_30;
+  int frame[3];
+  int frame2[3];
+
+  sub_40c = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+  sub_40c_30 = *(int *)(sub_40c + 0x30);
+  *(u8 *)(sub_40c + 0x14) |= 0x2;
+  *(f32 *)(p + 0x280) = lbl_803E62A8;
+  *(f32 *)(p + 0x284) = lbl_803E62A8;
+  {
+    int p2d0 = *(int *)(p + 0x2d0);
+    if (p2d0 == 0 || (**(int (**)(int))(*(int *)(*(int *)(p2d0 + 0x68)) + 0x20))(p2d0) == 0) {
+      *(u8 *)(sub_40c + 0x34) = 1;
+    }
+  }
+  if (*(int *)(sub_40c + 0x18) == 0) {
+    s16 r26 = *(s16 *)(sub_40c + 0x1c);
+    if (r26 != -1) {
+      int sp_handle;
+      sp_handle = *(int *)(sub_40c + 0x24);
+      frame[0] = *(int *)(sub_40c + 0x28);
+      frame[1] = *(int *)(sub_40c + 0x2c);
+      frame[2] = *(int *)(sub_40c + 0x30);
+      if (Stack_IsFull(sp_handle) == 0) Stack_Push(sp_handle, frame);
+      sp_handle = *(int *)(sub_40c + 0x24);
+      frame2[0] = 7;
+      frame2[1] = 0;
+      frame2[2] = r26;
+      if (Stack_IsFull(sp_handle) == 0) Stack_Push(sp_handle, frame2);
+      *(u8 *)(sub_40c + 0x34) = 1;
+      *(s16 *)(sub_40c + 0x1c) = -1;
+    }
+  }
+  if ((*(u32 *)(p + 0x314) & 0x200) != 0) {
+    *(int *)(sub_40c + 0x18) = *(int *)(p + 0x2d0);
+    *(s16 *)(sub_40c + 0x1c) = (s16)sub_40c_30;
+    *(int *)(sub_40c + 0x2c) = 0;
+    ObjMsg_SendToObject(*(int *)(sub_40c + 0x18), 17, obj, 18);
+    Sfx_PlayFromObject(obj, 491);
+  }
+  *(s8 *)(p + 0x34d) = 18;
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 16, lbl_803E62A8, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  if (*(s8 *)(p + 0x346) != 0) {
+    *(u8 *)(sub_40c + 0x34) = 1;
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
