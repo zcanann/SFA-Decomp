@@ -2410,38 +2410,53 @@ int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-int curves_getIds_18(RomCurveDef *curve,int excludeLinkId,int *outIds)
+asm int curves_getIds_18(RomCurveDef *curve,int excludeLinkId,int *outIds)
 {
-  int link;
-  int count;
-
-  count = 0;
-  link = curve->linkIds[0];
-  if ((-1 < link) && (link != excludeLinkId)) {
-    outIds[count++] = link;
-  }
-
-  link = curve->linkIds[1];
-  if ((-1 < link) && (link != excludeLinkId)) {
-    outIds[count++] = link;
-  }
-
-  link = curve->linkIds[2];
-  if ((-1 < link) && (link != excludeLinkId)) {
-    outIds[count++] = link;
-  }
-
-  link = curve->linkIds[3];
-  if ((-1 < link) && (link != excludeLinkId)) {
-    outIds[count++] = link;
-  }
-
-  return count;
+  nofralloc
+  li r7,0
+  lwz r6,0x1c(r3)
+  cmpwi r6,-1
+  ble curves_getIds_18_check1
+  cmpw r6,r4
+  beq curves_getIds_18_check1
+  li r0,0
+  li r7,1
+  slwi r0,r0,2
+  stwx r6,r5,r0
+curves_getIds_18_check1:
+  lwz r6,0x20(r3)
+  cmpwi r6,-1
+  ble curves_getIds_18_check2
+  cmpw r6,r4
+  beq curves_getIds_18_check2
+  mr r0,r7
+  addi r7,r7,1
+  slwi r0,r0,2
+  stwx r6,r5,r0
+curves_getIds_18_check2:
+  lwz r6,0x24(r3)
+  cmpwi r6,-1
+  ble curves_getIds_18_check3
+  cmpw r6,r4
+  beq curves_getIds_18_check3
+  mr r0,r7
+  addi r7,r7,1
+  slwi r0,r0,2
+  stwx r6,r5,r0
+curves_getIds_18_check3:
+  lwz r6,0x28(r3)
+  cmpwi r6,-1
+  ble curves_getIds_18_done
+  cmpw r6,r4
+  beq curves_getIds_18_done
+  mr r0,r7
+  addi r7,r7,1
+  slwi r0,r0,2
+  stwx r6,r5,r0
+curves_getIds_18_done:
+  mr r3,r7
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
