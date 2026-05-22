@@ -716,639 +716,298 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
+int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
                                ObjAnimEventList *events)
 {
-  nofralloc
-  stwu r1, -0x60(r1)
-  mflr r0
-  stw r0, 0x64(r1)
-  addi r11, r1, 0x60
-  bl _savegpr_27
-  li r11, 0x0
-  lfs f0, lbl_803DE90C
-  fcmpo cr0, f1, f0
-  bge ObjAnim_AdvanceCurrentMove_L_8002FA70
-  b ObjAnim_AdvanceCurrentMove_L_8002FA84
-ObjAnim_AdvanceCurrentMove_L_8002FA70:
-  lfs f0, gObjAnimProgressOne
-  fcmpo cr0, f1, f0
-  ble ObjAnim_AdvanceCurrentMove_L_8002FA80
-  b ObjAnim_AdvanceCurrentMove_L_8002FA84
-ObjAnim_AdvanceCurrentMove_L_8002FA80:
-  fmr f0, f1
-ObjAnim_AdvanceCurrentMove_L_8002FA84:
-  lwz r5, 0x7c(r3)
-  lbz r0, 0xad(r3)
-  extsb r0, r0
-  slwi r0, r0, 2
-  lwzx r6, r5, r0
-  lwz r5, 0x0(r6)
-  lhz r0, 0xec(r5)
-  cmplwi r0, 0x0
-  bne ObjAnim_AdvanceCurrentMove_L_8002FAB0
-  li r3, 0x0
-  b ObjAnim_AdvanceCurrentMove_L_800302EC
-ObjAnim_AdvanceCurrentMove_L_8002FAB0:
-  lwz r8, 0x2c(r6)
-  cmplwi r8, 0x0
-  bne ObjAnim_AdvanceCurrentMove_L_8002FAC4
-  li r3, 0x0
-  b ObjAnim_AdvanceCurrentMove_L_800302EC
-ObjAnim_AdvanceCurrentMove_L_8002FAC4:
-  lfs f1, 0x14(r8)
-  fmuls f1, f0, f1
-  stfs f1, 0xc(r8)
-  lhz r0, 0x58(r8)
-  cmplwi r0, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8002FC70
-  lbz r0, 0x63(r8)
-  extsb r0, r0
-  rlwinm r0, r0, 0, 28, 28
-  cmpwi r0, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8002FAF8
-  lfs f1, 0xc(r8)
-  stfs f1, 0x10(r8)
-ObjAnim_AdvanceCurrentMove_L_8002FAF8:
-  lfs f3, 0x10(r8)
-  lfs f1, 0x8(r8)
-  fmadds f1, f3, f2, f1
-  stfs f1, 0x8(r8)
-  lfs f4, 0x18(r8)
-  lbz r0, 0x61(r8)
-  extsb r0, r0
-  cmpwi r0, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8002FB7C
-  lfs f1, 0x8(r8)
-  lfs f3, gObjAnimProgressZero
-  fcmpo cr0, f1, f3
-  bge ObjAnim_AdvanceCurrentMove_L_8002FB48
-  b ObjAnim_AdvanceCurrentMove_L_8002FB3C
-ObjAnim_AdvanceCurrentMove_L_8002FB30:
-  lfs f1, 0x8(r8)
-  fadds f1, f1, f4
-  stfs f1, 0x8(r8)
-ObjAnim_AdvanceCurrentMove_L_8002FB3C:
-  lfs f1, 0x8(r8)
-  fcmpo cr0, f1, f3
-  blt ObjAnim_AdvanceCurrentMove_L_8002FB30
-ObjAnim_AdvanceCurrentMove_L_8002FB48:
-  lfs f1, 0x8(r8)
-  fcmpo cr0, f1, f4
-  cror 2,1,2
-  bne ObjAnim_AdvanceCurrentMove_L_8002FBA8
-  b ObjAnim_AdvanceCurrentMove_L_8002FB68
-ObjAnim_AdvanceCurrentMove_L_8002FB5C:
-  lfs f1, 0x8(r8)
-  fsubs f1, f1, f4
-  stfs f1, 0x8(r8)
-ObjAnim_AdvanceCurrentMove_L_8002FB68:
-  lfs f1, 0x8(r8)
-  fcmpo cr0, f1, f4
-  cror 2,1,2
-  beq ObjAnim_AdvanceCurrentMove_L_8002FB5C
-  b ObjAnim_AdvanceCurrentMove_L_8002FBA8
-ObjAnim_AdvanceCurrentMove_L_8002FB7C:
-  lfs f3, 0x8(r8)
-  lfs f1, gObjAnimProgressZero
-  fcmpo cr0, f3, f1
-  bge ObjAnim_AdvanceCurrentMove_L_8002FB90
-  b ObjAnim_AdvanceCurrentMove_L_8002FBA4
-ObjAnim_AdvanceCurrentMove_L_8002FB90:
-  fcmpo cr0, f3, f4
-  ble ObjAnim_AdvanceCurrentMove_L_8002FBA0
-  fmr f1, f4
-  b ObjAnim_AdvanceCurrentMove_L_8002FBA4
-ObjAnim_AdvanceCurrentMove_L_8002FBA0:
-  fmr f1, f3
-ObjAnim_AdvanceCurrentMove_L_8002FBA4:
-  stfs f1, 0x8(r8)
-ObjAnim_AdvanceCurrentMove_L_8002FBA8:
-  lbz r0, 0x63(r8)
-  extsb r0, r0
-  rlwinm r0, r0, 0, 30, 30
-  cmpwi r0, 0x0
-  bne ObjAnim_AdvanceCurrentMove_L_8002FC5C
-  lhz r0, 0x5e(r8)
-  lfd f3, gObjAnimU32ToDoubleBias
-  stw r0, 0xc(r1)
-  lis r5, 0x4330
-  stw r5, 0x8(r1)
-  lfd f1, 0x8(r1)
-  fsubs f3, f1, f3
-  lhz r0, 0x58(r8)
-  lfd f4, gObjAnimS32ToDoubleBias
-  xoris r0, r0, 0x8000
-  stw r0, 0x14(r1)
-  stw r5, 0x10(r1)
-  lfd f1, 0x10(r1)
-  fsubs f1, f1, f4
-  fnmsubs f1, f3, f2, f1
-  fctiwz f1, f1
-  stfd f1, 0x18(r1)
-  lwz r0, 0x1c(r1)
-  cmpwi r0, 0x0
-  bge ObjAnim_AdvanceCurrentMove_L_8002FC14
-  lfs f3, gObjAnimProgressZero
-  b ObjAnim_AdvanceCurrentMove_L_8002FC48
-ObjAnim_AdvanceCurrentMove_L_8002FC14:
-  xoris r0, r0, 0x8000
-  stw r0, 0x24(r1)
-  stw r5, 0x20(r1)
-  lfd f1, 0x20(r1)
-  fsubs f1, f1, f4
-  lfs f3, gObjAnimEventStepScale
-  fcmpo cr0, f1, f3
-  ble ObjAnim_AdvanceCurrentMove_L_8002FC38
-  b ObjAnim_AdvanceCurrentMove_L_8002FC48
-ObjAnim_AdvanceCurrentMove_L_8002FC38:
-  stw r0, 0x2c(r1)
-  stw r5, 0x28(r1)
-  lfd f1, 0x28(r1)
-  fsubs f3, f1, f4
-ObjAnim_AdvanceCurrentMove_L_8002FC48:
-  fctiwz f1, f3
-  stfd f1, 0x30(r1)
-  lwz r0, 0x34(r1)
-  clrlwi r0, r0, 16
-  sth r0, 0x58(r8)
-ObjAnim_AdvanceCurrentMove_L_8002FC5C:
-  lhz r0, 0x58(r8)
-  cmplwi r0, 0x0
-  bne ObjAnim_AdvanceCurrentMove_L_8002FC70
-  li r0, 0x0
-  sth r0, 0x5c(r8)
-ObjAnim_AdvanceCurrentMove_L_8002FC70:
-  lfs f3, 0x98(r3)
-  fmuls f1, f0, f2
-  fadds f0, f3, f1
-  stfs f0, 0x98(r3)
-  lfs f0, 0x98(r3)
-  lfs f4, gObjAnimProgressOne
-  fcmpo cr0, f0, f4
-  cror 2,1,2
-  bne ObjAnim_AdvanceCurrentMove_L_8002FCD4
-  lbz r0, 0x60(r8)
-  extsb r0, r0
-  cmpwi r0, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8002FCC8
-  b ObjAnim_AdvanceCurrentMove_L_8002FCB4
-ObjAnim_AdvanceCurrentMove_L_8002FCA8:
-  lfs f0, 0x98(r3)
-  fsubs f0, f0, f4
-  stfs f0, 0x98(r3)
-ObjAnim_AdvanceCurrentMove_L_8002FCB4:
-  lfs f0, 0x98(r3)
-  fcmpo cr0, f0, f4
-  cror 2,1,2
-  beq ObjAnim_AdvanceCurrentMove_L_8002FCA8
-  b ObjAnim_AdvanceCurrentMove_L_8002FCCC
-ObjAnim_AdvanceCurrentMove_L_8002FCC8:
-  stfs f4, 0x98(r3)
-ObjAnim_AdvanceCurrentMove_L_8002FCCC:
-  li r11, 0x1
-  b ObjAnim_AdvanceCurrentMove_L_8002FD18
-ObjAnim_AdvanceCurrentMove_L_8002FCD4:
-  lfs f2, gObjAnimProgressZero
-  fcmpo cr0, f0, f2
-  bge ObjAnim_AdvanceCurrentMove_L_8002FD18
-  lbz r0, 0x60(r8)
-  extsb r0, r0
-  cmpwi r0, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8002FD10
-  b ObjAnim_AdvanceCurrentMove_L_8002FD00
-ObjAnim_AdvanceCurrentMove_L_8002FCF4:
-  lfs f0, 0x98(r3)
-  fadds f0, f0, f4
-  stfs f0, 0x98(r3)
-ObjAnim_AdvanceCurrentMove_L_8002FD00:
-  lfs f0, 0x98(r3)
-  fcmpo cr0, f0, f2
-  blt ObjAnim_AdvanceCurrentMove_L_8002FCF4
-  b ObjAnim_AdvanceCurrentMove_L_8002FD14
-ObjAnim_AdvanceCurrentMove_L_8002FD10:
-  stfs f2, 0x98(r3)
-ObjAnim_AdvanceCurrentMove_L_8002FD14:
-  li r11, 0x1
-ObjAnim_AdvanceCurrentMove_L_8002FD18:
-  cmplwi r4, 0x0
-  bne ObjAnim_AdvanceCurrentMove_L_8002FD28
-  mr r3, r11
-  b ObjAnim_AdvanceCurrentMove_L_800302EC
-ObjAnim_AdvanceCurrentMove_L_8002FD28:
-  li r5, 0x0
-  stb r5, 0x12(r4)
-  lfs f0, gObjAnimProgressZero
-  stfs f0, 0x8(r4)
-  stfs f0, 0x4(r4)
-  stfs f0, 0x0(r4)
-  lwz r0, 0x60(r3)
-  cmplwi r0, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8002FEC4
-  stb r5, 0x1b(r4)
-  lwz r5, 0x60(r3)
-  lwz r0, 0x0(r5)
-  srawi r7, r0, 1
-  cmpwi r7, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8002FEC4
-  lfs f2, gObjAnimEventFrameScale
-  fmuls f0, f2, f3
-  fctiwz f0, f0
-  stfd f0, 0x30(r1)
-  lwz r10, 0x34(r1)
-  lfs f0, 0x98(r3)
-  fmuls f0, f2, f0
-  fctiwz f0, f0
-  stfd f0, 0x28(r1)
-  lwz r12, 0x2c(r1)
-  li r30, 0x0
-  cmpw r12, r10
-  bge ObjAnim_AdvanceCurrentMove_L_8002FD9C
-  ori r30, r30, 0x1
-ObjAnim_AdvanceCurrentMove_L_8002FD9C:
-  lfs f0, gObjAnimProgressZero
-  fcmpo cr0, f1, f0
-  bge ObjAnim_AdvanceCurrentMove_L_8002FDAC
-  ori r30, r30, 0x2
-ObjAnim_AdvanceCurrentMove_L_8002FDAC:
-  li r9, 0x0
-  li r5, 0x0
-  b ObjAnim_AdvanceCurrentMove_L_8002FEAC
-ObjAnim_AdvanceCurrentMove_L_8002FDB8:
-  lwz r27, 0x60(r3)
-  lwz r27, 0x4(r27)
-  lhax r0, r27, r5
-  clrlwi r31, r0, 23
-  extrwi r0, r0, 7, 16
-  cmpwi r0, 0x7f
-  beq ObjAnim_AdvanceCurrentMove_L_8002FEA4
-  cmpwi r30, 0x0
-  bne ObjAnim_AdvanceCurrentMove_L_8002FE08
-  cmpw r31, r10
-  blt ObjAnim_AdvanceCurrentMove_L_8002FE08
-  cmpw r31, r12
-  bge ObjAnim_AdvanceCurrentMove_L_8002FE08
-  extsb r29, r0
-  lbz r28, 0x1b(r4)
-  addi r27, r28, 0x1
-  stb r27, 0x1b(r4)
-  extsb r27, r28
-  addi r27, r27, 0x13
-  stbx r29, r4, r27
-ObjAnim_AdvanceCurrentMove_L_8002FE08:
-  cmpwi r30, 0x1
-  bne ObjAnim_AdvanceCurrentMove_L_8002FE3C
-  cmpw r31, r10
-  bge ObjAnim_AdvanceCurrentMove_L_8002FE20
-  cmpw r31, r12
-  bge ObjAnim_AdvanceCurrentMove_L_8002FE3C
-ObjAnim_AdvanceCurrentMove_L_8002FE20:
-  extsb r29, r0
-  lbz r28, 0x1b(r4)
-  addi r27, r28, 0x1
-  stb r27, 0x1b(r4)
-  extsb r27, r28
-  addi r27, r27, 0x13
-  stbx r29, r4, r27
-ObjAnim_AdvanceCurrentMove_L_8002FE3C:
-  cmpwi r30, 0x3
-  bne ObjAnim_AdvanceCurrentMove_L_8002FE70
-  cmpw r31, r12
-  ble ObjAnim_AdvanceCurrentMove_L_8002FE70
-  cmpw r31, r10
-  bgt ObjAnim_AdvanceCurrentMove_L_8002FE70
-  extsb r27, r0
-  lbz r28, 0x1b(r4)
-  addi r29, r28, 0x1
-  stb r29, 0x1b(r4)
-  extsb r29, r28
-  addi r29, r29, 0x13
-  stbx r27, r4, r29
-ObjAnim_AdvanceCurrentMove_L_8002FE70:
-  cmpwi r30, 0x2
-  bne ObjAnim_AdvanceCurrentMove_L_8002FEA4
-  cmpw r31, r12
-  bgt ObjAnim_AdvanceCurrentMove_L_8002FE88
-  cmpw r31, r10
-  bgt ObjAnim_AdvanceCurrentMove_L_8002FEA4
-ObjAnim_AdvanceCurrentMove_L_8002FE88:
-  extsb r29, r0
-  lbz r31, 0x1b(r4)
-  addi r0, r31, 0x1
-  stb r0, 0x1b(r4)
-  extsb r31, r31
-  addi r0, r31, 0x13
-  stbx r29, r4, r0
-ObjAnim_AdvanceCurrentMove_L_8002FEA4:
-  addi r5, r5, 0x2
-  addi r9, r9, 0x1
-ObjAnim_AdvanceCurrentMove_L_8002FEAC:
-  cmpw r9, r7
-  bge ObjAnim_AdvanceCurrentMove_L_8002FEC4
-  lbz r0, 0x1b(r4)
-  extsb r0, r0
-  cmpwi r0, 0x8
-  blt ObjAnim_AdvanceCurrentMove_L_8002FDB8
-ObjAnim_AdvanceCurrentMove_L_8002FEC4:
-  lwz r5, 0x0(r6)
-  lhz r0, 0x2(r5)
-  rlwinm r0, r0, 0, 25, 25
-  cmpwi r0, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8002FEF0
-  lhz r0, 0x44(r8)
-  slwi r0, r0, 2
-  add r5, r8, r0
-  lwz r5, 0x1c(r5)
-  addi r5, r5, 0x80
-  b ObjAnim_AdvanceCurrentMove_L_8002FF00
-ObjAnim_AdvanceCurrentMove_L_8002FEF0:
-  lwz r5, 0x64(r5)
-  lhz r0, 0x44(r8)
-  slwi r0, r0, 2
-  lwzx r5, r5, r0
-ObjAnim_AdvanceCurrentMove_L_8002FF00:
-  lha r0, 0x4(r5)
-  cmpwi r0, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_800302E0
-  li r0, 0x1
-  stb r0, 0x12(r4)
-  lha r0, 0x4(r5)
-  add r12, r5, r0
-  lfs f2, 0x0(r12)
-  lfs f0, 0x8(r3)
-  fmuls f5, f2, f0
-  lha r5, 0x4(r12)
-  subi r9, r5, 0x1
-  addi r12, r12, 0x6
-  lfd f4, gObjAnimS32ToDoubleBias
-  xoris r0, r9, 0x8000
-  stw r0, 0x34(r1)
-  lis r10, 0x4330
-  stw r10, 0x30(r1)
-  lfd f0, 0x30(r1)
-  fsubs f6, f0, f4
-  fmuls f2, f6, f3
-  fctiwz f0, f2
-  stfd f0, 0x28(r1)
-  lwz r0, 0x2c(r1)
-  xoris r5, r0, 0x8000
-  stw r5, 0x24(r1)
-  stw r10, 0x20(r1)
-  lfd f0, 0x20(r1)
-  fsubs f0, f0, f4
-  fsubs f0, f2, f0
-  lfs f2, 0x98(r3)
-  fmuls f6, f6, f2
-  fctiwz f2, f6
-  stfd f2, 0x18(r1)
-  lwz r7, 0x1c(r1)
-  xoris r5, r7, 0x8000
-  stw r5, 0x14(r1)
-  stw r10, 0x10(r1)
-  lfd f2, 0x10(r1)
-  fsubs f2, f2, f4
-  fsubs f2, f6, f2
-  li r31, 0x0
-  lhz r5, 0x5a(r8)
-  cmplwi r5, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_80030024
-  lfd f6, gObjAnimU32ToDoubleBias
-  stw r5, 0x34(r1)
-  stw r10, 0x30(r1)
-  lfd f4, 0x30(r1)
-  fsubs f6, f4, f6
-  lfs f4, gObjAnimEventStepScale
-  fdivs f6, f6, f4
-  lfs f4, gObjAnimProgressOne
-  fsubs f7, f4, f6
-  lwz r6, 0x0(r6)
-  lhz r5, 0x2(r6)
-  rlwinm r5, r5, 0, 25, 25
-  cmpwi r5, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_80030004
-  lhz r5, 0x48(r8)
-  slwi r5, r5, 2
-  add r5, r8, r5
-  lwz r5, 0x24(r5)
-  addi r6, r5, 0x80
-  b ObjAnim_AdvanceCurrentMove_L_80030014
-ObjAnim_AdvanceCurrentMove_L_80030004:
-  lwz r6, 0x64(r6)
-  lhz r5, 0x48(r8)
-  slwi r5, r5, 2
-  lwzx r6, r6, r5
-ObjAnim_AdvanceCurrentMove_L_80030014:
-  lha r5, 0x4(r6)
-  add r31, r6, r5
-  addi r31, r31, 0x6
-  b ObjAnim_AdvanceCurrentMove_L_8003002C
-ObjAnim_AdvanceCurrentMove_L_80030024:
-  lfs f6, gObjAnimProgressZero
-  lfs f7, gObjAnimProgressOne
-ObjAnim_AdvanceCurrentMove_L_8003002C:
-  li r10, 0x0
-  mr r5, r4
-  slwi r6, r0, 1
-  slwi r7, r7, 1
-  slwi r8, r9, 1
-  addi r0, r9, 0x1
-  slwi r0, r0, 1
-ObjAnim_AdvanceCurrentMove_L_80030048:
-  lha r9, 0x0(r12)
-  cmpwi r9, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8003029C
-  addi r12, r12, 0x2
-  cmplwi r31, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_80030064
-  addi r31, r31, 0x2
-ObjAnim_AdvanceCurrentMove_L_80030064:
-  add r27, r6, r12
-  lha r9, 0x0(r27)
-  lfd f8, gObjAnimS32ToDoubleBias
-  xoris r9, r9, 0x8000
-  stw r9, 0x34(r1)
-  lis r30, 0x4330
-  stw r30, 0x30(r1)
-  lfd f4, 0x30(r1)
-  fsubs f4, f4, f8
-  fmuls f9, f7, f4
-  cmplwi r31, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_800300B0
-  lhax r9, r6, r31
-  xoris r9, r9, 0x8000
-  stw r9, 0x2c(r1)
-  stw r30, 0x28(r1)
-  lfd f4, 0x28(r1)
-  fsubs f4, f4, f8
-  fmadds f9, f6, f4, f9
-ObjAnim_AdvanceCurrentMove_L_800300B0:
-  lha r9, 0x2(r27)
-  lfd f8, gObjAnimS32ToDoubleBias
-  xoris r9, r9, 0x8000
-  stw r9, 0x24(r1)
-  lis r30, 0x4330
-  stw r30, 0x20(r1)
-  lfd f4, 0x20(r1)
-  fsubs f4, f4, f8
-  fmuls f10, f7, f4
-  cmplwi r31, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_800300FC
-  addi r9, r31, 0x2
-  lhax r9, r6, r9
-  xoris r9, r9, 0x8000
-  stw r9, 0x1c(r1)
-  stw r30, 0x18(r1)
-  lfd f4, 0x18(r1)
-  fsubs f4, f4, f8
-  fmadds f10, f6, f4, f10
-ObjAnim_AdvanceCurrentMove_L_800300FC:
-  fsubs f4, f10, f9
-  fmadds f4, f0, f4, f9
-  add r27, r7, r12
-  lha r9, 0x0(r27)
-  lfd f9, gObjAnimS32ToDoubleBias
-  xoris r9, r9, 0x8000
-  stw r9, 0x14(r1)
-  lis r30, 0x4330
-  stw r30, 0x10(r1)
-  lfd f8, 0x10(r1)
-  fsubs f8, f8, f9
-  fmuls f10, f7, f8
-  cmplwi r31, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_80030150
-  lhax r9, r7, r31
-  xoris r9, r9, 0x8000
-  stw r9, 0xc(r1)
-  stw r30, 0x8(r1)
-  lfd f8, 0x8(r1)
-  fsubs f8, f8, f9
-  fmadds f10, f6, f8, f10
-ObjAnim_AdvanceCurrentMove_L_80030150:
-  lha r9, 0x2(r27)
-  lfd f9, gObjAnimS32ToDoubleBias
-  xoris r9, r9, 0x8000
-  stw r9, 0x3c(r1)
-  lis r30, 0x4330
-  stw r30, 0x38(r1)
-  lfd f8, 0x38(r1)
-  fsubs f8, f8, f9
-  fmuls f11, f7, f8
-  cmplwi r31, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_8003019C
-  addi r9, r31, 0x2
-  lhax r9, r7, r9
-  xoris r9, r9, 0x8000
-  stw r9, 0x44(r1)
-  stw r30, 0x40(r1)
-  lfd f8, 0x40(r1)
-  fsubs f8, f8, f9
-  fmadds f11, f6, f8, f11
-ObjAnim_AdvanceCurrentMove_L_8003019C:
-  fsubs f8, f11, f10
-  fmadds f10, f2, f8, f10
-  lfs f8, gObjAnimProgressZero
-  fcmpo cr0, f1, f8
-  ble ObjAnim_AdvanceCurrentMove_L_8003020C
-  lfs f8, 0x98(r3)
-  fcmpo cr0, f8, f3
-  bge ObjAnim_AdvanceCurrentMove_L_80030204
-  lhax r9, r8, r12
-  lfd f9, gObjAnimS32ToDoubleBias
-  xoris r9, r9, 0x8000
-  stw r9, 0x44(r1)
-  lis r30, 0x4330
-  stw r30, 0x40(r1)
-  lfd f8, 0x40(r1)
-  fsubs f8, f8, f9
-  fmadds f10, f7, f8, f10
-  cmplwi r31, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_80030204
-  lhax r9, r8, r31
-  xoris r9, r9, 0x8000
-  stw r9, 0x44(r1)
-  stw r30, 0x40(r1)
-  lfd f8, 0x40(r1)
-  fsubs f8, f8, f9
-  fmadds f10, f6, f8, f10
-ObjAnim_AdvanceCurrentMove_L_80030204:
-  fsubs f4, f10, f4
-  b ObjAnim_AdvanceCurrentMove_L_80030264
-ObjAnim_AdvanceCurrentMove_L_8003020C:
-  lfs f8, 0x98(r3)
-  fcmpo cr0, f8, f3
-  ble ObjAnim_AdvanceCurrentMove_L_80030260
-  lhax r9, r8, r12
-  lfd f9, gObjAnimS32ToDoubleBias
-  xoris r9, r9, 0x8000
-  stw r9, 0x44(r1)
-  lis r30, 0x4330
-  stw r30, 0x40(r1)
-  lfd f8, 0x40(r1)
-  fsubs f8, f8, f9
-  fnmsubs f10, f7, f8, f10
-  cmplwi r31, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_80030260
-  lhax r9, r8, r31
-  xoris r9, r9, 0x8000
-  stw r9, 0x44(r1)
-  stw r30, 0x40(r1)
-  lfd f8, 0x40(r1)
-  fsubs f8, f8, f9
-  fmadds f10, f6, f8, f10
-ObjAnim_AdvanceCurrentMove_L_80030260:
-  fsubs f4, f10, f4
-ObjAnim_AdvanceCurrentMove_L_80030264:
-  cmpwi r10, 0x3
-  bge ObjAnim_AdvanceCurrentMove_L_80030278
-  fmuls f4, f4, f5
-  stfs f4, 0x0(r4)
-  b ObjAnim_AdvanceCurrentMove_L_80030288
-ObjAnim_AdvanceCurrentMove_L_80030278:
-  fctiwz f4, f4
-  stfd f4, 0x40(r1)
-  lwz r9, 0x44(r1)
-  sth r9, 0x6(r5)
-ObjAnim_AdvanceCurrentMove_L_80030288:
-  add r12, r12, r0
-  cmplwi r31, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_800302C8
-  add r31, r31, r0
-  b ObjAnim_AdvanceCurrentMove_L_800302C8
-ObjAnim_AdvanceCurrentMove_L_8003029C:
-  addi r12, r12, 0x2
-  cmplwi r31, 0x0
-  beq ObjAnim_AdvanceCurrentMove_L_800302AC
-  addi r31, r31, 0x2
-ObjAnim_AdvanceCurrentMove_L_800302AC:
-  cmpwi r10, 0x3
-  bge ObjAnim_AdvanceCurrentMove_L_800302C0
-  lfs f4, gObjAnimProgressZero
-  stfs f4, 0x0(r4)
-  b ObjAnim_AdvanceCurrentMove_L_800302C8
-ObjAnim_AdvanceCurrentMove_L_800302C0:
-  li r9, 0x0
-  sth r9, 0x6(r5)
-ObjAnim_AdvanceCurrentMove_L_800302C8:
-  addi r4, r4, 0x4
-  addi r5, r5, 0x2
-  addi r10, r10, 0x1
-  cmpwi r10, 0x6
-  blt ObjAnim_AdvanceCurrentMove_L_80030048
-  b ObjAnim_AdvanceCurrentMove_L_800302E8
-ObjAnim_AdvanceCurrentMove_L_800302E0:
-  li r0, 0x0
-  stb r0, 0x12(r4)
-ObjAnim_AdvanceCurrentMove_L_800302E8:
-  mr r3, r11
-ObjAnim_AdvanceCurrentMove_L_800302EC:
-  addi r11, r1, 0x60
-  bl _restgpr_27
-  lwz r0, 0x64(r1)
-  mtlr r0
-  addi r1, r1, 0x60
-  blr
-}
+  ObjAnimComponent *objAnim;
+  ObjAnimBank *bank;
+  ObjAnimDef *animDef;
+  ObjAnimState *state;
+  ObjAnimEventTable *eventTable;
+  ObjAnimRootCurve *curve;
+  ObjAnimRootCurve *blendCurve;
+  s16 *axis;
+  s16 *blendAxis;
+  f32 previousProgress;
+  f32 progressDelta;
+  f32 clampedStepScale;
+  f32 value;
+  f32 previousAxisValue;
+  f32 previousAxisNextValue;
+  f32 currentAxisValue;
+  f32 currentAxisNextValue;
+  f32 previousInterp;
+  f32 currentInterp;
+  f32 previousScaledSample;
+  f32 currentScaledSample;
+  f32 previousFraction;
+  f32 currentFraction;
+  f32 rootScale;
+  f32 blendWeight;
+  f32 moveWeight;
+  int wrapped;
+  int countdown;
+  int previousFrame;
+  int currentFrame;
+  int scanMode;
+  int eventCount;
+  int eventIndex;
+  int axisIndex;
+  int sampleCount;
+  int segmentCount;
+  int previousSampleIndex;
+  int currentSampleIndex;
+  s16 eventEntry;
+  int eventFrame;
+  int eventId;
+  int shouldEmit;
 
+  objAnim = (ObjAnimComponent *)objAnimArg;
+  clampedStepScale = lbl_803DE90C;
+  if (moveStepScale >= lbl_803DE90C) {
+    clampedStepScale = gObjAnimProgressOne;
+    if (moveStepScale <= gObjAnimProgressOne) {
+      clampedStepScale = moveStepScale;
+    }
+  }
+
+  bank = ObjAnim_GetActiveBank(objAnim);
+  animDef = bank->animDef;
+  if (animDef->moveCount == 0) {
+    return 0;
+  }
+
+  state = bank->currentState;
+  if (state == NULL) {
+    return 0;
+  }
+
+  wrapped = 0;
+  state->step = clampedStepScale * state->segmentLength;
+  if (state->eventCountdown != 0) {
+    if ((state->flags & OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP) != 0) {
+      state->savedStep = state->step;
+    }
+    state->progress += state->savedStep * deltaTime;
+    if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
+      while (state->progress < gObjAnimProgressZero) {
+        state->progress += state->prevSegmentLength;
+      }
+      while (state->progress >= state->prevSegmentLength) {
+        state->progress -= state->prevSegmentLength;
+      }
+    }
+    else if (state->progress < gObjAnimProgressZero) {
+      state->progress = gObjAnimProgressZero;
+    }
+    else if (state->progress > state->prevSegmentLength) {
+      state->progress = state->prevSegmentLength;
+    }
+
+    if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
+      countdown = (int)((f32)state->eventCountdown - ((f32)state->eventStep * deltaTime));
+      if (countdown < 0) {
+        value = gObjAnimProgressZero;
+      }
+      else if ((f32)countdown > gObjAnimEventStepScale) {
+        value = gObjAnimEventStepScale;
+      }
+      else {
+        value = (f32)countdown;
+      }
+      state->eventCountdown = (u16)(int)value;
+    }
+    if (state->eventCountdown == 0) {
+      state->prevEventState = 0;
+    }
+  }
+
+  previousProgress = objAnim->currentMoveProgress;
+  progressDelta = clampedStepScale * deltaTime;
+  objAnim->currentMoveProgress = previousProgress + progressDelta;
+  if (objAnim->currentMoveProgress >= gObjAnimProgressOne) {
+    if (state->frameType != OBJANIM_FRAME_TYPE_CLAMPED) {
+      while (objAnim->currentMoveProgress >= gObjAnimProgressOne) {
+        objAnim->currentMoveProgress -= gObjAnimProgressOne;
+      }
+    }
+    else {
+      objAnim->currentMoveProgress = gObjAnimProgressOne;
+    }
+    wrapped = 1;
+  }
+  else if (objAnim->currentMoveProgress < gObjAnimProgressZero) {
+    if (state->frameType != OBJANIM_FRAME_TYPE_CLAMPED) {
+      while (objAnim->currentMoveProgress < gObjAnimProgressZero) {
+        objAnim->currentMoveProgress += gObjAnimProgressOne;
+      }
+    }
+    else {
+      objAnim->currentMoveProgress = gObjAnimProgressZero;
+    }
+    wrapped = 1;
+  }
+
+  if (events == NULL) {
+    return wrapped;
+  }
+
+  events->rootCurveValid = 0;
+  events->rootDeltaX = gObjAnimProgressZero;
+  events->rootDeltaY = gObjAnimProgressZero;
+  events->rootDeltaZ = gObjAnimProgressZero;
+  eventTable = objAnim->eventTable;
+  if (eventTable != NULL) {
+    events->triggerCount = 0;
+    eventCount = eventTable->byteCount >> 1;
+    if (eventCount != 0) {
+      previousFrame = (int)(gObjAnimEventFrameScale * previousProgress);
+      currentFrame = (int)(gObjAnimEventFrameScale * objAnim->currentMoveProgress);
+      scanMode = OBJANIM_EVENT_SCAN_FORWARD;
+      if (currentFrame < previousFrame) {
+        scanMode |= OBJANIM_EVENT_SCAN_WRAPPED;
+      }
+      if (progressDelta < gObjAnimProgressZero) {
+        scanMode |= OBJANIM_EVENT_SCAN_REVERSE;
+      }
+
+      for (eventIndex = 0;
+           eventIndex < eventCount && events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY;
+           eventIndex++) {
+        eventEntry = eventTable->entries[eventIndex];
+        eventFrame = eventEntry & OBJANIM_EVENT_FRAME_MASK;
+        eventId = (eventEntry >> OBJANIM_EVENT_ID_SHIFT) & OBJANIM_EVENT_ID_MASK;
+        if (eventId == OBJANIM_EVENT_ID_NONE) {
+          continue;
+        }
+
+        shouldEmit = 0;
+        if (scanMode == OBJANIM_EVENT_SCAN_FORWARD) {
+          shouldEmit = (previousFrame <= eventFrame) && (eventFrame < currentFrame);
+        }
+        else if (scanMode == OBJANIM_EVENT_SCAN_WRAPPED) {
+          shouldEmit = (eventFrame >= previousFrame) || (eventFrame < currentFrame);
+        }
+        else if (scanMode == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) {
+          shouldEmit = (eventFrame > currentFrame) && (eventFrame <= previousFrame);
+        }
+        else if (scanMode == OBJANIM_EVENT_SCAN_REVERSE) {
+          shouldEmit = (eventFrame > currentFrame) || (eventFrame <= previousFrame);
+        }
+
+        if (shouldEmit != 0) {
+          events->triggeredIds[events->triggerCount] = (s8)eventId;
+          events->triggerCount++;
+        }
+      }
+    }
+  }
+
+  curve = ObjAnim_GetMoveRootCurve(animDef,state,state->moveCacheSlot);
+  if (curve == NULL) {
+    events->rootCurveValid = 0;
+    return wrapped;
+  }
+
+  events->rootCurveValid = 1;
+  rootScale = curve->scale * objAnim->rootMotionScale;
+  sampleCount = curve->sampleCount;
+  segmentCount = sampleCount - 1;
+  axis = (s16 *)((u8 *)curve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+  previousScaledSample = (f32)segmentCount * previousProgress;
+  previousSampleIndex = (int)previousScaledSample;
+  previousFraction = previousScaledSample - (f32)previousSampleIndex;
+  currentScaledSample = (f32)segmentCount * objAnim->currentMoveProgress;
+  currentSampleIndex = (int)currentScaledSample;
+  currentFraction = currentScaledSample - (f32)currentSampleIndex;
+
+  blendAxis = NULL;
+  if (state->eventState != 0) {
+    blendWeight = (f32)state->eventState / gObjAnimEventStepScale;
+    moveWeight = gObjAnimProgressOne - blendWeight;
+    blendCurve = ObjAnim_GetBlendMoveRootCurve(animDef,state,state->blendCacheSlot);
+    if (blendCurve != NULL) {
+      blendAxis = (s16 *)((u8 *)blendCurve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+    }
+  }
+  else {
+    blendWeight = gObjAnimProgressZero;
+    moveWeight = gObjAnimProgressOne;
+  }
+
+  for (axisIndex = 0; axisIndex < OBJANIM_ROOT_CURVE_AXIS_COUNT; axisIndex++) {
+    if (*axis == 0) {
+      axis++;
+      if (blendAxis != NULL) {
+        blendAxis++;
+      }
+      if (axisIndex < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT) {
+        (&events->rootDeltaX)[axisIndex] = gObjAnimProgressZero;
+      }
+      else {
+        (&events->rootYaw)[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] = 0;
+      }
+    }
+    else {
+      axis++;
+      if (blendAxis != NULL) {
+        blendAxis++;
+      }
+      previousAxisValue = moveWeight * (f32)axis[previousSampleIndex];
+      if (blendAxis != NULL) {
+        previousAxisValue += blendWeight * (f32)blendAxis[previousSampleIndex];
+      }
+      previousAxisNextValue = moveWeight * (f32)axis[previousSampleIndex + 1];
+      if (blendAxis != NULL) {
+        previousAxisNextValue += blendWeight * (f32)blendAxis[previousSampleIndex + 1];
+      }
+      previousInterp = previousAxisValue +
+                       previousFraction * (previousAxisNextValue - previousAxisValue);
+
+      currentAxisValue = moveWeight * (f32)axis[currentSampleIndex];
+      if (blendAxis != NULL) {
+        currentAxisValue += blendWeight * (f32)blendAxis[currentSampleIndex];
+      }
+      currentAxisNextValue = moveWeight * (f32)axis[currentSampleIndex + 1];
+      if (blendAxis != NULL) {
+        currentAxisNextValue += blendWeight * (f32)blendAxis[currentSampleIndex + 1];
+      }
+      currentInterp = currentAxisValue +
+                      currentFraction * (currentAxisNextValue - currentAxisValue);
+
+      if (progressDelta > gObjAnimProgressZero) {
+        if (objAnim->currentMoveProgress < previousProgress) {
+          currentInterp += moveWeight * (f32)axis[segmentCount];
+          if (blendAxis != NULL) {
+            currentInterp += blendWeight * (f32)blendAxis[segmentCount];
+          }
+        }
+      }
+      else if (objAnim->currentMoveProgress > previousProgress) {
+        currentInterp -= moveWeight * (f32)axis[segmentCount];
+        if (blendAxis != NULL) {
+          currentInterp += blendWeight * (f32)blendAxis[segmentCount];
+        }
+      }
+
+      value = currentInterp - previousInterp;
+      if (axisIndex < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT) {
+        (&events->rootDeltaX)[axisIndex] = value * rootScale;
+      }
+      else {
+        (&events->rootYaw)[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] =
+            (s16)(int)value;
+      }
+
+      axis += sampleCount;
+      if (blendAxis != NULL) {
+        blendAxis += sampleCount;
+      }
+    }
+  }
+
+  return wrapped;
+}
 /*
  * --INFO--
  *
