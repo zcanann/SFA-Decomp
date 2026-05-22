@@ -7,7 +7,7 @@ extern void queueGlowRender(void *p);
 extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
 extern void *Obj_GetPlayerObject(void);
 extern int dimBossTonsil_newState_hitFightMain(void *obj, int p2, void *p3, void *p4);
-extern void fn_8001D9F4(void *p1, void *p2, void *p3, void *p4);
+extern void fn_8001D9F4(void *light, void *p1, void *p2, void *p3, void *p4);
 extern void fn_8001D71C(void *p1, u8 a, u8 b, u8 c, int d);
 extern int randomGetRange(int min, int max);
 
@@ -31,22 +31,32 @@ extern f32 lbl_803E4CC8;
 #pragma scheduling off
 void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
-    int local_8;
-    f32 outX, outY, outZ;
+    struct {
+        f32 x;
+        f32 y;
+        f32 z;
+    } pathPoint;
+    int partfxArgs;
+    f32 *outXPtr;
+    f32 *outYPtr;
+    f32 *outZPtr;
 
     if (visible != 0) {
         if (*(int *)((char *)obj + 0xf4) == 0) {
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
-            ObjPath_GetPointWorldPosition(obj, 1, &outX, &outY, &outZ, 0);
-            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, &local_8, 0x200001, -1, 0);
+            outXPtr = &pathPoint.x;
+            outYPtr = &pathPoint.y;
+            outZPtr = &pathPoint.z;
+            ObjPath_GetPointWorldPosition(obj, 1, outXPtr, outYPtr, outZPtr, 0);
+            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, &partfxArgs, 0x200001, -1, 0);
 
-            ObjPath_GetPointWorldPosition(obj, 0, &outX, &outY, &outZ, 0);
-            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, &local_8, 0x200001, -1, 0);
+            ObjPath_GetPointWorldPosition(obj, 0, outXPtr, outYPtr, outZPtr, 0);
+            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, &partfxArgs, 0x200001, -1, 0);
 
             if (gDIMbosstonsilLight != 0 && *((u8 *)gDIMbosstonsilLight + 0x2f8) != 0 && *((u8 *)gDIMbosstonsilLight + 0x4c) != 0) {
-                lightVecFn_8001dd88(outX, outY, outZ);
-                queueGlowRender((void *)gDIMbosstonsilLight);
+                lightVecFn_8001dd88(pathPoint.x, pathPoint.y, pathPoint.z);
+                queueGlowRender(gDIMbosstonsilLight);
             }
         }
     }
@@ -83,7 +93,6 @@ void DIMbosstonsil_update(void *obj)
 {
     void *r30;
     void *r4_loc;
-    int s32_temp;
     u8 b1, b2, b3, b4;
 
     r30 = *(void **)((char *)obj + 0xb8);
@@ -102,10 +111,9 @@ void DIMbosstonsil_update(void *obj)
 
     if ((*(u16 *)((char *)r30 + 0x400) & 0x2) != 0) {
         lbl_803DDBA4 = lbl_803E4CC8;
-        s32_temp = 1;
-        (*(void (***)(int, void *, void *, int, void *, int, int, int, int *))gBaddieControlInterface)[0xa](
+        (*(void (***)(int, void *, void *, int, void *, int, int, int, int))gBaddieControlInterface)[0xa](
             0, r30, (char *)r30 + 0x35c, *(s16 *)((char *)r30 + 0x3f4),
-            (char *)r30 + 0x405, 0, 0, 0, &s32_temp);
+            (char *)r30 + 0x405, 0, 0, 0, 1);
         *(u16 *)((char *)r30 + 0x400) = (u16)(*(u16 *)((char *)r30 + 0x400) & ~0x2);
     }
 
@@ -116,8 +124,8 @@ void DIMbosstonsil_update(void *obj)
 
     if (gDIMbosstonsilLight == 0) return;
 
-    fn_8001D9F4(&b4, &b3, &b2, &b1);
-    fn_8001D71C((void *)gDIMbosstonsilLight, *((u8 *)gDIMbosstonsilLight + 0x13), *((u8 *)gDIMbosstonsilLight + 0x12), *((u8 *)gDIMbosstonsilLight + 0x11), 0xc0);
+    fn_8001D9F4(gDIMbosstonsilLight, &b1, &b2, &b3, &b4);
+    fn_8001D71C(gDIMbosstonsilLight, b1, b2, b3, 0xc0);
 
     if (*((u8 *)gDIMbosstonsilLight + 0x2f8) == 0) return;
     if (*((u8 *)gDIMbosstonsilLight + 0x4c) == 0) return;

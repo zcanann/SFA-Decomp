@@ -2,19 +2,19 @@
 #include "main/dll/DIM/DIMbosstonsil.h"
 
 extern int GameBit_Get(int eventId);
-extern int objCreateLight(int param_1,int param_2);
-extern void modelLightStruct_setField50(int handle,int param_2);
-extern void modelLightStruct_setColorsA8AC(int handle,int r,int g,int b,int a);
-extern void modelLightStruct_setColors100104(int handle,int r,int g,int b,int a);
-extern void lightDistAttenFn_8001dc38(int handle,f32 param_2,f32 param_3);
-extern void lightSetField4D(int handle,int param_2);
-extern void lightFn_8001db6c(int handle,f32 param_2,int param_3);
-extern void fn_8001D714(int handle,f32 param_2);
-extern void lightSetFieldB0(int handle,int r,int g,int b,int a);
-extern void fn_8001D9E0(int handle,int r,int g,int b,int a);
-extern void lightFn_8001d620(int handle,int param_2,int param_3);
-extern void lightSetField2FB(int handle,int param_2);
-extern void fn_8001D730(int handle,f32 param_2,int param_3,int r,int g,int b,int a);
+extern void *objCreateLight(int param_1,int param_2);
+extern void modelLightStruct_setField50(void *handle,int param_2);
+extern void modelLightStruct_setColorsA8AC(void *handle,int r,int g,int b,int a);
+extern void modelLightStruct_setColors100104(void *handle,int r,int g,int b,int a);
+extern void lightDistAttenFn_8001dc38(void *handle,f32 param_2,f32 param_3);
+extern void lightSetField4D(void *handle,int param_2);
+extern void lightFn_8001db6c(void *handle,f32 param_2,int param_3);
+extern void fn_8001D714(void *handle,f32 param_2);
+extern void lightSetFieldB0(void *handle,int r,int g,int b,int a);
+extern void fn_8001D9E0(void *handle,int r,int g,int b,int a);
+extern void lightFn_8001d620(void *handle,int param_2,int param_3);
+extern void lightSetField2FB(void *handle,int param_2);
+extern void fn_8001D730(void *handle,f32 param_2,int param_3,int r,int g,int b,int a);
 extern void DIMbosstonsil_updateHitReaction(void);
 extern void DIMbosstonsil_enableHitReaction(void);
 extern void DIMbosstonsil_chooseHitReaction(void);
