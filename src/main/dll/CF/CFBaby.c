@@ -2072,6 +2072,7 @@ void dll_109_init(int obj, u8 *p) {
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_80188798(f32 *p, f32 *hi, f32 *lo) {
@@ -2082,6 +2083,7 @@ void fn_80188798(f32 *p, f32 *hi, f32 *lo) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -2175,7 +2177,7 @@ extern f32 lbl_803E3B78;
 extern f32 lbl_803E3B7C;
 extern f64 lbl_803E3B80;
 extern f32 lbl_803E3B88;
-extern f32 lbl_803E3B90;
+extern f64 lbl_803E3B90;
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern void fn_8002B2AC(f32 *out, int obj, f32 *pos);
 extern void Model_GetVertexPosition(int *model, int idx, f32 *out);
@@ -2273,7 +2275,7 @@ void decoration11a_init(int *obj, u8 *def) {
     *(s16 *)((char *)obj + 2) = (s16)((s32)def[25] << 8);
     *(s16 *)obj = (s16)((s32)def[26] << 8);
     if (def[27] != 0) {
-        *(f32 *)((char *)obj + 8) = ((f32)(u32)def[27] - lbl_803E3B90) / lbl_803E3B88;
+        *(f32 *)((char *)obj + 8) = (f32)(u32)def[27] / lbl_803E3B88;
         if (*(f32 *)((char *)obj + 8) == lbl_803E3B7C) {
             *(f32 *)((char *)obj + 8) = lbl_803E3B78;
         }
@@ -2281,12 +2283,24 @@ void decoration11a_init(int *obj, u8 *def) {
     }
     {
         s16 model = *(s16 *)((char *)obj + 0x46);
-        if (model == 1953 || model == 1954 || model == 1955) {
-            f32 *state = *(f32 **)((char *)obj + 0xb8);
-            int *m = *(int **)(*(int **)((char *)obj + 0x7c));
+        if (model == 1953) {
+            goto calc_decor_bounds;
+        }
+        if (model == 1954) {
+            goto calc_decor_bounds;
+        }
+        if (model == 1955) {
+calc_decor_bounds:
+        {
             int i;
+            int *m;
+            f32 *state;
             f32 tmp[3];
             f32 magB;
+            f32 maxMag;
+
+            state = *(f32 **)((char *)obj + 0xb8);
+            m = **(int ***)(*(int *)((char *)obj + 0x7c));
             Model_GetVertexPosition(m, 0, state);
             Model_GetVertexPosition(m, 0, state + 3);
             for (i = 1; i < *(u16 *)((char *)m + 0xe4); i++) {
@@ -2297,10 +2311,12 @@ void decoration11a_init(int *obj, u8 *def) {
             PSVECScale(state + 3, state + 3, *(f32 *)((char *)obj + 8));
             magB = PSVECMag(state + 3);
             if (PSVECMag(state) > magB) {
-                state[6] = PSVECMag(state);
+                maxMag = PSVECMag(state);
             } else {
-                state[6] = PSVECMag(state + 3);
+                maxMag = PSVECMag(state + 3);
             }
+            state[6] = maxMag;
+        }
         }
     }
 }
