@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void treasurechest_update(short *param_1,int param_2);
+void treasurechest_update(int obj);
 void treasurechest_release(void);
 void treasurechest_initialise(void);
 int magiccavebottom_getExtraSize(void);
