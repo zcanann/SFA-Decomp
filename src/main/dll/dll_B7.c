@@ -34,11 +34,7 @@ void camcontrol_activateHandler(u32 actionId, void *actionData)
 
   idx = 0;
   {
-    register CamcontrolHandlerEntry **p;
-    asm {
-      lis r3, gCamcontrolHandlerEntries@ha
-      addi p, r3, gCamcontrolHandlerEntries@l
-    }
+    CamcontrolHandlerEntry **p = gCamcontrolHandlerEntries;
     n = gCamcontrolHandlerCount;
     for (; idx < n; idx++) {
       if ((u16)actionId == (*p)->actionId) {
