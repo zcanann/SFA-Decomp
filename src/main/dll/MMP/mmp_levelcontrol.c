@@ -2,16 +2,19 @@
 #include "main/dll/MMP/mmp_levelcontrol.h"
 
 extern undefined4 FUN_80006824();
+extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
+extern int getTrickyObject(void);
 extern int ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
+extern void objRenderFn_80041018(int obj);
 extern int FUN_8005af70();
 extern int FUN_8005b398();
 extern uint FUN_80060058();
@@ -35,6 +38,7 @@ extern f32 lbl_803E4C7C;
 extern f32 lbl_803E4C80;
 extern f32 lbl_803E4C94;
 extern f32 lbl_803E4C98;
+extern f32 lbl_803E3FFC;
 extern f32 lbl_803E4000;
 
 /*
@@ -609,6 +613,48 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 void wallanimator_free(int obj) {
     ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_SECONDARY);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void wallanimator_update(int obj)
+{
+  int nearby;
+  int *state;
+  int tricky;
+  float nearestDistance[4];
+
+  state = *(int **)(obj + 0xb8);
+  tricky = *(int *)(obj + 0x4c);
+  *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
+  if (-1 < (char)*(byte *)(state + 1)) {
+    if (*state < WALLANIMATOR_DONE_TIMER) {
+      tricky = getTrickyObject();
+      if (tricky == 0) {
+        *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 0x10;
+      }
+      else {
+        nearestDistance[0] = lbl_803E3FFC;
+        nearby = ObjGroup_FindNearestObject(5,obj,nearestDistance);
+        if (nearby == 0) {
+          *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & 0xef;
+          *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & 0xf7;
+          if ((*(byte *)(obj + 0xaf) & 4) != 0) {
+            (**(code **)(**(int **)(tricky + 0x68) + 0x28))(tricky,obj,1,1);
+          }
+          objRenderFn_80041018(obj);
+        }
+      }
+    }
+    else {
+      *(byte *)(state + 1) = *(byte *)(state + 1) & 0x7f | 0x80;
+      GameBit_Set((int)*(short *)(tricky + 0x18),1);
+      Sfx_PlayFromObject(obj,0x109);
+    }
+  }
+  return;
 }
 #pragma peephole reset
 #pragma scheduling reset
