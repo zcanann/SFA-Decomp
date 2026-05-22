@@ -379,11 +379,16 @@ extern void ObjHits_EnableObject(int obj);
 #pragma scheduling off
 #pragma peephole off
 void mmsh_waterspike_init(int obj, s16 *def) {
+    register u32 packedEventIds;
+    register u32 lowEventId;
     ObjHits_EnableObject(obj);
     *(int *)((char *)obj + 0xF4) = 0;
-    *(u32 *)((char *)obj + 0xF8) =
-        ((u32)(u16)*(s16 *)((char *)def + 0x1C) << 16) |
-        (u32)(u16)*(s16 *)((char *)def + 0x1A);
+    packedEventIds = (u32)(u16)*(s16 *)((char *)def + 0x1C) << 16;
+    lowEventId = (u32)(u16)*(s16 *)((char *)def + 0x1A);
+    asm {
+        or packedEventIds, packedEventIds, lowEventId
+    }
+    *(u32 *)((char *)obj + 0xF8) = packedEventIds;
 }
 #pragma peephole reset
 #pragma scheduling reset
