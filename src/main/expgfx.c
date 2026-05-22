@@ -1701,9 +1701,6 @@ void renderParticles(void)
   int currentMatrix;
   float queuePosition[3];
 
-  asm {
-    mr expgfxBase, expgfxBase
-  }
   currentMatrix = Camera_GetViewMatrix();
   poolIndex = 0;
   poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
@@ -1711,10 +1708,7 @@ void renderParticles(void)
   poolBoundsTemplateIds = expgfxBase + EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET;
   poolBounds = (ExpgfxBounds *)(expgfxBase + EXPGFX_POOL_BOUNDS_OFFSET);
   poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  asm {
-    lis poolSlotTypeIdBase, gExpgfxStaticPoolSlotTypeIds@ha
-    addi poolSlotTypeIds, poolSlotTypeIdBase, gExpgfxStaticPoolSlotTypeIds@l
-  }
+  poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
   slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
   do {
     if ((*poolActiveCounts != '\0') &&
@@ -2535,14 +2529,9 @@ void expgfx_release(void)
   register void **slotPoolBases;
   int poolIndex;
 
-  asm {
-    bl expgfxRemoveAll
-  }
+  expgfxRemoveAll();
   poolIndex = 0;
-  asm {
-    lis r3, gExpgfxSlotPoolBases@ha
-    addi slotPoolBases, r3, gExpgfxSlotPoolBases@l
-  }
+  slotPoolBases = (void **)gExpgfxSlotPoolBases;
   do {
     mm_free(*slotPoolBases);
     slotPoolBases = slotPoolBases + 1;
