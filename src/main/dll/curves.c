@@ -2714,7 +2714,6 @@ void curves_remove(RomCurveDef *curve)
   RomCurveDef **slot;
   int count;
   int index;
-  int remaining;
 
   index = 0;
   slot = romCurves;
@@ -2731,16 +2730,12 @@ void curves_remove(RomCurveDef *curve)
 
   nRomCurves = nRomCurves - 1;
   slot = romCurves + index;
-  remaining = nRomCurves - index;
   if (index >= nRomCurves) {
     return;
   }
-  {
-    int i;
-    for (i = remaining; i > 0; i--) {
-      slot[0] = slot[1];
-      slot = slot + 1;
-    }
+  for (; index < nRomCurves; index++) {
+    slot[0] = slot[1];
+    slot = slot + 1;
   }
 }
 #pragma peephole reset
