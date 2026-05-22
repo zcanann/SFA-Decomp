@@ -33,7 +33,6 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
   undefined4 advanceResult;
   register s8 *event;
-  register int eventBase;
   s16 *objYaw;
   int pointIndex;
   int i;
@@ -50,10 +49,7 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     *objYaw += gSClanternObjAnimEvents.rootPitch;
   }
   i = 0;
-  asm {
-    lis eventBase, gSClanternObjAnimEvents@ha
-    addi event, eventBase, gSClanternObjAnimEvents@l
-  }
+  event = (s8 *)&gSClanternObjAnimEvents;
   while (i < (s8)gSClanternObjAnimEvents.triggerCount) {
     switch(event[0x13]) {
     case 1:

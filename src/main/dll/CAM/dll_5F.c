@@ -381,21 +381,13 @@ void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFlo
 #pragma scheduling off
 void CameraModeCombat_free(int obj)
 {
-  register int objReg = obj;
-  register u32 b;
-  register u32 bitval;
   if (*(void **)(obj + 0x11c) != NULL) {
     (*(void (**)(int))((char *)*(int *)gCameraInterface + 0x48))(0);
   }
   mm_free(lbl_803DD568);
   *(int *)&lbl_803DD568 = 0;
   Rcp_DisableBlurFilter();
-  bitval = 0;
-  asm {
-    lbz b, 0x143(objReg)
-    rlwimi b, bitval, 7, 24, 24
-    stb b, 0x143(objReg)
-  }
+  *(u8 *)(obj + 0x143) &= 0x7f;
 }
 #pragma scheduling reset
 #pragma peephole reset

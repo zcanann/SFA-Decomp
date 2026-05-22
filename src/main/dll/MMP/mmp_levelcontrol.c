@@ -623,14 +623,7 @@ void wallanimator_init(s16* obj, s16* p2)
     ObjGroup_AddObject((int)obj, 0x23);
     ObjGroup_AddObject((int)obj, 0x31);
     if (GameBit_Get((int)p2[0x18 / 2]) != 0) {
-        register u32 b;
-        register u32 bitval;
-        bitval = 1;
-        asm {
-            lbz b, 0x4(state)
-            rlwimi b, bitval, 7, 24, 24
-            stb b, 0x4(state)
-        }
+        *(u8*)((char*)state + 4) |= 0x80;
         *state = 0xbb8;
     }
 }

@@ -152,14 +152,7 @@ void sfxplayerObj_init(u8* obj, u8* data) {
         break;
     case 2: {
         int v = randomGetRange(data[0x1e], data[0x1f]);
-        register f32 scale;
-        register f32 vFloat;
-        vFloat = (f32)v;
-        scale = lbl_803E40BC;
-        asm {
-            fmuls scale, scale, vFloat
-        }
-        *(f32*)sub = scale;
+        *(f32*)sub = lbl_803E40BC * (f32)v;
         break;
     }
     }
