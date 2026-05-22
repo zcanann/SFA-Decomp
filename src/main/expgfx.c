@@ -71,6 +71,8 @@ extern undefined4 FUN_80286884();
 extern undefined4 FUN_80293470();
 extern double FUN_80293900();
 extern double FUN_80294c4c();
+extern void _savegpr_20(void);
+extern void _restgpr_20(void);
 extern void _savegpr_21(void);
 extern void _restgpr_21(void);
 extern void _savegpr_23(void);
@@ -1665,101 +1667,134 @@ expgfx_free_done:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-void expgfx_resetAllPools(void)
+asm void expgfx_resetAllPools(void)
 {
-  u16 *entryRefCount;
-  ExpgfxTableEntry *tableEntry;
-  u8 *staticDataBase;
-  u8 *expgfxBase;
-  u32 *slotPoolBases;
-  u32 *poolActiveMasks;
-  char *poolActiveCounts;
-  s16 *poolSlotTypeIds;
-  int *poolSourceIds;
-  u8 *poolFrameFlags;
-  int poolIndex;
-  ExpgfxSlot *slot;
-  int slotIndex;
-  u32 activeBit;
-  int resourceIndex;
-  ExpgfxResourceEntry *resourceEntry;
-
-  staticDataBase = gExpgfxStaticData;
-  expgfxBase = gExpgfxRuntimeData;
-  poolIndex = 0;
-  slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
-  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-  poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-  poolSlotTypeIds = (s16 *)(staticDataBase + EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET);
-  poolSourceIds = (int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  poolFrameFlags = staticDataBase + EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET;
-  do {
-    slot = (ExpgfxSlot *)*slotPoolBases;
-    slotIndex = 0;
-    do {
-      activeBit = 1 << slotIndex;
-      if ((*poolActiveMasks & activeBit) != 0) {
-        if (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
-            textureOrResource != 0) {
-          gExpgfxTextureFreeInProgress = 1;
-          textureFree((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
-                          [Expgfx_GetSlotTableIndex(slot)].textureOrResource);
-          gExpgfxTextureFreeInProgress = 0;
-        }
-        tableEntry =
-            (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET +
-                                 (Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT));
-        entryRefCount = &tableEntry->refCount;
-        if (*entryRefCount != 0) {
-          (*entryRefCount)--;
-          if (*entryRefCount == 0) {
-            tableEntry->textureOrResource = 0;
-            tableEntry->key0 = 0;
-          }
-        }
-        else {
-          debugPrintf((char *)(staticDataBase + EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET));
-        }
-        slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-        *poolActiveMasks = *poolActiveMasks & ~activeBit;
-      }
-      slot = slot + 1;
-      slotIndex = slotIndex + 1;
-    } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
-    *poolActiveCounts = 0;
-    *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
-    *poolSourceIds = 0;
-    *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    DCFlushRange((void *)*slotPoolBases,EXPGFX_POOL_BYTES);
-    slotPoolBases = slotPoolBases + 1;
-    poolActiveMasks = poolActiveMasks + 1;
-    poolActiveCounts = poolActiveCounts + 1;
-    poolSlotTypeIds = poolSlotTypeIds + 1;
-    poolSourceIds = poolSourceIds + 1;
-    poolFrameFlags = poolFrameFlags + 1;
-    poolIndex = poolIndex + 1;
-  } while (poolIndex < EXPGFX_POOL_COUNT);
-  resourceIndex = 0;
-  resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
-  do {
-    gExpgfxTextureFreeInProgress = 1;
-    if (resourceEntry->resource != 0) {
-      textureFree(resourceEntry->resource);
-    }
-    gExpgfxTextureFreeInProgress = 0;
-    resourceEntry->resource = 0;
-    resourceEntry->tableKeyType = 0;
-    resourceEntry->evictionScore = 0;
-    resourceEntry->wordC = 0;
-    resourceEntry++;
-    resourceIndex = resourceIndex + 1;
-  } while (resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT);
-  return;
+  nofralloc
+  stwu r1,-0x40(r1)
+  mflr r0
+  stw r0,0x44(r1)
+  addi r11,r1,0x40
+  bl _savegpr_20
+  lis r3,gExpgfxStaticData@ha
+  addi r31,r3,gExpgfxStaticData@l
+  lis r3,gExpgfxRuntimeData@ha
+  addi r24,r3,gExpgfxRuntimeData@l
+  li r22,0
+  addi r30,r24,0x1200
+  addi r29,r24,0x10c0
+  addi r28,r24,0x1070
+  addi r27,r31,0x30
+  addi r26,r24,0xed0
+  addi r25,r31,0xd0
+expgfx_resetAllPools_poolLoop:
+  lwz r20,0(r30)
+  li r21,0
+expgfx_resetAllPools_slotLoop:
+  li r4,1
+  slw r23,r4,r21
+  lwz r0,0(r29)
+  and r0,r23,r0
+  cmplwi r0,0
+  beq expgfx_resetAllPools_nextSlot
+  lbz r0,0x8a(r20)
+  rlwinm r0,r0,31,25,31
+  slwi r0,r0,4
+  add r3,r24,r0
+  lwz r0,0x988(r3)
+  cmplwi r0,0
+  beq expgfx_resetAllPools_updateRef
+  stw r4,gExpgfxTextureFreeInProgress
+  lbz r0,0x8a(r20)
+  rlwinm r0,r0,31,25,31
+  slwi r0,r0,4
+  add r3,r24,r0
+  lwz r3,0x988(r3)
+  bl textureFree
+  li r0,0
+  stw r0,gExpgfxTextureFreeInProgress
+expgfx_resetAllPools_updateRef:
+  lbz r0,0x8a(r20)
+  rlwinm r0,r0,31,25,31
+  slwi r0,r0,4
+  add r5,r24,r0
+  addi r5,r5,0x980
+  addi r4,r5,0xc
+  lhz r3,0(r4)
+  cmplwi r3,0
+  beq expgfx_resetAllPools_mismatch
+  subi r0,r3,1
+  sth r0,0(r4)
+  lhz r0,0(r4)
+  cmplwi r0,0
+  bne expgfx_resetAllPools_clearSlot
+  li r0,0
+  stw r0,8(r5)
+  stw r0,0(r5)
+  b expgfx_resetAllPools_clearSlot
+expgfx_resetAllPools_mismatch:
+  addi r3,r31,0x358
+  crclr 4*cr1+eq
+  bl debugPrintf
+expgfx_resetAllPools_clearSlot:
+  li r0,-1
+  sth r0,0x26(r20)
+  lwz r3,0(r29)
+  not r0,r23
+  and r0,r3,r0
+  stw r0,0(r29)
+expgfx_resetAllPools_nextSlot:
+  addi r20,r20,0xa0
+  addi r21,r21,1
+  cmpwi r21,0x19
+  blt expgfx_resetAllPools_slotLoop
+  li r3,0
+  stb r3,0(r28)
+  li r0,-1
+  sth r0,0(r27)
+  stw r3,0(r26)
+  stb r3,0(r25)
+  lwz r3,0(r30)
+  li r4,0xfa0
+  bl DCFlushRange
+  addi r30,r30,4
+  addi r29,r29,4
+  addi r28,r28,1
+  addi r27,r27,2
+  addi r26,r26,4
+  addi r25,r25,1
+  addi r22,r22,1
+  cmpwi r22,0x50
+  blt expgfx_resetAllPools_poolLoop
+  li r27,0
+  li r26,1
+  mr r25,r27
+  mr r23,r27
+  mr r22,r27
+  mr r21,r27
+  mr r20,r27
+expgfx_resetAllPools_resourceLoop:
+  stw r26,gExpgfxTextureFreeInProgress
+  lwz r3,0(r24)
+  cmplwi r3,0
+  beq expgfx_resetAllPools_clearResource
+  bl textureFree
+expgfx_resetAllPools_clearResource:
+  stw r25,gExpgfxTextureFreeInProgress
+  stw r23,0(r24)
+  stw r22,8(r24)
+  stw r21,4(r24)
+  stw r20,0xc(r24)
+  addi r24,r24,0x10
+  addi r27,r27,1
+  cmpwi r27,0x20
+  blt expgfx_resetAllPools_resourceLoop
+  addi r11,r1,0x40
+  bl _restgpr_20
+  lwz r0,0x44(r1)
+  mtlr r0
+  addi r1,r1,0x40
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
