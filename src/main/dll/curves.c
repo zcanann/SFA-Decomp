@@ -1172,61 +1172,20 @@ LAB_800e33ac:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3)
+f32 curves_distXZ(f32 x,f32 z,uint curveId)
 {
-  nofralloc
-  stwu r1,-0x10(r1)
-  mflr r0
-  stw r0,0x14(r1)
-  cmpwi r3,0
-  bge curves_distXZ_searchSetup
-  li r8,0
-  b curves_distXZ_haveCurve
-curves_distXZ_searchSetup:
-  lwz r4,nRomCurves
-  subi r7,r4,1
-  li r6,0
-  b curves_distXZ_loadTable
-curves_distXZ_searchLoop:
-  add r0,r7,r6
-  srawi r5,r0,1
-  slwi r0,r5,2
-  lwzx r8,r4,r0
-  lwz r0,0x14(r8)
-  cmplw r3,r0
-  ble curves_distXZ_checkUpper
-  addi r6,r5,1
-  b curves_distXZ_checkLoop
-curves_distXZ_checkUpper:
-  bge curves_distXZ_haveCurve
-  subi r7,r5,1
-  b curves_distXZ_checkLoop
-  b curves_distXZ_haveCurve
-curves_distXZ_loadTable:
-  lis r4,romCurves@ha
-  addi r4,r4,romCurves@l
-curves_distXZ_checkLoop:
-  cmpw r7,r6
-  bge curves_distXZ_searchLoop
-  li r8,0
-curves_distXZ_haveCurve:
-  cmplwi r8,0
-  beq curves_distXZ_zero
-  lfs f0,8(r8)
-  fsubs f1,f0,f1
-  lfs f0,0x10(r8)
-  fsubs f0,f0,f2
-  fmuls f0,f0,f0
-  fmadds f1,f1,f1,f0
-  bl sqrtf
-  b curves_distXZ_done
-curves_distXZ_zero:
-  lfs f1,lbl_803E0630
-curves_distXZ_done:
-  lwz r0,0x14(r1)
-  mtlr r0
-  addi r1,r1,0x10
-  blr
+  RomCurveDef *curve;
+  f32 dx;
+  f32 dz;
+
+  curve = RomCurve_FindByIdInline(curveId);
+  if (curve == NULL) {
+    return lbl_803E0630;
+  }
+
+  dx = curve->x - x;
+  dz = curve->z - z;
+  return sqrtf(dx * dx + dz * dz);
 }
 
 /*
@@ -1242,69 +1201,22 @@ curves_distXZ_done:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm f32 curves_distFn0B(int param_1,uint param_2)
+f32 curves_distFn0B(int obj,uint curveId)
 {
-  nofralloc
-  stwu r1,-0x10(r1)
-  mflr r0
-  stw r0,0x14(r1)
-  cmpwi r4,0
-  bge curves_distFn0B_searchSetup
-  li r9,0
-  b curves_distFn0B_haveCurve
-curves_distFn0B_searchSetup:
-  lwz r5,nRomCurves
-  subi r8,r5,1
-  li r7,0
-  b curves_distFn0B_loadTable
-curves_distFn0B_searchLoop:
-  add r0,r8,r7
-  srawi r6,r0,1
-  slwi r0,r6,2
-  lwzx r9,r5,r0
-  lwz r0,0x14(r9)
-  cmplw r4,r0
-  ble curves_distFn0B_checkUpper
-  addi r7,r6,1
-  b curves_distFn0B_checkLoop
-curves_distFn0B_checkUpper:
-  bge curves_distFn0B_haveCurve
-  subi r8,r6,1
-  b curves_distFn0B_checkLoop
-  b curves_distFn0B_haveCurve
-curves_distFn0B_loadTable:
-  lis r5,romCurves@ha
-  addi r5,r5,romCurves@l
-curves_distFn0B_checkLoop:
-  cmpw r8,r7
-  bge curves_distFn0B_searchLoop
-  li r9,0
-curves_distFn0B_haveCurve:
-  cmplwi r9,0
-  beq curves_distFn0B_zero
-  cmplwi r3,0
-  beq curves_distFn0B_zero
-  lfs f1,8(r9)
-  lfs f0,0xc(r3)
-  fsubs f2,f1,f0
-  lfs f1,0xc(r9)
-  lfs f0,0x10(r3)
-  fsubs f3,f1,f0
-  lfs f1,0x10(r9)
-  lfs f0,0x14(r3)
-  fsubs f1,f1,f0
-  fmuls f0,f3,f3
-  fmadds f0,f2,f2,f0
-  fmadds f1,f1,f1,f0
-  bl sqrtf
-  b curves_distFn0B_done
-curves_distFn0B_zero:
-  lfs f1,lbl_803E0630
-curves_distFn0B_done:
-  lwz r0,0x14(r1)
-  mtlr r0
-  addi r1,r1,0x10
-  blr
+  RomCurveDef *curve;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+
+  curve = RomCurve_FindByIdInline(curveId);
+  if (curve == NULL || obj == 0) {
+    return lbl_803E0630;
+  }
+
+  dx = curve->x - *(f32 *)(obj + 0x0c);
+  dy = curve->y - *(f32 *)(obj + 0x10);
+  dz = curve->z - *(f32 *)(obj + 0x14);
+  return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
 #pragma scheduling off
