@@ -92,12 +92,13 @@ extern undefined4 Obj_FreeObject();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 objRenderFn_8003b8f4();
+extern void objRenderFn_8003b8f4(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,
+                                 undefined4 param_4,undefined4 param_5,f32 scale);
 extern undefined4 timeOfDayFn_80055000();
-extern undefined4 queueGlowRender();
-extern undefined4 dll_2E_func06();
+extern void queueGlowRender(void *effect);
+extern void dll_2E_func06(DIMbossObject *obj,void *animController,int param_3);
 extern undefined4 dll_2E_func03();
-extern undefined4 fn_801BB598();
+extern void fn_801BB598(DIMbossObject *obj,DIMbossRuntime *runtime);
 
 extern f32 timeDelta;
 extern undefined4 DAT_803ad60c;
@@ -522,56 +523,25 @@ void DIMboss_free(DIMbossObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                        undefined4 param_5,char shouldRender)
+void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+                    undefined4 param_5,char shouldRender)
 {
-  nofralloc
-  stwu r1,-0x10(r1)
-  mflr r0
-  stw r0,0x14(r1)
-  stw r31,0xc(r1)
-  stw r30,8(r1)
-  mr r30,r3
-  lwz r31,0xb8(r30)
-  extsb r0,r8
-  cmpwi r0,0
-  beq DIMboss_render_done
-  lwz r0,0xf4(r30)
-  cmpwi r0,0
-  bne DIMboss_render_done
-  lha r0,0x402(r31)
-  cmpwi r0,3
-  bne DIMboss_render_body
-  b DIMboss_render_done
-DIMboss_render_body:
-  lfs f1,lbl_803E4C44
-  bl objRenderFn_8003b8f4
-  mr r3,r30
-  mr r4,r31
-  bl fn_801BB598
-  mr r3,r30
-  lis r4,gDIMbossAnimController@ha
-  addi r4,r4,gDIMbossAnimController@l
-  li r5,0
-  bl dll_2E_func06
-  lwz r3,0x40c(r31)
-  lwz r3,0(r3)
-  cmplwi r3,0
-  beq DIMboss_render_done
-  lbz r0,0x2f8(r3)
-  cmplwi r0,0
-  beq DIMboss_render_done
-  lbz r0,0x4c(r3)
-  cmplwi r0,0
-  beq DIMboss_render_done
-  bl queueGlowRender
-DIMboss_render_done:
-  lwz r31,0xc(r1)
-  lwz r30,8(r1)
-  lwz r0,0x14(r1)
-  mtlr r0
-  addi r1,r1,0x10
-  blr
+  DIMbossRuntime *runtime;
+  DIMbossEffect *effect;
+
+  runtime = obj->runtime;
+  if (shouldRender == 0 || obj->renderPause != 0 || runtime->phase == DIMBOSS_PHASE_NO_RENDER) {
+    return;
+  }
+
+  objRenderFn_8003b8f4(obj,param_2,param_3,param_4,param_5,lbl_803E4C44);
+  fn_801BB598(obj,runtime);
+  dll_2E_func06(obj,gDIMbossAnimController,0);
+
+  effect = runtime->topState->effect;
+  if (effect != NULL && effect->active != 0 && effect->visible != 0) {
+    queueGlowRender(effect);
+  }
 }
 
 /*
