@@ -88,5 +88,8 @@ void FUN_801f5064(int param_1);
 void FUN_801f5068(void);
 void FUN_801f506c(uint param_1);
 void FUN_801f5070(uint param_1);
+void firefly_free(int obj);
+void firefly_update(int obj);
+void firefly_init(int obj, int def);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_801F5184_H_ */

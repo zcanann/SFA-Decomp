@@ -92,6 +92,15 @@ extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294ccc();
+extern void fn_8001CB3C(void *state);
+extern int fn_8001CC9C(int obj, int red, int green, int blue, int alpha);
+extern void Obj_FreeObject(int obj);
+extern void storeZeroToFloatParam(void *timer);
+extern void s16toFloat(void *timer, int duration);
+extern int timerCountDown(void *timer);
+extern void itemPickupDoParticleFx(int obj, f32 scale, int mode, int count);
+extern void fn_801F4C04(void);
+extern void fn_801F4C28(int obj, void *state);
 
 extern undefined4 DAT_801f5cc4;
 extern undefined4 DAT_802c2c68;
@@ -114,6 +123,8 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
+extern int *gExpgfxInterface;
+extern s16 lbl_803DC128;
 extern undefined4 DAT_803de928;
 extern undefined4 DAT_803de92a;
 extern undefined4 DAT_803de92c;
@@ -1332,6 +1343,74 @@ void FUN_801f506c(uint param_1)
  */
 void FUN_801f5070(uint param_1)
 {
+}
+
+void firefly_free(int obj)
+{
+    fn_8001CB3C(*(void **)(obj + 0xB8));
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+}
+
+void firefly_update(int obj)
+{
+    int *state;
+    int *def;
+    int msg[2];
+    u8 isActive;
+
+    state = *(int **)(obj + 0xB8);
+    def = *(int **)(obj + 0x4C);
+    while (ObjMsg_Pop(obj, msg, 0, 0) != 0) {
+        if (msg[0] == 0x7000B) {
+            *(s16 *)(obj + 0x6) = (s16)(*(s16 *)(obj + 0x6) | 0x4000);
+            *(f32 *)((u8 *)state + 0x70) = lbl_803E5EA8;
+            gameBitIncrement(0x13D);
+            gameBitIncrement(0x5D6);
+            Sfx_PlayFromObject(obj, 0x49);
+        }
+    }
+
+    if ((*(u8 *)((u8 *)state + 0x6C) & 0x80) != 0) {
+        if (timerCountDown((u8 *)state + 0x74) != 0) {
+            *(f32 *)((u8 *)state + 0x70) = lbl_803E5EA8;
+        }
+        if (*(f32 *)((u8 *)state + 0x70) > lbl_803E5EC4) {
+            *(f32 *)((u8 *)state + 0x70) -= timeDelta;
+            if ((f32)lbl_803DC128 < *(f32 *)((u8 *)state + 0x70)) {
+                itemPickupDoParticleFx(obj, lbl_803E5EDC, 4, 5);
+            }
+            if (*(f32 *)((u8 *)state + 0x70) <= lbl_803E5EC4) {
+                Obj_FreeObject(obj);
+            }
+        } else {
+            FireFlyFn_801f4f88(obj);
+        }
+    } else {
+        isActive = 0;
+        if ((*(s16 *)((u8 *)def + 0x20) == -1) || (GameBit_Get(*(s16 *)((u8 *)def + 0x20)) != 0)) {
+            isActive = 1;
+        }
+        *(u8 *)((u8 *)state + 0x6C) =
+            (u8)((*(u8 *)((u8 *)state + 0x6C) & 0x7F) | (isActive << 7));
+        if ((*(u8 *)((u8 *)state + 0x6C) & 0x80) != 0) {
+            *state = fn_8001CC9C(obj, 100, 0xFF, 100, 0);
+        }
+    }
+}
+
+void firefly_init(int obj, int def)
+{
+    void *state;
+
+    state = *(void **)(obj + 0xB8);
+    fn_801F4C28(obj, state);
+    *(u8 *)(obj + 0x36) = 0;
+    *(void **)(obj + 0xBC) = fn_801F4C04;
+    ObjMsg_AllocQueue(obj, 1);
+    storeZeroToFloatParam((u8 *)state + 0x74);
+    if (*(s16 *)(def + 0x1A) == 0x7F) {
+        s16toFloat((u8 *)state + 0x74, 0xE10);
+    }
 }
 
 /* Pattern wrappers. */
