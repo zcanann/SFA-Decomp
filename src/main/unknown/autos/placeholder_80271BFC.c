@@ -222,7 +222,7 @@ void synthSetMusicVolumeType(u32 voiceIdx, u8 value)
     if (gSynthInitialized == 0) {
         return;
     }
-    ((SynthFade *)lbl_803BD364)[voiceIdx & 0xff].type = value;
+    lbl_803BD364[(voiceIdx & 0xff) * sizeof(SynthFade) + 0x2d] = value;
 }
 
 /*
