@@ -32,11 +32,11 @@ extern u32 lbl_803E59D4;
 /*
  * --INFO--
  *
- * Function: fn_801E67BC
+ * Function: TREX_Lazerwall_popQueuedState
  * EN v1.0 Address: 0x801E67BC
  * EN v1.0 Size: 468b
  */
-int fn_801E67BC(int arg1, int arg2)
+int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 {
     int state;
     int playerObj;
@@ -101,11 +101,11 @@ int fn_801E67BC(int arg1, int arg2)
 /*
  * --INFO--
  *
- * Function: fn_801E6990
+ * Function: TREX_Lazerwall_waitForStartBit
  * EN v1.0 Address: 0x801E6990
  * EN v1.0 Size: 56b
  */
-int fn_801E6990(void)
+int TREX_Lazerwall_waitForStartBit(void)
 {
     if (GameBit_Get(0x617) != 0) {
         return 6;
@@ -116,11 +116,11 @@ int fn_801E6990(void)
 /*
  * --INFO--
  *
- * Function: fn_801E69C8
+ * Function: TREX_Lazerwall_updateTimedChallenge
  * EN v1.0 Address: 0x801E69C8
  * EN v1.0 Size: 328b
  */
-int fn_801E69C8(int arg1)
+int TREX_Lazerwall_updateTimedChallenge(int arg1)
 {
     int state;
     int local10;
