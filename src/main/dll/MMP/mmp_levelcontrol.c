@@ -6,6 +6,7 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017748();
+extern void mathFn_80021ac8(void *in, void *out);
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern int getTrickyObject(void);
@@ -40,6 +41,7 @@ extern undefined4 FUN_80286884();
 extern void fn_80194C40(undefined4 def, int state, int block);
 
 extern undefined4* DAT_803dd708;
+extern undefined4* gPartfxInterface;
 extern f64 DOUBLE_803e4c88;
 extern f32 lbl_803E4C68;
 extern f32 lbl_803E4C6C;
@@ -54,6 +56,15 @@ extern f32 lbl_803E3FFC;
 extern f32 lbl_803E4000;
 extern f32 lbl_803E4008;
 extern f64 lbl_803E4010;
+extern f32 lbl_803E3FD0;
+extern f32 lbl_803E3FD4;
+extern f32 lbl_803E3FD8;
+extern f32 lbl_803E3FDC;
+extern f32 lbl_803E3FE0;
+extern f32 lbl_803E3FE4;
+extern f32 lbl_803E3FE8;
+extern f32 lbl_803E3FEC;
+extern f64 lbl_803E3FF0;
 
 /*
  * --INFO--
@@ -68,35 +79,66 @@ extern f64 lbl_803E4010;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wallanimator_setScale(int param_1,int param_2)
+#pragma scheduling off
+#pragma peephole off
+f32 wallanimator_setScale(int obj,int target)
 {
-  uint uVar1;
-  int iVar2;
-  byte *pbVar3;
-  
-  pbVar3 = *(byte **)(param_1 + 0xb8);
-  *pbVar3 = *(byte *)(param_2 + 0x1c) & 1;
-  pbVar3[1] = 0;
-  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x18));
-  if ((uVar1 != 0) && (*pbVar3 = *pbVar3 ^ 1, *(char *)(param_2 + 0x1a) == '\x01')) {
-    pbVar3[1] = pbVar3[1] | 1;
+  struct {
+    s16 rot[3];
+    char pad[6];
+    f32 pos[3];
+  } effect;
+  f32 deltaX;
+  f32 deltaY;
+  f32 deltaZ;
+  f32 out[3];
+  int desc;
+  int count;
+  int *state;
+  f32 scale;
+
+  desc = *(int *)(obj + 0x4c);
+  count = 6;
+  do {
+    out[0] = lbl_803E3FD0 * (f32)((double)(int)randomGetRange(-0x64,0x64) - lbl_803E3FF0);
+    out[1] = lbl_803E3FD4;
+    out[2] = lbl_803E3FD4;
+    effect.rot[2] = (s16)randomGetRange(-0x7fff,0x8000);
+    effect.rot[1] = 0;
+    effect.rot[0] = 0;
+    mathFn_80021ac8(effect.rot,out);
+    out[2] -= lbl_803E3FD8;
+    mathFn_80021ac8((void *)obj,out);
+    effect.rot[2] = *(s16 *)(desc + 0x1c);
+    effect.rot[0] = *(s16 *)obj;
+    effect.pos[0] = *(f32 *)(obj + 0x18) + out[0];
+    effect.pos[1] = lbl_803E3FDC + (*(f32 *)(obj + 0x1c) + out[1]);
+    effect.pos[2] = *(f32 *)(obj + 0x20) + out[2];
+    (**(code **)(*gPartfxInterface + 8))(obj,0xca,effect.rot,0x200001,-1,0);
+    (**(code **)(*gPartfxInterface + 8))(obj,0xcb,effect.rot,0x200001,-1,0);
+    count--;
+  } while (count != 0);
+
+  state = *(int **)(obj + 0xb8);
+  deltaY = *(f32 *)(target + 0x10) - *(f32 *)(obj + 0x10);
+  if ((deltaY < lbl_803E3FE0) || (lbl_803E3FE4 < deltaY)) {
+    scale = lbl_803E3FD4;
   }
-  iVar2 = FUN_8005b398((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10));
-  iVar2 = FUN_8005af70(iVar2);
-  if (((iVar2 != 0) && ((*(byte *)(param_2 + 0x1c) & 4) != 0)) &&
-     (*(char *)(param_2 + 0x1b) != '\0')) {
-    FUN_80193a50(iVar2,param_1,(char *)pbVar3,param_2);
+  else {
+    deltaX = *(f32 *)(target + 0xc) - *(f32 *)(obj + 0xc);
+    deltaZ = *(f32 *)(target + 0x14) - *(f32 *)(obj + 0x14);
+    if (deltaX * deltaX + deltaZ * deltaZ <= lbl_803E3FE8) {
+      *state += 0x3c;
+      scale = (f32)((double)*state - lbl_803E3FF0) / lbl_803E3FEC;
+    }
+    else {
+      scale = lbl_803E3FD4;
+    }
   }
-  pbVar3[1] = pbVar3[1] | 2;
-  if ((*(byte *)(param_2 + 0x1c) & 4) != 0) {
-    pbVar3[1] = pbVar3[1] | 4;
-  }
-  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x18));
-  pbVar3[2] = (byte)uVar1;
-  pbVar3[3] = (byte)uVar1;
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
-  return;
+  return scale;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
