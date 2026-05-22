@@ -434,7 +434,6 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
   int handlerIndex;
   CamcontrolHandlerEntry *defaultHandler;
   register CamcontrolHandlerEntry **handlerEntry;
-  register CamcontrolHandlerEntry **handlerEntriesBase;
   int blendFrames;
   CamcontrolTriggeredAction *camAction;
   int actionOffset;
@@ -500,10 +499,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
-      asm {
-        lis handlerEntriesBase, gCamcontrolHandlerEntries@ha
-        addi handlerEntry, handlerEntriesBase, gCamcontrolHandlerEntries@l
-      }
+      handlerEntry = gCamcontrolHandlerEntries;
       for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {
@@ -548,10 +544,7 @@ LAB_80102f3c:
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
        ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE2)) {
       handlerIndex = 0;
-      asm {
-        lis handlerEntriesBase, gCamcontrolHandlerEntries@ha
-        addi handlerEntry, handlerEntriesBase, gCamcontrolHandlerEntries@l
-      }
+      handlerEntry = gCamcontrolHandlerEntries;
       for (handlerCount = (int)gCamcontrolHandlerCount; 0 < handlerCount;
            handlerCount = handlerCount - 1) {
         if ((*handlerEntry)->actionId == CAMCONTROL_ACTION_DEFAULT) {

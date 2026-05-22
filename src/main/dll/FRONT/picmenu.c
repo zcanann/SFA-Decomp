@@ -186,10 +186,7 @@ BOOL AttractMovieAudio_Init(int audioMode)
     AIDCallback oldCb;
     register AIDCallback dmaCallback;
 
-    asm {
-        lis r3, lbl_803A57C0@ha
-        addi base, r3, lbl_803A57C0@l
-    }
+    base = lbl_803A57C0;
     memset(base + 0x5A0, 0, 0x1A8);
     OSInitMessageQueue((OSMessageQueue*)(base + 0x50C), (void*)(base + 0x500), 3);
 
@@ -202,10 +199,7 @@ BOOL AttractMovieAudio_Init(int audioMode)
     lbl_803DD678 = 0;
     lbl_803DD674 = 0;
     lbl_803DD670 = 0;
-    asm {
-        lis r3, AttractMovieAudio_DmaCallback@ha
-        addi dmaCallback, r3, AttractMovieAudio_DmaCallback@l
-    }
+    dmaCallback = AttractMovieAudio_DmaCallback;
     oldCb = AIRegisterDMACallback(dmaCallback);
     lbl_803DD668 = oldCb;
 
