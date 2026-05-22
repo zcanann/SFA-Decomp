@@ -869,87 +869,39 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
+int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
-  nofralloc
-  stwu r1,-0x10(r1)
-  mflr r0
-  stw r0,0x14(r1)
-  li r9,0
-  lis r7,gExpgfxTableEntries@ha
-  addi r8,r7,gExpgfxTableEntries@l
-  mr r7,r8
-  li r0,0x50
-  mtctr r0
-addToTable_findExisting:
-  lhz r0,0xc(r7)
-  cmplwi r0,0
-  beq addToTable_nextExisting
-  lwz r0,8(r7)
-  cmplw r0,r3
-  bne addToTable_nextExisting
-  lwz r0,0(r7)
-  cmplw r0,r4
-  bne addToTable_nextExisting
-  lwz r0,4(r7)
-  cmplw r0,r5
-  bne addToTable_nextExisting
-  lis r3,gExpgfxTableEntries@ha
-  addi r3,r3,gExpgfxTableEntries@l
-  slwi r0,r9,4
-  add r4,r3,r0
-  addi r4,r4,0xc
-  lhz r3,0(r4)
-  cmplwi r3,0xffff
-  blt addToTable_incrementRef
-  lis r3,sExpgfxAddToTableUsageOverflow@ha
-  addi r3,r3,sExpgfxAddToTableUsageOverflow@l
-  crclr 4*cr1+eq
-  bl debugPrintf
-  li r3,-1
-  b addToTable_done
-addToTable_incrementRef:
-  addi r0,r3,1
-  sth r0,0(r4)
-  extsh r3,r9
-  b addToTable_done
-addToTable_nextExisting:
-  addi r7,r7,0x10
-  addi r9,r9,1
-  bdnz addToTable_findExisting
-  li r10,0
-  li r0,0x50
-  mtctr r0
-addToTable_findFree:
-  lhz r0,0xc(r8)
-  cmplwi r0,0
-  bne addToTable_nextFree
-  li r0,1
-  lis r7,gExpgfxTableEntries@ha
-  addi r8,r7,gExpgfxTableEntries@l
-  slwi r9,r10,4
-  add r7,r8,r9
-  sth r0,0xc(r7)
-  stw r3,8(r7)
-  stwx r4,r8,r9
-  stw r5,4(r7)
-  sth r6,0xe(r7)
-  extsh r3,r10
-  b addToTable_done
-addToTable_nextFree:
-  addi r8,r8,0x10
-  addi r10,r10,1
-  bdnz addToTable_findFree
-  lis r3,sExpgfxExpTabIsFull@ha
-  addi r3,r3,sExpgfxExpTabIsFull@l
-  crclr 4*cr1+eq
-  bl debugPrintf
-  li r3,-1
-addToTable_done:
-  lwz r0,0x14(r1)
-  mtlr r0
-  addi r1,r1,0x10
-  blr
+  ExpgfxTableEntry *entry;
+  int tableIndex;
+
+  entry = gExpgfxTableEntries;
+  for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++, entry++) {
+    if ((entry->refCount != 0) && (entry->textureOrResource == textureOrResource) &&
+        (entry->key0 == key0) && (entry->key1 == key1)) {
+      if (entry->refCount < EXPGFX_REFCOUNT_OVERFLOW) {
+        entry->refCount++;
+        return (s16)tableIndex;
+      }
+
+      debugPrintf(sExpgfxAddToTableUsageOverflow);
+      return EXPGFX_INVALID_TABLE_INDEX;
+    }
+  }
+
+  entry = gExpgfxTableEntries;
+  for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++, entry++) {
+    if (entry->refCount == 0) {
+      entry->refCount = 1;
+      entry->textureOrResource = textureOrResource;
+      entry->key0 = key0;
+      entry->key1 = key1;
+      entry->slotType = slotType;
+      return (s16)tableIndex;
+    }
+  }
+
+  debugPrintf(sExpgfxExpTabIsFull);
+  return EXPGFX_INVALID_TABLE_INDEX;
 }
 
 /*
