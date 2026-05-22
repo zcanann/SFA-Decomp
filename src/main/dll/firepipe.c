@@ -443,7 +443,7 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
     else {
         ((FirePipeBitFlags *)&extra->flags)->bit6 = 1;
     }
-    obj->callback = firepipe_stateCallback;
+    obj->sequenceCallback = firepipe_stateCallback;
     {
         iVar7 = (int)obj->objectDef;
         iVar8 = (int)obj->extra;
