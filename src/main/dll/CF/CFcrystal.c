@@ -19,6 +19,10 @@ extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjGroup_RemoveObject();
+extern void ObjGroup_AddObject(int obj, int group);
+extern void Obj_FreeObject(int obj);
+extern void gameBitDecrement(int eventId);
+extern void GameBit_Set(int eventId, int value);
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80061a80();
 extern double FUN_80293900();
@@ -44,6 +48,12 @@ extern f32 FLOAT_803e4758;
 extern f32 FLOAT_803e475c;
 extern f32 FLOAT_803e4760;
 extern f32 FLOAT_803e476c;
+extern f32 lbl_803E3AA0;
+extern f32 lbl_803E3AB8;
+extern f32 lbl_803E3AD8;
+extern f32 lbl_803E3ADC;
+extern f32 lbl_803E3AE0;
+extern f32 lbl_803E3AEC;
 
 /*
  * --INFO--
@@ -443,7 +453,6 @@ int FireFlyLantern_getExtraSize(void) { return 0x24; }
 int FireFlyLantern_getObjectTypeId(void) { return 0x8; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E3AA0;
 extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3AA0); }
@@ -497,6 +506,137 @@ int fn_801871C8(int *obj) {
     *(s16 *)(q + 0x1c) = 40;
     *(u8 *)(q + 0x18) = 30;
     return loadObjectAtObject(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void LanternFireFly_init(int obj, int def)
+{
+    u8 *state;
+    f32 zero;
+    s16 randValue;
+    int flagValue;
+
+    state = *(u8 **)(obj + 0xB8);
+    ObjGroup_AddObject(obj, 0x30);
+
+    zero = lbl_803E3AB8;
+    *(f32 *)(state + 0x04) = zero;
+    *(f32 *)(state + 0x14) = zero;
+    *(f32 *)(state + 0x24) = zero;
+    *(f32 *)(state + 0x08) = zero;
+    *(f32 *)(state + 0x18) = zero;
+    *(f32 *)(state + 0x28) = zero;
+    *(f32 *)(state + 0x0C) = zero;
+    *(f32 *)(state + 0x1C) = zero;
+    *(f32 *)(state + 0x2C) = zero;
+    *(f32 *)(state + 0x10) = zero;
+    *(f32 *)(state + 0x20) = zero;
+    *(f32 *)(state + 0x30) = zero;
+
+    *(int *)(state + 0x00) = 0;
+    *(u8 *)(state + 0x6E) = 0;
+    *(f32 *)(state + 0x44) = lbl_803E3AD8;
+    *(f32 *)(state + 0x48) = lbl_803E3ADC;
+    *(f32 *)(state + 0x40) = lbl_803E3AA0;
+    *(u8 *)(state + 0x6C) = 0;
+    *(u8 *)(state + 0x6B) = 0;
+    randValue = (s16)randomGetRange(0x1F4, 0x5DC);
+    *(s16 *)(state + 0x66) = randValue;
+    randValue = (s16)randomGetRange(0, 0xFDE8);
+    *(s16 *)(state + 0x64) = randValue;
+    *(s16 *)(state + 0x68) = 4;
+    *(u8 *)(state + 0x6A) = 4;
+    *(f32 *)(state + 0x4C) = lbl_803E3AB8;
+    *(f32 *)(state + 0x50) = lbl_803E3AE0;
+    *(f32 *)(state + 0x54) = *(f32 *)(def + 0x08);
+    *(f32 *)(state + 0x58) = *(f32 *)(def + 0x0C);
+    *(f32 *)(state + 0x5C) = *(f32 *)(def + 0x10);
+    flagValue = 0;
+    *(u8 *)(state + 0x6F) = flagValue;
+    *(u8 *)(state + 0x70) = (u8)((*(u8 *)(state + 0x70) & 0x3F) | (flagValue << 6));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void FireFlyLantern_update(int obj)
+{
+    u8 *state;
+    u8 *def;
+    void *child;
+    int i;
+    int shouldFree;
+    u8 *slot;
+
+    state = *(u8 **)(obj + 0xB8);
+    def = *(u8 **)(obj + 0x4C);
+    shouldFree = 0;
+
+    if (*(s8 *)(def + 0x19) == 1) {
+        if (*(u8 *)(state + 0x1C) != 0) {
+            child = *(void **)state;
+            if (child != 0) {
+                (*(void (*)(void *))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x24)))(child);
+            }
+            gameBitDecrement(*(s16 *)(state + 0x20));
+        }
+        shouldFree = 1;
+    } else if ((*(u8 *)(state + 0x1E) >> 7) != 0) {
+        i = 0;
+        slot = state;
+        while (i < *(u8 *)(state + 0x1C)) {
+            Obj_FreeObject(*(int *)slot);
+            slot += 4;
+            i++;
+        }
+        shouldFree = 1;
+    }
+
+    if (shouldFree != 0) {
+        Obj_FreeObject(obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8018728C(int obj, int unused, int events)
+{
+    u8 *state;
+    u8 *slot;
+    void *child;
+    int i;
+    f32 yOffset;
+
+    state = *(u8 **)(obj + 0xB8);
+    for (i = 0; i < *(u8 *)(events + 0x8B); i++) {
+        if ((*(u8 *)(events + i + 0x81) == 1) && (*(u8 *)(state + 0x1C) != 0)) {
+            child = *(void **)(state + (*(u8 *)(state + 0x1C) * 4) - 4);
+            if (child != 0) {
+                (*(void (*)(void *))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x24)))(child);
+            }
+            *(u8 *)(state + 0x1C) = (u8)(*(u8 *)(state + 0x1C) - 1);
+            *(u8 *)(state + 0x1D) = (u8)(*(u8 *)(state + 0x1D) - 1);
+            GameBit_Set(*(s16 *)(state + 0x20), *(u8 *)(state + 0x1D));
+        }
+    }
+
+    *(u8 *)(state + 0x1E) = (u8)((*(u8 *)(state + 0x1E) & 0x7F) | 0x80);
+    yOffset = lbl_803E3AEC;
+    slot = state;
+    for (i = 0; i < *(u8 *)(state + 0x1C); i++) {
+        child = *(void **)slot;
+        (*(void (*)(void *, f32, f32, f32))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x28)))(
+            child, *(f32 *)(obj + 0xC), yOffset + *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+        slot += 4;
+    }
+
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
