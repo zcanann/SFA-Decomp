@@ -112,7 +112,7 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
   iVar4 = FUN_80017a98();
   piVar10 = *(int **)(uVar3 + 0xb8);
   iVar11 = *(int *)(uVar3 + 0x4c);
-  if (*(short *)(*(int *)(uVar3 + 0x30) + 0x46) == 0x139) {
+  if (*(short *)(*(int *)(uVar3 + 0x30) + 0x46) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) {
     *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) = *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & 0xfffe
     ;
     *(undefined *)((int)piVar10 + 0xd) = 0;
@@ -122,14 +122,14 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
       iVar5 = FUN_80017b00(&local_84,&local_88);
       for (; local_84 < local_88; local_84 = local_84 + 1) {
         iVar6 = *(int *)(iVar5 + local_84 * 4);
-        if (*(short *)(iVar6 + 0x46) == 0x8c) {
+        if (*(short *)(iVar6 + 0x46) == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE) {
           *piVar10 = iVar6;
           local_84 = local_88;
         }
       }
     }
     iVar5 = *(int *)(uVar3 + 0x30);
-    if ((iVar5 == 0) || (*(short *)(iVar5 + 0x46) != 0x8e)) {
+    if ((iVar5 == 0) || (*(short *)(iVar5 + 0x46) != SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE)) {
       iVar6 = 0;
       *(undefined *)((int)piVar10 + 10) = 4;
     }
@@ -158,7 +158,7 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
                (iVar5 = (**(code **)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
               if (*(char *)(iVar11 + 0x19) == '\0') {
                 *(undefined *)((int)piVar10 + 10) = 2;
-                *(undefined2 *)(piVar10 + 2) = 0x3c;
+                *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_WAKE_DELAY;
               }
               else {
                 *(undefined *)((int)piVar10 + 10) = 2;
@@ -176,18 +176,18 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
           if ((iVar11 == 0) &&
              (iVar7 = ObjHits_GetPriorityHit(uVar3,(undefined4 *)0x0,(int *)0x0,(uint *)0x0), iVar7 != 0)) {
             in_r8 = 1;
-            FUN_80017a28(uVar3,0xf,200,0,0,1);
-            FUN_80006824(uVar3,0x36);
+            FUN_80017a28(uVar3, SB_SHIPGUN_HIT_REACT_TYPE, SB_SHIPGUN_HIT_REACT_POWER, 0, 0, 1);
+            FUN_80006824(uVar3, SB_SHIPGUN_HIT_ANIM_A);
             *(char *)((int)piVar10 + 0xb) = *(char *)((int)piVar10 + 0xb) + '\x01';
-            if (*(char *)((int)piVar10 + 0xb) == '\x04') {
+            if (*(char *)((int)piVar10 + 0xb) == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT) {
               *(char *)(piVar10 + 3) = *(char *)(piVar10 + 3) + -1;
               *(undefined *)((int)piVar10 + 10) = 3;
               if (iVar5 != 0) {
                 (**(code **)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5);
               }
             }
-            else if (*(char *)((int)piVar10 + 0xb) == '\b') {
-              FUN_80006824(uVar3,0x3a);
+            else if (*(char *)((int)piVar10 + 0xb) == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT) {
+              FUN_80006824(uVar3, SB_SHIPGUN_HIT_ANIM_B);
               *(char *)(piVar10 + 3) = *(char *)(piVar10 + 3) + -1;
               *(undefined *)((int)piVar10 + 10) = 3;
               if (iVar5 != 0) {
@@ -228,17 +228,18 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
             local_70 = lbl_803E652C;
             local_6c = lbl_803E6524;
             uVar12 = FUN_80017748(local_68,&local_74);
-            puVar9 = FUN_80017aa4(0x18,0x113);
+            puVar9 = FUN_80017aa4(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE, SB_CANNONBALL_ALIAS_OBJECT_TYPE);
             *(float *)(puVar9 + 4) = local_78;
             *(float *)(puVar9 + 6) = local_7c;
             *(float *)(puVar9 + 8) = local_80;
-            *(undefined *)(puVar9 + 2) = 2;
-            *(undefined *)((int)puVar9 + 5) = 1;
-            *(undefined *)(puVar9 + 3) = 0xff;
-            *(undefined *)((int)puVar9 + 7) = 0xff;
+            *(undefined *)(puVar9 + 2) = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
+            *(undefined *)((int)puVar9 + 5) = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
+            *(undefined *)(puVar9 + 3) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
+            *(undefined *)((int)puVar9 + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
             puVar9 = (undefined2 *)
                      FUN_80017ae4(uVar12,dVar13,param_3,param_4,param_5,param_6,param_7,param_8,
-                                  puVar9,5,0xff,0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
+                                  puVar9, SB_CANNONBALL_SETUP_PARAM, SB_SHIPGUN_CANNONBALL_BYTE_FF,
+                                  0xffffffff, (uint *)0x0, in_r8, in_r9, in_r10);
             iVar11 = *piVar10;
             dVar16 = (double)(*(float *)(iVar11 + 0x18) - *(float *)(uVar3 + 0x18));
             dVar15 = (double)(*(float *)(iVar11 + 0x1c) -
@@ -258,28 +259,28 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
             *(float *)(puVar9 + 10) = fVar2 * *(float *)(puVar9 + 0x16) + *(float *)(puVar9 + 10);
             iVar11 = FUN_80017730();
             *puVar9 = (short)iVar11;
-            *(undefined4 *)(puVar9 + 0x7a) = 0x78;
+            *(undefined4 *)(puVar9 + 0x7a) = SB_SHIPGUN_CANNONBALL_LIFETIME;
             *(int *)(puVar9 + 0x7c) = *piVar10;
             FUN_800069bc();
             FUN_80006920((double)lbl_803E653C);
-            FUN_80006824(uVar3,0x3c);
+            FUN_80006824(uVar3, SB_SHIPGUN_FIRE_ANIM);
             *(char *)((int)piVar10 + 0xe) = *(char *)((int)piVar10 + 0xe) + '\x01';
-            if (*(char *)((int)piVar10 + 0xe) == '\x03') {
-              if (iVar6 < 3) {
-                uVar8 = randomGetRange(0,0x28);
-                *(short *)(piVar10 + 2) = (short)uVar8 + 0x78;
+            if (*(char *)((int)piVar10 + 0xe) == SB_SHIPGUN_VOLLEY_SIZE) {
+              if (iVar6 < SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
+                uVar8 = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
+                *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_SLOW_FIRE_DELAY;
               }
               else {
-                uVar8 = randomGetRange(0,0x28);
-                *(short *)(piVar10 + 2) = (short)uVar8 + 0x50;
+                uVar8 = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
+                *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_FAST_FIRE_DELAY;
               }
               *(undefined *)((int)piVar10 + 0xe) = 0;
             }
-            else if (iVar6 < 3) {
-              *(undefined2 *)(piVar10 + 2) = 0x78;
+            else if (iVar6 < SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
+              *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_SLOW_FIRE_DELAY;
             }
             else {
-              *(undefined2 *)(piVar10 + 2) = 0x50;
+              *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
             }
           }
         }
@@ -291,44 +292,46 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
       if ((iVar5 != 0) &&
          (iVar5 = (**(code **)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
         if (*(char *)(iVar11 + 0x19) == '\0') {
-          if (2 < iVar6) {
+          if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= iVar6) {
             *(undefined *)((int)piVar10 + 10) = 2;
-            *(undefined2 *)(piVar10 + 2) = 0x3c;
+            *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_WAKE_DELAY;
           }
         }
-        else if (2 < iVar6) {
+        else if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= iVar6) {
           *(undefined *)((int)piVar10 + 10) = 2;
           *(undefined2 *)(piVar10 + 2) = 0;
         }
       }
       local_60 = lbl_803E6540;
-      local_68[3] = 0xc0a;
+      local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
       ObjPath_GetPointWorldPosition(uVar3,0,&local_5c,&local_58,local_54,0);
       local_5c = local_5c - *(float *)(uVar3 + 0x18);
       local_58 = local_58 - *(float *)(uVar3 + 0x1c);
       local_54[0] = local_54[0] - *(float *)(uVar3 + 0x20);
       for (iVar11 = 0; iVar11 < (int)(uint)DAT_803dc070; iVar11 = iVar11 + 1) {
-        (**(code **)(*DAT_803dd708 + 8))(uVar3,0x7aa,local_68,2,0xffffffff,0);
+        (**(code **)(*DAT_803dd708 + 8))(uVar3, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
+                                           SB_SHIPGUN_SMOKE_PARTICLE_PARAM, 0xffffffff, 0);
       }
     }
     else if (cVar1 < '\x05') {
       local_60 = lbl_803E6540;
-      local_68[3] = 0xc0a;
+      local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
       ObjPath_GetPointWorldPosition(uVar3,0,&local_5c,&local_58,local_54,0);
       local_5c = local_5c - *(float *)(uVar3 + 0x18);
       local_58 = local_58 - *(float *)(uVar3 + 0x1c);
       local_54[0] = local_54[0] - *(float *)(uVar3 + 0x20);
       for (iVar11 = 0; iVar11 < (int)(uint)DAT_803dc070; iVar11 = iVar11 + 1) {
-        (**(code **)(*DAT_803dd708 + 8))(uVar3,0x7aa,local_68,2,0xffffffff,0);
+        (**(code **)(*DAT_803dd708 + 8))(uVar3, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
+                                           SB_SHIPGUN_SMOKE_PARTICLE_PARAM, 0xffffffff, 0);
       }
     }
     if (*(char *)(piVar10 + 3) == '\0') {
       dVar13 = (double)FUN_8001771c((float *)(iVar4 + 0x18),(float *)(uVar3 + 0x18));
       if ((double)lbl_803E6544 <= dVar13) {
-        FUN_8000680c(uVar3,0x40);
+        FUN_8000680c(uVar3, SB_SHIPGUN_RANGE_FAR_ANIM);
       }
       else {
-        FUN_80006824(uVar3,0x312);
+        FUN_80006824(uVar3, SB_SHIPGUN_RANGE_NEAR_ANIM);
       }
     }
   }
@@ -349,7 +352,7 @@ void SB_ShipGun_init(int obj)
 
   state = *(int *)(obj + 0xb8);
   *(u8 *)(state + 0xd) = 0;
-  *(u8 *)(state + 0xc) = 2;
+  *(u8 *)(state + 0xc) = SB_SHIPGUN_START_HEALTH;
   *(u8 *)(state + 0xe) = 0;
 }
 #pragma peephole reset
@@ -474,8 +477,8 @@ void SB_CannonBall_hitDetect(int *obj) {
         s16 type;
         if (target == NULL) return;
         type = *(s16 *)((char *)target + 0x46);
-        if (type == SB_CANNONBALL_IGNORE_OBJECT_TYPE_119) return;
-        if (type == SB_CANNONBALL_IGNORE_OBJECT_TYPE_113) return;
+        if (type == SB_CLOUDBALL_ALIAS_OBJECT_TYPE) return;
+        if (type == SB_CANNONBALL_ALIAS_OBJECT_TYPE) return;
     }
 
     if (zero != t) return;
