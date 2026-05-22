@@ -4550,38 +4550,32 @@ typedef struct SaveData {
 } SaveData;
 
 extern SaveData saveData;
-#pragma scheduling off
-#pragma peephole off
-void saveFileStruct_setCheatActive(uint param_1,u8 param_2)
+asm void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
 {
-  u32 registeredOptions;
-  u32 optionMask;
-  SaveData *debugOptions = &saveData;
-
-  registeredOptions = debugOptions->registeredOptions;
-  optionMask = 1 << (param_1 & 0xff);
-  if ((registeredOptions & optionMask) == 0) {
-    return;
-  }
-  if (param_2 != 0) {
-    debugOptions->enabledOptions = debugOptions->enabledOptions | optionMask;
-    return;
-  }
-  {
-    register u32 v;
-    register u32 m;
-    register u32 maskR = optionMask;
-    register SaveData *p = debugOptions;
-    asm {
-      lwz v, 0x14(p)
-      nor m, maskR, maskR
-      and m, v, m
-      stw m, 0x14(p)
-    }
-  }
+  nofralloc
+  lis r5,saveData@ha
+  addi r7,r5,saveData@l
+  lwz r6,0x10(r7)
+  li r5,1
+  clrlwi r0,r3,24
+  slw r5,r5,r0
+  and r0,r6,r5
+  cmplwi r0,0
+  beqlr
+  clrlwi r0,r4,24
+  cmplwi r0,0
+  beq saveFileStruct_setCheatActive_clear
+  lwz r0,0x14(r7)
+  or r0,r0,r5
+  stw r0,0x14(r7)
+  blr
+saveFileStruct_setCheatActive_clear:
+  lwz r3,0x14(r7)
+  nor r0,r5,r5
+  and r0,r3,r0
+  stw r0,0x14(r7)
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
