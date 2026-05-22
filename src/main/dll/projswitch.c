@@ -485,17 +485,10 @@ void enemy_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
         if (*(int *)((char *)obj + 0xf4) == 0) {
             ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E256C);
             {
-                register u32 flags = *(u32 *)((char *)state + 0x2e8);
+                u32 flags = *(u32 *)((char *)state + 0x2e8);
                 if ((flags & 3) != 0) {
                     if ((flags & 1) != 0) {
-                        {
-                            register u32 clearedFlags;
-                            asm {
-                                li clearedFlags, -2
-                                and clearedFlags, flags, clearedFlags
-                            }
-                            *(u32 *)((char *)state + 0x2e8) = clearedFlags;
-                        }
+                        *(u32 *)((char *)state + 0x2e8) = flags & ~1;
                         *(u32 *)((char *)state + 0x2e8) = *(u32 *)((char *)state + 0x2e8) | 2;
                     }
                     if (*(void **)((char *)state + 0x368) == NULL) {
