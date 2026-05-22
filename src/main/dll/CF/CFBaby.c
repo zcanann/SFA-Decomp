@@ -1950,6 +1950,45 @@ void Fall_Ladders_free(int obj) {
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
 extern f32 lbl_803E3B68;
+extern f32 lbl_803E3B6C;
+extern int fn_80295C40(int obj);
+extern undefined4* gObjectTriggerInterface;
+typedef void (*InfoPtUpdateFn)(int, int, int);
+#pragma scheduling off
+#pragma peephole off
+void coldwatercontrol_update(int obj) {
+    u8 *state;
+
+    state = *(u8 **)(obj + 0xb8);
+    if (GameBit_Get(0x1bf) != 0 && GameBit_Get(0x1bd) == 0) {
+        ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+        GameBit_Set(0x1bd, 1);
+        return;
+    }
+
+    if (*(void **)(state + 4) != NULL) {
+        if (fn_80295C40(*(int *)(state + 4)) != 0) {
+            if (lbl_803E3B68 == *(f32 *)state) {
+                ObjHits_RecordObjectHit(*(int *)(state + 4), obj, 0x1c, 0, 1);
+            }
+
+            *(f32 *)state = *(f32 *)state + timeDelta;
+            if (*(f32 *)state > lbl_803E3B6C) {
+                ObjHits_RecordObjectHit(*(int *)(state + 4), obj, 0x1c, 1, 1);
+                *(f32 *)state = *(f32 *)state - lbl_803E3B6C;
+            }
+        }
+        else {
+            *(f32 *)state = lbl_803E3B68;
+        }
+    }
+    else {
+        *(int *)(state + 4) = (int)Obj_GetPlayerObject();
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void coldwatercontrol_init(int obj) {
@@ -1992,8 +2031,6 @@ void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 extern void buttonDisable(int p1, int mask);
-extern undefined4* gObjectTriggerInterface;
-typedef void (*InfoPtUpdateFn)(int, int, int);
 #pragma scheduling off
 #pragma peephole off
 void infopoint_update(int obj) {
