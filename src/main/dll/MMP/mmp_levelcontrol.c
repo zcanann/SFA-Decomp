@@ -35,6 +35,7 @@ extern f32 lbl_803E4C7C;
 extern f32 lbl_803E4C80;
 extern f32 lbl_803E4C94;
 extern f32 lbl_803E4C98;
+extern f32 lbl_803E4000;
 
 /*
  * --INFO--
@@ -398,6 +399,51 @@ void FUN_801949ec(undefined2 *param_1,int param_2)
   }
   return;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: objFn_801948c0
+ * EN v1.0 Address: 0x801948C0
+ * EN v1.0 Size: 164b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+f32 objFn_801948c0(int obj,u8 coord)
+{
+  int state;
+
+  if (obj == 0) {
+    return lbl_803E4000;
+  }
+  state = *(int *)(obj + 0xb8);
+  if (state == 0) {
+    return lbl_803E4000;
+  }
+  switch (coord) {
+    case 1:
+      return *(f32 *)(obj + 0xc) + *(f32 *)(state + 0x40);
+    case 2:
+      return *(f32 *)(state + 0x40);
+    case 3:
+      return *(f32 *)(obj + 0x10) + *(f32 *)(state + 0x44);
+    case 4:
+      return *(f32 *)(state + 0x44);
+    case 5:
+      return *(f32 *)(obj + 0x14) + *(f32 *)(state + 0x48);
+    case 6:
+      return *(f32 *)(state + 0x48);
+  }
+  return lbl_803E4000;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
