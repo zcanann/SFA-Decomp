@@ -37,6 +37,39 @@
 #define SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND 1
 #define SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND 0
 
+typedef void (*SynthVirtualSampleCallback)(int kind, void *data);
+
+typedef struct SynthVirtualSampleCallbackData {
+    u16 sampleId;
+    u16 generation;
+    u32 start;
+    u32 size;
+    u32 wrapA;
+    u32 wrapB;
+} SynthVirtualSampleCallbackData;
+
+typedef struct SynthVirtualSampleEntry {
+    u8 mode;
+    u8 unk01;
+    u8 type;
+    u8 voice;
+    u32 position;
+    u32 remaining;
+    u32 lastTick;
+    SynthVirtualSampleCallbackData callbackData;
+} SynthVirtualSampleEntry;
+
+typedef struct SynthVirtualSampleState {
+    u8 entryCount;
+    u8 unk01[3];
+    u32 loopSize;
+    SynthVirtualSampleEntry entries[SYNTH_VIRTUAL_SAMPLE_MAX_VOICES];
+    u8 voiceMap[SYNTH_VIRTUAL_SAMPLE_MAX_VOICES];
+    u16 nextId;
+    u16 unk94A;
+    SynthVirtualSampleCallback callback;
+} SynthVirtualSampleState;
+
 void synthInitVirtualSampleTable(void);
 u32 synthClaimVirtualSampleSlot(u8 voice);
 void synthHandleVirtualSampleDone(u32 packed);

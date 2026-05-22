@@ -16,14 +16,14 @@ extern u8 hwGetSampleType(int slot);
 void synthInitVirtualSampleTable(void)
 {
     int i;
-    u8 *state = synthVirtualSampleState;
+    SynthVirtualSampleState *state = (SynthVirtualSampleState *)synthVirtualSampleState;
 
-    state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET] = 0;
+    state->entryCount = 0;
     for (i = 0; i < SYNTH_VIRTUAL_SAMPLE_MAX_VOICES; i++) {
-        state[SYNTH_VIRTUAL_SAMPLE_VOICE_MAP_OFFSET + i] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+        state->voiceMap[i] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
     }
-    *(u16 *)(state + SYNTH_VIRTUAL_SAMPLE_NEXT_ID_OFFSET) = 0;
-    *(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET) = 0;
+    state->nextId = 0;
+    state->callback = 0;
 }
 
 /*
