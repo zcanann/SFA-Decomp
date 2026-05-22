@@ -18,6 +18,10 @@ extern void objRenderFn_80041018(int obj);
 extern int FUN_8005af70();
 extern int FUN_8005b398();
 extern int mapGetBlock(int blockIdx);
+extern uint mapBlockFn_80060678(int *block);
+extern void *mapBlockFn_800606ec(int *obj, int idx);
+extern void *fn_800606DC(int *obj, int idx);
+extern void *fn_800606FC(int *obj, int idx);
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void mm_free(void *ptr);
 extern uint FUN_80060058();
@@ -566,6 +570,67 @@ void FUN_80194b10(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_8028687c();
   return;
 }
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80194964(int obj,int state,int block)
+{
+  ushort blockEnd;
+  ushort *mapBlock;
+  int blockLayer;
+  int coordOffset;
+  undefined2 *vertex;
+  uint triangle;
+  int triangleOffset;
+  int edge;
+  int edgeOffset;
+  int blockIndex;
+
+  triangleOffset = 0;
+  coordOffset = 0;
+  edgeOffset = 0;
+  for (blockIndex = 0; blockIndex < (int)(uint)*(ushort *)(block + 0x9a); blockIndex++) {
+    mapBlock = (ushort *)mapBlockFn_800606ec((int *)block,blockIndex);
+    blockLayer = mapBlockFn_80060678((int *)mapBlock);
+    if ((int)*(char *)(obj + 0x28) == blockLayer) {
+      *(ushort *)(*(int *)(state + 0x10) + coordOffset) = mapBlock[3];
+      *(ushort *)(*(int *)(state + 0x14) + coordOffset) = mapBlock[4];
+      coordOffset += 2;
+      blockEnd = mapBlock[10];
+      edgeOffset = triangleOffset;
+      for (triangle = (uint)*mapBlock; (int)triangle < (int)(uint)blockEnd; triangle++) {
+        mapBlock = (ushort *)fn_800606DC((int *)block,triangle);
+        vertex = (undefined2 *)(*(int *)(block + 0x58) + (uint)*mapBlock * 6);
+        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset) = *vertex;
+        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 2) = vertex[1];
+        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 4) = vertex[2];
+        vertex = (undefined2 *)(*(int *)(block + 0x58) + (uint)mapBlock[1] * 6);
+        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 6) = *vertex;
+        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 8) = vertex[1];
+        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 10) = vertex[2];
+        vertex = (undefined2 *)(*(int *)(block + 0x58) + (uint)mapBlock[2] * 6);
+        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 0xc) = *vertex;
+        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 0xe) = vertex[1];
+        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 0x10) = vertex[2];
+        edgeOffset += 0x12;
+        triangleOffset += 0x12;
+      }
+    }
+  }
+  edge = 0;
+  for (edgeOffset = 0; edgeOffset < (int)(uint)*(byte *)(block + 0xa1); edgeOffset++) {
+    blockIndex = (int)fn_800606FC((int *)block,edgeOffset);
+    *(undefined2 *)(*(int *)(state + 0x28) + edge) = *(undefined2 *)(blockIndex + 6);
+    *(undefined2 *)(*(int *)(state + 0x2c) + edge) = *(undefined2 *)(blockIndex + 0xc);
+    *(undefined2 *)(*(int *)(state + 0x30) + edge) = *(undefined2 *)(blockIndex + 8);
+    *(undefined2 *)(*(int *)(state + 0x34) + edge) = *(undefined2 *)(blockIndex + 0xe);
+    *(undefined2 *)(*(int *)(state + 0x38) + edge) = *(undefined2 *)(blockIndex + 10);
+    *(undefined2 *)(*(int *)(state + 0x3c) + edge) = *(undefined2 *)(blockIndex + 0x10);
+    edge += 2;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
