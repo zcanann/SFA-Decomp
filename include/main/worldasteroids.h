@@ -34,7 +34,7 @@ typedef struct WorldAsteroidsObject {
 extern ObjectDescriptor gWorldAsteroidsObjDescriptor;
 
 int worldasteroids_getExtraSize(void);
-int worldasteroids_func08(void);
+int worldasteroids_getObjectTypeId(void);
 void worldasteroids_free(void);
 void worldasteroids_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                            undefined4 param_4,undefined4 param_5,s8 visible);

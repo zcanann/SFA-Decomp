@@ -70,7 +70,7 @@ extern ObjectDescriptor gProximityMineObjDescriptor;
 
 void proximitymine_resetToIdle(ProximityMineObject *obj);
 int proximitymine_getExtraSize(void);
-int proximitymine_func08(void);
+int proximitymine_getObjectTypeId(void);
 void proximitymine_free(ProximityMineObject *obj);
 void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4 param_3,
                           undefined4 param_4,undefined4 param_5);

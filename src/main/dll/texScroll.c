@@ -51,6 +51,7 @@ undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int state
   u32 offset;
   u8 i;
   int runtime;
+  int trackedPositionSlot;
   int trackedObjectSlot;
 
   runtime = *(int *)(obj + 0xb8);
@@ -61,9 +62,10 @@ undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int state
       offset = (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
       handle = *(u32 *)(runtime + offset);
       if (handle != 0) {
-        *(f32 *)(runtime + (u32)i * 8 + PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET) =
+        trackedPositionSlot = runtime + (u32)i * 8;
+        *(f32 *)(trackedPositionSlot + PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET) =
             *(f32 *)(handle + 0xc);
-        *(f32 *)(runtime + (u32)i * 8 + (PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET + 4)) =
+        *(f32 *)(trackedPositionSlot + (PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET + 4)) =
             *(f32 *)(*(int *)(runtime + offset) + 0x14);
       }
     }
