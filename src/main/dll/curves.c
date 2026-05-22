@@ -4539,37 +4539,37 @@ uint FUN_800e6680(char param_1,uint param_2)
  * PAL Size: TODO
  */
 typedef struct SaveData {
-  u8 pad00[0x10];
+  u8 pad00[2];
+  u8 subtitlesEnabled;
+  u8 gameUiSetting;
+  u8 cameraSetting;
+  u8 pad05;
+  u8 widescreenEnabled;
+  u8 pad07;
+  u8 rumbleEnabled;
+  u8 soundMode;
+  u8 musicVolume;
+  u8 sfxVolume;
+  u8 speechVolume;
+  u8 pad0D[3];
   u32 registeredOptions;
   u32 enabledOptions;
 } SaveData;
 
 extern SaveData saveData;
-asm void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
+void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
 {
-  nofralloc
-  lis r5,saveData@ha
-  addi r7,r5,saveData@l
-  lwz r6,0x10(r7)
-  li r5,1
-  clrlwi r0,r3,24
-  slw r5,r5,r0
-  and r0,r6,r5
-  cmplwi r0,0
-  beqlr
-  clrlwi r0,r4,24
-  cmplwi r0,0
-  beq saveFileStruct_setCheatActive_clear
-  lwz r0,0x14(r7)
-  or r0,r0,r5
-  stw r0,0x14(r7)
-  blr
-saveFileStruct_setCheatActive_clear:
-  lwz r3,0x14(r7)
-  nor r0,r5,r5
-  and r0,r3,r0
-  stw r0,0x14(r7)
-  blr
+  u32 mask = 1 << (u8)optionIndex;
+
+  if ((saveData.registeredOptions & mask) == 0) {
+    return;
+  }
+  if (active != 0) {
+    saveData.enabledOptions |= mask;
+  }
+  else {
+    saveData.enabledOptions &= ~mask;
+  }
 }
 
 
@@ -4604,15 +4604,15 @@ extern void **gCameraInterface;
 #pragma peephole off
 void loadSaveSettings(void)
 {
-  setWidescreen(*((u8 *)&saveData + 6));
-  setSubtitlesEnabled(*((u8 *)&saveData + 2));
-  setRumbleEnabled(*((u8 *)&saveData + 8));
-  audioSetSoundMode(*((u8 *)&saveData + 9), 0);
-  (*(void (**)(u8))((char *)*gGameUIInterface + 0x50))(*((u8 *)&saveData + 3));
-  (*(void (**)(u8))((char *)*gCameraInterface + 0x6c))(*((u8 *)&saveData + 4));
-  audioSetVolumes(*((u8 *)&saveData + 11), 10, 0, 1, 0);
-  audioSetVolumes(*((u8 *)&saveData + 10), 10, 1, 0, 0);
-  audioSetVolumes(*((u8 *)&saveData + 12), 10, 0, 0, 1);
+  setWidescreen(saveData.widescreenEnabled);
+  setSubtitlesEnabled(saveData.subtitlesEnabled);
+  setRumbleEnabled(saveData.rumbleEnabled);
+  audioSetSoundMode(saveData.soundMode, 0);
+  (*(void (**)(u8))((char *)*gGameUIInterface + 0x50))(saveData.gameUiSetting);
+  (*(void (**)(u8))((char *)*gCameraInterface + 0x6c))(saveData.cameraSetting);
+  audioSetVolumes(saveData.sfxVolume, 10, 0, 1, 0);
+  audioSetVolumes(saveData.musicVolume, 10, 1, 0, 0);
+  audioSetVolumes(saveData.speechVolume, 10, 0, 0, 1);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4642,17 +4642,11 @@ void* RomCurve_getCurves(int *outCount) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* saveFileStruct_resetVolumes: 3 byte stores at +0xa..0xc of saveData = 0x7f. */
-asm void saveFileStruct_resetVolumes(void)
+void saveFileStruct_resetVolumes(void)
 {
-  nofralloc
-  li r0,0x7f
-  lis r3,saveData@ha
-  addi r3,r3,saveData@l
-  stb r0,0xa(r3)
-  stb r0,0xb(r3)
-  stb r0,0xc(r3)
-  blr
+  saveData.musicVolume = 0x7f;
+  saveData.sfxVolume = 0x7f;
+  saveData.speechVolume = 0x7f;
 }
 
 /* isCheatUnlocked: return registeredOptions & (1 << (idx & 0xff)). */
@@ -4679,28 +4673,17 @@ void saveFileStruct_unlockCheat(u8 idx) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* saveFileStruct_isCheatActive: return 1 if both registered AND enabled have bit (1<<idx) set, else 0. */
-asm int saveFileStruct_isCheatActive(u8 idx)
+int saveFileStruct_isCheatActive(u8 idx)
 {
-  nofralloc
-  lis r4,saveData@ha
-  addi r6,r4,saveData@l
-  lwz r5,0x10(r6)
-  li r4,1
-  clrlwi r0,r3,24
-  slw r3,r4,r0
-  and r0,r5,r3
-  cmplwi r0,0
-  beq saveFileStruct_isCheatActive_false
-  lwz r0,0x14(r6)
-  and r0,r0,r3
-  cmplwi r0,0
-  beq saveFileStruct_isCheatActive_false
-  li r3,1
-  blr
-saveFileStruct_isCheatActive_false:
-  li r3,0
-  blr
+  u32 mask = 1 << idx;
+
+  if ((saveData.registeredOptions & mask) == 0) {
+    return 0;
+  }
+  if ((saveData.enabledOptions & mask) == 0) {
+    return 0;
+  }
+  return 1;
 }
 
 /* curves_findByAction: scan romCurves for matching action curves, return curve id. */
