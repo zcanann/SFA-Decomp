@@ -669,13 +669,18 @@ extern void objRenderFn_80041018(int *obj);
 #pragma peephole off
 void doorlock_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible != 0) {
-        if (obj[0xf8/4] == 0) return;
+        if (obj[0xf8/4] == 0) {
+            goto render_basic;
+        }
     }
-    if (obj[0xf8/4] != 0) {
-        objRenderFn_80041018(obj);
-    } else {
-        ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3798);
+    if (obj[0xf8/4] == 0) {
+        return;
     }
+    objRenderFn_80041018(obj);
+    return;
+
+render_basic:
+    ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3798);
 }
 #pragma peephole reset
 
