@@ -807,18 +807,18 @@ void MoonSeedPlantingSpot_init(int *obj, u8 *init) {
 
     sub = *(u8**)((char*)obj + 0xb8);
     *(void**)((char*)obj + 0xbc) = (void*)&MoonSeedPlantingSpot_SeqFn;
-    *(s16*)obj = (s16)((s8)init[0x1f] << 8);
+    *(s16*)obj = (s16)(init[0x1f] << 8);
     sub[0] = 0;
     ObjGroup_AddObject((int)obj, 0x2e);
     mapId = *(int*)(init + 0x14);
     switch (mapId) {
-        case 0x41a59:
-            *(s16*)(sub + 8) = 0x867;
-            *(s16*)(sub + 0xa) = 0x858;
-            break;
         case 0x41a5b:
             *(s16*)(sub + 8) = 0x866;
             *(s16*)(sub + 0xa) = 0x856;
+            break;
+        case 0x41a59:
+            *(s16*)(sub + 8) = 0x867;
+            *(s16*)(sub + 0xa) = 0x858;
             break;
         case 0x41a5c:
             *(s16*)(sub + 8) = 0x868;
@@ -857,6 +857,7 @@ void MoonSeedPlantingSpot_init(int *obj, u8 *init) {
             *(s16*)(sub + 0xa) = 0xe10;
             break;
     }
+    sub[1] = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
