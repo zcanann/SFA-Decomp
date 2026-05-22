@@ -1711,8 +1711,10 @@ extern void Resource_Release(int* res);
 #pragma peephole off
 void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable)
 {
-    int mask = 1 << bit;
-    int flags = *(int*)((char*)state + 788);
+    register int flags;
+    register int mask;
+    mask = 1 << bit;
+    flags = *(int*)((char*)state + 788);
     if ((flags & mask) != 0) {
         *(int*)((char*)state + 788) = flags & ~mask;
         Sfx_PlayFromObject(obj, (u16)sfxTable[idx]);
@@ -1721,8 +1723,10 @@ void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable)
 
 void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable)
 {
-    int mask = 1 << bit;
-    int flags = *(int*)((char*)state + 788);
+    register int flags;
+    register int mask;
+    mask = 1 << bit;
+    flags = *(int*)((char*)state + 788);
     if ((flags & mask) != 0) {
         *(int*)((char*)state + 788) = flags & ~mask;
         Sfx_PlayFromObject(obj, (u16)sfxTable[idx]);
