@@ -2151,6 +2151,14 @@ typedef struct LandedArwingState {
     u8 hitCooldown[4];
 } LandedArwingState;
 
+typedef struct LandedArwingHitFlagBits {
+    u8 damaged:1;
+    u8 impactHandled:1;
+    u8 gameBit24Set:1;
+    u8 reactionDone:1;
+    u8 rest:4;
+} LandedArwingHitFlagBits;
+
 extern LandedArwingFxPoint lbl_80321A28[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
@@ -2615,33 +2623,35 @@ void fn_80189858(int obj, LandedArwingState *state) {
     int def;
     int *texture;
     u32 bit;
+    LandedArwingHitFlagBits *flags;
 
     def = *(int *)(obj + 0x4c);
+    flags = (LandedArwingHitFlagBits *)&state->hitFlags;
     if (*(s16 *)(def + 0x24) != -1) {
         bit = GameBit_Get(*(s16 *)(def + 0x24));
-        state->hitFlags = (state->hitFlags & 0xdf) | ((bit & 0xff) << 5 & 0x20);
-        bit = (state->hitFlags >> 5) & 1;
+        flags->gameBit24Set = bit;
+        bit = flags->gameBit24Set;
         if (bit != 0 && *(u8 *)(def + 0x1c) == 5) {
-            state->hitFlags = state->hitFlags & 0xbf | 0x40;
+            flags->impactHandled = 1;
         } else if (bit == 0) {
-            state->hitFlags = state->hitFlags & 0xbf;
+            flags->impactHandled = 0;
         }
     }
 
-    if (((state->hitFlags >> 7) & 1) == 0) {
+    if (flags->damaged == 0) {
         if (*(s16 *)(def + 0x22) != -1 && GameBit_Get(*(s16 *)(def + 0x22)) != 0) {
-            state->hitFlags = state->hitFlags & 0x7f | 0x80;
+            flags->damaged = 1;
         }
     } else {
         if (*(s16 *)(def + 0x22) != -1 && GameBit_Get(*(s16 *)(def + 0x22)) == 0) {
-            state->hitFlags = state->hitFlags & 0x7f;
+            flags->damaged = 0;
         }
     }
 
     texture = objFindTexture(obj, 0, 0);
     if (texture != NULL) {
-        if (((state->hitFlags >> 7) & 1) != 0) {
-            if (((state->hitFlags >> 5) & 1) != 0) {
+        if (flags->damaged != 0) {
+            if (flags->gameBit24Set != 0) {
                 *texture = 0x200;
             } else {
                 *texture = 0x100;
