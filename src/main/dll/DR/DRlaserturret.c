@@ -71,17 +71,17 @@ int DRlaserturret_updateIdle(void *obj, void *param2)
     state->promptState = 0xff;
     *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
     if (*(s16 *)((char *)obj + 0xa0) != 0) {
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E59DC, 0);
+        ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
     }
     ObjHits_EnableObject(obj);
     *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) & ~0x08;
-    if (GameBit_Get(0x617) == 0) {
-        v = 1;
+    if (GameBit_Get(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0) {
+        v = DR_LASERTURRET_STATE_PUSH_IDLE;
         psStack = state->stateStack;
         if (Stack_IsFull(psStack) == 0) {
             Stack_Push(psStack, &v);
         }
-        return 7;
+        return DR_LASERTURRET_STATE_CONTINUE;
     }
     shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
     *(f32 *)((char *)obj + 0x10) =
@@ -99,12 +99,12 @@ int DRlaserturret_updateIdle(void *obj, void *param2)
     state->bobPhase = (u16)sum;
     if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
         if (playerGetMoney(playerObj) >= 1) {
-            GameBit_Set(0x61d, 1);
-            buttonDisable(0, 0x100);
+            GameBit_Set(DR_LASERTURRET_GAMEBIT_HAS_MONEY, 1);
+            buttonDisable(0, DR_LASERTURRET_BUTTON_ACCEPT);
         } else {
             rng = randomGetRange(0, 2);
             (*(code **)gObjectTriggerInterface)[0x48 / 4](rng, obj, -1);
-            buttonDisable(0, 0x100);
+            buttonDisable(0, DR_LASERTURRET_BUTTON_ACCEPT);
         }
     }
     return 0;
@@ -141,14 +141,14 @@ int DRlaserturret_updateTracking(void *obj, void *param2)
     }
     if ((state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) != 0) {
         if (*(s8 *)((char *)param2 + 0x346) != 0) {
-            if (*(s16 *)((char *)obj + 0xa0) == 0x11) {
+            if (*(s16 *)((char *)obj + 0xa0) == DR_LASERTURRET_ANIM_TRACKING) {
                 if (*(f32 *)((char *)param2 + 0x2a0) > lbl_803E59DC) {
-                    ObjAnim_SetCurrentMove((int)obj, 0x12, 0.0f, 0);
+                    ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_ALERT, 0.0f, 0);
                     goto L_DE8;
                 }
             }
             if (*(s16 *)((char *)obj + 0xa0) != 0) {
-                ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E59DC, 0);
+                ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
             }
         L_DE8:
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
@@ -157,17 +157,18 @@ int DRlaserturret_updateTracking(void *obj, void *param2)
             state->actionTimer = (f32)rng;
         }
     } else {
-        if (*(s16 *)((char *)obj + 0xa0) != 0x12 && *(s16 *)((char *)obj + 0xa0) != 0) {
-            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E59DC, 0);
+        if (*(s16 *)((char *)obj + 0xa0) != DR_LASERTURRET_ANIM_ALERT &&
+            *(s16 *)((char *)obj + 0xa0) != 0) {
+            ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
         }
     }
     state->actionTimer = state->actionTimer - timeDelta;
     if (state->actionTimer <= lbl_803E59DC &&
         (state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) == 0) {
-        Sfx_PlayFromObject((int)obj, 0x40d);
-        if (*(s16 *)((char *)obj + 0xa0) == 0x12) {
-            ObjAnim_SetCurrentMove((int)obj, 0x11, lbl_803E5A08, 0);
+        Sfx_PlayFromObject((int)obj, DR_LASERTURRET_SFX_ACTION);
+        if (*(s16 *)((char *)obj + 0xa0) == DR_LASERTURRET_ANIM_ALERT) {
+            ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_TRACKING, lbl_803E5A08, 0);
             *(f32 *)((char *)param2 + 0x2a0) = lbl_803E5A0C;
         } else {
             rng = randomGetRange(0, 1);
@@ -176,13 +177,13 @@ int DRlaserturret_updateTracking(void *obj, void *param2)
         }
         state->flags = state->flags | DR_LASERTURRET_FLAG_ACTION_ACTIVE;
     }
-    if (GameBit_Get(0x617) == 0) {
-        v = 4;
+    if (GameBit_Get(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0) {
+        v = DR_LASERTURRET_STATE_PUSH_TRACKING;
         psStack = state->stateStack;
         if (Stack_IsFull(psStack) == 0) {
             Stack_Push(psStack, &v);
         }
-        return 7;
+        return DR_LASERTURRET_STATE_CONTINUE;
     }
     {
         float t = (float)shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
@@ -251,17 +252,17 @@ int DRlaserturret_startLinkedTarget(void *obj)
     int v;
 
     state = *(DRLaserTurretState **)((char *)obj + 0xb8);
-    if (GameBit_Get(0xcef) == 0) {
+    if (GameBit_Get(DR_LASERTURRET_GAMEBIT_LINK_READY) == 0) {
         return 0;
     }
-    v = (int)GameBit_Get(0xad3);
+    v = (int)GameBit_Get(DR_LASERTURRET_GAMEBIT_LINK_STARTED);
     if (v == 0) {
         int *target;
-        GameBit_Set(0xad3, 1);
+        GameBit_Set(DR_LASERTURRET_GAMEBIT_LINK_STARTED, 1);
         target = state->linkedTarget;
         (**(code ***)((char *)target + 0x68))[0x24 / 4](target, 1, 2);
     }
-    return 2;
+    return DR_LASERTURRET_STATE_LINKED_TARGET;
 }
 
 /*
@@ -282,14 +283,14 @@ int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch)
     char nudge;
 
     state = *(DRLaserTurretState **)((char *)obj + 0xb8);
-    if (dispatch == 0x14) {
+    if (dispatch == DR_LASERTURRET_PROMPT_COUNT) {
         padGetAnalogInput(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0) {
             state->countValue = state->countValue - 1;
-            Sfx_PlayFromObject(0, 0xf3);
+            Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         } else if ((s8)stickLo > 0) {
             state->countValue = state->countValue + 1;
-            Sfx_PlayFromObject(0, 0xf3);
+            Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         }
         if (state->countValue > state->maxCount) {
             state->countValue = state->maxCount;
@@ -300,66 +301,72 @@ int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch)
             state->countValue = (s16)(state->countScale >> 1);
         }
         v9d0 = state->countValue;
-        *(int *)objFindTexture(obj, 8, 0) = (v9d0 - v9d0 / 10 * 10) << 8;
-        *(int *)objFindTexture(obj, 7, 0) = (v9d0 / 10 - v9d0 / 100 * 10) << 8;
+        *(int *)objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0) =
+            (v9d0 - v9d0 / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        *(int *)objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0) =
+            (v9d0 / 10 - v9d0 / 100 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         slot = v9d0 / 100;
-        if (slot > 9) slot = 9;
-        *(int *)objFindTexture(obj, 6, 0) = slot << 8;
-    } else if (dispatch == 0x17) {
+        if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
+        *(int *)objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0) =
+            slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+    } else if (dispatch == DR_LASERTURRET_PROMPT_DIGIT_COUNT) {
         padGetAnalogInput(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0) {
             state->digitCount = state->digitCount - 1;
-            Sfx_PlayFromObject(0, 0xf3);
+            Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         } else if ((s8)stickLo > 0) {
             state->digitCount = state->digitCount + 1;
-            Sfx_PlayFromObject(0, 0xf3);
+            Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         }
         if (state->digitCount > state->maxCount) {
             state->digitCount = (u8)state->maxCount;
         }
-        if (state->digitCount > 0xa) {
-            state->digitCount = 0xa;
-        } else if (state->digitCount < 1) {
-            state->digitCount = 1;
+        if (state->digitCount > DR_LASERTURRET_MAX_DIGIT_COUNT) {
+            state->digitCount = DR_LASERTURRET_MAX_DIGIT_COUNT;
+        } else if (state->digitCount < DR_LASERTURRET_MIN_DIGIT_COUNT) {
+            state->digitCount = DR_LASERTURRET_MIN_DIGIT_COUNT;
         }
         {
             u8 v = state->digitCount;
-            *(int *)objFindTexture(obj, 8, 0) = (v - v / 10 * 10) << 8;
-            *(int *)objFindTexture(obj, 7, 0) = (v / 10 - v / 100 * 10) << 8;
+            *(int *)objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0) =
+                (v - v / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            *(int *)objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0) =
+                (v / 10 - v / 100 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             slot = v / 100;
-            if (slot > 9) slot = 9;
-            *(int *)objFindTexture(obj, 6, 0) = slot << 8;
+            if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
+            *(int *)objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0) =
+                slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         }
         btn = getButtonsJustPressed(0);
-        if ((btn & 0x200) != 0) {
+        if ((btn & DR_LASERTURRET_BUTTON_CANCEL) != 0) {
             state->flags = state->flags | DR_LASERTURRET_FLAG_CONFIRM_PROMPT;
             (*(code **)gScreenTransitionInterface)[0x8 / 4](0x1e, 1);
             return 1;
         }
     }
     btn = getButtonsJustPressed(0);
-    if ((btn & 0x100) == 0) {
+    if ((btn & DR_LASERTURRET_BUTTON_ACCEPT) == 0) {
         return 0;
     }
     if (state->countValue < state->countTarget) {
-        if (state->nudgeCount >= 2) nudge = 2;
+        if (state->nudgeCount >= DR_LASERTURRET_MAX_NUDGE_COUNT) nudge = 2;
         else nudge = 0;
     } else {
         nudge = 1;
     }
     switch (dispatch) {
-    case 0x14:
+    case DR_LASERTURRET_PROMPT_COUNT:
         if ((s8)nudge == 0) {
             state->nudgeCount = state->nudgeCount + 1;
         }
         return ((s8)nudge == 0) ? 1 : 0;
-    case 0x15:
+    case DR_LASERTURRET_PROMPT_NUDGE:
         if ((s8)nudge == 1) {
             int *target = state->linkedTarget;
             (**(code ***)((char *)target + 0x68))[0x48 / 4](target);
         }
         return ((s8)nudge == 1) ? 1 : 0;
-    case 0x16:
+    case DR_LASERTURRET_PROMPT_MAX_NUDGE:
         return ((s8)nudge == 2) ? 1 : 0;
     }
     return 0;
@@ -382,7 +389,7 @@ void DRlaserturret_startTimedChallenge(void *obj)
         gameTimerInit(0x11, 0x1e);
         timerSetToCountUp();
         hudFn_8011f6f0(1);
-        GameBit_Set(0x626, 1);
+        GameBit_Set(DR_LASERTURRET_GAMEBIT_TIMER_STARTED, 1);
         target = state->linkedTarget;
         (**(code ***)((char *)target + 0x68))[0x4c / 4](target, state->digitCount);
         (*(code **)gTitleMenuControlInterface)[0x4 / 4](0, 0xf5, 0, 0, 0);
