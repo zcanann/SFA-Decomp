@@ -285,7 +285,7 @@ void DIMbosstonsil_checkHit(void *obj,u8 *state)
     if (lbl_803E4C90 == lbl_803DDB98) {
       state[DIMBOSSTONSIL_ACTIVE_OFFSET] = 1;
       state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
-      state[DIMBOSSTONSIL_HIT_DAMAGE_COUNT_OFFSET] = (s8)hit;
+      *(s8 *)(state + DIMBOSSTONSIL_HIT_DAMAGE_COUNT_OFFSET) = hit;
       state[DIMBOSSTONSIL_HIT_POINTS_LEFT_OFFSET]--;
       gDIMbosstonsilRoutePhase++;
       GameBit_Set(DIMBOSSTONSIL_HIT_GAMEBIT,(s8)gDIMbosstonsilRoutePhase);
