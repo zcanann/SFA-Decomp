@@ -11,6 +11,7 @@
 #define ROMCURVE_LINK_COUNT 4
 #define ROMCURVE_LINK_ID_NONE 0xffffffff
 #define ROMCURVE_TYPE_ACTION 0x15
+#define ROMCURVE_GETCURVES_MAX_POINTS 0x23
 
 typedef struct RomCurveDef {
   u8 pad00[0x08];

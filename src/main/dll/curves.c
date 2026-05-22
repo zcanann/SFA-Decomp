@@ -3497,65 +3497,66 @@ double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double para
 RomCurvePoint *
 curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5)
 {
-  int iVar1;
-  RomCurvePoint *puVar2;
+  int queryMode;
+  RomCurvePoint *outPoint;
   RomCurvePoint *point;
-  uint uVar3;
-  uint uVar4;
-  RomCurvePoint **local_18;
+  uint remaining;
+  uint pairCount;
+  RomCurvePoint **hitPoints;
   
   if (curve != DAT_803de0fc) {
     DAT_803de0fc = curve;
     if (param_5 != 0) {
-      iVar1 = 1;
+      queryMode = 1;
     }
     else {
-      iVar1 = -2;
+      queryMode = -2;
     }
-    DAT_803de0f8 = hitDetectFn_80065e50(curve,x,*(float *)(curve + 0x1c),z,&local_18,iVar1,0);
-    if (0x23 < (int)DAT_803de0f8) {
-      DAT_803de0f8 = 0x23;
+    DAT_803de0f8 = hitDetectFn_80065e50(curve,x,*(float *)(curve + 0x1c),z,&hitPoints,
+                                        queryMode,0);
+    if (ROMCURVE_GETCURVES_MAX_POINTS < (int)DAT_803de0f8) {
+      DAT_803de0f8 = ROMCURVE_GETCURVES_MAX_POINTS;
     }
-    uVar3 = DAT_803de0f8;
-    puVar2 = (RomCurvePoint *)&DAT_803a3898;
+    remaining = DAT_803de0f8;
+    outPoint = (RomCurvePoint *)&DAT_803a3898;
     if (0 < (int)DAT_803de0f8) {
-      uVar4 = DAT_803de0f8 >> 1;
-      if (uVar4 != 0) {
+      pairCount = DAT_803de0f8 >> 1;
+      if (pairCount != 0) {
         do {
-          point = *local_18;
-          puVar2->x = point->x;
-          puVar2->y = point->y;
-          puVar2->z = point->z;
-          puVar2->w = point->w;
-          puVar2->flags = point->flags;
-          puVar2->type = point->type;
-          puVar2 = puVar2 + 1;
-          point = local_18[1];
-          puVar2->x = point->x;
-          puVar2->y = point->y;
-          puVar2->z = point->z;
-          puVar2->w = point->w;
-          puVar2->flags = point->flags;
-          puVar2->type = point->type;
-          local_18 = local_18 + 2;
-          puVar2 = puVar2 + 1;
-          uVar4 = uVar4 - 1;
-        } while (uVar4 != 0);
-        uVar3 = uVar3 & 1;
-        if (uVar3 == 0) goto LAB_800e6f44;
+          point = *hitPoints;
+          outPoint->x = point->x;
+          outPoint->y = point->y;
+          outPoint->z = point->z;
+          outPoint->w = point->w;
+          outPoint->flags = point->flags;
+          outPoint->type = point->type;
+          outPoint = outPoint + 1;
+          point = hitPoints[1];
+          outPoint->x = point->x;
+          outPoint->y = point->y;
+          outPoint->z = point->z;
+          outPoint->w = point->w;
+          outPoint->flags = point->flags;
+          outPoint->type = point->type;
+          hitPoints = hitPoints + 2;
+          outPoint = outPoint + 1;
+          pairCount = pairCount - 1;
+        } while (pairCount != 0);
+        remaining = remaining & 1;
+        if (remaining == 0) goto LAB_800e6f44;
       }
       do {
-        point = *local_18;
-        puVar2->x = point->x;
-        puVar2->y = point->y;
-        puVar2->z = point->z;
-        puVar2->w = point->w;
-        puVar2->flags = point->flags;
-        puVar2->type = point->type;
-        local_18 = local_18 + 1;
-        puVar2 = puVar2 + 1;
-        uVar3 = uVar3 - 1;
-      } while (uVar3 != 0);
+        point = *hitPoints;
+        outPoint->x = point->x;
+        outPoint->y = point->y;
+        outPoint->z = point->z;
+        outPoint->w = point->w;
+        outPoint->flags = point->flags;
+        outPoint->type = point->type;
+        hitPoints = hitPoints + 1;
+        outPoint = outPoint + 1;
+        remaining = remaining - 1;
+      } while (remaining != 0);
     }
   }
 LAB_800e6f44:
