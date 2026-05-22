@@ -698,162 +698,319 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut)
+asm int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut)
 {
-  ObjAnimBank *bank;
-  ObjAnimDef *animDef;
-  ObjAnimState *state;
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  short sVar6;
-  float fVar7;
-  float fVar8;
-  bool bVar9;
-  int uVar10;
-  int uVar11;
-  int *piVar12;
-  int iVar13;
-  float *pfVar14;
-  float *pfVar15;
-  float *pfVar16;
-  int iVar17;
-  float in_f6;
-  float in_f7;
-  float in_f8;
-
-  bank = ObjAnim_GetActiveBank(objAnim);
-  piVar12 = (int *)bank;
-  animDef = bank->animDef;
-  if (animDef->moveCount == 0) {
-    return 0;
-  }
-  state = bank->currentState;
-  fVar5 = objAnim->rootMotionScale;
-  fVar3 = distance * (fVar5 / objAnim->modelInstance->rootMotionScaleBase);
-  pfVar15 = (float *)0x0;
-  if (state->eventState != 0) {
-    in_f7 = (float)(u32)state->eventState / gObjAnimEventStepScale;
-    in_f8 = gObjAnimProgressOne - in_f7;
-    if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-      iVar13 = (int)state->blendMoveCache[state->blendCacheSlot] +
-               OBJANIM_CACHED_MOVE_DATA_OFFSET;
-    }
-    else {
-      iVar13 = (int)animDef->moveData[state->blendCacheSlot];
-    }
-    if (*(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
-      pfVar16 = (float *)(iVar13 + *(short *)(iVar13 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
-      in_f6 = *pfVar16 * fVar5;
-      pfVar15 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
-      if (*(short *)pfVar15 == 0) {
-        pfVar15 = (float *)((int)pfVar15 + 2);
-        if (*(short *)pfVar15 == 0) {
-          pfVar15 = (float *)((int)pfVar15 + 2);
-          if (*(short *)pfVar15 == 0) {
-            pfVar15 = (float *)0x0;
-          }
-        }
-      }
-      if (pfVar15 != (float *)0x0) {
-        pfVar15 = (float *)((int)pfVar15 + 2);
-      }
-    }
-  }
-  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
-    iVar17 = (int)state->moveCache[state->moveCacheSlot] +
-             OBJANIM_CACHED_MOVE_DATA_OFFSET;
-  }
-  else {
-    iVar17 = (int)animDef->moveData[state->moveCacheSlot];
-  }
-  if (*(short *)(iVar17 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) != 0) {
-    pfVar16 = (float *)(iVar17 + *(short *)(iVar17 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
-    fVar7 = *pfVar16 * fVar5;
-    uVar10 = (int)*(short *)(pfVar16 + 1) - 1;
-    pfVar14 = (float *)((int)pfVar16 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
-    if (*(short *)pfVar14 == 0) {
-      pfVar14 = (float *)((int)pfVar14 + 2);
-      if (*(short *)pfVar14 == 0) {
-        pfVar14 = (float *)((int)pfVar14 + 2);
-      }
-    }
-    if (*(short *)pfVar14 != 0) {
-      sVar6 = *(short *)((int)pfVar14 + uVar10 * 2 + 2);
-      if (sVar6 < 0) {
-        fVar7 = -fVar7;
-      }
-      if (sVar6 != 0) {
-        fVar4 = (float)(s32)uVar10;
-        fVar8 = gObjAnimProgressOne / fVar4;
-        fVar4 = fVar4 * objAnim->currentMoveProgress;
-        uVar11 = (int)fVar4;
-        fVar4 = fVar4 - (float)(s32)uVar11;
-        if (pfVar15 == (float *)0x0) {
-          fVar1 = fVar7 * (float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 2);
-          fVar2 = fVar7 * (float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 4);
-        }
-        else {
-          if (*(short *)((int)pfVar15 + uVar10 * 2) < 0) {
-            in_f6 = -in_f6;
-          }
-          iVar17 = uVar11 * 2;
-          fVar1 = in_f6 * (in_f7 * (float)*(s16 *)((int)pfVar15 + iVar17)) +
-                  fVar7 * (in_f8 * (float)*(s16 *)((int)pfVar14 + iVar17 + 2));
-          fVar2 = in_f6 *
-                      (in_f7 * (float)*(s16 *)((int)pfVar15 + iVar17 + 2)) +
-                  fVar7 * (in_f8 * (float)*(s16 *)((int)pfVar14 + iVar17 + 4));
-        }
-        fVar5 = fVar3 + fVar4 * (fVar2 - fVar1) + fVar1;
-        fVar4 = -(fVar8 * fVar4 - fVar8);
-        bVar9 = false;
-        do {
-          if (fVar2 <= fVar5) {
-            uVar11 = uVar11 + 1;
-            if ((int)uVar10 <= (int)uVar11) {
-              uVar11 = 0;
-            }
-            if (pfVar15 == (float *)0x0) {
-              fVar3 = fVar7 *
-                      ((float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 4) -
-                       (float)*(s16 *)((int)pfVar14 + uVar11 * 2 + 2));
-            }
-            else {
-              iVar17 = uVar11 * 2;
-              fVar3 = fVar7 *
-                          ((float)*(s16 *)((int)pfVar14 + iVar17 + 4) -
-                           (float)*(s16 *)((int)pfVar14 + iVar17 + 2)) *
-                          in_f8 +
-                      in_f6 *
-                          ((float)((s16 *)((int)pfVar15 + iVar17))[1] -
-                           (float)*(s16 *)((int)pfVar15 + iVar17)) *
-                          in_f7;
-            }
-            fVar4 = fVar4 + fVar8;
-            fVar1 = fVar2;
-            fVar2 = fVar2 + fVar3;
-          }
-          else {
-            fVar4 = fVar4 - (fVar8 * (fVar2 - fVar5)) / (fVar2 - fVar1);
-            bVar9 = true;
-          }
-        } while (!bVar9);
-        if (phaseOut != (float *)0x0) {
-          *phaseOut = fVar4;
-        }
-        return 1;
-      }
-      return 0;
-    }
-  }
-  return 0;
+  nofralloc
+  stwu r1, -0x30(r1)
+  lwz r5, 0x7c(r3)
+  lbz r0, 0xad(r3)
+  extsb r0, r0
+  slwi r0, r0, 2
+  lwzx r5, r5, r0
+  lwz r7, 0x0(r5)
+  lhz r0, 0xec(r7)
+  cmplwi r0, 0x0
+  bne ObjAnim_SampleRootCurvePhase_L_8002F604
+  li r3, 0x0
+  b ObjAnim_SampleRootCurvePhase_L_8002FA40
+ObjAnim_SampleRootCurvePhase_L_8002F604:
+  lwz r8, 0x2c(r5)
+  lfs f3, 0x8(r3)
+  lwz r5, 0x50(r3)
+  lfs f0, 0x4(r5)
+  fdivs f0, f3, f0
+  fmuls f2, f1, f0
+  li r6, 0x0
+  lhz r0, 0x5a(r8)
+  cmplwi r0, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002F6E4
+  lfd f1, gObjAnimU32ToDoubleBias
+  stw r0, 0xc(r1)
+  lis r0, 0x4330
+  stw r0, 0x8(r1)
+  lfd f0, 0x8(r1)
+  fsubs f1, f0, f1
+  lfs f0, gObjAnimEventStepScale
+  fdivs f7, f1, f0
+  lfs f0, gObjAnimProgressOne
+  fsubs f8, f0, f7
+  lhz r0, 0x2(r7)
+  rlwinm r0, r0, 0, 25, 25
+  cmpwi r0, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002F67C
+  lhz r0, 0x48(r8)
+  slwi r0, r0, 2
+  add r5, r8, r0
+  lwz r5, 0x24(r5)
+  addi r5, r5, 0x80
+  b ObjAnim_SampleRootCurvePhase_L_8002F68C
+ObjAnim_SampleRootCurvePhase_L_8002F67C:
+  lwz r5, 0x64(r7)
+  lhz r0, 0x48(r8)
+  slwi r0, r0, 2
+  lwzx r5, r5, r0
+ObjAnim_SampleRootCurvePhase_L_8002F68C:
+  lha r0, 0x4(r5)
+  cmpwi r0, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002F6E4
+  add r6, r5, r0
+  lfs f0, 0x0(r6)
+  fmuls f6, f0, f3
+  addi r6, r6, 0x6
+  lha r0, 0x0(r6)
+  cmpwi r0, 0x0
+  bne ObjAnim_SampleRootCurvePhase_L_8002F6D8
+  addi r6, r6, 0x2
+  lha r0, 0x0(r6)
+  cmpwi r0, 0x0
+  bne ObjAnim_SampleRootCurvePhase_L_8002F6D8
+  addi r6, r6, 0x2
+  lha r0, 0x0(r6)
+  cmpwi r0, 0x0
+  bne ObjAnim_SampleRootCurvePhase_L_8002F6D8
+  li r6, 0x0
+ObjAnim_SampleRootCurvePhase_L_8002F6D8:
+  cmplwi r6, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002F6E4
+  addi r6, r6, 0x2
+ObjAnim_SampleRootCurvePhase_L_8002F6E4:
+  lhz r0, 0x2(r7)
+  rlwinm r0, r0, 0, 25, 25
+  cmpwi r0, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002F70C
+  lhz r0, 0x44(r8)
+  slwi r0, r0, 2
+  add r5, r8, r0
+  lwz r5, 0x1c(r5)
+  addi r5, r5, 0x80
+  b ObjAnim_SampleRootCurvePhase_L_8002F71C
+ObjAnim_SampleRootCurvePhase_L_8002F70C:
+  lwz r5, 0x64(r7)
+  lhz r0, 0x44(r8)
+  slwi r0, r0, 2
+  lwzx r5, r5, r0
+ObjAnim_SampleRootCurvePhase_L_8002F71C:
+  lha r0, 0x4(r5)
+  cmpwi r0, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002FA3C
+  add r5, r5, r0
+  lfs f0, 0x0(r5)
+  fmuls f5, f0, f3
+  lha r7, 0x4(r5)
+  subi r0, r7, 0x1
+  addi r5, r5, 0x6
+  li r8, 0x0
+  lha r7, 0x0(r5)
+  cmpwi r7, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002F754
+  li r8, 0x1
+ObjAnim_SampleRootCurvePhase_L_8002F754:
+  cmpwi r7, 0x0
+  bne ObjAnim_SampleRootCurvePhase_L_8002F760
+  addi r5, r5, 0x2
+ObjAnim_SampleRootCurvePhase_L_8002F760:
+  cmpwi r8, 0x0
+  bne ObjAnim_SampleRootCurvePhase_L_8002F778
+  lha r7, 0x0(r5)
+  cmpwi r7, 0x0
+  bne ObjAnim_SampleRootCurvePhase_L_8002F778
+  addi r5, r5, 0x2
+ObjAnim_SampleRootCurvePhase_L_8002F778:
+  lha r7, 0x0(r5)
+  cmpwi r7, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002FA3C
+  slwi r8, r0, 1
+  add r7, r5, r8
+  lha r7, 0x2(r7)
+  cmpwi r7, 0x0
+  bge ObjAnim_SampleRootCurvePhase_L_8002F79C
+  fneg f5, f5
+ObjAnim_SampleRootCurvePhase_L_8002F79C:
+  cmpwi r7, 0x0
+  bne ObjAnim_SampleRootCurvePhase_L_8002F7AC
+  li r3, 0x0
+  b ObjAnim_SampleRootCurvePhase_L_8002FA40
+ObjAnim_SampleRootCurvePhase_L_8002F7AC:
+  lfd f3, gObjAnimS32ToDoubleBias
+  xoris r7, r0, 0x8000
+  stw r7, 0xc(r1)
+  lis r9, 0x4330
+  stw r9, 0x8(r1)
+  lfd f0, 0x8(r1)
+  fsubs f1, f0, f3
+  lfs f0, gObjAnimProgressOne
+  fdivs f4, f0, f1
+  lfs f0, 0x98(r3)
+  fmuls f1, f1, f0
+  fctiwz f0, f1
+  stfd f0, 0x10(r1)
+  lwz r3, 0x14(r1)
+  xoris r7, r3, 0x8000
+  stw r7, 0x1c(r1)
+  stw r9, 0x18(r1)
+  lfd f0, 0x18(r1)
+  fsubs f0, f0, f3
+  fsubs f10, f1, f0
+  cmplwi r6, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002F8AC
+  lhax r7, r6, r8
+  cmpwi r7, 0x0
+  bge ObjAnim_SampleRootCurvePhase_L_8002F814
+  fneg f6, f6
+ObjAnim_SampleRootCurvePhase_L_8002F814:
+  slwi r10, r3, 1
+  add r9, r5, r10
+  lha r7, 0x2(r9)
+  lfd f9, gObjAnimS32ToDoubleBias
+  xoris r7, r7, 0x8000
+  stw r7, 0x1c(r1)
+  lis r8, 0x4330
+  stw r8, 0x18(r1)
+  lfd f0, 0x18(r1)
+  fsubs f0, f0, f9
+  fmuls f0, f8, f0
+  fmuls f0, f5, f0
+  lhax r7, r6, r10
+  xoris r7, r7, 0x8000
+  stw r7, 0x14(r1)
+  stw r8, 0x10(r1)
+  lfd f1, 0x10(r1)
+  fsubs f1, f1, f9
+  fmuls f1, f7, f1
+  fmadds f0, f6, f1, f0
+  lha r7, 0x4(r9)
+  xoris r7, r7, 0x8000
+  stw r7, 0xc(r1)
+  stw r8, 0x8(r1)
+  lfd f1, 0x8(r1)
+  fsubs f1, f1, f9
+  fmuls f1, f8, f1
+  fmuls f1, f5, f1
+  add r7, r6, r10
+  lha r7, 0x2(r7)
+  xoris r7, r7, 0x8000
+  stw r7, 0x24(r1)
+  stw r8, 0x20(r1)
+  lfd f3, 0x20(r1)
+  fsubs f3, f3, f9
+  fmuls f3, f7, f3
+  fmadds f1, f6, f3, f1
+  b ObjAnim_SampleRootCurvePhase_L_8002F8EC
+ObjAnim_SampleRootCurvePhase_L_8002F8AC:
+  slwi r7, r3, 1
+  add r8, r5, r7
+  lha r7, 0x2(r8)
+  xoris r7, r7, 0x8000
+  stw r7, 0x24(r1)
+  stw r9, 0x20(r1)
+  lfd f0, 0x20(r1)
+  fsubs f0, f0, f3
+  fmuls f0, f5, f0
+  lha r7, 0x4(r8)
+  xoris r7, r7, 0x8000
+  stw r7, 0x1c(r1)
+  stw r9, 0x18(r1)
+  lfd f1, 0x18(r1)
+  fsubs f1, f1, f3
+  fmuls f1, f5, f1
+ObjAnim_SampleRootCurvePhase_L_8002F8EC:
+  fsubs f3, f1, f0
+  fmadds f3, f10, f3, f0
+  fadds f2, f2, f3
+  fnmsubs f3, f4, f10, f4
+  li r11, 0x0
+ObjAnim_SampleRootCurvePhase_L_8002F900:
+  fcmpo cr0, f1, f2
+  ble ObjAnim_SampleRootCurvePhase_L_8002F924
+  fsubs f9, f1, f2
+  fmuls f10, f4, f9
+  fsubs f9, f1, f0
+  fdivs f9, f10, f9
+  fsubs f3, f3, f9
+  li r11, 0x1
+  b ObjAnim_SampleRootCurvePhase_L_8002FA20
+ObjAnim_SampleRootCurvePhase_L_8002F924:
+  addi r3, r3, 0x1
+  cmpw r3, r0
+  blt ObjAnim_SampleRootCurvePhase_L_8002F934
+  li r3, 0x0
+ObjAnim_SampleRootCurvePhase_L_8002F934:
+  fmr f0, f1
+  cmplwi r6, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002F9D4
+  slwi r9, r3, 1
+  add r10, r5, r9
+  lha r7, 0x4(r10)
+  lfd f12, gObjAnimS32ToDoubleBias
+  xoris r7, r7, 0x8000
+  stw r7, 0x24(r1)
+  lis r8, 0x4330
+  stw r8, 0x20(r1)
+  lfd f9, 0x20(r1)
+  fsubs f10, f9, f12
+  lha r7, 0x2(r10)
+  xoris r7, r7, 0x8000
+  stw r7, 0x1c(r1)
+  stw r8, 0x18(r1)
+  lfd f9, 0x18(r1)
+  fsubs f9, f9, f12
+  fsubs f9, f10, f9
+  fmuls f11, f5, f9
+  add r9, r6, r9
+  lha r7, 0x2(r9)
+  xoris r7, r7, 0x8000
+  stw r7, 0x14(r1)
+  stw r8, 0x10(r1)
+  lfd f9, 0x10(r1)
+  fsubs f10, f9, f12
+  lha r7, 0x0(r9)
+  xoris r7, r7, 0x8000
+  stw r7, 0xc(r1)
+  stw r8, 0x8(r1)
+  lfd f9, 0x8(r1)
+  fsubs f9, f9, f12
+  fsubs f9, f10, f9
+  fmuls f9, f6, f9
+  fmuls f9, f9, f7
+  fmadds f9, f11, f8, f9
+  fadds f1, f1, f9
+  b ObjAnim_SampleRootCurvePhase_L_8002FA1C
+ObjAnim_SampleRootCurvePhase_L_8002F9D4:
+  slwi r7, r3, 1
+  add r9, r5, r7
+  lha r7, 0x4(r9)
+  lfd f11, gObjAnimS32ToDoubleBias
+  xoris r7, r7, 0x8000
+  stw r7, 0x24(r1)
+  lis r8, 0x4330
+  stw r8, 0x20(r1)
+  lfd f9, 0x20(r1)
+  fsubs f10, f9, f11
+  lha r7, 0x2(r9)
+  xoris r7, r7, 0x8000
+  stw r7, 0x1c(r1)
+  stw r8, 0x18(r1)
+  lfd f9, 0x18(r1)
+  fsubs f9, f9, f11
+  fsubs f9, f10, f9
+  fmadds f1, f5, f9, f1
+ObjAnim_SampleRootCurvePhase_L_8002FA1C:
+  fadds f3, f3, f4
+ObjAnim_SampleRootCurvePhase_L_8002FA20:
+  cmpwi r11, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002F900
+  cmplwi r4, 0x0
+  beq ObjAnim_SampleRootCurvePhase_L_8002FA34
+  stfs f3, 0x0(r4)
+ObjAnim_SampleRootCurvePhase_L_8002FA34:
+  li r3, 0x1
+  b ObjAnim_SampleRootCurvePhase_L_8002FA40
+ObjAnim_SampleRootCurvePhase_L_8002FA3C:
+  li r3, 0x0
+ObjAnim_SampleRootCurvePhase_L_8002FA40:
+  addi r1, r1, 0x30
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
