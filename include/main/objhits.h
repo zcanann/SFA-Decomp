@@ -51,6 +51,7 @@
 #define OBJHITBOX_SHAPE_VERTICAL_SPAN 0x02
 #define OBJHITBOX_SHAPE_CHECK_REVERSE 0x20
 #define OBJHITBOX_STATE_MATRIX_STRIDE 0x40
+#define OBJHITBOX_STATE_MATRIX_FLOAT_COUNT 0x10
 #define OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET 0x10C
 #define OBJHITBOX_STATE_RESET_FRAMES_OFFSET 0x10D
 
@@ -63,7 +64,7 @@ typedef struct ObjHitboxDef {
   s16 radius;
   s16 verticalMin;
   s16 verticalMax;
-  u16 flags;
+  s16 flags;
   u8 shapeFlags;
   u8 pad63[OBJHITBOX_DEF_HIT_TYPE_OFFSET - 0x63];
   s8 hitType;
@@ -74,7 +75,7 @@ typedef struct ObjHitboxDef {
 } ObjHitboxDef;
 
 typedef struct ObjHitboxTransformState {
-  u8 matrices[4][OBJHITBOX_STATE_MATRIX_STRIDE];
+  f32 matrices[4][4][4];
   u8 pad100[OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET - 0x100];
   u8 activeMatrixIndex;
   s8 resetFrames;

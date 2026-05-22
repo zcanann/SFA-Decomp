@@ -11,7 +11,7 @@ extern undefined4 Obj_TransformLocalPointToWorld();
 extern uint getAngle();
 extern undefined4 mtxRotateByVec3s();
 extern undefined4 setMatrixFromObjectPos();
-extern int FUN_80017970();
+extern int ObjModel_GetJointMatrix(int *model,int jointIndex);
 extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
 extern int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex);
 extern int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
@@ -189,7 +189,7 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
     *param_8 = (int)param_7;
     *param_9 = lbl_803DF590;
     dVar20 = extraout_f1;
-    iVar6 = FUN_80017970(param_6,0);
+    iVar6 = ObjModel_GetJointMatrix(param_6,0);
     local_c4 = *(float *)(iVar6 + 0xc);
     local_c0 = *(float *)(iVar6 + 0x1c);
     local_bc = *(float *)(iVar6 + 0x2c);
@@ -210,11 +210,11 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
       if (uVar13 == 0) break;
       if (dVar17 < (double)*(float *)(*(int *)(iVar9 + 0x10) + iVar6)) {
         iVar12 = (int)*(char *)(*(int *)(iVar10 + 0x3c) + iVar16);
-        iVar7 = FUN_80017970(param_6,uVar13);
+        iVar7 = ObjModel_GetJointMatrix(param_6,uVar13);
         local_c4 = *(float *)(iVar7 + 0xc);
         local_c0 = *(float *)(iVar7 + 0x1c);
         local_bc = *(float *)(iVar7 + 0x2c);
-        iVar7 = FUN_80017970(param_6,iVar12);
+        iVar7 = ObjModel_GetJointMatrix(param_6,iVar12);
         local_d0 = *(float *)(iVar7 + 0xc);
         local_cc = *(float *)(iVar7 + 0x1c);
         local_c8 = *(float *)(iVar7 + 0x2c);
@@ -401,7 +401,7 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
     *param_5 = (int)param_4;
     *param_6 = lbl_803DF590;
     dVar20 = extraout_f1;
-    iVar5 = FUN_80017970(param_3,0);
+    iVar5 = ObjModel_GetJointMatrix(param_3,0);
     local_a4 = *(float *)(iVar5 + 0xc);
     local_a0 = *(float *)(iVar5 + 0x1c);
     local_9c = *(float *)(iVar5 + 0x2c);
@@ -422,11 +422,11 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
       if (uVar12 == 0) break;
       if (dVar16 < (double)*(float *)(*(int *)(iVar8 + 0x10) + iVar5)) {
         iVar11 = (int)*(char *)(*(int *)(iVar9 + 0x3c) + iVar15);
-        iVar6 = FUN_80017970(param_3,uVar12);
+        iVar6 = ObjModel_GetJointMatrix(param_3,uVar12);
         local_a4 = *(float *)(iVar6 + 0xc);
         local_a0 = *(float *)(iVar6 + 0x1c);
         local_9c = *(float *)(iVar6 + 0x2c);
-        iVar6 = FUN_80017970(param_3,iVar11);
+        iVar6 = ObjModel_GetJointMatrix(param_3,iVar11);
         local_b0 = *(float *)(iVar6 + 0xc);
         local_ac = *(float *)(iVar6 + 0x1c);
         local_a8 = *(float *)(iVar6 + 0x2c);
@@ -1358,7 +1358,8 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix)
     if (advanceMatrix != 0) {
       transformState->activeMatrixIndex = (transformState->activeMatrixIndex + 1) & 1;
     }
-    matrixBase = (int)&transformState->matrices[transformState->activeMatrixIndex];
+    matrixBase = (int)((float *)transformState->matrices +
+                       transformState->activeMatrixIndex * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT);
     local_28.x = -hitbox->rotationX;
     if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
       local_28.y = 0;
@@ -1395,7 +1396,8 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix)
     local_28.radiusY = hitbox->radiusY;
     local_28.radiusZ = hitbox->radiusZ;
     setMatrixFromObjectPos(
-        (float *)&transformState->matrices[transformState->activeMatrixIndex + 2],
+        (float *)transformState->matrices +
+            (transformState->activeMatrixIndex + 2) * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT,
         &local_28);
     if (transformState->resetFrames != 0) {
       transformState->resetFrames = transformState->resetFrames + -1;
