@@ -2037,6 +2037,28 @@ typedef struct LandedArwingFxPoint {
     u8 pad;
 } LandedArwingFxPoint;
 
+typedef struct LandedArwingFxScratch {
+    u8 effectPos[12];
+    f32 x;
+    f32 y;
+    f32 z;
+} LandedArwingFxScratch;
+
+typedef struct LandedArwingState {
+    f32 unk0;
+    f32 path7Fx;
+    f32 path8Fx;
+    f32 path6Fx;
+    int childObject;
+    s16 unk14;
+    u8 sequenceState;
+    u8 unk17;
+    u8 unk18;
+    u8 unk19;
+    u8 enablePathFx;
+    u8 unk1B;
+} LandedArwingState;
+
 extern LandedArwingFxPoint lbl_80321A28[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
@@ -2046,55 +2068,54 @@ extern void fn_8009837C(int obj, int arg4, int arg5, int arg6, void *pos, f32 sc
 #pragma scheduling off
 #pragma peephole off
 void fn_801889C8(int obj) {
-    int *state;
+    LandedArwingState *state;
     u8 i;
     LandedArwingFxPoint *entry;
-    f32 z;
-    f32 y;
-    f32 x;
-    u8 posData[12];
+    LandedArwingFxScratch scratch;
     f32 *xPtr;
     f32 *yPtr;
     f32 *zPtr;
 
-    xPtr = &x;
-    yPtr = &y;
-    zPtr = &z;
-    state = *(int **)(obj + 0xb8);
-    if (*(u8 *)((char *)state + 0x1a) != 0) {
-        for (i = 0; i < 5; i++) {
+    state = *(LandedArwingState **)(obj + 0xb8);
+    if (state->enablePathFx != 0) {
+        i = 0;
+        zPtr = &scratch.z;
+        yPtr = &scratch.y;
+        xPtr = &scratch.x;
+        while (i < 5) {
             entry = &lbl_80321A28[i];
             ObjPath_GetPointWorldPosition(obj, entry->pathPoint, xPtr, yPtr, zPtr, 0);
             *xPtr -= *(f32 *)(obj + 0xc);
             *yPtr -= *(f32 *)(obj + 0x10);
             *zPtr -= *(f32 *)(obj + 0x14);
-            fn_800971A0(obj, 4, entry->arg5, entry->arg6, posData,
+            fn_800971A0(obj, 4, entry->arg5, entry->arg6, scratch.effectPos,
                         *(f32 *)(obj + 8) * entry->scale);
+            i++;
         }
     }
 
-    if (*(f32 *)((char *)state + 0xc) != lbl_803E3B98) {
-        ObjPath_GetPointWorldPosition(obj, 6, xPtr, yPtr, zPtr, 0);
-        *xPtr -= *(f32 *)(obj + 0xc);
-        *yPtr -= *(f32 *)(obj + 0x10);
-        *zPtr -= *(f32 *)(obj + 0x14);
-        fn_8009837C(obj, 4, 0, 0, posData, lbl_803E3B9C, *(f32 *)((char *)state + 0xc));
+    if (state->path6Fx != lbl_803E3B98) {
+        ObjPath_GetPointWorldPosition(obj, 6, &scratch.x, &scratch.y, &scratch.z, 0);
+        scratch.x -= *(f32 *)(obj + 0xc);
+        scratch.y -= *(f32 *)(obj + 0x10);
+        scratch.z -= *(f32 *)(obj + 0x14);
+        fn_8009837C(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path6Fx);
     }
 
-    if (*(f32 *)((char *)state + 8) != lbl_803E3B98) {
-        ObjPath_GetPointWorldPosition(obj, 8, xPtr, yPtr, zPtr, 0);
-        *xPtr -= *(f32 *)(obj + 0xc);
-        *yPtr -= *(f32 *)(obj + 0x10);
-        *zPtr -= *(f32 *)(obj + 0x14);
-        fn_8009837C(obj, 4, 0, 0, posData, lbl_803E3B9C, *(f32 *)((char *)state + 8));
+    if (state->path8Fx != lbl_803E3B98) {
+        ObjPath_GetPointWorldPosition(obj, 8, &scratch.x, &scratch.y, &scratch.z, 0);
+        scratch.x -= *(f32 *)(obj + 0xc);
+        scratch.y -= *(f32 *)(obj + 0x10);
+        scratch.z -= *(f32 *)(obj + 0x14);
+        fn_8009837C(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path8Fx);
     }
 
-    if (*(f32 *)((char *)state + 4) != lbl_803E3B98) {
-        ObjPath_GetPointWorldPosition(obj, 7, xPtr, yPtr, zPtr, 0);
-        *xPtr -= *(f32 *)(obj + 0xc);
-        *yPtr -= *(f32 *)(obj + 0x10);
-        *zPtr -= *(f32 *)(obj + 0x14);
-        fn_8009837C(obj, 4, 0, 0, posData, lbl_803E3B9C, *(f32 *)((char *)state + 4));
+    if (state->path7Fx != lbl_803E3B98) {
+        ObjPath_GetPointWorldPosition(obj, 7, &scratch.x, &scratch.y, &scratch.z, 0);
+        scratch.x -= *(f32 *)(obj + 0xc);
+        scratch.y -= *(f32 *)(obj + 0x10);
+        scratch.z -= *(f32 *)(obj + 0x14);
+        fn_8009837C(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path7Fx);
     }
 }
 #pragma peephole reset
