@@ -17,7 +17,7 @@ typedef struct TreeBirdState {
   s16 immediateTrigger;
   u8 triggerLatched;
   u8 searchDelay;
-  int targetObj;
+  void *targetObj;
 } TreeBirdState;
 
 typedef struct TreeBirdSeqData {
@@ -25,6 +25,8 @@ typedef struct TreeBirdSeqData {
   u8 commands[10];
   u8 commandCount;
 } TreeBirdSeqData;
+
+typedef undefined4 (*TreeBirdTriggerImmediateFn)(int obj, int triggerId);
 
 #define TREEBIRD_SPAWN_PARTICLE(obj,id) \
   (*(code *)(*gPartfxInterface + 8))(obj,id,0,1,-1,0)
@@ -141,16 +143,16 @@ int treebird_getExtraSize(void)
  */
 void treebird_render(int obj)
 {
-  int state;
+  TreeBirdState *state;
   float fx, fy, fz;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(TreeBirdState **)(obj + 0xb8);
   objRenderFn_8003b8f4(obj, lbl_803E51F8);
-  if ((u32)*(int *)(state + 8) != 0) {
+  if (state->targetObj != NULL) {
     ObjPath_GetPointWorldPosition(obj, 0, &fx, &fy, &fz, 0);
-    *(float *)(*(int *)(state + 8) + 0xc) = fx;
-    *(float *)(*(int *)(state + 8) + 0x10) = fy;
-    *(float *)(*(int *)(state + 8) + 0x14) = fz;
+    *(float *)((u8 *)state->targetObj + 0xc) = fx;
+    *(float *)((u8 *)state->targetObj + 0x10) = fy;
+    *(float *)((u8 *)state->targetObj + 0x14) = fz;
   }
 }
 
@@ -163,29 +165,31 @@ void treebird_render(int obj)
  */
 void treebird_update(int obj)
 {
-  int state;
+  TreeBirdState *state;
+  int immediateTrigger;
   float dist;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(TreeBirdState **)(obj + 0xb8);
   dist = lbl_803E51FC;
-  if (*(u8 *)(state + 7) != 0) {
-    *(int *)(state + 8) = ObjGroup_FindNearestObject(4, obj, &dist);
-    if (*(int *)(state + 8) != 0) {
-      *(u8 *)(state + 7) = 0;
+  if (state->searchDelay != 0) {
+    state->targetObj = (void *)ObjGroup_FindNearestObject(4, obj, &dist);
+    if ((u32)state->targetObj != 0) {
+      state->searchDelay = 0;
     }
     else {
-      *(u8 *)(state + 7) = *(u8 *)(state + 7) - 1;
+      state->searchDelay--;
     }
   }
-  else if (*(u8 *)(state + 6) == 0) {
-    if (*(short *)(state + 4) != 0) {
-      (*(code *)(*gObjectTriggerInterface + 0x54))();
-      (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(short *)(state + 2), obj, 1);
-      *(u8 *)(state + 6) = 1;
+  else if (state->triggerLatched == 0) {
+    immediateTrigger = state->immediateTrigger;
+    if (immediateTrigger != 0) {
+      ((TreeBirdTriggerImmediateFn)*(code *)(*gObjectTriggerInterface + 0x54))(obj, immediateTrigger);
+      (*(code *)(*gObjectTriggerInterface + 0x48))((int)state->triggerId, obj, 1);
+      state->triggerLatched = 1;
     }
-    else if (GameBit_Get((int)*(short *)state) != 0) {
-      (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(short *)(state + 2), obj, -1);
-      *(u8 *)(state + 6) = 1;
+    else if (GameBit_Get((int)state->gameBit) != 0) {
+      (*(code *)(*gObjectTriggerInterface + 0x48))((int)state->triggerId, obj, -1);
+      state->triggerLatched = 1;
     }
   }
 }
