@@ -1725,8 +1725,17 @@ int landed_arwing_getExtraSize(void) { return 0x1c; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AF8;
 extern f32 lbl_803E3AFC;
+extern f32 lbl_803E3B00;
+extern f32 lbl_803E3B20;
+extern f32 lbl_803E3B24;
+extern f32 lbl_803E3B28;
+extern f32 lbl_803E3B2C;
+extern f32 lbl_803E3B30;
+extern f32 lbl_803E3B34;
 extern void objRenderFn_8003b8f4(f32);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
+extern void objRemoveFromListFn_8002ce88(int obj);
 extern f32 lbl_803E3B70;
 extern f32 lbl_803E3B78;
 #pragma peephole off
@@ -1761,6 +1770,46 @@ void flammablevine_hitDetect(int obj)
             *(f32 *)(state + 4) = lbl_803E3AFC;
             state[0] = state[0] | 1;
         }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void flammablevine_init(int obj, int def)
+{
+    u8 *state;
+    f32 scale;
+
+    state = *(u8 **)(obj + 0xb8);
+    ObjGroup_AddObject(obj, 0x31);
+    *(s16 *)obj = (s16)((s8)*(u8 *)(def + 0x18) << 8);
+
+    *(f32 *)(obj + 8) = lbl_803E3B20 * ((f32)*(s16 *)(def + 0x1a) / lbl_803E3B24);
+    if (*(f32 *)(obj + 8) <= lbl_803E3B28) {
+        *(f32 *)(obj + 8) = lbl_803E3B28;
+    }
+
+    scale = *(f32 *)(obj + 8);
+    ObjHitbox_SetCapsuleBounds(
+        obj,
+        (s16)(lbl_803E3B2C * scale),
+        0,
+        (s16)(lbl_803E3B30 * scale));
+    *(f32 *)(state + 0x10) = lbl_803E3B34;
+    ObjAnim_SetMoveProgress(obj, lbl_803E3B00);
+
+    if (*(s16 *)(def + 0x1e) != -1 && GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
+        objRemoveFromListFn_8002ce88(obj);
+        ObjHits_DisableObject(obj);
+        *(u8 *)(obj + 0x36) = 0;
+        state[0] = state[0] | 2;
+    }
+
+    state[1] = *(u8 *)(def + 0x19);
+    if (state[1] == 1) {
+        ObjHits_MarkObjectPositionDirty(obj);
     }
 }
 #pragma peephole reset
