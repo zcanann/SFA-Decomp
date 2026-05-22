@@ -1,6 +1,7 @@
 
 
 #include "ghidra_import.h"
+#include "main/objanim.h"
 
 /* Pattern wrappers. */
 int ktrex_stateHandlerA00(void) { return 0x0; }
@@ -14,7 +15,6 @@ int hightop_func14(void) { return 0x0; }
 int hightop_func10(void) { return 0x0; }
 int hightop_func0E(void) { return 0x1; }
 
-extern void ObjAnim_SetCurrentMove(int obj, int moveId, f32 t, int unk);
 extern u8 framesThisStep;
 extern f32 lbl_803E6AA8;
 extern f32 lbl_803E6AB4;
