@@ -1759,7 +1759,7 @@ void fn_80187C70(int obj) {
     Dll109State *state;
     int def;
     int setup;
-    int hitOut[3];
+    u8 hitOut[12];
 
     state = *(Dll109State **)(obj + 0xb8);
     def = *(int *)(obj + 0x4c);
@@ -1799,7 +1799,7 @@ void fn_80187C70(int obj) {
                 if (ViewFrustum_IsSphereVisible((f32 *)(obj + 0xc),
                                                 *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8)) == 0) {
                     ObjHits_EnableObject(obj);
-                    *(u8 *)(obj + 0xaf) &= 0xf7;
+                    *(u8 *)(obj + 0xaf) &= ~8;
                     state->state = 0;
                 }
             }
@@ -2743,7 +2743,7 @@ void Fall_Ladders_update(int obj) {
             ((ObjectTriggerUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
         }
     } else if (state->delay != 0) {
-        state->delay -= (s16)(s32)timeDelta;
+        state->delay -= (s32)timeDelta;
         if (state->delay <= 0) {
             state->motionState = 1;
             if (state->playStartSound != 0) {
@@ -2756,7 +2756,7 @@ void Fall_Ladders_update(int obj) {
         if ((s8)state->motionState == 0 && GameBit_Get(state->upperGameBit) != 0) {
             state->delay = 10;
         }
-        if ((s8)state->motionState == 1 && *(f32 *)(def + 0xc) <= *(f32 *)(obj + 0x10)) {
+        if ((s8)state->motionState == 1 && *(f32 *)(obj + 0x10) >= *(f32 *)(def + 0xc)) {
             *(f32 *)(obj + 0x28) -= lbl_803E3B50;
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
             if (*(f32 *)(obj + 0x10) <= *(f32 *)(def + 0xc)) {
