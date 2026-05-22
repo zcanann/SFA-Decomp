@@ -73,7 +73,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
     effectPos.x = 0;
     animDef = bank->animDef;
     hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef,hitSphereIndex);
-    if (hitSphereIndex >= (int)(reactionEntryCount & 0xff)) {
+    if (hitSphereIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK)) {
       OSReport(sObjHitReactSphereOverflowString,hitSphereIndex);
       hitSphereIndex = 0;
     }
@@ -101,7 +101,8 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
         }
       }
       else {
-        objLightFn_8009a1dc(obj,(double)gObjHitReactAltEffectScale,(undefined2 *)&effectPos.x,1,0);
+        objLightFn_8009a1dc(obj,(double)gObjHitReactAltEffectScale,(undefined2 *)&effectPos.x,
+                            OBJHITREACT_ALT_EFFECT_COUNT,0);
       }
     }
     if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
