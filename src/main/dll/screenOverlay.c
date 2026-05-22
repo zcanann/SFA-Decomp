@@ -111,7 +111,7 @@ void ProjectileSwitch_hitDetect(int obj)
     if ((*(u8 *)(state2 + 0x1e) & 3) == 2) {
       *(float *)(state + 4) =
           lbl_803E3704 * lbl_803E3708 *
-          (float)((double)(int)(*(short *)(state2 + 0x1a) ^ 0x80000000) - lbl_803E3710);
+          (f32)*(s16 *)(state2 + 0x1a);
     }
   }
 }
@@ -147,7 +147,7 @@ void ProjectileSwitch_update(int obj)
   }
   if (lbl_803E3718 < *(float *)(state + 4)) {
     *(float *)(state + 4) =
-        *(float *)(state + 4) - (float)((double)(int)framesThisStep - lbl_803E3720);
+        *(float *)(state + 4) - (f32)(u32)framesThisStep;
     if (*(float *)(state + 4) <= lbl_803E3718) {
       *(float *)(state + 4) = lbl_803E3718;
       GameBit_Set((int)*(short *)(state + 2), 0);
@@ -252,7 +252,7 @@ void InvisibleHitSwitch_update(int obj)
 
   if (lbl_803E3730 < *(float *)(state + 4)) {
     *(float *)(state + 4) =
-        *(float *)(state + 4) - (float)((double)(int)framesThisStep - lbl_803E3740);
+        *(float *)(state + 4) - (f32)(u32)framesThisStep;
     if (*(float *)(state + 4) <= lbl_803E3730) {
       *(float *)(state + 4) = lbl_803E3730;
       GameBit_Set((int)*(short *)(state2 + 0x18), 0);
@@ -292,7 +292,7 @@ void InvisibleHitSwitch_update(int obj)
       if ((*(u8 *)(state2 + 0x1e) & 3) == 2) {
         *(float *)(state + 4) =
             lbl_803E3734 * lbl_803E373C *
-            (float)((double)(int)(*(short *)(state2 + 0x1a) ^ 0x80000000) - lbl_803E3748);
+            (f32)*(s16 *)(state2 + 0x1a);
       }
     }
   }
