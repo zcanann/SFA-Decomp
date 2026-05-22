@@ -145,9 +145,9 @@ s32 synthUpdateCallbacks(void) {
 }
 
 void synthFlushCallbacks(void) {
-    u32 listIndex;
     SynthCallbackLink* callback;
     SynthCallbackLink* next;
+    u32 listIndex;
     SynthCallbackLink* completed;
 
     for (listIndex = 0; listIndex < SYNTH_CALLBACK_ACTIVE_LIST_COUNT; listIndex++) {
@@ -155,9 +155,10 @@ void synthFlushCallbacks(void) {
         while (callback != 0) {
             next = callback->next;
             synthSendKeyOff(callback->callbackId);
-            gSynthCurrentVoice->callbackLists[listIndex] = next;
-            if (next != 0) {
-                next->prev = 0;
+            completed = callback->next;
+            gSynthCurrentVoice->callbackLists[listIndex] = completed;
+            if (completed != 0) {
+                gSynthCurrentVoice->callbackLists[listIndex]->prev = 0;
             }
 
             completed = gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX];
