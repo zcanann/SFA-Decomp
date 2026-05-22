@@ -23,8 +23,8 @@ extern undefined4 gameTextShow();
 extern undefined4 checkReset();
 extern undefined8 mmFreeTick();
 extern undefined4 ObjModel_ClearRenderAttachment();
-extern void ObjModel_EnableDefaultRenderCallback(double scale,DIMbossObject *obj,undefined4 model,
-                                                 void *mtx,int enabled);
+extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject *obj,undefined4 model,void *mtx,
+                                                 int enabled,double scale);
 extern int Obj_GetActiveModel();
 extern undefined4 Obj_BuildWorldTransformMatrix();
 extern undefined4 FUN_80017a98();
@@ -668,7 +668,7 @@ void DIMboss_update(DIMbossObject *obj)
             Obj_BuildWorldTransformMatrix(obj,gDIMbossRenderMtx,0);
             targetModel = Obj_GetActiveModel(obj);
             ObjModel_EnableDefaultRenderCallback
-                      ((double)(obj->modelScale * obj->baseScale),obj,targetModel,gDIMbossRenderMtx,1);
+                      (obj,targetModel,gDIMbossRenderMtx,1,(double)(obj->modelScale * obj->baseScale));
           }
         }
         if (((topState->steamSfxPending >> 7) & 1) != 0) {
@@ -681,12 +681,12 @@ void DIMboss_update(DIMbossObject *obj)
         }
       }
       else {
-        if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_TARGET_TRICKY) == 0) {
-          targetModel = Obj_GetPlayerObject();
+        if ((runtime->stateFlags & DIMBOSS_STATE_FLAG_TARGET_TRICKY) != 0) {
+          targetModel = getTrickyObject();
           runtime->targetModel = targetModel;
         }
         else {
-          targetModel = getTrickyObject();
+          targetModel = Obj_GetPlayerObject();
           runtime->targetModel = targetModel;
         }
         childObject = obj->childObject;
