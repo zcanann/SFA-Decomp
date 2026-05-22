@@ -2136,12 +2136,99 @@ void infopoint_init(int *obj, u8 *def) {
 
 extern f32 lbl_803E3B78;
 extern f32 lbl_803E3B7C;
+extern f64 lbl_803E3B80;
 extern f32 lbl_803E3B88;
 extern f32 lbl_803E3B90;
+extern f32 Vec_distance(f32 *a, f32 *b);
+extern void fn_8002B2AC(f32 *out, int obj, f32 *pos);
 extern void Model_GetVertexPosition(int *model, int idx, f32 *out);
 extern void fn_80188798(f32 *v, f32 *minOut, f32 *maxOut);
 extern void PSVECScale(f32 *dst, f32 *src, f32 s);
 extern f32 PSVECMag(f32 *v);
+
+#pragma scheduling off
+#pragma peephole off
+void decoration11a_hitDetect(int obj) {
+    s16 modelId;
+    f32 *state;
+    int count;
+    int *objects;
+    f32 radius;
+    f32 localPos[3];
+    f32 delta;
+    f32 xSq;
+    f32 ySq;
+    f32 zSq;
+
+    modelId = *(s16 *)(obj + 0x46);
+    if (modelId == 0x7a1) {
+        goto check_decor_objects;
+    }
+    if (modelId == 0x7a2) {
+        goto check_decor_objects;
+    }
+    if (modelId != 0x7a3) {
+        return;
+    }
+
+check_decor_objects:
+    state = *(f32 **)(obj + 0xb8);
+    objects = ObjGroup_GetObjects(2, &count);
+    while (count != 0) {
+        if (Vec_distance((f32 *)(*objects + 0x18), (f32 *)(obj + 0x18)) < state[6]) {
+            if (*(void **)(*objects + 0x54) != NULL) {
+                radius = (f32)*(s16 *)(*(int *)(*objects + 0x54) + 0x5a);
+                fn_8002B2AC(localPos, obj, (f32 *)(*objects + 0xc));
+
+                if (state[3] <= localPos[0]) {
+                    xSq = lbl_803E3B7C;
+                    if (state[0] < localPos[0]) {
+                        delta = localPos[0] - state[0];
+                        xSq = delta * delta;
+                    }
+                }
+                else {
+                    delta = localPos[0] - state[3];
+                    xSq = delta * delta;
+                }
+
+                if (state[4] <= localPos[1]) {
+                    ySq = lbl_803E3B7C;
+                    if (state[1] < localPos[1]) {
+                        delta = localPos[1] - state[1];
+                        ySq = delta * delta;
+                    }
+                }
+                else {
+                    delta = localPos[1] - state[4];
+                    ySq = delta * delta;
+                }
+
+                if (state[5] <= localPos[2]) {
+                    zSq = lbl_803E3B7C;
+                    if (state[2] < localPos[2]) {
+                        delta = localPos[2] - state[2];
+                        zSq = delta * delta;
+                    }
+                }
+                else {
+                    delta = localPos[2] - state[5];
+                    zSq = delta * delta;
+                }
+
+                if (lbl_803E3B7C + xSq + ySq + zSq < radius * radius) {
+                    *(int *)(*(int *)(*objects + 0x54) + 0x50) = obj;
+                    *(u8 *)(*(int *)(*objects + 0x54) + 0xad) = 1;
+                }
+            }
+        }
+        count--;
+        objects++;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void decoration11a_init(int *obj, u8 *def) {
