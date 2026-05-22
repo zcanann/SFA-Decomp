@@ -20,28 +20,26 @@ extern u8 voiceDirectSlots[];
  */
 void voiceUnregister(int obj)
 {
+    SynthVoiceState *voice;
     u32 voiceId;
     u32 midiSlot;
     u32 midiChannel;
-    u8 key;
     u8 *slot;
-    u32 baseAddr;
 
-    voiceId = *(u32 *)(obj + SYNTH_VOICE_HANDLE_OFFSET);
-    if (voiceId == 0xffffffff) return;
-    midiSlot = *(u8 *)(obj + SYNTH_VOICE_MIDI_SLOT_OFFSET);
-    if (midiSlot == 0xff) return;
-    midiChannel = *(u8 *)(obj + SYNTH_VOICE_MIDI_CHANNEL_OFFSET);
-    key = (u8)voiceId;
-    if (midiChannel == 0xff) {
-        baseAddr = (u32)voiceDirectSlots;
-        slot = (u8 *)(baseAddr + key);
-        if (*slot != key) return;
-        *slot = 0xff;
+    voice = (SynthVoiceState *)obj;
+    voiceId = voice->handle;
+    if (voiceId == SYNTH_INVALID_VOICE) return;
+    midiSlot = voice->midiSlot;
+    if (midiSlot == SYNTH_INVALID_VOICE_U8) return;
+    midiChannel = voice->midiChannel;
+    voiceId = (u8)voiceId;
+    if (midiChannel == SYNTH_INVALID_VOICE_U8) {
+        slot = &voiceDirectSlots[voiceId];
+        if (*slot != voiceId) return;
+        *slot = SYNTH_INVALID_VOICE_U8;
     } else {
-        baseAddr = (u32)voiceMidiKeySlots;
-        slot = (u8 *)(baseAddr + (midiChannel << 4) + midiSlot);
-        if (key != *slot) return;
-        *slot = 0xff;
+        slot = &voiceMidiKeySlots[(midiChannel << 4) + midiSlot];
+        if (voiceId != *slot) return;
+        *slot = SYNTH_INVALID_VOICE_U8;
     }
 }
