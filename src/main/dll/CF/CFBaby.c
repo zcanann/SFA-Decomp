@@ -1724,7 +1724,9 @@ int landed_arwing_getExtraSize(void) { return 0x1c; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AF8;
+extern f32 lbl_803E3AFC;
 extern void objRenderFn_8003b8f4(f32);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E3B70;
 extern f32 lbl_803E3B78;
 #pragma peephole off
@@ -1737,6 +1739,30 @@ void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 #pragma scheduling off
 #pragma peephole off
 void flammablevine_free(int x) { ObjGroup_RemoveObject(x, 0x31); }
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void flammablevine_hitDetect(int obj)
+{
+    u8 *state;
+    u8 *def;
+    int hitObj;
+
+    state = *(u8 **)(obj + 0xb8);
+    def = *(u8 **)(obj + 0x4c);
+    if ((state[0] & 3) == 0) {
+        if (ObjHits_GetPriorityHit(obj, 0, 0, &hitObj) == 0x1a) {
+            if (*(s16 *)(def + 0x1e) != -1) {
+                GameBit_Set(*(s16 *)(def + 0x1e), 1);
+                Sfx_PlayFromObject(0, 0x409);
+            }
+            *(f32 *)(state + 4) = lbl_803E3AFC;
+            state[0] = state[0] | 1;
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 

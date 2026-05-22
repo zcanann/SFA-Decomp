@@ -65,7 +65,7 @@ int flammablevine_getExtraSize(void);
 int flammablevine_func08(void);
 void flammablevine_free(int obj);
 void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void flammablevine_hitDetect(void);
+void flammablevine_hitDetect(int obj);
 void flammablevine_update(void);
 void flammablevine_init(void);
 void flammablevine_release(void);
