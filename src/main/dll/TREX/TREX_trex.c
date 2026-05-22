@@ -584,8 +584,6 @@ void FUN_801e4d6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     *(undefined4 *)(param_9 + 0x42) = *(undefined4 *)(param_9 + 8);
     *(undefined4 *)(param_9 + 0x44) = *(undefined4 *)(param_9 + 10);
     uStack_14 = randomGetRange(0xffffff9c,100);
-    uStack_14 = uStack_14 ^ 0x80000000;
-    local_18 = 0x43300000;
     *(float *)(param_9 + 4) =
          lbl_803E6590 * (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e65a0) +
          lbl_803E658C;
@@ -1024,10 +1022,10 @@ void FUN_801e57e0(short *param_1)
   if ((int)*(uint *)(param_1 + 0x7a) < 0x3d) {
     uStack_1c = *(uint *)(param_1 + 0x7a) ^ 0x80000000;
     local_20 = 0x43300000;
-    local_30 = (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e65d8) / lbl_803E65C8;
+    local_30 = (f32)(s32)uStack_1c / lbl_803E65C8;
     local_18 = 0x43300000;
     iVar1 = (int)(lbl_803E65CC *
-                 ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e65d8) / lbl_803E65C8
+                 ((f32)(s32)uStack_1c / lbl_803E65C8
                  ));
     local_10 = (longlong)iVar1;
     *(char *)(param_1 + 0x1b) = (char)iVar1;
@@ -1080,7 +1078,7 @@ void FUN_801e59ec(uint param_1)
   uVar2 = randomGetRange(0x14,0x28);
   fVar1 = lbl_803E65E0;
   *(float *)(param_1 + 0x24) =
-       -(lbl_803E65E4 * (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e65d8)
+       -(lbl_803E65E4 * (f32)(s32)(uVar2)
         + lbl_803E65E0);
   *(float *)(param_1 + 0x28) = lbl_803E65C4;
   *(float *)(param_1 + 0x2c) = lbl_803E65E8;
@@ -2052,7 +2050,7 @@ void SB_KyteCage_init(int *obj, int *params)
 extern int *ObjList_GetObjects(int *out_head, int *out_count);
 extern void buttonDisable(int controller, int mask);
 extern int *objModelGetVecFn_800395d8(int obj, int idx);
-extern int ObjAnim_AdvanceCurrentMove(int obj, int a, f32 b, f32 dt);
+extern int ObjAnim_AdvanceCurrentMove(int obj, f32 b, f32 dt, int a);
 extern f32 lbl_803E5918;
 extern f32 lbl_803E591C;
 extern f32 timeDelta;
@@ -2060,6 +2058,7 @@ extern f32 timeDelta;
 #pragma peephole off
 void SB_KyteCage_update(int obj)
 {
+    extern uint GameBit_Get(int);
     int state = *(int *)(obj + 0xb8);
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
     if (*(void **)state == NULL) {
@@ -2106,7 +2105,7 @@ void SB_KyteCage_update(int obj)
             ObjAnim_SetCurrentMove((int *)obj, 9, lbl_803E591C, 0);
         }
     }
-    if (ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5918, timeDelta) != 0) {
+    if (ObjAnim_AdvanceCurrentMove(obj, lbl_803E5918, timeDelta, 0) != 0) {
         Sfx_PlayFromObject((int *)obj, 0x315);
     }
 }

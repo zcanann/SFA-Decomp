@@ -409,6 +409,63 @@ void dimdismountpoint_hitDetect(void) {}
 void dimdismountpoint_release(void) {}
 void dimdismountpoint_initialise(void) {}
 
+extern int* ObjGroup_FindNearestObject(int group, int *obj, f32 *dist);
+extern void objRenderFn_80041018(int obj);
+extern f32 lbl_803E4910;
+
+#pragma scheduling off
+#pragma peephole off
+void dimdismountpoint_update(int *obj) {
+    extern uint GameBit_Get(int eventId);
+    int *nearest;
+    f32 d;
+
+    d = lbl_803E4910;
+    nearest = ObjGroup_FindNearestObject(0xa, obj, &d);
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+    if (GameBit_Get(0x3e3) != 0) {
+        *(u8*)((char*)obj + 0xe4) = 1;
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    } else {
+        *(u8*)((char*)obj + 0xe4) = 0;
+        if (nearest != NULL && ((int(*)(int*, int*))((int**)*(int**)((char*)nearest + 0x68))[8])(nearest, obj) != 0) {
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+        } else {
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+        }
+    }
+    if ((*(int*)(*(int*)((char*)obj + 0x50) + 0x44) & 1) != 0 && *(int*)((char*)obj + 0x74) != 0) {
+        objRenderFn_80041018((int)obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E4908;
+extern f32 lbl_803E4914;
+extern f32 lbl_803E4918;
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern uint GameBit_Get(int eventId);
+extern unsigned long GameBit_Set(int eventId, int value);
+
+#pragma peephole off
+#pragma scheduling off
+void dimdismountpoint_init(u8* obj, u8* params) {
+    f32 *sub;
+
+    ObjGroup_AddObject(obj, 0x13);
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    sub = *(f32**)(obj + 0xb8);
+    sub[0] = fn_80293E80(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
+    sub[1] = lbl_803E4908;
+    sub[2] = sin(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
+    sub[3] = -(sub[0] * *(f32*)(obj + 0xc) + sub[1] * *(f32*)(obj + 0x10) + sub[2] * *(f32*)(obj + 0x14));
+    *(int*)(obj + 0xf8) = 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* 8b "li r3, N; blr" returners. */
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
 int dimbridgecogmai_getObjectTypeId(void) { return 0x0; }
@@ -481,6 +538,60 @@ int fn_801B3768(int obj, int p2, char *r5) {
 extern int *gObjectTriggerInterface;
 #pragma scheduling off
 #pragma peephole off
+
+void dimbridgecogmai_update(int *obj) {
+    u8 *def;
+    int bits;
+    int code;
+    int callArg;
+
+    def = *(u8**)((char*)obj + 0x4c);
+    if (GameBit_Get(*(s16*)(def + 0x1a)) != 0) {
+        if ((s8)def[0x1e] != -1) {
+            switch (*(s16*)(def + 0x1a)) {
+            case 0x17a:
+                if (GameBit_Get(0x181) != 0) {
+                    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
+                    code = -1;
+                    callArg = 0;
+                } else {
+                    GameBit_Set(*(s16*)(def + 0x1a), 0);
+                    code = 0x1f;
+                    callArg = 1;
+                }
+                break;
+            case 0x1e3:
+                bits = (u8)GameBit_Get(0x182);
+                bits = (u8)(bits | (GameBit_Get(0x183) << 1));
+                bits = (u8)(bits | (GameBit_Get(0x184) << 2));
+                if (bits == 7) {
+                    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
+                    code = -1;
+                    callArg = 2;
+                } else {
+                    GameBit_Set(*(s16*)(def + 0x1a), 0);
+                    code = 0x1d;
+                    if ((bits & 4) != 0) {
+                        code = code | 2;
+                        if ((bits & 2) != 0) {
+                            code = code | 0x20;
+                        }
+                    }
+                    callArg = 1;
+                }
+                break;
+            default:
+                callArg = 0;
+                break;
+            }
+            ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(callArg, obj, code);
+        }
+        if ((def[0x1d] & 2) == 0) {
+            GameBit_Set(*(s16*)(def + 0x18), 1);
+        }
+    }
+}
+
 void dimdismountpoint_func11(int obj, int flag) {
     (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))((flag ^ 1) + 2, obj, -1);
 }

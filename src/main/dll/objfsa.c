@@ -153,11 +153,8 @@ void player_setScale(ushort *param_1,int param_2,uint param_3)
       uVar1 = uVar1 + 0xffff;
     }
     *param_1 = *param_1 +
-               (short)(int)(((float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
-                                    DOUBLE_803e1218) * lbl_803DC074) /
-                           (lbl_803E1204 *
-                           (float)((double)CONCAT44(0x43300000,param_3 ^ 0x80000000) -
-                                  DOUBLE_803e1218)));
+               (short)(int)(((f32)(s32)uVar1 * lbl_803DC074) /
+                           (lbl_803E1204 * (f32)(s32)param_3));
   }
   return;
 }
@@ -2339,9 +2336,8 @@ void FUN_800dbc68(void)
         iVar7 = (int)((float)(local_b8 - dVar25) + (float)(dVar29 / dVar31));
         local_c0 = (double)(longlong)iVar7;
         puVar12[0x2c] = (short)iVar7;
-        bVar1 = iVar24 != 100;
         iVar24 = iVar24 + 1;
-      } while (bVar1);
+      } while (iVar24 != 101);
       FUN_800723a0();
 LAB_800dd65c:
       iVar24 = 0;
@@ -2396,9 +2392,8 @@ LAB_800dd65c:
         iVar7 = (int)((float)(local_b8 - dVar25) - (float)(dVar29 / dVar31));
         local_c0 = (double)(longlong)iVar7;
         puVar12[0x2e] = (short)iVar7;
-        bVar1 = iVar24 != 100;
         iVar24 = iVar24 + 1;
-      } while (bVar1);
+      } while (iVar24 != 101);
       FUN_800723a0();
 LAB_800dd85c:
       puVar12 = puVar12 + 0x18;
@@ -4468,8 +4463,9 @@ void *fn_800DAFDC(int pos, int p4_filter, int p5_filter) {
             && (p5_filter == -1 || (s8)*((u8 *)hit + 0x1A) == p5_filter)) {
             f32 dx = *(f32 *)pos - *(f32 *)((char *)hit + 8);
             f32 dy = *(f32 *)(pos + 4) - *(f32 *)((char *)hit + 0xC);
+            f32 d;
             f32 dz = *(f32 *)(pos + 8) - *(f32 *)((char *)hit + 0x10);
-            f32 d = dy * dy;
+            d = dy * dy;
             d += dx * dx;
             d += dz * dz;
             if (d < minDist) {
@@ -4511,8 +4507,9 @@ void *fn_800DB0E0(int pos, int p4_filter, int p5_filter) {
                 if (gbId == -1 || GameBit_Get(gbId) == 0) {
                     f32 dx = *(f32 *)pos - *(f32 *)((char *)hit + 8);
                     f32 dy = *(f32 *)(pos + 4) - *(f32 *)((char *)hit + 0xC);
+                    f32 d;
                     f32 dz = *(f32 *)(pos + 8) - *(f32 *)((char *)hit + 0x10);
-                    f32 d = dy * dy;
+                    d = dy * dy;
                     d += dx * dx;
                     d += dz * dz;
                     if (d < minDist) {

@@ -293,6 +293,59 @@ void gpsh_objcreator_free(void) {}
 void gpsh_objcreator_hitDetect(void) {}
 void gpsh_objcreator_release(void) {}
 void gpsh_objcreator_initialise(void) {}
+
+extern u8 Obj_IsLoadingLocked(void);
+extern void hitDetectFn_80097070(int *obj, int a, int b, int c, int d, f32 e);
+extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
+extern void *Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void *setup, int a, int b, int c, void *d);
+extern f32 timeDelta;
+extern f32 lbl_803E504C;
+extern f32 lbl_803E5050;
+extern f32 lbl_803E5054;
+extern s16 lbl_803263B8[];
+
+#pragma scheduling off
+#pragma peephole off
+void gpsh_objcreator_update(int *obj) {
+    u8 *sub;
+    void *setup;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (GameBit_Get(0x5af) != 0) {
+        *(int*)((char*)obj + 0xf8) = 0;
+        sub[5] = (u8)(sub[5] & ~0x80);
+        *(u8*)((char*)obj + 0x37) = 0xff;
+        *(u8*)((char*)obj + 0x36) = 0xff;
+    }
+    if ((sub[5] & 0x80) != 0) return;
+    if (*(int*)((char*)obj + 0xf8) == 0) {
+        if (GameBit_Get(0x148) != 0) {
+            *(f32*)sub = lbl_803E504C;
+            *(int*)((char*)obj + 0xf8) = 1;
+        }
+    }
+    if ((u8)Obj_IsLoadingLocked() == 0) return;
+    if (*(f32*)sub == lbl_803E5050) return;
+    *(f32*)sub = *(f32*)sub - timeDelta;
+    hitDetectFn_80097070(obj, 2, 1, 1, 0, lbl_803E5054);
+    if (*(f32*)sub > lbl_803E5050) return;
+    Sfx_PlayFromObjectLimited(0, 0x167, 1);
+    setup = Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
+    sub[5] = (u8)(sub[5] | 0x80);
+    *(u8*)((char*)setup + 7) = 0xff;
+    *(u8*)((char*)setup + 4) = 0x20;
+    *(u8*)((char*)setup + 5) = 2;
+    *(f32*)((char*)setup + 8) = *(f32*)((char*)obj + 0xc);
+    *(f32*)((char*)setup + 0xc) = *(f32*)((char*)obj + 0x10);
+    *(f32*)((char*)setup + 0x10) = *(f32*)((char*)obj + 0x14);
+    *(s16*)setup = (s16)(sub[4] + 0x1f4);
+    *(u8*)((char*)setup + 0x18) = (u8)((s32)*(s16*)obj >> 8);
+    *(s16*)((char*)setup + 0x1a) = lbl_803263B8[sub[4]];
+    Obj_SetupObject(setup, 5, (s8)*(s8*)((char*)obj + 0xac), -1, *(void**)((char*)obj + 0x30));
+}
+#pragma peephole reset
+#pragma scheduling reset
 void gpsh_scene_free(void) {}
 void gpsh_scene_hitDetect(void) {}
 void gpsh_scene_update(void) {}

@@ -5000,8 +5000,8 @@ void FUN_8004b8cc(uint param_1)
   local_18 = 0x43300000;
   local_10 = 0x43300000;
   uStack_c = uStack_14;
-  FUN_80247a7c((double)(float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803df7b0),
-               (double)(float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803df7b0),
+  FUN_80247a7c((double)(f32)(s32)uStack_14,
+               (double)(f32)(s32)uStack_14,
                (double)lbl_803DF74C,afStack_48);
   local_1c = lbl_803DF748;
   FUN_8025d8c4(afStack_48,DAT_803dda00,0);
@@ -5066,7 +5066,7 @@ void FUN_8004b960(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
     local_28 = 0x43300000;
     dVar3 = (double)(lbl_803DF75C *
                     lbl_803DF7B8 *
-                    ((float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803df7b0) /
+                    ((f32)(s32)uStack_24 /
                      lbl_803DF7BC - lbl_803DF748));
     FUN_80247a7c(dVar3,dVar3,(double)lbl_803DF74C,afStack_58);
     local_2c = lbl_803DF748;
@@ -5420,6 +5420,34 @@ void initViewport(void) {
 }
 #pragma scheduling reset
 
+extern int lbl_803DCD88;
+extern int lbl_803DCD8C;
+extern int lbl_803DCD90;
+extern u8 lbl_803DCD6A;
+extern void GXSetTevDirect(int);
+extern void GXSetTevOrder(int, int, int, int);
+extern void GXSetTevSwapMode(int, int, int);
+extern void GXSetTevColorIn(int, int, int, int, int);
+extern void GXSetTevAlphaIn(int, int, int, int, int);
+extern void GXSetTevColorOp(int, int, int, int, int, int);
+extern void GXSetTevAlphaOp(int, int, int, int, int, int);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80050F2C(void) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 255);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorIn(lbl_803DCD90, 15, 6, 8, 15);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_8004AAD4(u8* arr, int size, int idx) {
@@ -5447,3 +5475,89 @@ void fn_8004AAD4(u8* arr, int size, int idx) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void gxSetZMode_(int a, int b, int c);
+extern void GXSetAlphaUpdate(u8 v);
+extern void GXFlush(void);
+extern void GXGetFifoPtrs(void *fifo, void **out_g, void **out_p);
+extern int OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(int s);
+extern void Queue_Push(void *q, void *item);
+extern void GXEnableBreakPt(void *p);
+extern void GXSetDrawSync(u16 v);
+extern void GXCopyDisp(void *fb, u8 clear);
+extern void VISetBlack(int black);
+extern void *lbl_803DCCD4;
+extern void *lbl_803DCCD0;
+extern void *lbl_803DCCEC;
+extern void *lbl_803DCCE8;
+extern u8 lbl_803DCCA7;
+extern u16 lbl_803DB5CE;
+extern u8 lbl_803DB5CC;
+extern char lbl_8035F730[];
+int GXFlush_(u8 visible) {
+    void *fifo_get;
+    void *fifo_put;
+    void *item[3];
+    int s;
+    void *next;
+    gxSetZMode_(1, 3, 1);
+    GXSetAlphaUpdate(1);
+    GXFlush();
+    GXGetFifoPtrs(lbl_803DCCD4, &fifo_get, &fifo_put);
+    item[0] = fifo_put;
+    item[1] = (void *)0;
+    item[2] = lbl_803DCCD0;
+    s = OSDisableInterrupts();
+    Queue_Push(&lbl_8035F730[0], item);
+    if (lbl_803DCCA7 == 0) {
+        GXEnableBreakPt(fifo_put);
+        lbl_803DCCA7 = 1;
+    }
+    OSRestoreInterrupts(s);
+    GXSetDrawSync(lbl_803DB5CE);
+    GXCopyDisp(lbl_803DCCD0, 1);
+    GXFlush();
+    lbl_803DB5CE = (u16)(lbl_803DB5CE + 1);
+    next = lbl_803DCCEC;
+    if (lbl_803DCCD0 == next) next = lbl_803DCCE8;
+    lbl_803DCCD0 = next;
+    if (visible != 0 && lbl_803DB5CC != 0) {
+        lbl_803DB5CC = lbl_803DB5CC - 1;
+        if (lbl_803DB5CC == 0) {
+            VISetBlack(0);
+            lbl_803DB5CC = 0;
+        }
+    }
+    return 0;
+}
+
+extern u8 GXNtsc480Prog[];
+extern u8 lbl_803DB5D4[];
+extern u8 *lbl_803DCCF0;
+extern void GXSetCopyFilter(u8 aa, u8 *pat, u8 vf_en, u8 *vfilter);
+void setDisplayCopyFilter(void) {
+    u8 *p = lbl_803DCCF0;
+    if (p == GXNtsc480Prog || p[0x18] == 0) {
+        GXSetCopyFilter(p[0x19], p + 0x1a, 0, p + 0x32);
+    } else {
+        GXSetCopyFilter(p[0x19], p + 0x1a, 1, lbl_803DB5D4);
+    }
+}
+
+extern void GXLoadTexObj(void *obj, int id);
+extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
+extern void fn_80053C40(u8 *tex, void *out);
+extern u8 lbl_803779A0[];
+void textureFn_8004c264(u8 *tex, int mapId) {
+    if (tex == NULL) return;
+    if (tex[72] != 0) {
+        GXLoadTexObjPreLoaded(&tex[32], *(void **)(tex + 64), mapId);
+    } else {
+        GXLoadTexObj(&tex[32], mapId);
+    }
+    if (*(int *)(tex + 80) != 0) {
+        fn_80053C40(tex, lbl_803779A0);
+        GXLoadTexObj(lbl_803779A0, 1);
+    }
+}

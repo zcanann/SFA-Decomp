@@ -63,21 +63,12 @@ void tumbleweed_updateRollingMotion(short *param_1,int param_2)
   *(float *)(param_1 + 6) = *(float *)(param_1 + 0x12) * lbl_803DC074 + *(float *)(param_1 + 6);
   *(float *)(param_1 + 8) = *(float *)(param_1 + 0x14) * lbl_803DC074 + *(float *)(param_1 + 8);
   *(float *)(param_1 + 10) = *(float *)(param_1 + 0x16) * lbl_803DC074 + *(float *)(param_1 + 10);
-  dVar1 = DOUBLE_803e3c08;
-  param_1[2] = (short)(int)((float)((double)CONCAT44(0x43300000,
-                                                     (int)*(short *)(param_2 + 0x27c) ^ 0x80000000)
-                                   - DOUBLE_803e3c08) * lbl_803DC074 +
-                           (float)((double)CONCAT44(0x43300000,(int)param_1[2] ^ 0x80000000) -
-                                  DOUBLE_803e3c08));
-  param_1[1] = (short)(int)((float)((double)CONCAT44(0x43300000,
-                                                     (int)*(short *)(param_2 + 0x27e) ^ 0x80000000)
-                                   - dVar1) * lbl_803DC074 +
-                           (float)((double)CONCAT44(0x43300000,(int)param_1[1] ^ 0x80000000) - dVar1
-                                  ));
-  *param_1 = (short)(int)((float)((double)CONCAT44(0x43300000,
-                                                   (int)*(short *)(param_2 + 0x280) ^ 0x80000000) -
-                                 dVar1) * lbl_803DC074 +
-                         (float)((double)CONCAT44(0x43300000,(int)*param_1 ^ 0x80000000) - dVar1));
+  param_1[2] = (short)(int)((f32)(s32)*(s16 *)(param_2 + 0x27c) * lbl_803DC074 +
+                           (f32)(s32)param_1[2]);
+  param_1[1] = (short)(int)((f32)(s32)*(s16 *)(param_2 + 0x27e) * lbl_803DC074 +
+                           (f32)(s32)param_1[1]);
+  *param_1 = (short)(int)((f32)(s32)*(s16 *)(param_2 + 0x280) * lbl_803DC074 +
+                         (f32)(s32)*param_1);
   return;
 }
 

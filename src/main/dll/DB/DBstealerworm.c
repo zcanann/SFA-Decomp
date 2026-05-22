@@ -291,64 +291,55 @@ void FUN_801e1884(int param_1,int param_2)
                              (float)((double)CONCAT44(0x43300000,
                                                       (uint)DAT_803dccec - (uint)DAT_803dcce8 ^
                                                       0x80000000) - DOUBLE_803e6458) +
-                            (float)((double)CONCAT44(0x43300000,DAT_803dcce8 ^ 0x80000000) -
-                                   DOUBLE_803e6458));
+                            (f32)(s32)(DAT_803dcce8));
   bRam803de8b9 = (byte)(int)(lbl_803DE8A8 *
                              (float)((double)CONCAT44(0x43300000,
                                                       (uint)bRam803dcced - (uint)bRam803dcce9 ^
                                                       0x80000000) - DOUBLE_803e6458) +
-                            (float)((double)CONCAT44(0x43300000,bRam803dcce9 ^ 0x80000000) -
-                                   DOUBLE_803e6458));
+                            (f32)(s32)(bRam803dcce9));
   bRam803de8ba = (byte)(int)(lbl_803DE8A8 *
                              (float)((double)CONCAT44(0x43300000,
                                                       (uint)bRam803dccee - (uint)bRam803dccea ^
                                                       0x80000000) - DOUBLE_803e6458) +
-                            (float)((double)CONCAT44(0x43300000,bRam803dccea ^ 0x80000000) -
-                                   DOUBLE_803e6458));
+                            (f32)(s32)(bRam803dccea));
   skyFn_800895e0(7,DAT_803de8b8,bRam803de8b9,bRam803de8ba,0x40,0x40);
   DAT_803de8b4 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)DAT_803dcce4 - (uint)DAT_803dcce0 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,DAT_803dcce0 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(DAT_803dcce0));
   uRam803de8b5 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)bRam803dcce5 - (uint)bRam803dcce1 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,bRam803dcce1 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(bRam803dcce1));
   uRam803de8b6 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)bRam803dcce6 - (uint)bRam803dcce2 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,bRam803dcce2 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(bRam803dcce2));
   FUN_80080f74(7,DAT_803de8b4,uRam803de8b5,uRam803de8b6);
   DAT_803de8b0 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)DAT_803dccf4 - (uint)DAT_803dccf0 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,DAT_803dccf0 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(DAT_803dccf0));
   uRam803de8b1 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)bRam803dccf5 - (uint)bRam803dccf1 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,bRam803dccf1 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(bRam803dccf1));
   uRam803de8b2 = (undefined)
                  (int)(lbl_803DE8A8 *
                        (float)((double)CONCAT44(0x43300000,
                                                 (uint)bRam803dccf6 - (uint)bRam803dccf2 ^ 0x80000000
                                                ) - DOUBLE_803e6458) +
-                      (float)((double)CONCAT44(0x43300000,bRam803dccf2 ^ 0x80000000) -
-                             DOUBLE_803e6458));
+                      (f32)(s32)(bRam803dccf2));
   FUN_80080f78(7,DAT_803de8b0,uRam803de8b1,uRam803de8b2);
   DAT_803de8ad = (undefined)(int)(lbl_803DE8A8 * lbl_803E6478 + lbl_803E6488);
   FUN_80080f68(1);
@@ -786,7 +777,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     local_40 = 0x43300000;
     iVar2 = (int)-((float)((double)CONCAT44(0x43300000,fStack_44) - DOUBLE_803e64c0) *
                    lbl_803DC074 -
-                  (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e64c0));
+                  (f32)(s32)uStack_3c);
     local_38 = (longlong)iVar2;
     *(short *)(uVar1 + 4) = (short)iVar2;
   }
@@ -814,7 +805,7 @@ void FUN_801e2708(int param_1,int param_2)
   
   pfVar2 = *(float **)(param_1 + 0xb8);
   uVar1 = randomGetRange(0x5a,0xf0);
-  *pfVar2 = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e64c0);
+  *pfVar2 = (f32)(s32)(uVar1);
   pfVar2[1] = lbl_803E64A8;
   pfVar2[2] = 1.68156e-42;
   *(undefined *)(pfVar2 + 3) = 4;
@@ -1076,17 +1067,13 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
       puVar6 = FUN_80017aa4(0x18,0x138);
       *(float *)(puVar6 + 4) = lbl_803E64EC + *(float *)(iVar2 + 0x18);
       uStack_5c = randomGetRange(0xfffffffa,6);
-      uStack_5c = uStack_5c ^ 0x80000000;
-      local_60 = 0x43300000;
       *(float *)(puVar6 + 6) =
            lbl_803E64E0 +
            *(float *)(iVar2 + 0x1c) +
-           (float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e64f8);
+           (f32)(s32)uStack_5c;
       uStack_54 = randomGetRange(0xfffffffa,6);
-      uStack_54 = uStack_54 ^ 0x80000000;
-      local_58 = 0x43300000;
       dVar12 = (double)(*(float *)(iVar2 + 0x20) +
-                       (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e64f8));
+                       (f32)(s32)uStack_54);
       *(float *)(puVar6 + 8) = (float)((double)lbl_803E64F0 + dVar12);
       *(undefined *)(puVar6 + 2) = 2;
       *(undefined *)((int)puVar6 + 5) = 1;
@@ -1118,6 +1105,54 @@ void SB_ShipMast_hitDetect(void) {}
 void SB_ShipMast_init(void) {}
 void SB_ShipMast_release(void) {}
 void SB_ShipMast_initialise(void) {}
+
+extern void ObjAnim_SetCurrentMove(int *obj, int a, f32 b, int c);
+extern void ObjAnim_AdvanceCurrentMove(int *obj, f32 b, f32 c, int a);
+extern f32 lbl_803E586C;
+extern f32 lbl_803E5870;
+extern f32 lbl_803E5874;
+extern f32 lbl_803E5878;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_ShipMast_update(int *obj) {
+    extern u8 framesThisStep;
+    int *parent;
+    int pf4;
+    f32 speed;
+
+    parent = *(int**)((char*)obj + 0x30);
+    if (parent == NULL) return;
+    pf4 = *(int*)((char*)parent + 0xf4);
+    *(f32*)((char*)obj + 0xc) = lbl_803E586C;
+    *(f32*)((char*)obj + 0x10) = lbl_803E586C;
+    *(f32*)((char*)obj + 0x14) = lbl_803E586C;
+    if (*(s16*)((char*)*(int**)((char*)obj + 0x30) + 0x46) == 0x139) {
+        if (pf4 >= 0xa && pf4 < 0xd) {
+            if (*(s16*)((char*)obj + 0xa0) != 0) {
+                ObjAnim_SetCurrentMove(obj, 0, lbl_803E586C, 0);
+            }
+            if (pf4 >= 0xc) {
+                speed = lbl_803E5870;
+            } else {
+                speed = lbl_803E5874;
+            }
+        } else {
+            if (*(s16*)((char*)obj + 0xa0) != 1) {
+                ObjAnim_SetCurrentMove(obj, 1, lbl_803E586C, 0);
+            }
+            speed = lbl_803E5878;
+        }
+    } else {
+        if (*(s16*)((char*)obj + 0xa0) != 1) {
+            ObjAnim_SetCurrentMove(obj, 1, lbl_803E586C, 0);
+        }
+        speed = lbl_803E5878;
+    }
+    ObjAnim_AdvanceCurrentMove(obj, speed, (f32)(u32)framesThisStep, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int SB_Galleon_getExtraSize(void) { return 0xb4; }
@@ -1235,11 +1270,11 @@ extern int lbl_803DDC18;
 extern int lbl_803DDC1C;
 void SB_Galleon_free(int obj, int p2) {
     u8 *p = (u8*)((int**)obj)[0xb8/4];
-    if (lbl_803DDC18 != 0) {
+    if ((void*)lbl_803DDC18 != NULL) {
         textureFree((void*)lbl_803DDC18);
         lbl_803DDC18 = 0;
     }
-    if (lbl_803DDC1C != 0) {
+    if ((void*)lbl_803DDC1C != NULL) {
         textureFree((void*)lbl_803DDC1C);
         lbl_803DDC1C = 0;
     }

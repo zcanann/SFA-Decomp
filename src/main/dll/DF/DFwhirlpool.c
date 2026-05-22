@@ -65,6 +65,7 @@ extern f32 lbl_803E4E18;
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void dfropenode_render(int obj, int param_2, int param_3)
 {
   DFropenodeExtra *extra;
@@ -155,6 +156,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
     }
   }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*

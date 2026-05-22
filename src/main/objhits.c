@@ -2509,33 +2509,24 @@ void ObjHits_DetectObjectPair(void)
   dVar22 = (double)(float)(dVar18 - dVar17);
   dVar21 = (double)(*(float *)(iVar12 + OBJHITBOX_WORLD_Z_OFFSET) -
                     *(float *)(iVar10 + OBJHITBOX_WORLD_Z_OFFSET));
-  dVar24 = (double)(float)((double)CONCAT44(0x43300000,
-                          (int)*(short *)(iVar15 + OBJHITBOX_DEF_RADIUS_OFFSET) ^ 0x80000000)
-                          - DOUBLE_803df5c0);
-  local_b0 = (double)CONCAT44(0x43300000,
-                              (int)*(short *)(iVar14 + OBJHITBOX_DEF_RADIUS_OFFSET) ^ 0x80000000);
-  dVar20 = (double)(float)(local_b0 - DOUBLE_803df5c0);
+  dVar24 = (f64)(f32)(s32)*(s16 *)(iVar15 + OBJHITBOX_DEF_RADIUS_OFFSET);
+  dVar20 = (f64)(f32)(s32)*(s16 *)(iVar14 + OBJHITBOX_DEF_RADIUS_OFFSET);
   bVar9 = false;
   bVar1 = *(byte *)(iVar14 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET);
   if (((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) ||
       ((*(byte *)(iVar15 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET) &
         OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)) {
-    if (dVar22 <= (double)lbl_803DF590) {
+    if (dVar22 <= (f64)lbl_803DF590) {
       dVar22 = dVar20;
       if ((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-        local_b0 = (double)CONCAT44(0x43300000,
-                                    (int)*(short *)(iVar14 + OBJHITBOX_DEF_VERTICAL_MAX_OFFSET) ^
-                                    0x80000000);
-        dVar22 = (double)(float)(local_b0 - DOUBLE_803df5c0);
+        dVar22 = (f64)(f32)(s32)*(s16 *)(iVar14 + OBJHITBOX_DEF_VERTICAL_MAX_OFFSET);
       }
       if ((*(byte *)(iVar15 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET) &
            OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
         dVar17 = dVar17 - dVar24;
       }
       else {
-        dVar17 = dVar17 + (double)(float)((double)CONCAT44(0x43300000,
-                                                           (int)*(short *)(iVar15 + OBJHITBOX_DEF_VERTICAL_MIN_OFFSET) ^
-                                                           0x80000000) - DOUBLE_803df5c0);
+        dVar17 = dVar17 + (f64)(f32)(s32)*(s16 *)(iVar15 + OBJHITBOX_DEF_VERTICAL_MIN_OFFSET);
       }
       if ((float)(dVar18 + dVar22) < (float)dVar17) goto LAB_800344f4;
     }
@@ -2543,18 +2534,13 @@ void ObjHits_DetectObjectPair(void)
       dVar22 = dVar24;
       if ((*(byte *)(iVar15 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET) &
            OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-        local_b0 = (double)CONCAT44(0x43300000,
-                                    (int)*(short *)(iVar15 + OBJHITBOX_DEF_VERTICAL_MAX_OFFSET) ^
-                                    0x80000000);
-        dVar22 = (double)(float)(local_b0 - DOUBLE_803df5c0);
+        dVar22 = (f64)(f32)(s32)*(s16 *)(iVar15 + OBJHITBOX_DEF_VERTICAL_MAX_OFFSET);
       }
       if ((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
         dVar18 = dVar18 - dVar20;
       }
       else {
-        dVar18 = dVar18 + (double)(float)((double)CONCAT44(0x43300000,
-                                                           (int)*(short *)(iVar14 + OBJHITBOX_DEF_VERTICAL_MIN_OFFSET) ^
-                                                           0x80000000) - DOUBLE_803df5c0);
+        dVar18 = dVar18 + (f64)(f32)(s32)*(s16 *)(iVar14 + OBJHITBOX_DEF_VERTICAL_MIN_OFFSET);
       }
       if ((float)(dVar17 + dVar22) < (float)dVar18) goto LAB_800344f4;
     }
@@ -2566,7 +2552,7 @@ void ObjHits_DetectObjectPair(void)
   if (dVar18 != (double)lbl_803DF590) {
     dVar18 = sqrtf(dVar18);
   }
-  iVar11 = (int)((double)CONCAT44(0x43300000,(int)dVar18 ^ 0x80000000) - DOUBLE_803df5c0);
+  iVar11 = (int)(f32)(s32)(int)dVar18;
   iVar13 = iVar11;
   if (0x400 < iVar11) {
     iVar13 = 0x400;
@@ -2669,30 +2655,24 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
   int *piVar8;
   int iVar9;
   int recursionDepth;
-  double dVar10;
-  double dVar11;
+  f64 dVar10;
+  f64 dVar11;
   undefined8 uVar12;
   int local_68;
-  float local_64;
-  float local_60;
-  float local_5c;
-  float local_58;
-  float local_54;
-  float local_50;
-  float local_4c;
-  float local_48;
-  float local_44;
-  float local_40;
-  float local_3c;
-  float local_38;
-  float local_34;
-  undefined4 local_30;
-  uint uStack_2c;
-  undefined4 local_28;
-  uint uStack_24;
-  undefined4 local_20;
-  uint uStack_1c;
-  
+  f32 local_64;
+  f32 local_60;
+  f32 local_5c;
+  f32 local_58;
+  f32 local_54;
+  f32 local_50;
+  f32 local_4c;
+  f32 local_48;
+  f32 local_44;
+  f32 local_40;
+  f32 local_3c;
+  f32 local_38;
+  f32 local_34;
+
   uVar12 = FUN_80286840();
   iVar5 = (int)((ulonglong)uVar12 >> 0x20);
   iVar7 = (int)uVar12;
@@ -2710,38 +2690,28 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
           ObjHits_CheckSkeletonPair(iVar7,iVar5,param_3);
         }
       } else {
-        local_60 = *(float *)(iVar7 + 0x18) - playerMapOffsetX;
-        local_5c = *(float *)(iVar7 + 0x1c);
-        local_58 = *(float *)(iVar7 + 0x20) - playerMapOffsetZ;
-        uStack_2c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
-        local_30 = 0x43300000;
-        uStack_24 = (int)*(short *)(iVar9 + 0x5e) ^ 0x80000000;
-        local_28 = 0x43300000;
-        uStack_1c = (int)*(short *)(iVar9 + 0x5c) ^ 0x80000000;
-        local_20 = 0x43300000;
+        local_60 = *(f32 *)(iVar7 + 0x18) - playerMapOffsetX;
+        local_5c = *(f32 *)(iVar7 + 0x1c);
+        local_58 = *(f32 *)(iVar7 + 0x20) - playerMapOffsetZ;
         local_3c = local_60;
         local_38 = local_5c;
         local_34 = local_58;
         local_68 = 0;
         ObjHits_CollectSkeletonHitsXZ(
-            (double)(float)((double)CONCAT44(0x43300000, uStack_2c) - DOUBLE_803df5c0),
-            (double)(local_5c +
-                     (float)((double)CONCAT44(0x43300000, uStack_24) - DOUBLE_803df5c0)),
-            (double)(local_5c +
-                     (float)((double)CONCAT44(0x43300000, uStack_1c) - DOUBLE_803df5c0)),
+            (f64)(f32)(s32)*(s16 *)(iVar9 + 0x5a),
+            (f64)(local_5c + (f32)(s32)*(s16 *)(iVar9 + 0x5e)),
+            (f64)(local_5c + (f32)(s32)*(s16 *)(iVar9 + 0x5c)),
             (undefined4)&local_60, piVar8[5], piVar8, param_3, &local_68, &local_64);
         if (local_68 != 0) {
-          dVar11 = (double)((*(float *)(iVar7 + 0xa8) * *(float *)(iVar7 + 8)) /
-                            (*(float *)(iVar5 + 0xa8) * *(float *)(iVar7 + 8)));
-          uStack_1c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
-          local_20 = 0x43300000;
-          dVar10 = (double)lbl_803DF590;
-          if ((dVar10 <= dVar11) && (dVar10 = dVar11, (double)lbl_803DF598 < dVar11)) {
-            dVar10 = (double)lbl_803DF598;
+          dVar11 = (f64)((*(f32 *)(iVar7 + 0xa8) * *(f32 *)(iVar7 + 8)) /
+                            (*(f32 *)(iVar5 + 0xa8) * *(f32 *)(iVar7 + 8)));
+          dVar10 = (f64)lbl_803DF590;
+          if ((dVar10 <= dVar11) && (dVar10 = dVar11, (f64)lbl_803DF598 < dVar11)) {
+            dVar10 = (f64)lbl_803DF598;
           }
           ObjHits_CalcSkeletonResponseXZ(
-              (double)(float)((double)CONCAT44(0x43300000, uStack_1c) - DOUBLE_803df5c0),dVar10,
-              (double)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
+              (f64)(f32)(s32)*(s16 *)(iVar9 + 0x5a),dVar10,
+              (f64)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
               local_68,&local_48);
           fVar2 = lbl_803DF5D8;
           if ((lbl_803DF5D8 <= local_48) && (fVar2 = local_48, lbl_803DF5DC < local_48)) {
@@ -2758,15 +2728,13 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
           local_48 = fVar2;
           local_44 = fVar3;
           local_40 = fVar4;
-          ObjHits_ApplyPairResponse((double)fVar2, (double)fVar3, (double)fVar4, iVar5, iVar7, 0);
+          ObjHits_ApplyPairResponse((f64)fVar2, (f64)fVar3, (f64)fVar4, iVar5, iVar7, 0);
         }
       }
     } else {
-      local_54 = *(float *)(iVar7 + 0x18) - playerMapOffsetX;
-      local_50 = *(float *)(iVar7 + 0x1c);
-      local_4c = *(float *)(iVar7 + 0x20) - playerMapOffsetZ;
-      uStack_2c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
-      local_30 = 0x43300000;
+      local_54 = *(f32 *)(iVar7 + 0x18) - playerMapOffsetX;
+      local_50 = *(f32 *)(iVar7 + 0x1c);
+      local_4c = *(f32 *)(iVar7 + 0x20) - playerMapOffsetZ;
       local_3c = local_54;
       local_38 = local_50;
       local_34 = local_4c;
@@ -2774,17 +2742,15 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
       ObjHits_CollectSkeletonHits3D((undefined4)&local_54, piVar8[5], piVar8, param_3, &local_68,
                                     &local_64);
       if (local_68 != 0) {
-        dVar11 = (double)((*(float *)(iVar7 + 0xa8) * *(float *)(iVar7 + 8)) /
-                          (*(float *)(iVar5 + 0xa8) * *(float *)(iVar5 + 8)));
-        uStack_2c = (int)*(short *)(iVar9 + 0x5a) ^ 0x80000000;
-        local_30 = 0x43300000;
-        dVar10 = (double)lbl_803DF590;
-        if ((dVar10 <= dVar11) && (dVar10 = dVar11, (double)lbl_803DF598 < dVar11)) {
-          dVar10 = (double)lbl_803DF598;
+        dVar11 = (f64)((*(f32 *)(iVar7 + 0xa8) * *(f32 *)(iVar7 + 8)) /
+                          (*(f32 *)(iVar5 + 0xa8) * *(f32 *)(iVar5 + 8)));
+        dVar10 = (f64)lbl_803DF590;
+        if ((dVar10 <= dVar11) && (dVar10 = dVar11, (f64)lbl_803DF598 < dVar11)) {
+          dVar10 = (f64)lbl_803DF598;
         }
         ObjHits_CalcSkeletonResponse3D(
-            (double)(float)((double)CONCAT44(0x43300000, uStack_2c) - DOUBLE_803df5c0),dVar10,
-            (double)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
+            (f64)(f32)(s32)*(s16 *)(iVar9 + 0x5a),dVar10,
+            (f64)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
             local_68,&local_48);
         fVar2 = lbl_803DF5D8;
         if ((lbl_803DF5D8 <= local_48) && (fVar2 = local_48, lbl_803DF5DC < local_48)) {
@@ -2801,7 +2767,7 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
         local_48 = fVar2;
         local_44 = fVar3;
         local_40 = fVar4;
-        ObjHits_ApplyPairResponse((double)fVar2, (double)fVar3, (double)fVar4, iVar5, iVar7, 0);
+        ObjHits_ApplyPairResponse((f64)fVar2, (f64)fVar3, (f64)fVar4, iVar5, iVar7, 0);
       }
     }
   }

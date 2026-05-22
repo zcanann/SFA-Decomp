@@ -107,6 +107,9 @@ extern f32 lbl_803E3790;
 extern f32 lbl_803E3794;
 extern f32 lbl_803E3798;
 extern f32 lbl_803E379C;
+extern f32 lbl_803E2AF8;
+extern f32 lbl_803E2AFC;
+extern f32 lbl_803E2B00;
 extern f32 lbl_803DBCEC;
 
 
@@ -1045,16 +1048,6 @@ void wbInit(undefined4 param_1,int param_2)
 void fn_80156950(uint param_1,int param_2)
 {
   switch (*(short *)(param_1 + 0xa0)) {
-  case 7:
-    if (*(ushort *)(param_2 + 0x2f8) != 0) {
-      if (*(float *)(param_1 + 0x98) >= lbl_803E3790) {
-        Sfx_PlayFromObject(param_1,0x24c);
-      }
-      else {
-        Sfx_PlayFromObject(param_1,0x24d);
-      }
-    }
-    break;
   case 5:
     if (*(ushort *)(param_2 + 0x2f8) != 0) {
       Sfx_PlayFromObject(param_1,0x24d);
@@ -1065,10 +1058,20 @@ void fn_80156950(uint param_1,int param_2)
       Sfx_PlayFromObject(param_1,0x24d);
     }
     break;
+  case 7:
+    if (*(ushort *)(param_2 + 0x2f8) != 0) {
+      if (*(float *)(param_1 + 0x98) >= lbl_803E2AF8) {
+        Sfx_PlayFromObject(param_1,0x24c);
+      }
+      else {
+        Sfx_PlayFromObject(param_1,0x24d);
+      }
+    }
+    break;
   case 8:
     if (*(ushort *)(param_2 + 0x2f8) != 0) {
-      if (*(float *)(param_1 + 0x98) >= lbl_803E3794) {
-        if (*(float *)(param_1 + 0x98) >= lbl_803E3798) {
+      if (*(float *)(param_1 + 0x98) >= lbl_803E2AFC) {
+        if (*(float *)(param_1 + 0x98) >= lbl_803E2B00) {
           Sfx_PlayFromObject(param_1,0x24c);
         }
         else {

@@ -111,9 +111,8 @@ void dfsh_shrine_render(ushort *param_1)
       if ((int)uVar2 < -0x8000) {
         uVar2 = uVar2 + 0xffff;
       }
-      local_30 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
       *param_1 = *param_1 +
-                 (short)(int)(((float)(local_30 - DOUBLE_803e5b18) * lbl_803DC074) /
+                 (short)(int)(((f32)(s32)(uVar2) * lbl_803DC074) /
                              lbl_803E5B08);
       dVar5 = (double)FUN_80017710((float *)(param_1 + 0xc),(float *)(iVar1 + 0x18));
       if ((double)lbl_803E5B0C < dVar5) {
@@ -334,7 +333,7 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         FUN_80006824((uint)param_9,0x343);
         uVar5 = randomGetRange(500,1000);
         *(float *)(iVar11 + 8) =
-             (float)((double)CONCAT44(0x43300000,uVar5 ^ 0x80000000) - DOUBLE_803e5b18);
+             (f32)(s32)(uVar5);
       }
       if ((*(byte *)((int)param_9 + 0xaf) & 1) != 0) {
         FUN_80017698(0x589,0);
@@ -539,9 +538,96 @@ void FUN_801c3b00(int param_1)
 void dfsh_shrine_hitDetect(void) {}
 void dfsh_shrine_release(void) {}
 void dfsh_shrine_initialise(void) {}
+
+extern void fn_801C2C68(int p1, int p2, void *p3);
+extern int mapGetDirIdx(int id);
+extern void unlockLevel(int idx, int a, int b);
+extern void *objCreateLight(int *obj, int v);
+extern f32 lbl_803E4E8C;
+
+#pragma scheduling off
+#pragma peephole off
+void dfsh_shrine_init(int *obj, u8 *init) {
+    u8 *sub;
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    *(s16*)(sub + 0x10) = 0xa;
+    if (*(s16*)(init + 0x1a) > 0) {
+        *(s16*)(sub + 0x10) = (s16)((s32)*(s16*)(init + 0x1a) >> 8);
+    }
+    sub[0x1a] = 4;
+    sub[0x1c] = (u8)(sub[0x1c] & ~0x80);
+    *(s16*)(sub + 0x12) = 0;
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_801C2C68;
+    ObjMsg_AllocQueue(obj, 4);
+    GameBit_Set(0x129, 1);
+    sub[0x1b] = 0;
+    *(f32*)(sub + 4) = lbl_803E4E8C;
+    unlockLevel(mapGetDirIdx(0x1f), 1, 0);
+    if (*(int*)sub == 0) {
+        *(int*)sub = (int)objCreateLight(NULL, 1);
+    }
+    *(int*)((char*)obj + 0xf4) = 1;
+    GameBit_Set(0xe70, 1);
+    GameBit_Set(0xefa, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SpiritPrize_hitDetect(void) {}
 void SpiritPrize_release(void) {}
 void SpiritPrize_initialise(void) {}
+
+extern void *gObjectTriggerInterface;
+extern void *objCreateLight(int *obj, int v);
+extern void modelLightStruct_setField50(void *light, int v);
+extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int d);
+extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
+extern f32 lbl_803E4E98;
+extern f32 lbl_803E4EB0;
+extern f32 lbl_803E4EB4;
+
+#pragma scheduling off
+#pragma peephole off
+void SpiritPrize_init(int *obj, u8 *init) {
+    u8 *sub;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (*(u32*)(init + 0x14) == 0x4ca62) return;
+    *(s16*)(sub + 0x6a) = *(s16*)(init + 0x1a);
+    *(s16*)(sub + 0x6e) = -1;
+    *(f32*)(sub + 0x24) = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)init[0x24]);
+    *(int*)(sub + 0x28) = -1;
+    if (*(int*)((char*)obj + 0xf4) == 0) {
+        if (*(s16*)(init + 0x18) != 1) {
+            ((void(*)(u8*))((void**)*(int*)gObjectTriggerInterface)[7])(sub);
+            *(int*)((char*)obj + 0xf4) = *(s16*)(init + 0x18) + 1;
+        }
+    } else {
+        if (*(s16*)(init + 0x18) != *(int*)((char*)obj + 0xf4) - 1) {
+            ((void(*)(u8*))((void**)*(int*)gObjectTriggerInterface)[9])(sub);
+            if (*(s16*)(init + 0x18) != -1) {
+                ((void(*)(u8*, u8*))((void**)*(int*)gObjectTriggerInterface)[7])(sub, init);
+            }
+            *(int*)((char*)obj + 0xf4) = *(s16*)(init + 0x18) + 1;
+        }
+    }
+    if (*(s16*)((char*)obj + 0x46) != 0x1d9) {
+        sub[0x144] = 1;
+    }
+    if (*(int*)(sub + 0x140) == 0) {
+        *(int*)(sub + 0x140) = (int)objCreateLight(sub[0x144] != 0 ? NULL : obj, 1);
+        if (*(int*)(sub + 0x140) != 0) {
+            modelLightStruct_setField50(*(void**)(sub + 0x140), 2);
+            modelLightStruct_setColorsA8AC(*(void**)(sub + 0x140), 0x96, 0x32, 0xff, 0xff);
+            lightDistAttenFn_8001dc38(*(void**)(sub + 0x140), lbl_803E4EB0, lbl_803E4EB4);
+        }
+    }
+    *(u8*)((char*)obj + 0x36) = 0;
+    *(u8*)((char*)obj + 0x37) = 0;
+    *(f32*)(sub + 0x148) = (f32)(s32)randomGetRange(0xb4, 0xf0);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dfsh_objcreator_free(void) {}
 void dfsh_objcreator_hitDetect(void) {}
 
@@ -557,3 +643,24 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4EB8); }
 #pragma peephole reset
+
+extern void objParticleFn_80099d84(int *obj, int a, int b, f32 c, f32 d);
+
+#pragma scheduling off
+#pragma peephole off
+void SpiritPrize_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    u8 *sub;
+    s32 v;
+    sub = *(u8**)((char*)obj + 0xb8);
+    v = visible;
+    if (v != 0) {
+        objRenderFn_8003b8f4(lbl_803E4E98);
+        if (sub[0x144] != 0) {
+            objParticleFn_80099d84(obj, 7, *(int*)(sub + 0x140), lbl_803E4E98, lbl_803E4E98);
+        } else {
+            objParticleFn_80099d84(obj, 7, 0, lbl_803E4E98, lbl_803E4E98);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

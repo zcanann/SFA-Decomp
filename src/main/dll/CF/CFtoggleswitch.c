@@ -651,6 +651,48 @@ LAB_8018bc44:
 /* Trivial 4b 0-arg blr leaves. */
 void trickyguardspot_render(void) {}
 
+extern int* getTrickyObject(void);
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern void objRenderFn_80041018(int obj);
+extern u8 framesThisStep;
+
+#pragma scheduling off
+#pragma peephole off
+void trickyguardspot_update(int *obj) {
+    u8 *sub;
+    u8 *def;
+    int *tricky;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    def = *(u8**)((char*)obj + 0x4c);
+    tricky = getTrickyObject();
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+    sub[4] = (u8)(sub[4] & ~0x80);
+    if (tricky != NULL) {
+        if ((u8)((int(*)(int*))((int**)*(int**)((char*)tricky + 0x68))[17])(tricky) != 0) {
+            if (Vec_xzDistance((f32*)((char*)obj + 0x18), (f32*)((char*)tricky + 0x18)) < (f32)(s32)*(s16*)(def + 0x1a)) {
+                *(int*)sub = *(int*)sub - framesThisStep;
+                sub[4] = (u8)(sub[4] | 0x80);
+            }
+        }
+    }
+    if (*(int*)sub != 0) {
+        if (tricky != NULL && (u8)((int(*)(int*))((int**)*(int**)((char*)tricky + 0x68))[17])(tricky) == 0) {
+            if ((*(u8*)((char*)obj + 0xaf) & 4) != 0) {
+                ((void(*)(int*, int*, int, int))((int**)*(int**)((char*)tricky + 0x68))[10])(tricky, obj, 1, 3);
+            }
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+            objRenderFn_80041018((int)obj);
+        }
+    } else if (tricky != NULL) {
+        ((void(*)(int*))((int**)*(int**)((char*)tricky + 0x68))[15])(tricky);
+        *(int*)sub = def[0x19] * 0x3c;
+    }
+    GameBit_Set(*(s16*)(def + 0x1e), (sub[4] >> 7) & 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int magiccavetop_getExtraSize(void) { return 0xc; }
 int trickyguardspot_getExtraSize(void) { return 0x8; }
@@ -692,6 +734,46 @@ void cctestinfot_init(int obj, s8 *def) {
     *(s16 *)obj = (s16)((s32)(u8)def[0x1A] << 8);
     *(s16 *)((char *)obj + 2) = (s16)((s32)(u8)def[0x19] << 8);
     *(s16 *)((char *)obj + 4) = (s16)((s32)(u8)def[0x18] << 8);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int playerIsDisguised(void);
+extern void Obj_SetActiveModelIndex(int *obj, int idx);
+extern u8 fn_801334E0(void);
+extern void showHelpText(s16 id);
+extern f32 timeDelta;
+extern f32 lbl_803E3C88;
+extern f32 lbl_803E3C8C;
+
+#pragma scheduling off
+#pragma peephole off
+void cctestinfot_update(int *obj) {
+    extern void *Obj_GetPlayerObject(void);
+    u8 *sub = *(u8**)((char*)obj + 0xb8);
+    Obj_GetPlayerObject();
+    if (sub[4] != 0) {
+        if (playerIsDisguised() == 0) {
+            sub[4] = 0;
+        }
+    } else {
+        if (playerIsDisguised() != 0) {
+            sub[4] = 1;
+        }
+    }
+    objSetHintTextIdx((int)obj, sub[4]);
+    Obj_SetActiveModelIndex(obj, sub[4]);
+    if (ObjTrigger_IsSet((int)obj) != 0 && fn_801334E0() == 0) {
+        *(f32*)sub = lbl_803E3C88;
+    }
+    if (*(f32*)sub > lbl_803E3C8C) {
+        if ((*(u8*)((char*)obj + 0xaf) & 4) == 0) {
+            *(f32*)sub = lbl_803E3C8C;
+        } else {
+            *(f32*)sub = *(f32*)sub - timeDelta;
+            showHelpText(*(s16*)((char*)*(int**)((char*)obj + 0x50) + 0x7c + sub[4] * 2));
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

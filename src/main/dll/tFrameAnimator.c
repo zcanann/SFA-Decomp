@@ -200,6 +200,57 @@ void levelname_render(void) {}
 void levelname_hitDetect(void) {}
 void levelname_release(void) {}
 void levelname_initialise(void) {}
+
+extern u8 framesThisStep;
+extern int* Obj_GetPlayerObject(void);
+extern f32 Vec_distance(f32 *a, f32 *b);
+extern f32 fn_80293E80(f32 v);
+extern f32 lbl_803E36E0;
+extern f32 lbl_803E36E4;
+extern f32 lbl_803E36E8;
+
+#pragma scheduling off
+#pragma peephole off
+void levelname_update(int *obj) {
+    u8 *sub;
+    int *player;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    switch (sub[0x14]) {
+    case 0:
+        player = Obj_GetPlayerObject();
+        if (Vec_distance((f32*)((char*)obj + 0x18), (f32*)((char*)player + 0x18)) < (f32)(u32)sub[0xc]) {
+            if (*(s16*)(sub + 0xe) != -1) {
+                GameBit_Set(*(s16*)(sub + 0xe), 1);
+            }
+            sub[0x14] = 1;
+        }
+        break;
+    case 1:
+        *(s16*)(sub + 0x12) = (s16)(*(s16*)(sub + 0x12) + framesThisStep * 4);
+        if (*(s16*)(sub + 0x12) > 0xdc) {
+            *(s16*)(sub + 0x12) = 0xdc;
+            sub[0x14] = 2;
+        }
+        break;
+    case 2:
+        *(s16*)(sub + 0x10) = (s16)(*(s16*)(sub + 0x10) + framesThisStep);
+        if ((u32)*(s16*)(sub + 0x10) > (u32)*(int*)(sub + 8)) {
+            sub[0x14] = 3;
+        }
+        *(s16*)(sub + 0x12) = (s16)((s32)(lbl_803E36E0 * fn_80293E80((lbl_803E36E4 * (f32)((s32)*(s16*)(sub + 0x10) * 0x500)) / lbl_803E36E8)) + 0xdc);
+        break;
+    case 3:
+        *(s16*)(sub + 0x12) = (s16)(*(s16*)(sub + 0x12) - framesThisStep * 4);
+        if (*(s16*)(sub + 0x12) < 0) {
+            *(s16*)(sub + 0x12) = 0;
+            sub[0x14] = 4;
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void ProjectileSwitch_free(void) {}
 
 /* 8b "li r3, N; blr" returners. */

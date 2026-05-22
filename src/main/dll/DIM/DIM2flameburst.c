@@ -641,8 +641,7 @@ void FUN_801b45b0(undefined8 param_1,double param_2,double param_3,double param_
             dVar12 = (double)pfVar11[7];
             iVar8 = *(int *)(uVar3 + 0xb8);
             uVar6 = randomGetRange(0xfffffffb,3);
-            local_38 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-            param_2 = (double)(float)(local_38 - DOUBLE_803e55e0);
+            param_2 = (double)(f32)(s32)(uVar6);
             local_e4 = pfVar11[3] *
                        (float)((double)lbl_803E55F4 * param_2 + (double)lbl_803E55C4);
             local_e0 = lbl_803E55F8;
@@ -661,12 +660,11 @@ void FUN_801b45b0(undefined8 param_1,double param_2,double param_3,double param_
             local_e0 = local_e0 + pfVar11[1];
             local_dc = local_dc + pfVar11[2];
             uVar6 = randomGetRange(0xc0,0x100);
-            local_48 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
             if (*(byte *)(iVar8 + 0xa58) < 0x32) {
               param_2 = (double)local_e4;
               param_3 = (double)local_e0;
               param_4 = (double)local_dc;
-              FUN_801b40f0((double)((float)(dVar12 * (double)(float)(local_48 - DOUBLE_803e55e0)) *
+              FUN_801b40f0((double)((float)(dVar12 * (double)(f32)(s32)(uVar6)) *
                                    lbl_803E560C),param_2,param_3,param_4);
             }
             pfVar11[8] = pfVar11[9];
@@ -889,8 +887,7 @@ void FUN_801b4f60(void)
     dVar11 = (double)lbl_803E5640;
   }
   else {
-    local_48 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar2 + 0x1a) ^ 0x80000000);
-    dVar11 = (double)((float)(local_48 - DOUBLE_803e55e0) * lbl_803E560C);
+    dVar11 = (double)((f32)(s32)((int)*(short *)(iVar2 + 0x1a)) * lbl_803E560C);
     if ((double)lbl_803E5640 < dVar11) {
       dVar11 = (double)lbl_803E5640;
     }
@@ -929,8 +926,7 @@ void FUN_801b4f60(void)
     for (iVar7 = 0; iVar7 < iVar4; iVar7 = iVar7 + 1) {
       if (*(char *)(iVar8 + 0xa5c) == '\0') {
         uVar6 = randomGetRange(0x14,0x28);
-        local_38 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-        local_b0 = lbl_803E5654 * lbl_803E5658 * (float)(local_38 - DOUBLE_803e55e0) +
+        local_b0 = lbl_803E5654 * lbl_803E5658 * (f32)(s32)(uVar6) +
                    lbl_803E5654;
         iVar1 = iVar7 >> 0x1f;
         uVar6 = (iVar1 * 4 | (uint)(iVar7 * 0x40000000 + iVar1) >> 0x1e) - iVar1 & 0xff;
@@ -938,38 +934,31 @@ void FUN_801b4f60(void)
         local_b4 = local_b0 * (float)(&DAT_8032616c)[uVar6 * 3];
         local_b0 = local_b0 * (float)(&DAT_80326170)[uVar6 * 3];
         uStack_3c = randomGetRange(0,0x8000);
-        uStack_3c = uStack_3c ^ 0x80000000;
-        local_40 = 0x43300000;
         PSVECDotProduct((double)(float)(DOUBLE_803e5600 *
                                     (double)(((float)((double)CONCAT44(0x43300000,uStack_3c) -
                                                      DOUBLE_803e55e0) - lbl_803E5660) /
                                             lbl_803E565C)),afStack_7c,0x7a);
         uVar6 = randomGetRange(0,0x8000);
-        local_48 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
         PSVECDotProduct((double)(float)(DOUBLE_803e5600 *
-                                    (double)(((float)(local_48 - DOUBLE_803e55e0) - lbl_803E5660)
+                                    (double)(((f32)(s32)(uVar6) - lbl_803E5660)
                                             / lbl_803E565C)),afStack_ac,0x78);
         FUN_80247618(afStack_ac,afStack_7c,afStack_7c);
         FUN_80247cd8(afStack_7c,&local_b8,&local_b8);
       }
       else {
         uVar6 = randomGetRange(0x14,0x28);
-        local_48 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-        local_b8 = lbl_803E5654 * lbl_803E5658 * (float)(local_48 - DOUBLE_803e55e0) +
+        local_b8 = lbl_803E5654 * lbl_803E5658 * (f32)(s32)(uVar6) +
                    lbl_803E5654;
         local_b4 = lbl_803E55F8;
         local_b0 = lbl_803E55F8;
         uStack_3c = randomGetRange(0x2000,0x6000);
-        uStack_3c = uStack_3c ^ 0x80000000;
-        local_40 = 0x43300000;
         PSVECDotProduct((double)(float)(DOUBLE_803e5600 *
                                     (double)((float)((double)CONCAT44(0x43300000,uStack_3c) -
                                                     DOUBLE_803e55e0) / lbl_803E565C)),afStack_7c,
                      0x7a);
         uVar6 = randomGetRange(0,0xffff);
-        local_38 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
         PSVECDotProduct((double)(float)(DOUBLE_803e5600 *
-                                    (double)((float)(local_38 - DOUBLE_803e55e0) / lbl_803E5608)),
+                                    (double)((f32)(s32)(uVar6) / lbl_803E5608)),
                      afStack_ac,0x79);
         FUN_80247618(afStack_ac,afStack_7c,afStack_7c);
         FUN_80247cd8(afStack_7c,&local_b8,&local_b8);
@@ -1127,7 +1116,30 @@ void FUN_801b5628(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern void textureFree(int tex);
+extern int lbl_803AC960[4];
+
+#pragma scheduling off
+#pragma peephole off
 void explosion_release(uint param_1)
+{
+    int i;
+    int** p;
+
+    i = 0;
+    p = (int**)lbl_803AC960;
+    for (; i < 4; i++) {
+        if (*p != NULL) {
+            textureFree((int)*p);
+            *p = NULL;
+        }
+        p++;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void fn_explosion_release_v11_unused(uint param_1)
 {
   short sVar1;
   float fVar2;
@@ -1136,7 +1148,7 @@ void explosion_release(uint param_1)
   int iVar5;
   char *pcVar6;
   short *psVar7;
-  
+
   psVar7 = *(short **)(param_1 + 0x4c);
   pcVar6 = *(char **)(param_1 + 0xb8);
   FUN_8002fc3c((double)*(float *)(pcVar6 + 4),(double)lbl_803DC074);
@@ -1632,6 +1644,79 @@ void dimmagicbridge_free(void) {}
 void dimmagicbridge_hitDetect(void) {}
 void dimmagicbridge_release(void) {}
 void dimmagicbridge_initialise(void) {}
+
+extern f32 lbl_803E4A10;
+extern void fn_801B602C(int obj);
+extern int Obj_GetActiveModel(int obj);
+extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
+extern void fn_80065574(int a, int b, int c);
+
+#pragma peephole off
+#pragma scheduling off
+void dimmagicbridge_init(u8* obj, u8* params) {
+    u8* sub;
+    int model;
+    int modelData;
+    s32 minY;
+    int i;
+    int j;
+    int stable;
+    f32* p;
+    f32 a, b;
+    int v;
+    s16 hh;
+
+    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
+    *(void**)(obj + 0xbc) = (void*)&fn_801B602C;
+    sub = *(u8**)(obj + 0xb8);
+    minY = 0;
+    model = Obj_GetActiveModel((int)obj);
+    modelData = *(int*)model;
+
+    i = 0;
+    while (i < *(u16*)(modelData + 0xe4)) {
+        v = ObjModel_GetCurrentVertexCoords(model, i);
+        hh = *(s16*)(v + 4);
+        if (hh < minY) {
+            minY = hh;
+        }
+        i++;
+    }
+
+    stable = 0;
+    while (stable == 0) {
+        stable = 1;
+        j = 0;
+        p = (f32*)sub;
+        while (j < (int)sub[0x4f] - 1) {
+            a = p[1];
+            b = p[2];
+            if (a < b) {
+                p[1] = b;
+                p[2] = (f32)(s32)a;
+                stable = 0;
+            }
+            p++;
+            j++;
+        }
+    }
+
+    sub[0x4f] = 0xa;
+    *(f32*)sub = (f32)minY;
+
+    if (GameBit_Get(0x1e9) != 0) {
+        sub[0x5f] = 1;
+    }
+    if (sub[0x5f] != 0) {
+        for (i = 0; i < (int)sub[0x4f]; i++) {
+            sub[0x50 + i] = 0xff;
+            sub[0x40 + i] = 1;
+            fn_80065574(0x11, 0, 0);
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /* 8b "li r3, N; blr" returners. */
 int explosion_getExtraSize(void) { return 0xa60; }

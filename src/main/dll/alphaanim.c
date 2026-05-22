@@ -594,6 +594,66 @@ void SeqObj2_initialise(void) {}
 void immultiseq_hitDetect(void) {}
 void immultiseq_release(void) {}
 void immultiseq_initialise(void) {}
+
+extern int fn_8017CBDC(int* obj, int* anim, u8* buf);
+extern int fn_8017C2D4(int* obj, int* anim, u8* buf);
+extern uint GameBit_Get(int eventId);
+
+#pragma scheduling off
+#pragma peephole off
+void seqobject_init(int *obj, u8 *params) {
+    u8 *sub;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(s16*)obj = (s16)(params[0x1c] << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8017C2D4;
+    *(u8*)((char*)obj + 0xad) = params[0x1f];
+    if ((s8)*(u8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
+        *(u8*)((char*)obj + 0xad) = 0;
+    }
+    ObjGroup_AddObject(obj, 0xf);
+    sub[0] = 0;
+    if (*(s16*)(params + 0x18) != -1 && GameBit_Get(*(s16*)(params + 0x18)) != 0) {
+        sub[0] = (u8)(sub[0] | 1);
+        if (*(s16*)(params + 0x20) != 0) {
+            sub[0] = (u8)(sub[0] | 2);
+        }
+    }
+    sub[1] = 0;
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x2000);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void immultiseq_init(int *obj, u8 *params) {
+    u8 *sub;
+    int i;
+    u8 *p;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(s16*)obj = (s16)((s8)params[0x28] << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8017CBDC;
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
+    *(u8*)((char*)obj + 0xad) = (u8)(s8)params[0x2a];
+    if ((s8)*(u8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
+        *(u8*)((char*)obj + 0xad) = 0;
+    }
+    ObjGroup_AddObject(obj, 0xf);
+    i = 0;
+    p = params;
+    while (i < 4) {
+        if ((uint)((params[0x30] >> (i + 4)) & 1) == GameBit_Get(*(s16*)(p + 0x18))) {
+            break;
+        }
+        p += 2;
+        i++;
+    }
+    *sub = (u8)i;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dll_115_hitDetect_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
@@ -641,6 +701,38 @@ extern int **gObjectTriggerInterface;
 extern int fn_8017C2D4(int* obj, int* anim, u8* buf);
 extern int fn_8017C7A4(int* obj, int* anim, u8* buf);
 extern int fn_8017CBDC(int* obj, int* anim, u8* buf);
+
+/* fn_8017CBDC: seqobj2 advance-state predicate. If obj has a trigger id
+ * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
+ * its GameBit, compare against the def[0x30] mask bit for that slot, and
+ * if the polarity flips (GameBit != mask bit) dispatch vtable[0x13] to
+ * advance. Always latches state[1] bit 0 before returning 0. */
+int fn_8017CBDC(int* obj, int* anim, u8* buf) {
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    u8* def = *(u8**)((char*)obj + 0x4c);
+    *(s16*)((char*)buf + 0x6e) = *(s16*)((char*)buf + 0x70);
+    *(u8*)((char*)buf + 0x56) = 0;
+    if (*(s16*)((char*)obj + 0xb4) == -1) {
+        return 0;
+    }
+    {
+        u32 v = state[0];
+        if (v != 4) {
+            u32 next = v + 1;
+            if ((s32)next < 4) {
+                s16 gbit = *(s16*)((char*)def + 0x20 + next * 2);
+                if (gbit != -1) {
+                    int bv = GameBit_Get(gbit);
+                    if ((u32)!(((u32)def[0x30] >> next) & 1) == (u32)bv) {
+                        ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(*(s16 *)((char *)obj + 0xb4));
+                    }
+                }
+            }
+        }
+    }
+    state[1] = (u8)(state[1] | 1);
+    return 0;
+}
 
 void fn_8017C294(int* obj)
 {

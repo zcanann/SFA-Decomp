@@ -98,7 +98,7 @@ extern f32 lbl_803E3BF0;
 extern void getTrickyObject(void);
 extern void* ObjList_FindObjectById(int id);
 extern void ObjAnim_SetCurrentMove(void* obj, int move, f32 weight, int flag);
-extern void ObjAnim_AdvanceCurrentMove(void* obj, int flag, f32 weight, f32 dt);
+extern void ObjAnim_AdvanceCurrentMove(void* obj, f32 weight, f32 dt, int flag);
 extern f32 timeDelta;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
@@ -113,7 +113,7 @@ void cannonclaw_update(u8* obj)
     if (*(s16*)(obj + 0xa0) != 0x208) {
         ObjAnim_SetCurrentMove(obj, 0x208, lbl_803E2F34, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E2F38, timeDelta);
+    ObjAnim_AdvanceCurrentMove(obj, lbl_803E2F38, timeDelta, 0);
     if (trickyState == NULL) return;
     if (GameBit_Get(*(s16*)(*(u8**)(trickyState + 0x4c) + 0x1a)) == 0) return;
     *(s32*)(obj + 0xf4) = 1;
@@ -542,9 +542,128 @@ void tumbleweedbush_hitDetect(void) {}
 void tumbleweedbush_release(void) {}
 void tumbleweedbush_initialise(void) {}
 
+extern f32 lbl_803E2F48;
+extern f32 lbl_803E2F4C;
+extern f32 lbl_803E2F50;
+extern f32 lbl_803E2F54;
+extern u8 lbl_803201E8[];
+extern void mathFn_80021ac8(void* obj, void* p);
+extern void *memcpy(void *dst, const void *src, int n);
+
+#pragma peephole off
+#pragma scheduling off
+void tumbleweedbush_init(u8* obj, u8* params, int param3) {
+    u8* sub;
+    f32 t;
+    int idx;
+    int i;
+    u8* p4;
+    u8* p12;
+    u8* pe;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(f32*)sub = lbl_803E2F48;
+    *(u16*)(sub + 8) = (u16)(params[0x1b] * 2);
+    sub[0x4c] = params[0x23];
+    *(s16*)(obj + 4) = (s16)((params[0x18] - 0x7f) << 7);
+    *(s16*)(obj + 2) = (s16)((params[0x19] - 0x7f) << 7);
+    *(s16*)obj = (s16)(params[0x1a] << 8);
+    *(f32*)(obj + 8) = *(f32*)(params + 0x1c);
+    t = *(f32*)(obj + 8);
+    ObjHitbox_SetCapsuleBounds(obj,
+        (s32)(lbl_803E2F4C * t),
+        (s32)(lbl_803E2F50 * t),
+        (s32)(lbl_803E2F54 * t));
+    switch (*(s16*)(obj + 0x46)) {
+    case 0x28d:
+    case 0x4b9:
+    case 0x4be:
+        sub[0x50] = 3;
+        idx = 0;
+        break;
+    case 0x3fd:
+        sub[0x50] = 3;
+        idx = 1;
+        break;
+    }
+    if (param3 == 0) {
+        p4 = sub;
+        pe = lbl_803201E8 + idx * 0x30;
+        p12 = sub;
+        for (i = 0; i < (int)sub[0x50]; i++) {
+            *(int*)(p4 + 0xc) = 0;
+            memcpy(p12 + 0x1c, pe, 0xc);
+            *(f32*)(p12 + 0x1c) = *(f32*)(p12 + 0x1c) * *(f32*)(obj + 8);
+            *(f32*)(p12 + 0x20) = *(f32*)(p12 + 0x20) * *(f32*)(obj + 8);
+            *(f32*)(p12 + 0x24) = *(f32*)(p12 + 0x24) * *(f32*)(obj + 8);
+            mathFn_80021ac8(obj, p12 + 0x1c);
+            p4 += 4;
+            pe += 0xc;
+            p12 += 0xc;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* 8b "li r3, N; blr" returners. */
 int tumbleweedbush_getExtraSize(void) { return 0x54; }
 int tumbleweedbush_getObjectTypeId(void) { return 0x0; }
+
+extern u8 lbl_803DDA80;
+extern void *gSHthorntailAnimationInterface;
+extern void *Obj_GetPlayerObject(void);
+extern void fn_80096F9C(int *p, int a, int b, int c, int d);
+extern int Sfx_PlayFromObject(int *obj, int sfx);
+extern s8 fn_801631C8(int *obj);
+extern float sqrtf(float x);
+
+#pragma scheduling off
+#pragma peephole off
+void tumbleweedbush_update(int *obj) {
+    u8 *sub;
+    int *player;
+    struct { int *hitObj; int extra; } hitInfo;
+    int hitData;
+    f32 dx, dy, d;
+    int i;
+    int j;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    player = (int*)Obj_GetPlayerObject();
+    if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hitInfo, &hitData) != 0) {
+        if (*(s16*)((char*)hitInfo.hitObj + 0x46) != 0x4ba) {
+            fn_80096F9C(&hitData, 8, 0xff, 0xff, 0x78);
+            Sfx_PlayFromObject(obj, 0x280);
+            for (i = 0; (u8)i < sub[0x50]; i++) {
+                int **slot = (int**)((char*)sub + (u8)i * 4 + 0xc);
+                if (*slot != NULL) {
+                    if (*(s16*)((char*)obj + 0x46) == 0x28d) {
+                        if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&hitInfo.extra) == 0) continue;
+                    }
+                    ((void(*)(int*))((void**)*(int*)((char*)*slot + 0x68))[10])(*slot);
+                }
+            }
+        }
+    }
+    dx = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)player + 0xc);
+    dy = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)player + 0x14);
+    d = sqrtf(dx * dx + dy * dy);
+    if ((u16)(s32)d < *(u16*)(sub + 8)) {
+        while ((s8)fn_801631C8(obj) != -1) {
+        }
+    }
+    for (j = 0; (u8)j < sub[0x50]; j++) {
+        int **slot = (int**)((char*)sub + (u8)j * 4 + 0xc);
+        if (*slot != NULL) {
+            if (((int(*)(int*))((void**)*(int*)((char*)*slot + 0x68))[8])(*slot) > 1) {
+                *slot = NULL;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 16b chained patterns. */
 #pragma scheduling off
@@ -623,8 +742,6 @@ void tumbleweedbush_setScale(u8* obj, void* match) {
 }
 #pragma scheduling reset
 
-extern void tumbleweedbush_update(void);
-extern void tumbleweedbush_init(void);
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
     {

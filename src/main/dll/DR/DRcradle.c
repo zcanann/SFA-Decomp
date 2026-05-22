@@ -144,7 +144,7 @@ void FUN_801ec7a0(uint param_1,int param_2)
   uStack_54 = (int)*(short *)(param_2 + 0x40e) ^ 0x80000000;
   local_58 = 0x43300000;
   iVar1 = (int)(*(float *)(param_2 + 0x414) * lbl_803DC074 +
-               (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e6798));
+               (f32)(s32)uStack_54);
   local_50 = (longlong)iVar1;
   *(short *)(param_2 + 0x40e) = (short)iVar1;
   iVar1 = (int)(*(float *)(param_2 + 0x414) * *(float *)(param_2 + 0x550));
@@ -160,9 +160,9 @@ void FUN_801ec7a0(uint param_1,int param_2)
   local_40 = 0x43300000;
   uStack_34 = *(uint *)(param_2 + 0x410) ^ 0x80000000;
   local_38 = 0x43300000;
-  iVar1 = (int)((float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e6798) *
+  iVar1 = (int)((f32)(s32)uStack_3c *
                 *(float *)(param_2 + 0x554) +
-               (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e6798));
+               (f32)(s32)uStack_34);
   local_30 = (longlong)iVar1;
   *(int *)(param_2 + 0x410) = iVar1;
   uStack_24 = (int)*(short *)(param_2 + 0x40e) - (uint)*(ushort *)(param_2 + 0x40c);
@@ -174,10 +174,9 @@ void FUN_801ec7a0(uint param_1,int param_2)
   }
   uStack_24 = uStack_24 ^ 0x80000000;
   local_28 = 0x43300000;
-  local_20 = (double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x40c) ^ 0x80000000);
   *(short *)(param_2 + 0x40c) =
-       (short)(int)((float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e6798) *
-                    *(float *)(param_2 + 0x558) + (float)(local_20 - DOUBLE_803e6798));
+       (short)(int)((f32)(s32)uStack_24 *
+                    *(float *)(param_2 + 0x558) + (f32)(s32)((int)*(short *)(param_2 + 0x40c)));
   if (*(char *)(param_2 + 0x428) < '\0') {
     *(float *)(param_2 + 0x584) =
          -*(float *)(param_2 + 0x570) * lbl_803DC074 + *(float *)(param_2 + 0x584);
@@ -187,18 +186,15 @@ void FUN_801ec7a0(uint param_1,int param_2)
       fVar6 = lbl_803E67E0;
     }
     *(float *)(param_2 + 0x584) = fVar6;
-    local_18 = (double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 2) ^ 0x80000000);
     *(short *)(param_1 + 2) =
          (short)(int)(*(float *)(param_2 + 0x584) * lbl_803DC074 +
-                     (float)(local_18 - DOUBLE_803e6798));
+                     (f32)(s32)((int)*(short *)(param_1 + 2)));
   }
   if ((*(byte *)(param_2 + 0x428) >> 1 & 1) == 0) {
     local_78 = *(undefined4 *)(param_2 + 0x414);
     local_74 = *(undefined4 *)(param_2 + 0x49c);
-    local_18 = (double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 4) ^ 0x80000000);
-    local_70 = (float)(local_18 - DOUBLE_803e6798);
-    local_20 = (double)CONCAT44(0x43300000,(int)*(short *)(param_1 + 2) ^ 0x80000000);
-    local_6c = (float)(local_20 - DOUBLE_803e6798);
+    local_70 = (f32)(s32)((int)*(short *)(param_1 + 4));
+    local_6c = (f32)(s32)((int)*(short *)(param_1 + 2));
     (**(code **)(*DAT_803dd6d0 + 0x60))(&local_78,0x10);
   }
   fVar3 = *(float *)(param_2 + 0x494);
@@ -510,37 +506,51 @@ void fn_801EC7A0(int p1, int p2)
  * EN v1.0 Size: 184b
  */
 #pragma dont_inline on
-void fn_801EC870(int p1, int p2)
+void fn_801EC870(int p1, register int p2_int)
 {
     f32 fz, fa, fb, fc;
-    *(f32 *)(p2 + 0x52c) = lbl_803E5C34;
-    *(f32 *)(p2 + 0x530) = lbl_803E5C38;
-    *(f32 *)(p2 + 0x534) = lbl_803E5BF4;
+    *(f32 *)(p2_int + 0x52c) = lbl_803E5C34;
+    *(f32 *)(p2_int + 0x530) = lbl_803E5C38;
+    *(f32 *)(p2_int + 0x534) = lbl_803E5BF4;
     fz = lbl_803E5AE8;
-    *(f32 *)(p2 + 0x414) = fz;
-    *(f32 *)(p2 + 0x584) = fz;
-    *(f32 *)(p2 + 0x548) = lbl_803E5BFC;
-    *(f32 *)(p2 + 0x54c) = lbl_803E5BE4;
-    *(f32 *)(p2 + 0x540) = lbl_803E5B20;
-    *(f32 *)(p2 + 0x544) = lbl_803E5AF8;
-    *(f32 *)(p2 + 0x558) = lbl_803E5BA8;
-    *(f32 *)(p2 + 0x56c) = lbl_803E5C00;
-    *(u8 *)(p2 + 0x428) &= ~0x80;
-    *(f32 *)(p2 + 0x430) = fz;
-    fa = *(f32 *)(p2 + 0x470);
-    *(f32 *)(p2 + 0x464) = fa;
-    *(f32 *)(p2 + 0x47c) = fa;
-    fb = *(f32 *)(p2 + 0x474);
-    *(f32 *)(p2 + 0x468) = fb;
-    *(f32 *)(p2 + 0x480) = fb;
-    fc = *(f32 *)(p2 + 0x478);
-    *(f32 *)(p2 + 0x46c) = fc;
-    *(f32 *)(p2 + 0x484) = fc;
-    *(u8 *)(p2 + 0x428) &= ~0x40;
-    *(u8 *)(p2 + 0x428) &= ~0x10;
-    *(int *)(p2 + 0x42c) = 0;
-    *(f32 *)(p2 + 0x3e4) = fz;
-    *(f32 *)(p2 + 0x3e0) = lbl_803E5AEC;
+    *(f32 *)(p2_int + 0x414) = fz;
+    *(f32 *)(p2_int + 0x584) = fz;
+    *(f32 *)(p2_int + 0x548) = lbl_803E5BFC;
+    *(f32 *)(p2_int + 0x54c) = lbl_803E5BE4;
+    *(f32 *)(p2_int + 0x540) = lbl_803E5B20;
+    *(f32 *)(p2_int + 0x544) = lbl_803E5AF8;
+    *(f32 *)(p2_int + 0x558) = lbl_803E5BA8;
+    *(f32 *)(p2_int + 0x56c) = lbl_803E5C00;
+    {
+        register u32 b;
+        register u32 v = 0;
+        asm {
+            lbz b, 0x428(p2_int)
+            rlwimi b, v, 7, 24, 24
+            stb b, 0x428(p2_int)
+        }
+        *(f32 *)(p2_int + 0x430) = fz;
+        fa = *(f32 *)(p2_int + 0x470);
+        *(f32 *)(p2_int + 0x464) = fa;
+        *(f32 *)(p2_int + 0x47c) = fa;
+        fb = *(f32 *)(p2_int + 0x474);
+        *(f32 *)(p2_int + 0x468) = fb;
+        *(f32 *)(p2_int + 0x480) = fb;
+        fc = *(f32 *)(p2_int + 0x478);
+        *(f32 *)(p2_int + 0x46c) = fc;
+        *(f32 *)(p2_int + 0x484) = fc;
+        asm {
+            lbz b, 0x428(p2_int)
+            rlwimi b, v, 6, 25, 25
+            stb b, 0x428(p2_int)
+            lbz b, 0x428(p2_int)
+            rlwimi b, v, 4, 27, 27
+            stb b, 0x428(p2_int)
+            stw v, 0x42c(p2_int)
+        }
+    }
+    *(f32 *)(p2_int + 0x3e4) = fz;
+    *(f32 *)(p2_int + 0x3e0) = lbl_803E5AEC;
 }
 #pragma dont_inline reset
 

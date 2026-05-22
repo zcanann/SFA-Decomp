@@ -231,8 +231,7 @@ void kaldaChomFn_80168374(int param_1,int param_2,char param_3)
       *(float *)(iVar4 + 0x28) =
            (float)((double)(((float)((double)lbl_803E30A8 * dVar6 +
                                     (double)*(float *)(*(int *)(param_2 + 0x2d0) + 0x10)) +
-                            (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) -
-                                   DOUBLE_803E3070)) - *(float *)(iVar3 + 0xc)) / dVar5);
+                            (f32)(s32)(uVar1)) - *(float *)(iVar3 + 0xc)) / dVar5);
       *(float *)(iVar4 + 0x2c) =
            (float)((double)(*(float *)(*(int *)(param_2 + 0x2d0) + 0x14) - *(float *)(iVar3 + 0x10))
                   / dVar5);
@@ -263,11 +262,11 @@ void fn_8016855C(int obj, int p2, int p3)
 
   lbl_803DDA98 = lbl_803E30A0 + (f32)(s32)(s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x28) / lbl_803E30A4;
 
-  if ((*(u32 *)(p3 + 0x314) & 0x1) != 0) {
+  if ((*(int *)(p3 + 0x314) &0x1) != 0) {
     *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x1;
     Sfx_PlayFromObject(obj, 627);
   }
-  if ((*(u32 *)(p3 + 0x314) & 0x80) != 0) {
+  if ((*(int *)(p3 + 0x314) &0x80) != 0) {
     int n;
     *(u8 *)(sub_40c + 0x4a) = (u8)randomGetRange(0, 2);
     *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x80;
@@ -277,19 +276,19 @@ void fn_8016855C(int obj, int p2, int p3)
           obj, 1809, 0, 4, -1, (int)&lbl_803DDA98);
     }
   }
-  if ((*(u32 *)(p3 + 0x314) & 0x40) != 0) {
+  if ((*(int *)(p3 + 0x314) &0x40) != 0) {
     *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x40;
     kaldaChomFn_80168374(obj, p2, 0);
   }
-  if ((*(u32 *)(p3 + 0x314) & 0x20) != 0) {
+  if ((*(int *)(p3 + 0x314) &0x20) != 0) {
     *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x20;
     kaldaChomFn_80168374(obj, p2, 1);
   }
-  if ((*(u32 *)(p3 + 0x314) & 0x200) != 0) {
+  if ((*(int *)(p3 + 0x314) &0x200) != 0) {
     *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x200;
     Sfx_PlayFromObject(obj, 629);
   }
-  if ((*(u32 *)(p3 + 0x314) & 0x400) != 0) {
+  if ((*(int *)(p3 + 0x314) &0x400) != 0) {
     int n;
     *(u8 *)(sub_40c + 0x4a) = 3;
     n = 10;
@@ -530,7 +529,20 @@ void kaldachom_update(int param_1)
   
   iVar9 = *(int *)(param_1 + 0xb8);
   iVar8 = *(int *)(param_1 + 0x4c);
-  if (*(int *)(param_1 + 0xf4) == 0) {
+  if (*(int *)(param_1 + 0xf4) != 0) {
+    if ((*(short *)(iVar9 + 0x270) != 3) &&
+        (iVar1 = (**(code **)(*gMapEventInterface + 0x68))(*(undefined4 *)(iVar8 + 0x14)), iVar1 != 0))
+    {
+      (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
+      *(undefined2 *)(iVar9 + 0x402) = 0;
+      Sfx_PlayFromObject(param_1,0x270);
+      ObjAnim_SetCurrentMove(param_1,4,lbl_803E3060,0x10);
+      *(undefined *)(iVar9 + 0x346) = 0;
+      *(undefined *)(param_1 + 0x36) = 0xff;
+      *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
+    }
+  }
+  else {
     iVar8 = (**(code **)(*gBaddieControlInterface + 0x30))(param_1,iVar9,0);
     if (iVar8 == 0) {
       *(undefined2 *)(iVar9 + 0x402) = 0;
@@ -550,9 +562,7 @@ void kaldachom_update(int param_1)
           (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
         }
         iVar8 = (**(code **)(*gBaddieControlInterface + 0x48))
-                          ((double)(float)((double)CONCAT44(0x43300000,
-                                                            (uint)*(ushort *)(iVar9 + 0x3fe)) -
-                                          lbl_803E3068),param_1,iVar9,0x8000);
+                          ((f64)(f32)(u32)*(u16 *)(iVar9 + 0x3fe),param_1,iVar9,0x8000);
         if (iVar8 != 0) {
           (**(code **)(*gBaddieControlInterface + 0x28))
                     (param_1,iVar9,iVar9 + 0x35c,(int)*(short *)(iVar9 + 0x3f4),0,0,0,4,0xffffffff);
@@ -564,11 +574,7 @@ void kaldachom_update(int param_1)
         iVar8 = *(int *)(iVar9 + 0x40c);
         piVar3 = (int *)objFindTexture(param_1,0,0);
         *(short *)(iVar8 + 0x48) = *(short *)(iVar8 + 0x48) + 0x1000;
-        dVar10 = (double)fn_80293E80((double)((lbl_803E30B4 *
-                                              (float)((double)CONCAT44(0x43300000,
-                                                                       (int)*(short *)(iVar8 + 0x48)
-                                                                       ^ 0x80000000) -
-                                                     DOUBLE_803E3070)) / lbl_803E30B8));
+        dVar10 = (f64)fn_80293E80((f64)((lbl_803E30B4 * (f32)(s32)*(s16 *)(iVar8 + 0x48)) / lbl_803E30B8));
         *piVar3 = (int)(lbl_803E30B0 * (float)((double)lbl_803E3078 + dVar10));
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
@@ -585,17 +591,6 @@ void kaldachom_update(int param_1)
         *(undefined4 *)(param_1 + 0xc0) = *(undefined4 *)(iVar9 + 0x3e0);
       }
     }
-  }
-  else if ((*(short *)(iVar9 + 0x270) != 3) &&
-          (iVar1 = (**(code **)(*gMapEventInterface + 0x68))(*(undefined4 *)(iVar8 + 0x14)), iVar1 != 0))
-  {
-    (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
-    *(undefined2 *)(iVar9 + 0x402) = 0;
-    Sfx_PlayFromObject(param_1,0x270);
-    ObjAnim_SetCurrentMove(param_1,4,lbl_803E3060,0x10);
-    *(undefined *)(iVar9 + 0x346) = 0;
-    *(undefined *)(param_1 + 0x36) = 0xff;
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
   }
   return;
 }
@@ -650,10 +645,7 @@ void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3)
   puVar5[0xf] = lbl_803E3060;
   *puVar5 = 0;
   *(ushort *)(iVar2 + 0xb0) = *(ushort *)(iVar2 + 0xb0) | 0x2000;
-  *(float *)(iVar2 + 8) =
-       lbl_803E30A0 +
-       (float)((double)CONCAT44(0x43300000,(int)*(char *)((int)uVar7 + 0x28) ^ 0x80000000) - dVar1)
-       / lbl_803E30A4;
+  *(f32 *)(iVar2 + 8) = lbl_803E30A0 + (f32)(s32)*(s8 *)((int)uVar7 + 0x28) / lbl_803E30A4;
   ObjHitbox_SetSphereRadius(iVar2,(int)(lbl_803E30CC * *(float *)(iVar2 + 8)));
   if (param_3 == 0) {
     lbl_803DDA90 = (undefined4 *)Resource_Acquire(0x5a,1);

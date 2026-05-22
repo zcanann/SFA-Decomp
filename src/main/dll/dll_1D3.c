@@ -328,7 +328,7 @@ undefined4 FUN_801ce424(uint param_1,int param_2)
         *(undefined *)(param_2 + 0x408) = 0x15;
         uVar3 = randomGetRange(0,300);
         *(float *)(param_2 + 4) =
-             (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e5eb8);
+             (f32)(s32)(uVar3);
       }
     }
   }

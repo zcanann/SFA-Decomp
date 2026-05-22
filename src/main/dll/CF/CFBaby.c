@@ -1918,11 +1918,60 @@ void infopoint_init(int *obj, u8 *def) {
     *(int *)(state + 4) = **(int **)((char *)txt + 8);
     *(int *)(state + 0xc) = 100;
     *(int *)state = (int)txt;
-    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x1c) << 8);
+    *(s16 *)obj = (s16)((s32)*(u8 *)((char *)def + 0x1c) << 8);
     *(int *)(state + 0x18) = 2;
     *(u8 *)(state + 0x10) = *(u8 *)((char *)def + 0x1b);
     *(s16 *)(state + 0x16) = 0;
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E3B78;
+extern f32 lbl_803E3B7C;
+extern f32 lbl_803E3B88;
+extern f32 lbl_803E3B90;
+extern void Model_GetVertexPosition(int *model, int idx, f32 *out);
+extern void fn_80188798(f32 *v, f32 *minOut, f32 *maxOut);
+extern void PSVECScale(f32 *dst, f32 *src, f32 s);
+extern f32 PSVECMag(f32 *v);
+#pragma scheduling off
+#pragma peephole off
+void decoration11a_init(int *obj, u8 *def) {
+    *(s16 *)((char *)obj + 4) = (s16)((s32)def[24] << 8);
+    *(s16 *)((char *)obj + 2) = (s16)((s32)def[25] << 8);
+    *(s16 *)obj = (s16)((s32)def[26] << 8);
+    if (def[27] != 0) {
+        *(f32 *)((char *)obj + 8) = ((f32)(u32)def[27] - lbl_803E3B90) / lbl_803E3B88;
+        if (*(f32 *)((char *)obj + 8) == lbl_803E3B7C) {
+            *(f32 *)((char *)obj + 8) = lbl_803E3B78;
+        }
+        *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
+    }
+    {
+        s16 model = *(s16 *)((char *)obj + 0x46);
+        if (model == 1953 || model == 1954 || model == 1955) {
+            f32 *state = *(f32 **)((char *)obj + 0xb8);
+            int *m = *(int **)(*(int **)((char *)obj + 0x7c));
+            int i;
+            f32 tmp[3];
+            f32 magB;
+            Model_GetVertexPosition(m, 0, state);
+            Model_GetVertexPosition(m, 0, state + 3);
+            for (i = 1; i < *(u16 *)((char *)m + 0xe4); i++) {
+                Model_GetVertexPosition(m, i, tmp);
+                fn_80188798(tmp, state, state + 3);
+            }
+            PSVECScale(state, state, *(f32 *)((char *)obj + 8));
+            PSVECScale(state + 3, state + 3, *(f32 *)((char *)obj + 8));
+            magB = PSVECMag(state + 3);
+            if (PSVECMag(state) > magB) {
+                state[6] = PSVECMag(state);
+            } else {
+                state[6] = PSVECMag(state + 3);
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

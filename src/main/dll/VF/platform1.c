@@ -319,7 +319,7 @@ void platform1_control(undefined8 param_1,double param_2,double param_3,undefine
       uVar6 = state->currentTrackOffset;
       if ((-0x46dd < (int)uVar6) && ((int)uVar6 < -0xb23)) {
         state->currentTrackOffset =
-            (int)((float)((double)CONCAT44(0x43300000,uVar6 ^ 0x80000000) - DOUBLE_803e6340) +
+            (int)((f32)(s32)(uVar6) +
                   (float)state->offsetVelocity);
       }
       local_f0 = (double)CONCAT44(0x43300000,state->prevTrackOffset ^ 0x80000000);

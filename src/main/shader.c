@@ -2506,3 +2506,253 @@ void fn_80056BBC(int idx, int a, int b, int p4, int p5) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803DEBB4;
+extern s8 lbl_803DB624;
+extern int lbl_803DCE78;
+extern int* gMapEventInterface;
+extern f32 fastFloorf(f32 v);
+extern int mapCoordsToId(int x, int z, int layer);
+extern int getDataFileSize(int kind);
+extern void getTabEntry(int base, int kind, int offset, int size);
+
+#pragma scheduling off
+#pragma peephole off
+void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
+{
+    int layer;
+    int tabEntry;
+    int mapId;
+    int mapY;
+    s8* arr;
+
+    layer = 0;
+    arr = &lbl_803DB624;
+    if (arr[0] != mapType) {
+        layer = 1;
+        if (arr[1] != mapType) {
+            layer = 2;
+            if (arr[2] != mapType) {
+                layer = 3;
+                if (arr[3] != mapType) {
+                    layer = 4;
+                    if (arr[4] != mapType) {
+                        layer = 5;
+                    }
+                }
+            }
+        }
+    }
+    curMapLayer = 0;
+    mapY = (s32)fastFloorf(c / lbl_803DEBB4);
+    mapId = mapCoordsToId((s32)fastFloorf(a / lbl_803DEBB4), mapY, layer);
+    if (mapId < 0 || mapId >= (getDataFileSize(0x1f) >> 5)) {
+        lbl_803DCEA4 = 0;
+    } else {
+        tabEntry = lbl_803DCE78;
+        getTabEntry(tabEntry, 0x1f, mapId << 5, 0x20);
+        lbl_803DCEA4 = *(s8*)(tabEntry + 0x1c);
+    }
+    lbl_803DCEB4 = 0;
+    if (lbl_803DCEA4 == 1) {
+        lbl_803DCEB6 = (s16)mapId;
+        lbl_803DCEB4 = *(s16*)(tabEntry + 0x1e);
+    }
+    *outMapId = mapId;
+    if (mapId != -1) {
+        *outEvent = (s32)*(s8*)((*(int(**)(void))(*gMapEventInterface + 0x90))() + 0xe);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int lbl_803822B4[5];
+extern s16* lbl_803DCE94;
+extern u8 lbl_803DCE98;
+extern u8* lbl_803DCE8C;
+extern int mapBlockFn_80059354(int p1, int p2, void* entry, int layer);
+extern int mapCheckCurBlocks(int v);
+extern void* MapBlock_loadFromFile(int blockId);
+extern void MapBlock_init(void* blk);
+extern int textureLoad(int id, int param);
+extern void MapBlock_initHits(void* blk, int blockId);
+extern void MapBlock_initShaders(void* blk);
+extern void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer);
+extern int return0_80060B90(void* blk);
+extern void DCStoreRange(void* p, int size);
+
+#pragma scheduling off
+#pragma peephole off
+int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
+{
+    int blockId;
+    char* entry;
+    s8* statusArr;
+    int slotIdx;
+    s16* arr;
+    int i;
+    void* blk;
+    int byteOff;
+
+    entry = (char*)lbl_803822A0[layer];
+    statusArr = (s8*)lbl_803822B4[layer];
+    slotIdx = p1 + (p2 << 4);
+    entry += slotIdx * 12;
+
+    mapBlockFn_80059354(p3, p4, entry, layer);
+
+    blockId = *(s16*)(entry + 6);
+    if (mapCheckCurBlocks(*(s8*)(entry + 9)) == -1) {
+        statusArr[slotIdx] = -1;
+        return 0;
+    }
+    if (blockId < 0) {
+        blockId = -1;
+    }
+    if (blockId < 0) {
+        statusArr[slotIdx] = (s8)blockId;
+        return 0;
+    }
+    statusArr[slotIdx] = -1;
+
+    arr = lbl_803DCE94;
+    for (i = 0; i < lbl_803DCE98; i++) {
+        if (*arr == blockId) {
+            lbl_803DCE8C[i]++;
+            statusArr[slotIdx] = (s8)i;
+            return 1;
+        }
+        arr++;
+    }
+
+    blk = MapBlock_loadFromFile(blockId);
+    if (blk == NULL) {
+        return 1;
+    }
+    MapBlock_init(blk);
+    i = 0;
+    byteOff = 0;
+    while (i < *(u8*)((char*)blk + 0xa0)) {
+        int v = *(int*)(*(int*)((char*)blk + 0x54) + byteOff);
+        v = -(int)((u32)v | 0x8000);
+        *(int*)(*(int*)((char*)blk + 0x54) + byteOff) = textureLoad(v, 0);
+        byteOff += 4;
+        i++;
+    }
+    MapBlock_initHits(blk, blockId);
+    MapBlock_initShaders(blk);
+    trackLoadBlockEnd(blk, blockId, slotIdx, layer);
+    *(int*)blk = return0_80060B90(blk);
+    DCStoreRange(blk, *(int*)((char*)blk + 0x8));
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct { f32 v[15]; } _PlanePack;
+typedef struct { f32 v[5]; } _ScalePack;
+typedef struct { f32 x, y, z; } _Vec3;
+
+extern _PlanePack lbl_802C1E58;
+extern _ScalePack lbl_802C1E94;
+extern f32 lbl_803878D8[];
+extern f32 PostCB_803DEBF4;
+extern int* Obj_GetPlayerObject(void);
+extern int* Camera_GetCurrentViewSlot(void);
+extern f32* Camera_GetInverseViewRotationMatrix(void);
+extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void PSMTXMultVec(f32* mtx, _Vec3* in, f32* out);
+extern void PSVECScale(f32* in, _Vec3* out, f32 s);
+extern void PSVECAdd(_Vec3* a, _Vec3* b, _Vec3* out);
+extern f32 PSVECDotProduct(_Vec3* a, f32* b);
+extern void fn_8005A8A4(f32* planes, int count);
+
+#pragma scheduling off
+#pragma peephole off
+void playerVecFn_8005a9b0(void)
+{
+    _Vec3 camPos;
+    _Vec3 tmp;
+    _ScalePack scales;
+    _PlanePack planes;
+    int* player;
+    int* viewSlot;
+    f32* invRotMtx;
+    int i;
+    f32* outPtr;
+    f32* dirPtr;
+    f32* scalePtr;
+    f32 clipDist;
+
+    planes = lbl_802C1E58;
+    scales = lbl_802C1E94;
+    player = Obj_GetPlayerObject();
+    viewSlot = Camera_GetCurrentViewSlot();
+    camPos.x = *(f32*)((char*)viewSlot + 0x44) - playerMapOffsetX;
+    camPos.y = *(f32*)((char*)viewSlot + 0x48);
+    camPos.z = *(f32*)((char*)viewSlot + 0x4c) - playerMapOffsetZ;
+    invRotMtx = Camera_GetInverseViewRotationMatrix();
+    if (player != NULL) {
+        clipDist = -Camera_DistanceToCurrentViewPosition(
+            *(f32*)((char*)player + 0x18),
+            *(f32*)((char*)player + 0x1c),
+            *(f32*)((char*)player + 0x20));
+    } else {
+        clipDist = PostCB_803DEBF4;
+    }
+    scales.v[0] = clipDist;
+
+    i = 0;
+    outPtr = lbl_803878D8;
+    dirPtr = planes.v;
+    scalePtr = scales.v;
+    for (; i < 5; i++) {
+        PSMTXMultVec(invRotMtx, (_Vec3*)dirPtr, outPtr);
+        PSVECScale(outPtr, &tmp, *scalePtr);
+        PSVECAdd(&camPos, &tmp, &tmp);
+        outPtr[3] = -PSVECDotProduct(&tmp, outPtr);
+        outPtr += 5;
+        dirPtr += 3;
+        scalePtr++;
+    }
+    fn_8005A8A4(lbl_803878D8, 5);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int* lbl_803DCE9C;
+extern void setMapBlockFlag(void);
+extern void OSReport(const char* fmt, ...);
+extern char sTrackLoadBlockOverrunError[];
+
+#pragma scheduling off
+#pragma peephole off
+void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
+{
+    int i;
+    s16* arr;
+    int count;
+    s8* statusArr;
+
+    i = 0;
+    arr = lbl_803DCE94;
+    count = lbl_803DCE98;
+    for (; i < count; i++) {
+        if (*arr == -1) break;
+        arr++;
+    }
+    if (i == count) {
+        lbl_803DCE98 = (u8)(lbl_803DCE98 + 1);
+        if (lbl_803DCE98 == 0x40) {
+            OSReport(sTrackLoadBlockOverrunError);
+        }
+    }
+    statusArr = (s8*)lbl_803822B4[layer];
+    statusArr[slotIdx] = (s8)i;
+    lbl_803DCE9C[i] = (int)blk;
+    lbl_803DCE94[i] = (s16)blockId;
+    lbl_803DCE8C[i] = 1;
+    setMapBlockFlag();
+}
+#pragma peephole reset
+#pragma scheduling reset

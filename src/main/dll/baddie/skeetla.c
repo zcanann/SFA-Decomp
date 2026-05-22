@@ -1226,7 +1226,7 @@ void FUN_8013a804(undefined4 param_1,undefined4 param_2,float *param_3)
       FUN_8013a5b0((double)(FLOAT_803e3114 *
                            (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803e3090)),
                    (double)(FLOAT_803e3114 *
-                           (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e3090)),uVar1,
+                           (f32)(s32)uStack_44),uVar1,
                    (int)uVar8,param_3,(float *)(iVar5 + 0x18));
     }
     piVar2 = piVar2 + 1;

@@ -174,8 +174,7 @@ void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
   undefined8 local_40;
   
   piVar4 = *(int **)(param_9 + 0x5c);
-  local_48 = (double)CONCAT44(0x43300000,*(uint *)(param_9 + 0x7a) ^ 0x80000000);
-  *(int *)(param_9 + 0x7a) = (int)((float)(local_48 - DOUBLE_803e3d80) - lbl_803DC074);
+  *(int *)(param_9 + 0x7a) = (int)((f32)(s32)(*(uint *)(param_9 + 0x7a)) - lbl_803DC074);
   if (*(int *)(param_9 + 0x7a) < 0) {
     uVar5 = FUN_8000680c((int)param_9,0x7f);
     FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
@@ -325,9 +324,8 @@ void kaldachompspit_init(uint param_1)
       FUN_80017594(*piVar3,0,0xff,0,0xff);
     }
     uVar1 = (uint)(lbl_803E3DA4 * *(float *)(param_1 + 8));
-    FUN_800175d0((double)(float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e3d80),
-                 (double)(float)((double)CONCAT44(0x43300000,uVar1 + 0x28 ^ 0x80000000) -
-                                DOUBLE_803e3d80),*piVar3);
+    FUN_800175d0((double)(f32)(s32)(uVar1),
+                 (double)(f32)(s32)(uVar1 + 0x28),*piVar3);
     FUN_800175bc(*piVar3,1);
     FUN_800175cc((double)lbl_803E3D78,*piVar3,'\x01');
     FUN_8001753c(*piVar3,1,3);
@@ -396,8 +394,8 @@ void fn_8016A660(int obj)
   extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
   extern f32 lbl_803E3144;
   extern f32 lbl_803E3148;
-  int sub;
   int i;
+  int sub;
   u8 *no;
 
   sub = *(int *)(obj + 0xb8);
@@ -686,9 +684,8 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar2 = 2;
       do {
         param_1 = (**(code **)(*DAT_803dd708 + 8))(param_9,0x4ba,0,1,0xffffffff,0);
-        bVar1 = iVar2 != 0;
         iVar2 = iVar2 + -1;
-      } while (bVar1);
+      } while (iVar2 != -1);
     }
   }
   else {
@@ -750,23 +747,22 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
         uVar2 = randomGetRange(0xffffffce,0x32);
         *(float *)(puVar3 + 0x12) =
              lbl_803E3DDC *
-             (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3de8) +
+             (f32)(s32)(uVar2) +
              *(float *)(param_9 + 0x24);
         uVar2 = randomGetRange(0xffffffce,0x32);
         *(float *)(puVar3 + 0x14) =
              lbl_803E3DE0 *
-             (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3de8) +
+             (f32)(s32)(uVar2) +
              *(float *)(param_9 + 0x28);
         uVar2 = randomGetRange(0xffffffce,0x32);
-        param_2 = (double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e3de8)
+        param_2 = (double)(f32)(s32)(uVar2)
         ;
         param_1 = (double)lbl_803E3DDC;
         *(float *)(puVar3 + 0x16) = (float)(param_1 * param_2 + (double)*(float *)(param_9 + 0x2c));
         *(int *)(puVar3 + 0x62) = param_9;
       }
-      bVar1 = iVar5 != 0;
       iVar5 = iVar5 + -1;
-    } while (bVar1);
+    } while (iVar5 != -1);
     *(undefined2 *)(iVar4 + 0x12) = 0x3c;
   }
   return;
@@ -816,9 +812,8 @@ void pollenfragment_init(int obj,int config)
   spawnCount = 4;
   do {
     (*(code *)(*gPartfxInterface + 8))(obj,(int)*(short *)(state[7] + 6),0,1,0xffffffff,0);
-    keepSpawning = spawnCount != 0;
     spawnCount = spawnCount + -1;
-  } while (keepSpawning);
+  } while (spawnCount != -1);
   if ((*(byte *)(state[7] + 0x12) >> 6 & 1) == 0) {
     *(float *)(state + 2) = lbl_803E319C;
   }
@@ -1003,9 +998,8 @@ void FUN_8016b428(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
             do {
               dVar7 = (double)(**(code **)(*DAT_803dd708 + 8))
                                         (param_9,(int)*(short *)(piVar5[7] + 8),0,1,0xffffffff,0);
-              bVar1 = iVar3 != 0;
               iVar3 = iVar3 + -1;
-            } while (bVar1);
+            } while (iVar3 != -1);
           }
           piVar5[2] = (int)lbl_803E3DF8;
           if ((uint)*(byte *)(param_9 + 0x1b) < (uint)DAT_803dc070 << 3) {

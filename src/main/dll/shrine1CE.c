@@ -424,9 +424,116 @@ void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
-void dll_19B_init(void) {}
-void dll_19C_update(void) {}
 void dll_19D_update(void) {}
+
+extern u8 framesThisStep;
+extern u8 Obj_IsLoadingLocked(void);
+extern void* Obj_AllocObjectSetup(int size, int type);
+extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern int Resource_Acquire(int id, int mode);
+extern void Resource_Release(int handle);
+extern f32 lbl_803E51B4;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_19C_update(int *obj) {
+    extern uint GameBit_Get(int);
+    u8 *def;
+    u8 *sub;
+    int res;
+    void *setup;
+
+    def = *(u8**)((char*)obj + 0x4c);
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (*(int*)((char*)obj + 0xf8) != 0) {
+        if (GameBit_Get(0x1d4) != 0) {
+            *(int*)((char*)obj + 0xf8) = 0;
+        }
+    }
+    if (*(int*)((char*)obj + 0xf8) == 0) {
+        if (GameBit_Get(0x1d3) != 0) {
+            res = Resource_Acquire(0x82, 1);
+            ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);
+            ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
+            Sfx_PlayFromObject(0, 0xaf);
+            Resource_Release(res);
+            *(s16*)(sub + 6) = 1;
+            *(int*)((char*)obj + 0xf8) = 1;
+        }
+    }
+    if (*(s16*)(sub + 6) != 0) {
+        *(s16*)(sub + 4) = (s16)(*(s16*)(sub + 4) - *(s16*)(sub + 6) * framesThisStep);
+    }
+    if (*(s16*)(sub + 4) <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0) {
+        setup = Obj_AllocObjectSetup(0x18, 0x248);
+        *(f32*)((char*)setup + 8) = *(f32*)(def + 8);
+        *(f32*)((char*)setup + 0xc) = lbl_803E51B4 + *(f32*)(def + 0xc);
+        *(f32*)((char*)setup + 0x10) = *(f32*)(def + 0x10);
+        *(s16*)setup = 0x248;
+        *(int*)((char*)setup + 0x14) = -1;
+        *(u8*)((char*)setup + 4) = def[4];
+        *(u8*)((char*)setup + 5) = def[5];
+        *(u8*)((char*)setup + 6) = def[6];
+        *(u8*)((char*)setup + 7) = def[7];
+        Obj_SetupObject(setup, 5, (s8)*(s8*)((char*)obj + 0xac), -1, *(void**)((char*)obj + 0x30));
+        *(s16*)(sub + 4) = 0x64;
+        *(s16*)(sub + 6) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void dll_19B_SeqFn(int p1, int p2, void *p3);
+extern int GameBit_Set(int eventId, int value);
+extern void *gTitleMenuControlInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_19B_init(u8 *obj, u8 *params) {
+    u8 *sub;
+    int res;
+    int ret;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(s16*)obj = 0;
+    *(s16*)sub = 0xa;
+    if (*(s16*)(params + 0x1a) > 0) {
+        *(s16*)sub = (s16)(*(s16*)(params + 0x1a) >> 8);
+    }
+    sub[0x13] = 0;
+    sub[0x14] = 0;
+    *(s16*)(sub + 2) = 0;
+    sub[0x12] = 0;
+    *(void**)(obj + 0xbc) = (void*)&dll_19B_SeqFn;
+    ObjMsg_AllocQueue(obj, 4);
+    GameBit_Set(0x129, 1);
+    GameBit_Set(0x1d2, 0);
+    GameBit_Set(0x126, 1);
+    GameBit_Set(0x127, 1);
+    GameBit_Set(0x2d, 1);
+    GameBit_Set(0x40, 1);
+    GameBit_Set(0x1d7, 1);
+    GameBit_Set(0x1d8, 0);
+    *(s16*)(sub + 4) = 0xc;
+    *(s16*)(sub + 8) = 0x1e;
+    *(s16*)(sub + 2) = 0xc8;
+    ((void(*)(int, int, int, int, int))((void**)*(void**)gTitleMenuControlInterface)[6])(2, 0x2b, 0x50, 1, 0);
+    *(s16*)(sub + 6) = 0;
+    *(s16*)(sub + 0xa) = 0;
+    sub[0x16] = 0;
+    *(s16*)(sub + 0x10) = 0xc8;
+    *(s16*)(sub + 0xe) = 0xfa0;
+    res = Resource_Acquire(0x6a, 1);
+    ret = ((int(*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
+    *(s16*)(sub + 0xc) = (s16)ret;
+    Resource_Release(res);
+    *(f32*)(obj + 0x18) = *(f32*)(obj + 0xc);
+    *(f32*)(obj + 0x1c) = *(f32*)(obj + 0x10);
+    *(f32*)(obj + 0x20) = *(f32*)(obj + 0x14);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 extern undefined4 *gExpgfxInterface;
 

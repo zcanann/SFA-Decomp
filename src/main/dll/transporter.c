@@ -753,12 +753,12 @@ LAB_801767e4:
     trackDolphin_buildSweptBounds(&uStack_e8,(float *)(iVar14 + 0x78),local_90,&local_120,4);
     uStack_5c = local_e4 ^ 0x80000000;
     local_60 = 0x43300000;
-    local_e4 = (uint)((float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e4210) -
+    local_e4 = (uint)((f32)(s32)uStack_5c -
                      lbl_803E4254);
     local_58 = (longlong)(int)local_e4;
     uStack_4c = local_d8 ^ 0x80000000;
     local_50 = 0x43300000;
-    local_d8 = (uint)((float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e4210) +
+    local_d8 = (uint)((f32)(s32)uStack_4c +
                      lbl_803E4254);
     local_48 = (double)(longlong)(int)local_d8;
     FUN_80063a74(iVar4,&uStack_e8,1,'\x01');
@@ -808,8 +808,7 @@ LAB_801767e4:
       *(float *)(iVar14 + 0xf4) = lbl_803E41C0;
     }
     else {
-      local_48 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-      *(float *)(iVar14 + 0xf4) = (float)(in_f31 / (double)(float)(local_48 - DOUBLE_803e4210));
+      *(float *)(iVar14 + 0xf4) = (float)(in_f31 / (double)(f32)(s32)(uVar6));
     }
     if ((uVar12 == 0) || (lbl_803E41C0 < *(float *)(iVar14 + 0x110))) {
       if ((*(ushort *)(iVar14 + 0x100) & 4) == 0) {
@@ -819,8 +818,7 @@ LAB_801767e4:
     }
     else {
       *(float *)(iVar4 + 0x28) = lbl_803E41C0;
-      local_48 = (double)CONCAT44(0x43300000,uVar12 ^ 0x80000000);
-      *(float *)(iVar4 + 0x10) = lbl_803E4224 + local_128 / (float)(local_48 - DOUBLE_803e4210);
+      *(float *)(iVar4 + 0x10) = lbl_803E4224 + local_128 / (f32)(s32)(uVar12);
       *(ushort *)(iVar14 + 0x100) = *(ushort *)(iVar14 + 0x100) & 0xfff3;
     }
   }
@@ -1605,6 +1603,43 @@ void iceblast_free(void) {}
 void iceblast_hitDetect(void) {}
 void iceblast_release(void) {}
 void iceblast_initialise(void) {}
+
+extern unsigned long GameBit_Set(int eventId, int value);
+extern int saveGame_saveObjectPos(int *obj);
+extern int lbl_803DDAB8;
+extern int lbl_803AC6E0[];
+
+#pragma scheduling off
+#pragma peephole off
+void pushable_free(int *obj) {
+    u8 *def = *(u8**)((char*)obj + 0x4c);
+    u8 *sub = *(u8**)((char*)obj + 0xb8);
+    s16 type = *(s16*)((char*)obj + 0x46);
+    int v;
+
+    switch (type) {
+    case 0x21e:
+        GameBit_Set(*(s16*)(sub + 0xac), 0);
+        break;
+    case 0x411:
+        GameBit_Set(*(s16*)(sub + 0xac), 0);
+        break;
+    default:
+        if (*(s16*)(def + 0x18) > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub[0x146] != 0) {
+            saveGame_saveObjectPos(obj);
+        }
+        break;
+    }
+    if ((*(u16*)(sub + 0x100) & 1) != 0) {
+        int val = *(int*)(def + 0x14);
+        v = lbl_803DDAB8;
+        lbl_803DDAB8 = v + 1;
+        lbl_803AC6E0[v] = val;
+    }
+    ObjGroup_RemoveObject(obj, 5);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int pushable_getExtraSize(void) { return 0x148; }

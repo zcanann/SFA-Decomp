@@ -1214,7 +1214,7 @@ void FUN_801a5420(undefined2 *param_1,int param_2,int param_3)
   uStack_3c = (int)*(short *)(param_3 + 0x20) ^ 0x80000000;
   local_40 = 0x43300000;
   *(float *)(param_1 + 0x12) =
-       (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e50a8) / lbl_803E5098;
+       (f32)(s32)uStack_3c / lbl_803E5098;
   uStack_34 = (int)*(short *)(param_3 + 0x22) ^ 0x80000000;
   local_38 = 0x43300000;
   *(float *)(param_1 + 0x14) = (float)((double)CONCAT44(0x43300000,uStack_34) - dVar2) / fVar1;
@@ -1245,7 +1245,7 @@ void FUN_801a5420(undefined2 *param_1,int param_2,int param_3)
   uStack_14 = (int)*(short *)(param_3 + 0x32) ^ 0x80000000;
   local_18 = 0x43300000;
   *(float *)(param_2 + 0x24) =
-       (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e50a8) / lbl_803E509C;
+       (f32)(s32)uStack_14 / lbl_803E509C;
   uStack_1c = (int)*(short *)(param_3 + 0x34) ^ 0x80000000;
   local_20 = 0x43300000;
   *(float *)(param_2 + 0x28) = (float)((double)CONCAT44(0x43300000,uStack_1c) - dVar2) / fVar1;
@@ -1295,6 +1295,49 @@ void cfmagicwall_initialise(void) {}
 void cflevelcontrol_hitDetect(void) {}
 void cflevelcontrol_release(void) {}
 void cflevelcontrol_initialise(void) {}
+
+extern void storeZeroToFloatParam(void* p);
+extern void s16toFloat(void* p, int duration);
+extern int CFLevelControl_SeqFn(int p1, int p2, void *p3);
+extern void GameBit_Set(int eventId, int value);
+extern uint GameBit_Get(int eventId);
+extern void objSetSlot(void *obj, int resourceId);
+extern s16 lbl_80323008[];
+extern int *gMapEventInterface;
+
+#pragma peephole off
+#pragma scheduling off
+void cflevelcontrol_init(u8* obj, u8* params) {
+    u8* sub;
+    int i;
+    s16* p;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(int*)(sub + 8) = 0;
+    sub[0xd] = (u8)-1;
+    storeZeroToFloatParam(sub);
+    s16toFloat(sub, 0x1e0);
+    sub[0xc] = (u8)(sub[0xc] & ~0x40);
+    *(void**)(obj + 0xbc) = (void*)&CFLevelControl_SeqFn;
+    GameBit_Set(0x983, *(int*)(*(int*)(obj + 0x4c) + 0x14) != 0x2cef ? 1 : 0);
+    if (GameBit_Get(0x2fe) == 0) {
+        p = lbl_80323008;
+        for (i = 0; i < 0x17; i++) {
+            GameBit_Set(*p, 0);
+            p++;
+        }
+    }
+    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 4, 0);
+    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 0x11, 0);
+    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 0x15, 0);
+    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 0x16, 0);
+    sub[0xc] = (u8)((sub[0xc] & ~0x20) | (((u8)GameBit_Get(0x974) & 1) << 5));
+    sub[0xc] = (u8)((sub[0xc] & ~0x10) | (((u8)GameBit_Get(0x975) & 1) << 4));
+    objSetSlot(obj, 0x51);
+    sub[0xc] = (u8)(sub[0xc] | 0x08);
+}
+#pragma scheduling reset
+#pragma peephole reset
 void exploded_free(void) {}
 void exploded_hitDetect(void) {}
 void exploded_release(void) {}
@@ -1413,13 +1456,113 @@ void exploded_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801A3E9C: forward decl (think-routine pointer used by slidingdoor_init). */
-extern void fn_801A3E9C(void);
+extern int fn_801A3E9C(u8* obj, int unused, u8* data);
+extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern f32 lbl_803E4428;
 extern void* Obj_GetPlayerObject(void);
+extern void* getTrickyObject(void);
+extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int atan2i(int y, int x);
 extern void fn_801A4DB8(int obj, int data, int extra, int sub);
+extern void GameBit_Set(int eventId, int value);
+extern uint GameBit_Get(int eventId);
+
+/* fn_801A3E9C: slidingdoor "think" routine. Tracks whether the player or
+ * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
+ * (state[0] bits 5..7) through the door's open/close machine. Returns 1
+ * while in the static states (0/1) and 0 while in transition (2/3). */
+#pragma scheduling off
+int fn_801A3E9C(u8* obj, int unused, u8* data) {
+    register int playerNear;
+    register int trickyNear;
+    register u8* state;
+    u8* params;
+    u32 mode;
+    int result;
+    void* player;
+    void* tricky;
+
+    player = Obj_GetPlayerObject();
+    tricky = getTrickyObject();
+
+    if (player != NULL) {
+        playerNear = Vec_xzDistance((f32*)(obj + 0x18), (f32*)((u8*)player + 0x18)) < lbl_803E43B8;
+    } else {
+        playerNear = 0;
+    }
+
+    if (tricky != NULL) {
+        trickyNear = Vec_xzDistance((f32*)(obj + 0x18), (f32*)((u8*)tricky + 0x18)) < lbl_803E43B8;
+    } else {
+        trickyNear = 0;
+    }
+
+    state = *(u8**)(obj + 0xb8);
+    params = *(u8**)(obj + 0x4c);
+    mode = ((u32)state[0] >> 5) & 7;
+
+    if (mode == 0) {
+        if (GameBit_Get(*(s16*)(params + 0x18)) != 0 &&
+            (*(s16*)(params + 0x22) == -1 ||
+             GameBit_Get(*(s16*)(params + 0x22)) != 0)) {
+            GameBit_Set(*(s16*)(params + 0x1a), 1);
+            if (playerNear != 0 || trickyNear != 0) {
+                register u32 v = 2;
+                register u32 b;
+                asm {
+                    lbz b, 0(state)
+                    rlwimi b, v, 5, 24, 26
+                    stb b, 0(state)
+                }
+            }
+        }
+    } else if (mode == 1) {
+        if ((GameBit_Get(*(s16*)(params + 0x18)) != 0 ||
+             (*(s16*)(params + 0x22) != -1 &&
+              GameBit_Get(*(s16*)(params + 0x22)) != 0)) &&
+            playerNear == 0 && trickyNear == 0) {
+            register u32 v = 3;
+            register u32 b;
+            asm {
+                lbz b, 0(state)
+                rlwimi b, v, 5, 24, 26
+                stb b, 0(state)
+            }
+        }
+    }
+
+    {
+        register int cur = state[0];
+        if (((cur >> 5) & 7) == 2) {
+            if (data[0x80] == 2) {
+                register int v = 1;
+                asm {
+                    rlwimi cur, v, 5, 24, 26
+                    stb cur, 0(state)
+                }
+            }
+        } else if (((cur >> 5) & 7) == 3) {
+            if (data[0x80] == 1) {
+                register int v = 0;
+                asm {
+                    rlwimi cur, v, 5, 24, 26
+                    stb cur, 0(state)
+                }
+            }
+        }
+    }
+
+    result = 0;
+    {
+        u32 m3 = ((u32)state[0] >> 5) & 7;
+        if (m3 != 2) {
+            if (m3 != 3) result = 1;
+        }
+    }
+    return result;
+}
+#pragma scheduling reset
 /* gObjectTriggerInterface: pointer to a vtable (used for state-machine dispatches). */
 extern u32 *gObjectTriggerInterface;
 
@@ -1522,7 +1665,7 @@ void slidingdoor_init(u8* obj, u8* data) {
     f32 v;
     *(u32*)(obj + 0xf4) = flag;
     *(s16*)obj = (s16)(data[0x1f] << 8);
-    *(void(**)(void))(obj + 0xbc) = fn_801A3E9C;
+    *(int(**)(u8*, int, u8*))(obj + 0xbc) = fn_801A3E9C;
     v = (f32)(u32)data[0x21] * lbl_803E43C0;
     *(f32*)(obj + 0x8) = v;
     *(f32*)(obj + 0x8) = *(f32*)(obj + 0x8) * *(f32*)((char*)(*(u8**)(obj + 0x50)) + 4);

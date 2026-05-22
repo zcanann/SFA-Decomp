@@ -164,7 +164,7 @@ void FUN_8013f308(undefined8 param_1,undefined8 param_2,double param_3,undefined
     if ((float)param_10[0x1d0] <= lbl_803E306C) {
       uVar3 = randomGetRange(500,0x2ee);
       param_10[0x1d0] =
-           (int)(float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e30f0);
+           (int)(f32)(s32)(uVar3);
       iVar2 = *(int *)(param_9 + 0xb8);
       if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
          (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&

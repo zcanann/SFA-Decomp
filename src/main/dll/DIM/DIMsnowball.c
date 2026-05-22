@@ -1238,7 +1238,7 @@ void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 extern void envFxActFn_800887f8(int a);
 extern void Music_Trigger(int a, int b);
 extern void spawnExplosion(f32 size, int a, int b, int c, int d, int e, int f, int g);
-extern int fn_801AA734(int* obj);
+extern int fn_801AA734(int obj, int unused, u8* data);
 extern f32 lbl_803E46C8;
 
 #pragma scheduling off
@@ -1294,8 +1294,8 @@ extern void getEnvfxAct(int obj, int target, int id, int p);
 extern int *gMapEventInterface;
 extern int lbl_80323548[];
 extern f32 lbl_803E46D4;
-extern void fn_801AB700(void);
-extern void fn_801AB800(void);
+extern void fn_801AB700(int obj, u8* state2);
+extern void fn_801AB800(int obj, u8* state2);
 extern void fn_8002B6D8(void *obj, int p2, int p3, int p4, int p5, int p6);
 
 void ccpedstal_init(int *obj, u8 *params) {
@@ -1369,6 +1369,185 @@ void fn_801AA878(u8* p1, int* p2, f32 v) {
         return;
     }
     p1[16] = 2;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void gameBitDecrement(int id);
+extern int** gObjectTriggerInterface;
+
+/* fn_801AB700: state2-driven model + trigger gate. If state2's gamebit at
+ * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
+ * Otherwise selects model 0, then consults gbit 0xa9: if set, clears the
+ * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
+ * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
+ * clear, sets the obj[0xaf] 0x10 flag instead. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801AB700(int obj, u8* state2) {
+    if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0) {
+        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
+        Obj_SetActiveModelIndex(obj, 1);
+    } else {
+        int doMark;
+        Obj_SetActiveModelIndex(obj, 0);
+        if (GameBit_Get(0xa9) != 0) {
+            *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) & ~0x10);
+            if (ObjTrigger_IsSetById(obj, 0xa9) != 0) {
+                (*(void(**)(int, int, int))(*(int*)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                gameBitDecrement(0xa9);
+                doMark = 1;
+                goto check;
+            }
+        } else {
+            *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 0x10);
+        }
+        doMark = 0;
+    check:
+        if (doMark != 0) {
+            state2[0x6] = (u8)(state2[0x6] | 1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int ObjTrigger_IsSet(int obj);
+extern void gameBitIncrement(int id);
+
+/* fn_801AB800: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
+ * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
+ * sets bit 8 again and selects model 0; if clear, selects model 1 and
+ * (when the obj's pending trigger is asserted) fires vtable[0x12] with
+ * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
+ * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
+ * match target's layout. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801AB800(int obj, u8* state2) {
+    if (GameBit_Get(0xdc5) != 0) {
+        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
+    } else {
+        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) & ~8);
+    }
+    if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0) {
+        *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
+        Obj_SetActiveModelIndex(obj, 0);
+    } else {
+        int doMark;
+        Obj_SetActiveModelIndex(obj, 1);
+        if (ObjTrigger_IsSet(obj) != 0) {
+            (*(void(**)(int, int, int))(*(int*)gObjectTriggerInterface + 0x48))(1, obj, -1);
+            gameBitIncrement(0xa9);
+            doMark = 1;
+            goto check;
+        }
+        doMark = 0;
+    check:
+        if (doMark != 0) {
+            state2[0x6] = (u8)(state2[0x6] | 1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int* gWaterfxInterface;
+extern f32 lbl_803E4670;
+
+extern void dll_2E_func05(int *obj, u8 *sub, int a, int b, int c);
+extern void dll_2E_func08(u8 *sub, int a, int b);
+extern void dll_2E_func09(u8 *sub, void *a, void *b, int c);
+
+typedef struct { s16 v[3]; } _S16x3;
+extern _S16x3 lbl_803E4650;
+extern _S16x3 lbl_803E4658;
+
+#pragma scheduling off
+#pragma peephole off
+void ccqueen_init(int *obj, u8 *init) {
+    u8 *sub;
+    _S16x3 buf1;
+    _S16x3 buf2;
+    sub = *(u8**)((char*)obj + 0xb8);
+    buf2 = lbl_803E4650;
+    buf1 = lbl_803E4658;
+    *(s16*)obj = (s16)(init[0x1a] << 8);
+    dll_2E_func05(obj, sub, 0x71c7, 0x3555, 3);
+    dll_2E_func08(sub, 0x258, 0xf0);
+    dll_2E_func09(sub, &buf1, &buf2, 3);
+    sub[0x611] = (u8)(sub[0x611] | 0xa);
+}
+#pragma peephole reset
+#pragma scheduling reset
+extern f32 lbl_803E4664;
+extern f32 lbl_803E4668;
+extern f32 timeDelta;
+extern uint GameBit_Get(int eventId);
+extern unsigned long GameBit_Set(int eventId, int value);
+extern f32 vec3f_distanceSquared(f32* p1, f32* p2);
+extern void ObjAnim_AdvanceCurrentMove(void* obj, f32 weight, f32 dt, int flag);
+extern void characterDoEyeAnims(int obj, void* p);
+extern void *Obj_GetPlayerObject(void);
+extern void ObjHits_DisableObject_xx(int *obj);
+
+#pragma scheduling off
+#pragma peephole off
+void ccqueen_update(int *obj) {
+    u8 *sub;
+    int *player;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (GameBit_Get(0x1c2) == 0 && GameBit_Get(0xa3) != 0) {
+        player = (int*)Obj_GetPlayerObject();
+        if (vec3f_distanceSquared((f32*)((char*)obj + 0x18), (f32*)((char*)player + 0x18)) < lbl_803E4664) {
+            GameBit_Set(0x1c2, 1);
+        }
+    }
+    if (GameBit_Get(0x1c3) != 0) {
+        *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+        *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
+        ObjHits_DisableObject(obj);
+    } else {
+        ObjAnim_AdvanceCurrentMove(obj, lbl_803E4668, timeDelta, 0);
+        dll_2E_func03(obj, sub);
+        characterDoEyeAnims((int)obj, sub + 0x624);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_801AA734: ccqueen seqFn dispatcher. Walks the (u8)data[0x8b] command
+ * bytes at data[0x81..]: cmd=1 detaches obj's child via ObjLink_DetachChild
+ * (only when obj->_c8 != 0); cmd=2 dispatches gWaterfxInterface vtable[4]
+ * with the obj's xyz position and lbl_803E4670 as a 5-arg call. Returns 0. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801AA734(int obj, int unused, u8* data) {
+    int* state = *(int**)(obj + 0xb8);
+    if (data[0x8b] != 0) {
+        u8 i;
+        for (i = 0; (u32)i < (u32)data[0x8b]; i++) {
+            int cmd = data[0x81 + (u32)i];
+            switch (cmd) {
+            case 1:
+                if (*(int*)(obj + 0xc8) != 0) {
+                    ObjLink_DetachChild(obj, *(int*)state);
+                }
+                break;
+            case 2:
+                ((void(*)(int, f32, f32, f32, f32))((void**)*gWaterfxInterface)[4])(
+                    obj,
+                    *(f32*)(obj + 0x18),
+                    *(f32*)(obj + 0x1c),
+                    *(f32*)(obj + 0x20),
+                    lbl_803E4670);
+                break;
+            }
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

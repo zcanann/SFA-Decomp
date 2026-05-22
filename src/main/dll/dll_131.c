@@ -204,7 +204,7 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
     else {
       uVar1 = randomGetRange(300,600);
       *(float *)(iVar3 + 0x34) =
-           (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e3d08);
+           (f32)(s32)(uVar1);
       (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,2);
     }
   }

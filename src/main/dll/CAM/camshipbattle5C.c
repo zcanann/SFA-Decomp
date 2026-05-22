@@ -84,21 +84,12 @@ void pathcam_buildWindowSamples(undefined4 param_1,undefined4 param_2,float *par
     iVar8 = *piVar16;
     if (iVar8 != 0) {
       *(undefined4 *)uVar19 = *(undefined4 *)(iVar8 + 8);
-      *pfVar15 = *(float *)(iVar8 + 0xc);
-      *pfVar14 = *(float *)(iVar8 + 0x10);
-      dVar6 = DOUBLE_803e2520;
-      uStack_74 = (int)*(short *)(iVar8 + 0x34) ^ 0x80000000;
-      local_78 = 0x43300000;
-      *pfVar13 = (float)((double)CONCAT44(0x43300000,uStack_74) - DOUBLE_803e2520);
-      uStack_6c = (int)*(short *)(iVar8 + 0x36) ^ 0x80000000;
-      local_70 = 0x43300000;
-      *pfVar11 = (float)((double)CONCAT44(0x43300000,uStack_6c) - dVar6);
-      uStack_64 = (int)*(short *)(iVar8 + 0x38) ^ 0x80000000;
-      local_68 = 0x43300000;
-      *pfVar10 = (float)((double)CONCAT44(0x43300000,uStack_64) - dVar6);
-      uStack_5c = (int)*(char *)(iVar8 + 0x3a) ^ 0x80000000;
-      local_60 = 0x43300000;
-      *pfVar7 = (float)((double)CONCAT44(0x43300000,uStack_5c) - dVar6);
+      *pfVar15 = *(f32 *)(iVar8 + 0xc);
+      *pfVar14 = *(f32 *)(iVar8 + 0x10);
+      *pfVar13 = (f32)(s32)*(s16 *)(iVar8 + 0x34);
+      *pfVar11 = (f32)(s32)*(s16 *)(iVar8 + 0x36);
+      *pfVar10 = (f32)(s32)*(s16 *)(iVar8 + 0x38);
+      *pfVar7 = (f32)(s32)*(s8 *)(iVar8 + 0x3a);
     }
     piVar16 = piVar16 + 1;
     uVar19 = CONCAT44(puVar17 + 1,(undefined4 *)uVar19 + 1);
@@ -119,64 +110,32 @@ void pathcam_buildWindowSamples(undefined4 param_1,undefined4 param_2,float *par
     do {
       if (*piVar12 == 0) {
         if (iVar18 == 0) {
-          *pfVar9 = *(float *)(local_88[1] + 8) +
-                    (*(float *)(local_88[1] + 8) - *(float *)(local_88[2] + 8));
-          *param_3 = *(float *)(local_88[1] + 0xc) +
-                     (*(float *)(local_88[1] + 0xc) - *(float *)(local_88[2] + 0xc));
-          *param_4 = *(float *)(local_88[1] + 0x10) +
-                     (*(float *)(local_88[1] + 0x10) - *(float *)(local_88[2] + 0x10));
-          dVar6 = DOUBLE_803e2520;
-          uStack_5c = *(short *)(local_88[1] + 0x34) * 2 - (int)*(short *)(local_88[2] + 0x34) ^
-                      0x80000000;
-          local_60 = 0x43300000;
-          *pfVar7 = (float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e2520);
-          uStack_64 = *(short *)(local_88[1] + 0x36) * 2 - (int)*(short *)(local_88[2] + 0x36) ^
-                      0x80000000;
-          local_68 = 0x43300000;
-          *pfVar10 = (float)((double)CONCAT44(0x43300000,uStack_64) - dVar6);
-          uStack_6c = *(short *)(local_88[1] + 0x38) * 2 - (int)*(short *)(local_88[2] + 0x38) ^
-                      0x80000000;
-          local_70 = 0x43300000;
-          *pfVar11 = (float)((double)CONCAT44(0x43300000,uStack_6c) - dVar6);
-          uStack_74 = (int)*(char *)(local_88[1] + 0x3a) ^ 0x80000000;
-          local_78 = 0x43300000;
-          uStack_54 = uStack_74;
-          local_58 = 0x43300000;
-          uStack_4c = (int)*(char *)(local_88[2] + 0x3a) ^ 0x80000000;
-          local_50 = 0x43300000;
-          *param_8 = (float)((double)CONCAT44(0x43300000,uStack_74) - dVar6) +
-                     ((float)((double)CONCAT44(0x43300000,uStack_74) - dVar6) -
-                     (float)((double)CONCAT44(0x43300000,uStack_4c) - dVar6));
+          *pfVar9 = *(f32 *)(local_88[1] + 8) +
+                    (*(f32 *)(local_88[1] + 8) - *(f32 *)(local_88[2] + 8));
+          *param_3 = *(f32 *)(local_88[1] + 0xc) +
+                     (*(f32 *)(local_88[1] + 0xc) - *(f32 *)(local_88[2] + 0xc));
+          *param_4 = *(f32 *)(local_88[1] + 0x10) +
+                     (*(f32 *)(local_88[1] + 0x10) - *(f32 *)(local_88[2] + 0x10));
+          *pfVar7 = (f32)(s32)(*(s16 *)(local_88[1] + 0x34) * 2 - (int)*(s16 *)(local_88[2] + 0x34));
+          *pfVar10 = (f32)(s32)(*(s16 *)(local_88[1] + 0x36) * 2 - (int)*(s16 *)(local_88[2] + 0x36));
+          *pfVar11 = (f32)(s32)(*(s16 *)(local_88[1] + 0x38) * 2 - (int)*(s16 *)(local_88[2] + 0x38));
+          *param_8 = (f32)(s32)*(s8 *)(local_88[1] + 0x3a) +
+                     ((f32)(s32)*(s8 *)(local_88[1] + 0x3a) -
+                     (f32)(s32)*(s8 *)(local_88[2] + 0x3a));
         }
         else if (iVar18 == 3) {
-          *pfVar9 = *(float *)(local_88[2] + 8) +
-                    (*(float *)(local_88[2] + 8) - *(float *)(local_88[1] + 8));
-          *param_3 = *(float *)(local_88[2] + 0xc) +
-                     (*(float *)(local_88[2] + 0xc) - *(float *)(local_88[1] + 0xc));
-          *param_4 = *(float *)(local_88[2] + 0x10) +
-                     (*(float *)(local_88[2] + 0x10) - *(float *)(local_88[1] + 0x10));
-          dVar6 = DOUBLE_803e2520;
-          uStack_4c = *(short *)(local_88[2] + 0x34) * 2 - (int)*(short *)(local_88[1] + 0x34) ^
-                      0x80000000;
-          local_50 = 0x43300000;
-          *pfVar7 = (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e2520);
-          uStack_54 = *(short *)(local_88[2] + 0x36) * 2 - (int)*(short *)(local_88[1] + 0x36) ^
-                      0x80000000;
-          local_58 = 0x43300000;
-          *pfVar10 = (float)((double)CONCAT44(0x43300000,uStack_54) - dVar6);
-          uStack_5c = *(short *)(local_88[2] + 0x38) * 2 - (int)*(short *)(local_88[1] + 0x38) ^
-                      0x80000000;
-          local_60 = 0x43300000;
-          *pfVar11 = (float)((double)CONCAT44(0x43300000,uStack_5c) - dVar6);
-          uStack_64 = (int)*(char *)(local_88[2] + 0x3a) ^ 0x80000000;
-          local_68 = 0x43300000;
-          uStack_6c = uStack_64;
-          local_70 = 0x43300000;
-          uStack_74 = (int)*(char *)(local_88[1] + 0x3a) ^ 0x80000000;
-          local_78 = 0x43300000;
-          *param_8 = (float)((double)CONCAT44(0x43300000,uStack_64) - dVar6) +
-                     ((float)((double)CONCAT44(0x43300000,uStack_64) - dVar6) -
-                     (float)((double)CONCAT44(0x43300000,uStack_74) - dVar6));
+          *pfVar9 = *(f32 *)(local_88[2] + 8) +
+                    (*(f32 *)(local_88[2] + 8) - *(f32 *)(local_88[1] + 8));
+          *param_3 = *(f32 *)(local_88[2] + 0xc) +
+                     (*(f32 *)(local_88[2] + 0xc) - *(f32 *)(local_88[1] + 0xc));
+          *param_4 = *(f32 *)(local_88[2] + 0x10) +
+                     (*(f32 *)(local_88[2] + 0x10) - *(f32 *)(local_88[1] + 0x10));
+          *pfVar7 = (f32)(s32)(*(s16 *)(local_88[2] + 0x34) * 2 - (int)*(s16 *)(local_88[1] + 0x34));
+          *pfVar10 = (f32)(s32)(*(s16 *)(local_88[2] + 0x36) * 2 - (int)*(s16 *)(local_88[1] + 0x36));
+          *pfVar11 = (f32)(s32)(*(s16 *)(local_88[2] + 0x38) * 2 - (int)*(s16 *)(local_88[1] + 0x38));
+          *param_8 = (f32)(s32)*(s8 *)(local_88[2] + 0x3a) +
+                     ((f32)(s32)*(s8 *)(local_88[2] + 0x3a) -
+                     (f32)(s32)*(s8 *)(local_88[1] + 0x3a));
         }
       }
       piVar12 = piVar12 + 1;

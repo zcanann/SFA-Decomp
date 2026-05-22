@@ -494,7 +494,7 @@ void FUN_80145230(undefined8 param_1,undefined8 param_2,double param_3,undefined
       if ((float)param_10[0x1d0] <= lbl_803E306C) {
         uVar3 = randomGetRange(500,0x2ee);
         param_10[0x1d0] =
-             (int)(float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e30f0);
+             (int)(f32)(s32)(uVar3);
         iVar2 = *(int *)(param_9 + 0xb8);
         if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
            (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
@@ -836,7 +836,7 @@ void FUN_80145ee8(int param_1,int param_2,int param_3)
     *(undefined4 *)(iVar4 + 0x700) = uVar1;
     uVar2 = randomGetRange(0x168,0x28);
     *(float *)(iVar4 + 0x710) =
-         (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e30f0);
+         (f32)(s32)(uVar2);
     *(undefined *)(iVar4 + 8) = 5;
     *(int *)(iVar4 + 0x24) = param_3;
     iVar3 = *(int *)(iVar4 + 0x700) + 8;
@@ -1173,7 +1173,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   int state;
   int i;
   int childSlot;
-  
+
   state = *(int *)(obj + 0xb8);
   freeAndNull((void *)(state + 0x538));
   freeAndNull((void *)(state + 0x568));
@@ -1185,7 +1185,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   freeAndNull((void *)(state + 0x688));
   freeAndNull((void *)(state + 0x6b8));
   ObjGroup_RemoveObject(obj,1);
-  (**(code **)(*gExpgfxInterface + 0x14))(obj);
+  ((void (**)(int))(*gExpgfxInterface))[5](obj);
   if ((shouldKeepFlameChildren == 0) && ((*(uint *)(state + 0x54) & 0x800) != 0)) {
     *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffff7ff;
     *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x1000;
@@ -1330,7 +1330,7 @@ void trickyFn_80148d8c(int obj,int state)
 {
   int setup;
   int alpha;
-  int tricky;
+  void *tricky;
   u32 spawnBits;
   u8 moveId;
 
@@ -1338,9 +1338,9 @@ void trickyFn_80148d8c(int obj,int state)
   *(u8 *)(state + 0x2ef) = 0;
   if (((*(u32 *)(state + 0x2dc) & 0x800) != 0) &&
       ((*(u32 *)(state + 0x2e0) & 0x800) == 0)) {
-    tricky = getTrickyObject();
-    if (tricky != 0) {
-      trickyImpress(tricky);
+    tricky = (void *)getTrickyObject();
+    if (tricky != NULL) {
+      trickyImpress((int)tricky);
     }
     if ((*(u32 *)(state + 0x2e4) & 0x40000000) == 0) {
       if (*(s16 *)(setup + 0x18) != -1) {
@@ -1654,10 +1654,8 @@ void baddieFn_8014a304(f32 radius,int obj,int state)
   f32 maxDistance;
   s16 setupId;
 
-  visibilityBits[0] = lbl_802C21F0[0];
-  visibilityBits[1] = lbl_802C21F0[1];
-  visibilityBits[2] = lbl_802C21F0[2];
-  visibilityBits[3] = lbl_802C21F0[3];
+  *(longlong *)&visibilityBits[0] = *(longlong *)&lbl_802C21F0[0];
+  *(longlong *)&visibilityBits[2] = *(longlong *)&lbl_802C21F0[2];
   probe.x = *(f32 *)(obj + 0xc);
   probe.y = lbl_803E25A0 + *(f32 *)(obj + 0x10);
   probe.z = *(f32 *)(obj + 0x14);

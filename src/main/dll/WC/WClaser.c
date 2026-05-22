@@ -242,6 +242,37 @@ void FUN_801f0718(short *param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void WM_Galleon_release(void) {}
 void WM_Galleon_initialise(void) {}
+
+extern int *gMapEventInterface;
+extern void objSetSlot(int *obj, int slot);
+extern int fn_801EFF7C(int p1, int p2, void *p3);
+extern void fn_80065574(int a, int *obj, int b);
+
+#pragma scheduling off
+#pragma peephole off
+void WM_Galleon_init(int *obj, u8 *init) {
+    u8 *sub;
+    int i;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (GameBit_Get(0x78) != 0) return;
+    if (*(s16*)((char*)obj + 0x46) == 0x188) return;
+    objSetSlot(obj, 0x5a);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_801EFF7C;
+    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    *(int*)((char*)obj + 0xf4) = 9;
+    *(f32*)sub = *(f32*)((char*)obj + 0xc);
+    *(f32*)(sub + 4) = *(f32*)((char*)obj + 0x10);
+    *(f32*)(sub + 8) = *(f32*)((char*)obj + 0x14);
+    *(s16*)(sub + 0xe) = *(s16*)obj;
+    fn_80065574(0, obj, 0);
+    for (i = 0; i < 5; i++) {
+        ((void(*)(int, int, int))((void**)*(int*)gMapEventInterface)[20])(*(u8*)((char*)obj + 0x34), i, 0);
+    }
+    GameBit_Set(0xa4, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 void WM_seqobject_free(void) {}
 void WM_seqobject_hitDetect(void) {}
 void WM_seqobject_release(void) {}

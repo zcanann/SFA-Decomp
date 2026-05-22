@@ -113,10 +113,8 @@ void sc_totempuzzle_update(void)
           if (*(short *)(iVar7 + SC_TOTEMPUZZLE_STATE_STEP_OFFSET) == SC_TOTEMPUZZLE_FORWARD_STEP) {
             iVar8 = iVar8 + 1;
             if (puVar6 == puVar2) {
-              local_20 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar5 + 0x10) ^ 0x80000000);
-              *(float *)(iVar5 + 0xc) = FLOAT_803e6288 * (float)(local_20 - DOUBLE_803e62a8);
-              local_28 = (double)(longlong)(int)*(float *)(iVar5 + 0xc);
-              *puVar2 = (short)(int)*(float *)(iVar5 + 0xc);
+              *(f32 *)(iVar5 + 0xc) = FLOAT_803e6288 * (f32)(s32)*(s16 *)(iVar5 + 0x10);
+              *puVar2 = (short)(int)*(f32 *)(iVar5 + 0xc);
               bVar1 = true;
             }
           }
@@ -127,10 +125,8 @@ void sc_totempuzzle_update(void)
         else if (*(short *)(iVar7 + SC_TOTEMPUZZLE_STATE_STEP_OFFSET) == SC_TOTEMPUZZLE_REVERSE_STEP) {
           iVar8 = iVar8 + 1;
           if (puVar6 == puVar2) {
-            local_28 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar5 + 0x10) + 1U ^ 0x80000000);
-            *(float *)(iVar5 + 0xc) = FLOAT_803e6288 * (float)(local_28 - DOUBLE_803e62a8);
-            local_20 = (double)(longlong)(int)*(float *)(iVar5 + 0xc);
-            *puVar2 = (short)(int)*(float *)(iVar5 + 0xc);
+            *(f32 *)(iVar5 + 0xc) = FLOAT_803e6288 * (f32)(s32)((int)*(s16 *)(iVar5 + 0x10) + 1);
+            *puVar2 = (short)(int)*(f32 *)(iVar5 + 0xc);
             bVar1 = true;
           }
         }
@@ -405,6 +401,59 @@ void FUN_801ddb3c(int param_1)
 /* Trivial 4b 0-arg blr leaves. */
 void sc_totempuzzle_release(void) {}
 void sc_totempuzzle_initialise(void) {}
+
+extern s16 lbl_80327A18[];
+extern f32 lbl_803E55FC;
+extern f32 lbl_803E562C;
+extern f32 lbl_803E5630;
+extern void fn_801DD170(int obj);
+extern void *objFindTexture(int obj, int a, int b);
+extern uint GameBit_Get(int eventId);
+extern int randomGetRange(int lo, int hi);
+
+#pragma peephole off
+#pragma scheduling off
+void sc_totempuzzle_init(u8* obj, u8* params) {
+    u8* sub;
+    int *tex;
+    int r;
+    f32 fz;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(s8*)(obj + 0xad) = (s8)params[0x1b];
+    if ((s8)obj[0xad] < 0 || (s8)obj[0xad] > 5) {
+        obj[0xad] = 0;
+    }
+    if ((s8)obj[0xad] == 5) {
+        tex = (int*)objFindTexture((int)obj, 0, 0);
+        if (tex != NULL) {
+            *tex = 0x100;
+        }
+    }
+    *(s16*)(sub + 0x10) = (s16)(s8)obj[0xad];
+    if (GameBit_Get(0x639) == 0) {
+        *(f32*)(sub + 0xc) = (f32)(s32)lbl_80327A18[*(s16*)(sub + 0x10)];
+    } else {
+        *(f32*)(sub + 0xc) = lbl_803E562C;
+        tex = (int*)objFindTexture((int)obj, 0, 0);
+        if (tex != NULL) {
+            *tex = 0x100;
+        }
+    }
+    *(s16*)obj = (s16)(s32)*(f32*)(sub + 0xc);
+    r = randomGetRange(7, 10);
+    fz = (f32)r * lbl_803E5630;
+    *(f32*)(sub + 4) = fz;
+    *(f32*)sub = fz;
+    if (((s8)obj[0xad]) & 1) {
+        *(s16*)(sub + 0x12) = 1;
+    }
+    *(f32*)(sub + 8) = lbl_803E55FC;
+    *(void**)(obj + 0xbc) = (void*)&fn_801DD170;
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
+}
+#pragma scheduling reset
+#pragma peephole reset
 void sc_totembond_hitDetect(void) {}
 void sc_totembond_release(void) {}
 void sc_totembond_initialise(void) {}

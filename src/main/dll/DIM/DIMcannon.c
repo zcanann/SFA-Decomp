@@ -1455,7 +1455,7 @@ void FUN_801b0388(undefined2 *param_1,uint param_2,uint param_3)
   
   piVar2 = *(int **)(param_1 + 0x5c);
   dVar4 = (double)(lbl_803E5470 *
-                  (float)((double)CONCAT44(0x43300000,param_3 ^ 0x80000000) - DOUBLE_803e5480));
+                  (f32)(s32)(param_3));
   uVar1 = *(undefined4 *)(*piVar2 + 0xc);
   *(undefined4 *)(param_1 + 0xc) = uVar1;
   *(undefined4 *)(param_1 + 6) = uVar1;
@@ -1475,7 +1475,7 @@ void FUN_801b0388(undefined2 *param_1,uint param_2,uint param_3)
   dVar3 = (double)FUN_80293f90();
   *(float *)(param_1 + 0x12) = (float)(dVar4 * -dVar3);
   *(float *)(param_1 + 0x14) =
-       lbl_803E5470 * (float)((double)CONCAT44(0x43300000,param_2 ^ 0x80000000) - DOUBLE_803e5480)
+       lbl_803E5470 * (f32)(s32)(param_2)
   ;
   dVar3 = (double)FUN_80294964();
   *(float *)(param_1 + 0x16) = (float)(dVar4 * -dVar3);
@@ -1711,11 +1711,11 @@ void FUN_801b0a1c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     uStack_4c = (int)*(short *)(param_10 + 0x1a) ^ 0x80000000;
     local_50 = 0x43300000;
     dVar7 = (double)(lbl_803E5470 *
-                    (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e5480));
+                    (f32)(s32)uStack_4c);
     uStack_44 = (int)*(short *)(param_10 + 0x1c) ^ 0x80000000;
     local_48 = 0x43300000;
     dVar6 = (double)(lbl_803E5470 *
-                    (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e5480));
+                    (f32)(s32)uStack_44);
     piVar4[2] = *(int *)(param_9 + 8);
     piVar4[3] = *(int *)(param_10 + 0x14);
     *(undefined4 *)(param_10 + 0x14) = 0xffffffff;
@@ -1885,7 +1885,7 @@ void FUN_801b0df4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uVar3 = randomGetRange(0,0x3c);
     *(float *)(iVar8 + 0xc) =
          *(float *)(iVar8 + 0x10) +
-         (float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - DOUBLE_803e54b0);
+         (f32)(s32)(uVar3);
   }
   return;
 }
@@ -2116,6 +2116,49 @@ void link_levcontrol_init(int *obj) {
         *(int *)((char *)obj + 0xf4) = 1;
     }
 }
+
+extern u8 lbl_803238D8[];
+extern void *gMapEventInterface;
+extern void fn_80088870(u8 *a, u8 *b, u8 *c, u8 *d);
+extern void envFxActFn_800887f8(int id);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+
+void linkb_levcontrol_init(int *obj) {
+    u8 *sub;
+    u8 *t;
+
+    t = lbl_803238D8;
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
+    if (GameBit_Get(0x36e) != 0) {
+        *(int*)sub = *(int*)sub & 4;
+    }
+    if (GameBit_Get(0x543) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x28);
+    } else if (GameBit_Get(0x387) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x20);
+    } else if (GameBit_Get(0x386) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x18);
+    } else if (GameBit_Get(0x385) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x10);
+    } else if (GameBit_Get(0x384) != 0) {
+        sub[4] = (u8)((sub[4] & ~0x38) | 0x08);
+    }
+    fn_80088870(t + 0x38, t, t + 0x70, t + 0xa8);
+    if (getSaveGameLoadStatus() != 0) {
+        if ((u8)((int(*)(int, int))((void**)*(void**)gMapEventInterface)[19])((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
+            envFxActFn_800887f8(0x3f);
+        }
+        getEnvfxActImmediately(0, 0, 0x23c, 0);
+    } else {
+        if ((u8)((int(*)(int, int))((void**)*(void**)gMapEventInterface)[19])((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
+            envFxActFn_800887f8(0x1f);
+        }
+        getEnvfxAct(0, 0, 0x23c, 0);
+    }
+    *(s16*)(sub + 0xc) = 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2191,6 +2234,18 @@ void imspacethruster_free(int obj) {
     if (inner[1] != 0) mm_free(inner[1]);
     if (inner[2] != 0) mm_free(inner[2]);
 }
+
+void dimlogfire_free(int *obj, int mode) {
+    void **inner = *(void ***)((char *)obj + 0xb8);
+    (*(void (***)(int*))gExpgfxInterface)[6](obj);
+    if (inner[1] != NULL && mode == 0) {
+        Obj_FreeObject(inner[1]);
+    }
+    ObjGroup_RemoveObject(obj, 0x31);
+    if (inner[0] != NULL) {
+        ModelLightStruct_free(inner[0]);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2258,6 +2313,24 @@ void dimlogfire_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
             }
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int fn_8001DB64(int* p);
+extern f32 lbl_803E47F0;
+
+#pragma scheduling off
+#pragma peephole off
+void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
+{
+    int* state = *(int**)((char*)obj + 0xb8);
+    if ((int*)state[1] != NULL) {
+        if (fn_8001DB64((int*)state[1]) != 0) {
+            queueGlowRender((int*)state[1]);
+        }
+    }
+    ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E47F0);
 }
 #pragma peephole reset
 #pragma scheduling reset

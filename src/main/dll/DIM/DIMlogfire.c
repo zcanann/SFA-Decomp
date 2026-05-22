@@ -86,23 +86,23 @@ void FUN_801a8f88(void)
       *(float *)(psVar3 + 0xc) = lbl_803E524C;
       uVar2 = randomGetRange(-(uint)(ushort)psVar3[1],(uint)(ushort)psVar3[1]);
       *(float *)(psVar3 + 0xe) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5250);
+           (f32)(s32)(uVar2);
       uVar2 = randomGetRange(-(uint)(ushort)psVar3[3],(uint)(ushort)psVar3[3]);
       *(float *)(psVar3 + 0x10) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5250);
+           (f32)(s32)(uVar2);
       uVar2 = randomGetRange(-(uint)(ushort)psVar3[2],(uint)(ushort)psVar3[2]);
       *(float *)(psVar3 + 0x12) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5250);
+           (f32)(s32)(uVar2);
       FUN_80017748((ushort *)(psVar3 + 4),(float *)(psVar3 + 0xe));
       *(float *)(psVar3 + 0xe) = *(float *)(psVar3 + 0xe) + *(float *)(iVar1 + 0xc);
       *(float *)(psVar3 + 0x10) = *(float *)(psVar3 + 0x10) + *(float *)(iVar1 + 0x10);
       *(float *)(psVar3 + 0x12) = *(float *)(psVar3 + 0x12) + *(float *)(iVar1 + 0x14);
       uVar2 = randomGetRange(100,200);
       *(float *)(psVar3 + 0x14) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5250);
+           (f32)(s32)(uVar2);
       uVar2 = randomGetRange(0x32,100);
       *(float *)(psVar3 + 0x16) =
-           (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5250);
+           (f32)(s32)(uVar2);
     }
     *(float *)(psVar3 + 0x16) = *(float *)(psVar3 + 0x16) - lbl_803DC074;
     if (lbl_803E5248 < *(float *)(psVar3 + 0x16)) {
@@ -110,11 +110,11 @@ void FUN_801a8f88(void)
     }
     DAT_803ad598 = lbl_803E524C;
     uVar2 = randomGetRange(-(uint)(ushort)psVar3[1],(uint)(ushort)psVar3[1]);
-    DAT_803ad59c = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5250);
+    DAT_803ad59c = (f32)(s32)(uVar2);
     uVar2 = randomGetRange(-(uint)(ushort)psVar3[3],(uint)(ushort)psVar3[3]);
-    DAT_803ad5a0 = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5250);
+    DAT_803ad5a0 = (f32)(s32)(uVar2);
     uVar2 = randomGetRange(-(uint)(ushort)psVar3[2],(uint)(ushort)psVar3[2]);
-    DAT_803ad5a4 = (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5250);
+    DAT_803ad5a4 = (f32)(s32)(uVar2);
     FUN_80017748((ushort *)(psVar3 + 4),&DAT_803ad59c);
     DAT_803ad59c = DAT_803ad59c + *(float *)(iVar1 + 0xc);
     DAT_803ad5a0 = DAT_803ad5a0 + *(float *)(iVar1 + 0x10);
@@ -573,7 +573,7 @@ void FUN_801a9e5c(uint param_1)
         uVar2 = randomGetRange(0xffffffff,1);
         *(float *)(param_1 + 0x10) =
              *(float *)(iVar4 + 0xc) +
-             (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5280);
+             (f32)(s32)(uVar2);
         (**(code **)(*DAT_803dd708 + 8))(param_1,0x70f,0,2,0xffffffff,0);
       }
       *(float *)(pbVar6 + 0x14) = *(float *)(pbVar6 + 0x14) - lbl_803DC074;
@@ -582,7 +582,7 @@ void FUN_801a9e5c(uint param_1)
         if (uVar2 == 0) {
           uVar2 = randomGetRange(0x32,200);
           *(float *)(pbVar6 + 0x14) =
-               (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5280);
+               (f32)(s32)(uVar2);
           pbVar6[1] = pbVar6[1] & 0xfb;
         }
         else {
@@ -796,6 +796,70 @@ void animsharpclaw_initialise(void) {}
 void MoonSeedPlantingSpot_hitDetect(void) {}
 void MoonSeedPlantingSpot_release(void) {}
 void MoonSeedPlantingSpot_initialise(void) {}
+
+extern int MoonSeedPlantingSpot_SeqFn(int p1);
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedPlantingSpot_init(int *obj, u8 *init) {
+    u8 *sub;
+    int mapId;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(void**)((char*)obj + 0xbc) = (void*)&MoonSeedPlantingSpot_SeqFn;
+    *(s16*)obj = (s16)((s8)init[0x1f] << 8);
+    sub[0] = 0;
+    ObjGroup_AddObject((int)obj, 0x2e);
+    mapId = *(int*)(init + 0x14);
+    switch (mapId) {
+        case 0x41a59:
+            *(s16*)(sub + 8) = 0x867;
+            *(s16*)(sub + 0xa) = 0x858;
+            break;
+        case 0x41a5b:
+            *(s16*)(sub + 8) = 0x866;
+            *(s16*)(sub + 0xa) = 0x856;
+            break;
+        case 0x41a5c:
+            *(s16*)(sub + 8) = 0x868;
+            *(s16*)(sub + 0xa) = 0x85a;
+            break;
+        case 0x41a5d:
+            *(s16*)(sub + 8) = 0x869;
+            *(s16*)(sub + 0xa) = 0x864;
+            break;
+        case 0x43e04:
+            *(s16*)(sub + 8) = 0x9a2;
+            *(s16*)(sub + 0xa) = 0x99a;
+            break;
+        case 0x43e1f:
+            *(s16*)(sub + 8) = 0x9a3;
+            *(s16*)(sub + 0xa) = 0x99c;
+            break;
+        case 0x43e20:
+            *(s16*)(sub + 8) = 0x9a4;
+            *(s16*)(sub + 0xa) = 0x99e;
+            break;
+        case 0x43e21:
+            *(s16*)(sub + 8) = 0x9a5;
+            *(s16*)(sub + 0xa) = 0x9a0;
+            break;
+        case 0x476ae:
+            *(s16*)(sub + 8) = 0x3d5;
+            *(s16*)(sub + 0xa) = 0x3d2;
+            break;
+        case 0x4b26e:
+            *(s16*)(sub + 8) = 0xd4d;
+            *(s16*)(sub + 0xa) = 0xd4b;
+            break;
+        case 0x4bea3:
+            *(s16*)(sub + 8) = 0xe21;
+            *(s16*)(sub + 0xa) = 0xe10;
+            break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void ccgasvent_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */

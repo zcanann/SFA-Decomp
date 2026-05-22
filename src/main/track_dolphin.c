@@ -635,6 +635,39 @@ void FUN_8005fdec(void)
 {
 }
 
+extern void GXLoadPosMtxImm(void *mtx, int slot);
+extern void PSMTXCopy(void *src, void *dst);
+extern void GXLoadNrmMtxImm(void *mtx, int slot);
+extern void PSMTXConcat(void *a, void *b, void *out);
+extern void GXLoadTexMtxImm(void *mtx, int slot, int type);
+extern void GXSetArray(int attr, void *base, int stride);
+extern f32 lbl_803DEBCC;
+extern u8 lbl_803967F0[];
+
+#pragma scheduling off
+#pragma peephole off
+void setupToRenderMapBlock(int *block, void *posMtx) {
+    f32 out[12];
+    f32 tmp[12];
+    f32 fc;
+
+    GXLoadPosMtxImm(posMtx, 0);
+    PSMTXCopy(posMtx, tmp);
+    fc = lbl_803DEBCC;
+    tmp[3] = fc;
+    tmp[7] = fc;
+    tmp[11] = fc;
+    GXLoadNrmMtxImm(tmp, 0);
+    PSMTXConcat(lbl_803967F0, posMtx, out);
+    GXLoadTexMtxImm(out, 0x24, 0);
+    GXSetArray(9, *(void **)((char *)block + 0x58), 6);
+    GXSetArray(11, *(void **)((char *)block + 0x5C), 2);
+    GXSetArray(13, *(void **)((char *)block + 0x60), 4);
+    GXSetArray(14, *(void **)((char *)block + 0x60), 4);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
@@ -1650,9 +1683,8 @@ int FUN_80061024(int param_1,uint param_2)
   }
   dVar5 = (double)FUN_80006958((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c)
                                ,(double)*(float *)(param_1 + 0x20));
-  local_28 = (double)CONCAT44(0x43300000,uVar4 ^ 0x80000000);
-  fVar1 = (float)(dVar5 - (double)(float)(local_28 - DOUBLE_803df8e0)) /
-          (float)((double)CONCAT44(0x43300000,iVar3 - uVar4 ^ 0x80000000) - DOUBLE_803df8e0);
+  fVar1 = (float)(dVar5 - (double)(f32)(s32)(uVar4)) /
+          (f32)(s32)(iVar3 - uVar4);
   fVar2 = lbl_803DF8D8;
   if ((lbl_803DF8D8 <= fVar1) && (fVar2 = fVar1, lbl_803DF8E8 < fVar1)) {
     fVar2 = lbl_803DF8E8;
@@ -1721,8 +1753,7 @@ ushort FUN_80061198(int param_1,int param_2)
                   (float)((double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 0x36) ^ 0x80000000) -
                          DOUBLE_803df8e0));
   uVar2 = FUN_80061024(param_1,(uint)*(byte *)(iVar3 + 0x3a));
-  uVar1 = (ushort)(int)((double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) -
-                                       DOUBLE_803df8e0) * dVar4);
+  uVar1 = (ushort)(int)((double)(f32)(s32)(uVar2) * dVar4);
   if ((short)uVar1 < 0x100) {
     if ((short)uVar1 < 0) {
       uVar1 = 0;
@@ -1975,10 +2006,10 @@ void FUN_800616c4(double param_1,double param_2,double param_3,uint param_4)
   uStack_54 = param_4 ^ 0x80000000;
   local_58 = 0x43300000;
   lbl_803DDB58 =
-       (float)(param_1 * (double)(float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803df8e0));
+       (float)(param_1 * (double)(f32)(s32)uStack_54);
   local_50 = 0x43300000;
   lbl_803DC2B0 =
-       (float)(param_2 * (double)(float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803df8e0));
+       (float)(param_2 * (double)(f32)(s32)uStack_54);
   lbl_803DC2B4 = lbl_803DF8E8;
   if (lbl_803DC2B0 < lbl_803DF914) {
     lbl_803DC2B0 = lbl_803DF914;
@@ -1986,7 +2017,7 @@ void FUN_800616c4(double param_1,double param_2,double param_3,uint param_4)
   uStack_44 = param_4 ^ 0x80000000;
   local_48 = 0x43300000;
   lbl_803DDB5C =
-       (float)(param_3 * (double)(float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803df8e0));
+       (float)(param_3 * (double)(f32)(s32)uStack_44);
   dVar3 = (double)(local_60 * DAT_80388618 + local_68 * DAT_80388610 + local_64 * DAT_80388614);
   dVar2 = (double)(DAT_80388618 * DAT_80388618 +
                   DAT_80388610 * DAT_80388610 + DAT_80388614 * DAT_80388614);
@@ -4211,3 +4242,117 @@ void fn_80063368(int target) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_803DCE06;
+extern int lbl_80382038[];
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803DEBCC;
+extern char gViewFrustumPlanes[];
+
+#pragma scheduling off
+#pragma peephole off
+void queueGlowRender(int* obj)
+{
+    u8 i;
+    u8 visible;
+    u8 idx;
+
+    if (lbl_803DCE06 >= 100) return;
+
+    for (i = 0; i < 5; i++) {
+        f32* plane = (f32*)(gViewFrustumPlanes + i * 0x14);
+        f32 dot = plane[0] * (*(f32*)((char*)obj + 0x10) - playerMapOffsetX)
+                + *(f32*)((char*)obj + 0x14) * plane[1]
+                + plane[2] * (*(f32*)((char*)obj + 0x18) - playerMapOffsetZ)
+                + plane[3];
+        if (lbl_803DEBCC + dot < lbl_803DEBCC) {
+            visible = 0;
+            goto check;
+        }
+    }
+    visible = 1;
+check:
+    if (visible == 0 && *(u8*)((char*)obj + 0x2f9) == 0) return;
+    if (visible == 0) {
+        *(s8*)((char*)obj + 0x2fa) = -0x10;
+    }
+    idx = lbl_803DCE06;
+    lbl_803DCE06 = (u8)(idx + 1);
+    lbl_80382038[idx] = (int)obj;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 lbl_803DCE98;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80060BB0(void)
+{
+    int i;
+    int j;
+    int byteOff;
+    int innerOff;
+    int* blk;
+    char* arr;
+
+    byteOff = 0;
+    for (i = 0; i < (int)lbl_803DCE98; i++) {
+        blk = *(int**)((char*)&lbl_803DCE9C + byteOff);
+        if (blk != NULL) {
+            innerOff = 0;
+            for (j = 0; j < (int)*(u8*)((char*)blk + 0xa1); j++) {
+                arr = *(char**)((char*)blk + 0x68);
+                arr[innerOff + 0x12] = 0;
+                innerOff += 0x1c;
+            }
+        }
+        byteOff += 4;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 *lbl_803DCF38;
+extern s16 lbl_803DCF5C;
+
+int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
+{
+    int i;
+    int n;
+    f32 *p;
+    f32 *base;
+
+    i = 0;
+    base = lbl_803DCF38;
+    p = base;
+    n = lbl_803DCF5C;
+    if (n > 0) {
+        do {
+            if (x == p[0] && y == p[1] && z == p[2]) {
+                arr[i * 2 + 1] = (s16)val;
+                return i;
+            }
+            p += 3;
+            i++;
+        } while (--n != 0);
+        n = lbl_803DCF5C;
+    }
+    base[n * 3] = x;
+    lbl_803DCF38[lbl_803DCF5C * 3 + 1] = y;
+    lbl_803DCF38[lbl_803DCF5C * 3 + 2] = z;
+    arr[lbl_803DCF5C * 2] = (s16)val;
+    arr[lbl_803DCF5C * 2 + 1] = -1;
+    lbl_803DCF5C++;
+    return lbl_803DCF5C - 1;
+}
+
+extern f32 CurrTiming_803DEC20;
+
+void fn_800605F0(s16 *in, f32 *out)
+{
+    out[0] = (f32)(s32)in[0] * CurrTiming_803DEC20;
+    out[1] = (f32)(s32)in[1] * CurrTiming_803DEC20;
+    out[2] = (f32)(s32)in[2] * CurrTiming_803DEC20;
+}

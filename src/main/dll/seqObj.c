@@ -414,7 +414,7 @@ void FUN_8014ffa8(undefined8 param_1,double param_2,undefined8 param_3,undefined
       uVar6 = randomGetRange((uint)(byte)(&DAT_8031feac)[iVar4],(uint)(byte)(&DAT_8031fead)[iVar4]);
       *(float *)(iVar7 + 0x324) =
            *(float *)(iVar7 + 0x334) +
-           (float)((double)CONCAT44(0x43300000,uVar6 ^ 0x80000000) - DOUBLE_803e33f0);
+           (f32)(s32)(uVar6);
       *(float *)(iVar7 + 0x334) = lbl_803E33D8;
       goto LAB_80150818;
     }

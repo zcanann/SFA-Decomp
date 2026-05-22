@@ -871,8 +871,7 @@ void FUN_801f1ac0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uStack_14 = (uint)DAT_803dc070;
     local_18 = 0x43300000;
     ObjAnim_AdvanceCurrentMove((double)lbl_803E6A34,
-                               (double)(float)((double)CONCAT44(0x43300000,uStack_14) -
-                                               DOUBLE_803e6a38),param_9,(ObjAnimEventList *)0x0);
+                               (f64)(f32)(s32)uStack_14,param_9,(ObjAnimEventList *)0x0);
   }
   else {
     if (*(short *)(param_9 + 0xa0) != 2) {
@@ -881,8 +880,7 @@ void FUN_801f1ac0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uStack_14 = (uint)DAT_803dc070;
     local_18 = 0x43300000;
     ObjAnim_AdvanceCurrentMove((double)lbl_803E6A34,
-                               (double)(float)((double)CONCAT44(0x43300000,uStack_14) -
-                                               DOUBLE_803e6a38),param_9,(ObjAnimEventList *)0x0);
+                               (f64)(f32)(s32)uStack_14,param_9,(ObjAnimEventList *)0x0);
   }
   if (((*(byte *)(param_9 + 0xaf) & 1) == 0) || (uVar1 = FUN_80017690(0x2fb), uVar1 != 0)) {
     if (((*(byte *)(param_9 + 0xaf) & 1) != 0) &&
@@ -1082,7 +1080,7 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 void fn_801F20D4(int obj)
 {
   extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
-  extern void ObjAnim_AdvanceCurrentMove(int obj, int n, f32 v, f32 t);
+  extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
   extern void *Obj_GetPlayerObject(void);
   extern int *gGameUIInterface;
   extern int lbl_802C247C[];
@@ -1092,7 +1090,7 @@ void fn_801F20D4(int obj)
   extern f32 lbl_803E5D9C;
   extern f32 lbl_803E5DA0;
   extern void GameBit_Set(int slot, int val);
-  extern int GameBit_Get(int id);
+  extern uint GameBit_Get(int id);
   int sub;
   int stk[3];
 
@@ -1108,12 +1106,12 @@ void fn_801F20D4(int obj)
     if (*(s16 *)(obj + 0xa0) != 7) {
       ObjAnim_SetCurrentMove(obj, 7, lbl_803E5D98, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(s32)(u32)framesThisStep - lbl_803E5DA0);
+    ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
   } else {
     if (*(s16 *)(obj + 0xa0) != 2) {
       ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(s32)(u32)framesThisStep - lbl_803E5DA0);
+    ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
   }
   if ((*(u8 *)(obj + 0xaf) & 0x1) != 0 && GameBit_Get(763) == 0) {
     GameBit_Set(763, 1);
@@ -1280,7 +1278,7 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
 void fn_801F27E4(int obj)
 {
   extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
-  extern void ObjAnim_AdvanceCurrentMove(int obj, int n, f32 v, f32 t);
+  extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
   extern void *Obj_GetPlayerObject(void);
   extern int fn_80296A14(void);
   extern int *gObjectTriggerInterface;
@@ -1290,14 +1288,14 @@ void fn_801F27E4(int obj)
   extern f32 lbl_803E5D9C;
   extern f32 lbl_803E5DA0;
   extern void GameBit_Set(int slot, int val);
-  extern int GameBit_Get(int id);
+  extern uint GameBit_Get(int id);
   int sub;
 
   sub = *(int *)(obj + 0xb8);
   if (*(s16 *)(obj + 0xa0) != 2) {
     ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
   }
-  ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5D9C, (f32)(s32)(u32)framesThisStep - lbl_803E5DA0);
+  ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
   *(u8 *)(sub + 0x24) = 1;
   if (*(u8 *)(sub + 0x24) == 0) {
     if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
@@ -1567,6 +1565,42 @@ void pressureswitch_free(void) {}
 void pressureswitch_hitDetect(void) {}
 void pressureswitch_release(void) {}
 void pressureswitch_initialise(void) {}
+
+extern int PressureSwitch_SeqFn(int p1, int p2, void* p3);
+extern f32 lbl_803E5D78;
+
+#pragma scheduling off
+#pragma peephole off
+void pressureswitch_init(int *obj, u8 *init) {
+    extern uint GameBit_Get(int id);
+    u8 *sub;
+    uint mapId;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(void**)((char*)obj + 0xbc) = (void*)&PressureSwitch_SeqFn;
+    *(s16*)obj = (s16)((s8)init[0x18] << 8);
+    *(s16*)(sub + 2) = (s16)(*(s16*)(init + 0x1e) * 0x3c);
+    sub[1] = 0;
+    mapId = *(int*)(*(int*)((char*)obj + 0x4c) + 0x14);
+    if (mapId == 0x1f1a) {
+        *(s16*)(sub + 4) = 0xf45;
+    } else if (mapId == 0x47293) {
+        *(s16*)(sub + 4) = 0xf46;
+    } else {
+        *(s16*)(sub + 4) = -1;
+    }
+    if (*(s16*)(sub + 4) != -1) {
+        if (GameBit_Get(*(s16*)(sub + 4)) != 0) {
+            sub[6] |= 0x40;
+        }
+    }
+    if (GameBit_Get(*(s16*)(init + 0x1c)) != 0) {
+        *(f32*)((char*)obj + 0x10) = *(f32*)(init + 0xc) - lbl_803E5D78;
+        sub[0] = 0x1e;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dll_1FF_free_nop(void) {}
 void dll_1FF_hitDetect_nop(void) {}
 void dll_1FF_release_nop(void) {}
@@ -1575,6 +1609,41 @@ void wmlasertarget_free(void) {}
 void wmlasertarget_hitDetect(void) {}
 void wmlasertarget_release(void) {}
 void wmlasertarget_initialise(void) {}
+
+extern void Obj_SetActiveModelIndex(int *obj, int idx);
+
+#pragma scheduling off
+#pragma peephole off
+void wmlasertarget_update(int *obj) {
+    extern u8 framesThisStep;
+    extern void GameBit_Set(int slot, int val);
+    u8 *def;
+    u8 *sub;
+
+    def = *(u8**)((char*)obj + 0x4c);
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+        sub[2] = 1;
+        *(s16*)sub = *(s16*)(def + 0x1a);
+    }
+    if (*(s16*)sub <= 0 && sub[2] != 0) {
+        if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
+            Obj_SetActiveModelIndex(obj, 0);
+            GameBit_Set(*(s16*)(def + 0x1e), 0);
+            GameBit_Set(*(s16*)(def + 0x20), 0);
+        } else {
+            Obj_SetActiveModelIndex(obj, 1);
+            GameBit_Set(*(s16*)(def + 0x1e), 1);
+            GameBit_Set(*(s16*)(def + 0x20), 1);
+        }
+        sub[2] = 0;
+        *(s16*)sub = *(s16*)(def + 0x1a);
+    } else if (*(s16*)sub > 0) {
+        *(s16*)sub = (s16)(*(s16*)sub - framesThisStep);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dll_200_free_nop(void) {}
 void dll_200_hitDetect_nop(void) {}
 void dll_200_release_nop(void) {}
@@ -1583,9 +1652,120 @@ void WM_colrise_free(void) {}
 void WM_colrise_hitDetect(void) {}
 void WM_colrise_release(void) {}
 void WM_colrise_initialise(void) {}
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 timeDelta;
+extern f32 lbl_803E5DCC;
+extern f32 lbl_803E5DD0;
+extern f32 lbl_803E5DD4;
+extern f32 lbl_803E5DD8;
+extern f32 lbl_803E5DDC;
+extern f32 lbl_803E5DE0;
+
+#pragma scheduling off
+#pragma peephole off
+void WM_colrise_update(int *obj) {
+    u8 *def;
+    u8 *sub;
+    s32 reached;
+    f32 target;
+    int i;
+
+    def = *(u8**)((char*)obj + 0x4c);
+    sub = *(u8**)((char*)obj + 0xb8);
+    sub[2] = (u8)(sub[2] - 1);
+    if ((s8)sub[2] < 0) sub[2] = 0;
+    if ((s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f) > 0) {
+        for (i = 0; i < (s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f); i++) {
+            int *p = *(int**)((char*)*(int**)((char*)obj + 0x58) + 0x100 + i * 4);
+            if (*(f32*)((char*)p + 0x10) - *(f32*)((char*)obj + 0x10) > lbl_803E5DCC) {
+                sub[2] = 0x3c;
+            }
+        }
+    }
+    reached = 0;
+    if ((*(s16*)sub == -1 || GameBit_Get(*(s16*)sub) != 0) && (s8)sub[2] != 0) {
+        target = lbl_803E5DD0 + (lbl_803E5DD4 + *(f32*)(def + 0xc));
+        if (*(f32*)((char*)obj + 0x10) > target) {
+            *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) - lbl_803E5DD8 * timeDelta;
+            if (*(f32*)((char*)obj + 0x10) > target) {
+                *(f32*)((char*)obj + 0x10) = target;
+            }
+        } else {
+            *(f32*)((char*)obj + 0x10) = lbl_803E5DDC * timeDelta + *(f32*)((char*)obj + 0x10);
+            if (*(f32*)((char*)obj + 0x10) > target) {
+                *(f32*)((char*)obj + 0x10) = target;
+            } else {
+                reached = 1;
+            }
+        }
+    } else {
+        *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) - lbl_803E5DE0 * timeDelta;
+        if (*(f32*)((char*)obj + 0x10) < *(f32*)(def + 0xc)) {
+            *(f32*)((char*)obj + 0x10) = *(f32*)(def + 0xc);
+        } else {
+            reached = 1;
+        }
+    }
+    if ((s8)reached != 0) {
+        Sfx_PlayFromObject((int)obj, 0x7d);
+    } else {
+        Sfx_StopObjectChannel((int)obj, 8);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void wmtorch_hitDetect(void) {}
 void wmtorch_release(void) {}
 void wmtorch_initialise(void) {}
+
+extern f32 lbl_803E5DEC;
+extern f32 lbl_803E5DF0;
+extern f32 lbl_803E5DF4;
+extern f32 lbl_803E5DF8;
+extern u32 Resource_Acquire(int id, int mode);
+extern void Resource_Release(u32);
+
+#pragma peephole off
+#pragma scheduling off
+void wmtorch_init(u8* obj, u8* params) {
+    u8* sub;
+    u32 res;
+    f32 v[5];
+
+    sub = *(u8**)(obj + 0xb8);
+    if (*(s16*)(params + 0x1a) != 0) {
+        *(f32*)(sub + 4) = (f32)(s32)*(s16*)(params + 0x1a);
+    } else {
+        *(f32*)(sub + 4) = lbl_803E5DEC;
+    }
+    if (*(s16*)(params + 0x1c) != 0) {
+        *(s16*)(sub + 0xa) = *(s16*)(params + 0x1c);
+    } else {
+        *(s16*)(sub + 0xa) = 0x8c;
+    }
+    sub[0xc] = params[0x19];
+    v[4] = lbl_803E5DF0;
+    if (sub[0xc] == 0) {
+        res = Resource_Acquire(0x69, 1);
+        *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
+        ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 1, v, 0x10004, -1, 0);
+    } else if (sub[0xc] == 0x7f) {
+        res = Resource_Acquire(0x69, 1);
+        *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
+        ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 2, v, 0x10004, -1, 0);
+    } else {
+        res = Resource_Acquire(0x63, 1);
+        *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF4;
+        ((void(*)(u8*, int, f32*, int, int, int))((void**)*(int*)res)[1])(obj, 2, v, 0x10004, -1, 0);
+    }
+    *(f32*)(obj + 8) = *(f32*)(obj + 8) * lbl_803E5DF8;
+    Resource_Release(res);
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x2000);
+}
+#pragma scheduling reset
+#pragma peephole reset
 #pragma peephole off
 void wmtorch_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
     if (visible == 0) return;
@@ -1691,8 +1871,6 @@ void wmlasertarget_init(char *obj, s8 *p) {
 
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 *a, f32 *b);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E5DE8;
 #pragma scheduling off
 #pragma peephole off

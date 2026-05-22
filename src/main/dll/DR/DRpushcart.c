@@ -378,8 +378,7 @@ double FUN_801e7be8(ushort *param_1,int param_2,int param_3)
       else {
         iVar4 = iVar4 + -0x2000;
       }
-      *param_1 = (ushort)(int)((float)((double)CONCAT44(0x43300000,iVar4 >> 3 ^ 0x80000000) -
-                                      DOUBLE_803e6698) * lbl_803DC074 +
+      *param_1 = (ushort)(int)((f32)(s32)(iVar4 >> 3) * lbl_803DC074 +
                               (float)((double)CONCAT44(0x43300000,(int)(short)*param_1 ^ 0x80000000)
                                      - DOUBLE_803e6698));
     }
@@ -751,18 +750,15 @@ void FUN_801e8300(void)
         dVar11 = (double)fVar1;
         local_7c = iVar3;
         uVar7 = randomGetRange(0,2000);
-        local_50 = (double)CONCAT44(0x43300000,uVar7 - 1000 ^ 0x80000000);
-        local_88 = (float)(dVar11 * (double)(float)(local_50 - DOUBLE_803e66f0) + (double)local_88);
+        local_88 = (float)(dVar11 * (double)(f32)(s32)(uVar7 - 1000) + (double)local_88);
         uVar7 = randomGetRange(0,2000);
         uStack_44 = uVar7 - 1000 ^ 0x80000000;
         local_48 = 0x43300000;
-        local_84 = (float)(dVar11 * (double)(float)((double)CONCAT44(0x43300000,uStack_44) -
-                                                   DOUBLE_803e66f0) + (double)local_84);
+        local_84 = (float)(dVar11 * (f64)(f32)(s32)uStack_44 + (double)local_84);
         uVar7 = randomGetRange(0,2000);
         uStack_3c = uVar7 - 1000 ^ 0x80000000;
         local_40 = 0x43300000;
-        local_80 = (float)(dVar11 * (double)(float)((double)CONCAT44(0x43300000,uStack_3c) -
-                                                   DOUBLE_803e66f0) + (double)local_80);
+        local_80 = (float)(dVar11 * (f64)(f32)(s32)uStack_3c + (double)local_80);
         uVar8 = FUN_80081030((double)lbl_803E66E0,(double)lbl_803E66E4,iVar3 + 0xc,&local_88,
                              0x14,0x40,0);
         *(undefined4 *)(iVar5 + 0x98) = uVar8;
@@ -904,7 +900,7 @@ void FUN_801e8658(int param_1)
 int fn_801E86F4(int obj, int p2, int p3)
 {
   extern void fn_801E8660(void);
-  extern void ObjAnim_AdvanceCurrentMove(int obj, int x, f32 a, f32 b);
+  extern void ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, int x);
   extern void fn_801F4D54(int obj, int sub);
   extern void fn_801F4ECC(int obj, int sub);
   extern f32 mathFn_80010ee0(int p, int m, f32 t);
@@ -920,7 +916,7 @@ int fn_801E86F4(int obj, int p2, int p3)
   *(s16 *)(p3 + 0x70) = (s16)(*(s16 *)(p3 + 0x70) & ~4);
 
   if (*(int *)(*(int *)(obj + 0x7c) + (s32)(s8)*(u8 *)(obj + 0xad) * 4) != 0) {
-    ObjAnim_AdvanceCurrentMove(obj, 0, lbl_803E5A60, timeDelta);
+    ObjAnim_AdvanceCurrentMove(obj, lbl_803E5A60, timeDelta, 0);
   }
 
   if (*(s16 *)(obj + 0x46) != 1127) return 0;
@@ -1105,7 +1101,7 @@ void shopkeeper_update(int obj) {
         shopKeeperRotateFn_801e7c4c(obj, player, 1);
     }
     *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4);
-    if (*(int *)(state + 0x9B4) == 0) {
+    if (*(void **)(state + 0x9B4) == NULL) {
         *(int *)(state + 0x9B4) = ObjGroup_FindNearestObject(9, obj, &dist);
     }
     *(s16 *)(state + 0x9C8) = (s16)playerGetMoney(player);

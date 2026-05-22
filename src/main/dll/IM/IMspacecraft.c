@@ -417,9 +417,8 @@ void FUN_801a5dcc(void)
       uVar4 = GameBit_Get((int)*(short *)(iVar6 + 0x20));
       puVar7[2] = uVar4;
       if (puVar7[2] != 0) {
-        local_48 = (double)CONCAT44(0x43300000,(int)*(char *)(iVar6 + 0x19) ^ 0x80000000);
         *(float *)(puVar2 + 4) =
-             *(float *)(*(int *)(puVar2 + 0x28) + 4) * (float)(local_48 - DOUBLE_803e50d0) *
+             *(float *)(*(int *)(puVar2 + 0x28) + 4) * (f32)(s32)((int)*(char *)(iVar6 + 0x19)) *
              lbl_803E50E0;
         if (*puVar7 == 0) {
           uVar4 = FUN_80017524(puVar2,0xff,0,0x4d,0);
@@ -439,18 +438,17 @@ void FUN_801a5dcc(void)
       else {
         *(char *)(puVar2 + 0x1b) = *(char *)(puVar2 + 0x1b) + -1;
         if (*puVar7 != 0) {
-          local_48 = (double)CONCAT44(0x43300000,*(byte *)(puVar2 + 0x1b) >> 2 ^ 0x80000000);
           uStack_3c = (*(byte *)(puVar2 + 0x1b) >> 2) + 10 ^ 0x80000000;
           local_40 = 0x43300000;
-          FUN_800175d0((double)(float)(local_48 - DOUBLE_803e50d0),
-                       (double)(float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e50d0),
+          FUN_800175d0((double)(f32)(s32)(*(byte *)(puVar2 + 0x1b) >> 2),
+                       (double)(f32)(s32)uStack_3c,
                        *puVar7);
         }
         *(float *)(puVar2 + 4) = *(float *)(puVar2 + 4) * lbl_803E50E4;
         uStack_3c = (int)(short)puVar2[2] ^ 0x80000000;
         local_40 = 0x43300000;
         iVar3 = (int)-(lbl_803E50E8 * lbl_803DC074 -
-                      (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e50d0));
+                      (f32)(s32)uStack_3c);
         local_48 = (double)(longlong)iVar3;
         puVar2[2] = (ushort)iVar3;
       }
@@ -575,14 +573,14 @@ void FUN_801a6378(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (DAT_803de7a0 < 2) {
     uVar1 = randomGetRange(0,1);
     uVar2 = randomGetRange(0x32,0x3c);
-    FUN_8008112c((double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5120),
+    FUN_8008112c((double)(f32)(s32)(uVar2),
                  param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,1,1,0,uVar1 & 0xff,
                  0,1,0);
   }
   else {
     uVar1 = randomGetRange(0,1);
     uVar2 = randomGetRange(0x32,0x3c);
-    FUN_8008112c((double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e5120),
+    FUN_8008112c((double)(f32)(s32)(uVar2),
                  param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,1,1,0,uVar1 & 0xff,
                  0,0,0);
   }
@@ -765,17 +763,15 @@ void FUN_801a66f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       iVar3 = FUN_80017730();
       *param_9 = (short)iVar3;
       if (*(char *)((int)pfVar7 + 0x115) == '\0') {
-        local_30 = (double)CONCAT44(0x43300000,(int)(short)param_9[2] ^ 0x80000000);
         param_9[2] = (short)(int)-(lbl_803E5140 * lbl_803DC074 -
-                                  (float)(local_30 - DOUBLE_803e5120));
+                                  (f32)(s32)((int)(short)param_9[2]));
         if ((short)param_9[2] < 0x3a00) {
           *(undefined *)((int)pfVar7 + 0x115) = 1;
         }
       }
       else {
-        local_38 = (double)CONCAT44(0x43300000,(int)(short)param_9[2] ^ 0x80000000);
         param_9[2] = (short)(int)(lbl_803E5140 * lbl_803DC074 +
-                                 (float)(local_38 - DOUBLE_803e5120));
+                                 (f32)(s32)((int)(short)param_9[2]));
         if (0x5000 < (short)param_9[2]) {
           *(undefined *)((int)pfVar7 + 0x115) = 0;
         }
@@ -783,8 +779,7 @@ void FUN_801a66f8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       dVar10 = DOUBLE_803e5120;
       dVar9 = (double)(lbl_803E5144 * lbl_803DC074);
       dVar8 = (double)pfVar7[0x42];
-      local_30 = (double)CONCAT44(0x43300000,(int)(short)param_9[1] ^ 0x80000000);
-      iVar3 = (int)(dVar9 * dVar8 + (double)(float)(local_30 - DOUBLE_803e5120));
+      iVar3 = (int)(dVar9 * dVar8 + (double)(f32)(s32)((int)(short)param_9[1]));
       local_38 = (double)(longlong)iVar3;
       param_9[1] = (short)iVar3;
       iVar3 = ObjHits_GetPriorityHit((int)param_9,local_40,&iStack_44,&uStack_48);
@@ -1013,6 +1008,70 @@ int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
     }
     MMP_levelcontrol_update(obj);
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 lbl_803DDB20;
+extern f32 lbl_803E4468;
+extern f32 lbl_803E446C;
+extern f32 lbl_803E4470;
+extern f32 lbl_803E4474;
+extern f32 lbl_803E4478;
+extern f32 lbl_803E447C;
+extern f32 lbl_803E4480;
+extern f32 lbl_803E4484;
+extern f64 lbl_803E4488;
+extern f64 lbl_803E4490;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void spawnExplosion(int obj, int p2, int p3, int p4, int p5, int p6, int p7, int p8, f32 f1);
+extern void CameraShake_Start(int obj, f32 a, f32 b, f32 c);
+extern void doRumble(f32 v);
+extern f32 Vec_distance(f32* a, f32* b);
+
+/* fn_801A5D88: bomb-detonation routine. Increments lbl_803DDB20, plays
+ * sfx 0x106, then spawns the appropriate explosion variant (first blast
+ * has p9=1, subsequent blasts have p9=0) with a random size/orientation.
+ * Latches state bits, sets the hitbox radius from data byte 0x62 scaled
+ * by lbl_803E446C, and if the player isn't in the immunity flag and is
+ * within lbl_803E4470 radius fires a falloff-scaled CameraShake and
+ * doRumble. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801A5D88(int obj) {
+    int state = *(int*)(obj + 0xb8);
+    u32 r;
+    u32 r2;
+    int player;
+    f32 dist;
+    f32 falloff;
+    lbl_803DDB20 = lbl_803DDB20 + 1;
+    Sfx_PlayFromObject(obj, 0x106);
+    if (lbl_803DDB20 > 1) {
+        r = randomGetRange(0, 1);
+        r2 = randomGetRange(0x32, 0x3c);
+        spawnExplosion(obj, 1, 1, 0, r & 0xff, 0, 0, 0,
+                       (f32)((f64)CONCAT44(0x43300000, r2 ^ 0x80000000) - lbl_803E4488));
+    } else {
+        r = randomGetRange(0, 1);
+        r2 = randomGetRange(0x32, 0x3c);
+        spawnExplosion(obj, 1, 1, 0, r & 0xff, 0, 1, 0,
+                       (f32)((f64)CONCAT44(0x43300000, r2 ^ 0x80000000) - lbl_803E4488));
+    }
+    *(u8*)(state + 0x114) = 1;
+    *(f32*)(state + 0x110) = lbl_803E4468;
+    *(s16*)(obj + 6) = (s16)(*(s16*)(obj + 6) | 0x4000);
+    ObjHitbox_SetSphereRadius(obj, (s16)(s32)(lbl_803E446C *
+        (f32)((f64)CONCAT44(0x43300000, (u32)*(u8*)(*(int*)(obj + 0x50) + 0x62)) - lbl_803E4490)));
+    player = (int)Obj_GetPlayerObject();
+    if ((*(u16*)(player + 0xb0) & 0x1000) == 0) {
+        dist = Vec_distance((f32*)(obj + 0x18), (f32*)(player + 0x18));
+        if (dist <= lbl_803E4470) {
+            falloff = lbl_803E4474 - dist / lbl_803E4470;
+            CameraShake_Start(obj, lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);
+            doRumble(lbl_803E4484 * falloff);
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

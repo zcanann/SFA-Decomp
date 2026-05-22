@@ -516,3 +516,51 @@ void nwsh_levcon_free(int obj) {
     GameBit_Set(3837, 0);
 }
 #pragma scheduling reset
+
+extern void NWSH_levcon_SeqFn(int p1, int p2, void *p3);
+extern int mapGetDirIdx(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(int a, int b, int c, int d);
+
+#pragma scheduling off
+#pragma peephole off
+void nwsh_levcon_update(int *obj) {
+    if (*(int*)((char*)obj + 0xf4) != 0) {
+        *(int*)((char*)obj + 0xf4) = *(int*)((char*)obj + 0xf4) - 1;
+        if (*(int*)((char*)obj + 0xf4) == 0) {
+            skyFn_80088c94(7, 1);
+            getEnvfxAct(0, 0, 0xd1, 0);
+            getEnvfxAct(0, 0, 0xd6, 0);
+            getEnvfxAct(0, 0, 0x222, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void nwsh_levcon_init(int *obj) {
+    *(void**)((char*)obj + 0xbc) = (void*)&NWSH_levcon_SeqFn;
+    unlockLevel(mapGetDirIdx(0x28), 1, 0);
+    Music_Trigger(6, 1);
+    *(int*)((char*)obj + 0xf4) = 1;
+    GameBit_Set(0xea2, 1);
+    GameBit_Set(0xefd, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void *gModgfxInterface;
+extern void *gTitleMenuControlInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_199_free(int *obj) {
+    ((void(*)(int*))((void**)*(void**)gModgfxInterface)[6])(obj);
+    ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
+    ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset

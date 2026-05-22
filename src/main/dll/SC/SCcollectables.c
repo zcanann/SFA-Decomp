@@ -434,22 +434,22 @@ extern f32 lbl_803E549C;
 #pragma peephole off
 void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
+    void *player;
     int *state = *(int **)((char *)obj + 0xb8);
-    int player;
     int *model;
-    f32 x;
-    f32 y;
     f32 z;
+    f32 y;
+    f32 x;
     s32 v = visible;
     if (v != 0) {
         objRenderFn_8003b8f4(lbl_803E549C);
-        player = Obj_GetPlayerObject();
-        if (player != 0 && fn_80296464() != 0) {
-            model = Obj_GetActiveModel(player);
+        player = (void *)Obj_GetPlayerObject();
+        if (player != NULL && fn_80296464() != 0) {
+            model = Obj_GetActiveModel((int)player);
             *(u16 *)((char *)model + 24) = (u16)(*(u16 *)((char *)model + 24) & ~0x8);
             ObjPath_GetPointWorldPosition(obj, *(u8 *)((char *)state + 8), &x, &y, &z, 0);
-            fn_80295B2C(player, x, y, z);
-            playerRender(player, p2, p3, p4, p5, -1);
+            fn_80295B2C((int)player, x, y, z);
+            playerRender((int)player, p2, p3, p4, p5, -1);
         }
     }
 }

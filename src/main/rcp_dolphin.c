@@ -2427,3 +2427,440 @@ void fn_80054F74(int *p, f32 *vec) {
     vec[2] = vec[2] + playerMapOffsetZ;
 }
 #pragma scheduling reset
+
+extern u8 lbl_803879A0[];
+extern u8 *lbl_803DCE78;
+extern s16 lbl_803DCEBA;
+extern u8 lbl_803DCEBC;
+extern u8 lbl_803DCEBD;
+extern void *gScreenTransitionInterface;
+extern int getTabEntry(void *p, int sz, int off, int unk);
+extern void Pause_SetDisabled(int);
+
+#pragma scheduling off
+#pragma peephole off
+void warpToMap(int idx, s8 transType) {
+    u8 *p = lbl_803DCE78;
+    getTabEntry(p, 28, idx << 4, 16);
+    *(f32 *)(lbl_803879A0 + 0) = *(f32 *)(p + 0);
+    *(f32 *)(lbl_803879A0 + 4) = *(f32 *)(p + 4);
+    *(f32 *)(lbl_803879A0 + 8) = *(f32 *)(p + 8);
+    *(s16 *)(lbl_803879A0 + 12) = *(s16 *)(p + 12);
+    *(s16 *)(lbl_803879A0 + 14) = *(s16 *)(p + 14);
+    lbl_803DCEBA = (s16)idx;
+    lbl_803DCEBD = 1;
+    *(s8 *)&lbl_803DCEBC = transType;
+    if (transType != 0) {
+        (*(void (***)(int, int))gScreenTransitionInterface)[2](2, 1);
+    }
+    Pause_SetDisabled(1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 lbl_8037E000[];
+
+#pragma scheduling off
+#pragma peephole off
+void ShaderDef_free(int *def) {
+    void *p1 = (void *)def[0];
+    void *p2;
+    int i;
+    void *s;
+
+    if (p1 != NULL) {
+        for (i = 0; i < 6; i++) {
+            s = *(void **)(lbl_8037E000 + i * 0x1C);
+            if (*(u16 *)((char *)s + 0xE) != 0 && s == p1) {
+                (*(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE))--;
+                break;
+            }
+        }
+    }
+    p2 = (void *)def[1];
+    if (p2 == NULL) return;
+    for (i = 0; i < 6; i++) {
+        s = *(void **)(lbl_8037E000 + i * 0x1C);
+        if (*(u16 *)((char *)s + 0xE) != 0 && s == p2) {
+            (*(u16 *)((char *)*(void **)(lbl_8037E000 + i * 0x1C) + 0xE))--;
+            return;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int lbl_803DCDBC;
+extern void *lbl_803DCDC4;
+#pragma peephole off
+#pragma scheduling off
+void* textureIdxToPtr(int idx) {
+    int i;
+    if ((u32)idx & 0x80000000) return (void*)idx;
+    i = idx - 1;
+    if (i < 0 || i >= lbl_803DCDBC) return NULL;
+    return *(void**)((u8*)lbl_803DCDC4 + i * 16 + 4);
+}
+
+void* getLoadedTexture(int key) {
+    u8 *iter = (u8 *)lbl_803DCDC4;
+    int count = lbl_803DCDBC;
+    int i;
+    for (i = 0; i < count; i++) {
+        if (*(int *)iter == key) {
+            return *(void **)((u8 *)lbl_803DCDC4 + i * 16 + 4);
+        }
+        iter += 16;
+    }
+    return NULL;
+}
+
+extern int getLoadedFileFlags(int);
+extern void loadTextureFile(void **out, int asset);
+void* textureLoadAsset(int asset) {
+    void *out = NULL;
+    if (getLoadedFileFlags(0) & 0x100000) return NULL;
+    loadTextureFile(&out, asset);
+    return out;
+}
+
+extern f32 distortionFilterVector[3];
+extern f32 distortionFilterAngle1;
+extern f32 distortionFilterAngle2;
+extern u8 distortionFilterColor[3];
+extern u8 bEnableDistortionFilter;
+void turnOnDistortionFilter(f32 *vec, u8 *color, f32 angle2, f32 angle1) {
+    distortionFilterVector[0] = vec[0];
+    distortionFilterVector[1] = vec[1];
+    distortionFilterVector[2] = vec[2];
+    distortionFilterAngle2 = angle2;
+    distortionFilterColor[0] = color[0];
+    distortionFilterColor[1] = color[1];
+    distortionFilterColor[2] = color[2];
+    distortionFilterAngle1 = angle1;
+    bEnableDistortionFilter = 1;
+}
+
+extern int lbl_803DCD58, lbl_803DCD84;
+extern int lbl_803DCD54, lbl_803DCD80;
+extern int lbl_803DCD64, lbl_803DCD90;
+extern int lbl_803DCD5C, lbl_803DCD88;
+extern int lbl_803DCD60, lbl_803DCD8C;
+extern int lbl_803DCD50, lbl_803DCD7C;
+extern int lbl_803DCD4C, lbl_803DCD78;
+extern int lbl_803DCD74;
+extern int lbl_803DCD70;
+extern int lbl_803DCD6C;
+extern u8 lbl_803DCD6B, lbl_803DCD4B;
+extern u8 lbl_803DCD4A;
+extern u8 lbl_803DCD49;
+extern u8 lbl_803DCD48;
+extern u8 lbl_803DCD30;
+void resetLotsOfRenderVars(void) {
+    lbl_803DCD58 = 30;
+    lbl_803DCD84 = 30;
+    lbl_803DCD54 = 64;
+    lbl_803DCD80 = 64;
+    lbl_803DCD64 = 0;
+    lbl_803DCD90 = 0;
+    lbl_803DCD5C = 0;
+    lbl_803DCD88 = 0;
+    lbl_803DCD60 = 0;
+    lbl_803DCD8C = 0;
+    lbl_803DCD50 = 0;
+    lbl_803DCD7C = 0;
+    lbl_803DCD4C = 4;
+    lbl_803DCD78 = 4;
+    lbl_803DCD74 = 0;
+    lbl_803DCD70 = 12;
+    lbl_803DCD6C = 28;
+    lbl_803DCD6B = 0;
+    lbl_803DCD4B = 0;
+    lbl_803DCD6A = 0;
+    lbl_803DCD4A = 0;
+    lbl_803DCD69 = 0;
+    lbl_803DCD49 = 0;
+    lbl_803DCD68 = 0;
+    lbl_803DCD48 = 0;
+    lbl_803DCD30 = 0;
+}
+
+extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
+void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2) {
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x2 < 0) x2 = 0;
+    if (y2 < 0) y2 = 0;
+    GXSetScissor(x, y, x2 - x, y2 - y);
+}
+
+extern void GXSetTevDirect(int tev);
+extern void GXSetTevOrder(int tev, int tc, int tm, int color);
+extern void GXSetTevSwapMode(int tev, int ras, int tex);
+extern void GXSetTevColorIn(int tev, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int tev, int a, int b, int c, int d);
+extern void GXSetTevColorOp(int tev, int op, int bias, int scale, int clamp, int outreg);
+extern void GXSetTevAlphaOp(int tev, int op, int bias, int scale, int clamp, int outreg);
+extern int lbl_803DCD90;
+void gxColorFn_800523d0(void) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xa);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 5);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xa, 0xf);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 0, 5, 7);
+    }
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+
+extern void GXSetTevColor(int id, int *color);
+extern void GXSetTevKColorSel(int tev, int sel);
+extern void gxTextureFn_8004bf88(int *p, int a, int b, int *out_sel, int *out_other);
+
+extern f32 LastCommandWasRead_803DEB60;
+extern f32 sDvdfsCurrentDirEntry;
+extern f32 LastReadIssued_803DEB58[2];
+extern f32 lbl_803DEB7C;
+void gxFn_80052dc0(void) {
+    f32 omtx[4][4];
+    f32 pmtx[3][4];
+    GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60,
+                  sDvdfsCurrentDirEntry, sDvdfsCurrentDirEntry,
+                  LastCommandWasRead_803DEB60, LastReadIssued_803DEB58[1]);
+    GXSetScissor(0, 0, 32, 32);
+    GXSetDispCopySrc(0, 0, 32, 32);
+    GXSetDispCopyDst(32, 32);
+    GXSetTexCopySrc(0, 0, 32, 32);
+    C_MTXOrtho(omtx, LastReadIssued_803DEB58[1], lbl_803DEB7C,
+               LastReadIssued_803DEB58[1], lbl_803DEB7C,
+               LastReadIssued_803DEB58[1], LastReadIssued_803DEB58[0]);
+    GXSetProjection(omtx, 1);
+    GXSetBlendMode(0, 1, 0, 5);
+    gxSetZMode_(0, 2, 0);
+    GXSetCullMode(0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(10, 1);
+    PSMTXIdentity(pmtx);
+    GXLoadPosMtxImm(pmtx, 0);
+    GXLoadNrmMtxImm(pmtx, 0);
+    GXSetCurrentMtx(0);
+}
+void gxTextureFn_80052638(int *param) {
+    int sel;
+    int v1;
+    int color;
+    GXSetTevDirect(lbl_803DCD90);
+    color = param[0];
+    GXSetTevColor(1, &color);
+    gxTextureFn_8004bf88(param, 1, 0, &sel, &v1);
+    GXSetTevKColorSel(lbl_803DCD90, sel);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    if (lbl_803DCD6A != 0 && lbl_803DCD30 != 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0, 0xe, 3, 0xf);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    }
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+
+extern void GXSetTevKAlphaSel(int tev, int sel);
+void textureFn_800524ec(int *param) {
+    int sel_color;
+    int sel_alpha;
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    gxTextureFn_8004bf88(param, 0, 1, &sel_color, &sel_alpha);
+    GXSetTevKAlphaSel(lbl_803DCD90, sel_alpha);
+    if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xa);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 6);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xa, 0xf);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 0, 6, 7);
+    }
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+
+void gxColorFn_80052764(int *param) {
+    int sel_color;
+    int sel_alpha;
+    GXSetTevDirect(lbl_803DCD90);
+    gxTextureFn_8004bf88(param, 1, 1, &sel_color, &sel_alpha);
+    GXSetTevKAlphaSel(lbl_803DCD90, sel_alpha);
+    GXSetTevKColorSel(lbl_803DCD90, sel_color);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0xe);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 6);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xe, 0xf);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 0, 6, 7);
+    }
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+
+extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
+extern void *mmAlloc(u32 size, int type, int p3);
+extern void *memset(void *, int, u32);
+extern void textureFn_80053d58(void *obj);
+void *textureAlloc(u16 w, u16 h, u8 fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11) {
+    u8 *obj;
+    u32 size = GXGetTexBufferSize(w, h, fmt, mip, maxLod) + 96;
+    obj = (u8 *)mmAlloc(size, 6, 0);
+    if (obj == NULL) return NULL;
+    memset(obj, 0, 100);
+    *(u8 *)(obj + 22) = fmt;
+    *(u16 *)(obj + 10) = w;
+    *(u16 *)(obj + 12) = h;
+    *(u16 *)(obj + 16) = 1;
+    *(u16 *)(obj + 14) = 0;
+    *(u8 *)(obj + 23) = b8;
+    *(u8 *)(obj + 24) = b9;
+    *(u8 *)(obj + 25) = b10;
+    *(u8 *)(obj + 26) = b11;
+    *(int *)(obj + 80) = 0;
+    textureFn_80053d58(obj);
+    return obj;
+}
+
+extern void GXInitTexObj(void *obj, void *img, u16 w, u16 h, int fmt, u8 ws, u8 wt, u8 mipmap);
+extern void GXInitTexObjLOD(void *obj, int mn, int mg, f32 minLod, f32 maxLod, f32 lodBias, u8 bclamp, u8 edgeLod, u8 aniso);
+extern void GXInitTexObjUserData(void *obj, void *udata);
+extern int GXGetTexObjFmt(void *obj);
+extern u16 GXGetTexObjWidth(void *obj);
+extern u16 GXGetTexObjHeight(void *obj);
+extern f32 lbl_803DEB98;
+extern f32 lbl_803DEB9C;
+void textureFn_80053d58(void *vobj) {
+    u8 *obj = (u8 *)vobj;
+    u8 mipmap = 0;
+    *(int *)(obj + 64) = 0;
+    obj[72] = 0;
+    if ((int)obj[29] - (int)obj[28] > 0) mipmap = 1;
+    GXInitTexObj((void *)(obj + 32), obj + 96,
+                 *(u16 *)(obj + 10), *(u16 *)(obj + 12),
+                 obj[22], obj[23], obj[24], mipmap);
+    if (mipmap != 0) {
+        GXInitTexObjLOD((void *)(obj + 32), obj[25], obj[26],
+                        (f32)(u32)obj[28], (f32)(s32)obj[29],
+                        lbl_803DEB98, 0, 0, 0);
+    } else {
+        GXInitTexObjLOD((void *)(obj + 32), obj[25], obj[26],
+                        lbl_803DEB9C, lbl_803DEB9C, lbl_803DEB9C, 0, 0, 0);
+    }
+    GXInitTexObjUserData((void *)(obj + 32), obj);
+    {
+        int fmt = GXGetTexObjFmt((void *)(obj + 32));
+        u16 w = GXGetTexObjWidth((void *)(obj + 32));
+        u16 h = GXGetTexObjHeight((void *)(obj + 32));
+        *(u32 *)(obj + 68) = GXGetTexBufferSize(w, h, fmt, 0, 0);
+    }
+}
+
+extern void findSomething(int);
+extern void mm_free(void *);
+void textureFree(u8 *tex) {
+    int i;
+    u8 *iter;
+    u8 *next;
+    int count;
+    if (tex == (u8 *)*(void **)((u8 *)lbl_803DCDC4 + 4)) return;
+    if (tex == NULL) {
+        tex[75] = 10;
+        return;
+    }
+    if (*(u16 *)(tex + 14) == 0) {
+        tex[75] = 10;
+        return;
+    }
+    if (tex[73] != 0 && *(u16 *)(tex + 14) <= 1) {
+        tex[75] = 10;
+    }
+    *(u16 *)(tex + 14) = *(u16 *)(tex + 14) - 1;
+    if (*(u16 *)(tex + 14) != 0) return;
+    i = 0;
+    count = lbl_803DCDBC;
+    if (count <= 0) return;
+    {
+        u8 *entry = (u8 *)lbl_803DCDC4;
+        do {
+            if (*(u8 **)(entry + 4) == tex) {
+                iter = *(u8 **)tex;
+                while (iter != NULL) {
+                    if ((u32)iter < 0x80000000 || (u32)iter > 0x81800000) iter = NULL;
+                    if ((u32)iter < 0x80000000 || (u32)iter >= 0xa0000000) iter = NULL;
+                    if (iter == NULL) break;
+                    next = *(u8 **)iter;
+                    if (iter[72] != 0) findSomething(*(int *)(iter + 64));
+                    if (iter[73] == 0) mm_free(iter);
+                    iter = next;
+                }
+                if (tex[72] != 0) findSomething(*(int *)(tex + 64));
+                if (tex[73] == 0) mm_free(tex);
+                *(int *)((u8 *)lbl_803DCDC4 + i * 16) = -1;
+                *(u8 **)((u8 *)lbl_803DCDC4 + i * 16 + 4) = NULL;
+                return;
+            }
+            entry += 16;
+            i++;
+            count--;
+        } while (count != 0);
+    }
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+int textureCrazyPointerFollowFn_80054c30(int *p, int n) {
+    int limit = *(u16 *)((char *)p + 16);
+    int q;
+    if (n >= limit) n = limit - 1;
+    n >>= 8;
+    if (n <= 0) return (int)p;
+    q = (u32)n >> 3;
+    if (q != 0) {
+        do {
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+            p = *(int **)p;
+        } while (--q != 0);
+    }
+    n = n & 7;
+    if (n == 0) return (int)p;
+    do {
+        p = *(int **)p;
+    } while (--n != 0);
+    return (int)p;
+}
+#pragma peephole off
+#pragma scheduling off
+#pragma scheduling reset
+#pragma peephole reset

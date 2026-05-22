@@ -65,10 +65,7 @@ void lightsource_init(undefined2 *obj,int mapData)
     *(float *)(obj + 4) = lbl_803E5E24;
   }
   else {
-    uStack_44 = (int)*(short *)(mapData + 0x1a) ^ 0x80000000;
-    local_48 = 0x43300000;
-    *(float *)(obj + 4) =
-        (float)((double)CONCAT44(0x43300000,uStack_44) - lbl_803E5E48) / lbl_803E5E20;
+    *(f32 *)(obj + 4) = (f32)(s32)*(s16 *)(mapData + 0x1a) / lbl_803E5E20;
   }
 
   *(undefined *)(state + 5) = *(undefined *)(mapData + 0x19);
@@ -141,17 +138,17 @@ void lightsource_init(undefined2 *obj,int mapData)
       uStack_44 = colors[colorBase];
       local_48 = 0x43300000;
       temp = (int)(lbl_803E5E34 *
-                   (float)((double)CONCAT44(0x43300000,uStack_44) - lbl_803E5E50));
+                   (f32)(s32)uStack_44);
       local_40 = (longlong)temp;
       uStack_34 = colors[colorBase + 1];
       local_38 = 0x43300000;
       lightIndex = (int)(lbl_803E5E34 *
-                         (float)((double)CONCAT44(0x43300000,uStack_34) - lbl_803E5E50));
+                         (f32)(s32)uStack_34);
       local_30 = (longlong)lightIndex;
       uStack_24 = colors[colorBase + 2];
       local_28 = 0x43300000;
       colorBase = (int)(lbl_803E5E34 *
-                        (float)((double)CONCAT44(0x43300000,uStack_24) - lbl_803E5E50));
+                        (f32)(s32)uStack_24);
       local_20 = (longlong)colorBase;
       lightSetFieldB0(*state,temp,lightIndex,colorBase,0xff);
       lightSetField4D(*state,1);

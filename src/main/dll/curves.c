@@ -1232,6 +1232,36 @@ f32 curves_distFn0B(int param_1,uint param_2)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+int curves_isNotPoint(int *obj) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (*(int *)((char *)obj + 0x1c + i * 4) != -1 &&
+            (*(s8 *)((char *)obj + 0x1b) & (1 << i)) == 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int curves_isPoint(int *obj) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (*(int *)((char *)obj + 0x1c + i * 4) != -1 &&
+            (*(s8 *)((char *)obj + 0x1b) & (1 << i)) != 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
@@ -1597,7 +1627,7 @@ LAB_800e41e4:
         local_38 = 0x43300000;
         *(float *)(iVar2 + iVar9 + 8) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_34 *
                     dVar11);
         uStack_3c = (int)*(char *)(iVar8 + 0x2d) << 8 ^ 0x80000000;
         local_40 = 0x43300000;
@@ -1606,7 +1636,7 @@ LAB_800e41e4:
         local_48 = 0x43300000;
         *(float *)(param_3 + iVar9 + 8) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_44 *
                     dVar11);
         uStack_4c = (int)*(char *)(iVar8 + 0x2c) << 8 ^ 0x80000000;
         local_50 = 0x43300000;
@@ -1616,7 +1646,7 @@ LAB_800e41e4:
         iVar8 = iVar10 + 3;
         *(float *)(param_4 + (iVar10 + 2) * 4) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_54 *
                     dVar11);
         uStack_5c = (int)*(char *)(iVar3 + 0x2c) << 8 ^ 0x80000000;
         local_60 = 0x43300000;
@@ -1625,7 +1655,7 @@ LAB_800e41e4:
         local_68 = 0x43300000;
         *(float *)(iVar2 + iVar9 + 0xc) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_64) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_64 *
                     dVar11);
         uStack_6c = (int)*(char *)(iVar3 + 0x2d) << 8 ^ 0x80000000;
         local_70 = 0x43300000;
@@ -1634,7 +1664,7 @@ LAB_800e41e4:
         local_78 = 0x43300000;
         *(float *)(param_3 + iVar9 + 0xc) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_74) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_74 *
                     dVar11);
         uStack_7c = (int)*(char *)(iVar3 + 0x2c) << 8 ^ 0x80000000;
         local_80 = 0x43300000;
@@ -1645,7 +1675,7 @@ LAB_800e41e4:
         iVar9 = iVar9 + 0x10;
         *(float *)(param_4 + iVar8 * 4) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_84) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_84 *
                     dVar11);
       }
     }
@@ -1741,7 +1771,7 @@ LAB_800e3ca0:
         local_80 = 0x43300000;
         *(float *)(iVar2 + iVar8 + 8) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_7c) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_7c *
                     dVar11);
         uStack_74 = (int)*(char *)(iVar9 + 0x2d) << 8 ^ 0x80000000;
         local_78 = 0x43300000;
@@ -1750,7 +1780,7 @@ LAB_800e3ca0:
         local_70 = 0x43300000;
         *(float *)(param_3 + iVar8 + 8) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_6c) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_6c *
                     dVar11);
         uStack_64 = (int)*(char *)(iVar9 + 0x2c) << 8 ^ 0x80000000;
         local_68 = 0x43300000;
@@ -1760,7 +1790,7 @@ LAB_800e3ca0:
         iVar9 = iVar10 + 3;
         *(float *)(param_4 + (iVar10 + 2) * 4) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_5c *
                     dVar11);
         uStack_54 = (int)*(char *)(iVar3 + 0x2c) << 8 ^ 0x80000000;
         local_58 = 0x43300000;
@@ -1769,7 +1799,7 @@ LAB_800e3ca0:
         local_50 = 0x43300000;
         *(float *)(iVar2 + iVar8 + 0xc) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_4c *
                     dVar11);
         uStack_44 = (int)*(char *)(iVar3 + 0x2d) << 8 ^ 0x80000000;
         local_48 = 0x43300000;
@@ -1778,7 +1808,7 @@ LAB_800e3ca0:
         local_40 = 0x43300000;
         *(float *)(param_3 + iVar8 + 0xc) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_3c *
                     dVar11);
         uStack_34 = (int)*(char *)(iVar3 + 0x2c) << 8 ^ 0x80000000;
         local_38 = 0x43300000;
@@ -1789,7 +1819,7 @@ LAB_800e3ca0:
         iVar8 = iVar8 + 0x10;
         *(float *)(param_4 + iVar9 * 4) =
              lbl_803E1290 *
-             (float)((double)(float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e12a8) *
+             (float)((double)(f32)(s32)uStack_2c *
                     dVar11);
       }
     }
@@ -2780,24 +2810,11 @@ void curves_countRandomPoints(int obj,uint *curve)
       *(undefined *)((int)puVar5 + 0x261) = 0;
     }
     else {
-      uStack_7c = uVar7 ^ 0x80000000;
-      local_80 = 0x43300000;
-      *(float *)(iVar2 + 0x1c) =
-           (float)(dVar12 / (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - DOUBLE_803e12f0
-                                           ));
-      local_78 = 0x43300000;
-      *(float *)(puVar5 + 0x68) =
-           (float)(dVar15 / (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - dVar11));
-      local_70 = 0x43300000;
-      *(float *)(puVar5 + 0x69) =
-           (float)(dVar14 / (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - dVar11));
-      local_68 = 0x43300000;
-      *(float *)(puVar5 + 0x6a) =
-           (float)(dVar13 / (double)(float)((double)CONCAT44(0x43300000,uStack_7c) - dVar11));
-      *(undefined *)((int)puVar5 + 0x261) = 1;
-      uStack_74 = uStack_7c;
-      uStack_6c = uStack_7c;
-      uStack_64 = uStack_7c;
+      *(f32 *)(iVar2 + 0x1c) = (f32)(dVar12 / (f64)(f32)(s32)uVar7);
+      *(f32 *)(puVar5 + 0x68) = (f32)(dVar15 / (f64)(f32)(s32)uVar7);
+      *(f32 *)(puVar5 + 0x69) = (f32)(dVar14 / (f64)(f32)(s32)uVar7);
+      *(f32 *)(puVar5 + 0x6a) = (f32)(dVar13 / (f64)(f32)(s32)uVar7);
+      *(u8 *)((int)puVar5 + 0x261) = 1;
     }
     dVar14 = (double)(*(float *)(puVar5[1] + 0x2c) - *(float *)(puVar5[1] + 8));
     dVar13 = (double)(local_94[3] - local_94[0]);
@@ -4184,7 +4201,7 @@ void FUN_800e61a4(void)
     dVar25 = DOUBLE_803e1318;
     uStack_6c = (uint)*(byte *)(puVar15 + 0x96);
     local_70 = 0x43300000;
-    uVar1 = (uint)(fVar8 - (float)((double)CONCAT44(0x43300000,uStack_6c) - DOUBLE_803e1318));
+    uVar1 = (uint)(fVar8 - (f32)(s32)uStack_6c);
     local_68 = (longlong)(int)uVar1;
     puVar15[0x91] = uVar1;
     uStack_5c = (uint)*(byte *)(puVar15 + 0x96);
@@ -4556,6 +4573,37 @@ int curves_findByAction(int act) {
         base++;
     }
     return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_800E1F3C: 2D segment-intersection predicate. Returns 1 if the
+ * segment between (f1, f3) and the origin in the xz-plane crosses the
+ * segment between a and b (each a curve-point struct with x at +0x8 and
+ * z at +0x10). Uses the standard sign-of-cross-product test on both
+ * pairs of endpoints. f2 and f4 args are ignored. */
+#pragma scheduling off
+#pragma peephole off
+int fn_800E1F3C(int* a, int* b, f32 f1, f32 f2, f32 f3, f32 f4) {
+    f32 ax = *(f32*)((u8*)a + 0x8);
+    f32 az = *(f32*)((u8*)a + 0x10);
+    f32 bx = *(f32*)((u8*)b + 0x8);
+    f32 bz = *(f32*)((u8*)b + 0x10);
+    f32 cross1 = bx * az - ax * bz;
+    f32 sum1 = cross1 + (f1 * (bz - az) + f3 * (ax - bx));
+    if (!((sum1 <= lbl_803E0638 && cross1 >= lbl_803E0638) ||
+          (sum1 >= lbl_803E0638 && cross1 < lbl_803E0638))) {
+        return 0;
+    }
+    {
+        f32 cross_a = -f3 * ax + f1 * az;
+        f32 cross_b = -f3 * bx + f1 * bz;
+        if ((cross_a <= lbl_803E0638 && cross_b >= lbl_803E0638) ||
+            (cross_a >= lbl_803E0638 && cross_b < lbl_803E0638)) {
+            return 1;
+        }
+        return 0;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

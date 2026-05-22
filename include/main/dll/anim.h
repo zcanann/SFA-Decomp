@@ -186,18 +186,18 @@ int drakorenergy_func08(void);
 void drakorenergy_free(void);
 void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void drakorenergy_hitDetect(void);
-void drakorenergy_init(void);
+void drakorenergy_init(int *obj, u8 *init);
 void drakorenergy_release(void);
 void drakorenergy_initialise(void);
 
 s16 DBstealerworm_setScale(int *obj);
 int dbstealerworm_getExtraSize(void);
 int dbstealerworm_func08(void);
-void dbstealerworm_free(void);
+void dbstealerworm_free(int *obj);
 void dbstealerworm_render(void);
 void dbstealerworm_hitDetect(int obj);
 void dbstealerworm_update(void);
-void dbstealerworm_init(void);
+void dbstealerworm_init(int *obj, u8 *def, int param3);
 void dbstealerworm_release(void);
 void dbstealerworm_initialise(void);
 
@@ -206,8 +206,8 @@ int dbholecontrol1_func08(void);
 void dbholecontrol1_free(int x);
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dbholecontrol1_hitDetect(void);
-void dbholecontrol1_update(void);
-void dbholecontrol1_init(void);
+void dbholecontrol1_update(int *obj);
+void dbholecontrol1_init(int *obj, u8 *params);
 void dbholecontrol1_release(void);
 void dbholecontrol1_initialise(void);
 
@@ -238,7 +238,7 @@ void dfpseqpoint_free(void);
 void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dfpseqpoint_hitDetect(void);
 void dfpseqpoint_update(void);
-void dfpseqpoint_init(void);
+void dfpseqpoint_init(int *obj, u8 *init);
 void dfpseqpoint_release(void);
 void dfpseqpoint_initialise(void);
 

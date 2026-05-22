@@ -2195,13 +2195,13 @@ void FUN_800401a0(float *param_1,float *param_2,short *param_3,int param_4,ushor
   
   uStack_24 = (int)*param_3 ^ 0x80000000;
   local_28 = 0x43300000;
-  local_8c = (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803df6c0);
+  local_8c = (f32)(s32)uStack_24;
   uStack_1c = (int)param_3[1] ^ 0x80000000;
   local_20 = 0x43300000;
-  local_88 = (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803df6c0);
+  local_88 = (f32)(s32)uStack_1c;
   uStack_14 = (int)param_3[2] ^ 0x80000000;
   local_18 = 0x43300000;
-  local_84 = (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803df6c0);
+  local_84 = (f32)(s32)uStack_14;
   if (param_6 != 0) {
     local_8c = local_8c * lbl_803DF6D8;
     local_88 = local_88 * lbl_803DF6D8;
@@ -4462,3 +4462,160 @@ s32 mapCheckCurBlocks(int v) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803DEA04;
+extern int *Obj_GetActiveModel(int *obj);
+extern void objRenderShadow2(int *obj, int *obj2, int model, int p4);
+extern void modelDoRenderInstrs(int *obj, int *obj2, int model, int p4);
+extern void objRenderChild(int *child, int *parent, int p3);
+void objRenderShadow(int *obj) {
+    if (*(f32 *)((char *)obj + 8) == lbl_803DEA04) {
+        curObjMtx = 0;
+        return;
+    }
+    {
+        int *m = (int *)*Obj_GetActiveModel(obj);
+        if (*(u8 *)((char *)m + 246) != 0) {
+            objRenderShadow2(obj, obj, (int)m, 1);
+        } else {
+            modelDoRenderInstrs(obj, obj, (int)m, 1);
+        }
+    }
+    if (*(s16 *)((char *)obj + 68) == 1) {
+        int i;
+        u8 *iter = (u8 *)obj;
+        for (i = 0; i < *(u8 *)((char *)obj + 235); i++) {
+            int *child = *(int **)(iter + 200);
+            if (child != NULL) {
+                objRenderChild(child, obj, 1);
+            }
+            iter += 4;
+        }
+    }
+}
+
+extern u8 lbl_80345E10[];
+void *getCurrentDataFile(int id) {
+    u8 *base = lbl_80345E10;
+    switch (id) {
+        case 14: return &base[0x2c0];
+        case 26: return &base[0x8200];
+        case 33: return &base[0xc200];
+        case 36: return &base[0x10200];
+        case 38: return &base[0xa200];
+        case 42: return &base[0x170e0];
+        case 47: return &base[0x14200];
+        case 80: return *(void **)&base[0x19718];
+    }
+    return NULL;
+}
+
+extern u32 lbl_803DCC84;
+extern void *lbl_803DCC8C;
+extern u32 lbl_8035F3E8[];
+extern u32 lbl_80345F70[];
+extern void mm_free(void *);
+extern void AtomicSList_Push(void *list, void *item);
+extern int DVDClose(void *fileInfo);
+
+void tex0tab1readCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        mm_free((void *)lbl_8035F3E8[36]);
+        lbl_8035F3E8[36] = 0;
+        lbl_80345F70[36] = 0;
+        if (lbl_803DCC80 & 0x400) {
+            lbl_803DCC84 |= 0x400;
+            lbl_80345F70[36] = 0;
+        }
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x400) {
+            lbl_803DCC84 |= 0x400;
+            lbl_80345F70[36] = 0;
+        }
+    }
+}
+
+void tex0tab2readCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        mm_free((void *)lbl_8035F3E8[78]);
+        lbl_8035F3E8[78] = 0;
+        lbl_80345F70[78] = 0;
+        if (lbl_803DCC80 & 0x800) {
+            lbl_803DCC84 |= 0x800;
+            lbl_80345F70[78] = 0;
+        }
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x800) {
+            lbl_803DCC84 |= 0x800;
+            lbl_80345F70[78] = 0;
+        }
+    }
+}
+
+void tex1tab1readCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        mm_free((void *)lbl_8035F3E8[78]);
+        lbl_8035F3E8[78] = 0;
+        lbl_80345F70[78] = 0;
+        if (lbl_803DCC80 & 0x4000) {
+            lbl_803DCC84 |= 0x4000;
+            lbl_80345F70[33] = 0;
+        }
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x4000) {
+            lbl_803DCC84 |= 0x4000;
+            lbl_80345F70[33] = 0;
+        }
+    }
+}
+
+void tex1tab2readCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        mm_free((void *)lbl_8035F3E8[78]);
+        lbl_8035F3E8[78] = 0;
+        lbl_80345F70[78] = 0;
+        if (lbl_803DCC80 & 0x8000) {
+            lbl_803DCC84 |= 0x8000;
+            lbl_80345F70[76] = 0;
+        }
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x8000) {
+            lbl_803DCC84 |= 0x8000;
+            lbl_80345F70[76] = 0;
+        }
+    }
+}
+
+extern u32 lbl_803DCC74;
+
+void romListReadCb(s32 result, void *fileInfo)
+{
+    lbl_803DCC74 = 0;
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+}

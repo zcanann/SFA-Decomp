@@ -302,7 +302,7 @@ void FUN_801dc6e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   param_9[0x7d] = 0;
   param_9[0x58] = param_9[0x58] | 0x2000;
   uVar2 = randomGetRange(1,99);
-  FUN_800305f8((double)((float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e6260) /
+  FUN_800305f8((double)((f32)(s32)(uVar2) /
                        lbl_803E6254),param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                param_9,0,0,param_12,param_13,param_14,param_15,param_16);
   FUN_8002fc3c((double)lbl_803E6224,(double)lbl_803E6224);
@@ -460,6 +460,29 @@ void sc_totempole_free(void) {}
 void sc_totempole_hitDetect(void) {}
 void sc_totempole_release(void) {}
 void sc_totempole_initialise(void) {}
+
+#pragma peephole off
+#pragma scheduling off
+void sc_totempole_init(u8* obj, u8* params) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    switch (*(int*)(params + 0x14)) {
+    case 0x44909:
+        *(s16*)sub = 0x83;
+        break;
+    case 0x4490C:
+        *(s16*)sub = 0x81;
+        break;
+    case 0x4490F:
+        *(s16*)sub = 0x82;
+        break;
+    case 0x44916:
+        *(s16*)sub = 0x84;
+        break;
+    }
+    *(s16*)obj = (s16)(params[0x1a] << 8);
+}
+#pragma scheduling reset
+#pragma peephole reset
 void sc_cloudrunnera_hitDetect(void) {}
 void sc_cloudrunnera_release(void) {}
 void sc_cloudrunnera_initialise(void) {}

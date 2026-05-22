@@ -14,7 +14,7 @@ void FUN_801cc868(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  int param_9);
 int dll_19E_getExtraSize(void);
 int dll_19E_func08(void);
-void dll_19B_init(void);
+void dll_19B_init(u8 *obj, u8 *params);
 void dll_19B_release(void);
 void dll_19B_initialise(void);
 int dll_19C_getExtraSize(void);
@@ -22,7 +22,7 @@ int dll_19C_func08(void);
 void dll_19C_free(void);
 void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_19C_hitDetect(void);
-void dll_19C_update(void);
+void dll_19C_update(int *obj);
 void dll_19C_init(int obj, u8 *initData);
 void dll_19C_release(void);
 void dll_19C_initialise(void);

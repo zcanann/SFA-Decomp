@@ -20,6 +20,10 @@ extern char FUN_80006bc8();
 extern char FUN_80006bd0();
 extern uint FUN_80006c00();
 extern uint FUN_80006c10();
+extern u32 getButtonsHeld(int port);
+extern u32 getButtonsJustPressed(int port);
+extern char padGetCX(int port);
+extern char padGetCY(int port);
 extern double FUN_800176f4();
 extern uint getAngle();
 extern undefined4 FUN_80017814();
@@ -125,22 +129,17 @@ void firstPersonDoControls(short *param_1)
   if ((dVar7 <= dVar6) && (dVar7 = dVar6, (double)lbl_803E17E8 < dVar6)) {
     dVar7 = (double)lbl_803E17E8;
   }
-  dVar6 = FUN_800176f4((double)((float)((double)CONCAT44(0x43300000,(int)cVar3 ^ 0x80000000) -
-                                       lbl_803E17D8) *
-                                -(float)((double)lbl_803E17F0 * dVar7 - (double)lbl_803E17EC) -
-                               *(float *)(lbl_803DD548 + 0x11c)),(double)lbl_803E17F4,
-                       (double)timeDelta);
+  dVar6 = FUN_800176f4((f64)((f32)(s32)cVar3 *
+                                -(f32)((f64)lbl_803E17F0 * dVar7 - (f64)lbl_803E17EC) -
+                               *(f32 *)(lbl_803DD548 + 0x11c)),(f64)lbl_803E17F4,
+                       (f64)timeDelta);
   *(float *)(lbl_803DD548 + 0x11c) = (float)((double)*(float *)(lbl_803DD548 + 0x11c) + dVar6);
   if ((lbl_803E17F8 < *(float *)(lbl_803DD548 + 0x11c)) &&
      (*(float *)(lbl_803DD548 + 0x11c) < lbl_803E17FC)) {
     *(float *)(lbl_803DD548 + 0x11c) = lbl_803E17C4;
   }
-  fVar1 = lbl_803E1800 *
-          ((float)((double)CONCAT44(0x43300000,(int)cVar4 ^ 0x80000000) - lbl_803E17D8) /
-          lbl_803E1804);
-  *param_1 = (short)(int)(*(float *)(lbl_803DD548 + 0x11c) * timeDelta +
-                         (float)((double)CONCAT44(0x43300000,(int)*param_1 ^ 0x80000000) -
-                                lbl_803E17D8));
+  fVar1 = lbl_803E1800 * ((f32)(s32)cVar4 / lbl_803E1804);
+  *param_1 = (short)(int)(*(f32 *)(lbl_803DD548 + 0x11c) * timeDelta + (f32)(s32)*param_1);
   sVar2 = (short)(int)fVar1 - param_1[1];
   if (0x8000 < sVar2) {
     sVar2 = sVar2 + 1;
@@ -148,13 +147,11 @@ void firstPersonDoControls(short *param_1)
   if (sVar2 < -0x8000) {
     sVar2 = sVar2 + -1;
   }
-  dVar7 = FUN_800176f4((double)(float)((double)CONCAT44(0x43300000,(int)sVar2 ^ 0x80000000) -
-                                      lbl_803E17D8),
-                       (double)(lbl_803E17E8 /
-                               (float)((double)lbl_803E180C * dVar7 + (double)lbl_803E1808)),
-                       (double)timeDelta);
-  param_1[1] = (short)(int)((double)(float)((double)CONCAT44(0x43300000,(int)param_1[1] ^ 0x80000000
-                                                            ) - lbl_803E17D8) + dVar7);
+  dVar7 = FUN_800176f4((f64)(f32)(s32)sVar2,
+                       (f64)(lbl_803E17E8 /
+                               (f32)((f64)lbl_803E180C * dVar7 + (f64)lbl_803E1808)),
+                       (f64)timeDelta);
+  param_1[1] = (short)(int)((f64)(f32)(s32)param_1[1] + dVar7);
   if (0x3c00 < param_1[1]) {
     param_1[1] = 0x3c00;
   }
@@ -174,9 +171,8 @@ void firstPersonDoControls(short *param_1)
   if (*(char *)(lbl_803DD548 + 0x12d) < '\0') {
     dVar7 = (double)*(float *)(param_1 + 0x5a);
     cVar3 = FUN_80006bb8(0);
-    local_38 = (double)CONCAT44(0x43300000,-(int)cVar3 ^ 0x80000000);
-    dVar6 = (double)(float)((double)(lbl_803E1810 * (float)(local_38 - lbl_803E17D8)) *
-                            (double)timeDelta + dVar7);
+    dVar6 = (f64)(f32)((f64)(lbl_803E1810 * (f32)(s32)(-(int)cVar3)) *
+                            (f64)timeDelta + dVar7);
     dVar7 = FUN_800069f8();
     FUN_800810d8(dVar7);
     dVar7 = (double)lbl_803E17FC;
@@ -384,8 +380,8 @@ void CameraModeDebug_update(short *param_1)
   
   dVar10 = (double)lbl_803E1840;
   iVar6 = *(int *)(param_1 + 0x52);
-  uVar2 = FUN_80006c10(0);
-  uVar3 = FUN_80006c00(0);
+  uVar2 = getButtonsHeld(0);
+  uVar3 = getButtonsJustPressed(0);
   if ((uVar3 & 2) == 0) {
     if ((uVar2 & 8) != 0) {
       dVar10 = (double)(lbl_803E1844 * *lbl_803DD550);
@@ -414,8 +410,8 @@ void CameraModeDebug_update(short *param_1)
     if (lbl_803E1858 < *lbl_803DD550) {
       *lbl_803DD550 = lbl_803E1858;
     }
-    cVar4 = FUN_80006bc0(0);
-    cVar5 = FUN_80006bb8(0);
+    cVar4 = padGetCX(0);
+    cVar5 = padGetCY(0);
     *param_1 = *param_1 + cVar4 * -3;
     param_1[1] = param_1[1] + cVar5 * 3;
     dVar10 = (double)fn_80293E80();
@@ -433,7 +429,7 @@ void CameraModeDebug_update(short *param_1)
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   }
   else {
-    (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
+    (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
   }
   return;
 }
@@ -474,64 +470,36 @@ void CameraModeDebug_init(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80109B04(undefined8 param_1,double param_2,double param_3)
+void *fn_80109B04(int filter1, int filter2, f32 x, f32 y, f32 z)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  int *piVar4;
-  int iVar5;
-  int iVar6;
-  double extraout_f1;
-  double dVar7;
-  double in_f28;
-  double dVar8;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  double dVar9;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar10;
-  int local_68 [12];
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  uVar10 = FUN_8028683c();
-  dVar9 = (double)lbl_803E1878;
-  dVar8 = extraout_f1;
-  piVar4 = ObjGroup_GetObjects(7,local_68);
-  for (iVar6 = 0; iVar6 < local_68[0]; iVar6 = iVar6 + 1) {
-    iVar5 = *piVar4;
-    if ((((int)*(short *)(iVar5 + 0x44) == (int)uVar10) &&
-        ((uint)*(byte *)(*(int *)(iVar5 + 0x4c) + 0x18) == (uint)((ulonglong)uVar10 >> 0x20))) &&
-       (fVar1 = (float)(dVar8 - (double)*(float *)(iVar5 + 0x18)),
-       fVar2 = (float)(param_2 - (double)*(float *)(iVar5 + 0x1c)),
-       fVar3 = (float)(param_3 - (double)*(float *)(iVar5 + 0x20)),
-       dVar7 = sqrtf((double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2)), dVar7 < dVar9)
-       ) {
-      dVar9 = dVar7;
+    void *best;
+    double bestDist;
+    int count;
+    int *list;
+    int i;
+    int *obj;
+    f32 dx, dy, dz;
+    double dist;
+
+    bestDist = lbl_803E1878;
+    best = NULL;
+    list = (int *)ObjGroup_GetObjects(7, &count);
+    for (i = 0; i < count; i++) {
+        obj = (int *)*list;
+        if (*(s16 *)((char *)obj + 0x44) == filter2 &&
+            *(u8 *)(*(int *)((char *)obj + 0x4c) + 0x18) == filter1) {
+            dx = x - *(f32 *)((char *)obj + 0x18);
+            dy = y - *(f32 *)((char *)obj + 0x1c);
+            dz = z - *(f32 *)((char *)obj + 0x20);
+            dist = sqrtf((double)(dy*dy + dx*dx + dz*dz));
+            if (dist < bestDist) {
+                bestDist = dist;
+                best = obj;
+            }
+        }
+        list++;
     }
-    piVar4 = piVar4 + 1;
-  }
-  FUN_80286888();
-  return;
+    return best;
 }
 
 /*
@@ -578,7 +546,7 @@ void CameraModeStatic_update(short *param_1)
   double dVar7;
   
   if (*(byte *)((int)lbl_803DD558 + 0xf5) != 0) {
-    (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
+    (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
   }
   else {
     iVar3 = *(int *)(param_1 + 0x52);

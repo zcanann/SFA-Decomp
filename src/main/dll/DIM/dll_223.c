@@ -174,13 +174,13 @@ int DIMbosstonsil_enableHitReaction(void *obj,u8 *state)
  */
 int DIMbosstonsil_chooseHitReaction(void *obj,u8 *state)
 {
-  s16 moveId;
+  u16 moveId;
   s16 unused1;
   s16 unused2;
 
   if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
     lbl_803DDB9C = lbl_803DDBA0;
-    (*(void (***)(void *,void *,int,s16 *,s16 *,s16 *))gBaddieControlInterface)[5]
+    (*(void (***)(void *,void *,int,u16 *,s16 *,s16 *))gBaddieControlInterface)[5]
         (obj,Obj_GetPlayerObject(),4,&moveId,&unused1,&unused2);
     switch (moveId) {
     case 0:

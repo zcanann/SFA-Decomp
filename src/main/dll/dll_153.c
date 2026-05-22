@@ -52,6 +52,64 @@ extern f32 lbl_803E4628;
 extern f32 lbl_803E462C;
 extern f32 lbl_803E4630;
 
+extern void* Obj_GetPlayerObject(void);
+extern f32 Vec_distance(f32* a, f32* b);
+extern int GameBit_Get(int id);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern f32 lbl_803E39B8;
+extern f32 lbl_803E39BC;
+extern f32 lbl_803E39C0;
+extern f32 lbl_803E39C4;
+extern f64 lbl_803E39C8;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80183250(int obj, int def)
+{
+    int* state31;
+    int player;
+    f32 oldVel;
+    int sum;
+    int v;
+    int adj;
+    f32 limit;
+
+    state31 = *(int**)(obj + 0x4c);
+    player = (int)Obj_GetPlayerObject();
+    if ((*(u16*)(*(int*)(obj + 0x30) + 0xb0) & 0x1000) != 0) {
+        *(f32*)(obj + 0xc) = *(f32*)(def + 0x24);
+        *(f32*)(obj + 0x24) = lbl_803E39B8;
+    } else {
+        oldVel = *(f32*)(obj + 0x24);
+        sum = (s32)*(s16*)(*(int*)(obj + 0x30) + 0x4) + (s32)(u32)*(u16*)(def + 0x20);
+        *(f32*)(obj + 0x24) = -(f32)((f64)CONCAT44(0x43300000, sum ^ 0x80000000) - lbl_803E39C8) / *(f32*)(def + 0x1c);
+        if ((oldVel <= lbl_803E39B8 && *(f32*)(obj + 0x24) >= lbl_803E39B8) ||
+            (oldVel >= lbl_803E39B8 && *(f32*)(obj + 0x24) <= lbl_803E39B8)) {
+            v = state31[0x14 / 4];
+            adj = v - 0x40000;
+            if (adj == 0x65d7 || (u32)(adj - 0x65d5) <= 1 || v == 0x66 || adj == 0x65d0 || adj == 0x65d2) {
+                if (Vec_distance((f32*)(player + 0x18), (f32*)(obj + 0x18)) < lbl_803E39BC) {
+                    if (GameBit_Get(0xa71) == 0) {
+                        Sfx_PlayFromObject(obj, 0x313);
+                    }
+                }
+            }
+        }
+        *(f32*)(obj + 0xc) = *(f32*)(obj + 0xc) + *(f32*)(obj + 0x24);
+        limit = lbl_803E39C0 + *(f32*)(def + 0x24);
+        if (*(f32*)(obj + 0xc) > limit) {
+            *(f32*)(obj + 0xc) = limit;
+        } else {
+            limit = *(f32*)(def + 0x24) - lbl_803E39C4;
+            if (*(f32*)(obj + 0xc) < limit) {
+                *(f32*)(obj + 0xc) = limit;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *

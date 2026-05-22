@@ -15,7 +15,7 @@ void FUN_801ca13c(int param_1);
 int dbsh_symbol_getExtraSize(void);
 void dbsh_symbol_free(void);
 void dbsh_symbol_update(void);
-void dbsh_symbol_init(void);
+void dbsh_symbol_init(int* obj);
 int dll_197_getExtraSize(void);
 int dll_197_func08(void);
 void dll_197_render(void);

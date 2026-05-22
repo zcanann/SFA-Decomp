@@ -965,6 +965,36 @@ void explodeanimator_render(void) {}
 void explodeanimator_hitDetect(void) {}
 void explodeanimator_release(void) {}
 void explodeanimator_initialise(void) {}
+
+extern int *gPartfxInterface;
+extern f32 lbl_803E4020;
+
+#pragma scheduling off
+#pragma peephole off
+void explodeanimator_update(int *obj) {
+    u8 *sub;
+    u8 *def;
+    int i;
+    f32 buf[6];
+    f32 vel[2];
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    if ((sub[2] & 1) != 0) return;
+    def = *(u8**)((char*)obj + 0x4c);
+    if (GameBit_Get(*(s16*)(def + 0x34)) == 0) return;
+    GameBit_Set(*(s16*)(def + 0x32), 1);
+    sub[2] = (u8)(sub[2] | 1);
+    for (i = 0; i < def[0x2c]; i++) {
+        vel[0] = (f32)(s32)randomGetRange(*(s16*)(def + 0x2e), *(s16*)(def + 0x28)) * lbl_803E4020;
+        vel[1] = (f32)(s32)randomGetRange(*(s16*)(def + 0x30), *(s16*)(def + 0x2a)) * lbl_803E4020;
+        buf[3] = (f32)(s32)randomGetRange(*(s16*)(def + 0x18), *(s16*)(def + 0x1e));
+        buf[4] = (f32)(s32)randomGetRange(*(s16*)(def + 0x1a), *(s16*)(def + 0x20));
+        buf[5] = (f32)(s32)randomGetRange(*(s16*)(def + 0x1c), *(s16*)(def + 0x22));
+        ((void(*)(int*, int, f32*, int, int, f32*))((void**)*(int*)gPartfxInterface)[2])(obj, *(s16*)(def + 0x24), buf, 2, -1, vel);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dimbossicesmash_hitDetect(void) {}
 void dimbossicesmash_release(void) {}
 void dimbossicesmash_initialise(void) {}
@@ -1020,6 +1050,48 @@ void fogcontrol_free(int* obj)
     u8* state = *(u8**)((char*)obj + 0xb8);
     if (((u32)state[4] >> 7) & 1u) {
         disableHeavyFog();
+    }
+}
+
+extern f32 lbl_803E4070;
+extern f32 lbl_803E4074;
+extern f32 lbl_803E4078;
+extern f32 lbl_803E407C;
+extern void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e);
+
+void fogcontrol_init(u8* obj, u8* params) {
+    u8* sub;
+    int v;
+    f32 c, d, e1;
+    f32 lerp_val;
+    f32 fa, fb, fc, fd, fe;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x4000);
+    sub[4] = (u8)(sub[4] & ~0x80);
+    sub[4] = (u8)(sub[4] & ~0x40);
+    *(f32*)sub = lbl_803E4070;
+    if ((params[0x1a] & 0x08) != 0) {
+        if (*(s16*)(params + 0x18) == -1) {
+            v = 1;
+        } else {
+            v = (u8)GameBit_Get(*(s16*)(params + 0x18));
+        }
+        if ((u8)v != 0) {
+            sub[4] = (u8)(sub[4] | 0x40);
+            sub[4] = (u8)(sub[4] | 0x80);
+            *(f32*)sub = lbl_803E4074;
+            c = (f32)(s32)*(s16*)(params + 0x1c);
+            d = (f32)(s32)*(s16*)(params + 0x20);
+            lerp_val = *(f32*)sub * (c - d) + d;
+            fa = *(f32*)(obj + 0x10) + lerp_val;
+            e1 = (f32)(s32)*(s16*)(params + 0x1e);
+            fb = e1 + fa - c;
+            fc = (f32)(s32)*(s16*)(params + 0x24);
+            fd = (f32)(s32)*(s16*)(params + 0x22) / lbl_803E4078;
+            fe = lbl_803E407C;
+            enableHeavyFog((u8)(params[0x1a] & 1), fa, fb, fc, fd, fe);
+        }
     }
 }
 

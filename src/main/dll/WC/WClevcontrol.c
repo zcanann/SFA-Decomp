@@ -153,8 +153,7 @@ void FUN_801ee7bc(short *param_1,int param_2,undefined4 param_3,undefined4 param
     uVar5 = uVar5 + 0xffff;
   }
   param_1[1] = (short)(int)(lbl_803E6940 *
-                            (float)((double)CONCAT44(0x43300000,uVar5 ^ 0x80000000) -
-                                   DOUBLE_803e6938) * lbl_803DC074 +
+                            (f32)(s32)(uVar5) * lbl_803DC074 +
                            (float)((double)CONCAT44(0x43300000,(int)param_1[1] ^ 0x80000000) -
                                   DOUBLE_803e6938));
   dVar1 = DOUBLE_803e6938;
@@ -167,8 +166,7 @@ void FUN_801ee7bc(short *param_1,int param_2,undefined4 param_3,undefined4 param
   }
   dVar6 = (double)lbl_803E6940;
   *(short *)(param_2 + 0x2e) =
-       (short)(int)(dVar6 * (double)((float)((double)CONCAT44(0x43300000,uVar5 ^ 0x80000000) -
-                                            DOUBLE_803e6938) * lbl_803DC074) +
+       (short)(int)(dVar6 * (double)((f32)(s32)(uVar5) * lbl_803DC074) +
                    (double)(float)((double)CONCAT44(0x43300000,
                                                     (int)*(short *)(param_2 + 0x2e) ^ 0x80000000) -
                                   DOUBLE_803e6938));
@@ -258,8 +256,7 @@ void FUN_801eeafc(ushort *param_1,int param_2,undefined4 param_3,undefined4 para
     uVar6 = uVar6 + 0xffff;
   }
   param_1[1] = (ushort)(int)(lbl_803E6940 *
-                             (float)((double)CONCAT44(0x43300000,uVar6 ^ 0x80000000) -
-                                    DOUBLE_803e6938) * lbl_803DC074 +
+                             (f32)(s32)(uVar6) * lbl_803DC074 +
                             (float)((double)CONCAT44(0x43300000,(int)(short)param_1[1] ^ 0x80000000)
                                    - DOUBLE_803e6938));
   uVar6 = (iVar3 - (iVar3 >> 0x1f)) - (uint)*(ushort *)(param_2 + 0x2e);
@@ -271,8 +268,7 @@ void FUN_801eeafc(ushort *param_1,int param_2,undefined4 param_3,undefined4 para
   }
   dVar10 = (double)lbl_803E6940;
   *(short *)(param_2 + 0x2e) =
-       (short)(int)(dVar10 * (double)((float)((double)CONCAT44(0x43300000,uVar6 ^ 0x80000000) -
-                                             DOUBLE_803e6938) * lbl_803DC074) +
+       (short)(int)(dVar10 * (double)((f32)(s32)(uVar6) * lbl_803DC074) +
                    (double)(float)((double)CONCAT44(0x43300000,
                                                     (int)*(short *)(param_2 + 0x2e) ^ 0x80000000) -
                                   DOUBLE_803e6938));
@@ -639,7 +635,7 @@ void FUN_801ef3f8(ushort *param_1,undefined4 param_2,int param_3,undefined4 para
     local_30 = 0x43300000;
     *(float *)(iVar7 + 0x5c) =
          *(float *)(iVar7 + 0x5c) +
-         ((float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e6938) * lbl_803DC074) /
+         ((f32)(s32)uStack_2c * lbl_803DC074) /
          lbl_803E6954;
     uStack_24 = (int)(short)param_1[1] ^ 0x80000000;
     local_28 = 0x43300000;

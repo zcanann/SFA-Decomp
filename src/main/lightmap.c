@@ -471,11 +471,9 @@ int FUN_8005b024(void)
   double dVar3;
   
   dVar3 = (double)FUN_802924c4();
-  iVar2 = (int)(dVar3 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda50 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar2 = (int)(dVar3 - (double)(f32)(s32)(DAT_803dda50));
   dVar3 = (double)FUN_802924c4();
-  iVar1 = (int)(dVar3 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda54 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar1 = (int)(dVar3 - (double)(f32)(s32)(DAT_803dda54));
   if ((iVar2 < 0) || (0xf < iVar2)) {
     iVar2 = -1;
   }
@@ -539,11 +537,9 @@ undefined4 FUN_8005b220(void)
   double dVar4;
   
   dVar4 = (double)FUN_802924c4();
-  iVar3 = (int)(dVar4 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda50 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar3 = (int)(dVar4 - (double)(f32)(s32)(DAT_803dda50));
   dVar4 = (double)FUN_802924c4();
-  iVar1 = (int)(dVar4 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda54 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar1 = (int)(dVar4 - (double)(f32)(s32)(DAT_803dda54));
   if ((iVar3 < 0) || (0xf < iVar3)) {
     uVar2 = 0xffffffff;
   }
@@ -605,11 +601,9 @@ int FUN_8005b398(undefined8 param_1,double param_2)
   undefined8 local_30;
   
   dVar5 = (double)FUN_802924c4();
-  iVar3 = (int)(dVar5 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda50 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar3 = (int)(dVar5 - (double)(f32)(s32)(DAT_803dda50));
   dVar5 = (double)FUN_802924c4();
-  iVar4 = (int)(dVar5 - (double)(float)((double)CONCAT44(0x43300000,DAT_803dda54 ^ 0x80000000) -
-                                       DOUBLE_803df840));
+  iVar4 = (int)(dVar5 - (double)(f32)(s32)(DAT_803dda54));
   if ((((-1 < iVar3) && (iVar3 < 0x10)) && (-1 < iVar4)) && (iVar4 < 0x10)) {
     iVar3 = iVar3 + iVar4 * 0x10;
     piVar2 = &DAT_80382f14;
@@ -618,8 +612,7 @@ int FUN_8005b398(undefined8 param_1,double param_2)
       iVar1 = (int)*(char *)(iVar3 + *piVar2);
       if (-1 < iVar1) {
         iVar1 = *(int *)(DAT_803ddb1c + iVar1 * 4);
-        local_30 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar1 + 0x8a) - 0x32U ^ 0x80000000);
-        if (((double)(float)(local_30 - DOUBLE_803df840) < param_2) &&
+        if (((double)(f32)(s32)((int)*(short *)(iVar1 + 0x8a) - 0x32U) < param_2) &&
            (local_30 = (double)CONCAT44(0x43300000,
                                         (int)*(short *)(iVar1 + 0x8c) + 0x32U ^ 0x80000000),
            param_2 < (double)(float)(local_30 - DOUBLE_803df840))) {
@@ -1192,11 +1185,10 @@ LAB_8005c210:
             uStack_7c = uVar9 ^ 0x80000000;
             local_80 = 0x43300000;
             lbl_803DDAD4 =
-                 lbl_803DF834 * (float)((double)CONCAT44(0x43300000,uStack_7c) - DOUBLE_803df840);
+                 lbl_803DF834 * (f32)(s32)uStack_7c;
             uStack_74 = (int)*(short *)(iVar6 + 0x8e) ^ 0x80000000;
             local_78 = 0x43300000;
-            FUN_80247a48(dVar14,(double)(float)((double)CONCAT44(0x43300000,uStack_74) -
-                                               DOUBLE_803df840),(double)lbl_803DDAD4,
+            FUN_80247a48(dVar14,(f64)(f32)(s32)uStack_74,(double)lbl_803DDAD4,
                          (undefined4 *)(iVar6 + 0xc));
             FUN_8005fb68();
           }
@@ -2703,6 +2695,7 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern int Camera_GetViewMatrix(void);
 extern void PSMTXMultVec(int m, f32 *in, f32 *out);
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void renderShadowType3(u8 *obj, u32 b, s32 offset) {
@@ -2731,6 +2724,7 @@ void renderShadowType3(u8 *obj, u32 b, s32 offset) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -2749,6 +2743,58 @@ void fn_8005DE94(u32 a, u32 b, f32 *p) {
     lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | 0x38000000;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 7;
     lbl_803DCE30++;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u32 lbl_803868D8[];
+extern int lbl_803DCDF0;
+extern s16 lbl_803DCEAE;
+extern int *gModgfxInterface;
+extern void objRender(int a, int b, int c, int d, void *obj, int f);
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+
+#pragma scheduling off
+#pragma peephole off
+void renderObjects(s8 *arg0) {
+    int i;
+    int idx;
+    u8 *obj;
+    u8 *state;
+    u32 flags;
+    int *p;
+    int slot;
+    int *objects;
+
+    objects = ObjList_GetObjects((int *)0, (int *)0);
+    for (i = 1; i < (int)lbl_803DCEAE; i++) {
+        idx = lbl_803868D8[i] & 0x3ff;
+        obj = (u8 *)objects[idx];
+        state = *(u8 **)(obj + 0x50);
+        flags = *(u32 *)(state + 0x44);
+        if ((flags & 0x800) != 0 || (state[0x5f] & 0x10) != 0) {
+            if (arg0[idx] != 0 && lbl_803DCDF0 < 0x14) {
+                slot = lbl_803DCDF0;
+                lbl_803DCDF0 = slot + 1;
+                lbl_8037E0C0[slot + 0x1045] = (u32)obj;
+            }
+        } else {
+            if ((flags & 0x100) == 0) {
+                (*(void (**)(int, int, int, int, void *))(*gModgfxInterface + 0x1c))(0, 0, 0, 1, obj);
+            }
+            objRender(0, 0, 0, 0, obj, 1);
+            p = *(int **)(obj + 0x64);
+            if (p != NULL && p[3] != 0) {
+                renderShadowType3(obj, 0x13, 0);
+                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 2;
+                lbl_803DCE30++;
+            } else if (*(s16 *)(state + 0x48) == 3 && (*(s16 *)(obj + 6) & 0x4000) == 0 && (p[12] & 0x4)) {
+                renderShadowType3(obj, 0x13, 0);
+                lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 3;
+                lbl_803DCE30++;
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3009,6 +3055,141 @@ void setDrawCloudsAndLights(int v) {
         renderFlags &= ~0x50;
         *(u8 *)((char *)env + 0x40) &= ~0x9;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void modelRenderInstrsState_init(int* state, void* buf, int s1, int s2);
+extern void modelRenderInstrsState_setBit(int* state, int bit);
+extern void renderFn_8005e730(int* p1, int* obj, float* p3);
+extern int shaderFn_8005e560(int* obj, int* state);
+extern void shaderFn_8005e348(int* obj, int v, int* state, float* p3);
+
+#pragma scheduling off
+void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
+{
+    int state[5];
+    int countShifted;
+    int v;
+    int byteOff;
+    int* base;
+    int newR;
+    int nibble;
+    int i;
+    int cursor;
+
+    countShifted = (int)*(u16*)((char*)obj + 0x84) << 3;
+    modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x78), countShifted, countShifted);
+    modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
+    state[4] += 4;
+    renderFn_8005e730(p1, obj, p3);
+    newR = shaderFn_8005e560(obj, state);
+    state[4] += 4;
+    mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
+    cursor = state[4] + 4;
+    byteOff = cursor >> 3;
+    v = *(u8*)(state[0] + byteOff);
+    base = (int*)(state[0] + byteOff);
+    v = v | ((u32)*(u8*)((char*)base + 1) << 8);
+    v = v | ((u32)*(u8*)((char*)base + 2) << 16);
+    state[4] += 8;
+    nibble = (v >> (cursor & 7)) & 0xf;
+    for (i = 0; i < nibble; i++) {
+        *(volatile int*)&state[4] += 8;
+    }
+    state[4] += 4;
+    shaderFn_8005e348(obj, newR, state, p3);
+}
+#pragma scheduling reset
+
+extern void fn_8000F8F8(void);
+extern void Camera_ApplyFullViewport(void);
+extern int mapBlockRender_setShader(int p1, int* obj, int* state);
+extern void mapBlockRender_callList(int p1, int p2, int* obj, int v, int* state, float* p3);
+
+#pragma scheduling off
+void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
+{
+    int state[5];
+    int countShifted;
+    int newR;
+    int v;
+    int byteOff;
+    int* base;
+    int cursor;
+    int nibble;
+    int i;
+    int byteOff2;
+
+    fn_8000F8F8();
+    countShifted = (int)*(u16*)((char*)obj + 0x86) << 3;
+    modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x7c), countShifted, countShifted);
+    modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
+    state[4] += 4;
+    newR = mapBlockRender_setShader(1, obj, state);
+    state[4] += 4;
+    mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
+    cursor = state[4] + 4;
+    byteOff = cursor >> 3;
+    v = *(u8*)(state[0] + byteOff);
+    base = (int*)(state[0] + byteOff);
+    v = v | ((u32)*(u8*)((char*)base + 1) << 8);
+    v = v | ((u32)*(u8*)((char*)base + 2) << 16);
+    state[4] += 8;
+    nibble = (v >> (cursor & 7)) & 0xf;
+    for (i = 0; i < nibble; i++) {
+        *(volatile int*)&state[4] += 8;
+    }
+    state[4] += 4;
+    mapBlockRender_callList(1, 1, obj, newR, state, p3);
+    Camera_ApplyFullViewport();
+}
+#pragma scheduling reset
+
+extern int* lbl_80386468_table[0x78];
+extern void* lbl_803DCEA0;
+
+#pragma scheduling off
+#pragma peephole off
+int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage)
+{
+    int outer;
+    int* page;
+    int* p;
+    int inner_idx;
+    int total_offset;
+    u16 limit;
+    int sz;
+
+    for (outer = 0; outer < 0x78; outer++) {
+        page = lbl_80386468_table[outer];
+        if (page == NULL) continue;
+
+        lbl_803DCEA0 = page;
+        p = (int*)*(int*)((char*)page + 0x20);
+        inner_idx = 0;
+        total_offset = 0;
+        limit = *(u16*)((char*)page + 0x8);
+
+        while (total_offset < (int)limit) {
+            if (*(u32*)((char*)p + 0x14) == (u32)needle) {
+                if (out_idx != NULL) *out_idx = inner_idx;
+                if (out_outer != NULL) *out_outer = outer;
+                if (out_type != NULL) {
+                    *out_type = (int)*(s8*)((char*)lbl_803DCEA0 + 0x19);
+                }
+                if (out_lastpage != NULL) {
+                    *out_lastpage = (outer >= 0x50) ? 1 : 0;
+                }
+                return p;
+            }
+            sz = (int)*(u8*)((char*)p + 0x2) << 2;
+            total_offset += sz;
+            p = (int*)((char*)p + sz);
+            inner_idx++;
+        }
+    }
+    return NULL;
 }
 #pragma peephole reset
 #pragma scheduling reset

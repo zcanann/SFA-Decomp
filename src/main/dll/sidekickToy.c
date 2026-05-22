@@ -1646,23 +1646,21 @@ void fn_8014C63C(int* obj)
 u8 fn_8014C4D8(int* obj)
 {
     int* state;
-    u8 result;
-    if (obj != NULL) {
-        state = *(int**)((char*)obj + 0xb8);
-        if (state != NULL) {
-            f32 val = *(f32*)((char*)state + 728);
-            if (val != lbl_803E2574) {
-                result = (u8)((s32)(val / lbl_803E2598) + 1);
-            } else {
-                result = 0;
-            }
-        } else {
-            result = 0;
-        }
-    } else {
-        result = 0;
-    }
-    return result;
+    f32 val;
+    if (obj == NULL) goto null_obj;
+    state = *(int**)((char*)obj + 0xb8);
+    goto have_state;
+null_obj:
+    return 0;
+have_state:
+    if (state == NULL) goto null_state;
+    val = *(f32*)((char*)state + 728);
+    if (val == lbl_803E2574) goto fpu_zero;
+    return (u8)((s32)(val / lbl_803E2598) + 1);
+fpu_zero:
+    return 0;
+null_state:
+    return 0;
 }
 
 #pragma peephole reset
@@ -1687,6 +1685,25 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
   }
 }
 #pragma peephole reset
+#pragma scheduling reset
+
+extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
+extern void fn_8015983C(void);
+
+#pragma scheduling off
+void baddieAfterUpdateBonesCb(int obj, int *p2)
+{
+    int *state = *(int **)((char *)obj + 0xB8);
+    int v = *p2;
+    switch (*(s16 *)((char *)obj + 0x46)) {
+    case 0x7C8:
+        playerTailFn_80026b3c(p2, v, *(int *)((char *)state + 0x36C), (void *)fn_8015983C);
+        break;
+    default:
+        playerTailFn_80026b3c(p2, v, *(int *)((char *)state + 0x36C), NULL);
+        break;
+    }
+}
 #pragma scheduling reset
 
 extern f64 lbl_803E25E0;
@@ -1724,10 +1741,135 @@ f32 fn_8014C5D0(int obj) {
     if (a != 0) {
         b = *(u16*)((char*)state + 688);
         if (b != 0) {
-            return (f32)((double)b - lbl_803E25E0) / (f32)((double)a - lbl_803E25E0);
+            return (f32)(u32)b / (f32)(u32)a;
         }
     }
     return lbl_803E2574;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 timeDelta;
+extern f32 sqrtf(f32);
+extern f32 powfBitEstimate(f32 base, f32 exp);
+
+/* fn_8014CB54: xz-plane physics step toward a target. Computes the planar
+ * distance to (tx,ty,tz), then nudges the obj's xz velocity (offsets 0x24,
+ * 0x2c) by timeDelta * speedScale * unitDir, clamped at +/-maxVel, with an
+ * optional drag pass. Returns the y-delta. */
+#pragma scheduling off
+#pragma peephole off
+f32 fn_8014CB54(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag) {
+    f32 dx = tx - *(f32*)(obj + 0x18);
+    f32 dy = ty - *(f32*)(obj + 0x1c);
+    f32 dz = tz - *(f32*)(obj + 0x20);
+    f32 dist = sqrtf(dx * dx + dz * dz);
+    if (dist > accel) {
+        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / dist));
+        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / dist));
+    } else if (dist > lbl_803E2574) {
+        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / accel));
+        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / accel));
+    }
+    if (*(f32*)(obj + 0x24) < -maxVel) {
+        *(f32*)(obj + 0x24) = -maxVel;
+    } else if (*(f32*)(obj + 0x24) > maxVel) {
+        *(f32*)(obj + 0x24) = maxVel;
+    }
+    if (*(f32*)(obj + 0x2c) < -maxVel) {
+        *(f32*)(obj + 0x2c) = -maxVel;
+    } else if (*(f32*)(obj + 0x2c) > maxVel) {
+        *(f32*)(obj + 0x2c) = maxVel;
+    }
+    if (lbl_803E2574 != drag) {
+        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) * powfBitEstimate(drag, timeDelta);
+        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) * powfBitEstimate(drag, timeDelta);
+    }
+    return dy;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_8014C920: 3D physics step toward a target. Variant of fn_8014CB54 that
+ * uses the full 3D distance (xyz) instead of planar (xz), and also nudges
+ * the y-axis velocity at obj+0x28. Returns the y-delta. */
+#pragma scheduling off
+#pragma peephole off
+f32 fn_8014C920(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag) {
+    f32 dx = tx - *(f32*)(obj + 0x18);
+    f32 dy = ty - *(f32*)(obj + 0x1c);
+    f32 dz = tz - *(f32*)(obj + 0x20);
+    f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
+    if (dist > accel) {
+        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / dist));
+        *(f32*)(obj + 0x28) = *(f32*)(obj + 0x28) + timeDelta * (speedScale * (dy / dist));
+        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / dist));
+    } else if (dist > lbl_803E2574) {
+        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) + timeDelta * (speedScale * (dx / accel));
+        *(f32*)(obj + 0x28) = *(f32*)(obj + 0x28) + timeDelta * (speedScale * (dy / accel));
+        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) + timeDelta * (speedScale * (dz / accel));
+    }
+    if (*(f32*)(obj + 0x24) < -maxVel) {
+        *(f32*)(obj + 0x24) = -maxVel;
+    } else if (*(f32*)(obj + 0x24) > maxVel) {
+        *(f32*)(obj + 0x24) = maxVel;
+    }
+    if (*(f32*)(obj + 0x28) < -maxVel) {
+        *(f32*)(obj + 0x28) = -maxVel;
+    } else if (*(f32*)(obj + 0x28) > maxVel) {
+        *(f32*)(obj + 0x28) = maxVel;
+    }
+    if (*(f32*)(obj + 0x2c) < -maxVel) {
+        *(f32*)(obj + 0x2c) = -maxVel;
+    } else if (*(f32*)(obj + 0x2c) > maxVel) {
+        *(f32*)(obj + 0x2c) = maxVel;
+    }
+    if (lbl_803E2574 != drag) {
+        *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) * powfBitEstimate(drag, timeDelta);
+        *(f32*)(obj + 0x28) = *(f32*)(obj + 0x28) * powfBitEstimate(drag, timeDelta);
+        *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) * powfBitEstimate(drag, timeDelta);
+    }
+    return dy;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
+extern void* gRomCurveInterface;
+extern u8 lbl_803DBC58;
+extern f32 lbl_803E25DC;
+
+/* fn_8014C064: pre-curve probe + state-bit gate. If state's 0x2000 bit is
+ * set, ask baddieTargetFn_8014a150 whether the target is locked on; on hit,
+ * leave state[0x2dc] alone. Otherwise dispatch gRomCurveInterface's vtable
+ * entry 0x8c with (data, obj, lbl_803E25DC, &lbl_803DBC58, -1) and toggle
+ * the 0x2000 bit based on the u8 result. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8014C064(int obj) {
+    u8* state = *(u8**)(obj + 0xb8);
+    u8* data = *(u8**)state;
+    if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
+        if ((u8)baddieTargetFn_8014a150(obj, state, (f32*)(obj + 0x18), data + 0x68) != 0) {
+            return;
+        }
+    }
+    if ((u8)(*(u8(**)(u8*, int, f32, u8*, int))(*(int*)gRomCurveInterface + 0x8c))(
+            *(u8**)state, obj, lbl_803E25DC, &lbl_803DBC58, -1) != 0) {
+        {
+            register u32 m;
+            register u32 v;
+            register u8* statePtr = state;
+            asm {
+                lwz v, 0x2dc(statePtr)
+                li m, -0x2001
+                and m, v, m
+                stw m, 0x2dc(statePtr)
+            }
+        }
+    } else {
+        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x2000;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

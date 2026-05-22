@@ -125,7 +125,7 @@ void pressureswitchfb_update(void)
         if ((bVar4) && (iVar12 != iVar8)) {
           uStack_34 = (uint)*(byte *)(iVar16 + 0x1d);
           local_38 = 0x43300000;
-          if ((float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e4408) <
+          if ((f32)(s32)uStack_34 <
               *(float *)(iVar12 + 0x10) - *(float *)(uVar6 + 0x10)) {
             iVar13 = *(int *)(uVar6 + 0xb8);
             uVar7 = 0;
@@ -202,7 +202,7 @@ void pressureswitchfb_update(void)
         uStack_34 = (uint)*(byte *)(iVar16 + 0x1c);
         local_38 = 0x43300000;
         fVar3 = *(float *)(pcVar15 + 0x7c) -
-                (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e4408);
+                (f32)(s32)uStack_34;
         fVar2 = *(float *)(uVar6 + 0x10);
         if (fVar3 <= fVar2) {
           *(float *)(uVar6 + 0x10) = -(*(float *)(pcVar15 + 0x80) * lbl_803DC074 - fVar2);
@@ -559,6 +559,68 @@ void mmp_bridge_hitDetect(void) {}
 void mmp_bridge_release(void) {}
 void mmp_bridge_initialise(void) {}
 
+extern f32 lbl_803E3778;
+extern void pressureswitchfb_updateStateMode(int obj, int p2, int stateParam);
+extern int *objFindTexture(int *obj, int a, int b);
+extern u32 GameBit_Get(int eventId);
+
+#pragma scheduling off
+#pragma peephole off
+void pressureswitchfb_init(u8* obj, u8* params) {
+    u8* sub;
+    int *tex;
+
+    sub = *(u8**)(obj + 0xb8);
+    *(s16*)obj = (s16)(params[0x18] << 8);
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
+    obj[0xad] = (u8)(s8)params[0x19];
+    if ((s8)obj[0xad] >= *(s8*)(*(int*)(obj + 0x50) + 0x55)) {
+        obj[0xad] = 0;
+    }
+    *(f32*)(sub + 0x80) = lbl_803E3778;
+    if (*(s16*)(obj + 0x46) == 0x77b) {
+        sub[0x84] = (u8)(sub[0x84] | 0x80);
+        sub[0x84] = (u8)(sub[0x84] | 0x40);
+        sub[0x84] = (u8)(sub[0x84] | 0x20);
+        *(f32*)(sub + 0x80) = lbl_803E3778;
+    }
+    *(f32*)(sub + 0x7c) = *(f32*)(params + 0xc);
+    if (GameBit_Get(*(s16*)(params + 0x1a)) != 0) {
+        *(f32*)(obj + 0x10) = *(f32*)(sub + 0x7c) - (f32)(u32)params[0x1c];
+        sub[0] = 0x1e;
+        sub[0x84] = (u8)(sub[0x84] & ~0x20);
+        switch (*(s16*)(obj + 0x46)) {
+        case 0x19f:
+        case 0x26c:
+        case 0x274:
+        case 0x545:
+            break;
+        default:
+            sub[0x84] = (u8)(sub[0x84] | 0x10);
+        }
+        if ((sub[0x84] >> 7) & 1) {
+            tex = objFindTexture((int*)obj, 0, 0);
+            if (tex != NULL) {
+                *tex = 0x100;
+            }
+        }
+    }
+    ObjGroup_AddObject(obj, 0x53);
+    *(int*)(sub + 4) = 0;
+    *(int*)(sub + 8) = 0;
+    *(int*)(sub + 0xc) = 0;
+    *(int*)(sub + 0x10) = 0;
+    *(int*)(sub + 0x14) = 0;
+    *(int*)(sub + 0x18) = 0;
+    *(int*)(sub + 0x1c) = 0;
+    *(int*)(sub + 0x20) = 0;
+    *(int*)(sub + 0x24) = 0;
+    *(int*)(sub + 0x28) = 0;
+    *(void**)(obj + 0xbc) = (void*)&pressureswitchfb_updateStateMode;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int Door_getExtraSize(void) { return 0x8; }
 int mmp_bridge_getExtraSize(void) { return 0x0; }
@@ -613,6 +675,51 @@ void doorlock_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
         objRenderFn_80041018(obj);
     } else {
         ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3798);
+    }
+}
+#pragma peephole reset
+
+extern int fn_8017B5C8;
+extern f32 lbl_803E3780;
+extern f32 lbl_803E3784;
+extern f32 lbl_803E3788;
+extern f32 lbl_803E3790;
+#pragma scheduling off
+#pragma peephole off
+void Door_init(int *obj, s16 *def) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    state[5] = 1;
+    *(s16 *)obj = (s16)(*(s8 *)((char *)def + 0x1f) << 8);
+    *(int *)((char *)obj + 0xbc) = (int)&fn_8017B5C8;
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
+    *(f32 *)((char *)obj + 8) = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
+    if (*(f32 *)((char *)obj + 8) == lbl_803E3788) {
+        *(f32 *)((char *)obj + 8) = lbl_803E3780;
+    }
+    *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
+    if (def[13] != -1) {
+        state[4] = (u8)GameBit_Get(def[13]);
+    } else {
+        state[4] = 0;
+    }
+    state[6] = 0;
+    if (GameBit_Get(def[12]) != 0) state[6] = (u8)(state[6] | 1);
+    if (GameBit_Get(def[17]) != 0) state[6] = (u8)(state[6] | 2);
+    {
+        s16 model = *(s16 *)((char *)obj + 0x46);
+        if (model == 1101) {
+            s32 subtype = (s32)*(s8 *)((char *)obj + 0xac);
+            if ((subtype >= 31 && subtype < 35) || (subtype >= 40 && subtype < 43)) {
+                *(s16 *)state = 832;
+                *(s16 *)(state + 2) = 833;
+            } else {
+                *(s16 *)state = 1154;
+                *(s16 *)(state + 2) = 1155;
+            }
+        } else if (model == 358) {
+            *(s16 *)state = 275;
+            *(s16 *)(state + 2) = 504;
+        }
     }
 }
 #pragma peephole reset

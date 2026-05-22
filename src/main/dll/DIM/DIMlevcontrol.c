@@ -117,7 +117,7 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
         uStack_2c = (int)cVar7 ^ 0x80000000;
         local_30 = 0x43300000;
         iVar11 = (int)(-lbl_803DCB70 *
-                      (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e5558));
+                      (f32)(s32)uStack_2c);
         local_28 = (double)(longlong)iVar11;
         if (iVar11 == 0) {
           if (*(int *)(iVar12 + 0xa8) != 0) {
@@ -361,7 +361,7 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
           dVar7 = FUN_80017708((float *)(param_9 + 0xc),(float *)(*piVar6 + 0x18));
           uStack_1c = *(short *)(iVar5 + 0x26) * DAT_803dcb78 ^ 0x80000000;
           local_20 = 0x43300000;
-          if (dVar7 < (double)((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e5558) /
+          if (dVar7 < (double)((f32)(s32)uStack_1c /
                               lbl_803E5584)) {
             *(undefined *)(piVar6 + 0x2b) = 1;
           }
@@ -418,7 +418,7 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
               FUN_801b2640(uVar8,dVar7,dVar9,dVar10,param_5,param_6,param_7,param_8);
               uStack_1c = *(short *)(iVar5 + 0x26) * DAT_803dcb74 ^ 0x80000000;
               local_20 = 0x43300000;
-              if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e5558) / lbl_803E5584
+              if ((f32)(s32)uStack_1c / lbl_803E5584
                   < (float)piVar6[4]) {
                 *(undefined *)(piVar6 + 0x2b) = 4;
               }
@@ -468,8 +468,53 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
 void dimcannon_hitDetect(void) {}
 void dimcannon_release(void) {}
 void dimcannon_initialise(void) {}
+
+extern void objRenderFn_8003b8f4(f32 x);
+extern f32 lbl_803E48E8;
+
+#pragma scheduling off
+#pragma peephole off
+void dimcannon_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    u8 *def;
+    u8 *sub;
+    s16 saved;
+
+    def = *(u8**)((char*)obj + 0x4c);
+    if (*(s16*)((char*)obj + 0x46) == 0x1d6) {
+        objRenderFn_8003b8f4(lbl_803E48E8);
+    } else {
+        sub = *(u8**)((char*)obj + 0xb8);
+        saved = *(s16*)obj;
+        *(s16*)obj = (s16)((s8)def[0x28] << 8);
+        objRenderFn_8003b8f4(lbl_803E48E8);
+        *(s16*)obj = saved;
+        ObjPath_GetPointWorldPosition((int)obj, 0, (f32*)(sub + 0x8c), (f32*)(sub + 0x90), (f32*)(sub + 0x94), 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dimlavasmash_free(void) {}
 void dimlavasmash_hitDetect(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+void dimlavasmash_update(int *obj) {
+    extern int *gObjectTriggerInterface;
+    u8 *sub;
+    int *p;
+    sub = *(u8**)((char*)obj + 0xb8);
+    if (sub[2] == 1) {
+        p = *(int**)((char*)obj + 0x54);
+        *(s16*)((char*)p + 0x60) = (s16)(*(s16*)((char*)p + 0x60) & ~1);
+    } else if (*(int*)((char*)obj + 0xf4) == 0) {
+        if ((s8)sub[0] != -1) {
+            ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])((s8)sub[0], obj, -1);
+        }
+        *(int*)((char*)obj + 0xf4) = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int dimlavasmash_getExtraSize(void) { return 0x3; }

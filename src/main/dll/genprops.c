@@ -2149,9 +2149,7 @@ void FUN_8016dddc(void)
         local_c8 = (double)(longlong)(int)uVar14;
         uStack_bc = uVar14 ^ 0x80000000;
         local_c0 = 0x43300000;
-        dVar21 = (double)(float)(dVar25 - (double)(float)((double)CONCAT44(0x43300000,
-                                                                           uVar14 ^ 0x80000000) -
-                                                         DOUBLE_803e3fb0));
+        dVar21 = (double)(float)(dVar25 - (double)(f32)(s32)(uVar14));
         uVar15 = (uint)((float)(dVar26 - dVar25) / lbl_803E3F44);
         local_b8 = (double)(longlong)(int)uVar15;
         if (uVar15 == 0) {
@@ -2161,8 +2159,7 @@ void FUN_8016dddc(void)
           goto LAB_8016eb30;
         }
         dVar24 = (double)lbl_803E3F4C;
-        local_b8 = (double)CONCAT44(0x43300000,uVar15 ^ 0x80000000);
-        dVar25 = (double)(lbl_803E3F20 / (float)(local_b8 - DOUBLE_803e3fb0));
+        dVar25 = (double)(lbl_803E3F20 / (f32)(s32)(uVar15));
         bVar4 = true;
         while (uVar15 != 0) {
           if (*(short *)((int)piVar17 + 0xe) == 0xbb6) {
@@ -2208,20 +2205,14 @@ void FUN_8016dddc(void)
                 *pfVar13 = (float)(local_b8 - DOUBLE_803e3fb0) / lbl_803E3F8C;
                 uStack_bc = (int)*(short *)(iVar16 + iVar5 + 2) ^ 0x80000000;
                 local_c0 = 0x43300000;
-                *pfVar8 = (float)((double)CONCAT44(0x43300000,uStack_bc) - DOUBLE_803e3fb0) /
+                *pfVar8 = (f32)(s32)uStack_bc /
                           lbl_803E3F8C;
-                local_c8 = (double)CONCAT44(0x43300000,
-                                            (int)*(short *)(iVar16 + iVar5 + 4) ^ 0x80000000);
-                *pfVar9 = (float)(local_c8 - DOUBLE_803e3fb0) / lbl_803E3F8C;
-                local_b0 = (double)CONCAT44(0x43300000,
-                                            (int)*(short *)(iVar16 + iVar5 + 6) ^ 0x80000000);
-                *pfVar10 = (float)(local_b0 - DOUBLE_803e3fb0) / lbl_803E3F8C;
-                local_a8 = (double)CONCAT44(0x43300000,
-                                            (int)*(short *)(iVar16 + iVar5 + 8) ^ 0x80000000);
-                *pfVar11 = (float)(local_a8 - DOUBLE_803e3fb0) / lbl_803E3F8C;
+                *pfVar9 = (f32)(s32)((int)*(short *)(iVar16 + iVar5 + 4)) / lbl_803E3F8C;
+                *pfVar10 = (f32)(s32)((int)*(short *)(iVar16 + iVar5 + 6)) / lbl_803E3F8C;
+                *pfVar11 = (f32)(s32)((int)*(short *)(iVar16 + iVar5 + 8)) / lbl_803E3F8C;
                 uStack_9c = (int)*(short *)(iVar16 + iVar5 + 10) ^ 0x80000000;
                 local_a0 = 0x43300000;
-                *pfVar12 = (float)((double)CONCAT44(0x43300000,uStack_9c) - DOUBLE_803e3fb0) /
+                *pfVar12 = (f32)(s32)uStack_9c /
                            lbl_803E3F8C;
                 fVar2 = *pfVar13;
                 fVar3 = *pfVar9;
@@ -2603,10 +2594,9 @@ void FUN_8016e8cc(undefined8 param_1,undefined8 param_2,double param_3,undefined
         }
         else {
           param_3 = (double)lbl_803E3FC4;
-          local_18 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar5 + 0x10) ^ 0x80000000);
           *(short *)(iVar5 + 0x10) =
                (short)(int)-(float)(param_3 * (double)lbl_803DC074 -
-                                   (double)(float)(local_18 - DOUBLE_803e3fb0));
+                                   (double)(f32)(s32)((int)*(short *)(iVar5 + 0x10)));
           *(undefined2 *)(iVar5 + 0x24) = *(undefined2 *)(iVar5 + 0x10);
         }
         sVar1 = *(short *)(iVar5 + 0x10);
@@ -3246,10 +3236,8 @@ void FUN_8016fc50(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                    (double)(*(float *)(param_9 + 0x16) * lbl_803DC074),(int)param_9);
       ObjHitbox_SetSphereRadius((int)param_9,
                    (short)(int)(*(float *)(iVar4 + 0xc) *
-                               (((float)((double)CONCAT44(0x43300000,DAT_803dc9cc ^ 0x80000000) -
-                                        DOUBLE_803e4030) - *(float *)(iVar4 + 4)) /
-                               (float)((double)CONCAT44(0x43300000,DAT_803dc9cc ^ 0x80000000) -
-                                      DOUBLE_803e4030))));
+                               (((f32)(s32)(DAT_803dc9cc) - *(float *)(iVar4 + 4)) /
+                               (f32)(s32)(DAT_803dc9cc))));
     }
     else {
       uVar5 = ObjHits_DisableObject((int)param_9);
@@ -3263,7 +3251,7 @@ void FUN_8016fc50(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
          lbl_803DC9D0 *
          lbl_803E4028 *
          *(float *)(iVar4 + 8) *
-         lbl_803E402C * (float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - DOUBLE_803e4030)
+         lbl_803E402C * (f32)(s32)(uVar2)
     ;
     FUN_80017748(param_9,(float *)(param_9 + 0x12));
     *(float *)(iVar4 + 0xc) = lbl_803DC9D4 * *(float *)(iVar4 + 8);
@@ -3755,9 +3743,8 @@ void FUN_801709dc(void)
           local_100 = 0x43300000;
           uStack_f4 = (int)*(short *)(iVar11 + 0x44) ^ 0x80000000;
           local_f8 = 0x43300000;
-          iVar10 = (int)(dVar21 * (double)(float)((double)CONCAT44(0x43300000,uStack_fc) -
-                                                 DOUBLE_803e4068) +
-                        (double)(float)((double)CONCAT44(0x43300000,uStack_f4) - DOUBLE_803e4068));
+          iVar10 = (int)(dVar21 * (f64)(f32)(s32)uStack_fc +
+                        (double)(f32)(s32)uStack_f4);
           local_f0 = (longlong)iVar10;
           *(short *)(iVar11 + 0x44) = (short)iVar10;
           uStack_e4 = (int)*(short *)(&DAT_803dc9e8 + iVar12) ^ 0x80000000;
@@ -3797,12 +3784,10 @@ void FUN_801709dc(void)
         if ((*(byte *)(iVar16 + uVar6 + 0x5c) & 1) == 0) {
           iVar12 = uVar6 * 2 + 0x44;
           *puVar7 = *(ushort *)(iVar16 + iVar12);
-          local_b0 = (double)CONCAT44(0x43300000,
-                                      (int)*(short *)(&DAT_803dc9d8 + uVar6 * 2) ^ 0x80000000);
           uStack_b4 = (int)*(short *)(iVar16 + iVar12) ^ 0x80000000;
           local_b8 = 0x43300000;
-          iVar10 = (int)(dVar21 * (double)(float)(local_b0 - DOUBLE_803e4068) +
-                        (double)(float)((double)CONCAT44(0x43300000,uStack_b4) - DOUBLE_803e4068));
+          iVar10 = (int)(dVar21 * (double)(f32)(s32)((int)*(short *)(&DAT_803dc9d8 + uVar6 * 2)) +
+                        (double)(f32)(s32)uStack_b4);
           local_c0 = (longlong)iVar10;
           *(short *)(iVar16 + iVar12) = (short)iVar10;
           iVar10 = iVar16 + uVar6 * 4;
@@ -4061,8 +4046,8 @@ void checkpoint4_init(ushort *param_1,int param_2)
   uStack_1c = *(byte *)(param_2 + 0x2a) ^ 0x80000000;
   local_20 = 0x43300000;
   local_18 = 0x43300000;
-  fVar1 = (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e40d0);
-  if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e40d0) < lbl_803E40BC) {
+  fVar1 = (f32)(s32)uStack_1c;
+  if ((f32)(s32)uStack_1c < lbl_803E40BC) {
     fVar1 = lbl_803E40BC;
   }
   *(float *)(param_1 + 4) = fVar1 * lbl_803E40C0;
@@ -4180,6 +4165,58 @@ void FUN_80171240(int param_1,int param_2)
     ObjHitbox_SetSphereRadius(param_1,(short)((int)(uint)*(ushort *)(param_2 + 0x18) >> 3));
   }
   return;
+}
+
+extern f32 lbl_803E31D8;
+extern f32 lbl_803E31DC;
+extern f32 lbl_803E31E0;
+extern f32 lbl_803E31E4;
+
+#pragma scheduling off
+#pragma peephole off
+void mikabombshadow_update(int *obj) {
+    int *r4;
+    f32 t;
+    f32 f;
+
+    r4 = *(int**)((char*)obj + 0xc4);
+    t = lbl_803E31D8 - (*(f32*)((char*)r4 + 0x10) - *(f32*)((char*)obj + 0x10)) / *(f32*)*(int**)((char*)obj + 0xb8);
+    *(f32*)*(int**)((char*)obj + 0x64) = lbl_803E31DC * t + lbl_803E31D8;
+    f = t * lbl_803E31E0;
+    if (f > lbl_803E31D8) f = lbl_803E31D8;
+    *(s16*)((char*)*(int**)((char*)obj + 0x64) + 0x36) = (s16)(s32)(lbl_803E31E4 * f);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E33F4;
+extern f32 lbl_803E33F8;
+
+#pragma scheduling off
+#pragma peephole off
+void curve_init(int *obj, u8 *params) {
+    *(s16*)obj = (s16)((s8)params[0x2c] << 8);
+    *(s16*)((char*)obj + 2) = (s16)((s8)params[0x2d] << 8);
+    if ((s8)params[0x19] == 8 || (s8)params[0x19] == 0x1a) {
+        *(s16*)((char*)obj + 4) = *(s16*)(params + 0x38);
+    }
+    if ((s8)params[0x19] == 0x15) {
+        *(f32*)((char*)obj + 8) = lbl_803E33F4;
+    } else if ((s8)params[0x19] == 0x16) {
+        *(f32*)((char*)obj + 8) = lbl_803E33F8;
+    } else {
+        *(f32*)((char*)obj + 8) = *(f32*)(*(int*)((char*)obj + 0x50) + 4);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void siderepel_init(int param_1, int param_2) {
+    *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0xe000;
+    ObjGroup_AddObject(param_1, 0x40);
+    if (*(void **)(param_1 + 0x54) != NULL) {
+        ObjHitbox_SetSphereRadius(param_1, (short)((int)(uint)*(ushort *)(param_2 + 0x18) >> 3));
+    }
 }
 
 /*
@@ -4428,6 +4465,23 @@ void flamethrowerspe_initialise(void) {}
 void shield_hitDetect(void) {}
 void shield_release(void) {}
 void shield_initialise(void) {}
+
+extern void ModelLightStruct_free(void *p);
+extern int Sfx_StopFromObject(int obj, int sfxId);
+
+#pragma scheduling off
+void shield_free(int obj)
+{
+    void **state = *(void ***)((char *)obj + 0xB8);
+    if (state[0] != NULL) {
+        ModelLightStruct_free(state[0]);
+        state[0] = NULL;
+    }
+    Sfx_StopFromObject(obj, 0x42C);
+    Sfx_StopFromObject(obj, 0x42D);
+}
+#pragma scheduling reset
+
 void curve_setScale(void) {}
 void curve_free(void) {}
 void dll_F7_hitDetect(void) {}
@@ -4466,6 +4520,38 @@ int curve_getExtraSize(void) { return 0x0; }
 int curve_getObjectTypeId(void) { return 0x0; }
 int dll_F7_getExtraSize(void) { return 0xc; }
 int dll_F7_getObjectTypeId(void) { return 0x2; }
+
+extern void *gModgfxInterface;
+extern void Resource_Release(int handle);
+extern int lbl_803DDAB0;
+extern int lbl_803DDAB4;
+
+#pragma scheduling off
+void dll_F7_free(int obj)
+{
+    (*(void (***)(int))gModgfxInterface)[6](obj);
+    Resource_Release(lbl_803DDAB0);
+    Resource_Release(lbl_803DDAB4);
+    lbl_803DDAB0 = 0;
+    lbl_803DDAB4 = 0;
+    ObjGroup_RemoveObject(obj, 0x3E);
+}
+#pragma scheduling reset
+
+extern void *gObjectTriggerInterface;
+extern void *gTitleMenuControlInterfaceCopy;
+extern void Sfx_StopObjectChannel(int *obj, int channel);
+
+#pragma scheduling off
+#pragma peephole off
+void dim2roofrub_free(int *obj) {
+    ((void(*)(void*))((void**)*(void**)gObjectTriggerInterface)[9])(*(void**)((char*)obj + 0xb8));
+    ((void(*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
+    Sfx_StopObjectChannel(obj, 0x7f);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int checkpoint4_getExtraSize(void) { return 0x40; }
 int checkpoint4_getObjectTypeId(void) { return 0x10; }
 int siderepel_getExtraSize(void) { return 0x1; }
@@ -4478,7 +4564,6 @@ extern void mikabomb_init();
 extern int mikabomb_getObjectTypeId();
 extern int mikabomb_getExtraSize();
 void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void mikabombshadow_update();
 extern void mikabombshadow_init();
 extern void StaticCamera_init();
 extern void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -4492,7 +4577,6 @@ extern void animatedobj_free();
 extern void animatedobj_render();
 extern void animatedobj_update();
 extern void animatedobj_init();
-extern void dim2roofrub_free();
 extern void dim2roofrub_render();
 extern void dim2roofrub_update();
 extern void dim2roofrub_init();
@@ -4526,7 +4610,6 @@ extern void shield_free();
 extern void shield_render();
 extern void shield_update();
 extern void shield_init();
-extern void curve_init();
 extern void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void restartmarker_init(int *obj, int *state) {
     *(s16*)obj = (s16)(*(u8*)((char*)state + 0x18) << 8);

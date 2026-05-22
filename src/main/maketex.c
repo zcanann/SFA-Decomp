@@ -989,7 +989,7 @@ undefined4 FUN_8007f818(int param_1)
   if ((DAT_803ddd14 == 0) && (cVar3 = FUN_80006884(), cVar3 == '\0')) {
     lbl_803DDCF4 =
          (float)(&DAT_8039ae0c)[param_1] -
-         (float)((double)CONCAT44(0x43300000,DAT_803dc388 ^ 0x80000000) - DOUBLE_803dfc38);
+         (f32)(s32)(DAT_803dc388);
     if (lbl_803DFC30 != lbl_803DDCF4) {
       DAT_803dc384 = param_1;
     }
@@ -1453,6 +1453,34 @@ void ObjSeq_preempt(int a, int b)
     lbl_8039A664[i][0] = a;
     lbl_8039A664[i][1] = b;
     lbl_803DD124++;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern int *gCameraInterface;
+
+#pragma peephole off
+#pragma scheduling off
+void cameraFocusNpc(int param1, u8 *obj)
+{
+    f32 vec[3];
+    u8 tag;
+    f32 *p;
+
+    if ((*(int (**)(void))(*gCameraInterface + 0x10))() == 0x4d) return;
+    lbl_803DD0FC = (u32)obj;
+    p = *(f32 **)(obj + 0x74);
+    if (p == NULL || param1 == 7 || param1 == 6) {
+        vec[0] = *(f32 *)(obj + 0x18);
+        vec[1] = *(f32 *)(obj + 0x1c);
+        vec[2] = *(f32 *)(obj + 0x20);
+    } else {
+        vec[0] = p[0];
+        vec[1] = p[1];
+        vec[2] = p[2];
+    }
+    tag = (u8)param1;
+    (*(void (**)(int, int, int, int, f32 *, int, int))(*gCameraInterface + 0x1c))(0x4d, 1, 0, 0x10, vec, 0, 0xff);
 }
 #pragma scheduling reset
 #pragma peephole reset

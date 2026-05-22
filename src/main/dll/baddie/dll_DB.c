@@ -813,5 +813,37 @@ void linkInitTextures(void) {}
 void linkDrawFn_801302c0(void) {}
 void linkDrawFn_80130484(void) {}
 void Link_func0F(void) {}
-void Link_copy(void) {}
+extern u8 lbl_803DD911;
+extern void *textureLoadAsset(int id);
+extern void textureFree(void *p);
+
+#pragma scheduling off
+#pragma peephole off
+void Link_copy(u8 *srcArg) {
+    u8 *dst;
+    u8 *src;
+    int i;
+
+    src = srcArg;
+    dst = lbl_803A9458;
+    for (i = 0; i < (s8)lbl_803DD911; i++) {
+        *(u16 *)(dst + 0x16) = *(u16 *)(src + 0x16);
+        dst[0x1a] = src[0x1a];
+        *(s16 *)(dst + 0x04) = *(s16 *)(src + 0x04);
+        if (*(int *)(src + 0x10) != -1) {
+            if (*(void **)(dst + 0x10) == NULL) {
+                *(void **)(dst + 0x10) = textureLoadAsset(*(int *)(src + 0x10));
+            }
+        } else {
+            if (*(void **)(dst + 0x10) != NULL) {
+                textureFree(*(void **)(dst + 0x10));
+            }
+            *(void **)(dst + 0x10) = NULL;
+        }
+        dst += 60;
+        src += 60;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void Link_func0B(void) {}

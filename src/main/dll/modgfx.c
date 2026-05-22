@@ -1159,6 +1159,7 @@ extern void* PTR_LAB_803108a0;
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma peephole off
 void expgfx_initialise(void)
 {
   u8 *expgfxBase;
@@ -1218,6 +1219,7 @@ void expgfx_initialise(void)
   memset(expgfxBase + EXPGFX_EXPTAB_OFFSET, 0, 0x500);
   return;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -2481,46 +2483,36 @@ void FUN_800a19bc(undefined8 param_1,double param_2,undefined4 param_3,undefined
         fVar2 = *(float *)(param_5 + 0xc);
         uStack_12c = (int)*(short *)(iVar9 + 0x10) ^ 0x80000000;
         local_130 = 0x43300000;
-        dVar23 = (double)(fVar2 + (float)((double)(float)((double)CONCAT44(0x43300000,uStack_12c) -
-                                                         DOUBLE_803e0100) - dVar10));
+        dVar23 = (double)(fVar2 + (float)((f64)(f32)(s32)uStack_12c - dVar10));
         uStack_124 = (int)*(short *)(iVar9 + 0x16) ^ 0x80000000;
         local_128 = 0x43300000;
-        dVar22 = (double)(float)((double)CONCAT44(0x43300000,uStack_124) - DOUBLE_803e0100);
+        dVar22 = (double)(f32)(s32)uStack_124;
         fVar3 = *(float *)(param_5 + 0x14);
         uStack_11c = (int)*(short *)(iVar9 + 0x1c) ^ 0x80000000;
         local_120 = 0x43300000;
-        dVar21 = (double)(fVar3 + (float)((double)(float)((double)CONCAT44(0x43300000,uStack_11c) -
-                                                         DOUBLE_803e0100) - param_2));
+        dVar21 = (double)(fVar3 + (float)((f64)(f32)(s32)uStack_11c - param_2));
         uStack_114 = (int)*(short *)(iVar9 + 0x12) ^ 0x80000000;
         local_118 = 0x43300000;
-        dVar20 = (double)(fVar2 + (float)((double)(float)((double)CONCAT44(0x43300000,uStack_114) -
-                                                         DOUBLE_803e0100) - dVar10));
+        dVar20 = (double)(fVar2 + (float)((f64)(f32)(s32)uStack_114 - dVar10));
         uStack_10c = (int)*(short *)(iVar9 + 0x18) ^ 0x80000000;
         local_110 = 0x43300000;
-        dVar19 = (double)(float)((double)CONCAT44(0x43300000,uStack_10c) - DOUBLE_803e0100);
+        dVar19 = (double)(f32)(s32)uStack_10c;
         uStack_104 = (int)*(short *)(iVar9 + 0x1e) ^ 0x80000000;
         local_108 = 0x43300000;
-        dVar18 = (double)(fVar3 + (float)((double)(float)((double)CONCAT44(0x43300000,uStack_104) -
-                                                         DOUBLE_803e0100) - param_2));
+        dVar18 = (double)(fVar3 + (float)((f64)(f32)(s32)uStack_104 - param_2));
         uStack_fc = (int)*(short *)(iVar9 + 0x14) ^ 0x80000000;
         local_100 = 0x43300000;
-        dVar17 = (double)(fVar2 + (float)((double)(float)((double)CONCAT44(0x43300000,uStack_fc) -
-                                                         DOUBLE_803e0100) - dVar10));
+        dVar17 = (double)(fVar2 + (float)((f64)(f32)(s32)uStack_fc - dVar10));
         uStack_f4 = (int)*(short *)(iVar9 + 0x1a) ^ 0x80000000;
         local_f8 = 0x43300000;
-        dVar16 = (double)(float)((double)CONCAT44(0x43300000,uStack_f4) - DOUBLE_803e0100);
+        dVar16 = (double)(f32)(s32)uStack_f4;
         uStack_ec = (int)*(short *)(iVar9 + 0x20) ^ 0x80000000;
         local_f0 = 0x43300000;
-        dVar14 = (double)(fVar3 + (float)((double)(float)((double)CONCAT44(0x43300000,uStack_ec) -
-                                                         DOUBLE_803e0100) - param_2));
+        dVar14 = (double)(fVar3 + (float)((f64)(f32)(s32)uStack_ec - param_2));
         uStack_e4 = randomGetRange(1,1000);
-        uStack_e4 = uStack_e4 ^ 0x80000000;
-        local_e8 = 0x43300000;
-        dVar12 = (double)((float)((double)CONCAT44(0x43300000,uStack_e4) - DOUBLE_803e0100) /
+        dVar12 = (double)((f32)(s32)uStack_e4 /
                          lbl_803E00F4);
         uStack_dc = randomGetRange(1,1000);
-        uStack_dc = uStack_dc ^ 0x80000000;
-        local_e0 = 0x43300000;
         dVar11 = FUN_80293900((double)((float)((double)CONCAT44(0x43300000,uStack_dc) -
                                               DOUBLE_803e0100) / lbl_803E00F4));
         dVar13 = (double)(float)((double)lbl_803E00F0 - dVar11);
@@ -2695,9 +2687,9 @@ void FUN_800a1de4(int param_1)
     uStack_14 = local_b0[2] ^ 0x80000000;
     local_18 = 0x43300000;
     FUN_800a19bc((double)(*(float *)(param_1 + 0xc) -
-                         (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e0100)),
+                         (f32)(s32)uStack_1c),
                  (double)(*(float *)(param_1 + 0x14) -
-                         (float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e0100)),uVar1,
+                         (f32)(s32)uStack_14),uVar1,
                  local_b8,param_1);
   }
   return;
@@ -3456,20 +3448,13 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
     switch((int)uVar4) {
     case 200:
       uVar3 = randomGetRange(0xfffffffa,6);
-      local_58 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_90 = (float)(local_58 - DOUBLE_803e08f0);
+      local_90 = (f32)(s32)(uVar3);
       uStack_4c = randomGetRange(0xfffffffa,6);
-      uStack_4c = uStack_4c ^ 0x80000000;
-      local_50 = 0x43300000;
-      local_8c = (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e08f0);
+      local_8c = (f32)(s32)uStack_4c;
       uStack_44 = randomGetRange(0xfffffffa,6);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_88 = (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e08f0);
+      local_88 = (f32)(s32)uStack_44;
       uStack_3c = randomGetRange(4,8);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_84 = lbl_803E0878 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_84 = lbl_803E0878 * (f32)(s32)uStack_3c;
       local_c0[2] = 0x24;
       local_60 = 0x41;
       local_7c = 0x100111;
@@ -3480,17 +3465,11 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
     case 0xca:
       if (param_3 == (ExpgfxAttachedSourceState *)0x0) goto LAB_800bd57c;
       uStack_3c = randomGetRange(0xffffffec,0x14);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_9c = lbl_803E087C * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_9c = lbl_803E087C * (f32)(s32)uStack_3c;
       uStack_44 = randomGetRange(10,0x14);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_98 = lbl_803E087C * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e08f0);
+      local_98 = lbl_803E087C * (f32)(s32)uStack_44;
       uStack_4c = randomGetRange(0x14,0x1e);
-      uStack_4c = uStack_4c ^ 0x80000000;
-      local_50 = 0x43300000;
-      local_94 = lbl_803E0880 * (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e08f0);
+      local_94 = lbl_803E0880 * (f32)(s32)uStack_4c;
       local_cc = lbl_803E0874;
       local_c8 = lbl_803E0874;
       local_c4 = lbl_803E0874;
@@ -3500,8 +3479,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       local_d8[0] = param_3->sourceVecX;
       FUN_80017748(local_d8,&local_9c);
       uVar3 = randomGetRange(4,8);
-      local_58 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_84 = lbl_803E0884 * (float)(local_58 - DOUBLE_803e08f0);
+      local_84 = lbl_803E0884 * (f32)(s32)(uVar3);
       local_c0[2] = 0x46;
       local_60 = 100;
       local_5f = 0;
@@ -3525,17 +3503,11 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
     case 0xcb:
       if (param_3 == (ExpgfxAttachedSourceState *)0x0) goto LAB_800bd57c;
       uStack_3c = randomGetRange(0xffffffec,0x14);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_9c = lbl_803E0888 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_9c = lbl_803E0888 * (f32)(s32)uStack_3c;
       uStack_44 = randomGetRange(10,0x14);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_98 = lbl_803E088C * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e08f0);
+      local_98 = lbl_803E088C * (f32)(s32)uStack_44;
       uStack_4c = randomGetRange(0x14,0x1e);
-      uStack_4c = uStack_4c ^ 0x80000000;
-      local_50 = 0x43300000;
-      local_94 = lbl_803E0888 * (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e08f0);
+      local_94 = lbl_803E0888 * (f32)(s32)uStack_4c;
       local_cc = lbl_803E0874;
       local_c8 = lbl_803E0874;
       local_c4 = lbl_803E0874;
@@ -3545,8 +3517,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       local_d8[0] = param_3->sourceVecX;
       FUN_80017748(local_d8,&local_9c);
       uVar3 = randomGetRange(4,8);
-      local_58 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_84 = lbl_803E0890 * (float)(local_58 - DOUBLE_803e08f0);
+      local_84 = lbl_803E0890 * (f32)(s32)(uVar3);
       local_c0[2] = 0x46;
       local_60 = 0xff;
       local_5f = 0;
@@ -3569,28 +3540,17 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       break;
     case 0xcc:
       uStack_3c = randomGetRange(0xffffffd8,0x28);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_90 = (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_90 = (f32)(s32)uStack_3c;
       uStack_44 = randomGetRange(1,2);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_8c = lbl_803E0894 * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e08f0);
+      local_8c = lbl_803E0894 * (f32)(s32)uStack_44;
       uStack_4c = randomGetRange(0xffffffd8,0x28);
-      uStack_4c = uStack_4c ^ 0x80000000;
-      local_50 = 0x43300000;
-      local_88 = (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e08f0);
+      local_88 = (f32)(s32)uStack_4c;
       uVar3 = randomGetRange(0xfffffff6,10);
-      local_58 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_9c = lbl_803E0898 * (float)(local_58 - DOUBLE_803e08f0);
+      local_9c = lbl_803E0898 * (f32)(s32)(uVar3);
       uStack_34 = randomGetRange(0xfffffff6,10);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_94 = lbl_803E0898 * (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e08f0);
+      local_94 = lbl_803E0898 * (f32)(s32)uStack_34;
       uStack_2c = randomGetRange(4,8);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_84 = lbl_803E089C * (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e08f0);
+      local_84 = lbl_803E089C * (f32)(s32)uStack_2c;
       local_c0[2] = 0xfa;
       local_60 = 0xff;
       local_7c = 0x80108;
@@ -3598,19 +3558,13 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       break;
     case 0xcd:
       uStack_2c = randomGetRange(0,0xfa);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_90 = (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e08f0);
+      local_90 = (f32)(s32)uStack_2c;
       uStack_34 = randomGetRange(0xfffffffb,5);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
       local_8c = lbl_803E08A0 + local_90 / lbl_803E08A0 +
-                 (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e08f0);
+                 (f32)(s32)uStack_34;
       local_88 = lbl_803E08A4 * local_90;
       uStack_3c = randomGetRange(0x28,0x50);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_84 = lbl_803E08A8 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_84 = lbl_803E08A8 * (f32)(s32)uStack_3c;
       local_c0[2] = 0xfa;
       local_60 = 0x7d;
       local_7c = 0x80080118;
@@ -3618,28 +3572,17 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       break;
     case 0xce:
       uStack_2c = randomGetRange(0xfffffff6,10);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_90 = lbl_803E08AC + (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e08f0);
+      local_90 = lbl_803E08AC + (f32)(s32)uStack_2c;
       uStack_34 = randomGetRange(0xfffffff8,8);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_8c = lbl_803E08B0 + (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e08f0);
+      local_8c = lbl_803E08B0 + (f32)(s32)uStack_34;
       uStack_3c = randomGetRange(0xfffffff6,10);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_88 = lbl_803E08B4 + (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_88 = lbl_803E08B4 + (f32)(s32)uStack_3c;
       uStack_44 = randomGetRange(0,10);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_98 = lbl_803E08B8 * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e08f0);
+      local_98 = lbl_803E08B8 * (f32)(s32)uStack_44;
       uStack_4c = randomGetRange(0x28,0x50);
-      uStack_4c = uStack_4c ^ 0x80000000;
-      local_50 = 0x43300000;
-      local_84 = lbl_803E086C * (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e08f0);
+      local_84 = lbl_803E086C * (f32)(s32)uStack_4c;
       uVar3 = randomGetRange(0,0x14);
-      local_58 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_c0[2] = (int)(lbl_803E08BC + (float)(local_58 - DOUBLE_803e08f0));
+      local_c0[2] = (int)(lbl_803E08BC + (f32)(s32)(uVar3));
       local_28 = (double)(longlong)local_c0[2];
       local_60 = 0x37;
       local_7c = 0x180100;
@@ -3647,18 +3590,13 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       break;
     case 0xcf:
       uVar3 = randomGetRange(0,0xfa);
-      local_28 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_90 = -(float)(local_28 - DOUBLE_803e08f0);
+      local_90 = -(f32)(s32)(uVar3);
       uStack_2c = randomGetRange(0xfffffffb,5);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
       local_8c = lbl_803E08A0 + local_90 / lbl_803E08A0 +
-                 (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e08f0);
+                 (f32)(s32)uStack_2c;
       local_88 = -local_90;
       uStack_34 = randomGetRange(0x28,0x50);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_84 = lbl_803E08A8 * (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e08f0);
+      local_84 = lbl_803E08A8 * (f32)(s32)uStack_34;
       local_c0[2] = 0xfa;
       local_60 = 0x7d;
       local_7c = 0x80080118;
@@ -3666,29 +3604,18 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       break;
     case 0xd0:
       uVar3 = randomGetRange(0xfffffff6,10);
-      local_28 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_90 = lbl_803E08C0 + (float)(local_28 - DOUBLE_803e08f0);
+      local_90 = lbl_803E08C0 + (f32)(s32)(uVar3);
       uStack_2c = randomGetRange(0xfffffff8,8);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_8c = lbl_803E08B0 + (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e08f0);
+      local_8c = lbl_803E08B0 + (f32)(s32)uStack_2c;
       uStack_34 = randomGetRange(0xfffffff6,10);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_88 = lbl_803E08C4 + (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e08f0);
+      local_88 = lbl_803E08C4 + (f32)(s32)uStack_34;
       uStack_3c = randomGetRange(0,10);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_98 = lbl_803E08B8 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_98 = lbl_803E08B8 * (f32)(s32)uStack_3c;
       uStack_44 = randomGetRange(0x28,0x50);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_84 = lbl_803E086C * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e08f0);
+      local_84 = lbl_803E086C * (f32)(s32)uStack_44;
       uStack_4c = randomGetRange(0,0x14);
-      uStack_4c = uStack_4c ^ 0x80000000;
-      local_50 = 0x43300000;
       local_c0[2] = (int)(lbl_803E08BC +
-                         (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e08f0));
+                         (f32)(s32)uStack_4c);
       local_58 = (double)(longlong)local_c0[2];
       local_60 = 0x37;
       local_7c = 0x180100;
@@ -3696,8 +3623,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       break;
     case 0xd1:
       uVar3 = randomGetRange(0x46,0x50);
-      local_28 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_84 = lbl_803E086C * (float)(local_28 - DOUBLE_803e08f0);
+      local_84 = lbl_803E086C * (f32)(s32)(uVar3);
       uVar3 = randomGetRange(0,0xf);
       local_c0[2] = uVar3 + 0x14;
       local_5f = 0;
@@ -3713,24 +3639,15 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       break;
     case 0xd3:
       uVar3 = randomGetRange(0,0xfa);
-      local_28 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_90 = -(float)(local_28 - DOUBLE_803e08f0);
+      local_90 = -(f32)(s32)(uVar3);
       uStack_2c = randomGetRange(0xfffffffb,5);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_8c = lbl_803E08C8 + (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e08f0);
+      local_8c = lbl_803E08C8 + (f32)(s32)uStack_2c;
       uStack_34 = randomGetRange(0xfffffffb,5);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_88 = (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e08f0);
+      local_88 = (f32)(s32)uStack_34;
       uStack_3c = randomGetRange(0xfffffffb,5);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_94 = lbl_803E0864 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_94 = lbl_803E0864 * (f32)(s32)uStack_3c;
       uStack_44 = randomGetRange(0x28,0x50);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_84 = lbl_803E08CC * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e08f0);
+      local_84 = lbl_803E08CC * (f32)(s32)uStack_44;
       local_c0[2] = 0xa0;
       local_60 = 0x7d;
       local_7c = 0x180108;
@@ -3738,29 +3655,18 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       break;
     case 0xd4:
       uVar3 = randomGetRange(0xfffffff6,0x14);
-      local_28 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_90 = (float)(local_28 - DOUBLE_803e08f0);
+      local_90 = (f32)(s32)(uVar3);
       uStack_2c = randomGetRange(0,0x1c);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_8c = (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e08f0);
+      local_8c = (f32)(s32)uStack_2c;
       uStack_34 = randomGetRange(0xffffffec,0x14);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_88 = (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e08f0);
+      local_88 = (f32)(s32)uStack_34;
       uStack_3c = randomGetRange(0,10);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_98 = lbl_803E08D0 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_98 = lbl_803E08D0 * (f32)(s32)uStack_3c;
       uStack_44 = randomGetRange(0x28,0x50);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_84 = lbl_803E08D4 * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e08f0);
+      local_84 = lbl_803E08D4 * (f32)(s32)uStack_44;
       uStack_4c = randomGetRange(0,0x14);
-      uStack_4c = uStack_4c ^ 0x80000000;
-      local_50 = 0x43300000;
       local_c0[2] = (int)(lbl_803E08D8 +
-                         (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e08f0));
+                         (f32)(s32)uStack_4c);
       local_58 = (double)(longlong)local_c0[2];
       local_60 = 0x37;
       local_7c = 0x180100;
@@ -3783,24 +3689,15 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
       break;
     case 0xd7:
       uVar3 = randomGetRange(0xffffff74,0x8c);
-      local_28 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-      local_90 = lbl_803E08E0 * (float)(local_28 - DOUBLE_803e08f0);
+      local_90 = lbl_803E08E0 * (f32)(s32)(uVar3);
       uStack_2c = randomGetRange(0xffffffce,10);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_8c = lbl_803E08E0 * (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e08f0);
+      local_8c = lbl_803E08E0 * (f32)(s32)uStack_2c;
       uStack_34 = randomGetRange(0xffffff74,0x8c);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_88 = lbl_803E08E0 * (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e08f0);
+      local_88 = lbl_803E08E0 * (f32)(s32)uStack_34;
       uStack_3c = randomGetRange(0xf,0x23);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_98 = lbl_803E08E4 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e08f0);
+      local_98 = lbl_803E08E4 * (f32)(s32)uStack_3c;
       uStack_44 = randomGetRange(1,10);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_84 = lbl_803E08E8 * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e08f0);
+      local_84 = lbl_803E08E8 * (f32)(s32)uStack_44;
       local_c0[2] = 0x8c;
       local_60 = 0xff;
       local_7c = 0x80180100;
@@ -3996,21 +3893,13 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
       break;
     case 0x423:
       uStack_4c = randomGetRange(0xfffffff6,10);
-      uStack_4c = uStack_4c ^ 0x80000000;
-      local_50 = 0x43300000;
-      local_88 = lbl_803E0910 * (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e0948);
+      local_88 = lbl_803E0910 * (f32)(s32)uStack_4c;
       uStack_44 = randomGetRange(0xfffffff6,10);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_84 = lbl_803E0910 * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e0948);
+      local_84 = lbl_803E0910 * (f32)(s32)uStack_44;
       uStack_3c = randomGetRange(0xfffffff6,10);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_80 = lbl_803E0910 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e0948);
+      local_80 = lbl_803E0910 * (f32)(s32)uStack_3c;
       uStack_34 = randomGetRange(5,0xb);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_7c = lbl_803E0900 * (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e0948);
+      local_7c = lbl_803E0900 * (f32)(s32)uStack_34;
       local_b8[2] = 0x3c;
       local_74 = 0x80110;
       local_57 = 0x10;
@@ -4018,33 +3907,19 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
       break;
     case 0x424:
       uStack_34 = randomGetRange(0xfffffff6,10);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_88 = lbl_803E0910 * (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e0948);
+      local_88 = lbl_803E0910 * (f32)(s32)uStack_34;
       uStack_3c = randomGetRange(0xfffffff6,10);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_84 = lbl_803E0910 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e0948);
+      local_84 = lbl_803E0910 * (f32)(s32)uStack_3c;
       uStack_44 = randomGetRange(0xfffffff6,10);
-      uStack_44 = uStack_44 ^ 0x80000000;
-      local_48 = 0x43300000;
-      local_80 = lbl_803E0910 * (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e0948);
+      local_80 = lbl_803E0910 * (f32)(s32)uStack_44;
       uStack_4c = randomGetRange(0xfffffffb,5);
-      uStack_4c = uStack_4c ^ 0x80000000;
-      local_50 = 0x43300000;
-      local_94 = lbl_803E0904 * (float)((double)CONCAT44(0x43300000,uStack_4c) - DOUBLE_803e0948);
+      local_94 = lbl_803E0904 * (f32)(s32)uStack_4c;
       uStack_2c = randomGetRange(3,10);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_90 = lbl_803E0904 * (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e0948);
+      local_90 = lbl_803E0904 * (f32)(s32)uStack_2c;
       uStack_24 = randomGetRange(0xfffffffb,5);
-      uStack_24 = uStack_24 ^ 0x80000000;
-      local_28 = 0x43300000;
-      local_8c = lbl_803E0904 * (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e0948);
+      local_8c = lbl_803E0904 * (f32)(s32)uStack_24;
       uStack_1c = randomGetRange(5,0xb);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      local_7c = lbl_803E091C * (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e0948);
+      local_7c = lbl_803E091C * (f32)(s32)uStack_1c;
       local_b8[2] = 0x3c;
       local_74 = 0x1480200;
       local_57 = 0x10;
@@ -4052,24 +3927,18 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
       break;
     case 0x425:
       uStack_1c = randomGetRange(8,10);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      local_90 = lbl_803E0920 * (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e0948);
+      local_90 = lbl_803E0920 * (f32)(s32)uStack_1c;
       uVar2 = randomGetRange(0,0x28);
       if (uVar2 == 0) {
         uStack_1c = randomGetRange(0x15,0x29);
-        uStack_1c = uStack_1c ^ 0x80000000;
-        local_20 = 0x43300000;
         local_7c = lbl_803E0900 *
-                   (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e0948);
+                   (f32)(s32)uStack_1c;
         local_b8[2] = 0x1cc;
       }
       else {
         uStack_1c = randomGetRange(8,0x14);
-        uStack_1c = uStack_1c ^ 0x80000000;
-        local_20 = 0x43300000;
         local_7c = lbl_803E0900 *
-                   (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e0948);
+                   (f32)(s32)uStack_1c;
         local_b8[2] = randomGetRange(0x5a,0x78);
       }
       local_74 = 0x80180200;
@@ -4085,17 +3954,11 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
       break;
     case 0x426:
       uStack_1c = randomGetRange(0xffffffec,0x14);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      local_94 = lbl_803E0920 * (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e0948);
+      local_94 = lbl_803E0920 * (f32)(s32)uStack_1c;
       uStack_24 = randomGetRange(8,0x14);
-      uStack_24 = uStack_24 ^ 0x80000000;
-      local_28 = 0x43300000;
-      local_90 = lbl_803E0920 * (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e0948);
+      local_90 = lbl_803E0920 * (f32)(s32)uStack_24;
       uStack_2c = randomGetRange(0xffffffec,0x14);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_8c = lbl_803E0920 * (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e0948);
+      local_8c = lbl_803E0920 * (f32)(s32)uStack_2c;
       local_7c = lbl_803E0924;
       local_b8[2] = 0x32;
       local_74 = 0x3000200;
@@ -4111,25 +3974,15 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
       break;
     case 0x427:
       uStack_1c = randomGetRange(0xffffff9c,100);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      local_88 = (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e0948) / lbl_803E0928;
+      local_88 = (f32)(s32)uStack_1c / lbl_803E0928;
       uStack_24 = randomGetRange(0xffffffce,0x32);
-      uStack_24 = uStack_24 ^ 0x80000000;
-      local_28 = 0x43300000;
-      local_84 = (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e0948) / lbl_803E092C;
+      local_84 = (f32)(s32)uStack_24 / lbl_803E092C;
       uStack_2c = randomGetRange(0xffffff9c,100);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_80 = (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e0948) / lbl_803E0928;
+      local_80 = (f32)(s32)uStack_2c / lbl_803E0928;
       uStack_34 = randomGetRange(1,4);
-      uStack_34 = uStack_34 ^ 0x80000000;
-      local_38 = 0x43300000;
-      local_90 = lbl_803E0930 * (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e0948);
+      local_90 = lbl_803E0930 * (f32)(s32)uStack_34;
       uStack_3c = randomGetRange(0,10);
-      uStack_3c = uStack_3c ^ 0x80000000;
-      local_40 = 0x43300000;
-      local_7c = lbl_803E0938 * (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e0948)
+      local_7c = lbl_803E0938 * (f32)(s32)uStack_3c
                  + lbl_803E0934;
       local_b8[2] = 0xa0;
       local_57 = 0;
@@ -4151,17 +4004,11 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
       break;
     case 0x42c:
       uStack_1c = randomGetRange(0xfffffff6,10);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      local_94 = lbl_803E0940 * (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e0948);
+      local_94 = lbl_803E0940 * (f32)(s32)uStack_1c;
       uStack_24 = randomGetRange(10,0x14);
-      uStack_24 = uStack_24 ^ 0x80000000;
-      local_28 = 0x43300000;
-      local_90 = lbl_803E0918 * (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e0948);
+      local_90 = lbl_803E0918 * (f32)(s32)uStack_24;
       uStack_2c = randomGetRange(0xfffffff6,10);
-      uStack_2c = uStack_2c ^ 0x80000000;
-      local_30 = 0x43300000;
-      local_8c = lbl_803E0940 * (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e0948);
+      local_8c = lbl_803E0940 * (f32)(s32)uStack_2c;
       local_7c = lbl_803E0944;
       local_b8[2] = 0x6e;
       local_74 = 0x8a100208;
@@ -4176,13 +4023,9 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
       break;
     case 0x42d:
       uStack_1c = randomGetRange(0xffffffec,0x14);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      local_94 = lbl_803E0944 * (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e0948);
+      local_94 = lbl_803E0944 * (f32)(s32)uStack_1c;
       uStack_24 = randomGetRange(0xffffffec,0x14);
-      uStack_24 = uStack_24 ^ 0x80000000;
-      local_28 = 0x43300000;
-      local_8c = lbl_803E0944 * (float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e0948);
+      local_8c = lbl_803E0944 * (f32)(s32)uStack_24;
       local_7c = lbl_803E0904;
       local_b8[2] = 600;
       local_58 = 0x7f;
@@ -4492,6 +4335,7 @@ extern s16 lbl_803DD28A;
 extern ModgfxPendingSpawn *lbl_803DD28C;
 extern ModgfxPendingSpawn *lbl_803DD290;
 #pragma scheduling off
+#pragma peephole off
 s16 dll_0B_func18(void) { return lbl_803DD288; }
 void dll_0B_func17(u32 flags) { *(u32 *)(lbl_8039BE98 + 0x54) |= flags; }
 void dll_0B_func15(void *params) { memcpy(lbl_8039BE98 + 0x46, params, 0xe); }
@@ -4527,6 +4371,7 @@ void dll_0B_func10(void)
   lbl_803DD28C = cursor;
   lbl_803DD28A = 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* OSReport(literal) wrapper. */
@@ -4589,6 +4434,7 @@ void dll_0B_func0B(void) {
 }
 
 #pragma scheduling off
+#pragma peephole off
 void dll_0B_func06(void) {
     fn_800A1040(0, 1);
 }
@@ -4596,6 +4442,7 @@ void dll_0B_func06(void) {
 void dll_0B_release(void) {
     fn_800A1040(0, 1);
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off
@@ -4750,6 +4597,102 @@ void boneParticleEffect_release(void)
     if (lbl_803DD2A4 != NULL) textureFree(lbl_803DD2A4);
     if (lbl_803DD2A8 != NULL) textureFree(lbl_803DD2A8);
 }
+
+typedef struct {
+    s16 a, b, c;
+    u16 pad;
+    s16 d, e;
+    u8 f, g, h, alpha;
+} ParticleSlot;
+extern ParticleSlot lbl_8030FFE8[];
+extern void *textureLoadAsset(int id);
+extern void *mmAlloc(int size, int align, int flag);
+
+void boneParticleEffect_initialise(void) {
+    int i;
+    int j;
+
+    lbl_803DD2A4 = textureLoadAsset(0x16b);
+    lbl_803DD2A8 = textureLoadAsset(0x201);
+    lbl_8039C2C0[0] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[1] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[2] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[3] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[4] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[5] = mmAlloc(0x140, 0x15, 0);
+    lbl_8039C2C0[6] = mmAlloc(0x140, 0x15, 0);
+    for (i = 0; i < 7; i++) {
+        for (j = 0; j < 20; j++) {
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].a = lbl_8030FFE8[j].a;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].b = lbl_8030FFE8[j].b;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].c = lbl_8030FFE8[j].c;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].d = lbl_8030FFE8[j].d;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].e = lbl_8030FFE8[j].e;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].f = lbl_8030FFE8[j].f;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].g = lbl_8030FFE8[j].g;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].h = lbl_8030FFE8[j].h;
+            ((ParticleSlot*)lbl_8039C2C0[i])[j].alpha = 0xff;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern f32 lbl_803DF438;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_800A02DC(ModgfxState* state, f32* in)
+{
+    extern f32 lbl_803DD284;
+    s32 dx, dy;
+    ModgfxVertexData* cur;
+    ModgfxVertexData* prev;
+    u8 ovx, ovy;
+    int i;
+    int j;
+    ModgfxVertexData* slot;
+
+    dx = (s32)(lbl_803DF438 * (in[1] * lbl_803DD284));
+    dy = (s32)(lbl_803DF438 * (in[2] * lbl_803DD284));
+
+    cur = state->vertexBuffers[state->activeVertexBufferIndex];
+    prev = state->vertexBuffers[1 - (u32)state->activeVertexBufferIndex];
+
+    ovx = 0;
+    ovy = 0;
+    for (i = 0; i < (s32)state->vertexCount; i++) {
+        cur->texCoordS = prev->texCoordS;
+        cur->texCoordT = prev->texCoordT;
+        cur->texCoordS = (s16)(cur->texCoordS + dx);
+        if ((s32)cur->texCoordS > 0x100) ovx = (u8)(ovx + 1);
+        if ((s32)cur->texCoordS < -0x100) ovx = (u8)(ovx + 1);
+        cur->texCoordT = (s16)(cur->texCoordT + dy);
+        if ((s32)cur->texCoordT > 0x100) ovy = (u8)(ovy + 1);
+        if ((s32)cur->texCoordT < -0x100) ovy = (u8)(ovy + 1);
+        cur++;
+        prev++;
+    }
+
+    slot = state->vertexBuffers[state->activeVertexBufferIndex];
+    for (j = 0; j < (s32)state->vertexCount; j++) {
+        if ((s32)ovx == (s32)state->vertexCount) {
+            if ((s32)slot->texCoordS > 0x100) {
+                slot->texCoordS -= 0x100;
+            } else {
+                slot->texCoordS += 0x100;
+            }
+        }
+        if ((s32)ovy == (s32)state->vertexCount) {
+            if ((s32)slot->texCoordT > 0x100) {
+                slot->texCoordT -= 0x100;
+            } else {
+                slot->texCoordT += 0x100;
+            }
+        }
+        slot++;
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -4757,9 +4700,10 @@ void boneParticleEffect_release(void)
 #pragma scheduling off
 void fn_800A0FD0(ModgfxState *state)
 {
-    ModgfxVertexData *dst = state->vertexBuffers[state->activeVertexBufferIndex];
-    ModgfxVertexData *src = state->baseVertexData;
     int i;
+    ModgfxVertexData *src;
+    ModgfxVertexData *dst = state->vertexBuffers[state->activeVertexBufferIndex];
+    src = state->baseVertexData;
     for (i = 0; i < state->vertexCount; i++) {
         dst->posX = src->posX;
         dst->posY = src->posY;

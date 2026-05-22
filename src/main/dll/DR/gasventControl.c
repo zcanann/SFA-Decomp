@@ -62,10 +62,10 @@ extern f32 lbl_803E5018;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void blasted_init(int param_1,int param_2)
+void fn_blasted_init_v11_unused(int param_1,int param_2)
 {
   int iVar1;
-  
+
   iVar1 = *(int *)(param_1 + 0xb8);
   *(byte *)(iVar1 + 7) = *(byte *)(iVar1 + 7) | 2;
   (**(code **)(*DAT_803dd740 + 4))(param_1,iVar1,5);
@@ -455,19 +455,17 @@ void FUN_801a35f8(int param_1,int param_2,int param_3)
   uStack_44 = (int)*(short *)(param_3 + 0x20) ^ 0x80000000;
   local_48 = 0x43300000;
   local_50[0] = *(float *)(param_2 + 0x10) -
-                (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e5020);
+                (f32)(s32)uStack_44;
   uStack_3c = (int)*(short *)(param_3 + 0x22) ^ 0x80000000;
   local_40 = 0x43300000;
   local_54 = *(float *)(param_2 + 0x14) -
-             (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e5020);
-  local_38 = (double)CONCAT44(0x43300000,(int)*(short *)(param_3 + 0x24) ^ 0x80000000);
-  local_58 = *(float *)(param_2 + 0x18) - (float)(local_38 - DOUBLE_803e5020);
+             (f32)(s32)uStack_3c;
+  local_58 = *(float *)(param_2 + 0x18) - (f32)(s32)((int)*(short *)(param_3 + 0x24));
   dVar4 = FUN_80293900((double)(local_58 * local_58 +
                                local_50[0] * local_50[0] + local_54 * local_54));
   dVar5 = (double)lbl_803E5000;
   if (dVar4 != dVar5) {
-    local_38 = (double)CONCAT44(0x43300000,(int)*(short *)(param_3 + 0x2c) ^ 0x80000000);
-    dVar4 = (double)((float)(local_38 - DOUBLE_803e5020) / (float)((double)lbl_803E5008 * dVar4));
+    dVar4 = (double)((f32)(s32)((int)*(short *)(param_3 + 0x2c)) / (float)((double)lbl_803E5008 * dVar4));
     if ((((double)local_50[0] != dVar5) || ((double)local_54 != dVar5)) ||
        ((double)local_58 != dVar5)) {
       FUN_8006f7a0(local_50,&local_54,&local_58);
@@ -478,21 +476,17 @@ void FUN_801a35f8(int param_1,int param_2,int param_3)
     uVar3 = (uint)(lbl_803E500C * (float)((double)lbl_803E5010 + dVar4));
     local_38 = (double)(longlong)(int)uVar3;
     uStack_3c = randomGetRange(0,uVar3);
-    uStack_3c = uStack_3c ^ 0x80000000;
-    local_40 = 0x43300000;
     *(float *)(param_2 + 0x1c) =
-         (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e5020) / lbl_803E5014;
+         (f32)(s32)uStack_3c / lbl_803E5014;
     uStack_44 = randomGetRange(0,uVar3);
-    uStack_44 = uStack_44 ^ 0x80000000;
-    local_48 = 0x43300000;
     *(float *)(param_2 + 0x20) =
-         (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e5020) / lbl_803E5014;
+         (f32)(s32)uStack_44 / lbl_803E5014;
     uStack_2c = randomGetRange(0,uVar3);
     dVar4 = DOUBLE_803e5020;
     uStack_2c = uStack_2c ^ 0x80000000;
     local_30 = 0x43300000;
     *(float *)(param_2 + 0x24) =
-         (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e5020) / lbl_803E5014;
+         (f32)(s32)uStack_2c / lbl_803E5014;
     local_28 = (double)CONCAT44(0x43300000,(int)*(short *)(param_3 + 0x30) ^ 0x80000000);
     dVar4 = (double)((float)(local_28 - dVar4) / lbl_803E4FF0);
     if (lbl_803E5000 < *(float *)(param_1 + 0x24)) {
@@ -513,19 +507,16 @@ void FUN_801a35f8(int param_1,int param_2,int param_3)
     uVar3 = (uint)(lbl_803E500C * (float)((double)lbl_803E5010 + dVar4));
     local_28 = (double)(longlong)(int)uVar3;
     uStack_2c = randomGetRange(0,uVar3);
-    uStack_2c = uStack_2c ^ 0x80000000;
-    local_30 = 0x43300000;
     *(float *)(param_2 + 0x28) =
-         (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e5020) / lbl_803E500C;
+         (f32)(s32)uStack_2c / lbl_803E500C;
     uVar2 = randomGetRange(0,uVar3);
-    local_38 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
-    *(float *)(param_2 + 0x2c) = (float)(local_38 - DOUBLE_803e5020) / lbl_803E500C;
+    *(float *)(param_2 + 0x2c) = (f32)(s32)(uVar2) / lbl_803E500C;
     uStack_3c = randomGetRange(0,uVar3);
     dVar5 = DOUBLE_803e5020;
     uStack_3c = uStack_3c ^ 0x80000000;
     local_40 = 0x43300000;
     *(float *)(param_2 + 0x30) =
-         (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e5020) / lbl_803E500C;
+         (f32)(s32)uStack_3c / lbl_803E500C;
     *(float *)(param_2 + 0x34) = (float)((double)local_50[0] * dVar4);
     *(float *)(param_2 + 0x38) = (float)((double)local_54 * dVar4 - (double)lbl_803E5018);
     *(float *)(param_2 + 0x3c) = (float)((double)local_58 * dVar4);
@@ -574,6 +565,39 @@ void explodable_free(int obj, int flag) {
         if (*(int *)((char *)p + 0x690) != 0) {
             Obj_FreeObject(*(int *)((char *)p + 0x690));
         }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objSetSlot(int* obj, int slot);
+extern void Obj_SetActiveModelIndex(int* obj, int idx);
+extern int fn_801A27B8(int* obj, int v);
+
+#pragma scheduling off
+#pragma peephole off
+void blasted_init(int param_1, int param_2)
+{
+    int* state = *(int**)(param_1 + 0xb8);
+    int* targ;
+    s16 gbid;
+
+    state[0xc / 4] = 0;
+    objSetSlot((int*)param_1, 0x51);
+    targ = *(int**)(param_1 + 0x54);
+    *(s16*)((char*)targ + 0x60) = (s16)(*(s16*)((char*)targ + 0x60) | 1);
+    *(u8*)((char*)state + 0x10) = (u8)*(s16*)(param_2 + 0x1a);
+    gbid = *(s16*)(param_2 + 0x20);
+    if (gbid != -1) {
+        *(u8*)((char*)state + 0x11) = (u8)GameBit_Get(gbid);
+        if (*(u8*)((char*)state + 0x11) != 0) {
+            Obj_SetActiveModelIndex((int*)param_1, (int)*(u8*)((char*)state + 0x11));
+        }
+    }
+    GameBit_Set(0x2de, 1);
+    *(s16*)param_1 = (s16)((s32)*(s8*)(param_2 + 0x18) << 8);
+    if (GameBit_Get(*(s16*)(param_2 + 0x1e)) != 0) {
+        state[0xc / 4] = fn_801A27B8((int*)param_1, (int)*(s16*)(param_2 + 0x1c));
     }
 }
 #pragma peephole reset

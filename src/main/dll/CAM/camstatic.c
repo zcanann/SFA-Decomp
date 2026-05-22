@@ -231,7 +231,7 @@ LAB_80105bbc:
   local_38 = 0x43300000;
   uStack_2c = (uint)*(byte *)(gCamcontrolModeSettings + 0xc2);
   local_30 = 0x43300000;
-  dVar5 = FUN_800176f4((double)(float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e2318),
+  dVar5 = FUN_800176f4((double)(f32)(s32)uStack_34,
                        (double)(lbl_803E2324 /
                                (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e2378)),
                        (double)lbl_803DC074);
@@ -240,7 +240,7 @@ LAB_80105bbc:
   camcontrol_updateTargetAction((int)param_1,(int)psVar4);
   uStack_1c = (int)param_1[2] ^ 0x80000000;
   local_20 = 0x43300000;
-  dVar5 = FUN_800176f4((double)(float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e2318),
+  dVar5 = FUN_800176f4((double)(f32)(s32)uStack_1c,
                        (double)lbl_803E23B0,(double)lbl_803DC074);
   local_18 = (longlong)(int)dVar5;
   param_1[2] = param_1[2] - (short)(int)dVar5;

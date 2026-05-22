@@ -264,7 +264,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *param_11 = 0;
     ObjLink_DetachChild(param_9,iVar2);
     uVar1 = randomGetRange(0x27,0x2c);
-    dVar4 = (double)((float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e44f8) /
+    dVar4 = (double)((f32)(s32)(uVar1) /
                     lbl_803E450C);
     uVar1 = FUN_80017730();
     randomGetRange((uVar1 & 0xffff) - 0x1000,(uVar1 & 0xffff) + 0x1000);
@@ -513,8 +513,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
             }
             uStack_1c = uStack_1c ^ 0x80000000;
             local_20 = 0x43300000;
-            fVar1 = (float)(dVar9 / (double)(float)((double)CONCAT44(0x43300000,uStack_1c) -
-                                                   DOUBLE_803e44f8));
+            fVar1 = (float)(dVar9 / (f64)(f32)(s32)uStack_1c);
             fVar3 = lbl_803E44F0;
             if ((fVar1 <= lbl_803E44F0) && (fVar3 = fVar1, fVar1 < lbl_803E44F4)) {
               fVar3 = lbl_803E44F4;
@@ -1251,12 +1250,12 @@ LAB_801814d8:
       local_60 = (double)CONCAT44(0x43300000,uStack_54);
       local_58 = 0x43300000;
       if (dVar14 < (double)((float)(local_60 - DOUBLE_803e45b0) *
-                           (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e45b0))) {
+                           (f32)(s32)uStack_54)) {
         uStack_54 = (uint)*(byte *)(iVar10 + 0x19);
         local_58 = 0x43300000;
         pfVar12[0x45] =
              pfVar12[0x45] +
-             (lbl_803E4590 * (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e45b0) *
+             (lbl_803E4590 * (f32)(s32)uStack_54 *
              lbl_803DC074) / lbl_803E4594;
         if (fVar3 * pfVar12[0x44] < pfVar12[0x45]) {
           pfVar12[0x45] = fVar3 * pfVar12[0x44];
@@ -1265,8 +1264,6 @@ LAB_801814d8:
       }
     }
     uStack_54 = randomGetRange(-(uint)*(byte *)(iVar10 + 0x19),(uint)*(byte *)(iVar10 + 0x19) << 1);
-    uStack_54 = uStack_54 ^ 0x80000000;
-    local_58 = 0x43300000;
     pfVar12[0x45] =
          pfVar12[0x45] +
          ((float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e45b8) * lbl_803DC074) /
@@ -1338,7 +1335,7 @@ LAB_80181668:
     uStack_54 = (uint)*(byte *)(iVar11 + 0x22);
     local_58 = 0x43300000;
     dVar13 = (double)((pfVar12[0x1b] +
-                      (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e45b0)) -
+                      (f32)(s32)uStack_54) -
                      *(float *)(puVar1 + 8));
     dVar15 = (double)(pfVar12[0x1c] - *(float *)(puVar1 + 10));
     dVar14 = FUN_80293900((double)(float)(dVar15 * dVar15 +
@@ -1657,7 +1654,51 @@ void duster_hitDetect(int param_1) {
 #pragma scheduling reset
 
 extern void MagicPlant_update();
-extern void MagicPlant_init();
+extern f32 lbl_803E385C;
+extern void *gMapEventInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void MagicPlant_init(int obj, u8 *params) {
+    int state;
+    s32 r;
+    f32 t;
+    int divisor;
+
+    state = *(int *)(obj + 0xb8);
+    ObjGroup_AddObject(obj, 52);
+    ObjGroup_AddObject(obj, 62);
+    r = ((int (**)(int))((int **)gMapEventInterface)[0])[26](*(int *)(params + 20));
+    if (r == 0) {
+        t = (f32)((int (**)(int))((int **)gMapEventInterface)[0])[27](*(int *)(params + 20));
+        divisor = *(u16 *)(params + 24);
+        if (divisor < 100) divisor = 100;
+        t = t / (f32)divisor;
+        if (t > lbl_803E3858) {
+            t = lbl_803E3858;
+        } else if (t < lbl_803E385C) {
+            t = lbl_803E385C;
+        }
+        *(f32 *)(state + 4) = lbl_803E3858 - t;
+    } else {
+        *(f32 *)(state + 4) = lbl_803E3858;
+    }
+    *(u8 *)(state + 15) = 0;
+    *(f32 *)(state + 8) = lbl_803E385C;
+    ObjAnim_SetMoveProgress((double)*(f32 *)(state + 4), (ObjAnimComponent *)obj);
+    *(s16 *)obj = (s16)((u32)params[29] << 8);
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+    *(s8 *)(obj + 0xad) = (s8)params[28];
+    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(u8 *)(obj + 0xad) = 0;
+    }
+    if (*(int *)(obj + 0x64) != 0) {
+        *(u32 *)(*(int *)(obj + 0x64) + 48) |= 0x810;
+    }
+    *(void **)(obj + 0xbc) = (void *)fn_8017F8C8;
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern void trickyguard_update();
 extern void StayPoint_update();
 extern void duster_update();

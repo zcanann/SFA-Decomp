@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
-extern int GameBit_Get(int bit);
+extern uint GameBit_Get(int bit);
 extern int GameBit_Set(int bit, int value);
 extern int mapUnload(int id, int flags);
 extern int Music_Trigger(int id, int value);
@@ -56,29 +56,22 @@ void mapUnloadFn_801d7c94(void *obj, void *p2)
 {
     SCTotemLogPuzzleObject *puzzleObj;
     SCTotemLogPuzzleRuntime *runtime;
-    s8 ac;
     puzzleObj = (SCTotemLogPuzzleObject *)obj;
     runtime = (SCTotemLogPuzzleRuntime *)p2;
 
-    if (GameBit_Get(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0) {
+    if ((u32)GameBit_Get(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0) {
         runtime->eventCountdown = SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET;
         GameBit_Set(SCTOTEMLOGPUZ_RESET_GAMEBIT, 0);
     }
     if (runtime->eventCountdown == 0) return;
 
     if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET) {
-        ac = puzzleObj->animId;
-        (*gMapEventInterface)->setAnimEvent(ac, 1, 0);
-        ac = puzzleObj->animId;
-        (*gMapEventInterface)->setAnimEvent(ac, 4, 0);
-        ac = puzzleObj->animId;
-        (*gMapEventInterface)->setAnimEvent(ac, 6, 0);
-        ac = puzzleObj->animId;
-        (*gMapEventInterface)->setAnimEvent(ac, 7, 0);
-        ac = puzzleObj->animId;
-        (*gMapEventInterface)->setAnimEvent(ac, 8, 0);
-        ac = puzzleObj->animId;
-        (*gMapEventInterface)->setAnimEvent(ac, 9, 0);
+        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 1, 0);
+        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 4, 0);
+        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 6, 0);
+        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 7, 0);
+        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 8, 0);
+        (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 9, 0);
         mapUnload(0x13, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
         mapUnload(0x41, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
         mapUnload(0x43, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
@@ -87,16 +80,11 @@ void mapUnloadFn_801d7c94(void *obj, void *p2)
     if (runtime->eventCountdown != SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE) {
         goto dec;
     }
-    ac = puzzleObj->animId;
-    (*gMapEventInterface)->setAnimEvent(ac, 0, 1);
-    ac = puzzleObj->animId;
-    (*gMapEventInterface)->setAnimEvent(ac, 2, 1);
-    ac = puzzleObj->animId;
-    (*gMapEventInterface)->setAnimEvent(ac, 3, 1);
-    ac = puzzleObj->animId;
-    (*gMapEventInterface)->setAnimEvent(ac, 5, 1);
-    ac = puzzleObj->animId;
-    (*gMapEventInterface)->setAnimEvent(ac, 0xa, 1);
+    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 0, 1);
+    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 2, 1);
+    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 3, 1);
+    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 5, 1);
+    (*gMapEventInterface)->setAnimEvent(puzzleObj->animId, 0xa, 1);
 dec:
     runtime->eventCountdown--;
 }

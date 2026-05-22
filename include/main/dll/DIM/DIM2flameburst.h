@@ -68,7 +68,7 @@ void dimmagicbridge_free(void);
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dimmagicbridge_hitDetect(void);
 void dimmagicbridge_update(int obj);
-void dimmagicbridge_init(void);
+void dimmagicbridge_init(u8* obj, u8* params);
 void dimmagicbridge_release(void);
 void dimmagicbridge_initialise(void);
 int dll_1CE_getExtraSize(void);

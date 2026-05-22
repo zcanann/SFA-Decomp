@@ -737,9 +737,9 @@ int fn_8015E210(int *obj, u8 *p)
   if (*(char *)(p + 0x27a) != '\0') {
     objs = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
-      int o = objs[i];
-      if (o != (int)obj && *(s16 *)(o + 0x46) == 774) {
-        (**(void (**)(int, int, int))(*(int *)(o + 0x68) + 0x24))(o, 129, 0);
+      void *o = (void *)objs[i];
+      if (o != (void *)obj && *(s16 *)((char *)o + 0x46) == 774) {
+        (**(void (**)(void *, int, int))(*(int *)((char *)o + 0x68) + 0x24))(o, 129, 0);
       }
     }
     player_b8 = *(int **)((char *)Obj_GetPlayerObject() + 0xc8);
@@ -925,13 +925,14 @@ int fn_8015E5DC(short *obj, u8 *p)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
   extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
+  extern int randomGetRange(int min, int max);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DDC;
   extern f32 lbl_803E2DE0;
+  int count;
+  int i;
   int sub;
   int *objs;
-  int i;
-  int count;
 
   sub = *(int *)((char *)obj + 0xb8);
   if (*(char *)(p + 0x27a) != '\0') {
@@ -944,9 +945,9 @@ int fn_8015E5DC(short *obj, u8 *p)
   if (*(char *)(p + 0x27a) != '\0') {
     objs = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
-      int o = objs[i];
-      if (o != (int)obj && *(s16 *)(o + 0x46) == 774) {
-        (**(void (**)(int, int, int))(*(int *)(o + 0x68) + 0x24))(o, 129, 0);
+      void *o = (void *)objs[i];
+      if (o != (void *)obj && *(s16 *)((char *)o + 0x46) == 774) {
+        (**(void (**)(void *, int, int))(*(int *)((char *)o + 0x68) + 0x24))(o, 129, 0);
       }
     }
     if (randomGetRange(0, 1) != 0) {
@@ -1448,7 +1449,7 @@ void FUN_8015f224(undefined4 param_1,undefined4 param_2,int param_3)
       FUN_80006824(uVar5,0x265);
       uVar5 = randomGetRange(0x32,0xfa);
       pfVar7[1] = pfVar7[1] +
-                  (float)((double)CONCAT44(0x43300000,uVar5 ^ 0x80000000) - DOUBLE_803e3aa0);
+                  (f32)(s32)(uVar5);
     }
     *pfVar7 = *pfVar7 + lbl_803DC074;
   }
@@ -1664,7 +1665,7 @@ void FUN_8015f75c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(undefined4 *)(param_9 + 0xbc) = 0;
   pfVar7 = *(float **)(iVar8 + 0x40c);
   uVar1 = randomGetRange(10,300);
-  *pfVar7 = (float)((double)CONCAT44(0x43300000,uVar1 ^ 0x80000000) - DOUBLE_803e3aa0);
+  *pfVar7 = (f32)(s32)(uVar1);
   FUN_800305f8((double)lbl_803E3A60,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                param_9,8,0,uVar2,uVar3,uVar4,uVar5,iVar6);
   *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
@@ -2974,7 +2975,7 @@ undefined4 FUN_80161984(undefined4 param_1,int param_2)
     uStack_c = (int)*(short *)(param_2 + 0x32e) ^ 0x80000000;
     local_10 = 0x43300000;
     if (lbl_803E3B68 * lbl_803DC074 <
-        (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e3b70)) {
+        (f32)(s32)uStack_c) {
       (**(code **)(*DAT_803dd738 + 0x14))
                 (param_1,*(int *)(param_2 + 0x2d0),0x10,local_14,auStack_16,auStack_18);
       if ((local_14[0] < 4) || (0xb < local_14[0])) {
@@ -3171,7 +3172,7 @@ FUN_80161ea0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   local_34[1] = 176.0;
   (**(code **)(**(int **)(*(int *)(iVar4 + 0x38) + 0x68) + 0x28))
             ((double)(*(float *)(param_10 + 0x280) *
-                     (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e3b70)),
+                     (f32)(s32)uStack_2c),
              *(int *)(iVar4 + 0x38),iVar4 + 0x48);
   if (lbl_803E3B8C <= *(float *)(iVar4 + 0x48)) {
     if (lbl_803E3B90 < *(float *)(iVar4 + 0x48)) {
@@ -3212,11 +3213,114 @@ void chukchuk_free(void) {}
 void chukchuk_hitDetect(void) {}
 void chukchuk_release(void) {}
 void chukchuk_initialise(void) {}
+
+extern uint GameBit_Get(int eventId);
+
+#pragma peephole off
+#pragma scheduling off
+void chukchuk_init(u8* obj, u8* params) {
+    u8* sub = *(u8**)(obj + 0xb8);
+    obj[0xaf] = (u8)(obj[0xaf] | 0x8);
+    *(s16*)(sub + 0xa) = *(s16*)(params + 0x18);
+    if (*(s16*)(sub + 0xa) != -1 && GameBit_Get(*(s16*)(sub + 0xa)) != 0) {
+        ObjHits_DisableObject(obj);
+        *(s16*)(obj + 6) = (s16)(*(s16*)(obj + 6) | 0x4000);
+        sub[0x12] = (u8)(sub[0x12] | 0x2);
+    } else {
+        *(u16*)(sub + 0xc) = (u16)(params[0x29] << 3);
+        *(s16*)(sub + 8) = *(s16*)(params + 0x22);
+        sub[0x13] = params[0x32];
+        *(u16*)(sub + 0xe) = (u16)((s8)params[0x28] * 0xb6);
+        sub[0x14] = params[0x2f];
+        sub[0x15] = params[0x27];
+        *(s16*)obj = (s16)((s8)params[0x2a] << 8);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
 void iceball_hitDetect(void) {}
 void iceball_release(void) {}
 void iceball_initialise(void) {}
 void dll_CB_func0B_nop(void) {}
 void dll_CB_release_nop(void) {}
+
+extern f32 lbl_803E2EA8;
+extern void dll_CB_seqFn(int p1, int p2, void *p3);
+
+#pragma scheduling off
+#pragma peephole off
+void dll_CB_init(int *obj, u8 *params, int extra) {
+    extern int *gBaddieControlInterface;
+    extern int *gPlayerInterface;
+    u8 *sub;
+    u32 flags;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    flags = 0x16;
+    if (extra != 0) flags = (u8)(flags | 1);
+    if ((params[0x2b] & 1) == 0) flags = (u8)(flags | 8);
+    *(s16*)((char*)obj + 2) = (s16)((s8)params[0x28] << 8);
+    *(s16*)((char*)obj + 4) = (s16)((s8)params[0x27] << 8);
+    ((void(*)(int*, u8*, u8*, int, int, int, u32, f32))((void**)*(int*)gBaddieControlInterface)[22])(obj, params, sub, 4, 6, 0x82, flags, lbl_803E2EA8);
+    *(void**)((char*)obj + 0xbc) = (void*)&dll_CB_seqFn;
+    ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, sub, 0);
+    *(s16*)(sub + 0x270) = 0;
+    if (*(u16*)(sub + 0x3fe) < 0x32) {
+        *(u16*)(sub + 0x3fe) = 0x32;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int fn_8016083C(int *obj, u8 *sub, u8 *sub2);
+extern f32 curveFn_80010320(int *p, f32 t);
+extern int getAngle(f32 a, f32 b);
+extern f32 lbl_803E2E98;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_CB_update(int *obj) {
+    extern int *gBaddieControlInterface;
+    extern int *gRomCurveInterface;
+    u8 *sub;
+    u8 *def;
+    int *path;
+    int one_local;
+
+    sub = *(u8**)((char*)obj + 0xb8);
+    def = *(u8**)((char*)obj + 0x4c);
+    if (*(int*)((char*)obj + 0xf4) != 0) return;
+    if (*(int*)((char*)obj + 0xf8) == 0) {
+        *(f32*)((char*)obj + 0xc) = *(f32*)(def + 8);
+        *(f32*)((char*)obj + 0x10) = *(f32*)(def + 0xc);
+        *(f32*)((char*)obj + 0x14) = *(f32*)(def + 0x10);
+        *(int*)((char*)obj + 0xf8) = 1;
+        return;
+    }
+    if ((*(u16*)(sub + 0x400) & 2) != 0) {
+        one_local = 1;
+        ((void(*)(u8*, u8*, s16, u8*, int, int, int, int*))((int**)*(int**)gBaddieControlInterface)[10])(sub, sub + 0x35c, *(s16*)(sub + 0x3f4), sub + 0x405, 0, 0, 0, &one_local);
+        *(u16*)(sub + 0x400) = (u16)(*(u16*)(sub + 0x400) & ~2);
+    }
+    if (((int(*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, sub, 1) == 0) return;
+    fn_8016083C(obj, sub, sub);
+    path = *(int**)(sub + 0x3dc);
+    if ((*(u16*)(sub + 0x400) & 8) == 0) return;
+    if (curveFn_80010320(path, *(f32*)(sub + 0x280)) != 0.0f || path[4] != 0) {
+        if ((u8)((int(*)(int*))((int**)*(int**)gRomCurveInterface)[36])(path) != 0) {
+            *(u16*)(sub + 0x400) = (u16)(*(u16*)(sub + 0x400) & ~8);
+        }
+    }
+    *(f32*)(sub + 0x280) = lbl_803E2E98;
+    *(s16*)obj = (s16)(getAngle(*(f32*)((char*)path + 0x74), *(f32*)((char*)path + 0x7c)) + 0x8000);
+    *(s16*)((char*)obj + 2) = (s16)(getAngle(*(f32*)((char*)path + 0x7c), *(f32*)((char*)path + 0x78)) + 0x4000);
+    *(s16*)((char*)obj + 4) = (s16)(getAngle(*(f32*)((char*)path + 0x78), *(f32*)((char*)path + 0x74)) + 0x4000);
+    *(f32*)((char*)obj + 0xc) = *(f32*)((char*)path + 0x68);
+    *(f32*)((char*)obj + 0x10) = *(f32*)((char*)path + 0x6c);
+    *(f32*)((char*)obj + 0x14) = *(f32*)((char*)path + 0x70);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int dll_CE_getExtraSize_ret_1052(void) { return 0x41c; }
@@ -3249,7 +3353,6 @@ void dll_CA_initialise(void) { fn_8015DAE8(); }
 void iceball_free(void) { Camera_DisableViewYOffset(); }
 
 extern void chukchuk_update(void);
-extern void chukchuk_init(void);
 extern void iceball_update(undefined2 *param_1,int param_2);
 
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, 0x26b). */
@@ -3695,3 +3798,81 @@ ObjectDescriptor gIceBallObjDescriptor = {
     (ObjectDescriptorCallback)iceball_getObjectTypeId,
     iceball_getExtraSize,
 };
+
+extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32);
+extern f32 lbl_803E2EB0;
+extern f32 lbl_803E2EB4;
+extern f32 lbl_803E2EBC;
+extern f32 lbl_803E2EC0;
+extern f32 lbl_803E2EC4;
+extern f32 lbl_803E2EC8;
+extern f32 lbl_803E2ECC;
+
+/* fn_80161264: scarab AI proximity gate. If no current target, dispatches
+ * vtable[5](obj, state, 0) and returns 1. Else (unless state mode 6 means
+ * already engaged) reads the angle from the obj to the target; when within
+ * a +/-90° wedge the planar distance term is the constant lbl_803E2EB0,
+ * otherwise it's sqrtf(dx*dx + dz*dz) - lbl_803E2EB4. The signed magnitude
+ * drives three threshold checks against lbl_803E2EBC/EC0/EC4 that issue
+ * vtable[5] calls with mode 6 (close), 1 (medium-out), or 1 (close-in)
+ * depending on the current mode at state[0x274] and the latch byte at
+ * state[0x346]. When mode == 1, picks one of two scalars (lbl_803E2EC8 or
+ * lbl_803E2ECC) for state[0x2a0]. Returns 0. */
+#pragma scheduling off
+#pragma peephole off
+int fn_80161264(int* obj, u8* state) {
+    int* target;
+    f32 dx;
+    f32 dz;
+    f32 mag;
+    s16 mode;
+    f32 magAbs;
+
+    target = *(int**)(state + 0x2d0);
+    if (target == NULL) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+        return 1;
+    }
+    mode = *(s16*)(state + 0x274);
+    if (mode != 6) {
+    dx = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)target + 0xc);
+    dz = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)target + 0x14);
+    {
+        s16 ang = (s16)getAngle(dx, dz);
+        u16 rel = (u16)((s16)((s32)ang - (s32)*(s16*)obj));
+        if (rel > 0x4000 && rel < 0xc000) {
+            mag = lbl_803E2EB0;
+        } else {
+            mag = sqrtf(dx * dx + dz * dz) - lbl_803E2EB4;
+        }
+    }
+    magAbs = mag < lbl_803E2EB8 ? -mag : mag;
+    if (magAbs < lbl_803E2EBC) {
+        if (mode == 1 || (mode == 5 && (s8)state[0x346] != 0)) {
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 6);
+            goto post;
+        }
+    }
+    if (mode == 1) goto post;
+    if (mag > lbl_803E2EC0) {
+        if (mode != 4 && (mode != 5 || (s8)state[0x346] != 0)) {
+            ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+        }
+    }
+    if (mag < lbl_803E2EC4) {
+        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+    }
+post:
+    if (*(s16*)(state + 0x274) == 1) {
+        if (mag > lbl_803E2EB8) {
+            *(f32*)(state + 0x2a0) = lbl_803E2EC8;
+        } else {
+            *(f32*)(state + 0x2a0) = lbl_803E2ECC;
+        }
+    }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

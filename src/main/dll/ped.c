@@ -294,3 +294,34 @@ int NW_geyser_SeqFn(int *obj, int p2, void *p3) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_8003A168(int obj, void* p);
+extern void fn_8003B228(int obj, void* p);
+extern void fn_8003A230(int obj, void* p, f32 f);
+extern void characterDoEyeAnims(int obj, void* p);
+extern u8 lbl_803268B4[];
+extern f32 lbl_803E5214;
+extern f32 lbl_803E520C;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801CDF94(int obj, int state, int flag)
+{
+    if (flag != 0 && *(void**)(state + 0x28) != NULL && *(f32*)(state + 0x18) < lbl_803E5214) {
+        *(u8*)(state + 0x40c) = 1;
+        *(f32*)(state + 0x410) = *(f32*)(*(int*)(state + 0x28) + 0xc);
+        *(f32*)(state + 0x414) = *(f32*)(*(int*)(state + 0x28) + 0x10);
+        *(f32*)(state + 0x418) = *(f32*)(*(int*)(state + 0x28) + 0x14);
+    } else {
+        *(u8*)(state + 0x40c) = 0;
+    }
+    if ((lbl_803268B4[*(u8*)(state + 0x408)] & 0x2) != 0) {
+        fn_8003A168(obj, (void*)(state + 0x40c));
+        fn_8003B228(obj, (void*)(state + 0x40c));
+    } else {
+        fn_8003A230(obj, (void*)(state + 0x40c), lbl_803E520C);
+        characterDoEyeAnims(obj, (void*)(state + 0x40c));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
