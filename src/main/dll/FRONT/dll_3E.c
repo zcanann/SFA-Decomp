@@ -60,7 +60,7 @@ extern undefined4 DAT_803de300;
 /*
  * --INFO--
  *
- * Function: FUN_8011846c
+ * Function: PlayControl
  * EN v1.0 Address: 0x8011846C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80118714
@@ -70,7 +70,7 @@ extern undefined4 DAT_803de300;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011846c(void)
+void PlayControl(void)
 {
 }
 

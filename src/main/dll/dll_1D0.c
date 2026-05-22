@@ -23,7 +23,7 @@ extern f32 lbl_803E5E74;
 /*
  * --INFO--
  *
- * Function: FUN_801cd258
+ * Function: dll_19E_update
  * EN v1.0 Address: 0x801CD258
  * EN v1.0 Size: 464b
  * EN v1.1 Address: 0x801CD480
@@ -33,7 +33,7 @@ extern f32 lbl_803E5E74;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801cd258(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void dll_19E_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {

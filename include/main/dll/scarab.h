@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-void FUN_8015d7b0(int param_1,int param_2,int param_3);
+void dll_CA_update(int param_1,int param_2,int param_3);
 void FUN_8015d99c(int param_1,char param_2);
 void FUN_8015da00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -58,7 +58,7 @@ FUN_8015ec98(undefined8 param_1,double param_2,double param_3,undefined8 param_4
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16);
 undefined4
-FUN_8015ee98(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+dll_CE_func0B(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16);

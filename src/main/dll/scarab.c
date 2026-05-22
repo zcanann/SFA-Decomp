@@ -189,7 +189,7 @@ extern f32 lbl_803E3B94;
 /*
  * --INFO--
  *
- * Function: FUN_8015d7b0
+ * Function: dll_CA_update
  * EN v1.0 Address: 0x8015D7B0
  * EN v1.0 Size: 492b
  * EN v1.1 Address: 0x8015D86C
@@ -199,7 +199,7 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8015d7b0(int param_1,int param_2,int param_3)
+void dll_CA_update(int param_1,int param_2,int param_3)
 {
   float fVar1;
   float fVar2;
@@ -1287,7 +1287,7 @@ void fn_8015ED1C(int p1, int p2, int p3)
 /*
  * --INFO--
  *
- * Function: FUN_8015ee98
+ * Function: dll_CE_func0B
  * EN v1.0 Address: 0x8015EE98
  * EN v1.0 Size: 464b
  * EN v1.1 Address: 0x8015ED68
@@ -1298,7 +1298,7 @@ void fn_8015ED1C(int p1, int p2, int p3)
  * PAL Size: TODO
  */
 undefined4
-FUN_8015ee98(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+dll_CE_func0B(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
