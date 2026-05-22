@@ -2121,6 +2121,90 @@ void fn_801889C8(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
+extern void fn_8022F270(int obj, int arg);
+extern void fn_8022F27C(int obj);
+extern int fn_802972A8(int obj);
+extern u8 fn_8012DDA4(void);
+extern void cutSceneFn_8011dd30(void);
+extern f32 lbl_803E3BA0;
+
+#pragma scheduling off
+#pragma peephole off
+void landed_arwing_update(int obj) {
+    LandedArwingState *state;
+    int player;
+    int child;
+    int def;
+    int nearest;
+
+    state = *(LandedArwingState **)(obj + 0xb8);
+    player = (int)Obj_GetPlayerObject();
+    if (state->childObject == 0) {
+        if (Obj_IsLoadingLocked() != 0) {
+            child = Obj_SetupObject(Obj_AllocObjectSetup(0x24, 0x606), 4, -1, -1, 0);
+            state->childObject = child;
+            if (state->childObject != 0) {
+                ObjLink_AttachChild(obj, state->childObject, 0);
+                fn_8022F270(state->childObject, 0xaf);
+                *(u16 *)(state->childObject + 6) |= 0x4000;
+            }
+        }
+    }
+
+    if (state->childObject != 0) {
+        fn_8022F27C(state->childObject);
+    }
+
+    if (player != 0 && fn_802972A8(player) != 0) {
+        *(u8 *)(obj + 0xaf) |= 0x10;
+    } else {
+        *(u8 *)(obj + 0xaf) &= 0xef;
+    }
+
+    switch (state->sequenceState) {
+        case 0:
+            if (ObjTrigger_IsSet(obj) != 0) {
+                def = *(int *)(obj + 0x4c);
+                nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
+                if (*(s8 *)(obj + 0xac) == 0xd && GameBit_Get(0xc92) != 0) {
+                    *(f32 *)(nearest + 0x10) += lbl_803E3BA0;
+                    ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(2, nearest, -1);
+                } else {
+                    ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(1, nearest, -1);
+                }
+                GameBit_Set(*(s16 *)(def + 0x1c), 0);
+            }
+            break;
+        case 1:
+            if (ObjTrigger_IsSet(obj) != 0) {
+                state->sequenceState = 2;
+                cutSceneFn_8011dd30();
+            }
+            ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, state);
+            break;
+        case 2:
+            if (fn_8012DDA4() != 0) {
+                def = *(int *)(obj + 0x4c);
+                nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
+                if (*(s8 *)(obj + 0xac) == 0xd && GameBit_Get(0xc92) != 0) {
+                    *(f32 *)(nearest + 0x10) += lbl_803E3BA0;
+                    ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(2, nearest, -1);
+                } else {
+                    ((InfoPtUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(1, nearest, -1);
+                }
+                GameBit_Set(*(s16 *)(def + 0x1c), 0);
+            } else {
+                state->sequenceState = 1;
+            }
+            break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 extern void buttonDisable(int p1, int mask);
 #pragma scheduling off
