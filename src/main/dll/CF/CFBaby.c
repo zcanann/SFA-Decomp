@@ -1726,6 +1726,13 @@ int landed_arwing_getExtraSize(void) { return 0x1c; }
 extern f32 lbl_803E3AF8;
 extern f32 lbl_803E3AFC;
 extern f32 lbl_803E3B00;
+extern f32 lbl_803E3B04;
+extern f32 lbl_803E3B08;
+extern f32 lbl_803E3B0C;
+extern f32 lbl_803E3B10;
+extern f32 lbl_803E3B14;
+extern f32 lbl_803E3B18;
+extern f32 lbl_803E3B1C;
 extern f32 lbl_803E3B20;
 extern f32 lbl_803E3B24;
 extern f32 lbl_803E3B28;
@@ -1736,6 +1743,11 @@ extern void objRenderFn_8003b8f4(f32);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
 extern void objRemoveFromListFn_8002ce88(int obj);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void fn_80098B18(int obj, f32 scale, int type, int a, int b, int c);
+extern int cMenuGetSelectedItem(void);
+extern f32 timeDelta;
+extern void *getTrickyObject(void);
 extern f32 lbl_803E3B70;
 extern f32 lbl_803E3B78;
 #pragma peephole off
@@ -1810,6 +1822,118 @@ void flammablevine_init(int obj, int def)
     state[1] = *(u8 *)(def + 0x19);
     if (state[1] == 1) {
         ObjHits_MarkObjectPositionDirty(obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void flammablevine_update(int obj)
+{
+    u8 *state;
+    u8 *def;
+    void *tricky;
+    u8 canUse;
+    f32 burnTimer;
+    f32 zero;
+    int pulseStyle;
+
+    state = *(u8 **)(obj + 0xb8);
+    def = *(u8 **)(obj + 0x4c);
+    tricky = getTrickyObject();
+
+    *(u8 *)(obj + 0xaf) = *(u8 *)(obj + 0xaf) | 8;
+    if (*(s16 *)(def + 0x20) == -1) {
+        goto can_use_vine;
+    }
+    if (GameBit_Get(*(s16 *)(def + 0x20)) == 0) {
+        goto cant_use_vine;
+    }
+    if (tricky == NULL) {
+        goto cant_use_vine;
+    }
+    if (GameBit_Get(0x245) == 0) {
+        goto cant_use_vine;
+    }
+can_use_vine:
+    canUse = 1;
+    goto checked_vine_use;
+cant_use_vine:
+    canUse = 0;
+checked_vine_use:
+
+    if ((state[0] & 3) == 0) {
+        if (state[1] == 0) {
+            ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
+        }
+        ObjHits_EnableObject(obj);
+
+        if (*(s16 *)(obj + 0x46) == 0x102) {
+            if (cMenuGetSelectedItem() == -1) {
+                *(u8 *)(*(int *)(*(int *)(obj + 0x50) + 0x40) + 0x11) = 0;
+            }
+            else {
+                *(u8 *)(*(int *)(*(int *)(obj + 0x50) + 0x40) + 0x11) = 0x10;
+            }
+        }
+
+        if (tricky != NULL && canUse != 0) {
+            *(u8 *)(obj + 0xaf) = *(u8 *)(obj + 0xaf) & ~8;
+            if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                ((void (*)(void *, int, int, int))(*(int *)(*(int *)(*(int *)((u8 *)tricky + 0x68)) + 0x28)))(
+                    tricky, obj, 1, 4);
+            }
+        }
+    }
+
+    burnTimer = *(f32 *)(state + 4);
+    zero = lbl_803E3B00;
+    if (burnTimer > zero) {
+        *(f32 *)(state + 4) = burnTimer - timeDelta;
+        if (*(f32 *)(state + 4) <= zero) {
+            *(u8 *)(obj + 0x36) = 0;
+            *(f32 *)(state + 4) = zero;
+            state[0] = state[0] & ~1;
+            state[0] = state[0] | 2;
+            objRemoveFromListFn_8002ce88(obj);
+            ObjHits_DisableObject(obj);
+        }
+    }
+
+    if ((state[0] & 1) != 0) {
+        if (*(f32 *)(state + 4) < lbl_803E3B04) {
+            *(f32 *)(state + 0x10) = lbl_803E3AF8;
+        }
+        else {
+            *(f32 *)(state + 0x10) = lbl_803E3AF8 - ((*(f32 *)(state + 4) - lbl_803E3B04) / lbl_803E3B04);
+        }
+
+        if (*(f32 *)(state + 4) < lbl_803E3B08 && *(f32 *)(state + 4) > lbl_803E3B04) {
+            ObjAnim_SetMoveProgress(
+                obj,
+                lbl_803E3AF8 - ((*(f32 *)(state + 4) - lbl_803E3B04) / lbl_803E3B0C));
+        }
+
+        if (*(f32 *)(state + 4) < lbl_803E3B10) {
+            if (*(f32 *)(state + 4) < lbl_803E3B04) {
+                *(u8 *)(obj + 0x36) = 0;
+            }
+            else {
+                *(u8 *)(obj + 0x36) = (u8)(lbl_803E3B14 * ((*(f32 *)(state + 4) - lbl_803E3B04) / lbl_803E3B18));
+            }
+        }
+
+        *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - timeDelta;
+        if (*(f32 *)(state + 0xc) <= lbl_803E3B00) {
+            pulseStyle = 3;
+            *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) + lbl_803E3AF8;
+        }
+        else {
+            pulseStyle = 0;
+        }
+        fn_80098B18(obj, lbl_803E3B1C * (*(f32 *)(state + 0x10) * *(f32 *)(obj + 8)), 3, 0, pulseStyle, 0);
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x9e);
     }
 }
 #pragma peephole reset

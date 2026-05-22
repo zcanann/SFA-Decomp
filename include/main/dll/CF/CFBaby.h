@@ -66,7 +66,7 @@ int flammablevine_func08(void);
 void flammablevine_free(int obj);
 void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void flammablevine_hitDetect(int obj);
-void flammablevine_update(void);
+void flammablevine_update(int obj);
 void flammablevine_init(int obj, int def);
 void flammablevine_release(void);
 void flammablevine_initialise(void);
