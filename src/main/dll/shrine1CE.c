@@ -628,19 +628,19 @@ void dll_19D_hitDetect(int obj)
     register int self = obj;
     register int state = *(int *)(self + 0xb8);
     int state2 = *(int *)(self + 0x4c);
-    float vec[4];
+    float vec[6];
     int linkObj;
-    int linkSubObj;
+    void *linkSubObj;
 
     vec[3] = lbl_803E51B8;
-    vec[2] = lbl_803E51B8;
-    vec[1] = lbl_803E51B8;
-    vec[0] = (float)((double)(int)(signed char)*(u8 *)(state2 + 0x19) - lbl_803E51C0);
+    vec[4] = lbl_803E51B8;
+    vec[5] = lbl_803E51B8;
+    vec[2] = (float)(int)(s8)*(u8 *)(state2 + 0x19);
 
     linkObj = *(int *)(self + 0x54);
-    linkSubObj = *(int *)(linkObj + 0x50);
+    linkSubObj = *(void **)(linkObj + 0x50);
     if (linkSubObj == 0) return;
-    if (*(short *)(linkSubObj + 0x46) == 0x248) return;
+    if (*(short *)((u8 *)linkSubObj + 0x46) == 0x248) return;
 
     (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
     (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
