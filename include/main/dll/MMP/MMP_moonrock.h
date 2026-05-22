@@ -4,6 +4,21 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+#define MMP_LIGHTNING_OBJGROUP 0x48
+
+#define WATERFALLSPRAY_ALT_SFX_DEF_MIN 0x4BE5C
+#define WATERFALLSPRAY_ALT_SFX_DEF_END 0x4BE5E
+#define WATERFALLSPRAY_DEFAULT_SFX_A 0x2AF
+#define WATERFALLSPRAY_DEFAULT_SFX_B 0x2B2
+#define WATERFALLSPRAY_ALT_SFX_A 0x489
+#define WATERFALLSPRAY_ALT_SFX_B 0x48A
+
+#define SFXPLAYER_OBJECT_FLAGS 0x6000
+#define SFXPLAYER_MODE_GAMEBIT 0
+#define SFXPLAYER_MODE_LOOPED 1
+#define SFXPLAYER_MODE_RANDOM_DELAY 2
+#define SFXPLAYER_RUNTIME_ACTIVE_FLAG 0x01
+
 extern ObjectDescriptor gWaterFallSprayObjDescriptor;
 extern ObjectDescriptor gLightningObjDescriptor;
 extern ObjectDescriptor gSfxPlayerObjDescriptor;

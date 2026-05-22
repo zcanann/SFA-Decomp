@@ -70,7 +70,7 @@ void lightning_free(u8* obj, int p2)
 {
     u8* state = *(u8**)(obj + 0xb8);
     void* h;
-    ObjGroup_RemoveObject(obj, 0x48);
+    ObjGroup_RemoveObject(obj, MMP_LIGHTNING_OBJGROUP);
     h = *(void**)state;
     if (h != NULL) {
         mm_free(h);
@@ -115,22 +115,22 @@ void WaterFallSpray_init(u8* obj, u8* data) {
     *(u32*)(obj + 0xf4) = 0;
     *(int(**)(int*))(obj + 0xbc) = WaterFallSpray_SeqFn;
     v = *(int*)((char*)(*(u8**)(obj + 0x4c)) + 0x14);
-    if (v < 0x4BE5E) {
-        if (v >= 0x4BE5C) {
-            *(u32*)(sub + 0) = 0x489;
-            *(u32*)(sub + 4) = 0x48a;
+    if (v < WATERFALLSPRAY_ALT_SFX_DEF_END) {
+        if (v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN) {
+            *(u32*)(sub + 0) = WATERFALLSPRAY_ALT_SFX_A;
+            *(u32*)(sub + 4) = WATERFALLSPRAY_ALT_SFX_B;
             return;
         }
     }
-    *(u32*)(sub + 0) = 0x2af;
-    *(u32*)(sub + 4) = 0x2b2;
+    *(u32*)(sub + 0) = WATERFALLSPRAY_DEFAULT_SFX_A;
+    *(u32*)(sub + 4) = WATERFALLSPRAY_DEFAULT_SFX_B;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* sfxplayerObj_init: prime obj->_b0 with bits 0x6000, then dispatch on
- * (s8)data->_1d: case 0 stores GameBit_Get(data->_18) at sub[0] if the
- * event id is positive; case 2 computes randomGetRange(data->_1e, data->_1f)
+/* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
+ * on (s8)data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
+ * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
 extern f32 lbl_803E40BC;
 #pragma scheduling off
@@ -138,19 +138,19 @@ extern f32 lbl_803E40BC;
 void sfxplayerObj_init(u8* obj, u8* data) {
     u8* sub = *(u8**)(obj + 0xb8);
     int type;
-    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
+    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | SFXPLAYER_OBJECT_FLAGS);
     type = data[0x1d];
     switch (type) {
-    case 0: {
+    case SFXPLAYER_MODE_GAMEBIT: {
         s16 bit = *(s16*)(data + 0x18);
         if (bit > 0) {
             *(int*)sub = GameBit_Get(bit);
         }
         break;
     }
-    case 1:
+    case SFXPLAYER_MODE_LOOPED:
         break;
-    case 2: {
+    case SFXPLAYER_MODE_RANDOM_DELAY: {
         int v = randomGetRange(data[0x1e], data[0x1f]);
         *(f32*)sub = lbl_803E40BC * (f32)v;
         break;
@@ -172,9 +172,9 @@ void sfxplayerObj_free(u8* obj)
     u8* data = *(u8**)(obj + 0x4c);
     u8* sub = *(u8**)(obj + 0xb8);
     u8 flag = sub[4];
-    if ((flag & 1) == 0) return;
-    sub[4] = (u8)(flag & ~1);
-    if (data[0x1d] == 1) {
+    if ((flag & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0) return;
+    sub[4] = (u8)(flag & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG);
+    if (data[0x1d] == SFXPLAYER_MODE_LOOPED) {
         u16 sfx1 = *(u16*)(data + 0x1a);
         if (sfx1 != 0) Sfx_RemoveLoopedObjectSound(obj, sfx1);
         {
@@ -383,7 +383,7 @@ void FUN_80197e14(int param_1)
   uint *puVar1;
   
   puVar1 = *(uint **)(param_1 + 0xb8);
-  ObjGroup_RemoveObject(param_1,0x48);
+  ObjGroup_RemoveObject(param_1,MMP_LIGHTNING_OBJGROUP);
   if (*puVar1 != 0) {
     FUN_80017814(*puVar1);
   }
@@ -463,7 +463,7 @@ void FUN_80197e84(void)
     if ((float)puVar7[6] <= lbl_803E4D20) {
       local_20 = (double)CONCAT44(0x43300000,(uint)*(byte *)(iVar5 + 0x23) * 0x3c ^ 0x80000000);
       puVar7[6] = (uint)((float)puVar7[6] + (float)(local_20 - DOUBLE_803e4d30));
-      piVar3 = ObjGroup_GetObjects(0x48,local_28);
+      piVar3 = ObjGroup_GetObjects(MMP_LIGHTNING_OBJGROUP,local_28);
       iVar6 = 0;
       piVar4 = piVar3;
       iVar5 = local_28[0];
@@ -539,7 +539,7 @@ void FUN_80198230(int param_1,int param_2)
   int iVar3;
   
   iVar3 = *(int *)(param_1 + 0xb8);
-  ObjGroup_AddObject(param_1,0x48);
+  ObjGroup_AddObject(param_1,MMP_LIGHTNING_OBJGROUP);
   *(byte *)(iVar3 + 0x24) = *(byte *)(param_2 + 0x21) & 0xf | *(byte *)(iVar3 + 0x24) & 0xf0;
   fVar1 = lbl_803E4D38;
   *(float *)(iVar3 + 0x10) = lbl_803E4D38;
@@ -1034,10 +1034,10 @@ void FUN_80198d58(int param_1,int param_2)
   float *pfVar4;
   
   pfVar4 = *(float **)(param_1 + 0xb8);
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
+  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | SFXPLAYER_OBJECT_FLAGS;
   bVar1 = *(byte *)(param_2 + 0x1d);
-  if (bVar1 != 1) {
-    if (bVar1 == 0) {
+  if (bVar1 != SFXPLAYER_MODE_LOOPED) {
+    if (bVar1 == SFXPLAYER_MODE_GAMEBIT) {
       if (0 < *(short *)(param_2 + 0x18)) {
         fVar2 = (float)GameBit_Get((int)*(short *)(param_2 + 0x18));
         *pfVar4 = fVar2;
