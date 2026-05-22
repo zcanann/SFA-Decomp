@@ -1010,9 +1010,9 @@ void shopitem_free(int obj) {
 
 extern void *lbl_803AD068[8];
 extern void *lbl_803DDC58;
-extern void fn_801E7124(int);
-extern void objAnimFn_801e6d08(int);
-extern void fn_801E6B10(int);
+extern void DRlaserturret_startLinkedTarget(int);
+extern void DRlaserturret_updateTracking(int);
+extern void DRlaserturret_updateIdle(int);
 extern void fn_801E69C8(int);
 extern void fn_801E6990(int);
 extern void fn_801E67BC(int);
@@ -1043,9 +1043,9 @@ void fn_801E832C(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void shopkeeper_initialise(void) {
-    lbl_803AD068[0] = (void *)fn_801E7124;
-    lbl_803AD068[1] = (void *)objAnimFn_801e6d08;
-    lbl_803AD068[2] = (void *)fn_801E6B10;
+    lbl_803AD068[0] = (void *)DRlaserturret_startLinkedTarget;
+    lbl_803AD068[1] = (void *)DRlaserturret_updateTracking;
+    lbl_803AD068[2] = (void *)DRlaserturret_updateIdle;
     lbl_803AD068[3] = (void *)fn_801E69C8;
     lbl_803AD068[4] = (void *)fn_801E6990;
     lbl_803AD068[5] = (void *)fn_801E67BC;

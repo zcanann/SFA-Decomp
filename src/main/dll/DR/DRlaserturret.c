@@ -53,11 +53,11 @@ extern f32 lbl_803E5A20;
 /*
  * --INFO--
  *
- * Function: fn_801E6B10
+ * Function: DRlaserturret_updateIdle
  * EN v1.0 Address: 0x801E6B10
  * EN v1.0 Size: 504b
  */
-int fn_801E6B10(void *obj, void *param2)
+int DRlaserturret_updateIdle(void *obj, void *param2)
 {
     void *playerObj;
     DRLaserTurretState *state;
@@ -113,11 +113,11 @@ int fn_801E6B10(void *obj, void *param2)
 /*
  * --INFO--
  *
- * Function: objAnimFn_801e6d08
+ * Function: DRlaserturret_updateTracking
  * EN v1.0 Address: 0x801E6D08
  * EN v1.0 Size: 1052b
  */
-int objAnimFn_801e6d08(void *obj, void *param2)
+int DRlaserturret_updateTracking(void *obj, void *param2)
 {
     void *playerObj;
     DRLaserTurretState *state;
@@ -241,11 +241,11 @@ int objAnimFn_801e6d08(void *obj, void *param2)
 /*
  * --INFO--
  *
- * Function: fn_801E7124
+ * Function: DRlaserturret_startLinkedTarget
  * EN v1.0 Address: 0x801E7124
  * EN v1.0 Size: 128b
  */
-int fn_801E7124(void *obj)
+int DRlaserturret_startLinkedTarget(void *obj)
 {
     DRLaserTurretState *state;
     int v;
@@ -267,11 +267,11 @@ int fn_801E7124(void *obj)
 /*
  * --INFO--
  *
- * Function: fn_801E71A4
+ * Function: DRlaserturret_handlePromptChoice
  * EN v1.0 Address: 0x801E71A4
  * EN v1.0 Size: 1096b
  */
-int fn_801E71A4(void *obj, void *param2, int dispatch)
+int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch)
 {
     DRLaserTurretState *state;
     char stickHi;
@@ -368,11 +368,11 @@ int fn_801E71A4(void *obj, void *param2, int dispatch)
 /*
  * --INFO--
  *
- * Function: objCbSet30sTimer_801e75ec
+ * Function: DRlaserturret_startTimedChallenge
  * EN v1.0 Address: 0x801E75EC
  * EN v1.0 Size: 180b
  */
-void objCbSet30sTimer_801e75ec(void *obj)
+void DRlaserturret_startTimedChallenge(void *obj)
 {
     DRLaserTurretState *state;
 
