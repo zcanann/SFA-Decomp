@@ -623,25 +623,11 @@ void *Camera_getCamActionsBinEntry(int actionNo)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm void camcontrol_release(void)
+void camcontrol_release(void)
 {
-  nofralloc
-  stwu r1,-0x10(r1)
-  mflr r0
-  stw r0,0x14(r1)
-  lwz r5,gCamcontrolCurrentHandler
-  cmplwi r5,0
-  beq done
-  lwz r5,4(r5)
-  lwz r5,0(r5)
-  lwz r12,0x10(r5)
-  mtctr r12
-  bctrl
-done:
-  lwz r0,0x14(r1)
-  mtlr r0
-  addi r1,r1,0x10
-  blr
+  if (gCamcontrolCurrentHandler != NULL) {
+    gCamcontrolCurrentHandler->handler->vtable->release((void *)pCamera);
+  }
 }
 
 /*
