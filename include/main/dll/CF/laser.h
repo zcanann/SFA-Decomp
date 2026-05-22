@@ -40,9 +40,9 @@ typedef undefined8 (*LaserMapEventTriggerFn)();
 typedef struct LaserEventInterface {
   u8 pad00[0x40];
   int (*getMode)(int mapId);
-  void (*setMode)(int mapId,int mode);
+  void (*triggerEvent)(int eventId,int value);
   u8 pad48[0x50 - 0x48];
-  LaserMapEventTriggerFn triggerEvent;
+  void (*setAnimEvent)(int animId,int eventId,int value);
 } LaserEventInterface;
 
 typedef struct LaserReleaseInterface {

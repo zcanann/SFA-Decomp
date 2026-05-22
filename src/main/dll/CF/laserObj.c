@@ -70,9 +70,9 @@ void laserObj_update(LaserObject *obj)
           GameBit_Set((int)state->secondarySequenceId,0);
           state->sequenceLatched = 1;
           obj->statusFlags = (u8)(obj->statusFlags | LASER_OBJECT_STATUS_DISABLED);
-          (*gMapEventInterface)->setMode(LASEROBJ_SEQUENCE_B_TRIGGER_A,
+          (*gMapEventInterface)->triggerEvent(LASEROBJ_SEQUENCE_B_TRIGGER_A,
                                    LASEROBJ_SEQUENCE_B_TRIGGER_A_VALUE);
-          (*gMapEventInterface)->setMode(LASEROBJ_SEQUENCE_B_TRIGGER_B,
+          (*gMapEventInterface)->triggerEvent(LASEROBJ_SEQUENCE_B_TRIGGER_B,
                                    LASEROBJ_SEQUENCE_B_TRIGGER_B_VALUE);
         }
         break;
