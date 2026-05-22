@@ -20,38 +20,6 @@ extern void audioFn_80280a08(void);
 extern void fn_8027FB08(void);
 extern void fn_8027FEE4(void);
 
-typedef struct SndSpatialEntry {
-    struct SndSpatialEntry *next;
-    u8 pad04[0x18];
-    s8 assignedVoice;
-} SndSpatialEntry;
-
-typedef struct Snd3DEmitter {
-    struct Snd3DEmitter *next;
-    struct Snd3DEmitter *prev;
-    SndSpatialEntry *entry;
-    u8 pad0c[4];
-    u32 flags;
-    u8 pad14[0x3c - 0x14];
-    u32 handle;
-    u8 pad40[4];
-    u16 fxId;
-    u8 studio;
-    u8 pad47[0x4c - 0x47];
-    f32 age;
-} Snd3DEmitter;
-
-#define S3D_EMITTER_FLAG_POSITIONAL 0x00000001
-#define S3D_EMITTER_FLAG_RESTART_ON_STOP 0x00000002
-#define S3D_EMITTER_FLAG_STOP_AT_ORIGIN 0x00000004
-#define S3D_EMITTER_FLAG_USE_AUX_STUDIO 0x00000010
-#define S3D_EMITTER_FLAG_REMOVE_AT_ORIGIN 0x00000040
-#define S3D_EMITTER_FLAG_PLAYING 0x00020000
-#define S3D_EMITTER_FLAG_REMOVE 0x00040000
-#define S3D_EMITTER_FLAG_WAITING_FOR_ROOM 0x00080000
-#define S3D_EMITTER_FLAG_AGE_OUT 0x00100000
-#define S3D_INVALID_FX_HANDLE 0xffffffff
-
 #define S3D_UNLINK_EMITTER(emitter)                         \
     do {                                                    \
         if ((emitter)->next != (Snd3DEmitter *)0x0) {       \
@@ -102,7 +70,7 @@ void s3dHandle(void)
     }
 
     lbl_803DE36B = 0;
-    s3dCallCnt = 3;
+    s3dCallCnt = S3D_UPDATE_SKIP_TICKS;
     lbl_803DE36C = 0;
     lbl_803DE36D = 0;
 
@@ -160,7 +128,8 @@ void s3dHandle(void)
                     } else {
                         studio = entry->assignedVoice;
                     }
-                    emitter->handle = synthFXStart(emitter->fxId, 0x7f, 0x40, studio,
+                    emitter->handle = synthFXStart(emitter->fxId, S3D_DEFAULT_FX_VOLUME,
+                                                   S3D_DEFAULT_FX_PAN, studio,
                                                    (emitter->flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0);
                     if (emitter->handle != S3D_INVALID_FX_HANDLE) {
                         goto update_voice;
@@ -223,14 +192,14 @@ update_voice:
 #pragma dont_inline on
 void s3dInit(u32 flags)
 {
-    u8 stereo = (flags & 0x2) != 0;
+    u8 stereo = (flags & S3D_INIT_STEREO_FLAG) != 0;
     s3dEmitterRoot = 0;
     s3dListenerRoot = 0;
     s3dRoomRoot = 0;
     s3dDoorRoot = 0;
     snd_used_studios = 0;
-    snd_base_studio = 1;
-    snd_max_studios = 3;
+    snd_base_studio = S3D_BASE_STUDIO;
+    snd_max_studios = S3D_MAX_STUDIOS;
     s3dCallCnt = 0;
     lbl_803DE36A = stereo;
 }
@@ -262,20 +231,20 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void *
     int result;
 
     gSynthInitialized = 0;
-    if (voiceCount <= 0x40) {
+    if (voiceCount <= SND_MAX_VOICES) {
         lbl_803BD150[0x210] = voiceCount;
     } else {
-        lbl_803BD150[0x210] = 0x40;
+        lbl_803BD150[0x210] = SND_MAX_VOICES;
     }
-    if (stereo <= 0x8) {
+    if (stereo <= SND_MAX_STUDIOS) {
         lbl_803BD150[0x213] = stereo;
     } else {
-        lbl_803BD150[0x213] = 0x8;
+        lbl_803BD150[0x213] = SND_MAX_STUDIOS;
     }
     lbl_803BD150[0x211] = streamCount;
     lbl_803BD150[0x212] = unk5;
     (void)sampleRatePad;
-    sampleRate = 0x7d00;
+    sampleRate = SND_DEFAULT_SAMPLE_RATE;
     result = hwInit(&sampleRate, lbl_803BD150[0x210], lbl_803BD150[0x213], flags);
     if (result == 0) {
         u8 voiceCountSnapshot = lbl_803BD150[0x210];
@@ -283,7 +252,7 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void *
         dataInit(0, data);
         fn_8026F30C();
         synthIdleWaitActive = 0;
-        synthInit(0x7d00, voiceCountSnapshot);
+        synthInit(SND_DEFAULT_SAMPLE_RATE, voiceCountSnapshot);
         synthInitJobTable();
         synthInitVirtualSampleTable();
         s3dInit(flags);
