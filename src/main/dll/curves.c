@@ -4710,10 +4710,7 @@ int curves_findByAction(int act) {
     register RomCurveDef **base;
     int i;
 
-    asm {
-        lis base, romCurves@ha
-        addi base, base, romCurves@l
-    }
+    base = romCurves;
     for (i = nRomCurves; i > 0; i--) {
         RomCurveDef *c = *base;
         if (c->type == ROMCURVE_TYPE_ACTION) {

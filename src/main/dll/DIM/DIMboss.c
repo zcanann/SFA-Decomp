@@ -675,18 +675,7 @@ void DIMboss_update(DIMbossObject *obj)
           skyFn_80089710(7,1,0);
           skyFn_800894a8((double)lbl_803E4C4C,(double)lbl_803E4C50,(double)lbl_803E4C54,7);
           skyFn_800895e0(7,0xa0,0xa0,0xff,0x7f,0x28);
-          {
-            register u32 flags;
-            register u32 zero;
-            register DIMbossTopState *topReg;
-            topReg = topState;
-            zero = 0;
-            asm {
-              lbz flags, 0xb6(topReg)
-              rlwimi flags, zero, 7, 24, 24
-              stb flags, 0xb6(topReg)
-            }
-          }
+          topState->steamSfxPending &= ~0x80;
         }
       }
       else {

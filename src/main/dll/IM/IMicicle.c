@@ -1508,13 +1508,7 @@ int fn_801A3E9C(u8* obj, int unused, u8* data) {
              GameBit_Get(*(s16*)(params + 0x22)) != 0)) {
             GameBit_Set(*(s16*)(params + 0x1a), 1);
             if (playerNear != 0 || trickyNear != 0) {
-                register u32 v = 2;
-                register u32 b;
-                asm {
-                    lbz b, 0(state)
-                    rlwimi b, v, 5, 24, 26
-                    stb b, 0(state)
-                }
+                state[0] = (u8)((state[0] & ~0xe0) | (2 << 5));
             }
         }
     } else if (mode == 1) {
@@ -1522,13 +1516,7 @@ int fn_801A3E9C(u8* obj, int unused, u8* data) {
              (*(s16*)(params + 0x22) != -1 &&
               GameBit_Get(*(s16*)(params + 0x22)) != 0)) &&
             playerNear == 0 && trickyNear == 0) {
-            register u32 v = 3;
-            register u32 b;
-            asm {
-                lbz b, 0(state)
-                rlwimi b, v, 5, 24, 26
-                stb b, 0(state)
-            }
+            state[0] = (u8)((state[0] & ~0xe0) | (3 << 5));
         }
     }
 
@@ -1536,19 +1524,11 @@ int fn_801A3E9C(u8* obj, int unused, u8* data) {
         register int cur = state[0];
         if (((cur >> 5) & 7) == 2) {
             if (data[0x80] == 2) {
-                register int v = 1;
-                asm {
-                    rlwimi cur, v, 5, 24, 26
-                    stb cur, 0(state)
-                }
+                state[0] = (u8)((cur & ~0xe0) | (1 << 5));
             }
         } else if (((cur >> 5) & 7) == 3) {
             if (data[0x80] == 1) {
-                register int v = 0;
-                asm {
-                    rlwimi cur, v, 5, 24, 26
-                    stb cur, 0(state)
-                }
+                state[0] = (u8)(cur & ~0xe0);
             }
         }
     }
