@@ -48,18 +48,20 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   switch((s8)runtime->behaviorState) {
   case SHTHORNTAIL_STATE_IDLE:
     alertTriggered =
-        RandomTimer_UpdateRangeTrigger(&runtime->proximityAlertState,lbl_803E5430,lbl_803E5434);
+        RandomTimer_UpdateRangeTrigger(&runtime->proximityAlertState,
+                                       SHTHORNTAIL_PROXIMITY_ALERT_MIN_TIME,
+                                       SHTHORNTAIL_PROXIMITY_ALERT_MAX_TIME);
     if (alertTriggered != 0) {
       Sfx_PlayFromObject(obj,SHTHORNTAIL_ALERT_VOLUME_ID);
     }
     runtime->idleTimer = runtime->idleTimer - timeDelta;
-    if (runtime->idleTimer <= lbl_803E5438) {
+    if (runtime->idleTimer <= SHTHORNTAIL_IDLE_COUNTDOWN_TIME) {
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE_COUNTDOWN;
     }
     break;
   case SHTHORNTAIL_STATE_IDLE_COUNTDOWN:
     runtime->idleTimer = runtime->idleTimer - timeDelta;
-    if (runtime->idleTimer <= lbl_803E5418) {
+    if (runtime->idleTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD) {
       tailSwingQueued = (*gSHthorntailAnimationInterface)->isTailSwingQueued(0);
       if (tailSwingQueued != 0) {
         runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
@@ -98,7 +100,7 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   case SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT:
     runtime->comboTimer = runtime->comboTimer -
                           (float)framesThisStep;
-    if (runtime->comboTimer <= lbl_803E5418) {
+    if (runtime->comboTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD) {
       if ((s8)runtime->comboRepeatCount <= 0) {
         runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER;
       }

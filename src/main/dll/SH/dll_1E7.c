@@ -113,7 +113,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
          ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
          ((*objects)->config->configToken == gSHthorntailDataTables[groupIndex][3]))) {
       fn_8014C66C(*objects,obj);
-      if ((vec3f_distanceSquared(&(*objects)->pos,&obj->pos) < lbl_803E5414) &&
+      if ((vec3f_distanceSquared(&(*objects)->pos,&obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
           (GameBit_Get(SHthorntail_GetLinkedGameBit((*objects)->config)) == 0)) {
         linkedEventPending = 1;
       }
@@ -153,15 +153,15 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
   switch(tailSwingState) {
   case SHTHORNTAIL_TAIL_SWING_READY:
     runtime->tailSwingTimer = runtime->tailSwingTimer - timeDelta;
-    if (runtime->tailSwingTimer <= lbl_803E5418) {
+    if (runtime->tailSwingTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD) {
       Sfx_PlayFromObject(objectId,SHTHORNTAIL_TAIL_SWING_WINDUP_VOLUME_ID);
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_WINDUP;
-      runtime->tailSwingTimer = lbl_803E541C;
+      runtime->tailSwingTimer = SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
     }
     break;
   case SHTHORNTAIL_TAIL_SWING_WINDUP:
     runtime->tailSwingTimer = runtime->tailSwingTimer - timeDelta;
-    if (runtime->tailSwingTimer <= lbl_803E5418) {
+    if (runtime->tailSwingTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD) {
       Sfx_PlayFromObject(objectId,SHTHORNTAIL_TAIL_SWING_ACTIVE_VOLUME_ID);
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
     }
@@ -170,7 +170,7 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
     moveComplete = runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE;
     if (moveComplete != 0) {
       runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_READY;
-      runtime->tailSwingTimer = lbl_803E5420;
+      runtime->tailSwingTimer = SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
     }
     break;
   default:
@@ -209,7 +209,7 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   if (config->leashRadiusByte != '\0') {
     value = Obj_GetPlayerObject();
     distanceSq = getXZDistance(&object->pos,(Vec *)(value + 0x18));
-    if (distanceSq < lbl_803E5424) {
+    if (distanceSq < SHTHORNTAIL_CLOSE_ATTACK_DISTANCE) {
       behaviorState = runtime->behaviorState;
       if ((SHTHORNTAIL_STATE_MOVE_2 <= behaviorState) &&
           (behaviorState <= SHTHORNTAIL_STATE_MOVE_5)) {

@@ -61,7 +61,8 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
   runtime->impactSfxTable = &gSHthorntailLevelControlMode1ImpactSfxTable;
   playerObj = Obj_GetPlayerObject();
   {
-    int cmp = (double)getXZDistance(objectId + 0x18,playerObj + 0x18) < (double)lbl_803E5424;
+    int cmp = (double)getXZDistance(objectId + 0x18,playerObj + 0x18) <
+              (double)SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
     closeToPlayer = cmp;
   }
   if (config->impactSfxVariant == 0) {
@@ -98,7 +99,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
   switch((s8)runtime->behaviorState) {
   case SHTHORNTAIL_STATE_IDLE:
     if (!closeToPlayer) {
-      runtime->idleTimer = lbl_803E5438;
+      runtime->idleTimer = SHTHORNTAIL_IDLE_COUNTDOWN_TIME;
       runtime->behaviorState = SHTHORNTAIL_STATE_IDLE_COUNTDOWN;
     }
     break;
@@ -108,7 +109,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
     }
     else {
       runtime->idleTimer = runtime->idleTimer - timeDelta;
-      if (runtime->idleTimer <= lbl_803E5418) {
+      if (runtime->idleTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD) {
         runtime->behaviorState = SHTHORNTAIL_STATE_TAIL_SWING_READY;
       }
     }
