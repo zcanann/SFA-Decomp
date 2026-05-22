@@ -23,11 +23,11 @@ extern u16 voicePrioSortRootListRoot;    /* sorted-list head (u16) */
  */
 void voiceSetPriority(int state, u8 newGroup)
 {
-    u8 *nodes = vidListNodes;
     u32 voiceHandle = *(u32 *)(state + 0xf4);
-    u32 voiceId = voiceHandle & 0xff;
+    u8 *nodes = vidListNodes;
+    register u32 voiceId = voiceHandle & 0xff;
     u8 *slot = nodes + 0x8c0 + ((voiceHandle << 2) & 0x3fc);
-    u8 oldFirst;
+    u32 oldFirst;
     u16 prev;
     u16 cur;
 
@@ -45,7 +45,8 @@ void voiceSetPriority(int state, u8 newGroup)
     /* prepend to new group's linked list */
     {
         int group = newGroup;
-        u8 *groupHead = nodes + group + 0x9c0;
+        u8 *groupHead = nodes + group;
+        groupHead += 0x9c0;
         oldFirst = *groupHead;
         *(u8 *)(slot + 1) = oldFirst;
         if (oldFirst != 0xff) {
@@ -89,6 +90,6 @@ void voiceSetPriority(int state, u8 newGroup)
     {
         u32 prio = *(u32 *)(state + 0x110) >> 15;
         prio |= ((u32)newGroup & 0xff) << 24;
-        hwSetPriority((u8)voiceId, prio);
+        hwSetPriority((u8)*(u32 *)(state + 0xf4), prio);
     }
 }
