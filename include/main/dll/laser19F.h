@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void MMSH_Shrine_SeqFn(undefined4 param_1,undefined4 param_2,int param_3);
+int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, int seqArg);
 void FUN_801c4b14(ushort *param_1);
 undefined4 FUN_801c4de0(int param_1);
 int mmsh_shrine_getExtraSize(void);

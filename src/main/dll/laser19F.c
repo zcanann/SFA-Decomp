@@ -8,10 +8,13 @@
 extern undefined8 FUN_80006b14();
 extern char FUN_80006bd0();
 extern undefined4 FUN_800175cc();
+extern void lightFn_8001db6c(int p1, int p2, f32 f);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
 extern int FUN_80017a98();
+extern void fn_8011F6D4(int p);
+extern int fn_801C49B8(int obj);
 extern int Obj_GetPlayerObject(void);
 extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjMsg_AllocQueue();
@@ -22,9 +25,11 @@ extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294ccc();
+extern void fn_80296518(int obj, int arg, int enable);
 
 extern undefined4* DAT_803dd72c;
 extern void* DAT_803de838;
+extern int *gMapEventInterface;
 extern int *gObjectTriggerInterface;
 extern f64 DOUBLE_803e5bd0;
 extern f64 lbl_803E4F38;
@@ -32,6 +37,10 @@ extern f32 lbl_803DC074;
 extern f32 timeDelta;
 extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F50;
+extern f32 lbl_803E4F54;
+extern f32 lbl_803E4F58;
+extern f32 lbl_803E4F5C;
+extern f32 lbl_803E4F60;
 extern f32 lbl_803E5B58;
 extern f32 lbl_803E5BA0;
 extern f32 lbl_803E5BA4;
@@ -56,9 +65,20 @@ extern f32 lbl_803E5BF8;
 #define MMSH_SHRINE_LOAD_MAP_DIR 0x20
 #define MMSH_SHRINE_LOAD_TRIGGER_TIMER 0xf4
 #define MMSH_SHRINE_LATCH_FLAG_OPEN_READY 0x1
+#define MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE 0x2
 #define MMSH_SHRINE_LATCH_FLAG_CHECK_COMPLETE 0x4
 #define MMSH_SHRINE_LATCH_FLAG_AMBIENT_LOCK 0x8
 #define MMSH_SHRINE_LATCH_FLAG_MUSIC_LOCK 0x10
+#define MMSH_SHRINE_LATCH_FLAG_SWAY_RESET 0x20
+#define MMSH_SHRINE_SEQ_RESULT_COMPLETE 4
+#define MMSH_SHRINE_SEQ_MAP_DIR 0xb
+#define MMSH_SHRINE_SEQ_MAP_EVENT 3
+#define MMSH_SHRINE_SEQ_GB_KRYSTAL 0x12a
+#define MMSH_SHRINE_SEQ_GB_UNKNOWN_FF 0xff
+#define MMSH_SHRINE_SEQ_GB_RESET0 0xe82
+#define MMSH_SHRINE_SEQ_GB_RESET1 0xe83
+#define MMSH_SHRINE_SEQ_GB_RESET2 0xe84
+#define MMSH_SHRINE_SEQ_GB_RESET3 0xe85
 #define MMSH_SHRINE_GB_OPEN 0xae6
 #define MMSH_SHRINE_GB_COMPLETE 0xae4
 #define MMSH_SHRINE_GB_RESET_A 0x12b
@@ -70,9 +90,9 @@ extern f32 lbl_803E5BF8;
 typedef struct MMSHShrineRuntime {
   void *light;
   f32 swayBase;
+  f32 swayAccel;
   f32 swayVelocity;
   f32 swayTarget;
-  f32 swayStep;
   f32 idleSfxTimer;
   SCGameBitLatchState latch;
   u8 pad1C[0x24 - 0x1C];
@@ -101,18 +121,30 @@ typedef struct MMSHShrineObject {
   s32 loadTriggerTimer;
 } MMSHShrineObject;
 
+typedef struct MMSHShrineSequenceState {
+  u8 pad00[0x56];
+  u8 activeCommand;
+  u8 pad57[0x70 - 0x57];
+  s16 targetObject;
+  u8 pad72[0x81 - 0x72];
+  u8 commands[10];
+  u8 commandCount;
+} MMSHShrineSequenceState;
+
 typedef void (*ObjectTriggerRefreshFn)(int mode, int obj, int arg);
 typedef void (*ObjectTriggerReleaseFn)(s16 triggerHandle);
 typedef void (*ObjectTriggerSpawnFn)(int type, int a, int b, int c);
+typedef void (*MapEventTriggerFn)(int mapDir, int eventId);
 
 #define OBJECT_TRIGGER_FN(offset, type) ((type)(*(u32 *)((u8 *)*gObjectTriggerInterface + (offset))))
+#define MAP_EVENT_FN(offset, type) ((type)(*(u32 *)((u8 *)*gMapEventInterface + (offset))))
 
 /*
  * --INFO--
  *
  * Function: MMSH_Shrine_SeqFn
  * EN v1.0 Address: 0x801C4B10
- * EN v1.0 Size: 4b
+ * EN v1.0 Size: 616b
  * EN v1.1 Address: 0x801C4B54
  * EN v1.1 Size: 196b
  * JP Address: TODO
@@ -120,81 +152,89 @@ typedef void (*ObjectTriggerSpawnFn)(int type, int a, int b, int c);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void MMSH_Shrine_SeqFn(undefined4 param_1,undefined4 param_2,int param_3)
+int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, int seqArg)
 {
-  int iVar1;
-  int iVar2;
-  uint uVar3;
-  int iVar4;
-  int *piVar5;
+  MMSHShrineObject *obj;
+  MMSHShrineRuntime *runtime;
+  MMSHShrineSequenceState *seq;
+  int playerObj;
+  int i;
+  u8 command;
 
-  iVar1 = FUN_8028683c();
-  piVar5 = *(int **)(iVar1 + 0xb8);
-  iVar2 = FUN_80017a98();
-  *(undefined2 *)(param_3 + 0x70) = 0xffff;
-  *(undefined *)(param_3 + 0x56) = 0;
-  for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar4 = iVar4 + 1) {
-    switch(*(undefined *)(param_3 + iVar4 + 0x81)) {
-    case 1:
-      piVar5[6] = piVar5[6] | 2;
-      break;
-    case 2:
-      piVar5[6] = piVar5[6] & 0xfffffffd;
-      if ((piVar5[6] & 0x20U) != 0) {
-        FUN_8011eb10(0);
-        piVar5[6] = piVar5[6] & 0xffffffdf;
-      }
-      break;
-    case 3:
-      piVar5[4] = (int)lbl_803E5BEC;
-      break;
-    case 4:
-      piVar5[4] = (int)lbl_803E5BF0;
-      break;
-    case 5:
-      piVar5[4] = (int)-(float)piVar5[4];
-      piVar5[3] = (int)-(float)piVar5[4];
-      break;
-    case 6:
-      piVar5[4] = (int)((float)piVar5[4] * lbl_803E5BF4);
-      break;
-    case 7:
-      FUN_80294ccc(iVar2,4,1);
-      GameBit_Set(0x12a,1);
-      GameBit_Set(0xff,1);
-      (**(code **)(*DAT_803dd72c + 0x44))(0xb,3);
-      break;
-    case 8:
-      piVar5[4] = (int)((float)piVar5[4] * lbl_803E5BF8);
-      break;
-    case 0xe:
-      *(ushort *)(iVar1 + 6) = *(ushort *)(iVar1 + 6) | 0x4000;
-      if (*piVar5 != 0) {
-        FUN_800175cc((double)lbl_803E5BE8,*piVar5,'\0');
-      }
-      break;
-    case 0xf:
-      *(ushort *)(iVar1 + 6) = *(ushort *)(iVar1 + 6) & 0xbfff;
-      if (*piVar5 != 0) {
-        FUN_800175cc((double)lbl_803E5BE8,*piVar5,'\0');
+  obj = (MMSHShrineObject *)objArg;
+  seq = (MMSHShrineSequenceState *)seqArg;
+  runtime = obj->runtime;
+  playerObj = Obj_GetPlayerObject();
+  seq->targetObject = -1;
+  seq->activeCommand = 0;
+
+  for (i = 0; i < (int)(u32)seq->commandCount; i++) {
+    command = seq->commands[i];
+    if (command != 0) {
+      switch (command) {
+      case 7:
+        fn_80296518(playerObj,4,1);
+        GameBit_Set(MMSH_SHRINE_SEQ_GB_KRYSTAL,1);
+        GameBit_Set(MMSH_SHRINE_SEQ_GB_UNKNOWN_FF,1);
+        MAP_EVENT_FN(0x44,MapEventTriggerFn)(MMSH_SHRINE_SEQ_MAP_DIR,MMSH_SHRINE_SEQ_MAP_EVENT);
+        break;
+      case 0xe:
+        obj->flags06 |= MMSH_SHRINE_FLAG_LIT;
+        if (runtime->light != NULL) {
+          lightFn_8001db6c((int)runtime->light,0,lbl_803E4F50);
+        }
+        break;
+      case 0xf:
+        obj->flags06 &= ~MMSH_SHRINE_FLAG_LIT;
+        if (runtime->light != NULL) {
+          lightFn_8001db6c((int)runtime->light,0,lbl_803E4F50);
+        }
+        break;
+      case 1:
+        runtime->latch.activeMask |= MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE;
+        break;
+      case 2:
+        runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE;
+        if ((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_RESET) != 0) {
+          fn_8011F6D4(0);
+          runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_SWAY_RESET;
+        }
+        break;
+      case 3:
+        runtime->swayTarget = lbl_803E4F54;
+        break;
+      case 4:
+        runtime->swayTarget = lbl_803E4F58;
+        break;
+      case 5:
+        runtime->swayTarget = -runtime->swayTarget;
+        runtime->swayVelocity = -runtime->swayTarget;
+        break;
+      case 6:
+        runtime->swayTarget *= lbl_803E4F5C;
+        break;
+      case 8:
+        runtime->swayTarget *= lbl_803E4F60;
+        break;
       }
     }
-    *(undefined *)(param_3 + iVar4 + 0x81) = 0;
+    seq->commands[i] = 0;
   }
-  if (((piVar5[6] & 2U) == 0) || (uVar3 = FUN_801c4de0(iVar1), (uVar3 & 0xff) == 0)) {
-    piVar5[6] = piVar5[6] | 1;
+
+  if (((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE) != 0) &&
+      ((u8)fn_801C49B8((int)obj) != 0)) {
+    fn_8011F6D4(0);
+    runtime->latch.activeMask &= ~(MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE |
+                                   MMSH_SHRINE_LATCH_FLAG_SWAY_RESET);
+    runtime->phase = 3;
+    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET0,0);
+    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET1,0);
+    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET2,0);
+    GameBit_Set(MMSH_SHRINE_SEQ_GB_RESET3,0);
+    return MMSH_SHRINE_SEQ_RESULT_COMPLETE;
   }
-  else {
-    FUN_8011eb10(0);
-    piVar5[6] = piVar5[6] & 0xffffffdd;
-    *(undefined *)(piVar5 + 9) = 3;
-    GameBit_Set(0xe82,0);
-    GameBit_Set(0xe83,0);
-    GameBit_Set(0xe84,0);
-    GameBit_Set(0xe85,0);
-  }
-  FUN_80286888();
-  return;
+  runtime->latch.activeMask |= MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
+  return 0;
 }
 
 /*
