@@ -234,6 +234,24 @@ typedef union ExpgfxSlotStateBits {
   } bits;
 } ExpgfxSlotStateBits;
 
+/*
+ * The first 0x40 bytes of each slot double as the cached quad stream rendered
+ * by drawGlow. Several lifetime fields below intentionally alias otherwise
+ * unused or alpha bytes in this stream.
+ */
+typedef struct ExpgfxQuadVertex {
+  s16 x;
+  s16 y;
+  s16 z;
+  s16 pad06;
+  s16 texS;
+  s16 texT;
+  u8 colorR;
+  u8 colorG;
+  u8 colorB;
+  u8 alpha;
+} ExpgfxQuadVertex;
+
 typedef struct ExpgfxSlot {
   u8 pad00[0x06];
   s16 lifetimeFrame;

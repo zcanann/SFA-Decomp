@@ -2122,6 +2122,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   u8 modeFlag;
   uint *slotPoolBases;
   u32 *trackedFrameMasks;
+  ExpgfxQuadVertex *quadVertices;
 
   expgfxBase = gExpgfxRuntimeData;
   poolIndex = 0;
@@ -2163,6 +2164,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
     trackedFrameMasks[trackedMaskPair] = maskHighWord & (uint)((int)inverseBit >> 0x1f);
   }
   slot = (ExpgfxSlot *)(slotPoolBases[(int)poolIndex] + slotIndex * EXPGFX_SLOT_SIZE);
+  quadVertices = (ExpgfxQuadVertex *)slot;
   gExpgfxSequenceCounter = gExpgfxSequenceCounter + 1;
   if ((short)EXPGFX_SEQUENCE_COUNTER_MAX < (short)gExpgfxSequenceCounter) {
     gExpgfxSequenceCounter = 0;
@@ -2247,7 +2249,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   slot->velocityY = config->velocityY;
   slot->velocityZ = config->velocityZ;
   slot->initialStateByte = config->initialStateByte;
-  *(s16 *)((char *)slot + 0x36) = (s16)*(int *)((char *)config + 0x4);
+  quadVertices[3].pad06 = (s16)*(int *)((char *)config + 0x4);
   slot->lifetimeFrame = (s16)*(int *)((char *)config + 0x8);
   slot->lifetimeFrameLimit = (s16)*(int *)((char *)config + 0x8);
 
@@ -2348,23 +2350,23 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   slot->colorByte2 = (u8)((int)config->colorByte2Hi >> 8);
 
   if ((config->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
-    *(u8 *)((char *)slot + 0x1f) = (u8)((int)config->overrideColor0 >> 8);
-    *(u8 *)((char *)slot + 0x2f) = (u8)((int)config->overrideColor1 >> 8);
-    *(u8 *)((char *)slot + 0x3f) = (u8)((int)config->overrideColor2 >> 8);
+    quadVertices[1].alpha = (u8)((int)config->overrideColor0 >> 8);
+    quadVertices[2].alpha = (u8)((int)config->overrideColor1 >> 8);
+    quadVertices[3].alpha = (u8)((int)config->overrideColor2 >> 8);
   }
 
-  *(u8 *)((char *)slot + 0xc) = 0xff;
-  *(u8 *)((char *)slot + 0xd) = 0xff;
-  *(u8 *)((char *)slot + 0xe) = 0xff;
+  quadVertices[0].colorR = 0xff;
+  quadVertices[0].colorG = 0xff;
+  quadVertices[0].colorB = 0xff;
 
-  *(s16 *)((char *)slot + 0x08) = (s16)polePosY;
-  *(s16 *)((char *)slot + 0x0a) = (s16)poleVecY;
-  *(s16 *)((char *)slot + 0x18) = (s16)polePosX;
-  *(s16 *)((char *)slot + 0x1a) = (s16)poleVecY;
-  *(s16 *)((char *)slot + 0x28) = (s16)polePosX;
-  *(s16 *)((char *)slot + 0x2a) = (s16)poleVecZ;
-  *(s16 *)((char *)slot + 0x38) = (s16)polePosY;
-  *(s16 *)((char *)slot + 0x3a) = (s16)poleVecZ;
+  quadVertices[0].texS = (s16)polePosY;
+  quadVertices[0].texT = (s16)poleVecY;
+  quadVertices[1].texS = (s16)polePosX;
+  quadVertices[1].texT = (s16)poleVecY;
+  quadVertices[2].texS = (s16)polePosX;
+  quadVertices[2].texT = (s16)poleVecZ;
+  quadVertices[3].texS = (s16)polePosY;
+  quadVertices[3].texT = (s16)poleVecZ;
 
   if ((slot->renderFlags & EXPGFX_RENDER_INIT_QUAD) != 0) {
     expgfx_initSlotQuad(slot);
