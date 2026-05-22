@@ -3546,15 +3546,11 @@ extern void  textureFree(void*);
 void titlescreen_release(void)
 {
     register void** p;
-    register int tableBase;
     int i;
     textureFree(lbl_803DD9D4);
     lbl_803DD9D4 = NULL;
     i = 0;
-    asm {
-        lis tableBase, lbl_803A9F98@ha
-        addi p, tableBase, lbl_803A9F98@l
-    }
+    p = lbl_803A9F98;
     do {
         if (*p != NULL) {
             textureFree(*p);
@@ -4287,24 +4283,7 @@ void fn_80138B60(int obj, register u8* state) {
         ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
         *(f32*)(state + 0x830) = lbl_803E23E0;
         ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
-        {
-            register int v = 0;
-            register u32 b;
-            asm {
-                lbz b, 0x82e(state)
-                rlwimi b, v, 7, 24, 24
-                stb b, 0x82e(state)
-            }
-        }
-        {
-            register int v = 1;
-            register u32 b;
-            asm {
-                lbz b, 0x82e(state)
-                rlwimi b, v, 6, 25, 25
-                stb b, 0x82e(state)
-            }
-        }
+        state[0x82e] = (u8)((state[0x82e] & ~0x80) | 0x40);
     }
     if ((state[0x82e] & 0x40) != 0) {
         u8* data = *(u8**)(state + 0);

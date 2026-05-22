@@ -1858,17 +1858,7 @@ void fn_8014C064(int obj) {
     }
     if ((u8)(*(u8(**)(u8*, int, f32, u8*, int))(*(int*)gRomCurveInterface + 0x8c))(
             *(u8**)state, obj, lbl_803E25DC, &lbl_803DBC58, -1) != 0) {
-        {
-            register u32 m;
-            register u32 v;
-            register u8* statePtr = state;
-            asm {
-                lwz v, 0x2dc(statePtr)
-                li m, -0x2001
-                and m, v, m
-                stw m, 0x2dc(statePtr)
-            }
-        }
+        *(u32*)(state + 0x2dc) &= ~0x2000;
     } else {
         *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x2000;
     }

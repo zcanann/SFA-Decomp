@@ -194,42 +194,22 @@ void treasurechest_init(int *obj) {
     register u8 *state = *(u8 **)((char *)obj + 0xb8);
     register int *cfg = *(int **)((char *)obj + 0x4c);
     register u32 b;
-    register u32 bset;
 
     *(void (**)(void))((char *)obj + 0xbc) = fn_8018A8BC;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)cfg + 0x18) << 8);
 
     if (*(s16 *)((char *)cfg + 0x1e) != -1) {
-        register u8 byteVal1;
         b = (u32)(u8)GameBit_Get(*(s16 *)((char *)cfg + 0x1e));
-        asm {
-            lbz byteVal1, 0(state)
-            rlwimi byteVal1, b, 7, 24, 24
-            stb byteVal1, 0(state)
-        }
+        *state = (u8)((*state & ~0x80) | ((b & 1) << 7));
     } else {
-        register u8 byteVal2;
-        b = 0;
-        asm {
-            lbz byteVal2, 0(state)
-            rlwimi byteVal2, b, 7, 24, 24
-            stb byteVal2, 0(state)
-        }
+        *state &= ~0x80;
     }
     if (((u32)*state >> 7) & 1) {
         *(s16 *)((char *)obj + 6) = (s16)(*(s16 *)((char *)obj + 6) | 0x4000);
         ObjHits_DisableObject((int)obj);
     }
     lbl_803DDAE0 = Resource_Acquire(90, 1);
-    bset = 1;
-    {
-        register u8 byteVal2;
-        asm {
-            lbz byteVal2, 0(state)
-            rlwimi byteVal2, bset, 6, 25, 25
-            stb byteVal2, 0(state)
-        }
-    }
+    *state |= 0x40;
 }
 #pragma peephole reset
 #pragma scheduling reset
