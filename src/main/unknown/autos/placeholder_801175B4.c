@@ -24,12 +24,7 @@ extern int lbl_803DD658;
 #pragma peephole off
 int CreateAudioDecodeThread(OSPriority priority, void *param)
 {
-    register u8 *base;
-
-    asm {
-        lis r3, lbl_803A4448@ha
-        addi base, r3, lbl_803A4448@l
-    }
+    u8 *base = lbl_803A4448;
 
     if (param != NULL) {
         if (OSCreateThread((OSThread *)(base + 0x1058), AudioDecoderForOnMemory, param,

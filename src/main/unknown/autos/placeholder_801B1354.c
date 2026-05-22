@@ -29,7 +29,6 @@ void dimsnowball_init(DimSnowballObject *param_1, DimSnowballDef *def)
 {
     DimSnowballObject *obj = param_1;
     DimSnowballState *state;
-    register u32 flags;
 
     state = obj->state;
     state->targetId = def->targetId;
@@ -41,9 +40,7 @@ void dimsnowball_init(DimSnowballObject *param_1, DimSnowballDef *def)
     if (obj->handle64 != NULL) {
         *(u32 *)(obj->handle64 + 0x30) |= 0x810;
     }
-    flags = obj->flags | 0x4000;
-    asm { clrlwi flags, flags, 16 }
-    obj->flags = flags;
+    obj->flags = (u16)(obj->flags | 0x4000);
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -96,18 +96,10 @@ int trickyGuardFindBaddieTarget(int p) {
         list++;
     }
     if (best != 0) {
-        register u32 mask;
-        register u32 oldFlags;
-        register int pReg = p;
         *(int *)(p + 0x72c) = best;
         if (*(uint *)(p + 0x28) != (best + 0x18)) {
             *(int *)(p + 0x28) = best + 0x18;
-            asm {
-                lwz oldFlags, 0x54(pReg)
-                li mask, -1025
-                and mask, oldFlags, mask
-                stw mask, 0x54(pReg)
-            }
+            *(u32 *)(p + 0x54) &= ~0x400;
             *(u16 *)(p + 0xd2) = 0;
         }
         *(u8 *)(p + 0xa) = 4;
@@ -189,30 +181,16 @@ void trickyFlame(int p1, int p2) {
         *(int *)(p2 + 0x71c) = fn_800DAFDC((float *)(*(int *)(p2 + 0x24) + 0x18), -1, 4);
         if (*(u8 *)(*(int *)(p2 + 0x71c) + 0x3) != 0) {
             if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x71c) + 0x8)) {
-                register u32 m, v;
-                register int pReg = p2;
                 *(int *)(p2 + 0x28) = *(int *)(p2 + 0x71c) + 0x8;
-                asm {
-                    lwz v, 0x54(pReg)
-                    li m, -1025
-                    and m, v, m
-                    stw m, 0x54(pReg)
-                }
+                *(u32 *)(p2 + 0x54) &= ~0x400;
                 *(u16 *)(p2 + 0xd2) = 0;
             }
             *(u8 *)(p2 + 0xa) = 1;
         } else {
             *(int *)(p2 + 0x720) = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(*(int *)(*(int *)(p2 + 0x71c) + 0x1c));
             if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x720) + 0x8)) {
-                register u32 m, v;
-                register int pReg = p2;
                 *(int *)(p2 + 0x28) = *(int *)(p2 + 0x720) + 0x8;
-                asm {
-                    lwz v, 0x54(pReg)
-                    li m, -1025
-                    and m, v, m
-                    stw m, 0x54(pReg)
-                }
+                *(u32 *)(p2 + 0x54) &= ~0x400;
                 *(u16 *)(p2 + 0xd2) = 0;
             }
             *(u8 *)(p2 + 0xa) = 3;
@@ -477,15 +455,8 @@ void trickyGuard(int p1, int p2) {
         trickyDebugPrint(strBase + 0x664);
         if (trickyFn_8013b368(p1, p2, lbl_803E2488) == 0) {
             if (*(uint *)(p2 + 0x28) != (uint)(p2 + 0x71c)) {
-                register u32 m, v;
-                register int pReg = p2;
                 *(int *)(p2 + 0x28) = p2 + 0x71c;
-                asm {
-                    lwz v, 0x54(pReg)
-                    li m, -1025
-                    and m, v, m
-                    stw m, 0x54(pReg)
-                }
+                *(u32 *)(p2 + 0x54) &= ~0x400;
                 *(u16 *)(p2 + 0xd2) = 0;
             }
             *(u8 *)(p2 + 0xa) = 3;
@@ -546,15 +517,8 @@ void trickyGuard(int p1, int p2) {
         } else {
             if (*(int *)(p2 + 0x730) != fn_800DBCFC((float *)(*(int *)(p2 + 0x28)), (void *)0x0)) {
                 if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x24) + 0x18)) {
-                    register u32 m, v;
-                    register int pReg = p2;
                     *(int *)(p2 + 0x28) = *(int *)(p2 + 0x24) + 0x18;
-                    asm {
-                        lwz v, 0x54(pReg)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(pReg)
-                    }
+                    *(u32 *)(p2 + 0x54) &= ~0x400;
                     *(u16 *)(p2 + 0xd2) = 0;
                 }
                 *(u8 *)(p2 + 0xa) = 2;
@@ -587,15 +551,8 @@ void trickyGuard(int p1, int p2) {
             *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10;
             if (trickyGuardFindBaddieTarget(p2) == 0) {
                 if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x24) + 0x18)) {
-                    register u32 m, v;
-                    register int pReg = p2;
                     *(int *)(p2 + 0x28) = *(int *)(p2 + 0x24) + 0x18;
-                    asm {
-                        lwz v, 0x54(pReg)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(pReg)
-                    }
+                    *(u32 *)(p2 + 0x54) &= ~0x400;
                     *(u16 *)(p2 + 0xd2) = 0;
                 }
                 *(u8 *)(p2 + 0xa) = 2;
@@ -685,15 +642,8 @@ void trickyGuard(int p1, int p2) {
             *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) & ~0x10;
             if (trickyGuardFindBaddieTarget(p2) == 0) {
                 if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x24) + 0x18)) {
-                    register u32 m, v;
-                    register int pReg = p2;
                     *(int *)(p2 + 0x28) = *(int *)(p2 + 0x24) + 0x18;
-                    asm {
-                        lwz v, 0x54(pReg)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(pReg)
-                    }
+                    *(u32 *)(p2 + 0x54) &= ~0x400;
                     *(u16 *)(p2 + 0xd2) = 0;
                 }
                 *(u8 *)(p2 + 0xa) = 2;
