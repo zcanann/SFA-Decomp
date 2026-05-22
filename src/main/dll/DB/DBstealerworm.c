@@ -1347,10 +1347,16 @@ int SB_Galleon_modelMtxFn(int *obj) {
 /* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
 #pragma peephole off
 int SB_Galleon_func0E(int *obj) {
-    s8 *p = (s8*)((int**)obj)[0xb8/4];
+    register s8 *p = (s8*)((int**)obj)[0xb8/4];
     int x, y;
     if (p[0x29] == 1) {
-        x = p[0x7c];
+        register u8 raw;
+        register int signedRaw;
+        asm {
+            lbz raw, 0x7c(p)
+            extsb signedRaw, raw
+        }
+        x = signedRaw;
         if (x >= 5) {
             y = x - 5;
         } else {
