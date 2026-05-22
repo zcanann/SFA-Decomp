@@ -51,6 +51,8 @@ extern undefined4* gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void sfxplayer_update(int obj)
 {
   s16 i;
@@ -138,6 +140,8 @@ void sfxplayer_update(int obj)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
