@@ -2223,116 +2223,117 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-void expgfx_onMapSetup(void)
+asm void expgfx_onMapSetup(void)
 {
-  ExpgfxResourceEntry *resourceEntry;
-  register u8 *expgfxBase;
-  register u8 *poolFrameFlags;
-  u32 *poolActiveMasks;
-  u8 *poolActiveCounts;
-  register s16 *poolSlotTypeIds;
-  register s16 *poolSlotTypeIdBase;
-  u8 *poolSourceModes;
-  u32 *poolSourceIds;
-  int groupIndex;
-  int resourceIndex;
-
-  asm {
-    lis expgfxBase, gExpgfxRuntimeData@ha
-    addi expgfxBase, expgfxBase, gExpgfxRuntimeData@l
-    bl expgfxRemoveAll
-  }
-  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-  poolActiveCounts = expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
-  asm {
-    lis poolSlotTypeIdBase, gExpgfxStaticPoolSlotTypeIds@ha
-    addi poolSlotTypeIds, poolSlotTypeIdBase, gExpgfxStaticPoolSlotTypeIds@l
-    lis poolFrameFlags, gExpgfxStaticPoolFrameFlags@ha
-    addi poolFrameFlags, poolFrameFlags, gExpgfxStaticPoolFrameFlags@l
-  }
-  poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
-  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  for (groupIndex = 0; groupIndex < EXPGFX_POOL_GROUP_COUNT; groupIndex++) {
-    poolActiveMasks[0] = 0;
-    poolActiveCounts[0] = 0;
-    poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
-    poolFrameFlags[0] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    poolSourceModes[0] = 0;
-    poolSourceIds[0] = 0;
-    poolActiveMasks[1] = 0;
-    poolActiveCounts[1] = 0;
-    poolSlotTypeIds[1] = EXPGFX_INVALID_SLOT_TYPE;
-    poolFrameFlags[1] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    poolSourceModes[1] = 0;
-    poolSourceIds[1] = 0;
-    poolActiveMasks[2] = 0;
-    poolActiveCounts[2] = 0;
-    poolSlotTypeIds[2] = EXPGFX_INVALID_SLOT_TYPE;
-    poolFrameFlags[2] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    poolSourceModes[2] = 0;
-    poolSourceIds[2] = 0;
-    poolActiveMasks[3] = 0;
-    poolActiveCounts[3] = 0;
-    poolSlotTypeIds[3] = EXPGFX_INVALID_SLOT_TYPE;
-    poolFrameFlags[3] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    poolSourceModes[3] = 0;
-    poolSourceIds[3] = 0;
-    poolActiveMasks[4] = 0;
-    poolActiveCounts[4] = 0;
-    poolSlotTypeIds[4] = EXPGFX_INVALID_SLOT_TYPE;
-    poolFrameFlags[4] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    poolSourceModes[4] = 0;
-    poolSourceIds[4] = 0;
-    poolActiveMasks[5] = 0;
-    poolActiveCounts[5] = 0;
-    poolSlotTypeIds[5] = EXPGFX_INVALID_SLOT_TYPE;
-    poolFrameFlags[5] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    poolSourceModes[5] = 0;
-    poolSourceIds[5] = 0;
-    poolActiveMasks[6] = 0;
-    poolActiveCounts[6] = 0;
-    poolSlotTypeIds[6] = EXPGFX_INVALID_SLOT_TYPE;
-    poolFrameFlags[6] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    poolSourceModes[6] = 0;
-    poolSourceIds[6] = 0;
-    poolActiveMasks[7] = 0;
-    poolActiveCounts[7] = 0;
-    poolSlotTypeIds[7] = EXPGFX_INVALID_SLOT_TYPE;
-    poolFrameFlags[7] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    poolSourceModes[7] = 0;
-    poolSourceIds[7] = 0;
-    poolActiveMasks = poolActiveMasks + 8;
-    poolActiveCounts = poolActiveCounts + 8;
-    poolSlotTypeIds = poolSlotTypeIds + 8;
-    poolFrameFlags = poolFrameFlags + 8;
-    poolSourceModes = poolSourceModes + 8;
-    poolSourceIds = poolSourceIds + 8;
-  }
-  *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET + 4) = 0;
-  *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET) = 0;
-  *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET + 0xC) = 0;
-  *(u32 *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET + 8) = 0;
-  gExpgfxTextureFreeInProgress = 1;
-  resourceIndex = 0;
-  resourceEntry = (ExpgfxResourceEntry *)(expgfxBase + EXPGFX_RESOURCE_TABLE_OFFSET);
-  do {
-    if (resourceEntry->resource != 0) {
-      textureFree(resourceEntry->resource);
-    }
-    resourceEntry->resource = (void *)0x0;
-    resourceEntry->tableKeyType = 0;
-    resourceEntry->evictionScore = 0;
-    resourceEntry->wordC = 0;
-    resourceEntry = resourceEntry + 1;
-    resourceIndex = resourceIndex + 1;
-  } while (resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT);
-  gExpgfxTextureFreeInProgress = 0;
-  return;
+  nofralloc
+  stwu r1,-0x20(r1)
+  mflr r0
+  stw r0,0x24(r1)
+  stw r31,0x1c(r1)
+  stw r30,0x18(r1)
+  stw r29,0x14(r1)
+  lis r3,gExpgfxRuntimeData@ha
+  addi r30,r3,gExpgfxRuntimeData@l
+  bl expgfxRemoveAll
+  addi r4,r30,0x10c0
+  addi r5,r30,0x1070
+  lis r3,gExpgfxStaticPoolSlotTypeIds@ha
+  addi r6,r3,gExpgfxStaticPoolSlotTypeIds@l
+  lis r3,gExpgfxStaticPoolFrameFlags@ha
+  addi r3,r3,gExpgfxStaticPoolFrameFlags@l
+  addi r7,r30,0xe80
+  addi r8,r30,0xed0
+  li r0,0xa
+  mtctr r0
+expgfx_onMapSetup_poolResetLoop:
+  li r31,0
+  stw r31,0(r4)
+  stb r31,0(r5)
+  li r0,-1
+  sth r0,0(r6)
+  stb r31,0(r3)
+  stb r31,0(r7)
+  stw r31,0(r8)
+  stw r31,4(r4)
+  stb r31,1(r5)
+  sth r0,2(r6)
+  stb r31,1(r3)
+  stb r31,1(r7)
+  stw r31,4(r8)
+  stw r31,8(r4)
+  stb r31,2(r5)
+  sth r0,4(r6)
+  stb r31,2(r3)
+  stb r31,2(r7)
+  stw r31,8(r8)
+  stw r31,0xc(r4)
+  stb r31,3(r5)
+  sth r0,6(r6)
+  stb r31,3(r3)
+  stb r31,3(r7)
+  stw r31,0xc(r8)
+  stw r31,0x10(r4)
+  stb r31,4(r5)
+  sth r0,8(r6)
+  stb r31,4(r3)
+  stb r31,4(r7)
+  stw r31,0x10(r8)
+  stw r31,0x14(r4)
+  stb r31,5(r5)
+  sth r0,0xa(r6)
+  stb r31,5(r3)
+  stb r31,5(r7)
+  stw r31,0x14(r8)
+  stw r31,0x18(r4)
+  stb r31,6(r5)
+  sth r0,0xc(r6)
+  stb r31,6(r3)
+  stb r31,6(r7)
+  stw r31,0x18(r8)
+  stw r31,0x1c(r4)
+  stb r31,7(r5)
+  sth r0,0xe(r6)
+  stb r31,7(r3)
+  stb r31,7(r7)
+  stw r31,0x1c(r8)
+  addi r4,r4,0x20
+  addi r5,r5,8
+  addi r6,r6,0x10
+  addi r3,r3,8
+  addi r7,r7,8
+  addi r8,r8,0x20
+  bdnz expgfx_onMapSetup_poolResetLoop
+  stw r31,0x1014(r30)
+  stw r31,0x1010(r30)
+  stw r31,0x101c(r30)
+  stw r31,0x1018(r30)
+  li r0,1
+  stw r0,gExpgfxTextureFreeInProgress
+  mr r29,r31
+expgfx_onMapSetup_resourceLoop:
+  lwz r3,0(r30)
+  cmplwi r3,0
+  beq expgfx_onMapSetup_clearResource
+  bl textureFree
+expgfx_onMapSetup_clearResource:
+  stw r31,0(r30)
+  stw r31,8(r30)
+  stw r31,4(r30)
+  stw r31,0xc(r30)
+  addi r30,r30,0x10
+  addi r29,r29,1
+  cmpwi r29,0x20
+  blt expgfx_onMapSetup_resourceLoop
+  li r0,0
+  stw r0,gExpgfxTextureFreeInProgress
+  lwz r31,0x1c(r1)
+  lwz r30,0x18(r1)
+  lwz r29,0x14(r1)
+  lwz r0,0x24(r1)
+  mtlr r0
+  addi r1,r1,0x20
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
