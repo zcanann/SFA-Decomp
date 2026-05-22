@@ -26,7 +26,7 @@ extern f32 sqrtf(f32 x);
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(int size,int heap,int flags);
-extern void fn_800E84D8(s16 actionNo);
+extern void SaveGame_setCamActionNo(s16 actionNo);
 extern void voxmaps_initialise(void);
 extern void voxmaps_resetLoadedMaps(void);
 
@@ -493,7 +493,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
       return;
     }
     camAction->triggerMode = triggerMode;
-    fn_800E84D8((short)actionNo);
+    SaveGame_setCamActionNo((short)actionNo);
     if (((((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_DEFAULT) &&
          ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
@@ -538,7 +538,7 @@ LAB_80102f3c:
       return;
     }
     camAction->triggerMode = triggerMode;
-    fn_800E84D8(1);
+    SaveGame_setCamActionNo(1);
     if (((((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_DEFAULT) &&
          ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
@@ -593,9 +593,9 @@ LAB_80102f3c_b:
  */
 #pragma scheduling off
 #pragma peephole off
-void *Camera_getCamActionsBinEntry(int actionNo)
+CamcontrolTriggeredAction *Camera_getCamActionsBinEntry(int actionNo)
 {
-  void *camAction;
+  CamcontrolTriggeredAction *camAction;
 
   if (actionNo == CAMCONTROL_ACTION_NO_NONE) {
     return 0;
@@ -645,11 +645,11 @@ void camcontrol_release(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void camcontrol_queueSavedAction(undefined4 param_1,undefined param_2)
+void camcontrol_queueSavedAction(undefined4 blendFrames,undefined queueMode)
 {
   if (gCamcontrolSavedActionId != CAMCONTROL_SAVED_ACTION_NONE) {
     Camera_setMode(gCamcontrolSavedActionId,gCamcontrolSavedActionPriority,
-                   gCamcontrolSavedActionStartFlags,0,0,param_1,param_2);
+                   gCamcontrolSavedActionStartFlags,0,0,blendFrames,queueMode);
   }
   return;
 }
