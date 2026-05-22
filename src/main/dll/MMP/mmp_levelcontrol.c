@@ -415,15 +415,11 @@ void FUN_801949ec(undefined2 *param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-f32 objFn_801948c0(int obj,u8 coord)
+f32 objFn_801948c0(u8 *obj,u8 coord)
 {
-  int state;
+  u8 *state;
 
-  if (obj == 0) {
-    return lbl_803E4000;
-  }
-  state = *(int *)(obj + 0xb8);
-  if (state == 0) {
+  if (obj == NULL || (state = *(u8 **)(obj + 0xb8), state == NULL)) {
     return lbl_803E4000;
   }
   switch (coord) {
