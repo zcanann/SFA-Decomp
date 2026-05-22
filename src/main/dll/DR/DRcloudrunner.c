@@ -466,6 +466,9 @@ void sc_totempole_initialise(void) {}
 void sc_totempole_init(u8* obj, u8* params) {
     u8* sub = *(u8**)(obj + 0xb8);
     switch (*(int*)(params + 0x14)) {
+    case 0x44916:
+        *(s16*)sub = 0x84;
+        break;
     case 0x44909:
         *(s16*)sub = 0x83;
         break;
@@ -474,9 +477,6 @@ void sc_totempole_init(u8* obj, u8* params) {
         break;
     case 0x4490F:
         *(s16*)sub = 0x82;
-        break;
-    case 0x44916:
-        *(s16*)sub = 0x84;
         break;
     }
     *(s16*)obj = (s16)(params[0x1a] << 8);
