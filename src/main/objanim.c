@@ -83,11 +83,13 @@ static s16 ObjAnim_ReadRootAxisSample(s16 *axis,int sampleIndex)
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,s16 eventState)
 {
+  int eventStateValue;
   int moveIndex;
   ObjAnimMoveData *moveData;
   int frameType;
   float frameValue;
 
+  eventStateValue = eventState;
   moveIndex =
       animDef->moveGroupBaseIndices[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
       (moveId & OBJANIM_MOVE_INDEX_MASK);
@@ -131,7 +133,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
       state->eventState = 0;
     }
     else {
-      state->eventState = (u16)eventState;
+      state->eventState = (u16)eventStateValue;
     }
   }
   return;
