@@ -71,6 +71,8 @@ extern undefined4 FUN_80286884();
 extern undefined4 FUN_80293470();
 extern double FUN_80293900();
 extern double FUN_80294c4c();
+extern void _savegpr_25(void);
+extern void _restgpr_25(void);
 
 extern ExpgfxBounds gExpgfxBoundsTemplates;
 extern undefined2 gExpgfxPoolSlotTypeIds;
@@ -270,79 +272,108 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive)
+asm void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int freeTexture,int clearActive)
 {
-  ExpgfxTableEntry *tableEntry;
-  u8 *exptabTextureResources;
-  u8 *expgfxBase;
-  u32 *poolActiveMask;
-  char *poolActiveCount;
-  ExpgfxSlot *slot;
-  u16 *entryRefCount;
-  uint activeMask;
-  uint tableIndex;
-  uint tableOffset;
-
-  expgfxBase = gExpgfxRuntimeData;
-  activeMask = 1 << slotIndex;
-  poolActiveMask = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET +
-                           poolIndex * sizeof(u32));
-  if ((activeMask & *poolActiveMask) != 0) {
-    slot = (ExpgfxSlot *)(slotPoolBase + slotIndex * EXPGFX_SLOT_SIZE);
-    slot->behaviorFlags = 0;
-    if (freeTexture == 0) {
-      exptabTextureResources = expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET;
-      tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-      if (*(uint *)(exptabTextureResources + tableOffset) != 0) {
-        gExpgfxTextureFreeInProgress = 1;
-        tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-        textureFree((void *)*(uint *)(exptabTextureResources + tableOffset));
-        gExpgfxTextureFreeInProgress = 0;
-      }
-      tableIndex = Expgfx_GetSlotTableIndex(slot);
-      tableOffset = tableIndex << EXPGFX_TABLE_ENTRY_SHIFT;
-      tableEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset);
-      entryRefCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableOffset);
-      if (*entryRefCount != 0) {
-        (*entryRefCount)--;
-        if (*entryRefCount == 0) {
-          *(uint *)(exptabTextureResources + tableOffset) = 0;
-          tableEntry->key0 = 0;
-        }
-      }
-      else {
-        debugPrintf(sExpgfxMismatchInAddRemove);
-      }
-    }
-    slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-    if (((u32)clearActive & EXPGFX_BYTE_VALUE_MASK) != 0) {
-      DCFlushRange(slot,EXPGFX_SLOT_SIZE);
-    }
-    {
-      register u32 v;
-      register u32 m;
-      register u32 maskR = activeMask;
-      register u32 *p = poolActiveMask;
-      asm {
-        lwz v, 0(p)
-        nor m, maskR, maskR
-        and m, v, m
-        stw m, 0(p)
-      }
-    }
-    poolActiveCount =
-        (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET + poolIndex);
-    (*poolActiveCount)--;
-    if (*poolActiveCount == '\0') {
-      gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
-    }
-  }
-  return;
+  nofralloc
+  stwu r1,-0x30(r1)
+  mflr r0
+  stw r0,0x34(r1)
+  addi r11,r1,0x30
+  bl _savegpr_25
+  mr r25,r4
+  mr r26,r7
+  lis r4,gExpgfxRuntimeData@ha
+  addi r31,r4,gExpgfxRuntimeData@l
+  li r4,1
+  slw r29,r4,r5
+  slwi r0,r25,2
+  add r28,r31,r0
+  addi r28,r28,0x10c0
+  lwz r0,0(r28)
+  and r0,r29,r0
+  cmplwi r0,0
+  beq expgfxRemove_done
+  mulli r0,r5,0xa0
+  add r27,r3,r0
+  li r0,0
+  stw r0,0x7c(r27)
+  cmpwi r6,0
+  bne expgfxRemove_clearSlot
+  addi r30,r31,0x988
+  lbz r0,0x8a(r27)
+  rlwinm r0,r0,31,25,31
+  slwi r0,r0,4
+  lwzx r0,r30,r0
+  cmplwi r0,0
+  beq expgfxRemove_updateRef
+  stw r4,gExpgfxTextureFreeInProgress
+  lbz r0,0x8a(r27)
+  rlwinm r0,r0,31,25,31
+  slwi r0,r0,4
+  lwzx r3,r30,r0
+  bl textureFree
+  li r0,0
+  stw r0,gExpgfxTextureFreeInProgress
+expgfxRemove_updateRef:
+  lbz r0,0x8a(r27)
+  rlwinm r0,r0,31,25,31
+  slwi r5,r0,4
+  add r4,r31,r5
+  addi r4,r4,0x98c
+  lhz r3,0(r4)
+  cmplwi r3,0
+  beq expgfxRemove_mismatch
+  addi r0,r3,-1
+  sth r0,0(r4)
+  lhz r0,0(r4)
+  cmplwi r0,0
+  bne expgfxRemove_clearSlot
+  li r0,0
+  stwx r0,r30,r5
+  add r3,r31,r5
+  stw r0,0x980(r3)
+  b expgfxRemove_clearSlot
+expgfxRemove_mismatch:
+  lis r3,sExpgfxMismatchInAddRemove@ha
+  addi r3,r3,sExpgfxMismatchInAddRemove@l
+  crclr 4*cr1+eq
+  bl debugPrintf
+expgfxRemove_clearSlot:
+  li r0,-1
+  sth r0,0x26(r27)
+  clrlwi r0,r26,24
+  cmplwi r0,0
+  beq expgfxRemove_clearActiveMask
+  mr r3,r27
+  li r4,0xa0
+  bl DCFlushRange
+expgfxRemove_clearActiveMask:
+  lwz r3,0(r28)
+  not r0,r29
+  and r0,r3,r0
+  stw r0,0(r28)
+  add r4,r31,r25
+  addi r4,r4,0x1070
+  lbz r3,0(r4)
+  addi r0,r3,-1
+  stb r0,0(r4)
+  lbz r0,0(r4)
+  extsb r0,r0
+  cmpwi r0,0
+  bne expgfxRemove_done
+  li r4,-1
+  slwi r0,r25,1
+  lis r3,gExpgfxStaticPoolSlotTypeIds@ha
+  addi r3,r3,gExpgfxStaticPoolSlotTypeIds@l
+  sthx r4,r3,r0
+expgfxRemove_done:
+  addi r11,r1,0x30
+  bl _restgpr_25
+  lwz r0,0x34(r1)
+  mtlr r0
+  addi r1,r1,0x30
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
