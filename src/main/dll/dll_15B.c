@@ -53,14 +53,14 @@ void largecrate_init(int obj, u8 *initData)
   *(short *)(state + 0xe) = *(short *)(initData + 0x1e);
 
   id = *(short *)(initData + 0x1c);
-  if (id == 0) {
-    *(int *)state = 0;
+  if (id == LARGECRATE_TIMER_SENTINEL_DISABLED) {
+    *(int *)state = LARGECRATE_TIMER_SENTINEL_DISABLED;
   }
-  else if (id == 0xff) {
+  else if (id == LARGECRATE_TIMER_SENTINEL_FOREVER) {
     *(int *)state = -1;
   }
   else {
-    *(int *)state = (int)id * 0x3c;
+    *(int *)state = (int)id * LARGECRATE_TIMER_SCALE_FRAMES;
   }
 
   if (GameBit_Get((int)*(short *)(state + 0xe)) != 0) {
@@ -69,33 +69,33 @@ void largecrate_init(int obj, u8 *initData)
   }
 
   *(u8 *)(state + 0x11) = initData[0x19];
-  lbl_803DDAC8 = (undefined4)Resource_Acquire(0x5b, 1);
-  r3rand = randomGetRange(0, 100);
-  *(short *)(state + 0xa) = (short)(r3rand + 300);
-  *(short *)(state + 0xc) = 0x190;
+  lbl_803DDAC8 = (undefined4)Resource_Acquire(LARGECRATE_RESOURCE_ID, LARGECRATE_RESOURCE_MODE);
+  r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_DELAY_MAX);
+  *(short *)(state + 0xa) = (short)(r3rand + LARGECRATE_RANDOM_DELAY_BASE);
+  *(short *)(state + 0xc) = LARGECRATE_DEFAULT_COUNTDOWN;
   *(u8 *)(state + 0x12) = (u8)*(short *)(initData + 0x1a);
-  *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
+  *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | LARGECRATE_OBJECT_FLAGS);
   *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
 
   id = *(short *)(obj + 0x46);
-  if (id == 0x3de) {
+  if (id == LARGECRATE_VARIANT_A) {
     *(u8 *)(state + 0x11) = (u8)((short *)constArrA)[*(u8 *)(state + 0x11)];
-    *(short *)(state + 0x14) = 0x5f;
-    *(short *)(state + 0x16) = 0x60;
+    *(short *)(state + 0x14) = LARGECRATE_VARIANT_A_SFX_A;
+    *(short *)(state + 0x16) = LARGECRATE_VARIANT_A_SFX_B;
   }
-  else if (id == 0x49f || id == 0x7be) {
+  else if (id == LARGECRATE_VARIANT_B || id == LARGECRATE_VARIANT_C) {
     *(u8 *)(state + 0x11) = (u8)((short *)constArrB)[*(u8 *)(state + 0x11)];
-    *(short *)(state + 0x14) = 0x48;
-    *(short *)(state + 0x16) = 0x4a;
+    *(short *)(state + 0x14) = LARGECRATE_VARIANT_B_SFX_A;
+    *(short *)(state + 0x16) = LARGECRATE_VARIANT_B_SFX_B;
   }
 
   *(short *)(state + 0x20) = 0;
-  r3rand = randomGetRange(0, 200);
+  r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_BOB_MAX);
   *(float *)(state + 0x1c) =
       lbl_803E39E8 + (float)((double)(int)r3rand - lbl_803E39C8);
   *(float *)(state + 0x24) = *(float *)(obj + 0xc);
 
-  if (*(short *)(obj + 0x46) == 0x7be) {
+  if (*(short *)(obj + 0x46) == LARGECRATE_VARIANT_C) {
     *(u8 *)(state + 0x28) = 0;
   }
   else {
