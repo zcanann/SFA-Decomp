@@ -8,11 +8,13 @@ extern uint GameBit_Get(int eventId);
 extern void *Resource_Acquire(int resourceId, int mode);
 extern void ObjHits_DisableObject(u32 obj);
 extern u32 randomGetRange(int min, int max);
-extern int fn_8006961C(void *outA, void *inA, void *inB, int param4);
-extern int hitDetectFn_800691c0(int obj, void *outA, short id, int param4);
-extern int hitDetectFn_80067958(int obj, void *inA, void *inB, int param4, void *outVec, int param6);
+extern void fn_8006961C(u32 *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii,
+                        int pointCount);
+extern void hitDetectFn_800691c0(int obj, void *bounds, uint mask, int flags);
+extern u8 hitDetectFn_80067958(int obj, f32 *startPoints, f32 *endPoints, int pointCount,
+                               void *outHits, int flags);
 
-extern f32 *lbl_803AC7A0;
+extern f32 lbl_803AC7A0[4];
 extern undefined4 lbl_802C2280;
 extern undefined4 lbl_802C228C;
 extern undefined4 lbl_803DDAC8;
@@ -134,35 +136,40 @@ void largecrate_initialise(void)
  */
 int objHitboxFn_801843c0(int obj)
 {
+  typedef struct HitDetectResults {
+    f32 hitInfo[4][4];
+    u8 pad40[0x1c];
+    u32 solidFlags[4];
+  } HitDetectResults;
+
   int state;
-  float locA[3], locB[3], locC[3];
-  float origin[3];
-  float resultTable[16];
-  u8 hitTable[16];
-  u32 *zeroTable;
-  float gridVec[4];
+  f32 endPoints[12];
+  f32 startPoints[3];
+  u32 sweptBounds[6];
+  f32 radii[4];
+  HitDetectResults hitResults;
+  u8 hitAxisTable[16];
   int idx;
   u8 hitMask;
-  int hit;
+  u8 hit;
 
   state = *(int *)(obj + 0x54);
   if (state == 0) {
     return 0;
   }
-  locA[0] = *(float *)(obj + 0xc);
-  locA[1] = *(float *)(obj + 0x10);
-  locA[2] = *(float *)(obj + 0x14);
-  locB[0] = *(float *)(obj + 0x80);
-  locB[1] = *(float *)(obj + 0x84);
-  locB[2] = *(float *)(obj + 0x88);
-  gridVec[0] = lbl_803E39F4;
-  hitTable[0] = 0xff;
-  hitTable[4] = 0x3;
+  endPoints[0] = *(float *)(obj + 0xc);
+  endPoints[1] = *(float *)(obj + 0x10);
+  endPoints[2] = *(float *)(obj + 0x14);
+  startPoints[0] = *(float *)(obj + 0x80);
+  startPoints[1] = *(float *)(obj + 0x84);
+  startPoints[2] = *(float *)(obj + 0x88);
+  radii[0] = lbl_803E39F4;
+  hitAxisTable[0] = 0xff;
+  hitAxisTable[4] = 0x3;
 
-  fn_8006961C(&locC, locB, locA, 1);
-  hitDetectFn_800691c0(obj, &locC, *(short *)(state + 0xb2), 1);
-  hit = hitDetectFn_80067958(obj, locB, locA, 1, locB, 0);
-  hit = hit & 0xff;
+  fn_8006961C(sweptBounds, startPoints, endPoints, radii, 1);
+  hitDetectFn_800691c0(obj, sweptBounds, *(ushort *)(state + 0xb2), 1);
+  hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &hitResults, 0);
   if (hit == 0) {
     return 0;
   }
@@ -180,15 +187,17 @@ int objHitboxFn_801843c0(int obj)
     idx = 3;
   }
 
-  hitMask = ((u8 *)&hitTable)[idx];
+  hitMask = ((u8 *)&hitAxisTable)[idx];
   *(u8 *)(state + 0xac) = hitMask;
-  *(float *)(state + 0x3c) = locA[idx];
-  *(float *)(state + 0x40) = locA[idx];  /* same column trick */
-  *(float *)(state + 0x44) = locA[idx];
-  *(float *)&lbl_803AC7A0 = locB[idx];
+  *(float *)(state + 0x3c) = endPoints[idx * 3];
+  *(float *)(state + 0x40) = endPoints[idx * 3 + 1];
+  *(float *)(state + 0x44) = endPoints[idx * 3 + 2];
+  lbl_803AC7A0[0] = hitResults.hitInfo[idx][0];
+  lbl_803AC7A0[1] = hitResults.hitInfo[idx][1];
+  lbl_803AC7A0[2] = hitResults.hitInfo[idx][2];
+  lbl_803AC7A0[3] = hitResults.hitInfo[idx][3];
 
-  zeroTable = (u32 *)((char *)&hitTable + 0x0c);
-  if (zeroTable[idx] != 0) {
+  if (hitResults.solidFlags[idx] != 0) {
     *(u8 *)(state + 0xad) = (u8)((int)(signed char)*(u8 *)(state + 0xad) | 2);
   }
   else {
