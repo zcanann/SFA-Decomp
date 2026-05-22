@@ -20,6 +20,48 @@ extern f32 gObjAnimEventFrameScale;
 extern f32 lbl_803DE908;
 extern f32 lbl_803DE90C;
 
+static ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state,u16 slot)
+{
+  ObjAnimMoveData *moveData;
+
+  moveData = ObjAnim_GetMoveData(animDef,state,slot);
+  if (moveData->rootCurveOffset == 0) {
+    return NULL;
+  }
+  return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
+}
+
+static ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state,u16 slot)
+{
+  ObjAnimMoveData *moveData;
+
+  moveData = ObjAnim_GetBlendMoveData(animDef,state,slot);
+  if (moveData->rootCurveOffset == 0) {
+    return NULL;
+  }
+  return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
+}
+
+static s16 *ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve *curve)
+{
+  s16 *axis;
+  int axisIndex;
+
+  axis = (s16 *)((u8 *)curve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+  for (axisIndex = 0; axisIndex < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT; axisIndex++) {
+    if (*axis != 0) {
+      return axis;
+    }
+    axis++;
+  }
+  return NULL;
+}
+
+static s16 ObjAnim_ReadRootAxisSample(s16 *axis,int sampleIndex)
+{
+  return axis[sampleIndex + 1];
+}
+
 /*
  * --INFO--
  *
@@ -533,318 +575,132 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut)
+int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut)
 {
-  nofralloc
-  stwu r1, -0x30(r1)
-  lwz r5, 0x7c(r3)
-  lbz r0, 0xad(r3)
-  extsb r0, r0
-  slwi r0, r0, 2
-  lwzx r5, r5, r0
-  lwz r7, 0x0(r5)
-  lhz r0, 0xec(r7)
-  cmplwi r0, 0x0
-  bne ObjAnim_SampleRootCurvePhase_L_8002F604
-  li r3, 0x0
-  b ObjAnim_SampleRootCurvePhase_L_8002FA40
-ObjAnim_SampleRootCurvePhase_L_8002F604:
-  lwz r8, 0x2c(r5)
-  lfs f3, 0x8(r3)
-  lwz r5, 0x50(r3)
-  lfs f0, 0x4(r5)
-  fdivs f0, f3, f0
-  fmuls f2, f1, f0
-  li r6, 0x0
-  lhz r0, 0x5a(r8)
-  cmplwi r0, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002F6E4
-  lfd f1, gObjAnimU32ToDoubleBias
-  stw r0, 0xc(r1)
-  lis r0, 0x4330
-  stw r0, 0x8(r1)
-  lfd f0, 0x8(r1)
-  fsubs f1, f0, f1
-  lfs f0, gObjAnimEventStepScale
-  fdivs f7, f1, f0
-  lfs f0, gObjAnimProgressOne
-  fsubs f8, f0, f7
-  lhz r0, 0x2(r7)
-  rlwinm r0, r0, 0, 25, 25
-  cmpwi r0, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002F67C
-  lhz r0, 0x48(r8)
-  slwi r0, r0, 2
-  add r5, r8, r0
-  lwz r5, 0x24(r5)
-  addi r5, r5, 0x80
-  b ObjAnim_SampleRootCurvePhase_L_8002F68C
-ObjAnim_SampleRootCurvePhase_L_8002F67C:
-  lwz r5, 0x64(r7)
-  lhz r0, 0x48(r8)
-  slwi r0, r0, 2
-  lwzx r5, r5, r0
-ObjAnim_SampleRootCurvePhase_L_8002F68C:
-  lha r0, 0x4(r5)
-  cmpwi r0, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002F6E4
-  add r6, r5, r0
-  lfs f0, 0x0(r6)
-  fmuls f6, f0, f3
-  addi r6, r6, 0x6
-  lha r0, 0x0(r6)
-  cmpwi r0, 0x0
-  bne ObjAnim_SampleRootCurvePhase_L_8002F6D8
-  addi r6, r6, 0x2
-  lha r0, 0x0(r6)
-  cmpwi r0, 0x0
-  bne ObjAnim_SampleRootCurvePhase_L_8002F6D8
-  addi r6, r6, 0x2
-  lha r0, 0x0(r6)
-  cmpwi r0, 0x0
-  bne ObjAnim_SampleRootCurvePhase_L_8002F6D8
-  li r6, 0x0
-ObjAnim_SampleRootCurvePhase_L_8002F6D8:
-  cmplwi r6, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002F6E4
-  addi r6, r6, 0x2
-ObjAnim_SampleRootCurvePhase_L_8002F6E4:
-  lhz r0, 0x2(r7)
-  rlwinm r0, r0, 0, 25, 25
-  cmpwi r0, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002F70C
-  lhz r0, 0x44(r8)
-  slwi r0, r0, 2
-  add r5, r8, r0
-  lwz r5, 0x1c(r5)
-  addi r5, r5, 0x80
-  b ObjAnim_SampleRootCurvePhase_L_8002F71C
-ObjAnim_SampleRootCurvePhase_L_8002F70C:
-  lwz r5, 0x64(r7)
-  lhz r0, 0x44(r8)
-  slwi r0, r0, 2
-  lwzx r5, r5, r0
-ObjAnim_SampleRootCurvePhase_L_8002F71C:
-  lha r0, 0x4(r5)
-  cmpwi r0, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002FA3C
-  add r5, r5, r0
-  lfs f0, 0x0(r5)
-  fmuls f5, f0, f3
-  lha r7, 0x4(r5)
-  subi r0, r7, 0x1
-  addi r5, r5, 0x6
-  li r8, 0x0
-  lha r7, 0x0(r5)
-  cmpwi r7, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002F754
-  li r8, 0x1
-ObjAnim_SampleRootCurvePhase_L_8002F754:
-  cmpwi r7, 0x0
-  bne ObjAnim_SampleRootCurvePhase_L_8002F760
-  addi r5, r5, 0x2
-ObjAnim_SampleRootCurvePhase_L_8002F760:
-  cmpwi r8, 0x0
-  bne ObjAnim_SampleRootCurvePhase_L_8002F778
-  lha r7, 0x0(r5)
-  cmpwi r7, 0x0
-  bne ObjAnim_SampleRootCurvePhase_L_8002F778
-  addi r5, r5, 0x2
-ObjAnim_SampleRootCurvePhase_L_8002F778:
-  lha r7, 0x0(r5)
-  cmpwi r7, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002FA3C
-  slwi r8, r0, 1
-  add r7, r5, r8
-  lha r7, 0x2(r7)
-  cmpwi r7, 0x0
-  bge ObjAnim_SampleRootCurvePhase_L_8002F79C
-  fneg f5, f5
-ObjAnim_SampleRootCurvePhase_L_8002F79C:
-  cmpwi r7, 0x0
-  bne ObjAnim_SampleRootCurvePhase_L_8002F7AC
-  li r3, 0x0
-  b ObjAnim_SampleRootCurvePhase_L_8002FA40
-ObjAnim_SampleRootCurvePhase_L_8002F7AC:
-  lfd f3, gObjAnimS32ToDoubleBias
-  xoris r7, r0, 0x8000
-  stw r7, 0xc(r1)
-  lis r9, 0x4330
-  stw r9, 0x8(r1)
-  lfd f0, 0x8(r1)
-  fsubs f1, f0, f3
-  lfs f0, gObjAnimProgressOne
-  fdivs f4, f0, f1
-  lfs f0, 0x98(r3)
-  fmuls f1, f1, f0
-  fctiwz f0, f1
-  stfd f0, 0x10(r1)
-  lwz r3, 0x14(r1)
-  xoris r7, r3, 0x8000
-  stw r7, 0x1c(r1)
-  stw r9, 0x18(r1)
-  lfd f0, 0x18(r1)
-  fsubs f0, f0, f3
-  fsubs f10, f1, f0
-  cmplwi r6, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002F8AC
-  lhax r7, r6, r8
-  cmpwi r7, 0x0
-  bge ObjAnim_SampleRootCurvePhase_L_8002F814
-  fneg f6, f6
-ObjAnim_SampleRootCurvePhase_L_8002F814:
-  slwi r10, r3, 1
-  add r9, r5, r10
-  lha r7, 0x2(r9)
-  lfd f9, gObjAnimS32ToDoubleBias
-  xoris r7, r7, 0x8000
-  stw r7, 0x1c(r1)
-  lis r8, 0x4330
-  stw r8, 0x18(r1)
-  lfd f0, 0x18(r1)
-  fsubs f0, f0, f9
-  fmuls f0, f8, f0
-  fmuls f0, f5, f0
-  lhax r7, r6, r10
-  xoris r7, r7, 0x8000
-  stw r7, 0x14(r1)
-  stw r8, 0x10(r1)
-  lfd f1, 0x10(r1)
-  fsubs f1, f1, f9
-  fmuls f1, f7, f1
-  fmadds f0, f6, f1, f0
-  lha r7, 0x4(r9)
-  xoris r7, r7, 0x8000
-  stw r7, 0xc(r1)
-  stw r8, 0x8(r1)
-  lfd f1, 0x8(r1)
-  fsubs f1, f1, f9
-  fmuls f1, f8, f1
-  fmuls f1, f5, f1
-  add r7, r6, r10
-  lha r7, 0x2(r7)
-  xoris r7, r7, 0x8000
-  stw r7, 0x24(r1)
-  stw r8, 0x20(r1)
-  lfd f3, 0x20(r1)
-  fsubs f3, f3, f9
-  fmuls f3, f7, f3
-  fmadds f1, f6, f3, f1
-  b ObjAnim_SampleRootCurvePhase_L_8002F8EC
-ObjAnim_SampleRootCurvePhase_L_8002F8AC:
-  slwi r7, r3, 1
-  add r8, r5, r7
-  lha r7, 0x2(r8)
-  xoris r7, r7, 0x8000
-  stw r7, 0x24(r1)
-  stw r9, 0x20(r1)
-  lfd f0, 0x20(r1)
-  fsubs f0, f0, f3
-  fmuls f0, f5, f0
-  lha r7, 0x4(r8)
-  xoris r7, r7, 0x8000
-  stw r7, 0x1c(r1)
-  stw r9, 0x18(r1)
-  lfd f1, 0x18(r1)
-  fsubs f1, f1, f3
-  fmuls f1, f5, f1
-ObjAnim_SampleRootCurvePhase_L_8002F8EC:
-  fsubs f3, f1, f0
-  fmadds f3, f10, f3, f0
-  fadds f2, f2, f3
-  fnmsubs f3, f4, f10, f4
-  li r11, 0x0
-ObjAnim_SampleRootCurvePhase_L_8002F900:
-  fcmpo cr0, f1, f2
-  ble ObjAnim_SampleRootCurvePhase_L_8002F924
-  fsubs f9, f1, f2
-  fmuls f10, f4, f9
-  fsubs f9, f1, f0
-  fdivs f9, f10, f9
-  fsubs f3, f3, f9
-  li r11, 0x1
-  b ObjAnim_SampleRootCurvePhase_L_8002FA20
-ObjAnim_SampleRootCurvePhase_L_8002F924:
-  addi r3, r3, 0x1
-  cmpw r3, r0
-  blt ObjAnim_SampleRootCurvePhase_L_8002F934
-  li r3, 0x0
-ObjAnim_SampleRootCurvePhase_L_8002F934:
-  fmr f0, f1
-  cmplwi r6, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002F9D4
-  slwi r9, r3, 1
-  add r10, r5, r9
-  lha r7, 0x4(r10)
-  lfd f12, gObjAnimS32ToDoubleBias
-  xoris r7, r7, 0x8000
-  stw r7, 0x24(r1)
-  lis r8, 0x4330
-  stw r8, 0x20(r1)
-  lfd f9, 0x20(r1)
-  fsubs f10, f9, f12
-  lha r7, 0x2(r10)
-  xoris r7, r7, 0x8000
-  stw r7, 0x1c(r1)
-  stw r8, 0x18(r1)
-  lfd f9, 0x18(r1)
-  fsubs f9, f9, f12
-  fsubs f9, f10, f9
-  fmuls f11, f5, f9
-  add r9, r6, r9
-  lha r7, 0x2(r9)
-  xoris r7, r7, 0x8000
-  stw r7, 0x14(r1)
-  stw r8, 0x10(r1)
-  lfd f9, 0x10(r1)
-  fsubs f10, f9, f12
-  lha r7, 0x0(r9)
-  xoris r7, r7, 0x8000
-  stw r7, 0xc(r1)
-  stw r8, 0x8(r1)
-  lfd f9, 0x8(r1)
-  fsubs f9, f9, f12
-  fsubs f9, f10, f9
-  fmuls f9, f6, f9
-  fmuls f9, f9, f7
-  fmadds f9, f11, f8, f9
-  fadds f1, f1, f9
-  b ObjAnim_SampleRootCurvePhase_L_8002FA1C
-ObjAnim_SampleRootCurvePhase_L_8002F9D4:
-  slwi r7, r3, 1
-  add r9, r5, r7
-  lha r7, 0x4(r9)
-  lfd f11, gObjAnimS32ToDoubleBias
-  xoris r7, r7, 0x8000
-  stw r7, 0x24(r1)
-  lis r8, 0x4330
-  stw r8, 0x20(r1)
-  lfd f9, 0x20(r1)
-  fsubs f10, f9, f11
-  lha r7, 0x2(r9)
-  xoris r7, r7, 0x8000
-  stw r7, 0x1c(r1)
-  stw r8, 0x18(r1)
-  lfd f9, 0x18(r1)
-  fsubs f9, f9, f11
-  fsubs f9, f10, f9
-  fmadds f1, f5, f9, f1
-ObjAnim_SampleRootCurvePhase_L_8002FA1C:
-  fadds f3, f3, f4
-ObjAnim_SampleRootCurvePhase_L_8002FA20:
-  cmpwi r11, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002F900
-  cmplwi r4, 0x0
-  beq ObjAnim_SampleRootCurvePhase_L_8002FA34
-  stfs f3, 0x0(r4)
-ObjAnim_SampleRootCurvePhase_L_8002FA34:
-  li r3, 0x1
-  b ObjAnim_SampleRootCurvePhase_L_8002FA40
-ObjAnim_SampleRootCurvePhase_L_8002FA3C:
-  li r3, 0x0
-ObjAnim_SampleRootCurvePhase_L_8002FA40:
-  addi r1, r1, 0x30
-  blr
+  ObjAnimBank *bank;
+  ObjAnimDef *animDef;
+  ObjAnimState *state;
+  ObjAnimRootCurve *curve;
+  ObjAnimRootCurve *blendCurve;
+  ObjModelInstance *model;
+  s16 *axis;
+  s16 *blendSamples;
+  f32 rootScale;
+  f32 blendScale;
+  f32 blendWeight;
+  f32 moveWeight;
+  f32 targetDistance;
+  f32 sampleCount;
+  f32 phaseStep;
+  f32 sampleProgress;
+  f32 sampleFraction;
+  f32 previousDistance;
+  f32 nextDistance;
+  f32 phase;
+  int segmentCount;
+  int sampleIndex;
+  int lastSample;
+
+  bank = ObjAnim_GetActiveBank(objAnim);
+  animDef = bank->animDef;
+  if (animDef->moveCount == 0) {
+    return 0;
+  }
+
+  state = bank->currentState;
+  model = objAnim->modelInstance;
+  targetDistance = distance * (objAnim->rootMotionScale / model->rootMotionScaleBase);
+  blendSamples = NULL;
+  blendWeight = gObjAnimProgressZero;
+  moveWeight = gObjAnimProgressOne;
+  blendScale = gObjAnimProgressZero;
+
+  if (state->eventState != 0) {
+    blendWeight = (f32)state->eventState / gObjAnimEventStepScale;
+    moveWeight = gObjAnimProgressOne - blendWeight;
+    blendCurve = ObjAnim_GetBlendMoveRootCurve(animDef,state,state->blendCacheSlot);
+    if (blendCurve != NULL) {
+      blendScale = blendCurve->scale * objAnim->rootMotionScale;
+      blendSamples = ObjAnim_FindFirstRootTranslationAxis(blendCurve);
+      if (blendSamples != NULL) {
+        blendSamples++;
+      }
+    }
+  }
+
+  curve = ObjAnim_GetMoveRootCurve(animDef,state,state->moveCacheSlot);
+  if (curve == NULL) {
+    return 0;
+  }
+
+  rootScale = curve->scale * objAnim->rootMotionScale;
+  segmentCount = curve->sampleCount - 1;
+  axis = ObjAnim_FindFirstRootTranslationAxis(curve);
+  if (axis == NULL) {
+    return 0;
+  }
+
+  lastSample = ObjAnim_ReadRootAxisSample(axis,segmentCount);
+  if (lastSample < 0) {
+    rootScale = -rootScale;
+  }
+  if (lastSample == 0) {
+    return 0;
+  }
+
+  sampleCount = (f32)segmentCount;
+  phaseStep = gObjAnimProgressOne / sampleCount;
+  sampleProgress = sampleCount * objAnim->currentMoveProgress;
+  sampleIndex = (int)sampleProgress;
+  sampleFraction = sampleProgress - (f32)sampleIndex;
+
+  if (blendSamples != NULL && blendSamples[segmentCount] < 0) {
+    blendScale = -blendScale;
+  }
+
+  if (blendSamples != NULL) {
+    previousDistance =
+        (rootScale * moveWeight * (f32)ObjAnim_ReadRootAxisSample(axis,sampleIndex)) +
+        (blendScale * blendWeight * (f32)blendSamples[sampleIndex]);
+    nextDistance =
+        (rootScale * moveWeight * (f32)ObjAnim_ReadRootAxisSample(axis,sampleIndex + 1)) +
+        (blendScale * blendWeight * (f32)blendSamples[sampleIndex + 1]);
+  }
+  else {
+    previousDistance = rootScale * (f32)ObjAnim_ReadRootAxisSample(axis,sampleIndex);
+    nextDistance = rootScale * (f32)ObjAnim_ReadRootAxisSample(axis,sampleIndex + 1);
+  }
+
+  targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
+  phase = phaseStep - (phaseStep * sampleFraction);
+  while (nextDistance <= targetDistance) {
+    sampleIndex++;
+    if (sampleIndex >= segmentCount) {
+      sampleIndex = 0;
+    }
+    previousDistance = nextDistance;
+    if (blendSamples != NULL) {
+      nextDistance +=
+          (rootScale * moveWeight *
+           ((f32)ObjAnim_ReadRootAxisSample(axis,sampleIndex + 1) -
+            (f32)ObjAnim_ReadRootAxisSample(axis,sampleIndex))) +
+          (blendScale * blendWeight *
+           ((f32)blendSamples[sampleIndex + 1] - (f32)blendSamples[sampleIndex]));
+    }
+    else {
+      nextDistance +=
+          rootScale *
+          ((f32)ObjAnim_ReadRootAxisSample(axis,sampleIndex + 1) -
+           (f32)ObjAnim_ReadRootAxisSample(axis,sampleIndex));
+    }
+    phase += phaseStep;
+  }
+
+  phase -= phaseStep * ((nextDistance - targetDistance) / (nextDistance - previousDistance));
+  if (phaseOut != NULL) {
+    *phaseOut = phase;
+  }
+  return 1;
 }
 
 /*
