@@ -17,6 +17,9 @@ extern undefined4 FUN_800400b0();
 extern void objRenderFn_80041018(int obj);
 extern int FUN_8005af70();
 extern int FUN_8005b398();
+extern int mapGetBlock(int blockIdx);
+extern int objPosToMapBlockIdx(double x, double y, double z);
+extern void mm_free(void *ptr);
 extern uint FUN_80060058();
 extern undefined4 FUN_800600b4();
 extern undefined4 FUN_800600c4();
@@ -26,6 +29,7 @@ extern undefined8 FUN_80286830();
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286884();
+extern void fn_80194C40(undefined4 def, int state);
 
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e4c88;
@@ -598,6 +602,38 @@ int xyzanimator_getExtraSize(void)
 {
   return 0x50;
 }
+
+#pragma scheduling off
+#pragma peephole off
+void xyzanimator_free(int obj,int param_2)
+{
+  int block;
+  int state;
+  undefined4 def;
+  f32 zero;
+
+  zero = lbl_803E4000;
+  state = *(int *)(obj + 0xb8);
+  def = *(undefined4 *)(obj + 0x4c);
+  *(float *)(state + 0x40) = lbl_803E4000;
+  *(float *)(state + 0x44) = zero;
+  *(float *)(state + 0x48) = zero;
+  if (param_2 == 0) {
+    block = objPosToMapBlockIdx((double)*(float *)(obj + 0xc),(double)*(float *)(obj + 0x10),
+                                (double)*(float *)(obj + 0x14));
+    block = mapGetBlock(block);
+    if ((block != 0) && (*(int *)(state + 4) != 0)) {
+      fn_80194C40(def,state);
+    }
+  }
+  if (*(int *)(state + 0xc) != 0) {
+    mm_free(*(void **)(state + 0xc));
+  }
+  ObjGroup_RemoveObject(obj,0x51);
+  return;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FF8;
