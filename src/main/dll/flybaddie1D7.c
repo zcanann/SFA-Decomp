@@ -7,6 +7,7 @@ extern double FUN_80017714();
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern int FUN_80017af8();
+extern int ObjList_FindObjectById(int objectId);
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_FindNearestObjectForObject();
@@ -30,6 +31,8 @@ extern undefined4 DAT_80327654;
 extern undefined4 DAT_80327670;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd72c;
+extern int *gObjectTriggerInterface;
+extern s32 lbl_803269F8[];
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5EF8;
 extern f32 lbl_803E5EFC;
@@ -348,6 +351,48 @@ undefined4 FUN_801d025c(int param_1)
   }
   return uVar3;
 }
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801CFD68
+ * EN v1.0 Address: 0x801CFD68
+ * EN v1.0 Size: 348b
+ */
+#pragma scheduling off
+#pragma peephole off
+int fn_801CFD68(u8 *state)
+{
+  s32 *table;
+  int obj;
+
+  table = lbl_803269F8;
+  obj = ObjList_FindObjectById(table[state[0xe]]);
+  if (ObjTrigger_IsSetById(obj,0x1ee) != 0) {
+    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0,obj,-1);
+    state[4] = 9;
+    state[0xc] = table[state[0xe] + 7];
+    state[0xd] = table[state[0xe] + 0xe];
+    state[0xe]++;
+    state[5] = 0x1e;
+    return 1;
+  }
+
+  if (state[0xe] != 0) {
+    obj = ObjList_FindObjectById(table[state[0xe] - 1]);
+    if (ObjTrigger_IsSetById(obj,0x1ee) != 0) {
+      (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0,obj,-1);
+      state[4] = 9;
+      state[0xc] = table[state[0xe] + 6];
+      state[5] = 0;
+      return 2;
+    }
+  }
+
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
