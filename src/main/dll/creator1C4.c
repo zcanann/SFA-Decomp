@@ -388,17 +388,12 @@ void gpsh_scene_init(int *obj, int *def) {
 void gpsh_objcreator_init(int *obj, int *def) {
     register u32 zero;
     register int *state;
-    register u32 b;
     state = *(int **)((char *)obj + 0xb8);
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x1e) << 8);
     zero = 0;
     *(int *)((char *)obj + 0xf8) = zero;
     *(u8 *)((char *)state + 4) = (u8)*(s16 *)((char *)def + 0x1a);
-    asm {
-        lbz b, 5(state)
-        rlwimi b, zero, 7, 24, 24
-        stb b, 5(state)
-    }
+    *(u8 *)((char *)state + 5) &= 0x7f;
     *(u8 *)((char *)obj + 0x37) = 0xff;
     *(u8 *)((char *)obj + 0x36) = 0xff;
 }

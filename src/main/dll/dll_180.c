@@ -217,33 +217,17 @@ void cflightwall_init(s16 *obj, u8 *def) {
 #pragma peephole off
 void cf_doorlight_init(int *obj, s8 *def) {
     register u8 *state = *(u8 **)((char *)obj + 0xb8);
-    register u32 b;
-    register u32 one;
+    u32 b;
     *(int *)state = 0;
     *(s16 *)obj = (s16)((s32)def[0x19] << 9);
     *(int *)(state + 8) = (int)*(s16 *)((char *)def + 0x1a) << 8;
     *(u8 *)(state + 4) = (u8)*(s16 *)((char *)def + 0x1c);
     *(int *)(state + 0xc) = (int)def[0x18] << 8;
     b = (u32)(u8)GameBit_Get(*(s16 *)((char *)def + 0x1e));
-    {
-        register u8 byteVal1;
-        asm {
-            lbz byteVal1, 0x14(state)
-            rlwimi byteVal1, b, 6, 25, 25
-            stb byteVal1, 0x14(state)
-        }
-    }
+    state[0x14] = (u8)((state[0x14] & ~0x40) | ((b & 1) << 6));
     if (((u32)state[0x14] >> 6) & 1) {
         *(int *)(state + 0x10) = *(int *)(state + 8);
-        one = 1;
-        {
-            register u8 byteVal2;
-            asm {
-                lbz byteVal2, 0x14(state)
-                rlwimi byteVal2, one, 5, 26, 26
-                stb byteVal2, 0x14(state)
-            }
-        }
+        state[0x14] |= 0x20;
     }
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
     *(u16 *)((char *)obj + 0xb0) |= 0x4000;

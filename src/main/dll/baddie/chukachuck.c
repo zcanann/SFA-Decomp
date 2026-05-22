@@ -210,22 +210,15 @@ void dfpfloorbar_init(int obj, int params)
 #pragma peephole off
 void dfpfloorbar_initialise(void)
 {
-    asm {
-        lis r3, gDfpfloorbarModeTable@ha
-        addi r3, r3, gDfpfloorbarModeTable@l
-        li r0, 0
-        stb r0, 0(r3)
-        stb r0, 1(r3)
-        stb r0, 2(r3)
-        addi r3, r3, 3
-        stb r0, 0(r3)
-        stb r0, 1(r3)
-        stb r0, 2(r3)
-        addi r3, r3, 3
-        stb r0, 0(r3)
-        stb r0, 1(r3)
-        stb r0, 2(r3)
-    }
+    gDfpfloorbarModeTable[0] = 0;
+    gDfpfloorbarModeTable[1] = 0;
+    gDfpfloorbarModeTable[2] = 0;
+    gDfpfloorbarModeTable[3] = 0;
+    gDfpfloorbarModeTable[4] = 0;
+    gDfpfloorbarModeTable[5] = 0;
+    gDfpfloorbarModeTable[6] = 0;
+    gDfpfloorbarModeTable[7] = 0;
+    gDfpfloorbarModeTable[8] = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

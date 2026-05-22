@@ -4341,11 +4341,7 @@ void dll_0B_func17(u32 flags) { *(u32 *)(lbl_8039BE98 + 0x54) |= flags; }
 void dll_0B_func15(void *params) { memcpy(lbl_8039BE98 + 0x46, params, 0xe); }
 void dll_0B_func14(s16 value)
 {
-  register u8 *state;
-  asm {
-    lis state, lbl_8039BE98@ha
-    addi state, state, lbl_8039BE98@l
-  }
+  u8 *state = lbl_8039BE98;
   state = state + lbl_803DD28A * 2;
   *(s16 *)(state + 0x46) = value;
 }
@@ -4353,8 +4349,7 @@ void dll_0B_func13(s16 x) { lbl_803DD28A = x; }
 void dll_0B_func12(void) { lbl_803DD28A++; }
 void dll_0B_func11(int modelOrResource, float posX, float posY, float posZ, s16 param14, int param10)
 {
-  register u32 sequenceIndex = lbl_803DD28A;
-  asm { clrlwi sequenceIndex, sequenceIndex, 24 }
+  u32 sequenceIndex = (u8)lbl_803DD28A;
   lbl_803DD28C->sequenceIndex = sequenceIndex;
   lbl_803DD28C->param14 = param14;
   lbl_803DD28C->param10 = param10;
