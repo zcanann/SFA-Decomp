@@ -163,173 +163,325 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,i
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,ObjAnimEventList *events)
+asm int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,ObjAnimEventList *events)
 {
-  ObjAnimComponent *objAnim;
-  ObjAnimEventTable *eventTable;
-  ObjAnimBank *bank;
-  ObjAnimState *state;
-  int previousEventFrame;
-  int currentEventFrame;
-  s8 triggerSlot;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  int moveWrappedOrEnded;
-  int eventByteOffset;
-  int eventCountdown;
-  int iVar11;
-  int eventIndex;
-  int eventScanFlags;
-  s16 eventWord;
-  int eventId;
-  int eventFrame;
-  double local_28;
-
-  objAnim = (ObjAnimComponent *)objAnimArg;
-  moveWrappedOrEnded = 0;
-  bank = ObjAnim_GetActiveBank(objAnim);
-  if (bank->animDef->moveCount == 0) {
-    moveWrappedOrEnded = 0;
-  }
-  else {
-    state = bank->activeState;
-    state->step = moveStepScale * state->segmentLength;
-    if (state->eventCountdown != 0) {
-      if ((state->flags & OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP) != 0) {
-        state->savedStep = state->step;
-      }
-      state->progress = state->savedStep * deltaTime + state->progress;
-      fVar5 = gObjAnimProgressZero;
-      fVar4 = state->prevSegmentLength;
-      if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
-        if (state->progress < gObjAnimProgressZero) {
-          while (state->progress < fVar5) {
-            state->progress = state->progress + fVar4;
-          }
-        }
-        if (fVar4 <= state->progress) {
-          while (fVar4 <= state->progress) {
-            state->progress = state->progress - fVar4;
-          }
-        }
-      }
-      else {
-        fVar5 = state->progress;
-        fVar6 = gObjAnimProgressZero;
-        if ((gObjAnimProgressZero <= fVar5) && (fVar6 = fVar5, fVar4 < fVar5)) {
-          fVar6 = fVar4;
-        }
-        state->progress = fVar6;
-      }
-      if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
-        eventCountdown =
-            (int)-(float)((ObjAnim_U32AsDouble(state->eventStep) - gObjAnimU32ToDoubleBias) *
-                              deltaTime -
-                          (ObjAnim_U32AsDouble(state->eventCountdown ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
-                           gObjAnimS32ToDoubleBias));
-        fVar4 = gObjAnimProgressZero;
-        if ((-1 < eventCountdown) &&
-           (eventCountdown = eventCountdown ^ OBJANIM_S32_DOUBLE_BIAS_XOR, fVar4 = gObjAnimEventStepScale,
-           ObjAnim_U32AsDouble(eventCountdown) - gObjAnimS32ToDoubleBias <= gObjAnimEventStepScale)) {
-          local_28 = ObjAnim_U32AsDouble(eventCountdown);
-          fVar4 = local_28 - gObjAnimS32ToDoubleBias;
-        }
-        state->eventCountdown = (u16)(int)fVar4;
-      }
-      if (state->eventCountdown == 0) {
-        state->prevEventState = 0;
-      }
-    }
-    fVar4 = objAnim->activeMoveProgress;
-    objAnim->activeMoveProgress = fVar4 + moveStepScale * deltaTime;
-    fVar6 = gObjAnimProgressZero;
-    fVar5 = gObjAnimProgressOne;
-    if (objAnim->activeMoveProgress >= gObjAnimProgressOne) {
-      if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-        objAnim->activeMoveProgress = gObjAnimProgressOne;
-      }
-      else {
-        while (fVar5 <= objAnim->activeMoveProgress) {
-          objAnim->activeMoveProgress = objAnim->activeMoveProgress - fVar5;
-        }
-      }
-      moveWrappedOrEnded = 1;
-    }
-    else if (objAnim->activeMoveProgress < gObjAnimProgressZero) {
-      if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-        objAnim->activeMoveProgress = gObjAnimProgressZero;
-      }
-      else {
-        while (objAnim->activeMoveProgress < fVar6) {
-          objAnim->activeMoveProgress = objAnim->activeMoveProgress + fVar5;
-        }
-      }
-      moveWrappedOrEnded = 1;
-    }
-    if ((events != (ObjAnimEventList *)0) &&
-        (events->rootCurveValid = 0, objAnim->eventTable != 0)) {
-      eventTable = objAnim->eventTable;
-      events->triggerCount = 0;
-      iVar11 = eventTable->byteCount >> 1;
-      if (iVar11 != 0) {
-        previousEventFrame = (int)(gObjAnimEventFrameScale * fVar4);
-        currentEventFrame = (int)(gObjAnimEventFrameScale * objAnim->activeMoveProgress);
-        eventScanFlags = OBJANIM_EVENT_SCAN_FORWARD;
-        if (currentEventFrame < previousEventFrame) {
-          eventScanFlags |= OBJANIM_EVENT_SCAN_WRAPPED;
-        }
-        if (moveStepScale * deltaTime < gObjAnimProgressZero) {
-          eventScanFlags |= OBJANIM_EVENT_SCAN_REVERSE;
-        }
-        eventIndex = 0;
-        eventByteOffset = 0;
-        while ((eventIndex < iVar11 && (events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY))) {
-          eventWord = *(s16 *)((u8 *)eventTable->entries + eventByteOffset);
-          eventFrame = eventWord & OBJANIM_EVENT_FRAME_MASK;
-          eventId = (eventWord >> OBJANIM_EVENT_ID_SHIFT) & OBJANIM_EVENT_ID_MASK;
-          if (eventId != OBJANIM_EVENT_ID_NONE) {
-            if (((eventScanFlags == OBJANIM_EVENT_SCAN_FORWARD) &&
-                (previousEventFrame <= (int)eventFrame)) &&
-               ((int)eventFrame < currentEventFrame)) {
-              triggerSlot = events->triggerCount;
-              events->triggerCount = triggerSlot + '\x01';
-              events->triggeredIds[(u8)triggerSlot] = eventId;
-            }
-            if ((eventScanFlags == OBJANIM_EVENT_SCAN_WRAPPED) &&
-               ((previousEventFrame <= (int)eventFrame ||
-                ((int)eventFrame < currentEventFrame)))) {
-              triggerSlot = events->triggerCount;
-              events->triggerCount = triggerSlot + '\x01';
-              events->triggeredIds[(u8)triggerSlot] = eventId;
-            }
-            if (((eventScanFlags == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) &&
-                (currentEventFrame < (int)eventFrame)) &&
-               ((int)eventFrame <= previousEventFrame)) {
-              triggerSlot = events->triggerCount;
-              events->triggerCount = triggerSlot + '\x01';
-              events->triggeredIds[(u8)triggerSlot] = eventId;
-            }
-            if ((eventScanFlags == OBJANIM_EVENT_SCAN_REVERSE) &&
-               ((currentEventFrame < (int)eventFrame ||
-                ((int)eventFrame <= previousEventFrame)))) {
-              triggerSlot = events->triggerCount;
-              events->triggerCount = triggerSlot + '\x01';
-              events->triggeredIds[(u8)triggerSlot] = eventId;
-            }
-          }
-          eventByteOffset = eventByteOffset + 2;
-          eventIndex = eventIndex + 1;
-        }
-      }
-    }
-  }
-  return moveWrappedOrEnded;
+  nofralloc
+  stwu r1,-0x50(r1)
+  stw r31,0x4c(r1)
+  stw r30,0x48(r1)
+  stw r29,0x44(r1)
+  li r0,0
+  lwz r6,0x7c(r3)
+  lbz r5,0xad(r3)
+  extsb r5,r5
+  slwi r5,r5,2
+  lwzx r6,r6,r5
+  lwz r5,0(r6)
+  lhz r5,0xec(r5)
+  cmplwi r5,0
+  bne Object_ObjAnimAdvanceMove_hasMoves
+  li r3,0
+  b Object_ObjAnimAdvanceMove_done
+Object_ObjAnimAdvanceMove_hasMoves:
+  lwz r7,0x30(r6)
+  lfs f0,0x14(r7)
+  fmuls f0,f1,f0
+  stfs f0,0xc(r7)
+  lhz r5,0x58(r7)
+  cmplwi r5,0
+  beq Object_ObjAnimAdvanceMove_progress
+  lbz r5,0x63(r7)
+  extsb r5,r5
+  rlwinm r5,r5,0,28,28
+  cmpwi r5,0
+  beq Object_ObjAnimAdvanceMove_savedStepReady
+  lfs f0,0xc(r7)
+  stfs f0,0x10(r7)
+Object_ObjAnimAdvanceMove_savedStepReady:
+  lfs f3,0x10(r7)
+  lfs f0,8(r7)
+  fmadds f0,f3,f2,f0
+  stfs f0,8(r7)
+  lfs f4,0x18(r7)
+  lbz r5,0x61(r7)
+  extsb r5,r5
+  cmpwi r5,0
+  beq Object_ObjAnimAdvanceMove_clampPrevProgress
+  lfs f0,8(r7)
+  lfs f3,gObjAnimProgressZero
+  fcmpo cr0,f0,f3
+  bge Object_ObjAnimAdvanceMove_checkPrevUpper
+  b Object_ObjAnimAdvanceMove_wrapPrevLowCheck
+Object_ObjAnimAdvanceMove_wrapPrevLow:
+  lfs f0,8(r7)
+  fadds f0,f0,f4
+  stfs f0,8(r7)
+Object_ObjAnimAdvanceMove_wrapPrevLowCheck:
+  lfs f0,8(r7)
+  fcmpo cr0,f0,f3
+  blt Object_ObjAnimAdvanceMove_wrapPrevLow
+Object_ObjAnimAdvanceMove_checkPrevUpper:
+  lfs f0,8(r7)
+  fcmpo cr0,f0,f4
+  cror 2,1,2
+  bne Object_ObjAnimAdvanceMove_updateCountdown
+  b Object_ObjAnimAdvanceMove_wrapPrevHighCheck
+Object_ObjAnimAdvanceMove_wrapPrevHigh:
+  lfs f0,8(r7)
+  fsubs f0,f0,f4
+  stfs f0,8(r7)
+Object_ObjAnimAdvanceMove_wrapPrevHighCheck:
+  lfs f0,8(r7)
+  fcmpo cr0,f0,f4
+  cror 2,1,2
+  beq Object_ObjAnimAdvanceMove_wrapPrevHigh
+  b Object_ObjAnimAdvanceMove_updateCountdown
+Object_ObjAnimAdvanceMove_clampPrevProgress:
+  lfs f3,8(r7)
+  lfs f0,gObjAnimProgressZero
+  fcmpo cr0,f3,f0
+  bge Object_ObjAnimAdvanceMove_clampPrevUpper
+  b Object_ObjAnimAdvanceMove_storePrevClamp
+Object_ObjAnimAdvanceMove_clampPrevUpper:
+  fcmpo cr0,f3,f4
+  ble Object_ObjAnimAdvanceMove_prevWithin
+  fmr f0,f4
+  b Object_ObjAnimAdvanceMove_storePrevClamp
+Object_ObjAnimAdvanceMove_prevWithin:
+  fmr f0,f3
+Object_ObjAnimAdvanceMove_storePrevClamp:
+  stfs f0,8(r7)
+Object_ObjAnimAdvanceMove_updateCountdown:
+  lbz r5,0x63(r7)
+  extsb r5,r5
+  rlwinm r5,r5,0,30,30
+  cmpwi r5,0
+  bne Object_ObjAnimAdvanceMove_countdownChecked
+  lhz r5,0x5e(r7)
+  lfd f3,gObjAnimU32ToDoubleBias
+  stw r5,0xc(r1)
+  lis r6,0x4330
+  stw r6,8(r1)
+  lfd f0,8(r1)
+  fsubs f3,f0,f3
+  lhz r5,0x58(r7)
+  lfd f4,gObjAnimS32ToDoubleBias
+  xoris r5,r5,0x8000
+  stw r5,0x14(r1)
+  stw r6,0x10(r1)
+  lfd f0,0x10(r1)
+  fsubs f0,f0,f4
+  fnmsubs f0,f3,f2,f0
+  fctiwz f0,f0
+  stfd f0,0x18(r1)
+  lwz r5,0x1c(r1)
+  cmpwi r5,0
+  bge Object_ObjAnimAdvanceMove_countdownNonnegative
+  lfs f3,gObjAnimProgressZero
+  b Object_ObjAnimAdvanceMove_storeCountdown
+Object_ObjAnimAdvanceMove_countdownNonnegative:
+  xoris r5,r5,0x8000
+  stw r5,0x24(r1)
+  stw r6,0x20(r1)
+  lfd f0,0x20(r1)
+  fsubs f0,f0,f4
+  lfs f3,gObjAnimEventStepScale
+  fcmpo cr0,f0,f3
+  ble Object_ObjAnimAdvanceMove_countdownWithinStep
+  b Object_ObjAnimAdvanceMove_storeCountdown
+Object_ObjAnimAdvanceMove_countdownWithinStep:
+  stw r5,0x2c(r1)
+  stw r6,0x28(r1)
+  lfd f0,0x28(r1)
+  fsubs f3,f0,f4
+Object_ObjAnimAdvanceMove_storeCountdown:
+  fctiwz f0,f3
+  stfd f0,0x30(r1)
+  lwz r5,0x34(r1)
+  clrlwi r5,r5,16
+  sth r5,0x58(r7)
+Object_ObjAnimAdvanceMove_countdownChecked:
+  lhz r5,0x58(r7)
+  cmplwi r5,0
+  bne Object_ObjAnimAdvanceMove_progress
+  li r5,0
+  sth r5,0x5c(r7)
+Object_ObjAnimAdvanceMove_progress:
+  lfs f3,0x9c(r3)
+  fmuls f4,f1,f2
+  fadds f0,f3,f4
+  stfs f0,0x9c(r3)
+  lfs f0,0x9c(r3)
+  lfs f2,gObjAnimProgressOne
+  fcmpo cr0,f0,f2
+  cror 2,1,2
+  bne Object_ObjAnimAdvanceMove_checkProgressLow
+  lbz r0,0x60(r7)
+  extsb r0,r0
+  cmpwi r0,0
+  beq Object_ObjAnimAdvanceMove_clampHigh
+  b Object_ObjAnimAdvanceMove_wrapHighCheck
+Object_ObjAnimAdvanceMove_wrapHigh:
+  lfs f0,0x9c(r3)
+  fsubs f0,f0,f2
+  stfs f0,0x9c(r3)
+Object_ObjAnimAdvanceMove_wrapHighCheck:
+  lfs f0,0x9c(r3)
+  fcmpo cr0,f0,f2
+  cror 2,1,2
+  beq Object_ObjAnimAdvanceMove_wrapHigh
+  b Object_ObjAnimAdvanceMove_setWrapped
+Object_ObjAnimAdvanceMove_clampHigh:
+  stfs f2,0x9c(r3)
+Object_ObjAnimAdvanceMove_setWrapped:
+  li r0,1
+  b Object_ObjAnimAdvanceMove_events
+Object_ObjAnimAdvanceMove_checkProgressLow:
+  lfs f1,gObjAnimProgressZero
+  fcmpo cr0,f0,f1
+  bge Object_ObjAnimAdvanceMove_events
+  lbz r0,0x60(r7)
+  extsb r0,r0
+  cmpwi r0,0
+  beq Object_ObjAnimAdvanceMove_clampLow
+  b Object_ObjAnimAdvanceMove_wrapLowCheck
+Object_ObjAnimAdvanceMove_wrapLow:
+  lfs f0,0x9c(r3)
+  fadds f0,f0,f2
+  stfs f0,0x9c(r3)
+Object_ObjAnimAdvanceMove_wrapLowCheck:
+  lfs f0,0x9c(r3)
+  fcmpo cr0,f0,f1
+  blt Object_ObjAnimAdvanceMove_wrapLow
+  b Object_ObjAnimAdvanceMove_setWrappedLow
+Object_ObjAnimAdvanceMove_clampLow:
+  stfs f1,0x9c(r3)
+Object_ObjAnimAdvanceMove_setWrappedLow:
+  li r0,1
+Object_ObjAnimAdvanceMove_events:
+  cmplwi r4,0
+  bne Object_ObjAnimAdvanceMove_hasEventList
+  mr r3,r0
+  b Object_ObjAnimAdvanceMove_done
+Object_ObjAnimAdvanceMove_hasEventList:
+  li r6,0
+  stb r6,0x12(r4)
+  lwz r5,0x60(r3)
+  cmplwi r5,0
+  beq Object_ObjAnimAdvanceMove_returnWrapped
+  stb r6,0x1b(r4)
+  lwz r5,0x60(r3)
+  lwz r5,0(r5)
+  srawi r6,r5,1
+  cmpwi r6,0
+  beq Object_ObjAnimAdvanceMove_returnWrapped
+  lfs f1,gObjAnimEventFrameScale
+  fmuls f0,f1,f3
+  fctiwz f0,f0
+  stfd f0,0x30(r1)
+  lwz r8,0x34(r1)
+  lfs f0,0x9c(r3)
+  fmuls f0,f1,f0
+  fctiwz f0,f0
+  stfd f0,0x28(r1)
+  lwz r9,0x2c(r1)
+  li r10,0
+  cmpw r9,r8
+  bge Object_ObjAnimAdvanceMove_checkReverse
+  ori r10,r10,1
+Object_ObjAnimAdvanceMove_checkReverse:
+  lfs f0,gObjAnimProgressZero
+  fcmpo cr0,f4,f0
+  bge Object_ObjAnimAdvanceMove_scanSetup
+  ori r10,r10,2
+Object_ObjAnimAdvanceMove_scanSetup:
+  li r7,0
+  li r5,0
+  b Object_ObjAnimAdvanceMove_scanTest
+Object_ObjAnimAdvanceMove_scanLoop:
+  lwz r11,0x60(r3)
+  lwz r11,4(r11)
+  lhax r11,r11,r5
+  clrlwi r29,r11,23
+  rlwinm r30,r11,23,25,31
+  cmpwi r30,0x7f
+  beq Object_ObjAnimAdvanceMove_nextEvent
+  cmpwi r10,0
+  bne Object_ObjAnimAdvanceMove_scanWrapped
+  cmpw r29,r8
+  blt Object_ObjAnimAdvanceMove_scanWrapped
+  cmpw r29,r9
+  bge Object_ObjAnimAdvanceMove_scanWrapped
+  extsb r31,r30
+  lbz r12,0x1b(r4)
+  addi r11,r12,1
+  stb r11,0x1b(r4)
+  extsb r11,r12
+  addi r11,r11,0x13
+  stbx r31,r4,r11
+Object_ObjAnimAdvanceMove_scanWrapped:
+  cmpwi r10,1
+  bne Object_ObjAnimAdvanceMove_scanReverseWrapped
+  cmpw r29,r8
+  bge Object_ObjAnimAdvanceMove_emitWrapped
+  cmpw r29,r9
+  bge Object_ObjAnimAdvanceMove_scanReverseWrapped
+Object_ObjAnimAdvanceMove_emitWrapped:
+  extsb r31,r30
+  lbz r12,0x1b(r4)
+  addi r11,r12,1
+  stb r11,0x1b(r4)
+  extsb r11,r12
+  addi r11,r11,0x13
+  stbx r31,r4,r11
+Object_ObjAnimAdvanceMove_scanReverseWrapped:
+  cmpwi r10,3
+  bne Object_ObjAnimAdvanceMove_scanReverse
+  cmpw r29,r9
+  ble Object_ObjAnimAdvanceMove_scanReverse
+  cmpw r29,r8
+  bgt Object_ObjAnimAdvanceMove_scanReverse
+  extsb r31,r30
+  lbz r12,0x1b(r4)
+  addi r11,r12,1
+  stb r11,0x1b(r4)
+  extsb r11,r12
+  addi r11,r11,0x13
+  stbx r31,r4,r11
+Object_ObjAnimAdvanceMove_scanReverse:
+  cmpwi r10,2
+  bne Object_ObjAnimAdvanceMove_nextEvent
+  cmpw r29,r9
+  bgt Object_ObjAnimAdvanceMove_emitReverse
+  cmpw r29,r8
+  bgt Object_ObjAnimAdvanceMove_nextEvent
+Object_ObjAnimAdvanceMove_emitReverse:
+  extsb r31,r30
+  lbz r12,0x1b(r4)
+  addi r11,r12,1
+  stb r11,0x1b(r4)
+  extsb r11,r12
+  addi r11,r11,0x13
+  stbx r31,r4,r11
+Object_ObjAnimAdvanceMove_nextEvent:
+  addi r5,r5,2
+  addi r7,r7,1
+Object_ObjAnimAdvanceMove_scanTest:
+  cmpw r7,r6
+  bge Object_ObjAnimAdvanceMove_returnWrapped
+  lbz r11,0x1b(r4)
+  extsb r11,r11
+  cmpwi r11,8
+  blt Object_ObjAnimAdvanceMove_scanLoop
+Object_ObjAnimAdvanceMove_returnWrapped:
+  mr r3,r0
+Object_ObjAnimAdvanceMove_done:
+  lwz r31,0x4c(r1)
+  lwz r30,0x48(r1)
+  lwz r29,0x44(r1)
+  addi r1,r1,0x50
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
