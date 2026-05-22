@@ -68,6 +68,9 @@ extern undefined4 FUN_80286880();
 extern undefined4 FUN_8028688c();
 extern uint FUN_80294c04();
 extern int FUN_80294dbc();
+extern void *Obj_GetPlayerObject(void);
+extern int fn_801871C8(int *obj);
+extern int fn_8018728C(int obj, int unused, int events);
 
 extern undefined4 DAT_803225e0;
 extern undefined4 DAT_803225f0;
@@ -138,49 +141,54 @@ extern f32 FLOAT_803e4848;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FireFlyLantern_init(int param_1,int param_2)
+#pragma scheduling off
+#pragma peephole off
+void FireFlyLantern_init(int obj, int def)
 {
-  float fVar1;
-  uint uVar2;
-  undefined4 *puVar3;
-  
-  puVar3 = *(undefined4 **)(param_1 + 0xb8);
-  ObjGroup_AddObject(param_1,0x30);
-  fVar1 = FLOAT_803e4750;
-  puVar3[1] = FLOAT_803e4750;
-  puVar3[5] = fVar1;
-  puVar3[9] = fVar1;
-  puVar3[2] = fVar1;
-  puVar3[6] = fVar1;
-  puVar3[10] = fVar1;
-  puVar3[3] = fVar1;
-  puVar3[7] = fVar1;
-  puVar3[0xb] = fVar1;
-  puVar3[4] = fVar1;
-  puVar3[8] = fVar1;
-  puVar3[0xc] = fVar1;
-  *puVar3 = 0;
-  *(undefined *)((int)puVar3 + 0x6e) = 0;
-  puVar3[0x11] = FLOAT_803e4770;
-  puVar3[0x12] = FLOAT_803e4774;
-  puVar3[0x10] = FLOAT_803e4738;
-  *(undefined *)(puVar3 + 0x1b) = 0;
-  *(undefined *)((int)puVar3 + 0x6b) = 0;
-  uVar2 = randomGetRange(500,0x5dc);
-  *(short *)((int)puVar3 + 0x66) = (short)uVar2;
-  uVar2 = randomGetRange(0,65000);
-  *(short *)(puVar3 + 0x19) = (short)uVar2;
-  *(undefined2 *)(puVar3 + 0x1a) = 4;
-  *(undefined *)((int)puVar3 + 0x6a) = 4;
-  puVar3[0x13] = FLOAT_803e4750;
-  puVar3[0x14] = FLOAT_803e4778;
-  puVar3[0x15] = *(undefined4 *)(param_2 + 8);
-  puVar3[0x16] = *(undefined4 *)(param_2 + 0xc);
-  puVar3[0x17] = *(undefined4 *)(param_2 + 0x10);
-  *(undefined *)((int)puVar3 + 0x6f) = 0;
-  *(byte *)(puVar3 + 0x1c) = *(byte *)(puVar3 + 0x1c) & 0x3f;
-  return;
+  void *player;
+  u8 *state;
+  u8 childCount;
+  int i;
+  u8 *childSlot;
+
+  state = *(u8 **)(obj + 0xb8);
+  *(int *)(obj + 0xbc) = (int)fn_8018728C;
+  player = Obj_GetPlayerObject();
+  if (*(s16 *)((u8 *)player + 0x46) != 0) {
+    *(s16 *)(state + 0x20) = 0x13d;
+  }
+  else {
+    *(s16 *)(state + 0x20) = 0x5d6;
+  }
+
+  *(u8 *)(state + 0x1c) = 0;
+  *(u8 *)(state + 0x1d) = GameBit_Get(*(s16 *)(state + 0x20));
+
+  if (*(s8 *)(def + 0x19) == 1) {
+    if (*(u8 *)(state + 0x1d) != 0) {
+      *(u8 *)(state + 0x1c) = 1;
+      *(int *)state = fn_801871C8((int *)obj);
+    }
+    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) | 0x4000;
+  }
+  else {
+    childCount = *(u8 *)(state + 0x1d);
+    if (childCount >= 6) {
+      childCount = 6;
+    }
+    *(u8 *)(state + 0x1c) = childCount;
+
+    i = 0;
+    childSlot = state;
+    while (i < *(u8 *)(state + 0x1c)) {
+      *(int *)childSlot = fn_801871C8((int *)obj);
+      childSlot += 4;
+      i++;
+    }
+  }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
