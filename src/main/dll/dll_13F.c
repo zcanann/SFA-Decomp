@@ -19,6 +19,7 @@ extern undefined8 FUN_801726ac();
 extern undefined4 FUN_80172974();
 extern undefined4 FUN_80172b40();
 extern uint countLeadingZeros();
+extern void fn_80172680(void);
 
 extern undefined4 DAT_803218a8;
 extern undefined4 DAT_803dc070;
@@ -36,6 +37,15 @@ extern f32 lbl_803E412C;
 extern f32 lbl_803E4130;
 extern f32 lbl_803E4134;
 extern f32 lbl_803E4138;
+extern void *gPathControlInterface;
+extern u8 lbl_80320C58[];
+extern u32 lbl_803E3440;
+extern u8 lbl_803E3444;
+extern f32 lbl_803E345C;
+extern f32 lbl_803E3494;
+extern f32 lbl_803E3498;
+extern f32 lbl_803E349C;
+extern f32 lbl_803E34A0;
 
 /*
  * --INFO--
@@ -50,118 +60,91 @@ extern f32 lbl_803E4138;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void collectible_init(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                      short *param_9)
+#pragma scheduling off
+#pragma peephole off
+void collectible_init(int obj,int setup)
 {
-  float fVar1;
-  uint uVar2;
-  int iVar3;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar4;
-  double dVar5;
-  undefined8 uVar6;
-  double dVar7;
-  uint local_18;
-  uint auStack_14 [2];
-  
-  iVar4 = *(int *)(param_9 + 0x5c);
-  *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 8;
-  fVar1 = lbl_803E40F4;
-  dVar7 = (double)*(float *)(iVar4 + 8);
-  dVar5 = (double)lbl_803E40F4;
-  if (dVar7 == dVar5) {
-    if ((int)*(short *)(iVar4 + 0x14) != 0xffffffff) {
-      uVar2 = GameBit_Get((int)*(short *)(iVar4 + 0x14));
-      uVar2 = countLeadingZeros(uVar2);
-      *(char *)(iVar4 + 0x1e) = (char)(uVar2 >> 5);
-    }
-    if ((*(char *)(iVar4 + 0x1e) == '\0') && (*(char *)(iVar4 + 0xf) == '\0')) {
-      if (param_9[0x23] == 0x6a6) {
-        in_r7 = 0x14;
-        in_r8 = 0;
-        in_r9 = 0;
-        FUN_800810f4((double)lbl_803E40EC,(double)lbl_803E40F0,param_9,5,6,1,0x14,0,0);
-      }
-      dVar7 = (double)*(float *)(iVar4 + 0x44);
-      dVar5 = (double)lbl_803E40F4;
-      if ((dVar7 == dVar5) ||
-         (*(float *)(iVar4 + 0x44) = (float)(dVar7 - (double)lbl_803DC074),
-         dVar5 < (double)*(float *)(iVar4 + 0x44))) {
-        while (iVar3 = ObjMsg_Pop((int)param_9,&local_18,auStack_14,(uint *)0x0), iVar3 != 0) {
-          if (local_18 == 0x7000b) {
-            dVar5 = (double)FUN_801713ac(dVar5,dVar7,param_3,param_4,param_5,param_6,param_7,param_8
-                                         ,(uint)param_9);
-          }
-        }
-        if (((param_9[0x23] == 0x319) && (*(short *)(iVar4 + 0x3c) != 0)) &&
-           (*(ushort *)(iVar4 + 0x3c) = *(short *)(iVar4 + 0x3c) - (ushort)DAT_803dc070,
-           *(short *)(iVar4 + 0x3c) < 1)) {
-          *(undefined2 *)(iVar4 + 0x3c) = 0;
-          *(byte *)(iVar4 + 0x37) = *(byte *)(iVar4 + 0x37) & 0xfe;
-          *(undefined *)(param_9 + 0x1b) = 0xff;
-          param_9[0x7a] = 0;
-          param_9[0x7b] = 0;
-        }
-        if (*(int *)(param_9 + 0x7a) == 0) {
-          *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
-          uVar6 = FUN_801726ac(param_9);
-          if (*(char *)(iVar4 + 0x1d) != '\0') {
-            uVar6 = FUN_801723dc((int)param_9);
-          }
-          if (*(char *)(iVar4 + 0x3e) == '\0') {
-            FUN_80172b40(uVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8);
-          }
-          else {
-            *(char *)(iVar4 + 0x3e) = *(char *)(iVar4 + 0x3e) + -1;
-            if (*(char *)(iVar4 + 0x3e) == '\0') {
-              *(undefined2 *)(iVar4 + 0x48) = 0xffff;
-              iVar3 = FUN_80017a98();
-              ObjMsg_SendToObject(uVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x7000a
-                           ,(uint)param_9,iVar4 + 0x48,in_r7,in_r8,in_r9,in_r10);
-            }
-          }
-        }
-        else {
-          iVar3 = *(int *)(param_9 + 0x2a);
-          if (iVar3 != 0) {
-            *(ushort *)(iVar3 + 0x60) = *(ushort *)(iVar3 + 0x60) | 0x100;
-          }
-          ObjHits_DisableObject((int)param_9);
-          if (((int)*(short *)(iVar4 + 0x10) != 0xffffffff) &&
-             (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 0x10)), uVar2 == 0)) {
-            param_9[0x7a] = 0;
-            param_9[0x7b] = 0;
-          }
-        }
-      }
-      else {
-        if ((param_9[3] & 0x2000U) != 0) {
-          *(float *)(iVar4 + 8) = lbl_803E40E8;
-          if (*(int *)(param_9 + 0x32) != 0) {
-            *(undefined4 *)(*(int *)(param_9 + 0x32) + 0x30) = 0x1000;
-          }
-          FUN_80081118((double)lbl_803E40EC,param_9,0xff,0x28);
-        }
-        *(float *)(iVar4 + 0x44) = lbl_803E40F4;
-      }
-    }
+  int state;
+  int setupObj;
+  int data;
+  u32 pathWord;
+  u8 pathByte;
+
+  state = *(int *)(obj + 0xb8);
+  pathWord = lbl_803E3440;
+  pathByte = lbl_803E3444;
+  ObjGroup_AddObject(obj,4);
+  ObjMsg_AllocQueue(obj,2);
+  *(s16 *)(obj + 0) = (s16)((u8)*(u8 *)(setup + 0x1b) << 8);
+  *(s16 *)(obj + 2) = (s16)((u8)*(u8 *)(setup + 0x22) << 8);
+  *(s16 *)(obj + 4) = (s16)((u8)*(u8 *)(setup + 0x23) << 8);
+  setupObj = *(int *)(obj + 0x50);
+  *(f32 *)(obj + 8) = *(f32 *)(setupObj + 4);
+  *(void (**)(void))(obj + 0xbc) = fn_80172680;
+  *(s8 *)(obj + 0xad) = *(s8 *)(setup + 0x26);
+  if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+    *(u8 *)(obj + 0xad) = 0;
   }
-  else {
-    *(float *)(iVar4 + 8) = (float)(dVar7 - (double)lbl_803DC074);
-    if ((double)*(float *)(iVar4 + 8) <= dVar5) {
-      *(float *)(iVar4 + 8) = fVar1;
-      uVar6 = ObjHits_DisableObject((int)param_9);
-      if ((param_9[3] & 0x2000U) != 0) {
-        FUN_80017ac8(uVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
-      }
-    }
+  *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
+  *(u8 *)(state + 0xc) = *(u8 *)(setup + 0x19);
+  *(u8 *)(state + 0xd) = *(u8 *)(setup + 0x1a);
+  *(u8 *)(state + 0xf) = 0;
+  *(s32 *)(state + 0x18) = -2;
+  *(u8 *)(state + 0x1d) = 0;
+  *(s16 *)(state + 0x14) = *(s16 *)(setup + 0x24);
+  *(u32 *)(state + 0x20) = *(u32 *)(setup + 0x14);
+  *(f32 *)(state + 0x24) = *(f32 *)(obj + 0xc);
+  *(f32 *)(state + 0x28) = *(f32 *)(obj + 0x10);
+  *(f32 *)(state + 0x2c) = *(f32 *)(obj + 0x14);
+  *(u8 *)(state + 0x36) = *(u8 *)(setup + 0x27);
+  *(u8 *)(state + 0x3e) = 0;
+  if (*(s16 *)(state + 0x14) != -1) {
+    *(u8 *)(state + 0x1e) = (u8)(__cntlzw(GameBit_Get(*(s16 *)(state + 0x14))) >> 5);
   }
-  return;
+  *(s16 *)(state + 0x10) = *(s16 *)(setup + 0x1c);
+  if (*(s16 *)(state + 0x10) != -1) {
+    *(u32 *)(obj + 0xf4) = GameBit_Get(*(s16 *)(state + 0x10));
+  } else {
+    *(u32 *)(obj + 0xf4) = 0;
+  }
+  if (*(u32 *)(obj + 0xf4) == 0) {
+    data = *(int *)(*(int *)(obj + 0x50) + 0x18);
+    if (data != 0) {
+      *(f32 *)(state + 4) = (f32)*(s8 *)(data + 8);
+    } else {
+      *(f32 *)(state + 4) = lbl_803E3494;
+    }
+    data = *(int *)(*(int *)(obj + 0x50) + 0x40);
+    if (data != 0) {
+      *(f32 *)(state + 4) = (f32)((u32)*(u8 *)(data + 0xc) << 2);
+    }
+    if (((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 0x10000) != 0) &&
+        (*(u8 *)(state + 0x36) != 0)) {
+      *(u8 *)(state + 0x38) = *(u8 *)(setup + 0x28);
+      *(u8 *)(state + 0x39) = *(u8 *)(setup + 0x29);
+      *(u8 *)(state + 0x3a) = *(u8 *)(setup + 0x2a);
+    }
+    switch (*(s16 *)(obj + 0x46)) {
+      case 0xb:
+        *(f32 *)(state + 0x40) = lbl_803E345C;
+        *(f32 *)(state + 0x44) = lbl_803E3498;
+        break;
+      case 0x3cd:
+        *(f32 *)(state + 0x40) = lbl_803E349C;
+        *(f32 *)(state + 0x44) = lbl_803E3498;
+        break;
+      default:
+        *(f32 *)(state + 0x40) = lbl_803E34A0;
+        break;
+    }
+    (*(void (**)(int,int,int,int))(*(int *)gPathControlInterface + 4))(state + 0x50,0,0x40006,1);
+    (*(void (**)(int,int,u8 *,u32 *,u8 *))(*(int *)gPathControlInterface + 0xc))
+        (state + 0x50,1,lbl_80320C58,&pathWord,&pathByte);
+    (*(void (**)(int,int))(*(int *)gPathControlInterface + 0x20))(obj,state + 0x50);
+  }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
