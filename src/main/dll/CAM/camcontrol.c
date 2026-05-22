@@ -4,25 +4,24 @@
 #include "main/objanim.h"
 #include "string.h"
 
-extern undefined4 FUN_80006824();
+extern undefined4 Sfx_PlayFromObject();
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
-extern uint FUN_80006c00();
+extern uint getButtonsJustPressed();
 extern undefined4 FUN_80017640();
 extern int Obj_IsObjectAlive();
 extern undefined8 FUN_800723a0();
-extern undefined4 FUN_80081100();
+extern undefined4 objShowButtonGlow();
 extern undefined4 FUN_800e8794();
 extern int camcontrol_findBestTarget(int cameraState, short *target);
 extern void camcontrol_updateMoveAverage(int cameraState, int target);
 extern void camcontrol_applyState(short *cameraState);
 extern void camcontrol_applyQueuedAction(void);
-extern int FUN_801113c0();
-extern int FUN_8012ef0c();
-extern int FUN_80133a28();
+extern int dll_19_func1B();
+extern int isTalkingToNpc();
 extern int gameTextFn_80134be8(void);
-extern double FUN_8014cbcc();
-extern double FUN_80183544();
+extern double fn_8014C5D0();
+extern double fn_80183204();
 extern f32 sqrtf(f32 x);
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void mm_free(void *ptr);
@@ -34,10 +33,10 @@ extern void voxmaps_resetLoadedMaps(void);
 extern void *gCamcontrolHandlers[20];
 extern u8 gCamcontrolStateStorage[];
 extern undefined4* DAT_803dd738;
-extern undefined4 gCamcontrolTargetChanged;
+extern u8 gCamcontrolTargetChanged;
 extern short* gCamcontrolTargetReticle;
 extern undefined4 DAT_803de140;
-extern undefined4 gCamcontrolTargetState;
+extern u8 gCamcontrolTargetState;
 extern short* gCamcontrolState;
 extern f64 DOUBLE_803e22d0;
 extern f32 lbl_803DC074;
@@ -81,78 +80,83 @@ extern undefined4 lbl_803DD4CC;
 #pragma peephole off
 void camcontrol_updateTargetFeedback(void)
 {
-  bool bVar1;
-  char cVar2;
+  register bool bVar1;
+  byte cVar2;
   short sVar3;
   float fVar4;
   float fVar5;
+  int iVar11;
   short *psVar6;
   byte bVar7;
   int iVar8;
   uint uVar9;
   uint uVar10;
-  int iVar11;
   double dVar12;
   
+  iVar11 = *(int *)(pCamera + 0x124);
   psVar6 = gCamcontrolTargetReticle;
-  iVar11 = *(int *)(gCamcontrolState + 0x124);
-  if (gCamcontrolTargetReticle == (short *)0x0) {
+  if (psVar6 == (short *)0x0) {
     return;
   }
-  iVar8 = FUN_80133a28();
+  iVar8 = gameTextFn_80134be8();
   if (iVar8 != 0) {
     return;
   }
   if ((gCamcontrolTargetChanged != '\0') && (gCamcontrolTargetChanged = '\0', iVar11 != 0)) {
-    cVar2 = *(char *)(gCamcontrolState + 0x138);
-    if (cVar2 == '\x01') {
-      FUN_80006824(0,0x3ff);
-      FUN_80081100((double)lbl_803E22AC,psVar6,2);
+    cVar2 = *(byte *)(pCamera + 0x138);
+    if (cVar2 == 1) {
+      Sfx_PlayFromObject(0,0x3ff);
+      objShowButtonGlow((double)lbl_803E22AC,psVar6,2);
     }
-    else if ((cVar2 == '\x04') || (cVar2 == '\t')) {
-      FUN_80006824(0,0x402);
-      FUN_80081100((double)lbl_803E22AC,psVar6,3);
+    else if ((cVar2 == 4) || (cVar2 == 9)) {
+      Sfx_PlayFromObject(0,0x402);
+      objShowButtonGlow((double)lbl_803E22AC,psVar6,3);
     }
-    else if (cVar2 != '\b') {
-      FUN_80006824(0,0x288);
-      FUN_80081100((double)lbl_803E22AC,psVar6,1);
+    else if (cVar2 != 8) {
+      Sfx_PlayFromObject(0,0x288);
+      objShowButtonGlow((double)lbl_803E22AC,psVar6,1);
     }
   }
   if (iVar11 != 0) {
     *(byte *)(iVar11 + 0xaf) = *(byte *)(iVar11 + 0xaf) | 4;
-    uVar9 = FUN_80006c00(0);
+    uVar9 = getButtonsJustPressed(0);
     uVar10 = 0x100;
     bVar7 = *(byte *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5 + 4) & 0xf;
     if ((bVar7 == 4) || (bVar7 == 9)) {
       uVar10 = 0x900;
     }
-    bVar1 = (uVar9 & uVar10) != 0;
+    bVar1 = false;
+    if ((uVar9 & uVar10) != 0) {
+      bVar1 = true;
+    }
     if ((*(byte *)(iVar11 + 0xaf) & 0x10) == 0) {
       if (bVar1) {
         *(byte *)(iVar11 + 0xaf) = *(byte *)(iVar11 + 0xaf) | 1;
       }
     }
-    else if ((bVar1) && (iVar8 = FUN_8012ef0c(), iVar8 == 0)) {
-      FUN_80006824(0,0x287);
+    else if ((bVar1) && (iVar8 = isTalkingToNpc(), iVar8 == 0)) {
+      Sfx_PlayFromObject(0,0x287);
     }
   }
   if (gCamcontrolTargetState == '\0') {
-    if (lbl_803E22B0 < *(float *)(psVar6 + 0x4c)) {
+    if (*(float *)(psVar6 + 0x4c) <= lbl_803E22B0) {
+      if (iVar11 == 0) {
+        *(undefined4 *)(pCamera + 0x128) = 0;
+      }
+      else {
+        *(int *)(pCamera + 0x128) = iVar11;
+        *(byte *)(pCamera + 0x138) =
+             *(byte *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5 + 4) & 0xf;
+        gCamcontrolTargetState = '\x03';
+        gCamcontrolTargetChanged = '\x01';
+      }
+    }
+    else {
       ObjAnim_AdvanceCurrentMove(lbl_803E22F0,lbl_803DC074,(int)psVar6,
                                  (ObjAnimEventList *)0x0);
     }
-    else if (iVar11 == 0) {
-      *(undefined4 *)(gCamcontrolState + 0x128) = 0;
-    }
-    else {
-      *(int *)(gCamcontrolState + 0x128) = iVar11;
-      *(byte *)(gCamcontrolState + 0x138) =
-           *(byte *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5 + 4) & 0xf;
-      gCamcontrolTargetState = '\x03';
-      gCamcontrolTargetChanged = '\x01';
-    }
   }
-  else if ((*(int *)(gCamcontrolState + 0x128) == iVar11) ||
+  else if ((*(int *)(pCamera + 0x128) == iVar11) ||
           (*(float *)(psVar6 + 0x4c) < lbl_803E22AC)) {
     ObjAnim_AdvanceCurrentMove(lbl_803E22F4,lbl_803DC074,(int)psVar6,
                                (ObjAnimEventList *)0x0);
@@ -160,38 +164,38 @@ void camcontrol_updateTargetFeedback(void)
   else {
     gCamcontrolTargetState = '\0';
     if (iVar11 == 0) {
-      cVar2 = *(char *)(gCamcontrolState + 0x138);
-      if (cVar2 == '\x01') {
-        FUN_80006824(0,0x400);
+      cVar2 = *(byte *)(pCamera + 0x138);
+      if (cVar2 == 1) {
+        Sfx_PlayFromObject(0,0x400);
       }
-      else if ((cVar2 == '\x04') || (cVar2 == '\t')) {
-        FUN_80006824(0,0x401);
+      else if ((cVar2 == 4) || (cVar2 == 9)) {
+        Sfx_PlayFromObject(0,0x401);
       }
-      else if (cVar2 != '\b') {
-        FUN_80006824(0,0x289);
+      else if (cVar2 != 8) {
+        Sfx_PlayFromObject(0,0x289);
       }
     }
     else {
       ObjAnim_SetMoveProgress(lbl_803E22B0,(ObjAnimComponent *)psVar6);
     }
   }
-  iVar11 = Obj_IsObjectAlive(*(int *)(gCamcontrolState + 0x128));
+  iVar11 = Obj_IsObjectAlive(*(int *)(pCamera + 0x128));
   if (iVar11 == 0) {
-    *(undefined4 *)(gCamcontrolState + 0x128) = 0;
+    *(undefined4 *)(pCamera + 0x128) = 0;
   }
-  if ((gCamcontrolTargetState != '\x03') || (*(int *)(gCamcontrolState + 0x128) == 0))
+  if ((gCamcontrolTargetState != '\x03') || (*(int *)(pCamera + 0x128) == 0))
   goto LAB_80102ab4;
-  if ((*(byte *)(*(int *)(gCamcontrolState + 0x128) + 0xaf) & 0x10) == 0) {
-    *(byte *)(gCamcontrolState + 0x141) = *(byte *)(gCamcontrolState + 0x141) & 0xdf;
+  if ((*(byte *)(*(int *)(pCamera + 0x128) + 0xaf) & 0x10) == 0) {
+    *(byte *)(pCamera + 0x141) = *(byte *)(pCamera + 0x141) & 0xdf;
   }
   else {
-    *(byte *)(gCamcontrolState + 0x141) = *(byte *)(gCamcontrolState + 0x141) | 0x20;
+    *(byte *)(pCamera + 0x141) = *(byte *)(pCamera + 0x141) | 0x20;
   }
-  iVar11 = *(int *)(gCamcontrolState + 0x128);
+  iVar11 = *(int *)(pCamera + 0x128);
   sVar3 = *(short *)(iVar11 + 0x46);
   if (sVar3 == 0x49f) {
 LAB_80102994:
-    dVar12 = FUN_80183544(iVar11);
+    dVar12 = fn_80183204(iVar11);
   }
   else {
     if (sVar3 < 0x49f) {
@@ -229,7 +233,7 @@ LAB_80102994:
           if (sVar3 < 0x58b) {
             if ((sVar3 != 0x4d7) && ((0x4d6 < sVar3 || (sVar3 != 0x4ac)))) {
 LAB_801029ac:
-              iVar8 = FUN_801113c0(iVar11);
+              iVar8 = dll_19_func1B(iVar11);
               if (iVar8 == 0) {
                 dVar12 = (double)lbl_803E22AC;
               }
@@ -253,32 +257,32 @@ LAB_801029ac:
         else if ((sVar3 != 0x851) && ((0x850 < sVar3 || (sVar3 != 0x84b)))) goto LAB_801029ac;
       }
     }
-    dVar12 = FUN_8014cbcc(iVar11);
+    dVar12 = fn_8014C5D0(iVar11);
   }
 LAB_801029e0:
   if (((double)lbl_803E22B0 < dVar12) ||
-     ((double)*(float *)(gCamcontrolState + 0x134) <= (double)lbl_803E22B0)) {
+     ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E22B0)) {
     if (((double)lbl_803E22B4 < dVar12) ||
-       ((double)*(float *)(gCamcontrolState + 0x134) <= (double)lbl_803E22B4)) {
+       ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E22B4)) {
       if (((double)lbl_803E22B8 < dVar12) ||
-         ((double)*(float *)(gCamcontrolState + 0x134) <= (double)lbl_803E22B8)) {
+         ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E22B8)) {
         if ((dVar12 <= (double)lbl_803E22BC) &&
-           ((double)lbl_803E22BC < (double)*(float *)(gCamcontrolState + 0x134))) {
-          FUN_80081100((double)lbl_803E22AC,psVar6,4);
+           ((double)lbl_803E22BC < (double)*(float *)(pCamera + 0x134))) {
+          objShowButtonGlow((double)lbl_803E22AC,psVar6,4);
         }
       }
       else {
-        FUN_80081100((double)lbl_803E22AC,psVar6,4);
+        objShowButtonGlow((double)lbl_803E22AC,psVar6,4);
       }
     }
     else {
-      FUN_80081100((double)lbl_803E22AC,psVar6,4);
+      objShowButtonGlow((double)lbl_803E22AC,psVar6,4);
     }
   }
   else {
-    FUN_80081100((double)lbl_803E22AC,psVar6,4);
+    objShowButtonGlow((double)lbl_803E22AC,psVar6,4);
   }
-  *(float *)(gCamcontrolState + 0x134) = (float)dVar12;
+  *(float *)(pCamera + 0x134) = (float)dVar12;
 LAB_80102ab4:
   fVar4 = lbl_803E22F8 * *(float *)(psVar6 + 0x4c);
   fVar5 = lbl_803E22B0;
