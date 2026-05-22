@@ -2057,6 +2057,11 @@ typedef struct LandedArwingState {
     u8 unk19;
     u8 enablePathFx;
     u8 unk1B;
+    u8 hitStarted;
+    u8 hitFlags;
+    u8 unk1E;
+    u8 spawnCount;
+    u8 hitCooldown[4];
 } LandedArwingState;
 
 extern LandedArwingFxPoint lbl_80321A28[];
@@ -2432,6 +2437,132 @@ void landed_arwing_init(int obj, int param) {
         unlockLevel(0, 0, 1);
     }
     *(int *)((char*)obj + 0xbc) = (int)Landed_Arwing_SeqFn;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E3BB8;
+extern f32 lbl_803E3BBC;
+extern f32 lbl_803E3BC0;
+extern f32 lbl_803E3BC4;
+extern f32 timeDelta;
+extern int ObjAnim_AdvanceCurrentMove(int obj, f32 rate, f32 delta, void *out);
+extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
+
+/* landed arwing hit/animation step: handles impact reactions and spawned debris. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80189610(int obj, LandedArwingState *state) {
+    int def;
+    int i;
+    int setup;
+    int other;
+    LandedArwingState *otherState;
+    f32 range;
+    f32 yOffset;
+    u8 animScratch[0x34];
+
+    def = *(int *)(obj + 0x4c);
+    if (((state->hitFlags >> 7) & 1) != 0) {
+        if (((state->hitFlags >> 6) & 1) != 0 && state->hitStarted == 0) {
+            return;
+        }
+        if (state->hitStarted != 0) {
+            *(s16 *)(obj + 2) = 0;
+            *(s16 *)(obj + 4) = 0;
+            if (*(f32 *)(obj + 0x98) >= lbl_803E3BBC && ((state->hitFlags >> 4) & 1) == 0) {
+                if (*(s16 *)(def + 0x24) > 0) {
+                    GameBit_Set(*(s16 *)(def + 0x24), 1);
+                }
+
+                switch (*(u8 *)(def + 0x1e)) {
+                    case 0:
+                        if (Obj_IsLoadingLocked() != 0) {
+                            yOffset = lbl_803E3BB8;
+                            for (i = 0; i < *(u8 *)(def + 0x1f); i++) {
+                                setup = Obj_AllocObjectSetup(0x24, 0x259);
+                                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10) + yOffset;
+                                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                                *(u8 *)(setup + 4) = 1;
+                                Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1,
+                                                *(int *)(obj + 0x30));
+                            }
+                        }
+                        break;
+                    case 1:
+                        range = lbl_803E3BC0;
+                        other = ObjGroup_FindNearestObject(0x41, obj, &range);
+                        if (other != 0) {
+                            otherState = *(LandedArwingState **)(other + 0xb8);
+                            if (*(s16 *)(*(int *)(other + 0x4c) + 0x22) > 0) {
+                                GameBit_Set(*(s16 *)(*(int *)(other + 0x4c) + 0x22), 1);
+                            }
+                            otherState->hitFlags = otherState->hitFlags & 0x7f | 0x80;
+                        }
+                        break;
+                }
+                state->hitStarted = 0;
+                state->hitFlags = state->hitFlags & 0xef | 0x10;
+            }
+            state->hitFlags = state->hitFlags & 0xbf | 0x40;
+            state->path8Fx = lbl_803E3BC4;
+        } else {
+            if (*(u8 *)(def + 0x1e) == 2) {
+                *(s16 *)(obj + 2) = (s16)randomGetRange(-200, 200);
+                *(s16 *)(obj + 4) = (s16)randomGetRange(-200, 200);
+            }
+            ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
+                                                      state->hitCooldown);
+        }
+        ObjAnim_AdvanceCurrentMove(obj, state->path8Fx, timeDelta, animScratch);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* landed arwing material flags: mirrors game bits into the damaged texture state. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80189858(int obj, LandedArwingState *state) {
+    int def;
+    int *texture;
+    u32 bit;
+
+    def = *(int *)(obj + 0x4c);
+    if (*(s16 *)(def + 0x24) != -1) {
+        bit = GameBit_Get(*(s16 *)(def + 0x24));
+        state->hitFlags = (state->hitFlags & 0xdf) | ((bit & 0xff) << 5 & 0x20);
+        bit = (state->hitFlags >> 5) & 1;
+        if (bit != 0 && *(u8 *)(def + 0x1c) == 5) {
+            state->hitFlags = state->hitFlags & 0xbf | 0x40;
+        } else if (bit == 0) {
+            state->hitFlags = state->hitFlags & 0xbf;
+        }
+    }
+
+    if (((state->hitFlags >> 7) & 1) == 0) {
+        if (*(s16 *)(def + 0x22) != -1 && GameBit_Get(*(s16 *)(def + 0x22)) != 0) {
+            state->hitFlags = state->hitFlags & 0x7f | 0x80;
+        }
+    } else {
+        if (*(s16 *)(def + 0x22) != -1 && GameBit_Get(*(s16 *)(def + 0x22)) == 0) {
+            state->hitFlags = state->hitFlags & 0x7f;
+        }
+    }
+
+    texture = objFindTexture(obj, 0, 0);
+    if (texture != NULL) {
+        if (((state->hitFlags >> 7) & 1) != 0) {
+            if (((state->hitFlags >> 5) & 1) != 0) {
+                *texture = 0x200;
+            } else {
+                *texture = 0x100;
+            }
+        } else {
+            *texture = 0;
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
