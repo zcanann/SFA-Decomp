@@ -1076,79 +1076,44 @@ addToTable_done:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm int expgfx_updateSourceFrameFlags(void *sourceObject)
+int expgfx_updateSourceFrameFlags(void *sourceObject)
 {
-  nofralloc
-  li r0, 0x0
-  li r4, 0x0
-  stb r4, lbl_803DD253
-  li r5, 0x0
-  lis r4, gExpgfxTrackedPoolSourceIds@ha
-  addi r4, r4, gExpgfxTrackedPoolSourceIds@l
-  lis r6, gExpgfxStaticPoolFrameFlags@ha
-  addi r11, r6, gExpgfxStaticPoolFrameFlags@l
-  b expgfx_updateSourceFrameFlags_L_8009DFF0
-expgfx_updateSourceFrameFlags_L_8009DF30:
-  lha r6, 0x46(r3)
-  cmpwi r6, 0xd4
-  beq expgfx_updateSourceFrameFlags_L_8009DF48
-  lwz r6, 0x0(r4)
-  cmplw r6, r3
-  bne expgfx_updateSourceFrameFlags_L_8009DFDC
-expgfx_updateSourceFrameFlags_L_8009DF48:
-  extsh r7, r5
-  li r10, 0x1
-  srawi r6, r7, 1
-  slw r9, r10, r6
-  srawi r8, r9, 31
-  clrlwi r6, r7, 31
-  slwi r7, r6, 3
-  lis r6, gExpgfxTrackedSourceFrameMasks@ha
-  addi r6, r6, gExpgfxTrackedSourceFrameMasks@l
-  add r7, r6, r7
-  lwz r6, 0x0(r7)
-  lwz r7, 0x4(r7)
-  and r7, r9, r7
-  and r8, r8, r6
-  li r6, 0x0
-  xor r7, r7, r6
-  xor r6, r8, r6
-  or r6, r7, r6
-  cmpwi r6, 0x0
-  beq expgfx_updateSourceFrameFlags_L_8009DFBC
-  li r6, 0x2
-  stb r6, 0x0(r11)
-  extsb r0, r0
-  cmpwi r0, 0x1
-  bne expgfx_updateSourceFrameFlags_L_8009DFB4
-  li r0, 0x3
-  b expgfx_updateSourceFrameFlags_L_8009DFE4
-expgfx_updateSourceFrameFlags_L_8009DFB4:
-  li r0, 0x2
-  b expgfx_updateSourceFrameFlags_L_8009DFE4
-expgfx_updateSourceFrameFlags_L_8009DFBC:
-  stb r10, 0x0(r11)
-  extsb r0, r0
-  cmpwi r0, 0x2
-  bne expgfx_updateSourceFrameFlags_L_8009DFD4
-  li r0, 0x3
-  b expgfx_updateSourceFrameFlags_L_8009DFE4
-expgfx_updateSourceFrameFlags_L_8009DFD4:
-  li r0, 0x1
-  b expgfx_updateSourceFrameFlags_L_8009DFE4
-expgfx_updateSourceFrameFlags_L_8009DFDC:
-  li r6, 0x0
-  stb r6, 0x0(r11)
-expgfx_updateSourceFrameFlags_L_8009DFE4:
-  addi r4, r4, 0x4
-  addi r11, r11, 0x1
-  addi r5, r5, 0x1
-expgfx_updateSourceFrameFlags_L_8009DFF0:
-  extsh r6, r5
-  cmpwi r6, 0x50
-  blt expgfx_updateSourceFrameFlags_L_8009DF30
-  mr r3, r0
-  blr
+  ExpgfxSourceObject *source;
+  ExpgfxTrackedSourceFrameMask *mask;
+  u32 bit;
+  u32 highBits;
+  s8 result;
+  int poolIndex;
+
+  source = (ExpgfxSourceObject *)sourceObject;
+  result = EXPGFX_SOURCE_FRAME_STATE_NONE;
+  lbl_803DD253 = 0;
+
+  for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
+    if ((source->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) ||
+        (gExpgfxTrackedPoolSourceIds[poolIndex] == (u32)sourceObject)) {
+      bit = 1 << ((poolIndex >> 1) & 0x1f);
+      highBits = (u32)((s32)bit >> 31);
+      mask = &gExpgfxTrackedSourceFrameMasks[poolIndex & 1];
+      if (((mask->low & bit) | (mask->high & highBits)) != 0) {
+        gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
+        result = (result == EXPGFX_SOURCE_FRAME_STATE_A)
+                     ? EXPGFX_SOURCE_FRAME_STATE_MIXED
+                     : EXPGFX_SOURCE_FRAME_STATE_B;
+      }
+      else {
+        gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_A;
+        result = (result == EXPGFX_SOURCE_FRAME_STATE_B)
+                     ? EXPGFX_SOURCE_FRAME_STATE_MIXED
+                     : EXPGFX_SOURCE_FRAME_STATE_A;
+      }
+    }
+    else {
+      gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
+    }
+  }
+
+  return result;
 }
 
 /*
