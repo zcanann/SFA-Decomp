@@ -28,7 +28,8 @@ extern undefined4 FUN_8005d340();
 extern undefined4 FUN_8005e1d8();
 extern void fn_8005DE94(uint slotPoolBase,int poolIndex,float *position);
 extern uint FUN_8005e558();
-extern u8 fn_8005E97C();
+extern int fn_8005E97C(float minX,float maxX,float minY,float maxY,float minZ,float maxZ,
+                       ExpgfxBounds *boundsTemplate);
 extern undefined4 FUN_8006f8a4();
 extern undefined4 FUN_8006f8fc();
 extern void trackIntersect_drawColorBand(void);
@@ -779,77 +780,37 @@ int expgfx_func09(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm void expgfx_renderSourcePools(int sourceId,int sourceMode)
+void expgfx_renderSourcePools(int sourceId,int sourceMode)
 {
-  nofralloc
-  stwu r1,-0x30(r1)
-  mflr r0
-  stw r0,0x34(r1)
-  addi r11,r1,0x30
-  bl _savegpr_23
-  mr r23,r3
-  mr r24,r4
-  lis r3,gExpgfxRuntimeData@ha
-  addi r3,r3,gExpgfxRuntimeData@l
-  li r25,0
-  addi r31,r3,0x1070
-  addi r30,r3,0xed0
-  addi r29,r3,0xe80
-  addi r28,r3,0x1020
-  addi r27,r3,0x200
-  addi r26,r3,0x1200
-expgfx_renderSourcePools_loop:
-  lbz r0,0(r31)
-  extsb r0,r0
-  cmpwi r0,0
-  beq expgfx_renderSourcePools_next
-  lwz r0,0(r30)
-  cmplw r0,r23
-  bne expgfx_renderSourcePools_next
-  lbz r3,0(r29)
-  addi r0,r24,1
-  cmpw r3,r0
-  bne expgfx_renderSourcePools_next
-  lfs f6,playerMapOffsetZ
-  lfs f2,playerMapOffsetX
-  lfs f0,0(r27)
-  fsubs f1,f0,f2
-  lfs f0,4(r27)
-  fsubs f2,f0,f2
-  lfs f3,8(r27)
-  lfs f4,0xc(r27)
-  lfs f0,0x10(r27)
-  fsubs f5,f0,f6
-  lfs f0,0x14(r27)
-  fsubs f6,f0,f6
-  lbz r0,0(r28)
-  mulli r4,r0,0x18
-  lis r3,gExpgfxStaticData@ha
-  addi r0,r3,gExpgfxStaticData@l
-  add r3,r0,r4
-  bl fn_8005E97C
-  clrlwi r0,r3,24
-  cmplwi r0,0
-  beq expgfx_renderSourcePools_next
-  lwz r3,0(r26)
-  mr r4,r25
-  bl drawGlow
-expgfx_renderSourcePools_next:
-  addi r31,r31,1
-  addi r30,r30,4
-  addi r29,r29,1
-  addi r28,r28,1
-  addi r27,r27,0x18
-  addi r26,r26,4
-  addi r25,r25,1
-  cmpwi r25,0x50
-  blt expgfx_renderSourcePools_loop
-  addi r11,r1,0x30
-  bl _restgpr_23
-  lwz r0,0x34(r1)
-  mtlr r0
-  addi r1,r1,0x30
-  blr
+  ExpgfxBounds *boundsTemplate;
+  ExpgfxBounds *poolBounds;
+  s8 *poolActiveCounts;
+  u8 *poolBoundsTemplateIds;
+  u8 *poolSourceModes;
+  u32 *poolSourceIds;
+  int poolIndex;
+
+  poolActiveCounts = (s8 *)&gExpgfxPoolActiveCounts;
+  poolSourceIds = (u32 *)&gExpgfxPoolSourceIds;
+  poolSourceModes = (u8 *)&gExpgfxPoolSourceModes;
+  poolBoundsTemplateIds = (u8 *)&gExpgfxPoolBoundsTemplateIds;
+  poolBounds = (ExpgfxBounds *)&gExpgfxPoolBounds;
+
+  for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
+    if ((poolActiveCounts[poolIndex] != 0) && (poolSourceIds[poolIndex] == (u32)sourceId) &&
+        (poolSourceModes[poolIndex] == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET)) {
+      boundsTemplate =
+          (ExpgfxBounds *)(gExpgfxStaticData +
+                           poolBoundsTemplateIds[poolIndex] * EXPGFX_BOUNDS_TEMPLATE_SIZE);
+      if (fn_8005E97C(poolBounds[poolIndex].minX - playerMapOffsetX,
+                      poolBounds[poolIndex].maxX - playerMapOffsetX,
+                      poolBounds[poolIndex].minY,poolBounds[poolIndex].maxY,
+                      poolBounds[poolIndex].minZ - playerMapOffsetZ,
+                      poolBounds[poolIndex].maxZ - playerMapOffsetZ,boundsTemplate) != 0) {
+        drawGlow(gExpgfxSlotPoolBases[poolIndex],poolIndex);
+      }
+    }
+  }
 }
 
 /*
