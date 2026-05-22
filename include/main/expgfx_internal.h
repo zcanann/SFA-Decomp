@@ -252,6 +252,12 @@ typedef struct ExpgfxQuadVertex {
   u8 alpha;
 } ExpgfxQuadVertex;
 
+typedef struct ExpgfxQuadTemplateVertex {
+  s16 x;
+  s16 y;
+  s16 z;
+} ExpgfxQuadTemplateVertex;
+
 typedef struct ExpgfxSlot {
   u8 pad00[0x06];
   s16 lifetimeFrame;

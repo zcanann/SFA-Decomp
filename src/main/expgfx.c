@@ -480,210 +480,100 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm void expgfx_initSlotQuad(void *slotPtr)
+void expgfx_initSlotQuad(void *slotPtr)
 {
-  nofralloc
-  stwu r1,-0x20(r1)
-  mflr r0
-  stw r0,0x24(r1)
-  lis r4,gExpgfxStaticData@ha
-  addi r4,r4,gExpgfxStaticData@l
-  lis r5,gExpgfxTableEntries@ha
-  addi r5,r5,gExpgfxTableEntries@l
-  lbz r0,0x8a(r3)
-  extrwi r0,r0,7,24
-  slwi r0,r0,EXPGFX_TABLE_ENTRY_SHIFT
-  add r5,r5,r0
-  lwz r7,8(r5)
-  li r5,0
-  lbz r0,0x8b(r3)
-  rlwimi r0,r5,0,31,31
-  stb r0,0x8b(r3)
-  li r5,1
-  lbz r0,0x8b(r3)
-  rlwimi r0,r5,1,30,30
-  stb r0,0x8b(r3)
-  lwz r6,0x7c(r3)
-  rlwinm r0,r6,0,4,4
-  cmplwi r0,0
-  beq expgfx_initSlotQuad_useTemplateB
-  addi r5,r4,EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET
-  b expgfx_initSlotQuad_checkLowBounce
-expgfx_initSlotQuad_useTemplateB:
-  addi r5,r4,EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET
-expgfx_initSlotQuad_checkLowBounce:
-  rlwinm r0,r6,0,1,1
-  cmplwi r0,0
-  beq expgfx_initSlotQuad_checkHighFast
-  lfs f2,0x74(r3)
-  lfs f0,lbl_803DF3B4
-  fcmpo cr0,f2,f0
-  bge expgfx_initSlotQuad_checkHighFast
-  rlwinm r0,r6,0,7,7
-  cmplwi r0,0
-  beq expgfx_initSlotQuad_lowSlow
-  fcmpo cr0,f2,f0
-  bge expgfx_initSlotQuad_lowSlow
-  lfs f1,lbl_803DF3B8
-  lfs f0,timeDelta
-  fnmsubs f0,f1,f0,f2
-  stfs f0,0x74(r3)
-  b expgfx_initSlotQuad_integratePosition
-expgfx_initSlotQuad_lowSlow:
-  lfs f2,lbl_803DF3BC
-  lfs f1,timeDelta
-  lfs f0,0x74(r3)
-  fnmsubs f0,f2,f1,f0
-  stfs f0,0x74(r3)
-  b expgfx_initSlotQuad_integratePosition
-expgfx_initSlotQuad_checkHighFast:
-  rlwinm r0,r6,0,7,7
-  cmplwi r0,0
-  beq expgfx_initSlotQuad_checkHighSlow
-  lfs f2,0x74(r3)
-  lfs f0,lbl_803DF3C0
-  fcmpo cr0,f2,f0
-  ble expgfx_initSlotQuad_checkHighSlow
-  lfs f1,lbl_803DF3B8
-  lfs f0,timeDelta
-  fmadds f0,f1,f0,f2
-  stfs f0,0x74(r3)
-  b expgfx_initSlotQuad_integratePosition
-expgfx_initSlotQuad_checkHighSlow:
-  rlwinm r0,r6,0,28,28
-  cmplwi r0,0
-  beq expgfx_initSlotQuad_integratePosition
-  lfs f2,0x74(r3)
-  lfs f0,lbl_803DF3C0
-  fcmpo cr0,f2,f0
-  ble expgfx_initSlotQuad_integratePosition
-  lfs f1,lbl_803DF3BC
-  lfs f0,timeDelta
-  fmadds f0,f1,f0,f2
-  stfs f0,0x74(r3)
-expgfx_initSlotQuad_integratePosition:
-  lfs f1,0x70(r3)
-  lfs f3,lbl_803DF3C4
-  lfs f0,0x58(r3)
-  fmadds f0,f1,f3,f0
-  stfs f0,0x58(r3)
-  lfs f1,0x74(r3)
-  lfs f0,0x5c(r3)
-  fmadds f0,f1,f3,f0
-  stfs f0,0x5c(r3)
-  lfs f1,0x78(r3)
-  lfs f0,0x60(r3)
-  fmadds f0,f1,f3,f0
-  stfs f0,0x60(r3)
-  lwz r0,0x7c(r3)
-  rlwinm r0,r0,0,11,11
-  cmplwi r0,0
-  beq expgfx_initSlotQuad_checkScaleDown
-  lhz r0,0x88(r3)
-  lfd f2,lbl_803DF378
-  stw r0,0xc(r1)
-  lis r6,0x4330
-  stw r6,8(r1)
-  lfd f0,8(r1)
-  fsubs f1,f0,f2
-  lhz r0,0x84(r3)
-  stw r0,0x14(r1)
-  stw r6,0x10(r1)
-  lfd f0,0x10(r1)
-  fsubs f0,f0,f2
-  fmadds f0,f1,f3,f0
-  fctiwz f0,f0
-  stfd f0,0x18(r1)
-  lwz r0,0x1c(r1)
-  sth r0,0x84(r3)
-  b expgfx_initSlotQuad_writeQuad
-expgfx_initSlotQuad_checkScaleDown:
-  lwz r0,0x80(r3)
-  rlwinm r0,r0,0,18,18
-  cmplwi r0,0
-  beq expgfx_initSlotQuad_writeQuad
-  lhz r0,0x88(r3)
-  lfd f2,lbl_803DF378
-  stw r0,0x1c(r1)
-  lis r6,0x4330
-  stw r6,0x18(r1)
-  lfd f0,0x18(r1)
-  fsubs f1,f0,f2
-  lhz r0,0x84(r3)
-  stw r0,0x14(r1)
-  stw r6,0x10(r1)
-  lfd f0,0x10(r1)
-  fsubs f0,f0,f2
-  fnmsubs f0,f1,f3,f0
-  fctiwz f0,f0
-  stfd f0,8(r1)
-  lwz r0,0xc(r1)
-  sth r0,0x84(r3)
-expgfx_initSlotQuad_writeQuad:
-  cmplwi r7,0
-  bne expgfx_initSlotQuad_hasTexture
-  addi r3,r4,0x384
-  crclr 4*cr1+eq
-  bl debugPrintf
-  b expgfx_initSlotQuad_done
-expgfx_initSlotQuad_hasTexture:
-  li r7,0
-  li r6,0
-  li r9,0
-  li r8,0
-  beq expgfx_initSlotQuad_storeQuad
-  li r9,EXPGFX_QUAD_TEXCOORD_MAX
-  li r7,EXPGFX_QUAD_TEXCOORD_MAX
-  lwz r4,0x7c(r3)
-  rlwinm r0,r4,0,24,24
-  cmplwi r0,0
-  beq expgfx_initSlotQuad_checkFlipTex0
-  li r8,EXPGFX_QUAD_TEXCOORD_MAX
-  li r9,0
-expgfx_initSlotQuad_checkFlipTex0:
-  rlwinm r0,r4,0,25,25
-  cmplwi r0,0
-  beq expgfx_initSlotQuad_storeQuad
-  li r6,EXPGFX_QUAD_TEXCOORD_MAX
-  li r7,0
-expgfx_initSlotQuad_storeQuad:
-  lha r0,0(r5)
-  sth r0,0(r3)
-  lha r0,2(r5)
-  sth r0,2(r3)
-  lha r0,4(r5)
-  sth r0,4(r3)
-  sth r9,8(r3)
-  sth r7,0xa(r3)
-  lha r0,6(r5)
-  sth r0,0x10(r3)
-  lha r0,8(r5)
-  sth r0,0x12(r3)
-  lha r0,0xa(r5)
-  sth r0,0x14(r3)
-  sth r8,0x18(r3)
-  sth r7,0x1a(r3)
-  lha r0,0xc(r5)
-  sth r0,0x20(r3)
-  lha r0,0xe(r5)
-  sth r0,0x22(r3)
-  lha r0,0x10(r5)
-  sth r0,0x24(r3)
-  sth r8,0x28(r3)
-  sth r6,0x2a(r3)
-  lha r0,0x12(r5)
-  sth r0,0x30(r3)
-  lha r0,0x14(r5)
-  sth r0,0x32(r3)
-  lha r0,0x16(r5)
-  sth r0,0x34(r3)
-  sth r9,0x38(r3)
-  sth r6,0x3a(r3)
-expgfx_initSlotQuad_done:
-  lwz r0,0x24(r1)
-  mtlr r0
-  addi r1,r1,0x20
-  blr
+  ExpgfxSlot *slot;
+  ExpgfxTableEntry *entry;
+  ExpgfxQuadVertex *quad;
+  ExpgfxQuadTemplateVertex *template;
+  u32 behaviorFlags;
+  s16 texS0;
+  s16 texS1;
+  s16 texT0;
+  s16 texT1;
+  f32 step;
+
+  slot = (ExpgfxSlot *)slotPtr;
+  entry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
+
+  slot->stateBits.value =
+      (slot->stateBits.value & ~EXPGFX_SLOT_STATE_FRAME_PARITY) | EXPGFX_SLOT_STATE_QUAD_READY;
+
+  behaviorFlags = slot->behaviorFlags;
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
+    template = (ExpgfxQuadTemplateVertex *)(gExpgfxStaticData + EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
+  } else {
+    template = (ExpgfxQuadTemplateVertex *)(gExpgfxStaticData + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
+  }
+
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
+      slot->velocityY < lbl_803DF3B4) {
+    if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+        slot->velocityY < lbl_803DF3B4) {
+      slot->velocityY -= lbl_803DF3B8 * timeDelta;
+    } else {
+      slot->velocityY -= lbl_803DF3BC * timeDelta;
+    }
+  } else if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+             slot->velocityY > lbl_803DF3C0) {
+    slot->velocityY += lbl_803DF3B8 * timeDelta;
+  } else if ((behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0 &&
+             slot->velocityY > lbl_803DF3C0) {
+    slot->velocityY += lbl_803DF3BC * timeDelta;
+  }
+
+  step = lbl_803DF3C4;
+  *(f32 *)&slot->posX += slot->velocityX * step;
+  *(f32 *)&slot->posY += slot->velocityY * step;
+  *(f32 *)&slot->posZ += slot->velocityZ * step;
+
+  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
+    slot->scaleCounter =
+        (s16)(int)((f32)(u16)slot->scaleFrames * step + (f32)(u16)slot->scaleCounter);
+  } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
+    slot->scaleCounter =
+        (s16)(int)((f32)(u16)slot->scaleCounter - (f32)(u16)slot->scaleFrames * step);
+  }
+
+  if (entry->textureOrResource == 0) {
+    debugPrintf(sExpgfxNoTexture);
+    return;
+  }
+
+  texS0 = EXPGFX_QUAD_TEXCOORD_MAX;
+  texT0 = EXPGFX_QUAD_TEXCOORD_MAX;
+  texS1 = 0;
+  texT1 = 0;
+  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX1_T) != 0) {
+    texS1 = EXPGFX_QUAD_TEXCOORD_MAX;
+    texS0 = 0;
+  }
+  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX0_T) != 0) {
+    texT1 = EXPGFX_QUAD_TEXCOORD_MAX;
+    texT0 = 0;
+  }
+
+  quad = (ExpgfxQuadVertex *)slot;
+  quad[0].x = template[0].x;
+  quad[0].y = template[0].y;
+  quad[0].z = template[0].z;
+  quad[0].texS = texS0;
+  quad[0].texT = texT0;
+  quad[1].x = template[1].x;
+  quad[1].y = template[1].y;
+  quad[1].z = template[1].z;
+  quad[1].texS = texS1;
+  quad[1].texT = texT0;
+  quad[2].x = template[2].x;
+  quad[2].y = template[2].y;
+  quad[2].z = template[2].z;
+  quad[2].texS = texS1;
+  quad[2].texT = texT1;
+  quad[3].x = template[3].x;
+  quad[3].y = template[3].y;
+  quad[3].z = template[3].z;
+  quad[3].texS = texS0;
+  quad[3].texT = texT1;
 }
 
 /*
