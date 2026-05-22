@@ -228,24 +228,26 @@ void AttractMovieAudio_Decode(void *readBufferArg)
 #pragma peephole off
 void *AudioDecoderForOnMemory(void *param)
 {
-  int frame;
+  register int frame;
+  register AttractMoviePlayer *player;
   int stride;
   u32 framesPerGroup;
   u32 frameInGroup;
   AttractMovieReadBuffer readBuffer;
 
-  stride = lbl_803A5D60.frameStride;
+  player = &lbl_803A5D60;
+  stride = player->frameStride;
   readBuffer.ptr = param;
   frame = 0;
   while (true) {
     readBuffer.frameNumber = frame;
     AttractMovieAudio_Decode(&readBuffer);
-    framesPerGroup = lbl_803A5D60.header.mNumFrames;
-    frameInGroup = (frame + lbl_803A5D60.initReadFrame) % framesPerGroup;
+    framesPerGroup = player->header.mNumFrames;
+    frameInGroup = (frame + player->initReadFrame) % framesPerGroup;
     if (frameInGroup == (framesPerGroup - 1)) {
-      if ((lbl_803A5D60.playFlags & 1) != 0) {
+      if ((player->playFlags & 1) != 0) {
         stride = *(int *)readBuffer.ptr;
-        readBuffer.ptr = lbl_803A5D60.loopFrame;
+        readBuffer.ptr = player->loopFrame;
       } else {
         OSSuspendThread(&lbl_803A54A0);
       }
