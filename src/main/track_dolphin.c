@@ -4025,12 +4025,7 @@ void fn_80060490(u32 *a, u32 *b, u32 *c, u32 *d) {
 #pragma scheduling off
 #pragma peephole off
 void setShadowFlag_803db658(s32 v) {
-    register s32 m;
-    register s32 vv = v;
-    asm {
-        extsb m, vv
-        stb   m, lbl_803DB658 (r2)
-    }
+    lbl_803DB658 = (s8)v;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4066,15 +4061,7 @@ void fn_80069958(void **out) {
 #pragma peephole off
 u32 mapBlockFn_80060678(int *obj)
 {
-    register u32 r;
-    register u32 t;
-    register int *o = obj;
-    asm {
-        lwz    t, 0x10 (o)
-        clrrwi t, t, 24
-        srwi   r, t, 24
-    }
-    return r;
+    return ((u32)obj[0x10 / 4] >> 24) & 0xff;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4087,17 +4074,8 @@ extern u32 lbl_803DCE9C;
 #pragma peephole off
 void mapGetBlocks(void **outPtr, u32 *outVal)
 {
-    register void **p1 = outPtr;
-    register u32 *p2 = outVal;
-    register u32 t;
-    register u32 scratch;
-    asm {
-        lis  scratch, lbl_803822B4@ha
-        addi t, scratch, lbl_803822B4@l
-        stw  t, 0x0 (p1)
-        lwz  t, lbl_803DCE9C (r2)
-        stw  t, 0x0 (p2)
-    }
+    *outPtr = lbl_803822B4;
+    *outVal = lbl_803DCE9C;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4121,15 +4099,7 @@ void playerShadowFn_80062a30(int *obj)
 #pragma peephole off
 u32 fn_80060668(int *obj)
 {
-    register u32 r;
-    register u32 t;
-    register int *o = obj;
-    asm {
-        lwz    t, 0x10 (o)
-        rlwinm t, t, 0, 8, 15
-        srwi   r, t, 16
-    }
-    return r;
+    return ((u32)obj[0x10 / 4] >> 16) & 0xff;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4145,23 +4115,12 @@ extern u8 lbl_803DCEE8;
 #pragma scheduling off
 #pragma peephole off
 void fn_80062894(void) {
-    register s32 t;
-    register s32 zero;
-    asm {
-        li   zero, 0
-        sth  zero, lbl_803DCEF6 (r2)
-        sth  zero, lbl_803DCEFA (r2)
-        lbz  t,    lbl_803DCEEA (r2)
-        subfic t,  t, 1
-        extsb  t,  t
-        stb  t,    lbl_803DCEEA (r2)
-        lbz  t,    lbl_803DCEEB (r2)
-        subfic t,  t, 1
-        extsb  t,  t
-        stb  t,    lbl_803DCEEB (r2)
-        stb  zero, lbl_803DCEE9 (r2)
-        stb  zero, lbl_803DCEE8 (r2)
-    }
+    lbl_803DCEF6 = 0;
+    lbl_803DCEFA = 0;
+    lbl_803DCEEA = (s8)(1 - lbl_803DCEEA);
+    lbl_803DCEEB = (s8)(1 - lbl_803DCEEB);
+    lbl_803DCEE9 = 0;
+    lbl_803DCEE8 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4172,22 +4131,9 @@ void fn_80062894(void) {
 #pragma scheduling off
 #pragma peephole off
 void fn_80069968(s32 *out1, u32 *out2) {
-    register s32 *p1 = out1;
-    register u32 *p2 = out2;
-    register u8 *base;
-    register s32 idx;
-    register s32 tmp;
-    asm {
-        lis    base, lbl_8038DC64@ha
-        addi   base, base, lbl_8038DC64@l
-        lbz    idx,  lbl_803DCF6C (r2)
-        mulli  idx,  idx, 0x18
-        add    base, base, idx
-        lha    tmp,  0x4 (base)
-        stw    tmp,  0x0 (p1)
-        lwz    tmp,  lbl_803DCF30 (r2)
-        stw    tmp,  0x0 (p2)
-    }
+    u8 *base = lbl_8038DC64 + lbl_803DCF6C * 0x18;
+    *out1 = *(s16 *)(base + 4);
+    *out2 = lbl_803DCF30;
 }
 #pragma peephole reset
 #pragma scheduling reset

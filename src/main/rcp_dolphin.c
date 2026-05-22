@@ -2365,15 +2365,7 @@ extern u32 lbl_803DCDB4;
 
 void fn_80053ED0(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 | bits; }
 void fn_80053EBC(u32 bits) {
-    register u32 m;
-    register u32 v;
-    (void)bits;
-    asm {
-        lwz v, lbl_803DCDA8(r0)
-        nor m, r3, r3
-        and m, v, m
-        stw m, lbl_803DCDA8(r0)
-    }
+    lbl_803DCDA8 &= ~bits;
 }
 void fn_800542F4(void) { lbl_803DCDA8 = 0; lbl_803DCDB4 = 0; lbl_803DCDB0 = 0; }
 
