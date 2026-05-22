@@ -20,6 +20,7 @@ double FUN_80194a70(int param_1,byte param_2);
 f32 objFn_801948c0(u8 *obj,u8 coord);
 void FUN_80194b10(undefined4 param_1,undefined4 param_2,int param_3);
 void fn_80194964(int obj,int state,int block);
+void fn_80194C40(undefined4 def,int state,int block);
 u8 wallanimator_modelMtxFn(int *obj);
 u8 wallanimator_func0B(int *obj);
 int wallanimator_getExtraSize(void);

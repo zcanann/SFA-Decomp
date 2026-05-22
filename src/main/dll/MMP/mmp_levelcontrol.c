@@ -22,8 +22,12 @@ extern uint mapBlockFn_80060678(int *block);
 extern void *mapBlockFn_800606ec(int *obj, int idx);
 extern void *fn_800606DC(int *obj, int idx);
 extern void *fn_800606FC(int *obj, int idx);
+extern void *fn_8006070C(int *obj, int idx);
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void mm_free(void *ptr);
+extern void DCStoreRange(void *addr, u32 nBytes);
+extern int return0_80060B90(void);
+extern void *Shader_getLayer(void *shader, int idx);
 extern uint FUN_80060058();
 extern undefined4 FUN_800600b4();
 extern undefined4 FUN_800600c4();
@@ -33,7 +37,7 @@ extern undefined8 FUN_80286830();
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286884();
-extern void fn_80194C40(undefined4 def, int state);
+extern void fn_80194C40(undefined4 def, int state, int block);
 
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e4c88;
@@ -48,6 +52,8 @@ extern f32 lbl_803E4C94;
 extern f32 lbl_803E4C98;
 extern f32 lbl_803E3FFC;
 extern f32 lbl_803E4000;
+extern f32 lbl_803E4008;
+extern f64 lbl_803E4010;
 
 /*
  * --INFO--
@@ -632,6 +638,92 @@ void fn_80194964(int obj,int state,int block)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+void fn_80194C40(undefined4 def,int state,int block)
+{
+  ushort blockEnd;
+  f32 scale;
+  int edgeData;
+  ushort *mapBlock;
+  int blockLayer;
+  void *shader;
+  undefined2 *vertex;
+  uint triangle;
+  int triangleOffset;
+  int vertexOffset;
+  int coordOffset;
+  int blockIndex;
+  int edgeIndex;
+  int edgeOffset;
+  int vertexIndex;
+  f64 bias;
+
+  triangleOffset = 0;
+  coordOffset = 0;
+  vertexOffset = 0;
+  for (blockIndex = 0; blockIndex < (int)(uint)*(ushort *)(block + 0x9a); blockIndex++) {
+    mapBlock = (ushort *)mapBlockFn_800606ec((int *)block,blockIndex);
+    blockLayer = mapBlockFn_80060678((int *)mapBlock);
+    if ((int)*(char *)(def + 0x28) == blockLayer) {
+      bias = lbl_803E4010;
+      mapBlock[3] = (ushort)(int)(*(float *)(state + 0x44) +
+                                  (float)((double)*(short *)(*(int *)(state + 0x10) + coordOffset) - bias));
+      mapBlock[4] = (ushort)(int)(*(float *)(state + 0x44) +
+                                  (float)((double)*(short *)(*(int *)(state + 0x14) + coordOffset) - bias));
+      coordOffset += 2;
+      blockEnd = mapBlock[10];
+      scale = lbl_803E4008;
+      edgeOffset = vertexOffset;
+      for (triangle = (uint)*mapBlock; (int)triangle < (int)(uint)blockEnd; triangle++) {
+        mapBlock = (ushort *)fn_800606DC((int *)block,triangle);
+        vertexIndex = edgeOffset;
+        for (edgeIndex = 3; edgeIndex != 0; edgeIndex--) {
+          vertex = (undefined2 *)(*(int *)(block + 0x58) + (uint)*mapBlock * 6);
+          *(short *)vertex = (short)(int)(scale * *(float *)(state + 0x40) +
+                                (float)((double)*(short *)(*(int *)(state + 0xc) + edgeOffset) - bias));
+          vertex[1] = (short)(int)(scale * *(float *)(state + 0x44) +
+                                (float)((double)*(short *)(*(int *)(state + 0xc) + edgeOffset + 2) - bias));
+          vertex[2] = (short)(int)(scale * *(float *)(state + 0x48) +
+                                (float)((double)*(short *)(*(int *)(state + 0xc) + edgeOffset + 4) - bias));
+          edgeOffset += 6;
+          vertexIndex += 6;
+          vertexOffset += 6;
+          mapBlock++;
+        }
+        edgeOffset = vertexIndex;
+      }
+    }
+  }
+  DCStoreRange(*(void **)(block + 0x58),(uint)*(ushort *)(block + 0x90) * 6);
+  edgeData = 0;
+  for (edgeOffset = 0; edgeOffset < (int)(uint)*(byte *)(block + 0xa1); edgeOffset++) {
+    vertexOffset = (int)fn_800606FC((int *)block,edgeOffset);
+    shader = fn_8006070C((int *)block,*(byte *)(vertexOffset + 0x13));
+    shader = Shader_getLayer(shader,0);
+    bias = lbl_803E4010;
+    scale = lbl_803E4008;
+    if ((uint)*(byte *)((int)shader + 5) == (int)*(char *)(def + 0x28)) {
+      *(short *)(vertexOffset + 6) = (short)(int)(scale * *(float *)(state + 0x40) +
+            (float)((double)*(short *)(*(int *)(state + 0x28) + edgeData) - bias));
+      *(short *)(vertexOffset + 0xc) = (short)(int)(scale * *(float *)(state + 0x40) +
+            (float)((double)*(short *)(*(int *)(state + 0x2c) + edgeData) - bias));
+      *(short *)(vertexOffset + 8) = (short)(int)(scale * *(float *)(state + 0x44) +
+            (float)((double)*(short *)(*(int *)(state + 0x30) + edgeData) - bias));
+      *(short *)(vertexOffset + 0xe) = (short)(int)(scale * *(float *)(state + 0x44) +
+            (float)((double)*(short *)(*(int *)(state + 0x34) + edgeData) - bias));
+      *(short *)(vertexOffset + 10) = (short)(int)(scale * *(float *)(state + 0x48) +
+            (float)((double)*(short *)(*(int *)(state + 0x38) + edgeData) - bias));
+      *(short *)(vertexOffset + 0x10) = (short)(int)(scale * *(float *)(state + 0x48) +
+            (float)((double)*(short *)(*(int *)(state + 0x3c) + edgeData) - bias));
+    }
+    edgeData += 2;
+  }
+  *(int *)block = return0_80060B90();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
@@ -688,7 +780,7 @@ void xyzanimator_free(int obj,int param_2)
                                 (double)*(float *)(obj + 0x14));
     block = mapGetBlock(block);
     if ((block != 0) && (*(int *)(state + 4) != 0)) {
-      fn_80194C40(def,state);
+      fn_80194C40(def,state,block);
     }
   }
   if (*(int *)(state + 0xc) != 0) {
