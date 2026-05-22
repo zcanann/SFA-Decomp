@@ -166,7 +166,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
   DIMbossConfig *config;
   DIMbossTopState *topState;
   byte bVar1;
-  bool loadWaitStarted;
+  u8 loadWaitStarted;
   undefined4 updateResult;
   undefined4 *puVar3;
   int iVar4;
@@ -277,10 +277,8 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         break;
       case DIMBOSS_EVENT_LOAD_DIMTOP_ASSETS:
         OSReport(sDIMBossLoadingAssetsForDIMTop);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        lockLevel(mapDirIndex,0);
-        mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_BOOT_DATA_FILE);
+        lockLevel(mapGetDirIdx(DIMTOP_MAP_DIR),0);
+        mapLoadDataFile(mapGetDirIdx(DIMTOP_MAP_DIR),DIMTOP_BOOT_DATA_FILE);
         mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
         mapLoadDataFile(mapDirIndex,DIMTOP_INTRO_DATA_FILE);
         mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
