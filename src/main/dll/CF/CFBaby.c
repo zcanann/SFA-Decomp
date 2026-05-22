@@ -146,10 +146,10 @@ extern f32 FLOAT_803e4848;
 void FireFlyLantern_init(int obj, int def)
 {
   void *player;
-  u8 *state;
-  u8 childCount;
-  int i;
   u8 *childSlot;
+  u8 *state;
+  int i;
+  u32 childCount;
 
   state = *(u8 **)(obj + 0xb8);
   *(int *)(obj + 0xbc) = (int)fn_8018728C;
@@ -176,7 +176,7 @@ void FireFlyLantern_init(int obj, int def)
     if (childCount >= 6) {
       childCount = 6;
     }
-    *(u8 *)(state + 0x1c) = childCount;
+    *(u8 *)(state + 0x1c) = (u8)childCount;
 
     i = 0;
     childSlot = state;
