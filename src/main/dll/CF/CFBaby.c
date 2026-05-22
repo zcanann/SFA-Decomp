@@ -2219,40 +2219,40 @@ check_decor_objects:
                 radius = (f32)*(s16 *)(*(int *)(*objects + 0x54) + 0x5a);
                 fn_8002B2AC(localPos, obj, (f32 *)(*objects + 0xc));
 
-                if (state[3] <= localPos[0]) {
-                    xSq = lbl_803E3B7C;
-                    if (state[0] < localPos[0]) {
-                        delta = localPos[0] - state[0];
-                        xSq = delta * delta;
-                    }
-                }
-                else {
+                if (localPos[0] < state[3]) {
                     delta = localPos[0] - state[3];
                     xSq = delta * delta;
                 }
-
-                if (state[4] <= localPos[1]) {
-                    ySq = lbl_803E3B7C;
-                    if (state[1] < localPos[1]) {
-                        delta = localPos[1] - state[1];
-                        ySq = delta * delta;
-                    }
+                else if (localPos[0] > state[0]) {
+                    delta = localPos[0] - state[0];
+                    xSq = delta * delta;
                 }
                 else {
+                    xSq = lbl_803E3B7C;
+                }
+
+                if (localPos[1] < state[4]) {
                     delta = localPos[1] - state[4];
                     ySq = delta * delta;
                 }
-
-                if (state[5] <= localPos[2]) {
-                    zSq = lbl_803E3B7C;
-                    if (state[2] < localPos[2]) {
-                        delta = localPos[2] - state[2];
-                        zSq = delta * delta;
-                    }
+                else if (localPos[1] > state[1]) {
+                    delta = localPos[1] - state[1];
+                    ySq = delta * delta;
                 }
                 else {
+                    ySq = lbl_803E3B7C;
+                }
+
+                if (localPos[2] < state[5]) {
                     delta = localPos[2] - state[5];
                     zSq = delta * delta;
+                }
+                else if (localPos[2] > state[2]) {
+                    delta = localPos[2] - state[2];
+                    zSq = delta * delta;
+                }
+                else {
+                    zSq = lbl_803E3B7C;
                 }
 
                 if (lbl_803E3B7C + xSq + ySq + zSq < radius * radius) {
