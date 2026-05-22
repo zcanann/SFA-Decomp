@@ -476,7 +476,7 @@ void dll_19C_update(int *obj) {
         *(u8*)((char*)setup + 5) = def[5];
         *(u8*)((char*)setup + 6) = def[6];
         *(u8*)((char*)setup + 7) = def[7];
-        Obj_SetupObject(setup, 5, (s8)*(s8*)((char*)obj + 0xac), -1, *(void**)((char*)obj + 0x30));
+        Obj_SetupObject(setup, 5, *(s8*)((char*)obj + 0xac), -1, *(void**)((char*)obj + 0x30));
         *(s16*)(sub + 4) = 0x64;
         *(s16*)(sub + 6) = 0;
     }
