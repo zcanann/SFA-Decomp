@@ -2121,6 +2121,208 @@ void fn_801889C8(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void loadMapAndParent(int mapId);
+extern int mapGetDirIdx(int mapId);
+extern void lockLevel(int dirIdx, int locked);
+extern void mapUnload(int dirIdx, int flags);
+extern void setLoadedFileFlags_blocks1(void);
+extern void clearLoadedFileFlags_blocks1(void);
+extern void warpToMap(int mapId, int arg);
+extern void unlockLevel(int a, int b, int c);
+extern int *gMapEventInterface;
+extern f32 lbl_803E3BA8;
+extern f32 lbl_803E3BAC;
+extern f32 lbl_803E3BB0;
+
+typedef u8 (*MapEventStatusFn)(int mapId);
+typedef void (*MapEventSetFn)(int mapId, int value);
+typedef void (*MapEventOpFn)(int mapId, int arg, int value);
+
+#define MAP_EVENT_STATUS(mapId) ((MapEventStatusFn)(*(u32 *)(*gMapEventInterface + 0x40)))(mapId)
+#define MAP_EVENT_SET(mapId, value) ((MapEventSetFn)(*(u32 *)(*gMapEventInterface + 0x44)))(mapId, value)
+#define MAP_EVENT_OP(mapId, arg, value) ((MapEventOpFn)(*(u32 *)(*gMapEventInterface + 0x50)))(mapId, arg, value)
+
+#pragma scheduling off
+#pragma peephole off
+int Landed_Arwing_SeqFn(int obj, int unused, u8 *events) {
+    int i;
+    int def;
+    LandedArwingState *state;
+    int mapId;
+    int child;
+
+    def = *(int *)(obj + 0x4c);
+    state = *(LandedArwingState **)(obj + 0xb8);
+    for (i = 0; i < events[0x8b]; i++) {
+        switch (events[0x81 + i]) {
+            case 2:
+            case 0x65:
+                mapId = *(int *)(def + 0x14);
+                if (mapId == 0x49f5a) {
+                    loadMapAndParent(0x26);
+                    unlockLevel(0, 0, 1);
+                    lockLevel(mapGetDirIdx(0x26), 0);
+                    lockLevel(mapGetDirIdx(0xb), 1);
+                } else if (mapId < 0x49f5a) {
+                    if (mapId == 0x451b9) {
+                        if (MAP_EVENT_STATUS(0xd) == 2) {
+                            loadMapAndParent(0xb);
+                            unlockLevel(0, 0, 1);
+                            lockLevel(mapGetDirIdx(0xb), 0);
+                        } else {
+                            loadMapAndParent(0x29);
+                            unlockLevel(0, 0, 1);
+                            lockLevel(mapGetDirIdx(0x29), 0);
+                        }
+                    } else if (mapId == 0x43775) {
+                        loadMapAndParent(0x29);
+                        unlockLevel(0, 0, 1);
+                        lockLevel(mapGetDirIdx(0x29), 0);
+                    } else {
+                        loadMapAndParent(0x29);
+                        unlockLevel(0, 0, 1);
+                        lockLevel(mapGetDirIdx(0x29), 0);
+                    }
+                } else if (mapId == 0x4cd65) {
+                    loadMapAndParent(0x41);
+                    unlockLevel(0, 0, 1);
+                    lockLevel(mapGetDirIdx(0x41), 0);
+                    lockLevel(mapGetDirIdx(0xb), 1);
+                } else {
+                    loadMapAndParent(0x29);
+                    unlockLevel(0, 0, 1);
+                    lockLevel(mapGetDirIdx(0x29), 0);
+                }
+                break;
+            case 3:
+            case 0x64:
+                mapId = *(int *)(def + 0x14);
+                if (mapId == 0x49f5a) {
+                    MAP_EVENT_OP(0xb, 4, 0);
+                } else if (mapId < 0x49f5a) {
+                    if (mapId == 0x451b9) {
+                        if (MAP_EVENT_STATUS(0xd) == 2) {
+                            unlockLevel(0, 0, 1);
+                            mapUnload(mapGetDirIdx(0xd), 0x3f3f);
+                            MAP_EVENT_OP(0xd, 0xa, 0);
+                            MAP_EVENT_OP(0xd, 0xb, 0);
+                            MAP_EVENT_OP(0xd, 0xe, 0);
+                        }
+                    } else if (mapId == 0x43775) {
+                        unlockLevel(0, 0, 1);
+                        mapUnload(mapGetDirIdx(7), 0x3f3c);
+                    }
+                } else if (mapId == 0x4cd65) {
+                    unlockLevel(0, 0, 1);
+                    mapUnload(mapGetDirIdx(0xb), 0x3f00);
+                }
+                break;
+            case 5:
+                mapId = *(int *)(def + 0x14);
+                if (mapId == 0x451b9) {
+                    if (MAP_EVENT_STATUS(0xd) == 2) {
+                        setLoadedFileFlags_blocks1();
+                    }
+                } else if (mapId < 0x451b9) {
+                    if (mapId == 0x43775) {
+                        setLoadedFileFlags_blocks1();
+                    }
+                } else if (mapId == 0x49f5a) {
+                    setLoadedFileFlags_blocks1();
+                }
+                break;
+            case 6:
+                mapId = *(int *)(def + 0x14);
+                if (mapId == 0x451b9) {
+                    if (MAP_EVENT_STATUS(0xd) == 2) {
+                        clearLoadedFileFlags_blocks1();
+                    }
+                } else if (mapId < 0x451b9) {
+                    if (mapId == 0x43775) {
+                        clearLoadedFileFlags_blocks1();
+                    }
+                } else if (mapId == 0x49f5a) {
+                    clearLoadedFileFlags_blocks1();
+                }
+                break;
+            case 7:
+            case 0x66:
+                mapId = *(int *)(def + 0x14);
+                if (mapId == 0x49f5a) {
+                    warpToMap(0x32, 0);
+                } else if (mapId < 0x49f5a) {
+                    if (mapId == 0x451b9) {
+                        if (MAP_EVENT_STATUS(0xd) == 2) {
+                            MAP_EVENT_SET(0xb, 5);
+                            warpToMap(0x4e, 0);
+                        }
+                    }
+                } else if (mapId == 0x4cd65) {
+                    warpToMap(0x7f, 0);
+                    MAP_EVENT_SET(0x41, 2);
+                }
+                break;
+            case 0xa:
+                state->enablePathFx = 1;
+                break;
+            case 0xb:
+                state->enablePathFx = 0;
+                break;
+            case 0xc:
+                state->path7Fx = lbl_803E3B98;
+                break;
+            case 0xd:
+                state->path7Fx = lbl_803E3BA8;
+                break;
+            case 0xe:
+                state->path7Fx = lbl_803E3BAC;
+                break;
+            case 0xf:
+                state->path7Fx = lbl_803E3BB0;
+                break;
+            case 0x10:
+                state->path8Fx = lbl_803E3B98;
+                break;
+            case 0x11:
+                state->path8Fx = lbl_803E3BA8;
+                break;
+            case 0x12:
+                state->path8Fx = lbl_803E3BAC;
+                break;
+            case 0x13:
+                state->path8Fx = lbl_803E3BB0;
+                break;
+            case 0x14:
+                state->path6Fx = lbl_803E3B98;
+                break;
+            case 0x15:
+                state->path6Fx = lbl_803E3BA8;
+                break;
+            case 0x16:
+                state->path6Fx = lbl_803E3BAC;
+                break;
+            case 0x17:
+                state->path6Fx = lbl_803E3BB0;
+                break;
+            case 0x18:
+                child = state->childObject;
+                if (child != 0) {
+                    *(u16 *)(child + 6) &= 0xbfff;
+                }
+                break;
+            case 0x19:
+                child = state->childObject;
+                if (child != 0) {
+                    *(u16 *)(child + 6) |= 0x4000;
+                }
+                break;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
@@ -2219,8 +2421,7 @@ void infopoint_update(int obj) {
 #pragma scheduling reset
 
 /* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-extern void unlockLevel(int a, int b, int c);
-extern void Landed_Arwing_SeqFn(void);
+extern int Landed_Arwing_SeqFn(int obj, int unused, u8 *events);
 #pragma scheduling off
 #pragma peephole off
 void landed_arwing_init(int obj, int param) {
@@ -2230,7 +2431,7 @@ void landed_arwing_init(int obj, int param) {
     if (GameBit_Get(*(s16*)((char*)param + 0x1c)) == 0) {
         unlockLevel(0, 0, 1);
     }
-    *(void(**)(void))((char*)obj + 0xbc) = Landed_Arwing_SeqFn;
+    *(int *)((char*)obj + 0xbc) = (int)Landed_Arwing_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
