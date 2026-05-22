@@ -10,16 +10,77 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern int FUN_800632f4();
 extern undefined4 FUN_80135814();
 extern double FUN_80194a70();
+extern void *Obj_GetPlayerObject(void);
+extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnim, void *events);
+extern s16 getAngle(f32 deltaX, f32 deltaZ);
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern f32 fn_80293E80(f32 x);
+extern void fn_80296518(void *obj, int arg, int enable);
+extern void GameBit_Set(int eventId, int value);
+extern void lightFn_8001db6c(int light, int mode, f32 value);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd718;
+extern void *gObjectTriggerInterface;
+extern f32 timeDelta;
 extern f64 DOUBLE_803e5c08;
+extern f32 lbl_803E4F90;
+extern f32 lbl_803E4F94;
+extern f32 lbl_803E4F98;
+extern f32 lbl_803E4F9C;
+extern f32 lbl_803E4FA0;
+extern f32 lbl_803E4FA4;
+extern f32 lbl_803E4FA8;
+extern f32 lbl_803E4FAC;
+extern f32 lbl_803E4FB0;
+extern f32 lbl_803E4FB4;
+extern f32 lbl_803E4FB8;
+extern f32 lbl_803E4FC8;
 extern f32 lbl_803E5C00;
 extern f32 lbl_803E5C10;
 extern f32 lbl_803E5C18;
 extern f32 lbl_803E5C1C;
 extern f32 lbl_803E5C20;
+
+typedef struct MmShrineAnimObj {
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    s16 flags;
+    u8 pad08[0x8];
+    f32 posY;
+    u8 pad14[0x4];
+    f32 posX;
+    u8 pad1C[0x4];
+    f32 posZ;
+    u8 pad24[0x12];
+    u8 fadeAlpha;
+    u8 pad37[0x15];
+    u8 *config;
+    u8 pad50[0x68];
+    u8 *state;
+} MmShrineAnimObj;
+
+typedef struct MmShrineAnimState {
+    int light;
+    u8 pad04[0x24];
+    s16 orbitA;
+    s16 orbitB;
+    s16 orbitC;
+    u8 pad2E[0x2];
+    u8 hasTorchSignal;
+} MmShrineAnimState;
+
+typedef struct MmShrineAnimEvents {
+    u8 pad00[0x56];
+    u8 eventStatus;
+    u8 pad57[0x19];
+    s16 eventModel;
+    u8 pad72[0xF];
+    u8 events[10];
+    u8 eventCount;
+} MmShrineAnimEvents;
 
 /*
  * --INFO--
@@ -156,6 +217,122 @@ void FUN_801c5c2c(int param_1)
   }
   return;
 }
+
+#pragma peephole off
+void fn_801C5990(void *objArg)
+{
+    MmShrineAnimObj *obj;
+    u8 *config;
+    MmShrineAnimState *state;
+    void *player;
+    f32 trigA;
+    f32 trigB;
+    f32 distance;
+    s32 angleDelta;
+    int animEvents;
+
+    obj = (MmShrineAnimObj *)objArg;
+    config = obj->config;
+    state = (MmShrineAnimState *)obj->state;
+    player = Obj_GetPlayerObject();
+
+    if ((obj->flags & 0x4000) != 0) {
+        obj->yaw = 0;
+        obj->posY = *(f32 *)(config + 0xC);
+        return;
+    }
+
+    state->orbitA = (s16)(state->orbitA + (s32)(lbl_803E4F90 * timeDelta));
+    state->orbitB = (s16)(state->orbitB + (s32)(lbl_803E4F94 * timeDelta));
+    state->orbitC = (s16)(state->orbitC + (s32)(lbl_803E4F98 * timeDelta));
+
+    obj->posY = lbl_803E4F9C +
+                (*(f32 *)(config + 0xC) +
+                 fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4));
+
+    trigA = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitB) / lbl_803E4FA4);
+    trigB = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
+    obj->roll = (s16)(s32)(lbl_803E4FA8 * (trigB + trigA));
+
+    trigA = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitC) / lbl_803E4FA4);
+    trigB = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
+    obj->pitch = (s16)(s32)(lbl_803E4FA8 * (trigB + trigA));
+
+    ObjAnim_AdvanceCurrentMove(lbl_803E4FAC, timeDelta, (int)obj, &animEvents);
+
+    if (player != NULL) {
+        angleDelta = (u16)getAngle(obj->posX - *(f32 *)((u8 *)player + 0x18),
+                                   obj->posZ - *(f32 *)((u8 *)player + 0x20)) -
+                     (u16)obj->yaw;
+        if (angleDelta > 0x8000) {
+            angleDelta -= 0xFFFF;
+        }
+        if (angleDelta < -0x8000) {
+            angleDelta += 0xFFFF;
+        }
+
+        obj->yaw = (s16)(obj->yaw + (s32)(((f32)angleDelta * timeDelta) / lbl_803E4FB0));
+        distance = Vec_xzDistance(&obj->posX, (f32 *)((u8 *)player + 0x18));
+        if (distance <= lbl_803E4FB4) {
+            obj->fadeAlpha = (u8)(s32)(lbl_803E4FB8 * (distance / lbl_803E4FB4));
+        } else {
+            obj->fadeAlpha = 0xFF;
+        }
+    }
+}
+
+int fn_801C5CE4(void *objArg, int unused, void *eventListArg)
+{
+    MmShrineAnimObj *obj;
+    MmShrineAnimState *state;
+    MmShrineAnimEvents *eventList;
+    void *player;
+    int i;
+    u8 event;
+
+    (void)unused;
+    obj = (MmShrineAnimObj *)objArg;
+    eventList = (MmShrineAnimEvents *)eventListArg;
+    state = (MmShrineAnimState *)obj->state;
+    player = Obj_GetPlayerObject();
+    eventList->eventModel = -1;
+    eventList->eventStatus = 0;
+
+    for (i = 0; i < eventList->eventCount; i++) {
+        event = eventList->events[i];
+        if (event != 0) {
+            switch (event) {
+            case 3:
+                state->hasTorchSignal = 1;
+                break;
+            case 7:
+                fn_80296518(player, 8, 1);
+                GameBit_Set(0x143, 1);
+                GameBit_Set(0xBA8, 1);
+                break;
+            case 13:
+                (*(void (***)(int, int, int, int))gObjectTriggerInterface)[0x14](0x48, 100, 0, 0x50);
+                break;
+            case 14:
+                obj->flags |= 0x4000;
+                if (state->light != 0) {
+                    lightFn_8001db6c(state->light, 0, lbl_803E4FC8);
+                }
+                break;
+            case 15:
+                obj->flags &= ~0x4000;
+                if (state->light != 0) {
+                    lightFn_8001db6c(state->light, 0, lbl_803E4FC8);
+                }
+                break;
+            }
+        }
+        eventList->events[i] = 0;
+    }
+
+    return 0;
+}
+#pragma peephole reset
 
 extern int lbl_803DDBC4;
 #pragma scheduling off
