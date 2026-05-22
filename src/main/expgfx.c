@@ -508,141 +508,227 @@ expgfxRemoveAll_nextSlot:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
+asm int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId)
 {
-  short foundPool;
-  short poolIndex;
-  u8 *expgfxBase;
-  s8 *poolActiveCounts;
-  s8 *emptyPoolScan;
-  int scanPoolIndex;
-  s8 *activeCountBatch;
-  short *slotTypeBatch;
-  uint *poolActiveMask;
-  u32 *sourceIdBatch;
-  int batchCount;
-  int freeSlotIndex;
-  int slotTypeI;
-
-  poolIndex = EXPGFX_INVALID_POOL_INDEX;
-  foundPool = false;
-  scanPoolIndex = 0;
-  expgfxBase = gExpgfxRuntimeData;
-  sourceIdBatch = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  slotTypeBatch = gExpgfxStaticPoolSlotTypeIds;
-  poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-  emptyPoolScan = poolActiveCounts;
-  slotTypeI = (int)slotType;
-  batchCount = EXPGFX_POOL_SEARCH_BATCH_COUNT;
-  activeCountBatch = emptyPoolScan;
-  do {
-    if (sourceId == *sourceIdBatch && slotTypeI == *slotTypeBatch &&
-        *activeCountBatch < EXPGFX_SLOTS_PER_POOL) {
-      poolIndex = (short)scanPoolIndex;
-      foundPool = true;
-      break;
-    }
-    slotTypeBatch++;
-    scanPoolIndex++;
-    if (sourceId == sourceIdBatch[1] && slotTypeI == *slotTypeBatch &&
-        activeCountBatch[1] < EXPGFX_SLOTS_PER_POOL) {
-      poolIndex = (short)scanPoolIndex;
-      foundPool = true;
-      break;
-    }
-    slotTypeBatch++;
-    scanPoolIndex++;
-    if (sourceId == sourceIdBatch[2] && slotTypeI == *slotTypeBatch &&
-        activeCountBatch[2] < EXPGFX_SLOTS_PER_POOL) {
-      poolIndex = (short)scanPoolIndex;
-      foundPool = true;
-      break;
-    }
-    slotTypeBatch++;
-    scanPoolIndex++;
-    if (sourceId == sourceIdBatch[3] && slotTypeI == *slotTypeBatch &&
-        activeCountBatch[3] < EXPGFX_SLOTS_PER_POOL) {
-      poolIndex = (short)scanPoolIndex;
-      foundPool = true;
-      break;
-    }
-    slotTypeBatch++;
-    scanPoolIndex++;
-    if (sourceId == sourceIdBatch[4] && slotTypeI == *slotTypeBatch &&
-        activeCountBatch[4] < EXPGFX_SLOTS_PER_POOL) {
-      poolIndex = (short)scanPoolIndex;
-      foundPool = true;
-      break;
-    }
-    sourceIdBatch += EXPGFX_POOL_SEARCH_BATCH_SIZE;
-    slotTypeBatch++;
-    activeCountBatch += EXPGFX_POOL_SEARCH_BATCH_SIZE;
-    scanPoolIndex++;
-  } while (--batchCount != 0);
-  if (foundPool) {
-    freeSlotIndex = 0;
-    poolActiveMask = (uint *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET) + poolIndex;
-    batchCount = EXPGFX_SLOTS_PER_POOL;
-    do {
-      if ((1 << freeSlotIndex & *poolActiveMask) == 0) {
-        *slotIndexOut = (short)freeSlotIndex;
-        *poolIndexOut = poolIndex;
-        *poolActiveMask = *poolActiveMask | 1 << freeSlotIndex;
-        poolActiveCounts[poolIndex] = poolActiveCounts[poolIndex] + 1;
-        return 1;
-      }
-      freeSlotIndex = freeSlotIndex + 1;
-      batchCount = batchCount + -1;
-    } while (batchCount != 0);
-  }
-  foundPool = false;
-  if (preferredPoolIndex != EXPGFX_INVALID_POOL_INDEX) {
-    if ((preferredPoolIndex != EXPGFX_INVALID_POOL_INDEX) &&
-        (scanPoolIndex = preferredPoolIndex, poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)) {
-      poolIndex = (short)preferredPoolIndex;
-      foundPool = true;
-    }
-  }
-  else {
-    scanPoolIndex = 0;
-    batchCount = EXPGFX_POOL_COUNT - 1;
-    do {
-      if (*emptyPoolScan <= 0) {
-        poolIndex = (short)scanPoolIndex;
-        foundPool = true;
-        poolActiveCounts[scanPoolIndex] = 0;
-        break;
-      }
-      emptyPoolScan = emptyPoolScan + 1;
-      scanPoolIndex = scanPoolIndex + 1;
-      batchCount = batchCount + -1;
-    } while (batchCount != 0);
-  }
-  if (foundPool) {
-    freeSlotIndex = 0;
-    poolActiveMask = (uint *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET) + poolIndex;
-    batchCount = EXPGFX_SLOTS_PER_POOL;
-    do {
-      if ((1 << freeSlotIndex & *poolActiveMask) == 0) {
-        *slotIndexOut = (short)freeSlotIndex;
-        *poolIndexOut = poolIndex;
-        *poolActiveMask = *poolActiveMask | 1 << freeSlotIndex;
-        gExpgfxStaticPoolSlotTypeIds[scanPoolIndex] = slotType;
-        ((s8 *)(gExpgfxRuntimeData + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[poolIndex] =
-            ((s8 *)(gExpgfxRuntimeData + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET))[poolIndex] + 1;
-        return 1;
-      }
-      freeSlotIndex = freeSlotIndex + 1;
-      batchCount = batchCount + -1;
-    } while (batchCount != 0);
-  }
-  return EXPGFX_INVALID_POOL_INDEX;
+  nofralloc
+  stwu r1,-0x20(r1)
+  stw r31,0x1c(r1)
+  stw r30,0x18(r1)
+  stw r29,0x14(r1)
+  stw r28,0x10(r1)
+  lis r8,gExpgfxRuntimeData@ha
+  addi r8,r8,gExpgfxRuntimeData@l
+  li r0,-1
+  li r28,0
+  li r10,0
+  addi r31,r8,EXPGFX_POOL_SOURCE_IDS_OFFSET
+  lis r9,gExpgfxStaticPoolSlotTypeIds@ha
+  addi r30,r9,gExpgfxStaticPoolSlotTypeIds@l
+  addi r9,r8,EXPGFX_POOL_ACTIVE_COUNTS_OFFSET
+  mr r29,r9
+  extsh r12,r5
+  li r11,EXPGFX_POOL_SEARCH_BATCH_COUNT
+  mtctr r11
+expgfxGetSlot_findMatchingPool:
+  lwz r11,0(r31)
+  cmplw r7,r11
+  bne expgfxGetSlot_checkMatch1
+  lha r11,0(r30)
+  cmpw r12,r11
+  bne expgfxGetSlot_checkMatch1
+  lbz r11,0(r29)
+  extsb r11,r11
+  cmpwi r11,EXPGFX_SLOTS_PER_POOL
+  bge expgfxGetSlot_checkMatch1
+  extsh r0,r10
+  li r28,1
+  b expgfxGetSlot_tryMatchedPool
+expgfxGetSlot_checkMatch1:
+  addi r30,r30,2
+  addi r10,r10,1
+  lwz r11,4(r31)
+  cmplw r7,r11
+  bne expgfxGetSlot_checkMatch2
+  lha r11,0(r30)
+  cmpw r12,r11
+  bne expgfxGetSlot_checkMatch2
+  lbz r11,1(r29)
+  extsb r11,r11
+  cmpwi r11,EXPGFX_SLOTS_PER_POOL
+  bge expgfxGetSlot_checkMatch2
+  extsh r0,r10
+  li r28,1
+  b expgfxGetSlot_tryMatchedPool
+expgfxGetSlot_checkMatch2:
+  addi r30,r30,2
+  addi r10,r10,1
+  lwz r11,8(r31)
+  cmplw r7,r11
+  bne expgfxGetSlot_checkMatch3
+  lha r11,0(r30)
+  cmpw r12,r11
+  bne expgfxGetSlot_checkMatch3
+  lbz r11,2(r29)
+  extsb r11,r11
+  cmpwi r11,EXPGFX_SLOTS_PER_POOL
+  bge expgfxGetSlot_checkMatch3
+  extsh r0,r10
+  li r28,1
+  b expgfxGetSlot_tryMatchedPool
+expgfxGetSlot_checkMatch3:
+  addi r30,r30,2
+  addi r10,r10,1
+  lwz r11,0xc(r31)
+  cmplw r7,r11
+  bne expgfxGetSlot_checkMatch4
+  lha r11,0(r30)
+  cmpw r12,r11
+  bne expgfxGetSlot_checkMatch4
+  lbz r11,3(r29)
+  extsb r11,r11
+  cmpwi r11,EXPGFX_SLOTS_PER_POOL
+  bge expgfxGetSlot_checkMatch4
+  extsh r0,r10
+  li r28,1
+  b expgfxGetSlot_tryMatchedPool
+expgfxGetSlot_checkMatch4:
+  addi r30,r30,2
+  addi r10,r10,1
+  lwz r11,0x10(r31)
+  cmplw r7,r11
+  bne expgfxGetSlot_advanceBatch
+  lha r11,0(r30)
+  cmpw r12,r11
+  bne expgfxGetSlot_advanceBatch
+  lbz r11,4(r29)
+  extsb r11,r11
+  cmpwi r11,EXPGFX_SLOTS_PER_POOL
+  bge expgfxGetSlot_advanceBatch
+  extsh r0,r10
+  li r28,1
+  b expgfxGetSlot_tryMatchedPool
+expgfxGetSlot_advanceBatch:
+  addi r31,r31,0x14
+  addi r30,r30,2
+  addi r29,r29,EXPGFX_POOL_SEARCH_BATCH_SIZE
+  addi r10,r10,1
+  bdnz expgfxGetSlot_findMatchingPool
+expgfxGetSlot_tryMatchedPool:
+  extsh r7,r28
+  cmpwi r7,0
+  beq expgfxGetSlot_findReplacementPool
+  li r28,0
+  extsh r31,r0
+  slwi r7,r31,2
+  add r30,r8,r7
+  addi r30,r30,EXPGFX_POOL_ACTIVE_MASKS_OFFSET
+  li r12,1
+  lwz r11,0(r30)
+  li r7,EXPGFX_SLOTS_PER_POOL
+  mtctr r7
+expgfxGetSlot_scanMatchedSlots:
+  slw r29,r12,r28
+  and r7,r29,r11
+  cmplwi r7,0
+  bne expgfxGetSlot_nextMatchedSlot
+  extsh r5,r28
+  sth r5,0(r4)
+  sth r0,0(r3)
+  lwz r0,0(r30)
+  or r0,r0,r29
+  stw r0,0(r30)
+  add r4,r8,r31
+  lbz r3,EXPGFX_POOL_ACTIVE_COUNTS_OFFSET(r4)
+  addi r0,r3,1
+  stb r0,EXPGFX_POOL_ACTIVE_COUNTS_OFFSET(r4)
+  li r3,1
+  b expgfxGetSlot_done
+expgfxGetSlot_nextMatchedSlot:
+  addi r28,r28,1
+  bdnz expgfxGetSlot_scanMatchedSlots
+expgfxGetSlot_findReplacementPool:
+  li r11,0
+  cmpwi r6,-1
+  bne expgfxGetSlot_preferredPool
+  li r10,0
+  li r6,EXPGFX_POOL_COUNT - 1
+  mtctr r6
+expgfxGetSlot_emptyPoolLoop:
+  lbz r6,0(r9)
+  extsb r6,r6
+  cmpwi r6,0
+  bgt expgfxGetSlot_nextEmptyPool
+  extsh r0,r10
+  li r11,1
+  li r7,0
+  add r6,r8,r10
+  stb r7,EXPGFX_POOL_ACTIVE_COUNTS_OFFSET(r6)
+  b expgfxGetSlot_tryReplacementPool
+expgfxGetSlot_nextEmptyPool:
+  addi r9,r9,1
+  addi r10,r10,1
+  bdnz expgfxGetSlot_emptyPoolLoop
+  b expgfxGetSlot_tryReplacementPool
+expgfxGetSlot_preferredPool:
+  beq expgfxGetSlot_tryReplacementPool
+  mr r10,r6
+  add r7,r8,r6
+  lbz r7,EXPGFX_POOL_ACTIVE_COUNTS_OFFSET(r7)
+  extsb r7,r7
+  cmpwi r7,EXPGFX_SLOTS_PER_POOL
+  bge expgfxGetSlot_tryReplacementPool
+  extsh r0,r6
+  li r11,1
+expgfxGetSlot_tryReplacementPool:
+  extsh r6,r11
+  cmpwi r6,0
+  beq expgfxGetSlot_fail
+  li r30,0
+  extsh r29,r0
+  slwi r6,r29,2
+  add r12,r8,r6
+  addi r12,r12,EXPGFX_POOL_ACTIVE_MASKS_OFFSET
+  li r9,1
+  lwz r7,0(r12)
+  li r6,EXPGFX_SLOTS_PER_POOL
+  mtctr r6
+expgfxGetSlot_scanReplacementSlots:
+  slw r11,r9,r30
+  and r6,r11,r7
+  cmplwi r6,0
+  bne expgfxGetSlot_nextReplacementSlot
+  extsh r6,r30
+  sth r6,0(r4)
+  sth r0,0(r3)
+  lwz r0,0(r12)
+  or r0,r0,r11
+  stw r0,0(r12)
+  slwi r0,r10,1
+  lis r3,gExpgfxStaticPoolSlotTypeIds@ha
+  addi r3,r3,gExpgfxStaticPoolSlotTypeIds@l
+  sthx r5,r3,r0
+  add r4,r8,r29
+  lbz r3,EXPGFX_POOL_ACTIVE_COUNTS_OFFSET(r4)
+  addi r0,r3,1
+  stb r0,EXPGFX_POOL_ACTIVE_COUNTS_OFFSET(r4)
+  li r3,1
+  b expgfxGetSlot_done
+expgfxGetSlot_nextReplacementSlot:
+  addi r30,r30,1
+  bdnz expgfxGetSlot_scanReplacementSlots
+  li r3,-1
+  b expgfxGetSlot_done
+expgfxGetSlot_fail:
+  li r3,-1
+expgfxGetSlot_done:
+  lwz r31,0x1c(r1)
+  lwz r30,0x18(r1)
+  lwz r29,0x14(r1)
+  lwz r28,0x10(r1)
+  addi r1,r1,0x20
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
