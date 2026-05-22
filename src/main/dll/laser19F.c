@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/laser19F.h"
+#include "main/dll/SC/SCtotemlogpuz.h"
 
 
 #pragma peephole off
@@ -11,6 +12,7 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
 extern int FUN_80017a98();
+extern int Obj_GetPlayerObject(void);
 extern undefined4 FUN_8002fc3c();
 extern undefined4 ObjMsg_AllocQueue();
 extern int FUN_8005398c();
@@ -23,8 +25,13 @@ extern undefined4 FUN_80294ccc();
 
 extern undefined4* DAT_803dd72c;
 extern void* DAT_803de838;
+extern int *gObjectTriggerInterface;
 extern f64 DOUBLE_803e5bd0;
+extern f64 lbl_803E4F38;
 extern f32 lbl_803DC074;
+extern f32 timeDelta;
+extern f32 lbl_803E4F40;
+extern f32 lbl_803E4F50;
 extern f32 lbl_803E5B58;
 extern f32 lbl_803E5BA0;
 extern f32 lbl_803E5BA4;
@@ -44,6 +51,61 @@ extern f32 lbl_803E5BEC;
 extern f32 lbl_803E5BF0;
 extern f32 lbl_803E5BF4;
 extern f32 lbl_803E5BF8;
+
+#define MMSH_SHRINE_FLAG_LIT 0x4000
+#define MMSH_SHRINE_LOAD_MAP_DIR 0x20
+#define MMSH_SHRINE_LOAD_TRIGGER_TIMER 0xf4
+#define MMSH_SHRINE_LATCH_FLAG_OPEN_READY 0x1
+#define MMSH_SHRINE_LATCH_FLAG_CHECK_COMPLETE 0x4
+#define MMSH_SHRINE_LATCH_FLAG_AMBIENT_LOCK 0x8
+#define MMSH_SHRINE_LATCH_FLAG_MUSIC_LOCK 0x10
+#define MMSH_SHRINE_GB_OPEN 0xae6
+#define MMSH_SHRINE_GB_COMPLETE 0xae4
+#define MMSH_SHRINE_GB_RESET_A 0x12b
+#define MMSH_SHRINE_GB_RESET_B 0xae5
+#define MMSH_SHRINE_GB_MUSIC_LOCK 0xcbb
+#define MMSH_SHRINE_SFX_IDLE 0x343
+#define MMSH_SHRINE_MUSIC_RUMBLE 0xd8
+
+typedef struct MMSHShrineRuntime {
+  void *light;
+  f32 swayBase;
+  f32 swayVelocity;
+  f32 swayTarget;
+  f32 swayStep;
+  f32 idleSfxTimer;
+  SCGameBitLatchState latch;
+  u8 pad1C[0x24 - 0x1C];
+  u8 phase;
+  u8 pad25[3];
+} MMSHShrineRuntime;
+
+typedef struct MMSHShrineObject {
+  s16 yaw;
+  u8 pad02[0x06 - 0x02];
+  s16 flags06;
+  u8 pad08[0x0C - 0x08];
+  f32 posX;
+  f32 posY;
+  f32 posZ;
+  f32 prevPosX;
+  f32 prevPosY;
+  f32 prevPosZ;
+  u8 pad24[0xAF - 0x24];
+  u8 objectFlags;
+  u8 padB0[0xB4 - 0xB0];
+  s16 triggerHandle;
+  u8 padB6[0xB8 - 0xB6];
+  MMSHShrineRuntime *runtime;
+  u8 padBC[MMSH_SHRINE_LOAD_TRIGGER_TIMER - 0xBC];
+  s32 loadTriggerTimer;
+} MMSHShrineObject;
+
+typedef void (*ObjectTriggerRefreshFn)(int mode, int obj, int arg);
+typedef void (*ObjectTriggerReleaseFn)(s16 triggerHandle);
+typedef void (*ObjectTriggerSpawnFn)(int type, int a, int b, int c);
+
+#define OBJECT_TRIGGER_FN(offset, type) ((type)(*(u32 *)((u8 *)*gObjectTriggerInterface + (offset))))
 
 /*
  * --INFO--
@@ -326,7 +388,19 @@ extern void Music_Trigger(int id, int p2);
 extern void objRenderFn_8003b8f4(int p1, undefined4 p2, undefined4 p3, undefined4 p4,
                                   undefined4 p5, f32 f);
 extern void objParticleFn_80099d84(int p1, int p2, int p3, f32 f1, f32 f2);
-extern f32 lbl_803E4F50;
+extern void skyFn_80088c94(int skyId, int enable);
+extern void getEnvfxAct(int obj, int target, int effectId, int flags);
+extern int mapGetDirIdx(int mapDir);
+extern void unlockLevel(int mapDir, int mode, int flags);
+extern void fn_801C4664(int obj);
+extern void SCGameBitLatch_Update(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
+                                  s16 clearIfClearBit, s16 latchBit, int musicId);
+extern void SCGameBitLatch_UpdateInverted(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
+                                          s16 clearIfClearBit, s16 latchBit, int musicId);
+extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern int randomGetRange(int min, int max);
+extern int objGetAnimStateFlags(int obj, u32 mask);
+extern void audioStopByMask(int mask);
 
 /*
  * --INFO--
@@ -397,9 +471,92 @@ void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, un
  * EN v1.0 Address: 0x801C4F20
  * EN v1.0 Size: 952b
  *
- * TODO: this stub exists so the function set aligns with v1.0 asm. Body
- * needs to be filled in from the asm (state machine on extra->field_0x24).
+ * Shrine state machine: load-completion effects, gamebit latches, object-trigger phases.
  */
-void mmsh_shrine_update(int param_1)
+void mmsh_shrine_update(int objArg)
 {
+  MMSHShrineRuntime *runtime;
+  MMSHShrineObject *obj;
+  int playerObj;
+
+  obj = (MMSHShrineObject *)objArg;
+  runtime = obj->runtime;
+  playerObj = Obj_GetPlayerObject();
+
+  if (obj->loadTriggerTimer != 0) {
+    obj->loadTriggerTimer--;
+    if (obj->loadTriggerTimer == 0) {
+      skyFn_80088c94(7,1);
+      getEnvfxAct((int)obj,playerObj,0x20d,0);
+      getEnvfxAct((int)obj,playerObj,0x20e,0);
+      getEnvfxAct((int)obj,playerObj,0x222,0);
+      obj->prevPosX = obj->posX;
+      obj->prevPosY = obj->posY;
+      obj->prevPosZ = obj->posZ;
+    }
+  }
+  unlockLevel(mapGetDirIdx(MMSH_SHRINE_LOAD_MAP_DIR),1,0);
+  fn_801C4664((int)obj);
+  SCGameBitLatch_Update(&runtime->latch,MMSH_SHRINE_LATCH_FLAG_AMBIENT_LOCK,-1,-1,
+                        MMSH_SHRINE_GB_OPEN,0xa);
+  SCGameBitLatch_UpdateInverted(&runtime->latch,MMSH_SHRINE_LATCH_FLAG_CHECK_COMPLETE,-1,-1,
+                                MMSH_SHRINE_GB_MUSIC_LOCK,8);
+  SCGameBitLatch_Update(&runtime->latch,MMSH_SHRINE_LATCH_FLAG_MUSIC_LOCK,-1,-1,
+                        MMSH_SHRINE_GB_MUSIC_LOCK,0xc4);
+
+  switch (runtime->phase) {
+  case 0:
+    runtime->idleSfxTimer -= timeDelta;
+    if (runtime->idleSfxTimer <= lbl_803E4F40) {
+      Sfx_PlayFromObject((int)obj,MMSH_SHRINE_SFX_IDLE);
+      runtime->idleSfxTimer = (f32)(s32)randomGetRange(500,1000);
+    }
+    if ((obj->objectFlags & 1) == 0) {
+      break;
+    }
+    runtime->phase = 1;
+    OBJECT_TRIGGER_FN(0x50,ObjectTriggerSpawnFn)(0x4c,0,0,0);
+    OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(0,(int)obj,-1);
+    Music_Trigger(MMSH_SHRINE_MUSIC_RUMBLE,1);
+    break;
+  case 1:
+    if ((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_OPEN_READY) == 0) {
+      break;
+    }
+    obj->flags06 |= MMSH_SHRINE_FLAG_LIT;
+    obj->yaw = 0;
+    runtime->phase = 2;
+    runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
+    GameBit_Set(MMSH_SHRINE_GB_OPEN,1);
+    OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(2,(int)obj,-1);
+    break;
+  case 2:
+    if (objGetAnimStateFlags(playerObj,4) == 0) {
+      audioStopByMask(3);
+      OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(1,(int)obj,-1);
+    }
+    runtime->phase = 5;
+    GameBit_Set(MMSH_SHRINE_GB_OPEN,0);
+    break;
+  case 3:
+    OBJECT_TRIGGER_FN(0x4c,ObjectTriggerReleaseFn)(obj->triggerHandle);
+    OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(3,(int)obj,-1);
+    runtime->phase = 4;
+    GameBit_Set(MMSH_SHRINE_GB_OPEN,0);
+    break;
+  case 4:
+    runtime->phase = 5;
+    GameBit_Set(MMSH_SHRINE_GB_OPEN,0);
+    GameBit_Set(MMSH_SHRINE_GB_COMPLETE,1);
+    break;
+  case 5:
+    runtime->phase = 0;
+    runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
+    obj->flags06 &= ~MMSH_SHRINE_FLAG_LIT;
+    GameBit_Set(MMSH_SHRINE_GB_RESET_A,0);
+    GameBit_Set(MMSH_SHRINE_GB_COMPLETE,0);
+    GameBit_Set(MMSH_SHRINE_GB_RESET_B,0);
+    GameBit_Set(MMSH_SHRINE_GB_OPEN,0);
+    break;
+  }
 }
