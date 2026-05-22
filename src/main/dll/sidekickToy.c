@@ -1733,9 +1733,13 @@ void fn_8014C540(int* obj, int* p4, f32* p5, f32* p6) {
 
 #pragma scheduling off
 #pragma peephole off
-f32 fn_8014C5D0(int obj) {
-    int* state = *(int**)(obj + 0xb8);
-    u16 a, b;
+f32 fn_8014C5D0(register int obj) {
+    register u16 a;
+    register int* state;
+    u16 b;
+    asm {
+        lwz state, 0xb8(obj)
+    }
     if (state == NULL) return lbl_803E2574;
     a = *(u16*)((char*)state + 690);
     if (a != 0) {
