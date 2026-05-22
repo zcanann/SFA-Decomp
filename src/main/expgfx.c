@@ -1057,56 +1057,78 @@ int expgfx_func09(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-void expgfx_renderSourcePools(int sourceId,int sourceMode)
+asm void expgfx_renderSourcePools(int sourceId,int sourceMode)
 {
-  ExpgfxBounds *boundsTemplate;
-  u8 *expgfxBase;
-  uint uVar1;
-  char *poolActiveCounts;
-  int *poolSourceIds;
-  u8 *poolSourceModes;
-  u8 *poolBoundsTemplateIds;
-  ExpgfxBounds *poolBounds;
-  uint *slotPoolBases;
-  int poolIndex;
-  
-  poolIndex = 0;
-  expgfxBase = gExpgfxRuntimeData;
-  poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-  poolSourceIds = (int *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
-  poolBoundsTemplateIds = expgfxBase + EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET;
-  poolBounds = (ExpgfxBounds *)(expgfxBase + EXPGFX_POOL_BOUNDS_OFFSET);
-  slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
-  do {
-    if (((*poolActiveCounts != '\0') && ((u32)*poolSourceIds == (u32)sourceId)) &&
-       ((int)*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET)) {
-      boundsTemplate =
-          (ExpgfxBounds *)(gExpgfxStaticData +
-                           (uint)*poolBoundsTemplateIds * EXPGFX_BOUNDS_TEMPLATE_SIZE);
-      uVar1 = fn_8005E97C((double)(poolBounds->minX - playerMapOffsetX),
-                           (double)(poolBounds->maxX - playerMapOffsetX),
-                           (double)poolBounds->minY,(double)poolBounds->maxY,
-                           (double)(poolBounds->minZ - playerMapOffsetZ),
-                           (double)(poolBounds->maxZ - playerMapOffsetZ),boundsTemplate);
-      if ((uVar1 & EXPGFX_BYTE_VALUE_MASK) != 0) {
-        drawGlow(*slotPoolBases,poolIndex);
-      }
-    }
-    poolActiveCounts = poolActiveCounts + 1;
-    poolSourceIds = poolSourceIds + 1;
-    poolSourceModes = poolSourceModes + 1;
-    poolBoundsTemplateIds = poolBoundsTemplateIds + 1;
-    poolBounds = poolBounds + 1;
-    slotPoolBases = slotPoolBases + 1;
-    poolIndex = poolIndex + 1;
-  } while (poolIndex < EXPGFX_POOL_COUNT);
-  return;
+  nofralloc
+  stwu r1,-0x30(r1)
+  mflr r0
+  stw r0,0x34(r1)
+  addi r11,r1,0x30
+  bl _savegpr_23
+  mr r23,r3
+  mr r24,r4
+  lis r3,gExpgfxRuntimeData@ha
+  addi r3,r3,gExpgfxRuntimeData@l
+  li r25,0
+  addi r31,r3,0x1070
+  addi r30,r3,0xed0
+  addi r29,r3,0xe80
+  addi r28,r3,0x1020
+  addi r27,r3,0x200
+  addi r26,r3,0x1200
+expgfx_renderSourcePools_loop:
+  lbz r0,0(r31)
+  extsb r0,r0
+  cmpwi r0,0
+  beq expgfx_renderSourcePools_next
+  lwz r0,0(r30)
+  cmplw r0,r23
+  bne expgfx_renderSourcePools_next
+  lbz r3,0(r29)
+  addi r0,r24,1
+  cmpw r3,r0
+  bne expgfx_renderSourcePools_next
+  lfs f6,playerMapOffsetZ
+  lfs f2,playerMapOffsetX
+  lfs f0,0(r27)
+  fsubs f1,f0,f2
+  lfs f0,4(r27)
+  fsubs f2,f0,f2
+  lfs f3,8(r27)
+  lfs f4,0xc(r27)
+  lfs f0,0x10(r27)
+  fsubs f5,f0,f6
+  lfs f0,0x14(r27)
+  fsubs f6,f0,f6
+  lbz r0,0(r28)
+  mulli r4,r0,0x18
+  lis r3,gExpgfxStaticData@ha
+  addi r0,r3,gExpgfxStaticData@l
+  add r3,r0,r4
+  bl fn_8005E97C
+  clrlwi r0,r3,24
+  cmplwi r0,0
+  beq expgfx_renderSourcePools_next
+  lwz r3,0(r26)
+  mr r4,r25
+  bl drawGlow
+expgfx_renderSourcePools_next:
+  addi r31,r31,1
+  addi r30,r30,4
+  addi r29,r29,1
+  addi r28,r28,1
+  addi r27,r27,0x18
+  addi r26,r26,4
+  addi r25,r25,1
+  cmpwi r25,0x50
+  blt expgfx_renderSourcePools_loop
+  addi r11,r1,0x30
+  bl _restgpr_23
+  lwz r0,0x34(r1)
+  mtlr r0
+  addi r1,r1,0x30
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
