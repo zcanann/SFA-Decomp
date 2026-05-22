@@ -738,14 +738,17 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
 int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
   u16 *entryRefCount;
-  ExpgfxTableEntry *entry;
-  ExpgfxTableEntry *freeEntry;
+  register ExpgfxTableEntry *entry;
+  register ExpgfxTableEntry *freeEntry;
   int entryIndex;
   int freeEntryIndex;
   
   entryIndex = 0;
-  freeEntry = gExpgfxTableEntries;
-  entry = freeEntry;
+  asm {
+    lis entry, gExpgfxTableEntries@ha
+    addi freeEntry, entry, gExpgfxTableEntries@l
+    mr entry, freeEntry
+  }
   for (; entryIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entryIndex++) {
     if (((entry->refCount != 0 && (entry->textureOrResource == textureOrResource)) &&
         (entry->key0 == key0)) && (entry->key1 == key1)) {
