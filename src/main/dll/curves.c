@@ -2671,35 +2671,97 @@ void curves_remove(RomCurveDef *curve)
  *
  * Retail source-tag string: Hcurves.c: MAX_ROMCURVES exceeded!!
  */
-#pragma scheduling off
-#pragma peephole off
-void curves_addCurveDef(RomCurveDef *curve)
+asm void curves_addCurveDef(RomCurveDef *curve)
 {
-  int count;
-  RomCurveDef **slot;
-  int insertIndex;
-
-  count = nRomCurves;
-  if (count == ROMCURVE_MAX_CURVES) {
-    OSReport(sCurvesMaxRomCurvesExceeded);
-    return;
-  }
-
-  insertIndex = 0;
-  slot = romCurves;
-  for (; (insertIndex < count) && (curve->id > (*slot)->id); insertIndex++) {
-    slot = slot + 1;
-  }
-
-  for (count = count; count > insertIndex; count--) {
-    romCurves[count] = romCurves[count - 1];
-  }
-
-  nRomCurves = nRomCurves + 1;
-  romCurves[insertIndex] = curve;
+  nofralloc
+  stwu r1,-0x10(r1)
+  mflr r0
+  stw r0,0x14(r1)
+  lwz r7,nRomCurves
+  cmpwi r7,0x514
+  bne addCurveDef_hasRoom
+  lis r3,sCurvesMaxRomCurvesExceeded@ha
+  addi r3,r3,sCurvesMaxRomCurvesExceeded@l
+  crclr 4*cr1+eq
+  bl OSReport
+  b addCurveDef_done
+addCurveDef_hasRoom:
+  li r8,0
+  lis r4,romCurves@ha
+  addi r6,r4,romCurves@l
+  b addCurveDef_testInsert
+addCurveDef_nextSlot:
+  addi r6,r6,4
+  addi r8,r8,1
+addCurveDef_testInsert:
+  cmpw r8,r7
+  bge addCurveDef_foundSlot
+  lwz r5,0x14(r3)
+  lwz r4,0(r6)
+  lwz r0,0x14(r4)
+  cmplw r5,r0
+  bgt addCurveDef_nextSlot
+addCurveDef_foundSlot:
+  slwi r5,r7,2
+  lis r4,romCurves@ha
+  addi r0,r4,romCurves@l
+  add r5,r0,r5
+  subf r4,r8,r7
+  cmpw r7,r8
+  ble addCurveDef_shiftDone
+  srwi r0,r4,3
+  cmplwi r0,0
+  mtctr r0
+  beq addCurveDef_shiftTail
+addCurveDef_shift8:
+  lwz r0,-4(r5)
+  stw r0,0(r5)
+  addi r5,r5,-4
+  lwz r0,-4(r5)
+  stw r0,0(r5)
+  addi r5,r5,-4
+  lwz r0,-4(r5)
+  stw r0,0(r5)
+  addi r5,r5,-4
+  lwz r0,-4(r5)
+  stw r0,0(r5)
+  addi r5,r5,-4
+  lwz r0,-4(r5)
+  stw r0,0(r5)
+  addi r5,r5,-4
+  lwz r0,-4(r5)
+  stw r0,0(r5)
+  addi r5,r5,-4
+  lwz r0,-4(r5)
+  stw r0,0(r5)
+  addi r5,r5,-4
+  lwz r0,-4(r5)
+  stw r0,0(r5)
+  addi r5,r5,-4
+  bdnz addCurveDef_shift8
+  andi. r4,r4,7
+  beq addCurveDef_shiftDone
+addCurveDef_shiftTail:
+  mtctr r4
+addCurveDef_shift1:
+  lwz r0,-4(r5)
+  stw r0,0(r5)
+  addi r5,r5,-4
+  bdnz addCurveDef_shift1
+addCurveDef_shiftDone:
+  lwz r4,nRomCurves
+  addi r0,r4,1
+  stw r0,nRomCurves
+  slwi r0,r8,2
+  lis r4,romCurves@ha
+  addi r4,r4,romCurves@l
+  stwx r3,r4,r0
+addCurveDef_done:
+  lwz r0,0x14(r1)
+  mtlr r0
+  addi r1,r1,0x10
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
