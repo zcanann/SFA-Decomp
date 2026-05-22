@@ -402,31 +402,34 @@ void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 void sh_staff_free(int *obj, int p2) {
     int *state = *(int **)((char *)obj + 0xb8);
     char *p;
-    int i;
     int idx;
 
     if (p2 != 0) return;
 
-    idx = 0;
-    p = (char *)state;
-    for (i = 0; i < 2; i++) {
-        if (*(int **)(p + 56) != NULL) {
-            *(s16 *)((char *)*(int **)(p + 56) + 6) = (s16)(*(s16 *)((char *)*(int **)(p + 56) + 6) | 0x4000);
+    for (idx = 0; idx < 8; idx += 4) {
+        int *child;
+        p = (char *)state + idx * 5;
+        child = *(int **)(p + 56);
+        if (child != NULL) {
+            *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
         }
-        if (*(int **)(p + 60) != NULL) {
-            *(s16 *)((char *)*(int **)(p + 60) + 6) = (s16)(*(s16 *)((char *)*(int **)(p + 60) + 6) | 0x4000);
+        child = *(int **)(p + 60);
+        if (child != NULL) {
+            *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
         }
-        if (*(int **)(p + 64) != NULL) {
-            *(s16 *)((char *)*(int **)(p + 64) + 6) = (s16)(*(s16 *)((char *)*(int **)(p + 64) + 6) | 0x4000);
+        child = *(int **)(p + 64);
+        if (child != NULL) {
+            *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
         }
-        if (*(int **)(p + 68) != NULL) {
-            *(s16 *)((char *)*(int **)(p + 68) + 6) = (s16)(*(s16 *)((char *)*(int **)(p + 68) + 6) | 0x4000);
+        child = *(int **)(p + 68);
+        if (child != NULL) {
+            *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
         }
-        if (*(int **)(p + 72) != NULL) {
-            *(s16 *)((char *)*(int **)(p + 72) + 6) = (s16)(*(s16 *)((char *)*(int **)(p + 72) + 6) | 0x4000);
+        child = *(int **)(p + 72);
+        if (child != NULL) {
+            *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
         }
         p += 20;
-        idx += 4;
     }
 }
 #pragma peephole reset
