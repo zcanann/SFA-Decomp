@@ -400,7 +400,6 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
     u32 index;
     u32 value;
     u32 targetInstrument;
-    int synthInfo;
     int offset;
     int voice;
     McmdVoiceState *voiceState;
@@ -417,9 +416,8 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
     if (((args->flags >> 8) & 0xff) == 0) {
         targetInstrument = args->flags >> 0x10;
         if (targetInstrument != 0xffff) {
-            synthInfo = (int)lbl_803BD150;
             offset = 0;
-            for (i = 0; i < *(u8 *)(synthInfo + 0x210); i++) {
+            for (i = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++) {
                 voice = (int)(synthVoice + offset);
                 voiceState = (McmdVoiceState *)voice;
                 if (voiceState->macroBase != 0 && targetInstrument == voiceState->instrumentKey) {
