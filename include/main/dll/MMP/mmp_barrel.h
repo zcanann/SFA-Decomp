@@ -8,6 +8,8 @@ extern ObjectDescriptor14 gWaveAnimatorObjDescriptor;
 extern ObjectDescriptor gAlphaAnimatorObjDescriptor;
 extern ObjectDescriptor14 gGroundAnimatorObjDescriptor;
 
+#define WALLANIMATOR_DONE_TIMER 3000
+
 u8 waveanimator_modelMtxFn(int *obj);
 void waveanimator_func0B(int *obj);
 void waveanimator_setScale(int *obj, f32 fval);
@@ -35,7 +37,7 @@ void FUN_80193a50(undefined4 param_1,undefined4 param_2,char *param_3,int param_
 void FUN_80193ba8(int param_1);
 
 int waveanimator_getExtraSize(void);
-int waveanimator_func08(void);
+int waveanimator_getObjectTypeId(void);
 void waveanimator_free(int *obj);
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void waveanimator_hitDetect(void);
@@ -45,7 +47,7 @@ void waveanimator_release(void);
 void waveanimator_initialise(void);
 
 int alphaanimator_getExtraSize(void);
-int alphaanimator_func08(void);
+int alphaanimator_getObjectTypeId(void);
 void alphaanimator_free(int *obj);
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void alphaanimator_hitDetect(void);
@@ -56,9 +58,9 @@ void alphaanimator_initialise(void);
 
 u8 groundanimator_modelMtxFn(int *obj);
 u8 groundanimator_func0B(int *obj);
-void groundanimator_setScale(void);
+void groundanimator_setScale(int *obj, f32 fval);
 int groundanimator_getExtraSize(void);
-void groundanimator_free(void);
+void groundanimator_free(int *obj);
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void groundanimator_update(void);
 void groundanimator_init(int *obj, int *desc);

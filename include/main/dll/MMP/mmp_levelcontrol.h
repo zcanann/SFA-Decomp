@@ -3,7 +3,12 @@
 
 #include "ghidra_import.h"
 
-void wallanimator_setScale(int param_1,int param_2);
+#define WALLANIMATOR_DONE_TIMER 3000
+#define WALLANIMATOR_GROUP_PRIMARY 0x23
+#define WALLANIMATOR_GROUP_SECONDARY 0x31
+#define WALLANIMATOR_RUNTIME_ACTIVE_FLAG 0x80
+
+void wallanimator_setScale(int obj,int desc);
 void FUN_80194544(int param_1);
 void FUN_801945fc(int param_1,int param_2);
 void FUN_801946b8(void);
@@ -14,7 +19,13 @@ void FUN_801949ec(undefined2 *param_1,int param_2);
 double FUN_80194a70(int param_1,byte param_2);
 f32 objFn_801948c0(u8 *obj,u8 coord);
 void FUN_80194b10(undefined4 param_1,undefined4 param_2,int param_3);
+u8 wallanimator_modelMtxFn(int *obj);
+u8 wallanimator_func0B(int *obj);
 int wallanimator_getExtraSize(void);
+void wallanimator_free(int obj);
+void wallanimator_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
+void wallanimator_update(int obj);
+void wallanimator_init(s16 *obj,s16 *desc);
 int xyzanimator_getExtraSize(void);
 
 #endif /* MAIN_DLL_MMP_MMP_LEVELCONTROL_H_ */

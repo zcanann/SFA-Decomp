@@ -607,8 +607,8 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 #pragma scheduling off
 #pragma peephole off
 void wallanimator_free(int obj) {
-    ObjGroup_RemoveObject(obj, 0x23);
-    ObjGroup_RemoveObject(obj, 0x31);
+    ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_PRIMARY);
+    ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_SECONDARY);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -620,11 +620,11 @@ void wallanimator_init(s16* obj, s16* p2)
     register int* state = *(int**)((char*)obj + 0xb8);
 
     *obj = (s16)p2[0x24 / 2];
-    ObjGroup_AddObject((int)obj, 0x23);
-    ObjGroup_AddObject((int)obj, 0x31);
+    ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_PRIMARY);
+    ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);
     if (GameBit_Get((int)p2[0x18 / 2]) != 0) {
-        *(u8*)((char*)state + 4) |= 0x80;
-        *state = 0xbb8;
+        *(u8*)((char*)state + 4) |= WALLANIMATOR_RUNTIME_ACTIVE_FLAG;
+        *state = WALLANIMATOR_DONE_TIMER;
     }
 }
 #pragma peephole reset

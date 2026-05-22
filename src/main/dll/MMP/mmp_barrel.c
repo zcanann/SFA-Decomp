@@ -104,7 +104,7 @@ void waveanimator_func0B(int *obj)
 u8 wallanimator_func0B(int *obj)
 {
     int *p = ((int **)obj)[0xb8 / 4];
-    return *p >= 3000;
+    return *p >= WALLANIMATOR_DONE_TIMER;
 }
 #pragma scheduling reset
 #pragma peephole reset
