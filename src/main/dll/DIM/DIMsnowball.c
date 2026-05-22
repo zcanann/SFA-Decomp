@@ -1468,8 +1468,8 @@ extern _S16x3 lbl_803E4658;
 #pragma peephole off
 void ccqueen_init(int *obj, u8 *init) {
     u8 *sub;
-    _S16x3 buf1;
     _S16x3 buf2;
+    _S16x3 buf1;
     sub = *(u8**)((char*)obj + 0xb8);
     buf2 = lbl_803E4650;
     buf1 = lbl_803E4658;
