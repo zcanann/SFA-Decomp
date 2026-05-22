@@ -20,9 +20,9 @@ void macSampleEndNotify(int state);
 u32 macSetExternalKeyoff(int state);
 void macSetPedalState(int state, u32 defer);
 void TimeQueueAdd(McmdVoiceState *state);
-void fn_802788B4(int state, u32 skipFadeReset);
-void audioFn_80278990(int state);
-void fn_80278A98(int state, int mode);
+void fn_802788B4(McmdVoiceState *state, u32 skipFadeReset);
+void audioFn_80278990(McmdVoiceState *state);
+void fn_80278A98(McmdVoiceState *state, int mode);
 int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 baseSample,
                      u8 keyFlags, u8 volume, u8 pan, u32 midiSlot, u8 midiEvent,
                      u8 midiLayer, u16 sampleOffsetIndex, u8 studio, u8 returnNewId,

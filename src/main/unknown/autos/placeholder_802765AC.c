@@ -95,8 +95,8 @@ extern void hwBreak(int slot);
 extern void voiceFree(int state);
 extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
-void audioFn_80278990(int state);
-void fn_802788B4(int state, u32 skipFadeReset);
+void audioFn_80278990(McmdVoiceState *state);
+void fn_802788B4(McmdVoiceState *state, u32 skipFadeReset);
 u32 macSetExternalKeyoff(int state);
 extern u32 inpGetExCtrl(McmdVoiceState *state, u32 ctrl);
 extern void inpSetExCtrl(McmdVoiceState *state, u32 ctrl, s16 value);
@@ -435,7 +435,7 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
                                 voiceState->macroCursor = voiceState->messageMacroCursor;
                                 voiceState->macroBase = voiceState->messageMacroBase;
                                 voiceState->messageMacroBase = 0;
-                                audioFn_80278990(voice);
+                                audioFn_80278990((McmdVoiceState *)voice);
                             }
                         }
                     }
@@ -467,7 +467,7 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
                     voiceState->macroCursor = voiceState->messageMacroCursor;
                     voiceState->macroBase = voiceState->messageMacroBase;
                     voiceState->messageMacroBase = 0;
-                    audioFn_80278990(voice);
+                    audioFn_80278990((McmdVoiceState *)voice);
                 }
             }
         }
@@ -543,7 +543,7 @@ void macHandle(u32 delta)
             break;
         }
         nextTimer = *(int *)(timer + 0x44);
-        audioFn_80278990(timer);
+        audioFn_80278990((McmdVoiceState *)timer);
         *(u32 *)(timer + 0xa4) = wakeLo;
         *(int *)(timer + 0xa0) = wakeHi;
         timer = nextTimer;
@@ -563,7 +563,7 @@ void macHandle(u32 delta)
             activeState->macroCursor = activeState->sampleEndMacroCursor;
             activeState->macroBase = activeState->sampleEndMacroBase;
             activeState->sampleEndMacroBase = 0;
-            audioFn_80278990(active);
+            audioFn_80278990((McmdVoiceState *)active);
         }
         macHandleActive(active);
     }
@@ -588,11 +588,11 @@ void macSampleEndNotify(int state)
             voiceState->macroCursor = voiceState->sampleEndMacroCursor;
             voiceState->macroBase = voiceState->sampleEndMacroBase;
             voiceState->sampleEndMacroBase = 0;
-            audioFn_80278990(state);
+            audioFn_80278990((McmdVoiceState *)state);
             resumed = true;
         }
         if (!resumed && ((voiceState->outputFlags & MCMD_VOICE_INACTIVE_WAIT_OUTPUT_FLAG) != 0)) {
-            audioFn_80278990(state);
+            audioFn_80278990((McmdVoiceState *)state);
         }
     }
 }
@@ -618,13 +618,13 @@ u32 macSetExternalKeyoff(int state)
                 voiceState->macroCursor = voiceState->keyoffMacroCursor;
                 voiceState->macroBase = voiceState->keyoffMacroBase;
                 voiceState->keyoffMacroBase = 0;
-                audioFn_80278990(state);
+                audioFn_80278990((McmdVoiceState *)state);
                 resumed = 1;
             }
             if (!resumed) {
                 result = voiceState->outputFlags & MCMD_VOICE_KEYOFF_WAIT_OUTPUT_FLAG;
                 if (result != 0) {
-                    audioFn_80278990(state);
+                    audioFn_80278990((McmdVoiceState *)state);
                 }
             }
         } else {
@@ -654,11 +654,11 @@ void macSetPedalState(int state, u32 defer)
                 voiceState->macroCursor = voiceState->keyoffMacroCursor;
                 voiceState->macroBase = voiceState->keyoffMacroBase;
                 voiceState->keyoffMacroBase = 0;
-                audioFn_80278990(state);
+                audioFn_80278990((McmdVoiceState *)state);
                 resumed = 1;
             }
             if (!resumed && ((voiceState->outputFlags & MCMD_VOICE_KEYOFF_WAIT_OUTPUT_FLAG) != 0)) {
-                audioFn_80278990(state);
+                audioFn_80278990((McmdVoiceState *)state);
             }
         }
         voiceState->inputFlags &= ~(MCMD_VOICE_KEYOFF_INPUT_FLAG |
@@ -711,12 +711,12 @@ void TimeQueueAdd(McmdVoiceState *state)
 /*
  * Remove a voice from the time queue and clear its scheduled wake time.
  */
-void fn_802788B4(int state, u32 skipFadeReset)
+void fn_802788B4(McmdVoiceState *state, u32 skipFadeReset)
 {
     u32 wakeHi;
     u32 wakeLo;
-    u32 prev;
-    u32 next;
+    McmdVoiceState *prev;
+    McmdVoiceState *next;
     u32 zero;
     u32 allBits;
     u32 activeTimeHi;
@@ -724,48 +724,48 @@ void fn_802788B4(int state, u32 skipFadeReset)
     u32 flags118;
     u32 flags114;
 
-    wakeHi = *(u32 *)(state + 0x98);
+    wakeHi = state->wakeTimeHi;
     zero = 0;
-    wakeLo = *(u32 *)(state + 0x9c);
+    wakeLo = state->wakeTimeLo;
     if (((wakeHi ^ zero) | (wakeLo ^ zero)) != 0) {
         allBits = 0xffffffff;
         if (((wakeLo ^ allBits) | (wakeHi ^ allBits)) != 0) {
-            prev = *(u32 *)(state + 0x48);
+            prev = state->timePrev;
             if (prev == 0) {
-                macTimeQueueRoot = *(int *)(state + 0x44);
+                macTimeQueueRoot = (int)state->timeNext;
             } else {
-                *(int *)(prev + 0x44) = *(int *)(state + 0x44);
+                prev->timeNext = state->timeNext;
             }
-            next = *(u32 *)(state + 0x44);
+            next = state->timeNext;
             if (next != 0) {
-                *(int *)(next + 0x48) = *(int *)(state + 0x48);
+                next->timePrev = state->timePrev;
             }
         }
         if (skipFadeReset == 0) {
-            synthQueueVoicePrimaryUpdates((void *)state);
+            synthQueueVoicePrimaryUpdates(state);
         }
-        *(int *)(state + 0x9c) = 0;
-        *(int *)(state + 0x98) = 0;
+        state->wakeTimeLo = 0;
+        state->wakeTimeHi = 0;
         activeTimeHi = macRealTimeHi;
         activeTimeLo = macRealTimeLo;
-        *(int *)(state + 0xa4) = activeTimeLo;
-        *(int *)(state + 0xa0) = activeTimeHi;
-        flags118 = *(u32 *)(state + 0x118);
-        flags114 = *(u32 *)(state + 0x114);
-        *(u32 *)(state + 0x118) = flags118 & 0xfffbfffb;
-        *(u32 *)(state + 0x114) = flags114 & allBits;
+        state->activeTimeLo = activeTimeLo;
+        state->activeTimeHi = activeTimeHi;
+        flags118 = state->outputFlags;
+        flags114 = state->inputFlags;
+        state->outputFlags = flags118 & 0xfffbfffb;
+        state->inputFlags = flags114 & allBits;
     }
 }
 
 /*
  * Move a live voice back onto the active voice list.
  */
-void audioFn_80278990(int state)
+void audioFn_80278990(McmdVoiceState *state)
 {
     u32 wakeHi;
     u32 wakeLo;
-    u32 prev;
-    u32 next;
+    McmdVoiceState *prev;
+    McmdVoiceState *next;
     u32 zero;
     u32 allBits;
     u32 activeTimeHi;
@@ -774,58 +774,58 @@ void audioFn_80278990(int state)
     u32 flags114;
     u32 activeHead;
 
-    if (*(int *)(state + 0x4c) != 0) {
-        wakeHi = *(u32 *)(state + 0x98);
+    if (state->queueMode != 0) {
+        wakeHi = state->wakeTimeHi;
         zero = 0;
-        wakeLo = *(u32 *)(state + 0x9c);
+        wakeLo = state->wakeTimeLo;
         if (((wakeHi ^ zero) | (wakeLo ^ zero)) != 0) {
             allBits = 0xffffffff;
             if (((wakeLo ^ allBits) | (wakeHi ^ allBits)) != 0) {
-                prev = *(u32 *)(state + 0x48);
+                prev = state->timePrev;
                 if (prev == 0) {
-                    macTimeQueueRoot = *(int *)(state + 0x44);
+                    macTimeQueueRoot = (int)state->timeNext;
                 } else {
-                    *(int *)(prev + 0x44) = *(int *)(state + 0x44);
+                    prev->timeNext = state->timeNext;
                 }
-                next = *(u32 *)(state + 0x44);
+                next = state->timeNext;
                 if (next != 0) {
-                    *(int *)(next + 0x48) = *(int *)(state + 0x48);
+                    next->timePrev = state->timePrev;
                 }
             }
-            synthQueueVoicePrimaryUpdates((void *)state);
-            *(int *)(state + 0x9c) = 0;
-            *(int *)(state + 0x98) = 0;
+            synthQueueVoicePrimaryUpdates(state);
+            state->wakeTimeLo = 0;
+            state->wakeTimeHi = 0;
             activeTimeHi = macRealTimeHi;
             activeTimeLo = macRealTimeLo;
-            *(int *)(state + 0xa4) = activeTimeLo;
-            *(int *)(state + 0xa0) = activeTimeHi;
-            flags118 = *(u32 *)(state + 0x118);
-            flags114 = *(u32 *)(state + 0x114);
-            *(u32 *)(state + 0x118) = flags118 & 0xfffbfffb;
-            *(u32 *)(state + 0x114) = flags114 & allBits;
+            state->activeTimeLo = activeTimeLo;
+            state->activeTimeHi = activeTimeHi;
+            flags118 = state->outputFlags;
+            flags114 = state->inputFlags;
+            state->outputFlags = flags118 & 0xfffbfffb;
+            state->inputFlags = flags114 & allBits;
         }
         activeHead = macActiveRoot;
-        *(int *)(state + 0x3c) = activeHead;
+        state->activeNext = (McmdVoiceState *)activeHead;
         if (activeHead != 0) {
-            *(int *)(macActiveRoot + 0x40) = state;
+            ((McmdVoiceState *)macActiveRoot)->activePrev = state;
         }
-        *(int *)(state + 0x40) = 0;
-        macActiveRoot = state;
-        *(int *)(state + 0x4c) = 0;
+        state->activePrev = 0;
+        macActiveRoot = (int)state;
+        state->queueMode = 0;
     }
 }
 
 /*
  * Change a voice list state, unlinking it from active or timer queues as needed.
  */
-void fn_80278A98(int state, int mode)
+void fn_80278A98(McmdVoiceState *state, int mode)
 {
-    u32 activePrev;
-    u32 activeNext;
+    McmdVoiceState *activePrev;
+    McmdVoiceState *activeNext;
     u32 wakeHi;
     u32 wakeLo;
-    u32 prev;
-    u32 next;
+    McmdVoiceState *prev;
+    McmdVoiceState *next;
     u32 zero;
     u32 allBits;
     u32 activeTimeHi;
@@ -833,52 +833,52 @@ void fn_80278A98(int state, int mode)
     u32 flags118;
     u32 flags114;
 
-    if (*(int *)(state + 0x4c) == mode) {
+    if (state->queueMode == mode) {
         return;
     }
-    if (*(int *)(state + 0x4c) == 0) {
-        activePrev = *(u32 *)(state + 0x40);
+    if (state->queueMode == 0) {
+        activePrev = state->activePrev;
         if (activePrev == 0) {
-            macActiveRoot = *(int *)(state + 0x3c);
+            macActiveRoot = (int)state->activeNext;
         } else {
-            *(int *)(activePrev + 0x3c) = *(int *)(state + 0x3c);
+            activePrev->activeNext = state->activeNext;
         }
-        activeNext = *(u32 *)(state + 0x3c);
+        activeNext = state->activeNext;
         if (activeNext != 0) {
-            *(int *)(activeNext + 0x40) = *(int *)(state + 0x40);
+            activeNext->activePrev = state->activePrev;
         }
     }
     if (mode == 2) {
-        wakeHi = *(u32 *)(state + 0x98);
+        wakeHi = state->wakeTimeHi;
         zero = 0;
-        wakeLo = *(u32 *)(state + 0x9c);
+        wakeLo = state->wakeTimeLo;
         if (((wakeHi ^ zero) | (wakeLo ^ zero)) != 0) {
             allBits = 0xffffffff;
             if (((wakeLo ^ allBits) | (wakeHi ^ allBits)) != 0) {
-                prev = *(u32 *)(state + 0x48);
+                prev = state->timePrev;
                 if (prev == 0) {
-                    macTimeQueueRoot = *(int *)(state + 0x44);
+                    macTimeQueueRoot = (int)state->timeNext;
                 } else {
-                    *(int *)(prev + 0x44) = *(int *)(state + 0x44);
+                    prev->timeNext = state->timeNext;
                 }
-                next = *(u32 *)(state + 0x44);
+                next = state->timeNext;
                 if (next != 0) {
-                    *(int *)(next + 0x48) = *(int *)(state + 0x48);
+                    next->timePrev = state->timePrev;
                 }
             }
-            *(int *)(state + 0x9c) = 0;
-            *(int *)(state + 0x98) = 0;
+            state->wakeTimeLo = 0;
+            state->wakeTimeHi = 0;
             activeTimeHi = macRealTimeHi;
             activeTimeLo = macRealTimeLo;
-            *(int *)(state + 0xa4) = activeTimeLo;
-            *(int *)(state + 0xa0) = activeTimeHi;
-            flags118 = *(u32 *)(state + 0x118);
-            flags114 = *(u32 *)(state + 0x114);
-            *(u32 *)(state + 0x118) = flags118 & 0xfffbfffb;
-            *(u32 *)(state + 0x114) = flags114 & allBits;
+            state->activeTimeLo = activeTimeLo;
+            state->activeTimeHi = activeTimeHi;
+            flags118 = state->outputFlags;
+            flags114 = state->inputFlags;
+            state->outputFlags = flags118 & 0xfffbfffb;
+            state->inputFlags = flags114 & allBits;
         }
     }
-    *(int *)(state + 0x4c) = mode;
+    state->queueMode = mode;
 }
 
 /*
@@ -934,7 +934,7 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
                         *(int *)(activeNext + 0x40) = *(int *)(state + 0x40);
                     }
                 }
-                fn_802788B4(state, 1);
+                fn_802788B4((McmdVoiceState *)state, 1);
                 *(int *)(state + 0x4c) = 2;
             }
 
@@ -992,7 +992,7 @@ int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 base
                 if (*(int *)(state + 0x4c) == 0) {
                     return vid;
                 }
-                fn_802788B4(state, 0);
+                fn_802788B4((McmdVoiceState *)state, 0);
                 activeHead = macActiveRoot;
                 *(int *)(state + 0x3c) = activeHead;
                 if (activeHead != 0) {

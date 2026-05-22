@@ -1,9 +1,10 @@
 #include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 #include "main/unknown/autos/placeholder_802792F8.h"
 #include "main/unknown/autos/placeholder_80279AF0.h"
 #include "main/unknown/autos/placeholder_80279EC0.h"
 
-extern void fn_80278A98(int state, int x);
+extern void fn_80278A98(McmdVoiceState *state, int x);
 
 extern VoiceIdSlot voiceFreeListSlots[];
 extern u8 *synthVoice;
@@ -188,7 +189,7 @@ found_voice:
  */
 void voiceFree(int state)
 {
-    fn_80278A98(state, 2);
+    fn_80278A98((McmdVoiceState *)state, 2);
     voiceRemovePriority(state);
     *(u32 *)(state + 0x34) = 0;
     *(u8 *)(state + 0x10c) = 0;
