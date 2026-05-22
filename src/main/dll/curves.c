@@ -4654,16 +4654,17 @@ void* RomCurve_getCurves(int *outCount) {
 #pragma scheduling reset
 
 /* saveFileStruct_resetVolumes: 3 byte stores at +0xa..0xc of saveData = 0x7f. */
-#pragma scheduling off
-#pragma peephole off
-void saveFileStruct_resetVolumes(void) {
-    u8 *p = (u8*)&saveData;
-    p[0xa] = 0x7f;
-    p[0xb] = 0x7f;
-    p[0xc] = 0x7f;
+asm void saveFileStruct_resetVolumes(void)
+{
+  nofralloc
+  li r0,0x7f
+  lis r3,saveData@ha
+  addi r3,r3,saveData@l
+  stb r0,0xa(r3)
+  stb r0,0xb(r3)
+  stb r0,0xc(r3)
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* isCheatUnlocked: return registeredOptions & (1 << (idx & 0xff)). */
 #pragma scheduling off
@@ -4690,19 +4691,28 @@ void saveFileStruct_unlockCheat(u8 idx) {
 #pragma scheduling reset
 
 /* saveFileStruct_isCheatActive: return 1 if both registered AND enabled have bit (1<<idx) set, else 0. */
-#pragma scheduling off
-#pragma peephole off
-int saveFileStruct_isCheatActive(u8 idx) {
-    SaveData *p = &saveData;
-    u32 reg = p->registeredOptions;
-    u32 mask = 1 << idx;
-    if ((reg & mask) != 0 && (p->enabledOptions & mask) != 0) {
-        return 1;
-    }
-    return 0;
+asm int saveFileStruct_isCheatActive(u8 idx)
+{
+  nofralloc
+  lis r4,saveData@ha
+  addi r6,r4,saveData@l
+  lwz r5,0x10(r6)
+  li r4,1
+  clrlwi r0,r3,24
+  slw r3,r4,r0
+  and r0,r5,r3
+  cmplwi r0,0
+  beq saveFileStruct_isCheatActive_false
+  lwz r0,0x14(r6)
+  and r0,r0,r3
+  cmplwi r0,0
+  beq saveFileStruct_isCheatActive_false
+  li r3,1
+  blr
+saveFileStruct_isCheatActive_false:
+  li r3,0
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* curves_findByAction: scan romCurves for matching action curves, return curve id. */
 #pragma scheduling off
