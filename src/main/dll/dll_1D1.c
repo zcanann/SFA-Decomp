@@ -11,6 +11,24 @@ extern void ObjPath_GetPointWorldPosition(int obj, int param2, float *outX, floa
 extern f32 lbl_803E51F8;
 extern f32 lbl_803E51FC;
 
+typedef struct TreeBirdState {
+  s16 gameBit;
+  s16 triggerId;
+  s16 immediateTrigger;
+  u8 triggerLatched;
+  u8 searchDelay;
+  int targetObj;
+} TreeBirdState;
+
+typedef struct TreeBirdSeqData {
+  u8 pad0[0x81];
+  u8 commands[10];
+  u8 commandCount;
+} TreeBirdSeqData;
+
+#define TREEBIRD_SPAWN_PARTICLE(obj,id) \
+  (*(code *)(*gPartfxInterface + 8))(obj,id,0,1,-1,0)
+
 #pragma peephole off
 #pragma scheduling off
 
@@ -29,66 +47,67 @@ extern f32 lbl_803E51FC;
  */
 int TreeBird_SeqFn(int obj, int param_2, int data)
 {
+  TreeBirdState *state;
+  TreeBirdSeqData *seqData;
   int i;
   int j;
-  int state;
   u8 cmd;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(TreeBirdState **)(obj + 0xb8);
+  seqData = (TreeBirdSeqData *)data;
   i = 0;
-  while (i < (int)*(u8 *)(data + 0x8b)) {
-    cmd = *(u8 *)(data + 0x81 + i);
-    if (cmd == 2) {
+  while (i < (int)seqData->commandCount) {
+    cmd = seqData->commands[i];
+    switch (cmd) {
+    case 1:
+      j = 200;
+      do {
+        TREEBIRD_SPAWN_PARTICLE(obj,0xcc);
+        j--;
+      } while (j != 0);
+      break;
+    case 2:
       j = 100;
       if (*(short *)(obj + 0x46) == 0x5d) {
         do {
-          (*(code *)(*gPartfxInterface + 8))(obj, 0xd3, 0, 1, -1, 0);
+          TREEBIRD_SPAWN_PARTICLE(obj,0xd3);
           j--;
         } while (j != 0);
       }
-      else if (*(short *)(state + 2) == 0) {
+      else if (state->triggerId == 0) {
         do {
-          (*(code *)(*gPartfxInterface + 8))(obj, 0xcd, 0, 1, -1, 0);
+          TREEBIRD_SPAWN_PARTICLE(obj,0xcd);
           j--;
         } while (j != 0);
       }
-      else if (*(short *)(state + 2) == 1) {
+      else if (state->triggerId == 1) {
         do {
-          (*(code *)(*gPartfxInterface + 8))(obj, 0xcf, 0, 1, -1, 0);
+          TREEBIRD_SPAWN_PARTICLE(obj,0xcf);
           j--;
         } while (j != 0);
       }
-    }
-    else if (cmd < 2) {
-      if (cmd == 1) {
-        j = 200;
-        do {
-          (*(code *)(*gPartfxInterface + 8))(obj, 0xcc, 0, 1, -1, 0);
-          j--;
-        } while (j != 0);
-      }
-    }
-    else if (cmd < 4) {
-      /* cmd == 3 */
+      break;
+    case 3:
       j = 5;
       if (*(short *)(obj + 0x46) == 0x5d) {
         do {
-          (*(code *)(*gPartfxInterface + 8))(obj, 0xd4, 0, 1, -1, 0);
+          TREEBIRD_SPAWN_PARTICLE(obj,0xd4);
           j--;
         } while (j != 0);
       }
-      else if (*(short *)(state + 2) == 0) {
+      else if (state->triggerId == 0) {
         do {
-          (*(code *)(*gPartfxInterface + 8))(obj, 0xce, 0, 1, -1, 0);
+          TREEBIRD_SPAWN_PARTICLE(obj,0xce);
           j--;
         } while (j != 0);
       }
-      else if (*(short *)(state + 2) == 1) {
+      else if (state->triggerId == 1) {
         do {
-          (*(code *)(*gPartfxInterface + 8))(obj, 0xd0, 0, 1, -1, 0);
+          TREEBIRD_SPAWN_PARTICLE(obj,0xd0);
           j--;
         } while (j != 0);
       }
+      break;
     }
     i++;
   }
