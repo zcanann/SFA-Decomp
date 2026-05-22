@@ -24,8 +24,8 @@ extern f32 lbl_803E1D58;
 extern f32 lbl_803E1D5C;
 extern f32 lbl_803E1D60;
 extern char sFrontendTimeFormat[];
-extern char sFrontendCompletionPercentFormat[];
-extern char sFrontendSingleDigitFormat[];
+__declspec(section ".sdata") extern char sFrontendCompletionPercentFormat[];
+__declspec(section ".sdata") extern char sFrontendSingleDigitFormat[];
 
 /*
  * --INFO--
@@ -47,8 +47,8 @@ void saveFileSelect_checkCheatCodes(void)
     u32 midLow;
 
     if (saveFileSelect_debugCheatProgress != 0 || saveFileSelect_saveCheatProgress != 0) {
-        register int inc = saveFileSelect_cheatInputTimer + 1;
-        asm { stb inc, saveFileSelect_cheatInputTimer }
+        int inc = saveFileSelect_cheatInputTimer + 1;
+        saveFileSelect_cheatInputTimer = inc;
         if ((u8)inc > 0xF) {
             saveFileSelect_debugCheatProgress = 0;
             saveFileSelect_saveCheatProgress = 0;
