@@ -5,7 +5,7 @@
 extern void *AudioDecoderForOnMemory(void *);
 extern void *AudioDecoder(void *);
 extern u8 lbl_803A4448[];
-extern int lbl_803DD658;
+extern int gAttractMovieAudioThreadActive;
 
 /*
  * --INFO--
@@ -39,7 +39,7 @@ int CreateAudioDecodeThread(OSPriority priority, void *param)
     }
     OSInitMessageQueue((OSMessageQueue *)(base + 0x38), (OSMessage *)(base + 0xc), 3);
     OSInitMessageQueue((OSMessageQueue *)(base + 0x18), (OSMessage *)base, 3);
-    lbl_803DD658 = 1;
+    gAttractMovieAudioThreadActive = 1;
     return 1;
 }
 #pragma peephole reset

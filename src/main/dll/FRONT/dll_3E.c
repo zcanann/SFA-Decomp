@@ -63,7 +63,7 @@ extern undefined4 DAT_803a6ab0;
 extern undefined4* DAT_803de2e4;
 extern undefined4 DAT_803de300;
 extern void (*lbl_803DD664)(void);
-extern u8 lbl_803DD680;
+extern u8 gAttractMovieLoopCompleted;
 
 /*
  * --INFO--
@@ -192,7 +192,7 @@ void PlayControl(void)
   }
   else if (((player->curAudioTrack + frameOffset) % framesPerGroup) ==
            (framesPerGroup - 1)) {
-    lbl_803DD680 = 1;
+    gAttractMovieLoopCompleted = 1;
   }
 }
 #pragma peephole reset

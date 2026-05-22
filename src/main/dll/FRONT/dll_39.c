@@ -100,7 +100,7 @@ extern f32 lbl_803DD604;
 extern u8 lbl_803DD608;
 extern s8 lbl_803DD609;
 extern u8 lbl_803DD60A;
-extern u8 lbl_803DD616;
+extern u8 gTitleMenuSelectionFade;
 extern int lbl_803DD610;
 extern u8 lbl_803DD614;
 extern u8 lbl_803DD619;
@@ -429,7 +429,7 @@ void TitleMenu_render(u8 *param_1)
   menuAction = (*(code *)(*gCameraInterface + 0x10))();
   if (menuAction == 0x57) {
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
-    titleScreenPositionElements(lbl_803E1D10 + (f32)(lbl_803DD616 * 0x1a4) / lbl_803E1D14,
+    titleScreenPositionElements(lbl_803E1D10 + (f32)(gTitleMenuSelectionFade * 0x1a4) / lbl_803E1D14,
                 lbl_803E1D18);
     gameTextBoxFn_80134d40(0,0,0);
     (*(code *)(*gScreenTransitionInterface + 0x18))();

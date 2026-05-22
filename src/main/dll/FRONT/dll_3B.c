@@ -32,20 +32,20 @@ extern u8 *lbl_803DD498;
 extern u8 lbl_803DB424;
 extern s32 lbl_803DD610;
 extern u8 lbl_803DD614;
-extern u8 lbl_803DD616;
+extern u8 gTitleMenuSelectionFade;
 extern u8 lbl_803DD619;
-extern u8 lbl_803DD61A;
-extern s32 lbl_803DD648;
-extern u8 lbl_803DD64C;
+extern u8 gAttractMovieAutoplayEnabled;
+extern s32 gTitleMenuInputCooldown;
+extern u8 gAttractMovieReplayCountdown;
 extern u8 lbl_803DD64D;
-extern u8 lbl_803DD64E;
+extern u8 gTitleMenuReadyForInput;
 extern u8 lbl_803DD64F;
-extern u8 lbl_803DD650;
-extern u8 lbl_803DD651;
-extern u8 lbl_803DD652;
-extern u8 lbl_803DD680;
+extern u8 gTitleMenuNextDllId;
+extern u8 gTitleMenuLoadDelay;
+extern u8 gTitleMenuPanelOpen;
+extern u8 gAttractMovieLoopCompleted;
 extern s32 lbl_803DD698;
-extern s32 lbl_803DD658;
+extern s32 gAttractMovieAudioThreadActive;
 extern TitleMenuControl *gScreenTransitionInterface;
 extern TitleMenuControl *gTitleMenuLinkInterface;
 extern f32 lbl_803E1D10;
@@ -106,23 +106,23 @@ void TitleMenu_initialise(void)
   int mode;
 
   if ((lbl_803DD498[0x21] & 0x80) != 0) {
-    lbl_803DD61A = 0;
+    gAttractMovieAutoplayEnabled = 0;
   } else {
-    lbl_803DD61A = 1;
+    gAttractMovieAutoplayEnabled = 1;
   }
   if (lbl_803DB424 >= 0xfe) {
     saveFn_8007d960(0);
   }
   gameTextLoadDir(0x15);
-  lbl_803DD650 = 0;
-  lbl_803DD651 = 0;
+  gTitleMenuNextDllId = 0;
+  gTitleMenuLoadDelay = 0;
   mode = getUiDllFn_80014930();
   if (mode == 3) {
     TitleMenu_OpenPanel(lbl_8031A1D8,1);
-    lbl_803DD652 = 0;
+    gTitleMenuPanelOpen = 0;
   } else {
     TitleMenu_OpenPanel(lbl_8031A214,4);
-    lbl_803DD652 = 1;
+    gTitleMenuPanelOpen = 1;
   }
   TitleMenu_SetPanelSelection(gTitleMenuSelection);
   titleScreenFn_801368a4(0);
@@ -141,11 +141,11 @@ void TitleMenu_initialise(void)
   TitleMenu_SetEntryHighlight();
   gAttractMoviePreparePending = 0;
   gAttractMovieRetraceCountdown = 0;
-  lbl_803DD64C = 1;
-  lbl_803DD648 = 0x3c;
-  lbl_803DD680 = 0;
+  gAttractMovieReplayCountdown = 1;
+  gTitleMenuInputCooldown = 0x3c;
+  gAttractMovieLoopCompleted = 0;
 
-  if ((lbl_803DD61A != 0) &&
+  if ((gAttractMovieAutoplayEnabled != 0) &&
       ((gAttractMovieState == NATTRACTMODE_MOVIE_READY) ||
        (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_RELEASED))) {
     n_attractmode_prepareMovie();
@@ -153,7 +153,7 @@ void TitleMenu_initialise(void)
     gAttractMoviePlaybackEnabled = 1;
     Movie_SetVolumeFade(0,0);
     audioSetVolumes(0,10,1,0,0);
-    lbl_803DD616 = 0;
+    gTitleMenuSelectionFade = 0;
   } else {
     titleScreenPositionElements(lbl_803E1D10,lbl_803E1D18);
     gAttractMoviePlaybackEnabled = 0;
@@ -161,7 +161,7 @@ void TitleMenu_initialise(void)
   }
   setIsOvercast(0);
   setDrawLights(0);
-  lbl_803DD64E = 0;
+  gTitleMenuReadyForInput = 0;
   envFxActFn_800887f8(0);
   gameTimerStop();
   audioFn_8000b694(0);
@@ -276,15 +276,15 @@ void *AudioDecoder(void *param)
 
 void AudioDecodeThreadCancel(void)
 {
-  if (lbl_803DD658 != 0) {
+  if (gAttractMovieAudioThreadActive != 0) {
     OSCancelThread(&lbl_803A54A0);
-    lbl_803DD658 = 0;
+    gAttractMovieAudioThreadActive = 0;
   }
 }
 
 void AudioDecodeThreadStart(void)
 {
-  if (lbl_803DD658 != 0) {
+  if (gAttractMovieAudioThreadActive != 0) {
     OSResumeThread(&lbl_803A54A0);
   }
 }
