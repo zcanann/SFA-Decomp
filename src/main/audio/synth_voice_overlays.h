@@ -18,5 +18,7 @@ typedef struct SynthVoiceTrackRuntime {
 #define SYNTH_VOICE_TRACK_RUNTIME(voice) ((SynthVoiceTrackRuntime*)&(voice)->unk124)
 #define SYNTH_CALLBACK_CONTROLLER_STATE(voice, controller) \
     ((SynthCallbackControllerState*)&(voice)->channelData[(controller) * 0x38])
+#define SYNTH_CALLBACK_CONTROLLER_THRESHOLD(controllerState, index) \
+    (*(s32*)((u8*)(controllerState) - 0x0C + ((index) * 8)))
 
 #endif

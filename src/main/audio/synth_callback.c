@@ -3,8 +3,6 @@
 
 #define SYNTH_CALLBACK_ACTIVE_LIST_COUNT 2
 #define SYNTH_CALLBACK_COMPLETED_LIST_INDEX 2
-#define SYNTH_CALLBACK_THRESHOLD(voice, index) \
-    (*(s32*)&((voice)->unkEE0[0x62C + ((index) * 8)]))
 
 void synthRecycleVoiceCallbacks(SynthVoice* voice) {
     SynthCallbackLink* callback;
@@ -109,32 +107,37 @@ SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex) {
 }
 
 s32 synthUpdateCallbacks(void) {
-    s32 listIndex;
     SynthCallbackLink* callback;
+    u32 listIndex;
     SynthCallbackLink* next;
     SynthCallbackLink* completed;
 
     for (listIndex = 0; listIndex < SYNTH_CALLBACK_ACTIVE_LIST_COUNT; listIndex++) {
         callback = gSynthCurrentVoice->callbackLists[listIndex];
-        while (callback != 0) {
-            if (callback->triggerValue > SYNTH_CALLBACK_THRESHOLD(gSynthCurrentVoice, listIndex)) {
-                break;
-            }
+        if (callback != 0) {
+            do {
+                if (callback->triggerValue >
+                    SYNTH_CALLBACK_CONTROLLER_THRESHOLD(
+                        SYNTH_CALLBACK_CONTROLLER_STATE(gSynthCurrentVoice, callback->controllerIndex),
+                        listIndex)) {
+                    break;
+                }
 
-            synthSendKeyOff(callback->callbackId);
-            next = callback->next;
-            gSynthCurrentVoice->callbackLists[listIndex] = next;
-            if (next != 0) {
-                gSynthCurrentVoice->callbackLists[listIndex]->prev = 0;
-            }
+                synthSendKeyOff(callback->callbackId);
+                next = callback->next;
+                gSynthCurrentVoice->callbackLists[listIndex] = next;
+                if (next != 0) {
+                    gSynthCurrentVoice->callbackLists[listIndex]->prev = 0;
+                }
 
-            completed = gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX];
-            callback->next = completed;
-            if (completed != 0) {
-                gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX]->prev = callback;
-            }
-            gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = callback;
-            callback = gSynthCurrentVoice->callbackLists[listIndex];
+                completed = gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX];
+                callback->next = completed;
+                if (completed != 0) {
+                    gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX]->prev = callback;
+                }
+                gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = callback;
+                callback = gSynthCurrentVoice->callbackLists[listIndex];
+            } while (callback != 0);
         }
     }
 
