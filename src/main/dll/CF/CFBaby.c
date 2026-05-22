@@ -1722,6 +1722,93 @@ int infopoint_getObjectTypeId(void) { return 0x0; }
 int decoration11a_getExtraSize(void) { return 0x1c; }
 int landed_arwing_getExtraSize(void) { return 0x1c; }
 
+typedef struct FallLaddersState {
+    f32 restYOffset;
+    s16 lowerGameBit;
+    s16 upperGameBit;
+    u8 motionState;
+    u8 playStartSound;
+    s16 delay;
+} FallLaddersState;
+
+typedef struct Dll109State {
+    u8 pad0[0xa];
+    u8 state;
+    u8 padB;
+    f32 timer;
+} Dll109State;
+
+extern int *lbl_803DCAC0;
+extern int *gPartfxInterface;
+extern undefined4* gObjectTriggerInterface;
+extern f32 timeDelta;
+extern f32 lbl_803E3B44;
+extern f32 lbl_803E3B48;
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int setup, int arg1, int arg2, int arg3, int arg4);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int ViewFrustum_IsSphereVisible(f32 *pos, f32 radius);
+typedef void (*ObjectTriggerUpdateFn)(int, int, int);
+typedef void (*PartfxSpawnFn)(int, int, int, int, int, int);
+
+/* dll_109_update: carryable impact state machine that spawns break particles. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80187C70(int obj) {
+    Dll109State *state;
+    int def;
+    int setup;
+    int hitOut[3];
+
+    state = *(Dll109State **)(obj + 0xb8);
+    def = *(int *)(obj + 0x4c);
+    switch (state->state) {
+        case 0:
+            (*(void (*)(int, Dll109State *))(*(int *)(*lbl_803DCAC0 + 8)))(obj, state);
+            if (ObjHits_GetPriorityHit(obj, 0, 0, hitOut) != 0) {
+                (*(void (*)(int, Dll109State *))(*(int *)(*lbl_803DCAC0 + 0x30)))(obj, state);
+                Sfx_PlayFromObject(obj, 0x48);
+                ObjHitbox_SetSphereRadius(obj, 0x28);
+                ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
+                if (Obj_IsLoadingLocked() != 0) {
+                    setup = Obj_AllocObjectSetup(0x24, 0x253);
+                    *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                    *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+                    *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                    Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                }
+                ((PartfxSpawnFn)(*(u32 *)(*gPartfxInterface + 8)))(obj, 0x355, 0, 0, -1, 0);
+                ((PartfxSpawnFn)(*(u32 *)(*gPartfxInterface + 8)))(obj, 0x352, 0, 0, -1, 0);
+                state->state = 1;
+            }
+            break;
+        case 1:
+            ObjHits_ClearHitVolumes();
+            ObjHits_DisableObject(obj);
+            *(u8 *)(obj + 0xaf) |= 8;
+            state->state = 2;
+            state->timer = lbl_803E3B44;
+            *(f32 *)(obj + 0xc) = *(f32 *)(def + 8);
+            *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
+            *(f32 *)(obj + 0x14) = *(f32 *)(def + 0x10);
+            break;
+        case 2:
+            state->timer += timeDelta;
+            if (state->timer > lbl_803E3B48) {
+                if (ViewFrustum_IsSphereVisible((f32 *)(obj + 0xc),
+                                                *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8)) == 0) {
+                    ObjHits_EnableObject(obj);
+                    *(u8 *)(obj + 0xaf) &= 0xf7;
+                    state->state = 0;
+                }
+            }
+            break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AF8;
 extern f32 lbl_803E3AFC;
@@ -2634,6 +2721,61 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
 extern u32 GameBit_Get(int eventId);
 extern f64 lbl_803E3B60;
+extern f32 lbl_803E3B50;
+extern f32 lbl_803E3B54;
+extern f32 lbl_803E3B58;
+extern f32 lbl_803E3B5C;
+
+#pragma scheduling off
+#pragma peephole off
+void Fall_Ladders_update(int obj) {
+    int def;
+    FallLaddersState *state;
+    f32 speed;
+
+    def = *(int *)(obj + 0x4c);
+    state = *(FallLaddersState **)(obj + 0xb8);
+    if (*(s16 *)(obj + 0x46) == 0x548) {
+        if (GameBit_Get(state->upperGameBit) != 0 && GameBit_Get(state->lowerGameBit) == 0) {
+            ((ObjectTriggerUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+        }
+        if (GameBit_Get(state->upperGameBit) == 0 && GameBit_Get(state->lowerGameBit) != 0) {
+            ((ObjectTriggerUpdateFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
+        }
+    } else if (state->delay != 0) {
+        state->delay -= (s16)(s32)timeDelta;
+        if (state->delay <= 0) {
+            state->motionState = 1;
+            if (state->playStartSound != 0) {
+                Sfx_PlayFromObject(obj, 0x4bc);
+                state->playStartSound = 0;
+            }
+            state->delay = 0;
+        }
+    } else {
+        if ((s8)state->motionState == 0 && GameBit_Get(state->upperGameBit) != 0) {
+            state->delay = 10;
+        }
+        if ((s8)state->motionState == 1 && *(f32 *)(def + 0xc) <= *(f32 *)(obj + 0x10)) {
+            *(f32 *)(obj + 0x28) -= lbl_803E3B50;
+            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+            if (*(f32 *)(obj + 0x10) <= *(f32 *)(def + 0xc)) {
+                *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
+                *(f32 *)(obj + 0x28) = lbl_803E3B54 * -*(f32 *)(obj + 0x28);
+                speed = *(f32 *)(obj + 0x28);
+                if (speed < lbl_803E3B58) {
+                    speed = -speed;
+                }
+                if (speed < lbl_803E3B5C) {
+                    state->motionState = 2;
+                }
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void Fall_Ladders_init(int *obj, s8 *def) {
