@@ -6,6 +6,7 @@
 extern undefined4 fn_8001CB3C(int param_1);
 extern undefined4 GameBit_Get(int eventId);
 extern undefined4 randomGetRange(int param_1, int param_2);
+extern int Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
 extern undefined4 Obj_FreeObject(int param_1);
 extern int loadObjectAtObject(FirePipeObject *obj, void *spawnDef);
@@ -15,16 +16,45 @@ extern int mmSetFreeDelay(int delay);
 extern void mm_free(void *ptr);
 extern undefined4 ObjHits_EnableObject(FirePipeObject *obj);
 extern void ObjHits_DisableObject(FirePipeObject *obj);
+extern int ObjHits_GetPriorityHit(FirePipeObject *obj, int a, int b, int c);
+extern void Obj_StartModelFadeIn(FirePipeObject *obj, int timer);
+extern int Obj_AllocObjectSetup(int size, int objectId);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
 extern undefined4 queueGlowRender(void);
 extern undefined4 storeZeroToFloatParam(int param_1);
 extern undefined4 s16toFloat(int param_1, int param_2);
+extern void fn_80098B18(FirePipeObject *obj, int type, int a, int b, int c, f32 scale);
+extern int objIsFrozen(FirePipeObject *obj);
+extern int fn_80080150(int timer);
+extern int timerCountDown(int timer);
+extern int fn_8001CC9C(FirePipeObject *obj, int r, int g, int b, int a);
+extern void lightFn_8001db6c(int light, int mode, f32 value);
+extern void fn_8001D730(int light, int a, int r, int g, int b, int alpha, f32 radius);
+extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
+extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
+extern int fn_8001DB64(int light);
+extern void lightFn_8001d6b0(int light);
+extern void Sfx_PlayFromObjectLimited(FirePipeObject *obj, int sfxId, int limit);
+extern void Sfx_KeepAliveLoopedObjectSoundLimited(FirePipeObject *obj, int sfxId, int limit);
 
 extern f32 lbl_803DC340;
+extern f32 lbl_803DC344;
+extern s16 lbl_803DC348;
+extern f32 lbl_803DC34C;
+extern s16 lbl_803DC350;
+extern f32 lbl_803E6B70;
 extern f32 lbl_803E6B74;
 extern f32 lbl_803E6B78;
+extern f32 lbl_803E6B7C;
+extern f32 lbl_803E6B80;
+extern f32 lbl_803E6B84;
+extern f32 lbl_803E6B88;
+extern f32 lbl_803E6B8C;
+extern f32 lbl_803E6B90;
+extern f32 lbl_803E6B94;
+extern f32 lbl_803E6B98;
 extern f64 lbl_803E6BA0;
 extern f32 lbl_803E6BA8;
 
@@ -113,6 +143,194 @@ int firepipe_setLinkedUpdateFlag(FirePipeObject *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void firepipe_updateState(FirePipeObject *obj)
+{
+    FirePipeExtra *extra;
+    FirePipeMapData *mapData;
+    FirePipeBitFlags *flags;
+    int priorityHit;
+    int spawnDef;
+    int effectObj;
+    f32 radius;
+    f32 nearAtten;
+    f32 farAtten;
+
+    extra = obj->extra;
+    mapData = (FirePipeMapData *)obj->objectDef;
+    flags = (FirePipeBitFlags *)&extra->flags;
+    Obj_GetPlayerObject();
+
+    if (obj->callback != NULL) {
+        ObjHits_DisableObject(obj);
+        if (flags->bit2 == 0) {
+            goto update_light;
+        }
+        flags->bit3 = 1;
+    } else {
+        priorityHit = ObjHits_GetPriorityHit(obj,0,0,0);
+        switch (obj->objectId) {
+        case 0x70a:
+            if ((priorityHit == 0xf) || (priorityHit == 0xe)) {
+                flags->bit6 = 0;
+                storeZeroToFloatParam((int)extra + 0x24);
+                s16toFloat((int)extra + 0x24,0x12c);
+            }
+            break;
+        case 0x6f9:
+            break;
+        case 0x4a4:
+        case 0x730:
+        case 0x731:
+        case 0x732:
+        default:
+            if (priorityHit == 0x10) {
+                Obj_StartModelFadeIn(obj,0x12c);
+                GameBit_Set(mapData->gameBit,1);
+                flags->bit4 = 1;
+            }
+            break;
+        }
+    }
+
+    if ((flags->bit4 == 0) && (mapData->gameBit != -1)) {
+        if ((u8)flags->bit7 != (u8)GameBit_Get(mapData->gameBit)) {
+            flags->bit6 = (GameBit_Get(mapData->gameBit) != 0);
+            if (flags->bit6 != 0) {
+                storeZeroToFloatParam((int)extra + 0x24);
+                if (mapData->timer != 0) {
+                    if (mapData->flags != 0) {
+                        if ((s8)mapData->flags < 0) {
+                            s16toFloat((int)extra + 0x24,
+                                       (s16)randomGetRange(1,mapData->timer * 0x3c));
+                        } else {
+                            s16toFloat((int)extra + 0x24,(s16)(mapData->flags * 0x3c));
+                            if (mapData->flags >= mapData->timer) {
+                                flags->bit6 = 0;
+                            }
+                        }
+                    } else {
+                        s16toFloat((int)extra + 0x24,(s16)(mapData->timer * 0x3c));
+                    }
+                }
+            } else {
+                storeZeroToFloatParam((int)extra + 0x24);
+            }
+        }
+        flags->bit7 = (u8)GameBit_Get(mapData->gameBit);
+    }
+
+    if (flags->bit6 != 0) {
+        if (((*(u16 *)((u8 *)obj + 0xb0) & 0x800) != 0) || (obj->callback != NULL)) {
+            fn_80098B18(obj,(u8)extra->effectType,0,0,0,lbl_803E6B70 * (f32)mapData->scale);
+        }
+    }
+
+    if (objIsFrozen(obj) != 0) {
+        flags->bit6 = 0;
+        flags->bit4 = 1;
+        goto sound_update;
+    }
+
+    if (flags->bit4 != 0) {
+        flags->bit6 = 1;
+        flags->bit4 = 0;
+        GameBit_Set(mapData->gameBit,(u8)flags->bit7);
+    }
+
+    if ((fn_80080150((int)extra + 0x24) != 0) && (flags->bit6 == 0)) {
+        if (extra->cycleTimer[0] < lbl_803DC348) {
+            if ((extra->subObj == 0) && (flags->bit0 != 0)) {
+                extra->subObj = fn_8001CC9C(obj,0xff,0x80,0,0);
+                if (extra->subObj != 0) {
+                    lightFn_8001db6c(extra->subObj,0,lbl_803E6B74);
+                    lightFn_8001db6c(extra->subObj,1,lbl_803E6B78);
+                    if (obj->objectId == 0x6f9) {
+                        fn_8001D730(extra->subObj,0,0,0xb4,0xff,0x64,
+                                    lbl_803DC34C * obj->scale);
+                    } else {
+                        fn_8001D730(extra->subObj,0,0xff,0x80,0,0x64,
+                                    lbl_803DC34C * obj->scale);
+                    }
+                    lightVecFn_8001dd88(extra->subObj,lbl_803E6B74,lbl_803E6B74,lbl_803E6B7C);
+                    radius = lbl_803E6B80 * obj->scale;
+                    nearAtten = radius;
+                    if (radius >= lbl_803E6B84) {
+                        if (radius > lbl_803E6B88) {
+                            nearAtten = lbl_803E6B88;
+                        }
+                    } else {
+                        nearAtten = lbl_803E6B84;
+                    }
+                    farAtten = lbl_803E6B8C + radius;
+                    if (farAtten >= lbl_803E6B90) {
+                        if (farAtten > lbl_803E6B94) {
+                            farAtten = lbl_803E6B94;
+                        }
+                    } else {
+                        farAtten = lbl_803E6B90;
+                    }
+                    lightDistAttenFn_8001dc38(extra->subObj,nearAtten,farAtten);
+                }
+            }
+        } else if (extra->subObj != 0) {
+            lightFn_8001db6c(extra->subObj,0,lbl_803E6B98);
+            if (fn_8001DB64(extra->subObj) == 0) {
+                fn_8001CB3C((int)&extra->subObj);
+            }
+        }
+    }
+
+    if (timerCountDown((int)extra + 0x24) != 0) {
+        if (mapData->timer != 0) {
+            s16toFloat((int)extra + 0x24,(s16)(mapData->timer * 0x3c));
+        }
+        flags->bit6 = (flags->bit6 == 0);
+    }
+
+sound_update:
+    if ((flags->bit6 != 0) && (timerCountDown((int)extra + 0x28) != 0)) {
+        spawnDef = Obj_AllocObjectSetup(0x24,0x1b5);
+        *(u8 *)(spawnDef + 4) = 2;
+        *(u8 *)(spawnDef + 0x19) = (s8)extra->effectMode;
+        *(s16 *)(spawnDef + 0x1a) = mapData->scale;
+        *(f32 *)(spawnDef + 8) = *(f32 *)((u8 *)obj + 0xc);
+        *(f32 *)(spawnDef + 0xc) = *(f32 *)((u8 *)obj + 0x10);
+        *(f32 *)(spawnDef + 0x10) = *(f32 *)((u8 *)obj + 0x14);
+        if (spawnDef != 0) {
+            effectObj = firepipe_spawnEffectObject(extra,obj,(void *)spawnDef);
+        } else {
+            effectObj = 0;
+        }
+        if (effectObj != 0) {
+            *(f32 *)(effectObj + 0xc) = *(f32 *)((u8 *)obj + 0xc);
+            *(f32 *)(effectObj + 0x10) = *(f32 *)((u8 *)obj + 0x10);
+            *(f32 *)(effectObj + 0x14) = *(f32 *)((u8 *)obj + 0x14);
+            *(s16 *)(effectObj + 0) = *(s16 *)((u8 *)obj + 0);
+            *(s16 *)(effectObj + 2) = *(s16 *)((u8 *)obj + 2);
+            *(f32 *)(effectObj + 0x28) = lbl_803DC344;
+        }
+        storeZeroToFloatParam((int)extra + 0x28);
+        s16toFloat((int)extra + 0x28,lbl_803DC350);
+    }
+
+    if (flags->bit6 != 0) {
+        if (flags->bit5 == 0) {
+            Sfx_PlayFromObjectLimited(obj,0x32c,3);
+        }
+        Sfx_KeepAliveLoopedObjectSoundLimited(obj,0x32d,2);
+    }
+    flags->bit5 = flags->bit6;
+
+update_light:
+    if (extra->subObj != 0) {
+        lightFn_8001d6b0(extra->subObj);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 int firepipe_getExtraSize(void)
 {

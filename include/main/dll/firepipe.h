@@ -47,6 +47,7 @@ typedef struct FirePipeObject {
     u8 statusFlags;
     u8 padB0[0xB8 - 0xB0];
     FirePipeExtra *extra;
+    u8 padBC[0xC4 - 0xBC];
     undefined4 (*callback)(struct FirePipeObject *obj);
 } FirePipeObject;
 
