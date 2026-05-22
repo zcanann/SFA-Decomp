@@ -2029,6 +2029,77 @@ void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma scheduling reset
 #pragma peephole reset
 
+typedef struct LandedArwingFxPoint {
+    f32 scale;
+    u8 pathPoint;
+    u8 arg5;
+    u8 arg6;
+    u8 pad;
+} LandedArwingFxPoint;
+
+extern LandedArwingFxPoint lbl_80321A28[];
+extern f32 lbl_803E3B98;
+extern f32 lbl_803E3B9C;
+extern void fn_800971A0(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale);
+extern void fn_8009837C(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale, f32 value);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801889C8(int obj) {
+    int *state;
+    u8 i;
+    LandedArwingFxPoint *entry;
+    f32 z;
+    f32 y;
+    f32 x;
+    u8 posData[12];
+    f32 *xPtr;
+    f32 *yPtr;
+    f32 *zPtr;
+
+    xPtr = &x;
+    yPtr = &y;
+    zPtr = &z;
+    state = *(int **)(obj + 0xb8);
+    if (*(u8 *)((char *)state + 0x1a) != 0) {
+        for (i = 0; i < 5; i++) {
+            entry = &lbl_80321A28[i];
+            ObjPath_GetPointWorldPosition(obj, entry->pathPoint, xPtr, yPtr, zPtr, 0);
+            *xPtr -= *(f32 *)(obj + 0xc);
+            *yPtr -= *(f32 *)(obj + 0x10);
+            *zPtr -= *(f32 *)(obj + 0x14);
+            fn_800971A0(obj, 4, entry->arg5, entry->arg6, posData,
+                        *(f32 *)(obj + 8) * entry->scale);
+        }
+    }
+
+    if (*(f32 *)((char *)state + 0xc) != lbl_803E3B98) {
+        ObjPath_GetPointWorldPosition(obj, 6, xPtr, yPtr, zPtr, 0);
+        *xPtr -= *(f32 *)(obj + 0xc);
+        *yPtr -= *(f32 *)(obj + 0x10);
+        *zPtr -= *(f32 *)(obj + 0x14);
+        fn_8009837C(obj, 4, 0, 0, posData, lbl_803E3B9C, *(f32 *)((char *)state + 0xc));
+    }
+
+    if (*(f32 *)((char *)state + 8) != lbl_803E3B98) {
+        ObjPath_GetPointWorldPosition(obj, 8, xPtr, yPtr, zPtr, 0);
+        *xPtr -= *(f32 *)(obj + 0xc);
+        *yPtr -= *(f32 *)(obj + 0x10);
+        *zPtr -= *(f32 *)(obj + 0x14);
+        fn_8009837C(obj, 4, 0, 0, posData, lbl_803E3B9C, *(f32 *)((char *)state + 8));
+    }
+
+    if (*(f32 *)((char *)state + 4) != lbl_803E3B98) {
+        ObjPath_GetPointWorldPosition(obj, 7, xPtr, yPtr, zPtr, 0);
+        *xPtr -= *(f32 *)(obj + 0xc);
+        *yPtr -= *(f32 *)(obj + 0x10);
+        *zPtr -= *(f32 *)(obj + 0x14);
+        fn_8009837C(obj, 4, 0, 0, posData, lbl_803E3B9C, *(f32 *)((char *)state + 4));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 extern void buttonDisable(int p1, int mask);
 #pragma scheduling off
