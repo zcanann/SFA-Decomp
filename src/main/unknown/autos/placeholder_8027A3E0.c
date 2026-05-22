@@ -1,10 +1,11 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027A3E0.h"
+#include "main/unknown/autos/placeholder_80279EC0.h"
 
 extern u32 __cvt_fp2unsigned(double x);
 extern f32 powf(f32 x, f32 y);
 
-extern u8 voiceMidiKeySlots[][16];
+extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u8 voiceDirectSlots[];
 extern u8 lbl_803BD150[];
 extern f32 voicePitchUpTable[];
@@ -19,9 +20,8 @@ extern f64 lbl_803E7840;
 
 /*
  * Mark all entries of the MIDI voice-id table and direct voice-id table
- * as 0xFF (free). The asm has the inner stb's unrolled
- * to 16 per loop iter for the 128-byte table (4 outer x 32 bytes),
- * and the 64-byte table is fully unrolled.
+ * as free. The asm has the inner stb's unrolled to two MIDI rows per
+ * loop iter, and the direct-voice table is fully unrolled.
  *
  * EN v1.0 Address: 0x8027A270
  * EN v1.0 Size: 4b (stub)
@@ -33,105 +33,105 @@ void voiceInitRegistrationTables(void)
     u8 *p = &voiceMidiKeySlots[0][0];
     int i;
 
-    for (i = 0; i < 4; i++) {
-        p[0] = 0xff;
-        p[1] = 0xff;
-        p[2] = 0xff;
-        p[3] = 0xff;
-        p[4] = 0xff;
-        p[5] = 0xff;
-        p[6] = 0xff;
-        p[7] = 0xff;
-        p[8] = 0xff;
-        p[9] = 0xff;
-        p[10] = 0xff;
-        p[11] = 0xff;
-        p[12] = 0xff;
-        p[13] = 0xff;
-        p[14] = 0xff;
-        p[15] = 0xff;
-        p[16] = 0xff;
-        p[17] = 0xff;
-        p[18] = 0xff;
-        p[19] = 0xff;
-        p[20] = 0xff;
-        p[21] = 0xff;
-        p[22] = 0xff;
-        p[23] = 0xff;
-        p[24] = 0xff;
-        p[25] = 0xff;
-        p[26] = 0xff;
-        p[27] = 0xff;
-        p[28] = 0xff;
-        p[29] = 0xff;
-        p[30] = 0xff;
-        p[31] = 0xff;
-        p += 32;
+    for (i = 0; i < SYNTH_VOICE_REGISTRATION_CLEAR_BLOCKS; i++) {
+        p[0] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[1] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[2] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[3] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[4] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[5] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[6] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[7] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[8] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[9] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[10] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[11] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[12] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[13] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[14] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[15] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[16] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[17] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[18] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[19] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[20] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[21] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[22] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[23] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[24] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[25] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[26] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[27] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[28] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[29] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[30] = SYNTH_VOICE_REGISTRATION_FREE;
+        p[31] = SYNTH_VOICE_REGISTRATION_FREE;
+        p += SYNTH_VOICE_REGISTRATION_CLEAR_STRIDE;
     }
-    voiceDirectSlots[0] = 0xff;
-    voiceDirectSlots[1] = 0xff;
-    voiceDirectSlots[2] = 0xff;
-    voiceDirectSlots[3] = 0xff;
-    voiceDirectSlots[4] = 0xff;
-    voiceDirectSlots[5] = 0xff;
-    voiceDirectSlots[6] = 0xff;
-    voiceDirectSlots[7] = 0xff;
-    voiceDirectSlots[8] = 0xff;
-    voiceDirectSlots[9] = 0xff;
-    voiceDirectSlots[10] = 0xff;
-    voiceDirectSlots[11] = 0xff;
-    voiceDirectSlots[12] = 0xff;
-    voiceDirectSlots[13] = 0xff;
-    voiceDirectSlots[14] = 0xff;
-    voiceDirectSlots[15] = 0xff;
-    voiceDirectSlots[16] = 0xff;
-    voiceDirectSlots[17] = 0xff;
-    voiceDirectSlots[18] = 0xff;
-    voiceDirectSlots[19] = 0xff;
-    voiceDirectSlots[20] = 0xff;
-    voiceDirectSlots[21] = 0xff;
-    voiceDirectSlots[22] = 0xff;
-    voiceDirectSlots[23] = 0xff;
-    voiceDirectSlots[24] = 0xff;
-    voiceDirectSlots[25] = 0xff;
-    voiceDirectSlots[26] = 0xff;
-    voiceDirectSlots[27] = 0xff;
-    voiceDirectSlots[28] = 0xff;
-    voiceDirectSlots[29] = 0xff;
-    voiceDirectSlots[30] = 0xff;
-    voiceDirectSlots[31] = 0xff;
-    voiceDirectSlots[32] = 0xff;
-    voiceDirectSlots[33] = 0xff;
-    voiceDirectSlots[34] = 0xff;
-    voiceDirectSlots[35] = 0xff;
-    voiceDirectSlots[36] = 0xff;
-    voiceDirectSlots[37] = 0xff;
-    voiceDirectSlots[38] = 0xff;
-    voiceDirectSlots[39] = 0xff;
-    voiceDirectSlots[40] = 0xff;
-    voiceDirectSlots[41] = 0xff;
-    voiceDirectSlots[42] = 0xff;
-    voiceDirectSlots[43] = 0xff;
-    voiceDirectSlots[44] = 0xff;
-    voiceDirectSlots[45] = 0xff;
-    voiceDirectSlots[46] = 0xff;
-    voiceDirectSlots[47] = 0xff;
-    voiceDirectSlots[48] = 0xff;
-    voiceDirectSlots[49] = 0xff;
-    voiceDirectSlots[50] = 0xff;
-    voiceDirectSlots[51] = 0xff;
-    voiceDirectSlots[52] = 0xff;
-    voiceDirectSlots[53] = 0xff;
-    voiceDirectSlots[54] = 0xff;
-    voiceDirectSlots[55] = 0xff;
-    voiceDirectSlots[56] = 0xff;
-    voiceDirectSlots[57] = 0xff;
-    voiceDirectSlots[58] = 0xff;
-    voiceDirectSlots[59] = 0xff;
-    voiceDirectSlots[60] = 0xff;
-    voiceDirectSlots[61] = 0xff;
-    voiceDirectSlots[62] = 0xff;
-    voiceDirectSlots[63] = 0xff;
+    voiceDirectSlots[0] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[1] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[2] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[3] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[4] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[5] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[6] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[7] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[8] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[9] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[10] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[11] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[12] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[13] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[14] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[15] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[16] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[17] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[18] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[19] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[20] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[21] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[22] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[23] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[24] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[25] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[26] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[27] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[28] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[29] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[30] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[31] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[32] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[33] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[34] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[35] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[36] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[37] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[38] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[39] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[40] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[41] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[42] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[43] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[44] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[45] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[46] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[47] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[48] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[49] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[50] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[51] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[52] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[53] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[54] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[55] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[56] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[57] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[58] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[59] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[60] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[61] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[62] = SYNTH_VOICE_REGISTRATION_FREE;
+    voiceDirectSlots[63] = SYNTH_VOICE_REGISTRATION_FREE;
 }
 
 /*

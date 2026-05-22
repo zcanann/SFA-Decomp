@@ -2,7 +2,7 @@
 #include "main/unknown/autos/placeholder_8027A2FC.h"
 #include "main/unknown/autos/placeholder_80279EC0.h"
 
-extern u8 voiceMidiKeySlots[];
+extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u8 voiceDirectSlots[];
 
 /*
@@ -38,7 +38,7 @@ void voiceUnregister(int obj)
         if (*slot != voiceId) return;
         *slot = SYNTH_INVALID_VOICE_U8;
     } else {
-        slot = &voiceMidiKeySlots[(midiChannel << 4) + midiSlot];
+        slot = &voiceMidiKeySlots[midiChannel][midiSlot];
         if (voiceId != *slot) return;
         *slot = SYNTH_INVALID_VOICE_U8;
     }

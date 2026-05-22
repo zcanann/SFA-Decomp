@@ -13,7 +13,7 @@ extern u8 vidListNodes[];
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 voiceDirectSlots[];
-extern u8 voiceMidiKeySlots[][16];
+extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u16 voicePrioSortRootListRoot;
 extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
