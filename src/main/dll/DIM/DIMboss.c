@@ -719,23 +719,19 @@ void DIMboss_update(DIMbossObject *obj)
  */
 void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
 {
-  typedef struct DIMbossLocalVec {
-    undefined4 x;
-    undefined4 y;
-    undefined4 z;
-    undefined2 mode;
-  } DIMbossLocalVec;
-
   DIMbossRuntime *runtime;
   DIMbossTopState *topState;
-  DIMbossLocalVec localVec;
+  undefined4 localVec[4];
   u8 *animFlagsByte;
   undefined4 mapDir;
   u8 animFlags;
   f32 liftHeight;
 
   runtime = obj->runtime;
-  localVec = *(DIMbossLocalVec *)lbl_802C2338;
+  localVec[0] = lbl_802C2338[0];
+  localVec[1] = lbl_802C2338[1];
+  localVec[2] = lbl_802C2338[2];
+  *(undefined2 *)(localVec + 3) = *(undefined2 *)(lbl_802C2338 + 3);
   setDrawCloudsAndLights(0);
   obj->updateMode = 2;
   animFlags = 6;
