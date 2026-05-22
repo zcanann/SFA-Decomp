@@ -17,8 +17,8 @@ extern f32 gObjAnimProgressOne;
 extern f32 gObjAnimProgressZero;
 extern f32 gObjAnimEventStepScale;
 extern f32 gObjAnimEventFrameScale;
-extern f32 lbl_803DE908;
-extern f32 lbl_803DE90C;
+extern f32 gObjAnimSetMoveProgressMax;
+extern f32 gObjAnimMoveStepScaleMin;
 
 static ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state,u16 slot)
 {
@@ -375,8 +375,8 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
  */
 int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 {
-  if (moveProgress > lbl_803DE908) {
-    moveProgress = lbl_803DE908;
+  if (moveProgress > gObjAnimSetMoveProgressMax) {
+    moveProgress = gObjAnimSetMoveProgressMax;
   }
   else if (moveProgress < gObjAnimProgressZero) {
     moveProgress = gObjAnimProgressZero;
@@ -763,8 +763,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   int shouldEmit;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
-  clampedStepScale = lbl_803DE90C;
-  if (moveStepScale >= lbl_803DE90C) {
+  clampedStepScale = gObjAnimMoveStepScaleMin;
+  if (moveStepScale >= gObjAnimMoveStepScaleMin) {
     clampedStepScale = gObjAnimProgressOne;
     if (moveStepScale <= gObjAnimProgressOne) {
       clampedStepScale = moveStepScale;
@@ -1023,8 +1023,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
  */
 int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 {
-  if (moveProgress > lbl_803DE908) {
-    moveProgress = lbl_803DE908;
+  if (moveProgress > gObjAnimSetMoveProgressMax) {
+    moveProgress = gObjAnimSetMoveProgressMax;
   }
   else if (moveProgress < gObjAnimProgressZero) {
     moveProgress = gObjAnimProgressZero;
