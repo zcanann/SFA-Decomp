@@ -107,7 +107,6 @@ extern undefined4 DAT_803adc78;
 extern undefined4 DAT_803dd5d0;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd70c;
-extern undefined4* gMapEventInterface;
 extern undefined4* lbl_803DCAB4;
 #define gBoneParticleEffectInterface lbl_803DCAB4
 extern undefined4* DAT_803dd738;
@@ -142,9 +141,15 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMbossRuntime *runtime,
                                    int param_4,int param_5,int param_6,int param_7,float scale);
-typedef u8 (*DIMbossMapAreaStateFn)(int areaId);
-typedef void (*DIMbossMapAreaSetStateFn)(int areaId,int state);
-typedef void (*DIMbossMapAreaTriggerFn)(int mapDir,int param_2,int enabled);
+typedef struct DIMbossMapEventInterface {
+  u8 pad00[0x40];
+  u8 (*getAreaState)(int areaId);
+  void (*setAreaState)(int areaId,int state);
+  u8 pad48[0x50 - 0x48];
+  void (*triggerArea)(int mapDir,int areaId,int enabled);
+} DIMbossMapEventInterface;
+
+extern DIMbossMapEventInterface **gMapEventInterface;
 
 /*
  * --INFO--
@@ -191,7 +196,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
   Obj_GetPlayerObject();
   iVar11 = (int)topState;
   runtime->phase = DIMBOSS_PHASE_START;
-  ((DIMbossMapAreaTriggerFn)(*(code *)(*gMapEventInterface + 0x50)))(DIMBOSS_MAP_DIR,5,0);
+  (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,5,0);
   if (obj->renderPause == 0) {
     puVar7 = gDIMbossAnimController;
     puVar8 = (undefined4 *)0x1;
@@ -215,7 +220,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
         obj->objectFlags &= ~8;
         obj->objectFlags |= 0x80;
-        ((DIMbossMapAreaTriggerFn)(*(code *)(*gMapEventInterface + 0x50)))(DIMBOSS_MAP_DIR,0,0);
+        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,0,0);
         break;
       case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_06:
         gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_06;
@@ -261,10 +266,10 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         (*(code *)(*DAT_803dd6d4 + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,puVar3,0x3c);
         break;
       case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
-        ((DIMbossMapAreaTriggerFn)(*(code *)(*gMapEventInterface + 0x50)))(DIMBOSS_MAP_DIR,2,1);
+        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,1);
         break;
       case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
-        ((DIMbossMapAreaTriggerFn)(*(code *)(*gMapEventInterface + 0x50)))(DIMBOSS_MAP_DIR,2,0);
+        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,0);
         break;
       case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
@@ -307,7 +312,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
         mapLoadDataFile(mapDirIndex,DIMTOP_AUDIO_DATA_FILE_B);
         loadWaitStarted = false;
-        while (statusFlags = getLoadedFileFlags(0), (statusFlags & 0xffefffff) != 0) {
+        while (statusFlags = getLoadedFileFlags(0), (statusFlags & DIMTOP_LOAD_PENDING_FLAGS_MASK) != 0) {
           padUpdate();
           checkReset();
           if (loadWaitStarted) {
@@ -741,14 +746,14 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   if (GameBit_Get(0x1df) == 0) {
     topState->stompDustDelay = 2;
     topState->introSinkHeight = lbl_803E4C78;
-    ((DIMbossMapAreaTriggerFn)(*(code *)(*gMapEventInterface + 0x50)))(DIMBOSS_MAP_DIR,5,1);
+    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,5,1);
   }
   else {
-    ((DIMbossMapAreaTriggerFn)(*(code *)(*gMapEventInterface + 0x50)))(DIMBOSS_MAP_DIR,5,0);
+    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,5,0);
   }
   topState->defeatTimer = 0;
-  if (((DIMbossMapAreaStateFn)(*(code *)(*gMapEventInterface + 0x40)))(7) == 2) {
-    ((DIMbossMapAreaSetStateFn)(*(code *)(*gMapEventInterface + 0x44)))(7,3);
+  if ((*gMapEventInterface)->getAreaState(7) == 2) {
+    (*gMapEventInterface)->setAreaState(7,3);
   }
   GameBit_Set(0xefd,1);
   unlockLevel(0,0,1);
