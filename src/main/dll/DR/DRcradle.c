@@ -521,34 +521,20 @@ void fn_801EC870(int p1, register int p2_int)
     *(f32 *)(p2_int + 0x544) = lbl_803E5AF8;
     *(f32 *)(p2_int + 0x558) = lbl_803E5BA8;
     *(f32 *)(p2_int + 0x56c) = lbl_803E5C00;
-    {
-        register u32 b;
-        register u32 v = 0;
-        asm {
-            lbz b, 0x428(p2_int)
-            rlwimi b, v, 7, 24, 24
-            stb b, 0x428(p2_int)
-        }
-        *(f32 *)(p2_int + 0x430) = fz;
-        fa = *(f32 *)(p2_int + 0x470);
-        *(f32 *)(p2_int + 0x464) = fa;
-        *(f32 *)(p2_int + 0x47c) = fa;
-        fb = *(f32 *)(p2_int + 0x474);
-        *(f32 *)(p2_int + 0x468) = fb;
-        *(f32 *)(p2_int + 0x480) = fb;
-        fc = *(f32 *)(p2_int + 0x478);
-        *(f32 *)(p2_int + 0x46c) = fc;
-        *(f32 *)(p2_int + 0x484) = fc;
-        asm {
-            lbz b, 0x428(p2_int)
-            rlwimi b, v, 6, 25, 25
-            stb b, 0x428(p2_int)
-            lbz b, 0x428(p2_int)
-            rlwimi b, v, 4, 27, 27
-            stb b, 0x428(p2_int)
-            stw v, 0x42c(p2_int)
-        }
-    }
+    *(u8 *)(p2_int + 0x428) &= 0x7f;
+    *(f32 *)(p2_int + 0x430) = fz;
+    fa = *(f32 *)(p2_int + 0x470);
+    *(f32 *)(p2_int + 0x464) = fa;
+    *(f32 *)(p2_int + 0x47c) = fa;
+    fb = *(f32 *)(p2_int + 0x474);
+    *(f32 *)(p2_int + 0x468) = fb;
+    *(f32 *)(p2_int + 0x480) = fb;
+    fc = *(f32 *)(p2_int + 0x478);
+    *(f32 *)(p2_int + 0x46c) = fc;
+    *(f32 *)(p2_int + 0x484) = fc;
+    *(u8 *)(p2_int + 0x428) &= 0xbf;
+    *(u8 *)(p2_int + 0x428) &= 0xef;
+    *(u32 *)(p2_int + 0x42c) = 0;
     *(f32 *)(p2_int + 0x3e4) = fz;
     *(f32 *)(p2_int + 0x3e0) = lbl_803E5AEC;
 }
