@@ -226,8 +226,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,Obj
       }
       if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
         eventCountdown =
-            (int)-(float)((ObjAnim_U32AsDouble((uint)state->eventStep) -
-                           gObjAnimU32ToDoubleBias) *
+            (int)-(float)((ObjAnim_U32AsDouble(state->eventStep) - gObjAnimU32ToDoubleBias) *
                               deltaTime -
                           (ObjAnim_U32AsDouble(state->eventCountdown ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
                            gObjAnimS32ToDoubleBias));
@@ -804,12 +803,11 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
         state->progress = fVar5;
       }
       if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
-        uVar15 = (uint)-(float)((double)(float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                                                 (uint)state->eventStep) -
-                                               gObjAnimU32ToDoubleBias) * deltaTime -
-                               (double)(float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                                                state->eventCountdown ^
-                                                                OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias));
+        uVar15 = (uint)-(float)((ObjAnim_U32AsDouble(state->eventStep) - gObjAnimU32ToDoubleBias) *
+                                    deltaTime -
+                                (ObjAnim_U32AsDouble(state->eventCountdown ^
+                                                     OBJANIM_S32_DOUBLE_BIAS_XOR) -
+                                 gObjAnimS32ToDoubleBias));
         fVar3 = gObjAnimProgressZero;
         if ((-1 < (int)uVar15) &&
            (uVar15 = uVar15 ^ OBJANIM_S32_DOUBLE_BIAS_XOR, fVar3 = gObjAnimEventStepScale,
