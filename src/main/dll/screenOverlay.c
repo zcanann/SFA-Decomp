@@ -13,7 +13,7 @@ extern void fn_8003B608(u32 a, u32 b, u32 c);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern undefined4 lbl_80321008;
+extern u8 lbl_80321008[];
 extern f32 lbl_803E3700;
 extern f32 lbl_803E3704;
 extern f32 lbl_803E3708;
@@ -165,34 +165,34 @@ void ProjectileSwitch_update(int obj)
 void ProjectileSwitch_init(int obj, u8 *initData)
 {
   int state;
-  int linkObj;
-  int linkSub;
+  u8 *linkObj;
+  u8 *linkSub;
   void *tex;
 
   state = *(int *)(obj + 0xb8);
-  *(short *)obj = (short)((int)(signed char)initData[0x1f] << 8);
-  *(short *)(obj + 2) = (short)((int)(signed char)initData[0x1c] << 8);
+  *(short *)obj = (short)(initData[0x1f] << 8);
+  *(short *)(obj + 2) = (short)(initData[0x1c] << 8);
   if (initData[0x1d] == 0) {
     *(float *)(obj + 8) = *(float *)(*(int *)(obj + 0x50) + 4);
   } else {
     *(float *)(obj + 8) =
-        ((float)((double)(int)initData[0x1d] - lbl_803E3720) *
-         *(float *)(*(int *)(obj + 0x50) + 4)) * lbl_803E3728;
+        ((f32)(u32)initData[0x1d] * *(float *)(*(int *)(obj + 0x50) + 4)) *
+        lbl_803E3728;
   }
   ObjHitbox_SetSphereRadius(
-      obj, (short)(((int)initData[0x1d] * (int)*(u8 *)(*(int *)(obj + 0x50) + 0x62)) >> 6));
-  *(u8 *)(obj + 0xad) = (u8)((int)(signed char)initData[0x1e] >> 2);
+      obj, (short)(((int)initData[0x1d] * (int)*(u8 *)(*(int *)(obj + 0x50) + 0x62)) / 64));
+  *(s8 *)(obj + 0xad) = initData[0x1e] >> 2;
   if ((int)(signed char)*(u8 *)(obj + 0xad) >=
       (int)(signed char)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
     *(u8 *)(obj + 0xad) = 0;
   }
 
-  linkObj = *(int *)(obj + 0x30);
+  linkObj = *(u8 **)(obj + 0x30);
   if (linkObj != 0) {
-    linkSub = *(int *)(linkObj + 0x4c);
+    linkSub = *(u8 **)(linkObj + 0x4c);
     if (linkSub != 0) {
       *(short *)(state + 2) =
-          (short)seqStreamLookupFn_8007fff8(&lbl_80321008, 2, *(int *)(linkSub + 0x14));
+          (short)seqStreamLookupFn_8007fff8(lbl_80321008, 2, *(int *)(linkSub + 0x14));
     } else {
       *(short *)(state + 2) = -1;
     }
