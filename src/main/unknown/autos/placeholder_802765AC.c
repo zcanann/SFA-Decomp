@@ -400,6 +400,7 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
     u32 index;
     u32 value;
     u32 targetInstrument;
+    int synthInfo;
     int offset;
     int voice;
     McmdVoiceState *voiceState;
@@ -416,8 +417,9 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
     if (((args->flags >> 8) & 0xff) == 0) {
         targetInstrument = args->flags >> 0x10;
         if (targetInstrument != 0xffff) {
+            synthInfo = (int)lbl_803BD150;
             offset = 0;
-            for (i = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++) {
+            for (i = 0; i < *(u8 *)(synthInfo + 0x210); i++) {
                 voice = (int)(synthVoice + offset);
                 voiceState = (McmdVoiceState *)voice;
                 if (voiceState->macroBase != 0 && targetInstrument == voiceState->instrumentKey) {
@@ -669,45 +671,43 @@ void macSetPedalState(int state, u32 defer)
 /*
  * Insert a voice into the 64-bit wake-time queue sorted by 0x98:0x9c.
  */
-void TimeQueueAdd(int state)
+void TimeQueueAdd(McmdVoiceState *state)
 {
-    u32 next;
-    u32 prev;
-    u32 cur;
+    McmdVoiceState *next;
+    McmdVoiceState *prev;
+    McmdVoiceState *cur;
 
-    next = macTimeQueueRoot;
+    next = (McmdVoiceState *)macTimeQueueRoot;
     prev = 0;
     while ((cur = next) != 0 &&
-           (*(u32 *)(cur + 0x98) < *(u32 *)(state + 0x98) ||
-            (*(u32 *)(cur + 0x98) == *(u32 *)(state + 0x98) &&
-             *(u32 *)(cur + 0x9c) < *(u32 *)(state + 0x9c)))) {
+           *(u64 *)&cur->wakeTimeHi < *(u64 *)&state->wakeTimeHi) {
         prev = cur;
-        next = *(int *)(cur + 0x44);
+        next = cur->timeNext;
     }
 
     if (cur == 0) {
         if (prev == 0) {
-            macTimeQueueRoot = state;
-            *(int *)(state + 0x44) = 0;
-            *(int *)(state + 0x48) = 0;
+            macTimeQueueRoot = (int)state;
+            state->timeNext = 0;
+            state->timePrev = 0;
             return;
         }
 
-        *(int *)(prev + 0x44) = state;
-        *(int *)(state + 0x48) = prev;
-        *(int *)(state + 0x44) = 0;
+        prev->timeNext = state;
+        state->timePrev = prev;
+        state->timeNext = 0;
         return;
     }
 
-    *(int *)(state + 0x44) = cur;
-    prev = *(int *)(cur + 0x48);
-    *(int *)(state + 0x48) = prev;
+    state->timeNext = cur;
+    prev = cur->timePrev;
+    state->timePrev = prev;
     if (prev != 0) {
-        *(int *)(*(int *)(cur + 0x48) + 0x44) = state;
+        cur->timePrev->timeNext = state;
     } else {
-        macTimeQueueRoot = state;
+        macTimeQueueRoot = (int)state;
     }
-    *(int *)(cur + 0x48) = state;
+    cur->timePrev = state;
 }
 
 /*

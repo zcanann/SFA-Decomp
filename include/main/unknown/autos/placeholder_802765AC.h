@@ -19,7 +19,7 @@ void macHandle(u32 delta);
 void macSampleEndNotify(int state);
 u32 macSetExternalKeyoff(int state);
 void macSetPedalState(int state, u32 defer);
-void TimeQueueAdd(int state);
+void TimeQueueAdd(McmdVoiceState *state);
 void fn_802788B4(int state, u32 skipFadeReset);
 void audioFn_80278990(int state);
 void fn_80278A98(int state, int mode);
