@@ -18,10 +18,10 @@ void camcontrol_activateHandler(u32 actionId, void *actionData)
 
   if (gCamcontrolCurrentHandler != NULL) {
     if (gCamcontrolActiveActionId != (int)(u16)actionId) {
-      (*(void (****)(void *))((char *)gCamcontrolCurrentHandler + 4))[0][3](pCamera);
-      if (*(u8 *)((char *)gCamcontrolCurrentHandler + 8) == 1) {
+      gCamcontrolCurrentHandler->handler->vtable->release(pCamera);
+      if (gCamcontrolCurrentHandler->priority == 1) {
         idx = gCamcontrolCurrentHandlerIndex;
-        Resource_Release(*(void **)((char *)gCamcontrolHandlerEntries[idx] + 4));
+        Resource_Release(gCamcontrolHandlerEntries[idx]->handler);
         mm_free(gCamcontrolHandlerEntries[idx]);
         gCamcontrolHandlerEntries[idx] = gCamcontrolHandlerEntries[gCamcontrolHandlerCount - 1];
         gCamcontrolHandlerCount--;
@@ -34,14 +34,17 @@ void camcontrol_activateHandler(u32 actionId, void *actionData)
 
   idx = 0;
   {
-    CamcontrolHandlerEntry **p = gCamcontrolHandlerEntries;
+    register CamcontrolHandlerEntry **p;
+    asm {
+      lis r3, gCamcontrolHandlerEntries@ha
+      addi p, r3, gCamcontrolHandlerEntries@l
+    }
     n = gCamcontrolHandlerCount;
     for (; idx < n; idx++) {
-      if ((u16)actionId != *(u16 *)*p) {
-        p++;
-      } else {
+      if ((u16)actionId == (*p)->actionId) {
         goto found;
       }
+      p++;
     }
   }
   idx = -1;
@@ -56,17 +59,17 @@ found:
     gCamcontrolHandlerEntries[n] = new_entry;
     gCamcontrolHandlerCount++;
     entry = gCamcontrolHandlerEntries[n];
-    *(u16 *)entry = actionId;
-    *((u8 *)entry + 8) = priority;
-    *(void **)((u8 *)entry + 4) = Resource_Acquire(actionId, 4);
+    entry->actionId = actionId;
+    entry->priority = priority;
+    entry->handler = Resource_Acquire(actionId, 4);
     gCamcontrolCurrentHandlerIndex = gCamcontrolHandlerCount - 1;
   }
 
   if (gCamcontrolCurrentHandlerIndex != -1) {
     entry = gCamcontrolHandlerEntries[gCamcontrolCurrentHandlerIndex];
     gCamcontrolCurrentHandler = entry;
-    gCamcontrolActiveActionId = *(u16 *)entry;
-    (*(void (****)(void *, int, void *))((char *)entry + 4))[0][1](pCamera, gCamcontrolQueuedActionStartFlags, actionData);
+    gCamcontrolActiveActionId = entry->actionId;
+    entry->handler->vtable->activate(pCamera, gCamcontrolQueuedActionStartFlags, actionData);
   } else {
     gCamcontrolCurrentHandler = NULL;
     gCamcontrolActiveActionId = -1;

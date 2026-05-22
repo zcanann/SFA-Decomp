@@ -60,7 +60,7 @@ typedef struct CamcontrolHandlerEntry {
 extern char sCamcontrolTriggeredCamActionLoadWarning[];
 extern CamcontrolHandlerEntry *gCamcontrolHandlerEntries[20];
 extern CamcontrolHandlerEntry *gCamcontrolCurrentHandler;
-extern u32 gCamcontrolActiveActionId;
+extern s32 gCamcontrolActiveActionId;
 extern int gCamcontrolActiveActionStartFlags;
 extern int gCamcontrolActiveActionPriority;
 extern int gCamcontrolCurrentHandlerIndex;
