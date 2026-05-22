@@ -322,23 +322,25 @@ extern void Rcp_DisableBlurFilter(void);
  */
 void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFloatPtr)
 {
+  int cameraObj;
   int paths;
   int settings;
   u8 curIdx;
   float t;
 
   settings = *(int *)(control + 0x11c);
-  paths = *(int *)(control + 0xa4);
+  cameraObj = *(int *)(control + 0xa4);
+  paths = *(int *)(settings + 0x74);
   curIdx = *(u8 *)(settings + 0xe4);
   if ((u32)curIdx != (u32)*(u8 *)(*(int **)&lbl_803DD568 + 0x14/4)) {
-    *(u8 *)(*(int **)&lbl_803DD568 + 0x13/4) = *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14);
+    *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13) = *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14);
     *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = lbl_803E18C0;
   }
   t = *(float *)((char *)*(int **)&lbl_803DD568 + 0x18);
   if (t > lbl_803E18C4) {
     t = -(lbl_803E18C8 * timeDelta) + t;
     *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = t;
-    if (t < lbl_803E18C4) {
+    if (*(float *)((char *)*(int **)&lbl_803DD568 + 0x18) < lbl_803E18C4) {
       *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = lbl_803E18C4;
       *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13) = *(u8 *)(settings + 0xe4);
     }
@@ -349,18 +351,21 @@ void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFlo
       float dy = *(float *)((char *)paths + ci * 0x18 + 0x10) - *(float *)((char *)paths + ti * 0x18 + 0x10);
       float dz = *(float *)((char *)paths + ci * 0x18 + 0x14) - *(float *)((char *)paths + ti * 0x18 + 0x14);
       float w = *(float *)((char *)*(int **)&lbl_803DD568 + 0x18);
-      dx = dx * w + *(float *)((char *)paths + ti * 0x18 + 0xc);
-      dy = dy * w + *(float *)((char *)paths + ti * 0x18 + 0x10);
-      dz = dz * w + *(float *)((char *)paths + ti * 0x18 + 0x14);
-      *outX = dx - *(float *)(control + 0x18);
+      dx *= w;
+      dy *= w;
+      dz *= w;
+      dx += *(float *)((char *)paths + ti * 0x18 + 0xc);
+      dy += *(float *)((char *)paths + ti * 0x18 + 0x10);
+      dz += *(float *)((char *)paths + ti * 0x18 + 0x14);
+      *outX = dx - *(float *)(cameraObj + 0x18);
       *outY = dy - *(float *)inFloatPtr;
-      *outZ = dz - *(float *)(control + 0x20);
+      *outZ = dz - *(float *)(cameraObj + 0x20);
     }
   } else {
     u8 ti = *(u8 *)(settings + 0xe4);
-    *outX = *(float *)((char *)paths + ti * 0x18 + 0xc) - *(float *)(control + 0x18);
+    *outX = *(float *)((char *)paths + ti * 0x18 + 0xc) - *(float *)(cameraObj + 0x18);
     *outY = *(float *)((char *)paths + ti * 0x18 + 0x10) - *(float *)inFloatPtr;
-    *outZ = *(float *)((char *)paths + ti * 0x18 + 0x14) - *(float *)(control + 0x20);
+    *outZ = *(float *)((char *)paths + ti * 0x18 + 0x14) - *(float *)(cameraObj + 0x20);
   }
   *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14) = *(u8 *)(settings + 0xe4);
 }
