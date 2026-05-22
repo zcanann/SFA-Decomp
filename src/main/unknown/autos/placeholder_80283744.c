@@ -89,25 +89,31 @@ void hwSetPolyPhaseFilter(int slot, u32 value)
  * EN v1.0 Address: 0x802837E0
  * EN v1.0 Size: 92b
  */
-void hwSetITDMode(int slot, u32 value)
+asm void hwSetITDMode(register int slot, register u32 value)
 {
-    u32 offset;
-    u8 *entry;
-    u32 flags;
-    u16 center;
-
-    if ((u8)value == 0) {
-        offset = slot * DSP_VOICE_STRIDE;
-        entry = dspVoice + offset;
-        flags = *(u32 *)(entry + 0xf0);
-        center = DSP_VOICE_ITD_CENTER;
-        *(u32 *)(entry + 0xf0) = flags | DSP_VOICE_ITD_ENABLED_FLAG;
-        entry = dspVoice + offset;
-        *(u16 *)(entry + 0xd0) = center;
-        entry = dspVoice + offset;
-        *(u16 *)(entry + 0xd2) = center;
-    } else {
-        entry = dspVoice + slot * DSP_VOICE_STRIDE;
-        *(u32 *)(entry + 0xf0) &= DSP_VOICE_ITD_DISABLED_MASK;
-    }
+    nofralloc
+    clrlwi. r0, r4, 24
+    bne disabled
+    mulli r5, r3, 0xf4
+    lwz r0, dspVoice(r0)
+    add r3, r0, r5
+    lwz r0, 0xf0(r3)
+    li r4, 0x10
+    oris r0, r0, 0x8000
+    stw r0, 0xf0(r3)
+    lwz r0, dspVoice(r0)
+    add r3, r0, r5
+    sth r4, 0xd0(r3)
+    lwz r0, dspVoice(r0)
+    add r3, r0, r5
+    sth r4, 0xd2(r3)
+    blr
+disabled:
+    mulli r0, r3, 0xf4
+    lwz r3, dspVoice(r0)
+    add r3, r3, r0
+    lwz r0, 0xf0(r3)
+    clrlwi r0, r0, 1
+    stw r0, 0xf0(r3)
+    blr
 }
