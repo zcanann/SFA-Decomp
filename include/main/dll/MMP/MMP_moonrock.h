@@ -14,7 +14,7 @@ void WaterFallSpray_free(u8 *obj);
 void WaterFallSpray_init(u8 *obj, u8 *data);
 void WaterFallSpray_render(void);
 int WaterFallSpray_getExtraSize(void);
-int fn_80197DB0(int *obj);
+int WaterFallSpray_SeqFn(int *obj);
 void sfxplayerObj_init(u8 *obj, u8 *data);
 void sfxplayerObj_free(u8 *obj);
 int sfxplayerObj_getExtraSize(void);
