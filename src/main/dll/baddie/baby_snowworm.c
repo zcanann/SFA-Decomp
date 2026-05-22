@@ -16,10 +16,10 @@
  * pauseMenuInit, viewFn_80129cbc. See inline notes per function for the
  * specific MWCC quirk that blocks each one.
  *
- * Previously-stuck, now matched via inline asm:
- *   GameUI_func0F          — extsh+sth triple preserved by asm{}.
- *   GameUI_unselectAllItems — lis/addi/loop locked by asm{}.
- *   fn_8012DDB8             — u16 = (u8)param ? 1 : 0 via asm{}.
+ * Previously-stuck helpers now kept as plain C semantics:
+ *   GameUI_func0F          - s16 UI field setters.
+ *   GameUI_unselectAllItems - clear selected menu slots.
+ *   fn_8012DDB8             - u16 = (u8)param ? 1 : 0.
  *
  * Known-stuck (verified, don't retry without new ideas):
  *   timeListFn_8012be84 (380b) : MWCC swaps r30/r31 between prev_state and
@@ -966,9 +966,7 @@ s32 CMenu_GetState(void)
     return cMenuState;
 }
 
-/* EN v1.0 0x8012EB08  size: 28b  Three s16 setters; target keeps the
- * extsh before each sth, MWCC strips them when written at C source
- * level. Inline asm preserves the triples. */
+/* EN v1.0 0x8012EB08  size: 28b  Three s16 UI setters. */
 extern s16 lbl_803DD892;
 extern s16 lbl_803DD890;
 extern s16 lbl_803DD88E;
@@ -976,26 +974,16 @@ extern s16 lbl_803DD88E;
 #pragma peephole off
 void GameUI_func0F(s32 a, s32 b, s32 c)
 {
-    register s32 ra = a;
-    register s32 rb = b;
-    register s32 rc = c;
-    register s32 r;
-    asm {
-        extsh r, ra
-        sth   r, lbl_803DD892 (r2)
-        extsh r, rb
-        sth   r, lbl_803DD890 (r2)
-        extsh r, rc
-        sth   r, lbl_803DD88E (r2)
-    }
+    lbl_803DD892 = (s16)a;
+    lbl_803DD890 = (s16)b;
+    lbl_803DD88E = (s16)c;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012EB30  size: 56b  Iterate a 0x10-stride struct array at
  * lbl_8031B5D8 clearing the s16 at +0x4 until the u32 key at +0x0 is
- * zero, then reset lbl_803DD8C2 to -1 and lbl_803DD8B8 to 0. Asm form
- * to lock the lis/addi reg pair and the post-loop r0 reuse pattern. */
+ * zero, then reset lbl_803DD8C2 to -1 and lbl_803DD8B8 to 0. */
 extern u8 lbl_8031B5D8[];
 extern s16 lbl_803DD8C2;
 extern u8  lbl_803DD8B8;
@@ -1003,26 +991,14 @@ extern u8  lbl_803DD8B8;
 #pragma peephole off
 void GameUI_unselectAllItems(void)
 {
-    register s32 v;
     register int *p;
-    register s32 t;
-    asm {
-        lis    v, lbl_8031B5D8@ha
-        addi   p, v, lbl_8031B5D8@l
-        li     v, 0
-        b      _GameUI_unselectAllItems_test
-    _GameUI_unselectAllItems_body:
-        sth    v, 0x4 (p)
-        addi   p, p, 0x10
-    _GameUI_unselectAllItems_test:
-        lwz    t, 0x0 (p)
-        cmplwi t, 0
-        bne    _GameUI_unselectAllItems_body
-        li     t, -1
-        sth    t, lbl_803DD8C2 (r2)
-        li     t, 0
-        stb    t, lbl_803DD8B8 (r2)
+    p = (int*)lbl_8031B5D8;
+    while (*p != 0) {
+        *(s16*)((u8*)p + 4) = 0;
+        p = (int*)((u8*)p + 0x10);
     }
+    lbl_803DD8C2 = -1;
+    lbl_803DD8B8 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1030,25 +1006,12 @@ void GameUI_unselectAllItems(void)
 /* GameUI_gameTextShowNpcDialogue declared at end of file (needs externs declared below). */
 
 /* EN v1.0 0x8012DDB8  size: 32b  Set lbl_803DD776 to 1 if (u8)param is
- * nonzero else 0. Asm block avoids MWCC's spurious clrlwi r0,r0,16
- * narrow before sth that bites the plain `lbl = val ? 1 : 0;` form. */
+ * nonzero else 0. */
 #pragma scheduling off
 #pragma peephole off
 void fn_8012DDB8(u32 val)
 {
-    register u32 m;
-    register u32 v = val;
-    asm {
-        clrlwi  m, v, 24
-        cmplwi  m, 0
-        beq     _fn_8012DDB8_zero
-        li      m, 1
-        b       _fn_8012DDB8_store
-    _fn_8012DDB8_zero:
-        li      m, 0
-    _fn_8012DDB8_store:
-        sth     m, lbl_803DD776
-    }
+    lbl_803DD776 = (u8)val != 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -1270,16 +1270,7 @@ void Tricky_init(int obj)
   doNothing_onTrickyInit();
   walkgroupFindExitPointFn_800dc398();
   *(u8 *)(state + 0x374) = 2;
-  {
-    register u32 flags;
-    register u32 enabledBit;
-    enabledBit = 1;
-    asm {
-      lbz flags, 0x82e(r31)
-      rlwimi flags, enabledBit, 7, 24, 24
-      stb flags, 0x82e(r31)
-    }
-  }
+  *(u8 *)(state + 0x82e) |= 0x80;
   *(s8 *)(state + 0xd) = -1;
 }
 #pragma scheduling reset
@@ -2785,14 +2776,7 @@ int trickyFn_801451d8(int obj,int state) {
 void Tricky_func11(int *obj) {
     register int *p = (int*)obj[0xb8/4];
     if (GameBit_Get(0x4e4)) {
-        register u32 m;
-        register u32 v;
-        asm {
-            lwz v, 0x54(p)
-            lis m, 1
-            or m, v, m
-            stw m, 0x54(p)
-        }
+        p[0x54/4] |= 0x10000;
     }
 }
 #pragma scheduling reset
@@ -2890,28 +2874,14 @@ void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
             state[0x24/4] = targetObj;
             nextTarget = (void *)(state[0x700/4] + 8);
             if ((void *)state[0x28/4] != nextTarget) {
-                register u32 m;
-                register u32 v;
                 state[0x28/4] = (int)nextTarget;
-                asm {
-                    lwz v, 0x54(state)
-                    li m, -1025
-                    and m, v, m
-                    stw m, 0x54(state)
-                }
+                state[0x54/4] &= ~0x400;
                 *(s16*)((u8*)state + 0xd2) = 0;
             }
             *((u8*)state + 10) = 0;
         }
     } else {
-        register u32 m;
-        register u32 v;
-        asm {
-            lwz v, 0x54(state)
-            lis m, 1
-            or m, v, m
-            stw m, 0x54(state)
-        }
+        state[0x54/4] |= 0x10000;
     }
 }
 #pragma scheduling reset
