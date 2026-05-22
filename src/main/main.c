@@ -1518,25 +1518,12 @@ void dll_224_init(void *obj, void *other) {
 }
 
 void vfpflamepoint_init(int *obj, s8 *def) {
-    asm {
-        lwz r6, 0xb8(r3)
-        lha r0, 0x1a(r4)
-        extsb r0, r0
-        stb r0, 4(r6)
-        lha r0, 0x1c(r4)
-        clrlwi r5, r0, 24
-        lbz r0, 5(r6)
-        rlwimi r0, r5, 6, 25, 25
-        stb r0, 5(r6)
-        lha r0, 0x1e(r4)
-        sth r0, 0(r6)
-        lha r0, 0x20(r4)
-        sth r0, 2(r6)
-        lhz r0, 0xb0(r3)
-        ori r0, r0, 0x6000
-        clrlwi r0, r0, 16
-        sth r0, 0xb0(r3)
-    }
+    u8 *extra = (u8 *)obj[0xb8 / 4];
+    extra[4] = (s8)*(s16 *)(def + 0x1a);
+    extra[5] = (u8)((extra[5] & ~0x40) | (((u8)*(s16 *)(def + 0x1c) & 1) << 6));
+    *(s16 *)(extra + 0) = *(s16 *)(def + 0x1e);
+    *(s16 *)(extra + 2) = *(s16 *)(def + 0x20);
+    *(u16 *)((u8 *)obj + 0xb0) |= 0x6000;
 }
 #pragma peephole reset
 #pragma scheduling reset

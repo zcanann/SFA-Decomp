@@ -3361,15 +3361,8 @@ extern u8 lbl_803DCC00;
 #pragma scheduling off
 #pragma peephole off
 void fn_80038F1C(int a, int b) {
-    register u32 m;
-    register u32 v;
     if ((int)(u8)a != 0) return;
-    v = b;
-    asm {
-        lbz m, lbl_803DCC00
-        rlwimi m, v, 7, 24, 24
-        stb m, lbl_803DCC00
-    }
+    lbl_803DCC00 = (u8)((lbl_803DCC00 & ~0x80) | ((b & 1) << 7));
 }
 #pragma peephole reset
 #pragma scheduling reset

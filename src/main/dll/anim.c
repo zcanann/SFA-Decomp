@@ -4767,17 +4767,7 @@ void dbstealerworm_hitDetect(int obj) {
 void GCRobotBlast_init(int obj, s8 *p) {
     char *inner = *(char **)(obj + 0xb8);
     *(int *)inner = (s8)p[0x19];
-    {
-        register u32 b;
-        register u32 bitval;
-        register char *t = inner;
-        bitval = 0;
-        asm {
-            lbz b, 4(t)
-            rlwimi b, bitval, 7, 24, 24
-            stb b, 4(t)
-        }
-    }
+    inner[4] &= ~0x80;
     *(void (**)(void))((char *)obj + 0xbc) = (void (*)(void))fn_801FF884;
 }
 #pragma peephole reset

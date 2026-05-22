@@ -1694,13 +1694,8 @@ void cfforcefield_init(s16 *obj, void *data) {
         *obj = t;
     }
     {
-        register u32 b;
-        register u32 bitval = (u32)GameBit_Get(*(s16*)((char*)data + 0x20)) & 0xff;
-        asm {
-            lbz b, 0(flagPtr)
-            rlwimi b, bitval, 7, 24, 24
-            stb b, 0(flagPtr)
-        }
+        u32 bitval = (u32)GameBit_Get(*(s16*)((char*)data + 0x20)) & 1;
+        flagPtr[0] = (u8)((flagPtr[0] & ~0x80) | (bitval << 7));
     }
     storeZeroToFloatParam(flagPtr + 4);
 }
