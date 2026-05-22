@@ -12,36 +12,34 @@ extern u32 synthRealTimeLo;
 u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u8 midiSlot, u8 midiKey)
 {
     int state;
-    u8 *slot;
-    u8 *entry;
+    McmdInputEntry *entry;
     u32 value;
     u32 result;
     u32 i;
     int signedMode;
 
     state = (int)statePtr;
-    slot = (u8 *)slotPtr;
     result = 0;
     i = 0;
-    entry = slot;
+    entry = slotPtr->entries;
     signedMode = 0;
     do {
-        if (slot[0x22] <= i) {
-            *(s16 *)(slot + 0x20) = (s16)result;
+        if (slotPtr->entryCount <= i) {
+            slotPtr->cachedValue = (s16)result;
             return result & 0xffff;
         }
-        if ((entry[1] & MCMD_INPUT_ENTRY_USE_VAR_FLAG) == 0) {
-            u8 ctrl = entry[0];
+        if ((entry->combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG) == 0) {
+            u8 ctrl = entry->controller;
             if (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION ||
                 ctrl == MCMD_CTRL_PANNING || (u8)(ctrl + 0x60) < 2 ||
                 ctrl == MCMD_CTRL_SUR_PANNING) {
                 if (ctrl < MCMD_CTRL_MIDI_LAYER && ctrl > 0x9f) {
                     int signedValue;
-                    if (state == 0) {
+                    if (statePtr == NULL) {
                         signedValue = 0;
                     } else {
-                        signedValue = *(s16 *)(state + (u32)ctrl * 0xc - 0x5bc) << 1;
-                        *(u8 *)(state + ctrl + 0x134) = 1;
+                        signedValue = statePtr->exCtrls[ctrl - MCMD_CTRL_EX_A0].value << 1;
+                        statePtr->exCtrlDirty[ctrl - MCMD_CTRL_EX_A0] = 1;
                     }
                     value = signedValue;
                     goto signed_input;
@@ -52,7 +50,7 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u8 midiSlot
             }
 
             if (ctrl == MCMD_CTRL_VOICE_AGE) {
-                if (state == 0) {
+                if (statePtr == NULL) {
                     value = 0;
                 } else {
                     value = *(u32 *)(state + 0x158) >> 9;
@@ -60,34 +58,34 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u8 midiSlot
             } else if (ctrl < MCMD_CTRL_VOICE_AGE) {
                 if (ctrl < MCMD_CTRL_MIDI_LAYER) {
                     value = inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff;
-                } else if (state == 0) {
+                } else if (statePtr == NULL) {
                     value = 0;
                 } else {
-                    value = (u32)*(u8 *)(state + 0x12f) << 7;
+                    value = (u32)statePtr->midiLayer << 7;
                 }
             } else {
                 if (ctrl > 0xa4) {
                     value = inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff;
-                } else if (state == 0) {
+                } else if (statePtr == NULL) {
                     value = 0;
                 } else {
                     u32 hi = synthRealTimeHi -
-                             ((u32)(synthRealTimeLo < *(u32 *)(state + 0x94)) +
-                              *(u32 *)(state + 0x90));
-                    u32 lo = synthRealTimeLo - *(u32 *)(state + 0x94);
+                             ((u32)(synthRealTimeLo < statePtr->startTimeLo) +
+                              statePtr->startTimeHi);
+                    u32 lo = synthRealTimeLo - statePtr->startTimeLo;
                     value = (u32)((((u64)hi << 32) | lo) >> 8);
                     if ((int)value > 0x3fff) {
                         value = 0x3fff;
                     }
-                    *(u8 *)(state + 0xa8) = 1;
+                    statePtr->unkA8[0] = 1;
                 }
             }
 
-            value = (int)(value * (*(int *)(entry + 4) >> 1)) >> 0xf;
+            value = (int)(value * (entry->scale >> 1)) >> 0xf;
             if ((int)value > 0x3fff) {
                 value = 0x3fff;
             }
-            switch (entry[1] & MCMD_INPUT_ENTRY_COMBINE_MASK) {
+            switch (entry->combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
             case MCMD_INPUT_COMBINE_SET:
                 signedMode = 0;
                 result = value;
@@ -145,19 +143,19 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u8 midiSlot
             }
         } else {
             int signedValue;
-            if (state == 0) {
+            if (statePtr == NULL) {
                 signedValue = 0;
             } else {
-                signedValue = varGet(state, 0, entry[0]);
+                signedValue = varGet(state, 0, entry->controller);
             }
 signed_input:
-            signedValue = (int)(signedValue * (*(int *)(entry + 4) >> 1)) >> 0xf;
+            signedValue = (int)(signedValue * (entry->scale >> 1)) >> 0xf;
             if (signedValue < -0x2000) {
                 signedValue = -0x2000;
             } else if (signedValue > 0x1fff) {
                 signedValue = 0x1fff;
             }
-            switch (entry[1] & MCMD_INPUT_ENTRY_COMBINE_MASK) {
+            switch (entry->combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
             case MCMD_INPUT_COMBINE_SET:
                 signedMode = 1;
                 result = signedValue + 0x2000;
@@ -214,7 +212,7 @@ signed_input:
                 break;
             }
         }
-        entry += 8;
+        entry++;
         i++;
     } while (1);
 }
@@ -229,14 +227,12 @@ signed_input:
  */
 u16 inpGetVolume(McmdVoiceState *state)
 {
-    int rawState = (int)state;
-    u32 flags = *(u32 *)(rawState + 0x214);
+    u32 flags = state->inputDirtyFlags;
     if ((flags & MCMD_INPUT_DIRTY_VOLUME) == 0) {
-        return *(u16 *)(rawState + 0x238);
+        return state->volumeInput.cachedValue;
     }
-    *(u32 *)(rawState + 0x214) = flags & ~MCMD_INPUT_DIRTY_VOLUME;
-    return _GetInputValue(state, (McmdInputSlot *)(rawState + 0x218),
-                          *(u8 *)(rawState + 0x121), *(u8 *)(rawState + 0x122));
+    state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_VOLUME;
+    return _GetInputValue(state, &state->volumeInput, state->midiSlot, state->midiEvent);
 }
 
 /*
@@ -247,12 +243,10 @@ u16 inpGetVolume(McmdVoiceState *state)
  */
 u16 inpGetPanning(McmdVoiceState *state)
 {
-    int rawState = (int)state;
-    u32 flags = *(u32 *)(rawState + 0x214);
+    u32 flags = state->inputDirtyFlags;
     if ((flags & MCMD_INPUT_DIRTY_PANNING) == 0) {
-        return *(u16 *)(rawState + 0x25c);
+        return state->panningInput.cachedValue;
     }
-    *(u32 *)(rawState + 0x214) = flags & ~MCMD_INPUT_DIRTY_PANNING;
-    return _GetInputValue(state, (McmdInputSlot *)(rawState + 0x23c),
-                          *(u8 *)(rawState + 0x121), *(u8 *)(rawState + 0x122));
+    state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_PANNING;
+    return _GetInputValue(state, &state->panningInput, state->midiSlot, state->midiEvent);
 }

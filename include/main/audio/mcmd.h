@@ -230,7 +230,7 @@ typedef struct McmdVoiceState {
             u16 exCtrlA1Limit;
         };
     };
-    u8 unk1D4[2];
+    u8 exCtrlDirty[2];
     u8 pitchBendRangeUp;
     u8 pitchBendRangeDown;
     u16 pitchBend;
