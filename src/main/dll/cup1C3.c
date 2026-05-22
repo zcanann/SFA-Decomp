@@ -534,22 +534,7 @@ void dbsh_symbol_init(int* obj)
     *(int*)(state + 0x14) = 0;
     *(s16*)(state + 0x1e) = 0;
     *(int*)(state + 0x0) = 0;
-    {
-        register u32 bitval;
-        register u32 v;
-        bitval = 0;
-        asm {
-            lbz v, 0x20(state)
-            rlwimi v, bitval, 7, 24, 24
-            stb v, 0x20(state)
-        }
-        bitval = 1;
-        asm {
-            lbz v, 0x20(state)
-            rlwimi v, bitval, 6, 25, 25
-            stb v, 0x20(state)
-        }
-    }
+    state[0x20] = (u8)((state[0x20] & ~0x80) | 0x40);
 
     *(f32*)((char*)obj + 0x10) -= lbl_803E5118;
     *(int**)((char*)obj + 0xbc) = (int*)DBSH_Symbol_SeqFn;

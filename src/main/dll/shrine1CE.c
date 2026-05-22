@@ -527,9 +527,7 @@ void dll_19B_init(u8 *obj, u8 *params) {
     *(s16*)(sub + 0xe) = 0xfa0;
     res = Resource_Acquire(0x6a, 1);
     handle = ((int(*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
-    asm {
-        sth handle, 0xc(sub)
-    }
+    *(s16*)(sub + 0xc) = (s16)handle;
     Resource_Release(res);
     *(f32*)(obj + 0x18) = *(f32*)(obj + 0xc);
     *(f32*)(obj + 0x1c) = *(f32*)(obj + 0x10);

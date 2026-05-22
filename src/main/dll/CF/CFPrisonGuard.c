@@ -323,24 +323,12 @@ void fn_80189BE4(int obj, u8 flag)
 {
     register int s = *(int *)(obj + 0x4c);
     register int t = *(int *)(obj + 0xb8);
-    register u32 b;
-    register u32 bitval;
     if (flag != 0) {
         GameBit_Set((int)*(short *)(s + 0x24), 1);
-        bitval = 1;
-        asm {
-            lbz b, 0x1d(t)
-            rlwimi b, bitval, 5, 26, 26
-            stb b, 0x1d(t)
-        }
+        *(u8 *)(t + 0x1d) |= 0x20;
     } else {
         GameBit_Set((int)*(short *)(s + 0x24), 0);
-        bitval = 0;
-        asm {
-            lbz b, 0x1d(t)
-            rlwimi b, bitval, 5, 26, 26
-            stb b, 0x1d(t)
-        }
+        *(u8 *)(t + 0x1d) &= ~0x20;
     }
 }
 #pragma scheduling reset

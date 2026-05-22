@@ -872,17 +872,13 @@ void TitleMenuItem_free(void)
 /* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */
 void TitleMenuItem_initialise(void)
 {
-    asm {
-        li r0, 0
-        lis r3, lbl_803A9DB8@ha
-        addi r3, r3, lbl_803A9DB8@l
-        stw r0, 0(r3)
-        stw r0, 4(r3)
-        stw r0, 8(r3)
-        stw r0, 0xc(r3)
-        stw r0, 0x10(r3)
-        stw r0, 0x14(r3)
-    }
+    u32* slots = (u32*)lbl_803A9DB8;
+    slots[0] = 0;
+    slots[1] = 0;
+    slots[2] = 0;
+    slots[3] = 0;
+    slots[4] = 0;
+    slots[5] = 0;
 }
 
 /* Drift-recovery: add new fns with v1.0 names. */

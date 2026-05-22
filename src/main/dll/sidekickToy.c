@@ -1737,9 +1737,7 @@ f32 fn_8014C5D0(register int obj) {
     register u16 a;
     register int* state;
     u16 b;
-    asm {
-        lwz state, 0xb8(obj)
-    }
+    state = *(int**)(obj + 0xb8);
     if (state == NULL) return lbl_803E2574;
     a = *(u16*)((char*)state + 690);
     if (a != 0) {

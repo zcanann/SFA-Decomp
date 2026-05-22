@@ -1350,13 +1350,7 @@ int SB_Galleon_func0E(int *obj) {
     register s8 *p = (s8*)((int**)obj)[0xb8/4];
     int x, y;
     if (p[0x29] == 1) {
-        register u8 raw;
-        register int signedRaw;
-        asm {
-            lbz raw, 0x7c(p)
-            extsb signedRaw, raw
-        }
-        x = signedRaw;
+        x = p[0x7c];
         if (x >= 5) {
             y = x - 5;
         } else {

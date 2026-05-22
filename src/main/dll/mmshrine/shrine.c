@@ -385,9 +385,7 @@ void mmsh_waterspike_init(int obj, s16 *def) {
     *(int *)((char *)obj + 0xF4) = 0;
     packedEventIds = (u32)(u16)*(s16 *)((char *)def + 0x1C) << 16;
     lowEventId = (u32)(u16)*(s16 *)((char *)def + 0x1A);
-    asm {
-        or packedEventIds, packedEventIds, lowEventId
-    }
+    packedEventIds |= lowEventId;
     *(u32 *)((char *)obj + 0xF8) = packedEventIds;
 }
 #pragma peephole reset
