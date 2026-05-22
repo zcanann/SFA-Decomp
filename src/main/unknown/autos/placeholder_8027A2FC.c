@@ -19,27 +19,28 @@ extern u8 voiceDirectSlots[];
  */
 void voiceUnregister(int obj)
 {
-    u32 a;
-    u8 b;
-    u8 c;
+    u32 voiceId;
+    u32 midiSlot;
+    u32 midiChannel;
     u8 key;
     u8 *slot;
+    u32 baseAddr;
 
-    a = *(u32 *)(obj + 0xf4);
-    if (a == 0xffffffff) return;
-    b = *(u8 *)(obj + 0x121);
-    if (b == 0xff) return;
-    c = *(u8 *)(obj + 0x122);
-    key = (u8)a;
-    if (c == 0xff) {
-        u8 *base = voiceDirectSlots;
-        slot = base + key;
+    voiceId = *(u32 *)(obj + 0xf4);
+    if (voiceId == 0xffffffff) return;
+    midiSlot = *(u8 *)(obj + 0x121);
+    if (midiSlot == 0xff) return;
+    midiChannel = *(u8 *)(obj + 0x122);
+    key = (u8)voiceId;
+    if (midiChannel == 0xff) {
+        baseAddr = (u32)voiceDirectSlots;
+        slot = (u8 *)(baseAddr + key);
         if (*slot != key) return;
         *slot = 0xff;
     } else {
-        u8 *base = voiceMidiKeySlots;
-        slot = base + c * 16 + b;
-        if (*slot != key) return;
+        baseAddr = (u32)voiceMidiKeySlots;
+        slot = (u8 *)(baseAddr + (midiChannel << 4) + midiSlot);
+        if (key != *slot) return;
         *slot = 0xff;
     }
 }
