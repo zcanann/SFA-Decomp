@@ -1753,80 +1753,40 @@ void expgfx_free2(u32 sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-asm void expgfx_free(u32 sourceId)
+void expgfx_free(u32 sourceId)
 {
-  nofralloc
-  stwu r1,-0x40(r1)
-  mflr r0
-  stw r0,0x44(r1)
-  addi r11,r1,0x40
-  bl _savegpr_21
-  mr r23,r3
-  lis r3,gExpgfxRuntimeData@ha
-  addi r31,r3,gExpgfxRuntimeData@l
-  cmplwi r23,0
-  beq expgfx_free_done
-  li r25,0
-  addi r30,r31,0x1200
-  addi r29,r31,0xed0
-  addi r28,r31,0x1070
-  lis r3,gExpgfxStaticPoolSlotTypeIds@ha
-  addi r27,r3,gExpgfxStaticPoolSlotTypeIds@l
-  lis r3,gExpgfxStaticPoolFrameFlags@ha
-  addi r26,r3,gExpgfxStaticPoolFrameFlags@l
-expgfx_free_poolLoop:
-  lwz r24,0(r30)
-  lwz r0,0(r29)
-  cmplw r23,r0
-  bne expgfx_free_nextPool
-  li r21,0
-  li r22,-1
-expgfx_free_slotLoop:
-  cmplwi r24,0
-  beq expgfx_free_afterSlot
-  lbz r0,0x8a(r24)
-  rlwinm r0,r0,31,25,31
-  slwi r0,r0,4
-  add r3,r31,r0
-  lwz r0,0x980(r3)
-  cmplw r0,r23
-  bne expgfx_free_afterSlot
-  lwz r3,0(r30)
-  mr r4,r25
-  mr r5,r21
-  li r6,0
-  li r7,1
-  bl expgfxRemove
-expgfx_free_afterSlot:
-  addi r24,r24,0xa0
-  lbz r0,0(r28)
-  extsb r0,r0
-  cmpwi r0,0
-  bne expgfx_free_nextSlot
-  sth r22,0(r27)
-expgfx_free_nextSlot:
-  addi r21,r21,1
-  cmpwi r21,0x19
-  blt expgfx_free_slotLoop
-  li r0,0
-  stw r0,0(r29)
-  stb r0,0(r26)
-expgfx_free_nextPool:
-  addi r30,r30,4
-  addi r29,r29,4
-  addi r28,r28,1
-  addi r27,r27,2
-  addi r26,r26,1
-  addi r25,r25,1
-  cmpwi r25,0x50
-  blt expgfx_free_poolLoop
-expgfx_free_done:
-  addi r11,r1,0x40
-  bl _restgpr_21
-  lwz r0,0x44(r1)
-  mtlr r0
-  addi r1,r1,0x40
-  blr
+  ExpgfxSlot *slot;
+  u32 *poolSourceIds;
+  u32 *slotPoolBases;
+  s8 *poolActiveCounts;
+  int poolIndex;
+  int slotIndex;
+
+  if (sourceId == 0) {
+    return;
+  }
+
+  poolSourceIds = (u32 *)&gExpgfxPoolSourceIds;
+  slotPoolBases = gExpgfxSlotPoolBases;
+  poolActiveCounts = (s8 *)&gExpgfxPoolActiveCounts;
+
+  for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
+    if (poolSourceIds[poolIndex] == sourceId) {
+      slot = (ExpgfxSlot *)slotPoolBases[poolIndex];
+      for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
+        if ((slot != NULL) &&
+            (Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot))->key0 == sourceId)) {
+          expgfxRemove(slotPoolBases[poolIndex], poolIndex, slotIndex, 0, 1);
+        }
+        slot = (ExpgfxSlot *)((u8 *)slot + EXPGFX_SLOT_SIZE);
+        if (poolActiveCounts[poolIndex] == 0) {
+          gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
+        }
+      }
+      poolSourceIds[poolIndex] = 0;
+      gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
+    }
+  }
 }
 
 /*
