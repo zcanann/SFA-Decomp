@@ -239,21 +239,10 @@ void voiceKill(u32 voice)
     SynthVoiceState *voiceState = SYNTH_VOICE_STATE(voice);
 
     if (voiceState->activeHandle != 0) {
-        register SynthVoiceState *stateReg = voiceState;
         vidRemoveVoice((int)voiceState);
-        asm {
-            lwz r5, 0x118(stateReg)
-            li r0, -4
-            lwz r4, 0x114(stateReg)
-            li r3, -1
-            and r0, r5, r0
-            stw r0, 0x118(stateReg)
-            and r3, r4, r3
-            li r0, 0
-            stw r3, 0x114(stateReg)
-            mr r3, stateReg
-            stw r0, 0x110(stateReg)
-        }
+        voiceState->stateFlags &= ~3;
+        voiceState->dirtyFlags = voiceState->dirtyFlags;
+        voiceState->priorityTick = 0;
         voiceFree((int)voiceState);
     }
     if (voiceState->callbackActive != 0) {
@@ -285,21 +274,10 @@ int voiceKillById(u32 id)
             u32 chain = voiceState->nextHandle;
             if (id == voiceState->handle) {
                 if (voiceState->activeHandle != 0) {
-                    register SynthVoiceState *stateReg = voiceState;
                     vidRemoveVoice((int)voiceState);
-                    asm {
-                        lwz r5, 0x118(stateReg)
-                        li r0, -4
-                        lwz r4, 0x114(stateReg)
-                        li r3, -1
-                        and r0, r5, r0
-                        stw r0, 0x118(stateReg)
-                        and r3, r4, r3
-                        li r0, 0
-                        stw r3, 0x114(stateReg)
-                        mr r3, stateReg
-                        stw r0, 0x110(stateReg)
-                    }
+                    voiceState->stateFlags &= ~3;
+                    voiceState->dirtyFlags = voiceState->dirtyFlags;
+                    voiceState->priorityTick = 0;
                     voiceFree((int)voiceState);
                 }
                 if (voiceState->callbackActive != 0) {
