@@ -356,7 +356,7 @@ void SB_ShipGun_init(int obj)
 #pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
-int SB_CannonBall_getExtraSize(void) { return 0x24; }
+int SB_CannonBall_getExtraSize(void) { return SB_CANNONBALL_EXTRA_SIZE; }
 int SB_CannonBall_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
@@ -375,7 +375,7 @@ void SB_CannonBall_free(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-int SB_FireBall_getExtraSize(void) { return 0x18; }
+int SB_FireBall_getExtraSize(void) { return SB_FIREBALL_EXTRA_SIZE; }
 int SB_FireBall_getObjectTypeId(void) { return 0x0; }
 
 void SB_FireBall_free(int obj)
@@ -403,22 +403,22 @@ extern void fn_80098928(int *obj, f32 f, int a, int b, int c, int d);
 #pragma peephole off
 void SB_CannonBall_update(int *obj) {
     int *state = *(int **)((char *)obj + 0xb8);
-    if ((*(s8 *)((char *)state + 0x1a) & 2) != 0) {
-        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, 170, 0, 1, -1, 0);
-        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, 170, 0, 1, -1, 0);
-        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, 170, 0, 1, -1, 0);
-        *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) & ~2);
+    if ((*(s8 *)((char *)state + 0x1a) & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0) {
+        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_BURST_PARTICLE_ID, 0, 1, -1, 0);
+        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_BURST_PARTICLE_ID, 0, 1, -1, 0);
+        (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_BURST_PARTICLE_ID, 0, 1, -1, 0);
+        *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) & ~SB_CANNONBALL_INITIAL_BURST_FLAG);
     } else {
-        fn_80098928(obj, lbl_803E58BC, 4, 389, 5, 0);
-        fn_80098928(obj, lbl_803E58BC, 4, 389, 5, 0);
+        fn_80098928(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
+        fn_80098928(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
     }
-    (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, 169, 0, 1, -1, 0);
-    *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + 4000;
-    if ((*(s8 *)((char *)state + 0x1a) & 1) == 0) {
+    (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_TRAIL_PARTICLE_ID, 0, 1, -1, 0);
+    *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + SB_CANNONBALL_ROTATION_STEP;
+    if ((*(s8 *)((char *)state + 0x1a) & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0) {
         *(f32 *)state = *(f32 *)((char *)obj + 0x24);
         *(f32 *)((char *)state + 4) = *(f32 *)((char *)obj + 0x28);
         *(f32 *)((char *)state + 8) = *(f32 *)((char *)obj + 0x2c);
-        *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) | 1);
+        *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) | SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG);
         *(f32 *)((char *)state + 0xc) = *(f32 *)((char *)obj + 0xc);
         *(f32 *)((char *)state + 0x10) = *(f32 *)((char *)obj + 0x10);
         *(f32 *)((char *)state + 0x14) = *(f32 *)((char *)obj + 0x14);
@@ -436,16 +436,16 @@ void SB_CannonBall_update(int *obj) {
     if (*(int *)((char *)obj + 0xf4) < 0) {
         Obj_FreeObject(obj);
     }
-    if (*(s16 *)((char *)state + 0x18) > 15) {
+    if (*(s16 *)((char *)state + 0x18) > SB_CANNONBALL_HITBOX_ENABLE_DELAY) {
         int *p = *(int **)((char *)obj + 0x54);
-        *(u8 *)((char *)p + 0x6e) = 5;
-        *(u8 *)((char *)p + 0x6f) = 1;
-        *(int *)((char *)p + 0x48) = 16;
-        *(int *)((char *)p + 0x4c) = 16;
-        *(s16 *)((char *)p + 0x60) = *(s16 *)((char *)p + 0x60) | 1;
+        *(u8 *)((char *)p + 0x6e) = SB_CANNONBALL_HITBOX_TYPE;
+        *(u8 *)((char *)p + 0x6f) = SB_CANNONBALL_HITBOX_PRIORITY;
+        *(int *)((char *)p + 0x48) = SB_CANNONBALL_HITBOX_SIZE;
+        *(int *)((char *)p + 0x4c) = SB_CANNONBALL_HITBOX_SIZE;
+        *(s16 *)((char *)p + 0x60) = *(s16 *)((char *)p + 0x60) | SB_CANNONBALL_SOLID_HITBOX_FLAG;
     } else {
         int *p = *(int **)((char *)obj + 0x54);
-        *(s16 *)((char *)p + 0x60) = *(s16 *)((char *)p + 0x60) & ~1;
+        *(s16 *)((char *)p + 0x60) = *(s16 *)((char *)p + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
     }
     *(s16 *)((char *)state + 0x18) = *(s16 *)((char *)state + 0x18) + framesThisStep;
 }
@@ -474,32 +474,32 @@ void SB_CannonBall_hitDetect(int *obj) {
         s16 type;
         if (target == NULL) return;
         type = *(s16 *)((char *)target + 0x46);
-        if (type == 281) return;
-        if (type == 275) return;
+        if (type == SB_CANNONBALL_IGNORE_OBJECT_TYPE_119) return;
+        if (type == SB_CANNONBALL_IGNORE_OBJECT_TYPE_113) return;
     }
 
     if (zero != t) return;
 
-    Sfx_PlayFromObject(obj, 797);
+    Sfx_PlayFromObject(obj, SB_CANNONBALL_IMPACT_SFX);
     {
         int *p = *(int **)((char *)obj + 0x54);
-        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~1);
+        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
     *(f32 *)((char *)state + 0x1c) = lbl_803E58B8;
-    *(u8 *)((char *)obj + 0x36) = 25;
+    *(u8 *)((char *)obj + 0x36) = SB_CANNONBALL_IMPACT_VISUAL_TIMER;
 
     {
         int i;
-        for (i = 50; i != 0; i--) {
+        for (i = SB_CANNONBALL_SMOKE_PARTICLE_COUNT; i != 0; i--) {
             (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
-                obj, 167, 0, 1, -1, 0);
+                obj, SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID, 0, 1, -1, 0);
         }
     }
     {
         int i;
-        for (i = 10; i != 0; i--) {
+        for (i = SB_CANNONBALL_SPARK_PARTICLE_COUNT; i != 0; i--) {
             (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
-                obj, 171, 0, 1, -1, 0);
+                obj, SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID, 0, 1, -1, 0);
         }
     }
 }
@@ -519,22 +519,22 @@ extern f32 lbl_803E58D0;
 void SB_CannonBall_init(int *obj) {
     int *state = *(int **)((char *)obj + 0xb8);
     if (*(u8 **)((char *)state + 0x20) == NULL) {
-        *(u8 **)((char *)state + 0x20) = objCreateLight(obj, 1);
+        *(u8 **)((char *)state + 0x20) = objCreateLight(obj, SB_CANNONBALL_LIGHT_KIND);
         if (*(u8 **)((char *)state + 0x20) != NULL) {
-            modelLightStruct_setField50(*(u8 **)((char *)state + 0x20), 2);
-            modelLightStruct_setColorsA8AC(*(u8 **)((char *)state + 0x20), 200, 60, 0, 0);
-            lightSetFieldBC_8001db14(*(u8 **)((char *)state + 0x20), 1);
+            modelLightStruct_setField50(*(u8 **)((char *)state + 0x20), SB_CANNONBALL_LIGHT_FIELD50);
+            modelLightStruct_setColorsA8AC(*(u8 **)((char *)state + 0x20), SB_CANNONBALL_LIGHT_RED, SB_CANNONBALL_LIGHT_GREEN, SB_CANNONBALL_LIGHT_BLUE, SB_CANNONBALL_LIGHT_ALPHA);
+            lightSetFieldBC_8001db14(*(u8 **)((char *)state + 0x20), SB_CANNONBALL_LIGHT_FIELD_BC);
             lightDistAttenFn_8001dc38(*(u8 **)((char *)state + 0x20), lbl_803E58C8, lbl_803E58CC);
         }
     }
     {
         int *p = *(int **)((char *)obj + 0x54);
-        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~1);
+        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
     *(f32 *)((char *)obj + 0x8) = *(f32 *)((char *)obj + 0x8) * lbl_803E58D0;
-    *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) | 2);
-    Sfx_PlayFromObject(obj, 53);
-    Sfx_PlayFromObject(obj, 714);
+    *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) | SB_CANNONBALL_INITIAL_BURST_FLAG);
+    Sfx_PlayFromObject(obj, SB_CANNONBALL_LAUNCH_SFX);
+    Sfx_PlayFromObject(obj, SB_CANNONBALL_LOOP_SFX);
 }
 #pragma peephole reset
 #pragma scheduling reset
