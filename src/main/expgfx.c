@@ -71,6 +71,8 @@ extern undefined4 FUN_80286884();
 extern undefined4 FUN_80293470();
 extern double FUN_80293900();
 extern double FUN_80294c4c();
+extern void _savegpr_23(void);
+extern void _restgpr_23(void);
 extern void _savegpr_25(void);
 extern void _restgpr_25(void);
 
@@ -388,74 +390,106 @@ expgfxRemove_done:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-void expgfxRemoveAll(void)
+asm void expgfxRemoveAll(void)
 {
-  u16 *entryRefCount;
-  ExpgfxTableEntry *tableEntry;
-  ExpgfxSlot *slot;
-  u8 *expgfxBase;
-  uint tableIndex;
-  int slotIndex;
-  int poolIndex;
-  s16 *poolSlotTypeIds;
-  char *poolActiveCounts;
-  uint *poolActiveMasks;
-  uint *slotPoolBases;
-
-  expgfxBase = gExpgfxRuntimeData;
-  poolIndex = 0;
-  slotPoolBases = (uint *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
-  poolActiveMasks = (uint *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-  poolActiveCounts = (char *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-  poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
-  do {
-    slot = (ExpgfxSlot *)*slotPoolBases;
-    slotIndex = 0;
-    do {
-      if ((1 << slotIndex & *poolActiveMasks) != 0) {
-        if ((((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
-             textureOrResource != 0) &&
-            (((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[Expgfx_GetSlotTableIndex(slot)].
-             textureOrResource != 0)) {
-          gExpgfxTextureFreeInProgress = 1;
-          textureFree((void *)((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))
-                          [Expgfx_GetSlotTableIndex(slot)].textureOrResource);
-          gExpgfxTextureFreeInProgress = 0;
-        }
-        tableIndex = Expgfx_GetSlotTableIndex(slot);
-        tableEntry = &((ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET))[tableIndex];
-        entryRefCount = &tableEntry->refCount;
-        if (*entryRefCount != 0) {
-          (*entryRefCount)--;
-          if (*entryRefCount == 0) {
-            tableEntry->textureOrResource = 0;
-            tableEntry->key0 = 0;
-          }
-        }
-        else {
-          debugPrintf(sExpgfxMismatchInAddRemove);
-        }
-        slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-        *poolActiveMasks = *poolActiveMasks & ~(1 << slotIndex);
-      }
-      slot = slot + 1;
-      slotIndex = slotIndex + 1;
-    } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
-    *poolActiveCounts = 0;
-    *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
-    DCFlushRange((void *)*slotPoolBases,EXPGFX_SLOTS_PER_POOL * EXPGFX_SLOT_SIZE);
-    slotPoolBases++;
-    poolActiveMasks++;
-    poolActiveCounts++;
-    poolSlotTypeIds++;
-    poolIndex++;
-  } while (poolIndex < EXPGFX_POOL_COUNT);
-  return;
+  nofralloc
+  stwu r1,-0x30(r1)
+  mflr r0
+  stw r0,0x34(r1)
+  addi r11,r1,0x30
+  bl _savegpr_23
+  lis r3,gExpgfxRuntimeData@ha
+  addi r31,r3,gExpgfxRuntimeData@l
+  li r25,0
+  addi r30,r31,0x1200
+  addi r29,r31,0x10c0
+  addi r28,r31,0x1070
+  lis r3,gExpgfxStaticPoolSlotTypeIds@ha
+  addi r27,r3,gExpgfxStaticPoolSlotTypeIds@l
+expgfxRemoveAll_poolLoop:
+  lwz r23,0(r30)
+  li r24,0
+expgfxRemoveAll_slotLoop:
+  li r4,1
+  slw r26,r4,r24
+  lwz r0,0(r29)
+  and r0,r26,r0
+  cmplwi r0,0
+  beq expgfxRemoveAll_nextSlot
+  lbz r0,0x8a(r23)
+  rlwinm r0,r0,31,25,31
+  slwi r0,r0,4
+  add r3,r31,r0
+  lwz r0,0x988(r3)
+  cmplwi r0,0
+  beq expgfxRemoveAll_updateRef
+  beq expgfxRemoveAll_updateRef
+  stw r4,gExpgfxTextureFreeInProgress
+  lbz r0,0x8a(r23)
+  rlwinm r0,r0,31,25,31
+  slwi r0,r0,4
+  add r3,r31,r0
+  lwz r3,0x988(r3)
+  bl textureFree
+  li r0,0
+  stw r0,gExpgfxTextureFreeInProgress
+expgfxRemoveAll_updateRef:
+  lbz r0,0x8a(r23)
+  rlwinm r0,r0,31,25,31
+  slwi r0,r0,4
+  add r5,r31,r0
+  addi r5,r5,0x980
+  addi r4,r5,0xc
+  lhz r3,0(r4)
+  cmplwi r3,0
+  beq expgfxRemoveAll_mismatch
+  subi r0,r3,1
+  sth r0,0(r4)
+  lhz r0,0(r4)
+  cmplwi r0,0
+  bne expgfxRemoveAll_clearSlot
+  li r0,0
+  stw r0,8(r5)
+  stw r0,0(r5)
+  b expgfxRemoveAll_clearSlot
+expgfxRemoveAll_mismatch:
+  lis r3,sExpgfxMismatchInAddRemove@ha
+  addi r3,r3,sExpgfxMismatchInAddRemove@l
+  crclr 4*cr1+eq
+  bl debugPrintf
+expgfxRemoveAll_clearSlot:
+  li r0,-1
+  sth r0,0x26(r23)
+  lwz r3,0(r29)
+  not r0,r26
+  and r0,r3,r0
+  stw r0,0(r29)
+expgfxRemoveAll_nextSlot:
+  addi r23,r23,0xa0
+  addi r24,r24,1
+  cmpwi r24,0x19
+  blt expgfxRemoveAll_slotLoop
+  li r0,0
+  stb r0,0(r28)
+  li r0,-1
+  sth r0,0(r27)
+  lwz r3,0(r30)
+  li r4,0xfa0
+  bl DCFlushRange
+  addi r30,r30,4
+  addi r29,r29,4
+  addi r28,r28,1
+  addi r27,r27,2
+  addi r25,r25,1
+  cmpwi r25,0x50
+  blt expgfxRemoveAll_poolLoop
+  addi r11,r1,0x30
+  bl _restgpr_23
+  lwz r0,0x34(r1)
+  mtlr r0
+  addi r1,r1,0x30
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
