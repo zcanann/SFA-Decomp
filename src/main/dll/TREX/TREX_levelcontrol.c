@@ -458,10 +458,11 @@ extern f32 lbl_803E58B8;
 void SB_CannonBall_hitDetect(int *obj) {
     int *state = *(int **)((char *)obj + 0xb8);
     f32 t = *(f32 *)((char *)state + 0x1c);
+    f32 zero = lbl_803E58B4;
 
-    if (t > lbl_803E58B4) {
+    if (t > zero) {
         *(f32 *)((char *)state + 0x1c) = t - timeDelta;
-        if (*(f32 *)((char *)state + 0x1c) <= lbl_803E58B4) {
+        if (*(f32 *)((char *)state + 0x1c) <= zero) {
             Obj_FreeObject(obj);
         }
         return;
@@ -477,7 +478,7 @@ void SB_CannonBall_hitDetect(int *obj) {
         if (type == 275) return;
     }
 
-    if (lbl_803E58B4 != t) return;
+    if (zero != t) return;
 
     Sfx_PlayFromObject(obj, 797);
     {
