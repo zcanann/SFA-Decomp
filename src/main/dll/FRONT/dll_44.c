@@ -22,69 +22,68 @@ int AttractMovie_AssignBuffers(void *movieOrReadBuffer, void *yTextureBuffer,
                                void *uTextureBuffer, void *vTextureBuffer, void *audioBuffer,
                                void *thpWorkBuffer)
 {
-    u8 *base;
-    u8 *base2;
-    int curr;
-    u32 align1;
-    u32 align2;
+    AttractMoviePlayer *player;
+    AttractMovieReadBuffer *readBuffer;
+    AttractMovieTextureSet *textureSet;
+    AttractMovieAudioBuffer *audioBuf;
+    u8 *curr;
+    u32 frameBufferSize;
+    u32 yTextureSize;
+    u32 uvTextureSize;
     u32 i;
 
-    base = (u8 *)&lbl_803A5D60;
-    if (*(int *)(base + 0x98) == 0) goto fail;
-    if (*(u8 *)(base + 0x9c) != 0) goto fail;
+    player = &lbl_803A5D60;
+    if (player->isOpen == 0) goto fail;
+    if (player->state != 0) goto fail;
 
-    if (*(int *)(base + 0xa8) != 0) {
-        *(void **)(base + 0xac) = movieOrReadBuffer;
-        curr = (int)movieOrReadBuffer + *(int *)(base + 0x58);
+    if (player->isOnMemory != 0) {
+        player->movieData = movieOrReadBuffer;
+        curr = (u8 *)movieOrReadBuffer + player->header.mMovieDataSize;
     } else {
-        *(void **)(base + 0xf4) = movieOrReadBuffer;
-        *(int *)(base + 0xfc) = (int)movieOrReadBuffer + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-        *(int *)(base + 0x104) = *(int *)(base + 0xfc) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-        *(int *)(base + 0x10c) = *(int *)(base + 0x104) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-        *(int *)(base + 0x114) = *(int *)(base + 0x10c) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-        *(int *)(base + 0x11c) = *(int *)(base + 0x114) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-        *(int *)(base + 0x124) = *(int *)(base + 0x11c) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-        *(int *)(base + 0x12c) = *(int *)(base + 0x124) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-        *(int *)(base + 0x134) = *(int *)(base + 0x12c) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-        *(int *)(base + 0x13c) = *(int *)(base + 0x134) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-        curr = *(int *)(base + 0x13c) + ((*(int *)(base + 0x44) + 0x1f) & ~0x1f);
-    }
-
-    base2 = (u8 *)&lbl_803A5D60;
-    align1 = (*(int *)(base2 + 0x80) * *(int *)(base2 + 0x84) + 0x1f) & ~0x1f;
-    align2 = ((u32)(*(int *)(base2 + 0x80) * *(int *)(base2 + 0x84)) >> 2) + 0x1f & ~0x1f;
-    i = 0;
-    do {
-        *(void **)(base2 + 0x144) = yTextureBuffer;
-        DCInvalidateRange((void *)curr, align1);
-        *(void **)(base2 + 0x148) = uTextureBuffer;
-        DCInvalidateRange((void *)curr, align2);
-        *(void **)(base2 + 0x14c) = vTextureBuffer;
-        DCInvalidateRange((void *)curr, align2);
-        curr += align2;
-        base2 += 0x10;
-        i++;
-    } while (i < 3);
-
-    base = (u8 *)&lbl_803A5D60;
-    if (*(u8 *)(base + 0x9f) != 0) {
-        *(void **)(base + 0x174) = audioBuffer;
-        *(void **)(base + 0x178) = audioBuffer;
-        *(int *)(base + 0x17c) = 0;
-        {
-            int sz = (*(int *)(base + 0x48) * 4 + 0x1f) & ~0x1f;
-            int p2 = (int)audioBuffer + sz;
-            *(int *)(base + 0x184) = p2;
-            *(int *)(base + 0x188) = p2;
-            *(int *)(base + 0x18c) = 0;
-            p2 += sz;
-            *(int *)(base + 0x194) = p2;
-            *(int *)(base + 0x198) = p2;
-            *(int *)(base + 0x19c) = 0;
+        readBuffer = player->readBuffer;
+        curr = movieOrReadBuffer;
+        for (i = 0; i < 10; i++) {
+            readBuffer[i].ptr = curr;
+            frameBufferSize = ALIGN_NEXT_32(player->header.mBufferSize);
+            curr += frameBufferSize;
         }
     }
 
-    *(void **)((u8 *)&lbl_803A5D60 + 0x94) = thpWorkBuffer;
+    player = &lbl_803A5D60;
+    yTextureSize = ALIGN_NEXT_32(player->videoInfo.xSize * player->videoInfo.ySize);
+    uvTextureSize = ALIGN_NEXT_32((player->videoInfo.xSize * player->videoInfo.ySize) >> 2);
+    textureSet = player->textureSet;
+    for (i = 0; i < 3; i++) {
+        textureSet->yTexture = yTextureBuffer;
+        DCInvalidateRange(curr, yTextureSize);
+        textureSet->uTexture = uTextureBuffer;
+        DCInvalidateRange(curr, uvTextureSize);
+        textureSet->vTexture = vTextureBuffer;
+        DCInvalidateRange(curr, uvTextureSize);
+        curr += uvTextureSize;
+        textureSet++;
+    }
+
+    player = &lbl_803A5D60;
+    if (player->audioExists != 0) {
+        audioBuf = player->audioBuffer;
+        audioBuf[0].buffer = audioBuffer;
+        audioBuf[0].curPtr = audioBuffer;
+        audioBuf[0].validSample = 0;
+        {
+            u32 audioBufferSize = ALIGN_NEXT_32(player->header.mAudioMaxSamples * 4);
+            s16 *nextAudioBuffer = (s16 *)((u8 *)audioBuffer + audioBufferSize);
+            audioBuf[1].buffer = nextAudioBuffer;
+            audioBuf[1].curPtr = nextAudioBuffer;
+            audioBuf[1].validSample = 0;
+            nextAudioBuffer = (s16 *)((u8 *)nextAudioBuffer + audioBufferSize);
+            audioBuf[2].buffer = nextAudioBuffer;
+            audioBuf[2].curPtr = nextAudioBuffer;
+            audioBuf[2].validSample = 0;
+        }
+    }
+
+    lbl_803A5D60.thpWorkArea = thpWorkBuffer;
     return 1;
 
 fail:
