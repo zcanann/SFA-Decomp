@@ -14,13 +14,30 @@
 #define SYNTH_VOICE_STATE_FLAGS_OFFSET 0x118
 #define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET 0x11C
 #define SYNTH_VOICE_MIDI_SLOT_OFFSET 0x121
-#define SYNTH_VOICE_MIDI_KEY_OFFSET 0x122
+#define SYNTH_VOICE_MIDI_CHANNEL_OFFSET 0x122
 
 typedef struct VoiceIdSlot {
     u8 prev;
     u8 next;
     u16 active;
 } VoiceIdSlot;
+
+typedef struct SynthVoiceState {
+    u8 pad00[0x34];
+    u32 activeHandle;
+    u8 pad38[0xec - 0x38];
+    u32 nextHandle;
+    u8 padf0[0xf4 - 0xf0];
+    u32 handle;
+    u8 padf8[0x110 - 0xf8];
+    u32 priorityTick;
+    u32 dirtyFlags;
+    u32 stateFlags;
+    u8 callbackActive;
+    u8 pad11d[0x121 - 0x11d];
+    u8 midiSlot;
+    u8 midiChannel;
+} SynthVoiceState;
 
 void voiceInitPriorityTables(void);
 void voiceBreakAndFree(u32 voice);

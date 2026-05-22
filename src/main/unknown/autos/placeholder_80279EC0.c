@@ -20,23 +20,6 @@ extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
 
-typedef struct SynthVoiceState {
-    u8 pad00[0x34];
-    u32 activeHandle;
-    u8 pad38[0xec - 0x38];
-    u32 nextHandle;
-    u8 padf0[0xf4 - 0xf0];
-    u32 handle;
-    u8 padf8[0x110 - 0xf8];
-    u32 priorityTick;
-    u32 dirtyFlags;
-    u32 stateFlags;
-    u8 callbackActive;
-    u8 pad11d[0x121 - 0x11d];
-    u8 midiSlot;
-    u8 midiKey;
-} SynthVoiceState;
-
 #define voicePriorityLinks (vidListNodes + 0x8c0)
 #define voicePriorityGroupHeads (vidListNodes + 0x9c0)
 #define voiceFreeListSlots (vidListNodes + 0xec0)
@@ -348,7 +331,7 @@ int voiceIsRegistered(int state)
     if (voice == SYNTH_INVALID_VOICE) goto fail;
     a = voiceState->midiSlot;
     if (a == SYNTH_INVALID_VOICE_U8) goto fail;
-    b = voiceState->midiKey;
+    b = voiceState->midiChannel;
     v = (u8)voice;
     if (b == SYNTH_INVALID_VOICE_U8) {
         if (voiceDirectSlots[v] == v) return 1;
@@ -374,7 +357,7 @@ void voiceRegister(int state)
     if (voice == SYNTH_INVALID_VOICE) return;
     a = voiceState->midiSlot;
     if (a == SYNTH_INVALID_VOICE_U8) return;
-    b = voiceState->midiKey;
+    b = voiceState->midiChannel;
     v = (u8)voice;
     if (b == SYNTH_INVALID_VOICE_U8) {
         voiceDirectSlots[v] = v;

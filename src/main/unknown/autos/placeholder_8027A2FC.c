@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027A2FC.h"
+#include "main/unknown/autos/placeholder_80279EC0.h"
 
 extern u8 voiceMidiKeySlots[];
 extern u8 voiceDirectSlots[];
@@ -26,11 +27,11 @@ void voiceUnregister(int obj)
     u8 *slot;
     u32 baseAddr;
 
-    voiceId = *(u32 *)(obj + 0xf4);
+    voiceId = *(u32 *)(obj + SYNTH_VOICE_HANDLE_OFFSET);
     if (voiceId == 0xffffffff) return;
-    midiSlot = *(u8 *)(obj + 0x121);
+    midiSlot = *(u8 *)(obj + SYNTH_VOICE_MIDI_SLOT_OFFSET);
     if (midiSlot == 0xff) return;
-    midiChannel = *(u8 *)(obj + 0x122);
+    midiChannel = *(u8 *)(obj + SYNTH_VOICE_MIDI_CHANNEL_OFFSET);
     key = (u8)voiceId;
     if (midiChannel == 0xff) {
         baseAddr = (u32)voiceDirectSlots;
