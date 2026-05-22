@@ -424,12 +424,13 @@ void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 #pragma peephole reset
 
 /* Stubs to align function set with v1.0 asm. */
-void dll_19D_update(void) {}
-
 extern u8 framesThisStep;
+extern f32 timeDelta;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
+extern void ObjHits_ClearHitVolumes(int obj);
+extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern int Resource_Acquire(int id, int mode);
 extern void Resource_Release(int handle);
@@ -646,6 +647,93 @@ void dll_19D_hitDetect(int obj)
     (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
     (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
     *(short *)(state + 0x32) = 0x32;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * Function: dll_19D_update
+ * EN v1.0 Address: 0x801CCB44
+ * EN v1.0 Size: 904b
+ */
+#pragma scheduling off
+#pragma peephole off
+void dll_19D_update(int obj)
+{
+    register int self = obj;
+    register int state = *(int *)(self + 0xb8);
+    int def = *(int *)(self + 0x4c);
+    int linkObj;
+    float vec[6];
+    s16 timer;
+    int lifetime;
+
+    vec[3] = lbl_803E51B8;
+    vec[4] = lbl_803E51B8;
+    vec[5] = lbl_803E51B8;
+    vec[2] = (float)(int)(s8)*(u8 *)(def + 0x19);
+
+    if ((*(u8 *)(state + 0x36) & 1) == 0) {
+        *(f32 *)(state + 0x8) = *(f32 *)(self + 0xc);
+        *(f32 *)(state + 0xc) = *(f32 *)(self + 0x10);
+        *(f32 *)(state + 0x10) = *(f32 *)(self + 0x14);
+        *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 1);
+    }
+
+    linkObj = *(int *)(self + 0x54);
+    if (*(s8 *)(linkObj + 0xad) != 0) {
+        Sfx_PlayFromObject(self, 0xb3);
+        (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+        (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+        (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
+        *(s16 *)(state + 0x32) = 0x32;
+    }
+
+    if (*(s16 *)(state + 0x32) == 0) {
+        *(f32 *)(self + 0x80) = *(f32 *)(self + 0xc);
+        *(f32 *)(self + 0x84) = *(f32 *)(self + 0x10);
+        *(f32 *)(self + 0x88) = *(f32 *)(self + 0x14);
+
+        *(s16 *)(self + 0x0) = (s16)(*(s16 *)(self + 0x0) + *(s16 *)(state + 0x2e) * (u16)framesThisStep);
+        *(s16 *)(self + 0x4) = (s16)(*(s16 *)(self + 0x4) + *(s16 *)(state + 0x2c) * (u16)framesThisStep);
+        (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29d, vec, 4, -1, 0);
+
+        timer = (s16)(*(s16 *)(state + 0x30) - (u16)framesThisStep);
+        *(s16 *)(state + 0x30) = timer;
+        if (timer < 1) {
+            (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29e, vec, 4, -1, 0);
+            (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29f, vec, 4, -1, 0);
+            (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a1, vec, 4, -1, 0);
+            *(s16 *)(state + 0x30) = 0x32;
+        }
+
+        *(f32 *)(state + 0x8) = *(f32 *)(self + 0x24) * timeDelta + *(f32 *)(state + 0x8);
+        *(f32 *)(state + 0xc) = *(f32 *)(self + 0x28) * timeDelta + *(f32 *)(state + 0xc);
+        *(f32 *)(state + 0x10) = *(f32 *)(self + 0x2c) * timeDelta + *(f32 *)(state + 0x10);
+        *(u16 *)(state + 0x34) = (u16)(*(s16 *)(state + 0x34) + (u16)framesThisStep * 0x5dc);
+        *(f32 *)(self + 0xc) = *(f32 *)(state + 0x8);
+        *(f32 *)(self + 0x10) = *(f32 *)(state + 0xc);
+        *(f32 *)(self + 0x14) = *(f32 *)(state + 0x10);
+
+        lifetime = *(int *)(self + 0xf4);
+        *(int *)(self + 0xf4) = lifetime - (u32)framesThisStep;
+        if ((int)(lifetime - (u32)framesThisStep) < 0) {
+            Obj_FreeObject(self);
+        }
+    } else {
+        if ((*(u8 *)(state + 0x36) & 2) == 0) {
+            getLActions(self, self, 1, 0, 0, 0);
+            *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 2);
+        }
+        *(f32 *)(self + 0x24) = lbl_803E51B8;
+        *(f32 *)(self + 0x28) = lbl_803E51B8;
+        *(f32 *)(self + 0x2c) = lbl_803E51B8;
+        ObjHits_ClearHitVolumes(self);
+        *(s16 *)(state + 0x32) = (s16)(*(s16 *)(state + 0x32) - 1);
+        if (*(s16 *)(state + 0x32) < 1) {
+            Obj_FreeObject(self);
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -31,7 +31,7 @@ int dll_19D_func08(void);
 void dll_19D_free(int obj);
 void dll_19D_render(void);
 void dll_19D_hitDetect(int obj);
-void dll_19D_update(void);
+void dll_19D_update(int obj);
 void dll_19D_init(int obj);
 void dll_19D_release(void);
 void dll_19D_initialise(void);
