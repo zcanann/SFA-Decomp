@@ -234,18 +234,23 @@ void levelname_update(int *obj) {
         }
         break;
     case 2:
-        *(s16*)(sub + 0x10) = (s16)(*(s16*)(sub + 0x10) + framesThisStep);
+    {
+        int timer = *(s16*)(sub + 0x10) + framesThisStep;
+        *(s16*)(sub + 0x10) = timer;
         if ((u32)*(s16*)(sub + 0x10) > (u32)*(int*)(sub + 8)) {
             sub[0x14] = 3;
         }
         *(s16*)(sub + 0x12) = (s16)((s32)(lbl_803E36E0 * fn_80293E80((lbl_803E36E4 * (f32)((s32)*(s16*)(sub + 0x10) * 0x500)) / lbl_803E36E8)) + 0xdc);
         break;
+    }
     case 3:
         *(s16*)(sub + 0x12) = (s16)(*(s16*)(sub + 0x12) - framesThisStep * 4);
         if (*(s16*)(sub + 0x12) < 0) {
             *(s16*)(sub + 0x12) = 0;
             sub[0x14] = 4;
         }
+        break;
+    case 4:
         break;
     }
 }
