@@ -8,6 +8,8 @@ extern undefined4 FUN_800723a0();
 extern void ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef *animDef);
 extern void ObjAnim_LoadMoveEvents(int objAnim,int objType,ObjAnimEventTable *eventTable,u32 moveId,
                                    int async);
+extern void _savegpr_27(void);
+extern void _restgpr_27(void);
 
 extern f64 gObjAnimU32ToDoubleBias;
 extern f64 gObjAnimS32ToDoubleBias;
@@ -1025,328 +1027,638 @@ ObjAnim_SampleRootCurvePhase_L_8002FA40:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
-int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
+asm int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
                                ObjAnimEventList *events)
 {
-  ObjAnimComponent *objAnim;
-  ObjAnimBank *bank;
-  ObjAnimDef *animDef;
-  ObjAnimState *state;
-  double dVar1;
-  char cVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  float fVar13;
-  float fVar14;
-  uint uVar15;
-  uint uVar16;
-  undefined uVar17;
-  undefined4 uVar18;
-  int iVar21;
-  int iVar23;
-  int iVar24;
-  int iVar25;
-  int iVar26;
-  float *pfVar27;
-  short *axisSamples;
-  byte eventScanFlags;
-  int iVar30;
-  double dVar31;
-  undefined8 local_48;
-  undefined8 local_38;
-  undefined8 local_30;
-  undefined8 local_20;
-  ObjAnimEventList *eventList;
-  float *rootDeltaOut;
-
-  eventList = events;
-  rootDeltaOut = (float *)events;
-  dVar31 = (double)lbl_803DE90C;
-  uVar18 = 0;
-  if ((dVar31 <= moveStepScale) &&
-     (dVar31 = moveStepScale, (double)gObjAnimProgressOne < moveStepScale)) {
-    dVar31 = (double)gObjAnimProgressOne;
-  }
-  objAnim = (ObjAnimComponent *)objAnimArg;
-  bank = ObjAnim_GetActiveBank(objAnim);
-  animDef = bank->animDef;
-  if ((animDef->moveCount != 0) &&
-     (state = bank->currentState, iVar24 = (int)state, iVar24 != 0)) {
-    state->step = (float)(dVar31 * (double)state->segmentLength);
-    if (state->eventCountdown != 0) {
-      if ((state->flags & OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP) != 0) {
-        state->savedStep = state->step;
-      }
-      state->progress =
-           (float)((double)state->savedStep * deltaTime + (double)state->progress);
-      fVar4 = gObjAnimProgressZero;
-      fVar3 = state->prevSegmentLength;
-      if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
-        if (state->progress < gObjAnimProgressZero) {
-          while (state->progress < fVar4) {
-            state->progress = state->progress + fVar3;
-          }
-        }
-        if (fVar3 <= state->progress) {
-          while (fVar3 <= state->progress) {
-            state->progress = state->progress - fVar3;
-          }
-        }
-      }
-      else {
-        fVar4 = state->progress;
-        fVar5 = gObjAnimProgressZero;
-        if ((gObjAnimProgressZero <= fVar4) && (fVar5 = fVar4, fVar3 < fVar4)) {
-          fVar5 = fVar3;
-        }
-        state->progress = fVar5;
-      }
-      if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
-        uVar15 = (uint)-(float)((ObjAnim_U32AsDouble(state->eventStep) - gObjAnimU32ToDoubleBias) *
-                                    deltaTime -
-                                (ObjAnim_U32AsDouble(state->eventCountdown ^
-                                                     OBJANIM_S32_DOUBLE_BIAS_XOR) -
-                                 gObjAnimS32ToDoubleBias));
-        fVar3 = gObjAnimProgressZero;
-        if ((-1 < (int)uVar15) &&
-           (uVar15 = uVar15 ^ OBJANIM_S32_DOUBLE_BIAS_XOR, fVar3 = gObjAnimEventStepScale,
-           (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,uVar15) - gObjAnimS32ToDoubleBias) <= gObjAnimEventStepScale)) {
-          local_38 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,uVar15);
-          fVar3 = (float)(local_38 - gObjAnimS32ToDoubleBias);
-        }
-        state->eventCountdown = (short)(int)fVar3;
-      }
-      if (state->eventCountdown == 0) {
-        state->prevEventState = 0;
-      }
-    }
-    fVar4 = objAnim->currentMoveProgress;
-    fVar3 = (float)(dVar31 * deltaTime);
-    objAnim->currentMoveProgress = fVar4 + fVar3;
-    fVar6 = gObjAnimProgressZero;
-    fVar5 = gObjAnimProgressOne;
-    if (objAnim->currentMoveProgress >= gObjAnimProgressOne) {
-      if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-        objAnim->currentMoveProgress = gObjAnimProgressOne;
-      }
-      else {
-        while (fVar5 <= objAnim->currentMoveProgress) {
-          objAnim->currentMoveProgress = objAnim->currentMoveProgress - fVar5;
-        }
-      }
-      uVar18 = 1;
-    }
-    else if (objAnim->currentMoveProgress < gObjAnimProgressZero) {
-      if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
-        objAnim->currentMoveProgress = gObjAnimProgressZero;
-      }
-      else {
-        while (objAnim->currentMoveProgress < fVar6) {
-          objAnim->currentMoveProgress = objAnim->currentMoveProgress + fVar5;
-        }
-      }
-      uVar18 = 1;
-    }
-    if (eventList != (ObjAnimEventList *)0x0) {
-      eventList->rootCurveValid = 0;
-      fVar5 = gObjAnimProgressZero;
-      eventList->rootDeltaZ = gObjAnimProgressZero;
-      eventList->rootDeltaY = fVar5;
-      eventList->rootDeltaX = fVar5;
-      if (objAnim->eventTable != (ObjAnimEventTable *)0x0) {
-        eventList->triggerCount = 0;
-        iVar23 = objAnim->eventTable->byteCount >> 1;
-        if (iVar23 != 0) {
-          iVar30 = (int)(gObjAnimEventFrameScale * fVar4);
-          iVar26 = (int)(gObjAnimEventFrameScale * objAnim->currentMoveProgress);
-          eventScanFlags = iVar26 < iVar30;
-          if (fVar3 < gObjAnimProgressZero) {
-            eventScanFlags = eventScanFlags | 2;
-          }
-          iVar25 = 0;
-          iVar21 = 0;
-          while ((iVar25 < iVar23 &&
-                  (eventList->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY))) {
-            uVar16 = (uint)*(short *)((u8 *)objAnim->eventTable->entries + iVar21);
-            uVar15 = uVar16 & OBJANIM_EVENT_FRAME_MASK;
-            uVar16 = uVar16 >> OBJANIM_EVENT_ID_SHIFT & OBJANIM_EVENT_ID_MASK;
-            if (uVar16 != OBJANIM_EVENT_ID_NONE) {
-              uVar17 = (undefined)uVar16;
-              if (((eventScanFlags == OBJANIM_EVENT_SCAN_FORWARD) && (iVar30 <= (int)uVar15)) &&
-                  ((int)uVar15 < iVar26)) {
-                cVar2 = eventList->triggerCount;
-                eventList->triggerCount = cVar2 + '\x01';
-                eventList->triggeredIds[(u8)cVar2] = uVar17;
-              }
-              if ((eventScanFlags == OBJANIM_EVENT_SCAN_WRAPPED) &&
-                  ((iVar30 <= (int)uVar15 || ((int)uVar15 < iVar26)))) {
-                cVar2 = eventList->triggerCount;
-                eventList->triggerCount = cVar2 + '\x01';
-                eventList->triggeredIds[(u8)cVar2] = uVar17;
-              }
-              if (((eventScanFlags == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) &&
-                  (iVar26 < (int)uVar15)) && ((int)uVar15 <= iVar30)) {
-                cVar2 = eventList->triggerCount;
-                eventList->triggerCount = cVar2 + '\x01';
-                eventList->triggeredIds[(u8)cVar2] = uVar17;
-              }
-              if ((eventScanFlags == OBJANIM_EVENT_SCAN_REVERSE) &&
-                  ((iVar26 < (int)uVar15 || ((int)uVar15 <= iVar30)))) {
-                cVar2 = eventList->triggerCount;
-                eventList->triggerCount = cVar2 + '\x01';
-                eventList->triggeredIds[(u8)cVar2] = uVar17;
-              }
-            }
-            iVar21 = iVar21 + 2;
-            iVar25 = iVar25 + 1;
-          }
-        }
-      }
-      if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
-        iVar23 = (int)animDef->moveData[state->moveCacheSlot];
-      }
-      else {
-        iVar23 = (int)state->moveCache[state->moveCacheSlot] + OBJANIM_CACHED_MOVE_DATA_OFFSET;
-      }
-      if (*(short *)(iVar23 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) == 0) {
-        eventList->rootCurveValid = 0;
-      }
-      else {
-        eventList->rootCurveValid = 1;
-        pfVar27 = (float *)(iVar23 + *(short *)(iVar23 + OBJANIM_MOVE_ROOT_CURVE_OFFSET));
-        fVar5 = *pfVar27;
-        fVar6 = objAnim->rootMotionScale;
-        iVar23 = (int)*(short *)(pfVar27 + 1);
-        axisSamples = (short *)((int)pfVar27 + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
-        local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,iVar23 - 1U ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
-        fVar7 = (float)(local_30 - gObjAnimS32ToDoubleBias) * fVar4;
-        uVar15 = (uint)fVar7;
-        dVar31 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,uVar15 ^ OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias;
-        fVar8 = (float)(local_30 - gObjAnimS32ToDoubleBias) * objAnim->currentMoveProgress;
-        uVar16 = (uint)fVar8;
-        dVar1 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,uVar16 ^ OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias;
-        iVar30 = 0;
-        fVar11 = gObjAnimProgressZero;
-        fVar13 = gObjAnimProgressOne;
-        if (state->eventState != 0) {
-          local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(uint)state->eventState);
-          fVar11 = (float)(local_30 - gObjAnimU32ToDoubleBias) / gObjAnimEventStepScale;
-          if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) == 0) {
-            iVar24 = (int)animDef->moveData[state->blendCacheSlot];
-          }
-          else {
-            iVar24 = (int)state->blendMoveCache[state->blendCacheSlot] +
-                     OBJANIM_CACHED_MOVE_DATA_OFFSET;
-          }
-          iVar30 = iVar24 + *(short *)(iVar24 + OBJANIM_MOVE_ROOT_CURVE_OFFSET) +
-                   OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET;
-          fVar13 = gObjAnimProgressOne - fVar11;
-        }
-        iVar26 = 0;
-        iVar24 = (iVar23 - 1U) * 2;
-        pfVar27 = rootDeltaOut;
-        do {
-          if (*axisSamples == 0) {
-            axisSamples = axisSamples + 1;
-            if (iVar30 != 0) {
-              iVar30 = iVar30 + 2;
-            }
-            if (iVar26 < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT) {
-              *rootDeltaOut = gObjAnimProgressZero;
-            }
-            else {
-              *(undefined2 *)((int)pfVar27 + 6) = 0;
-            }
-          }
-          else {
-            if (iVar30 != 0) {
-              iVar30 = iVar30 + 2;
-            }
-            local_30 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)axisSamples[uVar15 + 1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
-            fVar9 = fVar13 * (float)(local_30 - gObjAnimS32ToDoubleBias);
-            if (iVar30 != 0) {
-              local_38 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                          (int)*(short *)(uVar15 * 2 + iVar30) ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
-              fVar9 = fVar11 * (float)(local_38 - gObjAnimS32ToDoubleBias) + fVar9;
-            }
-            fVar10 = fVar13 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                                       (int)(axisSamples + uVar15 + 1)[1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR)
-                                     - gObjAnimS32ToDoubleBias);
-            if (iVar30 != 0) {
-              local_48 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                          (int)*(short *)(uVar15 * 2 + iVar30 + 2) ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
-              fVar10 = fVar11 * (float)(local_48 - gObjAnimS32ToDoubleBias) + fVar10;
-            }
-            fVar12 = fVar13 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                                       (int)axisSamples[uVar16 + 1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR) -
-                                     gObjAnimS32ToDoubleBias);
-            if (iVar30 != 0) {
-              fVar12 = fVar11 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                                         (int)*(short *)(uVar16 * 2 + iVar30) ^
-                                                         OBJANIM_S32_DOUBLE_BIAS_XOR) - gObjAnimS32ToDoubleBias) + fVar12;
-            }
-            fVar14 = fVar13 * (float)((double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                                       (int)(axisSamples + uVar16 + 1)[1] ^ OBJANIM_S32_DOUBLE_BIAS_XOR)
-                                     - gObjAnimS32ToDoubleBias);
-            if (iVar30 != 0) {
-              local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                          (int)*(short *)(uVar16 * 2 + iVar30 + 2) ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
-              fVar14 = fVar11 * (float)(local_20 - gObjAnimS32ToDoubleBias) + fVar14;
-            }
-            fVar12 = (fVar8 - (float)dVar1) * (fVar14 - fVar12) + fVar12;
-            if (fVar3 <= gObjAnimProgressZero) {
-              if (fVar4 < objAnim->currentMoveProgress) {
-                local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)axisSamples[iVar23] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
-                fVar12 = -(fVar13 * (float)(local_20 - gObjAnimS32ToDoubleBias) - fVar12);
-                if (iVar30 != 0) {
-                  local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,
-                                              (int)*(short *)(iVar24 + iVar30) ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
-                  fVar12 = fVar11 * (float)(local_20 - gObjAnimS32ToDoubleBias) + fVar12;
-                }
-              }
-            }
-            else if (objAnim->currentMoveProgress < fVar4) {
-              local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)axisSamples[iVar23] ^ OBJANIM_S32_DOUBLE_BIAS_XOR);
-              fVar12 = fVar13 * (float)(local_20 - gObjAnimS32ToDoubleBias) + fVar12;
-              if (iVar30 != 0) {
-                local_20 = (double)CONCAT44(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD,(int)*(short *)(iVar24 + iVar30) ^ OBJANIM_S32_DOUBLE_BIAS_XOR
-                                           );
-                fVar12 = fVar11 * (float)(local_20 - gObjAnimS32ToDoubleBias) + fVar12;
-              }
-            }
-            fVar12 = fVar12 - ((fVar7 - (float)dVar31) * (fVar10 - fVar9) + fVar9);
-            if (iVar26 < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT) {
-              *rootDeltaOut = fVar12 * fVar5 * fVar6;
-            }
-            else {
-              *(short *)((int)pfVar27 + 6) = (short)(int)fVar12;
-            }
-            axisSamples = axisSamples + iVar23 + 1;
-            if (iVar30 != 0) {
-              iVar30 = iVar30 + iVar23 * 2;
-            }
-          }
-          rootDeltaOut = rootDeltaOut + 1;
-          pfVar27 = (float *)((int)pfVar27 + 2);
-          iVar26 = iVar26 + 1;
-        } while (iVar26 < OBJANIM_ROOT_CURVE_AXIS_COUNT);
-      }
-    }
-  }
-  return uVar18;
+  nofralloc
+  stwu r1, -0x60(r1)
+  mflr r0
+  stw r0, 0x64(r1)
+  addi r11, r1, 0x60
+  bl _savegpr_27
+  li r11, 0x0
+  lfs f0, lbl_803DE90C
+  fcmpo cr0, f1, f0
+  bge ObjAnim_AdvanceCurrentMove_L_8002FA70
+  b ObjAnim_AdvanceCurrentMove_L_8002FA84
+ObjAnim_AdvanceCurrentMove_L_8002FA70:
+  lfs f0, gObjAnimProgressOne
+  fcmpo cr0, f1, f0
+  ble ObjAnim_AdvanceCurrentMove_L_8002FA80
+  b ObjAnim_AdvanceCurrentMove_L_8002FA84
+ObjAnim_AdvanceCurrentMove_L_8002FA80:
+  fmr f0, f1
+ObjAnim_AdvanceCurrentMove_L_8002FA84:
+  lwz r5, 0x7c(r3)
+  lbz r0, 0xad(r3)
+  extsb r0, r0
+  slwi r0, r0, 2
+  lwzx r6, r5, r0
+  lwz r5, 0x0(r6)
+  lhz r0, 0xec(r5)
+  cmplwi r0, 0x0
+  bne ObjAnim_AdvanceCurrentMove_L_8002FAB0
+  li r3, 0x0
+  b ObjAnim_AdvanceCurrentMove_L_800302EC
+ObjAnim_AdvanceCurrentMove_L_8002FAB0:
+  lwz r8, 0x2c(r6)
+  cmplwi r8, 0x0
+  bne ObjAnim_AdvanceCurrentMove_L_8002FAC4
+  li r3, 0x0
+  b ObjAnim_AdvanceCurrentMove_L_800302EC
+ObjAnim_AdvanceCurrentMove_L_8002FAC4:
+  lfs f1, 0x14(r8)
+  fmuls f1, f0, f1
+  stfs f1, 0xc(r8)
+  lhz r0, 0x58(r8)
+  cmplwi r0, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8002FC70
+  lbz r0, 0x63(r8)
+  extsb r0, r0
+  rlwinm r0, r0, 0, 28, 28
+  cmpwi r0, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8002FAF8
+  lfs f1, 0xc(r8)
+  stfs f1, 0x10(r8)
+ObjAnim_AdvanceCurrentMove_L_8002FAF8:
+  lfs f3, 0x10(r8)
+  lfs f1, 0x8(r8)
+  fmadds f1, f3, f2, f1
+  stfs f1, 0x8(r8)
+  lfs f4, 0x18(r8)
+  lbz r0, 0x61(r8)
+  extsb r0, r0
+  cmpwi r0, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8002FB7C
+  lfs f1, 0x8(r8)
+  lfs f3, gObjAnimProgressZero
+  fcmpo cr0, f1, f3
+  bge ObjAnim_AdvanceCurrentMove_L_8002FB48
+  b ObjAnim_AdvanceCurrentMove_L_8002FB3C
+ObjAnim_AdvanceCurrentMove_L_8002FB30:
+  lfs f1, 0x8(r8)
+  fadds f1, f1, f4
+  stfs f1, 0x8(r8)
+ObjAnim_AdvanceCurrentMove_L_8002FB3C:
+  lfs f1, 0x8(r8)
+  fcmpo cr0, f1, f3
+  blt ObjAnim_AdvanceCurrentMove_L_8002FB30
+ObjAnim_AdvanceCurrentMove_L_8002FB48:
+  lfs f1, 0x8(r8)
+  fcmpo cr0, f1, f4
+  cror 2,1,2
+  bne ObjAnim_AdvanceCurrentMove_L_8002FBA8
+  b ObjAnim_AdvanceCurrentMove_L_8002FB68
+ObjAnim_AdvanceCurrentMove_L_8002FB5C:
+  lfs f1, 0x8(r8)
+  fsubs f1, f1, f4
+  stfs f1, 0x8(r8)
+ObjAnim_AdvanceCurrentMove_L_8002FB68:
+  lfs f1, 0x8(r8)
+  fcmpo cr0, f1, f4
+  cror 2,1,2
+  beq ObjAnim_AdvanceCurrentMove_L_8002FB5C
+  b ObjAnim_AdvanceCurrentMove_L_8002FBA8
+ObjAnim_AdvanceCurrentMove_L_8002FB7C:
+  lfs f3, 0x8(r8)
+  lfs f1, gObjAnimProgressZero
+  fcmpo cr0, f3, f1
+  bge ObjAnim_AdvanceCurrentMove_L_8002FB90
+  b ObjAnim_AdvanceCurrentMove_L_8002FBA4
+ObjAnim_AdvanceCurrentMove_L_8002FB90:
+  fcmpo cr0, f3, f4
+  ble ObjAnim_AdvanceCurrentMove_L_8002FBA0
+  fmr f1, f4
+  b ObjAnim_AdvanceCurrentMove_L_8002FBA4
+ObjAnim_AdvanceCurrentMove_L_8002FBA0:
+  fmr f1, f3
+ObjAnim_AdvanceCurrentMove_L_8002FBA4:
+  stfs f1, 0x8(r8)
+ObjAnim_AdvanceCurrentMove_L_8002FBA8:
+  lbz r0, 0x63(r8)
+  extsb r0, r0
+  rlwinm r0, r0, 0, 30, 30
+  cmpwi r0, 0x0
+  bne ObjAnim_AdvanceCurrentMove_L_8002FC5C
+  lhz r0, 0x5e(r8)
+  lfd f3, gObjAnimU32ToDoubleBias
+  stw r0, 0xc(r1)
+  lis r5, 0x4330
+  stw r5, 0x8(r1)
+  lfd f1, 0x8(r1)
+  fsubs f3, f1, f3
+  lhz r0, 0x58(r8)
+  lfd f4, gObjAnimS32ToDoubleBias
+  xoris r0, r0, 0x8000
+  stw r0, 0x14(r1)
+  stw r5, 0x10(r1)
+  lfd f1, 0x10(r1)
+  fsubs f1, f1, f4
+  fnmsubs f1, f3, f2, f1
+  fctiwz f1, f1
+  stfd f1, 0x18(r1)
+  lwz r0, 0x1c(r1)
+  cmpwi r0, 0x0
+  bge ObjAnim_AdvanceCurrentMove_L_8002FC14
+  lfs f3, gObjAnimProgressZero
+  b ObjAnim_AdvanceCurrentMove_L_8002FC48
+ObjAnim_AdvanceCurrentMove_L_8002FC14:
+  xoris r0, r0, 0x8000
+  stw r0, 0x24(r1)
+  stw r5, 0x20(r1)
+  lfd f1, 0x20(r1)
+  fsubs f1, f1, f4
+  lfs f3, gObjAnimEventStepScale
+  fcmpo cr0, f1, f3
+  ble ObjAnim_AdvanceCurrentMove_L_8002FC38
+  b ObjAnim_AdvanceCurrentMove_L_8002FC48
+ObjAnim_AdvanceCurrentMove_L_8002FC38:
+  stw r0, 0x2c(r1)
+  stw r5, 0x28(r1)
+  lfd f1, 0x28(r1)
+  fsubs f3, f1, f4
+ObjAnim_AdvanceCurrentMove_L_8002FC48:
+  fctiwz f1, f3
+  stfd f1, 0x30(r1)
+  lwz r0, 0x34(r1)
+  clrlwi r0, r0, 16
+  sth r0, 0x58(r8)
+ObjAnim_AdvanceCurrentMove_L_8002FC5C:
+  lhz r0, 0x58(r8)
+  cmplwi r0, 0x0
+  bne ObjAnim_AdvanceCurrentMove_L_8002FC70
+  li r0, 0x0
+  sth r0, 0x5c(r8)
+ObjAnim_AdvanceCurrentMove_L_8002FC70:
+  lfs f3, 0x98(r3)
+  fmuls f1, f0, f2
+  fadds f0, f3, f1
+  stfs f0, 0x98(r3)
+  lfs f0, 0x98(r3)
+  lfs f4, gObjAnimProgressOne
+  fcmpo cr0, f0, f4
+  cror 2,1,2
+  bne ObjAnim_AdvanceCurrentMove_L_8002FCD4
+  lbz r0, 0x60(r8)
+  extsb r0, r0
+  cmpwi r0, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8002FCC8
+  b ObjAnim_AdvanceCurrentMove_L_8002FCB4
+ObjAnim_AdvanceCurrentMove_L_8002FCA8:
+  lfs f0, 0x98(r3)
+  fsubs f0, f0, f4
+  stfs f0, 0x98(r3)
+ObjAnim_AdvanceCurrentMove_L_8002FCB4:
+  lfs f0, 0x98(r3)
+  fcmpo cr0, f0, f4
+  cror 2,1,2
+  beq ObjAnim_AdvanceCurrentMove_L_8002FCA8
+  b ObjAnim_AdvanceCurrentMove_L_8002FCCC
+ObjAnim_AdvanceCurrentMove_L_8002FCC8:
+  stfs f4, 0x98(r3)
+ObjAnim_AdvanceCurrentMove_L_8002FCCC:
+  li r11, 0x1
+  b ObjAnim_AdvanceCurrentMove_L_8002FD18
+ObjAnim_AdvanceCurrentMove_L_8002FCD4:
+  lfs f2, gObjAnimProgressZero
+  fcmpo cr0, f0, f2
+  bge ObjAnim_AdvanceCurrentMove_L_8002FD18
+  lbz r0, 0x60(r8)
+  extsb r0, r0
+  cmpwi r0, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8002FD10
+  b ObjAnim_AdvanceCurrentMove_L_8002FD00
+ObjAnim_AdvanceCurrentMove_L_8002FCF4:
+  lfs f0, 0x98(r3)
+  fadds f0, f0, f4
+  stfs f0, 0x98(r3)
+ObjAnim_AdvanceCurrentMove_L_8002FD00:
+  lfs f0, 0x98(r3)
+  fcmpo cr0, f0, f2
+  blt ObjAnim_AdvanceCurrentMove_L_8002FCF4
+  b ObjAnim_AdvanceCurrentMove_L_8002FD14
+ObjAnim_AdvanceCurrentMove_L_8002FD10:
+  stfs f2, 0x98(r3)
+ObjAnim_AdvanceCurrentMove_L_8002FD14:
+  li r11, 0x1
+ObjAnim_AdvanceCurrentMove_L_8002FD18:
+  cmplwi r4, 0x0
+  bne ObjAnim_AdvanceCurrentMove_L_8002FD28
+  mr r3, r11
+  b ObjAnim_AdvanceCurrentMove_L_800302EC
+ObjAnim_AdvanceCurrentMove_L_8002FD28:
+  li r5, 0x0
+  stb r5, 0x12(r4)
+  lfs f0, gObjAnimProgressZero
+  stfs f0, 0x8(r4)
+  stfs f0, 0x4(r4)
+  stfs f0, 0x0(r4)
+  lwz r0, 0x60(r3)
+  cmplwi r0, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8002FEC4
+  stb r5, 0x1b(r4)
+  lwz r5, 0x60(r3)
+  lwz r0, 0x0(r5)
+  srawi r7, r0, 1
+  cmpwi r7, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8002FEC4
+  lfs f2, gObjAnimEventFrameScale
+  fmuls f0, f2, f3
+  fctiwz f0, f0
+  stfd f0, 0x30(r1)
+  lwz r10, 0x34(r1)
+  lfs f0, 0x98(r3)
+  fmuls f0, f2, f0
+  fctiwz f0, f0
+  stfd f0, 0x28(r1)
+  lwz r12, 0x2c(r1)
+  li r30, 0x0
+  cmpw r12, r10
+  bge ObjAnim_AdvanceCurrentMove_L_8002FD9C
+  ori r30, r30, 0x1
+ObjAnim_AdvanceCurrentMove_L_8002FD9C:
+  lfs f0, gObjAnimProgressZero
+  fcmpo cr0, f1, f0
+  bge ObjAnim_AdvanceCurrentMove_L_8002FDAC
+  ori r30, r30, 0x2
+ObjAnim_AdvanceCurrentMove_L_8002FDAC:
+  li r9, 0x0
+  li r5, 0x0
+  b ObjAnim_AdvanceCurrentMove_L_8002FEAC
+ObjAnim_AdvanceCurrentMove_L_8002FDB8:
+  lwz r27, 0x60(r3)
+  lwz r27, 0x4(r27)
+  lhax r0, r27, r5
+  clrlwi r31, r0, 23
+  extrwi r0, r0, 7, 16
+  cmpwi r0, 0x7f
+  beq ObjAnim_AdvanceCurrentMove_L_8002FEA4
+  cmpwi r30, 0x0
+  bne ObjAnim_AdvanceCurrentMove_L_8002FE08
+  cmpw r31, r10
+  blt ObjAnim_AdvanceCurrentMove_L_8002FE08
+  cmpw r31, r12
+  bge ObjAnim_AdvanceCurrentMove_L_8002FE08
+  extsb r29, r0
+  lbz r28, 0x1b(r4)
+  addi r27, r28, 0x1
+  stb r27, 0x1b(r4)
+  extsb r27, r28
+  addi r27, r27, 0x13
+  stbx r29, r4, r27
+ObjAnim_AdvanceCurrentMove_L_8002FE08:
+  cmpwi r30, 0x1
+  bne ObjAnim_AdvanceCurrentMove_L_8002FE3C
+  cmpw r31, r10
+  bge ObjAnim_AdvanceCurrentMove_L_8002FE20
+  cmpw r31, r12
+  bge ObjAnim_AdvanceCurrentMove_L_8002FE3C
+ObjAnim_AdvanceCurrentMove_L_8002FE20:
+  extsb r29, r0
+  lbz r28, 0x1b(r4)
+  addi r27, r28, 0x1
+  stb r27, 0x1b(r4)
+  extsb r27, r28
+  addi r27, r27, 0x13
+  stbx r29, r4, r27
+ObjAnim_AdvanceCurrentMove_L_8002FE3C:
+  cmpwi r30, 0x3
+  bne ObjAnim_AdvanceCurrentMove_L_8002FE70
+  cmpw r31, r12
+  ble ObjAnim_AdvanceCurrentMove_L_8002FE70
+  cmpw r31, r10
+  bgt ObjAnim_AdvanceCurrentMove_L_8002FE70
+  extsb r27, r0
+  lbz r28, 0x1b(r4)
+  addi r29, r28, 0x1
+  stb r29, 0x1b(r4)
+  extsb r29, r28
+  addi r29, r29, 0x13
+  stbx r27, r4, r29
+ObjAnim_AdvanceCurrentMove_L_8002FE70:
+  cmpwi r30, 0x2
+  bne ObjAnim_AdvanceCurrentMove_L_8002FEA4
+  cmpw r31, r12
+  bgt ObjAnim_AdvanceCurrentMove_L_8002FE88
+  cmpw r31, r10
+  bgt ObjAnim_AdvanceCurrentMove_L_8002FEA4
+ObjAnim_AdvanceCurrentMove_L_8002FE88:
+  extsb r29, r0
+  lbz r31, 0x1b(r4)
+  addi r0, r31, 0x1
+  stb r0, 0x1b(r4)
+  extsb r31, r31
+  addi r0, r31, 0x13
+  stbx r29, r4, r0
+ObjAnim_AdvanceCurrentMove_L_8002FEA4:
+  addi r5, r5, 0x2
+  addi r9, r9, 0x1
+ObjAnim_AdvanceCurrentMove_L_8002FEAC:
+  cmpw r9, r7
+  bge ObjAnim_AdvanceCurrentMove_L_8002FEC4
+  lbz r0, 0x1b(r4)
+  extsb r0, r0
+  cmpwi r0, 0x8
+  blt ObjAnim_AdvanceCurrentMove_L_8002FDB8
+ObjAnim_AdvanceCurrentMove_L_8002FEC4:
+  lwz r5, 0x0(r6)
+  lhz r0, 0x2(r5)
+  rlwinm r0, r0, 0, 25, 25
+  cmpwi r0, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8002FEF0
+  lhz r0, 0x44(r8)
+  slwi r0, r0, 2
+  add r5, r8, r0
+  lwz r5, 0x1c(r5)
+  addi r5, r5, 0x80
+  b ObjAnim_AdvanceCurrentMove_L_8002FF00
+ObjAnim_AdvanceCurrentMove_L_8002FEF0:
+  lwz r5, 0x64(r5)
+  lhz r0, 0x44(r8)
+  slwi r0, r0, 2
+  lwzx r5, r5, r0
+ObjAnim_AdvanceCurrentMove_L_8002FF00:
+  lha r0, 0x4(r5)
+  cmpwi r0, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_800302E0
+  li r0, 0x1
+  stb r0, 0x12(r4)
+  lha r0, 0x4(r5)
+  add r12, r5, r0
+  lfs f2, 0x0(r12)
+  lfs f0, 0x8(r3)
+  fmuls f5, f2, f0
+  lha r5, 0x4(r12)
+  subi r9, r5, 0x1
+  addi r12, r12, 0x6
+  lfd f4, gObjAnimS32ToDoubleBias
+  xoris r0, r9, 0x8000
+  stw r0, 0x34(r1)
+  lis r10, 0x4330
+  stw r10, 0x30(r1)
+  lfd f0, 0x30(r1)
+  fsubs f6, f0, f4
+  fmuls f2, f6, f3
+  fctiwz f0, f2
+  stfd f0, 0x28(r1)
+  lwz r0, 0x2c(r1)
+  xoris r5, r0, 0x8000
+  stw r5, 0x24(r1)
+  stw r10, 0x20(r1)
+  lfd f0, 0x20(r1)
+  fsubs f0, f0, f4
+  fsubs f0, f2, f0
+  lfs f2, 0x98(r3)
+  fmuls f6, f6, f2
+  fctiwz f2, f6
+  stfd f2, 0x18(r1)
+  lwz r7, 0x1c(r1)
+  xoris r5, r7, 0x8000
+  stw r5, 0x14(r1)
+  stw r10, 0x10(r1)
+  lfd f2, 0x10(r1)
+  fsubs f2, f2, f4
+  fsubs f2, f6, f2
+  li r31, 0x0
+  lhz r5, 0x5a(r8)
+  cmplwi r5, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_80030024
+  lfd f6, gObjAnimU32ToDoubleBias
+  stw r5, 0x34(r1)
+  stw r10, 0x30(r1)
+  lfd f4, 0x30(r1)
+  fsubs f6, f4, f6
+  lfs f4, gObjAnimEventStepScale
+  fdivs f6, f6, f4
+  lfs f4, gObjAnimProgressOne
+  fsubs f7, f4, f6
+  lwz r6, 0x0(r6)
+  lhz r5, 0x2(r6)
+  rlwinm r5, r5, 0, 25, 25
+  cmpwi r5, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_80030004
+  lhz r5, 0x48(r8)
+  slwi r5, r5, 2
+  add r5, r8, r5
+  lwz r5, 0x24(r5)
+  addi r6, r5, 0x80
+  b ObjAnim_AdvanceCurrentMove_L_80030014
+ObjAnim_AdvanceCurrentMove_L_80030004:
+  lwz r6, 0x64(r6)
+  lhz r5, 0x48(r8)
+  slwi r5, r5, 2
+  lwzx r6, r6, r5
+ObjAnim_AdvanceCurrentMove_L_80030014:
+  lha r5, 0x4(r6)
+  add r31, r6, r5
+  addi r31, r31, 0x6
+  b ObjAnim_AdvanceCurrentMove_L_8003002C
+ObjAnim_AdvanceCurrentMove_L_80030024:
+  lfs f6, gObjAnimProgressZero
+  lfs f7, gObjAnimProgressOne
+ObjAnim_AdvanceCurrentMove_L_8003002C:
+  li r10, 0x0
+  mr r5, r4
+  slwi r6, r0, 1
+  slwi r7, r7, 1
+  slwi r8, r9, 1
+  addi r0, r9, 0x1
+  slwi r0, r0, 1
+ObjAnim_AdvanceCurrentMove_L_80030048:
+  lha r9, 0x0(r12)
+  cmpwi r9, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8003029C
+  addi r12, r12, 0x2
+  cmplwi r31, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_80030064
+  addi r31, r31, 0x2
+ObjAnim_AdvanceCurrentMove_L_80030064:
+  add r27, r6, r12
+  lha r9, 0x0(r27)
+  lfd f8, gObjAnimS32ToDoubleBias
+  xoris r9, r9, 0x8000
+  stw r9, 0x34(r1)
+  lis r30, 0x4330
+  stw r30, 0x30(r1)
+  lfd f4, 0x30(r1)
+  fsubs f4, f4, f8
+  fmuls f9, f7, f4
+  cmplwi r31, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_800300B0
+  lhax r9, r6, r31
+  xoris r9, r9, 0x8000
+  stw r9, 0x2c(r1)
+  stw r30, 0x28(r1)
+  lfd f4, 0x28(r1)
+  fsubs f4, f4, f8
+  fmadds f9, f6, f4, f9
+ObjAnim_AdvanceCurrentMove_L_800300B0:
+  lha r9, 0x2(r27)
+  lfd f8, gObjAnimS32ToDoubleBias
+  xoris r9, r9, 0x8000
+  stw r9, 0x24(r1)
+  lis r30, 0x4330
+  stw r30, 0x20(r1)
+  lfd f4, 0x20(r1)
+  fsubs f4, f4, f8
+  fmuls f10, f7, f4
+  cmplwi r31, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_800300FC
+  addi r9, r31, 0x2
+  lhax r9, r6, r9
+  xoris r9, r9, 0x8000
+  stw r9, 0x1c(r1)
+  stw r30, 0x18(r1)
+  lfd f4, 0x18(r1)
+  fsubs f4, f4, f8
+  fmadds f10, f6, f4, f10
+ObjAnim_AdvanceCurrentMove_L_800300FC:
+  fsubs f4, f10, f9
+  fmadds f4, f0, f4, f9
+  add r27, r7, r12
+  lha r9, 0x0(r27)
+  lfd f9, gObjAnimS32ToDoubleBias
+  xoris r9, r9, 0x8000
+  stw r9, 0x14(r1)
+  lis r30, 0x4330
+  stw r30, 0x10(r1)
+  lfd f8, 0x10(r1)
+  fsubs f8, f8, f9
+  fmuls f10, f7, f8
+  cmplwi r31, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_80030150
+  lhax r9, r7, r31
+  xoris r9, r9, 0x8000
+  stw r9, 0xc(r1)
+  stw r30, 0x8(r1)
+  lfd f8, 0x8(r1)
+  fsubs f8, f8, f9
+  fmadds f10, f6, f8, f10
+ObjAnim_AdvanceCurrentMove_L_80030150:
+  lha r9, 0x2(r27)
+  lfd f9, gObjAnimS32ToDoubleBias
+  xoris r9, r9, 0x8000
+  stw r9, 0x3c(r1)
+  lis r30, 0x4330
+  stw r30, 0x38(r1)
+  lfd f8, 0x38(r1)
+  fsubs f8, f8, f9
+  fmuls f11, f7, f8
+  cmplwi r31, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_8003019C
+  addi r9, r31, 0x2
+  lhax r9, r7, r9
+  xoris r9, r9, 0x8000
+  stw r9, 0x44(r1)
+  stw r30, 0x40(r1)
+  lfd f8, 0x40(r1)
+  fsubs f8, f8, f9
+  fmadds f11, f6, f8, f11
+ObjAnim_AdvanceCurrentMove_L_8003019C:
+  fsubs f8, f11, f10
+  fmadds f10, f2, f8, f10
+  lfs f8, gObjAnimProgressZero
+  fcmpo cr0, f1, f8
+  ble ObjAnim_AdvanceCurrentMove_L_8003020C
+  lfs f8, 0x98(r3)
+  fcmpo cr0, f8, f3
+  bge ObjAnim_AdvanceCurrentMove_L_80030204
+  lhax r9, r8, r12
+  lfd f9, gObjAnimS32ToDoubleBias
+  xoris r9, r9, 0x8000
+  stw r9, 0x44(r1)
+  lis r30, 0x4330
+  stw r30, 0x40(r1)
+  lfd f8, 0x40(r1)
+  fsubs f8, f8, f9
+  fmadds f10, f7, f8, f10
+  cmplwi r31, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_80030204
+  lhax r9, r8, r31
+  xoris r9, r9, 0x8000
+  stw r9, 0x44(r1)
+  stw r30, 0x40(r1)
+  lfd f8, 0x40(r1)
+  fsubs f8, f8, f9
+  fmadds f10, f6, f8, f10
+ObjAnim_AdvanceCurrentMove_L_80030204:
+  fsubs f4, f10, f4
+  b ObjAnim_AdvanceCurrentMove_L_80030264
+ObjAnim_AdvanceCurrentMove_L_8003020C:
+  lfs f8, 0x98(r3)
+  fcmpo cr0, f8, f3
+  ble ObjAnim_AdvanceCurrentMove_L_80030260
+  lhax r9, r8, r12
+  lfd f9, gObjAnimS32ToDoubleBias
+  xoris r9, r9, 0x8000
+  stw r9, 0x44(r1)
+  lis r30, 0x4330
+  stw r30, 0x40(r1)
+  lfd f8, 0x40(r1)
+  fsubs f8, f8, f9
+  fnmsubs f10, f7, f8, f10
+  cmplwi r31, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_80030260
+  lhax r9, r8, r31
+  xoris r9, r9, 0x8000
+  stw r9, 0x44(r1)
+  stw r30, 0x40(r1)
+  lfd f8, 0x40(r1)
+  fsubs f8, f8, f9
+  fmadds f10, f6, f8, f10
+ObjAnim_AdvanceCurrentMove_L_80030260:
+  fsubs f4, f10, f4
+ObjAnim_AdvanceCurrentMove_L_80030264:
+  cmpwi r10, 0x3
+  bge ObjAnim_AdvanceCurrentMove_L_80030278
+  fmuls f4, f4, f5
+  stfs f4, 0x0(r4)
+  b ObjAnim_AdvanceCurrentMove_L_80030288
+ObjAnim_AdvanceCurrentMove_L_80030278:
+  fctiwz f4, f4
+  stfd f4, 0x40(r1)
+  lwz r9, 0x44(r1)
+  sth r9, 0x6(r5)
+ObjAnim_AdvanceCurrentMove_L_80030288:
+  add r12, r12, r0
+  cmplwi r31, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_800302C8
+  add r31, r31, r0
+  b ObjAnim_AdvanceCurrentMove_L_800302C8
+ObjAnim_AdvanceCurrentMove_L_8003029C:
+  addi r12, r12, 0x2
+  cmplwi r31, 0x0
+  beq ObjAnim_AdvanceCurrentMove_L_800302AC
+  addi r31, r31, 0x2
+ObjAnim_AdvanceCurrentMove_L_800302AC:
+  cmpwi r10, 0x3
+  bge ObjAnim_AdvanceCurrentMove_L_800302C0
+  lfs f4, gObjAnimProgressZero
+  stfs f4, 0x0(r4)
+  b ObjAnim_AdvanceCurrentMove_L_800302C8
+ObjAnim_AdvanceCurrentMove_L_800302C0:
+  li r9, 0x0
+  sth r9, 0x6(r5)
+ObjAnim_AdvanceCurrentMove_L_800302C8:
+  addi r4, r4, 0x4
+  addi r5, r5, 0x2
+  addi r10, r10, 0x1
+  cmpwi r10, 0x6
+  blt ObjAnim_AdvanceCurrentMove_L_80030048
+  b ObjAnim_AdvanceCurrentMove_L_800302E8
+ObjAnim_AdvanceCurrentMove_L_800302E0:
+  li r0, 0x0
+  stb r0, 0x12(r4)
+ObjAnim_AdvanceCurrentMove_L_800302E8:
+  mr r3, r11
+ObjAnim_AdvanceCurrentMove_L_800302EC:
+  addi r11, r1, 0x60
+  bl _restgpr_27
+  lwz r0, 0x64(r1)
+  mtlr r0
+  addi r1, r1, 0x60
+  blr
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
