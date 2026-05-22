@@ -1,24 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/DFbarrelanim.h"
-
+#include "main/dll/DF/dfropenode.h"
 
 #pragma peephole off
 #pragma scheduling off
-typedef struct DFropenodeExtra {
-  void *linkedObj;
-  f32 minX;
-  f32 maxX;
-  f32 minZ;
-  f32 maxZ;
-  f32 minY;
-  s16 angle;
-  u8 pad1A[0x12];
-  DFRope *rope;
-  u8 hidden : 1;
-  u8 pad30 : 7;
-  u8 pad31[3];
-} DFropenodeExtra;
 
 extern f32 sqrtf(f32 x);
 extern void *mmAlloc(int size, int heap, int flags);
@@ -176,9 +162,9 @@ void dfropenode_func12(int obj, float value)
 
 int dfropenode_func11(int obj)
 {
-  u32 bit = (*(u8 *)(*(int *)(obj + 0xb8) + 0x30) & 0x80) >> 7;
+  DFropenodeExtra *extra = (DFropenodeExtra *)*(int *)(obj + 0xb8);
 
-  return (s16)(bit == 0);
+  return (s16)(extra->hidden == 0);
 }
 
 #pragma peephole off
@@ -194,7 +180,7 @@ void dfropenode_func10(int obj, int value)
   bit = (value == 0);
   bitByte = bit;
   extra->hidden = bitByte;
-  linkedObj = extra->linkedObj;
+  linkedObj = (void *)extra->linkedObj;
   if (linkedObj != NULL) {
     extra = (DFropenodeExtra *)*(int *)((u8 *)linkedObj + 0xb8);
     extra->hidden = bitByte;
@@ -219,7 +205,7 @@ void dfropenode_func10(int obj, int value)
 #pragma scheduling off
 void dfropenode_func13(int obj)
 {
-  ((DFropenodeExtra *)*(int *)(obj + 0xb8))->linkedObj = NULL;
+  ((DFropenodeExtra *)*(int *)(obj + 0xb8))->linkedObj = 0;
 }
 #pragma scheduling reset
 

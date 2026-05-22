@@ -2,22 +2,7 @@
 #include "main/dll/DF/DFbarrel.h"
 #include "main/dll/DF/dll_194.h"
 #include "main/dll/DF/DFbarrelanim.h"
-
-typedef struct DFropenodeExtra {
-  void *linkedObj;
-  f32 minX;
-  f32 maxX;
-  f32 minZ;
-  f32 maxZ;
-  f32 minY;
-  s16 angle;
-  u8 pad1A[2];
-  f32 planeNormalX;
-  f32 planeNormalY;
-  f32 planeNormalZ;
-  f32 planeDistance;
-  DFRope *rope;
-} DFropenodeExtra;
+#include "main/dll/DF/dfropenode.h"
 
 extern f32 sqrtf(f32 x);
 
@@ -77,7 +62,7 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distan
   segmentIndex = 0;
   if ((*(u8 *)(*(int *)(obj + 0x4c) + 0x18) & 1) == 0) {
     segmentIndex = 0;
-  } else if (extra->linkedObj == NULL) {
+  } else if (extra->linkedObj == 0) {
     segmentIndex = 0;
   } else if ((((double)extra->minX > (double)worldX) ||
               ((double)extra->maxX < (double)worldX)) ||

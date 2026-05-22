@@ -3,22 +3,7 @@
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dll_196.h"
 #include "main/dll/DF/dll_198.h"
-
-typedef struct DFropenodeExtra {
-  int linkedObj;
-  f32 minX;
-  f32 maxX;
-  f32 minZ;
-  f32 maxZ;
-  f32 minY;
-  s16 angle;
-  u8 pad1A[2];
-  f32 planeNormalX;
-  f32 planeNormalY;
-  f32 planeNormalZ;
-  f32 planeDistance;
-  DFRope *rope;
-} DFropenodeExtra;
+#include "main/dll/DF/dfropenode.h"
 
 typedef struct DFDoorSpeciExtra {
   u16 phase;

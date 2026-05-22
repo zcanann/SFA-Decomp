@@ -1,0 +1,26 @@
+#ifndef MAIN_DLL_DF_DFROPENODE_H_
+#define MAIN_DLL_DF_DFROPENODE_H_
+
+#include "ghidra_import.h"
+#include "main/dll/DF/DFbarrel.h"
+
+typedef struct DFropenodeExtra {
+  int linkedObj;
+  f32 minX;
+  f32 maxX;
+  f32 minZ;
+  f32 maxZ;
+  f32 minY;
+  s16 angle;
+  u8 pad1A[2];
+  f32 planeNormalX;
+  f32 planeNormalY;
+  f32 planeNormalZ;
+  f32 planeDistance;
+  DFRope *rope;
+  u8 hidden : 1;
+  u8 pad30 : 7;
+  u8 pad31[3];
+} DFropenodeExtra;
+
+#endif /* MAIN_DLL_DF_DFROPENODE_H_ */
