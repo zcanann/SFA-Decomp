@@ -181,6 +181,8 @@ typedef struct DFSHLaserBeamObject {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void DFSH_LaserBeam_update(uint param_1)
 {
   DFSHLaserBeamObject *obj;
@@ -371,6 +373,8 @@ void DFSH_LaserBeam_update(uint param_1)
     *(f32 *)((u8 *)obj + 0x98) -= lbl_803E4EC8;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
