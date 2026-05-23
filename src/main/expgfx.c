@@ -644,28 +644,33 @@ void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
 {
+  ExpgfxTableEntry *tableBase;
   ExpgfxTableEntry *entry;
   int tableIndex;
 
-  entry = gExpgfxTableEntries;
+  tableBase = gExpgfxTableEntries;
+  entry = tableBase;
   for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++, entry++) {
     if ((entry->refCount != 0) && (entry->textureOrResource == textureOrResource) &&
         (entry->key0 == key0) && (entry->key1 == key1)) {
-      if (entry->refCount < EXPGFX_REFCOUNT_OVERFLOW) {
-        entry->refCount++;
-        return (s16)tableIndex;
+      entry = &tableBase[tableIndex];
+      if (entry->refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
+        debugPrintf(sExpgfxAddToTableUsageOverflow);
+        return EXPGFX_INVALID_TABLE_INDEX;
       }
-
-      debugPrintf(sExpgfxAddToTableUsageOverflow);
-      return EXPGFX_INVALID_TABLE_INDEX;
+      entry->refCount++;
+      return (s16)tableIndex;
     }
   }
 
-  entry = gExpgfxTableEntries;
+  entry = tableBase;
   for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++, entry++) {
     if (entry->refCount == 0) {
+      entry = &tableBase[tableIndex];
       entry->refCount = 1;
       entry->textureOrResource = textureOrResource;
       entry->key0 = key0;
@@ -678,6 +683,8 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   debugPrintf(sExpgfxExpTabIsFull);
   return EXPGFX_INVALID_TABLE_INDEX;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
