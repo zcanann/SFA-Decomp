@@ -231,8 +231,61 @@ void *fn_8013A6BC(u8 *state, u32 route, int pathId)
 #pragma dont_inline reset
 
 /* fn_8013A7F4  addr=0x8013A7F4  size=0x1D4  linkage=global */
-void fn_8013A7F4(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
+{
+    s8 status[8];
+    s8 i;
+    s8 failedCount;
+    s8 pass;
+    u8 *search;
+
+    search = state;
+    for (i = 0; i < 8; i++) {
+        if (routes[i] != 0) {
+            fn_8004B31C(search + 0x538, routes[i], *(int *)(state + 0x28), pathId, routeFlags[i]);
+        }
+        search += 0x30;
+    }
+
+    for (pass = 0; pass < 100; pass++) {
+        failedCount = 0;
+        search = state;
+        for (i = 0; i < 8; i++) {
+            if (routes[i] != 0) {
+                status[i] = fn_8004B218(search + 0x538, 1);
+            } else {
+                status[i] = -1;
+            }
+
+            if (status[i] == 1) {
+                return i;
+            }
+            if (status[i] == -1) {
+                routes[i] = 0;
+                failedCount++;
+            }
+
+            search += 0x30;
+        }
+
+        if (failedCount == 8) {
+            return -1;
+        }
+        if (failedCount == 7) {
+            for (i = 0; i < 8; i++) {
+                if (routes[i] != 0) {
+                    status[i] = fn_8004B218(state + 0x538 + i * 0x30, 0x1f4);
+                    if (status[i] == 1) {
+                        return i;
+                    }
+                    return -1;
+                }
+            }
+            return -1;
+        }
+    }
+
+    return -1;
 }
 
 /* fn_8013A9C8  addr=0x8013A9C8  size=0x184  linkage=global */
