@@ -1350,36 +1350,45 @@ void expgfx_free2(u32 sourceId)
  */
 void expgfx_free(u32 sourceId)
 {
+  u8 *expgfxBase;
   ExpgfxSlot *slot;
   u32 *poolSourceIds;
   u32 *slotPoolBases;
   s8 *poolActiveCounts;
+  s16 *poolSlotTypeIds;
+  u8 *poolFrameFlags;
+  u32 tableOffset;
   int poolIndex;
   int slotIndex;
 
+  expgfxBase = gExpgfxRuntimeData;
   if (sourceId == 0) {
     return;
   }
 
-  poolSourceIds = (u32 *)&gExpgfxPoolSourceIds;
-  slotPoolBases = gExpgfxSlotPoolBases;
-  poolActiveCounts = (s8 *)&gExpgfxPoolActiveCounts;
+  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
+  slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
+  poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+  poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
+  poolFrameFlags = gExpgfxStaticPoolFrameFlags;
 
   for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
     if (poolSourceIds[poolIndex] == sourceId) {
       slot = (ExpgfxSlot *)slotPoolBases[poolIndex];
       for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
-        if ((slot != NULL) &&
-            (Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot))->key0 == sourceId)) {
-          expgfxRemove(slotPoolBases[poolIndex], poolIndex, slotIndex, 0, 1);
+        if (slot != NULL) {
+          tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
+          if (*(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset) == sourceId) {
+            expgfxRemove(slotPoolBases[poolIndex], poolIndex, slotIndex, 0, 1);
+          }
         }
         slot = (ExpgfxSlot *)((u8 *)slot + EXPGFX_SLOT_SIZE);
         if (poolActiveCounts[poolIndex] == 0) {
-          gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
+          poolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
         }
       }
       poolSourceIds[poolIndex] = 0;
-      gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
+      poolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
     }
   }
 }
