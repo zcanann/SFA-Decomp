@@ -24,6 +24,7 @@ extern f32 lbl_803E6CE0;
 extern void dll_2E_func06(int obj, int state, int flags);
 extern int seqFn_800394a0(void);
 extern void fn_8003AAE0(int obj, int seq, int hitId, int p4, int p5);
+extern f32 lbl_803E6D38;
 
 int drenergydisc_getExtraSize(void) { return 1; }
 int drenergydisc_getObjectTypeId(void) { return 0; }
@@ -255,6 +256,30 @@ void earthwalker_hitDetect(int obj)
 #pragma scheduling on
 void earthwalker_release(void) {}
 void earthwalker_initialise(void) {}
+
+int wcbouncycra_getExtraSize(void) { return 0xc; }
+int wcbouncycra_getObjectTypeId(void) { return 0; }
+void wcbouncycra_free(void) {}
+#pragma peephole off
+void wcbouncycra_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6D38);
+    }
+}
+#pragma peephole on
+void wcbouncycra_hitDetect(void) {}
+#pragma scheduling off
+void wcbouncycra_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(f32 *)state = *(f32 *)(setup + 0xc);
+    *(s16 *)(state + 8) = 0x28;
+}
+#pragma scheduling on
+void wcbouncycra_release(void) {}
+void wcbouncycra_initialise(void) {}
 
 int fn_80223BBC(void) { return 0x2; }
 int fn_80223D10(void) { return 0x2; }
