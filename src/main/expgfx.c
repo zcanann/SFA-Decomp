@@ -699,15 +699,17 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int expgfx_updateSourceFrameFlags(void *sourceObject)
 {
   ExpgfxTrackedSourceFrameMask *mask;
   u32 bit;
   u32 highBits;
-  register int result;
-  register u32 *poolSourceIds;
-  register int poolIndex;
-  register u8 *poolFrameFlags;
+  int result;
+  u32 *poolSourceIds;
+  int poolIndex;
+  u8 *poolFrameFlags;
 
   result = EXPGFX_SOURCE_FRAME_STATE_NONE;
   lbl_803DD253 = 0;
@@ -721,7 +723,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       bit = 1 << ((s16)poolIndex >> 1);
       highBits = (u32)((s32)bit >> 31);
       mask = &gExpgfxTrackedSourceFrameMasks[poolIndex & 1];
-      if (((mask->low & bit) | (mask->high & highBits)) != 0) {
+      if ((CONCAT44(mask->high, mask->low) & CONCAT44(highBits, bit)) != 0) {
         *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
         if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A) {
           result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
@@ -748,6 +750,8 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
 
   return result;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
