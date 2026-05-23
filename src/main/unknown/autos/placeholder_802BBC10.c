@@ -1324,6 +1324,21 @@ int DR_CloudRunner_getObjectTypeId(void) { return 0x43; }
 void DR_CloudRunner_release(void) {}
 
 extern int GameBit_Get(int id);
+extern f32 lbl_803E82D0;
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
+int dim2prisonmammoth_getExtraSize(void) { return 0x604; }
+int dim2prisonmammoth_getObjectTypeId(void) { return 0; }
+void dim2prisonmammoth_free(void) {}
+
+void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E82D0);
+    }
+}
+
+void dim2prisonmammoth_hitDetect(void) {}
 
 #pragma scheduling off
 #pragma peephole off
