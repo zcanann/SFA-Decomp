@@ -428,6 +428,8 @@ void expgfxRemoveAll(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId)
 {
@@ -503,6 +505,8 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
 
   return EXPGFX_INVALID_POOL_INDEX;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
