@@ -45,8 +45,9 @@ int curves_distanceToNearestOfType16(double param_1,double param_2,double param_
 void FUN_800e2090(undefined4 param_1,undefined4 param_2,uint param_3,int *param_4);
 void FUN_800e2590(undefined4 param_1,undefined4 param_2,int param_3,int *param_4);
 int RomCurve_getRandomLinkedOfTypes(int param_1,int param_2,int param_3,int *param_4);
-f32 curves_distXZ(f32 param_1,f32 param_2,uint param_3);
-f32 curves_distFn0B(int param_1,uint param_2);
+int curves_findByAction(int action);
+f32 curves_distXZ(f32 x,f32 z,uint curveId);
+f32 curves_distFn0B(int obj,uint curveId);
 void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8);
 undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex);
