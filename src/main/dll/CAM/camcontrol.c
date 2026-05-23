@@ -60,7 +60,6 @@ extern f32 lbl_803E22FC;
 extern f32 lbl_803E2300;
 extern f32 lbl_803E1684;
 extern u16 lbl_803DB992;
-extern undefined lbl_803DD4CA;
 extern s8 lbl_803DD4CB;
 extern undefined4 lbl_803DD4CC;
 /*
@@ -870,7 +869,7 @@ void Camera_init(void *focus,f32 x,f32 y,f32 z)
   *(f32 *)((char *)pCamera + 0xc0) = z;
   *(void **)((char *)pCamera + 0xa4) = focus;
   *(f32 *)((char *)pCamera + 0xb4) = lbl_803E1684;
-  lbl_803DD4CA = 0;
+  gCamcontrolTargetState = 0;
 }
 
 void Camera_release(void)

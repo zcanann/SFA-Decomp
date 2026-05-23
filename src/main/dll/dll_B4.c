@@ -15,7 +15,7 @@ extern void objSetEventName(u8 *p, int a);
 extern void modelStruct2_setVectors(u8 *p, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setColorsA8AC(u8 *p, int a, int b, int c, int d);
 
-extern u8 *lbl_803DD4BC;
+extern u8 *gCamcontrolTargetReticle;
 extern u8 *lbl_803DD4C4;
 extern f32 lbl_803E162C;
 extern f32 lbl_803E1630;
@@ -32,13 +32,13 @@ extern f32 lbl_803E1640;
  */
 void lockIconInit(void)
 {
-  if (lbl_803DD4BC == NULL) {
-    lbl_803DD4BC = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x1FE), 4, -1, -1, 0);
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), lockIconTexCb);
-    lbl_803DD4BC[0xAD] = 1;
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), aButtonIconTexCb);
-    lbl_803DD4BC[0xAD] = 2;
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(lbl_803DD4BC), aButtonIconTexCb);
+  if (gCamcontrolTargetReticle == NULL) {
+    gCamcontrolTargetReticle = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x1FE), 4, -1, -1, 0);
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(gCamcontrolTargetReticle), lockIconTexCb);
+    gCamcontrolTargetReticle[0xAD] = 1;
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(gCamcontrolTargetReticle), aButtonIconTexCb);
+    gCamcontrolTargetReticle[0xAD] = 2;
+    ObjModel_SetRenderCallback(Obj_GetActiveModel(gCamcontrolTargetReticle), aButtonIconTexCb);
     colorFn_8001efe0(1, 0x32, 0x3C, 0x28);
     lbl_803DD4C4 = objCreateLight(0, 1);
     if (lbl_803DD4C4 != NULL) {

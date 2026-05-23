@@ -2,8 +2,8 @@
 #include "main/dll/dll_A6.h"
 
 extern u8 *pCamera;
-extern u8 *lbl_803DD4BC;
-extern s8 lbl_803DD4CA;
+extern u8 *gCamcontrolTargetReticle;
+extern s8 gCamcontrolTargetState;
 extern s16 lbl_803DB990;
 extern f32 lbl_803E1628;
 extern f32 lbl_803E162C;
@@ -39,12 +39,12 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
   int paletteIdx;
   u16 *flagsObj;
 
-  reticle = lbl_803DD4BC;
+  reticle = gCamcontrolTargetReticle;
   target = fallbackTarget;
   if (*(u32 *)(pCamera + 0x120) != 0) {
     target = (u8 *)*(u32 *)(pCamera + 0x120);
-    savedReticleState = lbl_803DD4CA;
-    lbl_803DD4CA = 3;
+    savedReticleState = gCamcontrolTargetState;
+    gCamcontrolTargetState = 3;
     savedReticleByte = reticle[0x36];
     reticle[0x36] = 0xFF;
   }
@@ -107,7 +107,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
   *(u16 *)((u8 *)flagsObj + 0x18) = (u16)(*(u16 *)((u8 *)flagsObj + 0x18) & ~8);
 
   if (*(u32 *)(pCamera + 0x120) != 0) {
-    lbl_803DD4CA = (s8)savedReticleState;
+    gCamcontrolTargetState = (s8)savedReticleState;
     reticle[0x36] = savedReticleByte;
   }
 end:
