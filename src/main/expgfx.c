@@ -38,7 +38,6 @@ extern undefined4 FUN_80080f84();
 extern undefined4 FUN_80080f8c();
 extern undefined4 FUN_80081130();
 extern int FUN_80081134();
-extern void expgfx_updateActivePools(u8 sourceMode,int sourceId,int param_3);
 extern undefined8 FUN_80135810();
 extern void debugPrintf(char *message,...);
 extern double FUN_80136594();
