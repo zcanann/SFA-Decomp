@@ -1,204 +1,294 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WCpushblock.h"
 
-extern undefined4 FUN_80003494();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80017748();
-extern uint FUN_80017830();
-extern undefined4 FUN_80017a14();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_80053754();
-extern undefined4 FUN_8005398c();
-extern undefined4 FUN_800e65c8();
-extern undefined4 FUN_801eba78();
-extern undefined4 SnowBike_render();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286888();
+#define WCPUSHBLOCK_SPAWN_OBJECT_ID 0x119
+#define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18
+#define WCPUSHBLOCK_SPAWN_PATH_POINT 4
+#define WCPUSHBLOCK_SPAWN_SFX 0x127
+#define WCPUSHBLOCK_SPAWN_IDLE_TIMER 0x5a
 
-extern undefined4 DAT_80329120;
-extern undefined4 DAT_80329150;
-extern undefined4 DAT_80329160;
-extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd728;
-extern undefined4 DAT_803de8e0;
-extern undefined4 DAT_803e6778;
-extern f32 lbl_803DCD20;
-extern f32 lbl_803DCD28;
-extern f32 lbl_803DCD2C;
-extern f32 lbl_803E6780;
-extern f32 lbl_803E6784;
-extern f32 lbl_803E6788;
-extern f32 lbl_803E67AC;
-extern f32 lbl_803E67B4;
-extern f32 lbl_803E67E0;
-extern f32 lbl_803E680C;
-extern f32 lbl_803E6828;
-extern f32 lbl_803E682C;
-extern f32 lbl_803E6830;
-extern f32 lbl_803E685C;
-extern f32 lbl_803E68E0;
-extern f32 lbl_803E68E8;
-extern f32 lbl_803E68EC;
-extern f32 lbl_803E68F0;
-extern f32 lbl_803E68F4;
-extern f32 lbl_803E68F8;
-extern f32 lbl_803E68FC;
-extern f32 lbl_803E6900;
-extern f32 lbl_803E6908;
-extern f32 lbl_803E690C;
-extern f32 lbl_803E6910;
-extern f32 lbl_803E6914;
-extern f32 lbl_803E6918;
+#define WCPUSHBLOCK_INPUT_SCALE 70
+#define WCPUSHBLOCK_PITCH_INPUT_SCALE 0x1770
+#define WCPUSHBLOCK_ROLL_INPUT_SCALE 0x2ee0
+#define WCPUSHBLOCK_YAW_DRIFT_SCALE 8
+#define WCPUSHBLOCK_ANGLE_DAMP_SHIFT 5
+#define WCPUSHBLOCK_MAX_PITCH 0x1f40
+#define WCPUSHBLOCK_MAX_ROLL 0x32c8
+#define WCPUSHBLOCK_RIDE_MOVE_ID 0xf
 
-/*
- * --INFO--
- *
- * Function: FUN_801ee0c0
- * EN v1.0 Address: 0x801EE0C0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801EE104
- * EN v1.1 Size: 1364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801ee0c0(undefined4 param_1,undefined4 param_2,int param_3)
+typedef struct WCPushBlockObjectSetup {
+    u8 pad0[4];
+    u8 placementMode;
+    u8 group;
+    u8 linkA;
+    u8 linkB;
+    f32 x;
+    f32 y;
+    f32 z;
+} WCPushBlockObjectSetup;
+
+typedef struct WCPushBlockRotationWork {
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    s16 pad;
+    f32 scale;
+    f32 zeroX;
+    f32 zeroY;
+    f32 zeroZ;
+} WCPushBlockRotationWork;
+
+typedef struct WCPushBlockObject {
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    u8 pad6[0x1e];
+    f32 velocityX;
+    f32 velocityY;
+    f32 velocityZ;
+    u8 pad30[0x70];
+    s16 currentMove;
+    u8 padA2[0x52];
+    int actionState;
+    void *spawnPath;
+} WCPushBlockObject;
+
+typedef struct WCPushBlockState {
+    u8 pad0[0x10];
+    void *linkedPushBlock;
+    u8 pad14[0x18];
+    s16 cloudYawDrift;
+    s16 pushRoll;
+    u8 pad30[0x30];
+    f32 liftAmount;
+    u8 pad64;
+    s8 rideState;
+    u8 pad66[4];
+    s16 rotorAngle;
+    u8 pad6C[4];
+    int stickX;
+    int stickY;
+    f32 bankAmount;
+    f32 liftBase;
+} WCPushBlockState;
+
+typedef struct WCPushBlockCloudActionInterface {
+    u8 pad0[0x20];
+    void (*setRotorAngle)(s16 angle);
+    void (*moveRelative)(f32 x, f32 z);
+} WCPushBlockCloudActionInterface;
+
+extern u8 Obj_IsLoadingLocked(void);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void mathFn_80021ac8(void *angles, void *out);
+extern WCPushBlockObjectSetup *Obj_AllocObjectSetup(int size, int objectId);
+extern WCPushBlockObject *Obj_SetupObject(WCPushBlockObjectSetup *setup, int mode, int mapLayer,
+                                          int linkId, void *parent);
+extern void ObjPath_GetPointWorldPosition(s16 *path, int pointIndex, f32 *outX, f32 *outY,
+                                          f32 *outZ, int useInputPosition);
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 moveProgress, int flags);
+extern int ObjAnim_AdvanceCurrentMove();
+extern f32 sin(f32 x);
+extern f32 fn_80293E80(f32 x);
+
+extern WCPushBlockCloudActionInterface **gCloudActionInterface;
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f32 lbl_803E5C70;
+extern f32 lbl_803E5C74;
+extern f32 lbl_803E5C78;
+extern f32 lbl_803E5C7C;
+extern f32 lbl_803E5C80;
+extern f32 lbl_803E5C84;
+extern f32 lbl_803E5C88;
+extern f32 lbl_803E5C8C;
+extern f32 lbl_803E5C90;
+extern f32 lbl_803E5C94;
+extern f32 lbl_803E5C98;
+extern f32 lbl_803E5CA8;
+extern f32 lbl_803E5CAC;
+
+typedef int (*ObjAnimAdvanceObjectFirstFn)(int obj, f32 moveStepScale, f32 deltaTime, void *events);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801EE0C0(s16 *path)
 {
-}
+    WCPushBlockObjectSetup *setup;
+    WCPushBlockObject *block;
+    f32 outVec[3];
+    WCPushBlockRotationWork rotation;
 
-/*
- * --INFO--
- *
- * Function: FUN_801ee0c4
- * EN v1.0 Address: 0x801EE0C4
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801EE658
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801ee0c4(void)
-{
-  if (DAT_803de8e0 != 0) {
-    FUN_80053754();
-    DAT_803de8e0 = 0;
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801ee0f8
- * EN v1.0 Address: 0x801EE0F8
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x801EE68C
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801ee0f8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-{
-  if (DAT_803de8e0 == 0) {
-    DAT_803de8e0 = FUN_8005398c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                0x186,param_10,param_11,param_12,param_13,param_14,param_15,param_16
-                               );
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801ee198
- * EN v1.0 Address: 0x801EE198
- * EN v1.0 Size: 436b
- * EN v1.1 Address: 0x801EE6F8
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801ee198(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9)
-{
-  uint uVar1;
-  undefined2 *puVar2;
-  undefined4 uVar3;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  undefined8 uVar4;
-  float local_38;
-  float local_34;
-  float local_30;
-  ushort local_2c;
-  ushort local_2a;
-  ushort local_28;
-  float local_24;
-  float local_20;
-  float local_1c;
-  float local_18;
-  
-  uVar1 = FUN_80017ae8();
-  if ((uVar1 & 0xff) != 0) {
-    FUN_80006824(0,0x127);
-    local_20 = lbl_803E6908;
-    local_1c = lbl_803E6908;
-    local_18 = lbl_803E6908;
-    local_24 = lbl_803E690C;
-    local_2c = *param_9;
-    local_2a = param_9[1];
-    local_28 = param_9[2];
-    local_38 = lbl_803E6908;
-    local_34 = lbl_803E6910;
-    local_30 = lbl_803E6914;
-    FUN_80017748(&local_2c,&local_38);
-    puVar2 = FUN_80017aa4(0x18,0x119);
-    *(undefined *)(puVar2 + 3) = 0xff;
-    *(undefined *)((int)puVar2 + 7) = 0xff;
-    *(undefined *)(puVar2 + 2) = 2;
-    *(undefined *)((int)puVar2 + 5) = 1;
-    uVar3 = 0;
-    uVar4 = ObjPath_GetPointWorldPosition(param_9,4,(float *)(puVar2 + 4),(undefined4 *)(puVar2 + 6),
-                         (float *)(puVar2 + 8),0);
-    puVar2 = (undefined2 *)
-             FUN_80017ae4(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,
-                          0xff,0xffffffff,(uint *)0x0,uVar3,in_r9,in_r10);
-    if (puVar2 != (undefined2 *)0x0) {
-      local_20 = lbl_803E6908;
-      local_1c = lbl_803E6908;
-      local_18 = lbl_803E6908;
-      local_24 = lbl_803E690C;
-      local_2c = *param_9;
-      local_2a = param_9[1];
-      local_28 = 0;
-      local_38 = lbl_803E6908;
-      local_34 = lbl_803E6908;
-      local_30 = lbl_803E6918;
-      FUN_80017748(&local_2c,&local_38);
-      *(float *)(puVar2 + 0x12) = local_38;
-      *(float *)(puVar2 + 0x14) = local_34;
-      *(float *)(puVar2 + 0x16) = local_30;
-      *(undefined4 *)(puVar2 + 0x7a) = 0x5a;
-      *(ushort **)(puVar2 + 0x7c) = param_9;
-      puVar2[2] = 0;
-      puVar2[1] = 0;
-      *puVar2 = 0;
+    if (Obj_IsLoadingLocked() == 0) {
+        return;
     }
-  }
-  return;
+
+    Sfx_PlayFromObject(0, WCPUSHBLOCK_SPAWN_SFX);
+
+    rotation.zeroX = lbl_803E5C70;
+    rotation.zeroY = lbl_803E5C70;
+    rotation.zeroZ = lbl_803E5C70;
+    rotation.scale = lbl_803E5C74;
+    rotation.yaw = path[0];
+    rotation.pitch = path[1];
+    rotation.roll = path[2];
+    outVec[0] = lbl_803E5C70;
+    outVec[1] = lbl_803E5C78;
+    outVec[2] = lbl_803E5C7C;
+    mathFn_80021ac8(&rotation, outVec);
+
+    setup = Obj_AllocObjectSetup(WCPUSHBLOCK_SPAWN_SETUP_SIZE, WCPUSHBLOCK_SPAWN_OBJECT_ID);
+    setup->linkA = 0xff;
+    setup->linkB = 0xff;
+    setup->placementMode = 2;
+    setup->group = 1;
+    ObjPath_GetPointWorldPosition(path, WCPUSHBLOCK_SPAWN_PATH_POINT, &setup->x, &setup->y,
+                                  &setup->z, 0);
+
+    block = Obj_SetupObject(setup, 5, -1, -1, NULL);
+    if (block == NULL) {
+        return;
+    }
+
+    rotation.zeroX = lbl_803E5C70;
+    rotation.zeroY = lbl_803E5C70;
+    rotation.zeroZ = lbl_803E5C70;
+    rotation.scale = lbl_803E5C74;
+    rotation.yaw = path[0];
+    rotation.pitch = path[1];
+    rotation.roll = 0;
+    outVec[0] = lbl_803E5C70;
+    outVec[1] = lbl_803E5C70;
+    outVec[2] = lbl_803E5C80;
+    mathFn_80021ac8(&rotation, outVec);
+
+    block->velocityX = outVec[0];
+    block->velocityY = outVec[1];
+    block->velocityZ = outVec[2];
+    block->actionState = WCPUSHBLOCK_SPAWN_IDLE_TIMER;
+    block->spawnPath = path;
+    block->roll = 0;
+    block->pitch = 0;
+    block->yaw = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801EE248(int obj, WCPushBlockState *state)
+{
+    f32 angle;
+    f32 angleSin;
+    f32 angleCos;
+    f32 targetLift;
+    f32 baseLift;
+    f32 moveX;
+    f32 moveZ;
+
+    (void)obj;
+
+    (*gCloudActionInterface)->setRotorAngle(state->rotorAngle);
+
+    angle = (lbl_803E5C84 * (f32)state->rotorAngle) / lbl_803E5C88;
+    angleSin = sin(angle);
+    angle = (lbl_803E5C84 * (f32)state->rotorAngle) / lbl_803E5C88;
+    angleCos = fn_80293E80(angle);
+
+    if (state->linkedPushBlock != NULL) {
+        targetLift = (f32)state->pushRoll / lbl_803E5C8C;
+    } else {
+        targetLift = lbl_803E5C70;
+    }
+    state->liftAmount += (targetLift - state->liftAmount) * timeDelta * lbl_803E5C90;
+
+    baseLift = lbl_803E5C94;
+    moveZ = baseLift * -angleSin;
+    moveX = angleCos * baseLift;
+    moveX += angleSin * -state->liftAmount;
+    moveZ += angleCos * -state->liftAmount;
+
+    state->bankAmount = state->liftAmount;
+    state->liftBase = baseLift;
+
+    moveZ = (moveZ * timeDelta) / lbl_803E5C98;
+    moveX = (moveX * timeDelta) / lbl_803E5C98;
+    (*gCloudActionInterface)->moveRelative(moveZ, moveX);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801EE3B4(WCPushBlockObject *obj, WCPushBlockState *state)
+{
+    int targetPitch;
+    int targetRoll;
+    int pitchDelta;
+    int rollDelta;
+    int pitch;
+    int roll;
+
+    targetPitch = (-(s32)state->stickY * WCPUSHBLOCK_PITCH_INPUT_SCALE) / WCPUSHBLOCK_INPUT_SCALE;
+    targetRoll = (-(s32)state->stickX * WCPUSHBLOCK_ROLL_INPUT_SCALE) / WCPUSHBLOCK_INPUT_SCALE;
+
+    state->cloudYawDrift =
+        (s16)((f32)state->cloudYawDrift -
+              (((f32)(state->stickX << 3) / lbl_803E5C98) * timeDelta));
+    state->cloudYawDrift =
+        (s16)(state->cloudYawDrift -
+              ((state->cloudYawDrift * framesThisStep) >> WCPUSHBLOCK_ANGLE_DAMP_SHIFT));
+
+    pitchDelta = targetPitch - (u16)obj->pitch;
+    if (pitchDelta > 0x8000) {
+        pitchDelta -= 0xffff;
+    }
+    if (pitchDelta < -0x8000) {
+        pitchDelta += 0xffff;
+    }
+
+    obj->pitch = (s16)((f32)obj->pitch + (lbl_803E5CA8 * ((f32)pitchDelta * timeDelta)));
+
+    rollDelta = targetRoll - (u16)state->pushRoll;
+    if (rollDelta > 0x8000) {
+        rollDelta -= 0xffff;
+    }
+    if (rollDelta < -0x8000) {
+        rollDelta += 0xffff;
+    }
+
+    state->pushRoll =
+        (s16)((f32)state->pushRoll + (lbl_803E5CA8 * ((f32)rollDelta * timeDelta)));
+
+    pitch = obj->pitch;
+    if (pitch < -WCPUSHBLOCK_MAX_PITCH) {
+        pitch = -WCPUSHBLOCK_MAX_PITCH;
+    } else if (pitch > WCPUSHBLOCK_MAX_PITCH) {
+        pitch = WCPUSHBLOCK_MAX_PITCH;
+    }
+    obj->pitch = (s16)pitch;
+
+    roll = state->pushRoll;
+    if (roll < -WCPUSHBLOCK_MAX_ROLL) {
+        roll = -WCPUSHBLOCK_MAX_ROLL;
+    } else if (roll > WCPUSHBLOCK_MAX_ROLL) {
+        roll = WCPUSHBLOCK_MAX_ROLL;
+    }
+    state->pushRoll = (s16)roll;
+
+    obj->yaw = (s16)(state->cloudYawDrift + 0x4000);
+    obj->roll = state->pushRoll;
+
+    if (obj->currentMove != WCPUSHBLOCK_RIDE_MOVE_ID) {
+        ObjAnim_SetCurrentMove((int)obj, WCPUSHBLOCK_RIDE_MOVE_ID, lbl_803E5C70, 0);
+    }
+
+    if (((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5CAC,
+                                                                  timeDelta, NULL) != 0) {
+        state->rideState = 0;
+    }
+
+    obj->actionState = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset

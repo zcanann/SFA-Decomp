@@ -28,7 +28,7 @@ extern undefined4 FUN_80053754();
 extern undefined4 FUN_8005398c();
 extern undefined4 FUN_80061a80();
 extern undefined4 FUN_8011e868();
-extern undefined4 FUN_801ee198();
+extern void fn_801EE0C0(s16 *path);
 extern undefined4 FUN_80247bf8();
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -336,7 +336,7 @@ void FUN_801eeafc(ushort *param_1,int param_2,undefined4 param_3,undefined4 para
     }
   }
   if (bVar1) {
-    FUN_801ee198(uVar8,dVar9,dVar10,in_f4,in_f5,in_f6,in_f7,in_f8,param_1);
+    fn_801EE0C0((s16 *)param_1);
   }
   return;
 }
