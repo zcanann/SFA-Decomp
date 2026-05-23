@@ -1383,6 +1383,8 @@ void expgfx_free2(u32 sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfx_free(u32 sourceId)
 {
   u8 *expgfxBase;
@@ -1427,6 +1429,8 @@ void expgfx_free(u32 sourceId)
     }
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
