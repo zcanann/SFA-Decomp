@@ -658,39 +658,49 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
  */
 int expgfx_updateSourceFrameFlags(void *sourceObject)
 {
-  ExpgfxSourceObject *source;
   ExpgfxTrackedSourceFrameMask *mask;
   u32 bit;
   u32 highBits;
-  s8 result;
-  int poolIndex;
+  register int result;
+  register u32 *poolSourceIds;
+  register int poolIndex;
+  register u8 *poolFrameFlags;
 
-  source = (ExpgfxSourceObject *)sourceObject;
   result = EXPGFX_SOURCE_FRAME_STATE_NONE;
   lbl_803DD253 = 0;
+  poolIndex = 0;
+  poolSourceIds = gExpgfxTrackedPoolSourceIds;
+  poolFrameFlags = gExpgfxStaticPoolFrameFlags;
 
-  for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
-    if ((source->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) ||
-        (gExpgfxTrackedPoolSourceIds[poolIndex] == (u32)sourceObject)) {
-      bit = 1 << ((poolIndex >> 1) & 0x1f);
+  while ((s16)poolIndex < EXPGFX_POOL_COUNT) {
+    if ((((ExpgfxSourceObject *)sourceObject)->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) ||
+        (*poolSourceIds == (u32)sourceObject)) {
+      bit = 1 << ((s16)poolIndex >> 1);
       highBits = (u32)((s32)bit >> 31);
       mask = &gExpgfxTrackedSourceFrameMasks[poolIndex & 1];
       if (((mask->low & bit) | (mask->high & highBits)) != 0) {
-        gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
-        result = (result == EXPGFX_SOURCE_FRAME_STATE_A)
-                     ? EXPGFX_SOURCE_FRAME_STATE_MIXED
-                     : EXPGFX_SOURCE_FRAME_STATE_B;
+        *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
+        if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A) {
+          result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
+        } else {
+          result = EXPGFX_SOURCE_FRAME_STATE_B;
+        }
       }
       else {
-        gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_A;
-        result = (result == EXPGFX_SOURCE_FRAME_STATE_B)
-                     ? EXPGFX_SOURCE_FRAME_STATE_MIXED
-                     : EXPGFX_SOURCE_FRAME_STATE_A;
+        *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_A;
+        if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_B) {
+          result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
+        } else {
+          result = EXPGFX_SOURCE_FRAME_STATE_A;
+        }
       }
     }
     else {
-      gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
+      *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
     }
+    poolSourceIds++;
+    poolFrameFlags++;
+    poolIndex++;
   }
 
   return result;
