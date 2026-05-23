@@ -1897,37 +1897,57 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfx_onMapSetup(void)
 {
+  u8 *expgfxBase;
   ExpgfxResourceEntry *resourceEntry;
+  ExpgfxTrackedSourceFrameMask *trackedFrameMasks;
+  u32 *poolActiveMasks;
   s8 *poolActiveCounts;
   u8 *poolSourceModes;
   u32 *poolSourceIds;
+  s16 *poolSlotTypeIds;
+  u8 *poolFrameFlags;
   int poolIndex;
   int resourceIndex;
 
+  expgfxBase = gExpgfxRuntimeData;
   expgfxRemoveAll();
 
-  poolActiveCounts = (s8 *)&gExpgfxPoolActiveCounts;
-  poolSourceModes = (u8 *)&gExpgfxPoolSourceModes;
-  poolSourceIds = (u32 *)&gExpgfxPoolSourceIds;
+  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+  poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+  poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
+  poolFrameFlags = gExpgfxStaticPoolFrameFlags;
+  poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
+  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
 
   for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
-    gExpgfxPoolActiveMasks[poolIndex] = 0;
-    poolActiveCounts[poolIndex] = 0;
-    gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
-    gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
-    poolSourceModes[poolIndex] = EXPGFX_POOL_SOURCE_MODE_STANDALONE;
-    poolSourceIds[poolIndex] = 0;
+    *poolActiveMasks = 0;
+    *poolActiveCounts = 0;
+    *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
+    *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
+    *poolSourceModes = EXPGFX_POOL_SOURCE_MODE_STANDALONE;
+    *poolSourceIds = 0;
+
+    poolActiveMasks++;
+    poolActiveCounts++;
+    poolSlotTypeIds++;
+    poolFrameFlags++;
+    poolSourceModes++;
+    poolSourceIds++;
   }
 
-  gExpgfxTrackedSourceFrameMasks[0].low = 0;
-  gExpgfxTrackedSourceFrameMasks[0].high = 0;
-  gExpgfxTrackedSourceFrameMasks[1].low = 0;
-  gExpgfxTrackedSourceFrameMasks[1].high = 0;
+  trackedFrameMasks =
+      (ExpgfxTrackedSourceFrameMask *)(expgfxBase + EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET);
+  trackedFrameMasks[0].low = 0;
+  trackedFrameMasks[0].high = 0;
+  trackedFrameMasks[1].low = 0;
+  trackedFrameMasks[1].high = 0;
 
   gExpgfxTextureFreeInProgress = 1;
-  resourceEntry = (ExpgfxResourceEntry *)gExpgfxRuntimeData;
+  resourceEntry = (ExpgfxResourceEntry *)expgfxBase;
   for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceIndex++,
       resourceEntry++) {
     if (resourceEntry->resource != NULL) {
@@ -1940,6 +1960,8 @@ void expgfx_onMapSetup(void)
   }
   gExpgfxTextureFreeInProgress = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
