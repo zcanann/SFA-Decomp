@@ -136,7 +136,7 @@ extern undefined DAT_803dc5d0;
 extern undefined DAT_803dc5d8;
 extern undefined4 DAT_803dc5e0;
 extern undefined DAT_803dc5e8;
-extern undefined4* DAT_803dd6fc;
+extern undefined4* gModgfxInterface;
 extern f64 DOUBLE_803e2100;
 extern f64 DOUBLE_803e21a8;
 extern f64 DOUBLE_803e21e8;
@@ -524,7 +524,7 @@ void dll_9D_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_
     }
   }
   local_334 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80318c88,0x18,&DAT_80318d5c,0x46c,0);
+  (**(code **)(*gModgfxInterface + 8))(&local_378,0,0x15,&DAT_80318c88,0x18,&DAT_80318d5c,0x46c,0);
   FUN_8028688c();
   return;
 }
@@ -532,7 +532,7 @@ void dll_9D_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_
 /*
  * --INFO--
  *
- * Function: FUN_800fd7b0
+ * Function: dll_9E_func03
  * EN v1.0 Address: 0x800FD7B0
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800FDD34
@@ -542,7 +542,7 @@ void dll_9D_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd7b0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void dll_9E_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
@@ -808,7 +808,7 @@ void FUN_800fd7b0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_334 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80318eb0,0x18,&DAT_80318f84,0x46c,0);
+  (**(code **)(*gModgfxInterface + 8))(&local_378,0,0x15,&DAT_80318eb0,0x18,&DAT_80318f84,0x46c,0);
   FUN_8028688c();
   return;
 }
@@ -833,7 +833,7 @@ void FUN_800fd81c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800fd820
+ * Function: dll_A0_func03
  * EN v1.0 Address: 0x800FD820
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x800FE4DC
@@ -843,7 +843,7 @@ void FUN_800fd81c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd820(int param_1,int param_2,int param_3,uint param_4)
+void dll_A0_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   undefined4 *local_378;
   int local_374;
@@ -1053,14 +1053,14 @@ void FUN_800fd820(int param_1,int param_2,int param_3,uint param_4)
   }
   local_374 = param_1;
   local_2f4 = local_2fc;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80319300,0x18,&DAT_803193d4,0x1d9,0);
+  (**(code **)(*gModgfxInterface + 8))(&local_378,0,0x15,&DAT_80319300,0x18,&DAT_803193d4,0x1d9,0);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800fd884
+ * Function: dll_A1_func03
  * EN v1.0 Address: 0x800FD884
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800FE844
@@ -1070,7 +1070,7 @@ void FUN_800fd820(int param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd884(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void dll_A1_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
@@ -1336,7 +1336,7 @@ void FUN_800fd884(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_334 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80319528,0x18,&DAT_803195fc,0x203,0);
+  (**(code **)(*gModgfxInterface + 8))(&local_378,0,0x15,&DAT_80319528,0x18,&DAT_803195fc,0x203,0);
   FUN_80286888();
   return;
 }
@@ -1344,7 +1344,7 @@ void FUN_800fd884(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
 /*
  * --INFO--
  *
- * Function: FUN_800fd8f0
+ * Function: dll_A2_func03
  * EN v1.0 Address: 0x800FD8F0
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x800FEBC4
@@ -1354,7 +1354,7 @@ void FUN_800fd884(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd8f0(int param_1,undefined2 param_2,int param_3,uint param_4)
+void dll_A2_func03(int param_1,undefined2 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined4 *local_378;
@@ -1591,14 +1591,14 @@ void FUN_800fd8f0(int param_1,undefined2 param_2,int param_3,uint param_4)
   }
   local_374 = param_1;
   local_334 = param_2;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0x15,&DAT_80319750,0x18,&DAT_80319824,0x24,0);
+  (**(code **)(*gModgfxInterface + 8))(&local_378,0,0x15,&DAT_80319750,0x18,&DAT_80319824,0x24,0);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800fd954
+ * Function: dll_A5_func03
  * EN v1.0 Address: 0x800FD954
  * EN v1.0 Size: 108b
  * EN v1.1 Address: 0x800FEF20
@@ -1608,7 +1608,7 @@ void FUN_800fd8f0(int param_1,undefined2 param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd954(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+void dll_A5_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
 {
   int iVar1;
   undefined2 extraout_r4;
@@ -1864,7 +1864,7 @@ void FUN_800fd954(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
     }
   }
   local_344 = extraout_r4;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_388,0,8,&DAT_80319998,4,&DAT_803199e8,0x5e0,0);
+  (**(code **)(*gModgfxInterface + 8))(&local_388,0,8,&DAT_80319998,4,&DAT_803199e8,0x5e0,0);
   FUN_8028688c();
   return;
 }
@@ -1907,7 +1907,7 @@ void FUN_800fd9c4(short *param_1,int param_2,int param_3,uint param_4,undefined4
 /*
  * --INFO--
  *
- * Function: FUN_800fd9c8
+ * Function: dll_A8_func03
  * EN v1.0 Address: 0x800FD9C8
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x800FFDE0
@@ -1917,7 +1917,7 @@ void FUN_800fd9c4(short *param_1,int param_2,int param_3,uint param_4,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fd9c8(int param_1,undefined2 param_2,int param_3,uint param_4,undefined4 param_5,
+void dll_A8_func03(int param_1,undefined2 param_2,int param_3,uint param_4,undefined4 param_5,
                  int param_6)
 {
   undefined4 *local_378;
@@ -2146,14 +2146,14 @@ void FUN_800fd9c8(int param_1,undefined2 param_2,int param_3,uint param_4,undefi
   local_2e4 = local_2dc;
   local_284 = local_29c;
   local_23c = local_29c;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0xe,&DAT_80319b38,0xc,&DAT_80319bc4,0x586,0);
+  (**(code **)(*gModgfxInterface + 8))(&local_378,0,0xe,&DAT_80319b38,0xc,&DAT_80319bc4,0x586,0);
   return;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800fda2c
+ * Function: dll_A9_func03
  * EN v1.0 Address: 0x800FDA2C
  * EN v1.0 Size: 100b
  * EN v1.1 Address: 0x801001A0
@@ -2163,7 +2163,7 @@ void FUN_800fd9c8(int param_1,undefined2 param_2,int param_3,uint param_4,undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800fda2c(int param_1,undefined2 param_2,int param_3,uint param_4,undefined4 param_5,
+void dll_A9_func03(int param_1,undefined2 param_2,int param_3,uint param_4,undefined4 param_5,
                  int param_6)
 {
   undefined4 *local_378;
@@ -2392,7 +2392,7 @@ void FUN_800fda2c(int param_1,undefined2 param_2,int param_3,uint param_4,undefi
   local_2e4 = local_2dc;
   local_284 = local_29c;
   local_23c = local_29c;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_378,0,0xe,&DAT_80319c78,0xc,&DAT_80319d04,0x586,0);
+  (**(code **)(*gModgfxInterface + 8))(&local_378,0,0xe,&DAT_80319c78,0xc,&DAT_80319d04,0x586,0);
   return;
 }
 
