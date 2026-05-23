@@ -27,7 +27,7 @@ extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80081118();
-extern undefined4 FUN_8017504c();
+extern undefined4 fn_80174BFC();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern u8 *Obj_GetPlayerObject(void);
@@ -662,7 +662,7 @@ undefined4 FUN_801743f0(uint param_1,int param_2)
     FUN_80006824(param_1,0x66);
     *(ushort *)(param_2 + 0x100) = *(ushort *)(param_2 + 0x100) | 2;
     if ((*(ushort *)(param_2 + 0x100) & 4) == 0) {
-      FUN_8017504c();
+      fn_80174BFC();
     }
     if (*(float *)(param_1 + 0xc) <= lbl_803E41C4 + *(float *)(iVar3 + 8)) {
       GameBit_Set((int)*(short *)(param_2 + 0xac),1);

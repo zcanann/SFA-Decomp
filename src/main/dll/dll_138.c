@@ -3,197 +3,47 @@
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern uint FUN_80017690();
 extern undefined4 FUN_80017698();
+extern uint GameBit_Get(int bit);
+extern void GameBit_Set(int bit, int value);
 extern uint FUN_80017730();
 extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern int FUN_80017a98();
-extern undefined4 ObjGroup_FindNearestObject();
 extern int FUN_80039520();
+extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern int FUN_800620e8();
 extern undefined4 FUN_800e8630();
-extern undefined4 pushable_setScale();
 extern undefined8 FUN_80286820();
 extern undefined4 FUN_8028686c();
 extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
+extern int ObjMsg_Pop(int obj, int *outMessage, int *outSender, int *outParam);
+extern void Obj_FreeObject(int obj);
+extern f32 sqrtf(f32 x);
 
 extern undefined4* DAT_803dd6d0;
 extern f64 DOUBLE_803e4210;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E41C0;
-extern f32 lbl_803E41D8;
-extern f32 lbl_803E41DC;
-extern f32 lbl_803E41E0;
-extern f32 lbl_803E41E4;
-extern f32 lbl_803E41E8;
 extern f32 lbl_803E41EC;
 extern f32 lbl_803E41F0;
-extern f32 lbl_803E41F4;
-extern f32 lbl_803E41F8;
 extern f32 lbl_803E41FC;
-extern f32 lbl_803E4200;
 extern f32 lbl_803E4204;
-extern f32 lbl_803E4208;
-extern f32 lbl_803E4218;
-extern f32 lbl_803E421C;
 extern f32 lbl_803E4220;
 extern f32 lbl_803E4230;
+extern f32 lbl_803E3528;
+extern f32 lbl_803E3564;
+extern f32 lbl_803E356C;
+extern f32 lbl_803E3580;
+extern f32 lbl_803E3584;
 
 /*
  * --INFO--
  *
- * Function: FUN_80174a80
- * EN v1.0 Address: 0x80174A80
- * EN v1.0 Size: 1108b
- * EN v1.1 Address: 0x80174B14
- * EN v1.1 Size: 1048b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4
-FUN_80174a80(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
-            ,int param_10)
-{
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  bool bVar4;
-  uint uVar5;
-  undefined4 uVar6;
-  int iVar7;
-  int *piVar8;
-  float local_38 [2];
-  undefined8 local_30;
-  undefined8 local_28;
-  
-  bVar4 = false;
-  local_38[0] = lbl_803E41D8;
-  pushable_setScale(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
-  uVar5 = FUN_80017690((int)*(short *)(param_10 + 0xac));
-  fVar2 = lbl_803E41DC;
-  if (uVar5 == 0) {
-    if (*(int *)(param_10 + 0xbc) == 0) {
-      uVar6 = ObjGroup_FindNearestObject(0x11,param_9,local_38);
-      *(undefined4 *)(param_10 + 0xbc) = uVar6;
-    }
-    if (*(int *)(param_10 + 0xbc) == 0) {
-      uVar6 = 0;
-    }
-    else {
-      if (*(float *)(param_10 + 0xd8) < lbl_803E41E8) {
-        *(float *)(param_10 + 0xd8) = lbl_803E41E8;
-      }
-      fVar2 = *(float *)(*(int *)(param_10 + 0xbc) + 0x14) - *(float *)(param_9 + 0x14);
-      if (fVar2 < lbl_803E41C0) {
-        fVar2 = fVar2 * lbl_803E41EC;
-      }
-      fVar1 = *(float *)(param_10 + 0xf0);
-      if (lbl_803E41F0 + fVar2 <= fVar1) {
-        fVar3 = *(float *)(*(int *)(param_10 + 0xbc) + 0xc) - *(float *)(param_9 + 0xc);
-        if (fVar3 < lbl_803E41C0) {
-          fVar3 = fVar3 * lbl_803E41EC;
-        }
-        if (fVar3 <= lbl_803E41F4) {
-          if ((lbl_803E41F0 + fVar2 <= fVar1) && (fVar1 <= lbl_803E41F8 + fVar2)) {
-            bVar4 = true;
-            FUN_80017698(0x1c9,1);
-          }
-          iVar7 = FUN_80039520(param_9,0);
-          *(float *)(param_10 + 0xec) =
-               *(float *)(param_10 + 0xe8) * lbl_803DC074 + *(float *)(param_10 + 0xec);
-          if (*(float *)(param_10 + 0xec) < *(float *)(param_10 + 0xe4)) {
-            if (*(float *)(param_10 + 0xec) < lbl_803E41C0) {
-              uVar5 = randomGetRange(0x19,0x4b);
-              *(float *)(param_10 + 0xe4) = lbl_803E41FC * (f32)(s32)(uVar5);
-              uVar5 = randomGetRange(0x28,0x46);
-              *(float *)(param_10 + 0xe8) =
-                   *(float *)(param_10 + 0xe4) / (f32)(s32)(uVar5);
-              *(float *)(param_10 + 0xec) = lbl_803E41C0;
-            }
-          }
-          else {
-            *(float *)(param_10 + 0xe8) = *(float *)(param_10 + 0xe8) * lbl_803E41EC;
-          }
-          if (iVar7 != 0) {
-            *(float *)(param_10 + 0xd8) = *(float *)(param_10 + 0xd8) + *(float *)(param_10 + 0xcc);
-            if (*(float *)(param_10 + 0xd8) < lbl_803E4200) {
-              *(float *)(param_10 + 0xdc) =
-                   *(float *)(param_10 + 0xdc) + *(float *)(param_10 + 0xd0);
-              if (*(float *)(param_10 + 0xdc) <= lbl_803E4204) {
-                if (*(float *)(param_10 + 0xdc) < lbl_803E41C0) {
-                  *(float *)(param_10 + 0xdc) = lbl_803E4204;
-                }
-              }
-              else {
-                *(float *)(param_10 + 0xdc) = lbl_803E4204;
-              }
-              *(float *)(param_10 + 0xe0) =
-                   *(float *)(param_10 + 0xe0) + *(float *)(param_10 + 0xd4);
-              if (*(float *)(param_10 + 0xe0) <= lbl_803E4204) {
-                if (*(float *)(param_10 + 0xe0) < lbl_803E41C0) {
-                  *(float *)(param_10 + 0xe0) = lbl_803E4204;
-                }
-              }
-              else {
-                *(float *)(param_10 + 0xe0) = lbl_803E4204;
-              }
-              fVar2 = *(float *)(param_10 + 0xdc);
-              fVar3 = lbl_803E4208 + *(float *)(param_10 + 0xec);
-              fVar1 = *(float *)(param_10 + 0xe0);
-              *(char *)(iVar7 + 0xc) = (char)(int)*(float *)(param_10 + 0xd8);
-              *(char *)(iVar7 + 0xd) = (char)(int)(fVar2 * fVar3);
-              *(char *)(iVar7 + 0xe) = (char)(int)(fVar1 * fVar3);
-            }
-            else {
-              FUN_80017698((int)*(short *)(param_10 + 0xac),1);
-              if (bVar4) {
-                FUN_80017698(0x1c9,0);
-              }
-              piVar8 = (int *)FUN_80006b14(0x5b);
-              (**(code **)(*piVar8 + 4))(param_9,0x14,0,2,0xffffffff,0);
-              (**(code **)(*piVar8 + 4))(param_9,0x14,0,2,0xffffffff,0);
-              FUN_80006b0c((undefined *)piVar8);
-              FUN_80006824(param_9,0x65);
-            }
-          }
-          uVar6 = 0;
-        }
-        else {
-          uVar6 = 0;
-        }
-      }
-      else {
-        uVar6 = 0;
-      }
-    }
-  }
-  else {
-    if (lbl_803E41DC < *(float *)(param_9 + 8)) {
-      *(float *)(param_9 + 8) = -(lbl_803E41E0 * lbl_803DC074 - *(float *)(param_9 + 8));
-      if (*(float *)(param_9 + 8) <= fVar2) {
-        *(float *)(param_9 + 8) = lbl_803E41C0;
-        *(float *)(param_9 + 0x10) = *(float *)(param_9 + 0x10) - lbl_803E41E4;
-        *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
-      }
-    }
-    uVar6 = 1;
-  }
-  return uVar6;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80174ed4
+ * Function: fn_80174A80
  * EN v1.0 Address: 0x80174ED4
  * EN v1.0 Size: 376b
  * EN v1.1 Address: 0x80174F2C
@@ -203,49 +53,49 @@ FUN_80174a80(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80174ed4(int param_1,int param_2)
+void fn_80174A80(int param_1,int param_2)
 {
   float fVar1;
   uint uVar2;
   int iVar3;
   
   iVar3 = *(int *)(param_1 + 0x4c);
-  *(float *)(param_2 + 0xcc) = lbl_803E4218;
-  fVar1 = lbl_803E421C;
-  *(float *)(param_2 + 0xd0) = lbl_803E421C;
+  *(float *)(param_2 + 0xcc) = lbl_803E3580;
+  fVar1 = lbl_803E3584;
+  *(float *)(param_2 + 0xd0) = lbl_803E3584;
   *(float *)(param_2 + 0xd4) = fVar1;
   uVar2 = randomGetRange(0x19,0x4b);
   *(float *)(param_2 + 0xe4) =
-       lbl_803E41FC * (f32)(s32)(uVar2);
+       lbl_803E3564 * (f32)(s32)(uVar2);
   uVar2 = randomGetRange(0x28,0x46);
   *(float *)(param_2 + 0xe8) =
        *(float *)(param_2 + 0xe4) /
        (f32)(s32)(uVar2);
-  fVar1 = lbl_803E41C0;
-  *(float *)(param_2 + 0xec) = lbl_803E41C0;
+  fVar1 = lbl_803E3528;
+  *(float *)(param_2 + 0xec) = lbl_803E3528;
   *(undefined2 *)(param_2 + 0xac) = *(undefined2 *)(iVar3 + 0x18);
   *(undefined2 *)(param_2 + 0xae) = *(undefined2 *)(iVar3 + 0x1a);
   *(float *)(param_2 + 0xf0) = fVar1;
   *(undefined4 *)(param_2 + 0xbc) = 0;
-  FUN_80017698((int)*(short *)(param_2 + 0xac),0);
-  iVar3 = FUN_80039520(param_1,0);
+  GameBit_Set((int)*(short *)(param_2 + 0xac),0);
+  iVar3 = (int)objFindTexture(param_1,0,0);
   *(float *)(param_2 + 0xdc) = *(float *)(param_2 + 0xdc) + *(float *)(param_2 + 0xd0);
-  if (*(float *)(param_2 + 0xdc) <= lbl_803E4204) {
-    if (*(float *)(param_2 + 0xdc) < lbl_803E41C0) {
-      *(float *)(param_2 + 0xdc) = lbl_803E4204;
+  if (*(float *)(param_2 + 0xdc) <= lbl_803E356C) {
+    if (*(float *)(param_2 + 0xdc) < lbl_803E3528) {
+      *(float *)(param_2 + 0xdc) = lbl_803E356C;
     }
   }
   else {
-    *(float *)(param_2 + 0xdc) = lbl_803E4204;
+    *(float *)(param_2 + 0xdc) = lbl_803E356C;
   }
   *(float *)(param_2 + 0xe0) = *(float *)(param_2 + 0xe0) + *(float *)(param_2 + 0xd4);
-  if (*(float *)(param_2 + 0xe0) <= lbl_803E4204) {
-    if (*(float *)(param_2 + 0xe0) < lbl_803E41C0) {
-      *(float *)(param_2 + 0xe0) = lbl_803E4204;
+  if (*(float *)(param_2 + 0xe0) <= lbl_803E356C) {
+    if (*(float *)(param_2 + 0xe0) < lbl_803E3528) {
+      *(float *)(param_2 + 0xe0) = lbl_803E356C;
     }
   }
   else {
-    *(float *)(param_2 + 0xe0) = lbl_803E4204;
+    *(float *)(param_2 + 0xe0) = lbl_803E356C;
   }
   *(undefined *)(iVar3 + 0xc) = 10;
   *(undefined *)(iVar3 + 0xd) = 10;
@@ -256,7 +106,7 @@ void FUN_80174ed4(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_8017504c
+ * Function: fn_80174BFC
  * EN v1.0 Address: 0x8017504C
  * EN v1.0 Size: 1052b
  * EN v1.1 Address: 0x801750A8
@@ -266,7 +116,7 @@ void FUN_80174ed4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017504c(void)
+void fn_80174BFC(void)
 {
   ushort uVar1;
   byte bVar2;
@@ -401,7 +251,7 @@ LAB_80175568:
                 else if (uVar1 == 0x7df) {
                   *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) & ~1;
                   if ((int)local_e7 == (uint)*(byte *)(iVar7 + 0x144)) {
-                    puVar6 = (undefined4 *)FUN_80039520((int)puVar3,0);
+                    puVar6 = (undefined4 *)objFindTexture((int)puVar3,0,0);
                     if (puVar6 != (undefined4 *)0x0) {
                       *puVar6 = 0x100;
                     }
@@ -478,7 +328,7 @@ LAB_8017533c:
 /*
  * --INFO--
  *
- * Function: FUN_80175468
+ * Function: fn_8017510C
  * EN v1.0 Address: 0x80175468
  * EN v1.0 Size: 744b
  * EN v1.1 Address: 0x801755B8
@@ -488,7 +338,7 @@ LAB_8017533c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80175468(short *param_1,short *param_2,int param_3)
+undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
 {
   uint uVar1;
   int iVar2;
@@ -546,8 +396,8 @@ undefined4 FUN_80175468(short *param_1,short *param_2,int param_3)
     *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
     if (('\0' < *(char *)(*(int *)(param_1 + 0x2c) + 0x10f)) &&
        ((*(short *)(*(int *)(*(int *)(param_1 + 0x2c) + 0x100) + 0x44) == 0x24 &&
-        (uVar1 = FUN_80017690(0x103), uVar1 == 0)))) {
-      FUN_80017698(0x103,1);
+        (uVar1 = GameBit_Get(0x103), uVar1 == 0)))) {
+      GameBit_Set(0x103,1);
       *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
       iVar2 = FUN_80017a98();
       dVar6 = (double)(*(float *)(param_1 + 6) - *(float *)(iVar2 + 0xc));
@@ -565,6 +415,50 @@ undefined4 FUN_80175468(short *param_1,short *param_2,int param_3)
     }
   }
   return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80175428
+ * EN v1.0 Address: 0x80175428
+ * EN v1.0 Size: 248b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_80175428(int obj)
+{
+  int state;
+  int msgSender;
+  int msg;
+  int msgParam;
+
+  state = *(int *)(obj + 0xb8);
+  msgParam = 0;
+  while (ObjMsg_Pop(obj,&msg,&msgSender,&msgParam) != 0) {
+    switch (msg) {
+    case 0xf0003:
+      *(int *)(state + 0xb8) = msgSender;
+      break;
+    case 0xe:
+      if ((*(short *)(obj + 0x46) != 0x21e) && (*(short *)(obj + 0x46) != 0x411)) {
+        Obj_FreeObject(obj);
+      }
+      break;
+    case 0x40001:
+      if (*(short *)(obj + 0x46) == 0x21e) {
+        *(float *)(state + 0xf0) = *(float *)msgParam;
+      }
+      if (*(short *)(obj + 0x46) == 0x411) {
+        *(float *)(state + 0xf0) = *(float *)msgParam;
+      }
+      break;
+    }
+  }
 }
 
 /*
@@ -606,6 +500,36 @@ void pushable_modelMtxFn(int obj,int modelNo)
   uint flags = *(uint *)(extra + 0xa8);
 
   *(uint *)(extra + 0xa8) = flags | (1 << modelNo);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: pushable_func0B
+ * EN v1.0 Address: 0x8017554C
+ * EN v1.0 Size: 128b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+int pushable_func0B(int obj,int other)
+{
+  int state;
+  f32 delta[3];
+
+  state = *(int *)(obj + 0xb8);
+  delta[0] = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
+  delta[1] = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
+  delta[2] = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
+  return sqrtf(delta[2] * delta[2] + (delta[0] * delta[0] + delta[1] * delta[1])) <
+         *(f32 *)(state + 0xc);
 }
 #pragma peephole reset
 #pragma scheduling reset

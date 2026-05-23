@@ -3,14 +3,12 @@
 
 #include "ghidra_import.h"
 
-undefined4
-FUN_80174a80(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
-            ,int param_10);
-void FUN_80174ed4(int param_1,int param_2);
-void FUN_8017504c(void);
-undefined4 FUN_80175468(short *param_1,short *param_2,int param_3);
+void fn_80174A80(int param_1,int param_2);
+void fn_80174BFC(void);
+undefined4 fn_8017510C(short *param_1,short *param_2,int param_3);
+void fn_80175428(int obj);
 int pushable_render2(int obj);
 void pushable_modelMtxFn(int obj,int modelNo);
+int pushable_func0B(int obj,int other);
 
 #endif /* MAIN_DLL_DLL_138_H_ */
