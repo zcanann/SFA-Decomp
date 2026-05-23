@@ -2616,20 +2616,16 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,ObjContactCallback cal
   ObjContactCallbackEntry *entry;
   int iVar3;
 
-  if ((param_1 == 0) || (param_2 == 0)) {
+  if (((void *)param_1 == NULL) || ((void *)param_2 == NULL)) {
     return 0;
   }
   entry = gObjContactCallbacks;
   count = gObjContactCallbackCount;
-  iVar3 = count;
-  if (count != 0) {
-    do {
-      if (((u32)entry->objA == (u32)param_1) && ((u32)entry->objB == (u32)param_2)) {
-        return 0;
-      }
-      entry++;
-      iVar3 = iVar3 + -1;
-    } while (iVar3 != 0);
+  for (iVar3 = 0; iVar3 < count; iVar3++) {
+    if (((u32)entry->objA == (u32)param_1) && ((u32)entry->objB == (u32)param_2)) {
+      return 0;
+    }
+    entry++;
   }
   if (count >= OBJCONTACT_CALLBACK_CAPACITY) {
     return 0;
@@ -2638,9 +2634,9 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,ObjContactCallback cal
   entry->objA = param_1;
   entry->objB = param_2;
   entry->callback = callback;
-  *(u8 *)(param_1 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
+  *(undefined *)(param_1 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
       *(u8 *)(param_1 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
-  *(u8 *)(param_2 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
+  *(undefined *)(param_2 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
       *(u8 *)(param_2 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
   gObjContactCallbackCount = gObjContactCallbackCount + 1;
   return 1;
