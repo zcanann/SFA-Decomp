@@ -2,13 +2,35 @@
 #include "main/dll/dll_180.h"
 
 extern uint GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80190148();
 extern undefined4 FUN_801905c4();
 extern undefined4 FUN_80190bd4();
 extern void Transporter_SeqFn(void);
+extern void objParticleFn_80097734(double scaleX,double scaleY,double scaleZ,double scaleW,
+                                   void *obj,int param_6,int param_7,int param_8,int param_9,
+                                   void *param_10,int param_11);
+extern void *objFindTexture(void *obj,int target,int param_3);
 
 extern undefined4 DAT_803ddb38;
+
+typedef struct CfDoorLightState {
+  s32 textureId;
+  u8 frameStep;
+  u8 pad05[0x8 - 0x5];
+  s32 maxFrame;
+  s32 resetFrame;
+  s32 currentFrame;
+  u8 flags;
+  u8 pad15[0x18 - 0x15];
+} CfDoorLightState;
+
+typedef struct CfDoorLightDef {
+  u8 pad00[0x1e];
+  s16 doneEvent;
+  s16 triggerEvent;
+} CfDoorLightDef;
 
 /*
  * --INFO--
@@ -175,11 +197,42 @@ extern f32 lbl_803E3EE8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3F00;
 extern f32 lbl_803E3F04;
+extern f32 lbl_803E3F08;
+extern f32 lbl_803E3F0C;
+extern f32 lbl_803E3F10;
+extern f32 lbl_803E3F14;
+extern f32 lbl_803E3F18;
+extern f32 lbl_803E3F1C;
+extern f32 lbl_803E3F20;
 extern f32 lbl_803E3F24;
 #pragma scheduling off
 #pragma peephole off
 void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
 void barrelpad_render(void) { objRenderFn_8003b8f4(lbl_803E3F00); }
+
+void barrelpad_update(s16 *obj) {
+    float local_c;
+    float local_8;
+    float local_4;
+    undefined particleScratch[12];
+
+    if (obj[0x23] == 0x79) {
+        local_c = lbl_803E3F04;
+        local_8 = lbl_803E3F08;
+        local_4 = lbl_803E3F04;
+        objParticleFn_80097734((double)lbl_803E3F0C,(double)lbl_803E3F10,
+                               (double)lbl_803E3F10,(double)lbl_803E3F14,
+                               obj,5,5,2,0x19,particleScratch,0);
+    }
+    else if (obj[0x23] == 0x748) {
+        local_c = lbl_803E3F04;
+        local_8 = lbl_803E3F18;
+        local_4 = lbl_803E3F04;
+        objParticleFn_80097734((double)lbl_803E3F1C,(double)lbl_803E3F20,
+                               (double)lbl_803E3F20,(double)lbl_803E3F14,
+                               obj,5,5,2,5,particleScratch,0);
+    }
+}
 
 void barrelpad_init(s16 *obj, u8 *def) {
     obj[2] = (s16)((s32)def[0x18] << 8);
@@ -215,6 +268,41 @@ void cflightwall_init(s16 *obj, u8 *def) {
 
 #pragma scheduling off
 #pragma peephole off
+void cf_doorlight_update(int obj) {
+    CfDoorLightState *state;
+    CfDoorLightDef *def;
+    int *textureFrame;
+
+    state = *(CfDoorLightState **)(obj + 0xb8);
+    def = *(CfDoorLightDef **)(obj + 0x4c);
+    if ((((state->flags >> 5) & 1) == 0) && (GameBit_Get(def->triggerEvent) != 0) &&
+        (((state->flags >> 6) & 1) == 0)) {
+        state->flags = (state->flags & ~0x20) | 0x20;
+        state->currentFrame = 0;
+    }
+    if (((state->flags >> 5) & 1) != 0) {
+        textureFrame = objFindTexture((void *)obj,state->textureId,0);
+        if (textureFrame != 0) {
+            state->currentFrame += state->frameStep;
+            if (state->currentFrame < 0) {
+                state->currentFrame = 0;
+            }
+            else if (state->currentFrame > state->maxFrame) {
+                if (def->doneEvent == -1) {
+                    state->currentFrame = state->resetFrame;
+                }
+                else {
+                    GameBit_Set(def->doneEvent,1);
+                    state->flags = state->flags & ~0x20;
+                    state->flags = (state->flags & ~0x40) | 0x40;
+                    state->currentFrame = state->maxFrame;
+                }
+            }
+            *textureFrame = state->currentFrame;
+        }
+    }
+}
+
 void cf_doorlight_init(int *obj, s8 *def) {
     register u8 *state = *(u8 **)((char *)obj + 0xb8);
     u32 b;
