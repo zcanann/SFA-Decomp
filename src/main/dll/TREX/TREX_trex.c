@@ -1941,6 +1941,8 @@ extern f32 lbl_803E58E8_;  // dummy to avoid duplicate
 extern void Obj_FreeObject(int obj);
 extern u8 framesThisStep;
 extern f32 timeDelta;
+extern f32 lbl_803E58DC;
+extern f32 lbl_803E58E0;
 extern void *Obj_GetPlayerObject(void);
 #pragma scheduling off
 #pragma peephole off
@@ -2015,7 +2017,61 @@ void SB_FireBall_init(int p)
 }
 #pragma scheduling reset
 #pragma peephole reset
-void SB_FireBall_update(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_FireBall_update(int obj)
+{
+    int state;
+    f32 particleArgs[7];
+
+    state = *(int *)(obj + 0xb8);
+    if (*(void **)state == NULL) {
+        *(void **)state = *(void **)(obj + 0xf8);
+    }
+
+    if (*(void **)state != NULL) {
+        *(s16 *)obj = 0;
+        *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + framesThisStep * SB_FIREBALL_SPIN_STEP);
+        *(int *)(obj + 0xf4) -= framesThisStep;
+        if (*(int *)(obj + 0xf4) < 0) {
+            Obj_FreeObject(obj);
+            return;
+        }
+
+        if (*(s8 *)(state + 0x14) == 0) {
+            *(f32 *)(state + 0x08) = *(f32 *)(obj + 0x24);
+            *(f32 *)(state + 0x0c) = *(f32 *)(obj + 0x28);
+            *(f32 *)(state + 0x10) = *(f32 *)(obj + 0x2c);
+            *(u8 *)(state + 0x14) = 1;
+        }
+
+        *(f32 *)(obj + 0x0c) += *(f32 *)(state + 0x08) * timeDelta;
+        *(f32 *)(obj + 0x10) += *(f32 *)(state + 0x0c) * timeDelta;
+        *(f32 *)(obj + 0x14) += *(f32 *)(state + 0x10) * timeDelta;
+
+        particleArgs[2] = lbl_803E58DC;
+        fn_80098928((int *)obj, lbl_803E58E0, SB_FIREBALL_SETUP_SIZE,
+                    SB_FIREBALL_SETUP_MODEL_ID, SB_FIREBALL_SETUP_PARAM, 0);
+        ((void (*)(int, int, f32 *, int, int, int))((void **)*gPartfxInterface)[2])(
+            obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, 0);
+
+        if (*(s16 *)(state + 4) > SB_FIREBALL_HITBOX_ENABLE_DELAY) {
+            *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = SB_FIREBALL_HITBOX_TYPE;
+            *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = SB_FIREBALL_HITBOX_PRIORITY;
+            *(int *)(*(int *)(obj + 0x54) + 0x48) = SB_FIREBALL_HITBOX_SIZE;
+            *(int *)(*(int *)(obj + 0x54) + 0x4c) = SB_FIREBALL_HITBOX_SIZE;
+            *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
+                (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) | SB_FIREBALL_SOLID_HITBOX_FLAG);
+        } else {
+            *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
+                (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~SB_FIREBALL_SOLID_HITBOX_FLAG);
+        }
+
+        *(s16 *)(state + 4) += framesThisStep;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 /* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
  * call ObjLink_DetachChild(obj). */
 #pragma scheduling off

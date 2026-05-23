@@ -6,6 +6,17 @@
 
 extern ObjectDescriptor24 gShopObjDescriptor;
 
+#define SB_FIREBALL_SPIN_STEP -800
+#define SB_FIREBALL_TRAIL_PARTICLE_ID 169
+#define SB_FIREBALL_SETUP_SIZE 4
+#define SB_FIREBALL_SETUP_MODEL_ID 389
+#define SB_FIREBALL_SETUP_PARAM 5
+#define SB_FIREBALL_HITBOX_ENABLE_DELAY 15
+#define SB_FIREBALL_HITBOX_TYPE 5
+#define SB_FIREBALL_HITBOX_PRIORITY 1
+#define SB_FIREBALL_HITBOX_SIZE 16
+#define SB_FIREBALL_SOLID_HITBOX_FLAG 1
+
 void FUN_801e42f8(int param_1);
 void FUN_801e4350(int param_1);
 void FUN_801e4378(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
