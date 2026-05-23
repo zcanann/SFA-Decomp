@@ -1759,14 +1759,14 @@ void fn_80187C70(int obj) {
     Dll109State *state;
     int def;
     int setup;
-    u8 hitOut[12];
+    u32 hitVolume;
 
     state = *(Dll109State **)(obj + 0xb8);
     def = *(int *)(obj + 0x4c);
     switch (state->state) {
         case 0:
             (*(void (*)(int, Dll109State *))(*(int *)(*lbl_803DCAC0 + 8)))(obj, state);
-            if (ObjHits_GetPriorityHit(obj, 0, 0, hitOut) != 0) {
+            if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0) {
                 (*(void (*)(int, Dll109State *))(*(int *)(*lbl_803DCAC0 + 0x30)))(obj, state);
                 Sfx_PlayFromObject(obj, 0x48);
                 ObjHitbox_SetSphereRadius(obj, 0x28);
