@@ -281,13 +281,19 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
  */
 void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureFree,int flushSlot)
 {
+  u8 *expgfxBase;
   ExpgfxSlot *slot;
-  ExpgfxTableEntry *entry;
-  s8 *poolActiveCounts;
+  u32 *activeMask;
+  u32 *tableTextureOrResources;
+  u16 *refCount;
+  s8 *poolActiveCount;
   u32 activeBit;
+  u32 tableOffset;
 
+  expgfxBase = gExpgfxRuntimeData;
   activeBit = 1 << slotIndex;
-  if ((gExpgfxPoolActiveMasks[poolIndex] & activeBit) == 0) {
+  activeMask = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET + poolIndex * sizeof(u32));
+  if ((*activeMask & activeBit) == 0) {
     return;
   }
 
@@ -295,18 +301,22 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
   slot->behaviorFlags = 0;
 
   if (skipTextureFree == 0) {
-    entry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
-    if (entry->textureOrResource != 0) {
+    tableTextureOrResources = (u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET);
+    tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
+    if (*(u32 *)((u8 *)tableTextureOrResources + tableOffset) != 0) {
       gExpgfxTextureFreeInProgress = 1;
-      textureFree((void *)entry->textureOrResource);
+      tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
+      textureFree((void *)*(u32 *)((u8 *)tableTextureOrResources + tableOffset));
       gExpgfxTextureFreeInProgress = 0;
     }
 
-    if (entry->refCount != 0) {
-      entry->refCount--;
-      if (entry->refCount == 0) {
-        entry->textureOrResource = 0;
-        entry->key0 = 0;
+    tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
+    refCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableOffset);
+    if (*refCount != 0) {
+      (*refCount)--;
+      if (*refCount == 0) {
+        *(u32 *)((u8 *)tableTextureOrResources + tableOffset) = 0;
+        *(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset) = 0;
       }
     } else {
       debugPrintf(sExpgfxMismatchInAddRemove);
@@ -318,10 +328,10 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
     DCFlushRange(slot, EXPGFX_SLOT_SIZE);
   }
 
-  gExpgfxPoolActiveMasks[poolIndex] &= ~activeBit;
-  poolActiveCounts = (s8 *)&gExpgfxPoolActiveCounts;
-  poolActiveCounts[poolIndex]--;
-  if (poolActiveCounts[poolIndex] == 0) {
+  *activeMask &= ~activeBit;
+  poolActiveCount = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET + poolIndex);
+  (*poolActiveCount)--;
+  if (*poolActiveCount == 0) {
     gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
   }
 }
