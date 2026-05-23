@@ -25,7 +25,7 @@ extern void fn_802BB998(int obj, int state, int state2);
  *
  * EN v1.1 Address: 0x802BB4B0, size 4b
  */
-void fn_802BB4B0(void) {}
+void DIMSnowHorn1_hitDetect(void) {}
 
 #pragma peephole off
 #pragma scheduling off
