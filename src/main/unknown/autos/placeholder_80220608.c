@@ -25,6 +25,9 @@ extern void dll_2E_func06(int obj, int state, int flags);
 extern int seqFn_800394a0(void);
 extern void fn_8003AAE0(int obj, int seq, int hitId, int p4, int p5);
 extern f32 lbl_803E6D38;
+extern f32 lbl_803E6D54;
+extern f32 lbl_803E6DA0;
+extern void ObjHitbox_SetStateIndex(int obj, int hitbox, int stateIndex);
 
 int drenergydisc_getExtraSize(void) { return 1; }
 int drenergydisc_getObjectTypeId(void) { return 0; }
@@ -280,6 +283,47 @@ void wcbouncycra_init(int obj, int setup)
 #pragma scheduling on
 void wcbouncycra_release(void) {}
 void wcbouncycra_initialise(void) {}
+
+int wcpushblock_getExtraSize(void) { return 0x288; }
+#pragma scheduling off
+int wcpushblock_getObjectTypeId(int obj)
+{
+    int modelIndex = (s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+
+    if (modelIndex >= modelCount) {
+        modelIndex = 0;
+    }
+    return (modelIndex << 0xb) | 0x400;
+}
+#pragma scheduling on
+void wcpushblock_free(void) {}
+#pragma peephole off
+void wcpushblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6D54);
+    }
+}
+#pragma peephole on
+void wcpushblock_hitDetect(void) {}
+#pragma scheduling off
+void wcpushblock_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(u8 *)(obj + 0x36) = 0;
+    *(u8 *)(obj + 0xad) = *(u8 *)(setup + 0x19);
+    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(u8 *)(obj + 0xad) = 0;
+    }
+    ObjHitbox_SetStateIndex(obj, *(int *)(obj + 0x54), (s8)*(u8 *)(obj + 0xad));
+    *(u8 *)(state + 0x283) = (u8)*(s16 *)(setup + 0x1a);
+    *(f32 *)(state + 0x274) = lbl_803E6DA0 + *(f32 *)(setup + 0xc);
+}
+#pragma scheduling on
+void wcpushblock_release(void) {}
+void wcpushblock_initialise(void) {}
 
 int fn_80223BBC(void) { return 0x2; }
 int fn_80223D10(void) { return 0x2; }
