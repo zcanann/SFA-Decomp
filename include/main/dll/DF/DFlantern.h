@@ -13,12 +13,16 @@ void FUN_801c2d44(undefined8 param_1,double param_2,double param_3,undefined8 pa
 undefined4 FUN_801c2e58(int param_1);
 void FUN_801c2f68(int param_1);
 void FUN_801c2f90(int param_1,int param_2);
+int fn_801C2C68(int obj,int unused,void *seq);
 void dfsh_door2speci_free(void);
+void dfsh_door2speci_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 void dfsh_door2speci_hitDetect(void);
 void dfsh_door2speci_update(void);
+void dfsh_door2speci_init(int obj,int def);
 void dfsh_door2speci_release(void);
 void dfsh_door2speci_initialise(void);
 int dfsh_shrine_getExtraSize(void);
-int dfsh_shrine_func08(void);
+int dfsh_shrine_getObjectTypeId(void);
+void dfsh_shrine_free(int obj);
 
 #endif /* MAIN_DLL_DF_DFLANTERN_H_ */

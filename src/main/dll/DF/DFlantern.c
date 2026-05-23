@@ -6,14 +6,26 @@ extern int FUN_80017730();
 extern undefined4 FUN_80017b00();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 FUN_80039520();
+extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053754();
 extern undefined4 FUN_8005398c();
 extern undefined4 FUN_801c1450();
+extern int DFSH_Door2Speci_SeqFn(int obj);
 extern int dfropenode_func0E();
 extern void dfropenode_render(int obj,int param_2,int param_3);
 extern double FUN_80293900();
 extern undefined4 FUN_80294964();
+extern void ModelLightStruct_free(void *light);
+extern void gameTimerStop(void);
+extern int mapGetDirIdx(int mapId);
+extern void unlockLevel(int mapDir,int mode,int flags);
+extern void Music_Trigger(int trackId,int mode);
+extern void GameBit_Set(int bit,int value);
+extern u8 *Obj_GetPlayerObject(void);
+extern void fn_80296518(void *obj,int arg,int enable);
+extern int *gMapEventInterface;
+extern void lightFn_8001db6c(int light,int mode,f32 value);
 
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dcba8;
@@ -26,6 +38,7 @@ extern f32 lbl_803E5AC0;
 extern f32 lbl_803E5AC8;
 extern f32 lbl_803E5ACC;
 extern f32 lbl_803E5AD0;
+extern f32 lbl_803E4E88;
 
 /*
  * --INFO--
@@ -379,6 +392,44 @@ void dfsh_door2speci_update(void)
 /*
  * --INFO--
  *
+ * Function: dfsh_door2speci_init
+ * EN v1.0 Address: 0x801C2868
+ * EN v1.0 Size: 164b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_door2speci_init(int obj,int def)
+{
+  int state;
+  int *texture;
+
+  state = *(int *)(obj + 0xb8);
+  *(int *)(obj + 0xbc) = (int)&DFSH_Door2Speci_SeqFn;
+  if (GameBit_Get((int)*(short *)(def + 0x22)) != 0) {
+    *(unsigned char *)(state + 3) = 2;
+  }
+  else {
+    *(unsigned char *)(state + 3) = 0;
+  }
+  texture = objFindTexture(obj,0,0);
+  if (texture != (int *)0x0) {
+    if (*(unsigned char *)(state + 3) == 2) {
+      *texture = 1;
+    }
+    else {
+      *texture = 0;
+    }
+  }
+  *(short *)state = 0;
+}
+
+/*
+ * --INFO--
+ *
  * Function: dfsh_door2speci_release
  * EN v1.0 Address: 0x801C290C
  * EN v1.0 Size: 4b
@@ -443,6 +494,94 @@ int dfsh_shrine_getExtraSize(void)
  */
 int dfsh_shrine_getObjectTypeId(void)
 {
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dfsh_shrine_free
+ * EN v1.0 Address: 0x801C2DD4
+ * EN v1.0 Size: 148b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dfsh_shrine_free(int obj)
+{
+  int state;
+
+  state = *(int *)(obj + 0xb8);
+  if (*(int *)state != 0) {
+    ModelLightStruct_free(*(void **)state);
+    *(int *)state = 0;
+  }
+  gameTimerStop();
+  unlockLevel(mapGetDirIdx(0x1f),1,0);
+  Music_Trigger(0xd8,0);
+  Music_Trigger(0xd9,0);
+  Music_Trigger(8,0);
+  GameBit_Set(0xefa,0);
+  GameBit_Set(0xcbb,1);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801C2C68
+ * EN v1.0 Address: 0x801C2C68
+ * EN v1.0 Size: 348b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fn_801C2C68(int obj,int unused,void *seq)
+{
+  int state;
+  u8 *player;
+  int i;
+  int cmdOffset;
+  u8 cmd;
+
+  state = *(int *)(obj + 0xb8);
+  player = Obj_GetPlayerObject();
+  *(u8 *)((char *)seq + 0x56) = 0;
+  for (i = 0; i < *(u8 *)((char *)seq + 0x8b); i++) {
+    cmdOffset = i + 0x81;
+    cmd = *(u8 *)((char *)seq + cmdOffset);
+    if (cmd != 0) {
+      switch (cmd) {
+      case 3:
+        *(u8 *)(state + 0x1c) = *(u8 *)(state + 0x1c) | 0x80;
+        break;
+      case 7:
+        fn_80296518(player,1,1);
+        GameBit_Set(0xbfd,1);
+        GameBit_Set(0x956,1);
+        (*(void (**)(int,int))(*gMapEventInterface + 0x44))(0xb,2);
+        break;
+      case 0xe:
+        *(short *)(obj + 6) = *(short *)(obj + 6) | 0x4000;
+        if (*(int *)state != 0) {
+          lightFn_8001db6c(*(int *)state,0,lbl_803E4E88);
+        }
+        break;
+      case 0xf:
+        *(short *)(obj + 6) = *(short *)(obj + 6) & ~0x4000;
+        if (*(int *)state != 0) {
+          lightFn_8001db6c(*(int *)state,0,lbl_803E4E88);
+        }
+        break;
+      }
+    }
+    *(u8 *)((char *)seq + cmdOffset) = 0;
+  }
   return 0;
 }
 
