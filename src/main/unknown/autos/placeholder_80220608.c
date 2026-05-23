@@ -30,9 +30,14 @@ extern f32 lbl_803E6DA0;
 extern f32 lbl_803E6DE0;
 extern f32 lbl_803E6DF0;
 extern f32 lbl_803E6E00;
+extern f32 lbl_803E6DFC;
+extern int *gMapEventInterface;
 extern int isGameTimerDisabled(void);
 extern void GameBit_Set(int id, int value);
 extern void ObjHitbox_SetStateIndex(int obj, int hitbox, int stateIndex);
+extern int Obj_GetActiveModel(int obj);
+extern void ObjModel_SetPostRenderCallback(int model, void *callback);
+extern void fn_800284CC(void);
 
 int drenergydisc_getExtraSize(void) { return 1; }
 int drenergydisc_getObjectTypeId(void) { return 0; }
@@ -365,6 +370,26 @@ void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 #pragma peephole on
+#pragma scheduling off
+void wcbeacon_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    (*(void (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
+    *(u8 *)(obj + 0xad) = *(u8 *)(setup + 0x19);
+    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(u8 *)(obj + 0xad) = 0;
+    }
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
+        if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+            *(u8 *)(state + 4) = 3;
+        } else {
+            *(u8 *)(state + 4) = 1;
+        }
+    }
+}
+#pragma scheduling on
 
 int wctile_getExtraSize(void) { return 0xc; }
 #pragma scheduling off
@@ -389,10 +414,57 @@ void wctile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 void wctile_hitDetect(void) {}
+#pragma scheduling off
+void wctile_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(f32 *)(obj + 0x10) = lbl_803E6DFC + *(f32 *)(setup + 0xc);
+    *(u8 *)(obj + 0xad) = *(u8 *)(setup + 0x19);
+    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(u8 *)(obj + 0xad) = 0;
+    }
+    *(s16 *)(state + 8) = *(s16 *)(setup + 0x1a);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
+    *(u8 *)(obj + 0x36) = 0;
+}
+#pragma scheduling on
 void wctile_release(void) {}
 void wctile_initialise(void) {}
 
 int wcpressures_getExtraSize(void) { return 0x7c; }
+#pragma scheduling off
+int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    u8 i;
+
+    if (*(u8 *)(callbackData + 0x80) == 1) {
+        for (i = 0; i < 10; i++) {
+            int tile = *(int *)(state + 4 + i * 4);
+
+            if (tile != 0) {
+                *(f32 *)(state + 0x2c + i * 8) = *(f32 *)(tile + 0xc);
+                *(f32 *)(state + 0x30 + i * 8) = *(f32 *)(tile + 0x14);
+            }
+        }
+        *(u8 *)(callbackData + 0x80) = 0;
+    } else if (*(u8 *)(callbackData + 0x80) == 2) {
+        for (i = 0; i < 10; i++) {
+            *(int *)(state + 4 + i * 4) = 0;
+        }
+        *(f32 *)(obj + 0x14) = *(f32 *)(setup + 8);
+        *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
+        *(f32 *)(obj + 0x14) = *(f32 *)(setup + 0x10);
+        GameBit_Set(*(s16 *)(setup + 0x1a), 0);
+        *(u8 *)(callbackData + 0x80) = 0;
+    }
+
+    return 0;
+}
+#pragma scheduling on
+
 #pragma scheduling off
 int wcpressures_getObjectTypeId(int obj)
 {
@@ -417,6 +489,32 @@ void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 void wcpressures_hitDetect(void) {}
+#pragma scheduling off
+void wcpressures_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+
+    *(s16 *)obj = (s16)(*(u8 *)(setup + 0x18) << 8);
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+    *(u8 *)(obj + 0xad) = (s8)*(u8 *)(setup + 0x19);
+    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(u8 *)(obj + 0xad) = 0;
+    }
+
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x1a)) != 0) {
+        *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) - (f32)*(u8 *)(setup + 0x1c);
+        *(u8 *)state = 0x1e;
+        *(u8 *)(state + 1) = 2;
+    }
+
+    ObjGroup_AddObject(obj, 0x31);
+    for (i = 0; i < 10; i++) {
+        *(int *)(state + 4 + i * 4) = 0;
+    }
+    *(void **)(obj + 0xbc) = wcpressures_tileStateCallback;
+}
+#pragma scheduling on
 void wcpressures_release(void) {}
 void wcpressures_initialise(void) {}
 
