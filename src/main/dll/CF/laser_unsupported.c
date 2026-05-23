@@ -38,7 +38,7 @@ void laser_updateUnsupported(void)
   return;
 }
 
-void laser_initUnsupported(void)
+void laser_init(void)
 {
   OSReport(sLaserInitNoLongerSupported);
   return;
@@ -62,7 +62,7 @@ ObjectDescriptor gLaserUnsupportedObjDescriptor = {
     laser_initialiseUnsupported,
     laser_releaseUnsupported,
     0,
-    laser_initUnsupported,
+    laser_init,
     laser_updateUnsupported,
     laser_hitDetectUnsupported,
     laser_renderUnsupported,
