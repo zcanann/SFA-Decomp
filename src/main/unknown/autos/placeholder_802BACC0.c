@@ -11,6 +11,8 @@ extern f32 lbl_803E8258;
 extern f32 lbl_803E827C;
 extern f32 lbl_803E8298;
 extern f32 lbl_803E829C;
+extern f32 lbl_803E82A0;
+extern f32 lbl_803E8244;
 
 extern void setMatrixFromObjectPos(void *matrix, void *packedTransform);
 extern void Matrix_TransformPoint(double x, double y, double z, void *matrix, undefined4 outX,
@@ -26,8 +28,13 @@ extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 sc
 extern void ObjPath_GetPointWorldPosition(int obj, int point, f32 *out_x, f32 *out_y,
                                           f32 *out_z, int useInputPosition);
 extern void ObjPath_GetPointWorldPositionArray(int obj, int point, int count, f32 *out);
+extern u32 randomGetRange(int min, int max);
+extern u16 audioPickSoundEffect_8006ed24(u8 id, int bank);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void doRumble(f32 strength);
 
 extern undefined lbl_803DB0F0[];
+extern void *gPartfxInterface;
 
 #pragma peephole off
 #pragma scheduling off
@@ -272,11 +279,53 @@ int DIMSnowHorn1_setScale(int obj)
 }
 #pragma dont_inline reset
 
-/*
- * fn_802BB998 - 85-instruction helper. Stubbed.
- */
 #pragma dont_inline on
-void fn_802BB998(void) {}
+void fn_802BB998(int obj, int pointState, int inputState)
+{
+    u8 flags;
+    u8 pointIndex;
+    u8 count;
+    struct {
+        undefined4 unk0;
+        undefined4 unk4;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } args;
+
+    flags = 0;
+    if ((*(u32 *)(inputState + 0x314) & 2) != 0) {
+        flags |= 1;
+    }
+    if ((*(u32 *)(inputState + 0x314) & 4) != 0) {
+        flags |= 2;
+    }
+
+    pointIndex = 0;
+    while (flags != 0) {
+        if ((flags & 1) != 0) {
+            args.x = *(f32 *)(pointState + 0x9b0 + pointIndex * 0xc);
+            args.y = *(f32 *)(pointState + 0x9b4 + pointIndex * 0xc);
+            args.z = *(f32 *)(pointState + 0x9b8 + pointIndex * 0xc);
+            args.scale = lbl_803E82A0;
+
+            count = (u8)randomGetRange(2, 6);
+            while (count != 0) {
+                (*(void (**)(int, int, void *, int, int, int))(*(int *)gPartfxInterface + 8))(
+                    obj, randomGetRange(0, 1) + 0x1f9, &args, 0x10001, -1, 0);
+                count--;
+            }
+
+            Sfx_PlayFromObject(obj,
+                               audioPickSoundEffect_8006ed24((u8)(s8)*(u8 *)(inputState + 0xbc),
+                                                             9));
+            doRumble(lbl_803E8244);
+        }
+        flags >>= 1;
+        pointIndex++;
+    }
+}
 #pragma dont_inline reset
 
 /*
