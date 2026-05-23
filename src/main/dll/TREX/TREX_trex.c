@@ -1722,6 +1722,7 @@ extern void ObjAnim_SetMoveProgress(f32 progress, int obj);
 extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
 extern void ObjGroup_RemoveObject(int* obj, int group);
+extern void ObjGroup_AddObject(int obj, int group);
 extern void ModelLightStruct_free(int* p);
 extern void skyFn_80088c94(int a, int b);
 extern void Music_Trigger(int a, int b);
@@ -2627,7 +2628,28 @@ u8 shop_getItemMinPrice(int p, int idx)
 }
 #pragma scheduling reset
 #pragma peephole reset
-void shop_init(int obj, int objDef) {}
+#pragma scheduling off
+#pragma peephole off
+void shop_init(int obj, int objDef)
+{
+    int i;
+    u8 *item;
+
+    *(s8 *)(*(int *)(obj + 0xb8) + 1) = -1;
+    ObjGroup_AddObject(obj, 9);
+    i = 0;
+    item = lbl_80327FD0;
+    while (i < 0x3c) {
+        item[5] = item[randomGetRange(0, 2) + 1];
+        item += 0xc;
+        i++;
+    }
+    Music_Trigger(0x90, 1);
+    *(int *)(obj + 0xf8) = 0;
+    GameBit_Set(0xefe, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
  * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
  * unset.  (i.e. open by default, gated when slot != -1.) */
