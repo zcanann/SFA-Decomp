@@ -279,6 +279,8 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureFree,int flushSlot)
 {
   u8 *expgfxBase;
@@ -335,6 +337,8 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
     gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
