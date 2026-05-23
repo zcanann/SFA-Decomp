@@ -117,13 +117,13 @@ extern undefined4 DAT_803ddef8;
 extern undefined4 DAT_cc008000;
 extern u8 gExpgfxStaticPoolFrameFlags[];
 extern undefined4* gPartfxInterface;
-extern u8 lbl_803DC7B0;
+extern u8 gExpgfxUpdatingActivePools;
 extern u8 lbl_803DD253;
-extern u8 lbl_803DD254;
+extern u8 gExpgfxRenderResetPending;
 extern volatile f32 timeDelta;
-extern volatile f32 lbl_803DD25C;
-extern volatile f32 lbl_803DD260;
-extern volatile f32 lbl_803DD264;
+extern volatile f32 gExpgfxFrameTimerA;
+extern volatile f32 gExpgfxFrameTimerB;
+extern volatile f32 gExpgfxFrameTimerC;
 extern volatile f32 lbl_803DF354;
 extern volatile f32 lbl_803DF35C;
 extern volatile f32 lbl_803DF384;
@@ -1257,9 +1257,9 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     slotIndex++;
   } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
 
-  if (lbl_803DD254 != 0) {
+  if (gExpgfxRenderResetPending != 0) {
     fn_8009AD44(0);
-    lbl_803DD254 = 0;
+    gExpgfxRenderResetPending = 0;
   }
 }
 #pragma peephole reset
@@ -1563,31 +1563,31 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
 
   renderMode = renderModeSetOrGet(EXPGFX_INVALID_SLOT_TYPE);
   if ((short)renderMode != 1) {
-    frameValue = lbl_803DD25C + (frameStep = timeDelta);
-    lbl_803DD25C = frameValue;
+    frameValue = gExpgfxFrameTimerA + (frameStep = timeDelta);
+    gExpgfxFrameTimerA = frameValue;
     if (frameValue >= lbl_803DF418) {
-      lbl_803DD25C = lbl_803DF35C;
+      gExpgfxFrameTimerA = lbl_803DF35C;
     }
-    frameValue = lbl_803DD260 + frameStep;
-    lbl_803DD260 = frameValue;
+    frameValue = gExpgfxFrameTimerB + frameStep;
+    gExpgfxFrameTimerB = frameValue;
     if (frameValue >= lbl_803DF384) {
-      lbl_803DD260 = lbl_803DF35C;
+      gExpgfxFrameTimerB = lbl_803DF35C;
     }
-    frameValue = lbl_803DD264 + frameStep;
-    lbl_803DD264 = frameValue;
+    frameValue = gExpgfxFrameTimerC + frameStep;
+    gExpgfxFrameTimerC = frameValue;
     if (frameValue >= lbl_803DF354) {
-      lbl_803DD264 = lbl_803DF35C;
+      gExpgfxFrameTimerC = lbl_803DF35C;
     }
-    lbl_803DC7B0 = 1;
+    gExpgfxUpdatingActivePools = 1;
     expgfx_updateActivePools((u8)sourceMode,sourceId,0);
-    lbl_803DC7B0 = 0;
+    gExpgfxUpdatingActivePools = 0;
     poolIndex = EXPGFX_POOL_COUNT;
     while ((u8)poolIndex > 0) {
       poolIndex--;
       gExpgfxStaticPoolFrameFlags[(u8)poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
     }
     (*(code *)(*gPartfxInterface + 0xc))(0);
-    lbl_803DD254 = 1;
+    gExpgfxRenderResetPending = 1;
   }
   return;
 }
@@ -1614,7 +1614,7 @@ extern f32 lbl_803DF41C;
 extern f32 lbl_803DF420;
 extern f32 lbl_803DF424;
 extern f32 lbl_803DF428;
-extern int lbl_803DD26C;
+extern int gExpgfxLastAddedSlot;
 extern int lbl_803DD270;
 extern int lbl_803DD274;
 extern int lbl_803DD278;
@@ -1910,7 +1910,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
       boundsTemplateId;
 
   DCFlushRange(slot, EXPGFX_SLOT_SIZE);
-  lbl_803DD26C = (int)slot;
+  gExpgfxLastAddedSlot = (int)slot;
   return slot->sequenceId;
   }
 }
