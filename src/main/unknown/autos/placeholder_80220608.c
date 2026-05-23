@@ -20,6 +20,10 @@ extern int lbl_803DC398;
 extern void storeZeroToFloatParam(void *timer);
 extern void s16toFloat(void *timer, int duration);
 extern void gunpowderbarrel_clearHeldState(int obj);
+extern f32 lbl_803E6CE0;
+extern void dll_2E_func06(int obj, int state, int flags);
+extern int seqFn_800394a0(void);
+extern void fn_8003AAE0(int obj, int seq, int hitId, int p4, int p5);
 
 int drenergydisc_getExtraSize(void) { return 1; }
 int drenergydisc_getObjectTypeId(void) { return 0; }
@@ -222,6 +226,35 @@ void drbarrelgr_free(int obj)
 void drbarrelgr_hitDetect(void) {}
 void drbarrelgr_release(void) {}
 void drbarrelgr_initialise(void) {}
+
+int earthwalker_getExtraSize(void) { return 0x660; }
+int earthwalker_getObjectTypeId(void) { return 0; }
+void earthwalker_free(void) {}
+#pragma scheduling off
+#pragma peephole off
+void earthwalker_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6CE0);
+        dll_2E_func06(obj, state, 0);
+    }
+}
+#pragma peephole on
+#pragma scheduling on
+#pragma scheduling off
+void earthwalker_hitDetect(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (*(s16 *)(obj + 0xa0) == 0x203) {
+        fn_8003AAE0(obj, seqFn_800394a0(), *(u8 *)(state + 0x610), 0, 0x186a0);
+    }
+}
+#pragma scheduling on
+void earthwalker_release(void) {}
+void earthwalker_initialise(void) {}
 
 int fn_80223BBC(void) { return 0x2; }
 int fn_80223D10(void) { return 0x2; }
