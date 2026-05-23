@@ -425,9 +425,66 @@ void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
     }
 }
 
+typedef struct SkeetlaParticleSpawnArgs {
+    s16 objectId;
+    s16 pad0;
+    u16 sourceId;
+    u16 pad1;
+    u32 pad2;
+    f32 x;
+    f32 y;
+    f32 z;
+} SkeetlaParticleSpawnArgs;
+
+extern u32 randomGetRange(int min, int max);
+extern void *gPartfxInterface;
+
 /* fn_8013ADFC  addr=0x8013ADFC  size=0x1E4  linkage=global */
-void fn_8013ADFC(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+void fn_8013ADFC(u8 *obj)
+{
+    u8 *state;
+    u8 *linkedObj;
+    SkeetlaParticleSpawnArgs args;
+
+    state = *(u8 **)(obj + 0xb8);
+    linkedObj = *(u8 **)(state + 0x24);
+
+    args.x = *(f32 *)(state + 0x3d8);
+    args.y = *(f32 *)(state + 0x3dc);
+    args.z = *(f32 *)(state + 0x3e0);
+    args.objectId = *(s16 *)obj;
+    if (*(s16 *)(linkedObj + 0x46) == 0x1ca) {
+        args.sourceId =
+            (u8)(*(u32 (**)(u8 *))(*(int *)(*(int *)(linkedObj + 0x68)) + 0x28))(linkedObj);
+    } else if (*(s16 *)(linkedObj + 0x46) == 0x160) {
+        args.sourceId =
+            (u8)(*(u32 (**)(u8 *))(*(int *)(*(int *)(linkedObj + 0x68)) + 0x28))(linkedObj);
+    } else {
+        args.sourceId = 0;
+    }
+
+    if (randomGetRange(0, 4) == 0) {
+        (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
+            obj, 0xca, &args, 0x200001, -1, 0);
+    }
+    if (randomGetRange(0, 4) == 0) {
+        (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
+            obj, 0xcb, &args, 0x200001, -1, 0);
+    }
+
+    args.x = *(f32 *)(state + 0x3e4);
+    args.y = *(f32 *)(state + 0x3e8);
+    args.z = *(f32 *)(state + 0x3ec);
+    args.objectId = *(s16 *)obj;
+
+    if (randomGetRange(0, 4) == 0) {
+        (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
+            obj, 0xca, &args, 0x200001, -1, 0);
+    }
+    if (randomGetRange(0, 4) == 0) {
+        (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
+            obj, 0xcb, &args, 0x200001, -1, 0);
+    }
 }
 
 /* fn_8013AFE0  addr=0x8013AFE0  size=0x200  linkage=global */
