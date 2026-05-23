@@ -64,13 +64,13 @@ extern f32 lbl_803E34A0;
 #pragma peephole off
 void collectible_init(int obj,int setup)
 {
-  int state;
+  u8 *state;
   int setupObj;
-  int data;
+  u8 *data;
   u32 pathWord;
   u8 pathByte;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(u8 **)(obj + 0xb8);
   pathWord = lbl_803E3440;
   pathByte = lbl_803E3444;
   ObjGroup_AddObject(obj,4);
@@ -92,14 +92,14 @@ void collectible_init(int obj,int setup)
   *(s32 *)(state + 0x18) = -2;
   *(u8 *)(state + 0x1d) = 0;
   *(s16 *)(state + 0x14) = *(s16 *)(setup + 0x24);
-  *(u32 *)(state + 0x20) = *(u32 *)(setup + 0x14);
+  *(s32 *)(state + 0x20) = *(s32 *)(setup + 0x14);
   *(f32 *)(state + 0x24) = *(f32 *)(obj + 0xc);
   *(f32 *)(state + 0x28) = *(f32 *)(obj + 0x10);
   *(f32 *)(state + 0x2c) = *(f32 *)(obj + 0x14);
   *(u8 *)(state + 0x36) = *(u8 *)(setup + 0x27);
   *(u8 *)(state + 0x3e) = 0;
   if (*(s16 *)(state + 0x14) != -1) {
-    *(u8 *)(state + 0x1e) = (u8)(__cntlzw(GameBit_Get(*(s16 *)(state + 0x14))) >> 5);
+    *(u8 *)(state + 0x1e) = (u8)((u32)__cntlzw(GameBit_Get(*(s16 *)(state + 0x14))) >> 5);
   }
   *(s16 *)(state + 0x10) = *(s16 *)(setup + 0x1c);
   if (*(s16 *)(state + 0x10) != -1) {
@@ -108,15 +108,15 @@ void collectible_init(int obj,int setup)
     *(u32 *)(obj + 0xf4) = 0;
   }
   if (*(u32 *)(obj + 0xf4) == 0) {
-    data = *(int *)(*(int *)(obj + 0x50) + 0x18);
+    data = *(u8 **)(*(int *)(obj + 0x50) + 0x18);
     if (data != 0) {
       *(f32 *)(state + 4) = (f32)*(s8 *)(data + 8);
     } else {
       *(f32 *)(state + 4) = lbl_803E3494;
     }
-    data = *(int *)(*(int *)(obj + 0x50) + 0x40);
+    data = *(u8 **)(*(int *)(obj + 0x50) + 0x40);
     if (data != 0) {
-      *(f32 *)(state + 4) = (f32)((u32)*(u8 *)(data + 0xc) << 2);
+      *(f32 *)(state + 4) = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
     }
     if (((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 0x10000) != 0) &&
         (*(u8 *)(state + 0x36) != 0)) {
@@ -137,10 +137,10 @@ void collectible_init(int obj,int setup)
         *(f32 *)(state + 0x40) = lbl_803E34A0;
         break;
     }
-    (*(void (**)(int,int,int,int))(*(int *)gPathControlInterface + 4))(state + 0x50,0,0x40006,1);
-    (*(void (**)(int,int,u8 *,u32 *,u8 *))(*(int *)gPathControlInterface + 0xc))
+    (*(void (**)(u8 *,int,int,int))(*(int *)gPathControlInterface + 4))(state + 0x50,0,0x40006,1);
+    (*(void (**)(u8 *,int,u8 *,u32 *,u8 *))(*(int *)gPathControlInterface + 0xc))
         (state + 0x50,1,lbl_80320C58,&pathWord,&pathByte);
-    (*(void (**)(int,int))(*(int *)gPathControlInterface + 0x20))(obj,state + 0x50);
+    (*(void (**)(int,u8 *))(*(int *)gPathControlInterface + 0x20))(obj,state + 0x50);
   }
 }
 #pragma peephole reset
