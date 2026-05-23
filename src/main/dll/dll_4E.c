@@ -5,6 +5,10 @@ extern undefined4 FUN_80006768();
 extern undefined4 FUN_8000676c();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006824();
+extern void audioSetSoundMode(u8 mode, u8 enabled);
+extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void saveFileStruct_resetVolumes(void);
 
 extern undefined4 DAT_803a9430;
@@ -20,10 +24,19 @@ extern undefined4 DAT_803de384;
 extern undefined4 DAT_803de385;
 extern undefined4 DAT_803de388;
 
+extern int* gScreenTransitionInterface;
+extern int* gTitleMenuControlInterface;
+extern int* gTitleMenuItemInterface;
+extern int* lbl_803A87D0[8];
+extern int lbl_803DD6FC;
+extern u8 lbl_803DD704;
+extern u8 lbl_803DD705;
+extern u8 *lbl_803DD708;
+
 /*
  * --INFO--
  *
- * Function: FUN_8011bfc8
+ * Function: fn_8011BFC8
  * EN v1.0 Address: 0x8011BFC8
  * EN v1.0 Size: 872b
  * EN v1.1 Address: 0x8011C2AC
@@ -33,64 +46,61 @@ extern undefined4 DAT_803de388;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8011bfc8(int param_1,int param_2)
+#pragma scheduling off
+#pragma peephole off
+void fn_8011BFC8(int p1,int p2)
 {
-  int iVar1;
-  byte bVar3;
-  uint uVar2;
-  
-  if (((&DAT_803a9430)[param_2] != 0) && (iVar1 = (**(code **)(*DAT_803dd724 + 0x2c))(), iVar1 != 0)
-     ) {
-    if (param_2 == 3) {
-      uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a943c);
-      FUN_8000676c(uVar2 & 0xff,10,0,0,1);
-    }
-    else if (param_2 < 3) {
-      if (param_2 == 1) {
-        uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9434);
-        FUN_8000676c(uVar2 & 0xff,10,1,0,0);
-        (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9434);
-        (**(code **)(*DAT_803dd6f0 + 0x28))();
-      }
-      else if (param_2 < 1) {
-        if (-1 < param_2) {
-          bVar3 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[param_2]);
-          FUN_80006768(bVar3,'\x01');
+    int value;
+
+    if (lbl_803A87D0[p2] != NULL &&
+        (*(int(**)(int*))(*gTitleMenuItemInterface + 0x2c))(lbl_803A87D0[p2]) != 0) {
+        switch (p2) {
+        case 0:
+            audioSetSoundMode((u8)(*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]), 1);
+            break;
+        case 2:
+            value = (*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]);
+            audioSetVolumes((u8)value, 10, 0, 1, 0);
+            break;
+        case 1:
+            value = (*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]);
+            audioSetVolumes((u8)value, 10, 1, 0, 0);
+            value = (*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]);
+            (*(void(**)(int))(*gTitleMenuControlInterface + 0x28))(value);
+            break;
+        case 3:
+            value = (*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]);
+            audioSetVolumes((u8)value, 10, 0, 0, 1);
+            break;
+        case 5:
+            lbl_803DD6FC = (*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[p2]);
+            break;
         }
-      }
-      else {
-        uVar2 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[param_2]);
-        FUN_8000676c(uVar2 & 0xff,10,0,1,0);
-      }
     }
-    else if (param_2 == 5) {
-      DAT_803de37c = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9444);
+    if ((lbl_803A87D0[p2] == NULL) || ((p2 != 2) && (p2 != 1) && (p2 != 3))) {
+        Sfx_StopFromObject(0, 0x3b9);
     }
-  }
-  if (((&DAT_803a9430)[param_2] == 0) || (((param_2 != 2 && (param_2 != 1)) && (param_2 != 3)))) {
-    FUN_80006810(0,0x3b9);
-  }
-  if (param_1 == 0) {
-    FUN_80006824(0,0x100);
-    (**(code **)(*DAT_803dd6cc + 8))(0x14,5);
-    DAT_803de384 = 0x23;
-    DAT_803de385 = 1;
-  }
-  else if ((param_1 == 1) && (param_2 == 4)) {
-    saveFileStruct_resetVolumes();
-    (**(code **)(*DAT_803dd724 + 0x28))(DAT_803a9434,*(undefined *)(DAT_803de388 + 10));
-    (**(code **)(*DAT_803dd724 + 0x28))(DAT_803a9438,*(undefined *)(DAT_803de388 + 0xb));
-    (**(code **)(*DAT_803dd724 + 0x28))(DAT_803a943c,*(undefined *)(DAT_803de388 + 0xc));
-    uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9434);
-    FUN_8000676c(uVar2 & 0xff,10,0,1,0);
-    uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9438);
-    FUN_8000676c(uVar2 & 0xff,10,1,0,0);
-    uVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a943c);
-    FUN_8000676c(uVar2 & 0xff,10,0,0,1);
-    FUN_80006824(0,0x418);
-  }
-  return;
+    if (p1 == 0) {
+        Sfx_PlayFromObject(0, 0x100);
+        (*(void(**)(int, int))(*gScreenTransitionInterface + 0x8))(0x14, 5);
+        lbl_803DD704 = 0x23;
+        lbl_803DD705 = 1;
+    } else if ((p1 == 1) && (p2 == 4)) {
+        saveFileStruct_resetVolumes();
+        (*(void(**)(int*, u8))(*gTitleMenuItemInterface + 0x28))(lbl_803A87D0[1], lbl_803DD708[10]);
+        (*(void(**)(int*, u8))(*gTitleMenuItemInterface + 0x28))(lbl_803A87D0[2], lbl_803DD708[11]);
+        (*(void(**)(int*, u8))(*gTitleMenuItemInterface + 0x28))(lbl_803A87D0[3], lbl_803DD708[12]);
+        value = (*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[1]);
+        audioSetVolumes((u8)value, 10, 0, 1, 0);
+        value = (*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[2]);
+        audioSetVolumes((u8)value, 10, 1, 0, 0);
+        value = (*(int(**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[3]);
+        audioSetVolumes((u8)value, 10, 0, 0, 1);
+        Sfx_PlayFromObject(0, 0x418);
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern int fn_8011C7B4(void);
 extern int fn_8011CA74(void);

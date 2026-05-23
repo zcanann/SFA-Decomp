@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_8011bfc8(int param_1,int param_2);
+void fn_8011BFC8(int p1,int p2);
 
 #endif /* MAIN_DLL_DLL_4E_H_ */
