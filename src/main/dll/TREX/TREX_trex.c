@@ -1718,6 +1718,7 @@ extern u8 framesThisStep;
 extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
 extern int ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, int events);
 extern void *Obj_GetPlayerObject(void);
+extern f32 Vec_distance(void *a, void *b);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ModelLightStruct_free(int* p);
 extern void skyFn_80088c94(int a, int b);
@@ -1921,7 +1922,33 @@ void SB_CageKyte_init(int p)
 #pragma peephole off
 void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 #pragma peephole reset
-void SB_CageKyte_update(void) {}
+#pragma scheduling off
+#pragma peephole off
+void SB_CageKyte_update(int obj)
+{
+    s16 *state;
+    int player;
+
+    state = *(s16 **)(obj + 0xb8);
+    if (*(int *)(obj + 0xf4) > 0) {
+        *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - 1;
+    }
+
+    *(u8 *)(obj + 0xaf) = *(u8 *)(obj + 0xaf) | 8;
+    *state = *state - (u16)framesThisStep;
+    player = (int)Obj_GetPlayerObject();
+    Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18));
+
+    if (*state <= 0) {
+        randomGetRange(0, 10);
+        if ((u32)GameBit_Get(0xa71) == 0u) {
+            Sfx_PlayFromObject((int *)obj, 0x316);
+        }
+        *state = (s16)randomGetRange(400, 600);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudBall_free(int* obj)
