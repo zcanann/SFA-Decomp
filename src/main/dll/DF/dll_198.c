@@ -51,15 +51,15 @@ extern f64 lbl_803E4E48;
  */
 #pragma peephole off
 #pragma scheduling off
-void dfropenode_update(int obj)
+void dfropenode_update(DFropenodeObject *obj)
 {
   DFropenodeExtra *extra;
-  int objDef;
-  u32 linkedObj;
-  int *objects;
+  u8 *objDef;
+  DFropenodeObject *linkedObj;
+  DFropenodeObject **objects;
   int objectCount;
   int objectIndex;
-  int candidateObj;
+  DFropenodeObject *candidateObj;
   f32 dx;
   f32 dy;
   f32 dz;
@@ -78,36 +78,36 @@ void dfropenode_update(int obj)
   f32 normalZ;
   f32 normalLength;
 
-  objDef = *(int *)(obj + 0x4c);
-  extra = *(DFropenodeExtra **)(obj + 0xb8);
-  if ((*(u8 *)(objDef + 0x18) & 1) == 0) {
+  objDef = obj->definition;
+  extra = obj->extra;
+  if ((objDef[0x18] & 1) == 0) {
     return;
   }
 
   linkedObj = extra->linkedObj;
-  if (linkedObj == 0) {
-    objects = ObjList_GetObjects(&objectIndex, &objectCount);
+  if (linkedObj == NULL) {
+    objects = (DFropenodeObject **)ObjList_GetObjects(&objectIndex, &objectCount);
     objectIndex = 0;
-    while ((objectIndex < objectCount) && (linkedObj == 0)) {
+    while ((objectIndex < objectCount) && (linkedObj == NULL)) {
       candidateObj = *objects;
-      if ((*(s16 *)(candidateObj + 0x44) == 0x36) &&
-          ((u32)*(u8 *)(objDef + 0x18) == *(u8 *)(*(int *)(candidateObj + 0x4c) + 0x18) - 1)) {
+      if ((candidateObj->objType == 0x36) &&
+          ((u32)objDef[0x18] == candidateObj->definition[0x18] - 1)) {
         linkedObj = candidateObj;
       }
       objects++;
       objectIndex++;
     }
-    if (linkedObj == 0) {
+    if (linkedObj == NULL) {
       return;
     }
 
-    **(int **)(linkedObj + 0xb8) = obj;
-    extra = *(DFropenodeExtra **)(obj + 0xb8);
+    linkedObj->extra->linkedObj = obj;
+    extra = obj->extra;
     extra->linkedObj = linkedObj;
 
-    dx = *(f32 *)(linkedObj + 0xc) - *(f32 *)(obj + 0xc);
-    dy = *(f32 *)(linkedObj + 0x10) - *(f32 *)(obj + 0x10);
-    dz = *(f32 *)(linkedObj + 0x14) - *(f32 *)(obj + 0x14);
+    dx = linkedObj->posX - obj->posX;
+    dy = linkedObj->posY - obj->posY;
+    dz = linkedObj->posZ - obj->posZ;
     length = sqrtf(dz * dz + (dx * dx + dy * dy));
     angle = getAngle(dx, dz);
     if (angle > 0x8000) {
@@ -122,10 +122,10 @@ void dfropenode_update(int obj)
         DFRope_Create(0x10, lbl_803E4DFC, lbl_803E4DFC, lbl_803E4DFC, dx, dy, dz, length,
                       (&lbl_803DBF50)[*(u8 *)(objDef + 0x1b)]);
 
-    extra->minX = *(f32 *)(obj + 0xc);
-    extra->minZ = *(f32 *)(obj + 0x14);
-    extra->maxX = *(f32 *)(linkedObj + 0xc);
-    extra->maxZ = *(f32 *)(linkedObj + 0x14);
+    extra->minX = obj->posX;
+    extra->minZ = obj->posZ;
+    extra->maxX = linkedObj->posX;
+    extra->maxZ = linkedObj->posZ;
     if (extra->minX > extra->maxX) {
       temp = extra->minX;
       extra->minX = extra->maxX;
@@ -141,12 +141,12 @@ void dfropenode_update(int obj)
     extra->maxX += lbl_803E4E24;
     extra->maxZ += lbl_803E4E24;
 
-    baseX = *(f32 *)(obj + 0xc);
-    baseY = *(f32 *)(obj + 0x10);
-    baseZ = *(f32 *)(obj + 0x14);
-    linkedX = *(f32 *)(linkedObj + 0xc);
-    linkedY = *(f32 *)(linkedObj + 0x10);
-    linkedZ = *(f32 *)(linkedObj + 0x14);
+    baseX = obj->posX;
+    baseY = obj->posY;
+    baseZ = obj->posZ;
+    linkedX = linkedObj->posX;
+    linkedY = linkedObj->posY;
+    linkedZ = linkedObj->posZ;
     liftedY = lbl_803E4E28 + baseY;
 
     normalX = liftedY * (baseZ - linkedZ) +
@@ -187,19 +187,19 @@ void dfropenode_update(int obj)
  */
 #pragma peephole off
 #pragma scheduling off
-void dfropenode_init(int obj, int objDef)
+void dfropenode_init(DFropenodeObject *obj, u8 *objDef)
 {
   DFropenodeExtra *extra;
 
-  extra = *(DFropenodeExtra **)(obj + 0xb8);
+  extra = obj->extra;
   if ((&lbl_803DBF58)[*(u8 *)(objDef + 0x1b)] == 0) {
-    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) & ~0x80;
+    *(s16 *)((u8 *)obj + 6) = *(s16 *)((u8 *)obj + 6) & ~0x80;
   }
-  ObjGroup_AddObject(obj, 0x17);
-  *(void **)(obj + 0xbc) = dfropenode_syncRopeToEndpoints;
+  ObjGroup_AddObject((int)obj, 0x17);
+  *(void **)((u8 *)obj + 0xbc) = dfropenode_syncRopeToEndpoints;
   extra->rope = NULL;
-  extra->linkedObj = 0;
-  *(u8 *)(obj + 0x36) = 0x46;
+  extra->linkedObj = NULL;
+  *(u8 *)((u8 *)obj + 0x36) = 0x46;
 }
 #pragma scheduling reset
 #pragma peephole reset

@@ -26,13 +26,13 @@ extern f32 lbl_803E4E24;
  */
 #pragma scheduling off
 #pragma peephole off
-int dfropenode_syncRopeToEndpoints(int obj)
+int dfropenode_syncRopeToEndpoints(DFropenodeObject *obj)
 {
   DFropenodeExtra *extra;
-  DFRopeLink *link;
-  int endObj;
-  int baseObj;
+  DFropenodeObject *endObj;
+  DFropenodeObject *baseObj;
   int i;
+  DFRopeLink *link;
   int flag;
   s16 angle;
   f32 dx;
@@ -44,26 +44,26 @@ int dfropenode_syncRopeToEndpoints(int obj)
   f32 margin;
 
   baseObj = obj;
-  flag = *(u8 *)(*(int *)(baseObj + 0x4c) + 0x18) & 1;
+  flag = baseObj->definition[0x18] & 1;
   if (flag != 0) {
-    extra = *(DFropenodeExtra **)(baseObj + 0xb8);
+    extra = baseObj->extra;
     endObj = extra->linkedObj;
   } else {
     endObj = baseObj;
-    baseObj = *(int *)*(int *)(baseObj + 0xb8);
-    if ((void *)baseObj == NULL) {
+    baseObj = baseObj->extra->linkedObj;
+    if (baseObj == NULL) {
       return 0;
     }
-    extra = *(DFropenodeExtra **)(baseObj + 0xb8);
+    extra = baseObj->extra;
   }
 
-  if ((extra->rope == NULL) || (endObj == 0)) {
+  if ((extra->rope == NULL) || (endObj == NULL)) {
     return 0;
   }
 
-  dx = *(f32 *)(endObj + 0xc) - *(f32 *)(baseObj + 0xc);
-  dy = *(f32 *)(endObj + 0x10) - *(f32 *)(baseObj + 0x10);
-  dz = *(f32 *)(endObj + 0x14) - *(f32 *)(baseObj + 0x14);
+  dx = endObj->posX - baseObj->posX;
+  dy = endObj->posY - baseObj->posY;
+  dz = endObj->posZ - baseObj->posZ;
 
   angle = getAngle(dx, dz);
   if (angle > 0x8000) {
@@ -87,10 +87,10 @@ int dfropenode_syncRopeToEndpoints(int obj)
   extra->rope->nodes[i].pos[1] = dy;
   extra->rope->nodes[i].pos[2] = dz;
 
-  extra->minX = *(f32 *)(baseObj + 0xc);
-  extra->minZ = *(f32 *)(baseObj + 0x14);
-  extra->maxX = *(f32 *)(endObj + 0xc);
-  extra->maxZ = *(f32 *)(endObj + 0x14);
+  extra->minX = baseObj->posX;
+  extra->minZ = baseObj->posZ;
+  extra->maxX = endObj->posX;
+  extra->maxZ = endObj->posZ;
   if (extra->minX > extra->maxX) {
     temp = extra->minX;
     extra->minX = extra->maxX;
@@ -103,7 +103,7 @@ int dfropenode_syncRopeToEndpoints(int obj)
   }
 
   if (extra->minY != lbl_803E4DFC) {
-    clampY = extra->minY - *(f32 *)(baseObj + 0x10);
+    clampY = extra->minY - baseObj->posY;
     for (i = 0; i < extra->rope->count - 1; i++) {
       if (extra->rope->nodes[i].pos[1] < clampY) {
         extra->rope->nodes[i].pos[1] = clampY;
