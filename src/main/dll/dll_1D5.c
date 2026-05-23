@@ -2,6 +2,7 @@
 #include "main/dll/creator1D4.h"
 #include "main/dll/dll_1D5.h"
 #include "main/objHitReact.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80017680();
 extern double FUN_80017714();
@@ -30,8 +31,6 @@ extern void fn_8003A168(int obj, void *p);
 extern void characterDoEyeAnims(int obj, void *p);
 extern int cMenuGetSelectedItem(void);
 extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
-extern void ObjAnim_SetCurrentMove(int obj, int move, f32 stepScale, int flags);
-extern int ObjAnim_AdvanceCurrentMove(int obj, void *events, f32 stepScale, f32 delta);
 extern void fn_801CDF94(int obj, void *state, int flag);
 extern void fn_801CEE0C(int obj, void *state, void *objDef);
 extern void fn_801CED2C(int obj, void *state, void *objDef);
@@ -204,7 +203,8 @@ void nw_mammoth_update(int obj,int param_2)
     }
     *(f32 *)(state + 0x4c) = NW_MAMMOTH_MOVE_STEP_SCALES(table)[state[0x408]];
   }
-  if (ObjAnim_AdvanceCurrentMove(obj, state + 0x440, *(f32 *)(state + 0x4c), timeDelta) != 0) {
+  if (ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x4c), timeDelta, obj,
+                                 (ObjAnimEventList *)(state + 0x440)) != 0) {
     state[0x43c] = (u8)(state[0x43c] | NW_MAMMOTH_RUNTIME_ANIM_ENDED);
   } else {
     state[0x43c] = (u8)(state[0x43c] & ~NW_MAMMOTH_RUNTIME_ANIM_ENDED);
