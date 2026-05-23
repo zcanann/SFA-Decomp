@@ -1729,8 +1729,10 @@ extern f32 lbl_803E59AC;
 extern f32 lbl_803E59B0;
 extern f32 lbl_803E595C;
 extern f32 lbl_803E5960;
+extern f32 lbl_803E5918;
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
+extern f32 timeDelta;
 extern int* lbl_803DCAB4;
 #define gBoneParticleEffectInterface lbl_803DCAB4
 extern int Stack_IsEmpty(int stack);
@@ -1782,7 +1784,40 @@ void Flag_update(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_KyteCage_SeqFn(void) {}
+#pragma scheduling off
+#pragma peephole off
+int SB_KyteCage_SeqFn(int obj, int unused, int seqState)
+{
+    int state;
+    int i;
+
+    state = *(int *)(obj + 0xb8);
+    i = 0;
+    while (i < *(u8 *)(seqState + 0x8b)) {
+        u8 seqCode;
+
+        seqCode = *(u8 *)(seqState + (i + 0x81));
+        if (seqCode == 1) {
+            *(u8 *)(state + 4) = 1;
+        } else if (seqCode == 2) {
+            *(u8 *)(state + 4) = 2;
+        }
+        i++;
+    }
+
+    *(s16 *)(seqState + 0x6e) = -4;
+    if (*(s16 *)(obj + 0xb4) != -1) {
+        *(s16 *)(seqState + 0x6e) = (s16)(*(s16 *)(seqState + 0x6e) & ~4);
+        if (ObjAnim_AdvanceCurrentMove(obj, lbl_803E5918, timeDelta, 0) != 0) {
+            Sfx_PlayFromObject((int *)obj, 0x315);
+        }
+    }
+
+    *(u8 *)(seqState + 0x56) = 0;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
 #pragma scheduling off
@@ -2113,14 +2148,14 @@ void SB_KyteCage_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern void SB_KyteCage_SeqFn(void);
+extern int SB_KyteCage_SeqFn(int obj, int unused, int seqState);
 
 #pragma scheduling off
 #pragma peephole off
 void SB_KyteCage_init(int *obj, int *params)
 {
     int *state = *(int **)((char *)obj + 0xb8);
-    *(void (**)(void))((char *)obj + 0xbc) = SB_KyteCage_SeqFn;
+    *(int (**)(int, int, int))((char *)obj + 0xbc) = SB_KyteCage_SeqFn;
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
     *(u8 *)((char *)state + 0x4) = 0;
