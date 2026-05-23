@@ -525,12 +525,16 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfx_initSlotQuad(void *slotPtr)
 {
+  u8 *staticBase;
   ExpgfxSlot *slot;
   ExpgfxTableEntry *entry;
   ExpgfxQuadVertex *quad;
   ExpgfxQuadTemplateVertex *template;
+  u32 textureOrResource;
   u32 behaviorFlags;
   s16 texS0;
   s16 texS1;
@@ -539,16 +543,18 @@ void expgfx_initSlotQuad(void *slotPtr)
   f32 step;
 
   slot = (ExpgfxSlot *)slotPtr;
+  staticBase = gExpgfxStaticData;
   entry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
+  textureOrResource = entry->textureOrResource;
 
-  slot->stateBits.value =
-      (slot->stateBits.value & ~EXPGFX_SLOT_STATE_FRAME_PARITY) | EXPGFX_SLOT_STATE_QUAD_READY;
+  slot->stateBits.bits.frameParity = 0;
+  slot->stateBits.bits.quadReady = 1;
 
   behaviorFlags = slot->behaviorFlags;
   if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
-    template = (ExpgfxQuadTemplateVertex *)(gExpgfxStaticData + EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
+    template = (ExpgfxQuadTemplateVertex *)(staticBase + EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
   } else {
-    template = (ExpgfxQuadTemplateVertex *)(gExpgfxStaticData + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
+    template = (ExpgfxQuadTemplateVertex *)(staticBase + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
   }
 
   if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
@@ -574,14 +580,14 @@ void expgfx_initSlotQuad(void *slotPtr)
 
   if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
     slot->scaleCounter =
-        (s16)(int)((f32)(u16)slot->scaleFrames * step + (f32)(u16)slot->scaleCounter);
+        (int)((f32)(u16)slot->scaleFrames * step + (f32)(u16)slot->scaleCounter);
   } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
     slot->scaleCounter =
-        (s16)(int)((f32)(u16)slot->scaleCounter - (f32)(u16)slot->scaleFrames * step);
+        (int)((f32)(u16)slot->scaleCounter - (f32)(u16)slot->scaleFrames * step);
   }
 
-  if (entry->textureOrResource == 0) {
-    debugPrintf(sExpgfxNoTexture);
+  if (textureOrResource == 0) {
+    debugPrintf((char *)(staticBase + EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET));
     return;
   }
 
@@ -620,6 +626,8 @@ void expgfx_initSlotQuad(void *slotPtr)
   quad[3].texS = texS0;
   quad[3].texT = texT1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1770,14 +1778,14 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
 
   if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
     slot->scaleCounter = 0;
-    slot->scaleFrames = (s16)(int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
-    slot->scaleTarget = (s16)(int)scaleVal;
+    slot->scaleFrames = (int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
+    slot->scaleTarget = (int)scaleVal;
   } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
-    slot->scaleCounter = (s16)(int)scaleVal;
-    slot->scaleFrames = (s16)(int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
+    slot->scaleCounter = (int)scaleVal;
+    slot->scaleFrames = (int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
     slot->scaleTarget = slot->scaleCounter;
   } else {
-    slot->scaleCounter = (s16)(int)scaleVal;
+    slot->scaleCounter = (int)scaleVal;
     slot->scaleTarget = slot->scaleCounter;
     slot->scaleFrames = 0;
   }

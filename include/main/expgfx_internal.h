@@ -43,6 +43,7 @@
 #define EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET 0x150
 #define EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET 0x168
 #define EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET 0x358
+#define EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET 0x384
 
 /*
  * Flag names describe observed behavior in expgfx_addremove and drawGlow. Keep
@@ -287,9 +288,9 @@ typedef struct ExpgfxSlot {
   float velocityZ;
   u32 behaviorFlags;
   u32 renderFlags;
-  s16 scaleCounter;
-  s16 scaleTarget;
-  s16 scaleFrames;
+  u16 scaleCounter;
+  u16 scaleTarget;
+  u16 scaleFrames;
   u8 encodedTableIndex;
   ExpgfxSlotStateBits stateBits;
   u8 colorByte0;
