@@ -29,6 +29,7 @@ extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
+extern int *gExpgfxInterface;
 extern f64 DOUBLE_803e40e0;
 extern f64 DOUBLE_803e4108;
 extern f32 lbl_803DC074;
@@ -449,7 +450,7 @@ LAB_80172f50:
 /*
  * --INFO--
  *
- * Function: FUN_80173040
+ * Function: collectible_free
  * EN v1.0 Address: 0x80173040
  * EN v1.0 Size: 76b
  * EN v1.1 Address: 0x80172F80
@@ -459,10 +460,10 @@ LAB_80172f50:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80173040(int param_1)
+void collectible_free(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
-  ObjGroup_RemoveObject(param_1,4);
+  (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+  ObjGroup_RemoveObject(obj,4);
   return;
 }
 
