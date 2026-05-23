@@ -191,6 +191,7 @@ static void *skeetla_validateRouteEntry(void *entry)
     return entry;
 }
 
+#pragma dont_inline on
 /* fn_8013A6BC  addr=0x8013A6BC  size=0x138  linkage=global */
 void *fn_8013A6BC(u8 *state, u32 route, int pathId)
 {
@@ -227,6 +228,7 @@ void *fn_8013A6BC(u8 *state, u32 route, int pathId)
     *(int *)(state + 0x6ec) = pathId;
     return entry;
 }
+#pragma dont_inline reset
 
 /* fn_8013A7F4  addr=0x8013A7F4  size=0x1D4  linkage=global */
 void fn_8013A7F4(void) {
@@ -234,8 +236,51 @@ void fn_8013A7F4(void) {
 }
 
 /* fn_8013A9C8  addr=0x8013A9C8  size=0x184  linkage=global */
-void fn_8013A9C8(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
+{
+    void *entry;
+    u32 flagByte;
+    u16 secondaryLink;
+
+    entry = NULL;
+    flagByte = routeFlagValue & 0xff;
+
+    if ((*(u8 **)(state + 0x528) == routeDef) &&
+        (*(u16 *)(state + 0x530) == *(u16 *)(state + 0x532)) &&
+        (*(u8 *)(state + 0x536) == flagByte)) {
+        entry = skeetla_validateRouteEntry(*(void **)(state + 0x52c));
+    }
+
+    if (entry == NULL) {
+        entry = fn_8013A4EC(state, routeDef, *(u16 *)(state + 0x532), flagByte);
+        if (entry == NULL) {
+            entry = fn_8013A6BC(state, (u32)routeDef, *(u16 *)(state + 0x532));
+        }
+
+        if (entry == NULL) {
+            secondaryLink = *(u16 *)(state + 0x534);
+            if (secondaryLink != 0) {
+                entry = fn_8013A4EC(state, routeDef, secondaryLink, flagByte);
+                if (entry == NULL) {
+                    entry = fn_8013A6BC(state, (u32)routeDef, secondaryLink);
+                }
+                if (entry != NULL) {
+                    *(u16 *)(state + 0x532) = secondaryLink;
+                }
+            }
+        }
+
+        if (entry == NULL) {
+            entry = fn_8013A4EC(state, routeDef, 0, flagByte);
+            *(u16 *)(state + 0x532) = 0;
+        }
+    }
+
+    *(u8 **)(state + 0x528) = routeDef;
+    *(void **)(state + 0x52c) = entry;
+    *(u16 *)(state + 0x530) = *(u16 *)(state + 0x532);
+    *(u8 *)(state + 0x536) = routeFlagValue;
+    return entry;
 }
 
 /* fn_8013AB4C  addr=0x8013AB4C  size=0x2B0  linkage=global */
