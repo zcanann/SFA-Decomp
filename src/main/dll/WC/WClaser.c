@@ -1,309 +1,159 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WClaser.h"
 
-extern undefined4 getLActions();
-extern undefined4 FUN_80006b0c();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_80017a98();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80061a80();
-extern int FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_80294d74();
-
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dcd58;
-extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd710;
-extern undefined4* DAT_803dd714;
-extern undefined4* DAT_803dd72c;
-extern undefined4 DAT_803de8f0;
-extern undefined4 DAT_803de8f4;
-extern f32 lbl_803E6984;
-extern f32 lbl_803E6988;
-extern f32 lbl_803E698C;
-
-/*
- * --INFO--
- *
- * Function: WM_Galleon_update
- * EN v1.0 Address: 0x801F02F0
- * EN v1.0 Size: 900b
- * EN v1.1 Address: 0x801F05B4
- * EN v1.1 Size: 592b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4
-WM_Galleon_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,undefined4 param_10,int param_11)
-{
-  uint uVar1;
-  char cVar2;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar3;
-  
-  DAT_803dcd58 = (uint)DAT_803dc070;
-  *(undefined2 *)(param_11 + 0x6e) = 0xffff;
-  *(undefined *)(param_11 + 0x56) = 0;
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar3 = iVar3 + 1) {
-    switch(*(undefined *)(param_11 + iVar3 + 0x81)) {
-    case 1:
-      *(undefined4 *)(param_9 + 0xf4) = 10;
-      break;
-    case 2:
-      getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
-                   0x77,0,0,0,in_r9,in_r10);
-      getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
-                   0x78,0,0,0,in_r9,in_r10);
-      getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
-                   0x80,0,0,0,in_r9,in_r10);
-      break;
-    case 3:
-      param_1 = (**(code **)(*DAT_803dd714 + 0x14))(0,0x1e,0x50);
-      break;
-    case 4:
-      *(undefined4 *)(param_9 + 0xf4) = 0xc;
-      break;
-    case 5:
-      *(undefined4 *)(param_9 + 0xf4) = 0xd;
-      break;
-    case 6:
-      (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_9 + 0x34),1,0);
-      (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_9 + 0x34),2,0);
-      (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_9 + 0x34),4,0);
-      param_1 = GameBit_Set(0xd1,0);
-      break;
-    case 7:
-      DAT_803de8f0 = 1;
-      break;
-    case 8:
-      DAT_803de8f0 = 0;
-      break;
-    case 9:
-      *(undefined4 *)(param_9 + 0xf4) = 0xb;
-    }
-  }
-  uVar1 = GameBit_Get(0x429);
-  if ((uVar1 != 0) &&
-     (cVar2 = (**(code **)(*DAT_803dd72c + 0x4c))(*(undefined *)(param_9 + 0x34),2), cVar2 != '\0'))
-  {
-    (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_9 + 0x34),1,0);
-    (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_9 + 0x34),2,0);
-  }
-  return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801f0674
- * EN v1.0 Address: 0x801F0674
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801F0804
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801f0674(int param_1,int param_2)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801f0678
- * EN v1.0 Address: 0x801F0678
- * EN v1.0 Size: 160b
- * EN v1.1 Address: 0x801F0864
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801f0678(void)
-{
-  int iVar1;
-  uint uVar2;
-  char in_r8;
-  
-  iVar1 = FUN_8028683c();
-  uVar2 = GameBit_Get(0x78);
-  if (((uVar2 == 0) && (in_r8 != '\0')) &&
-     ((*(short *)(iVar1 + 0x46) != 0x188 || (*(int *)(*(int *)(iVar1 + 0x30) + 0xf4) < 7)))) {
-    FUN_8003b818(iVar1);
-    if (DAT_803de8f0 != '\0') {
-      (**(code **)(*DAT_803dd710 + 4))(1);
-    }
-  }
-  FUN_80286888();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801f0718
- * EN v1.0 Address: 0x801F0718
- * EN v1.0 Size: 788b
- * EN v1.1 Address: 0x801F0928
- * EN v1.1 Size: 740b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801f0718(short *param_1)
-{
-  uint uVar1;
-  short *psVar2;
-  char cVar3;
-  undefined4 *puVar4;
-  
-  uVar1 = GameBit_Get(0x78);
-  if (uVar1 == 0) {
-    if (param_1[0x23] == 0x188) {
-      *(undefined *)(param_1 + 0x1b) = 0x80;
-    }
-    else {
-      psVar2 = (short *)FUN_80017a98();
-      puVar4 = *(undefined4 **)(param_1 + 0x5c);
-      uVar1 = GameBit_Get(0x429);
-      if (uVar1 == 0) {
-        uVar1 = GameBit_Get(0xd0);
-        if ((uVar1 == 0) &&
-           (cVar3 = (**(code **)(*DAT_803dd72c + 0x4c))(*(undefined *)(param_1 + 0x1a),2),
-           cVar3 == '\0')) {
-          (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_1 + 0x1a),1,1);
-          (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_1 + 0x1a),2,1);
-        }
-      }
-      else {
-        cVar3 = (**(code **)(*DAT_803dd72c + 0x4c))(*(undefined *)(param_1 + 0x1a),2);
-        if (cVar3 != '\0') {
-          (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_1 + 0x1a),1,0);
-          (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_1 + 0x1a),2,0);
-        }
-      }
-      uVar1 = GameBit_Get(0xd0);
-      if (uVar1 == 0) {
-        if ((*(char *)(puVar4 + 3) == '\0') && (uVar1 = GameBit_Get(0x429), uVar1 == 0)) {
-          (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_1 + 0x1a),1,1);
-          (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_1 + 0x1a),2,1);
-          *(undefined *)(puVar4 + 3) = 1;
-        }
-      }
-      else {
-        cVar3 = (**(code **)(*DAT_803dd72c + 0x4c))(*(undefined *)(param_1 + 0x1a),4);
-        if (cVar3 == '\0') {
-          (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(param_1 + 0x1a),4,1);
-        }
-        if (*(char *)(puVar4 + 3) != '\0') {
-          *(undefined *)(puVar4 + 3) = 0;
-        }
-      }
-      uVar1 = GameBit_Get(0xa4);
-      if (uVar1 == 0) {
-        *(float *)(psVar2 + 6) = lbl_803E6984;
-        *(float *)(psVar2 + 8) = lbl_803E6988;
-        *(float *)(psVar2 + 10) = lbl_803E698C;
-        FUN_80061a80(psVar2,param_1,0);
-        FUN_80294d74((int)psVar2);
-        param_1[0x7c] = 0;
-        param_1[0x7d] = 1;
-      }
-      else {
-        param_1[0x7a] = 0;
-        param_1[0x7b] = 10;
-        if (*(int *)(param_1 + 0x7c) == 1) {
-          *(undefined4 *)(param_1 + 6) = *puVar4;
-          *(undefined4 *)(param_1 + 8) = puVar4[1];
-          *(undefined4 *)(param_1 + 10) = puVar4[2];
-          *param_1 = *(short *)((int)puVar4 + 0xe);
-          (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
-          param_1[0x7c] = 0;
-          param_1[0x7d] = 2;
-        }
-      }
-    }
-  }
-  return;
-}
-
-
-/* Trivial 4b 0-arg blr leaves. */
-void WM_Galleon_release(void) {}
-void WM_Galleon_initialise(void) {}
+extern int Obj_GetPlayerObject(void);
+extern undefined4 *ObjGroup_GetObjects(int group, int *countOut);
+extern void ObjMsg_AllocQueue(void *obj, int capacity);
+extern void objSetSlot(int *obj, int slot);
+extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
+extern void objRenderFn_8003b8f4(f32 scale);
+extern void fn_80065574(int a, int *obj, int b);
+extern int fn_801EFF7C(int p1, int p2, void *p3);
+extern void fn_80296BBC(int player);
+extern void buttonDisable(int controller, int mask);
+extern void textureFree(void *resource);
+extern int ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 moveProgress, int flags);
 
 extern int *gMapEventInterface;
-extern void objSetSlot(int *obj, int slot);
-extern int fn_801EFF7C(int p1, int p2, void *p3);
-extern void fn_80065574(int a, int *obj, int b);
+extern int *gObjectTriggerInterface;
+extern int *gScreenTransitionInterface;
+extern int *gModgfxInterface;
+
+extern f32 timeDelta;
+extern u8 lbl_803DDC78;
+extern f32 lbl_803E5CEC;
+extern f32 lbl_803E5CF0;
+extern f32 lbl_803E5CF4;
+extern f32 lbl_803E5CF8;
+extern f32 lbl_803E5D00;
+extern f32 lbl_803E5D04;
+extern f32 lbl_803E5D08;
+
+#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
+#define OBJ_S8(obj, offset) (*(s8 *)((u8 *)(obj) + (offset)))
+#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
+#define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
+#define OBJ_F32(obj, offset) (*(f32 *)((u8 *)(obj) + (offset)))
+#define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
+
+#define MAP_EVENT_TEST(mapId, eventId) \
+    ((int (*)(int, int))(*(u32 *)((u8 *)*gMapEventInterface + 0x4c)))((mapId), (eventId))
+#define MAP_EVENT_SET(mapId, eventId, value) \
+    ((void (*)(int, int, int))(*(u32 *)((u8 *)*gMapEventInterface + 0x50)))((mapId), (eventId), (value))
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
+    ((void (*)(int, int *, int))(*(u32 *)((u8 *)*gObjectTriggerInterface + 0x48)))((eventId), (obj), (arg))
+#define SCREEN_TRANSITION_START(kind, value) \
+    ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0xc)))((kind), (value))
 
 #pragma scheduling off
 #pragma peephole off
-void WM_Galleon_init(int *obj, u8 *init) {
-    u8 *sub;
+void WM_Galleon_update(int *obj)
+{
+    int player;
+    u8 *state;
+    int gameBitA4;
+    int mapId;
+
+    if (GameBit_Get(0x78) != 0) {
+        return;
+    }
+
+    if (OBJ_S16(obj, 0x46) == 0x188) {
+        OBJ_U8(obj, 0x36) = 0x80;
+        return;
+    }
+
+    player = Obj_GetPlayerObject();
+    state = (u8 *)OBJ_PTR(obj, 0xb8);
+    mapId = OBJ_U8(obj, 0x34);
+
+    if (GameBit_Get(0x429) != 0) {
+        if ((u8)MAP_EVENT_TEST(mapId, 2) != 0) {
+            MAP_EVENT_SET(mapId, 1, 0);
+            MAP_EVENT_SET(mapId, 2, 0);
+        }
+    } else if ((GameBit_Get(0xd0) == 0) && ((u8)MAP_EVENT_TEST(mapId, 2) == 0)) {
+        MAP_EVENT_SET(mapId, 1, 1);
+        MAP_EVENT_SET(mapId, 2, 1);
+    }
+
+    if (GameBit_Get(0xd0) == 0) {
+        if ((state[0xc] == 0) && (GameBit_Get(0x429) == 0)) {
+            MAP_EVENT_SET(mapId, 1, 1);
+            MAP_EVENT_SET(mapId, 2, 1);
+            state[0xc] = 1;
+        }
+    } else {
+        if ((u8)MAP_EVENT_TEST(mapId, 4) == 0) {
+            MAP_EVENT_SET(mapId, 4, 1);
+        }
+        if (state[0xc] != 0) {
+            state[0xc] = 0;
+        }
+    }
+
+    gameBitA4 = GameBit_Get(0xa4);
+    if (gameBitA4 != 0) {
+        OBJ_S32(obj, 0xf4) = 10;
+    }
+    if (gameBitA4 == 0) {
+        OBJ_F32(player, 0xc) = lbl_803E5CEC;
+        OBJ_F32(player, 0x10) = lbl_803E5CF0;
+        OBJ_F32(player, 0x14) = lbl_803E5CF4;
+        objHitDetectFn_80062e84(player, (int)obj, 0);
+        fn_80296BBC(player);
+        OBJ_S32(obj, 0xf8) = 1;
+    } else if (OBJ_S32(obj, 0xf8) == 1) {
+        OBJ_F32(obj, 0xc) = *(f32 *)(state + 0);
+        OBJ_F32(obj, 0x10) = *(f32 *)(state + 4);
+        OBJ_F32(obj, 0x14) = *(f32 *)(state + 8);
+        OBJ_S16(obj, 0) = *(s16 *)(state + 0xe);
+        OBJECT_TRIGGER_REFRESH(0, obj, -1);
+        OBJ_S32(obj, 0xf8) = 2;
+    }
+}
+
+void WM_Galleon_init(int *obj, u8 *init)
+{
+    u8 *state;
     int i;
 
-    sub = *(u8**)((char*)obj + 0xb8);
-    if (GameBit_Get(0x78) != 0) return;
-    if (*(s16*)((char*)obj + 0x46) == 0x188) return;
+    state = (u8 *)OBJ_PTR(obj, 0xb8);
+    if (GameBit_Get(0x78) != 0) {
+        return;
+    }
+    if (OBJ_S16(obj, 0x46) == 0x188) {
+        return;
+    }
     objSetSlot(obj, 0x5a);
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_801EFF7C;
-    *(s16*)obj = (s16)((s8)init[0x18] << 8);
-    *(int*)((char*)obj + 0xf4) = 9;
-    *(f32*)sub = *(f32*)((char*)obj + 0xc);
-    *(f32*)(sub + 4) = *(f32*)((char*)obj + 0x10);
-    *(f32*)(sub + 8) = *(f32*)((char*)obj + 0x14);
-    *(s16*)(sub + 0xe) = *(s16*)obj;
+    OBJ_PTR(obj, 0xbc) = (void *)&fn_801EFF7C;
+    OBJ_S16(obj, 0) = (s16)((s8)init[0x18] << 8);
+    OBJ_S32(obj, 0xf4) = 9;
+    *(f32 *)(state + 0) = OBJ_F32(obj, 0xc);
+    *(f32 *)(state + 4) = OBJ_F32(obj, 0x10);
+    *(f32 *)(state + 8) = OBJ_F32(obj, 0x14);
+    *(s16 *)(state + 0xe) = OBJ_S16(obj, 0);
     fn_80065574(0, obj, 0);
     for (i = 0; i < 5; i++) {
-        ((void(*)(int, int, int))((void**)*(int*)gMapEventInterface)[20])(*(u8*)((char*)obj + 0x34), i, 0);
+        MAP_EVENT_SET(OBJ_U8(obj, 0x34), i, 0);
     }
     GameBit_Set(0xa4, 1);
 }
 #pragma peephole reset
 #pragma scheduling reset
-void WM_seqobject_free(void) {}
-void WM_seqobject_hitDetect(void) {}
-void WM_seqobject_release(void) {}
-void WM_seqobject_initialise(void) {}
-void dll_1FB_free_nop(void) {}
-void dll_1FB_hitDetect_nop(void) {}
-void dll_1FB_release_nop(void) {}
-void dll_1FB_initialise_nop(void) {}
-void LaserBeam_render(void) {}
-void LaserBeam_hitDetect(void) {}
 
-/* 8b "li r3, N; blr" returners. */
-int WM_seqobject_getExtraSize(void) { return 0x1; }
-int WM_seqobject_getObjectTypeId(void) { return 0x0; }
-int dll_1FB_getExtraSize_ret_12(void) { return 0xc; }
-int dll_1FB_getObjectTypeId(void) { return 0x0; }
-int LaserBeam_getExtraSize(void) { return 0x50; }
-int LaserBeam_getObjectTypeId(void) { return 0x0; }
+void WM_Galleon_release(void) {}
+void WM_Galleon_initialise(void) {}
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5CF8;
-extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
-void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5CF8); }
-#pragma peephole reset
-
-extern u8 lbl_803DDC78;
 #pragma scheduling off
 #pragma peephole off
-int fn_801F06D8(int p1, int p2, u8 *arg3) {
+int fn_801F06D8(int p1, int p2, u8 *arg3)
+{
     int i;
+
     for (i = 0; i < (int)arg3[0x8b]; i++) {
         if (arg3[0x81 + i] == 1) {
             lbl_803DDC78 = (u8)(1 - lbl_803DDC78);
@@ -313,32 +163,169 @@ int fn_801F06D8(int p1, int p2, u8 *arg3) {
     arg3[0x56] = 0;
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-void WM_seqobject_init(int *obj, s8 *def) {
-    *(s16*)obj = (s16)((s32)def[0x18] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)fn_801F06D8;
-    *(int*)((char*)obj + 0xf8) = 0x14;
+int WM_seqobject_getExtraSize(void) { return 1; }
+int WM_seqobject_getObjectTypeId(void) { return 0; }
+void WM_seqobject_free(void) {}
+
+#pragma peephole off
+void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+
+    if (v != 0) {
+        objRenderFn_8003b8f4(lbl_803E5CF8);
+    }
+}
+#pragma peephole reset
+
+void WM_seqobject_hitDetect(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+void WM_seqobject_update(int *obj)
+{
+    int count;
+    int *objects;
+    int found;
+    int i;
+
+    if (OBJ_S8(OBJ_PTR(obj, 0x4c), 0x19) != 0) {
+        return;
+    }
+    if (OBJ_S32(obj, 0xf4) != 0) {
+        return;
+    }
+    if (GameBit_Get(0xa4) != 0) {
+        return;
+    }
+    if (GameBit_Get(0x78) != 0) {
+        return;
+    }
+
+    objects = (int *)ObjGroup_GetObjects(6, &count);
+    found = 0;
+    for (i = 0; i < count; i++) {
+        if (OBJ_S16(*(int **)(objects + i), 0x46) == 0x139) {
+            found = 1;
+        }
+    }
+
+    if (found != 0) {
+        if (OBJ_S32(obj, 0xf8) == 0) {
+            OBJECT_TRIGGER_REFRESH(0, obj, -1);
+            OBJ_S32(obj, 0xf4) = 1;
+            GameBit_Set(0xa4, 1);
+        } else {
+            SCREEN_TRANSITION_START(0x50, 1);
+        }
+    } else {
+        OBJ_S32(obj, 0xf8) = 0x14;
+        SCREEN_TRANSITION_START(0x50, 1);
+    }
+
+    OBJ_S32(obj, 0xf8)--;
+    if (OBJ_S32(obj, 0xf8) < 0) {
+        OBJ_S32(obj, 0xf8) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void WM_seqobject_init(int *obj, s8 *def)
+{
+    OBJ_S16(obj, 0) = (s16)((s32)def[0x18] << 8);
+    OBJ_PTR(obj, 0xbc) = (void *)fn_801F06D8;
+    OBJ_S32(obj, 0xf8) = 0x14;
 }
 
-int dll_1FB_SeqFn(int *obj, int unused, s16 *p) {
-    int *state = *(int**)((char*)obj + 0xb8);
-    s16 v = *(s16*)((char*)state + 6);
-    if (v == 1 || v == 2) {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+void WM_seqobject_release(void) {}
+void WM_seqobject_initialise(void) {}
+
+int dll_1FB_SeqFn(int *obj, int unused, s16 *p)
+{
+    int *state = (int *)OBJ_PTR(obj, 0xb8);
+    s16 mode = *(s16 *)((u8 *)state + 6);
+
+    if ((mode == 1) || (mode == 2)) {
+        OBJ_U8(obj, 0xaf) = (u8)(OBJ_U8(obj, 0xaf) | 8);
     }
-    *(s16*)((char*)p + 0x70) = -1;
-    *(u8*)((char*)p + 0x56) = 0;
+    *(s16 *)((u8 *)p + 0x70) = -1;
+    *(u8 *)((u8 *)p + 0x56) = 0;
     return 0;
 }
 
-extern f32 lbl_803E5D00;
-void dll_1FB_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
-    u8 *state = *(u8**)((char*)obj + 0xb8);
+int dll_1FB_getExtraSize_ret_12(void) { return 0xc; }
+int dll_1FB_getObjectTypeId(void) { return 0; }
+void dll_1FB_free_nop(void) {}
+
+void dll_1FB_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8 *state = (u8 *)OBJ_PTR(obj, 0xb8);
+
     if (visible != 0) {
         if (state[9] == 0) {
             objRenderFn_8003b8f4(lbl_803E5D00);
         }
     }
 }
+
+void dll_1FB_hitDetect_nop(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+void dll_1FB_update(int *obj)
+{
+    u8 *state = (u8 *)OBJ_PTR(obj, 0xb8);
+
+    if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (*(s16 *)(state + 6) == 2) &&
+        (GameBit_Get(0x9ad) == 0)) {
+        OBJECT_TRIGGER_REFRESH(4, obj, -1);
+        buttonDisable(0, 0x100);
+        GameBit_Set(0x9ad, 1);
+    }
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D04, timeDelta, 0);
+}
+
+void dll_1FB_init(int *obj, u8 *def)
+{
+    u8 *state;
+
+    state = (u8 *)OBJ_PTR(obj, 0xb8);
+    ObjMsg_AllocQueue(obj, 4);
+    OBJ_PTR(obj, 0xbc) = (void *)dll_1FB_SeqFn;
+    OBJ_S16(obj, 0) = (s16)((s8)def[0x18] << 8);
+    OBJ_S16(obj, 2) = *(s16 *)(def + 0x1c);
+    *(s16 *)(state + 4) = (s16)(s8)def[0x19];
+    *(s16 *)(state + 6) = *(s16 *)(def + 0x1a);
+    ObjAnim_SetCurrentMove((int)obj, (int)*(s16 *)(state + 4) + 0x100, lbl_803E5D08, 0);
+}
 #pragma peephole reset
 #pragma scheduling reset
+
+void dll_1FB_release_nop(void) {}
+void dll_1FB_initialise_nop(void) {}
+
+int LaserBeam_getExtraSize(void) { return 0x50; }
+int LaserBeam_getObjectTypeId(void) { return 0; }
+
+#pragma scheduling off
+#pragma peephole off
+void LaserBeam_init(int *obj)
+{
+    void **state;
+
+    state = (void **)OBJ_PTR(obj, 0xb8);
+    ((void (*)(int *))(*(u32 *)((u8 *)*gModgfxInterface + 0x18)))(obj);
+    if (state[0] != 0) {
+        textureFree(state[0]);
+        state[0] = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void LaserBeam_render(void) {}
+void LaserBeam_hitDetect(void) {}
