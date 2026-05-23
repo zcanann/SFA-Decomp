@@ -108,7 +108,7 @@ void saveFileSelect_checkCheatCodes(void)
 #pragma scheduling off
 void saveSelect_drawText(int param_1, int param_2)
 {
-    char buf[20];
+    char buf[16];
 
     drawTexture(lbl_803A8680[1], param_2, lbl_803E1D58, lbl_803E1D5C, 0x100);
     drawTexture(lbl_803A8680[2], param_2, lbl_803E1D60, lbl_803E1D5C, 0x100);
@@ -126,7 +126,9 @@ void saveSelect_drawText(int param_1, int param_2)
         u32 mins = secs / 0xe10;
         int rem = secs - mins * 0xe10;
         int m_in_h = rem / 0x3c;
-        int s_in_m = rem - m_in_h * 0x3c;
+        int s_in_m;
+        m_in_h = (u8)m_in_h;
+        s_in_m = rem - m_in_h * 0x3c;
         sprintf(buf, sFrontendTimeFormat, mins, (u32)(u8)m_in_h, (u32)(u8)s_in_m);
         gameTextShowStr(buf, 0x43, 0, 0);
     }
