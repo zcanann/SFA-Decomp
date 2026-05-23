@@ -64,6 +64,8 @@ void trickyMove(void) {
 extern f32 lbl_803E247C;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E23E8;
+extern f32 lbl_803E2480;
+extern f32 sqrtf(f32 x);
 
 /* objAnimFn_8013a3f0  addr=0x8013A3F0  size=0xFC  linkage=global */
 #pragma peephole off
@@ -488,8 +490,80 @@ void fn_8013ADFC(u8 *obj)
 }
 
 /* fn_8013AFE0  addr=0x8013AFE0  size=0x200  linkage=global */
-void fn_8013AFE0(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+void fn_8013AFE0(f32 *start, f32 *end, f32 *guardPoint, f32 *center, f32 minDistance, f32 moveDistance)
+{
+    f32 projection[3];
+    f32 centerToStart;
+    f32 centerToEnd;
+    f32 minDistanceSq;
+    f32 limitDistanceSq;
+    f32 guardDistance;
+    f32 startGuardDistance;
+    f32 slope;
+    f32 intercept;
+    f32 perpSlope;
+    f32 dx;
+    f32 dz;
+    f32 length;
+    f32 adjustedDistance;
+    int useBlendedDistance;
+
+    useBlendedDistance = 0;
+    centerToStart = getXZDistance(center, start);
+    centerToEnd = getXZDistance(center, end);
+    minDistanceSq = minDistance * minDistance;
+    limitDistanceSq = moveDistance * moveDistance;
+
+    if (centerToEnd > centerToStart) {
+        return;
+    }
+
+    guardDistance = getXZDistance(guardPoint, center);
+    if (guardDistance < minDistanceSq) {
+        return;
+    }
+
+    startGuardDistance = getXZDistance(start, guardPoint);
+    if (getXZDistance(start, center) > startGuardDistance) {
+        return;
+    }
+
+    if (centerToStart < limitDistanceSq) {
+        limitDistanceSq = centerToStart;
+        useBlendedDistance = 1;
+    }
+
+    if (centerToEnd >= limitDistanceSq) {
+        return;
+    }
+
+    slope = (end[2] - start[2]) / (end[0] - start[0]);
+    intercept = start[2] - (slope * start[0]);
+    perpSlope = (start[0] - end[0]) / (end[2] - start[2]);
+    projection[0] = ((center[2] - (perpSlope * center[0])) - intercept) / (slope - perpSlope);
+    projection[2] = (slope * projection[0]) + intercept;
+
+    if (getXZDistance(center, projection) >= minDistanceSq) {
+        return;
+    }
+
+    dx = end[0] - center[0];
+    dz = end[2] - center[2];
+    length = sqrtf((dx * dx) + (dz * dz));
+    if (length != lbl_803E23E8) {
+        dx /= length;
+        dz /= length;
+    }
+
+    adjustedDistance = moveDistance;
+    if (useBlendedDistance != 0) {
+        adjustedDistance = sqrtf(limitDistanceSq);
+        adjustedDistance =
+            adjustedDistance - ((adjustedDistance - sqrtf(centerToEnd)) * lbl_803E2480);
+    }
+
+    end[0] = center[0] + (dx * adjustedDistance);
+    end[2] = center[2] + (dz * adjustedDistance);
 }
 
 /* fn_8013B1E0  addr=0x8013B1E0  size=0x188  linkage=global */
