@@ -30,16 +30,20 @@ extern int coordsToMapCell(f32 x, f32 z);
 extern int ObjGroup_FindNearestObject(int group, u8 *obj, f32 *outDistance);
 extern int ObjHits_PollPriorityHitWithCooldown(u8 *obj, f32 *cooldown, void **outObj, f32 *outPos);
 
+#pragma peephole off
+#pragma scheduling off
 /* fn_8013939C  addr=0x8013939C  size=0x498  linkage=global */
 void fn_8013939C(u8 *obj)
 {
     u8 *state;
+    f32 hitOffsetY;
     void *lastContactObj;
     f32 nearestDistance;
-    f32 hitOffset[3];
+    f32 hitPos[3];
     f32 lightArgs[3];
-    f32 hitPos[5];
-    int doGroundSnap;
+    f32 *hitPosPtr;
+    u8 doGroundSnap;
+    int doHeightSnap;
     int hitKind;
 
     state = *(u8 **)(obj + 0xb8);
@@ -65,23 +69,35 @@ void fn_8013939C(u8 *obj)
 
     if (doGroundSnap != 0) {
         hitDetectFn_800658a4(obj, *(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c),
-                             *(f32 *)(obj + 0x20), hitOffset, 0);
-        *(f32 *)(obj + 0x10) -= hitOffset[0];
+                             *(f32 *)(obj + 0x20), &hitOffsetY, 0);
+        *(f32 *)(obj + 0x10) -= hitOffsetY;
         *(u8 *)(state + 0x353) = 0;
     }
 
-    if ((*(s8 *)(state + 0x353) == 0) || ((*(u8 *)(state + 0x58) & 0x20) != 0)) {
-        *(f32 *)(obj + 0x28) = lbl_803E23DC;
-    } else {
-        if ((*(f32 *)(state + 0x2ac) != lbl_803E23DC) &&
-            ((*(f32 *)(state + 0x2b0) == lbl_803E2410) ||
-             (*(f32 *)(state + 0x2b4) - *(f32 *)(state + 0x2b0) > lbl_803E2414))) {
-            *(f32 *)(obj + 0x28) = lbl_803E23DC;
-            *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x2b4) - lbl_803E23EC;
+    if (*(s8 *)(state + 0x353) != 0) {
+        if ((*(u8 *)(state + 0x58) & 0x20) == 0) {
+            if (*(f32 *)(state + 0x2ac) == lbl_803E23DC) {
+                doHeightSnap = 0;
+            } else if (*(f32 *)(state + 0x2b0) == lbl_803E2410) {
+                doHeightSnap = 1;
+            } else if (*(f32 *)(state + 0x2b4) - *(f32 *)(state + 0x2b0) > lbl_803E2414) {
+                doHeightSnap = 1;
+            } else {
+                doHeightSnap = 0;
+            }
+
+            if (doHeightSnap != 0) {
+                *(f32 *)(obj + 0x28) = lbl_803E23DC;
+                *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x2b4) - lbl_803E23EC;
+            } else {
+                *(f32 *)(obj + 0x28) += lbl_803E2428 * timeDelta;
+                *(f32 *)(obj + 0x10) += *(f32 *)(obj + 0x28) * timeDelta;
+            }
         } else {
-            *(f32 *)(obj + 0x28) += lbl_803E2428 * timeDelta;
-            *(f32 *)(obj + 0x10) += *(f32 *)(obj + 0x28) * timeDelta;
+            *(f32 *)(obj + 0x28) = lbl_803E23DC;
         }
+    } else {
+        *(f32 *)(obj + 0x28) = lbl_803E23DC;
     }
 
     lastContactObj = **(void ***)(obj + 0x54);
@@ -113,11 +129,12 @@ void fn_8013939C(u8 *obj)
     }
 
     *(void **)(state + 0x360) = lastContactObj;
+    hitPosPtr = hitPos;
     hitKind = ObjHits_PollPriorityHitWithCooldown(obj, (f32 *)(state + 0x370),
-                                                  (void **)&lastContactObj, hitPos);
+                                                  (void **)&lastContactObj, hitPosPtr);
     *(int *)(state + 0x368) = hitKind;
 
-    switch (hitKind) {
+    switch (*(int *)(state + 0x368)) {
         case 1:
         case 2:
         case 4:
@@ -134,7 +151,7 @@ void fn_8013939C(u8 *obj)
         case 0xa:
         case 0xb:
         case 0xc:
-            fn_80096F9C(hitPos, 8, 0xff, 0x20, 0x20);
+            fn_80096F9C(hitPosPtr, 8, 0xff, 0x20, 0x20);
             objLightFn_8009a1dc(obj, lbl_803E2434, lightArgs, 4, 0);
             if (*(s16 *)((u8 *)lastContactObj + 0x46) == 0x69) {
                 Sfx_PlayFromObject(obj, 0x23f);
@@ -163,6 +180,8 @@ void fn_8013939C(u8 *obj)
     *(s16 *)(obj + 2) = *(s16 *)(state + 0x290);
     *(s16 *)(obj + 4) = *(s16 *)(state + 0x292);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 extern f32 lbl_803E244C;
 extern f32 lbl_803E2448;
