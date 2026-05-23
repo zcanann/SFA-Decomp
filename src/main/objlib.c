@@ -1447,8 +1447,8 @@ void ObjHits_ResetWorkBuffers(void)
 
   clearedSlots = 0;
   slotOffset = 0;
-  remainingSlots = OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_COUNT;
-  do {
+  for (remainingSlots = 0; remainingSlots < OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_COUNT;
+       remainingSlots++) {
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = 0;
@@ -1457,18 +1457,18 @@ void ObjHits_ResetWorkBuffers(void)
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1e0) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x21c) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x258) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x294) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x2d0) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x30c) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x348) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x384) = 0;
-    slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_SIZE;
+    slotOffset += OBJHITS_PRIORITY_WORK_SLOT_SIZE * 8;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xb4) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xf0) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = 0;
+    slotOffset += OBJHITS_PRIORITY_WORK_SLOT_SIZE * 8;
     clearedSlots += OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_SLOTS;
-    remainingSlots--;
-  } while (remainingSlots != 0);
+  }
   remainingSlots = OBJHITS_PRIORITY_WORK_SLOT_COUNT - clearedSlots;
   slotOffset = clearedSlots * OBJHITS_PRIORITY_WORK_SLOT_SIZE;
   if (clearedSlots < OBJHITS_PRIORITY_WORK_SLOT_COUNT) {
