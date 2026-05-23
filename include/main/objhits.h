@@ -52,6 +52,7 @@
 #define OBJHITBOX_SHAPE_CHECK_REVERSE 0x20
 #define OBJHITBOX_STATE_MATRIX_STRIDE 0x40
 #define OBJHITBOX_STATE_MATRIX_FLOAT_COUNT 0x10
+#define OBJHITBOX_CONTACT_OBJECT_COUNT 3
 #define OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET 0x10C
 #define OBJHITBOX_STATE_RESET_FRAMES_OFFSET 0x10D
 
@@ -76,9 +77,11 @@ typedef struct ObjHitboxDef {
 
 typedef struct ObjHitboxTransformState {
   f32 matrices[4][4][4];
-  u8 pad100[OBJHITBOX_STATE_ACTIVE_MATRIX_INDEX_OFFSET - 0x100];
+  int contactObjects[OBJHITBOX_CONTACT_OBJECT_COUNT];
   u8 activeMatrixIndex;
   s8 resetFrames;
+  u8 pad10E;
+  s8 contactObjectCount;
 } ObjHitboxTransformState;
 
 typedef struct ObjHitbox {
