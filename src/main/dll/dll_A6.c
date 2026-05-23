@@ -33,6 +33,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
   u8 *target;
   u8 *otherTbl;
   u8 *slot;
+  u8 *paletteBase;
   u8 idx;
   s8 mode;
   int paletteIdx;
@@ -71,11 +72,9 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
 
     paletteIdx = (int)target[0xE8];
     if (paletteIdx >= 4) paletteIdx = 0;
-    {
-      u8 *paletteBase = (u8 *)*(u32 *)(target + 0x50);
-      paletteBase = paletteBase + paletteIdx * 2;
-      lbl_803DB990 = *(s16 *)(paletteBase + 0x7C);
-    }
+    paletteBase = (u8 *)*(u32 *)(target + 0x50);
+    paletteBase = paletteBase + paletteIdx * 2;
+    lbl_803DB990 = *(s16 *)(paletteBase + 0x7C);
 
     *(f32 *)(reticle + 0x18) = *(f32 *)(slot + 0x0);
     *(f32 *)(reticle + 0x1C) = *(f32 *)(slot + 0x4);
@@ -104,8 +103,8 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
     *(u32 *)(reticle + 0x30) = 0;
   }
 
-  flagsObj = (u16 *)((u8 *)*(u32 *)(reticle + 0x7C) + (s8)reticle[0xAD] * 4);
-  *(u16 *)((u8 *)flagsObj + 0x18) = (u16)(*(u16 *)((u8 *)flagsObj + 0x18) & 0xFFF7);
+  flagsObj = *(u16 **)((u8 *)*(u32 *)(reticle + 0x7C) + (s8)reticle[0xAD] * 4);
+  *(u16 *)((u8 *)flagsObj + 0x18) = (u16)(*(u16 *)((u8 *)flagsObj + 0x18) & ~8);
 
   if (*(u32 *)(pCamera + 0x120) != 0) {
     lbl_803DD4CA = (s8)savedReticleState;
