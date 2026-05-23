@@ -1712,11 +1712,13 @@ extern int* gExpgfxInterface;
 extern int* gModgfxInterface;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int GameBit_Get(int);
 extern void GameBit_Set(int slot, int val);
 extern u8 framesThisStep;
 extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
 extern int ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, int events);
+extern void ObjAnim_SetMoveProgress(f32 progress, int obj);
 extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
 extern void ObjGroup_RemoveObject(int* obj, int group);
@@ -1849,6 +1851,11 @@ int SB_SeqDoor_SeqFn(int p1, int p2, int p3)
 #pragma scheduling reset
 #pragma peephole reset
 extern f32 lbl_803E597C;
+extern f32 lbl_803E5980;
+extern f32 lbl_803E5984;
+extern f32 lbl_803E5988;
+extern f32 lbl_803E598C;
+extern f64 lbl_803E5990;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1944,7 +1951,56 @@ void Lamp_init(int* obj, int* def)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void Lamp_update(void) {}
+#pragma scheduling off
+#pragma peephole off
+void Lamp_update(int obj)
+{
+    u8 effectArgs[0x18];
+    f32 distance;
+    int i;
+
+    distance = Vec_distance((void *)((int)Obj_GetPlayerObject() + 0x18), (void *)(obj + 0x18));
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) == 0) {
+        if (distance < lbl_803E5980) {
+            Sfx_PlayFromObject((int *)obj, 0x72);
+        }
+    } else if (distance >= lbl_803E5980) {
+        Sfx_StopObjectChannel((int *)obj, 0x40);
+    }
+
+    if (*(s16 *)(obj + 0x46) != 0x3e4) {
+        if (*(int *)(obj + 0xf8) == 0) {
+            *(int *)(obj + 0xf8) = 1;
+            ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / lbl_803E5980, obj);
+        }
+        ObjAnim_AdvanceCurrentMove(obj, lbl_803E5984, timeDelta, 0);
+    }
+
+    if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+        *(f32 *)(effectArgs + 8) = lbl_803E597C;
+        *(s16 *)(effectArgs + 6) = 0xc0d;
+        *(f32 *)(effectArgs + 0xc) = lbl_803E5988;
+        *(f32 *)(effectArgs + 0x10) = lbl_803E598C;
+        *(f32 *)(effectArgs + 0x14) = lbl_803E5988;
+        ObjPath_GetPointWorldPosition(obj, 0, (f32 *)(effectArgs + 0xc), (f32 *)(effectArgs + 0x10),
+                                      (f32 *)(effectArgs + 0x14), 1);
+        if (*(void **)(obj + 0x30) != NULL) {
+            *(f32 *)(effectArgs + 0xc) = *(f32 *)(effectArgs + 0xc) - *(f32 *)(obj + 0x18);
+            *(f32 *)(effectArgs + 0x10) = *(f32 *)(effectArgs + 0x10) - *(f32 *)(obj + 0x1c);
+            *(f32 *)(effectArgs + 0x14) = *(f32 *)(effectArgs + 0x14) - *(f32 *)(obj + 0x20);
+        } else {
+            *(f32 *)(effectArgs + 0xc) = *(f32 *)(effectArgs + 0xc) - *(f32 *)(obj + 0xc);
+            *(f32 *)(effectArgs + 0x10) = *(f32 *)(effectArgs + 0x10) - *(f32 *)(obj + 0x10);
+            *(f32 *)(effectArgs + 0x14) = *(f32 *)(effectArgs + 0x14) - *(f32 *)(obj + 0x14);
+        }
+        for (i = 0; i < framesThisStep; i++) {
+            ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(
+                obj, 0x7c7, effectArgs, 2, -1, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma peephole off
 #pragma scheduling off
 void SB_CageKyte_init(int p)
