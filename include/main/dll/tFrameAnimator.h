@@ -4,7 +4,8 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-undefined4 sidekickball_init(ushort *param_1);
+undefined4 sidekickball_init(int obj);
+void levelname_init(int obj, int objDef);
 extern ObjectDescriptor gAreaObjDescriptor;
 
 #endif /* MAIN_DLL_TFRAMEANIMATOR_H_ */
