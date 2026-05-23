@@ -114,9 +114,69 @@ void fn_8013A4EC(void) {
   /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
 }
 
+extern void *fn_8004B118(void *search);
+extern void fn_8004B148(void *search);
+extern int fn_8004B218(void *search, int timeout);
+extern void fn_8004B31C(void *search, u32 route, int objId, int pathId, int routeFlags);
+extern u32 GameBit_Get(int bit);
+
+static void *skeetla_validateRouteEntry(void *entry)
+{
+    s16 requiredBit;
+    s16 forbiddenBit;
+
+    if (entry == NULL) {
+        return NULL;
+    }
+
+    requiredBit = *(s16 *)((u8 *)entry + 0x30);
+    if ((requiredBit != -1) && (GameBit_Get(requiredBit) == 0)) {
+        return NULL;
+    }
+
+    forbiddenBit = *(s16 *)((u8 *)entry + 0x32);
+    if ((forbiddenBit != -1) && (GameBit_Get(forbiddenBit) != 0)) {
+        return NULL;
+    }
+
+    return entry;
+}
+
 /* fn_8013A6BC  addr=0x8013A6BC  size=0x138  linkage=global */
-void fn_8013A6BC(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+void *fn_8013A6BC(u8 *state, u32 route, int pathId)
+{
+    void *entry;
+    void *search;
+
+    if (pathId == 0) {
+        return NULL;
+    }
+
+    search = state + 0x6b8;
+    if ((*(int *)(state + 0x6ec) == pathId) && (*(u32 *)(state + 0x6e8) == route)) {
+        entry = fn_8004B118(search);
+        *(void **)(state + 0x6e8) = entry;
+        if (entry == NULL) {
+            return NULL;
+        }
+
+        entry = skeetla_validateRouteEntry(entry);
+        *(void **)(state + 0x6e8) = entry;
+        if (entry != NULL) {
+            return entry;
+        }
+    }
+
+    fn_8004B31C(search, route, *(int *)(state + 0x28), pathId, *(int *)(state + 0x4a0));
+    if (fn_8004B218(search, 0x1f4) != 1) {
+        return NULL;
+    }
+
+    fn_8004B148(search);
+    entry = fn_8004B118(search);
+    *(void **)(state + 0x6e8) = entry;
+    *(int *)(state + 0x6ec) = pathId;
+    return entry;
 }
 
 /* fn_8013A7F4  addr=0x8013A7F4  size=0x1D4  linkage=global */
