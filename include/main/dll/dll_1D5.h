@@ -3,7 +3,8 @@
 
 #include "ghidra_import.h"
 
-void FUN_801cf0ac(int param_1,int param_2);
+void nw_mammoth_update(int obj,int param_2);
+void nw_mammoth_init(int obj,u8 *objDef,int isReload);
 void FUN_801cf0b0(uint param_1,int param_2);
 void FUN_801cf0b4(int param_1);
 void FUN_801cf108(int param_1);
