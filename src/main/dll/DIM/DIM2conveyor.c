@@ -428,13 +428,14 @@ void dimdismountpoint_update(int *obj) {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
     } else {
         *(u8*)((char*)obj + 0xe4) = 0;
-        if (nearest != NULL && ((int(*)(int*, int*))((int**)*(int**)((char*)nearest + 0x68))[8])(nearest, obj) != 0) {
+        if (nearest != NULL &&
+            ((int (*)(int*, int*))(*(int *)(*(int *)*(int **)((char*)nearest + 0x68) + 0x20)))(nearest, obj) != 0) {
             *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
         } else {
             *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
         }
     }
-    if ((*(int*)(*(int*)((char*)obj + 0x50) + 0x44) & 1) != 0 && *(int*)((char*)obj + 0x74) != 0) {
+    if ((*(u32*)(*(int*)((char*)obj + 0x50) + 0x44) & 1) != 0 && *(void **)((char*)obj + 0x74) != NULL) {
         objRenderFn_80041018((int)obj);
     }
 }
