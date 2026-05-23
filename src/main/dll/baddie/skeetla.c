@@ -109,16 +109,65 @@ int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern void *gRomCurveInterface;
+extern u32 GameBit_Get(int bit);
+static void *skeetla_validateRouteEntry(void *entry);
+
 /* fn_8013A4EC  addr=0x8013A4EC  size=0x1D0  linkage=global */
-void fn_8013A4EC(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+void *fn_8013A4EC(u8 *context, u8 *routeDef, u16 linkSelector, u32 routeFlagValue)
+{
+    void *candidates[4];
+    void *entry;
+    f32 bestDistance;
+    f32 distance;
+    u16 i;
+    u16 count;
+    u16 mask;
+    u16 bestIndex;
+    int curveId;
+
+    count = 0;
+    mask = 1;
+    for (i = 0; i < 4; i++) {
+        curveId = *(int *)(routeDef + 0x1c + i * 4);
+        if ((curveId > -1) && (((s8)routeDef[0x1b] & mask) == routeFlagValue)) {
+            entry = (*(void *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(curveId);
+            candidates[count] = entry;
+            if (entry != NULL) {
+                if ((linkSelector == 0) || (routeDef[count + 4] == linkSelector)) {
+                    if (skeetla_validateRouteEntry(entry) != NULL) {
+                        if (((s8)routeDef[0x1a] != 9) || (*(s8 *)((u8 *)entry + 0x1a) != 8)) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        mask <<= 1;
+        routeFlagValue <<= 1;
+    }
+
+    if (count == 0) {
+        return NULL;
+    }
+
+    bestDistance = getXZDistance((f32 *)(*(int *)(context + 4) + 0x18), (f32 *)((u8 *)candidates[0] + 8));
+    bestIndex = 0;
+    for (i = 1; i < count; i++) {
+        distance = getXZDistance((f32 *)(*(int *)(context + 4) + 0x18), (f32 *)((u8 *)candidates[i] + 8));
+        if (distance < bestDistance) {
+            bestDistance = distance;
+            bestIndex = i;
+        }
+    }
+
+    return candidates[bestIndex];
 }
 
 extern void *fn_8004B118(void *search);
 extern void fn_8004B148(void *search);
 extern int fn_8004B218(void *search, int timeout);
 extern void fn_8004B31C(void *search, u32 route, int objId, int pathId, int routeFlags);
-extern u32 GameBit_Get(int bit);
 
 static void *skeetla_validateRouteEntry(void *entry)
 {
