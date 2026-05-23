@@ -1925,6 +1925,7 @@ void flammablevine_update(int obj)
     f32 burnTimer;
     f32 zero;
     int pulseStyle;
+    u32 fadeAlpha;
 
     state = *(u8 **)(obj + 0xb8);
     def = *(u8 **)(obj + 0x4c);
@@ -2007,7 +2008,8 @@ checked_vine_use:
                 *(u8 *)(obj + 0x36) = 0;
             }
             else {
-                *(u8 *)(obj + 0x36) = (u8)(lbl_803E3B14 * ((*(f32 *)(state + 4) - lbl_803E3B04) / lbl_803E3B18));
+                fadeAlpha = (u8)(lbl_803E3B14 * ((*(f32 *)(state + 4) - lbl_803E3B04) / lbl_803E3B18));
+                *(u8 *)(obj + 0x36) = fadeAlpha;
             }
         }
 
