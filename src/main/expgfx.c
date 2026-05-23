@@ -837,6 +837,8 @@ int expgfx_func09(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfx_renderSourcePools(int sourceId,int sourceMode)
 {
   u8 *expgfxBase;
@@ -878,6 +880,8 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
     poolIndex++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
