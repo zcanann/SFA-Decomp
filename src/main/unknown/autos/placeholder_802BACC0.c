@@ -77,9 +77,10 @@ void DIMSnowHorn1_func18(void *unused, f32 *out_f, int *out_i)
 /*
  * Stores arg at obj->state[0xa8a] (low byte).
  */
-void DIMSnowHorn1_func17(int obj, u8 value)
+void DIMSnowHorn1_func17(int obj, int value)
 {
-    *(u8 *)(*(int *)(obj + 0xb8) + 0xa8a) = value;
+    u8 mode = (u8)value;
+    *(u8 *)(*(int *)(obj + 0xb8) + 0xa8a) = mode;
 }
 
 /*
