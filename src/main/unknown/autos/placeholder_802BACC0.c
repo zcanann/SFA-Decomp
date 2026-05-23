@@ -6,6 +6,7 @@ extern void ObjGroup_RemoveObject(int obj, int group);
 extern undefined4 *gPlayerInterface;
 extern undefined4 *gPathControlInterface;
 extern f32 lbl_803E8234;
+extern f32 lbl_803E8240;
 extern f32 lbl_803E8258;
 extern f32 lbl_803E827C;
 extern f32 lbl_803E8298;
@@ -14,6 +15,19 @@ extern f32 lbl_803E829C;
 extern void setMatrixFromObjectPos(void *matrix, void *packedTransform);
 extern void Matrix_TransformPoint(double x, double y, double z, void *matrix, undefined4 outX,
                                   undefined4 outY, undefined4 outZ);
+extern void *ObjPath_GetPointModelMtx(int obj, int point);
+extern void ObjPath_GetPointLocalPosition(int obj, int point, f32 *out_x, f32 *out_y,
+                                          f32 *out_z);
+extern void mtx44_mult(void *lhs, void *rhs, void *out);
+extern void fn_8003B950(void *matrix);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32 *range);
+extern void buttonDisable(int controller, int buttons);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void ObjPath_GetPointWorldPosition(int obj, int point, f32 *out_x, f32 *out_y,
+                                          f32 *out_z, int useInputPosition);
+extern void ObjPath_GetPointWorldPositionArray(int obj, int point, int count, f32 *out);
+
+extern undefined lbl_803DB0F0[];
 
 #pragma peephole off
 #pragma scheduling off
@@ -202,18 +216,60 @@ int ddh_cc_initinterrupts(int obj, undefined4 unused, int setup)
 }
 #pragma dont_inline reset
 
-/*
- * DIMSnowHorn1_func22 - 52-instruction helper. Stubbed.
- */
 #pragma dont_inline on
-void DIMSnowHorn1_func22(void) {}
+void DIMSnowHorn1_func22(int obj, f32 scale)
+{
+    void *pathMtx;
+    struct {
+        s16 rotX;
+        s16 rotY;
+        s16 rotZ;
+        s16 pad;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } transform;
+
+    pathMtx = ObjPath_GetPointModelMtx(obj, 1);
+    ObjPath_GetPointLocalPosition(obj, 1, &transform.x, &transform.y, &transform.z);
+    transform.rotX = 0;
+    transform.rotY = 0;
+    transform.rotZ = 0;
+    transform.scale = scale / *(f32 *)(*(int *)(obj + 0x50) + 4);
+    setMatrixFromObjectPos(lbl_803DB0F0, &transform);
+    mtx44_mult(lbl_803DB0F0, pathMtx, lbl_803DB0F0);
+    fn_8003B950(lbl_803DB0F0);
+}
 #pragma dont_inline reset
 
-/*
- * DIMSnowHorn1_setScale - 45-instruction helper. Stubbed.
- */
 #pragma dont_inline on
-void DIMSnowHorn1_setScale(void) {}
+int DIMSnowHorn1_setScale(int obj)
+{
+    int state;
+    f32 range;
+    int nearest;
+
+    state = *(int *)(obj + 0xb8);
+    range = lbl_803E8240;
+
+    if ((*(u8 *)(state + 0xa8c) == 0) || (*(u8 *)(state + 0xa8c) == 5)) {
+        return 0;
+    }
+    if (*(s16 *)(state + 0x274) != 7) {
+        return 0;
+    }
+    if (*(void **)(obj + 0xc0) != NULL) {
+        return 0;
+    }
+
+    nearest = ObjGroup_FindNearestObject(0x13, obj, &range);
+    if ((nearest != 0) && ((*(u8 *)(nearest + 0xaf) & 4) != 0)) {
+        buttonDisable(0, 0x100);
+        return 1;
+    }
+    return 0;
+}
 #pragma dont_inline reset
 
 /*
@@ -241,9 +297,23 @@ void DIMSnowHorn1_free(int obj)
     ObjGroup_RemoveObject(obj, 0xa);
 }
 
-/*
- * DIMSnowHorn1_render - 60-instruction helper. Stubbed.
- */
 #pragma dont_inline on
-void DIMSnowHorn1_render(void) {}
+void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (visible == -1) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E8258);
+        ObjPath_GetPointWorldPosition(obj, 1, (f32 *)(state + 0x9e8), (f32 *)(state + 0x9ec),
+                                      (f32 *)(state + 0x9f0), 0);
+        ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32 *)(state + 0x9b0));
+    }
+
+    if ((*(u8 *)(state + 0xa8a) != 2) && (visible != 0)) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E8258);
+        ObjPath_GetPointWorldPosition(obj, 1, (f32 *)(state + 0x9e8), (f32 *)(state + 0x9ec),
+                                      (f32 *)(state + 0x9f0), 0);
+        ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32 *)(state + 0x9b0));
+    }
+}
 #pragma dont_inline reset
