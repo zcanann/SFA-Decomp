@@ -1848,7 +1848,42 @@ int SB_SeqDoor_SeqFn(int p1, int p2, int p3)
 }
 #pragma scheduling reset
 #pragma peephole reset
-void Lamp_SeqFn(void) {}
+extern f32 lbl_803E597C;
+
+#pragma scheduling off
+#pragma peephole off
+int Lamp_SeqFn(int obj, int unused, int state)
+{
+    u8 effectArgs[0x18];
+    int i;
+
+    if ((s32)randomGetRange(0, 1) != 0) {
+        *(u8 *)(state + 0x90) = 4;
+    } else {
+        *(u8 *)(state + 0x90) = 8;
+    }
+    *(u8 *)(state + 0x56) = 0;
+    *(s16 *)(state + 0x6e) = -1;
+    *(s16 *)(state + 0x6e) = (s16)(*(s16 *)(state + 0x6e) & ~0x20);
+
+    if (Obj_GetPlayerObject() == NULL) {
+        return 0;
+    }
+    if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+        *(f32 *)(effectArgs + 8) = lbl_803E597C;
+        *(s16 *)(effectArgs + 6) = 0xc0d;
+        *(f32 *)(effectArgs + 0xc) = *(f32 *)(effectArgs + 0xc) - *(f32 *)(obj + 0x18);
+        *(f32 *)(effectArgs + 0x10) = *(f32 *)(effectArgs + 0x10) - *(f32 *)(obj + 0x1c);
+        *(f32 *)(effectArgs + 0x14) = *(f32 *)(effectArgs + 0x14) - *(f32 *)(obj + 0x20);
+        for (i = 0; i < framesThisStep; i++) {
+            ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(
+                obj, 0x7a8, effectArgs, 6, -1, 0);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 int fn_801E66EC(int arg1, int arg2)
