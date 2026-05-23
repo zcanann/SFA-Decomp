@@ -618,10 +618,24 @@ extern int Sfx_PlayFromObject(int *obj, int sfx);
 extern s8 fn_801631C8(int *obj);
 extern float sqrtf(float x);
 
+typedef struct TumbleweedBushState {
+    f32 scale;
+    u8 pad04[4];
+    u16 triggerRadius;
+    u8 pad0A[2];
+    void *pieceObjects[4];
+    f32 pieceOffsets[3][3];
+    u8 pad40[0x4c - 0x40];
+    u8 variant;
+    u8 pad4D[3];
+    u8 pieceCount;
+    u8 pad51[3];
+} TumbleweedBushState;
+
 #pragma scheduling off
 #pragma peephole off
 void tumbleweedbush_update(int *obj) {
-    u8 *sub;
+    TumbleweedBushState *state;
     int *player;
     struct { int *hitObj; int extra; } hitInfo;
     int hitData;
@@ -629,14 +643,14 @@ void tumbleweedbush_update(int *obj) {
     int i;
     int j;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    state = *(TumbleweedBushState **)((char*)obj + 0xb8);
     player = (int*)Obj_GetPlayerObject();
     if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hitInfo, &hitData) != 0) {
         if (*(s16*)((char*)hitInfo.hitObj + 0x46) != 0x4ba) {
             fn_80096F9C(&hitData, 8, 0xff, 0xff, 0x78);
             Sfx_PlayFromObject(obj, 0x280);
-            for (i = 0; (u8)i < sub[0x50]; i++) {
-                int **slot = (int**)((char*)sub + (u8)i * 4 + 0xc);
+            for (i = 0; (u8)i < state->pieceCount; i++) {
+                int **slot = (int **)&state->pieceObjects[(u8)i];
                 if (*slot != NULL) {
                     if (*(s16*)((char*)obj + 0x46) == 0x28d) {
                         if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&hitInfo.extra) == 0) continue;
@@ -649,12 +663,12 @@ void tumbleweedbush_update(int *obj) {
     dx = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)player + 0xc);
     dy = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)player + 0x14);
     d = sqrtf(dx * dx + dy * dy);
-    if ((u16)(s32)d < *(u16*)(sub + 8)) {
+    if ((u16)(s32)d < state->triggerRadius) {
         while ((s8)fn_801631C8(obj) != -1) {
         }
     }
-    for (j = 0; (u8)j < sub[0x50]; j++) {
-        int **slot = (int**)((char*)sub + (u8)j * 4 + 0xc);
+    for (j = 0; (u8)j < state->pieceCount; j++) {
+        int **slot = (int **)&state->pieceObjects[(u8)j];
         if (*slot != NULL) {
             if (((int(*)(int*))((void**)*(int*)((char*)*slot + 0x68))[8])(*slot) > 1) {
                 *slot = NULL;
@@ -726,17 +740,14 @@ void* fn_801638BC(f32* p_pos)
  * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
 #pragma scheduling off
 void tumbleweedbush_setScale(u8* obj, void* match) {
-    void** p;
-    u8* sub;
+    TumbleweedBushState *state;
     int i;
-    sub = *(u8**)(obj + 0xb8);
+    state = *(TumbleweedBushState **)(obj + 0xb8);
     i = 0;
-    p = (void**)sub;
-    while (i < (int)sub[0x50]) {
-        if (*(void**)((char*)p + 0xc) == match) {
-            *(void**)((char*)p + 0xc) = NULL;
+    while (i < (int)state->pieceCount) {
+        if (state->pieceObjects[i] == match) {
+            state->pieceObjects[i] = NULL;
         }
-        p = (void**)((char*)p + 4);
         i++;
     }
 }
