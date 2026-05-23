@@ -10,7 +10,7 @@ extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 ObjMsg_SendToObject();
-extern undefined4 TrickyCurve_updateCooldownTrigger();
+extern void TrickyCurve_updateCooldownTrigger(int obj);
 extern uint FUN_80286838();
 extern uint FUN_8028683c();
 extern undefined4 FUN_80286884();
@@ -472,7 +472,7 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     TrickyCurve_updateBurstTrigger();
   }
   else if (cVar1 == '\x03') {
-    TrickyCurve_updateCooldownTrigger();
+    TrickyCurve_updateCooldownTrigger(param_9);
   }
   return;
 }
@@ -593,7 +593,7 @@ void TrickyCurve_update(int *obj) {
     if (state == 0) {
         TrickyCurve_updateBurstTrigger();
     } else if (state == 1) {
-        TrickyCurve_updateCooldownTrigger();
+        TrickyCurve_updateCooldownTrigger((int)obj);
     } else if (state == 2) {
         fn_80206C18(obj);
     } else if (state == 3) {

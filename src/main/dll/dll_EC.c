@@ -3,16 +3,25 @@
 
 extern void *Obj_GetPlayerObject(void);
 extern int randomGetRange(int min,int max);
-extern void fn_802960E4(double xVelocity,double zVelocity,int obj);
+extern void fn_802960E4(int obj, f32 xVelocity, f32 zVelocity);
 
 extern f32 lbl_803E6438;
-extern f64 lbl_803E6440;
 extern f32 lbl_803E644C;
 
-typedef struct TrickyCurveDoubleBits {
-  undefined4 hi;
-  uint lo;
-} TrickyCurveDoubleBits;
+typedef struct TrickyCurveObject {
+  u8 pad0[0xc];
+  f32 x;
+  f32 y;
+  f32 z;
+  u8 pad18[0xa0];
+  struct TrickyCurveState *state;
+} TrickyCurveObject;
+
+typedef struct TrickyCurveState {
+  s16 halfWidthX;
+  s16 halfWidthZ;
+  s16 halfHeightY;
+} TrickyCurveState;
 
 /*
  * --INFO--
@@ -29,76 +38,68 @@ typedef struct TrickyCurveDoubleBits {
  */
 void TrickyCurve_updateCooldownTrigger(int obj)
 {
-  float deltaX;
-  float deltaY;
-  float deltaZ;
-  int playerObj;
+  TrickyCurveObject *curve;
+  TrickyCurveObject *player;
+  TrickyCurveState *state;
   int axisCount;
-  uint randomValue;
-  short *state;
-  TrickyCurveDoubleBits bits;
-  double randomX;
-  double randomZ;
-  
-  state = *(short **)(obj + 0xb8);
-  playerObj = (int)Obj_GetPlayerObject();
+  f32 deltaX;
+  f32 deltaY;
+  f32 deltaZ;
+  f32 bound;
+  f32 randomX;
+  f32 randomZ;
+
+  curve = (TrickyCurveObject *)obj;
+  state = curve->state;
+  player = (TrickyCurveObject *)Obj_GetPlayerObject();
   axisCount = 0;
-  deltaX = *(float *)(playerObj + 0xc) - *(float *)(obj + 0xc);
-  deltaY = *(float *)(playerObj + 0x10) - *(float *)(obj + 0x10);
-  deltaZ = *(float *)(playerObj + 0x14) - *(float *)(obj + 0x14);
+  deltaX = player->x - curve->x;
+  deltaY = player->y - curve->y;
+  deltaZ = player->z - curve->z;
+
   if (deltaX <= lbl_803E6438) {
-    bits.hi = 0x43300000;
-    bits.lo = (int)*state ^ 0x80000000;
-    if (-(float)(*(double *)&bits - lbl_803E6440) < deltaX) {
+    bound = (f32)state->halfWidthX;
+    if (-bound < deltaX) {
       axisCount = 1;
     }
   }
   if (lbl_803E6438 < deltaX) {
-    bits.hi = 0x43300000;
-    bits.lo = (int)*state ^ 0x80000000;
-    if (deltaX < (float)(*(double *)&bits - lbl_803E6440)) {
+    bound = (f32)state->halfWidthX;
+    if (deltaX < bound) {
       axisCount = axisCount + 1;
     }
   }
+
   if (deltaZ <= lbl_803E6438) {
-    bits.hi = 0x43300000;
-    bits.lo = (int)state[1] ^ 0x80000000;
-    if (-(float)(*(double *)&bits - lbl_803E6440) < deltaZ) {
+    bound = (f32)state->halfWidthZ;
+    if (-bound < deltaZ) {
       axisCount = axisCount + 1;
     }
   }
   if (lbl_803E6438 < deltaZ) {
-    bits.hi = 0x43300000;
-    bits.lo = (int)state[1] ^ 0x80000000;
-    if (deltaZ < (float)(*(double *)&bits - lbl_803E6440)) {
+    bound = (f32)state->halfWidthZ;
+    if (deltaZ < bound) {
       axisCount = axisCount + 1;
     }
   }
+
   if (deltaY <= lbl_803E6438) {
-    bits.hi = 0x43300000;
-    bits.lo = (int)state[2] ^ 0x80000000;
-    if (-(float)(*(double *)&bits - lbl_803E6440) < deltaY) {
+    bound = (f32)state->halfHeightY;
+    if (-bound < deltaY) {
       axisCount = axisCount + 1;
     }
   }
   if (lbl_803E6438 < deltaY) {
-    bits.hi = 0x43300000;
-    bits.lo = (int)state[2] ^ 0x80000000;
-    if (deltaY < (float)(*(double *)&bits - lbl_803E6440)) {
+    bound = (f32)state->halfHeightY;
+    if (deltaY < bound) {
       axisCount = axisCount + 1;
     }
   }
-  if (axisCount == 3) {
-    randomValue = randomGetRange(-0x17,0x17);
-    bits.hi = 0x43300000;
-    bits.lo = randomValue ^ 0x80000000;
-    randomX = (double)(float)(*(double *)&bits - lbl_803E6440);
-    randomValue = randomGetRange(-0x17,0x17);
-    bits.hi = 0x43300000;
-    bits.lo = randomValue ^ 0x80000000;
-    randomZ = (double)(float)(*(double *)&bits - lbl_803E6440);
-    fn_802960E4((double)(lbl_803E644C * (float)randomX),
-                (double)(lbl_803E644C * (float)randomZ),playerObj);
+
+  if ((u8)axisCount == 3) {
+    randomX = lbl_803E644C * (f32)randomGetRange(-0x17, 0x17);
+    randomZ = lbl_803E644C * (f32)randomGetRange(-0x17, 0x17);
+    fn_802960E4((int)player, randomX, randomZ);
   }
   return;
 }
