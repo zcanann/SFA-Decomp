@@ -35,7 +35,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
   u8 *slot;
   u8 *paletteBase;
   u8 idx;
-  s8 mode;
+  int mode;
   int paletteIdx;
   u16 *flagsObj;
 
@@ -79,7 +79,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
     *(f32 *)(reticle + 0x18) = *(f32 *)(slot + 0x0);
     *(f32 *)(reticle + 0x1C) = *(f32 *)(slot + 0x4);
     *(f32 *)(reticle + 0x20) = *(f32 *)(slot + 0x8);
-    reticle[0xAD] = mode;
+    *(s8 *)(reticle + 0xAD) = mode;
 
     *(u32 *)(reticle + 0x30) = *(u32 *)(target + 0x30);
     if (*(u32 *)(reticle + 0x30) != 0) {
