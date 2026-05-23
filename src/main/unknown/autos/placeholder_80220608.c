@@ -27,6 +27,11 @@ extern void fn_8003AAE0(int obj, int seq, int hitId, int p4, int p5);
 extern f32 lbl_803E6D38;
 extern f32 lbl_803E6D54;
 extern f32 lbl_803E6DA0;
+extern f32 lbl_803E6DE0;
+extern f32 lbl_803E6DF0;
+extern f32 lbl_803E6E00;
+extern int isGameTimerDisabled(void);
+extern void GameBit_Set(int id, int value);
 extern void ObjHitbox_SetStateIndex(int obj, int hitbox, int stateIndex);
 
 int drenergydisc_getExtraSize(void) { return 1; }
@@ -324,6 +329,96 @@ void wcpushblock_init(int obj, int setup)
 #pragma scheduling on
 void wcpushblock_release(void) {}
 void wcpushblock_initialise(void) {}
+
+#pragma scheduling off
+int wcbeacon_aButtonCallback(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+
+    if (isGameTimerDisabled() == 0) {
+        *(u8 *)(state + 5) = 1;
+        GameBit_Set(*(s16 *)(setup + 0x1e), 1);
+    }
+    return 1;
+}
+#pragma scheduling on
+
+int wcbeacon_getExtraSize(void) { return 8; }
+#pragma scheduling off
+int wcbeacon_getObjectTypeId(int obj)
+{
+    int modelIndex = (s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+
+    if (modelIndex >= modelCount) {
+        modelIndex = 0;
+    }
+    return (modelIndex << 0xb) | 0x400;
+}
+#pragma scheduling on
+#pragma peephole off
+void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6DE0);
+    }
+}
+#pragma peephole on
+
+int wctile_getExtraSize(void) { return 0xc; }
+#pragma scheduling off
+int wctile_getObjectTypeId(int obj)
+{
+    int modelIndex = (s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+
+    if (modelIndex >= modelCount) {
+        modelIndex = 0;
+    }
+    return (modelIndex << 0xb) | 0x400;
+}
+#pragma scheduling on
+void wctile_free(void) {}
+#pragma peephole off
+void wctile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6DF0);
+    }
+}
+#pragma peephole on
+void wctile_hitDetect(void) {}
+void wctile_release(void) {}
+void wctile_initialise(void) {}
+
+int wcpressures_getExtraSize(void) { return 0x7c; }
+#pragma scheduling off
+int wcpressures_getObjectTypeId(int obj)
+{
+    int modelIndex = *(u8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+
+    if (modelIndex >= modelCount) {
+        modelIndex = 0;
+    }
+    return (modelIndex << 0xb) | 0x400;
+}
+#pragma scheduling on
+#pragma scheduling off
+void wcpressures_free(int obj) { ObjGroup_RemoveObject(obj, 0x31); }
+#pragma scheduling on
+#pragma peephole off
+void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E00);
+    }
+}
+#pragma peephole on
+void wcpressures_hitDetect(void) {}
+void wcpressures_release(void) {}
+void wcpressures_initialise(void) {}
 
 int fn_80223BBC(void) { return 0x2; }
 int fn_80223D10(void) { return 0x2; }
