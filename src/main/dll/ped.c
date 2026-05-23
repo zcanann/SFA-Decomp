@@ -6,16 +6,39 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void ObjHits_DisableObject(int obj);
+extern void ObjHits_EnableObject(int obj);
+extern void GameBit_Set(int eventId, int value);
+extern void objAudioFn_8006ef38(int obj, void *events, int pointCount, void *points,
+                                void *scratch, f32 scaleX, f32 scaleZ);
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
+extern int *gObjectTriggerInterface;
 extern f64 DOUBLE_803e5e88;
+extern f32 lbl_803E520C;
+extern f32 lbl_803E5210;
 extern f32 lbl_803E5E78;
 extern f32 lbl_803E5E7C;
 extern f32 lbl_803E5E80;
 extern f32 lbl_803E5E94;
+
+extern int TreeBird_SeqFn(int obj, int param_2, int data);
+void fn_801CDF94(int obj, int state, int flag);
+
+typedef struct TreeBirdState {
+  s16 gameBit;
+  s16 triggerId;
+  s16 immediateTrigger;
+  u8 triggerLatched;
+  u8 searchDelay;
+  void *targetObj;
+} TreeBirdState;
 
 /*
  * --INFO--
@@ -30,47 +53,26 @@ extern f32 lbl_803E5E94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void treebird_init(undefined2 *param_1,int param_2)
+#pragma scheduling off
+#pragma peephole off
+void treebird_init(int obj,int setup)
 {
-  int *piVar1;
-  int *piVar2;
-  undefined auStack_38 [16];
-  float local_28;
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  piVar2 = *(int **)(param_1 + 0x5c);
-  *param_1 = (short)(((int)*(char *)(param_2 + 0x18) & 0x3fU) << 10);
-  if (*(short *)(param_2 + 0x1a) < 1) {
-    *(float *)(param_1 + 4) = lbl_803E5E80;
+  TreeBirdState *state;
+
+  state = *(TreeBirdState **)(obj + 0xb8);
+  *(void **)(obj + 0xbc) = TreeBird_SeqFn;
+  *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
+  *(s16 *)(obj + 2) = *(s16 *)(setup + 0x1a);
+  *(s16 *)(obj + 4) = *(s16 *)(setup + 0x1c);
+  state->triggerId = (s16)(s8)*(u8 *)(setup + 0x19);
+  state->gameBit = *(s16 *)(setup + 0x1e);
+  if (GameBit_Get((int)state->gameBit) != 0) {
+    state->immediateTrigger = 0x154;
   }
-  else {
-    uStack_1c = (int)*(short *)(param_2 + 0x1a) ^ 0x80000000;
-    local_20 = 0x43300000;
-    *(float *)(param_1 + 4) =
-         (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e5e88) / lbl_803E5E7C;
-  }
-  *(undefined *)((int)piVar2 + 0xb) = *(undefined *)(param_2 + 0x19);
-  *(undefined *)(piVar2 + 3) = 0;
-  *(undefined *)((int)piVar2 + 0xf) = 0;
-  *piVar2 = (int)*(short *)(param_2 + 0x1e);
-  local_28 = lbl_803E5E78;
-  if (*(char *)((int)piVar2 + 0xb) == '\x01') {
-    *(char *)((int)piVar2 + 0xf) = (char)*(undefined2 *)(param_2 + 0x1c);
-    *(undefined *)((int)piVar2 + 0xd) = 0;
-    *(ushort *)(piVar2 + 2) = (ushort)*(byte *)((int)piVar2 + 0xf) * 0x28 + 0x398;
-    *(undefined *)((int)piVar2 + 0xe) = 0;
-  }
-  else if (*(char *)((int)piVar2 + 0xb) == '\0') {
-    *(undefined *)(piVar2 + 3) = 1;
-    piVar1 = (int *)FUN_80006b14(0x69);
-    if (*(short *)(param_2 + 0x1c) == 0) {
-      (**(code **)(*piVar1 + 4))(param_1,0,auStack_38,0x10004,0xffffffff,0);
-    }
-  }
-  *(undefined2 *)(piVar2 + 1) = 0;
-  return;
+  state->searchDelay = 4;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -273,6 +275,23 @@ void nw_geyser_free(int *obj) {
         *(s8*)((char*)obj + 0xac), 0x1f, 0);
 }
 
+void nw_geyser_update(int obj)
+{
+    if (GameBit_Get(0xa) != 0) {
+        *(s16 *)(obj + 6) = 0x4000;
+        *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x8000);
+        Sfx_RemoveLoopedObjectSound(obj, 0x372);
+        Sfx_RemoveLoopedObjectSound(obj, 0x373);
+        ObjHits_DisableObject(obj);
+        GameBit_Set(0x398, 1);
+    } else {
+        Sfx_AddLoopedObjectSound(obj, 0x372);
+        Sfx_AddLoopedObjectSound(obj, 0x373);
+        (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+        ObjHits_EnableObject(obj);
+    }
+}
+
 extern int objFindTexture(int *obj, int idx, int p3);
 extern f32 lbl_803E5200;
 extern f32 timeDelta;
@@ -290,6 +309,39 @@ int NW_geyser_SeqFn(int *obj, int p2, void *p3) {
     }
     *(s16 *)((char *)p3 + 0x6e) = (s16)(*(s16 *)((char *)p3 + 0x70) & ~0x40);
     *(u8 *)((char *)p3 + 0x56) = 0;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801CDE7C(int obj, int param_2, u8 *seqData)
+{
+    u8 *state;
+
+    (void)param_2;
+
+    state = *(u8 **)(obj + 0xb8);
+    if ((state[0x43c] & 0x20) == 0) {
+        Sfx_StopObjectChannel(obj, 0x7f);
+        *(f32 *)(state + 0x54) = lbl_803E520C;
+        state[0x43c] = (u8)(state[0x43c] & ~0x10);
+        state[0x43c] = (u8)(state[0x43c] | 0x20);
+    }
+    if ((state[0x43c] & 4) != 0) {
+        *(f32 *)(state + 0x18) = lbl_803E520C;
+        *(s16 *)(seqData + 0x6e) = (s16)(*(s16 *)(seqData + 0x6e) & ~8);
+        *(s16 *)(seqData + 0x6e) = (s16)(*(s16 *)(seqData + 0x6e) & ~0x40);
+        fn_801CDF94(obj, (int)state, 1);
+    }
+    objAudioFn_8006ef38(obj, state + 0x440, 8, state + 0x45c, state + 0x16c,
+                        lbl_803E5210, lbl_803E5210);
+    if (seqData[0x8b] != 0) {
+        *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) & ~0x400);
+        *(u32 *)(*(int *)(obj + 0x64) + 0x30) =
+            *(u32 *)(*(int *)(obj + 0x64) + 0x30) | 4;
+    }
     return 0;
 }
 #pragma peephole reset
