@@ -65,6 +65,7 @@ extern f32 lbl_803E247C;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E2480;
+extern f32 lbl_803E2484;
 extern f32 sqrtf(f32 x);
 
 /* objAnimFn_8013a3f0  addr=0x8013A3F0  size=0xFC  linkage=global */
@@ -567,8 +568,44 @@ void fn_8013AFE0(f32 *start, f32 *end, f32 *guardPoint, f32 *center, f32 minDist
 }
 
 /* fn_8013B1E0  addr=0x8013B1E0  size=0x188  linkage=global */
-void fn_8013B1E0(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+extern void **ObjGroup_GetObjects(int group, int *countOut);
+extern void **ObjList_GetObjects(int *startIndex, int *objectCount);
+
+void fn_8013B1E0(f32 *start, f32 *end, f32 *guardPoint)
+{
+    int count;
+    int startIndex;
+    int objectCount;
+    int i;
+    void **objects;
+    u8 *obj;
+    u8 *def;
+    u8 *runtime;
+    u16 minRadius;
+
+    objects = ObjGroup_GetObjects(0x40, &count);
+    for (i = 0; i < count; i++) {
+        obj = objects[i];
+        def = *(u8 **)(obj + 0x4c);
+        fn_8013AFE0(start, end, guardPoint, (f32 *)(obj + 0x18),
+                    lbl_803E2484 * (f32)*(u16 *)(def + 0x18),
+                    lbl_803E2484 * (f32)*(u16 *)(def + 0x1a));
+    }
+
+    objects = ObjList_GetObjects(&startIndex, &objectCount);
+    for (i = startIndex; i < objectCount; i++) {
+        obj = objects[i];
+        def = *(u8 **)(obj + 0x50);
+        minRadius = *(u16 *)(def + 0x84);
+        if (minRadius != 0) {
+            runtime = *(u8 **)(obj + 0x54);
+            if ((runtime != NULL) && ((*(u16 *)(runtime + 0x60) & 1) != 0)) {
+                fn_8013AFE0(start, end, guardPoint, (f32 *)(obj + 0x18),
+                            lbl_803E2484 * (f32)minRadius,
+                            lbl_803E2484 * (f32)*(u16 *)(def + 0x86));
+            }
+        }
+    }
 }
 
 /* ===== LEGACY src kept for mining; remove after restructure ===== */
