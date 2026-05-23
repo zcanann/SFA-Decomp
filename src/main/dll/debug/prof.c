@@ -4,11 +4,11 @@
 extern undefined4 FUN_800067b4();
 extern undefined4 FUN_80006824();
 extern undefined4 saveFileStruct_isCheatActive();
-extern uint isCheatUnlocked();
+extern int isCheatUnlocked();
 extern undefined4 OptionsScreen_render();
 extern bool FUN_80245dbc();
 extern uint countLeadingZeros();
-extern int OSGetSoundMode(void);
+extern u32 OSGetSoundMode(void);
 extern int Rcp_GetColorFilterEnabled(void);
 extern int return0x64_8000A378(void);
 
@@ -40,11 +40,11 @@ extern int lbl_803A87D0[8];
 
 typedef struct OptionsMenuPanels {
   u8 pad00[0x10];
-  u8 *audioEntries;
+  s8 *audioEntries;
   u32 audioUnused14;
   u8 audioCount;
   u8 pad19[0x20 - 0x19];
-  u8 *optionEntries;
+  s8 *optionEntries;
   u32 optionUnused24;
   u8 optionCount;
 } OptionsMenuPanels;
@@ -117,7 +117,7 @@ void FUN_8011c860(void)
   DAT_803a9430 = (**(code **)(*DAT_803dd724 + 0xc))(0x36b,0x22,0,1,(int)(short)(uVar1 >> 5));
   uVar1 = isCheatUnlocked(3);
   if ((uVar1 == 0) || (DAT_803dd5e8 != '\0')) {
-    PTR_DAT_8031b938[(uint)DAT_8031b940 * 0x3c + -0x5d] = 0xff;
+    PTR_DAT_8031b938[(uint)DAT_8031b940 * 0x3c + -0x5d] = -1;
     *(ushort *)(PTR_DAT_8031b938 + (uint)DAT_8031b940 * 0x3c + -0x26) =
          *(ushort *)(PTR_DAT_8031b938 + (uint)DAT_8031b940 * 0x3c + -0x26) | 0x4000;
   }
@@ -161,7 +161,7 @@ void FUN_8011ca28(void)
   DAT_803dc690 = 1;
   uVar1 = isCheatUnlocked(2);
   if (uVar1 == 0) {
-    PTR_DAT_8031b918[0x10b] = 0xff;
+    PTR_DAT_8031b918[0x10b] = -1;
     *(ushort *)(PTR_DAT_8031b918 + 0x142) = *(ushort *)(PTR_DAT_8031b918 + 0x142) | 0x4000;
   }
   else {
@@ -219,12 +219,12 @@ void fn_8011C7B4(void)
         (u16)(*(u16 *)(panels->audioEntries + 0x142) & ~0x4000);
     panels->audioEntries[0x146] = 4;
   } else {
-    panels->audioEntries[0x10b] = 0xff;
+    panels->audioEntries[0x10b] = -1;
     *(u16 *)(panels->audioEntries + 0x142) =
         (u16)(*(u16 *)(panels->audioEntries + 0x142) | 0x4000);
   }
 
-  (*(void (**)(u8 *, u8, int, int, int, int, int, int, int, int, int, int))(
+  (*(void (**)(s8 *, u8, int, int, int, int, int, int, int, int, int, int))(
       *gTitleMenuLinkInterface + 4))(panels->audioEntries, panels->audioCount, 0, 0, 0, 0,
                                      0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
 
@@ -250,10 +250,9 @@ void fn_8011C7B4(void)
   lbl_803A87D0[5] = 0;
 
   if (isCheatUnlocked(2) != 0) {
-    item = return0x64_8000A378();
     lbl_803A87D0[5] =
         (*(int (**)(int, int, int, int, int))(*gTitleMenuItemInterface + 0xc))(
-            0x3cb, 0x27, 0, (s16)(item - 1), 0);
+            0x3cb, 0x27, 0, (s16)(return0x64_8000A378() - 1), 0);
     *(u8 *)(lbl_803A87D0[5] + 4) = (u8)(*(u8 *)(lbl_803A87D0[5] + 4) | 0x80);
   }
 
@@ -265,10 +264,9 @@ void fn_8011CA74(void)
 {
   OptionsMenuPanels *panels;
   int lastUnlocked;
-  int cheatId;
   int entryOffset;
-  int item;
   int *slot;
+  int cheatId;
 
   if (lbl_803DBA28 != -1) {
     (*(void (**)(void))(*gTitleMenuLinkInterface + 8))();
@@ -308,7 +306,7 @@ void fn_8011CA74(void)
     cheatId++;
   } while (cheatId < 4);
 
-  (*(void (**)(u8 *, u8, int, int, int, int, int, int, int, int, int, int))(
+  (*(void (**)(s8 *, u8, int, int, int, int, int, int, int, int, int, int))(
       *gTitleMenuLinkInterface + 4))(panels->optionEntries, panels->optionCount, 0, 0, 0, 0,
                                      0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
 
@@ -324,13 +322,11 @@ void fn_8011CA74(void)
   do {
     if (isCheatUnlocked((u8)cheatId) != 0) {
       if (cheatId == 1) {
-        item = Rcp_GetColorFilterEnabled();
         *slot = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
-            0x507, cheatId + 0x24, 0, 1, (s16)item);
+            0x507, cheatId + 0x24, 0, 1, (s16)Rcp_GetColorFilterEnabled());
       } else {
-        item = saveFileStruct_isCheatActive(cheatId);
         *slot = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
-            0x36b, cheatId + 0x24, 0, 1, (s16)(item == 0));
+            0x36b, cheatId + 0x24, 0, 1, (s16)(saveFileStruct_isCheatActive(cheatId) == 0));
       }
     }
     slot++;
