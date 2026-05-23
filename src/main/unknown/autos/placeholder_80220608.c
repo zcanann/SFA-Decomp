@@ -10,6 +10,10 @@ extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void mm_free(void *ptr);
 extern int GameBit_Get(int id);
 extern void Obj_FreeObject(int obj);
+extern f32 lbl_803E6BC8;
+extern void fn_8009436C(int obj);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void ObjGroup_RemoveObject(int obj, int group);
 
 int drenergydisc_getExtraSize(void) { return 1; }
 int drenergydisc_getObjectTypeId(void) { return 0; }
@@ -107,6 +111,32 @@ void drlightbea_init(int obj)
 
 void drlightbea_release(void) {}
 void drlightbea_initialise(void) {}
+
+int drmusiccont_getExtraSize(void) { return 4; }
+int drmusiccont_getObjectTypeId(void) { return 0; }
+void drmusiccont_free(int obj) { fn_8009436C(obj); }
+void drmusiccont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6BC8);
+    }
+}
+void drmusiccont_hitDetect(void) {}
+void drmusiccont_release(void) {}
+void drmusiccont_initialise(void) {}
+
+int drcloudper_getExtraSize(void) { return 0x10; }
+int drcloudper_getObjectTypeId(void) { return 0; }
+void drcloudper_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, 0x13);
+    ObjGroup_RemoveObject(obj, 0x39);
+}
+void drcloudper_render(void) {}
+void drcloudper_hitDetect(void) {}
+void drcloudper_update(void) {}
+void drcloudper_release(void) {}
+void drcloudper_initialise(void) {}
 
 int fn_80223BBC(void) { return 0x2; }
 int fn_80223D10(void) { return 0x2; }
