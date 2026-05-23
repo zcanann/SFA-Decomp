@@ -20,7 +20,7 @@ extern f32 gObjAnimEventFrameScale;
 extern f32 gObjAnimSetMoveProgressMax;
 extern f32 gObjAnimMoveStepScaleMin;
 
-static ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state,u16 slot)
+static inline ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state,u16 slot)
 {
   ObjAnimMoveData *moveData;
 
@@ -31,7 +31,7 @@ static ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,ObjAnimSta
   return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
 }
 
-static ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state,u16 slot)
+static inline ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state,u16 slot)
 {
   ObjAnimMoveData *moveData;
 
@@ -42,7 +42,7 @@ static ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDef,ObjAn
   return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
 }
 
-static s16 *ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve *curve)
+static inline s16 *ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve *curve)
 {
   s16 *axis;
   int axisIndex;
@@ -57,7 +57,7 @@ static s16 *ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve *curve)
   return NULL;
 }
 
-static s16 ObjAnim_ReadRootAxisSample(s16 *axis,int sampleIndex)
+static inline s16 ObjAnim_ReadRootAxisSample(s16 *axis,int sampleIndex)
 {
   return axis[sampleIndex + 1];
 }
