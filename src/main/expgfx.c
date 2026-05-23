@@ -431,21 +431,27 @@ void expgfxRemoveAll(void)
 int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId)
 {
+  u8 *expgfxBase;
   s8 *poolActiveCounts;
   u32 *poolSourceIds;
+  u32 *poolActiveMasks;
+  s16 *poolSlotTypeIds;
   u32 activeBit;
   int poolIndex;
   int slotIndex;
   int foundPool;
 
-  poolActiveCounts = (s8 *)&gExpgfxPoolActiveCounts;
-  poolSourceIds = (u32 *)&gExpgfxPoolSourceIds;
+  expgfxBase = gExpgfxRuntimeData;
+  poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
+  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+  poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
   foundPool = 0;
   poolIndex = EXPGFX_INVALID_POOL_INDEX;
 
   for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
     if ((poolSourceIds[poolIndex] == sourceId) &&
-        (gExpgfxStaticPoolSlotTypeIds[poolIndex] == slotType) &&
+        (poolSlotTypeIds[poolIndex] == slotType) &&
         (poolActiveCounts[poolIndex] < EXPGFX_SLOTS_PER_POOL)) {
       foundPool = 1;
       break;
@@ -455,10 +461,10 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   if (foundPool) {
     for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
       activeBit = 1 << slotIndex;
-      if ((gExpgfxPoolActiveMasks[poolIndex] & activeBit) == 0) {
+      if ((poolActiveMasks[poolIndex] & activeBit) == 0) {
         *slotIndexOut = (s16)slotIndex;
         *poolIndexOut = (s16)poolIndex;
-        gExpgfxPoolActiveMasks[poolIndex] |= activeBit;
+        poolActiveMasks[poolIndex] |= activeBit;
         poolActiveCounts[poolIndex]++;
         return 1;
       }
@@ -485,11 +491,11 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
 
   for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
     activeBit = 1 << slotIndex;
-    if ((gExpgfxPoolActiveMasks[poolIndex] & activeBit) == 0) {
+    if ((poolActiveMasks[poolIndex] & activeBit) == 0) {
       *slotIndexOut = (s16)slotIndex;
       *poolIndexOut = (s16)poolIndex;
-      gExpgfxPoolActiveMasks[poolIndex] |= activeBit;
-      gExpgfxStaticPoolSlotTypeIds[poolIndex] = slotType;
+      poolActiveMasks[poolIndex] |= activeBit;
+      poolSlotTypeIds[poolIndex] = slotType;
       poolActiveCounts[poolIndex]++;
       return 1;
     }
