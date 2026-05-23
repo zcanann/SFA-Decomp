@@ -33,6 +33,7 @@ extern undefined4 DAT_803190b0;
 extern undefined4 DAT_803190b2;
 extern undefined4 DAT_803190b4;
 extern undefined4 DAT_803190d8;
+extern undefined DAT_80319168;
 extern undefined4 DAT_803191ac;
 extern undefined4 DAT_8031923c;
 extern undefined4 DAT_8031924c;
@@ -45,6 +46,8 @@ extern undefined4 DAT_803192d6;
 extern undefined4 DAT_803192d8;
 extern undefined4 DAT_803192da;
 extern undefined4 DAT_803192dc;
+extern undefined DAT_80319318;
+extern undefined DAT_80319344;
 extern undefined4 DAT_80319300;
 extern undefined4 DAT_803193d4;
 extern undefined DAT_80319474;
@@ -142,6 +145,16 @@ extern f64 DOUBLE_803e21a8;
 extern f64 DOUBLE_803e21e8;
 extern f64 DOUBLE_803e2210;
 extern f32 lbl_803E2078;
+extern f32 lbl_803E1600;
+extern f32 lbl_803E1604;
+extern f32 lbl_803E1608;
+extern f32 lbl_803E160C;
+extern f32 lbl_803E1610;
+extern f32 lbl_803E1614;
+extern f32 lbl_803E1618;
+extern f32 lbl_803E161C;
+extern f32 lbl_803E1620;
+extern f32 lbl_803E1624;
 extern f32 lbl_803E207C;
 extern f32 lbl_803E2080;
 extern f32 lbl_803E2084;
@@ -2394,6 +2407,47 @@ void dll_A9_func03(int param_1,undefined2 param_2,int param_3,uint param_4,undef
   local_23c = local_29c;
   (**(code **)(*gModgfxInterface + 8))(&local_378,0,0xe,&DAT_80319c78,0xc,&DAT_80319d04,0x586,0);
   return;
+}
+
+void dll_AA_func03(double param_1,undefined4 param_2,undefined param_3,int param_4,undefined4 param_5)
+{
+  double scaleAsDouble;
+  f32 scale;
+
+  scale = lbl_803E1600;
+  if (param_4 != 0) {
+    param_1 = (double)*(f32 *)(param_4 + 8);
+    scale = (f32)(param_1 / (double)lbl_803E1604);
+  }
+
+  scaleAsDouble = (double)scale;
+  (*(code *)(*gModgfxInterface + 0x34))(param_1,param_2,param_3,0x15,1,0);
+  (*(code *)(*gModgfxInterface + 0x4c))(&DAT_80319344);
+  (*(code *)(*gModgfxInterface + 0x54))(param_5);
+  (*(code *)(*gModgfxInterface + 0x38))();
+  (*(code *)(*gModgfxInterface + 0x3c))
+            ((double)lbl_803E1608,(double)lbl_803E160C,(double)lbl_803E160C,4,0x15,
+             &DAT_80319318);
+  (*(code *)(*gModgfxInterface + 0x3c))
+            ((double)lbl_803E1610,(double)lbl_803E1614,(double)lbl_803E1610,2,0x15,
+             &DAT_80319318);
+  (*(code *)(*gModgfxInterface + 0x3c))
+            ((double)lbl_803E160C,(double)lbl_803E1618,(double)lbl_803E160C,0x400000,0,0);
+  (*(code *)(*gModgfxInterface + 0x40))();
+  (*(code *)(*gModgfxInterface + 0x3c))
+            ((double)lbl_803E161C,(double)lbl_803E160C,(double)lbl_803E160C,4,7,&DAT_803192dc);
+  (*(code *)(*gModgfxInterface + 0x40))();
+  (*(code *)(*gModgfxInterface + 0x3c))
+            ((double)lbl_803E1620,(double)lbl_803E160C,(double)lbl_803E160C,4,7,&DAT_803192dc);
+  (*(code *)(*gModgfxInterface + 0x3c))
+            (scaleAsDouble,(double)lbl_803E1624,scaleAsDouble,2,0x15,&DAT_80319318);
+  (*(code *)(*gModgfxInterface + 0x40))();
+  scaleAsDouble = (double)lbl_803E160C;
+  (*(code *)(*gModgfxInterface + 0x3c))
+            (scaleAsDouble,scaleAsDouble,scaleAsDouble,4,7,&DAT_803192dc);
+  (*(code *)(*gModgfxInterface + 0x50))
+            (param_4,&DAT_80319168,0x15,&DAT_8031923c,0x18,0x3e9,0);
+  (*(code *)(*gModgfxInterface + 0x58))();
 }
 
 

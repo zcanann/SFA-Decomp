@@ -17,5 +17,6 @@ void dll_A8_func03(int param_1,undefined2 param_2,int param_3,uint param_4,undef
                  int param_6);
 void dll_A9_func03(int param_1,undefined2 param_2,int param_3,uint param_4,undefined4 param_5,
                  int param_6);
+void dll_AA_func03(double param_1,undefined4 param_2,undefined param_3,int param_4,undefined4 param_5);
 
 #endif /* MAIN_DLL_PICKUP_H_ */
