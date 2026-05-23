@@ -792,34 +792,43 @@ int expgfx_func09(void)
  */
 void expgfx_renderSourcePools(int sourceId,int sourceMode)
 {
+  u8 *expgfxBase;
   ExpgfxBounds *boundsTemplate;
   ExpgfxBounds *poolBounds;
   s8 *poolActiveCounts;
   u8 *poolBoundsTemplateIds;
   u8 *poolSourceModes;
   u32 *poolSourceIds;
+  u32 *slotPoolBases;
   int poolIndex;
 
-  poolActiveCounts = (s8 *)&gExpgfxPoolActiveCounts;
-  poolSourceIds = (u32 *)&gExpgfxPoolSourceIds;
-  poolSourceModes = (u8 *)&gExpgfxPoolSourceModes;
-  poolBoundsTemplateIds = (u8 *)&gExpgfxPoolBoundsTemplateIds;
-  poolBounds = (ExpgfxBounds *)&gExpgfxPoolBounds;
+  expgfxBase = gExpgfxRuntimeData;
+  poolIndex = 0;
+  poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+  poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
+  poolSourceModes = expgfxBase + EXPGFX_POOL_SOURCE_MODES_OFFSET;
+  poolBoundsTemplateIds = expgfxBase + EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET;
+  poolBounds = (ExpgfxBounds *)(expgfxBase + EXPGFX_POOL_BOUNDS_OFFSET);
+  slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
 
-  for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
-    if ((poolActiveCounts[poolIndex] != 0) && (poolSourceIds[poolIndex] == (u32)sourceId) &&
-        (poolSourceModes[poolIndex] == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET)) {
+  while (poolIndex < EXPGFX_POOL_COUNT) {
+    if ((*poolActiveCounts != 0) && (*poolSourceIds == (u32)sourceId) &&
+        (*poolSourceModes == sourceMode + EXPGFX_POOL_SOURCE_MODE_SOURCE_OFFSET)) {
       boundsTemplate =
-          (ExpgfxBounds *)(gExpgfxStaticData +
-                           poolBoundsTemplateIds[poolIndex] * EXPGFX_BOUNDS_TEMPLATE_SIZE);
-      if (fn_8005E97C(poolBounds[poolIndex].minX - playerMapOffsetX,
-                      poolBounds[poolIndex].maxX - playerMapOffsetX,
-                      poolBounds[poolIndex].minY,poolBounds[poolIndex].maxY,
-                      poolBounds[poolIndex].minZ - playerMapOffsetZ,
-                      poolBounds[poolIndex].maxZ - playerMapOffsetZ,boundsTemplate) != 0) {
-        drawGlow(gExpgfxSlotPoolBases[poolIndex],poolIndex);
+          (ExpgfxBounds *)(gExpgfxStaticData + *poolBoundsTemplateIds * EXPGFX_BOUNDS_TEMPLATE_SIZE);
+      if (fn_8005E97C(poolBounds->minX - playerMapOffsetX,poolBounds->maxX - playerMapOffsetX,
+                      poolBounds->minY,poolBounds->maxY,poolBounds->minZ - playerMapOffsetZ,
+                      poolBounds->maxZ - playerMapOffsetZ,boundsTemplate) != 0) {
+        drawGlow(*slotPoolBases,poolIndex);
       }
     }
+    poolActiveCounts++;
+    poolSourceIds++;
+    poolSourceModes++;
+    poolBoundsTemplateIds++;
+    poolBounds++;
+    slotPoolBases++;
+    poolIndex++;
   }
 }
 
