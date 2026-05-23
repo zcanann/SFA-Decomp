@@ -62,6 +62,7 @@ void trickyMove(void) {
 }
 
 extern f32 lbl_803E247C;
+extern f32 lbl_803E2418;
 extern f32 lbl_803E23E8;
 
 /* objAnimFn_8013a3f0  addr=0x8013A3F0  size=0xFC  linkage=global */
@@ -337,8 +338,91 @@ void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
 }
 
 /* fn_8013AB4C  addr=0x8013AB4C  size=0x2B0  linkage=global */
-void fn_8013AB4C(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
+{
+    f32 bestDistances[8];
+    void **curves;
+    void *curve;
+    void *linkedCurve;
+    u8 routeFlags;
+    f32 dx;
+    f32 dz;
+    f32 score;
+    int count;
+    int i;
+    int j;
+    int k;
+    int linkCurveId;
+    u8 *state;
+
+    state = *(u8 **)(obj + 0xb8);
+    curves = (*(void *(**)(int *))(*(int *)gRomCurveInterface + 0x10))(&count);
+
+    for (i = 0; i < 8; i++) {
+        bestDistances[i] = lbl_803E2418;
+        outRoutes[i] = NULL;
+    }
+
+    if (linkSelector == 0) {
+        return;
+    }
+
+    for (i = 0; i < count; i++) {
+        curve = curves[i];
+        if ((*(s8 *)((u8 *)curve + 0x19) != 0x24) || (*(u8 *)((u8 *)curve + 3) != 0)) {
+            continue;
+        }
+        if (((*(s16 *)((u8 *)curve + 0x30) != -1) &&
+             (GameBit_Get(*(s16 *)((u8 *)curve + 0x30)) == 0)) ||
+            ((*(s16 *)((u8 *)curve + 0x32) != -1) &&
+             (GameBit_Get(*(s16 *)((u8 *)curve + 0x32)) != 0))) {
+            continue;
+        }
+
+        dx = *(f32 *)(*(int *)(state + 0x28) + 0) - *(f32 *)((u8 *)curve + 8);
+        dz = *(f32 *)(*(int *)(state + 0x28) + 8) - *(f32 *)((u8 *)curve + 0x10);
+        score = (dz * dz) + (dx * dx);
+        dx = *(f32 *)(obj + 0x18) - *(f32 *)((u8 *)curve + 8);
+        dz = *(f32 *)(obj + 0x20) - *(f32 *)((u8 *)curve + 0x10);
+        score += (dx * dx) + (dz * dz);
+        if (score >= bestDistances[7]) {
+            continue;
+        }
+
+        for (j = 0; j < 4; j++) {
+            linkCurveId = *(int *)((u8 *)curve + 0x1c + j * 4);
+            if ((linkCurveId > -1) && (*(u8 *)((u8 *)curve + 4 + j) == (u16)linkSelector)) {
+                if (*(s8 *)((u8 *)curve + 0x1a) == 8) {
+                    linkedCurve = (*(void *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(linkCurveId);
+                    if ((linkedCurve != NULL) && (*(s8 *)((u8 *)linkedCurve + 0x1a) == 9)) {
+                        continue;
+                    }
+                }
+
+                routeFlags = (u8)(*(s8 *)((u8 *)curve + 0x1b) >> j);
+                break;
+            }
+        }
+
+        if (j == 4) {
+            continue;
+        }
+
+        for (j = 0; j < 8; j++) {
+            if (score < bestDistances[j]) {
+                for (k = 7; k > j; k--) {
+                    outRouteFlags[k] = outRouteFlags[k - 1];
+                    outRoutes[k] = outRoutes[k - 1];
+                    bestDistances[k] = bestDistances[k - 1];
+                }
+
+                outRouteFlags[j] = (routeFlags & 1) == 0;
+                outRoutes[j] = curve;
+                bestDistances[j] = score;
+                break;
+            }
+        }
+    }
 }
 
 /* fn_8013ADFC  addr=0x8013ADFC  size=0x1E4  linkage=global */
