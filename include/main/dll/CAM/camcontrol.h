@@ -80,6 +80,7 @@ extern u8 *pCamera;
 void camcontrol_updateTargetFeedback(void);
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
                                     float *outZ,float *outDistanceXZ,int useWorldPosition);
+void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z);
 int Camera_isZooming(void);
 void Camera_func15(int x);
 void Camera_setTarget(int target);

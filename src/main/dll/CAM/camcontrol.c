@@ -345,7 +345,6 @@ void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,f
                                     float *outZ,float *outDistanceXZ,int useWorldPosition)
 {
   int focusObj;
-  f32 distance;
 
   focusObj = *(int *)((char *)pCamera + 0xa4);
   if (useWorldPosition != 0) {
@@ -363,8 +362,7 @@ void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,f
     if (*outDistanceXZ > lbl_803E1630) {
       *outDistanceXZ = sqrtf(*outDistanceXZ);
     }
-    distance = *outDistanceXZ;
-    if (distance < lbl_803E1680) {
+    if (*outDistanceXZ < lbl_803E1680) {
       *outDistanceXZ = lbl_803E1680;
     }
   }
