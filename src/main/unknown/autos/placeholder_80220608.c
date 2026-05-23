@@ -19,6 +19,7 @@ extern f32 lbl_803E6C20;
 extern int lbl_803DC398;
 extern void storeZeroToFloatParam(void *timer);
 extern void s16toFloat(void *timer, int duration);
+extern void gunpowderbarrel_clearHeldState(int obj);
 
 int drenergydisc_getExtraSize(void) { return 1; }
 int drenergydisc_getObjectTypeId(void) { return 0; }
@@ -200,6 +201,27 @@ void barrelgener_init(int obj)
 #pragma scheduling on
 void barrelgener_release(void) {}
 void barrelgener_initialise(void) {}
+
+int drbarrelgr_getExtraSize(void) { return 0x12c; }
+int drbarrelgr_getObjectTypeId(void) { return 0; }
+void drbarrelgr_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    void *heldObj = *(void **)(state + 8);
+
+    if (heldObj != NULL) {
+        u8 flags;
+        int clear = 0;
+
+        gunpowderbarrel_clearHeldState((int)heldObj);
+        flags = *(u8 *)(state + 0x12a);
+        flags = (flags & 0x7f) | ((clear & 1) << 7);
+        *(u8 *)(state + 0x12a) = flags;
+    }
+}
+void drbarrelgr_hitDetect(void) {}
+void drbarrelgr_release(void) {}
+void drbarrelgr_initialise(void) {}
 
 int fn_80223BBC(void) { return 0x2; }
 int fn_80223D10(void) { return 0x2; }
