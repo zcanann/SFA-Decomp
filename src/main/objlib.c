@@ -996,26 +996,27 @@ void ObjHits_RefreshObjectState(int param_1)
 
   iVar5 = *(uint *)(param_1 + 0x54);
   if (iVar5 != 0) {
-    *(undefined2 *)(iVar5 + 0x60) = *(undefined2 *)(*(int *)(param_1 + 0x50) + 0x4e);
+    *(s16 *)(iVar5 + 0x60) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x4e);
     *(undefined *)(iVar5 + 0x62) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x65);
-    if (((*(byte *)(iVar5 + 0x62) & 0x20) != 0) &&
-       ((piVar6 = *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4),
-        (*(ushort *)(*piVar6 + 2) & 0x1000) == 0 || (piVar6[5] == 0)))) {
-      *(byte *)(iVar5 + 0x62) = *(byte *)(iVar5 + 0x62) & 0xdf;
+    if ((*(byte *)(iVar5 + 0x62) & 0x20) != 0) {
+      piVar6 = *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
+      if (((*(ushort *)(*piVar6 + 2) & 0x1000) == 0) || (piVar6[5] == 0)) {
+        *(byte *)(iVar5 + 0x62) = *(byte *)(iVar5 + 0x62) & 0xdf;
+      }
     }
     *(undefined *)(iVar5 + 0x6a) = *(undefined *)(*(int *)(param_1 + 0x50) + 99);
     *(undefined *)(iVar5 + 0x6b) = *(undefined *)(*(int *)(param_1 + 0x50) + 100);
     *(ushort *)(iVar5 + 0x5a) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x62);
-    *(undefined2 *)(iVar5 + 0x5c) = *(undefined2 *)(*(int *)(param_1 + 0x50) + 0x68);
-    *(undefined2 *)(iVar5 + 0x5e) = *(undefined2 *)(*(int *)(param_1 + 0x50) + 0x6a);
+    *(s16 *)(iVar5 + 0x5c) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x68);
+    *(s16 *)(iVar5 + 0x5e) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6a);
     *(undefined *)(iVar5 + 0xb0) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x60);
     *(undefined2 *)(iVar5 + 0x58) = 0x400;
     fVar1 = (float)(s32)*(short *)(iVar5 + 0x5a);
     *(float *)(iVar5 + 0xc) = fVar1 * fVar1;
     *(undefined *)(iVar5 + 0xb6) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x90);
     *(ushort *)(iVar5 + 100) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x77);
-    *(undefined2 *)(iVar5 + 0x66) = *(undefined2 *)(*(int *)(param_1 + 0x50) + 0x6c);
-    *(undefined2 *)(iVar5 + 0x68) = *(undefined2 *)(*(int *)(param_1 + 0x50) + 0x6e);
+    *(s16 *)(iVar5 + 0x66) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6c);
+    *(s16 *)(iVar5 + 0x68) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6e);
     *(float *)(iVar5 + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if ((*(byte *)(iVar5 + 0x62) & 2) == 0) {
       if ((*(byte *)(iVar5 + 0x62) & 1) != 0) {
