@@ -16,11 +16,14 @@ extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
+extern void ObjHits_EnableObject(int obj);
+extern void ObjHits_RefreshObjectState(int obj);
 extern int ObjHits_GetPriorityHit();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
+extern u32 randomGetRange(int min,int max);
 extern int FUN_800620e8();
 extern int FUN_800632f4();
 extern undefined4 FUN_80081118();
@@ -30,6 +33,7 @@ extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 
 extern undefined4* DAT_803dd71c;
+extern int *gExpgfxInterface;
 extern f64 DOUBLE_803e5f58;
 extern f32 FLOAT_803e5f20;
 extern f32 FLOAT_803e5f2c;
@@ -59,6 +63,11 @@ extern f32 lbl_803E52E8;
 extern f32 lbl_803E52EC;
 extern f32 lbl_803E52F0;
 extern f32 lbl_803E52F4;
+extern f32 lbl_803E52F8;
+extern f32 lbl_803E52FC;
+extern f32 lbl_803E5300;
+extern f32 lbl_803E5304;
+extern f64 lbl_803E5308;
 
 /*
  * --INFO--
@@ -148,6 +157,37 @@ void ediblemushroom_init(int obj, int aux)
         *(short *)(state + 0x134) = 0xc1;
     }
 }
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801D1BFC(s16 *obj,float *state,int enableTimer)
+{
+  int objDef;
+  u32 randomValue;
+
+  objDef = *(int *)((u8 *)obj + 0x4c);
+  obj[2] = (s16)randomGetRange(-0x5dc,0x5dc);
+  obj[1] = (s16)randomGetRange(-0x5dc,0x5dc);
+  obj[0] = (s16)randomGetRange(-0x5dc,0x5dc);
+  *(u8 *)((u8 *)obj + 0x36) = 0xff;
+  obj[3] = (s16)(obj[3] & ~0x4000);
+  *(f32 *)((u8 *)obj + 0xc) = *(f32 *)(objDef + 8);
+  *(f32 *)((u8 *)obj + 0x10) = *(f32 *)(objDef + 0xc);
+  *(f32 *)((u8 *)obj + 0x14) = *(f32 *)(objDef + 0x10);
+  if (enableTimer != 0) {
+    *(f32 *)((u8 *)obj + 8) = lbl_803E52F8;
+    state[0] = lbl_803E52FC;
+    randomValue = randomGetRange(0,100);
+    state[2] = lbl_803E5300 + (f32)(s32)randomValue;
+    randomValue = randomGetRange(-100,100);
+    state[1] = lbl_803E5304 * (f32)(s32)randomValue + state[3];
+    state[4] = state[1] / state[2];
+  }
+  ObjHits_EnableObject((int)obj);
+  ObjHits_RefreshObjectState((int)obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -377,6 +417,12 @@ int enemymushroom_getExtraSize(void)
 int enemymushroom_getObjectTypeId(int obj)
 {
   return (*(byte *)(*(int *)(obj + 0x4c) + 0x1f) << 0xb) | 0x400;
+}
+
+void enemymushroom_free(int obj)
+{
+  (*(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
+  ObjGroup_RemoveObject(obj,3);
 }
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
