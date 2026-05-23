@@ -353,6 +353,8 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void expgfxRemoveAll(void)
 {
   u8 *expgfxBase;
@@ -418,6 +420,8 @@ void expgfxRemoveAll(void)
     poolIndex++;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
