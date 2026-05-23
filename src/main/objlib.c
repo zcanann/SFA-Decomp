@@ -1115,12 +1115,12 @@ int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sph
   if ((hitState->flags & OBJHITS_PRIORITY_STATE_ENABLED) == 0) {
     return 0;
   }
-  if ((hitObj != 0) && (*(int *)(hitObj + 0x54) != 0)) {
+  if (((void *)hitObj != NULL) && (*(void **)(hitObj + 0x54) != NULL)) {
     (*(ObjHitsPriorityState **)(hitObj + 0x54))->lastHitObject = obj;
   }
   hitSlot = 0;
   while (hitSlot < hitState->priorityHitCount) {
-    if (hitState->hitObjects[hitSlot] == hitObj) {
+    if ((void *)hitState->hitObjects[hitSlot] == (void *)hitObj) {
       if (hitState->priorities[hitSlot] > priority) {
         hitState->sphereIndices[hitSlot] = sphereIndex;
         hitState->priorities[hitSlot] = priority;
@@ -1162,13 +1162,13 @@ int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sph
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int
-ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
-            u8 hitVolume,u8 sphereIndex)
+#pragma scheduling off
+#pragma peephole off
+int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
+                              u8 hitVolume,u8 sphereIndex)
 {
-  int hitObjectOffset;
-  int hitSlot;
   ObjHitsPriorityState *hitState;
+  int hitSlot;
   
   if (priority == '\0') {
     return 0;
@@ -1177,30 +1177,27 @@ ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj
   if ((hitState->flags & OBJHITS_PRIORITY_STATE_ENABLED) == 0) {
     return 0;
   }
-  if ((hitObj != 0) && (*(int *)(hitObj + 0x54) != 0)) {
+  if (((void *)hitObj != NULL) && (*(void **)(hitObj + 0x54) != NULL)) {
     (*(ObjHitsPriorityState **)(hitObj + 0x54))->lastHitObject = obj;
   }
   hitSlot = 0;
-  while( true ) {
-    hitObjectOffset = (int)hitState->priorityHitCount;
-    if (hitObjectOffset <= hitSlot) break;
-    hitObjectOffset = hitSlot * 4;
-    if (hitState->hitObjects[hitSlot] == hitObj) {
-      hitSlot = (int)hitState + hitSlot;
-      if (priority < *(char *)(hitSlot + 0x75)) {
-        *(undefined *)(hitSlot + 0x72) = sphereIndex;
-        *(char *)(hitSlot + 0x75) = priority;
-        *(undefined *)(hitSlot + 0x78) = hitVolume;
-        *(float *)((int)hitState->hitPosX + hitObjectOffset) = hitPosX;
-        *(float *)((int)hitState->hitPosY + hitObjectOffset) = hitPosY;
-        *(float *)((int)hitState->hitPosZ + hitObjectOffset) = hitPosZ;
+  while (hitSlot < hitState->priorityHitCount) {
+    if ((void *)hitState->hitObjects[hitSlot] == (void *)hitObj) {
+      if (hitState->priorities[hitSlot] > priority) {
+        hitState->sphereIndices[hitSlot] = sphereIndex;
+        hitState->priorities[hitSlot] = priority;
+        hitState->hitVolumes[hitSlot] = hitVolume;
+        hitState->hitPosX[hitSlot] = hitPosX;
+        hitState->hitPosY[hitSlot] = hitPosY;
+        hitState->hitPosZ[hitSlot] = hitPosZ;
       }
       hitSlot = hitState->priorityHitCount + 1;
     }
     hitSlot = hitSlot + 1;
   }
-  if ((hitSlot == hitObjectOffset) && (hitObjectOffset < OBJHITS_PRIORITY_HIT_COUNT)) {
-    hitState->sphereIndices[hitObjectOffset] = sphereIndex;
+  if ((hitSlot == hitState->priorityHitCount) &&
+      (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT)) {
+    hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
     *(char *)((int)hitState->priorities + hitState->priorityHitCount) = priority;
     *(undefined *)((int)hitState->hitVolumes + hitState->priorityHitCount) = hitVolume;
     hitState->hitObjects[hitState->priorityHitCount] = hitObj;
@@ -1211,6 +1208,8 @@ ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
