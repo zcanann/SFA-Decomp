@@ -14,6 +14,7 @@ extern f32 lbl_803E244C;
 extern f32 lbl_803E2448;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E2424;
+extern f32 lbl_803E2450;
 extern f32 timeDelta;
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void fn_800DA928(int p1, f32 p2);
@@ -52,8 +53,54 @@ int fn_80139834(f32 param_1, int param_2, int param_3)
 #pragma peephole reset
 
 /* fn_80139930  addr=0x80139930  size=0x15C  linkage=global */
-void fn_80139930(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+int fn_80139930(u8 *obj, u16 targetYaw)
+{
+    u8 *state;
+    int currentYaw;
+    int delta;
+    s16 step;
+
+    state = *(u8 **)(obj + 0xb8);
+    *(u16 *)(state + 0x5a) = targetYaw;
+
+    currentYaw = *(s16 *)obj;
+    delta = currentYaw - (u16)(s16)targetYaw;
+    if (delta > 0x8000) {
+        delta -= 0xffff;
+    }
+    if (delta < -0x8000) {
+        delta += 0xffff;
+    }
+
+    if ((*(u32 *)(state + 0x54) & 0x100000) != 0) {
+        *(u32 *)(state + 0x54) |= 0x200000;
+    } else {
+        *(u32 *)(state + 0x54) &= 0xffdfffff;
+    }
+    *(u32 *)(state + 0x54) &= 0xef2fffff;
+
+    if (delta > 0x10) {
+        *(u32 *)(state + 0x54) |= 0x900000;
+    } else if (delta < -0x10) {
+        *(u32 *)(state + 0x54) |= 0x500000;
+    } else {
+        *(u16 *)obj = targetYaw;
+        return 0;
+    }
+
+    if (delta > 0x200) {
+        step = (s16)(s32)(lbl_803E2450 * timeDelta);
+        *(s16 *)obj = (s16)(currentYaw - step);
+        *(u32 *)(state + 0x54) |= 0x10000000;
+    } else if (delta < -0x200) {
+        step = (s16)(s32)(lbl_803E2450 * timeDelta);
+        *(s16 *)obj = (s16)(currentYaw + step);
+        *(u32 *)(state + 0x54) |= 0x10000000;
+    } else {
+        *(u16 *)obj = targetYaw;
+    }
+
+    return delta;
 }
 
 /* trickyMove  addr=0x80139A8C  size=0x964  linkage=global */
