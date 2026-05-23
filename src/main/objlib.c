@@ -2436,16 +2436,18 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
 #pragma peephole off
 void ObjLink_DetachChild(int param_1,int param_2)
 {
-  uint uVar1;
   int iVar2;
   int iVar3;
   int iVar4;
+  int childCount;
 
   iVar4 = 0;
-  uVar1 = (uint)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET);
-  for (iVar3 = param_1; (uVar1 != 0 && (*(int *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET) != param_2)); iVar3 = iVar3 + 4) {
-    iVar4 = iVar4 + 1;
-    uVar1 = uVar1 - 1;
+  childCount = (int)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET);
+  for (iVar3 = param_1; iVar4 < childCount; iVar4++) {
+    if ((u32)*(int *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET) == (u32)param_2) {
+      break;
+    }
+    iVar3 = iVar3 + 4;
   }
   iVar3 = param_1 + iVar4 * 4;
   for (; iVar2 = *(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) - 1, iVar4 < iVar2; iVar4 = iVar4 + 1) {
@@ -2453,9 +2455,9 @@ void ObjLink_DetachChild(int param_1,int param_2)
         *(undefined4 *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET + sizeof(int));
     iVar3 = iVar3 + 4;
   }
-  *(char *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) = (char)iVar2;
-  *(undefined4 *)(param_1 + (uint)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) * 4 +
-                  OBJLINK_CHILD_LIST_OFFSET) = 0;
+  *(undefined *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) = iVar2;
+  iVar3 = param_1 + (uint)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) * 4;
+  *(undefined4 *)(iVar3 + OBJLINK_CHILD_LIST_OFFSET) = 0;
   *(undefined4 *)(param_2 + OBJLINK_PARENT_OFFSET) = 0;
   return;
 }
@@ -2479,16 +2481,17 @@ void ObjLink_DetachChild(int param_1,int param_2)
 #pragma peephole off
 void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
 {
-  u8 bVar1;
+  int childIndex;
   u8* base;
 
-  bVar1 = *(u8 *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET);
-  *(u8 *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) = bVar1 + 1;
-  base = (u8*)(param_1 + bVar1 * 4);
+  childIndex = (int)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET);
+  *(undefined *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) = childIndex + 1;
+  base = (u8*)param_1;
+  base = base + childIndex * 4;
   *(int *)(base + OBJLINK_CHILD_LIST_OFFSET) = param_2;
   *(int *)(param_2 + OBJLINK_PARENT_OFFSET) = param_1;
   *(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) =
-      (u16)(*(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) & OBJLINK_FLAGS_MODE_CLEAR_MASK);
+      (u16)(*(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) & ~OBJLINK_FLAGS_MODE_MASK);
   *(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) =
       (u16)(*(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) | param_3);
   *(u8 *)(param_2 + OBJLINK_CHILD_STATE_OFFSET) = 0;
