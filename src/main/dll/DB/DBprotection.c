@@ -6,6 +6,7 @@ extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006824();
 extern undefined4 GameBit_Set(int eventId,int value);
+extern uint GameBit_Get(int eventId);
 extern uint FUN_80017730();
 extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
@@ -19,6 +20,9 @@ extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
+extern int Obj_GetPlayerObject(void);
+extern int ObjList_FindObjectById(int id);
+extern void getEnvfxAct(int effectObj, int playerObj, int action, int unused);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6cc;
@@ -91,7 +95,7 @@ extern f32 lbl_803E6450;
 /*
  * --INFO--
  *
- * Function: FUN_801dfa28
+ * Function: fn_801DFA28
  * EN v1.0 Address: 0x801DFA28
  * EN v1.0 Size: 6060b
  * EN v1.1 Address: 0x801E0018
@@ -101,7 +105,7 @@ extern f32 lbl_803E6450;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dfa28(void)
+void fn_801DFA28(void)
 {
   char cVar1;
   float fVar2;
@@ -812,8 +816,55 @@ LAB_801e1614:
   return;
 }
 
+void fn_801E108C(u8 *state)
+{
+  int player;
+  int effectObj;
+
+  player = Obj_GetPlayerObject();
+  if (GameBit_Get(0xa3c) != 0) {
+    effectObj = ObjList_FindObjectById(0x467e8);
+    getEnvfxAct(effectObj, player, state[state[0xa4] + 0xa9], 0);
+    effectObj = ObjList_FindObjectById(0x467e7);
+    getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
+    getEnvfxAct(player, player, 0x96, 0);
+    GameBit_Set(0xa3c, 0);
+    *(u16 *)(state + 0xa2) = 0xa3e;
+  }
+
+  if (GameBit_Get(0xa3d) != 0) {
+    effectObj = ObjList_FindObjectById(0x467e7);
+    getEnvfxAct(effectObj, player, state[state[0xa4] + 0xa9], 0);
+    effectObj = ObjList_FindObjectById(0x467e8);
+    getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
+    getEnvfxAct(player, player, 0x96, 0);
+    GameBit_Set(0xa3d, 0);
+    *(u16 *)(state + 0xa2) = 0xa3f;
+  }
+
+  if (GameBit_Get(0xa3e) != 0) {
+    if (*(u16 *)(state + 0xa2) != 0xa3e) {
+      state[0xa4] = (u8)(state[0xa4] ^ 1);
+    }
+    getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
+    getEnvfxAct(player, player, state[state[0xa4] + 0xa9], 0);
+    getEnvfxAct(player, player, 0x8a, 0);
+    GameBit_Set(0xa3e, 0);
+  }
+
+  if (GameBit_Get(0xa3f) != 0) {
+    if (*(u16 *)(state + 0xa2) != 0xa3f) {
+      state[0xa4] = (u8)(state[0xa4] ^ 1);
+    }
+    getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
+    getEnvfxAct(player, player, state[state[0xa4] + 0xa9], 0);
+    getEnvfxAct(player, player, 0x8a, 0);
+    GameBit_Set(0xa3f, 0);
+  }
+}
+
 /* 16b chained patterns. */
-s32 fn_801E12DC(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x70); }
+int fn_801E12DC(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x70); }
 
 void fn_801E1568(int *obj) {
     char *state = *(char**)((char*)obj + 0xb8);
