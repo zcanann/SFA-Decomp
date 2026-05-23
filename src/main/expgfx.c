@@ -1452,7 +1452,6 @@ void expgfx_resetAllPools(void)
   u8 *staticBase;
   u8 *expgfxBase;
   ExpgfxSlot *slot;
-  ExpgfxTableEntry *entry;
   ExpgfxResourceEntry *resourceEntry;
   u32 *slotPoolBases;
   u32 *poolActiveMasks;
@@ -1460,6 +1459,7 @@ void expgfx_resetAllPools(void)
   u32 *poolSourceIds;
   s16 *poolSlotTypeIds;
   u8 *poolFrameFlags;
+  u16 *refCount;
   u32 activeBit;
   u32 tableOffset;
   int poolIndex;
@@ -1481,20 +1481,20 @@ void expgfx_resetAllPools(void)
       activeBit = 1 << slotIndex;
       if ((*poolActiveMasks & activeBit) != 0) {
         tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-        entry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset);
-        if (entry->textureOrResource != 0) {
+        if (*(u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET + tableOffset) != 0) {
           gExpgfxTextureFreeInProgress = 1;
-          textureFree((void *)entry->textureOrResource);
+          tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
+          textureFree((void *)*(u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET + tableOffset));
           gExpgfxTextureFreeInProgress = 0;
         }
 
         tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-        entry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset);
-        if (entry->refCount != 0) {
-          entry->refCount--;
-          if (entry->refCount == 0) {
-            entry->textureOrResource = 0;
-            entry->key0 = 0;
+        refCount = (u16 *)(expgfxBase + EXPGFX_EXPTAB_REFCOUNT_OFFSET + tableOffset);
+        if (*refCount != 0) {
+          (*refCount)--;
+          if (*refCount == 0) {
+            *(u32 *)(expgfxBase + EXPGFX_EXPTAB_TEXTURE_RESOURCE_OFFSET + tableOffset) = 0;
+            *(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset) = 0;
           }
         } else {
           debugPrintf((char *)(staticBase + EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET));
