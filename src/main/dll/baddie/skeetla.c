@@ -5,9 +5,163 @@
 #include "types.h"
 #include "main/dll/baddie/skeetla.h"
 
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E23E0;
+extern f32 lbl_803E23EC;
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+extern f32 lbl_803E2424;
+extern f32 lbl_803E2428;
+extern f32 lbl_803E242C;
+extern f32 lbl_803E2430;
+extern f32 lbl_803E2434;
+extern f32 lbl_803E2438;
+extern f32 timeDelta;
+extern void *gPathControlInterface;
+
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern void hitDetectFn_800658a4(u8 *obj, f32 x, f32 y, f32 z, f32 *out, int flags);
+extern u8 *Obj_GetPlayerObject(void);
+extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
+extern void objLightFn_8009a1dc(u8 *obj, f32 scale, void *args, int mode, int param);
+extern void fn_80096F9C(void *hitPos, int a, int b, int c, int d);
+extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
+extern int coordsToMapCell(f32 x, f32 z);
+extern int ObjGroup_FindNearestObject(int group, u8 *obj, f32 *outDistance);
+extern int ObjHits_PollPriorityHitWithCooldown(u8 *obj, f32 *cooldown, void **outObj, f32 *outPos);
+
 /* fn_8013939C  addr=0x8013939C  size=0x498  linkage=global */
-void fn_8013939C(void) {
-  /* TODO: body — see build/GSAE01/asm/main/dll/baddie/skeetla.s */
+void fn_8013939C(u8 *obj)
+{
+    u8 *state;
+    void *lastContactObj;
+    f32 nearestDistance;
+    f32 hitOffset[3];
+    f32 lightArgs[3];
+    f32 hitPos[5];
+    int doGroundSnap;
+    int hitKind;
+
+    state = *(u8 **)(obj + 0xb8);
+    doGroundSnap = 0;
+    nearestDistance = lbl_803E2424;
+
+    if ((objPosToMapBlockIdx(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20)) == -1) &&
+        ((*(u32 *)(state + 0x54) & 0x80000) == 0)) {
+        *(u8 *)(state + 0x353) = 0;
+        *(f32 *)(obj + 0x0c) = *(f32 *)(obj + 0x80);
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x84);
+        *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x88);
+    }
+
+    *(u32 *)(state + 0x54) &= 0xfff7ffff;
+
+    if (*(u8 *)(state + 0x374) != 0) {
+        *(u8 *)(state + 0x374) -= 1;
+        doGroundSnap = 1;
+    } else if ((*(u32 *)(state + 0x54) & 0x2000) != 0) {
+        doGroundSnap = 1;
+    }
+
+    if (doGroundSnap != 0) {
+        hitDetectFn_800658a4(obj, *(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c),
+                             *(f32 *)(obj + 0x20), hitOffset, 0);
+        *(f32 *)(obj + 0x10) -= hitOffset[0];
+        *(u8 *)(state + 0x353) = 0;
+    }
+
+    if ((*(s8 *)(state + 0x353) == 0) || ((*(u8 *)(state + 0x58) & 0x20) != 0)) {
+        *(f32 *)(obj + 0x28) = lbl_803E23DC;
+    } else {
+        if ((*(f32 *)(state + 0x2ac) != lbl_803E23DC) &&
+            ((*(f32 *)(state + 0x2b0) == lbl_803E2410) ||
+             (*(f32 *)(state + 0x2b4) - *(f32 *)(state + 0x2b0) > lbl_803E2414))) {
+            *(f32 *)(obj + 0x28) = lbl_803E23DC;
+            *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x2b4) - lbl_803E23EC;
+        } else {
+            *(f32 *)(obj + 0x28) += lbl_803E2428 * timeDelta;
+            *(f32 *)(obj + 0x10) += *(f32 *)(obj + 0x28) * timeDelta;
+        }
+    }
+
+    lastContactObj = **(void ***)(obj + 0x54);
+    if (((*(u16 *)(*(u8 **)(obj + 0x54) + 0x60) & 8) == 0) ||
+        (*(s16 *)((u8 *)lastContactObj + 0x46) == 0x1f)) {
+        lastContactObj = NULL;
+    }
+
+    if ((*(u32 *)(state + 0x54) & 8) != 0) {
+        *(f32 *)(state + 0x364) += timeDelta;
+        if (*(f32 *)(state + 0x364) >= lbl_803E242C) {
+            if (vec3f_distanceSquared((f32 *)(obj + 0x18),
+                                      (f32 *)(Obj_GetPlayerObject() + 0x18)) > lbl_803E2430) {
+                *(f32 *)(state + 0x364) -= lbl_803E242C;
+                *(u8 *)(*(u8 **)(obj + 0x50) + 0x71) = 0x7f;
+                *(u32 *)(state + 0x54) &= ~8;
+            }
+        }
+    } else if ((*(void **)(state + 0x360) != NULL) &&
+               (*(void **)(state + 0x360) == lastContactObj)) {
+        *(f32 *)(state + 0x364) += timeDelta;
+        if (*(f32 *)(state + 0x364) >= lbl_803E23E0) {
+            *(f32 *)(state + 0x364) -= lbl_803E23E0;
+            *(u32 *)(state + 0x54) |= 8;
+            *(u8 *)(*(u8 **)(obj + 0x50) + 0x71) = 0x7e;
+        }
+    } else {
+        *(f32 *)(state + 0x364) = lbl_803E23DC;
+    }
+
+    *(void **)(state + 0x360) = lastContactObj;
+    hitKind = ObjHits_PollPriorityHitWithCooldown(obj, (f32 *)(state + 0x370),
+                                                  (void **)&lastContactObj, hitPos);
+    *(int *)(state + 0x368) = hitKind;
+
+    switch (hitKind) {
+        case 1:
+        case 2:
+        case 4:
+        case 5:
+        case 0xe:
+        case 0xf:
+        case 0x11:
+        case 0x13:
+            objLightFn_8009a1dc(obj, lbl_803E2434, lightArgs, 1, 0);
+            break;
+        case 7:
+        case 8:
+        case 9:
+        case 0xa:
+        case 0xb:
+        case 0xc:
+            fn_80096F9C(hitPos, 8, 0xff, 0x20, 0x20);
+            objLightFn_8009a1dc(obj, lbl_803E2434, lightArgs, 4, 0);
+            if (*(s16 *)((u8 *)lastContactObj + 0x46) == 0x69) {
+                Sfx_PlayFromObject(obj, 0x23f);
+            }
+            break;
+        case 0x1f:
+            *(f32 *)(state + 0x838) = lbl_803E2438;
+            break;
+    }
+
+    if (*(s8 *)(state + 0x353) == 0) {
+        (*(void (**)(u8 *, u8 *))(*(int *)gPathControlInterface + 0x20))(obj, state + 0xf8);
+    }
+
+    if ((coordsToMapCell(*(f32 *)(obj + 0x0c), *(f32 *)(obj + 0x14)) == 0xe) ||
+        (ObjGroup_FindNearestObject(5, obj, &nearestDistance) != 0)) {
+        *(u32 *)(state + 0xf8) &= ~4;
+    } else {
+        *(u32 *)(state + 0xf8) |= 4;
+    }
+
+    (*(void (**)(u8 *, u8 *, f32))(*(int *)gPathControlInterface + 0x10))(obj, state + 0xf8, timeDelta);
+    (*(void (**)(u8 *, u8 *))(*(int *)gPathControlInterface + 0x14))(obj, state + 0xf8);
+    (*(void (**)(u8 *, u8 *, f32))(*(int *)gPathControlInterface + 0x18))(obj, state + 0xf8, timeDelta);
+
+    *(s16 *)(obj + 2) = *(s16 *)(state + 0x290);
+    *(s16 *)(obj + 4) = *(s16 *)(state + 0x292);
 }
 
 extern f32 lbl_803E244C;
