@@ -6,5 +6,7 @@
 undefined4 FUN_8011c7b4(int param_1,int param_2);
 void FUN_8011c860(void);
 void FUN_8011ca28(void);
+void fn_8011C7B4(void);
+void fn_8011CA74(void);
 
 #endif /* MAIN_DLL_DEBUG_PROF_H_ */
