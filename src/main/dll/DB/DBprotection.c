@@ -23,6 +23,8 @@ extern undefined4 FUN_80294964();
 extern int Obj_GetPlayerObject(void);
 extern int ObjList_FindObjectById(int id);
 extern void getEnvfxAct(int effectObj, int playerObj, int action, int unused);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 fn_80293E80(f32 x);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6cc;
@@ -91,6 +93,33 @@ extern f32 lbl_803E6444;
 extern f32 lbl_803E6448;
 extern f32 lbl_803E644C;
 extern f32 lbl_803E6450;
+extern u8 lbl_803DDC2C;
+extern int *gCloudActionInterface;
+extern int *gObjectTriggerInterface;
+extern int *gScreenTransitionInterface;
+extern f32 lbl_803E56CC;
+extern f32 lbl_803E56E4;
+extern f32 lbl_803E56E8;
+extern f32 lbl_803E57C8;
+extern f32 lbl_803E57CC;
+extern f32 lbl_803E57D0;
+extern f32 lbl_803E57D4;
+extern f32 lbl_803E57D8;
+extern f32 lbl_803E57DC;
+extern f32 lbl_803E57E0;
+
+#define SCREEN_TRANSITION_FADE(kind, value) \
+  ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x8)))((kind), (value))
+#define SCREEN_TRANSITION_START(kind, value) \
+  ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0xc)))((kind), (value))
+#define SCREEN_TRANSITION_READY() \
+  ((int (*)(void))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x14)))()
+#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
+  ((void (*)(int, int *, int))(*(u32 *)((u8 *)*gObjectTriggerInterface + 0x48)))((eventId), (obj), (arg))
+#define CLOUD_ACTION_SET(a, b) \
+  ((void (*)(f32, f32))(*(u32 *)((u8 *)*gCloudActionInterface + 0x28)))((a), (b))
+#define CLOUD_ACTION_ENABLE(flag) \
+  ((void (*)(int))(*(u32 *)((u8 *)*gCloudActionInterface + 0x20)))((flag))
 
 /*
  * --INFO--
@@ -865,6 +894,55 @@ void fn_801E108C(u8 *state)
 
 /* 16b chained patterns. */
 int fn_801E12DC(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x70); }
+
+void fn_801E12EC(int *obj)
+{
+  u8 *state;
+  f32 angleCos;
+
+  state = *(u8 **)((u8 *)obj + 0xb8);
+  *(int *)((u8 *)obj + 0xf4) = 7;
+
+  if (GameBit_Get(0x9f) != 0 &&
+      GameBit_Get(0xa0) == 0 &&
+      GameBit_Get(0x91c) != 0) {
+    lbl_803DDC2C = 1;
+    GameBit_Set(0xa0, 1);
+    SCREEN_TRANSITION_FADE(0xa, 1);
+  }
+
+  fn_801E108C(state);
+
+  if (lbl_803DDC2C != 0 && SCREEN_TRANSITION_READY() != 0) {
+    SCREEN_TRANSITION_START(0x50, 1);
+    OBJECT_TRIGGER_REFRESH(1, obj, -1);
+    state[0x70] = 3;
+    lbl_803DDC2C = 0;
+  }
+
+  CLOUD_ACTION_SET(lbl_803E57C8, lbl_803E56CC);
+  CLOUD_ACTION_ENABLE(0);
+
+  angleCos = fn_80293E80((lbl_803E56E4 * (f32)*(u16 *)(state + 0x68)) / lbl_803E56E8);
+  if (state[0x81] == 0) {
+    if (angleCos < lbl_803E57CC) {
+      if (GameBit_Get(0xa71) == 0) {
+        Sfx_PlayFromObject((int)obj, 0x144);
+      }
+      state[0x81] = 1;
+    } else if (angleCos > lbl_803E57D0) {
+      if (GameBit_Get(0xa71) == 0) {
+        Sfx_PlayFromObject((int)obj, 0x145);
+      }
+      state[0x81] = 1;
+    }
+  } else if (angleCos > lbl_803E57D4 && angleCos < lbl_803E57D8) {
+    state[0x81] = 0;
+  }
+
+  *(s16 *)((u8 *)obj + 4) = (s16)(s32)(lbl_803E57DC * angleCos);
+  *(u16 *)(state + 0x68) = (u16)(s32)(lbl_803E57E0 * lbl_803DC074 + (f32)*(u16 *)(state + 0x68));
+}
 
 void fn_801E1568(int *obj) {
     char *state = *(char**)((char*)obj + 0xb8);
