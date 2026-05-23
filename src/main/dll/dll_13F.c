@@ -66,6 +66,7 @@ void collectible_init(int obj,int setup)
 {
   u8 *state;
   int setupObj;
+  int setupModelIndex;
   u8 *data;
   u32 pathWord;
   u8 pathByte;
@@ -81,7 +82,8 @@ void collectible_init(int obj,int setup)
   setupObj = *(int *)(obj + 0x50);
   *(f32 *)(obj + 8) = *(f32 *)(setupObj + 4);
   *(void (**)(void))(obj + 0xbc) = fn_80172680;
-  *(s8 *)(obj + 0xad) = *(s8 *)(setup + 0x26);
+  setupModelIndex = *(s8 *)(setup + 0x26);
+  *(s8 *)(obj + 0xad) = (s8)setupModelIndex;
   if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
     *(u8 *)(obj + 0xad) = 0;
   }
@@ -107,7 +109,7 @@ void collectible_init(int obj,int setup)
   } else {
     *(u32 *)(obj + 0xf4) = 0;
   }
-  if (*(u32 *)(obj + 0xf4) == 0) {
+  if (*(s32 *)(obj + 0xf4) == 0) {
     data = *(u8 **)(*(int *)(obj + 0x50) + 0x18);
     if (data != 0) {
       *(f32 *)(state + 4) = (f32)*(s8 *)(data + 8);
