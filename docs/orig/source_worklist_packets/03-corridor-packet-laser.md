@@ -52,7 +52,7 @@
 - `textblockObj_render@0x8020984C-0x80209850` size=`0x4`
 - `textblockObj_hitDetect@0x80209850-0x80209854` size=`0x4`
 - `textblockObj_updateUnsupported@0x80209854-0x80209880` size=`0x2C`
-- `textblockObj_initUnsupported@0x80209880-0x802098AC` size=`0x2C`
+- `textblockObj_init@0x80209880-0x802098AC` size=`0x2C`
 - `textblockObj_release@0x802098AC-0x802098B0` size=`0x4`
 - `textblockObj_initialise@0x802098B0-0x802098B4` size=`0x4`
 - `platform1_getExtraSize@0x802098B4-0x802098BC` size=`0x8`

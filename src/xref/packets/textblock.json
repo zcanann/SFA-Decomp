@@ -94,7 +94,7 @@
     },
     {
       "function_start": "0x80209880",
-      "function_name": "textblockObj_initUnsupported",
+      "function_name": "textblockObj_init",
       "xrefs": [
         {
           "xref_address": "0x8020988C",
@@ -102,7 +102,7 @@
           "target_address": "0x80329CF0",
           "target_text": "<textblock.c Init>No Longer supported ",
           "pair_kind": "lis/addi",
-          "function_name": "textblockObj_initUnsupported"
+          "function_name": "textblockObj_init"
         }
       ]
     }

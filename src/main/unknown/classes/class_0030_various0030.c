@@ -1821,7 +1821,7 @@
  * - DLL 0x0239: gTextBlockObjDescriptor (slots=10, mask=1101111111)
  *   slot 00: 0x802098B0 textblockObj_initialise
  *   slot 01: 0x802098AC textblockObj_release
- *   slot 03: 0x80209880 textblockObj_initUnsupported
+ *   slot 03: 0x80209880 textblockObj_init
  *   slot 04: 0x80209854 textblockObj_updateUnsupported
  *   slot 05: 0x80209850 textblockObj_hitDetect
  *   slot 06: 0x8020984C textblockObj_render
