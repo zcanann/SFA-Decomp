@@ -33,14 +33,20 @@ extern f32 lbl_803E6E00;
 extern f32 lbl_803E6DFC;
 extern f32 lbl_803E6E10;
 extern f32 lbl_803E6E14;
+extern f32 lbl_803E6E18;
+extern f32 lbl_803E6E20;
+extern f32 lbl_803E6E24;
+extern f32 timeDelta;
 extern int *gMapEventInterface;
 extern int *gPartfxInterface;
+extern int *gObjectTriggerInterface;
 extern int isGameTimerDisabled(void);
 extern void GameBit_Set(int id, int value);
 extern int randomGetRange(int min, int max);
 extern void ObjHitbox_SetStateIndex(int obj, int hitbox, int stateIndex);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void *callback);
+extern void objRenderFn_80041018(int obj);
 extern void fn_800284CC(void);
 
 int drenergydisc_getExtraSize(void) { return 1; }
@@ -605,6 +611,76 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
 #pragma scheduling on
 void wctrexstatu_release(void) {}
 void wctrexstatu_initialise(void) {}
+
+int suntemple_getExtraSize(void) { return 2; }
+int suntemple_getObjectTypeId(void) { return 0; }
+void suntemple_free(void) {}
+#pragma peephole off
+void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E18);
+    }
+}
+#pragma peephole on
+#pragma peephole off
+void suntemple_hitDetect(int obj)
+{
+    if ((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
+        objRenderFn_80041018(obj);
+    }
+}
+#pragma peephole on
+void suntemple_release(void) {}
+void suntemple_initialise(void) {}
+
+int wctemple_getExtraSize(void) { return 8; }
+int wctemple_getObjectTypeId(void) { return 0; }
+void wctemple_free(void) {}
+#pragma peephole off
+void wctemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E20);
+    }
+}
+#pragma peephole on
+void wctemple_hitDetect(void) {}
+#pragma scheduling off
+#pragma peephole off
+void wctemple_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(f32 *)state -= timeDelta;
+    if (*(f32 *)state < lbl_803E6E24) {
+        *(f32 *)state = lbl_803E6E24;
+    }
+
+    if (*(u8 *)(state + 4) == 0) {
+        if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+            *(u8 *)(state + 4) = 1;
+        }
+    } else {
+        if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+            *(u8 *)(state + 4) = 0;
+        }
+    }
+}
+#pragma peephole on
+#pragma scheduling on
+#pragma peephole off
+void wctemple_init(int obj, int setup)
+{
+    int angle = (s8)*(u8 *)(setup + 0x18);
+
+    *(s16 *)obj = (s16)(angle << 8);
+}
+#pragma peephole on
+void wctemple_release(void) {}
+void wctemple_initialise(void) {}
 
 int fn_80223BBC(void) { return 0x2; }
 int fn_80223D10(void) { return 0x2; }
