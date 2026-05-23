@@ -49,10 +49,10 @@ undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int state
   int config;
   u32 handle;
   u32 offset;
-  u8 i;
   int runtime;
   int trackedPositionSlot;
   int trackedObjectSlot;
+  u8 i;
 
   runtime = *(int *)(obj + 0xb8);
   config = *(int *)(obj + 0x4c);
