@@ -542,8 +542,8 @@ extern int *gObjectTriggerInterface;
 
 void dimbridgecogmai_update(int *obj) {
     u8 *def;
-    int bits;
     int code;
+    u8 bits;
     int callArg;
 
     def = *(u8**)((char*)obj + 0x4c);
