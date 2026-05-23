@@ -1714,13 +1714,19 @@ extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern int GameBit_Get(int);
 extern void GameBit_Set(int slot, int val);
+extern u8 framesThisStep;
 extern void ObjAnim_SetCurrentMove(int* obj, int a, f32 t, int c);
+extern int ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, int events);
+extern void *Obj_GetPlayerObject(void);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ModelLightStruct_free(int* p);
 extern void skyFn_80088c94(int a, int b);
 extern void Music_Trigger(int a, int b);
 extern void fn_80098928(int* obj, f32 f, int a, int b, int c, int d);
 extern f32 lbl_803E5998;
+extern f32 lbl_803E599C;
+extern f32 lbl_803E59AC;
+extern f32 lbl_803E59B0;
 extern f32 lbl_803E595C;
 extern f32 lbl_803E5960;
 extern f32 lbl_803E59D8;
@@ -1753,7 +1759,29 @@ void Flag_init(int* obj, int* def)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void Flag_update(void) {}
+#pragma scheduling off
+#pragma peephole off
+void Flag_update(int obj)
+{
+    int linkedObj;
+
+    if (*(s16 *)(obj + 0x46) == 0x187) {
+        ObjAnim_AdvanceCurrentMove(obj, lbl_803E59AC, (f32)(u32)framesThisStep, 0);
+    } else if (*(s16 *)(obj + 0x46) == 0x803) {
+        Obj_GetPlayerObject();
+        linkedObj = *(int *)(obj + 0x30);
+        if ((*(u16 *)(linkedObj + 0xb0) & 0x1000) != 0) {
+            *(f32 *)(obj + 0x24) = lbl_803E5998;
+        } else {
+            *(f32 *)(obj + 0x24) = (f32)*(s16 *)(linkedObj + 4) * lbl_803E599C;
+            *(s16 *)(obj + 4) = (s16)((f32)*(s16 *)(obj + 4) + *(f32 *)(obj + 0x24));
+        }
+    } else {
+        ObjAnim_AdvanceCurrentMove(obj, lbl_803E59B0, (f32)(u32)framesThisStep, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void SB_KyteCage_SeqFn(void) {}
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
