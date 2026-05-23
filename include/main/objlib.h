@@ -20,7 +20,7 @@ void ObjHits_ClearHitVolumes(int obj);
 void ObjHits_SetHitVolumeMasks(int obj,int hitVolume,int hitType,int sourceMask);
 void ObjHits_SetHitVolumeSlot(u32 obj,int hitVolume,int hitType,int sourceSlot);
 void ObjHits_ClearSourceMask(int obj,int sourceMask);
-void ObjHits_SetSourceMask(int obj,byte sourceMask);
+void ObjHits_SetSourceMask(int obj,int sourceMask);
 void ObjHits_ClearFlags(int obj,int flags);
 void ObjHits_SetFlags(int obj,int flags);
 void ObjHits_MarkObjectPositionDirty(int obj);

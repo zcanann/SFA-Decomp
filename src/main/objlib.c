@@ -714,7 +714,7 @@ void ObjHits_ClearSourceMask(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_SetSourceMask(int param_1,byte param_2)
+void ObjHits_SetSourceMask(int param_1,int param_2)
 {
   *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) = *(byte *)(*(int *)(param_1 + 0x54) + 0xb4) | param_2;
   return;
