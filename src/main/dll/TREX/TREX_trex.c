@@ -2266,7 +2266,39 @@ void SB_MiniFire_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void SB_MiniFire_init(void) {}
+extern int Resource_Acquire(int id, int mode);
+extern void Resource_Release(int resource);
+extern int lbl_803DC098;
+extern f32 lbl_803E592C;
+extern f32 lbl_803E5948;
+extern f32 lbl_803E594C;
+extern f32 lbl_803E5950;
+
+#pragma scheduling off
+#pragma peephole off
+void SB_MiniFire_init(int obj)
+{
+    int resource;
+
+    *(int *)(obj + 0xf4) = 180;
+    *(f32 *)(obj + 0x24) = -(lbl_803E594C * (f32)(s32)randomGetRange(20, 40)) + lbl_803E5948;
+    *(f32 *)(obj + 0x28) = lbl_803E592C;
+    *(f32 *)(obj + 0x2c) = lbl_803E5950;
+    *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * lbl_803E5948;
+
+    resource = Resource_Acquire(117, 1);
+    (*(void (**)(int, int, int, int, int, int))(*(int *)resource + 4))(
+        obj, lbl_803DC098, 0, 0x10002, -1, 0);
+    lbl_803DC098++;
+    if (lbl_803DC098 > 3) {
+        lbl_803DC098 = 1;
+    }
+    Resource_Release(resource);
+    Sfx_PlayFromObject((int *)obj, 53);
+    Sfx_PlayFromObject((int *)obj, 714);
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern void fn_80053ED0(int);
 extern void fn_80053EBC(int);
 extern f32 lbl_803E5928;
@@ -2284,7 +2316,6 @@ void SB_MiniFire_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern f32 lbl_803E592C;
 extern f64 lbl_803E5940;
 extern f32 lbl_803E5930;
 extern f32 lbl_803E5934;
