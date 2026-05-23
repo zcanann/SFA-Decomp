@@ -6,16 +6,31 @@ extern uint FUN_80017730();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
+extern int Obj_GetPlayerObject(void);
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_FindNearestObject();
+extern void ObjGroup_RemoveObject(int obj,int group);
+extern void ModelLightStruct_free(int light);
+extern void gameTimerStop(void);
+extern void Music_Trigger(int id,int mode);
+extern void GameBit_Set(int eventId,int value);
+extern void unlockLevel(int param_1,int param_2,int param_3);
+extern int mapGetDirIdx(int idx);
+extern void lockLevel(int idx,int param_2);
+extern void lightFn_8001db6c(int light,int enabled,double scale);
+extern void objRenderFn_8003b8f4(double scale,int obj,undefined4 p2,undefined4 p3,undefined4 p4,undefined4 p5);
+extern void objParticleFn_80099d84(double scale1,double scale2,int obj,int type,int light);
+extern void fn_80296518(int obj,int param_2,int param_3);
 extern undefined4 FUN_80293f90();
 
 extern undefined4 DAT_803de848;
+extern undefined4 *gMapEventInterface;
 extern f64 DOUBLE_803e5d28;
 extern f64 DOUBLE_803e5d68;
 extern f32 lbl_803DC074;
+extern f32 lbl_803E50D8;
 extern f32 lbl_803E5CFC;
 extern f32 lbl_803E5D00;
 extern f32 lbl_803E5D1C;
@@ -32,7 +47,7 @@ extern f32 lbl_803E5D60;
 /*
  * --INFO--
  *
- * Function: FUN_801c8ebc
+ * Function: fn_801C8EBC
  * EN v1.0 Address: 0x801C8EBC
  * EN v1.0 Size: 348b
  * EN v1.1 Address: 0x801C8FE8
@@ -42,45 +57,51 @@ extern f32 lbl_803E5D60;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c8ebc(int param_1,int param_2)
+int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
 {
-  float fVar1;
-  uint uVar2;
-  undefined4 *puVar3;
-  float local_18 [2];
-  undefined4 local_10;
-  uint uStack_c;
-  
-  puVar3 = *(undefined4 **)(param_1 + 0xb8);
-  local_18[0] = lbl_803E5CFC;
-  DAT_803de848 = 0;
-  *puVar3 = *(undefined4 *)(param_1 + 0xc);
-  puVar3[1] = *(undefined4 *)(param_1 + 0x10);
-  puVar3[2] = *(undefined4 *)(param_1 + 0x14);
-  puVar3[6] = *(undefined4 *)(param_1 + 0x10);
-  *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) - lbl_803E5D1C;
-  fVar1 = lbl_803E5D00;
-  puVar3[3] = lbl_803E5D00;
-  puVar3[4] = fVar1;
-  puVar3[5] = fVar1;
-  puVar3[9] = 0;
-  puVar3[10] = (int)*(short *)(param_2 + 0x1a);
-  uStack_c = randomGetRange(0,600);
-  uStack_c = uStack_c ^ 0x80000000;
-  local_10 = 0x43300000;
-  puVar3[8] = (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e5d28);
-  uVar2 = randomGetRange(0xfffffce0,800);
-  *(short *)(puVar3 + 0xb) = (short)uVar2;
-  *(undefined *)((int)puVar3 + 0x2e) = 1;
-  *(undefined *)(param_1 + 0x37) = 0;
-  puVar3[7] = lbl_803E5D00;
-  if (DAT_803de848 == 0) {
-    DAT_803de848 = ObjGroup_FindNearestObject(0xb,param_1,local_18);
+  int i;
+  int player;
+  int *state;
+  u8 event;
+
+  state = *(int **)(obj + 0xb8);
+  player = Obj_GetPlayerObject();
+  *(s16 *)(animEvents + 0x70) = -1;
+  *(u8 *)(animEvents + 0x56) = 0;
+
+  for (i = 0; i < (s32)*(u8 *)(animEvents + 0x8b); i++) {
+    event = *(u8 *)(animEvents + i + 0x81);
+    if (event != 0) {
+      if (event == 7) {
+        fn_80296518(player,2,1);
+        GameBit_Set(0x15f,1);
+        GameBit_Set(0xc6e,1);
+        (*(code *)(*gMapEventInterface + 0x44))(0xb,3);
+        unlockLevel(0,0,1);
+        lockLevel(mapGetDirIdx(10),0);
+      }
+      else if (event < 7) {
+        if (event == 3) {
+          *(u8 *)((u8 *)state + 0x15) = *(u8 *)((u8 *)state + 0x15) | 0x80;
+        }
+      }
+      else if (event == 0xf) {
+        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) & ~0x4000);
+        if (state[0] != 0) {
+          lightFn_8001db6c(state[0],0,(double)lbl_803E50D8);
+        }
+      }
+      else if (event >= 0xe) {
+        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+        if (state[0] != 0) {
+          lightFn_8001db6c(state[0],0,(double)lbl_803E50D8);
+        }
+      }
+    }
+    *(u8 *)(animEvents + i + 0x81) = 0;
   }
-  ObjHits_EnableObject(param_1);
-  ObjHits_SetHitVolumeSlot(param_1,0,0,0);
-  ObjHits_SyncObjectPositionIfDirty(param_1);
-  return;
+
+  return 0;
 }
 
 /*
@@ -189,6 +210,44 @@ int dbsh_shrine_getExtraSize(void)
 int dbsh_shrine_getObjectTypeId(void)
 {
   return 0;
+}
+
+void dbsh_shrine_free(int obj)
+{
+  int *state;
+
+  state = *(int **)(obj + 0xb8);
+  if (state[0] != 0) {
+    ModelLightStruct_free(state[0]);
+    state[0] = 0;
+  }
+  gameTimerStop();
+  ObjGroup_RemoveObject(obj,0xb);
+  Music_Trigger(0xd8,0);
+  Music_Trigger(0xd9,0);
+  Music_Trigger(8,0);
+  Music_Trigger(0xe,0);
+  GameBit_Set(0xefa,0);
+  GameBit_Set(0xcbb,1);
+}
+
+void dbsh_shrine_render(int obj,undefined4 p2,undefined4 p3,undefined4 p4,undefined4 p5,s8 visible)
+{
+  int *state;
+
+  state = *(int **)(obj + 0xb8);
+  if (visible == 0) {
+    if (state[0] != 0) {
+      lightFn_8001db6c(state[0],0,(double)lbl_803E50D8);
+    }
+  }
+  else {
+    if (state[0] != 0) {
+      lightFn_8001db6c(state[0],1,(double)lbl_803E50D8);
+    }
+    objRenderFn_8003b8f4((double)lbl_803E50D8,obj,p2,p3,p4,p5);
+    objParticleFn_80099d84((double)lbl_803E50D8,(double)lbl_803E50D8,obj,7,state[0]);
+  }
 }
 
 /*
