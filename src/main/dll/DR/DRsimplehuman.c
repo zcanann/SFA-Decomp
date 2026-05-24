@@ -295,16 +295,16 @@ void spitembeam_update(int *obj) {
     if (target == NULL) {
         *(int**)((char*)obj + 0xf4) = ObjGroup_FindNearestObject(9, obj, &d);
     } else {
-        if (((int(*)(int*, s16))((int**)*(int**)((char*)target + 0x68))[10])(target, *(s16*)(def + 0x1a)) == 0
-            || ((int(*)(int*, s16))((int**)*(int**)((char*)target + 0x68))[11])(target, *(s16*)(def + 0x1a)) != 0) {
+        if (((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[10])(target, *(s16*)(def + 0x1a)) == 0
+            || ((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[11])(target, *(s16*)(def + 0x1a)) != 0) {
             *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
             *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
         }
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL) {
-            *(s16*)((char*)tex + 8) = (s16)(*(s16*)((char*)tex + 8) + 8);
+            *(s16*)((char*)tex + 8) = *(s16*)((char*)tex + 8) + 8;
             if (*(s16*)((char*)tex + 8) > 0x400) {
-                *(s16*)((char*)tex + 8) = (s16)(*(s16*)((char*)tex + 8) - 0x400);
+                *(s16*)((char*)tex + 8) = *(s16*)((char*)tex + 8) - 0x400;
             }
         }
     }
