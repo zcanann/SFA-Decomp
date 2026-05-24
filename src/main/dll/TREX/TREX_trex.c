@@ -2147,15 +2147,18 @@ extern void *Obj_GetPlayerObject(void);
 void SB_CloudBall_update(int obj)
 {
     int state = *(int *)(obj + 0xb8);
-    int player = (int)Obj_GetPlayerObject();
-    if (*(f32 *)(state + 0x20) != lbl_803E58EC) {
-        *(f32 *)(state + 0x20) = *(f32 *)(state + 0x20) - timeDelta;
-        if (*(f32 *)(state + 0x20) <= lbl_803E58EC) {
-            *(f32 *)(state + 0x20) = lbl_803E58EC;
+    void *player = Obj_GetPlayerObject();
+    f32 timer = *(f32 *)(state + 0x20);
+    f32 zero = lbl_803E58EC;
+    if (timer != zero) {
+        *(f32 *)(state + 0x20) = timer - timeDelta;
+        if (*(f32 *)(state + 0x20) <= zero) {
+            *(f32 *)(state + 0x20) = zero;
             Obj_FreeObject(obj);
         }
     } else {
         f32 particleVelocity[3];
+        f32 velocityScale;
         *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
         *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
         *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
@@ -2169,14 +2172,15 @@ void SB_CloudBall_update(int obj)
             *(f32 *)(state + 0x10) = *(f32 *)(obj + 0x10);
             *(f32 *)(state + 0x14) = *(f32 *)(obj + 0x14);
         }
-        *(f32 *)(state + 0xc) = lbl_803E58FC * (*(f32 *)state * timeDelta) + *(f32 *)(state + 0xc);
-        *(f32 *)(state + 0x10) = lbl_803E58FC * (*(f32 *)(state + 0x4) * timeDelta) + *(f32 *)(state + 0x10);
-        *(f32 *)(state + 0x14) = lbl_803E58FC * (*(f32 *)(state + 0x8) * timeDelta) + *(f32 *)(state + 0x14);
+        velocityScale = lbl_803E58FC;
+        *(f32 *)(state + 0xc) = velocityScale * (*(f32 *)state * timeDelta) + *(f32 *)(state + 0xc);
+        *(f32 *)(state + 0x10) = velocityScale * (*(f32 *)(state + 0x4) * timeDelta) + *(f32 *)(state + 0x10);
+        *(f32 *)(state + 0x14) = velocityScale * (*(f32 *)(state + 0x8) * timeDelta) + *(f32 *)(state + 0x14);
         *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xc);
         *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x10);
         *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x14);
         *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - framesThisStep;
-        if (*(int *)(obj + 0xf4) < 0 || (player != 0 && (*(u16 *)(player + 0xb0) & 0x1000) != 0)) {
+        if (*(int *)(obj + 0xf4) < 0 || (player != NULL && (*(u16 *)((char *)player + 0xb0) & 0x1000) != 0)) {
             if (*(f32 *)(state + 0x20) == lbl_803E58EC) {
                 *(u8 *)(obj + 0x36) = 0;
                 *(f32 *)(state + 0x20) = lbl_803E58F0;
