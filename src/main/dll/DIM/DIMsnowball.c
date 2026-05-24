@@ -1320,10 +1320,12 @@ void ccpedstal_init(int *obj, u8 *params) {
 }
 
 void cclevcontrol_init(int *obj) {
+    void *envfxTable;
     int *state;
+    envfxTable = lbl_80323548;
     state = *(int **)((char *)obj + 0xb8);
     *(void **)((char *)obj + 0xbc) = (void *)fn_801ABA84;
-    fn_80088870((char *)lbl_80323548 + 0x38, lbl_80323548, (char *)lbl_80323548 + 0x70, (char *)lbl_80323548 + 0xa8);
+    fn_80088870((char *)envfxTable + 0x38, envfxTable, (char *)envfxTable + 0x70, (char *)envfxTable + 0xa8);
     if (getSaveGameLoadStatus() != 0) {
         envFxActFn_800887f8(0x3f);
         getEnvfxActImmediately((void *)0, (void *)0, 0x242, 0);
