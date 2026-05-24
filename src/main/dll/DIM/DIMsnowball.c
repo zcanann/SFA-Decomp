@@ -1529,12 +1529,12 @@ void ccqueen_update(int *obj) {
 int fn_801AA734(int obj, int unused, u8* data) {
     int* state = *(int**)(obj + 0xb8);
     if (data[0x8b] != 0) {
-        u8 i;
-        for (i = 0; (u32)i < (u32)data[0x8b]; i++) {
-            int cmd = data[0x81 + (u32)i];
+        int i;
+        for (i = 0; (u8)i < data[0x8b]; i++) {
+            int cmd = data[0x81 + (u8)i];
             switch (cmd) {
             case 1:
-                if (*(int*)(obj + 0xc8) != 0) {
+                if (*(void**)(obj + 0xc8) != NULL) {
                     ObjLink_DetachChild(obj, *(int*)state);
                 }
                 break;
