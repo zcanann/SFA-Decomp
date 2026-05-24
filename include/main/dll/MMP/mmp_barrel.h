@@ -30,7 +30,7 @@ uint FUN_80193378(int param_1);
 double FUN_801933d8(int param_1,int param_2);
 void FUN_80193544(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_80193800(void);
-void FUN_80193924(int param_1);
+void FUN_80193924(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8019394c(void);
 void FUN_80193950(int param_1,int param_2);
 void FUN_80193a50(undefined4 param_1,undefined4 param_2,char *param_3,int param_4);
