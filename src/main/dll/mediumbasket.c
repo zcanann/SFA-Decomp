@@ -1052,7 +1052,7 @@ int fn_8015C7C8(int obj, int p)
     *(s16 *)(sub + 0x402) = 1;
   }
   {
-    u32 v = *(u32 *)(p + 0x314);
+    int v = *(int *)(p + 0x314);
     if ((v & 0x200) != 0) {
       *(u32 *)(p + 0x314) = v & ~0x200;
       *(u8 *)(sub_40c + 0x44) |= 0x20;
@@ -1062,7 +1062,7 @@ int fn_8015C7C8(int obj, int p)
   if (*(f32 *)(obj + 0x98) < lbl_803E2D78) {
     *(u8 *)(sub_40c + 0x44) |= 0x8;
   }
-  (*(int (**)(int, int, int, f32))(*(int *)(*gPlayerInterface) + 0x30))(obj, p, 4, timeDelta);
+  (*(int (**)(int, int, int, f32))(*gPlayerInterface + 0x30))(obj, p, 4, timeDelta);
   return 0;
 }
 #pragma peephole reset
@@ -1108,7 +1108,7 @@ int fn_8015C95C(int obj, int p)
     *(s16 *)(sub + 0x402) = 1;
   }
   {
-    u32 v = *(u32 *)(p + 0x314);
+    int v = *(int *)(p + 0x314);
     if ((v & 0x200) != 0) {
       *(u32 *)(p + 0x314) = v & ~0x200;
       *(u8 *)(sub_40c + 0x44) |= 0x20;
@@ -1118,7 +1118,7 @@ int fn_8015C95C(int obj, int p)
   if (*(f32 *)(obj + 0x98) < lbl_803E2D78) {
     *(u8 *)(sub_40c + 0x44) |= 0x8;
   }
-  (*(int (**)(int, int, int, f32))(*(int *)(*gPlayerInterface) + 0x30))(obj, p, 4, timeDelta);
+  (*(int (**)(int, int, int, f32))(*gPlayerInterface + 0x30))(obj, p, 4, timeDelta);
   return 0;
 }
 #pragma peephole reset
