@@ -62,7 +62,7 @@ void FUN_801348bc(undefined8 param_1,double param_2,double param_3,double param_
 void FUN_801348c0(undefined8 param_1,double param_2,double param_3,double param_4,undefined4 param_5
                  ,undefined4 param_6,undefined2 param_7,undefined2 param_8);
 void FUN_801348c4(int param_1);
-void FUN_80134900(int param_1);
+void FUN_80134900(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80134994(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9,
                  undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,

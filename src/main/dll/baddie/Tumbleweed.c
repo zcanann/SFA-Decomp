@@ -1912,11 +1912,9 @@ void FUN_801348c4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80134900(int param_1)
+void FUN_80134900(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if ((in_r8 != '\0') && (DAT_803de62b != '\0')) {
+  if ((visible != 0) && (DAT_803de62b != '\0')) {
     FUN_8003b818(param_1);
     if ((DAT_803de613 != '\0') && (DAT_803de62a == '\0')) {
       FUN_80017698(0xdf6,1);

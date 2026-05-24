@@ -81,7 +81,7 @@ void FUN_8015f910(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
 void FUN_8015fab4(uint param_1,char param_2);
-void FUN_8015fae4(int param_1);
+void FUN_8015fae4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9);
@@ -89,7 +89,7 @@ void iceball_update(undefined2 *param_1,int param_2);
 void FUN_801600a8(uint param_1);
 void FUN_80160190(uint param_1);
 void FUN_8016041c(void);
-void FUN_8016043c(int param_1);
+void FUN_8016043c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80160464(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9);
@@ -117,7 +117,7 @@ uint FUN_80161128(short *param_1,undefined4 param_2,int param_3);
 void FUN_80161130(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
-void FUN_80161220(int param_1);
+void FUN_80161220(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80161254(int param_1);
 void FUN_80161290(short *param_1);
 void FUN_80161578(int param_1,int param_2,int param_3);
