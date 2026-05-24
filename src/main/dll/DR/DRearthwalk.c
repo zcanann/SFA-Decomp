@@ -121,7 +121,7 @@ void sh_staff_render(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801d9cc4(void)
+void FUN_801d9cc4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   byte bVar1;
   float fVar2;
@@ -132,7 +132,6 @@ void FUN_801d9cc4(void)
   float *pfVar7;
   char *pcVar8;
   uint uVar9;
-  char in_r8;
   char *pcVar10;
   int iVar11;
   double in_f27;
@@ -186,7 +185,7 @@ void FUN_801d9cc4(void)
   puVar5 = (ushort *)FUN_80286834();
   pcVar10 = *(char **)(puVar5 + 0x5c);
   iVar6 = FUN_80017a98();
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     if (*pcVar10 == '\x03') {
       FUN_80017a50(puVar5,afStack_b0,'\0');
       pfVar7 = (float *)ObjPath_GetPointModelMtx(iVar6,0);

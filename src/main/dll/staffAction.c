@@ -943,11 +943,10 @@ void FUN_8016716c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016725c(void)
+void FUN_8016725c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
   int iVar2;
-  char in_r8;
   double dVar3;
   float afStack_58 [12];
   float local_28;
@@ -956,7 +955,7 @@ void FUN_8016725c(void)
   
   iVar1 = FUN_8028683c();
   iVar2 = *(int *)(*(int *)(iVar1 + 0xb8) + 0x40c);
-  if ((in_r8 != '\0') && (*(int *)(iVar1 + 0xf4) == 0)) {
+  if ((visible != 0) && (*(int *)(iVar1 + 0xf4) == 0)) {
     if ((*(char *)(iVar2 + 0x90) == '\x06') && ((*(byte *)(iVar2 + 0x92) >> 3 & 1) != 0)) {
       if ((*(byte *)(iVar2 + 0x92) >> 2 & 1) == 0) {
         dll_D3_update((float *)(iVar2 + 4),(float *)(iVar1 + 0x24),(float *)(iVar2 + 0x7c));

@@ -1019,20 +1019,19 @@ void FUN_80185c48(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80185c9c(void)
+void FUN_80185c9c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
 {
   short sVar1;
   int iVar2;
   int *piVar3;
-  char in_r8;
   
   iVar2 = FUN_80286840();
   piVar3 = *(int **)(iVar2 + 0xb8);
   if (((*(short *)(piVar3 + 4) == 0) || (0x32 < *(short *)(piVar3 + 4))) && (*piVar3 == 0)) {
     if (*(int *)(iVar2 + 0xf8) == 0) {
-      if (in_r8 == '\0') goto LAB_801860b0;
+      if (renderState == 0) goto LAB_801860b0;
     }
-    else if (in_r8 != -1) goto LAB_801860b0;
+    else if (renderState != -1) goto LAB_801860b0;
     sVar1 = *(short *)((int)piVar3 + 0x1e);
     if (sVar1 != 0) {
       if (sVar1 < 0x3c) {

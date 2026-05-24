@@ -12,6 +12,6 @@ void FUN_801c6e04(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_801c70c4(ushort *param_1);
 void FUN_801c7390(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_801c74f0(int param_1);
-void FUN_801c75a4(void);
+void FUN_801c75a4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 
 #endif /* MAIN_DLL_MMSHRINE_SHRINE1C2_H_ */
