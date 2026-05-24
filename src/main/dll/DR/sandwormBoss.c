@@ -2604,6 +2604,11 @@ extern void storeZeroToFloatParam(void* p);
 extern uint GameBit_Get(int eventId);
 extern int objRemoveFromListFn_8002ce88(int *obj);
 
+typedef struct BabyCloudrunnerFlags {
+    u8 resetLatch : 1;
+    u8 flags : 7;
+} BabyCloudrunnerFlags;
+
 #pragma scheduling off
 #pragma peephole off
 void babycloudrunner_init(int *obj, u8 *def) {
@@ -2648,7 +2653,7 @@ void babycloudrunner_init(int *obj, u8 *def) {
             *(void**)(sub + 0x240) = &lbl_803DBE28;
             ObjGroup_AddObject(obj, 0x20);
         }
-        sub[0x244] = (u8)(sub[0x244] & ~0x80);
+        ((BabyCloudrunnerFlags *)(sub + 0x244))->resetLatch = 0;
     }
 }
 #pragma peephole reset
