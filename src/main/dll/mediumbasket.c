@@ -2045,7 +2045,7 @@ void fn_8015ADDC(int* obj, u8* state) {
         ObjGroup_RemoveObject(obj, 80);
         state[827] = 0;
     }
-    *(s16*)obj = (int)((float)(int)*(s16*)obj - lbl_803E2CD8 * timeDelta);
+    *(u16*)obj = (float)(int)*(s16*)obj - lbl_803E2CD8 * timeDelta;
 }
 #pragma peephole reset
 #pragma scheduling reset
