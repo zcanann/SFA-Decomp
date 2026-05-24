@@ -184,11 +184,9 @@ uint FUN_801b376c(uint param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b3a28(int param_1)
+void FUN_801b3a28(int param_1,int p1,int p2,int p3,int p4,s8 visible)
 {
-  char in_r8;
-  
-  if ((*(char *)(*(int *)(param_1 + 0xb8) + 2) == '\x02') && (in_r8 != '\0')) {
+  if ((*(char *)(*(int *)(param_1 + 0xb8) + 2) == '\x02') && (visible != 0)) {
     FUN_8003b818(param_1);
   }
   return;
@@ -300,11 +298,9 @@ void FUN_dropped_dimdismountpoint_getObjectTypeId(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b3b7c(int param_1)
+void FUN_801b3b7c(int param_1,int p1,int p2,int p3,int p4,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
