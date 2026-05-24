@@ -3,6 +3,8 @@
 
 #include "ghidra_import.h"
 
-void dbsh_shrine_update(undefined4 param_1,undefined4 param_2,int param_3);
+typedef struct DbshShrineObject DbshShrineObject;
+
+void dbsh_shrine_update(DbshShrineObject *obj);
 
 #endif /* MAIN_DLL_SCENE1C7_H_ */
