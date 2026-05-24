@@ -23,7 +23,7 @@ extern double fn_8014CB54(double, double, double, double, double, double, double
 extern void fn_8014CD1C(double, double, void *, int, int, char);
 extern void fn_8014D08C(int, int, int, float, int, int);
 extern void fn_80154D0C(int, int, ushort *, float *);
-extern int fn_80154FB4(int, int, int, float);
+extern uint fn_80154FB4(double, short *, int, uint);
 extern int fn_80169EF4();
 extern undefined4 PSVECSubtract();
 extern undefined4 PSVECNormalize();
@@ -371,7 +371,7 @@ void fn_80155884(int *param_9,int param_10)
   }
   else if ((*(short *)(*(int *)(param_10 + 0x29c) + 0x44) == 1) &&
           (iVar1 = (int)fn_80295CBC(*(int *)(param_10 + 0x29c)), iVar1 != 0)) {
-    fn_80154FB4((int)param_9,param_10,0x19,lbl_803E2A30);
+    fn_80154FB4((double)lbl_803E2A30,(short *)param_9,param_10,0x19);
     if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
       fn_8014D08C((int)param_9,param_10,0,lbl_803E2A30,0,0);
       Sfx_PlayFromObject((uint)param_9,0x252);
@@ -411,10 +411,10 @@ void fn_80155948(int *param_9,int param_10)
     ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
     sVar1 = *(short *)(param_9 + 0x28);
     if (sVar1 == 3) {
-      fn_80154FB4((int)param_9,param_10,0x19,lbl_803E3698);
+      fn_80154FB4((double)lbl_803E3698,(short *)param_9,param_10,0x19);
     }
     else if ((sVar1 == 0) || (sVar1 == 1)) {
-      fn_80154FB4((int)param_9,param_10,0x19,lbl_803E36C8);
+      fn_80154FB4((double)lbl_803E36C8,(short *)param_9,param_10,0x19);
     }
     fn_80154D0C((int)param_9,param_10,local_18,afStack_14);
     if (((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) ||

@@ -44,7 +44,7 @@ extern undefined4 FUN_80153358();
 extern undefined4 FUN_80153a80();
 extern undefined4 FUN_801540a0();
 extern undefined4 FUN_80154a78();
-extern undefined4 FUN_80154f8c();
+extern undefined4 fn_80154C24();
 extern void rachnopInit(undefined4 param_1,int param_2);
 extern void baddieInit_80156188(undefined4 param_1,int param_2);
 extern void wbInit(undefined4 param_1,int param_2);

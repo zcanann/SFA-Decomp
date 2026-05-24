@@ -3,9 +3,9 @@
 
 #include "ghidra_import.h"
 
-void FUN_80154870(ushort *param_1,undefined4 *param_2);
-void FUN_80154b88(ushort *param_1,undefined4 *param_2);
-void FUN_80154f8c(int param_1,int param_2);
-void FUN_8015506c(int param_1,int param_2,undefined2 *param_3,float *param_4);
+void fn_80154870(int obj, int *state);
+void fn_80154C24(int obj, int state);
+void fn_80154D0C(int obj, int state, undefined2 *outAngle, float *outDistance);
+uint fn_80154FB4(double maxDistance, short *obj, int state, uint turnTime);
 
 #endif /* MAIN_DLL_DLL_10B_H_ */
