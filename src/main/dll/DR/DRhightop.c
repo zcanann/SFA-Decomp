@@ -733,6 +733,12 @@ extern undefined4 *gPathControlInterface;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5B9C;
 extern f32 lbl_803E5B74;
+
+typedef struct HightopFlags {
+    u8 resetLatch : 1;
+    u8 flags : 7;
+} HightopFlags;
+
 #pragma scheduling off
 #pragma peephole off
 void fn_801EB334(int *obj) {
@@ -743,7 +749,7 @@ void fn_801EB334(int *obj) {
         *(f32 *)((char *)state + 0x494) = fz;
         *(f32 *)((char *)state + 0x498) = fz;
         *(f32 *)((char *)state + 0x49c) = lbl_803E5B9C;
-        *(u8 *)((char *)state + 0x428) = (u8)(*(u8 *)((char *)state + 0x428) & ~0x80);
+        ((HightopFlags *)((char *)state + 0x428))->resetLatch = 0;
         *(f32 *)((char *)state + 0x424) = fz;
         sv = *(s16 *)obj;
         *(s16 *)((char *)state + 0x40e) = sv;
