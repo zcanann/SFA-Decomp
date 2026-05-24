@@ -184,11 +184,9 @@ void LaserBeam_update(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f0cb8(int param_1)
+void FUN_801f0cb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if ((in_r8 != '\0') && (*(char *)(*(int *)(param_1 + 0xb8) + 9) == '\0')) {
+  if ((visible != 0) && (*(char *)(*(int *)(param_1 + 0xb8) + 9) == '\0')) {
     FUN_8003b818(param_1);
   }
   return;
@@ -400,11 +398,9 @@ void FUN_801f10d8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f10dc(int param_1)
+void FUN_801f10dc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -594,16 +590,14 @@ void FUN_801f15ac(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f15b0(int param_1)
+void FUN_801f15b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
 {
-  char in_r8;
-  
   if (*(int *)(param_1 + 0xf8) == 0) {
-    if (in_r8 == '\0') {
+    if (renderState == 0) {
       return;
     }
   }
-  else if (in_r8 != -1) {
+  else if (renderState != -1) {
     return;
   }
   if (*(short *)(*(int *)(param_1 + 0x50) + 0x48) == 2) {
@@ -744,11 +738,9 @@ void FUN_801f1634(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f1934(int param_1)
+void FUN_801f1934(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -1410,11 +1402,9 @@ void FUN_801f28d8(undefined2 *param_1,undefined2 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f28dc(int param_1)
+void FUN_801f28dc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
