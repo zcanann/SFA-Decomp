@@ -282,19 +282,17 @@ uint FUN_801eb0c0(undefined2 *param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801eb42c
- * EN v1.0 Address: 0x801EB42C
- * EN v1.0 Size: 732b
- * EN v1.1 Address: 0x801EB484
- * EN v1.1 Size: 648b
+ * Function: fn_801EAE4C
+ * EN v1.0 Address: 0x801EAE4C
+ * EN v1.0 Size: 648b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801eb42c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9,int param_10)
+void fn_801EAE4C(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                short *param_9,int param_10)
 {
   float fVar1;
   float fVar2;
@@ -376,17 +374,15 @@ void FUN_801eb42c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_801eb708
- * EN v1.0 Address: 0x801EB708
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x801EB70C
- * EN v1.1 Size: 608b
+ * Function: fn_801EB0D4
+ * EN v1.0 Address: 0x801EB0D4
+ * EN v1.0 Size: 608b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801eb708(uint param_1,int param_2)
+void fn_801EB0D4(uint param_1,int param_2)
 {
   float fVar1;
   float fVar2;
@@ -520,17 +516,15 @@ undefined4 FUN_801eba78(short *param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: FUN_801eba80
- * EN v1.0 Address: 0x801EBA80
- * EN v1.0 Size: 788b
- * EN v1.1 Address: 0x801EBC6C
- * EN v1.1 Size: 780b
+ * Function: fn_801EB634
+ * EN v1.0 Address: 0x801EB634
+ * EN v1.0 Size: 780b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801eba80(int param_1,int param_2)
+void fn_801EB634(int param_1,int param_2)
 {
   bool bVar1;
   ushort uVar3;
@@ -616,17 +610,15 @@ void FUN_801eba80(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801ebd94
- * EN v1.0 Address: 0x801EBD94
- * EN v1.0 Size: 1104b
- * EN v1.1 Address: 0x801EBF78
- * EN v1.1 Size: 1056b
+ * Function: fn_801EB940
+ * EN v1.0 Address: 0x801EB940
+ * EN v1.0 Size: 1056b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ebd94(short *param_1,int param_2)
+void fn_801EB940(short *param_1,int param_2)
 {
   float fVar1;
   float fVar2;

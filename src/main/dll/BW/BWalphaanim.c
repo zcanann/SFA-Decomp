@@ -22,9 +22,9 @@ extern undefined4 FUN_8011e844();
 extern undefined4 FUN_8011e868();
 extern undefined4 FUN_801ea854();
 extern uint FUN_801eb0c0();
-extern undefined4 FUN_801eb42c();
-extern undefined4 FUN_801eb708();
-extern undefined4 FUN_801eba80();
+extern undefined4 fn_801EAE4C();
+extern undefined4 fn_801EB0D4();
+extern undefined4 fn_801EB634();
 extern undefined4 FUN_801ec1ac();
 extern undefined4 FUN_801ec7a0();
 extern undefined4 FUN_801ecd30();
@@ -132,7 +132,7 @@ void SnowBike_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,un
         }
       }
       else if (cVar5 < '\x03') {
-        FUN_801eb42c(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar6);
+        fn_801EAE4C(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar6);
         if ((*(byte *)(iVar6 + 0x428) >> 1 & 1) == 0) {
           FUN_8011e868(0x10);
           FUN_8011e844(0x11);
@@ -271,11 +271,11 @@ void SnowBike_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,un
             FUN_80017a80((int)param_9);
           }
         }
-        FUN_801eb708((uint)param_9,iVar6);
+        fn_801EB0D4((uint)param_9,iVar6);
         uVar3 = (uint)(lbl_803E6838 * -*(float *)(iVar6 + 0x430));
         local_10 = (longlong)(int)uVar3;
         FUN_801ea854((double)*(float *)(iVar6 + 0x49c),(uint)param_9,iVar6,uVar3,iVar6 + 0x461,7);
-        FUN_801eba80((int)param_9,iVar6);
+        fn_801EB634((int)param_9,iVar6);
         *param_9 = *(short *)(iVar6 + 0x40e);
       }
     }
