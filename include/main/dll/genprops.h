@@ -125,7 +125,7 @@ void FUN_80170978(int param_1);
 void FUN_801709dc(void);
 void FUN_80170df4(void);
 void FUN_80170df8(int param_1);
-void FUN_80170e48(int param_1);
+void FUN_80170e48(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80170e70(int param_1);
 void FUN_80170ed8(void);
 void FUN_80170f60(undefined8 param_1,double param_2,double param_3,undefined8 param_4,

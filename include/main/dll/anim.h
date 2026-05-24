@@ -107,7 +107,7 @@ void FUN_80203360(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void FUN_802035a8(int param_1);
-void FUN_802035cc(int param_1);
+void FUN_802035cc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_802035f4(int param_1);
 void FUN_80203688(undefined2 *param_1,int param_2);
 void FUN_8020368c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
@@ -128,7 +128,7 @@ void FUN_80204078(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_80204238(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9);
-void FUN_80204320(int param_1);
+void FUN_80204320(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80204348(uint param_1);
 void FUN_802047d0(undefined2 *param_1,int param_2);
 void FUN_802047d4(void);
@@ -138,7 +138,7 @@ void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void FUN_80204bb4(int param_1);
+void FUN_80204bb4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80204bdc(int param_1);
 void FUN_80204f1c(undefined2 *param_1,int param_2);
 void FUN_80204f20(undefined4 param_1);
