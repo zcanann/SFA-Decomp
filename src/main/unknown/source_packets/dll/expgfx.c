@@ -8,27 +8,33 @@
  * Suggested source path: src/main/expgfx.c
  * Packet path: src/main/unknown/source_packets/dll/expgfx.c
  * Bucket: dll
- * Score: 2580
+ * Score: 3580
  *
  * Retail EN evidence:
- * - main.dol string @ 0x803107B0
- * - main.dol string @ 0x803107E8
- * - main.dol string @ 0x80310810
- * - main.dol string @ 0x8031082C
+ * - main.dol string @ 0x8030FBEF
+ * - main.dol string @ 0x8030FC28
+ * - main.dol string @ 0x8030FC50
+ * - main.dol string @ 0x8030FC6C
+ * - main.dol string @ 0x8030FC88
  * - retail message: mismatch in add/remove in exptab
  * - retail message: addToTable usage overflow
  * - retail message: exptab is FULL
  * - retail message: invalid tabindex
+ * - retail message: scale overflow
+ * - EN xref: 0x8009B1C4 expgfxRemove + 0xE4
+ * - EN xref: 0x8009B334 expgfxRemoveAll + 0xE0
  * - EN xref: 0x8009DE60 expgfx_addToTable + 0x74
  * - EN xref: 0x8009DEE8 expgfx_addToTable + 0xFC
  * - EN xref: 0x8009F640 expgfx_addremove + 0x374
  * - EN xref: 0x8009F700 expgfx_addremove + 0x434
  *
  * Current EN source-window evidence:
- * - seed: 0x8009DDEC-0x8009FCDC, current expgfx source island
+ * - seed: 0x8009B0E0-0x8009FE7C, current expgfx source island
  * - blueprint action: corridor-packet, plan stays at the current seed
  *
  * Live EN anchors:
+ * - expgfxRemove @ 0x8009B0E0 and expgfxRemoveAll @ 0x8009B254 report the
+ *   mismatch-in-add/remove exptab path.
  * - expgfx_addToTable @ 0x8009DDEC reports the addToTable usage overflow
  *   and exptab full strings.
  * - expgfx_addremove @ 0x8009F2CC reports invalid tabindex and scale overflow.
