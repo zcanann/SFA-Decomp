@@ -18,15 +18,15 @@ void FUN_801ae9e4(void);
 void FUN_801aea18(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801aea40(int param_1);
 void FUN_801aea44(int param_1);
-void FUN_801aea8c(int param_1);
+void FUN_801aea8c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801aeab4(int param_1);
 void FUN_801aecf8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10);
-void FUN_801aef6c(int param_1);
+void FUN_801aef6c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801aef94(short *param_1);
 void FUN_801af058(undefined2 *param_1,int param_2);
-void FUN_801af0a0(int param_1);
+void FUN_801af0a0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801af0e4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_801af444(void);
@@ -54,7 +54,7 @@ void FUN_801b0a1c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 void FUN_801b0d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10);
-void FUN_801b0dcc(int param_1);
+void FUN_801b0dcc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801b0df4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
