@@ -1,164 +1,208 @@
 #include "ghidra_import.h"
 #include "main/dll/SP/SPshopkeeper.h"
 
-extern undefined4 FUN_80006824();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern int FUN_80017a98();
-extern undefined4 FUN_80135814();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
+#define SHOPKEEPER_THORNTAIL_OBJECT_ID 0x442ff
+#define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2
+#define SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED 0x40
+#define SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED 0x80
+#define SHOPKEEPER_LOADING_FLAG 0x1000
 
-extern undefined4 DAT_80328258;
-extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd72c;
-extern f64 DOUBLE_803e6150;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E6148;
-extern f32 lbl_803E614C;
+typedef struct ShopkeeperObject {
+    u8 unk0[0xac];
+    s8 mapId;
+    u8 unkAD[3];
+    u16 flagsB0;
+} ShopkeeperObject;
+
+typedef void (*ObjectTriggerRefreshFn)(int triggerId, int obj, int arg);
+typedef void (*ScreenTransitionStartFn)(int transitionId, int value);
+typedef int (*ScreenTransitionFinishedFn)(void);
+typedef void (*MapEventTriggerFn)(int mapId, int eventId, int value, int arg);
+typedef int (*MapEventGetAnimFn)(int mapId, int eventId);
+typedef void (*MapEventSetAnimFn)(int mapId, int eventId, int value);
+
+extern u32 GameBit_Get(u32 id);
+extern void GameBit_Set(u32 id, u32 value);
+extern int Obj_GetPlayerObject(void);
+extern int ObjList_FindObjectById(int objectId);
+extern int isScreenTransitionActive(void);
+extern void padClearAnalogInputX(int controller);
+extern void padClearAnalogInputY(int controller);
+extern void buttonDisable(int controller, int flags);
+extern int playerHasSpell(int obj, int spell);
+
+extern int *gObjectTriggerInterface;
+extern int *gScreenTransitionInterface;
+extern int *gMapEventInterface;
+
+#define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
+    ((ObjectTriggerRefreshFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))((triggerId), (obj), (arg))
+#define SCREEN_TRANSITION_START(transitionId, value) \
+    ((ScreenTransitionStartFn)(*(u32 *)(*gScreenTransitionInterface + 0x8)))((transitionId), (value))
+#define SCREEN_TRANSITION_FINISHED() \
+    ((ScreenTransitionFinishedFn)(*(u32 *)(*gScreenTransitionInterface + 0x14)))()
+#define MAP_EVENT_TRIGGER(mapId, eventId, value, arg) \
+    ((MapEventTriggerFn)(*(u32 *)(*gMapEventInterface + 0x1c)))((mapId), (eventId), (value), (arg))
+#define MAP_EVENT_GET_ANIM(mapId, eventId) \
+    ((MapEventGetAnimFn)(*(u32 *)(*gMapEventInterface + 0x4c)))((mapId), (eventId))
+#define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
+    ((MapEventSetAnimFn)(*(u32 *)(*gMapEventInterface + 0x50)))((mapId), (eventId), (value))
+#define SHOPKEEPER_APPLY_MAP_OVERRIDE(state, enabledBit)      \
+    if (GameBit_Get((enabledBit)) != 0) {                     \
+        if ((state)->mapOverride != 0xcc) {                   \
+            (state)->mapOverride = 0xcc;                      \
+            GameBit_Set(0xc0, 1);                             \
+            (state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;\
+        }                                                     \
+    } else if ((state)->mapOverride == 0xcc) {                \
+        (state)->mapOverride = -1;                            \
+    }
 
 /*
  * --INFO--
  *
  * Function: SH_LevelControl_doThornTailEvents
  * EN v1.0 Address: 0x801D87F8
- * EN v1.0 Size: 1380b
- * EN v1.1 Address: 0x801D88F8
- * EN v1.1 Size: 1264b
+ * EN v1.0 Size: 776b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SH_LevelControl_doThornTailEvents(void)
+#pragma scheduling off
+#pragma peephole off
+void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState *state)
 {
-  int iVar1;
-  char cVar6;
-  uint uVar2;
-  short *psVar3;
-  uint uVar4;
-  int iVar5;
-  uint *puVar7;
-  byte bVar8;
-  undefined8 uVar9;
-  undefined8 local_28;
-  
-  uVar9 = FUN_80286840();
-  iVar1 = (int)((ulonglong)uVar9 >> 0x20);
-  puVar7 = (uint *)uVar9;
-  cVar6 = (**(code **)(*DAT_803dd72c + 0x4c))((int)*(char *)(iVar1 + 0xac),0);
-  if ((cVar6 == '\0') && (uVar2 = GameBit_Get(0x13f), uVar2 == 0)) {
-    *(undefined *)((int)puVar7 + 6) = 0;
-    (**(code **)(*DAT_803dd6e8 + 100))();
-    for (bVar8 = 0; bVar8 < 0x12; bVar8 = bVar8 + 1) {
-      GameBit_Set((int)(short)(&DAT_80328258)[bVar8],0);
-    }
-  }
-  psVar3 = (short *)FUN_80017a98();
-  switch(*(undefined *)((int)puVar7 + 6)) {
-  case 0:
-    uVar2 = GameBit_Get(0x13f);
-    if (uVar2 == 0) {
-      *(undefined *)((int)puVar7 + 6) = 1;
-    }
-    else {
-      *(undefined *)((int)puVar7 + 6) = 7;
-    }
-    break;
-  case 1:
-    uVar2 = GameBit_Get(0x124);
-    if (uVar2 != 0) {
-      (**(code **)(*DAT_803dd72c + 0x1c))(psVar3 + 6,(int)*psVar3,1,0);
-      puVar7[2] = (uint)lbl_803E6148;
-      (**(code **)(*DAT_803dd6e8 + 0x58))(100000,0x5db);
-      *(undefined *)((int)puVar7 + 6) = 2;
-    }
-    break;
-  case 2:
-    uVar2 = 0x12;
-    for (bVar8 = 0; bVar8 < 0x12; bVar8 = bVar8 + 1) {
-      uVar4 = GameBit_Get((int)(short)(&DAT_80328258)[bVar8]);
-      if (uVar4 != 0) {
-        uVar2 = uVar2 - 1 & 0xff;
-      }
-    }
-    FUN_80135814();
-    if (uVar2 == 0) {
-      (**(code **)(*DAT_803dd6e8 + 100))();
-      (**(code **)(*DAT_803dd6cc + 8))(0x14,1);
-      *(undefined *)((int)puVar7 + 6) = 3;
-      FUN_80006824(0,0x7e);
-    }
-    else {
-      local_28 = (double)CONCAT44(0x43300000,uVar2);
-      puVar7[2] = (uint)-((float)(local_28 - DOUBLE_803e6150) * lbl_803DC074 - (float)puVar7[2]);
-      if ((float)puVar7[2] < lbl_803E614C) {
-        cVar6 = (**(code **)(*DAT_803dd72c + 0x4c))((int)*(char *)(iVar1 + 0xac),0);
-        if (cVar6 == '\0') {
-          puVar7[2] = (uint)lbl_803E614C;
-          (**(code **)(*DAT_803dd6e8 + 0x5c))(1);
+    ShopkeeperObject *thornTailObj;
+    ShopkeeperObject *playerObj;
+
+    SHOPKEEPER_APPLY_MAP_OVERRIDE(state, 0x193);
+
+    switch (state->thornTailState) {
+    case 0:
+        if (GameBit_Get(0xd39) != 0) {
+            state->thornTailState = 7;
+        } else {
+            OBJECT_TRIGGER_REFRESH(5, obj, -1);
+            state->thornTailState = 1;
         }
-        else {
-          (**(code **)(*DAT_803dd6e8 + 100))();
-          (**(code **)(*DAT_803dd6cc + 8))(0x14,1);
-          *(undefined *)((int)puVar7 + 6) = 5;
+        break;
+    case 1:
+        thornTailObj = (ShopkeeperObject *)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
+        if ((thornTailObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+            playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
+            if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+                OBJECT_TRIGGER_REFRESH(6, obj, -1);
+                state->thornTailState = 7;
+                GameBit_Set(0xd39, 1);
+            }
         }
-      }
-      else {
-        (**(code **)(*DAT_803dd6e8 + 0x5c))((int)(float)puVar7[2]);
-      }
+        break;
+    case 7:
+        break;
     }
-    break;
-  case 3:
-    iVar5 = (**(code **)(*DAT_803dd6cc + 0x14))();
-    if ((iVar5 != 0) && (iVar5 = FUN_80017a98(), (*(ushort *)(iVar5 + 0xb0) & 0x1000) == 0)) {
-      GameBit_Set(0x13f,1);
-      (**(code **)(*DAT_803dd6d4 + 0x48))(3,iVar1,0xffffffff);
-      *(undefined *)((int)puVar7 + 6) = 4;
+
+    if ((state->flags & SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED) == 0 &&
+        GameBit_Get(0x190) != 0 &&
+        GameBit_Get(0x191) != 0 &&
+        GameBit_Get(0x192) != 0) {
+        if (GameBit_Get(0x193) == 0) {
+            thornTailObj = (ShopkeeperObject *)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
+            if (thornTailObj != 0) {
+                playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
+                if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+                    if (isScreenTransitionActive() != 0) {
+                        GameBit_Set(0x193, 1);
+                        OBJECT_TRIGGER_REFRESH(1, obj, -1);
+                        state->flags |= SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED;
+                    } else {
+                        GameBit_Set(0x193, 1);
+                        SCREEN_TRANSITION_START(0x14, 1);
+                    }
+                }
+            }
+        } else if (SCREEN_TRANSITION_FINISHED() != 0) {
+            thornTailObj = (ShopkeeperObject *)ObjList_FindObjectById(SHOPKEEPER_THORNTAIL_OBJECT_ID);
+            if (thornTailObj != 0) {
+                playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
+                if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+                    OBJECT_TRIGGER_REFRESH(1, obj, -1);
+                    state->flags |= SHOPKEEPER_OBJFLAG_THORNTAIL_TRIGGERED;
+                }
+            }
+        }
     }
-    break;
-  case 4:
-    *(undefined *)((int)puVar7 + 6) = 7;
-    break;
-  case 5:
-    iVar5 = (**(code **)(*DAT_803dd6cc + 0x14))();
-    if ((iVar5 != 0) && (iVar5 = FUN_80017a98(), (*(ushort *)(iVar5 + 0xb0) & 0x1000) == 0)) {
-      (**(code **)(*DAT_803dd6d4 + 0x48))(2,iVar1,0xffffffff);
-      *(undefined *)((int)puVar7 + 6) = 6;
+
+    if (GameBit_Get(0xea9) == 0 && GameBit_Get(0x611) != 0) {
+        GameBit_Set(0xea9, 1);
+        MAP_EVENT_TRIGGER(0, 0, 1, 0);
     }
-    break;
-  case 6:
-    (**(code **)(*DAT_803dd72c + 0x28))();
-    break;
-  case 7:
-    uVar2 = GameBit_Get(0xea6);
-    if (uVar2 == 0) {
-      GameBit_Set(0xea6,1);
-      uVar2 = GameBit_Get(0x1a2);
-      if (uVar2 == 0) {
-        GameBit_Set(0x9d5,1);
-      }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: SH_LevelControl_doEarlyScenes
+ * EN v1.0 Address: 0x801D8B00
+ * EN v1.0 Size: 544b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState *state)
+{
+    ShopkeeperObject *playerObj;
+    s32 mapId;
+    u8 mapEventActive;
+
+    SHOPKEEPER_APPLY_MAP_OVERRIDE(state, 0x1ab);
+
+    if (state->earlySceneDelay < 2) {
+        state->earlySceneDelay++;
+    } else {
+        if (GameBit_Get(0xb) == 0) {
+            padClearAnalogInputX(0);
+            padClearAnalogInputY(0);
+            buttonDisable(0, 0x100);
+            buttonDisable(0, 0x200);
+            buttonDisable(0, 0x1000);
+            playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
+            if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+                OBJECT_TRIGGER_REFRESH(0, obj, -1);
+                GameBit_Set(0xb, 1);
+            }
+        }
+
+        if ((state->flags & SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED) == 0) {
+            GameBit_Set(0x2ba, 0);
+            state->flags |= SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED;
+        }
     }
-  }
-  if (*(char *)((int)puVar7 + 6) == '\x02') {
-    if (*(short *)((int)puVar7 + 0x12) != 0xf2) {
-      *(undefined2 *)((int)puVar7 + 0x12) = 0xf2;
-      GameBit_Set(0xc0,1);
-      *puVar7 = *puVar7 & 0xfffffffd;
+
+    if (GameBit_Get(0x2da) == 0 &&
+        GameBit_Get(0x34a) != 0 &&
+        GameBit_Get(0x36f) != 0 &&
+        GameBit_Get(0x166) != 0 &&
+        GameBit_Get(0x167) != 0) {
+        playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
+        if ((playerObj->flagsB0 & SHOPKEEPER_LOADING_FLAG) == 0) {
+            GameBit_Set(0x2da, 1);
+        }
     }
-  }
-  else if (*(short *)((int)puVar7 + 0x12) != 0xcc) {
-    *(undefined2 *)((int)puVar7 + 0x12) = 0xcc;
-    GameBit_Set(0xc0,1);
-    *puVar7 = *puVar7 & 0xfffffffd;
-  }
-  uVar2 = GameBit_Get(0xea8);
-  if ((uVar2 == 0) && (uVar2 = GameBit_Get(0x91b), uVar2 != 0)) {
-    GameBit_Set(0xea8,1);
-    (**(code **)(*DAT_803dd72c + 0x1c))(0,0,1,0);
-  }
-  FUN_8028688c();
-  return;
+
+    mapId = ((ShopkeeperObject *)obj)->mapId;
+    mapEventActive = MAP_EVENT_GET_ANIM(mapId, 6);
+    if (mapEventActive == 0) {
+        playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
+        if (playerHasSpell((int)playerObj, 0) != 0) {
+            MAP_EVENT_SET_ANIM(mapId, 6, 1);
+        }
+    }
 }
