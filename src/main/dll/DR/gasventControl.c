@@ -171,11 +171,9 @@ undefined4 FUN_801a2cb8(int param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801a2dc4(int param_1)
+void FUN_801a2dc4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if ((in_r8 != '\0') && (*(int *)(*(int *)(param_1 + 0xb8) + 0xc) == 0)) {
+  if ((visible != 0) && (*(int *)(*(int *)(param_1 + 0xb8) + 0xc) == 0)) {
     FUN_8003b818(param_1);
   }
   return;

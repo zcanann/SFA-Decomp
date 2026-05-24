@@ -5,7 +5,7 @@
 
 void blasted_init(int param_1,int param_2);
 undefined4 FUN_801a2cb8(int param_1,uint param_2);
-void FUN_801a2dc4(int param_1);
+void FUN_801a2dc4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801a2dfc(void);
 void FUN_801a3144(undefined2 *param_1,int param_2);
 undefined4
