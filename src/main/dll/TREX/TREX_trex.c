@@ -1741,12 +1741,18 @@ extern f32 lbl_803E5998;
 extern f32 lbl_803E599C;
 extern f32 lbl_803E59AC;
 extern f32 lbl_803E59B0;
+extern f32 lbl_803E5958;
 extern f32 lbl_803E595C;
+extern f64 lbl_803E5968;
+extern f32 lbl_803E5970;
+extern f32 lbl_803E5974;
 extern f32 lbl_803E5960;
 extern f32 lbl_803E5918;
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
 extern f32 timeDelta;
+extern u8 lbl_803DB411;
+extern f32 lbl_803DDC50;
 extern int* lbl_803DCAB4;
 #define gBoneParticleEffectInterface lbl_803DCAB4
 extern int Stack_IsEmpty(int stack);
@@ -2535,7 +2541,52 @@ void ShipBattle_free(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void ShipBattle_init(void) {}
+#pragma scheduling off
+#pragma peephole off
+void ShipBattle_init(int obj, int def)
+{
+    int state;
+    int light;
+    int chainIndex;
+
+    state = *(int *)(obj + 0xb8);
+    *(s16 *)(state + 0x6a) = *(s16 *)(def + 0x1a);
+    *(s16 *)(state + 0x6e) = -1;
+    *(f32 *)(state + 0x24) =
+        lbl_803E595C / (lbl_803E595C + (f32)*(u8 *)(def + 0x24));
+    *(int *)(state + 0x28) = -1;
+
+    chainIndex = *(int *)(obj + 0xf4);
+    if (chainIndex == 0) {
+        if (*(s16 *)(def + 0x18) != 1) {
+            (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x1c))(state);
+            *(int *)(obj + 0xf4) = *(s16 *)(def + 0x18) + 1;
+            goto light_setup;
+        }
+    } else if (*(s16 *)(def + 0x18) != chainIndex - 1) {
+        (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x24))(state);
+        if (*(s16 *)(def + 0x18) != -1) {
+            (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))(state, def);
+        }
+        *(int *)(obj + 0xf4) = *(s16 *)(def + 0x18) + 1;
+    }
+
+light_setup:
+    if (*(s16 *)(obj + 0x46) == 0x171) {
+        light = objCreateLight((int *)obj, 1);
+        if (light != 0) {
+            modelLightStruct_setField50(light, 2);
+            modelLightStruct_setColorsA8AC(light, 200, 60, 0, 0);
+            lightDistAttenFn_8001dc38(light, lbl_803E5970, lbl_803E5974);
+        }
+        *(int *)(obj + 0xf8) = light;
+    }
+
+    lbl_803DDC50 = lbl_803E5958;
+    *(u8 *)((char *)&lbl_803DDC50 + 4) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void ShipBattle_render(int* obj)
@@ -2547,7 +2598,54 @@ void ShipBattle_render(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void ShipBattle_update(void) {}
+#pragma scheduling off
+#pragma peephole off
+void ShipBattle_update(int obj)
+{
+    int *objects;
+    int objectCount;
+    int triggerResult;
+    int current;
+    int linkedObject;
+    int sameGroupCount;
+    int groupId;
+
+    if (*(void **)(obj + 0x4c) == NULL || *(s16 *)(*(int *)(obj + 0x4c) + 0x18) == -1) {
+        return;
+    }
+
+    triggerResult = (*(int (**)(int, f32))(*(int *)gObjectTriggerInterface + 0x14))(
+        obj, (f32)lbl_803DB411);
+    if (triggerResult == 0 || *(s16 *)(obj + 0xb4) != -2) {
+        return;
+    }
+
+    groupId = *(s8 *)(*(int *)(obj + 0xb8) + 0x57);
+    linkedObject = 0;
+    objects = ObjList_GetObjects(&triggerResult, &objectCount);
+    sameGroupCount = 0;
+    triggerResult = 0;
+    while (triggerResult < objectCount) {
+        current = objects[triggerResult];
+        if (*(s16 *)(current + 0xb4) == groupId) {
+            linkedObject = current;
+        }
+        if (*(s16 *)(current + 0xb4) == -2 && *(s16 *)(current + 0x44) == 0x10 &&
+            groupId == *(s8 *)(*(int *)(current + 0xb8) + 0x57)) {
+            sameGroupCount++;
+        }
+        triggerResult++;
+    }
+
+    if (sameGroupCount <= 1 && linkedObject != 0 && *(s16 *)(linkedObject + 0xb4) != -1) {
+        *(s16 *)(linkedObject + 0xb4) = -1;
+        (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x4c))(groupId);
+    }
+    *(s16 *)(obj + 0xb4) = -1;
+    Obj_FreeObject(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void shop_buyItem(int obj, int price)
