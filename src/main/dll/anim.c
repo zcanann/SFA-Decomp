@@ -4970,7 +4970,7 @@ int fn_802028C0(int obj, int p2)
   extern void ObjHits_EnableObject(int);
   extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
   extern int *gPlayerInterface;
-  extern int lbl_80329640;
+  extern int lbl_80329640[];
   extern f32 lbl_803E6350;
   extern f32 lbl_803E6354;
   extern f32 lbl_803E6358;
@@ -4995,8 +4995,8 @@ int fn_802028C0(int obj, int p2)
     *(u8 *)(sub_40c + 0x34) = 1;
   }
 
-  if ((*(u32 *)(p2 + 0x314) & 0x200) != 0) {
-    *(u32 *)(p2 + 0x314) = *(u32 *)(p2 + 0x314) & ~0x200;
+  if ((*(int *)(p2 + 0x314) & 0x200) != 0) {
+    *(int *)(p2 + 0x314) = *(int *)(p2 + 0x314) & ~0x200;
     *(u8 *)(sub_40c + 0x14) = (u8)(*(u8 *)(sub_40c + 0x14) | 0x4);
   }
 
@@ -5004,7 +5004,7 @@ int fn_802028C0(int obj, int p2)
     *(u8 *)(sub_40c + 0x14) = (u8)(*(u8 *)(sub_40c + 0x14) | 0x2);
   }
 
-  (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, &lbl_80329640);
+  (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, lbl_80329640);
   return 0;
 }
 #pragma peephole reset
