@@ -284,12 +284,14 @@ int fn_80167A60(int* obj, u8* state) {
     f32* t = *(f32**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
     if (*(s16*)((char*)state + 628) == 6) {
         f32 zero;
+        f32 timer;
         if ((s8)state[635] != 0) {
             *(f32*)((char*)t + 0x44) = lbl_803E3080;
         }
+        timer = *(f32*)((char*)t + 0x44);
         zero = lbl_803E3060;
-        if (*(f32*)((char*)t + 0x44) != zero) {
-            *(f32*)((char*)t + 0x44) = *(f32*)((char*)t + 0x44) - timeDelta;
+        if (timer != zero) {
+            *(f32*)((char*)t + 0x44) = timer - timeDelta;
             if (*(f32*)((char*)t + 0x44) < zero) {
                 *(f32*)((char*)t + 0x44) = zero;
             }
