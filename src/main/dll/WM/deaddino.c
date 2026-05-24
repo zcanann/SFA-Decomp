@@ -1,253 +1,169 @@
 #include "ghidra_import.h"
 #include "main/dll/WM/deaddino.h"
+#include "main/objlib.h"
 
-extern undefined8 FUN_80006824();
-extern void* FUN_80017aa4();
-extern undefined8 FUN_80017ac8();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_80017b00();
-extern undefined8 ObjLink_DetachChild();
-extern undefined4 ObjLink_AttachChild();
-extern undefined4 FUN_8003b818();
-extern undefined8 FUN_8020a8d0();
+#define SC_TOTEMPUZZLE_OBJECT_TYPE 0x3c1
+#define SC_TOTEMPUZZLE_READY_FLAG 0x2
+#define SC_TOTEMPUZZLE_REVERSED_FLAG 0x1
+#define SC_TOTEMPUZZLE_FORWARD_STEP 4
+#define SC_TOTEMPUZZLE_REVERSE_STEP 3
+#define SC_TOTEMPUZZLE_SOLVED_COUNT 5
 
-extern undefined4 DAT_803dc071;
-extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd6f4;
-extern f64 DOUBLE_803e6280;
-extern f32 FLOAT_803e6278;
+#define SC_TOTEMPUZZLE_WRONG_SFX 0x487
+#define SC_TOTEMPUZZLE_COMPLETE_SFX 0x7e
+#define SC_TOTEMPUZZLE_PROGRESS_SFX 0x409
 
-/*
- * --INFO--
- *
- * Function: FUN_801dd1a8
- * EN v1.0 Address: 0x801DD1A8
- * EN v1.0 Size: 116b
- * EN v1.1 Address: 0x801DD270
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dd1a8(int param_1)
+typedef struct SCTotemPuzzleState {
+    u8 pad00[0xc];
+    f32 angleTarget;
+    s16 step;
+    s16 flags;
+} SCTotemPuzzleState;
+
+typedef struct SCTotemPuzzleObject {
+    s16 angle;
+    u8 pad02[0x44];
+    s16 objectType;
+    u8 pad48[0x70];
+    SCTotemPuzzleState *state;
+} SCTotemPuzzleObject;
+
+typedef struct SCTotemPuzzleParticleBox {
+    f32 alpha;
+    f32 x;
+    f32 y;
+    f32 z;
+} SCTotemPuzzleParticleBox;
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void objParticleFn_80097734(double scaleX, double scaleY, double scaleZ, double scaleW,
+                                   void *obj, int param_6, int param_7, int param_8, int param_9,
+                                   void *param_10, int param_11);
+extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
+extern void objRenderFn_8003b8f4(f32);
+
+extern f32 lbl_803E55F0;
+extern f32 lbl_803E55F4;
+extern f32 lbl_803E55F8;
+extern f32 lbl_803E55FC;
+extern f32 lbl_803E5600;
+extern f32 lbl_803E5604;
+extern f32 lbl_803E5608;
+
+static void sc_totempuzzle_markSolved(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state, int step)
 {
-  (**(code **)(*DAT_803dd6d4 + 0x24))(*(undefined4 *)(param_1 + 0xb8));
-  (**(code **)(*DAT_803dd6f4 + 8))(param_1,0xffff,0,0,0);
-  return;
+    state->angleTarget = lbl_803E55F0 * (f32)step;
+    obj->angle = (s16)(s32)state->angleTarget;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801dd21c
- * EN v1.0 Address: 0x801DD21C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801DD2DC
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dd21c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
+#pragma scheduling off
+#pragma peephole off
+int fn_801DD1A8(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
 {
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
+    SCTotemPuzzleParticleBox particleBox;
+    int objectCount;
+    int objectIndex;
+    int *objects;
+    int solvedCount;
+    u8 solvedThisObject;
 
-/*
- * --INFO--
- *
- * Function: sc_totempuzzle_getExtraSize
- * EN v1.0 Address: 0x801DD424
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
+    solvedThisObject = 0;
+    solvedCount = 0;
+    objects = ObjList_GetObjects(&objectIndex, &objectCount);
+
+    while (objectIndex < objectCount) {
+        SCTotemPuzzleObject *peer;
+        SCTotemPuzzleState *peerState;
+        s16 flags;
+
+        peer = (SCTotemPuzzleObject *)objects[objectIndex];
+        if (peer->objectType == SC_TOTEMPUZZLE_OBJECT_TYPE) {
+            peerState = peer->state;
+            flags = peerState->flags;
+            if ((flags & SC_TOTEMPUZZLE_READY_FLAG) != 0) {
+                if ((flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0) {
+                    if (peerState->step + 1 == SC_TOTEMPUZZLE_FORWARD_STEP) {
+                        solvedCount++;
+                        if (peer == obj) {
+                            sc_totempuzzle_markSolved(obj, state, state->step + 1);
+                            solvedThisObject = 1;
+                        }
+                    } else if (peer == obj) {
+                        Sfx_PlayFromObject(0, SC_TOTEMPUZZLE_WRONG_SFX);
+                    }
+                } else if (peerState->step == SC_TOTEMPUZZLE_FORWARD_STEP) {
+                    solvedCount++;
+                    if (peer == obj) {
+                        sc_totempuzzle_markSolved(obj, state, state->step);
+                        solvedThisObject = 1;
+                    }
+                } else if (peer == obj) {
+                    Sfx_PlayFromObject(0, SC_TOTEMPUZZLE_WRONG_SFX);
+                }
+            }
+        }
+        objectIndex++;
+    }
+
+    if (solvedThisObject != 0) {
+        particleBox.x = lbl_803E55F4;
+        particleBox.y = lbl_803E55F8;
+        particleBox.z = lbl_803E55F4;
+        particleBox.alpha = lbl_803E55FC;
+
+        objectIndex = 20;
+        while (objectIndex != 0) {
+            objParticleFn_80097734(lbl_803E5600, lbl_803E5604, lbl_803E5604, lbl_803E5608,
+                                   obj, 7, 5, 7, 100, &particleBox, 0);
+            objectIndex--;
+        }
+
+        objects = objFindTexture((int)obj, 0, 0);
+        if (objects != NULL) {
+            *objects = 0x100;
+        }
+    }
+
+    if (solvedCount == SC_TOTEMPUZZLE_SOLVED_COUNT) {
+        if (solvedThisObject != 0) {
+            Sfx_PlayFromObject(0, SC_TOTEMPUZZLE_COMPLETE_SFX);
+        }
+        return 1;
+    }
+
+    if (solvedThisObject != 0) {
+        Sfx_PlayFromObject(0, SC_TOTEMPUZZLE_PROGRESS_SFX);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int sc_totempuzzle_getExtraSize(void)
 {
-  return 0x14;
+    return 0x14;
 }
 
-/*
- * --INFO--
- *
- * Function: sc_totempuzzle_getObjectTypeId
- * EN v1.0 Address: 0x801DD42C
- * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 int sc_totempuzzle_getObjectTypeId(void)
 {
-  return 0;
+    return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: sc_totempuzzle_free
- * EN v1.0 Address: 0x801DD434
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
 void sc_totempuzzle_free(void)
 {
 }
-
-/*
- * --INFO--
- *
- * Function: sc_totempuzzle_hitDetect
- * EN v1.0 Address: 0x801DD468
- * EN v1.0 Size: 4b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void sc_totempuzzle_hitDetect(void)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801dd244
- * EN v1.0 Address: 0x801DD244
- * EN v1.0 Size: 980b
- * EN v1.1 Address: 0x801DD310
- * EN v1.1 Size: 752b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dd244(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9)
-{
-  byte bVar1;
-  int *piVar2;
-  uint uVar3;
-  undefined2 *puVar4;
-  int iVar5;
-  int iVar6;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  undefined8 extraout_f1;
-  undefined8 uVar10;
-  int local_28;
-  int local_24 [5];
-  
-  iVar8 = *(int *)(param_9 + 0x5c);
-  if ((*(int *)(param_9 + 0x26) != 0) && (*(short *)(*(int *)(param_9 + 0x26) + 0x18) != -1)) {
-    local_24[2] = (int)DAT_803dc071;
-    local_24[1] = 0x43300000;
-    local_24[0] = (**(code **)(*DAT_803dd6d4 + 0x14))
-                            ((double)(float)((double)CONCAT44(0x43300000,local_24[2]) -
-                                            DOUBLE_803e6280));
-    uVar10 = extraout_f1;
-    if ((local_24[0] != 0) && (param_9[0x5a] == -2)) {
-      iVar7 = (int)*(char *)(iVar8 + 0x57);
-      iVar9 = 0;
-      piVar2 = (int *)FUN_80017b00(local_24,&local_28);
-      iVar6 = 0;
-      for (local_24[0] = 0; local_24[0] < local_28; local_24[0] = local_24[0] + 1) {
-        iVar5 = *piVar2;
-        if (*(short *)(iVar5 + 0xb4) == iVar7) {
-          iVar9 = iVar5;
-        }
-        if (((*(short *)(iVar5 + 0xb4) == -2) && (*(short *)(iVar5 + 0x44) == 0x10)) &&
-           (iVar8 = *(int *)(iVar5 + 0xb8), iVar7 == *(char *)(iVar8 + 0x57))) {
-          iVar6 = iVar6 + 1;
-        }
-        piVar2 = piVar2 + 1;
-      }
-      if (((iVar6 < 2) && (iVar9 != 0)) && (*(short *)(iVar9 + 0xb4) != -1)) {
-        *(undefined2 *)(iVar9 + 0xb4) = 0xffff;
-        uVar10 = (**(code **)(*DAT_803dd6d4 + 0x4c))(iVar7);
-      }
-      param_9[0x5a] = -1;
-    }
-    for (iVar9 = 0; iVar9 < (int)(uint)*(byte *)(iVar8 + 0x8b); iVar9 = iVar9 + 1) {
-      bVar1 = *(byte *)(iVar8 + iVar9 + 0x81);
-      if (bVar1 == 1) {
-        if (*(int *)(param_9 + 100) != 0) {
-          uVar10 = FUN_8020a8d0(*(int *)(param_9 + 100),'\0');
-        }
-      }
-      else if (bVar1 == 0) {
-        if ((*(int *)(param_9 + 100) == 0) && (uVar3 = FUN_80017ae8(), (uVar3 & 0xff) != 0)) {
-          puVar4 = FUN_80017aa4(0x30,0x6e8);
-          *(undefined *)((int)puVar4 + 0x1b) = 9;
-          *(undefined *)(puVar4 + 0xe) = 0;
-          *(undefined *)((int)puVar4 + 0x1d) = 0;
-          *(float *)(puVar4 + 0x10) = FLOAT_803e6278;
-          *(undefined *)(puVar4 + 0x13) = 0xff;
-          *(undefined *)((int)puVar4 + 0x27) = 0xff;
-          *(undefined *)(puVar4 + 0x14) = 0xff;
-          puVar4[0x12] = 0xffff;
-          *(undefined *)(puVar4 + 2) = 2;
-          *(undefined *)((int)puVar4 + 5) = 1;
-          *(undefined *)(puVar4 + 3) = 0xff;
-          *(undefined *)((int)puVar4 + 7) = 0xff;
-          *(undefined *)((int)puVar4 + 0x29) = 1;
-          *(undefined *)(puVar4 + 0x15) = 0;
-          iVar6 = FUN_80017ae4(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar4
-                               ,5,*(undefined *)(param_9 + 0x56),0xffffffff,
-                               *(uint **)(param_9 + 0x18),in_r8,in_r9,in_r10);
-          *(ushort *)(iVar6 + 6) = *(ushort *)(iVar6 + 6) | 0x4000;
-          ObjLink_AttachChild((int)param_9,iVar6,0);
-          uVar10 = FUN_80006824((uint)param_9,0x10f);
-        }
-      }
-      else if ((bVar1 < 3) && (iVar6 = *(int *)(param_9 + 100), iVar6 != 0)) {
-        uVar10 = ObjLink_DetachChild((int)param_9,iVar6);
-        uVar10 = FUN_80017ac8(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar6);
-      }
-    }
-    if (*(int *)(param_9 + 100) != 0) {
-      *(short *)(*(int *)(param_9 + 100) + 4) = param_9[2];
-      *(short *)(*(int *)(param_9 + 100) + 2) = param_9[1] + 0xe38;
-      **(short **)(param_9 + 100) = *param_9 + -0x8000;
-    }
-  }
-  return;
-}
-
-extern f32 lbl_803E55FC;
-extern void objRenderFn_8003b8f4(f32);
 
 #pragma peephole off
 void sc_totempuzzle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
+
     if (v != 0) {
         objRenderFn_8003b8f4(lbl_803E55FC);
     }
 }
 #pragma peephole reset
+
+void sc_totempuzzle_hitDetect(void)
+{
+}

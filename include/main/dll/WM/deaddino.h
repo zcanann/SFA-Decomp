@@ -3,14 +3,14 @@
 
 #include "ghidra_import.h"
 
-void FUN_801dd1a8(int param_1);
-void FUN_801dd21c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801dd244(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9);
+typedef struct SCTotemPuzzleObject SCTotemPuzzleObject;
+typedef struct SCTotemPuzzleState SCTotemPuzzleState;
+
+int fn_801DD1A8(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state);
 int sc_totempuzzle_getExtraSize(void);
-int sc_totempuzzle_func08(void);
+int sc_totempuzzle_getObjectTypeId(void);
 void sc_totempuzzle_free(void);
+void sc_totempuzzle_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void sc_totempuzzle_hitDetect(void);
 
 #endif /* MAIN_DLL_WM_DEADDINO_H_ */
