@@ -2642,9 +2642,9 @@ void curves_remove(RomCurveDef *curve)
  */
 void curves_addCurveDef(RomCurveDef *curve)
 {
+  RomCurveDef **slot;
   int count;
   int insertIndex;
-  RomCurveDef **slot;
 
   count = nRomCurves;
   if (count == ROMCURVE_MAX_CURVES) {
