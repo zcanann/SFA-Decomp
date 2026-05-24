@@ -1,5 +1,7 @@
 #include "ghidra_import.h"
+#include "dolphin/ai.h"
 #include "dolphin/os.h"
+#include "dolphin/os/OSCache.h"
 #include "dolphin/vi.h"
 #include "dolphin/vi/vifuncs.h"
 #include "main/dll/FRONT/attract_movie.h"
@@ -89,7 +91,13 @@ extern f64 DOUBLE_803e29c8;
 extern f32 FLOAT_803e29c4;
 extern s32 lbl_803DD610;
 extern s32 lbl_803DD660;
+extern AIDCallback lbl_803DD668;
+extern s32 lbl_803DD66C;
+extern u32 lbl_803DD670;
+extern u32 lbl_803DD674;
+extern u32 lbl_803DD678;
 extern f32 lbl_803E1D50;
+extern char lbl_803A57C0[0x50C];
 extern OSMessageQueue lbl_803A5CCC;
 
 /*
@@ -492,6 +500,55 @@ bool FUN_80118164(uint param_1)
     FUN_80003494(param_1,0x803a6a40,8);
   }
   return bVar1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: AttractMovieAudio_DmaCallback
+ * EN v1.0 Address: 0x80118018
+ * EN v1.0 Size: 372b
+ */
+void AttractMovieAudio_DmaCallback(void)
+{
+  BOOL interrupts;
+  char *dmaBuffer;
+
+  if (lbl_803DD66C == 0) {
+    lbl_803DD678 ^= 1;
+    dmaBuffer = lbl_803A57C0 + (lbl_803DD678 * 0x280);
+    AIInitDMA((u32)dmaBuffer, 0x280);
+    interrupts = OSEnableInterrupts();
+    dmaBuffer = lbl_803A57C0 + (lbl_803DD678 * 0x280);
+    AttractMovieAudio_Mix((undefined2 *)dmaBuffer, NULL, 0xa0);
+    DCFlushRange(dmaBuffer, 0x280);
+    OSRestoreInterrupts(interrupts);
+  }
+  else {
+    if (lbl_803DD66C == 1) {
+      if (lbl_803DD674 != 0) {
+        lbl_803DD670 = lbl_803DD674;
+      }
+      lbl_803DD668();
+      lbl_803DD674 = AIGetDMAStartAddr() + 0x80000000;
+    }
+    else {
+      lbl_803DD668();
+      lbl_803DD670 = AIGetDMAStartAddr() + 0x80000000;
+    }
+
+    lbl_803DD678 ^= 1;
+    dmaBuffer = lbl_803A57C0 + (lbl_803DD678 * 0x280);
+    AIInitDMA((u32)dmaBuffer, 0x280);
+    interrupts = OSEnableInterrupts();
+    if (lbl_803DD670 != 0) {
+      DCInvalidateRange((void *)lbl_803DD670, 0x280);
+    }
+    dmaBuffer = lbl_803A57C0 + (lbl_803DD678 * 0x280);
+    AttractMovieAudio_Mix((undefined2 *)dmaBuffer, (short *)lbl_803DD670, 0xa0);
+    DCFlushRange(dmaBuffer, 0x280);
+    OSRestoreInterrupts(interrupts);
+  }
 }
 
 /*
