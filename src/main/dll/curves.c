@@ -4511,18 +4511,15 @@ int saveFileStruct_isCheatActive(u8 idx)
 #pragma scheduling off
 #pragma peephole off
 int curves_findByAction(int act) {
-    register RomCurveDef **base;
     int i;
 
-    base = romCurves;
-    for (i = nRomCurves; i > 0; i--) {
-        RomCurveDef *c = *base;
+    for (i = 0; i < nRomCurves; i++) {
+        RomCurveDef *c = romCurves[i];
         if (c->type == ROMCURVE_TYPE_ACTION) {
             if (c->action == act) {
                 return c->id;
             }
         }
-        base++;
     }
     return -1;
 }
