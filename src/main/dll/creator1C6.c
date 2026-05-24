@@ -57,20 +57,22 @@ extern f32 lbl_803E5D60;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
 {
   int i;
   int player;
-  int *state;
-  u8 event;
+  void **state;
+  int event;
 
-  state = *(int **)(obj + 0xb8);
+  state = *(void ***)(obj + 0xb8);
   player = Obj_GetPlayerObject();
   *(s16 *)(animEvents + 0x70) = -1;
   *(u8 *)(animEvents + 0x56) = 0;
 
   for (i = 0; i < (s32)*(u8 *)(animEvents + 0x8b); i++) {
-    event = *(u8 *)(animEvents + i + 0x81);
+    event = (u8)*(u8 *)(animEvents + i + 0x81);
     if (event != 0) {
       if (event == 7) {
         fn_80296518(player,2,1);
@@ -87,14 +89,14 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
       }
       else if (event == 0xf) {
         *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) & ~0x4000);
-        if (state[0] != 0) {
-          lightFn_8001db6c(state[0],0,(double)lbl_803E50D8);
+        if (state[0] != NULL) {
+          lightFn_8001db6c((int)state[0],0,(double)lbl_803E50D8);
         }
       }
       else if (event >= 0xe) {
         *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
-        if (state[0] != 0) {
-          lightFn_8001db6c(state[0],0,(double)lbl_803E50D8);
+        if (state[0] != NULL) {
+          lightFn_8001db6c((int)state[0],0,(double)lbl_803E50D8);
         }
       }
     }
@@ -103,6 +105,8 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
 
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -212,14 +216,16 @@ int dbsh_shrine_getObjectTypeId(void)
   return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 void dbsh_shrine_free(int obj)
 {
-  int *state;
+  void **state;
 
-  state = *(int **)(obj + 0xb8);
-  if (state[0] != 0) {
-    ModelLightStruct_free(state[0]);
-    state[0] = 0;
+  state = *(void ***)(obj + 0xb8);
+  if (state[0] != NULL) {
+    ModelLightStruct_free((int)state[0]);
+    state[0] = NULL;
   }
   gameTimerStop();
   ObjGroup_RemoveObject(obj,0xb);
@@ -230,25 +236,31 @@ void dbsh_shrine_free(int obj)
   GameBit_Set(0xefa,0);
   GameBit_Set(0xcbb,1);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void dbsh_shrine_render(int obj,undefined4 p2,undefined4 p3,undefined4 p4,undefined4 p5,s8 visible)
 {
-  int *state;
+  void **state;
 
-  state = *(int **)(obj + 0xb8);
+  state = *(void ***)(obj + 0xb8);
   if (visible == 0) {
-    if (state[0] != 0) {
-      lightFn_8001db6c(state[0],0,(double)lbl_803E50D8);
+    if (state[0] != NULL) {
+      lightFn_8001db6c((int)state[0],0,(double)lbl_803E50D8);
     }
   }
   else {
-    if (state[0] != 0) {
-      lightFn_8001db6c(state[0],1,(double)lbl_803E50D8);
+    if (state[0] != NULL) {
+      lightFn_8001db6c((int)state[0],1,(double)lbl_803E50D8);
     }
     objRenderFn_8003b8f4((double)lbl_803E50D8,obj,p2,p3,p4,p5);
-    objParticleFn_80099d84((double)lbl_803E50D8,(double)lbl_803E50D8,obj,7,state[0]);
+    objParticleFn_80099d84((double)lbl_803E50D8,(double)lbl_803E50D8,obj,7,(int)state[0]);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
