@@ -28,6 +28,8 @@ extern int trickyDebugPrint(const char *fmt, ...);
  * EN v1.0 Address: 0x8013D8F0
  * EN v1.0 Size: 588b
  */
+#pragma scheduling off
+#pragma peephole off
 void trickyFn_8013d8f0(u8 *arg1, u8 *arg2)
 {
   f32 minDist;
@@ -100,3 +102,5 @@ void trickyFn_8013d8f0(u8 *arg1, u8 *arg2)
     trickyDebugPrint(lbl_8031D478);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
