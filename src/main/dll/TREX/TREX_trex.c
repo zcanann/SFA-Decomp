@@ -1736,7 +1736,7 @@ extern void ObjGroup_AddObject(int obj, int group);
 extern void ModelLightStruct_free(int* p);
 extern void skyFn_80088c94(int a, int b);
 extern void Music_Trigger(int a, int b);
-extern void fn_80098928(int* obj, f32 f, int a, int b, int c, int d);
+extern void fn_80098928(int* obj, f32 f, int a, int b, int c, void* d);
 extern f32 lbl_803E5998;
 extern f32 lbl_803E599C;
 extern f32 lbl_803E59AC;
@@ -2155,7 +2155,7 @@ void SB_CloudBall_update(int obj)
             Obj_FreeObject(obj);
         }
     } else {
-        f32 stack_8, stack_c, stack_10;
+        f32 particleVelocity[3];
         *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
         *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
         *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
@@ -2194,12 +2194,12 @@ void SB_CloudBall_update(int obj)
             *(f32 *)(state + 0x20) = lbl_803E58F0;
             *(u8 *)(obj + 0x36) = 0;
         }
-        stack_8 = lbl_803E5900 * -*(f32 *)state;
-        stack_c = lbl_803E5900 * -*(f32 *)(state + 0x4);
-        stack_10 = lbl_803E5900 * -*(f32 *)(state + 0x8);
-        fn_80098928((int *)obj, lbl_803E5904, 2, 0x156, 0xf, (int)&stack_8);
-        fn_80098928((int *)obj, lbl_803E5904, 2, 0x156, 0xf, (int)&stack_8);
-        fn_80098928((int *)obj, lbl_803E5904, 2, 0x156, 0xf, (int)&stack_8);
+        particleVelocity[0] = lbl_803E5900 * -*(f32 *)state;
+        particleVelocity[1] = lbl_803E5900 * -*(f32 *)(state + 0x4);
+        particleVelocity[2] = lbl_803E5900 * -*(f32 *)(state + 0x8);
+        fn_80098928((int *)obj, lbl_803E5904, 2, 0x156, 0xf, particleVelocity);
+        fn_80098928((int *)obj, lbl_803E5904, 2, 0x156, 0xf, particleVelocity);
+        fn_80098928((int *)obj, lbl_803E5904, 2, 0x156, 0xf, particleVelocity);
         ((void (*)(int, int, int, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa8, 0, 2, -1, 0);
     }
 }
@@ -2249,7 +2249,7 @@ void SB_FireBall_update(int obj)
 
         particleArgs[2] = lbl_803E58DC;
         fn_80098928((int *)obj, lbl_803E58E0, SB_FIREBALL_SETUP_SIZE,
-                    SB_FIREBALL_SETUP_MODEL_ID, SB_FIREBALL_SETUP_PARAM, 0);
+                    SB_FIREBALL_SETUP_MODEL_ID, SB_FIREBALL_SETUP_PARAM, NULL);
         ((void (*)(int, int, f32 *, int, int, int))((void **)*gPartfxInterface)[2])(
             obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, 0);
 
@@ -2599,7 +2599,7 @@ void ShipBattle_render(int* obj)
 {
     objRenderFn_8003b8f4(lbl_803E595C);
     if (*(s16*)((char*)obj + 0x46) == 369) {
-        fn_80098928(obj, lbl_803E5960, 4, 389, 5, 0);
+        fn_80098928(obj, lbl_803E5960, 4, 389, 5, NULL);
     }
 }
 #pragma peephole reset
