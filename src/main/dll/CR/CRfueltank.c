@@ -16,12 +16,10 @@ extern undefined4 FUN_8003b818();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_ShipGun_update(int param_1)
+void SB_ShipGun_update(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
   if ((((*(int *)(param_1 + 0x30) == 0) || (*(short *)(*(int *)(param_1 + 0x30) + 0x46) != 0x139))
-      && (in_r8 != '\0')) &&
+      && (visible != 0)) &&
      ((*(char *)(*(int *)(param_1 + 0xb8) + 0xc) != '\0' &&
       (*(char *)(*(int *)(param_1 + 0xb8) + 0xd) != '\0')))) {
     FUN_8003b818(param_1);
