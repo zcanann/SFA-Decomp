@@ -175,9 +175,9 @@ void ProjectileSwitch_init(int obj, u8 *initData)
   if (initData[0x1d] == 0) {
     *(float *)(obj + 8) = *(float *)(*(int *)(obj + 0x50) + 4);
   } else {
-    *(float *)(obj + 8) =
-        ((f32)(u32)initData[0x1d] * *(float *)(*(int *)(obj + 0x50) + 4)) *
-        lbl_803E3728;
+    f32 scaledRadius =
+        (f32)(u32)initData[0x1d] * *(float *)(*(int *)(obj + 0x50) + 4);
+    *(float *)(obj + 8) = scaledRadius * lbl_803E3728;
   }
   ObjHitbox_SetSphereRadius(
       obj, (short)(((int)initData[0x1d] * (int)*(u8 *)(*(int *)(obj + 0x50) + 0x62)) / 64));
