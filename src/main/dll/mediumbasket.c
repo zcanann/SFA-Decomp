@@ -1940,11 +1940,10 @@ extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void renderWhirlpool(void);
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8015AE68(int* obj, u8* state) {
     f32 fz;
     *(f32*)((char*)state + 684) = lbl_803E2CE8;
-    state[827] = (u8)(int)*(f32*)((char*)state + 680);
+    *(char *)((char *)state + 827) = (int)*(f32*)((char*)state + 680);
     *(f32*)((char*)state + 680) = lbl_803E2CEC;
     *(int*)((char*)state + 740) = 0x42001;
     *(f32*)((char*)state + 776) = lbl_803E2CF0;
@@ -1961,7 +1960,6 @@ void fn_8015AE68(int* obj, u8* state) {
     state[827] = 0;
     ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), (void*)renderWhirlpool);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
