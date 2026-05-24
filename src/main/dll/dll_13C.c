@@ -394,33 +394,45 @@ void fn_8016A660(int obj)
   extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
   extern f32 lbl_803E3144;
   extern f32 lbl_803E3148;
-  int i;
-  int sub;
-  u8 *no;
+  int burstCounter;
+  PollenExtra *extra;
+  u8 *fragment;
 
-  sub = *(int *)(obj + 0xb8);
+  extra = *(PollenExtra **)(obj + 0xb8);
   if (Obj_IsLoadingLocked() != 0) {
-    i = 5;
+    burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;
     do {
-      no = Obj_AllocObjectSetup(0x24, 0x482);
-      *(f32 *)(no + 8) = *(f32 *)(obj + 0xc);
-      *(f32 *)(no + 12) = *(f32 *)(obj + 0x10);
-      *(f32 *)(no + 16) = *(f32 *)(obj + 0x14);
-      *(u8 *)(no + 4) = 1;
-      *(u8 *)(no + 5) = 1;
-      *(u8 *)(no + 6) = 0xff;
-      *(u8 *)(no + 7) = 0xff;
-      no = Obj_SetupObject(no, 5, -1, -1, 0);
-      if (no != 0) {
-        *(s16 *)(no + 2) = 0;
-        *(s16 *)(no + 0) = (s16)randomGetRange(0, 0xffff);
-        *(f32 *)(no + 0x24) = lbl_803E3144 * (f32)(s32)randomGetRange(-50, 50) + *(f32 *)(obj + 0x24);
-        *(f32 *)(no + 0x28) = lbl_803E3148 * (f32)(s32)randomGetRange(-50, 50) + *(f32 *)(obj + 0x28);
-        *(f32 *)(no + 0x2c) = lbl_803E3144 * (f32)(s32)randomGetRange(-50, 50) + *(f32 *)(obj + 0x2c);
-        *(int *)(no + 0xc4) = obj;
+      fragment = Obj_AllocObjectSetup(POLLEN_FRAGMENT_SETUP_SIZE, POLLEN_FRAGMENT_OBJECT_ID);
+      *(f32 *)(fragment + 8) = *(f32 *)(obj + 0xc);
+      *(f32 *)(fragment + 12) = *(f32 *)(obj + 0x10);
+      *(f32 *)(fragment + 16) = *(f32 *)(obj + 0x14);
+      *(u8 *)(fragment + 4) = 1;
+      *(u8 *)(fragment + 5) = 1;
+      *(u8 *)(fragment + 6) = 0xff;
+      *(u8 *)(fragment + 7) = 0xff;
+      fragment = Obj_SetupObject(fragment, POLLEN_FRAGMENT_SETUP_KIND, -1, -1, 0);
+      if (fragment != 0) {
+        *(s16 *)(fragment + 2) = 0;
+        *(s16 *)(fragment + 0) = (s16)randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
+        *(f32 *)(fragment + 0x24) =
+            lbl_803E3144 *
+                (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
+                                         POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+            *(f32 *)(obj + 0x24);
+        *(f32 *)(fragment + 0x28) =
+            lbl_803E3148 *
+                (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
+                                         POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+            *(f32 *)(obj + 0x28);
+        *(f32 *)(fragment + 0x2c) =
+            lbl_803E3144 *
+                (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN,
+                                         POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+            *(f32 *)(obj + 0x2c);
+        *(int *)(fragment + POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET) = obj;
       }
-    } while (i-- != 0);
-    *(s16 *)(sub + 0x12) = 60;
+    } while (burstCounter-- != 0);
+    extra->fragmentSpawnTimer = POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES;
   }
 }
 #pragma peephole reset

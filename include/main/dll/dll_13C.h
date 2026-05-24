@@ -16,6 +16,21 @@ typedef struct PollenFragmentConfig {
   u16 flags;
 } PollenFragmentConfig;
 
+typedef struct PollenExtra {
+  u8 pad00[0x12];
+  s16 fragmentSpawnTimer;
+} PollenExtra;
+
+#define POLLEN_FRAGMENT_OBJECT_ID 0x482
+#define POLLEN_FRAGMENT_SETUP_SIZE 0x24
+#define POLLEN_FRAGMENT_SETUP_KIND 5
+#define POLLEN_FRAGMENT_BURST_COUNTER_START 5
+#define POLLEN_FRAGMENT_RANDOM_ANGLE_MAX 0xffff
+#define POLLEN_FRAGMENT_RANDOM_OFFSET_MIN -50
+#define POLLEN_FRAGMENT_RANDOM_OFFSET_MAX 50
+#define POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES 60
+#define POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET 0xc4
+
 void kaldachompspit_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                            undefined4 param_4,undefined4 param_5,char visible);
 void kaldachompspit_hitDetect(void);
