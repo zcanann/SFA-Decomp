@@ -2125,12 +2125,14 @@ int fn_8015B7EC(int obj, int p2)
   extern f32 lbl_803E2D14;
   extern f32 lbl_803E2D24;
   int sub = *(int *)(obj + 0xb8);
+  f32 neutralBlend;
 
-  if (*(void **)(p2 + 0x2d0) == NULL) return 0;
+  if (*(void **)(p2 + 0x2d0) == NULL) goto return0;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27b) != 0) {
-    *(f32 *)(p2 + 0x284) = lbl_803E2D14;
-    *(f32 *)(p2 + 0x280) = lbl_803E2D14;
+    neutralBlend = lbl_803E2D14;
+    *(f32 *)(p2 + 0x284) = neutralBlend;
+    *(f32 *)(p2 + 0x280) = neutralBlend;
     if ((u32)*(u8 *)(sub + 0x406) > 50) {
       if (*(f32 *)(p2 + 0x2c0) < lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe)
           || (*(u8 *)(sub + 0x404) & 0x2) != 0) {
@@ -2143,7 +2145,7 @@ int fn_8015B7EC(int obj, int p2)
     }
   }
 
-  if ((s32)(s8)*(u8 *)(p2 + 0x346) == 0) return 0;
+  if ((s32)(s8)*(u8 *)(p2 + 0x346) == 0) goto return0;
 
   (**(void (**)(int, int, int, f32))((char *)(*gPlayerInterface) + 0x30))(obj, p2, 4, timeDelta);
   if (((u8)(**(int (**)(int, int, f32))((char *)(*gBaddieControlInterface) + 0x18))(obj, p2, lbl_803E2D00) & 1) == 0) {
@@ -2155,6 +2157,9 @@ int fn_8015B7EC(int obj, int p2)
     return 8;
   }
   return 7;
+
+return0:
+  return 0;
 }
 #pragma fp_contract reset
 #pragma peephole reset
