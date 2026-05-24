@@ -1382,7 +1382,7 @@ int dbegg_setScale(int obj) {
 extern f32 lbl_803E61C8;
 extern f32 lbl_803E61D0;
 extern f64 lbl_803E61D8;
-extern int fn_801FE560(int obj, int *outIdx, int p3, f32 a, f32 b);
+extern int fn_801FE560(int obj, int *outIdx, f32 a, f32 b, int p3);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma scheduling off
 #pragma peephole off
@@ -1399,8 +1399,7 @@ void fn_801FE31C(int obj, u8 *state) {
     *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
     state[0x118] = (u8)(GameBit_Get(*(s16 *)(def + 0x1c)) != 0 ? 3 : 1);
     if (state[0x118] == 1) {
-        f32 fzero = lbl_803E61C8;
-        if (fn_801FE560(obj, &local_unused, 1, fzero, fzero) == 0) {
+        if (fn_801FE560(obj, &local_unused, lbl_803E61C8, lbl_803E61C8, 1) == 0) {
             state[0x118] = 2;
         }
     }
