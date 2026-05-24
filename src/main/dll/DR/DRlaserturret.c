@@ -291,17 +291,18 @@ int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch)
         if (state->countValue > state->maxCount) {
             state->countValue = state->maxCount;
         }
-        if (state->countValue > (s16)(state->countScale << 1)) {
+        if (state->countValue > state->countScale << 1) {
             state->countValue = (s16)(state->countScale << 1);
-        } else if (state->countValue < (s16)(state->countScale >> 1)) {
+        } else if (state->countValue < state->countScale >> 1) {
             state->countValue = (s16)(state->countScale >> 1);
         }
         v9d0 = state->countValue;
         texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
         *texture = (v9d0 - v9d0 / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
         texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
-        *texture = (v9d0 / 10 - v9d0 / 100 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
-        slot = v9d0 / 100;
+        slot = v9d0 / 10;
+        *texture = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+        slot = slot / 10;
         if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
         texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
         *texture = slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
@@ -327,8 +328,9 @@ int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch)
             texture = objFindTexture(obj, DR_LASERTURRET_ONES_TEXTURE_SLOT, 0);
             *texture = (v - v / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
             texture = objFindTexture(obj, DR_LASERTURRET_TENS_TEXTURE_SLOT, 0);
-            *texture = (v / 10 - v / 100 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
-            slot = v / 100;
+            slot = v / 10;
+            *texture = (slot - slot / 10 * 10) << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
+            slot = slot / 10;
             if (slot > DR_LASERTURRET_MAX_DIGIT) slot = DR_LASERTURRET_MAX_DIGIT;
             texture = objFindTexture(obj, DR_LASERTURRET_HUNDREDS_TEXTURE_SLOT, 0);
             *texture = slot << DR_LASERTURRET_DIGIT_TEXTURE_SHIFT;
