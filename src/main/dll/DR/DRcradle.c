@@ -454,6 +454,14 @@ void SnowBike_func15(int obj)
 extern void setMatrixFromObjectPos(void *mtx, s16 *vec);
 extern void mtxRotateByVec3s(void *mtx, s16 *vec);
 
+typedef struct SnowBikeFlags {
+    u8 resetLatch : 1;      /* 0x80 */
+    u8 pathActive : 1;      /* 0x40 */
+    u8 uiPrompt : 1;        /* 0x20 */
+    u8 impulseLatch : 1;    /* 0x10 */
+    u8 flags : 4;
+} SnowBikeFlags;
+
 /*
  * --INFO--
  *
@@ -509,6 +517,7 @@ void fn_801EC7A0(int p1, int p2)
 void fn_801EC870(int p1, register int p2_int)
 {
     f32 fz, fa, fb, fc;
+    SnowBikeFlags *flags;
     *(f32 *)(p2_int + 0x52c) = lbl_803E5C34;
     *(f32 *)(p2_int + 0x530) = lbl_803E5C38;
     *(f32 *)(p2_int + 0x534) = lbl_803E5BF4;
@@ -521,7 +530,8 @@ void fn_801EC870(int p1, register int p2_int)
     *(f32 *)(p2_int + 0x544) = lbl_803E5AF8;
     *(f32 *)(p2_int + 0x558) = lbl_803E5BA8;
     *(f32 *)(p2_int + 0x56c) = lbl_803E5C00;
-    *(u8 *)(p2_int + 0x428) &= 0x7f;
+    flags = (SnowBikeFlags *)(p2_int + 0x428);
+    flags->resetLatch = 0;
     *(f32 *)(p2_int + 0x430) = fz;
     fa = *(f32 *)(p2_int + 0x470);
     *(f32 *)(p2_int + 0x464) = fa;
@@ -532,8 +542,8 @@ void fn_801EC870(int p1, register int p2_int)
     fc = *(f32 *)(p2_int + 0x478);
     *(f32 *)(p2_int + 0x46c) = fc;
     *(f32 *)(p2_int + 0x484) = fc;
-    *(u8 *)(p2_int + 0x428) &= 0xbf;
-    *(u8 *)(p2_int + 0x428) &= 0xef;
+    flags->pathActive = 0;
+    flags->impulseLatch = 0;
     *(u32 *)(p2_int + 0x42c) = 0;
     *(f32 *)(p2_int + 0x3e4) = fz;
     *(f32 *)(p2_int + 0x3e0) = lbl_803E5AEC;
