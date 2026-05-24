@@ -1227,33 +1227,39 @@ int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hi
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjHits_AddContactObject(int param_1,int param_2)
+void ObjHits_AddContactObject(int obj,int contactObj)
 {
-  u8 cVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
+  int contactObjectIndex;
+  int contactObjectCount;
+  int contactOffset;
+  int contactStore;
+  int i;
+  int storeState;
+  int transformState;
 
-  iVar4 = *(int *)(param_1 + 0x58);
-  if ((u32)iVar4 == 0) {
+  transformState = *(int *)(obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
+  if ((u32)transformState == 0) {
     return;
   }
-  iVar2 = (int)*(char *)(iVar4 + 0x10f);
-  if (iVar2 >= 3) {
+  contactObjectCount =
+      (int)*(char *)(transformState + OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET);
+  if (contactObjectCount >= OBJHITBOX_CONTACT_OBJECT_COUNT) {
     return;
   }
-  iVar3 = 0;
-  for (iVar5 = 0; iVar5 < iVar2; iVar5++) {
-    if ((u32)*(int *)(iVar4 + iVar3 + 0x100) == (u32)param_2) {
+  contactOffset = 0;
+  for (i = 0; i < contactObjectCount; i++) {
+    if ((u32)*(int *)(transformState + contactOffset + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET) ==
+        (u32)contactObj) {
       return;
     }
-    iVar3 = iVar3 + 4;
+    contactOffset = contactOffset + 4;
   }
-  iVar2 = *(int *)(param_1 + 0x58);
-  cVar1 = *(u8 *)(iVar4 + 0x10f);
-  *(undefined *)(iVar4 + 0x10f) = cVar1 + 1;
-  *(int *)(iVar2 + (s8)cVar1 * 4 + 0x100) = param_2;
+  storeState = *(volatile int *)(obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
+  contactObjectIndex = *(u8 *)(transformState + OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET);
+  *(undefined *)(transformState + OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET) =
+      contactObjectIndex + 1;
+  contactStore = storeState + (s8)contactObjectIndex * 4;
+  *(int *)(contactStore + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET) = contactObj;
   return;
 }
 #pragma peephole reset
