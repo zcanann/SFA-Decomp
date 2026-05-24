@@ -13,7 +13,7 @@ void FUN_80186c34(short *param_1);
 void FUN_80186d78(int param_1);
 void FUN_80186e70(int param_1);
 void FUN_80186f88(int param_1,int param_2);
-void FUN_80187034(int param_1);
+void FUN_80187034(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8018705c(uint param_1);
 
 int LanternFireFly_getExtraSize(void);
