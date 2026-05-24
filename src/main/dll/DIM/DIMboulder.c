@@ -359,11 +359,9 @@ undefined4 FUN_801accf4(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801acd7c(int param_1)
+void FUN_801acd7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -529,11 +527,9 @@ double FUN_801ad24c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ad318(int param_1)
+void FUN_801ad318(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if ((*(char *)(*(int *)(param_1 + 0xb8) + 0xc) != '\x03') && (in_r8 != '\0')) {
+  if ((*(char *)(*(int *)(param_1 + 0xb8) + 0xc) != '\x03') && (visible != 0)) {
     FUN_8003b818(param_1);
   }
   return;
@@ -834,11 +830,9 @@ void FUN_801adb28(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801adbec(int param_1)
+void FUN_801adbec(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if ((*(short *)(param_1 + 0x46) == 0x172) && (in_r8 != '\0')) {
+  if ((*(short *)(param_1 + 0x46) == 0x172) && (visible != 0)) {
     FUN_8003b818(param_1);
   }
   return;

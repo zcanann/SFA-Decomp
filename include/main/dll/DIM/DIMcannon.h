@@ -12,10 +12,10 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,int param_12,uint *param_13,
                  undefined4 param_14,undefined4 param_15,undefined4 param_16);
-void FUN_801ae760(int param_1);
+void FUN_801ae760(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 undefined4 FUN_801ae788(int param_1,undefined4 param_2,int param_3);
 void FUN_801ae9e4(void);
-void FUN_801aea18(int param_1);
+void FUN_801aea18(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801aea40(int param_1);
 void FUN_801aea44(int param_1);
 void FUN_801aea8c(int param_1);

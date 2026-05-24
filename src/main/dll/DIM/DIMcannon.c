@@ -375,11 +375,9 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ae760(int param_1)
+void FUN_801ae760(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -495,11 +493,9 @@ void FUN_801ae9e4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801aea18(int param_1)
+void FUN_801aea18(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
