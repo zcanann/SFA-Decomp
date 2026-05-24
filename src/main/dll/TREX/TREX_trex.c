@@ -159,11 +159,9 @@ void SB_FireBall_hitDetect(int *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e4350(int param_1)
+void FUN_801e4350(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -365,11 +363,9 @@ void FUN_801e48f4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e4928(int param_1)
+void FUN_801e4928(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -513,11 +509,9 @@ void FUN_801e4c58(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e4cb0(int param_1)
+void FUN_801e4cb0(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -900,11 +894,9 @@ void FUN_801e55c4(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e5684(int param_1)
+void FUN_801e5684(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -1297,11 +1289,9 @@ void FUN_801e5f78(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e5fc4(int param_1)
+void FUN_801e5fc4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -1446,11 +1436,9 @@ void FUN_801e60cc(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e62b8(int param_1)
+void FUN_801e62b8(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
