@@ -19,7 +19,7 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void FUN_801797bc(int param_1);
-void FUN_80179820(int param_1);
+void FUN_80179820(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80179848(undefined2 *param_1);
 void FUN_801799bc(undefined2 *param_1,int param_2);
 uint FUN_801799c0(int param_1);
