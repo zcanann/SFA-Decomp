@@ -3617,9 +3617,13 @@ int fn_8016118C(int* obj, u8* state)
         ObjHits_DisableObject((int)obj);
         *(u8*)((char*)obj + 0xaf) |= 8;
     }
-    if (*(u8*)((char*)obj + 0x36) != 0) return 0;
-    if (*(void**)((char*)obj + 0x4c) != NULL) return 6;
-    Obj_FreeObject(obj);
+    if (*(u8*)((char*)obj + 0x36) == 0) {
+        if (*(void**)((char*)obj + 0x4c) == NULL) {
+            Obj_FreeObject(obj);
+            return 0;
+        }
+        return 6;
+    }
     return 0;
 }
 
