@@ -1193,7 +1193,7 @@ void Trigger_init(u8* obj, u8* params) {
         *(s16*)obj = (s16)(params[0x3d] << 8);
         *(f32*)(obj + 8) = t / lbl_803E40F8;
         break;
-    default:
+    case 0x4c:
         *(s16*)(sub + 0x82) = *(s16*)(params + 0x48);
         objFn_80198fa4(obj, params);
         break;
@@ -1206,7 +1206,6 @@ void Trigger_init(u8* obj, u8* params) {
         *(s16*)(obj + 2) = (s16)(params[0x3e] << 8);
         *(s16*)(obj + 4) = 0;
         break;
-    case 0x51:
     case 0xf4:
         break;
     case 0x54:
@@ -1215,6 +1214,8 @@ void Trigger_init(u8* obj, u8* params) {
         *(s16*)(sub + 0x86) = *(s16*)(params + 0x4c);
         *(s16*)(sub + 0x88) = *(s16*)(params + 0x4e);
         sub[0x8a] = (u8)(sub[0x8a] & ~0x80);
+        break;
+    default:
         break;
     }
     *(s16*)(sub + 0x80) = *(s16*)(params + 0x44);
