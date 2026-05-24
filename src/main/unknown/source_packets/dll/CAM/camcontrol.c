@@ -8,26 +8,26 @@
  * Suggested source path: src/dll/CAM/camcontrol.c
  * Packet path: src/main/unknown/source_packets/dll/CAM/camcontrol.c
  * Bucket: dll
- * Score: 600
+ * Score: 1100
  *
  * Retail EN evidence:
  * - main.dol string @ 0x80319B12
- * - retail string: /D<camcontrol.c> failed to load triggered camaction actionno %d
  * - retail message: failed to load triggered camaction actionno %d
- * - source_recovery currently has no direct current EN xref.
+ * - EN xref: 0x80102D28 camcontrol_loadTriggeredCamAction + 0x288
  *
  * Live EN anchors:
  * - camcontrol_loadTriggeredCamAction @ 0x80102AA0 is the translated function
  *   carrying the triggered camera action load path.
- * - camcontrol_initialise @ 0x80102A04, Camera_setFocus @ 0x80102A88,
- *   and Camera_moveBy @ 0x80102A2C match the reference-side function hints.
+ * - camcontrol_initialise @ 0x80102A04 and camcontrol_release @ 0x80102EB8
+ *   match the current reference-side function hints.
  * - Rena's EN map also anchors nearby camera accessors:
  *   Camera_isZooming @ 0x801028C0, Camera_setTarget @ 0x801028E8,
  *   Camera_getTarget @ 0x801028FC, Camera_getOverrideTarget @ 0x80102908,
- *   Camera_overridePos @ 0x80102A60, Camera_getDefaultHandlerEntry @ 0x80103054,
+ *   Camera_moveBy @ 0x80102A2C, Camera_overridePos @ 0x80102A60,
+ *   Camera_setFocus @ 0x80102A88, Camera_getCamActionsBinEntry @ 0x80102E94,
+ *   Camera_setMode @ 0x80102F88, Camera_getDefaultHandlerEntry @ 0x80103054,
  *   Camera_GetFollowPos @ 0x801030A8, Camera_getMode @ 0x801030B0,
- *   Camera_get @ 0x801030B8, Camera_setMode @ 0x80102F88,
- *   Camera_getCamActionsBinEntry @ 0x80102E94, Camera_update @ 0x801030C0,
+ *   Camera_get @ 0x801030B8, Camera_update @ 0x801030C0,
  *   Camera_init @ 0x801033AC, Camera_release @ 0x8010349C, and
  *   Camera_initialise @ 0x801034C4.
  *
@@ -40,8 +40,7 @@
  *
  * Reference-side function hints:
  * - camcontrol_initialise
- * - Camera_setFocus
- * - Camera_moveBy
+ * - camcontrol_release
  */
 
 #if 0
