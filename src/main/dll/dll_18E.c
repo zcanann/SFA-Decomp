@@ -18,40 +18,44 @@ extern int cos16(s16 angle);
  * EN v1.0 Address: 0x801BEEA0
  * EN v1.0 Size: 424b
  */
-void fn_801BEEA0(s16 *out, u8 *arg2)
+#pragma scheduling off
+#pragma peephole off
+void fn_801BEEA0(s16 *obj, u8 *state)
 {
-  u8 *st;
-  f32 dt;
-  s16 angle;
+  u8 *motion;
+  f32 heightDelta;
+  s16 turnDelta;
 
-  st = (u8 *)*(int *)(arg2 + 0x40C);
-  dt = *(f32 *)(st + 0xC) - *(f32 *)((u8 *)out + 0x10);
+  motion = (u8 *)*(int *)(state + 0x40C);
+  heightDelta = *(f32 *)(motion + 0xC) - *(f32 *)((u8 *)obj + 0x10);
 
-  *(s16 *)(st + 0x14) = (s16)(*(s16 *)(st + 0x14) + 0x400);
-  dt = dt + (f32)(int)cos16(*(s16 *)(st + 0x14)) / lbl_803E4D00;
+  *(s16 *)(motion + 0x14) = (s16)(*(s16 *)(motion + 0x14) + 0x400);
+  heightDelta = heightDelta + (f32)(int)cos16(*(s16 *)(motion + 0x14)) / lbl_803E4D00;
 
-  *(f32 *)(st + 0x0) = timeDelta * (dt / lbl_803E4D04 - *(f32 *)(st + 0x8))
-                       + *(f32 *)(st + 0x0);
+  *(f32 *)(motion + 0x0) = timeDelta * (heightDelta / lbl_803E4D04 - *(f32 *)(motion + 0x8))
+                       + *(f32 *)(motion + 0x0);
 
-  *(f32 *)((u8 *)out + 0x10) = *(f32 *)((u8 *)out + 0x10) + *(f32 *)(st + 0x0);
+  *(f32 *)((u8 *)obj + 0x10) = *(f32 *)((u8 *)obj + 0x10) + *(f32 *)(motion + 0x0);
 
   {
-    f32 v = lbl_803E4D08 * *(f32 *)(st + 0x0);
-    out[1] = (s16)(int)v;
+    f32 pitch = lbl_803E4D08 * *(f32 *)(motion + 0x0);
+    obj[1] = (s16)(int)pitch;
   }
 
-  angle = (s16)-(s16)out[2];
-  if (angle > 0x8000) {
-    angle = (s16)((angle - 0x10000) + 1);
+  turnDelta = (s16)-(u16)obj[2];
+  if (turnDelta > 0x8000) {
+    turnDelta = (s16)((turnDelta - 0x10000) + 1);
   }
-  if ((s16)angle < (s16)-0x8000) {
-    angle = (s16)((angle + 0x10000) - 1);
+  if ((s16)turnDelta < (s16)-0x8000) {
+    turnDelta = (s16)((turnDelta + 0x10000) - 1);
   }
 
-  *(f32 *)(st + 0x4) = *(f32 *)(st + 0x4) + (f32)((int)((s16)angle >> 4) * (int)framesThisStep);
+  *(f32 *)(motion + 0x4) = *(f32 *)(motion + 0x4) + (f32)((int)((s16)turnDelta / 16) * (int)framesThisStep);
 
-  out[2] = (s16)(int)(*(f32 *)(st + 0x4) + (f32)(int)out[2]);
+  obj[2] = (s16)(int)(*(f32 *)(motion + 0x4) + (f32)(int)obj[2]);
 
-  *(f32 *)(st + 0x0) = *(f32 *)(st + 0x0) / lbl_803E4D0C;
-  *(f32 *)(st + 0x4) = *(f32 *)(st + 0x4) / lbl_803E4D10;
+  *(f32 *)(motion + 0x0) = *(f32 *)(motion + 0x0) / lbl_803E4D0C;
+  *(f32 *)(motion + 0x4) = *(f32 *)(motion + 0x4) / lbl_803E4D10;
 }
+#pragma peephole reset
+#pragma scheduling reset
