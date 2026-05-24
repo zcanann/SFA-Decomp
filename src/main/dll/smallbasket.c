@@ -2608,7 +2608,8 @@ void fn_80157988(int obj) {
     if (count >= 1) {
         u8 i;
         for (i = 0; (u32)i < (u32)count; i++) {
-            int e = lbl_803AC4A8[(u32)i * 2];
+            u32 objectIndex = (u8)i;
+            int e = lbl_803AC4A8[objectIndex * 2];
             if (*(s16*)((char*)e + 0x46) == 0x6a3) {
                 u32 flags = *(u32*)((char*)*(int**)((char*)e + 0xb8) + 0x2dc);
                 if ((flags & 0x20000000) != 0 && (flags & 0x1800) == 0) {
