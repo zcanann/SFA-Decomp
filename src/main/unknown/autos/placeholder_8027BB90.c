@@ -49,7 +49,7 @@ void fn_8027BDA8(void)
  */
 int audioFreeFn_8027bde0(void)
 {
-    int i;
+    u8 i;
     int offset;
 
     salFree((int)dspCmdBuffer);

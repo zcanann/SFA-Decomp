@@ -1969,12 +1969,14 @@ int fn_802015EC(int obj, int p)
   int sub_40c_30;
   int frame[3];
   int frame2[3];
+  f32 resetValue;
 
   sub_40c = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
   sub_40c_30 = *(int *)(sub_40c + 0x30);
   *(u8 *)(sub_40c + 0x14) |= 0x2;
-  *(f32 *)(p + 0x280) = lbl_803E62A8;
-  *(f32 *)(p + 0x284) = lbl_803E62A8;
+  resetValue = lbl_803E62A8;
+  *(f32 *)(p + 0x280) = resetValue;
+  *(f32 *)(p + 0x284) = resetValue;
   {
     void *p2d0 = *(void **)(p + 0x2d0);
     if (p2d0 == NULL || (**(int (**)(void *))(*(int *)(*(int *)((char *)p2d0 + 0x68)) + 0x20))(p2d0) == 0) {
@@ -1999,7 +2001,7 @@ int fn_802015EC(int obj, int p)
       *(s16 *)(sub_40c + 0x1c) = -1;
     }
   }
-  if ((*(u32 *)(p + 0x314) & 0x200) != 0) {
+  if ((s32)(*(u32 *)(p + 0x314) & 0x200) != 0) {
     *(int *)(sub_40c + 0x18) = *(int *)(p + 0x2d0);
     *(s16 *)(sub_40c + 0x1c) = (s16)sub_40c_30;
     *(int *)(sub_40c + 0x2c) = 0;
