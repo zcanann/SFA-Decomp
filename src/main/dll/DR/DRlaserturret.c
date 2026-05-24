@@ -57,7 +57,7 @@ extern f32 lbl_803E5A20;
  * EN v1.0 Address: 0x801E6B10
  * EN v1.0 Size: 504b
  */
-int DRlaserturret_updateIdle(void *obj, void *param2)
+int DRlaserturret_updateIdle(void *obj, DRLaserTurretAnimState *animState)
 {
     void *playerObj;
     DRLaserTurretState *state;
@@ -69,7 +69,7 @@ int DRlaserturret_updateIdle(void *obj, void *param2)
     playerObj = Obj_GetPlayerObject();
     state = *(DRLaserTurretState **)((char *)obj + 0xb8);
     state->promptState = 0xff;
-    *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
+    animState->animStepScale = lbl_803E59E4;
     if (*(s16 *)((char *)obj + 0xa0) != 0) {
         ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
     }
@@ -117,7 +117,7 @@ int DRlaserturret_updateIdle(void *obj, void *param2)
  * EN v1.0 Address: 0x801E6D08
  * EN v1.0 Size: 1052b
  */
-int DRlaserturret_updateTracking(void *obj, void *param2)
+int DRlaserturret_updateTracking(void *obj, DRLaserTurretAnimState *animState)
 {
     void *playerObj;
     DRLaserTurretState *state;
@@ -134,15 +134,15 @@ int DRlaserturret_updateTracking(void *obj, void *param2)
 
     playerObj = Obj_GetPlayerObject();
     state = *(DRLaserTurretState **)((char *)obj + 0xb8);
-    if (*(s8 *)((char *)param2 + 0x27a) != 0) {
+    if (animState->stateEntered != 0) {
         rng = randomGetRange(0x1f4, 0x3e8);
         state->actionTimer = (f32)rng;
         state->flags = state->flags & ~DR_LASERTURRET_FLAG_ACTION_ACTIVE;
     }
     if ((state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) != 0) {
-        if (*(s8 *)((char *)param2 + 0x346) != 0) {
+        if (animState->moveComplete != 0) {
             if (*(s16 *)((char *)obj + 0xa0) == DR_LASERTURRET_ANIM_TRACKING) {
-                if (*(f32 *)((char *)param2 + 0x2a0) > lbl_803E59DC) {
+                if (animState->animStepScale > lbl_803E59DC) {
                     ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_ALERT, 0.0f, 0);
                     goto L_DE8;
                 }
@@ -151,7 +151,7 @@ int DRlaserturret_updateTracking(void *obj, void *param2)
                 ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
             }
         L_DE8:
-            *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
+            animState->animStepScale = lbl_803E59E4;
             state->flags = state->flags & ~DR_LASERTURRET_FLAG_ACTION_ACTIVE;
             rng = randomGetRange(0x1f4, 0x3e8);
             state->actionTimer = (f32)rng;
@@ -160,7 +160,7 @@ int DRlaserturret_updateTracking(void *obj, void *param2)
         if (*(s16 *)((char *)obj + 0xa0) != DR_LASERTURRET_ANIM_ALERT &&
             *(s16 *)((char *)obj + 0xa0) != 0) {
             ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
-            *(f32 *)((char *)param2 + 0x2a0) = lbl_803E59E4;
+            animState->animStepScale = lbl_803E59E4;
         }
     }
     state->actionTimer = state->actionTimer - timeDelta;
@@ -169,11 +169,11 @@ int DRlaserturret_updateTracking(void *obj, void *param2)
         Sfx_PlayFromObject((int)obj, DR_LASERTURRET_SFX_ACTION);
         if (*(s16 *)((char *)obj + 0xa0) == DR_LASERTURRET_ANIM_ALERT) {
             ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_TRACKING, lbl_803E5A08, 0);
-            *(f32 *)((char *)param2 + 0x2a0) = lbl_803E5A0C;
+            animState->animStepScale = lbl_803E5A0C;
         } else {
             rng = randomGetRange(0, 1);
             ObjAnim_SetCurrentMove((int)obj, (int)lbl_803DC0A0[rng], lbl_803E59DC, 0);
-            *(f32 *)((char *)param2 + 0x2a0) = lbl_803DC0A4[rng];
+            animState->animStepScale = lbl_803DC0A4[rng];
         }
         state->flags = state->flags | DR_LASERTURRET_FLAG_ACTION_ACTIVE;
     }
@@ -193,13 +193,12 @@ int DRlaserturret_updateTracking(void *obj, void *param2)
         } else {
             target = lbl_803E59DC;
         }
-        *(f32 *)((char *)param2 + 0x280) =
-            lbl_803E5A10 * (target - *(f32 *)((char *)param2 + 0x280)) * timeDelta +
-            *(f32 *)((char *)param2 + 0x280);
-        if (*(f32 *)((char *)param2 + 0x280) > lbl_803E5A1C) {
-            *(f32 *)((char *)param2 + 0x280) = lbl_803E59DC;
+        animState->aimBlend =
+            lbl_803E5A10 * (target - animState->aimBlend) * timeDelta + animState->aimBlend;
+        if (animState->aimBlend > lbl_803E5A1C) {
+            animState->aimBlend = lbl_803E59DC;
         }
-        *(f32 *)((char *)param2 + 0x280) = lbl_803E59DC;
+        animState->aimBlend = lbl_803E59DC;
     }
     count = hitDetectFn_80065e50(obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
                         *(f32 *)((char *)obj + 0x14), &arr, 0, 0);
