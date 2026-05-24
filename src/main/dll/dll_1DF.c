@@ -17,13 +17,12 @@ extern undefined4 FUN_8003b818();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void enemymushroom_update(int param_1)
+void enemymushroom_update(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
   int iVar1;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
     ObjPath_GetPointWorldPosition(param_1,0,(float *)(iVar1 + 0x20),(undefined4 *)(iVar1 + 0x24),
                  (float *)(iVar1 + 0x28),0);
