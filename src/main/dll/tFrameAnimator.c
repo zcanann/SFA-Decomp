@@ -111,8 +111,7 @@ void levelname_update(int *obj) {
         break;
     case 2:
     {
-        int timer = *(s16*)(sub + 0x10) + framesThisStep;
-        *(s16*)(sub + 0x10) = timer;
+        *(s16*)(sub + 0x10) += framesThisStep;
         if ((u32)*(s16*)(sub + 0x10) > (u32)*(int*)(sub + 8)) {
             sub[0x14] = 3;
         }
