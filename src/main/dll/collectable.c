@@ -189,7 +189,7 @@ extern undefined4 FUN_80294ca8();
 extern undefined4 FUN_80294dc4();
 extern void trickyReportError(const char *fmt, ...);
 extern void objParticleFn_80099d84(f32 param_1,f32 param_2,int obj,int param_4,int param_5);
-extern int objBboxFn_800640cc(f32 radius,Vec *from,Vec *to,int mode,void *hit,int obj,int param_7,
+extern int objBboxFn_800640cc(Vec *from,Vec *to,f32 radius,int mode,void *hit,int obj,int param_7,
                               int param_8,int param_9,int param_10);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
@@ -1625,7 +1625,7 @@ int baddieTargetFn_8014a150(int obj,int state,void *from,void *to)
     }
   }
   if ((visible != 0) && ((*(u32 *)(state + 0x2e4) & TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT) != 0)) {
-    if (objBboxFn_800640cc(lbl_803E256C,(Vec *)from,&probe,0,bboxHit,obj,*(u8 *)(state + 0x261),
+    if (objBboxFn_800640cc((Vec *)from,&probe,lbl_803E256C,0,bboxHit,obj,*(u8 *)(state + 0x261),
                            -1,0,0) != 0) {
       visible = 0;
     }
@@ -1699,7 +1699,7 @@ void baddieFn_8014a304(f32 radius,int obj,int state)
       visible = 0;
     }
     if ((visible != 0) && ((*(u32 *)(state + 0x2e4) & TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT) != 0)) {
-      if (objBboxFn_800640cc(lbl_803E256C,(Vec *)(obj + 0x18),&probe,0,bboxHit,obj,
+      if (objBboxFn_800640cc((Vec *)(obj + 0x18),&probe,lbl_803E256C,0,bboxHit,obj,
                              *(u8 *)(state + 0x261),-1,0,0) != 0) {
         visible = 0;
       }
