@@ -4,10 +4,16 @@
 #include "ghidra_import.h"
 
 typedef struct TitleMenuTextEntry {
-  u8 pad0[0x16];
+  u16 textId;
+  u8 pad02[0x0E];
+  s32 actionParam;
+  u8 pad14[2];
   u16 flags;
   s8 pad18[0x24];
 } TitleMenuTextEntry;
+
+#define TITLE_MENU_TEXT_ENTRY_SELECTABLE 0x1
+#define TITLE_MENU_TEXT_ENTRY_DISABLED 0x2
 
 typedef struct TitleMenuControl {
   void *vtable;

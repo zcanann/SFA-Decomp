@@ -105,13 +105,13 @@ void saveFileSelect_checkCheatCodes(void)
  */
 #pragma peephole off
 #pragma scheduling off
-void saveSelect_drawText(int param_1, int param_2)
+void saveSelect_drawText(int unused, int alpha)
 {
     char buf[16];
 
-    drawTexture(lbl_803A8680[1], param_2, lbl_803E1D58, lbl_803E1D5C, 0x100);
-    drawTexture(lbl_803A8680[2], param_2, lbl_803E1D60, lbl_803E1D5C, 0x100);
-    gameTextSetColor(0xff, 0xff, 0xff, param_2);
+    drawTexture(lbl_803A8680[1], alpha, lbl_803E1D58, lbl_803E1D5C, 0x100);
+    drawTexture(lbl_803A8680[2], alpha, lbl_803E1D60, lbl_803E1D5C, 0x100);
+    gameTextSetColor(0xff, 0xff, 0xff, alpha);
 
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
     gameTextShowStr(&saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex], 0x41, 0, 0);
