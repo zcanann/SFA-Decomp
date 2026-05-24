@@ -2043,7 +2043,7 @@ void SB_CageKyte_update(int obj)
     }
 
     *(u8 *)(obj + 0xaf) = *(u8 *)(obj + 0xaf) | 8;
-    *state = *state - (u16)framesThisStep;
+    *state -= framesThisStep;
     player = (int)Obj_GetPlayerObject();
     Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18));
 
