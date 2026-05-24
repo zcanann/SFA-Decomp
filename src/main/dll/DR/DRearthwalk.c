@@ -795,14 +795,15 @@ extern f32 lbl_803E5508;
 int fn_801DA284(int obj, int unused, u8 *buf)
 {
     int state = *(int *)(obj + 0xb8);
-    int i;
     int *p;
+    int i;
+    int pendingOffset;
 
-    p = (int *)state;
-    for (i = 0; i < 10; i++) {
-        if (*(u8 *)(state + 0x60 + i) != 0) {
+    for (i = 0, p = (int *)state; i < 10; i++) {
+        pendingOffset = i + 0x60;
+        if (((u8 *)state)[pendingOffset] != 0) {
             int loadResult;
-            if (Obj_IsLoadingLocked() == 0) {
+            if ((u8)Obj_IsLoadingLocked() == 0) {
                 loadResult = 0;
             } else {
                 int *newSetup = Obj_AllocObjectSetup(0x20, 0x659);
@@ -811,14 +812,13 @@ int fn_801DA284(int obj, int unused, u8 *buf)
                 loadResult = loadObjectAtObject(obj, newSetup);
             }
             *(int *)((char *)p + 0x38) = loadResult;
-            *(u8 *)(state + 0x60 + i) = 0;
+            ((u8 *)state)[pendingOffset] = 0;
         }
         p = (int *)((char *)p + 4);
     }
 
     for (i = 0; i < (int)buf[0x8b]; i++) {
         u8 v = buf[0x81 + i];
-        if (v > 0xc) continue;
         switch (v) {
         case 0:
             *(u8 *)state = 3;
@@ -856,6 +856,9 @@ int fn_801DA284(int obj, int unused, u8 *buf)
             *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0x10);
             *(u8 *)(state + 2) = (u8)(*(u8 *)(state + 2) | 0xa);
             *(f32 *)(state + 4) = lbl_803E5508;
+            break;
+        case 0xb:
+        case 0xc:
             break;
         }
     }
