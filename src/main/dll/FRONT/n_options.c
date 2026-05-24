@@ -1,4 +1,8 @@
 #include "ghidra_import.h"
+#include "dolphin/os.h"
+#include "dolphin/vi.h"
+#include "dolphin/vi/vifuncs.h"
+#include "main/dll/FRONT/attract_movie.h"
 #include "main/dll/FRONT/n_options.h"
 
 
@@ -49,6 +53,9 @@ extern undefined4 FUN_8025cdec();
 extern undefined4 FUN_8025ce2c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern void fn_8004C7AC(void *yTexture, void *uTexture, void *vTexture, int width, int height);
+extern u8 *ObjModel_GetRenderOp(undefined4 model, undefined4 idx);
+extern void PushFreeTextureSet(OSMessage msg);
 
 extern undefined4 DAT_8031b000;
 extern undefined4 DAT_803a50a8;
@@ -80,6 +87,10 @@ extern undefined4 DAT_803e29bc;
 extern undefined4 DAT_803e29c0;
 extern f64 DOUBLE_803e29c8;
 extern f32 FLOAT_803e29c4;
+extern s32 lbl_803DD610;
+extern s32 lbl_803DD660;
+extern f32 lbl_803E1D50;
+extern OSMessageQueue lbl_803A5CCC;
 
 /*
  * --INFO--
@@ -481,4 +492,121 @@ bool FUN_80118164(uint param_1)
     FUN_80003494(param_1,0x803a6a40,8);
   }
   return bVar1;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: THPPlayerPostDrawDone
+ * EN v1.0 Address: 0x8011818C
+ * EN v1.0 Size: 108b
+ */
+void THPPlayerPostDrawDone(void)
+{
+  OSMessage msg;
+
+  if (lbl_803DD660 != 0) {
+    while (OSReceiveMessage(&lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) == TRUE) {
+      if (msg == NULL) {
+        break;
+      }
+      PushFreeTextureSet(msg);
+    }
+  }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: THPPlayerGetVideoInfo
+ * EN v1.0 Address: 0x801181F8
+ * EN v1.0 Size: 72b
+ */
+BOOL THPPlayerGetVideoInfo(void *dst)
+{
+  if (lbl_803A5D60.isOpen != 0) {
+    FUN_80003494((uint)dst, (uint)&lbl_803A5D60.videoInfo, sizeof(lbl_803A5D60.videoInfo));
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80118240
+ * EN v1.0 Address: 0x80118240
+ * EN v1.0 Size: 84b
+ */
+void fn_80118240(void)
+{
+  AttractMovieTextureSet *textureSet;
+
+  if (lbl_803DD610 == 2) {
+    textureSet = (AttractMovieTextureSet *)lbl_803A5D60.curAudioNumber;
+    fn_8004C7AC(textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
+                (s16)lbl_803A5D60.videoInfo.xSize, (s16)lbl_803A5D60.videoInfo.ySize);
+  }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: AttractMovie_DrawTextureCallback
+ * EN v1.0 Address: 0x80118294
+ * EN v1.0 Size: 144b
+ */
+uint AttractMovie_DrawTextureCallback(undefined4 param_1, undefined4 *modelPtr, undefined4 renderOpIdx)
+{
+  AttractMovieTextureSet *textureSet;
+  u8 *renderOp;
+
+  if (modelPtr == NULL) {
+    renderOp = NULL;
+  }
+  else {
+    renderOp = ObjModel_GetRenderOp(*modelPtr, renderOpIdx);
+  }
+
+  if (((renderOp == NULL) || (renderOp[0x29] == 1)) && (lbl_803DD610 == 2)) {
+    textureSet = (AttractMovieTextureSet *)lbl_803A5D60.curAudioNumber;
+    ((int (*)(void *, void *, void *, int, int))THPPlayerDrawCurrentFrame)(
+        textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
+        (s16)lbl_803A5D60.videoInfo.xSize, (s16)lbl_803A5D60.videoInfo.ySize);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: ProperTimingForGettingNextFrame
+ * EN v1.0 Address: 0x80118324
+ * EN v1.0 Size: 328b
+ */
+int ProperTimingForGettingNextFrame(void)
+{
+  u32 frame;
+  u32 divisor;
+  s64 tick;
+
+  if ((lbl_803A5D60.playFlags & 2) != 0) {
+    return VIGetNextField() == 0;
+  }
+
+  if ((lbl_803A5D60.playFlags & 4) != 0) {
+    return VIGetNextField() == 1;
+  }
+
+  frame = (u32)(lbl_803E1D50 * lbl_803A5D60.header.mFrameRate);
+  divisor = (VIGetTvFormat() == 1) ? 5000 : 0x176a;
+  tick = lbl_803A5D60.retraceCount * frame;
+  lbl_803A5D60.curCount = tick / divisor;
+
+  if (lbl_803A5D60.prevCount != lbl_803A5D60.curCount) {
+    lbl_803A5D60.prevCount = lbl_803A5D60.curCount;
+    return TRUE;
+  }
+  return FALSE;
 }

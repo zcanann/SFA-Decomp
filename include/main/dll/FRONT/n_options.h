@@ -10,5 +10,10 @@ void AttractMovieAudio_Mix(undefined2 *dst,short *src,uint sampleCount);
 void FUN_80118108(void);
 void FUN_8011810c(void);
 bool FUN_80118164(uint param_1);
+void THPPlayerPostDrawDone(void);
+BOOL THPPlayerGetVideoInfo(void *dst);
+void fn_80118240(void);
+uint AttractMovie_DrawTextureCallback(undefined4 param_1,undefined4 *modelPtr,undefined4 renderOpIdx);
+int ProperTimingForGettingNextFrame(void);
 
 #endif /* MAIN_DLL_FRONT_N_OPTIONS_H_ */
