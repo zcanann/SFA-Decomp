@@ -24,17 +24,37 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
+extern int objCreateLight(int obj,int param_2);
+extern void modelLightStruct_setField50(int light,int value);
+extern void modelLightStruct_setColorsA8AC(int light,int r,int g,int b,int a);
+extern void modelLightStruct_setColors100104(int light,int r,int g,int b,int a);
+extern void lightDistAttenFn_8001dc38(int light,f32 near,f32 far);
+extern void lightFn_8001db6c(int light,int mode,f32 value);
+extern void lightVecFn_8001dd88(int light,f32 x,f32 y,f32 z);
+extern void lightFn_8001d620(int light,int param_2,int param_3);
+extern void lightSetFieldB0(int light,int r,int g,int b,int a);
+extern void fn_8001D730(int light,int param_2,int r,int g,int b,int a,f32 radius);
+extern void fn_8001D714(int light,f32 radius);
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8005fe14();
 extern undefined4 FUN_80081110();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
+extern void fn_801B0670(void);
 
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e54b0;
 extern f64 DOUBLE_803e54d8;
 extern f32 lbl_803DC074;
+extern f32 lbl_803E4820;
+extern f32 lbl_803E4828;
+extern f32 lbl_803E482C;
+extern f32 lbl_803E4830;
+extern f32 lbl_803E4834;
+extern f32 lbl_803E4838;
+extern f32 lbl_803E483C;
+extern f64 lbl_803E4840;
 extern f32 lbl_803E54AC;
 extern f32 lbl_803E54B8;
 extern f32 lbl_803E54BC;
@@ -167,7 +187,7 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  *
  * Function: dimlogfire_init
  * EN v1.0 Address: 0x801B0BE8
- * EN v1.0 Size: 180b
+ * EN v1.0 Size: 492b
  * EN v1.1 Address: 0x801B0DFC
  * EN v1.1 Size: 220b
  * JP Address: TODO
@@ -175,30 +195,45 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimlogfire_init(void)
+void dimlogfire_init(int obj,int def)
 {
-  int iVar1;
-  char in_r8;
-  int iVar2;
-  int *piVar3;
+  int eventActive;
+  u32 radius;
+  int *state;
   
-  iVar1 = FUN_8028683c();
-  if (in_r8 != '\0') {
-    piVar3 = *(int **)(iVar1 + 0xb8);
-    iVar2 = piVar3[1];
-    if (iVar2 != 0) {
-      iVar2 = *(int *)(*(int *)(iVar2 + 0x7c) + *(char *)(iVar2 + 0xad) * 4);
-      *(ushort *)(iVar2 + 0x18) = *(ushort *)(iVar2 + 0x18) & ~0x8;
-      *(undefined *)(piVar3[1] + 0x37) = *(undefined *)(iVar1 + 0x37);
-      FUN_8003b818(piVar3[1]);
-    }
-    FUN_8003b818(iVar1);
-    iVar1 = *piVar3;
-    if (((iVar1 != 0) && (*(char *)(iVar1 + 0x2f8) != '\0')) && (*(char *)(iVar1 + 0x4c) != '\0')) {
-      FUN_8005fe14(iVar1);
-    }
+  *(void **)(obj + 0xbc) = (void *)fn_801B0670;
+  ObjGroup_AddObject(obj,0x31);
+  state = *(int **)(obj + 0xb8);
+  *(undefined *)(state + 8) = 0;
+  *(char *)(state + 6) = (char)*(short *)(def + 0x1a);
+  *(char *)(state + 7) = (char)*(short *)(def + 0x1c);
+  *(undefined *)((int)state + 0x1e) = *(undefined *)(state + 7);
+  eventActive = GameBit_Get((int)*(short *)(def + 0x1e));
+  if (eventActive != 0) {
+    *(undefined *)((int)state + 0x1a) = 1;
+    *(undefined *)((int)state + 0x1d) = 1;
   }
-  FUN_80286888();
+  *(ushort *)(obj + 0xb0) = *(ushort *)(obj + 0xb0) | 0x2000;
+  state[4] = (int)lbl_803E482C;
+  state[5] = (int)lbl_803E4820;
+  if (*state == 0) {
+    *state = objCreateLight(obj,1);
+  }
+  if (*state != 0) {
+    modelLightStruct_setField50(*state,2);
+    modelLightStruct_setColorsA8AC(*state,0xff,0x7f,0,0xff);
+    modelLightStruct_setColors100104(*state,0xff,0x7f,0,0xff);
+    radius = (int)(lbl_803E4830 * *(float *)(obj + 8)) ^ 0x80000000;
+    lightDistAttenFn_8001dc38
+              (*state,(float)((double)CONCAT44(0x43300000,radius) - lbl_803E4840),
+               lbl_803E4834 + (float)((double)CONCAT44(0x43300000,radius) - lbl_803E4840));
+    lightFn_8001db6c(*state,1,lbl_803E4828);
+    lightVecFn_8001dd88(*state,lbl_803E4828,lbl_803E4838,lbl_803E4828);
+    lightFn_8001d620(*state,1,3);
+    lightSetFieldB0(*state,0xff,0x5c,0,0xff);
+    fn_8001D730(*state,0,0xff,0x7f,0,0x87,lbl_803E483C * *(float *)(obj + 8));
+    fn_8001D714(*state,lbl_803E4834);
+  }
   return;
 }
 
