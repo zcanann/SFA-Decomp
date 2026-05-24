@@ -79,7 +79,7 @@ typedef struct ObjHitboxTransformState {
   f32 matrices[4][4][4];
   int contactObjects[OBJHITBOX_CONTACT_OBJECT_COUNT];
   u8 activeMatrixIndex;
-  s8 resetFrames;
+  u8 resetFrames;
   u8 pad10E;
   s8 contactObjectCount;
 } ObjHitboxTransformState;

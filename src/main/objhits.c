@@ -1351,6 +1351,7 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix)
   } HitboxTransform;
   ObjHitboxTransformState *transformState;
   int matrixBase;
+  int matrixFloatOffset;
   HitboxTransform local_28;
   
   transformState = hitbox->transformState;
@@ -1358,8 +1359,8 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix)
     if (advanceMatrix != 0) {
       transformState->activeMatrixIndex = (transformState->activeMatrixIndex + 1) & 1;
     }
-    matrixBase = (int)((float *)transformState->matrices +
-                       transformState->activeMatrixIndex * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT);
+    matrixFloatOffset = transformState->activeMatrixIndex * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT;
+    matrixBase = (int)((float *)transformState->matrices + matrixFloatOffset);
     local_28.x = -hitbox->rotationX;
     if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
       local_28.y = 0;
@@ -1395,12 +1396,10 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix)
     local_28.radiusX = hitbox->radiusX;
     local_28.radiusY = hitbox->radiusY;
     local_28.radiusZ = hitbox->radiusZ;
-    setMatrixFromObjectPos(
-        (float *)transformState->matrices +
-            (transformState->activeMatrixIndex + 2) * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT,
-        &local_28);
+    matrixFloatOffset = (transformState->activeMatrixIndex + 2) * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT;
+    setMatrixFromObjectPos((float *)transformState->matrices + matrixFloatOffset,&local_28);
     if (transformState->resetFrames != 0) {
-      transformState->resetFrames = transformState->resetFrames + -1;
+      transformState->resetFrames--;
     }
   }
   return;
