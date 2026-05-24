@@ -259,33 +259,43 @@ void WM_seqobject_init(int *obj, s8 *def)
 void WM_seqobject_release(void) {}
 void WM_seqobject_initialise(void) {}
 
+#pragma scheduling off
+#pragma peephole off
 int dll_1FB_SeqFn(int *obj, int unused, s16 *p)
 {
     int *state = (int *)OBJ_PTR(obj, 0xb8);
     s16 mode = *(s16 *)((u8 *)state + 6);
+    u8 flags;
 
     if ((mode == 1) || (mode == 2)) {
-        OBJ_U8(obj, 0xaf) = (u8)(OBJ_U8(obj, 0xaf) | 8);
+        flags = (u8)(OBJ_U8(obj, 0xaf) | 8);
+        OBJ_U8(obj, 0xaf) = flags;
     }
     *(s16 *)((u8 *)p + 0x70) = -1;
     *(u8 *)((u8 *)p + 0x56) = 0;
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 int dll_1FB_getExtraSize_ret_12(void) { return 0xc; }
 int dll_1FB_getObjectTypeId(void) { return 0; }
 void dll_1FB_free_nop(void) {}
 
+#pragma scheduling off
+#pragma peephole off
 void dll_1FB_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8 *state = (u8 *)OBJ_PTR(obj, 0xb8);
 
     if (visible != 0) {
         if (state[9] == 0) {
-            objRenderFn_8003b8f4(lbl_803E5D00);
+            ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5D00);
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void dll_1FB_hitDetect_nop(void) {}
 
