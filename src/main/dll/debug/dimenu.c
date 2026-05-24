@@ -687,13 +687,15 @@ extern void loadUiDll(int);
 int Dummy39_run(void) {
     s32 v;
     u8 cur;
+    s8 next;
     Obj_GetPlayerObject();
     v = framesThisStep;
     if (v > 3) v = 3;
     cur = lbl_803DD728;
     if ((s8)cur > 0) {
-        lbl_803DD728 = (s8)(cur - v);
-        if ((s8)lbl_803DD728 <= 0) {
+        next = (s8)(cur - v);
+        *(s8 *)&lbl_803DD728 = next;
+        if ((s8)(u8)next <= 0) {
             loadUiDll(1);
             warpToMap(0x60, 1);
         }
