@@ -2612,17 +2612,24 @@ int fn_80202294(int obj, int p)
       *(int *)(sub_40c + 0x18) = 0;
     }
     player_c8 = *(int *)((char *)Obj_GetPlayerObject() + 0xc8);
-    r = (**(int (**)(int))(*(int *)(player_c8 + 0x68) + 0x44))(player_c8);
+    r = (**(int (**)(int))(*(int *)(*(int *)(player_c8 + 0x68)) + 0x44))(player_c8);
     if (r != 0) {
       Sfx_PlayFromObject(obj, (u16)lbl_80329650[randomGetRange(3, 4)]);
     } else {
       Sfx_PlayFromObject(obj, (u16)lbl_80329650[randomGetRange(0, 2)]);
     }
-    frame[0] = *(int *)(sub_40c + 0x28);
-    frame[1] = *(int *)(sub_40c + 0x2c);
-    frame[2] = *(int *)(sub_40c + 0x30);
     {
-      int sp_handle = *(int *)(sub_40c + 0x24);
+      int frame1;
+      int frame2;
+      int sp_handle;
+      int frame0;
+      frame2 = *(int *)(sub_40c + 0x30);
+      frame1 = *(int *)(sub_40c + 0x2c);
+      sp_handle = *(int *)(sub_40c + 0x24);
+      frame0 = *(int *)(sub_40c + 0x28);
+      frame[0] = frame0;
+      frame[1] = frame1;
+      frame[2] = frame2;
       if (Stack_IsFull(sp_handle) == 0) {
         Stack_Push(sp_handle, frame);
       }
