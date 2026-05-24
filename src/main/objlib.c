@@ -2479,22 +2479,22 @@ void ObjLink_DetachChild(int param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjLink_AttachChild(int param_1,int param_2,ushort param_3)
+void ObjLink_AttachChild(int parent,int child,ushort linkMode)
 {
   int childIndex;
-  u8* base;
+  u8 *parentBytes;
 
-  childIndex = (int)*(byte *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET);
-  *(undefined *)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) = childIndex + 1;
-  base = (u8*)param_1;
-  base = base + childIndex * 4;
-  *(int *)(base + OBJLINK_CHILD_LIST_OFFSET) = param_2;
-  *(int *)(param_2 + OBJLINK_PARENT_OFFSET) = param_1;
-  *(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) =
-      (u16)(*(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) & ~OBJLINK_FLAGS_MODE_MASK);
-  *(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) =
-      (u16)(*(u16 *)(param_2 + OBJLINK_FLAGS_OFFSET) | param_3);
-  *(u8 *)(param_2 + OBJLINK_CHILD_STATE_OFFSET) = 0;
+  childIndex = (int)*(u8 *)(parent + OBJLINK_CHILD_COUNT_OFFSET);
+  *(u8 *)(parent + OBJLINK_CHILD_COUNT_OFFSET) += 1;
+  parentBytes = (u8 *)parent;
+  parentBytes = parentBytes + childIndex * sizeof(int);
+  *(int *)(parentBytes + OBJLINK_CHILD_LIST_OFFSET) = child;
+  *(int *)(child + OBJLINK_PARENT_OFFSET) = parent;
+  *(u16 *)(child + OBJLINK_FLAGS_OFFSET) =
+      (u16)(*(u16 *)(child + OBJLINK_FLAGS_OFFSET) & ~OBJLINK_FLAGS_MODE_MASK);
+  *(u16 *)(child + OBJLINK_FLAGS_OFFSET) =
+      (u16)(*(u16 *)(child + OBJLINK_FLAGS_OFFSET) | linkMode);
+  *(u8 *)(child + OBJLINK_CHILD_STATE_OFFSET) = 0;
   return;
 }
 #pragma peephole reset
