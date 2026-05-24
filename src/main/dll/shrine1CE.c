@@ -494,7 +494,6 @@ extern void *gTitleMenuControlInterface;
 void dll_19B_init(u8 *obj, u8 *params) {
     register u8 *sub;
     int res;
-    register int handle;
 
     sub = *(u8**)(obj + 0xb8);
     *(s16*)obj = 0;
@@ -526,8 +525,7 @@ void dll_19B_init(u8 *obj, u8 *params) {
     *(s16*)(sub + 0x10) = 0xc8;
     *(s16*)(sub + 0xe) = 0xfa0;
     res = Resource_Acquire(0x6a, 1);
-    handle = ((int(*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
-    *(s16*)(sub + 0xc) = (s16)handle;
+    *(s16*)(sub + 0xc) = ((s16(*)(u8*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
     Resource_Release(res);
     *(f32*)(obj + 0x18) = *(f32*)(obj + 0xc);
     *(f32*)(obj + 0x1c) = *(f32*)(obj + 0x10);
