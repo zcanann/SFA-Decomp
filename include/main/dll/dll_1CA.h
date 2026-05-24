@@ -7,7 +7,7 @@ void dll_197_init(uint param_1);
 void FUN_801caa30(undefined2 *param_1,int param_2);
 undefined4 FUN_801cab60(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_801caca0(void);
-void FUN_801cacd4(int param_1);
+void FUN_801cacd4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801cacfc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
