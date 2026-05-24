@@ -222,7 +222,7 @@ void FUN_80117724(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
 /*
  * --INFO--
  *
- * Function: FUN_80117c30
+ * Function: Movie_SetVolumeFade
  * EN v1.0 Address: 0x80117C30
  * EN v1.0 Size: 300b
  * EN v1.1 Address: 0x80117E10
@@ -232,7 +232,7 @@ void FUN_80117724(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_80117c30(uint param_1,int param_2)
+undefined4 Movie_SetVolumeFade(uint param_1,int param_2)
 {
   undefined4 uVar1;
   
@@ -272,7 +272,7 @@ undefined4 FUN_80117c30(uint param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80117d5c
+ * Function: AttractMovieAudio_Mix
  * EN v1.0 Address: 0x80117D5C
  * EN v1.0 Size: 940b
  * EN v1.1 Address: 0x80117F1C
@@ -282,7 +282,7 @@ undefined4 FUN_80117c30(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80117d5c(undefined2 *param_1,short *param_2,uint param_3)
+void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
 {
   ushort uVar1;
   float fVar2;

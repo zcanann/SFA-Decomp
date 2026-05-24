@@ -51,7 +51,7 @@ extern uint FUN_8006f764();
 extern undefined4 FUN_8006f79c();
 extern undefined4 FUN_800723a0();
 extern int FUN_8007f7c0();
-extern undefined4 FUN_80117c30();
+extern void Movie_SetVolumeFade();
 extern char FUN_8011e7b0();
 extern undefined4 FUN_8012c9e8();
 extern uint FUN_80132028();

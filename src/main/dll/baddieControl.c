@@ -51,7 +51,7 @@ extern u8 *getSaveFileStruct();
 extern undefined4 camcontrol_traceMove();
 extern undefined4 camcontrol_traceFromTarget();
 extern undefined4 camcontrol_getTargetPosition();
-extern undefined4 FUN_80117c30();
+extern void Movie_SetVolumeFade();
 extern undefined4 FUN_8012e0f4();
 extern int FUN_8020a6e4();
 extern uint FUN_8020a6f4();
@@ -1940,7 +1940,7 @@ void FUN_80110b94(char param_1)
       }
       else {
         puVar1 = getSaveFileStruct();
-        FUN_80117c30(0,1000);
+        Movie_SetVolumeFade(0,1000);
         FUN_8000676c((uint)(byte)puVar1[10],1000,1,0,0);
       }
     }
@@ -2008,25 +2008,25 @@ void FUN_80110c90(ushort *param_1)
     lbl_803DC638 = lbl_803DC638 + lbl_803E2868;
     if (lbl_803DC638 < lbl_803E2860) {
       if (DAT_803de24a == 4) {
-        FUN_80117c30((int)(lbl_803E286C * lbl_803DC638),1);
+        Movie_SetVolumeFade((int)(lbl_803E286C * lbl_803DC638),1);
         FUN_8000676c((int)((float)((double)CONCAT44(0x43300000,(uint)(byte)puVar3[10]) -
                                   DOUBLE_803e2888) * (lbl_803E2860 - lbl_803DC638)),10,1,0,0);
       }
       else if (DAT_803de249 == 4) {
-        FUN_80117c30((int)(lbl_803E286C * (lbl_803E2860 - lbl_803DC638)),1);
+        Movie_SetVolumeFade((int)(lbl_803E286C * (lbl_803E2860 - lbl_803DC638)),1);
         FUN_8000676c((int)((float)((double)CONCAT44(0x43300000,(uint)(byte)puVar3[10]) -
                                   DOUBLE_803e2888) * lbl_803DC638),10,1,0,0);
       }
     }
     else {
       if (DAT_803de24a == 4) {
-        FUN_80117c30(100,1);
+        Movie_SetVolumeFade(100,1);
         FUN_8000676c(0,10,1,0,0);
         FUN_800067c0((int *)0xbe,0);
         FUN_800067c0((int *)0xc1,0);
       }
       else if (DAT_803de249 == 4) {
-        FUN_80117c30(0,1);
+        Movie_SetVolumeFade(0,1);
         FUN_8000676c((uint)(byte)puVar3[10],10,1,0,0);
       }
       lbl_803DC638 = lbl_803E2860;
