@@ -2472,9 +2472,9 @@ int fn_802020B0(int obj, int p2)
       (**(void (**)(int, f32))((char *)(*gMapEventInterface) + 0x64))(*(int *)(data + 0x14), lbl_803E633C);
     }
     *(u8 *)(sub + 0x404) |= *(u8 *)(data + 0x2b);
-    (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 0, 2, lbl_80329634);
-    (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, lbl_80329640);
   }
+  (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 0, 2, lbl_80329634);
+  (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, lbl_80329640);
   return 0;
 }
 #pragma peephole reset
