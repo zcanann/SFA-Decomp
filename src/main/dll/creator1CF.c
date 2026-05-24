@@ -52,6 +52,8 @@ void dll_19E_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void dll_19E_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                  undefined4 param_5, char param_6)
 {
@@ -103,9 +105,9 @@ void dll_19E_render(int param_1, undefined4 param_2, undefined4 param_3, undefin
     midB[2] = fac2z + *(float *)((int)camera + 0x14);
     voxmaps_worldToGrid(midA, gridA);
     voxmaps_worldToGrid(midB, gridB);
-    if (voxmaps_traceLine(gridB, gridB, auStack_28, 0, 0) == 0) {
+    if (voxmaps_traceLine(gridA, gridB, auStack_28, 0, 0) == 0) {
       *(char *)(state + 0xa) = 0;
-      (**(code **)(*gExpgfxInterface + 0x14))(param_1);
+      (*(code *)(*(int *)gExpgfxInterface + 0x14))(param_1);
     }
   }
   if (*(short *)(state + 4) > 0) {
@@ -116,12 +118,14 @@ void dll_19E_render(int param_1, undefined4 param_2, undefined4 param_3, undefin
     gfxVec[0] = lbl_803E51D8;
     gfxVec[1] = lbl_803E51DC;
     gfxVec[2] = lbl_803E51D8;
-    (**(code **)(*gPartfxInterface + 0x8))(param_1, 0x1f7, gfxVec, 0x12, 0xffffffff, 0);
+    (*(code *)(*(int *)gPartfxInterface + 0x8))(param_1, 0x1f7, gfxVec, 0x12, 0xffffffff, 0);
   }
   *(short *)(state + 4) = (short)(randomGetRange(-10, 10) + 0x3c);
 end:
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
