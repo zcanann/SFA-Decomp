@@ -1,245 +1,284 @@
 #include "ghidra_import.h"
 #include "main/dll/tesla.h"
 
-extern undefined4 FUN_800068c4();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern int FUN_80017a98();
-extern int FUN_80017b00();
-extern undefined4 FUN_8003b818();
-extern uint FUN_80286840();
-extern undefined4 FUN_8028688c();
+#define TRICKY_CURVE_GAMEBIT_HIT 0x468
+#define TRICKY_CURVE_PLAYER_ANIM_SLIDE 0x1d7
+#define TRICKY_CURVE_COOLDOWN_TICKS 200
+#define TRICKY_CURVE_BURST_LIMIT 0x14
+#define TRICKY_CURVE_HIT_PRIORITY 0x14
+#define TRICKY_CURVE_MESSAGE_BURST 0x60004
+#define TRICKY_CURVE_PARTFX_COOLDOWN 0x397
+#define TRICKY_CURVE_PARTFX_BURST 0x399
+#define TRICKY_CURVE_SFX_BURST 0x1c9
+#define TRICKY_CURVE_SFX_COOLDOWN 0x1ca
 
-extern undefined4 DAT_8032a618;
-extern undefined4 DAT_8032a619;
-extern undefined4 DAT_8032a61a;
-extern undefined4 DAT_8032a61b;
-extern undefined4 DAT_8032a61c;
-extern undefined4 DAT_8032a61d;
-extern undefined4 DAT_8032a61e;
-extern undefined4 DAT_8032a61f;
-extern undefined4 DAT_8032a620;
-extern undefined4 DAT_8032a660;
-extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd72c;
-extern f64 DOUBLE_803e7098;
-extern f64 DOUBLE_803e70c8;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E7090;
-extern f32 lbl_803E7094;
-extern f32 lbl_803E70A0;
-extern f32 lbl_803E70A4;
-extern f32 lbl_803E70A8;
-extern f32 lbl_803E70AC;
-extern f32 lbl_803E70B0;
-extern f32 lbl_803E70B4;
-extern f32 lbl_803E70B8;
-extern f32 lbl_803E70BC;
-extern f32 lbl_803E70C0;
-extern f32 lbl_803E70C4;
+typedef struct TrickyCurveObject {
+    u8 unk0[0xc];
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 unk18[0xa0];
+    struct TrickyCurveTriggerState *state;
+} TrickyCurveObject;
+
+typedef struct TrickyCurveTriggerState {
+    s16 xExtent;
+    s16 zExtent;
+    s16 yExtent;
+    s16 cooldown;
+    u8 unk8[8];
+    s8 xSide;
+    s8 ySide;
+    s8 zSide;
+} TrickyCurveTriggerState;
+
+typedef struct TrickyCurveBurstPartfxArgs {
+    s16 xRot;
+    s16 yRot;
+    s16 zRot;
+    f32 scale;
+    f32 xDelta;
+    f32 yDelta;
+    f32 zDelta;
+} TrickyCurveBurstPartfxArgs;
+
+typedef union TrickyCurveIntToDouble {
+    u64 bits;
+    f64 value;
+} TrickyCurveIntToDouble;
+
+typedef void (*PartfxSpawnFn)(int obj, int effectId, void *args, int mode, int arg5, int arg6);
+
+extern u32 GameBit_Set(u32 id, u32 value);
+extern int Obj_GetPlayerObject(void);
+extern void ObjHits_RecordObjectHit(int obj, int hitObj, int priority, int hitVolume, int sphereIndex);
+extern void ObjMsg_SendToObject(int obj, int message, int sender, int param);
+extern int objGetAnimState80A(int obj);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+
+extern int *gPartfxInterface;
+extern u8 gTrickyCurveBurstCounter;
+extern f32 timeDelta;
+extern f32 lbl_803E6438;
+extern f64 lbl_803E6440;
+extern f32 lbl_803E6448;
+
+#define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6) \
+    ((PartfxSpawnFn)(*(u32 *)(*gPartfxInterface + 0x8)))((obj), (effectId), (args), (mode), (arg5), (arg6))
 
 /*
  * --INFO--
  *
- * Function: FUN_80206968
+ * Function: fn_80206968
  * EN v1.0 Address: 0x80206968
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x802069B4
- * EN v1.1 Size: 272b
+ * EN v1.0 Size: 688b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80206968(undefined2 *param_1,int param_2)
+#pragma scheduling off
+#pragma peephole off
+void fn_80206968(TrickyCurveObject *obj)
 {
-}
+    f32 xDelta;
+    f32 yDelta;
+    f32 zDelta;
+    int player;
+    int insideAxes;
+    s8 xSide;
+    s8 ySide;
+    s8 zSide;
+    TrickyCurveTriggerState *state;
+    TrickyCurveIntToDouble extent;
 
-/*
- * --INFO--
- *
- * Function: FUN_8020696c
- * EN v1.0 Address: 0x8020696C
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x80206AC4
- * EN v1.1 Size: 68b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8020696c(int param_1)
-{
-  int iVar1;
-  
-  iVar1 = *(int *)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
-  *(undefined4 *)(iVar1 + 8) = 0;
-  return;
-}
+    state = obj->state;
+    player = Obj_GetPlayerObject();
+    insideAxes = 0;
+    xSide = 0;
+    ySide = 0;
+    zSide = 0;
 
-/*
- * --INFO--
- *
- * Function: FUN_802069b4
- * EN v1.0 Address: 0x802069B4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80206B08
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_802069b4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
+    xDelta = *(f32 *)(player + 0xc) - obj->x;
+    yDelta = *(f32 *)(player + 0x10) - obj->y;
+    zDelta = *(f32 *)(player + 0x14) - obj->z;
 
-/*
- * --INFO--
- *
- * Function: FUN_802069dc
- * EN v1.0 Address: 0x802069DC
- * EN v1.0 Size: 796b
- * EN v1.1 Address: 0x80206B64
- * EN v1.1 Size: 792b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_802069dc(void)
-{
-  float fVar1;
-  float fVar2;
-  uint uVar3;
-  byte bVar7;
-  uint uVar4;
-  uint uVar5;
-  int iVar6;
-  int iVar8;
-  ushort uVar9;
-  int iVar10;
-  int iVar11;
-  int local_28;
-  int local_24 [9];
-  
-  uVar3 = FUN_80286840();
-  iVar11 = *(int *)(uVar3 + 0x4c);
-  iVar10 = *(int *)(uVar3 + 0xb8);
-  uVar9 = 0xffff;
-  bVar7 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(uVar3 + 0xac));
-  if (bVar7 == 2) {
-    uVar4 = GameBit_Get(0xe58);
-    if (uVar4 != 0) {
-      *(float *)(uVar3 + 0x10) = *(float *)(iVar11 + 0xc) - lbl_803E70A4;
-      goto LAB_80206e64;
-    }
-  }
-  else if ((bVar7 < 2) && (bVar7 != 0)) {
-    if (5 < *(byte *)(iVar10 + 5)) goto LAB_80206e64;
-    uVar4 = GameBit_Get(0xe57);
-    if (uVar4 != 0) {
-      *(float *)(uVar3 + 0x10) = *(float *)(iVar11 + 0xc) - lbl_803E70A4;
-      goto LAB_80206e64;
-    }
-  }
-  uVar4 = GameBit_Get(0x5e4);
-  uVar5 = GameBit_Get(0x5e5);
-  if ((uVar5 != 0) || ((uVar4 & 0xff) != (uint)*(byte *)(iVar10 + 7))) {
-    *(undefined *)(iVar10 + 4) = 0;
-  }
-  *(char *)(iVar10 + 7) = (char)uVar4;
-  if (*(int *)(iVar10 + 8) == 0) {
-    iVar6 = FUN_80017b00(local_24,&local_28);
-    for (; local_24[0] < local_28; local_24[0] = local_24[0] + 1) {
-      iVar8 = *(int *)(iVar6 + local_24[0] * 4);
-      if (*(short *)(iVar8 + 0x46) == 0x431) {
-        *(int *)(iVar10 + 8) = iVar8;
-        local_24[0] = local_28;
-      }
-    }
-    if (*(int *)(iVar10 + 8) == 0) goto LAB_80206e64;
-  }
-  (**(code **)(**(int **)(*(int *)(iVar10 + 8) + 0x68) + 0x20))(*(int *)(iVar10 + 8),&DAT_8032a660);
-  *(undefined *)(iVar10 + 6) = (&DAT_8032a660)[*(byte *)(iVar10 + 5)];
-  if ((*(char *)(iVar10 + 4) == '\0') ||
-     (*(float *)(uVar3 + 0x10) <= *(float *)(iVar11 + 0xc) - lbl_803E70A4)) {
-    if (*(char *)(iVar10 + 6) != '\0') {
-      if (*(char *)(iVar10 + 4) == '\0') {
-        *(undefined4 *)(uVar3 + 0x10) = *(undefined4 *)(iVar11 + 0xc);
-      }
-      if ((*(char *)(iVar10 + 4) == '\0') && (iVar11 = FUN_80017a98(), iVar11 != 0)) {
-        fVar1 = *(float *)(uVar3 + 0x10) - *(float *)(iVar11 + 0x10);
-        if (fVar1 < lbl_803E70B0) {
-          fVar1 = fVar1 * lbl_803E70AC;
+    if (xDelta <= lbl_803E6438) {
+        extent.bits = CONCAT44(0x43300000, (int)state->xExtent ^ 0x80000000);
+        if (-(f32)(extent.value - lbl_803E6440) < xDelta) {
+            insideAxes = 1;
+            xSide = 1;
         }
-        if (fVar1 < lbl_803E70B4) {
-          fVar1 = *(float *)(iVar11 + 0xc) - (*(float *)(uVar3 + 0xc) - lbl_803E70B4);
-          fVar2 = *(float *)(uVar3 + 0x14) - *(float *)(iVar11 + 0x14);
-          if (fVar2 < lbl_803E70B0) {
-            fVar2 = fVar2 * lbl_803E70AC;
-          }
-          if (fVar2 < lbl_803E70B8) {
-            if (fVar1 < lbl_803E70BC) {
-              if (fVar1 < lbl_803E70B4) {
-                if (fVar1 < lbl_803E70C0) {
-                  if (lbl_803E70B0 <= fVar1) {
-                    uVar9 = 1;
-                  }
-                }
-                else {
-                  uVar9 = 2;
-                }
-              }
-              else {
-                uVar9 = 3;
-              }
-            }
-            else {
-              uVar9 = 4;
-            }
-            if (uVar9 == *(byte *)(iVar10 + 6)) {
-              *(undefined *)(iVar10 + 4) = 1;
-            }
-            else {
-              GameBit_Set(0x5e5,1);
-            }
-          }
+    }
+    if (lbl_803E6438 < xDelta) {
+        extent.bits = CONCAT44(0x43300000, (int)state->xExtent ^ 0x80000000);
+        if (xDelta < (f32)(extent.value - lbl_803E6440)) {
+            insideAxes++;
+            xSide--;
         }
-      }
     }
-  }
-  else {
-    FUN_800068c4(uVar3,0x1c8);
-    *(float *)(uVar3 + 0x10) = *(float *)(uVar3 + 0x10) - lbl_803DC074 / lbl_803E70A8;
-    fVar1 = *(float *)(iVar11 + 0xc) - lbl_803E70A4;
-    if (*(float *)(uVar3 + 0x10) <= fVar1) {
-      *(float *)(uVar3 + 0x10) = fVar1;
+    if (zDelta <= lbl_803E6438) {
+        extent.bits = CONCAT44(0x43300000, (int)state->zExtent ^ 0x80000000);
+        if (-(f32)(extent.value - lbl_803E6440) < zDelta) {
+            insideAxes++;
+            zSide = 1;
+        }
     }
-  }
-LAB_80206e64:
-  FUN_8028688c();
-  return;
+    if (lbl_803E6438 < zDelta) {
+        extent.bits = CONCAT44(0x43300000, (int)state->zExtent ^ 0x80000000);
+        if (zDelta < (f32)(extent.value - lbl_803E6440)) {
+            insideAxes++;
+            zSide--;
+        }
+    }
+    if (yDelta <= lbl_803E6438) {
+        extent.bits = CONCAT44(0x43300000, (int)state->yExtent ^ 0x80000000);
+        if (-(f32)(extent.value - lbl_803E6440) < yDelta) {
+            insideAxes++;
+            ySide = 1;
+        }
+    }
+    if (lbl_803E6438 < yDelta) {
+        extent.bits = CONCAT44(0x43300000, (int)state->yExtent ^ 0x80000000);
+        if (yDelta < (f32)(extent.value - lbl_803E6440)) {
+            insideAxes++;
+            ySide--;
+        }
+    }
+
+    if (state->cooldown >= 0) {
+        state->cooldown = state->cooldown - (s16)(int)timeDelta;
+    }
+    if (insideAxes == 3 && state->cooldown <= 0) {
+        if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE) {
+            GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
+            PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
+        } else {
+            ObjHits_RecordObjectHit(player, 0, TRICKY_CURVE_HIT_PRIORITY, 2, 0);
+        }
+        Sfx_PlayFromObject(player, TRICKY_CURVE_SFX_COOLDOWN);
+        state->cooldown = TRICKY_CURVE_COOLDOWN_TICKS;
+    }
+
+    state->xSide = xSide;
+    state->ySide = ySide;
+    state->zSide = zSide;
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_80206cf8
- * EN v1.0 Address: 0x80206CF8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80206E7C
- * EN v1.1 Size: 232b
+ * Function: fn_80206C18
+ * EN v1.0 Address: 0x80206C18
+ * EN v1.0 Size: 792b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80206cf8(undefined2 *param_1,int param_2)
+#pragma scheduling off
+#pragma peephole off
+void fn_80206C18(TrickyCurveObject *obj)
 {
+    f32 xDelta;
+    f32 yDelta;
+    f32 zDelta;
+    int player;
+    int insideAxes;
+    s8 xSide;
+    s8 ySide;
+    s8 zSide;
+    TrickyCurveTriggerState *state;
+    TrickyCurveBurstPartfxArgs partfxArgs;
+    TrickyCurveIntToDouble extent;
+
+    state = obj->state;
+    player = Obj_GetPlayerObject();
+    insideAxes = 0;
+    xSide = 0;
+    ySide = 0;
+    zSide = 0;
+
+    xDelta = *(f32 *)(player + 0xc) - obj->x;
+    yDelta = *(f32 *)(player + 0x10) - obj->y;
+    zDelta = *(f32 *)(player + 0x14) - obj->z;
+    gTrickyCurveBurstCounter++;
+
+    if (xDelta <= lbl_803E6438) {
+        extent.bits = CONCAT44(0x43300000, (int)state->xExtent ^ 0x80000000);
+        if (-(f32)(extent.value - lbl_803E6440) < xDelta) {
+            insideAxes = 1;
+            xSide = 1;
+        }
+    }
+    if (lbl_803E6438 < xDelta) {
+        extent.bits = CONCAT44(0x43300000, (int)state->xExtent ^ 0x80000000);
+        if (xDelta < (f32)(extent.value - lbl_803E6440)) {
+            insideAxes++;
+            xSide--;
+        }
+    }
+    if (zDelta <= lbl_803E6438) {
+        extent.bits = CONCAT44(0x43300000, (int)state->zExtent ^ 0x80000000);
+        if (-(f32)(extent.value - lbl_803E6440) < zDelta) {
+            insideAxes++;
+            zSide = 1;
+        }
+    }
+    if (lbl_803E6438 < zDelta) {
+        extent.bits = CONCAT44(0x43300000, (int)state->zExtent ^ 0x80000000);
+        if (zDelta < (f32)(extent.value - lbl_803E6440)) {
+            insideAxes++;
+            zSide--;
+        }
+    }
+    if (yDelta <= lbl_803E6438) {
+        extent.bits = CONCAT44(0x43300000, (int)state->yExtent ^ 0x80000000);
+        if (-(f32)(extent.value - lbl_803E6440) < yDelta) {
+            insideAxes++;
+            ySide = 1;
+        }
+    }
+    if (lbl_803E6438 < yDelta) {
+        extent.bits = CONCAT44(0x43300000, (int)state->yExtent ^ 0x80000000);
+        if (yDelta < (f32)(extent.value - lbl_803E6440)) {
+            insideAxes++;
+            ySide--;
+        }
+    }
+
+    if (insideAxes == 3) {
+        partfxArgs.xDelta = xDelta;
+        partfxArgs.yDelta = yDelta;
+        partfxArgs.zDelta = zDelta;
+        partfxArgs.scale = lbl_803E6448;
+        partfxArgs.zRot = 0;
+        partfxArgs.yRot = 0;
+        partfxArgs.xRot = 0;
+        if (xSide != state->xSide) {
+            partfxArgs.xRot = 0x3fff;
+        }
+
+        if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE) {
+            if (TRICKY_CURVE_BURST_LIMIT < gTrickyCurveBurstCounter) {
+                gTrickyCurveBurstCounter = 0;
+                GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
+                Sfx_PlayFromObject((int)obj, TRICKY_CURVE_SFX_BURST);
+            }
+            PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
+        } else {
+            GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
+            ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, (int)obj, 2);
+            PARTFX_SPAWN((int)obj, TRICKY_CURVE_PARTFX_BURST, &partfxArgs, 2, -1, 0);
+            Sfx_PlayFromObject((int)obj, TRICKY_CURVE_SFX_BURST);
+        }
+    }
+
+    state->xSide = xSide;
+    state->ySide = ySide;
+    state->zSide = zSide;
 }
