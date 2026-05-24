@@ -24,6 +24,8 @@ extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern int getTrickyObject(void);
+extern int Obj_GetPlayerObject(void);
+extern void Obj_FreeObject(int obj);
 extern void fn_80098B18(int obj,f32 scale,int type,int param_4,int param_5,int param_6);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
@@ -50,7 +52,11 @@ extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e54b0;
 extern f64 DOUBLE_803e54d8;
 extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+extern u8 framesThisStep;
+extern s16 lbl_803DBEE8;
 extern f32 lbl_803DC074;
+extern s16 lbl_80323BC0[];
 extern f32 lbl_803E4820;
 extern f32 lbl_803E4824;
 extern f32 lbl_803E4828;
@@ -60,6 +66,10 @@ extern f32 lbl_803E4834;
 extern f32 lbl_803E4838;
 extern f32 lbl_803E483C;
 extern f64 lbl_803E4840;
+extern f32 lbl_803E484C;
+extern f32 lbl_803E4850;
+extern f32 lbl_803E4854;
+extern f64 lbl_803E4858;
 extern f32 lbl_803E54AC;
 extern f32 lbl_803E54B8;
 extern f32 lbl_803E54BC;
@@ -95,7 +105,7 @@ void dimlogfire_update(int obj)
   float local_28;
   float local_24;
   float local_20;
-  
+
   state = *(int **)(obj + 0xb8);
   tricky = *(int *)(obj + 0x4c);
   *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
@@ -510,5 +520,105 @@ void dimsnowball_hitDetect(int *obj) {
     int *inner = (int*)state[0];
     if ((*(u16*)((char*)inner + 0xb0) & 0x40) == 0) return;
     state[0] = 0;
+}
+
+void dimsnowball_update(int obj)
+{
+  float currentX;
+  float currentY;
+  float currentZ;
+  float nextX;
+  float nextY;
+  float nextZ;
+  s16 pathIndex;
+  s16 prevIndex;
+  s16 nextIndex;
+  s16 nextNextIndex;
+  s16 lastIndex;
+  int model;
+  int player;
+  int *state;
+  f32 velocityLen;
+
+  state = *(int **)(obj + 0xb8);
+  player = Obj_GetPlayerObject();
+  if (*state == 0) {
+    Obj_FreeObject(obj);
+    return;
+  }
+  pathIndex = (short)state[2];
+  lastIndex = lbl_803DBEE8 - 1;
+  if (pathIndex >= lastIndex) {
+    Obj_FreeObject(obj);
+    return;
+  }
+  prevIndex = pathIndex - 1;
+  if (prevIndex < 0) {
+    prevIndex = 0;
+  }
+  nextIndex = pathIndex + 1;
+  if (nextIndex >= lbl_803DBEE8) {
+    nextIndex = lastIndex;
+  }
+  nextNextIndex = pathIndex + 2;
+  if (nextNextIndex >= lbl_803DBEE8) {
+    nextNextIndex = lastIndex;
+  }
+  currentX = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[pathIndex * 3] ^ 0x80000000) -
+                    lbl_803E4858) * lbl_803E484C;
+  currentY = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[pathIndex * 3 + 1] ^ 0x80000000) -
+                    lbl_803E4858) * lbl_803E484C;
+  currentZ = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[pathIndex * 3 + 2] ^ 0x80000000) -
+                    lbl_803E4858) * lbl_803E484C;
+  nextX = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextIndex * 3] ^ 0x80000000) -
+                 lbl_803E4858) * lbl_803E484C;
+  nextY = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextIndex * 3 + 1] ^ 0x80000000) -
+                 lbl_803E4858) * lbl_803E484C;
+  nextZ = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextIndex * 3 + 2] ^ 0x80000000) -
+                 lbl_803E4858) * lbl_803E484C;
+  if (((nextY - ((float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextNextIndex * 3 + 1] ^
+                                             0x80000000) - lbl_803E4858) * lbl_803E484C) <=
+        lbl_803E4850) &&
+      (currentY - ((float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[prevIndex * 3 + 1] ^
+                                            0x80000000) - lbl_803E4858) * lbl_803E484C) <=
+       lbl_803E4850)) && (*(char *)(state + 3) < '\x01')) {
+    velocityLen = sqrtf(*(float *)(obj + 0x2c) * *(float *)(obj + 0x2c) +
+                        *(float *)(obj + 0x24) * *(float *)(obj + 0x24) +
+                        *(float *)(obj + 0x28) * *(float *)(obj + 0x28));
+    if ((*(ushort *)(player + 0xb0) & 0x1000) == 0) {
+      Sfx_PlayFromObject(obj,0x1fb);
+    }
+    *(undefined *)(state + 3) = 0x1e;
+  }
+  *(float *)(obj + 0xc) = lbl_803E4850 * (nextX - currentX) + currentX;
+  *(float *)(obj + 0x10) = lbl_803E4850 * (nextY - currentY) + currentY;
+  *(float *)(obj + 0x14) = lbl_803E4850 * (nextZ - currentZ) + currentZ;
+  *(float *)(obj + 0xc) = *(float *)(obj + 0xc) + *(float *)(*state + 0xc);
+  *(float *)(obj + 0x10) = *(float *)(obj + 0x10) + *(float *)(*state + 0x10);
+  *(float *)(obj + 0x14) = *(float *)(obj + 0x14) + *(float *)(*state + 0x14);
+  *(float *)(obj + 0x24) = oneOverTimeDelta * (*(float *)(obj + 0xc) - *(float *)(obj + 0x80));
+  *(float *)(obj + 0x28) = oneOverTimeDelta * (*(float *)(obj + 0x10) - *(float *)(obj + 0x84));
+  *(float *)(obj + 0x2c) = oneOverTimeDelta * (*(float *)(obj + 0x14) - *(float *)(obj + 0x88));
+  state[2] = state[2] + framesThisStep;
+  if ('\0' < *(char *)(state + 3)) {
+    *(byte *)(state + 3) = *(char *)(state + 3) - framesThisStep;
+  }
+  *(short *)(obj + 2) =
+       (short)(int)-(lbl_803E4854 * -*(float *)(obj + 0x2c) -
+                    (float)((double)CONCAT44(0x43300000,(int)*(short *)(obj + 2) ^ 0x80000000) -
+                           lbl_803E4858));
+  *(short *)(obj + 4) =
+       (short)(int)-(lbl_803E4854 * *(float *)(obj + 0x24) -
+                    (float)((double)CONCAT44(0x43300000,(int)*(short *)(obj + 4) ^ 0x80000000) -
+                           lbl_803E4858));
+  model = *(int *)(obj + 0x54);
+  if (model != 0) {
+    *(ushort *)(model + 0x60) = *(ushort *)(model + 0x60) | 1;
+    *(undefined *)(model + 0x6e) = 4;
+    *(undefined *)(model + 0x6f) = 2;
+    *(undefined4 *)(model + 0x48) = 0x10;
+    *(undefined4 *)(model + 0x4c) = 0x10;
+  }
+  return;
 }
 #pragma peephole reset
