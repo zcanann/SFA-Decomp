@@ -1646,8 +1646,6 @@ void scarab_init(int *obj, u8 *def) {
         *(s16 *)((char *)state + 0x22) = 4;
         state[0x27] = 2;
         break;
-    case 0x3d7:
-        break;
     default:
         *(u8 *)((char *)*(int *)((char *)model + 0x34) + 8) = 5;
         *(s16 *)((char *)state + 0x1e) = 0x44;
