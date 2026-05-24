@@ -15,14 +15,19 @@ extern u8 hitDetectFn_80067958(int obj, f32 *startPoints, f32 *endPoints, int po
                                void *outHits, int flags);
 
 extern f32 lbl_803AC7A0[4];
-extern undefined4 lbl_802C2280;
-extern undefined4 lbl_802C228C;
 extern undefined4 lbl_803DDAC8;
 extern f32 lbl_803E39AC;
-extern f64 lbl_803E39C8;
 extern f32 lbl_803E39E8;
 extern f32 lbl_803E39F4;
 extern void LargeCrate_SeqFn(void);
+
+typedef union LargeCrateVariantRemap {
+  s16 entries[6];
+  int words[3];
+} LargeCrateVariantRemap;
+
+extern LargeCrateVariantRemap lbl_802C2280;
+extern LargeCrateVariantRemap lbl_802C228C;
 
 /*
  * --INFO--
@@ -37,17 +42,17 @@ void largecrate_init(int obj, u8 *initData)
 {
   int state;
   u32 r3rand;
-  int constArrA[3];
-  int constArrB[3];
+  LargeCrateVariantRemap constArrA;
+  LargeCrateVariantRemap constArrB;
   short id;
 
   /* copy two constant blobs to stack (used as lookup arrays) */
-  constArrA[0] = *(int *)((char *)&lbl_802C2280 + 0);
-  constArrA[1] = *(int *)((char *)&lbl_802C2280 + 4);
-  constArrA[2] = *(int *)((char *)&lbl_802C2280 + 8);
-  constArrB[0] = *(int *)((char *)&lbl_802C228C + 0);
-  constArrB[1] = *(int *)((char *)&lbl_802C228C + 4);
-  constArrB[2] = *(int *)((char *)&lbl_802C228C + 8);
+  constArrA.words[0] = lbl_802C2280.words[0];
+  constArrA.words[1] = lbl_802C2280.words[1];
+  constArrA.words[2] = lbl_802C2280.words[2];
+  constArrB.words[0] = lbl_802C228C.words[0];
+  constArrB.words[1] = lbl_802C228C.words[1];
+  constArrB.words[2] = lbl_802C228C.words[2];
 
   state = *(int *)(obj + 0xb8);
   *(void (**)(void))(obj + 0xbc) = LargeCrate_SeqFn;
@@ -81,20 +86,19 @@ void largecrate_init(int obj, u8 *initData)
 
   id = *(short *)(obj + 0x46);
   if (id == LARGECRATE_VARIANT_A) {
-    *(u8 *)(state + 0x11) = (u8)((short *)constArrA)[*(u8 *)(state + 0x11)];
+    *(u8 *)(state + 0x11) = (u8)constArrA.entries[*(u8 *)(state + 0x11)];
     *(short *)(state + 0x14) = LARGECRATE_VARIANT_A_SFX_A;
     *(short *)(state + 0x16) = LARGECRATE_VARIANT_A_SFX_B;
   }
   else if (id == LARGECRATE_VARIANT_B || id == LARGECRATE_VARIANT_C) {
-    *(u8 *)(state + 0x11) = (u8)((short *)constArrB)[*(u8 *)(state + 0x11)];
+    *(u8 *)(state + 0x11) = (u8)constArrB.entries[*(u8 *)(state + 0x11)];
     *(short *)(state + 0x14) = LARGECRATE_VARIANT_B_SFX_A;
     *(short *)(state + 0x16) = LARGECRATE_VARIANT_B_SFX_B;
   }
 
   *(short *)(state + 0x20) = 0;
   r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_BOB_MAX);
-  *(float *)(state + 0x1c) =
-      lbl_803E39E8 + (float)((double)(int)r3rand - lbl_803E39C8);
+  *(float *)(state + 0x1c) = lbl_803E39E8 + (float)(int)r3rand;
   *(float *)(state + 0x24) = *(float *)(obj + 0xc);
 
   if (*(short *)(obj + 0x46) == LARGECRATE_VARIANT_C) {
