@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void FUN_801b1ff4(undefined2 *param_1,int param_2);
-void FUN_801b2070(int param_1);
+void FUN_801b2070(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801b2098(uint param_1);
 void FUN_801b21cc(undefined2 *param_1,int param_2);
 void FUN_801b2260(double param_1,double param_2,double param_3,double param_4,undefined8 param_5,

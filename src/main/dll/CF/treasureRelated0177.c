@@ -166,11 +166,9 @@ void FUN_8018cdb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018cf58(int param_1)
+void FUN_8018cf58(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -264,14 +262,13 @@ void FUN_8018d064(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018d0b4(int param_1)
+void FUN_8018d0b4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   int iVar1;
-  char in_r8;
   int *piVar2;
   
   piVar2 = *(int **)(param_1 + 0xb8);
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
     iVar1 = *piVar2;
     if (((iVar1 != 0) && (*(char *)(iVar1 + 0x2f8) != '\0')) && (*(char *)(iVar1 + 0x4c) != '\0')) {
