@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void xyzanimator_update(int param_1,int param_2);
-void FUN_801950ac(int param_1);
+void FUN_801950ac(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801950d4(undefined4 param_1,undefined4 param_2,undefined4 *param_3);
 void FUN_801954f0(void);
 void FUN_801954f4(int param_1);

@@ -24,6 +24,6 @@ void FUN_801e8300(void);
 void FUN_801e8514(int param_1);
 undefined4 FUN_801e85b0(undefined2 *param_1,undefined4 param_2,int param_3);
 void FUN_801e85b8(int param_1);
-void FUN_801e8658(int param_1);
+void FUN_801e8658(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 
 #endif /* MAIN_DLL_DR_DRPUSHCART_H_ */

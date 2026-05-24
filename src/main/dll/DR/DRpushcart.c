@@ -880,11 +880,9 @@ void FUN_801e85b8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e8658(int param_1)
+void FUN_801e8658(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     if (*(short *)(param_1 + 0x46) == 0x468) {
       FUN_801e8300();
     }
