@@ -191,8 +191,16 @@ void WM_seqobject_update(int *obj)
     int *objects;
     int found;
     int i;
+    int setupType;
 
-    if (OBJ_S8(OBJ_PTR(obj, 0x4c), 0x19) != 0) {
+    setupType = OBJ_S8(OBJ_PTR(obj, 0x4c), 0x19);
+    if (setupType == 8) {
+        return;
+    }
+    if (setupType >= 8) {
+        return;
+    }
+    if (setupType != 0) {
         return;
     }
     if (OBJ_S32(obj, 0xf4) != 0) {
