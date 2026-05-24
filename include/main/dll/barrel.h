@@ -35,7 +35,7 @@ FUN_80162b78(undefined8 param_1,double param_2,double param_3,undefined8 param_4
             undefined4 param_15,undefined4 param_16);
 void FUN_80162ec0(short *param_1);
 void cannonclaw_release(int param_1);
-void FUN_80163220(int param_1);
+void FUN_80163220(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80163308(int param_1);
 
 extern ObjectDescriptor gGrimbleObjDescriptor;
