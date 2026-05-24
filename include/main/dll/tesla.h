@@ -5,7 +5,7 @@
 
 void FUN_80206968(undefined2 *param_1,int param_2);
 void FUN_8020696c(int param_1);
-void FUN_802069b4(int param_1);
+void FUN_802069b4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_802069dc(void);
 void FUN_80206cf8(undefined2 *param_1,int param_2);
 

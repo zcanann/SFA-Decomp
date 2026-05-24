@@ -185,13 +185,12 @@ void FUN_8014e248(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8014e2a8(int param_1)
+void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
   int iVar1;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  if ((in_r8 != '\0') && (*(int *)(param_1 + 0xf4) == 0)) {
+  if ((visible != 0) && (*(int *)(param_1 + 0xf4) == 0)) {
     FUN_8003b818(param_1);
     if ((*(byte *)(iVar1 + 0x26) & 0x10) != 0) {
       FUN_8008111c((double)lbl_803E32E8,
