@@ -1,417 +1,247 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMwooddoor.h"
+#include "main/objanim.h"
 
-extern undefined4 FUN_80006824();
-extern uint GameBit_Get(int eventId);
-extern undefined4 GameBit_Set(int eventId, int value);
-extern uint FUN_80017730();
-extern undefined4 FUN_80017a88();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_800305f8();
-extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern int FUN_8003964c();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8008112c();
-extern ulonglong FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
+typedef struct DIMWoodDoorConfig {
+    u8 pad00[0x4];
+    u8 setup04;
+    u8 setup05;
+    u8 setup06;
+    u8 setup07;
+    u8 pad08[0x20];
+    s8 angleBias;
+    u8 delayMin;
+    u8 delayMax;
+    u8 targetRadius;
+} DIMWoodDoorConfig;
 
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dcb6a;
-extern undefined4 DAT_803dcb6c;
-extern f64 DOUBLE_803e5558;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DCB58;
-extern f32 lbl_803DCB7C;
-extern f32 lbl_803E5538;
-extern f32 lbl_803E553C;
-extern f32 lbl_803E5540;
-extern f32 lbl_803E5544;
-extern f32 lbl_803E5548;
-extern f32 lbl_803E5550;
-extern f32 lbl_803E5560;
-extern f32 lbl_803E5564;
-extern f32 lbl_803E5568;
-extern f32 lbl_803E556C;
-extern f32 lbl_803E5570;
+typedef struct DIMWoodDoorState {
+    u8 pad00[0x4];
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    u8 pad10[0x7c];
+    f32 targetX;
+    f32 targetY;
+    f32 targetZ;
+    f32 launchSpeed;
+    u8 pad9c[0x8];
+    s16 launchDelay;
+    s16 cooldown;
+    u8 padA8[0x4];
+    u8 setupId;
+    u8 shouldSpawnShard;
+} DIMWoodDoorState;
 
-/*
- * --INFO--
- *
- * Function: FUN_801b1ff4
- * EN v1.0 Address: 0x801B1FF4
- * EN v1.0 Size: 124b
- * EN v1.1 Address: 0x801B206C
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801b1ff4(undefined2 *param_1,int param_2)
+typedef struct DIMWoodDoorShardState {
+    int parent;
+    u8 variant;
+    u8 lifetime;
+    u8 hitRadius;
+} DIMWoodDoorShardState;
+
+extern u8 Obj_IsLoadingLocked(void);
+extern s16 *objModelGetVecFn_800395d8(int obj, int target);
+extern u8 *Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(u8 *setup, int group, int mapLayer, int param4, int param5);
+extern int Obj_GetPlayerObject(void);
+extern s16 getAngle(f32 dx, f32 dz);
+extern f32 sqrtf(f32 value);
+extern f32 sin(f32 value);
+extern f32 fn_80293E80(f32 value);
+extern u32 randomGetRange(int min, int max);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+
+extern s16 lbl_803DBF02;
+extern s16 lbl_803DBF04;
+extern f32 lbl_803DBEF0;
+extern f32 lbl_803DBF14;
+extern f32 lbl_803E48A4;
+extern f32 lbl_803E48AC;
+extern f32 lbl_803E48B0;
+extern f32 lbl_803E48B4;
+extern f32 lbl_803E48B8;
+extern f64 lbl_803E48C0;
+extern f32 lbl_803E48C8;
+extern f32 lbl_803E48CC;
+extern f32 lbl_803E48D0;
+extern f32 lbl_803E48D4;
+extern f32 lbl_803E48D8;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801B1FF4(int obj, u8 variant)
 {
-  uint uVar1;
-  undefined *puVar2;
-  
-  puVar2 = *(undefined **)(param_1 + 0x5c);
-  *puVar2 = (char)*(undefined2 *)(param_2 + 0x1a);
-  if ((int)*(short *)(param_2 + 0x1e) != 0xffffffff) {
-    uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x1e));
-    puVar2[1] = (char)uVar1;
-  }
-  *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
-  param_1[0x58] = param_1[0x58] | 0x4000;
-  return;
-}
+    DIMWoodDoorConfig *config;
+    DIMWoodDoorState *state;
+    DIMWoodDoorShardState *shardState;
+    s16 *modelVec;
+    u8 *setup;
+    int shard;
+    f32 launchSpeed;
+    f32 launchScale;
+    f32 angle;
 
-/*
- * --INFO--
- *
- * Function: FUN_801b2070
- * EN v1.0 Address: 0x801B2070
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801B2108
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801b2070(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
+    config = *(DIMWoodDoorConfig **)(obj + 0x4c);
+    if (Obj_IsLoadingLocked() != 0) {
+        state = *(DIMWoodDoorState **)(obj + 0xb8);
+        if ((state->shouldSpawnShard != 0) && (state->launchDelay <= 0)) {
+            modelVec = objModelGetVecFn_800395d8(obj, 0);
+            setup = Obj_AllocObjectSetup(0x24, 0x1d6);
+            setup[4] = config->setup04;
+            setup[6] = config->setup06;
+            setup[5] = config->setup05;
+            setup[7] = config->setup07;
+            *(f32 *)(setup + 8) = state->targetX;
+            *(f32 *)(setup + 0xc) = state->targetY;
+            *(f32 *)(setup + 0x10) = state->targetZ;
 
-/*
- * --INFO--
- *
- * Function: FUN_801b2098
- * EN v1.0 Address: 0x801B2098
- * EN v1.0 Size: 308b
- * EN v1.1 Address: 0x801B213C
- * EN v1.1 Size: 340b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801b2098(uint param_1)
-{
-  bool bVar1;
-  char cVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  short *psVar6;
-  
-  iVar4 = *(int *)(param_1 + 0x4c);
-  psVar6 = *(short **)(param_1 + 0xb8);
-  if (*(char *)(psVar6 + 1) == '\x01') {
-    iVar3 = (uint)*(byte *)(param_1 + 0x36) + (uint)DAT_803dc070 * -0x10;
-    if (iVar3 < 0) {
-      iVar3 = 0;
-    }
-    *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
-    *(char *)(param_1 + 0x36) = (char)iVar3;
-    *psVar6 = *psVar6 - (ushort)DAT_803dc070;
-    if (*psVar6 < 1) {
-      GameBit_Set((int)*(short *)(iVar4 + 0x1e),1);
-      *(undefined *)(psVar6 + 1) = 2;
-    }
-  }
-  else if (*(char *)(psVar6 + 1) == '\0') {
-    bVar1 = false;
-    iVar3 = 0;
-    iVar4 = (int)*(char *)(*(int *)(param_1 + 0x58) + 0x10f);
-    if (0 < iVar4) {
-      do {
-        iVar5 = *(int *)(*(int *)(param_1 + 0x58) + iVar3 + 0x100);
-        if ((*(short *)(iVar5 + 0x46) == 0x1d6) && (*(char *)(*(int *)(iVar5 + 0xb8) + 4) != '\0'))
-        {
-          bVar1 = true;
-          break;
-        }
-        iVar3 = iVar3 + 4;
-        iVar4 = iVar4 + -1;
-      } while (iVar4 != 0);
-    }
-    if (bVar1) {
-      cVar2 = *(char *)((int)psVar6 + 3) + -1;
-      *(char *)((int)psVar6 + 3) = cVar2;
-      if (cVar2 < '\x01') {
-        *(undefined *)(psVar6 + 1) = 1;
-        *psVar6 = 0x1e;
-        FUN_80006824(param_1,0x206);
-      }
-      else {
-        FUN_80006824(param_1,0x207);
-      }
-    }
-  }
-  return;
-}
+            shard = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, 0);
+            shardState = *(DIMWoodDoorShardState **)(shard + 0xb8);
+            shardState->parent = obj;
+            shardState->variant = variant;
+            if (variant != 0) {
+                if (*(s8 *)(obj + 0xac) == 0x1b) {
+                    shardState->lifetime = 100;
+                } else {
+                    shardState->lifetime = 60;
+                }
+                shardState->hitRadius = 100;
+            } else {
+                shardState->lifetime = 20;
+                shardState->hitRadius = 1;
+            }
 
-/*
- * --INFO--
- *
- * Function: FUN_801b21cc
- * EN v1.0 Address: 0x801B21CC
- * EN v1.0 Size: 148b
- * EN v1.1 Address: 0x801B2290
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801b21cc(undefined2 *param_1,int param_2)
-{
-  uint uVar1;
-  int iVar2;
-  
-  *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
-  param_1[0x58] = param_1[0x58] | 0x6000;
-  iVar2 = *(int *)(param_1 + 0x5c);
-  *(undefined *)(iVar2 + 3) = 1;
-  *(undefined *)(iVar2 + 2) = 0;
-  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x1e));
-  if (uVar1 != 0) {
-    *(undefined *)(iVar2 + 3) = 0;
-    *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) =
-         *(ushort *)(*(int *)(param_1 + 0x2a) + 0x60) & ~1;
-    *(undefined *)(param_1 + 0x1b) = 0;
-    *(undefined *)(iVar2 + 2) = 2;
-  }
-  return;
-}
+            launchSpeed = state->launchSpeed;
+            launchScale = lbl_803E48AC * launchSpeed;
+            *(s16 *)shard = *(s16 *)obj + modelVec[1];
+            angle = (lbl_803E48B0 * (f32)(s32)*(s16 *)shard) / lbl_803E48B4;
+            *(f32 *)(shard + 0x24) = launchScale * -fn_80293E80(angle);
+            *(f32 *)(shard + 0x28) = launchSpeed;
+            angle = (lbl_803E48B0 * (f32)(s32)*(s16 *)shard) / lbl_803E48B4;
+            *(f32 *)(shard + 0x2c) = launchScale * -sin(angle);
 
-/*
- * --INFO--
- *
- * Function: FUN_801b2260
- * EN v1.0 Address: 0x801B2260
- * EN v1.0 Size: 992b
- * EN v1.1 Address: 0x801B2338
- * EN v1.1 Size: 624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801b2260(double param_1,double param_2,double param_3,double param_4,undefined8 param_5,
-                 undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9)
-{
-  uint uVar1;
-  int iVar2;
-  int *piVar3;
-  
-  piVar3 = *(int **)(param_9 + 0x5c);
-  if ((*(char *)(piVar3 + 2) != '\x01') && (*(char *)(piVar3 + 2) == '\0')) {
-    param_4 = (double)*(float *)(param_9 + 0x14);
-    *(float *)(param_9 + 0x14) =
-         (float)((double)(lbl_803E553C * -lbl_803DCB58) * (double)lbl_803DC074 + param_4);
-    param_1 = (double)(*(float *)(param_9 + 0x12) * lbl_803DC074);
-    param_2 = (double)(lbl_803E5540 * (float)(param_4 + (double)*(float *)(param_9 + 0x14)) *
-                      lbl_803DC074);
-    param_3 = (double)(*(float *)(param_9 + 0x16) * lbl_803DC074);
-    FUN_80017a88(param_1,param_2,param_3,(int)param_9);
-    param_9[2] = param_9[2] + *(char *)((int)piVar3 + 9) * 10;
-    param_9[1] = param_9[1] + *(char *)((int)piVar3 + 10) * 10;
-    *param_9 = *param_9 + *(char *)((int)piVar3 + 0xb) * 10;
-    iVar2 = *(int *)(param_9 + 0x2a);
-    if (iVar2 != 0) {
-      param_1 = (double)ObjHits_SetHitVolumeSlot((int)param_9,5,*(undefined *)((int)piVar3 + 6),0);
-      iVar2 = *(int *)(iVar2 + 0x50);
-      if ((iVar2 != 0) && (iVar2 != *piVar3)) {
-        ObjHitbox_SetSphereRadius((int)param_9,(ushort)*(byte *)((int)piVar3 + 5));
-        param_1 = (double)FUN_8008112c((double)lbl_803E5538,param_2,param_3,param_4,param_5,
-                                       param_6,param_7,param_8,param_9,2,1,0,1,1,1,0);
-        param_9[0x7a] = 0;
-        param_9[0x7b] = 0x49c;
-        *(undefined *)(piVar3 + 2) = 1;
-        param_9[3] = param_9[3] | 0x4000;
-      }
-    }
-    uVar1 = GameBit_Get(0x85e);
-    if (((uVar1 != 0) && (uVar1 = GameBit_Get(0xc2d), uVar1 == 0)) ||
-       ((uVar1 = GameBit_Get(0x874), uVar1 != 0 && (uVar1 = GameBit_Get(0xc2e), uVar1 == 0)))) {
-      param_9[0x7a] = 0;
-      param_9[0x7b] = 0x4b0;
-    }
-    if (*(char *)(*(int *)(param_9 + 0x2a) + 0xad) != '\0') {
-      ObjHitbox_SetSphereRadius((int)param_9,(ushort)*(byte *)((int)piVar3 + 5));
-      param_1 = (double)FUN_8008112c((double)lbl_803E5538,param_2,param_3,param_4,param_5,param_6,
-                                     param_7,param_8,param_9,2,1,0,1,1,1,0);
-      param_9[0x7a] = 0;
-      param_9[0x7b] = 0x49c;
-      *(undefined *)(piVar3 + 2) = 1;
-      param_9[3] = param_9[3] | 0x4000;
-    }
-  }
-  *(uint *)(param_9 + 0x7a) = *(int *)(param_9 + 0x7a) + (uint)DAT_803dc070;
-  if (*(int *)(param_9 + 0x7a) < 0x4b1) {
-    if (*(char *)((int)piVar3 + 7) != '\0') {
-      *(undefined *)((int)piVar3 + 7) = 0;
-    }
-  }
-  else {
-    FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
-  }
-  return;
-}
+            state->shouldSpawnShard = 0;
+            state->cooldown = 50;
+            if (state->setupId == 3) {
+                state->launchDelay = 50;
+            } else {
+                state->launchDelay = (s16)(randomGetRange(config->delayMin, config->delayMax) << 2);
+            }
 
-/*
- * --INFO--
- *
- * Function: FUN_801b2640
- * EN v1.0 Address: 0x801B2640
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801B25A8
- * EN v1.1 Size: 592b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801b2640(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
-{
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E48B8, 0);
+            Sfx_PlayFromObject(obj, 0x1fd);
+        }
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-/*
- * --INFO--
- *
- * Function: FUN_801b2644
- * EN v1.0 Address: 0x801B2644
- * EN v1.0 Size: 780b
- * EN v1.1 Address: 0x801B27F8
- * EN v1.1 Size: 780b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801b2644(void)
+#pragma scheduling off
+#pragma peephole off
+void fn_801B2244(int obj, f32 targetX, f32 targetY, f32 targetZ)
 {
-  char cVar1;
-  short sVar2;
-  float fVar3;
-  float fVar4;
-  short sVar6;
-  int iVar5;
-  int iVar7;
-  int iVar8;
-  uint uVar9;
-  int iVar10;
-  int iVar11;
-  int iVar12;
-  int iVar13;
-  double dVar14;
-  double dVar15;
-  double dVar16;
-  
-  iVar7 = FUN_8028683c();
-  iVar12 = *(int *)(iVar7 + 0x4c);
-  iVar8 = FUN_80017a98();
-  iVar13 = *(int *)(iVar7 + 0xb8);
-  if (*(short *)(iVar13 + 0xa6) < 1) {
-    iVar7 = FUN_8003964c(iVar7,0);
-    sVar2 = *(short *)(iVar7 + 2);
-    cVar1 = *(char *)(iVar12 + 0x28);
-    uVar9 = FUN_80017730();
-    iVar10 = ((uVar9 & 0xffff) + 0x8000) - ((int)sVar2 + cVar1 * 0x100 & 0xffffU);
-    if (0x8000 < iVar10) {
-      iVar10 = iVar10 + -0xffff;
-    }
-    if (iVar10 < -0x8000) {
-      iVar10 = iVar10 + 0xffff;
-    }
-    if ((iVar10 < 0x1200) && (-0x1200 < iVar10)) {
-      *(undefined *)(iVar13 + 0xad) = 1;
-    }
-    if (0x800 < iVar10) {
-      iVar10 = 0x800;
-    }
-    if (iVar10 < -0x800) {
-      iVar10 = -0x800;
-    }
-    iVar10 = iVar10 >> 3;
-    if (iVar10 != 0) {
-      sVar2 = *(short *)(iVar7 + 2);
-      sVar6 = sVar2;
-      if (sVar2 < 0) {
-        sVar6 = -sVar2;
-      }
-      if ((int)DAT_803dcb6a - (int)DAT_803dcb6c < (int)sVar6) {
-        if (iVar10 < 0) {
-          iVar11 = -1;
+    DIMWoodDoorConfig *config;
+    DIMWoodDoorState *state;
+    s16 *modelVec;
+    int player;
+    f32 dx;
+    f32 dz;
+    f32 distSq;
+    f32 dist;
+    f32 heightDelta;
+    f32 radiusSq;
+    f32 accel;
+    f32 accelDenom;
+    int angleDelta;
+    int turnStep;
+    s16 pitch;
+    s16 absPitch;
+    int turnSign;
+    int pitchSign;
+
+    config = *(DIMWoodDoorConfig **)(obj + 0x4c);
+    player = Obj_GetPlayerObject();
+    state = *(DIMWoodDoorState **)(obj + 0xb8);
+    if (state->cooldown <= 0) {
+        modelVec = objModelGetVecFn_800395d8(obj, 0);
+        angleDelta = (((u16)getAngle(targetX - *(f32 *)(obj + 0xc), targetZ - *(f32 *)(obj + 0x14)) +
+                       0x8000) -
+                      (u16)(modelVec[1] + ((s32)config->angleBias << 8)));
+        if (angleDelta > 0x8000) {
+            angleDelta -= 0xffff;
         }
-        else if (iVar10 < 1) {
-          iVar11 = 0;
+        if (angleDelta < -0x8000) {
+            angleDelta += 0xffff;
         }
-        else {
-          iVar11 = 1;
+        if ((angleDelta < 0x1200) && (angleDelta > -0x1200)) {
+            state->shouldSpawnShard = 1;
         }
-        if (sVar2 < 0) {
-          iVar5 = -1;
+        if (angleDelta > 0x800) {
+            angleDelta = 0x800;
         }
-        else if (sVar2 < 1) {
-          iVar5 = 0;
+        if (angleDelta < -0x800) {
+            angleDelta = -0x800;
         }
-        else {
-          iVar5 = 1;
+        turnStep = angleDelta >> 3;
+        if (turnStep != 0) {
+            pitch = modelVec[1];
+            if (pitch < 0) {
+                absPitch = -pitch;
+            } else {
+                absPitch = pitch;
+            }
+            if ((s32)lbl_803DBF02 - (s32)lbl_803DBF04 < (s32)absPitch) {
+                if (turnStep < 0) {
+                    turnSign = -1;
+                } else if (turnStep > 0) {
+                    turnSign = 1;
+                } else {
+                    turnSign = 0;
+                }
+                if (pitch < 0) {
+                    pitchSign = -1;
+                } else if (pitch > 0) {
+                    pitchSign = 1;
+                } else {
+                    pitchSign = 0;
+                }
+                if (pitchSign == turnSign) {
+                    turnStep = (turnStep * ((s32)lbl_803DBF02 - (s32)absPitch)) / (s32)lbl_803DBF04;
+                }
+            }
+            modelVec[1] = (s16)(modelVec[1] + turnStep);
         }
-        if (iVar5 == iVar11) {
-          iVar10 = (iVar10 * ((int)DAT_803dcb6a - (int)sVar6)) / (int)DAT_803dcb6c;
+
+        dx = state->targetX - state->posX;
+        dz = state->targetZ - state->posZ;
+        distSq = dx * dx + dz * dz;
+        dist = sqrtf(distSq);
+        heightDelta = (lbl_803E48C8 + state->posY) - state->targetY;
+        if (distSq < lbl_803E48C8) {
+            distSq = lbl_803E48C8;
         }
-      }
-      *(short *)(iVar7 + 2) = *(short *)(iVar7 + 2) + (short)iVar10;
+        radiusSq = (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2));
+        if ((distSq < radiusSq) || (heightDelta < lbl_803DBF14) ||
+            ((*(u16 *)(player + 0xb0) & 0x1000) != 0)) {
+            state->shouldSpawnShard = 0;
+        }
+        if (distSq <= radiusSq) {
+            distSq = radiusSq;
+        }
+
+        accel = (lbl_803E48A4 * -lbl_803DBEF0) * distSq;
+        accelDenom = lbl_803E48CC * heightDelta - lbl_803E48D0 * dist;
+        if (accelDenom < lbl_803E48D4) {
+            accelDenom = lbl_803E48D4;
+        }
+        accel = accel / accelDenom;
+        if (accel < lbl_803E48B8) {
+            accel = lbl_803E48B8;
+        }
+        accel = sqrtf(accel);
+        state->launchSpeed += (accel - state->launchSpeed) / lbl_803E48D8;
     }
-    fVar3 = *(float *)(iVar13 + 0x8c) - *(float *)(iVar13 + 4);
-    fVar4 = *(float *)(iVar13 + 0x94) - *(float *)(iVar13 + 0xc);
-    dVar16 = (double)(fVar3 * fVar3 + fVar4 * fVar4);
-    dVar14 = FUN_80293900(dVar16);
-    dVar15 = (double)lbl_803E5560;
-    fVar3 = (float)(dVar15 + (double)*(float *)(iVar13 + 8)) - *(float *)(iVar13 + 0x90);
-    if (dVar15 < dVar16) {
-      dVar15 = dVar16;
-    }
-    iVar7 = (uint)*(byte *)(iVar12 + 0x2b) * 2;
-    if (((dVar15 < (double)(f32)(s32)(iVar7 * iVar7)) || (fVar3 < lbl_803DCB7C)) ||
-       ((*(ushort *)(iVar8 + 0xb0) & 0x1000) != 0)) {
-      *(undefined *)(iVar13 + 0xad) = 0;
-    }
-    iVar7 = (uint)*(byte *)(iVar12 + 0x2b) * 2;
-    uVar9 = iVar7 * iVar7 ^ 0x80000000;
-    if (dVar15 <= (double)(float)((double)CONCAT44(0x43300000,uVar9) - DOUBLE_803e5558)) {
-      dVar15 = (double)(float)((double)CONCAT44(0x43300000,uVar9) - DOUBLE_803e5558);
-    }
-    fVar3 = lbl_803E5564 * fVar3 - (float)((double)lbl_803E5568 * dVar14);
-    fVar4 = lbl_803E556C;
-    if (fVar3 < lbl_803E556C) {
-      fVar4 = fVar3;
-    }
-    dVar14 = (double)((float)((double)(lbl_803E553C * -lbl_803DCB58) * dVar15) / fVar4);
-    dVar15 = (double)lbl_803E5550;
-    if (dVar15 < dVar14) {
-      dVar15 = dVar14;
-    }
-    dVar15 = FUN_80293900(dVar15);
-    *(float *)(iVar13 + 0x98) =
-         (float)((double)*(float *)(iVar13 + 0x98) +
-                (double)((float)(dVar15 - (double)*(float *)(iVar13 + 0x98)) / lbl_803E5570));
-  }
-  FUN_80286888();
-  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
