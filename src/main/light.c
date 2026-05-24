@@ -1202,6 +1202,7 @@ void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void fn_801FC378(int obj);
 extern int ObjAnim_SetMoveProgress(f32 progress, ObjAnimComponent *anim);
+typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimArg, f32 progress);
 typedef int (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg, f32 moveStepScale, f32 deltaTime,
                                            ObjAnimEventList *events);
 
@@ -1238,7 +1239,7 @@ void vfpdoorswitch_init(int obj, int data) {
     *(s16 *)(obj + 2) = *(s16 *)(data + 0x1c);
     state->gameBitId = *(s16 *)(data + 0x1e);
     if (GameBit_Get(state->gameBitId) != 0) {
-        ObjAnim_SetMoveProgress(lbl_803E611C, (ObjAnimComponent *)obj);
+        ((ObjAnimSetProgressObjectFirstFn)ObjAnim_SetMoveProgress)(obj, lbl_803E611C);
         state->activated = 1;
         state->unkflag2 = 1;
         *(s16 *)(obj + 6) |= 0x4000;
