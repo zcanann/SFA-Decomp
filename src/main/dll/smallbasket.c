@@ -2590,7 +2590,7 @@ void fn_80159654(s16* obj, u8* state) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 fn_8014C11C(int obj, u8 flag, int maxCount, void* buf, f32 dist);
+extern u8 fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
 extern int lbl_803AC4A8[];
 extern void* gCameraInterface;
 extern f32 lbl_803E2B80;
@@ -2603,7 +2603,7 @@ extern f32 lbl_803E2B80;
 #pragma scheduling off
 #pragma peephole off
 void fn_80157988(int obj) {
-    u8 count = (u8)fn_8014C11C(obj, 0, 0x28, lbl_803AC4A8, lbl_803E2B80);
+    u8 count = (u8)fn_8014C11C(obj, lbl_803E2B80, 0, 0x28, lbl_803AC4A8);
     u8 noMatch = 1;
     if (count >= 1) {
         u8 i;
