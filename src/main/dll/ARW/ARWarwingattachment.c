@@ -1675,23 +1675,25 @@ void WM_colrise_update(int *obj) {
     u8 *def;
     u8 *sub;
     s32 reached;
+    f32 detectDistance;
     f32 target;
     int i;
 
     def = *(u8**)((char*)obj + 0x4c);
     sub = *(u8**)((char*)obj + 0xb8);
-    sub[2] = (u8)(sub[2] - 1);
+    sub[2] -= 1;
     if ((s8)sub[2] < 0) sub[2] = 0;
     if ((s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f) > 0) {
+        detectDistance = lbl_803E5DCC;
         for (i = 0; i < (s8)*(s8*)((char*)*(int**)((char*)obj + 0x58) + 0x10f); i++) {
             int *p = *(int**)((char*)*(int**)((char*)obj + 0x58) + 0x100 + i * 4);
-            if (*(f32*)((char*)p + 0x10) - *(f32*)((char*)obj + 0x10) > lbl_803E5DCC) {
+            if (*(f32*)((char*)p + 0x10) - *(f32*)((char*)obj + 0x10) > detectDistance) {
                 sub[2] = 0x3c;
             }
         }
     }
     reached = 0;
-    if ((*(s16*)sub == -1 || GameBit_Get(*(s16*)sub) != 0) && (s8)sub[2] != 0) {
+    if ((*(s16*)sub == -1 || (u32)GameBit_Get(*(s16*)sub) != 0) && (s8)sub[2] != 0) {
         target = lbl_803E5DD0 + (lbl_803E5DD4 + *(f32*)(def + 0xc));
         if (*(f32*)((char*)obj + 0x10) > target) {
             *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) - lbl_803E5DD8 * timeDelta;
