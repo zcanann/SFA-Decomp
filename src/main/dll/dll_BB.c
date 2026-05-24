@@ -220,18 +220,18 @@ void camcontrol_applyQueuedAction(void)
   float blendStep;
 
   if (gCamcontrolQueuedActionPending != '\0') {
-    if (gCamcontrolQueuedActionBlendFrames < 2) {
-      *(float *)(pCamera + 0xf4) = lbl_803E1630;
-      pCamera[0x13f] = 0;
-    }
-    else {
+    if (gCamcontrolQueuedActionBlendFrames > 1) {
       blendStep = lbl_803E162C / (float)gCamcontrolQueuedActionBlendFrames;
-      if ((blendStep <= lbl_803E1630) || (lbl_803E162C < blendStep)) {
+      if ((blendStep <= lbl_803E1630) || (blendStep > lbl_803E162C)) {
         blendStep = lbl_803E162C;
       }
       *(float *)(pCamera + 0xf4) = lbl_803E162C;
       *(float *)(pCamera + 0xf8) = blendStep;
       pCamera[0x13f] = gCamcontrolQueuedActionMode;
+    }
+    else {
+      *(float *)(pCamera + 0xf4) = lbl_803E1630;
+      pCamera[0x13f] = 0;
     }
     view = Camera_GetCurrentViewSlot();
     if (lbl_803E162C == *(float *)(pCamera + 0xf4)) {
