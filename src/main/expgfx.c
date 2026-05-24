@@ -2012,14 +2012,14 @@ void expgfx_onMapSetup(void)
 #pragma peephole off
 void expgfx_release(void)
 {
-  register void **slotPoolBases;
+  u32 *slotPoolBases;
   int poolIndex;
 
   expgfxRemoveAll();
   poolIndex = 0;
-  slotPoolBases = (void **)gExpgfxSlotPoolBases;
+  slotPoolBases = gExpgfxSlotPoolBases;
   do {
-    mm_free(*slotPoolBases);
+    mm_free((void *)*slotPoolBases);
     slotPoolBases = slotPoolBases + 1;
     poolIndex = poolIndex + 1;
   } while (poolIndex < EXPGFX_POOL_COUNT);
