@@ -2569,16 +2569,20 @@ void ShipBattle_init(int obj, int def)
     chainIndex = *(int *)(obj + 0xf4);
     if (chainIndex == 0) {
         if (*(s16 *)(def + 0x18) != 1) {
-            (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x1c))(state);
+            (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))(state, def);
             *(int *)(obj + 0xf4) = *(s16 *)(def + 0x18) + 1;
             goto light_setup;
         }
-    } else if (*(s16 *)(def + 0x18) != chainIndex - 1) {
-        (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x24))(state);
-        if (*(s16 *)(def + 0x18) != -1) {
-            (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))(state, def);
+    }
+
+    if (chainIndex != 0) {
+        if (*(s16 *)(def + 0x18) != chainIndex - 1) {
+            (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x24))(state);
+            if (*(s16 *)(def + 0x18) != -1) {
+                (*(void (**)(int, int))(*(int *)gObjectTriggerInterface + 0x1c))(state, def);
+            }
+            *(int *)(obj + 0xf4) = *(s16 *)(def + 0x18) + 1;
         }
-        *(int *)(obj + 0xf4) = *(s16 *)(def + 0x18) + 1;
     }
 
 light_setup:
