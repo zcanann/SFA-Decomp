@@ -27,7 +27,7 @@ void FUN_80187b64(int param_1);
 void FUN_80187bf4(uint param_1);
 void FUN_80187ee0(undefined2 *param_1,int param_2);
 void FUN_80188038(void);
-void FUN_8018806c(void);
+void FUN_8018806c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);

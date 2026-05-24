@@ -420,14 +420,13 @@ void FUN_8017fbe0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017fccc(int param_1)
+void FUN_8017fccc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
-  char in_r8;
   int *piVar2;
   
   piVar2 = *(int **)(param_1 + 0xb8);
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
     iVar1 = *piVar2;
     if ((iVar1 != 0) && (*(int *)(iVar1 + 0xc4) != 0)) {

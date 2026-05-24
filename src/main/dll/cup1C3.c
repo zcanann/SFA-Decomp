@@ -412,13 +412,12 @@ void dbsh_symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ca13c(int param_1)
+void FUN_801ca13c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   float fVar1;
   undefined2 *puVar2;
   int iVar3;
   uint uVar4;
-  char in_r8;
   int iVar5;
   double dVar6;
   undefined8 uVar7;
@@ -447,7 +446,7 @@ void FUN_801ca13c(int param_1)
   float local_18;
   
   iVar5 = *(int *)(param_1 + 0xb8);
-  if (in_r8 == '\0') {
+  if (visible == 0) {
     *(undefined2 *)(iVar5 + 4) = 0;
     *(undefined *)(iVar5 + 10) = 0;
   }

@@ -649,15 +649,14 @@ void FUN_80188038(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018806c(void)
+void FUN_8018806c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
   int iVar2;
-  char in_r8;
   
   iVar1 = FUN_80286840();
   if ((*(char *)(*(int *)(iVar1 + 0xb8) + 10) == '\0') &&
-     (iVar2 = (**(code **)(*DAT_803dd740 + 0xc))(iVar1,(int)in_r8), iVar2 != 0)) {
+     (iVar2 = (**(code **)(*DAT_803dd740 + 0xc))(iVar1,(int)visible), iVar2 != 0)) {
     FUN_8003b818(iVar1);
   }
   FUN_8028688c();
