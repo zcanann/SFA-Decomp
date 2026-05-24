@@ -2858,18 +2858,24 @@ void textureFn_8006c75c(int id)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* Linear search by pointer identity through 0x25 array of 0x14-byte entries.
- * Clears the +0x10 flag byte when the entry matches the needle. */
-extern u8 lbl_8038DF48[0x294];
+typedef struct NewShadowEntry {
+    u8 pad00[0x10];
+    u8 isActive;
+    u8 pad11[0x3];
+} NewShadowEntry;
+
+/* Linear search by pointer identity through the shadow entry table.
+ * Clears the active flag when the entry matches the needle. */
+extern NewShadowEntry lbl_8038DF48[0x25];
 #pragma scheduling off
 #pragma peephole off
 void findSomething(void *needle)
 {
     int i;
-    u8 *p;
-    for (i = 0, p = lbl_8038DF48; i < 0x25; p += 0x14, ++i) {
-        if (p[0x10] != 0 && (void *)p == needle) {
-            lbl_8038DF48[i * 0x14 + 0x10] = 0;
+    NewShadowEntry *entry;
+    for (i = 0, entry = lbl_8038DF48; i < 0x25; entry++, ++i) {
+        if (entry->isActive != 0 && (void *)entry == needle) {
+            lbl_8038DF48[i].isActive = 0;
             return;
         }
     }
