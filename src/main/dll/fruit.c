@@ -1,28 +1,87 @@
 #include "ghidra_import.h"
+#include "main/dll/door.h"
 #include "main/dll/fruit.h"
-
 
 #pragma peephole off
 #pragma scheduling off
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068c4();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_8003b818();
-extern int FUN_800620e8();
-extern undefined4 FUN_800723a0();
 
-extern undefined4* DAT_803dd6d4;
-extern f64 DOUBLE_803e7118;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E7124;
+typedef struct DfpTargetBlockPartfxArgs {
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  s16 pad06;
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z;
+} DfpTargetBlockPartfxArgs;
+
+typedef u8 (*MapEventGetModeFn)(s32 mapId);
+typedef void (*PartfxSpawnObjectFn)(DfpTargetBlockObject *obj, int id, DfpTargetBlockPartfxArgs *args,
+                                    int mode, int arg5, int arg6);
+
+extern int ObjHits_GetPriorityHit(DfpTargetBlockObject *obj, DfpTargetBlockObject **hitObj,
+                                  int *priority, int flags);
+extern void Sfx_PlayFromObject(DfpTargetBlockObject *obj, u16 sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject *obj, u16 sfxId);
+extern f32 sqrtf(f32 value);
+
+extern int *gMapEventInterface;
+extern int *gPartfxInterface;
+extern f32 timeDelta;
+extern f32 lbl_803DDCF8;
+extern f32 lbl_803DDCFC;
+extern f32 lbl_803E648C;
+extern f32 lbl_803E6490;
+extern f32 lbl_803E6494;
+extern f32 lbl_803E6498;
+extern f32 lbl_803E649C;
+extern f32 lbl_803E64A0;
+extern f32 lbl_803E64A4;
+extern f32 lbl_803E64A8;
+extern f32 lbl_803E64AC;
+extern f32 lbl_803E64B0;
+extern f32 lbl_803E64B4;
+extern f32 lbl_803E64B8;
+extern f32 lbl_803E64BC;
+extern f32 lbl_803E64C0;
+
+static void dfptargetblock_resetToHome(DfpTargetBlockObject *obj, DfpTargetBlockObject *home,
+                                       DfpTargetBlockAudioState *state)
+{
+  f32 zero;
+
+  obj->x = *(f32 *)((u8 *)home + 0x08);
+  obj->z = *(f32 *)((u8 *)home + 0x10);
+  zero = lbl_803E648C;
+  obj->velX = zero;
+  obj->velZ = zero;
+  state->mode = DFPTARGETBLOCK_AUDIO_MODE_RESETTING;
+  obj->y = *(f32 *)((u8 *)home + 0x0c) - lbl_803E64AC;
+  Sfx_PlayFromObject(obj, 0x1d3);
+}
+
+static void dfptargetblock_checkSettled(DfpTargetBlockObject *obj, DfpTargetBlockAudioState *state,
+                                        f32 threshold)
+{
+  f32 dx;
+  f32 dz;
+
+  dx = obj->x - lbl_803DDCF8;
+  dz = obj->z - lbl_803DDCFC;
+  if ((lbl_803E648C == dx) && (lbl_803E648C == dz)) {
+    state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
+  } else if (sqrtf(dx * dx + dz * dz) < threshold) {
+    state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
+  }
+}
 
 /*
  * --INFO--
  *
  * Function: dfptargetblock_hitDetect
  * EN v1.0 Address: 0x802086C4
- * EN v1.0 Size: 340b
+ * EN v1.0 Size: 1196b
  * EN v1.1 Address: 0x802086D0
  * EN v1.1 Size: 348b
  * JP Address: TODO
@@ -30,264 +89,122 @@ extern f32 lbl_803E7124;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 dfptargetblock_hitDetect(int param_1,undefined4 param_2,int param_3)
-{
-  byte bVar1;
-  short sVar2;
-  int iVar3;
-  DfpTargetBlockAudioState *state;
-  
-  state = *(DfpTargetBlockAudioState **)(param_1 + 0xb8);
-  *(undefined2 *)(param_3 + 0x6e) = 0xffff;
-  *(undefined *)(param_3 + 0x56) = 0;
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
-    bVar1 = *(byte *)(param_3 + iVar3 + 0x81);
-    if (bVar1 == 2) {
-      FUN_80017698((int)state->control.audio.triggerSfxId + 5,0);
-      state->stopRequested = 1;
-    }
-    else if (bVar1 < 2) {
-      if (bVar1 != 0) {
-        FUN_80017698((int)state->control.audio.triggerSfxId + 5,1);
-      }
-    }
-    else if (bVar1 < 4) {
-      sVar2 = state->control.audio.triggerSfxId;
-      if (sVar2 == 0x674) {
-        FUN_80017698(0x670,1);
-        state->specialSfxStopTimer = 0x96;
-      }
-      else if (sVar2 < 0x674) {
-        if (sVar2 == 0x672) {
-          FUN_80017698(0x66e,1);
-          state->specialSfxStopTimer = 0x96;
-        }
-        else if (0x671 < sVar2) {
-          FUN_80017698(0x66f,1);
-          state->specialSfxStopTimer = 0x96;
-        }
-      }
-      else if (sVar2 < 0x676) {
-        FUN_80017698(0x9f5,1);
-        state->specialSfxStopTimer = 0x96;
-      }
-    }
-    *(undefined *)(param_3 + iVar3 + 0x81) = 0;
-  }
-  return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: dfptargetblock_updateAudioState
- * EN v1.0 Address: 0x80208818
- * EN v1.0 Size: 432b
- * EN v1.1 Address: 0x8020882C
- * EN v1.1 Size: 464b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void dfptargetblock_updateAudioState(uint param_1)
-{
-  short sVar1;
-  uint uVar2;
-  DfpTargetBlockAudioState *state;
-  
-  state = *(DfpTargetBlockAudioState **)(param_1 + 0xb8);
-  uVar2 = FUN_80017690((int)state->control.audio.triggerSfxId);
-  if (((state->effectEmitterActive == 0) && ((short)uVar2 != 0)) &&
-     (uVar2 = FUN_80017690(0xedf), uVar2 != 0)) {
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
-    state->effectEmitterActive = 1;
-  }
-  if (((state->stopRequested != 0) && (state->effectEmitterActive != 0)) &&
-     (uVar2 = FUN_80017690(0xedf), uVar2 != 0)) {
-    FUN_80017698((int)state->control.audio.triggerSfxId,0);
-    (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_1,0xffffffff);
-    state->effectEmitterActive = 0;
-    state->stopRequested = 0;
-  }
-  if ((int)state->specialSfxStopTimer != 0) {
-    state->specialSfxStopTimer =
-         (short)(int)((float)((double)CONCAT44(0x43300000,(int)state->specialSfxStopTimer ^ 0x80000000) -
-                             DOUBLE_803e7118) - lbl_803DC074);
-    FUN_800068c4(param_1,0x458);
-    if (state->specialSfxStopTimer < 1) {
-      state->specialSfxStopTimer = 0;
-      sVar1 = state->control.audio.triggerSfxId;
-      if (sVar1 == 0x674) {
-        FUN_80017698(0x670,0);
-      }
-      else if (sVar1 < 0x674) {
-        if (sVar1 == 0x672) {
-          FUN_80017698(0x66e,0);
-        }
-        else if (0x671 < sVar1) {
-          FUN_80017698(0x66f,0);
-        }
-      }
-      else if (sVar1 < 0x676) {
-        FUN_80017698(0x9f5,0);
-      }
-    }
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: dfptargetblock_updateAudioStateWrapper
- * EN v1.0 Address: 0x802089C8
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x802089FC
- * EN v1.1 Size: 32b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void dfptargetblock_updateAudioStateWrapper(uint param_1)
-{
-  dfptargetblock_updateAudioState(param_1);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_802089e8
- * EN v1.0 Address: 0x802089E8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80208A1C
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_802089e8(undefined2 *param_1,int param_2)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_802089ec
- * EN v1.0 Address: 0x802089EC
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x80208AE0
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_802089ec(void)
-{
-  FUN_800723a0();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80208a0c
- * EN v1.0 Address: 0x80208A0C
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x80208B0C
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80208a0c(void)
-{
-  FUN_800723a0();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: dfptargetblock_resolveCollision
- * EN v1.0 Address: 0x80208A2C
- * EN v1.0 Size: 508b
- * EN v1.1 Address: 0x80208B40
- * EN v1.1 Size: 364b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void dfptargetblock_resolveCollision(int *param_1,int param_2)
-{
-  float fVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  double dVar5;
-  double dVar6;
-  float local_90;
-  float local_8c;
-  float local_88;
-  int aiStack_84 [21];
-  
-  iVar3 = 0;
-  iVar4 = param_2;
-  while( true ) {
-    if (*(char *)(param_2 + 0x68) <= iVar3) {
-      return;
-    }
-    local_90 = *(float *)(iVar4 + 4) + (float)param_1[3];
-    dVar5 = (double)local_90;
-    local_8c = *(float *)(iVar4 + 8) + (float)param_1[4];
-    local_88 = *(float *)(iVar4 + 0xc) + (float)param_1[5];
-    dVar6 = (double)local_88;
-    iVar2 = FUN_800620e8(param_1 + 3,&local_90,(float *)0x1,aiStack_84,param_1,8,0xffffffff,0,0);
-    if (iVar2 != 0) break;
-    iVar4 = iVar4 + 0xc;
-    iVar3 = iVar3 + 1;
-  }
-  if (lbl_803E7124 != (float)param_1[9]) {
-    param_1[3] = (int)((float)param_1[3] + (float)((double)local_90 - dVar5));
-  }
-  if (lbl_803E7124 != (float)param_1[0xb]) {
-    param_1[5] = (int)((float)param_1[5] + (float)((double)local_88 - dVar6));
-  }
-  fVar1 = lbl_803E7124;
-  param_1[9] = (int)lbl_803E7124;
-  param_1[10] = (int)fVar1;
-  param_1[0xb] = (int)fVar1;
-  FUN_80006824((uint)param_1,0x1d0);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80208c28
- * EN v1.0 Address: 0x80208C28
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x80208CAC
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80208c28(int param_1)
+void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
 {
   DfpTargetBlockAudioState *state;
-  
-  state = *(DfpTargetBlockAudioState **)(param_1 + 0xb8);
-  if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
-     (state->mode != DFPTARGETBLOCK_AUDIO_MODE_SETTLED)) {
-    FUN_8003b818(param_1);
+  DfpTargetBlockObject *home;
+  DfpTargetBlockObject *hitObj;
+  DfpTargetBlockPartfxArgs effect;
+  int priority;
+  int hitType;
+  int mode;
+  f32 velX;
+  f32 velZ;
+  f32 dx;
+  f32 dz;
+  int i;
+
+  priority = -1;
+  state = *(DfpTargetBlockAudioState **)((u8 *)obj + 0xb8);
+  home = *(DfpTargetBlockObject **)((u8 *)obj + 0x4c);
+
+  if (*(s16 *)((u8 *)obj + 0x46) == 0x4e0) {
+    lbl_803DDCF8 = obj->x;
+    lbl_803DDCFC = obj->z;
+    return;
   }
-  return;
+
+  if ((state->completionSfxReady != 0) || (state->stateSfxReady == 0) ||
+      (state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED) ||
+      (state->mode == DFPTARGETBLOCK_AUDIO_MODE_LOWERING)) {
+    return;
+  }
+
+  *(f32 *)((u8 *)obj + 0x80) = obj->x;
+  *(f32 *)((u8 *)obj + 0x84) = obj->y;
+  *(f32 *)((u8 *)obj + 0x88) = obj->z;
+
+  hitObj = NULL;
+  hitType = ObjHits_GetPriorityHit(obj, &hitObj, &priority, 0);
+  if ((hitType != 0) && (hitObj != NULL) && (hitType == 0xe) && (hitType == 0xe)) {
+    Sfx_PlayFromObject(obj, 0x44d);
+    velX = hitObj->velX;
+    velZ = hitObj->velZ;
+    if (velX < lbl_803E648C) {
+      velX *= lbl_803E6494;
+    }
+    if (velZ < lbl_803E648C) {
+      velZ *= lbl_803E6494;
+    }
+    if (velX <= velZ) {
+      hitObj->velX = lbl_803E648C;
+    } else {
+      hitObj->velZ = lbl_803E648C;
+    }
+    obj->velX = hitObj->velX * lbl_803E6498;
+    obj->velZ = hitObj->velZ * lbl_803E6498;
+  }
+
+  obj->x = obj->velX * timeDelta + obj->x;
+  obj->z = obj->velZ * timeDelta + obj->z;
+
+  if (lbl_803E648C != obj->velX) {
+    Sfx_KeepAliveLoopedObjectSound(obj, 0x3bd);
+    velX = obj->velX;
+    if (velX < lbl_803E648C) {
+      if (velX >= lbl_803E648C) {
+        obj->velX = lbl_803E648C;
+      }
+    } else if ((velX > lbl_803E648C) && (velX <= lbl_803E648C)) {
+      obj->velX = lbl_803E648C;
+    }
+  }
+
+  if (lbl_803E648C != obj->velZ) {
+    Sfx_KeepAliveLoopedObjectSound(obj, 0x3bd);
+    velZ = obj->velZ;
+    if (velZ < lbl_803E648C) {
+      if (velZ >= lbl_803E648C) {
+        obj->velZ = lbl_803E648C;
+      }
+    } else if ((velZ > lbl_803E648C) && (velZ <= lbl_803E648C)) {
+      obj->velZ = lbl_803E648C;
+    }
+  }
+
+  dfptargetblock_resolveCollisionPoints(obj, (DfpTargetBlockCollisionPoints *)state);
+
+  dx = *(f32 *)((u8 *)home + 0x08) - obj->x;
+  dz = *(f32 *)((u8 *)home + 0x10) - obj->z;
+  mode = ((MapEventGetModeFn)(*(u32 *)(*gMapEventInterface + 0x40)))((s8)*(u8 *)((u8 *)obj + 0xac));
+
+  if (mode == 1) {
+    if ((lbl_803E649C < dx) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) ||
+        (lbl_803E64A8 < dz)) {
+      dfptargetblock_resetToHome(obj, home, state);
+    }
+    dfptargetblock_checkSettled(obj, state, lbl_803E64B0);
+  } else if (mode == 2) {
+    if ((lbl_803E64B4 < dx) || (dx < lbl_803E64B8) || (dz < lbl_803E64A4) ||
+        (lbl_803E64BC < dz)) {
+      dfptargetblock_resetToHome(obj, home, state);
+
+      effect.x = obj->x;
+      effect.y = obj->y;
+      effect.z = obj->z;
+      effect.scale = lbl_803E6490;
+      effect.rotZ = 0;
+      effect.rotY = 0;
+      effect.rotX = 0;
+
+      for (i = 0; i < 0x14; i++) {
+        ((PartfxSpawnObjectFn)(*(u32 *)(*gPartfxInterface + 0x8)))(obj, 0x5f5, &effect, 0x200001, -1,
+                                                                  0);
+      }
+    }
+    dfptargetblock_checkSettled(obj, state, lbl_803E64C0);
+  }
 }
+
+#pragma peephole reset
+#pragma scheduling reset
