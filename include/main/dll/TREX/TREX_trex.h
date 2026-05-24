@@ -52,7 +52,7 @@ void FUN_801e55c4(uint param_1);
 void FUN_801e5684(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801e56ac(int param_1);
 void FUN_801e5734(undefined4 param_1);
-void FUN_801e5790(void);
+void FUN_801e5790(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801e57e0(short *param_1);
 void FUN_801e59ec(uint param_1);
 void FUN_801e5afc(int param_1);

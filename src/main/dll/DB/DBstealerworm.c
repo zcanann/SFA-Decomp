@@ -492,10 +492,9 @@ void FUN_801e1f70(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e2034(void)
+void FUN_801e2034(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
-  char in_r8;
   int iVar2;
   undefined auStack_48 [6];
   undefined2 local_42;
@@ -507,7 +506,7 @@ void FUN_801e2034(void)
   
   iVar1 = FUN_8028683c();
   iVar2 = *(int *)(iVar1 + 0xb8);
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     if (*(char *)(iVar2 + 0x70) < '\x02') {
       local_30 = (longlong)(int)*(float *)(iVar2 + 0x88);
       local_42 = (undefined2)(int)*(float *)(iVar2 + 0x88);

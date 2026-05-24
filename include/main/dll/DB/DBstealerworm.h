@@ -20,7 +20,7 @@ FUN_801e1edc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 undefined4 FUN_801e1ee4(void);
 undefined4 FUN_801e1eec(uint param_1);
 void FUN_801e1f70(int param_1,int param_2);
-void FUN_801e2034(void);
+void FUN_801e2034(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801e20e4(int param_1);
 void FUN_801e217c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
