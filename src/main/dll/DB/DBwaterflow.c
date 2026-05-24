@@ -20,11 +20,9 @@ extern undefined4* DAT_803dd6d4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dfa28(int param_1)
+void FUN_801dfa28(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -85,11 +83,9 @@ void FUN_801dfab4(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dfab8(int param_1)
+void FUN_801dfab8(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -127,11 +123,9 @@ void FUN_801dfae0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801dfb04(int param_1)
+void FUN_801dfb04(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
