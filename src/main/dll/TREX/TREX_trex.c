@@ -1808,11 +1808,11 @@ void Flag_update(int obj)
 #pragma peephole off
 int SB_KyteCage_SeqFn(int obj, int unused, int seqState)
 {
-    int state;
     int i;
+    int state;
 
-    state = *(int *)(obj + 0xb8);
     i = 0;
+    state = *(int *)(obj + 0xb8);
     while (i < *(u8 *)(seqState + 0x8b)) {
         u8 seqCode;
 
