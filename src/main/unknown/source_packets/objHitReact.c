@@ -21,9 +21,13 @@
  * - previous resolved gap: 0x80030688-0x800353A4 is main/objhits.c
  *
  * Live EN anchors:
- * - objHitReact_update @ 0x800353A4 checks the retail "sphere overflow" path.
+ * - objHitReact_update @ 0x800353A4 checks the retail "sphere overflow" path
+ *   and is byte-matched in src/main/objHitReact.c.
  * - ObjHitReact_ResetActiveObjects @ 0x80035630 is the adjacent reset helper
- *   already carried in src/main/objHitReact.c.
+ *   and is also byte-matched in src/main/objHitReact.c.
+ * - ObjHitReact_LoadMoveEntries, ObjHitReact_InitState,
+ *   ObjHitReact_UpdateResetObjects, and ObjHitReact_GetResetObjects are
+ *   split and byte-matched in src/main/objlib.c.
  *
  * Reference-side function hints:
  * - objHitReactFn_80089890
