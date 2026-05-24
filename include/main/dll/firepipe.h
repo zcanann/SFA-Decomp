@@ -8,8 +8,8 @@ typedef struct FirePipeExtra {
     int effectObjs[8];
     u8 effectCount;
     u8 pad21[0x24 - 0x21];
-    u8 cycleTimer[4];
-    u8 emitTimer[4];
+    f32 cycleTimer;
+    f32 emitTimer;
     int subObj;
     int activeSpawn;
     int effectType;

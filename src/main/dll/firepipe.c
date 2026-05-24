@@ -23,8 +23,8 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5, double scale);
 extern undefined4 queueGlowRender(void);
-extern undefined4 storeZeroToFloatParam(int param_1);
-extern undefined4 s16toFloat(int param_1, int param_2);
+extern void storeZeroToFloatParam(f32 *param_1);
+extern void s16toFloat(f32 *param_1, s16 param_2);
 extern void fn_80098B18(FirePipeObject *obj, int type, int a, int b, int c, f32 scale);
 extern int objIsFrozen(FirePipeObject *obj);
 extern int fn_80080150(int timer);
@@ -175,8 +175,8 @@ void firepipe_updateState(FirePipeObject *obj)
         case 0x70a:
             if ((priorityHit == 0xf) || (priorityHit == 0xe)) {
                 flags->bit6 = 0;
-                storeZeroToFloatParam((int)extra + 0x24);
-                s16toFloat((int)extra + 0x24,0x12c);
+                storeZeroToFloatParam(&extra->cycleTimer);
+                s16toFloat(&extra->cycleTimer, 0x12c);
             }
             break;
         case 0x6f9:
@@ -199,24 +199,24 @@ void firepipe_updateState(FirePipeObject *obj)
         if ((u8)flags->bit7 != (u8)GameBit_Get(mapData->gameBit)) {
             flags->bit6 = (GameBit_Get(mapData->gameBit) != 0);
             if (flags->bit6 != 0) {
-                storeZeroToFloatParam((int)extra + 0x24);
+                storeZeroToFloatParam(&extra->cycleTimer);
                 if (mapData->timer != 0) {
                     if (mapData->flags != 0) {
                         if ((s8)mapData->flags < 0) {
-                            s16toFloat((int)extra + 0x24,
+                            s16toFloat(&extra->cycleTimer,
                                        (s16)randomGetRange(1,mapData->timer * 0x3c));
                         } else {
-                            s16toFloat((int)extra + 0x24,(s16)(mapData->flags * 0x3c));
+                            s16toFloat(&extra->cycleTimer, (s16)(mapData->flags * 0x3c));
                             if (mapData->flags >= mapData->timer) {
                                 flags->bit6 = 0;
                             }
                         }
                     } else {
-                        s16toFloat((int)extra + 0x24,(s16)(mapData->timer * 0x3c));
+                        s16toFloat(&extra->cycleTimer, (s16)(mapData->timer * 0x3c));
                     }
                 }
             } else {
-                storeZeroToFloatParam((int)extra + 0x24);
+                storeZeroToFloatParam(&extra->cycleTimer);
             }
         }
         flags->bit7 = (u8)GameBit_Get(mapData->gameBit);
@@ -241,7 +241,7 @@ void firepipe_updateState(FirePipeObject *obj)
     }
 
     if ((fn_80080150((int)extra + 0x24) != 0) && (flags->bit6 == 0)) {
-        if (extra->cycleTimer[0] < lbl_803DC348) {
+        if (*(u8 *)&extra->cycleTimer < lbl_803DC348) {
             if ((extra->subObj == 0) && (flags->bit0 != 0)) {
                 extra->subObj = fn_8001CC9C(obj,0xff,0x80,0,0);
                 if (extra->subObj != 0) {
@@ -285,7 +285,7 @@ void firepipe_updateState(FirePipeObject *obj)
 
     if (timerCountDown((int)extra + 0x24) != 0) {
         if (mapData->timer != 0) {
-            s16toFloat((int)extra + 0x24,(s16)(mapData->timer * 0x3c));
+            s16toFloat(&extra->cycleTimer, (s16)(mapData->timer * 0x3c));
         }
         flags->bit6 = (flags->bit6 == 0);
     }
@@ -312,8 +312,8 @@ sound_update:
             *(s16 *)(effectObj + 2) = *(s16 *)((u8 *)obj + 2);
             *(f32 *)(effectObj + 0x28) = lbl_803DC344;
         }
-        storeZeroToFloatParam((int)extra + 0x28);
-        s16toFloat((int)extra + 0x28,lbl_803DC350);
+        storeZeroToFloatParam(&extra->emitTimer);
+        s16toFloat(&extra->emitTimer, lbl_803DC350);
     }
 
     if (flags->bit6 != 0) {
@@ -424,7 +424,7 @@ static inline f64 firepipe_u32AsDouble(u32 value)
 void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
 {
     FirePipeExtra *extra;
-    int iVar8;
+    FirePipeExtra *extra2;
     int iVar7;
     short sVar1;
     short sVar5;
@@ -446,25 +446,25 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
     obj->sequenceCallback = firepipe_stateCallback;
     {
         iVar7 = (int)obj->objectDef;
-        iVar8 = (int)obj->extra;
-        storeZeroToFloatParam(iVar8 + 0x24);
+        extra2 = obj->extra;
+        storeZeroToFloatParam(&extra2->cycleTimer);
         sVar5 = *(short *)(iVar7 + 0x1a);
         if (sVar5 != 0) {
             sVar1 = *(short *)(iVar7 + 0x20);
             if (sVar1 != 0) {
                 if (sVar1 < 0) {
                     sVar5 = randomGetRange(1, sVar5 * 0x3c);
-                    s16toFloat(iVar8 + 0x24, (int)sVar5);
+                    s16toFloat(&extra2->cycleTimer, (int)sVar5);
                 }
                 else {
-                    s16toFloat(iVar8 + 0x24, (int)(short)(sVar1 * 0x3c));
+                    s16toFloat(&extra2->cycleTimer, (int)(short)(sVar1 * 0x3c));
                     if (*(short *)(iVar7 + 0x20) >= *(short *)(iVar7 + 0x1a)) {
-                        ((FirePipeBitFlags *)(iVar8 + 0x41))->bit6 = 0;
+                        ((FirePipeBitFlags *)&extra2->flags)->bit6 = 0;
                     }
                 }
             }
             else {
-                s16toFloat(iVar8 + 0x24, (int)(short)(sVar5 * 0x3c));
+                s16toFloat(&extra2->cycleTimer, (int)(short)(sVar5 * 0x3c));
             }
         }
         extra->clearVolumeA = 0;
@@ -535,8 +535,8 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
             uVar4 = 1;
         }
         ((FirePipeBitFlags *)&extra->flags)->bit0 = uVar4;
-        storeZeroToFloatParam((int)extra + 0x28);
-        s16toFloat((int)extra + 0x28, 0x14);
+        storeZeroToFloatParam(&extra->emitTimer);
+        s16toFloat(&extra->emitTimer, 0x14);
         ObjGroup_AddObject(obj, 0x4a);
         ((FirePipeBitFlags *)&extra->flags)->bit2 = 0;
         extra->subObj = 0;
