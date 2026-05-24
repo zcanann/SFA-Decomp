@@ -71,8 +71,6 @@ void dspInitCallback(void)
  *
  * EN v1.1 Address: 0x80284724
  */
-#pragma scheduling off
-#pragma peephole off
 void dspResumeCallback(void)
 {
     salDspCallbackEnabled = 1;
@@ -87,8 +85,6 @@ void dspResumeCallback(void)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * Audio output setup: allocate 0xa00-byte (4 x 0x280) DMA buffer,
