@@ -618,11 +618,13 @@ int fn_8015E3A0(int obj, int p2)
   extern void ObjHits_EnableObject(int);
   extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
   extern void ObjHits_RegisterActiveHitVolumeObject(int);
-  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern int *ObjList_GetObjects(int *, int *);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DD8;
   int sub = *(int *)(obj + 0xb8);
+  int count;
+  int idx;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
     ObjHits_EnableObject(obj);
@@ -633,13 +635,11 @@ int fn_8015E3A0(int obj, int p2)
   ObjHits_RegisterActiveHitVolumeObject(obj);
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    int idx;
-    int count;
     int *objs = ObjList_GetObjects(&idx, &count);
     while (idx < count) {
       int o = objs[idx];
-      if (o != obj && *(s16 *)(o + 0x46) == 774) {
-        (**(int (**)(int, int, int))(*(int *)(o + 0x68) + 0x24))(o, 129, 0);
+      if ((void *)o != (void *)obj && *(s16 *)(o + 0x46) == 774) {
+        (*(int (**)(int, int, int))(**(int **)(o + 0x68) + 0x24))(o, 129, 0);
       }
       idx++;
     }
@@ -648,12 +648,12 @@ int fn_8015E3A0(int obj, int p2)
   *(f32 *)(p2 + 0x2a0) = lbl_803E2DD8;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    ObjAnim_SetCurrentMove(obj, 10, 0, lbl_803E2DC8);
+    ObjAnim_SetCurrentMove(obj, 10, lbl_803E2DC8, 0);
     *(u8 *)(p2 + 0x346) = 0;
   }
   *(u8 *)(p2 + 0x34d) = 1;
 
-  if ((*(u32 *)(p2 + 0x314) & 0x1) != 0) {
+  if ((*(int *)(p2 + 0x314) & 0x1) != 0) {
     *(u32 *)(p2 + 0x314) = *(u32 *)(p2 + 0x314) & ~0x1;
     *(u8 *)(*(int *)(sub + 0x40c) + 0x8) = (u8)(*(u8 *)(*(int *)(sub + 0x40c) + 0x8) | 0x1);
     Sfx_PlayFromObject(obj, 614);
