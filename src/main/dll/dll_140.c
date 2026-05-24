@@ -91,11 +91,9 @@ void FUN_80179ad4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80179afc(int param_1)
+void FUN_80179afc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
 {
-  char in_r8;
-  
-  if ((*(int *)(param_1 + 0xf8) == 0) || (in_r8 == -1)) {
+  if ((*(int *)(param_1 + 0xf8) == 0) || (renderState == -1)) {
     FUN_8003b818(param_1);
   }
   return;
