@@ -319,6 +319,10 @@ int NW_geyser_SeqFn(int *obj, int p2, void *p3) {
 int fn_801CDE7C(int obj, int param_2, u8 *seqData)
 {
     u8 *state;
+    void *audioEvents;
+    void *audioPoints;
+    void *audioScratch;
+    f32 audioScale;
 
     (void)param_2;
 
@@ -335,8 +339,12 @@ int fn_801CDE7C(int obj, int param_2, u8 *seqData)
         *(s16 *)(seqData + 0x6e) = (s16)(*(s16 *)(seqData + 0x6e) & ~0x40);
         fn_801CDF94(obj, (int)state, 1);
     }
-    objAudioFn_8006ef38(obj, state + 0x440, 8, state + 0x45c, state + 0x16c,
-                        lbl_803E5210, lbl_803E5210);
+    audioEvents = state + 0x440;
+    audioPoints = state + 0x45c;
+    audioScratch = state + 0x16c;
+    audioScale = lbl_803E5210;
+    objAudioFn_8006ef38(obj, audioEvents, 8, audioPoints, audioScratch,
+                        audioScale, audioScale);
     if (seqData[0x8b] != 0) {
         *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) & ~0x400);
         *(u32 *)(*(int *)(obj + 0x64) + 0x30) =

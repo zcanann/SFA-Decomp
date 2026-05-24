@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/creator1D4.h"
 #include "main/dll/dll_1D5.h"
+#include "main/dll/ped.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 
@@ -36,7 +37,6 @@ extern void fn_801CEE0C(int obj, void *state, void *objDef);
 extern void fn_801CED2C(int obj, void *state, void *objDef);
 extern void fn_801CEA14(int obj, void *state, void *objDef);
 extern void fn_801CE2BC(int obj, void *state, void *objDef);
-extern void fn_801CDE7C(void);
 extern u32 GameBit_Get(int eventId);
 extern int* getTrickyObject(void);
 extern void Sfx_StopObjectChannel(int *p1, int channel);
@@ -244,7 +244,7 @@ void nw_mammoth_init(int obj, u8 *objDef, int isReload)
   state = *(u8 **)(obj + 0xb8);
   pathParam = lbl_803E5208;
   *(s16 *)obj = (s16)((s8)objDef[0x1c] << 8);
-  *(void **)(obj + 0xbc) = fn_801CDE7C;
+  *(void **)(obj + 0xbc) = nw_mammoth_SeqFn;
   if (isReload != 0) {
     return;
   }
