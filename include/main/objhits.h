@@ -166,7 +166,7 @@ uint ObjHits_TestTaperedCapsuleXZ(float pointRadius,float baseRadius,float tipRa
 uint ObjHits_TestTaperedCapsule3D(float pointRadius,float baseRadius,float tipRadius,float length,
                                   float *point,float *base,float *axis,float *tip,
                                   float *axial,float *dist2,float *sumR);
-void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount);
+void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount);
 void ObjHits_TickPriorityHitCooldowns(void);
 void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix);
 u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,

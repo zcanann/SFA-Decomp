@@ -1243,44 +1243,39 @@ uint ObjHits_TestTaperedCapsule3D(float pointRadius, float baseRadius, float tip
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjHits_SortSweepEntries(int sweepPtrs,int entryCount)
+void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount)
 {
-  uint iVar1;
-  uint iVar2;
-  int *piVar3;
-  int *piVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
+  int gap;
+  int maxGap;
+  int index;
+  int insertIndex;
+  ObjHitsSweepEntry **entrySlot;
+  ObjHitsSweepEntry **insertSlot;
+  ObjHitsSweepEntry *entry;
+  ObjHitsSweepEntry *prevEntry;
 
-  iVar1 = (entryCount + -1) / 9;
-  for (iVar9 = 1; iVar9 <= iVar1; iVar9 = iVar9 * 3 + 1) {
+  gap = 1;
+  maxGap = (entryCount - 1) / 9;
+  for (; gap <= maxGap; gap = gap * 3 + 1) {
   }
-  for (; 0 < iVar9; iVar9 = iVar9 / 3) {
-    iVar6 = iVar9 + 1;
-    iVar1 = iVar6 * 4;
-    piVar4 = (int *)(sweepPtrs + iVar1);
-    iVar2 = entryCount - iVar6;
-    if (iVar6 < entryCount) {
+  for (; gap > 0; gap = gap / 3) {
+    index = gap + 1;
+    entrySlot = sweepPtrs + index;
+    if (index < entryCount) {
       do {
-        iVar8 = *piVar4;
-        piVar3 = (int *)(sweepPtrs + iVar1);
-        iVar7 = iVar6;
-        while ((iVar9 < iVar7 &&
-               (iVar5 = *(int *)(sweepPtrs + (iVar7 - iVar9) * 4),
-               *(float *)(iVar8 + 4) < *(float *)(iVar5 + 4)))) {
-          *piVar3 = iVar5;
-          piVar3 = piVar3 + -iVar9;
-          iVar7 = iVar7 - iVar9;
+        entry = *entrySlot;
+        insertSlot = sweepPtrs + index;
+        insertIndex = index;
+        while ((gap < insertIndex) &&
+               (prevEntry = sweepPtrs[insertIndex - gap], prevEntry->maxX > entry->maxX)) {
+          *insertSlot = prevEntry;
+          insertSlot -= gap;
+          insertIndex -= gap;
         }
-        *(int *)(sweepPtrs + iVar7 * 4) = iVar8;
-        piVar4 = piVar4 + 1;
-        iVar6 = iVar6 + 1;
-        iVar1 = iVar1 + 4;
-        iVar2 = iVar2 + -1;
-      } while (iVar2 != 0);
+        sweepPtrs[insertIndex] = entry;
+        entrySlot++;
+        index++;
+      } while (index < entryCount);
     }
   }
   return;
@@ -3048,7 +3043,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
       objectCount--;
     } while (objectCount != 0);
   }
-  ObjHits_SortSweepEntries((int)&DAT_80341558, slotCount);
+  ObjHits_SortSweepEntries((ObjHitsSweepEntry **)&DAT_80341558, slotCount);
   currentIndex = 1;
   slotIndex = 1;
   entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
