@@ -242,12 +242,19 @@ void WM_seqobject_update(int *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void WM_seqobject_init(int *obj, s8 *def)
 {
-    OBJ_S16(obj, 0) = (s16)((s32)def[0x18] << 8);
+    s16 angle;
+
+    angle = (s16)((s32)def[0x18] << 8);
+    OBJ_S16(obj, 0) = angle;
     OBJ_PTR(obj, 0xbc) = (void *)fn_801F06D8;
     OBJ_S32(obj, 0xf8) = 0x14;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void WM_seqobject_release(void) {}
 void WM_seqobject_initialise(void) {}
