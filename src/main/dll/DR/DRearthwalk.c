@@ -780,7 +780,7 @@ void sh_emptytumblew_update(int obj)
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
 extern int *gGameUIInterface;
-extern int Obj_IsLoadingLocked(void);
+extern u8 Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int a, int b);
 extern int loadObjectAtObject(int obj, int *setup);
 extern void hudFn_8011f38c(int a);
@@ -883,7 +883,7 @@ extern void *fn_802966CC(int player);
 extern int fn_80295CF4(int player, int a);
 extern void ObjAnim_SetMoveProgress(int obj, f32 p);
 extern int ObjTrigger_IsSet(int obj);
-extern int Obj_IsLoadingLocked(void);
+extern u8 Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int a, int b);
 extern int loadObjectAtObject(int obj, int *setup);
 extern void mapUnload(int idx, int flags);
