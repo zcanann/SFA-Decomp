@@ -2595,6 +2595,7 @@ void curves_remove(RomCurveDef *curve)
   RomCurveDef **slot;
   int count;
   int index;
+  u32 remaining;
 
   index = 0;
   slot = romCurves;
@@ -2609,12 +2610,14 @@ void curves_remove(RomCurveDef *curve)
     return;
   }
 
-  nRomCurves = nRomCurves - 1;
+  count = nRomCurves - 1;
+  nRomCurves = count;
   slot = romCurves + index;
-  if (index >= nRomCurves) {
+  remaining = count - index;
+  if (index >= count) {
     return;
   }
-  for (; index < nRomCurves; index++) {
+  for (; remaining != 0; remaining--) {
     slot[0] = slot[1];
     slot = slot + 1;
   }
