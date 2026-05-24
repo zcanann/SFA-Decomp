@@ -353,15 +353,14 @@ void ecsh_shrine_free(int *obj) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c6404(void)
+void FUN_801c6404(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
-  char in_r8;
   int *piVar2;
   
   iVar1 = FUN_8028683c();
   piVar2 = *(int **)(iVar1 + 0xb8);
-  if (in_r8 == '\0') {
+  if (visible == 0) {
     if (*piVar2 != 0) {
       FUN_800175cc((double)lbl_803E5C60,*piVar2,'\0');
     }

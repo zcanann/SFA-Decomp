@@ -47,7 +47,7 @@ void FUN_801a8748(undefined4 param_1,undefined4 param_2,uint param_3);
 void FUN_801a8ae8(double param_1,double param_2,double param_3,int param_4);
 void FUN_801a8b20(int param_1,char param_2);
 void FUN_801a8b64(int param_1);
-void FUN_801a8bb0(void);
+void FUN_801a8bb0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801a8c14(void);
 void FUN_801a8c18(int param_1,int param_2);
 void FUN_801a8d70(void);

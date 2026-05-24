@@ -488,16 +488,15 @@ void FUN_801a9d30(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801a9d54(void)
+void FUN_801a9d54(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
   char *pcVar2;
-  char in_r8;
   double dVar3;
   
   iVar1 = FUN_80286840();
   pcVar2 = *(char **)(iVar1 + 0xb8);
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     if (*pcVar2 == '\x02') {
       if ((pcVar2[1] & 2U) != 0) {
         *(short *)(pcVar2 + 0xc) = *(short *)(pcVar2 + 0xc) + 0x1000;

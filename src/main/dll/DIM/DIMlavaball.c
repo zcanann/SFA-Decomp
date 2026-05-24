@@ -1213,14 +1213,13 @@ void FUN_801a8b64(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801a8bb0(void)
+void FUN_801a8bb0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
   int iVar2;
-  char in_r8;
   
   iVar1 = FUN_80286840();
-  iVar2 = (**(code **)(*DAT_803dd740 + 0xc))(iVar1,(int)in_r8);
+  iVar2 = (**(code **)(*DAT_803dd740 + 0xc))(iVar1,(int)visible);
   if (iVar2 != 0) {
     FUN_8003b818(iVar1);
   }
