@@ -830,11 +830,9 @@ void FUN_801807cc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80180940(int param_1)
+void FUN_80180940(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (((in_r8 != '\0') && (*(char *)(*(int *)(param_1 + 0xb8) + 0x1b) != '\0')) &&
+  if (((visible != 0) && (*(char *)(*(int *)(param_1 + 0xb8) + 0x1b) != '\0')) &&
      (*(char *)(*(int *)(param_1 + 0xb8) + 0x1c) == '\0')) {
     FUN_8003b818(param_1);
   }

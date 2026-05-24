@@ -47,7 +47,7 @@ void FUN_8016a708(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  short *param_9);
 void FUN_8016aa90(uint param_1);
 void FUN_8016aae4(void);
-void FUN_8016ab18(int param_1);
+void FUN_8016ab18(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8016ab40(int param_1);
 int pinponspike_getExtraSize(void);
 int pinponspike_func08(void);
