@@ -39,6 +39,16 @@ extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern undefined8 FUN_80294d28();
 extern undefined4 FUN_80294d60();
+extern int* gMapEventInterface;
+extern void playerAddMoney(int player, int amount);
+extern void playerAddHealth(int player, int amount);
+extern int gameBitIncrement(int bit);
+extern u8 lbl_80327FD0[];
+extern void* fn_802966CC(int player);
+extern void fn_80295CF4(int player, int mode);
+extern void skyFn_80088c94(int skyId, int enable);
+extern void envFxActFn_800887f8(int id);
+extern void getEnvfxAct(int obj, int target, int effectId, int flags);
 
 extern undefined4 DAT_80328c18;
 extern undefined4 DAT_803dc070;
@@ -2538,7 +2548,63 @@ void ShipBattle_render(int* obj)
 #pragma peephole reset
 #pragma scheduling reset
 void ShipBattle_update(void) {}
-void shop_buyItem(void) {}
+#pragma scheduling off
+#pragma peephole off
+void shop_buyItem(int obj, int price)
+{
+    int player;
+    int state;
+    int mapEventState;
+    u8 *items;
+    s16 boughtBit;
+
+    player = (int)Obj_GetPlayerObject();
+    state = *(int *)(obj + 0xb8);
+    mapEventState = ((int (*)(void))(*(u32 *)(*gMapEventInterface + 0x8c)))();
+    playerAddMoney(player, -price);
+
+    switch (*(s8 *)(state + 1)) {
+        case 0:
+            playerAddHealth(player, 2);
+            break;
+        case 0x17:
+            *(u8 *)(mapEventState + 0xa) = 10;
+            break;
+        case 1:
+            playerAddHealth(player, 8);
+            break;
+        case 2:
+            playerAddHealth(player, 4);
+            break;
+        case 3:
+            playerAddHealth(player, 0x1c);
+            break;
+        case 4:
+            gameBitIncrement(0x66c);
+            break;
+        case 5:
+            gameBitIncrement(0x86a);
+            break;
+        case 6:
+            gameBitIncrement(0xc1);
+            break;
+        case 7:
+            gameBitIncrement(0x13d);
+            gameBitIncrement(0x5d6);
+            break;
+        case 8:
+            gameBitIncrement(0x3f5);
+            break;
+    }
+
+    items = lbl_80327FD0;
+    boughtBit = *(s16 *)(items + *(s8 *)(state + 1) * 0xc + 8);
+    if (boughtBit != -1) {
+        GameBit_Set(boughtBit, 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void shop_free(int* obj)
@@ -2694,4 +2760,37 @@ void shop_setStateField1(int* obj, int v)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void shop_update(int obj) {}
+#pragma scheduling off
+#pragma peephole off
+void shop_update(int obj)
+{
+    int player;
+
+    player = (int)Obj_GetPlayerObject();
+    if (fn_802966CC(player) != NULL && (u32)GameBit_Get(0x18b) == 0u) {
+        fn_80295CF4(player, 0);
+    }
+
+    if (*(int *)(obj + 0xf4) == 0) {
+        (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 0, 1);
+        (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 5, 1);
+        (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 6, 1);
+        GameBit_Set(0x617, 1);
+        skyFn_80088c94(7, 1);
+        *(int *)(obj + 0xf4) = 1;
+    }
+
+    if ((u32)GameBit_Get(0xd21) != 0u && *(int *)(obj + 0xf8) == 0) {
+        envFxActFn_800887f8(0);
+        getEnvfxAct(obj, obj, 0x1c8, 0);
+        getEnvfxAct(obj, obj, 0x1cb, 0);
+        *(int *)(obj + 0xf8) = 1;
+        return;
+    }
+
+    if ((u32)GameBit_Get(0xd21) == 0u && *(int *)(obj + 0xf8) != 0) {
+        *(int *)(obj + 0xf8) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
