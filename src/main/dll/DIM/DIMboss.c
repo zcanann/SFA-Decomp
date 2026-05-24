@@ -228,6 +228,12 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         obj->objectFlags |= 0x80;
         (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,0,0);
         break;
+      case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
+        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,1);
+        break;
+      case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
+        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,0);
+        break;
       case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_06:
         gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_06;
         break;
@@ -270,12 +276,6 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         break;
       case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
         (*(code *)(*DAT_803dd6d4 + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,puVar3,0x3c);
-        break;
-      case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
-        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,1);
-        break;
-      case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
-        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,0);
         break;
       case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
