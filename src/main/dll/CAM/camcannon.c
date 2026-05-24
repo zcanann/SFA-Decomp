@@ -145,20 +145,21 @@ uint fn_8010AEA8(short *param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cameraModeTestStrengthFn_8010b238(f32 param_1, s16 *param_2, f32 *param_3, u32 param_4, u32 param_5,
-                 u32 param_6)
+void cameraModeTestStrengthFn_8010b238(f32 param_1, s16 *param_2, f32 *param_3, s32 param_4, s32 param_5,
+                 s32 param_6)
 {
   f32 fVar1;
   f32 fVar2;
   f32 fVar3;
+  int camState;
 
   *(u8 *)(lbl_803DD560 + 100) = 0;
   *(f32 *)(lbl_803DD560 + 0x10) = *(f32 *)((int)param_2 + 12);
   *(f32 *)(lbl_803DD560 + 0x18) = *(f32 *)((int)param_2 + 16);
   *(f32 *)(lbl_803DD560 + 0x20) = *(f32 *)((int)param_2 + 20);
-  *(f32 *)(lbl_803DD560 + 0x28) = (f32)(u32)(s32)param_2[0];
-  *(f32 *)(lbl_803DD560 + 0x30) = (f32)(u32)(s32)param_2[1];
-  *(f32 *)(lbl_803DD560 + 0x38) = (f32)(u32)(s32)param_2[2];
+  *(f32 *)(lbl_803DD560 + 0x28) = (f32)(s32)param_2[0];
+  *(f32 *)(lbl_803DD560 + 0x30) = (f32)(s32)param_2[1];
+  *(f32 *)(lbl_803DD560 + 0x38) = (f32)(s32)param_2[2];
   *(f32 *)(lbl_803DD560 + 0x40) = *(f32 *)((int)param_2 + 0xb4);
   *(f32 *)(lbl_803DD560 + 0x14) = param_3[0];
   *(f32 *)(lbl_803DD560 + 0x1c) = param_3[1];
@@ -172,9 +173,10 @@ void cameraModeTestStrengthFn_8010b238(f32 param_1, s16 *param_2, f32 *param_3, 
   fVar2 = *(f32 *)(lbl_803DD560 + 0x1c) - *(f32 *)(lbl_803DD560 + 0x18);
   fVar3 = *(f32 *)(lbl_803DD560 + 0x24) - *(f32 *)(lbl_803DD560 + 0x20);
   *(f32 *)(lbl_803DD560 + 0x60) = sqrtf(fVar1 * fVar1 + fVar2 * fVar2 + fVar3 * fVar3);
-  (**(void (**)(f64, f64, f64, f64, f64, int))(*gCameraInterface + 0x34))
-            ((f64)*(f32 *)(lbl_803DD560 + 0x60), (f64)lbl_803E18B0, (f64)lbl_803E18B4,
-             (f64)lbl_803E18B4, (f64)lbl_803E18B8, lbl_803DD560 + 0x48);
+  camState = lbl_803DD560;
+  (**(void (**)(int, f64, f64, f64, f64, f64))(*gCameraInterface + 0x34))
+            (camState + 0x48, (f64)*(f32 *)(camState + 0x60), (f64)lbl_803E18B0,
+             (f64)lbl_803E18B4, (f64)lbl_803E18B4, (f64)lbl_803E18B8);
 }
 
 /*
