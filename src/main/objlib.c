@@ -1521,6 +1521,8 @@ int *ObjHitReact_GetResetObjects(int *outObjectCount)
 #pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
+  int i;
+
   gObjHitReactResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
   gObjHitsPriorityHitStates =
       (undefined4)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * OBJHITS_PRIORITY_WORK_SLOT_SIZE,0xe,0);
@@ -1530,11 +1532,9 @@ void ObjHits_InitWorkBuffers(void)
   lbl_803DCBC8[0] = mmAlloc(0x400,0xe,0);
   lbl_803DCBC8[1] = mmAlloc(0x400,0xe,0);
   gObjHitsPriorityHitTickDelta = lbl_803DE914;
-  gObjHitsActiveHitVolumeObjects[0] = 0;
-  gObjHitsActiveHitVolumeObjects[1] = 0;
-  gObjHitsActiveHitVolumeObjects[2] = 0;
-  gObjHitsActiveHitVolumeObjects[3] = 0;
-  gObjHitsActiveHitVolumeObjects[4] = 0;
+  for (i = 0; i < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT; i++) {
+    gObjHitsActiveHitVolumeObjects[i] = 0;
+  }
   return;
 }
 #pragma peephole reset

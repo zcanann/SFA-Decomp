@@ -2203,13 +2203,11 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
 #pragma scheduling off
 void ObjHits_RegisterActiveHitVolumeObject(int obj)
 {
-  int *entry;
   int index;
 
   index = 0;
-  entry = gObjHitsActiveHitVolumeObjects;
-  while (index < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT && (uint)*entry != 0) {
-    entry = entry + 1;
+  while (index < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT &&
+         (uint)gObjHitsActiveHitVolumeObjects[index] != 0) {
     index = index + 1;
   }
   if (index == OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT) {
