@@ -1110,8 +1110,9 @@ int fn_801BA4B8(int obj, int p2)
 #pragma peephole off
 int fn_801BA880(int obj, int p2)
 {
+  f32 zeroProgress;
   extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
-  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern void Camera_EnableViewYOffset(void);
   extern void CameraShake_Start(f32, f32, f32);
   extern void doRumble(f32);
@@ -1124,16 +1125,17 @@ int fn_801BA880(int obj, int p2)
   extern f32 lbl_803E4BFC;
 
   *(f32 *)(p2 + 0x2a0) = lbl_803E4BF0;
-  *(f32 *)(p2 + 0x280) = lbl_803E4BD8;
-  *(f32 *)(p2 + 0x284) = lbl_803E4BD8;
+  zeroProgress = lbl_803E4BD8;
+  *(f32 *)(p2 + 0x280) = zeroProgress;
+  *(f32 *)(p2 + 0x284) = zeroProgress;
   ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    ObjAnim_SetCurrentMove(obj, 15, 0, lbl_803E4BD8);
+    ObjAnim_SetCurrentMove(obj, 15, lbl_803E4BD8, 0);
     *(u8 *)(p2 + 0x346) = 0;
   }
 
-  if ((*(u32 *)(p2 + 0x314) & 0x1) != 0) {
+  if ((*(int *)(p2 + 0x314) & 0x1) != 0) {
     gDIMbossSequenceFlags |= 0x4004;
     Sfx_PlayFromObject(obj, 381);
     Camera_EnableViewYOffset();
