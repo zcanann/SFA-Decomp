@@ -11,8 +11,8 @@
  * Score: 3760
  *
  * Retail EN evidence:
- * - main.dol string @ 0x8032A838
- * - main.dol string @ 0x8032A92F
+ * - main.dol string @ 0x80329BF8
+ * - main.dol string @ 0x80329CF0
  * - retail label: Init
  * - retail message: No Longer supported
  * - EN xref: 0x80208FF8 laser_freeUnsupported + 0xC
@@ -23,6 +23,9 @@
  * - EN xref: 0x8020988C textblockObj_init + 0xC
  *
  * Current EN relationship:
+ * - src/main/textblock.c is split and byte-matched for the TextBlock object wrappers.
+ * - src/main/dll/CF/laser_unsupported.c is split and byte-matched for the laser
+ *   unsupported wrappers that share the retail textblock.c string.
  * - the retail textblock.c string backs both the unsupported laser wrappers and
  *   the TextBlock object wrappers in the 0x80208FEC-0x802098B4 neighborhood.
  *
