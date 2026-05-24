@@ -2437,6 +2437,9 @@ extern void Obj_FreeObject(int obj);
 void SB_MiniFire_update(int obj)
 {
     f32 buf[8];
+    f32 dx;
+    f32 dy;
+    f32 dz;
     int dt;
     *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
     *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
@@ -2447,15 +2450,18 @@ void SB_MiniFire_update(int obj)
     buf[2] = lbl_803E5928;
     if (*(int *)(obj + 0xf4) <= 0x3c) {
         buf[2] = (f32)*(int *)(obj + 0xf4) / lbl_803E5930;
-        *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E5934 * buf[2]);
+        *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E5934 * ((f32)*(int *)(obj + 0xf4) / lbl_803E5930));
     }
     *(s16 *)((char *)buf + 4) = 0;
     *(s16 *)((char *)buf + 2) = 0;
     *(s16 *)((char *)buf + 0) = 0;
     ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa0, buf, 1, -1, 0);
-    buf[3] = (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80)) / lbl_803E5938;
-    buf[4] = (*(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84)) / lbl_803E5938;
-    buf[5] = (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)) / lbl_803E5938;
+    dy = *(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84);
+    dz = *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88);
+    dx = *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80);
+    buf[3] = dx / lbl_803E5938;
+    buf[4] = dy / lbl_803E5938;
+    buf[5] = dz / lbl_803E5938;
     ((void (*)(int, int, void *, int, int, int))((void **)*gPartfxInterface)[2])(obj, 0xa0, buf, 1, -1, 0);
     buf[3] = buf[3] * lbl_803E593C;
     buf[4] = buf[4] * lbl_803E593C;
