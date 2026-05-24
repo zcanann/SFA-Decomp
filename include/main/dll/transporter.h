@@ -17,7 +17,7 @@ uint FUN_80175740(int param_1,int param_2);
 void FUN_801757ac(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  int param_5);
 void FUN_80175ed4(int param_1);
-void pushable_render(void);
+void pushable_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801760a4(void);
 void FUN_801765c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,

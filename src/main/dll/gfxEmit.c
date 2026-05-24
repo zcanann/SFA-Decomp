@@ -480,15 +480,14 @@ void collectible_free(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017308c(void)
+void FUN_8017308c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
   int iVar2;
-  char in_r8;
   
   iVar1 = FUN_80286840();
   iVar2 = *(int *)(iVar1 + 0xb8);
-  if ((((in_r8 != '\0') && (*(float *)(iVar2 + 8) == lbl_803E40F4)) &&
+  if ((((visible != 0) && (*(float *)(iVar2 + 8) == lbl_803E40F4)) &&
       (*(int *)(iVar1 + 0xf4) == 0)) &&
      ((*(short *)(iVar1 + 0x46) == 0x156 || (*(char *)(iVar2 + 0x1e) == '\0')))) {
     if (((*(uint *)(*(int *)(iVar1 + 0x50) + 0x44) & 0x10000) != 0) &&

@@ -137,16 +137,15 @@ void FUN_801ed104(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801ed188(void)
+void FUN_801ed188(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
 {
   int iVar1;
-  char in_r8;
   int iVar2;
   
   iVar1 = FUN_80286838();
   iVar2 = *(int *)(iVar1 + 0xb8);
   FUN_801e9c00();
-  if (in_r8 == -1) {
+  if (renderState == -1) {
     FUN_8003b818(iVar1);
     ObjPath_GetPointWorldPosition(iVar1,0,(float *)(iVar2 + 1000),(undefined4 *)(iVar2 + 0x3ec),
                  (float *)(iVar2 + 0x3f0),0);

@@ -556,18 +556,17 @@ void FUN_80175ed4(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void pushable_render(void)
+void pushable_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   short sVar1;
   float fVar2;
   int iVar3;
   int iVar4;
   uint uVar5;
-  char in_r8;
   
   iVar3 = FUN_80286840();
   fVar2 = lbl_803E41C0;
-  if (in_r8 == '\0') goto LAB_80176578;
+  if (visible == 0) goto LAB_80176578;
   iVar4 = *(int *)(iVar3 + 0xb8);
   sVar1 = *(short *)(iVar3 + 0x46);
   if (sVar1 == 0x411) {
