@@ -13,7 +13,7 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_9,undefined4 param_10,float *param_11,undefined4 param_12,
                  int param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void FUN_8019b6ac(ushort *param_1,short *param_2);
-void FUN_8019b844(int param_1);
+void FUN_8019b844(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8019b86c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);

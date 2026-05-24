@@ -15,7 +15,7 @@ void FUN_801dc6e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void sc_totempole_sortCompletionGameBits(void);
-void FUN_801dc9e4(int param_1);
+void FUN_801dc9e4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void sc_totempole_update(uint param_1);
 
 #endif /* MAIN_DLL_DR_DRCLOUDRUNNER_H_ */
