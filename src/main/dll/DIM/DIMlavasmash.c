@@ -18,10 +18,13 @@ extern void* FUN_80017624();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
+extern void Sfx_PlayFromObject(int obj,int sfxId);
 extern int FUN_80017a90();
 extern undefined4 FUN_80017ac8();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
+extern int getTrickyObject(void);
+extern void fn_80098B18(int obj,f32 scale,int type,int param_4,int param_5,int param_6);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int objCreateLight(int obj,int param_2);
@@ -46,8 +49,10 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e54b0;
 extern f64 DOUBLE_803e54d8;
+extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E4820;
+extern f32 lbl_803E4824;
 extern f32 lbl_803E4828;
 extern f32 lbl_803E482C;
 extern f32 lbl_803E4830;
@@ -70,7 +75,7 @@ extern f32 lbl_803E54D4;
  *
  * Function: dimlogfire_update
  * EN v1.0 Address: 0x801B0924
- * EN v1.0 Size: 184b
+ * EN v1.0 Size: 708b
  * EN v1.1 Address: 0x801B0B58
  * EN v1.1 Size: 204b
  * JP Address: TODO
@@ -78,24 +83,101 @@ extern f32 lbl_803E54D4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimlogfire_update(short *param_1,int param_2)
+void dimlogfire_update(int obj)
 {
-  uint uVar1;
-  int iVar2;
+  bool hitPulseB;
+  byte stateId;
+  float sparkAlpha;
+  s16 lightAlpha;
+  int light;
+  int tricky;
+  int *state;
+  float local_28;
+  float local_24;
+  float local_20;
   
-  *param_1 = (ushort)*(byte *)(param_2 + 0x1c) << 8;
-  iVar2 = *(int *)(param_1 + 0x5c);
-  *(float *)(iVar2 + 0x10) =
-       (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x18) ^ 0x80000000) -
-              DOUBLE_803e54b0);
-  *(float *)(iVar2 + 0xc) = lbl_803E54AC;
-  *(ushort *)(iVar2 + 0x14) = (ushort)*(byte *)(param_2 + 0x1d);
-  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x22));
-  *(char *)(iVar2 + 0x18) = (char)uVar1;
-  if ((*(short *)(param_2 + 0x24) == -1) && (*(char *)(iVar2 + 0x18) == '\0')) {
-    *(undefined *)(iVar2 + 0x1b) = 1;
+  state = *(int **)(obj + 0xb8);
+  tricky = *(int *)(obj + 0x4c);
+  *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
+  stateId = *(byte *)((int)state + 0x1a);
+  if (stateId != 3) {
+    if (stateId < 3) {
+      if (stateId == 1) {
+        if (*state != 0) {
+          lightFn_8001db6c(*state,1,lbl_803E4824);
+        }
+        Sfx_PlayFromObject(obj,0x72);
+        *(float *)(state + 4) = *(float *)(state + 4) - timeDelta;
+        if (lbl_803E4828 < *(float *)(state + 4)) {
+          tricky = 0;
+        }
+        else {
+          tricky = 7;
+          *(float *)(state + 4) = *(float *)(state + 4) + lbl_803E482C;
+        }
+        *(float *)(state + 5) = *(float *)(state + 5) - timeDelta;
+        sparkAlpha = *(float *)(state + 5);
+        hitPulseB = sparkAlpha <= lbl_803E4828;
+        if (hitPulseB) {
+          *(float *)(state + 5) = sparkAlpha + lbl_803E4820;
+        }
+        local_28 = lbl_803E4828;
+        local_24 = lbl_803E482C;
+        local_20 = lbl_803E4828;
+        fn_80098B18(obj,*(float *)(obj + 8),2,tricky,hitPulseB,(int)&local_28);
+        ObjHits_SetHitVolumeSlot(obj,0x1f,1,0);
+        goto LAB_801b0b30;
+      }
+      if (stateId != 0) {
+        if (*state != 0) {
+          lightFn_8001db6c(*state,0,lbl_803E4824);
+        }
+        if (*(char *)(state + 7) < '\x01') {
+          ObjHits_DisableObject(obj);
+          *(undefined *)((int)state + 0x1a) = 1;
+          *(undefined *)((int)state + 0x1d) = 1;
+          GameBit_Set((int)*(short *)(tricky + 0x1e),1);
+        }
+        tricky = getTrickyObject();
+        if (tricky != 0) {
+          if ((*(byte *)(obj + 0xaf) & 4) != 0) {
+            (*(void (**)(int,int,int,int))(**(int **)(tricky + 0x68) + 0x28))(tricky,obj,1,4);
+          }
+          *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & 0xf7;
+        }
+        ObjHits_SetHitVolumeSlot(obj,0,0,0);
+        goto LAB_801b0b30;
+      }
+    }
+    else if (stateId < 5) {
+      goto LAB_801b0b30;
+    }
   }
-  param_1[0x58] = param_1[0x58] | 0x6000;
+  if (*(char *)(state + 6) == '\0') {
+    *(undefined *)((int)state + 0x1a) = 1;
+    *(undefined *)((int)state + 0x1d) = 1;
+  }
+  else {
+    *(undefined *)((int)state + 0x1a) = 2;
+  }
+LAB_801b0b30:
+  if (*(char *)((int)state + 0x1d) != '\0') {
+    *(undefined *)((int)state + 0x1d) = 0;
+  }
+  light = *state;
+  if (((light != 0) && (*(char *)(light + 0x2f8) != '\0')) && (*(char *)(light + 0x4c) != '\0')) {
+    lightAlpha = (ushort)*(byte *)(light + 0x2f9) + *(char *)(light + 0x2fa) +
+                 (short)randomGetRange(-0x19,0x19);
+    if (lightAlpha < 0) {
+      lightAlpha = 0;
+      *(undefined *)(light + 0x2fa) = 0;
+    }
+    else if (0xff < lightAlpha) {
+      lightAlpha = 0xff;
+      *(undefined *)(light + 0x2fa) = 0;
+    }
+    *(char *)(*state + 0x2f9) = (char)lightAlpha;
+  }
   return;
 }
 
