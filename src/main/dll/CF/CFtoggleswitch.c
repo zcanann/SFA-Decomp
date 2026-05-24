@@ -656,39 +656,58 @@ extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern void objRenderFn_80041018(int obj);
 extern u8 framesThisStep;
 
+typedef struct TrickyGuardSpotFlags {
+    u8 trickyInRange : 1; /* 0x80 */
+    u8 flags : 7;
+} TrickyGuardSpotFlags;
+
+typedef struct TrickyGuardSpotInterfaceVTable {
+    void *pad00[10];
+    void (*setGuardSpotAction)(int *tricky, int *obj, int action, int param);
+    void *pad2C[4];
+    void (*resetGuardSpotAction)(int *tricky);
+    void *pad40;
+    int (*isGuardSpotActionReady)(int *tricky);
+} TrickyGuardSpotInterfaceVTable;
+
+#define TRICKY_GUARD_SPOT_VTABLE(tricky) \
+    (*(TrickyGuardSpotInterfaceVTable **)(*(u8 **)((char *)(tricky) + 0x68)))
+
 #pragma scheduling off
 #pragma peephole off
 void trickyguardspot_update(int *obj) {
     u8 *sub;
     u8 *def;
     int *tricky;
+    TrickyGuardSpotFlags *flags;
 
     sub = *(u8**)((char*)obj + 0xb8);
     def = *(u8**)((char*)obj + 0x4c);
     tricky = getTrickyObject();
+    flags = (TrickyGuardSpotFlags *)(sub + 4);
     *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
-    sub[4] = (u8)(sub[4] & ~0x80);
+    flags->trickyInRange = 0;
     if (tricky != NULL) {
-        if ((u8)((int(*)(int*))((int**)*(int**)((char*)tricky + 0x68))[17])(tricky) != 0) {
+        if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) != 0) {
             if (Vec_xzDistance((f32*)((char*)obj + 0x18), (f32*)((char*)tricky + 0x18)) < (f32)(s32)*(s16*)(def + 0x1a)) {
                 *(int*)sub = *(int*)sub - framesThisStep;
-                sub[4] = (u8)(sub[4] | 0x80);
+                flags->trickyInRange = 1;
             }
         }
     }
-    if (*(int*)sub != 0) {
-        if (tricky != NULL && (u8)((int(*)(int*))((int**)*(int**)((char*)tricky + 0x68))[17])(tricky) == 0) {
+    if (*(u32*)sub != 0) {
+        if (tricky != NULL && (u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) == 0) {
             if ((*(u8*)((char*)obj + 0xaf) & 4) != 0) {
-                ((void(*)(int*, int*, int, int))((int**)*(int**)((char*)tricky + 0x68))[10])(tricky, obj, 1, 3);
+                TRICKY_GUARD_SPOT_VTABLE(tricky)->setGuardSpotAction(tricky, obj, 1, 3);
             }
             *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
             objRenderFn_80041018((int)obj);
         }
     } else if (tricky != NULL) {
-        ((void(*)(int*))((int**)*(int**)((char*)tricky + 0x68))[15])(tricky);
+        TRICKY_GUARD_SPOT_VTABLE(tricky)->resetGuardSpotAction(tricky);
         *(int*)sub = def[0x19] * 0x3c;
     }
-    GameBit_Set(*(s16*)(def + 0x1e), (sub[4] >> 7) & 1);
+    GameBit_Set(*(s16*)(def + 0x1e), flags->trickyInRange);
 }
 #pragma peephole reset
 #pragma scheduling reset
