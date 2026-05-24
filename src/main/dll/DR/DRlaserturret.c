@@ -130,7 +130,6 @@ int DRlaserturret_updateTracking(void *obj, DRLaserTurretAnimState *animState)
     int count;
     int idx;
     void **arr;
-    void *out;
 
     playerObj = Obj_GetPlayerObject();
     state = *(DRLaserTurretState **)((char *)obj + 0xb8);
@@ -204,19 +203,16 @@ int DRlaserturret_updateTracking(void *obj, DRLaserTurretAnimState *animState)
                         *(f32 *)((char *)obj + 0x14), &arr, 0, 0);
     fmin = lbl_803E5A20;
     if (count > 0) {
-        idx = 0;
-        do {
-            fdist = *(f32 *)*(int *)((char *)arr + idx) - *(f32 *)((char *)obj + 0x10);
+        for (idx = 0; idx < count; idx++) {
+            fdist = *(f32 *)arr[idx] - *(f32 *)((char *)obj + 0x10);
             if (fdist < lbl_803E59DC) {
                 fdist = -fdist;
             }
             if (fdist < fmin) {
-                state->bobBaseY = lbl_803E59E0 + *(f32 *)*(int *)((char *)arr + idx);
+                state->bobBaseY = lbl_803E59E0 + *(f32 *)arr[idx];
                 fmin = fdist;
             }
-            idx += 4;
-            count--;
-        } while (count != 0);
+        }
     }
     *(f32 *)((char *)obj + 0x10) =
         state->bobAmplitude *
