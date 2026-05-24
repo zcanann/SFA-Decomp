@@ -113,82 +113,24 @@ extern f32 lbl_803E5900;
 extern f32 lbl_803E5904;
 extern f32 lbl_803E5908;
 extern f32 lbl_803E590C;
+extern undefined4 gDIMbossAnimTable[];
+extern undefined4 gDIMbossHitDetectAnimTable[];
+extern void fn_801BB328(int* obj, f32* p2);
+extern void fn_801BB3E8(int obj, u8 flag);
 
 /*
  * --INFO--
  *
- * Function: FUN_801bb598
+ * Function: fn_801BB598
  * EN v1.0 Address: 0x801BB598
- * EN v1.0 Size: 688b
- * EN v1.1 Address: 0x801BB99C
- * EN v1.1 Size: 432b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801bb598(int param_1,char param_2)
-{
-  int *piVar1;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int *piVar2;
-  double dVar3;
-  double dVar4;
-  undefined8 in_f4;
-  undefined8 in_f5;
-  undefined8 in_f6;
-  undefined8 in_f7;
-  undefined8 in_f8;
-  
-  piVar2 = *(int **)(*(int *)(param_1 + 0xb8) + 0x40c);
-  if (*piVar2 == 0) {
-    piVar1 = FUN_80017624(0,'\x01');
-    *piVar2 = (int)piVar1;
-    if (*piVar2 != 0) {
-      FUN_800175b0(*piVar2,2);
-      dVar3 = (double)(float)piVar2[0x17];
-      dVar4 = (double)(float)piVar2[0x18];
-      FUN_800175ec((double)(float)piVar2[0x16],dVar3,dVar4,(int *)*piVar2);
-      if (param_2 == '\0') {
-        FUN_8001759c(*piVar2,0xff,0,0,0xff);
-        FUN_80017588(*piVar2,0xff,0,0,0xff);
-        FUN_8001754c((double)lbl_803E58C4,dVar3,dVar4,in_f4,in_f5,in_f6,in_f7,in_f8,*piVar2,0,0xff
-                     ,0,0,0xc0,in_r9,in_r10);
-      }
-      else {
-        FUN_8001759c(*piVar2,0,0xff,0,0xff);
-        FUN_80017588(*piVar2,0,0xff,0,0xff);
-        FUN_8001754c((double)lbl_803E58C0,dVar3,dVar4,in_f4,in_f5,in_f6,in_f7,in_f8,*piVar2,0,0,
-                     0xff,0,0xc0,in_r9,in_r10);
-      }
-      FUN_800175d0((double)lbl_803E58C4,(double)lbl_803E58C8,*piVar2);
-      FUN_800175bc(*piVar2,1);
-      FUN_800175cc((double)lbl_803E5870,*piVar2,'\x01');
-      FUN_80017594(*piVar2,0x40,0,0,0x40);
-      FUN_80017580(*piVar2,0x40,0,0,0x40);
-      FUN_8001753c(*piVar2,2,0x28);
-      FUN_800175d8(*piVar2,1);
-      FUN_80017544((double)lbl_803E5854,*piVar2);
-    }
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801bb848
- * EN v1.0 Address: 0x801BB848
- * EN v1.0 Size: 1672b
- * EN v1.1 Address: 0x801BBB4C
+ * EN v1.0 Size: 1452b
  * EN v1.1 Size: 1452b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bb848(void)
+void fn_801BB598(void)
 {
   float fVar1;
   short sVar2;
@@ -366,20 +308,21 @@ void FUN_801bb848(void)
 /*
  * --INFO--
  *
- * Function: FUN_801bbed0
- * EN v1.0 Address: 0x801BBED0
- * EN v1.0 Size: 2044b
- * EN v1.1 Address: 0x801BC0F8
+ * Function: warpDarkIceMines_801bbb44
+ * EN v1.0 Address: 0x801BBB44
+ * EN v1.0 Size: 1940b
  * EN v1.1 Size: 1940b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bbed0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void warpDarkIceMines_801bbb44(undefined8 param_1,double param_2,double param_3,
+                               undefined8 param_4,undefined8 param_5,undefined8 param_6,
+                               undefined8 param_7,undefined8 param_8,undefined4 param_9,
+                               undefined4 param_10,undefined4 param_11,undefined4 param_12,
+                               undefined4 param_13,undefined4 param_14,undefined4 param_15,
+                               undefined4 param_16)
 {
   uint uVar1;
   uint uVar2;
@@ -584,18 +527,17 @@ void FUN_801bbed0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_801bc6cc
- * EN v1.0 Address: 0x801BC6CC
- * EN v1.0 Size: 1480b
- * EN v1.1 Address: 0x801BC88C
+ * Function: fn_801BC2D8
+ * EN v1.0 Address: 0x801BC2D8
+ * EN v1.0 Size: 1292b
  * EN v1.1 Size: 1292b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bc6cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void fn_801BC2D8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   bool bVar1;
   uint uVar2;
@@ -744,18 +686,96 @@ void FUN_801bc6cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_801bcc94
- * EN v1.0 Address: 0x801BCC94
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801BCD98
+ * Function: fn_801BC7E4
+ * EN v1.0 Address: 0x801BC7E4
+ * EN v1.0 Size: 848b
  * EN v1.1 Size: 848b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801bcc94(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,int param_12)
+void fn_801BC7E4(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
 {
+  float fVar1;
+  float fVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+
+  iVar3 = FUN_80286840();
+  iVar5 = *(int *)(param_3 + 0x40c);
+  iVar4 = FUN_80017a90();
+  ObjHits_EnableObject(iVar3);
+  *(undefined *)(param_4 + 0x25f) = 1;
+  (**(code **)(*DAT_803dd738 + 0x2c))((double)lbl_803E5908,iVar3,param_4,1);
+  (**(code **)(*DAT_803dd738 + 0x54))
+            (iVar3,param_4,param_3 + 0x35c,(int)*(short *)(param_3 + 0x3f4),param_3 + 0x405,0,0,0);
+  if (*(short *)(param_4 + 0x274) == 6) {
+    *(float *)(iVar5 + 0xa0) =
+         -(lbl_803DC074 * (lbl_803E5860 * *(float *)(iVar3 + 0x98) + lbl_803E58DC) -
+          *(float *)(iVar5 + 0xa0));
+  }
+  else {
+    *(float *)(iVar5 + 0xa0) = *(float *)(iVar5 + 0xa0) - lbl_803DC074;
+  }
+  if (*(float *)(iVar5 + 0xa0) <= lbl_803E5870) {
+    GameBit_Set(*(undefined2 *)(&DAT_80326624 + (uint)*(byte *)(iVar5 + 0xb5) * 8),1);
+    *(undefined4 *)(iVar5 + 0xa0) =
+         *(undefined4 *)(&DAT_80326620 + (uint)*(byte *)(iVar5 + 0xb5) * 8);
+    *(char *)(iVar5 + 0xb5) = *(char *)(iVar5 + 0xb5) + '\x01';
+    if (0x17 < *(byte *)(iVar5 + 0xb5)) {
+      *(undefined *)(iVar5 + 0xb5) = 0;
+    }
+  }
+  fVar2 = lbl_803E590C;
+  if (iVar4 != 0) {
+    fVar1 = *(float *)(iVar5 + 0xa4);
+    if (((lbl_803E5870 < fVar1) && (fVar1 <= lbl_803E590C)) &&
+       (*(float *)(iVar5 + 0xa4) = fVar1 + lbl_803DC074, fVar2 <= *(float *)(iVar5 + 0xa4))) {
+      (**(code **)(**(int **)(iVar4 + 0x68) + 0x34))(iVar4,1,iVar3);
+    }
+    fVar2 = lbl_803E5870;
+    if (*(float *)(iVar5 + 0xa8) <= lbl_803E5870) {
+      if (*(short *)(param_3 + 0x402) == 1) {
+        *(ushort *)(param_3 + 0x400) = *(ushort *)(param_3 + 0x400) | 4;
+        *(float *)(iVar5 + 0xa8) = lbl_803E58DC;
+        fn_801BB3E8(iVar3,0);
+      }
+    }
+    else {
+      *(float *)(iVar5 + 0xa8) = *(float *)(iVar5 + 0xa8) + lbl_803DC074;
+      if (lbl_803E5884 <= *(float *)(iVar5 + 0xa8)) {
+        *(ushort *)(param_3 + 0x400) = *(ushort *)(param_3 + 0x400) & 0xfffb;
+        *(float *)(iVar5 + 0xa8) = fVar2;
+        (**(code **)(**(int **)(iVar4 + 0x68) + 0x34))(iVar4,0,0);
+        *(float *)(iVar5 + 0xa4) = lbl_803E58DC;
+      }
+    }
+  }
+  if (*(short *)(param_3 + 0x402) == 2) {
+    fn_801BB3E8(iVar3,1);
+  }
+  if ((DAT_803de800 & 0x20000) != 0) {
+    DAT_803de800 = DAT_803de800 & 0xfffdffff;
+    fn_801BB328((int *)(*(int *)(param_3 + 0x40c) + 4),(f32 *)(*(int *)(param_3 + 0x40c) + 0x94));
+  }
+  if ((*(ushort *)(param_3 + 0x400) & 4) != 0) {
+    DAT_803de800 = DAT_803de800 | 8;
+  }
+  if (*(short *)(param_3 + 0x402) == 1) {
+    (**(code **)(**(int **)(iVar4 + 0x68) + 0x28))(iVar4,iVar3,1,2);
+    *(undefined *)(iVar3 + 0xe4) = 1;
+  }
+  else {
+    *(undefined *)(iVar3 + 0xe4) = 2;
+  }
+  *(undefined4 *)(param_3 + 0x3e0) = *(undefined4 *)(iVar3 + 0xc0);
+  *(undefined4 *)(iVar3 + 0xc0) = 0;
+  (**(code **)(*DAT_803dd70c + 8))
+            ((double)lbl_803DC074,(double)lbl_803DC074,iVar3,param_4,gDIMbossHitDetectAnimTable,
+             gDIMbossAnimTable);
+  *(undefined4 *)(iVar3 + 0xc0) = *(undefined4 *)(param_3 + 0x3e0);
+  FUN_8028688c();
+  return;
 }
