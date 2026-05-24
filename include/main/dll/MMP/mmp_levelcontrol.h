@@ -13,7 +13,7 @@ void FUN_80194544(int param_1);
 void FUN_801945fc(int param_1,int param_2);
 void FUN_801946b8(void);
 void FUN_80194874(int param_1);
-void FUN_801948b0(int param_1);
+void FUN_801948b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801948d8(uint param_1);
 void FUN_801949ec(undefined2 *param_1,int param_2);
 double FUN_80194a70(int param_1,byte param_2);
