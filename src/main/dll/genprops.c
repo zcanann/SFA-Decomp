@@ -417,11 +417,9 @@ void FUN_8016b2e4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016b39c(int param_1)
+void FUN_8016b39c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -616,11 +614,9 @@ void FUN_8016b7d4(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016b970(int param_1)
+void FUN_8016b970(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if ((in_r8 != '\0') && (*(int *)(*(int *)(param_1 + 100) + 0xc) != 0)) {
+  if ((visible != 0) && (*(int *)(*(int *)(param_1 + 100) + 0xc) != 0)) {
     FUN_80061194();
   }
   return;
@@ -723,11 +719,9 @@ void staticCamera_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void staticCamera_render(int param_1)
+void staticCamera_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -777,11 +771,9 @@ void staticCamera_init(short *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016bbb8(int param_1)
+void FUN_8016bbb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if ((in_r8 != '\0') && (*(int *)(param_1 + 0xf4) == 0)) {
+  if ((visible != 0) && (*(int *)(param_1 + 0xf4) == 0)) {
     FUN_8003b818(param_1);
   }
   return;
@@ -859,11 +851,9 @@ void FUN_8016bd30(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016bd80(int param_1)
+void FUN_8016bd80(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;

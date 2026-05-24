@@ -16,7 +16,7 @@ void mikabomb_initialise(void);
 void FUN_8016b2e4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10);
-void FUN_8016b39c(int param_1);
+void FUN_8016b39c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8016b3c4(uint param_1);
 int mikabombshadow_getExtraSize(void);
 int mikabombshadow_func08(void);
@@ -37,7 +37,7 @@ void StaticCamera_update(void);
 void StaticCamera_init();
 void StaticCamera_release(void);
 void StaticCamera_initialise(void);
-void FUN_8016b970(int param_1);
+void FUN_8016b970(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8016b9a8(int param_1);
 int gcbaddieshield_getExtraSize(void);
 int gcbaddieshield_func08(void);
@@ -59,14 +59,14 @@ void baddieinterestp_init(void);
 void baddieinterestp_release(void);
 void baddieinterestp_initialise(void);
 void staticCamera_free(int param_1);
-void staticCamera_render(int param_1);
+void staticCamera_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void staticCamera_init(short *param_1,int param_2,int param_3);
-void FUN_8016bbb8(int param_1);
+void FUN_8016bbb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8016bbec(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9);
 void FUN_8016bd30(int param_1,int param_2);
-void FUN_8016bd80(int param_1);
+void FUN_8016bd80(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8016bda8(void);
 void FUN_8016c0a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
