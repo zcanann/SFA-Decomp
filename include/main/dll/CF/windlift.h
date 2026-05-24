@@ -16,7 +16,7 @@ void FUN_80185c9c(void);
 void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_8018671c(undefined2 *param_1,int param_2);
-void FUN_80186720(int param_1);
+void FUN_80186720(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80186748(int param_1);
 
 extern ObjectDescriptor gDummy108ObjDescriptor;

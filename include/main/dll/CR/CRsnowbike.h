@@ -19,7 +19,7 @@ void FUN_801db5b8(short *param_1,int param_2);
 undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2);
 void FUN_801db8c4(void);
-void FUN_801db924(int param_1);
+void FUN_801db924(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
 
