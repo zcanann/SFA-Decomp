@@ -9,7 +9,7 @@ void fn_801EAE4C(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
 void fn_801EB0D4(uint param_1,int param_2);
 void fn_801EB334(int *obj);
 void FUN_801eb990(undefined2 *param_1);
-undefined4 FUN_801eba78(short *param_1,undefined4 param_2,int param_3);
+undefined4 fn_801EB420(short *param_1,undefined4 param_2,int param_3);
 void fn_801EB634(int param_1,int param_2);
 void fn_801EB940(short *param_1,int param_2);
 

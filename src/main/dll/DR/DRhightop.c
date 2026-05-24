@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"
 
 extern undefined4 FUN_8000680c();
@@ -9,7 +10,11 @@ extern undefined4 FUN_80006920();
 extern undefined4 FUN_800069bc();
 extern undefined4 FUN_80006b94();
 extern undefined4 FUN_80006c88();
+extern void mtxRotateByVec3s(void *matrix, void *transform);
+extern void Matrix_TransformPoint(void *matrix, double x, double y, double z, float *outX,
+                                  float *outY, float *outZ);
 extern uint GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
 extern uint FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern u32 randomGetRange(int min, int max);
@@ -42,6 +47,8 @@ extern undefined4 DAT_8032916c;
 extern undefined4 DAT_803adcf4;
 extern undefined4 DAT_803add04;
 extern undefined4 DAT_803dc070;
+extern u8 framesThisStep;
+extern f32 oneOverTimeDelta;
 extern undefined4 DAT_803dcd24;
 extern undefined4 DAT_803dcd34;
 extern undefined4 DAT_803dcd38;
@@ -498,9 +505,9 @@ void FUN_801eb990(undefined2 *param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801eba78
- * EN v1.0 Address: 0x801EBA78
- * EN v1.0 Size: 8b
+ * Function: fn_801EB420
+ * EN v1.0 Address: 0x801EB420
+ * EN v1.0 Size: 532b
  * EN v1.1 Address: 0x801EBA58
  * EN v1.1 Size: 532b
  * JP Address: TODO
@@ -508,9 +515,73 @@ void FUN_801eb990(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801eba78(short *param_1,undefined4 param_2,int param_3)
+undefined4 fn_801EB420(short *param_1,undefined4 param_2,int param_3)
 {
-    return 0;
+  typedef struct HightopMatrixSeed {
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 pad;
+    f32 unused;
+    f32 x;
+    f32 y;
+    f32 z;
+  } HightopMatrixSeed;
+
+  u8 triggerType;
+  int i;
+  int state;
+  float matrix[16];
+  HightopMatrixSeed transform;
+  int intensity;
+  double xSpeed;
+  double ySpeed;
+  double zSpeed;
+
+  state = *(int *)(param_1 + 0x5c);
+  *(void (**)(int *))(param_3 + 0xe8) = fn_801EB334;
+  ObjHits_DisableObject((int)param_1);
+
+  for (i = 0; i < (int)(uint)*(u8 *)(param_3 + 0x8b); i++) {
+    triggerType = *(u8 *)(param_3 + i + 0x81);
+    if (triggerType == 3) {
+      (**(code **)(*DAT_803dd6e8 + 0x60))();
+    } else if (triggerType == 2 && param_1[0x23] != 0x16c && param_1[0x23] != 0x16f) {
+      GameBit_Set(0x499, 1);
+    }
+  }
+
+  if (*(s8 *)(state + 0x421) == 2) {
+    xSpeed = (double)(float)(oneOverTimeDelta *
+                             (*(float *)(param_1 + 6) - *(float *)(state + 0x16c)));
+    ySpeed = (double)(float)(oneOverTimeDelta *
+                             (*(float *)(param_1 + 8) - *(float *)(state + 0x170)));
+    zSpeed = (double)(float)(oneOverTimeDelta *
+                             (*(float *)(param_1 + 10) - *(float *)(state + 0x174)));
+
+    transform.unused = lbl_803E6784;
+    transform.x = lbl_803E6780;
+    transform.y = lbl_803E6780;
+    transform.z = lbl_803E6780;
+    transform.rotX = -*param_1;
+    transform.rotY = 0;
+    transform.rotZ = 0;
+    mtxRotateByVec3s(matrix, &transform);
+    Matrix_TransformPoint(matrix, xSpeed, ySpeed, zSpeed, (float *)(state + 0x494),
+                          (float *)(state + 0x498), (float *)(state + 0x49c));
+
+    *(s8 *)(state + 0x460) = *(s8 *)(state + 0x460) + (framesThisStep << 3);
+    if (*(s8 *)(state + 0x460) > 0x46) {
+      *(s8 *)(state + 0x460) = 0x46;
+    }
+
+    intensity = (int)(lbl_803E6838 * -*(float *)(state + 0x430));
+    fn_801EA240((double)*(float *)(state + 0x49c), (int)param_1, state, intensity,
+                state + 0x461, 4);
+  }
+
+  *(u8 *)(state + 0x428) &= 0xf7;
+  return 0;
 }
 
 /*
