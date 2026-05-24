@@ -28,7 +28,7 @@ typedef struct TrickyCurveState {
  *
  * Function: TrickyCurve_updateCooldownTrigger
  * EN v1.0 Address: 0x80206F30
- * EN v1.0 Size: 780b
+ * EN v1.0 Size: 604b
  * EN v1.1 Address: 0x80206FA0
  * EN v1.1 Size: 688b
  * JP Address: TODO
@@ -36,11 +36,13 @@ typedef struct TrickyCurveState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void TrickyCurve_updateCooldownTrigger(int obj)
 {
   TrickyCurveObject *curve;
-  TrickyCurveObject *player;
   TrickyCurveState *state;
+  TrickyCurveObject *player;
   int axisCount;
   f32 deltaX;
   f32 deltaY;
@@ -103,3 +105,5 @@ void TrickyCurve_updateCooldownTrigger(int obj)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
