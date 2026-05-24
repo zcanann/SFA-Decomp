@@ -1569,6 +1569,12 @@ void pressureswitch_initialise(void) {}
 extern int PressureSwitch_SeqFn(int p1, int p2, void* p3);
 extern f32 lbl_803E5D78;
 
+typedef struct PressureSwitchFlags {
+    u8 unusedHighBit : 1;
+    u8 mapBitLatched : 1;
+    u8 otherFlags : 6;
+} PressureSwitchFlags;
+
 #pragma scheduling off
 #pragma peephole off
 void pressureswitch_init(int *obj, u8 *init) {
@@ -1591,7 +1597,7 @@ void pressureswitch_init(int *obj, u8 *init) {
     }
     if (*(s16*)(sub + 4) != -1) {
         if (GameBit_Get(*(s16*)(sub + 4)) != 0) {
-            sub[6] |= 0x40;
+            ((PressureSwitchFlags *)(sub + 6))->mapBitLatched = 1;
         }
     }
     if (GameBit_Get(*(s16*)(init + 0x1c)) != 0) {
