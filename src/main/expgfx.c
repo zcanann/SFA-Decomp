@@ -671,10 +671,12 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   ExpgfxTableEntry *entry;
   u16 *refCount;
   int tableIndex;
+  int freeIndex;
 
+  tableIndex = 0;
   tableBase = gExpgfxTableEntries;
   entry = tableBase;
-  for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++, entry++) {
+  for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++) {
     if ((entry->refCount != 0) && (entry->textureOrResource == textureOrResource) &&
         (entry->key0 == key0) && (entry->key1 == key1)) {
       refCount = &gExpgfxTableEntries[tableIndex].refCount;
@@ -688,15 +690,15 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
   }
 
   entry = tableBase;
-  for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++, entry++) {
+  for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, freeIndex++) {
     if (entry->refCount == 0) {
-      entry = &gExpgfxTableEntries[tableIndex];
+      entry = &gExpgfxTableEntries[freeIndex];
       entry->refCount = 1;
       entry->textureOrResource = textureOrResource;
       entry->key0 = key0;
       entry->key1 = key1;
       entry->slotType = slotType;
-      return (s16)tableIndex;
+      return (s16)freeIndex;
     }
   }
 
