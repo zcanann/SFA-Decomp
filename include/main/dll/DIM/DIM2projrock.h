@@ -10,7 +10,7 @@ extern ObjectDescriptor12 gDIM2LavaControlObjDescriptor;
 
 void dll_1DA_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_801b8c60(int param_1);
+void FUN_801b8c60(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801b8c88(uint param_1);
 void FUN_801b8d0c(int *param_1);
 void FUN_801b932c(int param_1);
