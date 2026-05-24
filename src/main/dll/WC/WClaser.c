@@ -55,7 +55,6 @@ void WM_Galleon_update(int *obj)
     int player;
     u8 *state;
     int gameBitA4;
-    int mapId;
 
     if (GameBit_Get(0x78) != 0) {
         return;
@@ -68,27 +67,26 @@ void WM_Galleon_update(int *obj)
 
     player = Obj_GetPlayerObject();
     state = (u8 *)OBJ_PTR(obj, 0xb8);
-    mapId = OBJ_U8(obj, 0x34);
 
     if (GameBit_Get(0x429) != 0) {
-        if ((u8)MAP_EVENT_TEST(mapId, 2) != 0) {
-            MAP_EVENT_SET(mapId, 1, 0);
-            MAP_EVENT_SET(mapId, 2, 0);
+        if ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) != 0) {
+            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 0);
+            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 0);
         }
-    } else if ((GameBit_Get(0xd0) == 0) && ((u8)MAP_EVENT_TEST(mapId, 2) == 0)) {
-        MAP_EVENT_SET(mapId, 1, 1);
-        MAP_EVENT_SET(mapId, 2, 1);
+    } else if ((GameBit_Get(0xd0) == 0) && ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) == 0)) {
+        MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 1);
+        MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 1);
     }
 
     if (GameBit_Get(0xd0) == 0) {
         if ((state[0xc] == 0) && (GameBit_Get(0x429) == 0)) {
-            MAP_EVENT_SET(mapId, 1, 1);
-            MAP_EVENT_SET(mapId, 2, 1);
+            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 1);
+            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 1);
             state[0xc] = 1;
         }
     } else {
-        if ((u8)MAP_EVENT_TEST(mapId, 4) == 0) {
-            MAP_EVENT_SET(mapId, 4, 1);
+        if ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 4) == 0) {
+            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 4, 1);
         }
         if (state[0xc] != 0) {
             state[0xc] = 0;
@@ -188,6 +186,7 @@ void WM_seqobject_hitDetect(void) {}
 void WM_seqobject_update(int *obj)
 {
     int count;
+    int countdown;
     int *objects;
     int found;
     int i;
@@ -234,8 +233,9 @@ void WM_seqobject_update(int *obj)
         SCREEN_TRANSITION_START(0x50, 1);
     }
 
-    OBJ_S32(obj, 0xf8)--;
-    if (OBJ_S32(obj, 0xf8) < 0) {
+    countdown = OBJ_S32(obj, 0xf8) - 1;
+    OBJ_S32(obj, 0xf8) = countdown;
+    if (countdown < 0) {
         OBJ_S32(obj, 0xf8) = 0;
     }
 }
