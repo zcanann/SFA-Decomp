@@ -1309,16 +1309,16 @@ void SB_ShipHead_init(int obj) {
 extern f32 lbl_803E5888;
 #pragma scheduling off
 #pragma peephole off
-void SB_ShipGun_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
-    s8 *p = (s8*)((int**)obj)[0xb8/4];
-    void *o30 = *(void**)((char*)obj + 0x30);
+void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    void *o30 = *(void**)(obj + 0x30);
+    s8 *p = *(s8**)(obj + 0xb8);
     s32 v;
     if (o30 != NULL) {
         if (*(s16*)((char*)o30 + 0x46) == 0x139) return;
     }
     v = visible;
     if (v != 0 && p[0xc] != 0 && ((u8*)p)[0xd] != 0) {
-        objRenderFn_8003b8f4(lbl_803E5888);
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5888);
     }
 }
 #pragma peephole reset
