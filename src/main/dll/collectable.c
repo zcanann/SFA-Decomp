@@ -17,6 +17,17 @@
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
 
+typedef struct TrickyInitFlags {
+  u8 initBit7 : 1;
+  u8 bit6 : 1;
+  u8 bit5 : 1;
+  u8 bit4 : 1;
+  u8 bit3 : 1;
+  u8 bit2 : 1;
+  u8 bit1 : 1;
+  u8 bit0 : 1;
+} TrickyInitFlags;
+
 extern undefined4 FUN_800067e8();
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -1270,7 +1281,7 @@ void Tricky_init(int obj)
   doNothing_onTrickyInit();
   walkgroupFindExitPointFn_800dc398();
   *(u8 *)(state + 0x374) = 2;
-  *(u8 *)(state + 0x82e) |= 0x80;
+  ((TrickyInitFlags *)(state + 0x82e))->initBit7 = 1;
   *(s8 *)(state + 0xd) = -1;
 }
 #pragma scheduling reset
