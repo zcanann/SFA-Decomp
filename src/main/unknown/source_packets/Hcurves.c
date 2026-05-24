@@ -8,19 +8,19 @@
  * Suggested source path: src/Hcurves.c
  * Packet path: src/main/unknown/source_packets/Hcurves.c
  * Bucket: unknown
- * Score: 40
+ * Score: 540
  *
  * Retail EN evidence:
  * - main.dol string @ 0x803116BB
- * - retail string: Hcurves.c: MAX_ROMCURVES exceeded!!
  * - retail message: MAX_ROMCURVES exceeded!!
+ * - EN xref: 0x800E5300 curves_addCurveDef + 0x18
  * - active string symbol: sCurvesMaxRomCurvesExceeded @ 0x803116BC
  * - active source use: curves_addCurveDef reports the overflow string.
  *
  * Live EN anchors:
  * - curves_addCurveDef @ 0x800E52E8 reports the Hcurves overflow string.
- * - curves_distanceToNearestOfType16 @ 0x800E2214 is now promoted in the
- *   active symbol map from the existing source/header name.
+ * - curves_distanceToNearestOfType16 @ 0x800E2214 is promoted in the active
+ *   source/header name set.
  */
 
 #if 0
