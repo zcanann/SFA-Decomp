@@ -204,6 +204,12 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
     dll_2E_func07(puVar3,animUpdate,(float *)gDIMbossAnimController,1,1);
     for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
       switch(animUpdate->eventIds[eventIndex]) {
+      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_80000;
+        break;
+      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG:
+        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_80000;
+        break;
       case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
         (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x800,0,100,0);
         (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x800,0,100,0);
@@ -331,11 +337,6 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         }
         clearLoadedFileFlags_blocks1();
         break;
-      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_80000;
-        break;
-      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_80000;
       }
     }
     if (obj->animStateId != -1) {
