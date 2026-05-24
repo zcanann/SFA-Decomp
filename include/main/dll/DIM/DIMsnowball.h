@@ -10,7 +10,7 @@ extern ObjectDescriptor gCClevcontrolObjDescriptor;
 
 void ccqueen_render(void);
 void FUN_801aa684(int param_1);
-void FUN_801aa6d8(int param_1);
+void FUN_801aa6d8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801aa700(int param_1);
 void FUN_801aa704(short *param_1,int param_2);
 void FUN_801aa708(short *param_1);
