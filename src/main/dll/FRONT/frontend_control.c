@@ -47,9 +47,8 @@ void saveFileSelect_checkCheatCodes(void)
     u32 midLow;
 
     if (saveFileSelect_debugCheatProgress != 0 || saveFileSelect_saveCheatProgress != 0) {
-        int inc = saveFileSelect_cheatInputTimer + 1;
-        saveFileSelect_cheatInputTimer = inc;
-        if ((u8)inc > 0xF) {
+        saveFileSelect_cheatInputTimer++;
+        if (saveFileSelect_cheatInputTimer > 0xF) {
             saveFileSelect_debugCheatProgress = 0;
             saveFileSelect_saveCheatProgress = 0;
             saveFileSelect_cheatInputTimer = 0;
