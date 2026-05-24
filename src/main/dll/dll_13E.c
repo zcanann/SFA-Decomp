@@ -27,11 +27,16 @@ enum SidekickBallMode {
   SIDEKICK_BALL_FADING = 5,
 };
 
-#define SIDEKICK_BALL_TIMER 0x26C
-#define SIDEKICK_BALL_MODE 0x274
-#define SIDEKICK_BALL_ON_PATH_POINT 0x275
-#define SIDEKICK_BALL_TRIGGER_ARMED 0x2C8
-#define SIDEKICK_BALL_TRIGGER_HIT 0x2C9
+typedef struct SidekickBallState {
+  u8 unk0[0x26C];
+  f32 timer;
+  u8 unk270[4];
+  u8 mode;
+  u8 onPathPoint;
+  u8 unk276[0x52];
+  u8 triggerArmed;
+  u8 triggerHit;
+} SidekickBallState;
 
 /*
  * --INFO--
@@ -44,39 +49,43 @@ enum SidekickBallMode {
 #pragma peephole off
 void sidekickball_update(u8 *self)
 {
-  u8 *state;
+  SidekickBallState *state;
   u8 *player;
   u8 *other;
+  u32 otherStatusZeroWord;
+  u32 otherStatusMask;
   int gotHit;
 
-  state = (u8 *)*(int *)(self + 0xB8);
+  state = (SidekickBallState *)*(int *)(self + 0xB8);
   self[0xAF] = (u8)(self[0xAF] | 0x8);
-  state[SIDEKICK_BALL_ON_PATH_POINT] = 0;
+  state->onPathPoint = 0;
 
   player = Obj_GetPlayerObject();
   other = getTrickyObject();
   if (player == NULL
       || (*(u16 *)(player + 0xB0) & 0x1000) != 0
       || other == NULL
-      || (((u32)__cntlzw((u32)*(u16 *)(other + 0xB0)) >> 5 & 0x1000) != 0)
+      || (otherStatusZeroWord = (u32)__cntlzw((u32)*(u16 *)(other + 0xB0)),
+          otherStatusMask = otherStatusZeroWord >> 5,
+          (otherStatusMask & 0x1000) != 0)
       || GameBit_Get(0xD00) != 0) {
     Obj_FreeObject(self);
     return;
   }
 
-  if (state[SIDEKICK_BALL_MODE] == SIDEKICK_BALL_THROWN ||
-      state[SIDEKICK_BALL_MODE] == SIDEKICK_BALL_HELD ||
-      state[SIDEKICK_BALL_MODE] == SIDEKICK_BALL_MOVING) {
-    *(f32 *)(state + SIDEKICK_BALL_TIMER) = *(f32 *)(state + SIDEKICK_BALL_TIMER) + timeDelta;
-    if (*(f32 *)(state + SIDEKICK_BALL_TIMER) >= lbl_803E36A8) {
-      *(f32 *)(state + SIDEKICK_BALL_TIMER) = lbl_803E369C;
-      state[SIDEKICK_BALL_MODE] = SIDEKICK_BALL_FADING;
+  if (state->mode == SIDEKICK_BALL_THROWN ||
+      state->mode == SIDEKICK_BALL_HELD ||
+      state->mode == SIDEKICK_BALL_MOVING) {
+    state->timer = state->timer + timeDelta;
+    if (state->timer >= lbl_803E36A8) {
+      state->timer = lbl_803E369C;
+      state->mode = SIDEKICK_BALL_FADING;
     }
   }
 
-  switch (state[SIDEKICK_BALL_MODE]) {
+  switch (state->mode) {
   case SIDEKICK_BALL_THROWN:
-    state[SIDEKICK_BALL_MODE] = trickyBallMove(self);
+    state->mode = trickyBallMove(self);
     return;
   case SIDEKICK_BALL_MOVING:
     trickyBallMove(self);
@@ -90,26 +99,26 @@ void sidekickball_update(u8 *self)
       ObjHits_DisableObject(self);
       gotHit = 1;
     }
-    state[SIDEKICK_BALL_TRIGGER_HIT] = (u8)gotHit;
-    if (state[SIDEKICK_BALL_TRIGGER_HIT] != 0) {
-      state[SIDEKICK_BALL_TRIGGER_ARMED] = 0;
-      state[SIDEKICK_BALL_TRIGGER_HIT] = 0;
-      state[SIDEKICK_BALL_MODE] = SIDEKICK_BALL_IDLE;
+    state->triggerHit = (u8)gotHit;
+    if (state->triggerHit != 0) {
+      state->triggerArmed = 0;
+      state->triggerHit = 0;
+      state->mode = SIDEKICK_BALL_IDLE;
     }
     break;
   case SIDEKICK_BALL_FADING:
-    *(f32 *)(state + SIDEKICK_BALL_TIMER) = *(f32 *)(state + SIDEKICK_BALL_TIMER) + timeDelta;
-    if (*(f32 *)(state + SIDEKICK_BALL_TIMER) >= lbl_803E36A4) {
+    state->timer = state->timer + timeDelta;
+    if (state->timer >= lbl_803E36A4) {
       Obj_FreeObject(self);
       return;
     }
     {
-      f32 v = lbl_803E36AC * *(f32 *)(state + SIDEKICK_BALL_TIMER) / lbl_803E36A4;
+      f32 v = lbl_803E36AC * state->timer / lbl_803E36A4;
       self[0x36] = (u8)(0xFF - (int)v);
     }
     break;
   case SIDEKICK_BALL_IDLE:
-    trickyBallFn_801793b8(self, state);
+    trickyBallFn_801793b8(self, (u8 *)state);
     break;
   default:
     break;
@@ -117,9 +126,9 @@ void sidekickball_update(u8 *self)
 
   /* vtable calls at +0x10, +0x14, +0x18 */
   {
-    ((void (*)(u8 *, u8 *, f32))*(void **)(*(int *)gPathControlInterface + 0x10))(self, state, timeDelta);
-    ((void (*)(u8 *, u8 *))*(void **)(*(int *)gPathControlInterface + 0x14))(self, state);
-    ((void (*)(u8 *, u8 *, f32))*(void **)(*(int *)gPathControlInterface + 0x18))(self, state, timeDelta);
+    ((void (*)(u8 *, u8 *, f32))*(void **)(*(int *)gPathControlInterface + 0x10))(self, (u8 *)state, timeDelta);
+    ((void (*)(u8 *, u8 *))*(void **)(*(int *)gPathControlInterface + 0x14))(self, (u8 *)state);
+    ((void (*)(u8 *, u8 *, f32))*(void **)(*(int *)gPathControlInterface + 0x18))(self, (u8 *)state, timeDelta);
   }
 }
 #pragma peephole reset
