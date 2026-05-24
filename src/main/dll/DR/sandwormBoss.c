@@ -588,13 +588,12 @@ void FUN_8019b7cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8019b8ac(short *param_1)
+void FUN_8019b8ac(short *param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
-  char in_r8;
   int iVar1;
   
   iVar1 = *(int *)(param_1 + 0x5c);
-  if (in_r8 != '\0') {
+  if (visible != '\0') {
     FUN_8003b818((int)param_1);
     FUN_801149bc(param_1,iVar1,0);
   }
@@ -2238,12 +2237,11 @@ undefined4 FUN_8019e3b8(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8019e408(void)
+void FUN_8019e408(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
   uint uVar2;
   int iVar3;
-  char in_r8;
   int *piVar4;
   
   iVar1 = FUN_80286838();
@@ -2251,10 +2249,10 @@ void FUN_8019e408(void)
   uVar2 = FUN_80017690(0x50);
   if (uVar2 == 0) {
     uVar2 = FUN_80017690(0x4d);
-    if ((uVar2 == 0) || (in_r8 == '\0')) {
+    if ((uVar2 == 0) || (visible == '\0')) {
       if ((piVar4 != (int *)0x0) && (iVar3 = *piVar4, iVar3 != 0)) {
         if (*(char *)((int)piVar4 + 0x73) == '\0') {
-          if (in_r8 != '\0') {
+          if (visible != '\0') {
             iVar3 = FUN_80057690(iVar3);
             if (iVar3 != 0) {
               FUN_8003b818(*piVar4);
@@ -2269,7 +2267,7 @@ void FUN_8019e408(void)
           if (iVar3 != 0) {
             FUN_8003b818(*piVar4);
           }
-          if (in_r8 != '\0') {
+          if (visible != '\0') {
             FUN_8003b818(iVar1);
           }
         }

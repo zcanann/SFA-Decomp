@@ -93,7 +93,7 @@ void FUN_802026cc(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_802028f0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
-void FUN_802029ec(void);
+void FUN_802029ec(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80202b34(int param_1);
 void FUN_80202b70(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8);
@@ -142,7 +142,7 @@ void FUN_80204bb4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 void FUN_80204bdc(int param_1);
 void FUN_80204f1c(undefined2 *param_1,int param_2);
 void FUN_80204f20(undefined4 param_1);
-void FUN_80204f7c(int param_1);
+void FUN_80204f7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_802051e0(uint param_1);
 
 extern char sDoorswitchInitNoLongerSupported[];

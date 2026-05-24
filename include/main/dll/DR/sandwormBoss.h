@@ -25,7 +25,7 @@ FUN_8019b658(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 void FUN_8019b7cc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10);
-void FUN_8019b8ac(short *param_1);
+void FUN_8019b8ac(short *param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8019b8fc(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9,
                  undefined4 param_10,undefined4 param_11,float *param_12,int param_13,
@@ -79,7 +79,7 @@ void FUN_8019e1d0(int param_1);
 void FUN_8019e218(void);
 void FUN_8019e3b4(undefined2 *param_1,int param_2);
 undefined4 FUN_8019e3b8(int param_1,undefined4 param_2,int param_3);
-void FUN_8019e408(void);
+void FUN_8019e408(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8019e54c(uint param_1);
 void FUN_8019e764(int param_1);
 byte FUN_8019e768(int param_1);

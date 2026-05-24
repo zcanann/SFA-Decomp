@@ -318,15 +318,14 @@ void FUN_8015da00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8015daf4(void)
+void FUN_8015daf4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   short *psVar1;
-  char in_r8;
   int iVar2;
   
   psVar1 = (short *)FUN_8028683c();
   iVar2 = *(int *)(psVar1 + 0x5c);
-  if (((in_r8 != '\0') && (*(int *)(psVar1 + 0x7a) == 0)) && (*(short *)(iVar2 + 0x402) != 0)) {
+  if (((visible != '\0') && (*(int *)(psVar1 + 0x7a) == 0)) && (*(short *)(iVar2 + 0x402) != 0)) {
     if (*(float *)(iVar2 + 1000) != lbl_803E39AC) {
       FUN_8003b540(200,0,0,(char)(int)*(float *)(iVar2 + 1000));
     }
@@ -1589,14 +1588,13 @@ void FUN_8015f5dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8015f6cc(void)
+void FUN_8015f6cc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   float fVar1;
   int iVar2;
-  char in_r8;
   
   iVar2 = FUN_80286840();
-  if (((in_r8 != '\0') && (*(int *)(iVar2 + 0xf4) == 0)) &&
+  if (((visible != '\0') && (*(int *)(iVar2 + 0xf4) == 0)) &&
      (*(short *)(*(int *)(iVar2 + 0xb8) + 0x402) != 0)) {
     fVar1 = *(float *)(*(int *)(iVar2 + 0xb8) + 1000);
     if (fVar1 != lbl_803E3A60) {

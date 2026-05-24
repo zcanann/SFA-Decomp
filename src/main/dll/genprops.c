@@ -2861,14 +2861,13 @@ void FUN_8016f038(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8016f09c(void)
+void FUN_8016f09c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   undefined2 uVar1;
   undefined2 uVar2;
   int iVar3;
   int iVar4;
   uint uVar5;
-  char in_r8;
   uint uVar6;
   byte bVar7;
   int *piVar8;
@@ -2876,7 +2875,7 @@ void FUN_8016f09c(void)
   
   iVar3 = FUN_8028682c();
   piVar8 = *(int **)(iVar3 + 0xb8);
-  if (((in_r8 != '\0') && ((*(byte *)(piVar8 + 0x1c) & 8) == 0)) &&
+  if (((visible != '\0') && ((*(byte *)(piVar8 + 0x1c) & 8) == 0)) &&
      ((float)piVar8[0xf] == lbl_803E3FC8)) {
     *(undefined *)(iVar3 + 0xad) = 1;
     iVar4 = FUN_80017a54(iVar3);
@@ -3619,7 +3618,7 @@ void FUN_80170978(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801709dc(void)
+void FUN_801709dc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   byte bVar1;
   float fVar2;
@@ -3633,7 +3632,6 @@ void FUN_801709dc(void)
   int iVar10;
   int iVar11;
   int iVar12;
-  char in_r8;
   byte bVar13;
   byte bVar14;
   uint uVar15;
@@ -3705,7 +3703,7 @@ void FUN_801709dc(void)
   fStack_54 = (float)in_ps26_1;
   puVar7 = (ushort *)FUN_80286814();
   iVar16 = *(int *)(puVar7 + 0x5c);
-  if (in_r8 != '\0') {
+  if (visible != '\0') {
     iVar8 = FUN_80017a54((int)puVar7);
     dVar22 = (double)*(float *)(puVar7 + 4);
     bVar1 = *(byte *)(puVar7 + 0x1b);
@@ -3924,14 +3922,13 @@ void FUN_80170e70(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80170ed8(void)
+void FUN_80170ed8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   float fVar1;
   int iVar2;
-  char in_r8;
   
   iVar2 = FUN_80286840();
-  if ((*(char *)((int)*(float **)(iVar2 + 0xb8) + 9) == '\0') && (in_r8 != '\0')) {
+  if ((*(char *)((int)*(float **)(iVar2 + 0xb8) + 9) == '\0') && (visible != '\0')) {
     fVar1 = **(float **)(iVar2 + 0xb8);
     if (fVar1 != lbl_803E4098) {
       FUN_8003b540(200,0,0,(char)(int)fVar1);
