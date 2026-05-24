@@ -1329,15 +1329,14 @@ void fn_801F27E4(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f284c(void)
+void FUN_801f284c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
   char cVar3;
   uint uVar2;
-  char in_r8;
   
   iVar1 = FUN_80286840();
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     cVar3 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(iVar1 + 0xac));
     if (cVar3 == '\x04') {
       uVar2 = FUN_80017690(0x2bd);

@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void dbsh_shrine_init(int param_1);
-void FUN_801c95e8(void);
+void FUN_801c95e8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801c9680(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9);

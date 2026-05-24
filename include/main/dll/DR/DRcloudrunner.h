@@ -7,7 +7,7 @@ void sc_musictree_update(int param_1);
 void FUN_801dc314(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_801dc4c0(uint param_1,int param_2);
-void FUN_801dc638(void);
+void FUN_801dc638(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801dc6e4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_801dc6e8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,

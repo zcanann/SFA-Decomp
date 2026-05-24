@@ -320,12 +320,11 @@ void FUN_80183cb8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80183cf4(void)
+void FUN_80183cf4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
 {
   short sVar1;
   int iVar2;
   int iVar3;
-  char in_r8;
   int iVar4;
   
   iVar2 = FUN_80286838();
@@ -338,12 +337,12 @@ void FUN_80183cf4(void)
   }
   else {
     if (*(int *)(iVar2 + 0xf8) == 0) {
-      if (in_r8 == '\0') {
+      if (renderState == 0) {
         *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
         goto LAB_801841d8;
       }
     }
-    else if (in_r8 != -1) {
+    else if (renderState != -1) {
       *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
       goto LAB_801841d8;
     }
