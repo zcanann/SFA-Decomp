@@ -13,6 +13,17 @@ extern u8 lbl_803CC1E0[][0xbc];
 extern u8 salMaxStudioNum;
 extern u8 salNumVoices;
 
+typedef struct DspVoiceResources {
+    void *commands;
+    void *buffer;
+} DspVoiceResources;
+
+typedef struct DspStudioResources {
+    void *buffer;
+    u8 pad04[0x24];
+    void *itdBuffer;
+} DspStudioResources;
+
 /*
  * fn_8027BA04 - large voice processing (~932 instructions). Stubbed.
  */
@@ -40,16 +51,18 @@ int audioFreeFn_8027bde0(void)
 {
     int i;
     int offset;
+
     salFree((int)dspCmdBuffer);
-    offset = 0;
-    for (i = 0; (u8)i < salNumVoices; i++) {
-        salFree(*(int *)(dspVoice + offset));
-        salFree(*(int *)(dspVoice + offset + 4));
+    i = 0;
+    offset = i * 0xf4;
+    for (; (u8)i < salNumVoices; i++) {
+        salFree((int)((DspVoiceResources *)(dspVoice + offset))->commands);
+        salFree((int)((DspVoiceResources *)(dspVoice + offset))->buffer);
         offset += 0xf4;
     }
     for (i = 0; (u8)i < salMaxStudioNum; i++) {
-        salFree(*(int *)(&lbl_803CC1E0[i][0]));
-        salFree(*(int *)(&lbl_803CC1E0[i][0x28]));
+        salFree((int)((DspStudioResources *)lbl_803CC1E0[i])->buffer);
+        salFree((int)((DspStudioResources *)lbl_803CC1E0[i])->itdBuffer);
     }
     salFree((int)dspITDBuffer);
     salFree((int)dspVoice);
