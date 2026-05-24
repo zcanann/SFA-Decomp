@@ -733,9 +733,28 @@ extern u8  linkIsRotated;
 extern s16 linkItemOpacity;
 extern s16 linkCount_803dd90e;
 extern s8  linkSelected;
-extern u8  lbl_803A9458[0x960];
 extern u8  linkTextures[0x30];
 extern void getScreenResolution(void);
+
+typedef struct LinkMenuItem {
+    u8 pad0[2];
+    u16 itemId;
+    s16 field04;
+    u8 pad6[0x0A];
+    union {
+        int textureAssetId;
+        void *texture;
+    };
+    u8 pad14[2];
+    u16 field16;
+    u8 pad18[2];
+    u8 field1A;
+    u8 pad1B[3];
+    s8 state;
+    u8 pad1F[0x1D];
+} LinkMenuItem;
+
+extern LinkMenuItem lbl_803A9458[40];
 
 void Pause_SetDisabled(u8 v) { pauseDisabled = v; }
 void Pause_ResetMenuFrameCounter(void) { pauseMenuFrameCounter = 60; }
@@ -758,8 +777,8 @@ void titleScreenFn_80130464(u8 v) { linkFlag_803dd8f8 = v; }
 void setLinkNotRotated(void) { linkIsRotated = 0; }
 void setLinkIsRotated(void) { linkIsRotated = 1; }
 u8   Link_func0C(void) { return (u8)linkCount_803dd90e; }
-void Link_func0A(int idx, s8 v) { *(s8*)(lbl_803A9458 + idx * 60 + 0x1e) = v; }
-s32  Link_func09(int idx) { return *(s8*)(lbl_803A9458 + idx * 60 + 0x1e); }
+void Link_func0A(int idx, int v) { lbl_803A9458[idx].state = (s8)v; }
+s32  Link_func09(int idx) { return lbl_803A9458[idx].state; }
 void Link_setOpacity(u8 v) { linkItemOpacity = v; }
 #pragma peephole off
 void Link_setSelected(int v) { linkSelected = (s8)v; }
@@ -807,7 +826,7 @@ void Menu_initialise(void) {
     lbl_803DD8E8 = 0;
 }
 u16 fn_80130124(void) {
-    return *(u16*)(lbl_803A9458 + linkSelected * 0x3c + 2);
+    return lbl_803A9458[linkSelected].itemId;
 }
 void linkInitTextures(void) {}
 void linkDrawFn_801302c0(void) {}
@@ -820,28 +839,29 @@ extern void textureFree(void *p);
 #pragma scheduling off
 #pragma peephole off
 void Link_copy(u8 *srcArg) {
-    u8 *dst;
-    u8 *src;
+    LinkMenuItem *dst;
+    LinkMenuItem *src;
     int i;
 
-    src = srcArg;
+    i = 0;
     dst = lbl_803A9458;
-    for (i = 0; i < (s8)lbl_803DD911; i++) {
-        *(u16 *)(dst + 0x16) = *(u16 *)(src + 0x16);
-        dst[0x1a] = src[0x1a];
-        *(s16 *)(dst + 0x04) = *(s16 *)(src + 0x04);
-        if (*(int *)(src + 0x10) != -1) {
-            if (*(void **)(dst + 0x10) == NULL) {
-                *(void **)(dst + 0x10) = textureLoadAsset(*(int *)(src + 0x10));
+    src = (LinkMenuItem *)srcArg;
+    for (; i < (s8)lbl_803DD911; i++) {
+        dst->field16 = src->field16;
+        dst->field1A = src->field1A;
+        dst->field04 = src->field04;
+        if (src->textureAssetId != -1) {
+            if (dst->texture == NULL) {
+                dst->texture = textureLoadAsset(src->textureAssetId);
             }
         } else {
-            if (*(void **)(dst + 0x10) != NULL) {
-                textureFree(*(void **)(dst + 0x10));
+            if (dst->texture != NULL) {
+                textureFree(dst->texture);
             }
-            *(void **)(dst + 0x10) = NULL;
+            dst->texture = NULL;
         }
-        dst += 60;
-        src += 60;
+        dst++;
+        src++;
     }
 }
 #pragma peephole reset
