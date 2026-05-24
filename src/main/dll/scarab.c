@@ -653,9 +653,10 @@ int fn_8015E3A0(int obj, int p2)
   }
   *(u8 *)(p2 + 0x34d) = 1;
 
-  if ((*(int *)(p2 + 0x314) & 0x1) != 0) {
+  if ((*(u32 *)(p2 + 0x314) & 0x1) != 0U) {
+    int child = *(int *)(sub + 0x40c);
     *(u32 *)(p2 + 0x314) = *(u32 *)(p2 + 0x314) & ~0x1;
-    *(u8 *)(*(int *)(sub + 0x40c) + 0x8) = (u8)(*(u8 *)(*(int *)(sub + 0x40c) + 0x8) | 0x1);
+    *(u8 *)(child + 0x8) = (u8)(*(u8 *)(child + 0x8) | 0x1);
     Sfx_PlayFromObject(obj, 614);
   }
   return 0;
