@@ -323,13 +323,15 @@ FUN_80168368(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 #pragma peephole off
 int fn_80167E3C(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3090;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    ObjAnim_SetCurrentMove(obj, 3, 0, lbl_803E3060);
-    *(u8 *)(p2 + 0x346) = 0;
+    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+      ObjAnim_SetCurrentMove(obj, 3, lbl_803E3060, 0);
+      *(u8 *)(p2 + 0x346) = 0;
+    }
     Sfx_PlayFromObject(obj, 631);
   }
   *(s8 *)(p2 + 0x34d) = 3;
@@ -344,16 +346,18 @@ int fn_80167E3C(int obj, int p2)
 #pragma peephole off
 int fn_80167D10(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3090;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    ObjAnim_SetCurrentMove(obj, 8, 0, lbl_803E3060);
-    *(u8 *)(p2 + 0x346) = 0;
+    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+      ObjAnim_SetCurrentMove(obj, 8, lbl_803E3060, 0);
+      *(u8 *)(p2 + 0x346) = 0;
+    }
     Sfx_PlayFromObject(obj, 631);
   }
-  *(s16 *)(obj + 0) = (s16)(*(s16 *)(obj + 0) + 546);
+  *(s16 *)(obj + 0) += 546;
   *(s8 *)(p2 + 0x34d) = 1;
   *(f32 *)(p2 + 0x2a0) = lbl_803E3090;
   *(f32 *)(p2 + 0x280) = lbl_803E3060;
@@ -367,14 +371,16 @@ int fn_80167D10(int obj, int p2)
 int fn_80167EC4(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
-  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern f32 lbl_803E3060;
   extern f32 lbl_803E3094;
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
     ObjHits_EnableObject(obj);
-    ObjAnim_SetCurrentMove(obj, randomGetRange(6, 7), 0, lbl_803E3060);
-    *(u8 *)(p2 + 0x346) = 0;
+    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+      ObjAnim_SetCurrentMove(obj, randomGetRange(6, 7), lbl_803E3060, 0);
+      *(u8 *)(p2 + 0x346) = 0;
+    }
   }
   *(f32 *)(p2 + 0x2a0) = lbl_803E3094;
   *(u8 *)(p2 + 0x34d) = 1;
@@ -387,15 +393,17 @@ int fn_80167EC4(int obj, int p2)
 #pragma peephole off
 int fn_80167DA4(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern char lbl_803203F8[];
   extern f32 lbl_80320404[];
   extern f32 lbl_803E3060;
   int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    ObjAnim_SetCurrentMove(obj, *(s16 *)(lbl_803203F8 + 8), 0, lbl_803E3060);
-    *(u8 *)(p2 + 0x346) = 0;
+    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+      ObjAnim_SetCurrentMove(obj, *(s16 *)(lbl_803203F8 + 8), lbl_803E3060, 0);
+      *(u8 *)(p2 + 0x346) = 0;
+    }
     *(u8 *)(sub + 0x4a) = 4;
   }
   *(f32 *)(p2 + 0x2a0) = lbl_80320404[(u32)*(u8 *)(sub + 0x4a)];
@@ -409,7 +417,7 @@ int fn_80167DA4(int obj, int p2)
 #pragma peephole off
 int fn_80167F58(int obj, int p2)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, int, f32);
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern void ObjHits_EnableObject(int);
   extern s16 lbl_803203F8[];
   extern f32 lbl_80320404[];
@@ -417,8 +425,10 @@ int fn_80167F58(int obj, int p2)
   int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
 
   if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
-    ObjAnim_SetCurrentMove(obj, lbl_803203F8[(s32)randomGetRange(0, 4)], 0, lbl_803E3060);
-    *(u8 *)(p2 + 0x346) = 0;
+    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+      ObjAnim_SetCurrentMove(obj, lbl_803203F8[(s32)randomGetRange(0, 4)], lbl_803E3060, 0);
+      *(u8 *)(p2 + 0x346) = 0;
+    }
     ObjHits_EnableObject(obj);
     *(u8 *)(sub + 0x4a) = 4;
   }
