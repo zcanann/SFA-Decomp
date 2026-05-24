@@ -10,9 +10,11 @@ extern undefined4 FUN_80006920();
 extern undefined4 FUN_800069bc();
 extern undefined4 FUN_80006b94();
 extern undefined4 FUN_80006c88();
+extern void doRumble(f32 strength);
 extern void mtxRotateByVec3s(void *matrix, void *transform);
 extern void Matrix_TransformPoint(void *matrix, double x, double y, double z, float *outX,
                                   float *outY, float *outZ);
+extern f32 PSVECMag(void *vec);
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern uint FUN_80017730();
@@ -59,11 +61,40 @@ extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd6ec;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd728;
+extern undefined4 *gPartfxInterface;
 extern f64 DOUBLE_803e6798;
+extern f64 lbl_803E5B00;
+extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DCD30;
 extern f32 lbl_803DCD40;
+extern f32 lbl_803E5AE8;
+extern f32 lbl_803E5AEC;
+extern f32 lbl_803E5AF8;
+extern f32 lbl_803E5B1C;
+extern f32 lbl_803E5B20;
+extern f32 lbl_803E5B2C;
+extern f32 lbl_803E5B34;
+extern f32 lbl_803E5B88;
+extern f32 lbl_803E5BBC;
+extern f32 lbl_803E5BC4;
+extern f32 lbl_803E5BD8;
+extern f32 lbl_803E5BDC;
+extern f32 lbl_803E5BE0;
+extern f32 lbl_803E5BE4;
+extern f32 lbl_803E5BE8;
+extern f32 lbl_803E5BEC;
+extern f32 lbl_803E5BF0;
+extern f32 lbl_803E5BF4;
+extern f32 lbl_803E5BF8;
+extern f32 lbl_803E5BFC;
+extern f32 lbl_803E5C00;
+extern f32 lbl_803E5C04;
+extern f32 lbl_803E5C08;
+extern f32 lbl_803E5C0C;
+extern f32 lbl_803E5C10;
+extern f32 lbl_803E5C14;
 extern f32 lbl_803E6780;
 extern f32 lbl_803E6784;
 extern f32 lbl_803E678C;
@@ -790,6 +821,142 @@ void fn_801EB940(short *param_1,int param_2)
   }
   param_1[2] = sVar3;
   return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801EBD60
+ * EN v1.0 Address: 0x801EBD60
+ * EN v1.0 Size: 1100b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_801EBD60(int param_1,int param_2)
+{
+  typedef struct HightopPartfxTransform {
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 pad;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+  } HightopPartfxTransform;
+
+  u8 mode;
+  s16 motionFrame;
+  f32 speed;
+  f32 target558;
+  f32 target534;
+  f32 target530;
+  f32 target548;
+  f32 target54c;
+  f32 target540;
+  f32 target544;
+  HightopPartfxTransform effect;
+
+  speed = sqrtf(*(f32 *)(param_2 + 0x49c) * *(f32 *)(param_2 + 0x49c) +
+                *(f32 *)(param_2 + 0x494) * *(f32 *)(param_2 + 0x494) +
+                *(f32 *)(param_2 + 0x498) * *(f32 *)(param_2 + 0x498));
+  *(f32 *)(param_2 + 0x43c) -= timeDelta;
+  target558 = *(f32 *)(param_2 + 0x43c);
+  if (target558 < lbl_803E5AE8) {
+    target558 = lbl_803E5AE8;
+  } else if (target558 > lbl_803E5B1C) {
+    target558 = lbl_803E5B1C;
+  }
+  *(f32 *)(param_2 + 0x43c) = target558;
+
+  if ((*(u8 *)(param_2 + 0x428) & 0x80) != 0) {
+    target558 = *(f32 *)(param_2 + 0x578);
+    target534 = *(f32 *)(param_2 + 0x574);
+    target530 = *(f32 *)(param_2 + 0x56c);
+    target548 = *(f32 *)(param_2 + 0x57c);
+    target54c = *(f32 *)(param_2 + 0x580);
+    target540 = lbl_803E5B20;
+    target544 = lbl_803E5AF8;
+  } else {
+    mode = *(u8 *)(param_2 + 0x4b4);
+    if (mode == 9) {
+      target558 = lbl_803E5BEC;
+      target534 = lbl_803E5BF4;
+      target530 = lbl_803E5C00;
+      target548 = lbl_803E5C04;
+      target54c = lbl_803E5C08;
+      target540 = lbl_803E5B20;
+      target544 = lbl_803E5C0C;
+      if (speed > lbl_803E5B34) {
+        effect.scale = lbl_803E5AEC;
+        effect.rotZ = 0;
+        effect.rotY = 0;
+        effect.rotX = 0;
+        effect.x = *(f32 *)(param_1 + 0xc);
+        effect.y = lbl_803E5C10 + *(f32 *)(param_1 + 0x10);
+        effect.z = *(f32 *)(param_1 + 0x14);
+        (**(code **)(*gPartfxInterface + 8))(param_1,0x80a,&effect,1,0xffffffff,0);
+      }
+    } else if (mode == 0xd) {
+      target558 = lbl_803E5BD8;
+      target534 = lbl_803E5BDC;
+      target530 = lbl_803E5B88;
+      target548 = lbl_803E5BE0;
+      target54c = lbl_803E5BE4;
+      target540 = lbl_803E5BE8;
+      target544 = lbl_803E5AF8;
+      if (((*(u8 *)(param_2 + 0x428) >> 1 & 1) == 0) &&
+          (*(f32 *)(param_2 + 0x43c) <= lbl_803E5AE8)) {
+        *(f32 *)(param_2 + 0x43c) = (f32)(s32)randomGetRange(5,10);
+        if (PSVECMag((void *)(param_1 + 0x24)) > lbl_803E5BC4) {
+          doRumble((f32)(s32)randomGetRange(1,3));
+        }
+      }
+      if (speed > lbl_803E5BEC) {
+        (**(code **)(*gPartfxInterface + 8))(param_1,0x80b,0,2,0xffffffff,0);
+      }
+    } else {
+      target558 = lbl_803E5BF0;
+      target534 = lbl_803E5BF4;
+      target530 = lbl_803E5BF8;
+      target548 = lbl_803E5BFC;
+      target54c = lbl_803E5BE4;
+      target540 = lbl_803E5BE8;
+      target544 = lbl_803E5AF8;
+    }
+
+    motionFrame = *(s16 *)(param_2 + 0x44c);
+    if (((motionFrame >= 0x1e) && (motionFrame <= 0x3c)) ||
+        ((motionFrame >= 0x12c) && (motionFrame <= 0x14a))) {
+      target558 *= lbl_803E5B20;
+      target534 *= lbl_803E5B2C;
+      target530 += lbl_803E5B20;
+      if (target530 < lbl_803E5AE8) {
+        target530 = lbl_803E5AE8;
+      } else if (target530 > lbl_803E5B88) {
+        target530 = lbl_803E5B88;
+      }
+    }
+  }
+
+  if ((*(u8 *)(param_2 + 0x428) >> 1 & 1) != 0) {
+    target558 = lbl_803E5AF8;
+  }
+  if (target558 < lbl_803E5BD8) {
+    target558 = lbl_803E5BD8;
+  } else if (target558 > lbl_803E5AEC) {
+    target558 = lbl_803E5AEC;
+  }
+
+  *(f32 *)(param_2 + 0x558) += timeDelta * (lbl_803E5C14 * (target558 - *(f32 *)(param_2 + 0x558)));
+  *(f32 *)(param_2 + 0x534) += timeDelta * (lbl_803E5BBC * (target534 - *(f32 *)(param_2 + 0x534)));
+  *(f32 *)(param_2 + 0x530) += timeDelta * (lbl_803E5C14 * (target530 - *(f32 *)(param_2 + 0x530)));
+  *(f32 *)(param_2 + 0x548) += timeDelta * (lbl_803E5B20 * (target548 - *(f32 *)(param_2 + 0x548)));
+  *(f32 *)(param_2 + 0x54c) += timeDelta * (lbl_803E5B20 * (target54c - *(f32 *)(param_2 + 0x54c)));
+  *(f32 *)(param_2 + 0x540) += timeDelta * (lbl_803E5B20 * (target540 - *(f32 *)(param_2 + 0x540)));
+  *(f32 *)(param_2 + 0x544) += timeDelta * (lbl_803E5B20 * (target544 - *(f32 *)(param_2 + 0x544)));
 }
 
 extern undefined4 *gPathControlInterface;
