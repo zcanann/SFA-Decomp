@@ -1348,15 +1348,16 @@ int SB_Galleon_modelMtxFn(int *obj) {
 #pragma peephole off
 int SB_Galleon_func0E(int *obj) {
     register s8 *p = (s8*)((int**)obj)[0xb8/4];
-    int x, y;
+    s8 phase;
+    int wrappedPhase;
     if (p[0x29] == 1) {
-        x = p[0x7c];
-        if (x >= 5) {
-            y = x - 5;
+        phase = p[0x7c];
+        if (phase >= 5) {
+            wrappedPhase = phase - 5;
         } else {
-            y = x;
+            wrappedPhase = phase;
         }
-        return (6 - y) * 0x5a;
+        return (6 - wrappedPhase) * 0x5a;
     }
     return 0x640;
 }

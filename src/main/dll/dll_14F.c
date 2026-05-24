@@ -1515,9 +1515,7 @@ int trickywarp_getExtraSize(void) { return 0x64; }
 int duster_getExtraSize(void) { return 0x20; }
 int curvefish_getExtraSize(void) { return 0x120; }
 
-/* fn_801804C8: clear bit 0x80 of obj->_b8->_1e, return 0. 63% — target
- * uses rlwimi-with-r4=0 which MWCC won't pick from C (collapses to
- * rlwinm+clrlwi). asm{} block tried but messed up reg-alloc worse. */
+/* fn_801804C8: clear bit 0x80 of obj->_b8->_1e, return 0. */
 #pragma scheduling off
 #pragma peephole off
 int fn_801804C8(u8* obj) {
