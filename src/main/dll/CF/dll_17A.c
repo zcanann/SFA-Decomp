@@ -31,11 +31,9 @@ extern f32 FLOAT_803e4a60;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018d8dc(int param_1)
+void FUN_8018d8dc(int param_1,int p1,int p2,int p3,int p4,s8 visible)
 {
-  char in_r8;
-  
-  if (in_r8 != '\0') {
+  if (visible != 0) {
     FUN_8003b818(param_1);
   }
   return;
@@ -161,15 +159,15 @@ void FUN_8018db7c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018dbb0(void)
+void FUN_8018dbb0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+                 undefined4 param_5,s8 visible)
 {
   int iVar1;
   uint uVar2;
-  char in_r8;
   
   iVar1 = FUN_80286840();
-  if (((in_r8 != '\0') && (*(short *)(iVar1 + 0x46) != 0x1b8)) &&
-     (((in_r8 != '\0' && (*(short *)(iVar1 + 0x46) != 0x6bf)) ||
+  if (((visible != 0) && (*(short *)(iVar1 + 0x46) != 0x1b8)) &&
+     (((visible != 0 && (*(short *)(iVar1 + 0x46) != 0x6bf)) ||
       (uVar2 = GameBit_Get((int)*(short *)(*(int *)(iVar1 + 0xb8) + 0x3a)), uVar2 != 0)))) {
     FUN_8003b818(iVar1);
   }
