@@ -11,10 +11,10 @@ extern void DCFlushRange(void *src, u32 size);
 extern u8 lbl_803BD150[];
 extern void *salAiCallback;
 extern u32 salAiDmaBuffer;
-extern u32 salDspCallbackEnabled;
-extern u32 salDspCallbackPending;
-extern u32 salCallbackActive;
-extern u32 salLastTick;
+extern volatile u32 salDspCallbackEnabled;
+extern volatile u32 salDspCallbackPending;
+extern volatile u32 salCallbackActive;
+extern volatile u32 salLastTick;
 extern volatile u32 salDspInitIsDone;
 extern u8 salAIBufferIndex;
 
