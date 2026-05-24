@@ -780,7 +780,7 @@ void Camera_update(void)
       *(undefined4 *)((char *)pCamera + 0x30) = *(undefined4 *)(psVar3 + 0x18);
     }
     if (*(short **)(psVar3 + 0x18) != (short *)0x0) {
-      *psVar3 = *psVar3 + **(short **)(psVar3 + 0x18);
+      *psVar3 += **(short **)(psVar3 + 0x18);
     }
     camcontrol_applyQueuedAction();
     if (gCamcontrolCurrentHandler != 0) {
@@ -818,7 +818,7 @@ void Camera_update(void)
     *(float *)(psVar3 + 0xe) = gCamcontrolSavedFocusWorldY;
     *(float *)(psVar3 + 0x10) = gCamcontrolSavedFocusWorldZ;
     if (*(short **)(psVar3 + 0x18) != (short *)0x0) {
-      *psVar3 = *psVar3 - **(short **)(psVar3 + 0x18);
+      *psVar3 -= **(short **)(psVar3 + 0x18);
     }
   }
   return;
