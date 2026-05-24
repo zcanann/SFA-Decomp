@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_801018a8(uint param_1,undefined4 param_2);
+void firstPersonZoomOutOnExit(byte param_1, byte param_2);
+void cameraSetInterpMode(u8 v);
 
 #endif /* MAIN_DLL_DLL_B8_H_ */
