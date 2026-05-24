@@ -289,6 +289,7 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
   u16 *refCount;
   s8 *poolActiveCount;
   u32 activeBit;
+  u32 inactiveBitMask;
   u32 tableOffset;
 
   expgfxBase = gExpgfxRuntimeData;
@@ -329,8 +330,10 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
     DCFlushRange(slot, EXPGFX_SLOT_SIZE);
   }
 
-  *activeMask &= ~activeBit;
-  poolActiveCount = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET + poolIndex);
+  inactiveBitMask = ~activeBit;
+  *activeMask = *activeMask & inactiveBitMask;
+  poolActiveCount = (s8 *)(expgfxBase + poolIndex);
+  poolActiveCount += EXPGFX_POOL_ACTIVE_COUNTS_OFFSET;
   (*poolActiveCount)--;
   if (*poolActiveCount == 0) {
     gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
