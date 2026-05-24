@@ -20,12 +20,11 @@ extern undefined4* DAT_803dd72c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void smallbasket_update(void)
+void smallbasket_update(int param_1, int param_2, int param_3, int param_4, int param_5, s8 renderState)
 {
   short sVar1;
   int iVar2;
   int iVar3;
-  char in_r8;
   int iVar4;
   
   iVar2 = FUN_80286838();
@@ -37,7 +36,7 @@ void smallbasket_update(void)
   else {
     sVar1 = *(short *)(iVar4 + 10);
     if (((sVar1 == 0) || (0x32 < sVar1)) && (*(int *)(iVar4 + 0x14) == 0)) {
-      if ((*(int *)(iVar2 + 0xf8) == 0) || (in_r8 == -1)) {
+      if ((*(int *)(iVar2 + 0xf8) == 0) || (renderState == -1)) {
         FUN_8003b818(iVar2);
       }
       else {
