@@ -7945,6 +7945,16 @@ void Camera_InitState(void)
     copyMatrix44(scaledProjection, copiedProjection);
 }
 
+/*
+ * Function: fn_80010C50
+ * EN v1.0 Address: 0x80010C50
+ * EN v1.0 Size: 20b
+ */
+f32 fn_80010C50(f32 t, f32* values)
+{
+    return t * (values[1] - values[0]) + values[0];
+}
+
 typedef struct RingBufferQueue {
     s16 count;
     s16 capacity;
