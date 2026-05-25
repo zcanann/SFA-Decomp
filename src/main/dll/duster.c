@@ -848,7 +848,7 @@ void fn_8015625C(ushort *param_9,int param_10)
       *(float *)(param_9 + 0x14) = *(float *)(param_9 + 0x14) + lbl_803E2AD0;
     }
     if (lbl_803E2AD4 <= *(float *)(param_9 + 0x14)) {
-      if (lbl_803E2AD8 < *(float *)(param_9 + 0x14)) {
+      if (*(float *)(param_9 + 0x14) > lbl_803E2AD8) {
         *(float *)(param_9 + 0x14) = lbl_803E2AD8;
       }
     }
@@ -890,12 +890,12 @@ void fn_8015652C(ushort *param_9,int param_10)
   }
   *(float *)(param_10 + 0x328) = *(float *)(param_10 + 0x328) - lbl_803DC074;
   if (*(float *)(param_10 + 0x328) <= lbl_803E2A98) {
-    if ((*(uint *)(param_10 + 0x2dc) & 0x600) == 0) {
-      uVar2 = randomGetRange(600,0x352);
+    if ((*(uint *)(param_10 + 0x2dc) & 0x600) != 0) {
+      uVar2 = randomGetRange(0x96,0xfa);
       *(float *)(param_10 + 0x328) = (float)(int)uVar2;
     }
     else {
-      uVar2 = randomGetRange(0x96,0xfa);
+      uVar2 = randomGetRange(600,0x352);
       *(float *)(param_10 + 0x328) = (float)(int)uVar2;
     }
     Sfx_PlayFromObject((uint)param_9,0x262);
@@ -947,7 +947,7 @@ void fn_8015652C(ushort *param_9,int param_10)
   }
   if ((*(byte *)(param_10 + 0x33a) == 0) || (dVar7 <= (double)lbl_803E2A98)) {
     *(undefined *)(param_10 + 0x33a) = 0;
-    if (lbl_803E2ADC < *(float *)(param_10 + 0x308)) {
+    if (*(float *)(param_10 + 0x308) > lbl_803E2ADC) {
       *(float *)(param_10 + 0x308) = -(lbl_803E2AE0 * lbl_803DC074 - *(float *)(param_10 + 0x308));
     }
   }
@@ -957,7 +957,7 @@ void fn_8015652C(ushort *param_9,int param_10)
       *(float *)(param_9 + 0x14) = *(float *)(param_9 + 0x14) + lbl_803E2AD0;
     }
     if (lbl_803E2AD4 <= *(float *)(param_9 + 0x14)) {
-      if (lbl_803E2AD8 < *(float *)(param_9 + 0x14)) {
+      if (*(float *)(param_9 + 0x14) > lbl_803E2AD8) {
         *(float *)(param_9 + 0x14) = lbl_803E2AD8;
       }
     }
