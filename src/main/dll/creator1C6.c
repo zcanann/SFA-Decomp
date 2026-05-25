@@ -74,30 +74,30 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
   for (i = 0; i < (s32)*(u8 *)(animEvents + 0x8b); i++) {
     event = (u8)*(u8 *)(animEvents + i + 0x81);
     if (event != 0) {
-      if (event == 7) {
+      switch (event) {
+      case 3:
+        *(u8 *)((u8 *)state + 0x15) = *(u8 *)((u8 *)state + 0x15) | 0x80;
+        break;
+      case 7:
         fn_80296518(player,2,1);
         GameBit_Set(0x15f,1);
         GameBit_Set(0xc6e,1);
         (*(code *)(*gMapEventInterface + 0x44))(0xb,3);
         unlockLevel(0,0,1);
         lockLevel(mapGetDirIdx(10),0);
-      }
-      else if (event < 7) {
-        if (event == 3) {
-          *(u8 *)((u8 *)state + 0x15) = *(u8 *)((u8 *)state + 0x15) | 0x80;
-        }
-      }
-      else if (event == 0xf) {
-        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) & ~0x4000);
-        if (state[0] != NULL) {
-          lightFn_8001db6c((int)state[0],0,(double)lbl_803E50D8);
-        }
-      }
-      else if (event >= 0xe) {
+        break;
+      case 0xe:
         *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
         if (state[0] != NULL) {
           lightFn_8001db6c((int)state[0],0,(double)lbl_803E50D8);
         }
+        break;
+      case 0xf:
+        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) & ~0x4000);
+        if (state[0] != NULL) {
+          lightFn_8001db6c((int)state[0],0,(double)lbl_803E50D8);
+        }
+        break;
       }
     }
     *(u8 *)(animEvents + i + 0x81) = 0;
