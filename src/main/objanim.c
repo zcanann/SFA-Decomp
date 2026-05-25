@@ -591,6 +591,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   ObjAnimBank *bank;
   ObjAnimDef *animDef;
   ObjAnimState *state;
+  ObjAnimMoveData *moveData;
   ObjAnimRootCurve *curve;
   ObjAnimRootCurve *blendCurve;
   ObjModelInstance *model;
@@ -622,32 +623,46 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   model = objAnim->modelInstance;
   targetDistance = distance * (objAnim->rootMotionScale / model->rootMotionScaleBase);
   blendSamples = NULL;
-  blendWeight = gObjAnimProgressZero;
-  moveWeight = gObjAnimProgressOne;
-  blendScale = gObjAnimProgressZero;
 
   if (state->eventState != 0) {
     blendWeight = (f32)state->eventState / gObjAnimEventStepScale;
     moveWeight = gObjAnimProgressOne - blendWeight;
-    blendCurve = ObjAnim_GetBlendMoveRootCurve(animDef,state,state->blendCacheSlot);
-    if (blendCurve != NULL) {
+    moveData = ObjAnim_GetBlendMoveData(animDef,state,state->blendCacheSlot);
+    if (moveData->rootCurveOffset != 0) {
+      blendCurve = (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
       blendScale = blendCurve->scale * objAnim->rootMotionScale;
-      blendSamples = ObjAnim_FindFirstRootTranslationAxis(blendCurve);
+      blendSamples = (s16 *)((u8 *)blendCurve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+      if (*blendSamples == 0) {
+        blendSamples++;
+        if (*blendSamples == 0) {
+          blendSamples++;
+          if (*blendSamples == 0) {
+            blendSamples = NULL;
+          }
+        }
+      }
       if (blendSamples != NULL) {
         blendSamples++;
       }
     }
   }
 
-  curve = ObjAnim_GetMoveRootCurve(animDef,state,state->moveCacheSlot);
-  if (curve == NULL) {
+  moveData = ObjAnim_GetMoveData(animDef,state,state->moveCacheSlot);
+  if (moveData->rootCurveOffset == 0) {
     return 0;
   }
+  curve = (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
 
   rootScale = curve->scale * objAnim->rootMotionScale;
   segmentCount = curve->sampleCount - 1;
-  axis = ObjAnim_FindFirstRootTranslationAxis(curve);
-  if (axis == NULL) {
+  axis = (s16 *)((u8 *)curve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+  if (*axis == 0) {
+    axis++;
+    if (*axis == 0) {
+      axis++;
+    }
+  }
+  if (*axis == 0) {
     return 0;
   }
 
