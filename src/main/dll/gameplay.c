@@ -976,6 +976,50 @@ extern f32 lbl_803E19F8;
 extern char s______This_modgfx_needs_an_owner_o_80312af0[];
 extern undefined4 uRam803de108;
 extern undefined uRam803de10d;
+extern u8 lbl_803A32A8[];
+
+#define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
+#define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
+
+typedef struct SaveGameObjectPosition {
+    u32 objectId;
+    f32 x;
+    f32 y;
+    f32 z;
+} SaveGameObjectPosition;
+
+typedef struct SaveGameRomListPosition {
+    u8 pad0[0x8];
+    f32 x;
+    f32 y;
+    f32 z;
+    u32 objectId;
+} SaveGameRomListPosition;
+
+int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition *object)
+{
+    register int i;
+    register u8 *saveBase;
+    SaveGameObjectPosition *position;
+
+    i = 0;
+    saveBase = lbl_803A32A8;
+    do {
+        if (object->objectId ==
+            ((SaveGameObjectPosition *)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId) {
+            position = (SaveGameObjectPosition *)(lbl_803A32A8 + i * sizeof(SaveGameObjectPosition) +
+                                                  SAVEGAME_OBJECT_POSITION_OFFSET);
+            object->x = position->x;
+            object->y = position->y;
+            object->z = position->z;
+            return 1;
+        }
+        saveBase += sizeof(SaveGameObjectPosition);
+        i++;
+    } while (i < SAVEGAME_OBJECT_POSITION_COUNT);
+
+    return 0;
+}
 
 /*
  * --INFO--
@@ -13046,7 +13090,6 @@ void SaveGame_gplayClearRestartPoint(void) { if (pRestartPoint != 0) { mm_free(p
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u16 lbl_803A32A8[];
 #pragma scheduling off
 #pragma peephole off
 void SaveGame_setCamActionNo(s16 actionNo) { *(s16 *)((char *)lbl_803A32A8 + 0x6a4) = actionNo; }

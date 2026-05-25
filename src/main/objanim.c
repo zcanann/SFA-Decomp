@@ -218,6 +218,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   ObjAnimEventTable *eventTable;
   f32 previousProgress;
   f32 progressDelta;
+  f32 prevSegmentLength;
   f32 value;
   int wrapped;
   int countdown;
@@ -244,24 +245,27 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
       state->savedStep = state->step;
     }
     state->progress += state->savedStep * deltaTime;
+    prevSegmentLength = state->prevSegmentLength;
     if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
       while (state->progress < gObjAnimProgressZero) {
-        state->progress += state->prevSegmentLength;
+        state->progress += prevSegmentLength;
       }
-      while (state->progress >= state->prevSegmentLength) {
-        state->progress -= state->prevSegmentLength;
+      while (state->progress >= prevSegmentLength) {
+        state->progress -= prevSegmentLength;
       }
-    }
-    else if (state->progress < gObjAnimProgressZero) {
-      state->progress = gObjAnimProgressZero;
-    }
-    else if (state->progress > state->prevSegmentLength) {
-      state->progress = state->prevSegmentLength;
+    } else {
+      value = state->progress;
+      if (value < gObjAnimProgressZero) {
+        value = gObjAnimProgressZero;
+      } else if (value > prevSegmentLength) {
+        value = prevSegmentLength;
+      }
+      state->progress = value;
     }
 
     if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
       countdown =
-          (int)((f32)state->eventCountdown - ((f32)state->eventStep * deltaTime));
+          (int)((f32)(s32)state->eventCountdown - ((f32)state->eventStep * deltaTime));
       if (countdown < 0) {
         value = gObjAnimProgressZero;
       }
@@ -740,6 +744,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   f32 previousProgress;
   f32 progressDelta;
   f32 clampedStepScale;
+  f32 prevSegmentLength;
   f32 value;
   f32 previousAxisValue;
   f32 previousAxisNextValue;
@@ -798,23 +803,26 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
       state->savedStep = state->step;
     }
     state->progress += state->savedStep * deltaTime;
+    prevSegmentLength = state->prevSegmentLength;
     if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
       while (state->progress < gObjAnimProgressZero) {
-        state->progress += state->prevSegmentLength;
+        state->progress += prevSegmentLength;
       }
-      while (state->progress >= state->prevSegmentLength) {
-        state->progress -= state->prevSegmentLength;
+      while (state->progress >= prevSegmentLength) {
+        state->progress -= prevSegmentLength;
       }
-    }
-    else if (state->progress < gObjAnimProgressZero) {
-      state->progress = gObjAnimProgressZero;
-    }
-    else if (state->progress > state->prevSegmentLength) {
-      state->progress = state->prevSegmentLength;
+    } else {
+      value = state->progress;
+      if (value < gObjAnimProgressZero) {
+        value = gObjAnimProgressZero;
+      } else if (value > prevSegmentLength) {
+        value = prevSegmentLength;
+      }
+      state->progress = value;
     }
 
     if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
-      countdown = (int)((f32)state->eventCountdown - ((f32)state->eventStep * deltaTime));
+      countdown = (int)((f32)(s32)state->eventCountdown - ((f32)state->eventStep * deltaTime));
       if (countdown < 0) {
         value = gObjAnimProgressZero;
       }
