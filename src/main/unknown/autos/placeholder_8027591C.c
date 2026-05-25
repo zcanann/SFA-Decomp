@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/hw_adsr.h"
 #include "main/audio/mcmd.h"
 
 extern u8 *synthVoice;
@@ -19,7 +20,6 @@ extern u32 dataSampleInfo[];
 extern void *dataGetCurve(u16 key);
 extern u32 voiceConvertDbToLinear(u32 value);
 extern int fn_8027A8D4(McmdEnvelopeState *state);
-extern void hwSetADSR(int slot, u32 *adsr, u8 mode);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
 extern f32 lbl_803E77F0;

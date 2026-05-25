@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283744_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283744_H_
+#ifndef MAIN_AUDIO_HW_VOICE_PARAMS_H_
+#define MAIN_AUDIO_HW_VOICE_PARAMS_H_
 
 #include "ghidra_import.h"
 
@@ -8,4 +8,4 @@ void hwSetSRCType(int slot, u32 value);
 void hwSetPolyPhaseFilter(int slot, u32 value);
 void hwSetITDMode(int slot, u32 value);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283744_H_ */
+#endif /* MAIN_AUDIO_HW_VOICE_PARAMS_H_ */

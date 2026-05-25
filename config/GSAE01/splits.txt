@@ -2188,15 +2188,15 @@ main/unknown/autos/placeholder_80283134.c:
 main/unknown/autos/placeholder_80283488.c:
 	.text       start:0x8028343C end:0x8028348C
 
-main/unknown/autos/placeholder_802835C0.c:
+main/audio/hw_adsr.c:
 	extab       start:0x80005B70 end:0x80005B78
 	extabindex  start:0x800064B8 end:0x800064C4
 	.text       start:0x8028348C end:0x8028363C
 
-main/unknown/autos/placeholder_8028364C.c:
+main/audio/hw_sample.c:
 	.text       start:0x8028363C end:0x802836AC
 
-main/unknown/autos/placeholder_802836E4.c:
+main/audio/hw_voice_start.c:
 	extab       start:0x80005B78 end:0x80005B80
 	extabindex  start:0x800064C4 end:0x800064D0
 	.text       start:0x802836AC end:0x802836E8
@@ -2207,13 +2207,13 @@ main/unknown/autos/placeholder_802836F4.c:
 main/unknown/autos/placeholder_8028373C.c:
 	.text       start:0x80283710 end:0x80283710
 
-main/unknown/autos/placeholder_80283744.c:
+main/audio/hw_voice_params.c:
 	.text       start:0x80283710 end:0x8028383C
 
 main/unknown/autos/placeholder_802839B0.c:
 	.text       start:0x8028383C end:0x8028383C
 
-main/unknown/autos/placeholder_802839F4.c:
+main/audio/hw_volume.c:
 	extab       start:0x80005B80 end:0x80005BA0
 	extabindex  start:0x800064D0 end:0x80006500
 	.text       start:0x8028383C end:0x80283BA0

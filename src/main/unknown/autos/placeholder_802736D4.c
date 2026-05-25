@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/data_ref.h"
+#include "main/audio/hw_volume.h"
 #include "main/audio/synth_job.h"
 #include "main/unknown/autos/placeholder_802736D4.h"
 
@@ -15,8 +16,6 @@ extern undefined4 FUN_80284228();
 extern void sndBegin(void);
 extern void sndEnd(void);
 extern void voiceBreakAndFree(u32 voice);
-extern void hwSetVolume(int slot, undefined4 mode, f32 front, f32 left, f32 right, u32 auxA,
-                        undefined4 auxB);
 
 extern u8 lbl_803BD150[];
 extern u8 dataSmpSDirTable[];

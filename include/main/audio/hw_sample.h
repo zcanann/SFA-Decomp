@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028364C_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028364C_H_
+#ifndef MAIN_AUDIO_HW_SAMPLE_H_
+#define MAIN_AUDIO_HW_SAMPLE_H_
 
 #include "ghidra_import.h"
 
@@ -9,4 +9,4 @@ u8 hwGetSampleType(int slot);
 u16 hwGetSampleID(int slot);
 void hwSetStreamLoopPS(int slot, u8 value);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028364C_H_ */
+#endif /* MAIN_AUDIO_HW_SAMPLE_H_ */

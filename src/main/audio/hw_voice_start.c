@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_802836E4.h"
+#include "main/audio/hw_voice_start.h"
 
 extern void salActivateVoice(void *entry);
 extern u8 *dspVoice;

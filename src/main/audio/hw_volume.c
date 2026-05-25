@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_802839F4.h"
+#include "main/audio/hw_volume.h"
 
 extern void salDeactivateVoice(void *entry);
 extern void fn_8027BEBC(void);

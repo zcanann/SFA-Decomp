@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802836E4_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802836E4_H_
-
-#include "ghidra_import.h"
-
-void hwStart(int slot);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802836E4_H_ */

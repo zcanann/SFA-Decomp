@@ -1,11 +1,9 @@
 #include "ghidra_import.h"
+#include "main/audio/hw_sample.h"
 #include "main/audio/synth_virtual_sample.h"
 
 extern u8 synthVirtualSampleState[];
 extern u32 aramGetStreamBufferAddress(u8 slot, u32 *outPos);
-extern void hwSetVirtualSampleLoopBuffer(int slot, u32 valueA, u32 valueB);
-extern u16 hwGetSampleID(int slot);
-extern u8 hwGetSampleType(int slot);
 
 /*
  * Reset a 64-byte handle table at synthVirtualSampleState+0x908 to all-0xff,

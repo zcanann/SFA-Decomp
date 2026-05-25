@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_802835C0.h"
+#include "main/audio/hw_adsr.h"
 
 extern u8 voiceAdsrDecayTable[];
 extern u8 *dspVoice;

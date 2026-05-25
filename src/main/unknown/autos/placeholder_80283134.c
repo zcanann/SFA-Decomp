@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sal_ai.h"
+#include "main/audio/hw_voice_params.h"
 #include "main/unknown/autos/placeholder_80283134.h"
 #include "main/unknown/autos/placeholder_80284988.h"
 
@@ -76,9 +77,6 @@ extern u8 salFrame;
 extern u32 salMessageCallback;
 extern u8 *dspVoice;
 
-extern void hwSetSRCType(int slot, u32 value);
-extern void hwSetPolyPhaseFilter(int slot, u32 value);
-extern void hwSetITDMode(int slot, u32 value);
 void hwSetTimeOffset(u8 value);
 extern void audioFreeFn_8027bde0(void);
 extern int salStartDsp(void);
