@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_802827D4.h"
 
-extern u16 _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u8 a, u8 b);
+extern u16 _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u32 midiSlot, u32 midiKey);
 extern int synthGetVoiceSlotChannelScale(int x);
 extern u32 inpGetMidiCtrl(u32 controller, u32 slot, u32 key);
 extern void inpSetMidiCtrl14(u32 controller, u8 slot, u8 key, u16 value);

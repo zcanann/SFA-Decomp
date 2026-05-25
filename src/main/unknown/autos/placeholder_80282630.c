@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80282630.h"
 
-extern u16 _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u8 a, u8 b);
+extern u16 _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u32 midiSlot, u32 midiKey);
 
 /*
  * --INFO--
