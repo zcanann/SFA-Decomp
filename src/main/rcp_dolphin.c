@@ -2367,8 +2367,9 @@ void fn_80053ED0(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 | bits; }
 #pragma scheduling off
 #pragma peephole off
 void fn_80053EBC(u32 bits) {
-    register u32 v = lbl_803DCDA8;
-    lbl_803DCDA8 = v & ~bits;
+    u32 v = lbl_803DCDA8;
+    u32 nb = bits ^ 0xffffffff;
+    lbl_803DCDA8 = v & nb;
 }
 #pragma peephole reset
 #pragma scheduling reset
