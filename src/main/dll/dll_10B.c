@@ -51,6 +51,8 @@ extern f32 lbl_803E2A08;
 extern f64 lbl_803E2A10;
 extern f64 lbl_803E2A18;
 
+#pragma peephole off
+#pragma scheduling off
 void fn_80154870(int obj, int *state)
 {
     float fVar1;
@@ -139,6 +141,8 @@ void fn_80154870(int obj, int *state)
     *(short *)(obj + 2) = (short)iVar4;
     FUN_80154af4((ushort *)obj, (int)state);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
