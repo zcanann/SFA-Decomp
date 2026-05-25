@@ -84,7 +84,7 @@ typedef struct ObjContactCallbackEntry {
 
 typedef struct ObjHitsPriorityWorkSlot {
   int active;
-  int pad04;
+  u8 pad04[OBJHITS_PRIORITY_WORK_SLOT_OBJ_OFFSET - 0x04];
   int obj;
   u8 pad0C[OBJHITS_PRIORITY_WORK_SLOT_SIZE - 0x0C];
 } ObjHitsPriorityWorkSlot;
@@ -1471,7 +1471,7 @@ void ObjHits_ResetWorkBuffers(void)
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = 0;
-    slotOffset += OBJHITS_PRIORITY_WORK_SLOT_SIZE * 8;
+    slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_HALF_BLOCK_SIZE;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = 0;
@@ -1480,7 +1480,7 @@ void ObjHits_ResetWorkBuffers(void)
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = 0;
     *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = 0;
-    slotOffset += OBJHITS_PRIORITY_WORK_SLOT_SIZE * 8;
+    slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_HALF_BLOCK_SIZE;
     clearedSlots += OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_SLOTS;
   }
   remainingSlots = OBJHITS_PRIORITY_WORK_SLOT_COUNT - clearedSlots;
