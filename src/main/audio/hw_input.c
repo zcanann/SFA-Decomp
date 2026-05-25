@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80283BA0.h"
+#include "main/audio/hw_input.h"
 
 extern u8 lbl_803CC1E0[];
 extern void salAddStudioInput(void *entry);

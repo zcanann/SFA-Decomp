@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283BF0_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283BF0_H_
+#ifndef MAIN_AUDIO_HW_STREAM_H_
+#define MAIN_AUDIO_HW_STREAM_H_
 
 #include "ghidra_import.h"
 
@@ -10,4 +10,4 @@ void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 cal
 void hwFlushStream(int stream);
 void hwInitStream(void);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283BF0_H_ */
+#endif /* MAIN_AUDIO_HW_STREAM_H_ */

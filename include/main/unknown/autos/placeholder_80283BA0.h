@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283BA0_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283BA0_H_
-
-#include "ghidra_import.h"
-
-void hwAddInput(u8 index);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283BA0_H_ */

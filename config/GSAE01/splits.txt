@@ -2218,12 +2218,12 @@ main/unknown/autos/placeholder_802839F4.c:
 	extabindex  start:0x800064D0 end:0x80006500
 	.text       start:0x8028383C end:0x80283BA0
 
-main/unknown/autos/placeholder_80283BA0.c:
+main/audio/hw_input.c:
 	extab       start:0x80005BA0 end:0x80005BA8
 	extabindex  start:0x80006500 end:0x8000650C
 	.text       start:0x80283BA0 end:0x80283BD4
 
-main/unknown/autos/placeholder_80283BF0.c:
+main/audio/hw_stream.c:
 	extab       start:0x80005BA8 end:0x80005BC0
 	extabindex  start:0x8000650C end:0x80006530
 	.text       start:0x80283BD4 end:0x80283D5C

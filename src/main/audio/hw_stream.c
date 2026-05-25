@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80283BF0.h"
+#include "main/audio/hw_stream.h"
 
 extern void salRemoveStudioInput(void *p);
 extern int aramGetStreamBufferAddress(int stream, void *out);
