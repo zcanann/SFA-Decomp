@@ -3583,3 +3583,44 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void Obj_FreeObject(void *obj);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int type, int id);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern u8 lbl_802C2190[];
+
+/* dll_19_func19  addr=0x80111EB4  size=0x100  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void dll_19_func19(u8 *cam, u8 *ctx) {
+    struct Cfg8 { u32 w0; u32 w1; };
+    s16 buf[5];
+
+    *(struct Cfg8 *)&buf[0] = *(struct Cfg8 *)lbl_802C2190;
+    *(u16 *)&buf[4] = *(u16 *)(lbl_802C2190 + 8);
+
+    if ((s8)ctx[1031] == (s8)ctx[1033]) {
+        return;
+    }
+    if (cam[0x36] == 0) {
+        return;
+    }
+    if (*(void **)(cam + 0xc8) != NULL) {
+        Obj_FreeObject(*(void **)(cam + 0xc8));
+        *(int *)(cam + 0xc8) = 0;
+    }
+    if (Obj_IsLoadingLocked() != 0) {
+        if ((s8)ctx[1031] > 0) {
+            int obj = Obj_AllocObjectSetup(24, buf[(s8)ctx[1031] - 1]);
+            *(int *)(cam + 0xc8) = Obj_SetupObject(obj, 4, -1, -1, *(int *)(cam + 0x30));
+            *(u16 *)(*(int *)(cam + 0xc8) + 0xb0) = *(u16 *)(cam + 0xb0) & 7;
+        }
+        ctx[1033] = ctx[1031];
+    } else {
+        ctx[1033] = 0;
+    }
+}
+
+#pragma peephole reset
+#pragma scheduling reset
