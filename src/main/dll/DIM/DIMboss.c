@@ -99,14 +99,9 @@ extern void fn_801BB598(DIMbossObject *obj,DIMbossRuntime *runtime);
 
 extern f32 timeDelta;
 extern undefined4 DAT_803ad60c;
-extern undefined4 DAT_803adc60;
-extern undefined4 DAT_803adc78;
-extern undefined4 DAT_803dd5d0;
-extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd70c;
 extern undefined4* lbl_803DCAB4;
 #define gBoneParticleEffectInterface lbl_803DCAB4
-extern undefined4* DAT_803dd738;
+extern u8 lbl_803DC950;
 extern u32 gDIMbossSequenceFlags;
 extern undefined4 DAT_803de808;
 extern f32 lbl_803E58DC;
@@ -115,7 +110,7 @@ extern f32 lbl_803E5870;
 extern f32 lbl_803E58E4;
 extern f32 lbl_803E58E8;
 extern f32 lbl_803E58EC;
-extern f32 lbl_803E5908;
+extern f32 lbl_803E4C70;
 extern undefined4 gDIMbossRenderMtx[];
 extern undefined4 gDIMbossAnimController[];
 extern undefined4 lbl_802C2338[];
@@ -153,7 +148,7 @@ extern DIMbossMapEventInterface **gMapEventInterface;
  *
  * Function: DIMboss_updateState
  * EN v1.0 Address: 0x801BCB34
- * EN v1.0 Size: 3404b
+ * EN v1.0 Size: 1804b
  * EN v1.1 Address: 0x801BD0E8
  * EN v1.1 Size: 1836b
  * JP Address: TODO
@@ -272,7 +267,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         Music_Trigger(0xee,0);
         break;
       case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
-        (*(code *)(*DAT_803dd6d4 + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,puVar3,0x3c);
+        (*(code *)(*gObjectTriggerInterface + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,puVar3,0x3c);
         break;
       case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
@@ -328,7 +323,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
             gameTextRun();
             GXFlush_(1,0);
           }
-          if (DAT_803dd5d0 != '\0') {
+          if (lbl_803DC950 != '\0') {
             loadWaitStarted = true;
           }
         }
@@ -338,7 +333,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
     }
     if (obj->animStateId != -1) {
       puVar7 = (undefined4 *)0x1;
-      puVar8 = (undefined4 *)*DAT_803dd738;
+      puVar8 = (undefined4 *)*gBaddieControlInterface;
       iVar11 = (*(code *)puVar8[0xc])(puVar3,puVar13);
       if (iVar11 == 0) {
         updateResult = 1;
@@ -349,18 +344,19 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
       }
       if ((runtime->eventGameBit != -1) &&
           (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0)) {
-        puVar7 = (undefined4 *)*DAT_803dd6d4;
+        puVar7 = (undefined4 *)*gObjectTriggerInterface;
         (*(code *)puVar7[0x16])(animUpdate,(int)*(short *)(iVar12 + 0x2c));
         runtime->eventGameBit = -1;
       }
       bVar1 = runtime->hitReactMode;
       if (bVar1 == 1) {
-        iVar11 = (*(code *)(*DAT_803dd738 + 0x34))
-                          (puVar3,animUpdate,puVar13,&DAT_803adc78,&DAT_803adc60,0);
+        iVar11 = (*(code *)(*gBaddieControlInterface + 0x34))
+                          (puVar3,animUpdate,puVar13,gDIMbossHitDetectAnimTable,
+                           gDIMbossAnimTable,0);
         if (iVar11 != 0) {
           puVar7 = (undefined4 *)0x1;
-          puVar8 = (undefined4 *)*DAT_803dd738;
-          (*(code *)puVar8[0xb])((double)lbl_803E5908,puVar3,puVar13);
+          puVar8 = (undefined4 *)*gBaddieControlInterface;
+          (*(code *)puVar8[0xb])((double)lbl_803E4C70,puVar3,puVar13);
         }
       }
       else if ((bVar1 != 0) && (bVar1 < 3)) {
@@ -370,9 +366,9 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         fn_801BC7E4(puVar3,animUpdate,(int)puVar13,(int)puVar13);
         if (runtime->hitReactMode == 1) {
           *(undefined2 *)(puVar13 + 0x9c) = 0;
-          puVar7 = &DAT_803adc78;
-          puVar8 = &DAT_803adc60;
-          puVar9 = (undefined4 *)*DAT_803dd70c;
+          puVar7 = (undefined4 *)gDIMbossHitDetectAnimTable;
+          puVar8 = (undefined4 *)gDIMbossAnimTable;
+          puVar9 = (undefined4 *)*(int *)gPlayerInterface;
           (*(code *)puVar9[2])(puVar3,puVar13);
           animUpdate->sequenceEventActive = 0;
         }
