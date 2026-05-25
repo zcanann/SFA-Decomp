@@ -199,6 +199,7 @@ extern void fn_800DA928(int p1, f32 p2);
 int fn_80139834(f32 param_1, int param_2, int param_3)
 {
     f32 maxSq, dist, f29_val;
+    f32 limit;
     int result = 0;
     int iter;
     f32 tmp;
@@ -212,7 +213,8 @@ int fn_80139834(f32 param_1, int param_2, int param_3)
         f29_val = lbl_803E23F8;
     }
     iter = 0;
-    while (dist <= lbl_803E2424 || dist <= maxSq) {
+    limit = lbl_803E2424;
+    while (dist <= limit || maxSq >= dist) {
         result = 1;
         fn_800DA928(param_3, f29_val);
         dist = getXZDistance((f32 *)(param_3 + 0x68), (f32 *)(param_2 + 0x18));
