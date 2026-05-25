@@ -18,7 +18,7 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern void ObjHits_DisableObject(int);
 extern void ObjHits_EnableObject(int);
 extern void fn_80292E20(uint, float *, float *);
-extern char objBboxFn_800640cc();
+extern u8 objBboxFn_800640cc();
 extern double fn_8014CB54(double, double, double, double, double, double, double, int);
 extern void fn_8014CD1C(double, double, void *, int, int, char);
 extern void fn_8014D08C(int, int, int, float, int, int);
@@ -181,9 +181,7 @@ void fn_8015536C(float param_1,float param_2,float *param_3,float *param_4)
  */
 void fn_801554B4(int *param_1,int param_2)
 {
-  float fVar1;
-  float fVar2;
-  char cVar3;
+  u8 cVar3;
   int iVar4;
   float *pfVar5;
   double dVar6;
@@ -224,10 +222,9 @@ void fn_801554B4(int *param_1,int param_2)
   float local_24;
   float local_20;
   
-  cVar3 = '\0';
+  cVar3 = 0;
   pfVar5 = (float *)&lbl_8031F2F8;
-  for (iVar4 = 0; (fVar2 = lbl_803E2A24, fVar1 = lbl_803E2A20, cVar3 == '\0' && (iVar4 < 4));
-      iVar4 = iVar4 + 1) {
+  for (iVar4 = 0; cVar3 == 0 && iVar4 < 4; iVar4 = iVar4 + 1) {
     local_70 = *(float *)(param_1 + 3) + *pfVar5;
     local_78 = param_1[4];
     local_68 = *(float *)(param_1 + 5) + pfVar5[1];
@@ -240,7 +237,8 @@ void fn_801554B4(int *param_1,int param_2)
   if (cVar3 != '\0') {
     *(float *)(param_1 + 3) = (local_20 - lbl_803E2A20) * ((local_7c - local_70) / lbl_803E2A24) +
                       local_70;
-    *(float *)(param_1 + 5) = (local_20 - fVar1) * ((local_74 - local_68) / fVar2) + local_68;
+    *(float *)(param_1 + 5) = (local_20 - lbl_803E2A20) * ((local_74 - local_68) / lbl_803E2A24) +
+                      local_68;
     *(undefined4 *)(param_2 + 0x344) = local_48;
     *(undefined4 *)(param_2 + 0x348) = local_44;
     *(undefined4 *)(param_2 + 0x34c) = local_40;
