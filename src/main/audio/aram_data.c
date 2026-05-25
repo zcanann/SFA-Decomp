@@ -87,6 +87,7 @@ void aramInitStreamBuffers(void)
     u8 *base = lbl_803D3F60;
     AramStreamBufferEntry *buffers = (AramStreamBufferEntry *)(base + 0x508);
     AramStreamBufferEntry *node;
+    int batchCount;
     int i;
 
     aramQueueWrite = 0;
@@ -94,7 +95,8 @@ void aramInitStreamBuffers(void)
     aramStreamFreeList = buffers;
 
     node = &buffers[1];
-    for (i = 1; i < 57; i += 8) {
+    i = 1;
+    for (batchCount = 7; batchCount != 0; batchCount--) {
         node[-1].next = node;
         node[0].next = node + 1;
         node[1].next = node + 2;
@@ -104,6 +106,7 @@ void aramInitStreamBuffers(void)
         node[5].next = node + 6;
         node[6].next = node + 7;
         node += 8;
+        i += 8;
     }
 
 tail_loop:
