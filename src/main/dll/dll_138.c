@@ -11,6 +11,8 @@ extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern int FUN_80017a98();
+extern int Obj_GetPlayerObject();
+extern void setMatrixFromObjectPos(float *outMtx, short *inObj);
 extern int FUN_80039520();
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern int FUN_800620e8();
@@ -123,15 +125,13 @@ void fn_80174A80(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80174BFC(void)
+void fn_80174BFC(ushort *puVar3, int iVar7)
 {
   ushort uVar1;
   byte bVar2;
-  ushort *puVar3;
   int iVar4;
   uint uVar5;
   undefined4 *puVar6;
-  int iVar7;
   int iVar8;
   int iVar9;
   int iVar10;
@@ -140,19 +140,10 @@ void fn_80174BFC(void)
   int iVar13;
   float *pfVar14;
   float *pfVar15;
-  double in_f28;
   double dVar16;
-  double in_f29;
   double dVar17;
-  double in_f30;
   double dVar18;
-  double in_f31;
   double dVar19;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar20;
   ushort local_190;
   ushort local_18e;
   ushort local_18c;
@@ -171,34 +162,15 @@ void fn_80174BFC(void)
   uint uStack_8c;
   undefined4 local_88;
   uint uStack_84;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  uVar20 = FUN_80286820();
-  puVar3 = (ushort *)((ulonglong)uVar20 >> 0x20);
-  iVar7 = (int)uVar20;
+
   iVar12 = *(int *)(puVar3 + 0x26);
-  FUN_80017a98();
+  Obj_GetPlayerObject();
   dVar18 = (double)*(float *)(puVar3 + 6);
   dVar17 = (double)*(float *)(puVar3 + 8);
   dVar16 = (double)*(float *)(puVar3 + 10);
   bVar2 = 0xf;
   iVar10 = 0;
-  dVar19 = (double)lbl_803E4220;
+  dVar19 = (double)lbl_803E3588;
   do {
     if (bVar2 == 0) {
 LAB_80175568:
@@ -227,7 +199,7 @@ LAB_80175568:
       local_184 = *(int *)(puVar3 + 6);
       local_180 = *(int *)(puVar3 + 8);
       local_17c = *(int *)(puVar3 + 10);
-      FUN_80017754(afStack_178,&local_190);
+      setMatrixFromObjectPos(afStack_178,(short *)&local_190);
       FUN_80017778((double)*pfVar14,(double)pfVar14[1],(double)pfVar14[2],afStack_178,pfVar15,
                    (float *)((int)local_e4 + iVar8),(float *)((int)local_e4 + iVar9));
       if ((1 << iVar11 & 0xfU) != 0) {
