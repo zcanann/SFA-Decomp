@@ -748,7 +748,7 @@ extern void *textureLoadAsset(int id);
 extern void *hudTextures[];
 extern s16 lbl_8031B624[];
 extern u8 lbl_803A9398[];
-extern u8 lbl_803DD896;
+extern s8 lbl_803DD896;
 extern s16 lbl_803DD894;
 extern s16 lbl_803DD8C2;
 extern u8 lbl_803DD8B8;
