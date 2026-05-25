@@ -740,15 +740,11 @@ int fn_801DA954(int obj)
 #pragma scheduling reset
 
 /* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
-#pragma scheduling off
 int fn_801DA9CC(int obj)
 {
-  float f = lbl_803E552C;
-  obj = *(int*)(obj + 0xb8);
-  *(float*)(obj + 8) = f;
+  *(float*)(*(int*)(obj + 0xb8) + 8) = lbl_803E552C;
   return 1;
 }
-#pragma scheduling reset
 
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
 #pragma scheduling off
