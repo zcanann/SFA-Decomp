@@ -40,6 +40,10 @@ extern void cameraGetPrevPos2();
 extern int fn_80295C0C(int);
 extern int objFn_802962b4(int);
 extern int objFn_80296700(int);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 dx, f32 dy);
 
 extern undefined4 DAT_803a4ed8;
 extern undefined4 gCamcontrolTargetTypeMask;
@@ -59,6 +63,9 @@ extern u8 framesThisStep;
 extern f64 DOUBLE_803e2318;
 extern f64 lbl_803E1698;
 extern f32 lbl_803E1688;
+extern f32 lbl_803E168C;
+extern f32 lbl_803E1690;
+extern f32 lbl_803E1694;
 extern f32 lbl_803E16A4;
 extern f32 lbl_803E16AC;
 extern f32 lbl_803DE1A4;
@@ -605,45 +612,25 @@ void camcontrol_updateModeSettings(int camera)
     blend = curveFn_80010dc0((float)(*(f64 *)&local_18 - lbl_803E1698) /
                              (float)(*(f64 *)&local_10 - lbl_803E1698),curve,(float *)0x0);
     cameraMtxVar57[0x23] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x25] -
-                                         (double)cameraMtxVar57[0x24]) +
-                 (double)cameraMtxVar57[0x24]);
+         blend * (cameraMtxVar57[0x25] - cameraMtxVar57[0x24]) + cameraMtxVar57[0x24];
     cameraMtxVar57[0] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0xc] -
-                                         (double)cameraMtxVar57[0xb]) +
-                 (double)cameraMtxVar57[0xb]);
+         blend * (cameraMtxVar57[0xc] - cameraMtxVar57[0xb]) + cameraMtxVar57[0xb];
     cameraMtxVar57[1] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0xe] -
-                                         (double)cameraMtxVar57[0xd]) +
-                 (double)cameraMtxVar57[0xd]);
+         blend * (cameraMtxVar57[0xe] - cameraMtxVar57[0xd]) + cameraMtxVar57[0xd];
     cameraMtxVar57[2] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x10] -
-                                         (double)cameraMtxVar57[0xf]) +
-                 (double)cameraMtxVar57[0xf]);
+         blend * (cameraMtxVar57[0x10] - cameraMtxVar57[0xf]) + cameraMtxVar57[0xf];
     cameraMtxVar57[3] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x12] -
-                                         (double)cameraMtxVar57[0x11]) +
-                 (double)cameraMtxVar57[0x11]);
+         blend * (cameraMtxVar57[0x12] - cameraMtxVar57[0x11]) + cameraMtxVar57[0x11];
     cameraMtxVar57[4] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x14] -
-                                         (double)cameraMtxVar57[0x13]) +
-                 (double)cameraMtxVar57[0x13]);
+         blend * (cameraMtxVar57[0x14] - cameraMtxVar57[0x13]) + cameraMtxVar57[0x13];
     cameraMtxVar57[5] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x16] -
-                                         (double)cameraMtxVar57[0x15]) +
-                 (double)cameraMtxVar57[0x15]);
+         blend * (cameraMtxVar57[0x16] - cameraMtxVar57[0x15]) + cameraMtxVar57[0x15];
     cameraMtxVar57[6] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x18] -
-                                         (double)cameraMtxVar57[0x17]) +
-                 (double)cameraMtxVar57[0x17]);
+         blend * (cameraMtxVar57[0x18] - cameraMtxVar57[0x17]) + cameraMtxVar57[0x17];
     cameraMtxVar57[7] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x1a] -
-                                         (double)cameraMtxVar57[0x19]) +
-                 (double)cameraMtxVar57[0x19]);
+         blend * (cameraMtxVar57[0x1a] - cameraMtxVar57[0x19]) + cameraMtxVar57[0x19];
     *(float *)(camera + 0xb4) =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x1c] -
-                                         (double)cameraMtxVar57[0x1b]) +
-                 (double)cameraMtxVar57[0x1b]);
+         blend * (cameraMtxVar57[0x1c] - cameraMtxVar57[0x1b]) + cameraMtxVar57[0x1b];
   }
   return;
 }
