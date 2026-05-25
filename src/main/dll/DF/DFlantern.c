@@ -512,14 +512,16 @@ int dfsh_shrine_getObjectTypeId(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void dfsh_shrine_free(int obj)
 {
-  int state;
+  void **state;
 
-  state = *(int *)(obj + 0xb8);
-  if (*(int *)state != 0) {
-    ModelLightStruct_free(*(void **)state);
-    *(int *)state = 0;
+  state = *(void ***)(obj + 0xb8);
+  if (*state != NULL) {
+    ModelLightStruct_free(*state);
+    *state = NULL;
   }
   gameTimerStop();
   unlockLevel(mapGetDirIdx(0x1f),1,0);
@@ -529,6 +531,8 @@ void dfsh_shrine_free(int obj)
   GameBit_Set(0xefa,0);
   GameBit_Set(0xcbb,1);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
