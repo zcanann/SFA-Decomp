@@ -91,13 +91,17 @@ void hwSetPolyPhaseFilter(int slot, u32 value)
  */
 void hwSetITDMode(int slot, u32 value)
 {
-    u8 *entry = dspVoice + slot * DSP_VOICE_STRIDE;
-
     if ((u8)value == 0) {
+        int offset = slot * DSP_VOICE_STRIDE;
+        u8 *entry = dspVoice + offset;
         *(u32 *)(entry + 0xf0) |= DSP_VOICE_ITD_ENABLED_FLAG;
-        *(u16 *)(entry + 0xd0) = DSP_VOICE_ITD_CENTER;
-        *(u16 *)(entry + 0xd2) = DSP_VOICE_ITD_CENTER;
+        value = DSP_VOICE_ITD_CENTER;
+        entry = dspVoice + offset;
+        *(u16 *)(entry + 0xd0) = value;
+        entry = dspVoice + offset;
+        *(u16 *)(entry + 0xd2) = value;
     } else {
+        u8 *entry = dspVoice + slot * DSP_VOICE_STRIDE;
         *(u32 *)(entry + 0xf0) &= DSP_VOICE_ITD_DISABLED_MASK;
     }
 }
