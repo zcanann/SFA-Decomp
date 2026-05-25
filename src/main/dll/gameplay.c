@@ -13134,6 +13134,87 @@ void *SaveGame_getLast(void) { return lbl_803A32A8; }
 s32 SaveGame_getCamActionNo(void) { return *(s16 *)((char *)lbl_803A32A8 + 0x6a4); }
 void *saveGameGetEnvState(void) { return (char *)lbl_803A32A8 + 0x6a8; }
 f32 SaveGame_getPlayTime(void) { return *(f32 *)((char *)lbl_803A32A8 + 0x560); }
+extern f32 timeDelta;
+extern f32 lbl_803E06D0;
+extern f32 lbl_803E06D4;
+void SaveGame_updateTimes(void) {
+    int i;
+    u8 *base;
+    u8 *p;
+    s16 cnt;
+    base = lbl_803A32A8;
+    *(f32 *)(base + 0x560) = *(f32 *)(base + 0x560) + timeDelta;
+    i = 0;
+    p = base;
+    while (i < *(s16 *)(base + 0x6ec)) {
+        if (*(f32 *)(base + 0x560) > *(f32 *)(p + 0x6f4)) {
+            cnt = *(s16 *)(base + 0x6ec) - 1;
+            *(s16 *)(base + 0x6ec) = cnt;
+            *(int *)(p + 0x6f0) = *(int *)(base + cnt * 8 + 0x6f0);
+            *(f32 *)(p + 0x6f4) = *(f32 *)(base + *(s16 *)(base + 0x6ec) * 8 + 0x6f4);
+        } else {
+            p += 8;
+            i++;
+        }
+    }
+    if (*(u8 *)(lbl_803A32A8 + 0x55e) > 5) *(u8 *)0 = 0;
+    if (*(u8 *)(lbl_803DD498 + 0x55e) > 5) *(u8 *)0 = 0;
+}
+f32 SaveGame_gplayGetTime(int id) {
+    s16 count;
+    u8 *p;
+    int i;
+    if (id == -1) return lbl_803E06D0;
+    i = 0;
+    p = lbl_803A32A8;
+    count = *(s16 *)(p + 0x6ec);
+    for (; i < count; i++) {
+        if (*(int *)(p + 0x6f0) == id) {
+            return *(f32 *)(lbl_803A32A8 + i * 8 + 0x6f4) - *(f32 *)(lbl_803A32A8 + 0x560);
+        }
+        p += 8;
+    }
+    return lbl_803E06D0;
+}
+int SaveGame_gplayShouldNotSaveTime(int id) {
+    u8 *p;
+    s16 count;
+    int i;
+    if (id == -1) return 1;
+    p = lbl_803A32A8;
+    count = *(s16 *)(p + 0x6ec);
+    for (i = 0; i < count; i++) {
+        if (*(int *)(p + 0x6f0) == id) return 0;
+        p += 8;
+    }
+    return 1;
+}
+#pragma fp_contract off
+void SaveGame_gplayAddTime(int id, f32 time) {
+    u8 *base;
+    u8 *p;
+    s16 count;
+    int i;
+    f32 total;
+    if (id == -1) return;
+    base = lbl_803A32A8;
+    count = *(s16 *)(base + 0x6ec);
+    if (count == 0x100) return;
+    total = lbl_803E06D4 * time;
+    total += *(f32 *)(base + 0x560);
+    i = 0;
+    p = base;
+    for (; i < count; i++) {
+        if (*(int *)(p + 0x6f0) == id) break;
+        p += 8;
+    }
+    if (i == count) {
+        (*(s16 *)(base + 0x6ec))++;
+    }
+    *(int *)(lbl_803A32A8 + i * 8 + 0x6f0) = id;
+    *(f32 *)(lbl_803A32A8 + i * 8 + 0x6f4) = total;
+}
+#pragma fp_contract reset
 void *SaveGame_getTrickyEnergy(void) { return (char *)lbl_803A32A8 + 0x18; }
 void SaveGame_setCharacter(u8 c) { *(u8 *)((char *)lbl_803A32A8 + 0x20) = c; }
 u8 SaveGame_getCurChar(void) { return *(u8 *)((char *)lbl_803A32A8 + 0x20); }
