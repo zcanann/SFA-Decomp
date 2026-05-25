@@ -6356,6 +6356,7 @@ extern f32 lbl_803DE660;
 extern f32 lbl_803DE664;
 extern f32 lbl_803DE668;
 extern f32 lbl_803DE66C;
+extern f32 lbl_803DE670;
 extern f32 lbl_803DE678;
 extern f32 lbl_803DE694;
 extern f32 lbl_803DE698;
@@ -8028,6 +8029,48 @@ f32 curveFn_80010dc0(f32 t, f32* values, f32* outTangent)
         *outTangent = t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + values[2];
     }
     return t * (t * (a * t + b) + values[2]) + values[0];
+}
+
+/*
+ * Function: fn_80010E2C
+ * EN v1.0 Address: 0x80010E2C
+ * EN v1.0 Size: 180b
+ */
+void fn_80010E2C(f32* values, f32* coefficients)
+{
+    f32 scale;
+
+    coefficients[0] = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    coefficients[1] = lbl_803DE664 * values[2] +
+                      (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
+    coefficients[2] = lbl_803DE668 * values[0] + lbl_803DE664 * values[2];
+    coefficients[3] = values[2] + (values[0] + lbl_803DE65C * values[1]);
+
+    scale = lbl_803DE670;
+    coefficients[0] *= scale;
+    coefficients[1] *= scale;
+    coefficients[2] *= scale;
+    coefficients[3] *= scale;
+}
+
+/*
+ * Function: mathFn_80010ee0
+ * EN v1.0 Address: 0x80010EE0
+ * EN v1.0 Size: 140b
+ */
+f32 mathFn_80010ee0(f32 t, f32* values, f32* outTangent)
+{
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    f32 b = lbl_803DE664 * values[2] +
+            (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
+    f32 c = lbl_803DE668 * values[0] + lbl_803DE664 * values[2];
+    f32 d = values[2] + (values[0] + lbl_803DE65C * values[1]);
+
+    if (outTangent != NULL) {
+        *outTangent = lbl_803DE670 *
+                      (t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + c);
+    }
+    return lbl_803DE670 * (t * (t * (a * t + b) + c) + d);
 }
 
 typedef struct CurveHeapNode {
