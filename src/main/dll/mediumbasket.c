@@ -1982,6 +1982,8 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 sqrtf(f32 value);
 extern u8 lbl_8031FDA0[];
 extern u8 lbl_8031FE18[];
+extern s16 lbl_8031FD80[];
+extern s16 lbl_8031FD90[];
 extern u8 lbl_8031FE38[];
 extern u8 lbl_8031FE48[];
 extern void Camera_EnableViewYOffset(void);
@@ -2461,6 +2463,84 @@ int fn_8015B2A0(int obj, int state)
         ((int (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[17])(
             obj, state, (f32)*(u16 *)(sub + 0x3fe), 1) != 0) {
         return 5;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8015AF10(int obj, int state)
+{
+    int sub = *(int *)(obj + 0xb8);
+
+    if ((s8)*(u8 *)(state + 0x27b) != 0) {
+        if ((s32)*(f32 *)(state + 0x2c0) > 0x37) {
+            if ((*(u8 *)(sub + 0x404) & 2) == 0) {
+                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 7);
+            } else {
+                int control = *(int *)(sub + 0x40c);
+                if ((*(u8 *)(sub + 0x404) & 0x10) != 0) {
+                    s16 attackIndex = *(s16 *)(control + 4);
+                    *(s16 *)(control + 4) = attackIndex + 1;
+                    ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
+                        obj, state, (s32)lbl_8031FD90[attackIndex]);
+                } else {
+                    s16 attackIndex = *(s16 *)(control + 4);
+                    *(s16 *)(control + 4) = attackIndex + 1;
+                    ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
+                        obj, state, (s32)lbl_8031FD80[attackIndex]);
+                }
+                if (*(s16 *)(control + 4) >= 7) {
+                    *(s16 *)(control + 4) = 0;
+                }
+            }
+        } else {
+            if (*(s16 *)(state + 0x274) == 6) {
+                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 5);
+            } else {
+                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 6);
+            }
+        }
+    } else if ((s8)*(u8 *)(state + 0x346) != 0) {
+        if ((((u8)((int (*)(int, int, f32))((void **)*gBaddieControlInterface)[6])(
+                  obj, state, lbl_803E2D00) & 1) == 0)) {
+            return 5;
+        }
+        if (((int (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[17])(
+                obj, state, (f32)*(u16 *)(sub + 0x3fe), 1) != 0) {
+            return 5;
+        }
+        if ((s32)*(f32 *)(state + 0x2c0) > 0x37) {
+            if ((*(u8 *)(sub + 0x404) & 2) == 0) {
+                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 7);
+            } else {
+                int control = *(int *)(sub + 0x40c);
+                if ((*(u8 *)(sub + 0x404) & 0x10) != 0) {
+                    s16 attackIndex = *(s16 *)(control + 4);
+                    *(s16 *)(control + 4) = attackIndex + 1;
+                    ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
+                        obj, state, (s32)lbl_8031FD90[attackIndex]);
+                } else {
+                    s16 attackIndex = *(s16 *)(control + 4);
+                    *(s16 *)(control + 4) = attackIndex + 1;
+                    ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
+                        obj, state, (s32)lbl_8031FD80[attackIndex]);
+                }
+                if (*(s16 *)(control + 4) >= 7) {
+                    *(s16 *)(control + 4) = 0;
+                }
+            }
+        } else {
+            if (*(s16 *)(state + 0x274) == 6) {
+                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 5);
+            } else {
+                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 6);
+            }
+        }
+    } else if (*(s16 *)(state + 0x274) == 7 && (s32)*(f32 *)(state + 0x2c0) < 0x37) {
+        ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 6);
     }
     return 0;
 }
