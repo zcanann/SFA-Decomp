@@ -137,11 +137,11 @@ extern f32 lbl_803DDA5C;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f64 lbl_803DF378;
-extern f32 lbl_803DF3B4;
-extern f32 lbl_803DF3B8;
-extern f32 lbl_803DF3BC;
-extern f32 lbl_803DF3C0;
-extern f32 lbl_803DF3C4;
+extern f32 gExpgfxYVelocityPositiveLimit;
+extern f32 gExpgfxYVelocityFastStep;
+extern f32 gExpgfxYVelocitySlowStep;
+extern f32 gExpgfxYVelocityNegativeLimit;
+extern f32 gExpgfxSlotMotionStep;
 extern f32 lbl_803DDEDC;
 extern f32 lbl_803DDEE0;
 extern f32 lbl_803DDEE4;
@@ -568,22 +568,22 @@ void expgfx_initSlotQuad(void *slotPtr)
   }
 
   if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
-      slot->velocityY < lbl_803DF3B4) {
+      slot->velocityY < gExpgfxYVelocityPositiveLimit) {
     if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
-        slot->velocityY < lbl_803DF3B4) {
-      slot->velocityY -= lbl_803DF3B8 * timeDelta;
+        slot->velocityY < gExpgfxYVelocityPositiveLimit) {
+      slot->velocityY -= gExpgfxYVelocityFastStep * timeDelta;
     } else {
-      slot->velocityY -= lbl_803DF3BC * timeDelta;
+      slot->velocityY -= gExpgfxYVelocitySlowStep * timeDelta;
     }
   } else if ((behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
-             slot->velocityY > lbl_803DF3C0) {
-    slot->velocityY += lbl_803DF3B8 * timeDelta;
+             slot->velocityY > gExpgfxYVelocityNegativeLimit) {
+    slot->velocityY += gExpgfxYVelocityFastStep * timeDelta;
   } else if ((behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0 &&
-             slot->velocityY > lbl_803DF3C0) {
-    slot->velocityY += lbl_803DF3BC * timeDelta;
+             slot->velocityY > gExpgfxYVelocityNegativeLimit) {
+    slot->velocityY += gExpgfxYVelocitySlowStep * timeDelta;
   }
 
-  step = lbl_803DF3C4;
+  step = gExpgfxSlotMotionStep;
   *(f32 *)&slot->posX += slot->velocityX * step;
   *(f32 *)&slot->posY += slot->velocityY * step;
   *(f32 *)&slot->posZ += slot->velocityZ * step;
