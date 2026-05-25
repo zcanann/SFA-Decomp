@@ -3662,3 +3662,33 @@ void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E1B78;
+extern f32 lbl_803E1B7C;
+extern f32 lbl_803E1B80;
+extern f32 lbl_803E1B84;
+extern f32 lbl_803E1B88;
+
+/* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModePerv_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+
+    ((f32 *)lbl_803DD5C8)[0] -= lbl_803E1B78 * timeDelta;
+    if (((f32 *)lbl_803DD5C8)[0] < lbl_803E1B7C) {
+        ((f32 *)lbl_803DD5C8)[0] = lbl_803E1B7C;
+    }
+    *(f32 *)(obj + 0xc) =
+        *(f32 *)(state + 0x18) -
+        lbl_803E1B80 * fn_80293E80(lbl_803E1B84 * (f32)(s32)*(s16 *)state / lbl_803E1B88);
+    *(f32 *)(obj + 0x10) = ((f32 *)lbl_803DD5C8)[1];
+    *(f32 *)(obj + 0x14) =
+        *(f32 *)(state + 0x20) -
+        lbl_803E1B80 * sin(lbl_803E1B84 * (f32)(s32)*(s16 *)state / lbl_803E1B88);
+    *(s16 *)(obj + 0) = 0;
+    *(s16 *)(obj + 2) = -0x4000;
+    *(s16 *)(obj + 4) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
