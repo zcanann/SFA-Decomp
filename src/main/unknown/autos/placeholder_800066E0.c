@@ -791,6 +791,7 @@ extern void mtxFn_80022404(f32 *dst, f32 *src, f32 *out);
 extern void mtxRotateByVec3s(f32 *matrix, void *transform);
 extern void mtx44Transpose(f32 *src, f32 *dst);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
+extern void PSMTXCopy(f32 *src, f32 *dst);
 extern void PSMTXMultVec(f32 *matrix, f32 *in, f32 *out);
 extern void PSVECNormalize(f32 *in, f32 *out);
 extern void PSVECScale(f32 *in, f32 *out, f32 scale);
@@ -802,6 +803,7 @@ extern void C_MTXLightPerspective(f32* matrix, f32 fovY, f32 aspect, f32 scaleS,
 extern void GXSetProjection(f32* matrix, s32 projectionMode);
 extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane);
 extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane, u32 field);
+extern u8 pauseMenuGetState(void);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
@@ -6376,6 +6378,17 @@ typedef struct CameraViewSlot {
     u8 pad5E[2];
 } CameraViewSlot;
 
+typedef struct CameraMatrixTransform {
+    s16 pitch;
+    s16 yaw;
+    s16 roll;
+    s16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} CameraMatrixTransform;
+
 extern CameraViewSlot gCameraShakeSlots[];
 extern f32 sqrtf(f32 x);
 extern f32 sin(f32 x);
@@ -7551,6 +7564,64 @@ void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
     slot->x = x;
     slot->y = y;
     slot->z = z;
+}
+
+/*
+ * Function: Camera_UpdateViewMatrices
+ * EN v1.0 Address: 0x8000F564
+ * EN v1.0 Size: 540b
+ */
+void Camera_UpdateViewMatrices(void)
+{
+    CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
+    CameraMatrixTransform transform;
+    f32 rotationMatrix[16];
+
+    transform.x = -(slot->x - playerMapOffsetX);
+    transform.y = -slot->y;
+    transform.z = -(slot->z - playerMapOffsetZ);
+    transform.pitch = slot->pitch - 0x8000;
+    transform.yaw = slot->yaw;
+    transform.roll = slot->roll;
+    transform.scale = lbl_803DE5F0;
+    if (pauseMenuGetState() == 0) {
+        if (lbl_803DC88C != 0) {
+            transform.y -= slot->shakeMagnitude;
+        }
+        transform.x += lbl_803DE60C;
+        transform.y += lbl_803DE60C;
+        transform.z += lbl_803DE60C;
+    }
+
+    mtxRotateByVec3s(rotationMatrix, &transform);
+    mtx44Transpose(rotationMatrix, gCameraViewMatrix);
+
+    transform.x = slot->x - playerMapOffsetX;
+    transform.y = slot->y;
+    transform.z = slot->z - playerMapOffsetZ;
+    transform.pitch = -(slot->pitch - 0x8000);
+    transform.yaw = -slot->yaw;
+    transform.roll = -slot->roll;
+    transform.scale = lbl_803DE5F0;
+    if (pauseMenuGetState() == 0) {
+        if (lbl_803DC88C != 0) {
+            transform.y += slot->shakeMagnitude;
+        }
+        transform.x -= lbl_803DE60C;
+        transform.y -= lbl_803DE60C;
+        transform.z -= lbl_803DE60C;
+    }
+
+    setMatrixFromObjectPos((f32*)lbl_80338090, &transform);
+    mtx44Transpose((f32*)lbl_80338090, gCameraInverseViewMatrix);
+    PSMTXCopy(gCameraViewMatrix, gCameraViewRotationMatrix);
+    gCameraViewRotationMatrix[3] = lbl_803DE60C;
+    gCameraViewRotationMatrix[7] = lbl_803DE60C;
+    gCameraViewRotationMatrix[11] = lbl_803DE60C;
+    PSMTXCopy(gCameraInverseViewMatrix, gCameraInverseViewRotationMatrix);
+    gCameraInverseViewRotationMatrix[3] = lbl_803DE60C;
+    gCameraInverseViewRotationMatrix[7] = lbl_803DE60C;
+    gCameraInverseViewRotationMatrix[11] = lbl_803DE60C;
 }
 
 /*
