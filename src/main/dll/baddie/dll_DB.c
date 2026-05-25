@@ -751,7 +751,9 @@ typedef struct LinkMenuItem {
     u8 field1A;
     u8 pad1B[3];
     s8 state;
-    u8 pad1F[0x1D];
+    u8 pad1F[0x19];
+    s8 field38;
+    u8 pad39[3];
 } LinkMenuItem;
 
 extern LinkMenuItem lbl_803A9458[40];
@@ -833,8 +835,19 @@ u16 fn_80130124(void) {
 void linkInitTextures(void) {}
 void linkDrawFn_801302c0(void) {}
 void linkDrawFn_80130484(void) {}
-void Link_func0F(void) {}
 extern u8 lbl_803DD911;
+#pragma scheduling off
+#pragma peephole off
+void Link_func0F(void)
+{
+    int i;
+
+    for (i = 0; i < (s8)lbl_803DD911; i++) {
+        lbl_803A9458[i].field38 = 4;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern void *textureLoadAsset(int id);
 extern void textureFree(void *p);
 

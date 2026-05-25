@@ -287,261 +287,92 @@ extern f32 lbl_803E227C;
  */
 #pragma scheduling off
 #pragma peephole off
-void dll_9D_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+typedef struct {
+  u32 mode;       /* +0x00 */
+  f32 x, y, z;    /* +0x04 +0x08 +0x0c */
+  void *tex;      /* +0x10 */
+  u16 flags;      /* +0x14 */
+  u8 layer;       /* +0x16 */
+} GfxCmd;
+
+typedef struct {
+  GfxCmd *cmds;   /* +0x00 */
+  int ctx;        /* +0x04 */
+  u8 pad0[0x18];  /* +0x08 */
+  f32 col[3];     /* +0x20 */
+  f32 pos[3];     /* +0x2c */
+  f32 scale;      /* +0x38 */
+  u32 v3c;        /* +0x3c */
+  u32 v40;        /* +0x40 */
+  s16 v44;        /* +0x44 */
+  s16 hw[7];      /* +0x46 */
+  u32 flags;      /* +0x54 */
+  u8 v58, v59, v5a, v5b, v5c, count;  /* +0x58..+0x5d */
+  u8 pad1[2];     /* +0x5e */
+  GfxCmd entries[13];  /* +0x60 */
+} GfxBuf;
+
+void dll_9D_func03(int param_1,undefined4 param_2,int param_3,uint param_4)
 {
-  int iVar1;
-  undefined2 extraout_r4;
-  undefined4 *local_378;
-  int local_374;
-  float local_358;
-  float local_354;
-  float local_350;
-  float local_34c;
-  float local_348;
-  float local_344;
-  float local_340;
-  undefined4 local_33c;
-  undefined4 local_338;
-  undefined2 local_334;
-  undefined2 local_332;
-  undefined2 local_330;
-  undefined2 local_32e;
-  undefined2 local_32c;
-  undefined2 local_32a;
-  undefined2 local_328;
-  undefined2 local_326;
-  uint local_324;
-  undefined local_320;
-  undefined local_31f;
-  undefined local_31e;
-  undefined local_31d;
-  char local_31b;
-  undefined4 local_318;
-  float local_314;
-  float local_310;
-  float local_30c;
-  undefined *local_308;
-  undefined2 local_304;
-  undefined local_302;
-  undefined4 local_300;
-  float local_2fc;
-  float local_2f8;
-  float local_2f4;
-  undefined *local_2f0;
-  undefined2 local_2ec;
-  undefined local_2ea;
-  undefined4 local_2e8;
-  float local_2e4;
-  float local_2e0;
-  float local_2dc;
-  undefined *local_2d8;
-  undefined2 local_2d4;
-  undefined local_2d2;
-  undefined4 local_2d0;
-  float local_2cc;
-  float local_2c8;
-  float local_2c4;
-  undefined *local_2c0;
-  undefined2 local_2bc;
-  undefined local_2ba;
-  undefined4 local_2b8;
-  float local_2b4;
-  float local_2b0;
-  float local_2ac;
-  undefined4 local_2a8;
-  undefined2 local_2a4;
-  undefined local_2a2;
-  undefined4 local_2a0;
-  float local_29c;
-  float local_298;
-  float local_294;
-  undefined *local_290;
-  undefined2 local_28c;
-  undefined local_28a;
-  undefined4 local_288;
-  float local_284;
-  float local_280;
-  float local_27c;
-  undefined *local_278;
-  undefined2 local_274;
-  undefined local_272;
-  undefined4 local_270;
-  float local_26c;
-  float local_268;
-  float local_264;
-  undefined4 local_260;
-  undefined2 local_25c;
-  undefined local_25a;
-  undefined4 local_258;
-  float local_254;
-  float local_250;
-  float local_24c;
-  undefined *local_248;
-  undefined2 local_244;
-  undefined local_242;
-  undefined4 local_240;
-  float local_23c;
-  float local_238;
-  float local_234;
-  undefined4 local_230;
-  undefined2 local_22c;
-  undefined local_22a;
-  undefined4 local_228;
-  float local_224;
-  float local_220;
-  float local_21c;
-  undefined *local_218;
-  undefined2 local_214;
-  undefined local_212;
-  undefined4 local_210;
-  float local_20c;
-  float local_208;
-  float local_204;
-  undefined4 local_200;
-  undefined2 local_1fc;
-  undefined local_1fa;
-  undefined4 local_1f8;
-  float local_1f4;
-  float local_1f0;
-  float local_1ec;
-  undefined *local_1e8;
-  undefined2 local_1e4;
-  undefined local_1e2;
-  undefined auStack_1e0 [480];
-  
-  local_374 = FUN_80286840();
-  local_378 = &local_318;
-  local_302 = 0;
-  local_304 = 0x15;
-  local_308 = &DAT_80318e38;
-  local_318 = 4;
-  local_314 = lbl_803E2078;
-  local_310 = lbl_803E2078;
-  local_30c = lbl_803E2078;
-  local_2ea = 0;
-  local_2ec = 7;
-  local_2f0 = &DAT_80318dec;
-  local_300 = 2;
-  local_2fc = lbl_803E207C;
-  local_2f8 = lbl_803E2080;
-  local_2f4 = lbl_803E207C;
-  local_2d2 = 0;
-  local_2d4 = 7;
-  local_2d8 = &DAT_80318dfc;
-  local_2e8 = 2;
-  local_2e4 = lbl_803E2080;
-  local_2e0 = lbl_803E2080;
-  local_2dc = lbl_803E2080;
-  local_2ba = 0;
-  local_2bc = 7;
-  local_2c0 = &DAT_80318e0c;
-  local_2d0 = 2;
-  local_2cc = lbl_803E207C;
-  local_2c8 = lbl_803E2080;
-  local_2c4 = lbl_803E207C;
-  local_2a2 = 0;
-  local_2a4 = 0;
-  local_2a8 = 0;
-  local_2b8 = 0x400000;
-  local_2b4 = lbl_803E2078;
-  local_2b0 = lbl_803E2084;
-  local_2ac = lbl_803E2078;
-  local_28a = 1;
-  local_28c = 7;
-  local_290 = &DAT_80318dfc;
-  local_2a0 = 4;
-  local_29c = lbl_803E2088;
-  local_298 = lbl_803E2078;
-  local_294 = lbl_803E2078;
-  local_272 = 1;
-  local_274 = 0x15;
-  local_278 = &DAT_80318e38;
-  local_288 = 0x4000;
-  local_284 = lbl_803E2078;
-  local_280 = lbl_803E2078;
-  local_27c = lbl_803E2078;
-  local_25a = 1;
-  local_25c = 0;
-  local_260 = 0;
-  local_270 = 0x400000;
-  local_26c = lbl_803E2078;
-  local_268 = lbl_803E208C;
-  local_264 = lbl_803E2078;
-  local_242 = 2;
-  local_244 = 0x15;
-  local_248 = &DAT_80318e38;
-  local_258 = 0x4000;
-  local_254 = lbl_803E2078;
-  local_250 = lbl_803E2078;
-  local_24c = lbl_803E2078;
-  local_22a = 2;
-  local_22c = 0;
-  local_230 = 0;
-  local_240 = 0x400000;
-  local_23c = lbl_803E2078;
-  local_238 = lbl_803E2090;
-  local_234 = lbl_803E2078;
-  local_212 = 3;
-  local_214 = 0x15;
-  local_218 = &DAT_80318e38;
-  local_228 = 0x4000;
-  local_224 = lbl_803E2078;
-  local_220 = lbl_803E2078;
-  local_21c = lbl_803E2078;
-  local_1fa = 3;
-  local_1fc = 0;
-  local_200 = 0;
-  local_210 = 0x400000;
-  local_20c = lbl_803E2078;
-  local_208 = lbl_803E208C;
-  local_204 = lbl_803E2078;
-  local_1e2 = 3;
-  local_1e4 = 7;
-  local_1e8 = &DAT_80318dfc;
-  local_1f8 = 4;
-  local_1f4 = lbl_803E2078;
-  local_1f0 = lbl_803E2078;
-  local_1ec = lbl_803E2078;
-  local_320 = 0;
-  local_34c = lbl_803E2078;
-  local_348 = lbl_803E2078;
-  local_344 = lbl_803E2078;
-  local_358 = lbl_803E2078;
-  local_354 = lbl_803E2078;
-  local_350 = lbl_803E2078;
-  local_340 = lbl_803E2094;
-  local_338 = 2;
-  local_33c = 7;
-  local_31f = 0xe;
-  local_31e = 0;
-  local_31d = 0x1e;
-  iVar1 = (int)(auStack_1e0 + -(int)local_378) / 0x18 +
-          ((int)(auStack_1e0 + -(int)local_378) >> 0x1f);
-  local_31b = (char)iVar1 - (char)(iVar1 >> 0x1f);
-  local_332 = DAT_80318e80;
-  local_330 = DAT_80318e82;
-  local_32e = DAT_80318e84;
-  local_32c = DAT_80318e86;
-  local_32a = DAT_80318e88;
-  local_328 = DAT_80318e8a;
-  local_326 = DAT_80318e8c;
-  local_324 = param_4 | 0xc0100c0;
+  GfxBuf buf;
+  GfxCmd *e = buf.entries;
+
+  e[0].layer = 0;  e[0].flags = 0x15; e[0].tex = &DAT_80318e38; e[0].mode = 4;
+  e[0].x = lbl_803E2078; e[0].y = lbl_803E2078; e[0].z = lbl_803E2078;
+  e[1].layer = 0;  e[1].flags = 7;    e[1].tex = &DAT_80318dec; e[1].mode = 2;
+  e[1].x = lbl_803E207C; e[1].y = lbl_803E2080; e[1].z = lbl_803E207C;
+  e[2].layer = 0;  e[2].flags = 7;    e[2].tex = &DAT_80318dfc; e[2].mode = 2;
+  e[2].x = lbl_803E2080; e[2].y = lbl_803E2080; e[2].z = lbl_803E2080;
+  e[3].layer = 0;  e[3].flags = 7;    e[3].tex = &DAT_80318e0c; e[3].mode = 2;
+  e[3].x = lbl_803E207C; e[3].y = lbl_803E2080; e[3].z = lbl_803E207C;
+  e[4].layer = 0;  e[4].flags = 0;    e[4].tex = (void *)0;     e[4].mode = 0x400000;
+  e[4].x = lbl_803E2078; e[4].y = lbl_803E2084; e[4].z = lbl_803E2078;
+  e[5].layer = 1;  e[5].flags = 7;    e[5].tex = &DAT_80318dfc; e[5].mode = 4;
+  e[5].x = lbl_803E2088; e[5].y = lbl_803E2078; e[5].z = lbl_803E2078;
+  e[6].layer = 1;  e[6].flags = 0x15; e[6].tex = &DAT_80318e38; e[6].mode = 0x4000;
+  e[6].x = lbl_803E2078; e[6].y = lbl_803E2078; e[6].z = lbl_803E2078;
+  e[7].layer = 1;  e[7].flags = 0;    e[7].tex = (void *)0;     e[7].mode = 0x400000;
+  e[7].x = lbl_803E2078; e[7].y = lbl_803E208C; e[7].z = lbl_803E2078;
+  e[8].layer = 2;  e[8].flags = 0x15; e[8].tex = &DAT_80318e38; e[8].mode = 0x4000;
+  e[8].x = lbl_803E2078; e[8].y = lbl_803E2078; e[8].z = lbl_803E2078;
+  e[9].layer = 2;  e[9].flags = 0;    e[9].tex = (void *)0;     e[9].mode = 0x400000;
+  e[9].x = lbl_803E2078; e[9].y = lbl_803E2090; e[9].z = lbl_803E2078;
+  e[10].layer = 3; e[10].flags = 0x15; e[10].tex = &DAT_80318e38; e[10].mode = 0x4000;
+  e[10].x = lbl_803E2078; e[10].y = lbl_803E2078; e[10].z = lbl_803E2078;
+  e[11].layer = 3; e[11].flags = 0;    e[11].tex = (void *)0;     e[11].mode = 0x400000;
+  e[11].x = lbl_803E2078; e[11].y = lbl_803E208C; e[11].z = lbl_803E2078;
+  e[12].layer = 3; e[12].flags = 7;    e[12].tex = &DAT_80318dfc; e[12].mode = 4;
+  e[12].x = lbl_803E2078; e[12].y = lbl_803E2078; e[12].z = lbl_803E2078;
+
+  buf.v58 = 0;
+  buf.ctx = param_1;
+  buf.v44 = (s16)param_2;
+  buf.pos[0] = lbl_803E2078; buf.pos[1] = lbl_803E2078; buf.pos[2] = lbl_803E2078;
+  buf.col[0] = lbl_803E2078; buf.col[1] = lbl_803E2078; buf.col[2] = lbl_803E2078;
+  buf.scale = lbl_803E2094;
+  buf.v40 = 2;
+  buf.v3c = 7;
+  buf.v59 = 0xe;
+  buf.v5a = 0;
+  buf.v5b = 0x1e;
+  buf.count = 13;
+  buf.hw[0] = DAT_80318e80; buf.hw[1] = DAT_80318e82; buf.hw[2] = DAT_80318e84;
+  buf.hw[3] = DAT_80318e86; buf.hw[4] = DAT_80318e88; buf.hw[5] = DAT_80318e8a;
+  buf.hw[6] = DAT_80318e8c;
+  buf.cmds = buf.entries;
+  buf.flags = param_4 | 0xc0100c0;
   if ((param_4 & 1) != 0) {
-    if (local_374 == 0) {
-      local_34c = lbl_803E2078 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E2078 + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E2078 + *(float *)(param_3 + 0x14);
-    }
-    else {
-      local_34c = lbl_803E2078 + *(float *)(local_374 + 0x18);
-      local_348 = lbl_803E2078 + *(float *)(local_374 + 0x1c);
-      local_344 = lbl_803E2078 + *(float *)(local_374 + 0x20);
+    if (param_1 == 0) {
+      buf.pos[0] = lbl_803E2078 + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E2078 + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E2078 + *(f32 *)(param_3 + 0x14);
+    } else {
+      buf.pos[0] = lbl_803E2078 + *(f32 *)(param_1 + 0x18);
+      buf.pos[1] = lbl_803E2078 + *(f32 *)(param_1 + 0x1c);
+      buf.pos[2] = lbl_803E2078 + *(f32 *)(param_1 + 0x20);
     }
   }
-  local_334 = extraout_r4;
-  (**(code **)(*gModgfxInterface + 8))(&local_378,0,0x15,&DAT_80318c88,0x18,&DAT_80318d5c,0x46c,0);
-  FUN_8028688c();
-  return;
+  (**(code **)(*gModgfxInterface + 8))(&buf,0,0x15,&DAT_80318c88,0x18,&DAT_80318d5c,0x46c,0);
 }
 
 /*
