@@ -1937,7 +1937,10 @@ extern f32 lbl_803E2D54;
 extern f32 lbl_803E2D58;
 extern f32 lbl_803E2D5C;
 extern f32 lbl_803E2D60;
+extern f32 lbl_803E2DB0;
+extern f32 lbl_803E2DB4;
 extern f32 timeDelta;
+extern u8 framesThisStep;
 extern int* gPlayerInterface;
 extern int *gBaddieControlInterface;
 extern f32 lbl_803E2CE8;
@@ -1955,9 +1958,13 @@ extern void fn_8003B5E0(int arg0, int arg1, int arg2, int arg3);
 extern void objRenderFn_8003b8f4(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale);
 extern void fn_8015CE68(int obj, int state);
 extern u8 lbl_803AC548[];
+extern u8 lbl_803AC528[];
 extern void ObjAnim_SetCurrentMove(int obj, int moveId, f32 progress, int flags);
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32 sqrtf(f32 value);
+extern u8 lbl_8031FDA0[];
+extern u8 lbl_8031FE18[];
 
 #pragma scheduling off
 #pragma peephole off
@@ -2377,6 +2384,82 @@ int fn_8015C6B4(int obj, int state)
         *(u8 *)(obj + 0xaf) |= 8;
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015D27C(int obj, int sub, int state)
+{
+    int control = *(int *)(sub + 0x40c);
+
+    *(u16 *)(control + 0x46) += framesThisStep;
+    if (*(u16 *)(control + 0x46) > 299) {
+        *(u16 *)(control + 0x46) = randomGetRange(0, 200);
+        if (*(s16 *)(state + 0x274) == 7 || *(s16 *)(state + 0x274) == 8) {
+            Sfx_PlayFromObject(obj, 0x26c);
+        }
+    }
+    if ((*(u8 *)(sub + 0x404) & 2) == 0) {
+        ((void (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[11])(
+            obj, state, lbl_803E2DB0, -1);
+    } else {
+        ((void (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[11])(
+            obj, state, lbl_803E2D14, -1);
+    }
+    *(int *)(sub + 0x3e0) = *(int *)(obj + 0xc0);
+    *(int *)(obj + 0xc0) = 0;
+    ((void (*)(f32, f32, int, int, u8 *, u8 *))((void **)*gPlayerInterface)[2])(
+        timeDelta, timeDelta, obj, state, lbl_803AC548, lbl_803AC528);
+    *(int *)(obj + 0xc0) = *(int *)(sub + 0x3e0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015D3C0(int obj, int sub, int state)
+{
+    int control = *(int *)(sub + 0x40c);
+    int target;
+    int hitInfo[7];
+    f32 dx;
+    f32 dy;
+    f32 dz;
+
+    Obj_GetPlayerObject();
+    target = *(int *)(state + 0x2d0);
+    if (target != 0) {
+        dx = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
+        dy = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
+        dz = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
+        *(f32 *)(state + 0x2c0) = sqrtf(dz * dz + dx * dx + dy * dy);
+    }
+    if ((*(u8 *)(sub + 0x404) & 0x20) == 0) {
+        ((void (*)(int, int, int, int, int, int, int))((void **)*gBaddieControlInterface)[15])(
+            obj, state, sub + 0x400, 2, 3, (s32)*(s16 *)(sub + 0x3fc),
+            (s32)*(s16 *)(sub + 0x3fa));
+    }
+    ((void (*)(int, int, int, int, int, int, int, int))((void **)*gBaddieControlInterface)[21])(
+        obj, state, sub + 0x35c, (s32)*(s16 *)(sub + 0x3f4), 0, 0, 0, 8);
+    *(f32 *)control += timeDelta;
+    if (*(s16 *)(state + 0x274) != 3 &&
+        ((int (*)(int, int, int, int, u8 *, u8 *, int, int *))((void **)*gBaddieControlInterface)[20])(
+            obj, state, sub + 0x35c, (s32)*(s16 *)(sub + 0x3f4), lbl_8031FDA0,
+            lbl_8031FE18, 1, hitInfo) != 0) {
+        if (*(f32 *)control < lbl_803E2DB4) {
+            *(s16 *)(control + 6) += 1;
+        } else {
+            *(s16 *)(control + 6) = 0;
+        }
+        *(f32 *)control = lbl_803E2D14;
+        if ((s8)*(u8 *)(state + 0x354) > 0 && *(s16 *)(control + 6) > 1) {
+            ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 3);
+            *(s16 *)(control + 6) = 0;
+            *(s16 *)(state + 0x270) = 5;
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
