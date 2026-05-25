@@ -711,8 +711,7 @@ typedef struct SfxObjectChannel {
     u8 pad20[0x08];
     u8 globalCtrlDisabled;
     u8 pad29[0x07];
-    u32 ageHi;
-    u32 ageLo;
+    u64 age;
 } SfxObjectChannel;
 
 #define SFX_LOOPED_OBJECT_SOUND_COUNT 0x80
@@ -6674,17 +6673,15 @@ SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mod
 {
     SfxObjectChannel* objectChannel = gSfxObjectChannels;
     SfxObjectChannel* bestChannel = NULL;
-    u32 bestAgeLo;
-    u32 bestAgeHi;
+    u64 bestAge;
     u32 channelMask = (u8)channel;
     s32 i;
 
     if (mode == 2) {
-        bestAgeLo = 0;
+        bestAge = 0;
     } else {
-        bestAgeLo = (u32)-1;
+        bestAge = (u64)-1;
     }
-    bestAgeHi = (s32)bestAgeLo >> 31;
     gSfxObjectChannelMatchCount = 0;
 
     for (i = SFX_OBJECT_CHANNEL_COUNT; i != 0; i--) {
@@ -6694,24 +6691,22 @@ SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mod
             (((u16)sfxId == 0) || (objectChannel->sfxId == (u16)sfxId))) {
             gSfxObjectChannelMatchCount++;
 
-            if (mode == 0) {
+            switch (mode) {
+            case 2:
+                if (objectChannel->age > bestAge) {
+                    bestChannel = objectChannel;
+                    bestAge = objectChannel->age;
+                }
+                break;
+            case 0:
                 return objectChannel;
-            }
-
-            if (mode == 2) {
-                if ((objectChannel->ageHi > bestAgeHi) ||
-                    ((objectChannel->ageHi == bestAgeHi) && (objectChannel->ageLo > bestAgeLo))) {
+            case 1:
+            case 3:
+                if (objectChannel->age < bestAge) {
                     bestChannel = objectChannel;
-                    bestAgeHi = objectChannel->ageHi;
-                    bestAgeLo = objectChannel->ageLo;
+                    bestAge = objectChannel->age;
                 }
-            } else if ((mode == 1) || (mode == 3)) {
-                if ((objectChannel->ageHi < bestAgeHi) ||
-                    ((objectChannel->ageHi == bestAgeHi) && (objectChannel->ageLo < bestAgeLo))) {
-                    bestChannel = objectChannel;
-                    bestAgeHi = objectChannel->ageHi;
-                    bestAgeLo = objectChannel->ageLo;
-                }
+                break;
             }
 
             if ((mode != 3) && (gSfxObjectChannelMatchCount == 3)) {
