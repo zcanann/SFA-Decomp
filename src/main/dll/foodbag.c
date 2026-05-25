@@ -1585,11 +1585,12 @@ void dll_80_func03(int param_1,int param_2,int param_3,uint param_4)
   e[0].layer = 0; e[0].flags = 9; e[0].tex = &lbl_80315468[0x8c]; e[0].mode = 0x80;
   e[0].x = lbl_803E0E58; e[0].y = lbl_803E0E58; e[0].z = lbl_803E0E5C;
   if (param_2 == 1) {
-    e[1].y = lbl_803E0E60; e[1].z = lbl_803E0E64;
+    e[1].layer = 0; e[1].flags = 8; e[1].tex = &lbl_80315468[0xa0]; e[1].mode = 2;
+    e[1].x = lbl_803E0E60; e[1].y = lbl_803E0E60; e[1].z = lbl_803E0E64;
   } else {
-    e[1].y = lbl_803E0E68; e[1].z = lbl_803E0E6C;
+    e[1].layer = 0; e[1].flags = 8; e[1].tex = &lbl_80315468[0xa0]; e[1].mode = 2;
+    e[1].x = lbl_803E0E68; e[1].y = lbl_803E0E68; e[1].z = lbl_803E0E6C;
   }
-  e[1].layer = 0; e[1].flags = 8; e[1].tex = &lbl_80315468[0xa0]; e[1].mode = 2;
   e[2].layer = 1; e[2].flags = 8; e[2].tex = &lbl_80315468[0x8c]; e[2].mode = 2;
   e[2].x = lbl_803E0E6C; e[2].y = lbl_803E0E6C; e[2].z = lbl_803E0E70;
   e[3].layer = 1; e[3].flags = 9; e[3].tex = &lbl_80315468[0x8c]; e[3].mode = 0x100;
@@ -1625,7 +1626,6 @@ void dll_80_func03(int param_1,int param_2,int param_3,uint param_4)
     }
   }
   buf.v58 = 0;
-  e[1].x = e[1].y;
   (**(code **)(*gModgfxInterface + 8))(&buf,0,9,lbl_80315468,8,&lbl_80315468[0x5c],0x156,0);
 }
 
