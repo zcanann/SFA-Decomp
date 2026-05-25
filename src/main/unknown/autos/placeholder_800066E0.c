@@ -8132,7 +8132,18 @@ typedef struct ObjLinkedList {
     int head;
 } ObjLinkedList;
 
+typedef struct ModelList {
+    s16* entries;
+    s16* end;
+    s16* capacityEnd;
+    u8 dataSize;
+    u8 strideShorts;
+    u8 pad0E[6];
+} ModelList;
+
+extern int memcmp(const void* lhs, const void* rhs, u32 size);
 extern void* memcpy(void* dst, const void* src, u32 size);
+extern void* memset(void* dst, int value, u32 size);
 
 /*
  * Function: Queue_GetCount
@@ -8335,6 +8346,45 @@ void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, in
 }
 
 /*
+ * Function: objList_remove
+ * EN v1.0 Address: 0x80013A9C
+ * EN v1.0 Size: 132b
+ */
+void objList_remove(ObjLinkedList* list, int item)
+{
+    int head;
+    int prev;
+    int current;
+    int next;
+
+    head = list->head;
+    if (head == item) {
+        list->head = *(int*)(head + list->nextOffset);
+        list->count--;
+        return;
+    }
+
+    prev = head;
+    current = head;
+    while (current != 0 && current != item) {
+        prev = current;
+        current = *(int*)(current + list->nextOffset);
+    }
+
+    if (current == 0) {
+        return;
+    }
+
+    next = *(int*)(current + list->nextOffset);
+    if (current == head) {
+        list->head = next;
+    } else {
+        *(int*)(prev + list->nextOffset) = next;
+    }
+    list->count--;
+}
+
+/*
  * Function: objListAdd
  * EN v1.0 Address: 0x80013B20
  * EN v1.0 Size: 76b
@@ -8356,6 +8406,131 @@ void objListAdd(ObjLinkedList* list, int prev, int item)
         *(int*)(item + list->nextOffset) = next;
     }
     list->count++;
+}
+
+/*
+ * Function: fn_80013B6C
+ * EN v1.0 Address: 0x80013B6C
+ * EN v1.0 Size: 16b
+ */
+void fn_80013B6C(ObjLinkedList* list, s16 nextOffset)
+{
+    list->head = 0;
+    list->nextOffset = nextOffset;
+}
+
+/*
+ * Function: model_findIdxInModelList
+ * EN v1.0 Address: 0x80013B7C
+ * EN v1.0 Size: 148b
+ */
+BOOL model_findIdxInModelList(ModelList* list, void* header, int* outIndex)
+{
+    s16* entry;
+
+    entry = list->entries;
+    while (entry < list->end) {
+        if (memcmp(entry + 1, header, list->dataSize) == 0) {
+            *outIndex = *entry;
+            return TRUE;
+        }
+        entry += list->strideShorts;
+    }
+    return FALSE;
+}
+
+/*
+ * Function: ModelList_getHeader
+ * EN v1.0 Address: 0x80013C10
+ * EN v1.0 Size: 104b
+ */
+BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader)
+{
+    s16* entry;
+
+    entry = list->entries;
+    while (entry < list->end) {
+        if (*entry == index) {
+            memcpy(outHeader, entry + 1, list->dataSize);
+            return TRUE;
+        }
+        entry += list->strideShorts;
+    }
+    return FALSE;
+}
+
+/*
+ * Function: model_adjustModelList
+ * EN v1.0 Address: 0x80013C78
+ * EN v1.0 Size: 112b
+ */
+void model_adjustModelList(ModelList* list, int index)
+{
+    s16* entry;
+
+    entry = list->entries;
+    while (entry < list->end) {
+        if (*entry == index) {
+            *entry = -1;
+            break;
+        }
+        entry += list->strideShorts;
+    }
+
+    goto checkTail;
+trimTail:
+    list->end = (s16*)((u8*)list->end - list->strideShorts * 2);
+checkTail:
+    if (list->end <= list->entries) {
+        return;
+    }
+    if (list->end[-1] == -1) {
+        goto trimTail;
+    }
+    return;
+}
+
+/*
+ * Function: modelInitModelList
+ * EN v1.0 Address: 0x80013CE8
+ * EN v1.0 Size: 140b
+ */
+void modelInitModelList(ModelList* list, s16 index, void* header)
+{
+    s16* entry;
+
+    for (entry = list->entries; entry < list->end; entry += list->strideShorts) {
+        if (*entry == -1) {
+            break;
+        }
+    }
+
+    *entry = index;
+    memcpy(entry + 1, header, list->dataSize);
+    if (entry == list->end) {
+        list->end += list->strideShorts;
+    }
+}
+
+/*
+ * Function: allocModelStruct
+ * EN v1.0 Address: 0x80013D74
+ * EN v1.0 Size: 184b
+ */
+ModelList* allocModelStruct(int capacity, int dataSize)
+{
+    ModelList* list;
+    int entryBytes;
+
+    entryBytes = dataSize + 2;
+    list = mmAlloc(capacity * entryBytes + sizeof(ModelList), 0x1a, NULL);
+    list->entries = (s16*)((u8*)list + sizeof(ModelList));
+    list->dataSize = dataSize;
+    list->strideShorts = entryBytes >> 1;
+    list->end = list->entries;
+    list->capacityEnd = list->entries + capacity * list->strideShorts;
+    memset(list->entries, -1, capacity * list->strideShorts * 2);
+    return list;
 }
 
 extern u8 lbl_803DC8F8;
