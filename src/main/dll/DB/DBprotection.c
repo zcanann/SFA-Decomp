@@ -34,6 +34,7 @@ extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e6458;
 extern f32 lbl_803DC074;
+extern f32 timeDelta;
 extern f32 lbl_803E6360;
 extern f32 lbl_803E6364;
 extern f32 lbl_803E6368;
@@ -93,7 +94,7 @@ extern f32 lbl_803E6444;
 extern f32 lbl_803E6448;
 extern f32 lbl_803E644C;
 extern f32 lbl_803E6450;
-extern u8 lbl_803DDC2C;
+extern s8 lbl_803DDC2C;
 extern int *gCloudActionInterface;
 extern int *gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
@@ -942,8 +943,8 @@ void fn_801E12EC(int *obj)
     state[0x81] = 0;
   }
 
-  *(s16 *)((u8 *)obj + 4) = (s16)(s32)(lbl_803E57DC * angleCos);
-  *(u16 *)(state + 0x68) = (u16)(s32)(lbl_803E57E0 * lbl_803DC074 + (f32)*(u16 *)(state + 0x68));
+  *(u16 *)((u8 *)obj + 4) = (s32)(lbl_803E57DC * angleCos);
+  *(u16 *)(state + 0x68) = (u16)(s32)(lbl_803E57E0 * timeDelta + (f32)*(u16 *)(state + 0x68));
 }
 
 void fn_801E1568(int *obj) {
