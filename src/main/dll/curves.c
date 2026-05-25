@@ -2906,9 +2906,9 @@ void fn_800E5CBC(short *param_1,int param_2)
   float fVar1;
   short sVar2;
   int iVar3;
-  float local_78;
-  float local_74;
   float local_70;
+  float local_74;
+  float local_78;
   short local_6c [4];
   float local_64;
   float local_60;
@@ -2916,19 +2916,7 @@ void fn_800E5CBC(short *param_1,int param_2)
   float local_58;
   float afStack_54 [20];
   
-  if ((*(char *)(param_2 + 0x260) & 0x10) == 0) {
-    *(short *)(param_2 + 0x198) =
-         *(short *)(param_2 + 0x198) -
-         ((int)((int)*(short *)(param_2 + 0x198) * (uint)framesThisStep) >> 3);
-    *(short *)(param_2 + 0x19a) =
-         *(short *)(param_2 + 0x19a) -
-         ((int)((int)*(short *)(param_2 + 0x19a) * (uint)framesThisStep) >> 3);
-    fVar1 = lbl_803E0668;
-    *(float *)(param_2 + 0x1a0) = lbl_803E0668;
-    *(float *)(param_2 + 0x1a4) = lbl_803E068C;
-    *(float *)(param_2 + 0x1a8) = fVar1;
-  }
-  else {
+  if ((*(char *)(param_2 + 0x260) & 0x10) != 0) {
     local_6c[0] = -*param_1;
     if (*(short **)(param_1 + 0x18) != (short *)0x0) {
       local_6c[0] = local_6c[0] - **(short **)(param_1 + 0x18);
@@ -2955,6 +2943,18 @@ void fn_800E5CBC(short *param_1,int param_2)
     *(short *)(param_2 + 0x19a) =
          *(short *)(param_2 + 0x19a) +
          ((int)((uint)framesThisStep * ((int)sVar2 - (int)*(short *)(param_2 + 0x19a))) >> 3);
+  }
+  else {
+    *(short *)(param_2 + 0x198) =
+         *(short *)(param_2 + 0x198) -
+         ((int)((int)*(short *)(param_2 + 0x198) * (uint)framesThisStep) >> 3);
+    *(short *)(param_2 + 0x19a) =
+         *(short *)(param_2 + 0x19a) -
+         ((int)((int)*(short *)(param_2 + 0x19a) * (uint)framesThisStep) >> 3);
+    fVar1 = lbl_803E0668;
+    *(float *)(param_2 + 0x1a0) = lbl_803E0668;
+    *(float *)(param_2 + 0x1a4) = lbl_803E068C;
+    *(float *)(param_2 + 0x1a8) = fVar1;
   }
   return;
 }
