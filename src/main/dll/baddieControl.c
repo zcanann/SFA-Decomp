@@ -3823,3 +3823,51 @@ int dll_19_func10(int p1, u8 *p2, int p3, int p4, s16 p5, f32 *p6, f32 *p7, int 
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, int mtx);
+extern f32 lbl_803E1AC0;
+extern f32 lbl_803E1AC4;
+
+/* CameraModeCrawl_copyToCurrent  addr=0x8010F540  size=0x1E0  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
+    int obj;
+    u8 *state;
+    s16 yaw;
+    f32 c, s;
+    f32 pos[3];
+    int one;
+
+    if (param1 == NULL) {
+        return;
+    }
+    obj = (*(int (**)(void))((char *)*gCameraInterface + 0xc))();
+    state = *(u8 **)(obj + 164);
+    yaw = *(s16 *)state;
+
+    if (param2 == 0) {
+        c = fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+        s = sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+    } else {
+        c = -fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+        s = -sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+    }
+    *(s16 *)state = getAngle(c, s);
+    camcontrol_getTargetPosition(obj, state, pos, 0);
+    *(s16 *)state = yaw;
+    *(f32 *)(obj + 24) = pos[0];
+    *(f32 *)(obj + 184) = pos[0];
+    *(f32 *)(obj + 28) = pos[1];
+    *(f32 *)(obj + 188) = pos[1];
+    *(f32 *)(obj + 32) = pos[2];
+    *(f32 *)(obj + 192) = pos[2];
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+    one = 1;
+    ((u8 *)lbl_803DD598)[8] =
+        (u8)((((u8 *)lbl_803DD598)[8] & ~0x80) | ((one << 7) & 0x80));
+}
+#pragma peephole reset
+#pragma scheduling reset
