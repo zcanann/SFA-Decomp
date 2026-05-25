@@ -295,8 +295,8 @@ void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
     S3DMixGroup *group;
     S3DSortedNode *node;
     S3DSortedNode *prev;
-    u32 groupIndex;
-    u32 groupCount;
+    int groupIndex;
+    int groupCount;
 
     groups = S3D_MIX_GROUPS;
     group = groups;
@@ -309,15 +309,15 @@ void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
     }
 
     if (groupIndex == groupCount) {
-        group->activeHead = (S3DActiveNode *)0x0;
-        group->sortedHead = (S3DSortedNode *)0x0;
-        group->sortedCount = 0;
-        group->key = emitter->groupKey;
+        groups[groupIndex].activeHead = (S3DActiveNode *)0x0;
+        groups[groupIndex].sortedHead = (S3DSortedNode *)0x0;
+        groups[groupIndex].sortedCount = 0;
+        groups[groupIndex].key = emitter->groupKey;
         lbl_803DE36B++;
     }
 
-    group->sortedCount++;
-    node = group->sortedHead;
+    groups[groupIndex].sortedCount++;
+    node = groups[groupIndex].sortedHead;
     prev = (S3DSortedNode *)0x0;
     while (node != (S3DSortedNode *)0x0) {
         if (node->distance > distance) {
@@ -328,7 +328,7 @@ void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
     }
 
     if (prev == (S3DSortedNode *)0x0) {
-        group->sortedHead = &S3D_SORTED_NODES[lbl_803DE36D];
+        groups[groupIndex].sortedHead = &S3D_SORTED_NODES[lbl_803DE36D];
     } else {
         prev->next = &S3D_SORTED_NODES[lbl_803DE36D];
     }
