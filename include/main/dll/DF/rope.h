@@ -15,9 +15,7 @@ void DIMbossspit_render(int param_1,int param_2,int param_3,int param_4,int para
 void DIMbossspit_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                         undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                         short *param_9);
-void DIMbossspit_init(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                      int param_9);
+void DIMbossspit_init(int obj);
 void dimbossfire_free(int obj);
 void dimbossfire_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 

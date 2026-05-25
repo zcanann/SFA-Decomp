@@ -587,42 +587,48 @@ void DIMbossspit_update(undefined8 param_1,undefined8 param_2,undefined8 param_3
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_init(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                      undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                      int param_9)
+extern int objCreateLight(int obj, int n);
+extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
+extern void modelLightStruct_setColors100104(int light, int a, int b, int c, int d);
+extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern void lightSetField4D(int light, int v);
+extern void lightFn_8001db6c(int light, int v, f32 f);
+extern void lightSetField2FB(int light, int v);
+extern void fn_8001D730(int light, int a, int b, int c, int d, int e, f32 f);
+extern void fn_8001D714(int light, f32 f);
+extern int Obj_GetActiveModel(int obj);
+extern void ObjModel_SetPostRenderCallback(int model, void *cb);
+extern void fn_800284CC(void);
+extern f32 lbl_803E4D70;
+extern f32 lbl_803E4D74;
+extern f32 lbl_803E4D78;
+extern f32 lbl_803E4D7C;
+extern f32 lbl_803E4D80;
+
+void DIMbossspit_init(int obj)
 {
-  int *piVar1;
-  int iVar2;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  undefined2 *puVar3;
-  double dVar4;
-  
-  puVar3 = *(undefined2 **)(param_9 + 0xb8);
-  piVar1 = FUN_80017624(param_9,'\x01');
-  *(int **)(puVar3 + 2) = piVar1;
-  if (*(int *)(puVar3 + 2) != 0) {
-    FUN_800175b0(*(int *)(puVar3 + 2),2);
-    FUN_8001759c(*(int *)(puVar3 + 2),0,0xff,0,0);
-    FUN_80017588(*(int *)(puVar3 + 2),0,0xff,0,0);
-    dVar4 = (double)lbl_803E5A0C;
-    FUN_800175d0((double)lbl_803E5A08,dVar4,*(int *)(puVar3 + 2));
-    FUN_800175bc(*(int *)(puVar3 + 2),1);
-    FUN_800175cc((double)lbl_803E5A10,*(int *)(puVar3 + 2),'\x01');
-    FUN_800175d8(*(int *)(puVar3 + 2),1);
-    FUN_8001754c((double)lbl_803E5A14,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,
-                 *(undefined4 *)(puVar3 + 2),0,0,0xff,0,0x7f,in_r9,in_r10);
-    FUN_80017544((double)lbl_803E5A18,*(int *)(puVar3 + 2));
+  u8 *state = *(u8 **)(obj + 0xb8);
+
+  *(int *)(state + 4) = objCreateLight(obj, 1);
+  if (*(int *)(state + 4) != 0) {
+    modelLightStruct_setField50(*(int *)(state + 4), 2);
+    modelLightStruct_setColorsA8AC(*(int *)(state + 4), 0, 255, 0, 0);
+    modelLightStruct_setColors100104(*(int *)(state + 4), 0, 255, 0, 0);
+    lightDistAttenFn_8001dc38(*(int *)(state + 4), lbl_803E4D70, lbl_803E4D74);
+    lightSetField4D(*(int *)(state + 4), 1);
+    lightFn_8001db6c(*(int *)(state + 4), 1, lbl_803E4D78);
+    lightSetField2FB(*(int *)(state + 4), 1);
+    fn_8001D730(*(int *)(state + 4), 0, 0, 255, 0, 127, lbl_803E4D7C);
+    fn_8001D714(*(int *)(state + 4), lbl_803E4D80);
   }
-  *(undefined4 *)(param_9 + 0xf4) = 0xb4;
-  ObjHits_SetHitVolumeSlot(param_9,0,0,0);
-  ObjHitbox_SetSphereRadius(param_9,0);
-  *puVar3 = 0;
-  puVar3[1] = 0;
-  ObjHits_EnableObject(param_9);
-  iVar2 = FUN_80017a54(param_9);
-  FUN_80017958(iVar2,FUN_80017954);
-  return;
+  *(int *)(obj + 0xf4) = 0xb4;
+  ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+  ObjHitbox_SetSphereRadius(obj, 0);
+  *(s16 *)(state + 0) = 0;
+  *(s16 *)(state + 2) = 0;
+  ObjHits_EnableObject(obj);
+  ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
 }
 
 
