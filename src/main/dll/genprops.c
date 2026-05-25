@@ -4065,6 +4065,13 @@ void checkpoint4_init(ushort *param_1,int param_2)
   return;
 }
 
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_GetPlayerObject(void);
+extern int getTrickyObject(void);
+extern u32 GameBit_Get(int eventId);
+extern void *Obj_AllocObjectSetup(int size, int type);
+extern int *Obj_SetupObject(void *setup, int a, int b, int c, void *d);
+
 /*
  * --INFO--
  *
@@ -4078,36 +4085,25 @@ void checkpoint4_init(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sideload_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                    int param_9)
+void sideload_update(int param_1)
 {
-  uint uVar1;
-  int iVar2;
-  undefined2 *puVar3;
-  short *psVar4;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar5;
-  
-  iVar5 = *(int *)(param_9 + 0x4c);
-  uVar1 = FUN_80017ae8();
-  if (((((uVar1 & 0xff) != 0) && (iVar2 = FUN_80017a98(), iVar2 != 0)) &&
-      (iVar2 = FUN_80017a90(), iVar2 == 0)) &&
-     (uVar1 = FUN_80017690((int)*(short *)(iVar5 + 0x18)), uVar1 != 0)) {
-    puVar3 = FUN_80017aa4(0x18,0x24);
-    *(undefined *)(puVar3 + 2) = 2;
-    *(undefined *)((int)puVar3 + 5) = 4;
-    *(undefined *)((int)puVar3 + 7) = 0xff;
-    *(undefined4 *)(puVar3 + 4) = *(undefined4 *)(param_9 + 0xc);
-    *(undefined4 *)(puVar3 + 6) = *(undefined4 *)(param_9 + 0x10);
-    *(undefined4 *)(puVar3 + 8) = *(undefined4 *)(param_9 + 0x14);
-    psVar4 = (short *)FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                   puVar3,5,0xff,0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
-    *psVar4 = (ushort)*(byte *)(iVar5 + 0x1a) << 8;
+  int state;
+  void *obj;
+  short *p;
+
+  state = *(int *)(param_1 + 0x4c);
+  if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) &&
+      (getTrickyObject() == 0) && (GameBit_Get((int)*(short *)(state + 0x18)) != 0)) {
+    obj = Obj_AllocObjectSetup(0x18, 0x24);
+    *(u8 *)((char *)obj + 4) = 2;
+    *(u8 *)((char *)obj + 5) = 4;
+    *(u8 *)((char *)obj + 7) = 0xff;
+    *(float *)((char *)obj + 8) = *(float *)(param_1 + 0xc);
+    *(float *)((char *)obj + 0xc) = *(float *)(param_1 + 0x10);
+    *(float *)((char *)obj + 0x10) = *(float *)(param_1 + 0x14);
+    p = (short *)Obj_SetupObject(obj, 5, -1, -1, (void *)0);
+    *p = (short)((u8)*(u8 *)(state + 0x1a) << 8);
   }
-  return;
 }
 
 /*
