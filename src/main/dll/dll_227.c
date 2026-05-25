@@ -104,15 +104,15 @@ void DIMbosstonsil_update(void *obj)
         *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)r4_loc + 0x8);
         *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)r4_loc + 0xc);
         *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)r4_loc + 0x10);
-        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12]((s8) * (s8 *)((char *)r4_loc + 0x2e), obj, -1);
+        (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12]((int)*(char *)((char *)r4_loc + 0x2e), obj, -1);
         *(int *)((char *)obj + 0xf8) = 1;
         return;
     }
 
     if ((*(u16 *)((char *)r30 + 0x400) & 0x2) != 0) {
         lbl_803DDBA4 = lbl_803E4CC8;
-        (*(void (***)(int, void *, void *, int, void *, int, int, int, int))gBaddieControlInterface)[0xa](
-            0, r30, (char *)r30 + 0x35c, *(s16 *)((char *)r30 + 0x3f4),
+        (*(void (***)(void *, void *, void *, int, void *, int, int, int, int))gBaddieControlInterface)[0xa](
+            obj, r30, (char *)r30 + 0x35c, *(s16 *)((char *)r30 + 0x3f4),
             (char *)r30 + 0x405, 0, 0, 0, 1);
         *(u16 *)((char *)r30 + 0x400) = (u16)(*(u16 *)((char *)r30 + 0x400) & ~0x2);
     }
