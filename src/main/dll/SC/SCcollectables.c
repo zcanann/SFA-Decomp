@@ -6,6 +6,7 @@ extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006bb4();
 extern uint FUN_80006c00();
 extern uint GameBit_Get(int eventId);
+extern int GameBit_Set(int eventId, int value);
 extern uint getButtonsJustPressed(int controller);
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
@@ -468,9 +469,12 @@ extern void mapUnload(int dirIdx, int flags);
 extern int *gMapEventInterface;
 
 typedef void (*WarpstoneMapEventSetFn)(int mapId, int value);
+typedef void (*WarpstoneMapEventAnimFn)(int mapId, int eventId, int value);
 
 #define WARPSTONE_MAP_EVENT_SET(mapId, value) \
     ((WarpstoneMapEventSetFn)(*(u32 *)(*gMapEventInterface + 0x44)))((mapId), (value))
+#define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value) \
+    ((WarpstoneMapEventAnimFn)(*(u32 *)(*gMapEventInterface + 0x50)))((mapId), (eventId), (value))
 
 static void warpstone_setSwapstoneLoaded(void)
 {
@@ -572,6 +576,150 @@ int fn_801D6D98(undefined4 p1, undefined4 p2, int option)
         break;
     }
 
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int animatedObjGetSeqId(int obj);
+extern int fn_80080360(int obj, int seqId);
+extern int getCurUiDll(void);
+extern void ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
+extern int playerFn_801d6d58(void);
+extern void AudioStream_CancelPrepared(void);
+extern void seqClearTaskTexts(void);
+extern void doNothing_8000CF54(int unused);
+extern void CMenu_SetFadeCounter(s16 counter);
+extern void warpToMap(int mapId, int spawnId);
+extern void subtitleFn_8001b700(void);
+extern int getDLL16(void);
+extern void SHthorntail_updateDustEffects(int obj);
+extern f32 timeDelta;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801D70D8(int obj, undefined4 p2, int animObj)
+{
+    int commandOffset;
+    int i;
+    int child;
+    u8 command;
+    int state = *(int *)(obj + 0xb8);
+
+    if (animatedObjGetSeqId(animObj) == 0x35f) {
+        fn_80080360(animObj, 0x2648);
+        if (getCurUiDll() != 0x10) {
+            loadUiDll(0x10);
+        }
+    }
+
+    child = *(int *)state;
+    if (child != 0) {
+        ObjAnim_AdvanceCurrentMove(child, *(f32 *)(obj + 0x98) - *(f32 *)(child + 0x98), timeDelta, NULL);
+    }
+
+    *(void **)(animObj + 0xec) = fn_801D6D98;
+    *(void **)(animObj + 0xe8) = fn_801D70B4;
+
+    if (*(s8 *)(animObj + 0x56) != 0) {
+        *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) & ~3;
+        if (playerFn_801d6d58() != 0) {
+            *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 1;
+        }
+        if (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x123) != 0) {
+            *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 2;
+        }
+        *(u8 *)(animObj + 0x56) = 0;
+
+        if (GameBit_Get(*(s16 *)(state + 0xe)) != 0 && animatedObjGetSeqId(animObj) == 0x35f) {
+            AudioStream_CancelPrepared();
+            seqClearTaskTexts();
+            doNothing_8000CF54(0);
+            *(u8 *)(animObj + 0x90) = *(u8 *)(animObj + 0x90) | 4;
+        }
+    }
+
+    for (i = 0; i < *(u8 *)(animObj + 0x8b); i++) {
+        commandOffset = i + 0x81;
+        command = *(u8 *)(animObj + commandOffset);
+        switch (command) {
+        case 0x17:
+            *(u8 *)(state + 0xd4) = *(u8 *)(state + 0xd4) | 4;
+            Sfx_PlayFromObject(0, 0x420);
+            break;
+
+        case 3:
+            *(u8 *)(state + 8) = 0;
+            break;
+
+        case 4:
+            *(u8 *)(state + 8) = 1;
+            break;
+
+        case 6:
+            CMenu_SetFadeCounter(0);
+            loadUiDll(1);
+            warpToMap(0x7e, 1);
+            break;
+
+        case 7:
+            CMenu_SetFadeCounter(0);
+            loadUiDll(1);
+            GameBit_Set(0x884, 1);
+            warpToMap(0x7e, 1);
+            break;
+
+        case 0xa:
+            *(u8 *)(state + 9) = *(u8 *)(state + 9) ^ 1;
+            break;
+
+        case 9:
+            WARPSTONE_MAP_EVENT_SET(0x17, 1);
+            WARPSTONE_MAP_EVENT_SET(0xe, 2);
+            CMenu_SetFadeCounter(0);
+            loadUiDll(1);
+            break;
+
+        case 0xc:
+            CMenu_SetFadeCounter(0);
+            loadUiDll(1);
+            warpToMap(0x33, 0);
+            break;
+
+        case 0xd:
+            subtitleFn_8001b700();
+        case 0xe:
+        case 0xf:
+        case 0x10:
+            if (getCurUiDll() == 0x10) {
+                int dll16 = getDLL16();
+                (*(void (**)(int))(*(int *)dll16 + 0x10))(command - 0xd);
+            }
+            GameBit_Set(*(s16 *)(state + 0xe), 1);
+            GameBit_Set(0x887, 1);
+            break;
+
+        case 0x12:
+            WARPSTONE_MAP_EVENT_ANIM(7, 0xa, 0);
+            break;
+
+        case 0x14:
+            unlockLevel(0, 0, 1);
+            break;
+
+        case 0x15:
+            unlockLevel(0, 0, 1);
+            mapUnload(mapGetDirIdx(0x42), 0x20000000);
+            break;
+
+        case 0x16:
+            unlockLevel(0, 0, 1);
+            mapUnload(mapGetDirIdx(0x42), 0x20000000);
+            break;
+        }
+    }
+
+    SHthorntail_updateDustEffects(obj);
     return 0;
 }
 #pragma peephole reset
