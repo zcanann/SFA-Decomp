@@ -4110,8 +4110,8 @@ u32 fn_80060668(int *obj)
  * two more bytes. r3 stays at 0 through the whole sequence. */
 extern s16 lbl_803DCEF6;
 extern s16 lbl_803DCEFA;
-extern u8 lbl_803DCEEA;
-extern u8 lbl_803DCEEB;
+extern s8 lbl_803DCEEA;
+extern s8 lbl_803DCEEB;
 extern u8 lbl_803DCEE9;
 extern u8 lbl_803DCEE8;
 #pragma scheduling off
