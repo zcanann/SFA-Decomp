@@ -6,6 +6,15 @@ extern u8 *dspVoice;
 
 extern u32 voiceConvertDbToLinear(u32 value);
 
+typedef struct HwAdsrEnvelope {
+    u16 attack;
+    u16 decay;
+    u16 sustain;
+    u16 release;
+    u16 decayTime;
+    u16 releaseTime;
+} HwAdsrEnvelope;
+
 /*
  * --INFO--
  *
@@ -22,9 +31,11 @@ extern u32 voiceConvertDbToLinear(u32 value);
 void hwSetADSR(int slot, u32 *adsr, u8 mode)
 {
     u8 *entry;
+    HwAdsrEnvelope *envelope;
     u32 offset;
     u32 value;
 
+    envelope = (HwAdsrEnvelope *)adsr;
     switch (mode) {
     case 0:
         offset = slot * 0xf4;
@@ -33,12 +44,12 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
         *(u8 *)(entry + 0xa4) = 0;
         entry = dspVoice;
         entry += offset;
-        *(u32 *)(entry + 0xb8) = *(u16 *)((u8 *)adsr + 0);
+        *(u32 *)(entry + 0xb8) = envelope->attack;
         entry = dspVoice;
         entry += offset;
-        *(u32 *)(entry + 0xbc) = *(u16 *)((u8 *)adsr + 2);
+        *(u32 *)(entry + 0xbc) = envelope->decay;
 
-        value = *(u16 *)((u8 *)adsr + 4) << 3;
+        value = envelope->sustain << 3;
         if (value > 0x7fff) {
             value = 0x7fff;
         }
@@ -48,7 +59,7 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
         *(u16 *)(entry + 0xc0) = value;
         entry = dspVoice;
         entry += offset;
-        *(u32 *)(entry + 0xc4) = *(u16 *)((u8 *)adsr + 6);
+        *(u32 *)(entry + 0xc4) = envelope->release;
         break;
     case 1:
     case 2:
@@ -71,7 +82,7 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
             entry += offset;
             *(u32 *)(entry + 0xbc) = value & 0xffff;
 
-            value = *(u16 *)((u8 *)adsr + 8) >> 2;
+            value = envelope->decayTime >> 2;
             if (value > 0x3ff) {
                 value = 0x3ff;
             }
@@ -88,12 +99,12 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
             *(u32 *)(entry + 0xbc) = adsr[1] & 0xffff;
             entry = dspVoice;
             entry += offset;
-            *(u16 *)(entry + 0xc0) = *(u16 *)((u8 *)adsr + 8);
+            *(u16 *)(entry + 0xc0) = envelope->decayTime;
         }
 
         entry = dspVoice;
         entry += offset;
-        *(u32 *)(entry + 0xc4) = *(u16 *)((u8 *)adsr + 10);
+        *(u32 *)(entry + 0xc4) = envelope->releaseTime;
         break;
     }
 
