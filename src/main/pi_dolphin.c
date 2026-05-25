@@ -5534,17 +5534,19 @@ int GXFlush_(u8 visible) {
 }
 
 extern u8 GXNtsc480Prog[];
-extern u8 lbl_803DB5D4[];
+extern u8 lbl_803DB5D4;
 extern u8 *lbl_803DCCF0;
 extern void GXSetCopyFilter(u8 aa, u8 *pat, u8 vf_en, u8 *vfilter);
+#pragma scheduling off
 void setDisplayCopyFilter(void) {
     u8 *p = lbl_803DCCF0;
-    if (p == GXNtsc480Prog || p[0x18] == 0) {
+    if (p == GXNtsc480Prog || p[0x18] != 0) {
         GXSetCopyFilter(p[0x19], p + 0x1a, 0, p + 0x32);
     } else {
-        GXSetCopyFilter(p[0x19], p + 0x1a, 1, lbl_803DB5D4);
+        GXSetCopyFilter(p[0x19], p + 0x1a, 1, &lbl_803DB5D4);
     }
 }
+#pragma scheduling reset
 
 extern void GXLoadTexObj(void *obj, int id);
 extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
