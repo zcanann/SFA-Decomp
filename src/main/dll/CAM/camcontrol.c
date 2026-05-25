@@ -32,10 +32,10 @@ extern void voxmaps_resetLoadedMaps(void);
 
 extern void *gCamcontrolHandlers[20];
 extern u8 gCamcontrolStateStorage[];
-extern undefined4* DAT_803dd738;
+extern undefined4* gBaddieControlInterface;
 extern u8 gCamcontrolTargetChanged;
 extern short* gCamcontrolTargetReticle;
-extern undefined4 DAT_803de140;
+extern u16 lbl_803DD4C8;
 extern u8 gCamcontrolTargetState;
 extern short* gCamcontrolState;
 extern f64 DOUBLE_803e22d0;
@@ -237,7 +237,7 @@ LAB_801029ac:
                 dVar12 = (double)lbl_803E22AC;
               }
               else {
-                dVar12 = (double)(**(code **)(*DAT_803dd738 + 0x60))(iVar11);
+                dVar12 = (double)(**(code **)(*gBaddieControlInterface + 0x60))(iVar11);
               }
               goto LAB_801029e0;
             }
@@ -289,7 +289,7 @@ LAB_80102ab4:
     fVar5 = lbl_803E22F8;
   }
   *(char *)(psVar6 + 0x1b) = (char)(int)fVar5;
-  DAT_803de140 = 0x400;
+  lbl_803DD4C8 = 0x400;
   *psVar6 = (short)(int)(lbl_803E22FC * lbl_803DC074 +
                         (float)((double)CONCAT44(0x43300000,(int)*psVar6 ^ 0x80000000) -
                                DOUBLE_803e22d0));
