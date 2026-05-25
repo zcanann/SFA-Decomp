@@ -1417,70 +1417,68 @@ undefined4 trickyFn_80143b78(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-trickyFn_80143c04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
-            int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
-            undefined4 param_15,undefined4 param_16)
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+#pragma scheduling off
+#pragma peephole off
+int trickyFn_80143c04(int obj, int state)
 {
-  float fVar1;
-  char cVar3;
-  bool bVar4;
-  undefined4 uVar2;
-  int iVar5;
-  
-  param_10[9] = param_10[1];
-  if (param_10[10] != param_10[9] + 0x18) {
-    param_10[10] = param_10[9] + 0x18;
-    param_10[0x15] = param_10[0x15] & 0xfffffbff;
-    *(undefined2 *)((int)param_10 + 0xd2) = 0;
+  int tex;
+  short sVar;
+  int result;
+  int iVar4;
+  float fVar;
+
+  *(int *)(state + 0x24) = *(int *)(state + 4);
+  if (*(int *)(state + 0x28) != *(int *)(state + 0x24) + 0x18) {
+    *(int *)(state + 0x28) = *(int *)(state + 0x24) + 0x18;
+    *(int *)(state + 0x54) = *(int *)(state + 0x54) & 0xfffffbff;
+    *(short *)(state + 0xd2) = 0;
   }
-  if (lbl_803E306C == (float)param_10[0x1c7]) {
-    *(undefined *)((int)param_10 + 0xd) = 0xff;
-    fVar1 = lbl_803E3158;
-  }
-  else {
-    fVar1 = lbl_803E3098;
-    if ((param_10[0x15] & 0x20000U) != 0) {
-      *(undefined *)((int)param_10 + 0xd) = 0;
-      param_10[0x15] = param_10[0x15] & 0xfffdffff;
-      fVar1 = lbl_803E3098;
+  if (lbl_803E23DC == *(float *)(state + 0x71c)) {
+    *(s8 *)(state + 0xd) = -1;
+    fVar = lbl_803E24C8;
+  } else {
+    fVar = lbl_803E2408;
+    if ((*(int *)(state + 0x54) & 0x20000) != 0) {
+      *(s8 *)(state + 0xd) = 0;
+      *(int *)(state + 0x54) = *(int *)(state + 0x54) & 0xfffdffff;
     }
   }
-  cVar3 = trickyFn_8013b368((double)fVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9
-                       ,param_10,param_11,param_12,param_13,param_14,param_15,param_16);
-  if (cVar3 == '\x01') {
-    *(byte *)(param_10 + 0x1ca) = *(byte *)(param_10 + 0x1ca) & 0x7f | 0x80;
-    uVar2 = 1;
+  result = (u8)trickyFn_8013b368(fVar, obj, state);
+  if (result == 1) {
+    *(u8 *)(state + 0x728) = *(u8 *)(state + 0x728) | 0x80;
+    return 1;
   }
-  else {
-    if ((((cVar3 == '\x02') && ((param_10[0x15] & 2U) != 0)) &&
-        (iVar5 = *(int *)(param_9 + 0xb8), (*(byte *)(iVar5 + 0x58) >> 6 & 1) == 0)) &&
-       (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-        (bVar4 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar4)))) {
-      objAudioFn_800393f8(param_9,(void *)(iVar5 + 0x3a8),0x35d,0x500,0xffffffff,0);
-    }
-    if (lbl_803E306C == (float)param_10[0xab]) {
-      bVar4 = false;
-    }
-    else if (lbl_803E30A0 == (float)param_10[0xac]) {
-      bVar4 = true;
-    }
-    else if ((float)param_10[0xad] - (float)param_10[0xac] <= lbl_803E30A4) {
-      bVar4 = false;
-    }
-    else {
-      bVar4 = true;
-    }
-    if (bVar4) {
-      uVar2 = 0;
-    }
-    else {
-      uVar2 = fn_80143DD4(param_9,param_10);
+  if (result == 2) {
+    if ((*(int *)(state + 0x54) & 2) != 0) {
+      tex = *(int *)(obj + 0xb8);
+      if (((*(u8 *)(tex + 0x58) >> 6) & 1) == 0) {
+        sVar = *(short *)(obj + 0xa0);
+        if (sVar >= 48 || sVar < 41) {
+          if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
+            objAudioFn_800393f8(obj, (void *)(tex + 0x3a8), 861, 1280, -1, 0);
+          }
+        }
+      }
     }
   }
-  return uVar2;
+  if (lbl_803E23DC == *(float *)(state + 0x2ac)) {
+    iVar4 = 0;
+  } else if (lbl_803E2410 == *(float *)(state + 0x2b0)) {
+    iVar4 = 1;
+  } else if (*(float *)(state + 0x2b4) - *(float *)(state + 0x2b0) > lbl_803E2414) {
+    iVar4 = 1;
+  } else {
+    iVar4 = 0;
+  }
+  if (iVar4 != 0) {
+    return 0;
+  }
+  return fn_80143DD4(obj, (int *)state);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
