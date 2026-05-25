@@ -784,8 +784,12 @@ extern f32 lbl_803DE578;
 extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
 extern void Matrix_TransformPoint(f32 *matrix, f64 x, f64 y, f64 z, f32 *outX, f32 *outY, f32 *outZ);
 extern void setMatrixFromObjectPos(f32 *matrix, void *obj);
+extern void mtxFn_80021ec0(f32 *matrix, f32 scale);
 extern void mtxFn_80022404(f32 *dst, f32 *src, f32 *out);
 extern void mtxRotateByVec3s(f32 *matrix, void *transform);
+extern void mtx44Transpose(f32 *src, f32 *dst);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
+extern void GXLoadPosMtxImm(f32 *matrix, s32 slot);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
@@ -6345,6 +6349,10 @@ extern f32 sin(f32 x);
 extern u32 getScreenResolution(void);
 extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 extern u8 lbl_80338090[];
+extern f32 lbl_80338190[16];
+extern f32 lbl_803967C0[12];
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 
 /*
  * Function: Music_GetActivePriority
@@ -6973,6 +6981,40 @@ void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude)
 void* fn_8000E814(void)
 {
     return lbl_80338090;
+}
+
+/*
+ * Function: Camera_LoadModelViewMatrix
+ * EN v1.0 Address: 0x8000E820
+ * EN v1.0 Size: 292b
+ */
+void Camera_LoadModelViewMatrix(f32 scale, void* unused0, void* unused1, CameraViewSlot* transform, f32* matrix)
+{
+    f32* modelMatrix;
+
+    if (matrix != NULL) {
+        modelMatrix = matrix;
+    } else {
+        modelMatrix = lbl_80338190;
+    }
+
+    transform->x -= playerMapOffsetX;
+    transform->z -= playerMapOffsetZ;
+    setMatrixFromObjectPos(modelMatrix, transform);
+    if (lbl_803DE5F0 != scale) {
+        mtxFn_80021ec0(modelMatrix, scale);
+    }
+
+    if (matrix == NULL) {
+        mtx44Transpose(modelMatrix, lbl_803967C0);
+    } else {
+        mtx44Transpose(matrix, lbl_803967C0);
+    }
+
+    PSMTXConcat(gCameraViewMatrix, lbl_803967C0, lbl_803967C0);
+    GXLoadPosMtxImm(lbl_803967C0, 0);
+    transform->x += playerMapOffsetX;
+    transform->z += playerMapOffsetZ;
 }
 
 /*
