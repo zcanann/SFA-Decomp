@@ -409,44 +409,44 @@ extern int randomGetRange(int lo, int hi);
 
 #pragma peephole off
 #pragma scheduling off
-void sc_totempuzzle_init(u8* obj, u8* params) {
-    u8* sub;
+void sc_totempuzzle_init(ScTotemPuzzleObject *obj, ScTotemPuzzleMapData *params) {
+    ScTotemPuzzleState *state;
     int *tex;
     int r;
     f32 fz;
 
-    sub = *(u8**)(obj + 0xb8);
-    *(s8*)(obj + 0xad) = (s8)params[0x1b];
-    if ((s8)obj[0xad] < 0 || (s8)obj[0xad] > 5) {
-        obj[0xad] = 0;
+    state = obj->state;
+    obj->puzzleIndex = (s8)params->puzzleIndex;
+    if (obj->puzzleIndex < 0 || obj->puzzleIndex > 5) {
+        obj->puzzleIndex = 0;
     }
-    if ((s8)obj[0xad] == 5) {
+    if (obj->puzzleIndex == 5) {
         tex = (int*)objFindTexture((int)obj, 0, 0);
         if (tex != NULL) {
             *tex = 0x100;
         }
     }
-    *(s16*)(sub + 0x10) = (s16)(s8)obj[0xad];
+    state->stepIndex = (s16)obj->puzzleIndex;
     if (GameBit_Get(0x639) == 0) {
-        *(f32*)(sub + 0xc) = (f32)(s32)lbl_80327A18[*(s16*)(sub + 0x10)];
+        state->angle = (f32)(s32)lbl_80327A18[state->stepIndex];
     } else {
-        *(f32*)(sub + 0xc) = lbl_803E562C;
+        state->angle = lbl_803E562C;
         tex = (int*)objFindTexture((int)obj, 0, 0);
         if (tex != NULL) {
             *tex = 0x100;
         }
     }
-    *(s16*)obj = (s16)(s32)*(f32*)(sub + 0xc);
+    obj->yaw = (s16)(s32)state->angle;
     r = randomGetRange(7, 10);
     fz = (f32)r * lbl_803E5630;
-    *(f32*)(sub + 4) = fz;
-    *(f32*)sub = fz;
-    if (((s8)obj[0xad]) & 1) {
-        *(s16*)(sub + 0x12) = 1;
+    state->pulseTimerReset = fz;
+    state->pulseTimer = fz;
+    if (obj->puzzleIndex & 1) {
+        state->flags = 1;
     }
-    *(f32*)(sub + 8) = lbl_803E55FC;
-    *(void**)(obj + 0xbc) = (void*)&fn_801DD170;
-    *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
+    state->peerPhaseOffset = lbl_803E55FC;
+    obj->animEventCallback = fn_801DD170;
+    obj->objectFlags = (u16)(obj->objectFlags | 0x6000);
 }
 #pragma scheduling reset
 #pragma peephole reset
