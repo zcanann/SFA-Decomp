@@ -3777,3 +3777,49 @@ int dll_19_func13(int p1, u8 *p2, f32 f, int p4) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E1C6C;
+
+/* dll_19_func10  addr=0x80113398  size=0x16C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+int dll_19_func10(int p1, u8 *p2, int p3, int p4, s16 p5, f32 *p6, f32 *p7, int *p8) {
+    f32 dx, dz, dist;
+    f32 zero;
+
+    if (p2[897] != 0) {
+        zero = lbl_803E1C2C;
+        *(int *)(p2 + 792) = 0;
+        *(int *)(p2 + 796) = 0;
+        *(s16 *)(p2 + 816) = 0;
+        *(f32 *)(p2 + 656) = zero;
+        *(f32 *)(p2 + 652) = zero;
+        *p8 = 1;
+        dx = *p6 - *(f32 *)(p1 + 12);
+        dz = *p7 - *(f32 *)(p1 + 20);
+        dist = sqrtf(dx * dx + dz * dz);
+        if (dist < lbl_803E1C68) {
+            *p8 = 0;
+        } else {
+            dx /= dist;
+            dz /= dist;
+            *(f32 *)(p2 + 656) = lbl_803E1C6C * -dx;
+            *(f32 *)(p2 + 652) = lbl_803E1C6C * dz;
+            *(f32 *)(p1 + 12) += dist * dx;
+            *(f32 *)(p1 + 20) += dist * dz;
+            (*(void (**)(int, u8 *, f32, f32, int, int))(*(int *)gPlayerInterface + 8))(
+                p1, p2, timeDelta, timeDelta, p3, p4);
+        }
+        if (*p8 == 0) {
+            p2[1029] = 0;
+            *(s16 *)(p2 + 628) = p5;
+            *(int *)(p2 + 720) = 0;
+            p2[607] = 0;
+            GameBit_Set(*(s16 *)(p2 + 1012), 0);
+        }
+        return 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
