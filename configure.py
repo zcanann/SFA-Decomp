@@ -1322,7 +1322,7 @@ config.libs = [
             Object(NonMatching, "main/audio/sal_dsp.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/snd_reverb.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_80284EF0.c"),
-            Object(NonMatching, "main/unknown/autos/placeholder_8028503C.c", mw_version="GC/1.2.5n"),
+            Object(NonMatching, "dolphin/axfx/reverb_std_create.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_80285220.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80285B64.c"),
             Object(
