@@ -4405,3 +4405,68 @@ void dll_19_func18(int p1, u8 *p2, u8 *p3, int p4, int p5, int p6, f32 fparam, i
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 interpolate(f32 cur, f32 target, f32 t);
+extern f32 lbl_803E1AD0;
+extern f32 lbl_803E1AD4;
+extern f32 lbl_803E1AD8;
+extern f32 lbl_803E1ADC;
+
+/* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeCrawl_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 164);
+    int newangle;
+    int delta;
+    f32 work[2];
+    f32 v20, v16, v12, v8;
+    int other;
+
+    if (state == NULL) {
+        return;
+    }
+    if ((((u8 *)lbl_803DD598)[8] >> 7) & 1) {
+        *(f32 *)(obj + 24) =
+            lbl_803E1AD0 * fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
+            *(f32 *)(state + 24);
+        *(f32 *)(obj + 32) =
+            lbl_803E1AD0 * sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
+            *(f32 *)(state + 32);
+        *(f32 *)(obj + 28) = lbl_803E1AD4 + *(f32 *)(state + 28);
+        work[0] = *(f32 *)(obj + 12) - *(f32 *)(state + 24);
+        work[1] = *(f32 *)(obj + 20) - *(f32 *)(state + 32);
+        newangle = (u16)getAngle(work[0], work[1]);
+        delta = (0x8000 - newangle) - (u16)*(s16 *)obj;
+        if (delta > 0x8000) {
+            delta -= 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta += 0xffff;
+        }
+        *(s16 *)obj = (s16)(s32)((f32)(s32)*(s16 *)obj +
+                                 interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
+        *(s16 *)obj = (s16)(0x8000 - (u16)getAngle(work[0], work[1]));
+        *(s16 *)(obj + 2) = 2048;
+    } else {
+        other = (*(int (**)(void))(*(int *)gCameraInterface + 24))();
+        (*(void (**)(u8 *, f32 *, f32 *, f32 *, f32 *, f32, int))(*(int *)gCameraInterface + 56))(
+            obj, &v20, &v16, &v12, &v8, lbl_803E1ADC, 0);
+        newangle = (u16)getAngle(v20, v12);
+        delta = (0x8000 - newangle) - (u16)*(s16 *)obj;
+        if (delta > 0x8000) {
+            delta -= 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta += 0xffff;
+        }
+        *(s16 *)obj = (s16)(*(s16 *)obj + delta);
+        (*(void (**)(u8 *, f32, f32))(*(int *)(*(int *)(other + 4)) + 24))(
+            obj, *(f32 *)(state + 28), v8);
+    }
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset
