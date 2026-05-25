@@ -68,7 +68,7 @@ void fn_80174A80(int param_1,int param_2)
   *(float *)(param_2 + 0xd4) = fVar1;
   uVar2 = randomGetRange(0x19,0x4b);
   *(float *)(param_2 + 0xe4) =
-       lbl_803E3564 * (f32)(s32)(uVar2);
+       (f32)(s32)(uVar2) * lbl_803E3564;
   uVar2 = randomGetRange(0x28,0x46);
   *(float *)(param_2 + 0xe8) =
        *(float *)(param_2 + 0xe4) /
