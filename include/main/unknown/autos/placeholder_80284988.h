@@ -3,8 +3,6 @@
 
 #include "ghidra_import.h"
 
-int salExitAi(void);
-u32 salAiGetDest(void);
 int salInitDsp(u32 flags);
 int salStartDsp(void);
 void salCtrlDsp(u32 param_1);

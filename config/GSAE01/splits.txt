@@ -2271,7 +2271,7 @@ main/unknown/autos/placeholder_802844C0.c:
 main/unknown/autos/placeholder_80284698.c:
 	.text       start:0x80284670 end:0x80284670
 
-main/unknown/autos/placeholder_8028479C.c:
+main/audio/sal_ai.c:
 	extab       start:0x80005C18 end:0x80005C40
 	extabindex  start:0x800065B4 end:0x800065F0
 	.text       start:0x80284670 end:0x802848D8

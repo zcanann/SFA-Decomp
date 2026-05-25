@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/sal_ai.h"
 #include "main/unknown/autos/placeholder_80283134.h"
 #include "main/unknown/autos/placeholder_80284988.h"
 
@@ -80,16 +81,12 @@ extern void hwSetPolyPhaseFilter(int slot, u32 value);
 extern void hwSetITDMode(int slot, u32 value);
 void hwSetTimeOffset(u8 value);
 extern void audioFreeFn_8027bde0(void);
-extern int salExitAi(void);
 extern int salStartDsp(void);
 extern void sndBegin(void);
 extern void hwInitIrq(void);
-extern u32 salInitAi(void *callback, u32 flags, u32 value);
 extern u32 fn_8027BA04(u32 valueA, u32 valueB, u32 enabled);
 extern int salInitDsp(u32 flags);
-extern void salStartAi(void);
 extern void doNothing_802737E8(void);
-extern u32 salAiGetDest(void);
 extern void salCtrlDsp(u32 param_1);
 extern void salHandleAuxProcessing(void);
 extern void fn_8026EC44(u32 value);
@@ -190,14 +187,14 @@ void snd_handle_irq(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int hwInit(u32 value, u8 valueA, u8 valueB, u32 flags)
+int hwInit(u32 *sampleRate, u8 valueA, u8 valueB, u32 flags)
 {
     hwInitIrq();
     salFrame = 0;
     salAuxFrame = 0;
     salMessageCallback = 0;
 
-    if (salInitAi(snd_handle_irq, flags, value) != 0 &&
+    if (salInitAi(snd_handle_irq, flags, sampleRate) != 0 &&
         fn_8027BA04(valueA, valueB, (flags & 1) != 0) != 0 &&
         (u32)salInitDsp(flags) != 0) {
         sndEnd();

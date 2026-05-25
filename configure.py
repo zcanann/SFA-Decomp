@@ -1318,7 +1318,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_802842C4.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80284410.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_802844C0.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "main/unknown/autos/placeholder_8028479C.c", mw_version="GC/1.2.5n"),
+            Object(NonMatching, "main/audio/sal_ai.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_80284988.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_80284BAC.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_80284EF0.c"),
