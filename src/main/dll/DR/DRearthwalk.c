@@ -880,6 +880,7 @@ extern void *Obj_GetPlayerObject(void);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void *fn_802966CC(int player);
 extern int fn_80295CF4(int player, int a);
+extern int fn_8029672C(int player, int a);
 extern void ObjAnim_SetMoveProgress(int obj, f32 p);
 extern int ObjTrigger_IsSet(int obj);
 extern u8 Obj_IsLoadingLocked(void);
@@ -897,6 +898,61 @@ extern f32 lbl_803E54E0;
 extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801DA4A8(int obj, int state, int clearChildren)
+{
+    int player;
+    void *child;
+    u8 *childSlots;
+    int i;
+    int zero;
+
+    player = (int)Obj_GetPlayerObject();
+    ObjHits_DisableObject(obj);
+    *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+
+    if (clearChildren != 0) {
+        fn_80295CF4(player, 1);
+        fn_8029672C(player, 1);
+        zero = 0;
+        childSlots = (u8 *)state;
+        for (i = 0; i < 8; i += 4) {
+            child = *(void **)(childSlots + 0x38);
+            if (child != NULL) {
+                *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
+                *(int *)(childSlots + 0x38) = zero;
+            }
+            child = *(void **)(childSlots + 0x3c);
+            if (child != NULL) {
+                *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
+                *(int *)(childSlots + 0x3c) = zero;
+            }
+            child = *(void **)(childSlots + 0x40);
+            if (child != NULL) {
+                *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
+                *(int *)(childSlots + 0x40) = zero;
+            }
+            child = *(void **)(childSlots + 0x44);
+            if (child != NULL) {
+                *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
+                *(int *)(childSlots + 0x44) = zero;
+            }
+            child = *(void **)(childSlots + 0x48);
+            if (child != NULL) {
+                *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
+                *(int *)(childSlots + 0x48) = zero;
+            }
+            childSlots += 0x14;
+        }
+    }
+
+    *(u8 *)state = 6;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
