@@ -762,7 +762,7 @@ extern s16 yButtonState;
 extern int airMeter;
 
 typedef struct LinkMenuItem {
-    u8 pad0[2];
+    u16 field00;
     u16 itemId;
     s16 field04;
     u8 pad6[0x0A];
@@ -945,4 +945,19 @@ void Link_copy(u8 *srcArg) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-void Link_func0B(void) {}
+#pragma scheduling off
+#pragma peephole off
+void Link_func0B(u8 *srcArg)
+{
+    LinkMenuItem *src;
+    int i;
+
+    src = (LinkMenuItem *)srcArg;
+    for (i = 0; i < (s8)lbl_803DD911; i++) {
+        lbl_803A9458[i].field00 = src[i].field00;
+        lbl_803A9458[i].itemId = src[i].itemId;
+        lbl_803A9458[i].field38 = 2;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
