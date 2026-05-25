@@ -610,9 +610,32 @@ int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
 
 extern void *gRomCurveInterface;
 extern u32 GameBit_Get(int bit);
-static void *skeetla_validateRouteEntry(void *entry);
+
+static void *skeetla_validateRouteEntry(void *entry)
+{
+    s16 requiredBit;
+    s16 forbiddenBit;
+
+    if (entry == NULL) {
+        return NULL;
+    }
+
+    requiredBit = *(s16 *)((u8 *)entry + 0x30);
+    if ((requiredBit != -1) && (GameBit_Get(requiredBit) == 0)) {
+        return NULL;
+    }
+
+    forbiddenBit = *(s16 *)((u8 *)entry + 0x32);
+    if ((forbiddenBit != -1) && (GameBit_Get(forbiddenBit) != 0)) {
+        return NULL;
+    }
+
+    return entry;
+}
 
 /* fn_8013A4EC  addr=0x8013A4EC  size=0x1D0  linkage=global */
+#pragma peephole off
+#pragma scheduling off
 void *fn_8013A4EC(u8 *context, u8 *routeDef, u16 linkSelector, u32 routeFlagValue)
 {
     void *candidates[4];
@@ -662,33 +685,12 @@ void *fn_8013A4EC(u8 *context, u8 *routeDef, u16 linkSelector, u32 routeFlagValu
 
     return candidates[bestIndex];
 }
+#pragma peephole reset
 
 extern void *fn_8004B118(void *search);
 extern void fn_8004B148(void *search);
 extern int fn_8004B218(void *search, int timeout);
 extern void fn_8004B31C(void *search, u32 route, int objId, int pathId, int routeFlags);
-
-static void *skeetla_validateRouteEntry(void *entry)
-{
-    s16 requiredBit;
-    s16 forbiddenBit;
-
-    if (entry == NULL) {
-        return NULL;
-    }
-
-    requiredBit = *(s16 *)((u8 *)entry + 0x30);
-    if ((requiredBit != -1) && (GameBit_Get(requiredBit) == 0)) {
-        return NULL;
-    }
-
-    forbiddenBit = *(s16 *)((u8 *)entry + 0x32);
-    if ((forbiddenBit != -1) && (GameBit_Get(forbiddenBit) != 0)) {
-        return NULL;
-    }
-
-    return entry;
-}
 
 #pragma dont_inline on
 /* fn_8013A6BC  addr=0x8013A6BC  size=0x138  linkage=global */
