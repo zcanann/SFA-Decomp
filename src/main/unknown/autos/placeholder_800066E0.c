@@ -8030,6 +8030,41 @@ f32 curveFn_80010dc0(f32 t, f32* values, f32* outTangent)
     return t * (t * (a * t + b) + values[2]) + values[0];
 }
 
+typedef struct CurveHeapNode {
+    u16 priority;
+    u16 value;
+} CurveHeapNode;
+
+/*
+ * Function: fn_80010F6C
+ * EN v1.0 Address: 0x80010F6C
+ * EN v1.0 Size: 136b
+ */
+void fn_80010F6C(CurveHeapNode* heap, s32 count, s32 index)
+{
+    u16 priority = heap[index].priority;
+    u16 value = heap[index].value;
+
+    while (index <= count >> 1) {
+        s32 child = index * 2;
+
+        if ((child < count) && (heap[child].priority < heap[child + 1].priority)) {
+            child++;
+        }
+
+        if (heap[child].priority <= priority) {
+            break;
+        }
+
+        heap[index].priority = heap[child].priority;
+        heap[index].value = heap[child].value;
+        index = child;
+    }
+
+    heap[index].priority = priority;
+    heap[index].value = value;
+}
+
 typedef struct RingBufferQueue {
     s16 count;
     s16 capacity;
