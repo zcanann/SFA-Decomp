@@ -9165,13 +9165,16 @@ void padGetAnalogInput(int port, u8* x, u8* y)
  */
 u8 padGetCY(int port)
 {
+    PadStatusLite* statuses;
+
     if (port > 0) {
         return 0;
     }
     if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
         return 0;
     }
-    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].substickY;
+    statuses = (PadStatusLite*)lbl_803398F0;
+    return statuses[lbl_803DC94C * 4 + port].substickY;
 }
 
 /*
@@ -9181,13 +9184,16 @@ u8 padGetCY(int port)
  */
 u8 padGetCX(int port)
 {
+    PadStatusLite* statuses;
+
     if (port > 0) {
         return 0;
     }
     if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
         return 0;
     }
-    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].substickX;
+    statuses = (PadStatusLite*)lbl_803398F0;
+    return statuses[lbl_803DC94C * 4 + port].substickX;
 }
 
 /*
@@ -9197,13 +9203,16 @@ u8 padGetCX(int port)
  */
 u8 padGetStickY(int port)
 {
+    PadStatusLite* statuses;
+
     if (port > 0) {
         return 0;
     }
     if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
         return 0;
     }
-    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].stickY;
+    statuses = (PadStatusLite*)lbl_803398F0;
+    return statuses[lbl_803DC94C * 4 + port].stickY;
 }
 
 /*
@@ -9213,13 +9222,16 @@ u8 padGetStickY(int port)
  */
 u8 padGetStickX(int port)
 {
+    PadStatusLite* statuses;
+
     if (port > 0) {
         return 0;
     }
     if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
         return 0;
     }
-    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].stickX;
+    statuses = (PadStatusLite*)lbl_803398F0;
+    return statuses[lbl_803DC94C * 4 + port].stickX;
 }
 
 /*
@@ -9229,10 +9241,13 @@ u8 padGetStickX(int port)
  */
 u8 padGetLTrigger(int port)
 {
+    PadStatusLite* statuses;
+
     if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
         return 0;
     }
-    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].triggerLeft;
+    statuses = (PadStatusLite*)lbl_803398F0;
+    return statuses[lbl_803DC94C * 4 + port].triggerLeft;
 }
 
 /*
@@ -9242,10 +9257,13 @@ u8 padGetLTrigger(int port)
  */
 u8 padGetRTrigger(int port)
 {
+    PadStatusLite* statuses;
+
     if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
         return 0;
     }
-    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].triggerRight;
+    statuses = (PadStatusLite*)lbl_803398F0;
+    return statuses[lbl_803DC94C * 4 + port].triggerRight;
 }
 
 /*
