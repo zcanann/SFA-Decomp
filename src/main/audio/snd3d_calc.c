@@ -351,30 +351,28 @@ int s3dInsertActiveEmitter(Snd3DEmitter *emitter, f32 distance, f32 arg1, f32 ar
     S3DActiveNode *scan;
     S3DActiveNode *next;
     S3DActiveNode *newNode;
-    u32 groupIndex;
-    u32 groupCount;
-    u32 remaining;
+    int groupIndex;
+    int groupCount;
     u32 activeIndex;
 
     groups = S3D_MIX_GROUPS;
     group = groups;
     groupCount = lbl_803DE36B;
-    remaining = groupCount;
-    groupIndex = 0;
-    while ((remaining != 0) && (emitter->groupKey != group->key)) {
+    for (groupIndex = 0; groupIndex < groupCount; groupIndex++) {
+        if (emitter->groupKey == group->key) {
+            break;
+        }
         group++;
-        groupIndex++;
-        remaining--;
     }
 
     if (groupIndex == groupCount) {
         if (groupCount == S3D_MAX_GROUPS) {
             return 0;
         }
-        group->activeHead = (S3DActiveNode *)0x0;
-        group->sortedHead = (S3DSortedNode *)0x0;
-        group->sortedCount = 0;
-        group->key = emitter->groupKey;
+        groups[groupIndex].activeHead = (S3DActiveNode *)0x0;
+        groups[groupIndex].sortedHead = (S3DSortedNode *)0x0;
+        groups[groupIndex].sortedCount = 0;
+        groups[groupIndex].key = emitter->groupKey;
         lbl_803DE36B++;
     }
 
