@@ -49,7 +49,7 @@ extern undefined4 FUN_8007005c();
 extern undefined4 FUN_800709d8();
 extern undefined4 FUN_800709e0();
 extern undefined4 FUN_800709e8();
-extern uint FUN_800e6680();
+extern uint playerHasKrazoaSpirit();
 extern undefined4 hudDrawMagicBar();
 extern undefined8 FUN_801225a8();
 extern undefined4 fn_80124A78();
@@ -1648,7 +1648,7 @@ void FUN_8011f438(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     hudDrawMagicBar(uVar7,0x100,0);
   }
   iVar2 = 0;
-  uVar9 = FUN_800e6680('\x01',0);
+  uVar9 = playerHasKrazoaSpirit('\x01',0);
   uVar5 = GameBit_Get(0x123);
   if ((uVar5 == 0) && (uVar5 = GameBit_Get(0x83b), uVar5 == 0)) {
     uVar5 = GameBit_Get(0x2e8);

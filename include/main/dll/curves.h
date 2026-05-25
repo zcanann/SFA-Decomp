@@ -70,23 +70,23 @@ void curves_initialise(void);
 void curves_release(void);
 void curves_countRandomPoints(int obj,uint *curve);
 void FUN_800e49c0(int param_1,uint *param_2);
-void FUN_800e49c4(void);
-void FUN_800e4c64(short *param_1,int param_2);
+void fn_800E58FC(void);
+void fn_800E5CBC(short *param_1,int param_2);
 void FUN_800e4db4(int param_1,int param_2);
 void FUN_800e4db8(int param_1,int param_2);
-void FUN_800e4dbc(void);
-void FUN_800e514c(void);
-void FUN_800e5428(void);
-void FUN_800e5570(void);
+void fn_800E618C(void);
+void objFn_800e64f4(void);
+void objFn_800e67ac(void);
+void dll_15_func0A(void);
 double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double param_4,int param_5);
 RomCurvePoint *curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5);
-void FUN_800e58b8(void);
+void dll_15_func08(void);
 void FUN_800e6140(undefined4 param_1,uint *param_2);
-void FUN_800e61a4(void);
+void dll_15_func06(void);
 void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined param_5,
                  undefined param_6);
 void curves_clear(uint *param_1,int param_2,uint param_3,int param_4);
-uint FUN_800e6680(char param_1,uint param_2);
+uint playerHasKrazoaSpirit(char param_1,uint param_2);
 void saveFileStruct_setCheatActive(uint param_1,u8 param_2);
 
 #endif /* MAIN_DLL_CURVES_H_ */

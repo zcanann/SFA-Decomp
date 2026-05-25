@@ -15,7 +15,7 @@ extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
 extern undefined8 FUN_80043030();
 extern undefined4 FUN_80044404();
-extern uint FUN_800e6680();
+extern uint playerHasKrazoaSpirit();
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80294cd0();
@@ -248,7 +248,7 @@ FUN_801d71dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
   FUN_80017a98();
   uVar3 = FUN_80006bb4(0,local_17,&local_18);
   if (param_11 == 0x17) {
-    uVar2 = FUN_800e6680('\x01',0);
+    uVar2 = playerHasKrazoaSpirit('\x01',0);
     if (('\0' < local_17[0]) && (uVar2 == 0)) {
       FUN_80006824(0,0x418);
       return 1;
@@ -274,7 +274,7 @@ FUN_801d71dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
         return 1;
       }
     }
-    else if (('\0' < local_17[0]) && (uVar2 = FUN_800e6680('\x01',0), uVar2 != 0)) {
+    else if (('\0' < local_17[0]) && (uVar2 = playerHasKrazoaSpirit('\x01',0), uVar2 != 0)) {
       FUN_80041ff8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x42);
       uVar1 = FUN_80044404(0x42);
       FUN_80042bec(uVar1,0);
