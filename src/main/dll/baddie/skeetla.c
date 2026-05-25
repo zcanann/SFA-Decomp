@@ -199,6 +199,7 @@ extern void fn_800DA928(int p1, f32 p2);
 int fn_80139834(f32 param_1, int param_2, int param_3)
 {
     f32 maxSq, dist, f29_val;
+    f32 limit;
     int result = 0;
     int iter;
     f32 tmp;
@@ -212,7 +213,8 @@ int fn_80139834(f32 param_1, int param_2, int param_3)
         f29_val = lbl_803E23F8;
     }
     iter = 0;
-    while (dist <= lbl_803E2424 || dist <= maxSq) {
+    limit = lbl_803E2424;
+    while (dist <= limit || maxSq >= dist) {
         result = 1;
         fn_800DA928(param_3, f29_val);
         dist = getXZDistance((f32 *)(param_3 + 0x68), (f32 *)(param_2 + 0x18));
@@ -227,6 +229,8 @@ int fn_80139834(f32 param_1, int param_2, int param_3)
 #pragma peephole reset
 
 /* fn_80139930  addr=0x80139930  size=0x15C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
 int fn_80139930(u8 *obj, u16 targetYaw)
 {
     u8 *state;
@@ -276,6 +280,8 @@ int fn_80139930(u8 *obj, u16 targetYaw)
 
     return delta;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E2418;
@@ -604,9 +610,32 @@ int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags)
 
 extern void *gRomCurveInterface;
 extern u32 GameBit_Get(int bit);
-static void *skeetla_validateRouteEntry(void *entry);
+
+static void *skeetla_validateRouteEntry(void *entry)
+{
+    s16 requiredBit;
+    s16 forbiddenBit;
+
+    if (entry == NULL) {
+        return NULL;
+    }
+
+    requiredBit = *(s16 *)((u8 *)entry + 0x30);
+    if ((requiredBit != -1) && (GameBit_Get(requiredBit) == 0)) {
+        return NULL;
+    }
+
+    forbiddenBit = *(s16 *)((u8 *)entry + 0x32);
+    if ((forbiddenBit != -1) && (GameBit_Get(forbiddenBit) != 0)) {
+        return NULL;
+    }
+
+    return entry;
+}
 
 /* fn_8013A4EC  addr=0x8013A4EC  size=0x1D0  linkage=global */
+#pragma peephole off
+#pragma scheduling off
 void *fn_8013A4EC(u8 *context, u8 *routeDef, u16 linkSelector, u32 routeFlagValue)
 {
     void *candidates[4];
@@ -656,74 +685,59 @@ void *fn_8013A4EC(u8 *context, u8 *routeDef, u16 linkSelector, u32 routeFlagValu
 
     return candidates[bestIndex];
 }
+#pragma peephole reset
 
 extern void *fn_8004B118(void *search);
 extern void fn_8004B148(void *search);
 extern int fn_8004B218(void *search, int timeout);
 extern void fn_8004B31C(void *search, u32 route, int objId, int pathId, int routeFlags);
 
-static void *skeetla_validateRouteEntry(void *entry)
-{
-    s16 requiredBit;
-    s16 forbiddenBit;
-
-    if (entry == NULL) {
-        return NULL;
-    }
-
-    requiredBit = *(s16 *)((u8 *)entry + 0x30);
-    if ((requiredBit != -1) && (GameBit_Get(requiredBit) == 0)) {
-        return NULL;
-    }
-
-    forbiddenBit = *(s16 *)((u8 *)entry + 0x32);
-    if ((forbiddenBit != -1) && (GameBit_Get(forbiddenBit) != 0)) {
-        return NULL;
-    }
-
-    return entry;
-}
-
 #pragma dont_inline on
+#pragma peephole off
 /* fn_8013A6BC  addr=0x8013A6BC  size=0x138  linkage=global */
 void *fn_8013A6BC(u8 *state, u32 route, int pathId)
 {
     void *entry;
-    void *search;
 
     if (pathId == 0) {
         return NULL;
     }
 
-    search = state + 0x6b8;
     if ((*(int *)(state + 0x6ec) == pathId) && (*(u32 *)(state + 0x6e8) == route)) {
-        entry = fn_8004B118(search);
+        entry = fn_8004B118(state + 0x6b8);
         *(void **)(state + 0x6e8) = entry;
         if (entry == NULL) {
             return NULL;
         }
 
-        entry = skeetla_validateRouteEntry(entry);
+        if ((*(s16 *)((u8 *)entry + 0x30) != -1) && (GameBit_Get(*(s16 *)((u8 *)entry + 0x30)) == 0)) {
+            entry = NULL;
+        } else if ((*(s16 *)((u8 *)entry + 0x32) != -1) &&
+                   (GameBit_Get(*(s16 *)((u8 *)entry + 0x32)) != 0)) {
+            entry = NULL;
+        }
         *(void **)(state + 0x6e8) = entry;
         if (entry != NULL) {
             return entry;
         }
     }
 
-    fn_8004B31C(search, route, *(int *)(state + 0x28), pathId, *(int *)(state + 0x4a0));
-    if (fn_8004B218(search, 0x1f4) != 1) {
+    fn_8004B31C(state + 0x6b8, route, *(int *)(state + 0x28), pathId, *(int *)(state + 0x4a0));
+    if (fn_8004B218(state + 0x6b8, 0x1f4) != 1) {
         return NULL;
     }
 
-    fn_8004B148(search);
-    entry = fn_8004B118(search);
+    fn_8004B148(state + 0x6b8);
+    entry = fn_8004B118(state + 0x6b8);
     *(void **)(state + 0x6e8) = entry;
     *(int *)(state + 0x6ec) = pathId;
     return entry;
 }
+#pragma peephole reset
 #pragma dont_inline reset
 
 /* fn_8013A7F4  addr=0x8013A7F4  size=0x1D4  linkage=global */
+#pragma peephole off
 int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
 {
     s8 status[8];
@@ -750,12 +764,13 @@ int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
                 status[i] = -1;
             }
 
-            if (status[i] == 1) {
+            switch (status[i]) {
+            case 1:
                 return i;
-            }
-            if (status[i] == -1) {
+            case -1:
                 routes[i] = 0;
                 failedCount++;
+                break;
             }
 
             search += 0x30;
@@ -780,44 +795,41 @@ int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
 
     return -1;
 }
+#pragma peephole reset
 
 /* fn_8013A9C8  addr=0x8013A9C8  size=0x184  linkage=global */
 void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
 {
     void *entry;
-    u32 flagByte;
-    u16 secondaryLink;
 
     entry = NULL;
-    flagByte = routeFlagValue & 0xff;
 
     if ((*(u8 **)(state + 0x528) == routeDef) &&
         (*(u16 *)(state + 0x530) == *(u16 *)(state + 0x532)) &&
-        (*(u8 *)(state + 0x536) == flagByte)) {
+        (*(u8 *)(state + 0x536) == (routeFlagValue & 0xff))) {
         entry = skeetla_validateRouteEntry(*(void **)(state + 0x52c));
     }
 
     if (entry == NULL) {
-        entry = fn_8013A4EC(state, routeDef, *(u16 *)(state + 0x532), flagByte);
+        entry = fn_8013A4EC(state, routeDef, *(u16 *)(state + 0x532), routeFlagValue & 0xff);
         if (entry == NULL) {
             entry = fn_8013A6BC(state, (u32)routeDef, *(u16 *)(state + 0x532));
         }
 
         if (entry == NULL) {
-            secondaryLink = *(u16 *)(state + 0x534);
-            if (secondaryLink != 0) {
-                entry = fn_8013A4EC(state, routeDef, secondaryLink, flagByte);
+            if (*(u16 *)(state + 0x534) != 0) {
+                entry = fn_8013A4EC(state, routeDef, *(u16 *)(state + 0x534), routeFlagValue & 0xff);
                 if (entry == NULL) {
-                    entry = fn_8013A6BC(state, (u32)routeDef, secondaryLink);
+                    entry = fn_8013A6BC(state, (u32)routeDef, *(u16 *)(state + 0x534));
                 }
                 if (entry != NULL) {
-                    *(u16 *)(state + 0x532) = secondaryLink;
+                    *(u16 *)(state + 0x532) = *(u16 *)(state + 0x534);
                 }
             }
         }
 
         if (entry == NULL) {
-            entry = fn_8013A4EC(state, routeDef, 0, flagByte);
+            entry = fn_8013A4EC(state, routeDef, 0, routeFlagValue & 0xff);
             *(u16 *)(state + 0x532) = 0;
         }
     }
@@ -830,6 +842,7 @@ void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
 }
 
 /* fn_8013AB4C  addr=0x8013AB4C  size=0x2B0  linkage=global */
+#pragma peephole off
 void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
 {
     f32 bestDistances[8];
@@ -840,6 +853,7 @@ void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
     f32 dx;
     f32 dz;
     f32 score;
+    f32 init;
     int count;
     int i;
     int j;
@@ -850,8 +864,9 @@ void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
     state = *(u8 **)(obj + 0xb8);
     curves = (*(void *(**)(int *))(*(int *)gRomCurveInterface + 0x10))(&count);
 
+    init = lbl_803E2418;
     for (i = 0; i < 8; i++) {
-        bestDistances[i] = lbl_803E2418;
+        bestDistances[i] = init;
         outRoutes[i] = NULL;
     }
 
@@ -916,6 +931,7 @@ void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
         }
     }
 }
+#pragma peephole reset
 
 typedef struct SkeetlaParticleSpawnArgs {
     s16 objectId;
@@ -932,6 +948,7 @@ extern u32 randomGetRange(int min, int max);
 extern void *gPartfxInterface;
 
 /* fn_8013ADFC  addr=0x8013ADFC  size=0x1E4  linkage=global */
+#pragma scheduling off
 void fn_8013ADFC(u8 *obj)
 {
     u8 *state;
@@ -955,11 +972,11 @@ void fn_8013ADFC(u8 *obj)
         args.sourceId = 0;
     }
 
-    if (randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, 4) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
             obj, 0xca, &args, 0x200001, -1, 0);
     }
-    if (randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, 4) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
             obj, 0xcb, &args, 0x200001, -1, 0);
     }
@@ -969,15 +986,16 @@ void fn_8013ADFC(u8 *obj)
     args.z = *(f32 *)(state + 0x3ec);
     args.objectId = *(s16 *)obj;
 
-    if (randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, 4) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
             obj, 0xca, &args, 0x200001, -1, 0);
     }
-    if (randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, 4) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
             obj, 0xcb, &args, 0x200001, -1, 0);
     }
 }
+#pragma scheduling reset
 
 /* fn_8013AFE0  addr=0x8013AFE0  size=0x200  linkage=global */
 void fn_8013AFE0(f32 *start, f32 *end, f32 *guardPoint, f32 *center, f32 minDistance, f32 moveDistance)

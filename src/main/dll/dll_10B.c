@@ -51,11 +51,13 @@ extern f32 lbl_803E2A08;
 extern f64 lbl_803E2A10;
 extern f64 lbl_803E2A18;
 
+#pragma peephole off
+#pragma scheduling off
 void fn_80154870(int obj, int *state)
 {
     float fVar1;
     int iVar2;
-    char cVar3;
+    u8 cVar3;
     int iVar4;
     double dVar5;
     float local_38;
@@ -73,8 +75,8 @@ void fn_80154870(int obj, int *state)
     if ((((state[0xb7] & 0x2000U) != 0) &&
          (((iVar2 = curveFn_80010320((double)lbl_803E2990, iVar4), iVar2 != 0 ||
             (*(int *)(iVar4 + 0x10) != 0)) &&
-           (cVar3 = (**(code **)(*gRomCurveInterface + 0x90))(iVar4), cVar3 != '\0')))) &&
-        (cVar3 = (**(code **)(*gRomCurveInterface + 0x8c))
+           (cVar3 = (*(code *)(*gRomCurveInterface + 0x90))(iVar4), cVar3 != '\0')))) &&
+        (cVar3 = (*(code *)(*gRomCurveInterface + 0x8c))
                            ((double)lbl_803E29B0, *state, obj, &lbl_803DBCD0, 0xffffffff),
          cVar3 != '\0')) {
         state[0xb7] = state[0xb7] & 0xffffdfff;
@@ -88,13 +90,8 @@ void fn_80154870(int obj, int *state)
         state[0xb9] = state[0xb9] | 0x10000;
         state[0xc9] = (int)lbl_803E2990;
     }
-    local_28 = (double)CONCAT44(0x43300000, (uint)*(byte *)((int)state + 0x33a));
-    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (float)(local_28 - lbl_803E29D8)));
-    uStack_1c = (int)*(short *)(obj + 2) ^ 0x80000000;
-    local_20 = 0x43300000;
-    iVar4 = (int)-(float)((double)lbl_803E29BC * dVar5 -
-                          (double)(float)((double)CONCAT44(0x43300000, uStack_1c) - lbl_803E29A8));
-    local_18 = (double)(longlong)iVar4;
+    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (f32)(u32)*(byte *)((int)state + 0x33a)));
+    iVar4 = (int)-(float)((double)lbl_803E29BC * dVar5 - (double)(float)*(short *)(obj + 2));
     *(short *)(obj + 2) = (short)iVar4;
     fVar1 = lbl_803E2990;
     if (cVar3 == '\0') {
@@ -139,17 +136,16 @@ void fn_80154870(int obj, int *state)
         }
     }
     *(char *)((int)state + 0x33a) = *(char *)((int)state + 0x33a) + 1;
-    local_18 = (double)CONCAT44(0x43300000, (uint)*(byte *)((int)state + 0x33a));
-    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (float)(local_18 - lbl_803E29D8)));
-    uStack_1c = (int)*(short *)(obj + 2) ^ 0x80000000;
-    local_20 = 0x43300000;
-    iVar4 = (int)((double)lbl_803E29BC * dVar5 +
-                  (double)(float)((double)CONCAT44(0x43300000, uStack_1c) - lbl_803E29A8));
-    local_28 = (double)(longlong)iVar4;
+    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (f32)(u32)*(byte *)((int)state + 0x33a)));
+    iVar4 = (int)((double)lbl_803E29BC * dVar5 + (double)(float)*(short *)(obj + 2));
     *(short *)(obj + 2) = (short)iVar4;
     FUN_80154af4((ushort *)obj, (int)state);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma peephole off
+#pragma scheduling off
 void fn_80154C24(int obj, int state)
 {
     float fVar1;
@@ -170,14 +166,16 @@ void fn_80154C24(int obj, int state)
     fVar1 = lbl_803E2990;
     *(float *)(state + 0x324) = lbl_803E2990;
     *(float *)(state + 0x328) = fVar1;
-    *(undefined4 *)(state + 0x32c) = *(undefined4 *)(obj + 0x10);
+    *(float *)(state + 0x32c) = *(float *)(obj + 0x10);
     uVar2 = randomGetRange(0, 0xff);
-    *(char *)(state + 0x33a) = (char)uVar2;
+    *(char *)(state + 0x33a) = (u8)uVar2;
     *(undefined *)(state + 0x33b) = 0;
     *(float *)(state + 0x330) = lbl_803E29F4;
     uVar2 = randomGetRange(0x32, 0x4b);
-    *(float *)(state + 0x2fc) = lbl_803E29F8 * (f32)(s32)uVar2;
+    *(float *)(state + 0x2fc) = (f32)(s32)uVar2 * lbl_803E29F8;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void fn_80154D0C(int obj, int state, undefined2 *outAngle, float *outDistance)
 {
@@ -359,15 +357,11 @@ uint fn_80154FB4(double maxDistance, short *obj, int state, uint turnTime)
     if ((int)uStack_74 < -0x8000) {
         uStack_74 = uStack_74 + 0xffff;
     }
-    uStack_7c = turnTime & 0xffff;
-    local_80 = 0x43300000;
-    fVar1 = timeDelta / (float)((double)CONCAT44(0x43300000, uStack_7c) - lbl_803E2A10);
+    fVar1 = timeDelta / (f32)(turnTime & 0xffff);
     if (lbl_803E2A04 < fVar1) {
         fVar1 = lbl_803E2A04;
     }
-    uStack_74 = uStack_74 ^ 0x80000000;
-    local_78 = 0x43300000;
-    angleStep = (uint)((float)((double)CONCAT44(0x43300000, uStack_74) - lbl_803E2A18) * fVar1);
+    angleStep = (uint)((f32)(s32)uStack_74 * fVar1);
     local_70 = (longlong)(int)angleStep;
     *obj = obj[1] + (short)angleStep;
     obj[2] = 0x4000;

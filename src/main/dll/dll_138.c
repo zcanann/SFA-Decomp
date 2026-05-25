@@ -11,6 +11,8 @@ extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern int FUN_80017a98();
+extern int Obj_GetPlayerObject();
+extern void setMatrixFromObjectPos(float *outMtx, short *inObj);
 extern int FUN_80039520();
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern int FUN_800620e8();
@@ -24,7 +26,7 @@ extern int ObjMsg_Pop(int obj, int *outMessage, int *outSender, int *outParam);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 
-extern undefined4* DAT_803dd6d0;
+extern void **gCameraInterface;
 extern f64 DOUBLE_803e4210;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E41C0;
@@ -35,6 +37,9 @@ extern f32 lbl_803E4204;
 extern f32 lbl_803E4220;
 extern f32 lbl_803E4230;
 extern f32 lbl_803E3528;
+extern f32 lbl_803E3588;
+extern f32 lbl_803E3598;
+extern f32 timeDelta;
 extern f32 lbl_803E3564;
 extern f32 lbl_803E356C;
 extern f32 lbl_803E3580;
@@ -53,6 +58,8 @@ extern f32 lbl_803E3584;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void fn_80174A80(int param_1,int param_2)
 {
   float fVar1;
@@ -66,15 +73,15 @@ void fn_80174A80(int param_1,int param_2)
   *(float *)(param_2 + 0xd4) = fVar1;
   uVar2 = randomGetRange(0x19,0x4b);
   *(float *)(param_2 + 0xe4) =
-       lbl_803E3564 * (f32)(s32)(uVar2);
+       (f32)(s32)(uVar2) * lbl_803E3564;
   uVar2 = randomGetRange(0x28,0x46);
   *(float *)(param_2 + 0xe8) =
        *(float *)(param_2 + 0xe4) /
        (f32)(s32)(uVar2);
   fVar1 = lbl_803E3528;
   *(float *)(param_2 + 0xec) = lbl_803E3528;
-  *(undefined2 *)(param_2 + 0xac) = *(undefined2 *)(iVar3 + 0x18);
-  *(undefined2 *)(param_2 + 0xae) = *(undefined2 *)(iVar3 + 0x1a);
+  *(short *)(param_2 + 0xac) = *(short *)(iVar3 + 0x18);
+  *(short *)(param_2 + 0xae) = *(short *)(iVar3 + 0x1a);
   *(float *)(param_2 + 0xf0) = fVar1;
   *(undefined4 *)(param_2 + 0xbc) = 0;
   GameBit_Set((int)*(short *)(param_2 + 0xac),0);
@@ -102,6 +109,8 @@ void fn_80174A80(int param_1,int param_2)
   *(undefined *)(iVar3 + 0xe) = 10;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -116,15 +125,13 @@ void fn_80174A80(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80174BFC(void)
+void fn_80174BFC(ushort *puVar3, int iVar7)
 {
   ushort uVar1;
   byte bVar2;
-  ushort *puVar3;
   int iVar4;
   uint uVar5;
   undefined4 *puVar6;
-  int iVar7;
   int iVar8;
   int iVar9;
   int iVar10;
@@ -133,19 +140,10 @@ void fn_80174BFC(void)
   int iVar13;
   float *pfVar14;
   float *pfVar15;
-  double in_f28;
   double dVar16;
-  double in_f29;
   double dVar17;
-  double in_f30;
   double dVar18;
-  double in_f31;
   double dVar19;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar20;
   ushort local_190;
   ushort local_18e;
   ushort local_18c;
@@ -164,34 +162,15 @@ void fn_80174BFC(void)
   uint uStack_8c;
   undefined4 local_88;
   uint uStack_84;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  uVar20 = FUN_80286820();
-  puVar3 = (ushort *)((ulonglong)uVar20 >> 0x20);
-  iVar7 = (int)uVar20;
+
   iVar12 = *(int *)(puVar3 + 0x26);
-  FUN_80017a98();
+  Obj_GetPlayerObject();
   dVar18 = (double)*(float *)(puVar3 + 6);
   dVar17 = (double)*(float *)(puVar3 + 8);
   dVar16 = (double)*(float *)(puVar3 + 10);
   bVar2 = 0xf;
   iVar10 = 0;
-  dVar19 = (double)lbl_803E4220;
+  dVar19 = (double)lbl_803E3588;
   do {
     if (bVar2 == 0) {
 LAB_80175568:
@@ -220,7 +199,7 @@ LAB_80175568:
       local_184 = *(int *)(puVar3 + 6);
       local_180 = *(int *)(puVar3 + 8);
       local_17c = *(int *)(puVar3 + 10);
-      FUN_80017754(afStack_178,&local_190);
+      setMatrixFromObjectPos(afStack_178,(short *)&local_190);
       FUN_80017778((double)*pfVar14,(double)pfVar14[1],(double)pfVar14[2],afStack_178,pfVar15,
                    (float *)((int)local_e4 + iVar8),(float *)((int)local_e4 + iVar9));
       if ((1 << iVar11 & 0xfU) != 0) {
@@ -338,6 +317,8 @@ LAB_8017533c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
 {
   uint uVar1;
@@ -350,41 +331,41 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
   iVar3 = *(int *)(param_1 + 0x5c);
   *(undefined *)(iVar3 + 0x145) = 0x3c;
   if (param_1[0x5a] != -1) {
-    (**(code **)(*DAT_803dd6d0 + 0x4c))();
+    (*(void (**)(void))((char *)*gCameraInterface + 0x4c))();
   }
-  *(undefined2 *)(param_3 + 0x70) = 0xffff;
+  *(short *)(param_3 + 0x70) = -1;
   if (*(char *)(param_3 + 0x56) != '\0') {
     if (*(char *)(param_3 + 0x56) != '\x02') {
-      *(float *)(param_3 + 0x4c) = lbl_803E4220;
+      *(float *)(param_3 + 0x4c) = lbl_803E3588;
       *(float *)(param_3 + 0x40) = *(float *)(param_1 + 6) - *(float *)(param_2 + 6);
       *(float *)(param_3 + 0x44) = *(float *)(param_1 + 8) - *(float *)(param_2 + 8);
       *(float *)(param_3 + 0x48) = *(float *)(param_1 + 10) - *(float *)(param_2 + 10);
-      *(short *)(param_3 + 0x50) = *param_1 - *param_2;
+      *(short *)(param_3 + 0x50) = *param_1 - (u16)*param_2;
       if (0x8000 < *(short *)(param_3 + 0x50)) {
-        *(short *)(param_3 + 0x50) = *(short *)(param_3 + 0x50) + 1;
+        *(short *)(param_3 + 0x50) = *(short *)(param_3 + 0x50) - 0xffff;
       }
       if (*(short *)(param_3 + 0x50) < -0x8000) {
-        *(short *)(param_3 + 0x50) = *(short *)(param_3 + 0x50) + -1;
+        *(short *)(param_3 + 0x50) = *(short *)(param_3 + 0x50) + 0xffff;
       }
-      *(short *)(param_3 + 0x52) = param_1[1] - param_2[1];
+      *(short *)(param_3 + 0x52) = param_1[1] - (u16)param_2[1];
       if (0x8000 < *(short *)(param_3 + 0x52)) {
-        *(short *)(param_3 + 0x52) = *(short *)(param_3 + 0x52) + 1;
+        *(short *)(param_3 + 0x52) = *(short *)(param_3 + 0x52) - 0xffff;
       }
       if (*(short *)(param_3 + 0x52) < -0x8000) {
-        *(short *)(param_3 + 0x52) = *(short *)(param_3 + 0x52) + -1;
+        *(short *)(param_3 + 0x52) = *(short *)(param_3 + 0x52) + 0xffff;
       }
-      *(short *)(param_3 + 0x54) = param_2[2] - param_1[2];
+      *(short *)(param_3 + 0x54) = (u16)param_2[2] - (u16)param_1[2];
       if (0x8000 < *(short *)(param_3 + 0x54)) {
-        *(short *)(param_3 + 0x54) = *(short *)(param_3 + 0x54) + 1;
+        *(short *)(param_3 + 0x54) = *(short *)(param_3 + 0x54) - 0xffff;
       }
       if (*(short *)(param_3 + 0x54) < -0x8000) {
-        *(short *)(param_3 + 0x54) = *(short *)(param_3 + 0x54) + -1;
+        *(short *)(param_3 + 0x54) = *(short *)(param_3 + 0x54) + 0xffff;
       }
       *(undefined *)(param_3 + 0x56) = 2;
     }
     *(float *)(param_3 + 0x4c) =
-         -(*(float *)(param_3 + 0x24) * lbl_803DC074 - *(float *)(param_3 + 0x4c));
-    if (*(float *)(param_3 + 0x4c) <= lbl_803E41C0) {
+         -(*(float *)(param_3 + 0x24) * timeDelta - *(float *)(param_3 + 0x4c));
+    if (*(float *)(param_3 + 0x4c) <= lbl_803E3528) {
       *(undefined *)(param_3 + 0x56) = 0;
     }
   }
@@ -403,19 +384,21 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
       dVar6 = (double)(*(float *)(param_1 + 6) - *(float *)(iVar2 + 0xc));
       dVar5 = (double)(*(float *)(param_1 + 10) - *(float *)(iVar2 + 0x14));
       dVar4 = FUN_80293900((double)(float)(dVar6 * dVar6 + (double)(float)(dVar5 * dVar5)));
-      if (dVar4 != (double)lbl_803E41C0) {
+      if (dVar4 != (double)lbl_803E3528) {
         dVar6 = (double)(float)(dVar6 / dVar4);
         dVar5 = (double)(float)(dVar5 / dVar4);
       }
-      dVar4 = (double)lbl_803E4230;
+      dVar4 = (double)lbl_803E3598;
       *(float *)(iVar3 + 0xc0) = (float)(dVar4 * dVar6);
-      *(float *)(iVar3 + 0xc4) = lbl_803E41C0;
+      *(float *)(iVar3 + 0xc4) = lbl_803E3528;
       *(float *)(iVar3 + 200) = (float)(dVar4 * dVar5);
       return 4;
     }
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

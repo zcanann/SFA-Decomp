@@ -1274,14 +1274,12 @@ extern int* getTrickyObject(void);
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if result == 0 else 0. */
 #pragma scheduling off
-#pragma peephole off
 int fn_801B6D40(int* obj, int v)
 {
     s8* state = *(s8**)((char*)obj + 0xb8);
     state[2] = (s8)(state[2] - v);
     return state[2] == 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

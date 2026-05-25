@@ -787,19 +787,25 @@ int fn_8017C2D4(int* obj, int* anim, u8* buf)
     flagPtr = *(int**)((char*)obj + 0xb8);
     buf[0x56] = 0;
     for (i = 0; i < buf[0x8b]; i++) {
-        s8 op = (s8)buf[0x81 + i];
-        if (op == 2) {
-            u8 v = *((u8*)state + 0x24);
-            if (v != 0) {
-                warpToMap(v, 0);
-            }
-        } else if (op == 1) {
+        int op = buf[0x81 + i];
+        switch (op) {
+        case 1: {
             u8 flags = *((u8*)state + 0x1d);
             if ((flags & 1) == 0 && (flags & 2) != 0) {
                 GameBit_Set(*(s16*)((char*)state + 0x18), 1);
             }
-        } else if (op == 3) {
+            break;
+        }
+        case 2: {
+            u8 v = *((u8*)state + 0x24);
+            if (v != 0) {
+                warpToMap(v, 0);
+            }
+            break;
+        }
+        case 3:
             ((void(*)(int, int, int, int))((int*)(*gObjectTriggerInterface))[0x50/4])(86, 1, 0, 0);
+            break;
         }
     }
     *(u8*)flagPtr = (u8)(*(u8*)flagPtr | 4);

@@ -5323,10 +5323,11 @@ void fn_8004C1E4(u8 b, f32 scale) {
 #pragma scheduling off
 #pragma peephole off
 void *fn_8004B118(int *p) {
+    void **arr;
     int idx = *(s16*)((char*)p + 0x2c);
     if (idx < *(s16*)((char*)p + 0x2a)) {
-        void **arr = *(void***)((char*)p + 8);
-        *(s16*)((char*)p + 0x2c) = idx + 1;
+        arr = *(void***)((char*)p + 8);
+        (*(s16*)((char*)p + 0x2c))++;
         return arr[idx];
     }
     return NULL;
@@ -5451,23 +5452,24 @@ void fn_80050F2C(void) {
 #pragma scheduling off
 #pragma peephole off
 void fn_8004AAD4(u8* arr, int size, int idx) {
-    u32 key;
-    u16 val;
-    int half;
+    u32 key = *(u32*)(arr + idx * 8);
+    u16 val = *(u16*)(arr + idx * 8 + 4);
+    int half = size >> 1;
     int child;
-    u8* p;
-    p = arr + idx * 8;
-    key = *(u32*)p;
-    val = *(u16*)(p + 4);
-    half = size >> 1;
+    u8* cp;
+    u8* childptr;
     while (idx <= half) {
         child = idx + idx;
-        if (child < size && *(u32*)(arr + child * 8) < *(u32*)(arr + (child + 1) * 8)) {
-            child++;
+        if (child < size) {
+            cp = arr + child * 8;
+            if (*(u32*)cp < *(u32*)(cp + 8)) {
+                child++;
+            }
         }
-        if (key >= *(u32*)(arr + child * 8)) break;
-        *(u32*)(arr + idx * 8) = *(u32*)(arr + child * 8);
-        *(u16*)(arr + idx * 8 + 4) = *(u16*)(arr + child * 8 + 4);
+        childptr = arr + child * 8;
+        if (key >= *(u32*)childptr) break;
+        *(u32*)(arr + idx * 8) = *(u32*)childptr;
+        *(u16*)(arr + idx * 8 + 4) = *(u16*)(childptr + 4);
         idx = child;
     }
     *(u32*)(arr + idx * 8) = key;
@@ -5495,6 +5497,7 @@ extern u8 lbl_803DCCA7;
 extern u16 lbl_803DB5CE;
 extern u8 lbl_803DB5CC;
 extern char lbl_8035F730[];
+#pragma scheduling off
 int GXFlush_(u8 visible) {
     void *fifo_get;
     void *fifo_put;
@@ -5531,33 +5534,40 @@ int GXFlush_(u8 visible) {
     }
     return 0;
 }
+#pragma scheduling reset
 
 extern u8 GXNtsc480Prog[];
-extern u8 lbl_803DB5D4[];
+extern u8 lbl_803DB5D4;
 extern u8 *lbl_803DCCF0;
 extern void GXSetCopyFilter(u8 aa, u8 *pat, u8 vf_en, u8 *vfilter);
+#pragma scheduling off
 void setDisplayCopyFilter(void) {
     u8 *p = lbl_803DCCF0;
-    if (p == GXNtsc480Prog || p[0x18] == 0) {
+    if (p == GXNtsc480Prog || p[0x18] != 0) {
         GXSetCopyFilter(p[0x19], p + 0x1a, 0, p + 0x32);
     } else {
-        GXSetCopyFilter(p[0x19], p + 0x1a, 1, lbl_803DB5D4);
+        GXSetCopyFilter(p[0x19], p + 0x1a, 1, &lbl_803DB5D4);
     }
 }
+#pragma scheduling reset
 
 extern void GXLoadTexObj(void *obj, int id);
 extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
 extern void fn_80053C40(u8 *tex, void *out);
 extern u8 lbl_803779A0[];
+#pragma scheduling off
 void textureFn_8004c264(u8 *tex, int mapId) {
+    void *base;
     if (tex == NULL) return;
+    base = &tex[32];
     if (tex[72] != 0) {
-        GXLoadTexObjPreLoaded(&tex[32], *(void **)(tex + 64), mapId);
+        GXLoadTexObjPreLoaded(base, *(void **)(tex + 64), mapId);
     } else {
-        GXLoadTexObj(&tex[32], mapId);
+        GXLoadTexObj(base, mapId);
     }
-    if (*(int *)(tex + 80) != 0) {
+    if (*(void **)(tex + 80) != NULL) {
         fn_80053C40(tex, lbl_803779A0);
         GXLoadTexObj(lbl_803779A0, 1);
     }
 }
+#pragma scheduling reset

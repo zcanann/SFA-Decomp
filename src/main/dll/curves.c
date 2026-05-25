@@ -13,6 +13,11 @@ extern uint GameBit_Get(int eventId);
 extern double FUN_80017714();
 extern int FUN_80017730();
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
+extern void mtxRotateByVec3s(float *outMtx, short *angles);
+extern void Matrix_TransformPoint(float *mtx, double x, double y, double z, float *ox, float *oy, float *oz);
+extern u8 framesThisStep;
+extern f32 lbl_803E0668;
+extern f32 lbl_803E068C;
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
@@ -2901,9 +2906,9 @@ void fn_800E5CBC(short *param_1,int param_2)
   float fVar1;
   short sVar2;
   int iVar3;
-  float local_78;
-  float local_74;
   float local_70;
+  float local_74;
+  float local_78;
   short local_6c [4];
   float local_64;
   float local_60;
@@ -2911,44 +2916,45 @@ void fn_800E5CBC(short *param_1,int param_2)
   float local_58;
   float afStack_54 [20];
   
-  if ((*(byte *)(param_2 + 0x260) & 0x10) == 0) {
-    *(short *)(param_2 + 0x198) =
-         *(short *)(param_2 + 0x198) -
-         (short)((int)((int)*(short *)(param_2 + 0x198) * (uint)DAT_803dc070) >> 3);
-    *(short *)(param_2 + 0x19a) =
-         *(short *)(param_2 + 0x19a) -
-         (short)((int)((int)*(short *)(param_2 + 0x19a) * (uint)DAT_803dc070) >> 3);
-    fVar1 = lbl_803E12E8;
-    *(float *)(param_2 + 0x1a0) = lbl_803E12E8;
-    *(float *)(param_2 + 0x1a4) = lbl_803E130C;
-    *(float *)(param_2 + 0x1a8) = fVar1;
-  }
-  else {
+  if ((*(char *)(param_2 + 0x260) & 0x10) != 0) {
     local_6c[0] = -*param_1;
     if (*(short **)(param_1 + 0x18) != (short *)0x0) {
       local_6c[0] = local_6c[0] - **(short **)(param_1 + 0x18);
     }
     local_6c[1] = 0;
     local_6c[2] = 0;
-    local_64 = lbl_803E130C;
-    local_60 = lbl_803E12E8;
-    local_5c = lbl_803E12E8;
-    local_58 = lbl_803E12E8;
-    FUN_8001774c(afStack_54,(int)local_6c);
-    FUN_80017778((double)*(float *)(param_2 + 0x1a0),(double)*(float *)(param_2 + 0x1a4),
-                 (double)*(float *)(param_2 + 0x1a8),afStack_54,&local_70,&local_74,&local_78);
-    iVar3 = FUN_80017730();
+    local_64 = lbl_803E068C;
+    local_60 = lbl_803E0668;
+    local_5c = lbl_803E0668;
+    local_58 = lbl_803E0668;
+    mtxRotateByVec3s(afStack_54,local_6c);
+    Matrix_TransformPoint(afStack_54,(double)*(float *)(param_2 + 0x1a0),
+                 (double)*(float *)(param_2 + 0x1a4),(double)*(float *)(param_2 + 0x1a8),
+                 &local_70,&local_74,&local_78);
+    iVar3 = getAngle(local_74,local_78);
     sVar2 = 0x4000 - (short)iVar3;
     *(short *)(param_2 + 0x19c) = sVar2;
     *(short *)(param_2 + 0x198) =
          *(short *)(param_2 + 0x198) +
-         (short)((int)((uint)DAT_803dc070 * ((int)sVar2 - (int)*(short *)(param_2 + 0x198))) >> 3);
-    iVar3 = FUN_80017730();
+         ((int)((uint)framesThisStep * ((int)sVar2 - (int)*(short *)(param_2 + 0x198))) >> 3);
+    iVar3 = getAngle(local_74,local_70);
     sVar2 = -(0x4000 - (short)iVar3);
     *(short *)(param_2 + 0x19e) = sVar2;
     *(short *)(param_2 + 0x19a) =
          *(short *)(param_2 + 0x19a) +
-         (short)((int)((uint)DAT_803dc070 * ((int)sVar2 - (int)*(short *)(param_2 + 0x19a))) >> 3);
+         ((int)((uint)framesThisStep * ((int)sVar2 - (int)*(short *)(param_2 + 0x19a))) >> 3);
+  }
+  else {
+    *(short *)(param_2 + 0x198) =
+         *(short *)(param_2 + 0x198) -
+         ((int)((int)*(short *)(param_2 + 0x198) * (uint)framesThisStep) >> 3);
+    *(short *)(param_2 + 0x19a) =
+         *(short *)(param_2 + 0x19a) -
+         ((int)((int)*(short *)(param_2 + 0x19a) * (uint)framesThisStep) >> 3);
+    fVar1 = lbl_803E0668;
+    *(float *)(param_2 + 0x1a0) = lbl_803E0668;
+    *(float *)(param_2 + 0x1a4) = lbl_803E068C;
+    *(float *)(param_2 + 0x1a8) = fVar1;
   }
   return;
 }

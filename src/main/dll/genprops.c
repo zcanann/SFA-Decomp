@@ -75,7 +75,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern uint fn_800386BC();
+extern u32 fn_800386BC(f32 x, f32 y, f32 z);
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8004036c();
@@ -4161,15 +4161,16 @@ extern f32 lbl_803E31E4;
 #pragma peephole off
 void mikabombshadow_update(int *obj) {
     int *r4;
+    f32 fz = lbl_803E31D8;
     f32 t;
     f32 f;
 
     r4 = *(int**)((char*)obj + 0xc4);
-    t = lbl_803E31D8 - (*(f32*)((char*)r4 + 0x10) - *(f32*)((char*)obj + 0x10)) / *(f32*)*(int**)((char*)obj + 0xb8);
-    *(f32*)*(int**)((char*)obj + 0x64) = lbl_803E31DC * t + lbl_803E31D8;
+    t = fz - (*(f32*)((char*)r4 + 0x10) - *(f32*)((char*)obj + 0x10)) / *(f32*)*(int**)((char*)obj + 0xb8);
+    *(f32*)*(int**)((char*)obj + 0x64) = lbl_803E31DC * t + fz;
     f = t * lbl_803E31E0;
-    if (f > lbl_803E31D8) f = lbl_803E31D8;
-    *(s16*)((char*)*(int**)((char*)obj + 0x64) + 0x36) = (s16)(s32)(lbl_803E31E4 * f);
+    if (f > fz) f = fz;
+    *(s16*)((char*)*(int**)((char*)obj + 0x64) + 0x36) = (s32)(lbl_803E31E4 * f);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4256,7 +4257,7 @@ undefined4 FUN_80171310(int param_1)
   
   iVar2 = *(int *)(param_1 + 0xb8);
   if (*(int *)(iVar2 + 0x18) == -2) {
-    uVar1 = fn_800386BC();
+    uVar1 = fn_800386BC(0.0f, 0.0f, 0.0f);
     *(uint *)(iVar2 + 0x18) = uVar1 & 0xffff;
   }
   return *(undefined4 *)(iVar2 + 0x18);
@@ -4553,7 +4554,6 @@ extern void mikabombshadow_init();
 extern void StaticCamera_init();
 extern void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void StaticCamera_free(int x);
-extern void gcbaddieshield_render();
 extern void gcbaddieshield_update(int *obj);
 void gcbaddieshield_init(int *obj, void *initData);
 extern void baddieinterestp_update();
@@ -4572,7 +4572,7 @@ extern void staff_update();
 extern void staff_init();
 extern void staff_release();
 extern void staff_initialise();
-extern void staff_modelMtxFn();
+extern void staff_modelMtxFn(int *obj, int p4, int p5);
 extern void staff_hitDetectGeometry();
 void staff_func10(int *obj, s32 v);
 void staff_func11(int *obj, s32 v);
@@ -4594,7 +4594,7 @@ extern void flamethrowerspe_init();
 extern void shield_free();
 extern void shield_render();
 extern void shield_update();
-extern void shield_init();
+
 extern void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void restartmarker_init(int *obj, int *state) {
     *(s16*)obj = (s16)(*(u8*)((char*)state + 0x18) << 8);
@@ -4605,6 +4605,20 @@ extern void dll_F7_render();
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern u8 staffFn_80170380[];
+extern int *Obj_GetActiveModel(int obj);
+extern void fn_800284CC(void);
+extern void ObjModel_SetPostRenderCallback(int *model, void *callback);
+
+void shield_init(int *obj, void *initData) {
+    extern void staffFn_80170380(int *obj, int param);
+    int *model = Obj_GetActiveModel((int)obj);
+    ObjModel_SetPostRenderCallback(model, fn_800284CC);
+    if (*(s16 *)((char *)obj + 0x46) == 0x836) {
+        staffFn_80170380(obj, 5);
+    } else {
+        staffFn_80170380(obj, 7);
+    }
+}
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -5026,10 +5040,17 @@ extern f32 lbl_803E31E8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3220;
 extern f32 lbl_803E33F0;
+extern f32 lbl_803E31F8;
 #pragma peephole off
 void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E31E8); }
 void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3220); }
 void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E33F0); }
+void gcbaddieshield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    s32 v = visible;
+    if (v != 0 && *(int *)((char *)obj + 0xf4) == 0) {
+        objRenderFn_8003b8f4(lbl_803E31F8);
+    }
+}
 #pragma peephole reset
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -5099,6 +5120,69 @@ void collectible_render2(int *obj, f32 f1, f32 f2, f32 f3) {
     *(f32*)((char*)obj + 0x2c) = f3;
 }
 
+extern u32 GameBit_Get(int eventId);
+extern void saveGame_saveObjectPos(int obj);
+
+#pragma scheduling off
+#pragma peephole off
+void collectible_func10(int *obj, f32 f1, f32 f2, f32 f3) {
+    char *inner = (char*)((int**)obj)[0xb8/4];
+    *(f32*)((char*)obj + 0xc) = f1;
+    *(f32*)(inner + 0x24) = f1;
+    *(f32*)((char*)obj + 0x10) = f2;
+    *(f32*)(inner + 0x28) = f2;
+    *(f32*)((char*)obj + 0x14) = f3;
+    *(f32*)(inner + 0x2c) = f3;
+    if (GameBit_Get(*(s16*)(inner + 0x10)) == 0) {
+        saveGame_saveObjectPos((int)obj);
+    }
+}
+
+void collectible_func0B(int *obj, int flag) {
+    char *inner = (char*)((int**)obj)[0xb8/4];
+    *(u8*)(inner + 0xf) = (u8)flag;
+    if (flag != 0) {
+        ObjHits_DisableObject(obj);
+    } else {
+        if (GameBit_Get(*(s16*)(inner + 0x10)) == 0) {
+            ObjHits_EnableObject(obj);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int collectible_modelMtxFn(int *obj) {
+    int *inner = (int*)*(int*)((char*)obj + 0xb8);
+    if (*(int*)((char*)inner + 0x18) == -2) {
+        f32 f1 = *(f32*)((char*)obj + 0x18);
+        f32 f2 = *(f32*)((char*)obj + 0x1c);
+        f32 f3 = *(f32*)((char*)obj + 0x20);
+        *(u32*)((char*)inner + 0x18) = (u16)fn_800386BC(f1, f2, f3);
+    }
+    return *(int*)((char*)inner + 0x18);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void staff_setupSwipe(int *obj, int *inner, int p5, int p4);
+extern int getHudHiddenFrameCount(void);
+#pragma scheduling off
+#pragma peephole off
+void staff_modelMtxFn(int *obj, int p4, int p5) {
+    int *inner = (int*)*(int*)((char*)obj + 0xb8);
+    staff_setupSwipe(obj, inner, p5, p4);
+    if (getHudHiddenFrameCount() != 0) {
+        *(u8*)((char*)inner + 0xbc) = 1;
+    } else {
+        *(u8*)((char*)inner + 0xbc) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void flamethrowerspe_setScale(int *obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3) {
     *(f32*)((char*)obj + 0xc) = f1;
     *(f32*)((char*)obj + 0x10) = f2;
@@ -5149,10 +5233,12 @@ void mikabombshadow_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 void staff_func15(int *obj, s16 idx, f32 f1, f32 f2) {
     u8 *slot = (u8*)((int**)obj)[0xb8/4];
     u8 *state = slot;
-    if ((slot[0x14] & 0x2) != 0) {
-        slot += 0x18;
+    if ((state[0x14] & 0x2) != 0) {
+        slot = state + 0x18;
         if ((slot[0x14] & 0x2) != 0) {
             slot += 0x18;
+            if ((slot[0x14] & 0x2) != 0) {
+            }
         }
     }
     slot[0x14] = (u8)(slot[0x14] | 0x3);
@@ -5232,6 +5318,16 @@ void staff_free(int *obj) {
         p += 0x18;
     }
     ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
+}
+
+void fireball_free(int *obj) {
+    int *inner = ((int**)obj)[0xb8/4];
+    void *ptr = *(void**)inner;
+    if (ptr != NULL) {
+        ModelLightStruct_free(ptr);
+    }
+    ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
+    ObjGroup_RemoveObject((int)obj, 2);
 }
 #pragma peephole reset
 #pragma scheduling reset

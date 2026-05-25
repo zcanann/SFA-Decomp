@@ -42,7 +42,7 @@ void FUN_8016b9a8(int param_1);
 int gcbaddieshield_getExtraSize(void);
 int gcbaddieshield_func08(void);
 void gcbaddieshield_free(void);
-void gcbaddieshield_render();
+void gcbaddieshield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 void gcbaddieshield_hitDetect(void);
 void gcbaddieshield_update();
 void gcbaddieshield_init(int *obj, void *initData);

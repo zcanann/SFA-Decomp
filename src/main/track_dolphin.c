@@ -4301,7 +4301,8 @@ extern f32 CurrTiming_803DEC20;
 
 void fn_800605F0(s16 *in, f32 *out)
 {
-    out[0] = (f32)(s32)in[0] * CurrTiming_803DEC20;
-    out[1] = (f32)(s32)in[1] * CurrTiming_803DEC20;
-    out[2] = (f32)(s32)in[2] * CurrTiming_803DEC20;
+    f32 t = CurrTiming_803DEC20;
+    out[0] = (f32)(s32)in[0] * t;
+    out[1] = (f32)(s32)in[1] * t;
+    out[2] = (f32)(s32)in[2] * t;
 }

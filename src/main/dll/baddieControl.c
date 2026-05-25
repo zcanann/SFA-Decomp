@@ -3583,3 +3583,375 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void Obj_FreeObject(void *obj);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int type, int id);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern u8 lbl_802C2190[];
+
+/* dll_19_func19  addr=0x80111EB4  size=0x100  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void dll_19_func19(u8 *cam, u8 *ctx) {
+    struct Cfg8 { u32 w0; u32 w1; };
+    s16 buf[5];
+
+    *(struct Cfg8 *)&buf[0] = *(struct Cfg8 *)lbl_802C2190;
+    *(u16 *)&buf[4] = *(u16 *)(lbl_802C2190 + 8);
+
+    if ((s8)ctx[1031] == (s8)ctx[1033]) {
+        return;
+    }
+    if (cam[0x36] == 0) {
+        return;
+    }
+    if (*(void **)(cam + 0xc8) != NULL) {
+        Obj_FreeObject(*(void **)(cam + 0xc8));
+        *(int *)(cam + 0xc8) = 0;
+    }
+    if (Obj_IsLoadingLocked() != 0) {
+        if ((s8)ctx[1031] > 0) {
+            int obj = Obj_AllocObjectSetup(24, buf[(s8)ctx[1031] - 1]);
+            *(int *)(cam + 0xc8) = Obj_SetupObject(obj, 4, -1, -1, *(int *)(cam + 0x30));
+            *(u16 *)(*(int *)(cam + 0xc8) + 0xb0) = *(u16 *)(cam + 0xb0) & 7;
+        }
+        ctx[1033] = ctx[1031];
+    } else {
+        ctx[1033] = 0;
+    }
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void *gPlayerInterface;
+extern void *gPathControlInterface;
+extern void ObjAnim_SetCurrentMove(int obj, int move, f32 speed, int flags);
+
+/* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
+#pragma dont_inline on
+#pragma peephole off
+#pragma scheduling off
+void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p8, s8 p9) {
+    if (p3 != NULL) {
+        p3[0x24] = 0;
+        p3[0x25] = 0;
+        p3[0x26] = 4;
+        p3[0x27] = 20;
+    }
+    if (p6 != -1) {
+        *(s16 *)(p2 + 0x270) = p6;
+        p2[0x27b] = 1;
+    }
+    if (p7 != -1) {
+        (*(void (**)(int, u8 *))(*(int *)gPlayerInterface + 0x14))(p1, p2);
+    }
+    if (p5 != NULL) {
+        p5[0] = 2;
+    }
+    if (p8 != 0) {
+        ObjAnim_SetCurrentMove(p1, p8, lbl_803E1C2C, 0);
+    }
+    (*(void (**)(int, u8 *))(*(int *)gPathControlInterface + 0x20))(p1, p2 + 4);
+    if (p9 != -1) {
+        p2[0x25f] = p9;
+    }
+    if (p4 != -1) {
+        GameBit_Set(p4, 1);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+#pragma dont_inline reset
+
+extern f32 lbl_803E1B78;
+extern f32 lbl_803E1B7C;
+extern f32 lbl_803E1B80;
+extern f32 lbl_803E1B84;
+extern f32 lbl_803E1B88;
+
+/* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModePerv_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+
+    ((f32 *)lbl_803DD5C8)[0] -= lbl_803E1B78 * timeDelta;
+    if (((f32 *)lbl_803DD5C8)[0] < lbl_803E1B7C) {
+        ((f32 *)lbl_803DD5C8)[0] = lbl_803E1B7C;
+    }
+    *(f32 *)(obj + 0xc) =
+        *(f32 *)(state + 0x18) -
+        lbl_803E1B80 * fn_80293E80(lbl_803E1B84 * (f32)(s32)*(s16 *)state / lbl_803E1B88);
+    *(f32 *)(obj + 0x10) = ((f32 *)lbl_803DD5C8)[1];
+    *(f32 *)(obj + 0x14) =
+        *(f32 *)(state + 0x20) -
+        lbl_803E1B80 * sin(lbl_803E1B84 * (f32)(s32)*(s16 *)state / lbl_803E1B88);
+    *(s16 *)(obj + 0) = 0;
+    *(s16 *)(obj + 2) = -0x4000;
+    *(s16 *)(obj + 4) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E1B00;
+extern f32 lbl_803E1B04;
+extern f32 lbl_803E1B08;
+extern f32 lbl_803E1B1C;
+extern f32 lbl_803DB9C8;
+extern f32 lbl_803DD5AC;
+extern f32 lbl_803DD5B0;
+extern f32 sqrtf(f32 x);
+
+/* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+    f32 angle;
+    f32 cosv, sinv;
+    f32 baseX, baseZ;
+    f32 pos[3];
+    f32 extra;
+    f32 dx, dz;
+
+    angle = lbl_803E1B00 * (f32)(s32)*(s16 *)state / lbl_803E1B04;
+    cosv = fn_80293E80(angle);
+    sinv = sin(angle);
+    baseX = *(f32 *)(state + 0x18);
+    pos[0] = cosv * lbl_803DB9C8 + baseX;
+    pos[1] = lbl_803E1B08 + *(f32 *)(state + 0x1c);
+    baseZ = *(f32 *)(state + 0x20);
+    pos[2] = sinv * lbl_803DB9C8 + baseZ;
+    camcontrol_traceFromTarget(pos, state, pos, &extra);
+    dx = pos[0] - baseX;
+    dz = pos[2] - baseZ;
+    lbl_803DD5B0 = sqrtf(dx * dx + dz * dz);
+    if (p3 != NULL) {
+        lbl_803DB9C8 = p3[0];
+        lbl_803DD5AC = p3[1];
+    } else {
+        lbl_803DB9C8 = lbl_803E1B1C;
+        lbl_803DD5AC = lbl_803E1B08;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int Obj_GetPlayerObject(void);
+extern int fn_80295A04(int obj, int a);
+extern int fn_80296AE8(int obj);
+extern int objBboxFn_800640cc(int a, f32 *pos, f32 b, int c, f32 *out, int d, int e, int g, int h, int i);
+extern f32 lbl_803E1C68;
+extern f32 lbl_803E1C48;
+
+/* dll_19_func13  addr=0x8011313C  size=0x13C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+int dll_19_func13(int p1, u8 *p2, f32 f, int p4) {
+    int player = Obj_GetPlayerObject();
+    int result = 0;
+
+    if ((s8)p2[838] != 0) {
+        if (*(int *)(p2 + 720) != player) {
+            result = 1;
+        } else if ((s8)p2[852] == 0) {
+            result = 1;
+        } else if (*(f32 *)(p2 + 704) > f && p4 != 0) {
+            result = 1;
+        } else if (fn_80295A04(player, 1) == 0) {
+            result = 1;
+        } else if (fn_80296AE8(player) <= 0) {
+            result = 1;
+        } else {
+            f32 pos[3];
+            f32 out[2];
+            pos[0] = *(f32 *)(player + 0xc);
+            pos[1] = lbl_803E1C68 + *(f32 *)(player + 0x10);
+            pos[2] = *(f32 *)(player + 0x14);
+            if (objBboxFn_800640cc(p1 + 0xc, pos, lbl_803E1C48, 0, out, p1, 4, -1, 0, 0) != 0) {
+                result = 1;
+            }
+        }
+    }
+    return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E1C6C;
+
+/* dll_19_func10  addr=0x80113398  size=0x16C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+int dll_19_func10(int p1, u8 *p2, int p3, int p4, s16 p5, f32 *p6, f32 *p7, int *p8) {
+    f32 dx, dz, dist;
+    f32 zero;
+
+    if (p2[897] != 0) {
+        zero = lbl_803E1C2C;
+        *(int *)(p2 + 792) = 0;
+        *(int *)(p2 + 796) = 0;
+        *(s16 *)(p2 + 816) = 0;
+        *(f32 *)(p2 + 656) = zero;
+        *(f32 *)(p2 + 652) = zero;
+        *p8 = 1;
+        dx = *p6 - *(f32 *)(p1 + 12);
+        dz = *p7 - *(f32 *)(p1 + 20);
+        dist = sqrtf(dx * dx + dz * dz);
+        if (dist < lbl_803E1C68) {
+            *p8 = 0;
+        } else {
+            dx /= dist;
+            dz /= dist;
+            *(f32 *)(p2 + 656) = lbl_803E1C6C * -dx;
+            *(f32 *)(p2 + 652) = lbl_803E1C6C * dz;
+            *(f32 *)(p1 + 12) += dist * dx;
+            *(f32 *)(p1 + 20) += dist * dz;
+            (*(void (**)(int, u8 *, f32, f32, int, int))(*(int *)gPlayerInterface + 8))(
+                p1, p2, timeDelta, timeDelta, p3, p4);
+        }
+        if (*p8 == 0) {
+            p2[1029] = 0;
+            *(s16 *)(p2 + 628) = p5;
+            *(int *)(p2 + 720) = 0;
+            p2[607] = 0;
+            GameBit_Set(*(s16 *)(p2 + 1012), 0);
+        }
+        return 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, int mtx);
+extern f32 lbl_803E1AC0;
+extern f32 lbl_803E1AC4;
+
+/* CameraModeCrawl_copyToCurrent  addr=0x8010F540  size=0x1E0  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
+    int obj;
+    u8 *state;
+    s16 yaw;
+    f32 c, s;
+    f32 pos[3];
+    int one;
+
+    if (param1 == NULL) {
+        return;
+    }
+    obj = (*(int (**)(void))((char *)*gCameraInterface + 0xc))();
+    state = *(u8 **)(obj + 164);
+    yaw = *(s16 *)state;
+
+    if (param2 == 0) {
+        c = fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+        s = sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+    } else {
+        c = -fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+        s = -sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4);
+    }
+    *(s16 *)state = getAngle(c, s);
+    camcontrol_getTargetPosition(obj, state, pos, 0);
+    *(s16 *)state = yaw;
+    *(f32 *)(obj + 24) = pos[0];
+    *(f32 *)(obj + 184) = pos[0];
+    *(f32 *)(obj + 28) = pos[1];
+    *(f32 *)(obj + 188) = pos[1];
+    *(f32 *)(obj + 32) = pos[2];
+    *(f32 *)(obj + 192) = pos[2];
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+    one = 1;
+    ((u8 *)lbl_803DD598)[8] =
+        (u8)((((u8 *)lbl_803DD598)[8] & ~0x80) | ((one << 7) & 0x80));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* dll_19_func17  addr=0x80112544  size=0x19C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+int dll_19_func17(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, s16 p8) {
+    int msgData;
+    int msgType;
+    int extra;
+
+    extra = 0;
+    while (ObjMsg_Pop(p1, &msgType, &msgData, &extra) != 0) {
+        switch (msgType) {
+        case 4:
+            ObjMsg_SendToObject(msgData, 5, p1, 0);
+            break;
+        case 0xE0000:
+            if (msgData == *(int *)(p2 + 720)) {
+                *(s16 *)(p2 + 624) = p6;
+                *(int *)(p2 + 720) = 0;
+                p2[841] = 0;
+            }
+            break;
+        case 11:
+            p2[846] = (s8)extra;
+            break;
+        case 1:
+        case 0xA0001:
+            if (*(s16 *)(p2 + 624) != p7) {
+                dll_19_func0C(p1, p2, p3, p4, p5, p6, p8, 0, 1);
+                *(s16 *)(p2 + 624) = p7;
+                p2[841] = 0;
+                *(int *)(p2 + 720) = msgData;
+                return 1;
+            }
+            break;
+        case 3:
+            if (*(s16 *)(p2 + 624) == p7) {
+                p2[841] = 0;
+                *(int *)(p2 + 720) = 0;
+                *(s16 *)(p2 + 624) = p6;
+                return 2;
+            }
+            break;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int objModelGetVecFn_800395d8(int model, int idx);
+extern f32 lbl_803E1AE0;
+extern f32 lbl_803E1AE4;
+extern f32 lbl_803E1AE8;
+extern f32 lbl_803E1AEC;
+extern f32 lbl_803E1AF0;
+
+/* CameraModeCannon_update  addr=0x8010FA84  size=0x168  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeCannon_update(u8 *obj) {
+    int vec;
+    s16 yaw;
+    s16 delta;
+
+    vec = objModelGetVecFn_800395d8(*(int *)lbl_803DD5A0, 0);
+    if (*(int *)lbl_803DD5A0 == 0) {
+        return;
+    }
+    yaw = *(s16 *)obj;
+    delta = (s16)((0x8000 - *(s16 *)(*(int *)lbl_803DD5A0)) - *(s16 *)(vec + 2) - yaw);
+    *(s16 *)obj = (s16)(s32)((f32)(s32)yaw + (f32)(s32)delta / lbl_803E1AE0);
+    *(f32 *)(obj + 12) =
+        *(f32 *)(*(int *)lbl_803DD5A0 + 12) -
+        lbl_803E1AE4 * fn_80293E80(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
+    *(f32 *)(obj + 16) = lbl_803E1AF0 + *(f32 *)(*(int *)lbl_803DD5A0 + 16);
+    *(f32 *)(obj + 20) =
+        *(f32 *)(*(int *)lbl_803DD5A0 + 20) -
+        lbl_803E1AE4 * sin(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
+}
+#pragma peephole reset
+#pragma scheduling reset

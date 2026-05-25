@@ -825,9 +825,11 @@ void Menu_initialise(void) {
     lbl_803DD8F5 = 0;
     lbl_803DD8E8 = 0;
 }
+#pragma scheduling off
 u16 fn_80130124(void) {
     return lbl_803A9458[linkSelected].itemId;
 }
+#pragma scheduling reset
 void linkInitTextures(void) {}
 void linkDrawFn_801302c0(void) {}
 void linkDrawFn_80130484(void) {}

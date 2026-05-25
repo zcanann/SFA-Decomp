@@ -10,6 +10,7 @@ extern undefined4 FUN_80006920();
 extern undefined4 FUN_800069bc();
 extern undefined4 FUN_80006b94();
 extern undefined4 FUN_80006c88();
+extern void gameTextShow(int p);
 extern void doRumble(f32 strength);
 extern void mtxRotateByVec3s(void *matrix, void *transform);
 extern void Matrix_TransformPoint(void *matrix, double x, double y, double z, float *outX,
@@ -72,11 +73,22 @@ extern f32 lbl_803DCD40;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
 extern f32 lbl_803E5AF8;
+extern f32 lbl_803E5B14;
 extern f32 lbl_803E5B1C;
 extern f32 lbl_803E5B20;
 extern f32 lbl_803E5B2C;
 extern f32 lbl_803E5B34;
+extern f32 lbl_803E5B80;
+extern f32 lbl_803E5B84;
 extern f32 lbl_803E5B88;
+extern f32 lbl_803E5B8C;
+extern f32 lbl_803DC0D8;
+extern void **gGameUIInterface;
+extern void **gObjectTriggerInterface;
+extern void PSVECScale(f32 *dst, f32 *src, f32 s);
+extern void Sfx_KeepAliveLoopedObjectSound(uint obj, int sfxId);
+extern void Sfx_StopObjectChannel(uint obj, int channel);
+extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E5BBC;
 extern f32 lbl_803E5BC4;
 extern f32 lbl_803E5BD8;
@@ -328,9 +340,9 @@ uint FUN_801eb0c0(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801EAE4C(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                short *param_9,int param_10)
+#pragma scheduling off
+#pragma peephole off
+void fn_801EAE4C(short *param_9,int param_10)
 {
   float fVar1;
   float fVar2;
@@ -385,9 +397,8 @@ void fn_801EAE4C(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
         fVar2 = lbl_803E6800;
       }
       *(float *)(param_10 + 0x68) = fVar2;
-      if ((double)lbl_803E6814 < (double)*(float *)(param_10 + 0x68)) {
-        FUN_80006c88((double)*(float *)(param_10 + 0x68),param_2,param_3,param_4,param_5,param_6,
-                     param_7,param_8,0x475);
+      if (*(float *)(param_10 + 0x68) > lbl_803E6814) {
+        gameTextShow(0x475);
       }
       (**(code **)(*DAT_803dd6ec + 0x2c))(param_10 + 0x28);
       uVar5 = (**(code **)(*DAT_803dd6ec + 0x34))(param_10 + 0x28);
@@ -424,67 +435,61 @@ void fn_801EB0D4(uint param_1,int param_2)
 {
   float fVar1;
   float fVar2;
-  double dVar3;
+  float v;
   uint uVar4;
-  double dVar5;
-  double dVar6;
-  undefined8 local_28;
-  undefined8 local_20;
-  
+
   if ((*(byte *)(param_2 + 0x428) >> 5 & 1) != 0) {
-    if (*(float *)(param_2 + 0x4bc) < lbl_803E6780) {
-      FUN_8000680c(param_1,0x7f);
-      if (*(float *)(param_2 + 0x464) <= lbl_803E67B8) {
-        (**(code **)(*DAT_803dd6e8 + 0x60))();
-        (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
-        fVar2 = lbl_803E6824;
-        *(float *)(param_2 + 0x464) = lbl_803E6824;
+    if (*(float *)(param_2 + 0x4bc) >= lbl_803E5AE8) {
+      v = (f32)(s32)(*(float *)(param_2 + 0x4c0) *
+                     (timeDelta * PSVECMag((float *)(param_2 + 0x494))));
+      *(float *)(param_2 + 0x4bc) =
+           *(float *)(param_2 + 0x4bc) - (timeDelta * lbl_803DC0D8 + v);
+      if (lbl_803E5AE8 != *(float *)(param_2 + 0x4c4)) {
+        *(float *)(param_2 + 0x4bc) =
+             lbl_803E5B14 * timeDelta + *(float *)(param_2 + 0x4bc);
+        v = (f32)(s32)(lbl_803E5B14 * timeDelta);
+        *(float *)(param_2 + 0x4c4) = *(float *)(param_2 + 0x4c4) - v;
+        fVar2 = lbl_803E5AE8;
+        fVar1 = *(float *)(param_2 + 0x4c4);
+        if ((fVar2 <= fVar1) && (fVar2 = fVar1, lbl_803E5B80 < fVar1)) {
+          fVar2 = lbl_803E5B80;
+        }
+        *(float *)(param_2 + 0x4c4) = fVar2;
+        fVar2 = lbl_803E5AE8;
+        fVar1 = *(float *)(param_2 + 0x4bc);
+        if ((fVar2 <= fVar1) && (fVar2 = fVar1, *(float *)(param_2 + 0x4b8) < fVar1)) {
+          fVar2 = *(float *)(param_2 + 0x4b8);
+        }
+        *(float *)(param_2 + 0x4bc) = fVar2;
+      }
+      if (*(float *)(param_2 + 0x4bc) < lbl_803E5B84) {
+        Sfx_KeepAliveLoopedObjectSound(param_1,0x44e);
+      }
+      (*(void (**)(int))((char *)*gGameUIInterface + 0x5c))((s32)*(float *)(param_2 + 0x4bc));
+    }
+    else {
+      Sfx_StopObjectChannel(param_1,0x7f);
+      if (lbl_803E5B20 < *(float *)(param_2 + 0x464)) {
+        uVar4 = randomGetRange(0,10);
+        if (uVar4 == 0) {
+          Sfx_PlayFromObject(0,0x117);
+        }
+        PSVECScale((float *)(param_2 + 0x464),(float *)(param_2 + 0x464),lbl_803E5B88);
+        if ((*(byte *)(param_2 + 0x428) >> 7 & 1) != 0) {
+          if (*(float *)(param_2 + 0x464) < lbl_803E5B20) {
+            *(float *)(param_2 + 0x464) = lbl_803E5B20;
+          }
+        }
+      }
+      else {
+        (*(void (**)(void))((char *)*gGameUIInterface + 0x60))();
+        (*(void (**)(int, uint, int))((char *)*gObjectTriggerInterface + 0x48))
+            (0,param_1,0xffffffff);
+        fVar2 = lbl_803E5B8C;
+        *(float *)(param_2 + 0x464) = lbl_803E5B8C;
         *(float *)(param_2 + 0x468) = fVar2;
         *(float *)(param_2 + 0x46c) = fVar2;
       }
-      else {
-        uVar4 = randomGetRange(0,10);
-        if (uVar4 == 0) {
-          FUN_80006824(0,0x117);
-        }
-        FUN_80247edc((double)lbl_803E6820,(float *)(param_2 + 0x464),(float *)(param_2 + 0x464));
-        if ((*(char *)(param_2 + 0x428) < '\0') && (*(float *)(param_2 + 0x464) < lbl_803E67B8)) {
-          *(float *)(param_2 + 0x464) = lbl_803E67B8;
-        }
-      }
-    }
-    else {
-      dVar6 = (double)lbl_803DC074;
-      dVar5 = SeekTwiceBeforeRead((float *)(param_2 + 0x494));
-      dVar3 = DOUBLE_803e6798;
-      local_20 = (double)CONCAT44(0x43300000,
-                                  (int)(*(float *)(param_2 + 0x4c0) * (float)(dVar6 * dVar5)) ^
-                                  0x80000000);
-      *(float *)(param_2 + 0x4bc) =
-           *(float *)(param_2 + 0x4bc) -
-           (float)(dVar6 * (double)lbl_803DCD40 + (double)(float)(local_20 - DOUBLE_803e6798));
-      fVar1 = lbl_803E67AC;
-      fVar2 = lbl_803E6780;
-      if (lbl_803E6780 != *(float *)(param_2 + 0x4c4)) {
-        *(float *)(param_2 + 0x4bc) = lbl_803E67AC * lbl_803DC074 + *(float *)(param_2 + 0x4bc);
-        local_28 = (double)CONCAT44(0x43300000,(int)(fVar1 * lbl_803DC074) ^ 0x80000000);
-        *(float *)(param_2 + 0x4c4) = *(float *)(param_2 + 0x4c4) - (float)(local_28 - dVar3);
-        fVar1 = *(float *)(param_2 + 0x4c4);
-        if ((fVar2 <= fVar1) && (fVar2 = fVar1, lbl_803E6818 < fVar1)) {
-          fVar2 = lbl_803E6818;
-        }
-        *(float *)(param_2 + 0x4c4) = fVar2;
-        fVar2 = *(float *)(param_2 + 0x4bc);
-        fVar1 = lbl_803E6780;
-        if ((lbl_803E6780 <= fVar2) && (fVar1 = fVar2, *(float *)(param_2 + 0x4b8) < fVar2)) {
-          fVar1 = *(float *)(param_2 + 0x4b8);
-        }
-        *(float *)(param_2 + 0x4bc) = fVar1;
-      }
-      if (*(float *)(param_2 + 0x4bc) < lbl_803E681C) {
-        FUN_800068c4(param_1,0x44e);
-      }
-      (**(code **)(*DAT_803dd6e8 + 0x5c))((int)*(float *)(param_2 + 0x4bc));
     }
   }
   return;
@@ -575,10 +580,15 @@ undefined4 fn_801EB420(short *param_1,undefined4 param_2,int param_3)
 
   for (i = 0; i < (int)(uint)*(u8 *)(param_3 + 0x8b); i++) {
     triggerType = *(u8 *)(param_3 + i + 0x81);
-    if (triggerType == 3) {
+    switch (triggerType) {
+    case 2:
+      if (param_1[0x23] != 0x16c && param_1[0x23] != 0x16f) {
+        GameBit_Set(0x499, 1);
+      }
+      break;
+    case 3:
       (**(code **)(*DAT_803dd6e8 + 0x60))();
-    } else if (triggerType == 2 && param_1[0x23] != 0x16c && param_1[0x23] != 0x16f) {
-      GameBit_Set(0x499, 1);
+      break;
     }
   }
 

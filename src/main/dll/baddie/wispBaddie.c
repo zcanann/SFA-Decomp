@@ -54,12 +54,13 @@ void fn_80127F24(s32 param_1) {
                         lbl_803E1E94);
 
     for (i = 10; (s8)i >= 0; i -= 2) {
+        s16 x = (s16)((s16)(0xf5 - (s8)i) - lbl_803DD75C);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
-                    (s16)((s16)(0xf5 - (s8)i) - lbl_803DD75C),
+                    x,
                     (u8)param_1, 0x200, 0,
                     lbl_803E20BC, lbl_803E1EE4);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
-                    (s16)((s16)(0xf5 - (s8)i) - lbl_803DD75C),
+                    x,
                     (u8)param_1, 0x200, 0,
                     lbl_803E20C0, lbl_803E1EE4);
     }
@@ -70,12 +71,13 @@ void fn_80127F24(s32 param_1) {
     baseSub = lbl_803E20D0;
     for (i = 10; (s8)i >= 0; i -= 10) {
         f32 off = (denom - (f32)(s32)((s8)i)) * phase / denom;
+        s16 x = (s16)((s16)(0xff - (s8)i) - lbl_803DD75C);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
-                    (s16)((s16)(0xff - (s8)i) - lbl_803DD75C),
+                    x,
                     (u8)param_1, (s32)yFloat, 0,
                     baseAdd + off, lbl_803E20CC);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
-                    (s16)((s16)(0xff - (s8)i) - lbl_803DD75C),
+                    x,
                     (u8)param_1, (s32)yFloat, 0,
                     baseSub - off, lbl_803E20CC);
     }

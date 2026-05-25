@@ -43,6 +43,9 @@ extern f32 lbl_803E5B5C;
 extern f32 lbl_803E5B60;
 extern f32 lbl_803E5B64;
 
+#pragma scheduling off
+#pragma peephole off
+
 void fn_801E9C00(int obj, int state)
 {
     (void)obj;
