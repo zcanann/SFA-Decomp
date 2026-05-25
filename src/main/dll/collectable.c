@@ -1295,33 +1295,33 @@ void fn_80148C18(int obj,int state)
   *(u8 *)(state + 0x2ef) = 1;
   if (((*(u32 *)(state + 0x2dc) & 0x1000) != 0) &&
       ((*(u32 *)(state + 0x2e0) & 0x1000) == 0)) {
-    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) & 0xbfff;
+    *(s16 *)(obj + 6) = *(s16 *)(obj + 6) & ~0x4000;
     moveId = *(u8 *)(state + 0x320);
     *(f32 *)(state + 0x308) = lbl_803E256C / (lbl_803E2570 * *(f32 *)(state + 0x314));
     *(u8 *)(state + 0x323) = 1;
     ObjAnim_SetCurrentMove(obj,moveId,lbl_803E2574,0x10);
-    if (*(int *)(obj + 0x54) != 0) {
+    if (*(void **)(obj + 0x54) != NULL) {
       *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
     }
     *(u32 *)(state + 0x2e8) = *(u32 *)(state + 0x2e8) | 4;
     Sfx_PlayFromObjectLimited(obj,1099,2);
     ObjHits_EnableObject(obj);
   }
-  if ((*(u32 *)(state + 0x2dc) & 0x40000000) == 0) {
-    *(u8 *)(obj + 0x36) = (int)(lbl_803E257C * *(f32 *)(obj + 0x98));
-    *(f32 *)(state + 0x30c) = *(f32 *)(obj + 0x98);
-  }
-  else {
+  if ((*(u32 *)(state + 0x2dc) & 0x40000000) != 0) {
     *(f32 *)(state + 0x308) = lbl_803E2578;
     *(u8 *)(state + 0x323) = 0;
     ObjAnim_SetCurrentMove(obj,0,lbl_803E2574,0);
-    if (*(int *)(obj + 0x54) != 0) {
+    if (*(void **)(obj + 0x54) != NULL) {
       *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
     }
     *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) & 0xffffef7f;
     *(u32 *)(state + 0x2e8) = *(u32 *)(state + 0x2e8) & 0xfffffffb;
     *(f32 *)(state + 0x30c) = lbl_803E2574;
     *(u8 *)(obj + 0x36) = 0xff;
+  }
+  else {
+    *(u8 *)(obj + 0x36) = (int)(lbl_803E257C * *(f32 *)(obj + 0x98));
+    *(f32 *)(state + 0x30c) = *(f32 *)(obj + 0x98);
   }
 }
 #pragma scheduling reset
