@@ -41,6 +41,7 @@ extern u8 lbl_803DD6C4;
 extern void *lbl_8031A804[4];
 extern void *lbl_803A8680[4];
 extern SaveSelectPanel lbl_8031A7BC[8];
+extern u8 lbl_8031A7F8[];
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800067c0();
@@ -1004,7 +1005,54 @@ void saveSelectSetupMenuItems(void **p) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-void saveSelectGoToChapterSelect(void) {}
+void saveSelectGoToChapterSelect(void)
+{
+  int i;
+  int off;
+
+  if ((s8)lbl_803DB9FB != -1) {
+    ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
+  }
+  if (saveFileSelect_saveDirty != 0 || lbl_803DB424 == 0) {
+    lbl_803DB9FB = 4;
+    off = 0;
+    for (i = 0; i < 6; i++) {
+      if (i > *(u8 *)((char *)saveFileSelect_saveSlots +
+                      (s8)saveFileSelect_currentSlotIndex * 36 + 33)) {
+        *(u16 *)((char *)lbl_8031A7BC[4].entries + off + 22) =
+             (u16)(*(u16 *)((char *)lbl_8031A7BC[4].entries + off + 22) | 0x4000);
+      }
+      else {
+        *(u16 *)((char *)lbl_8031A7BC[4].entries + off + 22) =
+             (u16)(*(u16 *)((char *)lbl_8031A7BC[4].entries + off + 22) & ~0x4000);
+      }
+      if (i <= *(u8 *)((char *)saveFileSelect_saveSlots +
+                       (s8)saveFileSelect_currentSlotIndex * 36 + 33) + -1 && i < 5) {
+        *(s8 *)((char *)lbl_8031A7BC[4].entries + off + 27) = (s8)(i + 1);
+      }
+      else {
+        *(s8 *)((char *)lbl_8031A7BC[4].entries + off + 27) = -1;
+      }
+      off += 60;
+    }
+    ((void (**)(void *, u8, int, void *, int, int, int, int, int, int, int, int))
+         gTitleMenuLinkInterface->vtable)[1]
+        (lbl_8031A7BC[4].entries, lbl_8031A7BC[4].count, 0, lbl_8031A7F8, 5, 4, 0, 0,
+         0, 0, 0, 0);
+    lbl_803DD6CE = 2;
+  }
+  else {
+    lbl_803DD6CD = 1;
+    Sfx_PlayFromObject(0, 0x418);
+    ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](20, 1);
+    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
+    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);
+    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](2);
+    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](3);
+    lbl_803DD6CF = 0x23;
+    lbl_803DD6C4 = 0;
+  }
+}
 /*
  * --INFO--
  *
