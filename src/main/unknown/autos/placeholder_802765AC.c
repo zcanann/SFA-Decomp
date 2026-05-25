@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/snd_core.h"
 #include "main/unknown/autos/placeholder_802765AC.h"
 #include "main/unknown/autos/placeholder_80279608.h"
 
@@ -112,7 +113,6 @@ extern int voiceIsRegistered(int state);
 extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 extern int mcmdWait(McmdVoiceState *state, McmdCommandArgs *args);
 extern void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
-extern void inpSetGlobalMIDIDirtyFlag(u8 a, u8 b, u32 flag);
 extern int vidGetInternalId(u32 id);
 extern void (*synthMessageCallback)(u32 id);
 

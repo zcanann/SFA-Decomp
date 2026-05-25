@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/snd_core.h"
 #include "main/unknown/autos/placeholder_800066E0.h"
 
 
@@ -750,7 +751,6 @@ extern u32 gSfxObjectChannelMatchCount;
 extern u32 gSfxObjectChannelAgeHi;
 extern u32 gSfxObjectChannelAgeLo;
 
-extern void sndQuit(void);
 extern void AIReset(void);
 extern int sndFXKeyOff(u32 handle);
 extern int sndFXCheck(u32 handle);

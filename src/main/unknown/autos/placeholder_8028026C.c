@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/snd_core.h"
 
 typedef struct S3DEmitterCtrl {
     u8 controller;
@@ -108,8 +109,6 @@ extern f32 lbl_803E78BC;
 extern f32 lbl_803E78C0;
 
 extern double __frsqrte(double x);
-extern void salApplyMatrix(f32 *matrix, f32 *vec, f32 *out);
-extern void salNormalizeVector(f32 *v);
 extern u32 synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
 extern u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);

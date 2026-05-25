@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028116C_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028116C_H_
+#ifndef MAIN_AUDIO_SND_CORE_H_
+#define MAIN_AUDIO_SND_CORE_H_
 
 #include "ghidra_import.h"
 
@@ -10,4 +10,4 @@ void salApplyMatrix(f32 *matrix, f32 *vec, f32 *out);
 void salNormalizeVector(f32 *v);
 void inpSetGlobalMIDIDirtyFlag(u8 index, u8 group, u32 flags);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028116C_H_ */
+#endif /* MAIN_AUDIO_SND_CORE_H_ */
