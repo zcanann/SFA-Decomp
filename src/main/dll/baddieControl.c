@@ -3630,6 +3630,7 @@ extern void *gPathControlInterface;
 extern void ObjAnim_SetCurrentMove(int obj, int move, f32 speed, int flags);
 
 /* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
+#pragma dont_inline on
 #pragma peephole off
 #pragma scheduling off
 void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p8, s8 p9) {
@@ -3660,8 +3661,9 @@ void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p
         GameBit_Set(p4, 1);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
+#pragma peephole reset
+#pragma dont_inline reset
 
 extern f32 lbl_803E1B78;
 extern f32 lbl_803E1B7C;
@@ -3868,6 +3870,55 @@ void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
     one = 1;
     ((u8 *)lbl_803DD598)[8] =
         (u8)((((u8 *)lbl_803DD598)[8] & ~0x80) | ((one << 7) & 0x80));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* dll_19_func17  addr=0x80112544  size=0x19C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+int dll_19_func17(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, s16 p8) {
+    int msgData;
+    int msgType;
+    int extra;
+
+    extra = 0;
+    while (ObjMsg_Pop(p1, &msgType, &msgData, &extra) != 0) {
+        switch (msgType) {
+        case 4:
+            ObjMsg_SendToObject(msgData, 5, p1, 0);
+            break;
+        case 0xE0000:
+            if (msgData == *(int *)(p2 + 720)) {
+                *(s16 *)(p2 + 624) = p6;
+                *(int *)(p2 + 720) = 0;
+                p2[841] = 0;
+            }
+            break;
+        case 11:
+            p2[846] = (s8)extra;
+            break;
+        case 1:
+        case 0xA0001:
+            if (*(s16 *)(p2 + 624) != p7) {
+                dll_19_func0C(p1, p2, p3, p4, p5, p6, p8, 0, 1);
+                *(s16 *)(p2 + 624) = p7;
+                p2[841] = 0;
+                *(int *)(p2 + 720) = msgData;
+                return 1;
+            }
+            break;
+        case 3:
+            if (*(s16 *)(p2 + 624) == p7) {
+                p2[841] = 0;
+                *(int *)(p2 + 720) = 0;
+                *(s16 *)(p2 + 624) = p6;
+                return 2;
+            }
+            break;
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
