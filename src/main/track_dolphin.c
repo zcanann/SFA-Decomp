@@ -4099,7 +4099,9 @@ void playerShadowFn_80062a30(int *obj)
 #pragma peephole off
 u32 fn_80060668(int *obj)
 {
-    return ((u32)obj[0x10 / 4] >> 16) & 0xff;
+    u32 v = (u32)obj[4];
+    v &= 0x00FF0000;
+    return v >> 16;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4131,8 +4133,9 @@ void fn_80062894(void) {
 #pragma scheduling off
 #pragma peephole off
 void fn_80069968(s32 *out1, u32 *out2) {
-    u8 *base = lbl_8038DC64 + lbl_803DCF6C * 0x18;
-    *out1 = *(s16 *)(base + 4);
+    u8 *base = lbl_8038DC64;
+    u32 off = (u32)lbl_803DCF6C * 0x18;
+    *out1 = *(s16 *)(base + off + 4);
     *out2 = lbl_803DCF30;
 }
 #pragma peephole reset

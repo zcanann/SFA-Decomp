@@ -2364,9 +2364,14 @@ extern u32 lbl_803DCDB0;
 extern u32 lbl_803DCDB4;
 
 void fn_80053ED0(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 | bits; }
+#pragma scheduling off
+#pragma peephole off
 void fn_80053EBC(u32 bits) {
-    lbl_803DCDA8 &= ~bits;
+    register u32 v = lbl_803DCDA8;
+    lbl_803DCDA8 = v & ~bits;
 }
+#pragma peephole reset
+#pragma scheduling reset
 void fn_800542F4(void) { lbl_803DCDA8 = 0; lbl_803DCDB4 = 0; lbl_803DCDB0 = 0; }
 
 extern f32 lbl_803DCE50;

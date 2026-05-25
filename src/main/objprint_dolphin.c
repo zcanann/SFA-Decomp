@@ -4439,7 +4439,7 @@ int lockLevel(s32 val, int idx) {
     return cur;
 }
 
-extern u32 lbl_803DCC80;
+extern int lbl_803DCC80;
 extern int OSDisableInterrupts(void);
 extern void OSRestoreInterrupts(int);
 void setLoadedFileFlags_blocks1(void) {
@@ -4518,6 +4518,8 @@ extern void mm_free(void *);
 extern void AtomicSList_Push(void *list, void *item);
 extern int DVDClose(void *fileInfo);
 
+#pragma peephole off
+#pragma scheduling off
 void tex0tab1readCb(s32 result, void *fileInfo)
 {
     if (result < 0) {
@@ -4539,7 +4541,11 @@ void tex0tab1readCb(s32 result, void *fileInfo)
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma peephole off
+#pragma scheduling off
 void tex0tab2readCb(s32 result, void *fileInfo)
 {
     if (result < 0) {
@@ -4561,7 +4567,11 @@ void tex0tab2readCb(s32 result, void *fileInfo)
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma peephole off
+#pragma scheduling off
 void tex1tab1readCb(s32 result, void *fileInfo)
 {
     if (result < 0) {
@@ -4584,6 +4594,8 @@ void tex1tab1readCb(s32 result, void *fileInfo)
     }
 }
 
+#pragma peephole off
+#pragma scheduling off
 void tex1tab2readCb(s32 result, void *fileInfo)
 {
     if (result < 0) {
@@ -4605,6 +4617,8 @@ void tex1tab2readCb(s32 result, void *fileInfo)
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern u32 lbl_803DCC74;
 
