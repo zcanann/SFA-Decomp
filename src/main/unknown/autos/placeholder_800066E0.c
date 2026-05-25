@@ -721,6 +721,7 @@ extern void sndQuit(void);
 extern void AIReset(void);
 extern int sndFXKeyOff(u32 handle);
 extern int sndFXCtrl(u32 handle, u32 ctrl, u32 value);
+extern int sndFXCtrl14(u32 handle, u32 ctrl, u32 value);
 extern void Music_Update(void);
 extern void Sfx_UpdateObjectSounds(void);
 extern void Sfx_StopAllObjectSounds(void);
@@ -743,6 +744,10 @@ extern void Sfx_StopFromObject(u32 obj, u32 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
 extern void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u32 sfxId);
+extern void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
+extern f32 lbl_803DE570;
+extern f32 lbl_803DE574;
+extern f32 lbl_803DE578;
 extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
 extern void Matrix_TransformPoint(f64 x, f64 y, f64 z, f32 *matrix, f32 *outX, f32 *outY, f32 *outZ);
 extern void *memmove(void *dest, const void *src, u32 count);
@@ -6400,6 +6405,100 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId)
     if (objectChannel != NULL) {
         sndFXKeyOff(objectChannel->handle);
         objectChannel->handle = (u32)-1;
+    }
+}
+
+/*
+ * Function: Sfx_SetObjectChannelVolume
+ * EN v1.0 Address: 0x8000B888
+ * EN v1.0 Size: 276b
+ */
+void Sfx_SetObjectChannelVolume(f32 volumeScale, u32 obj, u32 channel, u32 volume)
+{
+    u32 volumeByte;
+    SfxObjectChannel* objectChannel;
+
+    volumeByte = volume;
+    if (((u8)channel == 0) || (obj == 0)) {
+        objectChannel = NULL;
+    } else {
+        objectChannel = Sfx_FindObjectChannel(obj, channel, 0, 2);
+    }
+
+    if (objectChannel != NULL) {
+        if ((u8)volumeByte != 0xFE) {
+            u32 ctrlVolume;
+
+            if ((u8)volumeByte == 0xFF) {
+                volumeByte = 100;
+            }
+            objectChannel->volume = volumeByte;
+            if (objectChannel->hasPosition != 0) {
+                Sfx_UpdateObjectChannel3D(objectChannel);
+            } else {
+                if (objectChannel->paused != 0) {
+                    ctrlVolume = 0;
+                } else {
+                    ctrlVolume = volumeByte;
+                }
+                sndFXCtrl(objectChannel->handle, 7, (u8)ctrlVolume);
+            }
+        }
+
+        if (volumeScale < lbl_803DE570) {
+            volumeScale = lbl_803DE570;
+        }
+        if (volumeScale > lbl_803DE574) {
+            volumeScale = lbl_803DE574;
+        }
+        sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
+    }
+}
+
+/*
+ * Function: Sfx_SetObjectSfxVolume
+ * EN v1.0 Address: 0x8000B99C
+ * EN v1.0 Size: 276b
+ */
+void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u32 volume)
+{
+    u32 volumeByte;
+    SfxObjectChannel* objectChannel;
+
+    volumeByte = volume;
+    if ((u16)sfxId != 0) {
+        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 2);
+    } else {
+        objectChannel = NULL;
+    }
+
+    if (objectChannel != NULL) {
+        if ((u8)volumeByte != 0xFE) {
+            u32 ctrlVolume;
+
+            if ((u8)volumeByte == 0xFF) {
+                volumeByte = 100;
+            }
+            objectChannel->volume = volumeByte;
+            if (objectChannel->hasPosition != 0) {
+                Sfx_UpdateObjectChannel3D(objectChannel);
+            } else {
+                if (objectChannel->paused != 0) {
+                    ctrlVolume = 0;
+                } else {
+                    ctrlVolume = volumeByte;
+                }
+                sndFXCtrl(objectChannel->handle, 7, (u8)ctrlVolume);
+            }
+        }
+
+        if (volumeScale < lbl_803DE570) {
+            volumeScale = lbl_803DE570;
+        }
+        if (volumeScale > lbl_803DE574) {
+            volumeScale = lbl_803DE574;
+        }
+        sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
     }
 }
 
