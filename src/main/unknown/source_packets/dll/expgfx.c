@@ -5,7 +5,7 @@
  * It exists as a retail-backed source/object packet for exploratory split work.
  *
  * Retail source: expgfx.c
- * Suggested source path: src/main/expgfx.c
+ * Suggested source path: src/main/dll/expgfx.c
  * Packet path: src/main/unknown/source_packets/dll/expgfx.c
  * Bucket: dll
  * Score: 3580

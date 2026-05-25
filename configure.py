@@ -820,7 +820,7 @@ config.libs = [
             Object(NonMatching, "main/newshadows.c"),
             Object(NonMatching, "track/intersect.c"),
             Object(NonMatching, "main/maketex.c"),
-            Object(NonMatching, "main/expgfx.c"),
+            Object(NonMatching, "main/dll/expgfx.c"),
             Object(NonMatching, "main/dll/modgfx.c"),
             Object(NonMatching, "main/dll/modelfx.c"),
             Object(NonMatching, "main/dll/dim_partfx.c"),

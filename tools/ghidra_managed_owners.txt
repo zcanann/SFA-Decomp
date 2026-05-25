@@ -373,7 +373,7 @@ main/dll/WM/deaddino.c
 main/dll/WM/WMcrystal.c
 main/dll/WM/WMlevcontrol.c
 main/dll/zBomb.c
-main/expgfx.c
+main/dll/expgfx.c
 main/expr.c
 main/light.c
 main/lightmap.c
