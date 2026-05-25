@@ -1,8 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/inp_ctrl.h"
 #include "main/audio/inp_midi.h"
-#include "main/unknown/autos/placeholder_802827D4.h"
-
-extern u16 _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u32 midiSlot, u32 midiKey);
 extern int synthGetVoiceSlotChannelScale(int x);
 
 extern u32 lbl_803DC610;
@@ -15,14 +13,12 @@ extern s16 lbl_80330028[];
  */
 u16 inpGetPostAuxB(McmdVoiceState *state)
 {
-    int rawState = (int)state;
-    u32 flags = *(u32 *)(rawState + 0x214);
+    u32 flags = state->inputDirtyFlags;
     if ((flags & MCMD_INPUT_DIRTY_POST_AUX_B) == 0) {
-        return *(u16 *)((u8 *)state + 0x3c4);
+        return state->postAuxBInput.cachedValue;
     }
-    *(u32 *)(rawState + 0x214) = flags & ~MCMD_INPUT_DIRTY_POST_AUX_B;
-    return _GetInputValue(state, (McmdInputSlot *)((u8 *)state + 0x3a4),
-                          state->midiSlot, state->midiEvent);
+    state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_POST_AUX_B;
+    return _GetInputValue(state, &state->postAuxBInput, state->midiSlot, state->midiEvent);
 }
 
 /*
@@ -32,14 +28,12 @@ u16 inpGetPostAuxB(McmdVoiceState *state)
  */
 u16 inpGetTremolo(McmdVoiceState *state)
 {
-    int rawState = (int)state;
-    u32 flags = *(u32 *)(rawState + 0x214);
+    u32 flags = state->inputDirtyFlags;
     if ((flags & MCMD_INPUT_DIRTY_TREMOLO) == 0) {
-        return *(u16 *)((u8 *)state + 0x3e8);
+        return state->tremoloInput.cachedValue;
     }
-    *(u32 *)(rawState + 0x214) = flags & ~MCMD_INPUT_DIRTY_TREMOLO;
-    return _GetInputValue(state, (McmdInputSlot *)((u8 *)state + 0x3c8),
-                          state->midiSlot, state->midiEvent);
+    state->inputDirtyFlags = flags & ~MCMD_INPUT_DIRTY_TREMOLO;
+    return _GetInputValue(state, &state->tremoloInput, state->midiSlot, state->midiEvent);
 }
 
 extern u8 lbl_803BDA74[];

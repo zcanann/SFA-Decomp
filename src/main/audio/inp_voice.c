@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80282594.h"
+#include "main/audio/mcmd.h"
 
 extern int _GetInputValue(int obj, int buf, u8 a, u8 b);
 

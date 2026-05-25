@@ -2160,22 +2160,22 @@ main/audio/inp_midi.c:
 	extabindex  start:0x8000638C end:0x800063A4
 	.text       start:0x80281A30 end:0x80282070
 
-main/unknown/autos/placeholder_80282288.c:
+main/audio/inp_value.c:
 	extab       start:0x80005AB8 end:0x80005AD0
 	extabindex  start:0x800063A4 end:0x800063C8
 	.text       start:0x80282070 end:0x80282588
 
-main/unknown/autos/placeholder_80282594.c:
+main/audio/inp_voice.c:
 	extab       start:0x80005AD0 end:0x80005AE0
 	extabindex  start:0x800063C8 end:0x800063E0
 	.text       start:0x80282588 end:0x80282618
 
-main/unknown/autos/placeholder_80282630.c:
+main/audio/inp_voice_aux.c:
 	extab       start:0x80005AE0 end:0x80005B10
 	extabindex  start:0x800063E0 end:0x80006428
 	.text       start:0x80282618 end:0x802827C8
 
-main/unknown/autos/placeholder_802827D4.c:
+main/audio/inp_ctrl.c:
 	extab       start:0x80005B10 end:0x80005B50
 	extabindex  start:0x80006428 end:0x80006488
 	.text       start:0x802827C8 end:0x80282FE0

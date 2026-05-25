@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/inp_ctrl.h"
 #include "main/audio/inp_midi.h"
 
 typedef struct SynthDelayedNode {
@@ -49,8 +50,6 @@ extern void synthFreeHandle(u32 handle);
 extern void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1);
 extern void macHandle(u32 delta);
 extern u8 hwGetTimeOffset(void);
-extern u16 inpGetAuxA(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
-extern u16 inpGetAuxB(u32 studio, u32 channel, u32 auxIndex, u32 handleIndex);
 extern void hwFrameDone(void);
 extern u8 lbl_803BCD90[];
 extern u32 synthMasterFaderPauseActiveFlags;

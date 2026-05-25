@@ -2,7 +2,6 @@
 #include "main/unknown/autos/placeholder_80283488.h"
 
 extern undefined4 FUN_80281a34();
-extern uint _GetInputValue();
 extern uint FUN_80282fe4();
 extern u8 *dspVoice;
 extern u8 salTimeOffset;
