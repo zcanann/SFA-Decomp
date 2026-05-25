@@ -4326,16 +4326,22 @@ typedef struct SaveData {
 extern SaveData saveData;
 void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
 {
-  u32 mask = 1 << (u8)optionIndex;
+  SaveData *save;
+  u32 registeredDebugOptions;
+  u32 mask;
 
-  if ((saveData.registeredDebugOptions & mask) == 0) {
+  save = &saveData;
+  registeredDebugOptions = save->registeredDebugOptions;
+  mask = 1 << (u8)optionIndex;
+  if ((registeredDebugOptions & mask) == 0) {
     return;
   }
   if (active != 0) {
-    saveData.enabledDebugOptions |= mask;
+    save->enabledDebugOptions |= mask;
   }
   else {
-    saveData.enabledDebugOptions &= ~mask;
+    mask = ~mask;
+    save->enabledDebugOptions &= mask;
   }
 }
 
