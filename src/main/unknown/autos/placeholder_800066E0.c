@@ -6657,10 +6657,14 @@ extern int lbl_803DC8F0;
 extern int lbl_803DC8F4;
 extern f32 lbl_803DC8FC;
 extern f32 lbl_803DC900;
+extern f32 lbl_803DC90C;
 extern u8 lbl_803DC908;
 extern u8 lbl_803DC909;
 extern u8 lbl_803DB2A8;
 extern s32 lbl_803DB278;
+extern s32 lbl_803DB28C;
+extern char lbl_803DB290;
+extern char lbl_803398A0[];
 extern u32 lbl_802C6E50[];
 extern u8 lbl_803DC934;
 extern u8 lbl_803DC938;
@@ -6672,6 +6676,11 @@ extern u32 lbl_803398C0[];
 extern u32 lbl_803398D0[];
 extern u32 lbl_803398E0[];
 extern u8 lbl_803398F0[];
+extern f32 lbl_803DE6E8;
+
+extern int sprintf(char* buf, const char* fmt, ...);
+extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
+extern void PADControlMotor(s32 chan, u32 command);
 
 typedef struct PadStatusLite {
     u16 buttons;
@@ -6687,6 +6696,16 @@ typedef struct PadStatusLite {
 } PadStatusLite;
 
 /*
+ * Function: fn_8001404C
+ * EN v1.0 Address: 0x8001404C
+ * EN v1.0 Size: 8b
+ */
+void fn_8001404C(s32 value)
+{
+    lbl_803DB28C = value;
+}
+
+/*
  * Function: gameTimerIsRunning
  * EN v1.0 Address: 0x80014054
  * EN v1.0 Size: 12b
@@ -6694,6 +6713,19 @@ typedef struct PadStatusLite {
 u32 gameTimerIsRunning(void)
 {
     return lbl_803DC8F8 & 4;
+}
+
+/*
+ * Function: hudNumberFn_80014060
+ * EN v1.0 Address: 0x80014060
+ * EN v1.0 Size: 84b
+ */
+void hudNumberFn_80014060(void)
+{
+    if (lbl_803DB278 != -1) {
+        sprintf(lbl_803398A0, &lbl_803DB290, lbl_803DB278);
+        gameTextShowStr(lbl_803398A0, 13, 0, 0);
+    }
 }
 
 /*
@@ -6725,6 +6757,16 @@ void gameTimerStop(void)
 {
     lbl_803DC8F8 &= ~4;
     lbl_803DC8F8 |= 2;
+}
+
+/*
+ * Function: fn_80014668
+ * EN v1.0 Address: 0x80014668
+ * EN v1.0 Size: 8b
+ */
+f32 fn_80014668(void)
+{
+    return lbl_803DC900;
 }
 
 /*
@@ -6854,6 +6896,51 @@ void padClearAnalogInputY(int port)
 void padClearAnalogInputX(int port)
 {
     (&lbl_803DC938)[port] = 0;
+}
+
+/*
+ * Function: stopRumble2
+ * EN v1.0 Address: 0x80014A28
+ * EN v1.0 Size: 60b
+ */
+void stopRumble2(void)
+{
+    if (lbl_803DC909 != 0) {
+        PADControlMotor(0, 2);
+        lbl_803DC90C = lbl_803DE6E8;
+    }
+}
+
+/*
+ * Function: stopRumble
+ * EN v1.0 Address: 0x80014A64
+ * EN v1.0 Size: 60b
+ */
+void stopRumble(void)
+{
+    if (lbl_803DC909 != 0) {
+        PADControlMotor(0, 0);
+        lbl_803DC90C = lbl_803DE6E8;
+    }
+}
+
+/*
+ * Function: doRumble
+ * EN v1.0 Address: 0x80014AA0
+ * EN v1.0 Size: 108b
+ */
+void doRumble(f32 duration)
+{
+    if (lbl_803DC909 != 0 && getGameState() == 1) {
+        f32 rumbleTimer;
+
+        PADControlMotor(0, 1);
+        rumbleTimer = lbl_803DC90C;
+        if (rumbleTimer <= duration) {
+            rumbleTimer = duration;
+        }
+        lbl_803DC90C = rumbleTimer;
+    }
 }
 
 /*
