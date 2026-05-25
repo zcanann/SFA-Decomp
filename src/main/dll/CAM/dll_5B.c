@@ -228,22 +228,22 @@ void firstPersonEnter(void)
  */
 void CameraModeViewfinder_copyToCurrent(undefined2 *param_1)
 {
-  undefined2 *puVar1;
-  
-  puVar1 = (undefined2 *)(**(code **)(*gCameraInterface + 0xc))();
-  if ((puVar1 != (undefined2 *)0x0) && (param_1 != (undefined2 *)0x0)) {
-    *puVar1 = *param_1;
-    puVar1[1] = param_1[1];
-    puVar1[2] = param_1[2];
-    *(undefined4 *)(puVar1 + 6) = *(undefined4 *)(param_1 + 4);
-    *(undefined4 *)(puVar1 + 8) = *(undefined4 *)(param_1 + 6);
-    *(undefined4 *)(puVar1 + 10) = *(undefined4 *)(param_1 + 8);
-    *(undefined4 *)(puVar1 + 0xc) = *(undefined4 *)(param_1 + 4);
-    *(undefined4 *)(puVar1 + 0xe) = *(undefined4 *)(param_1 + 6);
-    *(undefined4 *)(puVar1 + 0x10) = *(undefined4 *)(param_1 + 8);
-    *(undefined4 *)(puVar1 + 0x5a) = *(undefined4 *)(param_1 + 10);
+  u8 *src = (u8 *)param_1;
+  u8 *cur;
+
+  cur = (u8 *)(*(int (**)(void))(*(int *)gCameraInterface + 0xc))();
+  if ((cur != NULL) && (src != NULL)) {
+    *(s16 *)(cur + 0) = *(s16 *)(src + 0);
+    *(s16 *)(cur + 2) = *(s16 *)(src + 2);
+    *(s16 *)(cur + 4) = *(s16 *)(src + 4);
+    *(f32 *)(cur + 12) = *(f32 *)(src + 8);
+    *(f32 *)(cur + 16) = *(f32 *)(src + 12);
+    *(f32 *)(cur + 20) = *(f32 *)(src + 16);
+    *(f32 *)(cur + 24) = *(f32 *)(src + 8);
+    *(f32 *)(cur + 28) = *(f32 *)(src + 12);
+    *(f32 *)(cur + 32) = *(f32 *)(src + 16);
+    *(f32 *)(cur + 180) = *(f32 *)(src + 20);
   }
-  return;
 }
 
 /*
