@@ -8620,7 +8620,7 @@ void Resource_ResetRefCounts(void)
 }
 
 extern u8 lbl_803DC8F8;
-extern u8 lbl_803DC8F9;
+extern s8 lbl_803DC8F9;
 extern UiDllVTable** lbl_803DC8E8;
 extern int lbl_803DC8EC;
 extern int lbl_803DC8F0;
