@@ -695,16 +695,24 @@ typedef struct SfxLoopedObjectSoundTable {
     u32 objects[0x80];
 } SfxLoopedObjectSoundTable;
 
+typedef struct SfxObjectChannel {
+    u32 handle;
+    u8 pad04[0x34];
+} SfxObjectChannel;
+
 #define SFX_LOOPED_OBJECT_SOUND_COUNT 0x80
+#define SFX_OBJECT_CHANNEL_COUNT 56
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE 1
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN 2
 #define SFX_LOOPED_OBJECT_STOP_FLAG 0x40
 
 extern SfxLoopedObjectSoundTable gSfxLoopedObjectSoundFlags;
 extern u16 gSfxLoopedObjectSoundCount;
+extern SfxObjectChannel gSfxObjectChannels[];
 
 extern void sndQuit(void);
 extern void AIReset(void);
+extern int sndFXKeyOff(u32 handle);
 extern void Music_Update(void);
 extern void Sfx_UpdateObjectSounds(void);
 extern void Sfx_StopAllObjectSounds(void);
@@ -722,9 +730,11 @@ extern s32 getGameState(void);
 extern void AudioStream_CancelCallback(s32 result);
 extern void fn_8000D0B4(void);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
-extern s32 Sfx_IsPlayingFromObject(u32 obj, u16 sfxId);
-extern void Sfx_StopFromObject(u32 obj, u16 sfxId);
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+extern s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
+extern void Sfx_StopFromObject(u32 obj, u32 sfxId);
+extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
+extern SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
+extern void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u32 sfxId);
 extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
 extern void Matrix_TransformPoint(f64 x, f64 y, f64 z, f32 *matrix, f32 *outX, f32 *outY, f32 *outZ);
 extern void *memmove(void *dest, const void *src, u32 count);
@@ -6231,6 +6241,144 @@ extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 s32 Music_GetActivePriority(void)
 {
     return gMusicActivePriority;
+}
+
+/*
+ * Function: Sfx_IsPlayingFromObjectChannel
+ * EN v1.0 Address: 0x8000B578
+ * EN v1.0 Size: 88b
+ */
+s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel)
+{
+    SfxObjectChannel* objectChannel;
+
+    if (((u8)channel == 0) || (obj == 0)) {
+        objectChannel = NULL;
+    } else {
+        objectChannel = Sfx_FindObjectChannel(obj, channel, 0, 0);
+    }
+
+    if (objectChannel != NULL) {
+        return 1;
+    }
+    return 0;
+}
+
+/*
+ * Function: Sfx_IsPlayingFromObject
+ * EN v1.0 Address: 0x8000B5D0
+ * EN v1.0 Size: 84b
+ */
+s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
+{
+    SfxObjectChannel* objectChannel;
+
+    if ((u16)sfxId != 0) {
+        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
+    } else {
+        objectChannel = NULL;
+    }
+
+    if (objectChannel != NULL) {
+        return 1;
+    }
+    return 0;
+}
+
+/*
+ * Function: Sfx_StopAllObjectSounds
+ * EN v1.0 Address: 0x8000B624
+ * EN v1.0 Size: 112b
+ */
+void Sfx_StopAllObjectSounds(void)
+{
+    SfxObjectChannel* objectChannel = gSfxObjectChannels;
+    s32 i = SFX_OBJECT_CHANNEL_COUNT - 1;
+
+    do {
+        if (objectChannel->handle != (u32)-1) {
+            sndFXKeyOff(objectChannel->handle);
+            objectChannel->handle = (u32)-1;
+        }
+        objectChannel++;
+    } while (i-- != 0);
+}
+
+/*
+ * Function: Sfx_StopObjectChannel
+ * EN v1.0 Address: 0x8000B7BC
+ * EN v1.0 Size: 104b
+ */
+void Sfx_StopObjectChannel(u32 obj, u32 channel)
+{
+    SfxObjectChannel* objectChannel;
+
+    if (((u8)channel == 0) || (obj == 0)) {
+        objectChannel = NULL;
+    } else {
+        objectChannel = Sfx_FindObjectChannel(obj, channel, 0, 0);
+    }
+
+    if (objectChannel != NULL) {
+        sndFXKeyOff(objectChannel->handle);
+        objectChannel->handle = (u32)-1;
+    }
+}
+
+/*
+ * Function: Sfx_StopFromObject
+ * EN v1.0 Address: 0x8000B824
+ * EN v1.0 Size: 100b
+ */
+void Sfx_StopFromObject(u32 obj, u32 sfxId)
+{
+    SfxObjectChannel* objectChannel;
+
+    if ((u16)sfxId != 0) {
+        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
+    } else {
+        objectChannel = NULL;
+    }
+
+    if (objectChannel != NULL) {
+        sndFXKeyOff(objectChannel->handle);
+        objectChannel->handle = (u32)-1;
+    }
+}
+
+/*
+ * Function: Sfx_PlayFromObjectChannel
+ * EN v1.0 Address: 0x8000BAB0
+ * EN v1.0 Size: 48b
+ */
+void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u32 sfxId)
+{
+    Sfx_PlayFromObjectEx(obj, NULL, channel, sfxId);
+}
+
+/*
+ * Function: Sfx_PlayAtPositionFromObject
+ * EN v1.0 Address: 0x8000BAE0
+ * EN v1.0 Size: 56b
+ */
+void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u32 sfxId)
+{
+    f32 pos[3];
+
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    Sfx_PlayFromObjectEx(obj, pos, 0, sfxId);
+}
+
+/*
+ * Function: Sfx_PlayFromObject
+ * EN v1.0 Address: 0x8000BB18
+ * EN v1.0 Size: 44b
+ */
+void Sfx_PlayFromObject(u32 obj, u32 sfxId)
+{
+    Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
 }
 
 /*
