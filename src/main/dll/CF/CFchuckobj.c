@@ -146,16 +146,16 @@ void fn_8018F148(int obj, int count)
   sub = *(int *)(obj + 0xb8);
   for (i = 0; i < count; i++) {
     {
-      s16 sx = *(s16 *)(sub + 0x14);
-      args.vec[0] = (f32)(s32)(s16)randomGetRange(-sx, sx);
+      u16 sx = *(u16 *)(sub + 0x14);
+      args.vec[0] = (f32)(s32)randomGetRange(-sx, sx);
     }
     {
-      s16 sy = *(s16 *)(sub + 0x18);
-      args.vec[1] = (f32)(s32)(s16)randomGetRange(-sy, sy);
+      u16 sy = *(u16 *)(sub + 0x18);
+      args.vec[1] = (f32)(s32)randomGetRange(-sy, sy);
     }
     {
-      s16 sz = *(s16 *)(sub + 0x16);
-      args.vec[2] = (f32)(s32)(s16)randomGetRange(-sz, sz);
+      u16 sz = *(u16 *)(sub + 0x16);
+      args.vec[2] = (f32)(s32)randomGetRange(-sz, sz);
     }
     mathFn_80021ac8((s16 *)(sub + 0x1a), args.vec);
     args.vec[0] += *(f32 *)(obj + 0xc);
