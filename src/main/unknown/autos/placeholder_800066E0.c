@@ -701,7 +701,10 @@ typedef struct SfxObjectChannel {
     u8 tracksObjectPosition;
     u8 paused;
     u8 volume;
-    u8 pad08[0x10];
+    u8 pad08[0x04];
+    f32 x;
+    f32 y;
+    f32 z;
     u32 object;
     u16 channelMask;
     u16 sfxId;
@@ -729,6 +732,7 @@ extern u32 gSfxObjectChannelAgeLo;
 extern void sndQuit(void);
 extern void AIReset(void);
 extern int sndFXKeyOff(u32 handle);
+extern int sndFXCheck(u32 handle);
 extern int sndFXCtrl(u32 handle, u32 ctrl, u32 value);
 extern int sndFXCtrl14(u32 handle, u32 ctrl, u32 value);
 extern void Music_Update(void);
@@ -745,6 +749,7 @@ extern void AISetStreamVolRight(u32 volume);
 extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
 extern s32 getGameState(void);
+extern u32 GameBit_Get(u32 bit);
 extern void AudioStream_CancelCallback(s32 result);
 extern void fn_8000D0B4(void);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
@@ -6260,10 +6265,12 @@ extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
  * EN v1.0 Address: 0x8000AE88
  * EN v1.0 Size: 8b
  */
+#pragma dont_inline on
 s32 Music_GetActivePriority(void)
 {
     return gMusicActivePriority;
 }
+#pragma dont_inline reset
 
 /*
  * Function: Sfx_IsPlayingFromObjectChannel
@@ -6544,6 +6551,82 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u32 sfxId)
 void Sfx_PlayFromObject(u32 obj, u32 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
+}
+
+/*
+ * Function: Sfx_UpdateObjectSounds
+ * EN v1.0 Address: 0x8000BB44
+ * EN v1.0 Size: 624b
+ */
+void Sfx_UpdateObjectSounds(void)
+{
+    SfxObjectChannel* objectChannel;
+    s32 i;
+    u32 globalCtrl;
+
+    objectChannel = gSfxObjectChannels;
+    i = SFX_OBJECT_CHANNEL_COUNT - 1;
+    do {
+        if ((objectChannel->handle != (u32)-1) && ((u32)sndFXCheck(objectChannel->handle) == (u32)-1)) {
+            objectChannel->handle = (u32)-1;
+        }
+        objectChannel++;
+    } while (i-- != 0);
+
+    if (GameBit_Get(0xCBB) != 0) {
+        globalCtrl = 0xE;
+    } else if (GameBit_Get(0xEFA) != 0) {
+        globalCtrl = 0xC;
+    } else if (GameBit_Get(0xEFB) != 0) {
+        globalCtrl = 0xD;
+    } else if (GameBit_Get(0xEFD) != 0) {
+        globalCtrl = 0xC;
+    } else if (GameBit_Get(0xA7F) != 0) {
+        globalCtrl = 0xC;
+    } else if (GameBit_Get(0xEFC) != 0) {
+        globalCtrl = 0xC;
+    } else if (GameBit_Get(0xEFE) != 0) {
+        globalCtrl = 0xC;
+    } else if (GameBit_Get(0xDCF) != 0) {
+        globalCtrl = 0xB;
+    } else if (Music_GetActivePriority() <= 0x28) {
+        globalCtrl = 0xC;
+    } else {
+        globalCtrl = 0;
+    }
+
+    if ((u8)globalCtrl != (s32)(lbl_803DC838 / 5)) {
+        objectChannel = gSfxObjectChannels;
+        lbl_803DC838 = (u8)(globalCtrl * 5);
+        i = SFX_OBJECT_CHANNEL_COUNT - 1;
+        do {
+            if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0)) {
+                sndFXCtrl(objectChannel->handle, 0x5B, lbl_803DC838);
+            }
+            objectChannel++;
+        } while (i-- != 0);
+    }
+
+    objectChannel = gSfxObjectChannels;
+    i = SFX_OBJECT_CHANNEL_COUNT - 1;
+    do {
+        if ((objectChannel->handle != (u32)-1) && (objectChannel->hasPosition != 0)) {
+            if (objectChannel->tracksObjectPosition != 0) {
+                if ((*(u16*)(objectChannel->object + 0xB0) & SFX_LOOPED_OBJECT_STOP_FLAG) != 0) {
+                    objectChannel->tracksObjectPosition = 0;
+                } else {
+                    objectChannel->x = *(f32*)(objectChannel->object + 0x18);
+                    objectChannel->y = *(f32*)(objectChannel->object + 0x1C);
+                    objectChannel->z = *(f32*)(objectChannel->object + 0x20);
+                }
+            }
+
+            if ((objectChannel->tracksObjectPosition != 0) || (objectChannel->globalCtrlDisabled != 0)) {
+                Sfx_UpdateObjectChannel3D(objectChannel);
+            }
+        }
+        objectChannel++;
+    } while (i-- != 0);
 }
 
 /*
