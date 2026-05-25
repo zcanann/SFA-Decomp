@@ -642,24 +642,6 @@ void expgfx_initSlotQuad(void *slotPtr)
 /*
  * --INFO--
  *
- * Function: FUN_8009bd84
- * EN v1.0 Address: 0x8009BD84
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8009BC54
- * EN v1.1 Size: 9252b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8009bd84(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
-                 double param_6,undefined8 param_7,undefined8 param_8)
-{
-}
-
-/*
- * --INFO--
- *
  * Function: expgfx_addToTable
  * EN v1.0 Address: 0x8009DDEC
  * EN v1.0 Size: 288b
