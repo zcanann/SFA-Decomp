@@ -4454,12 +4454,17 @@ void saveFileStruct_unlockCheat(u8 idx) {
 
 int saveFileStruct_isCheatActive(u8 idx)
 {
-  u32 mask = 1 << idx;
+  SaveData *save;
+  u32 registeredDebugOptions;
+  u32 mask;
 
-  if ((saveData.registeredDebugOptions & mask) == 0) {
+  save = &saveData;
+  registeredDebugOptions = save->registeredDebugOptions;
+  mask = 1 << idx;
+  if ((registeredDebugOptions & mask) == 0) {
     return 0;
   }
-  if ((saveData.enabledDebugOptions & mask) == 0) {
+  if ((save->enabledDebugOptions & mask) == 0) {
     return 0;
   }
   return 1;
