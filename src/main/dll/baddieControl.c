@@ -3736,3 +3736,44 @@ void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Obj_GetPlayerObject(void);
+extern int fn_80295A04(int obj, int a);
+extern int fn_80296AE8(int obj);
+extern int objBboxFn_800640cc(int a, f32 *pos, f32 b, int c, f32 *out, int d, int e, int g, int h, int i);
+extern f32 lbl_803E1C68;
+extern f32 lbl_803E1C48;
+
+/* dll_19_func13  addr=0x8011313C  size=0x13C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+int dll_19_func13(int p1, u8 *p2, f32 f, int p4) {
+    int player = Obj_GetPlayerObject();
+    int result = 0;
+
+    if ((s8)p2[838] != 0) {
+        if (*(int *)(p2 + 720) != player) {
+            result = 1;
+        } else if ((s8)p2[852] == 0) {
+            result = 1;
+        } else if (*(f32 *)(p2 + 704) > f && p4 != 0) {
+            result = 1;
+        } else if (fn_80295A04(player, 1) == 0) {
+            result = 1;
+        } else if (fn_80296AE8(player) <= 0) {
+            result = 1;
+        } else {
+            f32 pos[3];
+            f32 out[2];
+            pos[0] = *(f32 *)(player + 0xc);
+            pos[1] = lbl_803E1C68 + *(f32 *)(player + 0x10);
+            pos[2] = *(f32 *)(player + 0x14);
+            if (objBboxFn_800640cc(p1 + 0xc, pos, lbl_803E1C48, 0, out, p1, 4, -1, 0, 0) != 0) {
+                result = 1;
+            }
+        }
+    }
+    return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
