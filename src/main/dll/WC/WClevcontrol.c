@@ -1094,7 +1094,7 @@ void SB_CloudRunner_update(int obj)
     int state = *(int *)(obj + 0xb8);
     int prevKey;
 
-    if (*(s8 *)(state + 0x6e) != 0 || *(s8 *)(obj + 0xac) != 0xb) {
+    if (*(s8 *)(state + 0x6e) != 0 || *(s8 *)(obj + 0xac) == 0xb) {
         *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
         return;
     }
