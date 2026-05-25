@@ -6321,9 +6321,11 @@ s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
  */
 void Sfx_StopAllObjectSounds(void)
 {
-    SfxObjectChannel* objectChannel = gSfxObjectChannels;
-    s32 i = SFX_OBJECT_CHANNEL_COUNT - 1;
+    s32 i;
+    SfxObjectChannel* objectChannel;
 
+    objectChannel = gSfxObjectChannels;
+    i = SFX_OBJECT_CHANNEL_COUNT - 1;
     do {
         if (objectChannel->handle != (u32)-1) {
             sndFXKeyOff(objectChannel->handle);
@@ -6429,9 +6431,9 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId)
  * EN v1.0 Address: 0x8000B888
  * EN v1.0 Size: 276b
  */
-void Sfx_SetObjectChannelVolume(f32 volumeScale, u32 obj, u32 channel, u32 volume)
+void Sfx_SetObjectChannelVolume(f32 volumeScale, u32 obj, u32 channel, u8 volume)
 {
-    u32 volumeByte;
+    u8 volumeByte;
     SfxObjectChannel* objectChannel;
 
     volumeByte = volume;
@@ -6476,9 +6478,9 @@ void Sfx_SetObjectChannelVolume(f32 volumeScale, u32 obj, u32 channel, u32 volum
  * EN v1.0 Address: 0x8000B99C
  * EN v1.0 Size: 276b
  */
-void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u32 volume)
+void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume)
 {
-    u32 volumeByte;
+    u8 volumeByte;
     SfxObjectChannel* objectChannel;
 
     volumeByte = volume;
