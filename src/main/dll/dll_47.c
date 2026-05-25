@@ -923,7 +923,48 @@ void SaveSelectScreen_release(void) {
 #pragma scheduling reset
 
 /* Stubs for as-yet-unmatched functions. */
-void saveFileSelect_init(void) {}
+void saveFileSelect_init(int param_1, int param_2)
+{
+  int i;
+
+  saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
+  if (param_1 == 0) {
+    Sfx_PlayFromObject(0, 0x100);
+    ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](20, 5);
+    lbl_803DD6CF = 0x23;
+    lbl_803DD6CC = 1;
+  }
+  else if (param_1 != -1) {
+    if (param_1 == 1) {
+      saveFileSelect_currentSlotIndex = (s8)param_2;
+      i = (s8)param_2;
+      if (*(u8 *)((char *)(saveFileSelect_saveSlots + i) + 0x20) == 0) {
+        loadUiDll(6);
+      }
+      else {
+        Sfx_PlayFromObject(0, 0x418);
+        if ((s8)lbl_803DB9FB != -1) {
+          ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
+        }
+        lbl_803DB9FB = 1;
+        *(u16 *)((char *)lbl_8031A7BC[1].entries + 0x16) =
+             (u16)(*(u16 *)((char *)lbl_8031A7BC[1].entries + 0x16) & ~0x4000);
+        *(s8 *)((char *)lbl_8031A7BC[1].entries + 0x56) = 0;
+        *(u16 *)((char *)lbl_8031A7BC[1].entries + 0x3c) = 982;
+        lbl_803DD6C5 = 0;
+        ((void (**)(void *, u8, int, int, int, int, int, int, int, int, int, int))
+             gTitleMenuLinkInterface->vtable)[1]
+            (lbl_8031A7BC[1].entries, lbl_8031A7BC[1].count, 0, 0, 5, 4, 20, 200,
+             255, 255, 255, 255);
+        ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](0);
+        saveFileSelect_debugCheatProgress = 0;
+        saveFileSelect_saveCheatProgress = 0;
+        saveFileSelect_cheatInputTimer = 0;
+        lbl_803DD6CE = 2;
+      }
+    }
+  }
+}
 /*
  * --INFO--
  *
