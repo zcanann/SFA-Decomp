@@ -973,5 +973,37 @@ end:
 }
 #pragma peephole reset
 #pragma scheduling reset
-void sh_beacon_init(int obj, int defData) {}
+#pragma scheduling off
+#pragma peephole off
+void sh_beacon_init(int obj, int defData)
+{
+    int state;
+    int *setup;
+
+    state = *(int *)(obj + 0xb8);
+    *(s16 *)obj = (s16)((s32)*(s8 *)(defData + 0x18) << 8);
+    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x4000);
+
+    *(u8 *)(state + 0x14) = (u8)GameBit_Get(*(s16 *)(defData + 0x1e));
+    if (*(u8 *)(state + 0x14) == 0) {
+        if (GameBit_Get(*(s16 *)(defData + 0x20)) != 0) {
+            *(u8 *)(state + 0x14) = 2;
+        }
+    }
+
+    if (*(u8 *)(state + 0x14) != 0 && Obj_IsLoadingLocked() != 0) {
+        setup = Obj_AllocObjectSetup(0x20, 0x55);
+        *(f32 *)((char *)setup + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)((char *)setup + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)((char *)setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(u8 *)((char *)setup + 4) = 2;
+        *(u8 *)((char *)setup + 5) = *(u8 *)(*(int *)(obj + 0x4c) + 5);
+        *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)(obj + 0x4c) + 7);
+        *(int *)state = loadObjectAtObject(obj, setup);
+    }
+
+    *(void **)(obj + 0xbc) = fn_801DA954;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void sh_beacon_update(int obj) {}
