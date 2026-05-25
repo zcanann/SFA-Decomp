@@ -150,6 +150,8 @@ void fn_80154870(int obj, int *state)
     FUN_80154af4((ushort *)obj, (int)state);
 }
 
+#pragma peephole off
+#pragma scheduling off
 void fn_80154C24(int obj, int state)
 {
     float fVar1;
@@ -170,14 +172,16 @@ void fn_80154C24(int obj, int state)
     fVar1 = lbl_803E2990;
     *(float *)(state + 0x324) = lbl_803E2990;
     *(float *)(state + 0x328) = fVar1;
-    *(undefined4 *)(state + 0x32c) = *(undefined4 *)(obj + 0x10);
+    *(float *)(state + 0x32c) = *(float *)(obj + 0x10);
     uVar2 = randomGetRange(0, 0xff);
-    *(char *)(state + 0x33a) = (char)uVar2;
+    *(char *)(state + 0x33a) = (u8)uVar2;
     *(undefined *)(state + 0x33b) = 0;
     *(float *)(state + 0x330) = lbl_803E29F4;
     uVar2 = randomGetRange(0x32, 0x4b);
-    *(float *)(state + 0x2fc) = lbl_803E29F8 * (f32)(s32)uVar2;
+    *(float *)(state + 0x2fc) = (f32)(s32)uVar2 * lbl_803E29F8;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void fn_80154D0C(int obj, int state, undefined2 *outAngle, float *outDistance)
 {
