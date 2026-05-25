@@ -134,6 +134,8 @@ extern f32 lbl_803E57E0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_801DFA28(void)
 {
   char cVar1;
