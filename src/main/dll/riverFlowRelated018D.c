@@ -46,6 +46,8 @@ extern f32 lbl_803E4CCC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
 {
   u8 variant;
@@ -88,6 +90,8 @@ void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
