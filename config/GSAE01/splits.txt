@@ -2185,7 +2185,7 @@ main/audio/hw_init.c:
 	extabindex  start:0x80006488 end:0x800064B8
 	.text       start:0x80282FE0 end:0x8028343C
 
-main/unknown/autos/placeholder_80283488.c:
+main/audio/hw_break.c:
 	.text       start:0x8028343C end:0x8028348C
 
 main/audio/hw_adsr.c:
@@ -2201,7 +2201,7 @@ main/audio/hw_voice_start.c:
 	extabindex  start:0x800064C4 end:0x800064D0
 	.text       start:0x802836AC end:0x802836E8
 
-main/unknown/autos/placeholder_802836F4.c:
+main/audio/hw_keyoff.c:
 	.text       start:0x802836E8 end:0x80283710
 
 main/unknown/autos/placeholder_8028373C.c:

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/hw_voice_control.h"
 #include "main/unknown/autos/placeholder_8027B41C.h"
 
 extern void synthAdvanceVirtualSampleEntry(void *entry, u32 tick);
@@ -6,7 +7,6 @@ extern u32 hwChangeStudio(int slot);
 extern u32 hwGetVirtualSampleState(int slot);
 extern u32 hwGetVirtualSampleID(int slot);
 extern u32 hwVoiceInStartup(int slot);
-extern void hwBreak(int slot);
 
 extern u8 synthVirtualSampleState[];
 extern u8 *synthVoice;

@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_802836F4.h"
+#include "main/audio/hw_voice_control.h"
 
 extern u8 *dspVoice;
 extern u8 salTimeOffset;

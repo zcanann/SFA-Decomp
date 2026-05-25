@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
+#include "main/audio/hw_voice_control.h"
 #include "main/unknown/autos/placeholder_802792F8.h"
 #include "main/unknown/autos/placeholder_80279AF0.h"
 #include "main/unknown/autos/placeholder_80279EC0.h"
 
 extern u32 hwIsActive(u32 voice);
-extern void hwBreak(u32 voice);
 extern u32 get_vidlist(u32 id);
 extern void synthCancelJob(int voice);
 

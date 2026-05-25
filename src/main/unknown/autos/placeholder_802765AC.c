@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/hw_voice_control.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/snd_core.h"
 #include "main/unknown/autos/placeholder_802765AC.h"
@@ -31,7 +32,6 @@ extern uint FUN_8028343c();
 extern undefined4 FUN_80283444();
 extern uint hwSetADSR();
 extern undefined4 hwStart();
-extern undefined4 hwKeyOff();
 extern uint hwSetPitch();
 extern bool FUN_80283844();
 extern undefined4 FUN_80283850();
@@ -87,7 +87,6 @@ extern u32 voiceAllocate(u32 priority, u32 maxInstances, u32 key, u8 streamKind)
 extern void vidRemoveVoice(int state);
 extern u32 vidMakeNew(int state, int returnNewId);
 extern int hwIsActive(int slot);
-extern void hwBreak(int slot);
 extern void voiceFree(int state);
 extern void inpResetChannelDefaults(u8 a, u8 b);
 void audioFn_80278990(McmdVoiceState *state);
