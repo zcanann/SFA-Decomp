@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284BAC_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284BAC_H_
+#ifndef MAIN_AUDIO_SND_REVERB_H_
+#define MAIN_AUDIO_SND_REVERB_H_
 
 #include "ghidra_import.h"
 
@@ -24,4 +24,4 @@ void salFree(void *ptr);
 void sndAuxCallbackReverbSTD(u8 mode, ReverbParams *params, ReverbState *state);
 void sndAuxCallbackUpdateSettingsReverbSTD(ReverbState *state);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284BAC_H_ */
+#endif /* MAIN_AUDIO_SND_REVERB_H_ */

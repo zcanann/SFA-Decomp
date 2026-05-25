@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80284BAC.h"
+#include "main/audio/snd_reverb.h"
 
 extern u32 gSalMallocHook[2];
 extern void ReverbSTDCallback(int a, int b, int c, void *state);
