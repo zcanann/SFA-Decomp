@@ -186,16 +186,13 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3,short *param_4)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
   uint uVar4;
   int iVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
+  f32 cosv;
+  f32 sinv;
   undefined auStack_d8 [4];
   float local_d4;
   undefined auStack_d0 [4];
@@ -208,47 +205,33 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
   float local_b4;
   undefined auStack_b0 [110];
   undefined local_42;
-  undefined4 local_40;
-  uint uStack_3c;
-  undefined4 local_38;
-  uint uStack_34;
-  
-  uStack_3c = (int)*param_2 ^ 0x80000000;
-  local_40 = 0x43300000;
-  dVar6 = (double)FUN_80293f90();
-  uStack_34 = (int)*param_2 ^ 0x80000000;
-  local_38 = 0x43300000;
-  dVar7 = (double)FUN_80294964();
-  local_cc = *(float *)(gCamcontrolModeSettings + 4) * *(float *)(gCamcontrolModeSettings + 4) -
-             *(float *)(gCamcontrolModeSettings + 8) * *(float *)(gCamcontrolModeSettings + 8);
-  if (local_cc < lbl_803E2314) {
-    local_cc = lbl_803E2314;
+
+  cosv = fn_80293E80(lbl_803E168C * (f32)*param_2 / lbl_803E1690);
+  sinv = sin(lbl_803E168C * (f32)*param_2 / lbl_803E1690);
+  local_cc = cameraMtxVar57[1] * cameraMtxVar57[1] - cameraMtxVar57[2] * cameraMtxVar57[2];
+  if (local_cc < lbl_803E1694) {
+    local_cc = lbl_803E1694;
   }
-  dVar8 = FUN_80293900((double)local_cc);
-  local_cc = (float)dVar8;
-  local_c8 = (float)(dVar6 * (double)(float)dVar8 + (double)*(float *)(param_2 + 0xc));
-  fVar1 = *(float *)(param_2 + 0xe) + *(float *)(gCamcontrolModeSettings + 0x8c);
-  local_c4 = *(float *)(gCamcontrolModeSettings + 8) + fVar1;
-  local_c0 = (float)(dVar7 * (double)(float)dVar8 + (double)*(float *)(param_2 + 0x10));
-  fVar2 = *(float *)(param_2 + 0xc);
-  fVar3 = *(float *)(param_2 + 0x10);
+  local_cc = sqrtf(local_cc);
+  local_c8 = cosv * local_cc + *(float *)(param_2 + 0xc);
+  local_c4 = cameraMtxVar57[2] + (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
+  local_c0 = sinv * local_cc + *(float *)(param_2 + 0x10);
   if (param_2[0x22] == 1) {
-    FUN_80294d78((int)param_2,&local_bc,&local_b8,&local_b4);
-    fVar2 = local_bc;
-    fVar1 = local_b8;
-    fVar3 = local_b4;
+    cameraGetPrevPos2((int)param_2,&local_bc,&local_b8,&local_b4);
   }
-  local_b4 = fVar3;
-  local_b8 = fVar1;
-  local_bc = fVar2;
-  camcontrol_traceMove((double)lbl_803E2308,&local_bc,&local_c8,param_3,(int)auStack_b0,3,
+  else {
+    local_bc = *(float *)(param_2 + 0xc);
+    local_b8 = *(float *)(param_2 + 0xe) + cameraMtxVar57[0x23];
+    local_b4 = *(float *)(param_2 + 0x10);
+  }
+  camcontrol_traceMove((double)lbl_803E1688,&local_bc,&local_c8,param_3,(int)auStack_b0,3,
                        '\x01','\x01');
-  (**(code **)(*DAT_803dd6d0 + 0x38))
-            ((double)*(float *)(gCamcontrolModeSettings + 0x8c),param_1,auStack_d0,&local_d4,auStack_d8,
+  (**(code **)(*gCameraInterface + 0x38))
+            ((double)cameraMtxVar57[0x23],param_1,auStack_d0,&local_d4,auStack_d8,
              &local_cc,0);
   local_d4 = *(float *)(param_1 + 0x1c) -
-             (*(float *)(param_2 + 0xe) + *(float *)(gCamcontrolModeSettings + 0x8c));
-  uVar4 = FUN_80017730();
+             (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
+  uVar4 = getAngle(local_d4,local_cc);
   iVar5 = (uVar4 & 0xffff) - (uint)*(ushort *)(param_1 + 2);
   if (0x8000 < iVar5) {
     iVar5 = iVar5 + -0xffff;
@@ -261,6 +244,7 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
   }
   return local_42;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
