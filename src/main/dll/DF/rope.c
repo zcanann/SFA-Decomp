@@ -327,11 +327,13 @@ void dimbossgut2_update(int obj)
   uint msgA;
   uint msgB;
   uint msgC;
-  u8 auStack_5c[8];
-  f32 local_54;
-  f32 local_50;
-  f32 local_4c;
-  f32 local_48;
+  struct {
+    u8 pad[8];
+    f32 f54;
+    f32 f50;
+    f32 f4c;
+    f32 f48;
+  } stk;
 
   state = *(int *)(obj + 0xb8);
   if ((*(int *)(obj + 0xf4) == 0) &&
@@ -349,16 +351,16 @@ void dimbossgut2_update(int obj)
         fdiff = -fdiff;
       }
       if ((fdiff < lbl_803E4CDC) &&
-         (local_4c = pfVar4[3], uVar2 = randomGetRange(0x1e, 0x3c),
-         (int)uVar2 < (int)(uint)*(u16 *)((int)pfVar4 + 0x16))) {
+         (stk.f4c = pfVar4[3], uVar2 = randomGetRange(0x1e, 0x3c),
+         (int)(uint)*(u16 *)((int)pfVar4 + 0x16) > (int)uVar2)) {
         fscale = lbl_803E4CE0 * pfVar4[4];
-        local_50 = *(f32 *)(obj + 0xc) -
-                   fscale * fn_80293E80(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
-        local_48 = *(f32 *)(obj + 0x14) -
-                   fscale * sin(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
-        local_54 = lbl_803E4CEC * (lbl_803E4CF0 - fdiff / lbl_803E4CDC);
+        stk.f50 = *(f32 *)(obj + 0xc) -
+                  fscale * fn_80293E80(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
+        stk.f48 = *(f32 *)(obj + 0x14) -
+                  fscale * sin(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
+        stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - fdiff / lbl_803E4CDC);
         (*((int (***)(int, int, void *, int, int, int))gPartfxInterface))[2](
-            obj, 0x32b, auStack_5c, 1, -1, 0);
+            obj, 0x32b, &stk, 1, -1, 0);
         *(u16 *)((int)pfVar4 + 0x16) = 0;
       }
     }
