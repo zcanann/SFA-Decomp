@@ -1920,7 +1920,12 @@ void FUN_8015e21c(uint param_1,int param_2,int param_3)
 }
 
 extern f32 lbl_803E2CD8;
+extern f32 lbl_803E2D00;
 extern f32 lbl_803E2D14;
+extern f32 lbl_803E2D10;
+extern f32 lbl_803E2D18;
+extern f32 lbl_803E2D1C;
+extern f32 lbl_803E2D20;
 extern f32 lbl_803E2D24;
 extern f32 lbl_803E2D28;
 extern f32 lbl_803E2D2C;
@@ -1985,6 +1990,7 @@ extern void *memcpy(void *dst, const void *src, u32 size);
 extern f32 fn_80293E80(f32 angle);
 extern f32 sin(f32 angle);
 extern void Matrix_TransformPoint(void *mtx, f32 *x, f32 *y, f32 *z);
+extern void voxmaps_updateRoutePath(void *from, void *to);
 void fn_8015CB0C(int *obj, int *state);
 
 #pragma scheduling off
@@ -2403,6 +2409,58 @@ int fn_8015C6B4(int obj, int state)
         *(u8 *)(state + 0x349) = 0;
         *(s16 *)(sub + 0x402) = 0;
         *(u8 *)(obj + 0xaf) |= 8;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8015B2A0(int obj, int state)
+{
+    int sub = *(int *)(obj + 0xb8);
+    int route;
+
+    if ((s8)*(u8 *)(state + 0x346) != 0 &&
+        (((u8)((int (*)(int, int, f32))((void **)*gBaddieControlInterface)[6])(
+              obj, state, lbl_803E2D00) & 1) == 0)) {
+        return 5;
+    }
+    if ((s8)*(u8 *)(state + 0x27b) != 0) {
+        ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 0xb);
+    } else if (*(s16 *)(sub + 0x402) == 3) {
+        ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 4);
+    } else if (*(s16 *)(sub + 0x402) == 4) {
+        if (*(f32 *)(state + 0x2c0) < lbl_803E2D10 && (s8)*(u8 *)(state + 0x346) != 0) {
+            if (*(u8 *)(sub + 0x406) < 0x33) {
+                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 1);
+            } else {
+                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 0);
+            }
+        }
+    } else if (*(s16 *)(sub + 0x402) == 1) {
+        return 8;
+    }
+    route = sub + 0x35c;
+    *(f32 *)(state + 0x290) = lbl_803E2D14;
+    *(f32 *)(state + 0x28c) = lbl_803E2D14;
+    memcpy((void *)route, (void *)(obj + 0xc), 0xc);
+    memcpy((void *)(sub + 0x368), (void *)(*(int *)(state + 0x2d0) + 0xc), 0xc);
+    voxmaps_updateRoutePath((void *)route, (void *)(sub + 0x384));
+    if (*(u8 *)(route + 0x25) == 0) {
+        ((void (*)(int, int, f32, f32, f32, f32, f32))((void **)*gPlayerInterface)[7])(
+            obj, state, *(f32 *)(route + 0x18), *(f32 *)(route + 0x20), lbl_803E2D14,
+            lbl_803E2D14, lbl_803E2D18);
+    } else {
+        ((void (*)(int, int, f32, f32, f32, f32, f32))((void **)*gPlayerInterface)[7])(
+            obj, state, *(f32 *)(route + 0x18), *(f32 *)(route + 0x20), lbl_803E2D1C,
+            lbl_803E2D20, lbl_803E2D18);
+    }
+    if (*(s16 *)(state + 0x32e) > 0x78 &&
+        ((int (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[17])(
+            obj, state, (f32)*(u16 *)(sub + 0x3fe), 1) != 0) {
+        return 5;
     }
     return 0;
 }
