@@ -621,8 +621,11 @@ CamcontrolTriggeredAction *Camera_getCamActionsBinEntry(int actionNo)
  */
 void camcontrol_release(void)
 {
-  if (gCamcontrolCurrentHandler != NULL) {
-    gCamcontrolCurrentHandler->handler->vtable->release((void *)pCamera);
+  CamcontrolHandlerEntry *currentHandler;
+
+  currentHandler = gCamcontrolCurrentHandler;
+  if (currentHandler != NULL) {
+    currentHandler->handler->vtable->actionCallback();
   }
 }
 

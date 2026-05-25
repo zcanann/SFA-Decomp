@@ -15,12 +15,22 @@ typedef struct CamcontrolQueuedActionParam {
   byte noBlendFlag;
 } CamcontrolQueuedActionParam;
 
+typedef struct CameraViewSlot {
+  s16 yaw;
+  s16 pitch;
+  s16 roll;
+  u8 pad06[0xC - 0x6];
+  f32 x;
+  f32 y;
+  f32 z;
+} CameraViewSlot;
+
 typedef struct CamcontrolHandlerVTable {
   void (*func00)();
   void (*activate)(void *camera,int startFlags,void *actionData);
   void (*update)(void *camera);
   void (*release)(void *camera);
-  void (*actionCallback)(CamcontrolTriggeredAction *action,int size);
+  void (*actionCallback)();
 } CamcontrolHandlerVTable;
 
 typedef struct CamcontrolHandler {

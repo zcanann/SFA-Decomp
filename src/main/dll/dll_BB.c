@@ -15,7 +15,7 @@ extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80247eb8();
 extern undefined4 FUN_80247ef8();
 extern double SeekTwiceBeforeRead();
-extern void *Camera_GetCurrentViewSlot(void);
+extern CameraViewSlot *Camera_GetCurrentViewSlot(void);
 extern f32 Camera_GetFovY(void);
 extern void Camera_SetViewportYOffset(s32 yOffset);
 extern void mm_free(void *ptr);
@@ -216,7 +216,7 @@ void camcontrol_applyState(short *param_1)
 #pragma peephole off
 void camcontrol_applyQueuedAction(void)
 {
-  short *view;
+  CameraViewSlot *view;
   float blendStep;
 
   if (gCamcontrolQueuedActionPending != '\0') {
@@ -235,18 +235,18 @@ void camcontrol_applyQueuedAction(void)
     }
     view = Camera_GetCurrentViewSlot();
     if (lbl_803E162C == *(float *)(pCamera + 0xf4)) {
-      *(float *)(pCamera + 0x10c) = *(float *)(view + 6);
-      *(float *)(pCamera + 0x110) = *(float *)(view + 8);
-      *(float *)(pCamera + 0x114) = *(float *)(view + 10);
-      *(short *)(pCamera + 0x106) = *view;
-      *(short *)(pCamera + 0x108) = view[1];
-      *(short *)(pCamera + 0x10a) = view[2];
+      *(float *)(pCamera + 0x10c) = view->x;
+      *(float *)(pCamera + 0x110) = view->y;
+      *(float *)(pCamera + 0x114) = view->z;
+      *(short *)(pCamera + 0x106) = view->yaw;
+      *(short *)(pCamera + 0x108) = view->pitch;
+      *(short *)(pCamera + 0x10a) = view->roll;
       *(float *)(pCamera + 0x118) = Camera_GetFovY();
     }
     else {
-      *(short *)pCamera = *view;
-      *(short *)(pCamera + 2) = view[1];
-      *(short *)(pCamera + 4) = view[2];
+      *(short *)pCamera = view->yaw;
+      *(short *)(pCamera + 2) = view->pitch;
+      *(short *)(pCamera + 4) = view->roll;
       *(float *)(pCamera + 0xb4) = Camera_GetFovY();
     }
     gCamcontrolSavedActionId = gCamcontrolActiveActionId;
