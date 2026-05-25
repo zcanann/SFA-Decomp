@@ -3624,3 +3624,41 @@ void dll_19_func19(u8 *cam, u8 *ctx) {
 
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *gPlayerInterface;
+extern void *gPathControlInterface;
+extern void ObjAnim_SetCurrentMove(int obj, int move, f32 speed, int flags);
+
+/* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p8, s8 p9) {
+    if (p3 != NULL) {
+        p3[0x24] = 0;
+        p3[0x25] = 0;
+        p3[0x26] = 4;
+        p3[0x27] = 20;
+    }
+    if (p6 != -1) {
+        *(s16 *)(p2 + 0x270) = p6;
+        p2[0x27b] = 1;
+    }
+    if (p7 != -1) {
+        (*(void (**)(int, u8 *))(*(int *)gPlayerInterface + 0x14))(p1, p2);
+    }
+    if (p5 != NULL) {
+        p5[0] = 2;
+    }
+    if (p8 != 0) {
+        ObjAnim_SetCurrentMove(p1, p8, lbl_803E1C2C, 0);
+    }
+    (*(void (**)(int, u8 *))(*(int *)gPathControlInterface + 0x20))(p1, p2 + 4);
+    if (p9 != -1) {
+        p2[0x25f] = p9;
+    }
+    if (p4 != -1) {
+        GameBit_Set(p4, 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
