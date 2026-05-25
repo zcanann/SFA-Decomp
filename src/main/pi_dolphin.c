@@ -520,7 +520,7 @@ extern f32 lbl_803DF7B8;
 extern f32 lbl_803DF7BC;
 extern f32 lbl_803DF7C0;
 extern void* PTR_LAB_802cd0ec;
-extern undefined* PTR_s_AUDIO_tab_802cbecc;
+extern char *sResourceFileNameTable[];
 extern void* PTR_s_animtest_802cc784;
 extern void* PTR_s_frontend_802cc518;
 extern undefined4 _DAT_00360048;
@@ -535,7 +535,7 @@ extern char s__s_animcurv_bin_802ccf30[];
 extern char s__s_animcurv_tab_802ccf40[];
 extern char s__s_mod_d_tab_802ccf98[];
 extern char s__s_mod_d_zlb_bin_802ccf84[];
-extern char s__s_romlist_zlb_802cd0dc[];
+extern char sRomlistZlbPathFormat[];
 extern char s__s_voxmap_bin_802ccf50[];
 extern char s__s_voxmap_tab_802ccf74[];
 extern char s_warlock_voxmap_bin_802ccf60[];
@@ -674,7 +674,7 @@ void piRomLoadSection(undefined8 param_1,undefined8 param_2,undefined8 param_3,u
   iVar4 = (int)uVar6;
   if ((param_11 == 0) && ((&DAT_8035fe68)[iVar4] == 0)) {
     uVar6 = FUN_8028fde8(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                         (int)acStack_418,s__s_romlist_zlb_802cd0dc,
+                         (int)acStack_418,sRomlistZlbPathFormat,
                          (&PTR_s_frontend_802cc518)[iVar4],param_12,param_13,param_14,param_15,
                          param_16);
     puVar1 = FUN_80017844(DAT_803dd90c);
@@ -691,7 +691,7 @@ void piRomLoadSection(undefined8 param_1,undefined8 param_2,undefined8 param_3,u
   else {
     if ((&DAT_8035fe68)[iVar4] == 0) {
       uVar5 = FUN_8028fde8(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                           (int)acStack_418,s__s_romlist_zlb_802cd0dc,
+                           (int)acStack_418,sRomlistZlbPathFormat,
                            (&PTR_s_frontend_802cc518)[iVar4],param_12,param_13,param_14,param_15,
                            param_16);
       piVar3 = FUN_80017844(DAT_803dd90c);
@@ -777,7 +777,7 @@ void FUN_80044840(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     iVar3 = (&DAT_80360048)[iVar8];
     if (iVar3 == 0) {
       FUN_80249300(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   (&PTR_s_AUDIO_tab_802cbecc)[iVar8],(int)aiStack_68);
+                   sResourceFileNameTable[iVar8],(int)aiStack_68);
       uVar2 = FUN_80017830(0x400,0x7f7f7fff);
       FUN_80006c30(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,aiStack_68,uVar2,
                    0x400,(uVar1 & 0xffffff) << 1,iVar5,uVar6,iVar7,param_16);
@@ -1236,7 +1236,7 @@ void FUN_80045328(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     if ((&DAT_80360048)[iVar2] == 0) {
       uVar5 = extraout_f1;
       FUN_80249300(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   (&PTR_s_AUDIO_tab_802cbecc)[iVar2],(int)aiStack_58);
+                   sResourceFileNameTable[iVar2],(int)aiStack_58);
       if (((uVar6 & 0x1f) == 0) && ((param_12 & 0x1f) == 0)) {
         FUN_802420b0(uVar4,param_12);
         FUN_80006c30(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,aiStack_58,uVar4,
@@ -1286,7 +1286,7 @@ int FUN_800455b8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
   
   if ((&DAT_80360048)[param_9] == 0) {
     FUN_80249300(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 (&PTR_s_AUDIO_tab_802cbecc)[param_9],(int)aiStack_58);
+                 sResourceFileNameTable[param_9],(int)aiStack_58);
     FUN_802420b0(param_10,local_24);
     FUN_80006c30(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,aiStack_58,param_10
                  ,local_24,0,param_13,param_14,param_15,param_16);
@@ -1328,7 +1328,7 @@ int FUN_80045734(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
   iVar1 = (&DAT_80360048)[param_9];
   if (iVar1 == 0) {
     FUN_80249300(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 (&PTR_s_AUDIO_tab_802cbecc)[param_9],(int)aiStack_58);
+                 sResourceFileNameTable[param_9],(int)aiStack_58);
     (&DAT_8035fd08)[param_9] = local_24;
     iVar1 = FUN_80017830((&DAT_8035fd08)[param_9] + 0x20,0x7d7d7d7d);
     (&DAT_80360048)[param_9] = iVar1;
