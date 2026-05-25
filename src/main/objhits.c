@@ -44,8 +44,6 @@ extern ObjHitsSweepEntry *gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern undefined4 DAT_80341b9c;
 extern undefined4 DAT_80342e58;
-extern undefined4 DAT_803dd848;
-extern undefined4 DAT_803dd850;
 extern int *gObjHitsPriorityHitStates;
 extern f64 DOUBLE_803df5a8;
 extern f64 DOUBLE_803df5c0;
@@ -74,8 +72,6 @@ extern f32 lbl_803DF5B8;
 extern f32 lbl_803DF5D8;
 extern f32 lbl_803DF5DC;
 extern f32 lbl_803DF5E0;
-extern undefined4 uRam803dd84c;
-extern undefined4 uRam803dd854;
 
 /*
  * --INFO--
@@ -2081,28 +2077,28 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
     if (*(short *)(iVar1 + 0x44) == 1) {
       piVar7 = *(int **)(*(int *)(iVar1 + 0x7c) + *(char *)(iVar1 + 0xad) * 4);
       uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-      if ((*(ushort *)(iVar5 + 0x60) & 0x2000) == 0) {
-        memcpy(DAT_803dd850,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = memcpy(uRam803dd854,piVar7[(uVar6 ^ 1) + 0x12],
+      if ((*(short *)(iVar5 + 0x60) & 0x2000) == 0) {
+        memcpy(gObjHitsPrimaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+        uVar8 = memcpy(gObjHitsPrimaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
       }
       else {
-        memcpy(piVar7[uVar6 + 0x12],DAT_803dd850,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd854,
+        memcpy(piVar7[uVar6 + 0x12],gObjHitsPrimaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+        uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],gObjHitsPrimaryHitboxBufferScratch1,
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
       }
       if (param_11 != 0) {
         piVar7 = *(int **)(*(int *)(param_11 + 0x7c) + *(char *)(param_11 + 0xad) * 4);
         uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-        if ((*(ushort *)(iVar5 + 0x60) & 0x2000) == 0) {
-          memcpy(DAT_803dd848,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = memcpy(uRam803dd84c,piVar7[(uVar6 ^ 1) + 0x12],
+        if ((*(short *)(iVar5 + 0x60) & 0x2000) == 0) {
+          memcpy(gObjHitsSecondaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+          uVar8 = memcpy(gObjHitsSecondaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          *(ushort *)(iVar5 + 0x60) = *(ushort *)(iVar5 + 0x60) | 0x2000;
+          *(short *)(iVar5 + 0x60) = *(short *)(iVar5 + 0x60) | 0x2000;
         }
         else {
-          memcpy(piVar7[uVar6 + 0x12],DAT_803dd848,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd84c,
+          memcpy(piVar7[uVar6 + 0x12],gObjHitsSecondaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+          uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],gObjHitsSecondaryHitboxBufferScratch1,
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
         }
       }
@@ -2131,28 +2127,28 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
     if (*(short *)(iVar3 + 0x44) == 1) {
       piVar7 = *(int **)(*(int *)(iVar3 + 0x7c) + *(char *)(iVar3 + 0xad) * 4);
       uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-      if ((*(ushort *)(iVar4 + 0x60) & 0x2000) == 0) {
-        memcpy(DAT_803dd850,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = memcpy(uRam803dd854,piVar7[(uVar6 ^ 1) + 0x12],
+      if ((*(short *)(iVar4 + 0x60) & 0x2000) == 0) {
+        memcpy(gObjHitsPrimaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+        uVar8 = memcpy(gObjHitsPrimaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
       }
       else {
-        memcpy(piVar7[uVar6 + 0x12],DAT_803dd850,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd854,
+        memcpy(piVar7[uVar6 + 0x12],gObjHitsPrimaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+        uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],gObjHitsPrimaryHitboxBufferScratch1,
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
       }
       if (param_12 != 0) {
         piVar7 = *(int **)(*(int *)(param_12 + 0x7c) + *(char *)(param_12 + 0xad) * 4);
         uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-        if ((*(ushort *)(iVar4 + 0x60) & 0x2000) == 0) {
-          memcpy(DAT_803dd848,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = memcpy(uRam803dd84c,piVar7[(uVar6 ^ 1) + 0x12],
+        if ((*(short *)(iVar4 + 0x60) & 0x2000) == 0) {
+          memcpy(gObjHitsSecondaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+          uVar8 = memcpy(gObjHitsSecondaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          *(ushort *)(iVar4 + 0x60) = *(ushort *)(iVar4 + 0x60) | 0x2000;
+          *(short *)(iVar4 + 0x60) = *(short *)(iVar4 + 0x60) | 0x2000;
         }
         else {
-          memcpy(piVar7[uVar6 + 0x12],DAT_803dd848,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],uRam803dd84c,
+          memcpy(piVar7[uVar6 + 0x12],gObjHitsSecondaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
+          uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],gObjHitsSecondaryHitboxBufferScratch1,
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
         }
       }

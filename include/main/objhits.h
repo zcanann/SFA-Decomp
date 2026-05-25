@@ -65,6 +65,10 @@
 #define OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET 0x10F
 
 extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
+extern void *gObjHitsPrimaryHitboxBufferScratch0;
+extern void *gObjHitsPrimaryHitboxBufferScratch1;
+extern void *gObjHitsSecondaryHitboxBufferScratch0;
+extern void *gObjHitsSecondaryHitboxBufferScratch1;
 extern char sObjHitsTooManyHitSpheresWarning[];
 
 typedef struct ObjHitboxDef {

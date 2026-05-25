@@ -120,8 +120,6 @@ typedef struct ObjTriggerInterface {
 } ObjTriggerInterface;
 
 extern ObjTriggerInterface **gGameUIInterface;
-extern void *lbl_803DCBC8[2];
-extern void *lbl_803DCBD0[2];
 extern void *lbl_803DCBD8;
 extern undefined4 gObjHitsPriorityHitStates;
 extern int gObjHitReactResetObjectCount;
@@ -1538,10 +1536,10 @@ void ObjHits_InitWorkBuffers(void)
   gObjHitsPriorityHitStates =
       (undefined4)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * sizeof(ObjHitsPriorityWorkSlot),0xe,0);
   lbl_803DCBD8 = mmAlloc(0x1900,0xe,0);
-  lbl_803DCBD0[0] = mmAlloc(0x400,0xe,0);
-  lbl_803DCBD0[1] = mmAlloc(0x400,0xe,0);
-  lbl_803DCBC8[0] = mmAlloc(0x400,0xe,0);
-  lbl_803DCBC8[1] = mmAlloc(0x400,0xe,0);
+  gObjHitsPrimaryHitboxBufferScratch0 = mmAlloc(0x400,0xe,0);
+  gObjHitsPrimaryHitboxBufferScratch1 = mmAlloc(0x400,0xe,0);
+  gObjHitsSecondaryHitboxBufferScratch0 = mmAlloc(0x400,0xe,0);
+  gObjHitsSecondaryHitboxBufferScratch1 = mmAlloc(0x400,0xe,0);
   gObjHitsPriorityHitTickDelta = lbl_803DE914;
   gObjHitsActiveHitVolumeObjects[0] = 0;
   gObjHitsActiveHitVolumeObjects[1] = 0;
