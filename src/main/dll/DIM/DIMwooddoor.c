@@ -141,8 +141,8 @@ void fn_801B1FF4(int obj, u8 variant)
 #pragma peephole off
 void fn_801B2244(int obj, f32 targetX, f32 targetY, f32 targetZ)
 {
-    DIMWoodDoorConfig *config;
     DIMWoodDoorState *state;
+    DIMWoodDoorConfig *config;
     s16 *modelVec;
     int player;
     f32 dx;
@@ -153,6 +153,7 @@ void fn_801B2244(int obj, f32 targetX, f32 targetY, f32 targetZ)
     f32 radiusSq;
     f32 accel;
     f32 accelDenom;
+    register int facingAngle;
     int angleDelta;
     int turnStep;
     s16 pitch;
@@ -165,9 +166,10 @@ void fn_801B2244(int obj, f32 targetX, f32 targetY, f32 targetZ)
     state = *(DIMWoodDoorState **)(obj + 0xb8);
     if (state->cooldown <= 0) {
         modelVec = objModelGetVecFn_800395d8(obj, 0);
-        angleDelta = (((u16)getAngle(targetX - *(f32 *)(obj + 0xc), targetZ - *(f32 *)(obj + 0x14)) +
-                       0x8000) -
-                      (u16)(modelVec[1] + ((s32)config->angleBias << 8)));
+        facingAngle = modelVec[1] + ((s32)config->angleBias << 8);
+        targetX -= *(f32 *)(obj + 0xc);
+        targetZ -= *(f32 *)(obj + 0x14);
+        angleDelta = (((u16)getAngle(targetX, targetZ) + 0x8000) - (u16)facingAngle);
         if (angleDelta > 0x8000) {
             angleDelta -= 0xffff;
         }
@@ -218,7 +220,7 @@ void fn_801B2244(int obj, f32 targetX, f32 targetY, f32 targetZ)
         distSq = dx * dx + dz * dz;
         dist = sqrtf(distSq);
         heightDelta = (lbl_803E48C8 + state->posY) - state->targetY;
-        if (distSq < lbl_803E48C8) {
+        if (distSq <= lbl_803E48C8) {
             distSq = lbl_803E48C8;
         }
         radiusSq = (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2));
@@ -232,11 +234,11 @@ void fn_801B2244(int obj, f32 targetX, f32 targetY, f32 targetZ)
 
         accel = (lbl_803E48A4 * -lbl_803DBEF0) * distSq;
         accelDenom = lbl_803E48CC * heightDelta - lbl_803E48D0 * dist;
-        if (accelDenom < lbl_803E48D4) {
+        if (accelDenom > lbl_803E48D4) {
             accelDenom = lbl_803E48D4;
         }
         accel = accel / accelDenom;
-        if (accel < lbl_803E48B8) {
+        if (accel <= lbl_803E48B8) {
             accel = lbl_803E48B8;
         }
         accel = sqrtf(accel);
