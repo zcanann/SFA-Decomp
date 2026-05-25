@@ -6398,3 +6398,165 @@ void Camera_SetFovY(f32 fovY)
     }
     gCameraFovY = fovY;
 }
+
+typedef struct RingBufferQueue {
+    s16 count;
+    s16 capacity;
+    s16 elemSize;
+    s16 unused;
+    s16 writeIndex;
+    s16 readIndex;
+    void* data;
+} RingBufferQueue;
+
+typedef struct ModelRenderInstrsState {
+    void* instrs;
+    s32 byteCount;
+    s32 bitCount;
+    s32 fieldC;
+    s32 bit;
+} ModelRenderInstrsState;
+
+typedef struct ObjLinkedList {
+    s16 count;
+    s16 nextOffset;
+    int head;
+} ObjLinkedList;
+
+extern void* memcpy(void* dst, const void* src, u32 size);
+
+/*
+ * Function: Queue_GetCount
+ * EN v1.0 Address: 0x80013754
+ * EN v1.0 Size: 8b
+ */
+s16 Queue_GetCount(RingBufferQueue* queue)
+{
+    return queue->count;
+}
+
+/*
+ * Function: Queue_IsEmpty
+ * EN v1.0 Address: 0x8001375C
+ * EN v1.0 Size: 16b
+ */
+BOOL Queue_IsEmpty(RingBufferQueue* queue)
+{
+    return queue->count == 0;
+}
+
+/*
+ * Function: Queue_Peek
+ * EN v1.0 Address: 0x8001376C
+ * EN v1.0 Size: 60b
+ */
+void Queue_Peek(RingBufferQueue* queue, void* dst)
+{
+    memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
+}
+
+/*
+ * Function: Queue_Init
+ * EN v1.0 Address: 0x8001388C
+ * EN v1.0 Size: 40b
+ */
+void Queue_Init(RingBufferQueue* queue, void* data, int capacity, int elemSize)
+{
+    queue->data = data;
+    queue->count = 0;
+    queue->capacity = capacity;
+    queue->elemSize = elemSize;
+    queue->writeIndex = 0;
+    queue->readIndex = 0;
+}
+
+/*
+ * Function: Stack_IsEmpty
+ * EN v1.0 Address: 0x800138B4
+ * EN v1.0 Size: 16b
+ */
+BOOL Stack_IsEmpty(RingBufferQueue* stack)
+{
+    return stack->count == 0;
+}
+
+/*
+ * Function: Stack_IsFull
+ * EN v1.0 Address: 0x800138C4
+ * EN v1.0 Size: 28b
+ */
+BOOL Stack_IsFull(RingBufferQueue* stack)
+{
+    return stack->count == stack->capacity - 1;
+}
+
+/*
+ * Function: Stack_Free
+ * EN v1.0 Address: 0x800139C8
+ * EN v1.0 Size: 32b
+ */
+void Stack_Free(RingBufferQueue* stack)
+{
+    mm_free(stack);
+}
+
+/*
+ * Function: modelRenderInstrsState_getBit
+ * EN v1.0 Address: 0x80013A54
+ * EN v1.0 Size: 8b
+ */
+s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state)
+{
+    return state->bit;
+}
+
+/*
+ * Function: modelRenderInstrsState_setBit
+ * EN v1.0 Address: 0x80013A5C
+ * EN v1.0 Size: 8b
+ */
+void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit)
+{
+    state->bit = bit;
+}
+
+/*
+ * Function: modelRenderInstrsState_init
+ * EN v1.0 Address: 0x80013A64
+ * EN v1.0 Size: 56b
+ */
+void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, int bitCount, int fieldC)
+{
+    state->byteCount = bitCount >> 3;
+    if ((bitCount & 7) != 0) {
+        state->byteCount++;
+    }
+    state->bitCount = bitCount;
+    state->fieldC = fieldC;
+    state->instrs = instrs;
+    state->bit = 0;
+}
+
+/*
+ * Function: objListAdd
+ * EN v1.0 Address: 0x80013B20
+ * EN v1.0 Size: 76b
+ */
+void objListAdd(ObjLinkedList* list, int prev, int item)
+{
+    int next;
+
+    if (list->head == 0) {
+        list->head = item;
+    } else {
+        if (prev == 0) {
+            next = list->head;
+            list->head = item;
+        } else {
+            next = *(int*)(prev + list->nextOffset);
+            *(int*)(prev + list->nextOffset) = item;
+        }
+        *(int*)(item + list->nextOffset) = next;
+    }
+    list->count++;
+}
