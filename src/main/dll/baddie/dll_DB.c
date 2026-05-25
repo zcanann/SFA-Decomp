@@ -92,31 +92,40 @@ extern f32 FLOAT_803e2e68;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void textureFreeFn_8012fcec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,short param_10)
+extern u8 lbl_803A87F0[];
+extern void gameUiResetMenuState(void);
+extern void *lbl_803DD7C8;
+extern s16 lbl_803DD830;
+extern void *lbl_803DD834;
+extern void textureFree(void *p);
+
+#pragma scheduling off
+#pragma peephole off
+void textureFreeFn_8012fcec(void)
 {
-  int iVar1;
-  short sVar2;
-  uint uVar3;
-  
-  iVar1 = FUN_801244a4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  sVar2 = (&DAT_8031c22c)[param_9 * 8];
-  uVar3 = 0;
-  while( true ) {
-    if (iVar1 <= (int)(uVar3 & 0xff)) {
-      return;
+    u8 i;
+
+    gameUiResetMenuState();
+    for (i = 0; i < 64; i++) {
+        if (*(void **)(lbl_803A87F0 + 2504 + i * 4) != NULL) {
+            textureFree(*(void **)(lbl_803A87F0 + 2504 + i * 4));
+            *(void **)(lbl_803A87F0 + 2504 + i * 4) = NULL;
+        }
+        *(s16 *)(lbl_803A87F0 + 2376 + i * 2) = -1;
+        lbl_803A87F0[1096 + i] = 1;
     }
-    if (((&DAT_803a98d8)[sVar2] != '\0') && ((int)param_10 == (&DAT_803a9c98)[sVar2])) break;
-    sVar2 = sVar2 + 1;
-    if (iVar1 <= sVar2) {
-      sVar2 = 0;
+    if (lbl_803DD7C8 != NULL) {
+        textureFree(lbl_803DD7C8);
+        lbl_803DD7C8 = NULL;
     }
-    uVar3 = uVar3 + 1;
-  }
-  (&DAT_8031c22c)[param_9 * 8] = sVar2;
-  return;
+    if (lbl_803DD834 != NULL) {
+        textureFree(lbl_803DD834);
+    }
+    lbl_803DD830 = -1;
+    lbl_803DD834 = NULL;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
