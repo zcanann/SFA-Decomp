@@ -2,6 +2,7 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/snd3d.h"
 #include "main/audio/snd3d_calc.h"
+#include "main/audio/snd3d_room.h"
 
 extern void dataInit(int p1, void *p2);
 extern void fn_8026F30C(void);
@@ -12,9 +13,6 @@ extern void synthResetLoadedGroupCount(void);
 extern u32 synthSendKeyOff(u32 handle);
 extern int synthFXStart(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux);
 extern int sndFXCheck(u32 id);
-extern void fn_8027FB08(void);
-extern void fn_8027FEE4(void);
-
 #define S3D_UNLINK_EMITTER(emitter)                         \
     do {                                                    \
         if ((emitter)->next != (Snd3DEmitter *)0x0) {       \
@@ -32,9 +30,9 @@ extern u8 gSynthInitialized;
 extern u8 synthIdleWaitActive;
 extern u8 s3dCallCnt;
 extern Snd3DEmitter *s3dEmitterRoot;
-extern void *s3dListenerRoot;
-extern void *s3dRoomRoot;
-extern void *s3dDoorRoot;
+extern SndSpatialListener *s3dListenerRoot;
+extern SndSpatialEntry *s3dRoomRoot;
+extern SndStudioInputLink *s3dDoorRoot;
 extern u32 snd_used_studios;
 extern u8 snd_base_studio;
 extern u8 snd_max_studios;
@@ -171,8 +169,8 @@ update_voice:
     }
 
     s3dStartQueuedEmitters();
-    fn_8027FB08();
-    fn_8027FEE4();
+    s3dAllocateRoomStudios();
+    s3dUpdateDoorStudioInputs();
 }
 #pragma dont_inline reset
 

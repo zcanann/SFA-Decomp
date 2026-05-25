@@ -1301,7 +1301,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_8027B53C.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027BB90.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027CAF4.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "main/unknown/autos/placeholder_8027F8B0.c", mw_version="GC/1.2.5n"),
+            Object(NonMatching, "main/audio/snd3d_room.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/snd3d_calc.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/snd_core.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_802817A8.c"),

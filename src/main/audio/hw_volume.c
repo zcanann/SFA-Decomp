@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
 #include "main/audio/hw_volume.h"
+#include "main/audio/snd3d_room.h"
 
 extern void salDeactivateVoice(void *entry);
 extern void fn_8027BEBC(void);
 extern void fn_8027BFC4(void);
-extern void fn_8027F2AC();
 extern u8 *dspVoice;
 extern u8 lbl_803CC1E0[];
 extern u8 lbl_802C2820[];
@@ -14,7 +14,7 @@ extern f32 lbl_803E78E4;
 
 /*
  * hwSetVolume - large mix-volume setter; computes 4-channel pan from
- * 3-axis float input via fn_8027F2AC, clamps each to s16, and writes
+ * 3-axis float input via salCalcVolumeMatrix, clamps each to s16, and writes
  * back to the voice's pan/volume table.
  *
  * EN v1.0 Address: 0x8028383C
@@ -35,10 +35,8 @@ void hwSetVolume(int slot, undefined4 p2, f32 a, f32 b, f32 c, u32 aux, undefine
 
     aux_entry = lbl_803CC1E0 + *(u8 *)(voice + 0xef) * 0xbc;
 
-    fn_8027F2AC(p2, out, aux, p7,
-                (*(u32 *)(voice + 0xf0) & 0x80000000u) != 0,
-                *(u32 *)(aux_entry + 0x54) == 1,
-                a, b, c);
+    salCalcVolumeMatrix(p2, out, aux, p7, (*(u32 *)(voice + 0xf0) & 0x80000000u) != 0,
+                        *(u32 *)(aux_entry + 0x54) == 1, a, b, c);
 
     v0 = (s32)(lbl_803E78E4 * out[0]);
     v1 = (s32)(lbl_803E78E4 * out[1]);

@@ -26,9 +26,57 @@
 
 typedef struct SndSpatialEntry {
     struct SndSpatialEntry *next;
-    u8 pad04[0x18];
+    u8 pad04[4];
+    u32 flags;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    f32 averageDistanceSq;
     s8 assignedVoice;
+    u8 pad1d[3];
+    void (*activateCallback)(u8 voice, u32 user);
+    void (*evictCallback)(u8 voice);
+    u32 callbackUser;
+    u32 fade;
 } SndSpatialEntry;
+
+typedef struct SndSpatialListener {
+    struct SndSpatialListener *next;
+    u8 pad04[4];
+    SndSpatialEntry *entry;
+    u32 flags;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    f32 time;
+    f32 refX;
+    f32 refY;
+    f32 refZ;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    u8 pad38[0x50 - 0x38];
+    f32 matrix[12];
+    f32 rearRange;
+    f32 frontRange;
+    f32 panScale;
+    f32 volumeScale;
+} SndSpatialListener;
+
+typedef struct SndStudioInputLink {
+    struct SndStudioInputLink *next;
+    u8 pad04[0x10];
+    f32 inputScale;
+    u8 pad18[4];
+    u8 sendLevel;
+    s8 activeInput;
+    u8 pad1e[2];
+    SndSpatialEntry *source;
+    SndSpatialEntry *target;
+    u32 flags;
+    u8 pad2c[8];
+    u8 studioInput[4];
+} SndStudioInputLink;
 
 typedef struct S3DEmitterCtrl {
     u8 controller;

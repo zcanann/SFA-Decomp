@@ -2,28 +2,6 @@
 #include "main/audio/snd_core.h"
 #include "main/audio/snd3d_calc.h"
 
-typedef struct SndSpatialListenerLite {
-    struct SndSpatialListenerLite *next;
-    u8 pad04[8];
-    u32 flags;
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    f32 time;
-    f32 refX;
-    f32 refY;
-    f32 refZ;
-    f32 velX;
-    f32 velY;
-    f32 velZ;
-    u8 pad38[0x50 - 0x38];
-    f32 matrix[12];
-    f32 rearRange;
-    f32 frontRange;
-    f32 panScale;
-    f32 volumeScale;
-} SndSpatialListenerLite;
-
 typedef struct S3DActiveNode {
     struct S3DActiveNode *next;
     f32 distance;
@@ -53,7 +31,7 @@ extern u8 lbl_803DE36B;
 extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
 extern u8 lbl_803DE36A;
-extern SndSpatialListenerLite *s3dListenerRoot;
+extern SndSpatialListener *s3dListenerRoot;
 extern f32 lbl_803E7880;
 extern f64 lbl_803E7888;
 extern f32 lbl_803E7890;
@@ -98,7 +76,7 @@ extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 void s3dCalcEmitter(Snd3DEmitter *emitter, f32 *distanceOut, f32 *panOut, f32 *azimuthOut,
                     f32 *pitchOut, f32 *frontBackOut)
 {
-    SndSpatialListenerLite *listener;
+    SndSpatialListener *listener;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -122,7 +100,7 @@ void s3dCalcEmitter(Snd3DEmitter *emitter, f32 *distanceOut, f32 *panOut, f32 *a
     pitchSum = lbl_803E7880;
     frontBackSum = lbl_803E7880;
 
-    for (listener = s3dListenerRoot; listener != (SndSpatialListenerLite *)0x0;
+    for (listener = s3dListenerRoot; listener != (SndSpatialListener *)0x0;
          listener = listener->next) {
         dx = emitter->posX - (listener->posX + listener->velX * listener->time);
         dy = emitter->posY - (listener->posY + listener->velY * listener->time);

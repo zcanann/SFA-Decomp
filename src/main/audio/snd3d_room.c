@@ -1,57 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/snd3d_room.h"
 
-typedef struct SndSpatialListener {
-    struct SndSpatialListener *next;
-    u8 pad04[4];
-    struct SndSpatialEntry *entry;
-    u8 pad0c[4];
-    f32 x;
-    f32 y;
-    f32 z;
-} SndSpatialListener;
-
-typedef struct SndSpatialEntry {
-    struct SndSpatialEntry *next;
-    u8 pad04[4];
-    u32 flags;
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 averageDistanceSq;
-    s8 assignedVoice;
-    u8 pad1d[3];
-    void (*activateCallback)(u8 voice, u32 user);
-    void (*evictCallback)(u8 voice);
-    u32 callbackUser;
-    u32 fade;
-} SndSpatialEntry;
-
-typedef struct SndStudioInputLink {
-    struct SndStudioInputLink *next;
-    u8 pad04[0x10];
-    f32 inputScale;
-    u8 pad18[4];
-    u8 sendLevel;
-    s8 activeInput;
-    u8 pad1e[2];
-    SndSpatialEntry *source;
-    SndSpatialEntry *target;
-    u32 flags;
-    u8 pad2c[8];
-    u8 studioInput[4];
-} SndStudioInputLink;
-
-typedef struct SndRuntimeVoice {
-    struct SndRuntimeVoice *next;
-    u8 pad04[4];
-    SndSpatialEntry *spatialEntry;
-    u8 pad0c[8];
-    u32 flags;
-    u8 pad14[0x28];
-    u32 handle;
-} SndRuntimeVoice;
-
-extern SndRuntimeVoice *s3dEmitterRoot;
+extern Snd3DEmitter *s3dEmitterRoot;
 extern SndSpatialListener *s3dListenerRoot;
 extern SndSpatialEntry *s3dRoomRoot;
 extern SndStudioInputLink *s3dDoorRoot;
@@ -71,10 +21,22 @@ extern void synthAddStudioInput(u8 studio, u8 *input);
 extern void synthRemoveStudioInput(u8 studio, u8 *input);
 
 /*
- * fn_8027F2AC - large pre-mix processing (~1944 instructions). Stubbed.
+ * salCalcVolumeMatrix - large pre-mix processing (~1944 instructions). Stubbed.
  */
 #pragma dont_inline on
-void fn_8027F2AC(void) {}
+void salCalcVolumeMatrix(undefined4 tableSelect, f32 *out, u32 auxA, undefined4 auxB,
+                         BOOL surround, BOOL auxMode, f32 a, f32 b, f32 c)
+{
+    (void)tableSelect;
+    (void)out;
+    (void)auxA;
+    (void)auxB;
+    (void)surround;
+    (void)auxMode;
+    (void)a;
+    (void)b;
+    (void)c;
+}
 #pragma dont_inline reset
 
 /*
@@ -82,7 +44,7 @@ void fn_8027F2AC(void) {}
  * registered listeners.
  */
 #pragma dont_inline on
-void fn_8027FA44(void)
+void s3dUpdateRoomDistances(void)
 {
     SndSpatialListener *listener;
     SndSpatialEntry *entry;
@@ -101,9 +63,9 @@ void fn_8027FA44(void)
             distanceSq = lbl_803E7880;
             if (entry->assignedVoice != -1) {
                 for (; listener != NULL; listener = listener->next) {
-                    f32 dx = entry->x - listener->x;
-                    f32 dy = entry->y - listener->y;
-                    f32 dz = entry->z - listener->z;
+                    f32 dx = entry->posX - listener->posX;
+                    f32 dy = entry->posY - listener->posY;
+                    f32 dz = entry->posZ - listener->posZ;
 
                     distanceSq = distanceSq + dz * dz + dx * dx + dy * dy;
                 }
@@ -119,13 +81,13 @@ void fn_8027FA44(void)
  * activation fade state.
  */
 #pragma dont_inline on
-void fn_8027FB08(void)
+void s3dAllocateRoomStudios(void)
 {
     SndSpatialEntry *entry;
     SndSpatialListener *listener;
     u32 listenerCount;
 
-    fn_8027FA44();
+    s3dUpdateRoomDistances();
 
     listenerCount = 0;
     for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
@@ -142,9 +104,9 @@ void fn_8027FB08(void)
 
                 distanceSq = lbl_803E7880;
                 for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
-                    f32 dx = entry->x - listener->x;
-                    f32 dy = entry->y - listener->y;
-                    f32 dz = entry->z - listener->z;
+                    f32 dx = entry->posX - listener->posX;
+                    f32 dy = entry->posY - listener->posY;
+                    f32 dz = entry->posZ - listener->posZ;
 
                     distanceSq = distanceSq + dz * dz + dx * dx + dy * dy;
                 }
@@ -160,7 +122,7 @@ void fn_8027FB08(void)
                 studioCount = snd_max_studios;
                 if (((1u << studioCount) - 1) == (((1u << studioCount) - 1) & snd_used_studios)) {
                     f32 worstDistance = lbl_803E7890;
-                    SndRuntimeVoice *voice;
+                    Snd3DEmitter *voice;
                     SndSpatialEntry *scanEntry;
 
                     for (scanEntry = s3dRoomRoot; scanEntry != NULL; scanEntry = scanEntry->next) {
@@ -174,7 +136,7 @@ void fn_8027FB08(void)
                         continue;
                     }
                     for (voice = s3dEmitterRoot; voice != NULL; voice = voice->next) {
-                        if (voice->spatialEntry == evictedEntry) {
+                        if (voice->entry == evictedEntry) {
                             synthSendKeyOff(voice->handle);
                             voice->flags |= 0x80000;
                             voice->handle = 0xffffffff;
@@ -247,7 +209,7 @@ void fn_8027FB08(void)
  * and disappear.
  */
 #pragma dont_inline on
-void fn_8027FEE4(void)
+void s3dUpdateDoorStudioInputs(void)
 {
     SndStudioInputLink *link;
 
