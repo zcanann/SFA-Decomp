@@ -132,6 +132,20 @@ extern f32 lbl_803E4D60;
 extern f32 lbl_803E4D64;
 extern f32 lbl_803E4D68;
 extern f32 lbl_803E4D6C;
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern void ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, int c);
+extern f32 lbl_803E4CD0;
+extern f32 lbl_803E4CD4;
+extern f32 lbl_803E4CD8;
+extern f32 lbl_803E4CDC;
+extern f32 lbl_803E4CE0;
+extern f32 lbl_803E4CE4;
+extern f32 lbl_803E4CE8;
+extern f32 lbl_803E4CEC;
+extern f64 lbl_803E4CF8;
+extern f32 lbl_803E4D20;
 
 /*
  * --INFO--
@@ -299,77 +313,74 @@ void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_update(ushort *param_1)
+void dimbossgut2_update(int obj)
 {
-  int iVar1;
+  int state;
+  int iVar;
   uint uVar2;
-  uint uVar3;
+  uint n;
   float *pfVar4;
-  int iVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  uint local_68;
-  uint uStack_64;
-  uint uStack_60;
-  undefined auStack_5c [8];
-  float local_54;
-  float local_50;
-  float local_4c;
-  float local_48;
-  undefined4 local_40;
-  uint uStack_3c;
-  undefined4 local_38;
-  uint uStack_34;
-  
-  iVar5 = *(int *)(param_1 + 0x5c);
-  if ((*(int *)(param_1 + 0x7a) == 0) &&
-     ((*(int *)(param_1 + 0x18) != 0 ||
-      (iVar1 = FUN_8005b398((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8)),
-      -1 < iVar1)))) {
-    local_68 = 0;
+  int iVar1;
+  f32 fdiff;
+  f32 fscale;
+  u8 *p;
+  uint msgA;
+  uint msgB;
+  uint msgC;
+  u8 auStack_5c[8];
+  f32 local_54;
+  f32 local_50;
+  f32 local_4c;
+  f32 local_48;
+
+  state = *(int *)(obj + 0xb8);
+  if ((*(int *)(obj + 0xf4) == 0) &&
+     ((*(void **)(obj + 0x30) != NULL ||
+      (iVar = objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)),
+      iVar >= 0)))) {
+    msgC = 0;
     do {
-      iVar1 = ObjMsg_Pop((int)param_1,&uStack_64,&uStack_60,&local_68);
-    } while (iVar1 != 0);
-    pfVar4 = *(float **)(iVar5 + 0x40c);
-    if ((*pfVar4 < lbl_803E5968) && (pfVar4[4] < lbl_803E596C)) {
-      dVar8 = (double)(pfVar4[3] - *(float *)(param_1 + 8));
-      if (dVar8 < (double)lbl_803E5970) {
-        dVar8 = -dVar8;
+      iVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
+    } while (iVar != 0);
+    pfVar4 = *(float **)(state + 0x40c);
+    if ((*pfVar4 < lbl_803E4CD0) && (pfVar4[4] < lbl_803E4CD4)) {
+      fdiff = pfVar4[3] - *(f32 *)(obj + 0x10);
+      if (fdiff < lbl_803E4CD8) {
+        fdiff = -fdiff;
       }
-      if ((dVar8 < (double)lbl_803E5974) &&
-         (local_4c = pfVar4[3], uVar2 = randomGetRange(0x1e,0x3c),
-         (int)uVar2 < (int)(uint)*(ushort *)((int)pfVar4 + 0x16))) {
-        dVar7 = (double)(lbl_803E5978 * pfVar4[4]);
-        dVar6 = (double)FUN_80293f90((f64)(f32)(s32)(short)*param_1);
-        local_50 = -(float)(dVar7 * dVar6 - (double)*(float *)(param_1 + 6));
-        dVar6 = (double)FUN_80294964((f64)(f32)(s32)(short)*param_1);
-        local_48 = -(float)(dVar7 * dVar6 - (double)*(float *)(param_1 + 10));
-        local_54 = lbl_803E5984 * (lbl_803E5988 - (float)(dVar8 / (double)lbl_803E5974));
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x32b,auStack_5c,1,0xffffffff,0);
-        *(undefined2 *)((int)pfVar4 + 0x16) = 0;
+      if ((fdiff < lbl_803E4CDC) &&
+         (local_4c = pfVar4[3], uVar2 = randomGetRange(0x1e, 0x3c),
+         (int)uVar2 < (int)(uint)*(u16 *)((int)pfVar4 + 0x16))) {
+        fscale = lbl_803E4CE0 * pfVar4[4];
+        local_50 = *(f32 *)(obj + 0xc) -
+                   fscale * fn_80293E80(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
+        local_48 = *(f32 *)(obj + 0x14) -
+                   fscale * sin(lbl_803E4CE4 * (f32)*(s16 *)obj / lbl_803E4CE8);
+        local_54 = lbl_803E4CEC * (lbl_803E4CF0 - fdiff / lbl_803E4CDC);
+        (*((int (***)(int, int, void *, int, int, int))gPartfxInterface))[2](
+            obj, 0x32b, auStack_5c, 1, -1, 0);
+        *(u16 *)((int)pfVar4 + 0x16) = 0;
       }
     }
-    *(ushort *)((int)pfVar4 + 0x16) = *(short *)((int)pfVar4 + 0x16) + (ushort)DAT_803dc070;
-    fn_801BEEA0((s16 *)param_1,(u8 *)iVar5);
-    dimbossgut2_updateTracking(param_1,iVar5);
-    FUN_8002fc3c((double)lbl_803E59B8,(double)lbl_803DC074);
-    *(undefined *)(*(int *)(param_1 + 0x2a) + 0x6e) = 9;
-    *(undefined *)(*(int *)(param_1 + 0x2a) + 0x6f) = 1;
-    ObjHits_RegisterActiveHitVolumeObject(param_1);
-    iVar1 = *(int *)(iVar5 + 0x40c);
-    iVar5 = *(int *)(iVar1 + 0x18);
-    if (((iVar5 != 0) && (*(char *)(iVar5 + 0x2f8) != '\0')) && (*(char *)(iVar5 + 0x4c) != '\0')) {
-      uVar2 = (uint)*(byte *)(iVar5 + 0x2f9) + (int)*(char *)(iVar5 + 0x2fa) & 0xffff;
-      if (0xc < uVar2) {
-        uVar3 = randomGetRange(0xfffffff4,0xc);
-        uVar2 = uVar2 + uVar3 & 0xffff;
-        if (0xff < uVar2) {
-          uVar2 = 0xff;
-          *(undefined *)(*(int *)(iVar1 + 0x18) + 0x2fa) = 0;
+    *(u16 *)((int)pfVar4 + 0x16) = *(u16 *)((int)pfVar4 + 0x16) + (u8)framesThisStep;
+    fn_801BEEA0((s16 *)obj, (u8 *)state);
+    dimbossgut2_updateTracking((ushort *)obj, state);
+    ObjAnim_AdvanceCurrentMove(obj, lbl_803E4D20, timeDelta, 0);
+    *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 9;
+    *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+    iVar1 = *(int *)(state + 0x40c);
+    p = *(u8 **)(iVar1 + 0x18);
+    if ((p != NULL) && (p[0x2f8] != 0) && (p[0x4c] != 0)) {
+      n = (p[0x2f9] + *(s8 *)(p + 0x2fa)) & 0xffff;
+      if (0xc < n) {
+        n = (n + randomGetRange(-12, 12)) & 0xffff;
+        if (0xff < n) {
+          n = 0xff;
+          *(u8 *)(*(int *)(iVar1 + 0x18) + 0x2fa) = 0;
         }
       }
-      *(char *)(*(int *)(iVar1 + 0x18) + 0x2f9) = (char)uVar2;
+      *(u8 *)(*(int *)(iVar1 + 0x18) + 0x2f9) = (u8)n;
     }
   }
   return;
