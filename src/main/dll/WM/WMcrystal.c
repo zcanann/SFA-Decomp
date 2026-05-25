@@ -303,13 +303,13 @@ undefined4 sc_totempuzzle_processAnimEvents(int param_1,undefined4 param_2,ObjAn
   int iVar2;
   int *piVar3;
   int iVar4;
-  int iVar5;
+  ScTotemBondState *state;
   int local_28;
   int local_24;
   int local_20;
   int local_1c [3];
   
-  iVar5 = *(int *)(param_1 + 0xb8);
+  state = ((ScTotemBondObject *)param_1)->state;
   animUpdate->sequenceEventActive = 0;
   iVar4 = 0;
   do {
@@ -328,11 +328,11 @@ undefined4 sc_totempuzzle_processAnimEvents(int param_1,undefined4 param_2,ObjAn
         }
         piVar3 = piVar3 + 1;
       }
-      *(byte *)(iVar5 + 0x26) = *(byte *)(iVar5 + 0x26) | 0x10;
+      state->eventFlags = state->eventFlags | 0x10;
     }
     else if (bVar1 < 2) {
       if (bVar1 != 0) {
-        *(byte *)(iVar5 + 0x26) = *(byte *)(iVar5 + 0x26) | 1;
+        state->eventFlags = state->eventFlags | 1;
         (**(code **)(*DAT_803dd6d4 + 0x50))(0x44,1,0,0);
       }
     }

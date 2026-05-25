@@ -32,6 +32,7 @@ typedef struct ScTotemPuzzleMapData {
 typedef struct ScTotemBondState {
     u8 pad00[0x24];
     s16 ringIndex;
+    u8 eventFlags;
 } ScTotemBondState;
 
 typedef struct ScTotemBondObject {
