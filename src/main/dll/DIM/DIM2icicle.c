@@ -130,6 +130,8 @@ extern void fn_801BB3E8(int obj, u8 flag);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_801BB598(void)
 {
   float fVar1;
