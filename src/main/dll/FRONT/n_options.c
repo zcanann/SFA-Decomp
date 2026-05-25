@@ -560,14 +560,23 @@ void AttractMovieAudio_DmaCallback(void)
  */
 void THPPlayerPostDrawDone(void)
 {
+  OSMessageQueue *queue;
   OSMessage msg;
+  OSMessage textureSet;
 
   if (lbl_803DD660 != 0) {
-    while (OSReceiveMessage(&lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) == TRUE) {
-      if (msg == NULL) {
+    queue = &lbl_803A5CCC;
+    while (TRUE) {
+      if (OSReceiveMessage(queue, &msg, OS_MESSAGE_NOBLOCK) == TRUE) {
+        textureSet = msg;
+      }
+      else {
+        textureSet = NULL;
+      }
+      if (textureSet == NULL) {
         break;
       }
-      PushFreeTextureSet(msg);
+      PushFreeTextureSet(textureSet);
     }
   }
 }
