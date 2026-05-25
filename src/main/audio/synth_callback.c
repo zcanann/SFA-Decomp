@@ -112,14 +112,8 @@ s32 synthUpdateCallbacks(void) {
     for (listIndex = 0; listIndex < SYNTH_CALLBACK_ACTIVE_LIST_COUNT; listIndex++) {
         callback = gSynthCurrentVoice->callbackLists[listIndex];
         if (callback != 0) {
-            do {
-                if (callback->triggerValue >
-                    SYNTH_CALLBACK_CONTROLLER_THRESHOLD(
-                        SYNTH_CALLBACK_CONTROLLER_STATE(gSynthCurrentVoice, callback->controllerIndex),
-                        listIndex)) {
-                    break;
-                }
-
+            goto checkThreshold;
+            while (1) {
                 synthSendKeyOff(callback->callbackId);
                 next = callback->next;
                 gSynthCurrentVoice->callbackLists[listIndex] = next;
@@ -134,7 +128,16 @@ s32 synthUpdateCallbacks(void) {
                 }
                 gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = callback;
                 callback = gSynthCurrentVoice->callbackLists[listIndex];
-            } while (callback != 0);
+                if (callback == 0) {
+                    break;
+                }
+checkThreshold:
+                if (callback->triggerValue >
+                    *(s32*)((u8*)gSynthCurrentVoice + 0x150C +
+                            (callback->controllerIndex * 0x38) + (listIndex * 8))) {
+                    break;
+                }
+            }
         }
     }
 
