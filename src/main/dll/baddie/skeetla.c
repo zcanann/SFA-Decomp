@@ -229,6 +229,8 @@ int fn_80139834(f32 param_1, int param_2, int param_3)
 #pragma peephole reset
 
 /* fn_80139930  addr=0x80139930  size=0x15C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
 int fn_80139930(u8 *obj, u16 targetYaw)
 {
     u8 *state;
@@ -278,6 +280,8 @@ int fn_80139930(u8 *obj, u16 targetYaw)
 
     return delta;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E2418;
