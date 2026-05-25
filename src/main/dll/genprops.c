@@ -5105,6 +5105,38 @@ void collectible_render2(int *obj, f32 f1, f32 f2, f32 f3) {
     *(f32*)((char*)obj + 0x2c) = f3;
 }
 
+extern u32 GameBit_Get(int eventId);
+extern void saveGame_saveObjectPos(int obj);
+
+#pragma scheduling off
+#pragma peephole off
+void collectible_func10(int *obj, f32 f1, f32 f2, f32 f3) {
+    char *inner = (char*)((int**)obj)[0xb8/4];
+    *(f32*)((char*)obj + 0xc) = f1;
+    *(f32*)(inner + 0x24) = f1;
+    *(f32*)((char*)obj + 0x10) = f2;
+    *(f32*)(inner + 0x28) = f2;
+    *(f32*)((char*)obj + 0x14) = f3;
+    *(f32*)(inner + 0x2c) = f3;
+    if (GameBit_Get(*(s16*)(inner + 0x10)) == 0) {
+        saveGame_saveObjectPos((int)obj);
+    }
+}
+
+void collectible_func0B(int *obj, int flag) {
+    char *inner = (char*)((int**)obj)[0xb8/4];
+    *(u8*)(inner + 0xf) = (u8)flag;
+    if (flag != 0) {
+        ObjHits_DisableObject(obj);
+    } else {
+        if (GameBit_Get(*(s16*)(inner + 0x10)) == 0) {
+            ObjHits_EnableObject(obj);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void flamethrowerspe_setScale(int *obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3) {
     *(f32*)((char*)obj + 0xc) = f1;
     *(f32*)((char*)obj + 0x10) = f2;
