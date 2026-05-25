@@ -4469,7 +4469,7 @@ extern void objRenderShadow2(int *obj, int *obj2, int model, int p4);
 extern void modelDoRenderInstrs(int *obj, int *obj2, int model, int p4);
 extern void objRenderChild(int *child, int *parent, int p3);
 void objRenderShadow(int *obj) {
-    if (*(f32 *)((char *)obj + 8) == lbl_803DEA04) {
+    if (lbl_803DEA04 == *(f32 *)((char *)obj + 8)) {
         curObjMtx = 0;
         return;
     }
@@ -4482,9 +4482,10 @@ void objRenderShadow(int *obj) {
         }
     }
     if (*(s16 *)((char *)obj + 68) == 1) {
-        int i;
-        u8 *iter = (u8 *)obj;
-        for (i = 0; i < *(u8 *)((char *)obj + 235); i++) {
+        u8 *iter;
+        int i = 0;
+        iter = (u8 *)obj;
+        for (; i < *(u8 *)((char *)obj + 235); i++) {
             int *child = *(int **)(iter + 200);
             if (child != NULL) {
                 objRenderChild(child, obj, 1);

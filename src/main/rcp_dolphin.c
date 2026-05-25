@@ -2724,7 +2724,7 @@ extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
 extern void *mmAlloc(u32 size, int type, int p3);
 extern void *memset(void *, int, u32);
 extern void textureFn_80053d58(void *obj);
-void *textureAlloc(u16 w, u16 h, u8 fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11) {
+void *textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11) {
     u8 *obj;
     u32 size = GXGetTexBufferSize(w, h, fmt, mip, maxLod) + 96;
     obj = (u8 *)mmAlloc(size, 6, 0);
