@@ -294,11 +294,6 @@ LAB_8005E718:
 void renderFn_8005e730(undefined4 param_1,undefined4 param_2,int param_3)
 {
   int *piVar3;
-  SfaIntDouble iD6;
-  SfaIntDouble iD5;
-  SfaIntDouble iD4;
-  SfaIntDouble iD3;
-  SfaIntDouble iD2;
   SfaIntDouble iD1;
   f32 fStack_18;
   f32 fStack_14;
@@ -313,21 +308,21 @@ void renderFn_8005e730(undefined4 param_1,undefined4 param_2,int param_3)
               (iD1.words.lo = (int)*(short *)((int)param_1 + 6) >> 3 ^ 0x80000000,
                iD1.words.hi = 0x43300000,
                (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX),
-              (iD2.words.lo = (int)*(short *)((int)param_1 + 8) >> 3 ^ 0x80000000,
-               iD2.words.hi = 0x43300000,
-               (float)(iD2.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28)),
-              (iD3.words.lo = (int)*(short *)((int)param_1 + 10) >> 3 ^ 0x80000000,
-               iD3.words.hi = 0x43300000,
-               (float)(iD3.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ),
-              (iD4.words.lo = (int)*(short *)((int)param_1 + 0xc) >> 3 ^ 0x80000000,
-               iD4.words.hi = 0x43300000,
-               (float)(iD4.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX),
-              (iD5.words.lo = (int)*(short *)((int)param_1 + 0xe) >> 3 ^ 0x80000000,
-               iD5.words.hi = 0x43300000,
-               (float)(iD5.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28)),
-              (iD6.words.lo = (int)*(short *)((int)param_1 + 0x10) >> 3 ^ 0x80000000,
-               iD6.words.hi = 0x43300000,
-               (float)(iD6.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ));
+              (iD1.words.lo = (int)*(short *)((int)param_1 + 8) >> 3 ^ 0x80000000,
+               iD1.words.hi = 0x43300000,
+               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28)),
+              (iD1.words.lo = (int)*(short *)((int)param_1 + 10) >> 3 ^ 0x80000000,
+               iD1.words.hi = 0x43300000,
+               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ),
+              (iD1.words.lo = (int)*(short *)((int)param_1 + 0xc) >> 3 ^ 0x80000000,
+               iD1.words.hi = 0x43300000,
+               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX),
+              (iD1.words.lo = (int)*(short *)((int)param_1 + 0xe) >> 3 ^ 0x80000000,
+               iD1.words.hi = 0x43300000,
+               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28)),
+              (iD1.words.lo = (int)*(short *)((int)param_1 + 0x10) >> 3 ^ 0x80000000,
+               iD1.words.hi = 0x43300000,
+               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ));
   resetLotsOfRenderVars();
   fn_8004CE0C(param_3);
   param_3 = 0;
