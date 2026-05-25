@@ -2134,7 +2134,7 @@ main/unknown/autos/placeholder_8028026C.c:
 	extabindex  start:0x8000632C end:0x80006350
 	.text       start:0x802800C0 end:0x80280C30
 
-main/unknown/autos/placeholder_80280F28.c:
+main/audio/snd3d.c:
 	extab       start:0x80005A80 end:0x80005A90
 	extabindex  start:0x80006350 end:0x80006368
 	.text       start:0x80280C30 end:0x80281160

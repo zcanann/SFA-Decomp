@@ -3,6 +3,7 @@
 #include "main/audio/sal_dsp.h"
 #include "main/audio/hw_voice_params.h"
 #include "main/audio/hw_init.h"
+#include "main/audio/snd3d.h"
 
 extern undefined4 DAT_803be6f6;
 extern undefined4 DAT_803be71a;
@@ -89,7 +90,6 @@ extern void salCtrlDsp(u32 param_1);
 extern void salHandleAuxProcessing(void);
 extern void fn_8026EC44(u32 value);
 extern void audioFn_80271498(u32 value);
-extern void s3dHandle(void);
 extern void synthUpdateJobTable(void);
 extern void synthUpdateVirtualSamples(void);
 

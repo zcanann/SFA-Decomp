@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/hw_init.h"
-#include "main/unknown/autos/placeholder_80280F28.h"
+#include "main/audio/snd3d.h"
 
 extern void dataInit(int p1, void *p2);
 extern void fn_8026F30C(void);
@@ -8,7 +8,6 @@ extern void synthInit(u32 sampleRate, u32 voiceCount);
 extern void synthInitJobTable(void);
 extern void synthInitVirtualSampleTable(void);
 extern void synthResetLoadedGroupCount(void);
-extern void s3dInit(u32 flags);
 extern u32 synthSendKeyOff(u32 handle);
 extern int synthFXStart(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux);
 extern int sndFXCheck(u32 id);

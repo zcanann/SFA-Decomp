@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/snd3d.h"
 #include "main/unknown/autos/placeholder_8028026C.h"
 #include "main/unknown/autos/placeholder_8028116C.h"
 
@@ -26,7 +27,6 @@ extern f64 lbl_803E78D8;
 
 extern void hwExit(void);
 extern void IFFifoAlloc(void);
-extern void s3dExit(void);
 extern void synthExit(void);
 extern double __frsqrte(double x);
 
