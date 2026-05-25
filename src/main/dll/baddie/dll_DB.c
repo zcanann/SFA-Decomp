@@ -765,7 +765,10 @@ typedef struct LinkMenuItem {
     u16 field00;
     u16 itemId;
     s16 field04;
-    u8 pad6[0x0A];
+    s16 field06;
+    u8 pad8[4];
+    s16 field0C;
+    u8 padE[2];
     union {
         int textureAssetId;
         void *texture;
@@ -977,7 +980,71 @@ void linkInitTextures(LinkMenuItem *item)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void linkDrawFn_801302c0(void) {}
+extern int getCurLanguage(void);
+extern u8 lbl_802C8680[];
+extern u8 lbl_803DD911;
+#pragma scheduling off
+#pragma peephole off
+void linkDrawFn_801302c0(void)
+{
+    LinkMenuItem *sel;
+    LinkMenuItem *p;
+    void *tex;
+    int selLeft;
+    int selRight;
+    int itemLeft;
+    int itemRight;
+    int w;
+    int i;
+
+    sel = &lbl_803A9458[(s8)linkSelected];
+    sel->field38 = 4;
+    if (((sel->field16 & 4) != 0) && ((s8)sel->slots[0] != -1)) {
+        tex = *(void **)(linkTextures + (s8)sel->slots[0] * 8);
+    } else {
+        tex = sel->texture;
+    }
+    if (tex != NULL) {
+        w = *(u16 *)((char *)tex + 12);
+        selLeft = sel->field0C;
+    } else {
+        if (getCurLanguage() == 4) {
+            w = *(u16 *)(lbl_802C8680 + 0xa) + 2;
+        } else {
+            w = *(u16 *)(lbl_802C8680 + 0x4a) + 2;
+        }
+        selLeft = sel->field06 - 2;
+    }
+    selRight = selLeft + w;
+    p = lbl_803A9458;
+    for (i = 0; i < (s8)lbl_803DD911; i++) {
+        if (i != (s8)linkSelected) {
+            if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1)) {
+                tex = *(void **)(linkTextures + (s8)p->slots[0] * 8);
+            } else {
+                tex = p->texture;
+            }
+            if (tex != NULL) {
+                w = *(u16 *)((char *)tex + 12);
+                itemLeft = p->field0C;
+            } else {
+                if (getCurLanguage() == 4) {
+                    w = *(u16 *)(lbl_802C8680 + 0xa) + 2;
+                } else {
+                    w = *(u16 *)(lbl_802C8680 + 0x4a) + 2;
+                }
+                itemLeft = p->field06 - 2;
+            }
+            itemRight = itemLeft + w;
+            if (itemLeft < selRight && itemRight > selLeft) {
+                p->field38 = 4;
+            }
+        }
+        p++;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void linkDrawFn_80130484(void) {}
 extern u8 lbl_803DD911;
 #pragma scheduling off
