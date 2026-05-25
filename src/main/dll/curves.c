@@ -52,13 +52,13 @@ extern undefined4 FUN_80294964();
 extern uint countLeadingZeros();
 
 extern RomCurveDef *romCurves[];
-extern undefined4 DAT_803a3898;
+extern RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de0e8;
 extern undefined4 DAT_803de0ec;
 extern int nRomCurves;
-extern undefined4 DAT_803de0f8;
-extern undefined4 DAT_803de0fc;
+extern u32 sCurvesCachedHitCount;
+extern u32 sCurvesCachedHitObj;
 extern f64 DOUBLE_803e12a8;
 extern f64 DOUBLE_803e12f0;
 extern f64 DOUBLE_803e1318;
@@ -3505,23 +3505,23 @@ curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5)
   uint pairCount;
   RomCurvePoint **hitPoints;
   
-  if (curve != DAT_803de0fc) {
-    DAT_803de0fc = curve;
+  if ((u32)curve != sCurvesCachedHitObj) {
+    sCurvesCachedHitObj = curve;
     if (param_5 != 0) {
       queryMode = 1;
     }
     else {
       queryMode = -2;
     }
-    DAT_803de0f8 = hitDetectFn_80065e50(curve,x,*(float *)(curve + 0x1c),z,&hitPoints,
-                                        queryMode,0);
-    if (ROMCURVE_GETCURVES_MAX_POINTS < (int)DAT_803de0f8) {
-      DAT_803de0f8 = ROMCURVE_GETCURVES_MAX_POINTS;
+    sCurvesCachedHitCount = hitDetectFn_80065e50(curve,x,*(float *)(curve + 0x1c),z,
+                                                 &hitPoints,queryMode,0);
+    if (ROMCURVE_GETCURVES_MAX_POINTS < (int)sCurvesCachedHitCount) {
+      sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
     }
-    remaining = DAT_803de0f8;
-    outPoint = (RomCurvePoint *)&DAT_803a3898;
-    if (0 < (int)DAT_803de0f8) {
-      pairCount = DAT_803de0f8 >> 1;
+    remaining = sCurvesCachedHitCount;
+    outPoint = sCurvesHitPoints;
+    if (0 < (int)sCurvesCachedHitCount) {
+      pairCount = sCurvesCachedHitCount >> 1;
       if (pairCount != 0) {
         do {
           point = *hitPoints;
@@ -3561,8 +3561,8 @@ curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5)
     }
   }
 LAB_800e6f44:
-  *outCount = DAT_803de0f8;
-  return (RomCurvePoint *)&DAT_803a3898;
+  *outCount = sCurvesCachedHitCount;
+  return sCurvesHitPoints;
 }
 
 /*
@@ -3652,8 +3652,8 @@ void FUN_800e58b8(void)
   puVar8[0x36] = 0;
   fVar2 = lbl_803E12E8;
   if (*(char *)((int)puVar8 + 0x25b) == '\x01') {
-    DAT_803de0fc = 0;
-    DAT_803de0f8 = 0;
+    sCurvesCachedHitObj = 0;
+    sCurvesCachedHitCount = 0;
     puVar8[0x68] = (uint)lbl_803E12E8;
     puVar8[0x69] = (uint)fVar3;
     puVar8[0x6a] = (uint)fVar2;
