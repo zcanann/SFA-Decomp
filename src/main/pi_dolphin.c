@@ -5452,23 +5452,24 @@ void fn_80050F2C(void) {
 #pragma scheduling off
 #pragma peephole off
 void fn_8004AAD4(u8* arr, int size, int idx) {
-    u32 key;
-    u16 val;
-    int half;
+    u32 key = *(u32*)(arr + idx * 8);
+    u16 val = *(u16*)(arr + idx * 8 + 4);
+    int half = size >> 1;
     int child;
-    u8* p;
-    p = arr + idx * 8;
-    key = *(u32*)p;
-    val = *(u16*)(p + 4);
-    half = size >> 1;
+    u8* cp;
+    u8* childptr;
     while (idx <= half) {
         child = idx + idx;
-        if (child < size && *(u32*)(arr + child * 8) < *(u32*)(arr + (child + 1) * 8)) {
-            child++;
+        if (child < size) {
+            cp = arr + child * 8;
+            if (*(u32*)cp < *(u32*)(cp + 8)) {
+                child++;
+            }
         }
-        if (key >= *(u32*)(arr + child * 8)) break;
-        *(u32*)(arr + idx * 8) = *(u32*)(arr + child * 8);
-        *(u16*)(arr + idx * 8 + 4) = *(u16*)(arr + child * 8 + 4);
+        childptr = arr + child * 8;
+        if (key >= *(u32*)childptr) break;
+        *(u32*)(arr + idx * 8) = *(u32*)childptr;
+        *(u16*)(arr + idx * 8 + 4) = *(u16*)(childptr + 4);
         idx = child;
     }
     *(u32*)(arr + idx * 8) = key;
