@@ -782,9 +782,133 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
     *z = p[2];
 }
 
-/* Stubs to align function set with v1.0 asm. Bodies are large state
- * machines / inits and need real reverse-engineering. */
-void fn_801EE668(void) {}
+/* Target 0x801EE668: Ghidra split this body as FUN_801eeafc. */
+void fn_801EE668(ushort *param_1,int param_2,undefined4 param_3,undefined4 param_4,
+                 undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
+{
+  bool bVar1;
+  int iVar2;
+  int iVar3;
+  ushort uVar4;
+  short sVar5;
+  uint uVar6;
+  double dVar7;
+  undefined8 uVar8;
+  double dVar9;
+  double dVar10;
+  undefined8 in_f4;
+  undefined8 in_f5;
+  undefined8 in_f6;
+  undefined8 in_f7;
+  undefined8 in_f8;
+  double dVar11;
+
+  iVar2 = *(int *)(param_2 + 0x74) * -6000;
+  iVar2 = iVar2 / 0x46 + (iVar2 >> 0x1f);
+  iVar2 = iVar2 - (iVar2 >> 0x1f);
+  iVar3 = *(int *)(param_2 + 0x70) * -12000;
+  iVar3 = iVar3 / 0x46 + (iVar3 >> 0x1f);
+  *(short *)(param_2 + 0x2c) =
+       (short)(int)-(((float)((double)CONCAT44(0x43300000,*(int *)(param_2 + 0x70) << 3 ^ 0x80000000
+                                              ) - DOUBLE_803e6938) / lbl_803E6930) *
+                     lbl_803DC074 -
+                    (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x2c) ^ 0x80000000
+                                            ) - DOUBLE_803e6938));
+  *(short *)(param_2 + 0x2c) =
+       *(short *)(param_2 + 0x2c) -
+       (short)((int)((int)*(short *)(param_2 + 0x2c) * (uint)DAT_803dc070) >> 5);
+  uVar6 = iVar2 - (uint)param_1[1];
+  if (0x8000 < (int)uVar6) {
+    uVar6 = uVar6 - 0xffff;
+  }
+  if ((int)uVar6 < -0x8000) {
+    uVar6 = uVar6 + 0xffff;
+  }
+  param_1[1] = (ushort)(int)(lbl_803E6940 *
+                             (f32)(s32)(uVar6) * lbl_803DC074 +
+                            (float)((double)CONCAT44(0x43300000,(int)(short)param_1[1] ^ 0x80000000)
+                                   - DOUBLE_803e6938));
+  uVar6 = (iVar3 - (iVar3 >> 0x1f)) - (uint)*(ushort *)(param_2 + 0x2e);
+  if (0x8000 < (int)uVar6) {
+    uVar6 = uVar6 - 0xffff;
+  }
+  if ((int)uVar6 < -0x8000) {
+    uVar6 = uVar6 + 0xffff;
+  }
+  dVar10 = (double)lbl_803E6940;
+  *(short *)(param_2 + 0x2e) =
+       (short)(int)(dVar10 * (double)((f32)(s32)(uVar6) * lbl_803DC074) +
+                   (double)(float)((double)CONCAT44(0x43300000,
+                                                    (int)*(short *)(param_2 + 0x2e) ^ 0x80000000) -
+                                  DOUBLE_803e6938));
+  uVar4 = param_1[1];
+  if ((short)uVar4 < -8000) {
+    uVar4 = 0xe0c0;
+  }
+  else if (8000 < (short)uVar4) {
+    uVar4 = 8000;
+  }
+  param_1[1] = uVar4;
+  sVar5 = *(short *)(param_2 + 0x2e);
+  if (sVar5 < -13000) {
+    sVar5 = -13000;
+  }
+  else if (13000 < sVar5) {
+    sVar5 = 13000;
+  }
+  *(short *)(param_2 + 0x2e) = sVar5;
+  *param_1 = *(short *)(param_2 + 0x2c) + 0x4000;
+  param_1[2] = *(ushort *)(param_2 + 0x2e);
+  dVar9 = (double)lbl_803E6948;
+  dVar7 = (double)lbl_803E6944;
+  dVar11 = (double)(float)(dVar9 * (double)(float)((double)CONCAT44(0x43300000,
+                                                                    (int)(short)param_1[1] ^
+                                                                    0x80000000) - DOUBLE_803e6938) +
+                          dVar7);
+  if (dVar11 <= (double)lbl_803E694C) {
+    if (param_1[0x50] != 0x100) {
+      FUN_800305f8((double)lbl_803E6908,dVar9,dVar10,in_f4,in_f5,in_f6,in_f7,in_f8,param_1,0x100,0,
+                   iVar2,param_5,param_6,param_7,param_8);
+    }
+  }
+  else {
+    dVar7 = dVar11;
+    if (param_1[0x50] != 5) {
+      FUN_800305f8((double)lbl_803E6908,dVar9,dVar10,in_f4,in_f5,in_f6,in_f7,in_f8,param_1,5,0,
+                   iVar2,param_5,param_6,param_7,param_8);
+      dVar7 = dVar11;
+    }
+  }
+  dVar9 = (double)lbl_803DC074;
+  uVar8 = FUN_8002fc3c(dVar7,dVar9);
+  *(undefined4 *)(param_1 + 6) = *(undefined4 *)(param_2 + 0x4c);
+  *(undefined4 *)(param_1 + 8) = *(undefined4 *)(param_2 + 0x50);
+  *(undefined4 *)(param_1 + 10) = *(undefined4 *)(param_2 + 0x54);
+  bVar1 = false;
+  if (*(char *)(param_2 + 0x80) < '\0') {
+    uVar6 = FUN_80006c10(0);
+    if ((uVar6 & 0x100) == 0) {
+      *(byte *)(param_2 + 0x80) = *(byte *)(param_2 + 0x80) & 0x7f;
+    }
+    else if (*(char *)(param_2 + 100) == '\0') {
+      bVar1 = true;
+      *(undefined *)(param_2 + 100) = 0x28;
+    }
+  }
+  else {
+    uVar6 = FUN_80006c10(0);
+    if (((uVar6 & 0x100) != 0) &&
+       (*(byte *)(param_2 + 0x80) = *(byte *)(param_2 + 0x80) & 0x7f | 0x80,
+       *(char *)(param_2 + 100) < '\x14')) {
+      bVar1 = true;
+      *(undefined *)(param_2 + 100) = 0x28;
+    }
+  }
+  if (bVar1) {
+    fn_801EE0C0((s16 *)param_1);
+  }
+  return;
+}
 
 /* fn_801EEB50: priority-hit handler — when the laser hits an object whose
  * type isn't 281 and isn't currently in fade state, fade it red, rumble,
