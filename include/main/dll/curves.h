@@ -42,8 +42,8 @@ RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
 undefined4 FUN_800e1b2c(double param_1,undefined8 param_2,double param_3,int param_4,int param_5);
 void curves_distFn15(undefined8 param_1,double param_2,double param_3);
 int curves_distanceToNearestOfType16(double param_1,double param_2,double param_3,int param_4);
-void FUN_800e2090(undefined4 param_1,undefined4 param_2,uint param_3,int *param_4);
-void FUN_800e2590(undefined4 param_1,undefined4 param_2,int param_3,int *param_4);
+void RomCurve_func13(undefined4 param_1,undefined4 param_2,uint param_3,int *param_4);
+void RomCurve_func11(undefined4 param_1,undefined4 param_2,int param_3,int *param_4);
 int RomCurve_getRandomLinkedOfTypes(int param_1,int param_2,int param_3,int *param_4);
 int curves_findByAction(int action);
 f32 curves_distXZ(f32 x,f32 z,uint curveId);
@@ -51,9 +51,9 @@ f32 curves_distFn0B(int obj,uint curveId);
 void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8);
 undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex);
-void FUN_800e31dc(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5);
-int FUN_800e3ad4(int param_1);
-void FUN_800e3cec(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
+void RomCurve_func20(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5);
+int RomCurve_countRandomPoints(int param_1);
+void RomCurve_func1E(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
 void RomCurve_getAdjacentWindow(int param_1,int *param_2);
 int RomCurve_getNearestAdjacentLink(double param_1,double param_2,double param_3,int param_4,
                                     int param_5);
@@ -62,7 +62,7 @@ int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId);
 int curves_getIds_18(RomCurveDef *curve,int excludeLinkId,int *outIds);
 int RomCurve_getRandomUnblockedLink(RomCurveDef *curve,int excludeLinkId);
 RomCurveDef *RomCurve_getById(uint curveId);
-void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
+void RomCurve_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);
 void curves_remove(RomCurveDef *curve);
 void curves_addCurveDef(RomCurveDef *curve);

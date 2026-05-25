@@ -454,7 +454,7 @@ int curves_distanceToNearestOfType16(double param_1,double param_2,double param_
 /*
  * --INFO--
  *
- * Function: FUN_800e2090
+ * Function: RomCurve_func13
  * EN v1.0 Address: 0x800E2090
  * EN v1.0 Size: 1280b
  * EN v1.1 Address: 0x800E260C
@@ -464,7 +464,7 @@ int curves_distanceToNearestOfType16(double param_1,double param_2,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e2090(undefined4 param_1,undefined4 param_2,uint param_3,int *param_4)
+void RomCurve_func13(undefined4 param_1,undefined4 param_2,uint param_3,int *param_4)
 {
   float fVar1;
   float fVar2;
@@ -724,7 +724,7 @@ LAB_800e2a50:
 /*
  * --INFO--
  *
- * Function: FUN_800e2590
+ * Function: RomCurve_func11
  * EN v1.0 Address: 0x800E2590
  * EN v1.0 Size: 1528b
  * EN v1.1 Address: 0x800E2B94
@@ -734,7 +734,7 @@ LAB_800e2a50:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e2590(undefined4 param_1,undefined4 param_2,int param_3,int *param_4)
+void RomCurve_func11(undefined4 param_1,undefined4 param_2,int param_3,int *param_4)
 {
   float fVar1;
   float fVar2;
@@ -1445,7 +1445,7 @@ undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
 /*
  * --INFO--
  *
- * Function: FUN_800e31dc
+ * Function: RomCurve_func20
  * EN v1.0 Address: 0x800E31DC
  * EN v1.0 Size: 2296b
  * EN v1.1 Address: 0x800E3A00
@@ -1455,7 +1455,7 @@ undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e31dc(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5)
+void RomCurve_func20(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5)
 {
   bool bVar1;
   int iVar2;
@@ -1816,7 +1816,7 @@ LAB_800e3ca0:
 /*
  * --INFO--
  *
- * Function: FUN_800e3ad4
+ * Function: RomCurve_countRandomPoints
  * EN v1.0 Address: 0x800E3AD4
  * EN v1.0 Size: 536b
  * EN v1.1 Address: 0x800E45B4
@@ -1826,7 +1826,7 @@ LAB_800e3ca0:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_800e3ad4(int param_1)
+int RomCurve_countRandomPoints(int param_1)
 {
   bool bVar1;
   int iVar2;
@@ -1923,7 +1923,7 @@ LAB_800e4758:
 /*
  * --INFO--
  *
- * Function: FUN_800e3cec
+ * Function: RomCurve_func1E
  * EN v1.0 Address: 0x800E3CEC
  * EN v1.0 Size: 492b
  * EN v1.1 Address: 0x800E4854
@@ -1933,7 +1933,7 @@ LAB_800e4758:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e3cec(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
+void RomCurve_func1E(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
 {
   uint *puVar1;
   float *pfVar2;
@@ -2503,7 +2503,7 @@ RomCurveDef *RomCurve_getById(uint curveId)
 /*
  * --INFO--
  *
- * Function: FUN_800e4628
+ * Function: RomCurve_find
  * EN v1.0 Address: 0x800E4628
  * EN v1.0 Size: 252b
  * EN v1.1 Address: 0x800E5330
@@ -2513,7 +2513,7 @@ RomCurveDef *RomCurve_getById(uint curveId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800e4628(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
+void RomCurve_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6)
 {
   int iVar1;
