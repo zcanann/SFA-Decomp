@@ -801,39 +801,35 @@ int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
 void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
 {
     void *entry;
-    u32 flagByte;
-    u16 secondaryLink;
 
     entry = NULL;
-    flagByte = routeFlagValue & 0xff;
 
     if ((*(u8 **)(state + 0x528) == routeDef) &&
         (*(u16 *)(state + 0x530) == *(u16 *)(state + 0x532)) &&
-        (*(u8 *)(state + 0x536) == flagByte)) {
+        (*(u8 *)(state + 0x536) == (routeFlagValue & 0xff))) {
         entry = skeetla_validateRouteEntry(*(void **)(state + 0x52c));
     }
 
     if (entry == NULL) {
-        entry = fn_8013A4EC(state, routeDef, *(u16 *)(state + 0x532), flagByte);
+        entry = fn_8013A4EC(state, routeDef, *(u16 *)(state + 0x532), routeFlagValue & 0xff);
         if (entry == NULL) {
             entry = fn_8013A6BC(state, (u32)routeDef, *(u16 *)(state + 0x532));
         }
 
         if (entry == NULL) {
-            secondaryLink = *(u16 *)(state + 0x534);
-            if (secondaryLink != 0) {
-                entry = fn_8013A4EC(state, routeDef, secondaryLink, flagByte);
+            if (*(u16 *)(state + 0x534) != 0) {
+                entry = fn_8013A4EC(state, routeDef, *(u16 *)(state + 0x534), routeFlagValue & 0xff);
                 if (entry == NULL) {
-                    entry = fn_8013A6BC(state, (u32)routeDef, secondaryLink);
+                    entry = fn_8013A6BC(state, (u32)routeDef, *(u16 *)(state + 0x534));
                 }
                 if (entry != NULL) {
-                    *(u16 *)(state + 0x532) = secondaryLink;
+                    *(u16 *)(state + 0x532) = *(u16 *)(state + 0x534);
                 }
             }
         }
 
         if (entry == NULL) {
-            entry = fn_8013A4EC(state, routeDef, 0, flagByte);
+            entry = fn_8013A4EC(state, routeDef, 0, routeFlagValue & 0xff);
             *(u16 *)(state + 0x532) = 0;
         }
     }
