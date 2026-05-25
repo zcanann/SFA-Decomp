@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/audio/sal_ai.h"
+#include "main/audio/sal_dsp.h"
 #include "main/audio/hw_voice_params.h"
-#include "main/unknown/autos/placeholder_80283134.h"
-#include "main/unknown/autos/placeholder_80284988.h"
+#include "main/audio/hw_init.h"
 
 extern undefined4 DAT_803be6f6;
 extern undefined4 DAT_803be71a;

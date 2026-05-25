@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80284988.h"
+#include "main/audio/sal_dsp.h"
 #include "dolphin/os.h"
 #include "dolphin/dsp.h"
 

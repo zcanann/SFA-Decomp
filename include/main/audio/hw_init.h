@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283134_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283134_H_
+#ifndef MAIN_AUDIO_HW_INIT_H_
+#define MAIN_AUDIO_HW_INIT_H_
 
 #include "ghidra_import.h"
 
@@ -13,4 +13,4 @@ void hwSetMesgCallback(u32 value);
 void hwSetPriority(int slot, u32 value);
 void hwInitSamplePlayback(int slot, u16 value70, u32 *values, u32 resetAdsr, u32 priority, u32 value18, u32 resetSrc, u32 itdMode);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283134_H_ */
+#endif /* MAIN_AUDIO_HW_INIT_H_ */

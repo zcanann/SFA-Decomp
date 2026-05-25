@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284988_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284988_H_
+#ifndef MAIN_AUDIO_SAL_DSP_H_
+#define MAIN_AUDIO_SAL_DSP_H_
 
 #include "ghidra_import.h"
 
@@ -16,4 +16,4 @@ void hwIRQLeaveCritical(void);
 void *salMalloc(u32 size);
 void salFree(void *ptr);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284988_H_ */
+#endif /* MAIN_AUDIO_SAL_DSP_H_ */

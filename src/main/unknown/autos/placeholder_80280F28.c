@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/hw_init.h"
 #include "main/unknown/autos/placeholder_80280F28.h"
 
-extern int hwInit(u32 *sampleRate, u8 voiceCount, u8 maxStudios, u32 flags);
 extern void dataInit(int p1, void *p2);
 extern void fn_8026F30C(void);
 extern void synthInit(u32 sampleRate, u32 voiceCount);

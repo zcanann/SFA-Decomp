@@ -2180,7 +2180,7 @@ main/unknown/autos/placeholder_802827D4.c:
 	extabindex  start:0x80006428 end:0x80006488
 	.text       start:0x802827C8 end:0x80282FE0
 
-main/unknown/autos/placeholder_80283134.c:
+main/audio/hw_init.c:
 	extab       start:0x80005B50 end:0x80005B70
 	extabindex  start:0x80006488 end:0x800064B8
 	.text       start:0x80282FE0 end:0x8028343C
@@ -2279,7 +2279,7 @@ main/audio/sal_ai.c:
 main/unknown/autos/placeholder_80284970.c:
 	.text       start:0x802848D8 end:0x802848D8
 
-main/unknown/autos/placeholder_80284988.c:
+main/audio/sal_dsp.c:
 	extab       start:0x80005C40 end:0x80005C90
 	extabindex  start:0x800065F0 end:0x80006668
 	.text       start:0x802848D8 end:0x80284B94
