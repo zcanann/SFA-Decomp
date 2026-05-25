@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void dimbossgut2_updateTracking(ushort *param_1,int param_2);
+void dimbossgut2_updateTracking(int obj, int state);
 void dimbossgut2_free(int param_9);
 void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void dimbossgut2_update(int obj);
