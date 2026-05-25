@@ -70,6 +70,8 @@ extern f32 gFloatHalf;
 extern f32 lbl_803E12B0;
 extern f32 lbl_803E12B4;
 extern f32 lbl_803E12B8;
+extern f32 lbl_803E065C;
+extern f32 lbl_803E0660;
 extern f32 lbl_803E12C4;
 extern f32 lbl_803E12D8;
 extern f32 lbl_803E12DC;
@@ -124,6 +126,8 @@ static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
 
   return NULL;
 }
+
+int fn_800E1F3C(int* a, int* b, f32 f1, f32 f2, f32 f3, f32 f4);
 
 /*
  * --INFO--
@@ -300,100 +304,53 @@ undefined4 FUN_800e1b2c(double param_1,undefined8 param_2,double param_3,int par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_distFn15(undefined8 param_1,double param_2,double param_3)
+int curves_distFn15(u32 curveId,f32 x,f32 y,f32 z,f32 *outDistance)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  uint uVar4;
-  float *pfVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  uint uVar10;
-  int iVar11;
-  uint uVar12;
-  double extraout_f1;
-  double dVar13;
-  double dVar14;
-  longlong lVar15;
-  
-  lVar15 = FUN_8028683c();
-  uVar4 = (uint)((ulonglong)lVar15 >> 0x20);
-  pfVar5 = (float *)lVar15;
-  if (lVar15 < 0) {
-    iVar9 = 0;
-  }
-  else {
-    iVar7 = nRomCurves + -1;
-    iVar11 = 0;
-    while (iVar11 <= iVar7) {
-      iVar8 = iVar7 + iVar11 >> 1;
-      iVar9 = (int)romCurves[iVar8];
-      if (RomCurve_GetId((RomCurveDef *)iVar9) < uVar4) {
-        iVar11 = iVar8 + 1;
-      }
-      else {
-        if (RomCurve_GetId((RomCurveDef *)iVar9) <= uVar4) goto LAB_800e2324;
-        iVar7 = iVar8 + -1;
-      }
-    }
-    iVar9 = 0;
-  }
-LAB_800e2324:
-  *pfVar5 = lbl_803E12DC;
-  uVar10 = uVar4;
-  dVar14 = extraout_f1;
+  RomCurveDef *curve;
+  RomCurveDef *nextCurve;
+  u32 nextCurveId;
+  u32 previousCurveId;
+  int linkIndex;
+  int hitCount;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 distance;
+
+  curve = RomCurve_FindByIdInline(curveId);
+  hitCount = 0;
+  *outDistance = lbl_803E065C;
   do {
-    uVar12 = ROMCURVE_LINK_ID_NONE;
-    iVar7 = 0;
-    iVar11 = iVar9;
-    while ((iVar7 < ROMCURVE_LINK_COUNT && (uVar12 == ROMCURVE_LINK_ID_NONE))) {
-      if (((int)*(char *)(iVar9 + ROMCURVE_LINK_FLAGS_OFFSET) & 1 << iVar7) == 0) {
-        uVar12 = *(uint *)(iVar11 + ROMCURVE_LINK_IDS_OFFSET);
+    nextCurveId = ROMCURVE_LINK_ID_NONE;
+    linkIndex = 0;
+    nextCurve = curve;
+    while ((linkIndex < ROMCURVE_LINK_COUNT) && (nextCurveId == ROMCURVE_LINK_ID_NONE)) {
+      if ((curve->blockedLinkMask & (1 << linkIndex)) == 0) {
+        nextCurveId = nextCurve->linkIds[0];
       }
-      iVar11 = iVar11 + ROMCURVE_LINK_ID_STRIDE;
-      iVar7 = iVar7 + 1;
+      nextCurve = (RomCurveDef *)((u8 *)nextCurve + ROMCURVE_LINK_ID_STRIDE);
+      linkIndex++;
     }
-    iVar11 = iVar9;
-    if (uVar12 != ROMCURVE_LINK_ID_NONE) {
-      if ((int)uVar12 < 0) {
-        iVar11 = 0;
-      }
-      else {
-        iVar8 = nRomCurves + -1;
-        iVar7 = 0;
-        while (iVar7 <= iVar8) {
-          iVar6 = iVar8 + iVar7 >> 1;
-          iVar11 = (int)romCurves[iVar6];
-          if (RomCurve_GetId((RomCurveDef *)iVar11) < uVar12) {
-            iVar7 = iVar6 + 1;
-          }
-          else {
-            if (RomCurve_GetId((RomCurveDef *)iVar11) <= uVar12) goto LAB_800e23ec;
-            iVar8 = iVar6 + -1;
-          }
+
+    nextCurve = curve;
+    if (nextCurveId != ROMCURVE_LINK_ID_NONE) {
+      nextCurve = RomCurve_FindByIdInline(nextCurveId);
+      if (fn_800E1F3C((int *)curve,(int *)nextCurve,x,y,z,lbl_803E0660) != 0) {
+        dx = curve->x - x;
+        dy = curve->y - y;
+        dz = curve->z - z;
+        distance = sqrtf(dz * dz + dx * dx + dy * dy);
+        if (distance < *outDistance) {
+          *outDistance = distance;
         }
-        iVar11 = 0;
-      }
-LAB_800e23ec:
-      iVar7 = FUN_800e1b2c(dVar14,param_2,param_3,iVar9,iVar11);
-      uVar10 = uVar12;
-      if ((iVar7 != 0) &&
-         (fVar1 = (float)((double)*(float *)(iVar9 + 8) - dVar14),
-         fVar2 = (float)((double)*(float *)(iVar9 + 0xc) - param_2),
-         fVar3 = (float)((double)*(float *)(iVar9 + 0x10) - param_3),
-         dVar13 = FUN_80293900((double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2)),
-         dVar13 < (double)*pfVar5)) {
-        *pfVar5 = (float)dVar13;
+        hitCount++;
       }
     }
-    if ((uVar10 == uVar4) || (iVar9 = iVar11, uVar12 == ROMCURVE_LINK_ID_NONE)) {
-      FUN_80286888();
-      return;
-    }
-  } while( true );
+    previousCurveId = nextCurveId;
+    curve = nextCurve;
+  } while ((previousCurveId != curveId) && (nextCurveId != ROMCURVE_LINK_ID_NONE));
+
+  return hitCount & 1;
 }
 
 /*
