@@ -2356,7 +2356,7 @@ typedef struct {
   u32 flags;      /* +0x54 */
   u8 v58, v59, v5a, v5b, v5c, count;  /* +0x58..+0x5d */
   u8 pad1[2];     /* +0x5e */
-  GfxCmd entries[13];  /* +0x60 */
+  GfxCmd entries[32];  /* +0x60 */
 } GfxBuf;
 
 #pragma scheduling off
