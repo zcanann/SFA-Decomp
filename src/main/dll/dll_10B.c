@@ -88,13 +88,8 @@ void fn_80154870(int obj, int *state)
         state[0xb9] = state[0xb9] | 0x10000;
         state[0xc9] = (int)lbl_803E2990;
     }
-    local_28 = (double)CONCAT44(0x43300000, (uint)*(byte *)((int)state + 0x33a));
-    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (float)(local_28 - lbl_803E29D8)));
-    uStack_1c = (int)*(short *)(obj + 2) ^ 0x80000000;
-    local_20 = 0x43300000;
-    iVar4 = (int)-(float)((double)lbl_803E29BC * dVar5 -
-                          (double)(float)((double)CONCAT44(0x43300000, uStack_1c) - lbl_803E29A8));
-    local_18 = (double)(longlong)iVar4;
+    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (f32)(u32)*(byte *)((int)state + 0x33a)));
+    iVar4 = (int)-(float)((double)lbl_803E29BC * dVar5 - (double)(float)*(short *)(obj + 2));
     *(short *)(obj + 2) = (short)iVar4;
     fVar1 = lbl_803E2990;
     if (cVar3 == '\0') {
@@ -139,13 +134,8 @@ void fn_80154870(int obj, int *state)
         }
     }
     *(char *)((int)state + 0x33a) = *(char *)((int)state + 0x33a) + 1;
-    local_18 = (double)CONCAT44(0x43300000, (uint)*(byte *)((int)state + 0x33a));
-    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (float)(local_18 - lbl_803E29D8)));
-    uStack_1c = (int)*(short *)(obj + 2) ^ 0x80000000;
-    local_20 = 0x43300000;
-    iVar4 = (int)((double)lbl_803E29BC * dVar5 +
-                  (double)(float)((double)CONCAT44(0x43300000, uStack_1c) - lbl_803E29A8));
-    local_28 = (double)(longlong)iVar4;
+    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (f32)(u32)*(byte *)((int)state + 0x33a)));
+    iVar4 = (int)((double)lbl_803E29BC * dVar5 + (double)(float)*(short *)(obj + 2));
     *(short *)(obj + 2) = (short)iVar4;
     FUN_80154af4((ushort *)obj, (int)state);
 }
