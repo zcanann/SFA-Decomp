@@ -6383,6 +6383,26 @@ void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
 }
 
 /*
+ * Function: fn_8000FA70
+ * EN v1.0 Address: 0x8000FA70
+ * EN v1.0 Size: 32b
+ */
+u16 fn_8000FA70(void)
+{
+    return (u16)gCameraShakeSlots[gCameraCurrentViewIndex].yaw;
+}
+
+/*
+ * Function: fn_8000FA90
+ * EN v1.0 Address: 0x8000FA90
+ * EN v1.0 Size: 28b
+ */
+u16 fn_8000FA90(void)
+{
+    return (u16)gCameraShakeSlots[gCameraCurrentViewIndex].pitch;
+}
+
+/*
  * Function: Camera_IsViewYOffsetEnabled
  * EN v1.0 Address: 0x8000FAC4
  * EN v1.0 Size: 8b
