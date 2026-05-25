@@ -2905,6 +2905,7 @@ void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId)
  */
 void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex)
 {
+    s32 matrixIndex;
     f32 *matrix;
 
     if (yawIndex < 0) {
@@ -2912,7 +2913,8 @@ void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex)
         out[1] = local[1];
         out[2] = local[2];
     } else {
-        matrix = gObjYawTransformMatrices[yawIndex];
+        matrixIndex = yawIndex << 4;
+        matrix = (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2));
         Matrix_TransformPoint(matrix, local[0], local[1], local[2], &out[0], &out[1], &out[2]);
     }
 }
