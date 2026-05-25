@@ -7710,6 +7710,29 @@ f32* Camera_GetProjectionMatrix(void)
 }
 
 /*
+ * Function: Camera_RebuildProjectionMatrix
+ * EN v1.0 Address: 0x8000FB00
+ * EN v1.0 Size: 232b
+ */
+void Camera_RebuildProjectionMatrix(void)
+{
+    if (gCameraProjectionMode == 1) {
+        C_MTXOrtho(gCameraProjectionMatrix, lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
+                   lbl_803DC894, gCameraNearPlane, gCameraFarPlane);
+    } else {
+        C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio,
+                         gCameraNearPlane, gCameraFarPlane);
+        C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
+                              lbl_803DE628, lbl_803DE62C, lbl_803DE62C);
+        C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                              lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
+        C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                              lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+    }
+    GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
+}
+
+/*
  * Function: Camera_GetFarPlane
  * EN v1.0 Address: 0x8000FBE8
  * EN v1.0 Size: 8b
