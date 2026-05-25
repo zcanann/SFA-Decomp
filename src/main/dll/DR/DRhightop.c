@@ -10,6 +10,7 @@ extern undefined4 FUN_80006920();
 extern undefined4 FUN_800069bc();
 extern undefined4 FUN_80006b94();
 extern undefined4 FUN_80006c88();
+extern void gameTextShow(int p);
 extern void doRumble(f32 strength);
 extern void mtxRotateByVec3s(void *matrix, void *transform);
 extern void Matrix_TransformPoint(void *matrix, double x, double y, double z, float *outX,
@@ -330,9 +331,7 @@ uint FUN_801eb0c0(undefined2 *param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801EAE4C(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                short *param_9,int param_10)
+void fn_801EAE4C(short *param_9,int param_10)
 {
   float fVar1;
   float fVar2;
@@ -387,9 +386,8 @@ void fn_801EAE4C(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
         fVar2 = lbl_803E6800;
       }
       *(float *)(param_10 + 0x68) = fVar2;
-      if ((double)lbl_803E6814 < (double)*(float *)(param_10 + 0x68)) {
-        FUN_80006c88((double)*(float *)(param_10 + 0x68),param_2,param_3,param_4,param_5,param_6,
-                     param_7,param_8,0x475);
+      if (*(float *)(param_10 + 0x68) > lbl_803E6814) {
+        gameTextShow(0x475);
       }
       (**(code **)(*DAT_803dd6ec + 0x2c))(param_10 + 0x28);
       uVar5 = (**(code **)(*DAT_803dd6ec + 0x34))(param_10 + 0x28);
