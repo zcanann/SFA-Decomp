@@ -683,6 +683,7 @@ extern f32 gAudioStreamPos;
 extern f32 timeDelta;
 extern f32 lbl_803DE5D0;
 extern f32 lbl_803DE5E8;
+extern f32 lbl_803DE5F0;
 extern s8 gObjTransformMatrixSlot;
 extern u8 lbl_80336C40[];
 extern u8 lbl_80336C70[];
@@ -713,6 +714,17 @@ typedef struct SfxObjectChannel {
     u8 pad29[0x07];
     u64 age;
 } SfxObjectChannel;
+
+typedef struct ObjMatrixBuildTransform {
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    u16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ObjMatrixBuildTransform;
 
 #define SFX_LOOPED_OBJECT_SOUND_COUNT 0x80
 #define SFX_OBJECT_CHANNEL_COUNT 56
@@ -763,6 +775,9 @@ extern f32 lbl_803DE574;
 extern f32 lbl_803DE578;
 extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
 extern void Matrix_TransformPoint(f32 *matrix, f64 x, f64 y, f64 z, f32 *outX, f32 *outY, f32 *outZ);
+extern void setMatrixFromObjectPos(f32 *matrix, void *obj);
+extern void mtxFn_80022404(f32 *dst, f32 *src, f32 *out);
+extern void mtxRotateByVec3s(f32 *matrix, void *transform);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
@@ -3172,6 +3187,58 @@ void Obj_GetWorldPosition(u32 obj, f32 *outX, f32 *outY, f32 *outZ)
  */
 void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
 {
+    u32 ancestors[4];
+    ObjMatrixBuildTransform inverseTransform;
+    u32 current;
+    s32 matrixIndex;
+    f32 *yawMatrix;
+    f32 *inverseYawMatrix;
+    f32 savedScale;
+    s8 ancestorCount;
+    s32 hasParent;
+
+    current = obj;
+    matrixIndex = yawIndex << 4;
+    inverseYawMatrix = (f32 *)((u8 *)gObjInverseYawTransformMatrices + (matrixIndex << 2));
+    yawMatrix = (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2));
+    hasParent = 0;
+    ancestorCount = 0;
+    while (current != 0) {
+        ancestors[ancestorCount] = current;
+        ancestorCount++;
+        savedScale = *(f32 *)(current + 0x08);
+        if ((*(u16 *)(current + 0xB0) & 8) == 0) {
+            *(f32 *)(current + 0x08) = lbl_803DE5F0;
+        }
+
+        if (hasParent == 0) {
+            setMatrixFromObjectPos(yawMatrix, (void *)current);
+        } else {
+            setMatrixFromObjectPos((f32 *)&DAT_80338c30, (void *)current);
+            mtxFn_80022404(yawMatrix, (f32 *)&DAT_80338c30, yawMatrix);
+        }
+
+        *(f32 *)(current + 0x08) = savedScale;
+        current = *(u32 *)(current + 0x30);
+        hasParent = 1;
+    }
+
+    while (ancestorCount > 0) {
+        ancestorCount--;
+        current = ancestors[ancestorCount];
+        inverseTransform.x = -*(f32 *)(current + 0x0C);
+        inverseTransform.y = -*(f32 *)(current + 0x10);
+        inverseTransform.z = -*(f32 *)(current + 0x14);
+        if ((*(u16 *)(current + 0xB0) & 8) == 0) {
+            inverseTransform.scale = lbl_803DE5F0;
+        } else {
+            inverseTransform.scale = lbl_803DE5F0 / *(f32 *)(current + 0x08);
+        }
+        inverseTransform.rotX = -*(s16 *)(current + 0x00);
+        inverseTransform.rotY = -*(s16 *)(current + 0x02);
+        inverseTransform.rotZ = -*(s16 *)(current + 0x04);
+        mtxRotateByVec3s(inverseYawMatrix, &inverseTransform);
+    }
 }
 
 /*
