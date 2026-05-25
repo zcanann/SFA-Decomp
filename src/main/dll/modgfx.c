@@ -4781,9 +4781,10 @@ void fn_800A081C(int p1, int p2, int mode)
         s16 buf[6];
         f32 *fbuf = (f32 *)&buf[2];
         s16 v = *(s16 *)*(int *)(p1 + 0x4);
-        fbuf[3] = lbl_803DF430;
-        fbuf[2] = lbl_803DF430;
-        fbuf[1] = lbl_803DF430;
+        f32 fill = lbl_803DF430;
+        fbuf[3] = fill;
+        fbuf[2] = fill;
+        fbuf[1] = fill;
         fbuf[0] = lbl_803DF434;
         buf[2] = v;
         buf[1] = v;
