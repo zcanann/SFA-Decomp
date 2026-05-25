@@ -725,11 +725,84 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010A104(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag)
 {
+  int curve;
+  int linked;
+  int i;
+  int k;
+  int window[4];
+  int count;
+  int dummy;
+  int found;
+  int done;
+  f32 dist;
+
+  curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p1);
+  found = 1;
+  for (i = 0; i < 5; i++) {
+    if (*(int *)(curve + 28 + i * 4) > -1 &&
+        ((s8)*(s8 *)(curve + 27) & (1 << i)) == 0) {
+      linked = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*(int *)(curve + 28 + i * 4));
+      if (linked != 0 &&
+          (*(u8 *)(linked + 49) == tag || *(u8 *)(linked + 50) == tag ||
+           *(u8 *)(linked + 51) == tag)) {
+        found = 0;
+        i = 5;
+      }
+    }
+  }
+  if (found != 0) {
+    for (i = 0; i < 5; i++) {
+      if (*(int *)(curve + 28 + i * 4) > -1 &&
+          ((s8)*(s8 *)(curve + 27) & (1 << i)) != 0) {
+        linked = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*(int *)(curve + 28 + i * 4));
+        if (linked != 0 &&
+            (*(u8 *)(linked + 49) == tag || *(u8 *)(linked + 50) == tag ||
+             *(u8 *)(linked + 51) == tag)) {
+          *p1 = *(int *)(curve + 28 + i * 4);
+          i = 5;
+        }
+      }
+    }
+  }
+  done = 0;
+  do {
+    done = 1;
+    curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p1);
+    pathcam_findTaggedNodeWindow(curve, window, tag);
+    dist = fn_8010AC48(window, x, y, z);
+    if (dist < lbl_803E1888) {
+      if (window[0] > -1) {
+        *p1 = window[0];
+        done = 0;
+      }
+    } else if (dist > lbl_803E188C) {
+      if (window[2] > -1 && window[3] > -1) {
+        *p1 = window[2];
+        done = 0;
+      }
+    }
+  } while (done == 0);
+  curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p1);
+  ((void (*)(int, int *, int))fn_8010A47C)(curve, &count, tag);
+  curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p2);
+  *p2 = *(int *)(((int (*)(int, int *, int))fn_8010A47C)(curve, &dummy, tag) + 20);
+  for (k = 0; k < count; k++) {
+    curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p2);
+    for (i = 0; i < 5; i++) {
+      if (*(int *)(curve + 28 + i * 4) > -1 &&
+          ((s8)*(s8 *)(curve + 27) & (1 << i)) == 0) {
+        linked = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*(int *)(curve + 28 + i * 4));
+        if (linked != 0 &&
+            (*(u8 *)(linked + 49) == tag || *(u8 *)(linked + 50) == tag ||
+             *(u8 *)(linked + 51) == tag)) {
+          *p2 = *(int *)(curve + 28 + i * 4);
+          i = 5;
+        }
+      }
+    }
+  }
 }
 
 /*

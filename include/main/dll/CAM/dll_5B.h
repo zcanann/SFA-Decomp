@@ -32,10 +32,7 @@ void CameraModeStatic_copyToCurrent_nop(void);
 void CameraModeStatic_free(void);
 void CameraModeStatic_release(void);
 void CameraModeStatic_initialise(void);
-void fn_8010A104(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag);
 void fn_8010A47C(undefined4 param_1,undefined4 param_2,uint param_3);
 
 #endif /* MAIN_DLL_CAM_DLL_5B_H_ */
