@@ -1930,6 +1930,8 @@ extern f32 lbl_803E2D3C;
 extern f32 lbl_803E2D40;
 extern f32 lbl_803E2D44;
 extern f32 lbl_803E2D48;
+extern f32 lbl_803E2D5C;
+extern f32 lbl_803E2D60;
 extern f32 timeDelta;
 extern int* gPlayerInterface;
 extern int *gBaddieControlInterface;
@@ -2138,6 +2140,94 @@ int fn_8015BFA0(int obj, int state)
         *(f32 *)(state + 0x280) = lbl_803E2D44 * height;
     }
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8015C4AC(int obj, int state)
+{
+    int sub = *(int *)(obj + 0xb8);
+    int control;
+
+    if ((s8)*(u8 *)(state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 9, lbl_803E2D14, 0);
+        *(u8 *)(state + 0x346) = 0;
+    }
+    control = *(int *)(sub + 0x40c);
+    *(u8 *)(control + 0x44) |= 0xc;
+    if ((s8)*(u8 *)(state + 0x27a) != 0) {
+        *(u8 *)(obj + 0xaf) |= 8;
+        *(s16 *)(sub + 0x402) = 4;
+    }
+    *(s16 *)obj = (s16)(lbl_803E2D5C *
+                        (((f32)*(s16 *)(state + 0x336) * timeDelta) / lbl_803E2D60) +
+                        (f32)*(s16 *)obj);
+    *(f32 *)(state + 0x2a0) = lbl_803E2D38;
+    *(f32 *)(state + 0x280) = lbl_803E2D48;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8015C5C4(int obj, int state)
+{
+    int sub = *(int *)(obj + 0xb8);
+    int control = *(int *)(sub + 0x40c);
+
+    *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 10;
+    *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+    if ((s8)*(u8 *)(state + 0x27a) != 0) {
+        *(u8 *)(state + 0x346) = 0;
+    }
+    if ((s8)*(u8 *)(state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 4, lbl_803E2D14, 0);
+        *(u8 *)(state + 0x346) = 0;
+    }
+    *(u8 *)(state + 0x34d) = 3;
+    *(f32 *)(state + 0x2a0) = lbl_803E2D28;
+    if ((*(u32 *)(state + 0x314) & 0x200) != 0) {
+        *(u32 *)(state + 0x314) &= ~0x200;
+        *(u8 *)(control + 0x44) |= 0x10;
+    }
+    *(u8 *)(control + 0x44) |= 0xc;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8015C6B4(int obj, int state)
+{
+    int sub = *(int *)(obj + 0xb8);
+    int hitState;
+
+    if (*(s16 *)(state + 0x276) != 4 && (s8)*(u8 *)(state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E2D14, 0);
+        *(u8 *)(state + 0x346) = 0;
+    }
+    *(u8 *)(*(int *)(sub + 0x40c) + 0x44) |= 0xc;
+    if ((s8)*(u8 *)(state + 0x27a) != 0) {
+        hitState = *(int *)(obj + 0x54);
+        *(s16 *)(hitState + 0x60) &= ~1;
+        *(f32 *)(state + 0x2a0) = lbl_803E2D38;
+        *(f32 *)(state + 0x280) = lbl_803E2D14;
+    }
+    if ((s8)*(u8 *)(state + 0x346) != 0) {
+        GameBit_Set((s32)*(s16 *)(sub + 0x3f4), 0);
+        ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
+        *(int *)(state + 0x2d0) = 0;
+        *(u8 *)(state + 0x25f) = 0;
+        *(u8 *)(state + 0x349) = 0;
+        *(s16 *)(sub + 0x402) = 0;
+        *(u8 *)(obj + 0xaf) |= 8;
+    }
     return 0;
 }
 #pragma peephole reset
