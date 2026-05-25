@@ -5302,5 +5302,15 @@ void staff_free(int *obj) {
     }
     ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
 }
+
+void fireball_free(int *obj) {
+    int *inner = ((int**)obj)[0xb8/4];
+    void *ptr = *(void**)inner;
+    if (ptr != NULL) {
+        ModelLightStruct_free(ptr);
+    }
+    ((void (*)(int *))((void **)*gExpgfxInterface)[6])(obj);
+    ObjGroup_RemoveObject((int)obj, 2);
+}
 #pragma peephole reset
 #pragma scheduling reset
