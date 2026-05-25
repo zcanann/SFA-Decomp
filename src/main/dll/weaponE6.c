@@ -49,6 +49,8 @@ extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
 
+#pragma peephole off
+#pragma scheduling off
 void fn_8013F100(int obj, int state)
 {
     int iVar2;
@@ -291,6 +293,8 @@ void fn_8013F100(int obj, int state)
         fn_8017962C(*(int *)(state + 0x700));
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void fn_8013F9E4(int obj, int state)
 {
