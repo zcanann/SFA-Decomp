@@ -27,6 +27,7 @@ extern int FUN_8007f924();
 extern undefined4 FUN_8007f944();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_801302a4();
+extern int fn_801D70D8(int obj, undefined4 p2, int animObj);
 extern undefined4 FUN_801d6d98();
 extern int FUN_801d7198();
 extern undefined4 FUN_801d71dc();
@@ -42,6 +43,9 @@ extern undefined4* DAT_803dd72c;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
+extern u32 GameBit_Get(int eventId);
+extern int GameBit_Set(int eventId, int value);
+extern void ObjHits_EnableObject(int obj);
 
 /*
  * --INFO--
@@ -145,6 +149,31 @@ void warpstone_release(void)
 void warpstone_initialise(void)
 {
 }
+
+#pragma scheduling off
+#pragma peephole off
+void warpstone_init(int obj, u8 *setup)
+{
+  int state;
+  s16 setupYaw;
+
+  state = *(int *)(obj + 0xb8);
+  setupYaw = (s16)(setup[0x1a] << 8);
+  *(s16 *)obj = setupYaw;
+  *(void **)(obj + 0xbc) = fn_801D70D8;
+  *(s16 *)(state + 0xe) = 0x15a;
+  *(s16 *)(state + 0x10) = 0x886;
+  ObjHits_EnableObject(obj);
+  if (GameBit_Get(0x887) != 0 && GameBit_Get(0x15a) != 0) {
+    *(u8 *)(state + 0xc) = 1;
+  } else {
+    *(u8 *)(state + 0xc) = 0;
+  }
+  GameBit_Set(*(s16 *)(state + 0x10), 0);
+  *(int *)state = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
