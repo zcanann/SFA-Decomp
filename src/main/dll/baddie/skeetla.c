@@ -726,6 +726,7 @@ void *fn_8013A6BC(u8 *state, u32 route, int pathId)
 #pragma dont_inline reset
 
 /* fn_8013A7F4  addr=0x8013A7F4  size=0x1D4  linkage=global */
+#pragma peephole off
 int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
 {
     s8 status[8];
@@ -752,12 +753,13 @@ int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
                 status[i] = -1;
             }
 
-            if (status[i] == 1) {
+            switch (status[i]) {
+            case 1:
                 return i;
-            }
-            if (status[i] == -1) {
+            case -1:
                 routes[i] = 0;
                 failedCount++;
+                break;
             }
 
             search += 0x30;
@@ -782,6 +784,7 @@ int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
 
     return -1;
 }
+#pragma peephole reset
 
 /* fn_8013A9C8  addr=0x8013A9C8  size=0x184  linkage=global */
 void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
