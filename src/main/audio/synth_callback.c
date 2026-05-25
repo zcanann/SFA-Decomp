@@ -196,10 +196,10 @@ void synthFreeCallback(SynthCallbackLink* callback) {
 }
 
 u32 synthAssignHandle(s32 voiceIndex) {
-    u32 handle;
-    SynthVoice* current;
     SynthVoice* queuedVoices;
     SynthVoice* allocatedVoices;
+    u32 handle;
+    SynthVoice* current;
 
     do {
         queuedVoices = gSynthQueuedVoices;
