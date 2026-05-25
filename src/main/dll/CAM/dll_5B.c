@@ -209,8 +209,69 @@ void firstPersonDoControls(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void firstPersonEnter(void)
+extern void curveFn_80010dc0(void);
+extern void curveFn_80010d54(void);
+extern void curvesMove(void *curve);
+extern int fn_802966D4(int obj, int *out);
+
+int firstPersonEnter(u8 *cam, s16 *p2)
 {
+  u8 *state;
+  int flag;
+  int conv;
+  int other;
+  f32 f2;
+
+  *(f32 *)(cam + 24) = *(f32 *)((char *)lbl_803DD548 + 288);
+  *(f32 *)(cam + 28) = *(f32 *)((char *)lbl_803DD548 + 292);
+  *(f32 *)(cam + 32) = *(f32 *)((char *)lbl_803DD548 + 296);
+  *(s16 *)(cam + 2) = 0;
+  flag = 0;
+  if (*(f32 *)(cam + 244) <= lbl_803E17C4) {
+    flag = 1;
+  }
+  conv = (int)(lbl_803E1814 * *(f32 *)(cam + 244));
+  state = *(u8 **)(cam + 164);
+  if (conv < 1) {
+    conv = 1;
+  }
+  if (state != NULL) {
+    state[54] = (u8)conv;
+    if (Obj_GetPlayerObject() == (int)state) {
+      if (fn_802966D4((int)state, &other) != 0) {
+        *(u8 *)(other + 54) = (u8)conv;
+        if (*(u8 *)(other + 54) == 1) {
+          *(u8 *)(other + 54) = 0;
+        }
+      }
+    }
+  }
+  if (flag != 0) {
+    *(int *)((char *)lbl_803DD548 + 252) = (int)((char *)lbl_803DD548 + 64);
+    *(int *)((char *)lbl_803DD548 + 256) = 0;
+    *(int *)((char *)lbl_803DD548 + 260) = 0;
+    *(int *)((char *)lbl_803DD548 + 264) = 4;
+    *(int *)((char *)lbl_803DD548 + 268) = (int)&curveFn_80010dc0;
+    *(int *)((char *)lbl_803DD548 + 272) = (int)&curveFn_80010d54;
+    *(int *)((char *)lbl_803DD548 + 248) = 0;
+    *(f32 *)((char *)lbl_803DD548 + 64) = (f32)(s32)*(s16 *)cam;
+    *(f32 *)((char *)lbl_803DD548 + 68) = (f32)(s32)(0x8000 - p2[0]);
+    f2 = *(f32 *)((char *)lbl_803DD548 + 64) - *(f32 *)((char *)lbl_803DD548 + 68);
+    if (f2 < lbl_803E1818 && f2 > lbl_803E181C) {
+      *(f32 *)((char *)lbl_803DD548 + 68) = *(f32 *)((char *)lbl_803DD548 + 64);
+    } else if (f2 > lbl_803E17C8 || f2 < lbl_803E17CC) {
+      if (*(f32 *)((char *)lbl_803DD548 + 64) < lbl_803E17C4) {
+        *(f32 *)((char *)lbl_803DD548 + 64) += lbl_803E17D0;
+      } else if (*(f32 *)((char *)lbl_803DD548 + 68) < lbl_803E17C4) {
+        *(f32 *)((char *)lbl_803DD548 + 68) += lbl_803E17D0;
+      }
+    }
+    *(f32 *)((char *)lbl_803DD548 + 72) = lbl_803E17C4;
+    *(f32 *)((char *)lbl_803DD548 + 76) = lbl_803E17C4;
+    curvesMove((char *)lbl_803DD548 + 120);
+    return 1;
+  }
+  return 0;
 }
 
 /*
