@@ -3922,3 +3922,36 @@ int dll_19_func17(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, s16 p8
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int objModelGetVecFn_800395d8(int model, int idx);
+extern f32 lbl_803E1AE0;
+extern f32 lbl_803E1AE4;
+extern f32 lbl_803E1AE8;
+extern f32 lbl_803E1AEC;
+extern f32 lbl_803E1AF0;
+
+/* CameraModeCannon_update  addr=0x8010FA84  size=0x168  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeCannon_update(u8 *obj) {
+    int vec;
+    s16 yaw;
+    s16 delta;
+
+    vec = objModelGetVecFn_800395d8(*(int *)lbl_803DD5A0, 0);
+    if (*(int *)lbl_803DD5A0 == 0) {
+        return;
+    }
+    yaw = *(s16 *)obj;
+    delta = (s16)((0x8000 - *(s16 *)(*(int *)lbl_803DD5A0)) - *(s16 *)(vec + 2) - yaw);
+    *(s16 *)obj = (s16)(s32)((f32)(s32)yaw + (f32)(s32)delta / lbl_803E1AE0);
+    *(f32 *)(obj + 12) =
+        *(f32 *)(*(int *)lbl_803DD5A0 + 12) -
+        lbl_803E1AE4 * fn_80293E80(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
+    *(f32 *)(obj + 16) = lbl_803E1AF0 + *(f32 *)(*(int *)lbl_803DD5A0 + 16);
+    *(f32 *)(obj + 20) =
+        *(f32 *)(*(int *)lbl_803DD5A0 + 20) -
+        lbl_803E1AE4 * sin(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
+}
+#pragma peephole reset
+#pragma scheduling reset
