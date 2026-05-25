@@ -7,5 +7,6 @@
 extern ObjectDescriptor gDllFCObjDescriptor;
 
 void appleontree_update(int param_1);
+void appleontree_init(int obj, int def);
 
 #endif /* MAIN_DLL_CRACKANIM_H_ */

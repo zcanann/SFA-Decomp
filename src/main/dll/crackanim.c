@@ -25,11 +25,23 @@ extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void playerAddHealth(u8 *player, int v);
 extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
+extern u32 randomGetRange(int min, int max);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void ObjMsg_AllocQueue(int obj, int capacity);
+extern int *objFindTexture(int obj, int textureId, int modelIdx);
 
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e44b8;
 extern f32 lbl_803DC074;
+extern f32 lbl_803E37C8;
+extern f32 lbl_803E37D4;
+extern f32 lbl_803E37DC;
+extern f32 lbl_803E3828;
+extern f32 lbl_803E382C;
+extern f32 lbl_803E3830;
+extern f32 lbl_803E3834;
+extern f32 lbl_803E3838;
 extern f32 lbl_803E4460;
 extern f32 lbl_803E4464;
 extern f32 lbl_803E4468;
@@ -323,6 +335,86 @@ switchD_8017e864_caseD_7:
 #pragma peephole reset
 #pragma scheduling reset
 
+/*
+ * --INFO--
+ *
+ * Function: appleontree_init
+ * EN v1.0 Address: 0x8017E964
+ * EN v1.0 Size: 684b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+void appleontree_init(int obj, int def)
+{
+    int state;
+    f32 zeroScale;
+    f32 timeScale;
+    f32 progress;
+    int eventBit;
+    int *texture;
+
+    state = *(int *)(obj + 0xb8);
+
+    *(u32 *)(state + 0x00) = *(u32 *)(def + 0x18);
+    *(f32 *)(state + 0x04) = (f32)*(u16 *)(def + 0x1c);
+    *(f32 *)(state + 0x08) = (f32)*(u16 *)(def + 0x1e);
+    *(f32 *)(state + 0x10) = (f32)*(u8 *)(def + 0x20) / lbl_803E3828;
+    *(f32 *)(state + 0x14) = *(f32 *)(state + 0x10) + (f32)*(u8 *)(def + 0x21) / lbl_803E3828;
+    *(f32 *)(state + 0x18) = *(f32 *)(state + 0x14) + (f32)*(u8 *)(def + 0x22) / lbl_803E3828;
+    *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x18) + (f32)*(u8 *)(def + 0x23) / lbl_803E3828;
+    *(f32 *)(state + 0x20) = (f32)*(u8 *)(def + 0x24) / lbl_803E3828;
+    *(f32 *)(state + 0x28) = (f32)*(s8 *)(def + 0x25) / lbl_803E3828;
+    *(f32 *)(state + 0x28) = *(f32 *)(state + 0x28) * lbl_803E37DC;
+    *(f32 *)(state + 0x24) = lbl_803E37C8;
+    *(u16 *)(state + 0x38) = 0;
+    zeroScale = lbl_803E37D4;
+    *(f32 *)(state + 0x3c) = zeroScale;
+    *(f32 *)(state + 0x40) = lbl_803E382C;
+    *(f32 *)(state + 0x44) = zeroScale;
+
+    timeScale = *(f32 *)(state + 0x04) * *(f32 *)(state + 0x18);
+    timeScale *= timeScale;
+    timeScale *= timeScale;
+    *(f32 *)(state + 0x54) = (timeScale * timeScale) * lbl_803E3830;
+
+    *(s16 *)(obj + 0x00) = (s16)randomGetRange(-0x8000, 0x7fff);
+    *(f32 *)(obj + 0x08) = lbl_803E3834;
+    Obj_SetActiveModelIndex(obj, 0);
+
+    eventBit = *(s16 *)(def + 0x26);
+    if ((eventBit != -1) && (GameBit_Get(eventBit) != 0)) {
+        *(f32 *)(state + 0x08) = lbl_803E3838;
+        *(u8 *)(state + 0x3a) = 6;
+    } else {
+        progress = *(f32 *)(state + 0x08) / *(f32 *)(state + 0x04);
+        if (progress < *(f32 *)(state + 0x10)) {
+            *(u8 *)(state + 0x3a) = 0;
+        } else if (progress < *(f32 *)(state + 0x14)) {
+            *(f32 *)(obj + 0x08) = *(f32 *)(*(int *)(obj + 0x50) + 4);
+            *(u8 *)(state + 0x3a) = 1;
+        } else if (progress < *(f32 *)(state + 0x18)) {
+            *(u8 *)(state + 0x3a) = 2;
+        } else {
+            state = *(int *)(obj + 0xb8);
+            texture = objFindTexture(obj, 0, 0);
+            *texture = 0;
+            *(f32 *)(state + 0x24) = lbl_803E37C8;
+            *(f32 *)(obj + 0x08) = *(f32 *)(*(int *)(obj + 0x50) + 4);
+            Obj_SetActiveModelIndex(obj, 1);
+            *(u8 *)(state + 0x3a) = 3;
+        }
+    }
+
+    ObjMsg_AllocQueue(obj, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_FC_free_nop(void) {}
