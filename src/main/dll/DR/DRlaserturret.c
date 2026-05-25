@@ -57,7 +57,7 @@ extern f32 lbl_803E5A20;
  * EN v1.0 Address: 0x801E6B10
  * EN v1.0 Size: 504b
  */
-int DRlaserturret_updateIdle(void *obj, DRLaserTurretAnimState *animState)
+int DRlaserturret_updateIdle(DRLaserTurretObject *obj, DRLaserTurretAnimState *animState)
 {
     void *playerObj;
     DRLaserTurretState *state;
@@ -67,14 +67,14 @@ int DRlaserturret_updateIdle(void *obj, DRLaserTurretAnimState *animState)
     int rng;
 
     playerObj = Obj_GetPlayerObject();
-    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
+    state = obj->state;
     state->promptState = 0xff;
     animState->animStepScale = lbl_803E59E4;
-    if (*(s16 *)((char *)obj + 0xa0) != 0) {
+    if (obj->currentMove != 0) {
         ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
     }
     ObjHits_EnableObject(obj);
-    *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) & ~0x08;
+    obj->hitFlags &= ~0x08;
     if (GameBit_Get(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0) {
         v = DR_LASERTURRET_STATE_PUSH_IDLE;
         psStack = state->stateStack;
@@ -84,7 +84,7 @@ int DRlaserturret_updateIdle(void *obj, DRLaserTurretAnimState *animState)
         return DR_LASERTURRET_STATE_CONTINUE;
     }
     shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
-    *(f32 *)((char *)obj + 0x10) =
+    obj->y =
         state->bobAmplitude *
             fn_80293E80(
                 (double)(lbl_803E59E8 *
@@ -97,7 +97,7 @@ int DRlaserturret_updateIdle(void *obj, DRLaserTurretAnimState *animState)
         state->bobAmplitude = (float)rng * lbl_803E59F0;
     }
     state->bobPhase = (u16)sum;
-    if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
+    if ((obj->hitFlags & 1) != 0) {
         if (playerGetMoney(playerObj) >= 1) {
             GameBit_Set(DR_LASERTURRET_GAMEBIT_HAS_MONEY, 1);
             buttonDisable(0, DR_LASERTURRET_BUTTON_ACCEPT);
