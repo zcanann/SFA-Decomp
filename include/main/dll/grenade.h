@@ -34,11 +34,7 @@ trickyFoodFn_801437d4(undefined8 param_1,double param_2,double param_3,undefined
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int *param_10);
 undefined4 trickyFn_80143b04(int param_1,int *param_2);
 undefined4 trickyFn_80143b78(int param_1,int *param_2);
-undefined4
-trickyFn_80143c04(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
-            int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
-            undefined4 param_15,undefined4 param_16);
+int trickyFn_80143c04(int obj, int state);
 undefined4 fn_80143DD4(int param_1,int *param_2);
 void objAnimFn_801441c0(int param_1,int param_2);
 void fn_801444A4(int param_1,int param_2);
