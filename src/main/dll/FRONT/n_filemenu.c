@@ -6,7 +6,7 @@ extern void Sfx_PlayFromObject(uint obj, ushort sfxId);
 extern void buttonDisable(int controller, uint buttons);
 extern void padClearAnalogInputY(int controller);
 extern void padClearAnalogInputX(int controller);
-extern void padGetAnalogInput(int controller, u8 *dpad, u8 *face);
+extern void padGetAnalogInput(int controller, s8 *dpad, s8 *face);
 extern uint getButtonsJustPressed(int controller);
 extern void loadUiDll(int id);
 extern void doNothing_onSaveSelectScreenExit(void);
@@ -107,8 +107,8 @@ int TitleMenu_run(void)
   uint buttons;
   u8 previousFadeTimer;
   u8 frames;
-  u8 dpad;
-  u8 face;
+  s8 dpad;
+  s8 face;
 
   previousFadeTimer = gTitleMenuLoadDelay;
   frames = framesThisStep;
