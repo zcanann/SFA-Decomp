@@ -800,6 +800,8 @@ extern void C_MTXOrtho(f32* matrix, f32 top, f32 bottom, f32 left, f32 right, f3
 extern void C_MTXPerspective(f32* matrix, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane);
 extern void C_MTXLightPerspective(f32* matrix, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 extern void GXSetProjection(f32* matrix, s32 projectionMode);
+extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane);
+extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane, u32 field);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
@@ -6340,6 +6342,19 @@ extern f32 lbl_803DE60C;
 extern f32 lbl_803DE628;
 extern f32 lbl_803DE62C;
 extern f32 lbl_803DE630;
+extern f32 lbl_803DE640;
+extern f32 lbl_803DE644;
+extern f32 lbl_803DE648;
+extern f32 lbl_803DB26C;
+
+typedef struct CameraRenderMode {
+    u32 viTVMode;
+    u16 fbWidth;
+    u16 efbHeight;
+    u16 xfbHeight;
+    u8 pad0A[0x0E];
+    u8 useViewportJitter;
+} CameraRenderMode;
 
 typedef struct CameraViewSlot {
     s16 pitch;
@@ -6376,6 +6391,8 @@ extern f32 lbl_80396850[12];
 extern s16 lbl_802C5ED0[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
+extern CameraRenderMode* lbl_803DCCF0;
+extern u32 lbl_803DCCBC;
 void Camera_ApplyCurrentViewport(void* viewportArg);
 
 extern u8 lbl_802C5E00[];
@@ -7534,6 +7551,82 @@ void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
     slot->x = x;
     slot->y = y;
     slot->z = z;
+}
+
+/*
+ * Function: Camera_ApplyFullViewport
+ * EN v1.0 Address: 0x8000F780
+ * EN v1.0 Size: 188b
+ */
+void Camera_ApplyFullViewport(void)
+{
+    CameraRenderMode* renderMode = lbl_803DCCF0;
+
+    if (renderMode->useViewportJitter != 0) {
+        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
+                            (f32)renderMode->xfbHeight, lbl_803DE60C, lbl_803DE5F0,
+                            lbl_803DCCBC);
+    } else {
+        GXSetViewport(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
+                      (f32)renderMode->xfbHeight, lbl_803DE60C, lbl_803DE5F0);
+    }
+}
+
+/*
+ * Function: fn_8000F83C
+ * EN v1.0 Address: 0x8000F83C
+ * EN v1.0 Size: 188b
+ */
+void fn_8000F83C(void)
+{
+    CameraRenderMode* renderMode = lbl_803DCCF0;
+
+    if (renderMode->useViewportJitter != 0) {
+        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
+                            (f32)renderMode->xfbHeight, lbl_803DE640, lbl_803DE5F0,
+                            lbl_803DCCBC);
+    } else {
+        GXSetViewport(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
+                      (f32)renderMode->xfbHeight, lbl_803DE640, lbl_803DB26C);
+    }
+}
+
+/*
+ * Function: fn_8000F8F8
+ * EN v1.0 Address: 0x8000F8F8
+ * EN v1.0 Size: 188b
+ */
+void fn_8000F8F8(void)
+{
+    CameraRenderMode* renderMode = lbl_803DCCF0;
+
+    if (renderMode->useViewportJitter != 0) {
+        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
+                            (f32)renderMode->xfbHeight, lbl_803DE644, lbl_803DE5F0,
+                            lbl_803DCCBC);
+    } else {
+        GXSetViewport(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
+                      (f32)renderMode->xfbHeight, lbl_803DE644, lbl_803DE5F0);
+    }
+}
+
+/*
+ * Function: fn_8000F9B4
+ * EN v1.0 Address: 0x8000F9B4
+ * EN v1.0 Size: 188b
+ */
+void fn_8000F9B4(void)
+{
+    CameraRenderMode* renderMode = lbl_803DCCF0;
+
+    if (renderMode->useViewportJitter != 0) {
+        GXSetViewportJitter(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
+                            (f32)renderMode->xfbHeight, lbl_803DE648, lbl_803DE5F0,
+                            lbl_803DCCBC);
+    } else {
+        GXSetViewport(lbl_803DE60C, lbl_803DE60C, (f32)renderMode->fbWidth,
+                      (f32)renderMode->xfbHeight, lbl_803DE648, lbl_803DE5F0);
+    }
 }
 
 /*
