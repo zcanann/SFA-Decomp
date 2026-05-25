@@ -582,11 +582,10 @@ void fn_8014FF58(int unused, char *p) {
 #pragma scheduling reset
 
 extern char lbl_8031F16C[];
-#pragma scheduling off
 #pragma peephole off
 void fn_801504BC(int obj, int delta) {
-    char *inner = *(char **)(obj + 0xb8);
-    u8 *ptr = *(u8 **)(lbl_8031F16C + (u8)inner[0x33b] * 0x28 + 4);
+    u8 *inner = *(u8 **)(obj + 0xb8);
+    u8 *ptr = *(u8 **)(lbl_8031F16C + inner[0x33b] * 0x28 + 4);
     inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
     inner[0x33e] = 1;
 }
