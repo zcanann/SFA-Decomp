@@ -6676,9 +6676,15 @@ extern u32 lbl_803398C0[];
 extern u32 lbl_803398D0[];
 extern u32 lbl_803398E0[];
 extern u8 lbl_803398F0[];
+extern u8 lbl_802C7400[];
+extern void* lbl_803DC954;
+extern void* lbl_803DC958;
+extern void* lbl_803DC9CC;
 extern f32 lbl_803DE6E8;
 
 extern int sprintf(char* buf, const char* fmt, ...);
+extern char* strcpy(char* dst, const char* src);
+extern char* strcat(char* dst, const char* src);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void PADControlMotor(s32 chan, u32 command);
 
@@ -6694,6 +6700,19 @@ typedef struct PadStatusLite {
     u8 analogB;
     s8 error;
 } PadStatusLite;
+
+/*
+ * Function: concatThreeStrings
+ * EN v1.0 Address: 0x8000A200
+ * EN v1.0 Size: 100b
+ */
+int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third)
+{
+    strcpy(dst, first);
+    strcat(dst, second);
+    strcat(dst, third);
+    return 1;
+}
 
 /*
  * Function: fn_8001404C
@@ -6954,6 +6973,41 @@ void setRumbleEnabled(u8 enabled)
 }
 
 /*
+ * Function: fileReadCb_80015954
+ * EN v1.0 Address: 0x80015954
+ * EN v1.0 Size: 8b
+ */
+void fileReadCb_80015954(void* result)
+{
+    lbl_803DC958 = result;
+}
+
+/*
+ * Function: setFileInfo
+ * EN v1.0 Address: 0x8001595C
+ * EN v1.0 Size: 8b
+ */
+void setFileInfo(void* fileInfo)
+{
+    lbl_803DC954 = fileInfo;
+}
+
+/*
+ * Function: isSpace
+ * EN v1.0 Address: 0x80015BC8
+ * EN v1.0 Size: 40b
+ */
+int isSpace(u32 c)
+{
+    int result = 0;
+
+    if (c == 0x20 || c == 0x3000 || c == 0x303F) {
+        result = 1;
+    }
+    return result;
+}
+
+/*
  * Function: padGetAnalogInput
  * EN v1.0 Address: 0x80014B78
  * EN v1.0 Size: 76b
@@ -7153,4 +7207,24 @@ u32 getButtonsHeld(int port)
         return 0;
     }
     return lbl_803398C0[port] & lbl_802C6E50[port];
+}
+
+/*
+ * Function: gameTextGetBox
+ * EN v1.0 Address: 0x800173C8
+ * EN v1.0 Size: 20b
+ */
+void* gameTextGetBox(int box)
+{
+    return &lbl_802C7400[box * 0x20];
+}
+
+/*
+ * Function: gameTextGetCurBox
+ * EN v1.0 Address: 0x800173DC
+ * EN v1.0 Size: 8b
+ */
+void* gameTextGetCurBox(void)
+{
+    return lbl_803DC9CC;
 }
