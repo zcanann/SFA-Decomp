@@ -53,8 +53,6 @@ extern uint countLeadingZeros();
 
 extern RomCurveDef *romCurves[];
 extern undefined4 DAT_803a3898;
-extern undefined4 gGameplayRegisteredDebugOptions;
-extern undefined4 gGameplayEnabledDebugOptions;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803de0e8;
 extern undefined4 DAT_803de0ec;
@@ -4373,8 +4371,8 @@ typedef struct SaveData {
   u8 sfxVolume;
   u8 speechVolume;
   u8 pad0D[3];
-  u32 registeredOptions;
-  u32 enabledOptions;
+  u32 registeredDebugOptions;
+  u32 enabledDebugOptions;
 } SaveData;
 
 extern SaveData saveData;
@@ -4382,14 +4380,14 @@ void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
 {
   u32 mask = 1 << (u8)optionIndex;
 
-  if ((saveData.registeredOptions & mask) == 0) {
+  if ((saveData.registeredDebugOptions & mask) == 0) {
     return;
   }
   if (active != 0) {
-    saveData.enabledOptions |= mask;
+    saveData.enabledDebugOptions |= mask;
   }
   else {
-    saveData.enabledOptions &= ~mask;
+    saveData.enabledDebugOptions &= ~mask;
   }
 }
 
@@ -4470,26 +4468,26 @@ void saveFileStruct_resetVolumes(void)
   saveData.speechVolume = 0x7f;
 }
 
-/* isCheatUnlocked: return registeredOptions & (1 << (idx & 0xff)). */
+/* isCheatUnlocked: return registeredDebugOptions & (1 << (idx & 0xff)). */
 #pragma scheduling off
 #pragma peephole off
 int isCheatUnlocked(u8 idx) {
     SaveData *p = &saveData;
-    u32 reg = p->registeredOptions;
+    u32 reg = p->registeredDebugOptions;
     u32 mask = 1 << idx;
     return reg & mask;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredOptions. */
+/* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredDebugOptions. */
 #pragma scheduling off
 #pragma peephole off
 void saveFileStruct_unlockCheat(u8 idx) {
     SaveData *p = &saveData;
-    u32 reg = p->registeredOptions;
+    u32 reg = p->registeredDebugOptions;
     u32 mask = 1 << idx;
-    p->registeredOptions = reg | mask;
+    p->registeredDebugOptions = reg | mask;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4498,10 +4496,10 @@ int saveFileStruct_isCheatActive(u8 idx)
 {
   u32 mask = 1 << idx;
 
-  if ((saveData.registeredOptions & mask) == 0) {
+  if ((saveData.registeredDebugOptions & mask) == 0) {
     return 0;
   }
-  if ((saveData.enabledOptions & mask) == 0) {
+  if ((saveData.enabledDebugOptions & mask) == 0) {
     return 0;
   }
   return 1;
