@@ -4533,7 +4533,7 @@ extern u32 randomGetRange(int min, int max);
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx) {
     int candidates[4];
     int count = 0;
-    int mask = 1;
+    u32 mask = 1;
     int neighbor;
     int i;
     for (i = 0; i < 4; i++) {
@@ -4544,18 +4544,20 @@ int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx) {
         }
         mask <<= 1;
     }
-    if (count == 0) return -1;
-    if (pickIdx > count - 1) pickIdx = count - 1;
-    if (pickIdx == -1) {
-        pickIdx = (int)randomGetRange(0, count - 1);
+    if (count != 0) {
+        if (pickIdx > count - 1) pickIdx = count - 1;
+        if (pickIdx == -1) {
+            pickIdx = (int)randomGetRange(0, count - 1);
+        }
+        return candidates[pickIdx];
     }
-    return candidates[pickIdx];
+    return -1;
 }
 
 int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
     int candidates[4];
     int count = 0;
-    int mask = 1;
+    u32 mask = 1;
     int neighbor;
     int i;
     for (i = 0; i < 4; i++) {
@@ -4566,12 +4568,14 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
         }
         mask <<= 1;
     }
-    if (count == 0) return -1;
-    if (pickIdx > count - 1) pickIdx = count - 1;
-    if (pickIdx == -1) {
-        pickIdx = (int)randomGetRange(0, count - 1);
+    if (count != 0) {
+        if (pickIdx > count - 1) pickIdx = count - 1;
+        if (pickIdx == -1) {
+            pickIdx = (int)randomGetRange(0, count - 1);
+        }
+        return candidates[pickIdx];
     }
-    return candidates[pickIdx];
+    return -1;
 }
 #pragma peephole reset
 #pragma scheduling reset
