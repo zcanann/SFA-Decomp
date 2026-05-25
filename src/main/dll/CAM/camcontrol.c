@@ -38,25 +38,24 @@ extern short* gCamcontrolTargetReticle;
 extern u16 lbl_803DD4C8;
 extern u8 gCamcontrolTargetState;
 extern short* gCamcontrolState;
-extern f64 DOUBLE_803e22d0;
-extern f32 lbl_803DC074;
+extern f32 timeDelta;
+extern f64 lbl_803E1650;
 extern f32 gCamcontrolSavedFocusWorldZ;
 extern f32 gCamcontrolSavedFocusWorldY;
 extern f32 gCamcontrolSavedFocusWorldX;
 extern f32 gCamcontrolSavedFocusLocalZ;
 extern f32 gCamcontrolSavedFocusLocalY;
 extern f32 gCamcontrolSavedFocusLocalX;
+extern f32 lbl_803E162C;
 extern f32 lbl_803E1630;
+extern f32 lbl_803E1634;
+extern f32 lbl_803E1638;
+extern f32 lbl_803E163C;
+extern f32 lbl_803E1670;
+extern f32 lbl_803E1674;
+extern f32 lbl_803E1678;
+extern f32 lbl_803E167C;
 extern f32 lbl_803E1680;
-extern f32 lbl_803E22AC;
-extern f32 lbl_803E22B0;
-extern f32 lbl_803E22B4;
-extern f32 lbl_803E22B8;
-extern f32 lbl_803E22BC;
-extern f32 lbl_803E22F0;
-extern f32 lbl_803E22F4;
-extern f32 lbl_803E22F8;
-extern f32 lbl_803E22FC;
 extern f32 lbl_803E2300;
 extern f32 lbl_803E1684;
 extern u16 lbl_803DB992;
@@ -105,15 +104,15 @@ void camcontrol_updateTargetFeedback(void)
     cVar2 = *(byte *)(pCamera + 0x138);
     if (cVar2 == 1) {
       Sfx_PlayFromObject(0,0x3ff);
-      objShowButtonGlow((double)lbl_803E22AC,psVar6,2);
+      objShowButtonGlow((double)lbl_803E162C,psVar6,2);
     }
     else if ((cVar2 == 4) || (cVar2 == 9)) {
       Sfx_PlayFromObject(0,0x402);
-      objShowButtonGlow((double)lbl_803E22AC,psVar6,3);
+      objShowButtonGlow((double)lbl_803E162C,psVar6,3);
     }
     else if (cVar2 != 8) {
       Sfx_PlayFromObject(0,0x288);
-      objShowButtonGlow((double)lbl_803E22AC,psVar6,1);
+      objShowButtonGlow((double)lbl_803E162C,psVar6,1);
     }
   }
   if (iVar11 != 0) {
@@ -138,7 +137,7 @@ void camcontrol_updateTargetFeedback(void)
     }
   }
   if (gCamcontrolTargetState == '\0') {
-    if (*(float *)(psVar6 + 0x4c) <= lbl_803E22B0) {
+    if (*(float *)(psVar6 + 0x4c) <= lbl_803E1630) {
       if (iVar11 == 0) {
         *(undefined4 *)(pCamera + 0x128) = 0;
       }
@@ -151,13 +150,13 @@ void camcontrol_updateTargetFeedback(void)
       }
     }
     else {
-      ObjAnim_AdvanceCurrentMove(lbl_803E22F0,lbl_803DC074,(int)psVar6,
+      ObjAnim_AdvanceCurrentMove(lbl_803E1670,timeDelta,(int)psVar6,
                                  (ObjAnimEventList *)0x0);
     }
   }
   else if ((*(int *)(pCamera + 0x128) == iVar11) ||
-          (*(float *)(psVar6 + 0x4c) < lbl_803E22AC)) {
-    ObjAnim_AdvanceCurrentMove(lbl_803E22F4,lbl_803DC074,(int)psVar6,
+          (*(float *)(psVar6 + 0x4c) < lbl_803E162C)) {
+    ObjAnim_AdvanceCurrentMove(lbl_803E1674,timeDelta,(int)psVar6,
                                (ObjAnimEventList *)0x0);
   }
   else {
@@ -175,7 +174,7 @@ void camcontrol_updateTargetFeedback(void)
       }
     }
     else {
-      ObjAnim_SetMoveProgress(lbl_803E22B0,(ObjAnimComponent *)psVar6);
+      ObjAnim_SetMoveProgress(lbl_803E1630,(ObjAnimComponent *)psVar6);
     }
   }
   iVar11 = Obj_IsObjectAlive(*(int *)(pCamera + 0x128));
@@ -203,7 +202,7 @@ LAB_80102994:
           if (sVar3 != 0x13a) {
             if (sVar3 < 0x13a) {
               if (sVar3 == 0x31) {
-                dVar12 = (double)lbl_803E22AC;
+                dVar12 = (double)lbl_803E162C;
                 goto LAB_801029e0;
               }
               if (sVar3 < 0x31) {
@@ -234,7 +233,7 @@ LAB_80102994:
 LAB_801029ac:
               iVar8 = dll_19_func1B(iVar11);
               if (iVar8 == 0) {
-                dVar12 = (double)lbl_803E22AC;
+                dVar12 = (double)lbl_803E162C;
               }
               else {
                 dVar12 = (double)(**(code **)(*gBaddieControlInterface + 0x60))(iVar11);
@@ -259,40 +258,40 @@ LAB_801029ac:
     dVar12 = fn_8014C5D0(iVar11);
   }
 LAB_801029e0:
-  if (((double)lbl_803E22B0 < dVar12) ||
-     ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E22B0)) {
-    if (((double)lbl_803E22B4 < dVar12) ||
-       ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E22B4)) {
-      if (((double)lbl_803E22B8 < dVar12) ||
-         ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E22B8)) {
-        if ((dVar12 <= (double)lbl_803E22BC) &&
-           ((double)lbl_803E22BC < (double)*(float *)(pCamera + 0x134))) {
-          objShowButtonGlow((double)lbl_803E22AC,psVar6,4);
+  if (((double)lbl_803E1630 < dVar12) ||
+     ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E1630)) {
+    if (((double)lbl_803E1634 < dVar12) ||
+       ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E1634)) {
+      if (((double)lbl_803E1638 < dVar12) ||
+         ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E1638)) {
+        if ((dVar12 <= (double)lbl_803E163C) &&
+           ((double)lbl_803E163C < (double)*(float *)(pCamera + 0x134))) {
+          objShowButtonGlow((double)lbl_803E162C,psVar6,4);
         }
       }
       else {
-        objShowButtonGlow((double)lbl_803E22AC,psVar6,4);
+        objShowButtonGlow((double)lbl_803E162C,psVar6,4);
       }
     }
     else {
-      objShowButtonGlow((double)lbl_803E22AC,psVar6,4);
+      objShowButtonGlow((double)lbl_803E162C,psVar6,4);
     }
   }
   else {
-    objShowButtonGlow((double)lbl_803E22AC,psVar6,4);
+    objShowButtonGlow((double)lbl_803E162C,psVar6,4);
   }
   *(float *)(pCamera + 0x134) = (float)dVar12;
 LAB_80102ab4:
-  fVar4 = lbl_803E22F8 * *(float *)(psVar6 + 0x4c);
-  fVar5 = lbl_803E22B0;
-  if ((lbl_803E22B0 <= fVar4) && (fVar5 = fVar4, lbl_803E22F8 < fVar4)) {
-    fVar5 = lbl_803E22F8;
+  fVar4 = lbl_803E1678 * *(float *)(psVar6 + 0x4c);
+  fVar5 = lbl_803E1630;
+  if ((lbl_803E1630 <= fVar4) && (fVar5 = fVar4, lbl_803E1678 < fVar4)) {
+    fVar5 = lbl_803E1678;
   }
   *(char *)(psVar6 + 0x1b) = (char)(int)fVar5;
   lbl_803DD4C8 = 0x400;
-  *psVar6 = (short)(int)(lbl_803E22FC * lbl_803DC074 +
+  *psVar6 = (short)(int)(lbl_803E167C * timeDelta +
                         (float)((double)CONCAT44(0x43300000,(int)*psVar6 ^ 0x80000000) -
-                               DOUBLE_803e22d0));
+                               lbl_803E1650));
   return;
 }
 #pragma peephole reset
