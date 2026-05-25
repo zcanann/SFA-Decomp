@@ -6344,6 +6344,7 @@ extern f32 sqrtf(f32 x);
 extern f32 sin(f32 x);
 extern u32 getScreenResolution(void);
 extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
+extern u8 lbl_80338090[];
 
 /*
  * Function: Music_GetActivePriority
@@ -6862,7 +6863,10 @@ void* Camera_GetCurrentViewSlot(void)
  */
 u8 CameraShake_IsActive(void)
 {
-    return gCameraShakeSlots[gCameraCurrentViewIndex].shakeActive == 1;
+    s32 offset = gCameraCurrentViewIndex * sizeof(CameraViewSlot);
+    CameraViewSlot* slot = (CameraViewSlot*)((u8*)gCameraShakeSlots + offset);
+
+    return slot->shakeActive == 1;
 }
 
 /*
@@ -6880,6 +6884,95 @@ void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff)
     slot->shakeTimer = lbl_803DE60C;
     slot->shakeFalloff = falloff;
     slot->shakeActive = 1;
+}
+
+/*
+ * Function: CameraShake_SetAllMagnitudes
+ * EN v1.0 Address: 0x8000E67C
+ * EN v1.0 Size: 156b
+ */
+void CameraShake_SetAllMagnitudes(f32 magnitude)
+{
+    CameraViewSlot* slot = gCameraShakeSlots;
+
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+    slot++;
+    slot->shakeMagnitude = magnitude;
+    slot->shakeActive = 0;
+}
+
+/*
+ * Function: CameraShake_ApplyRadial
+ * EN v1.0 Address: 0x8000E718
+ * EN v1.0 Size: 252b
+ */
+void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude)
+{
+    CameraViewSlot* slot;
+    s32 i;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distance;
+    s8 inactive;
+
+    i = 0;
+    slot = gCameraShakeSlots;
+    inactive = 0;
+    do {
+        dx = x - slot->x;
+        dy = y - slot->y;
+        dz = z - slot->z;
+        distance = sqrtf(dx * dx + dy * dy + dz * dz);
+        if (distance < radius) {
+            slot->shakeMagnitude = (magnitude * (radius - distance)) / radius;
+            slot->shakeActive = inactive;
+        }
+        slot++;
+        i++;
+    } while (i <= 7);
+}
+
+/*
+ * Function: fn_8000E814
+ * EN v1.0 Address: 0x8000E814
+ * EN v1.0 Size: 12b
+ */
+void* fn_8000E814(void)
+{
+    return lbl_80338090;
 }
 
 /*
