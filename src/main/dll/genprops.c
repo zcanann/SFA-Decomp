@@ -4553,7 +4553,6 @@ extern void mikabombshadow_init();
 extern void StaticCamera_init();
 extern void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void StaticCamera_free(int x);
-extern void gcbaddieshield_render();
 extern void gcbaddieshield_update(int *obj);
 void gcbaddieshield_init(int *obj, void *initData);
 extern void baddieinterestp_update();
@@ -5026,10 +5025,17 @@ extern f32 lbl_803E31E8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3220;
 extern f32 lbl_803E33F0;
+extern f32 lbl_803E31F8;
 #pragma peephole off
 void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E31E8); }
 void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3220); }
 void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E33F0); }
+void gcbaddieshield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
+    s32 v = visible;
+    if (v != 0 && *(int *)((char *)obj + 0xf4) == 0) {
+        objRenderFn_8003b8f4(lbl_803E31F8);
+    }
+}
 #pragma peephole reset
 
 /* render-with-fn(lbl) (no visibility check). */
