@@ -5496,6 +5496,7 @@ extern u8 lbl_803DCCA7;
 extern u16 lbl_803DB5CE;
 extern u8 lbl_803DB5CC;
 extern char lbl_8035F730[];
+#pragma scheduling off
 int GXFlush_(u8 visible) {
     void *fifo_get;
     void *fifo_put;
@@ -5532,6 +5533,7 @@ int GXFlush_(u8 visible) {
     }
     return 0;
 }
+#pragma scheduling reset
 
 extern u8 GXNtsc480Prog[];
 extern u8 lbl_803DB5D4;
