@@ -5555,15 +5555,19 @@ extern void GXLoadTexObj(void *obj, int id);
 extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
 extern void fn_80053C40(u8 *tex, void *out);
 extern u8 lbl_803779A0[];
+#pragma scheduling off
 void textureFn_8004c264(u8 *tex, int mapId) {
+    void *base;
     if (tex == NULL) return;
+    base = &tex[32];
     if (tex[72] != 0) {
-        GXLoadTexObjPreLoaded(&tex[32], *(void **)(tex + 64), mapId);
+        GXLoadTexObjPreLoaded(base, *(void **)(tex + 64), mapId);
     } else {
-        GXLoadTexObj(&tex[32], mapId);
+        GXLoadTexObj(base, mapId);
     }
-    if (*(int *)(tex + 80) != 0) {
+    if (*(void **)(tex + 80) != NULL) {
         fn_80053C40(tex, lbl_803779A0);
         GXLoadTexObj(lbl_803779A0, 1);
     }
 }
+#pragma scheduling reset
