@@ -796,6 +796,10 @@ extern void PSVECNormalize(f32 *in, f32 *out);
 extern void PSVECScale(f32 *in, f32 *out, f32 scale);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern void GXLoadPosMtxImm(f32 *matrix, s32 slot);
+extern void C_MTXOrtho(f32* matrix, f32 top, f32 bottom, f32 left, f32 right, f32 nearPlane, f32 farPlane);
+extern void C_MTXPerspective(f32* matrix, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane);
+extern void C_MTXLightPerspective(f32* matrix, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+extern void GXSetProjection(f32* matrix, s32 projectionMode);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
@@ -6323,11 +6327,19 @@ extern f32 gCameraFarPlane;
 extern f32 gCameraNearPlane;
 extern f32 gCameraAspectRatio;
 extern f32 gCameraFovY;
+extern s32 gCameraProjectionMode;
 extern s16 lbl_803DC880;
 extern s16 lbl_803DC882;
 extern f32 lbl_803DC8A8;
 extern f32 lbl_803DC8AC;
+extern f32 lbl_803DC894;
+extern f32 lbl_803DC898;
+extern f32 lbl_803DC89C;
+extern f32 lbl_803DC8A0;
 extern f32 lbl_803DE60C;
+extern f32 lbl_803DE628;
+extern f32 lbl_803DE62C;
+extern f32 lbl_803DE630;
 
 typedef struct CameraViewSlot {
     s16 pitch;
@@ -6358,6 +6370,9 @@ extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 extern u8 lbl_80338090[];
 extern f32 lbl_80338190[16];
 extern f32 lbl_803967C0[12];
+extern f32 lbl_803967F0[12];
+extern f32 lbl_80396820[12];
+extern f32 lbl_80396850[12];
 extern s16 lbl_802C5ED0[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -7353,6 +7368,7 @@ void viewportEffectFn_8000e380(void)
  * EN v1.0 Address: 0x8000F0B8
  * EN v1.0 Size: 68b
  */
+#pragma dont_inline on
 void Camera_ApplyCurrentViewport(void* viewportArg)
 {
     u32 resolution = getScreenResolution();
@@ -7361,6 +7377,91 @@ void Camera_ApplyCurrentViewport(void* viewportArg)
     int viewportY = lbl_803DC884 + 6;
 
     gxSetScissorRect(0, 0, 0, viewportY, height, width - viewportY);
+}
+#pragma dont_inline reset
+
+/*
+ * Function: Camera_UpdateProjection
+ * EN v1.0 Address: 0x8000F0FC
+ * EN v1.0 Size: 732b
+ */
+void Camera_UpdateProjection(void* viewportArg)
+{
+    u8 viewIndex = gCameraCurrentViewIndex;
+    u8 activeViewIndex;
+    u32 resolution = getScreenResolution();
+    u32 screenWidth = resolution >> 16;
+    u32 screenHeight = resolution & 0xffff;
+    u8* viewportEntry = lbl_802C5E00 + viewIndex * 0x34;
+
+    if ((*(u32*)(viewportEntry + 0x30) & 1) != 0) {
+        u8 savedViewIndex = gCameraCurrentViewIndex;
+
+        gCameraCurrentViewIndex = viewIndex;
+        gxSetScissorRect(0, 0,
+                         *(s32*)(viewportEntry + 0x20),
+                         *(s32*)(viewportEntry + 0x24),
+                         *(s32*)(viewportEntry + 0x28),
+                         *(s32*)(viewportEntry + 0x2c));
+
+        activeViewIndex = gCameraCurrentViewIndex;
+        viewportEntry = lbl_802C5E00 + activeViewIndex * 0x34;
+        if ((*(u32*)(viewportEntry + 0x30) & 1) == 0) {
+            lbl_802C5ED0[activeViewIndex * 8 + 4] = 0;
+            lbl_802C5ED0[activeViewIndex * 8 + 5] = 0;
+            lbl_802C5ED0[activeViewIndex * 8 + 0] = 0;
+            lbl_802C5ED0[activeViewIndex * 8 + 1] = 0;
+        }
+
+        gCameraCurrentViewIndex = savedViewIndex;
+        if (gCameraProjectionMode == 1) {
+            C_MTXOrtho(gCameraProjectionMatrix, lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
+                       lbl_803DC894, gCameraNearPlane, gCameraFarPlane);
+        } else {
+            C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio,
+                             gCameraNearPlane, gCameraFarPlane);
+            C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
+                                  lbl_803DE628, lbl_803DE62C, lbl_803DE62C);
+            C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                                  lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
+            C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                                  lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+        }
+        GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
+        gCameraCurrentViewIndex = viewIndex;
+    } else {
+        u32 halfScreenHeight = screenHeight >> 1;
+        u32 halfScreenWidth = screenWidth >> 1;
+
+        activeViewIndex = gCameraCurrentViewIndex;
+        viewportEntry = lbl_802C5E00 + activeViewIndex * 0x34;
+        if ((*(u32*)(viewportEntry + 0x30) & 1) == 0) {
+            s16 scaledHalfHeight = (s16)(halfScreenHeight << 2);
+            s16 scaledHalfWidth = (s16)(halfScreenWidth << 2);
+
+            lbl_802C5ED0[activeViewIndex * 8 + 4] = scaledHalfHeight;
+            lbl_802C5ED0[activeViewIndex * 8 + 5] = scaledHalfWidth;
+            lbl_802C5ED0[activeViewIndex * 8 + 0] = scaledHalfHeight;
+            lbl_802C5ED0[activeViewIndex * 8 + 1] = scaledHalfWidth;
+        }
+
+        if (gCameraProjectionMode == 1) {
+            C_MTXOrtho(gCameraProjectionMatrix, lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
+                       lbl_803DC894, gCameraNearPlane, gCameraFarPlane);
+        } else {
+            C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio,
+                             gCameraNearPlane, gCameraFarPlane);
+            C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
+                                  lbl_803DE628, lbl_803DE62C, lbl_803DE62C);
+            C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                                  lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
+            C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                                  lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+        }
+        GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
+        Camera_ApplyCurrentViewport(viewportArg);
+        gCameraCurrentViewIndex = viewIndex;
+    }
 }
 
 /*
