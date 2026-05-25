@@ -85,7 +85,6 @@ void fn_8013F9E4(int obj, int state)
     }
 }
 
-#pragma peephole off
 #pragma scheduling off
 void fn_8013FBE4(int obj, char **state)
 {
@@ -168,7 +167,6 @@ void fn_8013FBE4(int obj, char **state)
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 void fn_8013FEC0(undefined4 obj, int state)
