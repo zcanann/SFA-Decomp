@@ -53,6 +53,8 @@ extern f32 lbl_803E3584;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void fn_80174A80(int param_1,int param_2)
 {
   float fVar1;
@@ -73,8 +75,8 @@ void fn_80174A80(int param_1,int param_2)
        (f32)(s32)(uVar2);
   fVar1 = lbl_803E3528;
   *(float *)(param_2 + 0xec) = lbl_803E3528;
-  *(undefined2 *)(param_2 + 0xac) = *(undefined2 *)(iVar3 + 0x18);
-  *(undefined2 *)(param_2 + 0xae) = *(undefined2 *)(iVar3 + 0x1a);
+  *(undefined2 *)(param_2 + 0xac) = *(short *)(iVar3 + 0x18);
+  *(undefined2 *)(param_2 + 0xae) = *(short *)(iVar3 + 0x1a);
   *(float *)(param_2 + 0xf0) = fVar1;
   *(undefined4 *)(param_2 + 0xbc) = 0;
   GameBit_Set((int)*(short *)(param_2 + 0xac),0);
@@ -102,6 +104,8 @@ void fn_80174A80(int param_1,int param_2)
   *(undefined *)(iVar3 + 0xe) = 10;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
