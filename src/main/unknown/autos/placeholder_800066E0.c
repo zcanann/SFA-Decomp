@@ -7364,6 +7364,21 @@ void Camera_ApplyCurrentViewport(void* viewportArg)
 }
 
 /*
+ * Function: Camera_GetCurrentViewport
+ * EN v1.0 Address: 0x8000F3D8
+ * EN v1.0 Size: 128b
+ */
+void Camera_GetCurrentViewport(s32* outX, s32* outY, u32* outHeight, s32* outWidth)
+{
+    u32 resolution = getScreenResolution();
+
+    *outX = 0;
+    *outHeight = resolution & 0xffff;
+    *outY = lbl_803DC884 + 6;
+    *outWidth = (resolution >> 16) - (lbl_803DC884 + 6);
+}
+
+/*
  * Function: Camera_SetCurrentViewIndex
  * EN v1.0 Address: 0x8000F458
  * EN v1.0 Size: 40b
