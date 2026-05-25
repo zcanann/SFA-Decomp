@@ -2916,13 +2916,13 @@ void fn_800E5CBC(short *param_1,int param_2)
   float local_58;
   float afStack_54 [20];
   
-  if ((*(byte *)(param_2 + 0x260) & 0x10) == 0) {
+  if ((*(char *)(param_2 + 0x260) & 0x10) == 0) {
     *(short *)(param_2 + 0x198) =
          *(short *)(param_2 + 0x198) -
-         (short)((int)((int)*(short *)(param_2 + 0x198) * (uint)framesThisStep) >> 3);
+         ((int)((int)*(short *)(param_2 + 0x198) * (uint)framesThisStep) >> 3);
     *(short *)(param_2 + 0x19a) =
          *(short *)(param_2 + 0x19a) -
-         (short)((int)((int)*(short *)(param_2 + 0x19a) * (uint)framesThisStep) >> 3);
+         ((int)((int)*(short *)(param_2 + 0x19a) * (uint)framesThisStep) >> 3);
     fVar1 = lbl_803E0668;
     *(float *)(param_2 + 0x1a0) = lbl_803E0668;
     *(float *)(param_2 + 0x1a4) = lbl_803E068C;
@@ -2948,13 +2948,13 @@ void fn_800E5CBC(short *param_1,int param_2)
     *(short *)(param_2 + 0x19c) = sVar2;
     *(short *)(param_2 + 0x198) =
          *(short *)(param_2 + 0x198) +
-         (short)((int)((uint)framesThisStep * ((int)sVar2 - (int)*(short *)(param_2 + 0x198))) >> 3);
+         ((int)((uint)framesThisStep * ((int)sVar2 - (int)*(short *)(param_2 + 0x198))) >> 3);
     iVar3 = getAngle(local_74,local_70);
     sVar2 = -(0x4000 - (short)iVar3);
     *(short *)(param_2 + 0x19e) = sVar2;
     *(short *)(param_2 + 0x19a) =
          *(short *)(param_2 + 0x19a) +
-         (short)((int)((uint)framesThisStep * ((int)sVar2 - (int)*(short *)(param_2 + 0x19a))) >> 3);
+         ((int)((uint)framesThisStep * ((int)sVar2 - (int)*(short *)(param_2 + 0x19a))) >> 3);
   }
   return;
 }
