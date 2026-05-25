@@ -114,20 +114,3 @@ void hwSetADSR(int slot, u32 *adsr, u8 mode)
     *(u32 *)(entry + 0x24) |= 0x10;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80283494
- * EN v1.0 Address: 0x80283494
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x802835E0
- * EN v1.1 Size: 108b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-int FUN_80283494(uint param_1)
-{
-    return 0;
-}
