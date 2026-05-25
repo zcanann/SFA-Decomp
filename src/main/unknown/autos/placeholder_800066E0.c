@@ -681,9 +681,17 @@ extern u8 gAudioStreamPlayAddrCallbackDone;
 extern f32 gAudioStreamEndPos;
 extern f32 gAudioStreamPos;
 extern f32 timeDelta;
+extern u8 framesThisStep;
 extern f32 lbl_803DE5D0;
 extern f32 lbl_803DE5E8;
 extern f32 lbl_803DE5F0;
+extern f32 lbl_803DE5F4;
+extern f32 lbl_803DE5F8;
+extern f32 lbl_803DE5FC;
+extern f32 lbl_803DE600;
+extern f32 lbl_803DE604;
+extern f32 lbl_803DE608;
+extern f32 lbl_803DE610;
 extern s8 gObjTransformMatrixSlot;
 extern u8 lbl_80336C40[];
 extern u8 lbl_80336C70[];
@@ -6325,13 +6333,15 @@ typedef struct CameraViewSlot {
     f32 shakeDuration;
     f32 shakeTimer;
     f32 shakeFalloff;
-    u8 pad40[0x1D];
+    u8 pad40[0x1C];
+    s8 shakeFlipTimer;
     s8 shakeActive;
     u8 pad5E[2];
 } CameraViewSlot;
 
 extern CameraViewSlot gCameraShakeSlots[];
 extern f32 sqrtf(f32 x);
+extern f32 sin(f32 x);
 extern u32 getScreenResolution(void);
 extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 
@@ -6870,6 +6880,105 @@ void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff)
     slot->shakeTimer = lbl_803DE60C;
     slot->shakeFalloff = falloff;
     slot->shakeActive = 1;
+}
+
+/*
+ * Function: viewportEffectFn_8000e380
+ * EN v1.0 Address: 0x8000E380
+ * EN v1.0 Size: 672b
+ */
+void viewportEffectFn_8000e380(void)
+{
+    CameraViewSlot* slot;
+    f32 falloffTime;
+    f32 shakeTimer;
+    f32 expTerm;
+    f32 n;
+    f32 term;
+    f32 factorial;
+    f32 one;
+    f32 sinePhase;
+    s32 i;
+
+    lbl_803DC884 = lbl_803DC886;
+    if (lbl_803DC880 != 0) {
+        lbl_803DC880 -= framesThisStep;
+        if (lbl_803DC880 < 0) {
+            lbl_803DC880 = 0;
+        }
+        gCameraFarPlane = ((f32)lbl_803DC880 / (f32)lbl_803DC882) * (lbl_803DC8AC - lbl_803DC8A8) + lbl_803DC8A8;
+    }
+
+    gObjTransformMatrixSlot = 0;
+    slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
+
+    if (slot->shakeActive == 0) {
+        slot->shakeFlipTimer--;
+        while (slot->shakeFlipTimer < 0) {
+            slot->shakeFlipTimer++;
+            slot->shakeMagnitude = lbl_803DE5F4 * -slot->shakeMagnitude;
+        }
+    } else if (slot->shakeActive == 1) {
+        falloffTime = -slot->shakeFalloff;
+        shakeTimer = slot->shakeTimer;
+        falloffTime *= shakeTimer;
+        expTerm = lbl_803DE5F0;
+        n = expTerm;
+        term = falloffTime;
+        factorial = expTerm;
+        one = expTerm;
+
+        for (i = 0; i < 2; i++) {
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+        }
+
+        sinePhase = (lbl_803DE5F8 * (lbl_803DE5FC * slot->shakeDuration * shakeTimer)) / lbl_803DE600;
+        slot->shakeMagnitude = slot->shakeMagnitudeTarget * expTerm * sin(sinePhase);
+        if ((slot->shakeMagnitude < lbl_803DE604) && (slot->shakeMagnitude > lbl_803DE608)) {
+            slot->shakeMagnitude = lbl_803DE60C;
+            slot->shakeActive = -1;
+        }
+        slot->shakeTimer += timeDelta / lbl_803DE610;
+    }
 }
 
 /*
