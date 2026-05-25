@@ -1937,12 +1937,16 @@ extern f32 lbl_803E2D54;
 extern f32 lbl_803E2D58;
 extern f32 lbl_803E2D5C;
 extern f32 lbl_803E2D60;
+extern f32 lbl_803E2D84;
+extern f32 lbl_803E2D88;
+extern f32 lbl_803E2D8C;
 extern f32 lbl_803E2DB0;
 extern f32 lbl_803E2DB4;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern int* gPlayerInterface;
 extern int *gBaddieControlInterface;
+extern int *gPartfxInterface;
 extern f32 lbl_803E2CE8;
 extern f32 lbl_803E2CEC;
 extern f32 lbl_803E2CF0;
@@ -1965,6 +1969,11 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 sqrtf(f32 value);
 extern u8 lbl_8031FDA0[];
 extern u8 lbl_8031FE18[];
+extern u8 lbl_8031FE38[];
+extern u8 lbl_8031FE48[];
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+void fn_8015CB0C(int *obj, int *state);
 
 #pragma scheduling off
 #pragma peephole off
@@ -2384,6 +2393,69 @@ int fn_8015C6B4(int obj, int state)
         *(u8 *)(obj + 0xaf) |= 8;
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015CBD0(int obj, int state)
+{
+    int control = *(int *)(state + 0x40c);
+    int paletteIndex = 0;
+    u8 *particleArgs;
+    int i;
+    f32 shakeScale;
+
+    if (*(s16 *)(obj + 0x46) == 99) {
+        *(f32 *)(control + 0x28) = lbl_803E2D84;
+        shakeScale = lbl_803E2D88;
+    } else {
+        *(f32 *)(control + 0x28) = lbl_803E2D48;
+        shakeScale = lbl_803E2D48;
+    }
+    if ((s8)*(u8 *)(state + 0x25f) != 0) {
+        paletteIndex = lbl_8031FE48[(s8)*(u8 *)(state + 0xbc)];
+        if (paletteIndex > 0x1e) {
+            paletteIndex = 0;
+        }
+    }
+    particleArgs = &lbl_8031FE38[paletteIndex * 3];
+    if ((*(u8 *)(control + 0x44) & 1) != 0) {
+        fn_8015CB0C((int *)obj, (int *)control);
+        *(u8 *)(control + 0x44) &= ~1;
+    }
+    if ((*(u8 *)(control + 0x44) & 4) != 0 && (*(u8 *)(state + 0x404) & 0x40) == 0) {
+        for (i = 0; i < 4; i++) {
+            ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
+                obj, 0x56, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+        }
+    }
+    if ((*(u8 *)(control + 0x44) & 8) != 0 && (*(u8 *)(state + 0x404) & 0x40) == 0) {
+        ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
+            obj, 0x57, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+    }
+    if ((*(u8 *)(control + 0x44) & 0x10) != 0) {
+        Camera_EnableViewYOffset();
+        CameraShake_SetAllMagnitudes(lbl_803E2D88 * shakeScale);
+        for (i = 0; i < 0x28; i++) {
+            ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
+                obj, 0x57, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+        }
+    }
+    if ((*(u8 *)(control + 0x44) & 0x20) != 0) {
+        Camera_EnableViewYOffset();
+        CameraShake_SetAllMagnitudes(lbl_803E2D8C * shakeScale);
+        for (i = 0; i < 0x28; i++) {
+            ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
+                obj, 0x57, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+        }
+        for (i = 0; i < 10; i++) {
+            ((void (*)(int, int, void *, int, int, u8 *))((void **)*gPartfxInterface)[2])(
+                obj, 0x58, (void *)(control + 0x20), 0x200001, -1, particleArgs);
+        }
+    }
+    *(u8 *)(control + 0x44) = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
