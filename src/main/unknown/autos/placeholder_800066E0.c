@@ -698,12 +698,18 @@ typedef struct SfxLoopedObjectSoundTable {
 typedef struct SfxObjectChannel {
     u32 handle;
     u8 hasPosition;
-    u8 pad05;
+    u8 tracksObjectPosition;
     u8 paused;
     u8 volume;
-    u8 pad08[0x20];
+    u8 pad08[0x10];
+    u32 object;
+    u16 channelMask;
+    u16 sfxId;
+    u8 pad20[0x08];
     u8 globalCtrlDisabled;
-    u8 pad29[0x0F];
+    u8 pad29[0x07];
+    u32 ageHi;
+    u32 ageLo;
 } SfxObjectChannel;
 
 #define SFX_LOOPED_OBJECT_SOUND_COUNT 0x80
@@ -716,6 +722,9 @@ extern SfxLoopedObjectSoundTable gSfxLoopedObjectSoundFlags;
 extern u16 gSfxLoopedObjectSoundCount;
 extern SfxObjectChannel gSfxObjectChannels[];
 extern u8 lbl_803DC838;
+extern u32 gSfxObjectChannelMatchCount;
+extern u32 gSfxObjectChannelAgeHi;
+extern u32 gSfxObjectChannelAgeLo;
 
 extern void sndQuit(void);
 extern void AIReset(void);
@@ -6535,6 +6544,99 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u32 sfxId)
 void Sfx_PlayFromObject(u32 obj, u32 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
+}
+
+/*
+ * Function: Sfx_InitObjectChannels
+ * EN v1.0 Address: 0x8000BDB4
+ * EN v1.0 Size: 172b
+ */
+void Sfx_InitObjectChannels(void)
+{
+    SfxObjectChannel* objectChannel;
+    s32 i;
+
+    i = SFX_OBJECT_CHANNEL_COUNT;
+    objectChannel = &gSfxObjectChannels[SFX_OBJECT_CHANNEL_COUNT];
+    goto checkNextChannel;
+setChannelFree:
+    objectChannel->handle = (u32)-1;
+checkNextChannel:
+    objectChannel--;
+    if (i-- != 0) {
+        goto setChannelFree;
+    }
+
+    gSfxObjectChannelAgeLo = 0;
+    gSfxObjectChannelAgeHi = 0;
+    objectChannel = gSfxObjectChannels;
+    lbl_803DC838 = 0;
+    i = SFX_OBJECT_CHANNEL_COUNT - 1;
+    do {
+        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0)) {
+            sndFXCtrl(objectChannel->handle, 0x5B, lbl_803DC838);
+        }
+        objectChannel++;
+    } while (i-- != 0);
+}
+
+/*
+ * Function: Sfx_FindObjectChannel
+ * EN v1.0 Address: 0x8000CCEC
+ * EN v1.0 Size: 360b
+ */
+SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode)
+{
+    SfxObjectChannel* objectChannel = gSfxObjectChannels;
+    SfxObjectChannel* bestChannel = NULL;
+    u32 bestAgeLo;
+    u32 bestAgeHi;
+    u32 channelMask = (u8)channel;
+    s32 i;
+
+    if (mode == 2) {
+        bestAgeLo = 0;
+    } else {
+        bestAgeLo = (u32)-1;
+    }
+    bestAgeHi = (s32)bestAgeLo >> 31;
+    gSfxObjectChannelMatchCount = 0;
+
+    for (i = SFX_OBJECT_CHANNEL_COUNT; i != 0; i--) {
+        if ((objectChannel->handle != (u32)-1) &&
+            ((obj == 0) || (objectChannel->object == obj)) &&
+            ((channelMask == 0) || ((objectChannel->channelMask & channelMask) != 0)) &&
+            (((u16)sfxId == 0) || (objectChannel->sfxId == (u16)sfxId))) {
+            gSfxObjectChannelMatchCount++;
+
+            if (mode == 0) {
+                return objectChannel;
+            }
+
+            if (mode == 2) {
+                if ((objectChannel->ageHi > bestAgeHi) ||
+                    ((objectChannel->ageHi == bestAgeHi) && (objectChannel->ageLo > bestAgeLo))) {
+                    bestChannel = objectChannel;
+                    bestAgeHi = objectChannel->ageHi;
+                    bestAgeLo = objectChannel->ageLo;
+                }
+            } else if ((mode == 1) || (mode == 3)) {
+                if ((objectChannel->ageHi < bestAgeHi) ||
+                    ((objectChannel->ageHi == bestAgeHi) && (objectChannel->ageLo < bestAgeLo))) {
+                    bestChannel = objectChannel;
+                    bestAgeHi = objectChannel->ageHi;
+                    bestAgeLo = objectChannel->ageLo;
+                }
+            }
+
+            if ((mode != 3) && (gSfxObjectChannelMatchCount == 3)) {
+                return bestChannel;
+            }
+        }
+        objectChannel++;
+    }
+
+    return bestChannel;
 }
 
 /*
