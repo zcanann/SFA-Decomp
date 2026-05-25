@@ -14,6 +14,7 @@ extern undefined DAT_80318dec;
 extern undefined DAT_80318dfc;
 extern undefined DAT_80318e0c;
 extern undefined DAT_80318e38;
+extern u8 lbl_80318038[];
 extern undefined4 DAT_80318e80;
 extern undefined4 DAT_80318e82;
 extern undefined4 DAT_80318e84;
@@ -317,31 +318,31 @@ void dll_9D_func03(int param_1,undefined4 param_2,int param_3,uint param_4)
   GfxBuf buf;
   GfxCmd *e = buf.entries;
 
-  e[0].layer = 0;  e[0].flags = 0x15; e[0].tex = &DAT_80318e38; e[0].mode = 4;
+  e[0].layer = 0;  e[0].flags = 0x15; e[0].tex = &lbl_80318038[432]; e[0].mode = 4;
   e[0].x = lbl_803E2078; e[0].y = lbl_803E2078; e[0].z = lbl_803E2078;
-  e[1].layer = 0;  e[1].flags = 7;    e[1].tex = &DAT_80318dec; e[1].mode = 2;
+  e[1].layer = 0;  e[1].flags = 7;    e[1].tex = &lbl_80318038[356]; e[1].mode = 2;
   e[1].x = lbl_803E207C; e[1].y = lbl_803E2080; e[1].z = lbl_803E207C;
-  e[2].layer = 0;  e[2].flags = 7;    e[2].tex = &DAT_80318dfc; e[2].mode = 2;
+  e[2].layer = 0;  e[2].flags = 7;    e[2].tex = &lbl_80318038[372]; e[2].mode = 2;
   e[2].x = lbl_803E2080; e[2].y = lbl_803E2080; e[2].z = lbl_803E2080;
-  e[3].layer = 0;  e[3].flags = 7;    e[3].tex = &DAT_80318e0c; e[3].mode = 2;
+  e[3].layer = 0;  e[3].flags = 7;    e[3].tex = &lbl_80318038[388]; e[3].mode = 2;
   e[3].x = lbl_803E207C; e[3].y = lbl_803E2080; e[3].z = lbl_803E207C;
-  e[4].layer = 0;  e[4].flags = 0;    e[4].tex = (void *)0;     e[4].mode = 0x400000;
+  e[4].layer = 0;  e[4].flags = 0;    e[4].tex = (void *)0;          e[4].mode = 0x400000;
   e[4].x = lbl_803E2078; e[4].y = lbl_803E2084; e[4].z = lbl_803E2078;
-  e[5].layer = 1;  e[5].flags = 7;    e[5].tex = &DAT_80318dfc; e[5].mode = 4;
+  e[5].layer = 1;  e[5].flags = 7;    e[5].tex = &lbl_80318038[372]; e[5].mode = 4;
   e[5].x = lbl_803E2088; e[5].y = lbl_803E2078; e[5].z = lbl_803E2078;
-  e[6].layer = 1;  e[6].flags = 0x15; e[6].tex = &DAT_80318e38; e[6].mode = 0x4000;
+  e[6].layer = 1;  e[6].flags = 0x15; e[6].tex = &lbl_80318038[432]; e[6].mode = 0x4000;
   e[6].x = lbl_803E2078; e[6].y = lbl_803E2078; e[6].z = lbl_803E2078;
-  e[7].layer = 1;  e[7].flags = 0;    e[7].tex = (void *)0;     e[7].mode = 0x400000;
+  e[7].layer = 1;  e[7].flags = 0;    e[7].tex = (void *)0;          e[7].mode = 0x400000;
   e[7].x = lbl_803E2078; e[7].y = lbl_803E208C; e[7].z = lbl_803E2078;
-  e[8].layer = 2;  e[8].flags = 0x15; e[8].tex = &DAT_80318e38; e[8].mode = 0x4000;
+  e[8].layer = 2;  e[8].flags = 0x15; e[8].tex = &lbl_80318038[432]; e[8].mode = 0x4000;
   e[8].x = lbl_803E2078; e[8].y = lbl_803E2078; e[8].z = lbl_803E2078;
-  e[9].layer = 2;  e[9].flags = 0;    e[9].tex = (void *)0;     e[9].mode = 0x400000;
+  e[9].layer = 2;  e[9].flags = 0;    e[9].tex = (void *)0;          e[9].mode = 0x400000;
   e[9].x = lbl_803E2078; e[9].y = lbl_803E2090; e[9].z = lbl_803E2078;
-  e[10].layer = 3; e[10].flags = 0x15; e[10].tex = &DAT_80318e38; e[10].mode = 0x4000;
+  e[10].layer = 3; e[10].flags = 0x15; e[10].tex = &lbl_80318038[432]; e[10].mode = 0x4000;
   e[10].x = lbl_803E2078; e[10].y = lbl_803E2078; e[10].z = lbl_803E2078;
-  e[11].layer = 3; e[11].flags = 0;    e[11].tex = (void *)0;     e[11].mode = 0x400000;
+  e[11].layer = 3; e[11].flags = 0;    e[11].tex = (void *)0;          e[11].mode = 0x400000;
   e[11].x = lbl_803E2078; e[11].y = lbl_803E208C; e[11].z = lbl_803E2078;
-  e[12].layer = 3; e[12].flags = 7;    e[12].tex = &DAT_80318dfc; e[12].mode = 4;
+  e[12].layer = 3; e[12].flags = 7;    e[12].tex = &lbl_80318038[372]; e[12].mode = 4;
   e[12].x = lbl_803E2078; e[12].y = lbl_803E2078; e[12].z = lbl_803E2078;
 
   buf.v58 = 0;
@@ -356,9 +357,10 @@ void dll_9D_func03(int param_1,undefined4 param_2,int param_3,uint param_4)
   buf.v5a = 0;
   buf.v5b = 0x1e;
   buf.count = 13;
-  buf.hw[0] = DAT_80318e80; buf.hw[1] = DAT_80318e82; buf.hw[2] = DAT_80318e84;
-  buf.hw[3] = DAT_80318e86; buf.hw[4] = DAT_80318e88; buf.hw[5] = DAT_80318e8a;
-  buf.hw[6] = DAT_80318e8c;
+  buf.hw[0] = *(s16 *)&lbl_80318038[504]; buf.hw[1] = *(s16 *)&lbl_80318038[506];
+  buf.hw[2] = *(s16 *)&lbl_80318038[508]; buf.hw[3] = *(s16 *)&lbl_80318038[510];
+  buf.hw[4] = *(s16 *)&lbl_80318038[512]; buf.hw[5] = *(s16 *)&lbl_80318038[514];
+  buf.hw[6] = *(s16 *)&lbl_80318038[516];
   buf.cmds = buf.entries;
   buf.flags = param_4 | 0xc0100c0;
   if ((param_4 & 1) != 0) {
@@ -372,7 +374,7 @@ void dll_9D_func03(int param_1,undefined4 param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E2078 + *(f32 *)(param_1 + 0x20);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf,0,0x15,&DAT_80318c88,0x18,&DAT_80318d5c,0x46c,0);
+  (**(code **)(*gModgfxInterface + 8))(&buf,0,0x15,lbl_80318038,0x18,&lbl_80318038[212],0x46c,0);
 }
 
 /*
