@@ -6456,6 +6456,42 @@ void Queue_Peek(RingBufferQueue* queue, void* dst)
 }
 
 /*
+ * Function: Queue_Pop
+ * EN v1.0 Address: 0x800137A8
+ * EN v1.0 Size: 116b
+ */
+void Queue_Pop(RingBufferQueue* queue, void* dst)
+{
+    s16 readIndex;
+
+    memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
+    readIndex = queue->readIndex + 1;
+    queue->readIndex = readIndex;
+    if (readIndex == queue->capacity) {
+        queue->readIndex = 0;
+    }
+    queue->count--;
+}
+
+/*
+ * Function: Queue_Push
+ * EN v1.0 Address: 0x8001381C
+ * EN v1.0 Size: 112b
+ */
+void Queue_Push(RingBufferQueue* queue, void* src)
+{
+    s16 writeIndex;
+
+    memcpy((u8*)queue->data + queue->writeIndex * queue->elemSize, src, queue->elemSize);
+    writeIndex = queue->writeIndex + 1;
+    queue->writeIndex = writeIndex;
+    if (writeIndex == queue->capacity) {
+        queue->writeIndex = 0;
+    }
+    queue->count++;
+}
+
+/*
  * Function: Queue_Init
  * EN v1.0 Address: 0x8001388C
  * EN v1.0 Size: 40b
@@ -6491,6 +6527,42 @@ BOOL Stack_IsFull(RingBufferQueue* stack)
 }
 
 /*
+ * Function: Stack_Pop
+ * EN v1.0 Address: 0x800138E0
+ * EN v1.0 Size: 120b
+ */
+void Stack_Pop(RingBufferQueue* stack, void* dst)
+{
+    s16 writeIndex = stack->writeIndex - 1;
+
+    stack->writeIndex = writeIndex;
+    if (writeIndex < 0) {
+        writeIndex = stack->capacity - 1;
+        stack->writeIndex = writeIndex;
+    }
+    memcpy(dst, (u8*)stack->data + stack->writeIndex * stack->elemSize, stack->elemSize);
+    stack->count--;
+}
+
+/*
+ * Function: Stack_Push
+ * EN v1.0 Address: 0x80013958
+ * EN v1.0 Size: 112b
+ */
+void Stack_Push(RingBufferQueue* stack, void* src)
+{
+    s16 writeIndex;
+
+    memcpy((u8*)stack->data + stack->writeIndex * stack->elemSize, src, stack->elemSize);
+    writeIndex = stack->writeIndex + 1;
+    stack->writeIndex = writeIndex;
+    if (writeIndex == stack->capacity) {
+        stack->writeIndex = 0;
+    }
+    stack->count++;
+}
+
+/*
  * Function: Stack_Free
  * EN v1.0 Address: 0x800139C8
  * EN v1.0 Size: 32b
@@ -6498,6 +6570,22 @@ BOOL Stack_IsFull(RingBufferQueue* stack)
 void Stack_Free(RingBufferQueue* stack)
 {
     mm_free(stack);
+}
+
+/*
+ * Function: allocModelStruct_800139e8
+ * EN v1.0 Address: 0x800139E8
+ * EN v1.0 Size: 108b
+ */
+RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize)
+{
+    RingBufferQueue* queue = mmAlloc(elemSize * capacity + sizeof(RingBufferQueue), 0x1a, NULL);
+    queue->data = (u8*)queue + sizeof(RingBufferQueue);
+    queue->count = 0;
+    queue->capacity = capacity;
+    queue->elemSize = elemSize;
+    queue->writeIndex = 0;
+    return queue;
 }
 
 /*
