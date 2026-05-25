@@ -15,8 +15,6 @@ extern char sProjlightning5DoNoLongerSupported[];
 extern char sProjlightning7DoNoLongerSupported[];
 extern char sProjlightning6DoNoLongerSupported[];
 
-void FUN_80100550(double param_1,undefined4 param_2,undefined param_3,int param_4,undefined4 param_5
-                 );
 void projdummy_release(void);
 void projdummy_initialise(void);
 int projdummy_doUnsupported(void);
