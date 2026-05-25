@@ -36,26 +36,27 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
         f32 y;
         f32 z;
     } pathPoint;
-    int partfxArgs;
+    int partfxArgs[3];
     f32 *outXPtr;
     f32 *outYPtr;
     f32 *outZPtr;
 
     if (visible != 0) {
-        if (*(int *)((char *)obj + 0xf4) == 0) {
+        if (*(int *)((char *)obj + 0xf4) != 0) {
+        } else {
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
             outXPtr = &pathPoint.x;
             outYPtr = &pathPoint.y;
             outZPtr = &pathPoint.z;
             ObjPath_GetPointWorldPosition(obj, 1, outXPtr, outYPtr, outZPtr, 0);
-            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, &partfxArgs, 0x200001, -1, 0);
+            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, partfxArgs, 0x200001, -1, 0);
 
             ObjPath_GetPointWorldPosition(obj, 0, outXPtr, outYPtr, outZPtr, 0);
-            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, &partfxArgs, 0x200001, -1, 0);
+            (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, partfxArgs, 0x200001, -1, 0);
 
             if (gDIMbosstonsilLight != 0 && *((u8 *)gDIMbosstonsilLight + 0x2f8) != 0 && *((u8 *)gDIMbosstonsilLight + 0x4c) != 0) {
-                lightVecFn_8001dd88(pathPoint.x, pathPoint.y, pathPoint.z);
+                lightVecFn_8001dd88(*outXPtr, *outYPtr, *outZPtr);
                 queueGlowRender(gDIMbosstonsilLight);
             }
         }
