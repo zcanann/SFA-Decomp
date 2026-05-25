@@ -98,7 +98,7 @@ void largecrate_init(int obj, u8 *initData)
 
   *(short *)(state + 0x20) = 0;
   r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_BOB_MAX);
-  *(float *)(state + 0x1c) = lbl_803E39E8 + (float)(int)r3rand;
+  *(float *)(state + 0x1c) = (float)(int)r3rand + lbl_803E39E8;
   *(float *)(state + 0x24) = *(float *)(obj + 0xc);
 
   if (*(short *)(obj + 0x46) == LARGECRATE_VARIANT_C) {
