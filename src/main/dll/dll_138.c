@@ -24,7 +24,7 @@ extern int ObjMsg_Pop(int obj, int *outMessage, int *outSender, int *outParam);
 extern void Obj_FreeObject(int obj);
 extern f32 sqrtf(f32 x);
 
-extern undefined4* DAT_803dd6d0;
+extern void **gCameraInterface;
 extern f64 DOUBLE_803e4210;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E41C0;
@@ -342,6 +342,8 @@ LAB_8017533c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
 {
   uint uVar1;
@@ -354,9 +356,9 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
   iVar3 = *(int *)(param_1 + 0x5c);
   *(undefined *)(iVar3 + 0x145) = 0x3c;
   if (param_1[0x5a] != -1) {
-    (**(code **)(*DAT_803dd6d0 + 0x4c))();
+    (*(void (**)(void))((char *)*gCameraInterface + 0x4c))();
   }
-  *(undefined2 *)(param_3 + 0x70) = 0xffff;
+  *(undefined2 *)(param_3 + 0x70) = -1;
   if (*(char *)(param_3 + 0x56) != '\0') {
     if (*(char *)(param_3 + 0x56) != '\x02') {
       *(float *)(param_3 + 0x4c) = lbl_803E4220;
@@ -420,6 +422,8 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
