@@ -357,15 +357,11 @@ uint fn_80154FB4(double maxDistance, short *obj, int state, uint turnTime)
     if ((int)uStack_74 < -0x8000) {
         uStack_74 = uStack_74 + 0xffff;
     }
-    uStack_7c = turnTime & 0xffff;
-    local_80 = 0x43300000;
-    fVar1 = timeDelta / (float)((double)CONCAT44(0x43300000, uStack_7c) - lbl_803E2A10);
+    fVar1 = timeDelta / (f32)(turnTime & 0xffff);
     if (lbl_803E2A04 < fVar1) {
         fVar1 = lbl_803E2A04;
     }
-    uStack_74 = uStack_74 ^ 0x80000000;
-    local_78 = 0x43300000;
-    angleStep = (uint)((float)((double)CONCAT44(0x43300000, uStack_74) - lbl_803E2A18) * fVar1);
+    angleStep = (uint)((f32)(s32)uStack_74 * fVar1);
     local_70 = (longlong)(int)angleStep;
     *obj = obj[1] + (short)angleStep;
     obj[2] = 0x4000;
