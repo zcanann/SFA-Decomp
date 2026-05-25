@@ -5323,10 +5323,11 @@ void fn_8004C1E4(u8 b, f32 scale) {
 #pragma scheduling off
 #pragma peephole off
 void *fn_8004B118(int *p) {
+    void **arr;
     int idx = *(s16*)((char*)p + 0x2c);
     if (idx < *(s16*)((char*)p + 0x2a)) {
-        void **arr = *(void***)((char*)p + 8);
-        *(s16*)((char*)p + 0x2c) = idx + 1;
+        arr = *(void***)((char*)p + 8);
+        (*(s16*)((char*)p + 0x2c))++;
         return arr[idx];
     }
     return NULL;

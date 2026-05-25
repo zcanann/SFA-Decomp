@@ -2797,7 +2797,7 @@ void textureFree(u8 *tex) {
     if (tex[73] != 0 && *(u16 *)(tex + 14) <= 1) {
         tex[75] = 10;
     }
-    *(u16 *)(tex + 14) = *(u16 *)(tex + 14) - 1;
+    (*(u16 *)(tex + 14))--;
     if (*(u16 *)(tex + 14) != 0) return;
     i = 0;
     count = lbl_803DCDBC;
