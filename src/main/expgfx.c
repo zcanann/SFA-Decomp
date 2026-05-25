@@ -80,24 +80,24 @@ extern void _restgpr_23(void);
 extern void _savegpr_25(void);
 extern void _restgpr_25(void);
 
-extern ExpgfxBounds gExpgfxBoundsTemplates;
-extern undefined2 gExpgfxPoolSlotTypeIds;
-extern undefined gExpgfxPoolFrameFlags;
+extern ExpgfxBounds gExpgfxBoundsTemplates[];
+extern s16 gExpgfxPoolSlotTypeIds[];
+extern u8 gExpgfxPoolFrameFlags[];
 extern undefined2 DAT_803105a8;
 extern undefined4 DAT_80397420;
 extern int DAT_8039b7b8;
-extern ExpgfxBounds gExpgfxPoolBounds;
+extern ExpgfxBounds gExpgfxPoolBounds[];
 extern int DAT_8039c138;
 extern undefined4 DAT_8039c13c;
 extern undefined4 DAT_8039c140;
 extern short DAT_8039c144;
 extern undefined4 DAT_8039c146;
-extern byte gExpgfxPoolSourceModes;
-extern int gExpgfxPoolSourceIds;
+extern u8 gExpgfxPoolSourceModes[];
+extern u32 gExpgfxPoolSourceIds[];
 extern undefined4 DAT_8039c7c8;
 extern undefined4 DAT_8039c7cc;
-extern byte gExpgfxPoolBoundsTemplateIds;
-extern char gExpgfxPoolActiveCounts;
+extern u8 gExpgfxPoolBoundsTemplateIds[];
+extern s8 gExpgfxPoolActiveCounts[];
 extern char DAT_8039c829;
 extern u32 gExpgfxPoolActiveMasks[];
 extern u32 gExpgfxSlotPoolBases[];
@@ -241,11 +241,11 @@ static inline ExpgfxSlot *Expgfx_GetSlot(int poolIndex, int slotIndex) {
 }
 
 static inline ExpgfxBounds *Expgfx_GetBoundsTemplate(int templateIndex) {
-  return &((ExpgfxBounds *)&gExpgfxBoundsTemplates)[templateIndex];
+  return &gExpgfxBoundsTemplates[templateIndex];
 }
 
 static inline ExpgfxBounds *Expgfx_GetPoolBounds(int poolIndex) {
-  return &((ExpgfxBounds *)&gExpgfxPoolBounds)[poolIndex];
+  return &gExpgfxPoolBounds[poolIndex];
 }
 
 static inline f64 Expgfx_U16AsDouble(u16 value) {
@@ -433,8 +433,8 @@ void expgfxRemoveAll(void)
  * --INFO--
  *
  * Function: expgfxGetSlot
- * EN v1.0 Address: 0x8009B6A4
- * EN v1.0 Size: 752b
+ * EN v1.0 Address: 0x8009B3BC
+ * EN v1.0 Size: 792b
  * EN v1.1 Address: 0x8009B648
  * EN v1.1 Size: 792b
  * JP Address: TODO
