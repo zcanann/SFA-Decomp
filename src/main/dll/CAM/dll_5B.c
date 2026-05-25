@@ -92,6 +92,8 @@ extern f32 lbl_803E184C;
 extern f32 lbl_803E1850;
 extern f32 lbl_803E1854;
 extern f32 lbl_803E1858;
+extern f32 lbl_803E185C;
+extern f32 lbl_803E1860;
 extern f32 lbl_803E1870;
 extern f32 lbl_803E1878;
 extern f32 lbl_803E1888;
@@ -428,71 +430,56 @@ void FUN_801089d8(void)
  */
 void CameraModeDebug_update(short *param_1)
 {
-  float fVar1;
-  uint uVar2;
-  uint uVar3;
-  char cVar4;
-  char cVar5;
-  int iVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
-  
-  dVar10 = (double)lbl_803E1840;
-  iVar6 = *(int *)(param_1 + 0x52);
-  uVar2 = getButtonsHeld(0);
-  uVar3 = getButtonsJustPressed(0);
-  if ((uVar3 & 2) == 0) {
-    if ((uVar2 & 8) != 0) {
-      dVar10 = (double)(lbl_803E1844 * *lbl_803DD550);
-    }
-    if ((uVar2 & 4) != 0) {
-      dVar10 = (double)(lbl_803E1848 * *lbl_803DD550);
-    }
-    dVar7 = dVar10;
-    if (dVar10 < (double)lbl_803E1840) {
-      dVar7 = -dVar10;
-    }
-    dVar9 = (double)lbl_803DD550[1];
-    dVar8 = dVar9;
-    if (dVar9 < (double)lbl_803E1840) {
-      dVar8 = -dVar9;
-    }
-    fVar1 = lbl_803E1850;
-    if (dVar7 < dVar8) {
-      fVar1 = lbl_803E184C;
-    }
-    lbl_803DD550[1] = fVar1 * (float)(dVar10 - dVar9) + lbl_803DD550[1];
-    *lbl_803DD550 = *lbl_803DD550 + lbl_803DD550[1];
-    if (*lbl_803DD550 < lbl_803E1854) {
-      *lbl_803DD550 = lbl_803E1854;
-    }
-    if (lbl_803E1858 < *lbl_803DD550) {
-      *lbl_803DD550 = lbl_803E1858;
-    }
-    cVar4 = padGetCX(0);
-    cVar5 = padGetCY(0);
-    *param_1 = *param_1 + cVar4 * -3;
-    param_1[1] = param_1[1] + cVar5 * 3;
-    dVar10 = (double)fn_80293E80();
-    dVar7 = (double)sin();
-    dVar8 = (double)sin();
-    dVar9 = (double)fn_80293E80();
-    fVar1 = *lbl_803DD550;
-    dVar8 = (double)(float)((double)fVar1 * dVar8);
-    *(float *)(param_1 + 0xc) = *(float *)(iVar6 + 0x18) + (float)(dVar8 * dVar7);
-    *(float *)(param_1 + 0xe) =
-         lbl_803E1854 + *(float *)(iVar6 + 0x1c) + (float)((double)fVar1 * dVar9);
-    *(float *)(param_1 + 0x10) = *(float *)(iVar6 + 0x20) + (float)(dVar8 * dVar10);
-    Obj_TransformWorldPointToLocal((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
-                 (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
-                 (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
+  u8 *cam = (u8 *)param_1;
+  u8 *state = *(u8 **)(cam + 164);
+  u16 held;
+  f32 move;
+  f32 absMove;
+  f32 absVel;
+  f32 factor;
+  f32 radius;
+
+  if ((getButtonsJustPressed(0) & 2) != 0) {
+    (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0xff);
+    return;
   }
-  else {
-    (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
+  move = lbl_803E1840;
+  held = getButtonsHeld(0);
+  if ((held & 8) != 0) {
+    move = lbl_803E1844 * *lbl_803DD550;
   }
-  return;
+  if ((held & 4) != 0) {
+    move = lbl_803E1848 * *lbl_803DD550;
+  }
+  absMove = (move < lbl_803E1840) ? -move : move;
+  absVel = (lbl_803DD550[1] < lbl_803E1840) ? -lbl_803DD550[1] : lbl_803DD550[1];
+  factor = lbl_803E1850;
+  if (absMove < absVel) {
+    factor = lbl_803E184C;
+  }
+  lbl_803DD550[1] = factor * (move - lbl_803DD550[1]) + lbl_803DD550[1];
+  *lbl_803DD550 = *lbl_803DD550 + lbl_803DD550[1];
+  if (*lbl_803DD550 < lbl_803E1854) {
+    *lbl_803DD550 = lbl_803E1854;
+  }
+  if (*lbl_803DD550 > lbl_803E1858) {
+    *lbl_803DD550 = lbl_803E1858;
+  }
+  *(s16 *)cam = (s16)(*(s16 *)cam - (s8)padGetCX(0) * 3);
+  *(s16 *)(cam + 2) = (s16)(*(s16 *)(cam + 2) + (s8)padGetCY(0) * 3);
+  {
+    f32 cosYaw = fn_80293E80(lbl_803E185C * (f32)(s32)(*(s16 *)cam - 0x4000) / lbl_803E1860);
+    f32 sinYaw = sin(lbl_803E185C * (f32)(s32)(*(s16 *)cam - 0x4000) / lbl_803E1860);
+    f32 sinPitch = sin(lbl_803E185C * (f32)(s32)(*(s16 *)(cam + 2) - 0x4000) / lbl_803E1860);
+    f32 cosPitch = fn_80293E80(lbl_803E185C * (f32)(s32)(*(s16 *)(cam + 2) - 0x4000) / lbl_803E1860);
+    radius = *lbl_803DD550;
+    *(f32 *)(cam + 24) = *(f32 *)(state + 24) + radius * sinPitch * sinYaw;
+    *(f32 *)(cam + 28) = lbl_803E1854 + *(f32 *)(state + 28) + radius * cosPitch;
+    *(f32 *)(cam + 32) = *(f32 *)(state + 32) + radius * sinPitch * cosYaw;
+  }
+  Obj_TransformWorldPointToLocal(*(f32 *)(cam + 24), *(f32 *)(cam + 28), *(f32 *)(cam + 32),
+                                 (f32 *)(cam + 12), (f32 *)(cam + 16), (f32 *)(cam + 20),
+                                 *(int *)(cam + 48));
 }
 
 /*
