@@ -351,6 +351,7 @@ int s3dInsertActiveEmitter(Snd3DEmitter *emitter, f32 distance, f32 arg1, f32 ar
     S3DActiveNode *scan;
     S3DActiveNode *next;
     S3DActiveNode *newNode;
+    S3DActiveNode **pp;
     int groupIndex;
     int groupCount;
     u32 activeIndex;
@@ -381,22 +382,21 @@ int s3dInsertActiveEmitter(Snd3DEmitter *emitter, f32 distance, f32 arg1, f32 ar
         return 0;
     }
 
-    scan = group->activeHead;
+    pp = &groups[groupIndex].activeHead;
+    scan = *pp;
     if (scan == (S3DActiveNode *)0x0) {
         newNode = &S3D_ACTIVE_NODES[activeIndex];
-        newNode->next = (S3DActiveNode *)0x0;
-        group->activeHead = newNode;
+        newNode->next = scan;
+        *pp = newNode;
     } else {
-        do {
-            next = scan->next;
-            if (next == (S3DActiveNode *)0x0) {
-                break;
-            }
-            if (next->distance < distance) {
+        next = scan->next;
+        while (next != (S3DActiveNode *)0x0) {
+            if (scan->distance < distance) {
                 break;
             }
             scan = next;
-        } while (true);
+            next = scan->next;
+        }
         newNode = &S3D_ACTIVE_NODES[activeIndex];
         newNode->next = next;
         scan->next = newNode;
