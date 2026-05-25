@@ -697,7 +697,13 @@ typedef struct SfxLoopedObjectSoundTable {
 
 typedef struct SfxObjectChannel {
     u32 handle;
-    u8 pad04[0x34];
+    u8 hasPosition;
+    u8 pad05;
+    u8 paused;
+    u8 volume;
+    u8 pad08[0x20];
+    u8 globalCtrlDisabled;
+    u8 pad29[0x0F];
 } SfxObjectChannel;
 
 #define SFX_LOOPED_OBJECT_SOUND_COUNT 0x80
@@ -709,10 +715,12 @@ typedef struct SfxObjectChannel {
 extern SfxLoopedObjectSoundTable gSfxLoopedObjectSoundFlags;
 extern u16 gSfxLoopedObjectSoundCount;
 extern SfxObjectChannel gSfxObjectChannels[];
+extern u8 lbl_803DC838;
 
 extern void sndQuit(void);
 extern void AIReset(void);
 extern int sndFXKeyOff(u32 handle);
+extern int sndFXCtrl(u32 handle, u32 ctrl, u32 value);
 extern void Music_Update(void);
 extern void Sfx_UpdateObjectSounds(void);
 extern void Sfx_StopAllObjectSounds(void);
@@ -6299,6 +6307,55 @@ void Sfx_StopAllObjectSounds(void)
         if (objectChannel->handle != (u32)-1) {
             sndFXKeyOff(objectChannel->handle);
             objectChannel->handle = (u32)-1;
+        }
+        objectChannel++;
+    } while (i-- != 0);
+}
+
+/*
+ * Function: audioFn_8000b694
+ * EN v1.0 Address: 0x8000B694
+ * EN v1.0 Size: 128b
+ */
+void audioFn_8000b694(u32 value)
+{
+    s32 i;
+    SfxObjectChannel* objectChannel;
+
+    objectChannel = gSfxObjectChannels;
+    lbl_803DC838 = (u8)(value * 5);
+    i = SFX_OBJECT_CHANNEL_COUNT - 1;
+    do {
+        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0)) {
+            sndFXCtrl(objectChannel->handle, 0x5B, lbl_803DC838);
+        }
+        objectChannel++;
+    } while (i-- != 0);
+}
+
+/*
+ * Function: Sfx_SetObjectSoundsPaused
+ * EN v1.0 Address: 0x8000B714
+ * EN v1.0 Size: 168b
+ */
+void Sfx_SetObjectSoundsPaused(s32 paused)
+{
+    u8 pausedByte;
+    s32 i;
+    SfxObjectChannel* objectChannel;
+
+    objectChannel = gSfxObjectChannels;
+    i = SFX_OBJECT_CHANNEL_COUNT - 1;
+    pausedByte = paused;
+
+    do {
+        if (objectChannel->handle != (u32)-1) {
+            if (paused != 0) {
+                sndFXCtrl(objectChannel->handle, 7, 0);
+            } else if (objectChannel->paused != 0) {
+                sndFXCtrl(objectChannel->handle, 7, objectChannel->volume);
+            }
+            objectChannel->paused = pausedByte;
         }
         objectChannel++;
     } while (i-- != 0);
