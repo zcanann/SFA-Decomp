@@ -28,14 +28,16 @@ int fn_8017A048(int obj, int unused, u8 *setupData);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 sidekickball_init(int obj)
 {
   u8 pathFlag;
   u8 *state;
   int objDef;
 
-  pathFlag = 5;
   state = *(u8 **)(obj + 0xb8);
+  pathFlag = 5;
   memset(state, 0, 0x2cc);
   Obj_GetPlayerObject();
   state[0x274] = 0;
@@ -54,6 +56,8 @@ undefined4 sidekickball_init(int obj)
   ObjMsg_AllocQueue(obj, 1);
   GameBit_Set(0x3f8, 0);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 int area_getExtraSize(void) { return 0x0; }
@@ -132,6 +136,8 @@ void levelname_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void levelname_init(int obj, int objDef)
 {
     int *state;
@@ -155,6 +161,8 @@ void levelname_init(int obj, int objDef)
     }
     *(u16 *)(obj + 0xb0) |= 0x2000;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void ProjectileSwitch_free(void) {}
 
