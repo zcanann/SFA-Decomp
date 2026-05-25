@@ -476,15 +476,15 @@ void sc_totembond_free(int obj) {
 
 #pragma scheduling off
 #pragma peephole off
-void sc_totembond_init(int obj, int p2) {
-    int *state;
+void sc_totembond_init(ScTotemBondObject *obj, int params) {
+    ScTotemBondState *state;
     u32 v;
-    s16 hi = (s16)(u16)((s32)*(s16 *)obj / 8192);
-    state = *(int **)((char *)obj + 0xB8);
-    *(s16 *)((char *)state + 0x24) = hi;
-    *(void (**)(void))((char *)obj + 0xBC) = (void (*)(void))sc_totempuzzle_processAnimEvents;
-    v = (u32)*(u16 *)((char *)obj + 0xB0) | 0x6000;
-    *(u16 *)((char *)obj + 0xB0) = (u16)v;
+    s16 hi = (s16)(u16)((s32)obj->yaw / 8192);
+    state = obj->state;
+    state->ringIndex = hi;
+    obj->animEventCallback = sc_totempuzzle_processAnimEvents;
+    v = (u32)obj->objectFlags | 0x6000;
+    obj->objectFlags = (u16)v;
 }
 #pragma peephole reset
 #pragma scheduling reset
