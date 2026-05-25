@@ -6650,13 +6650,61 @@ void objListAdd(ObjLinkedList* list, int prev, int item)
 }
 
 extern u8 lbl_803DC8F8;
+extern u8 lbl_803DC8F9;
+extern void* lbl_803DC8E8;
+extern int lbl_803DC8EC;
 extern int lbl_803DC8F0;
 extern int lbl_803DC8F4;
+extern f32 lbl_803DC8FC;
+extern f32 lbl_803DC900;
 extern u8 lbl_803DC908;
+extern u8 lbl_803DC909;
 extern u8 lbl_803DB2A8;
+extern s32 lbl_803DB278;
 extern u32 lbl_802C6E50[];
 extern u8 lbl_803DC934;
 extern u8 lbl_803DC938;
+extern u16 lbl_803DC91C;
+extern u16 lbl_803DC92C;
+extern u8 lbl_803DC94C;
+extern u8 lbl_803DC950;
+extern u32 lbl_803398C0[];
+extern u32 lbl_803398D0[];
+extern u32 lbl_803398E0[];
+extern u8 lbl_803398F0[];
+
+typedef struct PadStatusLite {
+    u16 buttons;
+    s8 stickX;
+    s8 stickY;
+    s8 substickX;
+    s8 substickY;
+    u8 triggerLeft;
+    u8 triggerRight;
+    u8 analogA;
+    u8 analogB;
+    s8 error;
+} PadStatusLite;
+
+/*
+ * Function: gameTimerIsRunning
+ * EN v1.0 Address: 0x80014054
+ * EN v1.0 Size: 12b
+ */
+u32 gameTimerIsRunning(void)
+{
+    return lbl_803DC8F8 & 4;
+}
+
+/*
+ * Function: set_hudNumber_803db278
+ * EN v1.0 Address: 0x800140B4
+ * EN v1.0 Size: 8b
+ */
+void set_hudNumber_803db278(s32 value)
+{
+    lbl_803DB278 = value;
+}
 
 /*
  * Function: isGameTimerDisabled
@@ -6677,6 +6725,18 @@ void gameTimerStop(void)
 {
     lbl_803DC8F8 &= ~4;
     lbl_803DC8F8 |= 2;
+}
+
+/*
+ * Function: timerSetToCountUp
+ * EN v1.0 Address: 0x8001469C
+ * EN v1.0 Size: 32b
+ */
+void timerSetToCountUp(void)
+{
+    if ((lbl_803DC8F8 & 1) != 0) {
+        lbl_803DC8F8 &= ~1;
+    }
 }
 
 /*
@@ -6707,6 +6767,33 @@ int getUiDllFn_80014930(void)
 int getCurUiDll(void)
 {
     return lbl_803DC8F0;
+}
+
+/*
+ * Function: getDLL16
+ * EN v1.0 Address: 0x80014938
+ * EN v1.0 Size: 8b
+ */
+void* getDLL16(void)
+{
+    return lbl_803DC8E8;
+}
+
+/*
+ * Function: initGameTimer
+ * EN v1.0 Address: 0x800149F8
+ * EN v1.0 Size: 48b
+ */
+void initGameTimer(void)
+{
+    lbl_803DC8E8 = NULL;
+    lbl_803DC8EC = 0;
+    lbl_803DC8F4 = 0;
+    lbl_803DC8F0 = 0;
+    lbl_803DC8F8 = 2;
+    lbl_803DC8F9 = 0;
+    lbl_803DC900 = 0.0f;
+    lbl_803DC8FC = 0.0f;
 }
 
 /*
@@ -6767,4 +6854,216 @@ void padClearAnalogInputY(int port)
 void padClearAnalogInputX(int port)
 {
     (&lbl_803DC938)[port] = 0;
+}
+
+/*
+ * Function: setRumbleEnabled
+ * EN v1.0 Address: 0x800154A4
+ * EN v1.0 Size: 8b
+ */
+void setRumbleEnabled(u8 enabled)
+{
+    lbl_803DC909 = enabled;
+}
+
+/*
+ * Function: padGetAnalogInput
+ * EN v1.0 Address: 0x80014B78
+ * EN v1.0 Size: 76b
+ */
+void padGetAnalogInput(int port, u8* x, u8* y)
+{
+    if (lbl_803DC908 != 0 || port > 0 || lbl_803DC950 != 0) {
+        *x = 0;
+        *y = 0;
+        return;
+    }
+    *x = (&lbl_803DC938)[port];
+    *y = (&lbl_803DC934)[port];
+}
+
+/*
+ * Function: padGetCY
+ * EN v1.0 Address: 0x80014BC4
+ * EN v1.0 Size: 84b
+ */
+u8 padGetCY(int port)
+{
+    if (port > 0) {
+        return 0;
+    }
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].substickY;
+}
+
+/*
+ * Function: padGetCX
+ * EN v1.0 Address: 0x80014C18
+ * EN v1.0 Size: 84b
+ */
+u8 padGetCX(int port)
+{
+    if (port > 0) {
+        return 0;
+    }
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].substickX;
+}
+
+/*
+ * Function: padGetStickY
+ * EN v1.0 Address: 0x80014C6C
+ * EN v1.0 Size: 84b
+ */
+u8 padGetStickY(int port)
+{
+    if (port > 0) {
+        return 0;
+    }
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].stickY;
+}
+
+/*
+ * Function: padGetStickX
+ * EN v1.0 Address: 0x80014CC0
+ * EN v1.0 Size: 84b
+ */
+u8 padGetStickX(int port)
+{
+    if (port > 0) {
+        return 0;
+    }
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].stickX;
+}
+
+/*
+ * Function: padGetLTrigger
+ * EN v1.0 Address: 0x80014D14
+ * EN v1.0 Size: 68b
+ */
+u8 padGetLTrigger(int port)
+{
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].triggerLeft;
+}
+
+/*
+ * Function: padGetRTrigger
+ * EN v1.0 Address: 0x80014D58
+ * EN v1.0 Size: 68b
+ */
+u8 padGetRTrigger(int port)
+{
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return ((PadStatusLite*)lbl_803398F0)[lbl_803DC94C * 4 + port].triggerRight;
+}
+
+/*
+ * Function: getPadFn_80014d9c
+ * EN v1.0 Address: 0x80014D9C
+ * EN v1.0 Size: 60b
+ */
+u16 getPadFn_80014d9c(int port)
+{
+    if (port > 0) {
+        port = 0;
+    }
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return (&lbl_803DC92C)[port];
+}
+
+/*
+ * Function: getButtons_80014dd8
+ * EN v1.0 Address: 0x80014DD8
+ * EN v1.0 Size: 60b
+ */
+u16 getButtons_80014dd8(int port)
+{
+    if (port > 0) {
+        port = 0;
+    }
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return (&lbl_803DC91C)[port];
+}
+
+/*
+ * Function: getButtonsJustPressedIfNotBusy
+ * EN v1.0 Address: 0x80014E14
+ * EN v1.0 Size: 92b
+ */
+u32 getButtonsJustPressedIfNotBusy(int port)
+{
+    if (port > 0) {
+        return 0;
+    }
+    if (lbl_803DC950 != 0) {
+        return 0;
+    }
+    if (lbl_803DC908 != 0) {
+        return -1;
+    }
+    return lbl_803398D0[port] & lbl_802C6E50[port];
+}
+
+/*
+ * Function: getButtonsJustPressed
+ * EN v1.0 Address: 0x80014E70
+ * EN v1.0 Size: 84b
+ */
+u32 getButtonsJustPressed(int port)
+{
+    if (port > 0) {
+        return 0;
+    }
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return lbl_803398E0[port] & lbl_802C6E50[port];
+}
+
+/*
+ * Function: getNewInputs
+ * EN v1.0 Address: 0x80014EC4
+ * EN v1.0 Size: 36b
+ */
+u32 getNewInputs(int port)
+{
+    if (port > 0) {
+        return 0;
+    }
+    return lbl_803398C0[port];
+}
+
+/*
+ * Function: getButtonsHeld
+ * EN v1.0 Address: 0x80014EE8
+ * EN v1.0 Size: 84b
+ */
+u32 getButtonsHeld(int port)
+{
+    if (port > 0) {
+        return 0;
+    }
+    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+        return 0;
+    }
+    return lbl_803398C0[port] & lbl_802C6E50[port];
 }
