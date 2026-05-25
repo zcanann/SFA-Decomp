@@ -2150,12 +2150,12 @@ main/unknown/autos/placeholder_80281760.c:
 main/unknown/autos/placeholder_802817A8.c:
 	.text       start:0x80281338 end:0x80281338
 
-main/unknown/autos/placeholder_802818F8.c:
+main/audio/inp_midi_set.c:
 	extab       start:0x80005A98 end:0x80005AA8
 	extabindex  start:0x80006374 end:0x8000638C
 	.text       start:0x80281338 end:0x80281A30
 
-main/unknown/autos/placeholder_80281A9C.c:
+main/audio/inp_midi.c:
 	extab       start:0x80005AA8 end:0x80005AB8
 	extabindex  start:0x8000638C end:0x800063A4
 	.text       start:0x80281A30 end:0x80282070

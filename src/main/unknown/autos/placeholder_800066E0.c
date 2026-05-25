@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/inp_midi.h"
 #include "main/audio/snd_core.h"
 #include "main/unknown/autos/placeholder_800066E0.h"
 
@@ -117,7 +118,6 @@ extern undefined4 FUN_80272ed4();
 extern undefined4 FUN_80272ed8();
 extern int FUN_8027ba0c();
 extern uint FUN_8027ba1c();
-extern undefined4 inpSetMidiCtrl();
 extern undefined4 FUN_80281340();
 extern int FUN_8028133c();
 extern undefined4 FUN_80284674();

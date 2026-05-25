@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/inp_midi.h"
 
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];
@@ -7,7 +8,6 @@ extern u8 *synthVoice;
 extern u32 vidMakeNew(int state, int returnNewId);
 extern void vidRemoveVoice(int state);
 extern void voiceRegister(int state);
-extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 extern u32 hwIsActive(u32 slot);
 
 /*

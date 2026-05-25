@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80281A9C.h"
+#include "main/audio/inp_midi.h"
 
 extern void *memcpy(void *dst, const void *src, u32 n);
-extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 extern int inpTranslateExCtrl(int input);
 
 extern u8 sInpMidiCtrlFullResetPreset[];

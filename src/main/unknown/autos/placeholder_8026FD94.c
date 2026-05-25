@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/inp_midi.h"
 
 typedef struct SynthDelayedNode {
     struct SynthDelayedNode *next;
@@ -66,7 +67,6 @@ extern f32 lbl_803E77D0;
 typedef void (*SynthAuxCallback)(int active, u16 *samples, u32 user);
 
 extern u8 *dataGetKeymap(u32 sampleId);
-extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 extern int audioFn_8026f630(u32 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags);
 extern int audioLayerFn_8026f8b8(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
                        u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11,

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/inp_midi.h"
 #include "main/audio/snd_core.h"
 #include "main/unknown/autos/placeholder_802765AC.h"
 #include "main/unknown/autos/placeholder_80279608.h"
@@ -94,7 +95,6 @@ extern u32 vidMakeNew(int state, int returnNewId);
 extern int hwIsActive(int slot);
 extern void hwBreak(int slot);
 extern void voiceFree(int state);
-extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void inpResetChannelDefaults(u8 a, u8 b);
 void audioFn_80278990(McmdVoiceState *state);
 void fn_802788B4(McmdVoiceState *state, u32 skipFadeReset);
@@ -105,14 +105,10 @@ extern void voiceKill(u32 voice);
 extern u8 lbl_803BDA34[];
 extern void sndConvertTicks(u32 *p, McmdVoiceState *state);
 extern void sndConvertMs(u32 *p);
-extern void inpSetMidiCtrl(int idx, u8 a, u8 b, u8 mask);
-extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 extern void fn_8026F5B8(int state);
 extern u16 sndRand(void);
 extern int voiceIsRegistered(int state);
-extern void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 extern int mcmdWait(McmdVoiceState *state, McmdCommandArgs *args);
-extern void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
 extern int vidGetInternalId(u32 id);
 extern void (*synthMessageCallback)(u32 id);
 

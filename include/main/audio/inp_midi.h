@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80281A9C_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80281A9C_H_
+#ifndef MAIN_AUDIO_INP_MIDI_H_
+#define MAIN_AUDIO_INP_MIDI_H_
 
 #include "ghidra_import.h"
 
@@ -13,6 +13,8 @@
 #define INP_MIDI_AUX_BY_KEY_OFFSET 0x6540
 #define INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET 0x6740
 
+void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value);
+void inpSetMidiCtrl14(int controller, u8 slot, u8 key, u16 data);
 void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 u8 *inpGetChannelDefaults(u8 a, u8 b);
@@ -22,4 +24,4 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState);
 void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 u8 inpGetMidiLastNote(u8 a, u8 b);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80281A9C_H_ */
+#endif /* MAIN_AUDIO_INP_MIDI_H_ */

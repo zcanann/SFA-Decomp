@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/inp_midi.h"
 #include "main/unknown/autos/placeholder_80282288.h"
 
-extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 extern int varGet(int state, int useExCtrl, u32 index);
 extern u64 __shr2u(u32 hi, u32 lo, u32 shift);
 extern u32 synthRealTimeHi;

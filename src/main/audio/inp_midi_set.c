@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/inp_midi.h"
 #include "main/audio/mcmd.h"
 #include "main/unknown/autos/placeholder_80279EC0.h"
-#include "main/unknown/autos/placeholder_80281A9C.h"
 
 extern u8 lbl_803CD760[];
 extern u8 lbl_803BD150[];
