@@ -146,6 +146,14 @@ extern f32 lbl_803E4CE8;
 extern f32 lbl_803E4CEC;
 extern f64 lbl_803E4CF8;
 extern f32 lbl_803E4D20;
+extern int curveFn_80010320(int a, f32 f);
+extern int getAngle(f32 dx, f32 dy);
+extern int Obj_GetPlayerObject(void);
+extern int *gRomCurveInterface;
+extern f32 lbl_803E4D10;
+extern f32 lbl_803E4D14;
+extern f32 lbl_803E4D18;
+extern f32 lbl_803E4D1C;
 
 /*
  * --INFO--
@@ -160,71 +168,65 @@ extern f32 lbl_803E4D20;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossgut2_updateTracking(ushort *param_1,int param_2)
+void dimbossgut2_updateTracking(int obj, int state)
 {
-  float fVar1;
-  ushort uVar3;
-  short sVar4;
-  uint uVar2;
-  int iVar5;
-  char cVar6;
-  float *pfVar7;
-  int iVar8;
-  
-  iVar8 = *(int *)(param_2 + 0x40c);
-  pfVar7 = *(float **)(param_2 + 0x3dc);
-  if ((*(ushort *)(param_2 + 0x400) & 8) == 0) {
-    FUN_80017a98();
-    uVar2 = FUN_80017730();
-    iVar8 = (uVar2 & 0xffff) - (uint)*param_1;
-    if (0x8000 < iVar8) {
-      iVar8 = iVar8 + -0xffff;
+  int curve;
+  int r30v;
+  s16 angle;
+  s16 delta;
+  int q;
+  f32 fv;
+  int player;
+  int rel;
+
+  curve = *(int *)(state + 0x40c);
+  r30v = *(int *)(state + 0x3dc);
+  if ((*(u16 *)(state + 0x400) & 8) != 0) {
+    if ((curveFn_80010320(r30v, *(f32 *)(curve + 0x10)) != 0) || (*(int *)(r30v + 0x10) != 0)) {
+      if ((u8)(*((u8 (***)(int))gRomCurveInterface))[0x24](r30v) != 0) {
+        *(u16 *)(state + 0x400) = *(u16 *)(state + 0x400) & ~0x8;
+      }
     }
-    if (iVar8 < -0x8000) {
-      iVar8 = iVar8 + 0xffff;
+    angle = (s16)(getAngle(*(f32 *)(r30v + 0x74), *(f32 *)(r30v + 0x7c)) + 0x8000);
+    delta = (s16)(angle - (u16)*(s16 *)obj);
+    if (delta > 0x8000) {
+      delta = (s16)(delta - 0xffff);
     }
-    iVar8 = iVar8 * (uint)DAT_803dc070;
-    *param_1 = *param_1 +
-               ((short)((ulonglong)((longlong)iVar8 * 0x55555556) >> 0x20) -
-               ((short)((short)(iVar8 / 0x30000) + (short)(iVar8 >> 0x1f)) >> 0xf));
+    if (delta < -0x8000) {
+      delta = (s16)(delta + 0xffff);
+    }
+    *(s16 *)obj = angle;
+    *(f32 *)(curve + 4) = *(f32 *)(curve + 4) + (f32)(delta >> 4);
+    if (*(f32 *)(curve + 0x10) < lbl_803E4D14) {
+      *(f32 *)(curve + 0x10) = *(f32 *)(curve + 0x10) + lbl_803E4D18;
+    }
+    q = delta / 0xb6;
+    if (q < 0) {
+      q = -q;
+    }
+    fv = (f32)(s32)q * lbl_803E4CD4;
+    if (lbl_803E4CF0 < fv) {
+      *(f32 *)(curve + 0x10) = *(f32 *)(curve + 0x10) / fv;
+      *(f32 *)(curve + 8) = *(f32 *)(curve + 8) + lbl_803E4D1C;
+    }
+    if (lbl_803E4CD8 < *(f32 *)(curve + 8)) {
+      *(f32 *)(curve + 8) = *(f32 *)(curve + 8) / lbl_803E4D10;
+    }
+    *(f32 *)(obj + 0xc) = *(f32 *)(r30v + 0x68);
+    *(f32 *)(obj + 0x14) = *(f32 *)(r30v + 0x70);
   }
   else {
-    iVar5 = FUN_80006a10((double)*(float *)(iVar8 + 0x10),pfVar7);
-    if (((iVar5 != 0) || (pfVar7[4] != 0.0)) &&
-       (cVar6 = (**(code **)(*DAT_803dd71c + 0x90))(pfVar7), cVar6 != '\0')) {
-      *(ushort *)(param_2 + 0x400) = *(ushort *)(param_2 + 0x400) & ~0x8;
+    player = Obj_GetPlayerObject();
+    rel = (int)(u16)getAngle(-(*(f32 *)(player + 0x18) - *(f32 *)(obj + 0x18)),
+                             -(*(f32 *)(player + 0x20) - *(f32 *)(obj + 0x20))) -
+          (int)(u16)*(s16 *)obj;
+    if (rel > 0x8000) {
+      rel = rel - 0xffff;
     }
-    iVar5 = FUN_80017730();
-    uVar3 = (short)iVar5 + 0x8000;
-    sVar4 = uVar3 - *param_1;
-    if (0x8000 < sVar4) {
-      sVar4 = sVar4 + 1;
+    if (rel < -0x8000) {
+      rel = rel + 0xffff;
     }
-    if (sVar4 < -0x8000) {
-      sVar4 = sVar4 + -1;
-    }
-    *param_1 = uVar3;
-    iVar5 = (int)sVar4;
-    *(f32 *)(iVar8 + 4) =
-         *(f32 *)(iVar8 + 4) + (f32)(s32)(iVar5 >> 4);
-    if (*(f32 *)(iVar8 + 0x10) < lbl_803E59AC) {
-      *(f32 *)(iVar8 + 0x10) = *(f32 *)(iVar8 + 0x10) + lbl_803E59B0;
-    }
-    iVar5 = iVar5 / 0xb6 + (iVar5 >> 0x1f);
-    uVar2 = iVar5 - (iVar5 >> 0x1f);
-    if ((int)uVar2 < 0) {
-      uVar2 = -uVar2;
-    }
-    fVar1 = (f32)(s32)uVar2 * lbl_803E596C;
-    if (lbl_803E5988 < fVar1) {
-      *(float *)(iVar8 + 0x10) = *(float *)(iVar8 + 0x10) / fVar1;
-      *(float *)(iVar8 + 8) = *(float *)(iVar8 + 8) + lbl_803E59B4;
-    }
-    if (lbl_803E5970 < *(float *)(iVar8 + 8)) {
-      *(float *)(iVar8 + 8) = *(float *)(iVar8 + 8) / lbl_803E59A8;
-    }
-    *(float *)(param_1 + 6) = pfVar7[0x1a];
-    *(float *)(param_1 + 10) = pfVar7[0x1c];
+    *(s16 *)obj = (s16)(*(s16 *)obj + rel * (u8)framesThisStep / 3);
   }
   return;
 }
@@ -366,7 +368,7 @@ void dimbossgut2_update(int obj)
     }
     *(u16 *)((int)pfVar4 + 0x16) = *(u16 *)((int)pfVar4 + 0x16) + (u8)framesThisStep;
     fn_801BEEA0((s16 *)obj, (u8 *)state);
-    dimbossgut2_updateTracking((ushort *)obj, state);
+    dimbossgut2_updateTracking(obj, state);
     ObjAnim_AdvanceCurrentMove(obj, lbl_803E4D20, timeDelta, 0);
     *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 9;
     *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
