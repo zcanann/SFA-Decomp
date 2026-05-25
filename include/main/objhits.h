@@ -69,10 +69,11 @@
 extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
 extern f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
 extern void *gObjHitsPrimaryHitboxBufferScratch0;
-extern void *gObjHitsPrimaryHitboxBufferScratch1;
 extern void *gObjHitsSecondaryHitboxBufferScratch0;
-extern void *gObjHitsSecondaryHitboxBufferScratch1;
 extern char sObjHitsTooManyHitSpheresWarning[];
+
+#define gObjHitsPrimaryHitboxBufferScratch1 (&gObjHitsPrimaryHitboxBufferScratch0)[1]
+#define gObjHitsSecondaryHitboxBufferScratch1 (&gObjHitsSecondaryHitboxBufferScratch0)[1]
 
 typedef struct ObjHitboxDef {
   u8 pad00[OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET];
