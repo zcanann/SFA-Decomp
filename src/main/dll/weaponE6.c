@@ -87,7 +87,7 @@ void fn_8013F100(int obj, int state)
                 fn_80179678(*(int *)(state + 0x700), obj);
             } else if (iVar2 == 2) {
                 iVar3 = *(int *)(obj + 0xb8);
-                if (((*(u8 *)(iVar3 + 0x58) >> 6) & 1) == 0) {
+                if ((((uint)*(u8 *)(iVar3 + 0x58) >> 6) & 1) == 0) {
                     sVar = *(short *)(obj + 0xa0);
                     if (sVar >= 48 || sVar < 41) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
@@ -156,7 +156,7 @@ void fn_8013F100(int obj, int state)
                 if (*(float *)(state + 0x7a4) <= lbl_803E23DC) {
                     *(float *)(state + 0x7a4) = (f32)(s32)randomGetRange(150, 300);
                     iVar3 = *(int *)(obj + 0xb8);
-                    if (((*(u8 *)(iVar3 + 0x58) >> 6) & 1) != 0) {
+                    if ((((uint)*(u8 *)(iVar3 + 0x58) >> 6) & 1) != 0) {
                         break;
                     }
                     sVar = *(short *)(obj + 0xa0);
@@ -203,7 +203,7 @@ void fn_8013F100(int obj, int state)
         }
         break;
     case 2:
-        if ((*(int *)(state + 0x54) & 0x8000000) != 0) {
+        if ((*(uint *)(state + 0x54) & 0x8000000) != 0) {
             *(float *)(state + 0x828) = lbl_803E2408;
             iVar2 = *(int *)(state + 0);
             if (*(u8 *)(iVar2 + 2) >= 0xef) {
@@ -286,7 +286,7 @@ void fn_8013F100(int obj, int state)
     case 7:
         break;
     }
-    if (((*(int *)(state + 0x54) & 0x10000) != 0) &&
+    if (((*(uint *)(state + 0x54) & 0x10000) != 0) &&
         ViewFrustum_IsSphereVisible(obj + 0xc, lbl_803E2500) == 0) {
         Obj_FreeObject(*(int *)(state + 0x24));
     } else {
