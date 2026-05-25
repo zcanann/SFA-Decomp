@@ -4322,26 +4322,17 @@ void curves_clear(uint *param_1,int param_2,uint param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint playerHasKrazoaSpirit(char param_1,uint param_2)
+uint playerHasKrazoaSpirit(u8 checkStoryBits,uint bit)
 {
-  uint uVar1;
-  
-  if (param_1 == '\0') {
-    uVar1 = GameBit_Get(param_2);
+  if (checkStoryBits == 0) {
+    return GameBit_Get(bit);
   }
-  else {
-    uVar1 = GameBit_Get(0xbfd);
-    if ((((uVar1 == 0) && (uVar1 = GameBit_Get(0xff), uVar1 == 0)) &&
-        (uVar1 = GameBit_Get(0xba8), uVar1 == 0)) &&
-       (((uVar1 = GameBit_Get(0xc85), uVar1 == 0 && (uVar1 = GameBit_Get(0xc6e), uVar1 == 0)) &&
-        (uVar1 = GameBit_Get(0x174), uVar1 == 0)))) {
-      uVar1 = 0;
-    }
-    else {
-      uVar1 = 1;
-    }
+  if ((GameBit_Get(0xbfd) == 0) && (GameBit_Get(0xff) == 0) &&
+      (GameBit_Get(0xba8) == 0) && (GameBit_Get(0xc85) == 0) &&
+      (GameBit_Get(0xc6e) == 0) && (GameBit_Get(0x174) == 0)) {
+    return 0;
   }
-  return uVar1;
+  return 1;
 }
 
 /*
