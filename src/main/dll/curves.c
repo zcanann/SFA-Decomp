@@ -62,11 +62,11 @@ extern u32 sCurvesCachedHitObj;
 extern f64 DOUBLE_803e12a8;
 extern f64 DOUBLE_803e12f0;
 extern f64 DOUBLE_803e1318;
-extern f32 lbl_803E0630;
+extern f32 gFloatNegOne;
 extern f32 lbl_803E1290;
-extern f32 lbl_803E0634;
-extern f32 lbl_803E0638;
-extern f32 lbl_803E0658;
+extern f32 gFloatOne;
+extern f32 gFloatZero;
+extern f32 gFloatHalf;
 extern f32 lbl_803E12B0;
 extern f32 lbl_803E12B4;
 extern f32 lbl_803E12B8;
@@ -184,17 +184,17 @@ RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
     tangentDx = segmentStart->x - prevCurve->x;
     tangentDz = segmentStart->z - prevCurve->z;
   }
-  tangentDx = lbl_803E0658 * (tangentDx + segmentDx);
-  tangentDz = lbl_803E0658 * (tangentDz + segmentDz);
+  tangentDx = gFloatHalf * (tangentDx + segmentDx);
+  tangentDz = gFloatHalf * (tangentDz + segmentDz);
   tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
-  if (tangentLen != lbl_803E0638) {
+  if (tangentLen != gFloatZero) {
     tangentDx = tangentDx / tangentLen;
     tangentDz = tangentDz / tangentLen;
   }
 
   startDenom = tangentDx * segmentDx + tangentDz * segmentDz;
-  startPhase = lbl_803E0638;
-  if (startDenom != lbl_803E0638) {
+  startPhase = gFloatZero;
+  if (startDenom != gFloatZero) {
     startPhase =
         -(-((tangentDx * segmentStart->x) + (tangentDz * segmentStart->z)) +
           ((tangentDx * (f32)x) + (tangentDz * (f32)z))) /
@@ -207,17 +207,17 @@ RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
     nextTangentDx = nextCurve->x - segmentEnd->x;
     nextTangentDz = nextCurve->z - segmentEnd->z;
   }
-  nextTangentDx = lbl_803E0658 * (nextTangentDx + segmentDx);
-  nextTangentDz = lbl_803E0658 * (nextTangentDz + segmentDz);
+  nextTangentDx = gFloatHalf * (nextTangentDx + segmentDx);
+  nextTangentDz = gFloatHalf * (nextTangentDz + segmentDz);
   nextTangentLen = sqrtf(nextTangentDx * nextTangentDx + nextTangentDz * nextTangentDz);
-  if (nextTangentLen != lbl_803E0638) {
+  if (nextTangentLen != gFloatZero) {
     nextTangentDx = nextTangentDx / nextTangentLen;
     nextTangentDz = nextTangentDz / nextTangentLen;
   }
 
   endDenom = nextTangentDx * segmentDx + nextTangentDz * segmentDz;
-  endPhase = lbl_803E0638;
-  if (endDenom != lbl_803E0638) {
+  endPhase = gFloatZero;
+  if (endDenom != gFloatZero) {
     endPhase =
         -(-((nextTangentDx * segmentEnd->x) + (nextTangentDz * segmentEnd->z)) +
           ((nextTangentDx * (f32)x) + (nextTangentDz * (f32)z))) /
@@ -225,7 +225,7 @@ RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
   }
 
   phase = -startPhase / (endPhase - startPhase);
-  if ((phase < lbl_803E0638) || (lbl_803E0634 <= phase)) {
+  if ((phase < gFloatZero) || (gFloatOne <= phase)) {
     return 0;
   }
 
@@ -233,9 +233,9 @@ RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
   segmentLen = sqrtf(segmentDz * segmentDz + segmentDx * segmentDx + segmentDy * segmentDy);
   lateralX = segmentDx;
   lateralZ = segmentDz;
-  if (lbl_803E0638 < segmentLen) {
-    lateralX = -segmentDx * (lbl_803E0634 / segmentLen);
-    lateralZ = -segmentDz * (lbl_803E0634 / segmentLen);
+  if (gFloatZero < segmentLen) {
+    lateralX = -segmentDx * (gFloatOne / segmentLen);
+    lateralZ = -segmentDz * (gFloatOne / segmentLen);
   }
 
   *outLateralOffset = -(((segmentDx * phase + segmentStart->x) * lateralZ) -
@@ -1178,7 +1178,7 @@ f32 curves_distXZ(f32 x,f32 z,uint curveId)
 
   curve = RomCurve_FindByIdInline(curveId);
   if (curve == NULL) {
-    return lbl_803E0630;
+    return gFloatNegOne;
   }
 
   dx = curve->x - x;
@@ -1208,7 +1208,7 @@ f32 curves_distFn0B(int obj,uint curveId)
 
   curve = RomCurve_FindByIdInline(curveId);
   if (curve == NULL || obj == 0) {
-    return lbl_803E0630;
+    return gFloatNegOne;
   }
 
   dx = curve->x - *(f32 *)(obj + 0x0c);
@@ -4538,15 +4538,15 @@ int fn_800E1F3C(int* a, int* b, f32 f1, f32 f2, f32 f3, f32 f4) {
     f32 bz = *(f32*)((u8*)b + 0x10);
     f32 cross1 = bx * az - ax * bz;
     f32 sum1 = cross1 + (f1 * (bz - az) + f3 * (ax - bx));
-    if (!((sum1 <= lbl_803E0638 && cross1 >= lbl_803E0638) ||
-          (sum1 >= lbl_803E0638 && cross1 < lbl_803E0638))) {
+    if (!((sum1 <= gFloatZero && cross1 >= gFloatZero) ||
+          (sum1 >= gFloatZero && cross1 < gFloatZero))) {
         return 0;
     }
     {
         f32 cross_a = -f3 * ax + f1 * az;
         f32 cross_b = -f3 * bx + f1 * bz;
-        if ((cross_a <= lbl_803E0638 && cross_b >= lbl_803E0638) ||
-            (cross_a >= lbl_803E0638 && cross_b < lbl_803E0638)) {
+        if ((cross_a <= gFloatZero && cross_b >= gFloatZero) ||
+            (cross_a >= gFloatZero && cross_b < gFloatZero)) {
             return 1;
         }
         return 0;
