@@ -36,6 +36,7 @@ extern uint FUN_80294bf4();
 extern int FUN_80294c88();
 extern int FUN_80294d10();
 extern undefined4 FUN_80294d78();
+extern void cameraGetPrevPos2();
 extern int fn_80295C0C(int);
 extern int objFn_802962b4(int);
 extern int objFn_80296700(int);
@@ -57,6 +58,7 @@ extern f32 *cameraMtxVar57;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e2318;
 extern f64 lbl_803E1698;
+extern f32 lbl_803E1688;
 extern f32 lbl_803E16A4;
 extern f32 lbl_803E16AC;
 extern f32 lbl_803DE1A4;
@@ -148,21 +150,20 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
 {
   float local_88;
   float local_84;
-  undefined4 local_80;
-  undefined auStack_7c [110];
-  undefined local_e;
-  
+  float local_80;
+  undefined auStack_7c [111];
+
   if (*(short *)(param_2 + 0x44) == 1) {
-    FUN_80294d78(param_2,&local_88,&local_84,&local_80);
+    cameraGetPrevPos2(param_2,&local_88,&local_84,&local_80);
   }
   else {
     local_88 = *(float *)(param_2 + 0x18);
-    local_84 = *(float *)(param_2 + 0x1c) + *(float *)(gCamcontrolModeSettings + 0x8c);
-    local_80 = *(undefined4 *)(param_2 + 0x20);
+    local_84 = *(float *)(param_2 + 0x1c) + cameraMtxVar57[0x23];
+    local_80 = *(float *)(param_2 + 0x20);
   }
-  camcontrol_traceMove((double)lbl_803E2308,&local_88,param_1,param_3,(int)auStack_7c,3,'\x01',
+  camcontrol_traceMove((double)lbl_803E1688,&local_88,param_1,param_3,(int)auStack_7c,3,'\x01',
                        '\x01');
-  return local_e;
+  return auStack_7c[110];
 }
 
 /*
