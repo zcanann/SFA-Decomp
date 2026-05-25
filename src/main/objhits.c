@@ -43,7 +43,6 @@ extern undefined4 sin();
 extern ObjHitsSweepEntry *gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern undefined4 DAT_80341b9c;
-extern undefined4 DAT_80342e58;
 extern int *gObjHitsPriorityHitStates;
 extern f64 DOUBLE_803df5a8;
 extern f64 DOUBLE_803df5c0;
@@ -1763,7 +1762,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
           uVar31 = uVar31 - 1;
         } while (uVar31 != 0);
       }
-      local_1a4 = (float *)&DAT_80342e58;
+      local_1a4 = gObjHitsContactScratch;
       local_1c4 = lbl_803DF5B8;
       iVar16 = 1;
       while (iVar16 != 0) {

@@ -4,6 +4,8 @@
 #include "ghidra_import.h"
 
 #define OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT 5
+#define OBJHITS_CONTACT_SCRATCH_COUNT 0x40
+#define OBJHITS_CONTACT_SCRATCH_WORDS 7
 #define OBJHITS_SWEEP_ENTRY_CAPACITY 400
 #define OBJHITS_PRIORITY_HIT_COUNT 3
 #define OBJHITS_PRIORITY_INVALID 0x7f
@@ -65,6 +67,7 @@
 #define OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET 0x10F
 
 extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
+extern f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
 extern void *gObjHitsPrimaryHitboxBufferScratch0;
 extern void *gObjHitsPrimaryHitboxBufferScratch1;
 extern void *gObjHitsSecondaryHitboxBufferScratch0;
