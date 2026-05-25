@@ -38,19 +38,3 @@ void hwBreak(int slot)
   *(u32 *)(entry + 0x24) |= 0x20;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80283444
- * EN v1.0 Address: 0x80283444
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80283528
- * EN v1.1 Size: 152b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80283444(int param_1,uint param_2,short param_3)
-{
-}

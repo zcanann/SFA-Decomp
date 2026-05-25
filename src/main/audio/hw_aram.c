@@ -60,37 +60,3 @@ void hwTransAddr(void)
     aramGetZeroBuffer();
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80283d70
- * EN v1.0 Address: 0x80283D70
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x80283DE8
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined2 FUN_80283d70(int param_1)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80283d78
- * EN v1.0 Address: 0x80283D78
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80283DFC
- * EN v1.1 Size: 20b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80283d78(int param_1,undefined param_2)
-{
-}
