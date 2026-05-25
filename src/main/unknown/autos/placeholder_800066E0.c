@@ -8640,6 +8640,10 @@ extern u8 lbl_802C7400[];
 extern void* lbl_803DC954;
 extern void* lbl_803DC958;
 extern void* lbl_803DC9CC;
+extern f32 lbl_803DE6B8;
+extern f32 lbl_803DE6D4;
+extern f64 lbl_803DE6D8;
+extern f32 lbl_803DE6E0;
 extern f32 lbl_803DE6E8;
 
 extern int sprintf(char* buf, const char* fmt, ...);
@@ -8739,6 +8743,19 @@ void gameTimerStop(void)
 }
 
 /*
+ * Function: fn_8001461C
+ * EN v1.0 Address: 0x8001461C
+ * EN v1.0 Size: 76b
+ */
+f32 fn_8001461C(void)
+{
+    if (((s8)lbl_803DC8F9 & 1) != 0) {
+        return lbl_803DE6E0 * ((lbl_803DC8FC - lbl_803DC900) / lbl_803DE6D4);
+    }
+    return lbl_803DE6E0 * (lbl_803DC900 / lbl_803DE6D4);
+}
+
+/*
  * Function: fn_80014668
  * EN v1.0 Address: 0x80014668
  * EN v1.0 Size: 8b
@@ -8757,6 +8774,29 @@ void timerSetToCountUp(void)
 {
     if ((lbl_803DC8F8 & 1) != 0) {
         lbl_803DC8F8 &= ~1;
+    }
+}
+
+/*
+ * Function: gameTimerInit
+ * EN v1.0 Address: 0x800146BC
+ * EN v1.0 Size: 176b
+ */
+void gameTimerInit(s8 flags, int minutes)
+{
+    lbl_803DC8F9 = flags;
+    if ((flags & 1) != 0) {
+        lbl_803DC900 = minutes * 60;
+    } else {
+        lbl_803DC900 = lbl_803DE6B8;
+    }
+    lbl_803DC8FC = minutes * 60;
+    lbl_803DC8F8 |= 1;
+    lbl_803DC8F8 &= ~2;
+    if ((flags & 3) != 0) {
+        lbl_803DC8F8 |= 4;
+    } else {
+        lbl_803DC8F8 &= ~4;
     }
 }
 
