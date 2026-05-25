@@ -439,7 +439,7 @@ void fn_801EB0D4(uint param_1,int param_2)
   uint uVar4;
 
   if ((*(byte *)(param_2 + 0x428) >> 5 & 1) != 0) {
-    if (lbl_803E5AE8 <= *(float *)(param_2 + 0x4bc)) {
+    if (*(float *)(param_2 + 0x4bc) >= lbl_803E5AE8) {
       v = (f32)(s32)(*(float *)(param_2 + 0x4c0) *
                      (timeDelta * PSVECMag((float *)(param_2 + 0x494))));
       *(float *)(param_2 + 0x4bc) =
