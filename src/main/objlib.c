@@ -82,6 +82,13 @@ typedef struct ObjContactCallbackEntry {
   ObjContactCallback callback;
 } ObjContactCallbackEntry;
 
+typedef struct ObjHitsPriorityWorkSlot {
+  int active;
+  int pad04;
+  int obj;
+  u8 pad0C[OBJHITS_PRIORITY_WORK_SLOT_SIZE - 0x0C];
+} ObjHitsPriorityWorkSlot;
+
 typedef struct ObjLibRegionEntry {
   s16 type;
   u8 wordCount;
@@ -387,7 +394,7 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
 void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
 {
   int iVar1;
-  int *piVar2;
+  ObjHitsPriorityWorkSlot *workSlot;
   int slotIndex;
   int slotOffset;
   int clearedState;
@@ -406,9 +413,9 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   slotOffset = (s16)slotIndex;
   clearedState = slotOffset;
   for (; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1) {
-    piVar2 = (int *)(gObjHitsPriorityHitStates + slotOffset);
-    if ((*piVar2 != 0) && ((u32)piVar2[2] == (u32)param_1)) {
-      *piVar2 = clearedState;
+    workSlot = (ObjHitsPriorityWorkSlot *)(gObjHitsPriorityHitStates + slotOffset);
+    if ((workSlot->active != 0) && ((u32)workSlot->obj == (u32)param_1)) {
+      workSlot->active = clearedState;
     }
     slotOffset = slotOffset + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
   }
@@ -1527,20 +1534,20 @@ int *ObjHitReact_GetResetObjects(int *outObjectCount)
 #pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
-  int i;
-
   gObjHitReactResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
   gObjHitsPriorityHitStates =
-      (undefined4)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * OBJHITS_PRIORITY_WORK_SLOT_SIZE,0xe,0);
+      (undefined4)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * sizeof(ObjHitsPriorityWorkSlot),0xe,0);
   lbl_803DCBD8 = mmAlloc(0x1900,0xe,0);
   lbl_803DCBD0[0] = mmAlloc(0x400,0xe,0);
   lbl_803DCBD0[1] = mmAlloc(0x400,0xe,0);
   lbl_803DCBC8[0] = mmAlloc(0x400,0xe,0);
   lbl_803DCBC8[1] = mmAlloc(0x400,0xe,0);
   gObjHitsPriorityHitTickDelta = lbl_803DE914;
-  for (i = 0; i < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT; i++) {
-    gObjHitsActiveHitVolumeObjects[i] = 0;
-  }
+  gObjHitsActiveHitVolumeObjects[0] = 0;
+  gObjHitsActiveHitVolumeObjects[1] = 0;
+  gObjHitsActiveHitVolumeObjects[2] = 0;
+  gObjHitsActiveHitVolumeObjects[3] = 0;
+  gObjHitsActiveHitVolumeObjects[4] = 0;
   return;
 }
 #pragma peephole reset
