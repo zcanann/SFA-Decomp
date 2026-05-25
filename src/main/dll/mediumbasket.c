@@ -1971,6 +1971,35 @@ void dll_CA_func0B(int obj, u8 message)
 
 #pragma scheduling off
 #pragma peephole off
+int fn_8015B5CC(int obj, int state)
+{
+    if ((s8)*(u8 *)(state + 0x27b) != 0) {
+        ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 2);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8015B614(int obj, int state)
+{
+    int sub;
+
+    if ((s8)*(u8 *)(state + 0x27b) != 0) {
+        sub = *(int *)(obj + 0xb8);
+        *(u8 *)(sub + 0x405) = 0;
+        GameBit_Set((s32)*(s16 *)(sub + 0x3f4), 0);
+        GameBit_Set((s32)*(s16 *)(sub + 0x3f2), 1);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 int fn_8015B670(int obj, int state)
 {
     if ((s8)*(u8 *)(state + 0x27b) != 0) {
