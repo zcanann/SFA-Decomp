@@ -19,7 +19,7 @@ int trickyFn_80142a14(int obj, int state);
 void trickyFlameFn_80142b6c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 int trickyFoodFn_80142d2c(int obj, int state);
-undefined4 trickyFn_80142eb0(int param_1,int *param_2);
+int trickyFn_80142eb0(int obj, int state);
 undefined4
 trickyFn_801430e0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,

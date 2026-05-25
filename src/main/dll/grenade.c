@@ -876,65 +876,68 @@ skip:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 trickyFn_80142eb0(int param_1,int *param_2)
+extern f32 lbl_803E23F0;
+extern f32 lbl_803E243C;
+extern f32 lbl_803E249C;
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+extern int *gPartfxInterface;
+extern char sInWaterMessage[];
+extern char lbl_8031D478[];
+
+#pragma scheduling off
+#pragma peephole off
+int trickyFn_80142eb0(int obj, int state)
 {
-  short sVar1;
-  bool bVar2;
-  int iVar3;
-  uint uVar4;
-  undefined auStack_28 [8];
+  short sVar;
+  int b;
+  u8 auStack_28[8];
   float local_20;
-  undefined4 local_1c;
-  undefined4 local_18;
-  undefined4 local_14;
-  
-  iVar3 = trickyFoodFn_8014460c(param_1,param_2);
-  if (iVar3 == 0) {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
-    sVar1 = *(short *)(param_1 + 0xa0);
-    if (sVar1 == 0x2e) {
-      if (((param_2[0x15] & 0x8000000U) != 0) &&
-         ((((param_2[0x15] & 0x10000U) != 0 || (uVar4 = randomGetRange(0,2), uVar4 == 0)) ||
-          (lbl_803E306C < (float)param_2[0x1c8])))) {
-        objAnimFn_8013a3f0(param_1,0x2f,lbl_803E307C,0);
-      }
-      local_1c = *(undefined4 *)(param_1 + 0x18);
-      local_18 = *(undefined4 *)(param_1 + 0x1c);
-      local_14 = *(undefined4 *)(param_1 + 0x20);
-      local_20 = lbl_803E3080;
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0x7e6,auStack_28,0x200001,0xffffffff,0);
+  int local_1c;
+  int local_18;
+  int local_14;
+
+  if (trickyFoodFn_8014460c(obj, (int *)state) != 0) {
+    return 1;
+  }
+  *(u8 *)(obj + 0xaf) = *(u8 *)(obj + 0xaf) | 0x10;
+  sVar = *(short *)(obj + 0xa0);
+  if (sVar == 46) {
+    if (((*(int *)(state + 0x54) & 0x8000000) != 0) &&
+        (((*(int *)(state + 0x54) & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
+         *(float *)(state + 0x720) > lbl_803E23DC)) {
+      objAnimFn_8013a3f0(obj, 47, lbl_803E23EC, 0);
     }
-    else if (sVar1 < 0x2e) {
-      if ((0x2b < sVar1) && ((param_2[0x15] & 0x8000000U) != 0)) {
-        objAnimFn_8013a3f0(param_1,0x2e,lbl_803E312C,0);
-      }
+    local_1c = *(int *)(obj + 0x18);
+    local_18 = *(int *)(obj + 0x1c);
+    local_14 = *(int *)(obj + 0x20);
+    local_20 = lbl_803E23F0;
+    (**(code **)(*gPartfxInterface + 8))(obj, 2022, auStack_28, 0x200001, -1, 0);
+  } else if (sVar < 46) {
+    if (43 < sVar && (*(int *)(state + 0x54) & 0x8000000) != 0) {
+      objAnimFn_8013a3f0(obj, 46, lbl_803E249C, 0);
     }
-    else if ((sVar1 < 0x30) && ((param_2[0x15] & 0x8000000U) != 0)) {
-      if (lbl_803E306C == (float)param_2[0xab]) {
-        bVar2 = false;
-      }
-      else if (lbl_803E30A0 == (float)param_2[0xac]) {
-        bVar2 = true;
-      }
-      else if ((float)param_2[0xad] - (float)param_2[0xac] <= lbl_803E30A4) {
-        bVar2 = false;
-      }
-      else {
-        bVar2 = true;
-      }
-      if (bVar2) {
-        objAnimFn_8013a3f0(param_1,8,lbl_803E30CC,0);
-        param_2[0x1e7] = (int)lbl_803E30D0;
-        param_2[0x20e] = (int)lbl_803E306C;
-        FUN_80146fa0();
-      }
-      else {
-        objAnimFn_8013a3f0(param_1,0,lbl_803E30D4,0);
-        FUN_80146fa0();
-      }
-      param_2[0x15] = param_2[0x15] & 0xffffffef;
-      *(undefined *)((int)param_2 + 10) = 0;
+  } else if (sVar < 48 && (*(int *)(state + 0x54) & 0x8000000) != 0) {
+    if (lbl_803E23DC == *(float *)(state + 0x2ac)) {
+      b = 0;
+    } else if (lbl_803E2410 == *(float *)(state + 0x2b0)) {
+      b = 1;
+    } else if (*(float *)(state + 0x2b4) - *(float *)(state + 0x2b0) > lbl_803E2414) {
+      b = 1;
+    } else {
+      b = 0;
     }
+    if (b != 0) {
+      objAnimFn_8013a3f0(obj, 8, lbl_803E243C, 0);
+      *(float *)(state + 0x79c) = lbl_803E2440;
+      *(float *)(state + 0x838) = lbl_803E23DC;
+      trickyDebugPrint(sInWaterMessage);
+    } else {
+      objAnimFn_8013a3f0(obj, 0, lbl_803E2444, 0);
+      trickyDebugPrint(lbl_8031D478);
+    }
+    *(int *)(state + 0x54) = *(int *)(state + 0x54) & 0xffffffef;
+    *(u8 *)(state + 0xa) = 0;
   }
   return 1;
 }
