@@ -30,18 +30,41 @@ typedef struct SndSpatialEntry {
     s8 assignedVoice;
 } SndSpatialEntry;
 
+typedef struct S3DEmitterCtrl {
+    u8 controller;
+    u8 pad01;
+    u16 value;
+} S3DEmitterCtrl;
+
+typedef struct S3DEmitterCtrlList {
+    u8 count;
+    u8 pad01[3];
+    S3DEmitterCtrl *entries;
+} S3DEmitterCtrlList;
+
 typedef struct Snd3DEmitter {
     struct Snd3DEmitter *next;
     struct Snd3DEmitter *prev;
     SndSpatialEntry *entry;
-    u8 pad0c[4];
+    S3DEmitterCtrlList *ctrlList;
     u32 flags;
-    u8 pad14[0x3c - 0x14];
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    f32 refX;
+    f32 refY;
+    f32 refZ;
+    f32 maxDistance;
+    f32 maxVolume;
+    f32 minVolume;
+    f32 distanceCurve;
     u32 handle;
-    u8 pad40[4];
+    u32 groupKey;
     u16 fxId;
     u8 studio;
-    u8 pad47[0x4c - 0x47];
+    u8 maxVoices;
+    u16 retryCounter;
+    u8 pad4a[0x4c - 0x4a];
     f32 age;
 } Snd3DEmitter;
 

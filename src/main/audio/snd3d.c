@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/snd3d.h"
+#include "main/audio/snd3d_calc.h"
 
 extern void dataInit(int p1, void *p2);
 extern void fn_8026F30C(void);
@@ -11,11 +12,6 @@ extern void synthResetLoadedGroupCount(void);
 extern u32 synthSendKeyOff(u32 handle);
 extern int synthFXStart(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux);
 extern int sndFXCheck(u32 id);
-extern void fn_802800C0(void *emitter, f32 *distance, f32 *arg1, f32 *arg2, f32 *arg3, f32 *arg4);
-extern void fn_802805A4(void *emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
-extern int fn_802807C4(void *emitter, f32 distance);
-extern int fn_802808D8(void *emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
-extern void audioFn_80280a08(void);
 extern void fn_8027FB08(void);
 extern void fn_8027FEE4(void);
 
@@ -87,7 +83,7 @@ void s3dHandle(void)
         }
 
         if ((flags & (S3D_EMITTER_FLAG_PLAYING | S3D_EMITTER_FLAG_POSITIONAL)) != 0) {
-            fn_802800C0(emitter, &distance, &arg1, &arg2, &arg3, &arg4);
+            s3dCalcEmitter(emitter, &distance, &arg1, &arg2, &arg3, &arg4);
         }
 
         flags = emitter->flags;
@@ -114,7 +110,7 @@ void s3dHandle(void)
                 }
                 continue;
             } else if ((flags & S3D_EMITTER_FLAG_POSITIONAL) != 0) {
-                if (fn_802808D8(emitter, distance, arg1, arg2, arg3, arg4) != 0) {
+                if (s3dInsertActiveEmitter(emitter, distance, arg1, arg2, arg3, arg4) != 0) {
                     continue;
                 }
             } else {
@@ -143,7 +139,7 @@ void s3dHandle(void)
 update_voice:
             if (emitter->handle != S3D_INVALID_FX_HANDLE) {
                 if ((emitter->flags & S3D_EMITTER_FLAG_POSITIONAL) != 0) {
-                    fn_802807C4(emitter, distance);
+                    s3dInsertSortedEmitter(emitter, distance);
                 }
                 if ((distance == lbl_803E7880) &&
                     ((emitter->flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0)) {
@@ -155,7 +151,7 @@ update_voice:
                         emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
                     }
                 } else {
-                    fn_802805A4(emitter, distance, arg1, arg2, arg3, arg4);
+                    s3dApplyEmitterControls(emitter, distance, arg1, arg2, arg3, arg4);
                 }
             }
             if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0) {
@@ -174,7 +170,7 @@ update_voice:
         }
     }
 
-    audioFn_80280a08();
+    s3dStartQueuedEmitters();
     fn_8027FB08();
     fn_8027FEE4();
 }

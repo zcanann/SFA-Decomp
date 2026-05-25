@@ -1,47 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/snd_core.h"
-
-typedef struct S3DEmitterCtrl {
-    u8 controller;
-    u8 pad01;
-    u16 value;
-} S3DEmitterCtrl;
-
-typedef struct S3DEmitterCtrlList {
-    u8 count;
-    u8 pad01[3];
-    S3DEmitterCtrl *entries;
-} S3DEmitterCtrlList;
-
-typedef struct SndSpatialEntryLite {
-    u8 pad00[0x1c];
-    s8 assignedVoice;
-} SndSpatialEntryLite;
-
-typedef struct Snd3DEmitterLite {
-    u8 pad00[0x08];
-    SndSpatialEntryLite *entry;
-    S3DEmitterCtrlList *ctrlList;
-    u32 flags;
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    f32 refX;
-    f32 refY;
-    f32 refZ;
-    f32 maxDistance;
-    f32 maxVolume;
-    f32 minVolume;
-    f32 distanceCurve;
-    u32 handle;
-    u32 groupKey;
-    u16 fxId;
-    u8 studio;
-    u8 maxVoices;
-    u16 retryCounter;
-    u8 pad4a[0x4c - 0x4a];
-    f32 age;
-} Snd3DEmitterLite;
+#include "main/audio/snd3d_calc.h"
 
 typedef struct SndSpatialListenerLite {
     struct SndSpatialListenerLite *next;
@@ -72,13 +31,13 @@ typedef struct S3DActiveNode {
     f32 arg2;
     f32 arg3;
     f32 arg4;
-    Snd3DEmitterLite *emitter;
+    Snd3DEmitter *emitter;
 } S3DActiveNode;
 
 typedef struct S3DSortedNode {
     struct S3DSortedNode *next;
     f32 distance;
-    Snd3DEmitterLite *emitter;
+    Snd3DEmitter *emitter;
 } S3DSortedNode;
 
 typedef struct S3DMixGroup {
@@ -136,8 +95,8 @@ extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 
 #pragma fp_contract off
 #pragma dont_inline on
-void fn_802800C0(Snd3DEmitterLite *emitter, f32 *distanceOut, f32 *panOut, f32 *azimuthOut,
-                 f32 *pitchOut, f32 *frontBackOut)
+void s3dCalcEmitter(Snd3DEmitter *emitter, f32 *distanceOut, f32 *panOut, f32 *azimuthOut,
+                    f32 *pitchOut, f32 *frontBackOut)
 {
     SndSpatialListenerLite *listener;
     f32 dx;
@@ -290,8 +249,8 @@ void fn_802800C0(Snd3DEmitterLite *emitter, f32 *distanceOut, f32 *panOut, f32 *
 #pragma fp_contract reset
 
 #pragma dont_inline on
-void fn_802805A4(Snd3DEmitterLite *emitter, f32 distance, f32 pan, f32 unused, f32 azimuth,
-                 f32 pitch)
+void s3dApplyEmitterControls(Snd3DEmitter *emitter, f32 distance, f32 pan, f32 unused,
+                             f32 azimuth, f32 pitch)
 {
     S3DEmitterCtrlList *ctrlList;
     S3DEmitterCtrl *ctrl;
@@ -349,10 +308,10 @@ void fn_802805A4(Snd3DEmitterLite *emitter, f32 distance, f32 pan, f32 unused, f
 #pragma dont_inline reset
 
 /*
- * fn_802807C4 - distance-sorted voice node insert.
+ * s3dInsertSortedEmitter - distance-sorted voice node insert.
  */
 #pragma dont_inline on
-void fn_802807C4(Snd3DEmitterLite *emitter, f32 distance)
+void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
 {
     S3DMixGroup *groups;
     S3DMixGroup *group;
@@ -401,10 +360,11 @@ void fn_802807C4(Snd3DEmitterLite *emitter, f32 distance)
 #pragma dont_inline reset
 
 /*
- * fn_802808D8 - active spatial voice node insert.
+ * s3dInsertActiveEmitter - active spatial voice node insert.
  */
 #pragma dont_inline on
-int fn_802808D8(Snd3DEmitterLite *emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3, f32 arg4)
+int s3dInsertActiveEmitter(Snd3DEmitter *emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3,
+                           f32 arg4)
 {
     S3DMixGroup *groups;
     S3DMixGroup *group;
@@ -476,12 +436,12 @@ int fn_802808D8(Snd3DEmitterLite *emitter, f32 distance, f32 arg1, f32 arg2, f32
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void audioFn_80280a08(void)
+void s3dStartQueuedEmitters(void)
 {
     S3DMixGroup *group;
     S3DActiveNode *node;
-    Snd3DEmitterLite *emitter;
-    SndSpatialEntryLite *entry;
+    Snd3DEmitter *emitter;
+    SndSpatialEntry *entry;
     u32 groupIndex;
     u32 handle;
     u8 studio;
@@ -524,8 +484,8 @@ void audioFn_80280a08(void)
 start_voice:
                 emitter = node->emitter;
                 entry = emitter->entry;
-                if ((entry == (SndSpatialEntryLite *)0x0) || (entry->assignedVoice != -1)) {
-                    if (entry == (SndSpatialEntryLite *)0x0) {
+                if ((entry == (SndSpatialEntry *)0x0) || (entry->assignedVoice != -1)) {
+                    if (entry == (SndSpatialEntry *)0x0) {
                         studio = emitter->studio;
                     } else {
                         studio = entry->assignedVoice;
@@ -541,8 +501,8 @@ start_voice:
                         } else {
                             emitter->age = one;
                         }
-                        fn_802805A4(emitter, node->distance, node->arg1, node->arg2, node->arg3,
-                                     node->arg4);
+                        s3dApplyEmitterControls(emitter, node->distance, node->arg1,
+                                                node->arg2, node->arg3, node->arg4);
                         emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
                         group->sortedCount++;
                         if (group->sortedHead != (S3DSortedNode *)0x0) {
