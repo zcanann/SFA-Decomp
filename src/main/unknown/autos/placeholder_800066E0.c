@@ -6178,3 +6178,223 @@ int return0xFFFF_80008B6C(void) { return -0x1; }
 int return0x64_8000A378(void) { return 0x64; }
 void doNothing_8000CF54(void) {}
 void doNothing_endOfFrame(void) {}
+
+extern s32 gMusicActivePriority;
+extern f32 gCameraViewRotationMatrix[16];
+extern f32 gCameraInverseViewRotationMatrix[16];
+extern f32 gCameraViewMatrix[16];
+extern f32 gCameraInverseViewMatrix[16];
+extern u8 gCameraShakeSlots[];
+extern u8 gCameraCurrentViewIndex;
+extern u8 lbl_803DC88C;
+extern s16 lbl_803DC886;
+extern f32 gCameraProjectionMatrix[16];
+extern f32 gCameraFarPlane;
+extern f32 gCameraNearPlane;
+extern f32 gCameraAspectRatio;
+extern f32 gCameraFovY;
+extern s16 lbl_803DC880;
+extern s16 lbl_803DC882;
+extern f32 lbl_803DC8A8;
+extern f32 lbl_803DC8AC;
+
+/*
+ * Function: Music_GetActivePriority
+ * EN v1.0 Address: 0x8000AE88
+ * EN v1.0 Size: 8b
+ */
+s32 Music_GetActivePriority(void)
+{
+    return gMusicActivePriority;
+}
+
+/*
+ * Function: Camera_GetViewRotationMatrix
+ * EN v1.0 Address: 0x8000F534
+ * EN v1.0 Size: 12b
+ */
+f32* Camera_GetViewRotationMatrix(void)
+{
+    return gCameraViewRotationMatrix;
+}
+
+/*
+ * Function: Camera_GetInverseViewRotationMatrix
+ * EN v1.0 Address: 0x8000F540
+ * EN v1.0 Size: 12b
+ */
+f32* Camera_GetInverseViewRotationMatrix(void)
+{
+    return gCameraInverseViewRotationMatrix;
+}
+
+/*
+ * Function: Camera_GetViewMatrix
+ * EN v1.0 Address: 0x8000F54C
+ * EN v1.0 Size: 12b
+ */
+f32* Camera_GetViewMatrix(void)
+{
+    return gCameraViewMatrix;
+}
+
+/*
+ * Function: Camera_GetInverseViewMatrix
+ * EN v1.0 Address: 0x8000F558
+ * EN v1.0 Size: 12b
+ */
+f32* Camera_GetInverseViewMatrix(void)
+{
+    return gCameraInverseViewMatrix;
+}
+
+/*
+ * Function: Camera_GetCurrentViewSlot
+ * EN v1.0 Address: 0x8000FAAC
+ * EN v1.0 Size: 24b
+ */
+void* Camera_GetCurrentViewSlot(void)
+{
+    return &gCameraShakeSlots[gCameraCurrentViewIndex * 0x60];
+}
+
+/*
+ * Function: Camera_IsViewYOffsetEnabled
+ * EN v1.0 Address: 0x8000FAC4
+ * EN v1.0 Size: 8b
+ */
+u8 Camera_IsViewYOffsetEnabled(void)
+{
+    return lbl_803DC88C;
+}
+
+/*
+ * Function: Camera_DisableViewYOffset
+ * EN v1.0 Address: 0x8000FACC
+ * EN v1.0 Size: 12b
+ */
+void Camera_DisableViewYOffset(void)
+{
+    lbl_803DC88C = 0;
+}
+
+/*
+ * Function: Camera_EnableViewYOffset
+ * EN v1.0 Address: 0x8000FAD8
+ * EN v1.0 Size: 12b
+ */
+void Camera_EnableViewYOffset(void)
+{
+    lbl_803DC88C = 1;
+}
+
+/*
+ * Function: Camera_GetViewportYOffset
+ * EN v1.0 Address: 0x8000FAE4
+ * EN v1.0 Size: 8b
+ */
+s16 Camera_GetViewportYOffset(void)
+{
+    return lbl_803DC886;
+}
+
+/*
+ * Function: Camera_SetViewportYOffset
+ * EN v1.0 Address: 0x8000FAEC
+ * EN v1.0 Size: 8b
+ */
+void Camera_SetViewportYOffset(s16 yOffset)
+{
+    lbl_803DC886 = yOffset;
+}
+
+/*
+ * Function: Camera_GetProjectionMatrix
+ * EN v1.0 Address: 0x8000FAF4
+ * EN v1.0 Size: 12b
+ */
+f32* Camera_GetProjectionMatrix(void)
+{
+    return gCameraProjectionMatrix;
+}
+
+/*
+ * Function: Camera_GetFarPlane
+ * EN v1.0 Address: 0x8000FBE8
+ * EN v1.0 Size: 8b
+ */
+f32 Camera_GetFarPlane(void)
+{
+    return gCameraFarPlane;
+}
+
+/*
+ * Function: Camera_SetFarPlane
+ * EN v1.0 Address: 0x8000FBF0
+ * EN v1.0 Size: 44b
+ */
+void Camera_SetFarPlane(f32 farPlane, int transitionFrames)
+{
+    if (transitionFrames != 0) {
+        s16 frames = transitionFrames;
+        lbl_803DC882 = frames;
+        lbl_803DC880 = frames;
+        lbl_803DC8AC = gCameraFarPlane;
+        lbl_803DC8A8 = farPlane;
+    } else {
+        gCameraFarPlane = farPlane;
+    }
+}
+
+/*
+ * Function: Camera_GetNearPlane
+ * EN v1.0 Address: 0x8000FC1C
+ * EN v1.0 Size: 8b
+ */
+f32 Camera_GetNearPlane(void)
+{
+    return gCameraNearPlane;
+}
+
+/*
+ * Function: Camera_GetAspectRatio
+ * EN v1.0 Address: 0x8000FC24
+ * EN v1.0 Size: 8b
+ */
+f32 Camera_GetAspectRatio(void)
+{
+    return gCameraAspectRatio;
+}
+
+/*
+ * Function: Camera_SetAspectRatio
+ * EN v1.0 Address: 0x8000FC2C
+ * EN v1.0 Size: 8b
+ */
+void Camera_SetAspectRatio(f32 aspectRatio)
+{
+    gCameraAspectRatio = aspectRatio;
+}
+
+/*
+ * Function: Camera_GetFovY
+ * EN v1.0 Address: 0x8000FC34
+ * EN v1.0 Size: 8b
+ */
+f32 Camera_GetFovY(void)
+{
+    return gCameraFovY;
+}
+
+/*
+ * Function: Camera_SetFovY
+ * EN v1.0 Address: 0x8000FC3C
+ * EN v1.0 Size: 24b
+ */
+void Camera_SetFovY(f32 fovY)
+{
+    if (fovY == 0.0f) {
+        fovY = 1.0f;
+    }
+    gCameraFovY = fovY;
+}
