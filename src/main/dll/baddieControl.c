@@ -4279,3 +4279,194 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int GameBit_Get(int bit);
+extern void voxmaps_allocRouteWork(u8 *work);
+extern void *gRomCurveInterface;
+extern u32 lbl_803E1C28;
+extern f32 lbl_803E1C38;
+extern u8 lbl_8031A054[];
+extern u8 lbl_8031A048[];
+extern u32 lbl_803DB9E0;
+extern u32 lbl_803DD5E0;
+
+/* dll_19_func18  addr=0x80112098  size=0x47C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void dll_19_func18(int p1, u8 *p2, u8 *p3, int p4, int p5, int p6, f32 fparam, int p7) {
+    u8 flags = (u8)p7;
+    int b1 = flags & 1;
+    u8 *path = p3 + 4;
+    int curveLocal;
+    u8 byteLocal;
+
+    curveLocal = lbl_803E1C28;
+    byteLocal = 1;
+    *(int *)(p3 + 1036) = (int)(p3 + 1040);
+    *(s16 *)(p3 + 1026) = 0;
+
+    if (b1 == 0 && (flags & 0x20) == 0) {
+        ObjGroup_AddObject(p1, 3);
+        ObjMsg_AllocQueue(p1, 4);
+    }
+    (*(void (**)(int, u8 *, int, int))(*(int *)gPlayerInterface + 4))(p1, p3, p4, p5);
+    *(int *)(p3 + 0) = 0;
+    p3[841] = 0;
+    *(f32 *)(p3 + 640) = lbl_803E1C2C;
+    *(f32 *)(p3 + 644) = lbl_803E1C2C;
+    if ((s8)p2[50] != 0) {
+        p3[852] = (s8)p2[50];
+    } else {
+        p3[852] = 6;
+    }
+    *(s16 *)(p3 + 1012) = *(s16 *)(p2 + 48);
+    *(s16 *)(p3 + 1014) = *(s16 *)(p2 + 26);
+    *(s16 *)(p3 + 1016) = *(s16 *)(p2 + 28);
+    if (*(s16 *)(p3 + 1012) != -1) {
+        GameBit_Set(*(s16 *)(p3 + 1012), 0);
+    }
+    if ((flags & 2) != 0) {
+        (*(void (**)(u8 *, int, int, int))(*(int *)gPathControlInterface + 4))(path, 0, p6 | 0x200000, 1);
+    } else {
+        (*(void (**)(u8 *, int, int, int))(*(int *)gPathControlInterface + 4))(path, 0, 0, 0);
+    }
+    (*(void (**)(u8 *, int, u8 *, u32, int))(*(int *)gPathControlInterface + 8))(
+        path, 1, lbl_8031A054, lbl_803DB9E0, 4);
+    if ((flags & 4) != 0) {
+        (*(void (**)(u8 *, int, u8 *, u32, u8 *))(*(int *)gPathControlInterface + 12))(
+            path, 1, lbl_8031A048, lbl_803DD5E0, &byteLocal);
+    }
+    (*(void (**)(int, u8 *))(*(int *)gPathControlInterface + 32))(p1, path);
+    p3[1028] = p2[43];
+    *(s16 *)(p3 + 1008) = *(s16 *)(p2 + 34);
+    p3[1030] = p2[47];
+    p3[1031] = p2[39];
+    p3[1032] = p2[40];
+    *(s16 *)(p1 + 176) = *(u16 *)(p1 + 176) | ((s8)p3[1032] & 7);
+    if ((flags & 8) != 0) {
+        *(s16 *)(p3 + 1018) = *(s16 *)(p2 + 32);
+        *(s16 *)(p3 + 1020) = *(s16 *)(p2 + 30);
+    } else {
+        *(s16 *)(p3 + 1018) = 0;
+        *(s16 *)(p3 + 1020) = 0;
+    }
+    *(s16 *)(p3 + 1024) = 0;
+    *(s16 *)(p3 + 1022) = (u16)(p2[41] << 3);
+    p3[1029] = 0;
+    *(f32 *)(p3 + 996) = fparam;
+    *(s16 *)(p1 + 0) = (s16)((s8)p2[42] << 8);
+    *(u8 *)(p1 + 54) = 255;
+    *(u8 *)(p1 + 175) = *(u8 *)(p1 + 175) & ~0x8;
+    *(s16 *)(p3 + 1010) = *(s16 *)(p2 + 24);
+    if (*(s16 *)(p3 + 1010) != -1) {
+        if (*(s16 *)(p1 + 70) == 636) {
+            *(int *)(p1 + 244) = (GameBit_Get(*(s16 *)(p3 + 1010)) == 0);
+        } else {
+            *(int *)(p1 + 244) = GameBit_Get(*(s16 *)(p3 + 1010));
+        }
+    } else {
+        *(int *)(p1 + 244) = 0;
+    }
+    if ((*(int (**)(int))(*(int *)gMapEventInterface + 104))(*(int *)(p2 + 20)) == 0) {
+        *(int *)(p1 + 244) = 1;
+    }
+    if (*(int *)(p1 + 244) != 0) {
+        ObjHits_DisableObject(p1);
+        *(s16 *)(p1 + 6) = *(s16 *)(p1 + 6) | 0x4000;
+    } else {
+        *(s16 *)(p1 + 6) = *(s16 *)(p1 + 6) & ~0x4000;
+        ObjHits_EnableObject(p1);
+    }
+    if ((s8)p2[46] == -1) {
+        *(int *)(p1 + 248) = 1;
+    } else {
+        *(int *)(p1 + 248) = 0;
+    }
+    if (b1 == 0 && (flags & 0x20) == 0) {
+        voxmaps_allocRouteWork(p3 + 900);
+        p3[898] = 4;
+        p3[899] = 20;
+    }
+    if ((flags & 0x10) != 0) {
+        if (*(int *)(p3 + 988) == 0 && (flags & 0x20) == 0) {
+            *(int *)(p3 + 988) = (int)mmAlloc(264, 26, 0);
+        }
+        if (*(int *)(p3 + 988) != 0) {
+            memset((void *)*(int *)(p3 + 988), 0, 264);
+        }
+        if ((u8)(*(int (**)(int, int, f32, int *, int))(*(int *)gRomCurveInterface + 140))(
+                *(int *)(p3 + 988), p1, (f32)(s32)*(u16 *)(p3 + 1022) - lbl_803E1C38,
+                &curveLocal, -1) == 0) {
+            *(s16 *)(p3 + 1024) = *(u16 *)(p3 + 1024) | 8;
+        }
+    } else {
+        *(int *)(p3 + 988) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 interpolate(f32 cur, f32 target, f32 t);
+extern f32 lbl_803E1AD0;
+extern f32 lbl_803E1AD4;
+extern f32 lbl_803E1AD8;
+extern f32 lbl_803E1ADC;
+
+/* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeCrawl_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 164);
+    int newangle;
+    int delta;
+    f32 work[2];
+    f32 v20, v16, v12, v8;
+    int other;
+
+    if (state == NULL) {
+        return;
+    }
+    if ((((u8 *)lbl_803DD598)[8] >> 7) & 1) {
+        *(f32 *)(obj + 24) =
+            lbl_803E1AD0 * fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
+            *(f32 *)(state + 24);
+        *(f32 *)(obj + 32) =
+            lbl_803E1AD0 * sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
+            *(f32 *)(state + 32);
+        *(f32 *)(obj + 28) = lbl_803E1AD4 + *(f32 *)(state + 28);
+        work[0] = *(f32 *)(obj + 12) - *(f32 *)(state + 24);
+        work[1] = *(f32 *)(obj + 20) - *(f32 *)(state + 32);
+        newangle = (u16)getAngle(work[0], work[1]);
+        delta = (0x8000 - newangle) - (u16)*(s16 *)obj;
+        if (delta > 0x8000) {
+            delta -= 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta += 0xffff;
+        }
+        *(s16 *)obj = (s16)(s32)((f32)(s32)*(s16 *)obj +
+                                 interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
+        *(s16 *)obj = (s16)(0x8000 - (u16)getAngle(work[0], work[1]));
+        *(s16 *)(obj + 2) = 2048;
+    } else {
+        other = (*(int (**)(void))(*(int *)gCameraInterface + 24))();
+        (*(void (**)(u8 *, f32 *, f32 *, f32 *, f32 *, f32, int))(*(int *)gCameraInterface + 56))(
+            obj, &v20, &v16, &v12, &v8, lbl_803E1ADC, 0);
+        newangle = (u16)getAngle(v20, v12);
+        delta = (0x8000 - newangle) - (u16)*(s16 *)obj;
+        if (delta > 0x8000) {
+            delta -= 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta += 0xffff;
+        }
+        *(s16 *)obj = (s16)(*(s16 *)obj + delta);
+        (*(void (**)(u8 *, f32, f32))(*(int *)(*(int *)(other + 4)) + 24))(
+            obj, *(f32 *)(state + 28), v8);
+    }
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset

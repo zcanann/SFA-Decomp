@@ -765,7 +765,10 @@ typedef struct LinkMenuItem {
     u16 field00;
     u16 itemId;
     s16 field04;
-    u8 pad6[0x0A];
+    s16 field06;
+    u8 pad8[4];
+    s16 field0C;
+    u8 padE[2];
     union {
         int textureAssetId;
         void *texture;
@@ -855,7 +858,53 @@ void GameUI_initialise(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void Menu_func08(void) {}
+extern int getHudHiddenFrameCount(void);
+extern void padGetAnalogInput(int pad, s8 *y, s8 *x);
+extern int getButtonsJustPressed(int pad);
+extern f32 lbl_803DD8EC;
+extern f32 lbl_803E21D8;
+extern f32 timeDelta;
+#pragma scheduling off
+#pragma peephole off
+int Menu_func08(int *sel)
+{
+    s8 xInput;
+    s8 yInput;
+    int input;
+
+    if (getHudHiddenFrameCount() != 0) {
+        return -1;
+    }
+    lbl_803DD8EC += timeDelta;
+    if (lbl_803DD8EC > lbl_803E21D8) {
+        lbl_803DD8EC -= lbl_803E21D8;
+    }
+    padGetAnalogInput(0, &yInput, &xInput);
+    if (xInput < 0) {
+        *sel = *sel + 1;
+    } else if (xInput > 0) {
+        *sel = *sel - 1;
+    }
+    if (*sel < 0) {
+        *sel = (s8)lbl_803DD8F0 - 1;
+    }
+    if (*sel >= (s8)lbl_803DD8F0) {
+        *sel = 0;
+    }
+    if (lbl_803DD8E8 != 0) {
+        input = getButtonsJustPressed(0);
+        if (((input & 0x1100) != 0) && (GameBit_Get(1103) == 0)) {
+            return lbl_803DD8F5;
+        }
+        if ((input & 0x200) != 0) {
+            return lbl_803DD8F4;
+        }
+    }
+    lbl_803DD8E8 = 1;
+    return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void Menu_func05(int arg1, int unused2, int arg3, int arg4) {
@@ -931,8 +980,116 @@ void linkInitTextures(LinkMenuItem *item)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void linkDrawFn_801302c0(void) {}
-void linkDrawFn_80130484(void) {}
+extern int getCurLanguage(void);
+extern u8 lbl_802C8680[];
+extern u8 lbl_803DD911;
+#pragma scheduling off
+#pragma peephole off
+void linkDrawFn_801302c0(void)
+{
+    LinkMenuItem *sel;
+    LinkMenuItem *p;
+    void *tex;
+    int selLeft;
+    int selRight;
+    int itemLeft;
+    int itemRight;
+    int w;
+    int i;
+
+    sel = &lbl_803A9458[(s8)linkSelected];
+    sel->field38 = 4;
+    if (((sel->field16 & 4) != 0) && ((s8)sel->slots[0] != -1)) {
+        tex = *(void **)(linkTextures + (s8)sel->slots[0] * 8);
+    } else {
+        tex = sel->texture;
+    }
+    if (tex != NULL) {
+        w = *(u16 *)((char *)tex + 12);
+        selLeft = sel->field0C;
+    } else {
+        if (getCurLanguage() == 4) {
+            w = *(u16 *)(lbl_802C8680 + 0xa) + 2;
+        } else {
+            w = *(u16 *)(lbl_802C8680 + 0x4a) + 2;
+        }
+        selLeft = sel->field06 - 2;
+    }
+    selRight = selLeft + w;
+    p = lbl_803A9458;
+    for (i = 0; i < (s8)lbl_803DD911; i++) {
+        if (i != (s8)linkSelected) {
+            if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1)) {
+                tex = *(void **)(linkTextures + (s8)p->slots[0] * 8);
+            } else {
+                tex = p->texture;
+            }
+            if (tex != NULL) {
+                w = *(u16 *)((char *)tex + 12);
+                itemLeft = p->field0C;
+            } else {
+                if (getCurLanguage() == 4) {
+                    w = *(u16 *)(lbl_802C8680 + 0xa) + 2;
+                } else {
+                    w = *(u16 *)(lbl_802C8680 + 0x4a) + 2;
+                }
+                itemLeft = p->field06 - 2;
+            }
+            itemRight = itemLeft + w;
+            if (itemLeft < selRight && itemRight > selLeft) {
+                p->field38 = 4;
+            }
+        }
+        p++;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
+void linkDrawFn_80130484(void)
+{
+    LinkMenuItem *p;
+    void *tex;
+    int minX;
+    int maxX;
+    int w;
+    int x;
+    int right;
+    int i;
+
+    minX = 480;
+    maxX = 0;
+    p = lbl_803A9458;
+    for (i = 0; i < (s8)lbl_803DD911; i++) {
+        if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1)) {
+            tex = *(void **)(linkTextures + (s8)p->slots[0] * 8);
+        } else {
+            tex = p->texture;
+        }
+        if (tex != NULL) {
+            w = *(u16 *)((char *)tex + 12);
+            x = p->field0C;
+        } else {
+            if (getCurLanguage() == 4) {
+                w = *(u16 *)(lbl_802C8680 + 0xa) + 2;
+            } else {
+                w = *(u16 *)(lbl_802C8680 + 0x4a) + 2;
+            }
+            x = p->field06 - 2;
+        }
+        right = x + w;
+        if (x < minX) {
+            minX = x;
+        }
+        if (right > maxX) {
+            maxX = right;
+        }
+        p++;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern u8 lbl_803DD911;
 #pragma scheduling off
 #pragma peephole off

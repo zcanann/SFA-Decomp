@@ -1552,109 +1552,81 @@ void dll_7F_func03(int param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct {
+  u32 mode;
+  f32 x, y, z;
+  void *tex;
+  u16 flags;
+  u8 layer;
+} FbCmd;
+
+typedef struct {
+  FbCmd *cmds;
+  int ctx;
+  u8 pad0[0x18];
+  f32 col[3];
+  f32 pos[3];
+  f32 scale;
+  u32 v3c;
+  u32 v40;
+  s16 v44;
+  s16 hw[7];
+  u32 flags;
+  u8 v58, v59, v5a, v5b, v5c, count;
+  u8 pad1[2];
+  FbCmd entries[32];
+} FbBuf;
+
 void dll_80_func03(int param_1,int param_2,int param_3,uint param_4)
 {
-  typedef struct { int type; f32 x, y, z; u8 *model; s16 anim; u8 flag; u8 _p; } FbSlot;
-  typedef struct {
-    FbSlot *slots;
-    int param1;
-    u8 _g0[0x18];
-    f32 pos[3];
-    f32 vel[3];
-    f32 spd;
-    int s0;
-    int s1;
-    s16 objType;
-    s16 name[7];
-    u32 flags;
-    u8 b0, b1, b2, b3;
-    u8 _g1;
-    u8 count;
-    u8 _g2[2];
-    FbSlot slot[5];
-  } FbConfig;
-  FbConfig cfg;
+  FbBuf buf;
+  FbCmd *e = buf.entries;
 
-  cfg.slot[0].flag = 0;
-  cfg.slot[0].anim = 9;
-  cfg.slot[0].model = lbl_80315468 + 0x8c;
-  cfg.slot[0].type = 0x80;
-  cfg.slot[0].x = lbl_803E0E58;
-  cfg.slot[0].y = lbl_803E0E58;
-  cfg.slot[0].z = lbl_803E0E5C;
+  e[0].layer = 0; e[0].flags = 9; e[0].tex = &lbl_80315468[0x8c]; e[0].mode = 0x80;
+  e[0].x = lbl_803E0E58; e[0].y = lbl_803E0E58; e[0].z = lbl_803E0E5C;
   if (param_2 == 1) {
-    cfg.slot[1].y = lbl_803E0E60;
-    cfg.slot[1].z = lbl_803E0E64;
+    e[1].layer = 0; e[1].flags = 8; e[1].tex = &lbl_80315468[0xa0]; e[1].mode = 2;
+    e[1].x = lbl_803E0E60; e[1].y = lbl_803E0E60; e[1].z = lbl_803E0E64;
+  } else {
+    e[1].layer = 0; e[1].flags = 8; e[1].tex = &lbl_80315468[0xa0]; e[1].mode = 2;
+    e[1].x = lbl_803E0E68; e[1].y = lbl_803E0E68; e[1].z = lbl_803E0E6C;
   }
-  else {
-    cfg.slot[1].y = lbl_803E0E68;
-    cfg.slot[1].z = lbl_803E0E6C;
-  }
-  cfg.slot[1].flag = 0;
-  cfg.slot[1].anim = 8;
-  cfg.slot[1].model = lbl_80315468 + 0xa0;
-  cfg.slot[1].type = 2;
-  cfg.slot[2].flag = 1;
-  cfg.slot[2].anim = 8;
-  cfg.slot[2].model = lbl_80315468 + 0x8c;
-  cfg.slot[2].type = 2;
-  cfg.slot[2].x = lbl_803E0E6C;
-  cfg.slot[2].y = lbl_803E0E6C;
-  cfg.slot[2].z = lbl_803E0E70;
-  cfg.slot[3].flag = 1;
-  cfg.slot[3].anim = 9;
-  cfg.slot[3].model = lbl_80315468 + 0x8c;
-  cfg.slot[3].type = 0x100;
-  cfg.slot[3].x = lbl_803E0E74;
-  cfg.slot[3].y = lbl_803E0E58;
-  cfg.slot[3].z = lbl_803E0E58;
-  cfg.slot[4].flag = 1;
-  cfg.slot[4].anim = 9;
-  cfg.slot[4].model = lbl_80315468 + 0x8c;
-  cfg.slot[4].type = 4;
-  cfg.slot[4].x = lbl_803E0E58;
-  cfg.slot[4].y = lbl_803E0E58;
-  cfg.slot[4].z = lbl_803E0E58;
-  cfg.objType = (s16)param_2;
-  cfg.vel[0] = lbl_803E0E58;
-  cfg.vel[1] = lbl_803E0E58;
-  cfg.vel[2] = lbl_803E0E58;
-  cfg.pos[0] = lbl_803E0E58;
-  cfg.pos[1] = lbl_803E0E58;
-  cfg.pos[2] = lbl_803E0E58;
-  cfg.spd = lbl_803E0E70;
-  cfg.s1 = 1;
-  cfg.s0 = 0;
-  cfg.b1 = 9;
-  cfg.b2 = 0;
-  cfg.b3 = 0x20;
-  cfg.name[0] = *(s16 *)(lbl_80315468 + 0xb0);
-  cfg.name[1] = *(s16 *)(lbl_80315468 + 0xb2);
-  cfg.name[2] = *(s16 *)(lbl_80315468 + 0xb4);
-  cfg.name[3] = *(s16 *)(lbl_80315468 + 0xb6);
-  cfg.name[4] = *(s16 *)(lbl_80315468 + 0xb8);
-  cfg.name[5] = *(s16 *)(lbl_80315468 + 0xba);
-  cfg.name[6] = *(s16 *)(lbl_80315468 + 0xbc);
-  cfg.slots = cfg.slot;
-  cfg.flags = param_4 | 0x4000010;
+  e[2].layer = 1; e[2].flags = 8; e[2].tex = &lbl_80315468[0x8c]; e[2].mode = 2;
+  e[2].x = lbl_803E0E6C; e[2].y = lbl_803E0E6C; e[2].z = lbl_803E0E70;
+  e[3].layer = 1; e[3].flags = 9; e[3].tex = &lbl_80315468[0x8c]; e[3].mode = 0x100;
+  e[3].x = lbl_803E0E74; e[3].y = lbl_803E0E58; e[3].z = lbl_803E0E58;
+  e[4].layer = 1; e[4].flags = 9; e[4].tex = &lbl_80315468[0x8c]; e[4].mode = 4;
+  e[4].x = lbl_803E0E58; e[4].y = lbl_803E0E58; e[4].z = lbl_803E0E58;
+  buf.ctx = param_1;
+  buf.v44 = (s16)param_2;
+  buf.pos[0] = lbl_803E0E58; buf.pos[1] = lbl_803E0E58; buf.pos[2] = lbl_803E0E58;
+  buf.col[0] = lbl_803E0E58; buf.col[1] = lbl_803E0E58; buf.col[2] = lbl_803E0E58;
+  buf.scale = lbl_803E0E70;
+  buf.v40 = 1;
+  buf.v3c = 0;
+  buf.v59 = 9;
+  buf.v5a = 0;
+  buf.v5b = 0x20;
+  buf.count = 5;
+  buf.hw[0] = *(s16 *)&lbl_80315468[0xb0]; buf.hw[1] = *(s16 *)&lbl_80315468[0xb2];
+  buf.hw[2] = *(s16 *)&lbl_80315468[0xb4]; buf.hw[3] = *(s16 *)&lbl_80315468[0xb6];
+  buf.hw[4] = *(s16 *)&lbl_80315468[0xb8]; buf.hw[5] = *(s16 *)&lbl_80315468[0xba];
+  buf.hw[6] = *(s16 *)&lbl_80315468[0xbc];
+  buf.cmds = buf.entries;
+  buf.flags = param_4 | 0x4000010;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      cfg.vel[0] = lbl_803E0E58 + *(float *)(param_3 + 0xc);
-      cfg.vel[1] = lbl_803E0E58 + *(float *)(param_3 + 0x10);
-      cfg.vel[2] = lbl_803E0E58 + *(float *)(param_3 + 0x14);
-    }
-    else {
-      cfg.vel[0] = lbl_803E0E58 + *(float *)(param_1 + 0x18);
-      cfg.vel[1] = lbl_803E0E58 + *(float *)(param_1 + 0x1c);
-      cfg.vel[2] = lbl_803E0E58 + *(float *)(param_1 + 0x20);
+      buf.pos[0] = lbl_803E0E58 + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E0E58 + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E0E58 + *(f32 *)(param_3 + 0x14);
+    } else {
+      buf.pos[0] = lbl_803E0E58 + *(f32 *)(param_1 + 0x18);
+      buf.pos[1] = lbl_803E0E58 + *(f32 *)(param_1 + 0x1c);
+      buf.pos[2] = lbl_803E0E58 + *(f32 *)(param_1 + 0x20);
     }
   }
-  cfg.b0 = 0;
-  cfg.param1 = param_1;
-  cfg.slot[1].x = cfg.slot[1].y;
-  cfg.count = (u8)((int)((char *)&cfg.slot[5] - (char *)cfg.slots) / 0x18);
-  (**(code **)(*gModgfxInterface + 8))(&cfg,0,9,lbl_80315468,8,lbl_80315468 + 0x5c,0x156,0);
-  return;
+  buf.v58 = 0;
+  (**(code **)(*gModgfxInterface + 8))(&buf,0,9,lbl_80315468,8,&lbl_80315468[0x5c],0x156,0);
 }
 
 /*
