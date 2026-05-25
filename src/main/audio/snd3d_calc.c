@@ -47,7 +47,7 @@ extern f32 lbl_803E78C0;
 
 extern double __frsqrte(double x);
 extern u32 synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
-extern u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
+extern u32 synthFXSetCtrl(u32 handle, u8 controller, int value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 
 #define S3D_MAX_GROUPS 0x40
@@ -242,27 +242,27 @@ void s3dApplyEmitterControls(Snd3DEmitter *emitter, f32 distance, f32 pan, f32 u
     (void)unused;
     handle = emitter->handle;
     if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) == 0) {
-        value = (u32)(lbl_803E78A0 * distance);
+        value = (int)(lbl_803E78A0 * distance);
         value = S3D_CLAMP_7BIT(value);
         synthFXSetCtrl(handle, S3D_CTRL_VOLUME, value);
     } else {
-        value = (u32)(lbl_803E78A0 * (emitter->age * distance));
+        value = (int)(lbl_803E78A0 * (emitter->age * distance));
         value = S3D_CLAMP_7BIT(value);
         synthFXSetCtrl(handle, S3D_CTRL_VOLUME, value);
     }
 
-    value = (u32)(lbl_803E78B4 * (lbl_803E78A4 + pan));
+    value = (int)(lbl_803E78B4 * (lbl_803E78A4 + pan));
     value = S3D_CLAMP_7BIT(value);
     synthFXSetCtrl(handle, S3D_CTRL_PAN, value);
 
-    value = (u32)(lbl_803E78B4 * (lbl_803E78A4 - azimuth));
+    value = (int)(lbl_803E78B4 * (lbl_803E78A4 - azimuth));
     value = S3D_CLAMP_7BIT(value);
     synthFXSetCtrl(handle, S3D_CTRL_SPATIAL_AZIMUTH, value);
 
     scaledPitch = lbl_803E78B8 * pitch;
-    value = (u32)scaledPitch;
+    value = (int)scaledPitch;
     if (value < S3D_CTRL_14BIT_LIMIT + 1) {
-        value14 = (u16)(u32)scaledPitch;
+        value14 = (u16)(int)scaledPitch;
     } else {
         value14 = S3D_CTRL_14BIT_LIMIT;
     }
@@ -295,10 +295,12 @@ void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
     S3DMixGroup *group;
     S3DSortedNode *node;
     S3DSortedNode *prev;
+    u8 *base;
     int groupIndex;
     int groupCount;
 
-    groups = S3D_MIX_GROUPS;
+    base = lbl_803CC8C0;
+    groups = (S3DMixGroup *)(base + 0x50);
     group = groups;
     groupCount = lbl_803DE36B;
     for (groupIndex = 0; groupIndex < groupCount; groupIndex++) {
@@ -328,13 +330,13 @@ void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
     }
 
     if (prev == (S3DSortedNode *)0x0) {
-        groups[groupIndex].sortedHead = &S3D_SORTED_NODES[lbl_803DE36D];
+        groups[groupIndex].sortedHead = &((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D];
     } else {
-        prev->next = &S3D_SORTED_NODES[lbl_803DE36D];
+        prev->next = &((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D];
     }
-    S3D_SORTED_NODES[lbl_803DE36D].next = node;
-    S3D_SORTED_NODES[lbl_803DE36D].emitter = emitter;
-    S3D_SORTED_NODES[lbl_803DE36D].distance = distance;
+    ((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D].next = node;
+    ((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D].emitter = emitter;
+    ((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D].distance = distance;
     lbl_803DE36D++;
 }
 #pragma dont_inline reset
@@ -351,11 +353,14 @@ int s3dInsertActiveEmitter(Snd3DEmitter *emitter, f32 distance, f32 arg1, f32 ar
     S3DActiveNode *scan;
     S3DActiveNode *next;
     S3DActiveNode *newNode;
+    S3DActiveNode **pp;
+    u8 *base;
     int groupIndex;
     int groupCount;
     u32 activeIndex;
 
-    groups = S3D_MIX_GROUPS;
+    base = lbl_803CC8C0;
+    groups = (S3DMixGroup *)(base + 0x50);
     group = groups;
     groupCount = lbl_803DE36B;
     for (groupIndex = 0; groupIndex < groupCount; groupIndex++) {
@@ -381,23 +386,22 @@ int s3dInsertActiveEmitter(Snd3DEmitter *emitter, f32 distance, f32 arg1, f32 ar
         return 0;
     }
 
-    scan = group->activeHead;
+    pp = &groups[groupIndex].activeHead;
+    scan = *pp;
     if (scan == (S3DActiveNode *)0x0) {
-        newNode = &S3D_ACTIVE_NODES[activeIndex];
-        newNode->next = (S3DActiveNode *)0x0;
-        group->activeHead = newNode;
+        newNode = &((S3DActiveNode *)(base + 0x450))[activeIndex];
+        newNode->next = scan;
+        *pp = newNode;
     } else {
-        do {
-            next = scan->next;
-            if (next == (S3DActiveNode *)0x0) {
-                break;
-            }
-            if (next->distance < distance) {
+        next = scan->next;
+        while (next != (S3DActiveNode *)0x0) {
+            if (scan->distance < distance) {
                 break;
             }
             scan = next;
-        } while (true);
-        newNode = &S3D_ACTIVE_NODES[activeIndex];
+            next = scan->next;
+        }
+        newNode = &((S3DActiveNode *)(base + 0x450))[activeIndex];
         newNode->next = next;
         scan->next = newNode;
     }
