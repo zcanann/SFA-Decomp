@@ -770,13 +770,13 @@ typedef struct LinkMenuItem {
         int textureAssetId;
         void *texture;
     };
-    u8 pad14[2];
+    u16 field14;
     u16 field16;
     u8 pad18[2];
     u8 field1A;
     u8 pad1B[3];
     s8 state;
-    u8 pad1F[0x19];
+    s8 slots[25];
     s8 field38;
     u8 pad39[3];
 } LinkMenuItem;
@@ -896,7 +896,41 @@ u16 fn_80130124(void) {
     return lbl_803A9458[linkSelected].itemId;
 }
 #pragma scheduling reset
-void linkInitTextures(void) {}
+extern void OSReport(const char *fmt, ...);
+extern char lbl_8031C234[];
+#pragma scheduling off
+#pragma peephole off
+void linkInitTextures(LinkMenuItem *item)
+{
+    int budget;
+    int i;
+
+    budget = item->field14;
+    for (i = 0; i < 25; i++) {
+        item->slots[i] = -1;
+    }
+    item->slots[0] = 0;
+    i = 1;
+    budget -= linkTextures[6] + linkTextures[14];
+    while (budget != 0) {
+        if (budget >= 80) {
+            item->slots[i] = (s8)randomGetRange(2, 5);
+        } else if (budget >= 40) {
+            item->slots[i] = (s8)randomGetRange(4, 5);
+        } else {
+            item->slots[i] = 5;
+        }
+        budget -= linkTextures[item->slots[i] * 8 + 6];
+        i++;
+    }
+    item->slots[i] = 1;
+    i++;
+    if (i >= 25) {
+        OSReport(lbl_8031C234);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void linkDrawFn_801302c0(void) {}
 void linkDrawFn_80130484(void) {}
 extern u8 lbl_803DD911;
