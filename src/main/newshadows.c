@@ -2967,3 +2967,35 @@ void updateReflectionTextures(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct {
+    int id;
+    f32 dist;
+    int flags;
+} ShadowSortEntry;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8006B830(ShadowSortEntry *arr, int count)
+{
+    int gap = 1;
+    int i, j;
+    ShadowSortEntry tmp;
+    int limit = (count - 1) / 9;
+    while (gap <= limit)
+        gap = gap * 3 + 1;
+    while (gap > 0) {
+        for (i = gap + 1; i <= count; i++) {
+            tmp = arr[i - 1];
+            j = i;
+            while (j > gap && arr[j - gap - 1].dist < tmp.dist) {
+                arr[j - 1] = arr[j - gap - 1];
+                j -= gap;
+            }
+            arr[j - 1] = tmp;
+        }
+        gap /= 3;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
