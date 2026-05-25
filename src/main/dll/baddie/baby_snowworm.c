@@ -1007,14 +1007,15 @@ void GameUI_unselectAllItems(void)
 
 /* EN v1.0 0x8012DDB8  size: 32b  Set lbl_803DD776 to 1 if (u8)param is
  * nonzero else 0. */
-#pragma scheduling off
 #pragma peephole off
 void fn_8012DDB8(u32 val)
 {
-    lbl_803DD776 = (u8)val != 0;
+    if ((u8)val != 0)
+        lbl_803DD776 = 1;
+    else
+        lbl_803DD776 = 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /* Wider sbss/sdata extents touched by the larger v1.0 leaves below. */
 extern u8    framesThisStep;
