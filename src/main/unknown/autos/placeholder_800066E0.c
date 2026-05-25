@@ -2864,23 +2864,33 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u16 sfxId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
+void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId)
 {
+    SfxLoopedObjectSoundTable *table;
+    u32* objectIt;
+    u16* idIt;
     s16 i;
-    u16 count = gSfxLoopedObjectSoundCount;
+    u16 count;
     u32 found = 0;
 
-    for (i = 0; i < count; i++) {
-        if ((gSfxLoopedObjectSoundFlags.objects[i] == obj) && (gSfxLoopedObjectSoundFlags.ids[i] == sfxId)) {
+    table = &gSfxLoopedObjectSoundFlags;
+    i = 0;
+    objectIt = table->objects;
+    idIt = table->ids;
+    count = gSfxLoopedObjectSoundCount;
+    for (; i < count; i++) {
+        if ((*objectIt == obj) && (*idIt == (u16)sfxId)) {
             found = 1;
             break;
         }
+        objectIt++;
+        idIt++;
     }
 
     if ((found == 0) && (count != SFX_LOOPED_OBJECT_SOUND_COUNT)) {
-        gSfxLoopedObjectSoundFlags.objects[count] = obj;
-        gSfxLoopedObjectSoundFlags.ids[count] = sfxId;
-        gSfxLoopedObjectSoundFlags.flags[count] = 0;
+        table->objects[count] = obj;
+        table->ids[count] = sfxId;
+        table->flags[count] = 0;
         gSfxLoopedObjectSoundCount++;
         Sfx_PlayFromObject(obj, sfxId);
     }
