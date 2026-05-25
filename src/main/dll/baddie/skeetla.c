@@ -846,6 +846,7 @@ void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
 }
 
 /* fn_8013AB4C  addr=0x8013AB4C  size=0x2B0  linkage=global */
+#pragma peephole off
 void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
 {
     f32 bestDistances[8];
@@ -856,6 +857,7 @@ void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
     f32 dx;
     f32 dz;
     f32 score;
+    f32 init;
     int count;
     int i;
     int j;
@@ -866,8 +868,9 @@ void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
     state = *(u8 **)(obj + 0xb8);
     curves = (*(void *(**)(int *))(*(int *)gRomCurveInterface + 0x10))(&count);
 
+    init = lbl_803E2418;
     for (i = 0; i < 8; i++) {
-        bestDistances[i] = lbl_803E2418;
+        bestDistances[i] = init;
         outRoutes[i] = NULL;
     }
 
@@ -932,6 +935,7 @@ void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
         }
     }
 }
+#pragma peephole reset
 
 typedef struct SkeetlaParticleSpawnArgs {
     s16 objectId;
