@@ -693,42 +693,47 @@ extern int fn_8004B218(void *search, int timeout);
 extern void fn_8004B31C(void *search, u32 route, int objId, int pathId, int routeFlags);
 
 #pragma dont_inline on
+#pragma peephole off
 /* fn_8013A6BC  addr=0x8013A6BC  size=0x138  linkage=global */
 void *fn_8013A6BC(u8 *state, u32 route, int pathId)
 {
     void *entry;
-    void *search;
 
     if (pathId == 0) {
         return NULL;
     }
 
-    search = state + 0x6b8;
     if ((*(int *)(state + 0x6ec) == pathId) && (*(u32 *)(state + 0x6e8) == route)) {
-        entry = fn_8004B118(search);
+        entry = fn_8004B118(state + 0x6b8);
         *(void **)(state + 0x6e8) = entry;
         if (entry == NULL) {
             return NULL;
         }
 
-        entry = skeetla_validateRouteEntry(entry);
+        if ((*(s16 *)((u8 *)entry + 0x30) != -1) && (GameBit_Get(*(s16 *)((u8 *)entry + 0x30)) == 0)) {
+            entry = NULL;
+        } else if ((*(s16 *)((u8 *)entry + 0x32) != -1) &&
+                   (GameBit_Get(*(s16 *)((u8 *)entry + 0x32)) != 0)) {
+            entry = NULL;
+        }
         *(void **)(state + 0x6e8) = entry;
         if (entry != NULL) {
             return entry;
         }
     }
 
-    fn_8004B31C(search, route, *(int *)(state + 0x28), pathId, *(int *)(state + 0x4a0));
-    if (fn_8004B218(search, 0x1f4) != 1) {
+    fn_8004B31C(state + 0x6b8, route, *(int *)(state + 0x28), pathId, *(int *)(state + 0x4a0));
+    if (fn_8004B218(state + 0x6b8, 0x1f4) != 1) {
         return NULL;
     }
 
-    fn_8004B148(search);
-    entry = fn_8004B118(search);
+    fn_8004B148(state + 0x6b8);
+    entry = fn_8004B118(state + 0x6b8);
     *(void **)(state + 0x6e8) = entry;
     *(int *)(state + 0x6ec) = pathId;
     return entry;
 }
+#pragma peephole reset
 #pragma dont_inline reset
 
 /* fn_8013A7F4  addr=0x8013A7F4  size=0x1D4  linkage=global */
