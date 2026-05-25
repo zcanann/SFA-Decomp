@@ -405,10 +405,10 @@ void DIMbossspit_updateBurst(int obj)
   if (*(s16 *)state == 1) {
     i = 0;
     do {
-      (**(code **)(*(int *)gPartfxInterface + 8))(obj, 0x340, 0, 1, -1, 0);
+      (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x340, 0, 1, -1, 0);
       i = i + 1;
     } while (i < 0x12);
-    (**(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4bb, 0, 1, -1, 0);
+    (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4bb, 0, 1, -1, 0);
     Sfx_PlayFromObject(obj, 0x17e);
     Sfx_PlayFromObject(obj, 0x186);
     CameraShake_SetAllMagnitudes(lbl_803E4D3C);
@@ -428,7 +428,12 @@ void DIMbossspit_updateBurst(int obj)
   iVar = (int)(lbl_803E4D48 * ((f32)(s32)v * lbl_803E4D4C));
   n = 0xff - iVar;
   radius = 0x94 - (v >> 2);
-  if (n < 0) {
+  if (n >= 0) {
+    ObjHits_SetHitVolumeSlot(obj, 5, 2, 0);
+    ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
+    *(u8 *)(obj + 0x36) = (u8)n;
+  }
+  else {
     if (*(void **)(state + 4) != NULL) {
       ModelLightStruct_free(*(void **)(state + 4));
       *(int *)(state + 4) = 0;
@@ -439,12 +444,7 @@ void DIMbossspit_updateBurst(int obj)
       ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
     }
   }
-  else {
-    ObjHits_SetHitVolumeSlot(obj, 5, 2, 0);
-    ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
-    *(u8 *)(obj + 0x36) = (u8)n;
-  }
-  (**(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4bc, 0, 1, -1, &radius);
+  (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4bc, 0, 1, -1, (int)&radius);
 }
 
 /*
@@ -547,7 +547,7 @@ void DIMbossspit_update(int obj)
             *(f32 *)(obj + 0x2c) * timeDelta);
     i = 0;
     do {
-      (**(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4ba, 0, 1, -1, 0);
+      (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4ba, 0, 1, -1, 0);
       i = i + 1;
     } while (i < 3);
     if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
