@@ -743,7 +743,23 @@ extern s16 linkItemOpacity;
 extern s16 linkCount_803dd90e;
 extern s8  linkSelected;
 extern u8  linkTextures[0x30];
-extern void getScreenResolution(void);
+extern int getScreenResolution(void);
+extern void *textureLoadAsset(int id);
+extern void *hudTextures[];
+extern s16 lbl_8031B624[];
+extern u8 lbl_803A9398[];
+extern u8 lbl_803DD896;
+extern s16 lbl_803DD894;
+extern s16 lbl_803DD8C2;
+extern u8 lbl_803DD8B8;
+extern int lbl_803DD744;
+extern int lbl_803DD740;
+extern void *lbl_803DD8C4;
+extern int lbl_803DD82C;
+extern int lbl_803DD828;
+extern f32 lbl_803E1E3C;
+extern s16 yButtonState;
+extern int airMeter;
 
 typedef struct LinkMenuItem {
     u8 pad0[2];
@@ -799,7 +815,46 @@ s32  Link_getSelected(void) { return linkSelected; }
 /* Stubs added to align function set with v1.0 asm. Source had many Ghidra
  * FUN_xxx splits at wrong addresses; these stubs (no body yet) ensure the
  * asm symbol set is fully present so future hunters can fill bodies. */
-void GameUI_initialise(void) {}
+#pragma scheduling off
+#pragma peephole off
+void GameUI_initialise(void)
+{
+    int res;
+    int height;
+    int width;
+    int i;
+    void *p;
+
+    lbl_803DD896 = -1;
+    lbl_803DD894 = -1;
+    lbl_803DD8C2 = -1;
+    lbl_803DD8B8 = 0;
+    lbl_803DD830 = -1;
+    res = getScreenResolution();
+    lbl_803DD744 = res;
+    height = res >> 16;
+    lbl_803DD740 = height;
+    width = res & 0xffff;
+    lbl_803DD744 = width;
+    lbl_803DD744 = width - 320;
+    lbl_803DD740 = height - 240;
+    for (i = 0; i < 102; i++) {
+        hudTextures[i] = textureLoadAsset(lbl_8031B624[i]);
+    }
+    p = textureLoadAsset(1280);
+    lbl_803DD8C4 = p;
+    *(short *)((char *)p + 20) = 40;
+    lbl_803DD82C = 0x80000;
+    lbl_803DD828 = 0;
+    *(int *)(lbl_803A9398 + 4) = -1;
+    *(short *)(lbl_803A9398 + 12) = 0;
+    *(int *)(lbl_803A9398 + 0) = 0;
+    *(float *)(lbl_803A9398 + 8) = lbl_803E1E3C;
+    yButtonState = 0;
+    airMeter = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void Menu_func08(void) {}
 #pragma scheduling off
 #pragma peephole off
