@@ -432,21 +432,23 @@ void fn_8013FBE4(int obj, char **state)
 }
 #pragma scheduling reset
 
-void fn_8013FEC0(undefined4 obj, int state)
+#pragma peephole off
+#pragma scheduling off
+void fn_8013FEC0(int obj, int state)
 {
     bool inWater;
     int result;
 
-    result = trickyFn_8013b368((double)lbl_803E247C, (int)obj, state);
+    result = trickyFn_8013b368((double)lbl_803E247C, obj, state);
     if (result == 0) {
         if (lbl_803E23DC == *(float *)(state + 0x2ac)) {
             inWater = false;
         } else if (lbl_803E2410 == *(float *)(state + 0x2b0)) {
             inWater = true;
-        } else if (*(float *)(state + 0x2b4) - *(float *)(state + 0x2b0) <= lbl_803E2414) {
-            inWater = false;
-        } else {
+        } else if (*(float *)(state + 0x2b4) - *(float *)(state + 0x2b0) > lbl_803E2414) {
             inWater = true;
+        } else {
+            inWater = false;
         }
         if (inWater) {
             objAnimFn_8013a3f0((double)lbl_803E243C, obj, 8, 0);
@@ -459,3 +461,5 @@ void fn_8013FEC0(undefined4 obj, int state)
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
