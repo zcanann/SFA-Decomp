@@ -762,7 +762,7 @@ extern f32 lbl_803DE570;
 extern f32 lbl_803DE574;
 extern f32 lbl_803DE578;
 extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
-extern void Matrix_TransformPoint(f64 x, f64 y, f64 z, f32 *matrix, f32 *outX, f32 *outY, f32 *outZ);
+extern void Matrix_TransformPoint(f32 *matrix, f64 x, f64 y, f64 z, f32 *outX, f32 *outY, f32 *outZ);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
@@ -2905,13 +2905,15 @@ void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId)
  */
 void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex)
 {
+    f32 *matrix;
+
     if (yawIndex < 0) {
         out[0] = local[0];
         out[1] = local[1];
         out[2] = local[2];
     } else {
-        Matrix_TransformPoint(local[0], local[1], local[2], gObjYawTransformMatrices[yawIndex], &out[0], &out[1],
-                              &out[2]);
+        matrix = gObjYawTransformMatrices[yawIndex];
+        Matrix_TransformPoint(matrix, local[0], local[1], local[2], &out[0], &out[1], &out[2]);
     }
 }
 
@@ -2934,6 +2936,7 @@ void Obj_UpdateWorldTransform(s16 *obj)
 {
     s16 *parent;
     s32 matrixIndex;
+    f32 *matrix;
 
     parent = *(s16 **)(obj + 0x20);
     if (parent == (s16 *)0) {
@@ -2945,9 +2948,9 @@ void Obj_UpdateWorldTransform(s16 *obj)
         obj[0x2A] = obj[2];
     } else {
         matrixIndex = *(s8 *)((u8 *)parent + 0x35) << 4;
-        Matrix_TransformPoint(*(f32 *)(obj + 6), *(f32 *)(obj + 8), *(f32 *)(obj + 10),
-                              (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), (f32 *)(obj + 0x22),
-                              (f32 *)(obj + 0x24), (f32 *)(obj + 0x26));
+        matrix = (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2));
+        Matrix_TransformPoint(matrix, *(f32 *)(obj + 6), *(f32 *)(obj + 8), *(f32 *)(obj + 10),
+                              (f32 *)(obj + 0x22), (f32 *)(obj + 0x24), (f32 *)(obj + 0x26));
         obj[0x28] = obj[0] - parent[0];
         obj[0x29] = obj[1];
         obj[0x2A] = obj[2];
@@ -3084,7 +3087,7 @@ void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
 
     if (obj != 0) {
         matrixIndex = *(s8 *)(obj + 0x35) << 4;
-        Matrix_TransformPoint(x, y, z, (f32 *)((u8 *)gObjInverseYawTransformMatrices + (matrixIndex << 2)), outX, outY,
+        Matrix_TransformPoint((f32 *)((u8 *)gObjInverseYawTransformMatrices + (matrixIndex << 2)), x, y, z, outX, outY,
                               outZ);
     } else {
         *outX = x;
@@ -3112,7 +3115,7 @@ void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
 
     if (obj != 0) {
         matrixIndex = *(s8 *)(obj + 0x35) << 4;
-        Matrix_TransformPoint(x, y, z, (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), outX, outY, outZ);
+        Matrix_TransformPoint((f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), x, y, z, outX, outY, outZ);
     } else {
         *outX = x;
         *outY = y;
@@ -3147,8 +3150,8 @@ void Obj_GetWorldPosition(u32 obj, f32 *outX, f32 *outY, f32 *outZ)
         *outZ = *(f32 *)(obj + 0x14);
     } else {
         matrixIndex = *(s8 *)(parent + 0x35) << 4;
-        Matrix_TransformPoint(*(f32 *)(obj + 0x0C), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14),
-                              (f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), outX, outY, outZ);
+        Matrix_TransformPoint((f32 *)((u8 *)gObjYawTransformMatrices + (matrixIndex << 2)), *(f32 *)(obj + 0x0C),
+                              *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), outX, outY, outZ);
     }
 }
 
