@@ -95,9 +95,9 @@ void fn_8013FBE4(int obj, char **state)
     float *targetPos;
     char *trackedObj;
     int result;
-    double dx;
-    double dz;
-    double distance;
+    float dx;
+    float dz;
+    float distance;
 
     if (*(char *)((int)state + 10) != 1) {
         if (*(char *)((int)state + 10) != 0) {
@@ -133,17 +133,17 @@ void fn_8013FBE4(int obj, char **state)
             state[0x15] = (char *)((uint)state[0x15] & 0xfffffbff);
             *(undefined2 *)((int)state + 0xd2) = 0;
         }
-        dx = (double)(*targetPos - *(float *)(obj + 0x18));
-        dz = (double)(targetPos[2] - *(float *)(obj + 0x20));
-        distance = (double)sqrtf((double)(float)(dx * dx + (double)(float)(dz * dz)));
-        if ((double)lbl_803E23DC != distance) {
-            dx = (double)(float)(dx / distance);
-            dz = (double)(float)(dz / distance);
+        dx = *targetPos - *(float *)(obj + 0x18);
+        dz = targetPos[2] - *(float *)(obj + 0x20);
+        distance = sqrtf(dx * dx + dz * dz);
+        if (lbl_803E23DC != distance) {
+            dx = dx / distance;
+            dz = dz / distance;
         }
-        distance = (double)lbl_803E24D4;
-        *(float *)(state + 0x1c1) = -(float)(distance * dx - (double)*(float *)(trackedObj + 0x18));
+        distance = lbl_803E24D4;
+        *(float *)(state + 0x1c1) = -(distance * dx - *(float *)(trackedObj + 0x18));
         *(undefined4 *)(state + 0x1c2) = *(undefined4 *)(trackedObj + 0x1c);
-        *(float *)(state + 0x1c3) = -(float)(distance * dz - (double)*(float *)(trackedObj + 0x20));
+        *(float *)(state + 0x1c3) = -(distance * dz - *(float *)(trackedObj + 0x20));
         result = trickyFn_8013b368((double)lbl_803E2488, obj, (int)state);
         if (result == 0) {
             if (lbl_803E23DC == *(float *)(state + 0xab)) {
