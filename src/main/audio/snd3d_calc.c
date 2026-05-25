@@ -242,27 +242,27 @@ void s3dApplyEmitterControls(Snd3DEmitter *emitter, f32 distance, f32 pan, f32 u
     (void)unused;
     handle = emitter->handle;
     if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) == 0) {
-        value = (u32)(lbl_803E78A0 * distance);
+        value = (int)(lbl_803E78A0 * distance);
         value = S3D_CLAMP_7BIT(value);
         synthFXSetCtrl(handle, S3D_CTRL_VOLUME, value);
     } else {
-        value = (u32)(lbl_803E78A0 * (emitter->age * distance));
+        value = (int)(lbl_803E78A0 * (emitter->age * distance));
         value = S3D_CLAMP_7BIT(value);
         synthFXSetCtrl(handle, S3D_CTRL_VOLUME, value);
     }
 
-    value = (u32)(lbl_803E78B4 * (lbl_803E78A4 + pan));
+    value = (int)(lbl_803E78B4 * (lbl_803E78A4 + pan));
     value = S3D_CLAMP_7BIT(value);
     synthFXSetCtrl(handle, S3D_CTRL_PAN, value);
 
-    value = (u32)(lbl_803E78B4 * (lbl_803E78A4 - azimuth));
+    value = (int)(lbl_803E78B4 * (lbl_803E78A4 - azimuth));
     value = S3D_CLAMP_7BIT(value);
     synthFXSetCtrl(handle, S3D_CTRL_SPATIAL_AZIMUTH, value);
 
     scaledPitch = lbl_803E78B8 * pitch;
-    value = (u32)scaledPitch;
+    value = (int)scaledPitch;
     if (value < S3D_CTRL_14BIT_LIMIT + 1) {
-        value14 = (u16)(u32)scaledPitch;
+        value14 = (u16)(int)scaledPitch;
     } else {
         value14 = S3D_CTRL_14BIT_LIMIT;
     }
