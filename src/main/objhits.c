@@ -40,11 +40,9 @@ extern undefined4 FUN_8028688c();
 extern double sqrtf();
 extern undefined4 sin();
 
-extern undefined4* DAT_80341558;
-extern int DAT_8034155c;
-extern undefined4 DAT_80341b98;
+extern ObjHitsSweepEntry *gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
+extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern undefined4 DAT_80341b9c;
-extern undefined4 DAT_80341ba4;
 extern undefined4 DAT_80342e58;
 extern undefined4 DAT_803dd848;
 extern undefined4 DAT_803dd850;
@@ -3003,14 +3001,14 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
   
   objectCount = FUN_80286820();
   objectList = (int *)ObjList_GetObjects(&uStack_f28, auStack_f24);
-  sweepPtrs = (ObjHitsSweepEntry **)&DAT_80341558;
-  sweepEntries = (ObjHitsSweepEntry *)&DAT_80341b98;
-  nextEntry = (ObjHitsSweepEntry *)&DAT_80341ba4;
+  sweepPtrs = gObjHitsSweepEntryPtrs;
+  sweepEntries = gObjHitsSweepEntries;
+  nextEntry = &gObjHitsSweepEntries[1];
   sweepEntries->maxX = lbl_803DF5E0;
   sweepEntries->minX = lbl_803DF5E0;
   sweepPtrs[0] = sweepEntries;
   slotCount = 1;
-  entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
+  entrySlot = &gObjHitsSweepEntryPtrs[1];
   if (0 < objectCount) {
     do {
       obj = *objectList;
@@ -3043,13 +3041,13 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
       objectCount--;
     } while (objectCount != 0);
   }
-  ObjHits_SortSweepEntries((ObjHitsSweepEntry **)&DAT_80341558, slotCount);
+  ObjHits_SortSweepEntries(gObjHitsSweepEntryPtrs, slotCount);
   currentIndex = 1;
   slotIndex = 1;
-  entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
+  entrySlot = &gObjHitsSweepEntryPtrs[1];
   do {
     if (slotCount <= slotIndex) {
-      entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
+      entrySlot = &gObjHitsSweepEntryPtrs[1];
       for (currentIndex = 1; currentIndex < slotCount; currentIndex++) {
         obj = (*entrySlot)->obj;
         if (((*(ushort *)(*(int *)(obj + 0x54) + 0x60) & 0x200) != 0) &&
@@ -3058,7 +3056,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
         }
         entrySlot++;
       }
-      entrySlot = (ObjHitsSweepEntry **)&DAT_8034155c;
+      entrySlot = &gObjHitsSweepEntryPtrs[1];
       for (currentIndex = 1; currentIndex < slotCount; currentIndex++) {
         obj = (*entrySlot)->obj;
         objState = *(int *)(obj + 0x54);
