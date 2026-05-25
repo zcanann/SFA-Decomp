@@ -855,7 +855,53 @@ void GameUI_initialise(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void Menu_func08(void) {}
+extern int getHudHiddenFrameCount(void);
+extern void padGetAnalogInput(int pad, s8 *y, s8 *x);
+extern int getButtonsJustPressed(int pad);
+extern f32 lbl_803DD8EC;
+extern f32 lbl_803E21D8;
+extern f32 timeDelta;
+#pragma scheduling off
+#pragma peephole off
+int Menu_func08(int *sel)
+{
+    s8 xInput;
+    s8 yInput;
+    int input;
+
+    if (getHudHiddenFrameCount() != 0) {
+        return -1;
+    }
+    lbl_803DD8EC += timeDelta;
+    if (lbl_803DD8EC > lbl_803E21D8) {
+        lbl_803DD8EC -= lbl_803E21D8;
+    }
+    padGetAnalogInput(0, &yInput, &xInput);
+    if (xInput < 0) {
+        *sel = *sel + 1;
+    } else if (xInput > 0) {
+        *sel = *sel - 1;
+    }
+    if (*sel < 0) {
+        *sel = (s8)lbl_803DD8F0 - 1;
+    }
+    if (*sel >= (s8)lbl_803DD8F0) {
+        *sel = 0;
+    }
+    if (lbl_803DD8E8 != 0) {
+        input = getButtonsJustPressed(0);
+        if (((input & 0x1100) != 0) && (GameBit_Get(1103) == 0)) {
+            return lbl_803DD8F5;
+        }
+        if ((input & 0x200) != 0) {
+            return lbl_803DD8F4;
+        }
+    }
+    lbl_803DD8E8 = 1;
+    return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void Menu_func05(int arg1, int unused2, int arg3, int arg4) {
