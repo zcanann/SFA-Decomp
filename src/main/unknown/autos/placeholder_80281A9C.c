@@ -197,36 +197,53 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
     u32 ctrl;
     u32 dstVoice;
     u32 srcVoice;
-    u8 *dst;
-    u8 *src;
+    u8 *stateBase;
 
     ctrl = controller & 0xff;
     dstVoice = *(u32 *)(dstState + 0xf4) & 0xff;
     srcVoice = *(u32 *)(srcState + 0xf4) & 0xff;
-    dst = (u8 *)lbl_803CD760 + INP_MIDI_CTRL_GLOBAL_OFFSET +
-          dstVoice * INP_MIDI_CTRL_BANK_SIZE;
-    src = (u8 *)lbl_803CD760 + INP_MIDI_CTRL_GLOBAL_OFFSET +
-          srcVoice * INP_MIDI_CTRL_BANK_SIZE;
+    stateBase = (u8 *)lbl_803CD760;
 
     if (ctrl < 0x40) {
         ctrl = controller & 0x1f;
-        dst[ctrl] = src[ctrl];
-        dst[ctrl + 0x20] = src[ctrl + 0x20];
+        *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
+          dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
+              srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
+        *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 0x20 +
+          dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 0x20 +
+              srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
-    if (((controller - 0x80) & 0xff) < 2) {
+    if (((controller - 0x80) & 0xff) <= 1U) {
         ctrl = controller & 0xfe;
-        dst[ctrl] = src[ctrl];
-        dst[ctrl + 1] = src[ctrl + 1];
+        *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
+          dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
+              srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
+        *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 1 +
+          dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 1 +
+              srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
-    if (((controller - 0x84) & 0xff) < 2) {
+    if (((controller - 0x84) & 0xff) <= 1U) {
         ctrl = controller & 0xfe;
-        dst[ctrl] = src[ctrl];
-        dst[ctrl + 1] = src[ctrl + 1];
+        *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
+          dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
+              srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
+        *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 1 +
+          dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+            *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + 1 +
+              srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
-    dst[ctrl] = src[ctrl];
+    *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
+      dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
+        *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET +
+          srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
 }
 
 /*
