@@ -693,6 +693,7 @@ extern f32 lbl_803DE604;
 extern f32 lbl_803DE608;
 extern f32 lbl_803DE610;
 extern f32 lbl_803DE620;
+extern f32 lbl_803DE624;
 extern s8 gObjTransformMatrixSlot;
 extern u8 lbl_80336C40[];
 extern u8 lbl_80336C70[];
@@ -790,6 +791,10 @@ extern void mtxFn_80022404(f32 *dst, f32 *src, f32 *out);
 extern void mtxRotateByVec3s(f32 *matrix, void *transform);
 extern void mtx44Transpose(f32 *src, f32 *dst);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
+extern void PSMTXMultVec(f32 *matrix, f32 *in, f32 *out);
+extern void PSVECNormalize(f32 *in, f32 *out);
+extern void PSVECScale(f32 *in, f32 *out, f32 scale);
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern void GXLoadPosMtxImm(f32 *matrix, s32 slot);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
@@ -6347,6 +6352,7 @@ typedef struct CameraViewSlot {
 extern CameraViewSlot gCameraShakeSlots[];
 extern f32 sqrtf(f32 x);
 extern f32 sin(f32 x);
+extern f32 fabsf(f32 x);
 extern u32 getScreenResolution(void);
 extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 extern u8 lbl_80338090[];
@@ -6355,6 +6361,9 @@ extern f32 lbl_803967C0[12];
 extern s16 lbl_802C5ED0[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
+void Camera_ApplyCurrentViewport(void* viewportArg);
+
+extern u8 lbl_802C5E00[];
 
 /*
  * Function: Music_GetActivePriority
@@ -7041,6 +7050,206 @@ void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32*
 }
 
 /*
+ * Function: screenFn_8000e944
+ * EN v1.0 Address: 0x8000E944
+ * EN v1.0 Size: 308b
+ */
+void screenFn_8000e944(void* viewportArg)
+{
+    u32 resolution;
+    u32 width;
+    u32 height;
+    u32* viewportFlags;
+    u8 viewIndex;
+    s16 halfWidth;
+    s16 halfHeight;
+
+    gCameraCurrentViewIndex = 4;
+    resolution = getScreenResolution();
+    width = resolution >> 16;
+    height = resolution & 0xFFFF;
+    viewportFlags = (u32*)(lbl_802C5E00 + 0x30);
+
+    if ((*(u32*)((u8*)viewportFlags + gCameraCurrentViewIndex * 0x34) & 1) == 0) {
+        gxSetScissorRect(0, 0, 0, 0, height - 1, width - 1);
+        halfWidth = (s16)((height >> 1) << 2);
+        viewIndex = gCameraCurrentViewIndex;
+        if ((*(u32*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0) {
+            halfHeight = (s16)((width >> 1) << 2);
+            lbl_802C5ED0[viewIndex * 8 + 4] = halfWidth;
+            lbl_802C5ED0[viewIndex * 8 + 5] = halfHeight;
+            lbl_802C5ED0[viewIndex * 8 + 0] = halfWidth;
+            lbl_802C5ED0[viewIndex * 8 + 1] = halfHeight;
+        }
+    } else {
+        Camera_ApplyCurrentViewport(viewportArg);
+        viewIndex = gCameraCurrentViewIndex;
+        if ((*(u32*)((u8*)viewportFlags + viewIndex * 0x34) & 1) == 0) {
+            lbl_802C5ED0[viewIndex * 8 + 4] = 0;
+            lbl_802C5ED0[viewIndex * 8 + 5] = 0;
+            lbl_802C5ED0[viewIndex * 8 + 0] = 0;
+            lbl_802C5ED0[viewIndex * 8 + 1] = 0;
+        }
+    }
+
+    gCameraCurrentViewIndex = 0;
+}
+
+/*
+ * Function: Camera_ProjectWorldPoint
+ * EN v1.0 Address: 0x8000EF48
+ * EN v1.0 Size: 368b
+ */
+void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, f32* outViewZ)
+{
+    f32 pos[3];
+    f32 w;
+    f32 invW;
+
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    PSMTXMultVec(gCameraViewMatrix, pos, pos);
+
+    *outViewZ = pos[2];
+    *outX = gCameraProjectionMatrix[3] +
+            gCameraProjectionMatrix[2] * pos[2] +
+            gCameraProjectionMatrix[0] * pos[0] +
+            gCameraProjectionMatrix[1] * pos[1];
+    *outY = gCameraProjectionMatrix[7] +
+            gCameraProjectionMatrix[6] * pos[2] +
+            gCameraProjectionMatrix[4] * pos[0] +
+            gCameraProjectionMatrix[5] * pos[1];
+    *outZ = gCameraProjectionMatrix[11] +
+            gCameraProjectionMatrix[10] * pos[2] +
+            gCameraProjectionMatrix[8] * pos[0] +
+            gCameraProjectionMatrix[9] * pos[1];
+
+    w = gCameraProjectionMatrix[15] +
+        gCameraProjectionMatrix[14] * pos[2] +
+        gCameraProjectionMatrix[12] * pos[0] +
+        gCameraProjectionMatrix[13] * pos[1];
+    if (w != lbl_803DE60C) {
+        invW = lbl_803DE5F0 / w;
+        *outX *= invW;
+        *outY *= invW;
+        *outZ *= invW;
+    }
+}
+
+/*
+ * Function: Camera_ProjectWorldPointWithOffset
+ * EN v1.0 Address: 0x8000EDAC
+ * EN v1.0 Size: 412b
+ */
+void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ)
+{
+    f32 pos[3];
+    f32 offsetVec[3];
+    f32 w;
+    f32 invW;
+
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    PSMTXMultVec(gCameraViewMatrix, pos, pos);
+    PSVECNormalize(pos, offsetVec);
+    PSVECScale(offsetVec, offsetVec, offset);
+    PSVECSubtract(pos, offsetVec, pos);
+
+    *outX = gCameraProjectionMatrix[3] +
+            gCameraProjectionMatrix[2] * pos[2] +
+            gCameraProjectionMatrix[0] * pos[0] +
+            gCameraProjectionMatrix[1] * pos[1];
+    *outY = gCameraProjectionMatrix[7] +
+            gCameraProjectionMatrix[6] * pos[2] +
+            gCameraProjectionMatrix[4] * pos[0] +
+            gCameraProjectionMatrix[5] * pos[1];
+    *outZ = gCameraProjectionMatrix[11] +
+            gCameraProjectionMatrix[10] * pos[2] +
+            gCameraProjectionMatrix[8] * pos[0] +
+            gCameraProjectionMatrix[9] * pos[1];
+
+    w = gCameraProjectionMatrix[15] +
+        gCameraProjectionMatrix[14] * pos[2] +
+        gCameraProjectionMatrix[12] * pos[0] +
+        gCameraProjectionMatrix[13] * pos[1];
+    if (w != lbl_803DE60C) {
+        invW = lbl_803DE5F0 / w;
+        *outX *= invW;
+        *outY *= invW;
+        *outZ *= invW;
+    }
+}
+
+/*
+ * Function: Camera_ProjectWorldSphere
+ * EN v1.0 Address: 0x8000EB88
+ * EN v1.0 Size: 548b
+ */
+void Camera_ProjectWorldSphere(
+    f32 x,
+    f32 y,
+    f32 z,
+    f32 radius,
+    f32* outX,
+    f32* outY,
+    f32* outZ,
+    f32* outRadiusX,
+    f32* outRadiusY,
+    f32* outRadiusZ)
+{
+    f32 pos[3];
+    f32 w;
+    f32 invW;
+
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    PSMTXMultVec(gCameraViewMatrix, pos, pos);
+
+    *outX = gCameraProjectionMatrix[3] +
+            gCameraProjectionMatrix[2] * pos[2] +
+            gCameraProjectionMatrix[0] * pos[0] +
+            gCameraProjectionMatrix[1] * pos[1];
+    *outY = gCameraProjectionMatrix[7] +
+            gCameraProjectionMatrix[6] * pos[2] +
+            gCameraProjectionMatrix[4] * pos[0] +
+            gCameraProjectionMatrix[5] * pos[1];
+    *outZ = gCameraProjectionMatrix[11] +
+            gCameraProjectionMatrix[10] * pos[2] +
+            gCameraProjectionMatrix[8] * pos[0] +
+            gCameraProjectionMatrix[9] * pos[1];
+
+    w = gCameraProjectionMatrix[15] +
+        gCameraProjectionMatrix[14] * pos[2] +
+        gCameraProjectionMatrix[12] * pos[0] +
+        gCameraProjectionMatrix[13] * pos[1];
+    if (w != lbl_803DE60C) {
+        invW = lbl_803DE5F0 / w;
+        *outX *= invW;
+        *outY *= invW;
+        *outZ *= invW;
+
+        pos[2] += radius;
+        if (pos[2] > lbl_803DE624) {
+            pos[2] = lbl_803DE624;
+        }
+
+        w = gCameraProjectionMatrix[15] +
+            gCameraProjectionMatrix[14] * pos[2] +
+            gCameraProjectionMatrix[12] * pos[0] +
+            gCameraProjectionMatrix[13] * pos[1];
+        if (w != lbl_803DE60C) {
+            invW = lbl_803DE5F0 / w;
+            *outRadiusX = fabsf(invW * (radius * gCameraProjectionMatrix[0]));
+            *outRadiusY = fabsf(invW * (radius * gCameraProjectionMatrix[5]));
+            *outRadiusZ = fabsf(invW * (radius * gCameraProjectionMatrix[10]));
+        }
+    }
+}
+
+/*
  * Function: viewportEffectFn_8000e380
  * EN v1.0 Address: 0x8000E380
  * EN v1.0 Size: 672b
@@ -7144,7 +7353,7 @@ void viewportEffectFn_8000e380(void)
  * EN v1.0 Address: 0x8000F0B8
  * EN v1.0 Size: 68b
  */
-void Camera_ApplyCurrentViewport(void)
+void Camera_ApplyCurrentViewport(void* viewportArg)
 {
     u32 resolution = getScreenResolution();
     int width = resolution >> 16;
