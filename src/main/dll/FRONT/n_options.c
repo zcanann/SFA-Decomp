@@ -103,7 +103,7 @@ extern OSMessageQueue lbl_803A5CCC;
 /*
  * --INFO--
  *
- * Function: THPPlayerDrawCurrentFrame
+ * Function: FUN_80117668
  * EN v1.0 Address: 0x80117668
  * EN v1.0 Size: 188b
  * EN v1.1 Address: 0x8011784C
@@ -113,7 +113,7 @@ extern OSMessageQueue lbl_803A5CCC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 THPPlayerDrawCurrentFrame(int param_1,int param_2)
+undefined4 FUN_80117668(int param_1,int param_2)
 {
   int iVar1;
   
@@ -138,17 +138,17 @@ undefined4 THPPlayerDrawCurrentFrame(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80117724
- * EN v1.0 Address: 0x80117724
- * EN v1.0 Size: 1292b
- * EN v1.1 Address: 0x80117910
- * EN v1.1 Size: 1280b
+ * Function: THPPlayerDrawCurrentFrame
+ * EN v1.0 Address: 0x80117668
+ * EN v1.0 Size: 1280b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80117724(undefined4 param_1,undefined4 param_2,uint param_3,uint param_4,uint param_5)
+void THPPlayerDrawCurrentFrame(void *param_1,void *param_2,void *param_3,uint param_4,uint param_5)
 {
   uint uVar1;
   uint uVar2;
@@ -230,7 +230,7 @@ void FUN_80117724(undefined4 param_1,undefined4 param_2,uint param_3,uint param_
   dVar3 = (double)FLOAT_803e29c4;
   FUN_8025ace8(dVar3,dVar3,dVar3,auStack_64,0,0,0,'\0',0);
   FUN_8025b054(auStack_64,1);
-  FUN_8025aa74(auStack_84,param_3,uVar1 & 0xffff,uVar2 & 0xffff,1,0,0,'\0');
+  FUN_8025aa74(auStack_84,(uint)param_3,uVar1 & 0xffff,uVar2 & 0xffff,1,0,0,'\0');
   dVar3 = (double)FLOAT_803e29c4;
   FUN_8025ace8(dVar3,dVar3,dVar3,auStack_84,0,0,0,'\0',0);
   FUN_8025b054(auStack_84,2);
@@ -627,9 +627,9 @@ uint AttractMovie_DrawTextureCallback(undefined4 param_1, undefined4 *modelPtr, 
 
   if (((renderOp == NULL) || (renderOp[0x29] == 1)) && (lbl_803DD610 == 2)) {
     textureSet = (AttractMovieTextureSet *)lbl_803A5D60.curAudioNumber;
-    ((int (*)(void *, void *, void *, int, int))THPPlayerDrawCurrentFrame)(
-        textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
-        (s16)lbl_803A5D60.videoInfo.xSize, (s16)lbl_803A5D60.videoInfo.ySize);
+    THPPlayerDrawCurrentFrame(textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
+                              (s16)lbl_803A5D60.videoInfo.xSize,
+                              (s16)lbl_803A5D60.videoInfo.ySize);
     return TRUE;
   }
   return FALSE;
