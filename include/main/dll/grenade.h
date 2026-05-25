@@ -28,7 +28,7 @@ trickyFn_801430e0(undefined8 param_1,undefined8 param_2,double param_3,undefined
 undefined4 trickyFn_80143210(int param_1,int *param_2);
 undefined4 trickyFn_801432cc(int param_1,int *param_2);
 undefined4 trickyFn_80143388(int param_1,int *param_2);
-undefined4 trickyFn_801434b0(int param_1,int *param_2);
+int trickyFn_801434b0(int param_1, int *param_2);
 undefined4
 trickyFoodFn_801437d4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int *param_10);
