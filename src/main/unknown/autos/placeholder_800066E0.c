@@ -804,6 +804,8 @@ extern void GXSetProjection(f32* matrix, s32 projectionMode);
 extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane);
 extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane, u32 field);
 extern u8 pauseMenuGetState(void);
+extern void matrixFn_8006ff0c(f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale, f32* matrix, s16* out);
+extern void copyMatrix44(f32* src, f32* dst);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
@@ -6347,6 +6349,8 @@ extern f32 lbl_803DE630;
 extern f32 lbl_803DE640;
 extern f32 lbl_803DE644;
 extern f32 lbl_803DE648;
+extern f32 lbl_803DE64C;
+extern f32 lbl_803DE650;
 extern f32 lbl_803DB26C;
 
 typedef struct CameraRenderMode {
@@ -6406,6 +6410,7 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern CameraRenderMode* lbl_803DCCF0;
 extern u32 lbl_803DCCBC;
+extern s16 lbl_803DC88A;
 void Camera_ApplyCurrentViewport(void* viewportArg);
 
 extern u8 lbl_802C5E00[];
@@ -7882,6 +7887,62 @@ void Camera_SetFovY(f32 fovY)
         fovY = 1.0f;
     }
     gCameraFovY = fovY;
+}
+
+/*
+ * Function: Camera_InitState
+ * EN v1.0 Address: 0x8000FC54
+ * EN v1.0 Size: 568b
+ */
+void Camera_InitState(void)
+{
+    u32 i;
+    CameraViewSlot* slot;
+    f32* scaledProjection;
+    f32* copiedProjection;
+
+    for (i = 0; i < 12; i++) {
+        slot = &gCameraShakeSlots[(u8)i];
+        slot->roll = 0;
+        slot->yaw = 0;
+        slot->pitch = 0x7FF8;
+        slot->x = lbl_803DE650;
+        slot->y = lbl_803DE650;
+        slot->z = lbl_803DE650;
+        *(f32*)((u8*)slot + 0x20) = lbl_803DE60C;
+        *(f32*)((u8*)slot + 0x24) = lbl_803DE60C;
+        *(f32*)((u8*)slot + 0x28) = lbl_803DE60C;
+        slot->shakeMagnitude = lbl_803DE60C;
+        *(u32*)((u8*)slot + 0x40) = 0;
+        *(s16*)((u8*)slot + 0x5A) = 0;
+        *(f32*)((u8*)slot + 0x18) = lbl_803DE610;
+    }
+
+    gCameraCurrentViewIndex = 0;
+    lbl_803DC88C = 0;
+    gObjTransformMatrixSlot = 0;
+    lbl_803DC884 = 0;
+    lbl_803DC886 = 0;
+    gCameraFarPlane = lbl_803DE64C;
+    lbl_803DC880 = 0;
+    gCameraFovY = lbl_803DE610;
+    gCameraProjectionMode = 0;
+
+    C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
+                     gCameraFarPlane);
+    C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
+                          lbl_803DE628, lbl_803DE62C, lbl_803DE62C);
+    C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                          lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
+    C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                          lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+    GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
+
+    scaledProjection = (f32*)((u8*)gObjInverseYawTransformMatrices + 0x1080);
+    copiedProjection = (f32*)((u8*)gObjInverseYawTransformMatrices + 0x0FC0);
+    matrixFn_8006ff0c(gCameraFovY, gCameraAspectRatio, gCameraNearPlane, gCameraFarPlane,
+                      lbl_803DE5F0, scaledProjection, &lbl_803DC88A);
+    copyMatrix44(scaledProjection, copiedProjection);
 }
 
 typedef struct RingBufferQueue {
