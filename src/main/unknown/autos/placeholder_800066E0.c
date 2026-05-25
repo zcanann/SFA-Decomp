@@ -692,6 +692,7 @@ extern f32 lbl_803DE600;
 extern f32 lbl_803DE604;
 extern f32 lbl_803DE608;
 extern f32 lbl_803DE610;
+extern f32 lbl_803DE620;
 extern s8 gObjTransformMatrixSlot;
 extern u8 lbl_80336C40[];
 extern u8 lbl_80336C70[];
@@ -6351,6 +6352,7 @@ extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 extern u8 lbl_80338090[];
 extern f32 lbl_80338190[16];
 extern f32 lbl_803967C0[12];
+extern s16 lbl_802C5ED0[];
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
@@ -7015,6 +7017,27 @@ void Camera_LoadModelViewMatrix(f32 scale, void* unused0, void* unused1, CameraV
     GXLoadPosMtxImm(lbl_803967C0, 0);
     transform->x += playerMapOffsetX;
     transform->z += playerMapOffsetZ;
+}
+
+/*
+ * Function: Camera_NdcToScreen
+ * EN v1.0 Address: 0x8000EA78
+ * EN v1.0 Size: 272b
+ */
+void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32* outZ)
+{
+    if (outX != NULL) {
+        *outX = (s32)(ndcX * (f32)(lbl_802C5ED0[0] >> 2) + (f32)(lbl_802C5ED0[4] >> 2));
+    }
+
+    if (outY != NULL) {
+        *outY = (s32)(ndcY * (f32)(lbl_802C5ED0[1] >> 2) + (f32)(lbl_802C5ED0[5] >> 2));
+        *outY = 0x1E0 - *outY;
+    }
+
+    if (outZ != NULL) {
+        *outZ = (s32)(lbl_803DE620 * (lbl_803DE5F0 + ndcZ));
+    }
 }
 
 /*
