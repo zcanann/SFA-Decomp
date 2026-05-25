@@ -6184,10 +6184,10 @@ extern f32 gCameraViewRotationMatrix[16];
 extern f32 gCameraInverseViewRotationMatrix[16];
 extern f32 gCameraViewMatrix[16];
 extern f32 gCameraInverseViewMatrix[16];
-extern u8 gCameraShakeSlots[];
 extern u8 gCameraCurrentViewIndex;
 extern u8 lbl_803DC88C;
 extern s16 lbl_803DC886;
+extern s16 lbl_803DC884;
 extern f32 gCameraProjectionMatrix[16];
 extern f32 gCameraFarPlane;
 extern f32 gCameraNearPlane;
@@ -6197,6 +6197,31 @@ extern s16 lbl_803DC880;
 extern s16 lbl_803DC882;
 extern f32 lbl_803DC8A8;
 extern f32 lbl_803DC8AC;
+extern f32 lbl_803DE60C;
+
+typedef struct CameraViewSlot {
+    s16 pitch;
+    s16 yaw;
+    s16 roll;
+    u8 pad06[6];
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 pad18[0x14];
+    f32 shakeMagnitude;
+    f32 shakeMagnitudeTarget;
+    f32 shakeDuration;
+    f32 shakeTimer;
+    f32 shakeFalloff;
+    u8 pad40[0x1D];
+    s8 shakeActive;
+    u8 pad5E[2];
+} CameraViewSlot;
+
+extern CameraViewSlot gCameraShakeSlots[];
+extern f32 sqrtf(f32 x);
+extern u32 getScreenResolution(void);
+extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 
 /*
  * Function: Music_GetActivePriority
@@ -6255,7 +6280,106 @@ f32* Camera_GetInverseViewMatrix(void)
  */
 void* Camera_GetCurrentViewSlot(void)
 {
-    return &gCameraShakeSlots[gCameraCurrentViewIndex * 0x60];
+    return &gCameraShakeSlots[gCameraCurrentViewIndex];
+}
+
+/*
+ * Function: CameraShake_IsActive
+ * EN v1.0 Address: 0x8000E620
+ * EN v1.0 Size: 48b
+ */
+u8 CameraShake_IsActive(void)
+{
+    return gCameraShakeSlots[gCameraCurrentViewIndex].shakeActive == 1;
+}
+
+/*
+ * Function: CameraShake_Start
+ * EN v1.0 Address: 0x8000E650
+ * EN v1.0 Size: 44b
+ */
+void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff)
+{
+    CameraViewSlot* slot = &gCameraShakeSlots[0];
+
+    slot->shakeMagnitude = magnitude;
+    slot->shakeMagnitudeTarget = magnitude;
+    slot->shakeDuration = duration;
+    slot->shakeTimer = lbl_803DE60C;
+    slot->shakeFalloff = falloff;
+    slot->shakeActive = 1;
+}
+
+/*
+ * Function: Camera_ApplyCurrentViewport
+ * EN v1.0 Address: 0x8000F0B8
+ * EN v1.0 Size: 68b
+ */
+void Camera_ApplyCurrentViewport(void)
+{
+    u32 resolution = getScreenResolution();
+    int width = resolution >> 16;
+    int height = resolution & 0xffff;
+    int viewportY = lbl_803DC884 + 6;
+
+    gxSetScissorRect(0, 0, 0, viewportY, height, width - viewportY);
+}
+
+/*
+ * Function: Camera_SetCurrentViewIndex
+ * EN v1.0 Address: 0x8000F458
+ * EN v1.0 Size: 40b
+ */
+void Camera_SetCurrentViewIndex(int index)
+{
+    if (index >= 0 && index < 4) {
+        gCameraCurrentViewIndex = index;
+        return;
+    }
+    gCameraCurrentViewIndex = 0;
+}
+
+/*
+ * Function: Camera_DistanceToCurrentViewPosition
+ * EN v1.0 Address: 0x8000F480
+ * EN v1.0 Size: 96b
+ */
+f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z)
+{
+    CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
+    f32 dz = z - slot->z;
+    f32 dx = x - slot->x;
+    f32 dy = y - slot->y;
+
+    return sqrtf(dx * dx + dy * dy + dz * dz);
+}
+
+/*
+ * Function: Camera_SetCurrentViewRotation
+ * EN v1.0 Address: 0x8000F4E0
+ * EN v1.0 Size: 48b
+ */
+void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll)
+{
+    CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
+
+    slot->pitch = pitch;
+    slot->yaw = yaw;
+    slot->roll = roll;
+}
+
+/*
+ * Function: Camera_SetCurrentViewPosition
+ * EN v1.0 Address: 0x8000F510
+ * EN v1.0 Size: 36b
+ */
+void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
+{
+    CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
+
+    slot->x = x;
+    slot->y = y;
+    slot->z = z;
 }
 
 /*
