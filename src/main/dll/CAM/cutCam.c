@@ -36,9 +36,14 @@ extern uint FUN_80294bf4();
 extern int FUN_80294c88();
 extern int FUN_80294d10();
 extern undefined4 FUN_80294d78();
+extern void cameraGetPrevPos2();
 extern int fn_80295C0C(int);
 extern int objFn_802962b4(int);
 extern int objFn_80296700(int);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 dx, f32 dy);
 
 extern undefined4 DAT_803a4ed8;
 extern undefined4 gCamcontrolTargetTypeMask;
@@ -57,6 +62,10 @@ extern f32 *cameraMtxVar57;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e2318;
 extern f64 lbl_803E1698;
+extern f32 lbl_803E1688;
+extern f32 lbl_803E168C;
+extern f32 lbl_803E1690;
+extern f32 lbl_803E1694;
 extern f32 lbl_803E16A4;
 extern f32 lbl_803E16AC;
 extern f32 lbl_803DE1A4;
@@ -148,21 +157,20 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
 {
   float local_88;
   float local_84;
-  undefined4 local_80;
-  undefined auStack_7c [110];
-  undefined local_e;
-  
+  float local_80;
+  undefined auStack_7c [111];
+
   if (*(short *)(param_2 + 0x44) == 1) {
-    FUN_80294d78(param_2,&local_88,&local_84,&local_80);
+    cameraGetPrevPos2(param_2,&local_88,&local_84,&local_80);
   }
   else {
     local_88 = *(float *)(param_2 + 0x18);
-    local_84 = *(float *)(param_2 + 0x1c) + *(float *)(gCamcontrolModeSettings + 0x8c);
-    local_80 = *(undefined4 *)(param_2 + 0x20);
+    local_84 = *(float *)(param_2 + 0x1c) + cameraMtxVar57[0x23];
+    local_80 = *(float *)(param_2 + 0x20);
   }
-  camcontrol_traceMove((double)lbl_803E2308,&local_88,param_1,param_3,(int)auStack_7c,3,'\x01',
+  camcontrol_traceMove((double)lbl_803E1688,&local_88,param_1,param_3,(int)auStack_7c,3,'\x01',
                        '\x01');
-  return local_e;
+  return auStack_7c[110];
 }
 
 /*
@@ -604,45 +612,25 @@ void camcontrol_updateModeSettings(int camera)
     blend = curveFn_80010dc0((float)(*(f64 *)&local_18 - lbl_803E1698) /
                              (float)(*(f64 *)&local_10 - lbl_803E1698),curve,(float *)0x0);
     cameraMtxVar57[0x23] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x25] -
-                                         (double)cameraMtxVar57[0x24]) +
-                 (double)cameraMtxVar57[0x24]);
+         blend * (cameraMtxVar57[0x25] - cameraMtxVar57[0x24]) + cameraMtxVar57[0x24];
     cameraMtxVar57[0] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0xc] -
-                                         (double)cameraMtxVar57[0xb]) +
-                 (double)cameraMtxVar57[0xb]);
+         blend * (cameraMtxVar57[0xc] - cameraMtxVar57[0xb]) + cameraMtxVar57[0xb];
     cameraMtxVar57[1] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0xe] -
-                                         (double)cameraMtxVar57[0xd]) +
-                 (double)cameraMtxVar57[0xd]);
+         blend * (cameraMtxVar57[0xe] - cameraMtxVar57[0xd]) + cameraMtxVar57[0xd];
     cameraMtxVar57[2] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x10] -
-                                         (double)cameraMtxVar57[0xf]) +
-                 (double)cameraMtxVar57[0xf]);
+         blend * (cameraMtxVar57[0x10] - cameraMtxVar57[0xf]) + cameraMtxVar57[0xf];
     cameraMtxVar57[3] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x12] -
-                                         (double)cameraMtxVar57[0x11]) +
-                 (double)cameraMtxVar57[0x11]);
+         blend * (cameraMtxVar57[0x12] - cameraMtxVar57[0x11]) + cameraMtxVar57[0x11];
     cameraMtxVar57[4] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x14] -
-                                         (double)cameraMtxVar57[0x13]) +
-                 (double)cameraMtxVar57[0x13]);
+         blend * (cameraMtxVar57[0x14] - cameraMtxVar57[0x13]) + cameraMtxVar57[0x13];
     cameraMtxVar57[5] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x16] -
-                                         (double)cameraMtxVar57[0x15]) +
-                 (double)cameraMtxVar57[0x15]);
+         blend * (cameraMtxVar57[0x16] - cameraMtxVar57[0x15]) + cameraMtxVar57[0x15];
     cameraMtxVar57[6] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x18] -
-                                         (double)cameraMtxVar57[0x17]) +
-                 (double)cameraMtxVar57[0x17]);
+         blend * (cameraMtxVar57[0x18] - cameraMtxVar57[0x17]) + cameraMtxVar57[0x17];
     cameraMtxVar57[7] =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x1a] -
-                                         (double)cameraMtxVar57[0x19]) +
-                 (double)cameraMtxVar57[0x19]);
+         blend * (cameraMtxVar57[0x1a] - cameraMtxVar57[0x19]) + cameraMtxVar57[0x19];
     *(float *)(camera + 0xb4) =
-         (float)(blend * (double)(float)((double)cameraMtxVar57[0x1c] -
-                                         (double)cameraMtxVar57[0x1b]) +
-                 (double)cameraMtxVar57[0x1b]);
+         blend * (cameraMtxVar57[0x1c] - cameraMtxVar57[0x1b]) + cameraMtxVar57[0x1b];
   }
   return;
 }
