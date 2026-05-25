@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void firstPersonDoControls(short *param_1);
-void firstPersonEnter(void);
+int firstPersonEnter(u8 *cam, s16 *p2);
 void CameraModeViewfinder_copyToCurrent(undefined2 *param_1);
 void CameraModeViewfinder_free(int param_1);
 void CameraModeViewfinder_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
