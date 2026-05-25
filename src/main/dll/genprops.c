@@ -75,7 +75,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern uint fn_800386BC();
+extern u32 fn_800386BC(f32 x, f32 y, f32 z);
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8004036c();
@@ -4256,7 +4256,7 @@ undefined4 FUN_80171310(int param_1)
   
   iVar2 = *(int *)(param_1 + 0xb8);
   if (*(int *)(iVar2 + 0x18) == -2) {
-    uVar1 = fn_800386BC();
+    uVar1 = fn_800386BC(0.0f, 0.0f, 0.0f);
     *(uint *)(iVar2 + 0x18) = uVar1 & 0xffff;
   }
   return *(undefined4 *)(iVar2 + 0x18);
@@ -4571,7 +4571,7 @@ extern void staff_update();
 extern void staff_init();
 extern void staff_release();
 extern void staff_initialise();
-extern void staff_modelMtxFn();
+extern void staff_modelMtxFn(int *obj, int p4, int p5);
 extern void staff_hitDetectGeometry();
 void staff_func10(int *obj, s32 v);
 void staff_func11(int *obj, s32 v);
@@ -5132,6 +5132,37 @@ void collectible_func0B(int *obj, int flag) {
         if (GameBit_Get(*(s16*)(inner + 0x10)) == 0) {
             ObjHits_EnableObject(obj);
         }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int collectible_modelMtxFn(int *obj) {
+    int *inner = (int*)*(int*)((char*)obj + 0xb8);
+    if (*(int*)((char*)inner + 0x18) == -2) {
+        f32 f1 = *(f32*)((char*)obj + 0x18);
+        f32 f2 = *(f32*)((char*)obj + 0x1c);
+        f32 f3 = *(f32*)((char*)obj + 0x20);
+        *(u32*)((char*)inner + 0x18) = (u16)fn_800386BC(f1, f2, f3);
+    }
+    return *(int*)((char*)inner + 0x18);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void staff_setupSwipe(int *obj, int *inner, int p5, int p4);
+extern int getHudHiddenFrameCount(void);
+#pragma scheduling off
+#pragma peephole off
+void staff_modelMtxFn(int *obj, int p4, int p5) {
+    int *inner = (int*)*(int*)((char*)obj + 0xb8);
+    staff_setupSwipe(obj, inner, p5, p4);
+    if (getHudHiddenFrameCount() != 0) {
+        *(u8*)((char*)inner + 0xbc) = 1;
+    } else {
+        *(u8*)((char*)inner + 0xbc) = 0;
     }
 }
 #pragma peephole reset
