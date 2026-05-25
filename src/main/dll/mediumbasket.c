@@ -1919,16 +1919,12 @@ void FUN_8015e21c(uint param_1,int param_2,int param_3)
   return;
 }
 
-/* 8b "li r3, N; blr" returners. */
-int dll_CA_getExtraSize_ret_1112(void) { return 0x458; }
-int dll_CA_getObjectTypeId(void) { return 0x49; }
-
-/* Pattern wrappers. */
-s16 dll_CA_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
-
 extern f32 lbl_803E2CD8;
+extern f32 lbl_803E2D14;
+extern f32 lbl_803E2D48;
 extern f32 timeDelta;
 extern int* gPlayerInterface;
+extern int *gBaddieControlInterface;
 extern f32 lbl_803E2CE8;
 extern f32 lbl_803E2CEC;
 extern f32 lbl_803E2CF0;
@@ -1938,6 +1934,78 @@ extern f32 lbl_803E2CFC;
 extern int* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void renderWhirlpool(void);
+extern void Camera_DisableViewYOffset(void);
+extern void Obj_FreeObject(int obj);
+extern void fn_8003B5E0(int arg0, int arg1, int arg2, int arg3);
+extern void objRenderFn_8003b8f4(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale);
+extern void fn_8015CE68(int obj, int state);
+extern u8 lbl_803AC548[];
+
+#pragma scheduling off
+#pragma peephole off
+void dll_CA_func0B(int obj, u8 message)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (message == 0x80) {
+        ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 2);
+        *(s16 *)(state + 0x270) = 4;
+        *(u8 *)(state + 0x27b) = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Pattern wrappers. */
+s16 dll_CA_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
+
+/* 8b "li r3, N; blr" returners. */
+int dll_CA_getExtraSize_ret_1112(void) { return 0x458; }
+int dll_CA_getObjectTypeId(void) { return 0x49; }
+
+#pragma scheduling off
+#pragma peephole off
+void dll_CA_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    Camera_DisableViewYOffset();
+    ObjGroup_RemoveObject(obj, 3);
+    if (*(void **)(obj + 0xc8) != NULL) {
+        Obj_FreeObject(*(int *)(obj + 0xc8));
+        *(int *)(obj + 0xc8) = 0;
+    }
+    ((void (*)(int, int, int))((void **)*gBaddieControlInterface)[16])(obj, state, 0x20);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dll_CA_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (visible != 0 && *(void **)(obj + 0xf4) == NULL && *(s16 *)(state + 0x402) != 0) {
+        if (*(f32 *)(state + 0x3e8) != lbl_803E2D14) {
+            fn_8003B5E0(0xc8, 0, 0, (int)*(f32 *)(state + 0x3e8));
+        }
+        objRenderFn_8003b8f4(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
+        fn_8015CE68(obj, state);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dll_CA_hitDetect(int obj)
+{
+    ((void (*)(int, int, u8 *))((void **)*gPlayerInterface)[3])(obj, *(int *)(obj + 0xb8),
+                                                               lbl_803AC548);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 void fn_8015AE68(int* obj, u8* state) {
