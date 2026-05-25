@@ -6,6 +6,7 @@ extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006bb4();
 extern uint FUN_80006c00();
 extern uint GameBit_Get(int eventId);
+extern uint getButtonsJustPressed(int controller);
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_8002fc3c();
@@ -15,7 +16,8 @@ extern undefined4 FUN_80042b9c();
 extern undefined4 FUN_80042bec();
 extern undefined8 FUN_80043030();
 extern undefined4 FUN_80044404();
-extern uint playerHasKrazoaSpirit();
+extern int playerHasKrazoaSpirit();
+extern void padGetAnalogInput(int controller, s8 *horizontal, s8 *vertical);
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_80294cd0();
@@ -24,6 +26,8 @@ extern undefined DAT_803adca8;
 extern undefined4 DAT_803adcb6;
 extern undefined4 DAT_803adcba;
 extern undefined4 DAT_803adcc3;
+extern int lbl_803DC050;
+extern int lbl_803DDBF4;
 extern undefined4 DAT_803dccb8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd72c;
@@ -452,6 +456,123 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             playerRender((int)player, p2, p3, p4, p5, -1);
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void loadMapAndParent(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern int mapGetDirIdx(int mapId);
+extern void lockLevel(int dirIdx, int locked);
+extern void mapUnload(int dirIdx, int flags);
+extern int *gMapEventInterface;
+
+typedef void (*WarpstoneMapEventSetFn)(int mapId, int value);
+
+#define WARPSTONE_MAP_EVENT_SET(mapId, value) \
+    ((WarpstoneMapEventSetFn)(*(u32 *)(*gMapEventInterface + 0x44)))((mapId), (value))
+
+static void warpstone_setSwapstoneLoaded(void)
+{
+    loadMapAndParent(0x42);
+    unlockLevel(0, 0, 1);
+    lockLevel(mapGetDirIdx(0x42), 0);
+    lockLevel(mapGetDirIdx(7), 1);
+}
+
+static void warpstone_setThorntailLoaded(void)
+{
+    loadMapAndParent(9);
+    lockLevel(mapGetDirIdx(9), 0);
+    lockLevel(mapGetDirIdx(7), 1);
+}
+
+static void warpstone_playAccept(void)
+{
+    Sfx_PlayFromObject(0, 0x418);
+}
+
+static void warpstone_setSwapstoneMapEvent(s32 value)
+{
+    WARPSTONE_MAP_EVENT_SET(0x42, value);
+}
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801D6D98(undefined4 p1, undefined4 p2, int option)
+{
+    s8 horizontal;
+    s8 vertical;
+
+    Obj_GetPlayerObject();
+    padGetAnalogInput(0, &horizontal, &vertical);
+
+    switch (option) {
+    case 0x14:
+        if (horizontal < 0) {
+            warpstone_setSwapstoneLoaded();
+            warpstone_setSwapstoneMapEvent(1);
+            warpstone_playAccept();
+            return 1;
+        }
+        break;
+
+    case 0x15:
+        if (vertical > 0 && lbl_803DC050 == 0) {
+            warpstone_playAccept();
+            return 1;
+        }
+        break;
+
+    case 0x16:
+        if (horizontal > 0 && playerHasKrazoaSpirit(1, 0) != 0) {
+            loadMapAndParent(0x42);
+            lockLevel(mapGetDirIdx(0x42), 0);
+            lockLevel(mapGetDirIdx(7), 1);
+            if (GameBit_Get(0xbfd) != 0) {
+                warpstone_setSwapstoneMapEvent(2);
+            } else if (GameBit_Get(0xff) != 0) {
+                warpstone_setSwapstoneMapEvent(2);
+            } else if (GameBit_Get(0xc6e) != 0) {
+                warpstone_setSwapstoneMapEvent(2);
+            } else if (GameBit_Get(0xc85) != 0) {
+                warpstone_setSwapstoneMapEvent(2);
+            }
+            warpstone_playAccept();
+            return 1;
+        }
+        break;
+
+    case 0x17: {
+        int hasSpirit = playerHasKrazoaSpirit(1, 0);
+        if (horizontal > 0 && hasSpirit == 0) {
+            warpstone_playAccept();
+            return 1;
+        }
+        break;
+    }
+
+    case 0x18:
+        lbl_803DDBF4 = 1;
+        if (vertical > 0) {
+            warpstone_setThorntailLoaded();
+            warpstone_playAccept();
+            return 1;
+        }
+        break;
+
+    case 0x19:
+        if ((getButtonsJustPressed(0) & 0x200) != 0) {
+            unlockLevel(0, 0, 1);
+            mapUnload(mapGetDirIdx(0x42), 0x20000000);
+            mapUnload(mapGetDirIdx(0x17), 0x20000000);
+            Sfx_PlayFromObject(0, 0x419);
+            return 1;
+        }
+        break;
+    }
+
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
