@@ -400,6 +400,8 @@ void dfsh_door2speci_update(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void dfsh_door2speci_init(int obj,int def)
 {
   int state;
@@ -424,6 +426,8 @@ void dfsh_door2speci_init(int obj,int def)
   }
   *(short *)state = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
