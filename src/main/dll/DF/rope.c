@@ -27,7 +27,7 @@ extern void* FUN_80017624();
 extern void ModelLightStruct_free(void *light);
 extern uint FUN_80017720();
 extern uint FUN_80017730();
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min, int max);
 extern undefined4 FUN_80017954();
 extern undefined4 FUN_80017958();
 extern int FUN_80017a54();
@@ -112,6 +112,26 @@ extern f32 lbl_803E5A0C;
 extern f32 lbl_803E5A10;
 extern f32 lbl_803E5A14;
 extern f32 lbl_803E5A18;
+
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern undefined4 *gPartfxInterface;
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void Sfx_PlayFromObject(int obj, int id);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern void doRumble(f32 v);
+extern void lightFn_8001db6c(int light, int v, f32 f);
+extern f32 lbl_803E4D38;
+extern f32 lbl_803E4D3C;
+extern f32 lbl_803E4D40;
+extern f32 lbl_803E4D48;
+extern f32 lbl_803E4D4C;
+extern f32 lbl_803E4D50;
+extern f64 lbl_803E4D58;
+extern f32 lbl_803E4D60;
+extern f32 lbl_803E4D64;
+extern f32 lbl_803E4D68;
+extern f32 lbl_803E4D6C;
 
 /*
  * --INFO--
@@ -368,70 +388,63 @@ void dimbossgut2_update(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_updateBurst(undefined8 param_1,undefined8 param_2,undefined8 param_3,
-                             undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                             undefined8 param_7,undefined8 param_8,short *param_9)
+void DIMbossspit_updateBurst(int obj)
 {
-  uint uVar1;
-  int iVar2;
-  short *psVar3;
-  double dVar4;
-  int local_28 [2];
-  undefined4 local_20;
-  uint uStack_1c;
-  undefined8 local_18;
-  
-  psVar3 = *(short **)(param_9 + 0x5c);
-  dVar4 = (double)*(float *)(param_9 + 4);
-  *(float *)(param_9 + 4) = (float)(dVar4 + (double)lbl_803E59D0);
-  *param_9 = *param_9 + 0xaaa;
-  param_9[2] = param_9[2] + 0x38e;
-  param_9[1] = param_9[1] + 0x38e;
-  if (*psVar3 == 1) {
-    iVar2 = 0;
+  int state;
+  s16 v;
+  int iVar;
+  int n;
+  int radius;
+  int i;
+
+  state = *(int *)(obj + 0xb8);
+  *(f32 *)(obj + 8) = *(f32 *)(obj + 8) + lbl_803E4D38;
+  *(s16 *)(obj + 0) = *(s16 *)(obj + 0) + 0xaaa;
+  *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + 0x38e;
+  *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + 0x38e;
+  if (*(s16 *)state == 1) {
+    i = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x340,0,1,0xffffffff,0);
-      iVar2 = iVar2 + 1;
-    } while (iVar2 < 0x12);
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0x4bb,0,1,0xffffffff,0);
-    FUN_80006824((uint)param_9,0x17e);
-    FUN_80006824((uint)param_9,0x186);
-    FUN_80006920((double)lbl_803E59D4);
-    dVar4 = (double)FUN_80006b94((double)lbl_803E59D8);
-    if (*(int *)(psVar3 + 2) != 0) {
-      dVar4 = (double)FUN_800175cc((double)lbl_803E59DC,*(int *)(psVar3 + 2),'\0');
+      (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x340, 0, 1, -1, 0);
+      i = i + 1;
+    } while (i < 0x12);
+    (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4bb, 0, 1, -1, 0);
+    Sfx_PlayFromObject(obj, 0x17e);
+    Sfx_PlayFromObject(obj, 0x186);
+    CameraShake_SetAllMagnitudes(lbl_803E4D3C);
+    doRumble(lbl_803E4D40);
+    if (*(void **)(state + 4) != NULL) {
+      lightFn_8001db6c(*(int *)(state + 4), 0, lbl_803E4D44);
     }
   }
-  *psVar3 = *psVar3 + (ushort)DAT_803dc070;
-  uVar1 = (uint)*psVar3;
-  if ((int)uVar1 < 0x201) {
-    iVar2 = (int)(lbl_803E59E0 * (f32)(s32)uVar1 * lbl_803E59E4);
-    local_18 = (f64)(longlong)iVar2;
-    iVar2 = 0xff - iVar2;
-    local_28[0] = 0x94 - ((int)uVar1 >> 2);
-    if (iVar2 < 0) {
-      if (*(uint *)(psVar3 + 2) != 0) {
-        FUN_80017620(*(uint *)(psVar3 + 2));
-        psVar3[2] = 0;
-        psVar3[3] = 0;
-      }
-      *(undefined *)(param_9 + 0x1b) = 0;
-      if (lbl_803E59E8 < (f32)(s32)(local_28[0] + -0x40 >> 1)) {
-        ObjHits_SetHitVolumeSlot((int)param_9,9,1,0);
-        ObjHitbox_SetSphereRadius((int)param_9,(short)(local_28[0] + -0x40 >> 1));
-      }
+  *(s16 *)state = *(s16 *)state + (u8)framesThisStep;
+  v = *(s16 *)state;
+  if (v > 0x200) {
+    if (v > 0x22a) {
+      Obj_FreeObject(obj);
     }
-    else {
-      ObjHits_SetHitVolumeSlot((int)param_9,5,2,0);
-      ObjHitbox_SetSphereRadius((int)param_9,(short)(local_28[0] + -0x40 >> 1));
-      *(char *)(param_9 + 0x1b) = (char)iVar2;
+    return;
+  }
+  iVar = (int)(lbl_803E4D48 * ((f32)(s32)v * lbl_803E4D4C));
+  n = 0xff - iVar;
+  radius = 0x94 - (v >> 2);
+  if (n >= 0) {
+    ObjHits_SetHitVolumeSlot(obj, 5, 2, 0);
+    ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
+    *(u8 *)(obj + 0x36) = (u8)n;
+  }
+  else {
+    if (*(void **)(state + 4) != NULL) {
+      ModelLightStruct_free(*(void **)(state + 4));
+      *(int *)(state + 4) = 0;
     }
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0x4bc,0,1,0xffffffff,local_28);
+    *(u8 *)(obj + 0x36) = 0;
+    if ((f32)(s32)((radius - 0x40) >> 1) > lbl_803E4D50) {
+      ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
+      ObjHitbox_SetSphereRadius(obj, (s16)((radius - 0x40) >> 1));
+    }
   }
-  else if (0x22a < (int)uVar1) {
-    FUN_80017ac8(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
-  }
-  return;
+  (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4bc, 0, 1, -1, (int)&radius);
 }
 
 /*
@@ -509,67 +522,59 @@ void DIMbossspit_render(int param_1,int param_2,int param_3,int param_4,int para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbossspit_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                        undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                        short *param_9)
+void DIMbossspit_update(int obj)
 {
-  double dVar1;
-  float fVar2;
-  short sVar3;
-  uint uVar4;
-  int iVar5;
-  short *psVar6;
-  
-  psVar6 = *(short **)(param_9 + 0x5c);
-  if (*psVar6 == 0) {
-    *(uint *)(param_9 + 0x7a) = *(int *)(param_9 + 0x7a) - (uint)DAT_803dc070;
-    if (*(int *)(param_9 + 0x7a) < 0) {
-      FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
+  int state;
+  s16 v;
+  u8 *p;
+  int i;
+
+  state = *(int *)(obj + 0xb8);
+  if (*(s16 *)state == 0) {
+    *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - (u8)framesThisStep;
+    if (*(int *)(obj + 0xf4) < 0) {
+      Obj_FreeObject(obj);
       return;
     }
-    ObjHits_SetHitVolumeSlot((int)param_9,5,4,0);
-    ObjHitbox_SetSphereRadius((int)param_9,10);
-    *(float *)(param_9 + 0x14) = -(lbl_803E59F8 * lbl_803DC074 - *(float *)(param_9 + 0x14));
-    *(float *)(param_9 + 0x14) = *(float *)(param_9 + 0x14) * lbl_803E59FC;
-    *param_9 = (short)(int)(lbl_803E5A00 * lbl_803DC074 + (f32)(s32)*param_9);
-    fVar2 = lbl_803E5A04;
-    param_9[2] = (short)(int)(lbl_803E5A04 * lbl_803DC074 + (f32)(s32)param_9[2]);
-    param_9[1] = (short)(int)(fVar2 * lbl_803DC074 + (f32)(s32)param_9[1]);
-    FUN_80017a88((double)(*(float *)(param_9 + 0x12) * lbl_803DC074),
-                 (double)(*(float *)(param_9 + 0x14) * lbl_803DC074),
-                 (double)(*(float *)(param_9 + 0x16) * lbl_803DC074),(int)param_9);
-    iVar5 = 0;
+    ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
+    ObjHitbox_SetSphereRadius(obj, 10);
+    *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - lbl_803E4D60 * timeDelta;
+    *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) * lbl_803E4D64;
+    *(s16 *)(obj + 0) = (int)(lbl_803E4D68 * timeDelta + (f32)*(s16 *)(obj + 0));
+    *(s16 *)(obj + 4) = (int)(lbl_803E4D6C * timeDelta + (f32)*(s16 *)(obj + 4));
+    *(s16 *)(obj + 2) = (int)(lbl_803E4D6C * timeDelta + (f32)*(s16 *)(obj + 2));
+    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
+            *(f32 *)(obj + 0x2c) * timeDelta);
+    i = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x4ba,0,1,0xffffffff,0);
-      iVar5 = iVar5 + 1;
-    } while (iVar5 < 3);
-    if (*(char *)(*(int *)(param_9 + 0x2a) + 0xad) != '\0') {
-      *(undefined4 *)(param_9 + 6) = *(undefined4 *)(*(int *)(param_9 + 0x2a) + 0x3c);
-      *(float *)(param_9 + 8) = *(float *)(*(int *)(param_9 + 0x2a) + 0x40) - lbl_803E59E8;
-      *(undefined4 *)(param_9 + 10) = *(undefined4 *)(*(int *)(param_9 + 0x2a) + 0x44);
-      *psVar6 = 1;
+      (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4ba, 0, 1, -1, 0);
+      i = i + 1;
+    } while (i < 3);
+    if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
+      *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)(obj + 0x54) + 0x3c);
+      *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)(obj + 0x54) + 0x40) - lbl_803E4D50;
+      *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)(obj + 0x54) + 0x44);
+      *(s16 *)state = 1;
     }
   }
   else {
-    DIMbossspit_updateBurst(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                            param_9);
+    DIMbossspit_updateBurst(obj);
   }
-  iVar5 = *(int *)(psVar6 + 2);
-  if (((iVar5 != 0) && (*(char *)(iVar5 + 0x2f8) != '\0')) && (*(char *)(iVar5 + 0x4c) != '\0')) {
-    sVar3 = (ushort)*(byte *)(iVar5 + 0x2f9) + (short)*(char *)(iVar5 + 0x2fa);
-    if (sVar3 < 0) {
-      sVar3 = 0;
-      *(undefined *)(iVar5 + 0x2fa) = 0;
+  p = *(u8 **)(state + 4);
+  if (p != NULL && p[0x2f8] != 0 && p[0x4c] != 0) {
+    v = (s16)(p[0x2f9] + *(s8 *)(p + 0x2fa));
+    if (v < 0) {
+      v = 0;
+      p[0x2fa] = 0;
     }
-    else if (0xc < sVar3) {
-      uVar4 = randomGetRange(0xfffffff4,0xc);
-      sVar3 = sVar3 + (short)uVar4;
-      if (0xff < sVar3) {
-        sVar3 = 0xff;
-        *(undefined *)(*(int *)(psVar6 + 2) + 0x2fa) = 0;
+    else if (v > 0xc) {
+      v = (s16)(v + randomGetRange(-12, 12));
+      if (v > 0xff) {
+        v = 0xff;
+        (*(u8 **)(state + 4))[0x2fa] = 0;
       }
     }
-    *(char *)(*(int *)(psVar6 + 2) + 0x2f9) = (char)sVar3;
+    (*(u8 **)(state + 4))[0x2f9] = (u8)v;
   }
   return;
 }

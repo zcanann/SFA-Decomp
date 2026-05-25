@@ -1934,6 +1934,15 @@ void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   return;
 }
 
+extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int getTrickyObject(void);
+extern int Obj_GetPlayerObject(void);
+extern void Obj_FreeObject(int *obj);
+extern void fn_8015FCCC(int obj);
+extern f32 timeDelta;
+extern f32 lbl_803E2E54;
+extern f32 lbl_803E2E58;
+
 /*
  * --INFO--
  *
@@ -1949,28 +1958,41 @@ void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
  */
 void iceball_update(undefined2 *param_1,int param_2)
 {
-  uint uVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(param_1 + 0x5c);
-  *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
-  *(undefined2 *)(iVar2 + 10) = *(undefined2 *)(param_2 + 0x18);
-  if (((int)*(short *)(iVar2 + 10) == 0xffffffff) ||
-     (uVar1 = FUN_80017690((int)*(short *)(iVar2 + 10)), uVar1 == 0)) {
-    *(ushort *)(iVar2 + 0xc) = (ushort)*(byte *)(param_2 + 0x29) << 3;
-    *(undefined2 *)(iVar2 + 8) = *(undefined2 *)(param_2 + 0x22);
-    *(undefined *)(iVar2 + 0x13) = *(undefined *)(param_2 + 0x32);
-    *(short *)(iVar2 + 0xe) = *(char *)(param_2 + 0x28) * 0xb6;
-    *(undefined *)(iVar2 + 0x14) = *(undefined *)(param_2 + 0x2f);
-    *(undefined *)(iVar2 + 0x15) = *(undefined *)(param_2 + 0x27);
-    *param_1 = (short)((int)*(char *)(param_2 + 0x2a) << 8);
+  int p;
+
+  p = (int)param_1;
+  *(int *)(p + 0xf4) = (s32)((f32)(s32)*(int *)(p + 0xf4) - timeDelta);
+  if (*(int *)(p + 0xf4) < 0) {
+    Obj_FreeObject((int *)p);
+    return;
   }
-  else {
-    ObjHits_DisableObject((int)param_1);
-    param_1[3] = param_1[3] | 0x4000;
-    *(byte *)(iVar2 + 0x12) = *(byte *)(iVar2 + 0x12) | 2;
+  if (*(u8 *)(p + 0x36) == 0) {
+    return;
   }
-  return;
+  *(float *)(p + 0x28) = *(float *)(p + 0x28) - lbl_803E2E54 * timeDelta;
+  *(float *)(p + 0x28) = *(float *)(p + 0x28) * lbl_803E2E58;
+  *(short *)(p + 0) = *(short *)(p + 0) + 910;
+  *(short *)(p + 4) = *(short *)(p + 4) + 910;
+  *(short *)(p + 2) = *(short *)(p + 2) + 910;
+  objMove(p, *(float *)(p + 0x24) * timeDelta, *(float *)(p + 0x28) * timeDelta,
+          *(float *)(p + 0x2c) * timeDelta);
+  ObjHits_SetHitVolumeSlot(p, 10, 1, 0);
+  ObjHitbox_SetSphereRadius(p, 5);
+  ObjHits_EnableObject(p);
+  if (*(int *)(*(int *)(p + 0x54) + 0x50) != 0 &&
+      (*(int *)(*(int *)(p + 0x54) + 0x50) == Obj_GetPlayerObject() ||
+       *(int *)(*(int *)(p + 0x54) + 0x50) == getTrickyObject())) {
+    fn_8015FCCC(p);
+    *(u8 *)(p + 0x36) = 0;
+    *(int *)(p + 0xf4) = 120;
+    *(short *)(*(int *)(p + 0x54) + 0x60) = (short)(*(short *)(*(int *)(p + 0x54) + 0x60) & ~1);
+  }
+  else if ((s8)*(u8 *)(*(int *)(p + 0x54) + 0xad) != 0) {
+    fn_8015FBEC(p);
+    *(u8 *)(p + 0x36) = 0;
+    *(int *)(p + 0xf4) = 120;
+    *(short *)(*(int *)(p + 0x54) + 0x60) = (short)(*(short *)(*(int *)(p + 0x54) + 0x60) & ~1);
+  }
 }
 
 /*
