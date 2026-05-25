@@ -228,22 +228,22 @@ void firstPersonEnter(void)
  */
 void CameraModeViewfinder_copyToCurrent(undefined2 *param_1)
 {
-  undefined2 *puVar1;
-  
-  puVar1 = (undefined2 *)(**(code **)(*gCameraInterface + 0xc))();
-  if ((puVar1 != (undefined2 *)0x0) && (param_1 != (undefined2 *)0x0)) {
-    *puVar1 = *param_1;
-    puVar1[1] = param_1[1];
-    puVar1[2] = param_1[2];
-    *(undefined4 *)(puVar1 + 6) = *(undefined4 *)(param_1 + 4);
-    *(undefined4 *)(puVar1 + 8) = *(undefined4 *)(param_1 + 6);
-    *(undefined4 *)(puVar1 + 10) = *(undefined4 *)(param_1 + 8);
-    *(undefined4 *)(puVar1 + 0xc) = *(undefined4 *)(param_1 + 4);
-    *(undefined4 *)(puVar1 + 0xe) = *(undefined4 *)(param_1 + 6);
-    *(undefined4 *)(puVar1 + 0x10) = *(undefined4 *)(param_1 + 8);
-    *(undefined4 *)(puVar1 + 0x5a) = *(undefined4 *)(param_1 + 10);
+  u8 *src = (u8 *)param_1;
+  u8 *cur;
+
+  cur = (u8 *)(*(int (**)(void))(*(int *)gCameraInterface + 0xc))();
+  if ((cur != NULL) && (src != NULL)) {
+    *(s16 *)(cur + 0) = *(s16 *)(src + 0);
+    *(s16 *)(cur + 2) = *(s16 *)(src + 2);
+    *(s16 *)(cur + 4) = *(s16 *)(src + 4);
+    *(f32 *)(cur + 12) = *(f32 *)(src + 8);
+    *(f32 *)(cur + 16) = *(f32 *)(src + 12);
+    *(f32 *)(cur + 20) = *(f32 *)(src + 16);
+    *(f32 *)(cur + 24) = *(f32 *)(src + 8);
+    *(f32 *)(cur + 28) = *(f32 *)(src + 12);
+    *(f32 *)(cur + 32) = *(f32 *)(src + 16);
+    *(f32 *)(cur + 180) = *(f32 *)(src + 20);
   }
-  return;
 }
 
 /*
@@ -612,8 +612,56 @@ void CameraModeStatic_update(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeStatic_init(void)
+void CameraModeStatic_init(u8 *cam, int p2, int *p3)
 {
+  u8 *state = *(u8 **)(cam + 164);
+  int obj;
+  u8 *setup;
+  s16 yaw;
+  s16 pitch;
+  s16 roll;
+  f32 dx, dy, dz;
+
+  if (lbl_803DD558 == NULL) {
+    lbl_803DD558 = (undefined4 *)mmAlloc(248, 15, 0);
+  }
+  *(u8 *)((int)lbl_803DD558 + 244) = 1;
+  *(u8 *)((int)lbl_803DD558 + 245) = 0;
+  obj = (int)fn_80109B04(*p3, 18, *(f32 *)(state + 24), *(f32 *)(state + 28), *(f32 *)(state + 32));
+  if (obj == 0) {
+    *(u8 *)((int)lbl_803DD558 + 245) = 1;
+    return;
+  }
+  *(int *)lbl_803DD558 = obj;
+  setup = *(u8 **)(obj + 76);
+  dx = *(f32 *)(obj + 24) - *(f32 *)(state + 24);
+  dy = *(f32 *)(obj + 28) - *(f32 *)(state + 28);
+  dz = *(f32 *)(obj + 32) - *(f32 *)(state + 32);
+  if ((setup[27] & 1) != 0) {
+    yaw = (s16)(0x8000 - getAngle(dx, dz));
+  } else {
+    yaw = (s16)(*(s16 *)(setup + 28) + 0x8000);
+  }
+  if ((setup[27] & 2) != 0) {
+    pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz)) - *(s16 *)(setup + 30);
+  } else {
+    pitch = *(s16 *)(setup + 30);
+  }
+  if ((setup[27] & 4) != 0) {
+    roll = *(s16 *)(state + 4);
+  } else {
+    roll = *(s16 *)(setup + 32);
+  }
+  *(f32 *)(cam + 24) = *(f32 *)(obj + 24);
+  *(f32 *)(cam + 28) = *(f32 *)(obj + 28);
+  *(f32 *)(cam + 32) = *(f32 *)(obj + 32);
+  *(s16 *)(cam + 0) = yaw;
+  *(s16 *)(cam + 2) = pitch;
+  *(s16 *)(cam + 4) = roll;
+  *(f32 *)(cam + 180) = (f32)(u32)setup[26];
+  Obj_TransformWorldPointToLocal(*(f32 *)(cam + 24), *(f32 *)(cam + 28), *(f32 *)(cam + 32),
+                                 (f32 *)(cam + 12), (f32 *)(cam + 16), (f32 *)(cam + 20),
+                                 *(int *)(cam + 48));
 }
 
 /*
