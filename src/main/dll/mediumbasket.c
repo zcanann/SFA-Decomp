@@ -1940,6 +1940,14 @@ extern f32 lbl_803E2D60;
 extern f32 lbl_803E2D84;
 extern f32 lbl_803E2D88;
 extern f32 lbl_803E2D8C;
+extern f32 lbl_803E2D90;
+extern f32 lbl_803E2D94;
+extern f32 lbl_803E2D98;
+extern f32 lbl_803E2D9C;
+extern f32 lbl_803E2DA0;
+extern f32 lbl_803E2DA4;
+extern f32 lbl_803E2DA8;
+extern f32 lbl_803E2DAC;
 extern f32 lbl_803E2DB0;
 extern f32 lbl_803E2DB4;
 extern f32 timeDelta;
@@ -1973,6 +1981,10 @@ extern u8 lbl_8031FE38[];
 extern u8 lbl_8031FE48[];
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
+extern void *memcpy(void *dst, const void *src, u32 size);
+extern f32 fn_80293E80(f32 angle);
+extern f32 sin(f32 angle);
+extern void Matrix_TransformPoint(void *mtx, f32 *x, f32 *y, f32 *z);
 void fn_8015CB0C(int *obj, int *state);
 
 #pragma scheduling off
@@ -2393,6 +2405,65 @@ int fn_8015C6B4(int obj, int state)
         *(u8 *)(obj + 0xaf) |= 8;
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015CE68(int obj, int state)
+{
+    int control = *(int *)(state + 0x40c);
+    f32 transformedX;
+    f32 transformedY;
+    f32 transformedZ;
+    u8 transformScratch[0x18];
+    f32 pathX;
+    f32 pathY;
+    f32 pathZ;
+    f32 pathMtx[16];
+    f32 scale;
+    f32 angle;
+
+    memcpy(pathMtx, (void *)ObjPath_GetPointModelMtx(obj, 1), 0x40);
+    pathMtx[14] = lbl_803E2D14;
+    pathMtx[13] = lbl_803E2D14;
+    pathMtx[12] = lbl_803E2D14;
+    if (*(s16 *)(obj + 0x46) == 99) {
+        scale = lbl_803E2D48;
+    } else {
+        scale = lbl_803E2D2C;
+    }
+    if (*(f32 *)(state + 0x280) >= scale) {
+        scale = *(f32 *)(state + 0x280);
+    }
+    if (*(s16 *)(state + 0x274) == 4) {
+        ObjPath_GetPointWorldPosition(obj, 0, (f32 *)(control + 0x2c),
+                                      (f32 *)(control + 0x30), (f32 *)(control + 0x34), 0);
+    } else {
+        ObjPath_GetPointWorldPosition(obj, 2, (f32 *)(control + 0x2c),
+                                      (f32 *)(control + 0x30), (f32 *)(control + 0x34), 0);
+    }
+    *(f32 *)(control + 0x30) = lbl_803E2D90 + *(f32 *)(obj + 0x10);
+    angle = (lbl_803E2D98 * (f32)*(s16 *)obj) / lbl_803E2D9C;
+    *(f32 *)(control + 0x2c) =
+        *(f32 *)(control + 0x2c) - scale * (lbl_803E2D94 * fn_80293E80(angle));
+    angle = (lbl_803E2D98 * (f32)*(s16 *)obj) / lbl_803E2D9C;
+    *(f32 *)(control + 0x34) =
+        *(f32 *)(control + 0x34) - scale * (lbl_803E2D94 * sin(angle));
+    pathX = lbl_803E2D14;
+    pathY = lbl_803E2DA0;
+    pathZ = lbl_803E2DA4;
+    ObjPath_GetPointWorldPosition(obj, 0, &pathX, &pathY, &pathZ, 1);
+    if ((*(u8 *)(control + 0x44) & 2) != 0) {
+        transformedX = lbl_803E2DA8;
+        transformedY = lbl_803E2DAC;
+        transformedZ = lbl_803E2DA4;
+        Matrix_TransformPoint(pathMtx, &transformedX, &transformedY, &transformedZ);
+        memcpy((void *)(control + 0x38), &transformedX, 0xc);
+        memcpy((void *)(control + 8), transformScratch, 0x18);
+        *(u8 *)(control + 0x44) |= 1;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
