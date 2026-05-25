@@ -25,6 +25,11 @@ extern f32 lbl_803E4650;
 extern f32 lbl_803E4658;
 extern f32 lbl_803E466C;
 extern f32 lbl_803E4670;
+extern f32 lbl_803E39AC;
+extern f32 lbl_803E39B8;
+
+extern int *gMapEventInterface;
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 /*
  * --INFO--
@@ -387,6 +392,32 @@ int largecrate_getExtraSize(void)
 int largecrate_getObjectTypeId(void)
 {
   return 0;
+}
+
+void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
+{
+  int state;
+  int mapEvent;
+  s16 timer;
+
+  state = *(int *)(obj + 0xb8);
+  mapEvent = (**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(*(int *)(obj + 0x4c) + 0x14));
+  if ((mapEvent == 0) ||
+      (((timer = *(s16 *)(state + 0x8), timer != 0 && (timer < 0x33)) ||
+       (lbl_803E39B8 < *(f32 *)(state + 0x4))))) {
+    *(s16 *)(obj + 0x6) = *(s16 *)(obj + 0x6) | 0x4000;
+  } else {
+    if (*(int *)(obj + 0xf8) == 0) {
+      if (renderState == 0) {
+        *(s16 *)(obj + 0x6) = *(s16 *)(obj + 0x6) | 0x4000;
+        return;
+      }
+    } else if (renderState != -1) {
+      *(s16 *)(obj + 0x6) = *(s16 *)(obj + 0x6) | 0x4000;
+      return;
+    }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E39AC);
+  }
 }
 
 /*
