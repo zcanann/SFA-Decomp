@@ -1045,7 +1045,51 @@ void linkDrawFn_801302c0(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void linkDrawFn_80130484(void) {}
+#pragma scheduling off
+#pragma peephole off
+void linkDrawFn_80130484(void)
+{
+    LinkMenuItem *p;
+    void *tex;
+    int minX;
+    int maxX;
+    int w;
+    int x;
+    int right;
+    int i;
+
+    minX = 480;
+    maxX = 0;
+    p = lbl_803A9458;
+    for (i = 0; i < (s8)lbl_803DD911; i++) {
+        if (((p->field16 & 4) != 0) && ((s8)p->slots[0] != -1)) {
+            tex = *(void **)(linkTextures + (s8)p->slots[0] * 8);
+        } else {
+            tex = p->texture;
+        }
+        if (tex != NULL) {
+            w = *(u16 *)((char *)tex + 12);
+            x = p->field0C;
+        } else {
+            if (getCurLanguage() == 4) {
+                w = *(u16 *)(lbl_802C8680 + 0xa) + 2;
+            } else {
+                w = *(u16 *)(lbl_802C8680 + 0x4a) + 2;
+            }
+            x = p->field06 - 2;
+        }
+        right = x + w;
+        if (x < minX) {
+            minX = x;
+        }
+        if (right > maxX) {
+            maxX = right;
+        }
+        p++;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern u8 lbl_803DD911;
 #pragma scheduling off
 #pragma peephole off
