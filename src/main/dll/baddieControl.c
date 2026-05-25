@@ -4047,3 +4047,235 @@ int dll_19_func14(u8 *p1, u8 *p2, f32 frange, int p4) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *gMapEventInterface;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E1C30;
+extern f32 lbl_803E1C40;
+extern f32 lbl_803E1C44;
+extern f32 lbl_803E1C4C;
+extern f32 lbl_803E1C50;
+
+/* dll_19_func16  addr=0x801126E0  size=0x348  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+int dll_19_func16(u8 *p1, u8 *p2, int p3, int p4, int *p5, u8 *p6, s16 p7, u8 *p8) {
+    u8 *state = *(u8 **)(p1 + 184);
+    int player = Obj_GetPlayerObject();
+    int hit;
+    int v28;
+    int v24;
+    int hitId;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+
+    if (*(f32 *)(state + 1000) > lbl_803E1C2C) {
+        *(f32 *)(state + 1000) = timeDelta * *(f32 *)(state + 1004) + *(f32 *)(state + 1000);
+        if ((*(u16 *)(state + 1024) & 0x20) != 0) {
+            *(u16 *)(state + 1024) = *(u16 *)(state + 1024) & ~0x20;
+            *(u16 *)(state + 1024) = *(u16 *)(state + 1024) | 0x40;
+            if (*(f32 *)(state + 1000) > lbl_803E1C40) {
+                *(f32 *)(state + 1000) = lbl_803E1C2C;
+                *(u16 *)(state + 1024) = *(u16 *)(state + 1024) & ~0x40;
+            }
+        } else if ((*(u16 *)(state + 1024) & 0x40) != 0) {
+            if (*(f32 *)(state + 1000) > lbl_803E1C40) {
+                int other = *(int *)(p1 + 76);
+                *(f32 *)(state + 1000) = lbl_803E1C2C;
+                *(u16 *)(state + 1024) = *(u16 *)(state + 1024) & ~0x40;
+                p2[852] = 0;
+                p1[54] = 0;
+                *(int *)(p1 + 244) = 1;
+                *(s16 *)(p1 + 6) = *(s16 *)(p1 + 6) | 0x4000;
+                (*(void (**)(int, f32))(*(int *)gMapEventInterface + 100))(
+                    *(int *)(other + 20),
+                    (f32)(s32)(*(s16 *)(other + 44) * 60) - lbl_803E1C30);
+            }
+        } else {
+            if (*(f32 *)(state + 1000) < lbl_803E1C2C) {
+                *(f32 *)(state + 1000) = lbl_803E1C2C;
+            } else if (*(f32 *)(state + 1000) > lbl_803E1C44) {
+                *(f32 *)(state + 1000) = lbl_803E1C44 - (*(f32 *)(state + 1000) - lbl_803E1C44);
+                *(f32 *)(state + 1004) = -*(f32 *)(state + 1004);
+            }
+        }
+    }
+
+    if ((s8)p2[852] == 0) {
+        return 0;
+    }
+    hit = ObjHits_GetPriorityHitWithPosition(p1, &hitId, &v28, &v24, &posX, &posY, &posZ);
+    state[1034] = (s8)v28;
+    if (hit == 0) {
+        return hit;
+    }
+    if (p8 != NULL) {
+        *(f32 *)(p8 + 12) = posX + playerMapOffsetX;
+        *(f32 *)(p8 + 16) = posY;
+        *(f32 *)(p8 + 20) = posZ + playerMapOffsetZ;
+    }
+    if (p6 != NULL) {
+        if ((s8)*(s8 *)(p6 + hit - 2) != -1) {
+            v24 = (s8)*(s8 *)(p6 + hit - 2);
+        }
+    } else {
+        v24 = 0;
+    }
+    p2[852] = (s8)(p2[852] - v24);
+    if ((s8)p2[852] < 1) {
+        *(u16 *)(state + 1024) = *(u16 *)(state + 1024) | 0x20;
+        *(f32 *)(state + 1000) = lbl_803E1C48;
+        *(f32 *)(state + 1004) = lbl_803E1C4C;
+        *(s16 *)(p2 + 624) = p7;
+        p2[852] = 0;
+    } else {
+        if (v24 != 0) {
+            if (*(int *)(p2 + 720) == 0) {
+                if (fn_80295A04(player, 1) != 0) {
+                    *(int *)(p2 + 720) = player;
+                    p2[841] = 0;
+                }
+            }
+            *(f32 *)(state + 1000) = lbl_803E1C48;
+            *(f32 *)(state + 1004) = lbl_803E1C50;
+            if (p5 != NULL) {
+                if (p5[hit - 2] != -1) {
+                    (*(void (**)(u8 *, u8 *))(*(int *)gPlayerInterface + 20))(p1, p2);
+                    *(s16 *)(p2 + 624) = p7;
+                }
+            }
+            p2[847] = (s8)hit;
+        }
+        Sfx_StopObjectChannel((int *)p1, 16);
+        ObjMsg_SendToObject(hitId, 0xe0001, p1, 0);
+    }
+    return hit;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u32 lbl_803E1C18;
+extern u32 lbl_803E1C1C;
+extern u32 lbl_803E1C20;
+extern u32 lbl_803E1C24;
+extern f32 lbl_803E1C54;
+extern f32 lbl_803E1C58;
+extern f32 lbl_803E1C5C;
+extern f32 lbl_803E1C60;
+extern u32 lbl_803DD5E4;
+
+/* dll_19_func15  addr=0x80112A28  size=0x358  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
+    u8 *state = *(u8 **)(p1 + 76);
+    int obj;
+    f32 scale;
+    u16 ids1[4];
+    u16 ids2[4];
+    int idx;
+    f32 savedX, savedY, savedZ;
+    f32 nearDist;
+
+    scale = lbl_803E1C2C;
+    *(u32 *)&ids1[0] = lbl_803E1C18;
+    *(u32 *)&ids1[2] = lbl_803E1C1C;
+    *(u32 *)&ids2[0] = lbl_803E1C20;
+    *(u32 *)&ids2[2] = lbl_803E1C24;
+    if (p2 == 0) {
+        return 0;
+    }
+    if (Obj_IsLoadingLocked() == 0) {
+        return 0;
+    }
+    if ((*(s16 *)(state + 34) & 0xf00) != 0) {
+        idx = ((p2 & 0xf00) >> 8) - 1;
+        if (idx > 3) {
+            idx = 3;
+        }
+        obj = Obj_AllocObjectSetup(48, ids1[idx]);
+        scale = lbl_803E1C54;
+    }
+    if ((*(s16 *)(state + 34) & 0xf000) != 0) {
+        idx = ((p2 & 0xf000) >> 12) - 1;
+        if (idx > 3) {
+            idx = 3;
+        }
+        obj = Obj_AllocObjectSetup(48, ids2[idx]);
+        scale = lbl_803E1C54;
+    }
+    if ((u8)*(s16 *)(state + 34) != 0) {
+        switch (p2) {
+        case 1:
+            obj = Obj_AllocObjectSetup(48, 717);
+            scale = lbl_803E1C54;
+            break;
+        case 2:
+            obj = Obj_AllocObjectSetup(48, 9);
+            scale = lbl_803E1C54;
+            break;
+        case 3:
+            obj = Obj_AllocObjectSetup(48, 11);
+            scale = lbl_803E1C54;
+            break;
+        case 4:
+            obj = Obj_AllocObjectSetup(48, 717);
+            scale = lbl_803E1C54;
+            break;
+        case 5:
+            savedX = *(f32 *)(p1 + 24);
+            savedY = *(f32 *)(p1 + 28);
+            savedZ = *(f32 *)(p1 + 32);
+            if (state != NULL) {
+                *(f32 *)(p1 + 24) = *(f32 *)(state + 8);
+                *(f32 *)(p1 + 28) = *(f32 *)(state + 12);
+                *(f32 *)(p1 + 32) = *(f32 *)(state + 16);
+            }
+            nearDist = lbl_803E1C58;
+            lbl_803DD5E4 = (u32)ObjGroup_FindNearestObject(4, p1, &nearDist);
+            *(f32 *)(p1 + 24) = savedX;
+            *(f32 *)(p1 + 28) = savedY;
+            *(f32 *)(p1 + 32) = savedZ;
+            if (lbl_803DD5E4 != 0) {
+                *(f32 *)(lbl_803DD5E4 + 24) = *(f32 *)(p1 + 12);
+                *(f32 *)(lbl_803DD5E4 + 12) = *(f32 *)(p1 + 12);
+                *(f32 *)(lbl_803DD5E4 + 28) = *(f32 *)(p1 + 16) + lbl_803E1C5C;
+                *(f32 *)(lbl_803DD5E4 + 16) = *(f32 *)(p1 + 16) + lbl_803E1C5C;
+                *(f32 *)(lbl_803DD5E4 + 32) = *(f32 *)(p1 + 20);
+                *(f32 *)(lbl_803DD5E4 + 20) = *(f32 *)(p1 + 20);
+            }
+            return lbl_803DD5E4;
+        case 6:
+            obj = Obj_AllocObjectSetup(48, 1702);
+            *(u8 *)(obj + 27) = 0;
+            *(u8 *)(obj + 34) = 0;
+            *(u8 *)(obj + 35) = 64;
+            scale = lbl_803E1C60;
+            break;
+        default:
+            return 0;
+        }
+    }
+    *(u8 *)(obj + 26) = 20;
+    *(s16 *)(obj + 44) = -1;
+    *(s16 *)(obj + 28) = -1;
+    *(s16 *)(obj + 36) = -1;
+    *(f32 *)(obj + 8) = *(f32 *)(p1 + 12);
+    *(f32 *)(obj + 12) = *(f32 *)(p1 + 16) + scale;
+    *(f32 *)(obj + 16) = *(f32 *)(p1 + 20);
+    if ((u8)p4 != 0) {
+        *(s16 *)(obj + 46) = 2;
+    } else {
+        *(s16 *)(obj + 46) = 1;
+    }
+    *(u8 *)(obj + 4) = state[4];
+    *(u8 *)(obj + 6) = state[6];
+    *(u8 *)(obj + 5) = state[5];
+    *(u8 *)(obj + 7) = state[7];
+    lbl_803DD5E4 = (u32)Obj_SetupObject(obj, 5, (s8)p1[172], -1, *(int *)(p1 + 48));
+    return lbl_803DD5E4;
+}
+#pragma peephole reset
+#pragma scheduling reset
