@@ -2,13 +2,12 @@
 #include "main/dll/FRONT/n_filemenu.h"
 #include "main/dll/FRONT/dll_39.h"
 
-extern void FUN_80006824(uint obj, ushort sfxId);
-extern void FUN_80006b84(int id);
-extern void FUN_80006ba8(int controller, uint buttons);
-extern void FUN_80006bac(int controller);
-extern void FUN_80006bb0(int controller);
-extern void FUN_80006bb4(int controller, u8 *dpad, u8 *face);
-extern uint FUN_80006c00(int controller);
+extern void Sfx_PlayFromObject(uint obj, ushort sfxId);
+extern void buttonDisable(int controller, uint buttons);
+extern void padClearAnalogInputY(int controller);
+extern void padClearAnalogInputX(int controller);
+extern void padGetAnalogInput(int controller, u8 *dpad, u8 *face);
+extern uint getButtonsJustPressed(int controller);
 extern void loadUiDll(int id);
 extern void doNothing_onSaveSelectScreenExit(void);
 extern uint mmSetFreeDelay(uint delay);
@@ -56,71 +55,35 @@ extern TitleMenuControl *gCameraInterface;
 extern TitleMenuControl *gTitleMenuLinkInterface;
 extern f64 lbl_803E1D28;
 
-static int TitleMenu_GetMenuId(void)
-{
-  return (*(int (*)(void))((int)gCameraInterface->vtable + 0x10))();
-}
-
-static void TitleMenu_SetMenuState(int state, int arg)
-{
-  (*(void (*)(int, int))((int)gCameraInterface->vtable + 0x60))(state,arg);
-}
-
-static int TitleMenu_GetFadeState(void)
-{
-  return (*(int (*)(void))((int)gTitleMenuLinkInterface->vtable + 0xc))();
-}
-
-static u8 TitleMenu_GetSelection(void)
-{
-  return (*(u8 (*)(void))((int)gTitleMenuLinkInterface->vtable + 0x14))();
-}
-
-static void TitleMenu_BindEntries(void)
-{
-  (*(void (*)(TitleMenuTextEntry *))((int)gTitleMenuLinkInterface->vtable + 0x2c))(lbl_8031A214);
-}
-
-static void TitleMenu_ClearPanel(void)
-{
-  (*(void (*)(void))((int)gTitleMenuLinkInterface->vtable + 8))();
-}
-
-static void TitleMenu_OpenPanel(void)
-{
-  (*(void (*)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
-      ((int)gTitleMenuLinkInterface->vtable + 4))(lbl_8031A214,9,5,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
-}
-
-static void TitleMenu_SetPanelSelection(int selection)
-{
-  (*(void (*)(int))((int)gTitleMenuLinkInterface->vtable + 0x18))(selection);
-}
-
-static void TitleMenu_SetEntryHighlight(int entry)
-{
-  int i;
-
-  for (i = 0; i < 4; i++) {
-    if (i == entry) {
-      lbl_8031A214[i].flags &= 0xbfff;
-    } else {
-      lbl_8031A214[i].flags |= 0x4000;
-    }
-  }
-  TitleMenu_BindEntries();
-}
-
-static void TitleMenu_ReloadSaveSettings(void)
-{
-  int result;
-
-  result = saveFn_800e8508();
-  if ((result == 0) && (lbl_803DB424 != 0)) {
-    memCardFn_8007dd04(1);
-  }
-  loadSaveSettings();
-}
+#define TitleMenu_GetMenuId() (*(int (**)(void))((int)gCameraInterface->vtable + 0x10))()
+#define TitleMenu_SetMenuState(state, arg) (*(void (**)(int, int))((int)gCameraInterface->vtable + 0x60))(state,arg)
+#define TitleMenu_GetFadeState() (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0xc))()
+#define TitleMenu_GetSelection() (*(u8 (**)(void))((int)gTitleMenuLinkInterface->vtable + 0x14))()
+#define TitleMenu_BindEntries() (*(void (**)(TitleMenuTextEntry *))((int)gTitleMenuLinkInterface->vtable + 0x2c))(lbl_8031A214)
+#define TitleMenu_ClearPanel() (*(void (**)(void))((int)gTitleMenuLinkInterface->vtable + 8))()
+#define TitleMenu_OpenPanel() (*(void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))((int)gTitleMenuLinkInterface->vtable + 4))(lbl_8031A214,9,5,0,0,0,0x14,200,0xff,0xff,0xff,0xff)
+#define TitleMenu_SetPanelSelection(selection) (*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18))(selection)
+#define TitleMenu_SetEntryHighlight(entry) \
+  do { \
+    int i; \
+    for (i = 0; i < 4; i++) { \
+      if (i == (entry)) { \
+        lbl_8031A214[i].flags &= 0xbfff; \
+      } else { \
+        lbl_8031A214[i].flags |= 0x4000; \
+      } \
+    } \
+    TitleMenu_BindEntries(); \
+  } while (0)
+#define TitleMenu_ReloadSaveSettings() \
+  do { \
+    int result; \
+    result = saveFn_800e8508(); \
+    if ((result == 0) && (lbl_803DB424 != 0)) { \
+      memCardFn_8007dd04(1); \
+    } \
+    loadSaveSettings(); \
+  } while (0)
 
 /*
  * --INFO--
@@ -144,7 +107,7 @@ int TitleMenu_run(void)
   uint buttons;
   u8 previousFadeTimer;
   u8 frames;
-  u8 dpad[11];
+  u8 dpad;
   u8 face;
 
   previousFadeTimer = gTitleMenuLoadDelay;
@@ -190,15 +153,15 @@ int TitleMenu_run(void)
   if (((gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) &&
        (gAttractMoviePlaybackEnabled != 0)) &&
       (gTitleMenuReadyForInput != 0)) {
-    buttons = FUN_80006c00(0);
-    FUN_80006bb4(0,dpad,&face);
-    FUN_80006ba8(0,buttons);
-    FUN_80006bb0(0);
-    FUN_80006bac(0);
+    buttons = getButtonsJustPressed(0);
+    padGetAnalogInput(0,&dpad,&face);
+    buttonDisable(0,buttons);
+    padClearAnalogInputX(0);
+    padClearAnalogInputY(0);
 
     inputPressed = false;
     if ((gAttractMovieLoopCompleted == 0) || (gTitleMenuInputCooldown != 0)) {
-      if ((buttons != 0) || ((dpad[0] != 0 || (face != 0)))) {
+      if ((buttons != 0) || ((dpad != 0 || (face != 0)))) {
         inputPressed = true;
       }
     } else {
@@ -208,7 +171,7 @@ int TitleMenu_run(void)
       gAttractMovieLoopCompleted = 0;
     }
     if (inputPressed) {
-      if (((buttons == 0) && (dpad[0] == 0)) && (face == 0)) {
+      if (((buttons == 0) && (dpad == 0)) && (face == 0)) {
         gAttractMovieReplayCountdown = 1;
         gTitleMenuInputCooldown = 0x3c;
       } else {
@@ -225,9 +188,9 @@ int TitleMenu_run(void)
       }
     }
   } else if ((gTitleMenuReadyForInput != 0) && (gAttractMoviePlaybackEnabled == 0)) {
-    buttons = FUN_80006c00(0);
-    FUN_80006bb4(0,dpad,&face);
-    if ((buttons == 0) && ((dpad[0] == 0 && (face == 0)))) {
+    buttons = getButtonsJustPressed(0);
+    padGetAnalogInput(0,&dpad,&face);
+    if ((buttons == 0) && ((dpad == 0 && (face == 0)))) {
       if ((gAttractMovieLoopCompleted != 0) && (gAttractMovieLoopCompleted = 0, gTitleMenuInputCooldown == 0)) {
         gTitleMenuInputCooldown = 0x3c;
         gAttractMovieReplayCountdown--;
@@ -269,7 +232,7 @@ int TitleMenu_run(void)
       }
     } else if (gTitleMenuPreviousSelection != gTitleMenuSelection) {
       TitleMenu_SetMenuState(gTitleMenuSelection,1);
-      FUN_80006824(0,0x37b);
+      Sfx_PlayFromObject(0,0x37b);
       gTitleMenuSelectionFadeStep = -0x19;
       gTitleMenuPreviousSelection = gTitleMenuSelection;
       titleScreenFn_80130464(0);
@@ -302,7 +265,7 @@ int TitleMenu_run(void)
         titleScreenFn_801368a4(1);
         gTitleMenuLoadDelay = 1;
         titleScreenFn_80130464(1);
-        FUN_80006824(0,0xff);
+        Sfx_PlayFromObject(0,0xff);
         if (gTitleMenuSelection == 2) {
           gTitleMenuNextDllId = 7;
           lbl_803DD6F8 = 1;
