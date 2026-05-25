@@ -932,6 +932,7 @@ extern u32 randomGetRange(int min, int max);
 extern void *gPartfxInterface;
 
 /* fn_8013ADFC  addr=0x8013ADFC  size=0x1E4  linkage=global */
+#pragma scheduling off
 void fn_8013ADFC(u8 *obj)
 {
     u8 *state;
@@ -955,11 +956,11 @@ void fn_8013ADFC(u8 *obj)
         args.sourceId = 0;
     }
 
-    if (randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, 4) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
             obj, 0xca, &args, 0x200001, -1, 0);
     }
-    if (randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, 4) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
             obj, 0xcb, &args, 0x200001, -1, 0);
     }
@@ -969,15 +970,16 @@ void fn_8013ADFC(u8 *obj)
     args.z = *(f32 *)(state + 0x3ec);
     args.objectId = *(s16 *)obj;
 
-    if (randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, 4) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
             obj, 0xca, &args, 0x200001, -1, 0);
     }
-    if (randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, 4) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
             obj, 0xcb, &args, 0x200001, -1, 0);
     }
 }
+#pragma scheduling reset
 
 /* fn_8013AFE0  addr=0x8013AFE0  size=0x200  linkage=global */
 void fn_8013AFE0(f32 *start, f32 *end, f32 *guardPoint, f32 *center, f32 minDistance, f32 moveDistance)
