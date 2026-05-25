@@ -8141,9 +8141,19 @@ typedef struct ModelList {
     u8 pad0E[6];
 } ModelList;
 
+typedef struct ResourceDescriptor {
+    u8 pad00[0x10];
+    void (*acquire)(struct ResourceDescriptor* descriptor);
+    void (*release)(void);
+    u8 data[0];
+} ResourceDescriptor;
+
 extern int memcmp(const void* lhs, const void* rhs, u32 size);
 extern void* memcpy(void* dst, const void* src, u32 size);
 extern void* memset(void* dst, int value, u32 size);
+extern ResourceDescriptor* gResourceDescriptors[];
+extern void* gResourceLoadedHandles[];
+extern u16 gResourceRefCounts[];
 
 /*
  * Function: Queue_GetCount
@@ -8531,6 +8541,72 @@ ModelList* allocModelStruct(int capacity, int dataSize)
     list->capacityEnd = list->entries + capacity * list->strideShorts;
     memset(list->entries, -1, capacity * list->strideShorts * 2);
     return list;
+}
+
+/*
+ * Function: Resource_Release
+ * EN v1.0 Address: 0x80013E2C
+ * EN v1.0 Size: 156b
+ */
+BOOL Resource_Release(void* handleSlot)
+{
+    s32 i;
+    ResourceDescriptor* descriptor;
+    void** loadedHandle;
+
+    i = 0;
+    descriptor = (ResourceDescriptor*)handleSlot;
+    loadedHandle = gResourceLoadedHandles;
+    while (i < 0x2c1) {
+        if ((void*)loadedHandle == handleSlot) {
+            descriptor = gResourceDescriptors[i];
+            break;
+        }
+        loadedHandle++;
+        i++;
+    }
+
+    gResourceRefCounts[i]--;
+    if (gResourceRefCounts[i] == 0) {
+        if (descriptor->release != NULL) {
+            descriptor->release();
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+/*
+ * Function: Resource_Acquire
+ * EN v1.0 Address: 0x80013EC8
+ * EN v1.0 Size: 160b
+ */
+void Resource_Acquire(u32 id)
+{
+    u32 index;
+    ResourceDescriptor* descriptor;
+
+    index = id & 0xffff;
+    descriptor = gResourceDescriptors[index];
+    if (gResourceRefCounts[index] == 0 && descriptor->acquire != NULL) {
+        descriptor->acquire(descriptor);
+    }
+    gResourceRefCounts[index]++;
+    gResourceLoadedHandles[index] = descriptor->data;
+}
+
+/*
+ * Function: Resource_ResetRefCounts
+ * EN v1.0 Address: 0x80013F68
+ * EN v1.0 Size: 228b
+ */
+void Resource_ResetRefCounts(void)
+{
+    s32 i;
+
+    for (i = 0; i < 0x2c1; i++) {
+        gResourceRefCounts[i] = 0;
+    }
 }
 
 extern u8 lbl_803DC8F8;
