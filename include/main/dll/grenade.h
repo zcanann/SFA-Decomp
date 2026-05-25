@@ -15,11 +15,7 @@ void trickyFn_80142524(undefined8 param_1,undefined8 param_2,double param_3,unde
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int *param_10,undefined4 param_11,undefined4 param_12,
                  byte param_13,uint param_14,undefined4 param_15,undefined4 param_16);
-undefined4
-trickyFn_80142a14(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
-            int param_10,undefined4 param_11,undefined4 param_12,byte param_13,uint param_14,
-            undefined4 param_15,undefined4 param_16);
+int trickyFn_80142a14(int obj, int state);
 void trickyFlameFn_80142b6c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 bool trickyFoodFn_80142d2c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
