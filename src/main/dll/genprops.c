@@ -4593,7 +4593,7 @@ extern void flamethrowerspe_init();
 extern void shield_free();
 extern void shield_render();
 extern void shield_update();
-extern void shield_init();
+
 extern void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void restartmarker_init(int *obj, int *state) {
     *(s16*)obj = (s16)(*(u8*)((char*)state + 0x18) << 8);
@@ -4604,6 +4604,20 @@ extern void dll_F7_render();
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern u8 staffFn_80170380[];
+extern int *Obj_GetActiveModel(int obj);
+extern void fn_800284CC(void);
+extern void ObjModel_SetPostRenderCallback(int *model, void *callback);
+
+void shield_init(int *obj, void *initData) {
+    extern void staffFn_80170380(int *obj, int param);
+    int *model = Obj_GetActiveModel((int)obj);
+    ObjModel_SetPostRenderCallback(model, fn_800284CC);
+    if (*(s16 *)((char *)obj + 0x46) == 0x836) {
+        staffFn_80170380(obj, 5);
+    } else {
+        staffFn_80170380(obj, 7);
+    }
+}
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
