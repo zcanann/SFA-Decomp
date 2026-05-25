@@ -813,61 +813,54 @@ void trickyFlameFn_80142b6c(undefined8 param_1,double param_2,double param_3,und
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool trickyFoodFn_80142d2c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,int *param_10,undefined4 param_11,undefined4 param_12,byte param_13,
-                 uint param_14,undefined4 param_15,undefined4 param_16)
+extern int *gGameUIInterface;
+extern u32 lbl_802C21DC[];
+
+#pragma scheduling off
+#pragma peephole off
+int trickyFoodFn_80142d2c(int obj, int state)
 {
-  int iVar1;
-  bool bVar2;
-  char cVar3;
-  int iVar4;
-  undefined4 *puVar5;
-  undefined4 local_28;
-  undefined4 local_24;
-  undefined4 local_20;
-  undefined4 local_1c;
-  undefined4 local_18;
-  
-  puVar5 = &DAT_802c295c;
-  local_28 = DAT_802c295c;
-  local_24 = DAT_802c2960;
-  local_20 = DAT_802c2964;
-  local_1c = DAT_802c2968;
-  local_18 = DAT_802c296c;
-  iVar1 = trickyFoodFn_8014460c(param_9,param_10);
-  if (iVar1 != 0) {
-    param_10[0x1c8] = (int)lbl_803E306C;
-    param_10[0x15] = param_10[0x15] & 0xffffffef;
-    *(undefined *)((int)param_10 + 10) = 0;
-    return true;
+  int tex;
+  int iface;
+  int result;
+  short sVar;
+  u32 buf[5];
+
+  buf[0] = lbl_802C21DC[0];
+  buf[1] = lbl_802C21DC[1];
+  buf[2] = lbl_802C21DC[2];
+  buf[3] = lbl_802C21DC[3];
+  buf[4] = lbl_802C21DC[4];
+  if (trickyFoodFn_8014460c(obj, (int *)state) != 0) {
+    *(float *)(state + 0x720) = lbl_803E23DC;
+    *(int *)(state + 0x54) = *(int *)(state + 0x54) & ~0x10;
+    *(u8 *)(state + 0xa) = 0;
+    return 1;
   }
-  iVar4 = *DAT_803dd6e8;
-  iVar1 = (**(code **)(iVar4 + 0x24))(&local_28,5);
-  if (iVar1 != 2) {
-    if (iVar1 < 2) {
-      if (iVar1 < 0) goto LAB_801431cc;
+  iface = *gGameUIInterface;
+  result = (**(code **)(iface + 0x24))(buf, 5);
+  if (result != 2) {
+    if (result < 2) {
+      if (result < 0) goto skip;
+    } else if (result > 5) {
+      goto skip;
     }
-    else if (5 < iVar1) goto LAB_801431cc;
-    iVar1 = *(int *)(param_9 + 0xb8);
-    if (((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0) &&
-       (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-        (bVar2 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar2)))) {
-      iVar4 = 0x35d;
-      puVar5 = (undefined4 *)0x500;
-      param_13 = 0xff;
-      param_14 = 0;
-      objAudioFn_800393f8(param_9,(void *)(iVar1 + 0x3a8),0x35d,0x500,0xffffffff,0);
+    tex = *(int *)(obj + 0xb8);
+    if (((*(u8 *)(tex + 0x58) >> 6) & 1) == 0) {
+      sVar = *(short *)(obj + 0xa0);
+      if (sVar >= 48 || sVar < 41) {
+        if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0) {
+          objAudioFn_800393f8(obj, (void *)(tex + 0x3a8), 861, 1280, -1, 0);
+        }
+      }
     }
   }
-LAB_801431cc:
-  if (lbl_803E306C == (float)param_10[0x1c8]) {
-    param_10[0x15] = param_10[0x15] & 0xffffffef;
-    *(undefined *)((int)param_10 + 10) = 0;
+skip:
+  if (lbl_803E23DC == *(float *)(state + 0x720)) {
+    *(int *)(state + 0x54) = *(int *)(state + 0x54) & ~0x10;
+    *(u8 *)(state + 0xa) = 0;
   }
-  cVar3 = trickyFn_8013b368((double)lbl_803E3098,param_2,param_3,param_4,param_5,param_6,param_7,
-                       param_8,param_9,param_10,iVar4,puVar5,param_13,param_14,param_15,param_16);
-  return cVar3 == '\x01';
+  return (u8)trickyFn_8013b368(lbl_803E2408, obj, state) == 1;
 }
 
 /*

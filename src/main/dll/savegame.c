@@ -1,6 +1,15 @@
 #include "ghidra_import.h"
 #include "main/dll/savegame.h"
 
+typedef struct {
+  u32 mode;       /* +0x00 */
+  f32 x, y, z;    /* +0x04 +0x08 +0x0c */
+  void *tex;      /* +0x10 */
+  u16 flags;      /* +0x14 */
+  u8 layer;       /* +0x16 */
+} GfxCmd;
+extern undefined4* gModgfxInterface;
+
 extern uint GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80286834();
@@ -2323,7 +2332,71 @@ void dll_99_func00_nop(void) {}
 /* Stubs to align function set with v1.0 asm. The dll_xx_func03 stubs follow
  * the same large-struct + vtable-call pattern as foodbag's func03s; matching
  * bodies needs proper struct recovery as follow-up. */
-void dll_92_func03(int param_1, int param_2, int param_3, unsigned int param_4) {}
+extern u8 lbl_803171C0[];
+extern f32 lbl_803E1210;
+extern f32 lbl_803E1214;
+extern f32 lbl_803E121C;
+extern f32 lbl_803E1224;
+extern f32 lbl_803E1228;
+extern f32 lbl_803E122C;
+extern f32 lbl_803E1230;
+extern f32 lbl_803E1234;
+extern f32 lbl_803E1238;
+void dll_92_func03(int param_1, int param_2, int param_3, uint param_4)
+{
+  struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
+    u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
+    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+  GfxCmd *e = buf.entries;
+  int ctx;
+  e[0].layer = 0; e[0].flags = 5; e[0].tex = &lbl_803171C0[96]; e[0].mode = 4;
+  e[0].x = lbl_803E1214; e[0].y = lbl_803E1214; e[0].z = lbl_803E1214;
+  e[1].layer = 0; e[1].flags = 1; e[1].tex = (void *)0; e[1].mode = 4;
+  e[1].x = lbl_803E121C; e[1].y = lbl_803E1214; e[1].z = lbl_803E1214;
+  e[2].layer = 0; e[2].flags = 6; e[2].tex = &lbl_803171C0[84]; e[2].mode = 2;
+  e[2].x = lbl_803E1224; e[2].y = lbl_803E1224; e[2].z = lbl_803E1224;
+  e[3].layer = 1; e[3].flags = 6; e[3].tex = &lbl_803171C0[84]; e[3].mode = 0x4000;
+  e[3].x = lbl_803E1228; e[3].y = lbl_803E1210; e[3].z = lbl_803E1214;
+  e[4].layer = 1; e[4].flags = 6; e[4].tex = &lbl_803171C0[84]; e[4].mode = 2;
+  e[4].x = lbl_803E122C; e[4].y = lbl_803E122C; e[4].z = lbl_803E1230;
+  e[5].layer = 2; e[5].flags = 6; e[5].tex = &lbl_803171C0[84]; e[5].mode = 0x4000;
+  e[5].x = lbl_803E1228; e[5].y = lbl_803E1210; e[5].z = lbl_803E1214;
+  e[6].layer = 2; e[6].flags = 6; e[6].tex = &lbl_803171C0[84]; e[6].mode = 2;
+  e[6].x = lbl_803E1234; e[6].y = lbl_803E1234; e[6].z = lbl_803E1210;
+  e[7].layer = 3; e[7].flags = 6; e[7].tex = &lbl_803171C0[84]; e[7].mode = 0x4000;
+  e[7].x = lbl_803E1228; e[7].y = lbl_803E1210; e[7].z = lbl_803E1214;
+  e[8].layer = 3; e[8].flags = 1; e[8].tex = (void *)0; e[8].mode = 4;
+  e[8].x = lbl_803E1214; e[8].y = lbl_803E1214; e[8].z = lbl_803E1214;
+  buf.v58 = 0;
+  ctx = param_1;
+  buf.ctx = ctx;
+  buf.v44 = 4;
+  buf.pos[0] = lbl_803E1238; buf.pos[1] = lbl_803E1238; buf.pos[2] = lbl_803E1238;
+  buf.col[0] = lbl_803E1214; buf.col[1] = lbl_803E1214; buf.col[2] = lbl_803E1214;
+  buf.scale = lbl_803E1238;
+  buf.v40 = 1;
+  buf.v3c = 0;
+  buf.v59 = 6;
+  buf.v5a = 0;
+  buf.v5b = 0;
+  buf.count = 9;
+  buf.hw[0] = *(s16 *)&lbl_803171C0[108]; buf.hw[1] = *(s16 *)&lbl_803171C0[110]; buf.hw[2] = *(s16 *)&lbl_803171C0[112]; buf.hw[3] = *(s16 *)&lbl_803171C0[114];
+  buf.hw[4] = *(s16 *)&lbl_803171C0[116]; buf.hw[5] = *(s16 *)&lbl_803171C0[118]; buf.hw[6] = *(s16 *)&lbl_803171C0[120];
+  buf.cmds = buf.entries;
+  buf.flags = 0x4000400 | 0;
+  if ((param_4 & 1) != 0) {
+    if (ctx == 0) {
+      buf.pos[0] = lbl_803E1238 + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E1238 + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E1238 + *(f32 *)(param_3 + 0x14);
+    } else {
+      buf.pos[0] = lbl_803E1238 + *(f32 *)(ctx + 0x18);
+      buf.pos[1] = lbl_803E1238 + *(f32 *)(ctx + 0x1c);
+      buf.pos[2] = lbl_803E1238 + *(f32 *)(ctx + 0x20);
+    }
+  }
+  (**(code **)(*gModgfxInterface + 8))(&buf, 0, 6, &lbl_803171C0[0], 4, &lbl_803171C0[60], 0x3c, 0);
+}
 extern u8 lbl_80317260[];
 extern undefined4 *gModgfxInterface;
 extern f32 lbl_803E1240;
@@ -2334,13 +2407,6 @@ extern f32 lbl_803E1250;
 extern f32 lbl_803E1254;
 extern f32 lbl_803E1258;
 
-typedef struct {
-  u32 mode;       /* +0x00 */
-  f32 x, y, z;    /* +0x04 +0x08 +0x0c */
-  void *tex;      /* +0x10 */
-  u16 flags;      /* +0x14 */
-  u8 layer;       /* +0x16 */
-} GfxCmd;
 
 typedef struct {
   GfxCmd *cmds;   /* +0x00 */
