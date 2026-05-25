@@ -1111,7 +1111,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
       } else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_A) != 0) {
         angleA = 0;
         angleB = 0;
-      } else if ((behavior & 0x00100000) != 0) {
+      } else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH) != 0) {
         if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && sourceObject != NULL) {
           aimDelta[0] = *(f32 *)((char *)cameraSlot + 0xc) - sourceObject->posX;
           aimDelta[1] = *(f32 *)((char *)cameraSlot + 0x10) - sourceObject->posY;
