@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80283FA0.h"
+#include "main/audio/aram.h"
 #include "dolphin/os.h"
 
 extern void ARQPostRequest(void *req, u32 owner, u32 type, u32 prio, u32 src, u32 dst, u32 size, void (*cb)(void *));

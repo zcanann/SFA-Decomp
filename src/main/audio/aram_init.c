@@ -1,11 +1,8 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80284410.h"
+#include "main/audio/aram.h"
 
-extern void aramUploadData(void *src, void *dst, u32 size, int mode, int callback,
-                           int callbackArg);
 extern void *salMalloc(u32 size);
 extern void salFree(void *p);
-extern void aramInitStreamBuffers(void);
 extern void DCFlushRange(void *src, u32 size);
 extern u32 ARGetBaseAddress(void);
 extern u32 ARGetSize(void);
@@ -128,7 +125,7 @@ void aramInit(u32 extraSize)
     status[0x280] = 0;
     status[0x505] = 0;
     status[0x504] = 0;
-    aramUploadData(buf, (void *)arBase, 0x500, 0, 0, 0);
+    aramUploadData((u32)buf, arBase, 0x500, 0, 0, 0);
     while (*flag != 0) {
     }
     salFree(buf);

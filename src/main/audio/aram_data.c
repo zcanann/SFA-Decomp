@@ -1,9 +1,6 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_802844C0.h"
+#include "main/audio/aram.h"
 #include "dolphin/os/OSCache.h"
-
-extern void aramUploadData(void *src, void *dst, u32 size, int mode, int callback,
-                           int callbackArg);
 
 typedef struct AramStreamBufferEntry {
     struct AramStreamBufferEntry *next;
@@ -45,7 +42,7 @@ u32 aramStoreData(void *src, u32 size)
 
     if (aramChunkCallback == NULL) {
         DCFlushRange(src, alignedSize);
-        aramUploadData(src, (void *)aramWrite, alignedSize, 0, 0, 0);
+        aramUploadData((u32)src, aramWrite, alignedSize, 0, 0, 0);
         aramWrite += alignedSize;
         return startPos;
     }
@@ -57,7 +54,7 @@ u32 aramStoreData(void *src, u32 size)
         }
         piece = aramChunkCallback(src, chunk);
         DCFlushRange(piece, chunk);
-        aramUploadData(piece, (void *)aramWrite, chunk, 0, 0, 0);
+        aramUploadData((u32)piece, aramWrite, chunk, 0, 0, 0);
         alignedSize -= chunk;
         src = (u8 *)src + chunk;
         aramWrite += chunk;

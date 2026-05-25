@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283E4C_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283E4C_H_
+#ifndef MAIN_AUDIO_HW_SAMPLEMEM_H_
+#define MAIN_AUDIO_HW_SAMPLEMEM_H_
 
 #include "ghidra_import.h"
 
@@ -18,4 +18,4 @@ void hwDisableHRTF(void);
 int hwGetVirtualSampleID(int slot);
 int hwVoiceInStartup(int slot);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80283E4C_H_ */
+#endif /* MAIN_AUDIO_HW_SAMPLEMEM_H_ */

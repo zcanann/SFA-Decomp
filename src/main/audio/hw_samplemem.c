@@ -1,13 +1,11 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80283E4C.h"
+#include "main/audio/hw_samplemem.h"
+#include "main/audio/aram.h"
 
 extern undefined4 DAT_803dd280;
 extern undefined4 DAT_803dd288;
 extern undefined4 DAT_803defc4;
 extern undefined4 DAT_803deff0;
-extern void aramSyncTransferQueue(void);
-extern void* aramStoreData(void* ptr, u32 size);
-extern void aramRemoveData(void* ptr, u32 size);
 extern u32 dspHRTFOn;
 extern u8 *dspVoice;
 extern void *(*gSalMallocHook)(u32 size);
@@ -52,7 +50,7 @@ void hwSaveSample(u32 **sample, void **ptr)
     size <<= 1;
   }
 save:
-  *ptr = aramStoreData(*ptr, size);
+  *ptr = (void *)aramStoreData(*ptr, size);
 }
 
 /*

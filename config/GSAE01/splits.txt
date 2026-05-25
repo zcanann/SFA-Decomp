@@ -2228,7 +2228,7 @@ main/audio/hw_stream.c:
 	extabindex  start:0x8000650C end:0x80006530
 	.text       start:0x80283BD4 end:0x80283D5C
 
-main/unknown/autos/placeholder_80283DA0.c:
+main/audio/hw_aram.c:
 	extab       start:0x80005BC0 end:0x80005BD8
 	extabindex  start:0x80006530 end:0x80006554
 	.text       start:0x80283D5C end:0x80283DFC
@@ -2236,12 +2236,12 @@ main/unknown/autos/placeholder_80283DA0.c:
 main/unknown/autos/placeholder_80283E10.c:
 	.text       start:0x80283DFC end:0x80283DFC
 
-main/unknown/autos/placeholder_80283E4C.c:
+main/audio/hw_samplemem.c:
 	extab       start:0x80005BD8 end:0x80005BF0
 	extabindex  start:0x80006554 end:0x80006578
 	.text       start:0x80283DFC end:0x80283FA0
 
-main/unknown/autos/placeholder_80283FA0.c:
+main/audio/aram_queue.c:
 	extab       start:0x80005BF0 end:0x80005C00
 	extabindex  start:0x80006578 end:0x80006590
 	.text       start:0x80283FA0 end:0x80284224
@@ -2255,7 +2255,7 @@ main/unknown/autos/placeholder_802842C4.c:
 main/unknown/autos/placeholder_8028436C.c:
 	.text       start:0x80284224 end:0x80284224
 
-main/unknown/autos/placeholder_80284410.c:
+main/audio/aram_init.c:
 	extab       start:0x80005C00 end:0x80005C10
 	extabindex  start:0x80006590 end:0x800065A8
 	.text       start:0x80284224 end:0x80284468
@@ -2263,7 +2263,7 @@ main/unknown/autos/placeholder_80284410.c:
 main/unknown/autos/placeholder_802844BC.c:
 	.text       start:0x80284468 end:0x80284468
 
-main/unknown/autos/placeholder_802844C0.c:
+main/audio/aram_data.c:
 	extab       start:0x80005C10 end:0x80005C18
 	extabindex  start:0x800065A8 end:0x800065B4
 	.text       start:0x80284468 end:0x80284670

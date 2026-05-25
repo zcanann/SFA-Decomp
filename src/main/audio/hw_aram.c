@@ -1,13 +1,11 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80283DA0.h"
+#include "main/audio/hw_aram.h"
+#include "main/audio/aram.h"
 
 extern undefined4 DAT_803defc4;
 extern u32 lbl_803BD150[];
 extern f32 lbl_803E78E8;
 extern u32 __cvt_fp2unsigned(double value);
-extern void aramInit(undefined4 value);
-extern void aramGetZeroBuffer(void);
-
 /*
  * --INFO--
  *
