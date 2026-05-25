@@ -6648,3 +6648,123 @@ void objListAdd(ObjLinkedList* list, int prev, int item)
     }
     list->count++;
 }
+
+extern u8 lbl_803DC8F8;
+extern int lbl_803DC8F0;
+extern int lbl_803DC8F4;
+extern u8 lbl_803DC908;
+extern u8 lbl_803DB2A8;
+extern u32 lbl_802C6E50[];
+extern u8 lbl_803DC934;
+extern u8 lbl_803DC938;
+
+/*
+ * Function: isGameTimerDisabled
+ * EN v1.0 Address: 0x80014670
+ * EN v1.0 Size: 12b
+ */
+u32 isGameTimerDisabled(void)
+{
+    return lbl_803DC8F8 & 2;
+}
+
+/*
+ * Function: gameTimerStop
+ * EN v1.0 Address: 0x8001467C
+ * EN v1.0 Size: 32b
+ */
+void gameTimerStop(void)
+{
+    lbl_803DC8F8 &= ~4;
+    lbl_803DC8F8 |= 2;
+}
+
+/*
+ * Function: set_uiDllIdx_803dc8f0
+ * EN v1.0 Address: 0x80014928
+ * EN v1.0 Size: 8b
+ */
+void set_uiDllIdx_803dc8f0(int idx)
+{
+    lbl_803DC8F0 = idx;
+}
+
+/*
+ * Function: getUiDllFn_80014930
+ * EN v1.0 Address: 0x80014930
+ * EN v1.0 Size: 8b
+ */
+int getUiDllFn_80014930(void)
+{
+    return lbl_803DC8F4;
+}
+
+/*
+ * Function: getCurUiDll
+ * EN v1.0 Address: 0x80014940
+ * EN v1.0 Size: 8b
+ */
+int getCurUiDll(void)
+{
+    return lbl_803DC8F0;
+}
+
+/*
+ * Function: setJoypadDisabled
+ * EN v1.0 Address: 0x80014B0C
+ * EN v1.0 Size: 12b
+ */
+void setJoypadDisabled(void)
+{
+    lbl_803DC908 = 1;
+}
+
+/*
+ * Function: padFn_80014b18
+ * EN v1.0 Address: 0x80014B18
+ * EN v1.0 Size: 12b
+ */
+void padFn_80014b18(int value)
+{
+    lbl_803DB2A8 = (u8)value;
+}
+
+/*
+ * Function: buttonGetDisabled
+ * EN v1.0 Address: 0x80014B24
+ * EN v1.0 Size: 24b
+ */
+u32 buttonGetDisabled(int port)
+{
+    return ~lbl_802C6E50[port];
+}
+
+/*
+ * Function: buttonDisable
+ * EN v1.0 Address: 0x80014B3C
+ * EN v1.0 Size: 28b
+ */
+void buttonDisable(int port, u32 mask)
+{
+    lbl_802C6E50[port] &= ~mask;
+}
+
+/*
+ * Function: padClearAnalogInputY
+ * EN v1.0 Address: 0x80014B58
+ * EN v1.0 Size: 16b
+ */
+void padClearAnalogInputY(int port)
+{
+    (&lbl_803DC934)[port] = 0;
+}
+
+/*
+ * Function: padClearAnalogInputX
+ * EN v1.0 Address: 0x80014B68
+ * EN v1.0 Size: 16b
+ */
+void padClearAnalogInputX(int port)
+{
+    (&lbl_803DC938)[port] = 0;
+}
