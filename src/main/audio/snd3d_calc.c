@@ -47,7 +47,7 @@ extern f32 lbl_803E78C0;
 
 extern double __frsqrte(double x);
 extern u32 synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
-extern u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
+extern u32 synthFXSetCtrl(u32 handle, u8 controller, int value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 
 #define S3D_MAX_GROUPS 0x40
