@@ -577,10 +577,15 @@ undefined4 fn_801EB420(short *param_1,undefined4 param_2,int param_3)
 
   for (i = 0; i < (int)(uint)*(u8 *)(param_3 + 0x8b); i++) {
     triggerType = *(u8 *)(param_3 + i + 0x81);
-    if (triggerType == 3) {
+    switch (triggerType) {
+    case 3:
       (**(code **)(*DAT_803dd6e8 + 0x60))();
-    } else if (triggerType == 2 && param_1[0x23] != 0x16c && param_1[0x23] != 0x16f) {
-      GameBit_Set(0x499, 1);
+      break;
+    case 2:
+      if (param_1[0x23] != 0x16c && param_1[0x23] != 0x16f) {
+        GameBit_Set(0x499, 1);
+      }
+      break;
     }
   }
 
