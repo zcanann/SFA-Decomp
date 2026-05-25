@@ -8630,6 +8630,7 @@ extern f32 lbl_803DC900;
 extern f32 lbl_803DC90C;
 extern u8 lbl_803DC908;
 extern u8 lbl_803DC909;
+extern u32 lbl_803DC910;
 extern u8 lbl_803DB2A8;
 extern s32 lbl_803DB278;
 extern s32 lbl_803DB28C;
@@ -8638,10 +8639,17 @@ extern char lbl_803398A0[];
 extern u32 lbl_802C6E50[];
 extern u8 lbl_803DC934;
 extern u8 lbl_803DC938;
+extern u8 lbl_803DC93C;
+extern u8 lbl_803DC940;
+extern u8 lbl_803DC944;
+extern u8 lbl_803DC948;
+extern u16 lbl_803DC914;
 extern u16 lbl_803DC91C;
+extern u16 lbl_803DC924;
 extern u16 lbl_803DC92C;
 extern u8 lbl_803DC94C;
 extern u8 lbl_803DC950;
+extern u32 lbl_803398B0[];
 extern u32 lbl_803398C0[];
 extern u32 lbl_803398D0[];
 extern u32 lbl_803398E0[];
@@ -8662,6 +8670,9 @@ extern char* strcpy(char* dst, const char* src);
 extern char* strcat(char* dst, const char* src);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void PADControlMotor(s32 chan, u32 command);
+extern int PADInit(void);
+extern int PADRecalibrate(u32 mask);
+extern int PADReset(u32 mask);
 
 typedef struct PadStatusLite {
     u16 buttons;
@@ -9360,6 +9371,95 @@ u32 getButtonsHeld(int port)
         return 0;
     }
     return lbl_803398C0[port] & lbl_802C6E50[port];
+}
+
+/*
+ * Function: initControllers
+ * EN v1.0 Address: 0x800154AC
+ * EN v1.0 Size: 376b
+ */
+int initControllers(void)
+{
+    s32 i;
+    u32* padStateBlock;
+    u32* heldButtons;
+    u32* buttonsPressed;
+    u32* buttonsReleased;
+    u8* prevStickY;
+    u8* prevStickX;
+    u8* repeatY;
+    u8* repeatX;
+    u8* analogY;
+    u8* analogX;
+    u16* prevTriggers;
+    u16* triggers;
+    u16* triggersReleased;
+    u16* triggersPressed;
+    PadStatusLite* statuses;
+
+    padStateBlock = lbl_803398B0;
+    statuses = (PadStatusLite*)((u8*)padStateBlock + 0x40);
+    lbl_803DC910 = 0xF0000000;
+    PADInit();
+    PADRecalibrate(lbl_803DC910);
+    if (PADReset(lbl_803DC910) != 0) {
+        lbl_803DC910 = 0;
+    }
+
+    prevStickY = &lbl_803DC944;
+    prevStickX = &lbl_803DC948;
+    repeatY = &lbl_803DC93C;
+    repeatX = &lbl_803DC940;
+    analogY = &lbl_803DC934;
+    analogX = &lbl_803DC938;
+    heldButtons = padStateBlock;
+    buttonsPressed = padStateBlock + 4;
+    buttonsReleased = padStateBlock + 8;
+    prevTriggers = &lbl_803DC914;
+    triggers = &lbl_803DC91C;
+    triggersReleased = &lbl_803DC924;
+    triggersPressed = &lbl_803DC92C;
+
+    for (i = 0; i < 4; i++) {
+        *prevStickY = 0;
+        *prevStickX = 0;
+        *repeatY = 0;
+        *repeatX = 0;
+        *analogY = 0;
+        *analogX = 0;
+        *heldButtons = 0;
+        *buttonsPressed = 0;
+        *buttonsReleased = 0;
+        *padStateBlock = 0;
+        *prevTriggers = 0;
+        *triggers = 0;
+        *triggersReleased = 0;
+        *triggersPressed = 0;
+        memset(statuses, 0, sizeof(PadStatusLite));
+        memset(statuses + 4, 0, sizeof(PadStatusLite));
+
+        prevStickY++;
+        prevStickX++;
+        repeatY++;
+        repeatX++;
+        analogY++;
+        analogX++;
+        heldButtons++;
+        buttonsPressed++;
+        buttonsReleased++;
+        padStateBlock++;
+        prevTriggers++;
+        triggers++;
+        triggersReleased++;
+        triggersPressed++;
+        statuses++;
+    }
+
+    lbl_803DC94C = 0;
+    lbl_803DC909 = 1;
+    PADControlMotor(0, 2);
+    lbl_803DC90C = lbl_803DE6E8;
+    return 0;
 }
 
 /*
