@@ -57,7 +57,7 @@ void fn_80154870(int obj, int *state)
 {
     float fVar1;
     int iVar2;
-    char cVar3;
+    u8 cVar3;
     int iVar4;
     double dVar5;
     float local_38;
@@ -75,8 +75,8 @@ void fn_80154870(int obj, int *state)
     if ((((state[0xb7] & 0x2000U) != 0) &&
          (((iVar2 = curveFn_80010320((double)lbl_803E2990, iVar4), iVar2 != 0 ||
             (*(int *)(iVar4 + 0x10) != 0)) &&
-           (cVar3 = (**(code **)(*gRomCurveInterface + 0x90))(iVar4), cVar3 != '\0')))) &&
-        (cVar3 = (**(code **)(*gRomCurveInterface + 0x8c))
+           (cVar3 = (*(code *)(*gRomCurveInterface + 0x90))(iVar4), cVar3 != '\0')))) &&
+        (cVar3 = (*(code *)(*gRomCurveInterface + 0x8c))
                            ((double)lbl_803E29B0, *state, obj, &lbl_803DBCD0, 0xffffffff),
          cVar3 != '\0')) {
         state[0xb7] = state[0xb7] & 0xffffdfff;
