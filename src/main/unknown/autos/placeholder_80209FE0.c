@@ -1631,3 +1631,58 @@ extern undefined2 uRam803de99e;
 extern undefined uRam803de9a1;
 extern undefined2 uRam803de9a2;
 
+/*
+ * Function: bossdrakor_release
+ * EN v1.0 Address: 0x8020BAAC
+ * EN v1.0 Size: 4b
+ */
+void bossdrakor_release(void)
+{
+}
+
+/*
+ * Function: bossdrakor_initialise
+ * EN v1.0 Address: 0x8020BAB0
+ * EN v1.0 Size: 4b
+ */
+void bossdrakor_initialise(void)
+{
+}
+
+/*
+ * Function: drakord_thornbush_getExtraSize
+ * EN v1.0 Address: 0x8020BAB4
+ * EN v1.0 Size: 8b
+ */
+int drakord_thornbush_getExtraSize(void)
+{
+  return 0x7c;
+}
+
+/*
+ * Function: drakord_thornbush_getObjectTypeId
+ * EN v1.0 Address: 0x8020BABC
+ * EN v1.0 Size: 8b
+ */
+int drakord_thornbush_getObjectTypeId(void)
+{
+  return 0;
+}
+
+/*
+ * Function: drakord_thornbush_release
+ * EN v1.0 Address: 0x8020C270
+ * EN v1.0 Size: 4b
+ */
+void drakord_thornbush_release(void)
+{
+}
+
+/*
+ * Function: drakord_thornbush_initialise
+ * EN v1.0 Address: 0x8020C274
+ * EN v1.0 Size: 4b
+ */
+void drakord_thornbush_initialise(void)
+{
+}
