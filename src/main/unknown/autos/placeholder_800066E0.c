@@ -8148,6 +8148,13 @@ typedef struct ResourceDescriptor {
     u8 data[0];
 } ResourceDescriptor;
 
+typedef struct UiDllVTable {
+    void* field0;
+    int (*frameStart)(void);
+    void (*frameEnd)(void);
+    void (*draw)(void);
+} UiDllVTable;
+
 extern int memcmp(const void* lhs, const void* rhs, u32 size);
 extern void* memcpy(void* dst, const void* src, u32 size);
 extern void* memset(void* dst, int value, u32 size);
@@ -8548,6 +8555,7 @@ ModelList* allocModelStruct(int capacity, int dataSize)
  * EN v1.0 Address: 0x80013E2C
  * EN v1.0 Size: 156b
  */
+#pragma dont_inline on
 BOOL Resource_Release(void* handleSlot)
 {
     s32 i;
@@ -8581,7 +8589,7 @@ BOOL Resource_Release(void* handleSlot)
  * EN v1.0 Address: 0x80013EC8
  * EN v1.0 Size: 160b
  */
-void Resource_Acquire(u32 id)
+void* Resource_Acquire(u32 id, int unused)
 {
     u32 index;
     ResourceDescriptor* descriptor;
@@ -8593,7 +8601,9 @@ void Resource_Acquire(u32 id)
     }
     gResourceRefCounts[index]++;
     gResourceLoadedHandles[index] = descriptor->data;
+    return &gResourceLoadedHandles[index];
 }
+#pragma dont_inline reset
 
 /*
  * Function: Resource_ResetRefCounts
@@ -8611,7 +8621,7 @@ void Resource_ResetRefCounts(void)
 
 extern u8 lbl_803DC8F8;
 extern u8 lbl_803DC8F9;
-extern void* lbl_803DC8E8;
+extern UiDllVTable** lbl_803DC8E8;
 extern int lbl_803DC8EC;
 extern int lbl_803DC8F0;
 extern int lbl_803DC8F4;
@@ -8636,6 +8646,7 @@ extern u32 lbl_803398C0[];
 extern u32 lbl_803398D0[];
 extern u32 lbl_803398E0[];
 extern u8 lbl_803398F0[];
+extern s32 lbl_802C6E08[];
 extern u8 lbl_802C7400[];
 extern void* lbl_803DC954;
 extern void* lbl_803DC958;
@@ -8801,6 +8812,94 @@ void gameTimerInit(s8 flags, int minutes)
 }
 
 /*
+ * Function: curUiDllDraw
+ * EN v1.0 Address: 0x8001476C
+ * EN v1.0 Size: 56b
+ */
+void curUiDllDraw(void)
+{
+    UiDllVTable* callbacks;
+
+    if (lbl_803DC8E8 != NULL) {
+        callbacks = *lbl_803DC8E8;
+        callbacks->draw();
+    }
+}
+
+/*
+ * Function: uiDll_runFrameEndAndLoadNext
+ * EN v1.0 Address: 0x800147A4
+ * EN v1.0 Size: 184b
+ */
+void uiDll_runFrameEndAndLoadNext(void)
+{
+    UiDllVTable* callbacks;
+    s32 resourceId;
+
+    if (lbl_803DC8E8 != NULL) {
+        callbacks = *lbl_803DC8E8;
+        callbacks->frameEnd();
+    }
+
+    if (lbl_803DC8EC != 0) {
+        lbl_803DC8EC--;
+        lbl_803DC8F4 = lbl_803DC8F0;
+        if (lbl_803DC8E8 != NULL) {
+            Resource_Release(lbl_803DC8E8);
+            lbl_803DC8E8 = NULL;
+        }
+
+        resourceId = lbl_802C6E08[lbl_803DC8EC];
+        if (resourceId != -1) {
+            lbl_803DC8E8 = Resource_Acquire(resourceId, 1);
+        } else {
+            lbl_803DC8E8 = NULL;
+            lbl_803DC8EC = 0;
+        }
+        lbl_803DC8F0 = lbl_803DC8EC;
+        lbl_803DC8EC = 0;
+    }
+}
+
+/*
+ * Function: uiDll_runFrameStartAndLoadNext
+ * EN v1.0 Address: 0x8001485C
+ * EN v1.0 Size: 204b
+ */
+int uiDll_runFrameStartAndLoadNext(void)
+{
+    UiDllVTable* callbacks;
+    int result;
+    s32 resourceId;
+
+    result = 0;
+    if (lbl_803DC8E8 != NULL) {
+        callbacks = *lbl_803DC8E8;
+        result = callbacks->frameStart();
+    }
+
+    if (lbl_803DC8EC != 0) {
+        lbl_803DC8EC--;
+        lbl_803DC8F4 = lbl_803DC8F0;
+        if (lbl_803DC8E8 != NULL) {
+            Resource_Release(lbl_803DC8E8);
+            lbl_803DC8E8 = NULL;
+        }
+
+        resourceId = lbl_802C6E08[lbl_803DC8EC];
+        if (resourceId != -1) {
+            lbl_803DC8E8 = Resource_Acquire(resourceId, 1);
+        } else {
+            lbl_803DC8E8 = NULL;
+            lbl_803DC8EC = 0;
+        }
+        lbl_803DC8F0 = lbl_803DC8EC;
+        lbl_803DC8EC = 0;
+    }
+    return result;
+}
+
+/*
  * Function: set_uiDllIdx_803dc8f0
  * EN v1.0 Address: 0x80014928
  * EN v1.0 Size: 8b
@@ -8838,6 +8937,42 @@ int getCurUiDll(void)
 void* getDLL16(void)
 {
     return lbl_803DC8E8;
+}
+
+/*
+ * Function: loadUiDll
+ * EN v1.0 Address: 0x80014948
+ * EN v1.0 Size: 176b
+ */
+void loadUiDll(int index)
+{
+    s32 current;
+    s32 next;
+    s32 resourceId;
+
+    current = lbl_803DC8F0;
+    if (index != current) {
+        next = index + 1;
+        lbl_803DC8EC = next;
+        if (lbl_803DC8E8 == NULL && next != 0) {
+            lbl_803DC8EC = next - 1;
+            lbl_803DC8F4 = current;
+            if (lbl_803DC8E8 != NULL) {
+                Resource_Release(lbl_803DC8E8);
+                lbl_803DC8E8 = NULL;
+            }
+
+            resourceId = lbl_802C6E08[lbl_803DC8EC];
+            if (resourceId != -1) {
+                lbl_803DC8E8 = Resource_Acquire(resourceId, 1);
+            } else {
+                lbl_803DC8E8 = NULL;
+                lbl_803DC8EC = 0;
+            }
+            lbl_803DC8F0 = lbl_803DC8EC;
+            lbl_803DC8EC = 0;
+        }
+    }
 }
 
 /*
