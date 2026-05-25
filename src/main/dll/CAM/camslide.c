@@ -17,7 +17,7 @@ extern f32 fn_802966F4(int obj);
 extern u8 framesThisStep;
 extern int *gCameraInterface;
 extern f32 *cameraMtxVar57;
-extern f64 DOUBLE_803e1698;
+extern f64 lbl_803E1698;
 extern f32 lbl_803E168C;
 extern f32 lbl_803E1690;
 extern f32 lbl_803E1694;
@@ -33,7 +33,7 @@ extern f32 lbl_803E16E8;
 extern f32 lbl_803E16EC;
 extern f32 lbl_803E16F0;
 extern f32 lbl_803E16F4;
-extern f64 DOUBLE_803e16f8;
+extern f64 lbl_803E16F8;
 extern f32 timeDelta;
 
 #define gCamcontrolModeSettings cameraMtxVar57
@@ -271,7 +271,7 @@ void camslide_update(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void firstperson_updatePitch(double param_1,int param_2)
+void firstperson_updatePitch(f32 param_1,int param_2)
 {
   uint uVar1;
   double dVar2;
@@ -286,10 +286,11 @@ void firstperson_updatePitch(double param_1,int param_2)
     uVar1 = uVar1 + 0xffff;
   }
   dVar2 = interpolate((double)(float)(CamSlide_U32AsDouble(uVar1 ^ 0x80000000) -
-                                      DOUBLE_803e1698),
+                                      lbl_803E1698),
                       (double)(lbl_803E16A4 /
-                              (float)(CamSlide_U32AsDouble(*(u8 *)(gCamcontrolModeSettings + 0x30)) -
-                                      DOUBLE_803e16f8)),
+                              (float)(CamSlide_U32AsDouble(
+                                          *(u8 *)((u8 *)gCamcontrolModeSettings + 0xc2)) -
+                                      lbl_803E16F8)),
                       (double)timeDelta);
   *(short *)(param_2 + 2) = *(short *)(param_2 + 2) + (short)(int)dVar2;
   return;
