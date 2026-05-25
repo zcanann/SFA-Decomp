@@ -13019,6 +13019,15 @@ u8 getSaveGameLoadStatus(void) { return lbl_803DD488; }
 void setSaveGameLoadingFlag(void) { if (lbl_803DD488 == 2) lbl_803DD488 = 1; }
 s32 isSaveGameLoading(void) { return lbl_803DD488 == 2; }
 
+void Carryable_init(int param_1, int param_2) {
+    ObjGroup_AddObject(param_1, 0x10);
+    *(undefined2 *)(param_2 + 2) = 0;
+    *(undefined *)(param_2 + 5) = 0;
+    *(undefined *)(param_2 + 4) = 0;
+    *(undefined *)(param_2 + 6) = 0;
+    *(undefined4 *)(param_1 + 0xf8) = 0;
+}
+
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
@@ -13075,6 +13084,34 @@ extern void mm_free(u32);
 void SaveGame_release(void) { if (pRestartPoint != 0) mm_free(pRestartPoint); }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_803A2F80[];
+extern s8 lbl_803DD494;
+extern int lbl_803DD48C;
+extern u8 *lbl_803DD498;
+void SaveGame_initialise(void) {
+    u8 *base = lbl_803A2F80;
+    int i;
+    memset(base + 0x328, 0, 0xf70);
+    if (!(lbl_803DD498[0x21] & 0x80)) {
+        memset(lbl_803DD498, 0, 0x6ec);
+    }
+    pRestartPoint = 0;
+    lbl_803DD494 = -1;
+    lbl_803DD48C = -1;
+    memset(base + 0x244, 0, 0xe4);
+    base[0x24a] = 0;
+    base[0x246] = 1;
+    base[0x24c] = 1;
+    base[0x244] = 1;
+    base[0x24e] = 0x7f;
+    base[0x24f] = 0x7f;
+    base[0x250] = 0x7f;
+    base[0x00] = -1; base[0x03] = -1; base[0x06] = -1; base[0x09] = -1; base[0x0c] = -1;
+    base[0x0f] = -1; base[0x12] = -1; base[0x15] = -1; base[0x18] = -1; base[0x1b] = -1;
+    base[0x1e] = -1; base[0x21] = -1; base[0x24] = -1; base[0x27] = -1; base[0x2a] = -1;
+    base[0x2d] = -1; base[0x30] = -1; base[0x33] = -1; base[0x36] = -1; base[0x39] = -1;
+}
 
 extern void* getLastSavedGameTexts(void);
 #pragma scheduling off
