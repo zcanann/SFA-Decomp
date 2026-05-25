@@ -3692,3 +3692,47 @@ void CameraModePerv_update(u8 *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E1B00;
+extern f32 lbl_803E1B04;
+extern f32 lbl_803E1B08;
+extern f32 lbl_803E1B1C;
+extern f32 lbl_803DB9C8;
+extern f32 lbl_803DD5AC;
+extern f32 lbl_803DD5B0;
+extern f32 sqrtf(f32 x);
+
+/* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+    f32 angle;
+    f32 cosv, sinv;
+    f32 baseX, baseZ;
+    f32 pos[3];
+    f32 extra;
+    f32 dx, dz;
+
+    angle = lbl_803E1B00 * (f32)(s32)*(s16 *)state / lbl_803E1B04;
+    cosv = fn_80293E80(angle);
+    sinv = sin(angle);
+    baseX = *(f32 *)(state + 0x18);
+    pos[0] = cosv * lbl_803DB9C8 + baseX;
+    pos[1] = lbl_803E1B08 + *(f32 *)(state + 0x1c);
+    baseZ = *(f32 *)(state + 0x20);
+    pos[2] = sinv * lbl_803DB9C8 + baseZ;
+    camcontrol_traceFromTarget(pos, state, pos, &extra);
+    dx = pos[0] - baseX;
+    dz = pos[2] - baseZ;
+    lbl_803DD5B0 = sqrtf(dx * dx + dz * dz);
+    if (p3 != NULL) {
+        lbl_803DB9C8 = p3[0];
+        lbl_803DD5AC = p3[1];
+    } else {
+        lbl_803DB9C8 = lbl_803E1B1C;
+        lbl_803DD5AC = lbl_803E1B08;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
