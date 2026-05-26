@@ -387,11 +387,11 @@ void expgfxRemoveAll(void)
       if ((*activeMasks & activeBit) != 0) {
         tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
         tableEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset);
-        if ((tableEntry->textureOrResource != 0) && (tableEntry->textureOrResource != 0)) {
+        if ((tableEntry->resource != 0) && (tableEntry->resource != 0)) {
           gExpgfxTextureFreeInProgress = 1;
           tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
           tableEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset);
-          textureFree((void *)tableEntry->textureOrResource);
+          textureFree((void *)tableEntry->resource);
           gExpgfxTextureFreeInProgress = 0;
         }
 
@@ -401,8 +401,8 @@ void expgfxRemoveAll(void)
         if (*refCount != 0) {
           (*refCount)--;
           if (*refCount == 0) {
-            tableEntry->textureOrResource = 0;
-            tableEntry->key0 = 0;
+            tableEntry->resource = 0;
+            tableEntry->sourceId = 0;
           }
         } else {
           debugPrintf(sExpgfxMismatchInAddRemove);
@@ -544,7 +544,7 @@ void expgfx_initSlotQuad(void *slotPtr)
   ExpgfxTableEntry *entry;
   ExpgfxQuadVertex *quad;
   ExpgfxQuadTemplateVertex *template;
-  u32 textureOrResource;
+  u32 resource;
   u32 behaviorFlags;
   s16 texS0;
   s16 texS1;
@@ -555,7 +555,7 @@ void expgfx_initSlotQuad(void *slotPtr)
   slot = (ExpgfxSlot *)slotPtr;
   staticBase = gExpgfxStaticData;
   entry = Expgfx_GetTableEntry(Expgfx_GetSlotTableIndex(slot));
-  textureOrResource = entry->textureOrResource;
+  resource = entry->resource;
 
   slot->stateBits.bits.frameParity = 0;
   slot->stateBits.bits.quadReady = 1;
@@ -596,7 +596,7 @@ void expgfx_initSlotQuad(void *slotPtr)
         (int)((f32)(u16)slot->scaleCounter - (f32)(u16)slot->scaleFrames * step);
   }
 
-  if (textureOrResource == 0) {
+  if (resource == 0) {
     debugPrintf((char *)(staticBase + EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET));
     return;
   }
@@ -654,20 +654,20 @@ void expgfx_initSlotQuad(void *slotPtr)
  */
 #pragma scheduling off
 #pragma peephole off
-int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
+int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType)
 {
-  ExpgfxTableEntry *tableBase;
   ExpgfxTableEntry *entry;
+  ExpgfxTableEntry *freeScan;
   u16 *refCount;
   int tableIndex;
   int freeIndex;
 
   tableIndex = 0;
-  tableBase = gExpgfxTableEntries;
-  entry = tableBase;
+  entry = gExpgfxTableEntries;
+  freeScan = entry;
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++) {
-    if ((entry->refCount != 0) && (entry->textureOrResource == textureOrResource) &&
-        (entry->key0 == key0) && (entry->key1 == key1)) {
+    if ((entry->refCount != 0) && (entry->resource == resource) &&
+        (entry->sourceId == sourceId) && (entry->attachedKey1 == attachedKey1)) {
       refCount = &gExpgfxTableEntries[tableIndex].refCount;
       if (*refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
@@ -678,14 +678,13 @@ int expgfx_addToTable(uint textureOrResource,uint key0,uint key1,s16 slotType)
     }
   }
 
-  entry = tableBase;
-  for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, freeIndex++) {
-    if (entry->refCount == 0) {
+  for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeScan++, freeIndex++) {
+    if (freeScan->refCount == 0) {
       entry = &gExpgfxTableEntries[freeIndex];
       entry->refCount = 1;
-      entry->textureOrResource = textureOrResource;
-      entry->key0 = key0;
-      entry->key1 = key1;
+      entry->resource = resource;
+      entry->sourceId = sourceId;
+      entry->attachedKey1 = attachedKey1;
       entry->slotType = slotType;
       return (s16)freeIndex;
     }
@@ -1016,8 +1015,8 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     slot = (ExpgfxSlot *)((char *)slot + EXPGFX_SLOT_SIZE);
     tabEntry = &((ExpgfxTableEntry *)dstBuf)[((u32)slot->encodedTableIndex >> 1) &
                                              EXPGFX_SLOT_TABLE_INDEX_MASK];
-    sourceObject = (ExpgfxSourceObject *)tabEntry->key0;
-    texture = tabEntry->textureOrResource;
+    sourceObject = (ExpgfxSourceObject *)tabEntry->sourceId;
+    texture = tabEntry->resource;
     if ((1U << slotIndex & gExpgfxSlotActiveMasks[poolIndex]) == 0) goto next_slot;
     state = slot->stateBits.value;
     if (((state >> 2) & 3) != 0) goto next_slot;

@@ -147,9 +147,10 @@ typedef struct ExpgfxTrackedSourceFrameMask {
  * are stable enough to stop treating it as raw integer arrays.
  */
 typedef struct ExpgfxTableEntry {
-  uint key0;
-  uint key1;
-  uint textureOrResource;
+  /* The add/remove paths key entries by source identity plus an optional attached-source key. */
+  uint sourceId;
+  uint attachedKey1;
+  uint resource;
   u16 refCount;
   s16 slotType;
 } ExpgfxTableEntry;
