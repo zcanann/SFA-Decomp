@@ -5428,5 +5428,48 @@ void flamethrowerspe_init(int *obj, int *params)
     *(int *)((char *)state + 0x10) = 1;
     ObjHits_DisableObject(obj);
 }
+
+extern void Sfx_RemoveLoopedObjectSoundForObject(int *obj);
+extern void clearCurSeqNo(void);
+void animatedobj_free(int *obj, int seqFlag)
+{
+    ((void (*)(void *))((void **)*(void **)gObjectTriggerInterface)[9])(*(void **)((char *)obj + 0xb8));
+    ((void (*)(int *, int, int, int, int))((void **)*(void **)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
+    Sfx_RemoveLoopedObjectSoundForObject(obj);
+    Sfx_StopObjectChannel(obj, 0x7f);
+    if (*(s16 *)((char *)obj + 0x46) == 0x774 && *(u8 *)((char *)obj + 0xeb) != 0) {
+        Obj_FreeObject(*(int **)((char *)obj + 0xc8));
+        ObjLink_DetachChild(obj, *(int *)((char *)obj + 0xc8));
+    }
+    if (seqFlag != 0) {
+        clearCurSeqNo();
+    }
+}
+
+extern int mmAlloc(int size, int a, int b);
+extern f32 lbl_803E3328;
+extern u8 lbl_803AC6B8[];
+void staff_init(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *r54;
+    int *p;
+    int i;
+    *(u8 *)((char *)state + 0xaa) = 1;
+    *(s16 *)((char *)state + 0xb0) = 2;
+    *(f32 *)((char *)state + 0x50) = lbl_803E3328;
+    r54 = *(int **)((char *)obj + 0x54);
+    if (r54 != NULL) {
+        *(s16 *)((char *)r54 + 0xb2) = 0x109;
+    }
+    p = state;
+    for (i = 0; i < 3; i++) {
+        *p = mmAlloc(0xEA60, 0x1a, 0);
+        *(s16 *)((char *)p + 0x10) = -1;
+        p = (int *)((char *)p + 0x18);
+    }
+    lbl_803AC6B8[0x20] = 0;
+    *(int *)(lbl_803AC6B8 + 0x1c) = 0;
+}
 #pragma scheduling reset
 #pragma peephole reset
