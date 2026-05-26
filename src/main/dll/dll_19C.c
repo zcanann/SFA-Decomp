@@ -90,6 +90,13 @@ extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern f32 lbl_803E4E8C;
 extern void fn_801C2914(int obj);
+extern u8 lbl_803DB411;
+extern f32 lbl_803E4E9C;
+extern f64 lbl_803E4EA0;
+extern f64 lbl_803E4EA8;
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern void Obj_FreeObject(int obj);
+extern int coordsToMapCell(f32 x, f32 z);
 
 /*
  * --INFO--
@@ -845,6 +852,81 @@ void SpiritPrize_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
             objParticleFn_80099d84(obj, 7, *(int*)(sub + 0x140), lbl_803E4E98, lbl_803E4E98);
         } else {
             objParticleFn_80099d84(obj, 7, 0, lbl_803E4E98, lbl_803E4E98);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void SpiritPrize_update(int obj)
+{
+    u8 *params;
+    u8 *state;
+    int childObj;
+    int objectIndex;
+    int objectCount;
+    int *objects;
+    int i;
+
+    params = *(u8 **)(obj + 0x4c);
+    state = *(u8 **)(obj + 0xb8);
+    if (params == NULL || *(s16 *)(params + 0x18) == -1 || *(int *)(params + 0x14) == 0x4ca62) {
+        return;
+    }
+
+    for (i = 0; i < state[0x8b]; i++) {
+        switch (state[0x81 + i]) {
+        case 1:
+            state[0x144] = 0;
+            break;
+        case 2:
+            state[0x144] = 1;
+            break;
+        }
+    }
+
+    objectIndex = ((int (*)(int, f32))((void **)*(int *)gObjectTriggerInterface)[5])
+        (obj, (f32)(u32)lbl_803DB411);
+    if (objectIndex != 0 && *(s16 *)(obj + 0xb4) == -2) {
+        int prizeId;
+        int matchingObj;
+        int duplicateCount;
+
+        prizeId = (s8)state[0x57];
+        matchingObj = 0;
+        objects = ObjList_GetObjects(&objectIndex, &objectCount);
+        duplicateCount = 0;
+        objectIndex = 0;
+        while (objectIndex < objectCount) {
+            childObj = objects[objectIndex];
+            if (*(s16 *)(childObj + 0xb4) == prizeId) {
+                matchingObj = childObj;
+            }
+            if (*(s16 *)(childObj + 0xb4) == -2 && *(s16 *)(childObj + 0x44) == 0x10 &&
+                prizeId == (s8)*(u8 *)(*(int *)(childObj + 0xb8) + 0x57)) {
+                duplicateCount++;
+            }
+            objectIndex++;
+        }
+        if (duplicateCount < 2 && matchingObj != 0 && *(s16 *)(matchingObj + 0xb4) != -1) {
+            *(s16 *)(matchingObj + 0xb4) = -1;
+            ((void (*)(int))((void **)*(int *)gObjectTriggerInterface)[0x13])(prizeId);
+        }
+        *(s16 *)(obj + 0xb4) = -1;
+        Obj_FreeObject(obj);
+    }
+
+    *(f32 *)(state + 0x148) -= timeDelta;
+    if (*(f32 *)(state + 0x148) < lbl_803E4E9C) {
+        int player;
+
+        player = Obj_GetPlayerObject();
+        *(f32 *)(state + 0x148) = (f32)(s32)randomGetRange(0xb4, 0xf0);
+        if ((s8)*(u8 *)(obj + 0xac) == -1 &&
+            (player == 0 || coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) == 0xb)) {
+            Sfx_PlayFromObject(obj, 0x4a0);
         }
     }
 }
