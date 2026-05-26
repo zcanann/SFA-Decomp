@@ -12860,12 +12860,17 @@ void SaveGame_release(void) { if (pRestartPoint != 0) mm_free(pRestartPoint); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 lbl_803A2F80[];
+enum {
+    SAVEGAME_EMPTY_TASK_HINT = -1,
+    SAVEGAME_DEFAULT_VOLUME = 0x7f,
+};
+
+extern s8 lbl_803A2F80[];
 extern s8 lbl_803DD494;
 extern int lbl_803DD48C;
 extern u8 *lbl_803DD498;
 void SaveGame_initialise(void) {
-    u8 *base = lbl_803A2F80;
+    s8 *base = lbl_803A2F80;
     int i;
     memset(base + 0x328, 0, 0xf70);
     if (!(lbl_803DD498[0x21] & 0x80)) {
@@ -12879,13 +12884,13 @@ void SaveGame_initialise(void) {
     base[0x246] = 1;
     base[0x24c] = 1;
     base[0x244] = 1;
-    base[0x24e] = 0x7f;
-    base[0x24f] = 0x7f;
-    base[0x250] = 0x7f;
-    base[0x00] = -1; base[0x03] = -1; base[0x06] = -1; base[0x09] = -1; base[0x0c] = -1;
-    base[0x0f] = -1; base[0x12] = -1; base[0x15] = -1; base[0x18] = -1; base[0x1b] = -1;
-    base[0x1e] = -1; base[0x21] = -1; base[0x24] = -1; base[0x27] = -1; base[0x2a] = -1;
-    base[0x2d] = -1; base[0x30] = -1; base[0x33] = -1; base[0x36] = -1; base[0x39] = -1;
+    base[0x24e] = SAVEGAME_DEFAULT_VOLUME;
+    base[0x24f] = SAVEGAME_DEFAULT_VOLUME;
+    base[0x250] = SAVEGAME_DEFAULT_VOLUME;
+    base[0x00] = SAVEGAME_EMPTY_TASK_HINT; base[0x03] = SAVEGAME_EMPTY_TASK_HINT; base[0x06] = SAVEGAME_EMPTY_TASK_HINT; base[0x09] = SAVEGAME_EMPTY_TASK_HINT; base[0x0c] = SAVEGAME_EMPTY_TASK_HINT;
+    base[0x0f] = SAVEGAME_EMPTY_TASK_HINT; base[0x12] = SAVEGAME_EMPTY_TASK_HINT; base[0x15] = SAVEGAME_EMPTY_TASK_HINT; base[0x18] = SAVEGAME_EMPTY_TASK_HINT; base[0x1b] = SAVEGAME_EMPTY_TASK_HINT;
+    base[0x1e] = SAVEGAME_EMPTY_TASK_HINT; base[0x21] = SAVEGAME_EMPTY_TASK_HINT; base[0x24] = SAVEGAME_EMPTY_TASK_HINT; base[0x27] = SAVEGAME_EMPTY_TASK_HINT; base[0x2a] = SAVEGAME_EMPTY_TASK_HINT;
+    base[0x2d] = SAVEGAME_EMPTY_TASK_HINT; base[0x30] = SAVEGAME_EMPTY_TASK_HINT; base[0x33] = SAVEGAME_EMPTY_TASK_HINT; base[0x36] = SAVEGAME_EMPTY_TASK_HINT; base[0x39] = SAVEGAME_EMPTY_TASK_HINT;
 }
 
 extern void* getLastSavedGameTexts(void);
