@@ -63,6 +63,33 @@ extern f32 lbl_803E4E88;
 extern void lightFn_8001db6c(int light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int *obj, int kind, int light, f32 scale1, f32 scale2);
+extern f32 timeDelta;
+extern u8 lbl_803DBF60;
+extern f64 lbl_803E4E80;
+extern f64 lbl_803E4E90;
+extern u16 lbl_80325F88[];
+extern void *gScreenTransitionInterface;
+extern void *gObjectTriggerInterface;
+extern int Obj_GetPlayerObject(void);
+extern void skyFn_80088c94(int skyId, int enable);
+extern void getEnvfxAct(int obj, int target, int effectId, int flags);
+extern void playerAddRemoveMagic(int player, int amount);
+extern void SCGameBitLatch_UpdateInverted(void *latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
+extern void SCGameBitLatch_Update(void *latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void GameBit_Set(int bit, int value);
+extern int GameBit_Get(int bit);
+extern void Music_Trigger(int musicId, int mode);
+extern void gameTimerInit(int timerId, int value);
+extern void timerSetToCountUp(void);
+extern void gameTimerStop(void);
+extern int isGameTimerDisabled(void);
+extern int ObjList_FindObjectById(int objId);
+extern void fn_8014C5C0(int obj);
+extern int objGetAnimStateFlags(int obj, int flag);
+extern void audioStopByMask(int mask);
+extern f32 lbl_803E4E8C;
+extern void fn_801C2914(int obj);
 
 /*
  * --INFO--
@@ -99,6 +126,162 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4E88);
         objParticleFn_80099d84((int *)obj, 7, (int)state[0], lbl_803E4E88, lbl_803E4E88);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#define DFSH_REWARD_BIT(idx) (lbl_80325F88[(idx)])
+#define DFSH_REWARD_DELAY(idx) (lbl_80325F88[10 + (idx)])
+#define DFSH_REQUIRED_BIT(idx) (lbl_80325F88[20 + (idx)])
+#define DFSH_TARGET_OBJECT(idx) (((int *)((u8 *)lbl_80325F88 + 0x3c))[(idx)])
+
+#pragma scheduling off
+#pragma peephole off
+void dfsh_shrine_update(int obj)
+{
+    int player;
+    u8 *state;
+    s16 i;
+    u8 anyMissing;
+
+    state = *(u8 **)(obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    if (*(int *)(obj + 0xf4) != 0) {
+        *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - 1;
+        if (*(int *)(obj + 0xf4) == 0) {
+            skyFn_80088c94(7, 1);
+            getEnvfxAct(obj, player, 0x78, 0);
+            getEnvfxAct(obj, player, 0x79, 0);
+            getEnvfxAct(obj, player, 0x222, 0);
+        }
+    }
+    fn_801C2914(obj);
+    if (lbl_803DBF60 != 0) {
+        *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
+        *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
+        *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+        playerAddRemoveMagic(player, 0x14);
+        GameBit_Set(0x1d7, 1);
+        lbl_803DBF60 = 0;
+    }
+    SCGameBitLatch_UpdateInverted(state + 0xc, 1, -1, -1, 0xcbb, 8);
+    SCGameBitLatch_Update(state + 0xc, 4, -1, -1, 0xcbb, 0xc4);
+    if ((f32)(s32)*(s16 *)(state + 0x12) > lbl_803E4E8C) {
+        *(s16 *)(state + 0x12) = (s16)(s32)((f32)(s32)*(s16 *)(state + 0x12) - timeDelta);
+        if ((f32)(s32)*(s16 *)(state + 0x12) <= lbl_803E4E8C) {
+            *(s16 *)(state + 0x12) = 0;
+        }
+        return;
+    }
+
+    switch (state[0x1a]) {
+    case 0:
+        *(f32 *)(state + 8) -= timeDelta;
+        if (*(f32 *)(state + 8) <= lbl_803E4E8C) {
+            Sfx_PlayFromObject(obj, 0x343);
+            *(f32 *)(state + 8) = (f32)(s32)randomGetRange(500, 1000);
+        }
+        if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            GameBit_Set(0x589, 0);
+            state[0x1a] = 5;
+            Music_Trigger(0xd8, 1);
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[0x12])(0, obj, -1);
+            GameBit_Set(0x129, 0);
+        }
+        break;
+    case 1:
+        if ((s8)state[0x1c] < 0) {
+            state[0x1a] = 2;
+            GameBit_Set(0xb76, 1);
+            gameTimerInit(0x19, 0xd2);
+            timerSetToCountUp();
+        }
+        break;
+    case 2:
+        if (state[0x1b] < 10) {
+            *(f32 *)(state + 4) -= timeDelta;
+            if (*(f32 *)(state + 4) <= lbl_803E4E8C) {
+                GameBit_Set(DFSH_REWARD_BIT(state[0x1b]), 1);
+                *(f32 *)(state + 4) = (f32)(u32)DFSH_REWARD_DELAY(state[0x1b]);
+                state[0x1b]++;
+            }
+        }
+        anyMissing = 0;
+        for (i = 0; i < 10; i++) {
+            if (GameBit_Get(DFSH_REQUIRED_BIT(i)) == 0) {
+                anyMissing = 1;
+                i = 10;
+            }
+        }
+        if (anyMissing == 0) {
+            state[0x1a] = 7;
+            state[0x1c] = (state[0x1c] & ~0x40) | 0x40;
+            gameTimerStop();
+        } else if (isGameTimerDisabled() != 0) {
+            state[0x1a] = 7;
+            state[0x1c] &= ~0x40;
+            *(s16 *)(state + 0x12) = 0x78;
+            for (i = 0; i < 10; i++) {
+                int targetId;
+                int targetObj;
+
+                targetId = DFSH_TARGET_OBJECT(i);
+                if (targetId != -1) {
+                    targetObj = ObjList_FindObjectById(targetId);
+                    if (targetObj != 0) {
+                        fn_8014C5C0(targetObj);
+                    }
+                }
+            }
+        }
+        break;
+    case 3:
+        if (objGetAnimStateFlags(player, 1) == 0 && GameBit_Get(0xbfd) == 0) {
+            if (((state[0x1c] >> 6) & 1) == 0) {
+                state[0x1a] = 4;
+                GameBit_Set(0xb70, 1);
+            } else {
+                state[0x1a] = 4;
+                audioStopByMask(3);
+                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[0x12])(1, obj, -1);
+            }
+        } else {
+            state[0x1a] = 4;
+        }
+        GameBit_Set(0x129, 1);
+        GameBit_Set(0xb76, 0);
+        break;
+    case 4:
+        state[0x1a] = 0;
+        state[0x1c] &= ~0x80;
+        state[0x1b] = 0;
+        *(f32 *)(state + 4) = lbl_803E4E8C;
+        GameBit_Set(0x129, 1);
+        GameBit_Set(0xb70, 0);
+        GameBit_Set(0xb71, 0);
+        GameBit_Set(0xb76, 0);
+        GameBit_Set(0x589, 1);
+        for (i = 0; i < 10; i++) {
+            GameBit_Set(DFSH_REQUIRED_BIT(i), 0);
+            GameBit_Set(DFSH_REWARD_BIT(i), 0);
+        }
+        *(s16 *)(obj + 6) &= ~0x4000;
+        break;
+    case 5:
+        *(s16 *)(state + 0x12) = 0x1f;
+        ((void (*)(int, int))((void **)*(int *)gScreenTransitionInterface)[3])(0x1e, 1);
+        state[0x1a] = 1;
+        *(s16 *)(obj + 6) |= 0x4000;
+        break;
+    case 6:
+        state[0x1a] = 3;
+        break;
+    case 7:
+        state[0x1a] = 6;
+        *(s16 *)(state + 0x12) = 0x23;
+        ((void (*)(int, int))((void **)*(int *)gScreenTransitionInterface)[2])(0x1e, 1);
+        break;
     }
 }
 #pragma peephole reset
