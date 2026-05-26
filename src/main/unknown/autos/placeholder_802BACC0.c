@@ -256,12 +256,14 @@ int DIMSnowHorn1_setScale(int obj)
 {
     int state;
     f32 range;
-    int nearest;
+    void *nearest;
 
     state = *(int *)(obj + 0xb8);
     range = lbl_803E8240;
 
-    if ((*(u8 *)(state + 0xa8c) == 0) || (*(u8 *)(state + 0xa8c) == 5)) {
+    switch (*(u8 *)(state + 0xa8c)) {
+    case 0:
+    case 5:
         return 0;
     }
     if (*(s16 *)(state + 0x274) != 7) {
@@ -271,8 +273,8 @@ int DIMSnowHorn1_setScale(int obj)
         return 0;
     }
 
-    nearest = ObjGroup_FindNearestObject(0x13, obj, &range);
-    if ((nearest != 0) && ((*(u8 *)(nearest + 0xaf) & 4) != 0)) {
+    nearest = (void *)ObjGroup_FindNearestObject(0x13, obj, &range);
+    if ((nearest != NULL) && ((*(u8 *)((int)nearest + 0xaf) & 4) != 0)) {
         buttonDisable(0, 0x100);
         return 1;
     }
