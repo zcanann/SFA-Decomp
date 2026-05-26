@@ -5571,3 +5571,41 @@ void textureFn_8004c264(u8 *tex, int mapId) {
     }
 }
 #pragma scheduling reset
+
+#pragma scheduling off
+void selectTexture(u8 *tex, int mapId) {
+    void *base;
+    if (tex == NULL) return;
+    base = &tex[0x20];
+    if (tex[0x48] != 0) {
+        GXLoadTexObjPreLoaded(base, *(void **)(tex + 0x40), mapId);
+    } else {
+        GXLoadTexObj(base, mapId);
+    }
+}
+extern void VIConfigure(void *mode);
+void tvInit(void) {
+    *(s16 *)((char *)lbl_803DCCF0 + 0xe) = 0x294;
+    *(u16 *)((char *)lbl_803DCCF0 + 0xa) = *(u16 *)((char *)lbl_803DCCF0 + 0xa) - 0xa;
+    VIConfigure(lbl_803DCCF0);
+    VIFlush();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
+}
+void mapsBinGetRomlistSize(int idx, int *out1, int *out2, int *out3, int p5) {
+    char *base = (char *)lbl_8035F3E8;
+    char *e;
+    if (*(int *)(base + 0x74) == 0) return;
+    if (*(int *)(base + 0x78) == 0) return;
+    e = (char *)*(int *)(base + 0x74) + idx;
+    *out1 = *(s16 *)(e + 0x1c);
+    *out2 = *(s16 *)(e + 0x1e);
+    *out3 = *(int *)((char *)*(int *)(base + 0x74) +
+            *(int *)((char *)*(int *)(base + 0x78) + p5 * 4 + 0x18) + 4);
+}
+void trickyVoxAllocFn_8004b5d4(int *out) {
+    out[0] = (int)mmAlloc(0x1960, 0x10, 0);
+    out[1] = out[0] + 0xfe0;
+    out[2] = out[1] + 0x7f0;
+}
+#pragma scheduling reset
