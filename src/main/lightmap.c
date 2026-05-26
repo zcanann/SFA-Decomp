@@ -3281,3 +3281,88 @@ void objDrawFn_8005da48(int *obj)
         Camera_ApplyFullViewport();
     }
 }
+
+extern void *mmAlloc(int size, int heap, int flags);
+extern void loadAssetFileById(void **out, int id);
+extern void *memset(void *dst, int val, u32 n);
+extern void *lbl_803DCE94;
+extern void *lbl_803DCE8C;
+extern void *lbl_803DCE78;
+extern void *lbl_803DCE7C;
+extern void *lbl_803DCE80;
+extern void *lbl_803DCE84;
+extern s16 lbl_803DCE90;
+extern s16 lbl_803DCEBA;
+extern s16 lbl_803DCEB8;
+extern void *lbl_803DCE6C;
+extern void *lbl_803DCE68;
+
+void initMapBlocks(void)
+{
+    u8 *mb = (u8 *)lbl_8037E0C0;
+    u32 *q;
+    u16 *p;
+    void *tmp;
+    int i;
+
+    renderFlags = 0;
+    lbl_803DCE9C = mmAlloc(0x100, 5, 0);
+    lbl_803DCE94 = mmAlloc(0x80, 5, 0);
+    lbl_803DCE8C = mmAlloc(0x40, 5, 0);
+    lbl_803DCE78 = mmAlloc(0xd48, 5, 0);
+    *(u32 *)(mb + 0x41f4) = (u32)mmAlloc(0x500, 5, 0);
+    *(u32 *)(mb + 0x41e0) = (u32)mmAlloc(0x3c00, 5, 0);
+    *(u32 *)(mb + 0x41cc) = (u32)mmAlloc(0x500, 5, 0);
+
+    *(u32 *)(mb + 0x41f8) = *(volatile u32 *)(mb + 0x41f4) + 0x100;
+    *(u32 *)(mb + 0x41e4) = *(volatile u32 *)(mb + 0x41e0) + 0xc00;
+    *(u32 *)(mb + 0x41d0) = *(volatile u32 *)(mb + 0x41cc) + 0x100;
+    *(u32 *)(mb + 0x41fc) = *(volatile u32 *)(mb + 0x41f8) + 0x100;
+    *(u32 *)(mb + 0x41e8) = *(volatile u32 *)(mb + 0x41e4) + 0xc00;
+    *(u32 *)(mb + 0x41d4) = *(volatile u32 *)(mb + 0x41d0) + 0x100;
+    *(u32 *)(mb + 0x4200) = *(volatile u32 *)(mb + 0x41fc) + 0x100;
+    *(u32 *)(mb + 0x41ec) = *(volatile u32 *)(mb + 0x41e8) + 0xc00;
+    *(u32 *)(mb + 0x41d8) = *(volatile u32 *)(mb + 0x41d4) + 0x100;
+    *(u32 *)(mb + 0x4204) = *(volatile u32 *)(mb + 0x4200) + 0x100;
+    *(u32 *)(mb + 0x41f0) = *(volatile u32 *)(mb + 0x41ec) + 0xc00;
+    *(u32 *)(mb + 0x41dc) = *(volatile u32 *)(mb + 0x41d8) + 0x100;
+
+    loadAssetFileById(&lbl_803DCE7C, 0x1e);
+    loadAssetFileById(&lbl_803DCE80, 0x29);
+
+    q = (u32 *)(mb + 0x83a8);
+    for (i = 0; i < 3; i++) {
+        q[0] = 0; q[1] = 0; q[2] = 0; q[3] = 0; q[4] = 0;
+        q[5] = 0; q[6] = 0; q[7] = 0; q[8] = 0; q[9] = 0;
+        q[10] = 0; q[11] = 0; q[12] = 0; q[13] = 0; q[14] = 0;
+        q[15] = 0; q[16] = 0; q[17] = 0; q[18] = 0; q[19] = 0;
+        q[20] = 0; q[21] = 0; q[22] = 0; q[23] = 0; q[24] = 0;
+        q[25] = 0; q[26] = 0; q[27] = 0; q[28] = 0; q[29] = 0;
+        q[30] = 0; q[31] = 0; q[32] = 0; q[33] = 0; q[34] = 0;
+        q[35] = 0; q[36] = 0; q[37] = 0; q[38] = 0; q[39] = 0;
+        q += 40;
+    }
+
+    loadAssetFileById(&lbl_803DCE84, 0x27);
+
+    lbl_803DCE90 = 0;
+    p = (u16 *)lbl_803DCE84;
+    while (*p != 0xffff) {
+        p++;
+        lbl_803DCE90++;
+    }
+    lbl_803DCE90--;
+    lbl_803DCEBA = -1;
+    lbl_803DCEB8 = -2;
+
+    tmp = mmAlloc(0x500, 5, 0);
+    lbl_803DCE6C = tmp;
+    memset(tmp, 0, 0x500);
+
+    tmp = mmAlloc(0x3a0, 5, 0);
+    lbl_803DCE68 = tmp;
+    memset(tmp, 0, 0x3a0);
+
+    memset(mb + 0x8818, 0, 0xfa0);
+    *(u32 *)(mb + 0x8818) = -1;
+}
