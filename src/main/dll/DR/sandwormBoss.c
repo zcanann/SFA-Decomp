@@ -3277,6 +3277,49 @@ int fn_8019C3A0(int* obj, int p2, int* p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32  lbl_803E4218;
+extern f32  lbl_803E423C;
+extern f32  lbl_803E4240;
+extern f32  timeDelta;
+
+/* EN v1.0 0x8019E568  size: 352b  fn_8019E568: turn toward the target by
+ * a fraction of the yaw delta; when roughly aligned play/advance the idle
+ * move, otherwise start or speed-scale the turn move by the delta. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8019E568(int* a, int* b, u8* c, int d)
+{
+    int shifted;
+    fn_8003ADC4(a, b, (char*)c + 0x3c, 0x28, 0, 3);
+    shifted = Obj_GetYawDeltaToObject((int)a, (int)b, 0) >> 3;
+    *(s16*)a += shifted;
+    if (d == 0) return;
+    if ((s16)shifted > -200 && (s16)shifted < 200) {
+        if (*(int*)((char*)c + 0xc0) != 0) {
+            *(int*)((char*)c + 0xc0) = 0;
+            ObjAnim_SetCurrentMove((int)a, 0, lbl_803E4218, 0);
+        } else {
+            ObjAnim_AdvanceCurrentMove(lbl_803E423C, timeDelta, (int)a, 0);
+        }
+    } else {
+        if (*(int*)((char*)c + 0xc0) == 0) {
+            *(int*)((char*)c + 0xc0) = 1;
+            ObjAnim_SetCurrentMove((int)a, 9, lbl_803E4218, 0);
+        } else {
+            s16 t;
+            if ((s16)shifted > 0) {
+                t = (s16)shifted >> 2;
+            } else {
+                t = -(s16)shifted >> 2;
+            }
+            ObjAnim_AdvanceCurrentMove((f32)t / lbl_803E4240, timeDelta, (int)a, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void windlift_hitDetect(void) {}
 void windlift_release(void) {}
 void windlift_initialise(void) {}
