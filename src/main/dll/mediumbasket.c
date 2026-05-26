@@ -2431,6 +2431,7 @@ int fn_8015B2A0(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int route;
+    f32 neutralBlend;
 
     if ((s8)*(u8 *)(state + 0x346) != 0 &&
         (((u8)((int (*)(int, int, f32))((void **)*gBaddieControlInterface)[6])(
@@ -2443,18 +2444,19 @@ int fn_8015B2A0(int obj, int state)
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 4);
     } else if (*(s16 *)(sub + 0x402) == 4) {
         if (*(f32 *)(state + 0x2c0) < lbl_803E2D10 && (s8)*(u8 *)(state + 0x346) != 0) {
-            if (*(u8 *)(sub + 0x406) < 0x33) {
-                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 1);
-            } else {
+            if (*(u8 *)(sub + 0x406) > 50) {
                 ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 0);
+            } else {
+                ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 1);
             }
         }
     } else if (*(s16 *)(sub + 0x402) == 1) {
         return 8;
     }
     route = sub + 0x35c;
-    *(f32 *)(state + 0x290) = lbl_803E2D14;
-    *(f32 *)(state + 0x28c) = lbl_803E2D14;
+    neutralBlend = lbl_803E2D14;
+    *(f32 *)(state + 0x290) = neutralBlend;
+    *(f32 *)(state + 0x28c) = neutralBlend;
     memcpy((void *)route, (void *)(obj + 0xc), 0xc);
     memcpy((void *)(sub + 0x368), (void *)(*(int *)(state + 0x2d0) + 0xc), 0xc);
     voxmaps_updateRoutePath((void *)route, (void *)(sub + 0x384));
