@@ -2071,13 +2071,15 @@ int fn_8015B9B8(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int player;
+    f32 noBlend;
 
     *(u8 *)(state + 0x34d) = 3;
     *(f32 *)(state + 0x2a0) = lbl_803E2D28;
-    *(f32 *)(state + 0x280) = lbl_803E2D14;
-    *(f32 *)(state + 0x284) = lbl_803E2D14;
+    noBlend = lbl_803E2D14;
+    *(f32 *)(state + 0x280) = noBlend;
+    *(f32 *)(state + 0x284) = noBlend;
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
-        ObjAnim_SetCurrentMove(obj, 1, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove(obj, 1, noBlend, 0);
         *(u8 *)(state + 0x346) = 0;
     }
     if ((*(u8 *)(state + 0x356) & 1) == 0) {
