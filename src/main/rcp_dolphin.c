@@ -3027,3 +3027,88 @@ void textureAnimFn_80053f2c(u8 *def, u32 *node, int *cnt)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern char lbl_803822C8[];
+extern void *lbl_80386468[];
+extern int *gMapEventInterface;
+extern int *Obj_SetupObject(int *obj, int p1, int p2, int p3, int p4);
+
+#pragma scheduling off
+#pragma peephole off
+void mapInstantiateObjects(int *p1, int mapId, int index, int p4)
+{
+    int *seg = (int *)(lbl_803822C8 + mapId * 0x8c);
+    char *romBase;
+    char *p, *obj, *end;
+    int objIndex, i;
+    int visible, v, flag;
+    int byteIdx, bit;
+    s8 *vis;
+
+    if (seg[index] == -1)
+        return;
+    objIndex = 0;
+    romBase = *(char **)((char *)p1 + 0x20);
+    p = romBase;
+    obj = romBase + seg[index];
+    while (p < obj) {
+        objIndex++;
+        p += *(u8 *)(p + 2) * 4;
+    }
+    for (i = index + 1; i <= 0x20; i++) {
+        if (seg[i] != -1)
+            break;
+    }
+    end = romBase + seg[i];
+
+    while (obj < end) {
+        if (objIndex < 0) {
+            visible = 0;
+        } else {
+            void *bm = lbl_80386468[mapId];
+            byteIdx = objIndex >> 3;
+            if (byteIdx >= 0xc4) {
+                visible = 0;
+            } else {
+                bit = 1 << (objIndex & 7);
+                vis = *(s8 **)((char *)bm + 0x10);
+                if ((bit & vis[byteIdx]) != 0)
+                    visible = 1;
+                else
+                    visible = 0;
+            }
+        }
+        if (visible == 0) {
+            v = (*(u8 (*)(int))(*(int *)(*gMapEventInterface + 0x40)))(mapId);
+            if (v == -1) {
+                flag = 0;
+            } else if (v == 0) {
+                flag = 1;
+            } else if (v < 9) {
+                if ((*(u8 *)(obj + 3) >> (v - 1)) & 1)
+                    flag = 0;
+                else
+                    flag = 1;
+            } else {
+                if ((*(u8 *)(obj + 5) >> (0x10 - v)) & 1)
+                    flag = 0;
+                else
+                    flag = 1;
+            }
+            if (flag != 0) {
+                if (objIndex >= 0) {
+                    byteIdx = objIndex >> 3;
+                    bit = 1 << (objIndex & 7);
+                    vis = *(s8 **)((char *)lbl_80386468[mapId] + 0x10);
+                    vis[byteIdx] = vis[byteIdx] & ~bit;
+                    vis[byteIdx] = vis[byteIdx] | bit;
+                }
+                Obj_SetupObject((int *)obj, 1, mapId, objIndex, p4);
+            }
+        }
+        objIndex++;
+        obj += *(u8 *)(obj + 2) * 4;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
