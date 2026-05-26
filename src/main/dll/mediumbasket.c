@@ -2705,19 +2705,21 @@ void fn_8015D27C(int obj, int sub, int state)
 void fn_8015D3C0(int obj, int sub, int state)
 {
     int control = *(int *)(sub + 0x40c);
-    int target;
+    u8 *target;
     int hitInfo[7];
-    f32 dx;
-    f32 dy;
-    f32 dz;
+    f32 targetDelta[3];
+    f32 distSq;
 
     Obj_GetPlayerObject();
-    target = *(int *)(state + 0x2d0);
-    if (target != 0) {
-        dx = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
-        dy = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
-        dz = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
-        *(f32 *)(state + 0x2c0) = sqrtf(dz * dz + dx * dx + dy * dy);
+    target = *(u8 **)(state + 0x2d0);
+    if (target != NULL) {
+        targetDelta[0] = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
+        targetDelta[1] = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
+        targetDelta[2] = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
+        distSq = targetDelta[2] * targetDelta[2];
+        distSq += targetDelta[0] * targetDelta[0];
+        distSq += targetDelta[1] * targetDelta[1];
+        *(f32 *)(state + 0x2c0) = sqrtf(distSq);
     }
     if ((*(u8 *)(sub + 0x404) & 0x20) == 0) {
         ((void (*)(int, int, int, int, int, int, int))((void **)*gBaddieControlInterface)[15])(
