@@ -1326,6 +1326,11 @@ int arrayIndexOf(int *arr, int count, int target)
     return -1;
 }
 
+int randFn_80080100(int n)
+{
+    return randomGetRange(0, n * 60 / 60) == 0;
+}
+
 extern f32 timeDelta;
 #pragma peephole off
 #pragma scheduling off
