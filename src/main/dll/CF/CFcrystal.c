@@ -49,11 +49,36 @@ extern f32 FLOAT_803e475c;
 extern f32 FLOAT_803e4760;
 extern f32 FLOAT_803e476c;
 extern f32 lbl_803E3AA0;
+extern f32 lbl_803E3A98;
+extern f32 lbl_803E3A9C;
+extern f32 lbl_803E3AA8;
+extern f64 lbl_803E3AB0;
+extern f32 lbl_803E3AC0;
+extern f32 lbl_803E3AC4;
+extern f32 lbl_803E3AC8;
+extern f32 lbl_803E3ACC;
+extern f32 lbl_803E3AD0;
+extern f32 lbl_803E3AD4;
 extern f32 lbl_803E3AB8;
 extern f32 lbl_803E3AD8;
 extern f32 lbl_803E3ADC;
 extern f32 lbl_803E3AE0;
 extern f32 lbl_803E3AEC;
+extern f32 lbl_803DBDD8;
+extern u8 framesThisStep;
+extern u8 lbl_803DDAD8;
+extern void *gPartfxInterface;
+extern f32 mathFn_80010ee0(f32 t, void *control, int mode);
+extern f32 Vec_distance(void *a, void *b);
+extern int objCreateLight(int obj, int type);
+extern void modelLightStruct_setField50(int light, int value);
+extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
+extern void lightSetFieldBC_8001db14(int light, int value);
+extern void lightSetField2FB(int light, int value);
+extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern f32 sqrtf(f32 value);
+extern f32 fn_80293E80(f32 value);
 
 /*
  * --INFO--
@@ -455,6 +480,112 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3AA0); }
 #pragma peephole reset
+
+#define LANTERN_SPAWN_FX(obj, id, a, b, c, d) \
+    ((void (*)(int, int, int, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(obj, id, a, b, c, d)
+
+#define LANTERN_SPAWN_FX_VEC(obj, id, a, b, c, d, vx, vy, vz) \
+    ((void (*)(int, int, int, int, int, int, f32, f32, f32))(*(int *)(*(int *)gPartfxInterface + 8)))(obj, id, a, b, c, d, vx, vy, vz)
+
+#pragma scheduling off
+#pragma peephole off
+void LanternFireFly_update(int obj)
+{
+    u8 *state;
+    int player;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 stepScale;
+
+    state = *(u8 **)(obj + 0xb8);
+    player = FUN_80017a98();
+    *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+
+    if (lbl_803E3AA0 < *(f32 *)(state + 0x40)) {
+        *(f32 *)(state + 0x40) -= lbl_803E3AA0;
+        if (state[0x6c] < 4) {
+            FUN_80186d78(obj);
+        } else if (state[0x6c] == 7) {
+            state[0x6c] = 0;
+        } else {
+            state[0x6c]++;
+        }
+        FUN_80186e70(obj);
+    }
+
+    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x54) + mathFn_80010ee0(*(f32 *)(state + 0x40), state + 4, 0);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x58) + mathFn_80010ee0(*(f32 *)(state + 0x40), state + 0x14, 0);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x5c) + mathFn_80010ee0(*(f32 *)(state + 0x40), state + 0x24, 0);
+
+    if ((state[0x70] >> 6) == 1) {
+        *(f32 *)(state + 0x44) =
+            (f32)(lbl_803E3AC4 * Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) + lbl_803E3AC0);
+    }
+    *(f32 *)(state + 0x40) += *(f32 *)(state + 0x44) * FLOAT_803dc074;
+
+    if ((state[0x6a] == 1 || state[0x6a] == 4) && (state[0x70] >> 6) == 1 && state[0x6e] == 0) {
+        int light;
+
+        state[0x6e] = 1;
+        light = objCreateLight(obj, 1);
+        if (light != 0) {
+            modelLightStruct_setField50(light, 2);
+            modelLightStruct_setColorsA8AC(light, 100, 0xff, 100, 0);
+            lightSetFieldBC_8001db14(light, 1);
+            lightDistAttenFn_8001dc38(light, lbl_803E3A98, lbl_803E3A9C);
+            lightSetField2FB(light, 1);
+        }
+        *(int *)state = light;
+        if ((state[0x70] >> 6) != 1) {
+            lbl_803DDAD8 = 1;
+        }
+    }
+
+    dx = *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80);
+    dy = *(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84);
+    dz = *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88);
+    stepScale = lbl_803E3AA0 / ((f32)(s32)(sqrtf(dx * dx + dy * dy + dz * dz) / lbl_803E3AC8) + 1.0f);
+
+    if ((state[0x70] >> 6) == 1) {
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x43b);
+        if (lbl_803DBDD8 < (f32)*(int *)(state + 0x60)) {
+            if (state[0x6a] == 1 || state[0x6a] == 4) {
+                LANTERN_SPAWN_FX(obj, 0x19f, 0, 1, -1, 0);
+                LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
+            } else {
+                LANTERN_SPAWN_FX(obj, 0x1bd, 0, 1, -1, 0);
+            }
+        }
+        *(int *)(state + 0x60) -= framesThisStep;
+        if (*(int *)(state + 0x60) < 0) {
+            gameBitDecrement(0x698);
+            Obj_FreeObject(obj);
+            return;
+        }
+        *(f32 *)(state + 0x54) = *(f32 *)(player + 0x18);
+        *(f32 *)(state + 0x58) = lbl_803E3AA8 + *(f32 *)(player + 0x1c);
+        *(f32 *)(state + 0x5c) = *(f32 *)(player + 0x20);
+        if (*(int *)state != 0 && *(int *)(state + 0x60) < 0xb4) {
+            f32 atten;
+
+            atten = (f32)*(int *)(state + 0x60) *
+                fn_80293E80((lbl_803E3ACC * (f32)(*(int *)(state + 0x60) << 0xb)) / lbl_803E3AD0);
+            Sfx_KeepAliveLoopedObjectSound(0, 0x460);
+            lightDistAttenFn_8001dc38(*(int *)state, atten, lbl_803E3AD4 + atten);
+        }
+    } else {
+        LANTERN_SPAWN_FX_VEC(obj, 0x19f, 0, 1, -1, 0, dx * stepScale, dy * stepScale, dz * stepScale);
+        LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#undef LANTERN_SPAWN_FX
+#undef LANTERN_SPAWN_FX_VEC
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3AF0;

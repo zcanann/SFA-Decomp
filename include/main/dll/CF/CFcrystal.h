@@ -21,7 +21,7 @@ int LanternFireFly_func08(void);
 void LanternFireFly_free(void);
 void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void LanternFireFly_hitDetect(void);
-void LanternFireFly_update(void);
+void LanternFireFly_update(int obj);
 void LanternFireFly_init(int obj, int def);
 void LanternFireFly_release(void);
 void LanternFireFly_initialise(void);
