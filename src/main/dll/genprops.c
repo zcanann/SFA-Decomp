@@ -5332,10 +5332,12 @@ typedef struct DofState {
     u8 enabled : 1;
     u8 : 7;
     u8 field1;
+    u8 field2;
 } DofState;
 
-extern void fn_8016CD48(void);
+extern int fn_8016CD48();
 extern void Rcp_DisableBlurFilter(void);
+extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
 extern int textureFree(int tex);
 extern void *lbl_803DDAA0;
 extern void *lbl_803DDAA8[2];
@@ -5544,6 +5546,39 @@ void dll_F7_init(int *obj, int *params)
             *(u8 *)((char *)state + 8) = 0;
         }
     }
+}
+
+int fn_8016CD48(int *obj, int msg, u8 *cmds)
+{
+    DofState *s = *(DofState **)((char *)obj + 0xb8);
+    int i;
+    if (s->enabled) {
+        turnOnBlurFilter(*(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c),
+                         *(f32 *)((char *)obj + 0x20), s->field1, s->field2);
+    }
+    for (i = 0; i < cmds[0x8b]; i++) {
+        switch (cmds[i + 0x81]) {
+        case 0:
+            s->enabled = 0;
+            Rcp_DisableBlurFilter();
+            break;
+        case 1:
+            s->enabled = 1;
+            s->field1 = 0;
+            break;
+        case 2:
+            s->enabled = 1;
+            s->field1 = 1;
+            s->field2 = 0;
+            break;
+        case 3:
+            s->enabled = 1;
+            s->field2 = 1;
+            s->field1 = 0;
+            break;
+        }
+    }
+    return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
