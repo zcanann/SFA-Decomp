@@ -5451,6 +5451,7 @@ void fn_80050F2C(void) {
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int fn_8004AA24(int *ctx, int *ref) {
     int target = ctx[4];
     int *node = (int *)ref[0];
@@ -5499,6 +5500,45 @@ void fn_8004AAD4(u8* arr, int size, int idx) {
     }
     *(u32*)(arr + idx * 8) = key;
     *(u16*)(arr + idx * 8 + 4) = val;
+}
+#pragma dont_inline reset
+extern void fn_8004AFA0(int *q, int *elem, int idx);
+int fn_8004B218(int *q, int n) {
+    int done = 0;
+    int result = 0;
+    int idx;
+    int *elem;
+    int *heap;
+    int count;
+    while (done == 0 && n != 0) {
+        heap = *(int **)((char *)q + 0x4);
+        count = *(s16 *)((char *)q + 0x22);
+        if (count == 0) {
+            idx = -1;
+        } else {
+            idx = *(u16 *)((char *)heap + 0xc);
+            *(int *)((char *)heap + 0x8) = *(int *)((char *)heap + count * 8);
+            *(s16 *)((char *)q + 0x22) = count - 1;
+            *(u16 *)((char *)heap + 0xc) = *(u16 *)((char *)heap + count * 8 + 4);
+            fn_8004AAD4((u8 *)heap, *(s16 *)((char *)q + 0x22), 1);
+        }
+        if (idx < 0) {
+            done = 1;
+            result = -1;
+        } else {
+            elem = (int *)(*(int *)((char *)q + 0) + idx * 16);
+            *(int *)((char *)q + 0x1c) = idx;
+            if (fn_8004AA24(q, elem) != 0) {
+                done = 1;
+                result = 1;
+            } else {
+                *((u8 *)elem + 0xe) = 1;
+                fn_8004AFA0(q, elem, idx);
+            }
+        }
+        n--;
+    }
+    return result;
 }
 #pragma peephole reset
 #pragma scheduling reset
