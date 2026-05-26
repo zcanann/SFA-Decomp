@@ -31,6 +31,15 @@ extern f32 FLOAT_803e4ad8;
 extern f32 FLOAT_803e4ae0;
 
 extern void *lbl_803DBDE8;
+extern void *gExpgfxInterface;
+extern void *gModgfxInterface;
+extern void *gPartfxInterface;
+extern u8 framesThisStep;
+extern f32 lbl_803E3E48;
+extern char sCFTreasSharpyDebugFormat[];
+extern void fn_80137948(char *fmt, int obj, f32 x, f32 z);
+extern void *Resource_Acquire(int id, int flags);
+extern void Resource_Release(void *resource);
 
 extern f32 lbl_803E3DD8;
 extern f32 lbl_803E3DEC;
@@ -354,6 +363,179 @@ void FUN_8018e0a8(void)
   return;
 }
 
+typedef struct CFTreasSharpyFxSpawnArgs {
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} CFTreasSharpyFxSpawnArgs;
+
+#define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
+    ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(obj, id, data, flags, model, arg)
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8018E6C4(int obj)
+{
+    u8 *state;
+    u8 *def;
+    int spawnFlags;
+    s16 mode;
+    s16 count;
+    s16 i;
+    void *resource;
+
+    state = *(u8 **)(obj + 0xb8);
+    def = *(u8 **)(obj + 0x4c);
+    spawnFlags = 0;
+    if (*(s16 *)(state + 0xa) == 0x11) {
+        fn_80137948(sCFTreasSharpyDebugFormat, obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x14));
+    }
+
+    mode = *(s16 *)(state + 8);
+    switch (def[0x28]) {
+    case 0:
+        if (mode == 0 || mode == 1 || mode == 2) {
+            spawnFlags = 2;
+        }
+        break;
+    case 1:
+        if (mode == 0 || mode == 1 || mode == 2) {
+            spawnFlags = 4;
+        }
+        break;
+    case 2:
+        if (mode == 0) {
+            spawnFlags = 0x200001;
+        }
+        if (mode == 1 || mode == 2) {
+            spawnFlags = 1;
+        }
+        break;
+    case 3:
+        spawnFlags = 0;
+        break;
+    default:
+        spawnFlags = 2;
+        break;
+    }
+
+    count = *(s16 *)(state + 0xe);
+    if ((spawnFlags & 1) != 0) {
+        CFTreasSharpyFxSpawnArgs args;
+
+        args.x = *(f32 *)(obj + 0xc);
+        args.y = *(f32 *)(obj + 0x10);
+        args.z = *(f32 *)(obj + 0x14);
+        args.yaw = *(s16 *)obj;
+        args.pitch = *(s16 *)(obj + 2);
+        args.roll = *(s16 *)(obj + 4);
+        args.scale = lbl_803E3E48;
+        if (count < 1) {
+            CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xc), &args, spawnFlags, -1, 0);
+        } else {
+            for (i = 0; i < count; i++) {
+                CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), &args, spawnFlags, -1, 0);
+            }
+        }
+    } else {
+        switch (mode) {
+        case 0:
+            if (count < 1) {
+                CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), NULL, spawnFlags, -1, 0);
+            } else {
+                for (i = 0; i < count; i++) {
+                    CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), NULL, spawnFlags, -1, 0);
+                }
+            }
+            break;
+        case 1:
+            resource = Resource_Acquire((u16)(*(s16 *)(state + 0xa) + 0x58), 1);
+            if (count < 1) {
+                ((void (*)(int, int, int, int, int, int))((void **)*(int *)resource)[1])(obj, 0, 0, spawnFlags, -1, 0);
+            } else {
+                for (i = 0; i < count; i++) {
+                    ((void (*)(int, int, int, int, int, int))((void **)*(int *)resource)[1])(obj, 0, 0, spawnFlags, -1, 0);
+                }
+            }
+            Resource_Release(resource);
+            break;
+        case 2:
+            resource = Resource_Acquire((u16)(*(s16 *)(state + 0xa) + 0xab), 1);
+            if (count < 1) {
+                ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
+                    (obj, 0, 0, spawnFlags, -1, *(u16 *)(state + 0xa) & 0xff, 0);
+            } else {
+                for (i = 0; i < count; i++) {
+                    ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
+                        (obj, 0, 0, spawnFlags, -1, *(u16 *)(state + 0xa) & 0xff, 0);
+                }
+            }
+            Resource_Release(resource);
+            break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#undef CFTREAS_PARTFX_SPAWN
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8018EAA4(int obj, int unused, int events)
+{
+    u8 *state;
+    u8 *def;
+    u8 event;
+    int i;
+    s8 delta;
+
+    state = *(u8 **)(obj + 0xb8);
+    def = *(u8 **)(obj + 0x4c);
+    for (i = 0; i < *(u8 *)(events + 0x8b); i++) {
+        event = *(u8 *)(events + i + 0x81);
+        if (event == 1) {
+            fn_8018E6C4(obj);
+        }
+        if (*(u8 *)(events + i + 0x81) == 2) {
+            state[0x1c] = (u8)(1 - state[0x1c]);
+        }
+        *(u8 *)(events + i + 0x81) = 0;
+    }
+
+    if (state[0x1c] != 0) {
+        delta = (s8)def[0x27];
+        if (delta == 0x7f) {
+            *(s16 *)(obj + 0) = *(s16 *)(obj + 0) + framesThisStep * 10;
+        } else {
+            *(s16 *)(obj + 0) = *(s16 *)(obj + 0) + delta * framesThisStep * 100;
+        }
+
+        delta = (s8)def[0x26];
+        if (delta == 0x7f) {
+            *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + framesThisStep * 10;
+        } else {
+            *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + delta * framesThisStep * 100;
+        }
+
+        delta = (s8)def[0x25];
+        if (delta == 0x7f) {
+            *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + framesThisStep * 10;
+        } else {
+            *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + delta * framesThisStep * 100;
+        }
+        fn_8018E6C4(obj);
+    }
+
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
@@ -423,6 +605,16 @@ int fxemit_getObjectTypeId(void)
 {
   return 0;
 }
+
+#pragma scheduling off
+#pragma peephole off
+void fxemit_free(int obj)
+{
+    ((void (*)(int))((void **)*(int *)gExpgfxInterface)[6])(obj);
+    ((void (*)(int))((void **)*(int *)gModgfxInterface)[5])(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
