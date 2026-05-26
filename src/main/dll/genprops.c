@@ -5580,5 +5580,31 @@ int fn_8016CD48(int *obj, int msg, u8 *cmds)
     }
     return 0;
 }
+
+extern void lightFn_8001db6c(int handle, int flag, f32 v);
+extern f32 lbl_803E3330;
+int Fireball_SeqFn(int *obj, int msg, u8 *cmds)
+{
+    int i;
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)state + 0x70) & 8) {
+        return 0;
+    }
+    for (i = 0; i < cmds[0x8b]; i++) {
+        u8 cmd = cmds[i + 0x81];
+        if (cmd == 1) {
+            if (*(void **)state != NULL) {
+                lightFn_8001db6c(*(int *)state, 1, lbl_803E3330);
+            }
+            *(s16 *)((char *)obj + 6) &= ~0x4000;
+        } else if (cmd == 2) {
+            if (*(void **)state != NULL) {
+                lightFn_8001db6c(*(int *)state, 0, lbl_803E3330);
+            }
+            *(s16 *)((char *)obj + 6) |= 0x4000;
+        }
+    }
+    return 0;
+}
 #pragma scheduling reset
 #pragma peephole reset
