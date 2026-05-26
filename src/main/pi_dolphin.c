@@ -5685,6 +5685,46 @@ void checkLoadBlock(int a, int *pc, int *p8) {
         *pc = 0;
     }
 }
+void loadVoxMaps(int a, int *pc, int *p8) {
+    int idx = -1;
+    int flags;
+    int saved;
+    char *blk;
+    u32 t1b, t54;
+    if ((lbl_8035F3E8[0x1a] != 0 && lbl_8035F3E8[0x1b] != 0) ||
+        (lbl_8035F3E8[0x53] != 0 && lbl_8035F3E8[0x54] != 0)) {
+        saved = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(saved);
+        t1b = lbl_8035F3E8[0x1b];
+        t54 = lbl_8035F3E8[0x54];
+        if (t1b != 0 && (a & 0x80000000) != 0 && (flags & 0x1000000) == 0) {
+            idx = 0x1b;
+        } else if (t54 != 0 && (a & 0x20000000) != 0 && (flags & 0x4000000) == 0) {
+            idx = 0x54;
+        } else if (t1b != 0 && (flags & 0x1000000) == 0) {
+            idx = 0x1b;
+        } else if (t54 != 0 && (flags & 0x4000000) == 0) {
+            idx = 0x54;
+        }
+        if ((a & 0xf0000000) != 0) {
+            blk = (char *)lbl_8035F3E8[idx] + (a & 0x00ffffff);
+            if (strncmp(blk, sZlbBlockTag, 3) != 0) {
+                *p8 = 0;
+                *pc = 0;
+            } else {
+                *p8 = *(int *)(blk + 0x8);
+                *pc = *(int *)(blk + 0xc);
+            }
+        } else {
+            *p8 = 0;
+            *pc = 0;
+        }
+    } else {
+        *p8 = 0;
+        *pc = 0;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 extern void VIConfigure(void *mode);
