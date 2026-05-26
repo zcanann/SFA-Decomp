@@ -13230,6 +13230,36 @@ void screens_remove2(void) {
         lbl_803DD4AC = (u32)-1;
     }
 }
+extern void loadAssetFileById(void **out, int id);
+extern void *mmAlloc(int size, int heap, int flags);
+extern void getTabEntry(void *dst, int fileId, int offset, int size);
+void screens_show(int id) {
+    int *asset = NULL;
+    int *p;
+    int count;
+    int offset, size;
+    if ((int)lbl_803DD4AC != id) {
+        loadAssetFileById((void **)&asset, 0x19);
+        count = 0;
+        p = asset;
+        while (*p != -1) {
+            p++;
+            count++;
+        }
+        if (id < 0 || id >= count - 1) id = 0;
+        offset = asset[id];
+        size = asset[id + 1] - offset;
+        if (size != (int)lbl_803DD4A4) {
+            if (lbl_803DD4A0 != 0) mm_free(lbl_803DD4A0);
+            lbl_803DD4A0 = (u32)mmAlloc(size, 2, 0);
+        }
+        lbl_803DD4A4 = size;
+        getTabEntry((void *)lbl_803DD4A0, 0x18, offset, size);
+        mm_free((u32)asset);
+        lbl_803DD4AC = id;
+    }
+    lbl_803DD4A8 = 1;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
