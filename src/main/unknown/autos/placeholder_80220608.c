@@ -499,32 +499,40 @@ void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 void wcpressures_hitDetect(void) {}
+#pragma peephole off
 #pragma scheduling off
-void wcpressures_init(int obj, int setup)
+void wcpressures_init(u8 *obj, u8 *setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    u8 *state = *(u8 **)(obj + 0xb8);
+    s16 objType;
+    u16 objFlags;
+    s8 modelIndex;
     int i;
 
-    *(s16 *)obj = (s16)(*(u8 *)(setup + 0x18) << 8);
-    *(u16 *)(obj + 0xb0) |= 0x6000;
-    *(u8 *)(obj + 0xad) = (s8)*(u8 *)(setup + 0x19);
-    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        *(u8 *)(obj + 0xad) = 0;
+    objType = (s16)(setup[0x18] << 8);
+    *(s16 *)obj = objType;
+    objFlags = *(u16 *)(obj + 0xb0) | 0x6000;
+    *(u16 *)(obj + 0xb0) = objFlags;
+    modelIndex = (s8)setup[0x19];
+    *(s8 *)(obj + 0xad) = modelIndex;
+    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        obj[0xad] = 0;
     }
 
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x1a)) != 0) {
         *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) - (f32)*(u8 *)(setup + 0x1c);
-        *(u8 *)state = 0x1e;
-        *(u8 *)(state + 1) = 2;
+        state[0] = 0x1e;
+        state[1] = 2;
     }
 
-    ObjGroup_AddObject(obj, 0x31);
+    ObjGroup_AddObject((int)obj, 0x31);
     for (i = 0; i < 10; i++) {
         *(int *)(state + 4 + i * 4) = 0;
     }
     *(void **)(obj + 0xbc) = wcpressures_tileStateCallback;
 }
 #pragma scheduling on
+#pragma peephole on
 void wcpressures_release(void) {}
 void wcpressures_initialise(void) {}
 
