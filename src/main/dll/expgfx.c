@@ -652,6 +652,7 @@ void expgfx_initSlotQuad(void *slotPtr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType)
@@ -663,8 +664,8 @@ int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType
   int freeIndex;
 
   tableIndex = 0;
-  entry = gExpgfxTableEntries;
-  freeScan = entry;
+  freeScan = gExpgfxTableEntries;
+  entry = freeScan;
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++) {
     if ((entry->refCount != 0) && (entry->resource == resource) &&
         (entry->sourceId == sourceId) && (entry->attachedKey1 == attachedKey1)) {
@@ -695,6 +696,7 @@ int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -1629,10 +1631,10 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   uint inverseBit;
   short poolIndex;
   short slotIndex;
-  int polePosX = 0;
-  int polePosY = 0;
-  int poleVecY = 0;
-  int poleVecZ = 0;
+  int texS1 = 0;
+  int texS0 = 0;
+  int texT0 = 0;
+  int texT1 = 0;
   f32 scaleVal;
   u8 *poolSourceModesByte;
   u8 modeFlag;
@@ -1643,10 +1645,10 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   expgfxBase = gExpgfxRuntimeData;
   poolIndex = 0;
   slotIndex = 0;
-  polePosX = 0;
-  polePosY = 0;
-  poleVecY = 0;
-  poleVecZ = 0;
+  texS1 = 0;
+  texS0 = 0;
+  texT0 = 0;
+  texT1 = 0;
   if (getHudHiddenFrameCount() != 0) {
     return EXPGFX_INVALID_POOL_INDEX;
   }
@@ -1710,12 +1712,12 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
 
   behaviorFlags = slot->behaviorFlags;
   if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX1_T) != 0) {
-    polePosX = 0;
-    polePosY = 0;
+    texS1 = 0;
+    texS0 = 0;
   }
   if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX0_T) != 0) {
-    poleVecZ = 0;
-    poleVecY = 0;
+    texT1 = 0;
+    texT0 = 0;
   }
 
   attachedSource = (ExpgfxAttachedSourceState *)config->attachedSource;
@@ -1875,14 +1877,14 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   quadVertices[0].colorG = 0xff;
   quadVertices[0].colorB = 0xff;
 
-  quadVertices[0].texS = (s16)polePosY;
-  quadVertices[0].texT = (s16)poleVecY;
-  quadVertices[1].texS = (s16)polePosX;
-  quadVertices[1].texT = (s16)poleVecY;
-  quadVertices[2].texS = (s16)polePosX;
-  quadVertices[2].texT = (s16)poleVecZ;
-  quadVertices[3].texS = (s16)polePosY;
-  quadVertices[3].texT = (s16)poleVecZ;
+  quadVertices[0].texS = (s16)texS0;
+  quadVertices[0].texT = (s16)texT0;
+  quadVertices[1].texS = (s16)texS1;
+  quadVertices[1].texT = (s16)texT0;
+  quadVertices[2].texS = (s16)texS1;
+  quadVertices[2].texT = (s16)texT1;
+  quadVertices[3].texS = (s16)texS0;
+  quadVertices[3].texT = (s16)texT1;
 
   if ((slot->renderFlags & EXPGFX_RENDER_INIT_QUAD) != 0) {
     expgfx_initSlotQuad(slot);
