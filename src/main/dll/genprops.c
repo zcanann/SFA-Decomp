@@ -5378,13 +5378,13 @@ void staff_release(void)
     }
 }
 
-extern void fn_80065684(f32 a, f32 b, f32 c, f32 *out, int flag);
+extern void fn_80065684(int obj, f32 a, f32 b, f32 c, f32 *out, int flag);
 extern f32 lbl_803E31D8;
 void mikabombshadow_init(int *obj)
 {
     int *state = *(int **)((char *)obj + 0xb8);
     f32 out;
-    fn_80065684(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+    fn_80065684((int)obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
                 *(f32 *)((char *)obj + 0x14), &out, 0);
     ObjHits_DisableObject(obj);
     *(u8 *)((char *)obj + 0x36) = 0xff;
