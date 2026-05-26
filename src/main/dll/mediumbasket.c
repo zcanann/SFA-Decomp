@@ -2951,18 +2951,18 @@ void fn_8015D098(int obj, int p2, int p3)
   ObjHits_DisableObject(obj);
 
   if ((*(u8 *)(p2 + 0x404) & 0x4) != 0) {
-    r = (**(uint (**)(int, int, int, f32))((char *)(*gBaddieControlInterface) + 0x48))(
-            obj, p3, 0x8000, lbl_803E2D54);
+    r = (**(uint (**)(int, int, f32, int))((char *)(*gBaddieControlInterface) + 0x48))(
+            obj, p3, lbl_803E2D54, 0x8000);
   } else if ((*(u8 *)(p2 + 0x404) & 0x8) != 0) {
-    r = (**(uint (**)(int, int, int, f32))((char *)(*gBaddieControlInterface) + 0x48))(
-            obj, p3, 0x8000, lbl_803E2D24 * (f32)(u32)*(u16 *)(p2 + 0x3fe));
+    r = (**(uint (**)(int, int, f32, int))((char *)(*gBaddieControlInterface) + 0x48))(
+            obj, p3, lbl_803E2D24 * (f32)(u32)*(u16 *)(p2 + 0x3fe), 0x8000);
   } else {
-    r = (**(uint (**)(int, int, int, f32))((char *)(*gBaddieControlInterface) + 0x48))(
-            obj, p3, 0x8000, (f32)(u32)*(u16 *)(p2 + 0x3fe));
+    r = (**(uint (**)(int, int, f32, int))((char *)(*gBaddieControlInterface) + 0x48))(
+            obj, p3, (f32)(u32)*(u16 *)(p2 + 0x3fe), 0x8000);
   }
 
   if (r != 0) {
-    (**(void (**)(int, int, int, f32))((char *)(*gPlayerInterface) + 0x30))(obj, p3, 4, timeDelta);
+    (**(void (**)(int, int, f32, int))((char *)(*gPlayerInterface) + 0x30))(obj, p3, timeDelta, 4);
     if (((u8)(**(int (**)(int, int, f32))((char *)(*gBaddieControlInterface) + 0x18))(obj, p3, lbl_803E2D00) & 1) == 0) {
       r = 0;
     }
