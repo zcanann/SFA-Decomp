@@ -8381,8 +8381,8 @@ void objList_remove(ObjLinkedList* list, int item)
         return;
     }
 
-    prev = head;
     current = head;
+    prev = head;
     while (current != 0 && current != item) {
         prev = current;
         current = *(int*)(current + list->nextOffset);
