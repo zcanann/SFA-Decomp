@@ -380,26 +380,30 @@ void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 #pragma peephole on
+#pragma peephole off
 #pragma scheduling off
-void wcbeacon_init(int obj, int setup)
+void wcbeacon_init(u8 *obj, u8 *setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    u8 *state = *(u8 **)(obj + 0xb8);
+    s16 objType;
 
     (*(void (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
-    *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
-    *(u8 *)(obj + 0xad) = *(u8 *)(setup + 0x19);
-    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        *(u8 *)(obj + 0xad) = 0;
+    objType = (s16)((s8)setup[0x18] << 8);
+    *(s16 *)obj = objType;
+    obj[0xad] = setup[0x19];
+    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        obj[0xad] = 0;
     }
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
         if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
-            *(u8 *)(state + 4) = 3;
+            state[4] = 3;
         } else {
-            *(u8 *)(state + 4) = 1;
+            state[4] = 1;
         }
     }
 }
 #pragma scheduling on
+#pragma peephole on
 
 int wctile_getExtraSize(void) { return 0xc; }
 #pragma scheduling off
@@ -424,21 +428,23 @@ void wctile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 void wctile_hitDetect(void) {}
+#pragma peephole off
 #pragma scheduling off
-void wctile_init(int obj, int setup)
+void wctile_init(u8 *obj, u8 *setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    u8 *state = *(u8 **)(obj + 0xb8);
 
     *(f32 *)(obj + 0x10) = lbl_803E6DFC + *(f32 *)(setup + 0xc);
-    *(u8 *)(obj + 0xad) = *(u8 *)(setup + 0x19);
-    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        *(u8 *)(obj + 0xad) = 0;
+    obj[0xad] = setup[0x19];
+    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        obj[0xad] = 0;
     }
     *(s16 *)(state + 8) = *(s16 *)(setup + 0x1a);
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
-    *(u8 *)(obj + 0x36) = 0;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), fn_800284CC);
+    obj[0x36] = 0;
 }
 #pragma scheduling on
+#pragma peephole on
 void wctile_release(void) {}
 void wctile_initialise(void) {}
 
@@ -578,18 +584,20 @@ void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 #pragma peephole on
+#pragma peephole off
 #pragma scheduling off
-void wctrexstatu_hitDetect(int obj)
+void wctrexstatu_hitDetect(u8 *obj)
 {
     if (*(int *)(obj + 0xf4) != 0 && randomGetRange(0, 5) == 0) {
-        if ((s8)*(u8 *)(obj + 0xad) == 0) {
-            (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x73f, 0, 2, -1, obj);
+        if (*(s8 *)(obj + 0xad) == 0) {
+            (*(void (**)(u8 *, int, int, int, int, u8 *))(*gPartfxInterface + 8))(obj, 0x73f, 0, 2, -1, obj);
         } else {
-            (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x740, 0, 2, -1, obj);
+            (*(void (**)(u8 *, int, int, int, int, u8 *))(*gPartfxInterface + 8))(obj, 0x740, 0, 2, -1, obj);
         }
     }
 }
 #pragma scheduling on
+#pragma peephole on
 void wctrexstatu_update(void) {}
 #pragma scheduling off
 void wctrexstatu_init(int obj, int setup, int fromLoad)
