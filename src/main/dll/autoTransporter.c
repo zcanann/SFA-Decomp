@@ -794,6 +794,39 @@ void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
     *(f32*)((char*)state + 696) = *(f32*)((char*)obj + 20);
 }
 
+extern u32 GameBit_Get(int eventId);
+extern int **gObjectTriggerInterface;
+void doorf4_update(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    *(u8 *)((char *)state + 0x21) = 0;
+    if (*(int *)((char *)obj + 0xf4) == 0) {
+        int *src = *(int **)((char *)obj + 0x4c);
+        s16 type;
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)src + 8);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)src + 0xc);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)src + 0x10);
+        *(s16 *)obj = (s16)((s8) * (s8 *)((char *)src + 0x18) << 8);
+        type = *(s16 *)((char *)obj + 0x46);
+        if (type == 0x151) {
+            if (GameBit_Get(*(int *)((char *)state + 0x10)) != 0) {
+                ((void (*)(int *, int))((int *)(*gObjectTriggerInterface))[0x54 / 4])(obj, 0x75);
+                *(u8 *)((char *)state + 0x21) = 1;
+            }
+            ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(0, obj, -1);
+        } else if (type == 0x37a) {
+            if (GameBit_Get(*(int *)((char *)state + 0x10)) != 0) {
+                ((void (*)(int *, int))((int *)(*gObjectTriggerInterface))[0x54 / 4])(obj, 0x8a);
+                *(u8 *)((char *)state + 0x21) = 1;
+            }
+            ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(0, obj, -1);
+        } else {
+            ((void (*)(int, int *, int))((int *)(*gObjectTriggerInterface))[0x48 / 4])(0, obj, -1);
+        }
+        *(int *)((char *)obj + 0xf4) = 1;
+    }
+}
+
 extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
 extern f32 lbl_803E364C;
