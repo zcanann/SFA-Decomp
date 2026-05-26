@@ -1997,14 +1997,16 @@ void fn_8015CB0C(int *obj, int *state);
 
 #pragma scheduling off
 #pragma peephole off
-void dll_CA_func0B(int obj, u8 message)
+void dll_CA_func0B(int obj, int message)
 {
     int state = *(int *)(obj + 0xb8);
 
-    if (message == 0x80) {
+    switch ((u8)message) {
+    case 0x80:
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 2);
         *(s16 *)(state + 0x270) = 4;
         *(u8 *)(state + 0x27b) = 1;
+        break;
     }
 }
 #pragma peephole reset
