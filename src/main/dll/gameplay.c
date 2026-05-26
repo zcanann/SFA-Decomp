@@ -13288,6 +13288,19 @@ void loadTaskTexts(void) {
         }
     }
 }
+void mapBitsFn_800e9418(void) {
+    s8 *p;
+    int i;
+    for (i = 0, p = lbl_803A2F80; i < 20; i++) {
+        if (p[0] != -1) {
+            p[2]--;
+            if (p[2] <= 0) {
+                p[0] = -1;
+            }
+        }
+        p += 3;
+    }
+}
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
     return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
