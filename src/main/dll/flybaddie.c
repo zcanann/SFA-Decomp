@@ -5,10 +5,20 @@
 #define DBSH_SHRINE_GB_FIRST_RISE 0x15f
 #define DBSH_SHRINE_GB_ACTIVE 0xefa
 #define DBSH_SHRINE_GB_INITIALIZED 0xf08
-#define DBSH_SHRINE_LATCH_STARTED 0x80
 
 typedef u8 (*MapEventGetAnimFn)(int mapId, int eventId);
 typedef void (*MapEventSetAnimFn)(int mapId, int eventId, int value);
+
+typedef struct DbshShrineFlags {
+    u8 latchStarted : 1;
+    u8 unused1 : 1;
+    u8 unused2 : 1;
+    u8 unused3 : 1;
+    u8 unused4 : 1;
+    u8 unused5 : 1;
+    u8 unused6 : 1;
+    u8 unused7 : 1;
+} DbshShrineFlags;
 
 typedef struct DbshShrineRuntime {
     void *light;
@@ -16,7 +26,7 @@ typedef struct DbshShrineRuntime {
     s16 resetTimer;
     u8 pad0E[6];
     u8 state;
-    u8 flags;
+    DbshShrineFlags flags;
 } DbshShrineRuntime;
 
 typedef struct DbshShrineObject {
@@ -70,7 +80,7 @@ void dbsh_shrine_init(DbshShrineObject *obj)
     obj->messageFn = fn_801C8EBC;
     obj->triggerRadius = 0;
     runtime->state = 0;
-    runtime->flags &= ~DBSH_SHRINE_LATCH_STARTED;
+    runtime->flags.latchStarted = 0;
     runtime->resetTimer = 0;
 
     ObjMsg_AllocQueue(obj, 4);
