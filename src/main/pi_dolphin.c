@@ -5611,7 +5611,7 @@ void selectTexture(u8 *tex, int mapId) {
 extern int lbl_803DCC80;
 #pragma scheduling off
 #pragma peephole off
-void loadModelsBin(u32 a, int *p1c, int *p20, int *p18, int *p4) {
+void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
     u32 v31 = 0;
     u32 v30 = 0;
     int idx = -1;
@@ -5642,6 +5642,47 @@ void loadModelsBin(u32 a, int *p1c, int *p20, int *p18, int *p4) {
         *p1c = *(int *)(p + 0x1c);
         *p20 = *(int *)(p + 0x20);
         *p4 = *(int *)(p + 0x4);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+extern char sZlbBlockTag[];
+extern int strncmp(const char *a, const char *b, u32 n);
+#pragma scheduling off
+#pragma peephole off
+void checkLoadBlock(int a, int *pc, int *p8) {
+    int idx = -1;
+    int flags;
+    int saved;
+    char *blk;
+    u32 t25, t47;
+    if ((lbl_8035F3E8[0x26] != 0 && lbl_8035F3E8[0x25] != 0) ||
+        (lbl_8035F3E8[0x48] != 0 && lbl_8035F3E8[0x47] != 0)) {
+        saved = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(saved);
+        t25 = lbl_8035F3E8[0x25];
+        t47 = lbl_8035F3E8[0x47];
+        if (t25 != 0 && (a & 0x10000000) != 0 && (flags & 0x10000) == 0) {
+            idx = 0x25;
+        } else if (t47 != 0 && (a & 0x20000000) != 0 && (flags & 0x40000) == 0) {
+            idx = 0x47;
+        } else if (t25 != 0 && (flags & 0x10000) == 0) {
+            idx = 0x25;
+        } else if (t47 != 0 && (flags & 0x40000) == 0) {
+            idx = 0x47;
+        }
+        blk = (char *)lbl_8035F3E8[idx] + (a & 0x00ffffff);
+        if (strncmp(blk, sZlbBlockTag, 3) != 0) {
+            *p8 = 0;
+            *pc = 0;
+        } else {
+            *p8 = *(int *)(blk + 0x8);
+            *pc = *(int *)(blk + 0xc);
+        }
+    } else {
+        *p8 = 0;
+        *pc = 0;
     }
 }
 #pragma peephole reset
