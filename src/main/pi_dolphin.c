@@ -5688,4 +5688,19 @@ void fn_8004F2B0(void) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
+extern void GXSetTevColor(int id, void *color);
+void fn_8004EF9C(int *param) {
+    int color = param[0];
+    GXSetTevColor(2, &color);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
 #pragma scheduling reset
