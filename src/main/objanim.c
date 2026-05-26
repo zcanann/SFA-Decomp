@@ -246,14 +246,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
     }
     state->progress += state->savedStep * deltaTime;
     prevSegmentLength = state->prevSegmentLength;
-    if (state->prevFrameType != OBJANIM_FRAME_TYPE_CLAMPED) {
-      while (state->progress < gObjAnimProgressZero) {
-        state->progress += prevSegmentLength;
-      }
-      while (state->progress >= prevSegmentLength) {
-        state->progress -= prevSegmentLength;
-      }
-    } else {
+    if (state->prevFrameType == OBJANIM_FRAME_TYPE_CLAMPED) {
       value = state->progress;
       if (value < gObjAnimProgressZero) {
         value = gObjAnimProgressZero;
@@ -261,6 +254,18 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
         value = prevSegmentLength;
       }
       state->progress = value;
+    }
+    else {
+      if (state->progress < gObjAnimProgressZero) {
+        while (state->progress < gObjAnimProgressZero) {
+          state->progress += prevSegmentLength;
+        }
+      }
+      if (state->progress >= prevSegmentLength) {
+        while (state->progress >= prevSegmentLength) {
+          state->progress -= prevSegmentLength;
+        }
+      }
     }
 
     if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
@@ -285,25 +290,27 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   previousProgress = objAnim->activeMoveProgress;
   progressDelta = moveStepScale * deltaTime;
   objAnim->activeMoveProgress = previousProgress + progressDelta;
-  if (objAnim->activeMoveProgress >= gObjAnimProgressOne) {
-    if (state->frameType != OBJANIM_FRAME_TYPE_CLAMPED) {
+  if (objAnim->activeMoveProgress < gObjAnimProgressOne) {
+    if (objAnim->activeMoveProgress < gObjAnimProgressZero) {
+      if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
+        objAnim->activeMoveProgress = gObjAnimProgressZero;
+      }
+      else {
+        while (objAnim->activeMoveProgress < gObjAnimProgressZero) {
+          objAnim->activeMoveProgress += gObjAnimProgressOne;
+        }
+      }
+      wrapped = 1;
+    }
+  }
+  else {
+    if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
+      objAnim->activeMoveProgress = gObjAnimProgressOne;
+    }
+    else {
       while (objAnim->activeMoveProgress >= gObjAnimProgressOne) {
         objAnim->activeMoveProgress -= gObjAnimProgressOne;
       }
-    }
-    else {
-      objAnim->activeMoveProgress = gObjAnimProgressOne;
-    }
-    wrapped = 1;
-  }
-  else if (objAnim->activeMoveProgress < gObjAnimProgressZero) {
-    if (state->frameType != OBJANIM_FRAME_TYPE_CLAMPED) {
-      while (objAnim->activeMoveProgress < gObjAnimProgressZero) {
-        objAnim->activeMoveProgress += gObjAnimProgressOne;
-      }
-    }
-    else {
-      objAnim->activeMoveProgress = gObjAnimProgressZero;
     }
     wrapped = 1;
   }
