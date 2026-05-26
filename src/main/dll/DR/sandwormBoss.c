@@ -3643,6 +3643,40 @@ void cfprisonuncle_update(int* obj)
 void gcrobotlightbea_render(void) {}
 void gcrobotlightbea_release(void) {}
 void gcrobotlightbea_initialise(void) {}
+
+extern f32 lbl_803E4298;
+extern f32 lbl_803E429C;
+
+/* EN v1.0 0x801A01E8  size: 296b  gcrobotlightbea_hitDetect: clear the hit
+ * flag, then re-set it only if the priority hit is the (undisguised) player
+ * and lands inside the beacon's bounding box. */
+#pragma scheduling off
+#pragma peephole off
+void gcrobotlightbea_hitDetect(int* obj)
+{
+    int out;
+    f32 vec[3];
+    void* hit;
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    ((Bit80*)(sub + 8))->top = 0;
+    if (*(void**)((char*)obj + 0xc4) == NULL) return;
+    if (ObjHits_GetPriorityHit((int)obj, &hit, 0, 0) == 0) {
+        hit = *(void**)((char*)*(void**)((char*)obj + 0x54) + 0x50);
+        if (hit == NULL) return;
+    }
+    if (hit != Obj_GetPlayerObject()) return;
+    if (playerIsDisguised(hit) != 0) return;
+    vec[0] = *(f32*)((char*)hit + 0xc);
+    vec[1] = lbl_803E4298 + *(f32*)((char*)hit + 0x10);
+    vec[2] = *(f32*)((char*)hit + 0x14);
+    if (fn_80221D6C((int)obj + 0xc, vec) == 0) return;
+    if (*(int*)((char*)obj + 0xf4) != 0 ||
+        objBboxFn_800640cc((int)obj + 0xc, vec, 0, &out, (int)obj, 4, -1, 0, 0) == 0) {
+        ((Bit80*)(sub + 8))->top = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void cfperch_render(void) {}
 void cfperch_hitDetect(void) {}
 void cfperch_release(void) {}
