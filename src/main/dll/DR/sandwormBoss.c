@@ -3363,6 +3363,52 @@ int fn_801A0614(int* obj, int p2, u8* p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32  Vec_distance(void* a, void* b);
+extern f32  s16toFloat(int a, int b);
+extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
+extern void gameBitIncrement(int bit);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32  lbl_803E4244;
+
+/* EN v1.0 0x8019E6C8  size: 316b  babycloudrunner_func0B: when the player
+ * gets within the trigger radius and the runner is in state 3, fire its
+ * burst (notify, bump the counter, set the gamebit); otherwise just play
+ * the idle audio cue. */
+#pragma scheduling off
+#pragma peephole off
+int babycloudrunner_func0B(int* obj)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    u8* q = *(u8**)((char*)obj + 0x4c);
+    int flag = 0;
+    void* player = Obj_GetPlayerObject();
+    u8* r = *(u8**)((char*)obj + 0x4c);
+    if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16)*(s16*)(r + 0x1a)) {
+        if (*(int*)(sub + 0x230) == 3) {
+            if ((*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
+                flag = 1;
+            }
+        }
+    }
+    if (flag != 0) {
+        s16toFloat((int)sub, 0x3c);
+        *(int*)((char*)obj + 0xf4) = 1;
+        *(s16*)obj = *(s16*)(sub + 0xd0);
+        ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(4, obj, -1);
+        *(f32*)(sub + 0) = lbl_803E4244;
+        gameBitIncrement(0x901);
+        *(int*)(sub + 0xc4) = 0xc;
+        GameBit_Set(*(s16*)(q + 0x1e), 1);
+        *(int*)((char*)obj + 0xf4) = 0;
+        return 1;
+    }
+    objAudioFn_800393f8((int)obj, (char*)sub + 0x6c, 0x296, 0x1000, -1, 1);
+    Sfx_PlayFromObject((int)obj, 0xd4);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void windlift_hitDetect(void) {}
 void windlift_release(void) {}
 void windlift_initialise(void) {}
