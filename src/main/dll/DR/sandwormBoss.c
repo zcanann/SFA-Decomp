@@ -3756,7 +3756,7 @@ int cfprisoncage_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0
 u32 fn_801A0174(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x8) >> 7) & 1; }
 u32 gunpowderbarrel_isHeld(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x4a) >> 5) & 1; }
 
-typedef struct { u8 _pad0 : 2; u8 held : 1; u8 _pad1 : 5; } GpbHeldByte;
+typedef struct { u8 playerHeld : 1; u8 _pad0 : 1; u8 held : 1; u8 _pad1 : 5; } GpbHeldByte;
 extern f32 lbl_803E42C0;
 
 /* EN v1.0 0x801A0BDC  size: 56b  gunpowderbarrel_setHeldState: flag the
@@ -3783,6 +3783,32 @@ void gunpowderbarrel_clearHeldState(int* obj) {
     *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
     *(f32*)(sub + 0x38) = z;
     ((GpbHeldByte*)(sub + 0x4a))->held = 0;
+}
+
+/* EN v1.0 0x801A0E04  size: 244b  gunpowderbarrel_setPlayerHeldState: when
+ * grabbed by the player, copy the held-pose and enable hit reactions; when
+ * released, restore the default pose and clear them. */
+void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    u8* h = *(u8**)((char*)obj + 0x54);
+    if (heldByPlayer != 0) {
+        h[0x6a] = 1;
+        h[0x6b] = 1;
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+        ((GpbHeldByte*)(sub + 0x4a))->playerHeld = 1;
+        *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) & ~2);
+        ObjHits_SetFlags((int)obj, 0x480);
+        ObjHits_ClearSourceMask((int)obj, 1);
+        ObjHits_EnableObject((int)obj);
+        ObjHits_SyncObjectPositionIfDirty((int)obj);
+    } else {
+        h[0x6a] = (*(u8**)((char*)obj + 0x50))[0x63];
+        h[0x6b] = (*(u8**)((char*)obj + 0x50))[0x64];
+        ((GpbHeldByte*)(sub + 0x4a))->playerHeld = 0;
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+        ObjHits_ClearFlags((int)obj, 0x400);
+        *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) | 1);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
