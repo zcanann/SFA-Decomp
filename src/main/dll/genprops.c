@@ -5487,5 +5487,63 @@ void dll_F7_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3404);
     }
 }
+
+extern void Sfx_PlayFromObject(int *obj, int sfx);
+extern f32 lbl_803E32B4;
+extern f32 lbl_803E3320;
+extern f32 lbl_803E3288;
+extern f32 lbl_803E3324;
+void staffDoGrowShrinkAnim(int *obj, u8 grow, u8 flag2)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (grow != 0) {
+        if (*(f32 *)((char *)state + 0x50) < lbl_803E32B4) {
+            Sfx_PlayFromObject(obj, 0xc0);
+        }
+        if (flag2 == 0) {
+            *(f32 *)((char *)state + 0x50) = lbl_803E3320;
+        } else {
+            *(f32 *)((char *)state + 0x50) = lbl_803E3288;
+        }
+    } else {
+        if (*(f32 *)((char *)state + 0x50) > lbl_803E32B4) {
+            Sfx_PlayFromObject(obj, 0xc1);
+        }
+        if (flag2 == 0) {
+            *(f32 *)((char *)state + 0x50) = lbl_803E3324;
+        } else {
+            *(f32 *)((char *)state + 0x50) = lbl_803E3328;
+        }
+    }
+}
+
+extern int Resource_Acquire(int id, int flag);
+extern void *gMapEventInterface;
+void dll_F7_init(int *obj, int *params)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    ObjGroup_AddObject((int)obj, 0x3e);
+    *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    lbl_803DDAB0 = Resource_Acquire(0x5b, 1);
+    lbl_803DDAB4 = Resource_Acquire(0x5a, 1);
+    {
+        int *r64 = *(int **)((char *)obj + 0x64);
+        if (r64 != NULL) {
+            *(int *)((char *)r64 + 0x30) |= 0x810;
+        }
+    }
+    *(u8 *)((char *)state + 0xa) = 2;
+    *(u8 *)((char *)state + 0xb) = *(u8 *)((char *)params + 0x19);
+    if (*(s8 *)((char *)state + 0xb) == 0) {
+        int r = ((int (*)(int))((int **)*(int **)gMapEventInterface)[0x68 / 4])(*(int *)((char *)params + 0x14));
+        if (r == 0) {
+            int *r54 = *(int **)((char *)obj + 0x54);
+            *(s16 *)((char *)r54 + 0x60) &= ~1;
+            *(u8 *)((char *)state + 9) = 1;
+            *(u8 *)((char *)state + 8) = 0;
+        }
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset
