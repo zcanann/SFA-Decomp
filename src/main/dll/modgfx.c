@@ -4762,6 +4762,7 @@ void partfx_initialise(void) {
     }
     lbl_803DD2C0 = 0;
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -4859,6 +4860,87 @@ void dll_0B_func0E(void)
             }
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Resource_Release(void* res);
+extern void *lbl_803DD2C8;
+extern void *lbl_803DD2CC;
+extern void *lbl_803DD2D0;
+extern void *lbl_803DD2D4;
+extern void *lbl_803DD2D8;
+extern void *lbl_803DD2DC;
+extern void *lbl_803DD2E0;
+extern void *lbl_803DD2E4;
+extern void *lbl_803DD2E8;
+extern void *lbl_803DD2EC;
+extern void *lbl_803DD2F0;
+extern void *lbl_803DD2F4;
+extern void *lbl_803DD2F8;
+extern void *lbl_803DD2FC;
+extern void *lbl_803DD300;
+extern void *lbl_803DD304;
+extern void *lbl_803DD308;
+extern void *lbl_803DD30C;
+extern void *lbl_803DD310;
+extern void *lbl_803DD314;
+
+/* EN v1.0 0x800AF41C  size: 560b  partfx_release: clear the 20-slot
+ * effect-id table and free all 20 cached particle resources. */
+#pragma scheduling off
+#pragma peephole off
+void partfx_release(void) {
+    u16 *p;
+    int i;
+    i = 0x14;
+    p = lbl_8039C2E0 + 0x14;
+    while ((s8)i != 0) {
+        p = p - 1;
+        i = i - 1;
+        *p = 0;
+    }
+    if (lbl_803DD2C8 != NULL) Resource_Release(lbl_803DD2C8);
+    lbl_803DD2C8 = NULL;
+    if (lbl_803DD2CC != NULL) Resource_Release(lbl_803DD2CC);
+    lbl_803DD2CC = NULL;
+    if (lbl_803DD2D0 != NULL) Resource_Release(lbl_803DD2D0);
+    lbl_803DD2D0 = NULL;
+    if (lbl_803DD2D4 != NULL) Resource_Release(lbl_803DD2D4);
+    lbl_803DD2D4 = NULL;
+    if (lbl_803DD2D8 != NULL) Resource_Release(lbl_803DD2D8);
+    lbl_803DD2D8 = NULL;
+    if (lbl_803DD2DC != NULL) Resource_Release(lbl_803DD2DC);
+    lbl_803DD2DC = NULL;
+    if (lbl_803DD2E0 != NULL) Resource_Release(lbl_803DD2E0);
+    lbl_803DD2E0 = NULL;
+    if (lbl_803DD2E4 != NULL) Resource_Release(lbl_803DD2E4);
+    lbl_803DD2E4 = NULL;
+    if (lbl_803DD2E8 != NULL) Resource_Release(lbl_803DD2E8);
+    lbl_803DD2E8 = NULL;
+    if (lbl_803DD2EC != NULL) Resource_Release(lbl_803DD2EC);
+    lbl_803DD2EC = NULL;
+    if (lbl_803DD2F0 != NULL) Resource_Release(lbl_803DD2F0);
+    lbl_803DD2F0 = NULL;
+    if (lbl_803DD2F4 != NULL) Resource_Release(lbl_803DD2F4);
+    lbl_803DD2F4 = NULL;
+    if (lbl_803DD2F8 != NULL) Resource_Release(lbl_803DD2F8);
+    lbl_803DD2F8 = NULL;
+    if (lbl_803DD2FC != NULL) Resource_Release(lbl_803DD2FC);
+    lbl_803DD2FC = NULL;
+    if (lbl_803DD300 != NULL) Resource_Release(lbl_803DD300);
+    lbl_803DD300 = NULL;
+    if (lbl_803DD304 != NULL) Resource_Release(lbl_803DD304);
+    lbl_803DD304 = NULL;
+    if (lbl_803DD308 != NULL) Resource_Release(lbl_803DD308);
+    lbl_803DD308 = NULL;
+    if (lbl_803DD30C != NULL) Resource_Release(lbl_803DD30C);
+    lbl_803DD30C = NULL;
+    if (lbl_803DD310 != NULL) Resource_Release(lbl_803DD310);
+    lbl_803DD310 = NULL;
+    if (lbl_803DD314 != NULL) Resource_Release(lbl_803DD314);
+    lbl_803DD314 = NULL;
+    lbl_803DD2C0 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
