@@ -4929,3 +4929,54 @@ void mapLoadDataFiles(int mapIdx)
     mapLoadDataFile(mapIdx, 0xe);
     mapLoadDataFile(mapIdx, 0xd);
 }
+
+extern void debugPrintfxy(int x, int y, char *fmt, ...);
+extern char sAssetIndexOverflowError[];
+int getTableFileEntry(int fileId, int index, int *out)
+{
+    u8 *base = lbl_80345E10;
+    int count = 0;
+    void *table = NULL;
+    switch (fileId) {
+    case 0xe:
+        count = 0x1fd0;
+        table = &base[0x2c0];
+        break;
+    case 0x1a:
+        count = 0x800;
+        table = &base[0x8200];
+        break;
+    case 0x21:
+        count = 0x1000;
+        table = &base[0xc200];
+        break;
+    case 0x24:
+        count = 0x1000;
+        table = &base[0x10200];
+        break;
+    case 0x26:
+        count = 0x800;
+        table = &base[0xa200];
+        break;
+    case 0x2a:
+        count = 0x800;
+        table = &base[0x170e0];
+        break;
+    case 0x2f:
+        count = 0xbb8;
+        table = &base[0x14200];
+        break;
+    case 0x50:
+        table = *(void **)&base[0x19718];
+        break;
+    }
+    if (index < 0 || index >= count) {
+        debugPrintfxy(0x14, 0x28, sAssetIndexOverflowError);
+        return 0;
+    }
+    if (table != NULL) {
+        *out = ((int *)table)[index];
+        return 1;
+    }
+    return 0;
+}
