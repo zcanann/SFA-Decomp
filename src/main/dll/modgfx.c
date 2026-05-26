@@ -4841,3 +4841,24 @@ void fn_800A09C4(int* obj, f32* params, int mode)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* EN v1.0 0x800A113C  size: 276b  dll_0B_func0E: flag every active effect
+ * whose owner object has the 0x800 state bit by setting its byte _13e. */
+#pragma scheduling off
+#pragma peephole off
+void dll_0B_func0E(void)
+{
+    int i;
+    for (i = 0; i < 50; i++) {
+        int* e = lbl_8039C1F8[i];
+        int* f;
+        if (e != NULL) {
+            f = *(int**)((char*)e + 4);
+            if (f != NULL && (*(u16*)((char*)f + 0xb0) & 0x800) != 0) {
+                *(u8*)((char*)e + 0x13e) = 1;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
