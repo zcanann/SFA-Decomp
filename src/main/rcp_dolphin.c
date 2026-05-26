@@ -2956,3 +2956,74 @@ void textureFn_800541ac(int p1, int *tex, void *forceTex, int flags, int packed)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern u8 framesThisStep;
+
+#pragma scheduling off
+#pragma peephole off
+void textureAnimFn_80053f2c(u8 *def, u32 *node, int *cnt)
+{
+    u32 a, b, c;
+    u32 v;
+    int r;
+    int flag2;
+
+    v = node[0];
+    a = v & 0x80000;
+    b = v & 0x40000;
+    c = v & 0x20000;
+    if (c != 0) {
+        if (b == 0) {
+            r = randomGetRange(0, 0x3e8);
+            if (r > 0x3d9) {
+                node[0] &= ~0x80000;
+                node[0] |= 0x40000;
+            }
+        } else if (a == 0) {
+            *cnt += *(u16 *)(def + 0x14) * framesThisStep;
+            if (*cnt >= *(u16 *)(def + 0x10)) {
+                *cnt = *(u16 *)(def + 0x10) * 2 - 1 - *cnt;
+                if (*cnt < 0) {
+                    *cnt = 0;
+                    node[0] &= ~0xc0000;
+                } else {
+                    node[0] |= 0x80000;
+                }
+            }
+        } else {
+            *cnt -= *(u16 *)(def + 0x14) * framesThisStep;
+            if (*cnt < 0) {
+                *cnt = 0;
+                node[0] &= ~0xc0000;
+            }
+        }
+    } else if (b != 0) {
+        if (a == 0)
+            *cnt += *(u16 *)(def + 0x14) * framesThisStep;
+        else
+            *cnt -= *(u16 *)(def + 0x14) * framesThisStep;
+        do {
+            flag2 = 0;
+            if (*cnt < 0) {
+                *cnt = -*cnt;
+                node[0] &= ~0x80000;
+                flag2 = 1;
+            }
+            if (*cnt >= *(u16 *)(def + 0x10)) {
+                *cnt = *(u16 *)(def + 0x10) * 2 - 1 - *cnt;
+                node[0] |= 0x80000;
+                flag2 = 1;
+            }
+        } while (flag2 != 0);
+    } else if (a == 0) {
+        *cnt += *(u16 *)(def + 0x14) * framesThisStep;
+        while (*cnt >= *(u16 *)(def + 0x10))
+            *cnt -= *(u16 *)(def + 0x10);
+    } else {
+        *cnt -= *(u16 *)(def + 0x14) * framesThisStep;
+        while (*cnt < 0)
+            *cnt += *(u16 *)(def + 0x10);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
