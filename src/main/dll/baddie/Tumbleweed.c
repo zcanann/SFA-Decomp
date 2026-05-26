@@ -3499,7 +3499,7 @@ int titlescreen_getObjectTypeId(u8* obj)
 extern void titlescreen_free(u8* obj);
 extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(void);
-extern void titlescreen_init(void);
+extern void titlescreen_init(u8* obj, u8* p);
 extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
 
@@ -3639,6 +3639,40 @@ void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8    lbl_8031CE10[];
+extern void  ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+extern void  ObjModel_SetRenderCallback(int* model, void* cb);
+extern void  AttractMovie_DrawTextureCallback(void);
+
+/* EN v1.0 0x801367A8  size: 252b  titlescreen_init: seed the object's
+ * state from its descriptor id (obj->_46), pick the anim move and blend
+ * float per id range, and for the attract id install the movie draw
+ * callback. */
+void titlescreen_init(u8* obj, u8* p)
+{
+    u8* a = *(u8**)(obj + 0xb8);
+    s16 v;
+    *(u8*)(a + 0x30) = 0;
+    *(s16*)(obj + 0) = (s16)((s8)p[0x18] << 8);
+    v = *(s16*)(obj + 0x46);
+    if (v >= 0x77d && v < 0x781) {
+        *(s8*)(a + 0x31) = (s8)(v - 0x77d);
+        *(f32*)(a + 0x34) = *(f32*)((u8*)lbl_8031CE10 - 0xEFA0 + (*(s16*)(obj + 0x46) << 5));
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
+    } else {
+        *(f32*)(a + 0x34) = lbl_803E22F8;
+        *(s8*)(a + 0x31) = -2;
+        v = *(s16*)(obj + 0x46);
+        if (v == 0x78a) {
+            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
+        } else if (v == 0x781) {
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2318, 0);
+            ObjModel_SetRenderCallback(*(int**)(*(int**)(obj + 0x7c)),
+                                       (void*)AttractMovie_DrawTextureCallback);
+        }
+    }
+}
 
 /* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
  * float at lbl_803DD968. */
