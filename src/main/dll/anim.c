@@ -5157,3 +5157,37 @@ void fn_80203000(int obj, int param2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void unlockLevel(int a, int b, int c);
+extern void Music_Trigger(int a, int b);
+extern int *gMapEventInterface;
+
+#pragma peephole off
+#pragma scheduling off
+void dfplevelcontrol_init(int obj, int param2)
+{
+    int state = *(int *)(obj + 0xb8);
+    int v;
+    ObjGroup_AddObject(obj, 9);
+    *(u8 *)(state + 7) = (*(u8 *)(state + 7) & ~0x80) | (GameBit_Get(0xd5d) << 7);
+    *(u8 *)(state + 7) = (*(u8 *)(state + 7) & ~0x40) | (GameBit_Get(0xd59) << 6);
+    *(u8 *)(state + 7) = (*(u8 *)(state + 7) & ~0x20) | (GameBit_Get(0xd5a) << 5);
+    *(void **)(obj + 0xbc) = fn_802044EC;
+    *(s16 *)(state + 2) = 1;
+    v = *(s16 *)(param2 + 0x1a);
+    if (v != 0 && v <= 2) {
+        *(s16 *)(state + 2) = v;
+    }
+    (*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    unlockLevel(0, 0, 1);
+    *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x4000;
+    if (*(s8 *)(obj + 0xac) == 0x15) {
+        GameBit_Set(0xdce, 0);
+    }
+    if (GameBit_Get(0xdce) != 0) {
+        Music_Trigger(0x37, 0);
+        Music_Trigger(0xe4, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
