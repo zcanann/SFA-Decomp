@@ -46,23 +46,23 @@ extern f32 lbl_803E64B8;
 extern f32 lbl_803E64BC;
 extern f32 lbl_803E64C0;
 
-static void dfptargetblock_resetToHome(DfpTargetBlockObject *obj, DfpTargetBlockObject *home,
-                                       DfpTargetBlockAudioState *state)
+static inline void dfptargetblock_resetToHome(DfpTargetBlockObject *obj, DfpTargetBlockHome *home,
+                                              DfpTargetBlockAudioState *state)
 {
   f32 zero;
 
-  obj->x = *(f32 *)((u8 *)home + 0x08);
-  obj->z = *(f32 *)((u8 *)home + 0x10);
+  obj->x = home->x;
+  obj->z = home->z;
   zero = lbl_803E648C;
   obj->velX = zero;
   obj->velZ = zero;
   state->mode = DFPTARGETBLOCK_AUDIO_MODE_RESETTING;
-  obj->y = *(f32 *)((u8 *)home + 0x0c) - lbl_803E64AC;
-  Sfx_PlayFromObject(obj, 0x1d3);
+  obj->y = home->y - lbl_803E64AC;
+  Sfx_PlayFromObject(obj, DFPTARGETBLOCK_RESET_SFX);
 }
 
-static void dfptargetblock_checkSettled(DfpTargetBlockObject *obj, DfpTargetBlockAudioState *state,
-                                        f32 threshold)
+static inline void dfptargetblock_checkSettled(DfpTargetBlockObject *obj,
+                                               DfpTargetBlockAudioState *state, f32 threshold)
 {
   f32 dx;
   f32 dz;
@@ -92,7 +92,7 @@ static void dfptargetblock_checkSettled(DfpTargetBlockObject *obj, DfpTargetBloc
 void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
 {
   DfpTargetBlockAudioState *state;
-  DfpTargetBlockObject *home;
+  DfpTargetBlockHome *home;
   DfpTargetBlockObject *hitObj;
   DfpTargetBlockPartfxArgs effect;
   int priority;
@@ -105,10 +105,10 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
   int i;
 
   priority = -1;
-  state = *(DfpTargetBlockAudioState **)((u8 *)obj + 0xb8);
-  home = *(DfpTargetBlockObject **)((u8 *)obj + 0x4c);
+  state = obj->state;
+  home = obj->home;
 
-  if (*(s16 *)((u8 *)obj + 0x46) == 0x4e0) {
+  if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE) {
     lbl_803DDCF8 = obj->x;
     lbl_803DDCFC = obj->z;
     return;
@@ -120,14 +120,15 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
     return;
   }
 
-  *(f32 *)((u8 *)obj + 0x80) = obj->x;
-  *(f32 *)((u8 *)obj + 0x84) = obj->y;
-  *(f32 *)((u8 *)obj + 0x88) = obj->z;
+  obj->prevX = obj->x;
+  obj->prevY = obj->y;
+  obj->prevZ = obj->z;
 
   hitObj = NULL;
   hitType = ObjHits_GetPriorityHit(obj, &hitObj, &priority, 0);
-  if ((hitType != 0) && (hitObj != NULL) && (hitType == 0xe) && (hitType == 0xe)) {
-    Sfx_PlayFromObject(obj, 0x44d);
+  if ((hitType != 0) && (hitObj != NULL) && (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH) &&
+      (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH)) {
+    Sfx_PlayFromObject(obj, DFPTARGETBLOCK_IMPACT_SFX);
     velX = hitObj->velX;
     velZ = hitObj->velZ;
     if (velX < lbl_803E648C) {
@@ -149,7 +150,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
   obj->z = obj->velZ * timeDelta + obj->z;
 
   if (lbl_803E648C != obj->velX) {
-    Sfx_KeepAliveLoopedObjectSound(obj, 0x3bd);
+    Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
     velX = obj->velX;
     if (velX < lbl_803E648C) {
       if (velX >= lbl_803E648C) {
@@ -161,7 +162,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
   }
 
   if (lbl_803E648C != obj->velZ) {
-    Sfx_KeepAliveLoopedObjectSound(obj, 0x3bd);
+    Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
     velZ = obj->velZ;
     if (velZ < lbl_803E648C) {
       if (velZ >= lbl_803E648C) {
@@ -174,9 +175,9 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
 
   dfptargetblock_resolveCollisionPoints(obj, (DfpTargetBlockCollisionPoints *)state);
 
-  dx = *(f32 *)((u8 *)home + 0x08) - obj->x;
-  dz = *(f32 *)((u8 *)home + 0x10) - obj->z;
-  mode = ((MapEventGetModeFn)(*(u32 *)(*gMapEventInterface + 0x40)))((s8)*(u8 *)((u8 *)obj + 0xac));
+  dx = home->x - obj->x;
+  dz = home->z - obj->z;
+  mode = ((MapEventGetModeFn)(*(u32 *)(*gMapEventInterface + 0x40)))(obj->mapId);
 
   if (mode == 1) {
     if ((lbl_803E649C < dx) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) ||
@@ -197,9 +198,10 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
       effect.rotY = 0;
       effect.rotX = 0;
 
-      for (i = 0; i < 0x14; i++) {
-        ((PartfxSpawnObjectFn)(*(u32 *)(*gPartfxInterface + 0x8)))(obj, 0x5f5, &effect, 0x200001, -1,
-                                                                  0);
+      for (i = 0; i < DFPTARGETBLOCK_RESET_PARTICLE_COUNT; i++) {
+        ((PartfxSpawnObjectFn)(*(u32 *)(*gPartfxInterface + 0x8)))(
+            obj, DFPTARGETBLOCK_RESET_PARTICLE_ID, &effect, DFPTARGETBLOCK_RESET_PARTICLE_MODE, -1,
+            0);
       }
     }
     dfptargetblock_checkSettled(obj, state, lbl_803E64C0);

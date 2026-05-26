@@ -3,6 +3,15 @@
 
 #include "ghidra_import.h"
 
+typedef struct DfpTargetBlockAudioState DfpTargetBlockAudioState;
+
+typedef struct DfpTargetBlockHome {
+  u8 pad00[0x08];
+  f32 x;
+  f32 y;
+  f32 z;
+} DfpTargetBlockHome;
+
 typedef struct DfpTargetBlockObject {
   u8 pad00[0x0C];
   f32 x;
@@ -12,6 +21,18 @@ typedef struct DfpTargetBlockObject {
   f32 velX;
   f32 velY;
   f32 velZ;
+  u8 pad30[0x46 - 0x30];
+  s16 objectType;
+  u8 pad48[0x4C - 0x48];
+  DfpTargetBlockHome *home;
+  u8 pad50[0x80 - 0x50];
+  f32 prevX;
+  f32 prevY;
+  f32 prevZ;
+  u8 pad8C[0xAC - 0x8C];
+  s8 mapId;
+  u8 padAD[0xB8 - 0xAD];
+  DfpTargetBlockAudioState *state;
 } DfpTargetBlockObject;
 
 typedef struct DfpTargetBlockCollisionPoints {

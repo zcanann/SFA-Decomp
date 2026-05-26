@@ -31,22 +31,22 @@ extern f32 lbl_803E64D4;
  */
 #pragma scheduling off
 #pragma peephole off
-void dfptargetblock_update(int param_1)
+void dfptargetblock_update(DfpTargetBlockObject *obj)
 {
   u8 cVar1;
   undefined uVar3;
   DfpTargetBlockState *state;
-  int iVar4;
+  DfpTargetBlockHome *home;
   float buf[6];
 
-  state = *(DfpTargetBlockState **)(param_1 + 0xb8);
-  iVar4 = *(int *)(param_1 + 0x4c);
-  if (*(short *)(param_1 + 0x46) == 0x4e0) {
+  state = (DfpTargetBlockState *)obj->state;
+  home = obj->home;
+  if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE) {
     buf[3] = lbl_803E648C;
     buf[4] = lbl_803E64C4;
     buf[5] = lbl_803E648C;
     objParticleFn_80097734((double)lbl_803E64C8,(double)lbl_803E64C4,(double)lbl_803E64C4,
-                 (double)lbl_803E64B0,param_1,5,1,2,0x32,buf,0);
+                 (double)lbl_803E64B0,obj,5,1,2,0x32,buf,0);
   }
   else {
     if (state->completionSfxReady == '\0') {
@@ -60,28 +60,28 @@ void dfptargetblock_update(int param_1)
     if (((state->completionSfxReady == '\0') && (state->stateSfxReady != '\0')) &&
        (cVar1 = state->mode, cVar1 != DFPTARGETBLOCK_MODE_SETTLED)) {
       if ((cVar1 == DFPTARGETBLOCK_MODE_RAISING) || (cVar1 == DFPTARGETBLOCK_MODE_RESETTING)) {
-        if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc)) {
-          *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + timeDelta;
-          if (*(float *)(param_1 + 0x10) >= *(float *)(iVar4 + 0xc)) {
-            *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc);
+        if (obj->y <= home->y) {
+          obj->y = obj->y + timeDelta;
+          if (obj->y >= home->y) {
+            obj->y = home->y;
             state->mode = DFPTARGETBLOCK_MODE_ACTIVE;
           }
         }
       }
       else if (cVar1 == DFPTARGETBLOCK_MODE_LOWERING) {
-        if (*(float *)(param_1 + 0x10) >= *(float *)(iVar4 + 0xc) - lbl_803E64AC) {
-          *(float *)(param_1 + 0x10) = lbl_803E6494 * timeDelta + *(float *)(param_1 + 0x10);
-          if (*(float *)(param_1 + 0x10) <= *(float *)(iVar4 + 0xc) - lbl_803E64AC) {
-            *(float *)(param_1 + 0x10) = *(float *)(iVar4 + 0xc) - lbl_803E64AC;
+        if (obj->y >= home->y - lbl_803E64AC) {
+          obj->y = lbl_803E6494 * timeDelta + obj->y;
+          if (obj->y <= home->y - lbl_803E64AC) {
+            obj->y = home->y - lbl_803E64AC;
             state->mode = DFPTARGETBLOCK_MODE_SETTLED;
             GameBit_Set((int)state->completionSfxId,1);
           }
         }
       }
       else if (state->controlId != 0) {
-        (*(code *)(*gPathControlInterface + 0x10))((double)timeDelta,param_1);
-        (*(code *)(*gPathControlInterface + 0x14))(param_1,state->controlId);
-        (*(code *)(*gPathControlInterface + 0x18))((double)timeDelta,param_1,state->controlId);
+        (*(code *)(*gPathControlInterface + 0x10))((double)timeDelta,obj);
+        (*(code *)(*gPathControlInterface + 0x14))(obj,state->controlId);
+        (*(code *)(*gPathControlInterface + 0x18))((double)timeDelta,obj,state->controlId);
       }
     }
   }
@@ -100,7 +100,7 @@ void dfptargetblock_update(int param_1)
 
 #pragma scheduling off
 #pragma peephole off
-void dfptargetblock_init(int param_1,int param_2)
+void dfptargetblock_init(DfpTargetBlockObject *obj,int param_2)
 {
   char cVar1;
   bool bVar2;
@@ -114,13 +114,13 @@ void dfptargetblock_init(int param_1,int param_2)
   double dVar11;
   DfpTargetBlockPoint point;
 
-  state = *(DfpTargetBlockState **)(param_1 + 0xb8);
-  iVar7 = **(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x4000;
-  if (*(short *)(param_1 + 0x46) == 0x4e0) {
-    lbl_80329B78[0] = (int)*(float *)(param_1 + 0xc);
-    lbl_80329B78[1] = (int)*(float *)(param_1 + 0x10);
-    lbl_80329B78[2] = (int)*(float *)(param_1 + 0x14);
+  state = (DfpTargetBlockState *)obj->state;
+  iVar7 = **(int **)(*(int *)((u8 *)obj + 0x7c) + *(char *)((u8 *)obj + 0xad) * 4);
+  *(ushort *)((u8 *)obj + 0xb0) = *(ushort *)((u8 *)obj + 0xb0) | 0x4000;
+  if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE) {
+    lbl_80329B78[0] = (int)obj->x;
+    lbl_80329B78[1] = (int)obj->y;
+    lbl_80329B78[2] = (int)obj->z;
   }
   else {
     dVar11 = (double)lbl_803E64CC;
@@ -152,7 +152,7 @@ void dfptargetblock_init(int param_1,int param_2)
       }
     }
     state->mode = DFPTARGETBLOCK_MODE_RAISING;
-    *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) - lbl_803E64AC;
+    obj->y = obj->y - lbl_803E64AC;
     state->completionSfxId = *(short *)(param_2 + 0x1e);
     state->stateSfxId = *(short *)(param_2 + 0x20);
     uVar5 = GameBit_Get((int)state->completionSfxId);
@@ -160,8 +160,8 @@ void dfptargetblock_init(int param_1,int param_2)
     uVar5 = GameBit_Get((int)state->stateSfxId);
     state->stateSfxReady = uVar5;
     if (state->completionSfxReady != '\0') {
-      *(float *)(param_1 + 0xc) = *(float *)(param_1 + 0xc) + lbl_803E64D0;
-      *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x14) + lbl_803E64D4;
+      obj->x = obj->x + lbl_803E64D0;
+      obj->z = obj->z + lbl_803E64D4;
       state->mode = DFPTARGETBLOCK_MODE_SETTLED;
     }
   }

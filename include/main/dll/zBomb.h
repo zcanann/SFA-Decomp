@@ -2,6 +2,7 @@
 #define MAIN_DLL_ZBOMB_H_
 
 #include "ghidra_import.h"
+#include "main/dll/door.h"
 #include "main/object_descriptor.h"
 
 typedef struct DfpTargetBlockPoint {
@@ -29,8 +30,8 @@ typedef enum DfpTargetBlockMode {
   DFPTARGETBLOCK_MODE_SETTLED = 4,
 } DfpTargetBlockMode;
 
-void dfptargetblock_update(int obj);
-void dfptargetblock_init(int obj,int params);
+void dfptargetblock_update(DfpTargetBlockObject *obj);
+void dfptargetblock_init(DfpTargetBlockObject *obj,int params);
 void dfptargetblock_release(void);
 void dfptargetblock_initialise(void);
 extern ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor;
