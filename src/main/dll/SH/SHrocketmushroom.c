@@ -231,6 +231,7 @@ void bombplantspore_update(void *obj) {
 void bombplantspore_init(void *obj, void *param2) {
     void *state;
     void *light;
+    f32 randomPhase;
     u32 randAsDouble[2];
     u8 events[8];
 
@@ -244,8 +245,8 @@ void bombplantspore_init(void *obj, void *param2) {
 
     randAsDouble[1] = randomGetRange(0, 1000) ^ 0x80000000;
     randAsDouble[0] = 0x43300000;
-    *(f32 *)((u8 *)state + 0x280) =
-        (*(f64 *)randAsDouble - lbl_803E53A0) / lbl_803E5390;
+    randomPhase = *(f64 *)randAsDouble - lbl_803E53A0;
+    *(f32 *)((u8 *)state + 0x280) = randomPhase / lbl_803E5390;
 
     (*(void (***)(void *, int, int, int))gPathControlInterface)[1](
         (u8 *)state + 0x8, 0, 0x40002, 1);
