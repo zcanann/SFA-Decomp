@@ -78,13 +78,13 @@ extern undefined4 lbl_803DD4CC;
 #pragma peephole off
 void camcontrol_updateTargetFeedback(void)
 {
-  register bool bVar1;
   byte cVar2;
   short sVar3;
   float fVar4;
   float fVar5;
   int iVar11;
   short *psVar6;
+  int buttonPressed;
   byte bVar7;
   int iVar8;
   uint uVar9;
@@ -93,6 +93,7 @@ void camcontrol_updateTargetFeedback(void)
   
   iVar11 = *(int *)(pCamera + 0x124);
   psVar6 = gCamcontrolTargetReticle;
+  buttonPressed = false;
   if (psVar6 == (short *)0x0) {
     return;
   }
@@ -123,16 +124,15 @@ void camcontrol_updateTargetFeedback(void)
     if ((bVar7 == 4) || (bVar7 == 9)) {
       uVar10 = 0x900;
     }
-    bVar1 = false;
     if ((uVar9 & uVar10) != 0) {
-      bVar1 = true;
+      buttonPressed = true;
     }
     if ((*(byte *)(iVar11 + 0xaf) & 0x10) == 0) {
-      if (bVar1) {
+      if (buttonPressed) {
         *(byte *)(iVar11 + 0xaf) = *(byte *)(iVar11 + 0xaf) | 1;
       }
     }
-    else if ((bVar1) && (iVar8 = isTalkingToNpc(), iVar8 == 0)) {
+    else if ((buttonPressed) && (iVar8 = isTalkingToNpc(), iVar8 == 0)) {
       Sfx_PlayFromObject(0,0x287);
     }
   }
