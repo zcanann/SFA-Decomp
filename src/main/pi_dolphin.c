@@ -5608,4 +5608,33 @@ void trickyVoxAllocFn_8004b5d4(int *out) {
     out[1] = out[0] + 0xfe0;
     out[2] = out[1] + 0x7f0;
 }
+extern int DVDOpen(char *fileName, void *fileInfo);
+extern int DVDRead(void *fileInfo, void *addr, int length, int offset);
+extern void *memcpy(void *dst, const void *src, u32 n);
+void *fileLoad(int id) {
+    u8 fileInfo[0x3c];
+    if (lbl_8035F3E8[id] != 0) {
+        return (void *)lbl_8035F3E8[id];
+    }
+    DVDOpen(sResourceFileNameTable[id], fileInfo);
+    lbl_8035F0A8[id] = *(s32 *)(fileInfo + 0x34);
+    lbl_8035F3E8[id] = (u32)mmAlloc(lbl_8035F0A8[id] + 0x20, 0x7d7d7d7d, 0);
+    DCInvalidateRange((void *)lbl_8035F3E8[id], lbl_8035F0A8[id]);
+    DVDRead(fileInfo, (void *)lbl_8035F3E8[id], lbl_8035F0A8[id], 0);
+    DVDClose(fileInfo);
+    return (void *)lbl_8035F3E8[id];
+}
+int fileLoadToBuffer(int id, void *buffer) {
+    u8 fileInfo[0x3c];
+    if (lbl_8035F3E8[id] != 0) {
+        memcpy(buffer, (void *)lbl_8035F3E8[id], lbl_8035F0A8[id]);
+        DCStoreRange(buffer, lbl_8035F0A8[id]);
+        return lbl_8035F0A8[id];
+    }
+    DVDOpen(sResourceFileNameTable[id], fileInfo);
+    DCInvalidateRange(buffer, *(s32 *)(fileInfo + 0x34));
+    DVDRead(fileInfo, buffer, *(s32 *)(fileInfo + 0x34), 0);
+    DVDClose(fileInfo);
+    return *(s32 *)(fileInfo + 0x34);
+}
 #pragma scheduling reset
