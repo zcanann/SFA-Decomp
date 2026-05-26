@@ -59,13 +59,17 @@ extern f32 lbl_803E5B10;
 extern f32 lbl_803E5B20;
 extern f32 lbl_803E5B24;
 extern f32 lbl_803E5B30;
+extern f32 lbl_803E4E88;
+extern void lightFn_8001db6c(int light, int enabled, f32 scale);
+extern void objRenderFn_8003b8f4(f32 scale);
+extern void objParticleFn_80099d84(int *obj, int kind, int light, f32 scale1, f32 scale2);
 
 /*
  * --INFO--
  *
  * Function: dfsh_shrine_render
  * EN v1.0 Address: 0x801C2E68
- * EN v1.0 Size: 716b
+ * EN v1.0 Size: 184b
  * EN v1.1 Address: 0x801C2EC8
  * EN v1.1 Size: 852b
  * JP Address: TODO
@@ -73,63 +77,32 @@ extern f32 lbl_803E5B30;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_shrine_render(ushort *param_1)
+#pragma scheduling off
+#pragma peephole off
+void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-  int iVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  double dVar5;
-  double dVar6;
-  undefined8 local_30;
-  
-  iVar4 = *(int *)(param_1 + 0x26);
-  iVar3 = *(int *)(param_1 + 0x5c);
-  iVar1 = FUN_80017a98();
-  if ((param_1[3] & 0x4000) == 0) {
-    *(short *)(iVar3 + 0x14) =
-         *(short *)(iVar3 + 0x14) + (short)(int)(lbl_803E5AE8 * lbl_803DC074);
-    *(short *)(iVar3 + 0x16) =
-         *(short *)(iVar3 + 0x16) + (short)(int)(lbl_803E5AEC * lbl_803DC074);
-    *(short *)(iVar3 + 0x18) =
-         *(short *)(iVar3 + 0x18) + (short)(int)(lbl_803E5AF0 * lbl_803DC074);
-    dVar5 = (double)FUN_80293f90();
-    *(float *)(param_1 + 8) = lbl_803E5AF4 + (float)((double)*(float *)(iVar4 + 0xc) + dVar5);
-    dVar5 = (double)FUN_80293f90();
-    dVar6 = (double)FUN_80293f90();
-    param_1[2] = (ushort)(int)(lbl_803E5B00 * (float)(dVar6 + dVar5));
-    dVar5 = (double)FUN_80293f90();
-    dVar6 = (double)FUN_80293f90();
-    param_1[1] = (ushort)(int)(lbl_803E5B00 * (float)(dVar6 + dVar5));
-    FUN_8002fc3c((double)lbl_803E5B04,(double)lbl_803DC074);
-    if (iVar1 != 0) {
-      uVar2 = FUN_80017730();
-      uVar2 = (uVar2 & 0xffff) - (uint)*param_1;
-      if (0x8000 < (int)uVar2) {
-        uVar2 = uVar2 - 0xffff;
-      }
-      if ((int)uVar2 < -0x8000) {
-        uVar2 = uVar2 + 0xffff;
-      }
-      *param_1 = *param_1 +
-                 (short)(int)(((f32)(s32)(uVar2) * lbl_803DC074) /
-                             lbl_803E5B08);
-      dVar5 = (double)FUN_80017710((float *)(param_1 + 0xc),(float *)(iVar1 + 0x18));
-      if ((double)lbl_803E5B0C < dVar5) {
-        *(undefined *)(param_1 + 0x1b) = 0xff;
-      }
-      else {
-        *(char *)(param_1 + 0x1b) =
-             (char)(int)(lbl_803E5B10 * (float)(dVar5 / (double)lbl_803E5B0C));
-      }
+    void **state;
+    void *light;
+    s32 isVisible;
+
+    state = *(void ***)(obj + 0xb8);
+    isVisible = visible;
+    if (isVisible == 0) {
+        light = state[0];
+        if (light != NULL) {
+            lightFn_8001db6c((int)light, 0, lbl_803E4E88);
+        }
+    } else {
+        light = state[0];
+        if (light != NULL) {
+            lightFn_8001db6c((int)light, 1, lbl_803E4E88);
+        }
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4E88);
+        objParticleFn_80099d84((int *)obj, 7, (int)state[0], lbl_803E4E88, lbl_803E4E88);
     }
-  }
-  else {
-    *param_1 = 0;
-    *(undefined4 *)(param_1 + 8) = *(undefined4 *)(iVar4 + 0xc);
-  }
-  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -309,7 +282,7 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_80006728(uVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar6,0x222,
                  0,in_r7,in_r8,in_r9,in_r10);
   }
-  dfsh_shrine_render(param_9);
+  dfsh_shrine_render((int)param_9, 0, 0, 0, 0, 1);
   if (DAT_803dcbc8 != '\0') {
     *(undefined4 *)(param_9 + 0xc) = *(undefined4 *)(param_9 + 6);
     *(undefined4 *)(param_9 + 0xe) = *(undefined4 *)(param_9 + 8);
@@ -672,12 +645,9 @@ int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4EB8;
-extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4EB8); }
 #pragma peephole reset
-
-extern void objParticleFn_80099d84(int *obj, int a, int b, f32 c, f32 d);
 
 #pragma scheduling off
 #pragma peephole off
