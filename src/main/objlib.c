@@ -121,7 +121,7 @@ typedef struct ObjTriggerInterface {
 
 extern ObjTriggerInterface **gGameUIInterface;
 extern void *lbl_803DCBD8;
-extern undefined4 gObjHitsPriorityHitStates;
+extern u8 *gObjHitsPriorityHitStates;
 extern int gObjHitReactResetObjectCount;
 extern int *gObjHitReactResetObjects;
 extern u8 gObjGroupObjectCount;
@@ -1456,28 +1456,30 @@ void ObjHits_ResetWorkBuffers(void)
   int clearedSlots;
   int slotOffset;
   int remainingSlots;
+  int zeroWord;
 
   clearedSlots = 0;
   slotOffset = 0;
+  zeroWord = 0;
   for (remainingSlots = 0; remainingSlots < OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_COUNT;
        remainingSlots++) {
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xb4) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xf0) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xb4) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xf0) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = zeroWord;
     slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_HALF_BLOCK_SIZE;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xb4) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xf0) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = 0;
-    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = 0;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x3c) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x78) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xb4) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0xf0) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x12c) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x168) = zeroWord;
+    *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset + 0x1a4) = zeroWord;
     slotOffset += OBJHITS_PRIORITY_WORK_CLEAR_HALF_BLOCK_SIZE;
     clearedSlots += OBJHITS_PRIORITY_WORK_CLEAR_BLOCK_SLOTS;
   }
@@ -1485,7 +1487,7 @@ void ObjHits_ResetWorkBuffers(void)
   slotOffset = clearedSlots * OBJHITS_PRIORITY_WORK_SLOT_SIZE;
   if (clearedSlots < OBJHITS_PRIORITY_WORK_SLOT_COUNT) {
     do {
-      *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = 0;
+      *(undefined4 *)(gObjHitsPriorityHitStates + slotOffset) = zeroWord;
       slotOffset += OBJHITS_PRIORITY_WORK_SLOT_SIZE;
       remainingSlots--;
     } while (remainingSlots != 0);
@@ -1534,7 +1536,7 @@ void ObjHits_InitWorkBuffers(void)
 {
   gObjHitReactResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
   gObjHitsPriorityHitStates =
-      (undefined4)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * sizeof(ObjHitsPriorityWorkSlot),0xe,0);
+      (u8 *)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * sizeof(ObjHitsPriorityWorkSlot),0xe,0);
   lbl_803DCBD8 = mmAlloc(0x1900,0xe,0);
   gObjHitsPrimaryHitboxBufferScratch0 = mmAlloc(0x400,0xe,0);
   gObjHitsPrimaryHitboxBufferScratch1 = mmAlloc(0x400,0xe,0);
