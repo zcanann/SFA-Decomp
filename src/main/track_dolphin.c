@@ -4306,3 +4306,23 @@ void fn_800605F0(s16 *in, f32 *out)
     out[1] = (f32)(s32)in[1] * t;
     out[2] = (f32)(s32)in[2] * t;
 }
+
+int fn_80060688(int obj, int type)
+{
+    int entry;
+    int offset;
+    int total;
+    int i;
+    int count;
+    total = 0;
+    offset = 0;
+    count = *(u16 *)(obj + 0x9a);
+    for (i = 0; i < count; i++) {
+        entry = *(int *)(obj + 0x50) + offset;
+        if (type == (int)((*(u32 *)(entry + 0x10) & 0xff000000) >> 24)) {
+            total += *(u16 *)(entry + 0x14) - *(u16 *)entry;
+        }
+        offset += 0x14;
+    }
+    return total;
+}
