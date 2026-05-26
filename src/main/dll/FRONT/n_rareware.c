@@ -48,6 +48,27 @@ extern f32 lbl_803E1D00;
 extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
 
+typedef struct LoadingScreenTexture {
+  undefined _00[0xa];
+  u16 width;
+  u16 height;
+  u16 unk0e;
+  u16 unk10;
+  undefined _12[4];
+  u8 format;
+  u8 wrapS;
+  u8 wrapT;
+  u8 minFilter;
+  u8 magFilter;
+  undefined _1b[5];
+  u32 texObj[8];
+  int unk40;
+  uint bufferSize;
+  u8 unk48;
+  undefined _49[0x17];
+  u8 imageData[1];
+} LoadingScreenTexture;
+
 /*
  * --INFO--
  *
@@ -150,31 +171,37 @@ void runLoadingScreens(void)
 #pragma peephole off
 void initLoadingScreenTextures(void)
 {
-  int *textureSlot;
-  int textureHeader;
-  void *texObj;
   int arenaHi;
   int i;
+  LoadingScreenTexture **textureSlot;
+  LoadingScreenTexture *textureHeader;
+  void *texObj;
+  uint textureFormat;
+  uint textureWidth;
+  uint textureHeight;
+  int textureSize;
 
   arenaHi = (int)OSGetArenaHi() - 0x40000;
-  textureSlot = lbl_803A4438;
   for (i = 0; i < 3; i++) {
-    *textureSlot = arenaHi;
+    textureSlot = &((LoadingScreenTexture **)lbl_803A4438)[i];
+    *textureSlot = (LoadingScreenTexture *)arenaHi;
     textureHeader = *textureSlot;
-    *(int *)(textureHeader + 0x40) = 0;
-    *(u8 *)(textureHeader + 0x48) = 0;
-    texObj = (void *)(textureHeader + 0x20);
-    GXInitTexObj(texObj,(void *)(textureHeader + 0x60),*(u16 *)(textureHeader + 0xa),
-                 *(u16 *)(textureHeader + 0xc),*(u8 *)(textureHeader + 0x16),
-                 *(u8 *)(textureHeader + 0x17),*(u8 *)(textureHeader + 0x18),0);
-    GXInitTexObjLOD(texObj,*(u8 *)(textureHeader + 0x19),*(u8 *)(textureHeader + 0x1a),
+    textureHeader->unk40 = 0;
+    textureHeader->unk48 = 0;
+    texObj = textureHeader->texObj;
+    GXInitTexObj(texObj,textureHeader->imageData,textureHeader->width,
+                 textureHeader->height,textureHeader->format,
+                 textureHeader->wrapS,textureHeader->wrapT,0);
+    GXInitTexObjLOD(texObj,textureHeader->minFilter,textureHeader->magFilter,
                     lbl_803E1CF0,lbl_803E1CF0,lbl_803E1CF0,0,0,0);
-    GXInitTexObjUserData(texObj,(void *)textureHeader);
-    *(uint *)(textureHeader + 0x44) =
-        GXGetTexBufferSize(GXGetTexObjWidth(texObj),GXGetTexObjHeight(texObj),
-                           GXGetTexObjFmt(texObj),0,0);
-    arenaHi += *(int *)(*textureSlot + 0x44) + 0x60;
-    textureSlot++;
+    GXInitTexObjUserData(texObj,textureHeader);
+    textureFormat = GXGetTexObjFmt(texObj);
+    textureWidth = GXGetTexObjWidth(texObj);
+    textureHeight = GXGetTexObjHeight(texObj);
+    textureHeader->bufferSize =
+        GXGetTexBufferSize(textureWidth,textureHeight,textureFormat,0,0);
+    textureSize = (*textureSlot)->bufferSize + 0x60;
+    arenaHi += textureSize;
   }
   lbl_803DD5EC = 0;
   lbl_803DD5E8 = 0;
