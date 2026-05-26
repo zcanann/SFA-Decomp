@@ -5608,6 +5608,44 @@ void selectTexture(u8 *tex, int mapId) {
         GXLoadTexObj(base, mapId);
     }
 }
+extern int lbl_803DCC80;
+#pragma scheduling off
+#pragma peephole off
+void loadModelsBin(u32 a, int *p1c, int *p20, int *p18, int *p4) {
+    u32 v31 = 0;
+    u32 v30 = 0;
+    int idx = -1;
+    int flags;
+    int saved;
+    char *p;
+    if (lbl_8035F3E8[0x2b] != 0 || lbl_8035F3E8[0x46] != 0) {
+        saved = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(saved);
+        if ((flags & 4) == 0 && (flags & 1) == 0) {
+            v31 = lbl_8035F3E8[0x2a];
+        }
+        if ((flags & 8) == 0 && (flags & 2) == 0) {
+            v30 = lbl_8035F3E8[0x45];
+        }
+        if (v30 != 0 && (a & 0x20000000) != 0) {
+            idx = 0x46;
+        } else if (v31 != 0 && (a & 0x10000000) != 0) {
+            idx = 0x2b;
+        } else if (v31 != 0) {
+            idx = 0x2b;
+        } else if (v30 != 0) {
+            idx = 0x46;
+        }
+        p = (char *)lbl_8035F3E8[idx] + (a & 0x0fffffff);
+        *p18 = *(int *)(p + 0x18);
+        *p1c = *(int *)(p + 0x1c);
+        *p20 = *(int *)(p + 0x20);
+        *p4 = *(int *)(p + 0x4);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 extern void VIConfigure(void *mode);
 void tvInit(void) {
     *(s16 *)((char *)lbl_803DCCF0 + 0xe) = 0x294;
