@@ -691,10 +691,10 @@ extern f32 lbl_803E3788;
 extern f32 lbl_803E3790;
 #pragma scheduling off
 #pragma peephole off
-void Door_init(int *obj, s16 *def) {
+void Door_init(int *obj, u8 *def) {
     u8 *state = *(u8 **)((char *)obj + 0xb8);
     state[5] = 1;
-    *(s16 *)obj = (s16)(*(s8 *)((char *)def + 0x1f) << 8);
+    *(s16 *)obj = (s16)(def[0x1f] << 8);
     *(int *)((char *)obj + 0xbc) = (int)&fn_8017B5C8;
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
     *(f32 *)((char *)obj + 8) = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
@@ -702,14 +702,14 @@ void Door_init(int *obj, s16 *def) {
         *(f32 *)((char *)obj + 8) = lbl_803E3780;
     }
     *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
-    if (def[13] != -1) {
-        state[4] = (u8)GameBit_Get(def[13]);
+    if (*(s16 *)(def + 0x1a) != -1) {
+        state[4] = (u8)GameBit_Get(*(s16 *)(def + 0x1a));
     } else {
         state[4] = 0;
     }
     state[6] = 0;
-    if (GameBit_Get(def[12]) != 0) state[6] = (u8)(state[6] | 1);
-    if (GameBit_Get(def[17]) != 0) state[6] = (u8)(state[6] | 2);
+    if (GameBit_Get(*(s16 *)(def + 0x18)) != 0) state[6] = (u8)(state[6] | 1);
+    if (GameBit_Get(*(s16 *)(def + 0x22)) != 0) state[6] = (u8)(state[6] | 2);
     {
         s16 model = *(s16 *)((char *)obj + 0x46);
         if (model == 1101) {
