@@ -2278,11 +2278,16 @@ int fn_8015C0B4(int obj, int state)
         *(u8 *)&DAT_803de6f9 = randomGetRange(0, 2);
         choice = randomGetRange(0, 1);
         if (choice == 0) {
-            ObjAnim_SetCurrentMove(obj, 3, lbl_803E2D14, 0);
+            if ((s8)*(u8 *)(state + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove(obj, 3, lbl_803E2D14, 0);
+                *(u8 *)(state + 0x346) = 0;
+            }
         } else {
-            ObjAnim_SetCurrentMove(obj, 7, lbl_803E2D14, 0);
+            if ((s8)*(u8 *)(state + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove(obj, 7, lbl_803E2D14, 0);
+                *(u8 *)(state + 0x346) = 0;
+            }
         }
-        *(u8 *)(state + 0x346) = 0;
         *(u8 *)(state + 0x34d) = 1;
         *(f32 *)(state + 0x2a0) = lbl_803E2D4C + (f32)*(u8 *)(sub + 0x406) / lbl_803E2D50;
     }
@@ -2316,12 +2321,17 @@ int fn_8015C2AC(int obj, int state)
         choice = randomGetRange(0, 1);
         if (choice == 0) {
             *(u8 *)&DAT_803de6f8 = 3;
-            ObjAnim_SetCurrentMove(obj, 10, lbl_803E2D14, 0);
+            if ((s8)*(u8 *)(state + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove(obj, 10, lbl_803E2D14, 0);
+                *(u8 *)(state + 0x346) = 0;
+            }
         } else {
             *(u8 *)&DAT_803de6f8 = randomGetRange(0, 2);
-            ObjAnim_SetCurrentMove(obj, 6, lbl_803E2D14, 0);
+            if ((s8)*(u8 *)(state + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove(obj, 6, lbl_803E2D14, 0);
+                *(u8 *)(state + 0x346) = 0;
+            }
         }
-        *(u8 *)(state + 0x346) = 0;
         *(u8 *)(state + 0x34d) = 1;
         *(f32 *)(state + 0x2a0) = lbl_803E2D4C + (f32)*(u8 *)(sub + 0x406) / lbl_803E2D50;
     }
