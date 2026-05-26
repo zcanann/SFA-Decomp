@@ -625,15 +625,15 @@ void seqobject_init(int *obj, u8 *params) {
 #pragma peephole off
 void immultiseq_init(int *obj, u8 *params) {
     u8 *sub;
-    int i;
     u8 *p;
+    int i;
 
     sub = *(u8**)((char*)obj + 0xb8);
-    *(s16*)obj = (s16)((s8)params[0x28] << 8);
+    *(s16*)obj = (s16)(params[0x28] << 8);
     *(void**)((char*)obj + 0xbc) = (void*)&fn_8017CBDC;
     *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
-    *(u8*)((char*)obj + 0xad) = (u8)(s8)params[0x2a];
-    if ((s8)*(u8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
+    *(s8*)((char*)obj + 0xad) = (s8)params[0x2a];
+    if (*(s8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
         *(u8*)((char*)obj + 0xad) = 0;
     }
     ObjGroup_AddObject(obj, 0xf);
