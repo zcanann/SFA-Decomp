@@ -12914,6 +12914,12 @@ void SaveGame_gplayGotoRestartPoint(void) {
     }
     loadMapForCurrentSaveGame();
 }
+void SaveGame_gplayGotoSavegame(void) {
+    if ((s8)lbl_803DD498[0] < 1) lbl_803DD498[0] = 1;
+    if ((s8)lbl_803DD498[0xc] < 1) lbl_803DD498[0xc] = 1;
+    memcpy(lbl_803A32A8, lbl_803DD498, 0x6ec);
+    loadMapForCurrentSaveGame();
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -13054,6 +13060,15 @@ void mapClearBit(int idx, int bit) {
 void SaveGame_resetObjGroups(int idx) {
     if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
     lbl_803A2FBC[idx] = 0;
+}
+extern u32 GameBit_Get(int eventId);
+void SaveGame_mapUpdateObjGroups(int idx) {
+    u16 bit;
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    bit = lbl_80311810[idx];
+    if (bit != 0) {
+        lbl_803A2FBC[idx] = GameBit_Get(bit);
+    }
 }
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
