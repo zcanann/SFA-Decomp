@@ -12904,6 +12904,16 @@ u8 getNextTaskHintText(void) { u8 *p = (u8*)getLastSavedGameTexts(); return p[5]
 #pragma scheduling off
 #pragma peephole off
 void SaveGame_gplayClearRestartPoint(void) { if (pRestartPoint != 0) { mm_free(pRestartPoint); pRestartPoint = 0; } }
+extern void *memcpy(void *dst, const void *src, u32 n);
+extern void loadMapForCurrentSaveGame(void);
+void SaveGame_gplayGotoRestartPoint(void) {
+    if (pRestartPoint != 0) {
+        memcpy(lbl_803A32A8, (void *)pRestartPoint, 0x6ec);
+    } else {
+        memcpy(lbl_803A32A8, lbl_803DD498, 0x6ec);
+    }
+    loadMapForCurrentSaveGame();
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -13049,6 +13059,15 @@ extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
     return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
 }
+extern int getCurGameText(void);
+extern void gameTextLoadDir(int dirId);
+extern u8 lbl_803A4218[];
+int hintTextMapFn_800ea264(void) {
+    int r = getCurGameText();
+    u8 *t = (u8 *)getLastSavedGameTexts();
+    gameTextLoadDir(lbl_803A4218[lbl_803119E0[t[5]]]);
+    return r;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -13063,6 +13082,14 @@ void screens_remove(void) {
         lbl_803DD4AC = (u32)-1;
         lbl_803DD4A4 = 0;
         lbl_803DD4A8 = 0;
+    }
+}
+void screens_remove2(void) {
+    if (lbl_803DD4A0 != 0) {
+        mm_free(lbl_803DD4A0);
+        lbl_803DD4A0 = 0;
+        lbl_803DD4A4 = 0;
+        lbl_803DD4AC = (u32)-1;
     }
 }
 #pragma peephole reset
