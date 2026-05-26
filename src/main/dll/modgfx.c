@@ -4810,3 +4810,34 @@ void fn_800A081C(int p1, int p2, int mode)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* EN v1.0 0x800A09C4  size: 240b  fn_800A09C4: integer-vector lerp setup.
+ * On mode 1, snap or step-interpolate the s16 triple at obj->_106/_108/_10a
+ * toward the rounded params, then advance it by the per-step delta. */
+#pragma scheduling off
+#pragma peephole off
+void fn_800A09C4(int* obj, f32* params, int mode)
+{
+    if (mode == 1) {
+        int tx = (int)params[1];
+        int ty = (int)params[2];
+        int tz = (int)params[3];
+        if (*(s16*)((char*)obj + 0xfe) != 0) {
+            *(s16*)((char*)obj + 0x100) = (s16)(((s16)tx - *(s16*)((char*)obj + 0x106)) / *(s16*)((char*)obj + 0xfe));
+            *(s16*)((char*)obj + 0x102) = (s16)(((s16)ty - *(s16*)((char*)obj + 0x108)) / *(s16*)((char*)obj + 0xfe));
+            *(s16*)((char*)obj + 0x104) = (s16)(((s16)tz - *(s16*)((char*)obj + 0x10a)) / *(s16*)((char*)obj + 0xfe));
+        } else {
+            *(s16*)((char*)obj + 0x106) = tx;
+            *(s16*)((char*)obj + 0x100) = 0;
+            *(s16*)((char*)obj + 0x108) = ty;
+            *(s16*)((char*)obj + 0x102) = 0;
+            *(s16*)((char*)obj + 0x10a) = tz;
+            *(s16*)((char*)obj + 0x104) = 0;
+        }
+    }
+    *(s16*)((char*)obj + 0x106) = *(s16*)((char*)obj + 0x106) + *(s16*)((char*)obj + 0x100);
+    *(s16*)((char*)obj + 0x108) = *(s16*)((char*)obj + 0x108) + *(s16*)((char*)obj + 0x102);
+    *(s16*)((char*)obj + 0x10a) = *(s16*)((char*)obj + 0x10a) + *(s16*)((char*)obj + 0x104);
+}
+#pragma peephole reset
+#pragma scheduling reset
