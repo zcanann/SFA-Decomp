@@ -5729,30 +5729,4 @@ void fn_8004EF9C(int *param) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
-void fn_8004F080(void) {
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
-    GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 0xf);
-    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
-    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
-    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
-    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
-    GXSetTevDirect(lbl_803DCD90 + 1);
-    GXSetTevOrder(lbl_803DCD90 + 1, 0xff, 0xff, 0xff);
-    GXSetTevColorIn(lbl_803DCD90 + 1, 4, 0xf, 0xf, 0);
-    GXSetTevAlphaIn(lbl_803DCD90 + 1, 7, 7, 7, 0);
-    GXSetTevSwapMode(lbl_803DCD90 + 1, 0, 0);
-    GXSetTevColorOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
-    GXSetTevDirect(lbl_803DCD90 + 2);
-    GXSetTevOrder(lbl_803DCD90 + 2, 0xff, 0xff, 4);
-    GXSetTevColorIn(lbl_803DCD90 + 2, 0, 6, 0xb, 0xf);
-    GXSetTevAlphaIn(lbl_803DCD90 + 2, 7, 7, 7, 0);
-    GXSetTevSwapMode(lbl_803DCD90 + 2, 0, 0);
-    GXSetTevColorOp(lbl_803DCD90 + 2, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(lbl_803DCD90 + 2, 0, 0, 0, 1, 0);
-    lbl_803DCD30 = 1;
-    lbl_803DCD90 = lbl_803DCD90 + 3;
-    lbl_803DCD6A = lbl_803DCD6A + 3;
-}
 #pragma scheduling reset
