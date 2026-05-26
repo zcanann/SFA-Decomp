@@ -2082,11 +2082,12 @@ int fn_8015B9B8(int obj, int state)
     }
     if ((*(u8 *)(state + 0x356) & 1) == 0) {
         player = Obj_GetPlayerObject();
-        if (*(s16 *)(player + 0x46) == 0) {
-            Sfx_PlayFromObject(obj, 0x239);
-        } else {
-            Sfx_PlayFromObject(obj, 0x1f2);
-        }
+        if (*(s16 *)(player + 0x46) == 0) goto playGroundLandSound;
+        Sfx_PlayFromObject(obj, 0x1f2);
+        goto playLandingExtras;
+playGroundLandSound:
+        Sfx_PlayFromObject(obj, 0x239);
+playLandingExtras:
         Sfx_PlayFromObject(obj, 0x232);
         Sfx_PlayFromObject(obj, 0x26f);
         *(u8 *)(state + 0x356) |= 1;
@@ -2182,11 +2183,12 @@ int fn_8015BD2C(int obj, int state)
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
         Obj_GetPlayerObject();
         player = Obj_GetPlayerObject();
-        if (*(s16 *)(player + 0x46) == 0) {
-            Sfx_PlayFromObject(obj, 0x239);
-        } else {
-            Sfx_PlayFromObject(obj, 0x1f2);
-        }
+        if (*(s16 *)(player + 0x46) == 0) goto playGroundDropSound;
+        Sfx_PlayFromObject(obj, 0x1f2);
+        goto playDropExtras;
+playGroundDropSound:
+        Sfx_PlayFromObject(obj, 0x239);
+playDropExtras:
         Sfx_PlayFromObject(obj, 0x26e);
     }
     *(u8 *)(state + 0x34d) = 3;
