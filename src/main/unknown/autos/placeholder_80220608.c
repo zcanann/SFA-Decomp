@@ -55,60 +55,74 @@ void drenergydisc_free(void) {}
 void drenergydisc_render(void) {}
 void drenergydisc_hitDetect(void) {}
 
-void drenergydisc_update(int obj)
+typedef struct DrEnergyDiscState {
+    u8 activated : 1;
+} DrEnergyDiscState;
+
+#pragma peephole off
+#pragma scheduling off
+void drenergydisc_update(u8 *obj)
 {
     int *texture;
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    DrEnergyDiscState *state = *(DrEnergyDiscState **)(obj + 0xb8);
+    u8 *setup = *(u8 **)(obj + 0x4c);
 
-    if (GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
-        if ((*(s8 *)state) >= 0) {
-            *(u8 *)state |= 0x80;
-            Sfx_PlayFromObject(obj, 0x30c);
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
+        if (state->activated == 0) {
+            state->activated = 1;
+            Sfx_PlayFromObject((int)obj, 0x30c);
         }
 
-        texture = objFindTexture(obj, 0, 0);
+        texture = objFindTexture((int)obj, 0, 0);
         if (texture != NULL) {
             *texture = 0x100;
         }
 
-        texture = objFindTexture(obj, 0, 0);
+        texture = objFindTexture((int)obj, 0, 0);
         if (texture != NULL) {
             *(s16 *)((char *)texture + 0xa) =
-                *(s16 *)((char *)texture + 0xa) + (s16)(lbl_803DC380 * framesThisStep);
+                *(s16 *)((char *)texture + 0xa) + lbl_803DC380 * framesThisStep;
             if (*(s16 *)((char *)texture + 0xa) < -0x1000) {
                 *(s16 *)((char *)texture + 0xa) = 0;
             }
         }
     }
 
-    if (GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
-        ObjAnim_SetCurrentMove(obj, 0, lbl_803E6BB0, 0);
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E6BB0, 0);
     }
 }
+#pragma scheduling on
+#pragma peephole on
 
-void drenergydisc_init(int obj, int setup)
+#pragma peephole off
+#pragma scheduling off
+void drenergydisc_init(u8 *obj, u8 *setup)
 {
     int *texture;
-    int state = *(int *)(obj + 0xb8);
+    DrEnergyDiscState *state = *(DrEnergyDiscState **)(obj + 0xb8);
+    s16 objType;
 
-    *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
-    if (GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
-        *(u8 *)state |= 0x80;
-        Sfx_PlayFromObject(obj, 0x30c);
-        texture = objFindTexture(obj, 0, 0);
+    objType = (s16)((s8)setup[0x18] << 8);
+    *(s16 *)obj = objType;
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
+        state->activated = 1;
+        Sfx_PlayFromObject((int)obj, 0x30c);
+        texture = objFindTexture((int)obj, 0, 0);
         if (texture != NULL) {
             *texture = 0x100;
         }
     } else {
-        *(u8 *)state &= 0x7f;
-        texture = objFindTexture(obj, 0, 0);
+        state->activated = 0;
+        texture = objFindTexture((int)obj, 0, 0);
         if (texture != NULL) {
             *texture = 0;
         }
     }
-    *(u16 *)(obj + 0xb0) |= 0x6000;
+    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x6000);
 }
+#pragma scheduling on
+#pragma peephole on
 
 void drenergydisc_release(void) {}
 void drenergydisc_initialise(void) {}
