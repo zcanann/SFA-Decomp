@@ -1638,7 +1638,7 @@ void dimmagicbridge_release(void) {}
 void dimmagicbridge_initialise(void) {}
 
 extern f32 lbl_803E4A10;
-extern void fn_801B602C(int obj);
+extern int fn_801B602C(int* obj, int p2, u8* p3);
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int a, int b, int c);
@@ -1864,6 +1864,7 @@ void dim_levelcontrol_free(int p1)
 extern void *objFindTexture(int obj, int a, int b);
 extern u8 framesThisStep;
 #pragma scheduling off
+#pragma dont_inline on
 void fn_801B5F1C(int param_1, u8* obj)
 {
     u8* tex;
@@ -1890,4 +1891,44 @@ void fn_801B5F1C(int param_1, u8* obj)
     if (v > 0xffff) v = v - 0xffff;
     *(u16*)(obj + 0x62) = (u16)v;
 }
+#pragma dont_inline reset
+#pragma scheduling reset
+
+/* EN v1.0 0x801B602C  size: 312b  fn_801B602C: flameburst per-frame logic —
+ * tick the spawn timer, allocate a free flame slot every 16 frames, and ramp
+ * each active slot's alpha toward full; then run the UV scroll. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801B602C(int* obj, int p2, u8* p3)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    int j;
+    int i;
+    p3[0x56] = 0;
+    *(s16*)(p3 + 0x6e) = (s16)(*(s16*)(p3 + 0x6e) & ~0x40);
+    fn_801B5F1C((int)obj, sub);
+    if (p3[0x80] == 1) {
+        p3[0x80] = 0;
+        sub[0x5f] = 1;
+    }
+    if (sub[0x5f] != 0) {
+        *(s16*)(sub + 0x64) = *(s16*)(sub + 0x64) - framesThisStep;
+        if (*(s16*)(sub + 0x64) <= 0) {
+            *(s16*)(sub + 0x64) = 0x10;
+            for (j = 1; sub[0x40 + j] != 0 && j < sub[0x4f]; j++) {
+            }
+            sub[0x40 + j] = 1;
+        }
+        for (i = 1; i < sub[0x4f]; i++) {
+            if (sub[0x40 + i] != 0) {
+                int v = sub[0x50 + i] + framesThisStep;
+                if (v > 0xff) v = 0xff;
+                sub[0x50 + i] = (u8)v;
+            }
+        }
+    }
+    fn_801B5D48((int)obj, sub);
+    return 0;
+}
+#pragma peephole reset
 #pragma scheduling reset
