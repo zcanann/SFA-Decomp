@@ -5191,3 +5191,38 @@ void dfplevelcontrol_init(int obj, int param2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E62F4;
+extern f32 lbl_803E62A8;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_80202428(int obj, int param2)
+{
+    int state = *(int *)(obj + 0xb8);
+    u32 v;
+    int sub;
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        ObjHits_EnableObject(obj);
+    }
+    ObjHits_SetHitVolumeSlot(obj, 0xa, 1, -1);
+    *(f32 *)(param2 + 0x2a0) = lbl_803E62F4;
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove((void *)obj, 0xa, lbl_803E62A8, 0);
+        *(u8 *)(param2 + 0x346) = 0;
+    }
+    *(u8 *)(param2 + 0x34d) = 1;
+    sub = *(int *)(state + 0x40c);
+    *(u8 *)(sub + 0x14) = *(u8 *)(sub + 0x14) | 0x2;
+    v = *(u32 *)(param2 + 0x314);
+    if (v & 1) {
+        *(u32 *)(param2 + 0x314) = v & ~1;
+        *(u8 *)(sub + 0x14) = *(u8 *)(sub + 0x14) | 0x1;
+    }
+    if (*(s8 *)(param2 + 0x346) != 0) {
+        *(u8 *)(sub + 0x34) = 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
