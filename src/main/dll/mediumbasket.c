@@ -2915,12 +2915,16 @@ int fn_8015B524(int* obj, u8* state) {
 int fn_8015B748(int* obj, u8* state) {
     int* sub = *(int**)((char*)obj + 0xb8);
     if ((s8)state[852] < 1) return 3;
-    if ((s8)state[838] == 0) return 0;
-    if (*(s16*)((char*)state + 628) != 12) return 8;
-    if (*(u8*)((char*)sub + 1030) > 50) {
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
-    } else {
-        ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+    if ((s8)state[838] != 0) {
+        if (*(s16*)((char*)state + 628) == 12) {
+            if (*(u8*)((char*)sub + 1030) > 50) {
+                ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+            } else {
+                ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+            }
+        } else {
+            return 8;
+        }
     }
     return 0;
 }
