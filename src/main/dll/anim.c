@@ -5162,6 +5162,13 @@ extern void unlockLevel(int a, int b, int c);
 extern void Music_Trigger(int a, int b);
 extern int *gMapEventInterface;
 
+typedef struct DfpFlags7 {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 rest : 5;
+} DfpFlags7;
+
 #pragma peephole off
 #pragma scheduling off
 void dfplevelcontrol_init(int obj, int param2)
@@ -5169,9 +5176,9 @@ void dfplevelcontrol_init(int obj, int param2)
     int state = *(int *)(obj + 0xb8);
     int v;
     ObjGroup_AddObject(obj, 9);
-    *(u8 *)(state + 7) = (*(u8 *)(state + 7) & ~0x80) | (GameBit_Get(0xd5d) << 7);
-    *(u8 *)(state + 7) = (*(u8 *)(state + 7) & ~0x40) | (GameBit_Get(0xd59) << 6);
-    *(u8 *)(state + 7) = (*(u8 *)(state + 7) & ~0x20) | (GameBit_Get(0xd5a) << 5);
+    ((DfpFlags7 *)(state + 7))->b80 = GameBit_Get(0xd5d);
+    ((DfpFlags7 *)(state + 7))->b40 = GameBit_Get(0xd59);
+    ((DfpFlags7 *)(state + 7))->b20 = GameBit_Get(0xd5a);
     *(void **)(obj + 0xbc) = fn_802044EC;
     *(s16 *)(state + 2) = 1;
     v = *(s16 *)(param2 + 0x1a);
