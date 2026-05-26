@@ -145,6 +145,11 @@ Pick fresh 0% units to hunt. Good families seen this session: `dll/baddie/*`,
 
 ## Commit & push protocol (CRITICAL — shared remote main)
 
+**ALWAYS commit and push directly to `main` after finishing EVERY function** —
+do not batch, and do not sit on local commits. Other agents (and humans) push
+to `main` live, so they need to see your work immediately to avoid editing the
+same code and colliding. One function matched/improved = one commit = one push.
+
 After EACH match gain:
 
 ```bash
@@ -167,8 +172,10 @@ git push origin HEAD:main
 Use `TeamCreate` to make `sfa-decomp-hunt`, then `TaskCreate` to seed tasks
 **from the report.json 0%-unit list** (one fresh untouched unit/family per
 task — `dll/baddie/*`, `dll/CAM/*`, `audio/*`, small `dll_*`). Spawn 3-5
-hunter agents in parallel with `Agent(team_name=..., name=...,
+hunter agents in parallel with `Agent(team_name=..., name=..., model="opus",
 run_in_background=true)`, each on its own worktree per the setup above.
+**Run every hunter on Opus, not Sonnet** — pass `model="opus"` on every
+`Agent` spawn (Sonnet is materially weaker at this matching work).
 
 Coordination rules (learned the hard way — these prevent collisions and false
 alarms):
@@ -219,9 +226,12 @@ v1.0 `.s`):
 - **Full source-set restructure** for deeper drift: use
   `realign_skeleton.py --merge` to bootstrap, then fill bodies.
 
-Reference commits to study before starting: `2e20e326`, `01400901`,
-`a42bb90b` (asm{}); `aedc9605`, `fa042933`, `43ab8f56` (add-new-function);
-`dbbc5ba9` (full restructure); `77438a6f` (clamp form); `6863ffe7` (u8).
+Reference commits to study before starting: `aedc9605`, `fa042933`,
+`43ab8f56` (add-new-function — the core drift workflow); `dbbc5ba9` (full
+restructure); `a3a86c446`, `34ee540c0` (bitfield→`rlwimi` clean C);
+`61dd19936` (case-label ordering); `77438a6f` (clamp form); `6863ffe7` (u8).
+(The older `asm{}` reference commits are deprecated under the current no-asm
+Prime Directive — don't study or imitate them.)
 
 ---
 
