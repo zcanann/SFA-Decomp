@@ -5377,5 +5377,56 @@ void staff_release(void)
         lbl_803DDAA0 = NULL;
     }
 }
+
+extern void fn_80065684(f32 a, f32 b, f32 c, f32 *out, int flag);
+extern f32 lbl_803E31D8;
+void mikabombshadow_init(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    f32 out;
+    fn_80065684(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+                *(f32 *)((char *)obj + 0x14), &out, 0);
+    ObjHits_DisableObject(obj);
+    *(u8 *)((char *)obj + 0x36) = 0xff;
+    *(s16 *)((char *)obj + 2) = 0x4000;
+    *(s16 *)obj = 0;
+    *(s16 *)((char *)obj + 4) = 0;
+    *(int *)((char *)*(int **)((char *)obj + 0x64) + 0x30) |= 0x10000;
+    *(f32 *)state = out;
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - out;
+    *(s16 *)((char *)*(int **)((char *)obj + 0x64) + 0x36) = 0;
+    *(f32 *)*(int **)((char *)obj + 0x64) = lbl_803E31D8;
+}
+
+void StaticCamera_init(int *obj, int *params, int flag)
+{
+    u8 *state;
+    *(s16 *)obj = -*(s16 *)((char *)params + 0x1c);
+    *(s16 *)((char *)obj + 2) = -*(s16 *)((char *)params + 0x1e);
+    *(s16 *)((char *)obj + 4) = -*(s16 *)((char *)params + 0x20);
+    state = *(u8 **)((char *)obj + 0xb8);
+    state[0] = *(u8 *)((char *)params + 0x19);
+    *(f32 *)((char *)state + 4) = (f32)(u32) * (u8 *)((char *)params + 0x1a);
+    state[1] = 0;
+    if (flag == 0) {
+        ObjGroup_AddObject((int)obj, 7);
+    }
+}
+
+extern void storeZeroToFloatParam(f32 *p);
+extern f32 lbl_803E33A0;
+extern f32 lbl_803DBD60;
+extern f32 lbl_803E338C;
+void flamethrowerspe_init(int *obj, int *params)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    storeZeroToFloatParam((f32 *)((char *)state + 4));
+    *(f32 *)((char *)state + 8) =
+        ((f32) * (s16 *)((char *)params + 0x1a) / lbl_803E33A0) * lbl_803DBD60;
+    *(f32 *)((char *)obj + 0x28) = lbl_803E338C;
+    *(s16 *)((char *)obj + 6) |= 0x4000;
+    *(int *)((char *)state + 0x10) = 1;
+    ObjHits_DisableObject(obj);
+}
 #pragma scheduling reset
 #pragma peephole reset
