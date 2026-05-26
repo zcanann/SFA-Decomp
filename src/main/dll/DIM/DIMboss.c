@@ -182,198 +182,200 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
   Obj_GetPlayerObject();
   runtime->phase = DIMBOSS_PHASE_START;
   (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,5,0);
-  if (obj->renderPause == 0) {
-    puVar7 = gDIMbossAnimController;
-    puVar8 = (undefined4 *)0x1;
-    puVar9 = (undefined4 *)0x1;
-    dll_2E_func07(obj,animUpdate,(float *)gDIMbossAnimController,1,1);
-    for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
-      switch(animUpdate->eventIds[eventIndex]) {
-      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_80000;
-        break;
-      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_80000;
-        break;
-      case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
-        (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
-        (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
-        (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
-        puVar7 = (undefined4 *)0x0;
-        puVar8 = (undefined4 *)0x64;
-        puVar9 = (undefined4 *)0x0;
-        (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
-        iVar4 = Obj_GetActiveModel((int)obj);
-        ObjModel_ClearRenderAttachment(iVar4);
-        Music_Trigger(0x27,1);
-        break;
-      case DIMBOSS_EVENT_LAUNCH_LIFT:
-        runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
-        obj->objectFlags &= ~8;
-        obj->objectFlags |= 0x80;
-        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,0,0);
-        break;
-      case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
-        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,1);
-        break;
-      case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
-        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,0);
-        break;
-      case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_06:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_06;
-        break;
-      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_07:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
-        break;
-      case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
-        topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
-        Music_Trigger(0xee,0);
-        break;
-      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_09:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0040;
-        break;
-      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_09:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0040;
-        break;
-      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0C:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0080;
-        break;
-      case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0D:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0100;
-        break;
-      case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0D:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0100;
-        break;
-      case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_0F:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_0F;
-        break;
-      case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_10:
-        gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_10;
-        break;
-      case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
-        topState->defeatTimer = DIMBOSS_DEFEAT_TIMER_START;
-        GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_A,1);
-        GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_B,1);
-        Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE,0);
-        Music_Trigger(DIMBOSS_MUSIC_BOSS_THEME,0);
-        Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP,0);
-        break;
-      case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
-        (*(code *)(*gObjectTriggerInterface + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,obj,0x3c);
-        break;
-      case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
-        OSReport(sDIMBossFreeingAssetsForDIMBoss);
-        setLoadedFileFlags_blocks1();
-        unlockLevel(0,0,1);
-        mapDirIndex = mapGetDirIdx(DIMBOSS_MAP_DIR);
-        mapUnload(mapDirIndex,DIMBOSS_MAP_UNLOAD_MASK);
-        mapDirIndex = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
-        mapUnload(mapDirIndex,DIMBOSS_GUT_MAP_UNLOAD_MASK);
-        defragMemory(0);
-        break;
-      case DIMBOSS_EVENT_LOAD_DIMTOP_ASSETS:
-        OSReport(sDIMBossLoadingAssetsForDIMTop);
-        lockLevel(mapGetDirIdx(DIMTOP_MAP_DIR),0);
-        mapLoadDataFile(mapGetDirIdx(DIMTOP_MAP_DIR),DIMTOP_BOOT_DATA_FILE);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_INTRO_DATA_FILE);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_PLATFORM_DATA_FILE);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_LIFT_DATA_FILE);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_SCENE_DATA_FILE);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_STEAM_DATA_FILE);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_BOSS_DATA_FILE_A);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_BOSS_DATA_FILE_B);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_EFFECT_DATA_FILE_A);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_EFFECT_DATA_FILE_B);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_ROOM_DATA_FILE_A);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_ROOM_DATA_FILE_B);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_AUDIO_DATA_FILE_A);
-        mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
-        mapLoadDataFile(mapDirIndex,DIMTOP_AUDIO_DATA_FILE_B);
-        loadWaitStarted = false;
-        while (statusFlags = getLoadedFileFlags(0), (statusFlags & DIMTOP_LOAD_PENDING_FLAGS_MASK) != 0) {
-          padUpdate();
-          checkReset();
-          if (loadWaitStarted) {
-            waitNextFrame();
-          }
-          loadDataFiles();
-          dvdCheckError();
-          if (loadWaitStarted) {
-            mmFreeTick(0);
-            gameTextRun();
-            GXFlush_(1,0);
-          }
-          if (lbl_803DC950 != '\0') {
-            loadWaitStarted = true;
-          }
+  if (obj->renderPause != 0) {
+    return 0;
+  }
+
+  puVar7 = gDIMbossAnimController;
+  puVar8 = (undefined4 *)0x1;
+  puVar9 = (undefined4 *)0x1;
+  dll_2E_func07(obj,animUpdate,(float *)gDIMbossAnimController,1,1);
+  for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
+    switch(animUpdate->eventIds[eventIndex]) {
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_80000;
+      break;
+    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_80000;
+      break;
+    case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
+      (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
+      (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
+      (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
+      puVar7 = (undefined4 *)0x0;
+      puVar8 = (undefined4 *)0x64;
+      puVar9 = (undefined4 *)0x0;
+      (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
+      iVar4 = Obj_GetActiveModel((int)obj);
+      ObjModel_ClearRenderAttachment(iVar4);
+      Music_Trigger(0x27,1);
+      break;
+    case DIMBOSS_EVENT_LAUNCH_LIFT:
+      runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
+      obj->objectFlags &= ~8;
+      obj->objectFlags |= 0x80;
+      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,0,0);
+      break;
+    case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
+      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,1);
+      break;
+    case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
+      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,0);
+      break;
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_06:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_06;
+      break;
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_07:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
+      break;
+    case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
+      topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
+      Music_Trigger(0xee,0);
+      break;
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_09:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0040;
+      break;
+    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_09:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0040;
+      break;
+    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0C:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0080;
+      break;
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0D:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0100;
+      break;
+    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0D:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0100;
+      break;
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_0F:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_0F;
+      break;
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_10:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_10;
+      break;
+    case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
+      topState->defeatTimer = DIMBOSS_DEFEAT_TIMER_START;
+      GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_A,1);
+      GameBit_Set(DIMBOSS_GAMEBIT_DEFEAT_STATE_B,1);
+      Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE,0);
+      Music_Trigger(DIMBOSS_MUSIC_BOSS_THEME,0);
+      Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP,0);
+      break;
+    case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
+      (*(code *)(*gObjectTriggerInterface + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,obj,0x3c);
+      break;
+    case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
+      OSReport(sDIMBossFreeingAssetsForDIMBoss);
+      setLoadedFileFlags_blocks1();
+      unlockLevel(0,0,1);
+      mapDirIndex = mapGetDirIdx(DIMBOSS_MAP_DIR);
+      mapUnload(mapDirIndex,DIMBOSS_MAP_UNLOAD_MASK);
+      mapDirIndex = mapGetDirIdx(DIMBOSS_GUT_MAP_DIR);
+      mapUnload(mapDirIndex,DIMBOSS_GUT_MAP_UNLOAD_MASK);
+      defragMemory(0);
+      break;
+    case DIMBOSS_EVENT_LOAD_DIMTOP_ASSETS:
+      OSReport(sDIMBossLoadingAssetsForDIMTop);
+      lockLevel(mapGetDirIdx(DIMTOP_MAP_DIR),0);
+      mapLoadDataFile(mapGetDirIdx(DIMTOP_MAP_DIR),DIMTOP_BOOT_DATA_FILE);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_INTRO_DATA_FILE);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_PLATFORM_DATA_FILE);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_LIFT_DATA_FILE);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_SCENE_DATA_FILE);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_STEAM_DATA_FILE);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_BOSS_DATA_FILE_A);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_BOSS_DATA_FILE_B);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_EFFECT_DATA_FILE_A);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_EFFECT_DATA_FILE_B);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_ROOM_DATA_FILE_A);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_ROOM_DATA_FILE_B);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_AUDIO_DATA_FILE_A);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_AUDIO_DATA_FILE_B);
+      loadWaitStarted = false;
+      while (statusFlags = getLoadedFileFlags(0), (statusFlags & DIMTOP_LOAD_PENDING_FLAGS_MASK) != 0) {
+        padUpdate();
+        checkReset();
+        if (loadWaitStarted) {
+          waitNextFrame();
         }
-        clearLoadedFileFlags_blocks1();
-        break;
-      }
-    }
-    if (obj->animStateId != -1) {
-      puVar7 = (undefined4 *)0x1;
-      puVar8 = (undefined4 *)*gBaddieControlInterface;
-      baddieResult = (*(code *)puVar8[0xc])(obj,runtime);
-      if (baddieResult == 0) {
-        updateResult = 1;
-        goto LAB_801bd7dc;
-      }
-      if (obj->childObject != NULL) {
-        *(undefined4 *)((int)obj->childObject + 0x30) = obj->facingAngle;
-      }
-      if ((runtime->eventGameBit != -1) &&
-          (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0)) {
-        puVar7 = (undefined4 *)*gObjectTriggerInterface;
-        (*(code *)puVar7[0x16])(animUpdate,(int)config->eventId);
-        runtime->eventGameBit = -1;
-      }
-      hitReactMode = runtime->hitReactMode;
-      if (hitReactMode == 1) {
-        baddieResult = (*(code *)(*gBaddieControlInterface + 0x34))
-                          (obj,animUpdate,runtime,gDIMbossHitDetectAnimTable,
-                           gDIMbossAnimTable,0);
-        if (baddieResult != 0) {
-          puVar7 = (undefined4 *)0x1;
-          puVar8 = (undefined4 *)*gBaddieControlInterface;
-          (*(code *)puVar8[0xb])((double)lbl_803E4C70,obj,runtime);
+        loadDataFiles();
+        dvdCheckError();
+        if (loadWaitStarted) {
+          mmFreeTick(0);
+          gameTextRun();
+          GXFlush_(1,0);
+        }
+        if (lbl_803DC950 != '\0') {
+          loadWaitStarted = true;
         }
       }
-      else if ((hitReactMode != 0) && (hitReactMode < 3)) {
-        animUpdate->hitVolumePair = 0;
-        puVar7 = (undefined4 *)runtime;
-        puVar8 = (undefined4 *)runtime;
-        fn_801BC7E4(obj,animUpdate,(int)runtime,(int)runtime);
-        if (runtime->hitReactMode == 1) {
-          *(undefined2 *)((undefined4 *)runtime + 0x9c) = 0;
-          puVar7 = (undefined4 *)gDIMbossHitDetectAnimTable;
-          puVar8 = (undefined4 *)gDIMbossAnimTable;
-          puVar9 = (undefined4 *)*(int *)gPlayerInterface;
-          (*(code *)puVar9[2])(obj,runtime);
-          animUpdate->sequenceEventActive = 0;
-        }
+      clearLoadedFileFlags_blocks1();
+      break;
+    }
+  }
+  if (obj->animStateId != -1) {
+    puVar7 = (undefined4 *)0x1;
+    puVar8 = (undefined4 *)*gBaddieControlInterface;
+    baddieResult = (*(code *)puVar8[0xc])(obj,runtime);
+    if (baddieResult == 0) {
+      updateResult = 1;
+      goto LAB_801bd7dc;
+    }
+    if (obj->childObject != NULL) {
+      *(undefined4 *)((int)obj->childObject + 0x30) = obj->facingAngle;
+    }
+    if ((runtime->eventGameBit != -1) &&
+        (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0)) {
+      puVar7 = (undefined4 *)*gObjectTriggerInterface;
+      (*(code *)puVar7[0x16])(animUpdate,(int)config->eventId);
+      runtime->eventGameBit = -1;
+    }
+    hitReactMode = runtime->hitReactMode;
+    if (hitReactMode == 1) {
+      baddieResult = (*(code *)(*gBaddieControlInterface + 0x34))
+                        (obj,animUpdate,runtime,gDIMbossHitDetectAnimTable,
+                         gDIMbossAnimTable,0);
+      if (baddieResult != 0) {
+        puVar7 = (undefined4 *)0x1;
+        puVar8 = (undefined4 *)*gBaddieControlInterface;
+        (*(code *)puVar8[0xb])((double)lbl_803E4C70,obj,runtime);
       }
     }
-    warpDarkIceMines_801bbb44(obj,runtime);
-    if (obj->animStateId == -1) {
-      runtime->stateFlags |= DIMBOSS_STATE_FLAG_START_MOVE;
-      updateResult = 0;
+    else if ((hitReactMode != 0) && (hitReactMode < 3)) {
+      animUpdate->hitVolumePair = 0;
+      puVar7 = (undefined4 *)runtime;
+      puVar8 = (undefined4 *)runtime;
+      fn_801BC7E4(obj,animUpdate,(int)runtime,(int)runtime);
+      if (runtime->hitReactMode == 1) {
+        *(undefined2 *)((undefined4 *)runtime + 0x9c) = 0;
+        puVar7 = (undefined4 *)gDIMbossHitDetectAnimTable;
+        puVar8 = (undefined4 *)gDIMbossAnimTable;
+        puVar9 = (undefined4 *)*(int *)gPlayerInterface;
+        (*(code *)puVar9[2])(obj,runtime);
+        animUpdate->sequenceEventActive = 0;
+      }
     }
-    else {
-      updateResult = -((uint)runtime->hitReactMode) >> 31;
-    }
+  }
+  warpDarkIceMines_801bbb44(obj,runtime);
+  if (obj->animStateId == -1) {
+    runtime->stateFlags |= DIMBOSS_STATE_FLAG_START_MOVE;
+    updateResult = 0;
+  }
+  else {
+    updateResult = -((uint)runtime->hitReactMode) >> 31;
   }
 LAB_801bd7dc:
   return updateResult;
