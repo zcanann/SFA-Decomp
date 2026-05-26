@@ -2109,25 +2109,27 @@ int fn_8015BB00(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int control;
+    f32 noBlend;
 
     *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 10;
     *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
-    if (*(u8 *)(sub + 0x406) < 0x33) {
+    if (*(u8 *)(sub + 0x406) > 0x32) {
         if ((s8)*(u8 *)(state + 0x27a) != 0) {
-            ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E2D14, 0);
+            ObjAnim_SetCurrentMove(obj, 4, lbl_803E2D14, 0);
             *(u8 *)(state + 0x346) = 0;
         }
     } else if ((s8)*(u8 *)(state + 0x27a) != 0) {
-        ObjAnim_SetCurrentMove(obj, 4, lbl_803E2D14, 0);
+        ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E2D14, 0);
         *(u8 *)(state + 0x346) = 0;
     }
     *(u8 *)(state + 0x34d) = 3;
     *(f32 *)(state + 0x2a0) = lbl_803E2D28;
     control = *(int *)(sub + 0x40c);
     *(u8 *)(control + 0x44) |= 0xc;
-    *(f32 *)(state + 0x280) = lbl_803E2D14;
-    *(f32 *)(state + 0x284) = lbl_803E2D14;
+    noBlend = lbl_803E2D14;
+    *(f32 *)(state + 0x280) = noBlend;
+    *(f32 *)(state + 0x284) = noBlend;
     if ((*(u8 *)(sub + 0x404) & 2) == 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D30 + *(f32 *)(obj + 0x98);
     }
