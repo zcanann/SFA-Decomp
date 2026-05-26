@@ -4531,3 +4531,30 @@ void MapBlock_initShaders(int obj)
         outerOff += 0x44;
     }
 }
+
+extern int lbl_803DCF3C;
+
+void mapInitFn_80069990(void)
+{
+    int i;
+    int off;
+    if (lbl_803DCF30 == 0) {
+        lbl_803DCF30 = (u32)mmAlloc(0x16440, 0xffff00ff, 0);
+        lbl_803DCF34 = (int)mmAlloc(0x5dc0, 0xffff00ff, 0);
+        lbl_803DCF38 = (f32 *)mmAlloc(0x4fb0, 0xffff00ff, 0);
+        lbl_803DCF3C = (int)mmAlloc(0xbb8, 0xffff00ff, 0);
+        lbl_803DCF48 = (int)mmAlloc(0x600, 0xffff00ff, 0);
+    }
+    off = 0;
+    for (i = 0; i < 4; i++) {
+        int j;
+        for (j = 0; j < 16; j++) {
+            *(u8 *)(lbl_803DCF48 + off + 0x14 + j * 0x18) = 0;
+        }
+        off += 0x180;
+    }
+    lbl_803DCF5E = 0;
+    lbl_803DCF5C = 0;
+    lbl_803DCF4E = 0;
+    lbl_803DCF4F = 0;
+}
