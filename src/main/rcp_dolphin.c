@@ -2891,3 +2891,68 @@ void shaderInit(u8 *def, void **out, u8 *obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern void selectTexture(int handle, int slot);
+
+#pragma scheduling off
+#pragma peephole off
+void textureFn_800541ac(int p1, int *tex, void *forceTex, int flags, int packed)
+{
+    int i;
+    int idx, count;
+    int *node;
+    int *cur;
+    int *result;
+    int *walk;
+    u16 f10;
+
+    if (tex == NULL)
+        return;
+    idx = packed >> 16;
+    f10 = *(u16 *)((char *)tex + 0x10);
+    if (f10 != 0)
+        count = f10 >> 8;
+    else
+        count = 0;
+    cur = tex;
+    result = tex;
+    if (count > 1 && idx < count) {
+        node = tex;
+        for (i = 0; i < idx && node != NULL; i++)
+            node = *(int **)node;
+        if (node != NULL)
+            cur = node;
+        if (flags & 0x40) {
+            if (flags & 0x80000) {
+                idx--;
+                if (idx < 0) {
+                    if (flags & 0x40000)
+                        idx += 2;
+                    else
+                        idx = 0;
+                }
+            } else {
+                idx++;
+                if (idx >= count) {
+                    if (flags & 0x40000)
+                        idx -= 2;
+                    else
+                        idx = count - 1;
+                }
+            }
+            walk = tex;
+            for (i = 0; i < idx && walk != NULL; i++)
+                walk = *(int **)walk;
+            if (walk != NULL)
+                result = walk;
+        } else {
+            result = cur;
+        }
+    }
+    if (forceTex != NULL)
+        result = forceTex;
+    selectTexture((int)cur, 0);
+    selectTexture((int)result, 1);
+}
+#pragma scheduling reset
+#pragma peephole reset
