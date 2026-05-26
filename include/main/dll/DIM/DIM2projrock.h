@@ -61,7 +61,7 @@ int dim2lavacontrol_getExtraSize(void);
 void dim2lavacontrol_free(void);
 void dim2lavacontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2lavacontrol_update(void);
-void dim2lavacontrol_init(void);
+void dim2lavacontrol_init(int obj, int param2);
 void dll_1DA_init(void* obj);
 void dll_1DA_release(void);
 void dll_1DA_initialise(void);
