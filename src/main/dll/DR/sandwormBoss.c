@@ -3372,6 +3372,37 @@ void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E42B0); }
 #pragma peephole reset
 
+extern f32   lbl_803E4280;
+extern f32   lbl_803E4260;
+extern f32   lbl_803E4264;
+extern f32   lbl_803E4284;
+extern u8    framesThisStep;
+extern void  objParticleFn_80099d84(int obj, int a, f32 f, int b);
+
+/* EN v1.0 0x8019F93C  size: 188b  cfprisonguard_render: render the guard
+ * model when visible, ramp its alarm timer at sub->_30 each frame, and
+ * once it crosses the threshold spawn a one-shot particle. */
+#pragma scheduling off
+#pragma peephole off
+void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    if (visible != 0) {
+        objRenderFn_8003b8f4(lbl_803E4280);
+    }
+    if (visible != 0) {
+        f32 t = *(f32*)(sub + 0x30);
+        if (t > lbl_803E4260) {
+            *(f32*)(sub + 0x30) = lbl_803E4264 * (f32)(u32)framesThisStep + t;
+            if (*(f32*)(sub + 0x30) < lbl_803E4284) {
+                objParticleFn_80099d84((int)obj, 3, lbl_803E4280, 0);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
