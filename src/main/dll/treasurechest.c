@@ -14,6 +14,9 @@ extern undefined4 FUN_8016793c();
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
+extern void *memset(void *dst, int val, u32 size);
+extern void ObjAnim_SetCurrentMove(int obj, int move, f32 progress, int flags);
+extern void ObjHits_DisableObject(int obj);
 
 extern undefined4 DAT_80320f38;
 extern undefined4 DAT_80320fb0;
@@ -26,10 +29,23 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de708;
+extern void *gBaddieControlInterface;
 extern f64 DOUBLE_803e3cd8;
 extern f32 lbl_803DC074;
+extern f32 lbl_803E2FDC;
+extern f32 lbl_803E2FF4;
+extern f32 lbl_803E3048;
 extern f32 lbl_803E3C74;
 extern f32 lbl_803E3CCC;
+
+extern void fn_801659B8(void);
+extern void fn_8016558C(void);
+extern void fn_801653D8(void);
+extern void fn_80165188(void);
+extern void fn_801650D8(void);
+extern void fn_801650D0(void);
+extern void *lbl_803AC650[];
+extern void *lbl_803DDA88;
 
 /*
  * --INFO--
@@ -209,6 +225,73 @@ void FUN_8016702c(void)
   }
   FUN_8028688c();
   return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: dll_D3_init
+ * EN v1.0 Address: 0x801673F8
+ * EN v1.0 Size: 344b
+ */
+#pragma scheduling off
+#pragma peephole off
+void dll_D3_init(int obj, int def, int flag)
+{
+  int state;
+  int extra;
+  u8 setupFlags;
+  f32 zero;
+
+  state = *(int *)(obj + 0xb8);
+  setupFlags = 6;
+  if (flag != 0) {
+    setupFlags |= 1;
+  }
+  ((void (*)(int, int, int, int, int, int, int, f32))((void **)*(int *)gBaddieControlInterface)[22])
+      (obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
+  *(int *)(obj + 0xbc) = 0;
+
+  extra = *(int *)(state + 0x40c);
+  memset((void *)extra, 0, 0x94);
+  *(u8 *)(extra + 0x90) = 5;
+  *(u8 *)(extra + 0x92) = (*(u8 *)(extra + 0x92) & 0xf) | 0x30;
+  *(f32 *)(extra + 0x7c) = lbl_803E2FDC;
+  *(f32 *)(extra + 0x80) = lbl_803E2FF4;
+  *(f32 *)(extra + 0x84) = lbl_803E2FDC;
+  *(f32 *)(extra + 0x88) = -*(f32 *)(obj + 0x10);
+  *(f32 *)(extra + 0x70) = *(f32 *)(obj + 0xc);
+  *(f32 *)(extra + 0x74) = *(f32 *)(obj + 0x10);
+  *(f32 *)(extra + 0x78) = *(f32 *)(obj + 0x14);
+
+  ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
+  *(s16 *)(state + 0x274) = *(u8 *)(def + 0x2b) != 0;
+  *(s16 *)(state + 0x270) = 0;
+  *(s16 *)(state + 0x402) = 0;
+  *(u8 *)(state + 0x405) = 0;
+  *(u8 *)(state + 0x25f) = 0;
+  ObjHits_DisableObject(obj);
+
+  zero = lbl_803E2FF4;
+  *(f32 *)(extra + 4) = zero;
+  *(f32 *)(extra + 0x18) = zero;
+  *(f32 *)(extra + 0x2c) = zero;
+  *(f32 *)(extra + 0x40) = zero;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void dll_D3_initialise(void)
+{
+  void **table;
+
+  table = lbl_803AC650;
+  table[0] = fn_801659B8;
+  table[1] = fn_8016558C;
+  table[2] = fn_801653D8;
+  table[3] = fn_80165188;
+  table[4] = fn_801650D8;
+  lbl_803DDA88 = fn_801650D0;
 }
 
 
