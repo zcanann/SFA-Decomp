@@ -4690,3 +4690,56 @@ int fn_800DB240(int p1, f32 *outVec, u16 id)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
+{
+    int flag30 = 0;
+    int i = 0;
+    int done;
+    s16 startState;
+    int result;
+    if (*(s16 *)((char *)obj + 0x270) != *(s16 *)((char *)obj + 0x272)) {
+        *(u8 *)((char *)obj + 0x27b) = 1;
+        *(s16 *)((char *)obj + 0x32e) = 0;
+    }
+    do {
+        done = 0;
+        startState = *(s16 *)((char *)obj + 0x270);
+        result = ((int (*)(int, int *, f32))((int **)fnTable)[startState])(p1, obj, fval);
+        if (result > 0) {
+            *(s16 *)((char *)obj + 0x272) = *(s16 *)((char *)obj + 0x270);
+            *(s16 *)((char *)obj + 0x270) = result - 1;
+            *(u8 *)((char *)obj + 0x27b) = 1;
+            *(s16 *)((char *)obj + 0x32e) = 0;
+        } else if (result < 0) {
+            result = -result;
+            if (result == startState) {
+                *(u8 *)((char *)obj + 0x27b) = 0;
+            } else {
+                *(s16 *)((char *)obj + 0x272) = startState;
+                *(u8 *)((char *)obj + 0x27b) = 1;
+                *(s16 *)((char *)obj + 0x32e) = 0;
+            }
+            *(s16 *)((char *)obj + 0x270) = result;
+            done = 1;
+            flag30 = 1;
+        } else {
+            done = 1;
+        }
+        i++;
+        if (i > 0xff) {
+            done = 1;
+        }
+    } while (done == 0);
+    *(s16 *)((char *)obj + 0x272) = *(s16 *)((char *)obj + 0x270);
+    if (flag30 == 0) {
+        *(u8 *)((char *)obj + 0x27b) = 0;
+        if ((f32)*(s16 *)((char *)obj + 0x338) > lbl_803E05BC) {
+            *(u8 *)((char *)obj + 0x27b) = 0;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
