@@ -4882,6 +4882,26 @@ void voxMapTabReadCb(s32 result, void *fileInfo)
         }
     }
 }
-
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int mapLoadDataFiles(int idx);
+extern int sMapFileNameIndexRemapTable[];
+extern s16 sMapFileNameAdjacencyTable[];
+int loadMapAndParent(int mapId)
+{
+    int idx;
+    s16 parent;
+    if (mapId >= 0x4b) {
+        idx = 5;
+    } else {
+        idx = sMapFileNameIndexRemapTable[mapId];
+    }
+    parent = sMapFileNameAdjacencyTable[idx];
+    if (parent != -1 && mapCheckCurBlocks(parent) == -1) {
+        mapLoadDataFiles(parent);
+        return parent;
+    }
+    mapLoadDataFiles(idx);
+    return idx;
+}
