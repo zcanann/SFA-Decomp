@@ -5606,5 +5606,49 @@ int Fireball_SeqFn(int *obj, int msg, u8 *cmds)
     }
     return 0;
 }
+
+extern int cmbsrc_getColorIndex(int *p);
+extern void modelLightStruct_setColorsA8AC(int *light, int r, int g, int b, int a);
+extern void projectileParticleFxFn_80099660(int *obj, int kind, f32 v);
+extern f32 lbl_803E3354;
+extern f32 lbl_803E3358;
+void fireball_hitDetect(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *target;
+    if (*(s16 *)((char *)obj + 0x46) == 0x83e) return;
+    if (*(u8 *)((char *)state + 0x70) & 8) return;
+    target = *(int **)((char *)*(int **)((char *)obj + 0x54) + 0x50);
+    if (target == NULL) return;
+    if (*(s16 *)((char *)target + 0x46) == 0x6e8) {
+        int idx = cmbsrc_getColorIndex(target);
+        if ((s8)idx != -1) {
+            *(u8 *)((char *)state + 0x71) = (u8)idx;
+            if (*(void **)state != NULL) {
+                u8 *pal = (u8 *)lbl_80320978;
+                int c = *(u8 *)((char *)state + 0x71) * 3;
+                modelLightStruct_setColorsA8AC(*(int **)state, pal[c], pal[c + 1], pal[c + 2], 0);
+            }
+        }
+        ObjHits_EnableObject(obj);
+    } else {
+        u8 v;
+        *(f32 *)((char *)state + 0x38) = lbl_803E3358;
+        v = *(u8 *)((char *)state + 0x71);
+        if (v == 0) {
+            projectileParticleFxFn_80099660(obj, 3, lbl_803E3354);
+        } else if (v == 1) {
+            projectileParticleFxFn_80099660(obj, 0, lbl_803E3354);
+        } else {
+            projectileParticleFxFn_80099660(obj, 6, lbl_803E3354);
+        }
+        *(u8 *)((char *)obj + 0x36) = 0;
+        if (*(void **)state != NULL) {
+            ModelLightStruct_free(*(void **)state);
+            *(void **)state = NULL;
+        }
+    }
+    ObjGroup_RemoveObject((int)obj, 2);
+}
 #pragma scheduling reset
 #pragma peephole reset
