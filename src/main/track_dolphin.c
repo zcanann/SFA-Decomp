@@ -4454,3 +4454,44 @@ void MapBlock_initHits(int obj, int index)
     *(u16 *)(obj + 0x9e) = 0;
     *(u16 *)(obj + 4) = *(u16 *)(obj + 4) & ~0x40;
 }
+
+extern int lbl_803DCEB0;
+extern int lbl_803DCDE4;
+extern void checkLoadBlock(int v, int *outA, int *outB);
+extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
+
+void *MapBlock_loadFromFile(int blockId)
+{
+    int local_c;
+    int local_8;
+    void *buf;
+    int blockOff = 0;
+    int *table;
+    int v;
+    if (blockId > lbl_803DCEB0) {
+        return 0;
+    }
+    table = (int *)lbl_803DCDE4;
+    if (table != 0) {
+        v = table[blockId];
+        if (v != -1) {
+            if (v == 0 && table[blockId + 1] == 0) {
+                return 0;
+            }
+            blockOff = v;
+            checkLoadBlock(v, &local_c, &local_8);
+        }
+    }
+    if (local_c <= 0) {
+        return 0;
+    }
+    if (local_8 > 0x32000) {
+        return 0;
+    }
+    buf = mmAlloc(local_8, 5, 0);
+    if (buf == 0) {
+        return 0;
+    }
+    loadAndDecompressDataFile(0x25, buf, blockOff, local_c, 0, 0, 0);
+    return buf;
+}
