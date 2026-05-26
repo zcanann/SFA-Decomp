@@ -5327,3 +5327,55 @@ void fireball_free(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct DofState {
+    u8 enabled : 1;
+    u8 : 7;
+    u8 field1;
+} DofState;
+
+extern void fn_8016CD48(void);
+extern void Rcp_DisableBlurFilter(void);
+extern int textureFree(int tex);
+extern int lbl_803DDAA0;
+extern int lbl_803DDAA8[2];
+
+#pragma peephole off
+#pragma scheduling off
+void depthoffieldpoint_init(int *obj)
+{
+    DofState *s = *(DofState **)((char *)obj + 0xb8);
+    s->enabled = 0;
+    *(void **)((char *)obj + 0xbc) = (void *)fn_8016CD48;
+    s->field1 = 0;
+    *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+}
+
+void depthoffieldpoint_update(int *obj)
+{
+    DofState *s = *(DofState **)((char *)obj + 0xb8);
+    if (s->enabled) {
+        s->enabled = 0;
+        Rcp_DisableBlurFilter();
+    }
+}
+
+void staff_release(void)
+{
+    int i;
+    int *p;
+    if (lbl_803DDAA8[0] != 0) {
+        p = lbl_803DDAA8;
+        for (i = 0; i < 2; i++) {
+            textureFree(*p);
+            *p = 0;
+            p++;
+        }
+    }
+    if (lbl_803DDAA0 != 0) {
+        Resource_Release(lbl_803DDAA0);
+        lbl_803DDAA0 = 0;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
