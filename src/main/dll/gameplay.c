@@ -12920,6 +12920,34 @@ void SaveGame_gplayGotoSavegame(void) {
     memcpy(lbl_803A32A8, lbl_803DD498, 0x6ec);
     loadMapForCurrentSaveGame();
 }
+extern void unlockLevel(int a, int b, int c);
+extern void *memset(void *p, int v, u32 n);
+extern void cutsceneExit(void);
+extern void audioStopByMask(int mask);
+extern void stopRumble2(void);
+extern void resetYbutton(void);
+extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
+extern int getCurUiDll(void);
+extern void loadUiDll(int dll);
+extern void screenTransitionFn_800d7b04(int duration, int type);
+void loadMapForCurrentSaveGame(void) {
+    char *base;
+    lbl_803DD494 = -1;
+    lbl_803DD48C = -1;
+    unlockLevel(0, 0, 1);
+    memset((char *)lbl_803A32A8 + 0x6ec, 0, 0x884);
+    cutsceneExit();
+    audioStopByMask(7);
+    stopRumble2();
+    resetYbutton();
+    base = (char *)lbl_803A32A8 + *(u8 *)((char *)lbl_803A32A8 + 0x20) * 16;
+    mapLoadByCoords(*(f32 *)(base + 0x684), *(f32 *)(base + 0x688), *(f32 *)(base + 0x68c), *(s8 *)(base + 0x691));
+    if (getCurUiDll() != 4) {
+        loadUiDll(1);
+    }
+    screenTransitionFn_800d7b04(0x1e, 1);
+    lbl_803DD488 = 2;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
