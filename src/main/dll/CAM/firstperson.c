@@ -255,3 +255,14 @@ void firstperson_loadSettings(int param_1)
   *(undefined2 *)(gCamcontrolModeSettings + 0x21) = 0;
   return;
 }
+
+void CameraModeNormal_free(int obj)
+{
+  *(f32 *)((u8 *)cameraMtxVar57 + 0x74) = *(f32 *)(obj + 0x18);
+  *(f32 *)((u8 *)cameraMtxVar57 + 0x78) = *(f32 *)(obj + 0x1c);
+  *(f32 *)((u8 *)cameraMtxVar57 + 0x7c) = *(f32 *)(obj + 0x20);
+  *(s16 *)((u8 *)cameraMtxVar57 + 0x86) = *(s16 *)(obj + 0x0);
+  *(s16 *)((u8 *)cameraMtxVar57 + 0x88) = *(s16 *)(obj + 0x2);
+  *(s16 *)((u8 *)cameraMtxVar57 + 0x8a) = *(s16 *)(obj + 0x4);
+  *(u8 *)((u8 *)cameraMtxVar57 + 0xc6) &= ~0x40;
+}
