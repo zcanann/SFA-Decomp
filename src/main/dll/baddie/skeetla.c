@@ -944,6 +944,13 @@ typedef struct SkeetlaParticleSpawnArgs {
     f32 z;
 } SkeetlaParticleSpawnArgs;
 
+#define SKEETLA_LINKED_SOURCE_ID_OBJ_A 0x1ca
+#define SKEETLA_LINKED_SOURCE_ID_OBJ_B 0x160
+#define SKEETLA_PARTICLE_SPARK_A 0xca
+#define SKEETLA_PARTICLE_SPARK_B 0xcb
+#define SKEETLA_PARTICLE_SPAWN_FLAGS 0x200001
+#define SKEETLA_PARTICLE_RANDOM_RATE 4
+
 extern u32 randomGetRange(int min, int max);
 extern void *gPartfxInterface;
 
@@ -962,23 +969,23 @@ void fn_8013ADFC(u8 *obj)
     args.y = *(f32 *)(state + 0x3dc);
     args.z = *(f32 *)(state + 0x3e0);
     args.objectId = *(s16 *)obj;
-    if (*(s16 *)(linkedObj + 0x46) == 0x1ca) {
+    if (*(s16 *)(linkedObj + 0x46) == SKEETLA_LINKED_SOURCE_ID_OBJ_A) {
         args.sourceId =
             (u8)(*(u32 (**)(u8 *))(*(int *)(*(int *)(linkedObj + 0x68)) + 0x28))(linkedObj);
-    } else if (*(s16 *)(linkedObj + 0x46) == 0x160) {
+    } else if (*(s16 *)(linkedObj + 0x46) == SKEETLA_LINKED_SOURCE_ID_OBJ_B) {
         args.sourceId =
             (u8)(*(u32 (**)(u8 *))(*(int *)(*(int *)(linkedObj + 0x68)) + 0x28))(linkedObj);
     } else {
         args.sourceId = 0;
     }
 
-    if ((int)randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, 0xca, &args, 0x200001, -1, 0);
+            obj, SKEETLA_PARTICLE_SPARK_A, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, 0);
     }
-    if ((int)randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, 0xcb, &args, 0x200001, -1, 0);
+            obj, SKEETLA_PARTICLE_SPARK_B, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, 0);
     }
 
     args.x = *(f32 *)(state + 0x3e4);
@@ -986,13 +993,13 @@ void fn_8013ADFC(u8 *obj)
     args.z = *(f32 *)(state + 0x3ec);
     args.objectId = *(s16 *)obj;
 
-    if ((int)randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, 0xca, &args, 0x200001, -1, 0);
+            obj, SKEETLA_PARTICLE_SPARK_A, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, 0);
     }
-    if ((int)randomGetRange(0, 4) == 0) {
+    if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
         (*(void (**)(u8 *, int, SkeetlaParticleSpawnArgs *, int, int, int))(*(int *)gPartfxInterface + 8))(
-            obj, 0xcb, &args, 0x200001, -1, 0);
+            obj, SKEETLA_PARTICLE_SPARK_B, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, 0);
     }
 }
 #pragma scheduling reset
