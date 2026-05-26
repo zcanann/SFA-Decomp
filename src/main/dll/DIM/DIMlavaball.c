@@ -1825,3 +1825,40 @@ void mmp_gyservent_init(int obj) {
 void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_801A7D74(int obj, int a, int b);
+
+#pragma peephole off
+#pragma scheduling off
+void mmp_moonrock_init(int obj, int param2)
+{
+    int state = *(int *)(obj + 0xb8);
+    u8 kind;
+    *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
+    *(s16 *)(state + 0x24) = 0;
+    *(u8 *)(state + 0x2e) = (u8)GameBit_Get(*(s16 *)(param2 + 0x1a));
+    kind = *(u8 *)(state + 0x2e);
+    if (kind != 0) {
+        if ((u8)(kind - 3) <= 1 || kind == 6) {
+            *(u16 *)(state + 0x24) = *(u16 *)(state + 0x24) | 0x400;
+        }
+        (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 0);
+    } else {
+        (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 1);
+    }
+    {
+        f32 z = *(f32 *)(obj + 0x10);
+        *(f32 *)(state + 0xc) = z;
+        *(f32 *)(state + 0x10) = z;
+    }
+    (*(int (**)(int, int, int))(*(int *)lbl_803DCAC0 + 0x4))(obj, *(int *)(obj + 0xb8), 0x32);
+    (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x2c))(state, 1);
+    ObjGroup_AddObject(obj, 4);
+    *(f32 *)(state + 0x18) = *(f32 *)(obj + 0xc);
+    *(f32 *)(state + 0x1c) = *(f32 *)(obj + 0x10);
+    *(f32 *)(state + 0x20) = *(f32 *)(obj + 0x14);
+    ObjHits_DisableObject(obj);
+    fn_801A7D74(obj, 1, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
