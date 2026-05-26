@@ -3504,6 +3504,8 @@ void cfprisonguard_initialise(void) {}
 
 extern void fn_8019F540(int* obj);
 
+typedef struct { u8 top : 1; u8 rest : 7; } Bit80;
+
 /* EN v1.0 0x8019FBD0  size: 172b  cfprisonguard_init: set up the guard's
  * substate (update fn fn_8019F540, message queue), seed its header from
  * the spawn params, and apply the alarm-active gating bits. */
@@ -3520,7 +3522,7 @@ void cfprisonguard_init(int* obj, u8* params) {
         sub[0x38] = (u8)(sub[0x38] | 4);
     }
     *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
-    sub[0x39] = (u8)(sub[0x39] | 0x80);
+    ((Bit80*)(sub + 0x39))->top = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
