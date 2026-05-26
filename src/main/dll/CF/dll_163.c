@@ -504,7 +504,7 @@ void staffactivated_update(int obj) {
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
 after_bit4:
 
-    mode = *(u8 *)(*(int *)(obj + 0x4c) + 0x1c);
+    mode = *(u8 *)(param + 0x1c);
     if (mode == 2) {
         fn_801899B4(obj, state);
     } else if (mode > 2) {
@@ -531,7 +531,7 @@ after_bit4:
             isSet = 1;
         }
         *(u8 *)(state + 0x1d) =
-            (*(u8 *)(state + 0x1d) & ~0x80) | (u8)((isSet & 1) << 7);
+            (u8)(isSet << 7) | (*(u8 *)(state + 0x1d) & 0x7f);
         if ((*(u8 *)(state + 0x1d) >> 7) & 1) {
             stk.ox = lbl_803E3BBC;
             stk.oy = lbl_803E3C00;
@@ -560,5 +560,5 @@ default_case:
         isSet = 1;
     }
     *(u8 *)(state + 0x1d) =
-        (*(u8 *)(state + 0x1d) & ~0x80) | (u8)((isSet & 1) << 7);
+        (u8)(isSet << 7) | (*(u8 *)(state + 0x1d) & 0x7f);
 }
