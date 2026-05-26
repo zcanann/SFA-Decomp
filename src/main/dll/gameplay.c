@@ -13266,6 +13266,28 @@ void SaveGame_gplayRestartPoint(f32 *pos, s16 angle, int b691, int flag) {
         playerAddHealth((u8 *)Obj_GetPlayerObject(), 1);
     }
 }
+extern char *sMapDirectoryNameTable[];
+extern u8 lbl_803A4218[];
+void loadTaskTexts(void) {
+    int i;
+    int idx;
+    u8 *s;
+    u8 *p = &lbl_803A4218[0xd];
+    int n = 0xd;
+    while (n-- != 0) {
+        *--p = 0xff;
+    }
+    for (i = 0x49; i != 0; i--) {
+        s = (u8 *)sMapDirectoryNameTable[i];
+        if (s[0] == 'T' && s[1] == 'a' && s[2] == 's' && s[3] == 'k' &&
+            s[4] == 'T' && s[5] == 'e' && s[6] == 'x' && s[7] == 't' && s[8] == 's') {
+            idx = (s[9] - '0') * 100 + (s[10] - '0') * 10 + s[11] - '0';
+            if (idx < 0xd) {
+                lbl_803A4218[idx] = (u8)i;
+            }
+        }
+    }
+}
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
     return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
