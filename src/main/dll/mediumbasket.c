@@ -2157,7 +2157,7 @@ int fn_8015BC18(int obj, int state)
     }
     control = *(int *)(sub + 0x40c);
     *(u8 *)(control + 0x44) |= 4;
-    if ((*(u32 *)(state + 0x314) & 0x200) != 0) {
+    if ((s32)(*(u32 *)(state + 0x314) & 0x200) != 0) {
         *(u32 *)(state + 0x314) &= ~0x200;
         *(u8 *)(control + 0x44) |= 0x10;
     }
@@ -2379,7 +2379,7 @@ int fn_8015C5C4(int obj, int state)
     }
     *(u8 *)(state + 0x34d) = 3;
     *(f32 *)(state + 0x2a0) = lbl_803E2D28;
-    if ((*(u32 *)(state + 0x314) & 0x200) != 0) {
+    if ((s32)(*(u32 *)(state + 0x314) & 0x200) != 0) {
         *(u32 *)(state + 0x314) &= ~0x200;
         *(u8 *)(control + 0x44) |= 0x10;
     }
