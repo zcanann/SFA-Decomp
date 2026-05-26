@@ -13174,6 +13174,17 @@ void SaveGame_gplaySetAct(int idx, int act) {
         lbl_803A2FBC[j] = GameBit_Get(bit);
     }
 }
+s8 mapBitFindFn(int a, int b) {
+    int i;
+    s8 *p;
+    for (i = 0, p = lbl_803A2F80; i < 20; i++) {
+        if (a == p[0] && b == ((u8 *)p)[1]) {
+            return (s8)i;
+        }
+        p += 3;
+    }
+    return -1;
+}
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
     return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
