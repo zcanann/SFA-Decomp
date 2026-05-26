@@ -3562,6 +3562,57 @@ void titlescreen_release(void)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern s8    lbl_803DBC08;
+extern s8    lbl_803DBC09;
+extern u8    lbl_803DD990;
+extern u8    lbl_803DD991;
+extern u8    lbl_803DC968;
+extern f32   lbl_803DD9D0;
+extern f32   lbl_803DD9CC;
+extern f32   lbl_803DD9C4;
+extern f32   lbl_803DD9B4;
+extern f32   lbl_803DD9B0;
+extern int   lbl_803DD9AC;
+extern f32   lbl_803E2318;
+extern f32   lbl_803E22F8;
+extern u8    lbl_803A9FE4[0x34];
+extern s16   lbl_8031CDE8[];
+extern void  PSMTXIdentity(void*);
+
+/* EN v1.0 0x8013695C  size: 228b  titlescreen_initialise: reset state
+ * bytes, load the main texture (asset 0x647 or 0xC5 depending on
+ * lbl_803DC968), identity the matrix, then load the 19-entry texture
+ * table from the id list at lbl_8031CDE8 into lbl_803A9F98. */
+#pragma scheduling off
+#pragma peephole off
+void titlescreen_initialise(void)
+{
+    int i;
+    lbl_803DBC08 = -1;
+    lbl_803DD990 = 0;
+    lbl_803DBC09 = -1;
+    lbl_803DD991 = 0;
+    if (lbl_803DC968 != 0) {
+        lbl_803DD9D4 = textureLoadAsset(0x647);
+    } else {
+        lbl_803DD9D4 = textureLoadAsset(0xC5);
+    }
+    lbl_803DD9D0 = lbl_803E2318;
+    lbl_803DD9CC = lbl_803E2318;
+    PSMTXIdentity(lbl_803A9FE4);
+    for (i = 0; i < 19; i++) {
+        lbl_803A9F98[i] = textureLoadAsset(lbl_8031CDE8[i]);
+    }
+    lbl_803DD9C4 = lbl_803E22F8;
+    lbl_803DD992 = 0;
+    lbl_803DD9AC = 0;
+    lbl_803DD9B4 = lbl_803E2318;
+    lbl_803DD9B0 = lbl_803E2318;
+    lbl_803DD9AB = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
  * float at lbl_803DD968. */
 #pragma scheduling off
@@ -3859,8 +3910,8 @@ extern u8    lbl_803DD970;
 /* lbl_803DD940 declared later as void* */
 extern u8    lbl_803DD990;
 extern u8    lbl_803DD991;
-extern u8    lbl_803DBC08;
-extern u8    lbl_803DBC09;
+extern s8    lbl_803DBC08;
+extern s8    lbl_803DBC09;
 extern f32   lbl_803E2408;
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
