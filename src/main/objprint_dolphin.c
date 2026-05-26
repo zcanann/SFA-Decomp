@@ -4663,3 +4663,225 @@ void dvdReadCb_80041d30(s32 result, void *fileInfo)
         lbl_803DCC88--;
     }
 }
+
+/* Resource read-completion callbacks: close DVD, recycle file slot, mark loaded-flag. */
+#pragma peephole off
+#pragma scheduling off
+void animReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x10) {
+            lbl_803DCC84 |= 0x10;
+            lbl_80345F70[0xc0 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x20) {
+            lbl_803DCC84 |= 0x20;
+            lbl_80345F70[0x128 / 4] = 0;
+        }
+    }
+}
+
+void animCurvReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x10000000) {
+            lbl_803DCC84 |= 0x10000000;
+            lbl_80345F70[0x34 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x40000000) {
+            lbl_803DCC84 |= 0x40000000;
+            lbl_80345F70[0x154 / 4] = 0;
+        }
+    }
+}
+
+void animCurvTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x20000000) {
+            lbl_803DCC84 |= 0x20000000;
+            lbl_80345F70[0x38 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x80000000) {
+            lbl_803DCC84 |= 0x80000000;
+            lbl_80345F70[0x158 / 4] = 0;
+        }
+    }
+}
+
+void animTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x40) {
+            lbl_803DCC84 |= 0x40;
+            lbl_80345F70[0xbc / 4] = 0;
+        } else if (lbl_803DCC80 & 0x80) {
+            lbl_803DCC84 |= 0x80;
+            lbl_80345F70[0x124 / 4] = 0;
+        }
+    }
+}
+
+void blocksReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x10000) {
+            lbl_803DCC84 |= 0x10000;
+            lbl_80345F70[0x94 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x40000) {
+            lbl_803DCC84 |= 0x40000;
+            lbl_80345F70[0x11c / 4] = 0;
+        }
+    }
+}
+
+void blocksTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x20000) {
+            lbl_803DCC84 |= 0x20000;
+            lbl_80345F70[0x98 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x80000) {
+            lbl_803DCC84 |= 0x80000;
+            lbl_80345F70[0x120 / 4] = 0;
+        }
+    }
+}
+
+void modelsReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x1) {
+            lbl_803DCC84 |= 0x1;
+            lbl_80345F70[0xac / 4] = 0;
+        } else if (lbl_803DCC80 & 0x2) {
+            lbl_803DCC84 |= 0x2;
+            lbl_80345F70[0x118 / 4] = 0;
+        }
+    }
+}
+
+void modelsTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x4) {
+            lbl_803DCC84 |= 0x4;
+            lbl_80345F70[0xa8 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x8) {
+            lbl_803DCC84 |= 0x8;
+            lbl_80345F70[0x114 / 4] = 0;
+        }
+    }
+}
+
+void tex0readCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x100) {
+            lbl_803DCC84 |= 0x100;
+            lbl_80345F70[0x8c / 4] = 0;
+        } else if (lbl_803DCC80 & 0x200) {
+            lbl_803DCC84 |= 0x200;
+            lbl_80345F70[0x134 / 4] = 0;
+        }
+    }
+}
+
+void tex1ReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x1000) {
+            lbl_803DCC84 |= 0x1000;
+            lbl_80345F70[0x80 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x2000) {
+            lbl_803DCC84 |= 0x2000;
+            lbl_80345F70[0x12c / 4] = 0;
+        }
+    }
+}
+
+void voxMapReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x1000000) {
+            lbl_803DCC84 |= 0x1000000;
+            lbl_80345F70[0x6c / 4] = 0;
+        } else if (lbl_803DCC80 & 0x4000000) {
+            lbl_803DCC84 |= 0x4000000;
+            lbl_80345F70[0x150 / 4] = 0;
+        }
+    }
+}
+
+void voxMapTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x2000000) {
+            lbl_803DCC84 |= 0x2000000;
+            lbl_80345F70[0x68 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x8000000) {
+            lbl_803DCC84 |= 0x8000000;
+            lbl_80345F70[0x14c / 4] = 0;
+        }
+    }
+}
+
+#pragma scheduling reset
+#pragma peephole reset
