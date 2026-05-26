@@ -119,6 +119,13 @@ typedef struct ObjHitsSweepEntry {
   int obj;
 } ObjHitsSweepEntry;
 
+typedef struct ObjHitsPriorityWorkSlot {
+  int active;
+  u8 pad04[OBJHITS_PRIORITY_WORK_SLOT_OBJ_OFFSET - 0x04];
+  int obj;
+  u8 pad0C[OBJHITS_PRIORITY_WORK_SLOT_SIZE - 0x0C];
+} ObjHitsPriorityWorkSlot;
+
 typedef struct ObjHitsPriorityState {
   u8 pad00[0x50];
   int lastHitObject;

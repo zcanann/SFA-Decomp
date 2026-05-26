@@ -43,7 +43,7 @@ extern undefined4 sin();
 extern ObjHitsSweepEntry *gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern undefined4 DAT_80341b9c;
-extern int *gObjHitsPriorityHitStates;
+extern u8 *gObjHitsPriorityHitStates;
 extern f64 DOUBLE_803df5a8;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df5d0;
@@ -1295,14 +1295,16 @@ void ObjHits_TickPriorityHitCooldowns(void)
 {
   int iVar1;
   short sVar2;
-  int *base;
+  u8 *base;
+  ObjHitsPriorityWorkSlot *workSlot;
 
   sVar2 = 0;
   iVar1 = 0;
   do {
     base = gObjHitsPriorityHitStates;
-    if (*(int *)((int)base + iVar1) != 0) {
-      *(int *)((int)base + iVar1) = *(int *)((int)base + iVar1) + -1;
+    workSlot = (ObjHitsPriorityWorkSlot *)(base + iVar1);
+    if (workSlot->active != 0) {
+      workSlot->active--;
     }
     iVar1 = iVar1 + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
     sVar2++;
