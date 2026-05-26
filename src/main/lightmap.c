@@ -3227,3 +3227,28 @@ void fn_8005D270(void)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8005B56C(u32 *arr, int n)
+{
+    int gap = 1;
+    int i, j;
+    u32 tmp;
+    while (gap <= n / 9)
+        gap = gap * 3 + 1;
+    while (gap > 0) {
+        for (i = gap + 1; i <= n; i++) {
+            tmp = arr[i - 1];
+            j = i;
+            while (j > gap && arr[j - gap - 1] < tmp) {
+                arr[j - 1] = arr[j - gap - 1];
+                j -= gap;
+            }
+            arr[j - 1] = tmp;
+        }
+        gap /= 3;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
