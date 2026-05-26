@@ -12962,6 +12962,22 @@ void Carryable_stopCarrying(int *obj, u8 *param2) {
         playerSetHeldObject(player, 0);
     }
 }
+int Carryable_updateRenderState(int *obj, int flag) {
+    int *p50 = *(int **)((char *)obj + 0x50);
+    if (*(s16 *)((char *)p50 + 0x48) == 2) {
+        if (*(s16 *)((char *)obj + 0xb4) == -1) {
+            *(u32 *)((char *)*(int **)((char *)obj + 0x64) + 0x30) &= ~0x1000;
+        } else {
+            *(u32 *)((char *)*(int **)((char *)obj + 0x64) + 0x30) |= 0x1000;
+        }
+    }
+    if (*(int *)((char *)obj + 0xf8) != 0) {
+        if (flag != -1) return 0;
+    } else {
+        if (flag == 0) return 0;
+    }
+    return 1;
+}
 void objSaveFn_800ea774(int *obj) {
     u8 *sub = *(u8 **)((char *)obj + 0xb8);
     sub[5] = 0;
@@ -13143,9 +13159,32 @@ int SaveGame_gplayGetObjGroupStatus(int idx, int shift) {
     }
     return ((&lbl_803DD48C)[1] >> shift) & 1;
 }
+extern void GameBit_Set(int eventId, int value);
+void SaveGame_gplaySetAct(int idx, int act) {
+    int j;
+    u16 bit;
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    GameBit_Set(lbl_80311720[idx], act);
+    lbl_803DD494 = (s8)idx;
+    *((s8*)&lbl_803DD494 + 1) = (s8)act;
+    j = idx;
+    if (j >= 0x50) j = *(u8*)((char*)lbl_803A319C + j - 0x50);
+    bit = lbl_80311810[j];
+    if (bit != 0) {
+        lbl_803A2FBC[j] = GameBit_Get(bit);
+    }
+}
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
     return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
+}
+void hintTextFn_800ea174(u8 *out) {
+    u8 *texts = (u8 *)getLastSavedGameTexts();
+    s16 i;
+    for (i = 0; i < 0xd; i++) {
+        out[i] = (u8)GameBit_Get(i + 0xf10);
+    }
+    out[lbl_803119E0[texts[5]]] = 1;
 }
 extern int getCurGameText(void);
 extern void gameTextLoadDir(int dirId);
