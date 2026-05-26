@@ -1911,66 +1911,6 @@ void imspacethruster_hitDetect(void) {}
 void imspacethruster_release(void) {}
 void imspacethruster_initialise(void) {}
 
-extern void *mmAlloc(int size, int type, int x);
-extern void getTabEntry(void *dst, int fileId, int offset, int size);
-extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
-extern f32 lbl_803E47A8;
-extern f32 lbl_803E47AC;
-extern f32 lbl_803E47B0;
-extern f32 lbl_803E47B4;
-extern f32 lbl_803E4798;
-extern f32 lbl_803E4788;
-extern s16 lbl_80323818[];
-extern s16 lbl_80323824[];
-
-/* EN v1.0 0x801AE7F4  size: 392b  imspacethruster_init: seed header/state
- * from spawn params, pick the thrust scale by type, prime the model blend
- * channel, and (for types <5) allocate the two thrust models from the
- * type-indexed asset tables. */
-#pragma scheduling off
-#pragma peephole off
-void imspacethruster_init(int* obj, u8* params)
-{
-    u8* sub = *(u8**)((char*)obj + 0xb8);
-    int model;
-    *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    *(s16*)((char*)obj + 2) = *(s16*)(params + 0x1a);
-    *(s8*)((char*)obj + 0xad) = (s8)*(s16*)(params + 0x1c);
-    sub[0] = params[0x19];
-    switch (sub[0]) {
-    case 0:
-    case 1:
-        *(f32*)((char*)obj + 8) = lbl_803E47A8;
-        break;
-    case 2:
-    case 3:
-        *(f32*)((char*)obj + 8) = lbl_803E47AC;
-        break;
-    case 5:
-    case 6:
-        *(f32*)((char*)obj + 8) = lbl_803E47B0;
-        break;
-    case 4:
-        *(f32*)((char*)obj + 8) = lbl_803E47B4;
-        break;
-    }
-    model = (*(int**)((char*)obj + 0x7c))[(s8)*(s8*)((char*)obj + 0xad)];
-    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4798, 0);
-    ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4788);
-    {
-        u32 t = sub[0];
-        if (t < 5) {
-            *(void**)(sub + 4) = mmAlloc(0x28, 0x12, 0);
-            getTabEntry(*(void**)(sub + 4), 0xc, lbl_80323818[t] * 0x28, 0x28);
-            *(void**)(sub + 8) = mmAlloc(0x28, 0x12, 0);
-            getTabEntry(*(void**)(sub + 8), 0xc, lbl_80323824[t] * 0x28, 0x28);
-        }
-    }
-    *(u8*)((char*)obj + 0x36) = 0;
-}
-#pragma peephole reset
-#pragma scheduling reset
 void imspacering_free(void) {}
 void imspacering_hitDetect(void) {}
 void imspacering_release(void) {}
