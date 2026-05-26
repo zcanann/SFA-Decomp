@@ -2715,6 +2715,7 @@ void fn_8015D27C(int obj, int sub, int state)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma fp_contract off
 void fn_8015D3C0(int obj, int sub, int state)
 {
     int control = *(int *)(sub + 0x40c);
@@ -2752,13 +2753,14 @@ void fn_8015D3C0(int obj, int sub, int state)
             *(s16 *)(control + 6) = 0;
         }
         *(f32 *)control = lbl_803E2D14;
-        if ((s8)*(u8 *)(state + 0x354) > 0 && *(s16 *)(control + 6) > 1) {
+        if ((s8)*(u8 *)(state + 0x354) > 0 && *(s16 *)(control + 6) >= 2) {
             ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 3);
             *(s16 *)(control + 6) = 0;
             *(s16 *)(state + 0x270) = 5;
         }
     }
 }
+#pragma fp_contract reset
 #pragma peephole reset
 #pragma scheduling reset
 
