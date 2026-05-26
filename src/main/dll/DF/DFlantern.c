@@ -24,6 +24,10 @@ extern void Music_Trigger(int trackId,int mode);
 extern void GameBit_Set(int bit,int value);
 extern u8 *Obj_GetPlayerObject(void);
 extern void fn_80296518(void *obj,int arg,int enable);
+extern int ObjAnim_AdvanceCurrentMove(int obj,f32 moveStepScale,f32 deltaTime,void *events);
+extern s16 getAngle(f32 deltaX,f32 deltaZ);
+extern f32 Vec_xzDistance(void *a,void *b);
+extern f32 fn_80293E80(f32 angle);
 extern int *gMapEventInterface;
 extern void lightFn_8001db6c(int light,int mode,f32 value);
 
@@ -38,7 +42,29 @@ extern f32 lbl_803E5AC0;
 extern f32 lbl_803E5AC8;
 extern f32 lbl_803E5ACC;
 extern f32 lbl_803E5AD0;
+extern f32 timeDelta;
+extern f32 lbl_803E4E50;
+extern f32 lbl_803E4E54;
+extern f32 lbl_803E4E58;
+extern f32 lbl_803E4E5C;
+extern f32 lbl_803E4E60;
+extern f32 lbl_803E4E64;
+extern f32 lbl_803E4E68;
+extern f32 lbl_803E4E6C;
+extern f32 lbl_803E4E70;
+extern f32 lbl_803E4E74;
+extern f32 lbl_803E4E78;
 extern f32 lbl_803E4E88;
+
+typedef struct DFlanternShrineState {
+  void *light;
+  u8 pad04[0x14 - 0x04];
+  s16 orbitA;
+  s16 orbitB;
+  s16 orbitC;
+  u8 pad1a[0x1c - 0x1a];
+  u8 flags;
+} DFlanternShrineState;
 
 /*
  * --INFO--
@@ -466,6 +492,82 @@ void dfsh_door2speci_initialise(void)
 /*
  * --INFO--
  *
+ * Function: fn_801C2914
+ * EN v1.0 Address: 0x801C2914
+ * EN v1.0 Size: 852b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_801C2914(int obj)
+{
+  int def;
+  DFlanternShrineState *state;
+  u8 *player;
+  f32 trigA;
+  f32 trigB;
+  f32 distance;
+  int angleDelta;
+  int turnStep;
+  undefined animEvents[32];
+
+  def = *(int *)(obj + 0x4c);
+  state = *(DFlanternShrineState **)(obj + 0xb8);
+  player = Obj_GetPlayerObject();
+  if ((*(s16 *)(obj + 6) & 0x4000) != 0) {
+    *(s16 *)obj = 0;
+    *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
+    return;
+  }
+
+  state->orbitA += (s16)(s32)(lbl_803E4E50 * timeDelta);
+  state->orbitB += (s16)(s32)(lbl_803E4E54 * timeDelta);
+  state->orbitC += (s16)(s32)(lbl_803E4E58 * timeDelta);
+
+  *(f32 *)(obj + 0x10) =
+      lbl_803E4E5C +
+      (*(f32 *)(def + 0xc) +
+       fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64));
+
+  trigA = fn_80293E80((lbl_803E4E60 * (f32)state->orbitB) / lbl_803E4E64);
+  trigB = fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
+  *(s16 *)(obj + 4) = (s16)(s32)(lbl_803E4E68 * (trigB + trigA));
+
+  trigA = fn_80293E80((lbl_803E4E60 * (f32)state->orbitC) / lbl_803E4E64);
+  trigB = fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
+  *(s16 *)(obj + 2) = (s16)(s32)(lbl_803E4E68 * (trigB + trigA));
+
+  ObjAnim_AdvanceCurrentMove(obj,lbl_803E4E6C,timeDelta,animEvents);
+  if (player != NULL) {
+    angleDelta =
+        ((u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18),
+                       *(f32 *)(obj + 0x20) - *(f32 *)(player + 0x20)) -
+         ((u16)*(s16 *)obj));
+    if (angleDelta > 0x8000) {
+      angleDelta -= 0xffff;
+    }
+    if (angleDelta < -0x8000) {
+      angleDelta += 0xffff;
+    }
+    turnStep = (s32)(((f32)angleDelta * timeDelta) / lbl_803E4E70);
+    *(s16 *)obj += (s16)turnStep;
+
+    distance = Vec_xzDistance((void *)(obj + 0x18),player + 0x18);
+    if (distance <= lbl_803E4E74) {
+      *(u8 *)(obj + 0x36) = (u8)(s32)(lbl_803E4E78 * (distance / lbl_803E4E74));
+    }
+    else {
+      *(u8 *)(obj + 0x36) = 0xff;
+    }
+  }
+}
+
+/*
+ * --INFO--
+ *
  * Function: dfsh_shrine_getExtraSize
  * EN v1.0 Address: 0x801C2DC4
  * EN v1.0 Size: 8b
@@ -549,22 +651,26 @@ void dfsh_shrine_free(int obj)
  */
 int fn_801C2C68(int obj,int unused,void *seq)
 {
-  int state;
+  int objLocal;
+  u8 *seqBytes;
+  DFlanternShrineState *state;
   u8 *player;
   int i;
   int cmdOffset;
   u8 cmd;
 
-  state = *(int *)(obj + 0xb8);
+  objLocal = obj;
+  seqBytes = seq;
+  state = *(DFlanternShrineState **)(objLocal + 0xb8);
   player = Obj_GetPlayerObject();
-  *(u8 *)((char *)seq + 0x56) = 0;
-  for (i = 0; i < *(u8 *)((char *)seq + 0x8b); i++) {
+  seqBytes[0x56] = 0;
+  for (i = 0; i < seqBytes[0x8b]; i++) {
     cmdOffset = i + 0x81;
-    cmd = *(u8 *)((char *)seq + cmdOffset);
+    cmd = seqBytes[cmdOffset];
     if (cmd != 0) {
       switch (cmd) {
       case 3:
-        *(u8 *)(state + 0x1c) = *(u8 *)(state + 0x1c) | 0x80;
+        state->flags = (state->flags & 0x7f) | 0x80;
         break;
       case 7:
         fn_80296518(player,1,1);
@@ -573,20 +679,20 @@ int fn_801C2C68(int obj,int unused,void *seq)
         (*(void (**)(int,int))(*gMapEventInterface + 0x44))(0xb,2);
         break;
       case 0xe:
-        *(short *)(obj + 6) = *(short *)(obj + 6) | 0x4000;
-        if (*(int *)state != 0) {
-          lightFn_8001db6c(*(int *)state,0,lbl_803E4E88);
+        *(s16 *)(objLocal + 6) = (s16)(*(s16 *)(objLocal + 6) | 0x4000);
+        if (state->light != NULL) {
+          lightFn_8001db6c((int)state->light,0,lbl_803E4E88);
         }
         break;
       case 0xf:
-        *(short *)(obj + 6) = *(short *)(obj + 6) & ~0x4000;
-        if (*(int *)state != 0) {
-          lightFn_8001db6c(*(int *)state,0,lbl_803E4E88);
+        *(s16 *)(objLocal + 6) = (s16)(*(s16 *)(objLocal + 6) & ~0x4000);
+        if (state->light != NULL) {
+          lightFn_8001db6c((int)state->light,0,lbl_803E4E88);
         }
         break;
       }
     }
-    *(u8 *)((char *)seq + cmdOffset) = 0;
+    seqBytes[cmdOffset] = 0;
   }
   return 0;
 }

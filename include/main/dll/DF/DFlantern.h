@@ -21,6 +21,7 @@ void dfsh_door2speci_update(void);
 void dfsh_door2speci_init(int obj,int def);
 void dfsh_door2speci_release(void);
 void dfsh_door2speci_initialise(void);
+void fn_801C2914(int obj);
 int dfsh_shrine_getExtraSize(void);
 int dfsh_shrine_getObjectTypeId(void);
 void dfsh_shrine_free(int obj);
