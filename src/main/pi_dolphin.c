@@ -5663,4 +5663,29 @@ int fileLoadToBufferOffset(int id, void *buffer, int offset, int size) {
     DCStoreRange(buffer, size);
     return size;
 }
+extern u8 lbl_803DCD30;
+void fn_8004EECC(void) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevColorIn(lbl_803DCD90, 0, 0xf, 0xb, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
+void fn_8004F2B0(void) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
 #pragma scheduling reset
