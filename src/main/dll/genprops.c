@@ -5690,5 +5690,46 @@ void dim2roofrub_init(int *obj, int *params)
         }
     }
 }
+
+extern void Obj_SetModelRenderOpAlpha(int *obj, int alpha);
+extern f32 lbl_803E3228;
+void animatedobj_init(int *obj, int *params)
+{
+    int *state;
+    int f4;
+    objSetSlot(obj, 0x64);
+    state = *(int **)((char *)obj + 0xb8);
+    *(s16 *)((char *)state + 0x6a) = *(s16 *)((char *)params + 0x1a);
+    *(s16 *)((char *)state + 0x6e) = -1;
+    {
+        f32 d = lbl_803E3228;
+        *(f32 *)((char *)state + 0x24) = d / (d + (f32)(u32) * (u8 *)((char *)params + 0x24));
+    }
+    *(int *)((char *)state + 0x28) = -1;
+    *(int *)((char *)state + 0x98) = 0;
+    *(int *)((char *)state + 0x94) = 0;
+    *(s16 *)((char *)state + 0x116) = 0;
+    *(s16 *)((char *)state + 0x114) = 0;
+    *(int *)((char *)state + 0xe8) = 0;
+    f4 = *(int *)((char *)obj + 0xf4);
+    if (f4 == 0 && *(s16 *)((char *)params + 0x18) != 1) {
+        ((void (*)(int *, int *))((void **)*(void **)gObjectTriggerInterface)[0x1c / 4])(state, params);
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)params + 0x18) + 1;
+    } else if (f4 != 0 && *(s16 *)((char *)params + 0x18) != f4 - 1) {
+        ((void (*)(int *))((void **)*(void **)gObjectTriggerInterface)[0x24 / 4])(state);
+        if (*(s16 *)((char *)params + 0x18) != -1) {
+            ((void (*)(int *, int *))((void **)*(void **)gObjectTriggerInterface)[0x1c / 4])(state, params);
+        }
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)params + 0x18) + 1;
+    }
+    {
+        int *r64 = *(int **)((char *)obj + 0x64);
+        if (r64 != NULL) {
+            *(u8 *)((char *)r64 + 0x3a) = 0x64;
+            *(u8 *)((char *)*(int **)((char *)obj + 0x64) + 0x3b) = 0x96;
+        }
+    }
+    Obj_SetModelRenderOpAlpha(obj, 0xff);
+}
 #pragma scheduling reset
 #pragma peephole reset
