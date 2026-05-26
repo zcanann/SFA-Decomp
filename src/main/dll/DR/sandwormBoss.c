@@ -3320,6 +3320,49 @@ void fn_8019E568(int* a, int* b, u8* c, int d)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *gGameUIInterface;
+extern int *gObjectTriggerInterface;
+
+/* EN v1.0 0x801A0614  size: 368b  fn_801A0614: drain the object's message
+ * queue (re-arming its gamebit on the keyed message), then sync the
+ * lit/active state from gamebit 0x44 and notify on completion. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801A0614(int* obj, int p2, u8* p3)
+{
+    int msg;
+    int v;
+    int w = 0;
+    u8* sub = *(u8**)((char*)obj + 0x4c);
+    if (GameBit_Get(*(s16*)(sub + 0x18)) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+        *(u8*)((char*)p3 + 0x90) = (u8)(*(u8*)((char*)p3 + 0x90) | 0x4);
+        return 0;
+    }
+    if (*(s16*)((char*)obj + 0x46) == 0x127) {
+        return 0;
+    }
+    while (ObjMsg_Pop(obj, &msg, &v, &w) != 0) {
+        if (msg == 0xa0005) {
+            GameBit_Set(*(s16*)(sub + 0x18), 1);
+        }
+    }
+    if (GameBit_Get(0x44) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    } else {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+    }
+    if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
+        if (((int (*)(int))((int *)*gGameUIInterface)[0x20 / 4])(0x44) != 0) {
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(0, obj, -1);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void windlift_hitDetect(void) {}
 void windlift_release(void) {}
 void windlift_initialise(void) {}
@@ -3834,7 +3877,7 @@ void cfprisoncage_hitDetect(int* obj)
     }
 }
 
-extern void fn_801A0614(void);
+extern int fn_801A0614(int* obj, int p2, u8* p3);
 extern int *gObjectTriggerInterface;
 extern f32 lbl_803E42B4;
 #pragma scheduling off
