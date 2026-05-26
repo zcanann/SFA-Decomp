@@ -7,7 +7,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
-extern undefined4 Sfx_PlayFromObject();
+extern void Sfx_PlayFromObject(SHthorntailObject *obj,u16 volumeId);
 extern f32 getXZDistance(f32 *posA,f32 *posB);
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern int randomGetRange(int min,int max);
@@ -136,7 +136,7 @@ void SHthorntail_update(SHthorntailObject *obj)
   dVar11 = extraout_f1;
   if (runtime->behaviorState == '\f') {
     if (runtime->effectTimer <= lbl_803E5418) {
-      if ((psVar2[0x58] & 0x800U) != 0) {
+      if ((obj->objectFlags & 0x800U) != 0) {
         ObjPath_GetPointWorldPosition(obj,4,&fStack_6c,&fStack_68,&fStack_64,0);
         in_r8 = 0;
         in_r9 = *gPartfxInterface;
@@ -194,10 +194,10 @@ void SHthorntail_update(SHthorntailObject *obj)
         runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
       }
     }
-    if ((int)psVar2[0x50] != (int)gSHthorntailStateMoveIds[runtime->behaviorState]) {
+    if ((int)obj->currentMove != (int)gSHthorntailStateMoveIds[runtime->behaviorState]) {
       ObjAnim_SetCurrentMove((int)psVar2,(int)gSHthorntailStateMoveIds[runtime->behaviorState],
                              lbl_803E5418,0);
-      runtime->storedFacingAngle = *psVar2;
+      runtime->storedFacingAngle = obj->facingAngle;
     }
     iVar6 = ObjAnim_AdvanceCurrentMove(gSHthorntailStateMoveStepScales[runtime->behaviorState],
                                        timeDelta,(int)psVar2,&animEvents);
@@ -209,7 +209,7 @@ void SHthorntail_update(SHthorntailObject *obj)
     }
     if ((gSHthorntailStateFlags[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_APPLY_ROOT_MOTION) != 0) {
       if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
-        runtime->storedFacingAngle = *psVar2;
+        runtime->storedFacingAngle = obj->facingAngle;
       }
       uStack_3c = (int)runtime->storedFacingAngle ^ 0x80000000;
       local_40 = 0x43300000;
@@ -218,26 +218,26 @@ void SHthorntail_update(SHthorntailObject *obj)
       uStack_34 = (int)runtime->storedFacingAngle ^ 0x80000000;
       local_38 = 0x43300000;
       dVar12 = (double)FUN_80294964();
-      *(float *)(psVar2 + 6) =
-           (float)(dVar11 * -(double)animEvents.rootDeltaZ + (double)*(float *)(psVar2 + 6));
-      *(float *)(psVar2 + 10) =
-           (float)(-dVar12 * -(double)animEvents.rootDeltaZ + (double)*(float *)(psVar2 + 10));
-      *(float *)(psVar2 + 6) =
-           (float)(-dVar12 * -(double)animEvents.rootDeltaX + (double)*(float *)(psVar2 + 6));
-      *(float *)(psVar2 + 10) =
-           (float)(dVar11 * (double)animEvents.rootDeltaX + (double)*(float *)(psVar2 + 10));
-      *psVar2 = *psVar2 + animEvents.rootPitch;
+      obj->modelPos.x =
+           (float)(dVar11 * -(double)animEvents.rootDeltaZ + (double)obj->modelPos.x);
+      obj->modelPos.z =
+           (float)(-dVar12 * -(double)animEvents.rootDeltaZ + (double)obj->modelPos.z);
+      obj->modelPos.x =
+           (float)(-dVar12 * -(double)animEvents.rootDeltaX + (double)obj->modelPos.x);
+      obj->modelPos.z =
+           (float)(dVar11 * (double)animEvents.rootDeltaX + (double)obj->modelPos.z);
+      obj->facingAngle = obj->facingAngle + animEvents.rootPitch;
     }
     eventId = animEvents.triggeredIds;
     for (iVar6 = 0; iVar6 < animEvents.triggerCount; iVar6 = iVar6 + 1) {
       if (*eventId == '\0') {
         if (gSHthorntailStateTrigger0Sfx[runtime->behaviorState] != 0) {
-          Sfx_PlayFromObject((uint)psVar2,gSHthorntailStateTrigger0Sfx[runtime->behaviorState]);
+          Sfx_PlayFromObject(obj,gSHthorntailStateTrigger0Sfx[runtime->behaviorState]);
         }
       }
       else if ((*eventId == '\a') &&
               (gSHthorntailStateTrigger7Sfx[runtime->behaviorState] != 0)) {
-        Sfx_PlayFromObject((uint)psVar2,(ushort)gSHthorntailStateTrigger7Sfx[runtime->behaviorState]);
+        Sfx_PlayFromObject(obj,(ushort)gSHthorntailStateTrigger7Sfx[runtime->behaviorState]);
       }
       eventId++;
     }
@@ -264,16 +264,15 @@ void SHthorntail_update(SHthorntailObject *obj)
                 (*(undefined *)(runtime->impactSfxTable + uVar7),psVar2,0xffffffff);
     }
     if (config->leashRadiusByte != '\0') {
-      dVar11 = getXZDistance((float *)(psVar2 + 0xc),(float *)&config->homePos);
+      dVar11 = getXZDistance(&obj->pos.x,(float *)&config->homePos);
       if ((dVar11 > (double)(f32)(s32)((uint)config->leashRadiusByte *
                                       (uint)config->leashRadiusByte)) &&
-         (iVar9 = ViewFrustum_IsSphereVisible((float *)(psVar2 + 6),
-                                              *(float *)(psVar2 + 0x54) *
-                                                  *(float *)(psVar2 + 4)),
+         (iVar9 = ViewFrustum_IsSphereVisible(&obj->modelPos.x,
+                                              obj->cullRadius * obj->modelScale),
           iVar9 == 0)) {
-        iVar9 = getAngle(*(float *)(psVar2 + 6) - config->homePos.x,
-                         *(float *)(psVar2 + 10) - config->homePos.z);
-        *psVar2 = (short)iVar9;
+        iVar9 = getAngle(obj->modelPos.x - config->homePos.x,
+                         obj->modelPos.z - config->homePos.z);
+        obj->facingAngle = (short)iVar9;
       }
     }
     runtime->activeMoveValid = 1;

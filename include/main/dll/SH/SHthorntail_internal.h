@@ -57,7 +57,9 @@ typedef struct SHthorntailObject {
   s16 objType;
   u8 pad48[0x4C - 0x48];
   SHthorntailConfig *config;
-  u8 pad50[0xA8 - 0x50];
+  u8 pad50[0xA0 - 0x50];
+  s16 currentMove;
+  u8 padA2[0xA8 - 0xA2];
   f32 cullRadius;
   s8 animObjId;
   u8 padAD[0xAF - 0xAD];
