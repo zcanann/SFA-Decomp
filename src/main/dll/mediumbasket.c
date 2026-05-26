@@ -2291,7 +2291,7 @@ int fn_8015C0B4(int obj, int state)
         *(u8 *)(state + 0x34d) = 1;
         *(f32 *)(state + 0x2a0) = lbl_803E2D4C + (f32)*(u8 *)(sub + 0x406) / lbl_803E2D50;
     }
-    if (*(u8 *)(sub + 0x406) < 0x33 || (*(u8 *)(sub + 0x404) & 2) != 0) {
+    if (*(u8 *)(sub + 0x406) <= 50 || (*(u8 *)(sub + 0x404) & 2) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
     } else if (*(f32 *)(state + 0x2c0) <= lbl_803E2D54 || (s8)*(u8 *)(state + 0x346) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
@@ -2335,7 +2335,7 @@ int fn_8015C2AC(int obj, int state)
         *(u8 *)(state + 0x34d) = 1;
         *(f32 *)(state + 0x2a0) = lbl_803E2D4C + (f32)*(u8 *)(sub + 0x406) / lbl_803E2D50;
     }
-    if (*(u8 *)(sub + 0x406) < 0x33 || (*(u8 *)(sub + 0x404) & 2) != 0) {
+    if (*(u8 *)(sub + 0x406) <= 50 || (*(u8 *)(sub + 0x404) & 2) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
     } else if (*(f32 *)(state + 0x2c0) <= lbl_803E2D54 || (s8)*(u8 *)(state + 0x346) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
