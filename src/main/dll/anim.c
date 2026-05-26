@@ -5130,3 +5130,30 @@ void DBstealerwo_setFuncPtrs_80203c78(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int fn_80202EF0();
+extern int *gPartfxInterface;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_80203000(int obj, int param2)
+{
+    int i;
+    int state = *(int *)(param2 + 0x40c);
+    if ((*(u8 *)(state + 0x14) & 1) && *(void **)(param2 + 0x2d0) != 0) {
+        fn_80202EF0(obj, param2);
+    }
+    if (*(u8 *)(state + 0x14) & 2) {
+        (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x345, 0, 2, -1, 0);
+        (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x345, 0, 2, -1, 0);
+        (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x345, 0, 2, -1, 0);
+    }
+    if (*(u8 *)(state + 0x14) & 4) {
+        for (i = 0; i < 0xa; i++) {
+            (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x343, 0, 1, -1, 0);
+        }
+    }
+    *(u8 *)(state + 0x14) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
