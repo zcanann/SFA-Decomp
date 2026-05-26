@@ -3252,6 +3252,29 @@ void cfprisonguard_free(void) {}
 void cfprisonguard_release(void) {}
 void cfprisonguard_initialise(void) {}
 
+extern void fn_8019F540(int* obj);
+
+/* EN v1.0 0x8019FBD0  size: 172b  cfprisonguard_init: set up the guard's
+ * substate (update fn fn_8019F540, message queue), seed its header from
+ * the spawn params, and apply the alarm-active gating bits. */
+#pragma scheduling off
+#pragma peephole off
+void cfprisonguard_init(int* obj, u8* params) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    sub[0x38] = 1;
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019F540;
+    ObjMsg_AllocQueue(obj, 4);
+    sub[0x36] = 1;
+    if (GameBit_Get(0x4d) != 0) {
+        sub[0x38] = (u8)(sub[0x38] | 4);
+    }
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    sub[0x39] = (u8)(sub[0x39] | 0x80);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern f32 lbl_803E4268;
 extern f32 Vec_distance(void *a, void *b);
 extern int fn_800956F4(void *vec, f32 r);
