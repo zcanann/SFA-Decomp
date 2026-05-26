@@ -5462,8 +5462,9 @@ void staff_init(int *obj)
     if (r54 != NULL) {
         *(s16 *)((char *)r54 + 0xb2) = 0x109;
     }
+    i = 0;
     p = state;
-    for (i = 0; i < 3; i++) {
+    for (; i < 3; i++) {
         *p = mmAlloc(0xEA60, 0x1a, 0);
         *(s16 *)((char *)p + 0x10) = -1;
         p = (int *)((char *)p + 0x18);
