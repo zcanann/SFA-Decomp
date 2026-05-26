@@ -2209,7 +2209,7 @@ int fn_8015BE08(int obj, int state)
         *(u8 *)(state + 0x346) = 0;
     }
     *(u8 *)(state + 0x34d) = 1;
-    if ((*(u32 *)(state + 0x314) & 1) != 0) {
+    if ((*(s32 *)(state + 0x314) & 1) != 0) {
         control = *(int *)(sub + 0x40c);
         *(u32 *)(state + 0x314) &= ~1;
         *(u8 *)(control + 0x44) |= 2;
