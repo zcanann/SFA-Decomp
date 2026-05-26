@@ -3252,3 +3252,32 @@ void fn_8005B56C(u32 *arr, int n)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int *Obj_GetActiveModel(int *obj);
+extern void objRenderFn_8003d980(int *obj, int *model);
+extern void renderResetFn_8003fc60(void);
+extern void objShadowFn_80062498(int *obj, int p2, int p3, u8 frames);
+extern void objDrawFn_80061654(int *obj, int *model);
+extern void fn_8000F9B4(void);
+extern u8 framesThisStep;
+
+void objDrawFn_8005da48(int *obj)
+{
+    int *model = Obj_GetActiveModel(obj);
+    if (*(void **)((char *)model + 0x58) != NULL) {
+        objRenderFn_8003d980(obj, model);
+    } else {
+        void *shadow;
+        (*(void (*)(int, int, int, int, int *))(*(int *)(*gModgfxInterface + 0x1c)))(0, 0, 0, 1, obj);
+        renderResetFn_8003fc60();
+        objRender(0, 0, 0, 0, obj, 1);
+        fn_8000F9B4();
+        shadow = *(void **)((char *)obj + 0x64);
+        if (shadow != NULL && *(void **)((char *)shadow + 0xc) != NULL) {
+            objShadowFn_80062498(obj, 0, 0, framesThisStep);
+        } else if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) == 3) {
+            objDrawFn_80061654(obj, model);
+        }
+        Camera_ApplyFullViewport();
+    }
+}
