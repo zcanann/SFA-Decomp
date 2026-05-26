@@ -308,7 +308,7 @@ void bombplantingspot_init(void *obj, BombPlantingSpotMapData *mapData) {
     *(s16 *)obj = (s16)(mapData->yawByte << 8);
 }
 
-int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, void *p5) {
+int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, ObjAnimUpdateState *animUpdate) {
     void *pState = *(void **)((u8 *)obj + 0xb8);
     int i;
     u8 b2;
@@ -319,8 +319,8 @@ int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, void *p5) {
         *(u8 *)((u8 *)pState + 0x2) |= 0x20;
     }
 
-    for (i = 0; i < *(u8 *)((u8 *)p5 + 0x8b); i++) {
-        switch (*((u8 *)p5 + i + 0x81)) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
             case 0:
                 *(u8 *)((u8 *)pState + 0x2) |= 0x8;
                 break;
@@ -332,8 +332,8 @@ int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, void *p5) {
                 break;
             case 3:
                 *(u8 *)((u8 *)pState + 0x2) &= ~0x2;
-                *(s16 *)((u8 *)p5 + 0x6e) |= 0x8;
-                *(s16 *)((u8 *)p5 + 0x6e) |= 0x40;
+                animUpdate->hitVolumePair |= 0x8;
+                animUpdate->hitVolumePair |= 0x40;
                 break;
         }
     }
@@ -342,7 +342,7 @@ int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, void *p5) {
     if ((b2 & 0x2) != 0) {
         if ((b2 & 0x4) == 0) {
             void *player;
-            *(s16 *)((u8 *)p5 + 0x6e) &= ~0x8;
+            animUpdate->hitVolumePair &= ~0x8;
             player = Obj_GetPlayerObject();
             *(u8 *)((u8 *)pState + 0x8) = 1;
             *(f32 *)((u8 *)pState + 0xc) = *(f32 *)((u8 *)player + 0xc);
@@ -350,7 +350,7 @@ int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, void *p5) {
             *(f32 *)((u8 *)pState + 0x14) = *(f32 *)((u8 *)player + 0x14);
             fn_8003B500(obj, (u8 *)pState + 0x8, lbl_803E53F8);
         }
-        *(s16 *)((u8 *)p5 + 0x6e) &= ~0x40;
+        animUpdate->hitVolumePair &= ~0x40;
         if ((*(u8 *)((u8 *)pState + 0x2) & 0x8) != 0) {
             fn_8003B228(obj, (u8 *)pState + 0x8);
         } else {
