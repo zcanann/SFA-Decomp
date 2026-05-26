@@ -4597,7 +4597,7 @@ void restartmarker_init(int *obj, int *state) {
     *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x4000);
 }
 extern void dll_F7_free();
-extern void dll_F7_render();
+extern void dll_F7_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern u8 staffFn_80170380[];
@@ -5471,6 +5471,21 @@ void staff_init(int *obj)
     }
     lbl_803AC6B8[0x20] = 0;
     *(int *)(lbl_803AC6B8 + 0x1c) = 0;
+}
+
+extern void fn_8003B5E0(int a, int b, int c, int d);
+extern f32 lbl_803E3400;
+extern f32 lbl_803E3404;
+void dll_F7_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (*(s8 *)((char *)state + 9) == 0 && visible != 0) {
+        f32 v = *(f32 *)state;
+        if (v != lbl_803E3400) {
+            fn_8003B5E0(0xc8, 0, 0, (int)v);
+        }
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3404);
+    }
 }
 #pragma scheduling reset
 #pragma peephole reset
