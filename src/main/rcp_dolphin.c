@@ -2862,3 +2862,32 @@ int textureCrazyPointerFollowFn_80054c30(int *p, int n) {
 #pragma scheduling off
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void shaderInit(u8 *def, void **out, u8 *obj)
+{
+    void **slot;
+    void *s;
+
+    if (*(void **)(def + 0x8) != NULL) {
+        if (obj != NULL)
+            slot = (void **)(lbl_8037E000 + (6 - (obj[0xf2] + 1)) * 0x1C);
+        else
+            slot = (void **)(lbl_8037E000 + 0x8C);
+        s = *slot;
+        (*(u16 *)((char *)s + 0xE))++;
+        out[0] = *slot;
+    }
+    if (*(void **)(def + 0x14) == NULL)
+        return;
+    if (def[0x20] >= 6)
+        slot = (void **)lbl_8037E000;
+    else
+        slot = (void **)(lbl_8037E000 + (def[0x20] >> 1) * 0x1C);
+    s = *slot;
+    (*(u16 *)((char *)s + 0xE))++;
+    out[1] = *slot;
+}
+#pragma scheduling reset
+#pragma peephole reset
