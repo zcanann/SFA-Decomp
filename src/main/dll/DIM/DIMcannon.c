@@ -2156,6 +2156,48 @@ void fn_801AF6DC(int *obj) {
         break;
     }
 }
+extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
+extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
+extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
+extern s16 lbl_80323818[], lbl_80323824[];
+void imspacethruster_init(int *obj, u8 *param2) {
+    u8 *sub = *(u8 **)((char *)obj + 0xb8);
+    int model;
+    *(s16 *)obj = (s16)((s8)param2[0x18] << 8);
+    *(s16 *)((char *)obj + 2) = *(s16 *)((char *)param2 + 0x1a);
+    *(s8 *)((char *)obj + 0xad) = (s8)*(s16 *)((char *)param2 + 0x1c);
+    sub[0] = param2[0x19];
+    switch (sub[0]) {
+    case 0:
+    case 1:
+        *(f32 *)((char *)obj + 8) = lbl_803E47A8;
+        break;
+    case 2:
+    case 3:
+        *(f32 *)((char *)obj + 8) = lbl_803E47AC;
+        break;
+    case 5:
+    case 6:
+        *(f32 *)((char *)obj + 8) = lbl_803E47B0;
+        break;
+    case 4:
+        *(f32 *)((char *)obj + 8) = lbl_803E47B4;
+        break;
+    }
+    model = ((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)];
+    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4798, 0);
+    ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4788);
+    {
+        u32 v = sub[0];
+        if (v < 5) {
+            *(int *)(sub + 4) = (int)mmAlloc(0x28, 0x12, 0);
+            getTabEntry(*(void **)(sub + 4), 0xc, lbl_80323818[v] * 0x28, 0x28);
+            *(int *)(sub + 8) = (int)mmAlloc(0x28, 0x12, 0);
+            getTabEntry(*(void **)(sub + 8), 0xc, lbl_80323824[v] * 0x28, 0x28);
+        }
+    }
+    *(u8 *)((char *)obj + 0x36) = 0;
+}
 void link_levcontrol_update(int *obj) {
     s8 *inner = *(s8 **)((char *)obj + 0xb8);
     f32 *player = (f32 *)Obj_GetPlayerObject();
