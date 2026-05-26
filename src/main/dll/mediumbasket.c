@@ -2792,13 +2792,24 @@ void dll_CA_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
 {
     int state = *(int *)(obj + 0xb8);
 
-    if (visible != 0 && *(void **)(obj + 0xf4) == NULL && *(s16 *)(state + 0x402) != 0) {
-        if (*(f32 *)(state + 0x3e8) != lbl_803E2D14) {
-            fn_8003B5E0(0xc8, 0, 0, (int)*(f32 *)(state + 0x3e8));
-        }
-        objRenderFn_8003b8f4(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
-        fn_8015CE68(obj, state);
+    if (visible == 0) {
+        goto done;
     }
+    if (*(int *)(obj + 0xf4) != 0) {
+        goto done;
+    }
+    if (*(s16 *)(state + 0x402) != 0) {
+        goto render;
+    }
+    goto done;
+
+render:
+    if (*(f32 *)(state + 0x3e8) != lbl_803E2D14) {
+        fn_8003B5E0(0xc8, 0, 0, (int)*(f32 *)(state + 0x3e8));
+    }
+    objRenderFn_8003b8f4(obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
+    fn_8015CE68(obj, state);
+done:;
 }
 #pragma peephole reset
 #pragma scheduling reset
