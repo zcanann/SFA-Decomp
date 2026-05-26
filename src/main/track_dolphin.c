@@ -4495,3 +4495,39 @@ void *MapBlock_loadFromFile(int blockId)
     loadAndDecompressDataFile(0x25, buf, blockOff, local_c, 0, 0, 0);
     return buf;
 }
+
+extern void texAnimFn_800567a8(int tex, int b);
+
+void MapBlock_initShaders(int obj)
+{
+    int i;
+    int j;
+    int outerOff;
+    int block;
+    char *p;
+    int v;
+    for (i = 0, outerOff = 0; i < *(u8 *)(obj + 0xa2); i++) {
+        block = *(int *)(obj + 0x64) + outerOff;
+        p = (char *)block;
+        for (j = 0; j < *(u8 *)(block + 0x41); j++) {
+            v = *(int *)(p + 0x24);
+            if (v != -1) {
+                *(int *)(p + 0x24) = ((int *)*(int *)(obj + 0x54))[v];
+                if (*(u8 *)(p + 0x29) != 0) {
+                    texAnimFn_800567a8(*(int *)(p + 0x24), 0);
+                }
+            } else {
+                *(int *)(p + 0x24) = 0;
+            }
+            *(u8 *)(p + 0x2a) = 0xff;
+            p += 8;
+        }
+        v = *(int *)(block + 0x34);
+        if (v != -1) {
+            *(int *)(block + 0x34) = ((int *)*(int *)(obj + 0x54))[v];
+        } else {
+            *(int *)(block + 0x34) = 0;
+        }
+        outerOff += 0x44;
+    }
+}
