@@ -433,7 +433,6 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
   int blendFrames;
   CamcontrolTriggeredAction *camAction;
   int actionOffset;
-  int loadedActionNo;
   CamcontrolQueuedActionParam triggerType1Param;
   CamcontrolQueuedActionParam triggerType2Param;
   
@@ -528,13 +527,14 @@ LAB_80102f3c:
     OSReport(sCamcontrolTriggeredCamActionLoadWarning,actionNo);
     camAction = (CamcontrolTriggeredAction *)mmAlloc(CAMCONTROL_ACTION_RECORD_SIZE,CAMCONTROL_ACTION_HEAP,0);
     if (camAction != (CamcontrolTriggeredAction *)0x0) {
-      getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,0,CAMCONTROL_ACTION_RECORD_SIZE);
+      getTabEntry(camAction,CAMCONTROL_ACTION_FILE_ID,CAMCONTROL_FALLBACK_ACTION_FILE_OFFSET,
+                  CAMCONTROL_ACTION_RECORD_SIZE);
     }
     if (camAction == (CamcontrolTriggeredAction *)0x0) {
       return;
     }
     camAction->triggerMode = triggerMode;
-    SaveGame_setCamActionNo(1);
+    SaveGame_setCamActionNo(CAMCONTROL_FALLBACK_ACTION_NO);
     if (((((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_DEFAULT) &&
          ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGERED)) &&
         ((int)gCamcontrolActiveActionId != CAMCONTROL_ACTION_TRIGGER_TYPE1)) &&
