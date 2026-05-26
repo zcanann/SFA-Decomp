@@ -4419,3 +4419,38 @@ void MapBlock_init(int obj)
         off += 0x1c;
     }
 }
+
+extern void *mmAlloc(int size, int type, int flag);
+extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
+extern int lbl_803DCE80;
+
+void MapBlock_initHits(int obj, int index)
+{
+    int off;
+    int i;
+    int *table = (int *)lbl_803DCE80;
+    int fileOff = table[index];
+    int size = table[index + 1] - fileOff;
+    int entry;
+    if (size > 0) {
+        *(void **)(obj + 0x70) = mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(0x28, *(void **)(obj + 0x70), fileOff, size);
+    }
+    *(u16 *)(obj + 0x9c) = (u32)size / 20;
+    for (i = 0, off = 0; i < *(u16 *)(obj + 0x9c); i++) {
+        entry = *(int *)(obj + 0x70) + off;
+        if (*(s16 *)(entry + 0) < 0 || *(s16 *)(entry + 2) < 0 ||
+            *(s16 *)(entry + 0) > 0x280 || *(s16 *)(entry + 2) > 0x280) {
+            *(u8 *)(entry + 0xf) = 0x40;
+        }
+        entry = *(int *)(obj + 0x70) + off;
+        if (*(s16 *)(entry + 8) < 0 || *(s16 *)(entry + 0xa) < 0 ||
+            *(s16 *)(entry + 8) > 0x280 || *(s16 *)(entry + 0xa) > 0x280) {
+            *(u8 *)(entry + 0xf) = 0x40;
+        }
+        off += 0x14;
+    }
+    *(int *)(obj + 0x74) = 0;
+    *(u16 *)(obj + 0x9e) = 0;
+    *(u16 *)(obj + 4) = *(u16 *)(obj + 4) & ~0x40;
+}
