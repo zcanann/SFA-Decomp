@@ -66,6 +66,17 @@ extern f32 lbl_803E53F8;
 extern f32 lbl_803E53F0;
 extern f32 lbl_803E53F4;
 
+#define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES 0x66c
+#define BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER 0x196
+#define BOMBPLANTSPORE_MSG_DETONATE 0x7000b
+#define BOMBPLANTSPORE_MSG_HIT_PLAYER 0x7000a
+#define BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE 0x18e
+#define BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK 0x40
+#define BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE 0x80
+#define BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT 10
+#define BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG 0x08
+#define BOMBPLANTINGSPOT_READY_FLAG 0x10
+
 void bombplantspore_update(void *obj) {
     void *state;
     s32 particleAlpha;
@@ -80,13 +91,13 @@ void bombplantspore_update(void *obj) {
 
     state = *(void **)((u8 *)obj + 0xb8);
     if ((*(u8 *)((u8 *)state + 0x2b0) >> 6 & 1) != 0) {
-        detonateMessage = 0x7000b;
+        detonateMessage = BOMBPLANTSPORE_MSG_DETONATE;
         while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0) {
             if (poppedMessage == detonateMessage) {
-                gameBitIncrement(0x66c);
+                gameBitIncrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
                 Sfx_PlayFromObject(obj, 0xa7);
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
-                for (i = 0; i < 10; i++) {
+                for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++) {
                     objFn_800972dc(lbl_803E53B0, lbl_803E53B8, obj, 5, 7, 1, 0x3c, 0, 0);
                     (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
@@ -95,7 +106,7 @@ void bombplantspore_update(void *obj) {
                 *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
                 *(s16 *)((u8 *)obj + 0x6) |= 0x4000;
                 ObjHits_DisableObject(obj);
-                *(u8 *)((u8 *)state + 0x2b0) &= 0xbf;
+                *(u8 *)((u8 *)state + 0x2b0) &= ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
             }
         }
         if ((*(u8 *)((u8 *)state + 0x2b0) >> 6 & 1) != 0) {
@@ -175,13 +186,17 @@ void bombplantspore_update(void *obj) {
                 (hitId = *(s16 *)((u8 *)hitObj + 0x46), hitId != 0x36d) &&
                 hitId != 0x198 && hitId != 0x63c) {
                 Sfx_PlayFromObject(obj, 0x59);
-                *(u8 *)((u8 *)state + 0x2b0) = *(u8 *)((u8 *)state + 0x2b0) & 0x7f | 0x80;
+                *(u8 *)((u8 *)state + 0x2b0) =
+                    *(u8 *)((u8 *)state + 0x2b0) & ~BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE |
+                    BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE;
                 if (lbl_803E53C0 < *(f32 *)((u8 *)state + 0x274)) {
                     *(f32 *)((u8 *)state + 0x274) = lbl_803E53C0;
                 }
             }
             if ((*(u8 *)((u8 *)state + 0x268) & 0x11) != 0) {
-                *(u8 *)((u8 *)state + 0x2b0) = *(u8 *)((u8 *)state + 0x2b0) & 0x7f | 0x80;
+                *(u8 *)((u8 *)state + 0x2b0) =
+                    *(u8 *)((u8 *)state + 0x2b0) & ~BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE |
+                    BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE;
                 if (lbl_803E53C0 < *(f32 *)((u8 *)state + 0x274)) {
                     *(f32 *)((u8 *)state + 0x274) = lbl_803E53C0;
                 }
@@ -189,15 +204,18 @@ void bombplantspore_update(void *obj) {
         }
         playerObj = Obj_GetPlayerObject();
         if (hitObj == playerObj) {
-            *(u16 *)state = 0x18e;
-            ObjMsg_SendToObject(hitObj, 0x7000a, obj, state);
-            *(u8 *)((u8 *)state + 0x2b0) = *(u8 *)((u8 *)state + 0x2b0) & 0xbf | 0x40;
+            *(u16 *)state = BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE;
+            ObjMsg_SendToObject(hitObj, BOMBPLANTSPORE_MSG_HIT_PLAYER, obj, state);
+            *(u8 *)((u8 *)state + 0x2b0) =
+                *(u8 *)((u8 *)state + 0x2b0) &
+                    ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK |
+                BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
         } else {
             *(f32 *)((u8 *)state + 0x274) -= timeDelta;
             if (*(f32 *)((u8 *)state + 0x274) <= lbl_803E5394) {
                 Sfx_PlayFromObject(obj, 0xa2);
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
-                for (i = 0; i < 10; i++) {
+                for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++) {
                     objFn_800972dc(lbl_803E53B0, lbl_803E53B8, obj, 5, 7, 1, 0x3c, 0, 0);
                     (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
@@ -257,30 +275,31 @@ void bombplantingspot_update(void *obj) {
 
     trigBit = *(s16 *)((u8 *)pState + 0x20);
     if (trigBit != -1 && GameBit_Get(trigBit) == 0) {
-        *(u8 *)((u8 *)obj + 0xaf) |= 0x8;
+        *(u8 *)((u8 *)obj + 0xaf) |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
         return;
     }
 
-    if (GameBit_Get(0x66c) == 0) {
-        *(u8 *)((u8 *)obj + 0xaf) |= 0x10;
+    if (GameBit_Get(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES) == 0) {
+        *(u8 *)((u8 *)obj + 0xaf) |= BOMBPLANTINGSPOT_READY_FLAG;
     } else {
-        *(u8 *)((u8 *)obj + 0xaf) &= ~0x10;
+        *(u8 *)((u8 *)obj + 0xaf) &= ~BOMBPLANTINGSPOT_READY_FLAG;
     }
 
-    if (ObjTrigger_IsSetById(obj, 0x66c) != 0) {
-        gameBitDecrement(0x66c);
+    if (ObjTrigger_IsSetById(obj, BOMBPLANT_GAME_BIT_AVAILABLE_SPORES) != 0) {
+        gameBitDecrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
         GameBit_Set(*(s16 *)((u8 *)pState + 0x1e), 1);
         (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](1, obj, -1);
-    } else if ((*(u8 *)((u8 *)obj + 0xaf) & 0x4) != 0 && GameBit_Get(0x196) == 0) {
+    } else if ((*(u8 *)((u8 *)obj + 0xaf) & 0x4) != 0 &&
+               GameBit_Get(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER) == 0) {
         (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](0, obj, -1);
-        GameBit_Set(0x196, 1);
+        GameBit_Set(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER, 1);
     }
 
     if (GameBit_Get(*(s16 *)((u8 *)pState + 0x1e)) == 0) {
-        *(u8 *)((u8 *)obj + 0xaf) &= ~0x8;
+        *(u8 *)((u8 *)obj + 0xaf) &= ~BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
         objRenderFn_80041018(obj);
     } else {
-        *(u8 *)((u8 *)obj + 0xaf) |= 0x8;
+        *(u8 *)((u8 *)obj + 0xaf) |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
     }
 }
 
