@@ -5637,4 +5637,30 @@ int fileLoadToBuffer(int id, void *buffer) {
     DVDClose(fileInfo);
     return *(s32 *)(fileInfo + 0x34);
 }
+int fileLoadToBufferOffset(int id, void *buffer, int offset, int size) {
+    u8 fileInfo[0x3c];
+    void *tmp;
+    int asize;
+    if (size == 0) return 0;
+    if (lbl_8035F3E8[id] != 0) {
+        memcpy(buffer, (void *)(lbl_8035F3E8[id] + offset), size);
+        DCStoreRange(buffer, size);
+        return size;
+    }
+    DVDOpen(sResourceFileNameTable[id], fileInfo);
+    if (((int)buffer & 0x1f) != 0 || (size & 0x1f) != 0) {
+        asize = (size + 0x1f) & ~0x1f;
+        tmp = mmAlloc(asize, 0x7d7d7d7d, 0);
+        DCInvalidateRange(tmp, asize);
+        DVDRead(fileInfo, tmp, asize, offset);
+        memcpy(buffer, tmp, size);
+        mm_free(tmp);
+    } else {
+        DCInvalidateRange(buffer, size);
+        DVDRead(fileInfo, buffer, size, offset);
+    }
+    DVDClose(fileInfo);
+    DCStoreRange(buffer, size);
+    return size;
+}
 #pragma scheduling reset
