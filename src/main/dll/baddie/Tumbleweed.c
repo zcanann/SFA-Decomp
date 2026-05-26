@@ -3674,6 +3674,43 @@ void titlescreen_init(u8* obj, u8* p)
     }
 }
 
+extern int  *gPartfxInterface;
+extern f32   lbl_803E23E8;
+
+/* EN v1.0 0x80139164  size: 252b  fn_80139164: when b->_54 carries the
+ * spawn flag, build a particle descriptor on the stack from a's heading
+ * and the delta to b's position, then emit it 20 times via the partfx
+ * interface and clear the flag. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80139164(u8* a, u8* b)
+{
+    struct {
+        s16 hx, hy, hz;
+        f32 fk;
+        f32 dx, dy, dz;
+    } stk;
+    u8 i;
+    u32 flags = *(u32*)(b + 0x54);
+    if ((flags & 0x1800) == 0) return;
+    stk.dx = *(f32*)(b + 0x408) - *(f32*)(a + 0x18);
+    stk.dy = *(f32*)(b + 0x40c) - *(f32*)(a + 0x1c);
+    stk.dz = *(f32*)(b + 0x410) - *(f32*)(a + 0x20);
+    stk.fk = lbl_803E23E8;
+    stk.hx = *(s16*)(a + 0);
+    stk.hy = *(s16*)(a + 2);
+    stk.hz = *(s16*)(a + 4);
+    if ((flags & 0x800) != 0) return;
+    i = 0x14;
+    while (i-- != 0) {
+        ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
+            (int)a, 0x533, &stk, 2, -1, 0);
+    }
+    *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
  * float at lbl_803DD968. */
 #pragma scheduling off
