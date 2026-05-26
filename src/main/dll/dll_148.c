@@ -564,41 +564,58 @@ extern void pressureswitchfb_updateStateMode(int obj, int p2, int stateParam);
 extern int *objFindTexture(int *obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
 
+typedef struct PressureSwitchFbFlags {
+    u8 usePressedTexture : 1;
+    u8 startPressed : 1;
+    u8 canRelease : 1;
+    u8 autoPress : 1;
+    u8 unused4 : 1;
+    u8 unused5 : 1;
+    u8 unused6 : 1;
+    u8 unused7 : 1;
+} PressureSwitchFbFlags;
+
 #pragma scheduling off
 #pragma peephole off
 void pressureswitchfb_init(u8* obj, u8* params) {
     u8* sub;
     int *tex;
+    f32 defaultOffset;
+    PressureSwitchFbFlags *flags;
 
     sub = *(u8**)(obj + 0xb8);
+    flags = (PressureSwitchFbFlags *)(sub + 0x84);
     *(s16*)obj = (s16)(params[0x18] << 8);
     *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
-    obj[0xad] = (u8)(s8)params[0x19];
-    if ((s8)obj[0xad] >= *(s8*)(*(int*)(obj + 0x50) + 0x55)) {
+    *(s8 *)(obj + 0xad) = (s8)params[0x19];
+    if (*(s8 *)(obj + 0xad) >= *(s8*)(*(int*)(obj + 0x50) + 0x55)) {
         obj[0xad] = 0;
     }
-    *(f32*)(sub + 0x80) = lbl_803E3778;
+    defaultOffset = lbl_803E3778;
+    *(f32*)(sub + 0x80) = defaultOffset;
     if (*(s16*)(obj + 0x46) == 0x77b) {
-        sub[0x84] = (u8)(sub[0x84] | 0x80);
-        sub[0x84] = (u8)(sub[0x84] | 0x40);
-        sub[0x84] = (u8)(sub[0x84] | 0x20);
-        *(f32*)(sub + 0x80) = lbl_803E3778;
+        flags->usePressedTexture = 1;
+        flags->startPressed = 1;
+        flags->canRelease = 1;
+        *(f32*)(sub + 0x80) = defaultOffset;
     }
     *(f32*)(sub + 0x7c) = *(f32*)(params + 0xc);
     if (GameBit_Get(*(s16*)(params + 0x1a)) != 0) {
+        s16 model;
         *(f32*)(obj + 0x10) = *(f32*)(sub + 0x7c) - (f32)(u32)params[0x1c];
         sub[0] = 0x1e;
-        sub[0x84] = (u8)(sub[0x84] & ~0x20);
-        switch (*(s16*)(obj + 0x46)) {
-        case 0x19f:
-        case 0x26c:
-        case 0x274:
-        case 0x545:
-            break;
-        default:
-            sub[0x84] = (u8)(sub[0x84] | 0x10);
+        flags->canRelease = 0;
+        model = *(s16*)(obj + 0x46);
+        if (model != 0x19f) {
+            if (model != 0x26c) {
+                if (model != 0x274) {
+                    if (model != 0x545) {
+                        flags->autoPress = 1;
+                    }
+                }
+            }
         }
-        if ((sub[0x84] >> 7) & 1) {
+        if (flags->usePressedTexture) {
             tex = objFindTexture((int*)obj, 0, 0);
             if (tex != NULL) {
                 *tex = 0x100;
