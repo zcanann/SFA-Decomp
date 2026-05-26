@@ -3286,6 +3286,38 @@ void cfpowerbase_init(int* obj, u8* params) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *gGameUIInterface;
+extern int *gObjectTriggerInterface;
+
+/* EN v1.0 0x8019D77C  size: 312b  cfpowerbase_update: track its gamebit's
+ * lit state, fire the queued state-change trigger, and when the base is
+ * powered and its UI condition clears, mark it done and notify. */
+#pragma scheduling off
+#pragma peephole off
+void cfpowerbase_update(int* obj) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    if (GameBit_Get(*(s16*)(sub + 2)) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    } else {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+    }
+    if (*(int*)((char*)obj + 0xf4) != 0) {
+        ((void (*)(int *, int))((int *)*gObjectTriggerInterface)[0x54 / 4])(obj, 0xfa);
+        ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])((*(s8*)(sub + 4)), obj, 3);
+        *(int*)((char*)obj + 0xf4) = 0;
+    }
+    if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
+        if (((int (*)(int))((int *)*gGameUIInterface)[0x20 / 4])(*(s16*)(sub + 2)) != 0) {
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+            GameBit_Set(*(s16*)(sub + 2), 0);
+            GameBit_Set(0x973, 0);
+            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])((*(s8*)(sub + 4)), obj, -1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void cfmaincrystal_hitDetect(void) {}
 void cfmaincrystal_release(void) {}
 void cfmaincrystal_initialise(void) {}
