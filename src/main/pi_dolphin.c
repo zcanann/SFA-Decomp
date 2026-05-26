@@ -5765,6 +5765,21 @@ void loadVoxMaps(int a, int *pc, int *p8) {
         *pc = 0;
     }
 }
+void fn_80050FF4(u8 mode) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    if (mode != 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 1, 4, 6);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 1, 0xa, 6);
+    }
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
 #pragma peephole reset
 #pragma scheduling reset
 extern void VIConfigure(void *mode);
