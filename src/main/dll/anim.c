@@ -5226,3 +5226,34 @@ int fn_80202428(int obj, int param2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E62E8;
+extern f32 lbl_803E62EC;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_80200750(int obj, int param2)
+{
+    int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    *(u8 *)(sub + 0x14) = *(u8 *)(sub + 0x14) | 0x2;
+    *(u8 *)(sub + 0x15) = *(u8 *)(sub + 0x15) | 0x4;
+    *(f32 *)(param2 + 0x2a0) = lbl_803E62E8;
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove((void *)obj, 0x11, lbl_803E62A8, 0);
+        *(u8 *)(param2 + 0x346) = 0;
+    }
+    *(u8 *)(param2 + 0x34d) = 0x1f;
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        *(int *)(sub + 0x18) = *(int *)(param2 + 0x2d0);
+        *(s16 *)(sub + 0x1c) = 0x24;
+        *(int *)(sub + 0x2c) = 0;
+        ObjMsg_SendToObject(*(int *)(sub + 0x18), 0x11, obj, 0x12);
+        Sfx_PlayFromObject(obj, 0x1eb);
+    }
+    if (*(f32 *)(obj + 0x98) > lbl_803E62EC) {
+        *(u8 *)(sub + 0x34) = 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
