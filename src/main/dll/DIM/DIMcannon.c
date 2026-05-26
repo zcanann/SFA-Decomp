@@ -2075,6 +2075,47 @@ void link_levcontrol_free(int obj) {
         case 0x49: Music_Trigger(0x36, 0); break;
     }
 }
+extern void *gSHthorntailAnimationInterface;
+extern void SCGameBitLatch_Update(void *p, int a, int b, int c, int d, int e);
+void fn_801AF568(int *obj) {
+    int *sub = *(int **)((char *)obj + 0xb8);
+    switch (*(s8 *)((char *)obj + 0xac)) {
+    case 0x47:
+        if (((int (*)(int))((void **)*(int *)gSHthorntailAnimationInterface)[9])(0) != 0) {
+            if (sub[2] != 0x2d) {
+                sub[2] = 0x2d;
+                Music_Trigger(0x2d, 1);
+            }
+        } else {
+            if (sub[2] != 0x33) {
+                sub[2] = 0x33;
+                Music_Trigger(0x33, 1);
+            }
+        }
+        break;
+    case 0x48:
+        if (GameBit_Get(0xe1e) == 0) {
+            if (GameBit_Get(0xb72) != 0) {
+                if (sub[2] != 0x95) {
+                    sub[2] = 0x95;
+                    Music_Trigger(0x95, 1);
+                }
+            } else if (((int (*)(int))((void **)*(int *)gSHthorntailAnimationInterface)[9])(0) != 0) {
+                if (sub[2] != 0x2d) {
+                    sub[2] = 0x2d;
+                    Music_Trigger(0x2d, 1);
+                }
+            } else {
+                if (sub[2] != 0x33) {
+                    sub[2] = 0x33;
+                    Music_Trigger(0x33, 1);
+                }
+            }
+            SCGameBitLatch_Update((char *)sub + 0xc, 1, -1, -1, 0xe1e, 0x36);
+        }
+        break;
+    }
+}
 void link_levcontrol_update(int *obj) {
     s8 *inner = *(s8 **)((char *)obj + 0xb8);
     f32 *player = (f32 *)Obj_GetPlayerObject();
