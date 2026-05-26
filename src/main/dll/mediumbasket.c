@@ -2617,18 +2617,21 @@ void fn_8015CE68(int obj, int state)
 void fn_8015CBD0(int obj, int state)
 {
     int control = *(int *)(state + 0x40c);
-    int paletteIndex = 0;
+    int paletteIndex;
     u8 *particleArgs;
     int i;
     f32 shakeScale;
+    f32 contactScale;
 
     if (*(s16 *)(obj + 0x46) == 99) {
         *(f32 *)(control + 0x28) = lbl_803E2D84;
         shakeScale = lbl_803E2D88;
     } else {
-        *(f32 *)(control + 0x28) = lbl_803E2D48;
-        shakeScale = lbl_803E2D48;
+        contactScale = lbl_803E2D48;
+        *(f32 *)(control + 0x28) = contactScale;
+        shakeScale = contactScale;
     }
+    paletteIndex = 0;
     if ((s8)*(u8 *)(state + 0x25f) != 0) {
         paletteIndex = lbl_8031FE48[(s8)*(u8 *)(state + 0xbc)];
         if (paletteIndex > 0x1e) {
