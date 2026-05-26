@@ -3242,6 +3242,50 @@ void cfpowerbase_free(void) {}
 void cfpowerbase_hitDetect(void) {}
 void cfpowerbase_release(void) {}
 void cfpowerbase_initialise(void) {}
+
+extern int fn_8019D578(int p1, int unused, int p3);
+
+/* EN v1.0 0x8019D8B4  size: 308b  cfpowerbase_init: seed header and the
+ * sub's type from spawn params, map the type id (0x54..0x56) to a model
+ * and gamebit, then gate the active/lit state bits on those gamebits. */
+#pragma scheduling off
+#pragma peephole off
+void cfpowerbase_init(int* obj, u8* params) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    s16 type;
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    *(s16*)(sub + 0) = *(s16*)(params + 0x1e);
+    type = *(s16*)(sub + 0);
+    switch (type) {
+    case 0x54:
+        *(s16*)(sub + 2) = 0x51;
+        sub[4] = 0;
+        break;
+    case 0x55:
+        *(s16*)(sub + 2) = 0x52;
+        sub[4] = 1;
+        Obj_SetActiveModelIndex(obj, 2);
+        break;
+    case 0x56:
+        *(s16*)(sub + 2) = 0x53;
+        sub[4] = 2;
+        Obj_SetActiveModelIndex(obj, 1);
+        break;
+    }
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019D578;
+    ObjMsg_AllocQueue(obj, 2);
+    if (GameBit_Get(*(s16*)(sub + 2)) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    } else {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+    }
+    if (GameBit_Get(*(s16*)(sub + 0)) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+        *(int*)((char*)obj + 0xf4) = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void cfmaincrystal_hitDetect(void) {}
 void cfmaincrystal_release(void) {}
 void cfmaincrystal_initialise(void) {}
