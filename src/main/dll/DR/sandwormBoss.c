@@ -3578,6 +3578,66 @@ void cfprisonuncle_free(void) {}
 void cfprisonuncle_hitDetect(void) {}
 void cfprisonuncle_release(void) {}
 void cfprisonuncle_initialise(void) {}
+
+extern int  objModelGetVecFn_800395d8(int obj, int idx);
+extern void objAudioFn_80039270(int obj, void* p, int id);
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern int *gObjectTriggerInterface;
+extern u8   framesThisStep;
+extern f32  lbl_803E428C;
+
+/* EN v1.0 0x8019FEDC  size: 536b  cfprisonuncle_update: while not captured,
+ * drain pending messages, re-acquire the keyed target object, then either
+ * track/animate toward the player (firing the alert trigger) or, once
+ * captured, raise the done flag and notify. */
+#pragma scheduling off
+#pragma peephole off
+void cfprisonuncle_update(int* obj)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    void* player;
+    int m2, objectIndex, objectCount, m1, m3;
+    int* objects;
+    int i;
+    if (sub == NULL) return;
+    if (GameBit_Get(0x50) != 0) return;
+    if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0) {
+        *(void**)(sub + 0) = NULL;
+    }
+    if (*(void**)(sub + 0) == NULL) {
+        objects = ObjList_GetObjects(&objectIndex, &objectCount);
+        for (i = objectIndex; i < objectCount; i++) {
+            if (*(s16*)((char*)objects[i] + 0x44) == 0x3d) {
+                *(int*)(sub + 0) = objects[i];
+                i = objectCount;
+            }
+        }
+    }
+    ObjTrigger_UpdateIdBlockFlag((int)obj);
+    *(s8*)(sub + 0x73) = (s8)GameBit_Get(0x4d);
+    if (*(s8*)(sub + 0x73) == 0) {
+        player = Obj_GetPlayerObject();
+        fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
+        if ((int)randomGetRange(0, 0x1e) == 0) {
+            objAudioFn_80039270((int)obj, (char*)sub + 0x34, 0x297);
+        }
+        if (ObjTrigger_IsSet((int)obj) != 0) {
+            fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
+            *(s16*)objModelGetVecFn_800395d8((int)obj, 1) = -0xaaa;
+            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(1, obj, -1);
+        } else {
+            objAnimFn_80038f38((int)obj, (char*)sub + 0x34);
+            ObjAnim_AdvanceCurrentMove(lbl_803E428C, (f32)(u32)framesThisStep, (int)obj, 0);
+        }
+    } else {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+        if (*(s16*)((char*)obj + 0xb4) == -1) {
+            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(0, obj, -1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void gcrobotlightbea_render(void) {}
 void gcrobotlightbea_release(void) {}
 void gcrobotlightbea_initialise(void) {}
