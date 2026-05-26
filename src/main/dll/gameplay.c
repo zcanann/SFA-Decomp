@@ -13098,6 +13098,19 @@ void SaveGame_mapUpdateObjGroups(int idx) {
         lbl_803A2FBC[idx] = GameBit_Get(bit);
     }
 }
+extern u16 lbl_80311720[];
+u8 SaveGame_getMapAct(int idx) {
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    if (idx != lbl_803DD494) {
+        lbl_803DD494 = (s8)idx;
+        if (idx < 0 || idx >= 0x78 || lbl_80311720[idx] == 0) {
+            *((s8*)&lbl_803DD494 + 1) = 0;
+        } else {
+            *((s8*)&lbl_803DD494 + 1) = (s8)GameBit_Get(lbl_80311720[idx]);
+        }
+    }
+    return *((u8*)&lbl_803DD494 + 1);
+}
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
     return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
