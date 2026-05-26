@@ -3185,7 +3185,7 @@ extern GuardianVec lbl_802C22C0;
 extern GuardianVec lbl_802C22CC;
 extern u8 lbl_8032284C[];
 extern f32 lbl_803E4110;
-extern void fn_8019C3A0(int *obj);
+extern int fn_8019C3A0(int *obj, int p2, int *p3);
 extern void dll_2E_func0A(int a, int *obj);
 extern void dll_2E_func05(int *obj, u8 *sub, int c, int d, int e);
 extern void dll_2E_func08(u8 *sub, int b, int c);
@@ -3232,6 +3232,48 @@ void cfguardian_init(int *obj, u8 *params) {
     dll_2E_func09(sub, &stk2, &stk1, 4);
     objSeqInitFn_80080078(lbl_8032284C, 0xf);
     sub[0x611] = (u8)(sub[0x611] | 0x2);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct { int a, b, c, d; } GuardianMsg;
+extern GuardianMsg lbl_802C22D8;
+extern int  dll_2E_func07(int* obj, int* p3, u8* sub, int x, int y);
+extern int  animatedObjGetSeqId(int* p);
+extern void saveGame_saveObjectPos(int obj);
+extern void* Obj_GetPlayerObject(void);
+extern void playerAddRemoveMagic(void* player, int n);
+
+/* EN v1.0 0x8019C3A0  size: 252b  fn_8019C3A0: guardian message handler.
+ * Persists position on a negative cue, otherwise picks the active/idle
+ * heading pair and routes a move request; on the magic-grant message it
+ * tops the player back up. Returns 1 if the move was consumed. */
+#pragma scheduling off
+#pragma peephole off
+int fn_8019C3A0(int* obj, int p2, int* p3)
+{
+    int* sel;
+    GuardianMsg stk;
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    stk = lbl_802C22D8;
+    if (*(s16*)((char*)obj + 0xb4) < 0) {
+        saveGame_saveObjectPos((int)obj);
+        return 0;
+    }
+    if (sub[0xa80] != 6) {
+        sel = &stk.a;
+    } else {
+        sel = &stk.c;
+    }
+    if (animatedObjGetSeqId(p3) != 0x283) {
+        if (dll_2E_func07(obj, p3, sub, (s16)sel[0], (s16)sel[1]) != 0) {
+            return 1;
+        }
+    }
+    if (*(u8*)((char*)p3 + 0x80) == 2) {
+        playerAddRemoveMagic(Obj_GetPlayerObject(), 0xa);
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
