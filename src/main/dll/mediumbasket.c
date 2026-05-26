@@ -2494,13 +2494,13 @@ int fn_8015AF10(int obj, int state)
             } else {
                 int control = *(int *)(sub + 0x40c);
                 if ((*(u8 *)(sub + 0x404) & 0x10) != 0) {
-                    s16 attackIndex = *(s16 *)(control + 4);
-                    *(s16 *)(control + 4) = attackIndex + 1;
+                    int attackIndex = *(s16 *)(control + 4);
+                    *(u16 *)(control + 4) = attackIndex + 1;
                     ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD90[attackIndex]);
                 } else {
-                    s16 attackIndex = *(s16 *)(control + 4);
-                    *(s16 *)(control + 4) = attackIndex + 1;
+                    int attackIndex = *(s16 *)(control + 4);
+                    *(u16 *)(control + 4) = attackIndex + 1;
                     ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD80[attackIndex]);
                 }
@@ -2530,13 +2530,13 @@ int fn_8015AF10(int obj, int state)
             } else {
                 int control = *(int *)(sub + 0x40c);
                 if ((*(u8 *)(sub + 0x404) & 0x10) != 0) {
-                    s16 attackIndex = *(s16 *)(control + 4);
-                    *(s16 *)(control + 4) = attackIndex + 1;
+                    int attackIndex = *(s16 *)(control + 4);
+                    *(u16 *)(control + 4) = attackIndex + 1;
                     ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD90[attackIndex]);
                 } else {
-                    s16 attackIndex = *(s16 *)(control + 4);
-                    *(s16 *)(control + 4) = attackIndex + 1;
+                    int attackIndex = *(s16 *)(control + 4);
+                    *(u16 *)(control + 4) = attackIndex + 1;
                     ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(
                         obj, state, (s32)lbl_8031FD80[attackIndex]);
                 }
@@ -2552,7 +2552,11 @@ int fn_8015AF10(int obj, int state)
             }
         }
     } else if (*(s16 *)(state + 0x274) == 7 && (s32)*(f32 *)(state + 0x2c0) < 0x37) {
-        ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 6);
+        if (*(s16 *)(state + 0x274) == 6) {
+            ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 5);
+        } else {
+            ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 6);
+        }
     }
     return 0;
 }
