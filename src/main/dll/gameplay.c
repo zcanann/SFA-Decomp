@@ -13239,6 +13239,33 @@ void SaveGame_gplaySavePoint(f32 *pos, s16 angle, int flags, int mapByte) {
         base[0x22] = 1;
     }
 }
+extern int fn_80296AE8(int obj);
+extern void playerAddHealth(u8 *player, int v);
+extern void *mmAlloc(int size, int heap, int flags);
+void SaveGame_gplayRestartPoint(f32 *pos, s16 angle, int b691, int flag) {
+    int healed = 0;
+    if (pRestartPoint == 0) {
+        pRestartPoint = (u32)mmAlloc(0x6ec, 0xffff00ff, 0);
+        if (pRestartPoint == 0) return;
+    }
+    if (flag != 0) {
+        GameBit_Set(0x970, 1);
+        if (fn_80296AE8((int)Obj_GetPlayerObject()) > 1) {
+            playerAddHealth((u8 *)Obj_GetPlayerObject(), -1);
+            healed = 1;
+        }
+    }
+    memcpy((void *)pRestartPoint, lbl_803A32A8, 0x6ec);
+    *(f32 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x684) = pos[0];
+    *(f32 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x688) = pos[1];
+    *(f32 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x68c) = pos[2];
+    *(s8 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x690) = (s8)(angle >> 8);
+    *(s8 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x691) = (s8)b691;
+    GameBit_Set(0x970, 0);
+    if (flag != 0 && healed != 0) {
+        playerAddHealth((u8 *)Obj_GetPlayerObject(), 1);
+    }
+}
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
     return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
