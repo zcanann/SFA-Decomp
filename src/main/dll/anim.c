@@ -5051,3 +5051,37 @@ int fn_80203DA0(int obj, int unused, int p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int dbstealerworm_func0B(int obj, u8 msg, int *out)
+{
+    int state = *(int *)(obj + 0xb8);
+    int sub = *(int *)(state + 0x40c);
+    int result = 0;
+    switch (msg) {
+    case 0x81:
+        if ((*(u8 *)(state + 0x404) & 2) == 0) {
+            return result;
+        }
+        *(u8 *)(state + 0x404) = *(u8 *)(state + 0x404) & ~4;
+        if (out != 0) {
+            *out = 1;
+        }
+        return 1;
+    case 0x82:
+        if (*(s16 *)(state + 0x274) != 0xb) {
+            return result;
+        }
+        if (out == 0) {
+            return result;
+        }
+        *(int *)(sub + 0x3c) = (int)out;
+        return 1;
+    case 0x83:
+        return *(int *)(sub + 0x3c);
+    }
+    return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
