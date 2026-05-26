@@ -856,38 +856,43 @@ void wallanimator_update(int obj)
 {
   int nearby;
   int *state;
+  int desc;
   int tricky;
   float nearestDistance[4];
 
   state = *(int **)(obj + 0xb8);
-  tricky = *(int *)(obj + 0x4c);
+  desc = *(int *)(obj + 0x4c);
   *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
-  if (-1 < (char)*(byte *)(state + 1)) {
-    if (*state < WALLANIMATOR_DONE_TIMER) {
-      tricky = getTrickyObject();
-      if (tricky == 0) {
-        *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 0x10;
+
+  if (((u32)*(u8 *)(state + 1) >> 7) != 0) {
+    return;
+  }
+
+  if (*state >= WALLANIMATOR_DONE_TIMER) {
+    u8 activeBit = 1;
+    *(u8 *)(state + 1) =
+        (*(u8 *)(state + 1) & ~WALLANIMATOR_RUNTIME_ACTIVE_FLAG) | (activeBit << 7);
+    GameBit_Set((int)*(short *)(desc + 0x18),1);
+    Sfx_PlayFromObject(obj,WALLANIMATOR_COMPLETE_SFX);
+    return;
+  }
+
+  tricky = getTrickyObject();
+  if ((void *)tricky != NULL) {
+    nearestDistance[0] = lbl_803E3FFC;
+    nearby = ObjGroup_FindNearestObject(WALLANIMATOR_NEARBY_GROUP,obj,nearestDistance);
+    if ((void *)nearby == NULL) {
+      *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & ~0x10;
+      *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & ~8;
+      if ((*(byte *)(obj + 0xaf) & 4) != 0) {
+        (*(code *)(**(int **)(tricky + 0x68) + 0x28))(tricky,obj,1,1);
       }
-      else {
-        nearestDistance[0] = lbl_803E3FFC;
-        nearby = ObjGroup_FindNearestObject(5,obj,nearestDistance);
-        if (nearby == 0) {
-          *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & 0xef;
-          *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & 0xf7;
-          if ((*(byte *)(obj + 0xaf) & 4) != 0) {
-            (**(code **)(**(int **)(tricky + 0x68) + 0x28))(tricky,obj,1,1);
-          }
-          objRenderFn_80041018(obj);
-        }
-      }
-    }
-    else {
-      *(byte *)(state + 1) = *(byte *)(state + 1) & 0x7f | 0x80;
-      GameBit_Set((int)*(short *)(tricky + 0x18),1);
-      Sfx_PlayFromObject(obj,0x109);
+      objRenderFn_80041018(obj);
     }
   }
-  return;
+  else {
+    *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 0x10;
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
