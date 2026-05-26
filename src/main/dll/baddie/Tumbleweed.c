@@ -4263,6 +4263,12 @@ extern f32 lbl_803E23F4;
 extern f32 lbl_803E23F8;
 extern f64 lbl_803E2400;
 
+#define TUMBLEWEED_BLEND_FLAGS_OFFSET 0x82e
+#define TUMBLEWEED_BLEND_WEIGHT_OFFSET 0x830
+#define TUMBLEWEED_BLEND_VELOCITY_OFFSET 0x834
+#define TUMBLEWEED_BLEND_FLAG_PENDING 0x80
+#define TUMBLEWEED_BLEND_FLAG_ACTIVE 0x40
+
 /* fn_80138B60: weighted blend-channel animator. On state[0x82e] bit 0x80,
  * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
  * the active flag. While bit 0x40 is set, ramps state[0x830] toward
@@ -4271,54 +4277,65 @@ extern f64 lbl_803E2400;
  * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80138B60(int obj, register u8* state) {
+void fn_80138B60(int obj, u8* state) {
     extern void* Obj_GetActiveModel(int obj);
     int model;
     f32 target;
     Obj_GetActiveModel(obj);
-    if (((state[0x82e] >> 7) & 1) != 0) {
+    if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 7) & 1) != 0) {
         model = (int)Obj_GetActiveModel(obj);
         ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
-        *(f32*)(state + 0x830) = lbl_803E23E0;
+        *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E0;
         ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
-        state[0x82e] = (u8)((state[0x82e] & ~0x80) | 0x40);
+        state[TUMBLEWEED_BLEND_FLAGS_OFFSET] =
+            state[TUMBLEWEED_BLEND_FLAGS_OFFSET] & ~TUMBLEWEED_BLEND_FLAG_PENDING;
+        state[TUMBLEWEED_BLEND_FLAGS_OFFSET] =
+            state[TUMBLEWEED_BLEND_FLAGS_OFFSET] | TUMBLEWEED_BLEND_FLAG_ACTIVE;
     }
-    if ((state[0x82e] & 0x40) != 0) {
+    if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 6) & 1) != 0) {
         u8* data = *(u8**)(state + 0);
         target = (f32)(u32)data[0] / (f32)(u32)data[1];
-        if (target > *(f32*)(state + 0x830)) {
-            *(f32*)(state + 0x834) = lbl_803E23E4 * timeDelta + *(f32*)(state + 0x834);
-            *(f32*)(state + 0x830) = *(f32*)(state + 0x834) * timeDelta + *(f32*)(state + 0x830);
-            if (*(f32*)(state + 0x830) > lbl_803E23E8) {
-                *(f32*)(state + 0x834) = lbl_803E23DC;
-                *(f32*)(state + 0x830) = lbl_803E23E8;
-            } else if (*(f32*)(state + 0x830) > target) {
-                if (*(f32*)(state + 0x834) < lbl_803E23EC) {
-                    *(f32*)(state + 0x834) = lbl_803E23DC;
-                    *(f32*)(state + 0x830) = target;
+        if (target > *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET)) {
+            *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                lbl_803E23E4 * timeDelta + *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET);
+            *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * timeDelta +
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
+            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) > lbl_803E23E8) {
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E8;
+            } else if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) > target) {
+                if (*(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) < lbl_803E23EC) {
+                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
+                    *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = target;
                 } else {
-                    *(f32*)(state + 0x834) = *(f32*)(state + 0x834) * lbl_803E23F0;
+                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                        *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * lbl_803E23F0;
                 }
             }
-        } else if (target < *(f32*)(state + 0x830)) {
-            *(f32*)(state + 0x834) = *(f32*)(state + 0x834) - lbl_803E23E4 * timeDelta;
-            *(f32*)(state + 0x830) = *(f32*)(state + 0x834) * timeDelta + *(f32*)(state + 0x830);
-            if (*(f32*)(state + 0x830) < lbl_803E23DC) {
-                *(f32*)(state + 0x834) = lbl_803E23DC;
-                *(f32*)(state + 0x830) = lbl_803E23DC;
+        } else if (target < *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET)) {
+            *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) - lbl_803E23E4 * timeDelta;
+            *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * timeDelta +
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
+            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < lbl_803E23DC) {
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23DC;
             }
-            if (*(f32*)(state + 0x830) < target) {
-                if (*(f32*)(state + 0x834) > lbl_803E23F4) {
-                    *(f32*)(state + 0x834) = lbl_803E23DC;
-                    *(f32*)(state + 0x830) = target;
+            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < target) {
+                if (*(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) > lbl_803E23F4) {
+                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
+                    *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = target;
                 } else {
-                    *(f32*)(state + 0x834) = *(f32*)(state + 0x834) * lbl_803E23F0;
+                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                        *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * lbl_803E23F0;
                 }
             }
         }
         ObjModel_SetBlendChannelWeight(
             (int)Obj_GetActiveModel(obj), 1,
-            lbl_803E23F8 * *(f32*)(state + 0x830) - lbl_803E23E8);
+            lbl_803E23F8 * *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) - lbl_803E23E8);
     }
 }
 #pragma peephole reset
