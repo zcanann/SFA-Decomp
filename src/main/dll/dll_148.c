@@ -28,6 +28,7 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
 extern f64 DOUBLE_803e4408;
 extern f64 DOUBLE_803e4428;
+extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E43F0;
 extern f32 lbl_803E43F4;
@@ -563,6 +564,9 @@ extern f32 lbl_803E3778;
 extern void pressureswitchfb_updateStateMode(int obj, int p2, int stateParam);
 extern int *objFindTexture(int *obj, int a, int b);
 extern u32 GameBit_Get(int eventId);
+extern int *gObjectTriggerInterface;
+__declspec(section ".sdata") extern char lbl_803DBD90[];
+extern void fn_80137948(char *fmt, ...);
 
 typedef struct PressureSwitchFbFlags {
     u8 usePressedTexture : 1;
@@ -743,6 +747,59 @@ void Door_init(int *obj, u8 *def) {
             *(s16 *)(state + 2) = 504;
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void Door_update(int obj)
+{
+  int state;
+  int def;
+  int triggerArg;
+  int triggerId;
+
+  state = *(int *)(obj + 0xb8);
+  def = *(int *)(obj + 0x4c);
+  if (*(u8 *)(state + 5) != 0) {
+    triggerId = *(s16 *)(def + 0x1c);
+    if ((triggerId != 0) && (*(u8 *)(state + 4) != 0)) {
+      triggerArg = *(u8 *)(def + 0x20) & 0x7f;
+      (*(code *)(*gObjectTriggerInterface + 0x54))(obj,triggerId);
+    }
+    else {
+      triggerArg = -1;
+    }
+    if (*(s8 *)(def + 0x1e) != -1) {
+      (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(s8 *)(def + 0x1e),obj,triggerArg);
+    }
+    *(u8 *)(state + 5) = 0;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_bridge_update(int *obj)
+{
+  int *tex;
+  int frame;
+
+  if (GameBit_Get(*(s16 *)((char *)obj[0x4c / 4] + 0x1e)) != 0) {
+    tex = objFindTexture(obj,0,0);
+    if (tex != NULL) {
+      frame = *(s16 *)((char *)tex + 8) + ((int)timeDelta << 3);
+      *(s16 *)((char *)tex + 8) = (s16)frame;
+      frame = *(s16 *)((char *)tex + 8) + ((int)timeDelta << 3);
+      if (frame >= 0x131f) {
+        *(s16 *)((char *)tex + 8) = 0x131f;
+      }
+      fn_80137948(lbl_803DBD90,(int)*(s16 *)((char *)tex + 8));
+    }
+    ObjHits_EnableObject((int)obj);
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
