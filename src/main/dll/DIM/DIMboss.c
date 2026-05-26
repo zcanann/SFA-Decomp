@@ -166,7 +166,6 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
   byte hitReactMode;
   u8 loadWaitStarted;
   int updateResult;
-  undefined4 *puVar3;
   int iVar4;
   undefined4 mapDirIndex;
   uint statusFlags;
@@ -175,13 +174,10 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
   undefined4 *puVar9;
   int eventIndex;
   int baddieResult;
-  undefined4 *puVar13;
   
   runtime = obj->runtime;
   config = obj->config;
   topState = runtime->topState;
-  puVar3 = (undefined4 *)obj;
-  puVar13 = (undefined4 *)runtime;
   updateResult = 0;
   Obj_GetPlayerObject();
   runtime->phase = DIMBOSS_PHASE_START;
@@ -190,7 +186,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
     puVar7 = gDIMbossAnimController;
     puVar8 = (undefined4 *)0x1;
     puVar9 = (undefined4 *)0x1;
-    dll_2E_func07(puVar3,animUpdate,(float *)gDIMbossAnimController,1,1);
+    dll_2E_func07(obj,animUpdate,(float *)gDIMbossAnimController,1,1);
     for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
       switch(animUpdate->eventIds[eventIndex]) {
       case DIMBOSS_EVENT_SET_SEQUENCE_FLAG:
@@ -200,14 +196,14 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
         gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_80000;
         break;
       case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
-        (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x800,0,100,0);
-        (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x800,0,100,0);
-        (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x7ff,0,100,0);
+        (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
+        (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
+        (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
         puVar7 = (undefined4 *)0x0;
         puVar8 = (undefined4 *)0x64;
         puVar9 = (undefined4 *)0x0;
-        (*(code *)(*gBoneParticleEffectInterface + 0xc))(puVar3,0x7ff,0,100,0);
-        iVar4 = Obj_GetActiveModel((int)puVar3);
+        (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
+        iVar4 = Obj_GetActiveModel((int)obj);
         ObjModel_ClearRenderAttachment(iVar4);
         Music_Trigger(0x27,1);
         break;
@@ -263,7 +259,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
         Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP,0);
         break;
       case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
-        (*(code *)(*gObjectTriggerInterface + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,puVar3,0x3c);
+        (*(code *)(*gObjectTriggerInterface + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,obj,0x3c);
         break;
       case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
         OSReport(sDIMBossFreeingAssetsForDIMBoss);
@@ -330,7 +326,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
     if (obj->animStateId != -1) {
       puVar7 = (undefined4 *)0x1;
       puVar8 = (undefined4 *)*gBaddieControlInterface;
-      baddieResult = (*(code *)puVar8[0xc])(puVar3,puVar13);
+      baddieResult = (*(code *)puVar8[0xc])(obj,runtime);
       if (baddieResult == 0) {
         updateResult = 1;
         goto LAB_801bd7dc;
@@ -347,25 +343,25 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       hitReactMode = runtime->hitReactMode;
       if (hitReactMode == 1) {
         baddieResult = (*(code *)(*gBaddieControlInterface + 0x34))
-                          (puVar3,animUpdate,puVar13,gDIMbossHitDetectAnimTable,
+                          (obj,animUpdate,runtime,gDIMbossHitDetectAnimTable,
                            gDIMbossAnimTable,0);
         if (baddieResult != 0) {
           puVar7 = (undefined4 *)0x1;
           puVar8 = (undefined4 *)*gBaddieControlInterface;
-          (*(code *)puVar8[0xb])((double)lbl_803E4C70,puVar3,puVar13);
+          (*(code *)puVar8[0xb])((double)lbl_803E4C70,obj,runtime);
         }
       }
       else if ((hitReactMode != 0) && (hitReactMode < 3)) {
         animUpdate->hitVolumePair = 0;
-        puVar7 = puVar13;
-        puVar8 = puVar13;
-        fn_801BC7E4(puVar3,animUpdate,(int)puVar13,(int)puVar13);
+        puVar7 = (undefined4 *)runtime;
+        puVar8 = (undefined4 *)runtime;
+        fn_801BC7E4(obj,animUpdate,(int)runtime,(int)runtime);
         if (runtime->hitReactMode == 1) {
-          *(undefined2 *)(puVar13 + 0x9c) = 0;
+          *(undefined2 *)((undefined4 *)runtime + 0x9c) = 0;
           puVar7 = (undefined4 *)gDIMbossHitDetectAnimTable;
           puVar8 = (undefined4 *)gDIMbossAnimTable;
           puVar9 = (undefined4 *)*(int *)gPlayerInterface;
-          (*(code *)puVar9[2])(puVar3,puVar13);
+          (*(code *)puVar9[2])(obj,runtime);
           animUpdate->sequenceEventActive = 0;
         }
       }
