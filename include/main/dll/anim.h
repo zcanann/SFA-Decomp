@@ -248,7 +248,7 @@ void DFP_Torch_free(int obj);
 void DFP_Torch_render(void);
 void DFP_Torch_hitDetect(void);
 void DFP_Torch_update(void);
-void DFP_Torch_init(void);
+void DFP_Torch_init(int obj, int param2);
 void DFP_Torch_release(void);
 void DFP_Torch_initialise(void);
 

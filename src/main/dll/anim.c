@@ -5257,3 +5257,40 @@ int fn_80200750(int obj, int param2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Resource_Acquire(int id, int flag);
+extern f64 lbl_803E63F0;
+extern f32 lbl_803E63E4;
+extern f32 lbl_803E63E8;
+extern f32 lbl_803E63E0;
+
+#pragma peephole off
+#pragma scheduling off
+void DFP_Torch_init(int obj, int param2)
+{
+    int state = *(int *)(obj + 0xb8);
+    int res;
+    f32 local_18;
+    int v;
+    *(s16 *)obj = (s16)((*(s8 *)(param2 + 0x18) & 0x3f) << 10);
+    v = *(s16 *)(param2 + 0x1a);
+    if (v > 0) {
+        *(f32 *)(obj + 8) = (f32)v / lbl_803E63E4;
+    } else {
+        *(f32 *)(obj + 8) = lbl_803E63E8;
+    }
+    *(u8 *)(state + 9) = *(u8 *)(param2 + 0x19);
+    *(int *)(state) = *(s16 *)(param2 + 0x1e);
+    local_18 = lbl_803E63E0;
+    if (*(u8 *)(state + 9) == 0) {
+        *(u8 *)(state + 0xa) = 1;
+        res = Resource_Acquire(0x69, 1);
+        if (*(s16 *)(param2 + 0x1c) == 0) {
+            (*(void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)res + 4)))(obj, 0, &local_18, 0x10004, -1, 0);
+        }
+    }
+    *(u8 *)(state + 0xd) = (u8)*(s16 *)(param2 + 0x1c);
+    *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
