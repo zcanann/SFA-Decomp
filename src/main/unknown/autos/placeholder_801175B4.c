@@ -4,8 +4,18 @@
 
 extern void *AudioDecoderForOnMemory(void *);
 extern void *AudioDecoder(void *);
-extern u8 lbl_803A4448[];
 extern int gAttractMovieAudioThreadActive;
+
+typedef struct THPAudioDecodeContext {
+    OSMessage freeAudioBuffers[3];
+    OSMessage decodedAudioBuffers[3];
+    OSMessageQueue freeQueue;
+    OSMessageQueue decodedQueue;
+    u8 pad58[0x1058 - 0x58];
+    OSThread thread;
+} THPAudioDecodeContext;
+
+extern THPAudioDecodeContext lbl_803A4448;
 
 /*
  * --INFO--
@@ -22,23 +32,23 @@ extern int gAttractMovieAudioThreadActive;
  */
 #pragma scheduling off
 #pragma peephole off
-int CreateAudioDecodeThread(OSPriority priority, void *param)
+BOOL CreateAudioDecodeThread(OSPriority priority, void *param)
 {
-    u8 *base = lbl_803A4448;
+    THPAudioDecodeContext *context = &lbl_803A4448;
 
     if (param != NULL) {
-        if (OSCreateThread((OSThread *)(base + 0x1058), AudioDecoderForOnMemory, param,
-                           base + 0x1058, 0x1000, priority, 1) == 0) {
+        if (OSCreateThread(&context->thread, AudioDecoderForOnMemory, param,
+                           &context->thread, 0x1000, priority, 1) == 0) {
             return 0;
         }
     } else {
-        if (OSCreateThread((OSThread *)(base + 0x1058), AudioDecoder, NULL,
-                           base + 0x1058, 0x1000, priority, 1) == 0) {
+        if (OSCreateThread(&context->thread, AudioDecoder, NULL,
+                           &context->thread, 0x1000, priority, 1) == 0) {
             return 0;
         }
     }
-    OSInitMessageQueue((OSMessageQueue *)(base + 0x38), (OSMessage *)(base + 0xc), 3);
-    OSInitMessageQueue((OSMessageQueue *)(base + 0x18), (OSMessage *)base, 3);
+    OSInitMessageQueue(&context->decodedQueue, context->decodedAudioBuffers, 3);
+    OSInitMessageQueue(&context->freeQueue, context->freeAudioBuffers, 3);
     gAttractMovieAudioThreadActive = 1;
     return 1;
 }
