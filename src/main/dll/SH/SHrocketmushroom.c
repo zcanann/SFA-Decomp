@@ -268,12 +268,12 @@ void bombplantspore_init(void *obj, void *param2) {
 }
 
 void bombplantingspot_update(void *obj) {
-    void *pState = *(void **)((u8 *)obj + 0x4c);
+    BombPlantingSpotMapData *mapData = *(BombPlantingSpotMapData **)((u8 *)obj + 0x4c);
     s32 trigBit;
 
-    *(s16 *)obj = (s16)((s8) * ((s8 *)pState + 0x18) << 8);
+    *(s16 *)obj = (s16)(mapData->yawByte << 8);
 
-    trigBit = *(s16 *)((u8 *)pState + 0x20);
+    trigBit = mapData->requiredGameBit;
     if (trigBit != -1 && GameBit_Get(trigBit) == 0) {
         *(u8 *)((u8 *)obj + 0xaf) |= BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
         return;
@@ -287,7 +287,7 @@ void bombplantingspot_update(void *obj) {
 
     if (ObjTrigger_IsSetById(obj, BOMBPLANT_GAME_BIT_AVAILABLE_SPORES) != 0) {
         gameBitDecrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
-        GameBit_Set(*(s16 *)((u8 *)pState + 0x1e), 1);
+        GameBit_Set(mapData->plantedGameBit, 1);
         (*(void (***)(int, void *, int))gObjectTriggerInterface)[0x12](1, obj, -1);
     } else if ((*(u8 *)((u8 *)obj + 0xaf) & 0x4) != 0 &&
                GameBit_Get(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER) == 0) {
@@ -295,7 +295,7 @@ void bombplantingspot_update(void *obj) {
         GameBit_Set(BOMBPLANT_GAME_BIT_FIRST_SPOT_TRIGGER, 1);
     }
 
-    if (GameBit_Get(*(s16 *)((u8 *)pState + 0x1e)) == 0) {
+    if (GameBit_Get(mapData->plantedGameBit) == 0) {
         *(u8 *)((u8 *)obj + 0xaf) &= ~BOMBPLANTINGSPOT_MODEL_HIDDEN_FLAG;
         objRenderFn_80041018(obj);
     } else {
@@ -303,9 +303,9 @@ void bombplantingspot_update(void *obj) {
     }
 }
 
-void bombplantingspot_init(void *obj, void *param2) {
+void bombplantingspot_init(void *obj, BombPlantingSpotMapData *mapData) {
     *(u16 *)((u8 *)obj + 0xb0) |= 0x4000;
-    *(s16 *)obj = (s16)((s8) * ((s8 *)param2 + 0x18) << 8);
+    *(s16 *)obj = (s16)(mapData->yawByte << 8);
 }
 
 int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, void *p5) {
