@@ -590,6 +590,27 @@ void SpiritPrize_release(void) {}
 void SpiritPrize_initialise(void) {}
 
 extern void *gObjectTriggerInterface;
+extern void ModelLightStruct_free(void *light);
+
+#pragma scheduling off
+#pragma peephole off
+void SpiritPrize_free(int obj)
+{
+    u8 *state;
+    void *light;
+
+    state = *(u8 **)(obj + 0xb8);
+    light = *(void **)(state + 0x140);
+    if (light != NULL) {
+        ModelLightStruct_free(light);
+        *(void **)(state + 0x140) = NULL;
+        state[0x144] = 0;
+    }
+    ((void (*)(u8 *))((void **)*(int *)gObjectTriggerInterface)[9])(state);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void *objCreateLight(int *obj, int v);
 extern void modelLightStruct_setField50(void *light, int v);
 extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int d);

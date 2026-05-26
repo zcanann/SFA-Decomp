@@ -13,5 +13,6 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_801c3a9c(undefined2 *param_1,int param_2);
 void FUN_801c3aa0(int param_1);
 void FUN_801c3b00(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
+void SpiritPrize_free(int obj);
 
 #endif /* MAIN_DLL_DLL_19C_H_ */
