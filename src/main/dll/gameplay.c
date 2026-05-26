@@ -12952,7 +12952,32 @@ extern void *Obj_GetPlayerObject(void);
 extern int fn_802966D4(int obj, int *out);
 extern void playerSetHeldObject(void *player, int held);
 extern f32 lbl_803E06D8;
-extern int saveGame_saveObjectPos(int *obj);
+void saveGame_saveObjectPos(int *obj) {
+    int i;
+    char *slot;
+    int key;
+    if (*(s16 *)((char *)obj + 6) & 0x2000) return;
+    if (lbl_803DD488 != 0) return;
+    key = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
+    slot = (char *)lbl_803A32A8;
+    for (i = 0; i < 72; i++) {
+        int v = *(int *)(slot + 0x168);
+        if (v == 0) break;
+        if (v == key) break;
+        slot += 0x10;
+    }
+    if (i == 0x3f) return;
+    {
+        char *e = (char *)lbl_803A32A8 + i * 0x10;
+        *(int *)(e + 0x168) = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
+        *(f32 *)(e + 0x16c) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)(e + 0x170) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)(e + 0x174) = *(f32 *)((char *)obj + 0x14);
+    }
+    *(f32 *)(*(int *)((char *)obj + 0x4c) + 8) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)(*(int *)((char *)obj + 0x4c) + 0xc) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)(*(int *)((char *)obj + 0x4c) + 0x10) = *(f32 *)((char *)obj + 0x14);
+}
 void Carryable_stopCarrying(int *obj, u8 *param2) {
     void *player = Obj_GetPlayerObject();
     int held;
