@@ -724,8 +724,8 @@ int fn_8015E210(int *obj, u8 *p)
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DD4;
   int *objs;
-  int i;
   int count;
+  int i;
   int *player_b8;
   int *player;
   int r;
@@ -745,7 +745,7 @@ int fn_8015E210(int *obj, u8 *p)
     }
     player_b8 = *(int **)((char *)Obj_GetPlayerObject() + 0xc8);
     player = (int *)Obj_GetPlayerObject();
-    r = (**(int (**)(int *))(*(int *)((char *)player_b8 + 0x68) + 0x44))(player_b8);
+    r = (**(int (**)(int *))(*(int *)(*(int *)((char *)player_b8 + 0x68)) + 0x44))(player_b8);
     if (r != 0) {
       if (*(s16 *)((char *)player + 0x46) == 0) {
         Sfx_PlayFromObject(obj, 498);
