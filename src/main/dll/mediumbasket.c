@@ -2236,8 +2236,10 @@ int fn_8015BFA0(int obj, int state)
 
     *(u8 *)(control + 0x44) |= 0xc;
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
-        ObjAnim_SetCurrentMove(obj, 0xf, lbl_803E2D14, 0);
-        *(u8 *)(state + 0x346) = 0;
+        if ((s8)*(u8 *)(state + 0x27a) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0xf, lbl_803E2D14, 0);
+            *(u8 *)(state + 0x346) = 0;
+        }
         *(u8 *)(state + 0x34d) = 1;
     }
     *(f32 *)(state + 0x2a0) = *(f32 *)(state + 0x2c0) / lbl_803E2D3C;
@@ -2247,10 +2249,10 @@ int fn_8015BFA0(int obj, int state)
         *(f32 *)(state + 0x2a0) = lbl_803E2D38;
     }
     height = *(f32 *)(obj + 0x98);
-    if (height >= lbl_803E2D24) {
-        *(f32 *)(state + 0x280) = lbl_803E2D44 * (lbl_803E2D48 - height);
-    } else {
+    if (height < lbl_803E2D24) {
         *(f32 *)(state + 0x280) = lbl_803E2D44 * height;
+    } else {
+        *(f32 *)(state + 0x280) = lbl_803E2D44 * (lbl_803E2D48 - height);
     }
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
