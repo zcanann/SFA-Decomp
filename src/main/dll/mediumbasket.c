@@ -2691,23 +2691,23 @@ void fn_8015D27C(int obj, int sub, int state)
     int control = *(int *)(sub + 0x40c);
 
     *(u16 *)(control + 0x46) += framesThisStep;
-    if (*(u16 *)(control + 0x46) > 299) {
+    if (*(u16 *)(control + 0x46) >= 300) {
         *(u16 *)(control + 0x46) = randomGetRange(0, 200);
         if (*(s16 *)(state + 0x274) == 7 || *(s16 *)(state + 0x274) == 8) {
             Sfx_PlayFromObject(obj, 0x26c);
         }
     }
-    if ((*(u8 *)(sub + 0x404) & 2) == 0) {
-        ((void (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[11])(
-            obj, state, lbl_803E2DB0, -1);
-    } else {
+    if ((*(u8 *)(sub + 0x404) & 2) != 0) {
         ((void (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[11])(
             obj, state, lbl_803E2D14, -1);
+    } else {
+        ((void (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[11])(
+            obj, state, lbl_803E2DB0, -1);
     }
     *(int *)(sub + 0x3e0) = *(int *)(obj + 0xc0);
     *(int *)(obj + 0xc0) = 0;
-    ((void (*)(f32, f32, int, int, u8 *, u8 *))((void **)*gPlayerInterface)[2])(
-        timeDelta, timeDelta, obj, state, lbl_803AC548, lbl_803AC528);
+    ((void (*)(int, int, f32, f32, u8 *, u8 *))((void **)*gPlayerInterface)[2])(
+        obj, state, timeDelta, timeDelta, lbl_803AC548, lbl_803AC528);
     *(int *)(obj + 0xc0) = *(int *)(sub + 0x3e0);
 }
 #pragma peephole reset
