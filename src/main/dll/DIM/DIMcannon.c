@@ -2116,6 +2116,46 @@ void fn_801AF568(int *obj) {
         break;
     }
 }
+extern void fn_80088870(u8 *a, u8 *b, u8 *c, u8 *d);
+extern void envFxActFn_800887f8(int id);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern u8 lbl_803239F0[];
+void fn_801AF6DC(int *obj) {
+    u8 *tbl = lbl_803239F0;
+    switch (*(s8 *)((char *)obj + 0xac)) {
+    case 0x47:
+        fn_80088870(tbl + 0x38, tbl, tbl + 0x70, tbl + 0xa8);
+        if (*(int *)((char *)obj + 0xf4) == 2) {
+            envFxActFn_800887f8(0x3f);
+        } else {
+            envFxActFn_800887f8(0x1f);
+        }
+        Music_Trigger(0xc2, 0);
+        Music_Trigger(0xce, 0);
+        Music_Trigger(0xcc, 0);
+        Music_Trigger(0xdb, 0);
+        Music_Trigger(0xf2, 0);
+        break;
+    case 0x45:
+        skyFn_80088c94(7, 0);
+        envFxActFn_800887f8(0);
+        getEnvfxAct(0, 0, 0x13e, 0);
+        getEnvfxAct(0, 0, 0x140, 0);
+        getEnvfxAct(0, 0, 0x13f, 0);
+        Music_Trigger(0xda, 1);
+        break;
+    case 0x49:
+        Music_Trigger(0x36, 1);
+        break;
+    case 0x48:
+        Music_Trigger(0xc8, 0);
+        break;
+    case 0x46:
+        Music_Trigger(0xe1, 0);
+        Music_Trigger(0x96, 1);
+        break;
+    }
+}
 void link_levcontrol_update(int *obj) {
     s8 *inner = *(s8 **)((char *)obj + 0xb8);
     f32 *player = (f32 *)Obj_GetPlayerObject();
