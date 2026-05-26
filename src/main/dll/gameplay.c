@@ -13185,6 +13185,35 @@ s8 mapBitFindFn(int a, int b) {
     }
     return -1;
 }
+void SaveGame_gplaySavePoint(f32 *pos, s16 angle, int flags, int mapByte) {
+    u8 *base;
+    if (flags & 4) {
+        lbl_803A32A8[0x22] = 0;
+    }
+    base = lbl_803A32A8;
+    if (base[0x22] == 0) {
+        if (flags & 1) {
+            memcpy(lbl_803DD498, base, 0x5d8);
+            if (pRestartPoint != 0) {
+                memcpy((void *)pRestartPoint, lbl_803A32A8, 0x5d8);
+            }
+        } else {
+            *(f32 *)(base + base[0x20] * 16 + 0x684) = pos[0];
+            *(f32 *)(base + base[0x20] * 16 + 0x688) = pos[1];
+            *(f32 *)(base + base[0x20] * 16 + 0x68c) = pos[2];
+            *(s8 *)(base + base[0x20] * 16 + 0x690) = (s8)(angle >> 8);
+            *(s8 *)(base + base[0x20] * 16 + 0x691) = (s8)mapByte;
+            memcpy(lbl_803DD498, base, 0x6ec);
+            if (pRestartPoint != 0) {
+                mm_free(pRestartPoint);
+                pRestartPoint = 0;
+            }
+        }
+    }
+    if (flags & 2) {
+        base[0x22] = 1;
+    }
+}
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
     return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
