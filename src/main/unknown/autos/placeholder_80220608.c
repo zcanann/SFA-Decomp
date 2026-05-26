@@ -61,24 +61,24 @@ typedef struct DrEnergyDiscState {
 
 #pragma peephole off
 #pragma scheduling off
-void drenergydisc_update(u8 *obj)
+void drenergydisc_update(int obj)
 {
     int *texture;
     DrEnergyDiscState *state = *(DrEnergyDiscState **)(obj + 0xb8);
-    u8 *setup = *(u8 **)(obj + 0x4c);
+    int setup = *(int *)(obj + 0x4c);
 
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
         if (state->activated == 0) {
             state->activated = 1;
-            Sfx_PlayFromObject((int)obj, 0x30c);
+            Sfx_PlayFromObject(obj, 0x30c);
         }
 
-        texture = objFindTexture((int)obj, 0, 0);
+        texture = objFindTexture(obj, 0, 0);
         if (texture != NULL) {
             *texture = 0x100;
         }
 
-        texture = objFindTexture((int)obj, 0, 0);
+        texture = objFindTexture(obj, 0, 0);
         if (texture != NULL) {
             *(s16 *)((char *)texture + 0xa) =
                 *(s16 *)((char *)texture + 0xa) + lbl_803DC380 * framesThisStep;
@@ -89,7 +89,7 @@ void drenergydisc_update(u8 *obj)
     }
 
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E6BB0, 0);
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803E6BB0, 0);
     }
 }
 #pragma scheduling on
