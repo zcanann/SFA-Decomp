@@ -5731,5 +5731,49 @@ void animatedobj_init(int *obj, int *params)
     }
     Obj_SetModelRenderOpAlpha(obj, 0xff);
 }
+
+extern void objMove(int *obj, f32 x, f32 y, f32 z);
+extern void s16toFloat(f32 *out, s16 v);
+extern void mathFn_80021ac8(int *obj, f32 *p);
+extern void firepipe_releaseEffectObject(int *obj);
+extern int timerCountDown(f32 *p);
+extern f32 lbl_803E3390;
+extern f32 lbl_803E3394;
+extern f32 lbl_803DBD68;
+extern f32 lbl_803DBD6C;
+extern int lbl_803DBD64;
+void flamethrowerspe_update(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *src = *(int **)((char *)obj + 0x4c);
+    switch (*(int *)((char *)state + 0x10)) {
+    case 1:
+        *(f32 *)((char *)obj + 0x24) = lbl_803E338C;
+        *(f32 *)((char *)obj + 0x2c) =
+            lbl_803DBD68 * (lbl_803E3390 * (*(f32 *)((char *)state + 8) *
+                            (lbl_803E3394 * (f32)(s32)randomGetRange(0x64, 0x96))));
+        mathFn_80021ac8(obj, (f32 *)((char *)obj + 0x24));
+        *(f32 *)((char *)state + 0xc) = lbl_803DBD6C * *(f32 *)((char *)state + 8);
+        s16toFloat((f32 *)((char *)state + 4), (s16)lbl_803DBD64);
+        *(int *)((char *)state + 0x10) = 2;
+        break;
+    case 2:
+        if (timerCountDown((f32 *)((char *)state + 4)) != 0) {
+            ObjHits_DisableObject(obj);
+            firepipe_releaseEffectObject(obj);
+            return;
+        }
+        ObjHits_EnableObject(obj);
+        ObjHits_SetHitVolumeSlot(obj, *(int *)((char *)lbl_803209C0 + (s8) * (u8 *)((char *)src + 0x19) * 0xc + 8), 1, 0);
+        {
+            f32 dt = timeDelta;
+            objMove(obj, *(f32 *)((char *)obj + 0x24) * dt, *(f32 *)((char *)obj + 0x28) * dt,
+                    *(f32 *)((char *)obj + 0x2c) * dt);
+        }
+        ObjHitbox_SetSphereRadius(obj, (int)(*(f32 *)((char *)state + 0xc) *
+                                             (((f32)lbl_803DBD64 - *(f32 *)((char *)state + 4)) / (f32)lbl_803DBD64)));
+        break;
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset
