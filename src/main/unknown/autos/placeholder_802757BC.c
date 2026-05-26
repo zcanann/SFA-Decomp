@@ -25,7 +25,7 @@ void mcmdLoop(McmdVoiceState *state, McmdCommandArgs *params)
     u32 flags;
 
     if (state->loopCounter == 0) {
-        if (params->flags & MCMD_LOOP_RANDOM_DELAY_FLAG) {
+        if (((params->flags >> 16) & 1) != 0) {
             state->loopCounter = (u16)sndRand() % (u16)(params->value >> 16);
         } else {
             state->loopCounter = (u16)(params->value >> 16);
@@ -47,19 +47,20 @@ void mcmdLoop(McmdVoiceState *state, McmdCommandArgs *params)
 
 check_flags:
     flags = params->flags;
-    if (flags & MCMD_LOOP_WAIT_FOR_KEYOFF_FLAG) {
-        if (((state->inputFlags & MCMD_VOICE_KEYOFF_INPUT_FLAG) == 0) &&
+    if (((flags >> 8) & 1) != 0) {
+        zero = 0;
+        if (((state->inputFlags & MCMD_VOICE_KEYOFF_INPUT_FLAG) == zero) &&
             ((state->outputFlags & MCMD_VOICE_KEYOFF_OUTPUT_FLAG) ==
              MCMD_VOICE_KEYOFF_OUTPUT_FLAG)) {
             state->loopCounter = 0;
             return;
         }
     }
-    if (flags & MCMD_LOOP_WAIT_FOR_INACTIVE_FLAG) {
+    if (((flags >> 24) & 1) != 0) {
         zero = 0;
         if (((state->inputFlags & zero) == zero) &&
             ((state->outputFlags & MCMD_VOICE_ACTIVE_OUTPUT_FLAG) == zero)) {
-            if (hwIsActive(state->voiceHandleBytes[MCMD_VOICE_HANDLE_SLOT_BYTE]) == 0) {
+            if (hwIsActive(state->voiceHandle & 0xff) == 0) {
                 state->loopCounter = zero;
                 return;
             }
