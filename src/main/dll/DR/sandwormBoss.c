@@ -3756,6 +3756,37 @@ int cfprisoncage_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0
 u32 fn_801A0174(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x8) >> 7) & 1; }
 u32 gunpowderbarrel_isHeld(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x4a) >> 5) & 1; }
 
+typedef struct { u8 _pad0 : 2; u8 held : 1; u8 _pad1 : 5; } GpbHeldByte;
+extern f32 lbl_803E42C0;
+
+/* EN v1.0 0x801A0BDC  size: 56b  gunpowderbarrel_setHeldState: flag the
+ * barrel as held, mark obj active, and clear its physics-sleep bit. */
+#pragma scheduling off
+#pragma peephole off
+void gunpowderbarrel_setHeldState(int* obj) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    ((GpbHeldByte*)(sub + 0x4a))->held = 1;
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+    *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) & ~2);
+}
+
+/* EN v1.0 0x801A0B90  size: 76b  gunpowderbarrel_clearHeldState: zero the
+ * barrel's velocity/throw vectors, mark it sleeping, clear obj-active and
+ * the held flag. */
+void gunpowderbarrel_clearHeldState(int* obj) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    f32 z = lbl_803E42C0;
+    *(f32*)(sub + 0x24) = z;
+    *(f32*)(sub + 0x20) = z;
+    *(f32*)(sub + 0x28) = z;
+    *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) | 1);
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+    *(f32*)(sub + 0x38) = z;
+    ((GpbHeldByte*)(sub + 0x4a))->held = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 extern u32 GameBit_Get(int);
 extern void* Obj_GetPlayerObject(void);
