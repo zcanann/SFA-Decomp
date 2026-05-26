@@ -3497,7 +3497,7 @@ int titlescreen_getObjectTypeId(u8* obj)
 }
 
 extern void titlescreen_free(u8* obj);
-extern void titlescreen_render(void);
+extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(void);
 extern void titlescreen_init(void);
 extern void titlescreen_release(void);
@@ -3609,6 +3609,33 @@ void titlescreen_initialise(void)
     lbl_803DD9B4 = lbl_803E2318;
     lbl_803DD9B0 = lbl_803E2318;
     lbl_803DD9AB = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8    lbl_803DD9AA;
+extern int   lbl_803DD9A4;
+extern int  *gObjectTriggerInterface;
+extern void  objRenderFn_8003b8f4(f32);
+
+/* EN v1.0 0x80135C2C  size: 152b  titlescreen_render: when visible and
+ * ready, render via objRenderFn; once the credits flag fires, set the
+ * one-shot trigger 0x57 and release the attract-mode movie buffers. */
+#pragma scheduling off
+#pragma peephole off
+void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v == 0) return;
+    if (lbl_803DD9AB == 0) return;
+    objRenderFn_8003b8f4(lbl_803E2318);
+    if (lbl_803DD993 == 0) return;
+    if (lbl_803DD9AA != 0) return;
+    GameBit_Set(0xDF6, 1);
+    lbl_803DD9AA = 1;
+    ((void (*)(int, int, int, int))((void **)*gObjectTriggerInterface)[0x50 / 4])(0x57, 0, 0, 0);
+    n_attractmode_releaseMovieBuffers();
+    lbl_803DD9A4 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
