@@ -3146,7 +3146,6 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 }
 #pragma scheduling reset
 
-extern int* lbl_80386468_table[0x78];
 extern void* lbl_803DCEA0;
 
 #pragma scheduling off
@@ -3162,7 +3161,7 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     int sz;
 
     for (outer = 0; outer < 0x78; outer++) {
-        page = lbl_80386468_table[outer];
+        page = ((int**)lbl_80386468)[outer];
         if (page == NULL) continue;
 
         lbl_803DCEA0 = page;
