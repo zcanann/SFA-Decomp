@@ -4634,3 +4634,32 @@ void romListReadCb(s32 result, void *fileInfo)
         AtomicSList_Push(lbl_803DCC8C, fileInfo);
     }
 }
+
+int unlockLevel(s32 val, int idx, int flag)
+{
+    s32 cur;
+    if (flag == 1) {
+        (&lbl_803DB5B0)[0] = -2;
+        (&lbl_803DB5B0)[1] = -2;
+        return -1;
+    }
+    cur = (&lbl_803DB5B0)[idx];
+    if (val == cur || cur == -2) {
+        (&lbl_803DB5B0)[idx] = -2;
+        return -1;
+    }
+    return cur;
+}
+
+extern int lbl_803DCC88;
+void dvdReadCb_80041d30(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        lbl_803DCC88--;
+    }
+}
