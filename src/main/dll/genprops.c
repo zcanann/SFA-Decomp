@@ -5337,8 +5337,8 @@ typedef struct DofState {
 extern void fn_8016CD48(void);
 extern void Rcp_DisableBlurFilter(void);
 extern int textureFree(int tex);
-extern int lbl_803DDAA0;
-extern int lbl_803DDAA8[2];
+extern void *lbl_803DDAA0;
+extern void *lbl_803DDAA8[2];
 
 #pragma peephole off
 #pragma scheduling off
@@ -5363,18 +5363,18 @@ void depthoffieldpoint_update(int *obj)
 void staff_release(void)
 {
     int i;
-    int *p;
-    if (lbl_803DDAA8[0] != 0) {
+    void **p;
+    if (lbl_803DDAA8[0] != NULL) {
         p = lbl_803DDAA8;
         for (i = 0; i < 2; i++) {
-            textureFree(*p);
-            *p = 0;
+            textureFree((int)*p);
+            *p = NULL;
             p++;
         }
     }
-    if (lbl_803DDAA0 != 0) {
-        Resource_Release(lbl_803DDAA0);
-        lbl_803DDAA0 = 0;
+    if (lbl_803DDAA0 != NULL) {
+        Resource_Release((int)lbl_803DDAA0);
+        lbl_803DDAA0 = NULL;
     }
 }
 #pragma scheduling reset
