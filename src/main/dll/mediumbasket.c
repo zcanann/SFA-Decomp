@@ -1062,7 +1062,7 @@ int fn_8015C7C8(int obj, int p)
   if (*(f32 *)(obj + 0x98) < lbl_803E2D78) {
     *(u8 *)(sub_40c + 0x44) |= 0x8;
   }
-  (*(int (**)(int, int, int, f32))(*gPlayerInterface + 0x30))(obj, p, 4, timeDelta);
+  (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))(obj, p, timeDelta, 4);
   return 0;
 }
 #pragma peephole reset
@@ -1118,7 +1118,7 @@ int fn_8015C95C(int obj, int p)
   if (*(f32 *)(obj + 0x98) < lbl_803E2D78) {
     *(u8 *)(sub_40c + 0x44) |= 0x8;
   }
-  (*(int (**)(int, int, int, f32))(*gPlayerInterface + 0x30))(obj, p, 4, timeDelta);
+  (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))(obj, p, timeDelta, 4);
   return 0;
 }
 #pragma peephole reset
