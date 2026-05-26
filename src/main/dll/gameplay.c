@@ -12948,6 +12948,30 @@ void loadMapForCurrentSaveGame(void) {
     screenTransitionFn_800d7b04(0x1e, 1);
     lbl_803DD488 = 2;
 }
+extern void *Obj_GetPlayerObject(void);
+extern int fn_802966D4(int obj, int *out);
+extern void playerSetHeldObject(void *player, int held);
+extern f32 lbl_803E06D8;
+extern int saveGame_saveObjectPos(int *obj);
+void Carryable_stopCarrying(int *obj, u8 *param2) {
+    void *player = Obj_GetPlayerObject();
+    int held;
+    param2[5] = 0;
+    fn_802966D4((int)player, &held);
+    if ((int *)held == obj) {
+        playerSetHeldObject(player, 0);
+    }
+}
+void objSaveFn_800ea774(int *obj) {
+    u8 *sub = *(u8 **)((char *)obj + 0xb8);
+    sub[5] = 0;
+    sub[6] = 0;
+    if ((sub[7] & 8) == 0) {
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) + lbl_803E06D8;
+        saveGame_saveObjectPos(obj);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - lbl_803E06D8;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -13110,6 +13134,14 @@ u8 SaveGame_getMapAct(int idx) {
         }
     }
     return *((u8*)&lbl_803DD494 + 1);
+}
+int SaveGame_gplayGetObjGroupStatus(int idx, int shift) {
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    if (idx != lbl_803DD48C) {
+        lbl_803DD48C = idx;
+        (&lbl_803DD48C)[1] = GameBit_Get(lbl_80311810[idx]);
+    }
+    return ((&lbl_803DD48C)[1] >> shift) & 1;
 }
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
