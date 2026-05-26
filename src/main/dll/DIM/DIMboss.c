@@ -158,14 +158,14 @@ extern DIMbossMapEventInterface **gMapEventInterface;
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
+int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   DIMbossRuntime *runtime;
   DIMbossConfig *config;
   DIMbossTopState *topState;
-  byte bVar1;
+  byte hitReactMode;
   u8 loadWaitStarted;
-  undefined4 updateResult;
+  int updateResult;
   undefined4 *puVar3;
   int iVar4;
   undefined4 mapDirIndex;
@@ -174,8 +174,7 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
   undefined4 *puVar8;
   undefined4 *puVar9;
   int eventIndex;
-  int iVar11;
-  int iVar12;
+  int baddieResult;
   undefined4 *puVar13;
   
   runtime = obj->runtime;
@@ -183,10 +182,8 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
   topState = runtime->topState;
   puVar3 = (undefined4 *)obj;
   puVar13 = (undefined4 *)runtime;
-  iVar12 = (int)config;
   updateResult = 0;
   Obj_GetPlayerObject();
-  iVar11 = (int)topState;
   runtime->phase = DIMBOSS_PHASE_START;
   (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,5,0);
   if (obj->renderPause == 0) {
@@ -233,7 +230,6 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
         gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
         break;
       case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
-        iVar11 = (int)topState;
         topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
         Music_Trigger(0xee,0);
         break;
@@ -334,8 +330,8 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
     if (obj->animStateId != -1) {
       puVar7 = (undefined4 *)0x1;
       puVar8 = (undefined4 *)*gBaddieControlInterface;
-      iVar11 = (*(code *)puVar8[0xc])(puVar3,puVar13);
-      if (iVar11 == 0) {
+      baddieResult = (*(code *)puVar8[0xc])(puVar3,puVar13);
+      if (baddieResult == 0) {
         updateResult = 1;
         goto LAB_801bd7dc;
       }
@@ -345,21 +341,21 @@ undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpda
       if ((runtime->eventGameBit != -1) &&
           (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0)) {
         puVar7 = (undefined4 *)*gObjectTriggerInterface;
-        (*(code *)puVar7[0x16])(animUpdate,(int)*(short *)(iVar12 + 0x2c));
+        (*(code *)puVar7[0x16])(animUpdate,(int)config->eventId);
         runtime->eventGameBit = -1;
       }
-      bVar1 = runtime->hitReactMode;
-      if (bVar1 == 1) {
-        iVar11 = (*(code *)(*gBaddieControlInterface + 0x34))
+      hitReactMode = runtime->hitReactMode;
+      if (hitReactMode == 1) {
+        baddieResult = (*(code *)(*gBaddieControlInterface + 0x34))
                           (puVar3,animUpdate,puVar13,gDIMbossHitDetectAnimTable,
                            gDIMbossAnimTable,0);
-        if (iVar11 != 0) {
+        if (baddieResult != 0) {
           puVar7 = (undefined4 *)0x1;
           puVar8 = (undefined4 *)*gBaddieControlInterface;
           (*(code *)puVar8[0xb])((double)lbl_803E4C70,puVar3,puVar13);
         }
       }
-      else if ((bVar1 != 0) && (bVar1 < 3)) {
+      else if ((hitReactMode != 0) && (hitReactMode < 3)) {
         animUpdate->hitVolumePair = 0;
         puVar7 = puVar13;
         puVar8 = puVar13;

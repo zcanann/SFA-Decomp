@@ -146,7 +146,8 @@ typedef struct DIMbossConfig {
   f32 spawnX;
   f32 spawnY;
   f32 spawnZ;
-  u8 pad14[0x2E - 0x14];
+  u8 pad14[0x2C - 0x14];
+  s16 eventId;
   s8 animObjId;
 } DIMbossConfig;
 
@@ -170,8 +171,8 @@ typedef struct DIMbossObject {
   s16 animStateId;
   u8 padB6[0xB8 - 0xB6];
   DIMbossRuntime *runtime;
-  undefined4 (*updateState)(struct DIMbossObject *obj,undefined4 param_2,
-                            ObjAnimUpdateState *animUpdate);
+  int (*updateState)(struct DIMbossObject *obj,undefined4 param_2,
+                     ObjAnimUpdateState *animUpdate);
   u8 padC0[0xC8 - 0xC0];
   void *childObject;
   u8 padCC[0xE4 - 0xCC];
@@ -181,8 +182,7 @@ typedef struct DIMbossObject {
   int updateInitialized;
 } DIMbossObject;
 
-undefined4 DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,
-                               ObjAnimUpdateState *animUpdate);
+int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void DIMboss_func0B(void);
 int DIMboss_setScale(DIMbossObject *obj);
 int DIMboss_getExtraSize(void);
