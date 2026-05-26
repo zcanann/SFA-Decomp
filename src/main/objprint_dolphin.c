@@ -4885,7 +4885,7 @@ void voxMapTabReadCb(s32 result, void *fileInfo)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int mapLoadDataFiles(int idx);
+extern void mapLoadDataFiles(int idx);
 extern int sMapFileNameIndexRemapTable[];
 extern s16 sMapFileNameAdjacencyTable[];
 int loadMapAndParent(int mapId)
@@ -4904,4 +4904,28 @@ int loadMapAndParent(int mapId)
     }
     mapLoadDataFiles(idx);
     return idx;
+}
+
+extern void *gMapEventInterface;
+extern void mapLoadDataFile(int mapIdx, int fileType);
+void mapLoadDataFiles(int mapIdx)
+{
+    if (sMapFileNameAdjacencyTable[mapIdx] != -1) {
+        int *r = ((int *(*)(void *))((void **)*(void **)gMapEventInterface)[0x90 / 4])(*(void **)gMapEventInterface);
+        *(s8 *)((char *)r + 0xe) = (s8)mapIdx;
+    }
+    mapLoadDataFile(mapIdx, 0x20);
+    mapLoadDataFile(mapIdx, 0x21);
+    mapLoadDataFile(mapIdx, 0x23);
+    mapLoadDataFile(mapIdx, 0x24);
+    mapLoadDataFile(mapIdx, 0x30);
+    mapLoadDataFile(mapIdx, 0x2f);
+    mapLoadDataFile(mapIdx, 0x2b);
+    mapLoadDataFile(mapIdx, 0x2a);
+    mapLoadDataFile(mapIdx, 0x26);
+    mapLoadDataFile(mapIdx, 0x25);
+    mapLoadDataFile(mapIdx, 0x1a);
+    mapLoadDataFile(mapIdx, 0x1b);
+    mapLoadDataFile(mapIdx, 0xe);
+    mapLoadDataFile(mapIdx, 0xd);
 }
