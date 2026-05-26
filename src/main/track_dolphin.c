@@ -4364,3 +4364,37 @@ void fn_80062808(void)
     lbl_803DCF14 = lbl_803DCF1C;
     lbl_803DCF0C = lbl_803DCF20;
 }
+
+extern int lbl_803DCF34;
+extern s16 lbl_803DCF5E;
+
+void fn_80065574(int matchVal, int obj, int flag)
+{
+    int count;
+    int i;
+    int base;
+    char *e;
+    if ((u32)obj != 0) {
+        base = *(int *)(obj + 0x50);
+        e = *(char **)(base + 0x34);
+        count = *(u8 *)(base + 0x5c);
+    } else {
+        e = (char *)lbl_803DCF34;
+        count = lbl_803DCF5E;
+    }
+    if (flag != 0) {
+        for (i = 0; i < count; i++) {
+            if (*(s16 *)(e + 0xc) == matchVal) {
+                *(s8 *)(e + 3) = (s8)(*(u8 *)(e + 3) & ~0x40);
+            }
+            e += 0x10;
+        }
+    } else {
+        for (i = 0; i < count; i++) {
+            if (*(s16 *)(e + 0xc) == matchVal) {
+                *(s8 *)(e + 3) = (s8)(*(u8 *)(e + 3) | 0x40);
+            }
+            e += 0x10;
+        }
+    }
+}
