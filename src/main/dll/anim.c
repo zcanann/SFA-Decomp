@@ -5085,3 +5085,48 @@ int dbstealerworm_func0B(int obj, u8 msg, int *out)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int lbl_803AD0D8[];
+extern int fn_802025C0();
+extern int fn_80202428();
+extern int fn_80201BD8();
+extern int fn_802017A4();
+extern int fn_80201358();
+extern int fn_80200E44();
+extern int fn_80200A70();
+extern int fn_80200850();
+extern int fn_80200750();
+extern int fn_802004B0();
+extern int fn_80200088();
+extern int fn_801FFE18();
+
+#pragma peephole off
+#pragma scheduling off
+void DBstealerwo_setFuncPtrs_80203c78(void)
+{
+    lbl_803AD0F4[0] = (int)fn_802028C0;
+    lbl_803AD0F4[1] = (int)fn_80202720;
+    lbl_803AD0F4[2] = (int)fn_802025C0;
+    lbl_803AD0F4[3] = (int)fn_80202524;
+    lbl_803AD0F4[4] = (int)fn_80202428;
+    lbl_803AD0F4[5] = (int)fn_80202294;
+    lbl_803AD0F4[6] = (int)fn_802020B0;
+    lbl_803AD0F4[7] = (int)fn_80201BD8;
+    lbl_803AD0F4[8] = (int)fn_802017A4;
+    lbl_803AD0F4[9] = (int)fn_802015EC;
+    lbl_803AD0F4[10] = (int)fn_80201358;
+    lbl_803AD0F4[11] = (int)fn_80200E44;
+    lbl_803AD0F4[12] = (int)fn_80200A70;
+    lbl_803AD0F4[13] = (int)fn_80200850;
+    lbl_803AD0F4[14] = (int)fn_80200750;
+    lbl_803AD0F4[15] = (int)fn_802004B0;
+    lbl_803AD0D8[0] = (int)fn_80200460;
+    lbl_803AD0D8[1] = (int)fn_80200410;
+    lbl_803AD0D8[2] = (int)fn_80200380;
+    lbl_803AD0D8[3] = (int)fn_8020032C;
+    lbl_803AD0D8[4] = (int)fn_802002C4;
+    lbl_803AD0D8[5] = (int)fn_80200088;
+    lbl_803AD0D8[6] = (int)fn_801FFE18;
+}
+#pragma peephole reset
+#pragma scheduling reset
