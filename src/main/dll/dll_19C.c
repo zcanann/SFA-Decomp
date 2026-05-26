@@ -543,18 +543,32 @@ extern void unlockLevel(int idx, int a, int b);
 extern void *objCreateLight(int *obj, int v);
 extern f32 lbl_803E4E8C;
 
+typedef struct DfshShrineFlags {
+    u8 openedBySequence : 1;
+    u8 unused1 : 1;
+    u8 unused2 : 1;
+    u8 unused3 : 1;
+    u8 unused4 : 1;
+    u8 unused5 : 1;
+    u8 unused6 : 1;
+    u8 unused7 : 1;
+} DfshShrineFlags;
+
 #pragma scheduling off
 #pragma peephole off
 void dfsh_shrine_init(int *obj, u8 *init) {
     u8 *sub;
+    DfshShrineFlags *flags;
+
     sub = *(u8**)((char*)obj + 0xb8);
+    flags = (DfshShrineFlags *)(sub + 0x1c);
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
     *(s16*)(sub + 0x10) = 0xa;
     if (*(s16*)(init + 0x1a) > 0) {
         *(s16*)(sub + 0x10) = (s16)((s32)*(s16*)(init + 0x1a) >> 8);
     }
     sub[0x1a] = 4;
-    sub[0x1c] = (u8)(sub[0x1c] & ~0x80);
+    flags->openedBySequence = 0;
     *(s16*)(sub + 0x12) = 0;
     *(void**)((char*)obj + 0xbc) = (void*)&fn_801C2C68;
     ObjMsg_AllocQueue(obj, 4);
@@ -562,7 +576,7 @@ void dfsh_shrine_init(int *obj, u8 *init) {
     sub[0x1b] = 0;
     *(f32*)(sub + 4) = lbl_803E4E8C;
     unlockLevel(mapGetDirIdx(0x1f), 1, 0);
-    if (*(int*)sub == 0) {
+    if (*(void**)sub == NULL) {
         *(int*)sub = (int)objCreateLight(NULL, 1);
     }
     *(int*)((char*)obj + 0xf4) = 1;
