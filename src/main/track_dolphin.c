@@ -4398,3 +4398,24 @@ void fn_80065574(int matchVal, int obj, int flag)
         }
     }
 }
+
+void MapBlock_init(int obj)
+{
+    int off;
+    int i;
+    if (*(u32 *)(obj + 0x54) != 0) *(int *)(obj + 0x54) = obj + *(int *)(obj + 0x54);
+    if (*(u32 *)(obj + 0x4c) != 0) *(int *)(obj + 0x4c) = obj + *(int *)(obj + 0x4c);
+    if (*(u32 *)(obj + 0x50) != 0) *(int *)(obj + 0x50) = obj + *(int *)(obj + 0x50);
+    *(int *)(obj + 0x58) = obj + *(int *)(obj + 0x58);
+    *(int *)(obj + 0x5c) = obj + *(int *)(obj + 0x5c);
+    *(int *)(obj + 0x60) = obj + *(int *)(obj + 0x60);
+    if (*(u32 *)(obj + 0x78) != 0) *(int *)(obj + 0x78) = obj + *(int *)(obj + 0x78);
+    if (*(u32 *)(obj + 0x7c) != 0) *(int *)(obj + 0x7c) = obj + *(int *)(obj + 0x7c);
+    if (*(u32 *)(obj + 0x80) != 0) *(int *)(obj + 0x80) = obj + *(int *)(obj + 0x80);
+    *(int *)(obj + 0x68) = obj + *(int *)(obj + 0x68);
+    if (*(u32 *)(obj + 0x64) != 0) *(int *)(obj + 0x64) = obj + *(int *)(obj + 0x64);
+    for (i = 0, off = 0; i < *(u8 *)(obj + 0xa1); i++) {
+        *(int *)(*(int *)(obj + 0x68) + off) = obj + *(int *)(*(int *)(obj + 0x68) + off);
+        off += 0x1c;
+    }
+}
