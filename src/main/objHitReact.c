@@ -25,7 +25,7 @@ extern f32 gObjHitsScalarZero;
 extern f32 gObjHitsScalarOne;
 extern f32 gObjHitReactAltEffectScale;
 extern int gObjHitReactResetObjectCount;
-extern int *gObjHitReactResetObjects;
+extern ObjAnimComponent **gObjHitReactResetObjects;
 
 extern ObjHitReactEffectHandle *Resource_Acquire(u32 effectId,u32 count);
 
@@ -148,7 +148,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
         resetPending = hitState->resetFlags & OBJHITREACT_STATE_RESET_PENDING;
         if (resetPending != 0) {
           if (gObjHitReactResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS) {
-            gObjHitReactResetObjects[gObjHitReactResetObjectCount++] = obj;
+            gObjHitReactResetObjects[gObjHitReactResetObjectCount++] = (ObjAnimComponent *)obj;
           }
           hitState->activeHit = 0;
           hitState->flags = (s16)(hitState->flags & ~OBJHITREACT_STATE_RESET_PENDING);

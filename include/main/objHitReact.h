@@ -99,7 +99,7 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
 uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
                            uint entryArena,int objAnim);
 void ObjHitReact_UpdateResetObjects(void);
-int *ObjHitReact_GetResetObjects(int *outObjectCount);
+ObjAnimComponent **ObjHitReact_GetResetObjects(int *outObjectCount);
 
 #define objHitReactFn_80089890 objHitReact_update
 

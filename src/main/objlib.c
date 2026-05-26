@@ -123,7 +123,7 @@ extern ObjTriggerInterface **gGameUIInterface;
 extern void *lbl_803DCBD8;
 extern u8 *gObjHitsPriorityHitStates;
 extern int gObjHitReactResetObjectCount;
-extern int *gObjHitReactResetObjects;
+extern ObjAnimComponent **gObjHitReactResetObjects;
 extern u8 gObjGroupObjectCount;
 extern int lbl_803DCBF8;
 extern undefined4 DAT_803dd880;
@@ -1418,7 +1418,7 @@ void ObjHitReact_UpdateResetObjects(void)
   objectIndex = 0;
   objectOffset = 0;
   for (; objectIndex < gObjHitReactResetObjectCount; objectIndex = objectIndex + 1) {
-    obj = *(ObjAnimComponent **)((int)gObjHitReactResetObjects + objectOffset);
+    obj = gObjHitReactResetObjects[objectIndex];
     if (((obj->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0) &&
        (obj->activeHitboxMode != 'd')) {
       Obj_UpdateObject(obj,obj->modelInstance);
@@ -1426,10 +1426,8 @@ void ObjHitReact_UpdateResetObjects(void)
     objectOffset = objectOffset + 4;
   }
   objectOffset = 0;
-  objectIndex = objectOffset;
   for (; objectOffset < gObjHitReactResetObjectCount; objectOffset = objectOffset + 1) {
-    ObjHitbox_UpdateRotatedBounds(*(ObjHitbox **)((int)gObjHitReactResetObjects + objectIndex),1);
-    objectIndex = objectIndex + 4;
+    ObjHitbox_UpdateRotatedBounds((ObjHitbox *)gObjHitReactResetObjects[objectOffset],1);
   }
   return;
 }
@@ -1511,7 +1509,7 @@ void ObjHits_ResetWorkBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int *ObjHitReact_GetResetObjects(int *outObjectCount)
+ObjAnimComponent **ObjHitReact_GetResetObjects(int *outObjectCount)
 {
   *outObjectCount = gObjHitReactResetObjectCount;
   return gObjHitReactResetObjects;
@@ -1534,7 +1532,8 @@ int *ObjHitReact_GetResetObjects(int *outObjectCount)
 #pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
-  gObjHitReactResetObjects = (int *)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(int),0xe,0);
+  gObjHitReactResetObjects =
+      (ObjAnimComponent **)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(ObjAnimComponent *),0xe,0);
   gObjHitsPriorityHitStates =
       (u8 *)mmAlloc(OBJHITS_PRIORITY_WORK_SLOT_COUNT * sizeof(ObjHitsPriorityWorkSlot),0xe,0);
   lbl_803DCBD8 = mmAlloc(0x1900,0xe,0);
