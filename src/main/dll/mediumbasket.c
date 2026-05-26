@@ -3015,7 +3015,7 @@ int fn_8015B7EC(int obj, int p2)
 
   if ((s32)(s8)*(u8 *)(p2 + 0x346) == 0) goto return0;
 
-  (**(void (**)(int, int, int, f32))((char *)(*gPlayerInterface) + 0x30))(obj, p2, 4, timeDelta);
+  (**(void (**)(int, int, f32, int))((char *)(*gPlayerInterface) + 0x30))(obj, p2, timeDelta, 4);
   if (((u8)(**(int (**)(int, int, f32))((char *)(*gBaddieControlInterface) + 0x18))(obj, p2, lbl_803E2D00) & 1) == 0) {
     return 5;
   }
