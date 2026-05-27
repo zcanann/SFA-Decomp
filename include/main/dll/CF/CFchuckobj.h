@@ -49,4 +49,6 @@ void lfxemitter_init(int obj, int setup);
 void lfxemitter_release(void);
 void lfxemitter_initialise(void);
 
+void warpPadPlayerStandingOn(int obj);
+
 #endif /* MAIN_DLL_CF_CFCHUCKOBJ_H_ */

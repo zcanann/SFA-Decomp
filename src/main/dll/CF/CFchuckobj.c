@@ -20,6 +20,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern void Obj_FreeObject(int obj);
 extern int ObjTrigger_IsSet();
+extern f32 Vec_xzDistance(f32* posA, f32* posB);
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
 extern int Obj_GetPlayerObject(void);
@@ -43,9 +44,12 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
+extern int* gObjectTriggerInterface;
 extern int* gRomCurveInterface;
 extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803ddb38;
+extern u8 lbl_803DCDE0;
+extern s16 lbl_803DCEB8;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f64 DOUBLE_803e4af0;
@@ -87,6 +91,10 @@ extern f32 lbl_803E3E7C;
 extern f32 lbl_803E3E80;
 extern f32 lbl_803E3E84;
 extern f32 lbl_803E3E88;
+extern f32 lbl_803E3E98;
+extern f32 lbl_803E3EE0;
+
+extern void setAButtonIcon(int iconId);
 
 /*
  * --INFO--
@@ -1357,6 +1365,78 @@ void lfxemitter_update(int obj)
             }
             *(u8*)(state + 0x11f) = 1;
         }
+    }
+}
+
+void warpPadPlayerStandingOn(int obj)
+{
+    int def;
+    int state;
+    int player;
+    s16 gameBit;
+
+    def = *(int*)(obj + 0x4c);
+    state = *(int*)(obj + 0xb8);
+    gameBit = *(s16*)(def + 0x20);
+    if (gameBit != -1) {
+        if (GameBit_Get(gameBit) != 0) {
+            *(u8*)(state + 0xe) = *(u8*)(state + 0xe) & 0x7f;
+        } else {
+            *(u8*)(state + 0xe) = *(u8*)(state + 0xe) | 0x80;
+        }
+    }
+
+    if ((*(u8*)(obj + 0xaf) & 4) != 0) {
+        setAButtonIcon(0x1b);
+        if (GameBit_Get(0x912) == 0) {
+            (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(2, obj, -1);
+            GameBit_Set(0x912, 1);
+            return;
+        }
+    }
+
+    player = Obj_GetPlayerObject();
+    if (player == 0) {
+        return;
+    }
+
+    if ((*(u8*)(state + 0xd) == 0) && (*(u8*)(state + 0xc) == 0) &&
+        ((*(u16*)(obj + 0xb0) & 0x1000) == 0)) {
+        if (lbl_803DCEB8 > -1) {
+            player = Obj_GetPlayerObject();
+            if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < lbl_803E3EE0) {
+                (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(1, obj, -1);
+                *(s32*)(obj + 0xf4) = *(s16*)(state + 8);
+                *(u8*)(state + 0xd) = 0;
+                *(u8*)(state + 0xc) = 1;
+                lbl_803DCDE0 = 2;
+                goto updateTimer;
+            }
+        }
+        gameBit = *(s16*)(def + 0x20);
+        if (((gameBit == -1) ||
+             ((GameBit_Get(gameBit) != 0) && ((*(u8*)(obj + 0xaf) & 4) != 0))) &&
+            (ObjTrigger_IsSet(obj) != 0)) {
+            (*(void (**)(int, int, int))(*(int*)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+            *(s32*)(obj + 0xf4) = *(s16*)(state + 8);
+            *(u8*)(state + 0xd) = 1;
+            *(u8*)(state + 0xc) = 1;
+        }
+    }
+
+updateTimer:
+    if (*(u8*)(state + 0xc) != 0) {
+        if (*(s32*)(obj + 0xf4) > 0) {
+            *(s32*)(obj + 0xf4) = *(s32*)(obj + 0xf4) - framesThisStep;
+        } else {
+            *(s32*)(obj + 0xf4) = 0;
+            *(u8*)(state + 0xc) = 0;
+        }
+    }
+    *(f32*)(state + 4) = *(f32*)(state + 4) - timeDelta;
+    if (*(f32*)(state + 4) <= lbl_803E3E98) {
+        *(f32*)(state + 4) = lbl_803E3E98;
+        *(s16*)(state + 0xa) = -1;
     }
 }
 
