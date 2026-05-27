@@ -2757,6 +2757,7 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_800566A4(int key, int type)
@@ -2781,6 +2782,7 @@ void fn_800566A4(int key, int type)
 }
 #pragma scheduling reset
 #pragma peephole reset
+#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -3032,3 +3034,92 @@ int texAnimFn_800567a8(int key, int p4, int type)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int* gCheckpointInterface;
+extern int* gRomCurveInterface;
+extern int* gNewCloudsInterface;
+extern int* gCloudActionInterface;
+extern void audioStopByMask(int mask);
+extern void Sfx_ClearLoopedObjectSounds(void);
+extern void doNothing_8001F678(int a, int b);
+extern void Obj_ResetObjectSystem(void);
+extern void textureFree(int id);
+extern void voxmaps_resetLoadedMaps(void);
+extern void textureFreeFn_8012fcec(void);
+extern void fn_80133934(void);
+
+#pragma scheduling off
+#pragma peephole off
+void unloadMap(void)
+{
+    int layer;
+    int i;
+    s8* cur;
+    int mapType;
+    int blk;
+    int j;
+    int k;
+    int rb;
+    char* p;
+    int n;
+
+    audioStopByMask(4);
+    Sfx_ClearLoopedObjectSounds();
+    doNothing_8001F678(1, 0);
+    for (layer = 0; layer < 5; layer++) {
+        cur = (s8*)lbl_803822B4[layer];
+        for (i = 0; i < 256; i++) {
+            mapType = cur[i];
+            if (mapType >= 0) {
+                lbl_803DCE8C[mapType]--;
+                if (lbl_803DCE8C[mapType] == 0) {
+                    blk = lbl_803DCE9C[mapType];
+                    lbl_803DCE94[mapType] = -1;
+                    lbl_803DCE9C[mapType] = 0;
+                    for (j = 0; j < *(u8*)(blk + 0xa2); j++) {
+                        rb = *(int*)(blk + 0x64) + j * 68;
+                        p = (char*)rb;
+                        for (k = 0; k < *(u8*)(rb + 0x41); k++) {
+                            u32 cell = *(u8*)(p + 0x2a);
+                            if (cell != 0xff) {
+                                if (*(u8*)(lbl_803DCE68 + cell * 16 + 12) != 0)
+                                    *(u8*)(lbl_803DCE68 + cell * 16 + 12) -= 1;
+                            }
+                            if (*(u8*)(p + 0x29) != 0)
+                                fn_800566A4(*(int*)(p + 0x24), *(u8*)(p + 0x29));
+                            p += 8;
+                        }
+                    }
+                    for (j = 0; j < *(u8*)(blk + 0xa0); j++)
+                        textureFree(*(int*)(*(int*)(blk + 0x54) + j * 4));
+                    if (*(void**)(blk + 0x74) != 0)
+                        mm_free(*(void**)(blk + 0x74));
+                    if (*(void**)(blk + 0x70) != 0)
+                        mm_free(*(void**)(blk + 0x70));
+                    setMapBlockFlag();
+                    mm_free((void*)blk);
+                }
+            }
+        }
+    }
+    lbl_803DCE98 = 0;
+    Obj_ResetObjectSystem();
+    for (n = 0; n < 120; n++) {
+        if (lbl_80386468[n] != 0) {
+            mm_free(lbl_80386468[n]);
+            lbl_80386468[n] = 0;
+        }
+    }
+    (*(void (*)(void))(*(int *)(*gCheckpointInterface + 4)))();
+    (*(void (*)(void))(*(int *)(*gRomCurveInterface + 4)))();
+    lbl_803DCDEC = 0;
+    playerMapOffsetX = lbl_803DEBCC;
+    playerMapOffsetZ = lbl_803DEBCC;
+    voxmaps_resetLoadedMaps();
+    textureFreeFn_8012fcec();
+    fn_80133934();
+    (*(void (*)(int, int))(*(int *)(*gNewCloudsInterface + 0xc)))(-1, 0);
+    (*(void (*)(void))(*(int *)(*gCloudActionInterface + 0x14)))();
+}
+#pragma peephole reset
+#pragma scheduling reset
