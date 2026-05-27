@@ -3529,5 +3529,42 @@ void modelInitMtxs(int p1, int p2)
         lbl_803DCC48 = 3;
     }
 }
+
+extern void fn_80039DF8(int obj, int p4, f32 x);
+extern f32 lbl_803DE9A4;
+
+void fn_8003B500(int obj, int p4)
+{
+    s16* found;
+    int* table;
+    int i;
+    int j;
+    int k;
+    int n;
+
+    found = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        i = 0;
+        j = 0;
+        n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+        for (k = 0; k < n; k++) {
+            u8* data = *(u8**)((char*)table + 0x10);
+            s32 di = *(s8*)(obj + 0xad) + i + 1;
+            if (data[di] != 0xff && data[i] == 0) {
+                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+            }
+            i = i + *(s8*)((char*)table + 0x55) + 1;
+            j += 0x12;
+        }
+    }
+    if (found != NULL) {
+        if (found[0] != 0) {
+            found[0] = (s16)(found[0] * 3 / 4);
+        }
+        fn_80039DF8(obj, p4, lbl_803DE9A4);
+        *(s16*)(p4 + 0x1a) = (s16)(u8)*(s16*)(p4 + 0x1a);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
