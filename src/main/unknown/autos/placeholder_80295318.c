@@ -6351,6 +6351,9 @@ extern f32 lbl_803E7E98;
 extern f32 timeDelta;
 extern void fn_8011F34C(int a);
 extern void fn_80295CF4(int obj, int a);
+extern int getAngle(f32 a, f32 b);
+extern f32 lbl_803E7F34;
+extern void Music_Trigger(int a, int b);
 
 #pragma scheduling off
 #pragma peephole off
@@ -7463,6 +7466,109 @@ void fn_802B07D8(int obj, int state)
     if (b == 0 && GameBit_Get(0x75)) {
         fn_80295CF4(obj, 0);
     }
+}
+
+int fn_802BAA54(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 k = lbl_803E8234;
+    s16 v;
+
+    *(f32 *)((char *)state + 0x294) = k;
+    *(f32 *)((char *)state + 0x284) = k;
+    *(f32 *)((char *)state + 0x280) = k;
+    *(f32 *)((char *)obj + 0x24) = k;
+    *(f32 *)((char *)obj + 0x28) = k;
+    *(f32 *)((char *)obj + 0x2c) = k;
+    *(u32 *)((char *)state) |= 0x200000;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
+        if (*(s16 *)((char *)obj + 0xa0) != lbl_803DC748) {
+            ObjAnim_SetCurrentMove(obj, lbl_803DC748, lbl_803E8234, 0);
+        }
+        *(s16 *)((char *)inner + 0xa84) = randomGetRange(0x4b0, 0x960);
+    }
+
+    v = *(s16 *)((char *)inner + 0xa84) - (int)fv;
+    *(s16 *)((char *)inner + 0xa84) = v;
+    if (v <= 0) {
+        return -3;
+    }
+    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+        if (*(u8 *)((char *)inner + 0xa8e) & 0x20) {
+            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                randomGetRange(0, 2) + 6, obj, -1);
+        } else {
+            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                5, obj, -1);
+        }
+        buttonDisable(0, 0x100);
+    }
+    return 0;
+}
+
+int fn_8029D900(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int hit;
+
+    *(u8 *)((char *)state + 0x34d) = 3;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        if (ObjHits_GetPriorityHit(obj, &hit, 0, 0)) {
+            *(s16 *)((char *)inner + 0x478) =
+                (s16)getAngle(-*(f32 *)((char *)hit + 0x24), -*(f32 *)((char *)hit + 0x2c));
+            *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        }
+        ObjAnim_SetCurrentMove(obj, 0x407, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F34;
+    }
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0x407:
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0x408, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7FCC;
+        }
+        break;
+    case 0x408:
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        break;
+    }
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
+    return 0;
+}
+
+int fn_802957B4(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int sub;
+
+    if (obj == 0) {
+        return 0;
+    }
+    (*(void (*)(int, int, int))(*(int *)(*gCameraInterface + 0x24)))(0, 1, 0);
+    (*(void (*)(int, int, int, int))(*(int *)(*gObjectTriggerInterface + 0x50)))(0x42, 4, 0, 0);
+
+    sub = *(int *)((char *)inner + 0x7f0);
+    if (sub == 0) {
+        return 0;
+    }
+    (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 0);
+    (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(obj, 0);
+    *(s16 *)((char *)obj + 6) = *(s16 *)((char *)obj + 6) & ~8;
+    *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) &= ~0x1000;
+    *(int *)((char *)inner + 0x7f0) = 0;
+    *(s16 *)((char *)obj + 0xa2) = -1;
+    (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 1);
+    *(int *)((char *)inner + 0x304) = (int)fn_802A514C;
+    Music_Trigger(0x1f, 0);
+    Music_Trigger(0x97, 0);
+    Music_Trigger(0xe6, 0);
+    Music_Trigger(0xd5, 0);
+    return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
