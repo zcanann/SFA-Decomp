@@ -824,3 +824,59 @@ void fn_801B1D84(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *getTrickyObject(void);
+extern void objRenderFn_80041018(int *obj);
+extern int *gPartfxInterface;
+extern f32 lbl_803E4880;
+extern f32 lbl_803E4884;
+extern f32 lbl_803E4888;
+
+/* dimicewall_update: on shatter, emit two snow particle bursts and latch the
+ * gamebit; otherwise let Tricky push through it. */
+#pragma scheduling off
+#pragma peephole off
+void dimicewall_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    int *def = *(int **)((char *)obj + 0x4c);
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+    if (*(u8 *)((char *)extra + 1) == 0) {
+        if (*(s8 *)extra <= 0) {
+            f32 desc[6];
+            int i;
+            desc[2] = (f32)(s8)*(s8 *)((char *)def + 0x19) / lbl_803E4880;
+            desc[5] = lbl_803E4884;
+            for (i = 45; i != 0; i--) {
+                desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(-250, 250));
+                desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(0, 450));
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
+                    obj, 2041, desc, 2, -1, 0);
+            }
+            for (i = 25; i != 0; i--) {
+                desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(-250, 250));
+                desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(0, 450));
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
+                    obj, 2042, desc, 2, -1, 0);
+            }
+            if (*(int *)((char *)def + 0x14) != 7433) {
+                Sfx_PlayFromObject((int)obj, 1147);
+            }
+            *(u8 *)((char *)extra + 1) = 1;
+            if (*(s16 *)((char *)def + 0x1e) != -1) {
+                GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            }
+        } else {
+            int *tricky = getTrickyObject();
+            if (tricky != NULL) {
+                if ((*(u8 *)((char *)obj + 0xaf) & 4) != 0) {
+                    (*(void (**)(int *, int *, int, int))(**(int **)((char *)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+                }
+                *(u8 *)((char *)obj + 0xaf) &= ~8;
+                objRenderFn_80041018(obj);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
