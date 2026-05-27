@@ -56,11 +56,23 @@ extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int GameBit_Get(int id);
 extern void Sfx_PlayFromObject(int obj, int sfx);
+extern f32 lbl_803E39AC;
+extern f64 lbl_803E39B0;
 extern f32 lbl_803E39B8;
 extern f32 lbl_803E39BC;
 extern f32 lbl_803E39C0;
 extern f32 lbl_803E39C4;
 extern f64 lbl_803E39C8;
+
+#pragma scheduling off
+#pragma peephole off
+f32 fn_80183204(int obj)
+{
+    u8* state = *(u8**)(obj + 0xb8);
+    return lbl_803E39AC - (f32)(u32)state[0x13] / (f32)(u32)state[0x28];
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
