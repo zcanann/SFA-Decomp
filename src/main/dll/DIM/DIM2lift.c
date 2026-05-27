@@ -1422,3 +1422,41 @@ int fn_801BAE00(int obj, int param2, f32 arg)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BAF58(int obj, int param2, f32 arg)
+{
+    int t;
+    f32 v;
+    ObjHits_SetHitVolumeSlot(obj, 9, 1, -1);
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        *(s16 *)(obj + 0xa2) = -1;
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+        if ((int)randomGetRange(0, 1) != 0) {
+            if (*(s8 *)(param2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove((int *)obj, 0xb, lbl_803E4BD8, 0);
+                *(u8 *)(param2 + 0x346) = 0;
+            }
+            *(f32 *)(param2 + 0x2a0) = lbl_803E4C00;
+        } else {
+            if (*(s8 *)(param2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove((int *)obj, 0x10, lbl_803E4BD8, 0);
+                *(u8 *)(param2 + 0x346) = 0;
+            }
+            *(f32 *)(param2 + 0x2a0) = lbl_803E4C04;
+        }
+    }
+    t = *(int *)(param2 + 0x314);
+    if (t & 0x200) {
+        *(int *)(param2 + 0x314) = t & ~0x200;
+        gDIMbossSequenceFlags |= 5;
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, randomGetRange(0, 1), lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
