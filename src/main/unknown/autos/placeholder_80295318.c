@@ -6282,32 +6282,6 @@ extern f32 lbl_803E7FD8;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8029D454(int obj, int state)
-{
-    int inner = *(int *)((char *)obj + 0xb8);
-    *(u8 *)((char *)state + 0x34d) = 3;
-    if (*(s8 *)(*(int *)((char *)inner + 0x35c)) > 0) {
-        ObjAnim_SetCurrentMove(obj, 0xc8, lbl_803E7EA4, 0);
-        *(int *)((char *)state + 0x308) = 0;
-        return -0x21;
-    }
-    return 0;
-}
-
-int fn_802977A8(int obj, int state)
-{
-    if (*(s8 *)((char *)state + 0x27a) != 0) {
-        ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E7EA4, 0);
-        *(u8 *)((char *)state + 0x346) = 0;
-        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F08;
-        if (*(s8 *)((char *)state + 0x346) != 0) {
-            *(int *)((char *)state + 0x308) = 0;
-            return 0x41;
-        }
-    }
-    return 0;
-}
-
 int fn_8029DA60(int obj, int state)
 {
     *(u8 *)((char *)state + 0x34d) = 3;
