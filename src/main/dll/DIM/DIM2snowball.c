@@ -1619,3 +1619,100 @@ void dimtruthhornice_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int **ObjGroup_GetObjects(int group, int *countOut);
+extern int Obj_AllocObjectSetup(int kind, int id);
+extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+extern u8 Obj_IsLoadingLocked(void);
+extern int *gRomCurveInterface;
+extern u8 framesThisStep;
+
+#pragma scheduling off
+#pragma peephole off
+void dim2pathgenerator_update(int *obj)
+{
+    int *def;
+    int *extra = *(int **)((char *)obj + 0xb8);
+    int toggle;
+    int **objs;
+    int count;
+    int i;
+
+    def = *(int **)((char *)obj + 0x4c);
+    if (GameBit_Get(*(s16 *)((char *)def + 0x22)) == 0) {
+        return;
+    }
+    if ((*(u8 *)((char *)extra + 0x9a7) & 4) != 0) {
+        if ((*(u8 *)((char *)extra + 0x9a7) & 2) == 0) {
+            int n = 21;
+            if (((int (*)(int *, int, int, f32, f32, f32))((int *)*gRomCurveInterface)[0x14 / 4])(
+                    &n, 1, 10, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+                    *(f32 *)((char *)obj + 0x14)) != -1) {
+                int *cv = (int *)((int (*)(void))((int *)*gRomCurveInterface)[0x1c / 4])();
+                ((void (*)(void))((int *)*gRomCurveInterface)[0x74 / 4])();
+                *(u8 *)((char *)extra + 0x9a6) =
+                    ((int (*)(int *, void *, void *, void *, void *))((int *)*gRomCurveInterface)[0x78 / 4])(
+                        cv, (char *)extra + 0xc, (char *)extra + 0x32c, (char *)extra + 0x64c,
+                        (char *)extra + 0x96c);
+                *(u8 *)((char *)extra + 0x9a7) |= 2;
+                *(f32 *)extra = *(f32 *)((char *)cv + 8);
+                *(f32 *)((char *)extra + 4) = *(f32 *)((char *)cv + 0xc);
+                *(f32 *)((char *)extra + 8) = *(f32 *)((char *)cv + 0x10);
+            }
+        }
+    } else {
+        *(f32 *)extra = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)extra + 4) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)extra + 8) = *(f32 *)((char *)obj + 0x14);
+    }
+    {
+        s16 t = *(s16 *)((char *)extra + 0x99e) - framesThisStep;
+        *(s16 *)((char *)extra + 0x99e) = t;
+        if (t > 0) {
+            return;
+        }
+    }
+    toggle = *(u8 *)((char *)extra + 0x9a7) & 1;
+    *(s16 *)((char *)extra + 0x99e) = *(s16 *)((char *)extra + 0x9a0);
+    *(u8 *)((char *)extra + 0x9a7) &= ~1;
+    objs = ObjGroup_GetObjects(47, &count);
+    for (i = 0; i < count; i++) {
+        if (*(s16 *)((char *)extra + 0x9a2 + toggle * 2) == *(s16 *)((char *)objs[i] + 0x46)) {
+            int *p = *(int **)((char *)objs[i] + 0x4c);
+            int c2;
+            int j;
+            int **o2;
+            *(f32 *)((char *)p + 8) = *(f32 *)extra;
+            *(f32 *)((char *)p + 0xc) = *(f32 *)((char *)extra + 4);
+            *(f32 *)((char *)p + 0x10) = *(f32 *)((char *)extra + 8);
+            *(int *)((char *)p + 0x14) = *(int *)((char *)def + 0x14);
+            (*(void (**)(int *, int))(**(int **)((char *)objs[i] + 0x68) + 4))(objs[i], 1);
+            ObjGroup_RemoveObject(objs[i], 47);
+            o2 = ObjGroup_GetObjects(47, &c2);
+            for (j = 0; j < c2; j++) {
+            }
+            *(u8 *)((char *)extra + 0x9a7) |= (toggle ^ 1);
+            return;
+        }
+    }
+    if (Obj_IsLoadingLocked()) {
+        int *np = (int *)Obj_AllocObjectSetup(36, *(s16 *)((char *)extra + 0x9a2 + toggle * 2));
+        *(f32 *)((char *)np + 8) = *(f32 *)extra;
+        *(f32 *)((char *)np + 0xc) = *(f32 *)((char *)extra + 4);
+        *(f32 *)((char *)np + 0x10) = *(f32 *)((char *)extra + 8);
+        *(u8 *)((char *)np + 4) = *(u8 *)((char *)def + 4);
+        *(u8 *)((char *)np + 6) = *(u8 *)((char *)def + 6);
+        *(u8 *)((char *)np + 5) = *(u8 *)((char *)def + 5);
+        *(u8 *)((char *)np + 7) = *(u8 *)((char *)def + 7);
+        *(u8 *)((char *)np + 7) = 255;
+        *(u8 *)((char *)np + 3) = *(u8 *)((char *)def + 3);
+        *(s8 *)((char *)np + 0x18) = *(s8 *)((char *)def + 0x1c);
+        *(s16 *)((char *)np + 0x1a) = *(u8 *)((char *)def + 0x1a);
+        *(s16 *)((char *)np + 0x1c) = *(u8 *)((char *)def + 0x1b);
+        *(int *)((char *)np + 0x14) = *(int *)((char *)def + 0x14);
+        Obj_SetupObject((int)np, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
+        *(u8 *)((char *)extra + 0x9a7) |= (toggle ^ 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
