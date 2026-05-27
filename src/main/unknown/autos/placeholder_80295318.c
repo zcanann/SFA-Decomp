@@ -6354,6 +6354,17 @@ extern void fn_80295CF4(int obj, int a);
 extern int getAngle(f32 a, f32 b);
 extern f32 lbl_803E7F34;
 extern void Music_Trigger(int a, int b);
+extern f32 lbl_803E8238;
+extern f32 lbl_803E823C;
+extern f32 lbl_803DC690[];
+extern int lbl_803DC688[];
+extern int Obj_GetPlayerObject(void);
+extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern void doRumble(f32 a);
+extern f32 lbl_803E81CC;
+extern f32 lbl_803E81D0;
+extern f32 lbl_803E81D4;
+extern f32 lbl_803E81D8;
 
 #pragma scheduling off
 #pragma peephole off
@@ -7569,6 +7580,113 @@ int fn_802957B4(int obj)
     Music_Trigger(0xe6, 0);
     Music_Trigger(0xd5, 0);
     return 1;
+}
+
+int fn_802B978C(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int sub = *(int *)((char *)obj + 0x54);
+    f32 k = lbl_803E8234;
+
+    *(u32 *)((char *)state) |= 0x200000;
+    *(f32 *)((char *)state + 0x294) = k;
+    *(f32 *)((char *)state + 0x284) = k;
+    *(f32 *)((char *)state + 0x280) = k;
+    *(f32 *)((char *)obj + 0x24) = k;
+    *(f32 *)((char *)obj + 0x28) = k;
+    *(f32 *)((char *)obj + 0x2c) = k;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(u8 *)((char *)inner + 0xa8e) &= ~0x8;
+        *(s16 *)((char *)sub + 0x60) |= 0x200;
+        ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E8238;
+        Sfx_PlayFromObject(obj, 0x3b3);
+    }
+    if ((*(s16 *)((char *)sub + 0x60) & 0x200) && (*(s8 *)((char *)sub + 0xad) & 2)) {
+        *(u8 *)((char *)inner + 0xa8e) |= 0x8;
+    }
+    if (*(u8 *)((char *)inner + 0xa8e) & 0x8) {
+        *(u8 *)((char *)sub + 0x6e) = 0;
+        *(u8 *)((char *)sub + 0x6f) = 0;
+        *(s16 *)((char *)sub + 0x60) &= ~0x200;
+    } else {
+        *(u8 *)((char *)sub + 0x6e) = 0xb;
+        *(u8 *)((char *)sub + 0x6f) = 1;
+        *(s16 *)((char *)sub + 0x60) |= 0x200;
+    }
+    if (*(f32 *)((char *)obj + 0x98) > lbl_803E823C) {
+        return 8;
+    }
+    return 0;
+}
+
+int fn_8029BC4C(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int idx;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        if (lbl_803DE459 == 0) {
+            lbl_803DE459 = 1;
+        } else if (lbl_803DE459 > 2) {
+            lbl_803DE459 = 2;
+        }
+        idx = lbl_803DE459;
+        *(f32 *)((char *)state + 0x2a0) = lbl_803DC690[idx - 1];
+        ObjAnim_SetCurrentMove(obj, lbl_803DC688[idx - 1], lbl_803E7EA4, 0);
+        lbl_803DE459 = 0;
+    }
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x70) = 0;
+        if (*(void **)((char *)state + 0x2d0) != NULL) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029C8C8;
+            return 0x25;
+        }
+        ((ByteFlags *)((char *)inner + 0x3f1))->b80 = 1;
+        *(int *)((char *)inner + 0x360) |= 0x800000;
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return 2;
+    }
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
+    return 0;
+}
+
+void fn_802B8360(int obj, int p2)
+{
+    if (*(int *)((char *)p2 + 0x314) & 4) {
+        *(int *)((char *)p2 + 0x314) &= ~4;
+        Sfx_PlayFromObject(obj, 0x12e);
+    }
+    if (*(int *)((char *)p2 + 0x314) & 2) {
+        *(int *)((char *)p2 + 0x314) &= ~2;
+        Sfx_PlayFromObject(obj, 0x12e);
+    }
+    if (*(int *)((char *)p2 + 0x314) & 1) {
+        *(int *)((char *)p2 + 0x314) &= ~1;
+        if (randomGetRange(0, 2) == 0) {
+            Sfx_PlayFromObject(obj, 0x43c);
+        }
+    }
+    if (*(int *)((char *)p2 + 0x314) & 0x80) {
+        *(int *)((char *)p2 + 0x314) &= ~0x80;
+        Sfx_PlayFromObject(obj, 0x130);
+    }
+    if (*(int *)((char *)p2 + 0x314) & 0x200) {
+        *(int *)((char *)p2 + 0x314) &= ~0x200;
+        Sfx_PlayFromObject(obj, 0x133);
+    }
+    if (*(int *)((char *)p2 + 0x314) & 0x40) {
+        *(int *)((char *)p2 + 0x314) &= ~0x40;
+        Sfx_PlayFromObject(obj, 0x135);
+    }
+    if (*(int *)((char *)p2 + 0x314) & 0x800) {
+        *(int *)((char *)p2 + 0x314) &= ~0x800;
+        ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x19, 2, 1);
+        Sfx_PlayFromObject(obj, 0x136);
+        CameraShake_Start(lbl_803E81CC, lbl_803E81D0, lbl_803E81D4);
+        doRumble(lbl_803E81D8);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
