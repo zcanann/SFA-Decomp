@@ -1524,3 +1524,40 @@ void DR_CloudRunner_initialise(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Resource_Acquire(int id, int kind);
+extern int lbl_803DB160[];
+extern int lbl_803DB1B0[];
+extern void *lbl_803DE4C8;
+extern void *lbl_803DE4D4;
+extern void fn_802BC27C();
+extern void fn_802BC19C();
+extern void fn_802BC0D8();
+extern void fn_802BD7AC();
+extern void fn_802BCE14();
+extern void fn_802BCD04();
+
+#pragma scheduling off
+#pragma peephole off
+void dim2prisonmammoth_initialise(void)
+{
+    ((void **)lbl_803DB160)[0] = (void *)fn_802BC36C;
+    ((void **)lbl_803DB160)[1] = (void *)fn_802BC27C;
+    ((void **)lbl_803DB160)[2] = (void *)fn_802BC19C;
+    ((void **)lbl_803DB160)[3] = (void *)fn_802BC0D8;
+    lbl_803DE4C8 = (void *)fn_802BC0D0;
+}
+
+void DR_EarthWarrior_initialise(void)
+{
+    ((void **)lbl_803DB1B0)[0] = (void *)fn_802BDBCC;
+    ((void **)lbl_803DB1B0)[1] = (void *)fn_802BD7AC;
+    ((void **)lbl_803DB1B0)[2] = (void *)fn_802BCE14;
+    ((void **)lbl_803DB1B0)[3] = (void *)fn_802BCD04;
+    lbl_803DE4D4 = (void *)fn_802BCCFC;
+    if (lbl_803DE4D0 == NULL) {
+        lbl_803DE4D0 = (void *)Resource_Acquire(0x5a, 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
