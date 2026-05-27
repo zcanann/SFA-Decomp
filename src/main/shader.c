@@ -2801,11 +2801,11 @@ void fn_80056A6C(int type, u32 key, int value)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int mapGetRomListAndOffsets(int *p1, int b);
+extern int mapGetRomListAndOffsets(int p1, int b);
 
 #pragma scheduling off
 #pragma peephole off
-void mapLoadForObject(int *p1, char *p2)
+void mapLoadForObject(int p1, char *p2)
 {
     int saved = lbl_803DCEC8;
     int romList = mapGetRomListAndOffsets(p1, 1);
@@ -2820,7 +2820,7 @@ void mapLoadForObject(int *p1, char *p2)
         slot++;
     }
     *(u8 *)(p2 + 0x34) = (u8)slot;
-    (*(void (*)(int *, int))(*(int *)(*gMapEventInterface + 0x48)))(p1, slot);
+    (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x48)))(p1, slot);
     defStartFn_8005972c((void *)romList, &lbl_803822C8[slot * 0x8c], slot, 0);
     (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(slot);
     lbl_803DCEC8 = saved;
@@ -2863,6 +2863,51 @@ int fn_80056BF4(int kx, int ky, int sx, int sy)
     *(f32 *)(e + 4) = lbl_803DEBCC;
     *(u8 *)(e + 0xc) += 1;
     return slot;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern void *mmAlloc(int size, int heap, int flags);
+extern void mapsBinGetRomlistSize(int offset, int *a, int *b, int *c);
+extern void fileLoadToBufferOffset(int id, void *buf, int offset, int len);
+extern int lbl_803DCE7C;
+
+#pragma scheduling off
+#pragma peephole off
+int mapGetRomListAndOffsets(int p1, int flag)
+{
+    int tabOff = p1 * 7 << 2;
+    int offset0 = *(int *)(lbl_803DCE7C + tabOff);
+    int tailLen = *(int *)(lbl_803DCE7C + tabOff + 0x1c) - offset0;
+    int v0, v1, v2;
+    int i;
+
+    mapsBinGetRomlistSize(offset0, &v0, &v1, &v2);
+    lbl_803DCEA0 = mmAlloc(tailLen + ((v0 + 7 >> 3) + 0x401 + v2), 5, 0);
+    fileLoadToBufferOffset(0x1d, lbl_803DCEA0, offset0, tailLen);
+
+    *(int *)((char *)lbl_803DCEA0 + 0xc) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 4) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x14) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 8) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x30) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 0xc) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x2c) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 0x10) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x34) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 0x14) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x20) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 0x18) - offset0;
+
+    piRomLoadSection(*(int *)(lbl_803DCE7C + tabOff + 0x18), p1, *(int *)((char *)lbl_803DCEA0 + 0x20));
+    *(int *)((char *)lbl_803DCEA0 + 0x10) = v2 + (*(int *)(lbl_803DCE7C + tabOff + 0x1c) + (int)lbl_803DCEA0) - offset0;
+
+    for (i = 0; i < (v0 + 7 >> 3) + 1; i++) {
+        *(u8 *)(*(int *)((char *)lbl_803DCEA0 + 0x10) + i) = 0;
+    }
+    *(f32 *)((char *)lbl_803DCEA0 + 0x24) = lbl_803DEBCC;
+    *(f32 *)((char *)lbl_803DCEA0 + 0x28) = lbl_803DEBCC;
+    *(u8 *)((char *)lbl_803DCEA0 + 0x18) = 0;
+    *(u8 *)((char *)lbl_803DCEA0 + 0x19) = 0;
+    if (flag == 0) {
+        defStartFn_8005972c(lbl_803DCEA0, &lbl_803822C8[p1 * 0x8c], p1, 0);
+        (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(p1);
+    }
+    return (int)lbl_803DCEA0;
 }
 #pragma scheduling reset
 #pragma peephole reset
