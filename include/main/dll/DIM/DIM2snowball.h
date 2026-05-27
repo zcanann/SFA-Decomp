@@ -50,8 +50,8 @@ int dim2conveyor_func08(void);
 void dim2conveyor_free(int obj);
 void dim2conveyor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2conveyor_hitDetect(void);
-void dim2conveyor_update(void);
-void dim2conveyor_init(void);
+void dim2conveyor_update(int* obj);
+void dim2conveyor_init(int* obj, u8* params);
 void dim2conveyor_release(void);
 void dim2conveyor_initialise(void);
 

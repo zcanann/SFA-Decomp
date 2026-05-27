@@ -1432,3 +1432,70 @@ void dim_tricky_update(int* obj)
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling reset
+
+extern f32 sin(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern f32 timeDelta;
+extern f32 lbl_803E4A5C;
+extern f32 lbl_803E4A60;
+extern f32 lbl_803E4A64;
+extern f32 lbl_803E4A68;
+extern f32 lbl_803E4A6C;
+
+#pragma scheduling off
+#pragma peephole off
+void dim2conveyor_init(int *obj, u8 *params)
+{
+    f32 scale = (f32)*(s16 *)((char *)params + 0x1a) / lbl_803E4A64;
+    int *extra;
+    *(s16 *)obj = (s16)(*(s8 *)((char *)params + 0x18) << 8);
+    extra = *(int **)((char *)obj + 0xb8);
+    *(f32 *)extra = scale * fn_80293E80(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
+    *(f32 *)((char *)extra + 4) = scale * sin(lbl_803E4A68 * (f32)*(s16 *)obj / lbl_803E4A6C);
+    *(f32 *)((char *)extra + 0xc) = lbl_803E4A60;
+    *(int *)((char *)extra + 0x10) = 0;
+    ObjGroup_AddObject(obj, 22);
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    if (*(u32 *)((char *)params + 0x14) == 0x49b23) {
+        GameBit_Set(3164, 1);
+    }
+}
+
+void dim2conveyor_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    Sfx_PlayFromObject((int)obj, 501);
+    if (*(int *)((char *)extra + 0x10) != 0) {
+        *(int *)((char *)extra + 0x10) = *(int *)((char *)extra + 0x10) - 1;
+        if (*(int *)((char *)extra + 0x10) == 0) {
+            Music_Trigger(223, 0);
+        }
+    }
+    switch (*(int *)((char *)*(int **)((char *)obj + 0x4c) + 0x14)) {
+    case 0x49b23:
+        if (GameBit_Get(3169) != 0) {
+            *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0xc) + timeDelta;
+            if (*(f32 *)((char *)extra + 0xc) > lbl_803E4A5C) {
+                if (GameBit_Get(3163) != 0) {
+                    GameBit_Set(3164, 1);
+                    GameBit_Set(3163, 0);
+                } else if (GameBit_Get(3164) != 0) {
+                    GameBit_Set(3164, 0);
+                    GameBit_Set(3163, 1);
+                }
+                *(f32 *)((char *)extra + 0xc) = lbl_803E4A60;
+            }
+        }
+        if (GameBit_Get(3163) != 0) {
+            GameBit_Set(3164, 0);
+        }
+        if (GameBit_Get(3163) == 0) {
+            GameBit_Set(3164, 1);
+        }
+        break;
+    case 7849:
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
