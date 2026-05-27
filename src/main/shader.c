@@ -2914,6 +2914,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
 #pragma scheduling reset
 #pragma peephole reset
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void mapInitSetRects(s16 *rect, u8 *bitmap, int p3, int p4, int idx)
@@ -2942,6 +2943,7 @@ void mapInitSetRects(s16 *rect, u8 *bitmap, int p3, int p4, int idx)
 }
 #pragma scheduling reset
 #pragma peephole reset
+#pragma dont_inline reset
 
 extern void Obj_UpdateWorldTransform(void);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
@@ -3120,6 +3122,60 @@ void unloadMap(void)
     fn_80133934();
     (*(void (*)(int, int))(*(int *)(*gNewCloudsInterface + 0xc)))(-1, 0);
     (*(void (*)(void))(*(int *)(*gCloudActionInterface + 0x14)))();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int lbl_80382238[];
+extern void loadAssetFileById(void* out, int id);
+extern void* memset(void* p, int v, int n);
+
+#pragma scheduling off
+#pragma peephole off
+void initMaps(void)
+{
+    void* data;
+    int total;
+    int i;
+    int i2;
+    char* entry;
+
+    data = 0;
+    total = getDataFileSize(0x15);
+    loadAssetFileById(&data, 0x15);
+    lbl_80382238[0] = -1;
+    lbl_80382238[1] = (int)mmAlloc(1280, 5, 0);
+    lbl_80382238[2] = (int)mmAlloc(512, 5, 0);
+    lbl_80382238[3] = (int)mmAlloc(128, 5, 0);
+    lbl_80382238[4] = (int)mmAlloc(8192, 5, 0);
+    memset((void*)lbl_80382238[4], 0, 8192);
+    for (i = 0; i < 128; i++) {
+        char* e = (char*)lbl_80382238[1] + i * 10;
+        *(s8*)((char*)lbl_80382238[3] + i) = -128;
+        *(s16*)(e + 0) = -32768;
+        *(s16*)(e + 2) = -32768;
+        *(s16*)(e + 4) = -32768;
+        *(s16*)(e + 6) = -32768;
+        *(s8*)(e + 8) = -128;
+        *(s8*)(e + 9) = -128;
+        ((s16*)lbl_80382238[2])[i * 2] = -1;
+        ((s16*)lbl_80382238[2])[i * 2 + 1] = -1;
+    }
+    for (i2 = 0; i2 < total / 3; i2++) {
+        entry = (char*)data + i2 * 12;
+        if (*(s16*)(entry + 6) <= -1)
+            break;
+        *(s8*)((char*)lbl_80382238[3] + *(s16*)(entry + 6)) = (s8)*(s16*)(entry + 4);
+        mapInitSetRects((s16*)((char*)lbl_80382238[1] + *(s16*)(entry + 6) * 10),
+                        (u8*)((char*)lbl_80382238[4] + *(s16*)(entry + 6) * 64),
+                        *(s16*)(entry + 0), *(s16*)(entry + 2), *(s16*)(entry + 6));
+        ((s16*)lbl_80382238[2])[*(s16*)(entry + 6) * 2] = *(s16*)(entry + 8);
+        ((s16*)lbl_80382238[2])[*(s16*)(entry + 6) * 2 + 1] = *(s16*)(entry + 0xa);
+    }
+    lbl_803DCEA4 = 0;
+    lbl_803DCEB6 = 0;
+    lbl_803DCEB4 = 0;
+    mm_free(data);
 }
 #pragma peephole reset
 #pragma scheduling reset
