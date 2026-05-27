@@ -220,3 +220,33 @@ LAB_80101720:
 }
 #pragma peephole reset
 #pragma scheduling reset
+extern f32 PSVECMag(void *vec);
+extern float sqrtf(float x);
+extern f32 lbl_803E1630;
+extern f32 lbl_803E1658;
+#pragma scheduling off
+#pragma peephole off
+void camcontrol_updateMoveAverage(int *obj, void *p) {
+    f32 mag;
+    *(f32 *)((char *)obj + 0xc8) = *(f32 *)((char *)obj + 0xcc);
+    *(f32 *)((char *)obj + 0xcc) = *(f32 *)((char *)obj + 0xd0);
+    *(f32 *)((char *)obj + 0xd0) = *(f32 *)((char *)obj + 0xd4);
+    *(f32 *)((char *)obj + 0xd4) = *(f32 *)((char *)obj + 0xd8);
+    mag = PSVECMag((char *)p + 0x24);
+    if (mag > lbl_803E1630) {
+        mag = sqrtf(mag);
+    }
+    *(f32 *)((char *)obj + 0xd8) = mag;
+    *(f32 *)((char *)obj + 0xc4) = lbl_803E1630;
+    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xc8);
+    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xcc);
+    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xd0);
+    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xd4);
+    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) + *(f32 *)((char *)obj + 0xd8);
+    *(f32 *)((char *)obj + 0xc4) = *(f32 *)((char *)obj + 0xc4) * lbl_803E1658;
+    if (*(f32 *)((char *)obj + 0xc4) < lbl_803E1630) {
+        *(f32 *)((char *)obj + 0xc4) = -*(f32 *)((char *)obj + 0xc4);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
