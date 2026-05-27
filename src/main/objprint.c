@@ -3304,6 +3304,61 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
     }
 }
 
+extern u8 framesThisStep;
+
+void fn_8003B228(int obj, int p2)
+{
+    int* foundA;
+    int* foundB;
+    u8* list;
+    int i;
+    int n;
+    int k;
+    int* table;
+    int val;
+
+    foundA = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        list = *(u8**)((char*)table + 0xc);
+        if (list != NULL) {
+            i = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x59);
+            for (k = 0; k < n; k++) {
+                if (list[0] == 5) {
+                    foundA = (int*)((char*)*(void**)(obj + 0x70) + i);
+                }
+                list += 2;
+                i += 0x10;
+            }
+        }
+    }
+    foundB = NULL;
+    if (table != NULL) {
+        list = *(u8**)((char*)table + 0xc);
+        if (list != NULL) {
+            i = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x59);
+            for (k = 0; k < n; k++) {
+                if (list[0] == 4) {
+                    foundB = (int*)((char*)*(void**)(obj + 0x70) + i);
+                }
+                list += 2;
+                i += 0x10;
+            }
+        }
+    }
+    if (foundA == NULL) return;
+    if (foundB == NULL) return;
+    val = *foundB + framesThisStep * 0x30;
+    if (val >= 0x200) {
+        val = 0x200;
+    }
+    *foundA = val;
+    *foundB = val;
+    *(u8*)(p2 + 0x1e) = 1;
+}
+
 extern void* getCache(void);
 extern void copyToCache(void* dst, void* src, int blockCount);
 extern void modelCalcVtxGroupMtxs(int p1, int p2);
