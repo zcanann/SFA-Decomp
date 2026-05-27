@@ -6380,6 +6380,13 @@ extern f32 lbl_803E7EF8;
 extern int lbl_803DE434;
 extern void fn_8018A20C(int a, int b);
 extern void fn_80189F5C(int a, void *b, void *c);
+extern f32 lbl_803E812C;
+extern f32 lbl_803E7F28;
+extern f32 lbl_803E7F2C;
+extern int *gWaterfxInterface;
+extern void Sfx_StopFromObject(int obj, int id);
+extern int fn_8029B9FC(int obj, int state, f32 fv);
+extern int fn_80299E44(int obj, int state, f32 fv);
 
 #pragma scheduling off
 #pragma peephole off
@@ -7977,6 +7984,95 @@ void fn_80295CF4(int obj, int a)
         GameBit_Set(0x960, 0);
     }
     ((ByteFlags *)((char *)inner + 0x3f4))->b40 = a;
+}
+
+void fn_802AE83C(int obj, int inner)
+{
+    int sub;
+
+    ((ByteFlags *)((char *)inner + 0x3f1))->b40 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+    *(u8 *)((char *)inner + 0x40d) = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b20 = 1;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+    *(f32 *)((char *)inner + 0x440) = lbl_803E7EA4;
+    *(f32 *)((char *)inner + 0x43c) = lbl_803E7EA4;
+    Sfx_StopFromObject(obj, (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2d0 : 0x26));
+
+    if ((int)lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+        *(u8 *)((char *)inner + 0x8b4) = 1;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+    }
+    *(u8 *)((char *)inner + 0x800) = 0;
+    sub = *(int *)((char *)inner + 0x7f8);
+    if (sub != 0) {
+        s16 id = *(s16 *)((char *)sub + 0x46);
+        if (id == 0x3cf || id == 0x662) {
+            objThrowFn_80182504(sub);
+        } else {
+            objSaveFn_800ea774(sub);
+        }
+        *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 6) &= ~0x4000;
+        *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+        *(int *)((char *)inner + 0x7f8) = 0;
+    }
+    if (*(f32 *)((char *)obj + 0x28) < lbl_803E812C) {
+        Sfx_PlayFromObject(obj, 0x212);
+        (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x10)))(
+            obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+            *(f32 *)((char *)obj + 0x14), lbl_803E7ED8);
+    }
+}
+
+int fn_80298380(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int r;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0xfb, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F28;
+        *(f32 *)((char *)state + 0x294) = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x284) = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x280) = lbl_803E7EA4;
+        *(f32 *)((char *)obj + 0x24) = lbl_803E7EA4;
+        *(f32 *)((char *)obj + 0x28) = lbl_803E7EA4;
+        *(f32 *)((char *)obj + 0x2c) = lbl_803E7EA4;
+    }
+
+    r = fn_8029B9FC(obj, state, fv);
+    if (r != 0) {
+        return r;
+    }
+
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x30)))(obj, state, fv, 1);
+    *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)obj);
+    *(s16 *)((char *)inner + 0x478) = *(s16 *)((char *)obj);
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 2);
+
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        *(int *)((char *)state + 0x308) = (int)fn_8029C8C8;
+        return 0x25;
+    }
+    if (*(f32 *)((char *)obj + 0x98) > lbl_803E7F2C) {
+        if (*(u8 *)((char *)state + 0x349) == 1) {
+            r = fn_80299E44(obj, state, fv);
+            if (r != 0) {
+                return r;
+            }
+        } else {
+            if ((int)lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                *(u8 *)((char *)inner + 0x8b4) = 0;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+            }
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return -1;
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
