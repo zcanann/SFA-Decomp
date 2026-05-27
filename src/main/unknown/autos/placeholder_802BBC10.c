@@ -2065,5 +2065,60 @@ void fn_802BF0C8(int obj, int p2, int mode)
     }
     (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, q);
 }
+
+extern void *Camera_GetCurrentViewSlot(void);
+extern int padGetStickX(int p);
+extern int padGetStickY(int p);
+extern int getButtonsJustPressed(int p);
+extern int getButtonsHeld(int p);
+extern void fn_80222358(int obj, int q, f32 a, f32 b, f32 c, int d);
+extern int lbl_803DE4D8;
+extern f32 lbl_803E83B4;
+void fn_802BF4D8(int obj);
+
+void fn_802C11BC(int obj, int p2, f32 f)
+{
+    int inner;
+    int flag;
+    int slot;
+    if (p2 != -1) {
+        flag = (((framesThisStep - 1) - p2) == 0);
+    } else {
+        flag = 1;
+    }
+    slot = (int)Camera_GetCurrentViewSlot();
+    inner = *(int *)((char *)obj + 0xb8);
+    *(u8 *)((char *)inner + 0x354) = 0;
+    *(int *)((char *)inner + 0) &= ~0x8000;
+    *(int *)((char *)inner + 0) |= 0x200000;
+    if (*(u8 *)((char *)inner + 0xbb2) == 2) {
+        *(f32 *)((char *)inner + 0x290) = (f32)(s8)padGetStickX(0);
+        *(f32 *)((char *)inner + 0x28c) = (f32)(s8)padGetStickY(0);
+        *(int *)((char *)inner + 0x31c) = getButtonsJustPressed(0);
+        *(int *)((char *)inner + 0x318) = getButtonsHeld(0);
+        *(s16 *)((char *)inner + 0x330) = *(s16 *)slot;
+        if (((ByteFlags *)((char *)inner + 0xbc0))->b01 != 0) {
+            fn_80222358(obj, inner + 0x35c, *(f32 *)((char *)inner + 0xb50), lbl_803E83B4, lbl_803E8414, 1);
+        }
+    } else {
+        f32 v = lbl_803E83A4;
+        *(f32 *)((char *)inner + 0x290) = v;
+        *(f32 *)((char *)inner + 0x28c) = v;
+        *(int *)((char *)inner + 0x31c) = 0;
+        *(int *)((char *)inner + 0x318) = 0;
+        *(s16 *)((char *)inner + 0x330) = 0;
+    }
+    *(int *)((char *)inner + 0) |= 0x400000;
+    if (flag != 0) {
+        *(int *)((char *)inner + 0) &= ~0x400000;
+    }
+    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, f, timeDelta, (int)lbl_803DB1C0, &lbl_803DE4E0);
+    if ((*(int *)((char *)inner + 0x314) & 1) != 0) {
+        fn_802BF4D8(obj);
+    }
+    if (((ByteFlags *)((char *)inner + 0xbc0))->b02 != 0) {
+        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(*(s16 *)((char *)inner + 0xbb0) - lbl_803DE4D8);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
