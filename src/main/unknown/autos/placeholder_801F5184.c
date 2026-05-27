@@ -2396,3 +2396,44 @@ void wmplanets_init(int *obj, u8 *init) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dll_21B_free(int obj) {
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+}
+
+void vfpblock1_free(int obj) {
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+}
+
+void vfpladders_free(int obj) {
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+}
+
+void vfplift_free(int obj) {
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+}
+
+void vfpminifire_free(int obj) {
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+}
+
+void vfpstatueball_free(int obj) {
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+}
+
+void wmplanets_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
+    if (vis != 0) {
+        objRenderFn_8003b8f4(lbl_803E5F98);
+    }
+}
+
+void dll_21B_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((s8)init[0x18] << 8);
+    *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+}
+#pragma peephole reset
+#pragma scheduling reset
