@@ -186,31 +186,33 @@ void fn_8018F148(int obj, int count)
   } args;
 
   sub = *(int *)(obj + 0xb8);
-  for (i = 0; i < count; i++) {
-    {
-      u16 sx = *(u16 *)(sub + 0x14);
-      args.vec[0] = (f32)(s32)randomGetRange(-sx, sx);
-    }
-    {
-      u16 sy = *(u16 *)(sub + 0x18);
-      args.vec[1] = (f32)(s32)randomGetRange(-sy, sy);
-    }
-    {
-      u16 sz = *(u16 *)(sub + 0x16);
-      args.vec[2] = (f32)(s32)randomGetRange(-sz, sz);
-    }
-    mathFn_80021ac8((s16 *)(sub + 0x1a), args.vec);
-    args.vec[0] += *(f32 *)(obj + 0xc);
-    args.vec[1] += *(f32 *)(obj + 0x10);
-    args.vec[2] += *(f32 *)(obj + 0x14);
-    {
-      u8 type = *(u8 *)(sub + 8);
-      if (type == 4 || type == 6) {
-        (*(void (**)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface) + 8))(
-            obj, *(u16 *)(sub + 0xa), &args, 0x200001, -1, 0);
-      } else {
-        (*(void (**)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface) + 8))(
-            obj, *(u16 *)(sub + 0xa), &args, 2, -1, 0);
+  if (count > 0) {
+    for (i = 0; i < count; i++) {
+      {
+        u16 sx = *(u16 *)(sub + 0x14);
+        args.vec[0] = (f32)(s32)randomGetRange(-sx, sx);
+      }
+      {
+        u16 sy = *(u16 *)(sub + 0x18);
+        args.vec[1] = (f32)(s32)randomGetRange(-sy, sy);
+      }
+      {
+        u16 sz = *(u16 *)(sub + 0x16);
+        args.vec[2] = (f32)(s32)randomGetRange(-sz, sz);
+      }
+      mathFn_80021ac8((s16 *)(sub + 0x1a), args.vec);
+      {
+        u8 type = *(u8 *)(sub + 8);
+        if (type == 4 || type == 6) {
+          args.vec[0] += *(f32 *)(obj + 0xc);
+          args.vec[1] += *(f32 *)(obj + 0x10);
+          args.vec[2] += *(f32 *)(obj + 0x14);
+          (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
+              obj, *(u16 *)(sub + 0xa), &args, 0x200001, -1, 0);
+        } else {
+          (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(
+              obj, *(u16 *)(sub + 0xa), &args, 2, -1, 0);
+        }
       }
     }
   }
@@ -1139,7 +1141,7 @@ typedef struct CFEmitterFxArgs {
     } while (0)
 
 #define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6) \
-    (*(void (**)(int, int, void*, int, int, int))(*(int*)(*gPartfxInterface) + 8))( \
+    (*(void (**)(int, int, void*, int, int, int))(*gPartfxInterface + 8))( \
         (obj), (effectId), (args), (flags), (modelId), (arg6))
 
 #define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args)            \
