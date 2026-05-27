@@ -1550,3 +1550,34 @@ void waveanimator_free(int *obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+extern u8 lbl_803DDAF8;
+extern u8 framesThisStep;
+#pragma scheduling off
+#pragma peephole off
+void waveanimator_hitDetect(int *obj) {
+    int i;
+    int j;
+    int off;
+    int *w;
+    if (lbl_803DDAF8 != 0) {
+        return;
+    }
+    w = (int *)obj[46];
+    off = 0;
+    for (i = 0; i < w[8]; i++) {
+        for (j = 0; j < w[8]; j++) {
+            *(s16 *)((char *)lbl_803DDAF0 + off) += framesThisStep >> 1;
+            while (*(s16 *)((char *)lbl_803DDAF0 + off) >= w[7]) {
+                *(s16 *)((char *)lbl_803DDAF0 + off) -= w[7];
+            }
+            *(s16 *)((char *)lbl_803DDAF0 + off + 2) += framesThisStep >> 1;
+            while (*(s16 *)((char *)lbl_803DDAF0 + off + 2) >= w[7]) {
+                *(s16 *)((char *)lbl_803DDAF0 + off + 2) -= w[7];
+            }
+            off += 4;
+        }
+    }
+    lbl_803DDAF8 = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
