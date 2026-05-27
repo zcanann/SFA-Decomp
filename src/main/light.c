@@ -1468,3 +1468,90 @@ void fn_801FC6F4(int obj, int param2, int ctx)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E6108;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801FBAC8(int obj)
+{
+    int params = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    if (GameBit_Get(*(s16 *)state) != 0) {
+        *(u8 *)(state + 2) = 6;
+    }
+    switch (*(u8 *)(state + 2)) {
+    case 6:
+        if (*(f32 *)(obj + 0x14) < *(f32 *)(params + 0x10)) {
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + timeDelta;
+            if (*(f32 *)(obj + 0x14) >= *(f32 *)(params + 0x10)) {
+                *(f32 *)(obj + 0x14) = *(f32 *)(params + 0x10);
+            }
+        } else if (*(f32 *)(obj + 0x14) > *(f32 *)(params + 0x10)) {
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) - timeDelta;
+            if (*(f32 *)(obj + 0x14) <= *(f32 *)(params + 0x10)) {
+                *(f32 *)(obj + 0x14) = *(f32 *)(params + 0x10);
+            }
+        } else {
+            if (GameBit_Get(*(s16 *)state) == 0) {
+                *(u8 *)(state + 2) = 3;
+            }
+        }
+        break;
+    case 0:
+        if (GameBit_Get(*(s16 *)state) == 0) {
+            *(u8 *)(state + 2) = 3;
+        }
+        break;
+    case 1: {
+        s16 timer = *(s16 *)(state + 4);
+        if (timer != 0) {
+            *(s16 *)(state + 4) = timer - (int)timeDelta;
+            if (*(s16 *)(state + 4) <= 0) {
+                *(s16 *)(state + 4) = 0;
+            }
+        } else if (*(u8 *)(state + 3) == 0) {
+            if (*(f32 *)(obj + 0x14) == *(f32 *)(params + 0x10) - lbl_803E6108) {
+                *(u8 *)(state + 2) = 2;
+            }
+            if (*(f32 *)(obj + 0x14) == lbl_803E6108 + *(f32 *)(params + 0x10)) {
+                *(u8 *)(state + 2) = 3;
+            }
+        } else {
+            if (*(f32 *)(obj + 0x14) == *(f32 *)(params + 0x10) - lbl_803E6108) {
+                *(u8 *)(state + 2) = 4;
+            }
+            if (*(f32 *)(obj + 0x14) == lbl_803E6108 + *(f32 *)(params + 0x10)) {
+                *(u8 *)(state + 2) = 5;
+            }
+        }
+        break;
+    }
+    case 2: {
+        f32 thr = lbl_803E6108;
+        if (*(f32 *)(obj + 0x14) < thr + *(f32 *)(params + 0x10)) {
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + timeDelta;
+            if (*(f32 *)(obj + 0x14) >= thr + *(f32 *)(params + 0x10)) {
+                *(f32 *)(obj + 0x14) = thr + *(f32 *)(params + 0x10);
+                *(u8 *)(state + 2) = 1;
+                *(s16 *)(state + 4) = 20;
+            }
+        }
+        break;
+    }
+    case 3: {
+        f32 thr = lbl_803E6108;
+        if (*(f32 *)(obj + 0x14) > *(f32 *)(params + 0x10) - thr) {
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) - timeDelta;
+            if (*(f32 *)(obj + 0x14) <= *(f32 *)(params + 0x10) - thr) {
+                *(f32 *)(obj + 0x14) = *(f32 *)(params + 0x10) - thr;
+                *(u8 *)(state + 2) = 1;
+                *(s16 *)(state + 4) = 20;
+            }
+        }
+        break;
+    }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
