@@ -1213,6 +1213,7 @@ extern int *gExpgfxInterface;
 extern int hitDetectFn_80065e50(int obj, int **listOut, int p3, int p4, f32 x, f32 y, f32 z);
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
+#pragma dont_inline on
 f32 fn_801ACCFC(int obj) {
     int *state = *(int **)((char *)obj + 0xB8);
     int *list;
@@ -1241,6 +1242,7 @@ f32 fn_801ACCFC(int obj) {
     }
     return *(f32 *)((char *)obj + 0x10);
 }
+#pragma dont_inline reset
 
 void magiclight_free(int obj) {
     int *inner = *(int **)(obj + 0xb8);
@@ -1842,6 +1844,173 @@ void crrockfall_init(int *obj, u8 *params)
         *(int *)extra = (int)&lbl_803236B8[0xc];
     } else {
         *(int *)extra = (int)lbl_803236B8;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u32 Resource_Acquire(int id, int flag);
+extern void fn_800628CC(int *obj);
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern void Sfx_PlayFromObject(int *obj, int sfx);
+extern void Sfx_StopObjectChannel(int *obj, int channel);
+extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern f32 lbl_803E46E8;
+extern f32 lbl_803E46EC;
+extern f32 lbl_803E46F0;
+extern f32 lbl_803E4708;
+extern f32 lbl_803E470C;
+extern f32 lbl_803E4710;
+extern f32 lbl_803E4714;
+extern f32 lbl_803E4718;
+extern f32 lbl_803E471C;
+extern f32 lbl_803E4720;
+
+/* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
+ * height/distance, trigger the fall when the player is in range, integrate the
+ * fall, then shatter (sfx + explosion) on impact. */
+#pragma scheduling off
+#pragma peephole off
+void crrockfall_update(int *obj)
+{
+    int *ex = *(int **)((char *)obj + 0xb8);
+    int *s54 = *(int **)((char *)obj + 0x54);
+    int *p64 = *(int **)((char *)obj + 0x64);
+    int *p4c = *(int **)((char *)obj + 0x4c);
+
+    if (lbl_803DDB40 == 0) {
+        lbl_803DDB40 = Resource_Acquire(91, 1);
+    }
+
+    if (*(u8 *)((char *)ex + 0xe) == 0) {
+        *(f32 *)((char *)ex + 4) = fn_801ACCFC((int)obj);
+        if (*(u8 *)((char *)ex + 0xe) != 0 && p64 != NULL) {
+            *(f32 *)((char *)p64 + 0x24) = *(f32 *)((char *)ex + 4);
+            fn_800628CC(obj);
+        }
+    } else {
+        if (p64 != NULL) {
+            f32 frac;
+            f32 height;
+            f32 dist;
+            int n;
+            int *player;
+            frac = (*(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)ex + 4)) /
+                   (*(f32 *)((char *)ex + 8) - *(f32 *)((char *)ex + 4));
+            if (frac > lbl_803E4708) {
+                frac = lbl_803E4708;
+            } else if (frac < lbl_803E46E8) {
+                frac = lbl_803E46E8;
+            }
+            height = lbl_803E4708 - frac;
+            player = (int *)Obj_GetPlayerObject();
+            if (player != NULL) {
+                dist = Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18));
+                if (dist > lbl_803E470C) {
+                    dist = lbl_803E470C;
+                } else if (dist < lbl_803E4710) {
+                    dist = lbl_803E4710;
+                }
+            } else {
+                dist = lbl_803E470C;
+            }
+            dist = (dist - lbl_803E4710) / lbl_803E4714;
+            n = (int)(lbl_803E4718 * height) + 0x40;
+            *(u8 *)((char *)p64 + 0x40) =
+                (int)(((f32)(u32)*(u8 *)((char *)obj + 0x37) / lbl_803E471C) *
+                      ((f32)n * (lbl_803E4708 - dist)));
+        }
+
+        if (*(s16 *)((char *)p4c + 0x1c) == -1 ||
+            GameBit_Get(*(s16 *)((char *)p4c + 0x1c)) != 0) {
+            switch (*(u8 *)((char *)ex + 0xc)) {
+            case 0: {
+                int cond;
+                int *player = (int *)Obj_GetPlayerObject();
+                if (player == NULL) {
+                    cond = 0;
+                } else {
+                    int *def = *(int **)((char *)obj + 0x4c);
+                    f32 xz = Vec_xzDistance((f32 *)((char *)obj + 0x18),
+                                            (f32 *)((char *)player + 0x18));
+                    f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)player + 0x10);
+                    if (dy < lbl_803E46E8) {
+                        dy = lbl_803E46E8;
+                    }
+                    if (xz < lbl_803E46EC * (f32)(u32)*(u8 *)((char *)def + 0x1a) &&
+                        dy < lbl_803E46F0) {
+                        cond = 1;
+                    } else {
+                        cond = 0;
+                    }
+                }
+                if (cond != 0) {
+                    s16 timer = *(s16 *)((char *)ex + 0x10) - framesThisStep;
+                    *(s16 *)((char *)ex + 0x10) = timer;
+                    if (timer <= 0) {
+                        *(u8 *)((char *)ex + 0xc) = 1;
+                    }
+                }
+                break;
+            }
+            case 1:
+                if (*(u8 *)((char *)ex + 0xd) == 0) {
+                    *(u8 *)((char *)ex + 0xd) = 1;
+                    *(f32 *)((char *)obj + 0x28) = lbl_803E46E8;
+                    if (*(s16 *)((char *)obj + 0x46) == 103) {
+                        Sfx_PlayFromObject(obj, 341);
+                    }
+                    Sfx_PlayFromObject(obj, 165);
+                    *(s16 *)((char *)s54 + 0x60) |= 1;
+                }
+                *(int *)((char *)s54 + 0x48) = 16;
+                *(int *)((char *)s54 + 0x4c) = 16;
+                *(u8 *)((char *)s54 + 0x6f) = 1;
+                *(u8 *)((char *)s54 + 0x6e) = 13;
+                *(f32 *)((char *)obj + 0x28) =
+                    lbl_803E4720 * timeDelta + *(f32 *)((char *)obj + 0x28);
+                *(f32 *)((char *)obj + 0x10) =
+                    *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
+                if (*(f32 *)((char *)obj + 0x10) <
+                    *(f32 *)((char *)ex + 4) + *(f32 *)((char *)*(int **)ex + 8)) {
+                    *(f32 *)((char *)obj + 0x10) =
+                        *(f32 *)((char *)*(int **)ex + 8) * *(f32 *)((char *)obj + 8) +
+                        *(f32 *)((char *)ex + 4);
+                    *(u8 *)((char *)ex + 0xc) = 2;
+                    if (*(int *)((char *)*(int **)ex + 4) != 0) {
+                        Sfx_PlayFromObject(obj, (u16)*(int *)((char *)*(int **)ex + 4));
+                    }
+                }
+                break;
+            case 2:
+                *(int *)((char *)s54 + 0x48) = 16;
+                *(int *)((char *)s54 + 0x4c) = 16;
+                *(u8 *)((char *)s54 + 0x6f) = 1;
+                *(u8 *)((char *)s54 + 0x6e) = 13;
+                break;
+            case 4:
+                break;
+            }
+
+            if (*(void **)((char *)s54 + 0x50) != NULL) {
+                *(s16 *)((char *)s54 + 0x60) &= ~1;
+                *(u8 *)((char *)ex + 0xc) = 3;
+                Sfx_StopObjectChannel(obj, 8);
+                if (*(s16 *)((char *)obj + 0x46) == 103) {
+                    Sfx_PlayFromObject(obj, 342);
+                } else {
+                    Sfx_PlayFromObject(obj, 955);
+                    spawnExplosion(obj, (f32)(u32)*(u8 *)((char *)p4c + 0x1b),
+                                   1, 1, 0, 1, 1, 1, 1);
+                }
+            }
+        }
+    }
+
+    {
+        f32 z = lbl_803E46E8;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
     }
 }
 #pragma peephole reset

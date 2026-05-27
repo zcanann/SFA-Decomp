@@ -62,7 +62,7 @@ int crrockfall_func08(void);
 void crrockfall_free(void);
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void crrockfall_hitDetect(void);
-void crrockfall_update(void);
+void crrockfall_update(int* obj);
 void crrockfall_init(int* obj, u8* params);
 void crrockfall_release(void);
 void crrockfall_initialise(void);
