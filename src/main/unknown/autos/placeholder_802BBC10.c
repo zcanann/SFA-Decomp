@@ -1530,9 +1530,9 @@ extern int lbl_803DB160[];
 extern int lbl_803DB1B0[];
 extern void *lbl_803DE4C8;
 extern void *lbl_803DE4D4;
-extern void fn_802BC27C();
-extern void fn_802BC19C();
-extern void fn_802BC0D8();
+extern int fn_802BC27C(int obj, int p2);
+extern int fn_802BC19C(int obj, int p2);
+extern int fn_802BC0D8(int obj, int p2);
 extern void fn_802BD7AC();
 extern void fn_802BCE14();
 extern void fn_802BCD04();
@@ -1547,6 +1547,96 @@ void dim2prisonmammoth_initialise(void)
     ((void **)lbl_803DB160)[3] = (void *)fn_802BC0D8;
     lbl_803DE4C8 = (void *)fn_802BC0D0;
 }
+
+extern f32 lbl_803E82C0;
+extern f32 lbl_803E82C4;
+extern f32 lbl_803E82C8;
+extern f32 lbl_803E82CC;
+extern f32 lbl_803DC758;
+extern s16 lbl_803DC754;
+extern int randomGetRange(int lo, int hi);
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
+extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
+extern int *gObjectTriggerInterface;
+extern void buttonDisable(int a, int b);
+extern void Sfx_PlayFromObject(int obj, int id);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802BC0D8(int obj, int p2)
+{
+    f32 fz = lbl_803E82C0;
+    *(f32 *)((char *)p2 + 0x294) = fz;
+    *(f32 *)((char *)p2 + 0x284) = fz;
+    *(f32 *)((char *)p2 + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        int k = randomGetRange(0, 1);
+        *(f32 *)((char *)p2 + 0x2a0) = (&lbl_803DC758)[k];
+        ObjAnim_SetCurrentMove(obj, (&lbl_803DC754)[k], lbl_803E82C0, 0);
+    }
+    if (*(s8 *)((char *)p2 + 0x346) != 0) {
+        return -1;
+    }
+    return 0;
+}
+
+int fn_802BC19C(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz = lbl_803E82C0;
+    *(f32 *)((char *)p2 + 0x294) = fz;
+    *(f32 *)((char *)p2 + 0x284) = fz;
+    *(f32 *)((char *)p2 + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    *(f32 *)((char *)p2 + 0x2a0) = lbl_803E82C4;
+    if (*(s16 *)((char *)obj + 0xa0) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0, fz, 0);
+    }
+    *(s16 *)((char *)inner + 0x38c) = randomGetRange(0x4b0, 0x960);
+    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+        buttonDisable(0, 0x100);
+    }
+    return 0;
+}
+
+int fn_802BC27C(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz = lbl_803E82C0;
+    *(f32 *)((char *)p2 + 0x294) = fz;
+    *(f32 *)((char *)p2 + 0x284) = fz;
+    *(f32 *)((char *)p2 + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        *(f32 *)((char *)p2 + 0x2a0) = lbl_803E82C4;
+        if (*(s16 *)((char *)obj + 0xa0) != 5) {
+            ObjAnim_SetCurrentMove(obj, 5, fz, 0);
+        }
+        *(s16 *)((char *)inner + 0x38c) = randomGetRange(0x4b0, 0x960);
+    }
+    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+        GameBit_Set(0x223, 1);
+        buttonDisable(0, 0x100);
+    }
+    if (RandomTimer_UpdateRangeTrigger(inner + 0x600, lbl_803E82C8, lbl_803E82CC)) {
+        Sfx_PlayFromObject(obj, 0x43a);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 void DR_EarthWarrior_initialise(void)
 {
