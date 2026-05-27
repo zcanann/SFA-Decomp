@@ -2985,3 +2985,50 @@ void playerUpdateFn_8005649c(void)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern char sTrackGlobalTexanimOverflowError[];
+
+#pragma scheduling off
+#pragma peephole off
+int texAnimFn_800567a8(int key, int p4, int type)
+{
+    char *base = (char *)lbl_803DCE6C;
+    char *e;
+    int idx, found, off;
+
+    found = -1;
+    e = base;
+    for (idx = 0; idx < 80; idx++) {
+        if (*(s16 *)(e + 0xc) != 0 && *(u32 *)e == key && type == *(u8 *)(e + 0xe)) {
+            found = idx;
+            break;
+        }
+        e += 0x10;
+    }
+    if (found != -1) {
+        *(s16 *)(base + found * 0x10 + 0xc) += 1;
+        return found;
+    }
+    found = -1;
+    e = base;
+    for (idx = 0; idx < 80; idx++) {
+        if (*(s16 *)(e + 0xc) == 0) {
+            found = idx;
+            break;
+        }
+        e += 0x10;
+    }
+    if (found == -1) {
+        OSReport(sTrackGlobalTexanimOverflowError);
+        return 0;
+    }
+    off = found * 0x10;
+    *(s16 *)(base + off + 0xc) = 1;
+    *(int *)(lbl_803DCE6C + off + 4) = 0;
+    *(int *)(lbl_803DCE6C + off + 8) = p4;
+    *(int *)(lbl_803DCE6C + off) = key;
+    *(u8 *)(lbl_803DCE6C + off + 0xe) = type;
+    return found;
+}
+#pragma scheduling reset
+#pragma peephole reset
