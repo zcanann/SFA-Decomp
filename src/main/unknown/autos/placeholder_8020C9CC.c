@@ -168,5 +168,59 @@ void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
         *outY = 0;
     }
 }
+
+extern void snowclaw_animEventCallback();
+extern u8 lbl_8032A310[];
+extern f32 lbl_803E66EC;
+extern int lbl_803DDD38;
+extern void storeZeroToFloatParam(void *p);
+extern void s16toFloat(void *p, int duration);
+extern void objSeqInitFn_80080078(void *table, int n);
+
+void snowclaw_init(int *obj, u8 *init) {
+    u8 *table;
+    int *inner;
+    int *sub;
+
+    table = lbl_8032A310;
+    *(void **)((char *)obj + 0xbc) = (void *)snowclaw_animEventCallback;
+    sub = *(int **)((char *)obj + 0x64);
+    if (sub != NULL) {
+        *(int *)((char *)sub + 0x30) |= 0x4000;
+        *(u8 *)((char *)*(int **)((char *)obj + 0x64) + 0x3a) = 0x64;
+        *(u8 *)((char *)*(int **)((char *)obj + 0x64) + 0x3b) = 0x96;
+    }
+    inner = *(int **)((char *)obj + 0xb8);
+    *(int *)inner = 0;
+    *(u8 *)((char *)inner + 0xa2) = init[0x27];
+    *(u8 *)((char *)inner + 0xa4) = 4;
+    *(s8 *)((char *)inner + 0xa5) = -1;
+    switch (*(s16 *)((char *)obj + 0x46)) {
+    case 0x16d:
+    case 0x170:
+    default:
+        *(int *)((char *)inner + 4) = (int)(table + 0x58);
+        *(s16 *)((char *)inner + 0xa8) = 0x100;
+        break;
+    case 0x389:
+    case 0x38a:
+    case 0x4d3:
+        *(int *)((char *)inner + 4) = (int)(table + 0x54);
+        *(s16 *)((char *)inner + 0xa8) = 0x400;
+        /* fall through */
+    case 0x3e8:
+        *(int *)((char *)inner + 4) = (int)(table + 0x5c);
+        *(s16 *)((char *)inner + 0xa8) = 0x400;
+        break;
+    }
+    *(u8 *)((char *)inner + 0xa6) = 0;
+    *(int *)((char *)inner + 0x9c) = 0x64;
+    *(f32 *)((char *)inner + 0x30) = lbl_803E66EC;
+    storeZeroToFloatParam((char *)inner + 0x98);
+    s16toFloat((char *)inner + 0x98, (s16)*(int *)(table + 0x3c));
+    objSeqInitFn_80080078(table, 6);
+    lbl_803DDD38 = 0x96;
+    *(u8 *)((char *)inner + 0xaa) &= ~0x80;
+}
 #pragma peephole reset
 #pragma scheduling reset
