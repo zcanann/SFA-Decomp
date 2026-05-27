@@ -715,3 +715,44 @@ void dimbarrier_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int fn_802972A8(int player);
+extern int Obj_AllocObjectSetup(int kind, int id);
+extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+extern f32 lbl_803E4864;
+
+/* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
+ * spawn a rolling snowball seeded from the placement params. */
+#pragma scheduling off
+#pragma peephole off
+void dimsnowball1c2_update(int *obj)
+{
+    if (Obj_IsLoadingLocked()) {
+        int *extra = *(int **)((char *)obj + 0xb8);
+        *(s16 *)extra = *(s16 *)extra - framesThisStep;
+        if (*(s16 *)extra <= 0) {
+            if (fn_802972A8(Obj_GetPlayerObject()) == 0) {
+                int *def = *(int **)((char *)obj + 0x4c);
+                int *np = (int *)Obj_AllocObjectSetup(36, 406);
+                *(u8 *)((char *)np + 4) = *(u8 *)((char *)def + 4);
+                *(u8 *)((char *)np + 6) = *(u8 *)((char *)def + 6);
+                *(u8 *)((char *)np + 5) = *(u8 *)((char *)def + 5);
+                *(u8 *)((char *)np + 7) = *(u8 *)((char *)def + 7);
+                *(f32 *)((char *)np + 8) = *(f32 *)((char *)obj + 0xc);
+                *(f32 *)((char *)np + 0xc) = *(f32 *)((char *)obj + 0x10);
+                *(f32 *)((char *)np + 0x10) = *(f32 *)((char *)obj + 0x14);
+                *(int *)((char *)np + 0x14) = *(int *)((char *)def + 0x14);
+                *(s8 *)((char *)np + 0x18) = *(s8 *)((char *)def + 0x1c);
+                *(s16 *)((char *)np + 0x1a) = *(u8 *)((char *)def + 0x1a);
+                *(s16 *)((char *)np + 0x1c) =
+                    (int)((f32)(u32)*(u8 *)((char *)def + 0x1b) +
+                          (f32)(int)randomGetRange(0, 100) / lbl_803E4864);
+                Obj_SetupObject((int)np, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
+                *(s16 *)extra = *(s16 *)((char *)extra + 2);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
