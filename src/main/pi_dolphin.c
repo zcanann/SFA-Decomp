@@ -5855,6 +5855,47 @@ void fn_800510F0(void *p1, u8 flag2, u8 flag3) {
     lbl_803DCD8C = lbl_803DCD8C + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
+extern void gxTextureFn_8004bf88(void *buf, int a, int b, int *out1, int *out2);
+extern void GXSetTevKColorSel(int stage, int sel);
+void textureFn_80051348(void *p1, u8 p2) {
+    f32 mtxB[3][4];
+    f32 mtxA[3][4];
+    u8 buf[3];
+    int out_c;
+    int out_8;
+    PSMTXScale(mtxA, Breaking_803DEB40, Breaking_803DEB40, lbl_803DEACC);
+    PSMTXTrans(mtxB, Prepared_803DEAD8[1], Prepared_803DEAD8[1], lbl_803DEAC8);
+    PSMTXConcat(mtxB, mtxA, mtxA);
+    GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
+    buf[0] = p2;
+    buf[1] = p2;
+    buf[2] = p2;
+    gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
+    GXSetTevKColorSel(lbl_803DCD90, out_c);
+    GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, lbl_803DCD80);
+    if (lbl_803DCD68 == 0) {
+        GXSetTevDirect(lbl_803DCD90);
+    }
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 8, 0xe, 0xa);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 2);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    if (p1 != 0) {
+        if (*(u8 *)((char *)p1 + 0x48) != 0) {
+            GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), lbl_803DCD8C);
+        } else {
+            GXLoadTexObj((char *)p1 + 0x20, lbl_803DCD8C);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD69 = lbl_803DCD69 + 1;
+}
 #pragma peephole reset
 #pragma scheduling reset
 extern void VIConfigure(void *mode);
