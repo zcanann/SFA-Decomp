@@ -13,6 +13,37 @@ extern f32 lbl_8039AB48[];
 extern int objFindTexture(int name, int a, int b);
 extern f32 PSVECSquareDistance(f32 *a, f32 *b);
 extern void *memset(void *dst, int c, int n);
+extern void Obj_FreeObject(int obj);
+extern void textureFree(int tex);
+extern int textureLoadAsset(int id);
+extern void mm_free(void *p);
+extern void *mmAlloc(int size, int kind, int flags);
+extern void debugPrintf(char *fmt, ...);
+extern char sWaterfxDllAllocFailed[];
+extern int gExpgfxRuntimeData[];
+extern int gExpgfxTextureFreeInProgress;
+extern u8 framesThisStep;
+extern void waterfx_onMapSetup(void);
+extern void waterfx_drawFn_800953fc(void);
+extern void *lbl_803DD1FC;
+extern void *lbl_803DD200;
+extern void *lbl_803DD208;
+extern void *lbl_803DD210;
+extern void *lbl_803DD214;
+extern void *lbl_803DD218;
+extern void *lbl_803DD21C;
+extern void *lbl_803DD220;
+extern void *lbl_803DD224;
+extern void *lbl_803DD228;
+extern void *lbl_803DD22C;
+extern void *lbl_803DD230;
+extern void *lbl_803DD234;
+extern void *lbl_803DD238;
+extern void *lbl_803DD23C;
+extern void *lbl_803DD240;
+extern void *lbl_803DD244;
+extern void *lbl_803DD248;
+extern void *lbl_803DD24C;
 
 void cloudaction_func08_nop(void) {}
 void cloudaction_func09_nop(void) {}
@@ -65,6 +96,110 @@ int fn_800956F4(int vec, f32 dist) {
     }
     lbl_803DD1F8 = 0;
     return 0;
+}
+
+void cloudaction_free(void) {
+    if (*(void **)lbl_8039AB28 != NULL) {
+        Obj_FreeObject(*(int *)lbl_8039AB28);
+        *(int *)lbl_8039AB28 = 0;
+    }
+    *(int *)(lbl_8039AB28 + 0xc) = 0;
+    if (*(void **)(lbl_8039AB28 + 4) != NULL) {
+        Obj_FreeObject(*(int *)(lbl_8039AB28 + 4));
+        *(int *)(lbl_8039AB28 + 4) = 0;
+    }
+    *(int *)(lbl_8039AB28 + 0x10) = 0;
+    if (*(void **)(lbl_8039AB28 + 8) != NULL) {
+        Obj_FreeObject(*(int *)(lbl_8039AB28 + 8));
+        *(int *)(lbl_8039AB28 + 8) = 0;
+    }
+    *(int *)(lbl_8039AB28 + 0x14) = 0;
+}
+
+void fn_8009AD44(void) {
+    int i;
+    char *e;
+
+    e = (char *)gExpgfxRuntimeData;
+    for (i = 0; i < 0x20; i++) {
+        if (*(int *)(e + 8) != 0) {
+            *(int *)(e + 4) = *(int *)(e + 4) - framesThisStep;
+            if (*(int *)(e + 4) <= 0) {
+                *(int *)(e + 8) = 0;
+                *(int *)(e + 4) = 0;
+                *(int *)(e + 0xc) = 0;
+                gExpgfxTextureFreeInProgress = 1;
+                textureFree(*(int *)e);
+                gExpgfxTextureFreeInProgress = 0;
+                *(int *)e = 0;
+            }
+        }
+        e += 0x10;
+    }
+}
+
+void waterfx_release(void) {
+    if (lbl_803DD248 != NULL) {
+        mm_free(lbl_803DD248);
+    }
+    if (lbl_803DD21C != NULL) {
+        textureFree((int)lbl_803DD21C);
+        lbl_803DD21C = NULL;
+    }
+    if (lbl_803DD218 != NULL) {
+        textureFree((int)lbl_803DD218);
+        lbl_803DD218 = NULL;
+    }
+    if (lbl_803DD214 != NULL) {
+        textureFree((int)lbl_803DD214);
+        lbl_803DD214 = NULL;
+    }
+    if (lbl_803DD210 != NULL) {
+        textureFree((int)lbl_803DD210);
+        lbl_803DD210 = NULL;
+    }
+    if (lbl_803DD208 != NULL) {
+        mm_free(lbl_803DD208);
+        lbl_803DD208 = NULL;
+    }
+    if (lbl_803DD200 != NULL) {
+        mm_free(lbl_803DD200);
+        lbl_803DD200 = NULL;
+    }
+    if (lbl_803DD1FC != NULL) {
+        mm_free(lbl_803DD1FC);
+        lbl_803DD1FC = NULL;
+    }
+}
+
+void waterfx_initialise(void) {
+    char *buf;
+
+    buf = mmAlloc(0x22b0, 0x13, 0);
+    if (buf == NULL) {
+        debugPrintf(sWaterfxDllAllocFailed);
+        return;
+    }
+    lbl_803DD248 = buf;
+    lbl_803DD240 = buf + 0x3c0;
+    buf += 0x780;
+    lbl_803DD24C = buf;
+    lbl_803DD244 = buf + 0x780;
+    buf += 0xf00;
+    lbl_803DD238 = buf;
+    lbl_803DD230 = buf + 0x348;
+    lbl_803DD220 = buf + 0x5a0;
+    lbl_803DD228 = buf + 0x8e8;
+    lbl_803DD23C = NULL;
+    lbl_803DD234 = NULL;
+    lbl_803DD224 = NULL;
+    lbl_803DD22C = NULL;
+    lbl_803DD21C = (void *)textureLoadAsset(0x56);
+    lbl_803DD218 = (void *)textureLoadAsset(0xc2a);
+    lbl_803DD214 = (void *)textureLoadAsset(0xc2c);
+    lbl_803DD210 = (void *)textureLoadAsset(0xc2d);
+    waterfx_onMapSetup();
+    waterfx_drawFn_800953fc();
 }
 #pragma peephole reset
 #pragma scheduling reset
