@@ -50,8 +50,8 @@ extern undefined4 DAT_803dc998;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
-extern undefined4 DAT_803de6f8;
-extern undefined4 DAT_803de6f9;
+extern u8 lbl_803DDA78;
+extern u8 lbl_803DDA79;
 extern f64 DOUBLE_803e3948;
 extern f64 DOUBLE_803e3978;
 extern f64 DOUBLE_803e39a0;
@@ -1241,7 +1241,7 @@ FUN_8015ca54(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   ObjHits_RegisterActiveHitVolumeObject(param_9);
   if (*(char *)(param_10 + 0x27a) != '\0') {
     uVar1 = randomGetRange(0,2);
-    DAT_803de6f9 = (undefined)uVar1;
+    lbl_803DDA79 = (undefined)uVar1;
     uVar1 = randomGetRange(0,1);
     if (uVar1 == 0) {
       if (*(char *)(param_10 + 0x27a) != '\0') {
@@ -1309,7 +1309,7 @@ FUN_8015cd2c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   if (*(char *)(param_10 + 0x27a) != '\0') {
     uVar1 = randomGetRange(0,1);
     if (uVar1 == 0) {
-      DAT_803de6f8 = 3;
+      lbl_803DDA78 = 3;
       if (*(char *)(param_10 + 0x27a) != '\0') {
         FUN_800305f8((double)lbl_803E39AC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                      param_9,10,0,param_12,param_13,param_14,param_15,param_16);
@@ -1318,7 +1318,7 @@ FUN_8015cd2c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     }
     else {
       uVar1 = randomGetRange(0,2);
-      DAT_803de6f8 = (undefined)uVar1;
+      lbl_803DDA78 = (undefined)uVar1;
       if (*(char *)(param_10 + 0x27a) != '\0') {
         FUN_800305f8((double)lbl_803E39AC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                      param_9,6,0,param_12,param_13,param_14,param_15,param_16);
@@ -2268,14 +2268,13 @@ int fn_8015C0B4(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int choice;
-    f32 blend;
 
     *(u8 *)(*(int *)(sub + 0x40c) + 0x44) |= 4;
     *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 10;
     *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
-        *(u8 *)&DAT_803de6f9 = randomGetRange(0, 2);
+        lbl_803DDA79 = randomGetRange(0, 2);
         choice = randomGetRange(0, 1);
         if (choice == 0) {
             if ((s8)*(u8 *)(state + 0x27a) != 0) {
@@ -2296,8 +2295,9 @@ int fn_8015C0B4(int obj, int state)
     } else if (*(f32 *)(state + 0x2c0) <= lbl_803E2D54 || (s8)*(u8 *)(state + 0x346) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
     } else {
-        blend = *(f32 *)(state + 0x2c0) / lbl_803E2D54 - lbl_803E2D48;
-        *(f32 *)(state + 0x280) = blend * ((f32)*(u8 *)(sub + 0x406) / lbl_803E2D58);
+        *(f32 *)(state + 0x280) = *(f32 *)(state + 0x2c0) / lbl_803E2D54 - lbl_803E2D48;
+        *(f32 *)(state + 0x280) =
+            *(f32 *)(state + 0x280) * ((f32)*(u8 *)(sub + 0x406) / lbl_803E2D58);
     }
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
@@ -2311,7 +2311,6 @@ int fn_8015C2AC(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int choice;
-    f32 blend;
 
     *(u8 *)(*(int *)(sub + 0x40c) + 0x44) |= 4;
     *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 10;
@@ -2320,13 +2319,13 @@ int fn_8015C2AC(int obj, int state)
     if ((s8)*(u8 *)(state + 0x27a) != 0) {
         choice = randomGetRange(0, 1);
         if (choice == 0) {
-            *(u8 *)&DAT_803de6f8 = 3;
+            lbl_803DDA78 = 3;
             if ((s8)*(u8 *)(state + 0x27a) != 0) {
                 ObjAnim_SetCurrentMove(obj, 10, lbl_803E2D14, 0);
                 *(u8 *)(state + 0x346) = 0;
             }
         } else {
-            *(u8 *)&DAT_803de6f8 = randomGetRange(0, 2);
+            lbl_803DDA78 = randomGetRange(0, 2);
             if ((s8)*(u8 *)(state + 0x27a) != 0) {
                 ObjAnim_SetCurrentMove(obj, 6, lbl_803E2D14, 0);
                 *(u8 *)(state + 0x346) = 0;
@@ -2340,8 +2339,9 @@ int fn_8015C2AC(int obj, int state)
     } else if (*(f32 *)(state + 0x2c0) <= lbl_803E2D54 || (s8)*(u8 *)(state + 0x346) != 0) {
         *(f32 *)(state + 0x280) = lbl_803E2D14;
     } else {
-        blend = *(f32 *)(state + 0x2c0) / lbl_803E2D54 - lbl_803E2D48;
-        *(f32 *)(state + 0x280) = blend * ((f32)*(u8 *)(sub + 0x406) / lbl_803E2D58);
+        *(f32 *)(state + 0x280) = *(f32 *)(state + 0x2c0) / lbl_803E2D54 - lbl_803E2D48;
+        *(f32 *)(state + 0x280) =
+            *(f32 *)(state + 0x280) * ((f32)*(u8 *)(sub + 0x406) / lbl_803E2D58);
     }
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
