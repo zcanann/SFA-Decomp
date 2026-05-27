@@ -3353,6 +3353,91 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
 
 extern u8 framesThisStep;
 
+void characterDoEyeMovements(int obj, int p4)
+{
+    int* foundA;
+    int* foundB;
+    u8* list;
+    int i;
+    int n;
+    int k;
+    int* table;
+    int flag;
+    s16 t;
+    s8 timer;
+
+    foundA = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        list = *(u8**)((char*)table + 0xc);
+        if (list != NULL) {
+            i = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x59);
+            for (k = 0; k < n; k++) {
+                if (list[0] == 1) {
+                    foundA = (int*)((char*)*(void**)(obj + 0x70) + i);
+                }
+                list += 2;
+                i += 0x10;
+            }
+        }
+    }
+    foundB = NULL;
+    if (table != NULL) {
+        list = *(u8**)((char*)table + 0xc);
+        if (list != NULL) {
+            i = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x59);
+            for (k = 0; k < n; k++) {
+                if (list[0] == 0) {
+                    foundB = (int*)((char*)*(void**)(obj + 0x70) + i);
+                }
+                list += 2;
+                i += 0x10;
+            }
+        }
+    }
+    if (foundA == NULL) return;
+    if (foundB == NULL) return;
+
+    flag = 0;
+    t = *(s16*)(p4 + 0x22);
+    if (t == 0) {
+        flag = 1;
+    }
+    if (t > 0) {
+        if (*(s16*)((char*)foundA + 8) >= *(int*)(p4 + 0x24)) {
+            flag = 1;
+        }
+    }
+    if (t < 0) {
+        if (*(s16*)((char*)foundA + 8) <= *(int*)(p4 + 0x24)) {
+            flag = 1;
+        }
+    }
+    if (flag != 0) {
+        *(int*)(p4 + 0x24) = randomGetRange(-0x3e8, 0x3e8);
+        if (*(int*)(p4 + 0x24) < *(s16*)((char*)foundA + 8)) {
+            *(s16*)(p4 + 0x22) = -0x96;
+        } else {
+            *(s16*)(p4 + 0x22) = 0x96;
+        }
+        *(s8*)(p4 + 0x20) = (s8)randomGetRange(0x1e, 0x64);
+    }
+    timer = *(s8*)(p4 + 0x20);
+    if (timer > 0) {
+        *(s8*)(p4 + 0x20) = timer - framesThisStep;
+    } else {
+        *(s16*)((char*)foundA + 8) =
+            (s16)(*(s16*)((char*)foundA + 8) + *(s16*)(p4 + 0x22) * framesThisStep);
+        *(s16*)((char*)foundA + 0xa) = 0;
+        *(s16*)((char*)foundB + 8) = *(s16*)((char*)foundA + 8);
+        *(s16*)((char*)foundB + 0xa) = 0;
+    }
+}
+
+extern u8 framesThisStep;
+
 void fn_8003B228(int obj, int p2)
 {
     int* foundA;
