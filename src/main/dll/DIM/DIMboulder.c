@@ -1635,3 +1635,69 @@ void fn_801AD7E4(void *a, void *b, int c, int d, int e, int f, int g, int h, int
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_801AC01C(int *obj);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern void Music_Trigger(int track, int flag);
+extern void SCGameBitLatch_Update(void *state, int mask, int a, int b, int c, int d);
+extern int *gSHthorntailAnimationInterface;
+extern f32 timeDelta;
+extern f32 lbl_803E46DC;
+
+/* imicemountain_update: lazy-spawn the ambient effects, run the active state,
+ * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
+#pragma scheduling off
+void imicemountain_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    if (*(int *)((char *)obj + 0xf4) == 0) {
+        getEnvfxAct(obj, obj, 0xa3, 0);
+        getEnvfxAct(obj, obj, 0x9e, 0);
+        getEnvfxAct(obj, obj, 0x104, 0);
+        ((void (*)(int))((int *)*gCloudActionInterface)[0x1c / 4])(1);
+        *(int *)((char *)obj + 0xf4) = 1;
+    }
+    switch (*(u8 *)((char *)extra + 0xc)) {
+    case 1:
+        fn_801AC248(obj);
+        break;
+    case 2:
+        if (GameBit_Get(0x3a3) != 0) {
+            fn_801AC01C(obj);
+        }
+        break;
+    case 5:
+        break;
+    }
+    extra[1] &= ~1;
+    if (*(f32 *)((char *)extra + 0x10) > lbl_803E46DC) {
+        gameTextSetColor(255, 255, 255, 255);
+        gameTextShow(0x351);
+        *(f32 *)((char *)extra + 0x10) = *(f32 *)((char *)extra + 0x10) - timeDelta;
+        if (*(f32 *)((char *)extra + 0x10) < lbl_803E46DC) {
+            *(f32 *)((char *)extra + 0x10) = lbl_803E46DC;
+        }
+    }
+    if (((int (*)(int))((int *)*gSHthorntailAnimationInterface)[0x24 / 4])(0) != 0) {
+        if (*(s16 *)((char *)extra + 0xa) != -1) {
+            *(s16 *)((char *)extra + 0xa) = -1;
+            if ((extra[1] & 8) != 0) {
+                Music_Trigger(26, 0);
+            }
+        }
+    } else {
+        if (*(s16 *)((char *)extra + 0xa) != 26) {
+            *(s16 *)((char *)extra + 0xa) = 26;
+            if ((extra[1] & 8) != 0) {
+                Music_Trigger(26, 1);
+            }
+        }
+    }
+    SCGameBitLatch_Update((char *)extra + 4, 2, 705, 568, 493, 178);
+    SCGameBitLatch_Update((char *)extra + 4, 16, 442, 441, 470, 180);
+    SCGameBitLatch_Update((char *)extra + 4, 4, -1, -1, 928, 233);
+    SCGameBitLatch_Update((char *)extra + 4, 8, -1, -1, 929, *(s16 *)((char *)extra + 0xa));
+}
+#pragma peephole reset
+#pragma scheduling reset
