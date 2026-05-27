@@ -1983,5 +1983,54 @@ void DR_CloudRunner_init(int obj, int p2)
     ObjGroup_AddObject(obj, 0x26);
     ((ByteFlags *)((char *)inner + 0xbc0))->b01 = 0;
 }
+
+extern u8 lbl_803DC750;
+extern u8 lbl_803351A8[];
+extern f32 timeDelta;
+extern void fn_8003A168(int obj, int q);
+extern void characterDoEyeAnims(int obj, int q);
+extern void saveGame_saveObjectPos(int obj);
+
+void dim2prisonmammoth_update(int obj)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 matrix[16];
+    int inner = *(int *)((char *)obj + 0xb8);
+    int p;
+    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    if (((&lbl_803DC750)[*(s16 *)((char *)inner + 0x274)] & 8) == 0) {
+        *(u8 *)((char *)inner + 0x5fc) = objHitReact_update(obj, lbl_803351A8, 1, *(u8 *)((char *)inner + 0x5fc), (void *)(inner + 0x390));
+        if (*(u8 *)((char *)inner + 0x5fc) != 0) {
+            fn_8003A168(obj, inner + 0x35c);
+            characterDoEyeAnims(obj, inner + 0x35c);
+            return;
+        }
+    }
+    characterDoEyeAnims(obj, inner + 0x35c);
+    v.mat[1] = *(f32 *)((char *)obj + 0xc);
+    v.mat[2] = *(f32 *)((char *)obj + 0x10);
+    v.mat[3] = *(f32 *)((char *)obj + 0x14);
+    v.angles[0] = *(s16 *)((char *)obj + 0);
+    v.angles[1] = *(s16 *)((char *)obj + 2);
+    v.angles[2] = *(s16 *)((char *)obj + 4);
+    v.mat[0] = *(f32 *)((char *)obj + 8);
+    setMatrixFromObjectPos(matrix, v.angles);
+    p = *(int *)((char *)obj + 0x64);
+    Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
+                          (f32 *)((char *)p + 0x20), (f32 *)((char *)p + 0x24), (f32 *)((char *)p + 0x28));
+    *(u8 *)((char *)inner + 0x354) = 0;
+    *(int *)((char *)inner + 0) &= ~0x8000;
+    *(f32 *)((char *)inner + 0x290) = lbl_803E82C0;
+    *(f32 *)((char *)inner + 0x28c) = lbl_803E82C0;
+    *(int *)((char *)inner + 0x31c) = 0;
+    *(int *)((char *)inner + 0x318) = 0;
+    *(s16 *)((char *)inner + 0x330) = 0;
+    *(int *)((char *)inner + 0) |= 0x400000;
+    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)lbl_803DB160, &lbl_803DE4C8);
+    saveGame_saveObjectPos(obj);
+}
 #pragma peephole reset
 #pragma scheduling reset
