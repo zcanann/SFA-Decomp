@@ -1640,5 +1640,49 @@ void groundanimator_free(int *obj, int flag) {
     }
     ObjGroup_RemoveObject(obj, 0x31);
 }
+extern f32 lbl_803E3FA8;
+extern f32 lbl_803E3FAC;
+extern f32 lbl_803E3FB0;
+extern f32 lbl_803E3FB4;
+extern f32 lbl_803E3FBC;
+extern f32 timeDelta;
+extern void fn_801A80F0(int *e, int arg);
+#pragma scheduling off
+#pragma peephole off
+f32 groundanimator_setScale(int *obj, int *target) {
+    int *g;
+    int *r31;
+    f32 dy;
+    f32 dx;
+    f32 dz;
+    f32 r;
+    g = (int *)obj[46];
+    r31 = (int *)obj[19];
+    dy = *(f32 *)((char *)target + 0x10) - *(f32 *)((char *)obj + 0x10);
+    if (dy < lbl_803E3FA8 || dy > lbl_803E3FAC) {
+        return lbl_803E3FB0;
+    }
+    dx = *(f32 *)((char *)target + 0xc) - *(f32 *)((char *)obj + 0xc);
+    dz = *(f32 *)((char *)target + 0x14) - *(f32 *)((char *)obj + 0x14);
+    r = lbl_803E3FB4 + *(f32 *)((char *)g + 0x14);
+    if (dx * dx + dz * dz > r * r) {
+        return lbl_803E3FB8;
+    }
+    if (*(f32 *)((char *)g + 0xc) >= lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20)) {
+        if (g[2] != 0) {
+            int *e = (int *)g[2];
+            *(f32 *)((char *)g + 0xc) = lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20);
+            if (*(s16 *)((char *)e + 0x46) == 0x519) {
+                fn_801A80F0(e, 0);
+            } else {
+                (*(code *)(*(int *)(*(int *)((char *)e + 0x68)) + 0x24))(e, 0);
+            }
+        }
+    }
+    *(f32 *)((char *)g + 0xc) = lbl_803E3FBC * timeDelta + *(f32 *)((char *)g + 0xc);
+    *(u8 *)((char *)g + 0x2d) = *(u8 *)((char *)g + 0x2d) | 4;
+    return *(f32 *)((char *)g + 0x14) *
+           (*(f32 *)((char *)g + 0xc) / (lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20)));
+}
 #pragma peephole reset
 #pragma scheduling reset
