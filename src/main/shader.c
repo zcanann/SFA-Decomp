@@ -2756,3 +2756,28 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_800566A4(int key, int type)
+{
+    int i;
+    int off;
+
+    for (i = 0; i < 80; i++) {
+        off = i * 0x10;
+        if (key == *(u32 *)(lbl_803DCE6C + off) &&
+            *(u8 *)(lbl_803DCE6C + off + 0xe) == type &&
+            *(s16 *)(lbl_803DCE6C + off + 0xc) > 0) {
+            *(s16 *)(lbl_803DCE6C + off + 0xc) -= 1;
+            if (*(s16 *)(lbl_803DCE6C + off + 0xc) == 0) {
+                *(int *)(lbl_803DCE6C + off + 4) = 0;
+                *(u8 *)(lbl_803DCE6C + off + 0xe) = 0;
+                *(int *)(lbl_803DCE6C + off) = 0;
+                *(int *)(lbl_803DCE6C + off + 8) = 0;
+            }
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
