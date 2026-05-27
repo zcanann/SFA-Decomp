@@ -1716,3 +1716,128 @@ void dim2pathgenerator_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *objFindTexture(int *obj, int a, int b);
+extern void mtxRotateByVec3s(f32 *mtx, s16 *ang);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern f32 lbl_803E4A7C;
+extern f32 lbl_803E4A80;
+extern f32 lbl_803E4A84;
+extern f32 lbl_803E4A8C;
+extern f32 lbl_803E4A90;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_1D6_update(int *obj)
+{
+    int *def = *(int **)((char *)obj + 0x4c);
+    int *extra = *(int **)((char *)obj + 0xb8);
+    int *model;
+    int *tex;
+    int *player;
+    f32 mtx[12];
+    s16 ang[3];
+    f32 lx, ly, lz;
+
+    if ((*(u8 *)((char *)extra + 0x1d) & 1) != 0) {
+        if ((*(u8 *)((char *)extra + 0x1d) & 4) == 0) {
+            *(u8 *)((char *)extra + 0x1d) |= 4;
+            *(f32 *)((char *)extra + 0x10) = (f32)(int)randomGetRange(20, 40);
+            *(f32 *)((char *)extra + 0x14) = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+        }
+        *(s16 *)((char *)extra + 0x1a) = *(s16 *)((char *)extra + 0x1a) - framesThisStep;
+        *(s8 *)((char *)extra + 0x1c) = *(s8 *)((char *)extra + 0x1c) - framesThisStep;
+        if (*(s8 *)((char *)extra + 0x1c) <= 0) {
+            Sfx_PlayFromObject((int)obj, 159);
+        }
+        if (*(s16 *)((char *)extra + 0x1a) <= 0) {
+            model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
+            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A80, 16);
+            *(s16 *)((char *)extra + 0x18) = *(s16 *)((char *)def + 0x1a);
+            if (*(s16 *)((char *)extra + 0x18) < 15) {
+                *(s16 *)((char *)extra + 0x18) = 15;
+            }
+            *(u8 *)((char *)extra + 0x1d) &= ~1;
+            Sfx_PlayFromObject((int)obj, 502);
+        }
+    } else {
+        model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
+        if (*(int *)((char *)model + 0x28) != 0 && (*(u8 *)((char *)extra + 0x1d) & 4) != 0) {
+            if (*(f32 *)*(int **)((char *)model + 0x28) >= lbl_803E4A78) {
+                *(u8 *)((char *)extra + 0x1d) &= ~4;
+            }
+        }
+        *(s16 *)((char *)extra + 0x18) = *(s16 *)((char *)extra + 0x18) - framesThisStep;
+        if (*(s16 *)((char *)extra + 0x18) <= 0) {
+            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A84, 16);
+            *(s16 *)((char *)extra + 0x1a) = *(s16 *)((char *)def + 0x1c);
+            if (*(s16 *)((char *)extra + 0x1a) < 15) {
+                *(s16 *)((char *)extra + 0x1a) = 15;
+            }
+            *(u8 *)((char *)extra + 0x1d) |= 1;
+            Sfx_PlayFromObject((int)obj, 503);
+            *(s8 *)((char *)extra + 0x1c) = 20;
+        }
+    }
+    tex = objFindTexture(obj, 0, 0);
+    {
+        s16 v = -*(s16 *)((char *)tex + 0xa) + 256;
+        if (v > 2048) {
+            v = v - 2048;
+        }
+        *(s16 *)((char *)tex + 0xa) = -v;
+    }
+    tex = objFindTexture(obj, 1, 0);
+    {
+        s16 v = -*(s16 *)((char *)tex + 0xa) + 160;
+        if (v > 2048) {
+            v = v - 2048;
+        }
+        *(s16 *)((char *)tex + 0xa) = -v;
+    }
+    player = (int *)Obj_GetPlayerObject();
+    ang[0] = -*(s16 *)obj;
+    ang[1] = 0;
+    ang[2] = 0;
+    mtxRotateByVec3s(mtx, ang);
+    Matrix_TransformPoint(mtx, *(f32 *)((char *)player + 0xc), *(f32 *)((char *)player + 0x10),
+                          *(f32 *)((char *)player + 0x14), &lx, &ly, &lz);
+    if ((*(u8 *)((char *)extra + 0x1d) & 2) != 0) {
+        f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)player + 0x10);
+        if (dy < lbl_803E4A88) {
+            dy = -dy;
+        }
+        if (dy < lbl_803E4A8C) {
+            f32 zsq = lz * lz;
+            if (zsq <= *(f32 *)((char *)extra + 8)) {
+                int *row;
+                f32 lim;
+                model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
+                row = *(int **)((char *)model + ((*(u16 *)((char *)model + 0x18) >> 1) & 1) * 4 + 4);
+                lim = *(f32 *)((char *)obj + 8) *
+                      (f32)(int)*(s16 *)((char *)row + *(u8 *)((char *)extra + 0x1e) * 16);
+                if (lx <= lim) {
+                    ObjHits_RecordObjectHit(player, obj, 11, 4, 0);
+                }
+            }
+        }
+    }
+    if ((*(u8 *)((char *)extra + 0x1d) & 4) != 0) {
+        *(f32 *)((char *)extra + 0x10) =
+            *(f32 *)((char *)extra + 0x14) * timeDelta + *(f32 *)((char *)extra + 0x10);
+        if (*(f32 *)((char *)extra + 0x10) > lbl_803E4A90) {
+            *(f32 *)((char *)extra + 0x14) = -(f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+            *(f32 *)((char *)extra + 0x10) = lbl_803E4A90;
+        } else if (*(f32 *)((char *)extra + 0x10) < lbl_803E4A7C) {
+            *(f32 *)((char *)extra + 0x14) = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+            *(f32 *)((char *)extra + 0x10) = lbl_803E4A7C;
+        }
+    }
+    if (GameBit_Get(496) != 0) {
+        *(u8 *)((char *)extra + 0x1d) |= 2;
+    } else {
+        *(u8 *)((char *)extra + 0x1d) &= ~2;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
