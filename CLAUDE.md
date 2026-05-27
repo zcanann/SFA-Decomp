@@ -133,6 +133,17 @@ Heuristic before reaching for `asm { }`:
     try this before any `register`/asm approach. See `fa209c270`
     (fn_8019C3A0 → 100%).
 
+17. **Fold multiple early-return guards into ONE big `||` (with embedded
+    assignments) for convergent-predicate functions.** When target computes a
+    multi-condition predicate — several globals/fields checked, sometimes with
+    an assignment threaded in — and your early-return chain (`if(a) return;
+    if(b) return; ...`) sits at a partial, merge the guards into a single
+    `if (a || (x = f()) == 0 || b) return ...;`. MWCC's branch fusion for the
+    merged form matches target's convergent compare/branch layout, where
+    separate early-returns each emit their own branch island. Took two
+    EmissionController predicates 82% → 95%. Clean C, no asm. (Pairs with #14
+    `int`-param `cmpwi` and #3 `*(void**)` `cmplwi` for the individual compares.)
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
