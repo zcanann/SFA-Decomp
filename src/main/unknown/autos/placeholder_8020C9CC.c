@@ -286,5 +286,72 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
         break;
     }
 }
+
+extern int objUpdateOpacity(int sub);
+extern void ObjLink_AttachChild(int obj, int child, int c);
+extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int e);
+extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
+extern void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9);
+extern f32 lbl_803E66F0;
+extern f32 lbl_803E6708;
+extern f32 lbl_803E670C;
+extern f32 lbl_803E6710;
+
+void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis) {
+    int *inner;
+    int sub;
+    int found;
+    int opacity;
+    int oldFlag;
+    f32 dist;
+    int near;
+
+    dist = lbl_803E6708;
+    inner = *(int **)(obj + 0xb8);
+    sub = *(int *)inner;
+    if (*(u8 *)((char *)obj + 0x36) < 5) {
+        *(f32 *)((char *)inner + 0xac) = lbl_803E66F0;
+    }
+    found = 0;
+    opacity = vis;
+    if (*(s8 *)((char *)inner + 0xa4) >= 0 && sub != 0) {
+        if ((*(int (*)(int))(*(int *)(*(int *)(sub + 0x68) + 0x38)))(sub) == 2) {
+            found = 1;
+        }
+    }
+    if (found != 0) {
+        *(s16 *)((char *)obj + 6) |= 8;
+        opacity = (s8)objUpdateOpacity(sub);
+        snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, opacity, *(u8 *)((char *)inner + 0xa0), 1);
+    } else {
+        *(s16 *)((char *)obj + 6) &= ~8;
+    }
+    if ((s8)opacity != 0 && *(u8 *)((char *)inner + 0xa0) != 0) {
+        oldFlag = *(u8 *)((char *)obj + 0x37);
+        if (found != 0) {
+            *(u8 *)((char *)obj + 0x37) = *(u8 *)((char *)inner + 0xa0);
+        }
+        if (*(u8 *)((char *)obj + 0xeb) == 0 && *(s16 *)((char *)obj + 0x46) == 0x389 &&
+            ((*(u8 *)((char *)inner + 0xaa) >> 7) & 1) != 0) {
+            near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
+            if (near != 0 &&
+                (*(int (*)(int))(*(int *)(*(int *)(near + 0x68) + 0x24)))(near) != 0 &&
+                (*(int (*)(int, int))(*(int *)(*(int *)(near + 0x68) + 0x20)))(near, 0) != 0) {
+                ObjLink_AttachChild(obj, near, 0);
+            }
+        }
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E670C);
+        ObjPath_GetPointWorldPosition(obj, 1, (f32 *)((char *)inner + 0x18), (f32 *)((char *)inner + 0x1c), (f32 *)((char *)inner + 0x20), 0);
+        *(u8 *)((char *)obj + 0x37) = oldFlag;
+        if (((*(u8 *)((char *)inner + 0xaa) >> 6) & 1) != 0) {
+            if (*(f32 *)((char *)inner + 0xac) != lbl_803E66F0) {
+                *(f32 *)((char *)inner + 0xac) = lbl_803E670C + (f32)(s32)(0xff - *(u8 *)((char *)obj + 0x36)) / lbl_803E6710;
+            } else {
+                *(u8 *)((char *)inner + 0xaa) &= ~0x40;
+            }
+            objParticleFn_80099d84(obj, lbl_803E670C, 3, *(f32 *)((char *)inner + 0xac), 0);
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
