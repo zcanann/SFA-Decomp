@@ -546,3 +546,35 @@ void FUN_801249bc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+
+extern u32 lbl_803E1E14;
+extern int ObjModel_GetRenderOp(int model, int p);
+extern void resetLotsOfRenderVars(void);
+extern void *textureIdxToPtr(int idx);
+extern void gxFn_80051fb8(void *a, int b, int c, void *d, int e, int f);
+extern void textureFn_800528bc(void);
+extern void GXSetBlendMode(int a, int b, int c, int d);
+extern void gxSetZMode_(int a, int b, int c);
+extern void gxSetPeControl_ZCompLoc_(int a);
+extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
+
+#pragma peephole off
+#pragma scheduling off
+int modelFn_80124794(int obj, int param2, int param3)
+{
+    int renderOp;
+    u8 cfg[4];
+    *(u32 *)cfg = lbl_803E1E14;
+    renderOp = ObjModel_GetRenderOp(*(int *)param2, param3);
+    resetLotsOfRenderVars();
+    cfg[3] = *(u8 *)(obj + 0x37);
+    gxFn_80051fb8(textureIdxToPtr(*(int *)(renderOp + 0x24)), 0, 0, cfg, 0, 1);
+    textureFn_800528bc();
+    GXSetBlendMode(1, 4, 5, 5);
+    gxSetZMode_(0, 7, 0);
+    gxSetPeControl_ZCompLoc_(0);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
