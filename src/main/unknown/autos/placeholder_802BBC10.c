@@ -1693,3 +1693,30 @@ int fn_802C0B84(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *gObjectTriggerInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void DR_CloudRunner_func17(int obj, int param)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(u8 *)((char *)inner + 0xbb2) = (u8)param;
+    if (param == 1) {
+        s16 t;
+        *(u8 *)((char *)inner + 0x464) = 0;
+        t = *(s16 *)((char *)obj + 0xb4);
+        if (t != -1) {
+            (*(void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(t);
+        }
+    } else {
+        *(u8 *)((char *)inner + 0x464) = 1;
+    }
+    if (param == 2) {
+        GameBit_Set(0xed7, 1);
+    } else {
+        GameBit_Set(0xed7, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
