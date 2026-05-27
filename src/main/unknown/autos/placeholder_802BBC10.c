@@ -1487,3 +1487,40 @@ void DR_EarthWarrior_release(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int GameBit_Set(int id, int value);
+extern int *gGameUIInterface;
+extern int lbl_803DB1C0[];
+extern void *lbl_803DE4E0;
+extern int fn_802C0B84(int obj);
+extern void fn_802C0A5C();
+extern void fn_802C0978();
+extern void fn_802C0830();
+extern void fn_802C0550();
+extern void fn_802BF934();
+extern void fn_802BF75C();
+
+#pragma scheduling off
+#pragma peephole off
+void DR_CloudRunner_free(int obj)
+{
+    GameBit_Set(0x7aa, *(s16 *)((char *)*(int *)((char *)obj + 0xb8) + 0xbb0));
+    ObjGroup_RemoveObject(obj, 0xa);
+    ObjGroup_RemoveObject(obj, 0x26);
+    (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+}
+
+void DR_CloudRunner_initialise(void)
+{
+    ((void **)lbl_803DB1C0)[0] = (void *)fn_802C0B84;
+    ((void **)lbl_803DB1C0)[1] = (void *)fn_802C0A5C;
+    ((void **)lbl_803DB1C0)[2] = (void *)fn_802C0978;
+    ((void **)lbl_803DB1C0)[3] = (void *)fn_802C0830;
+    ((void **)lbl_803DB1C0)[4] = (void *)fn_802C0550;
+    ((void **)lbl_803DB1C0)[5] = (void *)fn_802BF934;
+    ((void **)lbl_803DB1C0)[6] = (void *)fn_802BF75C;
+    ((void **)lbl_803DB1C0)[7] = (void *)fn_802BF730;
+    lbl_803DE4E0 = (void *)fn_802BF728;
+}
+#pragma peephole reset
+#pragma scheduling reset
