@@ -104,5 +104,69 @@ void crcloudrace_updateCompletionState(int obj, int *state) {
         }
     }
 }
+
+extern int padGetStickX(int controller);
+extern int padGetStickY(int controller);
+extern int getLoadedFileFlags(int file);
+
+void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
+    s8 *inner = *(s8 **)(obj + 0xb8);
+    int stickX;
+    int stickY;
+    int resX;
+    int resY;
+
+    stickX = padGetStickX(0);
+    stickY = padGetStickY(0);
+    resX = 0;
+    resY = 0;
+    if (getLoadedFileFlags(0) == 0) {
+        if ((s8)stickX < -0x23 && inner[0xa] >= -0x23) {
+            resX = -1;
+            inner[0xc] = 0;
+        }
+        if ((s8)stickX > 0x23 && inner[0xa] <= 0x23) {
+            resX = 1;
+            inner[0xc] = 0;
+        }
+        if ((s8)stickY < -0x23 && inner[0xb] >= -0x23) {
+            resY = -1;
+            inner[0xd] = 0;
+        }
+        if ((s8)stickY > 0x23 && inner[0xb] <= 0x23) {
+            resY = 1;
+            inner[0xd] = 0;
+        }
+        inner[0xb] = stickY;
+        if (inner[0xb] < -0x23) {
+            inner[0xd]++;
+        } else if (inner[0xb] > 0x23) {
+            inner[0xd]++;
+        } else {
+            inner[0xd] = 0;
+        }
+        if (inner[0xd] > 0x32) {
+            inner[0xb] = 0;
+            inner[0xd] = 0;
+        }
+        inner[0xa] = stickX;
+        if (inner[0xa] < -0x23) {
+            inner[0xc]++;
+        } else if (inner[0xa] > 0x23) {
+            inner[0xc]++;
+        } else {
+            inner[0xc] = 0;
+        }
+        if (inner[0xc] > 0x32) {
+            inner[0xa] = 0;
+            inner[0xc] = 0;
+        }
+        *outX = resX;
+        *outY = resY;
+    } else {
+        *outX = 0;
+        *outY = 0;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
