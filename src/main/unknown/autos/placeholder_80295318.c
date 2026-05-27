@@ -5638,6 +5638,7 @@ extern void Obj_FreeObject(int obj);
 extern int *gBaddieControlInterface;
 extern int fn_802AC7DC(int a, int b, int c);
 extern int lbl_80332EC0[];
+extern f32 lbl_803E80EC;
 
 #pragma scheduling off
 #pragma peephole off
@@ -6713,6 +6714,29 @@ void fn_802AD204(int p1, int obj)
     } else {
         *(int *)((char *)obj + 0x3f8) = (int)(t + 0x190);
         *(int *)((char *)obj + 0x400) = (int)(t + 0x390);
+    }
+}
+
+void fn_802AB5A4(int obj, int p2, int flags)
+{
+    u8 f = (u8)flags;
+    char *q = (char *)p2 + 4;
+    if (f & 1) {
+        objFn_800e67ac(obj, q);
+    }
+    if (f & 2) {
+        objFn_800e64f4(obj, q);
+        *(f32 *)(q + 0x20) = *(f32 *)((char *)obj + 0x18);
+        *(f32 *)(q + 0x24) = lbl_803E80EC + *(f32 *)((char *)obj + 0x1c);
+        *(f32 *)(q + 0x28) = *(f32 *)((char *)obj + 0x20);
+    }
+    if (f & 4) {
+        *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x10) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x14) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x18) = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x1c) = *(f32 *)((char *)obj + 0x18);
+        *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x20) = *(f32 *)((char *)obj + 0x1c);
+        *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x24) = *(f32 *)((char *)obj + 0x20);
     }
 }
 #pragma peephole reset
