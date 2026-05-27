@@ -5844,3 +5844,132 @@ void lightfoot_release(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void playerInitFuncPtrs(int obj);
+extern void fn_802AB38C(int a, int b, int c);
+extern int lbl_80333250[];
+extern int lbl_80333050[];
+extern f32 lbl_803E7EDC;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802966D4(int obj, int *out)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *out = *(int *)((char *)inner + 0x7f8);
+    return *(int *)((char *)inner + 0x7f8) != 0;
+}
+
+int fn_80296C2C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s8 *)((char *)*(int *)((char *)inner + 0x35c)) > 0;
+}
+
+void fn_80298924(int obj)
+{
+    ObjHits_SyncObjectPositionIfDirty(obj);
+}
+
+void fn_802A00C0(int obj)
+{
+    ObjHits_SyncObjectPositionIfDirty(obj);
+}
+
+void fn_802A49A8(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(int *)((char *)inner + 0x400) = (int)lbl_80333250;
+    *(int *)((char *)inner + 0x3f8) = (int)lbl_80333050;
+}
+
+void fn_802B6F48(int obj)
+{
+    playerInitFuncPtrs(obj);
+}
+
+int fn_802969F0(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (((ByteFlags *)((char *)inner + 0x3f1))->b01) {
+        return *(u8 *)((char *)inner + 0x86c);
+    }
+    return -1;
+}
+
+void fn_802961D4(int obj, int v)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(s16 *)((char *)obj + 0) = v;
+    *(s16 *)((char *)inner + 0x478) = v;
+    *(s16 *)((char *)inner + 0x484) = v;
+    *(int *)((char *)inner + 0x360) |= 0x800000;
+}
+
+void fn_80296B78(int obj, int p2)
+{
+    fn_802AB38C(obj, *(int *)((char *)obj + 0xb8), p2);
+}
+
+void fn_8029782C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(int *)((char *)inner + 0x360) |= 0x800000;
+    ((ByteFlags *)((char *)inner + 0x3f6))->b20 = 0;
+}
+
+int objIsCurModelNotZero(void *obj)
+{
+    if (obj != NULL) {
+        return *(s8 *)((char *)obj + 0xad) != 0;
+    }
+    return 0;
+}
+
+int playerHasSpell(int obj, int spell)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if ((u32)spell > 0xb) {
+        return 0;
+    }
+    return *(u8 *)((char *)inner + 0x8c7) & (1 << spell);
+}
+
+int fn_80295C5C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s16 *)((char *)inner + 0x274) == 0x36 &&
+           ((ByteFlags *)((char *)inner + 0x3f3))->b10;
+}
+
+int objFn_80296700(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)inner + 0x8b3) != 0 && *(u8 *)((char *)inner + 0x8b4) != 0) {
+        return 1;
+    }
+    return 0;
+}
+
+void fn_802961A4(int obj, int *out1, f32 *out2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *out1 = *(s16 *)((char *)obj + 0xa0);
+    if (*(s16 *)((char *)inner + 0x274) == 0x26) {
+        *out2 = *(f32 *)((char *)inner + 0x7d8);
+    } else {
+        *out2 = *(f32 *)((char *)inner + 0x7d4);
+    }
+}
+
+void playerLock(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (p2 != 0) {
+        *(int *)((char *)inner + 0x360) |= 0x200000;
+    } else {
+        *(int *)((char *)inner + 0x360) &= ~0x200000;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
