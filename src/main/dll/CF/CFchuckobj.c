@@ -876,7 +876,7 @@ void FUN_80190008(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_80190148
+ * Function: warpPadFn_8019042c
  * EN v1.0 Address: 0x80190148
  * EN v1.0 Size: 1148b
  * EN v1.1 Address: 0x801909A8
@@ -886,7 +886,7 @@ void FUN_80190008(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80190148(int param_1)
+void warpPadFn_8019042c(int param_1)
 {
   byte bVar1;
   float fVar2;
