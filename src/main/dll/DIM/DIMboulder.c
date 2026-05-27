@@ -1371,7 +1371,7 @@ int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3) {
 #pragma scheduling reset
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
-extern void dll_16C_SeqFn(void);
+extern int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3);
 #pragma scheduling off
 #pragma peephole off
 void dll_16C_init(void *obj, void *arg2) {
@@ -1521,3 +1521,79 @@ void fn_801AC248(int *obj)
 #pragma scheduling reset
 #undef MEVT_TRIGGER
 #undef MEVT_SET
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int kind, int id);
+extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+extern void ObjAnim_SetCurrentMove(int *obj, int move, f32 blend, int flag);
+extern f32 lbl_803E4748;
+extern u8 lbl_802C2308[];
+
+typedef struct { s16 v[5]; } Blob10;
+
+/* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
+ * from a small id table, then run the map-event sub-object state callbacks. */
+#pragma scheduling off
+#pragma peephole off
+int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
+{
+    int *p;
+    int *extra = *(int **)((char *)obj + 0xb8);
+    s16 ids[6];
+
+    *(u8 *)((char *)extra + 0x20) = 0xff;
+    p = (int *)*extra;
+    if (arg3[0x80] == 3) {
+        *(s8 *)((char *)extra + 0x21) = -1;
+        arg3[0x80] = 0;
+    }
+    *(Blob10 *)&ids[1] = *(Blob10 *)lbl_802C2308;
+
+    if (*(s8 *)((char *)extra + 0x21) != *(s8 *)((char *)extra + 0x22)) {
+        if (*(void **)((char *)obj + 0xc8) != NULL) {
+            Obj_FreeObject(*(int **)((char *)obj + 0xc8));
+            *(int *)((char *)obj + 0xc8) = 0;
+            *(u8 *)((char *)obj + 0xeb) = 0;
+        }
+        if (Obj_IsLoadingLocked()) {
+            s8 idx = *(s8 *)((char *)extra + 0x21);
+            if (idx > 0) {
+                *(int *)((char *)obj + 0xc8) =
+                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx]), 4, -1, -1,
+                                    *(int *)((char *)obj + 0x30));
+                *(u8 *)((char *)obj + 0xeb) = 1;
+            }
+            *(s8 *)((char *)extra + 0x22) = *(s8 *)((char *)extra + 0x21);
+        } else {
+            *(s8 *)((char *)extra + 0x22) = 0;
+        }
+    }
+
+    *(s16 *)((char *)arg3 + 0x6e) = *(s16 *)((char *)arg3 + 0x70);
+
+    if (p != NULL && arg3[0x80] == 2) {
+        *(f32 *)((char *)extra + 4) = lbl_803E4758;
+        *(f32 *)((char *)extra + 8) = *(f32 *)((char *)extra + 0x14);
+        *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0x18);
+        *(f32 *)((char *)extra + 0x10) = *(f32 *)((char *)extra + 0x1c);
+        (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 2);
+        ObjAnim_SetCurrentMove(obj, 0x100, lbl_803E4748, 1);
+        if (*(void **)((char *)obj + 0x64) != NULL) {
+            *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x1000;
+        }
+        *(s16 *)((char *)arg3 + 0x6e) &= ~4;
+        arg3[0x80] = 0;
+    } else if (p != NULL && arg3[0x80] == 1) {
+        (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 0);
+        arg3[0x80] = 0;
+    }
+
+    if (p != NULL) {
+        if ((*(int (**)(int *))(**(int **)((char *)p + 0x68) + 0x38))(p) == 2) {
+            *(s16 *)((char *)arg3 + 0x6e) &= ~3;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
