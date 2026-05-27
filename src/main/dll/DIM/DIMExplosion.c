@@ -613,3 +613,49 @@ int fn_801B17F4(int obj, int delta) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
+ * present in the trigger list, latching the gamebit. */
+#pragma scheduling off
+#pragma peephole off
+void dimgate_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    int *def = *(int **)((char *)obj + 0x4c);
+    switch (*(s8 *)extra) {
+    case 0: {
+        int *hb = *(int **)((char *)obj + 0x54);
+        int *list;
+        int found;
+        int i;
+        if (*(s8 *)((char *)hb + 0xb0) != 1) {
+            ObjHitbox_SetStateIndex((int)obj, (int)hb, 1);
+        }
+        found = 0;
+        list = *(int **)((char *)obj + 0x58);
+        for (i = 0; i < *(s8 *)((char *)list + 0x10f); i++) {
+            if (*(s16 *)((char *)*(int **)((char *)list + 0x100 + i * 4) + 0x46) == 399) {
+                found = 1;
+                break;
+            }
+        }
+        if (found) {
+            GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            if (*(s8 *)((char *)*(int **)((char *)obj + 0x54) + 0xb0) != 2) {
+                ObjHitbox_SetStateIndex((int)obj, *(int *)((char *)obj + 0x54), 2);
+            }
+            *(s8 *)extra = 2;
+        }
+        break;
+    }
+    case 1:
+        break;
+    case 2:
+        if (*(s8 *)((char *)*(int **)((char *)obj + 0x54) + 0xb0) != 2) {
+            ObjHitbox_SetStateIndex((int)obj, *(int *)((char *)obj + 0x54), 2);
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
