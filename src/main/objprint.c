@@ -3615,5 +3615,38 @@ void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
         }
     }
 }
+
+extern int Obj_GetActiveModel(int obj);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+
+void objPosFn_80039510(int obj, int key, int out)
+{
+    int* table;
+    int i;
+    int k;
+    int n;
+    int joint;
+    int model;
+
+    table = *(int**)(obj + 0x50);
+    i = 0;
+    n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+    for (k = 0; k < n; k++) {
+        u8* data = *(u8**)((char*)table + 0x10);
+        if (key == (int)data[i]) {
+            joint = *(u8*)(data + i + *(s8*)((char*)obj + 0xad) + 1);
+            break;
+        }
+        i = i + *(s8*)((char*)table + 0x55) + 1;
+    }
+    model = Obj_GetActiveModel(obj);
+    model = (int)ObjModel_GetJointMatrix((int*)model, joint);
+    *(f32*)((char*)out + 0) = *(f32*)((char*)model + 0xc);
+    *(f32*)((char*)out + 4) = *(f32*)((char*)model + 0x1c);
+    *(f32*)((char*)out + 8) = *(f32*)((char*)model + 0x2c);
+    *(f32*)((char*)out + 0) = *(f32*)((char*)out + 0) + playerMapOffsetX;
+    *(f32*)((char*)out + 8) = *(f32*)((char*)out + 8) + playerMapOffsetZ;
+}
 #pragma peephole reset
 #pragma scheduling reset
