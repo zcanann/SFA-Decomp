@@ -5624,6 +5624,13 @@ extern void *lbl_803DE44C;
 extern u8 lbl_803DC66C;
 extern void objSetAnimField48to0(int *obj);
 extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
+extern f32 lbl_803E7EE0;
+extern f32 lbl_803E7EF0;
+extern int getCurSeqNo(void);
+extern void setTimeStop(int x);
+extern void cutsceneEnterExit(int a, int b);
+extern int *gCameraInterface;
+extern void fn_802AB5A4(int a, int b, int c);
 
 #pragma scheduling off
 #pragma peephole off
@@ -6353,6 +6360,83 @@ void fn_80296124(int obj, void *p2, void *p3)
         *(s16 *)((char *)obj + 4) = *(s16 *)((char *)p3 + 4);
         *(int *)((char *)inner + 0x360) |= 0x4000;
     }
+}
+
+int fn_8029605C(int obj, f32 *p2, f32 *p3)
+{
+    void *inner = *(void **)((char *)obj + 0xb8);
+    if (inner != NULL && getCurSeqNo() == 0) {
+        if ((*(int *)((char *)inner + 0x360) & 0x400) != 0) {
+            *p2 = *(f32 *)((char *)inner + 0x788);
+            *p3 = *(f32 *)((char *)inner + 0x78c);
+            return 1;
+        }
+        return 0;
+    }
+    return 0;
+}
+
+void fn_8029A420(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)inner + 0x8c8) != 0x42 && getCurSeqNo() == 0) {
+        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            0x42, 0, 1, 0, 0, 0x3c, 0xfe);
+    }
+    ((ByteFlags *)((char *)inner + 0x3f6))->b40 = 0;
+    *(s16 *)((char *)inner + 0x80a) = -1;
+}
+
+void playerUpdateWhileTimeStopped(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 zero = lbl_803E7EA4;
+    f32 v = *(f32 *)((char *)inner + 0x820);
+    if (v > zero) {
+        v -= lbl_803E7EE0;
+        *(f32 *)((char *)inner + 0x820) = v;
+        v = *(f32 *)((char *)inner + 0x820);
+        if (v <= zero) {
+            cutsceneEnterExit(0, 0);
+            *(u8 *)((char *)inner + 0x8cf) = 1;
+        } else if (lbl_803E7EF0 == v) {
+            cutsceneEnterExit(1, 0);
+            setTimeStop(0xfd);
+        }
+    }
+}
+
+void fn_8029DAE0(int obj, int *p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    u8 c;
+    *p2 &= ~0x4000;
+    c = *(u8 *)((char *)inner + 0x8c8);
+    if (c != 0x48 && c != 0x47 && getCurSeqNo() == 0) {
+        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            0x42, 0, 1, 0, 0, 0x3c, 0xfe);
+    }
+    ObjHits_SyncObjectPositionIfDirty(obj);
+}
+
+void fn_80295B2C(int obj, f32 f1, f32 f2, f32 f3)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(f32 *)((char *)obj + 0x8c) = f1;
+    *(f32 *)((char *)obj + 0x80) = f1;
+    *(f32 *)((char *)obj + 0x18) = f1;
+    *(f32 *)((char *)obj + 0xc) = f1;
+    *(f32 *)((char *)obj + 0x90) = f2;
+    *(f32 *)((char *)obj + 0x84) = f2;
+    *(f32 *)((char *)obj + 0x1c) = f2;
+    *(f32 *)((char *)obj + 0x10) = f2;
+    *(f32 *)((char *)obj + 0x94) = f3;
+    *(f32 *)((char *)obj + 0x88) = f3;
+    *(f32 *)((char *)obj + 0x20) = f3;
+    *(f32 *)((char *)obj + 0x14) = f3;
+    fn_802AB5A4(obj, inner, 7);
+    (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 1);
+    *(int *)((char *)inner + 0x304) = (int)fn_802A514C;
 }
 #pragma peephole reset
 #pragma scheduling reset
