@@ -74,6 +74,63 @@ f32 fn_80183204(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void ObjGroup_AddObject(int obj, int group);
+extern void* Resource_Acquire(int id, int mode);
+extern void* lbl_803DDAC0;
+
+#pragma scheduling off
+#pragma peephole off
+void smallbasket_init(int obj, int def)
+{
+    int state;
+    s16 v1c;
+    s16 mode;
+
+    state = *(int*)(obj + 0xb8);
+    ObjHits_DisableObject(obj);
+    ObjGroup_AddObject(obj, 0x10);
+
+    v1c = *(s16*)(def + 0x1c);
+    if (v1c == 0) {
+        *(int*)(state + 0x18) = 0;
+    } else {
+        *(int*)(state + 0x18) = v1c * 0x3c;
+    }
+
+    lbl_803DDAC0 = Resource_Acquire(0x5b, 1);
+    *(s16*)(state + 0xe) = (s16)(randomGetRange(0, 0x64) + 0x12c);
+    *(u8*)(state + 0x1f) = (u8)*(s16*)(def + 0x1a);
+    *(s16*)obj = (s16)(*(s8*)(def + 0x18) << 8);
+    *(s16*)(state + 0x1c) = *(s16*)(def + 0x1e);
+    *(s16*)(state + 0xc) = *(s16*)(def + 0x20);
+    if (*(s16*)(state + 0xc) == 0) {
+        *(s16*)(state + 0xc) = 0x14;
+    }
+    *(s16*)(state + 0x12) = 0x320;
+    *(u16*)(obj + 0xb0) |= 0x2000;
+    *(u8*)(state + 0x1e) = *(u8*)(def + 0x19);
+    *(f32*)(obj + 0x80) = *(f32*)(obj + 0xc);
+    *(f32*)(obj + 0x84) = *(f32*)(obj + 0x10);
+    *(f32*)(obj + 0x80) = *(f32*)(obj + 0x14);
+
+    if ((u32)GameBit_Get(*(s16*)(state + 0x1c)) != 0) {
+        *(int*)(state + 0x14) = 1;
+        ObjHits_DisableObject(obj);
+    }
+
+    mode = *(s16*)(obj + 0x46);
+    if (mode == 0x3cf) {
+        *(s16*)(state + 0x10) = 0x60;
+    } else if (mode == 0x662) {
+        *(u8*)(state + 0x20) = 1;
+        *(s16*)(state + 0x10) = 0x37d;
+    } else {
+        *(s16*)(state + 0x10) = 0x4a;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_80183250(int obj, int def)
