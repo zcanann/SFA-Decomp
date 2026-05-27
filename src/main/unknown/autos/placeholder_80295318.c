@@ -5642,6 +5642,7 @@ extern f32 lbl_803E80EC;
 extern void *lbl_80332ED4[];
 extern u8 lbl_803DE42C;
 extern void *lbl_803DE454;
+extern f32 lbl_803E7F6C;
 extern void Resource_Release(void *handle);
 extern void showDeathMenu(void);
 
@@ -6798,6 +6799,43 @@ int fn_802A9C0C(int obj, int p2, int p3)
         return 1;
     }
     return 0;
+}
+
+void fn_8029C8C8(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(f32 *)((char *)p2 + 0x298) < lbl_803E7F6C) {
+        s16 h = *(s16 *)((char *)obj + 0);
+        *(s16 *)((char *)inner + 0x484) = h;
+        *(s16 *)((char *)inner + 0x478) = h;
+        *(int *)((char *)inner + 0x494) = h;
+        *(f32 *)((char *)p2 + 0x298) = lbl_803E7EA4;
+    } else {
+        int t = *(int *)((char *)inner + 0x474);
+        *(int *)((char *)inner + 0x494) = t;
+        *(s16 *)((char *)inner + 0x484) = (s16)t;
+        *(int *)((char *)inner + 0x48c) = 0;
+        *(int *)((char *)inner + 0x488) = 0;
+    }
+    lbl_803DC66C = 1;
+    if (*(s16 *)((char *)p2 + 0x274) != 0x24 && *(s16 *)((char *)p2 + 0x274) != 0x25 &&
+        lbl_803DE42C != 0) {
+        void **p = lbl_80332ED4;
+        int i;
+        *(s16 *)((char *)inner + 0x80a) = -1;
+        lbl_803DE42C = 0;
+        for (i = 0; i < 7; i++) {
+            if (*p != NULL) {
+                Obj_FreeObject((int)*p);
+                *p = NULL;
+            }
+            p++;
+        }
+        if (lbl_803DE454 != NULL) {
+            Resource_Release(lbl_803DE454);
+            lbl_803DE454 = NULL;
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
