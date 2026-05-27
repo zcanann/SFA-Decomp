@@ -1657,6 +1657,7 @@ extern f32 lbl_803E840C;
 extern s16 lbl_803DC79A;
 extern f32 Vec_distance(int a, int b);
 extern void *Obj_GetPlayerObject(void);
+extern void fn_802BF0C8(int obj, int p2, int mode);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1722,6 +1723,48 @@ int fn_802C0A5C(int obj, int p2)
         ((ByteFlags *)((char *)inner + 0xbc0))->b10 = *(s16 *)((char *)inner + 0xbb0) > 0;
         *(s16 *)((char *)obj + 0) = lbl_803DC79A;
         return 3;
+    }
+    return 0;
+}
+
+int fn_802C0830(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        ((ByteFlags *)((char *)inner + 0xbc0))->b10 = 0;
+        *(f32 *)((char *)obj + 0x28) = lbl_803E83A4;
+        if (((ByteFlags *)((char *)inner + 0xbc0))->b20) {
+            ((ByteFlags *)((char *)inner + 0xbc0))->b20 = 0;
+            fn_802BF0C8(obj, p2, ((ByteFlags *)((char *)inner + 0xbc0))->b20);
+        }
+    }
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0x203:
+        if (*(s16 *)((char *)inner + 0xbb0) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0x20c, lbl_803E83A4, 0);
+            *(f32 *)((char *)p2 + 0x2a0) = lbl_803E8408;
+        }
+        break;
+    case 0x20c:
+        if (*(s8 *)((char *)p2 + 0x346) != 0) {
+            *(u8 *)((char *)inner + 0xad5) &= ~2;
+            return 3;
+        }
+        break;
+    default: {
+        f32 fz;
+        ObjAnim_SetCurrentMove(obj, 0x203, lbl_803E83A4, 0);
+        *(u8 *)((char *)inner + 0xad5) |= 2;
+        fz = lbl_803E83A4;
+        *(f32 *)((char *)p2 + 0x294) = fz;
+        *(f32 *)((char *)p2 + 0x284) = fz;
+        *(f32 *)((char *)p2 + 0x280) = fz;
+        *(f32 *)((char *)obj + 0x24) = fz;
+        *(f32 *)((char *)obj + 0x28) = fz;
+        *(f32 *)((char *)obj + 0x2c) = fz;
+        *(f32 *)((char *)p2 + 0x2a0) = lbl_803E8408;
+        break;
+    }
     }
     return 0;
 }
