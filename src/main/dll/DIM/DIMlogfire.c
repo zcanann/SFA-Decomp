@@ -1030,3 +1030,38 @@ void ccgasvent_update(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int MoonSeedPlantingSpot_setScale(int *obj, int arg) {
+    int *sub;
+    u8 *inner;
+    int ret;
+
+    inner = *(u8 **)((char *)obj + 0xb8);
+    ret = 0;
+    if (arg == 0) {
+        if ((inner[1] & 2) != 0) {
+            inner[0] = 3;
+            *(s16 *)(inner + 0xc) = 0;
+        }
+        ret = 1;
+    } else if (arg == 1) {
+        if (inner[0] == 3) {
+            ret = 1;
+            if (GameBit_Get(*(s16 *)(inner + 8)) != 0 && GameBit_Get(*(s16 *)(inner + 0xa)) == 0) {
+                inner = *(u8 **)((char *)obj + 0xb8);
+                sub = *(int **)((char *)obj + 0x4c);
+                if (GameBit_Get(*(s16 *)(inner + 8)) != 0) {
+                    *(u8 *)((char *)obj + 0xaf) |= 8;
+                    GameBit_Set(*(s16 *)(inner + 0xa), 1);
+                    inner[0] = 4;
+                    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)sub + 0xc);
+                }
+            }
+        }
+    }
+    return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset

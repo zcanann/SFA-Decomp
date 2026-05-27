@@ -47,7 +47,7 @@ void animsharpclaw_initialise(void);
 int MoonSeedPlantingSpot_render2(void);
 int MoonSeedPlantingSpot_modelMtxFn(void);
 int MoonSeedPlantingSpot_func0B(void);
-void MoonSeedPlantingSpot_setScale(void);
+int MoonSeedPlantingSpot_setScale(int *obj, int arg);
 int MoonSeedPlantingSpot_getExtraSize(void);
 int MoonSeedPlantingSpot_func08(void);
 void MoonSeedPlantingSpot_free(int x);
