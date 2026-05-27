@@ -5538,3 +5538,69 @@ int fn_80297498(void) { return 0x0; }
 int fn_80297824(void) { return 0x0; }
 void DIMSnowHorn1_func23(void) {}
 int fn_802B9784(void) { return 0x0; }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80295CE4(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return (*(u8 *)((char *)inner + 0x3f4) >> 6) & 1;
+}
+
+void fn_802960E8(void *playerObj, s16 p2)
+{
+    int inner = *(int *)((char *)playerObj + 0xb8);
+    *(s16 *)((char *)inner + 0x81c) = p2;
+}
+
+void fn_802960F4(int obj, int *out)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (out == NULL) {
+        return;
+    }
+    *out = (int)((char *)inner + 0x3c4);
+}
+
+f32 fn_8029610C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(f32 *)((char *)inner + 0x280);
+}
+
+int fn_80296118(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(int *)((char *)inner + 0x2d0);
+}
+
+f32 fn_80296214(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(f32 *)((char *)inner + 0x784);
+}
+
+void fn_80296220(int obj, f32 v)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(f32 *)((char *)inner + 0x784) = v;
+}
+
+int fn_8029622C(int obj)
+{
+    return (*(u16 *)((char *)obj + 0xb0) & 0x1000) == 0;
+}
+
+int fn_80296448(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return (*(u8 *)((char *)inner + 0x3f0) >> 5) & 1;
+}
+
+int fn_80296464(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(int *)((char *)inner + 0x360) & 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
