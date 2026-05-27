@@ -3835,5 +3835,50 @@ void fn_8003A230(int obj, int p2, f32 val)
         *(s16*)((char*)p2 + 0x1a) = (s16)(*(s16*)((char*)p2 + 0x1a) | (flag << 8));
     }
 }
+
+extern int getAngle(f32 dx, f32 dy);
+extern f32 lbl_803DE9EC;
+
+void fn_8003B0D0(int obj, int p2, int p3, int p4)
+{
+    s16* found;
+    int* table;
+    int i;
+    int j;
+    int k;
+    int n;
+    int angle;
+    s16 limit;
+
+    found = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        i = 0;
+        j = 0;
+        n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+        for (k = 0; k < n; k++) {
+            u8* data = *(u8**)((char*)table + 0x10);
+            s32 di = *(s8*)(obj + 0xad) + i + 1;
+            if (data[di] != 0xff && data[i] == 0) {
+                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+            }
+            i = i + *(s8*)((char*)table + 0x55) + 1;
+            j += 0x12;
+        }
+    }
+    if (found != NULL) {
+        angle = (s16)getAngle(*(f32*)((char*)obj + 0xc) - *(f32*)((char*)p2 + 0xc),
+                              *(f32*)((char*)obj + 0x14) - *(f32*)((char*)p2 + 0x14));
+        *(s16*)((char*)p3 + 0x14) = (s16)(angle - *(s16*)(obj + 0));
+        limit = (s16)(int)(lbl_803DE9EC * (f32)(s32)p4);
+        if (*(s16*)((char*)p3 + 0x14) > limit) {
+            *(s16*)((char*)p3 + 0x14) = limit;
+        }
+        if (*(s16*)((char*)p3 + 0x14) < -limit) {
+            *(s16*)((char*)p3 + 0x14) = -limit;
+        }
+        found[1] = *(s16*)((char*)p3 + 0x14);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
