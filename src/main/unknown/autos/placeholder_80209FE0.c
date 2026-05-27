@@ -1686,3 +1686,60 @@ void drakord_thornbush_release(void)
 void drakord_thornbush_initialise(void)
 {
 }
+
+extern void ModelLightStruct_free(int light);
+extern void Music_Trigger(int id, int value);
+extern void fn_80221978(int obj, int p1, int n, int p2, f32 v);
+extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
+extern f32 lbl_803E6588;
+extern f32 lbl_803E658C;
+extern f32 lbl_803E6590;
+extern f32 lbl_803E6594;
+
+int bossdrakor_getExtraSize(void)
+{
+    return 0x1a4;
+}
+
+#pragma scheduling off
+#pragma peephole off
+void bossdrakor_free(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 0x45);
+    if (*(void **)((char *)obj + 0xc8) != NULL) {
+        ObjLink_DetachChild(obj, *(int *)((char *)obj + 0xc8));
+    }
+    if (*(void **)((char *)inner + 0x160) != NULL) {
+        ModelLightStruct_free(*(int *)((char *)inner + 0x160));
+    }
+    Music_Trigger(0x26, 0);
+    Music_Trigger(0x96, 0);
+}
+
+void drakord_thornbush_free(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(s16 *)((char *)obj + 0x46) == 0x709) {
+        fn_80221978(obj, inner + 0x14, 3, inner + 0x64, lbl_803E6588);
+    }
+    if (*(void **)((char *)inner + 0x64) != NULL) {
+        ModelLightStruct_free(*(int *)((char *)inner + 0x64));
+    }
+}
+
+void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+{
+    int inner = *(int *)((char *)p1 + 0xb8);
+    f32 v;
+    if (*(s16 *)((char *)p1 + 0x46) == 0x709) {
+        v = *(f32 *)((char *)inner + 0x68);
+        if (v < lbl_803E6590) {
+            v = lbl_803E658C;
+        }
+        fn_80221978(p1, inner + 0x14, 3, inner + 0x64, v);
+    }
+    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6594);
+}
+#pragma peephole reset
+#pragma scheduling reset
