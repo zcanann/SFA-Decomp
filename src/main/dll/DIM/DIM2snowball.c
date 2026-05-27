@@ -1499,3 +1499,57 @@ void dim2conveyor_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int mmAlloc(int size, int a, int b);
+extern void getTabEntry(int dst, int a, int off, int size);
+extern void ObjModel_SetBlendChannelTargets(int *model, int a, int b, int c, f32 w, int d);
+extern void ObjModel_SetBlendChannelWeight(int *model, int a, f32 w);
+extern s16 lbl_803DBF18;
+extern f32 lbl_803E4A78;
+extern f32 lbl_803E4A88;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_1D6_init(int *obj, u8 *params)
+{
+    int *extra;
+    int *model;
+    int i;
+
+    *(s16 *)obj = (s16)(*(s8 *)((char *)params + 0x18) << 8);
+    extra = *(int **)((char *)obj + 0xb8);
+    model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
+    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
+    ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
+    *(s16 *)((char *)extra + 0x18) = *(s16 *)((char *)params + 0x1a);
+    if (*(s16 *)((char *)extra + 0x18) < 15) {
+        *(s16 *)((char *)extra + 0x18) = 15;
+    }
+    *(s16 *)((char *)extra + 0x1a) = *(s16 *)((char *)params + 0x1c);
+    if (*(s16 *)((char *)extra + 0x1a) < 15) {
+        *(s16 *)((char *)extra + 0x1a) = 15;
+    }
+    {
+        f32 k = lbl_803E4A88;
+        *(f32 *)((char *)extra + 8) = k * *(f32 *)((char *)obj + 8);
+        *(f32 *)((char *)extra + 8) = *(f32 *)((char *)extra + 8) * *(f32 *)((char *)extra + 8);
+        *(f32 *)((char *)extra + 0xc) = k * *(f32 *)((char *)obj + 8);
+        *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0xc) * *(f32 *)((char *)extra + 0xc);
+    }
+    *(u8 *)((char *)extra + 0x1d) = GameBit_Get(496) ? 2 : 0;
+    for (i = 0; i < 4; i++) {
+        if ((&lbl_803DBF20)[i] == 0) {
+            (&lbl_803DBF20)[i] = 1;
+            *(u8 *)((char *)extra + 0x1f) = i;
+            i = 4;
+        }
+    }
+    *(int *)extra = mmAlloc(40, 18, 0);
+    getTabEntry(*(int *)extra, 12, (&lbl_803DBF18)[*(u8 *)((char *)extra + 0x1f)] * 40, 40);
+    *(int *)((char *)extra + 4) = mmAlloc(40, 18, 0);
+    getTabEntry(*(int *)((char *)extra + 4), 12,
+                ((&lbl_803DBF18)[*(u8 *)((char *)extra + 0x1f)] + 1) * 40, 40);
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
