@@ -1551,3 +1551,24 @@ int fn_801AA734(int obj, int unused, u8* data) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void ccpedstal_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (*(u8 *)(state + 6) != 0) {
+        if (*(u8 *)(state + 6) & 1) {
+            GameBit_Set(*(s16 *)(state + 4), 1);
+        } else {
+            GameBit_Set(*(s16 *)(state + 4), 0);
+        }
+        *(u8 *)(state + 6) = 0;
+        if (GameBit_Get(0xdf0) == 0 && GameBit_Get(0xaa) != 0) {
+            GameBit_Set(0xdf0, 1);
+        }
+    }
+    (*(void (*)(int, int))*(int *)state)(obj, state);
+}
+#pragma peephole reset
+#pragma scheduling reset
