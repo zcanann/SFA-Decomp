@@ -1361,3 +1361,58 @@ void seqpoint_update(int *obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int *gPartfxInterface;
+extern void Obj_FreeObject(int *obj);
+extern int ObjHits_GetPriorityHit(int *obj, int a, int b, int c);
+extern u32 randomGetRange(int min, int max);
+extern s16 lbl_803DDCC4;
+extern u8 lbl_803DDCC6;
+
+#pragma scheduling off
+#pragma peephole off
+void vfpdraghead_update(int *obj)
+{
+    int state = *(s8 *)(*(char **)((char *)obj + 0x4c) + 0x19);
+    char *self2;
+
+    if (state == 2) {
+        self2 = *(char **)((char *)obj + 0xb8);
+        lbl_803DDCC4 -= (int)timeDelta;
+        if (GameBit_Get(*(s16 *)(self2 + 2)) != 0) return;
+        if (lbl_803DDCC4 > 0xc8) return;
+        if (*(u8 *)(self2 + 0xb) != lbl_803DDCC6) return;
+        if (randomGetRange(0, 2) != 0) return;
+        (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x391, 0, 4, -1, 0);
+    } else if (*(s16 *)((char *)obj + 0x46) == 0x3c5) {
+        self2 = *(char **)((char *)obj + 0xb8);
+        *(s16 *)(self2 + 6) -= (int)timeDelta;
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)obj + 0x24) * timeDelta + *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)obj + 0x2c) * timeDelta + *(f32 *)((char *)obj + 0x14);
+        if (*(s16 *)(self2 + 6) > 0) return;
+        Obj_FreeObject(obj);
+    } else if (state == 0) {
+        self2 = *(char **)((char *)obj + 0xb8);
+        lbl_803DDCC4 -= (int)timeDelta;
+        if (GameBit_Get(0x522) != 0) return;
+        if (lbl_803DDCC4 > 0xc8) return;
+        if (*(u8 *)(self2 + 0xb) != lbl_803DDCC6) return;
+        if (randomGetRange(0, 2) != 0) return;
+        (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x391, 0, 4, -1, 0);
+    } else if (state == 1) {
+        self2 = *(char **)((char *)obj + 0xb8);
+        if (GameBit_Get(*(s16 *)(self2 + 0)) != 0) {
+            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x390, 0, 4, -1, 0);
+            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x390, 0, 4, -1, 0);
+            if (randomGetRange(0, 1) != 0) {
+                (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x391, 0, 4, -1, 0);
+            }
+        }
+        if ((s16)ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+            GameBit_Set(*(s16 *)(self2 + 0), 1 - GameBit_Get(*(s16 *)(self2 + 0)));
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
