@@ -2160,5 +2160,95 @@ void player_animFn16(int *obj, int *ctx, int moveA, int moveB) {
         }
     }
 }
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} HudColor;
+extern u8 lbl_803DC950;
+extern f32 lbl_803E0568;
+extern void *gScreenTransitionInterface;
+extern void GXGetScissor(int *x, int *y, int *w, int *h);
+extern void GXSetScissor(int x, int y, int w, int h);
+extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
+extern void setHudOpacity(int op);
+extern void screenRectFn_800d7568(int p1, int p2, int p3, int r, int g, int b);
+#pragma scheduling off
+#pragma peephole off
+void screenTransition_do2(int p1, int p2, int p3) {
+    int sx;
+    int sy;
+    int sw;
+    int sh;
+    HudColor col;
+    if (lbl_803DD42E != 0) {
+        lbl_803DD42E = lbl_803DD42E - 1;
+        return;
+    }
+    if (lbl_803DD42F == 0 && lbl_803DD428 >= lbl_803E0568) {
+        (*(code *)(*(int *)gScreenTransitionInterface + 0xc))(0x1e, lbl_803DD42C);
+        lbl_803DD428 = lbl_803E0560;
+    }
+    lbl_803DD420 = lbl_803DD424 * timeDelta + lbl_803DD420;
+    if (lbl_803DD420 < lbl_803E0560) {
+        lbl_803DD420 = lbl_803E0560;
+        lbl_803DD42D = 1;
+        if (lbl_803DD42C == 5) {
+            setHudOpacity(0xff);
+        }
+        return;
+    }
+    if (lbl_803DD420 > lbl_803E0558) {
+        lbl_803DD420 = lbl_803E0558;
+        lbl_803DD42D = 1;
+        if (lbl_803DD42F == 0) {
+            lbl_803DD428 = lbl_803DD428 + timeDelta;
+        }
+        if (lbl_803DD42C != 5) {
+            setHudOpacity(0xff);
+        }
+    } else {
+        lbl_803DD42D = 0;
+    }
+    if (lbl_803DC950 != 0) {
+        return;
+    }
+    switch (lbl_803DD42C) {
+    case 1:
+        GXGetScissor(&sx, &sy, &sw, &sh);
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        col.b = 0;
+        col.g = 0;
+        col.r = 0;
+        col.a = (u8)(int)lbl_803DD420;
+        hudDrawRect(sx, sy, sw, sh, col);
+        GXSetScissor(sx, sy, sw, sh);
+        break;
+    case 2:
+        GXGetScissor(&sx, &sy, &sw, &sh);
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        col.r = 0xff;
+        col.g = 0xff;
+        col.b = 0xff;
+        col.a = (u8)(int)lbl_803DD420;
+        hudDrawRect(sx, sy, sw, sh, col);
+        GXSetScissor(sx, sy, sw, sh);
+        break;
+    case 3:
+        screenRectFn_800d7568(p1, p2, p3, 0xff, 0xff, 0xff);
+        break;
+    case 4:
+        GXGetScissor(&sx, &sy, &sw, &sh);
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        col.r = 0xff;
+        col.g = 0;
+        col.b = 0;
+        col.a = (u8)(int)lbl_803DD420;
+        hudDrawRect(sx, sy, sw, sh, col);
+        GXSetScissor(sx, sy, sw, sh);
+        break;
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset
