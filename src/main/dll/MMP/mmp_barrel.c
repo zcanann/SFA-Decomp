@@ -1684,5 +1684,77 @@ f32 groundanimator_setScale(int *obj, int *target) {
     return *(f32 *)((char *)g + 0x14) *
            (*(f32 *)((char *)g + 0xc) / (lbl_803E3F98 * (f32)(u32)*(u8 *)((char *)r31 + 0x20)));
 }
+extern float fastFloorf(float x);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E3FC0;
+#pragma scheduling off
+#pragma peephole off
+void fn_801932C8(int *obj, int *p2, int *p3) {
+    void *block;
+    void *entry;
+    void *vtx;
+    int blkIdx;
+    int mid;
+    int inner;
+    int foff;
+    int hoff;
+    int ix;
+    int iz;
+    f32 fracX;
+    f32 fracZ;
+    f32 radsq;
+    f32 clampMax;
+    f32 vpos[3];
+    block = mapGetBlock(objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
+                                            (double)*(f32 *)((char *)obj + 0x10),
+                                            (double)*(f32 *)((char *)obj + 0x14)));
+    if (block == NULL) {
+        return;
+    }
+    if ((*(u16 *)((char *)block + 4) & 8) == 0) {
+        return;
+    }
+    ix = (int)fastFloorf((*(f32 *)((char *)obj + 0xc) - playerMapOffsetX) / lbl_803E3FC0);
+    iz = (int)fastFloorf((*(f32 *)((char *)obj + 0x14) - playerMapOffsetZ) / lbl_803E3FC0);
+    fracX = *(f32 *)((char *)obj + 0xc) - (lbl_803E3FC0 * (f32)ix + playerMapOffsetX);
+    fracZ = *(f32 *)((char *)obj + 0x14) - (lbl_803E3FC0 * (f32)iz + playerMapOffsetZ);
+    *(u8 *)((char *)p2 + 0x2a) = 0;
+    radsq = *(f32 *)((char *)p2 + 0x14) * *(f32 *)((char *)p2 + 0x14);
+    foff = 0;
+    hoff = 0;
+    for (blkIdx = 0; blkIdx < *(u16 *)((char *)block + 0x9a); blkIdx++) {
+        entry = mapBlockFn_800606ec(block, blkIdx);
+        if (*(u8 *)((char *)p3 + 0x25) == mapBlockFn_80060678(entry)) {
+            clampMax = lbl_803E3FC4;
+            for (mid = *(u16 *)entry; mid < *(u16 *)((char *)block + 0x14); mid++) {
+                vtx = fn_800606DC(block, mid);
+                for (inner = 0; inner < 3; inner++) {
+                    void *cell = (char *)*(int *)((char *)block + 0x58) + *(u16 *)vtx * 6;
+                    f32 dx;
+                    f32 dz;
+                    f32 d;
+                    fn_800605F0(cell, vpos);
+                    dx = vpos[0] - fracX;
+                    dz = vpos[2] - fracZ;
+                    d = (dx * dx + dz * dz) / radsq;
+                    if (d > clampMax) {
+                        d = clampMax;
+                    }
+                    *(f32 *)((char *)*(int *)p2 + foff) = clampMax - d * d;
+                    *(s16 *)((char *)*(int *)((char *)p2 + 4) + hoff) = (s16)(int)vpos[1];
+                    foff += 4;
+                    hoff += 2;
+                    vtx = (char *)vtx + 2;
+                }
+            }
+            {
+                int cnt = *(u8 *)((char *)p2 + 0x2a);
+                *(u8 *)((char *)p2 + 0x2a) = cnt + 1;
+                *(s16 *)((char *)p2 + cnt * 2 + 0x1c) = (s16)blkIdx;
+            }
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
