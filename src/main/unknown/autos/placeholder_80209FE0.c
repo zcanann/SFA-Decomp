@@ -1695,7 +1695,7 @@ extern void storeZeroToFloatParam(f32 *p);
 extern void lightVecFn_8001dd88(int model, f32 x, f32 y, f32 z);
 extern void queueGlowRender(int model);
 extern int randomGetRange(int lo, int hi);
-extern void bossdrakor_animEventCallback();
+extern int bossdrakor_animEventCallback(int obj, int a2, int events);
 extern f32 lbl_803E6588;
 extern f32 lbl_803E658C;
 extern f32 lbl_803E6590;
@@ -1714,6 +1714,11 @@ extern int GameBit_Set(int bit, int val);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int *gMapEventInterface;
 extern f32 timeDelta;
+extern void gameTextShow(int id);
+extern int warpToMap(int id, int flags);
+extern void timeOfDayFn_80055000(void);
+extern void objParticleFn_80099d84(double s1, double s2, int obj, int type, int light);
+extern f32 lbl_803E6514;
 extern f32 lbl_803E6518;
 extern f32 lbl_803E6520;
 extern f32 lbl_803E6550;
@@ -1824,6 +1829,55 @@ void bossdrakor_hitDetect(int obj)
     }
     *(f32 *)((char *)inner + 0x19c) -= timeDelta;
     *(f32 *)((char *)inner + 0x1a0) -= timeDelta;
+}
+
+int bossdrakor_animEventCallback(int obj, int a2, int events)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int i;
+    int target;
+    ((DrakorFlags *)((char *)inner + 0x198))->b10 = 1;
+    if (*(f32 *)((char *)inner + 0x18c) > lbl_803E6510) {
+        gameTextShow(0x569);
+        *(f32 *)((char *)inner + 0x18c) -= timeDelta;
+        if (*(f32 *)((char *)inner + 0x18c) < lbl_803E6510) {
+            *(f32 *)((char *)inner + 0x18c) = lbl_803E6510;
+        }
+    }
+    for (i = 0; i < *(u8 *)((char *)events + 0x8b); i++) {
+        switch (*(u8 *)((char *)events + 0x81 + i)) {
+        case 6:
+            target = ObjGroup_FindNearestObject(0x1e, obj, 0);
+            if (target != 0 && *(u8 *)((char *)obj + 0xeb) != 0) {
+                (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)target + 0x68)) + 0x20)))(target, 2);
+                ObjLink_DetachChild(obj, target);
+            }
+            break;
+        case 7:
+            target = ObjGroup_FindNearestObject(0x1e, obj, 0);
+            if (target != 0) {
+                (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)target + 0x68)) + 0x20)))(target, 0);
+                ObjLink_AttachChild(obj, target, 1);
+                *(f32 *)((char *)inner + 0x18c) = lbl_803E6514;
+            }
+            break;
+        case 9:
+            ((DrakorFlags *)((char *)inner + 0x198))->b02 = 1;
+            break;
+        case 8:
+            GameBit_Set(0x5db, 0);
+            (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(2, 0xf, 1);
+            (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(2, 0x10, 1);
+            GameBit_Set(0xe7b, 0);
+            warpToMap(0x79, 0);
+            timeOfDayFn_80055000();
+            break;
+        }
+    }
+    if (((DrakorFlags *)((char *)inner + 0x198))->b02) {
+        objParticleFn_80099d84(lbl_803E6518, lbl_803E651C, obj, 6, 0);
+    }
+    return 0;
 }
 
 void bossdrakor_init(int obj, u8 *init)
