@@ -2120,5 +2120,89 @@ void fn_802C11BC(int obj, int p2, f32 f)
         (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(*(s16 *)((char *)inner + 0xbb0) - lbl_803DE4D8);
     }
 }
+
+extern u8 Obj_IsLoadingLocked(int obj);
+extern void Sfx_PlayFromObject(int obj, int id);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int s, int b, int c, int d, int e);
+extern void mathFn_80021ac8(void *a, void *b);
+extern void voxmaps_worldToGrid(void *src, void *grid);
+extern int voxmaps_traceLine(void *a, void *b, void *c, int d, int e);
+extern void voxmaps_gridToWorld(void *grid, void *out);
+extern f32 sqrtf(f32 x);
+extern int *gPartfxInterface;
+extern f32 lbl_803E83AC;
+extern f32 lbl_803E83B0;
+
+void fn_802BF4D8(int obj)
+{
+    f32 tr[2];
+    f32 gB[2];
+    f32 gC[2];
+    f32 pos[3];
+    f32 diff[3];
+    f32 dir[3];
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } s1;
+    int inner = *(int *)((char *)obj + 0xb8);
+    void *newObj;
+    int setup;
+    f32 dist;
+    if (Obj_IsLoadingLocked(obj) == 0) {
+        return;
+    }
+    Sfx_PlayFromObject(obj, 0x11e);
+    setup = Obj_AllocObjectSetup(0x24, 0x42a);
+    *(u8 *)((char *)setup + 6) = 0xff;
+    *(u8 *)((char *)setup + 7) = 0xff;
+    *(u8 *)((char *)setup + 4) = 2;
+    *(u8 *)((char *)setup + 5) = 1;
+    *(f32 *)((char *)setup + 8) = *(f32 *)((char *)inner + 0xae8);
+    *(f32 *)((char *)setup + 0xc) = *(f32 *)((char *)inner + 0xaec);
+    *(f32 *)((char *)setup + 0x10) = *(f32 *)((char *)inner + 0xaf0);
+    newObj = (void *)Obj_SetupObject(setup, 5, -1, -1, 0);
+    if (newObj == NULL) {
+        return;
+    }
+    s1.mat[1] = lbl_803E83A4;
+    s1.mat[2] = lbl_803E83A4;
+    s1.mat[3] = lbl_803E83A4;
+    s1.mat[0] = lbl_803E83A8;
+    s1.angles[0] = *(s16 *)((char *)obj + 0);
+    s1.angles[1] = (s16)((*(s16 *)((char *)obj + 2) - 0x190) >> 1);
+    s1.angles[2] = 0;
+    dir[0] = lbl_803E83A4;
+    dir[1] = lbl_803E83A4;
+    dir[2] = lbl_803E83AC;
+    mathFn_80021ac8(s1.angles, dir);
+    *(f32 *)((char *)newObj + 0x24) = dir[0];
+    *(f32 *)((char *)newObj + 0x28) = dir[1];
+    *(f32 *)((char *)newObj + 0x2c) = dir[2];
+    pos[0] = lbl_803E83B0 * *(f32 *)((char *)newObj + 0x24);
+    pos[1] = lbl_803E83B0 * *(f32 *)((char *)newObj + 0x28);
+    pos[2] = lbl_803E83B0 * *(f32 *)((char *)newObj + 0x2c);
+    pos[0] = *(f32 *)((char *)newObj + 0xc) + pos[0];
+    pos[1] = *(f32 *)((char *)newObj + 0x10) + pos[1];
+    pos[2] = *(f32 *)((char *)newObj + 0x14) + pos[2];
+    voxmaps_worldToGrid((void *)(obj + 0x18), gC);
+    voxmaps_worldToGrid(pos, gB);
+    if (voxmaps_traceLine(gC, gB, tr, 0, 0) == 0) {
+        voxmaps_gridToWorld(pos, tr);
+        diff[0] = pos[0] - *(f32 *)((char *)newObj + 0xc);
+        diff[1] = pos[1] - *(f32 *)((char *)newObj + 0x10);
+        diff[2] = pos[2] - *(f32 *)((char *)newObj + 0x14);
+        dist = sqrtf(diff[2] * diff[2] + (diff[0] * diff[0] + diff[1] * diff[1]));
+    } else {
+        dist = lbl_803E83B4;
+    }
+    *(int *)((char *)newObj + 0xf4) = (int)dist;
+    *(int *)((char *)newObj + 0xf8) = obj;
+    *(s16 *)((char *)newObj + 0x4) = 0;
+    *(s16 *)((char *)newObj + 0x2) = 0;
+    *(s16 *)((char *)newObj + 0) = 0;
+    (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))((int)newObj, 0x66, 0, 2, -1, 0);
+}
 #pragma peephole reset
 #pragma scheduling reset
