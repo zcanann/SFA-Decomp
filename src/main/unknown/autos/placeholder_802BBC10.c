@@ -1679,5 +1679,17 @@ void DIMSnowHorn1_release(void)
     }
     *p = NULL;
 }
+
+int fn_802C0B84(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)inner + 0xbb4) == 0) {
+        return 2;
+    }
+    ObjHits_EnableObject(obj);
+    ObjHits_SyncObjectPositionIfDirty(obj);
+    ((ByteFlags *)((char *)inner + 0xbc0))->b10 = *(s16 *)((char *)inner + 0xbb0) > 0;
+    return 3;
+}
 #pragma peephole reset
 #pragma scheduling reset
