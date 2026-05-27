@@ -1739,5 +1739,24 @@ void DR_EarthWarrior_func17(int obj, int param)
         GameBit_Set(0x7d4, 0);
     }
 }
+
+extern int *gRomCurveInterface;
+extern f32 lbl_803E8410;
+
+int fn_802C0BFC(int obj, int p2, int p3)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int local = 1;
+    int i;
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+    for (i = 0; i < *(u8 *)((char *)p3 + 0x8b); i++) {
+        int idx = i + 0x81;
+        if ((int)*(u8 *)((char *)p3 + idx) == 1) {
+            (*(void (*)(int, int, f32, int *, int))(*(int *)(*gRomCurveInterface + 0x8c)))(inner + 0x35c, obj, lbl_803E8410, &local, 0xf);
+        }
+    }
+    ((ByteFlags *)((char *)inner + 0xbc1))->b80 = 1;
+    return 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
