@@ -260,3 +260,78 @@ void pathcam_findTaggedNodeWindow(int node, int *out, u8 tag)
         debugPrintf(sPathCamNeedTwoControlPointsError);
     }
 }
+extern float sqrtf(float x);
+extern f32 lbl_803E18A8;
+extern f32 lbl_803E1888;
+#pragma scheduling off
+#pragma peephole off
+f32 fn_8010AC48(int *obj, f32 px, f32 py, f32 pz) {
+    int *pts[4];
+    int **dp;
+    int *sp;
+    int i;
+    f32 dx1;
+    f32 dz1;
+    f32 sx;
+    f32 sz;
+    f32 nsx;
+    f32 nsz;
+    f32 nx;
+    f32 nz;
+    f32 len;
+    f32 t1;
+    f32 t2;
+    f32 negdot;
+    dp = pts;
+    sp = obj;
+    for (i = 0; i < 4; i++) {
+        *dp = (int *)(**(int *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(*sp);
+        sp++;
+        dp++;
+    }
+    dx1 = *(f32 *)((char *)pts[2] + 8) - *(f32 *)((char *)pts[1] + 8);
+    dz1 = *(f32 *)((char *)pts[2] + 0x10) - *(f32 *)((char *)pts[1] + 0x10);
+    if (pts[0] != NULL) {
+        sx = *(f32 *)((char *)pts[1] + 8) - *(f32 *)((char *)pts[0] + 8);
+        sz = *(f32 *)((char *)pts[1] + 0x10) - *(f32 *)((char *)pts[0] + 0x10);
+    } else {
+        sx = dx1;
+        sz = dz1;
+    }
+    nx = lbl_803E18A8 * (sx + dx1);
+    nz = lbl_803E18A8 * (sz + dz1);
+    len = sqrtf(nx * nx + nz * nz);
+    if (lbl_803E1888 != len) {
+        nx = nx / len;
+        nz = nz / len;
+    }
+    negdot = -(nx * *(f32 *)((char *)pts[1] + 8) + nz * *(f32 *)((char *)pts[1] + 0x10));
+    t1 = nx * dx1 + nz * dz1;
+    if (lbl_803E1888 != t1) {
+        t1 = -(negdot + (nx * px + nz * pz)) / t1;
+    }
+    sx = *(f32 *)((char *)pts[2] + 8) - *(f32 *)((char *)pts[1] + 8);
+    sz = *(f32 *)((char *)pts[2] + 0x10) - *(f32 *)((char *)pts[1] + 0x10);
+    if (pts[3] != NULL) {
+        nsx = *(f32 *)((char *)pts[3] + 8) - *(f32 *)((char *)pts[2] + 8);
+        nsz = *(f32 *)((char *)pts[3] + 0x10) - *(f32 *)((char *)pts[2] + 0x10);
+    } else {
+        nsx = sx;
+        nsz = sz;
+    }
+    nx = lbl_803E18A8 * (nsx + sx);
+    nz = lbl_803E18A8 * (nsz + sz);
+    len = sqrtf(nx * nx + nz * nz);
+    if (lbl_803E1888 != len) {
+        nx = nx / len;
+        nz = nz / len;
+    }
+    negdot = -(nx * *(f32 *)((char *)pts[2] + 8) + nz * *(f32 *)((char *)pts[2] + 0x10));
+    t2 = nx * dx1 + nz * dz1;
+    if (lbl_803E1888 != t2) {
+        t2 = -(negdot + (nx * px + nz * pz)) / t2;
+    }
+    return -t1 / (t2 - t1);
+}
+#pragma peephole reset
+#pragma scheduling reset
