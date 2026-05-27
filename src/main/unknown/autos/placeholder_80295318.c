@@ -6312,8 +6312,17 @@ extern f32 lbl_803E80E4;
 extern f32 lbl_803E7ED8;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int size);
+extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern u8 framesThisStep;
+extern int lbl_803DE448;
+extern int lbl_803DE450;
+extern int lbl_803DE420;
+extern int lbl_803DE47C;
+extern int coordsToMapCell(f32 x, f32 z);
+extern int randomGetRange(int lo, int hi);
+extern void mm_free(void *ptr);
+extern void fn_80026C88(int a);
 
 #pragma scheduling off
 #pragma peephole off
@@ -6982,6 +6991,99 @@ void fn_802B827C(int obj, int p2, int p3)
         GameBit_Set(0xc4b, 1);
     }
     *(u8 *)((char *)p3 + 0x2e) = 0;
+}
+
+void fn_802A96D8(void)
+{
+    void **p;
+    s8 i;
+    int idx3;
+    int obj;
+
+    if (!Obj_IsLoadingLocked()) return;
+    p = lbl_80332ED4;
+    idx3 = 0;
+    for (i = 0; i < 7; i++) {
+        if (*p == NULL) {
+            obj = Obj_AllocObjectSetup(0x24, 0x4ec);
+            ObjPath_GetPointWorldPosition(lbl_803DE44C, 0, (char *)obj + 8,
+                                          (char *)obj + 0xc, (char *)obj + 0x10, 0);
+            *(u8 *)((char *)obj + 4) = 2;
+            *(u8 *)((char *)obj + 5) = 1;
+            *(u8 *)((char *)obj + 6) = 0xff;
+            *(u8 *)((char *)obj + 7) = 0xff;
+            *(s16 *)((char *)obj + 0x1a) = (s16)idx3;
+            *(s16 *)((char *)obj + 0x1c) = 0;
+            *p = (void *)Obj_SetupObject(obj, 5, -1, -1, 0);
+        }
+        p++;
+        idx3 += 3;
+    }
+}
+
+void fn_802B4DE0(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int off;
+    int i;
+
+    if (lbl_803DE448 != 0) {
+        Obj_FreeObject(lbl_803DE448);
+        ObjLink_DetachChild(obj, lbl_803DE448);
+        lbl_803DE448 = 0;
+    }
+    if ((int)lbl_803DE44C != 0) {
+        Obj_FreeObject((int)lbl_803DE44C);
+        ObjLink_DetachChild(obj, lbl_803DE44C);
+        lbl_803DE44C = NULL;
+    }
+    if (lbl_803DE450 != 0) {
+        lbl_803DE450 = 0;
+    }
+    off = 0;
+    for (i = 0; i < *(u8 *)((char *)inner + 0x8a8); i++) {
+        int e = *(int *)(*(int *)((char *)inner + 0x3dc) + off + 0x64);
+        if (e != 0) mm_free((void *)e);
+        off += 0xb0;
+    }
+    ObjGroup_RemoveObject(obj, 0);
+    ObjGroup_RemoveObject(obj, 0x25);
+    fn_80026C88(lbl_803DE420);
+}
+
+void fn_802A13F4(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int cell;
+    int t;
+    int sfx;
+
+    if (*(int *)((char *)p2 + 0x314) & 1) {
+        cell = coordsToMapCell(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x14));
+        if (cell == 0x12) {
+            Sfx_PlayFromObject(obj, 0x211);
+        } else {
+            Sfx_PlayFromObject(obj, 0x10);
+        }
+    }
+    if (lbl_803DE47C > 0) {
+        t = lbl_803DE47C - framesThisStep;
+        lbl_803DE47C = t;
+        if (t < 0) lbl_803DE47C = 0;
+    }
+    if (*(int *)((char *)p2 + 0x314) & 0x80) {
+        if (lbl_803DE47C == 0) {
+            if (randomGetRange(1, 0x64) < 0x46) {
+                if (*(s16 *)((char *)inner + 0x81a) == 0) {
+                    sfx = 0x398;
+                } else {
+                    sfx = 0x25;
+                }
+                Sfx_PlayFromObject(obj, (u16)sfx);
+                lbl_803DE47C = 0x3c;
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
