@@ -5708,3 +5708,139 @@ void fn_80297284(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int lbl_803DE424;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802966CC(int obj)
+{
+    return *(int *)((char *)obj + 0xc8);
+}
+
+void fn_80296B70(int v)
+{
+    lbl_803DE424 = v;
+}
+
+f32 fn_802966F4(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(f32 *)((char *)inner + 0x778);
+}
+
+int fn_802972A8(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(int *)((char *)inner + 0x7f0);
+}
+
+int EmissionController_IsLingering(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(u8 *)((char *)inner + 0x8c5);
+}
+
+uint playerGetStateFlag310(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(int *)((char *)inner + 0x310);
+}
+
+int fn_80296A14(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s16 *)((char *)*(int *)((char *)inner + 0x35c) + 4);
+}
+
+int fn_80296A8C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s16 *)((char *)*(int *)((char *)inner + 0x35c) + 6);
+}
+
+int fn_80296C4C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return (*(u8 *)((char *)inner + 0x3f3) >> 1) & 1;
+}
+
+int fn_80296C5C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return (*(u8 *)((char *)inner + 0x3f3) >> 2) & 1;
+}
+
+int fn_8029656C(int obj, f32 *out)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *out = *(f32 *)((char *)inner + 0x77c);
+    return *(u8 *)((char *)inner + 0x8c4);
+}
+
+int fn_80296AD4(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s8 *)((char *)*(int *)((char *)inner + 0x35c) + 1);
+}
+
+int fn_80296AE8(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s8 *)((char *)*(int *)((char *)inner + 0x35c));
+}
+
+int playerGetMoney(void *player)
+{
+    int inner = *(int *)((char *)player + 0xb8);
+    return *(u8 *)((char *)*(int *)((char *)inner + 0x35c) + 8);
+}
+
+int playerIsDisguised(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return (*(u8 *)((char *)inner + 0x3f3) >> 3) & 1;
+}
+
+int objGetAnimStateFlags(int obj, int flag)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s8 *)((char *)*(int *)((char *)inner + 0x35c) + 2) & flag;
+}
+
+int objGetAnimState80A(void *obj)
+{
+    void *inner = *(void **)((char *)obj + 0xb8);
+    if (inner != NULL) {
+        return *(s16 *)((char *)inner + 0x80a);
+    }
+    return 0;
+}
+
+int lightfoot_getExtraSize(void)
+{
+    return 0x440;
+}
+
+int lightfoot_getObjectTypeId(void)
+{
+    return 0x14b;
+}
+
+void cameraGetPrevPos2(int obj, f32 *x, f32 *y, f32 *z)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *x = *(f32 *)((char *)inner + 0x24);
+    *y = *(f32 *)((char *)inner + 0x28);
+    *z = *(f32 *)((char *)inner + 0x2c);
+}
+
+void lightfoot_hitDetect(void)
+{
+}
+
+void lightfoot_release(void)
+{
+}
+#pragma peephole reset
+#pragma scheduling reset
