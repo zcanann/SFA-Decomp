@@ -1357,3 +1357,61 @@ int fn_802BC36C(int* obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E83E8;
+extern f32 lbl_803E83A4;
+extern void fn_8003B950(int mtx);
+
+#pragma scheduling off
+#pragma peephole off
+void dim2prisonmammoth_release(void) {}
+
+f32 DR_CloudRunner_func19(int obj, f32 *out)
+{
+    *out = lbl_803E83E8;
+    return lbl_803E83A4;
+}
+
+void DR_CloudRunner_func18(int obj, f32 *a, int *b)
+{
+    *a = lbl_803E83A4;
+    *b = 0;
+}
+
+void DR_EarthWarrior_func15(int obj, f32 *x, f32 *y, f32 *z)
+{
+    *x = *(f32 *)((char *)obj + 0xc);
+    *y = *(f32 *)((char *)obj + 0x10);
+    *z = *(f32 *)((char *)obj + 0x14);
+}
+
+int fn_802BDBCC(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(u16 *)((char *)inner + 0x14e4) |= 0x20;
+    return 2;
+}
+
+int DR_CloudRunner_func11(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)inner + 0xbb8) != 0) {
+        return 1;
+    }
+    return 2;
+}
+
+void DR_EarthWarrior_modelMtxFn(int obj, f32 *x, f32 *y, f32 *z)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *x = *(f32 *)((char *)inner + 0x1438);
+    *y = *(f32 *)((char *)inner + 0x143c);
+    *z = *(f32 *)((char *)inner + 0x1440);
+}
+
+void DR_CloudRunner_func22(int obj)
+{
+    fn_8003B950(ObjPath_GetPointModelMtx(obj, 2));
+}
+#pragma peephole reset
+#pragma scheduling reset
