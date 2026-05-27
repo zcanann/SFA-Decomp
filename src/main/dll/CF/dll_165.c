@@ -3,12 +3,14 @@
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId,int value);
+extern void ObjHits_DisableObject(int obj);
 extern int FUN_80017a98();
 extern undefined4 FUN_801899b4();
 extern undefined4 FUN_80189cc4();
 extern undefined4 FUN_80189e0c();
 extern byte FUN_80294c28();
 
+extern int *gGameUIInterface;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd708;
 extern f32 FLOAT_803e4854;
@@ -123,6 +125,52 @@ void staffactivated_init(undefined8 param_1,double param_2,double param_3,undefi
 /*
  * --INFO--
  *
+ * Function: fn_8018A8BC
+ * EN v1.0 Address: 0x8018A8BC
+ * EN v1.0 Size: 248b
+ */
+#pragma scheduling off
+#pragma peephole off
+int fn_8018A8BC(int obj, int unused, u8 *events)
+{
+  int i;
+  int setup;
+  u8 *state;
+  u8 eventId;
+
+  setup = *(int *)(obj + 0x4c);
+  state = *(u8 **)(obj + 0xb8);
+  i = 0;
+  while (i < events[0x8b]) {
+    eventId = events[i + 0x81];
+    switch (eventId) {
+    case 1:
+      if (*(s16 *)(setup + 0x1c) != 0) {
+        (*(void (*)(int, int, int, int))(*(int *)(*gGameUIInterface + 0x38)))(
+            *(s16 *)(setup + 0x1c), 0xc8, 0x8c, 0);
+      }
+      break;
+    case 2:
+      state[0] = (state[0] & 0xdf) | 0x20;
+      break;
+    case 3:
+      state[0] = state[0] & 0xdf;
+      break;
+    case 4:
+      *(s16 *)(obj + 6) = *(s16 *)(obj + 6) | 0x4000;
+      ObjHits_DisableObject(obj);
+      break;
+    }
+    i++;
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
  * Function: treasurechest_getExtraSize
  * EN v1.0 Address: 0x8018A9B4
  * EN v1.0 Size: 8b
@@ -170,5 +218,24 @@ extern void Resource_Release(u32);
 #pragma scheduling off
 #pragma peephole off
 void treasurechest_free(void) { Resource_Release(lbl_803DDAE0); }
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E3C24;
+extern void hitDetectFn_80097070(int obj, int a, int b, int c, int d, f32 radius);
+#pragma scheduling off
+#pragma peephole off
+void treasurechest_hitDetect(int obj)
+{
+  u8 *state;
+  int setup;
+
+  setup = *(int *)(obj + 0x4c);
+  state = *(u8 **)(obj + 0xb8);
+  if (((u32)state[0] >> 5 & 1) != 0) {
+    f32 radius = lbl_803E3C24;
+    hitDetectFn_80097070(obj, 2, (u8)(*(u8 *)(setup + 0x19) + 6), 4, 0, radius);
+  }
+}
 #pragma peephole reset
 #pragma scheduling reset
