@@ -1864,3 +1864,82 @@ void fn_8014C064(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *getTrickyObject(void);
+extern int *gObjectTriggerInterface;
+extern void fn_80026C30(int *obj, int flag);
+extern void baddieInstantiateWeapon(int *node, int *sub);
+extern void fn_8014BC98(int *node, int *sub);
+extern void fn_8014B878(int *node, int *sub);
+extern void *memcpy(void *dst, void *src, int n);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8014BE1C(int *node, int p2, u8 *cmds)
+{
+    char *sub = *(char **)((char *)node + 0xb8);
+    s8 *n29 = *(s8 **)((char *)node + 0x4c);
+    int i;
+    int *obj;
+
+    if (*(int *)((char *)node + 0xf4) != 0)
+        return 0;
+    *(u32 *)(sub + 0x2dc) |= 0x8000;
+    memcpy(sub + 0x2c4, sub + 0x2b8, 0xc);
+    memcpy(sub + 0x2b8, (char *)node + 0x24, 0xc);
+    for (i = 0; i < cmds[0x8b]; i++) {
+        switch (cmds[0x81 + i]) {
+        case 1:
+            obj = getTrickyObject();
+            if (obj != NULL) {
+                (*(void (*)(int *, int, int *))(*(int *)(*(int *)(*(int *)((char *)obj + 0x68)) + 0x34)))(obj, 1, node);
+                *(u32 *)(sub + 0x2dc) |= 0x200000;
+                *(int **)(sub + 0x29c) = obj;
+            }
+            break;
+        case 4:
+            obj = Obj_GetPlayerObject();
+            if (obj != NULL) {
+                *(u32 *)(sub + 0x2dc) &= ~0x200000;
+                *(int **)(sub + 0x29c) = obj;
+            }
+            break;
+        case 2:
+            if (*(s16 *)((char *)node + 0x46) == 0x7a6)
+                *(u16 *)(sub + 0x2b6) = 0x7a5;
+            else
+                *(u16 *)(sub + 0x2b6) = 0x33;
+            break;
+        case 3:
+            (*(void (*)(int, int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x50)))(0x49, 4, node, 0x3c);
+            break;
+        case 6:
+            if (*(int **)(sub + 0x36c) != NULL)
+                fn_80026C30(*(int **)(sub + 0x36c), 1);
+            break;
+        case 7:
+            if (*(int **)(sub + 0x36c) != NULL)
+                fn_80026C30(*(int **)(sub + 0x36c), 0);
+            break;
+        }
+    }
+    baddieInstantiateWeapon(node, (int *)sub);
+    if (*(s16 *)((char *)node + 0xb4) == -1) {
+        *(u32 *)(sub + 0x2e8) &= ~3;
+        ObjHits_DisableObject(node);
+        return 0;
+    }
+    if ((*(u32 *)(sub + 0x2dc) & 0x1800) == 0) {
+        fn_8014BC98(node, (int *)sub);
+        fn_8014B878(node, (int *)sub);
+    }
+    if (n29[0x2e] == -1)
+        return 0;
+    if ((*(u32 *)(sub + 0x2dc) & 0x600) == 0)
+        return 0;
+    if ((s8)cmds[0x57] == *(s16 *)((char *)node + 0xb4))
+        return 4;
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
