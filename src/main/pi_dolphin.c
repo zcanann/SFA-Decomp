@@ -5855,7 +5855,7 @@ void fn_800510F0(void *p1, u8 flag2, u8 flag3) {
     lbl_803DCD8C = lbl_803DCD8C + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
-extern void gxTextureFn_8004bf88(void *buf, int a, int b, int *out1, int *out2);
+extern void gxTextureFn_8004bf88(void *buf, u8 a, u8 b, int *out1, int *out2);
 extern void GXSetTevKColorSel(int stage, int sel);
 void textureFn_80051348(void *p1, u8 p2) {
     f32 mtxB[3][4];
@@ -5931,6 +5931,88 @@ void textureFn_8004ff20(void *p1) {
         GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
         lbl_803DCD90 = lbl_803DCD90 + 1;
         lbl_803DCD6A = lbl_803DCD6A + 1;
+    }
+}
+extern int lbl_803DCD70;
+extern int lbl_803DCD6C;
+extern int lbl_803DCD74;
+extern void GXSetTevKColor(int id, void *color);
+void gxTextureFn_8004bf88(void *bufp, u8 flag1, u8 flag2, int *out1, int *out2) {
+    u8 *buf = bufp;
+    u8 found1 = 0;
+    u8 found2 = 0;
+    if (flag1 != 0) {
+        if (buf[0] == buf[1] && buf[0] == buf[2]) {
+            if (buf[0] == 0xff) {
+                *out1 = 0;
+                found1 = 1;
+            } else if (buf[0] == 0xe0) {
+                *out1 = 1;
+                found1 = 1;
+            } else if (buf[0] == 0xc0) {
+                *out1 = 2;
+                found1 = 1;
+            } else if (buf[0] == 0xa0) {
+                *out1 = 3;
+                found1 = 1;
+            } else if (buf[0] == 0x80) {
+                *out1 = 4;
+                found1 = 1;
+            } else if (buf[0] == 0x60) {
+                *out1 = 5;
+                found1 = 1;
+            } else if (buf[0] == 0x40) {
+                *out1 = 6;
+                found1 = 1;
+            } else if (buf[0] == 0x20) {
+                *out1 = 7;
+                found1 = 1;
+            }
+        }
+        if (found1 == 0) {
+            *out1 = lbl_803DCD70;
+        }
+    } else {
+        found1 = 1;
+    }
+    if (flag2 != 0) {
+        if (buf[3] == 0xff) {
+            *out2 = 0;
+            found2 = 1;
+        } else if (buf[3] == 0xe0) {
+            *out2 = 1;
+            found2 = 1;
+        } else if (buf[3] == 0xc0) {
+            *out2 = 2;
+            found2 = 1;
+        } else if (buf[3] == 0xa0) {
+            *out2 = 3;
+            found2 = 1;
+        } else if (buf[3] == 0x80) {
+            *out2 = 4;
+            found2 = 1;
+        } else if (buf[3] == 0x60) {
+            *out2 = 5;
+            found2 = 1;
+        } else if (buf[3] == 0x40) {
+            *out2 = 6;
+            found2 = 1;
+        } else if (buf[3] == 0x20) {
+            *out2 = 7;
+            found2 = 1;
+        }
+        if (found2 == 0) {
+            *out2 = lbl_803DCD6C;
+        }
+    } else {
+        found2 = 1;
+    }
+    if (found1 == 0 || found2 == 0) {
+        int color = *(int *)bufp;
+        GXSetTevKColor(lbl_803DCD74, &color);
+        lbl_803DCD74 = lbl_803DCD74 + 1;
+        lbl_803DCD70 = lbl_803DCD70 + 1;
+        lbl_803DCD6C = lbl_803DCD6C + 1;
     }
 }
 #pragma peephole reset
