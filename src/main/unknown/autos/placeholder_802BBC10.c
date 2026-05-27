@@ -1561,3 +1561,58 @@ void DR_EarthWarrior_initialise(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void dll_2E_func06();
+extern f32 lbl_803E8338;
+extern f32 lbl_803E83A8;
+extern f32 lbl_803E8360;
+extern f32 lbl_803E8354;
+extern f32 lbl_803E8364;
+extern f32 lbl_803E8304;
+
+#pragma scheduling off
+#pragma peephole off
+f32 DR_EarthWarrior_func19(int obj, f32 *out)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 v = lbl_803E8360 * *(f32 *)((char *)inner + 0x294) + lbl_803E8354;
+    if (v < lbl_803E8354) {
+        v = lbl_803E8354;
+    } else if (v > lbl_803E8364) {
+        v = lbl_803E8364;
+    }
+    *out = -v;
+    return lbl_803E8304;
+}
+
+void DR_EarthWarrior_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+{
+    int inner = *(int *)((char *)p1 + 0xb8);
+    if (vis == -1) {
+        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E8338);
+        ObjPath_GetPointWorldPosition(p1, 0xb, (char *)inner + 0x1438, (char *)inner + 0x143c, (char *)inner + 0x1440, 0);
+        ObjPath_GetPointWorldPositionArray(p1, 3, 4, (char *)inner + 0xb18);
+    } else if (vis != 0) {
+        objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E8338);
+        ObjPath_GetPointWorldPosition(p1, 0xb, (char *)inner + 0x1438, (char *)inner + 0x143c, (char *)inner + 0x1440, 0);
+        ObjPath_GetPointWorldPositionArray(p1, 3, 4, (char *)inner + 0xb18);
+        dll_2E_func06(p1, (char *)inner + 0x3ec, 0);
+    }
+}
+
+void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+{
+    int inner = *(int *)((char *)p1 + 0xb8);
+    if (*(int *)((char *)p1 + 0xf4) == 0) {
+        if (vis == -1) {
+            objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E83A8);
+            ObjPath_GetPointWorldPosition(p1, 3, (char *)inner + 0xae8, (char *)inner + 0xaec, (char *)inner + 0xaf0, 0);
+        }
+        if (*(u8 *)((char *)inner + 0xbb2) != 2 && vis != 0) {
+            objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E83A8);
+            dll_2E_func06(p1, (char *)inner + 0x4c4, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
