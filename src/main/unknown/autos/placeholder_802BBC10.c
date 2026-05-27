@@ -1758,5 +1758,23 @@ int fn_802C0BFC(int obj, int p2, int p3)
     ((ByteFlags *)((char *)inner + 0xbc1))->b80 = 1;
     return 0;
 }
+
+extern int *gPlayerInterface;
+int fn_802BC3F0(int obj, int p2, int p3);
+
+void dim2prisonmammoth_init(int obj, int p2)
+{
+    int inner;
+    *(s16 *)((char *)obj + 0) = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
+    *(int *)((char *)obj + 0xbc) = (int)fn_802BC3F0;
+    inner = *(int *)((char *)obj + 0xb8);
+    if (*(void **)((char *)obj + 0x64) != NULL) {
+        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;
+        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0x8020;
+    }
+    (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
+    *(u8 *)((char *)inner + 0x25f) = 0;
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+}
 #pragma peephole reset
 #pragma scheduling reset
