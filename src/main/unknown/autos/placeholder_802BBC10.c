@@ -1718,5 +1718,26 @@ void DR_CloudRunner_func17(int obj, int param)
         GameBit_Set(0xed7, 0);
     }
 }
+
+void DR_EarthWarrior_func17(int obj, int param)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(u8 *)((char *)inner + 0x14e6) = (u8)param;
+    if (param == 0) {
+        GameBit_Set(0x7bc, 0);
+        GameBit_Set(0x7d4, 1);
+        *(u8 *)((char *)inner + 0x9fd) &= ~1;
+        ((ByteFlags *)((char *)inner + 0x14ec))->b02 = 0;
+        (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+    } else {
+        int inner2 = *(int *)((char *)obj + 0xb8);
+        int p = *(int *)((char *)obj + 0x4c);
+        ((ByteFlags *)((char *)inner2 + 0x14ec))->b02 = 1;
+        (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(*(s16 *)((char *)p + 0x1a), 0x5cf);
+        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(*(s16 *)((char *)inner2 + 0x14e2));
+        GameBit_Set(0x7bc, 1);
+        GameBit_Set(0x7d4, 0);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
