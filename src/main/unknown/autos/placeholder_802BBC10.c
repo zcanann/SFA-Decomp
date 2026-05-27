@@ -1939,5 +1939,49 @@ int fn_802BDBE8(int obj, int p2, int p3)
     *(f32 *)((char *)obj + 0x2c) = fz;
     return 0;
 }
+
+extern int dll_2E_func0A(int a, void *out);
+extern void dll_2E_func05(int obj, int q, int a, int b, int c);
+extern void dll_2E_func08(int q, int a, int b);
+extern f32 lbl_803E8414;
+extern f32 lbl_803E8424;
+void fn_802BF0C8(int obj, int inner, int bit);
+
+void DR_CloudRunner_init(int obj, int p2)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } stk;
+    int inner;
+    int r;
+    *(s16 *)((char *)obj + 0) = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
+    *(int *)((char *)obj + 0xbc) = (int)fn_802C0BFC;
+    ObjGroup_AddObject(obj, 0xa);
+    inner = *(int *)((char *)obj + 0xb8);
+    *(u8 *)((char *)inner + 0xbb4) = *(u8 *)((char *)p2 + 0x19);
+    *(s16 *)((char *)inner + 0xbae) = 5;
+    *(s16 *)((char *)inner + 0xbb0) = *(s16 *)((char *)p2 + 0x1a);
+    *(s8 *)((char *)inner + 0xbc4) = -1;
+    *(f32 *)((char *)inner + 0xb50) = (f32)*(s16 *)((char *)p2 + 0x1c) / lbl_803E8414;
+    if (*(void **)((char *)obj + 0x64) != NULL) {
+        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;
+    }
+    r = GameBit_Get(0x7a9);
+    if (r != 0) {
+        dll_2E_func0A(r + 0x13, &stk);
+        *(f32 *)((char *)obj + 0xc) = stk.mat[1];
+        *(f32 *)((char *)obj + 0x10) = stk.mat[2];
+        *(f32 *)((char *)obj + 0x14) = stk.mat[3];
+        *(s16 *)((char *)obj + 0) = stk.angles[0];
+    }
+    (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 8, 1);
+    *(f32 *)((char *)inner + 0x2a4) = lbl_803E8424;
+    fn_802BF0C8(obj, inner, ((ByteFlags *)((char *)inner + 0xbc0))->b20);
+    dll_2E_func05(obj, inner + 0x4c4, -0x11c7, 0x1555, 1);
+    dll_2E_func08(inner + 0x4c4, 0x12c, 0x78);
+    ObjGroup_AddObject(obj, 0x26);
+    ((ByteFlags *)((char *)inner + 0xbc0))->b01 = 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
