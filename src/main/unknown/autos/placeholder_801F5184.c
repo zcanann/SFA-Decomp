@@ -2437,3 +2437,40 @@ void dll_21B_init(int *obj, u8 *init) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801F9804(int obj) {
+    int inner = *(int *)((char *)obj + 0xb8);
+    s16 bits[4];
+    s16 *p;
+    int i;
+
+    if (*(u8 *)(inner + 0x18) < 4) {
+        bits[0] = GameBit_Get(0xe1a);
+        bits[1] = GameBit_Get(0xe19);
+        bits[2] = GameBit_Get(0xe17);
+        bits[3] = GameBit_Get(0xe18);
+        p = &bits[*(u8 *)(inner + 0x18)];
+        for (i = *(u8 *)(inner + 0x18); i < 4; i++) {
+            if (i == *(u8 *)(inner + 0x18)) {
+                if (*p != 0) {
+                    *(u8 *)(inner + 0x18) = *(u8 *)(inner + 0x18) + 1;
+                    if (*(u8 *)(inner + 0x18) == 4) {
+                        GameBit_Set(0xe1b, 1);
+                    }
+                }
+            } else if (*p != 0) {
+                *(u8 *)(inner + 0x18) = 0;
+                GameBit_Set(0xe1a, 0);
+                GameBit_Set(0xe19, 0);
+                GameBit_Set(0xe17, 0);
+                GameBit_Set(0xe18, 0);
+                break;
+            }
+            p++;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
