@@ -5637,6 +5637,7 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, 
 extern void Obj_FreeObject(int obj);
 extern int *gBaddieControlInterface;
 extern int fn_802AC7DC(int a, int b, int c);
+extern int lbl_80332EC0[];
 
 #pragma scheduling off
 #pragma peephole off
@@ -6648,6 +6649,71 @@ void fn_8029FFD0(int obj, int p2)
         ObjHits_SyncObjectPositionIfDirty(obj);
     }
     *(s16 *)((char *)obj + 0xa2) = -1;
+}
+
+int objAnimFn_80296328(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int v;
+    if ((*(u16 *)((char *)obj + 0xb0) & 0x1000) != 0 &&
+        ((ByteFlags *)((char *)inner + 0x3f2))->b80 == 0) {
+        return 0;
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b04 ||
+        ((ByteFlags *)((char *)inner + 0x3f0))->b08 ||
+        ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
+        *(void **)((char *)inner + 0x7f8) != NULL ||
+        ((ByteFlags *)((char *)inner + 0x3f0))->b02) {
+        return 0;
+    }
+    v = *(s16 *)((char *)inner + 0x274);
+    if (v == 1 || v == 2 || v == 0x26) {
+        return 1;
+    }
+    if (v == 0x18) {
+        if (GameBit_Get(0x3e3)) {
+            return 1;
+        }
+        if (*(s16 *)((char *)*(int *)((char *)inner + 0x7f0) + 0x46) == 0x416) {
+            return 1;
+        }
+    }
+    if (*(void **)((char *)inner + 0x2d0) != NULL) {
+        return 1;
+    }
+    return 0;
+}
+
+void fn_802AD204(int p1, int obj)
+{
+    char *t = (char *)lbl_80332EC0;
+    *(int *)((char *)obj + 0x3fc) = *(int *)((char *)obj + 0x3f8);
+    if (((ByteFlags *)((char *)obj + 0x3f0))->b20) {
+        if (((ByteFlags *)((char *)obj + 0x3f1))->b20) {
+            *(int *)((char *)obj + 0x3f8) = (int)(t + 0x310);
+            *(int *)((char *)obj + 0x400) = (int)(t + 0xd8);
+        } else {
+            *(int *)((char *)obj + 0x3f8) = (int)(t + 0x210);
+            *(int *)((char *)obj + 0x400) = (int)(t + 0xd8);
+        }
+    } else if (*(void **)((char *)obj + 0x7f8) != NULL) {
+        *(int *)((char *)obj + 0x3f8) = (int)(t + 0x250);
+        *(int *)((char *)obj + 0x400) = (int)(t + 0x390);
+    } else if (((ByteFlags *)((char *)obj + 0x3f1))->b20) {
+        if (*(u8 *)((char *)obj + 0x8b3) != 0) {
+            *(int *)((char *)obj + 0x3f8) = (int)(t + 0x290);
+            *(int *)((char *)obj + 0x400) = (int)(t + 0x390);
+        } else {
+            *(int *)((char *)obj + 0x3f8) = (int)(t + 0x2d0);
+            *(int *)((char *)obj + 0x400) = (int)(t + 0x390);
+        }
+    } else if (*(u8 *)((char *)obj + 0x8b3) != 0) {
+        *(int *)((char *)obj + 0x3f8) = (int)(t + 0x1d0);
+        *(int *)((char *)obj + 0x400) = (int)(t + 0x390);
+    } else {
+        *(int *)((char *)obj + 0x3f8) = (int)(t + 0x190);
+        *(int *)((char *)obj + 0x400) = (int)(t + 0x390);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
