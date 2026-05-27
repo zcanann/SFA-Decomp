@@ -1243,3 +1243,42 @@ int fn_801BAA84(int obj, int param2, f32 fParam)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u32 gDIMbossSequenceFlags;
+extern int lbl_803DBF30;
+extern f32 lbl_803E4BC4;
+extern f32 lbl_803E4BC8;
+extern f32 lbl_803E4BCC;
+extern f32 lbl_803E4BD0;
+extern f32 lbl_803E4BE8;
+extern f32 lbl_803E4BEC;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BA780(int obj, int param2)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        f32 v;
+        gDIMbossSequenceFlags |= 0x2000;
+        Camera_EnableViewYOffset();
+        CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
+        doRumble(lbl_803E4BD0);
+        *(s16 *)(obj + 0xa2) = -1;
+        *(f32 *)(param2 + 0x2a0) = lbl_803E4BE8;
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+        if (*(s8 *)(param2 + 0x27a) != 0) {
+            ObjAnim_SetCurrentMove((int *)obj, 0xe, v, 0);
+            *(u8 *)(param2 + 0x346) = 0;
+        }
+        if (*(s16 *)(state + 0x402) == 1) {
+            *(f32 *)(*(int *)(state + 0x40c) + 0xa8) = lbl_803E4BEC;
+        }
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 1, &lbl_803DBF30);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
