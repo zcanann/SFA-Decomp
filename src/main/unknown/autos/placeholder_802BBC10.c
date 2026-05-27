@@ -2169,6 +2169,80 @@ void fn_802BE6E8(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void fn_80137948(const char *fmt, ...);
+extern char sOnCloudFormat[];
+extern void buttonDisable(int a, int b);
+extern void fn_8003B500(int obj, int q, f32 f);
+extern int *gMapEventInterface;
+extern f32 lbl_803E8418;
+extern f32 lbl_803E841C;
+extern f32 lbl_803E8420;
+
+#pragma peephole off
+void DR_CloudRunner_update(int obj)
+{
+    int inner;
+    Obj_GetPlayerObject();
+    inner = *(int *)((char *)obj + 0xb8);
+    *(s16 *)((char *)inner + 0xbae) = 5;
+    fn_80137948(sOnCloudFormat, GameBit_Get(0xed7));
+    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    if (*(u8 *)((char *)inner + 0xbb2) == 2) {
+        *(u8 *)((char *)obj + 0xaf) |= 8;
+        fn_802C11BC(obj, -1, timeDelta);
+        *(int *)((char *)*(int *)((char *)obj + 0x50) + 0x44) |= 0x200000;
+    } else {
+        *(u8 *)((char *)inner + 0x25f) = 0;
+        fn_802C11BC(obj, -1, timeDelta);
+        *(int *)((char *)*(int *)((char *)obj + 0x50) + 0x44) &= ~0x200000;
+    }
+    if (*(s8 *)((char *)inner + 0xbc3) != 0) {
+        s8 v = *(s8 *)((char *)inner + 0xbc3) - framesThisStep;
+        *(s8 *)((char *)inner + 0xbc3) = v;
+        if (v < 0) {
+            *(s8 *)((char *)inner + 0xbc3) = 0;
+        }
+    }
+    if (*(u8 *)((char *)inner + 0xbb2) == 2) {
+        ObjHits_MarkObjectPositionDirty(obj);
+        *(u8 *)((char *)inner + 0xad5) |= 1;
+    } else {
+        *(u8 *)((char *)inner + 0xad5) &= ~1;
+    }
+    dll_2E_func03(obj, inner + 0x4c4);
+    objAnimFn_80038f38(obj, inner + 0x494);
+    fn_8003B500(obj, inner + 0x464, lbl_803E83A4);
+    characterDoEyeAnims(obj, inner + 0x464);
+    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+        if (*(u8 *)((char *)inner + 0xbb2) == 0) {
+            if (((ByteFlags *)((char *)inner + 0xbc0))->b10) {
+                f32 vec[3];
+                buttonDisable(0, 0x100);
+                if ((*(int (*)(void))(*(int *)(*gMapEventInterface + 0x30)))() == 0) {
+                    vec[0] = lbl_803E8418;
+                    vec[1] = lbl_803E841C;
+                    vec[2] = lbl_803E8420;
+                    (*(void (*)(f32 *, int, int, int))(*(int *)(*gMapEventInterface + 0x24)))(vec, 0, 0, 0);
+                }
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(4, obj, -1);
+                *(int *)((char *)inner + 0xb04) = 0;
+                *(u8 *)((char *)inner + 0xbb6) |= 4;
+                *(u8 *)((char *)inner + 0xad5) |= 1;
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 4);
+            } else {
+                buttonDisable(0, 0x100);
+                {
+                    s8 t = *(s8 *)((char *)inner + 0xbc4);
+                    if (t != -1) {
+                        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(t, obj, -1);
+                    }
+                }
+            }
+        }
+    }
+}
+#pragma peephole reset
+
 extern u8 Obj_IsLoadingLocked(int obj);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern int Obj_AllocObjectSetup(int a, int b);
