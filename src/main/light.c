@@ -1294,3 +1294,70 @@ void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vi
 #pragma peephole reset
 #pragma scheduling reset
 
+
+extern int *gObjectTriggerInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void seqpoint_update(int *obj)
+{
+    void *player = Obj_GetPlayerObject();
+    char *self = *(char **)((char *)obj + 0xb8);
+    int key = *(s16 *)(self + 6);
+
+    if (key != -1) {
+        if (*(u8 *)(self + 0xd) != 0) {
+            if (GameBit_Get(key) != 0) return;
+            GameBit_Set(*(s16 *)(self + 6), 1);
+            *(u8 *)(self + 0xd) = 1;
+            return;
+        }
+        if (GameBit_Get(key) != 0) {
+            *(u8 *)(self + 0xd) = 1;
+            return;
+        }
+    }
+    if (*(u8 *)(self + 0xd) != 0) return;
+    switch (*(u8 *)(self + 0xe)) {
+    case 0:
+        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= *(f32 *)self) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
+        *(u8 *)(self + 0xd) = 1;
+        break;
+    case 1:
+        if (*(s16 *)(self + 4) == -1) return;
+        if (GameBit_Get(*(s16 *)(self + 4)) == 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
+        *(u8 *)(self + 0xd) = 1;
+        break;
+    case 2:
+        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= *(f32 *)self) return;
+        if (*(s16 *)(self + 4) == -1) return;
+        if (GameBit_Get(*(s16 *)(self + 4)) == 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
+        *(u8 *)(self + 0xd) = 1;
+        break;
+    case 3:
+        if (Vec_distance((char *)obj + 0x18, (char *)player + 0x18) >= *(f32 *)self) return;
+        if (*(s16 *)(self + 4) == -1) return;
+        if (GameBit_Get(*(s16 *)(self + 4)) != 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
+        GameBit_Set(*(s16 *)(self + 4), 1);
+        *(u8 *)(self + 0xd) = 1;
+        break;
+    case 4:
+        if (*(s16 *)(self + 4) == -1) return;
+        if (GameBit_Get(*(s16 *)(self + 4)) != 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
+        GameBit_Set(*(s16 *)(self + 4), 1);
+        *(u8 *)(self + 0xd) = 1;
+        break;
+    case 5:
+        if (*(s16 *)(self + 4) == -1) return;
+        if (GameBit_Get(*(s16 *)(self + 4)) == 0) return;
+        (*(void (*)(int, int *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(*(s16 *)(self + 8), obj, -1);
+        break;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
