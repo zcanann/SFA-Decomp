@@ -2303,3 +2303,96 @@ void wmnewcrystal_init(int *obj, u8 *init) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void timeOfDayFn_80055038(void);
+extern f32 lbl_803E60F8;
+extern f32 lbl_803E5FA0;
+extern f32 lbl_803E5F98;
+extern f32 lbl_803E5F9C;
+
+#pragma scheduling off
+#pragma peephole off
+void vfplevelcontrol_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    ObjGroup_AddObject(obj, 9);
+    *(s16 *)((char *)inner + 2) = 0;
+    *(s16 *)((char *)inner + 4) = 0;
+    *(s16 *)((char *)inner + 6) = 0;
+    *(s16 *)((char *)inner + 8) = 0;
+    *(s16 *)((char *)inner + 0xa) = 0;
+    *(s16 *)((char *)inner + 0xc) = 0;
+    *(s16 *)((char *)inner + 0xe) = 1;
+    if (*(s16 *)((char *)init + 0x1a) != 0 && *(s16 *)((char *)init + 0x1a) <= 2) {
+        *(s16 *)((char *)inner + 0xe) = *(s16 *)((char *)init + 0x1a);
+    }
+    lbl_803DC148 = 0x82;
+    (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x40)))((s8)*(u8 *)((char *)obj + 0xac));
+    *(s16 *)((char *)inner + 0xa) = 0;
+    *(s16 *)((char *)inner + 0xc) = 0;
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    timeOfDayFn_80055038();
+    GameBit_Set(0xdcf, 1);
+    unlockLevel(0, 0, 1);
+    if (GameBit_Get(0xe1b) != 0) {
+        *(u8 *)((char *)inner + 0x18) = 4;
+    } else {
+        GameBit_Set(0xe1a, 0);
+        GameBit_Set(0xe19, 0);
+        GameBit_Set(0xe17, 0);
+        GameBit_Set(0xe18, 0);
+    }
+}
+
+void vfplift_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801FB220;
+    *(s16 *)obj = (s16)((s8)init[0x18] << 8);
+    *(s16 *)((char *)inner + 0xa) = 0;
+    *(s16 *)((char *)inner + 0xc) = *(s16 *)((char *)init + 0x20);
+    *(s16 *)((char *)inner + 0xe) = *(s16 *)((char *)init + 0x1e);
+    *(f32 *)inner = (f32)(s32)*(s16 *)((char *)init + 0x1a);
+    *(u8 *)((char *)inner + 0x1a) = *(s16 *)((char *)init + 0x1c);
+    *(s16 *)((char *)inner + 0x12) = 0;
+    *(s16 *)((char *)inner + 0x14) = 0;
+    *(s16 *)((char *)inner + 0x16) = 0;
+    *(s16 *)((char *)inner + 0x18) = 0;
+    if (*(s16 *)((char *)obj + 0x46) == 0x3bf) {
+        if (GameBit_Get(*(s16 *)((char *)inner + 0xe)) != 0) {
+            *(s16 *)((char *)inner + 0xa) = 4;
+            *(u8 *)((char *)inner + 0x1c) |= 0x80;
+        } else {
+            *(s16 *)((char *)inner + 0xa) = 3;
+        }
+    }
+    if (*(s16 *)((char *)obj + 0x46) == 0x3b7 && GameBit_Get(0x4ee) != 0) {
+        if (GameBit_Get(*(s16 *)((char *)inner + 0xe)) != 0) {
+            *(s16 *)((char *)inner + 0xa) = 3;
+        } else {
+            *(s16 *)((char *)inner + 0xa) = 4;
+            *(u8 *)((char *)inner + 0x1c) |= 0x80;
+        }
+    }
+}
+
+void wmplanets_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    f32 a = lbl_803E5FA0 * *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4);
+    *(f32 *)((char *)obj + 8) = a * (lbl_803E5F98 + (f32)(s32)(s8)init[0x18]);
+    if (*(s16 *)init != 0) {
+        *(f32 *)((char *)inner + 0xc) = -(f32)(s32)((s8)init[0x19] << 4);
+    } else {
+        *(f32 *)((char *)inner + 0xc) = lbl_803E5F9C;
+    }
+    *(s16 *)inner = (s16)randomGetRange(0x64, 0xc8);
+    *(s16 *)((char *)inner + 2) = (s16)randomGetRange(0xc8, 0x190);
+    *(s16 *)((char *)inner + 4) = 0;
+    *(s16 *)((char *)inner + 8) = (s16)randomGetRange(0, 0x960);
+    *(f32 *)((char *)inner + 0x10) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)inner + 0x14) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)inner + 0x18) = *(f32 *)((char *)obj + 0x14);
+    Obj_SetActiveModelIndex((int)obj, *(s16 *)((char *)init + 0x1a));
+    *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)init + 0x10) + *(f32 *)((char *)inner + 0xc);
+}
+#pragma peephole reset
+#pragma scheduling reset
