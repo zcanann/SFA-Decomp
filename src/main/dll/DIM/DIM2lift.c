@@ -1314,3 +1314,38 @@ int fn_801BA654(int obj, int param2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E4C08;
+extern f32 lbl_803E4C0C;
+extern f32 lbl_803E4C10;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BAB88(int obj, int param2, f32 arg)
+{
+    f32 h;
+    f32 v;
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        *(f32 *)(param2 + 0x2a0) = lbl_803E4C08;
+        if (*(s8 *)(param2 + 0x27a) != 0) {
+            ObjAnim_SetCurrentMove((int *)obj, 0x12, lbl_803E4BD8, 0);
+            *(u8 *)(param2 + 0x346) = 0;
+        }
+        *(s16 *)(obj + 0xa2) = -1;
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+    }
+    h = *(f32 *)(obj + 0x98);
+    if (h > lbl_803E4C0C || *(s8 *)(param2 + 0x346) != 0) {
+        return 8;
+    }
+    if (h > lbl_803E4C10) {
+        gDIMbossSequenceFlags |= 0x10;
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 5, lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
