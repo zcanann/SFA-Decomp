@@ -3179,3 +3179,90 @@ void initMaps(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, int f2, int idx)
+{
+    int base;
+    s16* e2;
+    int aa, bb;
+    int ptr0;
+    int tbl, tbl2;
+    int index;
+    int idx2;
+    u32 v, v2;
+    int cellVal;
+
+    if (idx == -1) {
+        o0[0] = -1; o0[1] = 1; o0[2] = -1; o0[3] = 1;
+        o1[0] = 0; o1[1] = 0; o1[2] = 0; o1[3] = -1;
+        o2[0] = 0; o2[1] = 0; o2[2] = 0; o2[3] = -1;
+        o3[0] = 0; o3[1] = 0; o3[2] = 0; o3[3] = -1;
+        if (f1 != 0)
+            o0[3] = -2;
+        return;
+    }
+    base = lbl_80382238[1];
+    e2 = (s16*)(base + lbl_8038224C[idx].field_4 * 10);
+    aa = a - e2[0];
+    bb = b - e2[2];
+    ptr0 = lbl_8038224C[idx].field_0;
+    if (idx == -1) {
+        o0[0] = -1; o0[1] = 1; o0[2] = -1; o0[3] = 1;
+        o1[0] = 0; o1[1] = 0; o1[2] = 0; o1[3] = -1;
+        o2[0] = 0; o2[1] = 0; o2[2] = 0; o2[3] = -1;
+        o3[0] = 0; o3[1] = 0; o3[2] = 0; o3[3] = -1;
+        if (f1 != 0)
+            o0[3] = -2;
+        return;
+    }
+    if (f2 != 0) {
+        tbl = *(int*)(ptr0 + 0x30);
+        tbl2 = *(int*)(ptr0 + 0x34);
+    } else {
+        tbl = *(int*)(ptr0 + 0x14);
+        tbl2 = *(int*)(ptr0 + 0x2c);
+    }
+    index = aa + bb * *(s16*)ptr0;
+    idx2 = index * 2;
+    if (f1 == 0) {
+        v = ((int*)tbl)[idx2];
+        o0[0] = ((v >> 12) & 0xf) - 7;
+        o0[2] = ((v >> 8) & 0xf) - 7;
+        o0[1] = ((v >> 4) & 0xf) - 7;
+        o0[3] = (v & 0xf) - 7;
+        o1[0] = (v >> 28) - 7;
+        o1[2] = ((v >> 24) & 0xf) - 7;
+        o1[1] = ((v >> 20) & 0xf) - 7;
+        o1[3] = ((v >> 16) & 0xf) - 7;
+        v2 = ((int*)tbl)[idx2 + 1];
+        o2[0] = ((v2 >> 12) & 0xf) - 7;
+        o2[2] = ((v2 >> 8) & 0xf) - 7;
+        o2[1] = ((v2 >> 4) & 0xf) - 7;
+        o2[3] = (v2 & 0xf) - 7;
+        o3[0] = (v2 >> 28) - 7;
+        o3[2] = ((v2 >> 24) & 0xf) - 7;
+        o3[1] = ((v2 >> 20) & 0xf) - 7;
+        o3[3] = ((v2 >> 16) & 0xf) - 7;
+    } else {
+        o0[0] = 0; o0[1] = -1; o0[2] = 0; o0[3] = -1;
+        o1[0] = 0; o1[1] = -1; o1[2] = 0; o1[3] = -1;
+        o2[0] = 0; o2[1] = -1; o2[2] = 0; o2[3] = -1;
+        o3[0] = 0; o3[1] = -1; o3[2] = 0; o3[3] = -1;
+        cellVal = *(int*)(*(int*)(ptr0 + 0xc) + (idx2 >> 1) * 4) & 0x7f;
+        if (cellVal != 127) {
+            v2 = ((int*)tbl2)[f1 + cellVal * 4 - 1];
+            o0[0] = ((v2 >> 12) & 0xf) - 7;
+            o0[2] = ((v2 >> 8) & 0xf) - 7;
+            o0[1] = ((v2 >> 4) & 0xf) - 7;
+            o0[3] = (v2 & 0xf) - 7;
+            o1[0] = (v2 >> 28) - 7;
+            o1[2] = ((v2 >> 24) & 0xf) - 7;
+            o1[1] = ((v2 >> 20) & 0xf) - 7;
+            o1[3] = ((v2 >> 16) & 0xf) - 7;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
