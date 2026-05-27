@@ -3742,5 +3742,47 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         walk += 4;
     }
 }
+
+extern f32 timeDelta;
+
+void objModelAndSoundFn_80039118(int obj, int p2)
+{
+    int frame;
+    int model;
+    int kfval;
+    int* kf;
+
+    f32 t;
+
+    if (*(s32*)((char*)p2 + 0) < 0) return;
+    t = *(f32*)((char*)p2 + 8) - timeDelta;
+    *(f32*)((char*)p2 + 8) = t;
+    if (t >= lbl_803DE9A4) return;
+    frame = *(int*)((char*)p2 + 0);
+    if (frame >= *(int*)((char*)p2 + 4)) {
+        *(int*)((char*)p2 + 0) = -1;
+        model = ((int*)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)];
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
+            ObjModel_SetBlendChannelTargets(model, 2,
+                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
+                -1, lbl_803DE99C / lbl_803DB464, 0);
+        }
+    } else {
+        if (frame == 1) {
+            Sfx_PlayFromObjectChannel(obj, 0x10, *(u16*)((char*)p2 + 0x14));
+        }
+        kf = *(int**)((char*)p2 + 0x10);
+        frame = *(int*)((char*)p2 + 0);
+        *(int*)((char*)p2 + 0) = frame + 1;
+        kfval = kf[frame];
+        model = ((int*)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)];
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
+            ObjModel_SetBlendChannelTargets(model, 2,
+                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
+                kfval - 1, lbl_803DE99C / lbl_803DB464, 0);
+        }
+        *(f32*)((char*)p2 + 8) = *(f32*)((char*)p2 + 8) + *(f32*)((char*)p2 + 0xc);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
