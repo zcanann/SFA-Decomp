@@ -129,7 +129,17 @@ Distinguish them per unit: `comm -23 <(grep -oE '^\s*\.fn \S+' build/GSAE01/asm/
    stay partial/untouched (skip them). The clean-C wins live in the **many
    SMALL functions** (init/update/free/dispatch/logic) inside fresh 0% units.
    So target small functions in untouched units for fuzzy%/function-count
-   gains; do not chase the byte-heavy giants.
+   gains.
+   **Nuance — "skip FP-heavy" means skip GRINDING existing partials, NOT skip
+   ADDING missing functions.** Writing a *missing* (flavor-A, absent-from-src)
+   function as clean C that lands at 85-96% is a REAL win — it recovers
+   plausible source and is a big 0→high fuzzy gain (exactly what the Prime
+   Directive values). Even heavily-FP missing functions land high from clean C
+   (proven: pi_dolphin GX-matrix fns at 90%+, and `fn_8010AC48` with 69
+   paired-single FP ops at 96%). So DO add missing FP functions — take the
+   natural % and leave a clean partial. Only *skip*: (a) grinding an existing
+   partial for the last few %, and (b) the genuinely giant bodies (1k-40k bytes)
+   where a single mismatch tanks the whole function.
 1. **Triage**: run the report.json 0%-unit query above to get fresh untouched
    units; pick one no other agent owns. (Use `drift_audit.py <unit>` to gauge
    drift, but remember its stub count is inflated and stub_queue is stale.)

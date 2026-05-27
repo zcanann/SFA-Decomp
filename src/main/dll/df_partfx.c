@@ -1924,3 +1924,31 @@ void player_doProjGfx(int *p1, int p2, int p3, int count, int p5, int mode)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void Checkpoint_remove(int *obj) {
+    int i = 0;
+    CheckpointSlot *p = lbl_8039C458;
+    int count = lbl_803DD410;
+    CheckpointSlot *e;
+    int remaining;
+
+    while (i < count && (u32)obj[5] != p[i].key) {
+        i++;
+    }
+    if (i >= count) return;
+    count = lbl_803DD410 - 1;
+    lbl_803DD410 = count;
+    e = &lbl_8039C458[i];
+    remaining = count - i;
+    if (i >= count) return;
+    while (remaining > 0) {
+        e->entry = (e + 1)->entry;
+        e->key   = (e + 1)->key;
+        e++;
+        remaining--;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset

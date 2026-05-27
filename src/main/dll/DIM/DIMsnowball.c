@@ -1572,3 +1572,71 @@ void ccpedstal_update(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *fn_802972A8(void *obj);
+extern int mapGetDirIdx(int a);
+extern void lockLevel(int idx, int flag);
+extern int *gGameUIInterface;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_801AC01C(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int r;
+    void *res;
+    GameBit_Set(0x3a3, 0);
+    GameBit_Set(0x3a2, 0);
+    res = fn_802972A8(Obj_GetPlayerObject());
+    if (res != 0) {
+        r = (*(int (**)(int))(*(int *)(*(int *)((char *)res + 0x68)) + 0x48))((int)res);
+    } else {
+        r = 0;
+    }
+    lockLevel(mapGetDirIdx(0x17), 1);
+    if (r == 1) {
+        (*(int (**)(int))(*(int *)gGameUIInterface + 0x40))(1);
+        *(u8 *)(state + 0) = 5;
+        GameBit_Set(0x37b, 1);
+    } else {
+        *(u8 *)(state + 0) = 6;
+        GameBit_Set(0xce, 1);
+    }
+    GameBit_Set(0x378, 0);
+    GameBit_Set(0x3b9, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_801AC108(int obj, int param2)
+{
+    int r;
+    void *res;
+    (*(int (**)(int))(*(int *)gGameUIInterface + 0x40))(0);
+    if (GameBit_Get(0x3a3) != 0) {
+        GameBit_Set(0x3a3, 0);
+        GameBit_Set(0x3a2, 0);
+        GameBit_Set(0x378, 0);
+        GameBit_Set(0x3b9, 0);
+        res = fn_802972A8(Obj_GetPlayerObject());
+        if (res != 0) {
+            r = (*(int (**)(int))(*(int *)(*(int *)((char *)res + 0x68)) + 0x48))((int)res);
+        } else {
+            r = 0;
+        }
+        GameBit_Set(0x4e5, 1);
+        (*(int (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 1, 1);
+        if (r == 1) {
+            (*(int (**)(int))(*(int *)gGameUIInterface + 0x40))(1);
+            *(u8 *)(param2 + 0) = 5;
+            GameBit_Set(0x379, 1);
+        } else {
+            *(u8 *)(param2 + 0) = 6;
+            GameBit_Set(0xcb, 1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
