@@ -1650,3 +1650,34 @@ void DR_EarthWarrior_free(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int p5, int p6);
+extern void textureFree(int handle);
+extern f32 lbl_803E82E8;
+extern int lbl_8033527C[];
+extern void *lbl_803DE4C0;
+
+#pragma scheduling off
+#pragma peephole off
+void DR_EarthWarrior_func23(int obj, int mode)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (mode == 1) {
+        *(s16 *)((char *)inner + 0x14e2) += 4;
+        objAudioFn_800393f8(obj, (char *)inner + 0x3bc, 0x291, 0x1000, -1, 1);
+        *(f32 *)((char *)inner + 0x1444) = lbl_803E82E8;
+        *(f32 *)((char *)lbl_8033527C + 0x24) = *(f32 *)((char *)inner + 0x1444);
+    }
+}
+
+void DIMSnowHorn1_release(void)
+{
+    void **p = &lbl_803DE4C0;
+    void *v = *p;
+    if (v != NULL) {
+        textureFree((int)v);
+    }
+    *p = NULL;
+}
+#pragma peephole reset
+#pragma scheduling reset
