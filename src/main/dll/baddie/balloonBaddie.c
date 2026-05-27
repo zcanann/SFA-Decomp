@@ -578,3 +578,74 @@ int modelFn_80124794(int obj, int param2, int param3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *Obj_GetPlayerObject(void);
+extern int getTrickyObject(void);
+extern void GXSetScissor(int a, int b, int c, int d);
+extern void hudDrawTimedElement(int obj, void *p);
+extern void drawViewFinderHud(void);
+extern int getHudHiddenFrameCount(void);
+extern void textureFree(void);
+extern void *textureLoadAsset(int idx);
+extern void drawTexture(void *p, f32 a, f32 b, int c, int d);
+extern int *gCameraInterface;
+extern u8 pauseMenuState;
+extern int hudTextures[];
+extern u8 lbl_803A9398[];
+extern s16 lbl_8031B618[];
+extern int lbl_803DD738;
+extern int lbl_803DD73C;
+extern s16 lbl_803DD830;
+extern void *lbl_803DD834;
+extern f32 lbl_803E2018;
+extern f32 lbl_803E2038;
+extern f32 lbl_803E203C;
+
+#pragma peephole off
+#pragma scheduling off
+void hudFn_80125244(int obj)
+{
+    int player;
+    int tricky;
+    int local_8;
+    player = (int)Obj_GetPlayerObject();
+    tricky = getTrickyObject();
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    hudDrawTimedElement(obj, lbl_803A9398);
+    if ((void *)tricky != 0) {
+        lbl_803DD738 = (*(int (**)(int))(*(int *)(*(int *)(tricky + 0x68)) + 0x24))(tricky);
+        lbl_803DD73C = (*(int (**)(int))(*(int *)(*(int *)(tricky + 0x68)) + 0x20))(tricky);
+    } else {
+        lbl_803DD738 = 0;
+        lbl_803DD73C = 0;
+    }
+    drawViewFinderHud();
+    if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() != 0x44 &&
+        (*(u16 *)(player + 0xb0) & 0x1000) == 0 &&
+        pauseMenuState == 0 &&
+        (void *)tricky != 0 &&
+        getHudHiddenFrameCount() == 0) {
+        (*(int (**)(int, int *))(*(int *)(*(int *)(tricky + 0x68)) + 0x48))(tricky, &local_8);
+        if (lbl_803DD834 != 0) {
+            if (lbl_803DD830 != local_8) {
+                textureFree();
+                lbl_803DD830 = -1;
+                lbl_803DD834 = 0;
+            }
+        }
+        if (lbl_803DD834 == 0) {
+            if (local_8 > -1) {
+                if (lbl_8031B618[local_8] != -1) {
+                    lbl_803DD834 = textureLoadAsset(lbl_8031B618[local_8]);
+                }
+            }
+        }
+        lbl_803DD830 = (s16)local_8;
+        if (lbl_803DD834 != 0) {
+            drawTexture((void *)hudTextures[0x1d], lbl_803E2018, lbl_803E2038, 0xff, 0x100);
+            drawTexture(lbl_803DD834, lbl_803E2018, lbl_803E203C, 0xff, 0x80);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
