@@ -967,6 +967,7 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int fn_801A8F88(int obj, int arg2)
 {
     int i;
@@ -998,6 +999,7 @@ int fn_801A8F88(int obj, int arg2)
     }
     return 0;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1135,6 +1137,60 @@ void animsharpclaw_init(int *obj, u8 *init) {
         *(u8 *)(*(int *)((char *)obj + 0x64) + 0x3a) = 0x64;
         *(u8 *)(*(int *)((char *)obj + 0x64) + 0x3b) = 0x96;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 framesThisStep;
+
+#pragma scheduling off
+#pragma peephole off
+void animsharpclaw_update(int *obj) {
+    int *found;
+    int *inner;
+    int *child;
+    int kind;
+    int matchCount;
+    int *objects;
+    int i;
+    int count;
+    int result;
+
+    inner = *(int **)((char *)obj + 0xb8);
+    child = *(int **)((char *)obj + 0x4c);
+    if (child == NULL) {
+        return;
+    }
+    if (*(s16 *)((char *)child + 0x18) == -1) {
+        return;
+    }
+    result = (*(int (*)(int *, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)framesThisStep);
+    fn_801A8F88((int)obj, (int)inner);
+    if (result == 0) {
+        return;
+    }
+    if (*(s16 *)((char *)obj + 0xb4) != -2) {
+        return;
+    }
+    kind = (s8)*(u8 *)((char *)inner + 0x57);
+    found = NULL;
+    objects = (int *)ObjList_GetObjects(&i, &count);
+    matchCount = 0;
+    for (i = 0; i < count; i++) {
+        int *o = (int *)objects[i];
+        if (*(s16 *)((char *)o + 0xb4) == kind) {
+            found = o;
+        }
+        if (*(s16 *)((char *)o + 0xb4) == -2 && *(s16 *)((char *)o + 0x44) == 0x10 &&
+            kind == (s8)*(u8 *)((char *)*(int **)((char *)o + 0xb8) + 0x57)) {
+            matchCount++;
+        }
+    }
+    if (matchCount <= 1 && found != NULL && *(s16 *)((char *)found + 0xb4) != -1) {
+        *(s16 *)((char *)found + 0xb4) = -1;
+        (*(void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(kind);
+    }
+    *(s16 *)((char *)obj + 0xb4) = -1;
 }
 #pragma peephole reset
 #pragma scheduling reset
