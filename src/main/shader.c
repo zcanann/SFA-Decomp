@@ -2911,3 +2911,32 @@ int mapGetRomListAndOffsets(int p1, int flag)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void mapInitSetRects(s16 *rect, u8 *bitmap, int p3, int p4, int idx)
+{
+    int self = lbl_803DCE78;
+    int tabOff = idx * 7 << 2;
+    int x, y;
+
+    getTabEntry(self, 0x1d, *(int *)(lbl_803DCE7C + tabOff),
+                *(int *)(lbl_803DCE7C + tabOff + 8) - *(int *)(lbl_803DCE7C + tabOff));
+    *(int *)(self + 0xc) = self + *(int *)(lbl_803DCE7C + tabOff + 4) - *(int *)(lbl_803DCE7C + tabOff);
+    rect[0] = p3 - *(s16 *)(self + 4);
+    rect[2] = p4 - *(s16 *)(self + 6);
+    rect[1] = rect[0] + *(s16 *)(self + 0) - 1;
+    rect[3] = rect[2] + *(s16 *)(self + 2) - 1;
+    *(u8 *)((char *)rect + 8) = *(s16 *)(self + 4);
+    *(u8 *)((char *)rect + 9) = *(s16 *)(self + 6);
+    for (y = 0; (s16)y < *(s16 *)(self + 2); y++) {
+        for (x = 0; (s16)x < *(s16 *)(self + 0); x++) {
+            int p = (s16)x + (s16)y * *(s16 *)(self + 0);
+            if ((*(u32 *)(*(int *)(self + 0xc) + p * 4) >> 23 & 0xff) != 0xff) {
+                bitmap[p >> 3] |= 1 << (p & 7);
+            }
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
