@@ -1860,5 +1860,43 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
     mtx44_mult(lbl_803DB170, (void *)mtx, lbl_803DB170);
     fn_8003B950((int)lbl_803DB170);
 }
+
+extern void fn_802BABB4();
+extern void fn_802BAA54();
+extern void fn_802BA938();
+extern void fn_802BA7EC();
+extern void fn_802BA6E0();
+extern void fn_802BA3EC();
+extern void fn_802BA1D4();
+extern void fn_802B9FC0();
+extern void fn_802B9E38();
+extern void fn_802B9CC4();
+extern void fn_802B98F0();
+extern void fn_802B978C();
+extern void fn_802B9784();
+extern int lbl_803DB130[];
+extern void *lbl_803DE4C4;
+extern s16 lbl_803DC730;
+extern int textureLoad(int id, int p2);
+
+void DIMSnowHorn1_initialise(void)
+{
+    s16 *src = &lbl_803DC730;
+    void **dst = &lbl_803DE4C0;
+    ((void **)lbl_803DB130)[0] = (void *)fn_802BABB4;
+    ((void **)lbl_803DB130)[1] = (void *)fn_802BAA54;
+    ((void **)lbl_803DB130)[2] = (void *)fn_802BA938;
+    ((void **)lbl_803DB130)[3] = (void *)fn_802BA7EC;
+    ((void **)lbl_803DB130)[4] = (void *)fn_802BA6E0;
+    ((void **)lbl_803DB130)[5] = (void *)fn_802BA3EC;
+    ((void **)lbl_803DB130)[6] = (void *)fn_802BA1D4;
+    ((void **)lbl_803DB130)[7] = (void *)fn_802B9FC0;
+    ((void **)lbl_803DB130)[8] = (void *)fn_802B9E38;
+    ((void **)lbl_803DB130)[9] = (void *)fn_802B9CC4;
+    ((void **)lbl_803DB130)[10] = (void *)fn_802B98F0;
+    ((void **)lbl_803DB130)[11] = (void *)fn_802B978C;
+    lbl_803DE4C4 = (void *)fn_802B9784;
+    *dst = (void *)textureLoad(*src, 0);
+}
 #pragma peephole reset
 #pragma scheduling reset
