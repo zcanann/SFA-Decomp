@@ -193,3 +193,33 @@ int salRemoveStudioInput(int studio, int input) {
     }
     return 0;
 }
+
+void salHandleAuxProcessing(void) {
+    int i;
+    char *studio;
+    int buf;
+    void *bufs[3];
+
+    studio = (char *)lbl_803CC1E0;
+    for (i = 0; (u8)i < salMaxStudioNum; i++) {
+        if (*(u8 *)(studio + 0x50) == 1) {
+            if (*(void **)(studio + 0xac) != NULL) {
+                buf = *(int *)(studio + ((salAuxFrame + 2) % 3) * 4 + 0x30);
+                bufs[0] = (void *)buf;
+                bufs[1] = (void *)(buf + 0x280);
+                bufs[2] = (void *)(buf + 0x500);
+                (*(void (*)(int, void *, int))*(int *)(studio + 0xac))(0, bufs, *(int *)(studio + 0xb4));
+                DCFlushRangeNoSync((void *)buf, 0x780);
+            }
+            if (*(int *)(studio + 0x54) == 0 && *(void **)(studio + 0xb0) != NULL) {
+                buf = *(int *)(studio + ((salAuxFrame + 2) % 3) * 4 + 0x3c);
+                bufs[0] = (void *)buf;
+                bufs[1] = (void *)(buf + 0x280);
+                bufs[2] = (void *)(buf + 0x500);
+                (*(void (*)(int, void *, int))*(int *)(studio + 0xb0))(0, bufs, *(int *)(studio + 0xb8));
+                DCFlushRangeNoSync((void *)buf, 0x780);
+            }
+        }
+        studio += 0xbc;
+    }
+}
