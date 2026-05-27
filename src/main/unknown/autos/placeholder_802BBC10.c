@@ -1898,5 +1898,46 @@ void DIMSnowHorn1_initialise(void)
     lbl_803DE4C4 = (void *)fn_802B9784;
     *dst = (void *)textureLoad(*src, 0);
 }
+
+extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);
+extern int *gPathControlInterface;
+
+int fn_802BDBE8(int obj, int p2, int p3)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int i;
+    f32 fz;
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+    if (dll_2E_func07(obj, p3, (void *)(inner + 0x3ec), 0, 0) != 0) {
+        return 1;
+    }
+    for (i = 0; i < *(u8 *)((char *)p3 + 0x8b); i++) {
+        int idx = i + 0x81;
+        int v = *(u8 *)((char *)p3 + idx);
+        switch (v) {
+        case 0xa:
+            break;
+        case 0xe:
+        case 0xf:
+            *(u8 *)((char *)inner + 0x9fd) |= 1;
+            *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x62) &= ~0x20;
+            break;
+        case 0x10:
+            *(u8 *)((char *)inner + 0x9fd) &= ~1;
+            *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x62) |= 0x20;
+            break;
+        }
+    }
+    *(int *)((char *)inner + 0xeb8) |= 0x800000;
+    (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, inner + 0x4);
+    fz = lbl_803E8304;
+    *(f32 *)((char *)inner + 0x294) = fz;
+    *(f32 *)((char *)inner + 0x284) = fz;
+    *(f32 *)((char *)inner + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    return 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
