@@ -51,7 +51,7 @@ int alphaanimator_getObjectTypeId(void);
 void alphaanimator_free(int *obj);
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void alphaanimator_hitDetect(void);
-void alphaanimator_update(void);
+void alphaanimator_update(int *obj);
 void alphaanimator_init(int *obj);
 void alphaanimator_release(void);
 void alphaanimator_initialise(void);
