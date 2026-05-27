@@ -1616,3 +1616,37 @@ void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_80026C88(int p);
+extern int Obj_FreeObject(int obj);
+
+typedef struct {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 b10 : 1;
+    u8 b08 : 1;
+    u8 b04 : 1;
+    u8 b02 : 1;
+    u8 b01 : 1;
+} ByteFlags;
+
+#pragma scheduling off
+#pragma peephole off
+void DR_EarthWarrior_free(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(void **)((char *)inner + 0x14f8) != NULL) {
+        fn_80026C88(*(int *)((char *)inner + 0x14f8));
+    }
+    ObjGroup_RemoveObject(obj, 0xa);
+    if (((ByteFlags *)((char *)inner + 0x14ec))->b02) {
+        (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+    }
+    if (*(void **)((char *)inner + 0xb54) != NULL) {
+        ObjLink_DetachChild(obj, *(int *)((char *)inner + 0xb54));
+        Obj_FreeObject(*(int *)((char *)inner + 0xb54));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
