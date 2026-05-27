@@ -3578,5 +3578,42 @@ void fn_8003B500(int obj, int p4)
         *(s16*)(p4 + 0x1a) = (s16)(u8)*(s16*)(p4 + 0x1a);
     }
 }
+
+extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
+extern f32 lbl_803DB464;
+
+void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
+{
+    u16 sfx;
+    s16 pitch;
+    u32 count;
+    int model;
+    int did;
+
+    pitch = *(s16*)((char*)p3 + 2);
+    sfx = (u16)*(s16*)((char*)p3 + 0);
+    if (flag6 != 0 || Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
+        Sfx_PlayFromObjectChannel(p1, 0x10, sfx);
+        *(f32*)((char*)p2 + 0xc) = lbl_803DE9C8;
+        *(s16*)((char*)p2 + 0x14) = (s16)(-pitch);
+        *(u8*)((char*)p2 + 0) = 1;
+        *(f32*)((char*)p2 + 4) = lbl_803DE99C;
+    }
+    count = *(u8*)((char*)p3 + 4);
+    if (count != 0) {
+        model = ((int*)*(int*)((char*)p1 + 0x7c))[*(s8*)((char*)p1 + 0xad)];
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
+            ObjModel_SetBlendChannelTargets(model, 2,
+                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
+                count - 1, lbl_803DE99C / lbl_803DB464, 0);
+            did = 1;
+        } else {
+            did = 0;
+        }
+        if (did != 0) {
+            *(s16*)((char*)p3 + 2) = 0;
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
