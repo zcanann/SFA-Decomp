@@ -1148,12 +1148,12 @@ void vfpdraghead_init(int obj, int data) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_801FC6F4(int);
+extern void fn_801FC6F4(int, int, int);
 #pragma scheduling off
 #pragma peephole off
 void seqpoint_init(int obj, int data) {
     int state = *(int *)(obj + 0xB8);
-    *(void (**)(int))(obj + 0xBC) = fn_801FC6F4;
+    *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801FC6F4;
     *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
     *(f32 *)state = (f32)*(s16 *)(data + 0x1a);
     *(s16 *)(state + 8) = *(s16 *)(data + 0x1c);
@@ -1416,3 +1416,55 @@ void vfpdraghead_update(int *obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int *gMapEventInterface;
+extern void unlockLevel(int, int, int);
+extern undefined4 lockLevel(undefined4, int);
+extern int mapGetDirIdx(int);
+extern undefined4 loadMapAndParent(int);
+extern void warpToMap(int, int);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801FC6F4(int obj, int param2, int ctx)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+    *(s16 *)(ctx + 0x70) = -1;
+    *(u8 *)(ctx + 0x56) = 0;
+    for (i = 0; i < *(u8 *)(ctx + 0x8b); i++) {
+        switch (*(s16 *)(state + 8)) {
+        case 0:
+            break;
+        case 13:
+            if (*(u8 *)(ctx + i + 0x81) == 20) {
+                GameBit_Set(0x500, 0);
+                GameBit_Set(0xd72, 1);
+                GameBit_Set(0xd44, 1);
+                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 1, 1);
+                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 2, 1);
+                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 22, 1);
+                if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 1) {
+                    unlockLevel(0, 0, 1);
+                    lockLevel(mapGetDirIdx(70), 1);
+                    lockLevel(mapGetDirIdx(4), 0);
+                    loadMapAndParent(70);
+                    (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(18, 2);
+                    warpToMap(124, 0);
+                } else if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                    unlockLevel(0, 0, 1);
+                    lockLevel(mapGetDirIdx(70), 1);
+                    lockLevel(mapGetDirIdx(4), 0);
+                    loadMapAndParent(70);
+                    (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(11, 4);
+                    (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(8, 6);
+                    warpToMap(124, 0);
+                }
+            }
+            break;
+        }
+        *(u8 *)(ctx + i + 0x81) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
