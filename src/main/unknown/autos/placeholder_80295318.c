@@ -6305,6 +6305,15 @@ extern int *gPlayerInterface;
 extern int *gObjectTriggerInterface;
 extern f32 lbl_803E7F08;
 extern f32 lbl_803E7FD8;
+extern f32 lbl_803E801C;
+extern f32 lbl_803E7F10;
+extern f32 lbl_803E811C;
+extern f32 lbl_803E80E4;
+extern f32 lbl_803E7ED8;
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 
 #pragma scheduling off
 #pragma peephole off
@@ -6890,6 +6899,89 @@ void fn_8029C8C8(int obj, int p2)
             lbl_803DE454 = NULL;
         }
     }
+}
+
+void fn_802B1B28(int obj, f32 fv)
+{
+    f32 x, y, z;
+    f32 v;
+
+    v = *(f32 *)((char *)obj + 0x24);
+    if (v < lbl_803E801C) {
+        v = lbl_803E801C;
+    } else if (v > lbl_803E7F10) {
+        v = lbl_803E7F10;
+    }
+    *(f32 *)((char *)obj + 0x24) = v;
+
+    v = *(f32 *)((char *)obj + 0x28);
+    if (v < lbl_803E811C) {
+        v = lbl_803E811C;
+    } else if (v > lbl_803E80E4) {
+        v = lbl_803E80E4;
+    }
+    *(f32 *)((char *)obj + 0x28) = v;
+
+    v = *(f32 *)((char *)obj + 0x2c);
+    if (v < lbl_803E801C) {
+        v = lbl_803E801C;
+    } else if (v > lbl_803E7F10) {
+        v = lbl_803E7F10;
+    }
+    *(f32 *)((char *)obj + 0x2c) = v;
+
+    y = *(f32 *)((char *)obj + 0x28) * fv;
+    if (y > lbl_803E7ED8) {
+        y = lbl_803E7ED8;
+    }
+    x = *(f32 *)((char *)obj + 0x24) * fv;
+    z = *(f32 *)((char *)obj + 0x2c) * fv;
+    objMove(obj, x, y, z);
+}
+
+void fn_802B85E4(int obj, int p2)
+{
+    int inner = *(int *)((char *)p2 + 0x40c);
+    int child;
+    int setup;
+
+    if (*(s16 *)((char *)inner + 0x26) == *(s16 *)((char *)inner + 0x28)) return;
+    if (*(u8 *)((char *)obj + 0x36) == 0) return;
+
+    child = *(int *)((char *)obj + 0xc8);
+    if (child != 0) {
+        ObjLink_DetachChild(obj, child);
+        Obj_FreeObject(child);
+    }
+    if (Obj_IsLoadingLocked()) {
+        if (*(s16 *)((char *)inner + 0x28) > 0) {
+            setup = Obj_AllocObjectSetup(0x20);
+            setup = Obj_SetupObject(setup, 4, *(s8 *)((char *)obj + 0xac), -1,
+                                    *(int *)((char *)obj + 0x30));
+            ObjLink_AttachChild(obj, setup, 0);
+            *(s16 *)((char *)inner + 0x26) = *(s16 *)((char *)inner + 0x28);
+        }
+    } else {
+        *(s16 *)((char *)inner + 0x26) = 0;
+    }
+}
+
+void fn_802B827C(int obj, int p2, int p3)
+{
+    int idx;
+
+    if (*(u8 *)((char *)p3 + 0x2e) == 0) return;
+    if ((*(u16 *)((char *)p2 + 0x400) & 2) == 0) return;
+
+    idx = *(int *)((char *)obj + 0x4c);
+    if (*(u32 *)((char *)idx + 0x14) == 0x46A51 && GameBit_Get(0xc49) == 0) {
+        GameBit_Set(0xc49, 1);
+    } else if (*(u32 *)((char *)idx + 0x14) == 0x46A55 && GameBit_Get(0xc4a) == 0) {
+        GameBit_Set(0xc4a, 1);
+    } else if (*(u32 *)((char *)idx + 0x14) == 0x49928 && GameBit_Get(0xc4b) == 0) {
+        GameBit_Set(0xc4b, 1);
+    }
+    *(u8 *)((char *)p3 + 0x2e) = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
