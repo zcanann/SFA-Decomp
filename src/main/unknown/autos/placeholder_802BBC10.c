@@ -2204,5 +2204,51 @@ void fn_802BF4D8(int obj)
     *(s16 *)((char *)newObj + 0) = 0;
     (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))((int)newObj, 0x66, 0, 2, -1, 0);
 }
+
+extern f32 lbl_803E82EC;
+extern f32 GXInit_ClearColor;
+extern f32 GXInit_BlackColor;
+extern f32 GXInit_WhiteColor;
+extern f32 lbl_803E82FC;
+extern f32 lbl_803E8300;
+extern f32 lbl_803E8308;
+extern f32 lbl_803E830C;
+
+int fn_802BC830(int obj, int p2, int p3)
+{
+    *(int *)((char *)p2 + 0x360) |= 0x1000000;
+    *(f32 *)((char *)p3 + 0x2a0) = lbl_803E82EC;
+    if (*(f32 *)((char *)obj + 0x98) > GXInit_ClearColor &&
+        *(f32 *)((char *)obj + 0x98) < GXInit_BlackColor &&
+        *(f32 *)((char *)p3 + 0x294) > *(f32 *)((char *)*(int *)((char *)p2 + 0x400) + 0x1c) - GXInit_WhiteColor &&
+        *(f32 *)((char *)p3 + 0x298) > lbl_803E82FC &&
+        *(int *)((char *)p2 + 0x488) >= 0x96) {
+        ((ByteFlags *)((char *)p2 + 0x3f0))->b40 = 1;
+        ((ByteFlags *)((char *)p2 + 0x3f0))->b80 = 0;
+        *(u8 *)((char *)p2 + 0x8a6) = *(u8 *)((char *)p2 + 0x8a7);
+        *(f32 *)((char *)p3 + 0x2a0) = lbl_803E8300;
+        ObjAnim_SetCurrentMove(obj, *(s16 *)((char *)*(int *)((char *)p2 + 0x3f8) + 0x3a), lbl_803E8304, 0);
+        ObjAnim_SetCurrentEventStepFrames((struct ObjAnimComponent *)obj, 0x10);
+        *(int *)((char *)p2 + 0x858) = *(s16 *)((char *)p2 + 0x484);
+        *(f32 *)((char *)p2 + 0x844) = (lbl_803E8308 + (*(f32 *)((char *)*(int *)((char *)p2 + 0x400) + 0x14) + *(f32 *)((char *)p3 + 0x294))) / lbl_803E830C;
+        *(s16 *)((char *)p2 + 0x478) = *(s16 *)((char *)p2 + 0x484);
+        *(s16 *)((char *)p2 + 0x484) += 0x8000;
+        *(f32 *)((char *)p3 + 0x294) = -*(f32 *)((char *)p3 + 0x294);
+        *(f32 *)((char *)p3 + 0x280) = -*(f32 *)((char *)p3 + 0x280);
+    }
+    if (((ByteFlags *)((char *)p2 + 0x3f0))->b80 != 0) {
+        f32 lim = *(f32 *)((char *)*(int *)((char *)p2 + 0x400) + 0x10);
+        if (*(f32 *)((char *)p3 + 0x294) <= lim && *(f32 *)((char *)p3 + 0x280) <= lim) {
+            *(int *)((char *)p2 + 0x494) = *(s16 *)((char *)p2 + 0x484);
+            ((ByteFlags *)((char *)p2 + 0x3f0))->b40 = 0;
+            ((ByteFlags *)((char *)p2 + 0x3f0))->b80 = 0;
+            return 1;
+        }
+        *(f32 *)((char *)p2 + 0x408) = lbl_803E8304;
+        *(f32 *)((char *)p2 + 0x438) = *(f32 *)((char *)p2 + 0x830);
+        *(u16 *)((char *)p2 + 0x8d8) |= 8;
+    }
+    return 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
