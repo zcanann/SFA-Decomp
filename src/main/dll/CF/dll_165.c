@@ -4,19 +4,21 @@
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId,int value);
 extern void ObjHits_DisableObject(int obj);
-extern int FUN_80017a98();
-extern undefined4 FUN_801899b4();
-extern undefined4 FUN_80189cc4();
-extern undefined4 FUN_80189e0c();
-extern byte FUN_80294c28();
+extern void ObjGroup_AddObject(int obj, int group);
+extern void ObjHitbox_SetSphereRadius(int obj, int radius);
+extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
+extern f32 fn_80293E80(f32 angle);
+extern f32 sin(f32 angle);
 
 extern int *gGameUIInterface;
-extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd708;
-extern f32 FLOAT_803e4854;
-extern f32 FLOAT_803e4874;
-extern f32 FLOAT_803e4898;
-extern f32 FLOAT_803e489c;
+extern f32 lbl_803E3BBC;
+extern f32 lbl_803E3BF4;
+extern f32 lbl_803E3BF8;
+extern f32 lbl_803E3C08;
+extern f32 lbl_803E3C0C;
+extern f32 lbl_803E3C10;
+extern f32 lbl_803E3C14;
+extern f32 lbl_803E3C18;
 
 /*
  * --INFO--
@@ -31,95 +33,98 @@ extern f32 FLOAT_803e489c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void staffactivated_init(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                         undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                         undefined8 param_8,uint param_9)
+void staffactivated_init(int obj, int setup)
 {
-  int iVar1;
-  byte bVar3;
-  uint uVar2;
-  int iVar4;
-  int iVar5;
-  undefined auStack_28 [4];
-  undefined2 local_24;
-  undefined2 local_22;
-  float local_20;
-  float local_1c;
-  float local_18;
-  float local_14;
-  
-  iVar5 = *(int *)(param_9 + 0x4c);
-  iVar4 = *(int *)(param_9 + 0xb8);
-  iVar1 = FUN_80017a98();
-  if ((*(byte *)(iVar4 + 0x1d) >> 6 & 1) == 0) {
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
+  int sizeIndex;
+  u8 setupType;
+  u8 modelVariant;
+  f32 scale;
+  u8 *state;
+  f32 angle;
+  f32 offset;
+  u32 bit;
+
+  state = *(u8 **)(obj + 0xb8);
+  ObjGroup_AddObject(obj, 0x41);
+  *(s16 *)obj = (s16)((s32)*(u8 *)(setup + 0x18) << 8);
+
+  sizeIndex = *(u8 *)(setup + 0x1d);
+  if (sizeIndex > 2) {
+    sizeIndex = 2;
   }
-  else {
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
+
+  setupType = *(u8 *)(setup + 0x1c);
+  if (setupType == 2) {
+    switch (sizeIndex) {
+    case 0:
+      modelVariant = 0;
+      scale = lbl_803E3C0C;
+      break;
+    case 2:
+      modelVariant = 2;
+      scale = lbl_803E3C08;
+      break;
+    default:
+      modelVariant = 1;
+      scale = lbl_803E3BBC;
+      break;
+    }
+  } else {
+    scale = lbl_803E3BBC;
   }
-  if ((*(char *)(iVar4 + 0x1d) < '\0') && (bVar3 = FUN_80294c28(iVar1), bVar3 != 0)) {
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xef;
+
+  if (*(int *)(obj + 0x54) != 0) {
+    ObjHitbox_SetSphereRadius(obj, (int)((f32)*(s16 *)(*(int *)(obj + 0x54) + 0x5a) * scale));
   }
-  else {
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 0x10;
+
+  *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) * scale;
+  if (*(f32 *)(obj + 8) < lbl_803E3C10) {
+    *(f32 *)(obj + 8) = lbl_803E3C10;
   }
-  bVar3 = *(byte *)(iVar5 + 0x1c);
-  if (bVar3 == 2) {
-    FUN_80189e0c(param_9,iVar4);
+
+  switch (setupType) {
+  case 2:
+    *(u8 *)(obj + 0xe4) = modelVariant;
+    angle = (lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8;
+    offset = lbl_803E3C14 * *(f32 *)(obj + 8) * (lbl_803E3C18 * fn_80293E80(angle));
+    *(f32 *)state = *(f32 *)(obj + 0xc) - offset;
+    angle = (lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8;
+    offset = lbl_803E3C14 * *(f32 *)(obj + 8) * (lbl_803E3C18 * sin(angle));
+    *(f32 *)(state + 4) = *(f32 *)(obj + 0x14) - offset;
+    break;
+  case 3:
+    angle = (lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8;
+    offset = lbl_803E3C14 * *(f32 *)(obj + 8) * (lbl_803E3C18 * fn_80293E80(angle));
+    *(f32 *)state = offset + *(f32 *)(obj + 0xc);
+    angle = (lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8;
+    offset = lbl_803E3C14 * *(f32 *)(obj + 8) * (lbl_803E3C18 * sin(angle));
+    *(f32 *)(state + 4) = offset + *(f32 *)(obj + 0x14);
+    break;
+  default:
+    *(f32 *)state = *(f32 *)(obj + 0xc);
+    *(f32 *)(state + 4) = *(f32 *)(obj + 0x14);
+    break;
   }
-  else {
-    if (bVar3 < 2) {
-      if (bVar3 == 0) {
-        if (((*(byte *)(param_9 + 0xaf) & 4) != 0) && (uVar2 = GameBit_Get(0xd2a), uVar2 == 0)) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_9,0xffffffff);
-          GameBit_Set(0xd2a,1);
-        }
-        uVar2 = GameBit_Get(0x957);
-        if (uVar2 == 0) {
-          *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 0x10;
-        }
-        iVar1 = 0;
-        if (((int)*(short *)(iVar5 + 0x22) == 0xffffffff) ||
-           (uVar2 = GameBit_Get((int)*(short *)(iVar5 + 0x22)), uVar2 != 0)) {
-          iVar1 = 1;
-        }
-        *(byte *)(iVar4 + 0x1d) = (byte)(iVar1 << 7) | *(byte *)(iVar4 + 0x1d) & 0x7f;
-        if (-1 < *(char *)(iVar4 + 0x1d)) {
-          return;
-        }
-        local_1c = FLOAT_803e4898;
-        local_18 = FLOAT_803e489c;
-        local_14 = FLOAT_803e4874;
-        local_20 = FLOAT_803e4854;
-        local_22 = 0;
-        local_24 = 100;
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0x7c3,auStack_28,2,0xffffffff,0);
-        local_1c = FLOAT_803e4898;
-        local_18 = FLOAT_803e489c;
-        local_14 = FLOAT_803e4874;
-        local_20 = FLOAT_803e4854;
-        local_22 = 5;
-        local_24 = 10;
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0x7c3,auStack_28,2,0xffffffff,0);
-        return;
+
+  if (*(s16 *)(setup + 0x22) > 0) {
+    bit = (u8)GameBit_Get(*(s16 *)(setup + 0x22));
+    state[0x1d] = (state[0x1d] & 0x7f) | ((bit & 1) << 7);
+  } else {
+    state[0x1d] = (state[0x1d] & 0x7f) | 0x80;
+  }
+  state[0x1d] = state[0x1d] & 0xef;
+
+  if (*(s16 *)(setup + 0x24) > 0) {
+    bit = (u8)GameBit_Get(*(s16 *)(setup + 0x24));
+    state[0x1d] = (state[0x1d] & 0xbf) | ((bit & 1) << 6);
+    if (((state[0x1d] >> 6) & 1) != 0) {
+      if (setupType == 4) {
+        state[0x1d] = state[0x1d] & 0xbf;
+      } else if (setupType == 3) {
+        ObjAnim_SetMoveProgress(obj, lbl_803E3BBC);
       }
     }
-    else if (bVar3 < 6) {
-      if (bVar3 < 4) {
-        FUN_801899b4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-        return;
-      }
-      FUN_80189cc4(param_9,iVar4);
-      return;
-    }
-    iVar1 = 0;
-    if (((int)*(short *)(iVar5 + 0x22) == 0xffffffff) ||
-       (uVar2 = GameBit_Get((int)*(short *)(iVar5 + 0x22)), uVar2 != 0)) {
-      iVar1 = 1;
-    }
-    *(byte *)(iVar4 + 0x1d) = (byte)(iVar1 << 7) | *(byte *)(iVar4 + 0x1d) & 0x7f;
   }
-  return;
 }
 
 /*
