@@ -2940,3 +2940,48 @@ void mapInitSetRects(s16 *rect, u8 *bitmap, int p3, int p4, int idx)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern void Obj_UpdateWorldTransform(void);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern u8 lbl_80386648[];
+
+#pragma scheduling off
+#pragma peephole off
+void playerUpdateFn_8005649c(void)
+{
+    int count;
+    int **objs;
+    char *cam;
+    int **e;
+    int i, slot;
+    f32 lx, ly, lz;
+
+    objs = ObjGroup_GetObjects(6, &count);
+    cam = (char *)Camera_GetCurrentViewSlot();
+    Obj_UpdateWorldTransform();
+    for (i = 0; i < 31; i++)
+        *(int *)(lbl_80386648 + i * 0x10 + 0xc) = 0;
+    *(f32 *)(lbl_80386648 + 0) = *(f32 *)(cam + 0x44);
+    *(f32 *)(lbl_80386648 + 4) = *(f32 *)(cam + 0x48);
+    *(f32 *)(lbl_80386648 + 8) = *(f32 *)(cam + 0x4c);
+    *(int *)(lbl_80386648 + 0xc) = 1;
+    e = objs;
+    for (i = 0; i < count; i++) {
+        int *obj = *e;
+        slot = *(s8 *)((char *)obj + 0x35) + 1;
+        if (*(void **)(cam + 0x40) == (void *)obj) {
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 0) = *(f32 *)(cam + 0xc);
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 4) = *(f32 *)(cam + 0x10);
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 8) = *(f32 *)(cam + 0x14);
+        } else {
+            Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0x44), *(f32 *)(cam + 0x48), *(f32 *)(cam + 0x4c), &lx, &ly, &lz);
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 0) = lx;
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 4) = ly;
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 8) = lz;
+        }
+        *(int *)(lbl_80386648 + slot * 0x10 + 0xc) = 1;
+        e++;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
