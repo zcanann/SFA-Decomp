@@ -2123,3 +2123,95 @@ int vfpblock1_getExtraSize(void) { return 0x2; }
 int vfpblock1_getObjectTypeId(void) { return 0x0; }
 void vfpblock1_render(void) {}
 void vfpblock1_hitDetect(void) {}
+
+extern void mm_free(void *p);
+extern void Music_Trigger(int id, int a);
+extern void timeOfDayFn_80055000(void);
+extern int lbl_803DC148;
+extern f32 lbl_803E60F0;
+extern f32 lbl_803E605C;
+extern f32 lbl_803E5F94;
+
+#pragma scheduling off
+#pragma peephole off
+void vfplevelcontrol_initialise(void) {
+    lbl_803DC148 = 0x82;
+}
+
+int fn_801F7FF4(int obj) {
+    *(u8 *)(*(int *)(obj + 0xb8) + 0x296) = 1;
+    return 0;
+}
+
+int fn_801FB220(int obj) {
+    *(u8 *)(*(int *)(obj + 0xb8) + 0x1c) |= 0x40;
+    return 0;
+}
+
+void vfplift_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
+    objRenderFn_8003b8f4(lbl_803E60F0);
+}
+
+void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
+    objRenderFn_8003b8f4(lbl_803E605C);
+}
+
+void wmwallcrawler_free(int obj) {
+    ObjGroup_RemoveObject(obj, 3);
+}
+
+void dll_219_free(int obj) {
+    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
+}
+
+void dll_219_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((s8)init[0x18] << 8);
+    *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+}
+
+void wmspiritset_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((s8)init[0x18] << 8);
+    if (*(s16 *)((char *)obj + 0x46) == 0x264) {
+        *(f32 *)((char *)obj + 8) = lbl_803E5F94;
+    }
+    *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
+}
+
+void wmsun_free(int obj) {
+    int *inner = *(int **)(obj + 0xb8);
+    if (*(void **)((char *)inner + 8) != NULL) {
+        mm_free(*(void **)((char *)inner + 8));
+    }
+    *(int *)((char *)inner + 8) = 0;
+}
+
+void vfplevelcontrol_free(int obj) {
+    timeOfDayFn_80055000();
+    ObjGroup_RemoveObject(obj, 9);
+    Music_Trigger(0xe1, 0);
+}
+
+void vfpladders_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((s8)init[0x18] << 8);
+    *(s16 *)((char *)inner + 2) = *(s16 *)((char *)init + 0x20);
+    *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
+    *(u16 *)((char *)obj + 0xb0) |= 0x6000;
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801FAFEC;
+}
+
+void vfpobjcreator_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((s8)init[0x1e] << 8);
+    *(s16 *)inner = *(s16 *)((char *)init + 0x18);
+    *(s16 *)((char *)inner + 2) = *(s16 *)((char *)init + 0x1c);
+    *(s16 *)((char *)inner + 4) = *(s16 *)((char *)inner + 2);
+    *(s16 *)((char *)inner + 6) = (s8)init[0x1f];
+    *(s16 *)((char *)inner + 8) = init[0x20];
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
