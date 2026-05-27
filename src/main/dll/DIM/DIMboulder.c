@@ -1307,6 +1307,51 @@ void dll_16C_hitDetect(void *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int objUpdateOpacity(int *obj);
+extern void ObjPath_GetPointWorldPosition(int *obj, int idx, f32 *x, f32 *y, f32 *z, int e);
+extern f32 lbl_803E4758;
+#pragma scheduling off
+#pragma peephole off
+void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
+    int *extra;
+    int *p;
+    int hit;
+
+    if (*(s16 *)((char *)obj + 0x46) != 883) {
+        if (GameBit_Get(110) != 0) {
+            if (GameBit_Get(898) == 0) return;
+        }
+        extra = *(int **)((char *)obj + 0xb8);
+        p = (int *)*extra;
+        hit = 0;
+        if (p != NULL) {
+            if ((*(int (**)(int *))(**(int **)((char *)p + 0x68) + 0x38))(p) == 2) {
+                hit = 1;
+            }
+        }
+        if (hit != 0) {
+            *(s16 *)((char *)obj + 6) |= 8;
+            visible = (s8)objUpdateOpacity(p);
+            fn_801AD7E4(obj, p, p1, p2, p3, p4, visible, *(u8 *)((char *)extra + 0x20), 1);
+        } else {
+            *(s16 *)((char *)obj + 6) &= ~8;
+        }
+        if ((s8)visible != 0 && *(u8 *)((char *)extra + 0x20) != 0) {
+            u8 saved = *(u8 *)((char *)obj + 0x37);
+            if (hit != 0) {
+                *(u8 *)((char *)obj + 0x37) = *(u8 *)((char *)extra + 0x20);
+            }
+            ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4758);
+            ObjPath_GetPointWorldPosition(obj, 1, (f32 *)((char *)extra + 0x14), (f32 *)((char *)extra + 0x18), (f32 *)((char *)extra + 0x1c), 0);
+            *(u8 *)((char *)obj + 0x37) = saved;
+        }
+    } else {
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4758);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* IMIceMountain_SeqFn: set extra bit-0; scan arr for value==2 and clear two GameBits. */
 #pragma scheduling off
 #pragma peephole off
