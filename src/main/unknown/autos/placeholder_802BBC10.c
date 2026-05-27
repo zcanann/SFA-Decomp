@@ -1546,7 +1546,7 @@ extern int fn_802BC19C(int obj, int p2);
 extern int fn_802BC0D8(int obj, int p2);
 extern void fn_802BD7AC();
 extern void fn_802BCE14();
-extern void fn_802BCD04();
+extern int fn_802BCD04(int obj, int p2);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1658,6 +1658,13 @@ extern s16 lbl_803DC79A;
 extern f32 Vec_distance(int a, int b);
 extern void *Obj_GetPlayerObject(void);
 extern void fn_802BF0C8(int obj, int p2, int mode);
+extern f32 lbl_803E8304;
+extern f32 GX_F32_256;
+extern f32 lbl_803DC76C;
+extern f32 lbl_803E8338;
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 m);
+extern void playerAddHealth(int obj, int amt);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1765,6 +1772,42 @@ int fn_802C0830(int obj, int p2)
         *(f32 *)((char *)p2 + 0x2a0) = lbl_803E8408;
         break;
     }
+    }
+    return 0;
+}
+
+int fn_802BCD04(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz;
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+    fz = lbl_803E8304;
+    *(f32 *)((char *)p2 + 0x294) = fz;
+    *(f32 *)((char *)p2 + 0x284) = fz;
+    *(f32 *)((char *)p2 + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        if (((ByteFlags *)((char *)inner + 0x14ec))->b80) {
+            ObjAnim_SetCurrentMove(obj, 7, fz, 0);
+        } else {
+            ObjAnim_SetCurrentMove(obj, 8, fz, 0);
+        }
+        *(f32 *)((char *)p2 + 0x2a0) = GX_F32_256;
+    }
+    if (*(s8 *)((char *)p2 + 0x346) != 0) {
+        if (*(u8 *)((char *)inner + 0x14e6) == 2) {
+            *(s16 *)((char *)inner + 0x14e2) -= 1;
+            if (*(s16 *)((char *)inner + 0x14e2) <= 0) {
+                *(f32 *)((char *)inner + 0x1444) = lbl_803DC76C;
+                Camera_EnableViewYOffset();
+                CameraShake_SetAllMagnitudes(lbl_803E8338);
+                playerAddHealth((int)Obj_GetPlayerObject(), -1);
+                *(s16 *)((char *)inner + 0x14e2) = 0;
+            }
+            return *(int *)((char *)inner + 0x14d8) + 1;
+        }
     }
     return 0;
 }
