@@ -81,7 +81,7 @@ void mmp_moonrock_free(int obj);
 void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_moonrock_hitDetect(void);
 void mmp_moonrock_update(void);
-void mmp_moonrock_init(void);
+void mmp_moonrock_init(int obj, int param2);
 void mmp_moonrock_release(void);
 void mmp_moonrock_initialise(void);
 

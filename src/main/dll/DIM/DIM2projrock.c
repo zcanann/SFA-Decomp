@@ -1340,3 +1340,113 @@ void dll_1DB_init(void* obj, void* p)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int getSaveGameLoadStatus(void);
+extern void gameBitFn_800ea2e0(int i);
+extern void envFxActFn_800887f8(int a);
+extern u8 lbl_803DBF28[8];
+
+#pragma peephole off
+#pragma scheduling off
+void dim2lavacontrol_init(int obj, int param2)
+{
+    int state;
+    int i;
+    int g;
+    if (getSaveGameLoadStatus() != 0) {
+        *(int *)(obj + 0xf4) = 2;
+    } else {
+        *(int *)(obj + 0xf4) = 1;
+    }
+    for (i = 1; (u8)i <= 0x2d; i++) {
+        gameBitFn_800ea2e0(i);
+    }
+    state = *(int *)(obj + 0xb8);
+    *(s8 *)(state + 0) = (s8)*(s16 *)(param2 + 0x1a);
+    *(u8 *)(state + 1) = *(u8 *)(state + 0);
+    if (GameBit_Get(*(s16 *)(param2 + 0x1e)) != 0) {
+        g = 1;
+    } else {
+        g = 0;
+    }
+    *(s8 *)(state + 2) = (s8)(*(u8 *)(state + 2) | g);
+    *(int *)(state + 0xc) = 0xd7;
+    *(u8 *)(state + 4) = 0;
+    if ((*(s8 *)(state + 2) & 1) != 0) {
+        *(u8 *)(state + 0) = 0;
+        *(u8 *)(state + 3) = lbl_803DBF28[0];
+        fn_8004C1E4(lbl_803DBF28[0], lbl_803E4B90);
+    } else {
+        *(u8 *)(state + 0) = 3;
+        *(u8 *)(state + 3) = lbl_803DBF28[3];
+        fn_8004C1E4(lbl_803DBF28[3], lbl_803E4B90);
+    }
+    Music_Trigger(0xdd, 1);
+    envFxActFn_800887f8(0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void getEnvfxActImmediately(int a, int b, int id, int d);
+extern void getEnvfxAct(int a, int b, int id, int d);
+extern int fn_802966D4(void *obj, f32 *out);
+extern void SCGameBitLatch_Update(void *p, int mask, int a, int b, int e1, int e2);
+extern void SCGameBitLatch_UpdateInverted(void *p, int mask, int a, int b, int e1, int e2);
+
+#pragma peephole off
+#pragma scheduling off
+void dim2lavacontrol_update(int obj)
+{
+    int diff;
+    f32 local[3];
+    if (*(int *)(obj + 0xf4) != 0) {
+        if (*(int *)(obj + 0xf4) == 2) {
+            getEnvfxActImmediately(0, 0, 0x163, 0);
+            getEnvfxActImmediately(0, 0, 0x166, 0);
+            getEnvfxActImmediately(0, 0, 0x165, 0);
+            getEnvfxActImmediately(0, 0, 0x164, 0);
+        } else {
+            getEnvfxAct(0, 0, 0x163, 0);
+            getEnvfxAct(0, 0, 0x166, 0);
+            getEnvfxAct(0, 0, 0x165, 0);
+            getEnvfxAct(0, 0, 0x164, 0);
+        }
+        *(int *)(obj + 0xf4) = 0;
+    }
+    obj = *(int *)(obj + 0xb8);
+    if (*(s8 *)(obj + 4) == 0) {
+        if (GameBit_Get(0xacd) != 0) {
+            GameBit_Set(0xcc3, 1);
+            *(u8 *)(obj + 4) = 1;
+        }
+    }
+    diff = *(u8 *)(obj + 3) - lbl_803DBF28[*(s8 *)(obj + 0)];
+    if (diff != 0) {
+        if (diff > 0) {
+            *(u8 *)(obj + 3) = *(u8 *)(obj + 3) - 1;
+        } else {
+            *(u8 *)(obj + 3) = *(u8 *)(obj + 3) + 1;
+        }
+        fn_8004C1E4(*(u8 *)(obj + 3), lbl_803E4B90);
+    }
+    if (fn_802966D4(Obj_GetPlayerObject(), local) != 0) {
+        if ((*(int *)(obj + 8) & 2) && *(int *)(obj + 0xc) != 0xe0) {
+            Music_Trigger(*(int *)(obj + 0xc), 0);
+            *(int *)(obj + 0xc) = 0xe0;
+            Music_Trigger(0xe0, 1);
+        }
+    } else {
+        if ((*(int *)(obj + 8) & 2) && *(int *)(obj + 0xc) != 0xd7) {
+            Music_Trigger(*(int *)(obj + 0xc), 0);
+            *(int *)(obj + 0xc) = 0xd7;
+            Music_Trigger(0xd7, 1);
+        }
+    }
+    SCGameBitLatch_Update((char *)obj + 8, 1, -1, -1, 0xd99, 0xde);
+    SCGameBitLatch_Update((char *)obj + 8, 2, -1, -1, 0xda5, *(int *)(obj + 0xc));
+    SCGameBitLatch_Update((char *)obj + 8, 8, -1, -1, 0xf04, 0x96);
+    SCGameBitLatch_UpdateInverted((char *)obj + 8, 0x10, -1, -1, 0xf04, 0x2c);
+    SCGameBitLatch_Update((char *)obj + 8, 4, -1, -1, 0xcbb, 0xc4);
+}
+#pragma peephole reset
+#pragma scheduling reset

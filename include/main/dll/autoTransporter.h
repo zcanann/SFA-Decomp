@@ -29,7 +29,7 @@ int doorf4_func08(void);
 void doorf4_free(int obj);
 void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void doorf4_hitDetect(void);
-void doorf4_update(void);
+void doorf4_update(int *obj);
 void doorf4_init(int *obj, int *params);
 void doorf4_release(void);
 void doorf4_initialise(void);

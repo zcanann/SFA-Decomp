@@ -724,8 +724,8 @@ int fn_8015E210(int *obj, u8 *p)
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2DD4;
   int *objs;
-  int i;
   int count;
+  int i;
   int *player_b8;
   int *player;
   int r;
@@ -745,7 +745,7 @@ int fn_8015E210(int *obj, u8 *p)
     }
     player_b8 = *(int **)((char *)Obj_GetPlayerObject() + 0xc8);
     player = (int *)Obj_GetPlayerObject();
-    r = (**(int (**)(int *))(*(int *)((char *)player_b8 + 0x68) + 0x44))(player_b8);
+    r = (**(int (**)(int *))(*(int *)(*(int *)((char *)player_b8 + 0x68)) + 0x44))(player_b8);
     if (r != 0) {
       if (*(s16 *)((char *)player + 0x46) == 0) {
         Sfx_PlayFromObject(obj, 498);
@@ -3270,15 +3270,15 @@ void dll_CB_init(int *obj, u8 *params, int extra) {
     extern int *gBaddieControlInterface;
     extern int *gPlayerInterface;
     u8 *sub;
-    u32 flags;
+    u8 flags;
 
     sub = *(u8**)((char*)obj + 0xb8);
     flags = 0x16;
-    if (extra != 0) flags = (u8)(flags | 1);
-    if ((params[0x2b] & 1) == 0) flags = (u8)(flags | 8);
+    if (extra != 0) flags |= 1;
+    if ((params[0x2b] & 1) == 0) flags |= 8;
     *(s16*)((char*)obj + 2) = (s16)((s8)params[0x28] << 8);
     *(s16*)((char*)obj + 4) = (s16)((s8)params[0x27] << 8);
-    ((void(*)(int*, u8*, u8*, int, int, int, u32, f32))((void**)*(int*)gBaddieControlInterface)[22])(obj, params, sub, 4, 6, 0x82, flags, lbl_803E2EA8);
+    ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(obj, params, sub, 4, 6, 0x82, flags, lbl_803E2EA8);
     *(void**)((char*)obj + 0xbc) = (void*)&dll_CB_seqFn;
     ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, sub, 0);
     *(s16*)(sub + 0x270) = 0;

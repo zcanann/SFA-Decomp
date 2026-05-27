@@ -4306,3 +4306,255 @@ void fn_800605F0(s16 *in, f32 *out)
     out[1] = (f32)(s32)in[1] * t;
     out[2] = (f32)(s32)in[2] * t;
 }
+
+int fn_80060688(int obj, int type)
+{
+    int entry;
+    int offset;
+    int total;
+    int i;
+    int count;
+    total = 0;
+    offset = 0;
+    count = *(u16 *)(obj + 0x9a);
+    for (i = 0; i < count; i++) {
+        entry = *(int *)(obj + 0x50) + offset;
+        if (type == (int)((*(u32 *)(entry + 0x10) & 0xff000000) >> 24)) {
+            total += *(u16 *)(entry + 0x14) - *(u16 *)entry;
+        }
+        offset += 0x14;
+    }
+    return total;
+}
+
+extern s16 lbl_803DCEF4;
+extern s16 lbl_803DCEF8;
+extern s16 lbl_803DCEFC;
+extern s8 lbl_803DCEEC;
+extern s8 lbl_803DCEED;
+extern s8 lbl_803DCEEE;
+extern int lbl_803DCF04;
+extern int lbl_803DCF08;
+extern int lbl_803DCF0C;
+extern int lbl_803DCF10;
+extern int lbl_803DCF14;
+extern int lbl_803DCF18;
+extern int lbl_803DCF1C;
+extern int lbl_803DCF20;
+extern int lbl_803DCF24;
+
+void fn_80062808(void)
+{
+    int v;
+    if ((s8)lbl_803DB658 == 0) {
+        return;
+    }
+    lbl_803DCEF8 = 0;
+    lbl_803DCEFC = 0;
+    lbl_803DCEF4 = 0;
+    lbl_803DCEEC = 1 - lbl_803DCEEC;
+    lbl_803DCEED = 1 - lbl_803DCEED;
+    lbl_803DCEEE = 1 - lbl_803DCEEE;
+    v = (&lbl_803DCF24)[lbl_803DCEEC];
+    lbl_803DCF08 = v;
+    lbl_803DCEF4 = 0;
+    lbl_803DCF10 = lbl_803DCF20;
+    lbl_803DCF18 = lbl_803DCF1C;
+    lbl_803DCF04 = v;
+    lbl_803DCF14 = lbl_803DCF1C;
+    lbl_803DCF0C = lbl_803DCF20;
+}
+
+extern int lbl_803DCF34;
+extern s16 lbl_803DCF5E;
+
+void fn_80065574(int matchVal, int obj, int flag)
+{
+    int count;
+    int i;
+    int base;
+    char *e;
+    if ((u32)obj != 0) {
+        base = *(int *)(obj + 0x50);
+        e = *(char **)(base + 0x34);
+        count = *(u8 *)(base + 0x5c);
+    } else {
+        e = (char *)lbl_803DCF34;
+        count = lbl_803DCF5E;
+    }
+    if (flag != 0) {
+        for (i = 0; i < count; i++) {
+            if (*(s16 *)(e + 0xc) == matchVal) {
+                *(s8 *)(e + 3) = (s8)(*(u8 *)(e + 3) & ~0x40);
+            }
+            e += 0x10;
+        }
+    } else {
+        for (i = 0; i < count; i++) {
+            if (*(s16 *)(e + 0xc) == matchVal) {
+                *(s8 *)(e + 3) = (s8)(*(u8 *)(e + 3) | 0x40);
+            }
+            e += 0x10;
+        }
+    }
+}
+
+void MapBlock_init(int obj)
+{
+    int off;
+    int i;
+    if (*(u32 *)(obj + 0x54) != 0) *(int *)(obj + 0x54) = obj + *(int *)(obj + 0x54);
+    if (*(u32 *)(obj + 0x4c) != 0) *(int *)(obj + 0x4c) = obj + *(int *)(obj + 0x4c);
+    if (*(u32 *)(obj + 0x50) != 0) *(int *)(obj + 0x50) = obj + *(int *)(obj + 0x50);
+    *(int *)(obj + 0x58) = obj + *(int *)(obj + 0x58);
+    *(int *)(obj + 0x5c) = obj + *(int *)(obj + 0x5c);
+    *(int *)(obj + 0x60) = obj + *(int *)(obj + 0x60);
+    if (*(u32 *)(obj + 0x78) != 0) *(int *)(obj + 0x78) = obj + *(int *)(obj + 0x78);
+    if (*(u32 *)(obj + 0x7c) != 0) *(int *)(obj + 0x7c) = obj + *(int *)(obj + 0x7c);
+    if (*(u32 *)(obj + 0x80) != 0) *(int *)(obj + 0x80) = obj + *(int *)(obj + 0x80);
+    *(int *)(obj + 0x68) = obj + *(int *)(obj + 0x68);
+    if (*(u32 *)(obj + 0x64) != 0) *(int *)(obj + 0x64) = obj + *(int *)(obj + 0x64);
+    for (i = 0, off = 0; i < *(u8 *)(obj + 0xa1); i++) {
+        *(int *)(*(int *)(obj + 0x68) + off) = obj + *(int *)(*(int *)(obj + 0x68) + off);
+        off += 0x1c;
+    }
+}
+
+extern void *mmAlloc(int size, int type, int flag);
+extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
+extern int lbl_803DCE80;
+
+void MapBlock_initHits(int obj, int index)
+{
+    int off;
+    int i;
+    int *table = (int *)lbl_803DCE80;
+    int fileOff = table[index];
+    int size = table[index + 1] - fileOff;
+    int entry;
+    if (size > 0) {
+        *(void **)(obj + 0x70) = mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(0x28, *(void **)(obj + 0x70), fileOff, size);
+    }
+    *(u16 *)(obj + 0x9c) = (u32)size / 20;
+    for (i = 0, off = 0; i < *(u16 *)(obj + 0x9c); i++) {
+        entry = *(int *)(obj + 0x70) + off;
+        if (*(s16 *)(entry + 0) < 0 || *(s16 *)(entry + 2) < 0 ||
+            *(s16 *)(entry + 0) > 0x280 || *(s16 *)(entry + 2) > 0x280) {
+            *(u8 *)(entry + 0xf) = 0x40;
+        }
+        entry = *(int *)(obj + 0x70) + off;
+        if (*(s16 *)(entry + 8) < 0 || *(s16 *)(entry + 0xa) < 0 ||
+            *(s16 *)(entry + 8) > 0x280 || *(s16 *)(entry + 0xa) > 0x280) {
+            *(u8 *)(entry + 0xf) = 0x40;
+        }
+        off += 0x14;
+    }
+    *(int *)(obj + 0x74) = 0;
+    *(u16 *)(obj + 0x9e) = 0;
+    *(u16 *)(obj + 4) = *(u16 *)(obj + 4) & ~0x40;
+}
+
+extern int lbl_803DCEB0;
+extern int lbl_803DCDE4;
+extern void checkLoadBlock(int v, int *outA, int *outB);
+extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
+
+void *MapBlock_loadFromFile(int blockId)
+{
+    int local_c;
+    int local_8;
+    void *buf;
+    int blockOff = 0;
+    int *table;
+    int v;
+    if (blockId > lbl_803DCEB0) {
+        return 0;
+    }
+    table = (int *)lbl_803DCDE4;
+    if (table != 0) {
+        v = table[blockId];
+        if (v != -1) {
+            if (v == 0 && table[blockId + 1] == 0) {
+                return 0;
+            }
+            blockOff = v;
+            checkLoadBlock(v, &local_c, &local_8);
+        }
+    }
+    if (local_c <= 0) {
+        return 0;
+    }
+    if (local_8 > 0x32000) {
+        return 0;
+    }
+    buf = mmAlloc(local_8, 5, 0);
+    if (buf == 0) {
+        return 0;
+    }
+    loadAndDecompressDataFile(0x25, buf, blockOff, local_c, 0, 0, 0);
+    return buf;
+}
+
+extern void texAnimFn_800567a8(int tex, int b);
+
+void MapBlock_initShaders(int obj)
+{
+    int i;
+    int j;
+    int outerOff;
+    int block;
+    char *p;
+    int v;
+    for (i = 0, outerOff = 0; i < *(u8 *)(obj + 0xa2); i++) {
+        block = *(int *)(obj + 0x64) + outerOff;
+        p = (char *)block;
+        for (j = 0; j < *(u8 *)(block + 0x41); j++) {
+            v = *(int *)(p + 0x24);
+            if (v != -1) {
+                *(int *)(p + 0x24) = ((int *)*(int *)(obj + 0x54))[v];
+                if (*(u8 *)(p + 0x29) != 0) {
+                    texAnimFn_800567a8(*(int *)(p + 0x24), 0);
+                }
+            } else {
+                *(int *)(p + 0x24) = 0;
+            }
+            *(u8 *)(p + 0x2a) = 0xff;
+            p += 8;
+        }
+        v = *(int *)(block + 0x34);
+        if (v != -1) {
+            *(int *)(block + 0x34) = ((int *)*(int *)(obj + 0x54))[v];
+        } else {
+            *(int *)(block + 0x34) = 0;
+        }
+        outerOff += 0x44;
+    }
+}
+
+extern int lbl_803DCF3C;
+
+void mapInitFn_80069990(void)
+{
+    int i;
+    int off;
+    if (lbl_803DCF30 == 0) {
+        lbl_803DCF30 = (u32)mmAlloc(0x16440, 0xffff00ff, 0);
+        lbl_803DCF34 = (int)mmAlloc(0x5dc0, 0xffff00ff, 0);
+        lbl_803DCF38 = (f32 *)mmAlloc(0x4fb0, 0xffff00ff, 0);
+        lbl_803DCF3C = (int)mmAlloc(0xbb8, 0xffff00ff, 0);
+        lbl_803DCF48 = (int)mmAlloc(0x600, 0xffff00ff, 0);
+    }
+    off = 0;
+    for (i = 0; i < 4; i++) {
+        int j;
+        for (j = 0; j < 16; j++) {
+            *(u8 *)(lbl_803DCF48 + off + 0x14 + j * 0x18) = 0;
+        }
+        off += 0x180;
+    }
+    lbl_803DCF5E = 0;
+    lbl_803DCF5C = 0;
+    lbl_803DCF4E = 0;
+    lbl_803DCF4F = 0;
+}

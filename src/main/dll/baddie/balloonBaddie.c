@@ -546,3 +546,144 @@ void FUN_801249bc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+
+extern u32 lbl_803E1E14;
+extern int ObjModel_GetRenderOp(int model, int p);
+extern void resetLotsOfRenderVars(void);
+extern void *textureIdxToPtr(int idx);
+extern void gxFn_80051fb8(void *a, int b, int c, void *d, int e, int f);
+extern void textureFn_800528bc(void);
+extern void GXSetBlendMode(int a, int b, int c, int d);
+extern void gxSetZMode_(int a, int b, int c);
+extern void gxSetPeControl_ZCompLoc_(int a);
+extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
+
+#pragma peephole off
+#pragma scheduling off
+int modelFn_80124794(int obj, int param2, int param3)
+{
+    int renderOp;
+    u8 cfg[4];
+    *(u32 *)cfg = lbl_803E1E14;
+    renderOp = ObjModel_GetRenderOp(*(int *)param2, param3);
+    resetLotsOfRenderVars();
+    cfg[3] = *(u8 *)(obj + 0x37);
+    gxFn_80051fb8(textureIdxToPtr(*(int *)(renderOp + 0x24)), 0, 0, cfg, 0, 1);
+    textureFn_800528bc();
+    GXSetBlendMode(1, 4, 5, 5);
+    gxSetZMode_(0, 7, 0);
+    gxSetPeControl_ZCompLoc_(0);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void *Obj_GetPlayerObject(void);
+extern int getTrickyObject(void);
+extern void GXSetScissor(int a, int b, int c, int d);
+extern void hudDrawTimedElement(int obj, void *p);
+extern void drawViewFinderHud(void);
+extern int getHudHiddenFrameCount(void);
+extern void textureFree(void);
+extern void *textureLoadAsset(int idx);
+extern void drawTexture(void *p, f32 a, f32 b, int c, int d);
+extern int *gCameraInterface;
+extern u8 pauseMenuState;
+extern int hudTextures[];
+extern u8 lbl_803A9398[];
+extern s16 lbl_8031B618[];
+extern int lbl_803DD738;
+extern int lbl_803DD73C;
+extern s16 lbl_803DD830;
+extern void *lbl_803DD834;
+extern f32 lbl_803E2018;
+extern f32 lbl_803E2038;
+extern f32 lbl_803E203C;
+
+#pragma peephole off
+#pragma scheduling off
+void hudFn_80125244(int obj)
+{
+    int player;
+    int tricky;
+    int local_8;
+    player = (int)Obj_GetPlayerObject();
+    tricky = getTrickyObject();
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    hudDrawTimedElement(obj, lbl_803A9398);
+    if ((void *)tricky != 0) {
+        lbl_803DD738 = (*(int (**)(int))(*(int *)(*(int *)(tricky + 0x68)) + 0x24))(tricky);
+        lbl_803DD73C = (*(int (**)(int))(*(int *)(*(int *)(tricky + 0x68)) + 0x20))(tricky);
+    } else {
+        lbl_803DD738 = 0;
+        lbl_803DD73C = 0;
+    }
+    drawViewFinderHud();
+    if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() != 0x44 &&
+        (*(u16 *)(player + 0xb0) & 0x1000) == 0 &&
+        pauseMenuState == 0 &&
+        (void *)tricky != 0 &&
+        getHudHiddenFrameCount() == 0) {
+        (*(int (**)(int, int *))(*(int *)(*(int *)(tricky + 0x68)) + 0x48))(tricky, &local_8);
+        if (lbl_803DD834 != 0) {
+            if (lbl_803DD830 != local_8) {
+                textureFree();
+                lbl_803DD830 = -1;
+                lbl_803DD834 = 0;
+            }
+        }
+        if (lbl_803DD834 == 0) {
+            if (local_8 > -1) {
+                if (lbl_8031B618[local_8] != -1) {
+                    lbl_803DD834 = textureLoadAsset(lbl_8031B618[local_8]);
+                }
+            }
+        }
+        lbl_803DD830 = (s16)local_8;
+        if (lbl_803DD834 != 0) {
+            drawTexture((void *)hudTextures[0x1d], lbl_803E2018, lbl_803E2038, 0xff, 0x100);
+            drawTexture(lbl_803DD834, lbl_803E2018, lbl_803E203C, 0xff, 0x80);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u32 lbl_803E1E10;
+extern void *lbl_803A93C4[7];
+extern int lbl_803A93A8[7];
+extern f32 lbl_803E2010;
+extern f64 lbl_803E1E88;
+extern void gxColorFn_80052764(void *p);
+
+#pragma peephole off
+#pragma scheduling off
+int cMenuRenderFn_80124854(int obj, int param2, int param3)
+{
+    int idx;
+    void *tex;
+    u8 cfg[4];
+    *(u32 *)cfg = lbl_803E1E10;
+    idx = *(u8 *)(ObjModel_GetRenderOp(*(int *)param2, param3) + 0x29) - 1;
+    resetLotsOfRenderVars();
+    if (idx >= 0 && idx <= 6 && (tex = lbl_803A93C4[idx]) != 0) {
+        if (lbl_803A93A8[idx] != 0) {
+            cfg[3] = *(u8 *)(obj + 0x37);
+        } else {
+            cfg[3] = (int)(lbl_803E2010 * (f32)(u32)*(u8 *)(obj + 0x37));
+        }
+        gxFn_80051fb8(tex, 0, 0, cfg, 0, 1);
+    } else {
+        cfg[3] = 0;
+        gxColorFn_80052764(cfg);
+    }
+    textureFn_800528bc();
+    GXSetBlendMode(1, 4, 5, 5);
+    gxSetZMode_(0, 7, 0);
+    gxSetPeControl_ZCompLoc_(0);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset

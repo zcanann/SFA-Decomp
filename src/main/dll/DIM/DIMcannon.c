@@ -1910,6 +1910,7 @@ void imanimspacecraft_initialise(void) {}
 void imspacethruster_hitDetect(void) {}
 void imspacethruster_release(void) {}
 void imspacethruster_initialise(void) {}
+
 void imspacering_free(void) {}
 void imspacering_hitDetect(void) {}
 void imspacering_release(void) {}
@@ -2074,6 +2075,129 @@ void link_levcontrol_free(int obj) {
         case 0x48:
         case 0x49: Music_Trigger(0x36, 0); break;
     }
+}
+extern void *gSHthorntailAnimationInterface;
+extern void SCGameBitLatch_Update(void *p, int a, int b, int c, int d, int e);
+void fn_801AF568(int *obj) {
+    int *sub = *(int **)((char *)obj + 0xb8);
+    switch (*(s8 *)((char *)obj + 0xac)) {
+    case 0x47:
+        if (((int (*)(int))((void **)*(int *)gSHthorntailAnimationInterface)[9])(0) != 0) {
+            if (sub[2] != 0x2d) {
+                sub[2] = 0x2d;
+                Music_Trigger(0x2d, 1);
+            }
+        } else {
+            if (sub[2] != 0x33) {
+                sub[2] = 0x33;
+                Music_Trigger(0x33, 1);
+            }
+        }
+        break;
+    case 0x48:
+        if (GameBit_Get(0xe1e) == 0) {
+            if (GameBit_Get(0xb72) != 0) {
+                if (sub[2] != 0x95) {
+                    sub[2] = 0x95;
+                    Music_Trigger(0x95, 1);
+                }
+            } else if (((int (*)(int))((void **)*(int *)gSHthorntailAnimationInterface)[9])(0) != 0) {
+                if (sub[2] != 0x2d) {
+                    sub[2] = 0x2d;
+                    Music_Trigger(0x2d, 1);
+                }
+            } else {
+                if (sub[2] != 0x33) {
+                    sub[2] = 0x33;
+                    Music_Trigger(0x33, 1);
+                }
+            }
+            SCGameBitLatch_Update((char *)sub + 0xc, 1, -1, -1, 0xe1e, 0x36);
+        }
+        break;
+    }
+}
+extern void fn_80088870(u8 *a, u8 *b, u8 *c, u8 *d);
+extern void envFxActFn_800887f8(int id);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern u8 lbl_803239F0[];
+void fn_801AF6DC(int *obj) {
+    u8 *tbl = lbl_803239F0;
+    switch (*(s8 *)((char *)obj + 0xac)) {
+    case 0x47:
+        fn_80088870(tbl + 0x38, tbl, tbl + 0x70, tbl + 0xa8);
+        if (*(int *)((char *)obj + 0xf4) == 2) {
+            envFxActFn_800887f8(0x3f);
+        } else {
+            envFxActFn_800887f8(0x1f);
+        }
+        Music_Trigger(0xc2, 0);
+        Music_Trigger(0xce, 0);
+        Music_Trigger(0xcc, 0);
+        Music_Trigger(0xdb, 0);
+        Music_Trigger(0xf2, 0);
+        break;
+    case 0x45:
+        skyFn_80088c94(7, 0);
+        envFxActFn_800887f8(0);
+        getEnvfxAct(0, 0, 0x13e, 0);
+        getEnvfxAct(0, 0, 0x140, 0);
+        getEnvfxAct(0, 0, 0x13f, 0);
+        Music_Trigger(0xda, 1);
+        break;
+    case 0x49:
+        Music_Trigger(0x36, 1);
+        break;
+    case 0x48:
+        Music_Trigger(0xc8, 0);
+        break;
+    case 0x46:
+        Music_Trigger(0xe1, 0);
+        Music_Trigger(0x96, 1);
+        break;
+    }
+}
+extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
+extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
+extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798, lbl_803E4788;
+extern s16 lbl_80323818[], lbl_80323824[];
+void imspacethruster_init(int *obj, u8 *param2) {
+    u8 *sub = *(u8 **)((char *)obj + 0xb8);
+    int model;
+    *(s16 *)obj = (s16)((s8)param2[0x18] << 8);
+    *(s16 *)((char *)obj + 2) = *(s16 *)((char *)param2 + 0x1a);
+    *(s8 *)((char *)obj + 0xad) = (s8)*(s16 *)((char *)param2 + 0x1c);
+    sub[0] = param2[0x19];
+    switch (sub[0]) {
+    case 0:
+    case 1:
+        *(f32 *)((char *)obj + 8) = lbl_803E47A8;
+        break;
+    case 2:
+    case 3:
+        *(f32 *)((char *)obj + 8) = lbl_803E47AC;
+        break;
+    case 5:
+    case 6:
+        *(f32 *)((char *)obj + 8) = lbl_803E47B0;
+        break;
+    case 4:
+        *(f32 *)((char *)obj + 8) = lbl_803E47B4;
+        break;
+    }
+    model = ((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)];
+    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4798, 0);
+    ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4788);
+    {
+        u32 v = sub[0];
+        if (v < 5) {
+            *(int *)(sub + 4) = (int)mmAlloc(0x28, 0x12, 0);
+            getTabEntry(*(void **)(sub + 4), 0xc, lbl_80323818[v] * 0x28, 0x28);
+            *(int *)(sub + 8) = (int)mmAlloc(0x28, 0x12, 0);
+            getTabEntry(*(void **)(sub + 8), 0xc, lbl_80323824[v] * 0x28, 0x28);
+        }
+    }
+    *(u8 *)((char *)obj + 0x36) = 0;
 }
 void link_levcontrol_update(int *obj) {
     s8 *inner = *(s8 **)((char *)obj + 0xb8);

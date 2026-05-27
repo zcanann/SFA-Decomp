@@ -55,7 +55,7 @@ int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3);
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void imicemountain_hitDetect(void);
 void imicemountain_update(void);
-void imicemountain_init(void);
+void imicemountain_init(int* obj);
 
 int crrockfall_getExtraSize(void);
 int crrockfall_func08(void);
@@ -73,7 +73,7 @@ void magiclight_free(int obj);
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void magiclight_hitDetect(void);
 void magiclight_update(int obj);
-void magiclight_init(void);
+void magiclight_init(int* obj, u8* params);
 void magiclight_release(void);
 void magiclight_initialise(void);
 

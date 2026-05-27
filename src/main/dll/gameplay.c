@@ -1516,31 +1516,32 @@ int saveFn_800e8508(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gplaySaveGame(undefined8 param_1,double param_2,undefined8 param_3,
-                                          undefined8 param_4,undefined8 param_5,
-                                          undefined8 param_6,undefined8 param_7,
-                                          undefined8 param_8,byte param_9)
+extern s8 lbl_803DB890;
+extern u8 *lbl_803DD498;
+extern u32 pRestartPoint;
+extern void *memcpy(void *dst, const void *src, u32 n);
+extern int _saveGame(int a, int b, int c);
+
+void gplaySaveGame(int param)
 {
-  DAT_803a3f29 = 0;
-  DAT_803dc4f0 = param_9;
-  if (DAT_803a3f2a == '\0') {
-    param_1 = FUN_80003494((uint)DAT_803de110,0x803a3f08,0x564);
-    if (DAT_803de114 != 0) {
-      param_1 = FUN_80003494(DAT_803de114,0x803a3f08,0x564);
+  lbl_803A32A8[0x21] = 0;
+  lbl_803DB890 = (s8)param;
+  if (lbl_803A32A8[0x22] == 0) {
+    memcpy(lbl_803DD498, lbl_803A32A8, 0x564);
+    if (pRestartPoint != 0) {
+      memcpy((void *)pRestartPoint, lbl_803A32A8, 0x564);
     }
   }
-  if (DAT_803dc4f0 == 0xff) {
-    DAT_803dc4f0 = 0;
+  if ((s8)lbl_803DB890 == -1) {
+    lbl_803DB890 = 0;
   }
-  if (*DAT_803de110 < '\x01') {
-    *DAT_803de110 = '\x01';
+  if ((s8)lbl_803DD498[0] < 1) {
+    lbl_803DD498[0] = 1;
   }
-  if (DAT_803de110[0xc] < '\x01') {
-    DAT_803de110[0xc] = '\x01';
+  if ((s8)lbl_803DD498[0xc] < 1) {
+    lbl_803DD498[0xc] = 1;
   }
-  FUN_80072564(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)DAT_803dc4f0,
-               DAT_803de110,&gGameplayPreviewSettings);
-  return;
+  _saveGame((u8)lbl_803DB890, (int)lbl_803DD498, (int)saveData);
 }
 
 /*
@@ -1582,27 +1583,24 @@ void titleDoLoadSave(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void saveGame_save(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                   undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void saveGame_save(void)
 {
-  if (DAT_803a3f2a == '\0') {
-    param_1 = FUN_80003494((uint)DAT_803de110,0x803a3f08,0x564);
-    if (DAT_803de114 != 0) {
-      param_1 = FUN_80003494(DAT_803de114,0x803a3f08,0x564);
+  if (lbl_803A32A8[0x22] == 0) {
+    memcpy(lbl_803DD498, lbl_803A32A8, 0x564);
+    if (pRestartPoint != 0) {
+      memcpy((void *)pRestartPoint, lbl_803A32A8, 0x564);
     }
   }
-  if (DAT_803dc4f0 == 0xff) {
-    DAT_803dc4f0 = 0;
+  if ((s8)lbl_803DB890 == -1) {
+    lbl_803DB890 = 0;
   }
-  if (*DAT_803de110 < '\x01') {
-    *DAT_803de110 = '\x01';
+  if ((s8)lbl_803DD498[0] < 1) {
+    lbl_803DD498[0] = 1;
   }
-  if (DAT_803de110[0xc] < '\x01') {
-    DAT_803de110[0xc] = '\x01';
+  if ((s8)lbl_803DD498[0xc] < 1) {
+    lbl_803DD498[0xc] = 1;
   }
-  FUN_80072564(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)DAT_803dc4f0,
-               DAT_803de110,&gGameplayPreviewSettings);
-  return;
+  _saveGame((u8)lbl_803DB890, (int)lbl_803DD498, (int)saveData);
 }
 
 /*
@@ -12904,6 +12902,115 @@ u8 getNextTaskHintText(void) { u8 *p = (u8*)getLastSavedGameTexts(); return p[5]
 #pragma scheduling off
 #pragma peephole off
 void SaveGame_gplayClearRestartPoint(void) { if (pRestartPoint != 0) { mm_free(pRestartPoint); pRestartPoint = 0; } }
+extern void *memcpy(void *dst, const void *src, u32 n);
+extern void loadMapForCurrentSaveGame(void);
+void SaveGame_gplayGotoRestartPoint(void) {
+    if (pRestartPoint != 0) {
+        memcpy(lbl_803A32A8, (void *)pRestartPoint, 0x6ec);
+    } else {
+        memcpy(lbl_803A32A8, lbl_803DD498, 0x6ec);
+    }
+    loadMapForCurrentSaveGame();
+}
+void SaveGame_gplayGotoSavegame(void) {
+    if ((s8)lbl_803DD498[0] < 1) lbl_803DD498[0] = 1;
+    if ((s8)lbl_803DD498[0xc] < 1) lbl_803DD498[0xc] = 1;
+    memcpy(lbl_803A32A8, lbl_803DD498, 0x6ec);
+    loadMapForCurrentSaveGame();
+}
+extern void unlockLevel(int a, int b, int c);
+extern void *memset(void *p, int v, u32 n);
+extern void cutsceneExit(void);
+extern void audioStopByMask(int mask);
+extern void stopRumble2(void);
+extern void resetYbutton(void);
+extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
+extern int getCurUiDll(void);
+extern void loadUiDll(int dll);
+extern void screenTransitionFn_800d7b04(int duration, int type);
+void loadMapForCurrentSaveGame(void) {
+    char *base;
+    lbl_803DD494 = -1;
+    lbl_803DD48C = -1;
+    unlockLevel(0, 0, 1);
+    memset((char *)lbl_803A32A8 + 0x6ec, 0, 0x884);
+    cutsceneExit();
+    audioStopByMask(7);
+    stopRumble2();
+    resetYbutton();
+    base = (char *)lbl_803A32A8 + *(u8 *)((char *)lbl_803A32A8 + 0x20) * 16;
+    mapLoadByCoords(*(f32 *)(base + 0x684), *(f32 *)(base + 0x688), *(f32 *)(base + 0x68c), *(s8 *)(base + 0x691));
+    if (getCurUiDll() != 4) {
+        loadUiDll(1);
+    }
+    screenTransitionFn_800d7b04(0x1e, 1);
+    lbl_803DD488 = 2;
+}
+extern void *Obj_GetPlayerObject(void);
+extern int fn_802966D4(int obj, int *out);
+extern void playerSetHeldObject(void *player, int held);
+extern f32 lbl_803E06D8;
+void saveGame_saveObjectPos(int *obj) {
+    int i;
+    char *slot;
+    int key;
+    if (*(s16 *)((char *)obj + 6) & 0x2000) return;
+    if (lbl_803DD488 != 0) return;
+    key = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
+    slot = (char *)lbl_803A32A8;
+    for (i = 0; i < 72; i++) {
+        int v = *(int *)(slot + 0x168);
+        if (v == 0) break;
+        if (v == key) break;
+        slot += 0x10;
+    }
+    if (i == 0x3f) return;
+    {
+        char *e = (char *)lbl_803A32A8 + i * 0x10;
+        *(int *)(e + 0x168) = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
+        *(f32 *)(e + 0x16c) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)(e + 0x170) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)(e + 0x174) = *(f32 *)((char *)obj + 0x14);
+    }
+    *(f32 *)(*(int *)((char *)obj + 0x4c) + 8) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)(*(int *)((char *)obj + 0x4c) + 0xc) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)(*(int *)((char *)obj + 0x4c) + 0x10) = *(f32 *)((char *)obj + 0x14);
+}
+void Carryable_stopCarrying(int *obj, u8 *param2) {
+    void *player = Obj_GetPlayerObject();
+    int held;
+    param2[5] = 0;
+    fn_802966D4((int)player, &held);
+    if ((int *)held == obj) {
+        playerSetHeldObject(player, 0);
+    }
+}
+int Carryable_updateRenderState(int *obj, int flag) {
+    int *p50 = *(int **)((char *)obj + 0x50);
+    if (*(s16 *)((char *)p50 + 0x48) == 2) {
+        if (*(s16 *)((char *)obj + 0xb4) == -1) {
+            *(u32 *)((char *)*(int **)((char *)obj + 0x64) + 0x30) &= ~0x1000;
+        } else {
+            *(u32 *)((char *)*(int **)((char *)obj + 0x64) + 0x30) |= 0x1000;
+        }
+    }
+    if (*(int *)((char *)obj + 0xf8) != 0) {
+        if (flag != -1) return 0;
+    } else {
+        if (flag == 0) return 0;
+    }
+    return 1;
+}
+void objSaveFn_800ea774(int *obj) {
+    u8 *sub = *(u8 **)((char *)obj + 0xb8);
+    sub[5] = 0;
+    sub[6] = 0;
+    if ((sub[7] & 8) == 0) {
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) + lbl_803E06D8;
+        saveGame_saveObjectPos(obj);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - lbl_803E06D8;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -13045,9 +13152,173 @@ void SaveGame_resetObjGroups(int idx) {
     if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
     lbl_803A2FBC[idx] = 0;
 }
+extern u32 GameBit_Get(int eventId);
+void SaveGame_mapUpdateObjGroups(int idx) {
+    u16 bit;
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    bit = lbl_80311810[idx];
+    if (bit != 0) {
+        lbl_803A2FBC[idx] = GameBit_Get(bit);
+    }
+}
+extern u16 lbl_80311720[];
+u8 SaveGame_getMapAct(int idx) {
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    if (idx != lbl_803DD494) {
+        lbl_803DD494 = (s8)idx;
+        if (idx < 0 || idx >= 0x78 || lbl_80311720[idx] == 0) {
+            *((s8*)&lbl_803DD494 + 1) = 0;
+        } else {
+            *((s8*)&lbl_803DD494 + 1) = (s8)GameBit_Get(lbl_80311720[idx]);
+        }
+    }
+    return *((u8*)&lbl_803DD494 + 1);
+}
+int SaveGame_gplayGetObjGroupStatus(int idx, int shift) {
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    if (idx != lbl_803DD48C) {
+        lbl_803DD48C = idx;
+        (&lbl_803DD48C)[1] = GameBit_Get(lbl_80311810[idx]);
+    }
+    return ((&lbl_803DD48C)[1] >> shift) & 1;
+}
+extern void GameBit_Set(int eventId, int value);
+void SaveGame_gplaySetAct(int idx, int act) {
+    int j;
+    u16 bit;
+    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    GameBit_Set(lbl_80311720[idx], act);
+    lbl_803DD494 = (s8)idx;
+    *((s8*)&lbl_803DD494 + 1) = (s8)act;
+    j = idx;
+    if (j >= 0x50) j = *(u8*)((char*)lbl_803A319C + j - 0x50);
+    bit = lbl_80311810[j];
+    if (bit != 0) {
+        lbl_803A2FBC[j] = GameBit_Get(bit);
+    }
+}
+s8 mapBitFindFn(int a, int b) {
+    int i;
+    s8 *p;
+    for (i = 0, p = lbl_803A2F80; i < 20; i++) {
+        if (a == p[0] && b == ((u8 *)p)[1]) {
+            return (s8)i;
+        }
+        p += 3;
+    }
+    return -1;
+}
+void SaveGame_gplaySavePoint(f32 *pos, s16 angle, int flags, int mapByte) {
+    u8 *base;
+    if (flags & 4) {
+        lbl_803A32A8[0x22] = 0;
+    }
+    base = lbl_803A32A8;
+    if (base[0x22] == 0) {
+        if (flags & 1) {
+            memcpy(lbl_803DD498, base, 0x5d8);
+            if (pRestartPoint != 0) {
+                memcpy((void *)pRestartPoint, lbl_803A32A8, 0x5d8);
+            }
+        } else {
+            *(f32 *)(base + base[0x20] * 16 + 0x684) = pos[0];
+            *(f32 *)(base + base[0x20] * 16 + 0x688) = pos[1];
+            *(f32 *)(base + base[0x20] * 16 + 0x68c) = pos[2];
+            *(s8 *)(base + base[0x20] * 16 + 0x690) = (s8)(angle >> 8);
+            *(s8 *)(base + base[0x20] * 16 + 0x691) = (s8)mapByte;
+            memcpy(lbl_803DD498, base, 0x6ec);
+            if (pRestartPoint != 0) {
+                mm_free(pRestartPoint);
+                pRestartPoint = 0;
+            }
+        }
+    }
+    if (flags & 2) {
+        base[0x22] = 1;
+    }
+}
+extern int fn_80296AE8(int obj);
+extern void playerAddHealth(u8 *player, int v);
+extern void *mmAlloc(int size, int heap, int flags);
+void SaveGame_gplayRestartPoint(f32 *pos, s16 angle, int b691, int flag) {
+    int healed = 0;
+    if (pRestartPoint == 0) {
+        pRestartPoint = (u32)mmAlloc(0x6ec, 0xffff00ff, 0);
+        if (pRestartPoint == 0) return;
+    }
+    if (flag != 0) {
+        GameBit_Set(0x970, 1);
+        if (fn_80296AE8((int)Obj_GetPlayerObject()) > 1) {
+            playerAddHealth((u8 *)Obj_GetPlayerObject(), -1);
+            healed = 1;
+        }
+    }
+    memcpy((void *)pRestartPoint, lbl_803A32A8, 0x6ec);
+    *(f32 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x684) = pos[0];
+    *(f32 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x688) = pos[1];
+    *(f32 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x68c) = pos[2];
+    *(s8 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x690) = (s8)(angle >> 8);
+    *(s8 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x691) = (s8)b691;
+    GameBit_Set(0x970, 0);
+    if (flag != 0 && healed != 0) {
+        playerAddHealth((u8 *)Obj_GetPlayerObject(), 1);
+    }
+}
+extern char *sMapDirectoryNameTable[];
+extern u8 lbl_803A4218[];
+void loadTaskTexts(void) {
+    int i;
+    int idx;
+    u8 *s;
+    u8 *p = &lbl_803A4218[0xd];
+    int n = 0xd;
+    while (n-- != 0) {
+        *--p = 0xff;
+    }
+    for (i = 0x49; i != 0; i--) {
+        s = (u8 *)sMapDirectoryNameTable[i];
+        if (s[0] == 'T' && s[1] == 'a' && s[2] == 's' && s[3] == 'k' &&
+            s[4] == 'T' && s[5] == 'e' && s[6] == 'x' && s[7] == 't' && s[8] == 's') {
+            idx = (s[9] - '0') * 100 + (s[10] - '0') * 10 + s[11] - '0';
+            if (idx < 0xd) {
+                lbl_803A4218[idx] = (u8)i;
+            }
+        }
+    }
+}
+void mapBitsFn_800e9418(void) {
+    s8 *p;
+    int i;
+    for (i = 0, p = lbl_803A2F80; i < 20; i++) {
+        if (p[0] != -1) {
+            p[2]--;
+            if (p[2] <= 0) {
+                p[0] = -1;
+            }
+        }
+        p += 3;
+    }
+}
 extern s16 lbl_803119E0[];
 u8 getCurTaskHintTextMap(void) {
     return (u8)(s32)lbl_803119E0[*(u8*)((char*)getLastSavedGameTexts() + 0x5)];
+}
+void hintTextFn_800ea174(u8 *out) {
+    u8 *texts = (u8 *)getLastSavedGameTexts();
+    s16 i;
+    for (i = 0; i < 0xd; i++) {
+        out[i] = (u8)GameBit_Get(i + 0xf10);
+    }
+    out[lbl_803119E0[texts[5]]] = 1;
+}
+extern int getCurGameText(void);
+extern void gameTextLoadDir(int dirId);
+extern u8 lbl_803A4218[];
+int hintTextMapFn_800ea264(void) {
+    int r = getCurGameText();
+    u8 *t = (u8 *)getLastSavedGameTexts();
+    gameTextLoadDir(lbl_803A4218[lbl_803119E0[t[5]]]);
+    return r;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -13064,6 +13335,44 @@ void screens_remove(void) {
         lbl_803DD4A4 = 0;
         lbl_803DD4A8 = 0;
     }
+}
+void screens_remove2(void) {
+    if (lbl_803DD4A0 != 0) {
+        mm_free(lbl_803DD4A0);
+        lbl_803DD4A0 = 0;
+        lbl_803DD4A4 = 0;
+        lbl_803DD4AC = (u32)-1;
+    }
+}
+extern void loadAssetFileById(void **out, int id);
+extern void *mmAlloc(int size, int heap, int flags);
+extern void getTabEntry(void *dst, int fileId, int offset, int size);
+void screens_show(int id) {
+    int *asset = NULL;
+    int *p;
+    int count;
+    int offset, size;
+    if ((int)lbl_803DD4AC != id) {
+        loadAssetFileById((void **)&asset, 0x19);
+        count = 0;
+        p = asset;
+        while (*p != -1) {
+            p++;
+            count++;
+        }
+        if (id < 0 || id >= count - 1) id = 0;
+        offset = asset[id];
+        size = asset[id + 1] - offset;
+        if (size != (int)lbl_803DD4A4) {
+            if (lbl_803DD4A0 != 0) mm_free(lbl_803DD4A0);
+            lbl_803DD4A0 = (u32)mmAlloc(size, 2, 0);
+        }
+        lbl_803DD4A4 = size;
+        getTabEntry((void *)lbl_803DD4A0, 0x18, offset, size);
+        mm_free((u32)asset);
+        lbl_803DD4AC = id;
+    }
+    lbl_803DD4A8 = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset

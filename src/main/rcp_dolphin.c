@@ -2862,3 +2862,253 @@ int textureCrazyPointerFollowFn_80054c30(int *p, int n) {
 #pragma scheduling off
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void shaderInit(u8 *def, void **out, u8 *obj)
+{
+    void **slot;
+    void *s;
+
+    if (*(void **)(def + 0x8) != NULL) {
+        if (obj != NULL)
+            slot = (void **)(lbl_8037E000 + (6 - (obj[0xf2] + 1)) * 0x1C);
+        else
+            slot = (void **)(lbl_8037E000 + 0x8C);
+        s = *slot;
+        (*(u16 *)((char *)s + 0xE))++;
+        out[0] = *slot;
+    }
+    if (*(void **)(def + 0x14) == NULL)
+        return;
+    if (def[0x20] >= 6)
+        slot = (void **)lbl_8037E000;
+    else
+        slot = (void **)(lbl_8037E000 + (def[0x20] >> 1) * 0x1C);
+    s = *slot;
+    (*(u16 *)((char *)s + 0xE))++;
+    out[1] = *slot;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern void selectTexture(int handle, int slot);
+
+#pragma scheduling off
+#pragma peephole off
+void textureFn_800541ac(int p1, int *tex, void *forceTex, int flags, int packed)
+{
+    int i;
+    int idx, count;
+    int *node;
+    int *cur;
+    int *result;
+    int *walk;
+    u16 f10;
+
+    if (tex == NULL)
+        return;
+    idx = packed >> 16;
+    f10 = *(u16 *)((char *)tex + 0x10);
+    if (f10 != 0)
+        count = f10 >> 8;
+    else
+        count = 0;
+    cur = tex;
+    result = tex;
+    if (count > 1 && idx < count) {
+        node = tex;
+        for (i = 0; i < idx && node != NULL; i++)
+            node = *(int **)node;
+        if (node != NULL)
+            cur = node;
+        if (flags & 0x40) {
+            if (flags & 0x80000) {
+                idx--;
+                if (idx < 0) {
+                    if (flags & 0x40000)
+                        idx += 2;
+                    else
+                        idx = 0;
+                }
+            } else {
+                idx++;
+                if (idx >= count) {
+                    if (flags & 0x40000)
+                        idx -= 2;
+                    else
+                        idx = count - 1;
+                }
+            }
+            walk = tex;
+            for (i = 0; i < idx && walk != NULL; i++)
+                walk = *(int **)walk;
+            if (walk != NULL)
+                result = walk;
+        } else {
+            result = cur;
+        }
+    }
+    if (forceTex != NULL)
+        result = forceTex;
+    selectTexture((int)cur, 0);
+    selectTexture((int)result, 1);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern u8 framesThisStep;
+
+#pragma scheduling off
+#pragma peephole off
+void textureAnimFn_80053f2c(u8 *def, u32 *node, int *cnt)
+{
+    u32 a, b, c;
+    u32 v;
+    int r;
+    int flag2;
+
+    v = node[0];
+    a = v & 0x80000;
+    b = v & 0x40000;
+    c = v & 0x20000;
+    if (c != 0) {
+        if (b == 0) {
+            r = randomGetRange(0, 0x3e8);
+            if (r > 0x3d9) {
+                node[0] &= ~0x80000;
+                node[0] |= 0x40000;
+            }
+        } else if (a == 0) {
+            *cnt += *(u16 *)(def + 0x14) * framesThisStep;
+            if (*cnt >= *(u16 *)(def + 0x10)) {
+                *cnt = *(u16 *)(def + 0x10) * 2 - 1 - *cnt;
+                if (*cnt < 0) {
+                    *cnt = 0;
+                    node[0] &= ~0xc0000;
+                } else {
+                    node[0] |= 0x80000;
+                }
+            }
+        } else {
+            *cnt -= *(u16 *)(def + 0x14) * framesThisStep;
+            if (*cnt < 0) {
+                *cnt = 0;
+                node[0] &= ~0xc0000;
+            }
+        }
+    } else if (b != 0) {
+        if (a == 0)
+            *cnt += *(u16 *)(def + 0x14) * framesThisStep;
+        else
+            *cnt -= *(u16 *)(def + 0x14) * framesThisStep;
+        do {
+            flag2 = 0;
+            if (*cnt < 0) {
+                *cnt = -*cnt;
+                node[0] &= ~0x80000;
+                flag2 = 1;
+            }
+            if (*cnt >= *(u16 *)(def + 0x10)) {
+                *cnt = *(u16 *)(def + 0x10) * 2 - 1 - *cnt;
+                node[0] |= 0x80000;
+                flag2 = 1;
+            }
+        } while (flag2 != 0);
+    } else if (a == 0) {
+        *cnt += *(u16 *)(def + 0x14) * framesThisStep;
+        while (*cnt >= *(u16 *)(def + 0x10))
+            *cnt -= *(u16 *)(def + 0x10);
+    } else {
+        *cnt -= *(u16 *)(def + 0x14) * framesThisStep;
+        while (*cnt < 0)
+            *cnt += *(u16 *)(def + 0x10);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern char lbl_803822C8[];
+extern void *lbl_80386468[];
+extern int *gMapEventInterface;
+extern int *Obj_SetupObject(int *obj, int p1, int p2, int p3, int p4);
+
+#pragma scheduling off
+#pragma peephole off
+void mapInstantiateObjects(int *p1, int mapId, int index, int p4)
+{
+    int *seg = (int *)(lbl_803822C8 + mapId * 0x8c);
+    char *romBase;
+    char *p, *obj, *end;
+    int objIndex, i;
+    int visible, v, flag;
+    int byteIdx, bit;
+    s8 *vis;
+
+    if (seg[index] == -1)
+        return;
+    objIndex = 0;
+    romBase = *(char **)((char *)p1 + 0x20);
+    p = romBase;
+    obj = romBase + seg[index];
+    while (p < obj) {
+        objIndex++;
+        p += *(u8 *)(p + 2) * 4;
+    }
+    for (i = index + 1; i <= 0x20; i++) {
+        if (seg[i] != -1)
+            break;
+    }
+    end = romBase + seg[i];
+
+    while (obj < end) {
+        if (objIndex < 0) {
+            visible = 0;
+        } else {
+            void *bm = lbl_80386468[mapId];
+            byteIdx = objIndex >> 3;
+            if (byteIdx >= 0xc4) {
+                visible = 0;
+            } else {
+                bit = 1 << (objIndex & 7);
+                vis = *(s8 **)((char *)bm + 0x10);
+                if ((bit & vis[byteIdx]) != 0)
+                    visible = 1;
+                else
+                    visible = 0;
+            }
+        }
+        if (visible == 0) {
+            v = (*(u8 (*)(int))(*(int *)(*gMapEventInterface + 0x40)))(mapId);
+            if (v == -1) {
+                flag = 0;
+            } else if (v == 0) {
+                flag = 1;
+            } else if (v < 9) {
+                if ((*(u8 *)(obj + 3) >> (v - 1)) & 1)
+                    flag = 0;
+                else
+                    flag = 1;
+            } else {
+                if ((*(u8 *)(obj + 5) >> (0x10 - v)) & 1)
+                    flag = 0;
+                else
+                    flag = 1;
+            }
+            if (flag != 0) {
+                if (objIndex >= 0) {
+                    byteIdx = objIndex >> 3;
+                    bit = 1 << (objIndex & 7);
+                    vis = *(s8 **)((char *)lbl_80386468[mapId] + 0x10);
+                    vis[byteIdx] = vis[byteIdx] & ~bit;
+                    vis[byteIdx] = vis[byteIdx] | bit;
+                }
+                Obj_SetupObject((int *)obj, 1, mapId, objIndex, p4);
+            }
+        }
+        objIndex++;
+        obj += *(u8 *)(obj + 2) * 4;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset

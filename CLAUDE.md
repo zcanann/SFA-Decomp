@@ -96,6 +96,43 @@ Heuristic before reaching for `asm { }`:
     after the call, the project treats the return as `int`. Picked up
     `MMP_levelcontrol_init` in DIMlavaball via `extern int getSaveGameLoadStatus`.
 
+12. **Model a single-bit flag as a C bitfield to get `rlwimi` from CLEAN C** —
+    this **supersedes the asm `rlwimi` recipe below** for the common single-bit
+    case. When target sets a flag with `li r3,1; rlwimi rX,r3,sh,mb,me` but your
+    `field |= 0x20` emits `ori`/`andi`, declare the flag as a bitfield member
+    (`u8 x:1;` or `unsigned int x:1;`) at the bit position the `rlwimi` operands
+    imply, and assign `s->x = 1;`. MWCC then emits `li; rlwimi` matching target —
+    no asm. Read the bit position off the target `rlwimi rX,rS,sh,mb,me`
+    (`mb==me` ⇒ a single bit). Confirmed by three hunters. See `a3a86c446`
+    (gunpowderbarrel set/clear → 100%), `34ee540c0` (cfprisonguard_init → 100%).
+
+13. **Reorder C `case` labels to match target block-address order.** For a
+    `switch` MWCC lowers to a compare-chain (not a jump table), it emits the
+    case *bodies* in **source order**. If the dispatch matches but the case
+    blocks are laid out differently, reorder the `case` labels in the source to
+    the target's block order (read the block addresses off the `.s`). Clean C,
+    no asm. See `61dd19936` (DIMcannon `fn_801AF6DC` → 100%).
+
+14. **`int` parameter (not `u32`) for `(arg & bit)` flag tests → `cmpwi`.** A
+    `u32` param makes a masked-flag compare emit `cmplwi`; an `int` param emits
+    `cmpwi`. Use `int` when the caller passes a signed/int flag word. Mirror of
+    #3 (which is for the pointer case). See `1ebdcf015` (loadModelsBin → 100%).
+
+15. **`*(s8 *)(p + off)` instead of `(s8)p[off]` to land the byte in the
+    target/arg register.** The cast-pointer-deref form loads straight into the
+    destination/arg register; `(s8)p[off]` routes through a scratch first,
+    leaving an extra `mr` or wrong-reg residual. See `b42e26e71`
+    (cfpowerbase_update → 100%).
+
+16. **Clean-C local declaration order controls volatile-register coloring.**
+    Beyond the stack-offset trick (#5): when a partial's only residual is a
+    register-number permutation (logic identical — e.g. target uses r6/r4 where
+    you emit r4/r6), reorder the *local declarations*. MWCC colors volatiles
+    roughly in declaration order, so declaring the loop pointer last, or
+    swapping two `int` locals, often flips the allocation to match. No asm —
+    try this before any `register`/asm approach. See `fa209c270`
+    (fn_8019C3A0 → 100%).
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
@@ -132,7 +169,10 @@ swap which `register u32` is declared first. This is how `CameraModeCombat_free`
 and `fn_80189BE4` were taken to 100% — same body, just reordered the two
 `register` lines. See `01400901`, `a42bb90b`.
 
-For `rlwimi` (bit insert vs MWCC's `andi+ori`):
+For `rlwimi` (bit insert vs MWCC's `andi+ori`) — **try one-liner #12 (model the
+flag as a C bitfield) FIRST**; it produces the identical `li; rlwimi` from clean
+C and is now the preferred fix. Only fall back to this asm form if the field
+genuinely cannot be expressed as a bitfield member:
 
 ```c
 {
@@ -231,11 +271,31 @@ through the variable) requires source `*(int *)lbl_xxx + 0x34`. Writing
 is one level less indirect. The matched-code convention is `extern int *lbl;`
 + `*lbl_xxx` (no `&`).
 
+## Build hygiene (don't break shared `main`)
+
+- **Run `timeout 60 ninja; echo EXIT=$?` and confirm `EXIT=0` BEFORE every
+  commit/push.** Never push a new function body you haven't compiled.
+- **Warnings ≠ a broken build.** MWCC prints `'extraout_f1'/'in_rN' is not
+  initialized before being used` for raw Ghidra register-phantoms — these are
+  *warnings*; the object still compiles and `ninja` exits 0. A real break shows
+  `error:` / `FAILED:` lines and a non-zero exit. Don't raise alarms on warnings.
+- **The strict-hash / checksum (CI match) target ALWAYS "fails" until the
+  project is 100% matched** — that is the decomp, not a build break. "Build
+  green" = `ninja` compiles+links (exit 0); it does NOT mean the hash matches.
+- **Clean Ghidra phantoms out of committed bodies** (`extraout_*`, `in_rN`,
+  stray `local_N`) — replace with real locals for plausible C.
+- **Two agents must never edit the same `.c`** — concurrent recovery of the same
+  unit produces duplicate definitions and rebase conflicts. One owner per unit.
+
 ## Tooling
 
 - `python3 tools/function_objdump.py --diff <unit> <symbol>` — per-function diff
 - `python3 tools/drift_audit.py [--only-drifted] [--csv] [unit]` — find drifted units
-- `python3 tools/stub_queue.py [--aligned-only] [--max-size N]` — ranked easy-win targets
+- `python3 tools/stub_queue.py [--aligned-only] [--max-size N]` — ranked targets.
+  **CAVEAT: output is STALE** — it flags already-matched functions (and dead
+  `FUN_xxx` at drift addresses) as stubs, so its counts overstate real work.
+  Prefer `drift_audit.py <unit>` + `grep '\.fn ' build/GSAE01/asm/<unit>.s` to
+  find the genuinely missing-from-src symbols.
 - `python3 tools/realign_skeleton.py <unit> [--merge]` — v1.0-aligned skeleton
 - `rm -f build/GSAE01/report.json && timeout 30 ninja build/GSAE01/report.json` — refresh report
 
@@ -253,3 +313,8 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
 | Lift temp for forced CSE | `75660758` |
 | Local declaration swap for stack offset | `91f5f4ab` |
 | Source-set restructure | `dbbc5ba9` |
+| Bitfield member for clean-C `rlwimi` flag set | `a3a86c446`, `34ee540c0` |
+| Reorder `case` labels to match block layout | `61dd19936` |
+| `int` param → `cmpwi` on `(arg & bit)` | `1ebdcf015` |
+| `*(s8 *)(p+off)` to land byte in arg register | `b42e26e71` |
+| Local decl-order for register coloring (clean C) | `fa209c270` |

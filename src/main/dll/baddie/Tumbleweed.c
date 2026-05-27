@@ -3497,9 +3497,9 @@ int titlescreen_getObjectTypeId(u8* obj)
 }
 
 extern void titlescreen_free(u8* obj);
-extern void titlescreen_render(void);
+extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void titlescreen_update(void);
-extern void titlescreen_init(void);
+extern void titlescreen_init(u8* obj, u8* p);
 extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
 
@@ -3558,6 +3558,155 @@ void titlescreen_release(void)
         i++;
     } while (i < 19);
     lbl_803DD992 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s8    lbl_803DBC08;
+extern s8    lbl_803DBC09;
+extern u8    lbl_803DD990;
+extern u8    lbl_803DD991;
+extern u8    lbl_803DC968;
+extern f32   lbl_803DD9D0;
+extern f32   lbl_803DD9CC;
+extern f32   lbl_803DD9C4;
+extern f32   lbl_803DD9B4;
+extern f32   lbl_803DD9B0;
+extern int   lbl_803DD9AC;
+extern f32   lbl_803E2318;
+extern f32   lbl_803E22F8;
+extern u8    lbl_803A9FE4[0x34];
+extern s16   lbl_8031CDE8[];
+extern void  PSMTXIdentity(void*);
+
+/* EN v1.0 0x8013695C  size: 228b  titlescreen_initialise: reset state
+ * bytes, load the main texture (asset 0x647 or 0xC5 depending on
+ * lbl_803DC968), identity the matrix, then load the 19-entry texture
+ * table from the id list at lbl_8031CDE8 into lbl_803A9F98. */
+#pragma scheduling off
+#pragma peephole off
+void titlescreen_initialise(void)
+{
+    int i;
+    lbl_803DBC08 = -1;
+    lbl_803DD990 = 0;
+    lbl_803DBC09 = -1;
+    lbl_803DD991 = 0;
+    if (lbl_803DC968 != 0) {
+        lbl_803DD9D4 = textureLoadAsset(0x647);
+    } else {
+        lbl_803DD9D4 = textureLoadAsset(0xC5);
+    }
+    lbl_803DD9D0 = lbl_803E2318;
+    lbl_803DD9CC = lbl_803E2318;
+    PSMTXIdentity(lbl_803A9FE4);
+    for (i = 0; i < 19; i++) {
+        lbl_803A9F98[i] = textureLoadAsset(lbl_8031CDE8[i]);
+    }
+    lbl_803DD9C4 = lbl_803E22F8;
+    lbl_803DD992 = 0;
+    lbl_803DD9AC = 0;
+    lbl_803DD9B4 = lbl_803E2318;
+    lbl_803DD9B0 = lbl_803E2318;
+    lbl_803DD9AB = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8    lbl_803DD9AA;
+extern int   lbl_803DD9A4;
+extern int  *gObjectTriggerInterface;
+extern void  objRenderFn_8003b8f4(f32);
+
+/* EN v1.0 0x80135C2C  size: 152b  titlescreen_render: when visible and
+ * ready, render via objRenderFn; once the credits flag fires, set the
+ * one-shot trigger 0x57 and release the attract-mode movie buffers. */
+#pragma scheduling off
+#pragma peephole off
+void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v == 0) return;
+    if (lbl_803DD9AB == 0) return;
+    objRenderFn_8003b8f4(lbl_803E2318);
+    if (lbl_803DD993 == 0) return;
+    if (lbl_803DD9AA != 0) return;
+    GameBit_Set(0xDF6, 1);
+    lbl_803DD9AA = 1;
+    ((void (*)(int, int, int, int))((void **)*gObjectTriggerInterface)[0x50 / 4])(0x57, 0, 0, 0);
+    n_attractmode_releaseMovieBuffers();
+    lbl_803DD9A4 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8    lbl_8031CE10[];
+extern void  ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+extern void  ObjModel_SetRenderCallback(int* model, void* cb);
+extern void  AttractMovie_DrawTextureCallback(void);
+
+/* EN v1.0 0x801367A8  size: 252b  titlescreen_init: seed the object's
+ * state from its descriptor id (obj->_46), pick the anim move and blend
+ * float per id range, and for the attract id install the movie draw
+ * callback. */
+void titlescreen_init(u8* obj, u8* p)
+{
+    u8* a = *(u8**)(obj + 0xb8);
+    s16 v;
+    *(u8*)(a + 0x30) = 0;
+    *(s16*)(obj + 0) = (s16)((s8)p[0x18] << 8);
+    v = *(s16*)(obj + 0x46);
+    if (v >= 0x77d && v < 0x781) {
+        *(s8*)(a + 0x31) = (s8)(v - 0x77d);
+        *(f32*)(a + 0x34) = *(f32*)((u8*)lbl_8031CE10 - 0xEFA0 + (*(s16*)(obj + 0x46) << 5));
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
+    } else {
+        *(f32*)(a + 0x34) = lbl_803E22F8;
+        *(s8*)(a + 0x31) = -2;
+        v = *(s16*)(obj + 0x46);
+        if (v == 0x78a) {
+            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
+        } else if (v == 0x781) {
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2318, 0);
+            ObjModel_SetRenderCallback(*(int**)(*(int**)(obj + 0x7c)),
+                                       (void*)AttractMovie_DrawTextureCallback);
+        }
+    }
+}
+
+extern int  *gPartfxInterface;
+extern f32   lbl_803E23E8;
+
+/* EN v1.0 0x80139164  size: 252b  fn_80139164: when b->_54 carries the
+ * spawn flag, build a particle descriptor on the stack from a's heading
+ * and the delta to b's position, then emit it 20 times via the partfx
+ * interface and clear the flag. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80139164(u8* a, u8* b)
+{
+    struct {
+        s16 hx, hy, hz;
+        f32 fk;
+        f32 dx, dy, dz;
+    } stk;
+    u8 i;
+    u32 flags = *(u32*)(b + 0x54);
+    if ((flags & 0x1800) == 0) return;
+    stk.dx = *(f32*)(b + 0x408) - *(f32*)(a + 0x18);
+    stk.dy = *(f32*)(b + 0x40c) - *(f32*)(a + 0x1c);
+    stk.dz = *(f32*)(b + 0x410) - *(f32*)(a + 0x20);
+    stk.fk = lbl_803E23E8;
+    stk.hx = *(s16*)(a + 0);
+    stk.hy = *(s16*)(a + 2);
+    stk.hz = *(s16*)(a + 4);
+    if ((flags & 0x800) != 0) return;
+    i = 0x14;
+    while (i-- != 0) {
+        ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
+            (int)a, 0x533, &stk, 2, -1, 0);
+    }
+    *(u32*)(b + 0x54) = *(u32*)(b + 0x54) & ~0x1000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3859,8 +4008,8 @@ extern u8    lbl_803DD970;
 /* lbl_803DD940 declared later as void* */
 extern u8    lbl_803DD990;
 extern u8    lbl_803DD991;
-extern u8    lbl_803DBC08;
-extern u8    lbl_803DBC09;
+extern s8    lbl_803DBC08;
+extern s8    lbl_803DBC09;
 extern f32   lbl_803E2408;
 
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via

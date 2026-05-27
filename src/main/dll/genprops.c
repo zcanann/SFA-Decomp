@@ -4597,7 +4597,7 @@ void restartmarker_init(int *obj, int *state) {
     *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x4000);
 }
 extern void dll_F7_free();
-extern void dll_F7_render();
+extern void dll_F7_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
 extern u8 staffFn_80170380[];
@@ -5327,3 +5327,453 @@ void fireball_free(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct DofState {
+    u8 enabled : 1;
+    u8 : 7;
+    u8 field1;
+    u8 field2;
+} DofState;
+
+extern int fn_8016CD48();
+extern void Rcp_DisableBlurFilter(void);
+extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
+extern int textureFree(int tex);
+extern void *lbl_803DDAA0;
+extern void *lbl_803DDAA8[2];
+
+#pragma peephole off
+#pragma scheduling off
+void depthoffieldpoint_init(int *obj)
+{
+    DofState *s = *(DofState **)((char *)obj + 0xb8);
+    s->enabled = 0;
+    *(void **)((char *)obj + 0xbc) = (void *)fn_8016CD48;
+    s->field1 = 0;
+    *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+}
+
+void depthoffieldpoint_update(int *obj)
+{
+    DofState *s = *(DofState **)((char *)obj + 0xb8);
+    if (s->enabled) {
+        s->enabled = 0;
+        Rcp_DisableBlurFilter();
+    }
+}
+
+void staff_release(void)
+{
+    int i;
+    void **p;
+    if (lbl_803DDAA8[0] != NULL) {
+        p = lbl_803DDAA8;
+        for (i = 0; i < 2; i++) {
+            textureFree((int)*p);
+            *p = NULL;
+            p++;
+        }
+    }
+    if (lbl_803DDAA0 != NULL) {
+        Resource_Release((int)lbl_803DDAA0);
+        lbl_803DDAA0 = NULL;
+    }
+}
+
+extern void fn_80065684(int obj, f32 a, f32 b, f32 c, f32 *out, int flag);
+extern f32 lbl_803E31D8;
+void mikabombshadow_init(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    f32 out;
+    fn_80065684((int)obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+                *(f32 *)((char *)obj + 0x14), &out, 0);
+    ObjHits_DisableObject(obj);
+    *(u8 *)((char *)obj + 0x36) = 0xff;
+    *(s16 *)((char *)obj + 2) = 0x4000;
+    *(s16 *)obj = 0;
+    *(s16 *)((char *)obj + 4) = 0;
+    *(int *)((char *)*(int **)((char *)obj + 0x64) + 0x30) |= 0x10000;
+    *(f32 *)state = out;
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - out;
+    *(s16 *)((char *)*(int **)((char *)obj + 0x64) + 0x36) = 0;
+    *(f32 *)*(int **)((char *)obj + 0x64) = lbl_803E31D8;
+}
+
+void StaticCamera_init(int *obj, int *params, int flag)
+{
+    u8 *state;
+    *(s16 *)obj = -*(s16 *)((char *)params + 0x1c);
+    *(s16 *)((char *)obj + 2) = -*(s16 *)((char *)params + 0x1e);
+    *(s16 *)((char *)obj + 4) = -*(s16 *)((char *)params + 0x20);
+    state = *(u8 **)((char *)obj + 0xb8);
+    state[0] = *(u8 *)((char *)params + 0x19);
+    *(f32 *)((char *)state + 4) = (f32)(u32) * (u8 *)((char *)params + 0x1a);
+    state[1] = 0;
+    if (flag == 0) {
+        ObjGroup_AddObject((int)obj, 7);
+    }
+}
+
+extern void storeZeroToFloatParam(f32 *p);
+extern f32 lbl_803E33A0;
+extern f32 lbl_803DBD60;
+extern f32 lbl_803E338C;
+void flamethrowerspe_init(int *obj, int *params)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    storeZeroToFloatParam((f32 *)((char *)state + 4));
+    *(f32 *)((char *)state + 8) =
+        ((f32) * (s16 *)((char *)params + 0x1a) / lbl_803E33A0) * lbl_803DBD60;
+    *(f32 *)((char *)obj + 0x28) = lbl_803E338C;
+    *(s16 *)((char *)obj + 6) |= 0x4000;
+    *(int *)((char *)state + 0x10) = 1;
+    ObjHits_DisableObject(obj);
+}
+
+extern void Sfx_RemoveLoopedObjectSoundForObject(int *obj);
+extern void clearCurSeqNo(void);
+void animatedobj_free(int *obj, int seqFlag)
+{
+    ((void (*)(void *))((void **)*(void **)gObjectTriggerInterface)[9])(*(void **)((char *)obj + 0xb8));
+    ((void (*)(int *, int, int, int, int))((void **)*(void **)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
+    Sfx_RemoveLoopedObjectSoundForObject(obj);
+    Sfx_StopObjectChannel(obj, 0x7f);
+    if (*(s16 *)((char *)obj + 0x46) == 0x774 && *(u8 *)((char *)obj + 0xeb) != 0) {
+        Obj_FreeObject(*(int **)((char *)obj + 0xc8));
+        ObjLink_DetachChild(obj, *(int *)((char *)obj + 0xc8));
+    }
+    if (seqFlag != 0) {
+        clearCurSeqNo();
+    }
+}
+
+extern int mmAlloc(int size, int a, int b);
+extern f32 lbl_803E3328;
+extern u8 lbl_803AC6B8[];
+void staff_init(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *r54;
+    int *p;
+    int i;
+    *(u8 *)((char *)state + 0xaa) = 1;
+    *(s16 *)((char *)state + 0xb0) = 2;
+    *(f32 *)((char *)state + 0x50) = lbl_803E3328;
+    r54 = *(int **)((char *)obj + 0x54);
+    if (r54 != NULL) {
+        *(s16 *)((char *)r54 + 0xb2) = 0x109;
+    }
+    i = 0;
+    p = state;
+    for (; i < 3; i++) {
+        *p = mmAlloc(0xEA60, 0x1a, 0);
+        *(s16 *)((char *)p + 0x10) = -1;
+        p = (int *)((char *)p + 0x18);
+    }
+    lbl_803AC6B8[0x20] = 0;
+    *(int *)(lbl_803AC6B8 + 0x1c) = 0;
+}
+
+extern void fn_8003B5E0(int a, int b, int c, int d);
+extern f32 lbl_803E3400;
+extern f32 lbl_803E3404;
+void dll_F7_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (*(s8 *)((char *)state + 9) == 0 && visible != 0) {
+        f32 v = *(f32 *)state;
+        if (v != lbl_803E3400) {
+            fn_8003B5E0(0xc8, 0, 0, (int)v);
+        }
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3404);
+    }
+}
+
+extern void Sfx_PlayFromObject(int *obj, int sfx);
+extern f32 lbl_803E32B4;
+extern f32 lbl_803E3320;
+extern f32 lbl_803E3288;
+extern f32 lbl_803E3324;
+void staffDoGrowShrinkAnim(int *obj, u8 grow, u8 flag2)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (grow != 0) {
+        if (*(f32 *)((char *)state + 0x50) < lbl_803E32B4) {
+            Sfx_PlayFromObject(obj, 0xc0);
+        }
+        if (flag2 == 0) {
+            *(f32 *)((char *)state + 0x50) = lbl_803E3320;
+        } else {
+            *(f32 *)((char *)state + 0x50) = lbl_803E3288;
+        }
+    } else {
+        if (*(f32 *)((char *)state + 0x50) > lbl_803E32B4) {
+            Sfx_PlayFromObject(obj, 0xc1);
+        }
+        if (flag2 == 0) {
+            *(f32 *)((char *)state + 0x50) = lbl_803E3324;
+        } else {
+            *(f32 *)((char *)state + 0x50) = lbl_803E3328;
+        }
+    }
+}
+
+extern int Resource_Acquire(int id, int flag);
+extern void *gMapEventInterface;
+void dll_F7_init(int *obj, int *params)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    ObjGroup_AddObject((int)obj, 0x3e);
+    *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    lbl_803DDAB0 = Resource_Acquire(0x5b, 1);
+    lbl_803DDAB4 = Resource_Acquire(0x5a, 1);
+    {
+        int *r64 = *(int **)((char *)obj + 0x64);
+        if (r64 != NULL) {
+            *(int *)((char *)r64 + 0x30) |= 0x810;
+        }
+    }
+    *(u8 *)((char *)state + 0xa) = 2;
+    *(u8 *)((char *)state + 0xb) = *(u8 *)((char *)params + 0x19);
+    if (*(s8 *)((char *)state + 0xb) == 0) {
+        int r = ((int (*)(int))((int **)*(int **)gMapEventInterface)[0x68 / 4])(*(int *)((char *)params + 0x14));
+        if (r == 0) {
+            int *r54 = *(int **)((char *)obj + 0x54);
+            *(s16 *)((char *)r54 + 0x60) &= ~1;
+            *(u8 *)((char *)state + 9) = 1;
+            *(u8 *)((char *)state + 8) = 0;
+        }
+    }
+}
+
+int fn_8016CD48(int *obj, int msg, u8 *cmds)
+{
+    DofState *s = *(DofState **)((char *)obj + 0xb8);
+    int i;
+    if (s->enabled) {
+        turnOnBlurFilter(*(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c),
+                         *(f32 *)((char *)obj + 0x20), s->field1, s->field2);
+    }
+    for (i = 0; i < cmds[0x8b]; i++) {
+        switch (cmds[i + 0x81]) {
+        case 0:
+            s->enabled = 0;
+            Rcp_DisableBlurFilter();
+            break;
+        case 1:
+            s->enabled = 1;
+            s->field1 = 0;
+            break;
+        case 2:
+            s->enabled = 1;
+            s->field1 = 1;
+            s->field2 = 0;
+            break;
+        case 3:
+            s->enabled = 1;
+            s->field2 = 1;
+            s->field1 = 0;
+            break;
+        }
+    }
+    return 0;
+}
+
+extern void lightFn_8001db6c(int handle, int flag, f32 v);
+extern f32 lbl_803E3330;
+int Fireball_SeqFn(int *obj, int msg, u8 *cmds)
+{
+    int i;
+    int *state = *(int **)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)state + 0x70) & 8) {
+        return 0;
+    }
+    for (i = 0; i < cmds[0x8b]; i++) {
+        u8 cmd = cmds[i + 0x81];
+        if (cmd == 1) {
+            if (*(void **)state != NULL) {
+                lightFn_8001db6c(*(int *)state, 1, lbl_803E3330);
+            }
+            *(s16 *)((char *)obj + 6) &= ~0x4000;
+        } else if (cmd == 2) {
+            if (*(void **)state != NULL) {
+                lightFn_8001db6c(*(int *)state, 0, lbl_803E3330);
+            }
+            *(s16 *)((char *)obj + 6) |= 0x4000;
+        }
+    }
+    return 0;
+}
+
+extern int cmbsrc_getColorIndex(int *p);
+extern void modelLightStruct_setColorsA8AC(int *light, int r, int g, int b, int a);
+extern void projectileParticleFxFn_80099660(int *obj, int kind, f32 v);
+extern f32 lbl_803E3354;
+extern f32 lbl_803E3358;
+void fireball_hitDetect(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *target;
+    if (*(s16 *)((char *)obj + 0x46) == 0x83e) return;
+    if (*(u8 *)((char *)state + 0x70) & 8) return;
+    target = *(int **)((char *)*(int **)((char *)obj + 0x54) + 0x50);
+    if (target == NULL) return;
+    if (*(s16 *)((char *)target + 0x46) == 0x6e8) {
+        int idx = cmbsrc_getColorIndex(target);
+        if ((s8)idx != -1) {
+            *(u8 *)((char *)state + 0x71) = (u8)idx;
+            if (*(void **)state != NULL) {
+                u8 *pal = (u8 *)lbl_80320978;
+                int c = *(u8 *)((char *)state + 0x71) * 3;
+                modelLightStruct_setColorsA8AC(*(int **)state, pal[c], pal[c + 1], pal[c + 2], 0);
+            }
+        }
+        ObjHits_EnableObject(obj);
+    } else {
+        u8 v;
+        *(f32 *)((char *)state + 0x38) = lbl_803E3358;
+        v = *(u8 *)((char *)state + 0x71);
+        if (v == 0) {
+            projectileParticleFxFn_80099660(obj, 3, lbl_803E3354);
+        } else if (v == 1) {
+            projectileParticleFxFn_80099660(obj, 0, lbl_803E3354);
+        } else {
+            projectileParticleFxFn_80099660(obj, 6, lbl_803E3354);
+        }
+        *(u8 *)((char *)obj + 0x36) = 0;
+        if (*(void **)state != NULL) {
+            ModelLightStruct_free(*(void **)state);
+            *(void **)state = NULL;
+        }
+    }
+    ObjGroup_RemoveObject((int)obj, 2);
+}
+
+extern void objSetSlot(int *obj, int slot);
+extern f32 lbl_803E3270;
+void dim2roofrub_init(int *obj, int *params)
+{
+    int *state;
+    int f4;
+    objSetSlot(obj, 0x64);
+    state = *(int **)((char *)obj + 0xb8);
+    *(s16 *)((char *)state + 0x6a) = *(s16 *)((char *)params + 0x1a);
+    *(s16 *)((char *)state + 0x6e) = -1;
+    {
+        f32 d = lbl_803E3270;
+        *(f32 *)((char *)state + 0x24) = d / (d + (f32)(u32) * (u8 *)((char *)params + 0x24));
+    }
+    *(int *)((char *)state + 0x28) = -1;
+    *(int *)((char *)state + 0x98) = 0;
+    *(int *)((char *)state + 0x94) = 0;
+    *(s16 *)((char *)state + 0x116) = 0;
+    *(s16 *)((char *)state + 0x114) = 0;
+    *(int *)((char *)obj + 0xf8) = 0;
+    f4 = *(int *)((char *)obj + 0xf4);
+    if (f4 == 0 && *(s16 *)((char *)params + 0x18) != 1) {
+        ((void (*)(int *, int *))((void **)*(void **)gObjectTriggerInterface)[0x1c / 4])(state, params);
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)params + 0x18) + 1;
+    } else if (f4 != 0 && *(s16 *)((char *)params + 0x18) != f4 - 1) {
+        ((void (*)(int *))((void **)*(void **)gObjectTriggerInterface)[0x24 / 4])(state);
+        if (*(s16 *)((char *)params + 0x18) != -1) {
+            ((void (*)(int *, int *))((void **)*(void **)gObjectTriggerInterface)[0x1c / 4])(state, params);
+        }
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)params + 0x18) + 1;
+    }
+    {
+        int *r64 = *(int **)((char *)obj + 0x64);
+        if (r64 != NULL) {
+            *(u8 *)((char *)r64 + 0x3a) = 0x64;
+            *(u8 *)((char *)*(int **)((char *)obj + 0x64) + 0x3b) = 0x96;
+        }
+    }
+}
+
+extern void Obj_SetModelRenderOpAlpha(int *obj, int alpha);
+extern f32 lbl_803E3228;
+void animatedobj_init(int *obj, int *params)
+{
+    int *state;
+    int f4;
+    objSetSlot(obj, 0x64);
+    state = *(int **)((char *)obj + 0xb8);
+    *(s16 *)((char *)state + 0x6a) = *(s16 *)((char *)params + 0x1a);
+    *(s16 *)((char *)state + 0x6e) = -1;
+    {
+        f32 d = lbl_803E3228;
+        *(f32 *)((char *)state + 0x24) = d / (d + (f32)(u32) * (u8 *)((char *)params + 0x24));
+    }
+    *(int *)((char *)state + 0x28) = -1;
+    *(int *)((char *)state + 0x98) = 0;
+    *(int *)((char *)state + 0x94) = 0;
+    *(s16 *)((char *)state + 0x116) = 0;
+    *(s16 *)((char *)state + 0x114) = 0;
+    *(int *)((char *)state + 0xe8) = 0;
+    f4 = *(int *)((char *)obj + 0xf4);
+    if (f4 == 0 && *(s16 *)((char *)params + 0x18) != 1) {
+        ((void (*)(int *, int *))((void **)*(void **)gObjectTriggerInterface)[0x1c / 4])(state, params);
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)params + 0x18) + 1;
+    } else if (f4 != 0 && *(s16 *)((char *)params + 0x18) != f4 - 1) {
+        ((void (*)(int *))((void **)*(void **)gObjectTriggerInterface)[0x24 / 4])(state);
+        if (*(s16 *)((char *)params + 0x18) != -1) {
+            ((void (*)(int *, int *))((void **)*(void **)gObjectTriggerInterface)[0x1c / 4])(state, params);
+        }
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)params + 0x18) + 1;
+    }
+    {
+        int *r64 = *(int **)((char *)obj + 0x64);
+        if (r64 != NULL) {
+            *(u8 *)((char *)r64 + 0x3a) = 0x64;
+            *(u8 *)((char *)*(int **)((char *)obj + 0x64) + 0x3b) = 0x96;
+        }
+    }
+    Obj_SetModelRenderOpAlpha(obj, 0xff);
+}
+
+extern void objMove(int *obj, f32 x, f32 y, f32 z);
+extern void s16toFloat(f32 *out, s16 v);
+extern void mathFn_80021ac8(int *obj, f32 *p);
+extern void firepipe_releaseEffectObject(int *obj);
+extern int timerCountDown(f32 *p);
+extern f32 lbl_803E3390;
+extern f32 lbl_803E3394;
+extern f32 lbl_803DBD68;
+extern f32 lbl_803DBD6C;
+extern int lbl_803DBD64;
+void flamethrowerspe_update(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *src = *(int **)((char *)obj + 0x4c);
+    switch (*(int *)((char *)state + 0x10)) {
+    case 1:
+        *(f32 *)((char *)obj + 0x24) = lbl_803E338C;
+        *(f32 *)((char *)obj + 0x2c) =
+            lbl_803DBD68 * (lbl_803E3390 * (*(f32 *)((char *)state + 8) *
+                            (lbl_803E3394 * (f32)(s32)randomGetRange(0x64, 0x96))));
+        mathFn_80021ac8(obj, (f32 *)((char *)obj + 0x24));
+        *(f32 *)((char *)state + 0xc) = lbl_803DBD6C * *(f32 *)((char *)state + 8);
+        s16toFloat((f32 *)((char *)state + 4), (s16)lbl_803DBD64);
+        *(int *)((char *)state + 0x10) = 2;
+        break;
+    case 2:
+        if (timerCountDown((f32 *)((char *)state + 4)) != 0) {
+            ObjHits_DisableObject(obj);
+            firepipe_releaseEffectObject(obj);
+            return;
+        }
+        ObjHits_EnableObject(obj);
+        ObjHits_SetHitVolumeSlot(obj, *(int *)((char *)lbl_803209C0 + (s8) * (u8 *)((char *)src + 0x19) * 0xc + 8), 1, 0);
+        {
+            f32 dt = timeDelta;
+            objMove(obj, *(f32 *)((char *)obj + 0x24) * dt, *(f32 *)((char *)obj + 0x28) * dt,
+                    *(f32 *)((char *)obj + 0x2c) * dt);
+        }
+        ObjHitbox_SetSphereRadius(obj, (int)(*(f32 *)((char *)state + 0xc) *
+                                             (((f32)lbl_803DBD64 - *(f32 *)((char *)state + 4)) / (f32)lbl_803DBD64)));
+        break;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset

@@ -20,14 +20,9 @@ void FUN_800e8794(undefined2 param_1);
 int FUN_800e87a0(void);
 undefined4 * FUN_800e87a8(void);
 int saveFn_800e8508(void);
-void gplaySaveGame(undefined8 param_1,double param_2,undefined8 param_3,
-                                          undefined8 param_4,undefined8 param_5,
-                                          undefined8 param_6,undefined8 param_7,
-                                          undefined8 param_8,byte param_9);
+void gplaySaveGame(int param);
 void titleDoLoadSave(void);
-void saveGame_save(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                   undefined8 param_5,undefined8 param_6,undefined8 param_7,
-                   undefined8 param_8);
+void saveGame_save(void);
 void FUN_800e8b48(void);
 void FUN_800e8b54(void);
 uint FUN_800e8b6c(void);

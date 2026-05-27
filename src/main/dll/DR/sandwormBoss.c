@@ -3185,7 +3185,7 @@ extern GuardianVec lbl_802C22C0;
 extern GuardianVec lbl_802C22CC;
 extern u8 lbl_8032284C[];
 extern f32 lbl_803E4110;
-extern void fn_8019C3A0(int *obj);
+extern int fn_8019C3A0(int *obj, int p2, int *p3);
 extern void dll_2E_func0A(int a, int *obj);
 extern void dll_2E_func05(int *obj, u8 *sub, int c, int d, int e);
 extern void dll_2E_func08(u8 *sub, int b, int c);
@@ -3235,6 +3235,180 @@ void cfguardian_init(int *obj, u8 *params) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct { int a, b, c, d; } GuardianMsg;
+extern GuardianMsg lbl_802C22D8;
+extern int  dll_2E_func07(int* obj, int* p3, u8* sub, int x, int y);
+extern int  animatedObjGetSeqId(int* p);
+extern void saveGame_saveObjectPos(int obj);
+extern void* Obj_GetPlayerObject(void);
+extern void playerAddRemoveMagic(void* player, int n);
+
+/* EN v1.0 0x8019C3A0  size: 252b  fn_8019C3A0: guardian message handler.
+ * Persists position on a negative cue, otherwise picks the active/idle
+ * heading pair and routes a move request; on the magic-grant message it
+ * tops the player back up. Returns 1 if the move was consumed. */
+#pragma scheduling off
+#pragma peephole off
+int fn_8019C3A0(int* obj, int p2, int* p3)
+{
+    int* sel;
+    GuardianMsg stk;
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    stk = lbl_802C22D8;
+    if (*(s16*)((char*)obj + 0xb4) < 0) {
+        saveGame_saveObjectPos((int)obj);
+        return 0;
+    }
+    if (sub[0xa80] != 6) {
+        sel = &stk.a;
+    } else {
+        sel = &stk.c;
+    }
+    if (animatedObjGetSeqId(p3) != 0x283) {
+        if (dll_2E_func07(obj, p3, sub, (s16)sel[0], (s16)sel[1]) != 0) {
+            return 1;
+        }
+    }
+    if (*(u8*)((char*)p3 + 0x80) == 2) {
+        playerAddRemoveMagic(Obj_GetPlayerObject(), 0xa);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_8003ADC4(int* a, int* b, void* c, int d, int e, int f);
+extern f32  lbl_803E4218;
+extern f32  lbl_803E423C;
+extern f32  lbl_803E4240;
+extern f32  timeDelta;
+
+/* EN v1.0 0x8019E568  size: 352b  fn_8019E568: turn toward the target by
+ * a fraction of the yaw delta; when roughly aligned play/advance the idle
+ * move, otherwise start or speed-scale the turn move by the delta. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8019E568(int* a, int* b, u8* c, int d)
+{
+    int shifted;
+    fn_8003ADC4(a, b, (char*)c + 0x3c, 0x28, 0, 3);
+    shifted = Obj_GetYawDeltaToObject((int)a, (int)b, 0) >> 3;
+    *(s16*)a += shifted;
+    if (d == 0) return;
+    if ((s16)shifted > -200 && (s16)shifted < 200) {
+        if (*(int*)((char*)c + 0xc0) != 0) {
+            *(int*)((char*)c + 0xc0) = 0;
+            ObjAnim_SetCurrentMove((int)a, 0, lbl_803E4218, 0);
+        } else {
+            ObjAnim_AdvanceCurrentMove(lbl_803E423C, timeDelta, (int)a, 0);
+        }
+    } else {
+        if (*(int*)((char*)c + 0xc0) == 0) {
+            *(int*)((char*)c + 0xc0) = 1;
+            ObjAnim_SetCurrentMove((int)a, 9, lbl_803E4218, 0);
+        } else {
+            s16 t;
+            if ((s16)shifted > 0) {
+                t = (s16)shifted >> 2;
+            } else {
+                t = -(s16)shifted >> 2;
+            }
+            ObjAnim_AdvanceCurrentMove((f32)t / lbl_803E4240, timeDelta, (int)a, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *gGameUIInterface;
+extern int *gObjectTriggerInterface;
+
+/* EN v1.0 0x801A0614  size: 368b  fn_801A0614: drain the object's message
+ * queue (re-arming its gamebit on the keyed message), then sync the
+ * lit/active state from gamebit 0x44 and notify on completion. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801A0614(int* obj, int p2, u8* p3)
+{
+    int msg;
+    int v;
+    int w = 0;
+    u8* sub = *(u8**)((char*)obj + 0x4c);
+    if (GameBit_Get(*(s16*)(sub + 0x18)) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+        *(u8*)((char*)p3 + 0x90) = (u8)(*(u8*)((char*)p3 + 0x90) | 0x4);
+        return 0;
+    }
+    if (*(s16*)((char*)obj + 0x46) == 0x127) {
+        return 0;
+    }
+    while (ObjMsg_Pop(obj, &msg, &v, &w) != 0) {
+        if (msg == 0xa0005) {
+            GameBit_Set(*(s16*)(sub + 0x18), 1);
+        }
+    }
+    if (GameBit_Get(0x44) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    } else {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+    }
+    if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
+        if (((int (*)(int))((int *)*gGameUIInterface)[0x20 / 4])(0x44) != 0) {
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(0, obj, -1);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32  Vec_distance(void* a, void* b);
+extern f32  s16toFloat(int a, int b);
+extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
+extern void gameBitIncrement(int bit);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern f32  lbl_803E4244;
+
+/* EN v1.0 0x8019E6C8  size: 316b  babycloudrunner_func0B: when the player
+ * gets within the trigger radius and the runner is in state 3, fire its
+ * burst (notify, bump the counter, set the gamebit); otherwise just play
+ * the idle audio cue. */
+#pragma scheduling off
+#pragma peephole off
+int babycloudrunner_func0B(int* obj)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    u8* q = *(u8**)((char*)obj + 0x4c);
+    int flag = 0;
+    void* player = Obj_GetPlayerObject();
+    u8* r = *(u8**)((char*)obj + 0x4c);
+    if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16)*(s16*)(r + 0x1a)) {
+        if (*(int*)(sub + 0x230) == 3) {
+            if ((*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
+                flag = 1;
+            }
+        }
+    }
+    if (flag != 0) {
+        s16toFloat((int)sub, 0x3c);
+        *(int*)((char*)obj + 0xf4) = 1;
+        *(s16*)obj = *(s16*)(sub + 0xd0);
+        ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(4, obj, -1);
+        *(f32*)(sub + 0) = lbl_803E4244;
+        gameBitIncrement(0x901);
+        *(int*)(sub + 0xc4) = 0xc;
+        GameBit_Set(*(s16*)(q + 0x1e), 1);
+        *(int*)((char*)obj + 0xf4) = 0;
+        return 1;
+    }
+    objAudioFn_800393f8((int)obj, (char*)sub + 0x6c, 0x296, 0x1000, -1, 1);
+    Sfx_PlayFromObject((int)obj, 0xd4);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 void windlift_hitDetect(void) {}
 void windlift_release(void) {}
 void windlift_initialise(void) {}
@@ -3242,6 +3416,82 @@ void cfpowerbase_free(void) {}
 void cfpowerbase_hitDetect(void) {}
 void cfpowerbase_release(void) {}
 void cfpowerbase_initialise(void) {}
+
+extern int fn_8019D578(int p1, int unused, int p3);
+
+/* EN v1.0 0x8019D8B4  size: 308b  cfpowerbase_init: seed header and the
+ * sub's type from spawn params, map the type id (0x54..0x56) to a model
+ * and gamebit, then gate the active/lit state bits on those gamebits. */
+#pragma scheduling off
+#pragma peephole off
+void cfpowerbase_init(int* obj, u8* params) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    s16 type;
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    *(s16*)(sub + 0) = *(s16*)(params + 0x1e);
+    type = *(s16*)(sub + 0);
+    switch (type) {
+    case 0x54:
+        *(s16*)(sub + 2) = 0x51;
+        sub[4] = 0;
+        break;
+    case 0x55:
+        *(s16*)(sub + 2) = 0x52;
+        sub[4] = 1;
+        Obj_SetActiveModelIndex(obj, 2);
+        break;
+    case 0x56:
+        *(s16*)(sub + 2) = 0x53;
+        sub[4] = 2;
+        Obj_SetActiveModelIndex(obj, 1);
+        break;
+    }
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019D578;
+    ObjMsg_AllocQueue(obj, 2);
+    if (GameBit_Get(*(s16*)(sub + 2)) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    } else {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+    }
+    if (GameBit_Get(*(s16*)(sub + 0)) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+        *(int*)((char*)obj + 0xf4) = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *gGameUIInterface;
+extern int *gObjectTriggerInterface;
+
+/* EN v1.0 0x8019D77C  size: 312b  cfpowerbase_update: track its gamebit's
+ * lit state, fire the queued state-change trigger, and when the base is
+ * powered and its UI condition clears, mark it done and notify. */
+#pragma scheduling off
+#pragma peephole off
+void cfpowerbase_update(int* obj) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    if (GameBit_Get(*(s16*)(sub + 2)) != 0) {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    } else {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+    }
+    if (*(int*)((char*)obj + 0xf4) != 0) {
+        ((void (*)(int *, int))((int *)*gObjectTriggerInterface)[0x54 / 4])(obj, 0xfa);
+        ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])((*(s8*)(sub + 4)), obj, 3);
+        *(int*)((char*)obj + 0xf4) = 0;
+    }
+    if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
+        if (((int (*)(int))((int *)*gGameUIInterface)[0x20 / 4])(*(s16*)(sub + 2)) != 0) {
+            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+            GameBit_Set(*(s16*)(sub + 2), 0);
+            GameBit_Set(0x973, 0);
+            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])((*(s8*)(sub + 4)), obj, -1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void cfmaincrystal_hitDetect(void) {}
 void cfmaincrystal_release(void) {}
 void cfmaincrystal_initialise(void) {}
@@ -3251,6 +3501,31 @@ void babycloudrunner_initialise(void) {}
 void cfprisonguard_free(void) {}
 void cfprisonguard_release(void) {}
 void cfprisonguard_initialise(void) {}
+
+extern void fn_8019F540(int* obj);
+
+typedef struct { u8 top : 1; u8 rest : 7; } Bit80;
+
+/* EN v1.0 0x8019FBD0  size: 172b  cfprisonguard_init: set up the guard's
+ * substate (update fn fn_8019F540, message queue), seed its header from
+ * the spawn params, and apply the alarm-active gating bits. */
+#pragma scheduling off
+#pragma peephole off
+void cfprisonguard_init(int* obj, u8* params) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    sub[0x38] = 1;
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019F540;
+    ObjMsg_AllocQueue(obj, 4);
+    sub[0x36] = 1;
+    if (GameBit_Get(0x4d) != 0) {
+        sub[0x38] = (u8)(sub[0x38] | 4);
+    }
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    ((Bit80*)(sub + 0x39))->top = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 extern f32 lbl_803E4268;
 extern f32 Vec_distance(void *a, void *b);
@@ -3305,9 +3580,103 @@ void cfprisonuncle_free(void) {}
 void cfprisonuncle_hitDetect(void) {}
 void cfprisonuncle_release(void) {}
 void cfprisonuncle_initialise(void) {}
+
+extern int  objModelGetVecFn_800395d8(int obj, int idx);
+extern void objAudioFn_80039270(int obj, void* p, int id);
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern int *gObjectTriggerInterface;
+extern u8   framesThisStep;
+extern f32  lbl_803E428C;
+
+/* EN v1.0 0x8019FEDC  size: 536b  cfprisonuncle_update: while not captured,
+ * drain pending messages, re-acquire the keyed target object, then either
+ * track/animate toward the player (firing the alert trigger) or, once
+ * captured, raise the done flag and notify. */
+#pragma scheduling off
+#pragma peephole off
+void cfprisonuncle_update(int* obj)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    void* player;
+    int m2, objectIndex, objectCount, m1, m3;
+    int* objects;
+    int i;
+    if (sub == NULL) return;
+    if (GameBit_Get(0x50) != 0) return;
+    if (ObjMsg_Pop(obj, &m1, &m2, &m3) != 0) {
+        *(void**)(sub + 0) = NULL;
+    }
+    if (*(void**)(sub + 0) == NULL) {
+        objects = ObjList_GetObjects(&objectIndex, &objectCount);
+        for (i = objectIndex; i < objectCount; i++) {
+            if (*(s16*)((char*)objects[i] + 0x44) == 0x3d) {
+                *(int*)(sub + 0) = objects[i];
+                i = objectCount;
+            }
+        }
+    }
+    ObjTrigger_UpdateIdBlockFlag((int)obj);
+    *(s8*)(sub + 0x73) = (s8)GameBit_Get(0x4d);
+    if (*(s8*)(sub + 0x73) == 0) {
+        player = Obj_GetPlayerObject();
+        fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
+        if ((int)randomGetRange(0, 0x1e) == 0) {
+            objAudioFn_80039270((int)obj, (char*)sub + 0x34, 0x297);
+        }
+        if (ObjTrigger_IsSet((int)obj) != 0) {
+            fn_8003ADC4(obj, player, (char*)sub + 4, 0x41, 0, 3);
+            *(s16*)objModelGetVecFn_800395d8((int)obj, 1) = -0xaaa;
+            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(1, obj, -1);
+        } else {
+            objAnimFn_80038f38((int)obj, (char*)sub + 0x34);
+            ObjAnim_AdvanceCurrentMove(lbl_803E428C, (f32)(u32)framesThisStep, (int)obj, 0);
+        }
+    } else {
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+        if (*(s16*)((char*)obj + 0xb4) == -1) {
+            ((void (*)(int, int *, int))((int *)*gObjectTriggerInterface)[0x48 / 4])(0, obj, -1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void gcrobotlightbea_render(void) {}
 void gcrobotlightbea_release(void) {}
 void gcrobotlightbea_initialise(void) {}
+
+extern f32 lbl_803E4298;
+extern f32 lbl_803E429C;
+
+/* EN v1.0 0x801A01E8  size: 296b  gcrobotlightbea_hitDetect: clear the hit
+ * flag, then re-set it only if the priority hit is the (undisguised) player
+ * and lands inside the beacon's bounding box. */
+#pragma scheduling off
+#pragma peephole off
+void gcrobotlightbea_hitDetect(int* obj)
+{
+    int out;
+    f32 vec[3];
+    void* hit;
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    ((Bit80*)(sub + 8))->top = 0;
+    if (*(void**)((char*)obj + 0xc4) == NULL) return;
+    if (ObjHits_GetPriorityHit((int)obj, &hit, 0, 0) == 0) {
+        hit = *(void**)((char*)*(void**)((char*)obj + 0x54) + 0x50);
+        if (hit == NULL) return;
+    }
+    if (hit != Obj_GetPlayerObject()) return;
+    if (playerIsDisguised(hit) != 0) return;
+    vec[0] = *(f32*)((char*)hit + 0xc);
+    vec[1] = lbl_803E4298 + *(f32*)((char*)hit + 0x10);
+    vec[2] = *(f32*)((char*)hit + 0x14);
+    if (fn_80221D6C((int)obj + 0xc, vec) == 0) return;
+    if (*(int*)((char*)obj + 0xf4) != 0 ||
+        objBboxFn_800640cc((int)obj + 0xc, vec, 0, &out, (int)obj, 4, -1, 0, 0) == 0) {
+        ((Bit80*)(sub + 8))->top = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void cfperch_render(void) {}
 void cfperch_hitDetect(void) {}
 void cfperch_release(void) {}
@@ -3372,6 +3741,37 @@ void cfmaincrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 void cfprisoncage_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E42B0); }
 #pragma peephole reset
 
+extern f32   lbl_803E4280;
+extern f32   lbl_803E4260;
+extern f32   lbl_803E4264;
+extern f32   lbl_803E4284;
+extern u8    framesThisStep;
+extern void  objParticleFn_80099d84(int obj, int a, f32 f, int b);
+
+/* EN v1.0 0x8019F93C  size: 188b  cfprisonguard_render: render the guard
+ * model when visible, ramp its alarm timer at sub->_30 each frame, and
+ * once it crosses the threshold spawn a one-shot particle. */
+#pragma scheduling off
+#pragma peephole off
+void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    if (visible != 0) {
+        objRenderFn_8003b8f4(lbl_803E4280);
+    }
+    if (visible != 0) {
+        f32 t = *(f32*)(sub + 0x30);
+        if (t > lbl_803E4260) {
+            *(f32*)(sub + 0x30) = lbl_803E4264 * (f32)(u32)framesThisStep + t;
+            if (*(f32*)(sub + 0x30) < lbl_803E4284) {
+                objParticleFn_80099d84((int)obj, 3, lbl_803E4280, 0);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
@@ -3391,6 +3791,63 @@ int cfprisoncage_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0
 /* chained byte bit-extract. */
 u32 fn_801A0174(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x8) >> 7) & 1; }
 u32 gunpowderbarrel_isHeld(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x4a) >> 5) & 1; }
+
+typedef struct { u8 playerHeld : 1; u8 _pad0 : 1; u8 held : 1; u8 _pad1 : 5; } GpbHeldByte;
+extern f32 lbl_803E42C0;
+
+/* EN v1.0 0x801A0BDC  size: 56b  gunpowderbarrel_setHeldState: flag the
+ * barrel as held, mark obj active, and clear its physics-sleep bit. */
+#pragma scheduling off
+#pragma peephole off
+void gunpowderbarrel_setHeldState(int* obj) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    ((GpbHeldByte*)(sub + 0x4a))->held = 1;
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+    *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) & ~2);
+}
+
+/* EN v1.0 0x801A0B90  size: 76b  gunpowderbarrel_clearHeldState: zero the
+ * barrel's velocity/throw vectors, mark it sleeping, clear obj-active and
+ * the held flag. */
+void gunpowderbarrel_clearHeldState(int* obj) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    f32 z = lbl_803E42C0;
+    *(f32*)(sub + 0x24) = z;
+    *(f32*)(sub + 0x20) = z;
+    *(f32*)(sub + 0x28) = z;
+    *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) | 1);
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+    *(f32*)(sub + 0x38) = z;
+    ((GpbHeldByte*)(sub + 0x4a))->held = 0;
+}
+
+/* EN v1.0 0x801A0E04  size: 244b  gunpowderbarrel_setPlayerHeldState: when
+ * grabbed by the player, copy the held-pose and enable hit reactions; when
+ * released, restore the default pose and clear them. */
+void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    u8* h = *(u8**)((char*)obj + 0x54);
+    if (heldByPlayer != 0) {
+        h[0x6a] = 1;
+        h[0x6b] = 1;
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+        ((GpbHeldByte*)(sub + 0x4a))->playerHeld = 1;
+        *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) & ~2);
+        ObjHits_SetFlags((int)obj, 0x480);
+        ObjHits_ClearSourceMask((int)obj, 1);
+        ObjHits_EnableObject((int)obj);
+        ObjHits_SyncObjectPositionIfDirty((int)obj);
+    } else {
+        h[0x6a] = (*(u8**)((char*)obj + 0x50))[0x63];
+        h[0x6b] = (*(u8**)((char*)obj + 0x50))[0x64];
+        ((GpbHeldByte*)(sub + 0x4a))->playerHeld = 0;
+        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+        ObjHits_ClearFlags((int)obj, 0x400);
+        *(u8*)(sub + 0x49) = (u8)(*(u8*)(sub + 0x49) | 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 extern u32 GameBit_Get(int);
@@ -3619,7 +4076,7 @@ void cfprisoncage_hitDetect(int* obj)
     }
 }
 
-extern void fn_801A0614(void);
+extern int fn_801A0614(int* obj, int p2, u8* p3);
 extern int *gObjectTriggerInterface;
 extern f32 lbl_803E42B4;
 #pragma scheduling off

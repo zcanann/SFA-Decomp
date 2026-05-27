@@ -5451,6 +5451,32 @@ void fn_80050F2C(void) {
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
+int fn_8004AA24(int *ctx, int *ref) {
+    int target = ctx[4];
+    int *node = (int *)ref[0];
+    if (((s8 *)node)[0x19] == 0x24) {
+        u8 idx = ((u8 *)ref)[0xc];
+        if ((idx & 0x80) == 0) {
+            if (((u8 *)node)[3] != 0) {
+                return ((u8 *)node)[3] == target;
+            } else {
+                int *arr = (int *)*(int *)((char *)ctx[0] + (idx << 4));
+                int *p = arr;
+                int i;
+                for (i = 0; i < 4; i++) {
+                    if ((u32)node[5] == *(u32 *)((char *)p + 0x1c)) {
+                        return ((u8 *)arr)[i + 4] == target;
+                    }
+                    p++;
+                }
+                return 0;
+            }
+        }
+        return 0;
+    }
+    return (int)node == target;
+}
 void fn_8004AAD4(u8* arr, int size, int idx) {
     u32 key = *(u32*)(arr + idx * 8);
     u16 val = *(u16*)(arr + idx * 8 + 4);
@@ -5474,6 +5500,45 @@ void fn_8004AAD4(u8* arr, int size, int idx) {
     }
     *(u32*)(arr + idx * 8) = key;
     *(u16*)(arr + idx * 8 + 4) = val;
+}
+#pragma dont_inline reset
+extern void fn_8004AFA0(int *q, int *elem, int idx);
+int fn_8004B218(int *q, int n) {
+    int done = 0;
+    int result = 0;
+    int idx;
+    int *elem;
+    int *heap;
+    int count;
+    while (done == 0 && n != 0) {
+        heap = *(int **)((char *)q + 0x4);
+        count = *(s16 *)((char *)q + 0x22);
+        if (count == 0) {
+            idx = -1;
+        } else {
+            idx = *(u16 *)((char *)heap + 0xc);
+            *(int *)((char *)heap + 0x8) = *(int *)((char *)heap + count * 8);
+            *(s16 *)((char *)q + 0x22) = count - 1;
+            *(u16 *)((char *)heap + 0xc) = *(u16 *)((char *)heap + count * 8 + 4);
+            fn_8004AAD4((u8 *)heap, *(s16 *)((char *)q + 0x22), 1);
+        }
+        if (idx < 0) {
+            done = 1;
+            result = -1;
+        } else {
+            elem = (int *)(*(int *)((char *)q + 0) + idx * 16);
+            *(int *)((char *)q + 0x1c) = idx;
+            if (fn_8004AA24(q, elem) != 0) {
+                done = 1;
+                result = 1;
+            } else {
+                *((u8 *)elem + 0xe) = 1;
+                fn_8004AFA0(q, elem, idx);
+            }
+        }
+        n--;
+    }
+    return result;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -5569,5 +5634,629 @@ void textureFn_8004c264(u8 *tex, int mapId) {
         fn_80053C40(tex, lbl_803779A0);
         GXLoadTexObj(lbl_803779A0, 1);
     }
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+void selectTexture(u8 *tex, int mapId) {
+    void *base;
+    if (tex == NULL) return;
+    base = &tex[0x20];
+    if (tex[0x48] != 0) {
+        GXLoadTexObjPreLoaded(base, *(void **)(tex + 0x40), mapId);
+    } else {
+        GXLoadTexObj(base, mapId);
+    }
+}
+extern int lbl_803DCC80;
+#pragma scheduling off
+#pragma peephole off
+void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
+    u32 v31 = 0;
+    u32 v30 = 0;
+    int idx = -1;
+    int flags;
+    int saved;
+    char *p;
+    if (lbl_8035F3E8[0x2b] != 0 || lbl_8035F3E8[0x46] != 0) {
+        saved = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(saved);
+        if ((flags & 4) == 0 && (flags & 1) == 0) {
+            v31 = lbl_8035F3E8[0x2a];
+        }
+        if ((flags & 8) == 0 && (flags & 2) == 0) {
+            v30 = lbl_8035F3E8[0x45];
+        }
+        if (v30 != 0 && (a & 0x20000000) != 0) {
+            idx = 0x46;
+        } else if (v31 != 0 && (a & 0x10000000) != 0) {
+            idx = 0x2b;
+        } else if (v31 != 0) {
+            idx = 0x2b;
+        } else if (v30 != 0) {
+            idx = 0x46;
+        }
+        p = (char *)lbl_8035F3E8[idx] + (a & 0x0fffffff);
+        *p18 = *(int *)(p + 0x18);
+        *p1c = *(int *)(p + 0x1c);
+        *p20 = *(int *)(p + 0x20);
+        *p4 = *(int *)(p + 0x4);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+extern char sZlbBlockTag[];
+extern int strncmp(const char *a, const char *b, u32 n);
+#pragma scheduling off
+#pragma peephole off
+void checkLoadBlock(int a, int *pc, int *p8) {
+    int idx = -1;
+    int flags;
+    int saved;
+    char *blk;
+    u32 t25, t47;
+    if ((lbl_8035F3E8[0x26] != 0 && lbl_8035F3E8[0x25] != 0) ||
+        (lbl_8035F3E8[0x48] != 0 && lbl_8035F3E8[0x47] != 0)) {
+        saved = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(saved);
+        t25 = lbl_8035F3E8[0x25];
+        t47 = lbl_8035F3E8[0x47];
+        if (t25 != 0 && (a & 0x10000000) != 0 && (flags & 0x10000) == 0) {
+            idx = 0x25;
+        } else if (t47 != 0 && (a & 0x20000000) != 0 && (flags & 0x40000) == 0) {
+            idx = 0x47;
+        } else if (t25 != 0 && (flags & 0x10000) == 0) {
+            idx = 0x25;
+        } else if (t47 != 0 && (flags & 0x40000) == 0) {
+            idx = 0x47;
+        }
+        blk = (char *)lbl_8035F3E8[idx] + (a & 0x00ffffff);
+        if (strncmp(blk, sZlbBlockTag, 3) != 0) {
+            *p8 = 0;
+            *pc = 0;
+        } else {
+            *p8 = *(int *)(blk + 0x8);
+            *pc = *(int *)(blk + 0xc);
+        }
+    } else {
+        *p8 = 0;
+        *pc = 0;
+    }
+}
+void loadVoxMaps(int a, int *pc, int *p8) {
+    int idx = -1;
+    int flags;
+    int saved;
+    char *blk;
+    u32 t1b, t54;
+    if ((lbl_8035F3E8[0x1a] != 0 && lbl_8035F3E8[0x1b] != 0) ||
+        (lbl_8035F3E8[0x53] != 0 && lbl_8035F3E8[0x54] != 0)) {
+        saved = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(saved);
+        t1b = lbl_8035F3E8[0x1b];
+        t54 = lbl_8035F3E8[0x54];
+        if (t1b != 0 && (a & 0x80000000) != 0 && (flags & 0x1000000) == 0) {
+            idx = 0x1b;
+        } else if (t54 != 0 && (a & 0x20000000) != 0 && (flags & 0x4000000) == 0) {
+            idx = 0x54;
+        } else if (t1b != 0 && (flags & 0x1000000) == 0) {
+            idx = 0x1b;
+        } else if (t54 != 0 && (flags & 0x4000000) == 0) {
+            idx = 0x54;
+        }
+        if ((a & 0xf0000000) != 0) {
+            blk = (char *)lbl_8035F3E8[idx] + (a & 0x00ffffff);
+            if (strncmp(blk, sZlbBlockTag, 3) != 0) {
+                *p8 = 0;
+                *pc = 0;
+            } else {
+                *p8 = *(int *)(blk + 0x8);
+                *pc = *(int *)(blk + 0xc);
+            }
+        } else {
+            *p8 = 0;
+            *pc = 0;
+        }
+    } else {
+        *p8 = 0;
+        *pc = 0;
+    }
+}
+void fn_80050FF4(u8 mode) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    if (mode != 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 1, 4, 6);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 1, 0xa, 6);
+    }
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
+extern u8 lbl_803DCD30;
+void gxTextureFn_80050e28(u8 mode) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    if (mode != 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 6);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 0xa, 6);
+    }
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
+extern void GXSetTevIndRepeat(int stage);
+extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
+extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
+extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
+extern void GXLoadTexMtxImm(void *m, int id, int type);
+extern void GXSetTexCoordGen2(int dst, int func, int src, int mtx, int normalize, int pttexmtx);
+extern void GXSetTevSwapModeTable(int table, int r, int g, int b, int a);
+extern u8 lbl_803DCD68;
+extern int lbl_803DCD80;
+extern u8 lbl_803DCD69;
+extern f32 lbl_803DEACC;
+extern f32 Breaking_803DEB40;
+extern f32 Prepared_803DEAD8[2];
+void fn_800510F0(void *p1, u8 flag2, u8 flag3) {
+    f32 mtxB[3][4];
+    f32 mtxA[3][4];
+    if (lbl_803DCD68 == 0) {
+        GXSetTevDirect(lbl_803DCD90);
+    }
+    if (flag2 != 0) {
+        GXSetTevIndRepeat(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 - 1, lbl_803DCD8C, 0xff);
+    } else {
+        PSMTXScale(mtxA, Breaking_803DEB40, Breaking_803DEB40, lbl_803DEACC);
+        PSMTXTrans(mtxB, Prepared_803DEAD8[1], Prepared_803DEAD8[1], lbl_803DEAC8);
+        PSMTXConcat(mtxB, mtxA, mtxA);
+        GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
+        GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, lbl_803DCD80);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
+        lbl_803DCD80 = lbl_803DCD80 + 3;
+        lbl_803DCD88 = lbl_803DCD88 + 1;
+        lbl_803DCD69 = lbl_803DCD69 + 1;
+    }
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 4, 3, 7);
+    if (flag2 != 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 8, 4, 0xf);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 8, 0xa, 0xf);
+    }
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
+    if ((flag3 & 1) != 0) {
+        GXSetTevSwapModeTable(3, 2, 2, 2, 1);
+    } else {
+        GXSetTevSwapModeTable(3, 0, 0, 0, 1);
+    }
+    GXSetTevSwapMode(lbl_803DCD90, 0, 3);
+    if (p1 != 0) {
+        if (*(u8 *)((char *)p1 + 0x48) != 0) {
+            GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), lbl_803DCD8C);
+        } else {
+            GXLoadTexObj((char *)p1 + 0x20, lbl_803DCD8C);
+        }
+    }
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
+extern void gxTextureFn_8004bf88(void *buf, u8 a, u8 b, int *out1, int *out2);
+extern void GXSetTevKColorSel(int stage, int sel);
+void textureFn_80051348(void *p1, u8 p2) {
+    f32 mtxB[3][4];
+    f32 mtxA[3][4];
+    u8 buf[3];
+    int out_c;
+    int out_8;
+    PSMTXScale(mtxA, Breaking_803DEB40, Breaking_803DEB40, lbl_803DEACC);
+    PSMTXTrans(mtxB, Prepared_803DEAD8[1], Prepared_803DEAD8[1], lbl_803DEAC8);
+    PSMTXConcat(mtxB, mtxA, mtxA);
+    GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
+    buf[0] = p2;
+    buf[1] = p2;
+    buf[2] = p2;
+    gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
+    GXSetTevKColorSel(lbl_803DCD90, out_c);
+    GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, lbl_803DCD80);
+    if (lbl_803DCD68 == 0) {
+        GXSetTevDirect(lbl_803DCD90);
+    }
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 8, 0xe, 0xa);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 2);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    if (p1 != 0) {
+        if (*(u8 *)((char *)p1 + 0x48) != 0) {
+            GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), lbl_803DCD8C);
+        } else {
+            GXLoadTexObj((char *)p1 + 0x20, lbl_803DCD8C);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+    lbl_803DCD69 = lbl_803DCD69 + 1;
+}
+void textureFn_8004ff20(void *p1) {
+    if (p1 != 0) {
+        GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, 0x7d);
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 0xb, 8);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
+        GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+        GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+        lbl_803DCD30 = 1;
+        {
+            int id = lbl_803DCD8C;
+            if (p1 != 0) {
+                if (*(u8 *)((char *)p1 + 0x48) != 0) {
+                    GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), id);
+                } else {
+                    GXLoadTexObj((char *)p1 + 0x20, id);
+                }
+            }
+        }
+        lbl_803DCD88 = lbl_803DCD88 + 1;
+        lbl_803DCD90 = lbl_803DCD90 + 1;
+        lbl_803DCD8C = lbl_803DCD8C + 1;
+        lbl_803DCD69 = lbl_803DCD69 + 1;
+        lbl_803DCD6A = lbl_803DCD6A + 1;
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 5);
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xa, 0xb, 0);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 7);
+        GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+        GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+        lbl_803DCD90 = lbl_803DCD90 + 1;
+        lbl_803DCD6A = lbl_803DCD6A + 1;
+    }
+}
+extern int lbl_803DCD70;
+extern int lbl_803DCD6C;
+extern int lbl_803DCD74;
+extern void GXSetTevKColor(int id, void *color);
+void gxTextureFn_8004bf88(void *bufp, u8 flag1, u8 flag2, int *out1, int *out2) {
+    u8 *buf = bufp;
+    u8 found1 = 0;
+    u8 found2 = 0;
+    if (flag1 != 0) {
+        if (buf[0] == buf[1] && buf[0] == buf[2]) {
+            if (buf[0] == 0xff) {
+                *out1 = 0;
+                found1 = 1;
+            } else if (buf[0] == 0xe0) {
+                *out1 = 1;
+                found1 = 1;
+            } else if (buf[0] == 0xc0) {
+                *out1 = 2;
+                found1 = 1;
+            } else if (buf[0] == 0xa0) {
+                *out1 = 3;
+                found1 = 1;
+            } else if (buf[0] == 0x80) {
+                *out1 = 4;
+                found1 = 1;
+            } else if (buf[0] == 0x60) {
+                *out1 = 5;
+                found1 = 1;
+            } else if (buf[0] == 0x40) {
+                *out1 = 6;
+                found1 = 1;
+            } else if (buf[0] == 0x20) {
+                *out1 = 7;
+                found1 = 1;
+            }
+        }
+        if (found1 == 0) {
+            *out1 = lbl_803DCD70;
+        }
+    } else {
+        found1 = 1;
+    }
+    if (flag2 != 0) {
+        if (buf[3] == 0xff) {
+            *out2 = 0;
+            found2 = 1;
+        } else if (buf[3] == 0xe0) {
+            *out2 = 1;
+            found2 = 1;
+        } else if (buf[3] == 0xc0) {
+            *out2 = 2;
+            found2 = 1;
+        } else if (buf[3] == 0xa0) {
+            *out2 = 3;
+            found2 = 1;
+        } else if (buf[3] == 0x80) {
+            *out2 = 4;
+            found2 = 1;
+        } else if (buf[3] == 0x60) {
+            *out2 = 5;
+            found2 = 1;
+        } else if (buf[3] == 0x40) {
+            *out2 = 6;
+            found2 = 1;
+        } else if (buf[3] == 0x20) {
+            *out2 = 7;
+            found2 = 1;
+        }
+        if (found2 == 0) {
+            *out2 = lbl_803DCD6C;
+        }
+    } else {
+        found2 = 1;
+    }
+    if (found1 == 0 || found2 == 0) {
+        int color = *(int *)bufp;
+        GXSetTevKColor(lbl_803DCD74, &color);
+        lbl_803DCD74 = lbl_803DCD74 + 1;
+        lbl_803DCD70 = lbl_803DCD70 + 1;
+        lbl_803DCD6C = lbl_803DCD6C + 1;
+    }
+}
+void gxTextureFn_8004d5b4(void *p1) {
+    u8 buf[3];
+    int color;
+    u8 b = *(u8 *)((char *)p1 + 0x43);
+    buf[2] = b;
+    buf[1] = b;
+    buf[0] = b;
+    color = *(int *)buf;
+    GXSetTevKColor(lbl_803DCD74, &color);
+    GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorIn(lbl_803DCD90, 0, 2, 0xe, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD74 = lbl_803DCD74 + 1;
+    lbl_803DCD70 = lbl_803DCD70 + 1;
+    lbl_803DCD6C = lbl_803DCD6C + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
+struct piIndMtx { f32 m[2][3]; };
+extern struct piIndMtx lbl_802C1D50;
+extern u8 lbl_803DB5E8;
+extern int lbl_803DCD7C;
+extern int lbl_8030CEE0[];
+extern f32 lbl_803DEB38;
+extern f32 lbl_803DEB3C;
+extern void *textureIdxToPtr(int idx);
+extern void GXSetIndTexMtx(int id, f32 offset[2][3], int scale_exp);
+extern void GXSetIndTexOrder(int ind_stage, int tex_coord, int tex_map);
+extern void GXSetIndTexCoordScale(int ind_stage, int scale_s, int scale_t);
+extern void GXSetTevIndirect(int tev, int ind, int fmt, int bias, int mtx, int ws, int wt, int addprev, int utclod, int alpha);
+extern void GXSetTevOp(int stage, int mode);
+int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
+    struct piIndMtx indmtx;
+    f32 mtx[3][4];
+    f32 v;
+    int result = 0;
+    indmtx = lbl_802C1D50;
+    if ((lbl_803DB5E8 & 1) == 0) {
+        return 0;
+    }
+    GXSetIndTexMtx(1, indmtx.m, 0);
+    GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + p2, lbl_803DCD8C);
+    if (p4 != 0) {
+        void *texptr;
+        u32 div;
+        p2 = (p3 & 0xf) * 4 + 1;
+        texptr = textureIdxToPtr(p4);
+        div = (u32)*(u16 *)((char *)texptr + 0xa) / (u32)(*(u16 *)((char *)p1 + 0xa) * p2);
+        if (div != 0) {
+            GXSetIndTexCoordScale(lbl_803DCD7C, lbl_8030CEE0[div - 1], lbl_8030CEE0[div - 1]);
+        } else {
+            result = (u8)p2;
+        }
+    } else {
+        result = 1;
+    }
+    v = (f32)(s32)((p3 & 0xf0) >> 4);
+    v = v / lbl_803DEB3C;
+    v = v - lbl_803DEAC8;
+    v = lbl_803DEB38 * v;
+    v = Prepared_803DEAD8[1] * v;
+    PSMTXScale(mtx, v, v, lbl_803DEACC);
+    mtx[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, 1, 2, 0x1e, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, 1, 3, 0x1e, 0, lbl_803DCD80);
+    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 5, 6, 6, 0, 0, 0);
+    GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C, 0, 3, 9, 6, 6, 1, 0, 0);
+    GXSetTevIndirect(lbl_803DCD90 + 2, lbl_803DCD7C, 0, 0, 0, 0, 0, 1, 0, 0);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, (lbl_803DCD8C + 1) | 0x100, 0xff);
+    GXSetTevOp(lbl_803DCD90, 4);
+    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, (lbl_803DCD8C + 1) | 0x100, 0xff);
+    GXSetTevOp(lbl_803DCD90 + 1, 4);
+    if (p1 != 0) {
+        if (*(u8 *)((char *)p1 + 0x48) != 0) {
+            GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), lbl_803DCD8C);
+        } else {
+            GXLoadTexObj((char *)p1 + 0x20, lbl_803DCD8C);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD7C = lbl_803DCD7C + 1;
+    lbl_803DCD88 = lbl_803DCD88 + 2;
+    lbl_803DCD90 = lbl_803DCD90 + 2;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 2;
+    lbl_803DCD68 = lbl_803DCD68 + 1;
+    lbl_803DCD69 = lbl_803DCD69 + 2;
+    return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
+extern void VIConfigure(void *mode);
+void tvInit(void) {
+    *(s16 *)((char *)lbl_803DCCF0 + 0xe) = 0x294;
+    *(u16 *)((char *)lbl_803DCCF0 + 0xa) = *(u16 *)((char *)lbl_803DCCF0 + 0xa) - 0xa;
+    VIConfigure(lbl_803DCCF0);
+    VIFlush();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
+}
+void mapsBinGetRomlistSize(int idx, int *out1, int *out2, int *out3, int p5) {
+    char *base = (char *)lbl_8035F3E8;
+    char *e;
+    if (*(int *)(base + 0x74) == 0) return;
+    if (*(int *)(base + 0x78) == 0) return;
+    e = (char *)*(int *)(base + 0x74) + idx;
+    *out1 = *(s16 *)(e + 0x1c);
+    *out2 = *(s16 *)(e + 0x1e);
+    *out3 = *(int *)((char *)*(int *)(base + 0x74) +
+            *(int *)((char *)*(int *)(base + 0x78) + p5 * 4 + 0x18) + 4);
+}
+void trickyVoxAllocFn_8004b5d4(int *out) {
+    out[0] = (int)mmAlloc(0x1960, 0x10, 0);
+    out[1] = out[0] + 0xfe0;
+    out[2] = out[1] + 0x7f0;
+}
+extern int DVDOpen(char *fileName, void *fileInfo);
+extern int DVDRead(void *fileInfo, void *addr, int length, int offset);
+extern void *memcpy(void *dst, const void *src, u32 n);
+void *fileLoad(int id) {
+    u8 fileInfo[0x3c];
+    if (lbl_8035F3E8[id] != 0) {
+        return (void *)lbl_8035F3E8[id];
+    }
+    DVDOpen(sResourceFileNameTable[id], fileInfo);
+    lbl_8035F0A8[id] = *(s32 *)(fileInfo + 0x34);
+    lbl_8035F3E8[id] = (u32)mmAlloc(lbl_8035F0A8[id] + 0x20, 0x7d7d7d7d, 0);
+    DCInvalidateRange((void *)lbl_8035F3E8[id], lbl_8035F0A8[id]);
+    DVDRead(fileInfo, (void *)lbl_8035F3E8[id], lbl_8035F0A8[id], 0);
+    DVDClose(fileInfo);
+    return (void *)lbl_8035F3E8[id];
+}
+int fileLoadToBuffer(int id, void *buffer) {
+    u8 fileInfo[0x3c];
+    if (lbl_8035F3E8[id] != 0) {
+        memcpy(buffer, (void *)lbl_8035F3E8[id], lbl_8035F0A8[id]);
+        DCStoreRange(buffer, lbl_8035F0A8[id]);
+        return lbl_8035F0A8[id];
+    }
+    DVDOpen(sResourceFileNameTable[id], fileInfo);
+    DCInvalidateRange(buffer, *(s32 *)(fileInfo + 0x34));
+    DVDRead(fileInfo, buffer, *(s32 *)(fileInfo + 0x34), 0);
+    DVDClose(fileInfo);
+    return *(s32 *)(fileInfo + 0x34);
+}
+int fileLoadToBufferOffset(int id, void *buffer, int offset, int size) {
+    u8 fileInfo[0x3c];
+    void *tmp;
+    int asize;
+    if (size == 0) return 0;
+    if (lbl_8035F3E8[id] != 0) {
+        memcpy(buffer, (void *)(lbl_8035F3E8[id] + offset), size);
+        DCStoreRange(buffer, size);
+        return size;
+    }
+    DVDOpen(sResourceFileNameTable[id], fileInfo);
+    if (((int)buffer & 0x1f) != 0 || (size & 0x1f) != 0) {
+        asize = (size + 0x1f) & ~0x1f;
+        tmp = mmAlloc(asize, 0x7d7d7d7d, 0);
+        DCInvalidateRange(tmp, asize);
+        DVDRead(fileInfo, tmp, asize, offset);
+        memcpy(buffer, tmp, size);
+        mm_free(tmp);
+    } else {
+        DCInvalidateRange(buffer, size);
+        DVDRead(fileInfo, buffer, size, offset);
+    }
+    DVDClose(fileInfo);
+    DCStoreRange(buffer, size);
+    return size;
+}
+extern u8 lbl_803DCD30;
+void fn_8004EECC(void) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
+    GXSetTevColorIn(lbl_803DCD90, 0, 0xf, 0xb, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
+void fn_8004F080(void) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 3);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevDirect(lbl_803DCD90 + 1);
+    GXSetTevOrder(lbl_803DCD90 + 1, 0xff, 0xff, 0xff);
+    GXSetTevColorIn(lbl_803DCD90 + 1, 4, 0xf, 0xf, 0);
+    GXSetTevAlphaIn(lbl_803DCD90 + 1, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90 + 1, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
+    GXSetTevDirect(lbl_803DCD90 + 2);
+    GXSetTevOrder(lbl_803DCD90 + 2, 0xff, 0xff, 4);
+    GXSetTevColorIn(lbl_803DCD90 + 2, 0, 6, 0xb, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90 + 2, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90 + 2, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90 + 2, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90 + 2, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 3;
+    lbl_803DCD6A = lbl_803DCD6A + 3;
+}
+void fn_8004F2B0(void) {
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
+extern void GXSetTevColor(int id, void *color);
+void fn_8004EF9C(int *param) {
+    int color = param[0];
+    GXSetTevColor(2, &color);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 0, 4, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
 }
 #pragma scheduling reset

@@ -4634,3 +4634,349 @@ void romListReadCb(s32 result, void *fileInfo)
         AtomicSList_Push(lbl_803DCC8C, fileInfo);
     }
 }
+
+int unlockLevel(s32 val, int idx, int flag)
+{
+    s32 cur;
+    if (flag == 1) {
+        (&lbl_803DB5B0)[0] = -2;
+        (&lbl_803DB5B0)[1] = -2;
+        return -1;
+    }
+    cur = (&lbl_803DB5B0)[idx];
+    if (val == cur || cur == -2) {
+        (&lbl_803DB5B0)[idx] = -2;
+        return -1;
+    }
+    return cur;
+}
+
+extern int lbl_803DCC88;
+void dvdReadCb_80041d30(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        lbl_803DCC88--;
+    }
+}
+
+/* Resource read-completion callbacks: close DVD, recycle file slot, mark loaded-flag. */
+#pragma peephole off
+#pragma scheduling off
+void animReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x10) {
+            lbl_803DCC84 |= 0x10;
+            lbl_80345F70[0xc0 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x20) {
+            lbl_803DCC84 |= 0x20;
+            lbl_80345F70[0x128 / 4] = 0;
+        }
+    }
+}
+
+void animCurvReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x10000000) {
+            lbl_803DCC84 |= 0x10000000;
+            lbl_80345F70[0x34 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x40000000) {
+            lbl_803DCC84 |= 0x40000000;
+            lbl_80345F70[0x154 / 4] = 0;
+        }
+    }
+}
+
+void animCurvTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x20000000) {
+            lbl_803DCC84 |= 0x20000000;
+            lbl_80345F70[0x38 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x80000000) {
+            lbl_803DCC84 |= 0x80000000;
+            lbl_80345F70[0x158 / 4] = 0;
+        }
+    }
+}
+
+void animTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x40) {
+            lbl_803DCC84 |= 0x40;
+            lbl_80345F70[0xbc / 4] = 0;
+        } else if (lbl_803DCC80 & 0x80) {
+            lbl_803DCC84 |= 0x80;
+            lbl_80345F70[0x124 / 4] = 0;
+        }
+    }
+}
+
+void blocksReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x10000) {
+            lbl_803DCC84 |= 0x10000;
+            lbl_80345F70[0x94 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x40000) {
+            lbl_803DCC84 |= 0x40000;
+            lbl_80345F70[0x11c / 4] = 0;
+        }
+    }
+}
+
+void blocksTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x20000) {
+            lbl_803DCC84 |= 0x20000;
+            lbl_80345F70[0x98 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x80000) {
+            lbl_803DCC84 |= 0x80000;
+            lbl_80345F70[0x120 / 4] = 0;
+        }
+    }
+}
+
+void modelsReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x1) {
+            lbl_803DCC84 |= 0x1;
+            lbl_80345F70[0xac / 4] = 0;
+        } else if (lbl_803DCC80 & 0x2) {
+            lbl_803DCC84 |= 0x2;
+            lbl_80345F70[0x118 / 4] = 0;
+        }
+    }
+}
+
+void modelsTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x4) {
+            lbl_803DCC84 |= 0x4;
+            lbl_80345F70[0xa8 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x8) {
+            lbl_803DCC84 |= 0x8;
+            lbl_80345F70[0x114 / 4] = 0;
+        }
+    }
+}
+
+void tex0readCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x100) {
+            lbl_803DCC84 |= 0x100;
+            lbl_80345F70[0x8c / 4] = 0;
+        } else if (lbl_803DCC80 & 0x200) {
+            lbl_803DCC84 |= 0x200;
+            lbl_80345F70[0x134 / 4] = 0;
+        }
+    }
+}
+
+void tex1ReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x1000) {
+            lbl_803DCC84 |= 0x1000;
+            lbl_80345F70[0x80 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x2000) {
+            lbl_803DCC84 |= 0x2000;
+            lbl_80345F70[0x12c / 4] = 0;
+        }
+    }
+}
+
+void voxMapReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x1000000) {
+            lbl_803DCC84 |= 0x1000000;
+            lbl_80345F70[0x6c / 4] = 0;
+        } else if (lbl_803DCC80 & 0x4000000) {
+            lbl_803DCC84 |= 0x4000000;
+            lbl_80345F70[0x150 / 4] = 0;
+        }
+    }
+}
+
+void voxMapTabReadCb(s32 result, void *fileInfo)
+{
+    if (result < 0) {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x2000000) {
+            lbl_803DCC84 |= 0x2000000;
+            lbl_80345F70[0x68 / 4] = 0;
+        } else if (lbl_803DCC80 & 0x8000000) {
+            lbl_803DCC84 |= 0x8000000;
+            lbl_80345F70[0x14c / 4] = 0;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern void mapLoadDataFiles(int idx);
+extern int sMapFileNameIndexRemapTable[];
+extern s16 sMapFileNameAdjacencyTable[];
+int loadMapAndParent(int mapId)
+{
+    int idx;
+    s16 parent;
+    if (mapId >= 0x4b) {
+        idx = 5;
+    } else {
+        idx = sMapFileNameIndexRemapTable[mapId];
+    }
+    parent = sMapFileNameAdjacencyTable[idx];
+    if (parent != -1 && mapCheckCurBlocks(parent) == -1) {
+        mapLoadDataFiles(parent);
+        return parent;
+    }
+    mapLoadDataFiles(idx);
+    return idx;
+}
+
+extern void *gMapEventInterface;
+extern void mapLoadDataFile(int mapIdx, int fileType);
+void mapLoadDataFiles(int mapIdx)
+{
+    if (sMapFileNameAdjacencyTable[mapIdx] != -1) {
+        int *r = ((int *(*)(void *))((void **)*(void **)gMapEventInterface)[0x90 / 4])(*(void **)gMapEventInterface);
+        *(s8 *)((char *)r + 0xe) = (s8)mapIdx;
+    }
+    mapLoadDataFile(mapIdx, 0x20);
+    mapLoadDataFile(mapIdx, 0x21);
+    mapLoadDataFile(mapIdx, 0x23);
+    mapLoadDataFile(mapIdx, 0x24);
+    mapLoadDataFile(mapIdx, 0x30);
+    mapLoadDataFile(mapIdx, 0x2f);
+    mapLoadDataFile(mapIdx, 0x2b);
+    mapLoadDataFile(mapIdx, 0x2a);
+    mapLoadDataFile(mapIdx, 0x26);
+    mapLoadDataFile(mapIdx, 0x25);
+    mapLoadDataFile(mapIdx, 0x1a);
+    mapLoadDataFile(mapIdx, 0x1b);
+    mapLoadDataFile(mapIdx, 0xe);
+    mapLoadDataFile(mapIdx, 0xd);
+}
+
+extern void debugPrintfxy(int x, int y, char *fmt, ...);
+extern char sAssetIndexOverflowError[];
+int getTableFileEntry(int fileId, int index, int *out)
+{
+    u8 *base = lbl_80345E10;
+    int count = 0;
+    void *table = NULL;
+    switch (fileId) {
+    case 0xe:
+        count = 0x1fd0;
+        table = &base[0x2c0];
+        break;
+    case 0x1a:
+        count = 0x800;
+        table = &base[0x8200];
+        break;
+    case 0x21:
+        count = 0x1000;
+        table = &base[0xc200];
+        break;
+    case 0x24:
+        count = 0x1000;
+        table = &base[0x10200];
+        break;
+    case 0x26:
+        count = 0x800;
+        table = &base[0xa200];
+        break;
+    case 0x2a:
+        count = 0x800;
+        table = &base[0x170e0];
+        break;
+    case 0x2f:
+        count = 0xbb8;
+        table = &base[0x14200];
+        break;
+    case 0x50:
+        table = *(void **)&base[0x19718];
+        break;
+    }
+    if (index < 0 || index >= count) {
+        debugPrintfxy(0x14, 0x28, sAssetIndexOverflowError);
+        return 0;
+    }
+    if (table != NULL) {
+        *out = ((int *)table)[index];
+        return 1;
+    }
+    return 0;
+}

@@ -1326,6 +1326,11 @@ int arrayIndexOf(int *arr, int count, int target)
     return -1;
 }
 
+int randFn_80080100(int n)
+{
+    return randomGetRange(0, n * 60 / 60) == 0;
+}
+
 extern f32 timeDelta;
 #pragma peephole off
 #pragma scheduling off
@@ -1451,24 +1456,23 @@ extern int *gCameraInterface;
 #pragma scheduling off
 void cameraFocusNpc(int param1, u8 *obj)
 {
-    f32 vec[3];
-    u8 tag;
+    struct { f32 vec[3]; u8 tag; } buf;
     f32 *p;
 
     if ((*(int (**)(void))(*gCameraInterface + 0x10))() == 0x4d) return;
     lbl_803DD0FC = (u32)obj;
     p = *(f32 **)(obj + 0x74);
     if (p == NULL || param1 == 7 || param1 == 6) {
-        vec[0] = *(f32 *)(obj + 0x18);
-        vec[1] = *(f32 *)(obj + 0x1c);
-        vec[2] = *(f32 *)(obj + 0x20);
+        buf.vec[0] = *(f32 *)(obj + 0x18);
+        buf.vec[1] = *(f32 *)(obj + 0x1c);
+        buf.vec[2] = *(f32 *)(obj + 0x20);
     } else {
-        vec[0] = p[0];
-        vec[1] = p[1];
-        vec[2] = p[2];
+        buf.vec[0] = p[0];
+        buf.vec[1] = p[1];
+        buf.vec[2] = p[2];
     }
-    tag = (u8)param1;
-    (*(void (**)(int, int, int, int, f32 *, int, int))(*gCameraInterface + 0x1c))(0x4d, 1, 0, 0x10, vec, 0, 0xff);
+    buf.tag = (u8)param1;
+    (*(void (**)(int, int, int, int, f32 *, int, int))(*gCameraInterface + 0x1c))(0x4d, 1, 0, 0x10, buf.vec, 0, 0xff);
 }
 #pragma scheduling reset
 #pragma peephole reset

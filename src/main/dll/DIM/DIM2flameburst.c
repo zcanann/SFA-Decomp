@@ -1638,7 +1638,7 @@ void dimmagicbridge_release(void) {}
 void dimmagicbridge_initialise(void) {}
 
 extern f32 lbl_803E4A10;
-extern void fn_801B602C(int obj);
+extern int fn_801B602C(int* obj, int p2, u8* p3);
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int a, int b, int c);
@@ -1864,6 +1864,7 @@ void dim_levelcontrol_free(int p1)
 extern void *objFindTexture(int obj, int a, int b);
 extern u8 framesThisStep;
 #pragma scheduling off
+#pragma dont_inline on
 void fn_801B5F1C(int param_1, u8* obj)
 {
     u8* tex;
@@ -1890,4 +1891,175 @@ void fn_801B5F1C(int param_1, u8* obj)
     if (v > 0xffff) v = v - 0xffff;
     *(u16*)(obj + 0x62) = (u16)v;
 }
+#pragma dont_inline reset
+#pragma scheduling reset
+
+/* EN v1.0 0x801B602C  size: 312b  fn_801B602C: flameburst per-frame logic —
+ * tick the spawn timer, allocate a free flame slot every 16 frames, and ramp
+ * each active slot's alpha toward full; then run the UV scroll. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801B602C(int* obj, int p2, u8* p3)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    int j;
+    int i;
+    p3[0x56] = 0;
+    *(s16*)(p3 + 0x6e) = (s16)(*(s16*)(p3 + 0x6e) & ~0x40);
+    fn_801B5F1C((int)obj, sub);
+    if (p3[0x80] == 1) {
+        p3[0x80] = 0;
+        sub[0x5f] = 1;
+    }
+    if (sub[0x5f] != 0) {
+        *(s16*)(sub + 0x64) = *(s16*)(sub + 0x64) - framesThisStep;
+        if (*(s16*)(sub + 0x64) <= 0) {
+            *(s16*)(sub + 0x64) = 0x10;
+            for (j = 1; sub[0x40 + j] != 0 && j < sub[0x4f]; j++) {
+            }
+            sub[0x40 + j] = 1;
+        }
+        for (i = 1; i < sub[0x4f]; i++) {
+            if (sub[0x40 + i] != 0) {
+                int v = sub[0x50 + i] + framesThisStep;
+                if (v > 0xff) v = 0xff;
+                sub[0x50 + i] = (u8)v;
+            }
+        }
+    }
+    fn_801B5D48((int)obj, sub);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 timeDelta;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnim, void* events);
+extern f32 lbl_803E49D8;
+extern f32 lbl_803E49DC;
+extern f32 lbl_803E49E0;
+extern f32 lbl_803E49E4;
+
+/* EN v1.0 0x801B5804  size: 380b  dimwooddoor2_update: advance the door's
+ * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
+ * alpha, otherwise scan the nearby objects and, if a key object is present,
+ * snap the door open (reset wobble, ring the gamebit, play the open sfx). */
+#pragma scheduling off
+#pragma peephole off
+void dimwooddoor2_update(int* obj)
+{
+    int* q = *(int**)((char*)obj + 0x4c);
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    ObjAnim_AdvanceCurrentMove(*(f32*)(sub + 4), timeDelta, (int)obj, 0);
+    *(f32*)((char*)obj + 0x14) = *(f32*)((char*)obj + 0x14) + *(f32*)(sub + 8);
+    if (*(f32*)(sub + 8) != lbl_803E49D4) {
+        *(f32*)(sub + 8) = *(f32*)(sub + 8) * lbl_803E49D8;
+        if (*(f32*)(sub + 8) > lbl_803E49D4) {
+            *(f32*)(sub + 8) = lbl_803E49D4;
+        }
+    }
+    if ((s8)sub[0] <= 0 && *(s16*)q == 0x338 && *(f32*)((char*)obj + 0x98) > lbl_803E49DC) {
+        int v = *(u8*)((char*)obj + 0x36) - framesThisStep * 16;
+        int* q2 = *(int**)((char*)obj + 0x54);
+        if (v < 0) v = 0;
+        *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
+        *(u8*)((char*)obj + 0x36) = (u8)v;
+    } else {
+        int found = 0;
+        int i;
+        int* list = *(int**)((char*)obj + 0x58);
+        int n = (s8)*(s8*)((char*)list + 0x10f);
+        for (i = 0; i < n; i++) {
+            int* o = *(int**)((char*)list + 0x100 + i * 4);
+            if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6) {
+                found = 1;
+                break;
+            }
+        }
+        if (found) {
+            *(f32*)(sub + 4) = lbl_803E49E0;
+            *(f32*)(sub + 8) = lbl_803E49E4;
+            sub[0] = 0;
+            GameBit_Set(*(s16*)((char*)q + 0x1e), 1);
+            Sfx_PlayFromObject((int)obj, 0x3e1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int Obj_IsLoadingLocked(void);
+extern int *Obj_AllocObjectSetup(int a, int b);
+extern void Obj_SetupObject(int *obj, int a, int b, int c, int d);
+extern f32 lbl_803E49EC;
+extern f32 lbl_803E49F0;
+extern f32 lbl_803E49F4;
+extern f32 lbl_803E49F8;
+extern f32 lbl_803E49FC;
+
+/* EN v1.0 0x801B5AA0  size: 496b  dll_1CE_update: hatch-door logic — coast
+ * the lid open with clamped velocity while idle, and once a key object is
+ * nearby, count down then ring the gamebit and (if the load isn't locked)
+ * spawn the contents object seeded from the door's transform. */
+#pragma scheduling off
+#pragma peephole off
+void dll_1CE_update(int* obj)
+{
+    int* q = *(int**)((char*)obj + 0x4c);
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    if (*(u8*)((char*)obj + 0x36) == 0) return;
+    if ((s8)sub[9] <= 0) {
+        int* q2 = *(int**)((char*)obj + 0x54);
+        *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
+        if (sub[8] == 1) {
+            *(f32*)(sub + 0) = *(f32*)(sub + 4) * timeDelta + *(f32*)(sub + 0);
+            if (*(f32*)(sub + 0) > lbl_803E49EC) {
+                *(f32*)(sub + 0) = lbl_803E49EC;
+                *(f32*)(sub + 4) = lbl_803E49F0;
+            } else if (*(f32*)(sub + 0) < lbl_803E49F4) {
+                *(f32*)(sub + 0) = lbl_803E49F4;
+                *(f32*)(sub + 4) = lbl_803E49F8;
+            }
+        }
+    }
+    if (*(s16*)((char*)obj + 0x46) == 0x334) return;
+    {
+        int found = 0;
+        int i;
+        int* list = *(int**)((char*)obj + 0x58);
+        int n = (s8)*(s8*)((char*)list + 0x10f);
+        for (i = 0; i < n; i++) {
+            int* o = *(int**)((char*)list + 0x100 + i * 4);
+            if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6) {
+                found = 1;
+                break;
+            }
+        }
+        if (!found) return;
+    }
+    sub[9] = sub[9] - 1;
+    if ((s8)sub[9] > 0) return;
+    GameBit_Set(*(s16*)((char*)q + 0x1e), 1);
+    sub[8] = 1;
+    if ((s16)*(s16*)((char*)q + 0x1a) != (int)GameBit_Get(0x46d)) return;
+    if (Obj_IsLoadingLocked() == 0) return;
+    {
+        int* no = Obj_AllocObjectSetup(0x30, 0x246);
+        *(f32*)((char*)no + 8) = *(f32*)((char*)q + 8);
+        *(f32*)((char*)no + 0xc) = lbl_803E49FC + *(f32*)((char*)q + 0xc);
+        *(f32*)((char*)no + 0x10) = *(f32*)((char*)q + 0x10);
+        *(u8*)((char*)no + 4) = *(u8*)((char*)q + 4);
+        *(u8*)((char*)no + 5) = *(u8*)((char*)q + 5);
+        *(u8*)((char*)no + 6) = *(u8*)((char*)q + 6);
+        *(u8*)((char*)no + 7) = *(u8*)((char*)q + 7);
+        *(s16*)((char*)no + 0x1c) = 0x17f;
+        *(s16*)((char*)no + 0x24) = -1;
+        *(s16*)((char*)no + 0x2c) = -1;
+        *(u8*)((char*)no + 0x1a) = 5;
+        *(u8*)((char*)no + 0x1b) = (u8)((s16)*(s16*)obj >> 8);
+        Obj_SetupObject(no, 5, (s8)*(s8*)((char*)obj + 0xac), -1, 0);
+    }
+}
+#pragma peephole reset
 #pragma scheduling reset
