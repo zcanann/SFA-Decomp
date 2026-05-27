@@ -1555,3 +1555,157 @@ void fn_801FBAC8(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *gObjectTriggerInterface;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+
+#pragma scheduling off
+#pragma peephole off
+void vfpplatform_update(int obj)
+{
+    int params = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    u8 s3 = *(u8 *)(state + 3);
+    if (s3 == 10) {
+        if (GameBit_Get(*(s16 *)state) != 0) {
+            (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+        }
+    } else {
+        int xi = (int)*(f32 *)(obj + 0xc);
+        int yi = (int)*(f32 *)(obj + 0x14);
+        int txi = (int)*(f32 *)(params + 8);
+        int tyi = (int)*(f32 *)(params + 0x10);
+        if (s3 != 99) {
+            if (*(s16 *)(obj + 0x46) == 960) {
+                fn_801FBAC8(obj);
+            } else {
+                switch (*(u8 *)(state + 2)) {
+                case 0:
+                    if (GameBit_Get(*(s16 *)state) != 0) {
+                        *(u8 *)(state + 2) = 1;
+                    }
+                    break;
+                case 1: {
+                    s16 timer = *(s16 *)(state + 4);
+                    if (timer != 0) {
+                        *(s16 *)(state + 4) = timer - (int)timeDelta;
+                        if (*(s16 *)(state + 4) <= 0) {
+                            *(s16 *)(state + 4) = 0;
+                        }
+                    } else if (s3 == 0) {
+                        if (yi == tyi - 60) {
+                            *(u8 *)(state + 2) = 2;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                        if (yi == tyi) {
+                            *(u8 *)(state + 2) = 3;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                    } else if (s3 == 3) {
+                        if (xi == txi - 60) {
+                            *(u8 *)(state + 2) = 2;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                        if (xi == txi) {
+                            *(u8 *)(state + 2) = 3;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                    } else {
+                        if (yi == tyi + 60) {
+                            *(u8 *)(state + 2) = 4;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                        if (yi == tyi) {
+                            *(u8 *)(state + 2) = 5;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                    }
+                    break;
+                }
+                case 2:
+                    if (s3 == 3) {
+                        if (xi < txi) {
+                            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + timeDelta;
+                            if ((int)*(f32 *)(obj + 0xc) >= txi) {
+                                *(f32 *)(obj + 0xc) = (f32)txi;
+                                *(u8 *)(state + 2) = 1;
+                            }
+                        }
+                    } else {
+                        if (yi < tyi) {
+                            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + timeDelta;
+                            if ((int)*(f32 *)(obj + 0x14) >= tyi) {
+                                *(f32 *)(obj + 0x14) = (f32)tyi;
+                                *(u8 *)(state + 2) = 1;
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    if (s3 == 3) {
+                        if (xi > txi - 60) {
+                            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) - timeDelta;
+                            if ((int)*(f32 *)(obj + 0xc) <= txi - 60) {
+                                *(f32 *)(obj + 0xc) = (f32)(txi - 60);
+                                *(u8 *)(state + 2) = 1;
+                                *(s16 *)(state + 4) = 200;
+                            }
+                        }
+                    } else {
+                        if (yi > tyi - 60) {
+                            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) - timeDelta;
+                            if ((int)*(f32 *)(obj + 0x14) <= tyi - 60) {
+                                *(f32 *)(obj + 0x14) = (f32)(tyi - 60);
+                                *(u8 *)(state + 2) = 1;
+                                *(s16 *)(state + 4) = 200;
+                            }
+                        }
+                    }
+                    break;
+                case 4:
+                    if (s3 == 3) {
+                        if (xi > txi) {
+                            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) - timeDelta;
+                            if ((int)*(f32 *)(obj + 0xc) <= txi) {
+                                *(f32 *)(obj + 0xc) = (f32)txi;
+                                *(u8 *)(state + 2) = 1;
+                            }
+                        }
+                    } else {
+                        if (yi > tyi) {
+                            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) - timeDelta;
+                            if ((int)*(f32 *)(obj + 0x14) <= tyi) {
+                                *(f32 *)(obj + 0x14) = (f32)tyi;
+                                *(u8 *)(state + 2) = 1;
+                            }
+                        }
+                    }
+                    break;
+                case 5:
+                    if (s3 == 3) {
+                        if (xi < txi + 60) {
+                            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + timeDelta;
+                            if ((int)*(f32 *)(obj + 0xc) >= txi + 60) {
+                                *(f32 *)(obj + 0xc) = (f32)(txi + 60);
+                                *(u8 *)(state + 2) = 1;
+                                *(s16 *)(state + 4) = 200;
+                            }
+                        }
+                    } else {
+                        if (yi < tyi + 60) {
+                            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + timeDelta;
+                            if ((int)*(f32 *)(obj + 0x14) >= tyi + 60) {
+                                *(f32 *)(obj + 0x14) = (f32)(tyi + 60);
+                                *(u8 *)(state + 2) = 1;
+                                *(s16 *)(state + 4) = 200;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
