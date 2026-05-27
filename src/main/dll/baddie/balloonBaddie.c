@@ -649,3 +649,41 @@ void hudFn_80125244(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u32 lbl_803E1E10;
+extern void *lbl_803A93C4[7];
+extern int lbl_803A93A8[7];
+extern f32 lbl_803E2010;
+extern f64 lbl_803E1E88;
+extern void gxColorFn_80052764(void *p);
+
+#pragma peephole off
+#pragma scheduling off
+int cMenuRenderFn_80124854(int obj, int param2, int param3)
+{
+    int idx;
+    void *tex;
+    u8 cfg[4];
+    *(u32 *)cfg = lbl_803E1E10;
+    idx = *(u8 *)(ObjModel_GetRenderOp(*(int *)param2, param3) + 0x29) - 1;
+    resetLotsOfRenderVars();
+    if (idx >= 0 && idx <= 6 && (tex = lbl_803A93C4[idx]) != 0) {
+        if (lbl_803A93A8[idx] != 0) {
+            cfg[3] = *(u8 *)(obj + 0x37);
+        } else {
+            cfg[3] = (int)(lbl_803E2010 * (f32)(u32)*(u8 *)(obj + 0x37));
+        }
+        gxFn_80051fb8(tex, 0, 0, cfg, 0, 1);
+    } else {
+        cfg[3] = 0;
+        gxColorFn_80052764(cfg);
+    }
+    textureFn_800528bc();
+    GXSetBlendMode(1, 4, 5, 5);
+    gxSetZMode_(0, 7, 0);
+    gxSetPeControl_ZCompLoc_(0);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
