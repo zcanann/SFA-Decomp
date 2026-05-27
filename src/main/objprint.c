@@ -3229,5 +3229,79 @@ void objModelClearVecFn_8003aa40(int obj)
         }
     }
 }
+
+void fn_8003AC14(int obj, int* keys, int count)
+{
+    s16* found;
+    int* table;
+    int k;
+    int n;
+    int i;
+    int j;
+    int idx;
+
+    for (idx = 0; idx < count; idx++) {
+        int key = *keys;
+        found = NULL;
+        table = *(int**)(obj + 0x50);
+        if (table != NULL) {
+            i = 0;
+            j = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+            for (k = 0; k < n; k++) {
+                u8* data = *(u8**)((char*)table + 0x10);
+                s32 di = *(s8*)(obj + 0xad) + i + 1;
+                if (data[di] != 0xff && (int)data[i] == key) {
+                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                }
+                i = i + *(s8*)((char*)table + 0x55) + 1;
+                j += 0x12;
+            }
+        }
+        if (found != NULL) {
+            found[1] = (s16)(found[1] * 3 >> 2);
+            found[0] = (s16)(found[0] * 3 >> 2);
+            found[2] = (s16)(found[2] * 3 >> 2);
+        }
+        keys++;
+    }
+}
+
+void objFn_8003acfc(int obj, int* keys, int count, int out)
+{
+    s16* found;
+    int* table;
+    int k;
+    int n;
+    int i;
+    int j;
+    int idx;
+
+    for (idx = 0; idx < count; idx++) {
+        int key = *keys;
+        found = NULL;
+        table = *(int**)(obj + 0x50);
+        if (table != NULL) {
+            i = 0;
+            j = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+            for (k = 0; k < n; k++) {
+                u8* data = *(u8**)((char*)table + 0x10);
+                s32 di = *(s8*)(obj + 0xad) + i + 1;
+                if (data[di] != 0xff && (int)data[i] == key) {
+                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                }
+                i = i + *(s8*)((char*)table + 0x55) + 1;
+                j += 0x12;
+            }
+        }
+        if (found != NULL) {
+            *(s16*)(out + 0x16) = found[1];
+            *(s16*)(out + 0x46) = found[0];
+        }
+        keys++;
+        out += 0x60;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
