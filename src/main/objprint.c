@@ -3303,5 +3303,44 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
         out += 0x60;
     }
 }
+
+extern void* getCache(void);
+extern void copyToCache(void* dst, void* src, int blockCount);
+extern void modelCalcVtxGroupMtxs(int p1, int p2);
+extern void* ObjModel_GetJointMatrix(int* model, int joint);
+extern void DCFlushRange(void* addr, u32 nBytes);
+extern int lbl_803DCC48;
+
+void modelInitMtxs(int p1, int p2)
+{
+    int cache;
+    int mtx;
+    int count;
+    u8 rem;
+
+    cache = (int)getCache();
+    if (*(u8*)(p1 + 0xf4) != 0) {
+        modelCalcVtxGroupMtxs(p1, p2);
+    }
+    count = (s32)(u32)*(u8*)(p1 + 0xf3) + (s32)(u32)*(u8*)(p1 + 0xf4);
+    if (count >= 2 && count <= 0x64) {
+        mtx = (int)ObjModel_GetJointMatrix((int*)p2, 0);
+        DCFlushRange((void*)mtx, count << 6);
+        rem = (u8)(count << 1);
+        cache += 0x2700;
+        while (rem >= 0x80) {
+            copyToCache((void*)cache, (void*)mtx, 0);
+            rem -= 0x80;
+            mtx += 0x1000;
+            cache += 0x1000;
+        }
+        if (rem != 0) {
+            copyToCache((void*)cache, (void*)mtx, rem);
+        }
+        lbl_803DCC48 = 1;
+    } else {
+        lbl_803DCC48 = 3;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
