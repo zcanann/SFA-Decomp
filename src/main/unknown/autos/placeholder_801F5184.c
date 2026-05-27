@@ -2474,3 +2474,35 @@ void fn_801F9804(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E6090;
+extern f32 lbl_803E60A4;
+extern f32 lbl_803E609C;
+
+#pragma scheduling off
+#pragma peephole off
+void vfpminifire_init(int *obj, u8 *init) {
+    *(f32 *)((char *)obj + 0x28) = lbl_803E6090;
+    *(f32 *)((char *)obj + 0x10) = lbl_803E60A4 + *(f32 *)((char *)init + 0xc);
+    *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * lbl_803E609C;
+    (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x38c, 0, 2, -1, 0);
+    Sfx_PlayFromObject((int)obj, 0x103);
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+}
+
+void vfpstatueball_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
+    *(s16 *)((char *)inner + 2) = 0x19;
+    *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+    if (*(s16 *)((char *)init + 0x1a) > 2) {
+        *(s16 *)((char *)init + 0x1a) = 2;
+    }
+    if (*(s16 *)((char *)init + 0x1c) > 1) {
+        *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * (f32)(s32)*(s16 *)((char *)init + 0x1c);
+    }
+    Obj_SetActiveModelIndex((int)obj, *(s16 *)((char *)init + 0x1a));
+    *(u8 *)((char *)inner + 5) = (u8)GameBit_Get(*(s16 *)inner);
+}
+#pragma peephole reset
+#pragma scheduling reset
