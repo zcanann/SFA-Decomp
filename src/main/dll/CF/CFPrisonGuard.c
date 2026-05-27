@@ -16,8 +16,21 @@ extern undefined4 ObjHits_PollPriorityHitEffectWithCooldown();
 extern undefined4 FUN_80039520();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void doRumble(f32 strength);
+extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
+extern int Obj_GetPlayerObject(void);
+extern int getTrickyObject(void);
+extern int Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int objectId);
+extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
+extern void trickyImpress(int obj);
+extern f32 sqrtf(f32 value);
+extern void mathFn_80021ac8(void *rotation, void *vec);
+extern u16 getAngle(f32 x, f32 z);
 
 extern f64 DOUBLE_803e4868;
+extern f64 lbl_803E3BD0;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e4850;
 extern f32 FLOAT_803e4854;
@@ -25,6 +38,168 @@ extern f32 FLOAT_803e4858;
 extern f32 FLOAT_803e485c;
 extern f32 FLOAT_803e4860;
 extern f32 FLOAT_803e4864;
+extern f32 timeDelta;
+extern f32 lbl_803E3BBC;
+extern f32 lbl_803E3BC4;
+extern f32 lbl_803E3BC8;
+extern f32 lbl_803E3BCC;
+extern f32 lbl_803E3BD8;
+extern f32 lbl_803E3BDC;
+extern f32 lbl_803E3BE0;
+extern f64 lbl_803E3BE8;
+extern s16 lbl_803DBDE0[];
+extern int *gMapEventInterface;
+
+#define PRISON_GUARD_ACTIVE 0x80
+#define PRISON_GUARD_LOCKED 0x40
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801899B4
+ * EN v1.0 Address: 0x801899B4
+ * EN v1.0 Size: 560b
+ */
+void fn_801899B4(int obj, int state)
+{
+  s32 currentHeight;
+  s32 rumbleStrength;
+
+  if ((*(u8 *)(state + 0x1d) & PRISON_GUARD_ACTIVE) != 0 &&
+      ((*(u8 *)(state + 0x1d) & PRISON_GUARD_LOCKED) == 0)) {
+    if (*(u8 *)(state + 0x1c) == 0) {
+      *(s32 *)(state + 0xc) = (s32)((f32)*(s32 *)(state + 0xc) - (lbl_803E3BC8 * timeDelta));
+      *(s32 *)(state + 0x14) =
+          (s32)((f32)*(s32 *)(state + 0x14) + ((f32)*(s32 *)(state + 0xc) * timeDelta));
+      if (*(s32 *)(state + 0x18) < *(s32 *)(state + 0x14)) {
+        *(s32 *)(state + 0x18) = *(s32 *)(state + 0x14);
+      }
+      if (*(s32 *)(state + 0x10) == 0x800 && *(s32 *)(state + 0x14) < 0x800) {
+        Sfx_PlayFromObject(obj, 0x374);
+      }
+      if (*(s32 *)(state + 0x14) < 0) {
+        if (*(s32 *)(state + 0x10) > 0) {
+          Sfx_PlayFromObject(obj, 0x6e);
+          rumbleStrength = *(s32 *)(state + 0x18) / 200;
+          if (rumbleStrength > 0) {
+            doRumble((f32)rumbleStrength);
+          }
+        }
+        *(s32 *)(state + 0xc) = 0;
+        *(s32 *)(state + 0x14) = 0;
+      }
+    } else {
+      *(u8 *)(state + 0x1c) = 0;
+      *(s32 *)(state + 0x18) = 0;
+    }
+
+    currentHeight = *(s32 *)(state + 0x14);
+    if ((*(s32 *)(state + 0x10) < 0x40 && currentHeight >= 0x40) ||
+        (*(s32 *)(state + 0x10) >= 0x40 && currentHeight < 0x40)) {
+      Sfx_PlayFromObject(obj, 0x374);
+    }
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
+                                              (f32 *)(state + 0x20));
+    *(s32 *)(state + 0x10) = *(s32 *)(state + 0x14);
+    ObjAnim_SetMoveProgress(obj, (f32)*(s32 *)(state + 0x14) / lbl_803E3BCC);
+  }
+}
+
+typedef struct PrisonGuardRotationWork {
+  s16 y;
+  s16 x;
+  s16 z;
+  s16 pad;
+  f32 scale;
+  f32 tx;
+  f32 ty;
+  f32 tz;
+} PrisonGuardRotationWork;
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80189C68
+ * EN v1.0 Address: 0x80189C68
+ * EN v1.0 Size: 732b
+ */
+void fn_80189C68(int obj)
+{
+  int setup;
+  int player;
+  int tricky;
+  int state;
+  int spawnedSetup;
+  int spawnedObj;
+  int i;
+  f32 lenSq;
+  f32 len;
+  s32 yawDelta;
+  PrisonGuardRotationWork rotate;
+
+  setup = *(int *)(obj + 0x4c);
+  player = Obj_GetPlayerObject();
+  tricky = getTrickyObject();
+  state = *(int *)(obj + 0xb8);
+
+  if (((int (*)(int))(*(int *)(*gMapEventInterface + 0x68)))(*(int *)(setup + 0x14)) != 0 &&
+      Obj_IsLoadingLocked() != 0) {
+    ((void (*)(int, f32))(*(int *)(*gMapEventInterface + 0x64)))(
+        *(int *)(setup + 0x14), lbl_803E3BD8 * (f32)*(u8 *)(setup + 0x20));
+    if (tricky != 0) {
+      trickyImpress(tricky);
+    }
+
+    i = 0;
+    while (i < *(u8 *)(setup + 0x1f)) {
+      spawnedSetup = Obj_AllocObjectSetup(0x24, lbl_803DBDE0[*(u8 *)(setup + 0x1e)]);
+      *(f32 *)(spawnedSetup + 8) = *(f32 *)state;
+      *(f32 *)(spawnedSetup + 0xc) = *(f32 *)(obj + 0x10);
+      *(f32 *)(spawnedSetup + 0x10) = *(f32 *)(state + 4);
+      *(s16 *)(spawnedSetup + 0x1a) = 0x190;
+
+      spawnedObj = Obj_SetupObject(spawnedSetup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+      *(f32 *)(spawnedObj + 0x24) = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
+      *(f32 *)(spawnedObj + 0x2c) = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+
+      lenSq = (*(f32 *)(spawnedObj + 0x24) * *(f32 *)(spawnedObj + 0x24)) +
+              (*(f32 *)(spawnedObj + 0x2c) * *(f32 *)(spawnedObj + 0x2c));
+      if (lenSq != lbl_803E3BDC) {
+        len = sqrtf(lenSq);
+        *(f32 *)(spawnedObj + 0x24) = *(f32 *)(spawnedObj + 0x24) / len;
+        *(f32 *)(spawnedObj + 0x2c) = *(f32 *)(spawnedObj + 0x2c) / len;
+      }
+
+      *(f32 *)(spawnedObj + 0x24) =
+          *(f32 *)(spawnedObj + 0x24) *
+          (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, 0x19)));
+      *(f32 *)(spawnedObj + 0x2c) =
+          *(f32 *)(spawnedObj + 0x2c) *
+          (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, 0x19)));
+      *(f32 *)(spawnedObj + 0x28) = lbl_803E3BE0;
+
+      rotate.scale = lbl_803E3BBC;
+      rotate.tx = lbl_803E3BDC;
+      rotate.ty = lbl_803E3BDC;
+      rotate.tz = lbl_803E3BDC;
+      rotate.x = 0;
+      rotate.z = 0;
+      rotate.y = (s16)randomGetRange(-10000, 10000);
+      mathFn_80021ac8(&rotate, (void *)(spawnedObj + 0x24));
+
+      yawDelta = *(s16 *)spawnedObj -
+                 (u16)getAngle(*(f32 *)(spawnedObj + 0x24), -*(f32 *)(spawnedObj + 0x2c));
+      if (yawDelta > 0x8000) {
+        yawDelta -= 0xffff;
+      }
+      if (yawDelta < -0x8000) {
+        yawDelta += 0xffff;
+      }
+      *(s16 *)spawnedObj = (s16)yawDelta;
+      i++;
+    }
+  }
+}
 
 /*
  * --INFO--
