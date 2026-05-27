@@ -1710,7 +1710,17 @@ extern void s16toFloat(void *p, int v);
 extern int timerCountDown(f32 *p);
 extern int arrayIndexOf(int arr, int val);
 extern int Obj_FreeObject(int obj);
+extern int fn_80080150(int p);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern int fn_802972A8(int obj);
+extern double Vec_distance(int *from, int *to);
+extern int *Obj_GetPlayerObject(void);
+extern u8 framesThisStep;
 extern f32 lbl_803E6598;
+extern f32 lbl_803E65A8;
+extern f32 lbl_803E65AC;
+extern f32 lbl_803E65B0;
+extern f32 lbl_803E65B8;
 extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int objRemoveFromListFn_8002ce88(int *obj);
 extern void fn_80221E94(int obj, f32 *pos, f32 v);
@@ -1788,6 +1798,60 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         fn_80221978(p1, inner + 0x14, 3, inner + 0x64, v);
     }
     objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6594);
+}
+
+void drakord_thornbush_update(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int setup = *(int *)((char *)obj + 0x4c);
+    int s2;
+    if (fn_80080150((int)((char *)inner + 0xc)) != 0) {
+        if (*(f32 *)((char *)inner + 0xc) < (f32)(s32)*(s16 *)((char *)setup + 0x1c)) {
+            ObjHits_EnableObject(obj);
+            ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E65A8 + (f32)(s32)*(s16 *)((char *)setup + 0x1c) - *(f32 *)((char *)inner + 0xc)));
+        }
+        if (timerCountDown((f32 *)((char *)inner + 0xc)) != 0) {
+            *(s16 *)((char *)obj + 6) &= ~0x4000;
+            ((DrakorFlags *)((char *)inner + 0x79))->b80 = 1;
+            if (*(u32 *)((char *)setup + 0x14) == 0xffffffff) {
+                Obj_FreeObject(obj);
+            }
+        }
+    } else {
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x479);
+        if (((DrakorFlags *)((char *)inner + 0x79))->b80) {
+            ((DrakorFlags *)((char *)inner + 0x79))->b80 = 0;
+        }
+        switch (*(s16 *)((char *)obj + 0x46)) {
+        case 0x727:
+            if (fn_802972A8((int)Obj_GetPlayerObject()) != 0) {
+                ObjHits_ClearHitVolumes(obj);
+                ObjHits_EnableObject(obj);
+            } else {
+                ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+            }
+            break;
+        case 0x709:
+            if (Vec_distance((int *)((char *)Obj_GetPlayerObject() + 0x18), (int *)((char *)obj + 0x18)) <
+                (f32)(s32)(*(s16 *)((char *)setup + 0x1c) << 1)) {
+                ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), obj, 5, 1, 0);
+            }
+            break;
+        }
+        if (*(int *)((char *)inner + 0) == 0) {
+            s2 = *(int *)((char *)obj + 0x4c);
+            ObjHits_EnableObject(obj);
+            *(int *)((char *)inner + 0) = *(u8 *)((char *)s2 + 0x19);
+            ObjHitbox_SetSphereRadius(obj, (s16)*(int *)((char *)inner + 0x74));
+        }
+        if (*(s16 *)((char *)obj + 0x46) == 0x709) {
+            if (*(f32 *)((char *)inner + 0x68) < lbl_803E658C) {
+                *(f32 *)((char *)inner + 0x68) = lbl_803E65AC * (f32)(u32)framesThisStep + *(f32 *)((char *)inner + 0x68);
+                *(f32 *)((char *)obj + 8) =
+                    *(f32 *)((char *)inner + 0x68) * (*(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4) * (f32)(s32)*(s16 *)((char *)setup + 0x1c)) / lbl_803E65B0;
+            }
+        }
+    }
 }
 
 void drakord_thornbush_hitDetect(int obj)
