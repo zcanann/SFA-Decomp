@@ -659,3 +659,59 @@ void dimgate_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Sfx_PlayFromObject(int obj, int sfx);
+extern u8 framesThisStep;
+
+/* dimbarrier_update: while a live type-470 object is in the list, count down the
+ * arm timer; on expiry fade the barrier out and latch its gamebit. */
+#pragma scheduling off
+#pragma peephole off
+void dimbarrier_update(int *obj)
+{
+    int *def = *(int **)((char *)obj + 0x4c);
+    int *extra = *(int **)((char *)obj + 0xb8);
+    switch (*(u8 *)((char *)extra + 2)) {
+    case 0: {
+        int *list = *(int **)((char *)obj + 0x58);
+        int found = 0;
+        int i;
+        for (i = 0; i < *(s8 *)((char *)list + 0x10f); i++) {
+            int *entry = *(int **)((char *)list + 0x100 + i * 4);
+            if (*(s16 *)((char *)entry + 0x46) == 470 &&
+                *(u8 *)((char *)*(int **)((char *)entry + 0xb8) + 4) != 0) {
+                found = 1;
+                break;
+            }
+        }
+        if (found) {
+            s8 v = *(u8 *)((char *)extra + 3) - 1;
+            *(s8 *)((char *)extra + 3) = v;
+            if (v <= 0) {
+                *(s8 *)((char *)extra + 2) = 1;
+                *(s16 *)extra = 30;
+                Sfx_PlayFromObject((int)obj, 518);
+            } else {
+                Sfx_PlayFromObject((int)obj, 519);
+            }
+        }
+        break;
+    }
+    case 1: {
+        int v = *(u8 *)((char *)obj + 0x36) - framesThisStep * 16;
+        if (v < 0) {
+            v = 0;
+        }
+        *(s16 *)((char *)*(int **)((char *)obj + 0x54) + 0x60) &= ~1;
+        *(u8 *)((char *)obj + 0x36) = v;
+        *(s16 *)extra = *(s16 *)extra - framesThisStep;
+        if (*(s16 *)extra <= 0) {
+            GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            *(s8 *)((char *)extra + 2) = 2;
+        }
+        break;
+    }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
