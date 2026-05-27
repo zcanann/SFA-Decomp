@@ -1415,3 +1415,75 @@ void DR_CloudRunner_func22(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
+extern void Resource_Release(int handle);
+extern u8 framesThisStep;
+extern void *lbl_803DE4D0;
+
+#pragma scheduling off
+#pragma peephole off
+int DR_CloudRunner_func14(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)inner + 0xbb7) != 0) {
+        return 2;
+    }
+    return 1;
+}
+
+int DR_EarthWarrior_func11(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)inner + 0x14eb) != 0) {
+        return 1;
+    }
+    return 2;
+}
+
+int DR_EarthWarrior_func14(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(u8 *)((char *)inner + 0x14ea) != 0) {
+        return 2;
+    }
+    return 1;
+}
+
+void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c)
+{
+    ObjPath_GetPointWorldPosition(obj, 2, a, b, c, 0);
+}
+
+void DR_EarthWarrior_func18(int obj, f32 *a, int *b)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *a = (f32)(s32)*(s16 *)((char *)inner + 0x102c);
+    *b = *(s16 *)((char *)inner + 0x102e);
+}
+
+int fn_802BF730(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    u8 v;
+    if (*(s16 *)((char *)inner + 0xbb0) == 0) {
+        v = *(u8 *)((char *)obj + 0x36);
+        *(u8 *)((char *)obj + 0x36) = v - framesThisStep;
+    }
+    return 0;
+}
+
+void fn_802BC788(int a, int b)
+{
+    playerTailFn_80026b3c((int *)b, *(int *)b, *(int *)(*(int *)((char *)a + 0xb8) + 0x14f8), 0);
+}
+
+void DR_EarthWarrior_release(void)
+{
+    if (lbl_803DE4D0 != NULL) {
+        Resource_Release((int)lbl_803DE4D0);
+        lbl_803DE4D0 = NULL;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
