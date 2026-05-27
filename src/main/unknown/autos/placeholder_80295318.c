@@ -6347,6 +6347,10 @@ extern s8 padGetStickY(int channel);
 extern u16 getButtonsHeld(int channel);
 extern u16 getButtonsJustPressed(int channel);
 extern u16 getButtonsJustPressedIfNotBusy(int channel);
+extern f32 lbl_803E7E98;
+extern f32 timeDelta;
+extern void fn_8011F34C(int a);
+extern void fn_80295CF4(int obj, int a);
 
 #pragma scheduling off
 #pragma peephole off
@@ -7387,6 +7391,77 @@ void fn_8029A4A8(int obj, int p2)
     if (lbl_803DE454 != NULL) {
         Resource_Release(lbl_803DE454);
         lbl_803DE454 = NULL;
+    }
+}
+
+int fn_802BA7EC(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 k = lbl_803E8234;
+    int idx;
+
+    *(f32 *)((char *)state + 0x294) = k;
+    *(f32 *)((char *)state + 0x284) = k;
+    *(f32 *)((char *)state + 0x280) = k;
+    *(f32 *)((char *)obj + 0x24) = k;
+    *(f32 *)((char *)obj + 0x28) = k;
+    *(f32 *)((char *)obj + 0x2c) = k;
+    *(u32 *)((char *)state) |= 0x200000;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        idx = randomGetRange(0, 1);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803DC740[idx];
+        ObjAnim_SetCurrentMove(obj, lbl_803DC73C[idx], lbl_803E8234, 0);
+    }
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        return -1;
+    }
+    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+        if (*(u8 *)((char *)inner + 0xa8e) & 0x20) {
+            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                randomGetRange(0, 2) + 6, obj, -1);
+        } else {
+            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                5, obj, -1);
+        }
+        buttonDisable(0, 0x100);
+    }
+    return 0;
+}
+
+void fn_802B07D8(int obj, int state)
+{
+    int setup;
+    int b;
+
+    if ((int)lbl_803DE44C == 0 && Obj_IsLoadingLocked()) {
+        setup = Obj_AllocObjectSetup(0x18, 0x69);
+        setup = Obj_SetupObject(setup, 4, -1, -1, *(int *)((char *)obj + 0x30));
+        lbl_803DE44C = (void *)setup;
+        ObjLink_AttachChild(obj, setup, 2);
+    }
+    if ((int)lbl_803DE44C != 0) {
+        *(int *)((char *)lbl_803DE44C + 0x30) = *(int *)((char *)obj + 0x30);
+    }
+
+    *(f32 *)((char *)state + 0x7d4) -= lbl_803E7E98 * timeDelta;
+    if (*(f32 *)((char *)state + 0x7d4) < lbl_803E7EA4) {
+        *(f32 *)((char *)state + 0x7d4) = lbl_803E7EA4;
+    }
+    *(f32 *)((char *)state + 0x7d8) -= lbl_803E7E98 * timeDelta;
+    if (*(f32 *)((char *)state + 0x7d8) < lbl_803E7EA4) {
+        *(f32 *)((char *)state + 0x7d8) = lbl_803E7EA4;
+    }
+
+    fn_8011F34C((u8)(int)*(f32 *)((char *)state + 0x7d4));
+
+    if (obj != 0) {
+        b = (*(s8 *)((char *)obj + 0xad) != 0);
+    } else {
+        b = 0;
+    }
+    if (b == 0 && GameBit_Get(0x75)) {
+        fn_80295CF4(obj, 0);
     }
 }
 #pragma peephole reset
