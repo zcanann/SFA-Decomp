@@ -1721,6 +1721,14 @@ extern f32 lbl_803E65A8;
 extern f32 lbl_803E65AC;
 extern f32 lbl_803E65B0;
 extern f32 lbl_803E65B8;
+extern void lightFn_8001db6c(f32 intensity, void *light, int onoff);
+extern void drakorhoverpad_resetPendingMotion(int obj);
+extern int GameBit_Get(int bit);
+extern f32 lbl_803E6540;
+extern f32 lbl_803E6544;
+extern f32 lbl_803E6548;
+extern f32 lbl_803E654C;
+extern int lbl_80329F90[];
 extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int objRemoveFromListFn_8002ce88(int *obj);
 extern void fn_80221E94(int obj, f32 *pos, f32 v);
@@ -1907,6 +1915,112 @@ void drakord_thornbush_hitDetect(int obj)
                 *(s16 *)((char *)obj + 6) |= 0x4000;
             }
         }
+    }
+}
+
+void bossdrakor_handleActionEvent(int obj, int state, int action)
+{
+    int *tbl = lbl_80329F90;
+    f32 t;
+    int found;
+    switch (action) {
+    case 1:
+        if (((DrakorFlags *)((char *)state + 0x198))->b40) {
+            *(int *)((char *)state + 0x168) = 0x12;
+            if (*(void **)((char *)state + 0x160) != NULL) {
+                lightFn_8001db6c(lbl_803E651C, *(void **)((char *)state + 0x160), 0);
+            }
+        } else {
+            ((DrakorFlags *)((char *)state + 0x198))->b40 = 1;
+            if (*(void **)((char *)state + 0x160) != NULL) {
+                lightFn_8001db6c(lbl_803E651C, *(void **)((char *)state + 0x160), 1);
+            }
+        }
+        break;
+    case 2:
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        s16toFloat((void *)((char *)state + 0x10), 0x1e);
+        *(int *)((char *)state + 0x174) = 2;
+        *(f32 *)((char *)state + 0x14) = lbl_803E6510;
+        break;
+    case 3:
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        s16toFloat((void *)((char *)state + 0x10), 0x5a);
+        *(f32 *)((char *)state + 0x14) = lbl_803E6540;
+        *(int *)((char *)state + 0x174) = 1;
+        *(f32 *)((char *)state + 0x184) = *(f32 *)((char *)tbl + 0x84);
+        *(f32 *)((char *)state + 0x188) = *(f32 *)((char *)tbl + 0x90);
+        break;
+    case 4:
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        s16toFloat((void *)((char *)state + 0x10), 0x3c);
+        *(f32 *)((char *)state + 0x14) = lbl_803E6544;
+        *(int *)((char *)state + 0x174) = 1;
+        *(f32 *)((char *)state + 0x184) = *(f32 *)((char *)tbl + 0x88);
+        *(f32 *)((char *)state + 0x188) = *(f32 *)((char *)tbl + 0x94);
+        break;
+    case 5:
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        s16toFloat((void *)((char *)state + 0x10), 0x1e);
+        *(f32 *)((char *)state + 0x14) = lbl_803E6548;
+        *(int *)((char *)state + 0x174) = 1;
+        *(f32 *)((char *)state + 0x184) = *(f32 *)((char *)tbl + 0x8c);
+        *(f32 *)((char *)state + 0x188) = *(f32 *)((char *)tbl + 0x98);
+        break;
+    case 6:
+        t = lbl_803E6510;
+        *(f32 *)((char *)state + 0x14) = t;
+        *(f32 *)((char *)state + 0x10) = t;
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        break;
+    case 7:
+        *(int *)((char *)state + 0x168) = 0x13;
+        *(f32 *)((char *)state + 0x164) = lbl_803E654C;
+        ((DrakorFlags *)((char *)state + 0x198))->b08 = 0;
+        break;
+    case 25:
+        *(int *)((char *)state + 0x168) = 0x14;
+        *(f32 *)((char *)state + 0x164) = lbl_803E654C;
+        break;
+    case 8:
+        *(int *)((char *)state + 0x168) = 0x11;
+        break;
+    case 9:
+        *(int *)((char *)state + 0x168) = 0;
+        break;
+    case 10:
+    case 11:
+    case 12:
+        if (*(int *)((char *)state + 0x170) < *(int *)((char *)tbl + action * 4 + 0x74)) {
+            *(int *)((char *)state + 0x194) = 1;
+        }
+        break;
+    case 14:
+    case 15:
+    case 16:
+    case 17:
+    case 18:
+    case 19:
+        *(u8 *)((char *)state + 0x190) = *(u8 *)((char *)state + 0x190) + 1;
+        if (*(u8 *)((char *)state + 0x190) > action - 0xd) {
+            *(u8 *)((char *)state + 0x190) = 0;
+            *(int *)((char *)state + 0x194) = 1;
+        }
+        break;
+    case 20:
+    case 21:
+    case 22:
+    case 23:
+        if (GameBit_Get((s16)(action + 0xbe5)) != 0) {
+            *(int *)((char *)state + 0x194) = 1;
+        }
+        /* fall through */
+    case 24:
+        found = ObjGroup_FindNearestObject(0x46, obj, 0);
+        if (found != 0) {
+            drakorhoverpad_resetPendingMotion(found);
+        }
+        break;
     }
 }
 
