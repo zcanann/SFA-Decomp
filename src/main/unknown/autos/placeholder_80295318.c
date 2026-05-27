@@ -5604,3 +5604,107 @@ int fn_80296464(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 b10 : 1;
+    u8 b08 : 1;
+    u8 b04 : 1;
+    u8 b02 : 1;
+    u8 b01 : 1;
+} ByteFlags;
+
+extern u8 lbl_803DE459;
+extern f32 lbl_803E7EA4;
+extern f32 lbl_803E7ED4;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80295BF0(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(u8 *)((char *)inner + 0x8c8) != 0x44;
+}
+
+int fn_80295C0C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return ((*(u8 *)((char *)inner + 0x3f0) >> 1) & 1) == 0;
+}
+
+int fn_80295C24(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(f32 *)((char *)inner + 0x87c) > lbl_803E7EA4;
+}
+
+int fn_80295C40(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(f32 *)((char *)inner + 0x838) > lbl_803E7ED4;
+}
+
+int fn_80295CBC(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s16 *)((char *)inner + 0x274) == 0x13;
+}
+
+void fn_802961FC(int a, u8 type)
+{
+    if (type > 2) {
+        lbl_803DE459 = 0;
+    }
+}
+
+int fn_8029630C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s16 *)((char *)inner + 0x274) != 0x26;
+}
+
+int fn_8029669C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s16 *)((char *)inner + 0x274) == 7;
+}
+
+int fn_802966B4(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    return *(s16 *)((char *)inner + 0x274) == 6;
+}
+
+void fn_80296BBC(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(int *)((char *)inner + 0x360) &= ~2;
+}
+
+void fn_80296C6C(int obj, int flag)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    ((ByteFlags *)((char *)inner + 0x3f3))->b02 = flag;
+}
+
+void fn_80297254(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    ((ByteFlags *)((char *)inner + 0x3f2))->b20 = 1;
+}
+
+void fn_8029726C(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    ((ByteFlags *)((char *)inner + 0x3f2))->b40 = 1;
+}
+
+void fn_80297284(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    ((ByteFlags *)((char *)inner + 0x3f2))->b80 = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
