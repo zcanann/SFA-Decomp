@@ -6498,5 +6498,47 @@ void fn_80296C84(int obj)
     *(f32 *)((char *)inner + 0x79c) = lbl_803E7EA4;
     *(u8 *)((char *)inner + 0x8a2) = 0xff;
 }
+
+void fn_8029672C(int obj, int mode)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (mode == 0) {
+        if (lbl_803DE44C == NULL) return;
+        if (((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) return;
+        *(u8 *)((char *)inner + 0x8b4) = 0;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+    } else if (mode == 1) {
+        if (lbl_803DE44C == NULL) return;
+        if (((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) return;
+        *(u8 *)((char *)inner + 0x8b4) = 1;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+    } else {
+        if (lbl_803DE44C == NULL) return;
+        if (((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) return;
+        *(u8 *)((char *)inner + 0x8b4) = 1;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+    }
+}
+
+void fn_802967E0(int obj, int mode)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (mode == 0) {
+        if (lbl_803DE44C == NULL) return;
+        if (((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) return;
+        *(u8 *)((char *)inner + 0x8b4) = 2;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+    } else if (mode == 1) {
+        if (lbl_803DE44C == NULL) return;
+        if (((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) return;
+        *(u8 *)((char *)inner + 0x8b4) = 4;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+    } else {
+        if (lbl_803DE44C == NULL) return;
+        if (((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) return;
+        *(u8 *)((char *)inner + 0x8b4) = 4;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
