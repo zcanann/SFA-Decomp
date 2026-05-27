@@ -3533,6 +3533,18 @@ void modelInitMtxs(int p1, int p2)
 extern void fn_80039DF8(int obj, int p4, f32 x);
 extern f32 lbl_803DE9A4;
 
+void objAudioFn_800393f8(int p1, int p2, int p3, int p4, int p5, u8 p6)
+{
+    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel(p1, 0x10) != 0) {
+        return;
+    }
+    Sfx_PlayFromObjectChannel(p1, 0x10, p3);
+    *(f32*)((char*)p2 + 0xc) = (f32)p5;
+    *(s16*)((char*)p2 + 0x14) = (s16)(-p4);
+    *(u8*)((char*)p2 + 0) = 1;
+    *(f32*)((char*)p2 + 4) = lbl_803DE99C;
+}
+
 void fn_8003B500(int obj, int p4)
 {
     s16* found;
