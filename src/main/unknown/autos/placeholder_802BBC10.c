@@ -1507,7 +1507,7 @@ extern int fn_802C0B84(int obj);
 extern int fn_802C0A5C(int obj, int p2);
 extern int fn_802C0978(int obj, int p2);
 extern int fn_802C0830(int obj, int p2);
-extern void fn_802C0550();
+extern int fn_802C0550(int obj, int p2);
 extern void fn_802BF934();
 extern void fn_802BF75C();
 
@@ -2722,6 +2722,89 @@ int fn_802BC830(int obj, int p2, int p3)
         *(f32 *)((char *)p2 + 0x408) = lbl_803E8304;
         *(f32 *)((char *)p2 + 0x438) = *(f32 *)((char *)p2 + 0x830);
         *(u16 *)((char *)p2 + 0x8d8) |= 8;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int getAngle(f32 deltaX, f32 deltaZ);
+extern f32 interpolate(f32 cur, f32 target, f32 t);
+extern f32 lbl_803E83FC;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802C0550(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int a0;
+    int a1;
+    *(int *)((char *)p2 + 0) |= 0x1204000;
+    *(u8 *)((char *)p2 + 0x25f) = 0;
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        f32 fz = lbl_803E83A4;
+        int inner2;
+        int q;
+        *(f32 *)((char *)p2 + 0x294) = fz;
+        *(f32 *)((char *)p2 + 0x284) = fz;
+        *(f32 *)((char *)p2 + 0x280) = fz;
+        *(f32 *)((char *)obj + 0x24) = fz;
+        *(f32 *)((char *)obj + 0x28) = fz;
+        *(f32 *)((char *)obj + 0x2c) = fz;
+        inner2 = *(int *)((char *)obj + 0xb8);
+        q = *(int *)((char *)obj + 0x4c);
+        ((ByteFlags *)((char *)inner2 + 0xbc0))->b02 = 1;
+        (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(*(s16 *)((char *)q + 0x1a), 0x5de);
+        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(*(s16 *)((char *)inner2 + 0xbb0));
+        *(s16 *)((char *)p2 + 0x338) = 0;
+        *(f32 *)((char *)p2 + 0x2a0) = lbl_803E83F4;
+        *(f32 *)((char *)p2 + 0x2b8) = lbl_803E83F8;
+        ObjAnim_SetCurrentMove(obj, 1, lbl_803E83A4, 0);
+        ((ByteFlags *)((char *)inner + 0xbc0))->b01 = 1;
+    }
+    {
+        f32 fz = lbl_803E83A4;
+        *(f32 *)((char *)p2 + 0x294) = fz;
+        *(f32 *)((char *)p2 + 0x284) = fz;
+        *(f32 *)((char *)p2 + 0x280) = fz;
+        *(f32 *)((char *)obj + 0x24) = fz;
+        *(f32 *)((char *)obj + 0x28) = fz;
+        *(f32 *)((char *)obj + 0x2c) = fz;
+    }
+    *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)inner + 0x3c4);
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x3c8);
+    *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)inner + 0x3cc);
+    a0 = (u16)getAngle(-*(f32 *)((char *)inner + 0x3d0), -*(f32 *)((char *)inner + 0x3d8));
+    a1 = (u16)getAngle(*(f32 *)((char *)inner + 0x3d4),
+                       sqrtf(*(f32 *)((char *)inner + 0x3d0) * *(f32 *)((char *)inner + 0x3d0) +
+                             *(f32 *)((char *)inner + 0x3d8) * *(f32 *)((char *)inner + 0x3d8)));
+    a0 = a0 - (u16)*(s16 *)((char *)obj + 0);
+    if (a0 > 0x8000) {
+        a0 -= 0xffff;
+    }
+    if (a0 < -0x8000) {
+        a0 += 0xffff;
+    }
+    *(s16 *)((char *)obj + 0) =
+        (f32)(s32)*(s16 *)((char *)obj + 0) + interpolate((f32)(s32)a0, lbl_803E83FC, timeDelta);
+    a1 = a1 - (u16)*(s16 *)((char *)obj + 2);
+    if (a1 > 0x8000) {
+        a1 -= 0xffff;
+    }
+    if (a1 < -0x8000) {
+        a1 += 0xffff;
+    }
+    *(s16 *)((char *)obj + 2) =
+        (f32)(s32)*(s16 *)((char *)obj + 2) + interpolate((f32)(s32)a1, lbl_803E83FC, timeDelta);
+    *(s16 *)((char *)obj + 4) = (s16)(a0 >> 5);
+    {
+        int v = *(s16 *)((char *)obj + 4);
+        if (v < -0x1000) {
+            v = -0x1000;
+        } else if (v > 0x1000) {
+            v = 0x1000;
+        }
+        *(s16 *)((char *)obj + 4) = (s16)v;
     }
     return 0;
 }
