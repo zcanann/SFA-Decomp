@@ -1460,3 +1460,54 @@ int fn_801BAF58(int obj, int param2, f32 arg)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E4BBC;
+extern s16 lbl_80325AC8[30];
+extern s16 lbl_803DBF38[4];
+extern u8 gDIMbossAnimController[];
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BA224(int obj, int param2)
+{
+    u16 local_c;
+    s16 local_a;
+    u16 local_8;
+    int state;
+    s16 mode;
+    state = *(int *)(obj + 0xb8);
+    if (*(s8 *)(param2 + 0x346) != 0 || *(s8 *)(param2 + 0x27b) != 0) {
+        (*(int (**)(int, int, int, u16 *, s16 *, u16 *))(*(int *)gBaddieControlInterface + 0x14))(obj, *(int *)(param2 + 0x2d0), 0x10, &local_c, &local_a, &local_8);
+        *(u8 *)(param2 + 0x346) = 0;
+        if (local_8 < 90) {
+            if (local_8 > 30 && ((u16)(local_c - 3) <= 1 || local_c == 11 || local_c == 12)) {
+                (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, 2);
+            } else {
+                (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, 9);
+            }
+        } else {
+            if (local_c == 0 || local_c == 15) {
+                *(u8 *)(param2 + 0x346) = 0;
+                if (local_8 > 240 && (((u8)(*(u8 (**)(int, int, f32))(*(int *)gBaddieControlInterface + 0x18))(obj, param2, lbl_803E4BBC)) & 1)) {
+                    (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, lbl_80325AC8[randomGetRange(0, 5)]);
+                } else if (*(u16 *)(state + 0x400) & 4) {
+                    (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, lbl_803DBF38[randomGetRange(0, 1)]);
+                } else {
+                    (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, 3);
+                }
+            } else {
+                (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, 2);
+            }
+        }
+    }
+    mode = *(s16 *)(param2 + 0x274);
+    if (mode != 1 && mode != 4 && mode != 5) {
+        gDIMbossAnimController[0x611] |= 1;
+    } else {
+        gDIMbossAnimController[0x611] &= ~1;
+    }
+    fn_801BC2D8(obj, param2);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
