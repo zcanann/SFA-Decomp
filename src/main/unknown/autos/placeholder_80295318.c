@@ -6387,6 +6387,7 @@ extern int *gWaterfxInterface;
 extern void Sfx_StopFromObject(int obj, int id);
 extern int fn_8029B9FC(int obj, int state, f32 fv);
 extern int fn_80299E44(int obj, int state, f32 fv);
+extern f32 lbl_803E7F40;
 
 #pragma scheduling off
 #pragma peephole off
@@ -8070,6 +8071,64 @@ int fn_80298380(int obj, int state, f32 fv)
             }
             *(int *)((char *)state + 0x308) = (int)fn_802A514C;
             return -1;
+        }
+    }
+    return 0;
+}
+
+int fn_802A4B78(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int sub;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0x447, lbl_803E7EA4, 0);
+        *(s16 *)((char *)state + 0x278) = 1;
+        *(int *)((char *)inner + 0x898) = (int)fn_802A514C;
+    }
+    if ((*(int *)((char *)state + 0x314) & 1) &&
+        (sub = *(int *)((char *)inner + 0x7f8)) != 0) {
+        switch (*(s16 *)((char *)sub + 0x46)) {
+        case 0x6d:
+        case 0x754:
+            Sfx_PlayFromObject(obj, 0x31f);
+            break;
+        case 0x1f4:
+        case 0x1f5:
+        case 0x1f6:
+        case 0x1f7:
+        case 0x1f8:
+        case 0x1f9:
+        case 0x519:
+            Sfx_PlayFromObject(obj, 0x39b);
+            break;
+        default:
+            Sfx_PlayFromObject(obj, 0x6d);
+            break;
+        }
+    }
+    *(f32 *)((char *)state + 0x280) = lbl_803E7EA4;
+    *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
+
+    sub = *(int *)((char *)inner + 0x7f8);
+    if (sub == 0 && *(s8 *)((char *)state + 0x346) != 0) {
+        *(int *)((char *)inner + 0x360) |= 0x800000;
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return 2;
+    }
+    if (sub != 0 && *(f32 *)((char *)obj + 0x98) > lbl_803E7F48) {
+        *(u8 *)((char *)inner + 0x800) = 0;
+        if (*(int *)((char *)inner + 0x7f8) != 0) {
+            int s2 = *(int *)((char *)inner + 0x7f8);
+            s16 id = *(s16 *)((char *)s2 + 0x46);
+            if (id == 0x3cf || id == 0x662) {
+                objThrowFn_80182504(s2);
+            } else {
+                objSaveFn_800ea774(s2);
+            }
+            *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 6) &= ~0x4000;
+            *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+            *(int *)((char *)inner + 0x7f8) = 0;
         }
     }
     return 0;
