@@ -18,12 +18,16 @@ extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
+extern void Obj_FreeObject(int obj);
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
 extern int Obj_GetPlayerObject(void);
+extern int curveFn_80010320(int curve, f32 progress);
 extern int fn_8018EAA4(int obj, int unused, int events);
 extern undefined4 FUN_8018e0a8();
+extern void getTabEntry(void* dst, int fileId, int offset, int size);
+extern void* mmAlloc(int size, int heap, int flags);
 extern undefined4 FUN_80286838();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286884();
@@ -43,6 +47,7 @@ extern int* gRomCurveInterface;
 extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803ddb38;
 extern u8 framesThisStep;
+extern f32 timeDelta;
 extern f64 DOUBLE_803e4af0;
 extern f64 DOUBLE_803e4af8;
 extern f64 DOUBLE_803e4b28;
@@ -77,6 +82,8 @@ extern f32 FLOAT_803e4b78;
 extern f32 lbl_803E3E50;
 extern f32 lbl_803E3E6C;
 extern f32 lbl_803E3E70;
+extern f32 lbl_803E3E78;
+extern f32 lbl_803E3E7C;
 extern f32 lbl_803E3E80;
 extern f32 lbl_803E3E84;
 extern f32 lbl_803E3E88;
@@ -1258,6 +1265,99 @@ int lfxemitter_func0B(int* obj)
     int* state = *(int**)((char*)obj + 0xb8);
     int v = *(int*)((char*)state + 264);
     return (u32)(-v | v) >> 31;
+}
+
+void fn_8018FF48(undefined2* src, undefined2* dst)
+{
+    *dst = *src;
+    dst[1] = src[1];
+    dst[2] = src[2];
+    dst[3] = src[3];
+    dst[4] = src[4];
+    dst[5] = src[5];
+    dst[6] = src[6];
+    dst[7] = src[7];
+    *(undefined*)(dst + 9) = *(undefined*)(src + 9);
+    *(undefined*)((int)dst + 0x13) = *(undefined*)((int)src + 0x13);
+    *(undefined*)((int)dst + 0x1b) = *(undefined*)((int)src + 0x1b);
+    *(undefined*)(dst + 0xe) = *(undefined*)(src + 0xe);
+    *(undefined*)((int)dst + 0x1d) = *(undefined*)((int)src + 0x1d);
+    *(undefined*)(dst + 0xf) = *(undefined*)(src + 0xf);
+    *(undefined*)((int)dst + 0x1f) = *(undefined*)((int)src + 0x1f);
+    *(undefined*)(dst + 0x10) = *(undefined*)(src + 0x10);
+    *(undefined*)((int)dst + 0x21) = *(undefined*)((int)src + 0x21);
+    *(undefined*)(dst + 0x11) = *(undefined*)(src + 0x11);
+    *(undefined*)((int)dst + 0x15) = *(undefined*)((int)src + 0x15);
+    *(undefined*)((int)dst + 0x23) = *(undefined*)((int)src + 0x23);
+    *(undefined*)(dst + 0xb) = *(undefined*)(src + 0xb);
+    *(undefined*)(dst + 0x12) = *(undefined*)(src + 0x12);
+    *(undefined*)((int)dst + 0x17) = *(undefined*)((int)src + 0x17);
+    *(undefined*)((int)dst + 0x25) = *(undefined*)((int)src + 0x25);
+    *(undefined*)(dst + 0xc) = *(undefined*)(src + 0xc);
+    *(undefined*)(dst + 0x13) = *(undefined*)(src + 0x13);
+    *(undefined*)((int)dst + 0x19) = *(undefined*)((int)src + 0x19);
+    *(undefined*)((int)dst + 0x27) = *(undefined*)((int)src + 0x27);
+    *(undefined*)(dst + 0xd) = *(undefined*)(src + 0xd);
+    *(undefined*)(dst + 0x14) = *(undefined*)(src + 0x14);
+}
+
+void lfxemitter_update(int obj)
+{
+    int state;
+    int player;
+    void* config;
+
+    state = *(int*)(obj + 0xb8);
+    player = Obj_GetPlayerObject();
+
+    *(s16*)(obj + 0) = *(s16*)(obj + 0) + *(s16*)(state + 0x11c);
+    *(s16*)(obj + 4) = *(s16*)(obj + 4) + *(s16*)(state + 0x118);
+    *(s16*)(obj + 2) = *(s16*)(obj + 2) + *(s16*)(state + 0x11a);
+
+    if ((*(u8*)(state + 0x120) & 1) != 0) {
+        if ((curveFn_80010320(state, *(f32*)(state + 0x10c)) != 0) ||
+            (*(int*)(state + 0x10) != 0)) {
+            (*(void (**)(int))(*(int*)(*gRomCurveInterface) + 0x90))(state);
+        }
+        *(f32*)(obj + 0xc) = *(f32*)(state + 0x68);
+        *(f32*)(obj + 0x10) = *(f32*)(state + 0x6c);
+        *(f32*)(obj + 0x14) = *(f32*)(state + 0x70);
+    } else {
+        *(f32*)(obj + 0xc) = *(f32*)(obj + 0x24) * timeDelta + *(f32*)(obj + 0xc);
+        *(f32*)(obj + 0x10) = *(f32*)(obj + 0x28) * timeDelta + *(f32*)(obj + 0x10);
+        *(f32*)(obj + 0x14) = *(f32*)(obj + 0x2c) * timeDelta + *(f32*)(obj + 0x14);
+        if (((*(u8*)(state + 0x120) & 2) != 0) && (*(f32*)(obj + 0x28) > lbl_803E3E78)) {
+            *(f32*)(obj + 0x28) = lbl_803E3E7C * timeDelta + *(f32*)(obj + 0x28);
+        }
+    }
+
+    if ((player != 0) &&
+        ((*(s16*)(state + 0x116) == -1) || (GameBit_Get(*(s16*)(state + 0x116)) != 0))) {
+        if (*(u8*)(state + 0x11e) != 0) {
+            *(s16*)(state + 0x110) = *(s16*)(state + 0x110) - framesThisStep;
+            if (*(s16*)(state + 0x110) <= 0) {
+                Obj_FreeObject(obj);
+            }
+        }
+        if (*(u8*)(state + 0x11f) == 0) {
+            if ((state != 0) && (*(s16*)(state + 0x112) == (*(u16*)(lbl_803AC7B0 + 0xe) - 1))) {
+                config = mmAlloc(0x28, 0x12, 0);
+                *(void**)(state + 0x108) = config;
+                if (config != NULL) {
+                    fn_8018FF48((undefined2*)lbl_803AC7B0, (undefined2*)config);
+                }
+            } else {
+                config = mmAlloc(0x28, 0x12, 0);
+                *(void**)(state + 0x108) = config;
+                getTabEntry(config, 0xc, *(s16*)(state + 0x112) * 0x28, 0x28);
+                config = *(void**)(state + 0x108);
+                if (config != NULL) {
+                    fn_8018FF48((undefined2*)config, (undefined2*)lbl_803AC7B0);
+                }
+            }
+            *(u8*)(state + 0x11f) = 1;
+        }
+    }
 }
 
 void areafxemit_free(int* obj)
