@@ -8135,3 +8135,37 @@ int fn_802A4B78(int obj, int state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int playerSetHeldObject(int obj, int held)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int sub;
+
+    if (held != 0) {
+        *(int *)((char *)inner + 0x7f8) = held;
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 5);
+        *(int *)((char *)inner + 0x304) = (int)fn_802A4B4C;
+    } else if (*(int *)((char *)inner + 0x7f8) != 0) {
+        *(u8 *)((char *)inner + 0x800) = 0;
+        sub = *(int *)((char *)inner + 0x7f8);
+        if (sub != 0) {
+            s16 id = *(s16 *)((char *)sub + 0x46);
+            if (id == 0x3cf || id == 0x662) {
+                objThrowFn_80182504(sub);
+            } else {
+                objSaveFn_800ea774(sub);
+            }
+            *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 6) &= ~0x4000;
+            *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+            *(int *)((char *)inner + 0x7f8) = 0;
+        }
+        *(int *)((char *)inner + 0x360) |= 0x800000;
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 1);
+        *(int *)((char *)inner + 0x304) = (int)fn_802A514C;
+    }
+    return *(int *)((char *)inner + 0x7f8) != 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
