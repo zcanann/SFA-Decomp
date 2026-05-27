@@ -1810,5 +1810,31 @@ int fn_802BC3F0(int obj, int p2, int p3)
                           (f32 *)((char *)p + 0x20), (f32 *)((char *)p + 0x24), (f32 *)((char *)p + 0x28));
     return 0;
 }
+
+extern void *Obj_GetPlayerObject(void);
+extern f32 lbl_803DC78C;
+extern f32 lbl_803DC790;
+
+void DR_CloudRunner_func15(int obj, f32 *a, f32 *b, f32 *c)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 matrix[16];
+    void *src = Obj_GetPlayerObject();
+    if (src == NULL) {
+        src = (void *)obj;
+    }
+    v.mat[1] = *(f32 *)((char *)src + 0xc);
+    v.mat[2] = *(f32 *)((char *)src + 0x10);
+    v.mat[3] = *(f32 *)((char *)src + 0x14);
+    v.angles[0] = *(s16 *)((char *)src + 0);
+    v.angles[1] = *(s16 *)((char *)src + 2);
+    v.angles[2] = *(s16 *)((char *)src + 4);
+    v.mat[0] = lbl_803E83A8;
+    setMatrixFromObjectPos(matrix, v.angles);
+    Matrix_TransformPoint(matrix, lbl_803E83A4, lbl_803DC78C, lbl_803DC790, a, b, c);
+}
 #pragma peephole reset
 #pragma scheduling reset
