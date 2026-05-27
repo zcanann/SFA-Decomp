@@ -2827,3 +2827,42 @@ void mapLoadForObject(int *p1, char *p2)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80056BF4(int kx, int ky, int sx, int sy)
+{
+    char *base = (char *)lbl_803DCE68;
+    char *e;
+    int idx;
+    int slot;
+
+    e = base;
+    for (idx = 0; idx < 0x3a; idx++) {
+        if (*(s16 *)(e + 8) == kx && *(s16 *)(e + 0xa) == ky) {
+            *(u8 *)(e + 0xc) += 1;
+            return idx;
+        }
+        e += 0x10;
+    }
+    slot = -1;
+    e = base;
+    for (idx = 0; idx < 0x3a; idx++) {
+        if (*(u8 *)(e + 0xc) == 0) {
+            slot = idx;
+            break;
+        }
+        e += 0x10;
+    }
+    if (slot == -1)
+        return -1;
+    e = base + slot * 0x10;
+    *(s16 *)(e + 8) = (s16)((kx << 16) / (sx >> 6));
+    *(s16 *)(e + 0xa) = (s16)((ky << 16) / (sy >> 6));
+    *(f32 *)e = lbl_803DEBCC;
+    *(f32 *)(e + 4) = lbl_803DEBCC;
+    *(u8 *)(e + 0xc) += 1;
+    return slot;
+}
+#pragma scheduling reset
+#pragma peephole reset
