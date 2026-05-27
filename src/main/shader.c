@@ -2756,3 +2756,513 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma dont_inline on
+#pragma scheduling off
+#pragma peephole off
+void fn_800566A4(int key, int type)
+{
+    int i;
+    int off;
+
+    for (i = 0; i < 80; i++) {
+        off = i * 0x10;
+        if (key == *(u32 *)(lbl_803DCE6C + off) &&
+            *(u8 *)(lbl_803DCE6C + off + 0xe) == type &&
+            *(s16 *)(lbl_803DCE6C + off + 0xc) > 0) {
+            *(s16 *)(lbl_803DCE6C + off + 0xc) -= 1;
+            if (*(s16 *)(lbl_803DCE6C + off + 0xc) == 0) {
+                *(int *)(lbl_803DCE6C + off + 4) = 0;
+                *(u8 *)(lbl_803DCE6C + off + 0xe) = 0;
+                *(int *)(lbl_803DCE6C + off) = 0;
+                *(int *)(lbl_803DCE6C + off + 8) = 0;
+            }
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+#pragma dont_inline reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80056A6C(int type, u32 key, int value)
+{
+    int i;
+    int off;
+
+    for (i = 0; i < 80; i++) {
+        off = i * 0x10;
+        if (*(s16 *)(lbl_803DCE6C + off + 0xc) > 0 &&
+            *(u32 *)(lbl_803DCE6C + off) == key &&
+            type == *(u8 *)(lbl_803DCE6C + off + 0xe)) {
+            *(int *)(lbl_803DCE6C + off + 4) = value;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern int mapGetRomListAndOffsets(int p1, int b);
+
+#pragma scheduling off
+#pragma peephole off
+void mapLoadForObject(int p1, char *p2)
+{
+    int saved = lbl_803DCEC8;
+    int romList = mapGetRomListAndOffsets(p1, 1);
+    int slot = 0x50;
+    int i;
+
+    for (i = 0; i < 40; i++) {
+        if (lbl_80386468[slot] == NULL) {
+            lbl_80386468[slot] = (void *)romList;
+            break;
+        }
+        slot++;
+    }
+    *(u8 *)(p2 + 0x34) = (u8)slot;
+    (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x48)))(p1, slot);
+    defStartFn_8005972c((void *)romList, &lbl_803822C8[slot * 0x8c], slot, 0);
+    (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(slot);
+    lbl_803DCEC8 = saved;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80056BF4(int kx, int ky, int sx, int sy)
+{
+    char *base = (char *)lbl_803DCE68;
+    char *e;
+    int idx;
+    int slot;
+
+    e = base;
+    for (idx = 0; idx < 0x3a; idx++) {
+        if (*(s16 *)(e + 8) == kx && *(s16 *)(e + 0xa) == ky) {
+            *(u8 *)(e + 0xc) += 1;
+            return idx;
+        }
+        e += 0x10;
+    }
+    slot = -1;
+    e = base;
+    for (idx = 0; idx < 0x3a; idx++) {
+        if (*(u8 *)(e + 0xc) == 0) {
+            slot = idx;
+            break;
+        }
+        e += 0x10;
+    }
+    if (slot == -1)
+        return -1;
+    e = base + slot * 0x10;
+    *(s16 *)(e + 8) = (s16)((kx << 16) / (sx >> 6));
+    *(s16 *)(e + 0xa) = (s16)((ky << 16) / (sy >> 6));
+    *(f32 *)e = lbl_803DEBCC;
+    *(f32 *)(e + 4) = lbl_803DEBCC;
+    *(u8 *)(e + 0xc) += 1;
+    return slot;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern void *mmAlloc(int size, int heap, int flags);
+extern void mapsBinGetRomlistSize(int offset, int *a, int *b, int *c);
+extern void fileLoadToBufferOffset(int id, void *buf, int offset, int len);
+extern int lbl_803DCE7C;
+
+#pragma scheduling off
+#pragma peephole off
+int mapGetRomListAndOffsets(int p1, int flag)
+{
+    int tabOff = p1 * 7 << 2;
+    int offset0 = *(int *)(lbl_803DCE7C + tabOff);
+    int tailLen = *(int *)(lbl_803DCE7C + tabOff + 0x1c) - offset0;
+    int v0, v1, v2;
+    int i;
+
+    mapsBinGetRomlistSize(offset0, &v0, &v1, &v2);
+    lbl_803DCEA0 = mmAlloc(tailLen + ((v0 + 7 >> 3) + 0x401 + v2), 5, 0);
+    fileLoadToBufferOffset(0x1d, lbl_803DCEA0, offset0, tailLen);
+
+    *(int *)((char *)lbl_803DCEA0 + 0xc) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 4) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x14) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 8) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x30) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 0xc) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x2c) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 0x10) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x34) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 0x14) - offset0;
+    *(int *)((char *)lbl_803DCEA0 + 0x20) = (int)lbl_803DCEA0 + *(int *)(lbl_803DCE7C + tabOff + 0x18) - offset0;
+
+    piRomLoadSection(*(int *)(lbl_803DCE7C + tabOff + 0x18), p1, *(int *)((char *)lbl_803DCEA0 + 0x20));
+    *(int *)((char *)lbl_803DCEA0 + 0x10) = v2 + (*(int *)(lbl_803DCE7C + tabOff + 0x1c) + (int)lbl_803DCEA0) - offset0;
+
+    for (i = 0; i < (v0 + 7 >> 3) + 1; i++) {
+        *(u8 *)(*(int *)((char *)lbl_803DCEA0 + 0x10) + i) = 0;
+    }
+    *(f32 *)((char *)lbl_803DCEA0 + 0x24) = lbl_803DEBCC;
+    *(f32 *)((char *)lbl_803DCEA0 + 0x28) = lbl_803DEBCC;
+    *(u8 *)((char *)lbl_803DCEA0 + 0x18) = 0;
+    *(u8 *)((char *)lbl_803DCEA0 + 0x19) = 0;
+    if (flag == 0) {
+        defStartFn_8005972c(lbl_803DCEA0, &lbl_803822C8[p1 * 0x8c], p1, 0);
+        (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(p1);
+    }
+    return (int)lbl_803DCEA0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma dont_inline on
+#pragma scheduling off
+#pragma peephole off
+void mapInitSetRects(s16 *rect, u8 *bitmap, int p3, int p4, int idx)
+{
+    int self = lbl_803DCE78;
+    int tabOff = idx * 7 << 2;
+    int x, y;
+
+    getTabEntry(self, 0x1d, *(int *)(lbl_803DCE7C + tabOff),
+                *(int *)(lbl_803DCE7C + tabOff + 8) - *(int *)(lbl_803DCE7C + tabOff));
+    *(int *)(self + 0xc) = self + *(int *)(lbl_803DCE7C + tabOff + 4) - *(int *)(lbl_803DCE7C + tabOff);
+    rect[0] = p3 - *(s16 *)(self + 4);
+    rect[2] = p4 - *(s16 *)(self + 6);
+    rect[1] = rect[0] + *(s16 *)(self + 0) - 1;
+    rect[3] = rect[2] + *(s16 *)(self + 2) - 1;
+    *(u8 *)((char *)rect + 8) = *(s16 *)(self + 4);
+    *(u8 *)((char *)rect + 9) = *(s16 *)(self + 6);
+    for (y = 0; (s16)y < *(s16 *)(self + 2); y++) {
+        for (x = 0; (s16)x < *(s16 *)(self + 0); x++) {
+            int p = (s16)x + (s16)y * *(s16 *)(self + 0);
+            if ((*(u32 *)(*(int *)(self + 0xc) + p * 4) >> 23 & 0xff) != 0xff) {
+                bitmap[p >> 3] |= 1 << (p & 7);
+            }
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+#pragma dont_inline reset
+
+extern void Obj_UpdateWorldTransform(void);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern u8 lbl_80386648[];
+
+#pragma scheduling off
+#pragma peephole off
+void playerUpdateFn_8005649c(void)
+{
+    int count;
+    int **objs;
+    char *cam;
+    int **e;
+    int i, slot;
+    f32 lx, ly, lz;
+
+    objs = ObjGroup_GetObjects(6, &count);
+    cam = (char *)Camera_GetCurrentViewSlot();
+    Obj_UpdateWorldTransform();
+    for (i = 0; i < 31; i++)
+        *(int *)(lbl_80386648 + i * 0x10 + 0xc) = 0;
+    *(f32 *)(lbl_80386648 + 0) = *(f32 *)(cam + 0x44);
+    *(f32 *)(lbl_80386648 + 4) = *(f32 *)(cam + 0x48);
+    *(f32 *)(lbl_80386648 + 8) = *(f32 *)(cam + 0x4c);
+    *(int *)(lbl_80386648 + 0xc) = 1;
+    e = objs;
+    for (i = 0; i < count; i++) {
+        int *obj = *e;
+        slot = *(s8 *)((char *)obj + 0x35) + 1;
+        if (*(void **)(cam + 0x40) == (void *)obj) {
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 0) = *(f32 *)(cam + 0xc);
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 4) = *(f32 *)(cam + 0x10);
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 8) = *(f32 *)(cam + 0x14);
+        } else {
+            Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0x44), *(f32 *)(cam + 0x48), *(f32 *)(cam + 0x4c), &lx, &ly, &lz);
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 0) = lx;
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 4) = ly;
+            *(f32 *)(lbl_80386648 + slot * 0x10 + 8) = lz;
+        }
+        *(int *)(lbl_80386648 + slot * 0x10 + 0xc) = 1;
+        e++;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern char sTrackGlobalTexanimOverflowError[];
+
+#pragma scheduling off
+#pragma peephole off
+int texAnimFn_800567a8(int key, int p4, int type)
+{
+    char *base = (char *)lbl_803DCE6C;
+    char *e;
+    int idx, found, off;
+
+    found = -1;
+    e = base;
+    for (idx = 0; idx < 80; idx++) {
+        if (*(s16 *)(e + 0xc) != 0 && *(u32 *)e == key && type == *(u8 *)(e + 0xe)) {
+            found = idx;
+            break;
+        }
+        e += 0x10;
+    }
+    if (found != -1) {
+        *(s16 *)(base + found * 0x10 + 0xc) += 1;
+        return found;
+    }
+    found = -1;
+    e = base;
+    for (idx = 0; idx < 80; idx++) {
+        if (*(s16 *)(e + 0xc) == 0) {
+            found = idx;
+            break;
+        }
+        e += 0x10;
+    }
+    if (found == -1) {
+        OSReport(sTrackGlobalTexanimOverflowError);
+        return 0;
+    }
+    off = found * 0x10;
+    *(s16 *)(base + off + 0xc) = 1;
+    *(int *)(lbl_803DCE6C + off + 4) = 0;
+    *(int *)(lbl_803DCE6C + off + 8) = p4;
+    *(int *)(lbl_803DCE6C + off) = key;
+    *(u8 *)(lbl_803DCE6C + off + 0xe) = type;
+    return found;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern int* gCheckpointInterface;
+extern int* gRomCurveInterface;
+extern int* gNewCloudsInterface;
+extern int* gCloudActionInterface;
+extern void audioStopByMask(int mask);
+extern void Sfx_ClearLoopedObjectSounds(void);
+extern void doNothing_8001F678(int a, int b);
+extern void Obj_ResetObjectSystem(void);
+extern void textureFree(int id);
+extern void voxmaps_resetLoadedMaps(void);
+extern void textureFreeFn_8012fcec(void);
+extern void fn_80133934(void);
+
+#pragma scheduling off
+#pragma peephole off
+void unloadMap(void)
+{
+    int layer;
+    int i;
+    s8* cur;
+    int mapType;
+    int blk;
+    int j;
+    int k;
+    int rb;
+    char* p;
+    int n;
+
+    audioStopByMask(4);
+    Sfx_ClearLoopedObjectSounds();
+    doNothing_8001F678(1, 0);
+    for (layer = 0; layer < 5; layer++) {
+        cur = (s8*)lbl_803822B4[layer];
+        for (i = 0; i < 256; i++) {
+            mapType = cur[i];
+            if (mapType >= 0) {
+                lbl_803DCE8C[mapType]--;
+                if (lbl_803DCE8C[mapType] == 0) {
+                    blk = lbl_803DCE9C[mapType];
+                    lbl_803DCE94[mapType] = -1;
+                    lbl_803DCE9C[mapType] = 0;
+                    for (j = 0; j < *(u8*)(blk + 0xa2); j++) {
+                        rb = *(int*)(blk + 0x64) + j * 68;
+                        p = (char*)rb;
+                        for (k = 0; k < *(u8*)(rb + 0x41); k++) {
+                            u32 cell = *(u8*)(p + 0x2a);
+                            if (cell != 0xff) {
+                                if (*(u8*)(lbl_803DCE68 + cell * 16 + 12) != 0)
+                                    *(u8*)(lbl_803DCE68 + cell * 16 + 12) -= 1;
+                            }
+                            if (*(u8*)(p + 0x29) != 0)
+                                fn_800566A4(*(int*)(p + 0x24), *(u8*)(p + 0x29));
+                            p += 8;
+                        }
+                    }
+                    for (j = 0; j < *(u8*)(blk + 0xa0); j++)
+                        textureFree(*(int*)(*(int*)(blk + 0x54) + j * 4));
+                    if (*(void**)(blk + 0x74) != 0)
+                        mm_free(*(void**)(blk + 0x74));
+                    if (*(void**)(blk + 0x70) != 0)
+                        mm_free(*(void**)(blk + 0x70));
+                    setMapBlockFlag();
+                    mm_free((void*)blk);
+                }
+            }
+        }
+    }
+    lbl_803DCE98 = 0;
+    Obj_ResetObjectSystem();
+    for (n = 0; n < 120; n++) {
+        if (lbl_80386468[n] != 0) {
+            mm_free(lbl_80386468[n]);
+            lbl_80386468[n] = 0;
+        }
+    }
+    (*(void (*)(void))(*(int *)(*gCheckpointInterface + 4)))();
+    (*(void (*)(void))(*(int *)(*gRomCurveInterface + 4)))();
+    lbl_803DCDEC = 0;
+    playerMapOffsetX = lbl_803DEBCC;
+    playerMapOffsetZ = lbl_803DEBCC;
+    voxmaps_resetLoadedMaps();
+    textureFreeFn_8012fcec();
+    fn_80133934();
+    (*(void (*)(int, int))(*(int *)(*gNewCloudsInterface + 0xc)))(-1, 0);
+    (*(void (*)(void))(*(int *)(*gCloudActionInterface + 0x14)))();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int lbl_80382238[];
+extern void loadAssetFileById(void* out, int id);
+extern void* memset(void* p, int v, int n);
+
+#pragma scheduling off
+#pragma peephole off
+void initMaps(void)
+{
+    void* data;
+    int total;
+    int i;
+    int i2;
+    char* entry;
+
+    data = 0;
+    total = getDataFileSize(0x15);
+    loadAssetFileById(&data, 0x15);
+    lbl_80382238[0] = -1;
+    lbl_80382238[1] = (int)mmAlloc(1280, 5, 0);
+    lbl_80382238[2] = (int)mmAlloc(512, 5, 0);
+    lbl_80382238[3] = (int)mmAlloc(128, 5, 0);
+    lbl_80382238[4] = (int)mmAlloc(8192, 5, 0);
+    memset((void*)lbl_80382238[4], 0, 8192);
+    for (i = 0; i < 128; i++) {
+        char* e = (char*)lbl_80382238[1] + i * 10;
+        *(s8*)((char*)lbl_80382238[3] + i) = -128;
+        *(s16*)(e + 0) = -32768;
+        *(s16*)(e + 2) = -32768;
+        *(s16*)(e + 4) = -32768;
+        *(s16*)(e + 6) = -32768;
+        *(s8*)(e + 8) = -128;
+        *(s8*)(e + 9) = -128;
+        ((s16*)lbl_80382238[2])[i * 2] = -1;
+        ((s16*)lbl_80382238[2])[i * 2 + 1] = -1;
+    }
+    for (i2 = 0; i2 < total / 3; i2++) {
+        entry = (char*)data + i2 * 12;
+        if (*(s16*)(entry + 6) <= -1)
+            break;
+        *(s8*)((char*)lbl_80382238[3] + *(s16*)(entry + 6)) = (s8)*(s16*)(entry + 4);
+        mapInitSetRects((s16*)((char*)lbl_80382238[1] + *(s16*)(entry + 6) * 10),
+                        (u8*)((char*)lbl_80382238[4] + *(s16*)(entry + 6) * 64),
+                        *(s16*)(entry + 0), *(s16*)(entry + 2), *(s16*)(entry + 6));
+        ((s16*)lbl_80382238[2])[*(s16*)(entry + 6) * 2] = *(s16*)(entry + 8);
+        ((s16*)lbl_80382238[2])[*(s16*)(entry + 6) * 2 + 1] = *(s16*)(entry + 0xa);
+    }
+    lbl_803DCEA4 = 0;
+    lbl_803DCEB6 = 0;
+    lbl_803DCEB4 = 0;
+    mm_free(data);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, int f2, int idx)
+{
+    int base;
+    s16* e2;
+    int aa, bb;
+    int ptr0;
+    int tbl, tbl2;
+    int index;
+    int idx2;
+    u32 v, v2;
+    int cellVal;
+
+    if (idx == -1) {
+        o0[0] = -1; o0[1] = 1; o0[2] = -1; o0[3] = 1;
+        o1[0] = 0; o1[1] = 0; o1[2] = 0; o1[3] = -1;
+        o2[0] = 0; o2[1] = 0; o2[2] = 0; o2[3] = -1;
+        o3[0] = 0; o3[1] = 0; o3[2] = 0; o3[3] = -1;
+        if (f1 != 0)
+            o0[3] = -2;
+        return;
+    }
+    base = lbl_80382238[1];
+    e2 = (s16*)(base + lbl_8038224C[idx].field_4 * 10);
+    aa = a - e2[0];
+    bb = b - e2[2];
+    ptr0 = lbl_8038224C[idx].field_0;
+    if (idx == -1) {
+        o0[0] = -1; o0[1] = 1; o0[2] = -1; o0[3] = 1;
+        o1[0] = 0; o1[1] = 0; o1[2] = 0; o1[3] = -1;
+        o2[0] = 0; o2[1] = 0; o2[2] = 0; o2[3] = -1;
+        o3[0] = 0; o3[1] = 0; o3[2] = 0; o3[3] = -1;
+        if (f1 != 0)
+            o0[3] = -2;
+        return;
+    }
+    if (f2 != 0) {
+        tbl = *(int*)(ptr0 + 0x30);
+        tbl2 = *(int*)(ptr0 + 0x34);
+    } else {
+        tbl = *(int*)(ptr0 + 0x14);
+        tbl2 = *(int*)(ptr0 + 0x2c);
+    }
+    index = aa + bb * *(s16*)ptr0;
+    idx2 = index * 2;
+    if (f1 == 0) {
+        v = ((int*)tbl)[idx2];
+        o0[0] = ((v >> 12) & 0xf) - 7;
+        o0[2] = ((v >> 8) & 0xf) - 7;
+        o0[1] = ((v >> 4) & 0xf) - 7;
+        o0[3] = (v & 0xf) - 7;
+        o1[0] = (v >> 28) - 7;
+        o1[2] = ((v >> 24) & 0xf) - 7;
+        o1[1] = ((v >> 20) & 0xf) - 7;
+        o1[3] = ((v >> 16) & 0xf) - 7;
+        v2 = ((int*)tbl)[idx2 + 1];
+        o2[0] = ((v2 >> 12) & 0xf) - 7;
+        o2[2] = ((v2 >> 8) & 0xf) - 7;
+        o2[1] = ((v2 >> 4) & 0xf) - 7;
+        o2[3] = (v2 & 0xf) - 7;
+        o3[0] = (v2 >> 28) - 7;
+        o3[2] = ((v2 >> 24) & 0xf) - 7;
+        o3[1] = ((v2 >> 20) & 0xf) - 7;
+        o3[3] = ((v2 >> 16) & 0xf) - 7;
+    } else {
+        o0[0] = 0; o0[1] = -1; o0[2] = 0; o0[3] = -1;
+        o1[0] = 0; o1[1] = -1; o1[2] = 0; o1[3] = -1;
+        o2[0] = 0; o2[1] = -1; o2[2] = 0; o2[3] = -1;
+        o3[0] = 0; o3[1] = -1; o3[2] = 0; o3[3] = -1;
+        cellVal = *(int*)(*(int*)(ptr0 + 0xc) + (idx2 >> 1) * 4) & 0x7f;
+        if (cellVal != 127) {
+            v2 = ((int*)tbl2)[f1 + cellVal * 4 - 1];
+            o0[0] = ((v2 >> 12) & 0xf) - 7;
+            o0[2] = ((v2 >> 8) & 0xf) - 7;
+            o0[1] = ((v2 >> 4) & 0xf) - 7;
+            o0[3] = (v2 & 0xf) - 7;
+            o1[0] = (v2 >> 28) - 7;
+            o1[2] = ((v2 >> 24) & 0xf) - 7;
+            o1[1] = ((v2 >> 20) & 0xf) - 7;
+            o1[3] = ((v2 >> 16) & 0xf) - 7;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

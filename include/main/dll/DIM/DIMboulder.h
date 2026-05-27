@@ -54,7 +54,7 @@ void imicemountain_free(void);
 int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3);
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void imicemountain_hitDetect(void);
-void imicemountain_update(void);
+void imicemountain_update(int* obj);
 void imicemountain_init(int* obj);
 
 int crrockfall_getExtraSize(void);
@@ -62,8 +62,8 @@ int crrockfall_func08(void);
 void crrockfall_free(void);
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void crrockfall_hitDetect(void);
-void crrockfall_update(void);
-void crrockfall_init(void);
+void crrockfall_update(int* obj);
+void crrockfall_init(int* obj, u8* params);
 void crrockfall_release(void);
 void crrockfall_initialise(void);
 

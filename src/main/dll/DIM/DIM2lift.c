@@ -1243,3 +1243,271 @@ int fn_801BAA84(int obj, int param2, f32 fParam)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u32 gDIMbossSequenceFlags;
+extern int lbl_803DBF30;
+extern f32 lbl_803E4BC4;
+extern f32 lbl_803E4BC8;
+extern f32 lbl_803E4BCC;
+extern f32 lbl_803E4BD0;
+extern f32 lbl_803E4BE8;
+extern f32 lbl_803E4BEC;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BA780(int obj, int param2)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        f32 v;
+        gDIMbossSequenceFlags |= 0x2000;
+        Camera_EnableViewYOffset();
+        CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
+        doRumble(lbl_803E4BD0);
+        *(s16 *)(obj + 0xa2) = -1;
+        *(f32 *)(param2 + 0x2a0) = lbl_803E4BE8;
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+        if (*(s8 *)(param2 + 0x27a) != 0) {
+            ObjAnim_SetCurrentMove((int *)obj, 0xe, v, 0);
+            *(u8 *)(param2 + 0x346) = 0;
+        }
+        if (*(s16 *)(state + 0x402) == 1) {
+            *(f32 *)(*(int *)(state + 0x40c) + 0xa8) = lbl_803E4BEC;
+        }
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 1, &lbl_803DBF30);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E4BC0;
+extern f32 lbl_803E4BD4;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BA654(int obj, int param2)
+{
+    f32 v;
+    if (*(f32 *)(obj + 0x98) > lbl_803E4BC0) {
+        gDIMbossSequenceFlags &= ~0x20;
+    }
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        gDIMbossSequenceFlags |= 0x8020;
+        Camera_EnableViewYOffset();
+        CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
+        doRumble(lbl_803E4BD0);
+        *(s16 *)(obj + 0xa2) = -1;
+        *(f32 *)(param2 + 0x2a0) = lbl_803E4BD4 * (f32)(*(s8 *)(param2 + 0x354) + 1);
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+        if (*(s8 *)(param2 + 0x27a) != 0) {
+            ObjAnim_SetCurrentMove((int *)obj, 0x15, v, 0);
+            *(u8 *)(param2 + 0x346) = 0;
+        }
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 0, &lbl_803DBF30);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E4C08;
+extern f32 lbl_803E4C0C;
+extern f32 lbl_803E4C10;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BAB88(int obj, int param2, f32 arg)
+{
+    f32 h;
+    f32 v;
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        *(f32 *)(param2 + 0x2a0) = lbl_803E4C08;
+        if (*(s8 *)(param2 + 0x27a) != 0) {
+            ObjAnim_SetCurrentMove((int *)obj, 0x12, lbl_803E4BD8, 0);
+            *(u8 *)(param2 + 0x346) = 0;
+        }
+        *(s16 *)(obj + 0xa2) = -1;
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+    }
+    h = *(f32 *)(obj + 0x98);
+    if (h > lbl_803E4C0C || *(s8 *)(param2 + 0x346) != 0) {
+        return 8;
+    }
+    if (h > lbl_803E4C10) {
+        gDIMbossSequenceFlags |= 0x10;
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 5, lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E4C14;
+extern f32 lbl_803E4C18;
+extern f32 lbl_803E4C1C;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BACB8(int obj, int param2, f32 arg)
+{
+    f32 h;
+    f32 v;
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        *(f32 *)(param2 + 0x2a0) = lbl_803E4C14;
+        if (*(s8 *)(param2 + 0x27a) != 0) {
+            ObjAnim_SetCurrentMove((int *)obj, 0x11, lbl_803E4BD8, 0);
+            *(u8 *)(param2 + 0x346) = 0;
+        }
+        *(s16 *)(obj + 0xa2) = -1;
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+    }
+    h = *(f32 *)(obj + 0x98);
+    if (h > lbl_803E4C18) {
+        gDIMbossSequenceFlags &= 0xffffffbf;
+    } else if (h > lbl_803E4C1C) {
+        gDIMbossSequenceFlags |= 0x40;
+    }
+    if (*(int *)(param2 + 0x314) & 1) {
+        gDIMbossSequenceFlags |= 0x10000;
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 3, lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E4C20;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BAE00(int obj, int param2, f32 arg)
+{
+    f32 h;
+    f32 v;
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        *(f32 *)(param2 + 0x2a0) = lbl_803E4C00;
+        if (*(s8 *)(param2 + 0x27a) != 0) {
+            ObjAnim_SetCurrentMove((int *)obj, 0x11, lbl_803E4BD8, 0);
+            *(u8 *)(param2 + 0x346) = 0;
+        }
+        *(s16 *)(obj + 0xa2) = -1;
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+    }
+    h = *(f32 *)(obj + 0x98);
+    if (h > lbl_803E4C18) {
+        gDIMbossSequenceFlags &= ~0x40;
+    } else if (h > lbl_803E4C20) {
+        gDIMbossSequenceFlags |= 0x40;
+    }
+    if (*(int *)(param2 + 0x314) & 0x200) {
+        gDIMbossSequenceFlags |= 0x10000;
+        *(int *)(param2 + 0x314) &= ~0x200;
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 3, lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BAF58(int obj, int param2, f32 arg)
+{
+    int t;
+    f32 v;
+    ObjHits_SetHitVolumeSlot(obj, 9, 1, -1);
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        *(s16 *)(obj + 0xa2) = -1;
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+        if ((int)randomGetRange(0, 1) != 0) {
+            if (*(s8 *)(param2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove((int *)obj, 0xb, lbl_803E4BD8, 0);
+                *(u8 *)(param2 + 0x346) = 0;
+            }
+            *(f32 *)(param2 + 0x2a0) = lbl_803E4C00;
+        } else {
+            if (*(s8 *)(param2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove((int *)obj, 0x10, lbl_803E4BD8, 0);
+                *(u8 *)(param2 + 0x346) = 0;
+            }
+            *(f32 *)(param2 + 0x2a0) = lbl_803E4C04;
+        }
+    }
+    t = *(int *)(param2 + 0x314);
+    if (t & 0x200) {
+        *(int *)(param2 + 0x314) = t & ~0x200;
+        gDIMbossSequenceFlags |= 5;
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, randomGetRange(0, 1), lbl_80325AA0);
+    (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E4BBC;
+extern s16 lbl_80325AC8[30];
+extern s16 lbl_803DBF38[4];
+extern u8 gDIMbossAnimController[];
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BA224(int obj, int param2)
+{
+    u16 local_c;
+    s16 local_a;
+    u16 local_8;
+    int state;
+    s16 mode;
+    state = *(int *)(obj + 0xb8);
+    if (*(s8 *)(param2 + 0x346) != 0 || *(s8 *)(param2 + 0x27b) != 0) {
+        (*(int (**)(int, int, int, u16 *, s16 *, u16 *))(*(int *)gBaddieControlInterface + 0x14))(obj, *(int *)(param2 + 0x2d0), 0x10, &local_c, &local_a, &local_8);
+        *(u8 *)(param2 + 0x346) = 0;
+        if (local_8 < 90) {
+            if (local_8 > 30 && ((u16)(local_c - 3) <= 1 || local_c == 11 || local_c == 12)) {
+                (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, 2);
+            } else {
+                (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, 9);
+            }
+        } else {
+            if (local_c == 0 || local_c == 15) {
+                *(u8 *)(param2 + 0x346) = 0;
+                if (local_8 > 240 && (((u8)(*(u8 (**)(int, int, f32))(*(int *)gBaddieControlInterface + 0x18))(obj, param2, lbl_803E4BBC)) & 1)) {
+                    (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, lbl_80325AC8[randomGetRange(0, 5)]);
+                } else if (*(u16 *)(state + 0x400) & 4) {
+                    (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, lbl_803DBF38[randomGetRange(0, 1)]);
+                } else {
+                    (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, 3);
+                }
+            } else {
+                (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, 2);
+            }
+        }
+    }
+    mode = *(s16 *)(param2 + 0x274);
+    if (mode != 1 && mode != 4 && mode != 5) {
+        gDIMbossAnimController[0x611] |= 1;
+    } else {
+        gDIMbossAnimController[0x611] &= ~1;
+    }
+    fn_801BC2D8(obj, param2);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

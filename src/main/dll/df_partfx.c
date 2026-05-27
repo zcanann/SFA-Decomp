@@ -1950,5 +1950,305 @@ void Checkpoint_remove(int *obj) {
         remaining--;
     }
 }
+extern int getAngle(f32 a, f32 b);
+extern f32 lbl_803E0584;
+extern f32 timeDelta;
+#pragma scheduling off
+#pragma peephole off
+void player_rotateTowardEnemy(int *obj, int *ctx, int spd) {
+    int *enemy;
+    f32 dx;
+    f32 dz;
+    int diff;
+    enemy = (int *)ctx[0x2d0 / 4];
+    if (enemy != 0) {
+        if (enemy[0x30 / 4] == obj[0x30 / 4]) {
+            dx = *(f32 *)((char *)enemy + 0xc) - *(f32 *)((char *)obj + 0xc);
+            dz = *(f32 *)((char *)enemy + 0x14) - *(f32 *)((char *)obj + 0x14);
+        } else {
+            dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)enemy + 0x18);
+            dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)enemy + 0x20);
+        }
+        diff = (u16)getAngle(-dx, -dz) - (u16)*(s16 *)((char *)obj + 0);
+        if (diff > 0x8000) {
+            diff -= 0xffff;
+        }
+        if (diff < -0x8000) {
+            diff += 0xffff;
+        }
+        *(s16 *)((char *)obj + 0) =
+            (s16)(*(s16 *)((char *)obj + 0) +
+                  (int)((f32)diff * timeDelta / (lbl_803E0584 * (f32)spd)));
+    }
+}
+extern f32 lbl_803E058C;
+extern void setMatrixFromObjectPos(f32 *mtx, void *desc);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern void objMove(int *obj, f32 vx, f32 vy, f32 vz);
+struct PartDesc {
+    s16 ang[3];
+    f32 sc[4];
+};
+#pragma scheduling off
+#pragma peephole off
+void fn_800D82A8(int *p, int *ctx, f32 t) {
+    int flags;
+    int b;
+    struct PartDesc desc;
+    f32 mtx[12];
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    flags = ctx[0];
+    if ((flags & 0x2000000) != 0) {
+        return;
+    }
+    if ((flags & 0x200000) == 0) {
+        *(f32 *)((char *)p + 0x28) = *(f32 *)((char *)p + 0x28) * lbl_803E058C;
+        *(f32 *)((char *)p + 0x28) =
+            -(*(f32 *)((char *)ctx + 0x2a4) * t) + *(f32 *)((char *)p + 0x28);
+    }
+    b = (s8)*(u8 *)((char *)ctx + 0x34c);
+    if ((b & 1) == 0 || (b & 4) != 0) {
+        desc.ang[0] = *(s16 *)((char *)p + 0);
+        desc.ang[1] = *(s16 *)((char *)p + 2);
+        desc.ang[2] = 0;
+        desc.sc[0] = lbl_803E0588;
+        desc.sc[1] = lbl_803E0570;
+        desc.sc[2] = lbl_803E0570;
+        desc.sc[3] = lbl_803E0570;
+        setMatrixFromObjectPos(mtx, &desc);
+        if ((ctx[0] & 0x10000) != 0) {
+            Matrix_TransformPoint(mtx, *(f32 *)((char *)ctx + 0x284), *(f32 *)((char *)ctx + 0x288),
+                                  -*(f32 *)((char *)ctx + 0x280), &outX, (f32 *)((char *)p + 0x28),
+                                  &outZ);
+        } else {
+            Matrix_TransformPoint(mtx, *(f32 *)((char *)ctx + 0x284), lbl_803E0570,
+                                  -*(f32 *)((char *)ctx + 0x280), &outX, &outY, &outZ);
+        }
+        *(f32 *)((char *)p + 0x24) = outX;
+        *(f32 *)((char *)p + 0x2c) = outZ;
+    }
+    objMove(p, *(f32 *)((char *)p + 0x24) * t, *(f32 *)((char *)p + 0x28) * t,
+            *(f32 *)((char *)p + 0x2c) * t);
+}
+extern float sqrtf(float x);
+extern f32 lbl_803E0578;
+extern f32 lbl_803E0590;
+extern f32 lbl_803E0594;
+extern s16 lbl_803DD44C;
+#pragma scheduling off
+#pragma peephole off
+void fn_800D8414(int *obj, int *ctx) {
+    int diff;
+    *(f32 *)((char *)ctx + 0x29c) = *(f32 *)((char *)ctx + 0x298);
+    *(f32 *)((char *)ctx + 0x298) =
+        sqrtf(*(f32 *)((char *)ctx + 0x290) * *(f32 *)((char *)ctx + 0x290) +
+              *(f32 *)((char *)ctx + 0x28c) * *(f32 *)((char *)ctx + 0x28c));
+    if (*(f32 *)((char *)ctx + 0x298) > lbl_803E0578) {
+        *(f32 *)((char *)ctx + 0x298) = lbl_803E0578;
+    }
+    *(f32 *)((char *)ctx + 0x298) = *(f32 *)((char *)ctx + 0x298) / lbl_803E0578;
+    lbl_803DD44C = (s16)getAngle(*(f32 *)((char *)ctx + 0x290), -*(f32 *)((char *)ctx + 0x28c));
+    lbl_803DD44C = (s16)(lbl_803DD44C - *(s16 *)((char *)ctx + 0x330));
+    diff = lbl_803DD44C - (u16)*(s16 *)((char *)obj + 0);
+    if (diff > 0x8000) {
+        diff -= 0xffff;
+    }
+    if (diff < -0x8000) {
+        diff += 0xffff;
+    }
+    *(s16 *)((char *)ctx + 0x336) = (s16)(int)((f32)diff / lbl_803E0590);
+    if (diff < 0) {
+        *(s16 *)((char *)ctx + 0x334) = -*(s16 *)((char *)ctx + 0x336);
+    } else {
+        *(s16 *)((char *)ctx + 0x334) = *(s16 *)((char *)ctx + 0x336);
+    }
+    diff += 0x10000;
+    if (*(f32 *)((char *)ctx + 0x298) < lbl_803E0594) {
+        *(u8 *)((char *)ctx + 0x34b) = 0;
+    } else {
+        diff -= 0x6000;
+        if (diff < 0) {
+            diff += 0xffff;
+        }
+        if (diff > 0xffff) {
+            diff -= 0xffff;
+        }
+        *(u8 *)((char *)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
+    }
+}
+extern f32 lbl_803E0574;
+extern f32 lbl_803E057C;
+#pragma scheduling off
+#pragma peephole off
+void player_getExtraSize(int *a, int *ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd) {
+    f32 dx;
+    f32 dz;
+    f32 mag;
+    dx = *(f32 *)((char *)a + 0xc) - px;
+    dz = *(f32 *)((char *)a + 0x14) - pz;
+    mag = sqrtf(dx * dx + dz * dz);
+    *(f32 *)((char *)ctx + 0x2bc) = mag;
+    if (lbl_803E0570 != mag) {
+        dx = dx / mag;
+        dz = dz / mag;
+    }
+    if (*(f32 *)((char *)ctx + 0x2bc) > lo + hi) {
+        *(f32 *)((char *)ctx + 0x290) = dx * spd;
+        *(f32 *)((char *)ctx + 0x28c) = -dz * spd;
+    } else {
+        *(f32 *)((char *)ctx + 0x294) = *(f32 *)((char *)ctx + 0x294) * lbl_803E0574;
+        *(f32 *)((char *)ctx + 0x290) = lbl_803E0570;
+        *(f32 *)((char *)ctx + 0x28c) = lbl_803E0570;
+    }
+    if (*(f32 *)((char *)ctx + 0x290) > lbl_803E0578) {
+        *(f32 *)((char *)ctx + 0x290) = lbl_803E0578;
+    }
+    if (*(f32 *)((char *)ctx + 0x290) < lbl_803E057C) {
+        *(f32 *)((char *)ctx + 0x290) = lbl_803E057C;
+    }
+    if (*(f32 *)((char *)ctx + 0x28c) > lbl_803E0578) {
+        *(f32 *)((char *)ctx + 0x28c) = lbl_803E0578;
+    }
+    if (*(f32 *)((char *)ctx + 0x28c) < lbl_803E057C) {
+        *(f32 *)((char *)ctx + 0x28c) = lbl_803E057C;
+    }
+}
+extern u8 lbl_803DD434;
+extern f32 lbl_803E05A0;
+#pragma scheduling off
+#pragma peephole off
+void player_animFn16(int *obj, int *ctx, int moveA, int moveB) {
+    f32 mag;
+    f32 tmp;
+    f32 ratio;
+    int idx;
+    if ((s8)lbl_803DD434 != 0) {
+        if (*(f32 *)((char *)ctx + 0x280) > lbl_803E0570) {
+            if (*(s16 *)((char *)obj + 0xa0) != lbl_803DD43C) {
+                ObjAnim_SetCurrentMove((int)obj, lbl_803DD43C, *(f32 *)((char *)obj + 0x98), 0);
+                *(u8 *)((char *)ctx + 0x346) = 0;
+            }
+        } else if (*(f32 *)((char *)ctx + 0x280) < lbl_803E0570) {
+            if (*(s16 *)((char *)obj + 0xa0) != lbl_803DD438) {
+                ObjAnim_SetCurrentMove((int)obj, lbl_803DD438, *(f32 *)((char *)obj + 0x98), 0);
+                *(u8 *)((char *)ctx + 0x346) = 0;
+            }
+        }
+        mag = sqrtf(*(f32 *)((char *)ctx + 0x280) * *(f32 *)((char *)ctx + 0x280) +
+                    *(f32 *)((char *)ctx + 0x284) * *(f32 *)((char *)ctx + 0x284));
+        if (ObjAnim_SampleRootCurvePhase(mag, (ObjAnimComponent *)obj, &tmp) != 0) {
+            *(f32 *)((char *)ctx + 0x2a0) = tmp;
+        }
+        ratio = lbl_803E0570;
+        if (lbl_803E0570 != mag) {
+            ratio = *(f32 *)((char *)ctx + 0x284) / mag;
+        }
+        tmp = ratio;
+        idx = (int)(lbl_803E05A0 * ratio);
+        if (idx < 0) {
+            idx = -idx;
+        }
+        if ((f32)idx > lbl_803E05A0) {
+            idx = 0x4000;
+        }
+        if (*(f32 *)((char *)ctx + 0x284) > lbl_803E0570) {
+            Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, moveB, idx);
+        } else {
+            Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, moveA, idx);
+        }
+    }
+}
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} HudColor;
+extern u8 lbl_803DC950;
+extern f32 lbl_803E0568;
+extern void *gScreenTransitionInterface;
+extern void GXGetScissor(int *x, int *y, int *w, int *h);
+extern void GXSetScissor(int x, int y, int w, int h);
+extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
+extern void setHudOpacity(int op);
+extern void screenRectFn_800d7568(int p1, int p2, int p3, int r, int g, int b);
+#pragma scheduling off
+#pragma peephole off
+void screenTransition_do2(int p1, int p2, int p3) {
+    int sx;
+    int sy;
+    int sw;
+    int sh;
+    HudColor col;
+    if (lbl_803DD42E != 0) {
+        lbl_803DD42E = lbl_803DD42E - 1;
+        return;
+    }
+    if (lbl_803DD42F == 0 && lbl_803DD428 >= lbl_803E0568) {
+        (*(code *)(*(int *)gScreenTransitionInterface + 0xc))(0x1e, lbl_803DD42C);
+        lbl_803DD428 = lbl_803E0560;
+    }
+    lbl_803DD420 = lbl_803DD424 * timeDelta + lbl_803DD420;
+    if (lbl_803DD420 < lbl_803E0560) {
+        lbl_803DD420 = lbl_803E0560;
+        lbl_803DD42D = 1;
+        if (lbl_803DD42C == 5) {
+            setHudOpacity(0xff);
+        }
+        return;
+    }
+    if (lbl_803DD420 > lbl_803E0558) {
+        lbl_803DD420 = lbl_803E0558;
+        lbl_803DD42D = 1;
+        if (lbl_803DD42F == 0) {
+            lbl_803DD428 = lbl_803DD428 + timeDelta;
+        }
+        if (lbl_803DD42C != 5) {
+            setHudOpacity(0xff);
+        }
+    } else {
+        lbl_803DD42D = 0;
+    }
+    if (lbl_803DC950 != 0) {
+        return;
+    }
+    switch (lbl_803DD42C) {
+    case 1:
+        GXGetScissor(&sx, &sy, &sw, &sh);
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        col.b = 0;
+        col.g = 0;
+        col.r = 0;
+        col.a = (u8)(int)lbl_803DD420;
+        hudDrawRect(sx, sy, sw, sh, col);
+        GXSetScissor(sx, sy, sw, sh);
+        break;
+    case 2:
+        GXGetScissor(&sx, &sy, &sw, &sh);
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        col.r = 0xff;
+        col.g = 0xff;
+        col.b = 0xff;
+        col.a = (u8)(int)lbl_803DD420;
+        hudDrawRect(sx, sy, sw, sh, col);
+        GXSetScissor(sx, sy, sw, sh);
+        break;
+    case 3:
+        screenRectFn_800d7568(p1, p2, p3, 0xff, 0xff, 0xff);
+        break;
+    case 4:
+        GXGetScissor(&sx, &sy, &sw, &sh);
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        col.r = 0xff;
+        col.g = 0;
+        col.b = 0;
+        col.a = (u8)(int)lbl_803DD420;
+        hudDrawRect(sx, sy, sw, sh, col);
+        GXSetScissor(sx, sy, sw, sh);
+        break;
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset

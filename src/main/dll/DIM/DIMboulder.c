@@ -1213,6 +1213,7 @@ extern int *gExpgfxInterface;
 extern int hitDetectFn_80065e50(int obj, int **listOut, int p3, int p4, f32 x, f32 y, f32 z);
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;
+#pragma dont_inline on
 f32 fn_801ACCFC(int obj) {
     int *state = *(int **)((char *)obj + 0xB8);
     int *list;
@@ -1241,6 +1242,7 @@ f32 fn_801ACCFC(int obj) {
     }
     return *(f32 *)((char *)obj + 0x10);
 }
+#pragma dont_inline reset
 
 void magiclight_free(int obj) {
     int *inner = *(int **)(obj + 0xb8);
@@ -1371,7 +1373,7 @@ int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3) {
 #pragma scheduling reset
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
-extern void dll_16C_SeqFn(void);
+extern int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3);
 #pragma scheduling off
 #pragma peephole off
 void dll_16C_init(void *obj, void *arg2) {
@@ -1413,6 +1415,603 @@ int fn_801AD440(int *obj) {
         getLActions(obj, obj, (u16) * (s16 *)((char *)state + 8), 0, 0, 0);
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void getEnvfxAct(int *obj, int *target, int id, int p);
+extern void fn_801AC108(int *obj, int *extra);
+extern int *gCloudActionInterface;
+extern void warpToMap(int mapId, int flags);
+
+#define MEVT_TRIGGER(a, b, c) ((void (*)(int, int, int))((int *)*gMapEventInterface)[0x50 / 4])((a), (b), (c))
+#define MEVT_SET(a, b)        ((void (*)(int, int))((int *)*gMapEventInterface)[0x44 / 4])((a), (b))
+
+/* EN v1.0 0x801AC248  fn_801AC248: 8-state ice-mountain event machine dispatched
+ * through jumptable_80323698 (states 1..7; state 0 idles). */
+#pragma scheduling off
+#pragma peephole off
+void fn_801AC248(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    switch (*(u8 *)extra) {
+    case 7:
+        if (GameBit_Get(0x6e) != 0) {
+            *(u8 *)extra = 1;
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 2, 0);
+        }
+        break;
+    case 1:
+        if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0) {
+            GameBit_Set(0xade, 1);
+            *(u8 *)extra = 2;
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 11, 1);
+        } else if (GameBit_Get(0x70) != 0) {
+            *(u8 *)extra = 2;
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 11, 1);
+        }
+        break;
+    case 2:
+        if (GameBit_Get(0x70) != 0) {
+            *(u8 *)extra = 3;
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 6, 1);
+        }
+        break;
+    case 3:
+        if (GameBit_Get(0x72) != 0) {
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 0, 0);
+        }
+        if (GameBit_Get(0x3a2) != 0) {
+            *(u8 *)extra = 4;
+            GameBit_Set(0xe5d, 1);
+            GameBit_Set(0xe5e, 1);
+            GameBit_Set(0xe5f, 1);
+            GameBit_Set(0xe60, 1);
+            GameBit_Set(0xe61, 1);
+            GameBit_Set(0xe62, 1);
+            GameBit_Set(0xe63, 1);
+            GameBit_Set(0xe64, 1);
+            GameBit_Set(0xe65, 1);
+            GameBit_Set(0xe66, 1);
+            GameBit_Set(0xe67, 1);
+            GameBit_Set(0xe68, 1);
+            GameBit_Set(0xe69, 1);
+            GameBit_Set(0xe6a, 1);
+            GameBit_Set(0xe6b, 1);
+        }
+        if (*(int *)((char *)obj + 0xf4) == 0) {
+            getEnvfxAct(obj, obj, 0xa3, 0);
+            getEnvfxAct(obj, obj, 0x9e, 0);
+            getEnvfxAct(obj, obj, 0x119, 0);
+            getLActions(obj, obj, 0x15b, 0, 0, 0);
+            getLActions(obj, obj, 0x15c, 0, 0, 0);
+            getLActions(obj, obj, 0x17c, 0, 0, 0);
+            getLActions(obj, obj, 0x17b, 0, 0, 0);
+            ((void (*)(int))((int *)*gCloudActionInterface)[0x1c / 4])(1);
+            *(int *)((char *)obj + 0xf4) = 1;
+        }
+        break;
+    case 4:
+        fn_801AC108(obj, extra);
+        break;
+    case 5:
+        if ((extra[1] & 1) != 0) {
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 3, 0);
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 4, 0);
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 6, 0);
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 7, 0);
+            *(u8 *)extra = 0;
+            MEVT_SET(*(s8 *)((char *)obj + 0xac), 2);
+        }
+        break;
+    case 6:
+        if ((extra[1] & 1) != 0) {
+            *(s8 *)((char *)extra + 8) = 2;
+        }
+        if (*(s8 *)((char *)extra + 8) > 0) {
+            s8 cnt = *(s8 *)((char *)extra + 8) - 1;
+            *(s8 *)((char *)extra + 8) = cnt;
+            if (cnt == 0) {
+                GameBit_Set(0x4e5, 0);
+                warpToMap(0x1a, 0);
+            }
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+#undef MEVT_TRIGGER
+#undef MEVT_SET
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int kind, int id);
+extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+extern void ObjAnim_SetCurrentMove(int *obj, int move, f32 blend, int flag);
+extern f32 lbl_803E4748;
+extern u8 lbl_802C2308[];
+
+typedef struct { s16 v[5]; } Blob10;
+
+/* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
+ * from a small id table, then run the map-event sub-object state callbacks. */
+#pragma scheduling off
+#pragma peephole off
+int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
+{
+    int *p;
+    int *extra = *(int **)((char *)obj + 0xb8);
+    s16 ids[6];
+
+    *(u8 *)((char *)extra + 0x20) = 0xff;
+    p = (int *)*extra;
+    if (arg3[0x80] == 3) {
+        *(s8 *)((char *)extra + 0x21) = -1;
+        arg3[0x80] = 0;
+    }
+    *(Blob10 *)&ids[1] = *(Blob10 *)lbl_802C2308;
+
+    if (*(s8 *)((char *)extra + 0x21) != *(s8 *)((char *)extra + 0x22)) {
+        if (*(void **)((char *)obj + 0xc8) != NULL) {
+            Obj_FreeObject(*(int **)((char *)obj + 0xc8));
+            *(int *)((char *)obj + 0xc8) = 0;
+            *(u8 *)((char *)obj + 0xeb) = 0;
+        }
+        if (Obj_IsLoadingLocked()) {
+            s8 idx = *(s8 *)((char *)extra + 0x21);
+            if (idx > 0) {
+                *(int *)((char *)obj + 0xc8) =
+                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx]), 4, -1, -1,
+                                    *(int *)((char *)obj + 0x30));
+                *(u8 *)((char *)obj + 0xeb) = 1;
+            }
+            *(s8 *)((char *)extra + 0x22) = *(s8 *)((char *)extra + 0x21);
+        } else {
+            *(s8 *)((char *)extra + 0x22) = 0;
+        }
+    }
+
+    *(s16 *)((char *)arg3 + 0x6e) = *(s16 *)((char *)arg3 + 0x70);
+
+    if (p != NULL && arg3[0x80] == 2) {
+        *(f32 *)((char *)extra + 4) = lbl_803E4758;
+        *(f32 *)((char *)extra + 8) = *(f32 *)((char *)extra + 0x14);
+        *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0x18);
+        *(f32 *)((char *)extra + 0x10) = *(f32 *)((char *)extra + 0x1c);
+        (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 2);
+        ObjAnim_SetCurrentMove(obj, 0x100, lbl_803E4748, 1);
+        if (*(void **)((char *)obj + 0x64) != NULL) {
+            *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x1000;
+        }
+        *(s16 *)((char *)arg3 + 0x6e) &= ~4;
+        arg3[0x80] = 0;
+    } else if (p != NULL && arg3[0x80] == 1) {
+        (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 0);
+        arg3[0x80] = 0;
+    }
+
+    if (p != NULL) {
+        if ((*(int (**)(int *))(**(int **)((char *)p + 0x68) + 0x38))(p) == 2) {
+            *(s16 *)((char *)arg3 + 0x6e) &= ~3;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* fn_801AD7E4: snapshot the map-event sub-object's transform into the boulder
+ * extra block, optionally re-issuing a move on the sub-object first. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801AD7E4(void *a, void *b, int c, int d, int e, int f, int g, int h, int i)
+{
+    if (i != 0 && (s8)g != 0 && h > 0) {
+        u8 saved = *(u8 *)((char *)b + 0x37);
+        *(u8 *)((char *)b + 0x37) = h;
+        (*(void (**)(void *, int, int, int, int, int))(**(int **)((char *)b + 0x68) + 0x10))(b, c, d, e, f, -1);
+        *(u8 *)((char *)b + 0x37) = saved;
+    }
+    *(f32 *)((char *)a + 0x8c) = *(f32 *)((char *)a + 0x18);
+    *(f32 *)((char *)a + 0x90) = *(f32 *)((char *)a + 0x1c);
+    *(f32 *)((char *)a + 0x94) = *(f32 *)((char *)a + 0x20);
+    *(f32 *)((char *)a + 0x80) = *(f32 *)((char *)a + 0xc);
+    *(f32 *)((char *)a + 0x84) = *(f32 *)((char *)a + 0x10);
+    *(f32 *)((char *)a + 0x88) = *(f32 *)((char *)a + 0x14);
+    {
+        f32 x, y, z;
+        (*(void (**)(void *, f32 *, f32 *, f32 *))(**(int **)((char *)b + 0x68) + 0x28))(b, &x, &y, &z);
+        *(f32 *)((char *)a + 0xc) = x;
+        *(f32 *)((char *)a + 0x10) = y;
+        *(f32 *)((char *)a + 0x14) = z;
+    }
+    *(s16 *)((char *)a + 0) = *(s16 *)((char *)b + 0);
+    *(s16 *)((char *)a + 2) = *(s16 *)((char *)b + 2);
+    *(s16 *)((char *)a + 4) = *(s16 *)((char *)b + 4);
+    *(f32 *)((char *)a + 0x18) = *(f32 *)((char *)a + 0xc);
+    *(f32 *)((char *)a + 0x1c) = *(f32 *)((char *)a + 0x10);
+    *(f32 *)((char *)a + 0x20) = *(f32 *)((char *)a + 0x14);
+    *(f32 *)((char *)a + 0x24) = *(f32 *)((char *)b + 0x24);
+    *(f32 *)((char *)a + 0x28) = *(f32 *)((char *)b + 0x28);
+    *(f32 *)((char *)a + 0x2c) = *(f32 *)((char *)b + 0x2c);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_801AC01C(int *obj);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern void Music_Trigger(int track, int flag);
+extern void SCGameBitLatch_Update(void *state, int mask, int a, int b, int c, int d);
+extern int *gSHthorntailAnimationInterface;
+extern f32 timeDelta;
+extern f32 lbl_803E46DC;
+
+/* imicemountain_update: lazy-spawn the ambient effects, run the active state,
+ * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
+#pragma scheduling off
+void imicemountain_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    if (*(int *)((char *)obj + 0xf4) == 0) {
+        getEnvfxAct(obj, obj, 0xa3, 0);
+        getEnvfxAct(obj, obj, 0x9e, 0);
+        getEnvfxAct(obj, obj, 0x104, 0);
+        ((void (*)(int))((int *)*gCloudActionInterface)[0x1c / 4])(1);
+        *(int *)((char *)obj + 0xf4) = 1;
+    }
+    switch (*(u8 *)((char *)extra + 0xc)) {
+    case 1:
+        fn_801AC248(obj);
+        break;
+    case 2:
+        if (GameBit_Get(0x3a3) != 0) {
+            fn_801AC01C(obj);
+        }
+        break;
+    case 5:
+        break;
+    }
+    extra[1] &= ~1;
+    if (*(f32 *)((char *)extra + 0x10) > lbl_803E46DC) {
+        gameTextSetColor(255, 255, 255, 255);
+        gameTextShow(0x351);
+        *(f32 *)((char *)extra + 0x10) = *(f32 *)((char *)extra + 0x10) - timeDelta;
+        if (*(f32 *)((char *)extra + 0x10) < lbl_803E46DC) {
+            *(f32 *)((char *)extra + 0x10) = lbl_803E46DC;
+        }
+    }
+    if (((int (*)(int))((int *)*gSHthorntailAnimationInterface)[0x24 / 4])(0) != 0) {
+        if (*(s16 *)((char *)extra + 0xa) != -1) {
+            *(s16 *)((char *)extra + 0xa) = -1;
+            if ((extra[1] & 8) != 0) {
+                Music_Trigger(26, 0);
+            }
+        }
+    } else {
+        if (*(s16 *)((char *)extra + 0xa) != 26) {
+            *(s16 *)((char *)extra + 0xa) = 26;
+            if ((extra[1] & 8) != 0) {
+                Music_Trigger(26, 1);
+            }
+        }
+    }
+    SCGameBitLatch_Update((char *)extra + 4, 2, 705, 568, 493, 178);
+    SCGameBitLatch_Update((char *)extra + 4, 16, 442, 441, 470, 180);
+    SCGameBitLatch_Update((char *)extra + 4, 4, -1, -1, 928, 233);
+    SCGameBitLatch_Update((char *)extra + 4, 8, -1, -1, 929, *(s16 *)((char *)extra + 0xa));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *ObjGroup_GetObjects(int group, int *countOut);
+extern void ObjAnim_AdvanceCurrentMove(int *obj, int flag, f32 blend, f32 frames);
+extern u8 framesThisStep;
+extern f32 lbl_803E474C;
+extern f32 lbl_803E475C;
+extern f32 lbl_803E4760;
+extern f32 lbl_803E4764;
+
+/* dll_16C_update: re-link the spawned sub-object, then while active/visible run
+ * its move and fade opacity by distance to the player. */
+#pragma scheduling off
+#pragma peephole off
+void dll_16C_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    s16 ids[6];
+
+    *(Blob10 *)&ids[1] = *(Blob10 *)lbl_802C2308;
+    if (*(s8 *)((char *)extra + 0x21) != *(s8 *)((char *)extra + 0x22)) {
+        if (*(void **)((char *)obj + 0xc8) != NULL) {
+            Obj_FreeObject(*(int **)((char *)obj + 0xc8));
+            *(int *)((char *)obj + 0xc8) = 0;
+            *(u8 *)((char *)obj + 0xeb) = 0;
+        }
+        if (Obj_IsLoadingLocked()) {
+            s8 idx = *(s8 *)((char *)extra + 0x21);
+            if (idx > 0) {
+                *(int *)((char *)obj + 0xc8) =
+                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx]), 4, -1, -1,
+                                    *(int *)((char *)obj + 0x30));
+                *(u8 *)((char *)obj + 0xeb) = 1;
+            }
+            *(s8 *)((char *)extra + 0x22) = *(s8 *)((char *)extra + 0x21);
+        } else {
+            *(s8 *)((char *)extra + 0x22) = 0;
+        }
+    }
+
+    if (*(void **)extra == NULL) {
+        int *objs;
+        int count;
+        int i;
+        int sel;
+        objs = ObjGroup_GetObjects(10, &count);
+        switch (*(s16 *)((char *)obj + 0x46)) {
+        case 365:
+        case 883:
+        default:
+            sel = 364;
+            break;
+        case 368:
+            sel = 367;
+            break;
+        }
+        for (i = 0; i < count; i++) {
+            if (sel == *(s16 *)((char *)objs[i] + 0x46)) {
+                *(int *)extra = objs[i];
+                i = count;
+            }
+        }
+    }
+
+    if (*(s16 *)((char *)obj + 0x46) == 883 || GameBit_Get(0x3a2) != 0) {
+        int *sub = (int *)*extra;
+        f32 blend;
+        f32 a, b;
+        if (*(s16 *)((char *)obj + 0xa0) != 0x100) {
+            ObjAnim_SetCurrentMove(obj, 0x100, lbl_803E4748, 0);
+        }
+        (*(void (**)(int *, f32 *))(**(int **)((char *)sub + 0x68) + 0x44))(sub, &blend);
+        blend = lbl_803E474C;
+        (*(void (**)(int *, f32 *, f32 *))(**(int **)((char *)sub + 0x68) + 0x40))(sub, &a, &b);
+        ObjAnim_AdvanceCurrentMove(obj, 0, blend, (f32)(u32)framesThisStep);
+        if (*(void **)extra != NULL) {
+            f32 t;
+            int *player = (int *)Obj_GetPlayerObject();
+            t = Vec_distance((f32 *)((char *)*(int **)extra + 0x18), (f32 *)((char *)player + 0x18));
+            t = (t - lbl_803E475C) / lbl_803E4760;
+            if (t < lbl_803E4748) {
+                t = lbl_803E4748;
+            } else if (t > lbl_803E4758) {
+                t = lbl_803E4758;
+            }
+            *(u8 *)((char *)extra + 0x20) = (int)(lbl_803E4764 * (lbl_803E4758 - t));
+            if (*(void **)((char *)obj + 0x64) != NULL) {
+                *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x1000;
+            }
+        } else {
+            *(u8 *)((char *)extra + 0x20) = 0xff;
+            if (*(void **)((char *)obj + 0x64) != NULL) {
+                *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) &= ~0x1000;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 lbl_803236B8[];
+extern f32 lbl_803E4730;
+
+/* crrockfall_init: derive the per-rock scale from the placement params, size the
+ * capsule hitbox from the sub-object bounds, set up render flags, and pick the
+ * state-table variant by object type. */
+#pragma scheduling off
+#pragma peephole off
+void crrockfall_init(int *obj, u8 *params)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    int *sub;
+    int *p64;
+
+    *(u8 *)((char *)extra + 0xc) = 0;
+    *(f32 *)((char *)extra + 8) = *(f32 *)((char *)obj + 0x10);
+    *(s16 *)((char *)extra + 0x10) = *(s16 *)((char *)params + 0x1e);
+    *(f32 *)((char *)obj + 8) = (f32)(u32)params[0x1b] / lbl_803E4730;
+
+    sub = *(int **)((char *)obj + 0x54);
+    if (sub != NULL) {
+        f32 scale = *(f32 *)((char *)obj + 8);
+        ObjHitbox_SetCapsuleBounds(obj,
+                                   (int)((f32)*(s16 *)((char *)sub + 0x5a) * scale),
+                                   (int)((f32)*(s16 *)((char *)sub + 0x5c) * scale),
+                                   (int)((f32)*(s16 *)((char *)sub + 0x5e) * scale));
+        ObjHits_DisableObject(obj);
+    }
+
+    p64 = *(int **)((char *)obj + 0x64);
+    if (p64 != NULL) {
+        *(u32 *)((char *)p64 + 0x30) |= 0xb0;
+        *(u32 *)((char *)p64 + 0x30) |= 0xc00;
+        *(f32 *)((char *)p64 + 0x20) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)p64 + 0x28) = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)((char *)p64 + 0) = *(f32 *)((char *)p64 + 0) * *(f32 *)((char *)obj + 8);
+    }
+
+    if (*(s16 *)((char *)obj + 0x46) == 1536) {
+        *(int *)extra = (int)&lbl_803236B8[0xc];
+    } else {
+        *(int *)extra = (int)lbl_803236B8;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u32 Resource_Acquire(int id, int flag);
+extern void fn_800628CC(int *obj);
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern void Sfx_PlayFromObject(int *obj, int sfx);
+extern void Sfx_StopObjectChannel(int *obj, int channel);
+extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern f32 lbl_803E46E8;
+extern f32 lbl_803E46EC;
+extern f32 lbl_803E46F0;
+extern f32 lbl_803E4708;
+extern f32 lbl_803E470C;
+extern f32 lbl_803E4710;
+extern f32 lbl_803E4714;
+extern f32 lbl_803E4718;
+extern f32 lbl_803E471C;
+extern f32 lbl_803E4720;
+
+/* crrockfall_update: drive the falling-rock state machine - fade-in opacity by
+ * height/distance, trigger the fall when the player is in range, integrate the
+ * fall, then shatter (sfx + explosion) on impact. */
+#pragma scheduling off
+#pragma peephole off
+void crrockfall_update(int *obj)
+{
+    int *ex = *(int **)((char *)obj + 0xb8);
+    int *s54 = *(int **)((char *)obj + 0x54);
+    int *p64 = *(int **)((char *)obj + 0x64);
+    int *p4c = *(int **)((char *)obj + 0x4c);
+
+    if (lbl_803DDB40 == 0) {
+        lbl_803DDB40 = Resource_Acquire(91, 1);
+    }
+
+    if (*(u8 *)((char *)ex + 0xe) == 0) {
+        *(f32 *)((char *)ex + 4) = fn_801ACCFC((int)obj);
+        if (*(u8 *)((char *)ex + 0xe) != 0 && p64 != NULL) {
+            *(f32 *)((char *)p64 + 0x24) = *(f32 *)((char *)ex + 4);
+            fn_800628CC(obj);
+        }
+    } else {
+        if (p64 != NULL) {
+            f32 frac;
+            f32 height;
+            f32 dist;
+            int n;
+            int *player;
+            frac = (*(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)ex + 4)) /
+                   (*(f32 *)((char *)ex + 8) - *(f32 *)((char *)ex + 4));
+            if (frac > lbl_803E4708) {
+                frac = lbl_803E4708;
+            } else if (frac < lbl_803E46E8) {
+                frac = lbl_803E46E8;
+            }
+            height = lbl_803E4708 - frac;
+            player = (int *)Obj_GetPlayerObject();
+            if (player != NULL) {
+                dist = Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18));
+                if (dist > lbl_803E470C) {
+                    dist = lbl_803E470C;
+                } else if (dist < lbl_803E4710) {
+                    dist = lbl_803E4710;
+                }
+            } else {
+                dist = lbl_803E470C;
+            }
+            dist = (dist - lbl_803E4710) / lbl_803E4714;
+            n = (int)(lbl_803E4718 * height) + 0x40;
+            *(u8 *)((char *)p64 + 0x40) =
+                (int)(((f32)(u32)*(u8 *)((char *)obj + 0x37) / lbl_803E471C) *
+                      ((f32)n * (lbl_803E4708 - dist)));
+        }
+
+        if (*(s16 *)((char *)p4c + 0x1c) == -1 ||
+            GameBit_Get(*(s16 *)((char *)p4c + 0x1c)) != 0) {
+            switch (*(u8 *)((char *)ex + 0xc)) {
+            case 0: {
+                int cond;
+                int *player = (int *)Obj_GetPlayerObject();
+                if (player == NULL) {
+                    cond = 0;
+                } else {
+                    int *def = *(int **)((char *)obj + 0x4c);
+                    f32 xz = Vec_xzDistance((f32 *)((char *)obj + 0x18),
+                                            (f32 *)((char *)player + 0x18));
+                    f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)player + 0x10);
+                    if (dy < lbl_803E46E8) {
+                        dy = lbl_803E46E8;
+                    }
+                    if (xz < lbl_803E46EC * (f32)(u32)*(u8 *)((char *)def + 0x1a) &&
+                        dy < lbl_803E46F0) {
+                        cond = 1;
+                    } else {
+                        cond = 0;
+                    }
+                }
+                if (cond != 0) {
+                    s16 timer = *(s16 *)((char *)ex + 0x10) - framesThisStep;
+                    *(s16 *)((char *)ex + 0x10) = timer;
+                    if (timer <= 0) {
+                        *(u8 *)((char *)ex + 0xc) = 1;
+                    }
+                }
+                break;
+            }
+            case 1:
+                if (*(u8 *)((char *)ex + 0xd) == 0) {
+                    *(u8 *)((char *)ex + 0xd) = 1;
+                    *(f32 *)((char *)obj + 0x28) = lbl_803E46E8;
+                    if (*(s16 *)((char *)obj + 0x46) == 103) {
+                        Sfx_PlayFromObject(obj, 341);
+                    }
+                    Sfx_PlayFromObject(obj, 165);
+                    *(s16 *)((char *)s54 + 0x60) |= 1;
+                }
+                *(int *)((char *)s54 + 0x48) = 16;
+                *(int *)((char *)s54 + 0x4c) = 16;
+                *(u8 *)((char *)s54 + 0x6f) = 1;
+                *(u8 *)((char *)s54 + 0x6e) = 13;
+                *(f32 *)((char *)obj + 0x28) =
+                    lbl_803E4720 * timeDelta + *(f32 *)((char *)obj + 0x28);
+                *(f32 *)((char *)obj + 0x10) =
+                    *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
+                if (*(f32 *)((char *)obj + 0x10) <
+                    *(f32 *)((char *)ex + 4) + *(f32 *)((char *)*(int **)ex + 8)) {
+                    *(f32 *)((char *)obj + 0x10) =
+                        *(f32 *)((char *)*(int **)ex + 8) * *(f32 *)((char *)obj + 8) +
+                        *(f32 *)((char *)ex + 4);
+                    *(u8 *)((char *)ex + 0xc) = 2;
+                    if (*(int *)((char *)*(int **)ex + 4) != 0) {
+                        Sfx_PlayFromObject(obj, (u16)*(int *)((char *)*(int **)ex + 4));
+                    }
+                }
+                break;
+            case 2:
+                *(int *)((char *)s54 + 0x48) = 16;
+                *(int *)((char *)s54 + 0x4c) = 16;
+                *(u8 *)((char *)s54 + 0x6f) = 1;
+                *(u8 *)((char *)s54 + 0x6e) = 13;
+                break;
+            case 4:
+                break;
+            }
+
+            if (*(void **)((char *)s54 + 0x50) != NULL) {
+                *(s16 *)((char *)s54 + 0x60) &= ~1;
+                *(u8 *)((char *)ex + 0xc) = 3;
+                Sfx_StopObjectChannel(obj, 8);
+                if (*(s16 *)((char *)obj + 0x46) == 103) {
+                    Sfx_PlayFromObject(obj, 342);
+                } else {
+                    Sfx_PlayFromObject(obj, 955);
+                    spawnExplosion(obj, (f32)(u32)*(u8 *)((char *)p4c + 0x1b),
+                                   1, 1, 0, 1, 1, 1, 1);
+                }
+            }
+        }
+    }
+
+    {
+        f32 z = lbl_803E46E8;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

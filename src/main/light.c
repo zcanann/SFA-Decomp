@@ -1148,12 +1148,12 @@ void vfpdraghead_init(int obj, int data) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_801FC6F4(int);
+extern void fn_801FC6F4(int, int, int);
 #pragma scheduling off
 #pragma peephole off
 void seqpoint_init(int obj, int data) {
     int state = *(int *)(obj + 0xB8);
-    *(void (**)(int))(obj + 0xBC) = fn_801FC6F4;
+    *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801FC6F4;
     *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
     *(f32 *)state = (f32)*(s16 *)(data + 0x1a);
     *(s16 *)(state + 8) = *(s16 *)(data + 0x1c);
@@ -1416,3 +1416,296 @@ void vfpdraghead_update(int *obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int *gMapEventInterface;
+extern void unlockLevel(int, int, int);
+extern undefined4 lockLevel(undefined4, int);
+extern int mapGetDirIdx(int);
+extern undefined4 loadMapAndParent(int);
+extern void warpToMap(int, int);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801FC6F4(int obj, int param2, int ctx)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+    *(s16 *)(ctx + 0x70) = -1;
+    *(u8 *)(ctx + 0x56) = 0;
+    for (i = 0; i < *(u8 *)(ctx + 0x8b); i++) {
+        switch (*(s16 *)(state + 8)) {
+        case 0:
+            break;
+        case 13:
+            if (*(u8 *)(ctx + i + 0x81) == 20) {
+                GameBit_Set(0x500, 0);
+                GameBit_Set(0xd72, 1);
+                GameBit_Set(0xd44, 1);
+                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 1, 1);
+                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 2, 1);
+                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 22, 1);
+                if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 1) {
+                    unlockLevel(0, 0, 1);
+                    lockLevel(mapGetDirIdx(70), 1);
+                    lockLevel(mapGetDirIdx(4), 0);
+                    loadMapAndParent(70);
+                    (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(18, 2);
+                    warpToMap(124, 0);
+                } else if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                    unlockLevel(0, 0, 1);
+                    lockLevel(mapGetDirIdx(70), 1);
+                    lockLevel(mapGetDirIdx(4), 0);
+                    loadMapAndParent(70);
+                    (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(11, 4);
+                    (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(8, 6);
+                    warpToMap(124, 0);
+                }
+            }
+            break;
+        }
+        *(u8 *)(ctx + i + 0x81) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E6108;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801FBAC8(int obj)
+{
+    int params = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    if (GameBit_Get(*(s16 *)state) != 0) {
+        *(u8 *)(state + 2) = 6;
+    }
+    switch (*(u8 *)(state + 2)) {
+    case 6:
+        if (*(f32 *)(obj + 0x14) < *(f32 *)(params + 0x10)) {
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + timeDelta;
+            if (*(f32 *)(obj + 0x14) >= *(f32 *)(params + 0x10)) {
+                *(f32 *)(obj + 0x14) = *(f32 *)(params + 0x10);
+            }
+        } else if (*(f32 *)(obj + 0x14) > *(f32 *)(params + 0x10)) {
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) - timeDelta;
+            if (*(f32 *)(obj + 0x14) <= *(f32 *)(params + 0x10)) {
+                *(f32 *)(obj + 0x14) = *(f32 *)(params + 0x10);
+            }
+        } else {
+            if (GameBit_Get(*(s16 *)state) == 0) {
+                *(u8 *)(state + 2) = 3;
+            }
+        }
+        break;
+    case 0:
+        if (GameBit_Get(*(s16 *)state) == 0) {
+            *(u8 *)(state + 2) = 3;
+        }
+        break;
+    case 1: {
+        s16 timer = *(s16 *)(state + 4);
+        if (timer != 0) {
+            *(s16 *)(state + 4) = timer - (int)timeDelta;
+            if (*(s16 *)(state + 4) <= 0) {
+                *(s16 *)(state + 4) = 0;
+            }
+        } else if (*(u8 *)(state + 3) == 0) {
+            if (*(f32 *)(obj + 0x14) == *(f32 *)(params + 0x10) - lbl_803E6108) {
+                *(u8 *)(state + 2) = 2;
+            }
+            if (*(f32 *)(obj + 0x14) == lbl_803E6108 + *(f32 *)(params + 0x10)) {
+                *(u8 *)(state + 2) = 3;
+            }
+        } else {
+            if (*(f32 *)(obj + 0x14) == *(f32 *)(params + 0x10) - lbl_803E6108) {
+                *(u8 *)(state + 2) = 4;
+            }
+            if (*(f32 *)(obj + 0x14) == lbl_803E6108 + *(f32 *)(params + 0x10)) {
+                *(u8 *)(state + 2) = 5;
+            }
+        }
+        break;
+    }
+    case 2: {
+        f32 thr = lbl_803E6108;
+        if (*(f32 *)(obj + 0x14) < thr + *(f32 *)(params + 0x10)) {
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + timeDelta;
+            if (*(f32 *)(obj + 0x14) >= thr + *(f32 *)(params + 0x10)) {
+                *(f32 *)(obj + 0x14) = thr + *(f32 *)(params + 0x10);
+                *(u8 *)(state + 2) = 1;
+                *(s16 *)(state + 4) = 20;
+            }
+        }
+        break;
+    }
+    case 3: {
+        f32 thr = lbl_803E6108;
+        if (*(f32 *)(obj + 0x14) > *(f32 *)(params + 0x10) - thr) {
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) - timeDelta;
+            if (*(f32 *)(obj + 0x14) <= *(f32 *)(params + 0x10) - thr) {
+                *(f32 *)(obj + 0x14) = *(f32 *)(params + 0x10) - thr;
+                *(u8 *)(state + 2) = 1;
+                *(s16 *)(state + 4) = 20;
+            }
+        }
+        break;
+    }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *gObjectTriggerInterface;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+
+#pragma scheduling off
+#pragma peephole off
+void vfpplatform_update(int obj)
+{
+    int params = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    u8 s3 = *(u8 *)(state + 3);
+    if (s3 == 10) {
+        if (GameBit_Get(*(s16 *)state) != 0) {
+            (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+        }
+    } else {
+        int xi = (int)*(f32 *)(obj + 0xc);
+        int yi = (int)*(f32 *)(obj + 0x14);
+        int txi = (int)*(f32 *)(params + 8);
+        int tyi = (int)*(f32 *)(params + 0x10);
+        if (s3 != 99) {
+            if (*(s16 *)(obj + 0x46) == 960) {
+                fn_801FBAC8(obj);
+            } else {
+                switch (*(u8 *)(state + 2)) {
+                case 0:
+                    if (GameBit_Get(*(s16 *)state) != 0) {
+                        *(u8 *)(state + 2) = 1;
+                    }
+                    break;
+                case 1: {
+                    s16 timer = *(s16 *)(state + 4);
+                    if (timer != 0) {
+                        *(s16 *)(state + 4) = timer - (int)timeDelta;
+                        if (*(s16 *)(state + 4) <= 0) {
+                            *(s16 *)(state + 4) = 0;
+                        }
+                    } else if (s3 == 0) {
+                        if (yi == tyi - 60) {
+                            *(u8 *)(state + 2) = 2;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                        if (yi == tyi) {
+                            *(u8 *)(state + 2) = 3;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                    } else if (s3 == 3) {
+                        if (xi == txi - 60) {
+                            *(u8 *)(state + 2) = 2;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                        if (xi == txi) {
+                            *(u8 *)(state + 2) = 3;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                    } else {
+                        if (yi == tyi + 60) {
+                            *(u8 *)(state + 2) = 4;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                        if (yi == tyi) {
+                            *(u8 *)(state + 2) = 5;
+                            Sfx_PlayFromObject(obj, 277);
+                        }
+                    }
+                    break;
+                }
+                case 2:
+                    if (s3 == 3) {
+                        if (xi < txi) {
+                            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + timeDelta;
+                            if ((int)*(f32 *)(obj + 0xc) >= txi) {
+                                *(f32 *)(obj + 0xc) = (f32)txi;
+                                *(u8 *)(state + 2) = 1;
+                            }
+                        }
+                    } else {
+                        if (yi < tyi) {
+                            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + timeDelta;
+                            if ((int)*(f32 *)(obj + 0x14) >= tyi) {
+                                *(f32 *)(obj + 0x14) = (f32)tyi;
+                                *(u8 *)(state + 2) = 1;
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    if (s3 == 3) {
+                        if (xi > txi - 60) {
+                            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) - timeDelta;
+                            if ((int)*(f32 *)(obj + 0xc) <= txi - 60) {
+                                *(f32 *)(obj + 0xc) = (f32)(txi - 60);
+                                *(u8 *)(state + 2) = 1;
+                                *(s16 *)(state + 4) = 200;
+                            }
+                        }
+                    } else {
+                        if (yi > tyi - 60) {
+                            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) - timeDelta;
+                            if ((int)*(f32 *)(obj + 0x14) <= tyi - 60) {
+                                *(f32 *)(obj + 0x14) = (f32)(tyi - 60);
+                                *(u8 *)(state + 2) = 1;
+                                *(s16 *)(state + 4) = 200;
+                            }
+                        }
+                    }
+                    break;
+                case 4:
+                    if (s3 == 3) {
+                        if (xi > txi) {
+                            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) - timeDelta;
+                            if ((int)*(f32 *)(obj + 0xc) <= txi) {
+                                *(f32 *)(obj + 0xc) = (f32)txi;
+                                *(u8 *)(state + 2) = 1;
+                            }
+                        }
+                    } else {
+                        if (yi > tyi) {
+                            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) - timeDelta;
+                            if ((int)*(f32 *)(obj + 0x14) <= tyi) {
+                                *(f32 *)(obj + 0x14) = (f32)tyi;
+                                *(u8 *)(state + 2) = 1;
+                            }
+                        }
+                    }
+                    break;
+                case 5:
+                    if (s3 == 3) {
+                        if (xi < txi + 60) {
+                            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + timeDelta;
+                            if ((int)*(f32 *)(obj + 0xc) >= txi + 60) {
+                                *(f32 *)(obj + 0xc) = (f32)(txi + 60);
+                                *(u8 *)(state + 2) = 1;
+                                *(s16 *)(state + 4) = 200;
+                            }
+                        }
+                    } else {
+                        if (yi < tyi + 60) {
+                            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + timeDelta;
+                            if ((int)*(f32 *)(obj + 0x14) >= tyi + 60) {
+                                *(f32 *)(obj + 0x14) = (f32)(tyi + 60);
+                                *(u8 *)(state + 2) = 1;
+                                *(s16 *)(state + 4) = 200;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

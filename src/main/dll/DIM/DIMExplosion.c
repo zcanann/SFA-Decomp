@@ -613,3 +613,270 @@ int fn_801B17F4(int obj, int delta) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* dimgate_update: open the gate (hitbox state 1->2) once a type-399 object is
+ * present in the trigger list, latching the gamebit. */
+#pragma scheduling off
+#pragma peephole off
+void dimgate_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    int *def = *(int **)((char *)obj + 0x4c);
+    switch (*(s8 *)extra) {
+    case 0: {
+        int *hb = *(int **)((char *)obj + 0x54);
+        int *list;
+        int found;
+        int i;
+        if (*(s8 *)((char *)hb + 0xb0) != 1) {
+            ObjHitbox_SetStateIndex((int)obj, (int)hb, 1);
+        }
+        found = 0;
+        list = *(int **)((char *)obj + 0x58);
+        for (i = 0; i < *(s8 *)((char *)list + 0x10f); i++) {
+            if (*(s16 *)((char *)*(int **)((char *)list + 0x100 + i * 4) + 0x46) == 399) {
+                found = 1;
+                break;
+            }
+        }
+        if (found) {
+            GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            if (*(s8 *)((char *)*(int **)((char *)obj + 0x54) + 0xb0) != 2) {
+                ObjHitbox_SetStateIndex((int)obj, *(int *)((char *)obj + 0x54), 2);
+            }
+            *(s8 *)extra = 2;
+        }
+        break;
+    }
+    case 1:
+        break;
+    case 2:
+        if (*(s8 *)((char *)*(int **)((char *)obj + 0x54) + 0xb0) != 2) {
+            ObjHitbox_SetStateIndex((int)obj, *(int *)((char *)obj + 0x54), 2);
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int Sfx_PlayFromObject(int obj, int sfx);
+extern u8 framesThisStep;
+
+/* dimbarrier_update: while a live type-470 object is in the list, count down the
+ * arm timer; on expiry fade the barrier out and latch its gamebit. */
+#pragma scheduling off
+#pragma peephole off
+void dimbarrier_update(int *obj)
+{
+    int *def = *(int **)((char *)obj + 0x4c);
+    int *extra = *(int **)((char *)obj + 0xb8);
+    switch (*(u8 *)((char *)extra + 2)) {
+    case 0: {
+        int *list = *(int **)((char *)obj + 0x58);
+        int found = 0;
+        int i;
+        for (i = 0; i < *(s8 *)((char *)list + 0x10f); i++) {
+            int *entry = *(int **)((char *)list + 0x100 + i * 4);
+            if (*(s16 *)((char *)entry + 0x46) == 470 &&
+                *(u8 *)((char *)*(int **)((char *)entry + 0xb8) + 4) != 0) {
+                found = 1;
+                break;
+            }
+        }
+        if (found) {
+            s8 v = *(u8 *)((char *)extra + 3) - 1;
+            *(s8 *)((char *)extra + 3) = v;
+            if (v <= 0) {
+                *(s8 *)((char *)extra + 2) = 1;
+                *(s16 *)extra = 30;
+                Sfx_PlayFromObject((int)obj, 518);
+            } else {
+                Sfx_PlayFromObject((int)obj, 519);
+            }
+        }
+        break;
+    }
+    case 1: {
+        int v = *(u8 *)((char *)obj + 0x36) - framesThisStep * 16;
+        if (v < 0) {
+            v = 0;
+        }
+        *(s16 *)((char *)*(int **)((char *)obj + 0x54) + 0x60) &= ~1;
+        *(u8 *)((char *)obj + 0x36) = v;
+        *(s16 *)extra = *(s16 *)extra - framesThisStep;
+        if (*(s16 *)extra <= 0) {
+            GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            *(s8 *)((char *)extra + 2) = 2;
+        }
+        break;
+    }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int fn_802972A8(int player);
+extern int Obj_AllocObjectSetup(int kind, int id);
+extern int Obj_SetupObject(int handle, int a, int b, int c, int d);
+extern f32 lbl_803E4864;
+
+/* dimsnowball1c2_update: on a timer, if loading allows and the player is clear,
+ * spawn a rolling snowball seeded from the placement params. */
+#pragma scheduling off
+#pragma peephole off
+void dimsnowball1c2_update(int *obj)
+{
+    if (Obj_IsLoadingLocked()) {
+        int *extra = *(int **)((char *)obj + 0xb8);
+        *(s16 *)extra = *(s16 *)extra - framesThisStep;
+        if (*(s16 *)extra <= 0) {
+            if (fn_802972A8(Obj_GetPlayerObject()) == 0) {
+                int *def = *(int **)((char *)obj + 0x4c);
+                int *np = (int *)Obj_AllocObjectSetup(36, 406);
+                *(u8 *)((char *)np + 4) = *(u8 *)((char *)def + 4);
+                *(u8 *)((char *)np + 6) = *(u8 *)((char *)def + 6);
+                *(u8 *)((char *)np + 5) = *(u8 *)((char *)def + 5);
+                *(u8 *)((char *)np + 7) = *(u8 *)((char *)def + 7);
+                *(f32 *)((char *)np + 8) = *(f32 *)((char *)obj + 0xc);
+                *(f32 *)((char *)np + 0xc) = *(f32 *)((char *)obj + 0x10);
+                *(f32 *)((char *)np + 0x10) = *(f32 *)((char *)obj + 0x14);
+                *(int *)((char *)np + 0x14) = *(int *)((char *)def + 0x14);
+                *(s8 *)((char *)np + 0x18) = *(s8 *)((char *)def + 0x1c);
+                *(s16 *)((char *)np + 0x1a) = *(u8 *)((char *)def + 0x1a);
+                *(s16 *)((char *)np + 0x1c) =
+                    (int)((f32)(u32)*(u8 *)((char *)def + 0x1b) +
+                          (f32)(int)randomGetRange(0, 100) / lbl_803E4864);
+                Obj_SetupObject((int)np, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
+                *(s16 *)extra = *(s16 *)((char *)extra + 2);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objMove(int *obj, f32 x, f32 y, f32 z);
+extern void ObjHits_SetHitVolumeSlot(int *obj, int a, int b, int c);
+extern void ObjHitbox_SetSphereRadius(int *obj, int radius);
+extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern void Obj_FreeObject(int *obj);
+extern f32 timeDelta;
+extern f32 lbl_803E48A0;
+extern f32 lbl_803E48A4;
+extern f32 lbl_803E48A8;
+extern f32 lbl_803DBEF0;
+
+/* fn_801B1D84: integrate the falling debris under gravity, spin it, and on
+ * contact (or scripted trigger) fire the explosion and start the despawn timer. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801B1D84(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    switch (*(u8 *)((char *)extra + 8)) {
+    case 0: {
+        f32 oldvy = *(f32 *)((char *)obj + 0x28);
+        int *hb;
+        *(f32 *)((char *)obj + 0x28) = lbl_803E48A4 * -lbl_803DBEF0 * timeDelta + oldvy;
+        objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
+                lbl_803E48A8 * (oldvy + *(f32 *)((char *)obj + 0x28)) * timeDelta,
+                *(f32 *)((char *)obj + 0x2c) * timeDelta);
+        *(s16 *)((char *)obj + 4) = *(s16 *)((char *)obj + 4) + *(s8 *)((char *)extra + 9) * 10;
+        *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + *(s8 *)((char *)extra + 0xa) * 10;
+        *(s16 *)obj = *(s16 *)obj + *(s8 *)((char *)extra + 0xb) * 10;
+        hb = *(int **)((char *)obj + 0x54);
+        if (hb != NULL) {
+            int *vol;
+            ObjHits_SetHitVolumeSlot(obj, 5, *(s8 *)((char *)extra + 6), 0);
+            vol = *(int **)((char *)hb + 0x50);
+            if (vol != NULL && vol != *(int **)extra) {
+                ObjHitbox_SetSphereRadius(obj, *(s8 *)((char *)extra + 5));
+                spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
+                *(int *)((char *)obj + 0xf4) = 1180;
+                *(s8 *)((char *)extra + 8) = 1;
+                *(s16 *)((char *)obj + 6) |= 0x4000;
+            }
+        }
+        if ((GameBit_Get(2142) != 0 && GameBit_Get(3117) == 0) ||
+            (GameBit_Get(2164) != 0 && GameBit_Get(3118) == 0)) {
+            *(int *)((char *)obj + 0xf4) = 1200;
+        }
+        if (*(s8 *)((char *)*(int **)((char *)obj + 0x54) + 0xad) != 0) {
+            ObjHitbox_SetSphereRadius(obj, *(s8 *)((char *)extra + 5));
+            spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
+            *(int *)((char *)obj + 0xf4) = 1180;
+            *(s8 *)((char *)extra + 8) = 1;
+            *(s16 *)((char *)obj + 6) |= 0x4000;
+        }
+        break;
+    }
+    case 1:
+        break;
+    }
+    *(int *)((char *)obj + 0xf4) = *(int *)((char *)obj + 0xf4) + framesThisStep;
+    if (*(int *)((char *)obj + 0xf4) > 1200) {
+        Obj_FreeObject(obj);
+    } else if (*(u8 *)((char *)extra + 7) != 0) {
+        *(s8 *)((char *)extra + 7) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *getTrickyObject(void);
+extern void objRenderFn_80041018(int *obj);
+extern int *gPartfxInterface;
+extern f32 lbl_803E4880;
+extern f32 lbl_803E4884;
+extern f32 lbl_803E4888;
+
+/* dimicewall_update: on shatter, emit two snow particle bursts and latch the
+ * gamebit; otherwise let Tricky push through it. */
+#pragma scheduling off
+#pragma peephole off
+void dimicewall_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    int *def = *(int **)((char *)obj + 0x4c);
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+    if (*(u8 *)((char *)extra + 1) == 0) {
+        if (*(s8 *)extra <= 0) {
+            f32 desc[6];
+            int i;
+            desc[2] = (f32)(s8)*(s8 *)((char *)def + 0x19) / lbl_803E4880;
+            desc[5] = lbl_803E4884;
+            for (i = 45; i != 0; i--) {
+                desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(-250, 250));
+                desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(0, 450));
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
+                    obj, 2041, desc, 2, -1, 0);
+            }
+            for (i = 25; i != 0; i--) {
+                desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(-250, 250));
+                desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(0, 450));
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
+                    obj, 2042, desc, 2, -1, 0);
+            }
+            if (*(int *)((char *)def + 0x14) != 7433) {
+                Sfx_PlayFromObject((int)obj, 1147);
+            }
+            *(u8 *)((char *)extra + 1) = 1;
+            if (*(s16 *)((char *)def + 0x1e) != -1) {
+                GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            }
+        } else {
+            int *tricky = getTrickyObject();
+            if (tricky != NULL) {
+                if ((*(u8 *)((char *)obj + 0xaf) & 4) != 0) {
+                    (*(void (**)(int *, int *, int, int))(**(int **)((char *)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+                }
+                *(u8 *)((char *)obj + 0xaf) &= ~8;
+                objRenderFn_80041018(obj);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
