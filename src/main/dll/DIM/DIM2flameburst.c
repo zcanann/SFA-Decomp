@@ -1932,3 +1932,59 @@ int fn_801B602C(int* obj, int p2, u8* p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 timeDelta;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnim, void* events);
+extern f32 lbl_803E49D8;
+extern f32 lbl_803E49DC;
+extern f32 lbl_803E49E0;
+extern f32 lbl_803E49E4;
+
+/* EN v1.0 0x801B5804  size: 380b  dimwooddoor2_update: advance the door's
+ * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
+ * alpha, otherwise scan the nearby objects and, if a key object is present,
+ * snap the door open (reset wobble, ring the gamebit, play the open sfx). */
+#pragma scheduling off
+#pragma peephole off
+void dimwooddoor2_update(int* obj)
+{
+    int* q = *(int**)((char*)obj + 0x4c);
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    ObjAnim_AdvanceCurrentMove(*(f32*)(sub + 4), timeDelta, (int)obj, 0);
+    *(f32*)((char*)obj + 0x14) = *(f32*)((char*)obj + 0x14) + *(f32*)(sub + 8);
+    if (*(f32*)(sub + 8) != lbl_803E49D4) {
+        *(f32*)(sub + 8) = *(f32*)(sub + 8) * lbl_803E49D8;
+        if (*(f32*)(sub + 8) > lbl_803E49D4) {
+            *(f32*)(sub + 8) = lbl_803E49D4;
+        }
+    }
+    if ((s8)sub[0] <= 0 && *(s16*)q == 0x338 && *(f32*)((char*)obj + 0x98) > lbl_803E49DC) {
+        int v = *(u8*)((char*)obj + 0x36) - framesThisStep * 16;
+        int* q2 = *(int**)((char*)obj + 0x54);
+        if (v < 0) v = 0;
+        *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
+        *(u8*)((char*)obj + 0x36) = (u8)v;
+    } else {
+        int found = 0;
+        int i;
+        int* list = *(int**)((char*)obj + 0x58);
+        int n = (s8)*(s8*)((char*)list + 0x10f);
+        for (i = 0; i < n; i++) {
+            int* o = *(int**)((char*)list + 0x100 + i * 4);
+            if (*(s16*)((char*)o + 0x46) == 0x18f || *(s16*)((char*)o + 0x46) == 0x1d6) {
+                found = 1;
+                break;
+            }
+        }
+        if (found) {
+            *(f32*)(sub + 4) = lbl_803E49E0;
+            *(f32*)(sub + 8) = lbl_803E49E4;
+            sub[0] = 0;
+            GameBit_Set(*(s16*)((char*)q + 0x1e), 1);
+            Sfx_PlayFromObject((int)obj, 0x3e1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
