@@ -6323,6 +6323,22 @@ extern int coordsToMapCell(f32 x, f32 z);
 extern int randomGetRange(int lo, int hi);
 extern void mm_free(void *ptr);
 extern void fn_80026C88(int a);
+extern void buttonDisable(int a, int b);
+extern f32 lbl_803E8234;
+extern f32 lbl_803DC740[];
+extern s16 lbl_803DC73C[];
+extern f32 lbl_803E81DC;
+extern f32 lbl_803E81E0;
+extern f32 lbl_803E81E4;
+extern f32 lbl_803E81E8;
+extern f32 lbl_803E81EC;
+extern f32 lbl_803E81F0;
+extern f32 lbl_803E81F4;
+extern f32 lbl_803E81F8;
+extern f32 lbl_803E81FC;
+extern f32 lbl_803E8200;
+extern f32 lbl_803E8204;
+extern f32 lbl_803E8208;
 
 #pragma scheduling off
 #pragma peephole off
@@ -7083,6 +7099,129 @@ void fn_802A13F4(int obj, int p2)
                 lbl_803DE47C = 0x3c;
             }
         }
+    }
+}
+
+int fn_802BA6E0(int obj, int state)
+{
+    f32 k = lbl_803E8234;
+    int idx;
+
+    *(f32 *)((char *)state + 0x294) = k;
+    *(f32 *)((char *)state + 0x284) = k;
+    *(f32 *)((char *)state + 0x280) = k;
+    *(f32 *)((char *)obj + 0x24) = k;
+    *(f32 *)((char *)obj + 0x28) = k;
+    *(f32 *)((char *)obj + 0x2c) = k;
+    *(u32 *)((char *)state) |= 0x200000;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        idx = randomGetRange(0, 1);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803DC740[idx];
+        ObjAnim_SetCurrentMove(obj, lbl_803DC73C[idx], lbl_803E8234, 0);
+    }
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        return -2;
+    }
+    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+            randomGetRange(0, 2) + 6, obj, -1);
+        buttonDisable(0, 0x100);
+    }
+    return 0;
+}
+
+int fn_802BABB4(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+
+    switch (*(u8 *)((char *)inner + 0xa8c)) {
+    case 0:
+        if (GameBit_Get(0xf3)) {
+            *(u8 *)((char *)inner + 0xa8e) |= 0x20;
+        }
+        return 2;
+    case 5:
+        return 3;
+    case 4:
+        if (GameBit_Get(0x1db)) return 8;
+        return 6;
+    case 1:
+        if (GameBit_Get(0x16f)) return 8;
+        if (GameBit_Get(0x28)) return 7;
+        if (GameBit_Get(0x27)) return 7;
+        return 6;
+    case 3:
+        return 8;
+    default:
+        return 8;
+    }
+}
+
+int fn_802A98FC(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    s16 sel = *(s16 *)((char *)p2 + 0x274);
+
+    if (sel == 1 || sel == 2) {
+        void *slot = *(void **)((char *)inner + 0x4b8);
+        u8 af;
+        u8 c;
+        int sub;
+        if (slot == NULL || *(s16 *)((char *)slot + 0x46) != 0x414) return 0;
+        af = *(u8 *)((char *)slot + 0xaf);
+        if ((af & 4) == 0 || (af & 0x18) != 0) return 0;
+
+        c = *(u8 *)((char *)inner + 0x8c8);
+        if (*(void **)((char *)p2 + 0x2d0) != NULL ||
+            c == 0x48 || c == 0x47 || c == 0x44 ||
+            *(void **)((char *)inner + 0x7f8) != NULL ||
+            ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
+            ((ByteFlags *)((char *)inner + 0x3f0))->b04 ||
+            ((ByteFlags *)((char *)inner + 0x3f0))->b08 ||
+            ((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) {
+            return 0;
+        }
+        sub = *(int *)((char *)inner + 0x35c);
+        if (*(s16 *)((char *)sub + 4) < 0x14) return 0;
+        if (GameBit_Get(0x5bd)) return 1;
+    }
+    return 0;
+}
+
+void fn_802B84D0(int obj)
+{
+    switch (*(int *)((char *)*(int *)((char *)obj + 0x4c) + 0x14)) {
+    case 0x34316:
+        *(f32 *)((char *)obj + 0x18) = lbl_803E81DC;
+        *(f32 *)((char *)obj + 0x1c) = lbl_803E81E0;
+        *(f32 *)((char *)obj + 0x20) = lbl_803E81E4;
+        *(s16 *)((char *)obj + 0) = 0x2565;
+        break;
+    case 0x33E3C:
+        *(f32 *)((char *)obj + 0x18) = lbl_803E81E8;
+        *(f32 *)((char *)obj + 0x1c) = lbl_803E81EC;
+        *(f32 *)((char *)obj + 0x20) = lbl_803E81F0;
+        *(s16 *)((char *)obj + 0) = 0x1c42;
+        break;
+    case 0x33E34:
+        *(f32 *)((char *)obj + 0x18) = lbl_803E81F4;
+        *(f32 *)((char *)obj + 0x1c) = lbl_803E81EC;
+        *(f32 *)((char *)obj + 0x20) = lbl_803E81F8;
+        *(s16 *)((char *)obj + 0) = 0x1d00;
+        break;
+    case 0x45C47:
+        *(f32 *)((char *)obj + 0x18) = lbl_803E81FC;
+        *(f32 *)((char *)obj + 0x1c) = lbl_803E81E0;
+        *(f32 *)((char *)obj + 0x20) = lbl_803E8200;
+        *(s16 *)((char *)obj + 0) = 0x32c1;
+        break;
+    case 0x460B6:
+        *(f32 *)((char *)obj + 0x18) = lbl_803E8204;
+        *(f32 *)((char *)obj + 0x1c) = lbl_803E81E0;
+        *(f32 *)((char *)obj + 0x20) = lbl_803E8208;
+        *(s16 *)((char *)obj + 0) = 0x119f;
+        break;
     }
 }
 #pragma peephole reset
