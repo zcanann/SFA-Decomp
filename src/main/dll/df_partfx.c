@@ -1950,5 +1950,36 @@ void Checkpoint_remove(int *obj) {
         remaining--;
     }
 }
+extern int getAngle(f32 a, f32 b);
+extern f32 lbl_803E0584;
+extern f32 timeDelta;
+#pragma scheduling off
+#pragma peephole off
+void player_rotateTowardEnemy(int *obj, int *ctx, int spd) {
+    int *enemy;
+    f32 dx;
+    f32 dz;
+    int diff;
+    enemy = (int *)ctx[0x2d0 / 4];
+    if (enemy != 0) {
+        if (enemy[0x30 / 4] == obj[0x30 / 4]) {
+            dx = *(f32 *)((char *)enemy + 0xc) - *(f32 *)((char *)obj + 0xc);
+            dz = *(f32 *)((char *)enemy + 0x14) - *(f32 *)((char *)obj + 0x14);
+        } else {
+            dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)enemy + 0x18);
+            dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)enemy + 0x20);
+        }
+        diff = (u16)getAngle(-dx, -dz) - (u16)*(s16 *)((char *)obj + 0);
+        if (diff > 0x8000) {
+            diff -= 0xffff;
+        }
+        if (diff < -0x8000) {
+            diff += 0xffff;
+        }
+        *(s16 *)((char *)obj + 0) =
+            (s16)(*(s16 *)((char *)obj + 0) +
+                  (int)((f32)diff * timeDelta / (lbl_803E0584 * (f32)spd)));
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset
