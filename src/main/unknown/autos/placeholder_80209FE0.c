@@ -1691,10 +1691,29 @@ extern void ModelLightStruct_free(int light);
 extern void Music_Trigger(int id, int value);
 extern void fn_80221978(int obj, int p1, int n, int p2, f32 v);
 extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
+extern void storeZeroToFloatParam(f32 *p);
+extern void lightVecFn_8001dd88(int model, f32 x, f32 y, f32 z);
+extern void queueGlowRender(int model);
+extern int randomGetRange(int lo, int hi);
+extern void bossdrakor_animEventCallback();
 extern f32 lbl_803E6588;
 extern f32 lbl_803E658C;
 extern f32 lbl_803E6590;
 extern f32 lbl_803E6594;
+extern f32 lbl_803E651C;
+extern f32 lbl_803E6510;
+extern f32 lbl_803E657C;
+
+typedef struct {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 b10 : 1;
+    u8 b08 : 1;
+    u8 b04 : 1;
+    u8 b02 : 1;
+    u8 b01 : 1;
+} DrakorFlags;
 
 int bossdrakor_getExtraSize(void)
 {
@@ -1740,6 +1759,41 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         fn_80221978(p1, inner + 0x14, 3, inner + 0x64, v);
     }
     objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6594);
+}
+
+void bossdrakor_init(int obj, u8 *init)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz;
+    if (*(u8 *)((char *)init + 0x19) == 0) {
+        *(u8 *)((char *)init + 0x19) = 0xa;
+    }
+    if (*(s16 *)((char *)init + 0x1a) <= 0) {
+        *(s16 *)((char *)init + 0x1a) = 0x1e;
+    }
+    *(int *)((char *)inner + 0xc) = 0;
+    ((DrakorFlags *)((char *)inner + 0x198))->b80 = 0;
+    *(f32 *)((char *)inner + 0) = (f32)(u32)*(u8 *)((char *)init + 0x19);
+    *(int *)((char *)inner + 0x170) = *(s16 *)((char *)init + 0x1a);
+    fz = lbl_803E6510;
+    *(f32 *)((char *)inner + 0x14) = fz;
+    *(int *)((char *)inner + 0x168) = 0;
+    *(int *)((char *)inner + 0x16c) = -1;
+    *(int *)((char *)inner + 0x174) = 0;
+    *(f32 *)((char *)inner + 0x164) = lbl_803E657C;
+    ((DrakorFlags *)((char *)inner + 0x198))->b40 = 1;
+    *(f32 *)((char *)inner + 0x178) = fz;
+    *(f32 *)((char *)inner + 0x17c) = fz;
+    *(int *)((char *)inner + 0x194) = 0;
+    *(f32 *)((char *)inner + 0x18c) = fz;
+    ((DrakorFlags *)((char *)inner + 0x198))->b10 = 1;
+    storeZeroToFloatParam((f32 *)((char *)inner + 0x10));
+    ObjGroup_AddObject(obj, 0x45);
+    storeZeroToFloatParam((f32 *)((char *)inner + 0x18));
+    *(void **)((char *)obj + 0xbc) = (void *)bossdrakor_animEventCallback;
+    Music_Trigger(0x26, 1);
+    Music_Trigger(0x96, 1);
+    *(int *)((char *)inner + 0x160) = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
