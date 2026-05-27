@@ -5,6 +5,7 @@ extern undefined4 getLActions();
 extern void* FUN_800069a8();
 extern int FUN_80006a64();
 extern undefined8 FUN_80006a68();
+extern void *Resource_Acquire(int id, int mode);
 extern u32 randomGetRange(int min, int max);
 extern undefined8 ObjHits_SetHitVolumeSlot();
 extern double FUN_80293900();
@@ -19,6 +20,10 @@ extern f32 lbl_803E5E68;
 extern f32 lbl_803E5E6C;
 extern f32 lbl_803E5E70;
 extern f32 lbl_803E5E74;
+extern f32 lbl_803E51E0;
+extern f32 lbl_803E51E4;
+extern f32 lbl_803E51E8;
+extern f64 lbl_803E51F0;
 
 /*
  * --INFO--
@@ -189,6 +194,62 @@ void FUN_801cd484(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+
+
+/*
+ * --INFO--
+ *
+ * Function: dll_19E_init
+ * EN v1.0 Address: 0x801CD678
+ * EN v1.0 Size: 348b
+ */
+#pragma scheduling off
+#pragma peephole off
+void dll_19E_init(undefined2 *obj, int def)
+{
+  int *state;
+  int *resource;
+  undefined stackArg[16];
+  float localScale;
+  undefined4 doubleHigh;
+  uint doubleLow;
+
+  state = *(int **)(obj + 0x5c);
+  *obj = (short)(((int)*(char *)(def + 0x18) & 0x3fU) << 10);
+  if (*(short *)(def + 0x1a) > 0) {
+    doubleLow = (int)*(short *)(def + 0x1a) ^ 0x80000000;
+    doubleHigh = 0x43300000;
+    *(float *)(obj + 4) =
+        (float)((double)CONCAT44(doubleHigh, doubleLow) - lbl_803E51F0) / lbl_803E51E4;
+  }
+  else {
+    *(float *)(obj + 4) = lbl_803E51E8;
+  }
+
+  *(undefined *)((int)state + 0xb) = *(undefined *)(def + 0x19);
+  *(undefined *)(state + 3) = 0;
+  *(undefined *)((int)state + 0xf) = 0;
+  *state = (int)*(short *)(def + 0x1e);
+  localScale = lbl_803E51E0;
+
+  if (*(char *)((int)state + 0xb) == 1) {
+    *(char *)((int)state + 0xf) = (char)*(undefined2 *)(def + 0x1c);
+    *(undefined *)((int)state + 0xd) = 0;
+    *(ushort *)(state + 2) = (ushort)*(byte *)((int)state + 0xf) * 0x28 + 0x398;
+    *(undefined *)((int)state + 0xe) = 0;
+  }
+  else if (*(char *)((int)state + 0xb) == 0) {
+    *(undefined *)(state + 3) = 1;
+    resource = (int *)Resource_Acquire(0x69, 1);
+    if (*(short *)(def + 0x1c) == 0) {
+      (*(void (**)(undefined2 *, int, undefined *, int, int, int))(*resource + 4))(
+          obj, 0, stackArg, 0x10004, -1, 0);
+    }
+  }
+  *(undefined2 *)(state + 1) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
