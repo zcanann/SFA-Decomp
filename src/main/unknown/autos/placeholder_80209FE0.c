@@ -1707,6 +1707,19 @@ extern f32 lbl_803E65C0;
 extern f32 lbl_803E65C4;
 extern f32 lbl_803E65C8;
 extern void s16toFloat(void *p, int v);
+extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern int objRemoveFromListFn_8002ce88(int *obj);
+extern void fn_80221E94(int obj, f32 *pos, f32 v);
+extern int GameBit_Set(int bit, int val);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int *gMapEventInterface;
+extern f32 timeDelta;
+extern f32 lbl_803E6518;
+extern f32 lbl_803E6520;
+extern f32 lbl_803E6550;
+extern f32 lbl_803E6554;
+extern f32 lbl_803E6558;
+extern f32 lbl_803E655C;
 extern int lbl_803DC1A0;
 extern int lbl_803DC1A8;
 extern f32 lbl_803DC1B0;
@@ -1766,6 +1779,51 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         fn_80221978(p1, inner + 0x14, 3, inner + 0x64, v);
     }
     objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6594);
+}
+
+void bossdrakor_hitDetect(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int setup = *(int *)((char *)obj + 0x4c);
+    f32 hz;
+    f32 hy;
+    f32 hx;
+    f32 t518;
+    int hit = ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &hx, &hy, &hz);
+    if (hit == 0xf || hit == 0xe) {
+        if (((DrakorFlags *)((char *)inner + 0x198))->b40) {
+            *(int *)((char *)inner + 0x170) -= 1;
+            ((DrakorFlags *)((char *)inner + 0x198))->b08 = 1;
+            if (*(int *)((char *)inner + 0x170) < 0) {
+                GameBit_Set(*(s16 *)((char *)setup + 0x1e), 1);
+                spawnExplosion((int *)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
+                objRemoveFromListFn_8002ce88((int *)obj);
+                (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x44)))(0x1d, 3);
+                GameBit_Set(0x83c, 1);
+            } else {
+                fn_80221E94(obj, &hx, lbl_803E6554);
+            }
+            if (*(f32 *)((char *)inner + 0x19c) <= lbl_803E6510) {
+                *(f32 *)((char *)inner + 0x19c) = lbl_803E6558;
+                Sfx_PlayFromObject(obj, 0x478);
+            }
+            if (*(f32 *)((char *)inner + 0x1a0) <= lbl_803E6510) {
+                *(f32 *)((char *)inner + 0x1a0) = lbl_803E6520;
+                Sfx_PlayFromObject(obj, 0x4af);
+            }
+            t518 = lbl_803E6518;
+            *(f32 *)((char *)inner + 0x17c) = t518;
+            *(f32 *)((char *)inner + 0x178) = t518;
+            *(f32 *)((char *)inner + 0x180) = (f32)(s32)randomGetRange(-0x32, 0x32) / lbl_803E655C;
+        } else {
+            if (*(f32 *)((char *)inner + 0x1a0) < lbl_803E6510) {
+                *(f32 *)((char *)inner + 0x1a0) = lbl_803E6520;
+                Sfx_PlayFromObject(obj, 0x4b0);
+            }
+        }
+    }
+    *(f32 *)((char *)inner + 0x19c) -= timeDelta;
+    *(f32 *)((char *)inner + 0x1a0) -= timeDelta;
 }
 
 void bossdrakor_init(int obj, u8 *init)
