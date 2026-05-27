@@ -6039,6 +6039,78 @@ void gxTextureFn_8004d5b4(void *p1) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
+struct piIndMtx { f32 m[2][3]; };
+extern struct piIndMtx lbl_802C1D50;
+extern u8 lbl_803DB5E8;
+extern int lbl_803DCD7C;
+extern int lbl_8030CEE0[];
+extern f32 lbl_803DEB38;
+extern f32 lbl_803DEB3C;
+extern void *textureIdxToPtr(int idx);
+extern void GXSetIndTexMtx(int id, f32 offset[2][3], int scale_exp);
+extern void GXSetIndTexOrder(int ind_stage, int tex_coord, int tex_map);
+extern void GXSetIndTexCoordScale(int ind_stage, int scale_s, int scale_t);
+extern void GXSetTevIndirect(int tev, int ind, int fmt, int bias, int mtx, int ws, int wt, int addprev, int utclod, int alpha);
+extern void GXSetTevOp(int stage, int mode);
+int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
+    struct piIndMtx indmtx;
+    f32 mtx[3][4];
+    f32 v;
+    int result = 0;
+    indmtx = lbl_802C1D50;
+    if ((lbl_803DB5E8 & 1) == 0) {
+        return 0;
+    }
+    GXSetIndTexMtx(1, indmtx.m, 0);
+    GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + p2, lbl_803DCD8C);
+    if (p4 != 0) {
+        void *texptr;
+        u32 div;
+        p2 = (p3 & 0xf) * 4 + 1;
+        texptr = textureIdxToPtr(p4);
+        div = (u32)*(u16 *)((char *)texptr + 0xa) / (u32)(*(u16 *)((char *)p1 + 0xa) * p2);
+        if (div != 0) {
+            GXSetIndTexCoordScale(lbl_803DCD7C, lbl_8030CEE0[div - 1], lbl_8030CEE0[div - 1]);
+        } else {
+            result = (u8)p2;
+        }
+    } else {
+        result = 1;
+    }
+    v = (f32)(s32)((p3 & 0xf0) >> 4);
+    v = v / lbl_803DEB3C;
+    v = v - lbl_803DEAC8;
+    v = lbl_803DEB38 * v;
+    v = Prepared_803DEAD8[1] * v;
+    PSMTXScale(mtx, v, v, lbl_803DEACC);
+    mtx[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, 1, 2, 0x1e, 0, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, 1, 3, 0x1e, 0, lbl_803DCD80);
+    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 5, 6, 6, 0, 0, 0);
+    GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C, 0, 3, 9, 6, 6, 1, 0, 0);
+    GXSetTevIndirect(lbl_803DCD90 + 2, lbl_803DCD7C, 0, 0, 0, 0, 0, 1, 0, 0);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, (lbl_803DCD8C + 1) | 0x100, 0xff);
+    GXSetTevOp(lbl_803DCD90, 4);
+    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, (lbl_803DCD8C + 1) | 0x100, 0xff);
+    GXSetTevOp(lbl_803DCD90 + 1, 4);
+    if (p1 != 0) {
+        if (*(u8 *)((char *)p1 + 0x48) != 0) {
+            GXLoadTexObjPreLoaded((char *)p1 + 0x20, *(void **)((char *)p1 + 0x40), lbl_803DCD8C);
+        } else {
+            GXLoadTexObj((char *)p1 + 0x20, lbl_803DCD8C);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD7C = lbl_803DCD7C + 1;
+    lbl_803DCD88 = lbl_803DCD88 + 2;
+    lbl_803DCD90 = lbl_803DCD90 + 2;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 2;
+    lbl_803DCD68 = lbl_803DCD68 + 1;
+    lbl_803DCD69 = lbl_803DCD69 + 2;
+    return result;
+}
 #pragma peephole reset
 #pragma scheduling reset
 extern void VIConfigure(void *mode);
