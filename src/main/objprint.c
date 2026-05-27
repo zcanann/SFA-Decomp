@@ -3194,5 +3194,40 @@ void fn_8003A168(int p1, int p2)
     }
     *(s16*)(p2 + 0x1a) = 0;
 }
+
+void objModelClearVecFn_8003aa40(int obj)
+{
+    s16* found;
+    int* table;
+    int k;
+    int n;
+    int i;
+    int j;
+    int slot;
+
+    for (slot = 0; slot < 0x16; slot++) {
+        found = NULL;
+        table = *(int**)(obj + 0x50);
+        if (table != NULL) {
+            i = 0;
+            j = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+            for (k = 0; k < n; k++) {
+                u8* data = *(u8**)((char*)table + 0x10);
+                s32 offset = *(s8*)(obj + 0xad);
+                if (data[(offset + i) + 1] != 0xff && (int)data[i] == slot) {
+                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                }
+                i = i + *(s8*)((char*)table + 0x55) + 1;
+                j += 0x12;
+            }
+        }
+        if (found != NULL) {
+            found[0] = 0;
+            found[1] = 0;
+            found[2] = 0;
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
