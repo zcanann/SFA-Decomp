@@ -1799,3 +1799,50 @@ void dll_16C_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_803236B8[];
+extern f32 lbl_803E4730;
+
+/* crrockfall_init: derive the per-rock scale from the placement params, size the
+ * capsule hitbox from the sub-object bounds, set up render flags, and pick the
+ * state-table variant by object type. */
+#pragma scheduling off
+#pragma peephole off
+void crrockfall_init(int *obj, u8 *params)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    int *sub;
+    int *p64;
+
+    *(u8 *)((char *)extra + 0xc) = 0;
+    *(f32 *)((char *)extra + 8) = *(f32 *)((char *)obj + 0x10);
+    *(s16 *)((char *)extra + 0x10) = *(s16 *)((char *)params + 0x1e);
+    *(f32 *)((char *)obj + 8) = (f32)(u32)params[0x1b] / lbl_803E4730;
+
+    sub = *(int **)((char *)obj + 0x54);
+    if (sub != NULL) {
+        f32 scale = *(f32 *)((char *)obj + 8);
+        ObjHitbox_SetCapsuleBounds(obj,
+                                   (int)((f32)*(s16 *)((char *)sub + 0x5a) * scale),
+                                   (int)((f32)*(s16 *)((char *)sub + 0x5c) * scale),
+                                   (int)((f32)*(s16 *)((char *)sub + 0x5e) * scale));
+        ObjHits_DisableObject(obj);
+    }
+
+    p64 = *(int **)((char *)obj + 0x64);
+    if (p64 != NULL) {
+        *(u32 *)((char *)p64 + 0x30) |= 0xb0;
+        *(u32 *)((char *)p64 + 0x30) |= 0xc00;
+        *(f32 *)((char *)p64 + 0x20) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)p64 + 0x28) = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)((char *)p64 + 0) = *(f32 *)((char *)p64 + 0) * *(f32 *)((char *)obj + 8);
+    }
+
+    if (*(s16 *)((char *)obj + 0x46) == 1536) {
+        *(int *)extra = (int)&lbl_803236B8[0xc];
+    } else {
+        *(int *)extra = (int)lbl_803236B8;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
