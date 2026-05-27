@@ -73,7 +73,7 @@ void magiclight_free(int obj);
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void magiclight_hitDetect(void);
 void magiclight_update(int obj);
-void magiclight_init(void);
+void magiclight_init(int* obj, u8* params);
 void magiclight_release(void);
 void magiclight_initialise(void);
 

@@ -1031,6 +1031,60 @@ void crrockfall_hitDetect(void) {}
 void magiclight_hitDetect(void) {}
 void magiclight_release(void) {}
 void magiclight_initialise(void) {}
+
+extern int fn_801AD440(int* obj);
+extern u32 randomGetRange(int min, int max);
+extern f32 lbl_803E4740;
+extern f32 lbl_803E4744;
+
+/* EN v1.0 0x801AD684  size: 344b  magiclight_init: seed header + update fn;
+ * for the non-172 variants pick a random lifetime and, for type 0x16b, map
+ * the spawn subtype to a light-pair / intensity preset. */
+#pragma scheduling off
+#pragma peephole off
+void magiclight_init(int* obj, u8* params)
+{
+    u8* sub;
+    *(int*)((char*)obj + 0xf4) = 0;
+    *(s16*)obj = (s16)((s8)params[0x18] << 8);
+    *(void**)((char*)obj + 0xbc) = (void*)&fn_801AD440;
+    if (*(s16*)((char*)obj + 0x46) == 0x172) {
+        return;
+    }
+    sub = *(u8**)((char*)obj + 0xb8);
+    *(s16*)(sub + 4) = (s16)randomGetRange(0xc8, 0x258);
+    *(s8*)(sub + 0xc) = (s8)*(s16*)(params + 0x1a);
+    sub[0xb] = 0;
+    if (*(s16*)((char*)obj + 0x46) == 0x16b) {
+        switch ((s8)sub[0xc]) {
+        case 0:
+            *(s16*)(sub + 6) = 0x90;
+            *(s16*)(sub + 8) = 0x91;
+            *(f32*)(sub + 0) = lbl_803E4740;
+            break;
+        case 1:
+            *(s16*)(sub + 6) = 0x92;
+            *(s16*)(sub + 8) = 0x93;
+            *(f32*)(sub + 0) = lbl_803E4740;
+            break;
+        default:
+            *(s16*)(sub + 6) = 0x94;
+            *(s16*)(sub + 8) = 0x95;
+            *(f32*)(sub + 0) = lbl_803E4744;
+            break;
+        case 3:
+            *(s16*)(sub + 6) = 0x187;
+            *(s16*)(sub + 8) = 0x5;
+            *(f32*)(sub + 0) = lbl_803E4740;
+            break;
+        }
+        *(s16*)(sub + 0x10) = 0x12d;
+    } else {
+        *(s16*)(sub + 0x10) = 0x12d;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 void dll_16C_release(void) {}
 void dll_16C_initialise(void) {}
 void imicepillar_free(void) {}
