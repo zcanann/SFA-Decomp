@@ -5621,6 +5621,9 @@ extern f32 lbl_803E7EA4;
 extern f32 lbl_803E7ED4;
 extern f32 lbl_803E7F08;
 extern void *lbl_803DE44C;
+extern u8 lbl_803DC66C;
+extern void objSetAnimField48to0(int *obj);
+extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
 
 #pragma scheduling off
 #pragma peephole off
@@ -6304,6 +6307,52 @@ int fn_802A7160(int obj, int state)
         return 2;
     }
     return 0;
+}
+
+void fn_8029BC08(int obj)
+{
+    *(int *)((char *)*(int *)((char *)obj + 0x54) + 0x48) = 0;
+    if (*(s16 *)((char *)lbl_803DE44C + 0x44) == 0x2d) {
+        objSetAnimField48to0((int *)lbl_803DE44C);
+    }
+    lbl_803DC66C = 1;
+}
+
+void fn_8029F67C(int obj)
+{
+    int m = *(int *)((char *)obj + 0x64);
+    s16 *v;
+    *(int *)((char *)m + 0x30) &= ~0x1000;
+    *(s16 *)((char *)obj + 0x6) &= ~0x8;
+    *(s16 *)((char *)obj + 0xa2) = -1;
+    v = objModelGetVecFn_800395d8(obj, 9);
+    if (v != NULL) {
+        v[0] = 0;
+        v[1] = 0;
+        v[2] = 0;
+    }
+}
+
+void fn_80296124(int obj, void *p2, void *p3)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(int *)((char *)inner + 0x360) &= ~0x4000;
+    if (p2 != NULL) {
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)p2 + 0);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)p2 + 4);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)p2 + 8);
+        *(int *)((char *)inner + 0x360) |= 0x4000;
+    }
+    if (p3 != NULL) {
+        s16 t = *(s16 *)((char *)p3 + 0);
+        *(s16 *)((char *)obj + 0) = t;
+        *(s16 *)((char *)inner + 0x478) = t;
+        *(s16 *)((char *)inner + 0x484) = t;
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        *(s16 *)((char *)obj + 2) = *(s16 *)((char *)p3 + 2);
+        *(s16 *)((char *)obj + 4) = *(s16 *)((char *)p3 + 4);
+        *(int *)((char *)inner + 0x360) |= 0x4000;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
