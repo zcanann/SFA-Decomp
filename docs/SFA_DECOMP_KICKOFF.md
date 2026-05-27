@@ -81,6 +81,20 @@ Pick fresh 0% units to hunt. Good families seen this session: `dll/baddie/*`,
 `dll/CAM/*`, `audio/*`, and the many small `dll/dll_*`. **One owner per unit**
 (two agents editing the same `.c` ⇒ duplicate defs + rebase collisions).
 
+**Two flavors of 0%-matched unit — only flavor A is high-yield clean-C work:**
+- **(A) MISSING-from-src (drift):** the asm has symbols that are NOT defined in
+  the `.c`. These are the **add-new-function** wins — add the symbol as a new
+  correctly-named function; they routinely hit 90–100% from clean C. *This is
+  the productive pool.* (gameplay, sandwormBoss, DIMcannon/DIMlavaball,
+  pi_dolphin were all this.)
+- **(B) present-but-unmatched:** the function body is ALREADY in the `.c`
+  (Ghidra-imported) but compiles to non-matching code. These are
+  partial-improvement only and the residuals are usually
+  register-allocation/FP-scheduling — i.e. asm-territory we skip. Low yield;
+  don't mistake a flavor-B unit for fresh work.
+
+Distinguish them per unit: `comm -23 <(grep -oE '^\s*\.fn \S+' build/GSAE01/asm/<unit>.s | awk '{print $2}' | sort -u) <(grep -oE '\b(fn_[0-9a-fA-F]+|[A-Za-z_][A-Za-z0-9_]*)\s*\(' src/<unit>.c | ...)` — or more simply, open the `.c`: if the 0% functions already have full bodies, it's flavor B (skip); if the asm symbols are absent from the `.c`, it's flavor A (go). External "naming/pragma sweep" commits also leave a unit at 0% while editing it — check `git log -1 --grep=<unit>` and prefer never-touched units to avoid colliding with other contributors.
+
 - `python3 tools/drift_audit.py` — rank every unit by Ghidra v1.0/v1.1 drift
   score. Drifted units (src `FUN_xxx` whose addresses don't align with the
   v1.0 `.s`) cannot be matched per-function until restructured. Add
