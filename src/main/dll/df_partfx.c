@@ -1904,3 +1904,23 @@ void player_updateParticles(int *p1, int p2, int p3, int count, int mode)
 
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void player_doProjGfx(int *p1, int p2, int p3, int count, int p5, int mode)
+{
+    int *res = Resource_Acquire((u16)(p3 + 0x58), 1);
+    while (count != 0) {
+        if (mode == 0) {
+            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*(int *)res + 4)))(p1, 0, 0, 1, -1, 0);
+        } else if (mode == 1) {
+            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*(int *)res + 4)))(p1, 0, 0, 2, -1, 0);
+        } else if (mode == 2) {
+            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*(int *)res + 4)))(p1, 0, 0, 4, -1, 0);
+        }
+        count--;
+    }
+    Resource_Release(res);
+}
+#pragma scheduling reset
+#pragma peephole reset
