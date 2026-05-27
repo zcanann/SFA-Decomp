@@ -6015,6 +6015,30 @@ void gxTextureFn_8004bf88(void *bufp, u8 flag1, u8 flag2, int *out1, int *out2) 
         lbl_803DCD6C = lbl_803DCD6C + 1;
     }
 }
+void gxTextureFn_8004d5b4(void *p1) {
+    u8 buf[3];
+    int color;
+    u8 b = *(u8 *)((char *)p1 + 0x43);
+    buf[2] = b;
+    buf[1] = b;
+    buf[0] = b;
+    color = *(int *)buf;
+    GXSetTevKColor(lbl_803DCD74, &color);
+    GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorIn(lbl_803DCD90, 0, 2, 0xe, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD74 = lbl_803DCD74 + 1;
+    lbl_803DCD70 = lbl_803DCD70 + 1;
+    lbl_803DCD6C = lbl_803DCD6C + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A = lbl_803DCD6A + 1;
+}
 #pragma peephole reset
 #pragma scheduling reset
 extern void VIConfigure(void *mode);
