@@ -6227,3 +6227,63 @@ int fn_802A2E8C(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
+extern int *gPlayerInterface;
+extern int *gObjectTriggerInterface;
+extern f32 lbl_803E7F08;
+extern f32 lbl_803E7FD8;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8029D454(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(u8 *)((char *)state + 0x34d) = 3;
+    if (*(s8 *)(*(int *)((char *)inner + 0x35c)) > 0) {
+        ObjAnim_SetCurrentMove(obj, 0xc8, lbl_803E7EA4, 0);
+        *(int *)((char *)state + 0x308) = 0;
+        return -0x21;
+    }
+    return 0;
+}
+
+int fn_802977A8(int obj, int state)
+{
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E7EA4, 0);
+        *(u8 *)((char *)state + 0x346) = 0;
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F08;
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(int *)((char *)state + 0x308) = 0;
+            return 0x41;
+        }
+    }
+    return 0;
+}
+
+int fn_8029DA60(int obj, int state)
+{
+    *(u8 *)((char *)state + 0x34d) = 3;
+    *(f32 *)((char *)state + 0x2a0) = lbl_803E7FD8;
+    *(f32 *)((char *)state + 0x280) = lbl_803E7EA4;
+    (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, 2);
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return 2;
+    }
+    return 0;
+}
+
+int fn_802A7160(int obj, int state)
+{
+    if (GameBit_Get(0x970)) {
+        GameBit_Set(0x970, 0);
+        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0x10, obj, -1);
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return 2;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
