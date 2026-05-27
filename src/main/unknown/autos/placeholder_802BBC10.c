@@ -1776,5 +1776,39 @@ void dim2prisonmammoth_init(int obj, int p2)
     *(u8 *)((char *)inner + 0x25f) = 0;
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
 }
+
+extern void setMatrixFromObjectPos(f32 *out, void *vec);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern f32 lbl_803E82C0;
+
+int fn_802BC3F0(int obj, int p2, int p3)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 matrix[16];
+    int inner;
+    int p;
+
+    *(u8 *)((char *)p3 + 0x56) = 0;
+    *(s16 *)((char *)p3 + 0x6e) = *(s16 *)((char *)p3 + 0x70);
+    inner = *(int *)((char *)obj + 0xb8);
+    (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 2);
+
+    v.mat[1] = *(f32 *)((char *)obj + 0xc);
+    v.mat[2] = *(f32 *)((char *)obj + 0x10);
+    v.mat[3] = *(f32 *)((char *)obj + 0x14);
+    v.angles[0] = *(s16 *)((char *)obj + 0);
+    v.angles[1] = *(s16 *)((char *)obj + 2);
+    v.angles[2] = *(s16 *)((char *)obj + 4);
+    v.mat[0] = *(f32 *)((char *)obj + 8);
+    setMatrixFromObjectPos(matrix, v.angles);
+
+    p = *(int *)((char *)obj + 0x64);
+    Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
+                          (f32 *)((char *)p + 0x20), (f32 *)((char *)p + 0x24), (f32 *)((char *)p + 0x28));
+    return 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
