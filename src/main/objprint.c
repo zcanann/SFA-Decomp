@@ -3648,5 +3648,39 @@ void objPosFn_80039510(int obj, int key, int out)
     *(f32*)((char*)out + 0) = *(f32*)((char*)out + 0) + playerMapOffsetX;
     *(f32*)((char*)out + 8) = *(f32*)((char*)out + 8) + playerMapOffsetZ;
 }
+
+extern void cacheFn_800229c4(int x);
+extern void PSMTXConcat(int a, int b, int c);
+extern f32 lbl_803DEA04;
+
+void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
+{
+    int cache;
+    int count;
+    int dstA;
+    int mid;
+    int dstB;
+    f32 fill;
+    int i;
+
+    cache = (int)getCache();
+    count = (s32)(u32)*(u8*)((char*)p1 + 0xf3) + (s32)(u32)*(u8*)((char*)p1 + 0xf4);
+    dstA = cache + 0x2700;
+    mid = cache;
+    dstB = cache + 0x12c0;
+    cacheFn_800229c4(0);
+    fill = lbl_803DEA04;
+    for (i = 0; i < count; i++) {
+        PSMTXConcat(p3, dstA, mid);
+        PSMTXConcat(mid, p4, dstB);
+        *(f32*)((char*)dstB + 0xc) = fill;
+        *(f32*)((char*)dstB + 0x1c) = fill;
+        *(f32*)((char*)dstB + 0x2c) = fill;
+        dstA += 0x40;
+        mid += 0x30;
+        dstB += 0x30;
+    }
+    lbl_803DCC48 = 2;
+}
 #pragma peephole reset
 #pragma scheduling reset
