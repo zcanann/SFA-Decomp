@@ -6605,5 +6605,49 @@ int fn_802B7298(int obj, int p2)
     }
     return 0;
 }
+
+int fn_802A9B1C(int obj, int p2, int p3)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    u8 c = *(u8 *)((char *)inner + 0x8c8);
+    int deref;
+    int v;
+    if (c == 0x48 || c == 0x47 || c == 0x44 ||
+        *(void **)((char *)inner + 0x7f8) != NULL ||
+        ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
+        ((ByteFlags *)((char *)inner + 0x3f0))->b04 ||
+        ((ByteFlags *)((char *)inner + 0x3f0))->b08 ||
+        ((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) {
+        return 0;
+    }
+    deref = *(int *)((char *)inner + 0x35c);
+    if (p3 == 0x2d) {
+        if (*(s16 *)((char *)deref + 4) < 2) return 0;
+    } else {
+        if (*(s16 *)((char *)deref + 4) < 1) return 0;
+    }
+    v = *(s16 *)((char *)p2 + 0x274);
+    if (v == 1 || v == 2 || v == 0x2a || v == 0x2c || (u16)(v - 0x2e) <= 1 || v == 0x2d) {
+        return 1;
+    }
+    return 0;
+}
+
+void fn_8029FFD0(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    s16 v = *(s16 *)((char *)p2 + 0x274);
+    if (v != 0x15 && v != 0x14 && v != 0x12 && v != 0x13 && v != 0xe && v != 0xf && v != 0x10) {
+        u8 c = *(u8 *)((char *)inner + 0x8c8);
+        if (c != 0x48 && c != 0x47 && c != 0x42 && getCurSeqNo() == 0) {
+            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x42, 0, 1, 0, 0, 0, 0xff);
+            *(u8 *)((char *)inner + 0x8c8) = 0x42;
+        }
+        *(int *)((char *)inner + 0x360) |= 0x800000;
+        ObjHits_SyncObjectPositionIfDirty(obj);
+    }
+    *(s16 *)((char *)obj + 0xa2) = -1;
+}
 #pragma peephole reset
 #pragma scheduling reset
