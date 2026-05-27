@@ -1579,5 +1579,66 @@ void waveanimator_hitDetect(int *obj) {
     }
     lbl_803DDAF8 = 1;
 }
+extern int objPosToMapBlockIdx(double x, double y, double z);
+extern void *mapGetBlock(int idx);
+extern void *mapBlockFn_800606ec(void *block, int idx);
+extern int mapBlockFn_80060678(void *entry);
+extern void *fn_800606DC(void *block, int idx);
+extern void fn_800605F0(void *cell, void *out);
+extern void fn_8006058C(void *cell, void *in);
+#pragma scheduling off
+#pragma peephole off
+void groundanimator_free(int *obj, int flag) {
+    int *w;
+    int *r21;
+    void *block;
+    void *entry;
+    void *vtx;
+    int blkIdx;
+    int mid;
+    int inner;
+    int off;
+    int midoff;
+    int innoff;
+    int *cell;
+    f32 local[2];
+    w = (int *)obj[46];
+    r21 = (int *)obj[19];
+    if (flag == 0) {
+        block = mapGetBlock(objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
+                                                (double)*(f32 *)((char *)obj + 0x10),
+                                                (double)*(f32 *)((char *)obj + 0x14)));
+        if (block != NULL) {
+            off = 0;
+            for (blkIdx = 0; blkIdx < *(u16 *)((char *)block + 0x9a); blkIdx++) {
+                entry = mapBlockFn_800606ec(block, blkIdx);
+                if (*(u8 *)((char *)r21 + 0x25) == mapBlockFn_80060678(entry)) {
+                    midoff = off;
+                    for (mid = *(u16 *)entry; mid < *(u16 *)((char *)block + 0x14); mid++) {
+                        vtx = fn_800606DC(block, mid);
+                        innoff = midoff;
+                        for (inner = 0; inner < 3; inner++) {
+                            cell = (int *)((char *)*(int *)((char *)block + 0x58) +
+                                           *(u16 *)vtx * 6);
+                            fn_800605F0(cell, local);
+                            if (w[1] != 0) {
+                                local[1] = (f32)*(s16 *)((char *)w[1] + innoff);
+                                fn_8006058C(cell, local);
+                            }
+                            innoff += 2;
+                            midoff += 2;
+                            off += 2;
+                            vtx = (char *)vtx + 2;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (w[0] != 0) {
+        mm_free((void *)w[0]);
+    }
+    ObjGroup_RemoveObject(obj, 0x31);
+}
 #pragma peephole reset
 #pragma scheduling reset
