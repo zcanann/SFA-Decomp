@@ -1193,3 +1193,27 @@ int fn_801BA958(int obj, int param2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *gBaddieControlInterface;
+extern int lbl_80325960[16];
+extern f32 lbl_803259A0[16];
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BB0D8(int obj, int param2, f32 fParam)
+{
+    u16 local_c;
+    s16 local_a;
+    s16 local_8;
+    *(f32 *)(param2 + 0x280) = lbl_803E4BD8;
+    if (*(s8 *)(param2 + 0x346) != 0 || *(s8 *)(param2 + 0x27a) != 0 || *(s16 *)(obj + 0xa0) == 1) {
+        (*(int (**)(int, int, int, u16 *, s16 *, s16 *))(*(int *)gBaddieControlInterface + 0x14))(obj, *(int *)(param2 + 0x2d0), 0x10, &local_c, &local_a, &local_8);
+        ObjAnim_SetCurrentMove((int *)obj, lbl_80325960[local_c], lbl_803E4BD8, 0);
+        *(f32 *)(param2 + 0x2a0) = lbl_803259A0[local_c];
+        *(u8 *)(param2 + 0x346) = 0;
+    }
+    (*(int (**)(int, int, int, f32))(*(int *)gPlayerInterface + 0x20))(obj, param2, 8, fParam);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
