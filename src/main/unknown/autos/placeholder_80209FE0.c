@@ -1795,5 +1795,40 @@ void bossdrakor_init(int obj, u8 *init)
     Music_Trigger(0x96, 1);
     *(int *)((char *)inner + 0x160) = 0;
 }
+
+void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+{
+    int inner = *(int *)((char *)p1 + 0xb8);
+    f32 pos2;
+    f32 pos1;
+    f32 pos0;
+    int light;
+    int val;
+    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E651C);
+    ObjPath_GetPointWorldPosition(p1, 0, (char *)inner + 0x1c, (char *)inner + 0x20, (char *)inner + 0x24, 0);
+    if (*(void **)((char *)inner + 0x160) != NULL) {
+        ObjPath_GetPointWorldPosition(p1, 5, &pos0, &pos1, &pos2, 0);
+        lightVecFn_8001dd88(*(int *)((char *)inner + 0x160), pos0, pos1, pos2);
+        light = *(int *)((char *)inner + 0x160);
+        if (*(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
+            val = *(u8 *)((char *)light + 0x2f9) + (s8)*(u8 *)((char *)light + 0x2fa);
+            if (val < 0) {
+                val = 0;
+                *(u8 *)((char *)light + 0x2fa) = 0;
+            } else if (val > 0xc) {
+                val += randomGetRange(-0xc, 0xc);
+                if (val > 0xff) {
+                    val = 0xff;
+                    *(u8 *)((char *)*(int *)((char *)inner + 0x160) + 0x2fa) = 0;
+                }
+            }
+            *(u8 *)((char *)*(int *)((char *)inner + 0x160) + 0x2f9) = (u8)val;
+        }
+        light = *(int *)((char *)inner + 0x160);
+        if (*(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
+            queueGlowRender(light);
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
