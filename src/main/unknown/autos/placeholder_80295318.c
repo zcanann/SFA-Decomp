@@ -5631,6 +5631,8 @@ extern void setTimeStop(int x);
 extern void cutsceneEnterExit(int a, int b);
 extern int *gCameraInterface;
 extern void fn_802AB5A4(int a, int b, int c);
+extern f32 lbl_803E8060;
+extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
 #pragma scheduling off
 #pragma peephole off
@@ -6437,6 +6439,64 @@ void fn_80295B2C(int obj, f32 f1, f32 f2, f32 f3)
     fn_802AB5A4(obj, inner, 7);
     (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 1);
     *(int *)((char *)inner + 0x304) = (int)fn_802A514C;
+}
+
+int fn_802A4F8C(int obj, int state, f32 fv)
+{
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0x92, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E8060;
+    }
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 3);
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return 2;
+    }
+    return 0;
+}
+
+void playerAddMoney(int obj, int amount)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int cap;
+    int total;
+    if (GameBit_Get(0x91b)) {
+        cap = 0xc8;
+    } else if (GameBit_Get(0x91a)) {
+        cap = 0x64;
+    } else if (GameBit_Get(0x919)) {
+        cap = 0x32;
+    } else {
+        cap = 0xa;
+    }
+    total = *(u8 *)((char *)*(int *)((char *)inner + 0x35c) + 8) + amount;
+    if (amount > *(u8 *)((char *)inner + 0x3e8)) {
+        *(u8 *)((char *)inner + 0x3e8) = (u8)amount;
+    }
+    if (total < 0) {
+        total = 0;
+    } else if (total > cap) {
+        total = cap;
+    }
+    *(u8 *)((char *)*(int *)((char *)inner + 0x35c) + 8) = (u8)total;
+    GameBit_Set(0x1be, total);
+}
+
+void fn_80296C84(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int deref = *(int *)((char *)inner + 0x35c);
+    int v = *(s8 *)((char *)deref + 1);
+    if (v < 0) {
+        v = 0;
+    } else if (v > *(s8 *)((char *)deref + 1)) {
+        v = *(s8 *)((char *)deref + 1);
+    }
+    *(s8 *)((char *)*(int *)((char *)inner + 0x35c)) = (s8)v;
+    Obj_SetModelColorFadeRecursive(obj, 0x168, 0xc8, 0, 0, 1);
+    ((ByteFlags *)((char *)inner + 0x3f3))->b04 = 1;
+    *(f32 *)((char *)inner + 0x79c) = lbl_803E7EA4;
+    *(u8 *)((char *)inner + 0x8a2) = 0xff;
 }
 #pragma peephole reset
 #pragma scheduling reset
