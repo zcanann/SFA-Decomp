@@ -2121,6 +2121,54 @@ void fn_802C11BC(int obj, int p2, f32 f)
     }
 }
 
+extern void fn_802B0EA4(int obj, int q, int inner);
+extern void fn_802B1BF8(int obj, int q, int inner, f32 t);
+extern void fn_802B1B28(int obj, f32 t);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_802BE6E8(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int q;
+    int slot;
+    Obj_GetPlayerObject();
+    q = inner + 0xb58;
+    slot = (int)Camera_GetCurrentViewSlot();
+    *(u8 *)((char *)inner + 0x354) = 0;
+    *(int *)((char *)inner + 0) &= ~0x8000;
+    if (*(u8 *)((char *)inner + 0x14e6) == 2) {
+        *(f32 *)((char *)inner + 0x290) = (f32)(s8)padGetStickX(0);
+        *(f32 *)((char *)inner + 0x28c) = (f32)(s8)padGetStickY(0);
+        *(int *)((char *)inner + 0x31c) = getButtonsJustPressed(0);
+        *(int *)((char *)inner + 0x318) = getButtonsHeld(0);
+        *(s16 *)((char *)inner + 0x330) = *(s16 *)slot;
+    } else {
+        f32 v = lbl_803E8304;
+        *(f32 *)((char *)inner + 0x290) = v;
+        *(f32 *)((char *)inner + 0x28c) = v;
+        *(int *)((char *)inner + 0x31c) = 0;
+        *(int *)((char *)inner + 0x318) = 0;
+        *(s16 *)((char *)inner + 0x330) = 0;
+    }
+    *(int *)((char *)inner + 0) |= 0x1000000;
+    fn_802B0EA4(obj, q, inner);
+    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)lbl_803DB1B0, &lbl_803DE4D4);
+    *(s16 *)((char *)obj + 0x2) = (s16)(*(s16 *)((char *)obj + 0x2) + (*(s16 *)((char *)inner + 0x19c) >> 2));
+    *(s16 *)((char *)obj + 0x4) = (s16)(*(s16 *)((char *)obj + 0x4) + (*(s16 *)((char *)inner + 0x19e) >> 2));
+    if (((ByteFlags *)((char *)inner + 0x14ec))->b02) {
+        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(*(s16 *)((char *)inner + 0x14e2));
+    }
+    fn_802B1BF8(obj, q, inner, timeDelta);
+    fn_802B1B28(obj, timeDelta);
+    (*(void (*)(int, int, f32))(*(int *)(*gPathControlInterface + 0x10)))(obj, inner + 0x4, timeDelta);
+    (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x14)))(obj, inner + 0x4);
+    (*(void (*)(int, int, f32))(*(int *)(*gPathControlInterface + 0x18)))(obj, inner + 0x4, timeDelta);
+    *(s16 *)((char *)obj + 0) = *(s16 *)((char *)q + 0x478);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern u8 Obj_IsLoadingLocked(int obj);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern int Obj_AllocObjectSetup(int a, int b);
