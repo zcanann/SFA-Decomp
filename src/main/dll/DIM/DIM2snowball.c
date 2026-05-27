@@ -1841,3 +1841,174 @@ void dll_1D6_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int curveFn_80010320(int *extra, f32 t);
+extern void curveFn_80010d54(void);
+extern void curveFn_80010dc0(void);
+extern void curvesMove(int *extra);
+extern int **ObjList_GetObjects(int *startOut, int *countOut);
+extern void objMove(int *obj, f32 dx, f32 dy, f32 dz);
+extern int objBboxFn_800640cc(void *a, void *b, f32 c, int d, int e, int *f, int g, int h, int i, int j);
+extern int getAngle(f32 a, f32 b);
+extern int hitDetectFn_80065e50(int *obj, int ***listOut, int p3, int p4, f32 x, f32 y, f32 z);
+extern void Sfx_KeepAliveLoopedObjectSound(int *obj, int sfx);
+extern void Obj_FreeObject(int *obj);
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E4AA4;
+extern f32 lbl_803E4AA8;
+extern f32 lbl_803E4AAC;
+extern f32 lbl_803E4AB0;
+extern f32 lbl_803E4AB4;
+extern f32 lbl_803E4AB8;
+extern f32 lbl_803E4ABC;
+extern f32 lbl_803E4AC0;
+extern f64 lbl_803E4AC8;
+extern f32 lbl_803E4AD0;
+
+#pragma scheduling off
+#pragma peephole off
+void dim2snowball_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+
+    if ((*(u8 *)((char *)extra + 0xac) & 4) != 0) {
+        int v = *(u8 *)((char *)obj + 0x36) + framesThisStep * 2;
+        if (v > 255) {
+            v = 255;
+            *(u8 *)((char *)extra + 0xac) &= ~4;
+        }
+        *(u8 *)((char *)obj + 0x36) = v;
+    } else if ((*(u8 *)((char *)extra + 0xac) & 8) != 0) {
+        int v = *(u8 *)((char *)obj + 0x36) - framesThisStep * 2;
+        if (v < 0) {
+            v = 0;
+            *(u8 *)((char *)extra + 0xac) &= ~8;
+        }
+        *(u8 *)((char *)obj + 0x36) = v;
+    }
+
+    if ((*(u8 *)((char *)extra + 0xac) & 1) == 0) {
+        int *cobj = *(int **)((char *)extra + 0x9c);
+        *(int *)((char *)extra + 0x90) =
+            (*(int (**)(int *, void *, void *, void *, void *))(**(int **)((char *)cobj + 0x68) + 0x20))(
+                cobj, (char *)extra + 0x84, (char *)extra + 0x88, (char *)extra + 0x8c, (char *)extra + 0xa8);
+        *(int *)((char *)extra + 0x80) = 0;
+        *(int *)((char *)extra + 0x94) = (int)curveFn_80010dc0;
+        *(int *)((char *)extra + 0x98) = (int)curveFn_80010d54;
+        curvesMove(extra);
+        *(u8 *)((char *)extra + 0xac) |= 1;
+    }
+
+    if ((*(u8 *)((char *)extra + 0xac) & 2) != 0) {
+        if (*(f32 *)((char *)obj + 0x10) < *(f32 *)((char *)extra + 0xa4)) {
+            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4AA4;
+            *(f32 *)((char *)obj + 0x28) = lbl_803E4AA8;
+            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4AA4;
+            if ((*(u8 *)((char *)extra + 0xac) & 0x20) == 0) {
+                int start;
+                int count;
+                int j;
+                int **list;
+                int *hit = NULL;
+                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4AAC;
+                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4AAC;
+                *(u8 *)((char *)extra + 0xac) |= 0x18;
+                list = ObjList_GetObjects(&start, &count);
+                for (j = start; j < count; j++) {
+                    if (*(s16 *)((char *)list[j] + 0x46) == 214) {
+                        hit = list[j];
+                        break;
+                    }
+                }
+                if (hit != NULL) {
+                    (*(void (**)(int *))(**(int **)((char *)hit + 0x68) + 0x20))(hit);
+                }
+                Sfx_PlayFromObject((int)obj, 506);
+            }
+            {
+                f32 pos[3];
+                pos[0] = *(f32 *)((char *)obj + 0xc);
+                pos[1] = *(f32 *)((char *)obj + 0x10);
+                pos[2] = *(f32 *)((char *)obj + 0x14);
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
+                    obj, 518, pos, 4, -1, 0);
+            }
+            if (*(u8 *)((char *)obj + 0x36) == 0) {
+                Obj_FreeObject(obj);
+                return;
+            }
+            objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
+                    *(f32 *)((char *)obj + 0x28) * timeDelta,
+                    *(f32 *)((char *)obj + 0x2c) * timeDelta);
+        } else {
+            int bbox;
+            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4AB0;
+            *(f32 *)((char *)obj + 0x28) =
+                *(f32 *)((char *)obj + 0x28) - lbl_803E4AB4 * timeDelta;
+            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4AB0;
+            objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
+                    *(f32 *)((char *)obj + 0x28) * timeDelta,
+                    *(f32 *)((char *)obj + 0x2c) * timeDelta);
+            bbox = objBboxFn_800640cc((char *)extra + 0x80, (char *)obj + 0xc, lbl_803E4AB8, 0, 0,
+                                      obj, 8, -1, 0, 0);
+            if (bbox != 0) {
+                *(f32 *)((char *)obj + 0x24) = -*(f32 *)((char *)obj + 0x24);
+                *(f32 *)((char *)obj + 0x2c) = -*(f32 *)((char *)obj + 0x2c);
+                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4ABC;
+                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4ABC;
+            }
+        }
+    } else {
+        int done = curveFn_80010320(extra, lbl_803E4AC0);
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)extra + 0x68);
+        *(f32 *)((char *)obj + 0x10) = (f32)(lbl_803E4AC8 + *(f32 *)((char *)extra + 0x6c));
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)extra + 0x70);
+        *(s16 *)obj = getAngle(*(f32 *)((char *)extra + 0x74), *(f32 *)((char *)extra + 0x7c));
+        *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + framesThisStep * 800;
+        *(f32 *)((char *)obj + 0x24) =
+            oneOverTimeDelta * (*(f32 *)((char *)obj + 0xc) - *(f32 *)((char *)obj + 0x80));
+        *(f32 *)((char *)obj + 0x28) = lbl_803E4AD0;
+        *(f32 *)((char *)obj + 0x2c) =
+            oneOverTimeDelta * (*(f32 *)((char *)obj + 0x14) - *(f32 *)((char *)obj + 0x88));
+        if (done != 0) {
+            Obj_FreeObject(obj);
+            return;
+        }
+        if (*(u8 *)((char *)*(int **)((char *)extra + 0xa8) + (*(int *)((char *)extra + 0x10) >> 2)) == 32) {
+            if (GameBit_Get(648) != 0) {
+                int **results;
+                int n;
+                *(u8 *)((char *)extra + 0xac) |= 2;
+                n = hitDetectFn_80065e50(obj, &results, 0, 0, *(f32 *)((char *)obj + 0xc),
+                                         *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14));
+                *(f32 *)((char *)extra + 0xa4) = *(f32 *)((char *)obj + 0x10);
+                while (n > 0) {
+                    int *r = results[--n];
+                    if (*(f32 *)r < *(f32 *)((char *)obj + 0x10)) {
+                        s8 t = *(s8 *)((char *)r + 0x14);
+                        if (t == 26 || t == 8) {
+                            *(f32 *)((char *)extra + 0xa4) = *(f32 *)r;
+                            break;
+                        }
+                    }
+                }
+                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4ABC;
+                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4ABC;
+            }
+        }
+    }
+
+    if (*(u8 *)((char *)obj + 0x36) == 255) {
+        int *m = *(int **)((char *)obj + 0x54);
+        if (m != NULL) {
+            *(s16 *)((char *)m + 0x60) |= 1;
+            *(u8 *)((char *)m + 0x6e) = 4;
+            *(u8 *)((char *)m + 0x6f) = 2;
+            *(int *)((char *)m + 0x48) = 16;
+            *(int *)((char *)m + 0x4c) = 16;
+        }
+    }
+    Sfx_KeepAliveLoopedObjectSound(obj, 1171);
+}
+#pragma peephole reset
+#pragma scheduling reset
