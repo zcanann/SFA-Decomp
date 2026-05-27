@@ -2800,3 +2800,30 @@ void fn_80056A6C(int type, u32 key, int value)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int mapGetRomListAndOffsets(int *p1, int b);
+
+#pragma scheduling off
+#pragma peephole off
+void mapLoadForObject(int *p1, char *p2)
+{
+    int saved = lbl_803DCEC8;
+    int romList = mapGetRomListAndOffsets(p1, 1);
+    int slot = 0x50;
+    int i;
+
+    for (i = 0; i < 40; i++) {
+        if (lbl_80386468[slot] == NULL) {
+            lbl_80386468[slot] = (void *)romList;
+            break;
+        }
+        slot++;
+    }
+    *(u8 *)(p2 + 0x34) = (u8)slot;
+    (*(void (*)(int *, int))(*(int *)(*gMapEventInterface + 0x48)))(p1, slot);
+    defStartFn_8005972c((void *)romList, &lbl_803822C8[slot * 0x8c], slot, 0);
+    (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(slot);
+    lbl_803DCEC8 = saved;
+}
+#pragma scheduling reset
+#pragma peephole reset
