@@ -222,5 +222,69 @@ void snowclaw_init(int *obj, u8 *init) {
     lbl_803DDD38 = 0x96;
     *(u8 *)((char *)inner + 0xaa) &= ~0x80;
 }
+
+extern void objRenderFn_8003b8f4(f32 e);
+extern f32 lbl_803E6678;
+extern int randomGetRange(int min, int max);
+extern void GXSetScissor(int x, int y, int w, int h);
+extern void Camera_ApplyCurrentViewport(int cam);
+extern int fn_8012DDAC(void);
+extern int *gScreenTransitionInterface;
+extern int lbl_803DDD34;
+extern int fn_8001DB64(int model);
+extern void queueGlowRender(int model);
+
+void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
+    int *inner = *(int **)(p1 + 0xb8);
+    int modelId = *(s16 *)*(int **)(p1 + 0x4c);
+
+    if (modelId == 0x5f5) {
+        objRenderFn_8003b8f4(lbl_803E6678);
+        return;
+    }
+    if (visible == 0) {
+        return;
+    }
+    if (modelId == 0x61e) {
+        return;
+    }
+    switch (modelId) {
+    case 0x5de:
+        if (*(u8 *)((char *)inner + 0x27d) == 0) {
+            objRenderFn_8003b8f4(lbl_803E6678);
+        }
+        break;
+    case 0x5e3:
+        if (randomGetRange(0, 0x19) != 0 && *(u8 *)((char *)inner + 0x27d) != 0) {
+            GXSetScissor(0x1e0, 0x32, 0x82, 0x96);
+            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
+            Camera_ApplyCurrentViewport(p2);
+        }
+        break;
+    case 0x740:
+        if (*(u8 *)((char *)inner + 0x27d) != 0 && (u8)fn_8012DDAC() == 0 &&
+            (*(int (*)(void))(*(int *)(*gScreenTransitionInterface + 0x14)))() != 0) {
+            if (lbl_803DDD34 != 0) {
+                lbl_803DDD34 = lbl_803DDD34 - 1;
+            } else {
+                ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
+            }
+        } else {
+            lbl_803DDD34 = 2;
+        }
+        break;
+    case 0x80f:
+        if (*(void **)inner != NULL && fn_8001DB64(*(int *)inner) != 0) {
+            queueGlowRender(*(int *)inner);
+        }
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
+        break;
+    case 0x5da:
+    case 0x5dc:
+    default:
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);
+        break;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
