@@ -460,7 +460,7 @@ FUN_8011d790(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
   }
   else if (DAT_803de393 == '\x01') {
     if (DAT_803de392 == '\0') {
-      saveGame_save(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+      saveGame_save();
     }
     DAT_803de392 = (char)(int)((float)((double)CONCAT44(0x43300000,(int)DAT_803de392 ^ 0x80000000) -
                                       DOUBLE_803e2a78) + lbl_803DC074);

@@ -252,8 +252,7 @@ void FUN_8011a298(undefined8 param_1,double param_2,undefined8 param_3,undefined
     else {
       cVar2 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803de338);
       if (cVar2 == '\x01') {
-        gplaySaveGame(extraout_f1,param_2,param_3,param_4,param_5,param_6,
-                                             param_7,param_8,DAT_803de324);
+        gplaySaveGame(DAT_803de324);
       }
       uVar3 = (**(code **)(*DAT_803dd724 + 0x10))(DAT_803de338);
       DAT_803de338 = 0;

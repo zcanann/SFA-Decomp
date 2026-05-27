@@ -1516,31 +1516,32 @@ int saveFn_800e8508(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gplaySaveGame(undefined8 param_1,double param_2,undefined8 param_3,
-                                          undefined8 param_4,undefined8 param_5,
-                                          undefined8 param_6,undefined8 param_7,
-                                          undefined8 param_8,byte param_9)
+extern s8 lbl_803DB890;
+extern u8 *lbl_803DD498;
+extern u32 pRestartPoint;
+extern void *memcpy(void *dst, const void *src, u32 n);
+extern int _saveGame(int a, int b, int c);
+
+void gplaySaveGame(int param)
 {
-  DAT_803a3f29 = 0;
-  DAT_803dc4f0 = param_9;
-  if (DAT_803a3f2a == '\0') {
-    param_1 = FUN_80003494((uint)DAT_803de110,0x803a3f08,0x564);
-    if (DAT_803de114 != 0) {
-      param_1 = FUN_80003494(DAT_803de114,0x803a3f08,0x564);
+  lbl_803A32A8[0x21] = 0;
+  lbl_803DB890 = (s8)param;
+  if (lbl_803A32A8[0x22] == 0) {
+    memcpy(lbl_803DD498, lbl_803A32A8, 0x564);
+    if (pRestartPoint != 0) {
+      memcpy((void *)pRestartPoint, lbl_803A32A8, 0x564);
     }
   }
-  if (DAT_803dc4f0 == 0xff) {
-    DAT_803dc4f0 = 0;
+  if ((s8)lbl_803DB890 == -1) {
+    lbl_803DB890 = 0;
   }
-  if (*DAT_803de110 < '\x01') {
-    *DAT_803de110 = '\x01';
+  if ((s8)lbl_803DD498[0] < 1) {
+    lbl_803DD498[0] = 1;
   }
-  if (DAT_803de110[0xc] < '\x01') {
-    DAT_803de110[0xc] = '\x01';
+  if ((s8)lbl_803DD498[0xc] < 1) {
+    lbl_803DD498[0xc] = 1;
   }
-  FUN_80072564(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)DAT_803dc4f0,
-               DAT_803de110,&gGameplayPreviewSettings);
-  return;
+  _saveGame((u8)lbl_803DB890, (int)lbl_803DD498, (int)saveData);
 }
 
 /*
@@ -1582,27 +1583,24 @@ void titleDoLoadSave(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void saveGame_save(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                   undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void saveGame_save(void)
 {
-  if (DAT_803a3f2a == '\0') {
-    param_1 = FUN_80003494((uint)DAT_803de110,0x803a3f08,0x564);
-    if (DAT_803de114 != 0) {
-      param_1 = FUN_80003494(DAT_803de114,0x803a3f08,0x564);
+  if (lbl_803A32A8[0x22] == 0) {
+    memcpy(lbl_803DD498, lbl_803A32A8, 0x564);
+    if (pRestartPoint != 0) {
+      memcpy((void *)pRestartPoint, lbl_803A32A8, 0x564);
     }
   }
-  if (DAT_803dc4f0 == 0xff) {
-    DAT_803dc4f0 = 0;
+  if ((s8)lbl_803DB890 == -1) {
+    lbl_803DB890 = 0;
   }
-  if (*DAT_803de110 < '\x01') {
-    *DAT_803de110 = '\x01';
+  if ((s8)lbl_803DD498[0] < 1) {
+    lbl_803DD498[0] = 1;
   }
-  if (DAT_803de110[0xc] < '\x01') {
-    DAT_803de110[0xc] = '\x01';
+  if ((s8)lbl_803DD498[0xc] < 1) {
+    lbl_803DD498[0xc] = 1;
   }
-  FUN_80072564(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)DAT_803dc4f0,
-               DAT_803de110,&gGameplayPreviewSettings);
-  return;
+  _saveGame((u8)lbl_803DB890, (int)lbl_803DD498, (int)saveData);
 }
 
 /*
