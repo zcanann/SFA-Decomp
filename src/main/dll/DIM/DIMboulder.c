@@ -1026,6 +1026,82 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 /* Trivial 4b 0-arg blr leaves. */
 void imicemountain_free(void) {}
 void imicemountain_hitDetect(void) {}
+
+extern int *gMapEventInterface;
+extern void gameBitFn_800ea2e0(int idx);
+extern void unlockLevel(int a, int b, int c);
+extern f32 lbl_803E46E0;
+
+#define MEVT_TRIGGER(a, b, c) ((void (*)(int, int, int))((int *)*gMapEventInterface)[0x50 / 4])((a), (b), (c))
+#define MEVT_SET(a, b)        ((void (*)(int, int))((int *)*gMapEventInterface)[0x44 / 4])((a), (b))
+#define MEVT_QUERY(a)         ((int (*)(int))((int *)*gMapEventInterface)[0x40 / 4])((a))
+
+/* EN v1.0 0x801AC9C0  size: 828b  imicemountain_init: clear the ice-mountain
+ * gamebit block, arm the map-event triggers, then branch on the queried level
+ * state to set the boulder's start state and fire the appropriate triggers. */
+#pragma scheduling off
+#pragma peephole off
+void imicemountain_init(int* obj)
+{
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    int i;
+    *(void**)((char*)obj + 0xbc) = (void*)&IMIceMountain_SeqFn;
+    for (i = 1; (u8)i <= 0xd; i++) {
+        gameBitFn_800ea2e0(i);
+    }
+    *(f32*)(sub + 0x10) = lbl_803E46E0;
+    MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 1, 0);
+    MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 5, 1);
+    unlockLevel(0, 0, 1);
+    if (GameBit_Get(0x379) != 0) {
+        MEVT_SET(*(s8*)((char*)obj + 0xac), 2);
+    }
+    sub[0xc] = MEVT_QUERY(*(s8*)((char*)obj + 0xac));
+    switch (sub[0xc]) {
+    case 1:
+        if (GameBit_Get(0x72) != 0) {
+            if (GameBit_Get(0x379) != 0) {
+                sub[0] = 5;
+            } else {
+                GameBit_Set(0x3a3, 0);
+                GameBit_Set(0x3a2, 0);
+                GameBit_Set(0xcb, 0);
+                GameBit_Set(0x379, 0);
+                sub[0] = 3;
+            }
+        } else {
+            MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 0, 1);
+            if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0) {
+                MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 0xb, 1);
+            }
+            if (GameBit_Get(0x6e) != 0) {
+                sub[0] = 1;
+            } else {
+                MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 2, 1);
+                sub[0] = 7;
+            }
+        }
+        MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 3, 1);
+        MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 4, 1);
+        MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 7, 1);
+        break;
+    case 2:
+        GameBit_Set(0x3a3, 0);
+        GameBit_Set(0x3a2, 0);
+        GameBit_Set(0xce, 0);
+        GameBit_Set(0x37b, 0);
+        GameBit_Set(0xc8, 0);
+        GameBit_Set(0x374, 0);
+        GameBit_Set(0x37c, 0);
+        MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 2, 0);
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+#undef MEVT_TRIGGER
+#undef MEVT_SET
+#undef MEVT_QUERY
 void crrockfall_free(void) {}
 void crrockfall_hitDetect(void) {}
 void magiclight_hitDetect(void) {}
