@@ -5639,6 +5639,11 @@ extern int *gBaddieControlInterface;
 extern int fn_802AC7DC(int a, int b, int c);
 extern int lbl_80332EC0[];
 extern f32 lbl_803E80EC;
+extern void *lbl_80332ED4[];
+extern u8 lbl_803DE42C;
+extern void *lbl_803DE454;
+extern void Resource_Release(void *handle);
+extern void showDeathMenu(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -6738,6 +6743,61 @@ void fn_802AB5A4(int obj, int p2, int flags)
         *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x20) = *(f32 *)((char *)obj + 0x1c);
         *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x24) = *(f32 *)((char *)obj + 0x20);
     }
+}
+
+int fn_802A5048(int obj, int state, f32 fv)
+{
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0x8e, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E8060;
+    }
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 3);
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        void **p = lbl_80332ED4;
+        int i;
+        lbl_803DE42C = 0;
+        for (i = 0; i < 7; i++) {
+            if (*p != NULL) {
+                Obj_FreeObject((int)*p);
+                *p = NULL;
+            }
+            p++;
+        }
+        if (lbl_803DE454 != NULL) {
+            Resource_Release(lbl_803DE454);
+            lbl_803DE454 = NULL;
+        }
+        showDeathMenu();
+    }
+    return 0;
+}
+
+int fn_802A9C0C(int obj, int p2, int p3)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    u8 c = *(u8 *)((char *)inner + 0x8c8);
+    int deref;
+    int v;
+    if (c == 0x48 || c == 0x47 || c == 0x44 ||
+        *(void **)((char *)inner + 0x7f8) != NULL ||
+        ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
+        ((ByteFlags *)((char *)inner + 0x3f0))->b04 ||
+        ((ByteFlags *)((char *)inner + 0x3f0))->b08 ||
+        ((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) {
+        return 0;
+    }
+    deref = *(int *)((char *)inner + 0x35c);
+    if (p3 == 0x2d) {
+        if (*(s16 *)((char *)deref + 4) < 2) return 0;
+    } else {
+        if (*(s16 *)((char *)deref + 4) < 1) return 0;
+    }
+    v = *(s16 *)((char *)p2 + 0x274);
+    if (v == 1 || v == 2 || (u16)(v - 0x24) <= 1 || (u16)(v - 0x2a) <= 2 ||
+        (u16)(v - 0x2e) <= 1 || v == 0x2d) {
+        return 1;
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
