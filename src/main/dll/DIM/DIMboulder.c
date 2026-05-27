@@ -1701,3 +1701,101 @@ void imicemountain_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *ObjGroup_GetObjects(int group, int *countOut);
+extern void ObjAnim_AdvanceCurrentMove(int *obj, int flag, f32 blend, f32 frames);
+extern u8 framesThisStep;
+extern f32 lbl_803E474C;
+extern f32 lbl_803E475C;
+extern f32 lbl_803E4760;
+extern f32 lbl_803E4764;
+
+/* dll_16C_update: re-link the spawned sub-object, then while active/visible run
+ * its move and fade opacity by distance to the player. */
+#pragma scheduling off
+#pragma peephole off
+void dll_16C_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    s16 ids[6];
+
+    *(Blob10 *)&ids[1] = *(Blob10 *)lbl_802C2308;
+    if (*(s8 *)((char *)extra + 0x21) != *(s8 *)((char *)extra + 0x22)) {
+        if (*(void **)((char *)obj + 0xc8) != NULL) {
+            Obj_FreeObject(*(int **)((char *)obj + 0xc8));
+            *(int *)((char *)obj + 0xc8) = 0;
+            *(u8 *)((char *)obj + 0xeb) = 0;
+        }
+        if (Obj_IsLoadingLocked()) {
+            s8 idx = *(s8 *)((char *)extra + 0x21);
+            if (idx > 0) {
+                *(int *)((char *)obj + 0xc8) =
+                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx]), 4, -1, -1,
+                                    *(int *)((char *)obj + 0x30));
+                *(u8 *)((char *)obj + 0xeb) = 1;
+            }
+            *(s8 *)((char *)extra + 0x22) = *(s8 *)((char *)extra + 0x21);
+        } else {
+            *(s8 *)((char *)extra + 0x22) = 0;
+        }
+    }
+
+    if (*(void **)extra == NULL) {
+        int *objs;
+        int count;
+        int i;
+        int sel;
+        objs = ObjGroup_GetObjects(10, &count);
+        switch (*(s16 *)((char *)obj + 0x46)) {
+        case 365:
+        case 883:
+        default:
+            sel = 364;
+            break;
+        case 368:
+            sel = 367;
+            break;
+        }
+        for (i = 0; i < count; i++) {
+            if (sel == *(s16 *)((char *)objs[i] + 0x46)) {
+                *(int *)extra = objs[i];
+                i = count;
+            }
+        }
+    }
+
+    if (*(s16 *)((char *)obj + 0x46) == 883 || GameBit_Get(0x3a2) != 0) {
+        int *sub = (int *)*extra;
+        f32 blend;
+        f32 a, b;
+        if (*(s16 *)((char *)obj + 0xa0) != 0x100) {
+            ObjAnim_SetCurrentMove(obj, 0x100, lbl_803E4748, 0);
+        }
+        (*(void (**)(int *, f32 *))(**(int **)((char *)sub + 0x68) + 0x44))(sub, &blend);
+        blend = lbl_803E474C;
+        (*(void (**)(int *, f32 *, f32 *))(**(int **)((char *)sub + 0x68) + 0x40))(sub, &a, &b);
+        ObjAnim_AdvanceCurrentMove(obj, 0, blend, (f32)(u32)framesThisStep);
+        if (*(void **)extra != NULL) {
+            f32 t;
+            int *player = (int *)Obj_GetPlayerObject();
+            t = Vec_distance((f32 *)((char *)*(int **)extra + 0x18), (f32 *)((char *)player + 0x18));
+            t = (t - lbl_803E475C) / lbl_803E4760;
+            if (t < lbl_803E4748) {
+                t = lbl_803E4748;
+            } else if (t > lbl_803E4758) {
+                t = lbl_803E4758;
+            }
+            *(u8 *)((char *)extra + 0x20) = (int)(lbl_803E4764 * (lbl_803E4758 - t));
+            if (*(void **)((char *)obj + 0x64) != NULL) {
+                *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) |= 0x1000;
+            }
+        } else {
+            *(u8 *)((char *)extra + 0x20) = 0xff;
+            if (*(void **)((char *)obj + 0x64) != NULL) {
+                *(u32 *)(*(char **)((char *)obj + 0x64) + 0x30) &= ~0x1000;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
