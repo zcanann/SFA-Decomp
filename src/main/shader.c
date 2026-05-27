@@ -2781,3 +2781,22 @@ void fn_800566A4(int key, int type)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80056A6C(int type, u32 key, int value)
+{
+    int i;
+    int off;
+
+    for (i = 0; i < 80; i++) {
+        off = i * 0x10;
+        if (*(s16 *)(lbl_803DCE6C + off + 0xc) > 0 &&
+            *(u32 *)(lbl_803DCE6C + off) == key &&
+            type == *(u8 *)(lbl_803DCE6C + off + 0xe)) {
+            *(int *)(lbl_803DCE6C + off + 4) = value;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
