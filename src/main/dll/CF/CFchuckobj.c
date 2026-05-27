@@ -21,6 +21,7 @@ extern undefined4 ObjGroup_AddObject();
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
+extern int fn_8018EAA4(int obj, int unused, int events);
 extern undefined4 FUN_8018e0a8();
 extern undefined4 FUN_80286838();
 extern undefined8 FUN_8028683c();
@@ -69,6 +70,8 @@ extern f32 FLOAT_803e4b60;
 extern f32 FLOAT_803e4b64;
 extern f32 FLOAT_803e4b68;
 extern f32 FLOAT_803e4b78;
+extern f32 lbl_803E3E50;
+extern f32 lbl_803E3E70;
 
 /*
  * --INFO--
@@ -83,50 +86,42 @@ extern f32 FLOAT_803e4b78;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fxemit_init(undefined4 param_1,undefined4 param_2,int param_3)
+void fxemit_init(int obj, int setup)
 {
-  short *psVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  
-  psVar1 = (short *)FUN_80286838();
-  iVar3 = *(int *)(psVar1 + 0x5c);
-  iVar5 = *(int *)(psVar1 + 0x26);
-  for (iVar2 = 0; iVar2 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar2 = iVar2 + 1) {
-    iVar4 = iVar2 + 0x81;
-    if (*(char *)(param_3 + iVar4) == '\x01') {
-      FUN_8018e0a8();
-    }
-    if (*(char *)(param_3 + iVar4) == '\x02') {
-      *(char *)(iVar3 + 0x1c) = '\x01' - *(char *)(iVar3 + 0x1c);
-    }
-    *(undefined *)(param_3 + iVar4) = 0;
+  int state;
+  s16 emitCount;
+
+  *(s16 *)(obj + 0) = 0;
+  *(int (**)(int, int, int))(obj + 0xbc) = fn_8018EAA4;
+  state = *(int *)(obj + 0xb8);
+
+  *(f32 *)(state + 0) = (f32)((s32)*(s8 *)(setup + 0x18) << 2);
+  *(s16 *)(state + 8) = *(s8 *)(setup + 0x19);
+  *(s16 *)(state + 0xa) = *(s16 *)(setup + 0x1a);
+  emitCount = *(s16 *)(setup + 0x1c);
+  *(s16 *)(state + 0xe) = emitCount;
+  *(f32 *)(obj + 8) = lbl_803E3E50;
+  *(s16 *)(state + 0x14) = *(s16 *)(setup + 0x1e);
+  *(s16 *)(state + 0x16) = *(s16 *)(setup + 0x20);
+  *(s16 *)(state + 0x18) = 0;
+
+  if (emitCount < 1) {
+    *(s32 *)(obj + 0xf4) = emitCount;
+  } else {
+    *(s32 *)(obj + 0xf4) = 0;
   }
-  if (*(char *)(iVar3 + 0x1c) != '\0') {
-    if (*(char *)(iVar5 + 0x27) == '\x7f') {
-      *psVar1 = *psVar1 + (ushort)DAT_803dc070 * 10;
-    }
-    else {
-      *psVar1 = *psVar1 + (short)*(char *)(iVar5 + 0x27) * (ushort)DAT_803dc070 * 100;
-    }
-    if (*(char *)(iVar5 + 0x26) == '\x7f') {
-      psVar1[1] = psVar1[1] + (ushort)DAT_803dc070 * 10;
-    }
-    else {
-      psVar1[1] = psVar1[1] + (short)*(char *)(iVar5 + 0x26) * (ushort)DAT_803dc070 * 100;
-    }
-    if (*(char *)(iVar5 + 0x25) == '\x7f') {
-      psVar1[2] = psVar1[2] + (ushort)DAT_803dc070 * 10;
-    }
-    else {
-      psVar1[2] = psVar1[2] + (short)*(char *)(iVar5 + 0x25) * (ushort)DAT_803dc070 * 100;
-    }
-    FUN_8018e0a8();
+
+  if (*(s16 *)(state + 0x16) != -1 && GameBit_Get(*(s16 *)(state + 0x16)) != 0) {
+    *(s16 *)(state + 0x18) = 1;
   }
-  FUN_80286884();
-  return;
+
+  *(s16 *)(obj + 0) = (s16)(*(s8 *)(setup + 0x24) << 8);
+  *(s16 *)(obj + 2) = (s16)(*(s8 *)(setup + 0x23) << 8);
+  *(s16 *)(obj + 4) = (s16)(*(s8 *)(setup + 0x22) << 8);
+  *(s16 *)(state + 0x1a) = (s16)(*(u8 *)(setup + 0x29) * 100);
+  *(f32 *)(state + 4) = *(f32 *)(obj + 0xc);
+  *(s16 *)(state + 0x12) = (s16)randomGetRange(0, 10);
+  *(s16 *)(state + 0xc) = 0;
 }
 
 #pragma scheduling off
@@ -1117,6 +1112,49 @@ int fn_8018FB84(int* obj, int p2, u8* state)
         }
     }
     return 0;
+}
+
+void areafxemit_init(int obj, int setup)
+{
+    int state;
+    s16 period;
+    s16 angle;
+
+    *(int (**)(int*, int, u8*))(obj + 0xbc) = fn_8018FB84;
+    state = *(int*)(obj + 0xb8);
+
+    *(f32*)(state + 0) = (f32)((s32)*(s8*)(setup + 0x18) << 2);
+    *(u8*)(state + 8) = *(u8*)(setup + 0x1f);
+    *(u16*)(state + 0xa) = *(u16*)(setup + 0x20);
+    period = *(s16*)(setup + 0x22);
+    *(s16*)(state + 0xc) = period;
+    *(s16*)(state + 0xe) = *(s16*)(setup + 0x24);
+    *(s16*)(state + 0x10) = *(s16*)(setup + 0x26);
+    *(s16*)(state + 0x12) = 0;
+    *(u16*)(state + 0x14) = (u16)(*(u8*)(setup + 0x1c) << 2);
+    *(u16*)(state + 0x16) = (u16)(*(u8*)(setup + 0x1d) << 2);
+    *(u16*)(state + 0x18) = (u16)(*(u8*)(setup + 0x1e) << 2);
+
+    angle = (s16)(*(s8*)(setup + 0x19) << 8);
+    *(s16*)(state + 0x1e) = angle;
+    *(s16*)(obj + 4) = angle;
+    angle = (s16)(*(s8*)(setup + 0x1a) << 8);
+    *(s16*)(state + 0x1c) = angle;
+    *(s16*)(obj + 2) = angle;
+    angle = (s16)(*(s8*)(setup + 0x1b) << 8);
+    *(s16*)(state + 0x1a) = angle;
+    *(s16*)(obj + 0) = angle;
+    *(f32*)(obj + 8) = lbl_803E3E70;
+
+    if (period < 1) {
+        *(s32*)(obj + 0xf4) = period;
+    } else {
+        *(s32*)(obj + 0xf4) = 0;
+    }
+
+    if (*(s16*)(state + 0x10) != -1 && GameBit_Get(*(s16*)(state + 0x10)) != 0) {
+        *(s16*)(state + 0x12) = 1;
+    }
 }
 
 int lfxemitter_setScale(void) { return -1; }

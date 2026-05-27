@@ -7,7 +7,7 @@
 extern ObjectDescriptor gAreaFXEmitObjDescriptor;
 extern ObjectDescriptor12 gLFXEmitterObjDescriptor;
 
-void fxemit_init(undefined4 param_1,undefined4 param_2,int param_3);
+void fxemit_init(int obj, int setup);
 void FUN_8018f158(undefined4 param_1);
 void FUN_8018f1b4(short *param_1);
 void FUN_8018f4fc(undefined2 *param_1,int param_2);
@@ -27,19 +27,19 @@ void FUN_80190148(int param_1);
 void FUN_801905c4(int param_1);
 
 int areafxemit_getExtraSize(void);
-int areafxemit_func08(void);
+int areafxemit_getObjectTypeId(void);
 void areafxemit_free(int* obj);
 void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void areafxemit_hitDetect(void);
 void areafxemit_update(void);
-void areafxemit_init(void);
+void areafxemit_init(int obj, int setup);
 void areafxemit_release(void);
 void areafxemit_initialise(void);
 
 int lfxemitter_func0B(int* obj);
 int lfxemitter_setScale(void);
 int lfxemitter_getExtraSize(void);
-int lfxemitter_func08(void);
+int lfxemitter_getObjectTypeId(void);
 void lfxemitter_free(int* obj);
 void lfxemitter_render(void);
 void lfxemitter_hitDetect(void);
