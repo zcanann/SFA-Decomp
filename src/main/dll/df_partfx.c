@@ -1981,5 +1981,56 @@ void player_rotateTowardEnemy(int *obj, int *ctx, int spd) {
                   (int)((f32)diff * timeDelta / (lbl_803E0584 * (f32)spd)));
     }
 }
+extern f32 lbl_803E058C;
+extern void setMatrixFromObjectPos(f32 *mtx, void *desc);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern void objMove(int *obj, f32 vx, f32 vy, f32 vz);
+struct PartDesc {
+    s16 ang[3];
+    f32 sc[4];
+};
+#pragma scheduling off
+#pragma peephole off
+void fn_800D82A8(int *p, int *ctx, f32 t) {
+    int flags;
+    int b;
+    struct PartDesc desc;
+    f32 mtx[12];
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    flags = ctx[0];
+    if ((flags & 0x2000000) != 0) {
+        return;
+    }
+    if ((flags & 0x200000) == 0) {
+        *(f32 *)((char *)p + 0x28) = *(f32 *)((char *)p + 0x28) * lbl_803E058C;
+        *(f32 *)((char *)p + 0x28) =
+            -(*(f32 *)((char *)ctx + 0x2a4) * t) + *(f32 *)((char *)p + 0x28);
+    }
+    b = (s8)*(u8 *)((char *)ctx + 0x34c);
+    if ((b & 1) == 0 || (b & 4) != 0) {
+        desc.ang[0] = *(s16 *)((char *)p + 0);
+        desc.ang[1] = *(s16 *)((char *)p + 2);
+        desc.ang[2] = 0;
+        desc.sc[0] = lbl_803E0588;
+        desc.sc[1] = lbl_803E0570;
+        desc.sc[2] = lbl_803E0570;
+        desc.sc[3] = lbl_803E0570;
+        setMatrixFromObjectPos(mtx, &desc);
+        if ((ctx[0] & 0x10000) != 0) {
+            Matrix_TransformPoint(mtx, *(f32 *)((char *)ctx + 0x284), *(f32 *)((char *)ctx + 0x288),
+                                  -*(f32 *)((char *)ctx + 0x280), &outX, (f32 *)((char *)p + 0x28),
+                                  &outZ);
+        } else {
+            Matrix_TransformPoint(mtx, *(f32 *)((char *)ctx + 0x284), lbl_803E0570,
+                                  -*(f32 *)((char *)ctx + 0x280), &outX, &outY, &outZ);
+        }
+        *(f32 *)((char *)p + 0x24) = outX;
+        *(f32 *)((char *)p + 0x2c) = outZ;
+    }
+    objMove(p, *(f32 *)((char *)p + 0x24) * t, *(f32 *)((char *)p + 0x28) * t,
+            *(f32 *)((char *)p + 0x2c) * t);
+}
 #pragma scheduling reset
 #pragma peephole reset
