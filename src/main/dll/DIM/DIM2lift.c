@@ -1160,3 +1160,36 @@ int fn_801BA5A8(int obj, int param2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E4C00;
+extern int lbl_80325AA0[6];
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BA958(int obj, int param2)
+{
+    if (*(s8 *)(param2 + 0x27a) != 0) {
+        f32 v;
+        *(s16 *)(obj + 0xa2) = -1;
+        v = lbl_803E4BD8;
+        *(f32 *)(param2 + 0x280) = v;
+        *(f32 *)(param2 + 0x284) = v;
+        *(f32 *)(param2 + 0x2a0) = lbl_803E4C00;
+        if ((int)randomGetRange(0, 1) != 0) {
+            if (*(s8 *)(param2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove((int *)obj, 0xd, lbl_803E4BD8, 0);
+                *(u8 *)(param2 + 0x346) = 0;
+            }
+        } else {
+            if (*(s8 *)(param2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove((int *)obj, 0xc, lbl_803E4BD8, 0);
+                *(u8 *)(param2 + 0x346) = 0;
+            }
+        }
+    }
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 0, lbl_80325AA0);
+    (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 7, 1, lbl_80325AA0);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
