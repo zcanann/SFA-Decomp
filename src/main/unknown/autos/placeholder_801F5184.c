@@ -2215,3 +2215,91 @@ void vfpobjcreator_init(int *obj, u8 *init) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_801FB434(int obj);
+extern void fn_801FB23C(int obj);
+extern void fn_801F943C(void);
+extern void fn_80053ED0(int n);
+extern void fn_80053EBC(int n);
+extern void doNothing_8005D148(int a, int b);
+extern void doNothing_8005D14C(int a, int b);
+extern u8 framesThisStep;
+extern f32 lbl_803E5F90;
+extern f32 lbl_803E5F24;
+extern f32 lbl_803E6088;
+extern f32 lbl_803E5FB4;
+
+#pragma scheduling off
+#pragma peephole off
+void vfplift_update(int obj) {
+    int v;
+    Obj_GetPlayerObject();
+    v = *(s16 *)((char *)obj + 0x46);
+    if (v == 0x3b7) {
+        fn_801FB434(obj);
+    } else if (v == 0x3bf) {
+        fn_801FB23C(obj);
+    } else if (v == 0x53f) {
+        fn_801FB23C(obj);
+    }
+}
+
+void vfplift_hitDetect(int obj) {
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(s16 *)((char *)inner + 0xc) != -1 && GameBit_Get(*(s16 *)((char *)inner + 0xc)) == 0) {
+        *(u8 *)((char *)obj + 0xaf) |= 8;
+    } else if ((*(u8 *)((char *)obj + 0xaf) & 8) != 0) {
+        *(u8 *)((char *)obj + 0xaf) ^= 8;
+    }
+}
+
+void wmspiritset_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
+    int *inner = *(int **)(p1 + 0xb8);
+    s16 v = *(s16 *)inner;
+    if ((v == -1 || GameBit_Get(v) != 0) && vis != 0) {
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5F90);
+    }
+}
+
+void wmsun_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
+    int *inner = *(int **)(p1 + 0xb8);
+    if (vis != 0 && *(u8 *)((char *)inner + 0xd) != 0) {
+        doNothing_8005D148(p2, 0x10000);
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5F24);
+        doNothing_8005D14C(p2, 0x10000);
+    }
+}
+
+void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
+    if (vis != 0 && *(u8 *)(p1 + 0x36) != 0) {
+        fn_80053ED0(8);
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6088);
+        fn_80053EBC(8);
+    }
+}
+
+void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
+    int *inner = *(int **)(p1 + 0xb8);
+    if ((*(u16 *)((char *)inner + 0x294) & 0x40) != 0 && (u8)*(u8 *)(p1 + 0x36) < 0xff) {
+        if (*(u8 *)(p1 + 0x36) > 0xff - framesThisStep) {
+            *(u8 *)(p1 + 0x36) = 0xff;
+            *(u16 *)((char *)inner + 0x294) &= ~0x40;
+        } else {
+            *(u8 *)(p1 + 0x36) = *(u8 *)(p1 + 0x36) + framesThisStep;
+        }
+    }
+    if (vis != 0 && *(s16 *)((char *)inner + 0x28c) == 0) {
+        objRenderFn_8003b8f4(lbl_803E5FB4);
+    }
+}
+
+void wmnewcrystal_init(int *obj, u8 *init) {
+    int *inner = *(int **)((char *)obj + 0xb8);
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801F943C;
+    if ((u8)(*(int (*)(int))(*(int *)(*gMapEventInterface + 0x40)))((s8)*(u8 *)((char *)obj + 0xac)) > 1) {
+        GameBit_Set(0xd27, 1);
+        *(u8 *)((char *)inner + 0x68) = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
