@@ -5643,6 +5643,8 @@ extern void *lbl_80332ED4[];
 extern u8 lbl_803DE42C;
 extern void *lbl_803DE454;
 extern f32 lbl_803E7F6C;
+extern f32 lbl_803E7FD4;
+extern f32 lbl_803E7FCC;
 extern void Resource_Release(void *handle);
 extern void showDeathMenu(void);
 
@@ -6770,6 +6772,56 @@ int fn_802A5048(int obj, int state, f32 fv)
             lbl_803DE454 = NULL;
         }
         showDeathMenu();
+    }
+    return 0;
+}
+
+int fn_8029D7F0(int obj, int state, f32 fv)
+{
+    *(u8 *)((char *)state + 0x34d) = 3;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0x44c, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7FD4;
+    }
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0x44c:
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0x44d, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7FCC;
+        }
+        break;
+    case 0x44d:
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        break;
+    }
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
+    return 0;
+}
+
+int fn_802A9A0C(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int threshold;
+    if (GameBit_Get(0xc55)) {
+        threshold = 0x14;
+    } else {
+        threshold = 0xa;
+    }
+    if (GameBit_Get(0x107) &&
+        *(s16 *)((char *)*(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c) + 4) >= threshold &&
+        *(u8 *)((char *)inner + 0x8c8) != 0x44 &&
+        *(void **)((char *)inner + 0x7f8) == NULL &&
+        !((ByteFlags *)((char *)inner + 0x3f0))->b20 &&
+        !((ByteFlags *)((char *)inner + 0x3f0))->b04 &&
+        !((ByteFlags *)((char *)inner + 0x3f0))->b08 &&
+        ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+        s16 v = *(s16 *)((char *)p2 + 0x274);
+        if (v == 1 || v == 2 || v == 0x25 || v == 0x24) {
+            return 1;
+        }
     }
     return 0;
 }
