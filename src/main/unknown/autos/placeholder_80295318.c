@@ -6150,3 +6150,80 @@ void fn_802A4B4C(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern uint GameBit_Get(int bit);
+extern void fn_802A514C(void);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_802985AC(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    ((ByteFlags *)((char *)inner + 0x3f4))->b20 = 0;
+    *(f32 *)((char *)inner + 0x414) = lbl_803E7EA4;
+    ((ByteFlags *)((char *)inner + 0x3f3))->b10 = 0;
+    *(s16 *)((char *)inner + 0x80a) = -1;
+    ObjHits_SyncObjectPositionIfDirty(obj);
+}
+
+int fn_8029F9D4(int p1, int state)
+{
+    if (GameBit_Get(0x2d0)) {
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return -1;
+    }
+    return 0;
+}
+
+int fn_80297748(int p1, int obj)
+{
+    if (*(s8 *)((char *)obj + 0x27a) != 0) {
+        *(u8 *)((char *)obj + 0x357) = 0;
+    }
+    *(u8 *)((char *)obj + 0x357) += 1;
+    if (*(s8 *)((char *)obj + 0x346) != 0 && *(s8 *)((char *)obj + 0x357) > 0x1e) {
+        *(int *)((char *)obj + 0x308) = (int)fn_802A514C;
+        return 2;
+    }
+    return 0;
+}
+
+int fn_8029852C(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    u8 v;
+    ((ByteFlags *)((char *)inner + 0x3f6))->b20 = 1;
+    v = *(u8 *)((char *)state + 0x34b);
+    if (v == 3) {
+        *(int *)((char *)state + 0x308) = (int)fn_8029782C;
+        return 0x3c;
+    }
+    if (v == 4) {
+        *(int *)((char *)state + 0x308) = (int)fn_8029782C;
+        return 0x3e;
+    }
+    if (v == 1) {
+        *(int *)((char *)state + 0x308) = (int)fn_8029782C;
+        return 0x3b;
+    }
+    *(int *)((char *)state + 0x308) = (int)fn_8029782C;
+    return 0x39;
+}
+
+int fn_802A2E8C(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz;
+    *(int *)((char *)inner + 0x360) &= ~2;
+    *(int *)((char *)inner + 0x360) |= 0x2000;
+    *(int *)((char *)p2 + 4) |= 0x100000;
+    fz = lbl_803E7EA4;
+    *(f32 *)((char *)p2 + 0x280) = fz;
+    *(f32 *)((char *)p2 + 0x284) = fz;
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
