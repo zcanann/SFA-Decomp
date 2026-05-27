@@ -1883,3 +1883,24 @@ void Checkpoint_Add(int *entry) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *gPartfxInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void player_updateParticles(int *p1, int p2, int p3, int count, int mode)
+{
+    while (count != 0 && p1 != NULL) {
+        if (mode == 0) {
+            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(p1, p3, 0, 2, -1, 0);
+        } else if (mode == 1) {
+            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(p1, p3, 0, 2, -1, 0);
+        } else if (mode == 2) {
+            (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(p1, p3, 0, 4, -1, 0);
+        }
+        count--;
+    }
+}
+
+#pragma scheduling reset
+#pragma peephole reset
