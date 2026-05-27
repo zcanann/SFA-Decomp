@@ -1553,3 +1553,69 @@ void dll_1D6_init(int *obj, u8 *params)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *gPartfxInterface;
+extern f32 lbl_803E4A40;
+extern f32 lbl_803E4A44;
+extern f32 lbl_803E4A48;
+extern f32 lbl_803E4A4C;
+
+#pragma scheduling off
+#pragma peephole off
+void dimtruthhornice_update(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+    switch (*(s8 *)((char *)extra + 3)) {
+    case 0:
+        if (*(s8 *)((char *)extra + 2) <= 0) {
+            if (*(s16 *)extra != -1) {
+                GameBit_Set(*(s16 *)extra, 1);
+                ObjHits_DisableObject(obj);
+                *(s8 *)((char *)extra + 3) = 1;
+                *(f32 *)((char *)extra + 4) = lbl_803E4A40;
+            }
+        } else {
+            int *tricky = (int *)getTrickyObject();
+            if (tricky != NULL) {
+                if ((*(u8 *)((char *)obj + 0xaf) & 4) != 0) {
+                    (*(void (**)(int *, int *, int, int))(**(int **)((char *)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+                }
+                *(u8 *)((char *)obj + 0xaf) &= ~8;
+            }
+        }
+        break;
+    case 1:
+        *(f32 *)((char *)extra + 4) = *(f32 *)((char *)extra + 4) + timeDelta;
+        if (*(f32 *)((char *)extra + 4) > lbl_803E4A44) {
+            int i;
+            f32 scale = lbl_803E4A48;
+            *(s8 *)((char *)extra + 3) = 2;
+            Sfx_PlayFromObject(0, 265);
+            Sfx_PlayFromObject((int)obj, 1147);
+            for (i = 30; i != 0; i--) {
+                f32 desc[6];
+                desc[3] = scale * (f32)(int)randomGetRange(-100, 100);
+                desc[4] = scale * (f32)(int)randomGetRange(0, 350);
+                desc[5] = scale * (f32)(int)randomGetRange(-100, 100);
+                desc[2] = lbl_803E4A4C;
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2043, desc, 2, -1, 0);
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2044, desc, 2, -1, 0);
+            }
+        }
+        {
+            f32 desc[6];
+            desc[3] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
+            desc[4] = lbl_803E4A48 * (f32)(int)randomGetRange(0, 350);
+            desc[5] = lbl_803E4A48 * (f32)(int)randomGetRange(-100, 100);
+            desc[2] = lbl_803E4A4C;
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(obj, 2044, desc, 2, -1, 0);
+        }
+        break;
+    case 2:
+        *(s16 *)((char *)obj + 6) |= 0x4000;
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
