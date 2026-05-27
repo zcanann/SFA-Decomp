@@ -1101,3 +1101,40 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void objSetSlot(void *obj, int slot);
+
+#pragma scheduling off
+#pragma peephole off
+void animsharpclaw_init(int *obj, u8 *init) {
+    int *inner;
+    int f4;
+
+    *(int *)((char *)obj + 0xbc) = 0;
+    objSetSlot(obj, 0x64);
+    inner = *(int **)((char *)obj + 0xb8);
+    *(s16 *)((char *)inner + 0x6a) = *(s16 *)((char *)init + 0x1a);
+    *(s16 *)((char *)inner + 0x6e) = -1;
+    *(f32 *)((char *)inner + 0x24) = lbl_803E45C8 / (lbl_803E45C8 + (f32)(u32)init[0x24]);
+    *(int *)((char *)inner + 0x28) = -1;
+    *(int *)((char *)inner + 0x98) = 0;
+    *(int *)((char *)inner + 0x94) = 0;
+    *(int *)((char *)obj + 0xf8) = -1;
+    f4 = *(int *)((char *)obj + 0xf4);
+    if (f4 == 0 && *(s16 *)((char *)init + 0x18) != 1) {
+        (*(void (*)(int *, u8 *))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, init);
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)init + 0x18) + 1;
+    } else if (f4 != 0 && *(s16 *)((char *)init + 0x18) != f4 - 1) {
+        (*(void (*)(int *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
+        if (*(s16 *)((char *)init + 0x18) != -1) {
+            (*(void (*)(int *, u8 *))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, init);
+        }
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)init + 0x18) + 1;
+    }
+    if (*(int **)((char *)obj + 0x64) != NULL) {
+        *(u8 *)(*(int *)((char *)obj + 0x64) + 0x3a) = 0x64;
+        *(u8 *)(*(int *)((char *)obj + 0x64) + 0x3b) = 0x96;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

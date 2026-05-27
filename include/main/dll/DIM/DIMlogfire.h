@@ -40,7 +40,7 @@ void animsharpclaw_free(int obj);
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void animsharpclaw_hitDetect(void);
 void animsharpclaw_update(void);
-void animsharpclaw_init(void);
+void animsharpclaw_init(int *obj, u8 *init);
 void animsharpclaw_release(void);
 void animsharpclaw_initialise(void);
 
