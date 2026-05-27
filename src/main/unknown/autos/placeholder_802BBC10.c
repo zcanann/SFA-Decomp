@@ -2,6 +2,17 @@
 #include "main/objanim.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 
+typedef struct {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 b10 : 1;
+    u8 b08 : 1;
+    u8 b04 : 1;
+    u8 b02 : 1;
+    u8 b01 : 1;
+} ByteFlags;
+
 extern undefined8 FUN_80006824();
 extern undefined8 FUN_80006920();
 extern void* FUN_800069a8();
@@ -1493,9 +1504,9 @@ extern int *gGameUIInterface;
 extern int lbl_803DB1C0[];
 extern void *lbl_803DE4E0;
 extern int fn_802C0B84(int obj);
-extern void fn_802C0A5C();
-extern void fn_802C0978();
-extern void fn_802C0830();
+extern int fn_802C0A5C(int obj, int p2);
+extern int fn_802C0978(int obj, int p2);
+extern int fn_802C0830(int obj, int p2);
 extern void fn_802C0550();
 extern void fn_802BF934();
 extern void fn_802BF75C();
@@ -1638,6 +1649,85 @@ int fn_802BC27C(int obj, int p2)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 lbl_803E83F4;
+extern f32 lbl_803E83F8;
+extern f32 lbl_803E83BC;
+extern f32 lbl_803E8408;
+extern f32 lbl_803E840C;
+extern s16 lbl_803DC79A;
+extern f32 Vec_distance(int a, int b);
+extern void *Obj_GetPlayerObject(void);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802C0978(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        f32 fz = lbl_803E83A4;
+        *(f32 *)((char *)p2 + 0x294) = fz;
+        *(f32 *)((char *)p2 + 0x284) = fz;
+        *(f32 *)((char *)p2 + 0x280) = fz;
+        *(f32 *)((char *)obj + 0x24) = fz;
+        *(f32 *)((char *)obj + 0x28) = fz;
+        *(f32 *)((char *)obj + 0x2c) = fz;
+        *(s16 *)((char *)p2 + 0x338) = 0;
+        *(f32 *)((char *)p2 + 0x2a0) = lbl_803E83F4;
+        *(f32 *)((char *)p2 + 0x2b8) = lbl_803E83F8;
+        if (*(s16 *)((char *)obj + 0xa0) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0, fz, 0);
+        }
+        if (((ByteFlags *)((char *)inner + 0xbc0))->b20) {
+            ((ByteFlags *)((char *)inner + 0xbc0))->b20 = 0;
+            *(u8 *)((char *)p2 + 0x25f) = 0;
+        }
+    }
+    if (*(f32 *)((char *)p2 + 0x298) < lbl_803E83BC) {
+        *(s16 *)((char *)p2 + 0x334) = 0;
+        *(s16 *)((char *)p2 + 0x336) = 0;
+        *(f32 *)((char *)p2 + 0x298) = lbl_803E83A4;
+    }
+    return 0;
+}
+
+int fn_802C0A5C(int obj, int p2)
+{
+    int q = *(int *)((char *)obj + 0x4c);
+    int inner;
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        f32 fz;
+        ObjHits_DisableObject(obj);
+        *(u8 *)((char *)p2 + 0x25f) = 0;
+        *(f32 *)((char *)p2 + 0x2a0) = lbl_803E8408;
+        fz = lbl_803E83A4;
+        *(f32 *)((char *)p2 + 0x294) = fz;
+        *(f32 *)((char *)p2 + 0x284) = fz;
+        *(f32 *)((char *)p2 + 0x280) = fz;
+        *(f32 *)((char *)obj + 0x24) = fz;
+        *(f32 *)((char *)obj + 0x28) = fz;
+        *(f32 *)((char *)obj + 0x2c) = fz;
+        return 0;
+    }
+    inner = *(int *)((char *)obj + 0xb8);
+    Vec_distance(obj + 0x18, (int)Obj_GetPlayerObject() + 0x18);
+    if (RandomTimer_UpdateRangeTrigger(inner + 0xb54, lbl_803E83F8, lbl_803E840C)) {
+        Sfx_PlayFromObject(obj, 0x464);
+    }
+    if (GameBit_Get(*(s16 *)((char *)q + 0x1e))) {
+        *(int *)((char *)obj + 0xf4) = 0;
+        ObjHits_EnableObject(obj);
+        ObjHits_SyncObjectPositionIfDirty(obj);
+        ((ByteFlags *)((char *)inner + 0xbc0))->b10 = *(s16 *)((char *)inner + 0xbb0) > 0;
+        *(s16 *)((char *)obj + 0) = lbl_803DC79A;
+        return 3;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void DR_EarthWarrior_initialise(void)
 {
     ((void **)lbl_803DB1B0)[0] = (void *)fn_802BDBCC;
@@ -1709,17 +1799,6 @@ void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 
 extern void fn_80026C88(int p);
 extern int Obj_FreeObject(int obj);
-
-typedef struct {
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 b10 : 1;
-    u8 b08 : 1;
-    u8 b04 : 1;
-    u8 b02 : 1;
-    u8 b01 : 1;
-} ByteFlags;
 
 #pragma scheduling off
 #pragma peephole off
