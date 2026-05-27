@@ -1040,7 +1040,6 @@ extern f32 lbl_803E46E0;
  * gamebit block, arm the map-event triggers, then branch on the queried level
  * state to set the boulder's start state and fire the appropriate triggers. */
 #pragma scheduling off
-#pragma peephole off
 void imicemountain_init(int* obj)
 {
     u8* sub = *(u8**)((char*)obj + 0xb8);
@@ -1094,6 +1093,8 @@ void imicemountain_init(int* obj)
         GameBit_Set(0x374, 0);
         GameBit_Set(0x37c, 0);
         MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 2, 0);
+        break;
+    case 5:
         break;
     }
 }
