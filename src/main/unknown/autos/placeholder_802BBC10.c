@@ -1899,6 +1899,104 @@ void DIMSnowHorn1_initialise(void)
     *dst = (void *)textureLoad(*src, 0);
 }
 
+typedef struct {
+    f32 f0;
+    f32 f4;
+    f32 f8;
+    s16 hc;
+    u8 pad_e[2];
+    f32 f10;
+    f32 f14;
+    f32 f18;
+    s16 h1c;
+    u16 h1e;
+    u16 h20;
+    u8 pad_22[2];
+} SnowHornEntry;
+
+extern u8 lbl_80335030[];
+extern void ddh_cc_initinterrupts();
+extern int lbl_803E8230;
+extern int lbl_803DC734;
+extern f32 lbl_803E82B8;
+extern int *gPathControlInterface;
+extern void dll_2E_func05(int obj, int q, int a, int b, int c);
+
+void DIMSnowHorn1_init(int obj, int p2, int p3)
+{
+    u8 *base = lbl_80335030;
+    int stk = lbl_803E8230;
+    int inner;
+    int q;
+    s8 idx;
+    *(s16 *)((char *)obj + 0) = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
+    *(int *)((char *)obj + 0xbc) = (int)ddh_cc_initinterrupts;
+    ObjGroup_AddObject(obj, 0xa);
+    inner = *(int *)((char *)obj + 0xb8);
+    *(u8 *)((char *)inner + 0xa8c) = *(u8 *)((char *)p2 + 0x19);
+    *(s16 *)((char *)inner + 0xa86) = 5;
+    *(s16 *)((char *)inner + 0xa88) = 0x3e8;
+    if (*(void **)((char *)obj + 0x64) != NULL) {
+        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;
+    }
+    if (*(void **)((char *)obj + 0x54) != NULL) {
+        *(s16 *)((char *)*(int *)((char *)obj + 0x54) + 0xb2) = 9;
+    }
+    (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 0xc, 1);
+    *(f32 *)((char *)inner + 0x2a4) = lbl_803E82B8;
+    q = inner + 0x4;
+    *(u8 *)((char *)q + 0x25b) = 0;
+    switch (*(u8 *)((char *)inner + 0xa8c)) {
+    case 1:
+    case 3:
+    case 4:
+        (*(void (*)(int, int, int, int))(*(int *)(*gPathControlInterface + 0x4)))(q, 3, 0x200020, 1);
+        (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0x8)))(q, 2, (int)(base + 0xe0), (int)&lbl_803DC734, 8);
+        (*(void (*)(int, int, int, int, int *))(*(int *)(*gPathControlInterface + 0xc)))(q, 4, (int)(base + 0xa0), (int)(base + 0xd0), &stk);
+        (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, q);
+        break;
+    case 2:
+        break;
+    }
+    dll_2E_func05(obj, inner + 0x35c, -0x2000, 0x2aaa, 3);
+    *(u8 *)((char *)inner + 0x96d) |= 8;
+    if (p3 == 0) {
+        idx = -1;
+        switch (*(u8 *)((char *)inner + 0xa8c)) {
+        case 1:
+            if (GameBit_Get(0x16f)) {
+                idx = 0;
+            }
+            break;
+        case 3:
+            idx = 1;
+            break;
+        case 4:
+            if (GameBit_Get(0x1db)) {
+                idx = 2;
+            }
+            break;
+        }
+        if (idx >= 0) {
+            SnowHornEntry *e = &((SnowHornEntry *)base)[idx];
+            if (GameBit_Get(e->h1e)) {
+                *(f32 *)((char *)obj + 0xc) = e->f10;
+                *(f32 *)((char *)obj + 0x10) = e->f14;
+                *(f32 *)((char *)obj + 0x14) = e->f18;
+                *(s16 *)((char *)obj + 0) = e->h1c;
+            } else {
+                *(f32 *)((char *)obj + 0xc) = e->f0;
+                *(f32 *)((char *)obj + 0x10) = e->f4;
+                *(f32 *)((char *)obj + 0x14) = e->f8;
+                *(s16 *)((char *)obj + 0) = e->hc;
+            }
+            if (GameBit_Get(e->h20)) {
+                *(s16 *)((char *)obj + 0) += 0x8000;
+            }
+        }
+    }
+}
+
 extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);
 extern int *gPathControlInterface;
 
