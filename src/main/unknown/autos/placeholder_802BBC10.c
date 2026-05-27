@@ -1836,5 +1836,29 @@ void DR_CloudRunner_func15(int obj, f32 *a, f32 *b, f32 *c)
     setMatrixFromObjectPos(matrix, v.angles);
     Matrix_TransformPoint(matrix, lbl_803E83A4, lbl_803DC78C, lbl_803DC790, a, b, c);
 }
+
+extern void mtx44_mult(void *lhs, void *rhs, void *out);
+extern f32 lbl_803DB170[];
+
+void DR_EarthWarrior_func22(int obj, f32 scale)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 lp0, lp1, lp2;
+    int mtx = (int)ObjPath_GetPointModelMtx(obj, 2);
+    ObjPath_GetPointLocalPosition(obj, 2, &lp0, &lp1, &lp2);
+    v.mat[1] = lp0;
+    v.mat[2] = lp1;
+    v.mat[3] = lp2;
+    v.angles[0] = 0;
+    v.angles[1] = 0;
+    v.angles[2] = 0;
+    v.mat[0] = scale / *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 0x4);
+    setMatrixFromObjectPos(lbl_803DB170, v.angles);
+    mtx44_mult(lbl_803DB170, (void *)mtx, lbl_803DB170);
+    fn_8003B950((int)lbl_803DB170);
+}
 #pragma peephole reset
 #pragma scheduling reset
