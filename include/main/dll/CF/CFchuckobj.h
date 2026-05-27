@@ -31,7 +31,7 @@ int areafxemit_getObjectTypeId(void);
 void areafxemit_free(int* obj);
 void areafxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void areafxemit_hitDetect(void);
-void areafxemit_update(void);
+void areafxemit_update(int* obj);
 void areafxemit_init(int obj, int setup);
 void areafxemit_release(void);
 void areafxemit_initialise(void);

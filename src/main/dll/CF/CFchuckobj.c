@@ -21,6 +21,7 @@ extern undefined4 ObjGroup_AddObject();
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
+extern int Obj_GetPlayerObject(void);
 extern int fn_8018EAA4(int obj, int unused, int events);
 extern undefined4 FUN_8018e0a8();
 extern undefined4 FUN_80286838();
@@ -28,6 +29,7 @@ extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286884();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();
+extern f32 sqrtf(f32 value);
 
 extern undefined4 DAT_803ad410;
 extern undefined4 DAT_803ad41e;
@@ -39,6 +41,7 @@ extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
 extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803ddb38;
+extern u8 framesThisStep;
 extern f64 DOUBLE_803e4af0;
 extern f64 DOUBLE_803e4af8;
 extern f64 DOUBLE_803e4b28;
@@ -71,6 +74,7 @@ extern f32 FLOAT_803e4b64;
 extern f32 FLOAT_803e4b68;
 extern f32 FLOAT_803e4b78;
 extern f32 lbl_803E3E50;
+extern f32 lbl_803E3E6C;
 extern f32 lbl_803E3E70;
 
 /*
@@ -1112,6 +1116,50 @@ int fn_8018FB84(int* obj, int p2, u8* state)
         }
     }
     return 0;
+}
+
+void areafxemit_update(int* obj)
+{
+    int state;
+    int player;
+    s16 period;
+    f32 xDelta;
+    f32 yDelta;
+    f32 zDelta;
+    f32 distance;
+    f32 radius;
+
+    state = *(int*)((u8*)obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    if ((player != 0) &&
+        (((*(s16*)(state + 0xe) == -1) || (GameBit_Get(*(s16*)(state + 0xe)) != 0)) &&
+         (*(s16*)(state + 0x12) == 0))) {
+        if (GameBit_Get(*(s16*)(state + 0x10)) != 0) {
+            *(s16*)(state + 0x12) = 1;
+        }
+        period = *(s16*)(state + 0xc);
+        if ((-1 < period) || ((-1 >= period && (*(s32*)((u8*)obj + 0xf4) < 1)))) {
+            xDelta = *(f32*)((u8*)obj + 0x18) - *(f32*)(player + 0x18);
+            yDelta = *(f32*)((u8*)obj + 0x1c) - *(f32*)(player + 0x1c);
+            zDelta = *(f32*)((u8*)obj + 0x20) - *(f32*)(player + 0x20);
+            if (period == 0) {
+                *(s16*)(state + 0x12) = 1;
+            }
+            distance = sqrtf(zDelta * zDelta + xDelta * xDelta + yDelta * yDelta);
+            radius = *(f32*)(state + 0);
+            if (distance <= radius || radius == lbl_803E3E6C) {
+                if ((3 < *(u8*)(state + 8)) &&
+                    ((*(f32*)(state + 4) > radius && (radius != lbl_803E3E6C)))) {
+                    fn_8018F148((int)obj, 0x23);
+                }
+                fn_8018F2D8(obj);
+            }
+            *(s32*)((u8*)obj + 0xf4) = -period;
+            *(f32*)(state + 4) = distance;
+        } else if ((period < 0) && (0 < *(s32*)((u8*)obj + 0xf4))) {
+            *(s32*)((u8*)obj + 0xf4) = *(s32*)((u8*)obj + 0xf4) - (u32)framesThisStep;
+        }
+    }
 }
 
 void areafxemit_init(int obj, int setup)
