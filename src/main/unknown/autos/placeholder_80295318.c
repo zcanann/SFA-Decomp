@@ -6754,9 +6754,10 @@ int fn_802A5048(int obj, int state, f32 fv)
     }
     (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 3);
     if (*(s8 *)((char *)state + 0x346) != 0) {
-        void **p = lbl_80332ED4;
         int i;
+        void **p;
         lbl_803DE42C = 0;
+        p = lbl_80332ED4;
         for (i = 0; i < 7; i++) {
             if (*p != NULL) {
                 Obj_FreeObject((int)*p);
@@ -6820,10 +6821,11 @@ void fn_8029C8C8(int obj, int p2)
     lbl_803DC66C = 1;
     if (*(s16 *)((char *)p2 + 0x274) != 0x24 && *(s16 *)((char *)p2 + 0x274) != 0x25 &&
         lbl_803DE42C != 0) {
-        void **p = lbl_80332ED4;
         int i;
+        void **p;
         *(s16 *)((char *)inner + 0x80a) = -1;
         lbl_803DE42C = 0;
+        p = lbl_80332ED4;
         for (i = 0; i < 7; i++) {
             if (*p != NULL) {
                 Obj_FreeObject((int)*p);
