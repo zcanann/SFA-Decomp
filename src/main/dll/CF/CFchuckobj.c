@@ -154,6 +154,7 @@ void fxemit_init(int obj, int setup)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void fn_8018F148(int obj, int count)
 {
   extern void mathFn_80021ac8(s16 *in, f32 *out);
@@ -196,6 +197,7 @@ void fn_8018F148(int obj, int count)
     }
   }
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
