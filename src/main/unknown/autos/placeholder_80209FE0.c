@@ -1703,6 +1703,13 @@ extern f32 lbl_803E6594;
 extern f32 lbl_803E651C;
 extern f32 lbl_803E6510;
 extern f32 lbl_803E657C;
+extern f32 lbl_803E65C0;
+extern f32 lbl_803E65C4;
+extern f32 lbl_803E65C8;
+extern void s16toFloat(void *p, int v);
+extern int lbl_803DC1A0;
+extern int lbl_803DC1A8;
+extern f32 lbl_803DC1B0;
 
 typedef struct {
     u8 b80 : 1;
@@ -1828,6 +1835,40 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         if (*(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
             queueGlowRender(light);
         }
+    }
+}
+
+void drakord_thornbush_init(int obj, u8 *init)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(int *)((char *)inner + 0) = 0;
+    ObjHits_SetTargetMask(obj, 4);
+    *(s16 *)((char *)obj + 2) = (s16)((s8)init[0x18] << 8);
+    if (*(u32 *)((char *)init + 0x14) == 0xffffffff) {
+        ((DrakorFlags *)((char *)inner + 0x79))->b80 = 1;
+    }
+    storeZeroToFloatParam((f32 *)((char *)inner + 0xc));
+    storeZeroToFloatParam((f32 *)((char *)inner + 0x10));
+    *(int *)((char *)inner + 8) = 0;
+    switch (*(s16 *)((char *)obj + 0x46)) {
+    case 0x727:
+        *(void **)((char *)inner + 0x6c) = &lbl_803DC1A8;
+        ObjHitbox_SetSphereRadius(obj, *(s16 *)((char *)init + 0x1c));
+        *(int *)((char *)inner + 0x74) = *(s16 *)((char *)init + 0x1c);
+        *(f32 *)((char *)inner + 0x70) = lbl_803E65C0;
+        *(f32 *)((char *)obj + 8) =
+            *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E6590;
+        break;
+    case 0x709:
+        *(void **)((char *)inner + 0x6c) = &lbl_803DC1A0;
+        *(f32 *)((char *)obj + 8) =
+            *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E65C4;
+        ObjHitbox_SetSphereRadius(obj, (s16)(*(s16 *)((char *)init + 0x1c) / 7));
+        s16toFloat((f32 *)((char *)inner + 0x10), (int)lbl_803DC1B0);
+        *(f32 *)((char *)inner + 0x70) = lbl_803E65C8;
+        *(int *)((char *)inner + 0x74) = *(s16 *)((char *)init + 0x1c) / 5;
+        *(f32 *)((char *)inner + 0x68) = lbl_803E6594;
+        break;
     }
 }
 #pragma peephole reset
