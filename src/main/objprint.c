@@ -3304,6 +3304,53 @@ void objFn_8003acfc(int obj, int* keys, int count, int out)
     }
 }
 
+void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
+{
+    s16* found;
+    int* table;
+    int k;
+    int n;
+    int i;
+    int j;
+    int idx;
+    int v;
+
+    for (idx = 0; idx < count; idx++) {
+        int key = *keys;
+        found = NULL;
+        table = *(int**)(obj + 0x50);
+        if (table != NULL) {
+            i = 0;
+            j = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+            for (k = 0; k < n; k++) {
+                u8* data = *(u8**)((char*)table + 0x10);
+                s32 di = *(s8*)(obj + 0xad) + i + 1;
+                if (data[di] != 0xff && (int)data[i] == key) {
+                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                }
+                i = i + *(s8*)((char*)table + 0x55) + 1;
+                j += 0x12;
+            }
+        }
+        if (found != NULL) {
+            v = found[0];
+            if (v < lo) v = lo;
+            else if (v > hi) v = hi;
+            found[0] = (s16)v;
+            v = found[1];
+            if (v < lo) v = lo;
+            else if (v > hi) v = hi;
+            found[1] = (s16)v;
+            v = found[2];
+            if (v < lo) v = lo;
+            else if (v > hi) v = hi;
+            found[2] = (s16)v;
+        }
+        keys++;
+    }
+}
+
 extern u8 framesThisStep;
 
 void fn_8003B228(int obj, int p2)
