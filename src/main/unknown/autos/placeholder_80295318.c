@@ -5632,7 +5632,11 @@ extern void cutsceneEnterExit(int a, int b);
 extern int *gCameraInterface;
 extern void fn_802AB5A4(int a, int b, int c);
 extern f32 lbl_803E8060;
+extern f32 lbl_803E7F4C;
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
+extern void Obj_FreeObject(int obj);
+extern int *gBaddieControlInterface;
+extern int fn_802AC7DC(int a, int b, int c);
 
 #pragma scheduling off
 #pragma peephole off
@@ -6004,7 +6008,7 @@ extern void fn_802B7B0C(void);
 extern void fn_802B78A4(void);
 extern void fn_802B74C4(void);
 extern void fn_802B735C(void);
-extern void fn_802B7298(void);
+extern int fn_802B7298(int obj, int p2);
 
 #pragma scheduling off
 #pragma peephole off
@@ -6539,6 +6543,67 @@ void fn_802967E0(int obj, int mode)
         *(u8 *)((char *)inner + 0x8b4) = 4;
         ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
     }
+}
+
+void lightfoot_free(int obj, int p2)
+{
+    int i;
+    int count;
+    int inner = *(int *)((char *)obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 3);
+    count = *(u8 *)((char *)obj + 0xeb);
+    for (i = 0; i < count; i++) {
+        void *child = *(void **)((char *)obj + 0xc8);
+        if (child != NULL) {
+            ObjLink_DetachChild(obj, child);
+            if (p2 == 0) {
+                Obj_FreeObject((int)child);
+            }
+        }
+    }
+    (*(void (*)(int, int, int))(*(int *)(*gBaddieControlInterface + 0x40)))(obj, inner, 0x20);
+}
+
+int fn_8029B6BC(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int r = fn_802AC7DC(obj, state, inner);
+    if (r != 0) {
+        return r;
+    }
+    if (*(s16 *)((char *)obj + 0xa0) != 0x449) {
+        u8 c;
+        ObjAnim_SetCurrentMove(obj, 0x449, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F4C;
+        Sfx_PlayFromObject(obj, 0x40b);
+        c = *(u8 *)((char *)inner + 0x8c8);
+        if (c != 0x42 && c != 0x4c) {
+            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x42, 0, 1, 0, 0, 0x3c, 0xfe);
+        }
+    }
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return -1;
+    }
+    return 0;
+}
+
+int fn_802B7298(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(void **)((char *)p2 + 0x2d0) != NULL) {
+        if (*(u16 *)((char *)*(int *)((char *)inner + 0x40c) + 0x22) <
+            *(u16 *)((char *)inner + 0x3fe)) {
+            if (*(s8 *)((char *)p2 + 0x27b) != 0 || *(s8 *)((char *)p2 + 0x346) != 0 ||
+                *(s16 *)((char *)p2 + 0x274) == 0) {
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, p2, 4);
+            }
+        } else if (*(s8 *)((char *)p2 + 0x27b) != 0 || *(s8 *)((char *)p2 + 0x346) != 0) {
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, p2, 0);
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
