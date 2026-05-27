@@ -5619,6 +5619,8 @@ typedef struct {
 extern u8 lbl_803DE459;
 extern f32 lbl_803E7EA4;
 extern f32 lbl_803E7ED4;
+extern f32 lbl_803E7F08;
+extern void *lbl_803DE44C;
 
 #pragma scheduling off
 #pragma peephole off
@@ -6223,6 +6225,50 @@ int fn_802A2E8C(int obj, int p2)
     *(int *)((char *)p2 + 0) |= 0x200000;
     *(f32 *)((char *)obj + 0x24) = fz;
     *(f32 *)((char *)obj + 0x2c) = fz;
+    return 0;
+}
+
+int fn_802977A8(int obj, int state)
+{
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0xe, lbl_803E7EA4, 0);
+        *(s8 *)((char *)state + 0x346) = 0;
+    }
+    *(f32 *)((char *)state + 0x2a0) = lbl_803E7F08;
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        *(int *)((char *)state + 0x308) = 0;
+        return 0x41;
+    }
+    return 0;
+}
+
+int fn_8029D454(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(u8 *)((char *)state + 0x34d) = 3;
+    if (*(s8 *)((char *)*(int *)((char *)inner + 0x35c)) > 0) {
+        ObjAnim_SetCurrentMove(obj, 0xc8, lbl_803E7EA4, 0);
+        *(int *)((char *)state + 0x308) = 0;
+        return -0x21;
+    }
+    return 0;
+}
+
+int fn_8029B994(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    u32 b;
+    if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+        b = (*(u8 *)((char *)inner + 0x3f4) >> 6) & 1;
+        if (b != 0) {
+            if (lbl_803DE44C != NULL && b != 0) {
+                *(u8 *)((char *)inner + 0x8b4) = 4;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+            }
+            *(int *)((char *)state + 0x308) = 0;
+            return 0x32;
+        }
+    }
     return 0;
 }
 #pragma peephole reset
