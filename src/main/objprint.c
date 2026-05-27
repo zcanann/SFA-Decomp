@@ -3784,5 +3784,56 @@ void objModelAndSoundFn_80039118(int obj, int p2)
         *(f32*)((char*)p2 + 8) = *(f32*)((char*)p2 + 8) + *(f32*)((char*)p2 + 0xc);
     }
 }
+
+extern void fn_80039B54(int obj, int p2, f32 val);
+extern f32 lbl_803DE9E4;
+
+void fn_8003A230(int obj, int p2, f32 val)
+{
+    s16* found;
+    int* table;
+    int i;
+    int j;
+    int k;
+    int n;
+    int flag;
+
+    found = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        i = 0;
+        j = 0;
+        n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+        for (k = 0; k < n; k++) {
+            u8* data = *(u8**)((char*)table + 0x10);
+            s32 di = *(s8*)(obj + 0xad) + i + 1;
+            if (data[di] != 0xff && data[i] == 0) {
+                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+            }
+            i = i + *(s8*)((char*)table + 0x55) + 1;
+            j += 0x12;
+        }
+    }
+    if (found != NULL) {
+        if (found[0] != 0) {
+            found[0] = (s16)(found[0] * 3 / 4);
+        }
+        if (val < lbl_803DE9A4) {
+            val = -val;
+        }
+        if (val <= lbl_803DE9E4) {
+            fn_80039DF8(obj, p2, val);
+        } else {
+            fn_80039B54(obj, p2, val);
+        }
+        *(s16*)((char*)p2 + 0x1a) = (s16)(u8)*(s16*)((char*)p2 + 0x1a);
+        if (val > lbl_803DE9E4) {
+            flag = 1;
+        } else {
+            flag = 0;
+        }
+        *(s16*)((char*)p2 + 0x1a) = (s16)(*(s16*)((char*)p2 + 0x1a) | (flag << 8));
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
