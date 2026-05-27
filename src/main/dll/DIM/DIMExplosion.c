@@ -756,3 +756,71 @@ void dimsnowball1c2_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void objMove(int *obj, f32 x, f32 y, f32 z);
+extern void ObjHits_SetHitVolumeSlot(int *obj, int a, int b, int c);
+extern void ObjHitbox_SetSphereRadius(int *obj, int radius);
+extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern void Obj_FreeObject(int *obj);
+extern f32 timeDelta;
+extern f32 lbl_803E48A0;
+extern f32 lbl_803E48A4;
+extern f32 lbl_803E48A8;
+extern f32 lbl_803DBEF0;
+
+/* fn_801B1D84: integrate the falling debris under gravity, spin it, and on
+ * contact (or scripted trigger) fire the explosion and start the despawn timer. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801B1D84(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    switch (*(u8 *)((char *)extra + 8)) {
+    case 0: {
+        f32 oldvy = *(f32 *)((char *)obj + 0x28);
+        int *hb;
+        *(f32 *)((char *)obj + 0x28) = lbl_803E48A4 * -lbl_803DBEF0 * timeDelta + oldvy;
+        objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
+                lbl_803E48A8 * (oldvy + *(f32 *)((char *)obj + 0x28)) * timeDelta,
+                *(f32 *)((char *)obj + 0x2c) * timeDelta);
+        *(s16 *)((char *)obj + 4) = *(s16 *)((char *)obj + 4) + *(s8 *)((char *)extra + 9) * 10;
+        *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + *(s8 *)((char *)extra + 0xa) * 10;
+        *(s16 *)obj = *(s16 *)obj + *(s8 *)((char *)extra + 0xb) * 10;
+        hb = *(int **)((char *)obj + 0x54);
+        if (hb != NULL) {
+            int *vol;
+            ObjHits_SetHitVolumeSlot(obj, 5, *(s8 *)((char *)extra + 6), 0);
+            vol = *(int **)((char *)hb + 0x50);
+            if (vol != NULL && vol != *(int **)extra) {
+                ObjHitbox_SetSphereRadius(obj, *(s8 *)((char *)extra + 5));
+                spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
+                *(int *)((char *)obj + 0xf4) = 1180;
+                *(s8 *)((char *)extra + 8) = 1;
+                *(s16 *)((char *)obj + 6) |= 0x4000;
+            }
+        }
+        if ((GameBit_Get(2142) != 0 && GameBit_Get(3117) == 0) ||
+            (GameBit_Get(2164) != 0 && GameBit_Get(3118) == 0)) {
+            *(int *)((char *)obj + 0xf4) = 1200;
+        }
+        if (*(s8 *)((char *)*(int **)((char *)obj + 0x54) + 0xad) != 0) {
+            ObjHitbox_SetSphereRadius(obj, *(s8 *)((char *)extra + 5));
+            spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
+            *(int *)((char *)obj + 0xf4) = 1180;
+            *(s8 *)((char *)extra + 8) = 1;
+            *(s16 *)((char *)obj + 6) |= 0x4000;
+        }
+        break;
+    }
+    case 1:
+        break;
+    }
+    *(int *)((char *)obj + 0xf4) = *(int *)((char *)obj + 0xf4) + framesThisStep;
+    if (*(int *)((char *)obj + 0xf4) > 1200) {
+        Obj_FreeObject(obj);
+    } else if (*(u8 *)((char *)extra + 7) != 0) {
+        *(s8 *)((char *)extra + 7) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
