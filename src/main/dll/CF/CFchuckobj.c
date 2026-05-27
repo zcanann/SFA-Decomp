@@ -39,6 +39,7 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
+extern int* gRomCurveInterface;
 extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803ddb38;
 extern u8 framesThisStep;
@@ -76,6 +77,9 @@ extern f32 FLOAT_803e4b78;
 extern f32 lbl_803E3E50;
 extern f32 lbl_803E3E6C;
 extern f32 lbl_803E3E70;
+extern f32 lbl_803E3E80;
+extern f32 lbl_803E3E84;
+extern f32 lbl_803E3E88;
 
 /*
  * --INFO--
@@ -1203,6 +1207,41 @@ void areafxemit_init(int obj, int setup)
     if (*(s16*)(state + 0x10) != -1 && GameBit_Get(*(s16*)(state + 0x10)) != 0) {
         *(s16*)(state + 0x12) = 1;
     }
+}
+
+void lfxemitter_init(int obj, int setup)
+{
+    int state;
+    int curveFlags;
+
+    state = *(int*)(obj + 0xb8);
+    curveFlags = 0x21;
+    *(f32*)(obj + 8) = lbl_803E3E80 * *(f32*)(*(int*)(obj + 0x50) + 4);
+
+    *(s16*)(state + 0x112) = *(s16*)(setup + 0x1e);
+    *(s16*)(state + 0x110) = *(s16*)(setup + 0x20);
+    *(s16*)(state + 0x114) = -2;
+    *(s16*)(state + 0x116) = *(s16*)(setup + 0x22);
+    *(s16*)(state + 0x118) = *(s16*)(setup + 0x18);
+    *(s16*)(state + 0x11a) = *(s16*)(setup + 0x1a);
+    *(s16*)(state + 0x11c) = *(s16*)(setup + 0x1c);
+    *(f32*)(obj + 0xc) = *(f32*)(setup + 8);
+    *(f32*)(obj + 0x10) = *(f32*)(setup + 0xc);
+    *(f32*)(obj + 0x14) = *(f32*)(setup + 0x10);
+
+    if (*(s16*)(state + 0x110) != 0) {
+        *(u8*)(state + 0x11e) = 1;
+    } else {
+        *(u8*)(state + 0x11e) = 0;
+    }
+
+    if (*(u8*)(setup + 0x24) != 0) {
+        *(u8*)(state + 0x120) = *(u8*)(state + 0x120) | 1;
+        *(f32*)(state + 0x10c) = (f32)*(s8*)(setup + 0x25) / lbl_803E3E84;
+        (*(void (**)(int, int, f32, int*, int))(*(int*)(*gRomCurveInterface) + 0x8c))(
+            state, obj, lbl_803E3E88, &curveFlags, -1);
+    }
+    ObjGroup_AddObject(obj, 0x1c);
 }
 
 int lfxemitter_setScale(void) { return -1; }

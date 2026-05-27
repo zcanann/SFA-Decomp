@@ -44,7 +44,7 @@ void lfxemitter_free(int* obj);
 void lfxemitter_render(void);
 void lfxemitter_hitDetect(void);
 void lfxemitter_update(void);
-void lfxemitter_init(void);
+void lfxemitter_init(int obj, int setup);
 void lfxemitter_release(void);
 void lfxemitter_initialise(void);
 
