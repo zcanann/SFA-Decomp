@@ -1147,3 +1147,16 @@ int fn_801BA880(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801BA5A8(int obj, int param2)
+{
+    if (*(s8 *)(param2 + 0x346) != 0) {
+        (*(int (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, param2, 0);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
