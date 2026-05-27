@@ -1597,3 +1597,41 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* fn_801AD7E4: snapshot the map-event sub-object's transform into the boulder
+ * extra block, optionally re-issuing a move on the sub-object first. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801AD7E4(void *a, void *b, int c, int d, int e, int f, int g, int h, int i)
+{
+    if (i != 0 && (s8)g != 0 && h > 0) {
+        u8 saved = *(u8 *)((char *)b + 0x37);
+        *(u8 *)((char *)b + 0x37) = h;
+        (*(void (**)(void *, int, int, int, int, int))(**(int **)((char *)b + 0x68) + 0x10))(b, c, d, e, f, -1);
+        *(u8 *)((char *)b + 0x37) = saved;
+    }
+    *(f32 *)((char *)a + 0x8c) = *(f32 *)((char *)a + 0x18);
+    *(f32 *)((char *)a + 0x90) = *(f32 *)((char *)a + 0x1c);
+    *(f32 *)((char *)a + 0x94) = *(f32 *)((char *)a + 0x20);
+    *(f32 *)((char *)a + 0x80) = *(f32 *)((char *)a + 0xc);
+    *(f32 *)((char *)a + 0x84) = *(f32 *)((char *)a + 0x10);
+    *(f32 *)((char *)a + 0x88) = *(f32 *)((char *)a + 0x14);
+    {
+        f32 x, y, z;
+        (*(void (**)(void *, f32 *, f32 *, f32 *))(**(int **)((char *)b + 0x68) + 0x28))(b, &x, &y, &z);
+        *(f32 *)((char *)a + 0xc) = x;
+        *(f32 *)((char *)a + 0x10) = y;
+        *(f32 *)((char *)a + 0x14) = z;
+    }
+    *(s16 *)((char *)a + 0) = *(s16 *)((char *)b + 0);
+    *(s16 *)((char *)a + 2) = *(s16 *)((char *)b + 2);
+    *(s16 *)((char *)a + 4) = *(s16 *)((char *)b + 4);
+    *(f32 *)((char *)a + 0x18) = *(f32 *)((char *)a + 0xc);
+    *(f32 *)((char *)a + 0x1c) = *(f32 *)((char *)a + 0x10);
+    *(f32 *)((char *)a + 0x20) = *(f32 *)((char *)a + 0x14);
+    *(f32 *)((char *)a + 0x24) = *(f32 *)((char *)b + 0x24);
+    *(f32 *)((char *)a + 0x28) = *(f32 *)((char *)b + 0x28);
+    *(f32 *)((char *)a + 0x2c) = *(f32 *)((char *)b + 0x2c);
+}
+#pragma peephole reset
+#pragma scheduling reset
