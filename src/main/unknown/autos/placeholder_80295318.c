@@ -6341,6 +6341,12 @@ extern f32 lbl_803E8204;
 extern f32 lbl_803E8208;
 extern f32 lbl_803E827C;
 extern s16 lbl_803DC748;
+extern f32 lbl_803E813C;
+extern s8 padGetStickX(int channel);
+extern s8 padGetStickY(int channel);
+extern u16 getButtonsHeld(int channel);
+extern u16 getButtonsJustPressed(int channel);
+extern u16 getButtonsJustPressedIfNotBusy(int channel);
 
 #pragma scheduling off
 #pragma peephole off
@@ -7284,6 +7290,104 @@ int fn_802BA938(int obj, int state, f32 fv)
         buttonDisable(0, 0x100);
     }
     return 0;
+}
+
+#pragma dont_inline on
+void fn_802B18BC(int obj, int state, f32 fv)
+{
+    f32 v;
+
+    if ((*(u16 *)((char *)state + 0x6e0) & 0x100) && fn_802A9A0C(obj, state)) {
+        ((ByteFlags *)((char *)state + 0x3f4))->b20 = 1;
+        *(f32 *)((char *)state + 0x414) += fv;
+        v = *(f32 *)((char *)state + 0x414);
+        if (v < lbl_803E7EA4) {
+            v = lbl_803E7EA4;
+        } else if (v > lbl_803E813C) {
+            v = lbl_803E813C;
+        }
+        *(f32 *)((char *)state + 0x414) = v;
+    } else {
+        ((ByteFlags *)((char *)state + 0x3f4))->b20 = 0;
+        *(f32 *)((char *)state + 0x414) = lbl_803E7EA4;
+    }
+
+    *(f32 *)((char *)state + 0x410) -= fv;
+    if (*(f32 *)((char *)state + 0x410) < lbl_803E7EA4) {
+        *(f32 *)((char *)state + 0x410) = lbl_803E7EA4;
+    }
+    *(f32 *)((char *)state + 0x878) -= fv;
+    if (*(f32 *)((char *)state + 0x878) < lbl_803E7EA4) {
+        *(f32 *)((char *)state + 0x878) = lbl_803E7EA4;
+    }
+    *(f32 *)((char *)state + 0x87c) -= fv;
+    if (*(f32 *)((char *)state + 0x87c) < lbl_803E7EA4) {
+        *(f32 *)((char *)state + 0x87c) = lbl_803E7EA4;
+    }
+    *(f32 *)((char *)state + 0x880) -= fv;
+    if (*(f32 *)((char *)state + 0x880) < lbl_803E7EA4) {
+        *(f32 *)((char *)state + 0x880) = lbl_803E7EA4;
+    }
+}
+#pragma dont_inline reset
+
+void fn_802B19F8(int obj, int state, f32 fv)
+{
+    u8 c;
+
+    *(int *)((char *)state + 0x6d0) = 0;
+    *(int *)((char *)state + 0x6d4) = 0;
+    *(u16 *)((char *)state + 0x6e0) = 0;
+    *(u16 *)((char *)state + 0x6e2) = 0;
+    *(u16 *)((char *)state + 0x6e4) = 0;
+    if ((*(int *)((char *)state + 0x360) & 0x200000) == 0 &&
+        *(s16 *)((char *)state + 0x81a) != -1 &&
+        (c = *(u8 *)((char *)state + 0x8c8)) != 0x44 && c != 0x4e) {
+        *(int *)((char *)state + 0x6d0) = padGetStickX(0);
+        *(int *)((char *)state + 0x6d4) = padGetStickY(0);
+        *(u16 *)((char *)state + 0x6e0) = getButtonsHeld(0);
+        *(u16 *)((char *)state + 0x6e2) = getButtonsJustPressed(0);
+        *(u16 *)((char *)state + 0x6e4) = getButtonsJustPressedIfNotBusy(0);
+    }
+    *(f32 *)((char *)state + 0x6dc) = (f32)*(int *)((char *)state + 0x6d0);
+    *(f32 *)((char *)state + 0x6d8) = (f32)*(int *)((char *)state + 0x6d4);
+    fn_802B18BC(obj, state, fv);
+}
+
+void fn_8029A4A8(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    s16 sel = *(s16 *)((char *)p2 + 0x274);
+    void **p;
+    int i;
+
+    if (sel == 0x2a || sel == 0x2e || sel == 0x2f || sel == 0x2c) return;
+
+    *(int *)((char *)inner + 0x360) |= 0x800000;
+    *(s16 *)((char *)inner + 0x80a) = -1;
+    *(int *)((char *)inner + 0x360) &= ~0x2000400;
+
+    if (*(s16 *)((char *)p2 + 0x274) != 0x2b) {
+        if (*(u8 *)((char *)inner + 0x8c8) != 0x42 && getCurSeqNo() == 0) {
+            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x42, 0, 1, 0, 0, 0x3c, 0xfe);
+        }
+        ((ByteFlags *)((char *)inner + 0x3f6))->b40 = 0;
+    }
+
+    lbl_803DE42C = 0;
+    p = lbl_80332ED4;
+    for (i = 0; i < 7; i++) {
+        if (*p != NULL) {
+            Obj_FreeObject((int)*p);
+            *p = NULL;
+        }
+        p++;
+    }
+    if (lbl_803DE454 != NULL) {
+        Resource_Release(lbl_803DE454);
+        lbl_803DE454 = NULL;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
