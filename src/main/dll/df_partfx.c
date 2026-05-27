@@ -2032,5 +2032,51 @@ void fn_800D82A8(int *p, int *ctx, f32 t) {
     objMove(p, *(f32 *)((char *)p + 0x24) * t, *(f32 *)((char *)p + 0x28) * t,
             *(f32 *)((char *)p + 0x2c) * t);
 }
+extern float sqrtf(float x);
+extern f32 lbl_803E0578;
+extern f32 lbl_803E0590;
+extern f32 lbl_803E0594;
+extern s16 lbl_803DD44C;
+#pragma scheduling off
+#pragma peephole off
+void fn_800D8414(int *obj, int *ctx) {
+    int diff;
+    *(f32 *)((char *)ctx + 0x29c) = *(f32 *)((char *)ctx + 0x298);
+    *(f32 *)((char *)ctx + 0x298) =
+        sqrtf(*(f32 *)((char *)ctx + 0x290) * *(f32 *)((char *)ctx + 0x290) +
+              *(f32 *)((char *)ctx + 0x28c) * *(f32 *)((char *)ctx + 0x28c));
+    if (*(f32 *)((char *)ctx + 0x298) > lbl_803E0578) {
+        *(f32 *)((char *)ctx + 0x298) = lbl_803E0578;
+    }
+    *(f32 *)((char *)ctx + 0x298) = *(f32 *)((char *)ctx + 0x298) / lbl_803E0578;
+    lbl_803DD44C = (s16)getAngle(*(f32 *)((char *)ctx + 0x290), -*(f32 *)((char *)ctx + 0x28c));
+    lbl_803DD44C = (s16)(lbl_803DD44C - *(s16 *)((char *)ctx + 0x330));
+    diff = lbl_803DD44C - (u16)*(s16 *)((char *)obj + 0);
+    if (diff > 0x8000) {
+        diff -= 0xffff;
+    }
+    if (diff < -0x8000) {
+        diff += 0xffff;
+    }
+    *(s16 *)((char *)ctx + 0x336) = (s16)(int)((f32)diff / lbl_803E0590);
+    if (diff < 0) {
+        *(s16 *)((char *)ctx + 0x334) = -*(s16 *)((char *)ctx + 0x336);
+    } else {
+        *(s16 *)((char *)ctx + 0x334) = *(s16 *)((char *)ctx + 0x336);
+    }
+    diff += 0x10000;
+    if (*(f32 *)((char *)ctx + 0x298) < lbl_803E0594) {
+        *(u8 *)((char *)ctx + 0x34b) = 0;
+    } else {
+        diff -= 0x6000;
+        if (diff < 0) {
+            diff += 0xffff;
+        }
+        if (diff > 0xffff) {
+            diff -= 0xffff;
+        }
+        *(u8 *)((char *)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset
