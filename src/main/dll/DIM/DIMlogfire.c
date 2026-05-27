@@ -1065,3 +1065,39 @@ int MoonSeedPlantingSpot_setScale(int *obj, int arg) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E45D8;
+extern f32 lbl_803E45DC;
+extern f32 lbl_803E45E0;
+extern f32 lbl_803E45E4;
+extern f32 fn_80293E80(f32 x);
+extern void fn_8003B608(int r, int g, int b);
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
+    u8 *inner = *(u8 **)(p1 + 0xb8);
+    s32 v = visible;
+    if (v != 0) {
+        if (inner[0] == 2) {
+            if ((inner[1] & 2) != 0) {
+                f32 s;
+                int iv;
+                *(s16 *)(inner + 0xc) += 0x1000;
+                s = fn_80293E80(lbl_803E45E0 * (f32)*(s16 *)(inner + 0xc) / lbl_803E45E4);
+                iv = (int)(lbl_803E45D8 * (lbl_803E45DC + s));
+                fn_8003B608((u8)(iv + 0x7f), 0xff, 0xff);
+            }
+        } else if (inner[0] == 3) {
+            if (*(s16 *)(inner + 0xc) < 0x7d00) {
+                *(s16 *)(inner + 0xc) += 0xff;
+            }
+            fn_8003B608((s16)(*(s16 *)(inner + 0xc) >> 7), 0xff, 0xff);
+        } else {
+            fn_8003B608(0xff, 0xff, 0xff);
+        }
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E45DC);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
