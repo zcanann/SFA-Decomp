@@ -2078,5 +2078,42 @@ void fn_800D8414(int *obj, int *ctx) {
         *(u8 *)((char *)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
     }
 }
+extern f32 lbl_803E0574;
+extern f32 lbl_803E057C;
+#pragma scheduling off
+#pragma peephole off
+void player_getExtraSize(int *a, int *ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd) {
+    f32 dx;
+    f32 dz;
+    f32 mag;
+    dx = *(f32 *)((char *)a + 0xc) - px;
+    dz = *(f32 *)((char *)a + 0x14) - pz;
+    mag = sqrtf(dx * dx + dz * dz);
+    *(f32 *)((char *)ctx + 0x2bc) = mag;
+    if (lbl_803E0570 != mag) {
+        dx = dx / mag;
+        dz = dz / mag;
+    }
+    if (*(f32 *)((char *)ctx + 0x2bc) > lo + hi) {
+        *(f32 *)((char *)ctx + 0x290) = dx * spd;
+        *(f32 *)((char *)ctx + 0x28c) = -dz * spd;
+    } else {
+        *(f32 *)((char *)ctx + 0x294) = *(f32 *)((char *)ctx + 0x294) * lbl_803E0574;
+        *(f32 *)((char *)ctx + 0x290) = lbl_803E0570;
+        *(f32 *)((char *)ctx + 0x28c) = lbl_803E0570;
+    }
+    if (*(f32 *)((char *)ctx + 0x290) > lbl_803E0578) {
+        *(f32 *)((char *)ctx + 0x290) = lbl_803E0578;
+    }
+    if (*(f32 *)((char *)ctx + 0x290) < lbl_803E057C) {
+        *(f32 *)((char *)ctx + 0x290) = lbl_803E057C;
+    }
+    if (*(f32 *)((char *)ctx + 0x28c) > lbl_803E0578) {
+        *(f32 *)((char *)ctx + 0x28c) = lbl_803E0578;
+    }
+    if (*(f32 *)((char *)ctx + 0x28c) < lbl_803E057C) {
+        *(f32 *)((char *)ctx + 0x28c) = lbl_803E057C;
+    }
+}
 #pragma scheduling reset
 #pragma peephole reset
