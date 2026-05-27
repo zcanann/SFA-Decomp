@@ -1416,3 +1416,108 @@ int fn_801AD440(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void getEnvfxAct(int *obj, int *target, int id, int p);
+extern void fn_801AC108(int *obj, int *extra);
+extern int *gCloudActionInterface;
+extern void warpToMap(int mapId, int flags);
+
+#define MEVT_TRIGGER(a, b, c) ((void (*)(int, int, int))((int *)*gMapEventInterface)[0x50 / 4])((a), (b), (c))
+#define MEVT_SET(a, b)        ((void (*)(int, int))((int *)*gMapEventInterface)[0x44 / 4])((a), (b))
+
+/* EN v1.0 0x801AC248  fn_801AC248: 8-state ice-mountain event machine dispatched
+ * through jumptable_80323698 (states 1..7; state 0 idles). */
+#pragma scheduling off
+#pragma peephole off
+void fn_801AC248(int *obj)
+{
+    int *extra = *(int **)((char *)obj + 0xb8);
+    switch (*(u8 *)extra) {
+    case 7:
+        if (GameBit_Get(0x6e) != 0) {
+            *(u8 *)extra = 1;
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 2, 0);
+        }
+        break;
+    case 1:
+        if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0) {
+            GameBit_Set(0xade, 1);
+            *(u8 *)extra = 2;
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 11, 1);
+        } else if (GameBit_Get(0x70) != 0) {
+            *(u8 *)extra = 2;
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 11, 1);
+        }
+        break;
+    case 2:
+        if (GameBit_Get(0x70) != 0) {
+            *(u8 *)extra = 3;
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 6, 1);
+        }
+        break;
+    case 3:
+        if (GameBit_Get(0x72) != 0) {
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 0, 0);
+        }
+        if (GameBit_Get(0x3a2) != 0) {
+            *(u8 *)extra = 4;
+            GameBit_Set(0xe5d, 1);
+            GameBit_Set(0xe5e, 1);
+            GameBit_Set(0xe5f, 1);
+            GameBit_Set(0xe60, 1);
+            GameBit_Set(0xe61, 1);
+            GameBit_Set(0xe62, 1);
+            GameBit_Set(0xe63, 1);
+            GameBit_Set(0xe64, 1);
+            GameBit_Set(0xe65, 1);
+            GameBit_Set(0xe66, 1);
+            GameBit_Set(0xe67, 1);
+            GameBit_Set(0xe68, 1);
+            GameBit_Set(0xe69, 1);
+            GameBit_Set(0xe6a, 1);
+            GameBit_Set(0xe6b, 1);
+        }
+        if (*(int *)((char *)obj + 0xf4) == 0) {
+            getEnvfxAct(obj, obj, 0xa3, 0);
+            getEnvfxAct(obj, obj, 0x9e, 0);
+            getEnvfxAct(obj, obj, 0x119, 0);
+            getLActions(obj, obj, 0x15b, 0, 0, 0);
+            getLActions(obj, obj, 0x15c, 0, 0, 0);
+            getLActions(obj, obj, 0x17c, 0, 0, 0);
+            getLActions(obj, obj, 0x17b, 0, 0, 0);
+            ((void (*)(int))((int *)*gCloudActionInterface)[0x1c / 4])(1);
+            *(int *)((char *)obj + 0xf4) = 1;
+        }
+        break;
+    case 4:
+        fn_801AC108(obj, extra);
+        break;
+    case 5:
+        if ((extra[1] & 1) != 0) {
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 3, 0);
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 4, 0);
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 6, 0);
+            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 7, 0);
+            *(u8 *)extra = 0;
+            MEVT_SET(*(s8 *)((char *)obj + 0xac), 2);
+        }
+        break;
+    case 6:
+        if ((extra[1] & 1) != 0) {
+            *(s8 *)((char *)extra + 8) = 2;
+        }
+        if (*(s8 *)((char *)extra + 8) > 0) {
+            s8 cnt = *(s8 *)((char *)extra + 8) - 1;
+            *(s8 *)((char *)extra + 8) = cnt;
+            if (cnt == 0) {
+                GameBit_Set(0x4e5, 0);
+                warpToMap(0x1a, 0);
+            }
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+#undef MEVT_TRIGGER
+#undef MEVT_SET
