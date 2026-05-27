@@ -11,7 +11,10 @@ extern undefined4 GameBit_Set(int eventId,int value);
 extern undefined4 FUN_80017710();
 extern double FUN_80017714();
 extern undefined4 FUN_80017748();
+extern void mathFn_80021ac8(s16* in, f32* out);
 extern u32 randomGetRange(int min, int max);
+extern void* Resource_Acquire(int id, int flags);
+extern void Resource_Release(void* handle);
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern int FUN_80017a98();
@@ -44,6 +47,7 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
+extern int* gPartfxInterface;
 extern int* gObjectTriggerInterface;
 extern int* gRomCurveInterface;
 extern undefined4 DAT_803dda60;
@@ -84,6 +88,7 @@ extern f32 FLOAT_803e4b64;
 extern f32 FLOAT_803e4b68;
 extern f32 FLOAT_803e4b78;
 extern f32 lbl_803E3E50;
+extern f32 lbl_803E3E68;
 extern f32 lbl_803E3E6C;
 extern f32 lbl_803E3E70;
 extern f32 lbl_803E3E78;
@@ -1122,7 +1127,135 @@ extern void mm_free(void* p);
 #pragma scheduling off
 #pragma peephole off
 
-extern void fn_8018F2D8(int* obj);
+typedef struct CFEmitterFxArgs {
+    u32 unk0;
+    u32 unk4;
+    f32 scale;
+    f32 pos[3];
+} CFEmitterFxArgs;
+
+#define CF_EMITTER_RANDOMIZE_OFFSET(state, pos)               \
+    do {                                                      \
+        u16 range;                                            \
+        range = *(u16*)((state) + 0x14);                      \
+        (pos)[0] = (f32)(s32)randomGetRange(-range, range);   \
+        range = *(u16*)((state) + 0x18);                      \
+        (pos)[1] = (f32)(s32)randomGetRange(-range, range);   \
+        range = *(u16*)((state) + 0x16);                      \
+        (pos)[2] = (f32)(s32)randomGetRange(-range, range);   \
+    } while (0)
+
+#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6) \
+    (*(void (**)(int, int, void*, int, int, int))(*(int*)(*gPartfxInterface) + 8))( \
+        (obj), (effectId), (args), (flags), (modelId), (arg6))
+
+#define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args)            \
+    do {                                                          \
+        s16 rot[3];                                               \
+        rot[0] = *(s16*)((state) + 0x1a);                         \
+        rot[1] = *(s16*)((state) + 0x1c);                         \
+        rot[2] = *(s16*)((state) + 0x1e);                         \
+        if (*(int*)((obj) + 0x30) != 0) {                         \
+            rot[2] += *(s16*)(*(int*)((obj) + 0x30) + 4);         \
+        }                                                         \
+        mathFn_80021ac8(rot, (args)->pos);                        \
+    } while (0)
+
+#define CF_EMITTER_ADD_OBJECT_POSITION(obj, args)                 \
+    do {                                                          \
+        (args)->pos[0] += *(f32*)((obj) + 0xc);                   \
+        (args)->pos[1] += *(f32*)((obj) + 0x10);                  \
+        (args)->pos[2] += *(f32*)((obj) + 0x14);                  \
+    } while (0)
+
+void fn_8018F2D8(int* obj)
+{
+    int object;
+    int state;
+    int count;
+    s16 i;
+    u8 type;
+    void* resource;
+    CFEmitterFxArgs args;
+
+    object = (int)obj;
+    state = *(int*)(object + 0xb8);
+    args.scale = lbl_803E3E68;
+    type = *(u8*)(state + 8);
+    count = *(s16*)(state + 0xc);
+
+    if (type == 0) {
+        if (count > 0) {
+            for (i = 0; i < count; i++) {
+                CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
+                CF_EMITTER_ROTATE_FROM_LOCAL(object, state, &args);
+                CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
+                CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);
+            }
+        } else {
+            CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
+            CF_EMITTER_ROTATE_FROM_LOCAL(object, state, &args);
+            CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
+            CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);
+        }
+    } else if (type == 1) {
+        resource = Resource_Acquire((u16)(*(u16*)(state + 0xa) + 0x58), 1);
+        if (count > 0) {
+            for (i = 0; i < count; i++) {
+                (*(void (**)(int*, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
+            }
+        } else {
+            (*(void (**)(int*, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
+        }
+        Resource_Release(resource);
+    } else if (type == 2) {
+        resource = Resource_Acquire((u16)(*(u16*)(state + 0xa) + 0xab), 1);
+        if (count > 0) {
+            for (i = 0; i < count; i++) {
+                (*(void (**)(int*, int, int, int, int, int, int))(*(int*)resource + 4))(
+                    obj, 0, 0, 1, -1, *(u16*)(state + 0xa) & 0xff, 0);
+            }
+        } else {
+            (*(void (**)(int*, int, int, int, int, int, int))(*(int*)resource + 4))(
+                obj, 0, 0, 1, -1, *(u16*)(state + 0xa) & 0xff, 0);
+        }
+        Resource_Release(resource);
+    } else if (type == 3) {
+        if (count > 0) {
+            for (i = 0; i < count; i++) {
+                CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
+                CF_EMITTER_ROTATE_FROM_LOCAL(object, state, &args);
+                CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 2, -1, 0);
+            }
+        } else {
+            CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
+            CF_EMITTER_ROTATE_FROM_LOCAL(object, state, &args);
+            CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 2, -1, 0);
+        }
+    } else if (type > 5) {
+        if (count > 0) {
+            for (i = 0; i < count; i++) {
+                CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
+                mathFn_80021ac8((s16*)(state + 0x1a), args.pos);
+                if (*(u8*)(state + 8) == 6) {
+                    CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
+                    CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);
+                } else {
+                    CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 2, -1, 0);
+                }
+            }
+        } else {
+            CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
+            mathFn_80021ac8((s16*)(state + 0x1a), args.pos);
+            if (*(u8*)(state + 8) == 6) {
+                CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
+                CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);
+            } else {
+                CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 2, -1, 0);
+            }
+        }
+    }
+}
 
 int fn_8018FB84(int* obj, int p2, u8* state)
 {

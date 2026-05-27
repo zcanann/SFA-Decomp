@@ -19,6 +19,7 @@ void FUN_8018fd48(int param_1);
 void FUN_8018fec4(undefined2 *param_1,int param_2);
 void FUN_8018fec8(undefined2 *param_1,undefined2 *param_2);
 void FUN_8018ffbc(int param_1);
+void fn_8018F2D8(int* obj);
 void fn_8018FF48(undefined2* src, undefined2* dst);
 void FUN_80190004(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
