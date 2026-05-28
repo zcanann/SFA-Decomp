@@ -763,6 +763,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_800944A0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801175B4.c"),
             Object(NonMatching, "main/dll/WM/dll_020B_firefly.c"),
+            Object(NonMatching, "main/dll/WM/dll_020C_wmspiritplace.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801F5184.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80209FE0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026FD1C.c"),
