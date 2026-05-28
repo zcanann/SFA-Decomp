@@ -6713,6 +6713,130 @@ int fn_802A3B04(int obj, int state)
     return 0;
 }
 
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup();
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern f32 Camera_GetFovY(void);
+extern f32 Camera_GetAspectRatio(void);
+extern int getScreenResolution(void);
+extern int fn_8000E814(void);
+extern void Matrix_TransformVector(int m, f32 *src, f32 *dst);
+extern void setMatrixFromObjectPos(f32 *matrix, s16 *objpos);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern f32 sqrtf(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 lbl_803E7EE0;
+extern f32 lbl_803E80DC;
+extern f32 lbl_803E80D4;
+extern f32 lbl_803E7F94;
+extern f32 lbl_803E7F98;
+extern f32 lbl_803E7F5C;
+
+void fn_802AA4B0(int obj, int p2)
+{
+    int spawned = 0;
+    int inner = *(int *)((char *)obj + 0xb8);
+    int slot;
+    int setup;
+    f32 vec[3];
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 mtx[16];
+
+    slot = Camera_GetCurrentViewSlot();
+    if (Obj_IsLoadingLocked()) {
+        Sfx_PlayFromObject(obj, 0x20a);
+        setup = Obj_AllocObjectSetup(0x24, 0x14b);
+        *(u8 *)((char *)setup + 0x4) = 2;
+        *(u8 *)((char *)setup + 0x5) = 1;
+        *(u8 *)((char *)setup + 0x6) = 0xff;
+        *(u8 *)((char *)setup + 0x7) = 0xff;
+        if (*(void **)((char *)p2 + 0x2d0) != NULL) {
+            ObjPath_GetPointWorldPosition(lbl_803DE44C, 0, (f32 *)((char *)setup + 0x8),
+                                          (f32 *)((char *)setup + 0xc), (f32 *)((char *)setup + 0x10), 0);
+        } else {
+            *(f32 *)((char *)setup + 0x8) = *(f32 *)((char *)slot + 0xc);
+            *(f32 *)((char *)setup + 0xc) = *(f32 *)((char *)slot + 0x10);
+            *(f32 *)((char *)setup + 0x10) = *(f32 *)((char *)slot + 0x14);
+        }
+        *(s8 *)((char *)setup + 0x19) = (s8)(*(int (*)(void *))(
+            *(int *)((char *)*(int *)(*(int *)((char *)lbl_803DE44C + 0x68)) + 0x44)))(lbl_803DE44C);
+        if (*(void **)((char *)p2 + 0x2d0) == NULL) {
+            *(s16 *)((char *)setup + 0x1a) = 1;
+        }
+        setup = Obj_SetupObject(setup, 5, -1, -1, 0);
+        if (setup == 0) {
+            return;
+        }
+        *(s16 *)((char *)setup + 0x6) = *(s16 *)((char *)setup + 0x6) | 0x2000;
+        if (*(void **)((char *)p2 + 0x2d0) != NULL) {
+            int sp = *(int *)((char *)p2 + 0x2d0);
+            int pt = *(int *)((char *)sp + 0x74) + *(u8 *)((char *)sp + 0xe4) * 0x18;
+            f32 dx = *(f32 *)pt - *(f32 *)((char *)lbl_803DE44C + 0xc);
+            f32 dy = *(f32 *)((char *)pt + 4) - *(f32 *)((char *)lbl_803DE44C + 0x10);
+            f32 dz = *(f32 *)((char *)pt + 8) - *(f32 *)((char *)lbl_803DE44C + 0x14);
+            spawned = sp;
+            v.mat[1] = lbl_803E7EA4;
+            v.mat[2] = lbl_803E7EA4;
+            v.mat[3] = lbl_803E7EA4;
+            v.mat[0] = lbl_803E7EE0;
+            v.angles[0] = *(s16 *)((char *)inner + 0x478);
+            v.angles[1] = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
+            v.angles[2] = 0;
+            if (*(void **)((char *)obj + 0x30) != NULL) {
+                v.angles[0] = v.angles[0] + *(s16 *)(*(int *)((char *)obj + 0x30));
+            }
+            setMatrixFromObjectPos(mtx, v.angles);
+            Matrix_TransformPoint(mtx, lbl_803E7EA4, lbl_803E7EA4, lbl_803E80DC,
+                                  (f32 *)((char *)setup + 0x24), (f32 *)((char *)setup + 0x28),
+                                  (f32 *)((char *)setup + 0x2c));
+            *(f32 *)((char *)setup + 0x18) = *(f32 *)((char *)setup + 0xc);
+            *(f32 *)((char *)setup + 0x1c) = *(f32 *)((char *)setup + 0x10);
+            *(f32 *)((char *)setup + 0x20) = *(f32 *)((char *)setup + 0x14);
+            *(s16 *)((char *)setup + 0x0) = *(s16 *)((char *)inner + 0x478);
+            *(s16 *)((char *)setup + 0x2) = *(s16 *)((char *)slot + 0x2) / 2;
+        } else {
+            int res = getScreenResolution();
+            int half = res >> 17;
+            f32 fov;
+            f32 cot;
+            f32 fx;
+            f32 mag;
+            f32 k;
+            f32 m;
+            *(s16 *)((char *)setup + 0x0) = *(s16 *)((char *)slot + 0x0);
+            fov = lbl_803E7F94 * (Camera_GetFovY() * lbl_803E80D4) / lbl_803E7F98;
+            cot = lbl_803E7F5C * (fn_80293E80(fov) / sin(fov));
+            fx = cot * -((*(f32 *)((char *)inner + 0x788) - (f32)(int)((res & 0xffff) >> 1)) /
+                         (f32)(int)((res & 0xffff) >> 1) * Camera_GetAspectRatio());
+            cot = cot * ((*(f32 *)((char *)inner + 0x78c) - (f32)half) / (f32)half);
+            mag = sqrtf(lbl_803E80AC + (fx * fx + cot * cot));
+            vec[0] = fx / mag;
+            vec[1] = cot / mag;
+            vec[2] = lbl_803E7F5C / mag;
+            Matrix_TransformVector(fn_8000E814(), vec, vec);
+            m = lbl_803E80DC;
+            *(f32 *)((char *)setup + 0x24) = m * vec[0];
+            *(f32 *)((char *)setup + 0x28) = m * vec[1];
+            *(f32 *)((char *)setup + 0x2c) = m * vec[2];
+            k = lbl_803E7ED4;
+            *(f32 *)((char *)setup + 0x18) = *(f32 *)((char *)setup + 0xc) =
+                k * *(f32 *)((char *)setup + 0x24) + *(f32 *)((char *)slot + 0xc);
+            *(f32 *)((char *)setup + 0x1c) = *(f32 *)((char *)setup + 0x10) =
+                k * *(f32 *)((char *)setup + 0x28) + *(f32 *)((char *)slot + 0x10);
+            *(f32 *)((char *)setup + 0x20) = *(f32 *)((char *)setup + 0x14) =
+                k * *(f32 *)((char *)setup + 0x2c) + *(f32 *)((char *)slot + 0x14);
+            *(s16 *)((char *)setup + 0x2) = *(s16 *)((char *)slot + 0x2) / 2;
+            *(s16 *)((char *)setup + 0x0) = -*(s16 *)((char *)slot + 0x0);
+        }
+        *(int *)((char *)setup + 0xf4) = 0x5f;
+        *(int *)((char *)setup + 0xf8) = spawned;
+    }
+}
+
 int fn_802977A8(int obj, int state)
 {
     if (*(s8 *)((char *)state + 0x27a) != 0) {
