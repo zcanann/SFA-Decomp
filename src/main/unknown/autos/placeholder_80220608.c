@@ -6085,6 +6085,40 @@ void fn_8023A3E4(int p1, int p2)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern f32 lbl_803E6D50;
+
+#pragma scheduling off
+int fn_802242A8(int p1, int p2, int p3)
+{
+    f32 cy;
+    f32 cx;
+    int result;
+
+    if ((s8)*(u8 *)(p1 + 0xad) == 1) {
+        (*(void (**)(int, int, int, int))(*(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)) + 0x30))(
+            *(u8 *)(p2 + 0x283), p2 + 0x27e, p2 + 0x280,
+            *(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)));
+        (*(void (**)(int, int, int, f32 *, f32 *, int))(*(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)) + 0x20))(
+            p1, *(s16 *)(p2 + 0x27e), *(s16 *)(p2 + 0x280), &cy, &cx,
+            *(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)));
+    } else {
+        (*(void (**)(int, int, int, int))(*(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)) + 0x4c))(
+            *(u8 *)(p2 + 0x283), p2 + 0x27e, p2 + 0x280,
+            *(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)));
+        (*(void (**)(int, int, int, f32 *, f32 *, int))(*(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)) + 0x3c))(
+            p1, *(s16 *)(p2 + 0x27e), *(s16 *)(p2 + 0x280), &cy, &cx,
+            *(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)));
+    }
+    if (*(f32 *)(p3 + 0xc) > cy + lbl_803E6D50 || *(f32 *)(p3 + 0xc) < cy - lbl_803E6D50)
+        result = 1;
+    else if (*(f32 *)(p3 + 0x14) > cx + lbl_803E6D50 || *(f32 *)(p3 + 0x14) < cx - lbl_803E6D50)
+        result = 1;
+    else
+        result = 0;
+    return result;
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
