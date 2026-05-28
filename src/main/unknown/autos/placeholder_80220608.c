@@ -4323,3 +4323,139 @@ void dll_299_init(int obj, int setup)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern void PSVECAdd(int p1, int p2, int p3);
+typedef struct Vec12 { int a, b, c; } Vec12;
+
+#pragma scheduling off
+void fn_8022D460(int arwing, f32 val) { *(f32 *)(*(int *)(arwing + 0xb8) + 0x20) = val; }
+
+int fn_8022D46C(int arwing) { return (s16) * (int *)(*(int *)(arwing + 0xb8) + 0x358); }
+
+void fn_8022D47C(int arwing, int p2) { *(int *)(*(int *)(arwing + 0xb8) + 0x358) = (s16)p2; }
+
+void fn_8022D48C(int out, int arwing)
+{
+    *(Vec12 *)out = *(Vec12 *)(*(int *)(arwing + 0xb8) + 0x48);
+}
+
+void fn_8022D4AC(int arwing, int in)
+{
+    int state = *(int *)(arwing + 0xb8);
+    *(f32 *)(state + 0x48) = *(f32 *)(in + 0);
+    *(f32 *)(state + 0x4c) = *(f32 *)(in + 4);
+    *(f32 *)(state + 0x50) = *(f32 *)(in + 8);
+}
+
+void fn_8022D4CC(int arwing, int in)
+{
+    int v = *(int *)(arwing + 0xb8) + 0x48;
+    PSVECAdd(v, in, v);
+}
+
+void fn_8022D4F8(int arwing) { *(int *)(*(int *)(arwing + 0xb8) + 0x438) = 0; }
+
+int fn_8022D508(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x471); }
+
+int fn_8022D514(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x470); }
+
+void fn_8022D520(int arwing, u8 amount)
+{
+    int state = *(int *)(arwing + 0xb8);
+    *(u16 *)(state + 0x47c) = *(u16 *)(state + 0x47c) + amount;
+    if (*(u16 *)(state + 0x47c) > 0x270f) {
+        *(u16 *)(state + 0x47c) = 0x270f;
+    }
+}
+
+int fn_8022D550(int arwing)
+{
+    int state = *(int *)(arwing + 0xb8);
+    if (*(u16 *)(state + 0x47c) > 0x270f) {
+        *(u16 *)(state + 0x47c) = 0x270f;
+    }
+    return *(u16 *)(state + 0x47c);
+}
+
+int fn_8022D574(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x44c); }
+
+int fn_8022D580(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x469); }
+
+int fn_8022D590(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x468); }
+
+int fn_8022D5A0(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x475))++; }
+
+int fn_8022D5B4(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x474))++; }
+
+int fn_8022D5C8(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x473))++; }
+
+int fn_8022D5DC(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x472))++; }
+
+int fn_8022D5F0(int arwing)
+{
+    int state = *(int *)(arwing + 0xb8);
+    if (*(u8 *)(state + 0x470) == 9) {
+        *(u16 *)(state + 0x47c) = *(u16 *)(state + 0x47c) + 0x64;
+        if (*(u16 *)(state + 0x47c) > 0x270f) {
+            *(u16 *)(state + 0x47c) = 0x270f;
+        }
+    }
+    return (*(u8 *)(state + 0x470))++;
+}
+
+#pragma peephole off
+void fn_8022D634(int arwing, int p2)
+{
+    int state = *(int *)(arwing + 0xb8);
+    *(s8 *)(state + 0x469) = *(u8 *)(state + 0x469) + p2;
+}
+#pragma peephole on
+
+void fn_8022D64C(int arwing, int p2)
+{
+    int state = *(int *)(arwing + 0xb8);
+    s8 v;
+
+    *(s8 *)(state + 0x468) = *(u8 *)(state + 0x468) + p2;
+    v = *(s8 *)(state + 0x468);
+    if (v < 0) {
+        v = 0;
+    } else if (v > *(s8 *)(state + 0x469)) {
+        v = *(s8 *)(state + 0x469);
+    }
+    *(s8 *)(state + 0x468) = v;
+    if (*(s8 *)(state + 0x468) > 3) {
+        Sfx_StopObjectChannel(arwing, 4);
+    }
+}
+
+void fn_8022D6D0(int arwing)
+{
+    int state = *(int *)(arwing + 0xb8);
+    if (*(u8 *)(state + 0x44c) < *(u8 *)(state + 0x44d)) {
+        (*(u8 *)(state + 0x44c))++;
+    }
+}
+
+void fn_8022D6F0(int arwing)
+{
+    int state = *(int *)(arwing + 0xb8);
+    if ((s8) * (u8 *)(state + 0x404) < 2) {
+        (*(u8 *)(state + 0x404))++;
+    }
+}
+
+int fn_8022D710(int arwing)
+{
+    int result = 0;
+    int v = *(u8 *)(*(int *)(arwing + 0xb8) + 0x478);
+    if (v == 5 || v == 6) {
+        result = 1;
+    }
+    return result;
+}
+
+int fn_8022D738(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x478) == 1; }
+
+int fn_8022D750(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x478) == 4; }
+#pragma scheduling on
