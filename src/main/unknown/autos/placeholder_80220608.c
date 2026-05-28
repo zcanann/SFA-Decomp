@@ -2611,3 +2611,28 @@ void arwlevelcon_update(int obj)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern f32 lbl_803E7154;
+extern void fn_802317A8(int obj, int state, int setup);
+extern void fn_802315EC(int obj, int state, int setup);
+
+void arwgenerato_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+
+    if (*(f32 *)state > lbl_803E7154) {
+        *(f32 *)state -= timeDelta;
+        if (*(f32 *)state <= lbl_803E7154) {
+            switch (*(u8 *)(setup + 0x25)) {
+            case 0:
+                fn_802317A8(obj, state, setup);
+                break;
+            case 1:
+                fn_802315EC(obj, state, setup);
+                break;
+            }
+            *(f32 *)state = (f32)(u32)*(u16 *)(setup + 0x18);
+        }
+    }
+}
