@@ -10509,6 +10509,102 @@ void MIDIWADLoadedCallback(int status, void* fileInfo)
     }
 }
 
+typedef struct MusicTrackSlot {
+    s16 id;
+    u8 pad2[6];
+    int offset;
+    int size;
+} MusicTrackSlot;
+
+extern u8 gMidiWadLoadStarted;
+extern MusicChannel gMusicChannels[];
+extern int lbl_803DC814;
+extern int lbl_803DC818;
+extern int gMidiWadLoadedSize;
+extern void *gMidiWadFileData;
+extern void *gMidiWadPayloadStart;
+extern int gMidiWadPayloadSize;
+extern int gMidiWadArenaSize;
+extern char sMidiWadPath[];
+extern uint mmSetFreeDelay(uint delay);
+extern u8 testAndSet_onlyUseHeap3(int arg);
+extern void *loadFileByPathAsync(char *path, int *outSize, int unused, void (*cb)(void *));
+extern void fn_80008F38(void *addr, u32 dest, u32 size);
+extern s16 sMusicTrackTable[];
+
+/*
+ * Function: musicInitMidiWad
+ * EN v1.0 Address: 0x8000AE90
+ */
+int musicInitMidiWad(void)
+{
+    MusicTrackSlot *table;
+    MusicTrackSlot *found;
+    MusicChannel *ch;
+    int track, j;
+    int size;
+    int arenaOffset;
+    int saved;
+    int i;
+
+    if (!gMidiWadLoadStarted) {
+        gMidiWadLoadStarted = 1;
+        ch = gMusicChannels;
+        for (i = 0; i < 16; i++) {
+            ch->field_0 = -1;
+            ch->seqHandle = -1;
+            ch->bankData = NULL;
+            ch->voiceId = 0xff;
+            ch->status = 0;
+            ch->field_12 = 0;
+            *(int *)&ch->pad14[4] = 0;
+            ch++;
+        }
+        lbl_803DC814 = 1;
+        lbl_803DC818 = 1;
+        gAudioPendingLoadFlags |= 0x800;
+        saved = testAndSet_onlyUseHeap3(0);
+        gMidiWadFileData = loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0,
+                                               (void (*)(void *))MIDIWADLoadedCallback);
+        testAndSet_onlyUseHeap3(saved);
+    }
+    if (gAudioCompletedLoadFlags & 0x800) {
+        size = gMidiWadLoadedSize;
+        if (size & 0x1f) {
+            size = (size | 0x1f) + 1;
+        }
+        gMidiWadPayloadStart = (u8 *)gMidiWadFileData + 0x1a0;
+        gMidiWadPayloadSize = size - 0x1a0;
+        gMidiWadArenaSize = 0x1000000 - gMidiWadPayloadSize;
+        arenaOffset = gMidiWadArenaSize;
+        table = (MusicTrackSlot *)sMusicTrackTable;
+        for (track = 0; track <= 0x63; track++) {
+            found = NULL;
+            for (j = 0; j < 0x64; j++) {
+                if (track == table[j].id) {
+                    found = &table[j];
+                    break;
+                }
+            }
+            if (found != NULL) {
+                found->offset = arenaOffset;
+                found->size = ((int *)gMidiWadFileData)[track];
+            }
+            size = found->size;
+            if (size & 0x1f) {
+                size = (size | 0x1f) + 1;
+            }
+            arenaOffset += size;
+        }
+        fn_80008F38(gMidiWadPayloadStart, gMidiWadArenaSize, gMidiWadPayloadSize);
+        saved = mmSetFreeDelay(0);
+        mm_free(gMidiWadFileData);
+        mmSetFreeDelay(saved);
+        return 1;
+    }
+    return 0;
+}
+
 /*
  * Function: gameTextAppendStr
  * EN v1.0 Address: 0x8001618C
