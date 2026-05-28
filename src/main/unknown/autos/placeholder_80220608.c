@@ -6599,6 +6599,50 @@ void fn_80221F14(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 c)
 }
 #pragma scheduling reset
 
+extern f32 lbl_803E6C60;
+extern f32 lbl_803E6C64;
+extern f32 lbl_803E6C78;
+extern f32 lbl_803E6C7C;
+extern f32 lbl_803E6C80;
+
+#pragma scheduling off
+int fn_80222358(int p1, int p2, f32 a, f32 b, f32 c, int flag)
+{
+    f32 d[3];
+    f32 dist, ang, scale;
+    int result;
+
+    result = 0;
+    scale = c;
+    d[0] = *(f32 *)(p1 + 0xc) - *(f32 *)(p2 + 0x68);
+    d[2] = *(f32 *)(p1 + 0x14) - *(f32 *)(p2 + 0x70);
+    dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
+    if (dist < b) {
+        if (curveFn_80010320(p2, a) != 0 || *(int *)(p2 + 0x10) != 0) {
+            if ((u8)(*(int (**)(int))(*gRomCurveInterface + 0x90))(p2) != 0)
+                result = -1;
+            else
+                result = (s8)*(u8 *)(*(int *)(p2 + 0x9c) + 0x18);
+        }
+        scale = lbl_803E6C78 * a;
+    }
+    d[0] = *(f32 *)(p2 + 0x68) - *(f32 *)(p1 + 0xc);
+    d[1] = *(f32 *)(p2 + 0x6c) - *(f32 *)(p1 + 0x10);
+    d[2] = *(f32 *)(p2 + 0x70) - *(f32 *)(p1 + 0x14);
+    if (flag == 0) {
+        int state2 = *(int *)(p1 + 0xb8);
+        d[0] = *(f32 *)(p1 + 0xc) - *(f32 *)(p2 + 0x68);
+        d[2] = *(f32 *)(p1 + 0x14) - *(f32 *)(p2 + 0x70);
+        ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
+        *(f32 *)(state2 + 0x290) = scale * -fn_80293E80(ang);
+        *(f32 *)(state2 + 0x28c) = scale * -sin(ang);
+    } else {
+        fn_80221F14(p1, (f32 *)(p1 + 0x24), d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
+    }
+    return result;
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
