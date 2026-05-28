@@ -7072,6 +7072,89 @@ int fn_802A1114(int obj, int state)
 
 #pragma peephole off
 #pragma scheduling off
+s16 fn_802A71E0(int obj, int a, int b, int *p6, int *p7, f32 e, f32 f, int n, int flags)
+{
+    int model;
+    int uf;
+    u8 mf;
+    int sel;
+    int blend;
+    f32 v1, v2, t;
+    f32 buf1[3];
+    f32 buf2[2];
+    model = *(int *)((char *)*(int *)((char *)obj + 0x7c) +
+                     ((s32)(*(s8 *)((char *)obj + 0xad)) << 2));
+    uf = (u8)flags;
+    mf = 0;
+    if (uf & 0x2) {
+        mf |= 0x2;
+    }
+    if (uf & 0x40) {
+        mf |= 0x4;
+    }
+    if (uf & 0x10) {
+        mf |= 0x8;
+    }
+    if (uf & 0x20) {
+        mf |= 0x1;
+    }
+    sel = uf & 0x4;
+    if (sel != 0) {
+        ObjAnim_SetCurrentMove(obj, a, lbl_803E7EA4, mf);
+        ObjAnim_AdvanceCurrentMove(f, lbl_803E7EA4, obj, NULL);
+        ObjModel_SampleJointTransform(model, 0, 0, e, *(f32 *)((char *)obj + 0x8), buf1, buf2);
+    } else {
+        Object_ObjAnimSetMove(lbl_803E7EA4, obj, a, mf);
+        Object_ObjAnimAdvanceMove(f, lbl_803E7EA4, obj, NULL);
+        ObjModel_SampleJointTransform(model, 1, 0, e, *(f32 *)((char *)obj + 0x8), buf1, buf2);
+    }
+    v1 = *(f32 *)((char *)buf1 + ((u8)n << 2));
+    if (v1 < lbl_803E7EA4) {
+        v1 = -v1;
+    }
+    if (sel != 0) {
+        Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, b, 0);
+        ObjModel_SampleJointTransform(model, 0, 2, e, *(f32 *)((char *)obj + 0x8), buf1, buf2);
+    } else {
+        Object_ObjAnimSetPrimaryBlendMove((ObjAnimComponent *)obj, b, 0);
+        ObjModel_SampleJointTransform(model, 1, 2, e, *(f32 *)((char *)obj + 0x8), buf1, buf2);
+    }
+    v2 = *(f32 *)((char *)buf1 + ((u8)n << 2));
+    if (v2 < lbl_803E7EA4) {
+        v2 = -v2;
+    }
+    t = *(f32 *)((char *)p7 + 0xc) +
+        (*(f32 *)((char *)p6 + 0x0) * *(f32 *)((char *)p7 + 0x0) +
+         *(f32 *)((char *)p6 + 0x8) * *(f32 *)((char *)p7 + 0x8));
+    if (t < lbl_803E7EA4) {
+        t = -t;
+    }
+    t = (t - v1) / (v2 - v1);
+    if (uf & 0x1) {
+        if (t < lbl_803E7EA4) {
+            t = lbl_803E7EA4;
+        }
+    } else {
+        if (t < lbl_803E7EA4) {
+            t = -t;
+        }
+    }
+    if (t > lbl_803E7EE0) {
+        t = lbl_803E7EE0;
+    }
+    blend = (int)(lbl_803E7FAC * t);
+    if (sel != 0) {
+        Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, b, (s16)blend);
+    } else {
+        Object_ObjAnimSetPrimaryBlendMove((ObjAnimComponent *)obj, b, (s16)blend);
+    }
+    return blend;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
 int fn_8029F6E4(int obj, int state)
 {
     int inner = *(int *)((char *)obj + 0xb8);
