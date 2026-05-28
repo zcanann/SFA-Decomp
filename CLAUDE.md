@@ -172,6 +172,15 @@ Heuristic before reaching for `asm { }`:
     extension. Took fn_802B7B0C 96.5% → 100%. Clean C, no asm. (Same family as
     the caller-side extsb/extsh table below.)
 
+21. **Invert `if(c){A}else{B}` → `if(!c){B}else{A}` to flip MWCC's then/else
+    block layout.** When the dispatch matches but the then- and else-blocks are
+    laid out in the *opposite* order from target (e.g. target emits `beq else;
+    <A>; b end; else: <B>`, you emit `bne A; <B>; b end; A: <A>`), invert the
+    condition and swap the branches in C. MWCC always lays the *then*-block
+    first, so flipping the C source flips the asm. Plain peer to #13 (case-order
+    for compare-chain switches) but for if/else. Took fn_802BA1D4 91% → 100%.
+    Clean C, no asm.
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
