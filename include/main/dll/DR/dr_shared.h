@@ -1,5 +1,5 @@
-#ifndef DLL_80211C24_SHARED_H
-#define DLL_80211C24_SHARED_H
+#ifndef DR_SHARED_H
+#define DR_SHARED_H
 
 #include "ghidra_import.h"
 #include "main/objanim.h"

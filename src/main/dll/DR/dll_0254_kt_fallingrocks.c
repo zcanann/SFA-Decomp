@@ -1,4 +1,4 @@
-#include "main/dll/DR/dll_80211C24_shared.h"
+#include "main/dll/DR/dr_shared.h"
 
 int ktfallingrocks_getExtraSize(void) { return 0x0; }
 
