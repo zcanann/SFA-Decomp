@@ -10962,6 +10962,83 @@ extern f32 lbl_803E7EB0;
 extern f32 lbl_803E7EB8;
 extern f32 lbl_803E7EBC;
 
+extern int fn_802ABFBC(int obj, int state, int inner);
+extern f32 lbl_803E7FC8;
+extern f32 lbl_80332FC0[];
+
+int fn_8029CF30(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 t, ang, vx, vy, dx, dy;
+    f32 zero = lbl_803E7EA4;
+    int r;
+
+    *(f32 *)((char *)state + 0x280) = zero;
+    *(f32 *)((char *)state + 0x284) = zero;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(f32 *)((char *)inner + 0x404) = lbl_803E7FC4;
+        *(u8 *)((char *)inner + 0x8cc) = 0;
+        *(f32 *)((char *)inner + 0x4c8) = zero;
+        *(f32 *)((char *)inner + 0x4cc) = zero;
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F84;
+        *(f32 *)((char *)state + 0x294) = zero;
+        lbl_803DC66C = 5;
+    }
+
+    r = fn_8029B9FC(obj, state, fv);
+    if (r != 0) {
+        return r;
+    }
+
+    t = (*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
+    ang = lbl_803E7EA4;
+    if (t >= ang) {
+        ang = lbl_803E7EE0;
+        if (t <= ang) ang = t;
+    }
+    vx = *(f32 *)((char *)inner + 0x404) *
+         (ang * -fn_80293E80(lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474) / lbl_803E7F98));
+    vy = *(f32 *)((char *)inner + 0x404) *
+         (ang * -sin(lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474) / lbl_803E7F98));
+    dx = interpolate(vx - *(f32 *)((char *)inner + 0x4c8), lbl_803E7F44, timeDelta);
+    dy = interpolate(vy - *(f32 *)((char *)inner + 0x4cc), lbl_803E7F44, timeDelta);
+    *(f32 *)((char *)inner + 0x4c8) += dx;
+    *(f32 *)((char *)inner + 0x4cc) += dy;
+    *(f32 *)((char *)state + 0x294) =
+        sqrtf(*(f32 *)((char *)inner + 0x4c8) * *(f32 *)((char *)inner + 0x4c8) +
+              *(f32 *)((char *)inner + 0x4cc) * *(f32 *)((char *)inner + 0x4cc));
+    {
+        f32 d = *(f32 *)((char *)state + 0x294);
+        f32 c = lbl_803E7EA4;
+        if (d >= c) {
+            c = *(f32 *)((char *)inner + 0x404);
+            if (d <= c) c = d;
+        }
+        *(f32 *)((char *)state + 0x294) = c;
+    }
+
+    if (*(f32 *)((char *)state + 0x29c) >= lbl_803E7FC8 &&
+        *(f32 *)((char *)state + 0x298) >= lbl_803E7FC8 &&
+        *(f32 *)((char *)state + 0x294) >= lbl_80332FC0[1]) {
+        *(int *)((char *)state + 0x308) = (int)fn_8029C8C8;
+        return 0x26;
+    }
+
+    if (*(s16 *)((char *)obj + 0xa0) != 0x8c) {
+        ObjAnim_SetCurrentMove(obj, 0x8c, lbl_803E7EA4, 0);
+        if (*(s16 *)((char *)state + 0x276) == 0x39) {
+            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 8);
+        }
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F84;
+    }
+
+    *(s16 *)((char *)inner + 0x478) += (int)((f32)*(int *)((char *)inner + 0x4a4) / lbl_803E7FC0);
+    *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+    *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+    fn_802ABFBC(obj, state, inner);
+    return 0;
+}
+
 #pragma peephole off
 #pragma scheduling off
 void fn_80295334(int a, int b, f32 *vec, int c, int mode, f32 angle)
@@ -12018,7 +12095,7 @@ extern int fn_8029ABD8();
 extern int fn_8029AF9C();
 extern int fn_8029BDB4();
 extern int fn_8029C9C8();
-extern int fn_8029CF30();
+extern int fn_8029CF30(int obj, int state, f32 fv);
 extern int fn_8029D4C0(int obj, int state, f32 fv);
 extern int fn_8029DB70();
 extern int fn_8029E568();
