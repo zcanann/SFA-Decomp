@@ -341,6 +341,15 @@ Heuristic before reaching for `asm { }`:
     `if`/`while`/`?:` conditions; only accept the residual when the boolean is
     actually stored or returned. (Corrects the over-broad "FP-compare → mfcr/cror
     cap" that earlier handoffs propagated.)
+    **Counter-caveat — the reverse divergence IS sometimes a real cap.** On some
+    targets a clamp uses a SIMPLE `bge`/`ble` (single branch) where clean-C
+    `v>=lo`/`v<=hi` *over-produces* the `cror eq,gt,eq; bne` combine, and nothing
+    in C flips it back to the simple branch (peephole-on tested, no effect). So
+    #25 cuts both ways: when target has the cror combine, write the operator (not
+    a cap); when target has a plain `bge`/`ble` and your `>=`/`<=` emits the cror,
+    that 1-2 instr divergence is a genuine residual — leave it, and DON'T rewrite
+    the clamp chasing it (hotel5's logically-correct rewrite scored *lower*).
+    (hotel5, fn_8001D820/fn_8001D84C ~68%.)
 
 26. **"Floor-first" clamp restructure forces a FRESH callee-saved FP reg (frame
     size + coloring fix).** When a clamp `x = computed; if (x < floor) x = floor;`
@@ -451,6 +460,11 @@ residual diff shows the two `lfs` lines swapped, flip the compare:
 Writing the scalar form for a `.data` symbol mis-emits sda21 and breaks every
 load/store of it. Check `config/GSAE01/symbols.txt` for the section.
 
+**Passing a `.sdata` string BY ADDRESS — declare a SCALAR `extern char tag;` and
+pass `&tag`** to get `addi r5, r13, tag@sda21`. The `extern char tag[];` array
+form emits `lis;addi` (wrong) for the same symbol. (hotel5, sMmShowInfo tag →
+matched the OSReport arg.)
+
 ## `#pragma dont_inline on` for callees that live in the same TU
 
 With `-inline auto`, MWCC inlines small functions into their callers within
@@ -461,6 +475,18 @@ never match. Wrap the callee:
 void small_helper(...) { ... }
 #pragma dont_inline reset
 ```
+
+**CAUTION — `dont_inline on` disables inlining in BOTH directions: it stops the
+fn from being inlined into callers AND stops it from inlining ITS OWN callees.**
+So if target *keeps the `bl`* to a helper but that helper itself *inlines* its
+own leaves (which target does), wrapping the helper in `dont_inline` will fix the
+`bl` but REGRESS the helper (its leaves stop inlining). hotel5 hit this — wrapping
+mmFree regressed it 99→73 because mmFree relies on inlining mmGetRegionForPtr.
+**The safe fix in that case is SOURCE ORDER, not dont_inline:** place the new
+caller *before* the helper's definition so MWCC can't inline the helper upward
+(it's not yet defined), while the helper still inlines its own callees normally.
+Reach for `dont_inline` only when the wrapped fn has no callees it needs to
+inline.
 
 **Diagnostic:** when a freshly-added function lands mysteriously low (<70%) for
 no visible source reason, suspect a same-TU callee got auto-inlined into it.
