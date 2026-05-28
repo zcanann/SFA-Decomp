@@ -5967,6 +5967,44 @@ void fn_80239FCC(int p1, int p2)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern f32 lbl_803DC4C0;
+extern f32 lbl_803DC4C4;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
+{
+    f32 val, ang;
+    f32 dx, dy, dz, dist;
+    int yaw;
+    int result;
+    f32 vel[3];
+
+    result = 0;
+    dx = *(f32 *)(p1 + 0xc0) - *(f32 *)(*(int *)p1 + 0xc);
+    dy = *(f32 *)(p1 + 0xc4) - *(f32 *)(*(int *)p1 + 0x10);
+    dz = *(f32 *)(p1 + 0xc8) - *(f32 *)(*(int *)p1 + 0x14);
+    dist = sqrtf(dx * dx + dy * dy);
+    yaw = (s16)getAngle(dx, dy);
+    if ((s16)getAngle(dist, dz) > 0x2ee0 && dz > lbl_803DC4C0)
+        result = 1;
+    val = dist / b;
+    if (val < -a)
+        val = -a;
+    else if (val > a)
+        val = a;
+    ang = lbl_803E74A0 * (f32)(u32)yaw / lbl_803E74A4;
+    *(f32 *)(p1 + 0xd8) = val * fn_80293E80(ang);
+    *(f32 *)(p1 + 0xdc) = val * sin(ang);
+    fn_8022D48C((int)vel, *(int *)p1);
+    *(f32 *)(p1 + 0xd8) -= vel[0] * lbl_803DC4C4;
+    *(f32 *)(p1 + 0xdc) -= vel[1] * lbl_803DC4C4;
+    *(f32 *)(p1 + 0xe0) = c;
+    return result;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
