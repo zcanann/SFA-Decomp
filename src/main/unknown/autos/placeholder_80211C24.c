@@ -120,9 +120,11 @@ extern f32 lbl_803E6AC4;
 extern f32 lbl_803E6AC8;
 extern f32 lbl_803E6B34;
 
+extern f32 lbl_803E67A0;
+extern f32 lbl_803E67B8;
+extern f32 lbl_803E6808;
 extern f32 lbl_803E6858;
 extern f32 lbl_803E6994;
-extern f32 lbl_803E67A0;
 extern f32 lbl_803E6978;
 extern f32 lbl_803E69D0;
 extern f32 lbl_803E69D8;
@@ -146,6 +148,7 @@ extern void mm_free(void *ptr);
 extern void storeZeroToFloatParam(void *timer);
 extern void **gGameUIInterface;
 extern void gmmazewell_clearPendingTriggerCallback(void);
+extern u32 GameBit_Get(int eventId);
 
 #pragma scheduling off
 #pragma peephole off
@@ -394,6 +397,36 @@ void drakorhoverpad_func17(int obj, int sel, int *out) {
         *out = 1;
         break;
     }
+}
+
+int hightop_stateHandler00(int obj) {
+    int p = *(int *)((char *)obj + 0x4c);
+    if (*(s8 *)(p + 0x19) != 0) {
+        return 0xa;
+    }
+    if (GameBit_Get(0x631) != 0) {
+        return 8;
+    }
+    return 5;
+}
+
+int hightop_stateHandler06(int obj, u8 *p2) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    if ((s8)p2[0x27a] != 0) {
+        p[0x9fd] |= 1;
+    }
+    if (GameBit_Get(0x632) != 0) {
+        return 8;
+    }
+    return 2;
+}
+
+int ktrex_stateHandlerB00(int obj, u8 *p2) {
+    if ((s8)p2[0x27a] != 0) {
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803E67B8, 0);
+    }
+    *(f32 *)(p2 + 0x2a0) = lbl_803E6808;
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
