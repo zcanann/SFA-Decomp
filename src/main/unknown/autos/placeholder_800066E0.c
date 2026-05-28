@@ -9477,6 +9477,7 @@ typedef struct PadStatusLite {
  * EN v1.0 Address: 0x8000A200
  * EN v1.0 Size: 100b
  */
+#pragma dont_inline on
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third)
 {
     strcpy(dst, first);
@@ -9484,6 +9485,7 @@ int concatThreeStrings(char* dst, void* unused, const char* first, const char* s
     strcat(dst, third);
     return 1;
 }
+#pragma dont_inline reset
 
 /*
  * Function: fn_8001404C
@@ -10887,8 +10889,12 @@ void musicTriggersLoadedCallback(int status, void* fileInfo)
 }
 
 typedef struct {
-    u8 pad[0x15];
-    u8 flag;
+    u16 id;          // 0x0
+    u8 fadeBits;     // 0x2
+    u8 volBits;      // 0x3
+    u16 lengthRaw;   // 0x4
+    char name[0xF];  // 0x6
+    u8 flag;         // 0x15
 } StreamEntry;
 
 extern StreamEntry* gStreamsData;
@@ -11234,6 +11240,127 @@ extern void GXFlush_(int a, int b);
 extern void padUpdate(void);
 extern void dvdCheckError(void);
 extern void gameTextRun(void);
+
+extern int lbl_802C5DB8[];
+extern f32 lbl_803DE5D4;
+extern f32 lbl_803DE5D8;
+extern char sAdpExtension[];
+extern int DVDPrepareStreamAsync(void* fileInfo, int a, int b, void (*cb)(void));
+extern int DVDStopStreamAtEndAsync(void* fileInfo, int a);
+
+/*
+ * Function: AudioStream_Play
+ * EN v1.0 Address: 0x80006B20
+ * EN v1.0 Size: 860b
+ */
+int AudioStream_Play(int id, void (*preparedCallback)(void))
+{
+    char path[64];
+    u8* dvd = lbl_80336C40;
+    int* fadeTbl = lbl_802C5DB8;
+    StreamEntry* s = gStreamsData;
+    int count = gStreamsCount;
+    int slot = -1;
+    int i;
+    u8 vol;
+    u8 stopped;
+
+    if (id == 1228) {
+        return 0;
+    }
+    if (id == 1318) {
+        Music_Trigger(0xA8, 0);
+        Music_Trigger(0xF4, 1);
+    }
+    if ((int)audioFlagFn_8000a188(8)) {
+        return 0;
+    }
+
+    for (i = count; i != 0; i--) {
+        if (s->id == id) {
+            slot = (s - gStreamsData) + 1;
+            break;
+        }
+        s++;
+    }
+
+    if (slot == -1) {
+        return 0;
+    }
+    if (gAudioStreamDvdState != 0) {
+        return 0;
+    }
+    gAudioStreamDvdState = 0;
+
+    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name,
+                           sAdpExtension) == 0) {
+        return 0;
+    }
+    if (DVDOpen(path, dvd + 0x90) == 0) {
+        return 0;
+    }
+
+    if (gAudioStreamCurrentId != 0) {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        if (DVDCancelStreamAsync(dvd, AudioStream_CancelCallback) == 0) {
+            OSReport((char*)fadeTbl + 0xC);
+            gAudioStreamPlaying = 0;
+        }
+        gAudioStreamPreparedId = 0;
+        gAudioStreamPreparingId = 0;
+        gAudioStreamCurrentId = 0;
+        gAudioStreamStartWhenPrepared = 0;
+        gAudioActiveChannelMask = 0;
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+    } else {
+        gAudioStreamPlaying = 0;
+    }
+
+    gAudioStreamEndPos = (f32)(u32)s->lengthRaw / lbl_803DE5D4;
+    if (gAudioStreamEndPos == lbl_803DE5D0) {
+        gAudioStreamEndPos = lbl_803DE5D8;
+    }
+
+    gAudioStreamMusicFadeFlagA = fadeTbl[(s->fadeBits >> 6) & 3] != 0 ? 1 : 0;
+    gAudioStreamMusicFadeFlagB = fadeTbl[(s->fadeBits >> 4) & 3] != 0 ? 1 : 0;
+    if ((s->fadeBits >> 2) & 3) {
+        Sfx_StopAllObjectSounds();
+    }
+    gAudioActiveChannelMask = ((s->volBits >> 7) & 1) ? 4 : 0;
+
+    stopped = 0;
+    while (gAudioStreamPlaying != 0) {
+        padUpdate();
+        checkReset();
+        if (stopped) {
+            mmFreeTick(0);
+            waitNextFrame();
+        }
+        dvdCheckError();
+        if (stopped) {
+            gameTextRun();
+            GXFlush_(1, 0);
+        }
+        if (lbl_803DC950 != 0) {
+            stopped = 1;
+            gAudioStreamPlaying = 0;
+        }
+    }
+
+    vol = (((s->volBits & 0x7F) + 1) * gAudioStreamDefaultVolume) >> 7;
+    gAudioStreamVolumeLeft = vol;
+    gAudioStreamVolumeRight = vol;
+    AISetStreamVolLeft(vol);
+    AISetStreamVolRight(vol);
+    gAudioStreamPreparedCallback = preparedCallback;
+    gAudioStreamPreparingId = slot;
+    gAudioStreamDvdState = 1;
+    DVDPrepareStreamAsync(lbl_80336C40 + 0x90, 0, 0, AudioStream_PrepareCallback);
+    DVDStopStreamAtEndAsync(lbl_80336C40 + 0x60, 0);
+    return 1;
+}
 
 /*
  * Function: DVDRead
