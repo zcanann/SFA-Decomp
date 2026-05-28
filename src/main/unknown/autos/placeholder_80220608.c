@@ -1331,6 +1331,104 @@ void suntemple_init(u8 *obj, u8 *setup)
         }
     }
 }
+
+extern void buttonDisable(int a, int b);
+extern int *gGameUIInterface;
+
+void suntemple_update(int obj)
+{
+    int state;
+    int cfg;
+    int *texture;
+    int flags;
+
+    state = *(int *)(obj + 0xb8);
+    cfg = *(int *)(obj + 0x4c);
+    *(u8 *)(state + 0) = (u8)GameBit_Get(*(s16 *)(cfg + 0x1c));
+    if (*(u8 *)(state + 0) == 0) {
+        texture = objFindTexture(obj, 0, 0);
+        if (texture != NULL) {
+            *texture = 0;
+        }
+        *(f32 *)(obj + 0xc) = *(f32 *)(cfg + 0x8);
+        *(f32 *)(obj + 0x10) = *(f32 *)(cfg + 0xc);
+        *(f32 *)(obj + 0x14) = *(f32 *)(cfg + 0x10);
+        *(u8 *)(obj + 0xaf) &= ~0x08;
+
+        if (*(s16 *)(cfg + 0x22) == -1) {
+            *(u8 *)(obj + 0xaf) &= ~0x10;
+        } else if ((u32)GameBit_Get(*(s16 *)(cfg + 0x22)) != 0) {
+            *(u8 *)(obj + 0xaf) &= ~0x10;
+        } else {
+            *(u8 *)(obj + 0xaf) |= 0x10;
+            if ((*(u8 *)(cfg + 0x1b) & 0x10) != 0) {
+                *(u8 *)(obj + 0xaf) |= 0x08;
+            }
+        }
+
+        if (*(s16 *)(obj + 0x46) == 0x830 && gameTimerIsRunning() != 0) {
+            *(u8 *)(obj + 0xaf) |= 0x10;
+        }
+
+        if ((*(u8 *)(obj + 0xaf) & 0x1) != 0) {
+            if (*(s16 *)(cfg + 0x1e) == -1 ||
+                (*(int (**)(int))(*gGameUIInterface + 0x20))(*(s16 *)(cfg + 0x1e)) != 0) {
+                if (*(s8 *)(cfg + 0x20) != -1) {
+                    if (*(s16 *)(obj + 0x46) == 0x526) {
+                        if (*(u8 *)(state + 1) == 1 &&
+                            ((u32)GameBit_Get(0x25a) != 0 || (u32)GameBit_Get(0x25b) != 0)) {
+                            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
+                                *(s8 *)(cfg + 0x20) + 2, obj, -1);
+                        } else if (*(u8 *)(state + 1) == 2 &&
+                                   ((u32)GameBit_Get(0x202) != 0 || (u32)GameBit_Get(0x243) != 0)) {
+                            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
+                                *(s8 *)(cfg + 0x20) + 2, obj, -1);
+                        } else {
+                            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
+                                *(s8 *)(cfg + 0x20), obj, -1);
+                        }
+                    } else {
+                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
+                            *(s8 *)(cfg + 0x20), obj, -1);
+                    }
+                }
+                if ((*(u8 *)(cfg + 0x1b) & 0x04) == 0) {
+                    GameBit_Set(*(s16 *)(cfg + 0x1c), 1);
+                    texture = objFindTexture(obj, 0, 0);
+                    if (texture != NULL) {
+                        *texture = 0x100;
+                    }
+                }
+                if ((*(u8 *)(cfg + 0x1b) & 0x08) != 0) {
+                    GameBit_Set(*(s16 *)(cfg + 0x22), 0);
+                } else {
+                    *(u8 *)(state + 0) = 1;
+                    *(int *)(obj + 0xf4) = 1;
+                }
+                buttonDisable(0, 0x100);
+            }
+        }
+    } else {
+        if (*(int *)(obj + 0xf4) == 0 && *(s8 *)(cfg + 0x20) != -1 &&
+            *(s16 *)(cfg + 0x24) != 0) {
+            (*(void (**)(int))(*gObjectTriggerInterface + 0x54))(obj);
+            flags = 1;
+            if ((*(u8 *)(cfg + 0x1b) & 0x20) != 0) {
+                flags |= 0x2;
+            }
+            if ((*(u8 *)(cfg + 0x1b) & 0x40) != 0) {
+                flags |= 0x3;
+            }
+            if ((*(u8 *)(cfg + 0x1b) & 0x80) != 0) {
+                flags |= 0x4;
+            }
+            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(
+                *(s8 *)(cfg + 0x20), obj, flags);
+        }
+        *(u8 *)(obj + 0xaf) |= 0x08;
+    }
+    *(int *)(obj + 0xf4) = 1;
+}
 #pragma scheduling on
 #pragma peephole on
 void suntemple_release(void) {}
