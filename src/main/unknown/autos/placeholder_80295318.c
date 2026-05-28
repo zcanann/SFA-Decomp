@@ -5618,6 +5618,20 @@ typedef struct {
 
 extern u8 lbl_803DE459;
 extern f32 lbl_803E7EA4;
+extern f32 lbl_803E7FA8;
+extern f32 lbl_803E7FF0;
+extern f32 lbl_803E7FB4;
+extern f32 lbl_803E7FB0;
+extern f32 lbl_803E7ECC;
+extern f32 lbl_803E7FF4;
+extern f32 lbl_803E7EA0;
+extern f32 lbl_803DC6D4;
+extern f32 lbl_803DC6D8;
+extern f32 lbl_803DC6DC;
+extern f32 lbl_803DC6E0;
+extern f32 lbl_803DC6E4;
+extern void fn_802AA014(int p1);
+extern f32 powfBitEstimate(f32 base, f32 exp);
 extern f32 lbl_803E7ED4;
 extern f32 lbl_803E7F08;
 extern void *lbl_803DE44C;
@@ -7551,6 +7565,148 @@ int fn_8029B994(int obj, int state)
     return 0;
 }
 
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8029EBCC(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    void *sub;
+    f32 v7b8, v7bc;
+    int res, halfW, halfH;
+
+    *(int *)((char *)inner + 0x360) &= 0xFFFFFFFD;
+    ObjHits_EnableObject(obj);
+    sub = *(void **)((char *)inner + 0x7f0);
+    if (sub == NULL) {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x294) = z;
+        *(f32 *)((char *)state + 0x284) = z;
+        *(f32 *)((char *)state + 0x280) = z;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x28) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
+        ObjHits_EnableObject(obj);
+    } else {
+        if (*(s16 *)((char *)sub + 0x46) != 0x714) {
+            ObjHits_DisableObject(obj);
+        }
+    }
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)inner + 0x7b8) = z;
+        *(f32 *)((char *)inner + 0x7bc) = z;
+        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            0x53, 1, sub != NULL ? 0x12 : -2, 0, 0, 0, 0xff);
+        ObjAnim_SetCurrentMove(obj, 0x43e, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F34;
+        *(f32 *)((char *)inner + 0x418) = lbl_803E7EA4;
+        if (lbl_803DE44C != NULL) {
+            if ((*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0) {
+                *(u8 *)((char *)inner + 0x8b4) = 4;
+                *(u8 *)((char *)inner + 0x3f4) |= 8;
+            }
+        }
+    }
+    if (*(u8 *)((char *)obj + 0x36) > 1) {
+        *(u8 *)((char *)obj + 0x36) = 1;
+    }
+    *(f32 *)((char *)inner + 0x418) = *(f32 *)((char *)inner + 0x418) - timeDelta;
+    if (*(f32 *)((char *)inner + 0x418) < lbl_803E7EA4) {
+        *(f32 *)((char *)inner + 0x418) = lbl_803E7EA4;
+    }
+    if ((*(u16 *)((char *)inner + 0x6e2) & 0x100) != 0) {
+        if (*(f32 *)((char *)inner + 0x418) <= lbl_803E7EA4) {
+            buttonDisable(0, 0x100);
+            ((void (*)(int, int, f32, f32))fn_802AA014)(obj, state, *(f32 *)((char *)inner + 0x7bc), lbl_803E7EA4);
+            *(f32 *)((char *)inner + 0x418) = lbl_803E7F10;
+        }
+    }
+    {
+        f32 x = *(f32 *)((char *)state + 0x28c) / lbl_803E7FA8;
+        f32 c;
+        void *hit;
+        if (x >= lbl_803E7FF0) {
+            if (x <= lbl_803E7FC4) {
+                c = x;
+            } else {
+                c = lbl_803E7FC4;
+            }
+        } else {
+            c = lbl_803E7FF0;
+        }
+        hit = *(void **)((char *)inner + 0x7f0);
+        if (hit != NULL && *(s16 *)((char *)hit + 0x46) == 0x484) {
+            c = c + lbl_803DC6E0;
+        }
+        if (hit == NULL) {
+            c = c + lbl_803DC6E4;
+        }
+        *(f32 *)((char *)inner + 0x7bc) +=
+            interpolate(c - *(f32 *)((char *)inner + 0x7bc), lbl_803DC6D4, timeDelta);
+    }
+    {
+        f32 x = *(f32 *)((char *)state + 0x290) / lbl_803E7FA8;
+        f32 c;
+        if (x >= lbl_803E7ECC) {
+            if (x <= lbl_803E7EE0) {
+                c = x;
+            } else {
+                c = lbl_803E7EE0;
+            }
+        } else {
+            c = lbl_803E7ECC;
+        }
+        *(f32 *)((char *)inner + 0x7b8) +=
+            interpolate(c - *(f32 *)((char *)inner + 0x7b8), lbl_803DC6D8, timeDelta);
+    }
+    {
+        f32 d = *(f32 *)((char *)inner + 0x7b8);
+        if (d > lbl_803E7EA4) {
+            d = d - lbl_803E7EA0;
+            if (d < lbl_803E7EA4) {
+                d = lbl_803E7EA4;
+            }
+        } else {
+            d = lbl_803E7EA0 + d;
+            if (d > lbl_803E7EA4) {
+                d = lbl_803E7EA4;
+            }
+        }
+        *(s16 *)((char *)inner + 0x478) =
+            (int)(lbl_803E7FB4 * d * lbl_803DC6DC + (f32)*(s16 *)((char *)inner + 0x478));
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+    }
+    if (*(f32 *)((char *)inner + 0x7bc) > lbl_803E7EA4) {
+        ((void (*)(int, int, f32, int))Object_ObjAnimSetSecondaryBlendMove)(obj, 0x441, lbl_803E7EA4,
+            (int)(lbl_803E7FAC * *(f32 *)((char *)inner + 0x7bc)));
+    } else {
+        ((void (*)(int, int, f32, int))Object_ObjAnimSetSecondaryBlendMove)(obj, 0x440, lbl_803E7FAC,
+            (int)(lbl_803E7FAC * -*(f32 *)((char *)inner + 0x7bc)));
+    }
+    *(s16 *)((char *)inner + 0x4d0) =
+        (int)((f32)*(s16 *)((char *)inner + 0x4d0) * powfBitEstimate(lbl_803E7FF4, timeDelta));
+    *(s16 *)((char *)inner + 0x4d6) =
+        (int)((f32)*(s16 *)((char *)inner + 0x4d6) * powfBitEstimate(lbl_803E7F1C, timeDelta));
+    *(s16 *)((char *)inner + 0x4d2) = (int)(lbl_803E7FB0 * *(f32 *)((char *)inner + 0x7b8));
+    *(s16 *)((char *)inner + 0x4d4) = (s16)(*(s16 *)((char *)inner + 0x4d2) >> 1);
+    *(int *)((char *)inner + 0x360) &= 0xFFFFFBFF;
+    v7bc = *(f32 *)((char *)inner + 0x7bc);
+    v7b8 = *(f32 *)((char *)inner + 0x7b8);
+    res = getScreenResolution();
+    halfW = res >> 17;
+    halfH = (int)(u16)res >> 1;
+    *(f32 *)((char *)inner + 0x788) = lbl_803E7E98 * (v7b8 * (f32)halfH) + (f32)halfH;
+    if (v7bc < lbl_803E7EA4) {
+        *(f32 *)((char *)inner + 0x78c) = lbl_803E7E98 * (v7bc * (f32)halfW) + (f32)halfW;
+    } else {
+        *(f32 *)((char *)inner + 0x78c) = lbl_803E7F44 * (v7bc * (f32)halfW) + (f32)halfW;
+    }
+    *(int *)((char *)inner + 0x360) |= 0x400;
+    return 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -13313,7 +13469,7 @@ extern int fn_8029CF30(int obj, int state, f32 fv);
 extern int fn_8029D4C0(int obj, int state, f32 fv);
 extern int fn_8029DB70();
 extern int fn_8029E568();
-extern int fn_8029EBCC();
+extern int fn_8029EBCC(int obj, int state);
 extern int fn_8029F108();
 extern int fn_8029FA24();
 extern int fn_802A0680();
