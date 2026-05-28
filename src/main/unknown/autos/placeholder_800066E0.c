@@ -4675,7 +4675,11 @@ extern int lbl_803DB270;
 extern f32 lbl_80338790[];
 extern f32 curveFn_80010ce4(f32 t, f32 *values, f32 *outTangent);
 extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
+extern void debugPrintf(char *message, ...);
+extern char sCurvesSetupMoveNetworkCurveTooFewControlPoints[];
+extern char sCurvesSetupMoveNetworkCurveBadControlPointCount[];
 int curveFn_80010320(Curve *curve, f32 dt);
+void curveFn_8000fe8c(Curve *curve, int count);
 
 void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *ch, f32 *buf))
 {
@@ -4914,6 +4918,45 @@ int curveFn_80010320(Curve *curve, f32 dt)
     return 0;
 }
 #pragma scheduling reset
+
+/*
+ * Function: curvesSetupMoveNetworkCurve
+ * EN v1.0 Address: 0x80010904
+ */
+void curvesSetupMoveNetworkCurve(Curve *curve)
+{
+    if (curve->count < 4) {
+        debugPrintf(sCurvesSetupMoveNetworkCurveTooFewControlPoints);
+    }
+    if ((curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) &&
+        (curve->count & 3) != 0) {
+        debugPrintf(sCurvesSetupMoveNetworkCurveBadControlPointCount);
+    }
+
+    curve->fc = lbl_803DE658;
+    curve->idx = 0;
+    while (curve->idx < curve->count - 3) {
+        curveFn_8000fe8c(curve, 5);
+        curve->fc += curve->totalLen;
+        if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+            curve->idx += 4;
+        } else {
+            curve->idx += 1;
+        }
+    }
+
+    if (curve->dir != 0) {
+        curve->idx = curve->count - 4;
+    } else {
+        curve->idx = 0;
+    }
+    curveFn_8000fe8c(curve, 20);
+    if (curve->dir != 0) {
+        curve->f8 = curve->fc - curve->f4;
+    } else {
+        curve->f8 = curve->f4;
+    }
+}
 
 /*
  * --INFO--
