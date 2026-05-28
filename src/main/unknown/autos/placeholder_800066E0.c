@@ -10184,3 +10184,37 @@ int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
         return 1;
     }
 }
+
+extern f32 lbl_803DE6B0;
+
+/*
+ * Function: voxmaps_worldToGrid
+ * EN v1.0 Address: 0x80012D00
+ * EN v1.0 Size: 264b
+ */
+void voxmaps_worldToGrid(f32* in, s16* out)
+{
+    f32 sx, sy, sz;
+    int ix, iy, iz;
+    sx = in[0];
+    sy = in[1];
+    sz = in[2];
+    if (lbl_803DC8CC != 0) {
+        Obj_TransformWorldPointToLocal(sx, sy, sz, &sx, &sy, &sz, lbl_803DC8CC);
+    }
+    ix = (int)sx;
+    iy = (int)sy;
+    iz = (int)sz;
+    if (sx < lbl_803DE6B0) {
+        ix -= 10;
+    }
+    if (sy < lbl_803DE6B0) {
+        iy -= 10;
+    }
+    if (sz < lbl_803DE6B0) {
+        iz -= 10;
+    }
+    out[0] = ix / 10;
+    out[1] = iy / 10;
+    out[2] = iz / 10;
+}
