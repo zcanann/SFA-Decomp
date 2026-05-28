@@ -128,6 +128,12 @@ void drenergydisc_init(u8 *obj, u8 *setup)
 void drenergydisc_release(void) {}
 void drenergydisc_initialise(void) {}
 
+typedef struct DrLightBeaFlags {
+    u8 bit80 : 1;
+    u8 bit40 : 1;
+    u8 pad : 6;
+} DrLightBeaFlags;
+
 int drlightbea_getExtraSize(void) { return 0xc; }
 int drlightbea_getObjectTypeId(void) { return 0; }
 void drlightbea_free(int obj)
@@ -153,9 +159,9 @@ void drlightbea_update(int obj)
 void drlightbea_init(int obj)
 {
     int state = *(int *)(obj + 0xb8);
-    *(u8 *)(state + 4) &= 0x7f;
+    ((DrLightBeaFlags *)(state + 4))->bit80 = 0;
     *(void **)state = NULL;
-    *(u8 *)(state + 4) &= 0xbf;
+    ((DrLightBeaFlags *)(state + 4))->bit40 = 0;
 }
 
 void drlightbea_release(void) {}
@@ -164,12 +170,14 @@ void drlightbea_initialise(void) {}
 int drmusiccont_getExtraSize(void) { return 4; }
 int drmusiccont_getObjectTypeId(void) { return 0; }
 void drmusiccont_free(int obj) { fn_8009436C(obj); }
+#pragma peephole off
 void drmusiccont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6BC8);
     }
 }
+#pragma peephole reset
 void drmusiccont_hitDetect(void) {}
 void drmusiccont_release(void) {}
 void drmusiccont_initialise(void) {}
@@ -8114,12 +8122,6 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     }
 }
 #pragma scheduling on
-
-typedef struct DrLightBeaFlags {
-    u8 bit80 : 1;
-    u8 bit40 : 1;
-    u8 pad : 6;
-} DrLightBeaFlags;
 
 extern int dll_2E_func0A(int a, void *out);
 extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
