@@ -4459,3 +4459,132 @@ int fn_8022D738(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x478) ==
 
 int fn_8022D750(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x478) == 4; }
 #pragma scheduling on
+
+extern int ObjTrigger_IsSet(int obj);
+extern void hudFn_8011f38c(int arg);
+extern int fn_80296A9C(int player, int p2);
+extern int fn_802966CC(void);
+extern void staffSetGlow(int staff, int p2, int p3);
+
+#pragma scheduling off
+int fn_80238F50(int obj, int p2, int setup)
+{
+    if (*(u8 *)(setup + 0x8b) != 0) {
+        (*(void (**)(int, int, int, int))(*gGameUIInterface + 0x38))(
+            *(s16 *)(*(int *)(obj + 0x4c) + 0x1a), 0x14, 0x8c, 0);
+    }
+    return 0;
+}
+
+int fn_80239054(int p1, int p2, int setup)
+{
+    int i;
+    for (i = 0; i < *(u8 *)(setup + 0x8b); i++) {
+        switch (*(u8 *)(setup + 0x81 + i)) {
+        case 0:
+            hudFn_8011f38c(1);
+            break;
+        case 1:
+            fn_80296A9C(Obj_GetPlayerObject(), 0x19);
+            (*(void (**)(int, int, int, int))(*gGameUIInterface + 0x38))(0x468, 0x14, 0x8c, 0);
+            break;
+        case 2:
+            hudFn_8011f38c(0);
+            break;
+        }
+    }
+    return 0;
+}
+
+int fn_802391C4(int p1, int p2, int setup)
+{
+    int staff;
+    int i;
+
+    if (Obj_GetPlayerObject() == 0) {
+        return 0;
+    }
+    staff = fn_802966CC();
+    if (staff == 0) {
+        return 0;
+    }
+    for (i = 0; i < *(u8 *)(setup + 0x8b); i++) {
+        switch (*(u8 *)(setup + 0x81 + i)) {
+        case 1:
+            staffSetGlow(staff, 5, 1);
+            break;
+        case 2:
+            staffSetGlow(staff, 5, (u8)*(int *)(p1 + 0xf8));
+            break;
+        case 3:
+            staffSetGlow(staff, 5, 0);
+            break;
+        }
+    }
+    return 0;
+}
+
+void mcupgrade_update(int obj)
+{
+    int setup = *(int *)(obj + 0x4c);
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+        *(u8 *)(obj + 0xaf) |= 8;
+    } else if (ObjTrigger_IsSet(obj) != 0) {
+        GameBit_Set(*(s16 *)(setup + 0x1e), 1);
+        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+    } else {
+        objRenderFn_80041018(obj);
+    }
+}
+
+void mcupgrade_init(int obj) { *(int *)(obj + 0xbc) = (int)fn_80238F50; }
+
+void mcupgradema_update(int obj)
+{
+    int setup = *(int *)(obj + 0x4c);
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x1a)) != 0) {
+        *(u8 *)(obj + 0xaf) |= 8;
+    } else if (ObjTrigger_IsSet(obj) != 0) {
+        GameBit_Set(*(s16 *)(setup + 0x1a), 1);
+        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+    } else {
+        objRenderFn_80041018(obj);
+    }
+}
+
+void mcupgradema_init(int obj) { *(int *)(obj + 0xbc) = (int)fn_80239054; }
+
+void mcstaffeffe_render(int obj)
+{
+    fn_80098B18(obj, *(f32 *)(obj + 0x8), (u8)*(int *)(obj + 0xf4), 0, 0, 0);
+}
+
+void mcstaffeffe_update(void) {}
+
+void mcstaffeffe_init(int obj, int setup)
+{
+    *(int *)(obj + 0xbc) = (int)fn_802391C4;
+    switch (*(u8 *)(setup + 0x1b)) {
+    case 0:
+        *(int *)(obj + 0xf4) = 4;
+        *(int *)(obj + 0xf8) = 1;
+        break;
+    case 1:
+        *(int *)(obj + 0xf4) = 5;
+        *(int *)(obj + 0xf8) = 5;
+        break;
+    case 2:
+        *(int *)(obj + 0xf4) = 6;
+        *(int *)(obj + 0xf8) = 2;
+        break;
+    case 3:
+        *(int *)(obj + 0xf4) = 0xb;
+        *(int *)(obj + 0xf8) = 3;
+        break;
+    default:
+        *(int *)(obj + 0xf4) = 4;
+        *(int *)(obj + 0xf8) = 1;
+        break;
+    }
+}
+#pragma scheduling on
