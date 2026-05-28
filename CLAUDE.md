@@ -181,6 +181,15 @@ Heuristic before reaching for `asm { }`:
     for compare-chain switches) but for if/else. Took fn_802BA1D4 91% → 100%.
     Clean C, no asm.
 
+22. **Wrap the whole body in `if (cond) { ... } return 0;` instead of
+    `if (!cond) return 0; <body>`.** An early mid-function `return` of a constant
+    emits an extra `li r3,0; b <epilogue>` island that target doesn't have when
+    it instead falls through a single guarded block to one common return. When
+    the function is "guard, then do everything, then `return 0`", express it as
+    the positive `if (cond) { <body> }` wrapping the work and a single trailing
+    `return 0;`. Took fn_802B74C4 73% → 100% (combined with a local decl-order
+    swap). Clean C, no asm.
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
