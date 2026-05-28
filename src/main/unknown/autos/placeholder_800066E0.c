@@ -4543,23 +4543,38 @@ void FUN_80006a04(void)
 {
 }
 
+typedef f32 (*CurveEvalFn)(f32 t, f32 *values, f32 *outTangent);
+
 typedef struct Curve {
-    u8 pad00[0x10];
+    f32 t;
+    f32 f4;
+    f32 f8;
+    f32 fc;
     int idx;
     f32 totalLen;
-    f32 segLen[27];
+    f32 segLen[20];
+    f32 sample[3];
+    f32 tangent[3];
+    int dir;
     f32 *px;
     f32 *py;
     f32 *pz;
-    u8 pad90[8];
+    int count;
+    CurveEvalFn eval;
     u32 flag98;
 } Curve;
 
 extern void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803DE658;
+extern f32 lbl_803DE674;
+extern f32 lbl_803DE690;
 extern f32 lbl_803DE67C;
+extern f32 curveFn_80010ce4(f32 t, f32 *values, f32 *outTangent);
+extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
+int curveFn_80010320(Curve *curve, f32 dt);
 
+#pragma dont_inline on
 void curveFn_8000fe8c(Curve *curve, int count)
 {
     f32 outX[21];
@@ -4600,6 +4615,137 @@ void curveFn_8000fe8c(Curve *curve, int count)
         curve->totalLen += curve->segLen[i];
     }
 }
+#pragma dont_inline reset
+
+/*
+ * Function: curveFn_80010320
+ * EN v1.0 Address: 0x80010320
+ */
+#pragma scheduling off
+int curveFn_80010320(Curve *curve, f32 dt)
+{
+    int seg, savedIdx;
+    f32 *lengths = &curve->totalLen;
+    f32 step = dt * timeDelta;
+    f32 zero;
+    f32 base, frac, t;
+
+    if (step > lbl_803DE658) {
+        seg = (int)(lbl_803DE690 * curve->t);
+        if (seg == 20) {
+            seg--;
+        }
+        if (curve->dir != 0) {
+            curve->f4 = lengths[seg + 1] + curve->f4;
+        } else if (curve->t >= lbl_803DE674) {
+            return 1;
+        }
+        curve->f8 += step;
+        step += curve->f4;
+        zero = lbl_803DE658;
+        while (step > zero) {
+            step -= lengths[seg + 1];
+            if (step > zero && ++seg >= 20) {
+                savedIdx = curve->idx;
+                if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+                    curve->idx += 3;
+                }
+                if (++curve->idx > curve->count - 4) {
+                    if (curve->px != NULL) {
+                        curve->sample[0] = curve->eval(lbl_803DE674, curve->px + savedIdx, &curve->tangent[0]);
+                    }
+                    if (curve->py != NULL) {
+                        curve->sample[1] = curve->eval(lbl_803DE674, curve->py + savedIdx, &curve->tangent[1]);
+                    }
+                    if (curve->pz != NULL) {
+                        curve->sample[2] = curve->eval(lbl_803DE674, curve->pz + savedIdx, &curve->tangent[2]);
+                    }
+                    curve->t = lbl_803DE674;
+                    curve->f4 = lbl_803DE658;
+                    curve->f8 = curve->fc;
+                    curve->idx = curve->count - 4;
+                    return 1;
+                }
+                curveFn_8000fe8c(curve, 20);
+                seg = 0;
+            }
+        }
+        step += lengths[seg + 1];
+        base = (f32)seg / lbl_803DE690;
+        frac = step / lengths[seg + 1];
+        t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
+        if (curve->px != NULL) {
+            curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);
+        }
+        if (curve->py != NULL) {
+            curve->sample[1] = curve->eval(t, curve->py + curve->idx, &curve->tangent[1]);
+        }
+        if (curve->pz != NULL) {
+            curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
+        }
+        curve->t = t;
+        curve->f4 = step;
+        curve->dir = 0;
+        return 0;
+    } else if (step < lbl_803DE658) {
+        seg = (int)(lbl_803DE690 * curve->t);
+        if (seg == 20) {
+            seg--;
+        }
+        if (curve->dir == 0) {
+            curve->f4 = lengths[seg + 1] - curve->f4;
+        } else if (curve->t <= lbl_803DE658) {
+            return 1;
+        }
+        curve->f8 += step;
+        step += curve->f4;
+        zero = lbl_803DE658;
+        while (step < zero) {
+            step += lengths[seg + 1];
+            if (step < zero && --seg < 0) {
+                savedIdx = curve->idx;
+                if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+                    curve->idx -= 3;
+                }
+                if (--curve->idx < 0) {
+                    if (curve->px != NULL) {
+                        curve->sample[0] = curve->eval(lbl_803DE658, curve->px + savedIdx, &curve->tangent[0]);
+                    }
+                    if (curve->py != NULL) {
+                        curve->sample[1] = curve->eval(lbl_803DE658, curve->py + savedIdx, &curve->tangent[1]);
+                    }
+                    if (curve->pz != NULL) {
+                        curve->sample[2] = curve->eval(lbl_803DE658, curve->pz + savedIdx, &curve->tangent[2]);
+                    }
+                    curve->t = lbl_803DE658;
+                    curve->f4 = -lengths[1];
+                    curve->f8 = lbl_803DE658;
+                    curve->idx = 0;
+                    return 1;
+                }
+                curveFn_8000fe8c(curve, 20);
+                seg = 19;
+            }
+        }
+        base = (f32)seg / lbl_803DE690;
+        frac = step / lengths[seg + 1];
+        t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
+        if (curve->px != NULL) {
+            curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);
+        }
+        if (curve->py != NULL) {
+            curve->sample[1] = curve->eval(t, curve->py + curve->idx, &curve->tangent[1]);
+        }
+        if (curve->pz != NULL) {
+            curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
+        }
+        curve->t = t;
+        curve->f4 = step - lengths[seg + 1];
+        curve->dir = 1;
+    }
+    return 0;
+}
+#pragma scheduling reset
 
 /*
  * --INFO--
