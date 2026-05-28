@@ -4694,6 +4694,102 @@ int ktrex_stateHandlerA09(int obj, int runtime) {
 }
 #pragma scheduling reset
 
+extern f32 lbl_803E67D0;
+extern f32 lbl_803E67D4;
+
+#pragma scheduling off
+int ktrex_stateHandlerA10(int obj, int runtime) {
+    void *p;
+    u16 flags;
+    int phase;
+    int laneBit;
+    p = *(void **)((char *)obj + 0x4c);
+    flags = *(u16 *)((char *)gKTRexState + 0xfa);
+    phase = (flags >> 1) & 3;
+    laneBit = flags & 1;
+    if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
+        (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 1);
+        *(u8 *)((char *)gKTRexState + 0xfc) = 2;
+        *(f32 *)((char *)runtime + 0x294) =
+            *(f32 *)((char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4 + 0x38) / lbl_803E67C4;
+    }
+    if (ktrex_updateArenaPathProgress(runtime) != 0) {
+        int push = 0xa;
+        if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+            Stack_Push(*(int *)gKTRexState, &push);
+        }
+        return 4;
+    }
+    if ((u8)ktrex_shouldAdvanceArenaPhase() != 0) {
+        (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(3, 0, 0);
+    }
+    if (RandomTimer_UpdateRangeTrigger((char *)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0) {
+        Sfx_PlayFromObject(obj, 0x8f);
+    }
+    *(f32 *)((char *)gKTRexState + 4) -= timeDelta;
+    if (*(f32 *)((char *)gKTRexState + 4) <= lbl_803E67B8) {
+        *(f32 *)((char *)gKTRexState + 4) = lbl_803E67B8;
+    }
+    if (*(f32 *)((char *)gKTRexState + 4) <= lbl_803E67B8 &&
+        *(int *)((char *)gKTRexState + 0xc) == phase &&
+        ((laneBit == 0 && *(f32 *)((char *)gKTRexState + 8) >= lbl_803E67D0) ||
+         (laneBit != 0 && *(f32 *)((char *)gKTRexState + 8) <= lbl_803E67D4))) {
+        if ((*(u16 *)((char *)gKTRexState + 0xfa) & 8) != 0) {
+            int cond;
+            u8 fe;
+            *(u8 *)((char *)gKTRexState + 0x101) += 1;
+            GameBit_Set(0x572, *(u8 *)((char *)gKTRexState + 0x101));
+            *(u8 *)((char *)gKTRexState + 0xfd) = 0;
+            *(u16 *)((char *)gKTRexState + 0xfa) &= ~0x8;
+            fe = *(u8 *)((char *)gKTRexState + 0xfe);
+            if (fe == 1) {
+                cond = *(u8 *)((char *)gKTRexState + 0xff) == 2;
+            } else if (fe == 2) {
+                cond = *(u8 *)((char *)gKTRexState + 0xff) == 1;
+            } else if (fe == 4) {
+                cond = *(u8 *)((char *)gKTRexState + 0xff) == 8;
+            } else {
+                cond = *(u8 *)((char *)gKTRexState + 0xff) == 4;
+            }
+            if (cond && (*(u16 *)((char *)gKTRexState + 0xfa) & 0x40) == 0) {
+                int push = 0xb;
+                if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+                    Stack_Push(*(int *)gKTRexState, &push);
+                }
+            } else {
+                int push = 2;
+                if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+                    Stack_Push(*(int *)gKTRexState, &push);
+                }
+            }
+            {
+                int push = 4;
+                if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+                    Stack_Push(*(int *)gKTRexState, &push);
+                }
+            }
+        } else {
+            int push = 2;
+            *(u8 *)((char *)gKTRexState + 0x101) -= 1;
+            if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+                Stack_Push(*(int *)gKTRexState, &push);
+            }
+        }
+        ktrexlevel_updatePathGameBits();
+        (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(3, 0, 0);
+        GameBit_Set(0x572, *(u8 *)((char *)gKTRexState + 0x101));
+        {
+            int popped = 0;
+            if (Stack_IsEmpty(*(int *)gKTRexState) == 0) {
+                Stack_Pop(*(int *)gKTRexState, &popped);
+            }
+            return popped + 1;
+        }
+    }
+    return 0;
+}
+#pragma scheduling reset
+
 extern void **gScreenTransitionInterface;
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern void unlockLevel(int a, int b, int c);
