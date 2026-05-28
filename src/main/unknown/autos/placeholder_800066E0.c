@@ -10053,3 +10053,43 @@ void streamsLoadedCallback(int status, void* fileInfo)
         }
     }
 }
+
+extern int lbl_803387B8[];
+
+/*
+ * Function: voxmaps_updateTimers
+ * EN v1.0 Address: 0x80013434
+ * EN v1.0 Size: 160b
+ */
+void voxmaps_updateTimers(void)
+{
+    int* p = lbl_803387B8;
+    int i;
+    for (i = 0; i < 6; i++) {
+        if (*p < 0x3FFFFFFF) {
+            (*p)++;
+        }
+        p++;
+    }
+}
+
+extern u32 lbl_803DC8CC;
+
+/*
+ * Function: voxmaps_gridToWorld
+ * EN v1.0 Address: 0x80012E0C
+ * EN v1.0 Size: 180b
+ */
+void voxmaps_gridToWorld(f32* out, s16* grid)
+{
+    int v;
+    v = grid[0] * 10 + 5;
+    out[0] = (f32)v;
+    v = grid[1] * 10 + 5;
+    out[1] = (f32)v;
+    v = grid[2] * 10 + 5;
+    out[2] = (f32)v;
+    if (lbl_803DC8CC != 0) {
+        Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], lbl_803DC8CC);
+    }
+}
