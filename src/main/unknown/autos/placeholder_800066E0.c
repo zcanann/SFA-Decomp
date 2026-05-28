@@ -2163,18 +2163,18 @@ typedef struct SfxTriggerCacheEntry {
     u16 index;
 } SfxTriggerCacheEntry;
 
-extern SfxTrigger *gSfxTriggersData;
+extern void *gSfxTriggersData;
 extern int gSfxTriggersCount;
 extern SfxTriggerCacheEntry lbl_802C5D78[];
 
 SfxTrigger *Sfx_FindTrigger(u16 id)
 {
-    SfxTrigger *low = gSfxTriggersData;
-    SfxTrigger *high = gSfxTriggersData + gSfxTriggersCount;
+    SfxTrigger *low = (SfxTrigger *)gSfxTriggersData;
+    SfxTrigger *high = (SfxTrigger *)gSfxTriggersData + gSfxTriggersCount;
     SfxTriggerCacheEntry *c = &lbl_802C5D78[id & 0xf];
 
     if (c->key == id) {
-        return gSfxTriggersData + c->index;
+        return (SfxTrigger *)gSfxTriggersData + c->index;
     }
     while (low < high) {
         SfxTrigger *mid = low + (high - low) / 2;
@@ -2184,7 +2184,7 @@ SfxTrigger *Sfx_FindTrigger(u16 id)
             low = mid + 1;
         } else {
             c->key = id;
-            c->index = mid - gSfxTriggersData;
+            c->index = mid - (SfxTrigger *)gSfxTriggersData;
             return mid;
         }
     }
@@ -2240,6 +2240,44 @@ void FUN_8000684c(uint *param_1)
  */
 void FUN_80006850(void)
 {
+}
+
+extern void *Obj_GetPlayerObject(void);
+extern int getCurSeqNo(void);
+extern void *Camera_GetCurrentViewSlot(void);
+extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
+extern f32 PSVECMag(f32 *v);
+extern f32 lbl_803DE5B4;
+extern f32 lbl_803DE5B8;
+extern double lbl_803DE5C0;
+extern double lbl_803DE5C8;
+
+f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
+{
+    f32 v[3];
+    f32 t;
+    f32 *listener;
+    void *player = Obj_GetPlayerObject();
+    void *slot = Camera_GetCurrentViewSlot();
+    int seqNo = getCurSeqNo();
+
+    if (player != NULL && seqNo == 0) {
+        listener = (f32 *)((u8 *)player + 0x18);
+    } else if (slot == NULL) {
+        return lbl_803DE570;
+    } else if (player == NULL) {
+        listener = (f32 *)((u8 *)slot + 0x44);
+    } else {
+        PSVECSubtract((f32 *)((u8 *)slot + 0x44), (f32 *)((u8 *)player + 0x18), v);
+        t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
+        t = (t > lbl_803DE5C8 ? t : lbl_803DE5C8) > lbl_803DE5C0 ? lbl_803DE5C0
+                                                                  : (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
+        PSVECScale(v, v, t);
+        PSVECAdd((f32 *)((u8 *)player + 0x18), v, v);
+        listener = v;
+    }
+    PSVECSubtract(listener, soundPos, outDelta);
+    return PSVECMag(outDelta);
 }
 
 /*
