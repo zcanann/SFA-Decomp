@@ -252,6 +252,8 @@ extern void lightFn_8001db6c(void *light, int v, f32 f);
 extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int d);
 extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
 extern int *ObjGroup_GetObjects(int group, int *count);
+extern f32 lbl_803E6B68;
+extern f32 lbl_803E6B6C;
 
 typedef struct {
     u8 b0 : 1;
@@ -1274,6 +1276,43 @@ void drshackle_update(int obj) {
     if (((BitFlags8 *)(p + 0x1a))->b0 != 0) {
         ((BitFlags8 *)(p + 0x1a))->b0 = (GameBit_Get(*(s16 *)(q + 0x1e)) == 0);
     }
+}
+
+void drgenerator_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    f32 fv;
+    if (*(s16 *)((char *)obj + 0x46) == 0x72e) {
+        int *t;
+        *(void **)((char *)obj + 0xbc) = (void *)drgenerator_eventCallback;
+        t = objFindTexture(obj, 0, 0);
+        if (t != 0) {
+            *t = 0x100;
+        }
+    }
+    *(u8 *)(p + 0x19a) = 2;
+    ObjHits_EnableObject(obj);
+    if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
+        *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        objRemoveFromListFn_8002ce88(obj);
+        ObjHits_DisableObject(obj);
+    }
+    ObjGroup_AddObject(obj, 0x3);
+    *(int *)p = 0;
+    ((BitFlags8 *)(p + 0x19b))->b3 = 1;
+    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
+    *(s16 *)(p + 0x198) = (*(s16 *)(arg + 0x1a) == 0) ? 0x14 : *(s16 *)(arg + 0x1a);
+    *(s16 *)(p + 0x198) = *(s16 *)(p + 0x198) * 0x3c;
+    *(f32 *)(p + 0x124) = lbl_803E6B68;
+    if (GameBit_Get(0x9b9) != 0) {
+        ((BitFlags8 *)(p + 0x19b))->b0 = 1;
+        ((BitFlags8 *)(p + 0x19b))->b4 = 1;
+    } else {
+        ((BitFlags8 *)(p + 0x19b))->b4 = 0;
+    }
+    fv = lbl_803E6B6C;
+    *(f32 *)((char *)obj + 0x2c) = fv;
+    *(f32 *)((char *)obj + 0x28) = fv;
+    *(f32 *)((char *)obj + 0x24) = fv;
 }
 
 #pragma peephole reset
