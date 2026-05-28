@@ -32,6 +32,11 @@ Heuristic before reaching for `asm { }`:
    peephole pass that fuses `extsb + cmpwi → extsb.`, `rlwinm + cmpwi →
    rlwinm.`, and similar dot-form merges. Single most useful change on this
    project. See `b7eda753` (dll_198 — 3 functions to 100%).
+   **Caveat — peephole-off suppresses jump tables.** `peephole off` also turns a
+   `switch` MWCC would lower to a jump table into a compare-chain. If a function
+   is *all-switch with no bit-ops*, keep it OUTSIDE the peephole-off region so
+   the jump table survives; if it mixes a switch with bit-ops you can't have
+   both, so pick whichever the target uses and leave the other as the residual.
 
 2. **Replace `& 0xff7f`-style literal with `& ~0x80`** for single-bit clears.
    The bit-NOT form often produces `rlwinm` directly where the explicit
@@ -50,6 +55,11 @@ Heuristic before reaching for `asm { }`:
    (e.g. `ObjList_GetObjects(&objectIndex, &objectCount)`), MWCC assigns stack
    offsets in declaration order. If target has `&first` at sp+8 and `&second`
    at sp+0xc but yours is the opposite, swap the declarations. See `91f5f4ab`.
+   **Note — address-taken locals can color in REVERSE declaration order.** In
+   some functions MWCC assigns address-taken stack locals offsets in *reverse*
+   declaration order (declare the lowest-offset local LAST). If the plain
+   declaration-order swap above doesn't land the offsets, flip it. Proven on
+   drgenerator/drlasercannon/hightop_hitDetect (placeholder_80211C24).
 
 6. **Lift a repeated constant load to a local before multiple stores** to force
    CSE. `f32 fz = lbl_xxx; *p1 = fz; *p2 = fz; *p3 = fz;` instead of three
