@@ -86,7 +86,15 @@ extern u8 lbl_803DD164;
 extern void *lbl_803DD168;
 extern u8 lbl_803DD178;
 extern s8 lbl_803DD113;
+extern u8 lbl_803DD114;
+extern s16 lbl_803DD116;
+extern f32 lbl_803DD118;
+extern f32 lbl_803DD11C;
+extern f32 lbl_803DD120;
 extern void *lbl_803DD144;
+extern u16 lbl_803DD0B6;
+extern void *lbl_803DD0B8;
+extern u8 framesThisStep;
 extern f32 lbl_8039A7A8[];
 extern f32 pEXIInputFlag;
 extern f32 timeDelta;
@@ -4349,6 +4357,65 @@ void objSeqSetupFn_80085b34(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void *
     }
 }
 
+void objAnimFn_8008718c(u8 *obj, u8 *seqObj, u8 *seq)
+{
+    s16 basePitch;
+    s16 baseYaw;
+    s16 baseRoll;
+    f32 baseX;
+    f32 baseY;
+    f32 baseZ;
+
+    if (*(void **)(seqObj + 0x30) == *(void **)(obj + 0x30) || (s8)lbl_803DD114 == 0) {
+        baseX = *(f32 *)(obj + 0xc);
+        baseY = *(f32 *)(obj + 0x10);
+        baseZ = *(f32 *)(obj + 0x14);
+        basePitch = *(s16 *)(obj + 0);
+    } else {
+        baseX = lbl_803DD120;
+        baseY = lbl_803DD11C;
+        baseZ = lbl_803DD118;
+        basePitch = lbl_803DD116;
+    }
+
+    baseYaw = *(s16 *)(obj + 2);
+    baseRoll = *(s16 *)(obj + 4);
+    if (seqObj != obj) {
+        if ((*(s16 *)(seq + 0x6e) & 1) != 0) {
+            if ((s8)seq[0x56] == 2) {
+                *(f32 *)(seqObj + 0xc) = *(f32 *)(seq + 0x40) * *(f32 *)(seq + 0x4c) + baseX;
+                *(f32 *)(seqObj + 0x10) = *(f32 *)(seq + 0x44) * *(f32 *)(seq + 0x4c) + baseY;
+                *(f32 *)(seqObj + 0x14) = *(f32 *)(seq + 0x48) * *(f32 *)(seq + 0x4c) + baseZ;
+            } else {
+                *(f32 *)(seqObj + 0xc) = baseX;
+                *(f32 *)(seqObj + 0x10) = baseY;
+                *(f32 *)(seqObj + 0x14) = baseZ;
+            }
+        }
+        if ((*(s16 *)(seq + 0x6e) & 2) != 0) {
+            if ((s8)seq[0x56] == 2) {
+                *(s16 *)(seqObj + 0) =
+                    (s16)(basePitch + (s32)((f32)*(s16 *)(seq + 0x50) * *(f32 *)(seq + 0x4c)));
+                *(s16 *)(seqObj + 2) =
+                    (s16)(baseYaw + (s32)((f32)*(s16 *)(seq + 0x52) * *(f32 *)(seq + 0x4c)));
+                *(s16 *)(seqObj + 4) =
+                    (s16)(baseRoll + (s32)((f32)*(s16 *)(seq + 0x54) * *(f32 *)(seq + 0x4c)));
+            } else {
+                *(s16 *)(seqObj + 0) = basePitch;
+                *(s16 *)(seqObj + 2) = baseYaw;
+                *(s16 *)(seqObj + 4) = baseRoll;
+            }
+        }
+    }
+
+    if ((s8)seq[0x7b] != 0 && (s8)seq[0x78] != 0) {
+        lbl_803DD0B8 = obj;
+        lbl_803DD0B6 = framesThisStep;
+    }
+    Obj_GetWorldPosition(seqObj, (f32 *)(seqObj + 0x18), (f32 *)(seqObj + 0x1c),
+                         (f32 *)(seqObj + 0x20));
+}
+
 int seqEvalCondition(int condition, u8 *seq, int obj)
 {
     int tailState;
@@ -4474,12 +4541,11 @@ void ObjSeq_setFlag(int index, int value)
     if (index < 0) {
         return;
     }
-    if (index < 0x55) {
-        flag = value;
-        lbl_8039A45C[index] = flag;
+    if (index >= 0x55) {
         return;
     }
-    return;
+    flag = value;
+    lbl_8039A45C[index] = flag;
 }
 
 void ObjSeq_addBgCmd(int index, int xrot, int yrot)
@@ -4492,22 +4558,22 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     if (index < 0) {
         return;
     }
-    if (index < 0x55) {
-        count = lbl_803DD0BC;
-        if (count >= 0x1e) {
-            return;
-        }
-
-        shortIndex = index;
-        shortYrot = yrot;
-        lbl_80399398[count * 3] = shortIndex;
-        lbl_80399398[count * 3 + 2] = shortYrot;
-        shortXrot = xrot;
-        lbl_803DD0BC++;
-        lbl_80399398[count * 3 + 1] = shortXrot;
+    if (index >= 0x55) {
         return;
     }
-    return;
+
+    count = lbl_803DD0BC;
+    if (count >= 0x1e) {
+        return;
+    }
+
+    shortIndex = index;
+    shortYrot = yrot;
+    lbl_80399398[count * 3] = shortIndex;
+    lbl_80399398[count * 3 + 2] = shortYrot;
+    shortXrot = xrot;
+    lbl_803DD0BC++;
+    lbl_80399398[count * 3 + 1] = shortXrot;
 }
 
 void ObjSeq_seqState_free(u8 *seq)
