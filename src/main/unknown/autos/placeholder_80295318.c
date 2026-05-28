@@ -6441,6 +6441,9 @@ extern void Sfx_StopFromObject(int obj, int id);
 extern int fn_8029B9FC(int obj, int state, f32 fv);
 extern int fn_80299E44(int obj, int state, f32 fv);
 extern f32 lbl_803E7F40;
+extern f32 lbl_803E805C;
+extern s16 lbl_80333110[];
+extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern u16 getButtons_80014dd8(int port);
 extern f32 powfBitEstimate(f32 base, f32 exp);
 extern f32 lbl_803E7E8C;
@@ -9894,6 +9897,70 @@ void fn_802A514C(int obj, int state)
         ObjHits_SyncObjectPositionIfDirty(obj);
     }
     lbl_803DC66C = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802A4D34(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(f32 *)((char *)state + 0x284) = lbl_803E7EA4;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        if (lbl_803DE44C != NULL) {
+            if (((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                *(u8 *)((char *)inner + 0x8b4) = 1;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+            }
+        }
+        *(s16 *)((char *)state + 0x278) = 1;
+        *(int *)((char *)inner + 0x898) = (int)fn_802A514C;
+    }
+    if (*(s16 *)((char *)obj + 0xa0) == 5) {
+        void *sub;
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
+        *(f32 *)((char *)state + 0x280) = lbl_803E7EA4;
+        sub = *(void **)((char *)inner + 0x7f8);
+        if (sub != NULL) {
+            f32 amt;
+            if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E98) {
+                *(int *)((char *)sub + 0xf8) = 1;
+            }
+            amt = interpolate((f32)*(int *)((char *)inner + 0x4a4), lbl_803E805C, timeDelta);
+            *(s16 *)((char *)inner + 0x478) = (int)((f32)*(s16 *)((char *)inner + 0x478) + amt);
+            *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        }
+        if (*(f32 *)((char *)obj + 0x98) > lbl_803E7F2C) {
+            *(int *)((char *)inner + 0x3f8) = (int)lbl_80333110;
+            ObjAnim_SetCurrentMove(obj, *(s16 *)*(int *)((char *)inner + 0x3f8), lbl_803E7EA4, 0);
+            *(int *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+    } else {
+        void *sub = *(void **)((char *)inner + 0x7f8);
+        if (sub != NULL && *(s16 *)((char *)sub + 0x46) == 0x112) {
+            *(int *)((char *)inner + 0x3f8) = (int)lbl_80333110;
+            *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 1;
+            ObjAnim_SetCurrentMove(obj, *(s16 *)*(int *)((char *)inner + 0x3f8), lbl_803E7EA4, 0);
+            *(int *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        } else {
+            ObjAnim_SetCurrentMove(obj, 5, lbl_803E7EA4, 0);
+        }
+    }
+    if (*(int *)((char *)state + 0x314) & 1) {
+        u16 snd;
+        if (*(s16 *)((char *)inner + 0x81a) != 0) {
+            snd = 0x3c1;
+        } else {
+            snd = 0x320;
+        }
+        Sfx_PlayFromObject(obj, snd);
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
