@@ -10965,6 +10965,61 @@ extern f32 lbl_803E7EBC;
 extern int fn_802ABFBC(int obj, int state, int inner);
 extern f32 lbl_803E7FC8;
 extern f32 lbl_80332FC0[];
+extern void objPosFn_80039510(int obj, int idx, f32 *out);
+extern f32 lbl_803E7FF4;
+extern f32 lbl_803E7F1C;
+
+int fn_802ABFBC(int obj, int state, int inner)
+{
+    void *sub;
+    f32 dx, dy, dz;
+    f32 x1, y1, z1;
+    f32 pos2[3];
+
+    *(s16 *)((char *)inner + 0x4d0) =
+        (int)((f32)*(s16 *)((char *)inner + 0x4d0) * powfBitEstimate(lbl_803E7FF4, timeDelta));
+    sub = *(void **)((char *)inner + 0x4b8);
+    if (sub != NULL && *(u8 *)(*(int *)((char *)sub + 0x50) + 0x58) != 0) {
+        int d;
+        int adj;
+
+        ObjPath_GetPointWorldPosition(obj, 5, &x1, &y1, &z1, 0);
+        if (objModelGetVecFn_800395d8((int)sub, 0) != 0) {
+            objPosFn_80039510((int)sub, 0, pos2);
+        } else {
+            pos2[0] = *(f32 *)((char *)sub + 0xc);
+            pos2[1] = *(f32 *)((char *)sub + 0x10);
+            pos2[2] = *(f32 *)((char *)sub + 0x14);
+        }
+        dx = pos2[0] - x1;
+        dy = pos2[1] - y1;
+        dz = pos2[2] - z1;
+
+        d = (u16)getAngle(-dy, sqrtf(dx * dx + dz * dz)) - (u16)*(s16 *)((char *)inner + 0x4d6);
+        if (d > 0x8000) d -= 0xffff;
+        if (d < -0x8000) d += 0xffff;
+        adj = (int)((f32)d * lbl_803E7EB4);
+        *(s16 *)((char *)inner + 0x4d6) =
+            (int)((f32)adj * timeDelta + (f32)*(s16 *)((char *)inner + 0x4d6));
+
+        d = (u16)getAngle(-dx, -dz) - (u16)*(s16 *)((char *)inner + 0x478);
+        if (d > 0x8000) d -= 0xffff;
+        if (d < -0x8000) d += 0xffff;
+        if (d < -0x1c70) d = -0x1c70;
+        else if (d > 0x1c70) d = 0x1c70;
+        d -= (u16)*(s16 *)((char *)inner + 0x4d4);
+        if (d > 0x8000) d -= 0xffff;
+        if (d < -0x8000) d += 0xffff;
+        adj = (int)((f32)d * lbl_803E7EB4);
+        *(s16 *)((char *)inner + 0x4d4) =
+            (int)((f32)adj * timeDelta + (f32)*(s16 *)((char *)inner + 0x4d4));
+        *(s16 *)((char *)inner + 0x4d2) = *(s16 *)((char *)inner + 0x4d4) / 2;
+    } else {
+        *(s16 *)((char *)inner + 0x4d6) =
+            (int)((f32)*(s16 *)((char *)inner + 0x4d6) * powfBitEstimate(lbl_803E7F1C, timeDelta));
+    }
+    return 0;
+}
 
 int fn_8029CF30(int obj, int state, f32 fv)
 {
