@@ -10936,6 +10936,68 @@ extern f32 lbl_803E7ECC;
 extern f32 lbl_803E7ED0;
 extern void PSMTXMultVec(f32 *m, f32 *src, f32 *dst);
 
+extern int getScreenResolution(void);
+extern f32 Camera_GetAspectRatio(void);
+extern int fn_8000E814(void);
+extern void Matrix_TransformVector(int m, f32 *src, f32 *dst);
+extern f32 lbl_803E80D4;
+extern f32 lbl_803E80D8;
+extern f32 lbl_803E80AC;
+
+void fn_802AA014(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int slot = Camera_GetCurrentViewSlot();
+
+    if (Obj_IsLoadingLocked()) {
+        int setup = Obj_AllocObjectSetup(0x24, 0x14b);
+        void *o;
+        f32 v[3];
+
+        *(u8 *)((char *)setup + 4) = 2;
+        *(u8 *)((char *)setup + 5) = 1;
+        *(u8 *)((char *)setup + 6) = 0xff;
+        *(u8 *)((char *)setup + 7) = 0xff;
+        *(f32 *)((char *)setup + 8) = *(f32 *)((char *)slot + 0xc);
+        *(f32 *)((char *)setup + 0xc) = *(f32 *)((char *)slot + 0x10);
+        *(f32 *)((char *)setup + 0x10) = *(f32 *)((char *)slot + 0x14);
+        Sfx_PlayFromObject(obj, 0x20b);
+        o = (void *)Obj_SetupObject(setup, 5, -1, -1, 0);
+        if (o != NULL) {
+            f32 fov, cot, aspect, ycomp, xcomp, len;
+            int res, h2, hw;
+
+            *(s16 *)((char *)o + 6) |= 0x2000;
+            res = getScreenResolution();
+            hw = res >> 17;
+            *(s16 *)((char *)o + 0) = *(s16 *)((char *)slot + 0);
+            fov = (lbl_803E7F94 * (Camera_GetFovY() * lbl_803E80D4)) / lbl_803E7F98;
+            cot = lbl_803E7F5C * (fn_80293E80(fov) / sin(fov));
+            aspect = Camera_GetAspectRatio();
+            h2 = (u16)res >> 1;
+            ycomp = cot * -(((*(f32 *)((char *)inner + 0x788) - (f32)h2) / (f32)h2) * aspect);
+            xcomp = cot * ((*(f32 *)((char *)inner + 0x78c) - (f32)hw) / (f32)hw);
+            len = sqrtf(lbl_803E80AC + (ycomp * ycomp + xcomp * xcomp));
+            v[0] = ycomp / len;
+            v[1] = xcomp / len;
+            v[2] = lbl_803E7F5C / len;
+            Matrix_TransformVector(fn_8000E814(), v, v);
+            *(f32 *)((char *)o + 0x24) = v[0] * lbl_803E80D8;
+            *(f32 *)((char *)o + 0x28) = v[1] * lbl_803E80D8;
+            *(f32 *)((char *)o + 0x2c) = v[2] * lbl_803E80D8;
+            *(f32 *)((char *)o + 0xc) = *(f32 *)((char *)o + 0x18) =
+                lbl_803E7ED4 * *(f32 *)((char *)o + 0x24) + *(f32 *)((char *)slot + 0xc);
+            *(f32 *)((char *)o + 0x10) = *(f32 *)((char *)o + 0x1c) =
+                lbl_803E7ED4 * *(f32 *)((char *)o + 0x28) + *(f32 *)((char *)slot + 0x10);
+            *(f32 *)((char *)o + 0x14) = *(f32 *)((char *)o + 0x20) =
+                lbl_803E7ED4 * *(f32 *)((char *)o + 0x2c) + *(f32 *)((char *)slot + 0x14);
+            *(s16 *)((char *)o + 2) = *(s16 *)((char *)slot + 2) / 2;
+            *(s16 *)((char *)o + 0) = -*(s16 *)((char *)slot + 0);
+            *(int *)((char *)o + 0xf4) = 0x64;
+        }
+    }
+}
+
 int fn_80295674(int obj, int inner)
 {
     f32 outvec[3];
