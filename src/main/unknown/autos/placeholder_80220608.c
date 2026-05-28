@@ -4844,3 +4844,77 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
     }
 }
 #pragma scheduling on
+
+typedef struct DrLightBeaFlags {
+    u8 bit80 : 1;
+    u8 bit40 : 1;
+    u8 pad : 6;
+} DrLightBeaFlags;
+
+extern int dll_2E_func0A(int a, void *out);
+extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern f32 lbl_803E6BB8;
+extern f32 lbl_803E6BBC;
+extern f32 lbl_803E6BC0;
+
+#pragma peephole off
+#pragma scheduling off
+void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    int player;
+    int connectId;
+    f32 buf[6];
+    f32 vecA[3];
+    f32 vecB[3];
+
+    if (((DrLightBeaFlags *)(state + 4))->bit80) {
+        *(f32 *)(*(int *)state + 0) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(int *)state + 4) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(int *)state + 8) = *(f32 *)(obj + 0x14);
+        if (*(s8 *)(setup + 0x19) == 0) {
+            player = Obj_GetPlayerObject();
+            *(f32 *)(*(int *)state + 0xc) = *(f32 *)(player + 0xc);
+            *(f32 *)(*(int *)state + 0x10) = lbl_803E6BB8 + *(f32 *)(player + 0x10);
+            *(f32 *)(*(int *)state + 0x14) = *(f32 *)(player + 0x14);
+        }
+        renderFn_8008f904(*(void **)state);
+        *(u16 *)(*(int *)state + 0x20) += 1;
+        if (*(u16 *)(*(int *)state + 0x20) >= *(u16 *)(*(int *)state + 0x22)) {
+            mm_free(*(void **)state);
+            *(int *)state = 0;
+            ((DrLightBeaFlags *)(state + 4))->bit80 = 0;
+            if (*(u32 *)(setup + 0x14) == 0xffffffff) {
+                ((DrLightBeaFlags *)(state + 4))->bit40 = 1;
+            }
+        }
+    } else {
+        if (*(void **)state != NULL) {
+            mm_free(*(void **)state);
+            *(int *)state = 0;
+        }
+        ((DrLightBeaFlags *)(state + 4))->bit80 = (u8)GameBit_Get(*(s16 *)(setup + 0x20));
+        if (((DrLightBeaFlags *)(state + 4))->bit80) {
+            Sfx_PlayFromObject(obj, 0x30f);
+            vecA[0] = *(f32 *)(obj + 0xc);
+            vecA[1] = *(f32 *)(obj + 0x10);
+            vecA[2] = *(f32 *)(obj + 0x14);
+            connectId = *(s8 *)(setup + 0x19);
+            if (connectId != 0 && dll_2E_func0A(connectId, buf) != 0) {
+                vecB[0] = buf[3];
+                vecB[1] = buf[4];
+                vecB[2] = buf[5];
+            } else {
+                player = Obj_GetPlayerObject();
+                vecB[0] = *(f32 *)(player + 0xc);
+                vecB[1] = lbl_803E6BB8 + *(f32 *)(player + 0x10);
+                vecB[2] = *(f32 *)(player + 0x14);
+            }
+            *(void **)state = fn_8008FB20(vecA, vecB, lbl_803E6BBC, lbl_803E6BC0,
+                                         (u16)randomGetRange(5, 0xf), 0x60, 0);
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
