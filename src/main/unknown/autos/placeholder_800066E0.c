@@ -8857,7 +8857,7 @@ f32 fn_80010C50(f32 t, f32* values)
  */
 f32 mathFn_80010c64(f32 t, f32* values, f32* outTangent)
 {
-    f32 a = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     f32 b = (lbl_803DE65C * values[2] + (lbl_803DE660 * values[0] + lbl_803DE694 * values[1])) - values[3];
     f32 c = -values[0] + values[2];
     f32 d = lbl_803DE660 * values[1];
@@ -8926,7 +8926,7 @@ void fn_80010E2C(f32* values, f32* coefficients)
 {
     f32 scale;
 
-    coefficients[0] = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    coefficients[0] = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     coefficients[1] = lbl_803DE664 * values[2] +
                       (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
     coefficients[2] = lbl_803DE668 * values[0] + lbl_803DE664 * values[2];
@@ -8946,7 +8946,7 @@ void fn_80010E2C(f32* values, f32* coefficients)
  */
 f32 mathFn_80010ee0(f32 t, f32* values, f32* outTangent)
 {
-    f32 a = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     f32 b = lbl_803DE664 * values[2] +
             (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
     f32 c = lbl_803DE668 * values[0] + lbl_803DE664 * values[2];
