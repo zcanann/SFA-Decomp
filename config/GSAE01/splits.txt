@@ -1400,8 +1400,32 @@ main/dll/WM/dll_0211_wmwallcrawler.c:
 main/dll/WM/dll_0212_wmnewcrystal.c:
 	.text       start:0x801F943C end:0x801F9804
 
-main/unknown/autos/placeholder_801F5184.c:
-	.text       start:0x801F9804 end:0x801FB9F4
+main/dll/VF/dll_0216_vfplevelcontrol.c:
+	.text       start:0x801F9804 end:0x801F9D78
+
+main/dll/VF/dll_0217_vfpobjcreator.c:
+	.text       start:0x801F9D78 end:0x801FA228
+
+main/dll/VF/dll_0218_vfpminifire.c:
+	.text       start:0x801FA228 end:0x801FA6FC
+
+main/dll/VF/dll_0219.c:
+	.text       start:0x801FA6FC end:0x801FA870
+
+main/dll/VF/dll_021A_vfpstatueball.c:
+	.text       start:0x801FA870 end:0x801FAC6C
+
+main/dll/VF/dll_021B.c:
+	.text       start:0x801FAC6C end:0x801FAFEC
+
+main/dll/VF/dll_021C_vfpladders.c:
+	.text       start:0x801FAFEC end:0x801FB220
+
+main/dll/VF/dll_021D_vfplift.c:
+	.text       start:0x801FB220 end:0x801FB9AC
+
+main/dll/VF/dll_021E_vfpblock1.c:
+	.text       start:0x801FB9AC end:0x801FB9F4
 
 main/light.c:
 	.text       start:0x801FB9F4 end:0x801FD398
