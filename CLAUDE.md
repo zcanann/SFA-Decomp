@@ -37,6 +37,14 @@ Heuristic before reaching for `asm { }`:
    is *all-switch with no bit-ops*, keep it OUTSIDE the peephole-off region so
    the jump table survives; if it mixes a switch with bit-ops you can't have
    both, so pick whichever the target uses and leave the other as the residual.
+   **Treat the two pragmas independently — `scheduling off` ALONE is often the
+   win.** For vtable-dispatch / call-heavy / FP-heavy functions, `scheduling
+   off` by itself takes 40-70% → 95-100% (it stops MWCC reordering loads/stores
+   and FP ops around calls), while `peephole off` can *hurt* them (jump-table
+   suppression, clamp/compare fusion changes). Default to `scheduling off` only,
+   and add `peephole off` *only* to kill a specific `extsb.`/`rlwinm.` dot-merge
+   residual. Whole object-DLL units (e.g. placeholder_80220608) match best on
+   scheduling-off-only.
 
 2. **Replace `& 0xff7f`-style literal with `& ~0x80`** for single-bit clears.
    The bit-NOT form often produces `rlwinm` directly where the explicit
