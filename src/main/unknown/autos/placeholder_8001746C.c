@@ -8650,6 +8650,42 @@ void mmFree(void *p) {
     OSReport(sMmAllocFreeMessageBlock, p);
 }
 
+extern void *gMmStoreArray[];
+extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
+extern char sMmMemoryStoreMessageBlock[];
+
+int mmAllocateFromFBMemoryStore(int handle, int size) {
+    void **p;
+    int *found;
+    int i;
+    int avail;
+    found = NULL;
+    i = 0;
+    p = gMmStoreArray;
+    while (i < 0x20) {
+        int *store = (int *)*p;
+        if (store != NULL && handle == store[3]) {
+            found = (int *)gMmStoreArray[i];
+            break;
+        }
+        p++;
+        if (++i == 0x20) {
+            OSReport(sMmAllocateFromFBMemoryStoreMissingHandleError);
+            return 0;
+        }
+    }
+    if (found != NULL) {
+        avail = found[2] - (found[1] - found[0]);
+        if (avail < size) {
+            OSReport(sMmMemoryStoreMessageBlock);
+            return 0;
+        }
+        found[1] += size;
+        return found[1] - size;
+    }
+    return 0;
+}
+
 typedef struct {
     void *key;
     int size;
