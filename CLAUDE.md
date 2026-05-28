@@ -288,6 +288,15 @@ no visible source reason, suspect a same-TU callee got auto-inlined into it.
 Wrap that *callee's definition* (not the caller) — this frequently lifts the
 caller AND every other caller of that helper to 100% in one move.
 
+**Confirm via symbol size, and expect multiple victims.** `objdump -t` (or the
+`.o` symbol size) showing the function *much larger* than target is the
+fingerprint of auto-inlining. A single dispatcher can inline *many* siblings at
+once — wrap *each* inlined callee's definition; one fix then lands the
+dispatcher and all the siblings together (a real case: a GameBit dispatcher
+inlined 5 `fn_802A9xxx` siblings, all at 0%; wrapping the 5 callees lifted every
+one to 99-100%). Inserting a new function *after* its callees' definitions in
+the file also avoids forward-decl churn.
+
 ## `for (i=0; i<n; i++) { use(*p); p++; }` vs `*p++`
 
 MWCC emits a `bdnz` countdown loop only when the increment and the
