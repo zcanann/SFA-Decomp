@@ -8448,3 +8448,37 @@ void *ObjAnim_LoadCachedMove(int a, int b, int c, int d) {
     return out;
 }
 #pragma pop
+
+extern void C_MTXLightPerspective(f32 *m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+extern f32 lbl_803DE790;
+extern u8 *lbl_80340898[];
+extern u8 *lbl_80340880[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_8001D878(u8 *obj, f32 a, f32 b) {
+    *(f32 *)(obj + 0x148) = a;
+    *(f32 *)(obj + 0x14c) = b;
+    *(int *)(obj + 0x168) = 1;
+    C_MTXLightPerspective((f32 *)(obj + 0x1b0), *(f32 *)(obj + 0x148), *(f32 *)(obj + 0x14c),
+                          lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
+    C_MTXLightPerspective((f32 *)(obj + 0x1f0), *(f32 *)(obj + 0x148), *(f32 *)(obj + 0x14c),
+                          lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
+}
+
+void ObjModel_InitScratchBuffers(void) {
+    u8 *c = getCache();
+    lbl_80340898[0] = c;
+    lbl_80340898[1] = c + 0x1000;
+    lbl_80340898[2] = c + 0x2000;
+    lbl_80340898[3] = c + 0x3000;
+    c = getCache();
+    lbl_80340880[0] = c;
+    lbl_80340880[1] = c + 0x1000;
+    lbl_80340880[2] = c + 0x1800;
+    lbl_80340880[3] = c + 0x2000;
+    lbl_80340880[4] = c + 0x3000;
+    lbl_80340880[5] = c + 0x3800;
+}
+#pragma pop
