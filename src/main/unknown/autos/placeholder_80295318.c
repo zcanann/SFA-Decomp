@@ -9832,6 +9832,155 @@ void fn_802AC32C(int p1, int p2, int p3)
               powfBitEstimate(lbl_803E7F1C, timeDelta));
 }
 
+extern int lbl_80334EE8[];
+extern f32 lbl_803E8228;
+extern f32 lbl_803E81C0;
+extern int lbl_803DC6F0;
+extern int lbl_803DC6F4;
+extern int lbl_803DC6FC;
+extern int lbl_803DC700;
+extern int lbl_803DC714;
+extern int lbl_803DC718;
+extern int lbl_803DC708;
+extern int lbl_803DC70C;
+extern int lbl_803DC720;
+extern int lbl_803DC724;
+
+void fn_802B8864(void) {}
+
+void lightfoot_init(int obj, int p2, int p3)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int sub;
+    int flags = 0x16;
+
+    if (p3 != 0) {
+        flags = (u8)(flags | 1);
+    }
+    (*(void (*)(int, int, int, int, int, int, int, f32))(*(int *)(*gBaddieControlInterface + 0x58)))(
+        obj, p2, inner, 5, 3, 0x108, flags, lbl_803E8228);
+    *(int *)((char *)obj + 0xbc) = (int)fn_802B8864;
+    *(s16 *)((char *)inner + 0x274) = 0;
+    *(s16 *)((char *)inner + 0x270) = 0;
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
+    sub = *(int *)((char *)inner + 0x40c);
+    *(s16 *)((char *)sub + 0x26) = -1;
+    *(s16 *)((char *)sub + 0x28) = *(s16 *)((char *)sub + 0x26);
+    *(u16 *)((char *)obj + 0xb0) =
+        (u16)(*(u16 *)((char *)obj + 0xb0) | (*(s8 *)((char *)p2 + 0x28) & 0x7));
+    if (*(s16 *)((char *)p2 + 0x1a) == 0x64c) {
+        *(s16 *)((char *)inner + 0x274) = 2;
+        *(s16 *)((char *)inner + 0x270) = 1;
+        ObjHits_DisableObject(obj);
+        *(s16 *)((char *)sub + 0x24) = (u16)randomGetRange(0, 3);
+        *(s16 *)((char *)sub + 0x28) = 0x6f1;
+        *(int *)((char *)sub + 0) = (int)&lbl_803DC6F0;
+        *(int *)((char *)sub + 4) = (int)&lbl_803DC6F4;
+        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+        *(int *)((char *)obj + 0xf8) = 0;
+    } else {
+        switch (*(int *)((char *)p2 + 0x14)) {
+        case 0x34316:
+            *(int *)((char *)sub + 0) = (int)&lbl_803DC714;
+            *(int *)((char *)sub + 4) = (int)&lbl_803DC718;
+            ObjHits_DisableObject(obj);
+            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(f32 *)((char *)obj + 0x98) = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            break;
+        case 0x33e3c:
+            *(int *)((char *)sub + 0) = (int)&lbl_803DC6F0;
+            *(int *)((char *)sub + 4) = (int)&lbl_803DC6F4;
+            *(s16 *)((char *)sub + 0x28) = 0x6f1;
+            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(f32 *)((char *)obj + 0x98) = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            break;
+        case 0x33e34:
+            *(int *)((char *)sub + 0) = (int)&lbl_803DC6FC;
+            *(int *)((char *)sub + 4) = (int)&lbl_803DC700;
+            *(s16 *)((char *)sub + 0x28) = 0x6f1;
+            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(f32 *)((char *)obj + 0x98) = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            break;
+        case 0x45c47:
+            *(int *)((char *)sub + 0) = (int)&lbl_803DC708;
+            *(int *)((char *)sub + 4) = (int)&lbl_803DC70C;
+            ObjHits_DisableObject(obj);
+            *(s16 *)((char *)sub + 0x28) = 0x6f2;
+            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(f32 *)((char *)obj + 0x98) = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            break;
+        case 0x460b6:
+            *(int *)((char *)sub + 0) = (int)&lbl_803DC720;
+            *(int *)((char *)sub + 4) = (int)&lbl_803DC724;
+            ObjHits_DisableObject(obj);
+            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(f32 *)((char *)obj + 0x98) = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            break;
+        case 0x3433f:
+            *(int *)((char *)sub + 0) = (int)((char *)lbl_80334EE8 + 0x30);
+            *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x40);
+            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(f32 *)((char *)obj + 0x98) = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            break;
+        case 0x46a51:
+            if (GameBit_Get(0xc52)) {
+                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            }
+            *(int *)((char *)sub + 0) = (int)lbl_80334EE8;
+            *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x10);
+            break;
+        case 0x46a55:
+            if (GameBit_Get(0xc53)) {
+                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            }
+            *(int *)((char *)sub + 0) = (int)lbl_80334EE8;
+            *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x10);
+            break;
+        case 0x49928:
+            if (GameBit_Get(0xc54)) {
+                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            }
+            *(int *)((char *)sub + 0) = (int)lbl_80334EE8;
+            *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x10);
+            break;
+        case 0x499ac:
+        case 0x499ae:
+        case 0x499af:
+        case 0x499b0:
+        case 0x499b1:
+        case 0x499b2:
+            *(s16 *)((char *)inner + 0x270) = 2;
+            *(int *)((char *)sub + 0) = (int)((char *)lbl_80334EE8 + 0x30);
+            *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x40);
+            *(f32 *)((char *)sub + 0x14) = (f32)(s32)randomGetRange(0x78, 0xb4);
+            *(f32 *)((char *)obj + 0x98) = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
+            break;
+        case 0x499b5:
+        case 0x499b6:
+            *(int *)((char *)obj + 0xf4) = 1;
+            *(int *)((char *)sub + 0) = (int)((char *)lbl_80334EE8 + 0x30);
+            *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x40);
+            break;
+        default:
+            *(int *)((char *)sub + 0) = (int)lbl_80334EE8;
+            *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x10);
+            break;
+        }
+    }
+    fn_802B84D0(obj);
+    ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C,
+                            (ObjAnimComponent *)obj);
+    if (randomGetRange(0, 1) != 0) {
+        *(s16 *)((char *)sub + 0x2a) = 0x133;
+    } else {
+        *(s16 *)((char *)sub + 0x2a) = 0x134;
+    }
+    *(f32 *)((char *)sub + 0xc) = lbl_803E81C0;
+    if (*(int *)((char *)obj + 0xf4) != 0) {
+        ObjHits_DisableObject(obj);
+    }
+}
+
 extern int *gMapEventInterface;
 extern int *gPathControlInterface;
 extern void fn_8029560C();
