@@ -9189,6 +9189,45 @@ void *Obj_SetupObject(int a, int b, int c, int d, int e) {
 }
 #pragma peephole reset
 
+extern void ShaderDef_free(int *def);
+extern void model_adjustModelList(void *list, int index);
+extern void *textureIdxToPtr(int id);
+extern void model_findIdxInModelList(void *list, void *header, int *outIndex);
+extern void *lbl_803DCB50;
+
+void ObjModel_Release(u8 *model) {
+    u8 *header;
+    int i;
+    if (*(u16 *)(model + 0x18) & 0x40) {
+        *(u16 *)(model + 0x18) &= ~0x40;
+        for (i = 0; i < (*(u8 **)model)[0xf8]; i++) {
+            ShaderDef_free((int *)(*(u8 **)(model + 0x34) + i * 0xc));
+        }
+    }
+    header = *(u8 **)model;
+    if (*(void **)(model + 0x58) != NULL) {
+        mm_free(*(void **)(model + 0x58));
+    }
+    if (--*(u8 *)header == 0) {
+        model_adjustModelList(lbl_803DCB54, *(u16 *)(header + 0x4));
+        for (i = 0; i < header[0xf2]; i++) {
+            textureFree(textureIdxToPtr(*(int *)(*(u8 **)(header + 0x20) + i * 4)));
+        }
+        if (*(void **)(header + 0x64) != NULL && *(u16 *)(header + 0xec) != 0) {
+            for (i = 0; i < *(u16 *)(header + 0xec); i++) {
+                void *tex = *(void **)(*(u8 **)(header + 0x64) + i * 4);
+                if (tex != NULL && (s8)--*(u8 *)tex <= 0) {
+                    int idx;
+                    model_findIdxInModelList(lbl_803DCB50, &tex, &idx);
+                    model_adjustModelList(lbl_803DCB50, idx);
+                    mm_free(tex);
+                }
+            }
+        }
+        mm_free(header);
+    }
+}
+
 extern void setGQR6(u32 v);
 extern void mapSetup();
 extern void *memset(void *dst, int val, int n);
