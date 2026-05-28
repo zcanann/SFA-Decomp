@@ -7143,10 +7143,10 @@ int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
 }
 
 void Obj_SetModelRenderOpAlpha(u8 *obj, int alpha) {
-    u8 *modelFile;
     int renderOpAlpha;
-    u8 *model;
     int renderOpIndex;
+    u8 *modelFile;
+    u8 *model;
 
     renderOpAlpha = alpha;
     model = *(u8 **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4);
@@ -8572,5 +8572,26 @@ void ObjModel_ClearBlendChannels(u8 *model) {
         ObjModel_SetBlendChannelTargets(model, 1, -1, -1, lbl_803DE828, 7);
         ObjModel_SetBlendChannelTargets(model, 2, -1, -1, lbl_803DE828, 7);
     }
+}
+#pragma pop
+
+extern void *modelLoadFn_80025ae4(u8 *p, int b, int isType1, int c);
+extern void modelLoadColorFn_80024ec8(void *m, void *data);
+extern void ObjModel_RelocateAnimData(u8 *p, void *m);
+extern void DCStoreRange(void *p, int size);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
+    void *m = modelLoadFn_80025ae4(p, b, p[0] == 1, c);
+    modelLoadColorFn_80024ec8(m, *(void **)((u8 *)m + 0x2c));
+    if (*(void **)((u8 *)m + 0x30) != NULL) {
+        modelLoadColorFn_80024ec8(m, *(void **)((u8 *)m + 0x30));
+    }
+    ObjModel_RelocateAnimData(p, m);
+    *(int *)(p + 8) = 0;
+    DCStoreRange(p, *(int *)(p + 0xc));
+    return m;
 }
 #pragma pop
