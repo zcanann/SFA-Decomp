@@ -8974,6 +8974,61 @@ int randomGetRange(int lo, int hi) {
     return (int)(v + (f32)lo);
 }
 
+extern s16 lbl_803DCAD8;
+extern u8 *lbl_803DCAE0;
+
+u32 GameBit_Get(int eventId) {
+    s16 id = (s16)eventId & 0xfff;
+    u8 flags;
+    u8 *base;
+    int start;
+    int i;
+    u32 bit;
+    u32 result;
+
+    if (id == 0x95) {
+        return 1;
+    }
+    if (id == 0x96) {
+        return 0;
+    }
+    if (eventId == -1) {
+        return 0;
+    }
+    if (id < 0 || id >= lbl_803DCAD8) {
+        return 0;
+    }
+    flags = lbl_803DCADC[id * 4 + 2];
+    switch (flags >> 6) {
+    case 0:
+        base = lbl_803DCAE0 + 0xef0;
+        break;
+    case 1:
+        base = lbl_803DCAE0 + 0x564;
+        break;
+    case 2:
+        base = lbl_803DCAE0 + 0x24;
+        break;
+    case 3:
+        base = lbl_803DCAE0 + 0x5d8;
+        break;
+    }
+    start = *(u16 *)(lbl_803DCADC + id * 4);
+    result = 0;
+    bit = 1;
+    for (i = start; i <= (flags & 0x1f) + start; i++) {
+        if ((1 << (i & 7)) & base[i >> 3]) {
+            result |= bit;
+        }
+        bit <<= 1;
+    }
+    if (eventId & 0x8000) {
+        result &= 1;
+        result ^= 1;
+    }
+    return result;
+}
+
 void copyMatrix44(f32 *src, f32 *dst) {
     dst[0] = src[0];
     dst[1] = src[1];
