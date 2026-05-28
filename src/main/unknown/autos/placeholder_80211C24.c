@@ -198,6 +198,9 @@ extern f32 lbl_803E68E8;
 extern f32 lbl_803E68EC;
 extern f32 lbl_803E6A38;
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
+extern void ObjPath_GetPointWorldPositionArray(int obj, int idx, int count, f32 *out);
+extern void dll_2E_func06(int obj, void *p, int v);
+extern int lbl_8032AB48[];
 extern void lightFn_8001d6b0(void *p);
 
 extern f32 lbl_803E6898;
@@ -1465,6 +1468,32 @@ void ktfallingrocks_update(int obj) {
     }
     Sfx_PlayFromObject(obj, 696);
     GameBit_Set(*(s16 *)(q + 0x24), 0);
+}
+
+void hightop_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    char *runtime = *(char **)((char *)obj + 0xb8);
+    if (visible != 0) {
+        int count;
+        int **list;
+        int i;
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6AB8);
+        ObjPath_GetPointWorldPosition((int)obj, 2, (f32 *)(runtime + 0xb6c), (f32 *)(runtime + 0xb70), (f32 *)(runtime + 0xb74), 0);
+        ObjPath_GetPointWorldPositionArray((int)obj, 3, 4, (f32 *)(runtime + 0xb18));
+        ObjPath_GetPointWorldPosition((int)obj, 0, (f32 *)(runtime + 0xb78), (f32 *)(runtime + 0xb7c), (f32 *)(runtime + 0xb80), 0);
+        ((BitFlags8 *)(runtime + 0xc49))->b5 = 1;
+        dll_2E_func06((int)obj, runtime + 0x3ec, 0);
+        if (((BitFlags8 *)(runtime + 0xc49))->b1 != 0) {
+            list = (int **)ObjGroup_GetObjects(55, &count);
+            for (i = 0; i < count; i++) {
+                int idx = (*(int (**)(int *))((char *)**(int ***)((char *)*list + 0x68) + 0x24))(*list);
+                (*(void (**)(int *, void *, int, undefined4, undefined4, undefined4, undefined4))((char *)**(int ***)((char *)*list + 0x68) + 0x20))(
+                    *list, obj, lbl_8032AB48[idx], p2, p3, p4, p5);
+                list++;
+            }
+        }
+    } else {
+        ((BitFlags8 *)(runtime + 0xc49))->b5 = 0;
+    }
 }
 
 #pragma peephole reset
