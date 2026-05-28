@@ -4831,6 +4831,40 @@ int FUN_80006a70(int param_1,int param_2,int param_3,uint param_4,int param_5,in
     return 0;
 }
 
+int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, int f)
+{
+    int count;
+    int e3 = e * 2 + e;
+    u8 *cur;
+    u8 *end;
+    u8 byte;
+
+    if ((f >> 3) != 0) {
+        u8 *q = header + e3;
+        count = ((u32)q[1] >> 4) | (q[2] << 4);
+        cur = bitmap + (e * 32 | 0x10);
+    } else {
+        u8 *q = header + e3;
+        count = header[e3] | ((q[1] & 0xf) << 8);
+        cur = bitmap + e * 32;
+    }
+    end = bitmap + (e * 32 | (f * 2 + (d >> 3)));
+    while (cur < end) {
+        byte = *cur;
+        while (byte != 0) {
+            byte &= byte - 1;
+            count++;
+        }
+        cur++;
+    }
+    byte = *end & ((u32)0xff >> (8 - (d & 7)));
+    while (byte != 0) {
+        byte &= byte - 1;
+        count++;
+    }
+    return nodeBase + count;
+}
+
 /*
  * --INFO--
  *
