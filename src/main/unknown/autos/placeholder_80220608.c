@@ -1880,3 +1880,176 @@ void arwgenerato_init(int obj, int setup)
 
 void arwgenerato_release(void) {}
 void arwgenerato_initialise(void) {}
+
+extern f32 lbl_803E7218;
+extern f32 lbl_803E7100;
+extern f32 lbl_803E71E4;
+extern f32 lbl_803E704C;
+extern void ObjHits_MarkObjectPositionDirty(int obj);
+
+#pragma peephole off
+#pragma scheduling off
+int arwblocker_getBlockState(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    switch (*(u8 *)(state + 0)) {
+    case 1:
+        if (*(u8 *)(state + 1) != 0) {
+            return 0;
+        }
+        return 1;
+    case 0:
+        return 0;
+    }
+    return 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
+int arwblocker_getExtraSize(void) { return 2; }
+int arwblocker_getObjectTypeId(void) { return 0; }
+void arwblocker_free(void) {}
+void arwblocker_hitDetect(void) {}
+
+void arwblocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7218);
+}
+
+#pragma peephole off
+#pragma scheduling off
+void arwblocker_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    *(s16 *)(obj + 0) = -0x8000;
+    *(s16 *)(obj + 4) = (s16)(*(s8 *)(setup + 0x18) << 8);
+    *(void **)(obj + 0xbc) = (void *)arwblocker_getBlockState;
+    *(u8 *)(state + 0) = *(u8 *)(setup + 0x19);
+    *(s16 *)(obj + 6) |= 0x4000;
+    *(u8 *)(obj + 0x36) = 0;
+    ObjHits_DisableObject(obj);
+}
+#pragma scheduling on
+#pragma peephole on
+
+void arwblocker_release(void) {}
+void arwblocker_initialise(void) {}
+
+int arwspeedstr_getExtraSize(void) { return 0x1c; }
+int arwspeedstr_getObjectTypeId(void) { return 0; }
+void arwspeedstr_free(void) {}
+void arwspeedstr_hitDetect(void) {}
+
+void arwspeedstr_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7100);
+}
+
+void arwspeedstr_init(int obj, int setup)
+{
+    *(u8 *)(obj + 0x36) = 0;
+}
+
+void arwspeedstr_release(void) {}
+void arwspeedstr_initialise(void) {}
+
+int arwproximit_getExtraSize(void) { return 0x18; }
+int arwproximit_getObjectTypeId(void) { return 0; }
+
+void arwproximit_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (*(void **)(state + 4) != NULL) {
+        ModelLightStruct_free(*(void **)(state + 4));
+        *(void **)(state + 4) = NULL;
+    }
+}
+
+void arwproximit_hitDetect(void) {}
+
+void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (*(void **)(state + 4) != NULL && fn_8001DB64(*(void **)(state + 4)) != 0) {
+        queueGlowRender(*(void **)(state + 4));
+    }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E71E4);
+}
+
+#pragma peephole off
+#pragma scheduling off
+void arwproximit_init(int obj, int setup, int p3)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(s16 *)(state + 0) = (s16)randomGetRange(0x64, 0x12c);
+    *(u8 *)(state + 0x15) = *(u8 *)(setup + 0x31);
+    if (p3 == 0) {
+        *(s16 *)(obj + 2) = (s16)randomGetRange(0, 0xffff);
+        *(s16 *)(obj + 4) = (s16)randomGetRange(0, 0xffff);
+        *(s16 *)(obj + 0) = (s16)randomGetRange(0, 0xffff);
+        *(s16 *)(obj + 6) |= 0x4000;
+        *(u8 *)(obj + 0x36) = 0;
+    }
+    storeZeroToFloatParam((void *)(state + 0xc));
+    storeZeroToFloatParam((void *)(state + 0x10));
+    ObjHits_DisableObject(obj);
+    ObjHits_MarkObjectPositionDirty(obj);
+}
+#pragma scheduling on
+#pragma peephole on
+
+void arwproximit_release(void) {}
+void arwproximit_initialise(void) {}
+
+int arwarwingbo_getExtraSize(void) { return 0xc; }
+int arwarwingbo_getObjectTypeId(void) { return 0; }
+
+void arwarwingbo_free(int obj)
+{
+    (*(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
+    ObjGroup_RemoveObject(obj, 0x52);
+}
+
+void arwarwingbo_hitDetect(void) {}
+
+#pragma peephole off
+void arwarwingbo_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E704C);
+    }
+}
+#pragma peephole on
+
+#pragma peephole off
+#pragma scheduling off
+void arwarwingbo_init(int obj, int setup)
+{
+    *(s16 *)(obj + 0) = (s16)(*(u8 *)(setup + 0x1a) << 8);
+    *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
+    *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
+    ObjGroup_AddObject(obj, 0x52);
+}
+#pragma scheduling on
+#pragma peephole on
+
+#pragma peephole off
+#pragma scheduling off
+void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (active != 0) {
+        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
+        *(u8 *)(state + 0) = 1;
+        *(s16 *)(obj + 6) &= ~0x4000;
+    } else {
+        *(u8 *)(state + 0) = 0;
+        *(s16 *)(obj + 6) |= 0x4000;
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+void arwarwingbo_release(void) {}
+void arwarwingbo_initialise(void) {}
