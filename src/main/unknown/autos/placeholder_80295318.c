@@ -6398,6 +6398,14 @@ extern f32 lbl_803E7F14;
 extern f32 lbl_803E7F18;
 extern f32 lbl_803E7F1C;
 extern f32 lbl_803E7F24;
+extern f32 lbl_803E7FC0;
+
+typedef struct {
+    u8 pad[0x7ac];
+    s16 moves[8];
+    f32 blend[8];
+    f32 angles[8];
+} MoveTable;
 
 #pragma scheduling off
 #pragma peephole off
@@ -8421,6 +8429,53 @@ int fn_80297F48(int obj, int state, f32 fv)
             return r;
         }
         return 0;
+    }
+    return 0;
+}
+
+int fn_8029D250(int obj, int state, f32 fv)
+{
+    MoveTable *mt = (MoveTable *)lbl_80332EC0;
+    int inner = *(int *)((char *)obj + 0xb8);
+    u32 flags;
+    int idx;
+
+    *(u8 *)((char *)state + 0x34d) = 3;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        if (*(void **)((char *)state + 0x2d0) != NULL &&
+            (*(u32 *)((char *)inner + 0x884) & 1)) {
+            doRumble(lbl_803E7ED8);
+            flags = *(u32 *)((char *)inner + 0x884);
+            if (flags & 2) {
+                idx = 3;
+            } else if (flags & 4) {
+                idx = 1;
+            } else if (flags & 8) {
+                idx = 2;
+            } else {
+                idx = 3;
+            }
+            ObjAnim_SetCurrentMove(obj, mt->moves[idx], mt->blend[idx], 0);
+            *(f32 *)((char *)state + 0x2a0) = mt->angles[idx];
+            *(f32 *)((char *)state + 0x280) = -*(f32 *)((char *)inner + 0x88c);
+        } else {
+            ObjAnim_SetCurrentMove(obj, mt->moves[*(u8 *)((char *)inner + 0x8a2)],
+                                   lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = mt->angles[*(u8 *)((char *)inner + 0x8a2)];
+        }
+    }
+    if (*(void **)((char *)state + 0x2d0) != NULL) {
+        *(s16 *)((char *)inner + 0x478) = *(s16 *)((char *)inner + 0x478) +
+            (int)((f32)*(int *)((char *)inner + 0x4a4) / lbl_803E7FC0);
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+    }
+    *(f32 *)((char *)state + 0x280) =
+        *(f32 *)((char *)state + 0x280) *
+        powfBitEstimate(*(f32 *)((char *)inner + 0x888), fv);
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 2);
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return 2;
     }
     return 0;
 }
