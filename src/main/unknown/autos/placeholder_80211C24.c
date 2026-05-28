@@ -2106,3 +2106,42 @@ void hightop_update(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+void kytesmum_playAnimationEventSfx(int obj, u8 *arg, s16 *sfxData) {
+    u8 flags = 0;
+    int i;
+    for (i = 0; i < (s8)arg[0x1b]; i++) {
+        switch ((s8)arg[i + 0x13]) {
+        case 0:
+            if (sfxData != 0) {
+                Sfx_PlayFromObject(obj, (u16)sfxData[0]);
+            }
+            break;
+        case 1:
+            if (sfxData != 0) {
+                Sfx_PlayFromObject(obj, (u16)sfxData[1]);
+            }
+            break;
+        case 2:
+            flags |= 1;
+            break;
+        case 3:
+            flags |= 2;
+            break;
+        case 4:
+            flags |= 4;
+            break;
+        case 5:
+            flags |= 8;
+            break;
+        case 6:
+        case 7:
+            break;
+        }
+    }
+    if (flags != 0 && sfxData != 0) {
+        Sfx_PlayFromObject(obj, (u16)sfxData[3]);
+    }
+}
+#pragma scheduling reset
