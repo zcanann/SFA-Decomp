@@ -3195,6 +3195,20 @@ extern int Camera_GetCurrentViewSlot(void);
 extern f32 interpolate(f32 a, f32 b, f32 c);
 extern void fn_8009837C(int obj, f32 brightness, int b, int c, int d, f32 e, int f);
 extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void *vec);
+extern void lightSetField4D(void *light, int v);
+extern void ObjHits_SyncObjectPositionIfDirty(int obj);
+extern f32 lbl_8032BD10[];
+extern f32 lbl_803E73A8;
+extern f32 lbl_803E73AC;
+extern f32 lbl_803E73B0;
+extern f32 lbl_803E73B4;
+extern f32 lbl_803E73B8;
+extern f32 lbl_803E73BC;
+extern f32 lbl_803E73C0;
+
+typedef struct CmbsrcHitFlag {
+    u8 disabled : 1;
+} CmbsrcHitFlag;
 
 #pragma dont_inline on
 #pragma peephole off
@@ -3472,7 +3486,7 @@ int cmbsrc_update(int obj)
             if (*(void **)state != NULL) {
                 lightFn_8001db6c(*(void **)state, 1, lbl_803E7374);
             }
-            if (!(*(u8 *)(state + 0x27) & 0x1)) {
+            if (!((CmbsrcHitFlag *)(state + 0x27))->disabled) {
                 ObjHits_EnableObject(obj);
             }
             if (*(s16 *)(setup + 0x24) != -1) {
@@ -3484,6 +3498,138 @@ int cmbsrc_update(int obj)
         break;
     }
     cmbsrc_updateVisuals(obj, state);
+}
+
+void cmbsrc_init(int obj, u8 *setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    int lightVariant;
+
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x758:
+        lightVariant = 1;
+        break;
+    case 0x6e8:
+    default:
+        lightVariant = 0;
+        break;
+    }
+    *(s16 *)(obj + 4) = (s16)(setup[0x18] << 8);
+    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
+    *(s16 *)(obj + 0) = (s16)(setup[0x1a] << 8);
+    *(u8 *)(state + 0x25) = 1;
+    *(u8 *)(state + 0x26) = 0xf;
+    if (setup[0x2b] == 0) {
+        *(u16 *)(state + 0x20) = 0x258;
+    } else {
+        *(u16 *)(state + 0x20) = setup[0x2b] * 0x3c;
+    }
+    if (setup[0x29] & 0x1) {
+        *(u8 *)(state + 0x22) |= 0x2;
+    }
+    if (setup[0x2a] & 0x1) {
+        *(u8 *)(state + 0x22) |= 0x4;
+    }
+    if (setup[0x2a] & 0x80) {
+        *(u8 *)(state + 0x22) |= 0x8;
+    }
+    if (setup[0x29] & 0x10) {
+        u8 *colorTbl;
+        int ci;
+        int local;
+
+        if (*(void **)state == NULL) {
+            *(void **)state = objCreateLight(obj, 1);
+        }
+        if (*(void **)state != NULL) {
+            modelLightStruct_setField50(*(void **)state, 2);
+            if (*(s16 *)(obj + 0x46) == 0x758) {
+                lightVecFn_8001dd88(*(void **)state, lbl_803E7360, lbl_803E7360, lbl_803E7360);
+            } else {
+                lightVecFn_8001dd88(*(void **)state, lbl_803E7360, lbl_803E73A8, lbl_803E7360);
+            }
+            colorTbl = &lbl_8032BD50[lightVariant * 0x30];
+            ci = setup[0x1b] * 3;
+            modelLightStruct_setColorsA8AC(*(void **)state, colorTbl[ci], colorTbl[ci + 1],
+                                           colorTbl[ci + 2], 0xff);
+            modelLightStruct_setColors100104(*(void **)state, colorTbl[ci], colorTbl[ci + 1],
+                                             colorTbl[ci + 2], 0xff);
+            {
+                int n = (int)((setup[0x2a] & 0x8 ? lbl_803E73AC : lbl_803E73B0) *
+                              *(f32 *)(obj + 8));
+                lightDistAttenFn_8001dc38(*(void **)state, (f32)n, lbl_803E73B4 + (f32)n);
+            }
+            if (*(u8 *)(state + 0x22) & 0x4) {
+                if ((*(int (**)(void *))(*gSHthorntailAnimationInterface + 0x24))(&local) != 0) {
+                    lightFn_8001db6c(*(void **)state, 1, lbl_803E7374);
+                } else {
+                    lightFn_8001db6c(*(void **)state, 0, lbl_803E7374);
+                    *(u8 *)(state + 0x25) = 0;
+                }
+            }
+            lightFn_8001d620(*(void **)state, 1, 3);
+            lightSetFieldB0(*(void **)state,
+                            (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci]),
+                            (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci + 1]),
+                            (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci + 2]), 0xff);
+            if (setup[0x29] & 0x20) {
+                lightSetField2FB(*(void **)state, 1);
+            }
+            if (setup[0x29] & 0x40) {
+                if (setup[0x29] & 0x80) {
+                    fn_8001D730(*(void **)state, 0, colorTbl[ci], colorTbl[ci + 1],
+                                colorTbl[ci + 2], 0x87, lbl_803E73B8 * *(f32 *)(obj + 8));
+                } else {
+                    fn_8001D730(*(void **)state, 0, colorTbl[ci], colorTbl[ci + 1],
+                                colorTbl[ci + 2], 0x87, lbl_803E7370 * *(f32 *)(obj + 8));
+                }
+            }
+            {
+                int m = setup[0x2c] & 0x3;
+                if (m == 0) {
+                    fn_8001D714(*(void **)state, lbl_803E73BC);
+                } else if (m == 1) {
+                    fn_8001D714(*(void **)state, lbl_803E7384);
+                } else if (m == 2) {
+                    fn_8001D714(*(void **)state, lbl_803E73C0);
+                } else {
+                    fn_8001D714(*(void **)state, lbl_803E7360);
+                }
+            }
+            if (setup[0x2a] & 0x4) {
+                lightSetField4D(*(void **)state, 0);
+            } else {
+                lightSetField4D(*(void **)state, 1);
+            }
+        }
+    }
+    if (*(void **)(obj + 0x54) != NULL) {
+        ((CmbsrcHitFlag *)(state + 0x27))->disabled = 1;
+        ObjHitbox_SetSphereRadius(obj,
+            (int)(lbl_803E7374 *
+                  (*(f32 *)(setup + 0x20) * (*(f32 *)(obj + 8) * lbl_8032BD10[setup[0x1b]]))));
+        if (setup[0x29] & 0x4) {
+            ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
+            ((CmbsrcHitFlag *)(state + 0x27))->disabled = 0;
+        } else {
+            ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+        }
+        if (setup[0x2a] & 0x40) {
+            ObjHits_SyncObjectPositionIfDirty(obj);
+            ((CmbsrcHitFlag *)(state + 0x27))->disabled = 0;
+        } else {
+            ObjHits_MarkObjectPositionDirty(obj);
+        }
+        if (setup[0x2a] & 0x30) {
+            ((CmbsrcHitFlag *)(state + 0x27))->disabled = 0;
+        }
+        if (((CmbsrcHitFlag *)(state + 0x27))->disabled) {
+            ObjHits_DisableObject(obj);
+        }
+    }
+    *(f32 *)(state + 0x10) = (f32)randomGetRange(0, 0x64);
+    *(f32 *)(state + 0x18) = lbl_803E7374 * *(f32 *)(setup + 0x20);
+    *(void **)(obj + 0xbc) = (void *)cmbsrc_updateAndReturnZero;
 }
 #pragma peephole on
 #pragma scheduling on
