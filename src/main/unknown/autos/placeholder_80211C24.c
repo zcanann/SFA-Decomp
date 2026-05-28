@@ -4452,6 +4452,96 @@ void ktrex_init(int obj, char *arg) {
 }
 #pragma scheduling reset
 
+extern int lbl_802C2550[];
+extern int lbl_803DDD4C;
+extern f32 lbl_803E6820;
+extern s16 lbl_803AD158[];
+extern void ObjMsg_SendToObject(int target, int msg, int sender, int arg);
+
+#pragma scheduling off
+void ktrex_updateContactEffects(int obj, void *runtime) {
+    int hitA;
+    int hitC;
+    int hitType;
+    int msg[4];
+    int hit;
+    int row;
+    f32 *pt;
+    msg[0] = lbl_802C2550[0];
+    msg[1] = lbl_802C2550[1];
+    msg[2] = lbl_802C2550[2];
+    msg[3] = lbl_802C2550[3];
+    if (lbl_803DDD4C != 0) {
+        lbl_803DDD4C -= 1;
+    }
+    if (*(f32 *)((char *)gKTRexRuntime + 0x3e8) > lbl_803E67B8) {
+        *(f32 *)((char *)gKTRexRuntime + 0x3e8) =
+            timeDelta * *(f32 *)((char *)gKTRexRuntime + 0x3ec) + *(f32 *)((char *)gKTRexRuntime + 0x3e8);
+        if (*(f32 *)((char *)gKTRexRuntime + 0x3e8) < lbl_803E67B8) {
+            *(f32 *)((char *)gKTRexRuntime + 0x3e8) = lbl_803E67B8;
+        } else if (*(f32 *)((char *)gKTRexRuntime + 0x3e8) > lbl_803E6820) {
+            *(f32 *)((char *)gKTRexRuntime + 0x3e8) =
+                lbl_803E6820 - (*(f32 *)((char *)gKTRexRuntime + 0x3e8) - lbl_803E6820);
+            *(f32 *)((char *)gKTRexRuntime + 0x3ec) = -*(f32 *)((char *)gKTRexRuntime + 0x3ec);
+        }
+    }
+    hit = ObjHits_GetPriorityHit(obj, &hitA, (int)&hitType, (int)&hitC);
+    if (hit == 0) {
+        return;
+    }
+    row = *(int *)(*(int *)(*(int *)((char *)obj + 0x7c) + (s8)*(s8 *)((char *)obj + 0xad) * 4) + 0x50);
+    if ((s8)*(u8 *)((char *)runtime + 0x354) != 0 && (hitType == 3 || hitType == 2) &&
+        (*(u16 *)((char *)gKTRexState + 0xfa) & 0x10) != 0 && hit == 5) {
+        pt = (f32 *)((char *)row + hitType * 16);
+        *(f32 *)((char *)lbl_803AD158 + 0xc) = playerMapOffsetX + pt[1];
+        *(f32 *)((char *)lbl_803AD158 + 0x10) = pt[2];
+        *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
+        Sfx_PlayFromObject(obj, 0x8c);
+        Sfx_PlayFromObject(obj, 0x94);
+        (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(
+            obj, 0x4b2, lbl_803AD158, 0x200001, -1, 0);
+        (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(
+            obj, 0x4b3, lbl_803AD158, 0x200001, -1, 0);
+        if (hit == 0xe) {
+            *(u8 *)((char *)runtime + 0x354) -= 1;
+        } else {
+            *(u8 *)((char *)runtime + 0x354) = 0;
+        }
+        if ((s8)*(u8 *)((char *)runtime + 0x354) <= 0) {
+            *(u8 *)((char *)runtime + 0x354) = 0;
+            *(u16 *)((char *)gKTRexState + 0xfa) &= ~0x10;
+            *(u16 *)((char *)gKTRexState + 0xfa) |= 0x8;
+        }
+        *(u8 *)((char *)runtime + 0x34f) = (s8)hit;
+    } else if (lbl_803DDD4C == 0) {
+        Sfx_PlayFromObject(obj, 0x95);
+        row = *(int *)(*(int *)(*(int *)((char *)obj + 0x7c) + (s8)*(s8 *)((char *)obj + 0xad) * 4) + 0x50);
+        pt = (f32 *)((char *)row + hitType * 16);
+        *(f32 *)((char *)lbl_803AD158 + 0xc) = playerMapOffsetX + pt[1];
+        *(f32 *)((char *)lbl_803AD158 + 0x10) = pt[2];
+        *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
+        (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(
+            obj, 0x328, lbl_803AD158, 0x200001, -1, 0);
+        *(f32 *)((char *)lbl_803AD158 + 0xc) -= *(f32 *)((char *)obj + 0x18);
+        *(f32 *)((char *)lbl_803AD158 + 0x10) -= *(f32 *)((char *)obj + 0x1c);
+        *(f32 *)((char *)lbl_803AD158 + 0x14) -= *(f32 *)((char *)obj + 0x20);
+        *(f32 *)((char *)lbl_803AD158 + 0x8) = lbl_803E6818;
+        *(s16 *)((char *)lbl_803AD158 + 0x0) = 0;
+        *(s16 *)((char *)lbl_803AD158 + 0x2) = 0;
+        *(s16 *)((char *)lbl_803AD158 + 0x4) = 0;
+        msg[1] += randomGetRange(0, 0x9b);
+        msg[2] += randomGetRange(0, 0x9b);
+        (*(void (**)(int, int, void *, int, int, int *))(*(int *)lbl_803DDD48 + 0x4))(
+            obj, 0, lbl_803AD158, 1, -1, msg);
+        lbl_803DDD4C = 0x3c;
+    }
+    if ((s8)*(u8 *)((char *)runtime + 0x354) < 1) {
+        *(u8 *)((char *)runtime + 0x354) = 0;
+    }
+    ObjMsg_SendToObject(hitA, 0xe0001, obj, 0);
+}
+#pragma scheduling reset
+
 extern int Stack_IsFull(int stack);
 extern void Stack_Push(int stack, int *val);
 
