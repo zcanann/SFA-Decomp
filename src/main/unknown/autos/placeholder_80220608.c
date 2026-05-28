@@ -2535,3 +2535,79 @@ void arwingandrossstuff_update(int obj)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern f32 lbl_803E70E4;
+extern f32 lbl_803E70E8;
+extern void skyFn_80089710(int p1, int p2, int p3);
+extern void skyFn_800895e0(int p1, int p2, int p3, int p4, int p5, int p6);
+extern void skyFn_800894a8(int p1, f32 p2, f32 p3, f32 p4);
+extern void getEnvfxAct(int p1, int p2, int p3, int p4);
+extern void setDrawLights(int value);
+extern int AudioStream_IsPreparing(void);
+extern void AudioStream_StartPrepared(void);
+extern void AudioStream_Play(int stream, void (*cb)(void));
+extern int mapBlockFn_800592e4(void);
+extern int fn_8022D750(int arwing);
+extern int fn_8022D710(int arwing);
+extern int fn_8022D508(int arwing);
+extern int fn_8022D514(int arwing);
+
+#pragma peephole off
+#pragma scheduling off
+void arwlevelcon_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int arwing = getArwing();
+
+    if (*(u8 *)(state + 0x18) == 0) {
+        skyFn_80089710(7, 1, 0);
+        if (*(u8 *)(state + 0x1b) != 0) {
+            skyFn_800895e0(7, 0xaa, 0x78, 0xff, 0x69, 0x40);
+        } else {
+            skyFn_800895e0(7, 0x96, 0x64, 0xf0, 0, 0);
+        }
+        skyFn_800894a8(7, lbl_803E70E4, lbl_803E70E4, lbl_803E70E0);
+        getEnvfxAct(0, 0, 0x21f, 0);
+        getEnvfxAct(0, 0, 0x22b, 0);
+        setIsOvercast(0);
+        *(u8 *)(state + 0x18) = 1;
+        setDrawLights(0);
+    }
+    if (*(u8 *)(state + 0x19) == 0) {
+        int mode;
+        if (*(u8 *)(state + 0x1b) != 0) {
+            mode = 3;
+        } else {
+            if (AudioStream_IsPreparing() == 0) {
+                AudioStream_Play(*(int *)(state + 0x1c), AudioStream_StartPrepared);
+            }
+            mode = 0;
+        }
+        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(mode, obj, -1);
+        *(u8 *)(state + 0x19) = 1;
+        GameBit_Set(0x9d6, 0);
+        GameBit_Set(0x9d8, 0);
+        GameBit_Set(0x9d7, 0);
+    }
+    if (*(u8 *)(state + 0x1a) == 0) {
+        int mb = mapBlockFn_800592e4();
+        if (*(f32 *)(arwing + 0x14) - *(f32 *)(mb + 0x28) > lbl_803E70E8 &&
+            fn_8022D750(arwing) == 0 && fn_8022D710(arwing) == 0) {
+            int a, b;
+            arwingHudSetVisible(2);
+            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x7c))(*(u16 *)(state + 0x20), 0, 0);
+            a = fn_8022D508(arwing);
+            b = fn_8022D514(arwing);
+            if (b >= a) {
+                GameBit_Set(0x9d8, 1);
+            } else {
+                GameBit_Set(0x9d7, 1);
+            }
+            *(u8 *)(state + 0x1a) = 1;
+            Music_Trigger(2, 0);
+            Music_Trigger(0xf3, 0);
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
