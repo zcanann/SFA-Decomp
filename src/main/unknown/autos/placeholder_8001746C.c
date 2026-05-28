@@ -8744,6 +8744,24 @@ typedef struct {
 
 extern char sMmSpawnedUnalignedSlotWarning[];
 extern int lbl_803DCB1C;
+extern char sMemStatsFormat[];
+extern int lbl_803DCB20;
+extern int lbl_803DCB24;
+extern int lbl_803DCB28;
+extern int lbl_803DCB2C;
+
+int printHeapStats(void) {
+    OSReport(sMemStatsFormat,
+        lbl_803DCB20, gMmRegionTable[0].size,
+        lbl_803DCB24, gMmRegionTable[1].size,
+        lbl_803DCB28, gMmRegionTable[2].size,
+        lbl_803DCB2C, gMmRegionTable[3].size,
+        gMmRegionTable[0].f4, gMmRegionTable[0].numSlots,
+        gMmRegionTable[1].f4, gMmRegionTable[1].numSlots,
+        gMmRegionTable[2].f4, gMmRegionTable[2].numSlots,
+        gMmRegionTable[3].f4, gMmRegionTable[3].numSlots);
+    return lbl_803DCB20 + (lbl_803DCB24 + lbl_803DCB28 + lbl_803DCB2C);
+}
 
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val) {
     MmRegion *reg;
