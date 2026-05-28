@@ -10114,9 +10114,12 @@ void fn_802B4A9C(int obj, int sA, int sB)
                 if (*(int **)((char *)sB + 0x2d0) != target) {
                     *(u8 *)((char *)sB + 0x349) = 0;
                     if ((*(u8 *)((char *)*(int *)((char *)target + 0x78) + 4) & 0xf) == 1) {
-                        if (lbl_803DE44C != NULL && ((*(u8 *)((char *)sA + 0x3f4) >> 6) & 1) != 0) {
-                            *(u8 *)((char *)sA + 0x8b4) = 2;
-                            ((ByteFlags *)((char *)sA + 0x3f4))->b08 = 0;
+                        if (lbl_803DE44C != NULL) {
+                            u32 targetFlag = (*(u8 *)((char *)sA + 0x3f4) >> 6) & 1;
+                            if (targetFlag != 0) {
+                                *(u8 *)((char *)sA + 0x8b4) = 2;
+                                ((ByteFlags *)((char *)sA + 0x3f4))->b08 = 0;
+                            }
                         }
                         *(u8 *)((char *)sB + 0x349) = 1;
                     }
