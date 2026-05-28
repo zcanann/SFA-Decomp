@@ -190,6 +190,14 @@ Heuristic before reaching for `asm { }`:
     `return 0;`. Took fn_802B74C4 73% → 100% (combined with a local decl-order
     swap). Clean C, no asm.
 
+23. **`!!x` for MWCC's double-`cntlzw` `x != 0` materialization; plain `!= 0`
+    gives `neg; or; srwi`.** When target materializes a boolean "is non-zero"
+    with the `cntlzw rX,rY; ...; cntlzw`/`srwi rX,rX,5` (count-leading-zeros)
+    idiom and your `x != 0` (or `(int)(x != 0)`) emits the `neg; orc/or; srwi`
+    form instead, write `!!x` (double logical-NOT) to get the `cntlzw` form.
+    Mirror: `!x` gives the `== 0` `cntlzw` form. Match whichever the target
+    uses. Clean C, no asm — supersedes leaving these as a "cntlzw-idiom cap."
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
