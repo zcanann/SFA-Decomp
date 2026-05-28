@@ -12058,6 +12058,93 @@ void fn_802AF410(int obj, int state)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 lbl_803E80E0;
+extern u8 lbl_803DAF08[];
+extern f32 lbl_802C2BF0[];
+extern u8 lbl_802C2B30[];
+extern void setTextColor(undefined4 *objAndParam, u8 blue, u8 green, u8 red, int alpha);
+extern void textureSetupFn_800799c0(void);
+extern void textRenderSetupFn_800795e8(void);
+extern void textRenderSetupFn_80079804(void);
+extern void fn_80078740(void);
+extern void GXSetColorUpdate(int update);
+extern void setMatrixFromObjectTransposed(void *transform, f32 *mtx);
+extern f32 *Camera_GetViewMatrix(void);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
+extern void GXLoadPosMtxImm(f32 *matrix, s32 slot);
+extern void drawFn_8005cf8c(void *matrix, void *displayList, int count);
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802AAD44(int obj)
+{
+    int state = *(int *)((char *)obj + 0xb8);
+    u8 *vp = lbl_803DAF08;
+    f32 *src = lbl_802C2BF0;
+    int i;
+    f32 height;
+    f32 v;
+    struct {
+        s16 rx, ry, rz, pad;
+        f32 scale;
+        f32 px, py, pz;
+    } xf;
+    f32 mtx[12];
+
+    height = *(f32 *)((char *)state + 0x7d0);
+    setTextColor((undefined4 *)0, 0xff, 0xff, 0xff, 0x80);
+    textureSetupFn_800799c0();
+    textRenderSetupFn_800795e8();
+    textRenderSetupFn_80079804();
+    fn_80078740();
+    GXSetColorUpdate(0);
+
+    v = lbl_803E7FA4 * (lbl_803E80C4 - height);
+    for (i = 0; i < 8; i++) {
+        if (i < 4) {
+            *(s16 *)(vp + 2) = 0x320;
+        } else {
+            *(s16 *)(vp + 2) = (s16)(s32)v;
+        }
+        if (i < 4) {
+            *(s16 *)(vp + 0) = (s16)(s32)(lbl_803E7FA4 * src[0]);
+            *(s16 *)(vp + 4) = (s16)(s32)(lbl_803E7FA4 * src[2]);
+        } else {
+            *(s16 *)(vp + 0) = (s16)(s32)(lbl_803E7FA4 * src[0]);
+            *(s16 *)(vp + 4) = (s16)(s32)(lbl_803E7FA4 * src[2]);
+        }
+        vp[0xc] = 0xff;
+        vp[0xd] = 0;
+        vp[0xe] = 0;
+        vp[0xf] = 0x40;
+        vp += 0x10;
+        src += 3;
+    }
+
+    xf.px = *(f32 *)((char *)obj + 0xc) - playerMapOffsetX;
+    xf.py = *(f32 *)((char *)obj + 0x10);
+    xf.pz = *(f32 *)((char *)obj + 0x14) - playerMapOffsetZ;
+    xf.rx = *(s16 *)((char *)state + 0x478);
+    xf.ry = 0;
+    xf.rz = 0;
+    xf.scale = lbl_803E7F6C;
+    setMatrixFromObjectTransposed(&xf, mtx);
+    PSMTXConcat(Camera_GetViewMatrix(), mtx, mtx);
+    GXLoadPosMtxImm(mtx, 0);
+    drawFn_8005cf8c(lbl_803DAF08, lbl_802C2B30, 0xc);
+
+    if (*(f32 *)((char *)state + 0x7d0) >= lbl_803E80E0) {
+        int t = *(u8 *)((char *)obj + 0x36) - (framesThisStep << 2);
+        if (t < 0) {
+            t = 0;
+        }
+        *(u8 *)((char *)obj + 0x36) = t;
+    }
+    GXSetColorUpdate(1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma peephole off
 #pragma scheduling off
 void fn_8029560C(int obj, int *state)
