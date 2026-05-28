@@ -194,6 +194,12 @@ typedef struct {
     f32 z;
 } ObjPosParams;
 
+extern f32 lbl_803E68E8;
+extern f32 lbl_803E68EC;
+extern f32 lbl_803E6A38;
+extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
+extern void lightFn_8001d6b0(void *p);
+
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;
@@ -692,6 +698,65 @@ int ktrex_stateHandlerB00(int obj, u8 *p2) {
     }
     *(f32 *)(p2 + 0x2a0) = lbl_803E6808;
     return 0;
+}
+
+void ktfallingrocks_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    if (visible != 0) {
+    }
+}
+
+void cagecontrol_update(int obj) {
+    int p = *(int *)((char *)obj + 0x4c);
+    if (GameBit_Get(*(s16 *)(p + 0x1e)) != 0) {
+        *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        ObjHits_DisableObject(obj);
+    } else {
+        *(s16 *)((char *)obj + 0x6) &= ~0x4000;
+        ObjHits_EnableObject(obj);
+    }
+}
+
+void drakorhoverpad_resetPendingMotion(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    if (((BitFlags8 *)(p + 0x179))->b6 != 0) {
+        ((BitFlags8 *)(p + 0x179))->b6 = 0;
+        *(f32 *)p = lbl_803E6A38;
+    }
+}
+
+int drchimmey_countdownCallback(int obj, int dec) {
+    s8 *p = (s8 *)*(char **)((char *)obj + 0xb8);
+    p[0x16] -= dec;
+    return p[0x16] == 0;
+}
+
+int drcagewith_toggleRopeStateCallback(int obj, int unused, u8 *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int i;
+    for (i = 0; i < arg[0x8b]; i++) {
+        if (arg[i + 0x81] == 1) {
+            ((BitFlags8 *)(p + 0x31))->b1 ^= 1;
+        }
+    }
+    return 0;
+}
+
+void ktrex_hitDetect(int obj) {
+    f32 z, y, x;
+    if (*(void **)((char *)gKTRexState + 0x178) != 0) {
+        ObjPath_GetPointWorldPosition(obj, 5, &x, &y, &z, 0);
+        lightVecFn_8001dd88(*(void **)((char *)gKTRexState + 0x178), x, y, z);
+        lightFn_8001d6b0(*(void **)((char *)gKTRexState + 0x178));
+    }
+}
+
+void drlasercannon_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E68E8);
+        ObjPath_GetPointWorldPosition((int)obj, 0, (f32 *)(p + 0x10), (f32 *)(p + 0x14), (f32 *)(p + 0x18), 0);
+        *(f32 *)(p + 0x14) = *(f32 *)(p + 0x14) - lbl_803E68EC;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
