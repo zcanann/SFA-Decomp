@@ -8551,6 +8551,7 @@ int mmGetRegionForPtr(u8 *ptr) {
     return -1;
 }
 
+#pragma dont_inline on
 void *mmInitRegion(u8 *buf, int size, int numSlots) {
     int regIdx = lbl_803DCB42++;
     int after = size - numSlots * 0x1c;
@@ -8581,6 +8582,7 @@ void *mmInitRegion(u8 *buf, int size, int numSlots) {
     gMmRegionTable[regIdx].f4++;
     return gMmRegionTable[regIdx].start;
 }
+#pragma dont_inline reset
 
 extern u32 OSGetTick(void);
 extern void heapFree(int region, int slotIdx);
@@ -8684,6 +8686,48 @@ int mmAllocateFromFBMemoryStore(int handle, int size) {
         return found[1] - size;
     }
     return 0;
+}
+
+extern void *OSGetArenaLo(void);
+extern void *OSGetArenaHi(void);
+extern void *OSAllocFromHeap(int heap, int size);
+extern void DCFlushRange(void *addr, u32 nBytes);
+extern int __OSCurrHeap;
+extern int lbl_803DCB18;
+extern void *lbl_803DD498;
+extern void *lbl_803DCAFC;
+
+void mmInit(void) {
+    int size;
+    void *p;
+    u8 *lo;
+    lbl_803DCB42 = 0;
+    lo = OSGetArenaLo();
+    size = (u8 *)OSGetArenaHi() - lo - 0x6c0000 - 0x720;
+    lbl_803DCB18 = size;
+    p = OSAllocFromHeap(__OSCurrHeap, size);
+    DCFlushRange(p, size);
+    mmInitRegion(p, size, 0xfa);
+
+    p = OSAllocFromHeap(__OSCurrHeap, 0x6ed);
+    lbl_803DD498 = p;
+    lbl_803DCAFC = (u8 *)p + 0x6ec;
+
+    p = OSAllocFromHeap(__OSCurrHeap, 0x1c0000);
+    DCFlushRange(p, 0x1c0000);
+    mmInitRegion(p, 0x1c0000, 0x352);
+
+    p = OSAllocFromHeap(__OSCurrHeap, 0x9ffa0);
+    DCFlushRange(p, 0x9ffa0);
+    mmInitRegion(p, 0x9ffa0, 0x352);
+
+    p = OSAllocFromHeap(__OSCurrHeap, 0x45ffa0);
+    DCFlushRange(p, 0x45ffa0);
+    mmInitRegion(p, 0x45ffa0, 0x244);
+
+    lbl_803DCB14++;
+    gMmFreeDelay = 2;
+    gMmDeferredFreeCount = 0;
 }
 
 typedef struct {
