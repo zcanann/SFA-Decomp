@@ -7953,6 +7953,24 @@ void gameTextFn_8001984c(s16 x, s16 y, int flags) {
     }
 }
 
+typedef struct {
+    u32 key;
+    int len;
+} CtrlCharEntry;
+extern CtrlCharEntry lbl_802C86F0[];
+
+int getControlCharLen(u32 c) {
+    CtrlCharEntry *p = lbl_802C86F0;
+    int i;
+    for (i = 45; i >= 0; i--) {
+        if (p->key == c) {
+            return p->len;
+        }
+        p++;
+    }
+    return 0;
+}
+
 void *getTabEntry(int id, int arg, int e, int d) {
     lbl_8033BF88.f0 = 1;
     lbl_8033BF88.f1 = 2;
