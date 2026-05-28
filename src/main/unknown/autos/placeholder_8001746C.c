@@ -7720,6 +7720,20 @@ void *getTablesBinEntry(int i) {
     return lbl_803DCBB4;
 }
 
+void fn_8002CE14(u8 *obj) {
+    if (*(u16 *)(obj + 0xb0) & 0x10) {
+        int *list = &lbl_803DCB7C;
+        int prev = 0;
+        int cur = list[1];
+        s16 linkOff = *(s16 *)((u8 *)list + 2);
+        while (cur != 0 && (s8)obj[0xae] < (s8)((u8 *)cur)[0xae]) {
+            prev = cur;
+            cur = *(int *)((u8 *)cur + linkOff);
+        }
+        objListAdd(&lbl_803DCB7C, prev, (int)obj);
+    }
+}
+
 void objRemoveFromListFn_8002ce88(u8 *obj) {
     if (*(u16 *)(obj + 0xb0) & 0x10) {
         objList_remove(&lbl_803DCB7C, obj);
