@@ -2827,3 +2827,55 @@ void androssbrain_setState(int obj, int newState, u8 force)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, int *outVol);
+extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
+extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f,
+                                    int g, int h, int i, int j, int k);
+extern int lbl_803DC508;
+extern f32 lbl_803E75A8;
+
+#pragma peephole off
+#pragma scheduling off
+void androsshand_handleDamage(int obj, int hand)
+{
+    int hitVol;
+    int sphereIdx;
+    int hitObj;
+    f32 x;
+    f32 y;
+    f32 z;
+    int t;
+
+    t = *(u8 *)(hand + 0x26) - framesThisStep;
+    if (t < 0) {
+        t = 0;
+    }
+    *(u8 *)(hand + 0x26) = (u8)t;
+    if (ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol) != 0 &&
+        *(u8 *)(hand + 0x26) == 0 && sphereIdx == 0) {
+        *(u8 *)(hand + 0x25) -= 1;
+        *(u8 *)(hand + 0x26) = 6;
+        *(f32 *)(hand + 0x1c) = (f32)lbl_803DC508;
+        Sfx_PlayFromObject(obj, 0x484);
+        if (*(u8 *)(hand + 0x25) == 0) {
+            *(s8 *)(hand + 0x23) = 9;
+            andross_setPartSignal(*(int *)hand, 1);
+            Sfx_PlayFromObject(obj, 0x485);
+            ObjPath_GetPointWorldPosition(obj, 0, &x, &y, &z, 0);
+            DIMexplosionFn_8009a96c(obj, x, y, z, lbl_803E75A8, 1, 1, 1, 1, 0, 1, 0);
+        }
+    }
+    if (*(u8 *)(hand + 0x25) != 0) {
+        if (*(u8 *)(hand + 0x26) != 0) {
+            *(u8 *)(hand + 0x28) = 1;
+        } else {
+            *(u8 *)(hand + 0x28) = 0;
+        }
+    } else {
+        *(u8 *)(hand + 0x28) = 2;
+    }
+    *(int *)objFindTexture(obj, 0, 0) = *(u8 *)(hand + 0x28) << 8;
+}
+#pragma scheduling on
+#pragma peephole on
