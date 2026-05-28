@@ -3949,3 +3949,51 @@ void ktrex_initialiseStateHandlerTables(void) {
     gKTRexStateHandlersA[10] = (void *)ktrex_stateHandlerA10;
     gKTRexStateHandlersA[11] = (void *)ktrex_stateHandlerA11;
 }
+
+extern f32 lbl_8032A534[];
+extern f32 lbl_8032A540[];
+
+int ktrex_updateArenaPathProgress(int obj) {
+    u16 flags;
+    int phase;
+    int dir;
+    f32 speed;
+    int changed;
+
+    changed = 0;
+    flags = *(u16 *)((char *)gKTRexState + 0xfa);
+    dir = flags & 1;
+    phase = (flags >> 1) & 3;
+    if (dir != 0) {
+        speed = -*(f32 *)((char *)obj + 0x294);
+    } else {
+        speed = *(f32 *)((char *)obj + 0x294);
+    }
+    *(f32 *)((char *)gKTRexState + 8) = speed * timeDelta + *(f32 *)((char *)gKTRexState + 8);
+    if ((*(f32 *)((char *)gKTRexState + 8) > lbl_8032A540[*(u8 *)((char *)gKTRexState + 0xfc)] && speed > lbl_803E67B8) ||
+        (*(f32 *)((char *)gKTRexState + 8) < lbl_8032A534[*(u8 *)((char *)gKTRexState + 0xfc)] && speed < lbl_803E67B8)) {
+        if (dir != 0) {
+            phase--;
+            if (phase < 0) {
+                phase = 3;
+            }
+        } else {
+            phase++;
+            if (phase >= 4) {
+                phase = 0;
+            }
+        }
+        *(u16 *)((char *)gKTRexState + 0xfa) = *(u16 *)((char *)gKTRexState + 0xfa) & ~6;
+        *(u16 *)((char *)gKTRexState + 0xfa) = *(u16 *)((char *)gKTRexState + 0xfa) | (phase << 1);
+        if (*(f32 *)((char *)gKTRexState + 8) > lbl_8032A540[*(u8 *)((char *)gKTRexState + 0xfc)]) {
+            *(f32 *)((char *)gKTRexState + 8) = lbl_8032A540[*(u8 *)((char *)gKTRexState + 0xfc)];
+        } else if (*(f32 *)((char *)gKTRexState + 8) < lbl_8032A534[*(u8 *)((char *)gKTRexState + 0xfc)]) {
+            *(f32 *)((char *)gKTRexState + 8) = lbl_8032A534[*(u8 *)((char *)gKTRexState + 0xfc)];
+        }
+        changed = 1;
+    }
+    *(f32 *)((char *)gKTRexState + 0xe8) = *(f32 *)((char *)gKTRexState + 8) * (((f32 *)*(int *)((char *)gKTRexState + 0xdc))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd0))[phase]) + ((f32 *)*(int *)((char *)gKTRexState + 0xd0))[phase];
+    *(f32 *)((char *)gKTRexState + 0xec) = *(f32 *)((char *)gKTRexState + 8) * (((f32 *)*(int *)((char *)gKTRexState + 0xe0))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd4))[phase]) + ((f32 *)*(int *)((char *)gKTRexState + 0xd4))[phase];
+    *(f32 *)((char *)gKTRexState + 0xf0) = *(f32 *)((char *)gKTRexState + 8) * (((f32 *)*(int *)((char *)gKTRexState + 0xe4))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase]) + ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase];
+    return changed;
+}
