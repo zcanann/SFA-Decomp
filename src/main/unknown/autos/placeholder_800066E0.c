@@ -10310,3 +10310,47 @@ u32 Sfx_PlayFromObjectLimited(u32 obj, u32 sfxId, int limit)
     }
     return gSfxObjectChannelMatchCount;
 }
+
+extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
+extern int DVDOpen(char* path, void* fileInfo);
+extern void DVDSetAutoInvalidation(int autoInval);
+extern void DCStoreRange(void* addr, u32 nBytes);
+
+/*
+ * Function: loadFileByPath
+ * EN v1.0 Address: 0x80015AB4
+ * EN v1.0 Size: 276b
+ */
+void* loadFileByPath(char* path, int* outSize)
+{
+    u8 fileInfo[0x3c];
+    int size;
+    u32 alignedSize;
+    void* buf;
+    if (outSize != NULL) {
+        *outSize = 0;
+    }
+    DVDSetAutoInvalidation(1);
+    if (DVDOpen(path, fileInfo) == 0) {
+        return NULL;
+    }
+    size = *(u32*)(fileInfo + 0x34);
+    alignedSize = (size + 0x1f) & ~0x1f;
+    buf = mmAlloc(alignedSize, 0x7d7d7d7d, NULL);
+    if (buf == NULL) {
+        return NULL;
+    }
+    if (DVDRead(fileInfo, buf, alignedSize, 0) == -1) {
+        mm_free(buf);
+        return NULL;
+    }
+    if (DVDClose(fileInfo) == 0) {
+        mm_free(buf);
+        return NULL;
+    }
+    DCStoreRange(buf, size);
+    if (outSize != NULL) {
+        *outSize = size;
+    }
+    return buf;
+}
