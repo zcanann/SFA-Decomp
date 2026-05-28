@@ -51,6 +51,14 @@ Heuristic before reaching for `asm { }`:
    and add `peephole off` *only* to kill a specific `extsb.`/`rlwinm.` dot-merge
    residual. Whole object-DLL units (e.g. placeholder_80220608) match best on
    scheduling-off-only.
+   **`#pragma ... reset` POPS a stack — it does NOT reset-to-default.** `on`/`off`
+   push; `reset` restores the *surrounding* state. So nested regions matter: a
+   function between an outer `off` and an inner `... reset` is still `off`. When
+   reproducing per-function pragma regions (esp. splitting/restructuring an
+   interleaved file), model the pragma state as a STACK and emit the *effective*
+   on/off for each function — tracking only the last-seen label silently compiles
+   functions with the wrong setting (regressed 7 fns during the 80211C24 split
+   until modeled as a stack).
 
 2. **Replace `& 0xff7f`-style literal with `& ~0x80`** for single-bit clears.
    The bit-NOT form often produces `rlwinm` directly where the explicit
