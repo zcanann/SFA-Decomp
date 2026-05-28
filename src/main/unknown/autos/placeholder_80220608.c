@@ -360,6 +360,57 @@ void wcpushblock_init(int obj, int setup)
 void wcpushblock_release(void) {}
 void wcpushblock_initialise(void) {}
 
+extern u8 lbl_8032B0C8[][8];
+extern u8 lbl_8032B088[][8];
+extern u8 lbl_803AD298[][8];
+
+#pragma peephole off
+#pragma scheduling off
+void wclevelcont_func16(s16 value, s16 *outRow, s16 *outCol)
+{
+    int i, j;
+
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            if (value == lbl_8032B0C8[i][j]) {
+                *outRow = (s16)i;
+                *outCol = (s16)j;
+                return;
+            }
+        }
+    }
+}
+void wclevelcont_func15(s16 value, s16 *outRow, s16 *outCol)
+{
+    int i, j;
+
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            if (value == lbl_8032B088[i][j]) {
+                *outRow = (s16)i;
+                *outCol = (s16)j;
+                return;
+            }
+        }
+    }
+}
+int wclevelcont_func14(s16 i, s16 j)
+{
+    if (i < 0 || i > 7 || j < 0 || j > 7) {
+        return 0;
+    }
+    return lbl_803AD298[i][j];
+}
+void wclevelcont_func13(int value, s16 i, s16 j)
+{
+    if (i < 0 || i > 7 || j < 0 || j > 7) {
+        return;
+    }
+    lbl_803AD298[i][j] = (u8)value;
+}
+#pragma scheduling on
+#pragma peephole on
+
 #pragma scheduling off
 int wcbeacon_aButtonCallback(int obj)
 {
