@@ -10355,7 +10355,7 @@ void* loadFileByPath(char* path, int* outSize)
     return buf;
 }
 
-extern void DVDReadAsyncPrio(void* fileInfo, void* buf, int size, int offset, void (*cb)(void*), int prio);
+extern int DVDReadAsyncPrio(void* fileInfo, void* buf, int size, int offset, void (*cb)(void*), int prio);
 extern void checkReset(void);
 extern void waitNextFrame(void);
 extern void mmFreeTick(int arg);
@@ -10653,4 +10653,53 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
     if (outMaxY != NULL) {
         *outMaxY = lbl_803DC9AC >> 2;
     }
+}
+
+extern u8 testAndSet_onlyUseHeap3(int arg);
+
+/*
+ * Function: loadFileByPathAsync
+ * EN v1.0 Address: 0x80015964
+ * EN v1.0 Size: 332b
+ */
+void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*))
+{
+    void* fileInfo;
+    int size;
+    u32 alignedSize;
+    void* buf;
+    int guard;
+    if (outSize != NULL) {
+        *outSize = 0;
+    }
+    DVDSetAutoInvalidation(1);
+    if (lbl_803DC954 != NULL) {
+        fileInfo = lbl_803DC954;
+    } else {
+        guard = testAndSet_onlyUseHeap3(0);
+        fileInfo = mmAlloc(0x3c, 0xFACEFEED, NULL);
+        testAndSet_onlyUseHeap3(guard);
+    }
+    if (DVDOpen(path, fileInfo) == 0) {
+        mm_free(fileInfo);
+        return NULL;
+    }
+    size = *(int*)((u8*)fileInfo + 0x34);
+    alignedSize = (size + 0x1f) & ~0x1f;
+    guard = testAndSet_onlyUseHeap3(0);
+    buf = mmAlloc(alignedSize, 0x7d7d7d7d, NULL);
+    testAndSet_onlyUseHeap3(guard);
+    if (buf == NULL) {
+        mm_free(fileInfo);
+        return NULL;
+    }
+    if (DVDReadAsyncPrio(fileInfo, buf, alignedSize, 0, cb, 2) != 0) {
+        if (outSize != NULL) {
+            *outSize = size;
+        }
+        return buf;
+    }
+    mm_free(buf);
+    mm_free(fileInfo);
+    return NULL;
 }
