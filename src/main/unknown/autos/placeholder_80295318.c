@@ -12482,6 +12482,167 @@ int fn_8029C9C8(int obj, int state)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int lbl_803DCF34;
+extern int lbl_803DCF38;
+extern f32 lbl_803E80C8;
+extern int hitDetectFn_800658a4(int a, void *p, int flag, f32 x, f32 y, f32 z);
+
+typedef struct {
+    f32 nx, ny, nz, d;
+} EmitPlane;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802A8EE4(int a, int b, int c, int d, int e)
+{
+    EmitPlane planes[2];
+    f32 ax, ay, az, bx, by, bz;
+    void *hit;
+    int tbl1, tbl2;
+    int i;
+
+    *(int *)((char *)b + 0x4c4) = 0;
+    *(f32 *)((char *)d + 0x1c) = *(f32 *)((char *)c + 0x1c);
+    *(f32 *)((char *)d + 0x20) = *(f32 *)((char *)c + 0x20);
+    *(f32 *)((char *)d + 0x24) = *(f32 *)((char *)c + 0x24);
+    *(f32 *)((char *)d + 0x28) = *(f32 *)((char *)c + 0x28);
+    *(u8 *)((char *)d + 0x60) = *(u8 *)((char *)c + 0x53);
+    hit = *(void **)((char *)c + 0x0);
+    if (hit != NULL) {
+        int m = *(int *)((char *)hit + 0x50);
+        tbl1 = *(int *)((char *)m + 0x34);
+        tbl2 = *(int *)((char *)m + 0x3c);
+    } else {
+        tbl1 = lbl_803DCF34;
+        tbl2 = lbl_803DCF38;
+    }
+    planes[0].nx = -*(f32 *)((char *)d + 0x24);
+    planes[0].ny = lbl_803E7EA4;
+    planes[0].nz = *(f32 *)((char *)d + 0x1c);
+    planes[0].d = -(-*(f32 *)((char *)d + 0x24) * *(f32 *)((char *)c + 0x4)) +
+                  *(f32 *)((char *)d + 0x1c) * *(f32 *)((char *)c + 0x14);
+    planes[1].nx = *(f32 *)((char *)d + 0x24);
+    planes[1].ny = lbl_803E7EA4;
+    planes[1].nz = -*(f32 *)((char *)d + 0x1c);
+    planes[1].d = -(*(f32 *)((char *)d + 0x24) * *(f32 *)((char *)c + 0x8)) +
+                  -*(f32 *)((char *)d + 0x1c) * *(f32 *)((char *)c + 0x18);
+    for (i = 0; i < 2; i++) {
+        f32 dot = ((f32 (*)(void *, void *))PSVECDotProduct)(&planes[i], (void *)e) + planes[i].d;
+        int face;
+        int v0, v1;
+        if (dot < lbl_803E7E98 + lbl_803DC6B8[1]) {
+            s16 fi = *(s16 *)((char *)c + i * 2 + 0x4c);
+            if (fi > -1) {
+                face = tbl1 + (fi << 4);
+            } else {
+                face = 0;
+            }
+            if (face == 0) {
+                return 0;
+            }
+            if (((s8)*(s8 *)((char *)face + 0x3) & 0x3f) != 6 &&
+                ((s8)*(s8 *)((char *)face + 0x3) & 0x3f) != 0x10) {
+                return 0;
+            }
+            v0 = *(s16 *)((char *)face + 0x4) * 0xc;
+            ax = *(f32 *)((char *)tbl2 + v0);
+            ay = lbl_803E7EA4;
+            az = *(f32 *)((char *)tbl2 + v0 + 8);
+            v1 = *(s16 *)((char *)face + 0x6) * 0xc;
+            bx = *(f32 *)((char *)tbl2 + v1);
+            by = lbl_803E7EA4;
+            bz = *(f32 *)((char *)tbl2 + v1 + 8);
+            if (hit != NULL) {
+                ((void (*)(f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(&ax, &ay, &az, (int)hit);
+                ((void (*)(f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(&bx, &by, &bz, (int)hit);
+            }
+            {
+                f32 dz = bz - az;
+                f32 dx = ax - bx;
+                f32 len = sqrtf(dx * dx + dz * dz);
+                f32 scale = lbl_803E7EE0 / len;
+                dx = dx * scale;
+                dz = dz * scale;
+                if (dx * *(f32 *)((char *)d + 0x1c) + dz * *(f32 *)((char *)d + 0x24) < lbl_803E7E98) {
+                    return 0;
+                }
+            }
+        }
+    }
+    *(f32 *)((char *)d + 0x2c) = *(f32 *)((char *)e + 0x0);
+    *(f32 *)((char *)d + 0x30) = *(f32 *)((char *)e + 0x4);
+    *(f32 *)((char *)d + 0x34) = *(f32 *)((char *)e + 0x8);
+    *(f32 *)((char *)d + 0x44) =
+        -(*(f32 *)((char *)d + 0x1c) * (lbl_803E7E98 + lbl_803DC6C0)) + *(f32 *)((char *)d + 0x2c);
+    *(f32 *)((char *)d + 0x4c) =
+        -(*(f32 *)((char *)d + 0x24) * (lbl_803E7E98 + lbl_803DC6C0)) + *(f32 *)((char *)d + 0x34);
+    *(f32 *)((char *)d + 0x50) =
+        lbl_803E7F10 * *(f32 *)((char *)d + 0x1c) + *(f32 *)((char *)d + 0x2c);
+    *(f32 *)((char *)d + 0x58) =
+        lbl_803E7F10 * *(f32 *)((char *)d + 0x24) + *(f32 *)((char *)d + 0x34);
+    *(f32 *)((char *)d + 0x38) = *(f32 *)((char *)b + 0x768);
+    *(f32 *)((char *)d + 0x3c) = lbl_803E7EA4;
+    *(f32 *)((char *)d + 0x40) = *(f32 *)((char *)b + 0x770);
+    *(f32 *)((char *)d + 0x4) =
+        *(f32 *)((char *)c + 0x48) * (*(f32 *)((char *)c + 0x40) - *(f32 *)((char *)c + 0x3c)) +
+        *(f32 *)((char *)c + 0x3c);
+    *(u8 *)((char *)d + 0x5e) = *(u8 *)((char *)c + 0x50);
+    *(u8 *)((char *)d + 0x61) = 1;
+    if (hitDetectFn_800658a4(a, (char *)d + 0x48, 0x205, *(f32 *)((char *)d + 0x44),
+                             *(f32 *)((char *)d + 0x4), *(f32 *)((char *)d + 0x4c)) != 0) {
+        return 0;
+    }
+    *(f32 *)((char *)d + 0x48) = *(f32 *)((char *)d + 0x4) - *(f32 *)((char *)d + 0x48);
+    if ((s8)*(s8 *)((char *)c + 0x50) == 0x10) {
+        *(f32 *)((char *)d + 0x8) = *(f32 *)((char *)a + 0x10);
+        *(f32 *)((char *)d + 0x0) = *(f32 *)((char *)d + 0x4) - *(f32 *)((char *)d + 0x8);
+        if (*(f32 *)((char *)d + 0x0) >= lbl_803E8044) {
+            return 0;
+        }
+        if (hit != NULL && (*(int *)((char *)*(int *)((char *)hit + 0x50) + 0x44) & 0x8000) == 0) {
+            *(int *)((char *)b + 0x4c4) = (int)hit;
+        }
+        return 3;
+    }
+    *(f32 *)((char *)d + 0x8) = *(f32 *)((char *)a + 0x84);
+    *(f32 *)((char *)d + 0x0) = *(f32 *)((char *)d + 0x4) - *(f32 *)((char *)d + 0x8);
+    if ((*(u8 *)((char *)b + 0x3f1) & 1) != 0) {
+        if (hit != NULL && (*(int *)((char *)*(int *)((char *)hit + 0x50) + 0x44) & 0x8000) == 0) {
+            *(int *)((char *)b + 0x4c4) = (int)hit;
+        }
+        if (*(f32 *)((char *)d + 0x0) <= lbl_803E80C8) {
+            if (*(f32 *)((char *)d + 0x0) > lbl_803E80C4) {
+                return 2;
+            }
+        }
+        if (*(f32 *)((char *)d + 0x0) <= lbl_803E80C4) {
+            if (*(f32 *)((char *)d + 0x0) >= lbl_803E8018) {
+                return 3;
+            }
+        }
+        return 0;
+    } else {
+        f32 q = *(f32 *)((char *)d + 0x4) -
+                (*(f32 *)((char *)c + 0x48) * (*(f32 *)((char *)c + 0x10) - *(f32 *)((char *)c + 0xc)) +
+                 *(f32 *)((char *)c + 0xc));
+        if (*(f32 *)((char *)d + 0x0) < lbl_803E7ED8) {
+            return 0;
+        }
+        if (*(f32 *)((char *)d + 0x0) > lbl_803E7FBC) {
+            return 0;
+        }
+        if (q < lbl_803E80C4) {
+            return 0;
+        }
+        if (hit != NULL && (*(int *)((char *)*(int *)((char *)hit + 0x50) + 0x44) & 0x8000) == 0) {
+            *(int *)((char *)b + 0x4c4) = (int)hit;
+        }
+        return 6;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int fn_802ABFBC(int obj, int state, int inner)
 {
     void *sub;
