@@ -2614,12 +2614,14 @@ void arwsquadron_render(int obj, int p2, int p3, int p4, int p5)
 }
 void arwsquadron_hitDetect(void) {}
 
+#pragma dont_inline on
 void arwprojectile_setLifetime(int obj, int lifetime)
 {
     int state = *(int *)(obj + 0xb8);
 
     *(f32 *)(state + 4) = (f32)lifetime;
 }
+#pragma dont_inline reset
 
 extern f32 lbl_803E7008;
 extern f32 lbl_803E70EC;
@@ -2637,6 +2639,7 @@ typedef struct ArwProjPosSrc {
     f32 pos[3];
 } ArwProjPosSrc;
 
+#pragma dont_inline on
 void arwprojectile_placeForward(int obj, f32 dist)
 {
     int state = *(int *)(obj + 0xb8);
@@ -2657,6 +2660,7 @@ void arwprojectile_placeForward(int obj, f32 dist)
     *(s16 *)obj += 0x8000;
     *(s16 *)(obj + 2) = -*(s16 *)(obj + 2);
 }
+#pragma dont_inline reset
 
 void arwingandrossstuff_init(int obj, u8 *setup)
 {
@@ -5225,6 +5229,7 @@ extern f32 lbl_803E7010;
 extern f32 lbl_803E7014;
 extern f32 lbl_803E7018;
 
+#pragma dont_inline on
 #pragma peephole off
 #pragma scheduling off
 void arwprojectile_createLinkedEffect(int obj, u8 enable) {
@@ -5255,6 +5260,7 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
 }
 #pragma scheduling reset
 #pragma peephole reset
+#pragma dont_inline reset
 
 extern f32 lbl_803E721C;
 extern f32 lbl_803E7220;
@@ -5287,6 +5293,39 @@ void arwblocker_update(int obj) {
     }
 }
 #pragma scheduling reset
+
+extern f32 lbl_803E71A8;
+
+#pragma peephole off
+#pragma scheduling off
+void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag) {
+    f32 pz, py, px;
+    int proj;
+    if (Obj_IsLoadingLocked() == 0)
+        return;
+    ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
+    {
+        int setup = Obj_AllocObjectSetup(0x20, 0x6ae);
+        *(f32 *)(setup + 8) = px;
+        *(f32 *)(setup + 0xc) = py;
+        *(f32 *)(setup + 0x10) = pz;
+        *(u8 *)(setup + 0x1a) = (*(s16 *)obj + 0x10000 + angle - 0x8000) >> 8;
+        *(u8 *)(setup + 0x19) = -*(s16 *)(obj + 2) >> 8;
+        *(u8 *)(setup + 0x18) = 0;
+        *(u8 *)(setup + 4) = 1;
+        *(u8 *)(setup + 5) = 1;
+    }
+    proj = loadObjectAtObject(obj);
+    if (proj == 0)
+        return;
+    if (flag != 0)
+        arwprojectile_createLinkedEffect(proj, 1);
+    arwprojectile_setLifetime(proj, 0x4b);
+    arwprojectile_placeForward(proj, lbl_803E71A8);
+    Sfx_PlayFromObjectLimited(proj, 0x2b5, 4);
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 void fn_8022D6D0(int arwing)
 {
