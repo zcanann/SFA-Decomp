@@ -1818,6 +1818,17 @@ void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 void ring_release(void) {}
 void ring_initialise(void) {}
 
+typedef struct RingFlags {
+    u8 bit80 : 1;
+    u8 bit40 : 1;
+    u8 bit20 : 1;
+    u8 bit10 : 1;
+    u8 pad : 4;
+} RingFlags;
+
+extern f32 lbl_803E70C4;
+extern f32 lbl_803E70D8;
+
 typedef struct CntHitFlags {
     u8 disabled : 1;
     u8 pad : 7;
@@ -1828,6 +1839,54 @@ extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, in
 extern void ObjHits_DisableObject(int obj);
 extern void ObjHits_EnableObject(int obj);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
+
+#pragma peephole off
+#pragma scheduling off
+void ring_init(int obj, int setup) {
+    int state = *(int *)(obj + 0xb8);
+    RingFlags *f = (RingFlags *)(state + 0x14);
+    s16 type = *(s16 *)(obj + 0x46);
+    if (type == 1548) {
+        *(u8 *)(state + 0) = 0;
+    } else if (type == 2073) {
+        *(u8 *)(state + 0) = 0;
+        f->bit10 = 1;
+    } else if (type == 1547) {
+        *(u8 *)(state + 0) = 2;
+    } else if (type == 2044) {
+        *(u8 *)(state + 0) = 3;
+    } else if (type == 2043) {
+        *(u8 *)(state + 0) = 4;
+    } else {
+        *(u8 *)(state + 0) = 2;
+    }
+    *(u8 *)(state + 1) = *(u8 *)(setup + 0x19);
+    if (*(u8 *)(state + 1) == 2 || *(u8 *)(state + 1) == 3 || *(u8 *)(state + 1) == 5) {
+        f->bit80 = 0;
+        Obj_SetActiveModelIndex(obj, 1);
+    } else {
+        f->bit80 = 1;
+        ObjHits_DisableObject(obj);
+    }
+    *(u16 *)(state + 2) = *(s16 *)(setup + 0x1a);
+    *(f32 *)(state + 4) = (f32)*(s16 *)(setup + 0x1c) / lbl_803E70C4;
+    *(f32 *)(state + 8) = *(f32 *)(obj + 12);
+    *(f32 *)(state + 0xc) = *(f32 *)(obj + 16);
+    if (*(s8 *)(setup + 0x18) != 0)
+        f->bit20 = 1;
+    else
+        f->bit20 = 0;
+    *(s16 *)obj = -32768;
+    if (*(u8 *)(state + 0) == 3 || *(u8 *)(state + 0) == 4) {
+        f->bit10 = 1;
+        *(f32 *)(state + 0x10) = lbl_803E70D8;
+    } else {
+        *(s16 *)(obj + 6) |= 0x4000;
+        *(u8 *)(obj + 0x36) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 int cnthitobjec_getExtraSize(void) { return 0xc; }
 int cnthitobjec_getObjectTypeId(void) { return 0; }
