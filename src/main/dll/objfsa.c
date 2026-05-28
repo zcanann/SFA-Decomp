@@ -29,6 +29,7 @@ extern int RomCurve_projectPointToAdjacentWindow();
 extern int curves_distFn15();
 extern int RomCurve_findByIdWithIndex();
 extern void *romCurves[];
+extern s32 nRomCurves;
 extern undefined4 RomCurve_getAdjacentWindow();
 extern f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
 extern int FUN_80286818();
@@ -4057,9 +4058,9 @@ LAB_800e1778:
 /*
  * --INFO--
  *
- * Function: FUN_800dfc4c
- * EN v1.0 Address: 0x800DFC4C
- * EN v1.0 Size: 536b
+ * Function: curves_getPos
+ * EN v1.0 Address: 0x800E1578
+ * EN v1.0 Size: 592b
  * EN v1.1 Address: 0x800E17FC
  * EN v1.1 Size: 592b
  * JP Address: TODO
@@ -4067,7 +4068,7 @@ LAB_800e1778:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800dfc4c(double param_1,int param_2,float *param_3,float *param_4,float *param_5)
+void curves_getPos(double phase,int curve,float *outX,float *outY,float *outZ)
 {
   float fVar1;
   float fVar2;
@@ -4081,26 +4082,26 @@ void FUN_800dfc4c(double param_1,int param_2,float *param_3,float *param_4,float
   uint local_38 [6];
   
   iVar5 = 0;
-  uVar8 = *(uint *)(param_2 + 0x1c);
-  if (((-1 < (int)uVar8) && ((*(byte *)(param_2 + 0x1b) & 1) == 0)) && (uVar8 != 0)) {
+  uVar8 = *(uint *)(curve + 0x1c);
+  if (((-1 < (int)uVar8) && ((*(byte *)(curve + 0x1b) & 1) == 0)) && (uVar8 != 0)) {
     iVar5 = 1;
     local_38[0] = uVar8;
   }
-  uVar8 = *(uint *)(param_2 + 0x20);
+  uVar8 = *(uint *)(curve + 0x20);
   iVar6 = iVar5;
-  if (((-1 < (int)uVar8) && ((*(byte *)(param_2 + 0x1b) & 2) == 0)) && (uVar8 != 0)) {
+  if (((-1 < (int)uVar8) && ((*(byte *)(curve + 0x1b) & 2) == 0)) && (uVar8 != 0)) {
     iVar6 = iVar5 + 1;
     local_38[iVar5] = uVar8;
   }
-  uVar8 = *(uint *)(param_2 + 0x24);
+  uVar8 = *(uint *)(curve + 0x24);
   iVar5 = iVar6;
-  if (((-1 < (int)uVar8) && ((*(byte *)(param_2 + 0x1b) & 4) == 0)) && (uVar8 != 0)) {
+  if (((-1 < (int)uVar8) && ((*(byte *)(curve + 0x1b) & 4) == 0)) && (uVar8 != 0)) {
     iVar5 = iVar6 + 1;
     local_38[iVar6] = uVar8;
   }
-  uVar8 = *(uint *)(param_2 + 0x28);
+  uVar8 = *(uint *)(curve + 0x28);
   iVar6 = iVar5;
-  if (((-1 < (int)uVar8) && ((*(byte *)(param_2 + 0x1b) & 8) == 0)) && (uVar8 != 0)) {
+  if (((-1 < (int)uVar8) && ((*(byte *)(curve + 0x1b) & 8) == 0)) && (uVar8 != 0)) {
     iVar6 = iVar5 + 1;
     local_38[iVar5] = uVar8;
   }
@@ -4115,7 +4116,7 @@ void FUN_800dfc4c(double param_1,int param_2,float *param_3,float *param_4,float
     iVar9 = 0;
   }
   else {
-    iVar6 = DAT_803de0f0 + -1;
+    iVar6 = nRomCurves + -1;
     iVar5 = 0;
     while (iVar5 <= iVar6) {
       iVar7 = iVar6 + iVar5 >> 1;
@@ -4132,20 +4133,20 @@ void FUN_800dfc4c(double param_1,int param_2,float *param_3,float *param_4,float
   }
 LAB_800e19bc:
   if (iVar9 == 0) {
-    *param_3 = *(float *)(param_2 + 8);
-    *param_4 = *(float *)(param_2 + 0xc);
-    *param_5 = *(float *)(param_2 + 0x10);
+    *outX = *(float *)(curve + 8);
+    *outY = *(float *)(curve + 0xc);
+    *outZ = *(float *)(curve + 0x10);
   }
   else {
     fVar1 = *(float *)(iVar9 + 0xc);
-    fVar2 = *(float *)(param_2 + 0xc);
+    fVar2 = *(float *)(curve + 0xc);
     fVar3 = *(float *)(iVar9 + 0x10);
-    fVar4 = *(float *)(param_2 + 0x10);
-    *param_3 = (float)((double)(float)((double)*(float *)(iVar9 + 8) -
-                                      (double)*(float *)(param_2 + 8)) * param_1 +
-                      (double)*(float *)(param_2 + 8));
-    *param_4 = (float)((double)(fVar1 - fVar2) * param_1 + (double)*(float *)(param_2 + 0xc));
-    *param_5 = (float)((double)(fVar3 - fVar4) * param_1 + (double)*(float *)(param_2 + 0x10));
+    fVar4 = *(float *)(curve + 0x10);
+    *outX = (float)((double)(float)((double)*(float *)(iVar9 + 8) -
+                                      (double)*(float *)(curve + 8)) * phase +
+                      (double)*(float *)(curve + 8));
+    *outY = (float)((double)(fVar1 - fVar2) * phase + (double)*(float *)(curve + 0xc));
+    *outZ = (float)((double)(fVar3 - fVar4) * phase + (double)*(float *)(curve + 0x10));
   }
   return;
 }

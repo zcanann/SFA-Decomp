@@ -77,7 +77,7 @@ void FUN_800dece0(void);
 int FUN_800df2a4(double param_1,double param_2,double param_3,int param_4,int param_5);
 uint FUN_800df46c(undefined8 param_1,double param_2,double param_3);
 void FUN_800df660(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
-void FUN_800dfc4c(double param_1,int param_2,float *param_3,float *param_4,float *param_5);
+void curves_getPos(double phase,int curve,float *outX,float *outY,float *outZ);
 int RomCurve_findProjectedCurveFromStart(double x,double y,double z,int curve,float *outPhase);
 
 #endif /* MAIN_DLL_OBJFSA_H_ */
