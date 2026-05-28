@@ -173,6 +173,9 @@ extern int hightop_stateHandler07();
 extern int hightop_stateHandler09();
 extern int hightop_stateHandler10();
 
+extern void ObjGroup_AddObject(int obj, int group);
+extern void drcreator_spawnProjectileCallback(void);
+
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;
@@ -519,6 +522,19 @@ void drcagewith_free(int obj, int arg) {
         Obj_FreeObject(*(int *)p);
     }
     ObjGroup_RemoveObject(obj, 0x18);
+}
+
+void drcreator_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((s8)arg[0x1e] << 8);
+    *(s16 *)(p + 0x4) = *(s16 *)(arg + 0x18);
+    *(s16 *)(p + 0x6) = *(s16 *)(arg + 0x1c);
+    *(s16 *)(p + 0x8) = (s16)randomGetRange(0, *(s16 *)(p + 0x6));
+    *(s16 *)(p + 0xa) = (s8)arg[0x1f];
+    *(int *)p = (u8)arg[0x20];
+    ((BitFlags8 *)(p + 0x18))->b0 = 1;
+    GameBit_Set(0x5dd, 0);
+    *(void **)((char *)obj + 0xbc) = (void *)drcreator_spawnProjectileCallback;
 }
 
 void ktrexlevel_updatePathGameBits(void) {
