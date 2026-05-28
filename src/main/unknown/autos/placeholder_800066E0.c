@@ -10218,3 +10218,42 @@ void voxmaps_worldToGrid(f32* in, s16* out)
     out[1] = iy / 10;
     out[2] = iz / 10;
 }
+
+extern int lbl_803DC9AC;
+extern int lbl_803DC9B0;
+extern int lbl_803DC9B4;
+extern int lbl_803DC9B8;
+extern int lbl_803DC9BC;
+
+/*
+ * Function: gameTextBoxFn_800164b0
+ * EN v1.0 Address: 0x800164B0
+ * EN v1.0 Size: 220b
+ */
+void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+{
+    u8* box = &lbl_802C7400[boxIdx * 0x20];
+    s16 savedX = *(s16*)(box + 0x18);
+    s16 savedY = *(s16*)(box + 0x1a);
+    lbl_803DC9BC = 1;
+    lbl_803DC9B0 = 0x7FFFFFFF;
+    lbl_803DC9AC = 0;
+    lbl_803DC9B8 = 0x7FFFFFFF;
+    lbl_803DC9B4 = 0;
+    gameTextRenderStrs(str, boxIdx);
+    lbl_803DC9BC = 0;
+    if (outMinX != NULL) {
+        *outMinX = lbl_803DC9B8 >> 2;
+    }
+    if (outMinY != NULL) {
+        *outMinY = lbl_803DC9B4 >> 2;
+    }
+    if (outMaxX != NULL) {
+        *outMaxX = lbl_803DC9B0 >> 2;
+    }
+    if (outMaxY != NULL) {
+        *outMaxY = lbl_803DC9AC >> 2;
+    }
+    *(s16*)(box + 0x18) = savedX;
+    *(s16*)(box + 0x1a) = savedY;
+}
