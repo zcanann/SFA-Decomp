@@ -1307,30 +1307,6 @@ void FUN_801f5070(uint param_1)
 
 
 
-int wmspiritset_getExtraSize(void) { return 0x2; }
-int wmspiritset_getObjectTypeId(void) { return 0x0; }
-void wmspiritset_free(void) {}
-void wmspiritset_hitDetect(void) {}
-void wmspiritset_update(void) {}
-void wmspiritset_release(void) {}
-void wmspiritset_initialise(void) {}
-int wmplanets_getExtraSize(void) { return 0x1c; }
-int wmplanets_getObjectTypeId(void) { return 0x0; }
-void wmplanets_free(void) {}
-void wmplanets_hitDetect(void) {}
-void wmplanets_release(void) {}
-void wmplanets_initialise(void) {}
-int wmwallcrawler_getExtraSize(void) { return 0x29c; }
-int wmwallcrawler_getObjectTypeId(void) { return 0x0; }
-void wmwallcrawler_release(void) {}
-void wmwallcrawler_initialise(void) {}
-int wmnewcrystal_getExtraSize(void) { return 0x6c; }
-int wmnewcrystal_getObjectTypeId(void) { return 0x0; }
-void wmnewcrystal_free(void) {}
-void wmnewcrystal_hitDetect(void) {}
-void wmnewcrystal_update(void) {}
-void wmnewcrystal_release(void) {}
-void wmnewcrystal_initialise(void) {}
 int vfplevelcontrol_getExtraSize(void) { return 0x1c; }
 int vfplevelcontrol_getObjectTypeId(void) { return 0x0; }
 void vfplevelcontrol_render(void) {}
@@ -1395,10 +1371,6 @@ void vfplevelcontrol_initialise(void) {
     lbl_803DC148 = 0x82;
 }
 
-int fn_801F7FF4(int obj) {
-    *(u8 *)(*(int *)(obj + 0xb8) + 0x296) = 1;
-    return 0;
-}
 
 int fn_801FB220(int obj) {
     *(u8 *)(*(int *)(obj + 0xb8) + 0x1c) |= 0x40;
@@ -1409,13 +1381,7 @@ void vfplift_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     objRenderFn_8003b8f4(lbl_803E60F0);
 }
 
-void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
-    objRenderFn_8003b8f4(lbl_803E605C);
-}
 
-void wmwallcrawler_free(int obj) {
-    ObjGroup_RemoveObject(obj, 3);
-}
 
 void dll_219_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
@@ -1428,14 +1394,6 @@ void dll_219_init(int *obj, u8 *init) {
     *(u16 *)((char *)obj + 0xb0) |= 0x6000;
 }
 
-void wmspiritset_init(int *obj, u8 *init) {
-    int *inner = *(int **)((char *)obj + 0xb8);
-    *(s16 *)obj = (s16)((s8)init[0x18] << 8);
-    if (*(s16 *)((char *)obj + 0x46) == 0x264) {
-        *(f32 *)((char *)obj + 8) = lbl_803E5F94;
-    }
-    *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
-}
 
 
 void vfplevelcontrol_free(int obj) {
@@ -1503,13 +1461,6 @@ void vfplift_hitDetect(int obj) {
     }
 }
 
-void wmspiritset_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
-    int *inner = *(int **)(p1 + 0xb8);
-    s16 v = *(s16 *)inner;
-    if ((v == -1 || GameBit_Get(v) != 0) && vis != 0) {
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5F90);
-    }
-}
 
 
 void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
@@ -1520,29 +1471,7 @@ void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     }
 }
 
-void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
-    int *inner = *(int **)(p1 + 0xb8);
-    if ((*(u16 *)((char *)inner + 0x294) & 0x40) != 0 && (u8)*(u8 *)(p1 + 0x36) < 0xff) {
-        if (*(u8 *)(p1 + 0x36) > 0xff - framesThisStep) {
-            *(u8 *)(p1 + 0x36) = 0xff;
-            *(u16 *)((char *)inner + 0x294) &= ~0x40;
-        } else {
-            *(u8 *)(p1 + 0x36) = *(u8 *)(p1 + 0x36) + framesThisStep;
-        }
-    }
-    if (vis != 0 && *(s16 *)((char *)inner + 0x28c) == 0) {
-        objRenderFn_8003b8f4(lbl_803E5FB4);
-    }
-}
 
-void wmnewcrystal_init(int *obj, u8 *init) {
-    int *inner = *(int **)((char *)obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801F943C;
-    if ((u8)(*(int (*)(int))(*(int *)(*gMapEventInterface + 0x40)))((s8)*(u8 *)((char *)obj + 0xac)) > 1) {
-        GameBit_Set(0xd27, 1);
-        *(u8 *)((char *)inner + 0x68) = 1;
-    }
-}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1617,25 +1546,6 @@ void vfplift_init(int *obj, u8 *init) {
     }
 }
 
-void wmplanets_init(int *obj, u8 *init) {
-    int *inner = *(int **)((char *)obj + 0xb8);
-    f32 a = lbl_803E5FA0 * *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4);
-    *(f32 *)((char *)obj + 8) = a * (lbl_803E5F98 + (f32)(s32)(s8)init[0x18]);
-    if (*(s16 *)init != 0) {
-        *(f32 *)((char *)inner + 0xc) = -(f32)(s32)((s8)init[0x19] << 4);
-    } else {
-        *(f32 *)((char *)inner + 0xc) = lbl_803E5F9C;
-    }
-    *(s16 *)inner = (s16)randomGetRange(0x64, 0xc8);
-    *(s16 *)((char *)inner + 2) = (s16)randomGetRange(0xc8, 0x190);
-    *(s16 *)((char *)inner + 4) = 0;
-    *(s16 *)((char *)inner + 8) = (s16)randomGetRange(0, 0x960);
-    *(f32 *)((char *)inner + 0x10) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)((char *)inner + 0x14) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)((char *)inner + 0x18) = *(f32 *)((char *)obj + 0x14);
-    Obj_SetActiveModelIndex((int)obj, *(s16 *)((char *)init + 0x1a));
-    *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)init + 0x10) + *(f32 *)((char *)inner + 0xc);
-}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1665,11 +1575,6 @@ void vfpstatueball_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
 }
 
-void wmplanets_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
-    if (vis != 0) {
-        objRenderFn_8003b8f4(lbl_803E5F98);
-    }
-}
 
 void dll_21B_init(int *obj, u8 *init) {
     int *inner = *(int **)((char *)obj + 0xb8);
