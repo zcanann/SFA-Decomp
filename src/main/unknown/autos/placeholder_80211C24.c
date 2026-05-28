@@ -1228,6 +1228,29 @@ void ktlazerlight_update(int obj) {
     }
 }
 
+void explodeplan_update(int obj) {
+    int q = *(int *)((char *)obj + 0x4c);
+    char *p = *(char **)((char *)obj + 0xb8);
+    if (((BitFlags8 *)(p + 0x4))->b1 != 0) {
+        return;
+    }
+    if (*(int *)p == 0 && GameBit_Get(*(s16 *)(q + 0x1e)) != 0) {
+        ((BitFlags8 *)(p + 0x4))->b1 = 1;
+        *(int *)p = 2;
+    }
+    if (((BitFlags8 *)(p + 0x4))->b2 != 0) {
+        ((BitFlags8 *)(p + 0x4))->b1 = 1;
+        (*(void (**)(int, int))((char *)*gObjectTriggerInterface + 0x54))(obj, 0x76c);
+        if (GameBit_Get(0x9f3) != 0) {
+            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(*(int *)p, obj, 0x60);
+        } else {
+            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(*(int *)p, obj, 0x70);
+        }
+    } else {
+        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(*(int *)p, obj, -1);
+    }
+}
+
 #pragma peephole reset
 #pragma scheduling reset
 
