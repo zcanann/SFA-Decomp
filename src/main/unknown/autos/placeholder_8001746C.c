@@ -9611,6 +9611,22 @@ extern void model_adjustModelList(void *list, int index);
 extern void *textureIdxToPtr(int id);
 extern void model_findIdxInModelList(void *list, void *header, int *outIndex);
 extern void *lbl_803DCB50;
+extern void *allocModelStruct(int size, int align);
+extern int *lbl_803DCB5C;
+
+#pragma push
+#pragma scheduling off
+void ObjModel_InitResourceCaches(void) {
+    void *m;
+    lbl_803DCB54 = allocModelStruct(0x8c, 4);
+    lbl_803DCB50 = allocModelStruct(0xc4, 4);
+    m = mmAlloc(0x830, 0xa, 0);
+    lbl_803DCB64 = m;
+    lbl_803DCB60 = (int *)((u8 *)m + 0x800);
+    lbl_803DCB5C = (int *)((u8 *)m + 0x810);
+    loadModelAndAnimTabs();
+}
+#pragma pop
 
 void ObjModel_Release(u8 *model) {
     u8 *header;
