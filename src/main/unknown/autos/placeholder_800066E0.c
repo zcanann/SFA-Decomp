@@ -2696,6 +2696,7 @@ void FUN_80006868(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 u32 AudioStream_GetMusicFadeFlagA(void)
 {
     if (gAudioStreamPos > gAudioStreamEndPos) {
@@ -2703,6 +2704,7 @@ u32 AudioStream_GetMusicFadeFlagA(void)
     }
     return gAudioStreamMusicFadeFlagA;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2717,6 +2719,7 @@ u32 AudioStream_GetMusicFadeFlagA(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 u32 AudioStream_GetMusicFadeFlagB(void)
 {
     if (gAudioStreamPos > gAudioStreamEndPos) {
@@ -2724,6 +2727,7 @@ u32 AudioStream_GetMusicFadeFlagB(void)
     }
     return gAudioStreamMusicFadeFlagB;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -11626,6 +11630,237 @@ foundTrigger:
         sndSeqVolume(0, i < 0x1f4 ? 0x1f4 : i, channel->seqHandle, 1);
         channel->status = 2;
     }
+}
+
+extern f32 lbl_803DE564;
+extern f32 lbl_803DE568;
+extern void sndSeqStop(int handle);
+extern void sndSeqMute(int handle, int a, int b);
+extern void sndSeqContinue(int handle);
+
+typedef struct SynthVoice {
+    u8 pad0[8];
+    u8 field_8;
+    u8 pad9[0x1868 - 9];
+} SynthVoice;
+extern SynthVoice gSynthVoices[];
+
+static void Music_FreeChannel(MusicChannel *ch)
+{
+    sndSeqStop(ch->seqHandle);
+    mm_free(ch->bankData);
+    ch->field_0 = -1;
+    ch->seqHandle = -1;
+    ch->bankData = NULL;
+    ch->voiceId = 0xff;
+    ch->status = 0;
+    ch->field_12 = 0;
+    ch->field_20 = lbl_803DE560;
+}
+
+static int Music_IsTriggerExcluded(int id)
+{
+    switch (id) {
+    case 0x2b:
+    case 0xbd:
+    case 0xeb:
+        return 1;
+    }
+    return 0;
+}
+
+/*
+ * Function: Music_Update
+ * EN v1.0 Address: 0x8000A828
+ */
+void Music_Update(void)
+{
+    MusicChannel *ch;
+    int i;
+    int lowPriority = 0x7fff;
+    u32 bestActive18 = 0;
+    u32 bestLow18 = 0;
+    int activeVol = 0x1f4;
+    int lowVol = 0x1f4;
+    int s2VolA = 0x1f4;
+    int s2VolB = 0x1f4;
+    int found20 = 0;
+    int found19 = 0;
+    u32 fadeB = AudioStream_GetMusicFadeFlagB();
+    u32 fadeA = AudioStream_GetMusicFadeFlagA();
+
+    gMusicActivePriority = 0x7fff;
+
+    ch = gMusicChannels;
+    i = 0xf;
+    do {
+        int status = ch->status;
+        if (status != 0 && status != 4) {
+            if (gSynthVoices[ch->voiceId].field_8 == 0) {
+                if (status == 4 || status == 5) {
+                    ch->status = 5;
+                } else {
+                    Music_FreeChannel(ch);
+                }
+            }
+        }
+        switch (ch->status) {
+        case 1:
+        case 3:
+        case 4:
+            if (!Music_IsTriggerExcluded((*(MusicTrigger **)&ch->pad14[8])->id)) {
+                if (ch->pad11 != 0) {
+                    gMusicActivePriority = ch->field_12 < gMusicActivePriority
+                                               ? ch->field_12
+                                               : gMusicActivePriority;
+                } else {
+                    lowPriority =
+                        ch->field_12 < lowPriority ? ch->field_12 : lowPriority;
+                }
+            }
+            break;
+        case 2:
+            ch->field_20 += timeDelta / lbl_803DE564;
+            if (ch->field_20 > lbl_803DE568) {
+                if (ch->status == 4 || ch->status == 5) {
+                    ch->status = 5;
+                } else {
+                    Music_FreeChannel(ch);
+                }
+            }
+            break;
+        }
+        ch++;
+    } while (i-- != 0);
+
+    ch = gMusicChannels;
+    for (i = 0; i < 16; i++) {
+        switch (ch->status) {
+        case 1:
+        case 3:
+        case 4:
+            if (!Music_IsTriggerExcluded((*(MusicTrigger **)&ch->pad14[8])->id)) {
+                if (ch->pad11 != 0) {
+                    if (ch->field_12 == gMusicActivePriority &&
+                        *(u32 *)&ch->pad14[4] > bestActive18) {
+                        bestActive18 = *(u32 *)&ch->pad14[4];
+                        activeVol = *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad;
+                    }
+                } else {
+                    if (ch->field_12 == lowPriority &&
+                        *(u32 *)&ch->pad14[4] > bestLow18) {
+                        bestLow18 = *(u32 *)&ch->pad14[4];
+                        lowVol = *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad;
+                        if (ch->status != 3) {
+                            found20 = 1;
+                        }
+                    }
+                }
+            }
+            break;
+        case 2:
+            if (ch->pad11 != 0) {
+                s2VolA = s2VolA > *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad
+                             ? s2VolA
+                             : *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad;
+            } else {
+                s2VolB = s2VolB > *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad
+                             ? s2VolB
+                             : *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad;
+                found19 = 1;
+            }
+            break;
+        }
+        ch++;
+    }
+
+    if (found20) {
+        activeVol = lowVol;
+    }
+    if (found19) {
+        s2VolA = s2VolB;
+    }
+    if ((int)fadeB != 0) {
+        if (activeVol >= 0x1f4) {
+            activeVol = 0x1f4;
+        }
+    }
+    if ((int)fadeA != 0) {
+        if (lowVol >= 0x1f4) {
+            lowVol = 0x1f4;
+        }
+    }
+
+    ch = gMusicChannels;
+    i = 0xf;
+    do {
+        int st = ch->status;
+        switch (st) {
+        case 1:
+        case 3:
+            if (ch->pad11 != 0) {
+                if (ch->field_12 == gMusicActivePriority &&
+                    *(u32 *)&ch->pad14[4] < bestActive18) {
+                    if (st != 2) {
+                        if (st == 4 || st == 5) {
+                            ch->status = 5;
+                        } else {
+                            sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol),
+                                         ch->seqHandle, 1);
+                            ch->status = 2;
+                        }
+                    }
+                } else if (ch->field_12 > gMusicActivePriority ||
+                           ch->field_12 > lowPriority || (int)fadeB != 0) {
+                    if (st != 3) {
+                        sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol),
+                                     ch->seqHandle, (u8)(ch->pad11 != 0 ? 0 : 2));
+                        ch->status = 3;
+                    }
+                } else {
+                    if (st != 1) {
+                        sndSeqMute(ch->seqHandle, -1, -1);
+                        sndSeqContinue(ch->seqHandle);
+                        sndSeqVolume((u8)*(u16 *)&ch->pad14[0],
+                                     (u16)(s2VolA < 0x1f4 ? 0x1f4 : s2VolA),
+                                     ch->seqHandle, 0);
+                        ch->status = 1;
+                    }
+                }
+            } else {
+                if (ch->field_12 == lowPriority &&
+                    *(u32 *)&ch->pad14[4] < bestLow18) {
+                    if (st != 2) {
+                        if (st == 4 || st == 5) {
+                            ch->status = 5;
+                        } else {
+                            sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol),
+                                         ch->seqHandle, 1);
+                            ch->status = 2;
+                        }
+                    }
+                } else if (ch->field_12 > lowPriority ||
+                           ch->field_12 > gMusicActivePriority || (int)fadeA != 0) {
+                    if (st != 3) {
+                        sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol),
+                                     ch->seqHandle, (u8)(ch->pad11 != 0 ? 0 : 2));
+                        ch->status = 3;
+                    }
+                } else {
+                    if (st != 1) {
+                        sndSeqMute(ch->seqHandle, -1, -1);
+                        sndSeqContinue(ch->seqHandle);
+                        sndSeqVolume((u8)*(u16 *)&ch->pad14[0],
+                                     (u16)(s2VolB < 0x1f4 ? 0x1f4 : s2VolB),
+                                     ch->seqHandle, 0);
+                        ch->status = 1;
+                    }
+                }
+            }
+            break;
+        }
+        ch++;
+    } while (i-- != 0);
 }
 
 /*
