@@ -1044,6 +1044,59 @@ void wctempledia_init(int obj, int setup)
 void wctempledia_release(void) {}
 void wctempledia_initialise(void) {}
 
+extern f32 lbl_803E6E90;
+#pragma scheduling off
+void wctemplebri_updateModelWarp(int obj, int p2)
+{
+    int tex;
+    int v;
+
+    tex = (int)objFindTexture(obj, 0, 0);
+    *(s16 *)(tex + 0xa) += 0x14;
+    if (*(s16 *)(tex + 0xa) > 0x2710) *(s16 *)(tex + 0xa) -= 0x2710;
+    *(s16 *)(tex + 8) += 0xa;
+    if (*(s16 *)(tex + 8) > 0x2710) *(s16 *)(tex + 8) -= 0x2710;
+    tex = (int)objFindTexture(obj, 1, 0);
+    *(s16 *)(tex + 0xa) += 0x1e;
+    if (*(s16 *)(tex + 0xa) > 0x2710) *(s16 *)(tex + 0xa) -= 0x2710;
+    v = *(u16 *)(p2 + 0x60) + (framesThisStep << 8);
+    if (v > 0xffff) v -= 0xffff;
+    *(u16 *)(p2 + 0x60) = (u16)v;
+    v = *(u16 *)(p2 + 0x62) + (framesThisStep << 7);
+    if (v > 0xffff) v -= 0xffff;
+    *(u16 *)(p2 + 0x62) = (u16)v;
+}
+#pragma scheduling on
+int wctemplebri_getExtraSize(void) { return 0x68; }
+#pragma scheduling off
+int wctemplebri_getObjectTypeId(int obj)
+{
+    int modelIndex = (s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+
+    if (modelIndex >= modelCount) {
+        modelIndex = 0;
+    }
+    return (modelIndex << 0xb) | 0x400;
+}
+#pragma scheduling on
+void wctemplebri_free(void) {}
+#pragma peephole off
+#pragma scheduling off
+void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (visible != 0) {
+        if (*(u8 *)(state + 0x5f) != 0) {
+            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E90);
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+void wctemplebri_hitDetect(void) {}
+
 int suntemple_getExtraSize(void) { return 2; }
 int suntemple_getObjectTypeId(void) { return 0; }
 void suntemple_free(void) {}
