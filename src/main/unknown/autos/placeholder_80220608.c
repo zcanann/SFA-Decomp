@@ -1565,6 +1565,105 @@ void timer_init(int obj, int setup)
 #pragma scheduling on
 #pragma peephole on
 
+extern int timerCountDown(void *timer);
+extern int fn_8001CC9C(int obj, int a, int b, int c, int d);
+extern f32 lbl_803DC418;
+extern f32 lbl_803DC41C;
+extern f32 lbl_803E741C;
+extern f32 lbl_803E7420;
+
+#pragma peephole off
+#pragma scheduling off
+void timer_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    TimerFlags *f = (TimerFlags *)(state + 0xd);
+    int flag;
+
+    if (fn_80080150(state) != 0) {
+        flag = 0;
+        if (f->manual == 0 && (u32)GameBit_Get(*(s16 *)(setup + 0x20)) == 0) {
+            storeZeroToFloatParam((void *)state);
+            if (*(u8 *)(state + 0xc) == 1) {
+                if (*(int *)(*(int *)(obj + 0x4c) + 0x14) != 0x466ED) {
+                    Sfx_PlayFromObject(obj, 126);
+                }
+            }
+            flag = 1;
+        }
+        if (timerCountDown((void *)state) != 0) {
+            GameBit_Set(*(s16 *)(setup + 0x1e), 1);
+            GameBit_Set(*(s16 *)(setup + 0x20), 0);
+            flag = 1;
+        }
+        if (flag != 0) {
+            f->expired = 1;
+            switch (*(u8 *)(state + 0xc)) {
+            case 1:
+                gameTimerStop();
+                break;
+            case 2:
+                fn_8001CB3C(state + 4);
+                break;
+            }
+            f->manual = 0;
+        }
+    } else {
+        if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0 || f->manual != 0) {
+            storeZeroToFloatParam((void *)state);
+            if (*(s16 *)(setup + 0x1a) != 0) {
+                s16toFloat((void *)state, (s16)(*(s16 *)(setup + 0x1a) * 60));
+            }
+            switch (*(u8 *)(state + 0xc)) {
+            case 1:
+                gameTimerInit(29, *(s16 *)(setup + 0x1a));
+                timerSetToCountUp();
+                break;
+            case 2:
+                *(int *)(state + 4) = fn_8001CC9C(obj, 255, 0, 0, 0);
+                if (*(int *)(state + 4) != 0) {
+                    fn_8001D730((void *)*(int *)(state + 4), 0, 255, 0, 0, 100, lbl_803DC418);
+                    lightVecFn_8001dd88((void *)*(int *)(state + 4), lbl_803E741C, lbl_803E7420,
+                                        lbl_803E741C);
+                }
+                break;
+            }
+        }
+        if (*(u8 *)(state + 0xc) == 2 && fn_80080150(state) != 0) {
+            int hold = *(int *)(state + 4);
+            int tv = (int)((f32)(*(s16 *)(setup + 0x1a) * 60) / *(f32 *)(state + 0) *
+                           lbl_803DC41C);
+            int *texPtr = objFindTexture(obj, 0, 0);
+            int v;
+            if (texPtr != 0) {
+                v = *texPtr + tv * framesThisStep;
+                if (v > 512) {
+                    v -= 512;
+                }
+                *texPtr = v;
+            }
+            if (hold != 0) {
+                tv = v >> 8;
+            } else {
+                tv = 0;
+            }
+            if (*(int *)(state + 4) != 0) {
+                if (tv == 1 && tv != f->flag20) {
+                    Sfx_PlayFromObject(obj, 986);
+                }
+                lightFn_8001db6c((void *)*(int *)(state + 4), (u8)tv, lbl_803E741C);
+            }
+            f->flag20 = (u8)tv;
+        }
+        if (*(int *)(state + 4) != 0) {
+            lightFn_8001d6b0((void *)*(int *)(state + 4));
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
 extern void set_hudNumber_803db278(int n);
 
 int cntcounter_getExtraSize(void) { return 8; }
