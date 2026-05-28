@@ -8482,3 +8482,80 @@ void ObjModel_InitScratchBuffers(void) {
     lbl_80340880[5] = c + 0x3800;
 }
 #pragma pop
+
+extern void GXInitLightAttn(u8 *lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
+extern u8 curGameTexts[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_8002B6D8(u8 *obj, int a, int b, int c, u8 d, u8 e) {
+    u8 *p;
+    if (obj == NULL) {
+        return;
+    }
+    p = *(u8 **)(obj + 0x78);
+    if (p == NULL) {
+        return;
+    }
+    p += obj[0xe4] * 5;
+    if (a != 0) {
+        p[0] = a >> 2;
+    }
+    if (c != 0) {
+        p[1] = c >> 2;
+    }
+    if (b != 0) {
+        p[2] = b >> 2;
+    }
+    if (d != 0) {
+        p[3] = d;
+    }
+    if (e != 0) {
+        p[4] = e;
+    }
+}
+
+void dvdCancelCallback_8001b39c(int a, u8 *match) {
+    int i;
+    u8 *p = curGameTexts;
+    for (i = 8; i != 0; i--) {
+        if (match == p) {
+            *(int *)(p + 0x44) = 5;
+            return;
+        }
+        p += 0x4c;
+    }
+}
+
+void gameTextOpenCallback_8001b3d0(int status, u8 *match) {
+    int i;
+    u8 *p = curGameTexts;
+    if (status != -1 && status != -3) {
+        for (i = 8; i != 0; i--) {
+            if (match == p) {
+                *(int *)(p + 0x44) = 2;
+                return;
+            }
+            p += 0x4c;
+        }
+    } else {
+        p = curGameTexts;
+        for (i = 8; i != 0; i--) {
+            if (match == p) {
+                *(int *)(p + 0x44) = 5;
+                return;
+            }
+            p += 0x4c;
+        }
+    }
+}
+
+void fn_8001D994(u8 *obj, f32 a, f32 b) {
+    *(f32 *)(obj + 0x10c) = a;
+    *(f32 *)(obj + 0x110) = b;
+    GXInitLightAttn(obj + 0xc0, lbl_803DE75C, lbl_803DE75C, lbl_803DE760,
+                    *(f32 *)(obj + 0x10c) * lbl_803DE790, lbl_803DE75C,
+                    lbl_803DE760 - *(f32 *)(obj + 0x10c) * lbl_803DE790);
+}
+#pragma pop
