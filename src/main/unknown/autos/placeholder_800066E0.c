@@ -1583,6 +1583,7 @@ FUN_80006788(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 #pragma peephole off
+#pragma dont_inline on
 u32 audioFlagFn_8000a188(u32 mask)
 {
     s32 managed = gAudioManagedChannelMask & mask;
@@ -1591,6 +1592,7 @@ u32 audioFlagFn_8000a188(u32 mask)
     }
     return (gAudioActiveChannelMask & mask) != 0;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 
 /*
@@ -2207,6 +2209,70 @@ SfxTrigger *Sfx_FindTrigger(u16 id)
 void FUN_80006848(undefined4 param_1,undefined4 param_2,uint param_3,int param_4)
 {
 }
+
+extern int sndFXStartEx(s16 a, int b, int c, int d);
+extern f32 lbl_803DE590;
+extern u8 lbl_803DE593;
+
+#pragma peephole on
+SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, int c, int d)
+{
+    SfxObjectChannel *ch;
+    s32 i;
+    u32 handle;
+
+    if (audioFlagFn_8000a188(4)) {
+        return 0;
+    }
+
+    ch = gSfxObjectChannels;
+    for (i = SFX_OBJECT_CHANNEL_COUNT - 1; ch->handle != (u32)-1; i--) {
+        ch++;
+        if (i == 0) {
+            ch = NULL;
+            break;
+        }
+    }
+    if (ch == NULL) {
+        return 0;
+    }
+
+    handle = sndFXStartEx(a, b, c, 0);
+    if (handle == (u32)-1) {
+        ch->handle = (u32)-1;
+        return 0;
+    }
+    if (lbl_803DC838 != 0 && d == 0) {
+        sndFXCtrl(handle, 0x5b, 0);
+    }
+
+    {
+        f32 fz = lbl_803DE570;
+        ch->object = 0;
+        ch->channelMask = 0;
+        ch->paused = 0;
+        ch->hasPosition = 0;
+        ch->tracksObjectPosition = 0;
+        ch->handle = handle;
+        ch->x = fz;
+        ch->y = fz;
+        ch->z = fz;
+    }
+    *(s16 *)((u8 *)ch + 8) = a;
+    ch->volume = 0x64;
+    *(f32 *)((u8 *)ch + 0x20) = lbl_803DE590;
+    *(f32 *)((u8 *)ch + 0x24) = *(f32 *)((u8 *)&lbl_803DE593 + 1);
+    ch->globalCtrlDisabled = (u8)d;
+
+    ch->age = ((u64)gSfxObjectChannelAgeHi << 32) | gSfxObjectChannelAgeLo;
+    {
+        u64 next = (((u64)gSfxObjectChannelAgeHi << 32) | gSfxObjectChannelAgeLo) + 1;
+        gSfxObjectChannelAgeHi = (u32)(next >> 32);
+        gSfxObjectChannelAgeLo = (u32)next;
+    }
+    return ch;
+}
+#pragma peephole reset
 
 /*
  * --INFO--
