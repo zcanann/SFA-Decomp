@@ -948,6 +948,52 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
 void wctrexstatu_release(void) {}
 void wctrexstatu_initialise(void) {}
 
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern u8 *mapGetBlock(int idx);
+extern int fn_8006070C(int block, int index);
+extern void fn_80056A6C(int a, int b, int c);
+extern f32 lbl_803E6E58;
+#pragma peephole off
+#pragma scheduling off
+void wctempledia_syncPartVisibility(int obj, u8 mask)
+{
+    u8 *block;
+    int part;
+    int slot;
+    int bit;
+
+    block = mapGetBlock(objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)));
+    if (block != NULL) {
+        for (part = 1; part < 4; part++) {
+            bit = mask & (1 << (part - 1));
+            for (slot = 0; slot < block[0xa2]; slot++) {
+                int entry = fn_8006070C((int)block, slot);
+                if (*(u8 *)(entry + 0x29) == part) {
+                    if (bit != 0) {
+                        fn_80056A6C(part, *(int *)(entry + 0x24), 0x100);
+                    } else {
+                        fn_80056A6C(part, *(int *)(entry + 0x24), 0);
+                    }
+                }
+            }
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+int wctempledia_getExtraSize(void) { return 0x14; }
+int wctempledia_getObjectTypeId(void) { return 0; }
+void wctempledia_free(void) {}
+#pragma peephole off
+void wctempledia_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E58);
+    }
+}
+#pragma peephole on
+void wctempledia_hitDetect(void) {}
+
 int suntemple_getExtraSize(void) { return 2; }
 int suntemple_getObjectTypeId(void) { return 0; }
 void suntemple_free(void) {}
