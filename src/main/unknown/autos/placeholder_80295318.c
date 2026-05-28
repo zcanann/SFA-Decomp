@@ -7822,6 +7822,7 @@ int fn_8029D7F0(int obj, int state, f32 fv)
     return 0;
 }
 
+#pragma dont_inline on
 int fn_802A9A0C(int obj, int p2)
 {
     int inner = *(int *)((char *)obj + 0xb8);
@@ -7874,6 +7875,7 @@ int fn_802A9C0C(int obj, int p2, int p3)
     }
     return 0;
 }
+#pragma dont_inline reset
 
 void fn_8029C8C8(int obj, int p2)
 {
@@ -8197,6 +8199,7 @@ int fn_802BABB4(int obj)
     }
 }
 
+#pragma dont_inline on
 int fn_802A98FC(int obj, int p2)
 {
     int inner = *(int *)((char *)obj + 0xb8);
@@ -8226,6 +8229,7 @@ int fn_802A98FC(int obj, int p2)
     }
     return 0;
 }
+#pragma dont_inline reset
 
 void fn_802B84D0(int obj)
 {
@@ -8263,6 +8267,7 @@ void fn_802B84D0(int obj)
     }
 }
 
+#pragma dont_inline on
 int fn_802A97D0(int obj, int p2)
 {
     int inner = *(int *)((char *)obj + 0xb8);
@@ -8289,6 +8294,7 @@ int fn_802A97D0(int obj, int p2)
     }
     return 1;
 }
+#pragma dont_inline reset
 
 int fn_802BA938(int obj, int state, f32 fv)
 {
@@ -9687,6 +9693,7 @@ int fn_802AE480(int obj, int inner, int state)
     return 0;
 }
 
+#pragma dont_inline on
 void fn_80295E90(int obj, int mode)
 {
     int inner = *(int *)((char *)obj + 0xb8);
@@ -9728,6 +9735,107 @@ void fn_80295E90(int obj, int mode)
         Sfx_PlayFromObject(obj, 0x69);
     }
 }
+#pragma dont_inline reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802AF7F8(int obj, int state)
+{
+    int inner;
+    u8 result;
+    int r35c;
+    void **p;
+    int i;
+    int v;
+    if (fn_802A9C0C(obj, state, 0x2d) != 0) {
+        GameBit_Set(0x965, 0);
+        GameBit_Set(0x986, 0);
+    } else {
+        GameBit_Set(0x965, 1);
+        GameBit_Set(0x986, 1);
+    }
+    if (fn_802A9C0C(obj, state, 0x5ce) != 0) {
+        GameBit_Set(0x961, 0);
+    } else {
+        GameBit_Set(0x961, 1);
+    }
+    inner = *(int *)((char *)obj + 0xb8);
+    if (*(void **)((char *)state + 0x2d0) != NULL ||
+        *(s16 *)(*(int *)((char *)inner + 0x35c) + 4) < 0xa ||
+        ((ByteFlags *)((char *)inner + 0x3f3))->b08 != 0) {
+        result = 0;
+    } else if (*(s16 *)((char *)state + 0x274) == 1 || *(s16 *)((char *)state + 0x274) == 2) {
+        result = 1;
+    } else {
+        result = 0;
+    }
+    if (result != 0) {
+        GameBit_Set(0x969, 0);
+    } else {
+        GameBit_Set(0x969, 1);
+    }
+    if (fn_802A98FC(obj, state) != 0) {
+        GameBit_Set(0x960, 0);
+    } else {
+        GameBit_Set(0x960, 1);
+    }
+    if (fn_802A97D0(obj, state) != 0) {
+        GameBit_Set(0x964, 0);
+    } else {
+        GameBit_Set(0x964, 1);
+    }
+    if (fn_802A9A0C(obj, state) != 0) {
+        GameBit_Set(0x96b, 0);
+    } else {
+        GameBit_Set(0x96b, 1);
+    }
+    switch (*(s16 *)((char *)state + 0x80a)) {
+    case 0x2d:
+        break;
+    case 0x40:
+        if ((getButtonsJustPressed(0) & 0x200) != 0 &&
+            ((ByteFlags *)((char *)state + 0x3f3))->b08 != 0 &&
+            *(u8 *)((char *)state + 0x8c8) != 0x44) {
+            fn_80295E90(obj, 0);
+            *(s16 *)((char *)state + 0x80a) = -1;
+            *(s16 *)((char *)state + 0x80c) = -1;
+            buttonDisable(0, 0x200);
+        }
+        *(f32 *)((char *)state + 0x854) = *(f32 *)((char *)state + 0x854) - timeDelta;
+        if (*(f32 *)((char *)state + 0x854) <= lbl_803E7EA4) {
+            r35c = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+            v = *(s16 *)((char *)r35c + 4);
+            if (v < 0) {
+                v = 0;
+            } else if (v > *(s16 *)((char *)r35c + 6)) {
+                v = *(s16 *)((char *)r35c + 6);
+            }
+            *(s16 *)((char *)r35c + 4) = v;
+            *(f32 *)((char *)state + 0x854) = lbl_803E7EDC;
+        }
+        break;
+    case 0x5ce:
+        if (lbl_803DE42C != 0 && getCurSeqNo() != 0) {
+            *(s16 *)((char *)state + 0x80a) = -1;
+            lbl_803DE42C = 0;
+            p = lbl_80332ED4;
+            for (i = 0; i < 7; i++) {
+                if (*p != NULL) {
+                    Obj_FreeObject((int)*p);
+                    *p = NULL;
+                }
+                p++;
+            }
+            if (lbl_803DE454 != NULL) {
+                Resource_Release(lbl_803DE454);
+                lbl_803DE454 = NULL;
+            }
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 int fn_802A14F8(int obj, int state)
 {
