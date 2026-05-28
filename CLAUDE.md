@@ -106,6 +106,17 @@ Heuristic before reaching for `asm { }`:
     project's named `lbl_xxx` f64 magic (matching target). When converting an
     unsigned byte/halfword to float, write `(f32)(u32)obj->u8field` rather
     than `(f32)obj->u8field`. Picked up MoonSeedBush_init in DIMlavaball.
+    **THE @magic-vs-named-lbl cap is usually fixable — this is the #1 residual
+    on the autos units, don't just leave it.** When an int→f32 conversion emits
+    an anonymous compiler `@NNNN` magic where target references a named
+    `lbl_803Exxxx` f64 magic, add an EXPLICIT cast matching the conversion's
+    signedness and try both: `(f32)(int)x` (signed/`xoris` path) vs
+    `(f32)(u32)x` (unsigned path). The explicit cast frequently flips MWCC from
+    its anonymous local magic to the project's named magic. A bare
+    `(f32)someIntReturningCall()` (e.g. `randomGetRange`) tends to emit the
+    anonymous form — wrapping it `(f32)(int)randomGetRange(...)` forces the named
+    path. `#pragma peephole off` can independently flip this choice too. Proven:
+    drakorhoverpad render 95→100% and initMain 98.5→100% (placeholder_80211C24).
 
 11. **`extern int fn(...)` for callees whose return is treated as `int`** —
     even if conceptually the return is a byte. Declaring `extern u8 fn(...)`
