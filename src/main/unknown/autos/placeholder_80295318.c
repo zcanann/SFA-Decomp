@@ -14403,6 +14403,118 @@ extern f32 lbl_803E7FEC;
 extern f32 lbl_803E8014;
 extern f32 lbl_803DE498;
 
+extern int fn_80295A04(int obj, int sel);
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802B0920(int obj, int state)
+{
+    s16 *vec9 = objModelGetVecFn_800395d8(obj, 9);
+    s16 *vec0 = objModelGetVecFn_800395d8(obj, 0);
+    int doBlink = 0;
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 f31v;
+    f32 f30v;
+
+    if ((s8)*(s8 *)(*(int *)((char *)state + 0x35c)) > 0) {
+        characterDoEyeAnims(obj, state + 0x364);
+    } else {
+        int *t5 = objFindTexture(obj, 5, 0);
+        int *t4 = objFindTexture(obj, 4, 0);
+        if (t5 != NULL) {
+            *t5 = 0x200;
+        }
+        if (t4 != NULL) {
+            *t4 = 0x200;
+        }
+    }
+    if ((*(int *)((char *)state + 0x360) & 0x2000000) == 0) {
+        *(s16 *)((char *)state + 0x4d0) =
+            (f32)*(s16 *)((char *)state + 0x4d0) * powfBitEstimate(lbl_803E7FF4, timeDelta);
+        *(s16 *)((char *)state + 0x4d6) =
+            (f32)*(s16 *)((char *)state + 0x4d6) * powfBitEstimate(lbl_803E7F1C, timeDelta);
+        *(s16 *)((char *)state + 0x4d4) =
+            (f32)*(s16 *)((char *)state + 0x4d4) * powfBitEstimate(lbl_803E7F1C, timeDelta);
+        *(s16 *)((char *)state + 0x4d2) =
+            (f32)*(s16 *)((char *)state + 0x4d2) * powfBitEstimate(lbl_803E7F1C, timeDelta);
+    }
+    if (((ByteFlags *)((char *)state + 0x3f0))->b20) {
+        f31v = *(f32 *)((char *)inner + 0x294) /
+               *(f32 *)((char *)(*(int *)((char *)state + 0x400)) + 0x18);
+        if (f31v < lbl_803E7EA4) {
+            f31v = lbl_803E7EA4;
+        } else if (f31v > lbl_803E7EE0) {
+            f31v = lbl_803E7EE0;
+        }
+        f30v = lbl_803E7EE0 - f31v;
+    }
+    if (vec9 != NULL) {
+        if (((ByteFlags *)((char *)state + 0x3f0))->b20) {
+            vec9[2] = lbl_803E7E98 *
+                      ((f32)*(s16 *)((char *)state + 0x4d0) * f30v +
+                       (f32)*(s16 *)((char *)state + 0x4d2) * f31v);
+            vec9[1] = lbl_803E7E98 *
+                      ((f32)*(s16 *)((char *)state + 0x4d2) * f30v +
+                       (f32)*(s16 *)((char *)state + 0x4d0) * f31v);
+        } else {
+            vec9[2] = *(s16 *)((char *)state + 0x4d0);
+            vec9[1] = *(s16 *)((char *)state + 0x4d2);
+        }
+    }
+    if (vec0 != NULL) {
+        vec0[0] = -*(s16 *)((char *)state + 0x4d6);
+        if (((ByteFlags *)((char *)state + 0x3f0))->b20) {
+            int h4 = *(s16 *)((char *)state + 0x4d4) / 2;
+            int h0 = -(*(s16 *)((char *)state + 0x4d0) / 2);
+            vec0[1] = lbl_803E7E98 * ((f32)h4 * f30v + (f32)h0 * f31v);
+            vec0[2] = lbl_803E7E98 * ((f32)h0 * f30v + (f32)h4 * f31v);
+        } else {
+            vec0[1] = *(s16 *)((char *)state + 0x4d4) / 2;
+            vec0[2] = -(*(s16 *)((char *)state + 0x4d0) / 2);
+        }
+    }
+    if (((ByteFlags *)((char *)state + 0x3f0))->b20) {
+        *(s16 *)((char *)obj + 0x4) =
+            (f32)*(s16 *)((char *)obj + 0x4) * powfBitEstimate(lbl_803E7FF4, timeDelta);
+    } else {
+        *(s16 *)((char *)obj + 0x4) = *(s16 *)((char *)state + 0x4d0) / 4;
+    }
+    {
+        int e;
+        if (*(s16 *)((char *)state + 0x274) == 1) {
+            e = 1;
+        } else {
+            e = 0;
+        }
+        ((void (*)(int, int, u16))playerEyeAnimFn_80038988)(obj, state + 0x364, e);
+    }
+    if ((*(u16 *)((char *)obj + 0xb0) & 0x1000) == 0) {
+        if (((ByteFlags *)((char *)state + 0x3f1))->b20) {
+            lbl_803DC66C = 5;
+        } else {
+            if (fn_80295A04(obj, 2) == 0 &&
+                (s8)*(s8 *)(*(int *)((char *)state + 0x35c)) > 4 &&
+                lbl_803DC66C == 1 && randomGetRange(0, 0x12c) == 1) {
+                lbl_803DC66C = 2;
+                doBlink = 1;
+            }
+            if (doBlink == 0 && lbl_803DC66C == 2 && randomGetRange(0, 5) == 1) {
+                lbl_803DC66C = 1;
+            }
+        }
+        {
+            s16 *vec1 = objModelGetVecFn_800395d8(obj, 1);
+            if (vec1 != NULL) {
+                vec1[0] = 0x1c2;
+                vec1[1] = 0;
+                vec1[2] = 0;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void Sfx_PlayAtPositionFromObject(int obj, int id, f32 x, f32 y, f32 z);
 extern f32 lbl_803E8114;
 extern f32 lbl_803E8118;
