@@ -9832,6 +9832,156 @@ void fn_802AC32C(int p1, int p2, int p3)
               powfBitEstimate(lbl_803E7F1C, timeDelta));
 }
 
+extern int *gMapEventInterface;
+extern int *gPathControlInterface;
+extern void fn_8029560C();
+extern void fn_802AABE4(int obj);
+extern int allocModelStruct2(int p1, int p2);
+extern void *mmAlloc(int size, int heap, int flags);
+extern void objSetSlot(int obj, int slot);
+extern void objGetWeaponDa(int a, int b, int c, int d, int e);
+extern int lbl_803DC668;
+extern int lbl_803DC6A4;
+extern f32 lbl_803DC6C0;
+extern int lbl_803DE428;
+extern f32 lbl_803E8144;
+extern f32 lbl_803E8168;
+extern f32 lbl_803E816C;
+extern f32 lbl_803E8170;
+extern f32 lbl_803E8174;
+
+void fn_802B2DA4(void) {}
+
+void objLoadPlayerFromSave(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int pc;
+    int me;
+    int off;
+    int i;
+    s16 *gb;
+    f32 fz;
+
+    lbl_803DE459 = 0;
+    ObjGroup_AddObject(obj, 0);
+    ObjGroup_AddObject(obj, 0x25);
+    objSetSlot(obj, 0x3c);
+    ObjMsg_AllocQueue(obj, 0x14);
+    *(int *)((char *)obj + 0xbc) = (int)fn_802B2DA4;
+    *(int *)((char *)obj + 0x4c) = 0;
+    *(int *)((char *)inner + 0x7f8) = 0;
+    *(int *)((char *)inner + 0x35c) =
+        (*(int (*)(int))(*(int *)(*gMapEventInterface + 0x8c)))(*gMapEventInterface);
+    *(u16 *)((char *)inner + 0x81a) =
+        (u8)(*(int (*)(int))(*(int *)(*gMapEventInterface + 0x74)))(*gMapEventInterface);
+    Obj_SetActiveModelIndex(obj, *(s16 *)((char *)inner + 0x81a));
+    me = (*(int (*)(int))(*(int *)(*gMapEventInterface + 0x90)))(*gMapEventInterface);
+    *(s16 *)((char *)obj + 0) = (s16)(*(s8 *)((char *)me + 0xc) << 8);
+    *(s16 *)((char *)inner + 0x478) = *(s16 *)((char *)obj + 0);
+    *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)obj + 0);
+    *(int *)((char *)inner + 0x494) = *(s16 *)((char *)obj + 0);
+    fz = lbl_803E7EE0;
+    *(f32 *)((char *)inner + 0x77c) = fz;
+    *(s16 *)((char *)inner + 0x80c) = -1;
+    *(s16 *)((char *)inner + 0x80a) = -1;
+    *(f32 *)((char *)inner + 0x82c) = fz;
+    *(f32 *)((char *)inner + 0x834) = fz;
+    *(f32 *)((char *)inner + 0x830) = lbl_803E8144;
+    ((ByteFlags *)((char *)inner + 0x3f1))->b01 = 1;
+    *(f32 *)((char *)inner + 0x880) = lbl_803E7FA4;
+    *(u8 *)((char *)inner + 0x8a3) = 3;
+    *(u8 *)((char *)inner + 0x8a4) = 4;
+    *(u8 *)((char *)inner + 0x8a5) = 5;
+    *(u8 *)((char *)inner + 0x8a7) = 6;
+    *(u8 *)((char *)inner + 0x8a6) = *(u8 *)((char *)inner + 0x8a3);
+    *(u8 *)((char *)inner + 0x8bf) = 0;
+    (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 0x42, 1);
+    *(int *)((char *)inner + 0x27c) = inner + 0x6f0;
+    pc = inner + 0x4;
+    (*(void (*)(int, int, int, int))(*(int *)(*gPathControlInterface + 0x4)))(pc, 1, 0x400a7, 1);
+    (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0x8)))(
+        pc, 1, (int)((char *)lbl_80332EC0 + 0x130), (int)&lbl_803DC6C0, 1);
+    (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0xc)))(
+        pc, 2, (int)((char *)lbl_80332EC0 + 0x118), (int)lbl_803DC6B8, (int)&lbl_803DC6A4);
+    *(u8 *)((char *)pc + 0x258) = 0x64;
+    fn_802AB5A4(obj, inner, 0xff);
+    *(s16 *)((char *)*(int *)((char *)obj + 0x54) + 0xb2) = 0x29;
+    *(u8 *)((char *)obj + 0x36) = 0xff;
+    if (*(int *)((char *)obj + 0x64) != 0) {
+        *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x4008;
+    }
+    (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x14)))(*gGameUIInterface);
+    lbl_803DE444 = NULL;
+    ((ByteFlags *)((char *)inner + 0x3f4))->b40 = 1;
+    *(int *)((char *)inner + 0x3f8) = (int)((char *)lbl_80332EC0 + 0x190);
+    *(int *)((char *)inner + 0x3dc) = (int)((char *)lbl_80332EC0 + 0x854);
+    *(u8 *)((char *)inner + 0x8a8) = 0x1c;
+    *(int *)((char *)inner + 0x450) = (int)((char *)lbl_80332EC0 + 0x450);
+    *(u8 *)((char *)inner + 0x8d0) = 0x29;
+    *(int *)((char *)inner + 0x454) = (int)((char *)lbl_80332EC0 + 0x4f4);
+    *(u8 *)((char *)inner + 0x8d1) = 0x29;
+    *(int *)((char *)inner + 0x458) = (int)((char *)lbl_80332EC0 + 0x598);
+    *(u8 *)((char *)inner + 0x8d2) = 0x2e;
+    *(int *)((char *)inner + 0x45c) = (int)((char *)lbl_80332EC0 + 0x650);
+    *(u8 *)((char *)inner + 0x8d3) = 0x29;
+    *(int *)((char *)inner + 0x460) = (int)((char *)lbl_80332EC0 + 0x6f4);
+    *(u8 *)((char *)inner + 0x8d4) = 0x2e;
+    *(f32 *)((char *)inner + 0x7e0) = lbl_803E7ED8;
+    off = 0;
+    for (i = 0; i < *(u8 *)((char *)inner + 0x8a8); i++) {
+        int da;
+        *(int *)(*(int *)((char *)inner + 0x3dc) + off + 0x64) = (int)mmAlloc(0x800, 0x1a, 0);
+        da = *(int *)((char *)inner + 0x3dc) + off;
+        objGetWeaponDa(obj, *(s16 *)((char *)obj + 0x46), da + 0x60,
+                       *(s16 *)((char *)lbl_80332EC0 + 0x7fc +
+                                *(s16 *)((char *)da + 0x2) * 2),
+                       0);
+        off += 0xb0;
+    }
+    fn_802AABE4(obj);
+    lbl_803DE4B2 = 0x2d;
+    lbl_803DE448 = 0;
+    gb = (s16 *)((char *)lbl_80332EC0 + 0x1b94);
+    for (i = 0; i < 0xb; i++) {
+        if (GameBit_Get(*gb) != 0) {
+            *(u8 *)((char *)inner + 0x8c7) =
+                (u8)(*(u8 *)((char *)inner + 0x8c7) | (1 << i));
+        }
+        gb++;
+    }
+    if (*(s16 *)((char *)inner + 0x81a) == 0) {
+        *(f32 *)((char *)inner + 0x7dc) = lbl_803E8168;
+        *(f32 *)((char *)inner + 0x874) = lbl_803E816C;
+    } else {
+        *(f32 *)((char *)inner + 0x7dc) = lbl_803E8170;
+        *(f32 *)((char *)inner + 0x874) = lbl_803E8174;
+    }
+    lbl_803DE420 = allocModelStruct2((int)&lbl_803DC668, 1);
+    *(int *)((char *)obj + 0x108) = (int)fn_8029560C;
+    if (lbl_803DE424 != 0) {
+        int v = lbl_803DE424;
+        int hi;
+        if (v < 0) {
+            v = 0;
+        } else if (v > 0x50) {
+            v = 0x50;
+        }
+        *(s8 *)(*(int *)((char *)inner + 0x35c) + 1) = (s8)v;
+        v = lbl_803DE424;
+        if (v < 0) {
+            v = 0;
+        } else {
+            hi = *(s8 *)(*(int *)((char *)inner + 0x35c) + 1);
+            if (v > hi) {
+                v = hi;
+            }
+        }
+        *(s8 *)(*(int *)((char *)inner + 0x35c) + 0) = (s8)v;
+        lbl_803DE424 = 0;
+    }
+    lbl_803DE428 = 0;
+}
+
 int fn_802AB1D0(int obj)
 {
     int objs;
