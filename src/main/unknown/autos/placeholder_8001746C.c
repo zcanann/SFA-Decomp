@@ -8602,6 +8602,78 @@ typedef struct {
 } DeferredFree;
 extern DeferredFree gMmDeferredFreeStack[];
 
+extern char sMmShowInfoFBMemoryStoreMessageBlock[];
+extern char sMmStoreAllocationTag;
+extern int gMmNextStoreHandle;
+extern void *gMmStoreArray[];
+
+typedef struct {
+    void *buf;
+    void *bufCur;
+    int size;
+    int handle;
+} MmStore;
+
+int mmCreateMemoryStore(int size) {
+    char *msg = sMmShowInfoFBMemoryStoreMessageBlock;
+    MmStore *store;
+    void **p;
+    int i = 0;
+    if (size <= 0) {
+        OSReport(msg + 0x1e8, size);
+        return 0;
+    }
+    if (size > 0x4000) {
+        OSReport(msg + 0x218, size, 0x4000);
+        return 0;
+    }
+    store = (MmStore *)mmAlloc(0x10, 0, (int)&sMmStoreAllocationTag);
+    if (store == NULL) {
+        OSReport(msg + 0x26c);
+        return 0;
+    }
+    store->size = size;
+    store->handle = gMmNextStoreHandle++;
+    store->buf = NULL;
+    store->bufCur = NULL;
+    store->buf = mmAlloc(store->size, 0, (int)(msg + 0x2a8));
+    if (store->buf == NULL) {
+        OSReport(msg + 0x2bc);
+        if (gMmFreeDelay == 0) {
+            mmFree(store);
+        } else {
+            mmFreeDeferred(store);
+        }
+        return 0;
+    }
+    store->bufCur = store->buf;
+    p = gMmStoreArray;
+    while (i < 0x20) {
+        if (*p == NULL) {
+            gMmStoreArray[i] = store;
+            break;
+        }
+        p++;
+        if (++i == 0x20) {
+            void *buf;
+            OSReport(msg + 0x2f8);
+            buf = store->buf;
+            if (gMmFreeDelay == 0) {
+                mmFree(buf);
+            } else {
+                mmFreeDeferred(buf);
+            }
+            if (gMmFreeDelay == 0) {
+                mmFree(store);
+            } else {
+                mmFreeDeferred(store);
+            }
+            return 0;
+        }
+    }
+    return store->handle;
+}
+
 void mmFreeDeferred(void *p) {
     DeferredFree *stack;
     if (gMmDeferredFreeCount == 0x7d0) {
