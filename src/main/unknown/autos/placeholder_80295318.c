@@ -6420,6 +6420,7 @@ extern int Obj_GetActiveModel(int obj);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
 extern void *memcpy(void *dst, const void *src, u32 size);
 extern int *lbl_803DCAB4;
+extern f32 lbl_803E800C;
 
 typedef struct {
     u8 pad[0x7ac];
@@ -6847,6 +6848,7 @@ void fn_802AD204(int p1, int obj)
     }
 }
 
+#pragma dont_inline on
 void fn_802AB5A4(int obj, int p2, int flags)
 {
     u8 f = (u8)flags;
@@ -6869,6 +6871,7 @@ void fn_802AB5A4(int obj, int p2, int flags)
         *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x24) = *(f32 *)((char *)obj + 0x20);
     }
 }
+#pragma dont_inline reset
 
 int fn_802A5048(int obj, int state, f32 fv)
 {
@@ -8776,6 +8779,54 @@ void fn_80295E90(int obj, int mode)
         GameBit_Set(0xc30, 0);
         Sfx_PlayFromObject(obj, 0x69);
     }
+}
+
+int fn_802A14F8(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 k;
+    f32 pos[2];
+
+    *(int *)((char *)inner + 0x360) &= ~2;
+    *(int *)((char *)inner + 0x360) |= 0x2000;
+    *(int *)((char *)state + 0x4) |= 0x100000;
+    k = lbl_803E7EA4;
+    *(f32 *)((char *)state + 0x280) = k;
+    *(f32 *)((char *)state + 0x284) = k;
+    *(int *)state |= 0x200000;
+    *(f32 *)((char *)obj + 0x24) = k;
+    *(f32 *)((char *)obj + 0x2c) = k;
+    *(int *)((char *)state + 0x4) |= 0x8000000;
+    *(f32 *)((char *)obj + 0x28) = k;
+    if (*(s8 *)((char *)state + 0x27a) != 0 && lbl_803DE44C != 0 &&
+        ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+        *(u8 *)((char *)inner + 0x8b4) = 1;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+    }
+    if (*(s16 *)((char *)obj + 0xa0) == 0x41a) {
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            fn_802AB5A4(obj, inner + 4, 5);
+            *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+            return -0x13;
+        }
+    } else {
+        pos[0] = *(f32 *)((char *)inner + 0x54c);
+        pos[1] = *(f32 *)((char *)inner + 0x550);
+        if (*(u8 *)((char *)inner + 0x8c8) != 0x48 && *(u8 *)((char *)inner + 0x8c8) != 0x47) {
+            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x4b, 1, 1, 8, pos, 0, 0xff);
+        }
+        ObjAnim_SetCurrentMove(obj, 0x41a, lbl_803E7EA4, 1);
+        *(s16 *)((char *)inner + 0x478) =
+            getAngle(*(f32 *)((char *)inner + 0x56c), *(f32 *)((char *)inner + 0x574));
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)inner + 0x58c);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x76c);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)inner + 0x594);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E800C;
+    }
+    fn_802AB5A4(obj, inner + 4, 5);
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
