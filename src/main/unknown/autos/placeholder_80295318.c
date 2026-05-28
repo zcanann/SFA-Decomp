@@ -13341,6 +13341,7 @@ void fn_802AA014(int obj)
     }
 }
 
+#pragma dont_inline on
 int fn_80295674(int obj, int inner)
 {
     f32 outvec[3];
@@ -13375,6 +13376,7 @@ int fn_80295674(int obj, int inner)
         *(u8 *)((char *)inner + 0x8b1) -= 1;
     }
 }
+#pragma dont_inline reset
 
 void fn_802AAF80(int obj, int inner, int a, int b, int c)
 {
