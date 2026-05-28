@@ -374,6 +374,10 @@ extern f32 lbl_803E6DD4;
 extern f32 lbl_803E6DD8;
 extern void fn_8005B0A8(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z);
 extern void gameTimerStop(void);
+extern u8 gameTimerIsRunning(void);
+extern int *gSHthorntailAnimationInterface;
+extern void Music_Trigger(int id, int p2);
+extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 
 #pragma peephole off
 #pragma scheduling off
@@ -534,6 +538,44 @@ void wclevelcont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 void wclevelcont_hitDetect(void) {}
+#pragma peephole off
+#pragma scheduling off
+void wclevelcont_syncProgressBits(int obj)
+{
+    int flag;
+
+    if ((*(int (**)(int))(*gSHthorntailAnimationInterface + 0x24))(0)) {
+        if (*(u16 *)(obj + 0x16) != 0x2d) {
+            *(u16 *)(obj + 0x16) = 0x2d;
+            Music_Trigger(0x2d, 1);
+        }
+        if (*(u16 *)(obj + 0x18) != -1) {
+            *(u16 *)(obj + 0x18) = 0xffff;
+            Music_Trigger(0x22, 0);
+        }
+    } else {
+        if (*(u16 *)(obj + 0x16) != 0x39) {
+            *(u16 *)(obj + 0x16) = 0x39;
+            Music_Trigger(0x39, 1);
+        }
+        if (*(u16 *)(obj + 0x18) != 0x22) {
+            *(u16 *)(obj + 0x18) = 0x22;
+            Music_Trigger(0x22, 1);
+        }
+    }
+    SCGameBitLatch_Update(obj + 0x10, 0x8, -1, -1, 0xba6, 0xd2);
+    SCGameBitLatch_Update(obj + 0x10, 0x4, -1, -1, 0xcce, 0x36);
+    SCGameBitLatch_Update(obj + 0x10, 0x10, -1, -1, 0xcd0, 0xd4);
+    SCGameBitLatch_Update(obj + 0x10, 0x40, -1, -1, 0xcbb, 0xc4);
+    flag = 0;
+    if ((u32)GameBit_Get(0xba6) == 0 && ((u32)GameBit_Get(0xda9) != 0 || gameTimerIsRunning() != 0)) {
+        flag = 1;
+    }
+    GameBit_Set(0xf31, flag);
+    SCGameBitLatch_Update(obj + 0x10, 0x80, -1, -1, 0xf31, 0xaf);
+}
+#pragma scheduling on
+#pragma peephole on
 
 #pragma scheduling off
 int wcbeacon_aButtonCallback(int obj)
