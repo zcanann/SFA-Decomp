@@ -380,6 +380,49 @@ typedef struct {
     u8 b7 : 1;
 } BitFlags8;
 
+extern void ktrex_updateAttackEffects(int obj);
+
+#pragma scheduling off
+#pragma peephole off
+int ktrex_animEventCallback(int obj, int p2, u8 *arg) {
+    int i;
+    arg[0x56] = 0;
+    for (i = 0; i < arg[0x8b]; i++) {
+        switch (arg[0x81 + i]) {
+        case 1:
+            *(int *)((char *)gKTRexState + 0x104) |= 4;
+            break;
+        case 2:
+            *(int *)((char *)gKTRexState + 0x104) |= 8;
+            break;
+        case 3:
+            *(int *)((char *)gKTRexState + 0x104) |= 0x800;
+            break;
+        case 4:
+            *(int *)((char *)gKTRexState + 0x104) |= 0x1000;
+            break;
+        case 5:
+            *(int *)((char *)gKTRexState + 0x104) |= 0x20000;
+            break;
+        case 6:
+            if (*(void **)((char *)gKTRexState + 0x178) != NULL) {
+                ModelLightStruct_free(*(void **)((char *)gKTRexState + 0x178));
+                *(void **)((char *)gKTRexState + 0x178) = NULL;
+            }
+            break;
+        }
+    }
+    ktrex_updateAttackEffects(obj);
+    if (*(int *)((char *)obj + 0xf8) == 0) {
+        *(int *)((char *)obj + 0xf8) = 1;
+    } else if (*(int *)((char *)obj + 0xf8) == 3) {
+        *(int *)((char *)obj + 0xf8) = 4;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 int ktrex_isPlayerInLaneThreatRange(int obj) {
     u8 state = *(u8 *)((char *)gKTRexState + 0x100);
