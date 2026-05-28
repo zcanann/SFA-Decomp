@@ -11011,6 +11011,7 @@ void fn_80008F38(void* addr, u32 dest, u32 size)
  * EN v1.0 Address: 0x80008DF4
  * EN v1.0 Size: 232b
  */
+#pragma dont_inline on
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5, u32 p6, u32 p7)
 {
     int idx;
@@ -11035,6 +11036,7 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5
     lbl_803DC7BC = 0;
     ARQPostRequest(entry, 0x64, 1, 1, (u32)source, (u32)buf, size, (void (*)(void*))fn_80008EDC);
 }
+#pragma dont_inline reset
 
 extern void Music_Trigger(int id, int arg);
 
