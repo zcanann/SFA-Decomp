@@ -7401,6 +7401,84 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
     fn_802AB5A4(p1, p2, 7);
 }
 
+typedef struct {
+    s16 unk0;
+    s16 moveIdx;
+    u8 pad[0xb0 - 4];
+} MoveSlot;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_80299BB0(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int state30 = 0x1a;
+    int state29 = 0x1a;
+    void *near;
+    f32 dist;
+    f32 dir[3];
+    f32 cosv;
+    f32 sinv;
+    f32 fz;
+    dist = lbl_803E7F5C;
+    near = (void *)ObjGroup_FindNearestObject(0x3e, obj, &dist);
+    ((ByteFlags *)((char *)inner + 0x3f4))->b20 = 1;
+    fz = lbl_803E7EA4;
+    *(f32 *)((char *)inner + 0x414) = fz;
+    if (near != 0) {
+        dir[0] = *(f32 *)((char *)near + 0xc) - *(f32 *)((char *)obj + 0xc);
+        dir[1] = *(f32 *)((char *)near + 0x10) - *(f32 *)((char *)obj + 0x10);
+        dir[2] = *(f32 *)((char *)near + 0x14) - *(f32 *)((char *)obj + 0x14);
+        dir[1] = fz;
+        Vec3_Normalize(dir);
+        cosv = fn_80293E80(lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478) / lbl_803E7F98);
+        sinv = sin(lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478) / lbl_803E7F98);
+        switch (*(u8 *)(*(int *)((char *)near + 0x50) + 0x75)) {
+        case 3:
+            if (dir[2] * cosv - dir[0] * sinv > lbl_803E7EA4) {
+                state29 = 0x1a;
+            }
+            state30 = state29;
+            break;
+        case 2:
+            state29 = 0x1a;
+            break;
+        case 1:
+            state30 ^= state29;
+            state29 ^= state30;
+            state30 ^= state29;
+            break;
+        default:
+            *(u8 *)((char *)inner + 0x8aa) = (u8)(*(u8 *)((char *)inner + 0x8aa) ^ 1);
+            if (*(u8 *)((char *)inner + 0x8aa) != 0) {
+                state29 = 0x1a;
+            }
+            break;
+        }
+    } else {
+        *(u8 *)((char *)inner + 0x8aa) = (u8)(*(u8 *)((char *)inner + 0x8aa) ^ 1);
+        if (*(u8 *)((char *)inner + 0x8aa) != 0) {
+            state29 = 0x1a;
+        }
+    }
+    if (*(u8 *)((char *)p2 + 0x34b) == 2 && *(f32 *)((char *)p2 + 0x298) > lbl_803E7EAC) {
+        ObjAnim_SetCurrentMove(
+            obj, lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[(u8)state30].moveIdx],
+            lbl_803E7EA4, 0);
+        *(u8 *)((char *)inner + 0x8a9) = state30;
+        *(int *)((char *)p2 + 0x308) = (int)fn_8029BC08;
+        return 0x27;
+    }
+    ObjAnim_SetCurrentMove(
+        obj, lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[(u8)state29].moveIdx],
+        lbl_803E7EA4, 0);
+    *(u8 *)((char *)inner + 0x8a9) = state29;
+    *(int *)((char *)p2 + 0x308) = (int)fn_8029BC08;
+    return 0x27;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int fn_802A9B1C(int obj, int p2, int p3)
 {
     int inner = *(int *)((char *)obj + 0xb8);
