@@ -386,6 +386,8 @@ extern f32 lbl_803E6A78;
 extern f32 lbl_803E6A7C;
 extern f32 lbl_803E6A80;
 extern f32 lbl_803E6A84;
+extern int Stack_IsEmpty(int stack);
+extern void Stack_Pop(int stack, int *out);
 
 extern int fn_80080150(void *timer);
 extern void s16toFloat(void *timer, int v);
@@ -1494,6 +1496,22 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         break;
     }
     return 1;
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+int ktrex_stateHandlerA06(int obj, int runtime) {
+    int slot;
+    if (*(s8 *)((char *)runtime + 0x27b) != 0) {
+        (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 5);
+    } else if (*(s8 *)((char *)runtime + 0x346) != 0) {
+        slot = 0;
+        if (Stack_IsEmpty(*(int *)gKTRexState) == 0) {
+            Stack_Pop(*(int *)gKTRexState, &slot);
+        }
+        return slot + 1;
+    }
+    return 0;
 }
 #pragma scheduling reset
 
