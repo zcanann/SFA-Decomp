@@ -6309,6 +6309,72 @@ void fn_8022A9C8(int obj, int state)
 }
 #pragma scheduling reset
 
+extern int *gPathControlInterface;
+extern f32 lbl_803E6F24;
+extern f32 lbl_803E6F28;
+extern f32 lbl_803E6F2C;
+extern f32 lbl_803E6F30;
+extern f32 lbl_803E6F34;
+extern f32 lbl_803E6F38;
+extern f32 lbl_803E6F3C;
+extern f32 lbl_803E6F40;
+
+#pragma scheduling off
+void fn_8022BE14(int obj, int state)
+{
+    int sub = state + 0xc0;
+    int dmg;
+
+    (*(void (**)(int, int, f32))(*gPathControlInterface + 0x10))(obj, sub, timeDelta);
+    (*(void (**)(int, int))(*gPathControlInterface + 0x14))(obj, sub);
+    (*(void (**)(int, int, f32))(*gPathControlInterface + 0x18))(obj, sub, timeDelta);
+
+    if (*(u8 *)(state + 0x338) == 0 || *(u8 *)(state + 0x478) == 4) {
+        dmg = (s8)*(u8 *)(sub + 0x260);
+        if (dmg == 0)
+            return;
+        if (*(u8 *)(state + 0x478) == 4) {
+            *(u8 *)(state + 0x478) = 5;
+            *(f32 *)(state + 0x46c) = lbl_803E6F24;
+            *(s16 *)(obj + 6) |= 0x4000;
+            spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
+            return;
+        }
+        if ((dmg & 1) && (s8)*(u8 *)(sub + 0xb8) == 8)
+            *(u8 *)(state + 0x468) = 0;
+        else
+            *(u8 *)(state + 0x468) = *(u8 *)(state + 0x468) - 1;
+        doRumble(lbl_803E6F2C);
+        if ((s8)*(u8 *)(state + 0x468) <= 0) {
+            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+            if ((s8)*(u8 *)(obj + 0xac) == 0x26)
+                GameBit_Set(0xe74, 1);
+            else
+                *(u8 *)(state + 0x478) = 4;
+            *(f32 *)(state + 0x46c) = lbl_803E6F30;
+            Sfx_PlayFromObject(obj, 0x380);
+            Music_Trigger(0xd6, 1);
+        } else if ((s8)*(u8 *)(*(int *)(obj + 0xb8) + 0x468) <= 3) {
+            Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
+        }
+        Sfx_PlayFromObject(obj, 0x2a0);
+        *(u8 *)(state + 0x339) |= 0x80;
+        Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
+        *(f32 *)(state + 0x328) = lbl_803E6F34;
+        *(u8 *)(state + 0x338) = 1;
+        *(s16 *)(state + 0x33a) = 0;
+        *(s16 *)(state + 0x33c) = 0;
+        *(f32 *)(state + 0x32c) = *(f32 *)(sub + 0x1a0);
+        *(f32 *)(state + 0x330) = *(f32 *)(sub + 0x1a4);
+        Camera_EnableViewYOffset();
+        CameraShake_SetAllMagnitudes(lbl_803E6F38);
+    } else {
+        *(s16 *)(state + 0x33a) = lbl_803E6F3C * timeDelta + (f32)*(u16 *)(state + 0x33a);
+        *(s16 *)(state + 0x33c) = lbl_803E6F40 * timeDelta + (f32)*(u16 *)(state + 0x33c);
+    }
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
