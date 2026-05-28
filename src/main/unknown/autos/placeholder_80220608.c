@@ -3483,12 +3483,48 @@ void gf_levelcon_init(int obj)
 int tree_getExtraSize(void) { return 0x5c; }
 
 extern f32 lbl_803E745C;
-extern void mclightning_handleScriptEvents(int obj);
+extern int mclightning_handleScriptEvents(int obj, int eventId, u8 *script);
+extern f32 lbl_803E7440;
 
 typedef struct McLightningFlags {
     u8 hi : 4;
     u8 lo : 4;
 } McLightningFlags;
+
+int mclightning_handleScriptEvents(int obj, int eventId, u8 *script) {
+    int state = *(int *)(obj + 0xb8);
+    int i;
+    for (i = 0; i < script[0x8b]; i++) {
+        McLightningFlags *f = (McLightningFlags *)(state + 0x1b);
+        switch (f->hi) {
+        case 0:
+            f->hi = 1;
+            *(f32 *)(state + 8) = lbl_803E7440 * (f32)(u32)script[0x81 + i];
+            break;
+        case 1:
+            f->hi = 2;
+            *(f32 *)(state + 0xc) = lbl_803E7440 * (f32)(u32)script[0x81 + i];
+            break;
+        case 2:
+            f->hi = 3;
+            *(u8 *)(state + 0x18) = script[0x81 + i];
+            break;
+        case 3:
+            f->hi = 4;
+            *(u8 *)(state + 0x19) = script[0x81 + i];
+            break;
+        case 4:
+            f->hi = 5;
+            *(u8 *)(state + 0x1a) = script[0x81 + i];
+            *(s16 *)(obj + 6) &= ~0x4000;
+            break;
+        default:
+            f->hi = 0xa;
+            break;
+        }
+    }
+    return 0;
+}
 
 int mclightning_getExtraSize(void) { return 0x1c; }
 #pragma peephole off
@@ -5045,6 +5081,61 @@ int fn_8022FCD8(int obj, int state, int arwing) {
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern f32 lbl_803E6ECC;
+extern void fn_8022B764(int p, int q, int idx);
+
+#pragma scheduling off
+void fn_8022AE1C(int obj, int bounds) {
+    f32 cx = *(f32 *)(bounds + 0x14);
+    f32 hx = cx + *(f32 *)(bounds + 0x20);
+    f32 lx = cx - *(f32 *)(bounds + 0x20);
+    f32 cy = *(f32 *)(bounds + 0x18);
+    f32 hy = cy + *(f32 *)(bounds + 0x28);
+    f32 ly = cy - *(f32 *)(bounds + 0x24);
+    if (*(f32 *)(obj + 0xc) > hx) {
+        *(f32 *)(obj + 0xc) = hx;
+        *(f32 *)(bounds + 0x48) = lbl_803E6ECC;
+    } else if (*(f32 *)(obj + 0xc) < lx) {
+        *(f32 *)(obj + 0xc) = lx;
+        *(f32 *)(bounds + 0x48) = lbl_803E6ECC;
+    }
+    if (*(f32 *)(obj + 0x10) > hy) {
+        *(f32 *)(obj + 0x10) = hy;
+        *(f32 *)(bounds + 0x4c) = lbl_803E6ECC;
+    } else if (*(f32 *)(obj + 0x10) < ly) {
+        *(f32 *)(obj + 0x10) = ly;
+        *(f32 *)(bounds + 0x4c) = lbl_803E6ECC;
+    }
+    *(f32 *)(bounds + 0x2c) = *(f32 *)(obj + 0xc) - *(f32 *)(bounds + 0x14);
+    *(f32 *)(bounds + 0x30) = *(f32 *)(obj + 0x10) - *(f32 *)(bounds + 0x18);
+    *(f32 *)(bounds + 0x34) = lbl_803E6ECC;
+}
+
+void fn_8022B8A0(int p, int q) {
+    if (*(void **)(q + 0x438) != NULL)
+        return;
+    {
+        f32 t = *(f32 *)(q + 0x440);
+        if (t > lbl_803E6ECC) {
+            *(f32 *)(q + 0x440) = t - timeDelta;
+            if (*(f32 *)(q + 0x440) >= lbl_803E6ECC)
+                return;
+            *(f32 *)(q + 0x440) = lbl_803E6ECC;
+        }
+    }
+    if (*(u16 *)(q + 0x3f4) & 0x200) {
+        if ((s8) * (u8 *)(q + 0x43c) == 1) {
+            fn_8022B764(p, q, 0);
+            fn_8022B764(p, q, 1);
+        } else {
+            fn_8022B764(p, q, *(u8 *)(q + 0x43d));
+            *(u8 *)(q + 0x43d) = (*(u8 *)(q + 0x43d) ^ 1) & 0xff;
+        }
+        *(f32 *)(q + 0x440) = (f32)(u32) * (u16 *)(q + 0x444);
+    }
+}
+#pragma scheduling reset
 
 void fn_8022D6D0(int arwing)
 {
