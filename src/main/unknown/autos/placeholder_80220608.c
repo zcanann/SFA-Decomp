@@ -3170,10 +3170,22 @@ void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole on
 #pragma scheduling on
 
+extern void modelLightStruct_setColors100104(void *light, u8 r, u8 g, u8 b, int a);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sound);
 extern int *gSHthorntailAnimationInterface;
 extern f32 lbl_803E7360;
+extern f32 lbl_803E7364;
+extern f32 lbl_803E7368;
+extern f32 lbl_803E736C;
+extern f32 lbl_803E7370;
+extern f32 lbl_803E7374;
 extern f32 lbl_803E7384;
+extern u8 lbl_803DC3E0[];
+extern u8 lbl_8032BD00[];
+extern u8 lbl_8032BD50[];
+extern void cmbsrc_updateVisuals(int obj, int state);
 
+#pragma dont_inline on
 #pragma peephole off
 #pragma scheduling off
 int cmbsrc_shouldActivate(int obj, int state, int setup)
@@ -3250,5 +3262,106 @@ void cmbsrc_hitDetect(int obj)
         *(s8 *)(state + 0x26) = (s8)v;
     }
 }
-#pragma scheduling on
+
+int cmbsrc_cycleColor(int obj, int state)
+{
+    int setup = *(int *)(obj + 0x4c);
+    int idx;
+
+    *(f32 *)(state + 0x10) -= timeDelta;
+    if (*(f32 *)(state + 0x10) <= lbl_803E7360) {
+        *(f32 *)(state + 0x10) = lbl_803E7364;
+        *(u8 *)(state + 0x23) += 1;
+        if (*(u8 *)(state + 0x23) >= 3) {
+            *(u8 *)(state + 0x23) = 0;
+        }
+        idx = lbl_803DC3E0[*(u8 *)(state + 0x23)];
+        if (*(void **)state != NULL) {
+            int base = idx * 3;
+            modelLightStruct_setColorsA8AC(*(void **)state, lbl_8032BD50[base],
+                                           lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
+            modelLightStruct_setColors100104(*(void **)state, lbl_8032BD50[base],
+                                             lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
+            lightSetFieldB0(*(void **)state,
+                            (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base]),
+                            (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 1]),
+                            (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 2]), 0xff);
+            if (*(u8 *)(setup + 0x29) & 0x40) {
+                if (*(u8 *)(setup + 0x29) & 0x80) {
+                    fn_8001D730(*(void **)state, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
+                                lbl_8032BD50[base + 2], 0x87, lbl_803E736C * *(f32 *)(obj + 8));
+                } else {
+                    fn_8001D730(*(void **)state, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
+                                lbl_8032BD50[base + 2], 0x87, lbl_803E7370 * *(f32 *)(obj + 8));
+                }
+            }
+        }
+    } else {
+        idx = lbl_803DC3E0[*(u8 *)(state + 0x23)];
+    }
+    return idx;
+}
+
+int cmbsrc_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+
+    switch (*(u8 *)(state + 0x25)) {
+    case 1:
+        if (cmbsrc_shouldDeactivate(obj, state, setup)) {
+            *(u8 *)(state + 0x25) = 0;
+            if (*(void **)state != NULL) {
+                lightFn_8001db6c(*(void **)state, 0, lbl_803E7374);
+            }
+            if (*(u8 *)(setup + 0x29) & 0x2) {
+                Sfx_StopObjectChannel(obj, 0x40);
+            }
+            ObjHits_DisableObject(obj);
+            if (*(s16 *)(setup + 0x24) != -1) {
+                GameBit_Set(*(s16 *)(setup + 0x24), 0);
+            }
+        } else {
+            if (*(u8 *)(setup + 0x29) & 0x2) {
+                Sfx_KeepAliveLoopedObjectSound(obj,
+                    lbl_8032BD00[*(u8 *)(*(int *)(obj + 0x4c) + 0x1b)]);
+            }
+            if (*(void **)state != NULL && *(u8 *)(*(int *)state + 0x2f8) != 0 &&
+                *(u8 *)(*(int *)state + 0x4c) != 0) {
+                s16 v = (s16)(*(u8 *)(*(int *)state + 0x2f9) + *(s8 *)(*(int *)state + 0x2fa));
+                if (v < 0) {
+                    v = 0;
+                    *(u8 *)(*(int *)state + 0x2fa) = 0;
+                } else if (v > 0xc) {
+                    v = (s16)(v + randomGetRange(-0xc, 0xc));
+                    if (v > 0xff) {
+                        v = 0xff;
+                        *(u8 *)(*(int *)state + 0x2fa) = 0;
+                    }
+                }
+                *(u8 *)(*(int *)state + 0x2f9) = (u8)v;
+            }
+        }
+        break;
+    case 0:
+        if (cmbsrc_shouldActivate(obj, state, setup)) {
+            *(u8 *)(state + 0x25) = 1;
+            if (*(void **)state != NULL) {
+                lightFn_8001db6c(*(void **)state, 1, lbl_803E7374);
+            }
+            if (!(*(u8 *)(state + 0x27) & 0x1)) {
+                ObjHits_EnableObject(obj);
+            }
+            if (*(s16 *)(setup + 0x24) != -1) {
+                GameBit_Set(*(s16 *)(setup + 0x24), 1);
+            }
+            *(u8 *)(state + 0x26) = 0xf;
+            *(f32 *)(state + 0x14) = lbl_803E7360;
+        }
+        break;
+    }
+    cmbsrc_updateVisuals(obj, state);
+}
 #pragma peephole on
+#pragma scheduling on
+#pragma dont_inline reset
