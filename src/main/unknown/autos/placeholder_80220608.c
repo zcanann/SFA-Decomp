@@ -6534,6 +6534,71 @@ void arwarwing_init(int obj)
 }
 #pragma scheduling reset
 
+extern f32 PSVECMag(f32 *v);
+extern void PSVECNormalize(void *src, void *dst);
+extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
+extern f32 PSVECDotProduct(f32 *a, f32 *b);
+extern void PSMTXRotAxisRad(f32 *mtx, f32 *axis, f32 angle);
+extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
+extern f32 fn_80291FF4(f32 x);
+extern f32 lbl_803E6C38;
+extern f32 lbl_803E6C6C;
+extern f32 lbl_803E6C70;
+extern f32 lbl_803E6C74;
+
+#pragma scheduling off
+void fn_80221F14(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 c)
+{
+    f32 mtx[12];
+    f32 n1[3];
+    f32 n2[3];
+    f32 cross[3];
+    f32 mag1, mag2, t, ang;
+
+    mag1 = PSVECMag(v1);
+    if (mag1 > lbl_803E6C38) {
+        t = lbl_803E6C6C / mag1;
+        n1[0] = v1[0] * t;
+        n1[1] = v1[1] * t;
+        n1[2] = v1[2] * t;
+        PSVECNormalize(n1, n1);
+    } else {
+        n1[0] = lbl_803E6C38;
+        n1[1] = lbl_803E6C38;
+        n1[2] = lbl_803E6C38;
+    }
+    mag2 = PSVECMag(v2);
+    if (mag2 > lbl_803E6C38) {
+        t = lbl_803E6C6C / mag2;
+        n2[0] = v2[0] * t;
+        n2[1] = v2[1] * t;
+        n2[2] = v2[2] * t;
+    } else {
+        n2[0] = lbl_803E6C38;
+        n2[1] = lbl_803E6C38;
+        n2[2] = lbl_803E6C38;
+    }
+    PSVECCrossProduct(n1, n2, cross);
+    if (PSVECMag(cross) > lbl_803E6C38) {
+        ang = fn_80291FF4(PSVECDotProduct(n1, n2));
+        if (ang > c) {
+            PSMTXRotAxisRad(mtx, cross, c * (ang > lbl_803E6C38 ? lbl_803E6C6C : lbl_803E6C70));
+            PSMTXMultVecSR2(mtx, n1, n2);
+        }
+    }
+    t = mag2 * lbl_803E6C74;
+    if (t > mag1 + b)
+        t = mag1 + b;
+    else if (t < mag1 - b)
+        t = mag1 - b;
+    if (t > a)
+        t = a;
+    *(f32 *)(out + 0x24) = n2[0] * t;
+    *(f32 *)(out + 0x28) = n2[1] * t;
+    *(f32 *)(out + 0x2c) = n2[2] * t;
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
