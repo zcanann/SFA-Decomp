@@ -10589,3 +10589,68 @@ void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
     box[1] = a2->f2;
     voxmapsFn_80010ff4(a1, a2, a3, count, box);
 }
+
+typedef struct {
+    u16 id;
+    u8 pad[0xa];
+} GlyphEntry;
+
+typedef struct {
+    int field0;
+    GlyphEntry* entries;
+    int field8;
+    int count;
+    u8 pad[0x10];
+    int mode;
+} GameTextFont;
+
+extern GameTextFont* gameTextFonts;
+
+/*
+ * Function: gameTextFn_8001628c
+ * EN v1.0 Address: 0x8001628C
+ * EN v1.0 Size: 312b
+ */
+void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+{
+    GameTextFont* font = gameTextFonts;
+    int found = 0;
+    if (font->mode == 2) {
+        GlyphEntry* e = font->entries;
+        int count = font->count;
+        int i;
+        for (i = 0; i < count; i++) {
+            if (e->id == id) {
+                found = 1;
+                break;
+            }
+            e++;
+        }
+    }
+    if (!found) {
+        *outMaxX = 0;
+        *outMaxY = 0;
+        *outMinX = 0;
+        *outMinY = 0;
+        return;
+    }
+    lbl_803DC9BC = 1;
+    lbl_803DC9B0 = 0x7FFFFFFF;
+    lbl_803DC9AC = 0;
+    lbl_803DC9B8 = 0x7FFFFFFF;
+    lbl_803DC9B4 = 0;
+    gameTextFn_8001658c(id, a, b);
+    lbl_803DC9BC = 0;
+    if (outMinX != NULL) {
+        *outMinX = lbl_803DC9B8 >> 2;
+    }
+    if (outMinY != NULL) {
+        *outMinY = lbl_803DC9B4 >> 2;
+    }
+    if (outMaxX != NULL) {
+        *outMaxX = lbl_803DC9B0 >> 2;
+    }
+    if (outMaxY != NULL) {
+        *outMaxY = lbl_803DC9AC >> 2;
+    }
+}
