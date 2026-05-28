@@ -7748,7 +7748,8 @@ typedef struct DrMusicContFlags {
     u8 b_9e7 : 1;
 } DrMusicContFlags;
 
-#pragma peephole off
+#pragma peephole on
+#pragma scheduling off
 void drmusiccont_init(int obj)
 {
     int state = *(int *)(obj + 0xb8);
@@ -7769,8 +7770,8 @@ void drmusiccont_init(int obj)
     f->b_9e2 = (u8)GameBit_Get(0x9e2);
     f->b_9e7 = (u8)GameBit_Get(0x9e7);
 }
-#pragma peephole on
-#pragma scheduling on
+#pragma scheduling reset
+#pragma peephole reset
 
 extern void fn_80094378(int obj, f32 a, f32 b, f32 c);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
