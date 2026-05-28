@@ -6682,6 +6682,68 @@ int fn_80222160(int p1, int p2, f32 a, f32 b, f32 c, int flag, int *p6)
 }
 #pragma scheduling reset
 
+typedef struct {
+    u8 f80 : 1;
+    u8 : 1;
+    u8 f20 : 1;
+    u8 : 1;
+    u8 f08 : 1;
+    u8 : 3;
+} SquadCmdFlags;
+extern f32 lbl_803E716C;
+extern f32 lbl_803E7170;
+
+#pragma scheduling off
+void arwsquadron_applyCommandParams(int p1, int p2)
+{
+    SquadCmdFlags *flags = (SquadCmdFlags *)(p2 + 0x160);
+    int cmds = *(int *)(p2 + 0x9c);
+    int i;
+
+    if ((s8)*(u8 *)(cmds + 0x19) == 0x28) {
+        for (i = 0; i < 2; i++) {
+            int cmd;
+            f32 val;
+            if (i == 0) {
+                cmd = *(u8 *)(cmds + 0x18);
+                val = (f32)(s8)*(u8 *)(cmds + 0x1a);
+            } else {
+                cmd = *(u8 *)(cmds + 0x2f);
+                val = (f32)*(u8 *)(cmds + 0x30);
+            }
+            switch ((u8)cmd) {
+            case 3:
+                *(f32 *)(p2 + 0x10c) = val * lbl_803E716C;
+                break;
+            case 1:
+                if (!flags->f80) {
+                    int s = *(int *)(p1 + 0x4c);
+                    flags->f80 = 1;
+                    if (*(u8 *)(p2 + 0x15c) == 1) {
+                        flags->f20 = 0;
+                        storeZeroToFloatParam((void *)(p2 + 0x124));
+                        s16toFloat((void *)(p2 + 0x124), *(u8 *)(s + 0x2c));
+                    }
+                }
+                break;
+            case 2:
+                flags->f80 = 0;
+                break;
+            case 4:
+                if (!flags->f08) {
+                    flags->f08 = 1;
+                    *(s16 *)(p2 + 0x144) = lbl_803E7170 * val;
+                }
+                break;
+            case 5:
+                flags->f08 = 0;
+                break;
+            }
+        }
+    }
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
