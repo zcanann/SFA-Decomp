@@ -5197,6 +5197,18 @@ int fn_8008B71C(int slot)
     return 0;
 }
 
+void fn_8008B744(f32 time, s16 *days, s16 *hours, s16 *minutes)
+{
+    s32 remaining;
+
+    remaining = (s32)time;
+    *days = remaining / 0x34bc0;
+    remaining -= *days * 0x34bc0;
+    *hours = remaining / 0xe10;
+    remaining -= *hours * 0xe10;
+    *minutes = remaining / 0x3c;
+}
+
 void fn_8008B8B4(f32 *time)
 {
     u8 *sky;
