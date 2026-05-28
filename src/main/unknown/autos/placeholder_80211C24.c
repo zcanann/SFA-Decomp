@@ -120,9 +120,15 @@ extern f32 lbl_803E6AC4;
 extern f32 lbl_803E6AC8;
 extern f32 lbl_803E6B34;
 
+extern f32 lbl_803E6858;
+extern f32 lbl_803E6994;
+extern f32 lbl_803E67A0;
 extern f32 lbl_803E6978;
 extern f32 lbl_803E69D0;
 extern f32 lbl_803E69D8;
+extern f32 lbl_803E69E0;
+extern f32 lbl_803E6A44;
+extern f32 lbl_803E6B58;
 
 extern void *gKTRexState;
 extern void *gKTRexRuntime;
@@ -132,6 +138,10 @@ extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefi
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void *Obj_GetPlayerObject(void);
 extern void ModelLightStruct_free(void *p);
+extern void GameBit_Set(int eventId, int value);
+extern void Music_Trigger(int trackId, int restart);
+extern void Obj_FreeObject(int obj);
+extern void mm_free(void *ptr);
 
 #pragma scheduling off
 #pragma peephole off
@@ -253,6 +263,75 @@ void cagecontrol_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, 
 void explodeplan_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
+    }
+}
+
+void drchimmey_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69E0);
+    }
+}
+
+void drgenerator_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
+    }
+}
+
+void ktrexfloorswitch_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6858);
+    }
+}
+
+void ktrexlevel_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E67A0);
+    }
+}
+
+void kytesmum_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6994);
+    }
+}
+
+f32 drakorhoverpad_func13(int obj, f32 *out) {
+    *out = lbl_803E6A44;
+    return lbl_803E6A3C;
+}
+
+void gmmazewell_free(void) {
+    GameBit_Set(0xefc, 0);
+    Music_Trigger(0x36, 0);
+}
+
+void kytesmum_free(int obj) {
+    int p = *(int *)((char *)obj + 0x4c);
+    if (*(s8 *)(p + 0x19) != 0) {
+        ObjGroup_RemoveObject(obj, 0x3);
+    }
+}
+
+void drakorhoverpad_free(int obj) {
+    ObjGroup_RemoveObject(obj, 0x46);
+    ObjGroup_RemoveObject(obj, 0xa);
+}
+
+void drakormissile_modelMtxFn(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    p[0x5] |= 1;
+    if (p[0x4] == 1) {
+        Obj_FreeObject(obj);
+    }
+}
+
+void ktlazerwall_free(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    void *m = *(void **)(p + 0x10);
+    if (m != 0) {
+        mm_free(m);
+        *(void **)(p + 0x10) = 0;
     }
 }
 #pragma peephole reset

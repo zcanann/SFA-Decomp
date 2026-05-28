@@ -821,7 +821,7 @@ void pointlight_update(int obj)
 
     if (*(u8 *)(state + 4) != 0) {
         s16 bit = *(s16 *)(setup + 0x1e);
-        if (bit > 0 && GameBit_Get(bit) == 0) {
+        if (bit > 0 && (u32)GameBit_Get(bit) == 0) {
             *(u8 *)(state + 4) = 0;
             lightFn_8001db6c(*(void **)state, 0, lbl_803E7234);
         }
@@ -832,7 +832,7 @@ void pointlight_update(int obj)
         }
     } else {
         s16 bit = *(s16 *)(setup + 0x1e);
-        if (bit > 0 && GameBit_Get(bit) != 0) {
+        if (bit > 0 && (u32)GameBit_Get(bit) != 0) {
             *(u8 *)(state + 4) = 1;
             lightFn_8001db6c(*(void **)state, 1, lbl_803E7234);
         }
