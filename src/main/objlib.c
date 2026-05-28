@@ -463,7 +463,7 @@ void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2)
 
   iVar3 = *(uint *)(param_1 + 0x54);
   if (iVar3 != 0) {
-    if ((*(byte *)(iVar3 + 0x62) & 1) != 0) {
+    if ((*(byte *)(iVar3 + 0x62) & OBJHITS_SHAPE_SPHERE) != 0) {
       *(undefined2 *)(iVar3 + 0x5a) = param_2;
       fVar1 = (float)(s32)*(short *)(iVar3 + 0x5a);
       *(float *)(iVar3 + 0xc) = fVar1 * fVar1;
@@ -476,7 +476,7 @@ void ObjHitbox_SetSphereRadius(int param_1,undefined2 param_2)
         *(float *)(iVar3 + 0x2c) = (float)(s32)*(short *)(iVar3 + 0x5a);
       }
     }
-    if ((*(byte *)(iVar3 + 0xb6) & 1) != 0) {
+    if ((*(byte *)(iVar3 + 0xb6) & OBJHITS_SHAPE_SPHERE) != 0) {
       *(undefined2 *)(iVar3 + 100) = param_2;
       *(float *)(iVar3 + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
       if ((float)(s32)*(short *)(iVar3 + 0x5a) > *(float *)(iVar3 + 0x30)) {
@@ -521,7 +521,7 @@ void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,sho
 
   iVar3 = *(uint *)(param_1 + 0x54);
   if (iVar3 != 0) {
-    if ((*(byte *)(iVar3 + 0x62) & 2) != 0) {
+    if ((*(byte *)(iVar3 + 0x62) & OBJHITS_SHAPE_CAPSULE) != 0) {
       *(short *)(iVar3 + 0x5c) = param_3;
       *(short *)(iVar3 + 0x5e) = param_4;
       *(undefined2 *)(iVar3 + 0x5a) = param_2;
@@ -550,7 +550,7 @@ void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,sho
         *(float *)(iVar3 + 0x2c) = (float)(s32)*(short *)(iVar3 + 0x5a);
       }
     }
-    if ((*(byte *)(iVar3 + 0xb6) & 2) != 0) {
+    if ((*(byte *)(iVar3 + 0xb6) & OBJHITS_SHAPE_CAPSULE) != 0) {
       *(short *)(iVar3 + 0x66) = param_3;
       *(short *)(iVar3 + 0x68) = param_4;
       *(undefined2 *)(iVar3 + 100) = param_2;
@@ -793,7 +793,7 @@ void ObjHits_MarkObjectPositionDirty(int param_1)
   ObjHitsPriorityState *hitState;
 
   hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
-  hitState->flags = (s16)(hitState->flags | 0x40);
+  hitState->flags = (s16)(hitState->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
   return;
 }
 #pragma peephole reset
@@ -822,10 +822,10 @@ void ObjHits_SyncObjectPositionIfDirty(u32 param_1)
     return;
   }
   flags = hitState->flags;
-  if ((flags & 0x40) == 0) {
+  if ((flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) {
     return;
   }
-  hitState->flags = (s16)(flags & ~0x40);
+  hitState->flags = (s16)(flags & ~OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
   *(f32 *)((int)hitState + 0x10) = *(f32 *)(param_1 + 0xc);
   *(f32 *)((int)hitState + 0x14) = *(f32 *)(param_1 + 0x10);
   *(f32 *)((int)hitState + 0x18) = *(f32 *)(param_1 + 0x14);
@@ -858,7 +858,7 @@ void ObjHits_DisableObject(u32 param_1)
   if (hitState == 0) {
     return;
   }
-  hitState->flags = (s16)(hitState->flags & ~1);
+  hitState->flags = (s16)(hitState->flags & ~OBJHITS_PRIORITY_STATE_ENABLED);
   return;
 }
 #pragma peephole reset
@@ -887,10 +887,10 @@ void ObjHits_EnableObject(u32 param_1)
     return;
   }
   flags = hitState->flags;
-  if ((flags & 1) != 0) {
+  if ((flags & OBJHITS_PRIORITY_STATE_ENABLED) != 0) {
     return;
   }
-  hitState->flags = (s16)(flags | 1);
+  hitState->flags = (s16)(flags | OBJHITS_PRIORITY_STATE_ENABLED);
   *(f32 *)((int)hitState + 0x10) = *(f32 *)(param_1 + 0xc);
   *(f32 *)((int)hitState + 0x14) = *(f32 *)(param_1 + 0x10);
   *(f32 *)((int)hitState + 0x18) = *(f32 *)(param_1 + 0x14);
@@ -916,7 +916,7 @@ void ObjHits_EnableObject(u32 param_1)
  */
 ushort ObjHits_IsObjectEnabled(int param_1)
 {
-  return (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags & 1;
+  return (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags & OBJHITS_PRIORITY_STATE_ENABLED;
 }
 
 /*
@@ -1009,10 +1009,10 @@ void ObjHits_RefreshObjectState(int param_1)
   if (hitState != 0) {
     hitState->flags = *(s16 *)(*(int *)(param_1 + 0x50) + 0x4e);
     hitState->shapeFlags = *(undefined *)(*(int *)(param_1 + 0x50) + 0x65);
-    if ((hitState->shapeFlags & 0x20) != 0) {
+    if ((hitState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) {
       piVar6 = *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
       if (((*(ushort *)(*piVar6 + 2) & 0x1000) == 0) || (piVar6[5] == 0)) {
-        hitState->shapeFlags = hitState->shapeFlags & 0xdf;
+        hitState->shapeFlags = hitState->shapeFlags & (u8)~OBJHITS_SHAPE_SKELETON;
       }
     }
     *(undefined *)((int)hitState + 0x6a) = *(undefined *)(*(int *)(param_1 + 0x50) + 99);
@@ -1029,8 +1029,8 @@ void ObjHits_RefreshObjectState(int param_1)
     *(s16 *)((int)hitState + 0x66) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6c);
     *(s16 *)((int)hitState + 0x68) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6e);
     *(float *)((int)hitState + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-    if ((hitState->shapeFlags & 2) == 0) {
-      if ((hitState->shapeFlags & 1) != 0) {
+    if ((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) == 0) {
+      if ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
         if ((float)(s32)*(short *)((int)hitState + 0x5a) > *(float *)((int)hitState + 0x28)) {
           *(float *)((int)hitState + 0x28) = (float)(s32)*(short *)((int)hitState + 0x5a);
         }
@@ -1053,14 +1053,15 @@ void ObjHits_RefreshObjectState(int param_1)
       }
     }
     *(float *)((int)hitState + 0x2c) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-    if (((hitState->shapeFlags & 2) != 0) || ((hitState->shapeFlags & 1) != 0)) {
+    if (((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) ||
+        ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0)) {
       if ((float)(s32)*(short *)((int)hitState + 0x5a) > *(float *)((int)hitState + 0x2c)) {
         *(float *)((int)hitState + 0x2c) = (float)(s32)*(short *)((int)hitState + 0x5a);
       }
     }
     *(float *)((int)hitState + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-    if ((hitState->secondaryShapeFlags & 2) == 0) {
-      if ((hitState->secondaryShapeFlags & 1) != 0) {
+    if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) == 0) {
+      if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
         if ((float)(s32)*(short *)((int)hitState + 100) > *(float *)((int)hitState + 0x30)) {
           *(float *)((int)hitState + 0x30) = (float)(s32)*(short *)((int)hitState + 100);
         }
@@ -1083,7 +1084,8 @@ void ObjHits_RefreshObjectState(int param_1)
       }
     }
     *(float *)((int)hitState + 0x34) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-    if (((hitState->secondaryShapeFlags & 2) != 0) || ((hitState->secondaryShapeFlags & 1) != 0)) {
+    if (((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) ||
+        ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0)) {
       if ((float)(s32)*(short *)((int)hitState + 100) > *(float *)((int)hitState + 0x34)) {
         *(float *)((int)hitState + 0x34) = (float)(s32)*(short *)((int)hitState + 100);
       }

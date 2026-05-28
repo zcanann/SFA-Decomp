@@ -2078,7 +2078,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
     if (*(short *)(iVar1 + 0x44) == 1) {
       piVar7 = *(int **)(*(int *)(iVar1 + 0x7c) + *(char *)(iVar1 + 0xad) * 4);
       uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-      if ((objStateA->flags & 0x2000) == 0) {
+      if ((objStateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) == 0) {
         memcpy(gObjHitsPrimaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
         uVar8 = memcpy(gObjHitsPrimaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
@@ -2091,11 +2091,11 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
       if (param_11 != 0) {
         piVar7 = *(int **)(*(int *)(param_11 + 0x7c) + *(char *)(param_11 + 0xad) * 4);
         uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-        if ((objStateA->flags & 0x2000) == 0) {
+        if ((objStateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) == 0) {
           memcpy(gObjHitsSecondaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
           uVar8 = memcpy(gObjHitsSecondaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          objStateA->flags = objStateA->flags | 0x2000;
+          objStateA->flags = objStateA->flags | OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
         }
         else {
           memcpy(piVar7[uVar6 + 0x12],gObjHitsSecondaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
@@ -2128,7 +2128,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
     if (*(short *)(iVar3 + 0x44) == 1) {
       piVar7 = *(int **)(*(int *)(iVar3 + 0x7c) + *(char *)(iVar3 + 0xad) * 4);
       uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-      if ((objStateB->flags & 0x2000) == 0) {
+      if ((objStateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) == 0) {
         memcpy(gObjHitsPrimaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
         uVar8 = memcpy(gObjHitsPrimaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
                              (uint)*(byte *)(*piVar7 + 0xf7) << 4);
@@ -2141,11 +2141,11 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
       if (param_12 != 0) {
         piVar7 = *(int **)(*(int *)(param_12 + 0x7c) + *(char *)(param_12 + 0xad) * 4);
         uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-        if ((objStateB->flags & 0x2000) == 0) {
+        if ((objStateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) == 0) {
           memcpy(gObjHitsSecondaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
           uVar8 = memcpy(gObjHitsSecondaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
                                (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          objStateB->flags = objStateB->flags | 0x2000;
+          objStateB->flags = objStateB->flags | OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
         }
         else {
           memcpy(piVar7[uVar6 + 0x12],gObjHitsSecondaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
