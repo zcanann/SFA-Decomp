@@ -13,6 +13,7 @@ extern void playerEnvFxFn_80088ad4(int envFxValue);
 extern void renderSunAndMoon(void);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
+extern void renderFn_8008f904(void *state);
 
 extern s16 lbl_80399398[];
 extern u8 lbl_80399EA8[];
@@ -46,6 +47,10 @@ extern f32 lbl_8039A7A8[];
 extern f32 pEXIInputFlag;
 extern f32 lbl_803DF06C;
 extern u8 colorScale;
+extern int lbl_803DB610[];
+extern s8 lbl_803DD180;
+extern u8 *lbl_803DD184[];
+extern u8 *lbl_803DD19C;
 extern void PSVECNormalize(void *src, void *dst);
 
 extern undefined4 ABS();
@@ -4343,6 +4348,88 @@ void objGetColor(int slot, u8 *red, u8 *green, u8 *blue)
     *red = (u8)((*red * colorScale) >> 8);
     *green = (u8)((*green * colorScale) >> 8);
     *blue = (u8)((*blue * colorScale) >> 8);
+}
+
+void dll_06_func0B(int *x, int *y)
+{
+    u8 *state;
+    f32 value;
+
+    state = lbl_803DD184[0];
+    if (state != NULL) {
+        value = *(f32 *)(state + 0x14);
+        *x = value;
+        value = *(f32 *)(lbl_803DD184[0] + 0x18);
+        *y = value;
+    }
+}
+
+void dll_06_func0A(int *a, int *b, int *c, f32 *scale)
+{
+    u8 *state;
+
+    state = lbl_803DD184[0];
+    if (state == NULL) {
+        return;
+    }
+    *a = *(int *)(state + 0x24);
+    *b = *(int *)(lbl_803DD184[0] + 0x28);
+    *c = *(int *)(lbl_803DD184[0] + 0x2c);
+    *scale = *(f32 *)(lbl_803DD184[0] + 0x30c);
+}
+
+void dll_06_func0E(void)
+{
+    if (lbl_803DD184[0] == NULL) {
+        return;
+    }
+    if (lbl_803DD180 != 1) {
+        lbl_803DD180 = 1;
+    }
+}
+
+void dll_06_func0D(void)
+{
+    if (lbl_803DD184[0] == NULL) {
+        return;
+    }
+    if (lbl_803DD180 != 2) {
+        lbl_803DD180 = 2;
+    }
+}
+
+void sky2_initialise(void)
+{
+    lbl_803DB610[0] = -1;
+    lbl_803DB610[1] = -1;
+    if (lbl_803DD184[0] != NULL) {
+        mm_free(lbl_803DD184[0]);
+    }
+    if (lbl_803DD184[1] != NULL) {
+        mm_free(lbl_803DD184[1]);
+    }
+    lbl_803DD184[0] = NULL;
+    lbl_803DD184[1] = NULL;
+}
+
+void fn_8008EDE8(f32 *out)
+{
+    u8 *state;
+
+    state = lbl_803DD19C;
+    if (state == NULL) {
+        return;
+    }
+    out[0] = *(f32 *)(state + 0);
+    out[1] = *(f32 *)(lbl_803DD19C + 4);
+    out[2] = *(f32 *)(lbl_803DD19C + 8);
+}
+
+void renderFn_8008faf4(void)
+{
+    if (lbl_803DD19C != NULL) {
+        renderFn_8008f904(lbl_803DD19C);
+    }
 }
 
 #pragma pop
