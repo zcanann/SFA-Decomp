@@ -8307,6 +8307,77 @@ extern void *lbl_803DCB4C;
 extern int lbl_803DCB58;
 extern void shaderInit(u8 *def, void *out, int arg, int n);
 
+void ObjModel_RelocateModelData(u8 *m) {
+    int i;
+    if (*(u32 *)(m + 0x58)) {
+        *(u32 *)(m + 0x58) += (u32)m;
+    }
+    if (*(u32 *)(m + 0x3c)) {
+        *(u32 *)(m + 0x3c) += (u32)m;
+        if (*(u32 *)(m + 0x18)) {
+            *(u32 *)(m + 0x18) += (u32)m;
+        }
+        if (*(u32 *)(m + 0x1c)) {
+            *(u32 *)(m + 0x1c) += (u32)m;
+        }
+        if (*(u32 *)(m + 0x40)) {
+            *(u32 *)(m + 0x40) += (u32)m;
+        }
+    }
+    if (*(u32 *)(m + 0x54)) {
+        *(u32 *)(m + 0x54) += (u32)m;
+    }
+    if (*(u32 *)(m + 0x20)) {
+        *(u32 *)(m + 0x20) += (u32)m;
+    }
+    *(u32 *)(m + 0x28) += (u32)m;
+    if (*(u32 *)(m + 0x2c)) {
+        *(u32 *)(m + 0x2c) += (u32)m;
+    }
+    if (*(u32 *)(m + 0x30)) {
+        *(u32 *)(m + 0x30) += (u32)m;
+    }
+    if (*(u32 *)(m + 0x34)) {
+        *(u32 *)(m + 0x34) += (u32)m;
+    }
+    if (*(u32 *)(m + 0xd4)) {
+        *(u32 *)(m + 0xd4) += (u32)m;
+    }
+    if (*(u32 *)(m + 0xd0)) {
+        *(u32 *)(m + 0xd0) += (u32)m;
+    }
+    if (*(u32 *)(m + 0xdc)) {
+        *(u32 *)(m + 0xdc) += (u32)m;
+    }
+    if (*(u32 *)(m + 0xa4)) {
+        *(u32 *)(m + 0xa4) += (u32)m;
+    }
+    if (*(u32 *)(m + 0xa8)) {
+        *(u32 *)(m + 0xa8) += (u32)m;
+    }
+    if (*(u32 *)(m + 0xc8)) {
+        *(u32 *)(m + 0xc8) += (u32)m;
+    }
+    if (*(u32 *)(m + 0xcc)) {
+        *(u32 *)(m + 0xcc) += (u32)m;
+    }
+    if (*(u32 *)(m + 0x38)) {
+        *(u32 *)(m + 0x38) += (u32)m;
+    }
+    for (i = 0; i < m[0xf5] + m[0xf6]; i++) {
+        *(u32 *)(*(u8 **)(m + 0xd0) + i * 0x1c) += (u32)m;
+    }
+    for (i = 0; i < m[0xf9]; i++) {
+        *(u32 *)(*(u8 **)(m + 0xdc) + i * 4) += (u32)m;
+    }
+    if (*(u32 *)(m + 0x5c)) {
+        *(u32 *)(m + 0x5c) += (u32)m;
+    }
+    if (*(u32 *)(m + 0x60)) {
+        *(u32 *)(m + 0x60) += (u32)m;
+    }
+}
+
 void ObjModel_RelocateAnimData(u8 *m, u8 *dst) {
     int i;
     *(u8 **)(m + 0x94) = *(u8 **)(m + 0xa4);
@@ -9130,7 +9201,7 @@ void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
 #pragma pop
 
 extern void *ObjModel_LoadModelData(int id);
-extern void ObjModel_RelocateModelData(void *model);
+extern void ObjModel_RelocateModelData(u8 *model);
 extern void ObjModel_ResolveRenderOpTextures(void *model);
 extern void modelLoadAnimations(void *model, int id, void *animBase);
 extern int modelLoad_calcSizes(void *model, int arg, void *out, int flag);
