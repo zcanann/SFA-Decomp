@@ -277,6 +277,12 @@ Heuristic before reaching for `asm { }`:
     form instead, write `!!x` (double logical-NOT) to get the `cntlzw` form.
     Mirror: `!x` gives the `== 0` `cntlzw` form. Match whichever the target
     uses. Clean C, no asm — supersedes leaving these as a "cntlzw-idiom cap."
+    **Related — `break` (fall to common return) instead of `case`-body
+    `return 0` drops a spurious `cntlzw` boolean.** When a switch case ends with
+    an explicit `return 0;` and target instead uses an `li`-branch to a shared
+    epilogue, write `break;` and let the function fall to one trailing return.
+    MWCC then emits the explicit `li r3,0; b` form rather than synthesizing the
+    `cntlzw` non-zero idiom. (zulu13, 80220608 *_free family.)
 
 24. **Declare single-precision math/helper callees as `f32 fn(f32)`, NOT
     `double fn(double)`.** A `double` signature makes MWCC promote args and
