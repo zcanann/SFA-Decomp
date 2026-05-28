@@ -251,6 +251,7 @@ extern f32 lbl_803E68C0;
 extern void lightFn_8001db6c(void *light, int v, f32 f);
 extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int d);
 extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
+extern int *ObjGroup_GetObjects(int group, int *count);
 
 typedef struct {
     u8 b0 : 1;
@@ -1248,6 +1249,30 @@ void explodeplan_update(int obj) {
         }
     } else {
         (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(*(int *)p, obj, -1);
+    }
+}
+
+void drshackle_update(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x4c);
+    int count;
+    int *list;
+    int j;
+    if (*(s16 *)(q + 0x1a) != 0 && *(void **)p == 0) {
+        list = ObjGroup_GetObjects(0x17, &count);
+        while (count-- != 0) {
+            int sub = *(int *)(*list + 0x4c);
+            for (j = 0; j < *(int *)(p + 0x14); j++) {
+                if (*(u8 *)(sub + 0x18) == *(s16 *)(q + 0x1a) + j * 4) {
+                    *(int *)(p + j * 4) = *list;
+                    (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(0, *(int *)(p + j * 4), -1);
+                }
+            }
+            list++;
+        }
+    }
+    if (((BitFlags8 *)(p + 0x1a))->b0 != 0) {
+        ((BitFlags8 *)(p + 0x1a))->b0 = (GameBit_Get(*(s16 *)(q + 0x1e)) == 0);
     }
 }
 
