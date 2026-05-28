@@ -310,6 +310,11 @@ extern undefined4 FUN_802950cc();
 extern undefined4 FUN_802950d0();
 extern void mm_free(void *ptr);
 extern void gxTextureFn_80072dfc(void *obj, void **model, int param_3);
+extern void *textureIdxToPtr(int textureId);
+extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
+extern void gxSetZMode_(u32 enable, int func, u32 update);
+extern void gxSetPeControl_ZCompLoc_(u32 beforeTex);
+extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern undefined4 FUN_802950d4();
 extern undefined4 FUN_802950d8();
 extern undefined4 FUN_802950dc();
@@ -7040,6 +7045,10 @@ void ObjModel_CopyJointTranslation(u8 *model, int jointIndex, f32 *out) {
     out[2] = *(f32 *)(jointMtx + 0x2c);
 }
 
+void *fn_800283E8(u8 *model, int textureIndex) {
+    return textureIdxToPtr(*(int *)(*(u8 **)(model + 0x20) + textureIndex * 4));
+}
+
 void *ObjModel_GetBaseVertexCoords(u8 *model, int vertexIndex) {
     return *(u8 **)(model + 0x28) + vertexIndex * 6;
 }
@@ -7074,6 +7083,13 @@ void *ObjModel_GetCurrentVertexCoords(u8 *model, int vertexIndex) {
 
 void *ObjModel_GetPostRenderCallback(u8 *model) {
     return *(void **)(model + 0x3c);
+}
+
+void fn_800284CC(void) {
+    GXSetBlendMode(1, 4, 1, 5);
+    gxSetZMode_(1, 3, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
 void ObjModel_SetPostRenderCallback(u8 *model, void *callback) {
