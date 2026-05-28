@@ -7510,3 +7510,126 @@ void objSetHintTextIdx(u8 *obj, u16 idx) {
     obj[0xe8] = (u8)idx;
 }
 #pragma pop
+
+extern void GXInitLightAttnA(u8 *lt_obj, f32 a0, f32 a1, f32 a2);
+extern int getLoadedFileFlags(int);
+extern s8 lbl_803DCB74;
+extern int lbl_803408A8[];
+extern int lbl_803DD610;
+extern void *lbl_803DD61C;
+extern f32 lbl_803DE764;
+extern f32 lbl_803DE78C;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_8001D9F4(u8 *p, u8 *a, u8 *b, u8 *c, u8 *d) {
+    *a = p[0x100];
+    *b = p[0x101];
+    *c = p[0x102];
+    *d = p[0x103];
+}
+
+void fn_8001DACC(u8 *p, u8 *a, u8 *b, u8 *c, u8 *d) {
+    *a = p[0xa8];
+    *b = p[0xa9];
+    *c = p[0xaa];
+    *d = p[0xab];
+}
+
+void fn_8001DA3C(u8 *p, f32 a, f32 b, f32 c) {
+    GXInitLightAttnA(p + 0x68, a, b, c);
+}
+
+void modelLightStruct_setColors100104(u8 *p, u8 a, u8 b, u8 c, u8 d) {
+    p[0x104] = a;
+    p[0x100] = a;
+    p[0x105] = b;
+    p[0x101] = b;
+    p[0x106] = c;
+    p[0x102] = c;
+    p[0x107] = d;
+    p[0x103] = d;
+}
+
+void modelLightStruct_setColorsA8AC(u8 *p, u8 a, u8 b, u8 c, u8 d) {
+    p[0xac] = a;
+    p[0xa8] = a;
+    p[0xad] = b;
+    p[0xa9] = b;
+    p[0xae] = c;
+    p[0xaa] = c;
+    p[0xaf] = d;
+    p[0xab] = d;
+}
+
+void lightGetColor(int i, u8 *a, u8 *b, u8 *c) {
+    u8 *base = &lbl_803DB408;
+    *a = base[i * 4];
+    *b = base[i * 4 + 1];
+    *c = base[i * 4 + 2];
+}
+
+void *getCache(void) {
+    if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
+        return lbl_803DD61C;
+    }
+    return (void *)0xe0000000;
+}
+
+f32 getXZDistance(f32 *a, f32 *b) {
+    f32 dx = a[0] - b[0];
+    f32 dz = a[2] - b[2];
+    return dx * dx + dz * dz;
+}
+
+f32 vec3f_distanceSquared(f32 *a, f32 *b) {
+    f32 dx = a[0] - b[0];
+    f32 dy = a[1] - b[1];
+    f32 dz = a[2] - b[2];
+    return dx * dx + dy * dy + dz * dz;
+}
+
+void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
+    out[0] = s * b[0] + a[0];
+    out[1] = s * b[1] + a[1];
+    out[2] = s * b[2] + a[2];
+}
+
+void fn_8001D820(u8 *p, f32 v) {
+    if (v >= *(f32 *)(p + 0x160)) {
+        if (v <= lbl_803DE764) {
+            *(f32 *)(p + 0x164) = v;
+        }
+    }
+}
+
+void fn_8001D84C(u8 *p, f32 v) {
+    if (v >= lbl_803DE78C) {
+        if (v <= *(f32 *)(p + 0x164)) {
+            *(f32 *)(p + 0x160) = v;
+        }
+    }
+}
+
+int Obj_IsLoadingLocked(void) {
+    return !(getLoadedFileFlags(0) & 0x100000);
+}
+
+void objSetSlot(u8 *obj, s8 slot) {
+    if (slot == 0x5a) {
+        if ((*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) == 0) {
+            return;
+        }
+    }
+    *(s8 *)(obj + 0xae) = slot;
+}
+
+#pragma peephole on
+void fn_8002B860(void *v) {
+    s8 i = lbl_803DCB74;
+    lbl_803DCB74 = i + 1;
+    lbl_803408A8[i] = (int)v;
+}
+#pragma peephole reset
+#pragma pop
