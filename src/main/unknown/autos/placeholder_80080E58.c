@@ -33,6 +33,15 @@ extern void Obj_GetWorldPosition(void *obj, f32 *x, f32 *y, f32 *z);
 extern void Camera_GetCurrentViewSlot(void);
 extern int randomGetRange(int min, int max);
 extern int return0xFFFF_80008B6C(int obj, int a, int b, int c, int d, int e, int f);
+extern void objSeqUpdateMoreCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode);
+extern void objSeqUpdateCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode);
+extern void objAnimCurvFn_800849e8(u8 *obj, u8 *seq);
+extern int hitDetectFn_800658a4(void *obj, f32 x, f32 y, f32 z, f32 *out, int flags);
+extern void objAnimFn_8008718c(u8 *obj, u8 *seqObj, u8 *seq);
+extern void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq);
+extern void objModelClearVecFn_8003aa40(void *obj);
+extern s16 *objModelGetVecFn_800395d8(void *obj, int index);
+extern long long OSGetTime(void);
 
 extern s16 lbl_80399398[];
 extern u8 lbl_80399EA8[];
@@ -41,6 +50,7 @@ extern s8 lbl_8039A45C[];
 extern s8 lbl_8039A4B4[];
 extern s8 lbl_8039A50C[];
 extern ObjSeqBgCmd lbl_8039A5BC[];
+extern u8 lbl_80396918[];
 extern int lbl_8030EDA4[];
 extern u8 lbl_8030ECA8[];
 extern u8 lbl_803DB748;
@@ -53,6 +63,7 @@ extern s8 seqGlobal3;
 extern int *gSHthorntailAnimationInterface;
 extern s8 lbl_803DD0BC;
 extern void *lbl_803DD0D4;
+extern u8 lbl_803DD0D8;
 extern u8 lbl_803DD0DA;
 extern int lbl_803DD090;
 extern int lbl_803DD100;
@@ -4090,7 +4101,7 @@ int objSeqFindConditional(u8 *seq, u8 *seqState)
     return -1;
 }
 
-void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, void *action)
+void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action)
 {
     int callbackResult;
     s8 actionSlot;
@@ -4265,6 +4276,75 @@ void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
                 }
             }
             break;
+        }
+    }
+}
+
+void objSeqSetupFn_80085b34(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction)
+{
+    u8 *activeObj;
+    s16 *modelVec;
+    f32 groundY[2];
+    long long time;
+    u8 *historyBase;
+
+    historyBase = lbl_80396918;
+    if ((s8)seq[0x7b] != 0) {
+        lbl_803DD108 = 1;
+        lbl_803DD100 = 0x5a;
+        lbl_803DD10C = 0x42;
+    }
+
+    *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x5e);
+    *(s16 *)(seq + 0x5a) = -0x3c;
+    objSeqUpdateMoreCurves(obj, *seqObj, seq, 0);
+    objSeqUpdateCurves(obj, *seqObj, seq, 1);
+
+    activeObj = *(u8 **)(*(u8 **)(obj + 0xb8));
+    if (activeObj == NULL) {
+        activeObj = obj;
+    }
+    *outAction = *(void **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+    *seqObj = activeObj;
+
+    objAnimCurvFn_800849e8(obj, seq);
+    if ((s8)seq[0x7a] == 1 &&
+        hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                             *(f32 *)(obj + 0x14), groundY, 0) == 0) {
+        *(f32 *)(obj + 0x10) =
+            *(f32 *)(obj + 0x10) + ((*(f32 *)(obj + 0x10) - groundY[0]) - *(f32 *)(sourceObj + 0xc));
+    }
+
+    *(u16 *)obj = *(s16 *)obj + *(s16 *)(seq + 0x1a);
+    if (*seqObj != obj && (s8)lbl_803DD0D8 == 0) {
+        objCallSeqFn(*seqObj, obj, seq, *(u8 *)(historyBase + (s8)seq[0x57] + 0x3c4c));
+    }
+
+    objAnimFn_8008718c(obj, *seqObj, seq);
+    seq[0x8d] = 0;
+    seq[0x8e] = 0;
+    seq[0x7e] = 1;
+    *(s16 *)(seq + 0x5a) = *(s16 *)(seq + 0x58);
+    if ((s8)lbl_803DD0DA != 0) {
+        animatedObjFreeAndSavePlayerPos(obj, *seqObj, seq);
+    }
+
+    *(f32 *)(historyBase + (s8)seq[0x57] * 4 + 0x3740) = (f32)*(s16 *)(seq + 0x58);
+    *(s16 *)(historyBase + (s8)seq[0x57] * 2 + 0x2be0) = *(s16 *)(seq + 0x58);
+    time = OSGetTime();
+    *(long long *)(historyBase + (s8)seq[0x57] * 8 + 0x2f38) = time;
+    time = OSGetTime();
+    *(long long *)(historyBase + (s8)seq[0x57] * 8 + 0x2c90) = time;
+
+    if (*seqObj != NULL) {
+        objModelClearVecFn_8003aa40(*seqObj);
+        if (*(s16 *)(*seqObj + 0x44) == 1) {
+            modelVec = objModelGetVecFn_800395d8(obj, 1);
+            if (modelVec != NULL) {
+                modelVec[0] = 0;
+                modelVec[1] = 0;
+                modelVec[2] = 0;
+            }
         }
     }
 }
