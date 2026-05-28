@@ -8303,6 +8303,70 @@ extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *from, void *to, void *out, int p4, int p5);
 extern f32 lbl_803E6C58;
 
+extern void mm_free_(void *ptr);
+extern f32 lbl_803E6C3C;
+extern f32 lbl_803E6C40;
+extern f32 lbl_803E6C44;
+extern f32 lbl_803DC3A0;
+extern f32 lbl_803DC3A4;
+extern f32 lbl_803DC3A8;
+extern u16 lbl_803DC3AC;
+
+#pragma scheduling off
+int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
+{
+    int i;
+    int spawned;
+    void **p;
+    f32 pos[3];
+
+    spawned = 0;
+    if (lbl_803E6C38 == intensity) {
+        spawned = 0;
+        for (i = 0, p = entries; i < count; p++, i++) {
+            if (*p != 0) {
+                mm_free_(*p);
+                *p = 0;
+            }
+        }
+        if (*light != 0) {
+            fn_8001CB3C((int)light);
+        }
+        return 0;
+    }
+
+    for (i = 0, p = entries; i < count; p++, i++) {
+        if (*p != 0) {
+            renderFn_8008f904(*p);
+            *(u16 *)((char *)*p + 0x20) += framesThisStep;
+            if ((f32)(u32)*(u16 *)((char *)*p + 0x20) > lbl_803DC3A8) {
+                mm_free_(*p);
+                *p = 0;
+            }
+        } else if (spawned == 0) {
+            pos[0] = *(f32 *)(obj + 0xc);
+            pos[1] = *(f32 *)(obj + 0x10);
+            pos[2] = *(f32 *)(obj + 0x14);
+            pos[0] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
+            pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
+            pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
+            *p = fn_8008FB20((f32 *)(obj + 0xc), pos, lbl_803DC3A0, lbl_803DC3A4,
+                             (int)lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
+            spawned = 1;
+        }
+    }
+
+    if (*light == 0) {
+        *light = (void *)fn_8001CC9C(obj, 0x80, 0x80, 0xff, 0);
+        if (*light != 0) {
+            lightVecFn_8001dd88(*light, lbl_803E6C38, intensity * lbl_803E6C40, lbl_803E6C38);
+            lightDistAttenFn_8001dc38(*light, intensity, lbl_803E6C44 + intensity);
+        }
+    }
+    return 1;
+}
+#pragma scheduling reset
+
 #pragma scheduling off
 int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
