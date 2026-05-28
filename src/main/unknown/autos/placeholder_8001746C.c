@@ -8215,6 +8215,29 @@ void modelStruct2_setVectors(u8 *s, f32 x, f32 y, f32 z) {
     }
 }
 
+extern int *lbl_803DCB60;
+extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
+
+#pragma peephole off
+int modelGetAmapSize(int a, int b, int c) {
+    int size;
+    if (b != 0) {
+        size = c * 2 + 8;
+        while (size & 7) {
+            size++;
+        }
+    } else {
+        size = c * 4;
+        while (size & 7) {
+            size++;
+        }
+        fileLoadToBufferOffset(0x31, lbl_803DCB60, (a & ~3) << 2, 0x20);
+        size += lbl_803DCB60[(a & 3) + 1] - lbl_803DCB60[a & 3];
+    }
+    return size;
+}
+#pragma peephole reset
+
 int gameBitDecrement(int bit) {
     int val = GameBit_Get(bit);
     if (val != 0) {
