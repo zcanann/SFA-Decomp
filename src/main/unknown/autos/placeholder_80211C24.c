@@ -211,6 +211,13 @@ extern void getEnvfxAct(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
 extern int drshackle_toggleEventCallback(int obj, int unused, u8 *arg);
 
+extern f32 lbl_803E6A2C;
+extern f32 lbl_803E6B30;
+extern s16 lbl_803DC310;
+extern void seqFn_800394a0(int obj);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void fn_8009A8C8(int obj, f32 v);
+
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;
@@ -821,6 +828,76 @@ void drshackle_init(int obj, char *arg) {
         *(u8 *)(p + 0x1c) = 1 - *(u8 *)(p + 0x1b);
     } else {
         *(int *)(p + 0x14) = 1;
+    }
+}
+
+int drshackle_toggleEventCallback(int obj, int unused, u8 *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    void *q = *(void **)p;
+    int i;
+    if (q != 0) {
+        *(f32 *)((char *)q + 0xc) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)q + 0x10) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)q + 0x14) = *(f32 *)((char *)obj + 0x14);
+    }
+    for (i = 0; i < arg[0x8b]; i++) {
+        switch (arg[i + 0x81]) {
+        case 1:
+            ((BitFlags8 *)(p + 0x1a))->b0 = 0;
+            break;
+        case 2:
+            ((BitFlags8 *)(p + 0x1a))->b0 = 1;
+            break;
+        }
+    }
+    return 0;
+}
+
+int hightop_interactionCallback(int obj) {
+    char *p;
+    seqFn_800394a0(obj);
+    p = *(char **)((char *)obj + 0xb8);
+    *(u8 *)(p + 0x9fd) &= ~1;
+    ((BitFlags8 *)(p + 0xc49))->b4 = 0;
+    ((BitFlags8 *)(p + 0xc49))->b6 = 1;
+    if ((s8)p[0xc4b] == 0) {
+        ((BitFlags8 *)(p + 0xc4a))->b0 = 1;
+    }
+    return 0;
+}
+
+void drshackle_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    int i;
+    int *ptr;
+    if (((BitFlags8 *)(p + 0x1a))->b0 == 0 && visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
+        ptr = (int *)p;
+        for (i = 0; i < *(int *)(p + 0x14); i++) {
+            int *entry = *(int **)ptr;
+            if (entry != 0) {
+                ObjPath_GetPointWorldPosition((int)obj, p[i + 0x1b], (f32 *)((char *)entry + 0xc), (f32 *)((char *)entry + 0x10), (f32 *)((char *)entry + 0x14), 0);
+            }
+            ptr++;
+        }
+    }
+}
+
+void hightop_playMovementSfx(int obj, int p2, int p3) {
+    int flags = *(int *)((char *)p3 + 0x314);
+    int idx;
+    if ((flags & 0x81) != 0) {
+        if (flags & 1) {
+            idx = 0;
+        }
+        if (flags & 0x80) {
+            idx = 1;
+        }
+        Sfx_PlayFromObject(obj, (u16)(&lbl_803DC310)[idx]);
+    }
+    if (*(int *)((char *)p3 + 0x314) & 0x100) {
+        fn_8009A8C8(obj, lbl_803E6B30);
+        Sfx_PlayFromObject(obj, (u16)lbl_803DC310);
     }
 }
 #pragma peephole reset
