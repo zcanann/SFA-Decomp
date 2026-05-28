@@ -6014,7 +6014,7 @@ extern f32 lbl_803E7EEC;
 extern void fn_802B8108(void);
 extern void fn_802B7D28(void);
 extern void fn_802B7BF0(void);
-extern void fn_802B7B0C(void);
+extern int fn_802B7B0C(int obj, int state, f32 fv);
 extern void fn_802B78A4(void);
 extern void fn_802B74C4(void);
 extern void fn_802B735C(void);
@@ -6321,6 +6321,10 @@ extern void fuzzRenderFn_800412dc(int obj);
 extern void objSetMtxFn_800412d4(int a);
 extern s16 lbl_803DC6C4;
 extern int *gPartfxInterface;
+extern int Camera_GetCurrentViewSlot(void);
+extern void arwprojectile_placeForward(int obj, f32 dist);
+extern void arwprojectile_setLifetime(int obj, int frames);
+extern void arwprojectile_createLinkedEffect(int obj, int a);
 extern f32 lbl_803E7F50;
 extern f32 lbl_803E80C4;
 extern f32 lbl_803DE478;
@@ -6332,6 +6336,8 @@ extern f32 lbl_803E7FA0;
 extern f32 lbl_803E7FA4;
 extern f32 lbl_803E7F5C;
 extern f32 lbl_803E8150;
+extern f32 lbl_803E8180;
+extern f32 lbl_803E81A8;
 extern f32 lbl_803DAF88[];
 extern s16 lbl_80332F2C[];
 extern s16 lbl_80332F48[];
@@ -9379,6 +9385,134 @@ void fn_802AE650(int obj, int state, int p3)
                                lbl_803E7EA4, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 1);
     }
+}
+
+void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
+{
+    int slot = Camera_GetCurrentViewSlot();
+    int setup;
+    f32 x1, y1, z1, x0, y0, z0;
+    f32 dx, dy, dz, len;
+
+    if (Obj_IsLoadingLocked() != 0) {
+        Sfx_PlayFromObject(0, 0x20b);
+        setup = Obj_AllocObjectSetup(0x24, 0x655);
+        *(u8 *)((char *)setup + 4) = 2;
+        *(u8 *)((char *)setup + 5) = 1;
+        *(u8 *)((char *)setup + 6) = 0xff;
+        *(u8 *)((char *)setup + 7) = 0xff;
+        ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 0, &x0, &y0, &z0, 0);
+        *(f32 *)((char *)setup + 8) = x0 + yoff;
+        *(f32 *)((char *)setup + 0xc) = y0 + yoff;
+        *(f32 *)((char *)setup + 0x10) = z0 + yoff;
+        setup = Obj_SetupObject(setup, 5, -1, -1, 0);
+        if (setup != 0) {
+            ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 0, &x0, &y0, &z0, 0);
+            ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 1, &x1, &y1, &z1, 0);
+            dx = x0 - x1;
+            dy = y0 - y1;
+            dz = z0 - z1;
+            len = sqrtf(dx * dx + dy * dy + dz * dz);
+            dx = dx / len;
+            dy = dy / len;
+            dz = dz / len;
+            *(s16 *)((char *)setup + 0) = (s16)getAngle(dx, dz);
+            *(s16 *)((char *)setup + 2) = (s16)(-getAngle(dy, sqrtf(dx * dx + dz * dz)));
+            *(f32 *)((char *)setup + 8) = *(f32 *)((char *)setup + 8) * lbl_803E7EF0;
+            arwprojectile_placeForward(setup, lbl_803E7ED8);
+            arwprojectile_setLifetime(setup, 0x32);
+            if (slot == 1) {
+                arwprojectile_createLinkedEffect(setup, 1);
+            }
+        }
+    }
+}
+
+void fn_802AED2C(int obj, int state, int p3)
+{
+    u16 sound;
+    u32 b;
+
+    if (*(u8 *)((char *)state + 0x8b3) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0x47f, lbl_803E7EA4, 0);
+    } else {
+        ObjAnim_SetCurrentMove(obj, 0x47b, lbl_803E7EA4, 0);
+    }
+    *(f32 *)((char *)p3 + 0x2a0) = lbl_803E7F20;
+    *(s16 *)((char *)state + 0x478) = *(s16 *)((char *)state + 0x484);
+    *(f32 *)((char *)state + 0x844) = lbl_803E7EA4;
+    ((ByteFlags *)((char *)state + 0x3f0))->b10 = 1;
+    ((ByteFlags *)((char *)state + 0x3f0))->b80 = 0;
+    staffFn_80170380(lbl_803DE450, 2);
+    ((ByteFlags *)((char *)state + 0x3f0))->b02 = 0;
+    *(int *)((char *)state + 0x360) |= 0x800000;
+    ObjHits_SyncObjectPositionIfDirty(obj);
+    ((ByteFlags *)((char *)state + 0x3f0))->b08 = 0;
+    ((ByteFlags *)((char *)state + 0x3f0))->b04 = 0;
+    *(u8 *)((char *)state + 0x40d) = 0;
+    ((ByteFlags *)((char *)state + 0x3f0))->b40 = 0;
+    *(int *)((char *)state + 0x488) = 0;
+    *(int *)((char *)state + 0x47c) = 0;
+    *(int *)((char *)state + 0x48c) = 0;
+    *(int *)((char *)state + 0x480) = 0;
+    lbl_803DC66C = 4;
+    *(u8 *)((char *)state + 0x800) = 0;
+    if (*(void **)((char *)state + 0x7f8) != NULL) {
+        short id = *(s16 *)((char *)*(int *)((char *)state + 0x7f8) + 0x46);
+        if (id == 0x3cf || id == 0x662) {
+            objThrowFn_80182504(*(int *)((char *)state + 0x7f8));
+        } else {
+            objSaveFn_800ea774(*(int *)((char *)state + 0x7f8));
+        }
+        *(s16 *)((char *)*(int *)((char *)state + 0x7f8) + 6) &= ~0x4000;
+        *(int *)((char *)*(int *)((char *)state + 0x7f8) + 0xf8) = 0;
+        *(int *)((char *)state + 0x7f8) = 0;
+    }
+    b = (*(u8 *)((char *)state + 0x3f1) >> 5) & 1;
+    if (b != 0) {
+        short t = *(s16 *)((char *)obj + 0);
+        *(s16 *)((char *)state + 0x484) = t;
+        *(s16 *)((char *)state + 0x478) = t;
+        *(int *)((char *)state + 0x494) = t;
+        *(f32 *)((char *)state + 0x284) = lbl_803E7EA4;
+    }
+    ((ByteFlags *)((char *)state + 0x3f1))->b20 = 0;
+    if (*(f32 *)((char *)state + 0x838) > lbl_803E7EE0) {
+        if (*(s16 *)((char *)state + 0x81a) == 0) {
+            sound = 0x427;
+        } else {
+            sound = 0x427;
+        }
+        Sfx_PlayFromObject(obj, sound);
+    } else {
+        if (*(s16 *)((char *)state + 0x81a) == 0) {
+            sound = 0x3ce;
+        } else {
+            sound = 0x2e;
+        }
+        Sfx_PlayFromObject(obj, sound);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802B7B0C(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        Sfx_PlayFromObject(obj, *(u16 *)((char *)*(int *)((char *)inner + 0x40c) + 0x2a));
+        if (randomGetRange(0, 1) != 0) {
+            *(s16 *)((char *)obj + 0) += 0x8AA9;
+        } else {
+            *(s16 *)((char *)obj + 0) -= 0x8AA9;
+        }
+        ObjAnim_SetCurrentMove(obj, 0x23, lbl_803E8180, 0);
+    }
+    *(f32 *)((char *)state + 0x2a0) = lbl_803E81A8;
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
