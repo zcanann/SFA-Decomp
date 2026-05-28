@@ -6348,6 +6348,7 @@ extern s16 lbl_80332F2C[];
 extern s16 lbl_80332F48[];
 extern int *gPlayerInterface;
 extern int *gObjectTriggerInterface;
+extern int *gGameUIInterface;
 extern f32 lbl_803E7F08;
 extern f32 lbl_803E7FD8;
 extern f32 lbl_803E801C;
@@ -6429,6 +6430,7 @@ extern f32 lbl_803E7F44;
 extern f32 lbl_803E7F48;
 extern f32 lbl_803E7EF8;
 extern int lbl_803DE434;
+extern s16 lbl_803DE4B2;
 extern void fn_8018A20C(int a, int b);
 extern void fn_80189F5C(int a, void *b, void *c);
 extern f32 lbl_803E812C;
@@ -9694,6 +9696,139 @@ int fn_802B9FC0(int obj, int state)
         }
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802BA1D4(int obj, int state)
+{
+    int inner;
+    f32 fz;
+
+    fz = lbl_803E8234;
+    *(f32 *)((char *)state + 0x294) = fz;
+    *(f32 *)((char *)state + 0x284) = fz;
+    *(f32 *)((char *)state + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(u32 *)((char *)state) |= 0x200000;
+    inner = *(int *)((char *)obj + 0xb8);
+    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    *(u8 *)((char *)obj + 0xe4) = GameBit_Get(0x170) != 0;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
+        if (*(s16 *)((char *)obj + 0xa0) != 0x13) {
+            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E8234, 0);
+        }
+    }
+    if (*(u8 *)((char *)obj + 0xaf) & 4) {
+        if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x170) != 0) {
+            u8 bit170 = GameBit_Get(0x170);
+            if (GameBit_Get(0x28) == 0) {
+                switch (bit170) {
+                case 1:
+                    GameBit_Set(0x28, 1);
+                    *(u8 *)((char *)inner + 0xa8d) = 2;
+                    break;
+                case 2:
+                    *(u8 *)((char *)inner + 0xa8d) = 4;
+                    GameBit_Set(0x16f, 1);
+                    break;
+                }
+            } else {
+                *(u8 *)((char *)inner + 0xa8d) = 4;
+                GameBit_Set(0x16f, 1);
+            }
+            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                *(u8 *)((char *)inner + 0xa8d), obj, -1);
+            GameBit_Set(0x170, GameBit_Get(0x170) - bit170);
+            buttonDisable(0, 0x100);
+        } else {
+            if (*(u8 *)((char *)obj + 0xaf) & 1) {
+                if (GameBit_Get(0x28) != 0) {
+                    *(u8 *)((char *)inner + 0xa8d) = 3;
+                } else {
+                    *(u8 *)((char *)inner + 0xa8d) = 1;
+                }
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                    *(u8 *)((char *)inner + 0xa8d), obj, -1);
+                buttonDisable(0, 0x100);
+            }
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802AB38C(int a, int b, int c)
+{
+    switch (c) {
+    case 0x2d:
+        lbl_803DE4B2 = 0x2d;
+        break;
+    case 0x958:
+        lbl_803DE4B2 = 0x958;
+        break;
+    case 0x5ce:
+        lbl_803DE4B2 = 0x5ce;
+        break;
+    case 0x957:
+        lbl_803DE434 = *(int *)((char *)b + 0x4b8);
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(a, b, 0x32);
+        *(int *)((char *)b + 0x304) = (int)fn_802994A4;
+        break;
+    case 0x107:
+    case 0xc55:
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(a, b, 0x36);
+        *(int *)((char *)b + 0x304) = (int)fn_802985AC;
+        break;
+    case 0x40:
+        *(f32 *)((char *)b + 0x854) = lbl_803E7EDC;
+        {
+            int sub = *(int *)((char *)*(int *)((char *)a + 0xb8) + 0x35c);
+            int v = *(s16 *)((char *)sub + 0x4) - 0xa;
+            if (v < 0) {
+                v = 0;
+            } else if (v > *(s16 *)((char *)sub + 0x6)) {
+                v = *(s16 *)((char *)sub + 0x6);
+            }
+            *(s16 *)((char *)sub + 0x4) = v;
+        }
+        fn_80295E90(a, 1);
+        Sfx_PlayFromObject(a, 0x209);
+        break;
+    case 0x5bd:
+        c = -1;
+        {
+            int sub = *(int *)((char *)*(int *)((char *)a + 0xb8) + 0x35c);
+            int v = *(s16 *)((char *)sub + 0x4) - 0x14;
+            if (v < 0) {
+                v = 0;
+            } else if (v > *(s16 *)((char *)sub + 0x6)) {
+                v = *(s16 *)((char *)sub + 0x6);
+            }
+            *(s16 *)((char *)sub + 0x4) = v;
+        }
+        {
+            void *cam = (*(void *(*)(void))(*(int *)(*gCameraInterface + 0x40)))();
+            if (cam != NULL) {
+                s16 id = *(s16 *)((char *)cam + 0x46);
+                if (id == 0x414 || id == 0x4a9) {
+                    c = 0x5bd;
+                    getAngle(*(f32 *)((char *)*(int *)((char *)cam + 0x74)) - *(f32 *)((char *)a + 0xc),
+                             *(f32 *)((char *)*(int *)((char *)cam + 0x74) + 0x8) - *(f32 *)((char *)a + 0x14));
+                }
+            }
+        }
+        break;
+    }
+    *(s16 *)((char *)b + 0x80a) = c;
 }
 #pragma peephole reset
 #pragma scheduling reset
