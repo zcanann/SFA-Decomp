@@ -8376,6 +8376,29 @@ void mtx44Transpose(f32 *src, f32 *dst) {
 }
 
 extern void setMatrixFromObjectPos(f32 *mtx, void *obj);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
+
+void model_multMtxs(u8 *model, f32 *out) {
+    u8 *hdr = *(u8 **)model;
+    int i;
+    for (i = 0; i < hdr[0xf3]; i++) {
+        u8 *h = *(u8 **)model;
+        u32 cnt = h[0xf3];
+        int lim;
+        int j = i;
+        f32 *base;
+        if (cnt != 0) {
+            lim = cnt + h[0xf4];
+        } else {
+            lim = 1;
+        }
+        if (j >= lim) {
+            j = 0;
+        }
+        base = *(f32 **)(model + 0xc + (*(u16 *)(model + 0x18) & 1) * 4);
+        PSMTXConcat(out, base + j * 0x10, base + j * 0x10);
+    }
+}
 
 void setMatrixFromObjectTransposed(void *obj, f32 *out) {
     f32 m[16];
