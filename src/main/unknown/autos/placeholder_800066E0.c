@@ -9758,3 +9758,298 @@ void gameTextAppendStr(char* str, int arg2)
         e[2] = arg2;
     }
 }
+
+extern uint mmSetFreeDelay(uint delay);
+extern char sPoolDataMLoadedCallbackLoadError[];
+
+/*
+ * Function: poolDataMLoadedCallback
+ * EN v1.0 Address: 0x800094E4
+ * EN v1.0 Size: 176b
+ */
+void poolDataMLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sPoolDataMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x8;
+        gAudioCompletedLoadFlags |= 0x8;
+    }
+}
+
+extern char sPoolDataSLoadedCallbackLoadError[];
+extern char sProjectDataMLoadedCallbackLoadError[];
+extern char sProjectDataSLoadedCallbackLoadError[];
+extern char sSampleBufferMLoadedCallbackLoadError[];
+extern char sSampleBufferSLoadedCallbackLoadError[];
+extern char sSampleDirectoryMLoadedCallbackLoadError[];
+extern char sSampleDirectorySLoadedCallbackLoadError[];
+extern char sSfxTriggersLoadedCallbackLoadError[];
+extern char sMusicTriggersLoadedCallbackLoadError[];
+extern char sStreamsLoadedCallbackLoadError[];
+
+/*
+ * Function: poolDataSLoadedCallback
+ * EN v1.0 Address: 0x80009210
+ * EN v1.0 Size: 176b
+ */
+void poolDataSLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sPoolDataSLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x80;
+        gAudioCompletedLoadFlags |= 0x80;
+    }
+}
+
+/*
+ * Function: projectDataMLoadedCallback
+ * EN v1.0 Address: 0x80009420
+ * EN v1.0 Size: 176b
+ */
+void projectDataMLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sProjectDataMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x10;
+        gAudioCompletedLoadFlags |= 0x10;
+    }
+}
+
+/*
+ * Function: projectDataSLoadedCallback
+ * EN v1.0 Address: 0x80009160
+ * EN v1.0 Size: 176b
+ */
+void projectDataSLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sProjectDataSLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x100;
+        gAudioCompletedLoadFlags |= 0x100;
+    }
+}
+
+/*
+ * Function: sampleBufferMLoadedCallback
+ * EN v1.0 Address: 0x800092D4
+ * EN v1.0 Size: 172b
+ */
+void sampleBufferMLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSampleBufferMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x40;
+        gAudioCompletedLoadFlags |= 0x40;
+    }
+}
+
+/*
+ * Function: sampleBufferSLoadedCallback
+ * EN v1.0 Address: 0x80009000
+ * EN v1.0 Size: 176b
+ */
+void sampleBufferSLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSampleBufferSLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x400;
+        gAudioCompletedLoadFlags |= 0x400;
+    }
+}
+
+/*
+ * Function: sampleDirectoryMLoadedCallback
+ * EN v1.0 Address: 0x80009384
+ * EN v1.0 Size: 176b
+ */
+void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSampleDirectoryMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x20;
+        gAudioCompletedLoadFlags |= 0x20;
+    }
+}
+
+/*
+ * Function: sampleDirectorySLoadedCallback
+ * EN v1.0 Address: 0x800090C4
+ * EN v1.0 Size: 176b
+ */
+void sampleDirectorySLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSampleDirectorySLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x200;
+        gAudioCompletedLoadFlags |= 0x200;
+    }
+}
+
+/*
+ * Function: sfxTriggersLoadedCallback
+ * EN v1.0 Address: 0x800096AC
+ * EN v1.0 Size: 176b
+ */
+void sfxTriggersLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSfxTriggersLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x2;
+        gAudioCompletedLoadFlags |= 0x2;
+    }
+}
+
+/*
+ * Function: musicTriggersLoadedCallback
+ * EN v1.0 Address: 0x8000977C
+ * EN v1.0 Size: 176b
+ */
+void musicTriggersLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sMusicTriggersLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x1;
+        gAudioCompletedLoadFlags |= 0x1;
+    }
+}
+
+typedef struct {
+    u8 pad[0x15];
+    u8 flag;
+} StreamEntry;
+
+extern StreamEntry* gStreamsData;
+extern int gStreamsCount;
+
+/*
+ * Function: streamsLoadedCallback
+ * EN v1.0 Address: 0x80009594
+ * EN v1.0 Size: 276b
+ */
+void streamsLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sStreamsLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        StreamEntry* s;
+        int count;
+        int i;
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x4;
+        gAudioCompletedLoadFlags |= 0x4;
+        s = gStreamsData;
+        count = gStreamsCount;
+        for (i = 0; i < count; i++) {
+            s->flag = 0;
+            s++;
+        }
+    }
+}
