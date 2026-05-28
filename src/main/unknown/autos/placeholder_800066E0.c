@@ -10257,3 +10257,56 @@ void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, i
     *(s16*)(box + 0x18) = savedX;
     *(s16*)(box + 0x1a) = savedY;
 }
+
+/*
+ * Function: gameTextMeasureFn_800163c4
+ * EN v1.0 Address: 0x800163C4
+ * EN v1.0 Size: 236b
+ */
+void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+{
+    u8* box = &lbl_802C7400[boxIdx * 0x20];
+    s16 savedX = *(s16*)(box + 0x18);
+    s16 savedY = *(s16*)(box + 0x1a);
+    lbl_803DC9BC = 1;
+    lbl_803DC9B0 = 0x7FFFFFFF;
+    lbl_803DC9AC = 0;
+    lbl_803DC9B8 = 0x7FFFFFFF;
+    lbl_803DC9B4 = 0;
+    *(s16*)(box + 0x18) = (s16)x;
+    *(s16*)(box + 0x1a) = (s16)y;
+    gameTextRenderStrs(str, boxIdx);
+    lbl_803DC9BC = 0;
+    if (outMinX != NULL) {
+        *outMinX = lbl_803DC9B8 >> 2;
+    }
+    if (outMinY != NULL) {
+        *outMinY = lbl_803DC9B4 >> 2;
+    }
+    if (outMaxX != NULL) {
+        *outMaxX = lbl_803DC9B0 >> 2;
+    }
+    if (outMaxY != NULL) {
+        *outMaxY = lbl_803DC9AC >> 2;
+    }
+    *(s16*)(box + 0x18) = savedX;
+    *(s16*)(box + 0x1a) = savedY;
+}
+
+/*
+ * Function: Sfx_PlayFromObjectLimited
+ * EN v1.0 Address: 0x8000B4D0
+ * EN v1.0 Size: 168b
+ */
+u32 Sfx_PlayFromObjectLimited(u32 obj, u32 sfxId, int limit)
+{
+    SfxObjectChannel* ch = Sfx_FindObjectChannel(0, 0, sfxId, 3);
+    if (ch != NULL && (int)gSfxObjectChannelMatchCount > limit) {
+        sndFXKeyOff(*(s32*)ch);
+        *(s32*)ch = -1;
+    }
+    if ((int)gSfxObjectChannelMatchCount < limit) {
+        Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
+    }
+    return gSfxObjectChannelMatchCount;
+}
