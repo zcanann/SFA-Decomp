@@ -6259,6 +6259,86 @@ int fn_802A2E8C(int obj, int p2)
     return 0;
 }
 
+extern void Obj_TransformWorldPointToLocal(f32 *outX, f32 *outY, f32 *outZ, int xform, f32 x, f32 y, f32 z);
+extern void objHitDetectFn_80062e84(int obj, int a, int b);
+extern int getAngle(f32 a, f32 b);
+extern s16 lbl_80332EF0[];
+extern s16 lbl_803DC6A0;
+extern f32 lbl_803E8038;
+extern f32 lbl_803E7E90;
+extern f32 lbl_803E7F10;
+
+int fn_802A3F24(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(s16 *)((char *)state + 0x278) = 9;
+        *(int *)((char *)inner + 0x898) = 0;
+    }
+    *(int *)((char *)inner + 0x360) &= ~2;
+    *(int *)((char *)inner + 0x360) |= 0x2000;
+    *(int *)((char *)state + 4) |= 0x100000;
+    fz = lbl_803E7EA4;
+    *(f32 *)((char *)state + 0x280) = fz;
+    *(f32 *)((char *)state + 0x284) = fz;
+    *(int *)((char *)state + 0) |= 0x200000;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(int *)((char *)state + 4) |= 0x8000000;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    if (*(s16 *)((char *)obj + 0xa0) == 0x419) {
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ObjAnim_SetCurrentMove(obj, lbl_80332EF0[6], fz, 0);
+            lbl_803DC6A0 = 6;
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E8038;
+            fn_802AB5A4(obj, inner + 4, 5);
+            *(int *)((char *)state + 0x308) = 0;
+            return 0xd;
+        }
+    } else {
+        f32 k;
+        ObjAnim_SetCurrentMove(obj, 0x419, fz, 1);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7E90;
+        *(s16 *)((char *)inner + 0x478) =
+            (s16)getAngle(*(f32 *)((char *)inner + 0x5c4), *(f32 *)((char *)inner + 0x5cc));
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        k = lbl_803E7F10;
+        *(f32 *)((char *)obj + 0x18) =
+            k * *(f32 *)((char *)inner + 0x5c4) + *(f32 *)((char *)inner + 0x5d4);
+        *(f32 *)((char *)obj + 0x1c) =
+            *(f32 *)((char *)inner + 0x5ac) - *(f32 *)((char *)inner + 0x874);
+        *(f32 *)((char *)obj + 0x20) =
+            k * *(f32 *)((char *)inner + 0x5cc) + *(f32 *)((char *)inner + 0x5dc);
+        Obj_TransformWorldPointToLocal(
+            (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14),
+            *(int *)((char *)obj + 0x30),
+            *(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c), *(f32 *)((char *)obj + 0x20));
+        objHitDetectFn_80062e84(obj, *(int *)((char *)inner + 0x4c4), 1);
+        if (*(void **)((char *)inner + 0x4c4) != NULL) {
+            Obj_TransformWorldPointToLocal(
+                (f32 *)((char *)inner + 0x5d4), (f32 *)((char *)inner + 0x5d8), (f32 *)((char *)inner + 0x5dc),
+                *(int *)((char *)inner + 0x4c4),
+                *(f32 *)((char *)inner + 0x5d4), *(f32 *)((char *)inner + 0x5d8), *(f32 *)((char *)inner + 0x5dc));
+            Obj_TransformWorldPointToLocal(
+                (f32 *)((char *)inner + 0x5ec), (f32 *)((char *)inner + 0x5f0), (f32 *)((char *)inner + 0x5f4),
+                *(int *)((char *)inner + 0x4c4),
+                *(f32 *)((char *)inner + 0x5ec), *(f32 *)((char *)inner + 0x5f0), *(f32 *)((char *)inner + 0x5f4));
+            Obj_TransformWorldPointToLocal(
+                (f32 *)((char *)inner + 0x5f8), (f32 *)((char *)inner + 0x5fc), (f32 *)((char *)inner + 0x600),
+                *(int *)((char *)inner + 0x4c4),
+                *(f32 *)((char *)inner + 0x5f8), *(f32 *)((char *)inner + 0x5fc), *(f32 *)((char *)inner + 0x600));
+            *(f32 *)((char *)inner + 0x5ac) =
+                *(f32 *)((char *)inner + 0x5ac) - *(f32 *)((char *)*(int *)((char *)inner + 0x4c4) + 0x10);
+            *(f32 *)((char *)inner + 0x5b0) =
+                *(f32 *)((char *)inner + 0x5b0) - *(f32 *)((char *)*(int *)((char *)inner + 0x4c4) + 0x10);
+            *(u8 *)((char *)inner + 0x609) = 0;
+        }
+    }
+    fn_802AB5A4(obj, inner + 4, 5);
+    return 0;
+}
+
 int fn_802977A8(int obj, int state)
 {
     if (*(s8 *)((char *)state + 0x27a) != 0) {
