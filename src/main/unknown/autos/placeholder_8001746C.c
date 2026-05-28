@@ -8173,6 +8173,30 @@ int mmGetRegionForPtr(u8 *ptr) {
     return -1;
 }
 
+typedef struct {
+    void *key;
+    int size;
+    u8 _8[4];
+    s16 next;
+    u8 _e[0x1c - 0xe];
+} HeapItem;
+
+int getHeapItemSize(void *ptr) {
+    int i = mmGetRegionForPtr(ptr);
+    HeapItem *items = (HeapItem *)gMmRegionTable[i].start;
+    int idx = 0;
+    for (;;) {
+        HeapItem *item = &items[idx];
+        if (item->key == ptr) {
+            return item->size;
+        }
+        idx = item->next;
+        if (idx == -1) {
+            return -1;
+        }
+    }
+}
+
 void *AtomicSList_Pop(void **list) {
     int intr = OSDisableInterrupts();
     void *head = *list;
