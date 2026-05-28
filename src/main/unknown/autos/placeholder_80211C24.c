@@ -1987,12 +1987,14 @@ void ktlazerwall_free(int obj) {
     }
 }
 
+#pragma dont_inline on
 void ktrexlevel_clearPathGameBits(void) {
     GameBit_Set(0x54a, 0);
     GameBit_Set(0x54e, 0);
     GameBit_Set(0x552, 0);
     GameBit_Set(0x556, 0);
 }
+#pragma dont_inline reset
 
 void hightop_free(int obj) {
     void *ui;
@@ -4364,6 +4366,59 @@ int ktrex_stateHandlerB02(int obj, int runtime) {
         *(s16 *)obj = lbl_803E681C * *(f32 *)((char *)obj + 0x98) + (f32)(int)*(s16 *)((char *)gKTRexState + 0xf8);
     } else {
         *(s16 *)obj = (f32)(int)*(s16 *)((char *)gKTRexState + 0xf8) - lbl_803E681C * *(f32 *)((char *)obj + 0x98);
+    }
+    return 0;
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+int ktrex_stateHandlerA03(int obj, int runtime) {
+    int phase;
+    f32 f4;
+    f32 f5;
+    int popped;
+    if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
+        (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 2);
+        return 0;
+    }
+    if ((s8)*(u8 *)((char *)runtime + 0x346) != 0) {
+        phase = (*(u16 *)((char *)gKTRexState + 0xfa) >> 1) & 3;
+        f5 = ((f32 *)*(int *)((char *)gKTRexState + 0xdc))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd0))[phase];
+        f4 = ((f32 *)*(int *)((char *)gKTRexState + 0xe4))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase];
+        if (__fabs(f5) > __fabs(f4)) {
+            *(f32 *)((char *)gKTRexState + 8) =
+                (*(f32 *)((char *)obj + 0xc) - ((f32 *)*(int *)((char *)gKTRexState + 0xd0))[phase]) / f5;
+        } else {
+            *(f32 *)((char *)gKTRexState + 8) =
+                (*(f32 *)((char *)obj + 0x14) - ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase]) / f4;
+        }
+        popped = 0;
+        if (Stack_IsEmpty(*(int *)gKTRexState) == 0) {
+            Stack_Pop(*(int *)gKTRexState, &popped);
+        }
+        return popped + 1;
+    }
+    return 0;
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+int ktrex_stateHandlerA07(int obj, int runtime) {
+    if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
+        (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 6);
+        *(u8 *)((char *)obj + 0xaf) &= ~8;
+        *(u8 *)((char *)gKTRexState + 0x101) += 1;
+        ktrexlevel_clearPathGameBits();
+        GameBit_Set(1394, *(u8 *)((char *)gKTRexState + 0x101));
+        *(u16 *)((char *)gKTRexState + 0xfa) |= 0x10;
+        *(u16 *)((char *)gKTRexState + 0xfa) &= ~8;
+        Music_Trigger(148, 0);
+        Music_Trigger(40, 0);
+        Music_Trigger(147, 1);
+        return 0;
+    }
+    if ((s8)*(u8 *)((char *)runtime + 0x346) != 0 || (*(u16 *)((char *)gKTRexState + 0xfa) & 8) != 0) {
+        return 9;
     }
     return 0;
 }
