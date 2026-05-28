@@ -6302,6 +6302,8 @@ int fn_8029B994(int obj, int state)
 
 extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern void ObjModel_SampleJointTransform(int model, int a, int b, f32 blend, f32 frame, void *out1, void *out2);
+extern void fn_8014C540(int obj, void *a, void *b, void *c);
+extern f32 lbl_803E8150;
 extern f32 lbl_803DAF88[];
 extern s16 lbl_80332F2C[];
 extern s16 lbl_80332F48[];
@@ -8972,6 +8974,51 @@ void fn_802AABE4(int obj)
         outp++;
     }
     ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 0, 0);
+}
+
+void fn_802B4A9C(int obj, int sA, int sB)
+{
+    int *target = (int *)(*(int (*)(int))(*(int *)(*gCameraInterface + 0x3c)))(*gCameraInterface);
+    u32 v = (*(u8 *)((char *)sA + 0x3f4) >> 6) & 1;
+
+    if (v != 0) {
+        if ((*(u32 *)((char *)sA + 0x360) & 0x10) != 0) {
+            if (lbl_803DE44C != NULL && v != 0) {
+                *(u8 *)((char *)sA + 0x8b4) = 2;
+                ((ByteFlags *)((char *)sA + 0x3f4))->b08 = 0;
+            }
+            *(u8 *)((char *)sB + 0x349) = 1;
+            if (target != NULL) {
+                *(int **)((char *)sB + 0x2d0) = target;
+            } else {
+                f32 dist = lbl_803E8150;
+                *(int *)((char *)sB + 0x2d0) = ObjGroup_FindNearestObject(3, obj, &dist);
+            }
+        } else {
+            if (target != NULL) {
+                if (*(int **)((char *)sB + 0x2d0) != target) {
+                    *(u8 *)((char *)sB + 0x349) = 0;
+                    if ((*(u8 *)((char *)*(int *)((char *)target + 0x78) + 4) & 0xf) == 1) {
+                        if (lbl_803DE44C != NULL && ((*(u8 *)((char *)sA + 0x3f4) >> 6) & 1) != 0) {
+                            *(u8 *)((char *)sA + 0x8b4) = 2;
+                            ((ByteFlags *)((char *)sA + 0x3f4))->b08 = 0;
+                        }
+                        *(u8 *)((char *)sB + 0x349) = 1;
+                    }
+                }
+                *(int **)((char *)sB + 0x2d0) = target;
+            } else {
+                *(int *)((char *)sB + 0x2d0) = 0;
+                *(u8 *)((char *)sB + 0x349) = 0;
+            }
+        }
+        if (*(int **)((char *)sB + 0x2d0) != NULL) {
+            fn_8014C540(*(int *)((char *)sB + 0x2d0), (char *)sA + 0x884, (char *)sA + 0x888,
+                        (char *)sA + 0x88c);
+        } else {
+            *(s16 *)((char *)sA + 0x80e) = -1;
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
