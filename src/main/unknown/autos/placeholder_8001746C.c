@@ -8559,3 +8559,18 @@ void fn_8001D994(u8 *obj, f32 a, f32 b) {
                     lbl_803DE760 - *(f32 *)(obj + 0x10c) * lbl_803DE790);
 }
 #pragma pop
+
+extern void ObjModel_SetBlendChannelTargets(u8 *model, int ch, int a, int b, f32 w, int c);
+extern f32 lbl_803DE828;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjModel_ClearBlendChannels(u8 *model) {
+    if (*(void **)(*(u8 **)model + 0xdc) != NULL) {
+        ObjModel_SetBlendChannelTargets(model, 0, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets(model, 1, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets(model, 2, -1, -1, lbl_803DE828, 7);
+    }
+}
+#pragma pop
