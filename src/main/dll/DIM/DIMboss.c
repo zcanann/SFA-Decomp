@@ -112,6 +112,7 @@ extern f32 lbl_803E58E8;
 extern f32 lbl_803E58EC;
 extern f32 lbl_803E4C70;
 extern undefined4 gDIMbossRenderMtx[];
+extern u8 lbl_803AC970[];
 extern undefined4 gDIMbossAnimController[];
 extern undefined4 lbl_802C2338[];
 extern void (*gDIMbossAnimTable[])(void);
@@ -130,6 +131,11 @@ extern f32 lbl_803E4C54;
 extern f32 lbl_803E4C78;
 extern char sDIMBossFreeingAssetsForDIMBoss[];
 extern char sDIMBossLoadingAssetsForDIMTop[];
+
+#define gDIMbossAnimScratchBase lbl_803AC970
+#define DIMBOSS_ANIM_CONTROLLER_OFFSET 0x6C
+#define DIMBOSS_ANIM_TABLE_OFFSET 0x690
+#define DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET 0x6A8
 
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMbossRuntime *runtime,
                                    int param_4,int param_5,int param_6,int param_7,float scale);
@@ -163,6 +169,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
   DIMbossRuntime *runtime;
   DIMbossConfig *config;
   DIMbossTopState *topState;
+  u8 *animScratchBase;
   byte hitReactMode;
   u8 loadWaitStarted;
   int updateResult;
@@ -175,21 +182,23 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
   int eventIndex;
   int baddieResult;
   
+  animScratchBase = gDIMbossAnimScratchBase;
   runtime = obj->runtime;
   config = obj->config;
-  topState = runtime->topState;
   updateResult = 0;
   Obj_GetPlayerObject();
+  topState = runtime->topState;
   runtime->phase = DIMBOSS_PHASE_START;
   (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,5,0);
   if (obj->renderPause != 0) {
     return 0;
   }
 
-  puVar7 = gDIMbossAnimController;
+  puVar7 = (undefined4 *)(animScratchBase + DIMBOSS_ANIM_CONTROLLER_OFFSET);
   puVar8 = (undefined4 *)0x1;
   puVar9 = (undefined4 *)0x1;
-  dll_2E_func07(obj,animUpdate,(float *)gDIMbossAnimController,1,1);
+  dll_2E_func07(obj,animUpdate,
+                (float *)(animScratchBase + DIMBOSS_ANIM_CONTROLLER_OFFSET),1,1);
   for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
     switch(animUpdate->eventIds[eventIndex]) {
     case DIMBOSS_EVENT_SET_SEQUENCE_FLAG:
@@ -346,8 +355,9 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
     hitReactMode = runtime->hitReactMode;
     if (hitReactMode == 1) {
       baddieResult = (*(code *)(*gBaddieControlInterface + 0x34))
-                        (obj,animUpdate,runtime,gDIMbossHitDetectAnimTable,
-                         gDIMbossAnimTable,0);
+                        (obj,animUpdate,runtime,
+                         animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
+                         animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET,0);
       if (baddieResult != 0) {
         puVar7 = (undefined4 *)0x1;
         puVar8 = (undefined4 *)*gBaddieControlInterface;
@@ -361,10 +371,10 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       fn_801BC7E4(obj,animUpdate,(int)runtime,(int)runtime);
       if (runtime->hitReactMode == 1) {
         *(undefined2 *)((undefined4 *)runtime + 0x9c) = 0;
-        puVar7 = (undefined4 *)gDIMbossHitDetectAnimTable;
-        puVar8 = (undefined4 *)gDIMbossAnimTable;
+        puVar7 = (undefined4 *)(animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET);
+        puVar8 = (undefined4 *)(animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
         puVar9 = (undefined4 *)*(int *)gPlayerInterface;
-        (*(code *)puVar9[2])(obj,runtime);
+        (*(code *)puVar9[2])(obj,runtime,lbl_803E4C44,lbl_803E4C44,puVar7,puVar8);
         animUpdate->sequenceEventActive = 0;
       }
     }
