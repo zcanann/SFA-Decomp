@@ -10553,3 +10553,39 @@ int utf8GetNextChar(u8* str, int* outLen)
     *outLen = cls + 1;
     return acc - lbl_802C6F98[cls];
 }
+
+typedef struct {
+    s16 f0;
+    s16 f2;
+    s16 f4;
+    s16 pad6;
+    u16 f8;
+} VoxBoxArg;
+
+extern void voxmapsFn_80010ff4(int a1, VoxBoxArg* a2, int a3, u16 count, s16* box);
+
+/*
+ * Function: fn_800118EC
+ * EN v1.0 Address: 0x800118EC
+ * EN v1.0 Size: 272b
+ */
+void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
+{
+    s16 box[3];
+    u16 count = a2->f8 + 1;
+    box[0] = a2->f0;
+    box[1] = a2->f2;
+    box[2] = a2->f4;
+    box[0] = a2->f0 + 2;
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    box[0] = box[0] - 4;
+    box[1] = a2->f2;
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    box[0] = box[0] + 2;
+    box[2] = box[2] + 2;
+    box[1] = a2->f2;
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    box[2] = box[2] - 4;
+    box[1] = a2->f2;
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+}
