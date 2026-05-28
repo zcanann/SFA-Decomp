@@ -409,6 +409,15 @@ inlined 5 `fn_802A9xxx` siblings, all at 0%; wrapping the 5 callees lifted every
 one to 99-100%). Inserting a new function *after* its callees' definitions in
 the file also avoids forward-decl churn.
 
+**Call-set diff = a systematic detector for inline victims.** Instead of
+guessing which leaf inlined, diff the partial's CALL SET against target
+(`tools/function_objdump.py --diff`): any callee that appears as a `bl` in
+*target* but NOT in your output has been auto-inlined into your function. Wrap
+that leaf's definition in `#pragma dont_inline on` — fixes the caller AND lifts
+the leaf standalone. Catches hidden ones a size-check misses (a small leaf
+inlined into a big caller barely moves the symbol size). On inline-heavy TUs
+(placeholder_800066E0), run this check first on any partial <90%.
+
 ## `for (i=0; i<n; i++) { use(*p); p++; }` vs `*p++`
 
 MWCC emits a `bdnz` countdown loop only when the increment and the
