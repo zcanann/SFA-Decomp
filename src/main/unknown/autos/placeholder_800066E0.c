@@ -1085,6 +1085,61 @@ void FUN_80006728(undefined8 param_1,double param_2,double param_3,undefined8 pa
 {
 }
 
+typedef struct EnvfxActEntry {
+    u8 pad0[0x2a];
+    u16 field_2a;
+    u8 pad1[0x30];
+    u8 kind;
+    u8 pad2[3];
+} EnvfxActEntry;
+
+extern int *gNewCloudsInterface;
+extern int *gSky2Interface;
+extern int *gSHthorntailAnimationInterface;
+extern int *gCloudActionInterface;
+
+int getEnvfxActImmediately(int a, int b, u16 idx, int d)
+{
+    u8 raw[0x80];
+    EnvfxActEntry *e = (EnvfxActEntry *)(((u32)raw + 0x1f) & ~0x1f);
+
+    getTabEntry(e, 0x57, idx * 0x60, 0x60);
+    if (e != NULL) {
+        if (e->kind <= 2 || e->kind == 4) {
+            (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gNewCloudsInterface + 0x4)))(a, b, e, d);
+        } else if (e->kind == 3) {
+            e->field_2a = 0;
+            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gSky2Interface + 0x4)))(a, b, e, d, idx);
+        } else if (e->kind == 5) {
+            e->field_2a = 0;
+            (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gSHthorntailAnimationInterface + 0x4)))(a, b, e, d);
+        } else if (e->kind == 6) {
+            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gCloudActionInterface + 0x4)))(a, b, e, d, idx);
+        }
+    }
+    return 0;
+}
+
+int getEnvfxAct(int a, int b, u16 idx, int d)
+{
+    u8 raw[0x80];
+    EnvfxActEntry *e = (EnvfxActEntry *)(((u32)raw + 0x1f) & ~0x1f);
+
+    getTabEntry(e, 0x57, idx * 0x60, 0x60);
+    if (e != NULL) {
+        if (e->kind <= 2 || e->kind == 4) {
+            (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gNewCloudsInterface + 0x4)))(a, b, e, d);
+        } else if (e->kind == 3) {
+            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gSky2Interface + 0x4)))(a, b, e, d, idx);
+        } else if (e->kind == 5) {
+            (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gSHthorntailAnimationInterface + 0x4)))(a, b, e, d);
+        } else if (e->kind == 6) {
+            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gCloudActionInterface + 0x4)))(a, b, e, d, idx);
+        }
+    }
+    return 0;
+}
+
 /*
  * --INFO--
  *
