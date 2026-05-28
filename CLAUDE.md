@@ -409,6 +409,52 @@ dereference are separate statements. `*p++` merges them and the loop loses
 the tight `lwz; addi; cmpw; b` body that target uses. Keep `*p` and `p++`
 on separate lines inside the loop body.
 
+## Graduating a `placeholder_XXXX` catch-all into real DLL files
+
+The `unknown/autos/placeholder_XXXXXXXX` units are dtk auto-splits that bundle
+several real per-object DLL TUs into one file (named by load address). Once a
+placeholder is meaningfully recovered, it can be *graduated* — dissolved into
+the real `dll/<AREA>/dll_XXXX_<name>.c` files — and this is **byte-for-byte
+match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
+801F5184→17 files), exact conservation both times, 2 functions even *improved*
+(splitting removed a wrong cross-family auto-inline the false single-TU caused).
+
+**Match-safety preconditions (verify in Phase 1, no edits):**
+- Unit is **`.text`-only** (no `.data`/`.rodata`/`.sdata`/`.bss` in its `.s`) —
+  so there are no per-TU pooled constants that splitting would re-pool. If it
+  has pooled data, splitting is risky; stop.
+- **0 file-local `static`s** (all `.fn … , global`) — no shared helpers pinning
+  a TU boundary.
+- Symbols place by **name→address** (symbols.txt), independent of which `.c`
+  defines them or source order — so identical compiled bytes ⇒ identical
+  placement ⇒ conserved.
+- Families are **contiguous address-ordered runs** (each = one original TU);
+  confirm boundaries by call sites + any descriptor table / doc-skeletons.
+
+**Procedure (per family, conservation-checked):**
+1. Map each family → real `dll/<AREA>/dll_XXXX_<name>.c` (canonical `dll_XXXX_`
+   prefix dodges basename collisions with unrelated existing DLLs).
+2. Shared header per area (`include/main/dll/<AREA>/<area>_shared.h`) carrying
+   the **complete** extern set — collect **every** `extern`/forward-decl in the
+   WHOLE placeholder `.c`, not just its preamble (auto-gen scatters callee
+   externs through the body; missing ones fail to compile). Externs emit no
+   code → duplicating them is harmless.
+3. **Graduate EDGE-FIRST in address order** — dtk requires linear link order;
+   a mid-unit hole makes the placeholder appear on both sides of another unit's
+   range → cyclic-dependency abort. Keep the placeholder one shrinking
+   contiguous range (carve the front edge each step).
+4. Emit each family's fns in **source-line order** (preserves intra-family
+   call-before-def) and wrap **each fn** in its **effective** pragma state
+   computed from a **stack model** (`reset` pops — see recipe #1; tracking only
+   the last label silently miscompiles nested-region fns).
+5. Update `splits.txt` (replace placeholder range with the per-family ranges) +
+   `configure.py` (replace the 1 placeholder Object with N). Delete the
+   placeholder `.c`/`.h` and any unbuilt doc-stub.
+6. **Conservation check** after each family: combined `matched_code` +
+   matched-fn-count across (shrunken placeholder + new file) must EQUAL the
+   pre-move total (NOT the headline %, which shifts with the denominator).
+   Revert any family that doesn't conserve. Build green, **land on `main`**.
+
 ## Drift handling (Ghidra-imported `FUN_xxx` don't match v1.0)
 
 Many `.c` files were imported from a v1.1 Ghidra session and have wrong
