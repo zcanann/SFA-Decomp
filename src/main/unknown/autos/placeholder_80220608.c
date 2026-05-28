@@ -2911,3 +2911,32 @@ void androsshand_init(int obj, u8 *setup)
     ObjHits_SetTargetMask(obj, 4);
 }
 #pragma scheduling on
+
+extern int ObjList_FindObjectById(int id);
+extern void androssligh_updateBeam(int obj, int state);
+
+void androssligh_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (*(void **)state == NULL) {
+        *(int *)state = ObjList_FindObjectById(0x47dd9);
+    }
+    if (*(void **)state != NULL) {
+        *(f32 *)(obj + 0xc) = *(f32 *)(*(int *)state + 0xc);
+        *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)state + 0x10);
+        *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)state + 0x14);
+    }
+    *(u8 *)(state + 0xd) = *(u8 *)(state + 0xc);
+    switch (*(s8 *)(state + 0xc)) {
+    case 0:
+        break;
+    case 1:
+        androssligh_updateBeam(obj, state);
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    }
+}
