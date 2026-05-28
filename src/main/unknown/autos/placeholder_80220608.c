@@ -5702,6 +5702,7 @@ void fn_8022FA00(int obj, int state) {
 }
 #pragma scheduling on
 
+#pragma scheduling off
 void fn_8022FB5C(int obj, int state, int arwing) {
     int setup = *(int *)(obj + 0x4c);
     u8 mode = *(u8 *)(state + 0);
@@ -5739,6 +5740,7 @@ void fn_8022FB5C(int obj, int state, int arwing) {
     }
     *(u8 *)(state + 0x15) = 2;
 }
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
