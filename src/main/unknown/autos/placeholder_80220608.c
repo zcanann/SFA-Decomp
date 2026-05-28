@@ -184,11 +184,13 @@ void drmusiccont_initialise(void) {}
 
 int drcloudper_getExtraSize(void) { return 0x10; }
 int drcloudper_getObjectTypeId(void) { return 0; }
+#pragma scheduling off
 void drcloudper_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 0x13);
     ObjGroup_RemoveObject(obj, 0x39);
 }
+#pragma scheduling reset
 void drcloudper_render(void) {}
 void drcloudper_hitDetect(void) {}
 void drcloudper_update(void) {}
@@ -3212,6 +3214,7 @@ void arwarwinggu_initialise(void) {}
 
 int arwingandrossstuff_getExtraSize(void) { return 0x20; }
 int arwingandrossstuff_getObjectTypeId(void) { return 0; }
+#pragma scheduling off
 void arwingandrossstuff_free(int obj)
 {
     int state = *(int *)(obj + 0xb8);
@@ -3221,6 +3224,7 @@ void arwingandrossstuff_free(int obj)
         ModelLightStruct_free(*(void **)(state + 0x14));
     }
 }
+#pragma scheduling reset
 #pragma peephole off
 void arwingandrossstuff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -3234,12 +3238,14 @@ void arwingandrossstuff_initialise(void) {}
 
 int arwlevelcon_getExtraSize(void) { return 0x24; }
 int arwlevelcon_getObjectTypeId(void) { return 0; }
+#pragma scheduling off
 void arwlevelcon_free(void)
 {
     arwingHudSetVisible(2);
     fn_80125D04();
     setIsOvercast(1);
 }
+#pragma scheduling reset
 void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70E0);
