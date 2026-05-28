@@ -3243,10 +3243,12 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma dont_inline on
 void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
 {
     Sfx_KeepAliveLoopedObjectSoundLimited(obj, sfxId, 0);
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 
 /*
@@ -7419,6 +7421,7 @@ void Sfx_SetObjectChannelVolume(f32 volumeScale, u32 obj, u32 channel, u8 volume
  * EN v1.0 Address: 0x8000B99C
  * EN v1.0 Size: 276b
  */
+#pragma dont_inline on
 void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume)
 {
     u8 volumeByte;
@@ -7460,6 +7463,7 @@ void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume)
         sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
     }
 }
+#pragma dont_inline reset
 
 /*
  * Function: Sfx_PlayFromObjectChannel
@@ -7491,10 +7495,12 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u32 sfxId)
  * EN v1.0 Address: 0x8000BB18
  * EN v1.0 Size: 44b
  */
+#pragma dont_inline on
 void Sfx_PlayFromObject(u32 obj, u32 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
 }
+#pragma dont_inline reset
 
 /*
  * Function: Sfx_UpdateObjectSounds
@@ -11360,6 +11366,129 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     DVDPrepareStreamAsync(lbl_80336C40 + 0x90, 0, 0, AudioStream_PrepareCallback);
     DVDStopStreamAtEndAsync(lbl_80336C40 + 0x60, 0);
     return 1;
+}
+
+extern f32 lbl_803DE6BC;
+extern f32 lbl_803DE6C0;
+extern f32 lbl_803DE6C4;
+extern f32 lbl_803DE6C8;
+extern f32 lbl_803DE6CC;
+extern f32 lbl_803DE6D0;
+extern char lbl_803DB294[];
+extern char lbl_803DB29C[];
+extern char lbl_803DB2A0[];
+extern int lbl_803DB27C;
+extern int lbl_803DB280;
+extern int lbl_803DB284;
+extern int lbl_803DB288;
+extern u8 pauseMenuState;
+extern int getHudHiddenFrameCount(void);
+extern int getMinimapY(void);
+extern void drawHudBox(int a, s16 b, int c, int d, int e, int f);
+
+/*
+ * Function: gameTimerRun
+ * EN v1.0 Address: 0x800140BC
+ * EN v1.0 Size: 1376b
+ */
+void gameTimerRun(void)
+{
+    f32 dt = timeDelta;
+    void* box = gameTextGetBox(0xD);
+    u8 colorFlag = 0;
+    int A;
+    int B;
+    int C;
+    u16 y;
+    char clamped;
+    f32 ratio;
+    int totalSecs;
+    int mins;
+
+    if ((lbl_803DC8F8 & 1) || getHudHiddenFrameCount() != 0) {
+        dt = lbl_803DE6B8;
+    }
+
+    clamped = 0;
+    if ((lbl_803DC8F9 & 1) != 0) {
+        lbl_803DC900 -= dt;
+        if (lbl_803DC900 <= lbl_803DE6B8) {
+            clamped = 1;
+            lbl_803DC900 = lbl_803DE6B8;
+        }
+        if (lbl_803DC900 < lbl_803DE6BC) {
+            colorFlag = 1;
+        }
+    } else {
+        lbl_803DC900 += dt;
+        if (lbl_803DC900 > lbl_803DC8FC) {
+            clamped = 1;
+            lbl_803DC900 = lbl_803DC8FC;
+        }
+        if (lbl_803DC900 > lbl_803DC8FC - lbl_803DE6BC) {
+            colorFlag = 1;
+        }
+    }
+
+    if (clamped) {
+        if ((lbl_803DC8F9 & 8) != 0) {
+            Sfx_PlayFromObject(0, 0x28D);
+        }
+        lbl_803DC8F8 &= ~4;
+        lbl_803DC8F8 |= 2;
+    }
+
+    if ((lbl_803DC8F9 & 4) != 0) {
+        f32 panByte;
+        Sfx_KeepAliveLoopedObjectSound(0, 0x28C);
+        if ((lbl_803DC8F9 & 1) != 0) {
+            ratio = lbl_803DC900 / lbl_803DC8FC;
+            panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * ratio) & 0xFF));
+            Sfx_SetObjectSfxVolume(lbl_803DE6C4 - lbl_803DE6C8 * ratio, 0, 0x28C, panByte);
+        } else {
+            ratio = lbl_803DC900 / lbl_803DC8FC;
+            panByte = (f32)(((int)(lbl_803DE6C0 * ratio) & 0xFF) + 0x2F);
+            Sfx_SetObjectSfxVolume(lbl_803DE6C8 * ratio + lbl_803DE6CC, 0, 0x28C, panByte);
+        }
+    }
+
+    if ((lbl_803DC8F9 & 0x10) == 0 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0) {
+        return;
+    }
+
+    totalSecs = (int)lbl_803DC900;
+    mins = totalSecs / 60;
+    A = mins / 60;
+    B = mins - A * 60;
+    C = (int)(lbl_803DE6D0 * (lbl_803DC900 / lbl_803DE6D4));
+    C = C - C / 100 * 100;
+
+    y = getMinimapY() - 0x28;
+    drawHudBox(0x32, (s16)(y - 4), 0x78, 0x28, 0xFF, 1);
+    *(s16*)((char*)box + 0x16) = (s16)y;
+
+    if (colorFlag && C < 0x32) {
+        gameTextSetColor(0xFF, 0x40, 0x40, 0xFF);
+    } else {
+        gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+
+    sprintf(lbl_803398A0, lbl_803DB294, A / 10);
+    gameTextShowStr(lbl_803398A0, 0xD, 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, A % 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB27C + 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, B / 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 + 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, B % 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 + lbl_803DB27C + 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, C / 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 * 2 + 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, C % 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
+    if (B & 1) {
+        gameTextShowStr(lbl_803DB29C, 0xD, lbl_803DB284, 3);
+        gameTextShowStr(lbl_803DB2A0, 0xD, lbl_803DB288, 3);
+    }
 }
 
 /*
