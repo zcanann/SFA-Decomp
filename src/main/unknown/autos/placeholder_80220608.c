@@ -3103,3 +3103,69 @@ void mclightning_init(int obj, u8 *setup)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern f32 lbl_803E738C;
+extern int cmbsrc_update(int obj);
+
+int cmbsrc_getExtraSize(void) { return 0x28; }
+int cmbsrc_getObjectTypeId(void) { return 0; }
+void cmbsrc_initialise(void) {}
+void cmbsrc_release(void) {}
+#pragma scheduling off
+int cmbsrc_updateAndReturnZero(int obj)
+{
+    cmbsrc_update(obj);
+    return 0;
+}
+int cmbsrc_getColorIndex(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+
+    if (*(u8 *)(setup + 0x1b) == 0xf) {
+        return *(s8 *)(state + 0x23);
+    }
+    return -1;
+}
+#pragma peephole off
+void cmbsrc_setExternalActive(int obj, u8 active)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (active != 0) {
+        *(u8 *)(state + 0x22) |= 0x2;
+    } else {
+        *(u8 *)(state + 0x22) &= ~0x2;
+    }
+}
+#pragma peephole on
+void cmbsrc_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    (*(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
+    if (*(void **)state != NULL) {
+        ModelLightStruct_free(*(void **)state);
+    }
+    Sfx_StopObjectChannel(obj, 0x40);
+}
+#pragma peephole off
+void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+
+    if (visible != 0) {
+        *(u8 *)(state + 0x22) |= 0x1;
+        if (*(void **)state != NULL && *(u8 *)(*(int *)state + 0x2f8) != 0 &&
+            *(u8 *)(*(int *)state + 0x4c) != 0) {
+            queueGlowRender(*(void **)state);
+        }
+        if ((*(u8 *)(setup + 0x29) & 0x8) != 0) {
+            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E738C);
+        }
+    }
+}
+#pragma peephole on
+#pragma scheduling on
