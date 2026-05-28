@@ -1442,6 +1442,31 @@ void drshackle_hitDetect(int obj) {
     }
 }
 
+void ktfallingrocks_update(int obj) {
+    int q = *(int *)((char *)obj + 0x4c);
+    ObjPosParams params;
+    int player;
+    int i;
+    if (GameBit_Get(*(s16 *)(q + 0x24)) == 0) {
+        return;
+    }
+    player = (int)Obj_GetPlayerObject();
+    if (player == 0) {
+        return;
+    }
+    *(f32 *)((char *)obj + 0xc) = *(f32 *)(player + 0xc);
+    *(f32 *)((char *)obj + 0x14) = *(f32 *)(player + 0x14);
+    for (i = 0; i < 10; i++) {
+        params.x = *(f32 *)((char *)obj + 0xc) + (f32)(int)randomGetRange(-200, 200);
+        params.y = *(f32 *)((char *)obj + 0x10);
+        params.z = *(f32 *)((char *)obj + 0x14) + (f32)(int)randomGetRange(-200, 200);
+        (*(void (**)(int, int, ObjPosParams *, int, int, int))((char *)*gPartfxInterface + 0x8))(
+            obj, *(u16 *)(q + 0x20), &params, 0x200001, -1, 0);
+    }
+    Sfx_PlayFromObject(obj, 696);
+    GameBit_Set(*(s16 *)(q + 0x24), 0);
+}
+
 #pragma peephole reset
 #pragma scheduling reset
 
