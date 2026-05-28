@@ -175,6 +175,24 @@ extern int hightop_stateHandler10();
 
 extern void ObjGroup_AddObject(int obj, int group);
 extern void drcreator_spawnProjectileCallback(void);
+extern void setMatrixFromObjectPos(f32 *mtx, void *desc);
+extern void Matrix_TransformPoint(f32 *mtx, double x, double y, double z, f32 *ox, f32 *oy, f32 *oz);
+extern f32 lbl_803E6B38;
+extern f32 lbl_803E6B3C;
+extern f32 lbl_803E6A48;
+extern f32 lbl_803DC300;
+extern f32 lbl_803DC304;
+
+typedef struct {
+    s16 rx;
+    s16 ry;
+    s16 rz;
+    s16 pad;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ObjPosParams;
 
 typedef struct {
     u8 b0 : 1;
@@ -522,6 +540,40 @@ void drcagewith_free(int obj, int arg) {
         Obj_FreeObject(*(int *)p);
     }
     ObjGroup_RemoveObject(obj, 0x18);
+}
+
+void hightop_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
+    int *player;
+    ObjPosParams pos;
+    f32 mtx[16];
+    player = Obj_GetPlayerObject();
+    pos.x = *(f32 *)((char *)player + 0xc);
+    pos.y = *(f32 *)((char *)player + 0x10);
+    pos.z = *(f32 *)((char *)player + 0x14);
+    pos.rx = *(s16 *)player;
+    pos.ry = *(s16 *)((char *)player + 0x2);
+    pos.rz = *(s16 *)((char *)player + 0x4);
+    pos.scale = lbl_803E6AB8;
+    setMatrixFromObjectPos(mtx, &pos);
+    Matrix_TransformPoint(mtx, lbl_803E6AA8, lbl_803E6B38, lbl_803E6B3C, ox, oy, oz);
+}
+
+void drakorhoverpad_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
+    ObjPosParams pos;
+    f32 mtx[16];
+    int *src = Obj_GetPlayerObject();
+    if (src == 0) {
+        src = (int *)obj;
+    }
+    pos.x = *(f32 *)((char *)src + 0xc);
+    pos.y = *(f32 *)((char *)src + 0x10);
+    pos.z = *(f32 *)((char *)src + 0x14);
+    pos.rx = *(s16 *)src;
+    pos.ry = *(s16 *)((char *)src + 0x2);
+    pos.rz = *(s16 *)((char *)src + 0x4);
+    pos.scale = lbl_803E6A48;
+    setMatrixFromObjectPos(mtx, &pos);
+    Matrix_TransformPoint(mtx, lbl_803E6A3C, lbl_803DC300, lbl_803DC304, ox, oy, oz);
 }
 
 void drcreator_init(int obj, char *arg) {
