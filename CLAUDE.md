@@ -232,6 +232,15 @@ Heuristic before reaching for `asm { }`:
     everywhere, instead of re-deriving the address per access. MWCC then parks it
     in a callee-saved reg matching target's coloring. Took fn_8029FA24 90.7% →
     96.8% in one move (placeholder_80295318).
+    **Single-base struct-overlay for a CLUSTER of globals.** When target addresses
+    several "separate" globals off ONE base reg at fixed offsets (e.g.
+    `gMmDeferredFreeStack` = base+0x80, `gMmRegionTable` = base+0x3F00, all off
+    r31=`gMmStoreArray`), declare ONE struct that overlays the whole block and cast
+    the base global to it (`MmGlobal *g = (MmGlobal *)gMmStoreArray;`), then use
+    `g->field`. Every access then folds to `r31+const` off the single base,
+    matching target — instead of each global emitting its own `lis;addi`. The
+    cluster-of-globals generalization of the base-pointer hoist. (hotel5, mm
+    block on placeholder_8001746C — required for mmFreeTick/mmAllocFromRegion.)
 
 17. **Fold multiple early-return guards into ONE big `||` (with embedded
     assignments) for convergent-predicate functions.** When target computes a
