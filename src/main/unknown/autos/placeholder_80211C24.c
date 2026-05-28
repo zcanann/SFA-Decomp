@@ -118,11 +118,7 @@ extern f32 lbl_803E6ABC;
 extern f32 lbl_803E6AC0;
 extern f32 lbl_803E6AC4;
 extern f32 lbl_803E6AC8;
-extern f32 lbl_803E6B24;
-extern f32 lbl_803E6B28;
-extern f32 lbl_803E6B2C;
 extern f32 lbl_803E6B34;
-extern s16 lbl_803DC32C;
 
 extern f32 lbl_803E67A0;
 extern f32 lbl_803E67B8;
@@ -3234,38 +3230,6 @@ int explodeplan_updateTriggerCallback(int obj) {
     return ret;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-int hightop_stateHandler01(int obj, u8 *p2) {
-    f32 zero = lbl_803E6AA8;
-    *(f32 *)(p2 + 0x294) = zero;
-    *(f32 *)(p2 + 0x284) = zero;
-    *(f32 *)(p2 + 0x280) = zero;
-    *(f32 *)((char *)obj + 0x24) = zero;
-    *(f32 *)((char *)obj + 0x28) = zero;
-    *(f32 *)((char *)obj + 0x2c) = zero;
-    *(u32 *)p2 |= 0x200000;
-    if ((s8)p2[0x27a] != 0) {
-        *(s16 *)(p2 + 0x338) = 0;
-        *(f32 *)(p2 + 0x2a0) = lbl_803E6B24;
-        *(f32 *)(p2 + 0x2b8) = lbl_803E6B28;
-        if (*(s16 *)((char *)obj + 0xa0) != lbl_803DC32C) {
-            ObjAnim_SetCurrentMove(obj, lbl_803DC32C, lbl_803E6AA8, 0);
-        }
-    }
-    if (*(f32 *)(p2 + 0x298) < lbl_803E6B2C) {
-        *(s16 *)(p2 + 0x334) = 0;
-        *(s16 *)(p2 + 0x336) = 0;
-        *(f32 *)(p2 + 0x298) = lbl_803E6AA8;
-    }
-    if (*(f32 *)(p2 + 0x29c) > lbl_803E6AA8 && *(f32 *)(p2 + 0x298) > lbl_803E6AA8) {
-        return 3;
-    }
-    return 0;
-}
 #pragma peephole reset
 #pragma scheduling reset
 
