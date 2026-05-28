@@ -10717,6 +10717,7 @@ extern u8 testAndSet_onlyUseHeap3(int arg);
  * EN v1.0 Address: 0x80015964
  * EN v1.0 Size: 332b
  */
+#pragma dont_inline on
 void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*))
 {
     void* fileInfo;
@@ -10757,4 +10758,36 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*
     mm_free(buf);
     mm_free(fileInfo);
     return NULL;
+}
+#pragma dont_inline reset
+
+extern void* gSfxTriggersData;
+extern int gSfxTriggersCount;
+
+/*
+ * Function: audioLoadTriggerData
+ * EN v1.0 Address: 0x8000980C
+ * EN v1.0 Size: 276b
+ */
+void audioLoadTriggerData(void)
+{
+    char* base = sSampleBufferSLoadedCallbackLoadError;
+    int info;
+    int delay;
+    if (gMusicTriggersData != NULL) {
+        delay = mmSetFreeDelay(0);
+        mm_free(gMusicTriggersData);
+        mm_free(gSfxTriggersData);
+        mm_free(gStreamsData);
+        mmSetFreeDelay(delay);
+    }
+    gAudioPendingLoadFlags |= 0x1;
+    gMusicTriggersData = loadFileByPathAsync(base + 0x1b4, &info, 1, (void (*)(void*))musicTriggersLoadedCallback);
+    gMusicTriggersCount = (u32)info >> 4;
+    gAudioPendingLoadFlags |= 0x2;
+    gSfxTriggersData = loadFileByPathAsync(base + 0x1cc, &info, 1, (void (*)(void*))sfxTriggersLoadedCallback);
+    gSfxTriggersCount = (u32)info >> 5;
+    gAudioPendingLoadFlags |= 0x4;
+    gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, (void (*)(void*))streamsLoadedCallback);
+    gStreamsCount = (u32)info / 0xb0;
 }
