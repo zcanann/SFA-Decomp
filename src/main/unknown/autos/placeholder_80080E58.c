@@ -4855,13 +4855,12 @@ void loadSunAndMoon(void)
 int getSkyColorFn_80088e08(int slot)
 {
     u8 *sky;
-    int offset;
 
     sky = lbl_803DD12C;
     if (sky != NULL) {
         slot *= 0xa4;
-        offset = slot + 0xc1;
-        return (sky[offset] >> 7) & 1;
+        slot += 0xc1;
+        return (sky[slot] >> 7) & 1;
     }
     return 0;
 }
@@ -4965,7 +4964,6 @@ void fn_80089134(f32 mtx[3][4])
 int skyFn_8008919c(int slot)
 {
     u8 *sky;
-    int offset;
 
     sky = lbl_803DD12C;
     if (sky == NULL) {
@@ -4973,8 +4971,8 @@ int skyFn_8008919c(int slot)
     }
 
     slot *= 0xa4;
-    offset = slot + 0xc1;
-    if (((sky[offset] >> 7) & 1) != 0) {
+    slot += 0xc1;
+    if ((u32)((sky[slot] >> 7) & 1) != 0) {
         return 0;
     }
     return lbl_803DD148[0x37];
@@ -5397,13 +5395,12 @@ void renderFn_8008faf4(void)
 int fn_8008B71C(int slot)
 {
     u8 *sky;
-    int offset;
 
     sky = lbl_803DD12C;
     if (sky != NULL) {
         slot *= 0xa4;
-        offset = slot + 0xc1;
-        return (sky[offset] >> 5) & 1;
+        slot += 0xc1;
+        return (sky[slot] >> 5) & 1;
     }
     return 0;
 }
@@ -5458,12 +5455,12 @@ f32 fn_8008ED88(void)
     u16 currentFrame;
 
     state = lbl_803DD19C;
-    if (state == NULL) {
-        return lbl_803DF1A0;
+    if (state != NULL) {
+        totalFrames = *(u16 *)(state + 0x22);
+        currentFrame = *(u16 *)(state + 0x20);
+        return (f32)(s32)(totalFrames - currentFrame) / (f32)totalFrames;
     }
-    totalFrames = *(u16 *)(state + 0x22);
-    currentFrame = *(u16 *)(state + 0x20);
-    return (f32)(s32)(totalFrames - currentFrame) / (f32)totalFrames;
+    return lbl_803DF1A0;
 }
 
 void fn_8008FC00(f32 *out, f32 height, f32 scale)
