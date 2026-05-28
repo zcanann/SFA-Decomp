@@ -3,20 +3,31 @@
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mm_free(void *ptr);
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern void *Obj_GetPlayerObject(void);
+extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
 extern void objSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void *entries, int count);
+extern void playerEnvFxFn_80088ad4(int envFxValue);
 
 extern s16 lbl_80399398[];
 extern u8 lbl_80399EA8[];
 extern s16 lbl_80399F00[];
 extern s8 lbl_8039A45C[];
 extern u8 lbl_8030ECA8[];
+extern u8 lbl_803DB748;
 extern s8 lbl_803DD0BC;
 extern void *lbl_803DD0D4;
 extern int lbl_803DD100;
 extern int lbl_803DD104;
 extern int lbl_803DD108;
 extern int lbl_803DD10C;
+extern int lbl_803DD130;
+extern int lbl_803DD134;
+extern int lbl_803DD138;
+extern int lbl_803DD13C;
+extern u8 lbl_803DD140;
 
 extern undefined4 ABS();
 extern undefined4 FUN_800033a8();
@@ -4012,6 +4023,77 @@ void ObjSeq_initialise(void)
     lbl_803DD100 = 0x5a;
     lbl_803DD10C = 0x42;
     objSeqInitFn_80080078(lbl_8030ECA8, 5);
+}
+
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+
+int fn_800882C8(int index)
+{
+    int changed;
+
+    changed = lbl_80399EA8[index];
+    lbl_80399EA8[index] = 0;
+    return changed;
+}
+
+void fn_80088730(u8 *out)
+{
+    u8 *src;
+
+    out[0] = lbl_803DB748;
+    src = &lbl_803DB748;
+    out[1] = src[1];
+    out[2] = src[2];
+    out[3] = src[3];
+}
+
+int getEnvFxBit2BA(void)
+{
+    return (u8)GameBit_Get(0x2ba);
+}
+
+void setGameBit2BA(int value)
+{
+    int bitValue;
+
+    bitValue = value;
+    if ((u8)bitValue >= 0x1c) {
+        bitValue = 0;
+    }
+    GameBit_Set(0x2ba, (u8)bitValue);
+}
+
+void envFxFn_800887cc(void)
+{
+    playerEnvFxFn_80088ad4((u8)GameBit_Get(0x2ba));
+}
+
+void envFxActFn_800887f8(u8 value)
+{
+    void *player;
+    int masked;
+
+    lbl_803DD140 = value;
+    masked = (u8)value;
+    masked &= 8;
+    if (masked == 0) {
+        player = Obj_GetPlayerObject();
+        getEnvfxAct(player, player, 0x136, 0);
+        getEnvfxAct(player, player, 0x137, 0);
+        getEnvfxAct(player, player, 0x143, 0);
+    }
+}
+
+void fn_80088870(int a, int b, int c, int d)
+{
+    lbl_803DD13C = a;
+    lbl_803DD130 = b;
+    lbl_803DD138 = c;
+    lbl_803DD134 = d;
 }
 
 #pragma pop
