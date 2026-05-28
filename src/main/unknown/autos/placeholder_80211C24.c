@@ -275,6 +275,15 @@ extern f32 timeDelta;
 extern f32 lbl_803E68B0;
 extern f32 lbl_803E68B4;
 extern void renderFn_8008f904(void *p);
+extern int ObjHits_GetPriorityHitWithPosition(int obj, void *a, int b, int *c, f32 *x, f32 *y, f32 *z);
+extern void fn_80221E94(int obj, f32 *p, f32 v);
+extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern int ObjGroup_FindNearestObject(int group, int obj, void *out);
+extern void timer_addDuration(int obj, s16 dur);
+extern void **gPartfxInterface;
+extern f32 lbl_803E6B5C;
+extern f32 lbl_803E6B60;
+extern f32 lbl_803E6B64;
 
 typedef struct {
     u8 b0 : 1;
@@ -1588,6 +1597,90 @@ void ktlazerwall_render(int obj) {
             GameBit_Set(*(s16 *)(q + 0x1e), 0);
         }
     }
+}
+
+void drgenerator_hitDetect(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x4c);
+    f32 a18;
+    f32 a14;
+    f32 a10;
+    int ac;
+    int a8;
+    int found;
+    if (((BitFlags8 *)(p + 0x19b))->b0 || ((BitFlags8 *)(p + 0x19b))->b3) {
+        return;
+    }
+    if (ObjHits_GetPriorityHitWithPosition(obj, &a8, 0, &ac, &a10, &a14, &a18) != 5) {
+        return;
+    }
+    p[0x19a] = p[0x19a] - ac;
+    fn_80221E94(obj, &a10, lbl_803E6B5C);
+    fn_8009A8C8(obj, lbl_803E6B60);
+    if (p[0x19a] > 0) {
+        return;
+    }
+    {
+        int *tex = objFindTexture(obj, 0, 0);
+        spawnExplosion(obj, lbl_803E6B64, 1, 1, 1, 1, 0, 1, 0);
+        if (tex != 0) {
+            *tex = 0x100;
+        }
+    }
+    ((BitFlags8 *)(p + 0x19b))->b0 = 1;
+    GameBit_Set(*(s16 *)(q + 0x1e), 1);
+    if (*(s16 *)((char *)obj + 0x46) == 0x716 &&
+        (found = ObjGroup_FindNearestObject(0x4c, obj, 0)) != 0) {
+        timer_addDuration(found, *(s16 *)(p + 0x198));
+    } else {
+        ObjHits_DisableObject(obj);
+    }
+}
+
+void drgenerator_update(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x4c);
+    int n;
+    if (((BitFlags8 *)(p + 0x19b))->b4 == 0 && GameBit_Get(0x9b9) != 0) {
+        ((BitFlags8 *)(p + 0x19b))->b4 = 1;
+    }
+    if (((BitFlags8 *)(p + 0x19b))->b4 != 0) {
+        goto loop;
+    }
+    if (((BitFlags8 *)(p + 0x19b))->b3 != 0) {
+        goto enable;
+    }
+    if (GameBit_Get(*(s16 *)(q + 0x20)) != 0) {
+        goto enable;
+    }
+    if (*(s16 *)((char *)obj + 0x46) != 0x72e) {
+        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(4, obj, -1);
+    }
+    ((BitFlags8 *)(p + 0x19b))->b3 = 1;
+    ((BitFlags8 *)(p + 0x19b))->b0 = 0;
+    ObjHits_DisableObject(obj);
+    return;
+enable:
+    if (((BitFlags8 *)(p + 0x19b))->b3 == 0) {
+        goto loop;
+    }
+    if (GameBit_Get(*(s16 *)(q + 0x20)) == 0) {
+        goto loop;
+    }
+    if (*(s16 *)((char *)obj + 0x46) != 0x72e) {
+        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(3, obj, -1);
+    }
+    ((BitFlags8 *)(p + 0x19b))->b3 = 0;
+    ObjHits_EnableObject(obj);
+    return;
+loop:
+    if (((BitFlags8 *)(p + 0x19b))->b0 == 0) {
+        return;
+    }
+    n = 1;
+    do {
+        (*(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x690, 0, 1, -1, 0);
+    } while (n-- != 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
