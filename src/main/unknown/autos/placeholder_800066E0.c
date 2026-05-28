@@ -8668,10 +8668,12 @@ extern f32 lbl_803DE6D4;
 extern f64 lbl_803DE6D8;
 extern f32 lbl_803DE6E0;
 extern f32 lbl_803DE6E8;
-extern int lbl_803DC7BC;
+extern volatile int lbl_803DC7BC;
+extern int lbl_803DC7B8;
 extern int gRenderMode;
 extern int lbl_803DC9C8;
 extern u8 lbl_8033A540[];
+extern void ARQPostRequest(void* req, u32 owner, u32 type, u32 prio, u32 src, u32 dst, u32 size, void (*cb)(void*));
 
 extern int sprintf(char* buf, const char* fmt, ...);
 extern char* strcpy(char* dst, const char* src);
@@ -10092,4 +10094,59 @@ void voxmaps_gridToWorld(f32* out, s16* grid)
     if (lbl_803DC8CC != 0) {
         Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], lbl_803DC8CC);
     }
+}
+
+/*
+ * Function: fn_80008F38
+ * EN v1.0 Address: 0x80008F38
+ * EN v1.0 Size: 204b
+ */
+void fn_80008F38(void* addr, u32 dest, u32 size)
+{
+    int idx;
+    TextCallbackEntry* entry;
+    idx = lbl_803DC7B8;
+    lbl_803DC7B8 = idx + 1;
+    entry = &lbl_80335940[idx];
+    if (idx + 1 >= 0x10) {
+        lbl_803DC7B8 = 0;
+    }
+    if ((size & 0x1f) != 0) {
+        size = (size | 0x1f) + 1;
+    }
+    DCFlushRange(addr, size);
+    lbl_803DC7BC = 0;
+    ARQPostRequest(entry, 0x64, 0, 1, (u32)addr, dest, size, (void (*)(void*))fn_80009008);
+    while (lbl_803DC7BC == 0) {
+    }
+}
+
+/*
+ * Function: audioAllocFn_80008df4
+ * EN v1.0 Address: 0x80008DF4
+ * EN v1.0 Size: 232b
+ */
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5, u32 p6, u32 p7)
+{
+    int idx;
+    TextCallbackEntry* entry;
+    void* buf;
+    idx = lbl_803DC7B8;
+    lbl_803DC7B8 = idx + 1;
+    entry = &lbl_80335940[idx];
+    if (idx + 1 >= 0x10) {
+        lbl_803DC7B8 = 0;
+    }
+    if ((size & 0x1f) != 0) {
+        size = (size | 0x1f) + 1;
+    }
+    buf = mmAlloc(size, 0, NULL);
+    *outBuf = buf;
+    entry->fn = (void (*)(int, int, int))cb;
+    entry->a = p5;
+    entry->b = p6;
+    entry->c = p7;
+    DCFlushRange(buf, size);
+    lbl_803DC7BC = 0;
+    ARQPostRequest(entry, 0x64, 1, 1, (u32)source, (u32)buf, size, (void (*)(void*))fn_80008EDC);
 }
