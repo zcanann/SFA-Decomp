@@ -5277,9 +5277,11 @@ void fn_800897D4(int slot, f32 *x, f32 *y, f32 *z)
     offset = slot * 0xa4;
     sky = lbl_803DD12C + offset;
     *x = *(f32 *)(sky + 0x90);
-    sky = lbl_803DD12C + offset;
+    sky = lbl_803DD12C;
+    sky += offset;
     *y = *(f32 *)(sky + 0x94);
-    sky = lbl_803DD12C + offset;
+    sky = lbl_803DD12C;
+    sky += offset;
     *z = *(f32 *)(sky + 0x98);
 }
 
