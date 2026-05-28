@@ -955,6 +955,7 @@ extern void fn_80056A6C(int a, int b, int c);
 extern f32 lbl_803E6E58;
 #pragma peephole off
 #pragma scheduling off
+#pragma dont_inline on
 void wctempledia_syncPartVisibility(int obj, u8 mask)
 {
     u8 *block;
@@ -981,6 +982,7 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
 }
 #pragma scheduling on
 #pragma peephole on
+#pragma dont_inline reset
 int wctempledia_getExtraSize(void) { return 0x14; }
 int wctempledia_getObjectTypeId(void) { return 0; }
 void wctempledia_free(void) {}
@@ -993,6 +995,54 @@ void wctempledia_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 void wctempledia_hitDetect(void) {}
+extern s16 lbl_803DC3B8;
+extern s16 lbl_803DC3C0;
+extern f32 lbl_8032B348[];
+extern f32 lbl_8032B354[];
+int wctempledia_interactCallback(int obj, int p2, int p3);
+#pragma peephole off
+#pragma scheduling off
+void wctempledia_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+
+    *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
+    *(u8 *)(obj + 0xad) = *(u8 *)(setup + 0x19);
+    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(u8 *)(obj + 0xad) = 0;
+    }
+    if (*(s8 *)(obj + 0xad) == 0) {
+        *(s16 **)(state + 0x10) = &lbl_803DC3B8;
+        *(f32 **)(state + 0xc) = lbl_8032B348;
+    } else {
+        *(s16 **)(state + 0x10) = &lbl_803DC3C0;
+        *(f32 **)(state + 0xc) = lbl_8032B354;
+    }
+    for (i = 0; i < 3; i++) {
+        if ((u32)GameBit_Get((*(s16 **)(state + 0x10))[i]) != 0) {
+            *(u8 *)(state + 8) |= (1 << i);
+        }
+    }
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+        *(u8 *)(state + 8) = 7;
+        *(u8 *)(state + 9) |= 1;
+    }
+    if (*(u8 *)(state + 8) & 2) {
+        *(f32 *)state = (*(f32 **)(state + 0xc))[2];
+    } else if (*(u8 *)(state + 8) & 1) {
+        *(f32 *)state = (*(f32 **)(state + 0xc))[1];
+    } else {
+        *(f32 *)state = (*(f32 **)(state + 0xc))[0];
+    }
+    *(f32 *)(state + 4) = *(f32 *)state;
+    *(void **)(obj + 0xbc) = (void *)wctempledia_interactCallback;
+    wctempledia_syncPartVisibility(obj, *(u8 *)(state + 8));
+}
+#pragma scheduling on
+#pragma peephole on
+void wctempledia_release(void) {}
+void wctempledia_initialise(void) {}
 
 int suntemple_getExtraSize(void) { return 2; }
 int suntemple_getObjectTypeId(void) { return 0; }
