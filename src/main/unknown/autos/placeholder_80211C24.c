@@ -208,6 +208,7 @@ typedef struct {
 extern f32 lbl_803E68E8;
 extern f32 lbl_803E68EC;
 extern f32 lbl_803E6A38;
+extern f32 lbl_803E6A74;
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
 extern void ObjPath_GetPointWorldPositionArray(int obj, int idx, int count, f32 *out);
 extern void dll_2E_func06(int obj, void *p, int v);
@@ -460,6 +461,54 @@ void ktrex_spawnRandomEnergyArc(int obj, u16 angle, int slot) {
     *(void **)((char *)gKTRexState + slot * 4 + 0x17c) =
         fn_8008FB20(point1, point2, lbl_803E67B4, lbl_803E67C0, angle, 96, 0);
 }
+#pragma scheduling reset
+
+typedef struct {
+    u8 bit80 : 1;
+    u8 b40 : 1;
+    u8 bit20 : 1;
+    u8 state : 4;
+    u8 b01 : 1;
+} HoverpadFlags;
+
+#pragma scheduling off
+#pragma peephole off
+int drakorhoverpad_init(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    HoverpadFlags *f = (HoverpadFlags *)(p + 0x178);
+
+    if (f->b40 == 0) {
+        if (f->state > 3) {
+            if (lbl_803E6A3C == *(f32 *)(p + 0x110)) {
+                f->state = 0;
+            }
+        }
+    }
+    if (f->b01 != GameBit_Get(1654)) {
+        f->b01 ^= 1;
+        *(f32 *)p = -*(f32 *)p;
+        if (f->state == 3) {
+            f->state = 0;
+            *(f32 *)p = lbl_803E6A38;
+        }
+        if (f->state == 4) {
+            f->state = 0;
+            *(f32 *)p = lbl_803E6A74;
+        }
+        if (f->b40 != 0) {
+            if (lbl_803E6A3C == *(f32 *)p) {
+                if (f->b01 != 0) {
+                    *(f32 *)p = lbl_803E6A74;
+                } else {
+                    *(f32 *)p = lbl_803E6A38;
+                }
+            }
+        }
+        Sfx_PlayFromObject(obj, 777);
+    }
+    return 0;
+}
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
