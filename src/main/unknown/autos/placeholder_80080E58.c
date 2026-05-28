@@ -14,6 +14,8 @@ extern void renderSunAndMoon(void);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern void renderFn_8008f904(void *state);
+extern void Camera_GetCurrentViewSlot(void);
+extern int randomGetRange(int min, int max);
 
 extern s16 lbl_80399398[];
 extern u8 lbl_80399EA8[];
@@ -50,7 +52,9 @@ extern u8 colorScale;
 extern int lbl_803DB610[];
 extern s8 lbl_803DD180;
 extern u8 *lbl_803DD184[];
+extern u8 lbl_803DD19B;
 extern u8 *lbl_803DD19C;
+extern u8 lbl_803DD1C0;
 extern void PSVECNormalize(void *src, void *dst);
 
 extern undefined4 ABS();
@@ -4430,6 +4434,41 @@ void renderFn_8008faf4(void)
     if (lbl_803DD19C != NULL) {
         renderFn_8008f904(lbl_803DD19C);
     }
+}
+
+int fn_8008B71C(int slot)
+{
+    u8 *sky;
+    int offset;
+
+    sky = lbl_803DD12C;
+    if (sky != NULL) {
+        slot *= 0xa4;
+        offset = slot + 0xc1;
+        return (sky[offset] >> 5) & 1;
+    }
+    return 0;
+}
+
+void mm_free_(void *ptr)
+{
+    mm_free(ptr);
+}
+
+void dll_07_func09(void)
+{
+    Camera_GetCurrentViewSlot();
+    randomGetRange(5, 5);
+}
+
+int dll_07_func08(void)
+{
+    return lbl_803DD19B;
+}
+
+void newclouds_initialise(void)
+{
+    lbl_803DD1C0 = 0;
 }
 
 #pragma pop
