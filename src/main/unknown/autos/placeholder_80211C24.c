@@ -1757,6 +1757,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma dont_inline on
 int ktrex_isPlayerInLaneThreatRange(int obj) {
     u8 state = *(u8 *)((char *)gKTRexState + 0x100);
     f32 center;
@@ -1793,6 +1794,7 @@ int ktrex_isPlayerInLaneThreatRange(int obj) {
     }
     return 0;
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -3955,6 +3957,7 @@ void ktrex_initialiseStateHandlerTables(void) {
 extern f32 lbl_8032A534[];
 extern f32 lbl_8032A540[];
 
+#pragma dont_inline on
 int ktrex_updateArenaPathProgress(int obj) {
     u16 flags;
     int phase;
@@ -3999,6 +4002,7 @@ int ktrex_updateArenaPathProgress(int obj) {
     *(f32 *)((char *)gKTRexState + 0xf0) = *(f32 *)((char *)gKTRexState + 8) * (((f32 *)*(int *)((char *)gKTRexState + 0xe4))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase]) + ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase];
     return changed;
 }
+#pragma dont_inline reset
 
 extern f32 lbl_803E6818;
 extern f32 lbl_803E6848;
@@ -4449,6 +4453,50 @@ int ktrex_stateHandlerA04(int obj, int runtime) {
             }
             return popped + 1;
         }
+    }
+    return 0;
+}
+#pragma scheduling reset
+
+extern int RandomTimer_UpdateRangeTrigger(void *timer, f32 lo, f32 hi);
+extern int Stack_IsFull(int stack);
+extern void Stack_Push(int stack, int *val);
+extern f32 lbl_803E67C4;
+extern f32 lbl_803E67C8;
+extern f32 lbl_803E67CC;
+
+#pragma scheduling off
+int ktrex_stateHandlerA05(int obj, int runtime) {
+    void *p;
+    int pushHi;
+    int pushLo;
+    p = *(void **)((char *)obj + 0x4c);
+    if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
+        (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 1);
+        *(u8 *)((char *)gKTRexState + 0xfc) = 1;
+        *(f32 *)((char *)runtime + 0x294) =
+            *(f32 *)((char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4 + 0x38) / lbl_803E67C4;
+    }
+    if (RandomTimer_UpdateRangeTrigger((char *)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0) {
+        Sfx_PlayFromObject(obj, 143);
+    }
+    if (ktrex_updateArenaPathProgress(runtime) != 0) {
+        *(u8 *)((char *)gKTRexState + 0x103) -= 1;
+        if ((s8)*(u8 *)((char *)gKTRexState + 0x103) <= 0) {
+            pushLo = 2;
+            if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+                Stack_Push(*(int *)gKTRexState, &pushLo);
+            }
+        } else {
+            pushHi = 5;
+            if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+                Stack_Push(*(int *)gKTRexState, &pushHi);
+            }
+        }
+        return 4;
+    }
+    if (ktrex_isPlayerInLaneThreatRange(obj) != 0) {
+        return 8;
     }
     return 0;
 }
