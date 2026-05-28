@@ -362,10 +362,15 @@ void wcpushblock_initialise(void) {}
 
 extern u8 lbl_8032B0C8[][8];
 extern u8 lbl_8032B088[][8];
+extern u8 lbl_8032B048[][8];
+extern u8 lbl_8032B008[][8];
 extern u8 lbl_803AD298[][8];
+extern u8 lbl_803AD2D8[][8];
 extern f32 lbl_803E6DB4;
 extern f32 lbl_803E6DB8;
 extern f32 lbl_803E6DC0;
+extern f32 lbl_803E6DD0;
+extern f32 lbl_803E6DD4;
 extern void fn_8005B0A8(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z);
 
 #pragma peephole off
@@ -432,6 +437,64 @@ void wclevelcont_func11(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
     fn_8005B0A8(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
     *outXp = lbl_803E6DB4 + (lbl_803E6DB8 + outX + (f32)(col * 48));
     *outZp = lbl_803E6DB4 + (lbl_803E6DC0 + outZ + (f32)(row * 48));
+}
+void wclevelcont_func0F(s16 value, s16 *outRow, s16 *outCol)
+{
+    int i, j;
+
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            if (value == lbl_8032B048[i][j]) {
+                *outRow = (s16)i;
+                *outCol = (s16)j;
+                return;
+            }
+        }
+    }
+}
+void wclevelcont_func0E(s16 value, s16 *outRow, s16 *outCol)
+{
+    int i, j;
+
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            if (value == lbl_8032B008[i][j]) {
+                *outRow = (s16)i;
+                *outCol = (s16)j;
+                return;
+            }
+        }
+    }
+}
+int wclevelcont_render2(s16 i, s16 j)
+{
+    if (i < 0 || i > 7 || j < 0 || j > 7) {
+        return 0;
+    }
+    return lbl_803AD2D8[i][j];
+}
+void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
+{
+    if (i < 0 || i > 7 || j < 0 || j > 7) {
+        return;
+    }
+    lbl_803AD2D8[i][j] = (u8)value;
+}
+void wclevelcont_func0B(int obj, s16 *outRow, s16 *outCol, f32 px, f32 pz)
+{
+    f32 outX, outZ;
+
+    fn_8005B0A8(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    *outRow = (s16)((s16)(px - outX - lbl_803E6DD0) / 48);
+    *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
+}
+void wclevelcont_setScale(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
+{
+    f32 outX, outZ;
+
+    fn_8005B0A8(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    *outXp = lbl_803E6DB4 + (lbl_803E6DD0 + outX + (f32)(col * 48));
+    *outZp = lbl_803E6DB4 + (lbl_803E6DD4 + outZ + (f32)(row * 48));
 }
 #pragma scheduling on
 #pragma peephole on
