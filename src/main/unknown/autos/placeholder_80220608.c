@@ -253,23 +253,26 @@ void barrelgener_init(int obj)
 void barrelgener_release(void) {}
 void barrelgener_initialise(void) {}
 
+typedef struct DrBarrelGrFlags {
+    u8 bit80 : 1;
+    u8 bit40 : 1;
+    u8 pad : 6;
+} DrBarrelGrFlags;
+
 int drbarrelgr_getExtraSize(void) { return 0x12c; }
 int drbarrelgr_getObjectTypeId(void) { return 0; }
+#pragma scheduling off
 void drbarrelgr_free(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     void *heldObj = *(void **)(state + 8);
 
     if (heldObj != NULL) {
-        u8 flags;
-        int clear = 0;
-
         gunpowderbarrel_clearHeldState((int)heldObj);
-        flags = *(u8 *)(state + 0x12a);
-        flags = (flags & 0x7f) | ((clear & 1) << 7);
-        *(u8 *)(state + 0x12a) = flags;
+        ((DrBarrelGrFlags *)(state + 0x12a))->bit80 = 0;
     }
 }
+#pragma scheduling reset
 void drbarrelgr_hitDetect(void) {}
 void drbarrelgr_release(void) {}
 void drbarrelgr_initialise(void) {}
@@ -2127,6 +2130,7 @@ extern void timerSetToCountUp(void);
 
 int timer_getExtraSize(void) { return 0x20; }
 
+#pragma scheduling off
 void timer_free(int obj)
 {
     int state = *(int *)(obj + 0xb8);
@@ -2136,6 +2140,7 @@ void timer_free(int obj)
     }
     gameTimerStop();
 }
+#pragma scheduling reset
 
 int timer_hasExpired(int obj)
 {
@@ -2957,7 +2962,6 @@ extern f32 lbl_803E71E4;
 extern f32 lbl_803E704C;
 extern void ObjHits_MarkObjectPositionDirty(int obj);
 
-#pragma peephole off
 #pragma scheduling off
 int arwblocker_getBlockState(int obj)
 {
@@ -2965,16 +2969,15 @@ int arwblocker_getBlockState(int obj)
     switch (*(u8 *)(state + 0)) {
     case 1:
         if (*(u8 *)(state + 1) != 0) {
-            return 0;
+            break;
         }
         return 1;
     case 0:
-        return 0;
+        break;
     }
     return 0;
 }
-#pragma scheduling on
-#pragma peephole on
+#pragma scheduling reset
 
 int arwblocker_getExtraSize(void) { return 2; }
 int arwblocker_getObjectTypeId(void) { return 0; }
@@ -3143,6 +3146,7 @@ int getArwing(void) { return lbl_803DDD88; }
 
 int arwarwing_getExtraSize(void) { return 0x498; }
 int arwarwing_getObjectTypeId(void) { return 0; }
+#pragma scheduling off
 void arwarwing_free(int obj)
 {
     int state = *(int *)(obj + 0xb8);
@@ -3153,6 +3157,7 @@ void arwarwing_free(int obj)
         ModelLightStruct_free(*(void **)(state + 0x450));
     }
 }
+#pragma scheduling reset
 void arwarwing_release(void) {}
 void arwarwing_initialise(void) {}
 
@@ -7855,12 +7860,6 @@ void drmusiccont_update(int obj)
 }
 #pragma scheduling on
 #pragma peephole on
-
-typedef struct DrBarrelGrFlags {
-    u8 bit80 : 1;
-    u8 bit40 : 1;
-    u8 pad : 6;
-} DrBarrelGrFlags;
 
 extern f32 lbl_803E6CA4;
 extern f32 lbl_803E6CD0;
