@@ -2419,3 +2419,119 @@ void arwarwing_hitDetect(int obj)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern f32 lbl_803E7028;
+extern f32 lbl_803E705C;
+extern f32 lbl_803E7060;
+extern f32 lbl_803DC3D0;
+extern f32 lbl_803DC3D4;
+extern f32 lbl_803DC3D8;
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int limit);
+extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
+extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
+extern int fn_800283E8(int p1, int p2);
+extern void fn_800541A4(int p1, int p2);
+extern void textureAnimFn_80053f2c(int p1, int p2, int p3);
+
+#pragma peephole off
+#pragma scheduling off
+void arwarwinggu_update(int obj)
+{
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x606: {
+        int state = *(int *)(obj + 0xb8);
+        int model = Obj_GetActiveModel(obj);
+        int texture = (int)objFindTexture(obj, 0, 0);
+        int anim = fn_800283E8(*(int *)model, 0);
+        fn_800541A4(anim, (u16)*(int *)(state + 4));
+        textureAnimFn_80053f2c(anim, state, texture);
+        break;
+    }
+    case 0x610:
+    case 0x615: {
+        int state = *(int *)(obj + 0xb8);
+        if (*(f32 *)state > lbl_803E7060) {
+            *(f32 *)state -= timeDelta;
+            if (*(f32 *)state <= lbl_803E7060) {
+                *(f32 *)state = lbl_803E7060;
+                *(u8 *)(obj + 0x36) = 0;
+            }
+        }
+        break;
+    }
+    case 0x611: {
+        int state = *(int *)(obj + 0xb8);
+        f32 v;
+        if (*(u8 *)state != 0) {
+            v = lbl_803E705C * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36);
+        } else {
+            v = (f32)(u32)*(u8 *)(obj + 0x36) - lbl_803E705C * timeDelta;
+        }
+        if (v < lbl_803E7060) {
+            v = lbl_803E7060;
+        } else if (v > lbl_803E705C) {
+            v = lbl_803E705C;
+        }
+        *(u8 *)(obj + 0x36) = (int)v;
+        break;
+    }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+#pragma peephole off
+#pragma scheduling off
+void arwingandrossstuff_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int arwing = getArwing();
+
+    if (arwing != 0 && (*(u16 *)(arwing + 0xb0) & 0x1000) != 0) {
+        Obj_FreeObject(obj);
+        return;
+    }
+    if (*(f32 *)(state + 0x10) > lbl_803E7008) {
+        *(f32 *)(state + 0x10) -= timeDelta;
+        if (*(f32 *)(state + 0x10) <= lbl_803E7008) {
+            Obj_FreeObject(obj);
+        }
+        return;
+    }
+    ObjHits_SetHitVolumeSlot(obj, 0xf, *(u8 *)(state + 0x18), 0);
+    *(u8 *)(obj + 0x36) = 0xff;
+    if (*(f32 *)(state + 4) > lbl_803E7008) {
+        *(f32 *)(state + 4) -= timeDelta;
+        if (*(f32 *)(state + 4) <= lbl_803E7008) {
+            *(f32 *)(state + 4) = lbl_803E7008;
+            Obj_FreeObject(obj);
+            return;
+        }
+        if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
+            if (*(s16 *)(obj + 0x46) != 0x6ae) {
+                Sfx_PlayFromObjectLimited(obj, 0x2b3, 4);
+            }
+            *(f32 *)(state + 0x10) = lbl_803E7028;
+            *(u8 *)(obj + 0x36) = 0;
+            projectileParticleFxFn_80099660(obj, lbl_803E701C, *(u8 *)state);
+            if (*(int *)(state + 0x14) != 0) {
+                ModelLightStruct_free(*(void **)(state + 0x14));
+                *(int *)(state + 0x14) = 0;
+            }
+        }
+        objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
+                *(f32 *)(obj + 0x2c) * timeDelta);
+        if (*(s16 *)(obj + 0x46) == 0x80d) {
+            *(s16 *)(obj + 4) += *(s16 *)(state + 0x1a);
+            *(s16 *)(obj + 2) += *(s16 *)(state + 0x1c);
+        }
+        if (*(s16 *)(obj + 0x46) == 0x7e4) {
+            *(f32 *)(obj + 8) += lbl_803DC3D0;
+            ObjHitbox_SetSphereRadius(obj, (int)(*(f32 *)(obj + 8) * lbl_803DC3D8));
+            *(s16 *)(obj + 4) = (int)((f32)*(s16 *)(obj + 4) + lbl_803DC3D4);
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
