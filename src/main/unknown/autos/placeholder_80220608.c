@@ -4659,4 +4659,49 @@ void fn_8022ED74(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v
 void fn_8022F558(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
 void fn_80231028(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
 void fn_8023134C(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+
+void fn_8022F27C(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int model = Obj_GetActiveModel(obj);
+    int *texture = objFindTexture(obj, 0, 0);
+    int anim = fn_800283E8(*(int *)model, 0);
+    fn_800541A4(anim, (u16)*(int *)(state + 4));
+    textureAnimFn_80053f2c(anim, state, (int)texture);
+}
+
+extern f32 lbl_803E7044;
+void fn_8022ECE0(int obj, f32 param)
+{
+    int state = *(int *)(obj + 0xb8);
+    f32 mtx[12];
+    ArwProjPosSrc src;
+
+    *(f32 *)(state + 4) = param;
+    src.pos[0] = lbl_803E7044;
+    src.pos[1] = lbl_803E7044;
+    src.pos[2] = lbl_803E7044;
+    src.rot[0] = *(s16 *)obj;
+    src.rot[1] = *(s16 *)(obj + 2);
+    src.rot[2] = 0;
+    src.scale = lbl_803E704C;
+    setMatrixFromObjectPos(mtx, &src);
+    Matrix_TransformPoint(mtx, lbl_803E7044, lbl_803E7044, *(f32 *)(state + 4),
+                          (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
+}
+
+extern f32 lbl_803E6C68;
+void fn_80221E94(int obj, f32 *p2)
+{
+    struct {
+        f32 _pad[3];
+        f32 vec[3];
+    } s;
+
+    s.vec[0] = p2[0] + playerMapOffsetX;
+    s.vec[1] = p2[1];
+    s.vec[2] = p2[2] + playerMapOffsetZ;
+    objLightFn_8009a1dc(obj, lbl_803E6C68, &s, 1, 0);
+    Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
+}
 #pragma scheduling on
