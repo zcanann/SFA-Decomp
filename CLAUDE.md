@@ -233,6 +233,12 @@ Heuristic before reaching for `asm { }`:
     and index `tbl[idx].f` — MWCC then emits `add; lha disp`. Single-level
     indexing matches 100% (fn_8029D250); double-level (`element*stride + idx*4`)
     only partials — leave those partial. Clean C, no asm.
+    **End-pointer form for the LAST element: `T *top = &arr[n]; top[-1].f`
+    gives `add base; lwz -disp(base)` where `arr[n-1].f` emits indexed `lwzx`.**
+    When target walks to the end of a table and accesses the final entry with a
+    negative displacement off a computed end-pointer, write the end-pointer +
+    `top[-1]` form rather than the `arr[n-1]` index. Took mmFreeDeferred
+    94.8→99.45% (hotel4, 8001746C). Clean C, no asm.
 
 19. **objdiff cascade-misalign trap: a low fuzzy% with a high instruction-diff%
     means ONE dropped instruction early in the body, not a wrong function.**
