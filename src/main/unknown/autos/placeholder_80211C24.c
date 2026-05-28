@@ -4268,3 +4268,49 @@ int ktrex_stateHandlerB04(int obj, int runtime) {
     return 0;
 }
 #pragma scheduling reset
+
+extern s16 lbl_803DC258;
+extern u16 lbl_803DC268;
+extern u16 lbl_803DC270;
+extern u16 lbl_803DC278;
+extern u16 lbl_803DC280;
+
+#pragma scheduling off
+int ktrex_stateHandlerB01(int obj, int runtime) {
+    f32 z;
+    u16 mask;
+    f32 dx;
+    f32 dz;
+    if ((s8)*(u8 *)((char *)runtime + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, (&lbl_803DC258)[*(u8 *)((char *)gKTRexState + 0xfc)], lbl_803E67B8, 0);
+        z = lbl_803E67B8;
+        *(f32 *)((char *)runtime + 0x280) = z;
+        *(f32 *)((char *)runtime + 0x284) = z;
+    }
+    mask = (&lbl_803DC268)[*(u8 *)((char *)gKTRexState + 0xfc)];
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 4) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~4;
+        *(int *)((char *)gKTRexState + 0x104) |= mask;
+    }
+    mask = (&lbl_803DC270)[*(u8 *)((char *)gKTRexState + 0xfc)];
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 2) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~2;
+        *(int *)((char *)gKTRexState + 0x104) |= mask;
+    }
+    if (*(u8 *)((char *)gKTRexState + 0x108) != 0) {
+        mask = (&lbl_803DC278)[*(u8 *)((char *)gKTRexState + 0xfc)];
+    } else {
+        mask = (&lbl_803DC280)[*(u8 *)((char *)gKTRexState + 0xfc)];
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 1) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~1;
+        *(int *)((char *)gKTRexState + 0x104) |= mask;
+    }
+    dx = oneOverTimeDelta * (*(f32 *)((char *)gKTRexState + 0xe8) - *(f32 *)((char *)obj + 0xc));
+    dz = oneOverTimeDelta * (*(f32 *)((char *)gKTRexState + 0xf0) - *(f32 *)((char *)obj + 0x14));
+    ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent *)obj, (f32 *)((char *)runtime + 0x2a0));
+    *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)gKTRexState + 0xe8);
+    *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)gKTRexState + 0xf0);
+    return 0;
+}
+#pragma scheduling reset
