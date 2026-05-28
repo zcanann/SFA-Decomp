@@ -7937,6 +7937,22 @@ void gameTextFn_80019804(int flags) {
     }
 }
 
+void gameTextFn_8001984c(s16 x, s16 y, int flags) {
+    if (flags & 1) {
+        lbl_803DC9AA = x;
+        lbl_803DC9A8 = y;
+    }
+    if (flags & 2) {
+        int i = lbl_803DC9C8;
+        GameTextSlot *s;
+        lbl_803DC9C8 = i + 1;
+        s = &lbl_8033A540[i];
+        s->v = 0xa;
+        s->f4 = (u16)x;
+        s->f8 = (u16)y;
+    }
+}
+
 void *getTabEntry(int id, int arg, int e, int d) {
     lbl_8033BF88.f0 = 1;
     lbl_8033BF88.f1 = 2;
