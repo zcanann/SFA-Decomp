@@ -136,7 +136,8 @@ static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
   return NULL;
 }
 
-int fn_800E1F3C(int* a, int* b, f32 f1, f32 f2, f32 f3, f32 f4);
+int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef *a,RomCurveDef *b,f32 x,f32 unusedY,
+                                          f32 z,f32 unusedW);
 
 /*
  * --INFO--
@@ -344,7 +345,7 @@ int curves_distFn15(u32 curveId,f32 x,f32 y,f32 z,f32 *outDistance)
     nextCurve = curve;
     if (nextCurveId != ROMCURVE_LINK_ID_NONE) {
       nextCurve = RomCurve_FindByIdInline(nextCurveId);
-      if (fn_800E1F3C((int *)curve,(int *)nextCurve,x,y,z,lbl_803E0660) != 0) {
+      if (RomCurve_segmentIntersectsOriginRayXZ(curve,nextCurve,x,y,z,lbl_803E0660) != 0) {
         dx = curve->x - x;
         dy = curve->y - y;
         dz = curve->z - z;
@@ -4501,27 +4502,26 @@ int curves_findByAction(int act) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_800E1F3C: 2D segment-intersection predicate. Returns 1 if the
- * segment between (f1, f3) and the origin in the xz-plane crosses the
- * segment between a and b (each a curve-point struct with x at +0x8 and
- * z at +0x10). Uses the standard sign-of-cross-product test on both
- * pairs of endpoints. f2 and f4 args are ignored. */
+/* RomCurve_segmentIntersectsOriginRayXZ: 2D segment-intersection predicate.
+ * Returns 1 if the segment between (x, z) and the origin in the xz-plane
+ * crosses the segment between a and b. */
 #pragma scheduling off
 #pragma peephole off
-int fn_800E1F3C(int* a, int* b, f32 f1, f32 f2, f32 f3, f32 f4) {
-    f32 ax = *(f32*)((u8*)a + 0x8);
-    f32 az = *(f32*)((u8*)a + 0x10);
-    f32 bx = *(f32*)((u8*)b + 0x8);
-    f32 bz = *(f32*)((u8*)b + 0x10);
+int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef *a, RomCurveDef *b, f32 x, f32 unusedY,
+                                          f32 z, f32 unusedW) {
+    f32 ax = a->x;
+    f32 az = a->z;
+    f32 bx = b->x;
+    f32 bz = b->z;
     f32 cross1 = bx * az - ax * bz;
-    f32 sum1 = cross1 + (f1 * (bz - az) + f3 * (ax - bx));
+    f32 sum1 = cross1 + (x * (bz - az) + z * (ax - bx));
     if (!((sum1 <= gFloatZero && cross1 >= gFloatZero) ||
           (sum1 >= gFloatZero && cross1 < gFloatZero))) {
         return 0;
     }
     {
-        f32 cross_a = -f3 * ax + f1 * az;
-        f32 cross_b = -f3 * bx + f1 * bz;
+        f32 cross_a = -z * ax + x * az;
+        f32 cross_b = -z * bx + x * bz;
         if ((cross_a <= gFloatZero && cross_b >= gFloatZero) ||
             (cross_a >= gFloatZero && cross_b < gFloatZero)) {
             return 1;
