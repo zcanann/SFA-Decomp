@@ -120,9 +120,18 @@ extern f32 lbl_803E6AC4;
 extern f32 lbl_803E6AC8;
 extern f32 lbl_803E6B34;
 
+extern f32 lbl_803E6978;
+extern f32 lbl_803E69D0;
+extern f32 lbl_803E69D8;
+
 extern void *gKTRexState;
 extern void *gKTRexRuntime;
+extern undefined4 *gExpgfxInterface;
 extern void ktrex_initialiseStateHandlerTables(void);
+extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void *Obj_GetPlayerObject(void);
+extern void ModelLightStruct_free(void *p);
 
 #pragma scheduling off
 #pragma peephole off
@@ -204,6 +213,47 @@ void drakorhoverpad_modelMtxFn(int obj, f32 *a, f32 *b, f32 *c) {
 
 void ktrex_initialise(void) {
     ktrex_initialiseStateHandlerTables();
+}
+
+void drgenerator_free(int obj) {
+    ObjGroup_RemoveObject(obj, 0x3);
+}
+
+void drshackle_free(int obj) {
+    ObjGroup_RemoveObject(obj, 0x37);
+}
+
+int kytesmum_idleCallback(void) {
+    Obj_GetPlayerObject();
+    return 0;
+}
+
+void ktlazerlight_free(int obj) {
+    void *p = *(void **)((char *)obj + 0xb8);
+    void *m = *(void **)((char *)p + 0x4);
+    if (m != 0) {
+        ModelLightStruct_free(m);
+    }
+}
+
+void ktfallingrocks_free(u8 *obj) {
+    ((void (*)(u8 *))(*(u32 *)(*gExpgfxInterface + 0x18)))(obj);
+}
+
+void gmmazewell_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6978);
+}
+
+void cagecontrol_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69D0);
+    }
+}
+
+void explodeplan_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
