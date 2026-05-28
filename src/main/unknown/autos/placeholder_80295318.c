@@ -9233,6 +9233,56 @@ void fn_802B066C(int obj, int state)
     }
 }
 
+extern void cutsceneFadeInOut(int x);
+extern void setPendingMapLoad(int v);
+extern void AudioStream_StopCurrent(void);
+extern void AudioStream_Play(int a, void *cb);
+extern void AudioStream_StartPrepared(void);
+
+void playerDie(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int setup;
+    int variant;
+    int i;
+    void **p;
+    cutsceneFadeInOut(1);
+    setTimeStop(0xff);
+    setPendingMapLoad(1);
+    if ((u32)obj != 0) {
+        variant = *(s8 *)((char *)obj + 0xad) != 0;
+    } else {
+        variant = 0;
+    }
+    if (variant != 0) {
+        setup = Obj_AllocObjectSetup(0x20, 0x882);
+    } else {
+        setup = Obj_AllocObjectSetup(0x20, 0x887);
+    }
+    *(f32 *)((char *)setup + 0x8) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)setup + 0xc) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)setup + 0x10) = *(f32 *)((char *)obj + 0x14);
+    *(int *)((char *)inner + 0x46c) = Obj_SetupObject(setup, 5, -1, -1, 0);
+    ((ByteFlags *)((char *)inner + 0x3f3))->b04 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f3))->b02 = 1;
+    lbl_803DE42C = 0;
+    p = lbl_80332ED4;
+    for (i = 0; i < 7; i++) {
+        if (*p != NULL) {
+            Obj_FreeObject((int)*p);
+            *p = NULL;
+        }
+        p++;
+    }
+    if (lbl_803DE454 != NULL) {
+        Resource_Release(lbl_803DE454);
+        lbl_803DE454 = NULL;
+    }
+    *(int *)((char *)inner + 0x360) &= ~0x400;
+    AudioStream_StopCurrent();
+    AudioStream_Play(0x51e0, AudioStream_StartPrepared);
+}
+
 void fn_802AABE4(int obj)
 {
     s16 *movp;
