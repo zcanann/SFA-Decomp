@@ -4464,6 +4464,64 @@ void FUN_80006a04(void)
 {
 }
 
+typedef struct Curve {
+    u8 pad00[0x10];
+    int idx;
+    f32 totalLen;
+    f32 segLen[27];
+    f32 *px;
+    f32 *py;
+    f32 *pz;
+    u8 pad90[8];
+    u32 flag98;
+} Curve;
+
+extern void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803DE658;
+extern f32 lbl_803DE67C;
+
+void curveFn_8000fe8c(Curve *curve, int count)
+{
+    f32 outX[21];
+    f32 outY[21];
+    f32 outZ[21];
+    f32 *px = NULL;
+    f32 *py = NULL;
+    f32 *pz = NULL;
+    int i;
+    f32 dx, dy, dz, sq;
+    f32 zero;
+
+    if (curve->px != NULL) {
+        px = curve->px + curve->idx;
+    }
+    if (curve->py != NULL) {
+        py = curve->py + curve->idx;
+    }
+    if (curve->pz != NULL) {
+        pz = curve->pz + curve->idx;
+    }
+    if (curve->flag98 != 0) {
+        curveFn_80010018(px, py, pz, outX, outY, outZ, count);
+    }
+
+    zero = lbl_803DE658;
+    curve->totalLen = zero;
+    for (i = 0; i < count; i++) {
+        dx = px != NULL ? outX[i + 1] - outX[i] : lbl_803DE658;
+        dy = py != NULL ? outY[i + 1] - outY[i] : lbl_803DE658;
+        dz = pz != NULL ? outZ[i + 1] - outZ[i] : lbl_803DE658;
+        sq = dx * dx + dy * dy + dz * dz;
+        if (sq > zero) {
+            curve->segLen[i] = sqrtf(sq);
+        } else {
+            curve->segLen[i] = lbl_803DE67C;
+        }
+        curve->totalLen += curve->segLen[i];
+    }
+}
+
 /*
  * --INFO--
  *
