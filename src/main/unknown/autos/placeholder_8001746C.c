@@ -7633,3 +7633,119 @@ void fn_8002B860(void *v) {
 }
 #pragma peephole reset
 #pragma pop
+
+extern float fn_802924B4(float y, float x);
+extern void Sfx_SetObjectSoundsPaused(s32 paused);
+extern void gameTextInitFn_8001c794(void);
+extern void gameTextLoadDir(int dirId);
+extern void LCQueueWait();
+extern void mmFree(void *p);
+extern void mmFreeDeferred(void *p);
+extern void objList_remove(void *list, void *item);
+extern double lbl_803DE7D8;
+extern u8 lbl_803DCA31;
+extern int lbl_803DCA34;
+extern u8 lbl_803DC980;
+extern f32 lbl_803DE854;
+extern int lbl_803DCBAC;
+extern int *lbl_803DCBB0;
+extern u8 *lbl_803DCBB4;
+extern int lbl_803DCB7C;
+extern f32 timeDelta;
+
+typedef struct {
+    u8 active;
+    u8 _1[3];
+    int f4;
+    int f8;
+    int fc;
+} Elem8033BE60;
+extern Elem8033BE60 lbl_8033BE60[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void cutsceneExit(void) {
+    lbl_803DCA3A = 0;
+    lbl_803DCA3C = 0;
+    Sfx_SetObjectSoundsPaused(0);
+}
+
+void gameTextInit(void) {
+    gameTextInitFn_8001c794();
+    lbl_803DC980 = 1;
+    gameTextLoadDir(0x1c);
+}
+
+int getAngle(float y, float x) {
+    return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
+}
+
+int atan2_8002178c(float y, float x) {
+    return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
+}
+
+void cacheFn_800229c4(void) {
+    if (lbl_803DD610 != 4 && lbl_803DD610 == 0) {
+        LCQueueWait();
+    }
+}
+
+void fn_80026C54(u8 *p) {
+    p[0x18] = 0;
+    *(f32 *)(p + 0x14) += timeDelta;
+    if (*(f32 *)(p + 0x14) > lbl_803DE854) {
+        *(f32 *)(p + 0x14) -= lbl_803DE854;
+    }
+}
+
+void mm_free(void *p) {
+    if (gMmFreeDelay == 0) {
+        mmFree(p);
+    } else {
+        mmFreeDeferred(p);
+    }
+}
+
+void *getTablesBinEntry(int i) {
+    if (i >= 0 && i < lbl_803DCBAC) {
+        return lbl_803DCBB4 + lbl_803DCBB0[i] * 4;
+    }
+    return lbl_803DCBB4;
+}
+
+void objRemoveFromListFn_8002ce88(u8 *obj) {
+    if (*(u16 *)(obj + 0xb0) & 0x10) {
+        objList_remove(&lbl_803DCB7C, obj);
+    }
+}
+
+void *Obj_GetPlayerObject(void) {
+    int count;
+    void **objs = ObjGroup_GetObjects(0, &count);
+    if (count != 0) {
+        return objs[0];
+    }
+    return NULL;
+}
+
+void fn_8001E608(int i, int a, int b) {
+    lbl_8033BE60[i].f8 = a;
+    lbl_8033BE60[i].f4 = 0;
+    lbl_8033BE60[i].fc = b;
+    lbl_8033BE60[i].active = 1;
+}
+
+#pragma peephole on
+void fn_8001E8F4(u8 v) {
+    lbl_803DCA31 = v;
+    lbl_803DCA34 = 1;
+    lbl_8033BE60[0].active = 0;
+    lbl_8033BE60[1].active = 0;
+    lbl_8033BE60[2].active = 0;
+    lbl_8033BE60[3].active = 0;
+    lbl_8033BE60[4].active = 0;
+    lbl_8033BE60[5].active = 0;
+}
+#pragma peephole reset
+#pragma pop
