@@ -11607,3 +11607,127 @@ int fn_802985FC(int obj, int state, f32 fv)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E8068;
+extern f32 lbl_803E806C;
+extern f32 lbl_803E7EA0;
+extern f32 lbl_803DC680;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802AE9C8(int obj, int inner, int state)
+{
+    if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E98) {
+        ObjAnim_SetCurrentMove(obj, 0x91, lbl_803E7EA4, 0);
+    } else {
+        ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E7EA4, 0);
+    }
+    ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0xf);
+
+    *(f32 *)((char *)inner + 0x404) = lbl_803E8068;
+    *(f32 *)((char *)inner + 0x408) =
+        lbl_803E7EA0 * (lbl_803E806C * *(f32 *)((char *)state + 0x298)) +
+        lbl_803E7EB4 * *(f32 *)((char *)state + 0x294);
+    {
+        f32 v = *(f32 *)((char *)inner + 0x408);
+        f32 clamped;
+        if (v < lbl_803E7F18) {
+            clamped = lbl_803E7F18;
+        } else if (v > *(f32 *)((char *)inner + 0x404)) {
+            clamped = *(f32 *)((char *)inner + 0x404);
+        } else {
+            clamped = v;
+        }
+        *(f32 *)((char *)inner + 0x408) = clamped;
+    }
+    *(f32 *)((char *)state + 0x280) = *(f32 *)((char *)inner + 0x408);
+    *(f32 *)((char *)state + 0x294) = *(f32 *)((char *)inner + 0x408);
+
+    *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)state + 0x280) / lbl_803E8068;
+    {
+        f32 v = *(f32 *)((char *)obj + 0x28);
+        f32 clamped;
+        if (v < lbl_803E7EA4) {
+            clamped = lbl_803E7EA4;
+        } else if (v > lbl_803E7EE0) {
+            clamped = lbl_803E7EE0;
+        } else {
+            clamped = v;
+        }
+        *(f32 *)((char *)obj + 0x28) = clamped;
+    }
+    *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) * lbl_803DC680;
+    {
+        f32 v = *(f32 *)((char *)obj + 0x28);
+        f32 clamped;
+        if (v < lbl_803E7E98) {
+            clamped = lbl_803E7E98;
+        } else if (v > lbl_803DC680) {
+            clamped = lbl_803DC680;
+        } else {
+            clamped = v;
+        }
+        *(f32 *)((char *)obj + 0x28) = clamped;
+    }
+    *(f32 *)((char *)state + 0x2a0) =
+        lbl_803E7EE0 / (lbl_803E7ED4 * lbl_803DC680 / lbl_803DC67C);
+    *(f32 *)((char *)inner + 0x84c) = *(f32 *)((char *)obj + 0x1c);
+    *(f32 *)((char *)inner + 0x850) = *(f32 *)((char *)obj + 0x1c) - lbl_803E7ED8;
+
+    ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 1;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+    *(u8 *)((char *)inner + 0x40d) = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+    staffFn_80170380(lbl_803DE450, 2);
+    ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
+    *(int *)((char *)inner + 0x360) |= 0x800000;
+    ObjHits_SyncObjectPositionIfDirty(obj);
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b40) {
+        *(s16 *)((char *)inner + 0x484) += -0x8000;
+    }
+    ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f1))->b01 = 0;
+    *(u8 *)((char *)inner + 0x40c) = 0;
+    if (((ByteFlags *)((char *)inner + 0x3f1))->b20) {
+        int t = *(s16 *)obj;
+        *(s16 *)((char *)inner + 0x484) = t;
+        *(s16 *)((char *)inner + 0x478) = t;
+        *(int *)((char *)inner + 0x494) = t;
+        *(f32 *)((char *)inner + 0x284) = lbl_803E7EA4;
+    }
+    ((ByteFlags *)((char *)inner + 0x3f1))->b20 = 0;
+    if (((ByteFlags *)((char *)inner + 0x3f1))->b10 &&
+        *(u8 *)((char *)inner + 0x8c8) != 0x48 &&
+        *(u8 *)((char *)inner + 0x8c8) != 0x47 && getCurSeqNo() == 0) {
+        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            0x42, 0, 1, 0, 0, 0x1e, 0xff);
+        ((ByteFlags *)((char *)inner + 0x3f1))->b10 = 0;
+    }
+    {
+        u16 sfxId;
+        if (*(s16 *)((char *)inner + 0x81a) == 0) {
+            sfxId = 0x2d7;
+        } else {
+            sfxId = 0x2d6;
+        }
+        Sfx_PlayFromObject(obj, sfxId);
+    }
+    *(u8 *)((char *)inner + 0x800) = 0;
+    {
+        void *sub = *(void **)((char *)inner + 0x7f8);
+        if (sub != NULL) {
+            s16 id = *(s16 *)((char *)sub + 0x46);
+            if (id == 0x3cf || id == 0x662) {
+                objThrowFn_80182504((int)sub);
+            } else {
+                objSaveFn_800ea774((int)sub);
+            }
+            *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) &= ~0x4000;
+            *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+            *(int *)((char *)inner + 0x7f8) = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
