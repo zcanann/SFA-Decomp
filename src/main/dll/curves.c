@@ -104,6 +104,10 @@ static inline u32 RomCurve_GetId(RomCurveDef *curve) {
   return curve->id;
 }
 
+static inline int RomCurve_IsLinkIdValid(int linkId) {
+  return -1 < linkId;
+}
+
 static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
   RomCurveDef *curve;
   int high;
@@ -2361,15 +2365,23 @@ int curves_getIds_18(RomCurveDef *curve,int excludeLinkId,int *outIds)
 {
   int count;
   int linkId;
-  int i;
 
   count = 0;
-  for (i = 0; i < ROMCURVE_LINK_COUNT; i++) {
-    linkId = curve->linkIds[i];
-    if (linkId > 0 && linkId != excludeLinkId) {
-      outIds[count] = linkId;
-      count++;
-    }
+  linkId = curve->linkIds[0];
+  if (RomCurve_IsLinkIdValid(linkId) && linkId != excludeLinkId) {
+    outIds[count++] = linkId;
+  }
+  linkId = curve->linkIds[1];
+  if (RomCurve_IsLinkIdValid(linkId) && linkId != excludeLinkId) {
+    outIds[count++] = linkId;
+  }
+  linkId = curve->linkIds[2];
+  if (RomCurve_IsLinkIdValid(linkId) && linkId != excludeLinkId) {
+    outIds[count++] = linkId;
+  }
+  linkId = curve->linkIds[3];
+  if (RomCurve_IsLinkIdValid(linkId) && linkId != excludeLinkId) {
+    outIds[count++] = linkId;
   }
   return count;
 }

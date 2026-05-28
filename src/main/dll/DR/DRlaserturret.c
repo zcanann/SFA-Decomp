@@ -117,7 +117,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject *obj, DRLaserTurretAnimState *a
  * EN v1.0 Address: 0x801E6D08
  * EN v1.0 Size: 1052b
  */
-int DRlaserturret_updateTracking(void *obj, DRLaserTurretAnimState *animState)
+int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimState *animState)
 {
     void *playerObj;
     DRLaserTurretState *state;

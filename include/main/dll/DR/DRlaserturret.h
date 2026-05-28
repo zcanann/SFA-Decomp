@@ -63,8 +63,10 @@ typedef struct DRLaserTurretState {
 } DRLaserTurretState;
 
 typedef struct DRLaserTurretObject {
-    u8 pad000[0x10];
+    u8 pad000[0x0c];
+    f32 x;
     f32 y;
+    f32 z;
     u8 pad014[0xa0 - 0x14];
     s16 currentMove;
     u8 pad0a2[0xaf - 0xa2];
@@ -85,7 +87,7 @@ typedef struct DRLaserTurretAnimState {
 } DRLaserTurretAnimState;
 
 int DRlaserturret_updateIdle(DRLaserTurretObject *obj, DRLaserTurretAnimState *animState);
-int DRlaserturret_updateTracking(void *obj, DRLaserTurretAnimState *animState);
+int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimState *animState);
 int DRlaserturret_startLinkedTarget(void *obj);
 int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch);
 void DRlaserturret_startTimedChallenge(void *obj);
