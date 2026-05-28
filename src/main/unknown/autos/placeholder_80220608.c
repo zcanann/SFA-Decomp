@@ -6784,6 +6784,37 @@ void arwsquadron_followPath(int p1, int p2)
 }
 #pragma scheduling reset
 
+#pragma scheduling off
+void arwsquadron_updateVolley(int p1, int p2, int p3)
+{
+    SquadCmdFlags *flags = (SquadCmdFlags *)(p2 + 0x160);
+
+    if (!flags->f20) {
+        if (timerCountDown((void *)(p2 + 0x124)) != 0) {
+            flags->f20 = 1;
+            storeZeroToFloatParam((void *)(p2 + 0x128));
+            s16toFloat((void *)(p2 + 0x128), *(u8 *)(p3 + 0x2d));
+            *(u8 *)(p2 + 0x155) = (s8)*(u8 *)(p3 + 0x2e);
+            *(s16 *)(p2 + 0x14e) = -*(u16 *)(p3 + 0x2a);
+        }
+    } else if (timerCountDown((void *)(p2 + 0x128)) != 0) {
+        arwsquadron_spawnProjectile(p1, 0, *(s16 *)(p2 + 0x14e),
+                                    (s8)*(u8 *)(p2 + 0x155) == *(u8 *)(p3 + 0x2e) ? 1 : 0);
+        if (*(u8 *)(p2 + 0x15b) > 1)
+            arwsquadron_spawnProjectile(p1, 1, *(s16 *)(p2 + 0x14e), 0);
+        *(u8 *)(p2 + 0x155) = *(u8 *)(p2 + 0x155) - 1;
+        storeZeroToFloatParam((void *)(p2 + 0x128));
+        s16toFloat((void *)(p2 + 0x128), *(u8 *)(p3 + 0x2d));
+        *(s16 *)(p2 + 0x14e) = *(s16 *)(p2 + 0x14e) + *(u16 *)(p3 + 0x2a) * 2 / *(u8 *)(p3 + 0x2e);
+        if ((s8)*(u8 *)(p2 + 0x155) <= 0) {
+            flags->f20 = 0;
+            storeZeroToFloatParam((void *)(p2 + 0x124));
+            s16toFloat((void *)(p2 + 0x124), *(u8 *)(p3 + 0x2c));
+        }
+    }
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
