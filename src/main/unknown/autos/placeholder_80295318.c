@@ -6948,7 +6948,7 @@ extern f32 lbl_803DE464;
 extern f32 lbl_803DE460;
 extern int *gPartfxInterface;
 
-int fn_8029A76C(int obj, int state)
+int fn_8029A76C(int obj, int state, f32 fv)
 {
     int inner = *(int *)((char *)obj + 0xb8);
     int r;
@@ -7369,6 +7369,139 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
         *(s8 *)((char *)out + 0x2) = *(s8 *)((char *)src + 0x53);
         return 1;
     }
+    return 0;
+}
+
+extern int fn_8029A5E4(int obj, int state);
+extern void fn_802A96D8(void);
+extern int getYButtonItem(s16 *out);
+extern void buttonDisable(int a, int b);
+extern s16 lbl_803DE4B2;
+extern f32 lbl_803DE430;
+
+int fn_8029ABD8(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    struct {
+        u8 pad[6];
+        u16 mode;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } pfx;
+
+    if (lbl_803DE42C != 0) {
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
+        *(f32 *)((char *)inner + 0x854) = *(f32 *)((char *)inner + 0x854) - timeDelta;
+        if (*(f32 *)((char *)inner + 0x854) <= lbl_803E7EA4) {
+            int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+            int v = *(s16 *)((char *)sub + 0x4) - 1;
+            if (v < 0) {
+                v = 0;
+            } else if (v > *(s16 *)((char *)sub + 0x6)) {
+                v = *(s16 *)((char *)sub + 0x6);
+            }
+            *(s16 *)((char *)sub + 0x4) = v;
+            *(f32 *)((char *)inner + 0x854) = lbl_803E7F58;
+        }
+        ObjPath_GetPointWorldPosition(lbl_803DE44C, 5, &pfx.x, &pfx.y, &pfx.z, 0);
+        pfx.scale = lbl_803E7F9C;
+        pfx.mode = 0;
+        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        pfx.mode = 1;
+        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        if ((*(u16 *)((char *)inner + 0x6e0) & lbl_803DE4B4) == 0 ||
+            *(s16 *)((char *)*(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c) + 0x4) == 0 ||
+            getCurSeqNo() != 0) {
+            void **p = lbl_80332ED4;
+            int i;
+            *(s16 *)((char *)inner + 0x80a) = -1;
+            lbl_803DE42C = 0;
+            for (i = 0; i < 7; i++) {
+                if (*p != NULL) {
+                    Obj_FreeObject((int)*p);
+                    *p = NULL;
+                }
+                p++;
+            }
+            if (lbl_803DE454 != NULL) {
+                Resource_Release(lbl_803DE454);
+                lbl_803DE454 = NULL;
+            }
+        }
+    } else if (*(s16 *)((char *)inner + 0x80e) != -1 || (*(u16 *)((char *)inner + 0x6e2) & 0x800) != 0) {
+        int yitem;
+        int b28;
+        s16 item;
+        if (*(u16 *)((char *)inner + 0x6e2) & 0x800) {
+            yitem = getYButtonItem(&item);
+            b28 = 0x800;
+        } else {
+            yitem = 0;
+            item = *(s16 *)((char *)inner + 0x80e);
+            b28 = 0x100;
+        }
+        if (*(s16 *)((char *)inner + 0x80e) != -1 ||
+            (yitem == 1 && (item == 0x2d || item == 0x5ce))) {
+            buttonDisable(0, 0x900);
+            *(s16 *)((char *)inner + 0x6e2) = *(u16 *)((char *)inner + 0x6e2) & ~0x900;
+            lbl_803DE4B2 = item;
+            if (item != *(s16 *)((char *)inner + 0x80a)) {
+                fn_802AB38C(obj, inner, item);
+            }
+            switch (lbl_803DE4B2) {
+            case 0x2d: {
+                int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                if (*(s16 *)((char *)sub + 0x4) >= 2) {
+                    int r = fn_8029A76C(obj, state, fv);
+                    if (r != 0) {
+                        return r;
+                    }
+                } else {
+                    Sfx_PlayFromObject(0, 0x10a);
+                }
+                break;
+            }
+            case 0x958: {
+                int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                if (*(s16 *)((char *)sub + 0x4) >= 0) {
+                    int r = ((int (*)(int, int, f32))fn_8029A5E4)(obj, state, fv);
+                    if (r != 0) {
+                        return r;
+                    }
+                } else {
+                    Sfx_PlayFromObject(0, 0x10a);
+                }
+                break;
+            }
+            case 0x5ce: {
+                int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                if (*(s16 *)((char *)sub + 0x4) >= 1) {
+                    int sub2;
+                    int v;
+                    ((void (*)(int))fn_802A96D8)(obj);
+                    lbl_803DE4B4 = b28;
+                    lbl_803DE42C = 1;
+                    lbl_803DE430 = lbl_803E7EA4;
+                    *(f32 *)((char *)inner + 0x854) = lbl_803E7F58;
+                    sub2 = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                    v = *(s16 *)((char *)sub2 + 0x4) - 1;
+                    if (v < 0) {
+                        v = 0;
+                    } else if (v > *(s16 *)((char *)sub2 + 0x6)) {
+                        v = *(s16 *)((char *)sub2 + 0x6);
+                    }
+                    *(s16 *)((char *)sub2 + 0x4) = v;
+                }
+                break;
+            }
+            }
+        }
+    }
+    *(s16 *)((char *)inner + 0x80a) = -1;
     return 0;
 }
 
@@ -13068,8 +13201,8 @@ extern int fn_802985FC(int obj, int state, f32 fv);
 extern int fn_80298944();
 extern int fn_80298E54();
 extern int fn_802994D0();
-extern int fn_8029A76C();
-extern int fn_8029ABD8();
+extern int fn_8029A76C(int obj, int state, f32 fv);
+extern int fn_8029ABD8(int obj, int state, f32 fv);
 extern int fn_8029AF9C();
 extern int fn_8029BDB4();
 extern int fn_8029C9C8();
