@@ -6409,6 +6409,8 @@ extern int lbl_803DAFC8[];
 extern int lbl_803DE4B8;
 extern void fn_802B0EA4(int obj, int state, int sub);
 extern s8 fn_802A74A4(int obj, int state, int sub, void *out, f32 fv, int n);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E80E8;
 
 typedef struct {
     u8 pad[0x7ac];
@@ -8627,6 +8629,58 @@ void fn_802B4C18(int obj, int state, f32 fv)
     (*(void (*)(int, int, f32, f32, int *, int *))(*(int *)(*gPlayerInterface + 0x8)))(
         obj, state, fv, fv, lbl_803DAFC8, &lbl_803DE4B8);
     *(int *)state &= ~0x1000000;
+}
+
+int fn_802AB1D0(int obj)
+{
+    int objs;
+    int i;
+    int count;
+    int best;
+    int cur;
+    f32 dist;
+    f32 bestDist;
+    f32 scale;
+    s16 yaw;
+    void *held;
+
+    if (*(u16 *)((char *)obj + 0xb0) & 0x1000) {
+        return 0;
+    }
+    held = *(void **)((char *)*(int *)((char *)obj + 0xb8) + 0x2d0);
+    if (held != NULL) {
+        return (int)held;
+    }
+    best = 0;
+    objs = (int)ObjGroup_GetObjects(8, &count);
+    bestDist = lbl_803E7EA4;
+    for (i = 0; i < count; i++) {
+        cur = ((int *)objs)[i];
+        if ((*(s16 *)((char *)cur + 0x44) == 0x1c || *(s16 *)((char *)cur + 0x44) == 0x2a) &&
+            *(u8 *)((char *)cur + 0x36) == 0xff) {
+            f32 dx = *(f32 *)((char *)cur + 0x18) - *(f32 *)((char *)obj + 0x18);
+            f32 dy = *(f32 *)((char *)cur + 0x1c) - *(f32 *)((char *)obj + 0x1c);
+            f32 dz = *(f32 *)((char *)cur + 0x20) - *(f32 *)((char *)obj + 0x20);
+            dist = dx * dx + dy * dy + dz * dz;
+            if (dist < lbl_803E80E8) {
+                if (dist <= lbl_803E7EA4) {
+                    scale = (f32)*(s8 *)((char *)*(int *)((char *)cur + 0x50) + 0x56);
+                    if (scale <= lbl_803E7EA4) {
+                        scale = lbl_803E7EE0;
+                    }
+                    dist = sqrtf(dist) / scale;
+                }
+                yaw = Obj_GetYawDeltaToObject(obj, cur, 0);
+                if (yaw < 0x5555 && yaw > -0x5555) {
+                    if (dist < bestDist || lbl_803E7EA4 == bestDist) {
+                        bestDist = dist;
+                        best = cur;
+                    }
+                }
+            }
+        }
+    }
+    return best;
 }
 #pragma peephole reset
 #pragma scheduling reset
