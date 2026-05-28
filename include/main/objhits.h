@@ -152,7 +152,11 @@ typedef struct ObjHitsPriorityState {
   f32 hitPosX[OBJHITS_PRIORITY_HIT_COUNT];
   f32 hitPosY[OBJHITS_PRIORITY_HIT_COUNT];
   f32 hitPosZ[OBJHITS_PRIORITY_HIT_COUNT];
-  u8 padAC[0xB4 - 0xAC];
+  u8 contactHitVolume;
+  u8 contactFlags;
+  u8 padAE[0xB0 - 0xAE];
+  u8 stateIndex;
+  u8 padB1[0xB4 - 0xB1];
   u8 sourceMask;
   u8 targetMask;
   u8 secondaryShapeFlags;

@@ -2932,15 +2932,15 @@ void ObjHits_CheckTrackContact(void)
         else {
           iVar23 = 0;
         }
-        *(undefined *)(iVar6 + 0xac) = local_50[iVar23];
+        ((ObjHitsPriorityState *)iVar6)->contactHitVolume = local_50[iVar23];
         *(float *)(iVar6 + 0x3c) = local_e8[iVar23 * 3];
         *(float *)(iVar6 + 0x40) = local_e8[iVar23 * 3 + 1];
         *(float *)(iVar6 + 0x44) = local_e8[iVar23 * 3 + 2];
         if (local_44[iVar23] == 0) {
-          *(byte *)(iVar6 + 0xad) = *(byte *)(iVar6 + 0xad) | 1;
+          ((ObjHitsPriorityState *)iVar6)->contactFlags = ((ObjHitsPriorityState *)iVar6)->contactFlags | 1;
         }
         else {
-          *(byte *)(iVar6 + 0xad) = *(byte *)(iVar6 + 0xad) | 2;
+          ((ObjHitsPriorityState *)iVar6)->contactFlags = ((ObjHitsPriorityState *)iVar6)->contactFlags | 2;
         }
       }
     }
@@ -3022,15 +3022,15 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
           slotCount++;
         }
         objState->flags = objState->flags & ~0x8;
-        *(undefined *)((int)objState + 0xad) = 0;
-        *(undefined *)((int)objState + 0xac) = 0xff;
+        objState->contactFlags = 0;
+        objState->contactHitVolume = 0xff;
         *(undefined4 *)objState = 0;
         attachedObj = *(int *)(obj + 0xc8);
         if ((attachedObj != 0) && (*(short *)(attachedObj + 0x44) == 0x2d)) {
           attachedState = *(ObjHitsPriorityState **)(attachedObj + 0x54);
           attachedState->flags = attachedState->flags & ~0x8;
-          *(undefined *)((int)attachedState + 0xad) = 0;
-          *(undefined *)((int)attachedState + 0xac) = 0xff;
+          attachedState->contactFlags = 0;
+          attachedState->contactHitVolume = 0xff;
           *(undefined4 *)attachedState = 0;
         }
       }

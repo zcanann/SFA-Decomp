@@ -385,6 +385,7 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
 void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
 {
   int iVar1;
+  ObjHitsPriorityState *hitState;
   ObjHitsPriorityWorkSlot *workSlot;
   int slotIndex;
   int slotOffset;
@@ -397,7 +398,8 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   else if (param_3 < 0) {
     param_3 = 0;
   }
-  if (*(char *)(param_2 + 0xb0) == param_3) {
+  hitState = (ObjHitsPriorityState *)param_2;
+  if (hitState->stateIndex == param_3) {
     return;
   }
   slotIndex = 0;
@@ -410,7 +412,7 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
     }
     slotOffset = slotOffset + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
   }
-  *(char *)(param_2 + 0xb0) = (char)param_3;
+  hitState->stateIndex = (char)param_3;
   return;
 }
 #pragma peephole reset
@@ -1020,7 +1022,7 @@ void ObjHits_RefreshObjectState(int param_1)
     *(ushort *)((int)hitState + 0x5a) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x62);
     *(s16 *)((int)hitState + 0x5c) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x68);
     *(s16 *)((int)hitState + 0x5e) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6a);
-    *(undefined *)((int)hitState + 0xb0) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x60);
+    hitState->stateIndex = *(undefined *)(*(int *)(param_1 + 0x50) + 0x60);
     *(undefined2 *)((int)hitState + 0x58) = 0x400;
     fVar1 = (float)(s32)*(short *)((int)hitState + 0x5a);
     *(float *)((int)hitState + 0xc) = fVar1 * fVar1;
