@@ -7372,3 +7372,141 @@ void texFlagFn_80023cbc(int v) {
     lbl_803DCB10 = (u8)v;
 }
 #pragma peephole reset
+
+extern u16 lbl_803DCA42;
+extern u8 lbl_803DCAF0;
+typedef struct {
+    u8 _pad[0x1c];
+    int state;
+    u8 _pad2[8];
+} GameTextStateElem;
+extern GameTextStateElem lbl_8033AF40[];
+extern u8 lbl_803DB408;
+extern int gMmFreeDelay;
+extern int lbl_803DCB14;
+extern int lbl_803DCB08;
+extern int lbl_803DB434;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_8001D71C(u8 *p, u8 a, u8 b, u8 c, u8 d) {
+    p[0x2ec] = a;
+    p[0x2ed] = b;
+    p[0x2ee] = c;
+    p[0x2ef] = d;
+}
+
+void fn_8001D7F8(u8 *p, void **a, void **b) {
+    *a = *(void **)(p + 0x270);
+    *b = *(void **)(p + 0x274);
+}
+
+void fn_8001D9E0(u8 *p, u8 a, u8 b, u8 c, u8 d) {
+    p[0x108] = a;
+    p[0x109] = b;
+    p[0x10a] = c;
+    p[0x10b] = d;
+}
+
+void lightSetFieldB0(u8 *p, u8 a, u8 b, u8 c, u8 d) {
+    p[0xb0] = a;
+    p[0xb1] = b;
+    p[0xb2] = c;
+    p[0xb3] = d;
+}
+
+void fn_8001FE90(void) {
+    lbl_803DCA42++;
+    lbl_803DCAF0 = 0xd0;
+}
+
+void fn_8001FEA8(void) {
+    lbl_803DCA42++;
+    lbl_803DCAF0 = 0xc9;
+}
+
+int gameTextGetState(int i) {
+    return lbl_8033AF40[i].state;
+}
+
+void blankScreen(int frames) {
+    s16 v = frames;
+    lbl_803DCA46 = v;
+    if (v < 0) {
+        lbl_803DCA46 = 0;
+    }
+}
+
+void fn_8001DD50(u8 *p, f32 *a, f32 *b, f32 *c) {
+    *a = *(f32 *)(p + 0x1c);
+    *b = *(f32 *)(p + 0x20);
+    *c = *(f32 *)(p + 0x24);
+}
+
+void fn_8001DD6C(u8 *p, f32 *a, f32 *b, f32 *c) {
+    *a = *(f32 *)(p + 0x10);
+    *b = *(f32 *)(p + 0x14);
+    *c = *(f32 *)(p + 0x18);
+}
+
+#pragma peephole on
+void fn_8001FE74(void *v) {
+    int i = lbl_803DCA48;
+    lbl_803DCA48 = i + 1;
+    (&lbl_803DCAE8)[i] = (int)v;
+}
+#pragma peephole reset
+
+int mmSetFreeDelay(int v) {
+    int old = gMmFreeDelay;
+    lbl_803DCB14++;
+    gMmFreeDelay = v;
+    return old;
+}
+
+int testAndSet_onlyUseHeap3(int v) {
+    lbl_803DCB14++;
+    {
+        int old = lbl_803DCB08;
+        lbl_803DCB08 = v;
+        return old;
+    }
+}
+
+int testAndSet_onlyUseHeaps1and2(int v) {
+    lbl_803DCB14++;
+    {
+        int old = lbl_803DB434;
+        lbl_803DB434 = v;
+        return old;
+    }
+}
+
+void colorFn_8001efe0(int i, u8 a, u8 b, u8 c) {
+    u8 *base = &lbl_803DB408;
+    base[i * 4] = a;
+    base[i * 4 + 1] = b;
+    base[i * 4 + 2] = c;
+}
+
+int fn_80022E0C(int x) {
+    int r = x & 1;
+    if (r > 0) {
+        x += 2 - r;
+    }
+    return x;
+}
+
+void modelFn_8001db3c(u8 *p, int n) {
+    *(int *)(p + 0x5c) = n;
+    p[0x64] = (u8)(1 << n);
+}
+
+void objSetHintTextIdx(u8 *obj, u16 idx) {
+    if (idx > 4) {
+        idx = 0;
+    }
+    obj[0xe8] = (u8)idx;
+}
+#pragma pop
