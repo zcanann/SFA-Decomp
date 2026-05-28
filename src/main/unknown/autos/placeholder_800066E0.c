@@ -1843,6 +1843,85 @@ uint FUN_800067dc(uint param_1)
     return 0;
 }
 
+typedef struct MusicSeqStartParams {
+    u32 flags;
+    u8 pad4[8];
+    u16 field_c;
+    u16 field_e;
+    u8 field_10;
+    u8 pad11[0xf];
+} MusicSeqStartParams;
+
+typedef struct MusicChannel {
+    u32 field_0;
+    u32 seqHandle;
+    void *bankData;
+    int status;
+    u8 voiceId;
+    u8 pad11;
+    u16 field_12;
+    u8 pad14[0xc];
+    f32 field_20;
+} MusicChannel;
+
+typedef struct MusicTrigParam {
+    u8 pad0[2];
+    u16 field_2;
+    u8 pad4[2];
+    u16 field_6;
+    u8 pad8[4];
+    u8 field_c;
+} MusicTrigParam;
+
+typedef struct MusicBank {
+    u8 pad0[2];
+    u8 field_2;
+} MusicBank;
+
+extern MusicSeqStartParams lbl_802C1A68;
+extern f32 lbl_803DE560;
+extern int fn_8027B9DC(int a, int b, void *bank, MusicSeqStartParams *params, int e);
+extern void sndSeqVolume(int voice, int a, int handle, int b);
+extern int synthResolveHandle(int handle);
+
+void Music_ChannelLoadedCallback(MusicBank *bank, MusicChannel *channel, MusicTrigParam *trigger)
+{
+    MusicSeqStartParams params = lbl_802C1A68;
+
+    if (channel != NULL) {
+        if (channel->status == 5) {
+            mm_free(channel->bankData);
+            channel->field_0 = -1;
+            channel->seqHandle = -1;
+            channel->bankData = NULL;
+            channel->voiceId = 0xff;
+            channel->status = 0;
+            channel->field_12 = 0;
+            channel->field_20 = lbl_803DE560;
+        } else {
+            int voice;
+            int seqHandle;
+            if (trigger->field_6 != -1) {
+                params.field_c = trigger->field_6;
+                params.flags |= 2;
+            }
+            if (trigger->field_c != -1) {
+                voice = trigger->field_c;
+            } else {
+                voice = 0x7f;
+            }
+            params.field_10 = 0;
+            params.field_e = 0;
+            params.flags |= 4;
+            seqHandle = fn_8027B9DC(bank->field_2, trigger->field_2, channel->bankData, &params, 0);
+            sndSeqVolume(voice, 0x1f4, seqHandle, 0);
+            channel->status = 1;
+            channel->seqHandle = seqHandle;
+            channel->voiceId = synthResolveHandle(seqHandle);
+        }
+    }
+}
+
 /*
  * --INFO--
  *
