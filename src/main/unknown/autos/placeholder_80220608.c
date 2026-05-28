@@ -2879,3 +2879,35 @@ void androsshand_handleDamage(int obj, int hand)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
+extern f32 lbl_803E75AC;
+extern f32 lbl_8032C270[];
+
+void androssligh_init(void) {}
+
+#pragma scheduling off
+void androssbrain_init(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(u8 *)(state + 0x1e) = 0x50;
+    ObjHits_SetTargetMask(obj, 4);
+}
+
+void androsshand_init(int obj, u8 *setup)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(u8 *)(state + 0x22) = setup[0x1b];
+    *(u8 *)(state + 0x24) = -1;
+    *(u8 *)(state + 0x25) = 0xf;
+    *(u8 *)(state + 0x27) = 5;
+    *(u8 *)(state + 0x23) = 3;
+    *(u8 *)(state + 0x24) = 3;
+    ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
+    *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[4];
+    *(f32 *)(obj + 0x98) = lbl_803E75B0;
+    ObjHits_SetTargetMask(obj, 4);
+}
+#pragma scheduling on
