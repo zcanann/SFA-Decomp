@@ -13,6 +13,7 @@ extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
 extern void objSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void *entries, int count);
 extern int seqEvalCondition(int condition, u8 *seq, int obj);
+extern int isGameTimerDisabled(void);
 extern void playerEnvFxFn_80088ad4(int envFxValue);
 extern void renderSunAndMoon(void);
 extern void skyFn_8008a04c(void);
@@ -25,8 +26,13 @@ extern s16 lbl_80399398[];
 extern u8 lbl_80399EA8[];
 extern s16 lbl_80399F00[];
 extern s8 lbl_8039A45C[];
+extern s8 lbl_8039A4B4[];
 extern u8 lbl_8030ECA8[];
 extern u8 lbl_803DB748;
+extern s16 seqGlobal1;
+extern s16 seqGlobal2;
+extern s8 seqGlobal3;
+extern int *gSHthorntailAnimationInterface;
 extern s8 lbl_803DD0BC;
 extern void *lbl_803DD0D4;
 extern int lbl_803DD100;
@@ -4057,6 +4063,101 @@ int objSeqFindConditional(u8 *seq, u8 *seqState)
         commandIndex++;
     }
     return -1;
+}
+
+int seqEvalCondition(int condition, u8 *seq, int obj)
+{
+    int tailState;
+    int result;
+
+    result = 0;
+
+    switch (condition) {
+    case 0:
+        if (*(s16 *)(seq + 0x60) <= 0) {
+            result = 1;
+        }
+        break;
+    case 1:
+        if (*(s16 *)(seq + 0x60) > 0) {
+            result = 1;
+        }
+        break;
+    case 2:
+        if ((*(int (**)(int *))((u8 *)(*gSHthorntailAnimationInterface) + 0x24))(&tailState) == 0) {
+            result = 1;
+        }
+        break;
+    case 3:
+        if ((*(int (**)(int *))((u8 *)(*gSHthorntailAnimationInterface) + 0x24))(&tailState) != 0) {
+            result = 1;
+        }
+        break;
+    case 4:
+        if (lbl_8039A45C[(s8)seq[0x57]] == 0) {
+            result = 1;
+        }
+        break;
+    case 5:
+        if (lbl_8039A45C[(s8)seq[0x57]] == 1) {
+            result = 1;
+        }
+        break;
+    case 6:
+        if (lbl_8039A4B4[(s8)seq[0x57]] == 0) {
+            result = 1;
+        }
+        break;
+    case 7:
+        if (lbl_8039A4B4[(s8)seq[0x57]] != 0) {
+            result = 1;
+        }
+        break;
+    case 8:
+        if (seqGlobal1 <= 0) {
+            result = 1;
+        }
+        break;
+    case 9:
+        if (seqGlobal1 > 0) {
+            result = 1;
+        }
+        break;
+    case 10:
+        if (seqGlobal2 <= 0) {
+            result = 1;
+        }
+        break;
+    case 11:
+        if (seqGlobal2 > 0) {
+            result = 1;
+        }
+        break;
+    case 12:
+        if (isGameTimerDisabled() != 0) {
+            result = 1;
+        }
+        break;
+    case 13:
+        if (isGameTimerDisabled() == 0) {
+            result = 1;
+        }
+        break;
+    case 14:
+        if (seqGlobal3 != 0) {
+            result = 1;
+        }
+        break;
+    case 15:
+        if (seqGlobal3 == 0) {
+            result = 1;
+        }
+        break;
+    default:
+        result = 1;
+        break;
+    }
+    return result;
 }
 
 #pragma pop
