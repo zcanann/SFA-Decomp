@@ -3150,9 +3150,9 @@ FUN_800de998(double param_1,undefined8 param_2,double param_3,undefined8 param_4
 /*
  * --INFO--
  *
- * Function: FUN_800de9a0
- * EN v1.0 Address: 0x800DE9A0
- * EN v1.0 Size: 832b
+ * Function: curves_findNearObj
+ * EN v1.0 Address: 0x800E0134
+ * EN v1.0 Size: 696b
  * EN v1.1 Address: 0x800E03B8
  * EN v1.1 Size: 696b
  * JP Address: TODO
@@ -3160,7 +3160,7 @@ FUN_800de998(double param_1,undefined8 param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800de9a0(undefined4 param_1,undefined4 param_2,int param_3,int param_4,char param_5)
+void curves_findNearObj(undefined4 param_1,undefined4 param_2,int param_3,int param_4,char param_5)
 {
   float fVar1;
   int *piVar2;
@@ -3217,7 +3217,7 @@ void FUN_800de9a0(undefined4 param_1,undefined4 param_2,int param_3,int param_4,
   dVar14 = dVar13;
   FUN_80006a68(&local_bc,asStack_cc);
   piVar8 = (int *)romCurves;
-  for (iVar7 = 0; iVar7 < DAT_803de0f0; iVar7 = iVar7 + 1) {
+  for (iVar7 = 0; iVar7 < nRomCurves; iVar7 = iVar7 + 1) {
     iVar6 = *piVar8;
     iVar5 = 0;
     do {

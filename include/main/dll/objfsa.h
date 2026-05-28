@@ -72,7 +72,7 @@ FUN_800de998(double param_1,undefined8 param_2,double param_3,undefined8 param_4
             undefined8 param_6,undefined8 param_7,undefined8 param_8,float *param_9,int param_10,
             undefined4 param_11,int param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16);
-void FUN_800de9a0(undefined4 param_1,undefined4 param_2,int param_3,int param_4,char param_5);
+void curves_findNearObj(undefined4 param_1,undefined4 param_2,int param_3,int param_4,char param_5);
 void FUN_800dece0(void);
 int FUN_800df2a4(double param_1,double param_2,double param_3,int param_4,int param_5);
 uint FUN_800df46c(undefined8 param_1,double param_2,double param_3);
