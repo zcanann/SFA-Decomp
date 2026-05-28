@@ -6815,6 +6815,53 @@ void arwsquadron_updateVolley(int p1, int p2, int p3)
 }
 #pragma scheduling reset
 
+extern void ObjPath_GetPointLocalPosition(int obj, int idx, f32 *x, f32 *y, f32 *z);
+
+typedef struct {
+    s16 s0, s2, s4, s6;
+    f32 f8;
+    f32 fx, fy, fz;
+} SquadPfx;
+
+#pragma scheduling off
+void arwsquadron_emitEffects(int p1, int p2)
+{
+    u8 flag = 1;
+    SquadPfx pfx;
+
+    if ((s8)*(u8 *)(p2 + 0x15e) <= 2) {
+        int cnt = *(u8 *)(p2 + 0x15f);
+        *(u8 *)(p2 + 0x15f) = cnt + 1;
+        if (cnt % 2 != 0) {
+            ObjPath_GetPointLocalPosition(p2, 4, &pfx.fx, &pfx.fy, &pfx.fz);
+            pfx.f8 = *(f32 *)(p2 + 0x11c);
+            pfx.s6 = ((s8)*(u8 *)(p2 + 0x15e) <= 1) ? 0x61a8 : -0x63c0;
+            (*(void (**)(int, int, void *, int, int, void *))(*gPartfxInterface + 8))(
+                p1, 0x7d0, &pfx, 4, -1, &flag);
+        }
+    }
+    if ((s8)*(u8 *)(p2 + 0x15e) <= 1) {
+        pfx.s6 = 0xc0a;
+        ObjPath_GetPointLocalPosition(p2, 5, &pfx.fx, &pfx.fy, &pfx.fz);
+        pfx.f8 = *(f32 *)(p2 + 0x120);
+        (*(void (**)(int, int, void *, int, int, void *))(*gPartfxInterface + 8))(
+            p1, 0x7d1, &pfx, 4, -1, &flag);
+    }
+    if (*(u8 *)(p2 + 0x15a) != 0 && (s8)*(u8 *)(p2 + 0x15e) > 1) {
+        pfx.s0 = 0;
+        pfx.s2 = 0;
+        pfx.s4 = 0;
+        pfx.f8 = lbl_803E7168;
+        ObjPath_GetPointLocalPosition(p2, 2, &pfx.fx, &pfx.fy, &pfx.fz);
+        fn_8009837C(p1, *(f32 *)(p2 + 0x114), 2, 0, 0, *(f32 *)(p2 + 0x118), (int)&pfx);
+    }
+    if (*(u8 *)(p2 + 0x15a) > 1 && (s8)*(u8 *)(p2 + 0x15e) > 1) {
+        ObjPath_GetPointLocalPosition(p2, 3, &pfx.fx, &pfx.fy, &pfx.fz);
+        fn_8009837C(p1, *(f32 *)(p2 + 0x114), 2, 0, 0, *(f32 *)(p2 + 0x118), (int)&pfx);
+    }
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
