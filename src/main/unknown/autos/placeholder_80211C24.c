@@ -471,6 +471,53 @@ typedef struct {
     u8 b01 : 1;
 } HoverpadFlags;
 
+typedef struct {
+    u8 p0 : 1;
+    u8 p1 : 1;
+    u8 p2 : 1;
+    u8 f10 : 1;
+    u8 f08 : 1;
+    u8 f04 : 1;
+    u8 p6 : 1;
+    u8 p7 : 1;
+} Flags377;
+
+#pragma scheduling off
+#pragma peephole off
+void drakorhoverpad_initMain(int obj, void *desc) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    HoverpadFlags *f = (HoverpadFlags *)(p + 0x178);
+    Flags377 *g = (Flags377 *)(p + 0x179);
+    f32 v;
+
+    *(s16 *)obj = (s16)(*(s8 *)((char *)desc + 0x18) << 8);
+    *(f32 *)(p + 0x118) = (f32)*(s16 *)((char *)desc + 0x1a);
+    v = lbl_803E6A3C;
+    *(f32 *)(p + 0x110) = v;
+    f->bit20 = 0;
+    f->b40 = 1;
+    *(int *)(p + 0x170) = 0;
+    *(f32 *)(p + 0x11c) = v;
+    *(f32 *)(p + 0x120) = v;
+    *(s16 *)(p + 0x176) = 0;
+    switch (*(s16 *)desc) {
+    case 1812:
+        g->f10 = 1;
+        g->f04 = 1;
+        g->f08 = 0;
+        break;
+    case 1048:
+        g->f10 = 0;
+        g->f04 = 0;
+        g->f08 = 1;
+        break;
+    }
+    ObjGroup_AddObject(obj, 70);
+    ObjGroup_AddObject(obj, 10);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 int drakorhoverpad_init(int obj) {
