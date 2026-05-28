@@ -154,6 +154,17 @@ Heuristic before reaching for `asm { }`:
     indexing matches 100% (fn_8029D250); double-level (`element*stride + idx*4`)
     only partials — leave those partial. Clean C, no asm.
 
+19. **objdiff cascade-misalign trap: a low fuzzy% with a high instruction-diff%
+    means ONE dropped instruction early in the body, not a wrong function.**
+    When a newly-added function scores ~11% fuzzy but its instruction diff reads
+    ~94% similar, MWCC dropped/const-folded a single instruction near the top
+    (commonly a literal `int x = 1;` that target keeps live in a saved reg),
+    which shifts every later instruction by one and makes objdiff only score the
+    prologue. Don't rewrite the body — make that one value non-foldable so the
+    instruction count realigns: assign it from an adjacent call's return (e.g.
+    `x = Camera_GetCurrentViewSlot();`) instead of a literal. Took fn_802AA2B0
+    11.6% → 97.3%. Clean C, no asm.
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
