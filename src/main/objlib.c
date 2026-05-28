@@ -431,10 +431,13 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
  */
 void ObjHits_SetTargetMask(int param_1,undefined param_2)
 {
-  if (*(u32 *)(param_1 + 0x54) == 0) {
+  ObjHitsPriorityState *hitState;
+
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  if (hitState == 0) {
     return;
   }
-  *(undefined *)(*(int *)(param_1 + 0x54) + 0xb5) = param_2;
+  hitState->targetMask = param_2;
   return;
 }
 
@@ -598,13 +601,13 @@ void ObjHitbox_SetCapsuleBounds(int param_1,undefined2 param_2,short param_3,sho
  */
 void ObjHits_ClearHitVolumes(int param_1)
 {
-  int iVar1;
+  ObjHitsPriorityState *hitState;
   
-  iVar1 = *(int *)(param_1 + 0x54);
-  *(undefined *)(iVar1 + 0x6e) = 0;
-  *(undefined *)(iVar1 + 0x6f) = 0;
-  *(undefined4 *)(iVar1 + 0x48) = 0;
-  *(undefined4 *)(iVar1 + 0x4c) = 0;
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  hitState->objectHitType = 0;
+  hitState->skeletonHitType = 0;
+  hitState->objectHitMask = 0;
+  hitState->skeletonHitMask = 0;
   return;
 }
 
@@ -625,16 +628,16 @@ void ObjHits_ClearHitVolumes(int param_1)
 #pragma peephole off
 void ObjHits_SetHitVolumeMasks(int param_1,int param_2,int param_3,int param_4)
 {
-  int iVar1;
+  ObjHitsPriorityState *hitState;
 
-  iVar1 = *(int *)(param_1 + 0x54);
-  *(s8 *)(iVar1 + 0x6e) = (s8)param_2;
-  *(s8 *)(iVar1 + 0x6f) = (s8)param_3;
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  hitState->objectHitType = (s8)param_2;
+  hitState->skeletonHitType = (s8)param_3;
   if (param_4 == 0) {
     return;
   }
-  *(int *)(iVar1 + 0x48) = param_4 << 4;
-  *(int *)(iVar1 + 0x4c) = param_4 << 4;
+  hitState->objectHitMask = param_4 << 4;
+  hitState->skeletonHitMask = param_4 << 4;
   return;
 }
 #pragma peephole reset
@@ -657,21 +660,21 @@ void ObjHits_SetHitVolumeMasks(int param_1,int param_2,int param_3,int param_4)
 #pragma peephole off
 void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4)
 {
-  int iVar1;
-  u32 iVar2;
+  int hitMask;
+  ObjHitsPriorityState *hitState;
 
-  iVar2 = *(u32 *)(param_1 + 0x54);
-  if (iVar2 == 0) {
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  if (hitState == 0) {
     return;
   }
-  *(s8 *)(iVar2 + 0x6e) = (s8)param_2;
-  *(s8 *)(iVar2 + 0x6f) = (s8)param_3;
+  hitState->objectHitType = (s8)param_2;
+  hitState->skeletonHitType = (s8)param_3;
   if (param_4 == -1) {
     return;
   }
-  iVar1 = 1 << (param_4 + 4);
-  *(int *)(iVar2 + 0x48) = iVar1;
-  *(int *)(iVar2 + 0x4c) = iVar1;
+  hitMask = 1 << (param_4 + 4);
+  hitState->objectHitMask = hitMask;
+  hitState->skeletonHitMask = hitMask;
   return;
 }
 #pragma peephole reset
@@ -693,8 +696,10 @@ void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4)
 #pragma peephole off
 void ObjHits_ClearSourceMask(int param_1,int param_2)
 {
-  u8* p = (u8*)(*(int *)(param_1 + 0x54) + 0xb4);
-  *p = (u8)(*p & ~param_2);
+  ObjHitsPriorityState *hitState;
+
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  hitState->sourceMask = (u8)(hitState->sourceMask & ~param_2);
   return;
 }
 #pragma peephole reset
@@ -714,8 +719,10 @@ void ObjHits_ClearSourceMask(int param_1,int param_2)
  */
 void ObjHits_SetSourceMask(int param_1,u8 param_2)
 {
-  u8* sourceMask = (u8*)(*(int *)(param_1 + 0x54) + 0xb4);
-  *sourceMask |= param_2;
+  ObjHitsPriorityState *hitState;
+
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  hitState->sourceMask |= param_2;
   return;
 }
 
@@ -735,8 +742,10 @@ void ObjHits_SetSourceMask(int param_1,u8 param_2)
 #pragma peephole off
 void ObjHits_ClearFlags(int param_1,int param_2)
 {
-  s16* p = (s16*)(*(int *)(param_1 + 0x54) + 0x60);
-  *p = (s16)(*p & ~param_2);
+  ObjHitsPriorityState *hitState;
+
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  hitState->flags = (s16)(hitState->flags & ~param_2);
   return;
 }
 #pragma peephole reset
@@ -757,8 +766,10 @@ void ObjHits_ClearFlags(int param_1,int param_2)
 #pragma peephole off
 void ObjHits_SetFlags(int param_1,int param_2)
 {
-  s16* p = (s16*)(*(int *)(param_1 + 0x54) + 0x60);
-  *p = (s16)(*p | param_2);
+  ObjHitsPriorityState *hitState;
+
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  hitState->flags = (s16)(hitState->flags | param_2);
   return;
 }
 #pragma peephole reset
@@ -779,8 +790,10 @@ void ObjHits_SetFlags(int param_1,int param_2)
 #pragma peephole off
 void ObjHits_MarkObjectPositionDirty(int param_1)
 {
-  s16* p = (s16*)(*(int *)(param_1 + 0x54) + 0x60);
-  *p = (s16)(*p | 0x40);
+  ObjHitsPriorityState *hitState;
+
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  hitState->flags = (s16)(hitState->flags | 0x40);
   return;
 }
 #pragma peephole reset

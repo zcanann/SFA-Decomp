@@ -127,11 +127,17 @@ typedef struct ObjHitsPriorityWorkSlot {
 } ObjHitsPriorityWorkSlot;
 
 typedef struct ObjHitsPriorityState {
-  u8 pad00[0x50];
+  u8 pad00[0x48];
+  u32 objectHitMask;
+  u32 skeletonHitMask;
   int lastHitObject;
   u8 pad54[0x0C];
   s16 flags;
-  u8 pad62[0x0F];
+  u8 shapeFlags;
+  u8 pad63[0x6E - 0x63];
+  s8 objectHitType;
+  s8 skeletonHitType;
+  u8 pad70;
   s8 priorityHitCount;
   s8 sphereIndices[OBJHITS_PRIORITY_HIT_COUNT];
   s8 priorities[OBJHITS_PRIORITY_HIT_COUNT];
@@ -141,6 +147,10 @@ typedef struct ObjHitsPriorityState {
   f32 hitPosX[OBJHITS_PRIORITY_HIT_COUNT];
   f32 hitPosY[OBJHITS_PRIORITY_HIT_COUNT];
   f32 hitPosZ[OBJHITS_PRIORITY_HIT_COUNT];
+  u8 padAC[0xB4 - 0xAC];
+  u8 sourceMask;
+  u8 targetMask;
+  u8 secondaryShapeFlags;
 } ObjHitsPriorityState;
 
 /*
