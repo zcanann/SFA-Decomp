@@ -5217,6 +5217,43 @@ void fn_8022C680(int obj) {
 }
 #pragma scheduling reset
 
+extern void lightSetFieldBC_8001db14(void *light, int v);
+extern f32 lbl_803E700C;
+extern f32 lbl_803E7010;
+extern f32 lbl_803E7014;
+extern f32 lbl_803E7018;
+
+#pragma peephole off
+#pragma scheduling off
+void arwprojectile_createLinkedEffect(int obj, u8 enable) {
+    int state = *(int *)(obj + 0xb8);
+    if (enable == 0)
+        return;
+    if (*(void **)(state + 0x14) != NULL)
+        return;
+    *(void **)(state + 0x14) = objCreateLight(obj, 1);
+    if (*(void **)(state + 0x14) == NULL)
+        return;
+    modelLightStruct_setField50(*(void **)(state + 0x14), 2);
+    lightVecFn_8001dd88(*(void **)(state + 0x14), lbl_803E7008, lbl_803E7008, lbl_803E7008);
+    lightSetFieldBC_8001db14(*(void **)(state + 0x14), 1);
+    if (*(s16 *)(obj + 0x46) == 0x6ae) {
+        modelLightStruct_setColorsA8AC(*(void **)(state + 0x14), 0xff, 0x14, 0x50, 0);
+    } else if ((s8) * (u8 *)(obj + 0xad) == 0) {
+        modelLightStruct_setColorsA8AC(*(void **)(state + 0x14), 0x3c, 0xff, 0x5a, 0);
+    } else {
+        modelLightStruct_setColorsA8AC(*(void **)(state + 0x14), 0x3c, 0x5a, 0xff, 0);
+    }
+    if (*(s16 *)(obj + 0x46) == 0x655) {
+        lightDistAttenFn_8001dc38(*(void **)(state + 0x14), lbl_803E700C, lbl_803E7010);
+    } else {
+        lightDistAttenFn_8001dc38(*(void **)(state + 0x14), lbl_803E7014, lbl_803E7018);
+    }
+    lightSetField2FB(*(void **)(state + 0x14), 1);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 void fn_8022D6D0(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
