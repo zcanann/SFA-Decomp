@@ -6971,6 +6971,91 @@ int fn_802B7298(int obj, int p2)
     return 0;
 }
 
+extern f32 Camera_GetFovY(void);
+extern void viewFinderSetZoom(f32 zoom);
+extern void fn_80026C30(int obj, int flag);
+extern int ObjModel_ClearBlendChannels();
+extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
+extern void *lbl_803DE444;
+extern f32 lbl_803E80CC;
+extern f32 lbl_803E80D0;
+extern f32 lbl_803E7FBC;
+
+void fn_802A93F4(int obj, int p2, int p3)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 dist;
+    void *found;
+    s16 *vec;
+    int *tex;
+    dist = lbl_803E80CC;
+    *(f32 *)((char *)obj + 0x8) = lbl_803E7EE0;
+    viewFinderSetZoom(Camera_GetFovY());
+    *(u16 *)((char *)obj + 0xb0) &= ~0x1000;
+    *(u8 *)((char *)obj + 0x36) = 0xff;
+    ((ByteFlags *)((char *)inner + 0x3f2))->b80 = 0;
+    if (((ByteFlags *)((char *)inner + 0x3f2))->b40) {
+        *(f32 *)((char *)inner + 0x87c) = lbl_803E7FBC;
+    }
+    ((ByteFlags *)((char *)inner + 0x3f2))->b40 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f2))->b20 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f4))->b80 = 0;
+    ObjHits_EnableObject(obj);
+    *(f32 *)((char *)obj + 0x28) = lbl_803E7EA4;
+    if ((*(s16 *)((char *)p3 + 0x6e) & 1) != 0) {
+        fn_802AB5A4(obj, inner, 7);
+    }
+    fn_80026C30(lbl_803DE420, 1);
+    *(u8 *)((char *)inner + 0x8c4) = 2;
+    if (lbl_803DE444 != NULL) {
+        found = (void *)ObjGroup_FindNearestObject(0x20, obj, &dist);
+        if (found != NULL) {
+            (*(void (*)(void *))(*(int *)((char *)*(int *)*(int *)((char *)found + 0x68) + 0x24)))(found);
+        }
+        ObjLink_DetachChild(obj, (int)lbl_803DE444);
+        Obj_FreeObject((int)lbl_803DE444);
+        lbl_803DE444 = NULL;
+    }
+    *(int *)((char *)inner + 0x360) |= 0x800000;
+    *(int *)((char *)inner + 0x684) = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+    *(u8 *)((char *)inner + 0x40d) = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f0))->b20 = 0;
+    *(s16 *)((char *)inner + 0x80a) = -1;
+    ((ByteFlags *)((char *)inner + 0x3f6))->b40 = 0;
+    staffFn_80170380(lbl_803DE450, 2);
+    ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
+    *(int *)((char *)inner + 0x360) |= 0x800000;
+    ObjHits_SyncObjectPositionIfDirty(obj);
+    *(f32 *)((char *)inner + 0x838) = lbl_803E7EA4;
+    *(f32 *)((char *)inner + 0x83c) = lbl_803E80D0;
+    *(f32 *)((char *)inner + 0x880) = lbl_803E7FA4;
+    *(u8 *)((char *)inner + 0x25f) = 1;
+    *(int *)((char *)inner + 0x4) &= ~0x100000;
+    *(int *)((char *)inner + 0x4) |= 0x8000000;
+    if (*(s8 *)(*(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c)) <= 0) {
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 3);
+        *(int *)((char *)inner + 0x304) = 0;
+    }
+    vec = (s16 *)objModelGetVecFn_800395d8(obj, 1);
+    if (vec != NULL) {
+        vec[0] = 0;
+        vec[1] = 0;
+        vec[2] = 0;
+    }
+    ObjModel_ClearBlendChannels(Obj_GetActiveModel(obj));
+    tex = objFindTexture(obj, 1, 0);
+    *(s16 *)((char *)tex + 0x8) = 0;
+    *(s16 *)((char *)tex + 0xa) = 0;
+    tex = objFindTexture(obj, 0, 0);
+    *(s16 *)((char *)tex + 0x8) = 0;
+    *(s16 *)((char *)tex + 0xa) = 0;
+}
+
 int fn_802A9B1C(int obj, int p2, int p3)
 {
     int inner = *(int *)((char *)obj + 0xb8);
