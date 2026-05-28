@@ -765,6 +765,7 @@ config.libs = [
             Object(NonMatching, "main/dll/WM/dll_020B_firefly.c"),
             Object(NonMatching, "main/dll/WM/dll_020C_wmspiritplace.c"),
             Object(NonMatching, "main/dll/WM/dll_020D_wmseqpoint.c"),
+            Object(NonMatching, "main/dll/WM/dll_020E_wmsun.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801F5184.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80209FE0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026FD1C.c"),

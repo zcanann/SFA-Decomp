@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_WM_WM_SHARED_H_
-#define MAIN_DLL_WM_WM_SHARED_H_
+#ifndef MAIN_DLL_VF_VF_SHARED_H_
+#define MAIN_DLL_VF_VF_SHARED_H_
 
 #include "ghidra_import.h"
 
@@ -335,4 +335,4 @@ void firefly_free(int obj);
 void firefly_update(int obj);
 void firefly_init(int obj, int def);
 
-#endif /* MAIN_DLL_WM_WM_SHARED_H_ */
+#endif /* MAIN_DLL_VF_VF_SHARED_H_ */
