@@ -9425,5 +9425,71 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
         }
     }
 }
+
+void fn_802AED2C(int obj, int state, int p3)
+{
+    u16 sound;
+    u32 b;
+
+    if (*(u8 *)((char *)state + 0x8b3) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0x47f, lbl_803E7EA4, 0);
+    } else {
+        ObjAnim_SetCurrentMove(obj, 0x47b, lbl_803E7EA4, 0);
+    }
+    *(f32 *)((char *)p3 + 0x2a0) = lbl_803E7F20;
+    *(s16 *)((char *)state + 0x478) = *(s16 *)((char *)state + 0x484);
+    *(f32 *)((char *)state + 0x844) = lbl_803E7EA4;
+    ((ByteFlags *)((char *)state + 0x3f0))->b10 = 1;
+    ((ByteFlags *)((char *)state + 0x3f0))->b80 = 0;
+    staffFn_80170380(lbl_803DE450, 2);
+    ((ByteFlags *)((char *)state + 0x3f0))->b02 = 0;
+    *(int *)((char *)state + 0x360) |= 0x800000;
+    ObjHits_SyncObjectPositionIfDirty(obj);
+    ((ByteFlags *)((char *)state + 0x3f0))->b08 = 0;
+    ((ByteFlags *)((char *)state + 0x3f0))->b04 = 0;
+    *(u8 *)((char *)state + 0x40d) = 0;
+    ((ByteFlags *)((char *)state + 0x3f0))->b40 = 0;
+    *(int *)((char *)state + 0x488) = 0;
+    *(int *)((char *)state + 0x47c) = 0;
+    *(int *)((char *)state + 0x48c) = 0;
+    *(int *)((char *)state + 0x480) = 0;
+    lbl_803DC66C = 4;
+    *(u8 *)((char *)state + 0x800) = 0;
+    if (*(void **)((char *)state + 0x7f8) != NULL) {
+        short id = *(s16 *)((char *)*(int *)((char *)state + 0x7f8) + 0x46);
+        if (id == 0x3cf || id == 0x662) {
+            objThrowFn_80182504(*(int *)((char *)state + 0x7f8));
+        } else {
+            objSaveFn_800ea774(*(int *)((char *)state + 0x7f8));
+        }
+        *(s16 *)((char *)*(int *)((char *)state + 0x7f8) + 6) &= ~0x4000;
+        *(int *)((char *)*(int *)((char *)state + 0x7f8) + 0xf8) = 0;
+        *(int *)((char *)state + 0x7f8) = 0;
+    }
+    b = (*(u8 *)((char *)state + 0x3f1) >> 5) & 1;
+    if (b != 0) {
+        short t = *(s16 *)((char *)obj + 0);
+        *(s16 *)((char *)state + 0x484) = t;
+        *(s16 *)((char *)state + 0x478) = t;
+        *(int *)((char *)state + 0x494) = t;
+        *(f32 *)((char *)state + 0x284) = lbl_803E7EA4;
+    }
+    ((ByteFlags *)((char *)state + 0x3f1))->b20 = 0;
+    if (*(f32 *)((char *)state + 0x838) > lbl_803E7EE0) {
+        if (*(s16 *)((char *)state + 0x81a) == 0) {
+            sound = 0x427;
+        } else {
+            sound = 0x427;
+        }
+        Sfx_PlayFromObject(obj, sound);
+    } else {
+        if (*(s16 *)((char *)state + 0x81a) == 0) {
+            sound = 0x3ce;
+        } else {
+            sound = 0x2e;
+        }
+        Sfx_PlayFromObject(obj, sound);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
