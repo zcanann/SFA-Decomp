@@ -34,6 +34,9 @@ extern int moonFxCb_80074110(int obj, int *model, int param);
 extern void modelStruct2_setVectors(void *model, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setColorsA8AC(void *model, int red, int green, int blue, int alpha);
 extern void colorFn_8001efe0(int index, int red, int green, int blue);
+extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
+extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
+extern void Obj_BuildWorldTransformMatrix(void *obj, f32 mtx[3][4], int flags);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern void renderFn_8008f904(void *state);
@@ -108,6 +111,7 @@ extern void *lbl_803DD0B8;
 extern u8 framesThisStep;
 extern f32 lbl_8039A7A8[];
 extern f32 pEXIInputFlag;
+extern f32 EXIInputFlag;
 extern f32 timeDelta;
 extern f32 lbl_803DEFB0;
 extern f32 lbl_803DEFC8;
@@ -4939,6 +4943,17 @@ void fn_8008908C(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed
 void *fn_8008912C(void)
 {
     return lbl_803DD150;
+}
+
+void fn_80089134(f32 mtx[3][4])
+{
+    f32 scale;
+    f32 scaleMtx[3][4];
+
+    scale = EXIInputFlag / *(f32 *)(lbl_803DD148 + 8);
+    PSMTXScale(scaleMtx, scale, scale, scale);
+    Obj_BuildWorldTransformMatrix(lbl_803DD148, mtx, 0);
+    PSMTXConcat(mtx, scaleMtx, mtx);
 }
 
 int skyFn_8008919c(int slot)
