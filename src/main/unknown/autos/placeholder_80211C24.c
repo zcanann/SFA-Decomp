@@ -299,6 +299,11 @@ extern int lbl_803DC2C8;
 extern int lbl_803DC2D0;
 extern f32 lbl_803E699C;
 extern void **gPlayerInterface;
+extern f32 lbl_803E690C;
+extern f32 lbl_803E6920;
+extern f32 lbl_803E6938;
+extern int fn_801702D4(int obj, f32 v);
+extern void staffFn_80170380(int handle, int v);
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg);
 int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg);
 
@@ -1840,6 +1845,55 @@ int hightop_handleMotionEvent(int obj, u8 event) {
         break;
     }
     return 0;
+}
+
+void drlasercannon_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    f32 fz;
+    *(u8 *)(p + 0x1a6) = 4;
+    ObjHits_EnableObject(obj);
+    if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
+        *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        objRemoveFromListFn_8002ce88(obj);
+        ObjHits_DisableObject(obj);
+    }
+    ObjGroup_AddObject(obj, 0x3);
+    *(int *)p = 0;
+    ((BitFlags8 *)(p + 0x1a8))->b3 = 0;
+    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
+    *(int *)(p + 0x128) = 0x258;
+    *(f32 *)(p + 0x124) = lbl_803E6920;
+    if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
+        ((BitFlags8 *)(p + 0x1a8))->b0 = 1;
+        ((BitFlags8 *)(p + 0x1a8))->b4 = 1;
+    } else {
+        ((BitFlags8 *)(p + 0x1a8))->b4 = 0;
+    }
+    ((BitFlags8 *)(p + 0x1a8))->b5 = 0;
+    fz = lbl_803E690C;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    if (GameBit_Get(*(s16 *)(arg + 0x1e)) == 0) {
+        *(int *)(p + 0x190) = fn_801702D4(obj, lbl_803E6938);
+        if (*(void **)(p + 0x190) != 0) {
+            staffFn_80170380(*(int *)(p + 0x190), 4);
+        }
+        ((BitFlags8 *)(p + 0x1a8))->b6 = 1;
+    } else {
+        ((BitFlags8 *)(p + 0x1a8))->b6 = 0;
+        *(int *)(p + 0x190) = 0;
+    }
+    storeZeroToFloatParam((void *)(p + 0x12c));
+    s16toFloat((void *)(p + 0x12c), (s16)((s8)arg[0x19] * 4 + 1));
+    *(u8 *)(p + 0x1a7) = 0;
+    ((BitFlags8 *)(p + 0x1a8))->b7 = 1;
+    *(int *)(p + 0x19c) = 0x429;
+    if (*(s8 *)((char *)obj + 0xac) == 2) {
+        *(s16 *)(p + 0x1a4) = 0xe90;
+    } else {
+        *(s16 *)(p + 0x1a4) = -1;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
