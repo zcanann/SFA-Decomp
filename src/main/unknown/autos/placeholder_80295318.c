@@ -6306,6 +6306,12 @@ extern void fn_8014C540(int obj, void *a, void *b, void *c);
 extern void fn_802AA2B0(int obj, int state, f32 a, f32 b);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void staffFn_80170380(int a, int b);
+extern f32 PSVECMag(f32 *v);
+extern void PSVECScale(f32 *dst, f32 *src, f32 s);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 lbl_803E7F94;
+extern f32 lbl_803E7F98;
 extern void setAButtonIcon(int idx);
 extern void setBButtonIcon(int idx);
 extern f32 lbl_803DE45C;
@@ -9110,6 +9116,31 @@ void fn_80296D20(int obj, void *arg)
             (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 2);
             *(int *)((char *)state + 0x304) = (int)fn_802A514C;
         }
+    }
+}
+
+void fn_802A81B8(int obj, int state, f32 *out)
+{
+    f32 mag;
+    u32 flag = (*(u8 *)((char *)state + 0x3f1) >> 5) & 1;
+
+    if (flag != 0 || *(int **)((char *)state + 0x2d0) != NULL) {
+        out[0] = *(f32 *)((char *)obj + 0x24);
+        out[1] = lbl_803E7EA4;
+        out[2] = *(f32 *)((char *)obj + 0x2c);
+        mag = PSVECMag(out);
+        if (mag > lbl_803E7EA4) {
+            PSVECScale(out, out, lbl_803E7EE0 / mag);
+        } else {
+            out[0] = -fn_80293E80(lbl_803E7F94 * (f32)*(s16 *)((char *)state + 0x478) /
+                                  lbl_803E7F98);
+            out[1] = lbl_803E7EA4;
+            out[2] = -sin(lbl_803E7F94 * (f32)*(s16 *)((char *)state + 0x478) / lbl_803E7F98);
+        }
+    } else {
+        out[0] = -fn_80293E80(lbl_803E7F94 * (f32)*(s16 *)((char *)state + 0x478) / lbl_803E7F98);
+        out[1] = lbl_803E7EA4;
+        out[2] = -sin(lbl_803E7F94 * (f32)*(s16 *)((char *)state + 0x478) / lbl_803E7F98);
     }
 }
 #pragma peephole reset
