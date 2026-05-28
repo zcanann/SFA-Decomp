@@ -292,6 +292,11 @@ extern f32 lbl_803E68C0;
 extern void lightFn_8001db6c(void *light, int v, f32 f);
 extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int d);
 extern void lightSetFieldBC_8001db14(void *light, int v);
+extern void ObjModel_CopyJointTranslation(void *model, int joint, f32 *out);
+extern void objSetMtxFn_800412d4(void *mtx);
+extern f32 lbl_803E6A28;
+extern int lbl_803DC2F0;
+extern int lbl_803DDD70;
 extern void fn_8001D730(void *light, int a, int b, int c, int d, int e, f32 f);
 extern void fn_8001D714(void *light, f32 f);
 extern void ObjHits_SetTargetMask(int obj, int mask);
@@ -674,6 +679,69 @@ void drakormissile_startActiveLaunch(int obj) {
     ObjHits_SetHitVolumeSlot(obj, 22, 1, 0);
     Sfx_PlayFromObject(obj, 965);
     Sfx_PlayFromObject(obj, 966);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    int *q = *(int **)((char *)obj + 0x4c);
+    int *model;
+    int *modelData;
+    s8 joint1;
+    f32 jointPos[3];
+    f32 parentPos[3];
+    int i;
+    int *ptr;
+    BitFlags8 *bf = (BitFlags8 *)(p + 0x1a);
+
+    if (bf->b0 == 0) {
+        return 1;
+    }
+    *(f32 *)(p + 8) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)(p + 0xc) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)(p + 0x10) = *(f32 *)((char *)obj + 0x14);
+
+    joint1 = *(s8 *)(*(int *)(*(int *)((char *)a + 0x50) + 0x2c) + b * 24 + *(s8 *)((char *)obj + 0xad) + 0x12);
+    model = *(int **)(*(int *)((char *)a + 0x7c) + *(s8 *)((char *)a + 0xad) * 4);
+    modelData = *(int **)model;
+
+    *(s16 *)((char *)obj + 4) = 0;
+    *(s16 *)((char *)obj + 2) = 0;
+    ObjModel_CopyJointTranslation(model, joint1, jointPos);
+    ObjModel_CopyJointTranslation(model, *(s8 *)(*(int *)((char *)modelData + 0x3c) + joint1 * 28),
+                                  parentPos);
+    PSVECSubtract(parentPos, jointPos, jointPos);
+
+    if (*(s16 *)((char *)q + 0x1c) != 0) {
+        *(s16 *)((char *)obj + 4) =
+            (s16)((*(s16 *)((char *)q + 0x1c) << 14) + getAngle(jointPos[2], jointPos[0]));
+        *(s16 *)((char *)obj + 2) = (s16)getAngle(jointPos[2], jointPos[1]);
+    } else {
+        f32 savedY = jointPos[1];
+        f32 mag;
+        jointPos[1] = lbl_803E6A28;
+        mag = PSVECMag(jointPos);
+        *(s16 *)((char *)obj + 4) = (s16)(lbl_803DC2F0 + getAngle(jointPos[0], jointPos[2]));
+        *(s16 *)((char *)obj + 2) = (s16)(lbl_803DDD70 + getAngle(mag, savedY));
+        objSetMtxFn_800412d4(ObjPath_GetPointModelMtx(a, b));
+    }
+    ObjPath_GetPointWorldPosition(a, b, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10),
+                                  (f32 *)((char *)obj + 0x14), 0);
+    objRenderFn_8003b8f4((void *)obj, c, d, e, f, (double)lbl_803E6A2C);
+
+    ptr = (int *)p;
+    for (i = 0; i < *(int *)(p + 0x14); i++) {
+        int entry = *ptr;
+        if (entry != 0) {
+            ObjPath_GetPointWorldPosition(obj, p[i + 0x1b], (f32 *)(entry + 0xc),
+                                          (f32 *)(entry + 0x10), (f32 *)(entry + 0x14), 0);
+        }
+        ptr++;
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
