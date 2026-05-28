@@ -11402,3 +11402,108 @@ void playerInitFuncPtrs(int obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern void fn_80189BE4(int a, int b);
+extern int fn_80189C58(int a);
+
+#pragma peephole off
+#pragma scheduling off
+int fn_80298944(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 f;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjHits_MarkObjectPositionDirty(obj);
+    }
+    f = lbl_803E7EA4;
+    *(f32 *)((char *)state + 0x294) = f;
+    *(f32 *)((char *)state + 0x284) = f;
+    *(f32 *)((char *)state + 0x280) = f;
+    *(f32 *)((char *)obj + 0x24) = f;
+    *(f32 *)((char *)obj + 0x28) = f;
+    *(f32 *)((char *)obj + 0x2c) = f;
+    setAButtonIcon(0xe);
+    setBButtonIcon(0xa);
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0xe0:
+        if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E98 &&
+            (*(u8 *)((char *)state + 0x356) & 1) == 0) {
+            *(u8 *)((char *)state + 0x356) |= 1;
+            Sfx_PlayFromObject(obj, 0x376);
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0xdf, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
+            *(u8 *)((char *)state + 0x356) = 0;
+        }
+        break;
+    case 0xde:
+        if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E9C &&
+            (*(u8 *)((char *)state + 0x356) & 1) == 0) {
+            *(u8 *)((char *)state + 0x356) |= 1;
+            doRumble(lbl_803E7F10);
+            Sfx_PlayFromObject(obj, 0x377);
+            fn_80189BE4(lbl_803DE434, 0);
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0xe4, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
+            Sfx_PlayFromObject(obj, 0x3c3);
+        }
+        break;
+    case 0xe1:
+        if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E98 &&
+            (*(u8 *)((char *)state + 0x356) & 1) == 0) {
+            *(u8 *)((char *)state + 0x356) |= 1;
+            Sfx_PlayFromObject(obj, 0x376);
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0xde, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
+            *(u8 *)((char *)state + 0x356) = 0;
+        }
+        break;
+    case 0xdf:
+        if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E9C &&
+            (*(u8 *)((char *)state + 0x356) & 1) == 0) {
+            *(u8 *)((char *)state + 0x356) |= 1;
+            doRumble(lbl_803E7F10);
+            Sfx_PlayFromObject(obj, 0x377);
+            fn_80189BE4(lbl_803DE434, 1);
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0xe5, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
+            Sfx_PlayFromObject(obj, 0x3c3);
+        }
+        break;
+    case 0xe4:
+    case 0xe5:
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(int *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        break;
+    default:
+        if (fn_80189C58(lbl_803DE434) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0xe1, lbl_803E7EA4, 0);
+        } else {
+            ObjAnim_SetCurrentMove(obj, 0xe0, lbl_803E7EA4, 0);
+        }
+        fn_80189F5C(lbl_803DE434, (char *)obj + 0xc, (char *)obj + 0x14);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
+        *(u8 *)((char *)state + 0x356) = 0;
+        *(s16 *)((char *)inner + 0x478) = *(s16 *)lbl_803DE434;
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+            *(u8 *)((char *)inner + 0x8b4) = 4;
+            ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+        }
+        break;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
