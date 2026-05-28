@@ -12403,3 +12403,158 @@ int fn_802A8350(int obj, int p4, int src, int dst, int flag)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern s16 lbl_8033366C[];
+extern f32 lbl_8033369C[];
+extern f32 lbl_803E8130;
+extern void staffDoGrowShrinkAnim(void *a, int b, int c, int d);
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802AEF34(int obj, int state)
+{
+    int prevChanged;
+    int changed;
+    int model;
+    f32 f31;
+    void *p;
+
+    model = *(int *)((char *)Obj_GetActiveModel(obj) + 0x30);
+    prevChanged = 0;
+
+    if (*(s16 *)((char *)state + 0x806) != 3) {
+        u8 b = *(u8 *)((char *)state + 0x8b4);
+        if (b == 1) {
+            staffDoGrowShrinkAnim(lbl_803DE44C, 0, ((ByteFlags *)((char *)state + 0x3f4))->b08, 0);
+            *(u8 *)((char *)state + 0x8b3) = 0;
+            if (*(s16 *)((char *)state + 0x806) != 0 && *(s16 *)((char *)state + 0x806) != 0xf) {
+                *(s16 *)((char *)state + 0x806) = 3;
+            }
+        } else if (b == 4) {
+            staffDoGrowShrinkAnim(lbl_803DE44C, 1, ((ByteFlags *)((char *)state + 0x3f4))->b08, 0);
+            *(u8 *)((char *)state + 0x8b3) = 1;
+            if (*(s16 *)((char *)state + 0x806) != 0 && *(s16 *)((char *)state + 0x806) != 0xf) {
+                *(s16 *)((char *)state + 0x806) = 3;
+            }
+        }
+    }
+
+    f31 = -lbl_803E7F20;
+    do {
+        changed = 0;
+        switch (*(s16 *)((char *)state + 0x806)) {
+        case 2:
+            if (prevChanged != 0) {
+                Object_ObjAnimSetMove(*(f32 *)((char *)obj + 0x98), obj,
+                                      *(s16 *)((char *)obj + 0xa0), 0);
+                p = *(void **)((char *)state + 0x4b8);
+                if (p != NULL &&
+                    (*(s16 *)((char *)p + 0x44) == 0x1c || *(s16 *)((char *)p + 0x44) == 0x2a)) {
+                    Object_ObjAnimSetMove(lbl_803E7EA4, obj, 0x82, 0);
+                } else {
+                    Object_ObjAnimSetMove(lbl_803E7EA4, obj, 0x8d, 0);
+                }
+                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0xc);
+            }
+            if (*(f32 *)((char *)obj + 0x9c) >= lbl_803E8130) {
+                *(u8 *)((char *)state + 0x8b3) = 1;
+            }
+            if (*(f32 *)((char *)obj + 0x9c) >= lbl_803E7F1C) {
+                staffDoGrowShrinkAnim(lbl_803DE44C, 1, 0, 0);
+                *(s16 *)((char *)state + 0x806) = 3;
+                changed = 1;
+            } else {
+                Object_ObjAnimAdvanceMove(lbl_803E7F20, lbl_803E7EE0, obj, NULL);
+            }
+            break;
+        case 1:
+            if (prevChanged != 0) {
+                Object_ObjAnimSetMove(*(f32 *)((char *)obj + 0x98), obj,
+                                      *(s16 *)((char *)obj + 0xa0), 0);
+                p = *(void **)((char *)state + 0x4b8);
+                if (p != NULL &&
+                    (*(s16 *)((char *)p + 0x44) == 0x1c || *(s16 *)((char *)p + 0x44) == 0x2a)) {
+                    Object_ObjAnimSetMove(lbl_803E7F68, obj, 0x82, 0);
+                } else {
+                    Object_ObjAnimSetMove(lbl_803E7F68, obj, 0x8d, 0);
+                }
+                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0xc);
+            }
+            if (*(f32 *)((char *)obj + 0x9c) <= lbl_803E8130) {
+                *(u8 *)((char *)state + 0x8b3) = 0;
+            }
+            if (*(f32 *)((char *)obj + 0x9c) <= lbl_803E7EB4) {
+                *(s16 *)((char *)state + 0x806) = 3;
+                changed = 1;
+            } else {
+                Object_ObjAnimAdvanceMove(f31, lbl_803E7EE0, obj, NULL);
+            }
+            break;
+        case 0xf:
+            if (prevChanged != 0) {
+                Object_ObjAnimSetMove(*(f32 *)((char *)obj + 0x98), obj,
+                                      *(s16 *)((char *)obj + 0xa0), 0);
+                Object_ObjAnimSetMove(lbl_803E7EA4, obj,
+                                      lbl_8033366C[*(u8 *)((char *)state + 0x8a2)], 0);
+                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0xc);
+            }
+            if (*(f32 *)((char *)obj + 0x9c) >= lbl_803E7EE0) {
+                *(s16 *)((char *)state + 0x806) = 3;
+                *(u8 *)((char *)state + 0x8a2) = 0xff;
+                changed = 1;
+            } else {
+                int ok;
+                ByteFlags *bf = (ByteFlags *)((char *)state + 0x3f0);
+                if (bf->b10 || bf->b04 || bf->b08 || bf->b20 ||
+                    *(s16 *)((char *)state + 0x274) == 0x36) {
+                    ok = 0;
+                } else {
+                    s16 t = *(s16 *)((char *)state + 0x274);
+                    ok = (u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 ||
+                         *(int *)((char *)state + 0x2d0) != 0;
+                }
+                if (ok) {
+                    Object_ObjAnimAdvanceMove(lbl_8033369C[*(u8 *)((char *)state + 0x8a2)],
+                                              timeDelta, obj, NULL);
+                } else {
+                    *(s16 *)((char *)state + 0x806) = 3;
+                    *(u8 *)((char *)state + 0x8a2) = 0xff;
+                    changed = 1;
+                }
+            }
+            break;
+        case 3:
+            if (*(s16 *)((char *)obj + 0xa2) != *(s16 *)((char *)obj + 0xa0)) {
+                Object_ObjAnimSetMove(*(f32 *)((char *)obj + 0x98), obj,
+                                      *(s16 *)((char *)obj + 0xa0), 0);
+            }
+            if (*(u16 *)((char *)model + 0x58) == 0) {
+                *(s16 *)((char *)obj + 0xa2) = -1;
+                *(s16 *)((char *)state + 0x806) = 0;
+            } else {
+                Object_ObjAnimAdvanceMove(lbl_803E7EA4, timeDelta, obj, NULL);
+                Object_ObjAnimSetMoveProgress(*(f32 *)((char *)obj + 0x98), (ObjAnimComponent *)obj);
+            }
+            break;
+        default:
+            if (*(u8 *)((char *)state + 0x8b3) != 0) {
+                if (*(u8 *)((char *)state + 0x8b4) == 0) {
+                    staffDoGrowShrinkAnim(lbl_803DE44C, 0, 0, 0);
+                    *(s16 *)((char *)state + 0x806) = 1;
+                    changed = 1;
+                }
+            } else if (*(u8 *)((char *)state + 0x8b4) == 2) {
+                *(s16 *)((char *)state + 0x806) = 2;
+                changed = 1;
+            }
+            if (*(u8 *)((char *)state + 0x8a2) == 5 || *(u8 *)((char *)state + 0x8a2) == 7) {
+                *(s16 *)((char *)state + 0x806) = 0xf;
+                changed = 1;
+            }
+            break;
+        }
+        prevChanged = changed;
+    } while (changed != 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
