@@ -2459,6 +2459,7 @@ void arwarwingbo_init(int obj, int setup)
 #pragma scheduling on
 #pragma peephole on
 
+#pragma dont_inline on
 #pragma peephole off
 #pragma scheduling off
 void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
@@ -2475,6 +2476,7 @@ void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
 }
 #pragma scheduling on
 #pragma peephole on
+#pragma dont_inline reset
 
 void arwarwingbo_release(void) {}
 void arwarwingbo_initialise(void) {}
@@ -6116,6 +6118,85 @@ int fn_802242A8(int p1, int p2, int p3)
     else
         result = 0;
     return result;
+}
+#pragma scheduling reset
+
+extern f32 lbl_803E6ECC;
+extern f32 lbl_803E6ED0;
+extern f32 lbl_803E6F5C;
+extern f32 lbl_803E6F64;
+extern f32 lbl_803E6F70;
+extern f32 lbl_803E6F74;
+extern f32 lbl_803E6F78;
+extern f32 lbl_803E6F7C;
+extern f32 lbl_803E6F80;
+extern f32 lbl_803E6F84;
+extern f32 lbl_803E6F88;
+extern f32 lbl_803E6F8C;
+extern f32 lbl_803E6F90;
+extern f32 lbl_803E6F94;
+extern f32 lbl_803E6F98;
+extern f32 lbl_803E6F9C;
+extern f32 lbl_803E6FA0;
+extern f32 lbl_803E6FA4;
+extern f32 lbl_803E6FA8;
+extern f32 lbl_803E6FAC;
+extern f32 lbl_803E6FB0;
+extern f32 lbl_803E6FB4;
+extern f32 lbl_803E6FB8;
+extern f32 lbl_803E6FBC;
+
+#pragma scheduling off
+void fn_8022D308(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    f32 v7c = lbl_803E6F7C;
+    f32 v74 = lbl_803E6F74;
+
+    *(f32 *)(state + 0x54) = lbl_803E6F70;
+    *(f32 *)(state + 0x60) = v74;
+    *(f32 *)(state + 0x58) = lbl_803E6F78;
+    *(f32 *)(state + 0x64) = v7c;
+    *(f32 *)(state + 0x5c) = lbl_803E6F78;
+    *(f32 *)(state + 0x68) = v7c;
+    *(f32 *)(state + 0x78) = lbl_803E6F80;
+    *(f32 *)(state + 0x84) = lbl_803E6F84;
+    *(f32 *)(state + 0x6c) = lbl_803E6ED0;
+    *(f32 *)(state + 0x348) = lbl_803E6F88;
+    *(f32 *)(state + 0x34c) = v74;
+    *(f32 *)(state + 0x35c) = lbl_803E6F8C;
+    *(f32 *)(state + 0x360) = v7c;
+    *(f32 *)(state + 0x370) = lbl_803E6F90;
+    *(f32 *)(state + 0x374) = lbl_803E6F94;
+    *(f32 *)(state + 0x384) = lbl_803E6F98;
+    *(f32 *)(state + 0x388) = lbl_803E6F9C;
+    *(f32 *)(state + 0x394) = lbl_803E6FA0;
+    *(f32 *)(state + 0x390) = lbl_803E6FA4;
+    *(f32 *)(state + 0x39c) = lbl_803E6FA8;
+    *(u8 *)(state + 0x3fa) = 0x19;
+    *(f32 *)(state + 0x3a4) = lbl_803E6FAC;
+    *(f32 *)(state + 0x38) = lbl_803E6FB0;
+    *(f32 *)(state + 0x3ac) = lbl_803E6FB4;
+    *(f32 *)(state + 0x3b0) = lbl_803E6FB8;
+    *(f32 *)(state + 0x88) = lbl_803E6FBC;
+    *(f32 *)(state + 0x8c) = lbl_803E6F64;
+    *(f32 *)(state + 0x9c) = *(f32 *)(state + 0xa0);
+    *(f32 *)(state + 0xa4) = *(f32 *)(state + 0xa8);
+    *(f32 *)(state + 0xac) = lbl_803E6F5C;
+    *(f32 *)(state + 0xb0) = lbl_803E6F5C;
+    *(f32 *)(state + 0x48) = lbl_803E6ECC;
+    *(f32 *)(state + 0x4c) = lbl_803E6ECC;
+    *(f32 *)(state + 0x50) = lbl_803E6ECC;
+    *(u8 *)(state + 0x404) = 0;
+    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x14);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x18);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x1c);
+    *(int *)(state + 0x358) = 0;
+    *(int *)(state + 0x36c) = 0;
+    *(s16 *)(obj + 0) = 0;
+    *(s16 *)(obj + 2) = 0;
+    *(s16 *)(obj + 4) = 0;
+    arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
 }
 #pragma scheduling reset
 
