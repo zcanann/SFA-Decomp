@@ -573,6 +573,35 @@ void drakorhoverpad_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p
         }
     }
 }
+
+int drakorhoverpad_pickUnmaskedNextPoint(int *pad, int exclude, int maxIndex) {
+    int collected[4];
+    int pt;
+    int count;
+    u32 bit;
+    int i;
+
+    count = 0;
+    bit = 1;
+    for (i = 0; i < 4; i++) {
+        pt = pad[7 + i];
+        if (pt > -1 && (*(s8 *)((char *)pad + 0x1b) & bit) == 0 && pt != exclude) {
+            collected[count] = pt;
+            count++;
+        }
+        bit <<= 1;
+    }
+    if (count == 0) {
+        return -1;
+    }
+    if (maxIndex != -1 && maxIndex > count - 1) {
+        maxIndex = count - 1;
+    }
+    if (maxIndex == -1) {
+        maxIndex = randomGetRange(0, count - 1);
+    }
+    return collected[maxIndex];
+}
 #pragma peephole reset
 #pragma scheduling reset
 
