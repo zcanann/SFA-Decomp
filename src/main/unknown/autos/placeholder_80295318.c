@@ -6421,6 +6421,9 @@ extern int Obj_SetActiveModelIndex(int obj, int idx);
 extern void *memcpy(void *dst, const void *src, u32 size);
 extern int *lbl_803DCAB4;
 extern f32 lbl_803E800C;
+extern f32 lbl_803E8138;
+extern f32 lbl_803E8050;
+extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
 
 typedef struct {
     u8 pad[0x7ac];
@@ -8891,6 +8894,47 @@ void fn_802972B4(int obj, int *flags, f32 *p5, f32 *p6, f32 *p7, s16 *p8)
         *flags |= 2;
     }
     *p8 = 0x78;
+}
+
+void fn_802B066C(int obj, int state)
+{
+    f32 v;
+    f32 px;
+    f32 py;
+    f32 pz;
+
+    if (*(u8 *)((char *)state + 0x86c) == 0x1a) {
+        return;
+    }
+    if (((ByteFlags *)((char *)state + 0x3f0))->b08 == 0) {
+        v = sqrtf(*(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c) +
+                  *(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                  *(f32 *)((char *)obj + 0x28) * *(f32 *)((char *)obj + 0x28));
+        *(f32 *)((char *)state + 0x7a4) = v;
+        v = *(f32 *)((char *)state + 0x7a4);
+        if (v < lbl_803E7EE0) {
+            v = lbl_803E7EE0;
+        } else if (v > lbl_803E8138) {
+            v = lbl_803E8138;
+        }
+        *(f32 *)((char *)state + 0x7a4) = v;
+    }
+    *(f32 *)((char *)state + 0x79c) =
+        *(f32 *)((char *)state + 0x79c) - timeDelta * *(f32 *)((char *)state + 0x7a4);
+    if (*(f32 *)((char *)state + 0x79c) <= lbl_803E7EA4) {
+        if (Sfx_IsPlayingFromObject(obj, 0x394)) {
+            Sfx_StopFromObject(obj, 0x394);
+            Sfx_PlayFromObject(obj, 0x395);
+        }
+        *(f32 *)((char *)state + 0x79c) = lbl_803E7EA4;
+        return;
+    }
+    *(f32 *)((char *)state + 0x7a0) = *(f32 *)((char *)state + 0x7a0) - timeDelta;
+    if (*(f32 *)((char *)state + 0x7a0) <= lbl_803E7EA4) {
+        ObjPath_GetPointWorldPosition(obj, 0xb, &px, &py, &pz, 0);
+        ObjHits_RecordPositionHit(px, py, pz, obj, 0, 0x1f, 1, -1);
+        *(f32 *)((char *)state + 0x7a0) = lbl_803E8050;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
