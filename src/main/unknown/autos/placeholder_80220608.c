@@ -6928,6 +6928,61 @@ void arwsquadron_handleDamage(int obj, int state)
 }
 #pragma scheduling reset
 
+extern void setMatrixFromObjectTransposed(void *transform, f32 *mtx);
+extern f32 lbl_803E718C;
+extern f32 lbl_803E7190;
+extern f32 lbl_803E7194;
+extern f32 lbl_803E7198;
+
+#pragma scheduling off
+void arwsquadron_followLeader(int p1, int p2)
+{
+    int leader = *(int *)(p2 + 0x13c);
+    int leaderState = *(int *)(leader + 0xb8);
+    int wstate = *(int *)(p1 + 0x4c);
+    ArwProjPosSrc src;
+    f32 mtx[12];
+    f32 out[3];
+
+    *(s16 *)(p2 + 0x146) = (f32)*(u16 *)(p2 + 0x14a) * timeDelta + (f32)*(u16 *)(p2 + 0x146);
+    *(s16 *)(p2 + 0x148) = (f32)*(u16 *)(p2 + 0x14c) * timeDelta + (f32)*(u16 *)(p2 + 0x148);
+    src.pos[0] = *(f32 *)(leader + 0xc);
+    src.pos[1] = *(f32 *)(leader + 0x10);
+    src.pos[2] = *(f32 *)(leader + 0x14);
+    src.scale = lbl_803E7188;
+    src.rot[0] = *(s16 *)(leader + 0);
+    src.rot[1] = *(s16 *)(leader + 2);
+    src.rot[2] = *(s16 *)(leader + 4);
+    out[0] = lbl_803E7190 * fn_80293E80(lbl_803E7194 * (f32)*(u16 *)(p2 + 0x146) / lbl_803E7198) +
+             lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x26);
+    out[1] = lbl_803E7190 * fn_80293E80(lbl_803E7194 * (f32)*(u16 *)(p2 + 0x148) / lbl_803E7198) +
+             lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x27);
+    out[2] = lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x1e);
+    setMatrixFromObjectTransposed(&src, mtx);
+    PSMTXMultVec(mtx, out, (void *)(p1 + 0xc));
+    *(f32 *)(p1 + 0x24) = *(f32 *)(leader + 0x24);
+    *(f32 *)(p1 + 0x28) = *(f32 *)(leader + 0x28);
+    *(f32 *)(p1 + 0x2c) = *(f32 *)(leader + 0x2c);
+    *(s16 *)(p1 + 0) = *(s16 *)(leader + 0);
+    *(s16 *)(p1 + 2) = *(s16 *)(leader + 2);
+    if (!((SquadCmdFlags *)(p2 + 0x160))->f08) {
+        *(s16 *)(p1 + 4) =
+            *(f32 *)(leaderState + 0x138) *
+                fn_80293E80(lbl_803E7194 * (f32)*(u16 *)(p2 + 0x146) / lbl_803E7198) +
+            (f32)*(s16 *)(leader + 4);
+    }
+    ((SquadCmdFlags *)(p2 + 0x160))->f80 = ((SquadCmdFlags *)(leaderState + 0x160))->f80;
+    if (*(s16 *)(p2 + 0x144) > 0)
+        ((SquadCmdFlags *)(p2 + 0x160))->f08 = ((SquadCmdFlags *)(leaderState + 0x160))->f08;
+    if (*(u8 *)(leaderState + 0x159) == 4) {
+        *(s16 *)(p1 + 6) |= 0x4000;
+        ObjHits_DisableObject(p1);
+        *(u8 *)(p2 + 0x159) = 4;
+        *(u8 *)(p2 + 0x159) = 4;
+    }
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
