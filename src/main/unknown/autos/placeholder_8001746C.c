@@ -8238,6 +8238,22 @@ int modelGetAmapSize(int a, int b, int c) {
 }
 #pragma peephole reset
 
+extern void *mmAlloc(int size, int type, int flag);
+extern void *memset(void *dst, int val, int n);
+
+void *Obj_AllocObjectSetup(int size, int b) {
+    u8 *p = mmAlloc(size, 0xe, 0);
+    memset(p, 0, size);
+    *(int *)(p + 0x14) = -1;
+    p[6] = 0x64;
+    p[7] = 0x96;
+    p[4] = 8;
+    p[5] = 4;
+    *(s16 *)p = b;
+    p[2] = size;
+    return p;
+}
+
 int gameBitDecrement(int bit) {
     int val = GameBit_Get(bit);
     if (val != 0) {
