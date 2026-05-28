@@ -2359,3 +2359,63 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
     }
     return 0;
 }
+
+extern f32 lbl_803E6ED0;
+extern f32 lbl_803E6EE8;
+extern f32 lbl_803E6EFC;
+extern f32 lbl_803E6F00;
+extern f32 lbl_803E6F5C;
+extern f32 lbl_803E6FF4;
+extern f32 lbl_803E6FF8;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 fn_80293E80(f32 x);
+extern void Obj_BuildWorldTransformMatrix(int obj, void *mtx, int p3);
+extern void PSMTXMultVec(void *mtx, void *src, void *dst);
+extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
+
+#pragma peephole off
+#pragma scheduling off
+void arwarwing_render(int obj, int p2, int p3, int p4, int p5)
+{
+    int state = *(int *)(obj + 0xb8);
+    int dx, dy;
+
+    if (*(u8 *)(state + 0x338) != 0) {
+        dx = (int)(lbl_803E6FF4 *
+                   fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(state + 0x33c) / lbl_803E6F00));
+        dy = (int)(lbl_803E6F5C *
+                   fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(state + 0x33a) / lbl_803E6F00));
+        *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + dx);
+        *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + dy);
+    }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6ED0);
+    if (*(u8 *)(state + 0x338) != 0) {
+        *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) - dx);
+        *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) - dy);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+#pragma peephole off
+#pragma scheduling off
+void arwarwing_hitDetect(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    f32 pos[3];
+    f32 mtx[12];
+
+    if ((*(u16 *)(obj + 0xb0) & 0x1000) != 0 && *(u8 *)(state + 0x47f) != 0) {
+        Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+        PSMTXMultVec(mtx, (void *)(state + 0x484), pos);
+        pos[0] += playerMapOffsetX;
+        pos[2] += playerMapOffsetZ;
+        fn_8008020C((s16)(0x8000 - *(s16 *)obj + *(s16 *)(state + 0x490)),
+                    (s16)(*(s16 *)(obj + 2) + *(s16 *)(state + 0x492)),
+                    (s16)(*(s16 *)(obj + 4) + *(s16 *)(state + 0x494)),
+                    pos[0], pos[1], pos[2], lbl_803E6FF8);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
