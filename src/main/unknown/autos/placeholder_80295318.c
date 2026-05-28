@@ -9705,6 +9705,133 @@ void fn_802B4C18(int obj, int state, f32 fv)
     *(int *)state &= ~0x1000000;
 }
 
+extern f32 lbl_803E80F4;
+extern f32 lbl_803E80F8;
+extern f32 lbl_803E7FC4;
+
+void fn_802AC32C(int p1, int p2, int p3)
+{
+    void *near;
+    int angle1;
+    int angle2;
+
+    near = (void *)fn_802AB1D0(p1);
+    if (near != NULL && ((ByteFlags *)((char *)p3 + 0x3f0))->b80 == 0 &&
+        ((ByteFlags *)((char *)p3 + 0x3f0))->b40 == 0) {
+        s16 cd = *(s16 *)((char *)p3 + 0x4a0) - 1;
+        f32 ratio;
+        f32 clamped;
+        f32 f5;
+        f32 fdelta;
+        f32 result;
+        int delta;
+
+        *(s16 *)((char *)p3 + 0x4a0) = cd;
+        if (cd <= 0) {
+            *(s16 *)((char *)p3 + 0x4a0) = (s16)randomGetRange(0x78, 0xf0);
+            *(s16 *)((char *)p3 + 0x4a2) = (s16)randomGetRange(0, 0x28);
+        }
+        delta = (u16)getAngle(-(*(f32 *)((char *)near + 0xc) - *(f32 *)((char *)p1 + 0xc)),
+                              -(*(f32 *)((char *)near + 0x14) - *(f32 *)((char *)p1 + 0x14))) -
+                (u16)*(s16 *)((char *)p3 + 0x478);
+        if (delta > 0x8000) {
+            delta -= 0xFFFF;
+        }
+        if (delta < -0x8000) {
+            delta += 0xFFFF;
+        }
+        ratio = lbl_803E7EE0 - (*(f32 *)((char *)p2 + 0x294) - lbl_803E7E9C) /
+                                   (*(f32 *)((char *)p3 + 0x404) - lbl_803E7E9C);
+        if (ratio < lbl_803E7EA4) {
+            clamped = lbl_803E7EA4;
+        } else if (ratio > lbl_803E7EE0) {
+            clamped = lbl_803E7EE0;
+        } else {
+            clamped = ratio;
+        }
+        f5 = lbl_803E80C4 * clamped + lbl_803E80F4;
+        fdelta = (f32)delta;
+        if (fdelta < lbl_803E80F8 * -f5) {
+            result = lbl_803E80F8 * -f5;
+        } else if (fdelta > lbl_803E80F8 * f5) {
+            result = lbl_803E80F8 * f5;
+        } else {
+            result = fdelta;
+        }
+        angle1 = (int)result;
+    } else {
+        angle1 = 0;
+        *(s16 *)((char *)p3 + 0x4a0) = 0;
+    }
+
+    {
+        int v480;
+        if (((ByteFlags *)((char *)p3 + 0x3f1))->b20) {
+            v480 = 0;
+        } else {
+            v480 = *(int *)((char *)p3 + 0x480);
+        }
+        if (v480 < -0x28) {
+            v480 = -0x28;
+        } else if (v480 > 0x28) {
+            v480 = 0x28;
+        }
+        angle1 += v480 * 0xb6;
+    }
+    angle1 -= (u16)*(s16 *)((char *)p3 + 0x4d4);
+    if (angle1 > 0x8000) {
+        angle1 -= 0xFFFF;
+    }
+    if (angle1 < -0x8000) {
+        angle1 += 0xFFFF;
+    }
+    angle1 = (int)((f32)angle1 * lbl_803E7EB4);
+    if (angle1 < -0x16c) {
+        angle1 = -0x16c;
+    } else if (angle1 > 0x16c) {
+        angle1 = 0x16c;
+    }
+    *(s16 *)((char *)p3 + 0x4d4) =
+        (int)((f32)angle1 * timeDelta + (f32)*(s16 *)((char *)p3 + 0x4d4));
+    *(s16 *)((char *)p3 + 0x4d2) = (s16)(*(s16 *)((char *)p3 + 0x4d4) / 2);
+
+    angle2 = *(s16 *)((char *)p3 + 0x478) - (u16)*(s16 *)((char *)p3 + 0x492);
+    if (angle2 > 0x8000) {
+        angle2 -= 0xFFFF;
+    }
+    if (angle2 < -0x8000) {
+        angle2 += 0xFFFF;
+    }
+    if (((ByteFlags *)((char *)p3 + 0x3f1))->b20) {
+        angle2 = 0;
+    }
+    {
+        f32 f2 = lbl_803E7E98 * (*(f32 *)((char *)p2 + 0x294) - lbl_803E7E9C) + lbl_803E7EE0;
+        if (f2 < lbl_803E7EA4) {
+            f2 = lbl_803E7EA4;
+        }
+        angle2 = (int)((f32)angle2 * (lbl_803E7FC4 * f2));
+    }
+    if (angle2 < -0xccc) {
+        angle2 = -0xccc;
+    } else if (angle2 > 0xccc) {
+        angle2 = 0xccc;
+    }
+    angle2 -= (u16)*(s16 *)((char *)p3 + 0x4d0);
+    if (angle2 > 0x8000) {
+        angle2 -= 0xFFFF;
+    }
+    if (angle2 < -0x8000) {
+        angle2 += 0xFFFF;
+    }
+    *(s16 *)((char *)p3 + 0x4d0) =
+        (int)((f32)*(s16 *)((char *)p3 + 0x4d0) +
+              interpolate((f32)angle2, lbl_803E7EB4, timeDelta));
+    *(s16 *)((char *)p3 + 0x4d6) =
+        (int)((f32)*(s16 *)((char *)p3 + 0x4d6) *
+              powfBitEstimate(lbl_803E7F1C, timeDelta));
+}
+
 int fn_802AB1D0(int obj)
 {
     int objs;
