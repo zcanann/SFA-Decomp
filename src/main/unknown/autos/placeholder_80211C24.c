@@ -4641,3 +4641,39 @@ int ktrex_stateHandlerA01(int obj, int runtime) {
     return 0;
 }
 #pragma scheduling reset
+
+extern f32 lbl_803E6B24;
+extern f32 lbl_803E6B28;
+extern f32 lbl_803E6B2C;
+extern s16 lbl_803DC32C;
+
+#pragma scheduling off
+int hightop_stateHandler01(int obj, int p) {
+    f32 v;
+    v = lbl_803E6AA8;
+    *(f32 *)((char *)p + 0x294) = v;
+    *(f32 *)((char *)p + 0x284) = v;
+    *(f32 *)((char *)p + 0x280) = v;
+    *(f32 *)((char *)obj + 0x24) = v;
+    *(f32 *)((char *)obj + 0x28) = v;
+    *(f32 *)((char *)obj + 0x2c) = v;
+    *(int *)((char *)p + 0) |= 0x200000;
+    if ((s8)*(u8 *)((char *)p + 0x27a) != 0) {
+        *(s16 *)((char *)p + 0x338) = 0;
+        *(f32 *)((char *)p + 0x2a0) = lbl_803E6B24;
+        *(f32 *)((char *)p + 0x2b8) = lbl_803E6B28;
+        if (*(s16 *)((char *)obj + 0xa0) != lbl_803DC32C) {
+            ObjAnim_SetCurrentMove(obj, lbl_803DC32C, lbl_803E6AA8, 0);
+        }
+    }
+    if (*(f32 *)((char *)p + 0x298) < lbl_803E6B2C) {
+        *(s16 *)((char *)p + 0x334) = 0;
+        *(s16 *)((char *)p + 0x336) = 0;
+        *(f32 *)((char *)p + 0x298) = lbl_803E6AA8;
+    }
+    if (*(f32 *)((char *)p + 0x29c) > lbl_803E6AA8 && *(f32 *)((char *)p + 0x298) > lbl_803E6AA8) {
+        return 3;
+    }
+    return 0;
+}
+#pragma scheduling reset
