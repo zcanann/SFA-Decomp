@@ -4853,6 +4853,7 @@ void fn_8022D4CC(int arwing, int in)
 
 void fn_8022D4F8(int arwing) { *(int *)(*(int *)(arwing + 0xb8) + 0x438) = 0; }
 
+#pragma dont_inline on
 int fn_8022D508(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x471); }
 
 int fn_8022D514(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x470); }
@@ -4926,6 +4927,124 @@ void fn_8022D64C(int arwing, int p2)
         Sfx_StopObjectChannel(arwing, 4);
     }
 }
+#pragma dont_inline reset
+
+extern void gameBitIncrement(int id);
+extern f32 lbl_803E70A0;
+extern f32 lbl_803E70A4;
+extern f32 lbl_803E70A8;
+extern f32 lbl_803E70AC;
+
+#pragma scheduling off
+void fn_8022FA00(int obj, int state) {
+    u8 mode = *(u8 *)(state + 1);
+    u16 raw = *(u16 *)(state + 2);
+    if (mode == 1 || mode == 3) {
+        f32 cur, lim, edge;
+        *(f32 *)(obj + 0xc) = *(f32 *)(state + 4) * timeDelta + *(f32 *)(obj + 0xc);
+        cur = *(f32 *)(obj + 0xc);
+        lim = *(f32 *)(state + 8);
+        edge = lim + (f32)(u32)raw;
+        if (cur > edge) {
+            *(f32 *)(obj + 0xc) = edge - (cur - edge);
+            *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+        } else {
+            edge = lim - (f32)(u32)raw;
+            if (cur < edge) {
+                *(f32 *)(obj + 0xc) = edge - (cur - edge);
+                *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+            }
+        }
+    } else if (mode == 4 || mode == 5) {
+        f32 cur, lim, edge;
+        *(f32 *)(obj + 0x10) = *(f32 *)(state + 4) * timeDelta + *(f32 *)(obj + 0x10);
+        cur = *(f32 *)(obj + 0x10);
+        lim = *(f32 *)(state + 0xc);
+        edge = lim + (f32)(u32)raw;
+        if (cur > edge) {
+            *(f32 *)(obj + 0x10) = edge - (cur - edge);
+            *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+        } else {
+            edge = lim - (f32)(u32)raw;
+            if (cur < edge) {
+                *(f32 *)(obj + 0x10) = edge - (cur - edge);
+                *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+            }
+        }
+    }
+}
+#pragma scheduling on
+
+void fn_8022FB5C(int obj, int state, int arwing) {
+    int setup = *(int *)(obj + 0x4c);
+    u8 mode = *(u8 *)(state + 0);
+    if (mode == 0) {
+        Sfx_PlayFromObject(arwing, 0x2a9);
+        if (*(s16 *)(arwing + 0x46) == 0x601) {
+            fn_8022D64C(arwing, 1);
+            fn_8022D520(arwing, 0xa);
+        }
+    } else if (mode == 1) {
+        Sfx_PlayFromObject(arwing, 0x2a9);
+        if (*(s16 *)(arwing + 0x46) == 0x601) {
+            fn_8022D634(arwing, 1);
+            fn_8022D64C(arwing, fn_8022D580(arwing));
+        }
+    } else if (mode == 3 || mode == 4) {
+        Sfx_PlayFromObject(arwing, 0x2a9);
+        gameBitIncrement(*(s16 *)(setup + 0x1e));
+    } else {
+        Sfx_PlayFromObject(arwing, 0x2ab);
+        if (*(s16 *)(arwing + 0x46) == 0x601) {
+            int seg;
+            fn_8022D5F0(arwing);
+            fn_8022D64C(arwing, 1);
+            fn_8022D520(arwing, 0x14);
+            seg = fn_8022D508(arwing);
+            if (fn_8022D514(arwing) == seg) {
+                if (((RingFlags *)(state + 0x14))->bit20)
+                    gameTextFn_80125ba4(7);
+            } else {
+                if (((RingFlags *)(state + 0x14))->bit20)
+                    gameTextFn_80125ba4(9);
+            }
+        }
+    }
+    *(u8 *)(state + 0x15) = 2;
+}
+
+#pragma peephole off
+#pragma scheduling off
+int fn_8022FCD8(int obj, int state, int arwing) {
+    RingFlags *f = (RingFlags *)(state + 0x14);
+    if (f->bit10) {
+        f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
+        f32 dy = *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10);
+        f32 dz;
+        if (dy < lbl_803E70A0)
+            dy = -dy;
+        dz = *(f32 *)(obj + 0x14) - *(f32 *)(arwing + 0x14);
+        if (dy <= lbl_803E70A4) {
+            if (dx * dx + dz * dz < lbl_803E70A8)
+                return 1;
+        }
+    } else {
+        f32 oz = *(f32 *)(obj + 0x14);
+        f32 a = oz - *(f32 *)(arwing + 0x14);
+        f32 b = oz - *(f32 *)(arwing + 0x88);
+        if (a <= lbl_803E70A0 && b >= lbl_803E70A0) {
+            f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
+            f32 dy = *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10);
+            if (sqrtf(dx * dx + dy * dy) < lbl_803E70AC)
+                return 1;
+            if (*(u8 *)(state + 0) == 2 && f->bit20)
+                gameTextFn_80125ba4(0xa);
+        }
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 void fn_8022D6D0(int arwing)
 {
