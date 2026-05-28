@@ -1675,3 +1675,64 @@ void cnthitobjec_update(int obj)
 }
 #pragma scheduling on
 #pragma peephole on
+
+int dustmotesou_getExtraSize(void) { return 0; }
+int dustmotesou_getObjectTypeId(void) { return 0; }
+
+void dustmotesou_free(int obj)
+{
+    (*(void (**)(int))(*gExpgfxInterface + 0x18))(obj);
+}
+
+void dustmotesou_hitDetect(void) {}
+
+#pragma peephole off
+#pragma scheduling off
+void dustmotesou_init(int obj, int setup)
+{
+    *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
+    *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
+    *(s16 *)(obj + 0) = (s16)(*(u8 *)(setup + 0x1a) << 8);
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+}
+#pragma scheduling on
+#pragma peephole on
+
+void dustmotesou_release(void) {}
+void dustmotesou_initialise(void) {}
+
+extern f32 lbl_803E7338;
+extern f32 lbl_803E733C;
+extern f32 lbl_803E7340;
+extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int state);
+
+int brokenpipe_getExtraSize(void) { return 4; }
+
+#pragma peephole off
+#pragma scheduling off
+void brokenpipe_init(int obj, int setup)
+{
+    *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
+    *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
+    *(s16 *)(obj + 0) = (s16)(*(u8 *)(setup + 0x1a) << 8);
+    if (*(u8 *)(setup + 0x1b) != 0) {
+        *(f32 *)(obj + 8) = (f32)(u32)*(u8 *)(setup + 0x1b) / lbl_803E7338;
+        if (*(f32 *)(obj + 8) == lbl_803E733C) {
+            *(f32 *)(obj + 8) = lbl_803E7340;
+        }
+        ObjHitbox_SetSphereRadius(obj,
+            (int)((f32)*(s16 *)(*(int *)(obj + 0x54) + 0x5a) * *(f32 *)(obj + 8)));
+        *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
+    }
+    *(u16 *)(obj + 0xb0) |= 0x4000;
+}
+#pragma scheduling on
+#pragma peephole on
+
+#pragma scheduling off
+void brokenpipe_update(int obj)
+{
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
+        *(int *)(obj + 0xb8));
+}
+#pragma scheduling on
