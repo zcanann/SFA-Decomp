@@ -7570,12 +7570,14 @@ void lightGetColor(int i, u8 *a, u8 *b, u8 *c) {
     *c = base[i * 4 + 2];
 }
 
+#pragma dont_inline on
 void *getCache(void) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
         return lbl_803DD61C;
     }
     return (void *)0xe0000000;
 }
+#pragma dont_inline reset
 
 f32 getXZDistance(f32 *a, f32 *b) {
     f32 dx = a[0] - b[0];
@@ -7768,6 +7770,9 @@ typedef struct {
     int f8;
     int fc;
     int f10;
+    u8 _14[0xc];
+    int f20;
+    int f24;
 } AssetReq;
 extern AssetReq lbl_8033BF88;
 
@@ -8066,5 +8071,84 @@ f32 interpolate(f32 a, f32 t, f32 exp) {
 
 int atan2i(int y, int x) {
     return (int)(lbl_803DE7D8 * fn_802924B4((f32)y, (f32)x));
+}
+#pragma pop
+
+extern void *memcpy(void *dst, const void *src, int n);
+extern void LCLoadBlocks(void *destTag, void *srcAddr, u32 numBlocks);
+extern u32 PPCMfhid2(void);
+extern void DCInvalidateRange(void *addr, u32 nBytes);
+extern void LCEnable(void);
+extern void ObjModel_InitScratchBuffers(void);
+extern void setGQR6_2(int a, int b, int c, int d);
+extern void GXInitLightSpot(u8 *lt_obj, f32 cutoff, int spot_func);
+extern void GXInitLightDistAttn(u8 *lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
+extern void GXGetLightAttnK(u8 *lt_obj, f32 *k0, f32 *k1, f32 *k2);
+extern f32 lbl_803DE760;
+extern f32 lbl_803DE75C;
+extern f32 lbl_803DE758;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int objMove(u8 *obj, f32 dx, f32 dy, f32 dz) {
+    int n;
+    *(f32 *)(obj + 0xc) += dx;
+    *(f32 *)(obj + 0x10) += dy;
+    *(f32 *)(obj + 0x14) += dz;
+    ObjGroup_GetObjects(0, &n);
+    return 0;
+}
+
+void copyToCache(void *dst, void *src, u32 count) {
+    if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
+        int len;
+        if (count != 0) {
+            len = count << 5;
+        } else {
+            len = 0x1000;
+        }
+        memcpy(dst, src, len);
+    } else {
+        LCLoadBlocks(dst, src, count);
+    }
+}
+
+void ObjModel_InitRenderBuffers(void) {
+    if ((PPCMfhid2() & 0x10000000) == 0) {
+        void *cache = getCache();
+        DCInvalidateRange(cache, 0x4000);
+        LCEnable();
+        ObjModel_InitScratchBuffers();
+        setGQR6_2(7, 4, 7, 4);
+    }
+}
+
+void *animationLoad(int id, s16 a, s16 b, int e, int f) {
+    lbl_8033BF88.f0 = 1;
+    lbl_8033BF88.f1 = 7;
+    lbl_8033BF88.f4 = a;
+    lbl_8033BF88.f8 = id;
+    lbl_8033BF88.fc = b;
+    lbl_8033BF88.f20 = e;
+    lbl_8033BF88.f24 = f;
+    return loadAsset(&lbl_8033BF88);
+}
+
+void fn_8001DA60(u8 *obj, f32 cutoff, int mode) {
+    *(f32 *)(obj + 0xb4) = cutoff;
+    *(int *)(obj + 0xb8) = mode;
+    if (mode == 0) {
+        GXInitLightAttnA(obj + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
+    } else {
+        GXInitLightSpot(obj + 0x68, *(f32 *)(obj + 0xb4), *(int *)(obj + 0xb8));
+    }
+}
+
+void lightDistAttenFn_8001dc38(u8 *obj, f32 a, f32 b) {
+    *(f32 *)(obj + 0x140) = a;
+    *(f32 *)(obj + 0x144) = b;
+    GXInitLightDistAttn(obj + 0x68, *(f32 *)(obj + 0x140), lbl_803DE758, 2);
+    GXGetLightAttnK(obj + 0x68, (f32 *)(obj + 0x124), (f32 *)(obj + 0x128), (f32 *)(obj + 0x12c));
 }
 #pragma pop
