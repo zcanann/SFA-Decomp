@@ -4048,3 +4048,84 @@ void ktrex_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefi
     *(int *)((char *)gKTRexState + 0x104) |= 0x100000;
 }
 #pragma scheduling reset
+
+extern s16 lbl_803DC290[];
+extern s16 lbl_803DC298[];
+extern u32 lbl_803E67B0;
+extern void ObjHits_SetHitVolumeMasks(int obj, int a, int b, int c);
+extern void ktrex_updateContactEffects(int obj, void *runtime);
+
+#pragma scheduling off
+void ktrex_update(int obj) {
+    void *runtime;
+    void *player;
+    f32 d[3];
+    u32 tmp;
+    u8 maskA;
+    u8 maskB;
+    u8 flags;
+    int phase;
+    int i;
+    f32 dz, dx;
+
+    if (*(int *)((char *)obj + 0xf4) != 0) {
+        return;
+    }
+    runtime = *(void **)((char *)obj + 0xb8);
+    gKTRexRuntime = runtime;
+    if (*(int *)((char *)obj + 0xf8) == 1) {
+        Music_Trigger(40, 1);
+        *(int *)((char *)obj + 0xf8) = 2;
+        *(s16 *)((char *)runtime + 0x270) = 11;
+        *(u8 *)((char *)runtime + 0x27b) = 1;
+    }
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+    *(void **)((char *)runtime + 0x2d0) = Obj_GetPlayerObject();
+    if (*(void **)((char *)runtime + 0x2d0) != NULL) {
+        player = *(void **)((char *)runtime + 0x2d0);
+        d[0] = *(f32 *)((char *)player + 0x18) - *(f32 *)((char *)obj + 0x18);
+        d[1] = *(f32 *)((char *)player + 0x1c) - *(f32 *)((char *)obj + 0x1c);
+        d[2] = *(f32 *)((char *)player + 0x20) - *(f32 *)((char *)obj + 0x20);
+        *(f32 *)((char *)runtime + 0x2c0) = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
+    }
+    characterDoEyeAnims(obj, (char *)gKTRexRuntime + 0x3ac);
+    maskA = 0;
+    for (i = 0; i < 4; i++) {
+        if (GameBit_Get(lbl_803DC290[i]) != 0) {
+            maskA |= 1 << i;
+        }
+    }
+    *(u8 *)((char *)gKTRexState + 0xff) = maskA;
+    player = *(void **)((char *)runtime + 0x2d0);
+    phase = (*(u16 *)((char *)gKTRexState + 0xfa) >> 1) & 3;
+    dz = ((f32 *)*(int *)((char *)gKTRexState + 0xdc))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd0))[phase];
+    dx = ((f32 *)*(int *)((char *)gKTRexState + 0xe4))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase];
+    if ((f32)__fabs(dz) > (f32)__fabs(dx)) {
+        *(f32 *)((char *)gKTRexState + 0xf4) =
+            (*(f32 *)((char *)player + 0xc) - ((f32 *)*(int *)((char *)gKTRexState + 0xd0))[phase]) / dz;
+    } else {
+        *(f32 *)((char *)gKTRexState + 0xf4) =
+            (*(f32 *)((char *)player + 0x14) - ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase]) / dx;
+    }
+    tmp = lbl_803E67B0;
+    *(u8 *)((char *)gKTRexState + 0xfe) = ((u8 *)&tmp)[(*(u16 *)((char *)gKTRexState + 0xfa) >> 1) & 3];
+    flags = *(u8 *)((char *)gKTRexState + 0xfe);
+    maskB = 0;
+    for (i = 0; i < 4; i++) {
+        if ((flags & (1 << i)) != 0 && GameBit_Get(lbl_803DC298[i]) != 0) {
+            maskB |= 1 << i;
+        }
+    }
+    *(u8 *)((char *)gKTRexState + 0x100) = maskB;
+    (*(void (**)(int, void *, void *, int, void *, int, int, int))((char *)*gBaddieControlInterface + 0x54))(
+        obj, runtime, (char *)gKTRexRuntime + 0x35c, *(s16 *)((char *)gKTRexRuntime + 0x3f4),
+        (char *)gKTRexRuntime + 0x405, 2, 2, 0);
+    ktrex_updateContactEffects(obj, runtime);
+    ktrex_updateAttackEffects(obj);
+    (*(void (**)(int, void *, int, f32))((char *)*gBaddieControlInterface + 0x2c))(obj, runtime, 0, lbl_803E67B8);
+    ObjHits_SetHitVolumeMasks(obj, 24, 2, 0x1fffff);
+    (*(void (**)(int, void *, f32, f32, void **, void *))((char *)*gPlayerInterface + 0x8))(
+        obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)gKTRexState + 0xec);
+}
+#pragma scheduling reset
