@@ -1200,9 +1200,9 @@ extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 #pragma scheduling off
 void waterflowwe_init(int obj, u8 *setup)
 {
-    *(s16 *)(obj + 4) = setup[0x18] << 8;
-    *(s16 *)(obj + 2) = setup[0x19] << 8;
-    *(s16 *)(obj + 0) = setup[0x1a] << 8;
+    *(s16 *)(obj + 4) = (s16)(setup[0x18] << 8);
+    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
+    *(s16 *)(obj + 0) = (s16)(setup[0x1a] << 8);
     if (setup[0x1b] != 0) {
         *(f32 *)(obj + 8) = (f32)(u32)setup[0x1b] / lbl_803E72F4;
         if (*(f32 *)(obj + 8) == lbl_803E72B0) {
@@ -3730,10 +3730,11 @@ void arwgenerato_update(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     int setup = *(int *)(obj + 0x4c);
+    f32 thr = lbl_803E7154;
 
-    if (*(f32 *)state > lbl_803E7154) {
+    if (*(f32 *)state > thr) {
         *(f32 *)state -= timeDelta;
-        if (*(f32 *)state <= lbl_803E7154) {
+        if (*(f32 *)state <= thr) {
             switch (*(u8 *)(setup + 0x25)) {
             case 0:
                 fn_802317A8(obj, state, setup);
