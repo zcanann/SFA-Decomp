@@ -344,6 +344,19 @@ extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *start, void *end, void *hit, int d, int e);
 extern void voxmaps_gridToWorld(void *world, void *grid);
 extern f32 lbl_803E6960;
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void Sfx_StopFromObject(int obj, int id);
+extern void fn_80221C18(int player, f32 v, f32 *objPos, f32 *out);
+extern void PSVECNormalize(f32 *out, f32 *in);
+extern void PSVECScale(f32 *out, f32 *in, f32 scale);
+extern void PSVECAdd(f32 *out, f32 *a, f32 *b);
+extern int ObjHits_GetPriorityHit(int obj, void *out, int a, int b);
+extern f32 Vec_distance(f32 *a, f32 *b);
+extern f32 lbl_803DC2B0;
+extern f32 lbl_803DC2B4;
+extern f32 lbl_803DC2B8;
+extern f32 lbl_803DC2BC;
+extern f32 lbl_803E6968;
 
 extern int fn_80080150(void *timer);
 extern void s16toFloat(void *timer, int v);
@@ -772,6 +785,129 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed) {
     *(u8 *)((char *)obj + 0x36) = 255;
     *(f32 *)((char *)obj + 8) = lbl_803E6958 * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
     Sfx_PlayFromObject(obj, 371);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void drakormissile_update(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    int moving;
+    f32 toTarget[3];
+    f32 dir[3];
+    int *hitObj;
+    int hit;
+    int *near;
+    int result;
+    int player;
+    f32 mag;
+    int f5;
+    int f3;
+    int rem;
+
+    moving = 0;
+    switch (*(u8 *)(p + 4)) {
+    case 3:
+        moving = 1;
+        objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
+                *(f32 *)((char *)obj + 0x28) * timeDelta,
+                *(f32 *)((char *)obj + 0x2c) * timeDelta);
+        break;
+    case 2:
+        *(u8 *)((char *)obj + 0x36) = 0;
+        if (*(int *)(p + 8) == 0) {
+            ObjHits_DisableObject(obj);
+        }
+        *(int *)(p + 8) += framesThisStep;
+        if (*(int *)(p + 8) > 0x80) {
+            ObjHits_DisableObject(obj);
+            Sfx_StopFromObject(obj, 0x173);
+            Sfx_StopFromObject(obj, 0x3c5);
+            *(u8 *)(p + 4) = 1;
+        }
+        break;
+    case 4:
+        player = (int)Obj_GetPlayerObject();
+        mag = lbl_803E695C;
+        if (*(f32 *)((char *)player + 0x24) != mag || *(f32 *)((char *)player + 0x28) != mag ||
+            *(f32 *)((char *)player + 0x2c) != mag) {
+            mag = PSVECMag((f32 *)((char *)player + 0x24));
+        }
+        mag = lbl_803DC2B8 + mag;
+        fn_80221C18(player, mag, (f32 *)((char *)obj + 0xc), toTarget);
+        PSVECSubtract(toTarget, (f32 *)((char *)obj + 0xc), dir);
+        PSVECNormalize(dir, dir);
+        PSVECScale(dir, dir, mag * lbl_803DC2B4);
+        PSVECScale((f32 *)((char *)obj + 0x24), (f32 *)((char *)obj + 0x24), lbl_803DC2B0);
+        PSVECAdd((f32 *)((char *)obj + 0x24), dir, (f32 *)((char *)obj + 0x24));
+        mag = sqrtf(*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                    *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c));
+        *(s16 *)obj = getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c));
+        *(s16 *)((char *)obj + 2) = getAngle(*(f32 *)((char *)obj + 0x28), mag);
+        objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
+                *(f32 *)((char *)obj + 0x28) * timeDelta,
+                *(f32 *)((char *)obj + 0x2c) * timeDelta);
+        moving = 1;
+        break;
+    case 1: {
+        f32 life = *(f32 *)(p + 0xc) + timeDelta;
+        *(f32 *)(p + 0xc) = life;
+        if (life > lbl_803E6968) {
+            Obj_FreeObject(obj);
+            return;
+        }
+        break;
+    }
+    }
+    if (moving) {
+        near = *(int **)(*(int *)((char *)obj + 0x54) + 0x50);
+        hitObj = NULL;
+        hit = ObjHits_GetPriorityHit(obj, &hitObj, 0, 0);
+        f5 = 0;
+        rem = *(int *)(p + 8) - framesThisStep;
+        *(int *)(p + 8) = rem;
+        if (rem < 0 || hit != 0) {
+            f5 = 1;
+        }
+        f3 = 0;
+        if (near != NULL && *(s16 *)((char *)near + 0x46) != 0x2ab) {
+            f3 = 1;
+        }
+        result = f5 | f3;
+        result |= *(s8 *)(*(int *)((char *)obj + 0x54) + 0xad);
+        if (*(u8 *)(p + 4) == 4) {
+            player = (int)Obj_GetPlayerObject();
+            if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) <
+                lbl_803DC2BC) {
+                result |= 1;
+            }
+        }
+        if (hitObj != NULL && *(s16 *)((char *)hitObj + 0x46) == 0x2ab) {
+            result = 0;
+        }
+        if (result != 0) {
+            *(u8 *)(p + 4) = 2;
+            *(int *)(p + 8) = 0;
+            if ((*(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) & 8) != 0) {
+                Sfx_PlayFromObject(obj, 0x172);
+            }
+            if (*(s8 *)((char *)obj + 0xac) == 2) {
+                spawnExplosion(obj, lbl_803E6940, 3, 0, 0, 0, 0, 0, 3);
+            } else {
+                spawnExplosion(obj, lbl_803E6940, 1, 0, 0, 0, 0, 0, 3);
+            }
+            if (*(void **)p != NULL) {
+                ModelLightStruct_free(*(void **)p);
+                *(void **)p = NULL;
+            }
+        }
+        *(int *)(*(int *)((char *)obj + 0x54) + 0x4c) = 0x10;
+        *(int *)(*(int *)((char *)obj + 0x54) + 0x48) = 0x10;
+    }
+    if (*(void **)p != NULL && fn_8001DB64()) {
+        lightFn_8001d6b0(*(void **)p);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
