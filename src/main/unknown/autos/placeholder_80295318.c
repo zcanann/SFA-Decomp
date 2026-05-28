@@ -7324,6 +7324,54 @@ void fn_80296EB4(int obj, int newParent)
     *(int *)((char *)obj + 0x30) = newParent;
 }
 
+extern f32 lbl_803E80BC;
+
+int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
+{
+    f32 d1;
+    f32 d2;
+    f32 nx;
+    f32 ny;
+    *(f32 *)((char *)out + 0x44) = *(f32 *)((char *)vec + 0x0);
+    *(f32 *)((char *)out + 0x48) = *(f32 *)((char *)src + 0xc);
+    *(f32 *)((char *)out + 0x4c) = *(f32 *)((char *)vec + 0x8);
+    *(f32 *)((char *)out + 0x50) = *(f32 *)((char *)p2 + 0x768);
+    *(f32 *)((char *)out + 0x54) = lbl_803E7EA4;
+    *(f32 *)((char *)out + 0x58) = *(f32 *)((char *)p2 + 0x770);
+    if (flag != 0) {
+        *(u8 *)((char *)out + 0x1) = 1;
+    } else {
+        *(u8 *)((char *)out + 0x1) = 0;
+    }
+    *(f32 *)((char *)out + 0x24) = *(f32 *)((char *)src + 0x1c);
+    *(f32 *)((char *)out + 0x28) = *(f32 *)((char *)src + 0x20);
+    *(f32 *)((char *)out + 0x2c) = *(f32 *)((char *)src + 0x24);
+    *(f32 *)((char *)out + 0x30) = *(f32 *)((char *)src + 0x28);
+    *(f32 *)((char *)out + 0x34) = -*(f32 *)((char *)src + 0x24);
+    *(f32 *)((char *)out + 0x38) = lbl_803E7EA4;
+    *(f32 *)((char *)out + 0x3c) = *(f32 *)((char *)src + 0x1c);
+    *(f32 *)((char *)out + 0x40) = *(f32 *)((char *)out + 0x48) * *(f32 *)((char *)out + 0x38) +
+                                       *(f32 *)((char *)out + 0x44) * *(f32 *)((char *)out + 0x34) -
+                                   *(f32 *)((char *)out + 0x4c) * *(f32 *)((char *)out + 0x3c);
+    nx = -*(f32 *)((char *)out + 0x2c);
+    ny = *(f32 *)((char *)out + 0x24);
+    d1 = (ny * *(f32 *)((char *)src + 0x14) - nx * *(f32 *)((char *)src + 0x4)) +
+         (ny * *(f32 *)((char *)out + 0x4c) +
+          (nx * *(f32 *)((char *)out + 0x44) + *(f32 *)((char *)out + 0x38) * *(f32 *)((char *)out + 0x48)));
+    nx = -nx;
+    ny = -ny;
+    d2 = (ny * *(f32 *)((char *)src + 0x18) - nx * *(f32 *)((char *)src + 0x8)) +
+         (ny * *(f32 *)((char *)out + 0x4c) +
+          (nx * *(f32 *)((char *)out + 0x44) + *(f32 *)((char *)out + 0x38) * *(f32 *)((char *)out + 0x48)));
+    if (d1 > lbl_803E80BC && d2 > lbl_803E80BC) {
+        *(f32 *)((char *)out + 0x8) = *(f32 *)((char *)src + 0xc);
+        *(f32 *)((char *)out + 0x4) = *(f32 *)((char *)src + 0x3c);
+        *(s8 *)((char *)out + 0x2) = *(s8 *)((char *)src + 0x53);
+        return 1;
+    }
+    return 0;
+}
+
 int fn_802977A8(int obj, int state)
 {
     if (*(s8 *)((char *)state + 0x27a) != 0) {
