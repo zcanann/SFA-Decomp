@@ -141,6 +141,14 @@ Heuristic before reaching for `asm { }`:
     blocks are laid out differently, reorder the `case` labels in the source to
     the target's block order (read the block addresses off the `.s`). Clean C,
     no asm. See `61dd19936` (DIMcannon `fn_801AF6DC` → 100%).
+    **Jump-table switches also match — read the table and order cases by block
+    address.** When MWCC lowers the switch to a *jump table* (dense cases), read
+    the table (`jumptable_xxx`) from the unit's data `.s`
+    (`build/GSAE01/asm/..._data.s`) to recover each case→block-offset mapping,
+    then write the `case` labels in **target block-address order** and let cases
+    that fall to default just omit — MWCC regenerates the same table. Residual is
+    usually only the anonymous `@jumptable` vs the named symbol (a ~2-instr reloc
+    diff), leave that. Took drakorhoverpad_handlePathPointEvent (22-case) to 86%.
 
 14. **`int` parameter (not `u32`) for `(arg & bit)` flag tests → `cmpwi`.** A
     `u32` param makes a masked-flag compare emit `cmplwi`; an `int` param emits
@@ -238,6 +246,17 @@ Heuristic before reaching for `asm { }`:
     reproduce target's `crclr 4*cr1+eq` varargs marker; widen a callee's return
     `void`→`int` when target keeps its result live even if your caller ignores
     it.)
+
+25. **An FP comparison feeding a BRANCH is NOT a cap — write the plain
+    operator.** `if (a >= b)` / `while (a < b)` / `a <= b ? x : y` on floats
+    reproduces target's `fcmpo` + `cror` (the `cror eq,gt,eq`→`>=`,
+    `eq,lt,eq`→`<=` combine) directly from the `>=`/`<=`/`<`/`>` operator — do
+    NOT leave these partial. The cap is ONLY when target *materializes* the
+    boolean into a GPR (`int x = a >= b;` / `return a >= b;`), which clean C
+    emits via `mfcr`/`rlwinm` and rarely matches. So keep float compares inside
+    `if`/`while`/`?:` conditions; only accept the residual when the boolean is
+    actually stored or returned. (Corrects the over-broad "FP-compare → mfcr/cror
+    cap" that earlier handoffs propagated.)
 
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
