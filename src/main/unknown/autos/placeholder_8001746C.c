@@ -8745,6 +8745,47 @@ typedef struct {
 extern char sMmSpawnedUnalignedSlotWarning[];
 extern int lbl_803DCB1C;
 
+int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val) {
+    MmRegion *reg;
+    HeapItem *base;
+    int oldSize;
+    while (size % 32 != 0) {
+        size++;
+    }
+    reg = &gMmRegionTable[region];
+    base = (HeapItem *)reg->start;
+    base[idx].type = type;
+    oldSize = base[idx].size;
+    base[idx].size = size;
+    base[idx].f10 = f10val;
+    if (oldSize > size) {
+        s16 oldNext;
+        int ni = base[reg->f4++].stack;
+        base[idx].type = newType;
+        while ((oldSize - size) % 32 != 0) {
+            size++;
+        }
+        base[idx].size = oldSize - size;
+        base[ni].type = type;
+        base[ni].key = (char *)base[idx].key + oldSize - size;
+        if ((int)base[ni].key % 32 != 0) {
+            OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
+        }
+        base[ni].size = size;
+        base[ni].f10 = f10val;
+        base[ni].f14 = lbl_803DCB1C;
+        oldNext = base[idx].next;
+        base[ni].next = oldNext;
+        base[ni].prev = idx;
+        base[idx].next = ni;
+        if (oldNext != -1) {
+            base[oldNext].prev = ni;
+        }
+        return ni;
+    }
+    return idx;
+}
+
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val) {
     MmRegion *reg = &gMmRegionTable[region];
     HeapItem *base = (HeapItem *)reg->start;
