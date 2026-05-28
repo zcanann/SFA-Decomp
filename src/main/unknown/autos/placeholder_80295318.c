@@ -6303,6 +6303,13 @@ int fn_8029B994(int obj, int state)
 extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern void ObjModel_SampleJointTransform(int model, int a, int b, f32 blend, f32 frame, void *out1, void *out2);
 extern void fn_8014C540(int obj, void *a, void *b, void *c);
+extern void fn_802AA2B0(int obj, int state, f32 a, f32 b);
+extern void setAButtonIcon(int idx);
+extern void setBButtonIcon(int idx);
+extern f32 lbl_803DE45C;
+extern f32 lbl_803E7FA0;
+extern f32 lbl_803E7FA4;
+extern f32 lbl_803E7F5C;
 extern f32 lbl_803E8150;
 extern f32 lbl_803DAF88[];
 extern s16 lbl_80332F2C[];
@@ -9019,6 +9026,49 @@ void fn_802B4A9C(int obj, int sA, int sB)
             *(s16 *)((char *)sA + 0x80e) = -1;
         }
     }
+}
+
+int fn_8029A5E4(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int r = fn_802AC7DC(obj, state, inner);
+    if (r != 0) {
+        return r;
+    }
+    setAButtonIcon(6);
+    setBButtonIcon(0xa);
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        int p = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+        int val = *(s16 *)((char *)p + 4);
+        if (val < 0) {
+            val = 0;
+        } else {
+            int hi = *(s16 *)((char *)p + 6);
+            if (val > hi) {
+                val = hi;
+            }
+        }
+        *(s16 *)((char *)p + 4) = (s16)val;
+        lbl_803DE45C = lbl_803E7F30;
+    }
+    if (lbl_803E7F30 == lbl_803DE45C || lbl_803E7FA0 == lbl_803DE45C ||
+        lbl_803E7FA4 == lbl_803DE45C) {
+        fn_802AA2B0(obj, state, *(f32 *)((char *)inner + 0x7bc),
+                    (f32)randomGetRange(-0xc8, 0xc8) / lbl_803E7F5C);
+    }
+    lbl_803DE45C = lbl_803DE45C - lbl_803E7EE0;
+    if (lbl_803DE45C < lbl_803E7EA4) {
+        *(int *)((char *)state + 0x308) = (int)fn_8029A4A8;
+        return 0x2d;
+    }
+    if (*(int **)((char *)state + 0x2d0) == NULL) {
+        if ((*(u16 *)((char *)inner + 0x6e2) & 0x200) != 0 ||
+            *(u8 *)((char *)inner + 0x8c8) != 0x52) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029A420;
+            return 0x2c;
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
