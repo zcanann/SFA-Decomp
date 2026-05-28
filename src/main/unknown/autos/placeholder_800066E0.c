@@ -10394,3 +10394,36 @@ int DVDRead(void* fileInfo, void* buf, int size, int offset)
     }
     return lbl_803DC958;
 }
+
+typedef struct {
+    u16 id;
+    u16 track;
+    u8 pad[0xc];
+} MusicTrigger;
+
+extern MusicTrigger* gMusicTriggersData;
+extern int gMusicTriggersCount;
+extern s16 sMusicTrackTable[];
+
+/*
+ * Function: Music_PlayTrackByIndex
+ * EN v1.0 Address: 0x8000A2E4
+ * EN v1.0 Size: 148b
+ */
+void Music_PlayTrackByIndex(int index)
+{
+    MusicTrigger* trigger = gMusicTriggersData;
+    int count = gMusicTriggersCount;
+    while (count != 0) {
+        if ((int)trigger->id == 0xec) {
+            goto found;
+        }
+        trigger++;
+        count--;
+    }
+    trigger = NULL;
+found:
+    streamFn_8000a380(3, 1, 0);
+    trigger->track = *(s16*)((u8*)sMusicTrackTable + (index << 4));
+    Music_Trigger(0xec, 1);
+}
