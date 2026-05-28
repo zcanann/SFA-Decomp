@@ -7217,9 +7217,11 @@ int getCurLanguage(void) {
     return curLanguage;
 }
 
+#pragma dont_inline on
 void *getCurGameText(void) {
     return curGameTextDir;
 }
+#pragma dont_inline reset
 
 int objIsFrozen(u8 *obj) {
     return obj[0xe5] & 1;
@@ -7701,6 +7703,7 @@ void fn_80026C54(u8 *p) {
     }
 }
 
+#pragma dont_inline on
 void mm_free(void *p) {
     if (gMmFreeDelay == 0) {
         mmFree(p);
@@ -7708,6 +7711,7 @@ void mm_free(void *p) {
         mmFreeDeferred(p);
     }
 }
+#pragma dont_inline reset
 
 void *getTablesBinEntry(int i) {
     if (i >= 0 && i < lbl_803DCBAC) {
@@ -8263,6 +8267,87 @@ void gameTextSetWindowStrPos(int idx, int x, int y) {
         s->f4 = idx;
         s->f8 = x;
         s->fc = y;
+    }
+}
+#pragma pop
+
+extern void textureFree(void *tex);
+extern void *textureLoadAsset(int asset);
+extern void *lbl_8033BE54[];
+extern f32 lbl_803DE8B8;
+extern int lbl_803DC9FC;
+extern void *lbl_803DC9F8;
+extern u8 lbl_803DC9F7;
+extern u8 lbl_803DC9F6;
+extern u8 lbl_803DC9F5;
+extern u8 lbl_803DC9F4;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_8001BDD4(int mode) {
+    switch (mode) {
+    case 3:
+        textureFree(lbl_8033BE54[0]);
+        textureFree(lbl_8033BE54[1]);
+        textureFree(lbl_8033BE54[2]);
+        break;
+    }
+}
+
+void fn_8001BE2C(int mode) {
+    switch (mode) {
+    case 3:
+        lbl_8033BE54[0] = textureLoadAsset(0x43b);
+        lbl_8033BE54[1] = textureLoadAsset(0x43e);
+        lbl_8033BE54[2] = textureLoadAsset(0x43d);
+        break;
+    }
+}
+
+int fn_8002B8F0(u8 *obj) {
+    *(f32 *)(obj + 0xc) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0xfc) + *(f32 *)(obj + 0x24)));
+    *(f32 *)(obj + 0x10) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0x100) + *(f32 *)(obj + 0x28)));
+    *(f32 *)(obj + 0x14) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0x104) + *(f32 *)(obj + 0x2c)));
+    return 1;
+}
+
+void fn_80026C88(u8 *p) {
+    int i;
+    for (i = 0; i < *(int *)(p + 4); i++) {
+        mm_free(*(void **)(*(u8 **)p + i * 0xc));
+    }
+    mm_free(*(void **)p);
+    mm_free(p);
+}
+
+void textFn_8001bb78(int x) {
+    if (lbl_803DCA00 != 0) {
+        lbl_803DC9FC = x;
+        lbl_803DC9F8 = getCurGameText();
+        lbl_803DC9F0 = 0;
+        lbl_803DB3E0 = -1;
+        lbl_803DCA04 = 1;
+        lbl_803DC9F7 = 0xff;
+        lbl_803DC9F6 = 0xff;
+        lbl_803DC9F5 = 0xff;
+        lbl_803DC9F4 = 0xff;
+    }
+}
+
+void Obj_ApplyPendingParentLinks(void) {
+    int i;
+    for (i = 0; i < lbl_803DCB84; i++) {
+        u8 *obj = ((u8 **)lbl_803DCB88)[i];
+        obj[0xaf] &= ~7;
+        {
+            u8 *parent = *(u8 **)(obj + 0xc0);
+            if (parent != NULL && *(void **)(obj + 0x30) == NULL &&
+                *(void **)(parent + 0x30) != NULL) {
+                *(void **)(obj + 0x30) = *(void **)(parent + 0x30);
+                *(void **)(obj + 0xc0) = NULL;
+            }
+        }
     }
 }
 #pragma pop
