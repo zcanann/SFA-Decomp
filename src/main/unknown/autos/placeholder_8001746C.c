@@ -7053,9 +7053,11 @@ void *ObjModel_GetBaseVertexCoords(u8 *model, int vertexIndex) {
     return *(u8 **)(model + 0x28) + vertexIndex * 6;
 }
 
+#pragma dont_inline on
 void *ObjModel_GetRenderOp(u8 *model, int renderOpIndex) {
     return *(u8 **)(model + 0x38) + renderOpIndex * 0x44;
 }
+#pragma dont_inline reset
 
 u16 modelFileHeaderGetCullDistance(u8 *modelFile) {
     return *(u16 *)(modelFile + 0xe0);
@@ -7138,5 +7140,35 @@ void *ObjModel_GetRenderOpTextureRefs(u8 *model, int renderOpIndex) {
 
 int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
     return baseSize + resource[8] * resource[7];
+}
+
+void Obj_SetModelRenderOpAlpha(u8 *obj, int alpha) {
+    u8 *modelFile;
+    int renderOpAlpha;
+    u8 *model;
+    int renderOpIndex;
+
+    renderOpAlpha = alpha;
+    model = *(u8 **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4);
+    if (model != NULL) {
+        modelFile = *(u8 **)model;
+        if (modelFile != NULL) {
+            for (renderOpIndex = 0; renderOpIndex < modelFile[0xf8]; renderOpIndex++) {
+                *(s8 *)((u8 *)ObjModel_GetRenderOp(modelFile, renderOpIndex) + 0x43) = renderOpAlpha;
+            }
+        }
+    }
+}
+
+void Obj_SetModelSlotIndex(u8 *obj, int slotIndex) {
+    *(s8 *)(obj + 0xac) = slotIndex;
+}
+
+void Obj_ClearModelSlotIndex(u8 *obj) {
+    *(s8 *)(obj + 0xac) = -1;
+}
+
+void *Obj_GetActiveModel(u8 *obj) {
+    return *(void **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4);
 }
 #pragma pop
