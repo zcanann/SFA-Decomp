@@ -587,6 +587,8 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut)
 {
   ObjAnimBank *bank;
@@ -729,6 +731,8 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
