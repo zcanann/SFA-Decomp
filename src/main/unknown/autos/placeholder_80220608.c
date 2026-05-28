@@ -2535,6 +2535,7 @@ void arwarwinggu_init(int obj)
     *(s16 *)(obj + 6) |= 0x4000;
     *(u8 *)(obj + 0x36) = 0;
 }
+#pragma dont_inline on
 #pragma peephole off
 #pragma scheduling off
 void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
@@ -2553,6 +2554,7 @@ void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
 }
 #pragma scheduling on
 #pragma peephole on
+#pragma dont_inline reset
 void arwarwinggu_release(void) {}
 void arwarwinggu_initialise(void) {}
 
@@ -5410,6 +5412,50 @@ void arwarwing_updateWeaponFire(int obj, int state) {
         break;
     }
     *(f32 *)(state + 0x408) = (f32)(u32) * (u16 *)(state + 0x40c);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkEffect) {
+    f32 pz, py, px;
+    int proj;
+    if (Obj_IsLoadingLocked() == 0)
+        return;
+    if (side == 0) {
+        ObjPath_GetPointWorldPosition(obj, 3, &px, &py, &pz, 0);
+        arwarwinggu_setActiveVisible(*(int *)(state + 8), 1, level == 2);
+    } else {
+        ObjPath_GetPointWorldPosition(obj, 4, &px, &py, &pz, 0);
+        arwarwinggu_setActiveVisible(*(int *)(state + 0xc), 1, level == 2);
+    }
+    {
+        int setup = Obj_AllocObjectSetup(0x20, 0x604);
+        *(f32 *)(setup + 8) = px;
+        *(f32 *)(setup + 0xc) = py;
+        *(f32 *)(setup + 0x10) = pz;
+        *(u8 *)(setup + 0x1a) = *(s16 *)obj >> 8;
+        *(u8 *)(setup + 0x19) = *(s16 *)(obj + 2) >> 8;
+        *(u8 *)(setup + 0x18) = 0;
+        *(u8 *)(setup + 4) = 1;
+        *(u8 *)(setup + 5) = 1;
+    }
+    proj = loadObjectAtObject(obj);
+    if (proj == 0)
+        return;
+    if (level == 0) {
+        Sfx_PlayFromObject(proj, 0x2a1);
+    } else if (level == 1) {
+        Sfx_PlayFromObject(proj, 0x2a2);
+    } else {
+        Sfx_PlayFromObject(proj, 0x2b4);
+        Obj_SetActiveModelIndex(proj, 1);
+    }
+    if (linkEffect != 0)
+        arwprojectile_createLinkedEffect(proj, 1);
+    arwprojectile_setLifetime(proj, *(u16 *)(state + 0x40e));
+    arwprojectile_placeForward(proj, *(f32 *)(state + 0x410));
 }
 #pragma scheduling reset
 #pragma peephole reset
