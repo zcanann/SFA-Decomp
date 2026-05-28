@@ -254,6 +254,10 @@ extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
 extern int *ObjGroup_GetObjects(int group, int *count);
 extern f32 lbl_803E6B68;
 extern f32 lbl_803E6B6C;
+extern f32 lbl_803E6964;
+extern int *Obj_GetActiveModel(void);
+extern int fn_8001DB64(void);
+extern void queueGlowRender(void *p);
 
 typedef struct {
     u8 b0 : 1;
@@ -1313,6 +1317,38 @@ void drgenerator_init(int obj, char *arg) {
     *(f32 *)((char *)obj + 0x2c) = fv;
     *(f32 *)((char *)obj + 0x28) = fv;
     *(f32 *)((char *)obj + 0x24) = fv;
+}
+
+void drakormissile_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    if (visible != 0 && *(u8 *)(p + 0x4) != 1) {
+        s16 sv4 = *(s16 *)((char *)obj + 0x4);
+        s16 sv2 = *(s16 *)((char *)obj + 0x2);
+        f32 sv8 = *(f32 *)((char *)obj + 0x8);
+        int *model;
+        char *m;
+        int i;
+        *(u8 *)((char *)obj + 0xad) = 1;
+        model = Obj_GetActiveModel();
+        m = p;
+        for (i = 0; i < 5; i++) {
+            *(u16 *)(m + 0x10) = *(u16 *)(m + 0x10) + *(u16 *)(m + 0x1a);
+            *(u16 *)(m + 0x24) = *(u16 *)(m + 0x24) + *(u16 *)(m + 0x2e);
+            *(s16 *)((char *)obj + 0x4) = *(u16 *)(m + 0x10);
+            *(s16 *)((char *)obj + 0x2) = *(u16 *)(m + 0x24);
+            *(u16 *)((char *)model + 0x18) &= ~8;
+            objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
+            m += 2;
+        }
+        *(s16 *)((char *)obj + 0x4) = sv4;
+        *(s16 *)((char *)obj + 0x2) = sv2;
+        *(f32 *)((char *)obj + 0x8) = sv8;
+        *(u8 *)((char *)obj + 0xad) = 0;
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
+        if (*(void **)p != 0 && fn_8001DB64() != 0) {
+            queueGlowRender(*(void **)p);
+        }
+    }
 }
 
 #pragma peephole reset
