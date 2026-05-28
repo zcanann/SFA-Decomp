@@ -11360,6 +11360,68 @@ foundTrigger:
 }
 
 /*
+ * Function: Music_LoadChannelForTrigger
+ * EN v1.0 Address: 0x8000B0D0
+ */
+void Music_LoadChannelForTrigger(MusicTrigger *trigger)
+{
+    MusicTrackSlot *slot;
+    MusicChannel *channel;
+    int counter;
+    int i;
+
+    if ((trigger->pad[0xb] >> 5) & 1) {
+        if (audioFlagFn_8000a188(2)) {
+            return;
+        }
+    }
+    if (!((trigger->pad[0xb] >> 5) & 1)) {
+        if (audioFlagFn_8000a188(1)) {
+            return;
+        }
+    }
+    slot = (MusicTrackSlot *)sMusicTrackTable;
+    for (i = 0; i < 100; i++) {
+        if (slot->id == (int)trigger->track) {
+            goto foundSlot;
+        }
+        slot++;
+    }
+    slot = NULL;
+foundSlot:
+    if (slot == NULL) {
+        return;
+    }
+    channel = gMusicChannels;
+    for (i = 0; i < 16; i++) {
+        if (channel->status == 0) {
+            goto foundChannel;
+        }
+        channel++;
+    }
+    channel = NULL;
+foundChannel:
+    if (channel == NULL) {
+        return;
+    }
+    channel->field_0 = trigger->track;
+    *(u16 *)&channel->pad14[0] = trigger->pad[8];
+    channel->pad11 = (trigger->pad[0xb] >> 5) & 1;
+    channel->status = 4;
+    channel->field_12 = trigger->pad[9];
+    if (channel->pad11) {
+        counter = lbl_803DC814++;
+    } else {
+        counter = lbl_803DC818++;
+    }
+    *(int *)&channel->pad14[4] = counter;
+    *(MusicTrigger **)&channel->pad14[8] = trigger;
+    channel->field_20 = lbl_803DE560;
+    audioAllocFn_80008df4((void *)slot->offset, slot->size, &channel->bankData,
+                          (u32)Music_ChannelLoadedCallback, (u32)slot, (u32)channel, (u32)trigger);
+}
+
+/*
  * Function: Music_PlayTrackByIndex
  * EN v1.0 Address: 0x8000A2E4
  * EN v1.0 Size: 148b
