@@ -294,6 +294,19 @@ extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int
 extern void lightSetFieldBC_8001db14(void *light, int v);
 extern void ObjModel_CopyJointTranslation(void *model, int joint, f32 *out);
 extern void objSetMtxFn_800412d4(void *mtx);
+extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
+extern int *objModelGetVecFn_800395d8(int obj, int i);
+extern f32 interpolate(f32 a, f32 b, f32 c);
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E69F4;
+extern f32 lbl_803E69F8;
+extern f32 lbl_803E69FC;
+extern f32 lbl_803E6A00;
+extern f32 lbl_803E6A04;
+extern f32 lbl_803E6A08;
+extern f32 lbl_803E6A0C;
+extern f32 lbl_803E6A10;
+extern f32 lbl_803E6A14;
 extern f32 lbl_803E6A28;
 extern int lbl_803DC2F0;
 extern int lbl_803DDD70;
@@ -682,6 +695,109 @@ void drakormissile_startActiveLaunch(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void drcagewith_hitDetect(int obj) {
+    int *q = *(int **)((char *)obj + 0x4c);
+    u8 *p;
+    BitFlags8 *bf31;
+    f32 maxDist;
+    int i;
+    int spawned;
+    int *nearest;
+    f32 v;
+    f32 clamped;
+    f32 px;
+    f32 div;
+
+    maxDist = lbl_803E69F4;
+    p = *(u8 **)((char *)obj + 0xb8);
+    bf31 = (BitFlags8 *)(p + 0x31);
+
+    if (bf31->b1 != 0) {
+        objParticleFn_80099d84(obj, lbl_803E69F8, 6, lbl_803E69F0, 0);
+    }
+
+    if (*(s16 *)((char *)obj + 0x46) == 2154 || *(s16 *)((char *)obj + 0x46) == 2155) {
+        if (GameBit_Get(1545) != 0) {
+            *(s16 *)((char *)obj + 6) &= ~0x4000;
+        }
+        return;
+    }
+    if (*(void **)p == NULL) {
+        if (Obj_IsLoadingLocked()) {
+            spawned = Obj_AllocObjectSetup(32, 1143);
+            *(u8 *)(spawned + 4) = 2;
+            *(u8 *)(spawned + 5) = 1;
+            *(u8 *)(spawned + 5) = (u8)(*(u8 *)(spawned + 5) | (*(u8 *)((char *)q + 5) & 0x18));
+            *(f32 *)(spawned + 8) = *(f32 *)((char *)obj + 0xc);
+            *(f32 *)(spawned + 0xc) = *(f32 *)((char *)obj + 0x10);
+            *(f32 *)(spawned + 0x10) = *(f32 *)((char *)obj + 0x14);
+            spawned = Obj_SetupObject(spawned, 5, *(s8 *)((char *)obj + 0xac), -1,
+                                      *(int *)((char *)obj + 0x30));
+            *(s16 *)(spawned + 6) |= 0x4000;
+            *(int *)(spawned + 0xf4) = 1;
+            *(int *)p = spawned;
+            return;
+        }
+    }
+    if (bf31->b0 == 0) {
+        if (GameBit_Get(1545) != 0) {
+            ObjHits_DisableObject(obj);
+            *(s16 *)((char *)obj + 6) |= 0x4000;
+            bf31->b0 = 1;
+            nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
+            if (nearest != NULL && *(s16 *)((char *)nearest + 0x46) == 1049) {
+                *(int *)((char *)nearest + 0xf4) = 0;
+                *(int *)(p + 4) = 0;
+            }
+            return;
+        }
+        v = oneOverTimeDelta * (*(f32 *)((char *)obj + 0xc) - *(f32 *)((char *)obj + 0x80)) * lbl_803E69FC;
+        v = interpolate(v - *(f32 *)(p + 0x24), lbl_803E6A00, timeDelta);
+        clamped = lbl_803E6A04 * timeDelta;
+        if (v >= clamped) {
+            clamped = lbl_803E6A08 * timeDelta;
+            if (v <= clamped) {
+                clamped = v;
+            }
+        }
+        *(f32 *)(p + 0x24) = *(f32 *)(p + 0x24) + clamped;
+        div = lbl_803E6A0C;
+        for (i = 0; i < 9; i++) {
+            nearest = objModelGetVecFn_800395d8(obj, i);
+            if (nearest != NULL) {
+                *(s16 *)((char *)nearest + 4) = (int)(*(f32 *)(p + 0x24) / div);
+            }
+        }
+        if (*(void **)p != NULL) {
+            *(s16 *)(*(int *)p + 4) = (int)*(f32 *)(p + 0x24);
+            nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
+            if (nearest != NULL && *(s16 *)((char *)nearest + 0x46) == 1049) {
+                *(int *)((char *)nearest + 0xf4) = 1;
+                *(int *)(p + 4) = (int)nearest;
+                *(s16 *)((char *)nearest + 4) = *(s16 *)(*(int *)p + 4);
+                *(int *)(*(int *)p + 0xf4) = 1;
+            }
+            if (*(void **)(p + 4) != NULL && (*(u16 *)(*(int *)(p + 4) + 0xb0) & 0x40) != 0) {
+                *(int *)(p + 4) = 0;
+            }
+        }
+    }
+    if (bf31->b0 == 0) {
+        if (GameBit_Get(3175) != 0) {
+            px = *(f32 *)((char *)obj + 0xc);
+            if (px >= lbl_803E6A10 && px <= lbl_803E6A14) {
+                GameBit_Set(*(s16 *)((char *)q + 0x1e), 1);
+            } else {
+                GameBit_Set(3748, 1);
+            }
+        } else {
+            GameBit_Set(3748, 0);
+        }
+    }
+}
 
 #pragma scheduling off
 #pragma peephole off
