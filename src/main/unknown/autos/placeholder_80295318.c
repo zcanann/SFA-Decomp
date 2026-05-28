@@ -14403,6 +14403,147 @@ extern f32 lbl_803E7FEC;
 extern f32 lbl_803E8014;
 extern f32 lbl_803DE498;
 
+extern void Sfx_PlayAtPositionFromObject(int obj, int id, f32 x, f32 y, f32 z);
+extern f32 lbl_803E8114;
+extern f32 lbl_803E8118;
+extern f32 lbl_803E8120;
+extern f32 lbl_803E8124;
+extern f32 lbl_803E8128;
+extern f32 lbl_803E808C;
+extern f32 lbl_803E7FD0;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802ADE80(int obj, int inner, int state)
+{
+    f32 waterZ;
+    f32 waterX;
+    f32 tx;
+    f32 ty;
+    f32 tz;
+    struct {
+        u8 pad[6];
+        u16 mode;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } pfx;
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 mtx[16];
+    f32 angle;
+    int playEffect;
+    int loopCount;
+    int i;
+
+    angle = *(f32 *)((char *)inner + 0x83c) +
+            fn_80293E80(lbl_803E7F94 * (f32)(u32)*(u16 *)((char *)inner + 0x89c) / lbl_803E7F98);
+    *(s16 *)((char *)inner + 0x89c) =
+        lbl_803E8114 * timeDelta + (f32)(u32)*(u16 *)((char *)inner + 0x89c);
+    {
+        f32 d = angle - *(f32 *)((char *)obj + 0x10);
+        if (d > lbl_803E7FA0) {
+            d = lbl_803E7FA0;
+        }
+        *(f32 *)((char *)obj + 0x28) =
+            d / lbl_803E7FA0 * lbl_803E8118 * timeDelta + *(f32 *)((char *)obj + 0x28);
+    }
+    *(f32 *)((char *)obj + 0x28) =
+        *(f32 *)((char *)obj + 0x28) - lbl_803E7EFC * timeDelta;
+    *(f32 *)((char *)obj + 0x28) =
+        *(f32 *)((char *)obj + 0x28) * powfBitEstimate(lbl_803E7FD0, timeDelta);
+    {
+        f32 v = *(f32 *)((char *)obj + 0x28);
+        if (v < lbl_803E811C) {
+            v = lbl_803E811C;
+        } else if (v > lbl_803E8120) {
+            v = lbl_803E8120;
+        }
+        *(f32 *)((char *)obj + 0x28) = v;
+    }
+    ((void (*)(f32 *, f32 *, f32, int))playerCalcWaterCurrent)(&waterX, &waterZ, lbl_803E7EE0, obj);
+    {
+        f32 cosv = fn_80293E80(lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478) / lbl_803E7F98);
+        f32 sinv = sin(lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478) / lbl_803E7F98);
+        f32 a = -waterZ * sinv - waterX * cosv;
+        *(f32 *)((char *)inner + 0x440) =
+            timeDelta * (lbl_803E7EFC * ((waterX * sinv - waterZ * cosv) - *(f32 *)((char *)inner + 0x440))) +
+            *(f32 *)((char *)inner + 0x440);
+        *(f32 *)((char *)inner + 0x43c) =
+            timeDelta * (lbl_803E7EFC * (a - *(f32 *)((char *)inner + 0x43c))) +
+            *(f32 *)((char *)inner + 0x43c);
+    }
+    playEffect = 0;
+    if (*(s16 *)((char *)state + 0x274) == 1) {
+        if ((*(int *)((char *)state + 0x314) & 0x200) != 0) {
+            Sfx_PlayAtPositionFromObject(obj, 0xe, *(f32 *)((char *)obj + 0xc),
+                                         *(f32 *)((char *)inner + 0x83c), *(f32 *)((char *)obj + 0x14));
+        }
+        if (*(f32 *)((char *)inner + 0x838) < lbl_803E7FA0 &&
+            (*(int *)((char *)state + 0x314) & 0x200) != 0) {
+            tx = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
+            tz = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
+            playEffect = 1;
+        }
+    } else {
+        if ((*(int *)((char *)state + 0x314) & 1) != 0) {
+            Sfx_PlayAtPositionFromObject(obj, 0xf, *(f32 *)((char *)obj + 0xc),
+                                         *(f32 *)((char *)inner + 0x83c), *(f32 *)((char *)obj + 0x14));
+        }
+        if (*(f32 *)((char *)inner + 0x838) < lbl_803E7FA0 &&
+            (*(int *)((char *)state + 0x314) & 0x200) != 0) {
+            s8 c;
+            tx = (f32)randomGetRange(-0x14, 0x14) / lbl_803E7ED8;
+            c = *(s8 *)((char *)inner + 0x8cc);
+            if (c > 0xc) {
+                tz = lbl_803E8124;
+            } else if (c > 8) {
+                tz = lbl_803E8124;
+            } else {
+                tz = lbl_803E8124;
+            }
+            playEffect = 1;
+        }
+    }
+    if (playEffect != 0) {
+        v.mat[1] = *(f32 *)((char *)obj + 0xc);
+        v.mat[2] = lbl_803E7EA4;
+        v.mat[3] = *(f32 *)((char *)obj + 0x14);
+        v.angles[0] = *(s16 *)((char *)inner + 0x478);
+        v.angles[1] = 0;
+        v.angles[2] = 0;
+        v.mat[0] = lbl_803E7EE0;
+        setMatrixFromObjectPos(mtx, v.angles);
+        Matrix_TransformPoint(mtx, tx, lbl_803E7EA4, tz, &tx, &ty, &tz);
+        (*(void (*)(int, int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x14)))(
+            0, 5, tx, *(f32 *)((char *)inner + 0x83c), tz, lbl_803E7EA4);
+        if (*(f32 *)((char *)inner + 0x838) > lbl_803E8128 &&
+            *(f32 *)((char *)state + 0x294) > lbl_803E7E9C) {
+            s16 ang = (s16)(*(s16 *)((char *)inner + 0x478) -
+                            getAngle(*(f32 *)((char *)state + 0x284), *(f32 *)((char *)state + 0x280)));
+            (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x18)))(
+                ang, tx, *(f32 *)((char *)inner + 0x83c), tz, lbl_803E7EA4);
+        }
+    }
+    ObjPath_GetPointWorldPosition(obj, 0x13, &v.mat[1], &v.mat[2], &v.mat[3], 0);
+    loopCount = (*(f32 *)((char *)inner + 0x83c) - v.mat[2] > lbl_803E7F10);
+    for (i = 0; i < loopCount; i++) {
+        pfx.x = v.mat[1] + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7FA4;
+        pfx.y = v.mat[2] + (f32)randomGetRange(-0x64, 0x64) / lbl_803E808C;
+        pfx.z = v.mat[3] + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7FA4;
+        pfx.scale = *(f32 *)((char *)inner + 0x83c) - pfx.y;
+        if (pfx.scale > lbl_803E7EA4) {
+            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                obj, 0x202, &pfx, 0x200001, -1, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma peephole off
 #pragma scheduling off
 int fn_802A16CC(int obj, int state, f32 fv)
