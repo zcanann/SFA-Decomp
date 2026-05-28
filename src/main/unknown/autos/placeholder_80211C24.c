@@ -151,6 +151,16 @@ extern void **gGameUIInterface;
 extern void gmmazewell_clearPendingTriggerCallback(void);
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
+extern void explodeplan_updateTriggerCallback(void);
+extern void firepipe_clearLinkedUpdateFlag(int handle);
+extern void ObjLink_DetachChild(int obj, int child);
+extern void ObjHits_EnableObject(int obj);
+extern void ObjHits_DisableObject(int obj);
+extern void *objCreateLight(int v1, int v2);
+extern void modelLightStruct_setField50(void *light, int v);
+extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
+extern void lightSetField2FB(void *handle, int v);
+extern int *objFindTexture(int obj, int idx, int p3);
 
 typedef struct {
     u8 b0 : 1;
@@ -432,6 +442,85 @@ int hightop_stateHandler06(int obj, u8 *p2) {
         return 8;
     }
     return 2;
+}
+
+void ktrexlevel_free(void) {
+    GameBit_Set(0xefd, 0);
+    GameBit_Set(0xcd1, 0);
+    GameBit_Set(0xccd, 0);
+    GameBit_Set(0xccf, 0);
+    GameBit_Set(0xcd0, 0);
+    GameBit_Set(0xedb, 0);
+    GameBit_Set(0xcbb, 0);
+}
+
+void explodeplan_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    *(void **)((char *)obj + 0xbc) = (void *)explodeplan_updateTriggerCallback;
+    if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
+        ((BitFlags8 *)(p + 0x4))->b2 = 1;
+        *(int *)p = 2;
+    } else {
+        *(int *)p = 0;
+    }
+}
+
+void drlasercannon_free(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    if (*(void **)(p + 0x194) != 0) {
+        firepipe_clearLinkedUpdateFlag((int)*(void **)(p + 0x194));
+        ObjLink_DetachChild(obj, (int)*(void **)(p + 0x194));
+    }
+    if (*(void **)(p + 0x190) != 0) {
+        Obj_FreeObject((int)*(void **)(p + 0x190));
+    }
+    ObjGroup_RemoveObject(obj, 0x3);
+}
+
+void cagecontrol_init(int obj, char *arg) {
+    ObjHits_EnableObject(obj);
+    if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
+        *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        ObjHits_DisableObject(obj);
+    }
+    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
+}
+
+void ktlazerlight_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    *(void **)(p + 0x4) = objCreateLight(0, 1);
+    if (*(void **)(p + 0x4) != 0) {
+        modelLightStruct_setField50(*(void **)(p + 0x4), 2);
+        lightVecFn_8001dd88(*(void **)(p + 0x4), *(f32 *)(arg + 0x8), *(f32 *)(arg + 0xc), *(f32 *)(arg + 0x10));
+        lightSetField2FB(*(void **)(p + 0x4), 1);
+    }
+}
+
+void drcagewith_free(int obj, int arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    char *x = *(char **)p;
+    if (x != 0 && arg == 0 && *(void **)(x + 0x50) != 0) {
+        char *y = *(char **)(p + 0x4);
+        if (y != 0) {
+            *(int *)(y + 0xf4) = 0;
+        }
+        *(int *)(*(char **)p + 0xf4) = 0;
+        Obj_FreeObject(*(int *)p);
+    }
+    ObjGroup_RemoveObject(obj, 0x18);
+}
+
+int drgenerator_eventCallback(int obj, int unused, u8 *arg) {
+    int i;
+    for (i = 0; i < arg[0x8b]; i++) {
+        if (arg[i + 0x81] == 1) {
+            int *t = objFindTexture(obj, 0, 0);
+            if (t != 0) {
+                *t = 0;
+            }
+        }
+    }
+    return 0;
 }
 
 int hightop_stateHandler03(int obj, u8 *p2) {
