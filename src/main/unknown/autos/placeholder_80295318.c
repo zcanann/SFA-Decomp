@@ -6430,6 +6430,7 @@ extern f32 lbl_803E7F44;
 extern f32 lbl_803E7F48;
 extern f32 lbl_803E7EF8;
 extern int lbl_803DE434;
+extern s16 lbl_803DE4B2;
 extern void fn_8018A20C(int a, int b);
 extern void fn_80189F5C(int a, void *b, void *c);
 extern f32 lbl_803E812C;
@@ -9759,6 +9760,75 @@ int fn_802BA1D4(int obj, int state)
         }
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802AB38C(int a, int b, int c)
+{
+    switch (c) {
+    case 0x2d:
+        lbl_803DE4B2 = 0x2d;
+        break;
+    case 0x958:
+        lbl_803DE4B2 = 0x958;
+        break;
+    case 0x5ce:
+        lbl_803DE4B2 = 0x5ce;
+        break;
+    case 0x957:
+        lbl_803DE434 = *(int *)((char *)b + 0x4b8);
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(a, b, 0x32);
+        *(int *)((char *)b + 0x304) = (int)fn_802994A4;
+        break;
+    case 0x107:
+    case 0xc55:
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(a, b, 0x36);
+        *(int *)((char *)b + 0x304) = (int)fn_802985AC;
+        break;
+    case 0x40:
+        *(f32 *)((char *)b + 0x854) = lbl_803E7EDC;
+        {
+            int sub = *(int *)((char *)*(int *)((char *)a + 0xb8) + 0x35c);
+            int v = *(s16 *)((char *)sub + 0x4) - 0xa;
+            if (v < 0) {
+                v = 0;
+            } else if (v > *(s16 *)((char *)sub + 0x6)) {
+                v = *(s16 *)((char *)sub + 0x6);
+            }
+            *(s16 *)((char *)sub + 0x4) = v;
+        }
+        fn_80295E90(a, 1);
+        Sfx_PlayFromObject(a, 0x209);
+        break;
+    case 0x5bd:
+        c = -1;
+        {
+            int sub = *(int *)((char *)*(int *)((char *)a + 0xb8) + 0x35c);
+            int v = *(s16 *)((char *)sub + 0x4) - 0x14;
+            if (v < 0) {
+                v = 0;
+            } else if (v > *(s16 *)((char *)sub + 0x6)) {
+                v = *(s16 *)((char *)sub + 0x6);
+            }
+            *(s16 *)((char *)sub + 0x4) = v;
+        }
+        {
+            void *cam = (*(void *(*)(void))(*(int *)(*gCameraInterface + 0x40)))();
+            if (cam != NULL) {
+                s16 id = *(s16 *)((char *)cam + 0x46);
+                if (id == 0x414 || id == 0x4a9) {
+                    c = 0x5bd;
+                    getAngle(*(f32 *)((char *)*(int *)((char *)cam + 0x74)) - *(f32 *)((char *)a + 0xc),
+                             *(f32 *)((char *)*(int *)((char *)cam + 0x74) + 0x8) - *(f32 *)((char *)a + 0x14));
+                }
+            }
+        }
+        break;
+    }
+    *(s16 *)((char *)b + 0x80a) = c;
 }
 #pragma peephole reset
 #pragma scheduling reset
