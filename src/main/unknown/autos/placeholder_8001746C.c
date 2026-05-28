@@ -7224,3 +7224,53 @@ void *getCurGameText(void) {
 int objIsFrozen(u8 *obj) {
     return obj[0xe5] & 1;
 }
+
+int objGetFlagsE5_2(u8 *obj) {
+    return obj[0xe5] & 2;
+}
+
+void objSetEventName(u8 *obj, void *name) {
+    *(void **)(obj + 0x60) = name;
+}
+
+void crash(void) {
+    *(u8 *)0 = 0;
+}
+
+void __set_debug_bba(u8 *p) {
+    p[0x19] = 0;
+}
+
+#pragma peephole off
+int roundUpTo4(int x) {
+    int r = x & 3;
+    if (r > 0) {
+        x += 4 - r;
+    }
+    return x;
+}
+
+int roundUpTo8(int x) {
+    int r = x & 7;
+    if (r > 0) {
+        x += 8 - r;
+    }
+    return x;
+}
+
+int roundUpTo16(int x) {
+    int r = x & 0xf;
+    if (r > 0) {
+        x += 0x10 - r;
+    }
+    return x;
+}
+
+int roundUpTo32(int x) {
+    int r = x & 0x1f;
+    if (r > 0) {
+        x += 0x20 - r;
+    }
+    return x;
+}
+#pragma peephole reset
