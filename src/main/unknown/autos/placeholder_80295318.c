@@ -6971,6 +6971,89 @@ int fn_802B7298(int obj, int p2)
     return 0;
 }
 
+extern f32 lbl_803E7FAC;
+extern s16 lbl_803332B0[];
+
+#pragma peephole off
+#pragma scheduling off
+int fn_8029F6E4(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    void *sub;
+    f32 out;
+    f32 a;
+    int b;
+    f32 c;
+    int d;
+    f32 ret;
+    int blend;
+    (*(void (*)(int))(*(int *)(*gCameraInterface + 0x68)))(2);
+    *(u8 *)((char *)state + 0x25f) = 0;
+    *(int *)((char *)state + 0x4) |= 0x100000;
+    *(int *)((char *)inner + 0x360) &= ~2;
+    ObjHits_DisableObject(obj);
+    sub = *(void **)((char *)inner + 0x7f0);
+    if (sub == NULL) {
+        *(s16 *)((char *)obj + 0xa2) = -1;
+        return 0;
+    }
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        if (*(void **)((char *)inner + 0x6e8) == NULL) {
+            *(int *)((char *)inner + 0x6e8) = (int)lbl_803332B0;
+        }
+        ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)((char *)inner + 0x6e8) + 0x2),
+                               lbl_803E7EA4, 0);
+        ObjAnim_AdvanceCurrentMove(lbl_803E7EA4, lbl_803E7EA4, obj, NULL);
+    }
+    if ((*(u8 *)((char *)inner + 0x6ec) & 0x4) != 0) {
+        ObjAnim_SetMoveProgress(*(f32 *)((char *)sub + 0x98), (ObjAnimComponent *)obj);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7EA4;
+    } else {
+        ret = (*(f32 (*)(int, f32 *))(*(int *)((char *)*(int *)*(int *)((char *)sub + 0x68) + 0x44)))(
+            (int)sub, &out);
+        if (out <= lbl_803E7EE0) {
+            *(f32 *)((char *)state + 0x2a0) = out;
+        } else {
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7F6C * ret + lbl_803E7EF8;
+        }
+    }
+    if ((*(u8 *)((char *)inner + 0x6ec) & 0x1) != 0) {
+        (*(void (*)(int, f32 *, int *))(*(int *)((char *)*(int *)*(int *)((char *)sub + 0x68) + 0x40)))(
+            (int)sub, &a, &b);
+        blend = (int)(lbl_803E7FAC * a);
+        if (blend < 0) {
+            blend = -blend;
+        }
+        if (b != 0) {
+            Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj,
+                                                *(s16 *)(*(int *)((char *)inner + 0x6e8) + 0xa), blend);
+        } else {
+            Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj,
+                                                *(s16 *)(*(int *)((char *)inner + 0x6e8) + 0x8), blend);
+        }
+    } else if ((*(u8 *)((char *)inner + 0x6ec) & 0x8) != 0) {
+        (*(void (*)(int, f32 *, int *))(*(int *)((char *)*(int *)*(int *)((char *)sub + 0x68) + 0x40)))(
+            (int)sub, &c, &d);
+        *(int *)((char *)inner + 0x360) |= 0x2000000;
+        *(s16 *)((char *)inner + 0x4d6) = (s16)d;
+        *(s16 *)((char *)inner + 0x4d4) = (s16)c;
+        *(s16 *)((char *)inner + 0x4d2) = *(s16 *)((char *)inner + 0x4d4) / 2;
+        *(s16 *)((char *)inner + 0x4d0) = *(s16 *)((char *)inner + 0x4d4) / 2;
+    }
+    if ((*(u8 *)((char *)inner + 0x6ec) & 0x1) != 0) {
+        ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 2, 0);
+        ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 1, 2, 0);
+    }
+    if ((*(int (*)(int, int))(*(int *)((char *)*(int *)*(int *)((char *)sub + 0x68) + 0x2c)))(
+            (int)sub, obj) != 0) {
+        *(int *)((char *)state + 0x308) = 0;
+        return 0x1a;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern f32 Camera_GetFovY(void);
 extern void viewFinderSetZoom(f32 zoom);
 extern void fn_80026C30(int obj, int flag);
