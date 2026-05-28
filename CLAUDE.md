@@ -190,6 +190,13 @@ Heuristic before reaching for `asm { }`:
     swapping two `int` locals, often flips the allocation to match. No asm —
     try this before any `register`/asm approach. See `fa209c270`
     (fn_8019C3A0 → 100%).
+    **Base-pointer hoist for saved-register coloring.** When target keeps a
+    repeatedly-used base address in a *saved* register (r29-r31) across the whole
+    function — e.g. it references one global table at many offsets — declare that
+    base as the FIRST local (`char *base = (char *)lbl_xxxx;`) and use `base + off`
+    everywhere, instead of re-deriving the address per access. MWCC then parks it
+    in a callee-saved reg matching target's coloring. Took fn_8029FA24 90.7% →
+    96.8% in one move (placeholder_80295318).
 
 17. **Fold multiple early-return guards into ONE big `||` (with embedded
     assignments) for convergent-predicate functions.** When target computes a
