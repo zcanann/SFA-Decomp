@@ -8172,6 +8172,7 @@ extern f32 lbl_803DE890;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
+#pragma dont_inline on
 void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag) {
     f32 savedZ;
     Mtx mtx;
@@ -8187,6 +8188,7 @@ void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag) 
     dst[0] += playerMapOffsetX;
     dst[2] += playerMapOffsetZ;
 }
+#pragma dont_inline reset
 
 extern void Vec_normalize(f32 *dst, f32 *src);
 extern f32 *Camera_GetViewMatrix(void);
@@ -8212,6 +8214,32 @@ void modelStruct2_setVectors(u8 *s, f32 x, f32 y, f32 z) {
         *(int *)(s + 0x40) = *(int *)(s + 0x34);
         *(int *)(s + 0x44) = *(int *)(s + 0x38);
         *(int *)(s + 0x48) = *(int *)(s + 0x3c);
+    }
+}
+
+void lightVecFn_8001dd88(u8 *s, f32 x, f32 y, f32 z) {
+    f32 tmp[3];
+    f32 *view;
+    if (*(void **)s != NULL) {
+        *(f32 *)(s + 0x4) = x;
+        *(f32 *)(s + 0x8) = y;
+        *(f32 *)(s + 0xc) = z;
+        Obj_TransformLocalPointByWorldMatrix(*(void **)s, (f32 *)(s + 0x4), (f32 *)(s + 0x10), 1);
+    } else {
+        *(f32 *)(s + 0x10) = x;
+        *(f32 *)(s + 0x14) = y;
+        *(f32 *)(s + 0x18) = z;
+    }
+    view = Camera_GetViewMatrix();
+    if (*(int *)(s + 0x60) == 0) {
+        tmp[0] = *(f32 *)(s + 0x10) - playerMapOffsetX;
+        tmp[1] = *(f32 *)(s + 0x14);
+        tmp[2] = *(f32 *)(s + 0x18) - playerMapOffsetZ;
+        PSMTXMultVec(view, tmp, (f32 *)(s + 0x1c));
+    } else {
+        *(int *)(s + 0x1c) = *(int *)(s + 0x10);
+        *(int *)(s + 0x20) = *(int *)(s + 0x14);
+        *(int *)(s + 0x24) = *(int *)(s + 0x18);
     }
 }
 
