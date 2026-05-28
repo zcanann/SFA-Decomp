@@ -604,6 +604,22 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   stray `local_N`) — replace with real locals for plausible C.
 - **Two agents must never edit the same `.c`** — concurrent recovery of the same
   unit produces duplicate definitions and rebase conflicts. One owner per unit.
+- **NEVER `git stash` / `git stash pop` in a hunter worktree.** The stash store
+  lives in the COMMON git dir and is SHARED across all worktrees, so a `git stash
+  pop` can pop a DIFFERENT agent's (or an old) WIP stash and splatter it as
+  conflicts across dozens of files. For the recurring `.claude/scheduled_tasks.lock`
+  modification, use ONLY `git checkout -- .claude/scheduled_tasks.lock` before
+  rebasing — never stash. If a stray pop hits, `git reset --hard HEAD` recovers
+  cleanly (a failed pop does NOT drop the stash). (mike7 hit this — popped
+  hunter-bravo's WIP by accident.) For relocating uncommitted WIP between
+  worktrees, COMMIT it on a branch instead of stashing.
+- **A `shutdown_request` ack is NOT a process death.** Swapped-out hunters have
+  repeatedly replied "shutting down" / gone idle while their process kept running
+  (idle-but-alive zombies that keep drawing tokens → rate limits). After every
+  swap, VERIFY the predecessor is actually gone (`ps aux | grep "agent-id hunter-X"`
+  / its tmux pane) and hard-kill the PID + `tmux kill-pane` if it lingers. Removing
+  the config entry and pruning the worktree does NOT kill the process. Only spawn
+  the successor once the predecessor's process is confirmed dead.
 
 ## Tooling
 
