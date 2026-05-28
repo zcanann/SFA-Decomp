@@ -48,10 +48,18 @@ extern void *lbl_803DD144;
 extern f32 lbl_8039A7A8[];
 extern f32 pEXIInputFlag;
 extern f32 lbl_803DF06C;
+extern f32 lbl_803DF118;
+extern f32 lbl_803DF138;
+extern f32 lbl_803DF13C;
+extern f32 lbl_803DF140;
+extern f32 lbl_803DF1A0;
+extern f32 lbl_803DF1D8;
+extern f32 lbl_803DF1DC;
 extern u8 colorScale;
-extern int lbl_803DB610[];
+extern int lbl_803DB610;
 extern s8 lbl_803DD180;
-extern u8 *lbl_803DD184[];
+extern u8 *lbl_803DD184;
+extern u8 *lbl_803DD188;
 extern u8 lbl_803DD19B;
 extern u8 *lbl_803DD19C;
 extern u8 lbl_803DD1C0;
@@ -4359,11 +4367,11 @@ void dll_06_func0B(int *x, int *y)
     u8 *state;
     f32 value;
 
-    state = lbl_803DD184[0];
+    state = lbl_803DD184;
     if (state != NULL) {
         value = *(f32 *)(state + 0x14);
         *x = value;
-        value = *(f32 *)(lbl_803DD184[0] + 0x18);
+        value = *(f32 *)(lbl_803DD184 + 0x18);
         *y = value;
     }
 }
@@ -4372,19 +4380,19 @@ void dll_06_func0A(int *a, int *b, int *c, f32 *scale)
 {
     u8 *state;
 
-    state = lbl_803DD184[0];
+    state = lbl_803DD184;
     if (state == NULL) {
         return;
     }
     *a = *(int *)(state + 0x24);
-    *b = *(int *)(lbl_803DD184[0] + 0x28);
-    *c = *(int *)(lbl_803DD184[0] + 0x2c);
-    *scale = *(f32 *)(lbl_803DD184[0] + 0x30c);
+    *b = *(int *)(lbl_803DD184 + 0x28);
+    *c = *(int *)(lbl_803DD184 + 0x2c);
+    *scale = *(f32 *)(lbl_803DD184 + 0x30c);
 }
 
 void dll_06_func0E(void)
 {
-    if (lbl_803DD184[0] == NULL) {
+    if (lbl_803DD184 == NULL) {
         return;
     }
     if (lbl_803DD180 != 1) {
@@ -4394,7 +4402,7 @@ void dll_06_func0E(void)
 
 void dll_06_func0D(void)
 {
-    if (lbl_803DD184[0] == NULL) {
+    if (lbl_803DD184 == NULL) {
         return;
     }
     if (lbl_803DD180 != 2) {
@@ -4404,16 +4412,21 @@ void dll_06_func0D(void)
 
 void sky2_initialise(void)
 {
-    lbl_803DB610[0] = -1;
-    lbl_803DB610[1] = -1;
-    if (lbl_803DD184[0] != NULL) {
-        mm_free(lbl_803DD184[0]);
+    u8 **states;
+    u8 *state;
+
+    lbl_803DB610 = -1;
+    (&lbl_803DB610)[1] = -1;
+    if (lbl_803DD184 != NULL) {
+        mm_free(lbl_803DD184);
     }
-    if (lbl_803DD184[1] != NULL) {
-        mm_free(lbl_803DD184[1]);
+    states = &lbl_803DD184;
+    state = states[1];
+    if (state != NULL) {
+        mm_free(state);
     }
-    lbl_803DD184[0] = NULL;
-    lbl_803DD184[1] = NULL;
+    lbl_803DD184 = NULL;
+    states[1] = NULL;
 }
 
 void fn_8008EDE8(f32 *out)
@@ -4448,6 +4461,89 @@ int fn_8008B71C(int slot)
         return (sky[offset] >> 5) & 1;
     }
     return 0;
+}
+
+void fn_8008B8B4(f32 *time)
+{
+    u8 *sky;
+
+    sky = lbl_803DD12C;
+    if (sky == NULL) {
+        *time = pEXIInputFlag;
+    } else {
+        *time = *(s32 *)(sky + 0x210);
+    }
+}
+
+int dll_06_func0F(void)
+{
+    u8 *state;
+    f32 y;
+
+    state = lbl_803DD184;
+    if (state == NULL) {
+        return 0xff;
+    }
+    y = *(f32 *)(state + 0x14);
+    if (y < lbl_803DF138) {
+        return 0;
+    }
+    if (y > lbl_803DF13C) {
+        return 0xff;
+    }
+    return (int)(lbl_803DF118 * ((y - lbl_803DF138) / lbl_803DF140));
+}
+
+f32 fn_8008ED88(void)
+{
+    u8 *state;
+    u16 totalFrames;
+    u16 currentFrame;
+
+    state = lbl_803DD19C;
+    if (state == NULL) {
+        return lbl_803DF1A0;
+    }
+    totalFrames = *(u16 *)(state + 0x22);
+    currentFrame = *(u16 *)(state + 0x20);
+    return (f32)(s32)(totalFrames - currentFrame) / (f32)totalFrames;
+}
+
+void fn_8008FC00(f32 *out, f32 height, f32 scale)
+{
+    f32 side;
+    f32 zero;
+    f32 scaledHeight;
+    f32 edge;
+
+    side = lbl_803DF1D8 * scale;
+    out[0] = side;
+    zero = lbl_803DF1A0;
+    out[1] = zero;
+    out[2] = side;
+    out[3] = side;
+    scaledHeight = height * scale;
+    out[4] = scaledHeight;
+    out[5] = side;
+    edge = lbl_803DF1DC * scale;
+    out[6] = edge;
+    out[7] = scaledHeight;
+    out[8] = side;
+    out[9] = edge;
+    out[10] = zero;
+    out[11] = side;
+    out[12] = side;
+    out[13] = zero;
+    out[14] = edge;
+    out[15] = side;
+    out[16] = scaledHeight;
+    out[17] = edge;
+    out[18] = edge;
+    out[19] = scaledHeight;
+    out[20] = edge;
+    out[21] = edge;
+    out[22] = zero;
+    out[23] = edge;
 }
 
 void mm_free_(void *ptr)
