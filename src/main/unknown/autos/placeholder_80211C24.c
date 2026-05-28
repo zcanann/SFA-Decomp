@@ -4597,3 +4597,47 @@ int ktrex_stateHandlerA09(int obj, int runtime) {
     return 0;
 }
 #pragma scheduling reset
+
+extern void **gScreenTransitionInterface;
+extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
+extern void unlockLevel(int a, int b, int c);
+extern f32 lbl_803E67EC;
+extern f32 lbl_803E67F0;
+
+#pragma scheduling off
+int ktrex_stateHandlerA01(int obj, int runtime) {
+    if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
+        *(u8 *)((char *)obj + 0xaf) |= 8;
+        *(u8 *)((char *)runtime + 0x349) = 0;
+        *(u8 *)((char *)runtime + 0x25f) = 0;
+        *(f32 *)((char *)gKTRexState + 4) = lbl_803E67EC;
+        return 0;
+    }
+    *(f32 *)((char *)gKTRexState + 4) -= timeDelta;
+    if (*(f32 *)((char *)gKTRexState + 4) <= lbl_803E67F0) {
+        if (*(int *)((char *)obj + 0xf8) != 3) {
+            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 8))(30, 1);
+            *(int *)((char *)obj + 0xf8) = 3;
+        }
+    }
+    if (*(f32 *)((char *)gKTRexState + 4) <= lbl_803E67B8) {
+        Obj_SetModelColorFadeRecursive((int)Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
+        Music_Trigger(40, 0);
+        Music_Trigger(147, 0);
+        Music_Trigger(148, 0);
+        *(u8 *)((char *)obj + 0xad) = 1;
+        GameBit_Set(1380, 1);
+        GameBit_Set(874, 0);
+        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 0, 1);
+        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 1, 1);
+        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 5, 1);
+        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 10, 1);
+        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 11, 1);
+        GameBit_Set(3589, 0);
+        unlockLevel(53, 1, 0);
+        GameBit_Set(2107, 1);
+        (*(void (**)(int, int))((char *)*gMapEventInterface + 0x44))(4, 2);
+    }
+    return 0;
+}
+#pragma scheduling reset
