@@ -191,6 +191,7 @@ extern void Matrix_TransformPoint(f32 *mtx, double x, double y, double z, f32 *o
 extern f32 lbl_803E6B38;
 extern f32 lbl_803E6B3C;
 extern f32 lbl_803E6A48;
+extern f32 lbl_803E6A88;
 extern f32 lbl_803DC300;
 extern f32 lbl_803DC304;
 
@@ -554,6 +555,23 @@ int drakorhoverpad_init(int obj) {
         Sfx_PlayFromObject(obj, 777);
     }
     return 0;
+}
+
+void drakorhoverpad_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    if (visible) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6A48);
+        *(s16 *)(p + 0x176) += framesThisStep;
+        if (*(s16 *)(p + 0x176) == 0 || *(s16 *)(p + 0x176) > 10) {
+            *(s16 *)(p + 0x176) = 0;
+            *(f32 *)(p + 0x154) = *(f32 *)((char *)obj + 0xc) + (f32)(int)randomGetRange(-30, 30);
+            *(f32 *)(p + 0x158) = *(f32 *)((char *)obj + 0x10);
+            *(f32 *)(p + 0x15c) = *(f32 *)((char *)obj + 0x14) + (f32)(int)randomGetRange(-30, 30);
+            *(f32 *)(p + 0x160) = *(f32 *)((char *)obj + 0xc) + (f32)(int)randomGetRange(-120, 120);
+            *(f32 *)(p + 0x164) = *(f32 *)((char *)obj + 0x10) - lbl_803E6A88;
+            *(f32 *)(p + 0x168) = *(f32 *)((char *)obj + 0x14) + (f32)(int)randomGetRange(-120, 120);
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
