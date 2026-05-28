@@ -6837,6 +6837,105 @@ void fn_802AA4B0(int obj, int p2)
     }
 }
 
+extern f32 lbl_803E8050;
+extern f32 lbl_803E80F0;
+extern f32 lbl_803E7FC4;
+extern f32 lbl_803E7F6C;
+extern f32 lbl_803E7F68;
+extern f32 lbl_803E7F1C;
+extern f32 timeDelta;
+
+void playerCalcWaterCurrent(f32 *outX, f32 *outZ, int player)
+{
+    int inner = *(int *)((char *)player + 0xb8);
+    f32 sumC = lbl_803E7EA4;
+    f32 sumS = lbl_803E7EA4;
+    int any = 0;
+    int *objs;
+    int n;
+    int i;
+
+    objs = (int *)ObjGroup_GetObjects(0x14, &n);
+    for (i = 0; i < n; i++) {
+        int o = objs[i];
+        if (*(u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x1a) & 2) {
+            f32 dy;
+            any = 1;
+            dy = *(f32 *)((char *)o + 0x10) - *(f32 *)((char *)player + 0x10);
+            if (dy <= lbl_803E8050 && dy >= lbl_803E80F0) {
+                f32 dx = *(f32 *)((char *)o + 0xc) - *(f32 *)((char *)player + 0xc);
+                f32 dz = *(f32 *)((char *)o + 0x14) - *(f32 *)((char *)player + 0x14);
+                f32 dist = sqrtf(dx * dx + dz * dz);
+                f32 thresh =
+                    lbl_803E7FC4 * (f32)(u32) * (u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x19);
+                if (dist < thresh) {
+                    f32 ratio = lbl_803E7EA4;
+                    if (thresh > lbl_803E7EA4) {
+                        ratio = (thresh - dist) / thresh;
+                    }
+                    ratio = ratio * (lbl_803E7ED8 * *(f32 *)((char *)o + 0x8));
+                    sumC = ratio * fn_80293E80(lbl_803E7F94 * (f32)(int)*(s16 *)((char *)o + 0) /
+                                               lbl_803E7F98) +
+                           sumC;
+                    sumS = ratio * sin(lbl_803E7F94 * (f32)(int)*(s16 *)((char *)o + 0) /
+                                       lbl_803E7F98) +
+                           sumS;
+                }
+            }
+        }
+    }
+    objs = (int *)ObjGroup_GetObjects(0x50, &n);
+    for (i = 0; i < n; i++) {
+        int o = objs[i];
+        f32 strength =
+            (f32)(u32) * (u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x32) / lbl_803E7ED8;
+        f32 dy;
+        any = 1;
+        dy = *(f32 *)((char *)o + 0x10) - *(f32 *)((char *)player + 0x10);
+        if (dy <= lbl_803E8050 && dy >= lbl_803E80F0) {
+            f32 dx = *(f32 *)((char *)o + 0xc) - *(f32 *)((char *)player + 0xc);
+            f32 dz = *(f32 *)((char *)o + 0x14) - *(f32 *)((char *)player + 0x14);
+            int a22 = (s16)(getAngle(dx, dz) + 0x84d0);
+            f32 dist = sqrtf(dx * dx + dz * dz);
+            f32 thresh = (f32)(int)(*(u8 *)((char *)*(int *)((char *)o + 0x4c) + 0x29) << 3);
+            if (dist < thresh) {
+                f32 ratio = lbl_803E7EA4;
+                f32 angle;
+                if (thresh > lbl_803E7EA4) {
+                    ratio = (thresh - dist) / thresh;
+                }
+                ratio = ratio * strength;
+                angle = lbl_803E7F94 * (f32)(int)a22 / lbl_803E7F98;
+                sumC = ratio * fn_80293E80(angle) + sumC;
+                sumS = ratio * sin(angle) + sumS;
+            }
+        }
+    }
+    if (any) {
+        f32 mag;
+        sumC = sumC / (f32)(int)any;
+        sumS = sumS / (f32)(int)any;
+        *(f32 *)((char *)inner + 0x648) =
+            *(f32 *)((char *)inner + 0x648) - lbl_803E7F6C * sumC;
+        *(f32 *)((char *)inner + 0x64c) =
+            *(f32 *)((char *)inner + 0x64c) - lbl_803E7F6C * sumS;
+        *(f32 *)((char *)inner + 0x648) = *(f32 *)((char *)inner + 0x648) * lbl_803E7F68;
+        *(f32 *)((char *)inner + 0x64c) = *(f32 *)((char *)inner + 0x64c) * lbl_803E7F68;
+        mag = sqrtf(*(f32 *)((char *)inner + 0x648) * *(f32 *)((char *)inner + 0x648) +
+                    *(f32 *)((char *)inner + 0x64c) * *(f32 *)((char *)inner + 0x64c));
+        if (mag > lbl_803E7F1C) {
+            f32 s = lbl_803E7F1C / mag;
+            *(f32 *)((char *)inner + 0x648) = *(f32 *)((char *)inner + 0x648) * s;
+            *(f32 *)((char *)inner + 0x64c) = *(f32 *)((char *)inner + 0x64c) * s;
+        }
+        *outX = *(f32 *)((char *)inner + 0x648) * timeDelta;
+        *outZ = *(f32 *)((char *)inner + 0x64c) * timeDelta;
+    } else {
+        *outX = lbl_803E7EA4;
+        *outZ = lbl_803E7EA4;
+    }
+}
+
 int fn_802977A8(int obj, int state)
 {
     if (*(s8 *)((char *)state + 0x27a) != 0) {
