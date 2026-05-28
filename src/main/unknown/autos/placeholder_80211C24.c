@@ -360,6 +360,10 @@ extern f32 lbl_803E6968;
 extern f32 lbl_803E68E0;
 extern f32 lbl_803E68E4;
 extern s16 lbl_803DC2AE;
+extern f32 lbl_803E6998;
+extern f32 lbl_803E69A0;
+extern char sKytesMumYawDiffMessage[];
+void kytesmum_playAnimationEventSfx(int obj, u8 *arg, s16 *sfxData);
 
 extern int fn_80080150(void *timer);
 extern void s16toFloat(void *timer, int v);
@@ -996,6 +1000,80 @@ int drlasercannon_aimAtTarget(int self, int target, int *out, int maxRate, f32 *
         delta = -delta;
     }
     return delta > 0x100;
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void kytesmum_update(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x4c);
+    f32 nearDist;
+    int diff;
+    int moveIdx;
+    int nearest;
+
+    nearDist = lbl_803E6998;
+    if (*(u8 *)(p + 0x6e6) == 0) {
+        if ((*(int (**)(int))(p + 0x6d4))(obj) != 0) {
+            GameBit_Set(*(s16 *)((char *)q + 0x1e), 1);
+            *(u8 *)(p + 0x6e6) = 1;
+        }
+    }
+    diff = (s16)((*(s8 *)((char *)q + 0x18) << 8) - (u16)*(s16 *)obj);
+    if (diff > 0x8000) {
+        diff -= 0xFFFF;
+    }
+    if (diff < -0x8000) {
+        diff += 0xFFFF;
+    }
+    if (diff != 0) {
+        fn_80137948(sKytesMumYawDiffMessage);
+        if (*(s16 *)((char *)obj + 0xa0) != *(s16 *)(*(int *)(p + 0x6dc) + 4)) {
+            ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)(p + 0x6dc) + 4), lbl_803E698C, 0);
+        }
+        *(s16 *)obj = (s16)(*(s16 *)obj + ((diff + 1) >> 4));
+        *(f32 *)(p + 0x6e0) = lbl_803E699C * (f32)(diff / 1024);
+        if (diff < 0) {
+            diff = -diff;
+        }
+        if (diff < 0x400) {
+            *(s16 *)obj = (s16)(*(s8 *)((char *)q + 0x18) << 8);
+            ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)(p + 0x6dc) + randomGetRange(0, 1) * 2),
+                                   lbl_803E698C, 0);
+            *(f32 *)(p + 0x6e0) = lbl_803E699C;
+        }
+    }
+    *(s16 *)(p + 0x6e4) -= framesThisStep;
+    if (*(s16 *)(p + 0x6e4) < 0) {
+        *(s16 *)(p + 0x6e4) = randomGetRange(0x32, 0x1f4);
+        objSoundFn_800392f0(obj, (int)(p + 0x684),
+                            (void *)(*(int *)(p + 0x6d0) + randomGetRange(0, 3) * 6), 0);
+    }
+    if (ObjAnim_AdvanceCurrentMove(*(f32 *)(p + 0x6e0), timeDelta, obj,
+                                   (ObjAnimEventList *)(p + 0x6b4)) != 0) {
+        if (randomGetRange(0, 7) != 0) {
+            moveIdx = 0;
+        } else if (randomGetRange(0, 1) != 0) {
+            moveIdx = 1;
+        } else {
+            moveIdx = 4;
+        }
+        ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)(p + 0x6dc) + moveIdx * 2), lbl_803E698C, 0);
+        if (moveIdx == 0) {
+            *(f32 *)(p + 0x6e0) = lbl_803E699C;
+        } else {
+            *(f32 *)(p + 0x6e0) = lbl_803E69A0;
+        }
+    }
+    kytesmum_playAnimationEventSfx(obj, (u8 *)(p + 0x6b4), *(s16 **)(p + 0x6d8));
+    characterDoEyeAnims(obj, (void *)(p + 0x654));
+    objAnimFn_80038f38(obj, (void *)(p + 0x684));
+    nearest = ObjGroup_FindNearestObject(1, obj, &nearDist);
+    if (nearest != 0) {
+        (*(void (**)(int, int, int, int))(*(int *)(*(int *)((char *)nearest + 0x68)) + 0x28))(
+            nearest, obj, 1, 2);
+    }
 }
 #pragma scheduling reset
 
