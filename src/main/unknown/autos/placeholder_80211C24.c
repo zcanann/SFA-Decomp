@@ -4187,3 +4187,84 @@ int ktrex_stateHandlerB08(int obj, int runtime) {
     return 0;
 }
 #pragma scheduling reset
+
+extern f32 lbl_803E680C;
+
+#pragma scheduling off
+int ktrex_stateHandlerB06(int obj, int runtime) {
+    f32 z;
+    if ((s8)*(u8 *)((char *)runtime + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 11, lbl_803E67B8, 0);
+        Sfx_PlayFromObject(obj, 1108);
+        *(f32 *)((char *)runtime + 0x2a0) = lbl_803E680C;
+        z = lbl_803E67B8;
+        *(f32 *)((char *)runtime + 0x280) = z;
+        *(f32 *)((char *)runtime + 0x284) = z;
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 1) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~1;
+        *(int *)((char *)gKTRexState + 0x104) |= 0x80000;
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 0x80) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~0x80;
+        *(int *)((char *)gKTRexState + 0x104) |= 0x20000;
+    }
+    return 0;
+}
+#pragma scheduling reset
+
+extern f32 lbl_803E6814;
+
+#pragma scheduling off
+int ktrex_stateHandlerB03(int obj, int runtime) {
+    f32 z;
+    u16 dir;
+    dir = *(u16 *)((char *)gKTRexState + 0xfa) & 1;
+    if ((s8)*(u8 *)((char *)runtime + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 15, lbl_803E67B8, 0);
+        *(f32 *)((char *)runtime + 0x2a0) = lbl_803E6810;
+        z = lbl_803E67B8;
+        *(f32 *)((char *)runtime + 0x280) = z;
+        *(f32 *)((char *)runtime + 0x284) = z;
+        *(s16 *)((char *)gKTRexState + 0xf8) = *(s16 *)obj;
+    }
+    if (dir != 0) {
+        *(s16 *)obj = lbl_803E6814 * *(f32 *)((char *)obj + 0x98) + (f32)(int)*(s16 *)((char *)gKTRexState + 0xf8);
+    } else {
+        *(s16 *)obj = (f32)(int)*(s16 *)((char *)gKTRexState + 0xf8) - lbl_803E6814 * *(f32 *)((char *)obj + 0x98);
+    }
+    return 0;
+}
+#pragma scheduling reset
+
+extern s16 lbl_803DC260;
+extern u16 lbl_803DC288;
+extern f32 lbl_8032A51C[];
+
+#pragma scheduling off
+int ktrex_stateHandlerB04(int obj, int runtime) {
+    f32 z;
+    u16 mask;
+    if ((s8)*(u8 *)((char *)runtime + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, (&lbl_803DC260)[*(u8 *)((char *)gKTRexState + 0xfd)], lbl_803E67B8, 0);
+        *(f32 *)((char *)runtime + 0x2a0) = lbl_8032A51C[*(u8 *)((char *)gKTRexState + 0xfd)];
+        z = lbl_803E67B8;
+        *(f32 *)((char *)runtime + 0x280) = z;
+        *(f32 *)((char *)runtime + 0x284) = z;
+    }
+    mask = (&lbl_803DC288)[*(u8 *)((char *)gKTRexState + 0xfd)];
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 1) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~1;
+        *(int *)((char *)gKTRexState + 0x104) |= mask;
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 0x200) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~0x200;
+        *(int *)((char *)gKTRexState + 0x104) |= 0x800;
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 0x400) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~0x400;
+        *(int *)((char *)gKTRexState + 0x104) |= 0x1000;
+    }
+    return 0;
+}
+#pragma scheduling reset
