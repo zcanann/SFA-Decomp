@@ -809,6 +809,7 @@ extern void copyMatrix44(f32* src, f32* dst);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
+extern void getTabEntry(void* dst, int kind, int offset, int size);
 
 /*
  * --INFO--
@@ -823,12 +824,11 @@ extern void *mmAlloc(u32 size, u32 tag, void *name);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-getLActions(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
-            undefined4 param_10,uint param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,undefined4 param_15,undefined4 param_16)
+int getLActions(int a, int b, u16 idx)
 {
+    void* buf = mmAlloc(0x28, -1, NULL);
+    getTabEntry(buf, 0xc, idx * 0x28, 0x28);
+    mm_free(buf);
     return 0;
 }
 
@@ -9563,5 +9563,130 @@ void gameTextFreePhrase(int* p)
     if (((void**)p)[5] != NULL) {
         mm_free(((void**)p)[5]);
         ((void**)p)[5] = NULL;
+    }
+}
+
+extern void* gameTextDrawFunc;
+extern char* lbl_803DC9C4;
+extern char* gameStrcpy(char* dst, char* src);
+extern void gameTextFn_8001658c(int a, int b, int c);
+
+typedef struct {
+    u8 pad[0x20];
+    void (*fn)(int, int, int);
+    int a;
+    int b;
+    int c;
+} TextCallbackEntry;
+
+extern TextCallbackEntry lbl_80335940[];
+
+typedef struct {
+    u16 a;
+    u16 b;
+    u16 key;
+} TaskTextEntry;
+
+extern TaskTextEntry lbl_802C8860[];
+
+/*
+ * Function: fn_80008EDC
+ * EN v1.0 Address: 0x80008EDC
+ * EN v1.0 Size: 92b
+ */
+void fn_80008EDC(TextCallbackEntry* p)
+{
+    int i;
+    TextCallbackEntry* e = lbl_80335940;
+    for (i = 0; i < 16; i++) {
+        if (p == e) {
+            e->fn(e->a, e->b, e->c);
+            return;
+        }
+        e++;
+    }
+}
+
+/*
+ * Function: gameTextFn_80016810
+ * EN v1.0 Address: 0x80016810
+ * EN v1.0 Size: 96b
+ */
+void gameTextFn_80016810(int a, int b, int c)
+{
+    int i;
+    int* e;
+    if (gameTextDrawFunc != NULL) {
+        gameTextFn_8001658c(a, b, c);
+    } else {
+        i = lbl_803DC9C8++;
+        e = (int*)&lbl_8033A540[i * 0x14];
+        e[0] = 2;
+        e[1] = a;
+        e[2] = b;
+        e[3] = c;
+    }
+}
+
+/*
+ * Function: gameTextGetTaskText
+ * EN v1.0 Address: 0x80015D70
+ * EN v1.0 Size: 88b
+ */
+int gameTextGetTaskText(int id, int* outA, int* outB)
+{
+    int i;
+    TaskTextEntry* e = lbl_802C8860;
+    for (i = 0; i < 0x7a; i++) {
+        if (e->key == id) {
+            if (outA != NULL) {
+                *outA = e->a;
+            }
+            if (outB != NULL) {
+                *outB = e->b;
+            }
+            return 1;
+        }
+        e++;
+    }
+    return 0;
+}
+
+/*
+ * Function: gameTextShowTimeStr
+ * EN v1.0 Address: 0x80016220
+ * EN v1.0 Size: 108b
+ */
+void gameTextShowTimeStr(char* str)
+{
+    int i;
+    int* e;
+    char* buf;
+    i = lbl_803DC9C8++;
+    e = (int*)&lbl_8033A540[i * 0x14];
+    e[0] = 5;
+    buf = lbl_803DC9C4;
+    lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
+    e[1] = (int)buf;
+}
+
+/*
+ * Function: gameTextShow
+ * EN v1.0 Address: 0x80016870
+ * EN v1.0 Size: 104b
+ */
+void gameTextShow(int a)
+{
+    int i;
+    int* e;
+    if (gameTextDrawFunc != NULL) {
+        gameTextFn_8001658c(a, 0, 0);
+    } else {
+        i = lbl_803DC9C8++;
+        e = (int*)&lbl_8033A540[i * 0x14];
+        e[0] = 2;
+        e[1] = a;
+        e[2] = 0;
+        e[3] = 0;
     }
 }
