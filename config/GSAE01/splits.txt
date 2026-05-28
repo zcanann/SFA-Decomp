@@ -1507,8 +1507,59 @@ main/unknown/autos/placeholder_802113F8.c:
 main/proximitymine_init.c:
 	.text       start:0x80211A10 end:0x80211C24
 
-main/unknown/autos/placeholder_80211C24.c:
-	.text       start:0x80211C24 end:0x8021F34C
+main/dll/DR/dll_024F_kt_rexlevel.c:
+	.text       start:0x80211C24 end:0x80211F38
+
+main/dll/DR/obj_008A_kt_rex.c:
+	.text       start:0x80211F38 end:0x80215A3C
+
+main/dll/DR/dll_0251_kt_rexfloorswitch.c:
+	.text       start:0x80215A3C end:0x80216620
+
+main/dll/DR/dll_0252_kt_lazerwall.c:
+	.text       start:0x80216620 end:0x80216B48
+
+main/dll/DR/dll_0253_kt_lazerlight.c:
+	.text       start:0x80216B48 end:0x80216D18
+
+main/dll/DR/dll_0254_kt_fallingrocks.c:
+	.text       start:0x80216D18 end:0x80216EAC
+
+main/dll/DR/dll_0261_dr_lasercannon.c:
+	.text       start:0x80216EAC end:0x80217F24
+
+main/dll/DR/dll_0262_drakormissile.c:
+	.text       start:0x80217F24 end:0x80218B24
+
+main/dll/DR/dll_0263_gm_mazewell.c:
+	.text       start:0x80218B24 end:0x80218EE8
+
+main/dll/DR/dll_0266_kytesmum.c:
+	.text       start:0x80218EE8 end:0x80219A88
+
+main/dll/DR/dll_0265_dr_creator.c:
+	.text       start:0x80219A88 end:0x8021A008
+
+main/dll/DR/dll_0268_dr_cagecontrol.c:
+	.text       start:0x8021A008 end:0x8021A13C
+
+main/dll/DR/dll_0269_explodeplan.c:
+	.text       start:0x8021A13C end:0x8021A42C
+
+main/dll/DR/dll_026B_dr_chimmey.c:
+	.text       start:0x8021A42C end:0x8021A62C
+
+main/dll/DR/dll_026C_dr_cagewith.c:
+	.text       start:0x8021A62C end:0x8021ACE8
+
+main/dll/DR/dll_026E_dr_shackle.c:
+	.text       start:0x8021ACE8 end:0x8021B358
+
+main/dll/DR/dll_0271_drakorhoverpad.c:
+	.text       start:0x8021B358 end:0x8021CF60
+
+main/dll/DR/dll_0272_hightop.c:
+	.text       start:0x8021CF60 end:0x8021F34C
 
 main/dll/DR/dll_026F_dr_generator.c:
 	.text       start:0x8021F34C end:0x8021F8CC
