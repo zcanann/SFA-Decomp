@@ -1970,7 +1970,8 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
               }
               ObjHits_RecordPositionHit((double)(local_188[unaff_r26 * 4 + 1] + pfVar26[2]),(double)fVar2,
                            (double)(local_188[unaff_r26 * 4 + 3] + pfVar26[4]),iVar15,iVar14,
-                           *(char *)(local_198 + 0x6e),*(undefined *)(local_198 + 0x6f),
+                           ((ObjHitsPriorityState *)local_198)->hitVolumePriority,
+                           ((ObjHitsPriorityState *)local_198)->hitVolumeId,
                            *(byte *)((int)pfVar26 + 0x19));
               local_1a8 = 1;
             }
@@ -1988,9 +1989,11 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
       }
       if ((cVar18 == '\0') || (local_1a8 == 0)) {
         if ((cVar19 != '\0') && ((lbl_803DF590 < local_1c4 && (iVar14 == param_11)))) {
-          ObjHits_RecordObjectHit(iVar15,iVar14,*(char *)(local_198 + 0x6c),*(undefined *)(local_198 + 0x6d),
+          ObjHits_RecordObjectHit(iVar15,iVar14,((ObjHitsPriorityState *)local_198)->objectPairPriority,
+                       ((ObjHitsPriorityState *)local_198)->objectPairHitVolume,
                        (char)unaff_r26);
-          ObjHits_RecordObjectHit(iVar14,iVar15,*(char *)(iVar24 + 0x6c),*(undefined *)(iVar24 + 0x6d),
+          ObjHits_RecordObjectHit(iVar14,iVar15,((ObjHitsPriorityState *)iVar24)->objectPairPriority,
+                       ((ObjHitsPriorityState *)iVar24)->objectPairHitVolume,
                        (char)unaff_r27);
           ObjHits_ApplyPairResponse(-(double)local_1bc,(double)lbl_803DF590,-(double)local_1c0,
                                     iVar14,iVar15,0);

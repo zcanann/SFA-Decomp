@@ -606,8 +606,8 @@ void ObjHits_ClearHitVolumes(int param_1)
   ObjHitsPriorityState *hitState;
   
   hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
-  hitState->objectHitType = 0;
-  hitState->skeletonHitType = 0;
+  hitState->hitVolumePriority = 0;
+  hitState->hitVolumeId = 0;
   hitState->objectHitMask = 0;
   hitState->skeletonHitMask = 0;
   return;
@@ -633,8 +633,8 @@ void ObjHits_SetHitVolumeMasks(int param_1,int param_2,int param_3,int param_4)
   ObjHitsPriorityState *hitState;
 
   hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
-  hitState->objectHitType = (s8)param_2;
-  hitState->skeletonHitType = (s8)param_3;
+  hitState->hitVolumePriority = (s8)param_2;
+  hitState->hitVolumeId = (s8)param_3;
   if (param_4 == 0) {
     return;
   }
@@ -669,8 +669,8 @@ void ObjHits_SetHitVolumeSlot(u32 param_1,int param_2,int param_3,int param_4)
   if (hitState == 0) {
     return;
   }
-  hitState->objectHitType = (s8)param_2;
-  hitState->skeletonHitType = (s8)param_3;
+  hitState->hitVolumePriority = (s8)param_2;
+  hitState->hitVolumeId = (s8)param_3;
   if (param_4 == -1) {
     return;
   }
@@ -1019,31 +1019,31 @@ void ObjHits_RefreshObjectState(int param_1)
     }
     *(undefined *)((int)hitState + 0x6a) = *(undefined *)(*(int *)(param_1 + 0x50) + 99);
     *(undefined *)((int)hitState + 0x6b) = *(undefined *)(*(int *)(param_1 + 0x50) + 100);
-    *(ushort *)((int)hitState + 0x5a) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x62);
-    *(s16 *)((int)hitState + 0x5c) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x68);
-    *(s16 *)((int)hitState + 0x5e) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6a);
+    hitState->primaryRadius = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x62);
+    hitState->primaryCapsuleOffsetA = *(s16 *)(*(int *)(param_1 + 0x50) + 0x68);
+    hitState->primaryCapsuleOffsetB = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6a);
     hitState->stateIndex = *(undefined *)(*(int *)(param_1 + 0x50) + 0x60);
-    *(undefined2 *)((int)hitState + 0x58) = 0x400;
-    fVar1 = (float)(s32)*(short *)((int)hitState + 0x5a);
+    hitState->capsuleScale = 0x400;
+    fVar1 = (float)(s32)hitState->primaryRadius;
     *(float *)((int)hitState + 0xc) = fVar1 * fVar1;
     hitState->secondaryShapeFlags = *(undefined *)(*(int *)(param_1 + 0x50) + 0x90);
-    *(ushort *)((int)hitState + 100) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x77);
-    *(s16 *)((int)hitState + 0x66) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6c);
-    *(s16 *)((int)hitState + 0x68) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6e);
+    hitState->secondaryRadius = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x77);
+    hitState->secondaryCapsuleOffsetA = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6c);
+    hitState->secondaryCapsuleOffsetB = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6e);
     *(float *)((int)hitState + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if ((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) == 0) {
       if ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
-        if ((float)(s32)*(short *)((int)hitState + 0x5a) > *(float *)((int)hitState + 0x28)) {
-          *(float *)((int)hitState + 0x28) = (float)(s32)*(short *)((int)hitState + 0x5a);
+        if ((float)(s32)hitState->primaryRadius > *(float *)((int)hitState + 0x28)) {
+          *(float *)((int)hitState + 0x28) = (float)(s32)hitState->primaryRadius;
         }
       }
     }
     else {
-      sVar3 = *(short *)((int)hitState + 0x5c);
+      sVar3 = hitState->primaryCapsuleOffsetA;
       if (sVar3 < 0) {
         sVar3 = -sVar3;
       }
-      sVar4 = *(short *)((int)hitState + 0x5e);
+      sVar4 = hitState->primaryCapsuleOffsetB;
       if (sVar4 < 0) {
         sVar4 = -sVar4;
       }
@@ -1057,24 +1057,24 @@ void ObjHits_RefreshObjectState(int param_1)
     *(float *)((int)hitState + 0x2c) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if (((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) ||
         ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0)) {
-      if ((float)(s32)*(short *)((int)hitState + 0x5a) > *(float *)((int)hitState + 0x2c)) {
-        *(float *)((int)hitState + 0x2c) = (float)(s32)*(short *)((int)hitState + 0x5a);
+      if ((float)(s32)hitState->primaryRadius > *(float *)((int)hitState + 0x2c)) {
+        *(float *)((int)hitState + 0x2c) = (float)(s32)hitState->primaryRadius;
       }
     }
     *(float *)((int)hitState + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) == 0) {
       if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
-        if ((float)(s32)*(short *)((int)hitState + 100) > *(float *)((int)hitState + 0x30)) {
-          *(float *)((int)hitState + 0x30) = (float)(s32)*(short *)((int)hitState + 100);
+        if ((float)(s32)hitState->secondaryRadius > *(float *)((int)hitState + 0x30)) {
+          *(float *)((int)hitState + 0x30) = (float)(s32)hitState->secondaryRadius;
         }
       }
     }
     else {
-      sVar3 = *(short *)((int)hitState + 0x66);
+      sVar3 = hitState->secondaryCapsuleOffsetA;
       if (sVar3 < 0) {
         sVar3 = -sVar3;
       }
-      sVar4 = *(short *)((int)hitState + 0x68);
+      sVar4 = hitState->secondaryCapsuleOffsetB;
       if (sVar4 < 0) {
         sVar4 = -sVar4;
       }
@@ -1088,8 +1088,8 @@ void ObjHits_RefreshObjectState(int param_1)
     *(float *)((int)hitState + 0x34) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if (((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) ||
         ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0)) {
-      if ((float)(s32)*(short *)((int)hitState + 100) > *(float *)((int)hitState + 0x34)) {
-        *(float *)((int)hitState + 0x34) = (float)(s32)*(short *)((int)hitState + 100);
+      if ((float)(s32)hitState->secondaryRadius > *(float *)((int)hitState + 0x34)) {
+        *(float *)((int)hitState + 0x34) = (float)(s32)hitState->secondaryRadius;
       }
     }
     *(float *)((int)hitState + 0x38) = *(float *)((int)hitState + 0x2c);
