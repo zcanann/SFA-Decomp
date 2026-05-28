@@ -150,13 +150,15 @@ void drlightbea_free(int obj)
 #pragma scheduling reset
 
 void drlightbea_hitDetect(void) {}
+#pragma peephole off
 void drlightbea_update(int obj)
 {
     int state = *(int *)(obj + 0xb8);
-    if ((*(u8 *)(state + 4) & 0x40) != 0) {
+    if (((DrLightBeaFlags *)(state + 4))->bit40) {
         Obj_FreeObject(obj);
     }
 }
+#pragma peephole reset
 
 void drlightbea_init(int obj)
 {
