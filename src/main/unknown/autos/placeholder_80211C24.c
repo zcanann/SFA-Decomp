@@ -131,6 +131,7 @@ extern f32 lbl_803E69D8;
 extern f32 lbl_803E69E0;
 extern f32 lbl_803E69E8;
 extern f32 lbl_803E6A44;
+extern f32 lbl_803E6B00;
 extern f32 lbl_803E6B58;
 
 extern void *gKTRexState;
@@ -149,6 +150,18 @@ extern void storeZeroToFloatParam(void *timer);
 extern void **gGameUIInterface;
 extern void gmmazewell_clearPendingTriggerCallback(void);
 extern u32 GameBit_Get(int eventId);
+extern u32 randomGetRange(int min, int max);
+
+typedef struct {
+    u8 b0 : 1;
+    u8 b1 : 1;
+    u8 b2 : 1;
+    u8 b3 : 1;
+    u8 b4 : 1;
+    u8 b5 : 1;
+    u8 b6 : 1;
+    u8 b7 : 1;
+} BitFlags8;
 
 #pragma scheduling off
 #pragma peephole off
@@ -419,6 +432,52 @@ int hightop_stateHandler06(int obj, u8 *p2) {
         return 8;
     }
     return 2;
+}
+
+int hightop_stateHandler03(int obj, u8 *p2) {
+    int p = *(int *)((char *)obj + 0xb8);
+    f32 zero = lbl_803E6AA8;
+    *(f32 *)(p2 + 0x294) = zero;
+    *(f32 *)(p2 + 0x284) = zero;
+    *(f32 *)(p2 + 0x280) = zero;
+    *(f32 *)((char *)obj + 0x24) = zero;
+    *(f32 *)((char *)obj + 0x28) = zero;
+    *(f32 *)((char *)obj + 0x2c) = zero;
+    if ((s8)p2[0x27a] != 0) {
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x78);
+        if (*(u32 *)(p + 0xc3c) == 4) {
+            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);
+            *(f32 *)(p2 + 0x2a0) = lbl_803E6AC8;
+        } else {
+            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E6AA8, 0);
+            *(f32 *)(p2 + 0x2a0) = lbl_803E6AC8;
+        }
+    }
+    if (*(f32 *)((char *)obj + 0x98) > lbl_803E6B00) {
+        return *(int *)(p + 0xc3c) + 1;
+    }
+    return 0;
+}
+
+int hightop_stateHandler05(int obj, u8 *p2) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    if ((s8)p2[0x27a] != 0) {
+        ((BitFlags8 *)(p + 0xc49))->b1 = 0;
+        p[0xc4b] = 0xa;
+    }
+    switch ((s8)p[0xc4b]) {
+    case 1:
+        if (GameBit_Get(0x62c) != 0) {
+            p[0xc4b] = 2;
+        }
+        break;
+    case 0xa:
+        if (GameBit_Get(0x630) != 0) {
+            return 7;
+        }
+        break;
+    }
+    return 0;
 }
 
 int ktrex_stateHandlerB00(int obj, u8 *p2) {
