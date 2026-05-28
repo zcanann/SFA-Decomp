@@ -1402,23 +1402,29 @@ void expgfx_free(u32 sourceId)
   poolFrameFlags = gExpgfxStaticPoolFrameFlags;
 
   for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
-    if (poolSourceIds[poolIndex] == sourceId) {
-      slot = (ExpgfxSlot *)slotPoolBases[poolIndex];
+    if (*poolSourceIds == sourceId) {
+      slot = (ExpgfxSlot *)*slotPoolBases;
       for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
         if (slot != NULL) {
           tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
           if (*(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset) == sourceId) {
-            expgfxRemove(slotPoolBases[poolIndex], poolIndex, slotIndex, 0, 1);
+            expgfxRemove(*slotPoolBases, poolIndex, slotIndex, 0, 1);
           }
         }
         slot = (ExpgfxSlot *)((u8 *)slot + EXPGFX_SLOT_SIZE);
-        if (poolActiveCounts[poolIndex] == 0) {
-          poolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
+        if (*poolActiveCounts == 0) {
+          *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
         }
       }
-      poolSourceIds[poolIndex] = 0;
-      poolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
+      *poolSourceIds = 0;
+      *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
     }
+
+    poolSourceIds++;
+    slotPoolBases++;
+    poolActiveCounts++;
+    poolSlotTypeIds++;
+    poolFrameFlags++;
   }
 }
 #pragma peephole reset
