@@ -284,6 +284,20 @@ extern void **gPartfxInterface;
 extern f32 lbl_803E6B5C;
 extern f32 lbl_803E6B60;
 extern f32 lbl_803E6B64;
+extern int lbl_802C2578[];
+extern int lbl_802C2584[];
+extern int lbl_8032A7FC[];
+extern int ObjTrigger_IsSet(int obj);
+extern void saveGame_saveObjectPos(int obj);
+extern int objGetAnimState80A(int *obj);
+extern void ObjHits_SetHitVolumeSlot(int obj, int a, int b, int c);
+extern f32 lbl_803E6988;
+extern f32 lbl_803E698C;
+extern f32 lbl_803E6990;
+
+typedef struct {
+    int v[3];
+} QuestTriple;
 
 typedef struct {
     u8 b0 : 1;
@@ -1681,6 +1695,72 @@ loop:
     do {
         (*(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x690, 0, 1, -1, 0);
     } while (n-- != 0);
+}
+
+int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
+    int *player = Obj_GetPlayerObject();
+    int *tricky = getTrickyObject();
+    char *runtime = *(char **)((char *)obj + 0xb8);
+    if (objGetAnimState80A(player) == 0x40) {
+        return 1;
+    }
+    if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
+        if ((*(int (**)(void *))((char *)*gGameUIInterface + 0x1c))(*gGameUIInterface) == 0) {
+            buttonDisable(0, 0x100);
+            *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = 0xb;
+            *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = 4;
+            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(randomGetRange(0, 1), obj, -1);
+        }
+    }
+    if ((tricky != 0 && Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)tricky + 0x18)) < lbl_803E6988) ||
+        (player != 0 && Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) < lbl_803E6988)) {
+        if (*(s16 *)((char *)obj + 0xa0) != 9) {
+            ObjAnim_SetCurrentMove(obj, 9, lbl_803E698C, 0);
+            *(f32 *)(runtime + 0x6e0) = lbl_803E6990;
+            if (tricky != 0) {
+                (*(void (**)(int *, int, int))((char *)*(void **)*(void **)((char *)tricky + 0x68) + 0x34))(tricky, 0, 0);
+            }
+        }
+    }
+    if (*(s16 *)((char *)obj + 0xa0) == 9) {
+        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = 0xb;
+        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = 4;
+        ObjHits_SetHitVolumeSlot(obj, 0xb, 4, 7);
+        ObjHits_RegisterActiveHitVolumeObject(obj);
+    }
+    return 0;
+}
+
+int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
+    int questBits[3];
+    int triggerIds[3];
+    int count;
+    char *runtime;
+    int next;
+    *(QuestTriple *)questBits = *(QuestTriple *)lbl_802C2578;
+    *(QuestTriple *)triggerIds = *(QuestTriple *)lbl_802C2584;
+    count = 0;
+    Obj_GetPlayerObject();
+    runtime = *(char **)((char *)obj + 0xb8);
+    saveGame_saveObjectPos(obj);
+    ObjHits_DisableObject(obj);
+    for (; questBits[count] != -1 && GameBit_Get(questBits[count]) != 0; count++) {
+        ;
+    }
+    if (count > 0) {
+        *(int *)(runtime + 0x6d0) = (int)lbl_8032A7FC;
+    }
+    GameBit_Set(0xeb9, count == 1);
+    next = triggerIds[count];
+    if (next == -1) {
+        *(u8 *)((char *)obj + 0xaf) |= 8;
+        return 1;
+    }
+    if (ObjTrigger_IsSet(obj) != 0) {
+        *(void **)((char *)obj + 0xbc) = (void *)kytesmum_idleCallback;
+        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(next, obj, -1);
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
