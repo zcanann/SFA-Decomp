@@ -6265,6 +6265,50 @@ void arwarwingbo_update(int obj)
 }
 #pragma scheduling reset
 
+extern f32 lbl_803E6EF0;
+extern f32 lbl_803E6EF4;
+
+#pragma scheduling off
+void fn_8022A9C8(int obj, int state)
+{
+    int slot;
+    f32 mtx[12];
+    ArwProjPosSrc src;
+
+    slot = Camera_GetCurrentViewSlot();
+    src.pos[0] = *(f32 *)(obj + 0xc);
+    src.pos[1] = *(f32 *)(obj + 0x10);
+    src.pos[2] = *(f32 *)(obj + 0x14);
+    src.rot[0] = *(s16 *)obj;
+    src.rot[1] = *(s16 *)(obj + 2);
+    src.rot[2] = 0;
+    src.scale = lbl_803E6ED0;
+    setMatrixFromObjectPos(mtx, &src);
+
+    Matrix_TransformPoint(mtx, lbl_803E6ECC, lbl_803E6ECC, lbl_803E6EF0,
+                          (f32 *)(*(int *)(state + 0x418) + 0xc),
+                          (f32 *)(*(int *)(state + 0x418) + 0x10),
+                          (f32 *)(*(int *)(state + 0x418) + 0x14));
+    *(f32 *)(*(int *)(state + 0x418) + 0x18) = *(f32 *)(*(int *)(state + 0x418) + 0xc);
+    *(f32 *)(*(int *)(state + 0x418) + 0x1c) = *(f32 *)(*(int *)(state + 0x418) + 0x10);
+    *(f32 *)(*(int *)(state + 0x418) + 0x20) = *(f32 *)(*(int *)(state + 0x418) + 0x14);
+    *(s16 *)(*(int *)(state + 0x418) + 4) = -*(s16 *)(slot + 4);
+    *(s16 *)(*(int *)(state + 0x418) + 2) = -*(s16 *)(slot + 2);
+    *(s16 *)(*(int *)(state + 0x418) + 0) = 0x8000 - *(s16 *)slot;
+
+    Matrix_TransformPoint(mtx, lbl_803E6ECC, lbl_803E6ECC, lbl_803E6EF4,
+                          (f32 *)(*(int *)(state + 0x41c) + 0xc),
+                          (f32 *)(*(int *)(state + 0x41c) + 0x10),
+                          (f32 *)(*(int *)(state + 0x41c) + 0x14));
+    *(f32 *)(*(int *)(state + 0x41c) + 0x18) = *(f32 *)(*(int *)(state + 0x41c) + 0xc);
+    *(f32 *)(*(int *)(state + 0x41c) + 0x1c) = *(f32 *)(*(int *)(state + 0x41c) + 0x10);
+    *(f32 *)(*(int *)(state + 0x41c) + 0x20) = *(f32 *)(*(int *)(state + 0x41c) + 0x14);
+    *(s16 *)(*(int *)(state + 0x41c) + 4) = -*(s16 *)(slot + 4);
+    *(s16 *)(*(int *)(state + 0x41c) + 2) = -*(s16 *)(slot + 2);
+    *(s16 *)(*(int *)(state + 0x41c) + 0) = 0x8000 - *(s16 *)slot;
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
