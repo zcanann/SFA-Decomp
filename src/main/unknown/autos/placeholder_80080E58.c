@@ -8,6 +8,12 @@ typedef struct ObjSeqBgCmd {
     s8 pad;
 } ObjSeqBgCmd;
 
+typedef struct SkyBlendStateFlags {
+    u8 unused80 : 1;
+    u8 active : 1;
+    u8 rest : 6;
+} SkyBlendStateFlags;
+
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mm_free(void *ptr);
 extern void *Resource_Acquire(int id, int mode);
@@ -5208,6 +5214,50 @@ void fn_8008B88C(int *outTimer)
         return;
     }
     *outTimer = *(int *)(sky + 0x218);
+}
+
+void skyFn_80089710(int flags, u32 enabled, int startComplete)
+{
+    u8 *sky;
+    u32 flagBit;
+    u32 stateActive;
+    u32 requestedActive;
+
+    sky = lbl_803DD12C;
+    if (sky == NULL) {
+        return;
+    }
+
+    flagBit = 0;
+    if ((flags & (1 << flagBit)) != 0) {
+        stateActive = ((SkyBlendStateFlags *)(sky + 0xc1))->active;
+        requestedActive = (u8)enabled;
+        if (stateActive != requestedActive) {
+            if (startComplete != 0) {
+                *(f32 *)(sky + 0xbc) = EXIInputFlag;
+            } else {
+                *(f32 *)(sky + 0xbc) = pEXIInputFlag;
+            }
+        }
+        sky = lbl_803DD12C;
+        ((SkyBlendStateFlags *)(sky + 0xc1))->active = enabled;
+    }
+
+    flagBit = 1;
+    if ((flags & (1 << flagBit)) != 0) {
+        sky = lbl_803DD12C;
+        stateActive = ((SkyBlendStateFlags *)(sky + 0x165))->active;
+        requestedActive = (u8)enabled;
+        if (stateActive != requestedActive) {
+            if (startComplete != 0) {
+                *(f32 *)(sky + 0x160) = EXIInputFlag;
+            } else {
+                *(f32 *)(sky + 0x160) = pEXIInputFlag;
+            }
+        }
+        sky = lbl_803DD12C;
+        ((SkyBlendStateFlags *)(sky + 0x165))->active = enabled;
+    }
 }
 
 void fn_800897D4(int slot, f32 *x, f32 *y, f32 *z)
