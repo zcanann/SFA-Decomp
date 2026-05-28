@@ -178,6 +178,8 @@ extern int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg);
 extern char sDrCreatorTimeFormat[];
 extern void fn_80137948(char *fmt, ...);
 extern f32 lbl_803E69A8;
+extern void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int b);
+extern f32 lbl_803E68B8;
 extern void setMatrixFromObjectPos(f32 *mtx, void *desc);
 extern void Matrix_TransformPoint(f32 *mtx, double x, double y, double z, f32 *ox, f32 *oy, f32 *oz);
 extern f32 lbl_803E6B38;
@@ -1733,6 +1735,62 @@ int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg) {
         }
     }
     return 0;
+}
+
+void ktlazerwall_update(int obj) {
+    int q = *(int *)((char *)obj + 0x4c);
+    u8 *runtime = *(u8 **)((char *)obj + 0xb8);
+    int cur;
+    int mode;
+    int i;
+    runtime[1] = runtime[0];
+    runtime[0] &= ~3;
+    cur = (s16)GameBit_Get(*(s16 *)(q + 0x1a));
+    if (cur >= *(s16 *)(q + 0x1c)) {
+        runtime[0] |= 4;
+    } else {
+        runtime[0] &= ~4;
+        if (GameBit_Get(*(s16 *)(q + 0x1e)) == 0) {
+            return;
+        }
+    }
+    *(s16 *)((char *)obj + 4) += 910;
+    if (cur >= 15 && (runtime[0] & 9) == 0) {
+        GameBit_Set(*(s16 *)(q + 0x1e), 1);
+        runtime[0] |= 9;
+        ktrexfloorswitch_spawnEnergyArc(obj, lbl_803E68B8, 120);
+        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1150, 0, 2, -1, 0);
+        for (i = 10; i != 0; i--) {
+            mode = 2;
+            (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+        }
+        *(f32 *)(runtime + 4) = (f32)(int)randomGetRange(1, 60);
+    }
+    if (runtime[0] & 4) {
+        mode = 0;
+        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+        mode = 1;
+        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+        if ((runtime[1] & 4) == 0) {
+            Sfx_PlayFromObject(obj, 130);
+        }
+    }
+    if (runtime[0] & 8) {
+        mode = 0;
+        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+        mode = 2;
+        (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
+    }
+    if ((runtime[0] & 8) == 0 && (runtime[1] & 8) != 0) {
+        Sfx_PlayFromObject(obj, 132);
+    }
+    if (*(f32 *)(runtime + 4) > lbl_803E6898) {
+        *(f32 *)(runtime + 4) -= timeDelta;
+        if (*(f32 *)(runtime + 4) <= lbl_803E6898) {
+            Sfx_PlayFromObject(obj, 131);
+            *(f32 *)(runtime + 4) = lbl_803E6898;
+        }
+    }
 }
 
 #pragma peephole reset
