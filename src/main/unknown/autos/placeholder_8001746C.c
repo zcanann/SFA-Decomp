@@ -308,6 +308,8 @@ extern undefined4 FUN_80294964();
 extern undefined4 FUN_802950c0();
 extern undefined4 FUN_802950cc();
 extern undefined4 FUN_802950d0();
+extern void mm_free(void *ptr);
+extern void gxTextureFn_80072dfc(void *obj, void **model, int param_3);
 extern undefined4 FUN_802950d4();
 extern undefined4 FUN_802950d8();
 extern undefined4 FUN_802950dc();
@@ -7002,8 +7004,40 @@ void fn_8002B85C(void) {}
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+void *fn_80028354(u8 *modelFile, int index) {
+    return *(u8 **)(modelFile + 0x5c) + index * 8;
+}
+
+void *fn_80028364(u8 *modelFile, int index) {
+    return *(u8 **)(modelFile + 0x60) + index * 0x14;
+}
+
 void *modelFileGetDisplayList(u8 *modelFile, int displayListIndex) {
     return *(u8 **)(modelFile + 0xd0) + displayListIndex * 0x1c;
+}
+
+void ObjModel_CopyJointTranslation(u8 *model, int jointIndex, f32 *out) {
+    u8 *modelFile;
+    uint jointCount;
+    u8 *jointMtx;
+
+    modelFile = *(u8 **)model;
+    jointCount = modelFile[0xf3];
+    if (jointCount != 0) {
+        jointCount += modelFile[0xf4];
+    } else {
+        jointCount = 1;
+    }
+
+    if (jointIndex >= jointCount) {
+        jointIndex = 0;
+    }
+
+    model += (*(u16 *)(model + 0x18) & 1) * 4;
+    jointMtx = *(u8 **)(model + 0xc) + jointIndex * 0x40;
+    out[0] = *(f32 *)(jointMtx + 0xc);
+    out[1] = *(f32 *)(jointMtx + 0x1c);
+    out[2] = *(f32 *)(jointMtx + 0x2c);
 }
 
 void *ObjModel_GetBaseVertexCoords(u8 *model, int vertexIndex) {
@@ -7014,12 +7048,72 @@ void *ObjModel_GetRenderOp(u8 *model, int renderOpIndex) {
     return *(u8 **)(model + 0x38) + renderOpIndex * 0x44;
 }
 
+u16 modelFileHeaderGetCullDistance(u8 *modelFile) {
+    return *(u16 *)(modelFile + 0xe0);
+}
+
+void ObjModel_ClearRenderAttachment(u8 *model) {
+    if (*(void **)(model + 0x58) != NULL) {
+        mm_free(*(void **)(model + 0x58));
+        *(void **)(model + 0x58) = NULL;
+    } else {
+        *(void **)(model + 0x38) = NULL;
+    }
+}
+
+void ObjModel_EnableDefaultRenderCallback(void *obj, u8 *model) {
+    if (*(void **)(model + 0x58) == NULL) {
+        *(void **)(model + 0x38) = gxTextureFn_80072dfc;
+    }
+}
+
+void *ObjModel_GetCurrentVertexCoords(u8 *model, int vertexIndex) {
+    model += (((*(u16 *)(model + 0x18) >> 1) & 1) * 4);
+    return *(u8 **)(model + 0x1c) + vertexIndex * 6;
+}
+
+void *ObjModel_GetPostRenderCallback(u8 *model) {
+    return *(void **)(model + 0x3c);
+}
+
+void ObjModel_SetPostRenderCallback(u8 *model, void *callback) {
+    *(void **)(model + 0x3c) = callback;
+}
+
+void *ObjModel_GetRenderCallback(u8 *model) {
+    return *(void **)(model + 0x38);
+}
+
+void ObjModel_SetRenderCallback(u8 *model, void *callback) {
+    *(void **)(model + 0x38) = callback;
+}
+
 void ObjModel_ToggleVertexBuffer(u8 *model) {
     *(u16 *)(model + 0x18) ^= 2;
 }
 
 void ObjModel_ToggleMatrixBuffer(u8 *model) {
     *(u16 *)(model + 0x18) ^= 1;
+}
+
+void *ObjModel_GetJointMatrix(u8 *model, int jointIndex) {
+    u8 *modelFile;
+    uint jointCount;
+
+    modelFile = *(u8 **)model;
+    jointCount = modelFile[0xf3];
+    if (jointCount != 0) {
+        jointCount += modelFile[0xf4];
+    } else {
+        jointCount = 1;
+    }
+
+    if (jointIndex >= jointCount) {
+        jointIndex = 0;
+    }
+
+    model += (*(u16 *)(model + 0x18) & 1) * 4;
+    return *(u8 **)(model + 0xc) + jointIndex * 0x40;
 }
 
 void *ObjModel_GetRenderOpTextureRefs(u8 *model, int renderOpIndex) {
