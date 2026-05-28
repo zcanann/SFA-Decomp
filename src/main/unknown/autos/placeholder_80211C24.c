@@ -3997,3 +3997,54 @@ int ktrex_updateArenaPathProgress(int obj) {
     *(f32 *)((char *)gKTRexState + 0xf0) = *(f32 *)((char *)gKTRexState + 8) * (((f32 *)*(int *)((char *)gKTRexState + 0xe4))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase]) + ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase];
     return changed;
 }
+
+extern f32 lbl_803E6818;
+extern f32 lbl_803E6848;
+extern void fn_8003B5E0(int a, int b, int c, int d);
+extern void PSMTXMultVecSR(f32 *m, f32 *src, f32 *dst);
+
+#pragma scheduling off
+void ktrex_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    f32 m[12];
+    void *e;
+    int i;
+
+    gKTRexRuntime = *(void **)((char *)obj + 0xb8);
+    if (visible == 0) {
+        return;
+    }
+    if (*(int *)((char *)obj + 0xf4) != 0) {
+        return;
+    }
+    if (*(void **)((char *)gKTRexState + 0x178) != NULL) {
+        queueGlowRender(*(void **)((char *)gKTRexState + 0x178));
+    }
+    for (i = 0; i < 5; i++) {
+        e = *(void **)((char *)gKTRexState + 380 + i * 4);
+        if (e != NULL) {
+            renderFn_8008f904(e);
+            *(u16 *)((char *)*(void **)((char *)gKTRexState + 380 + i * 4) + 0x20) =
+                (f32)(u32)*(u16 *)((char *)*(void **)((char *)gKTRexState + 380 + i * 4) + 0x20) + timeDelta;
+            if (*(u16 *)((char *)*(void **)((char *)gKTRexState + 380 + i * 4) + 0x20) >=
+                *(u16 *)((char *)*(void **)((char *)gKTRexState + 380 + i * 4) + 0x22)) {
+                mm_free(*(void **)((char *)gKTRexState + 380 + i * 4));
+                *(int *)((char *)gKTRexState + 380 + i * 4) = 0;
+            }
+        }
+    }
+    if (*(f32 *)((char *)gKTRexRuntime + 0x3e8) != lbl_803E67B8) {
+        fn_8003B5E0(200, 0, 0, (int)*(f32 *)((char *)gKTRexRuntime + 0x3e8));
+    }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6818);
+    ObjPath_GetPointWorldPosition((int)obj, 1, (f32 *)((char *)gKTRexState + 0x130), (f32 *)((char *)gKTRexState + 0x134), (f32 *)((char *)gKTRexState + 0x138), 0);
+    ObjPath_GetPointWorldPosition((int)obj, 2, (f32 *)((char *)gKTRexState + 0x148), (f32 *)((char *)gKTRexState + 0x14c), (f32 *)((char *)gKTRexState + 0x150), 0);
+    ObjPath_GetPointWorldPosition((int)obj, 3, (f32 *)((char *)gKTRexState + 0x160), (f32 *)((char *)gKTRexState + 0x164), (f32 *)((char *)gKTRexState + 0x168), 0);
+    ObjPath_GetPointWorldPosition((int)obj, 0, (f32 *)((char *)gKTRexState + 0x118), (f32 *)((char *)gKTRexState + 0x11c), (f32 *)((char *)gKTRexState + 0x120), 0);
+    memcpy(m, ObjPath_GetPointModelMtx((int)obj, 4), 48);
+    *(f32 *)((char *)gKTRexState + 0x16c) = lbl_803E67B4 * (f32)(int)randomGetRange(-50, 50);
+    *(f32 *)((char *)gKTRexState + 0x170) = lbl_803E67B4 * (f32)(int)randomGetRange(60, 120);
+    *(f32 *)((char *)gKTRexState + 0x174) = lbl_803E6848 * (f32)(int)randomGetRange(100, 150);
+    PSMTXMultVecSR(m, (f32 *)((char *)gKTRexState + 0x16c), (f32 *)((char *)gKTRexState + 0x16c));
+    *(int *)((char *)gKTRexState + 0x104) |= 0x100000;
+}
+#pragma scheduling reset
