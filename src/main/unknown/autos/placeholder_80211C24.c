@@ -4533,3 +4533,44 @@ int ktrex_stateHandlerA08(int obj, int runtime) {
     return 10;
 }
 #pragma scheduling reset
+
+#pragma scheduling off
+int ktrex_stateHandlerA11(int obj, int runtime) {
+    int phase;
+    f32 f4;
+    f32 f5;
+    if ((*(u16 *)((char *)gKTRexState + 0xfa) & 1) != 0) {
+        *(s16 *)obj += 0x8000;
+    } else {
+        *(s16 *)obj -= 0x8000;
+    }
+    *(u16 *)((char *)gKTRexState + 0xfa) ^= 1;
+    if ((*(u16 *)((char *)gKTRexState + 0xfa) & 1) != 0) {
+        *(void **)((char *)gKTRexState + 0xd0) = (char *)gKTRexState + 0x70;
+        *(void **)((char *)gKTRexState + 0xd4) = (char *)gKTRexState + 0x80;
+        *(void **)((char *)gKTRexState + 0xd8) = (char *)gKTRexState + 0x90;
+        *(void **)((char *)gKTRexState + 0xdc) = (char *)gKTRexState + 0xa0;
+        *(void **)((char *)gKTRexState + 0xe0) = (char *)gKTRexState + 0xb0;
+        *(void **)((char *)gKTRexState + 0xe4) = (char *)gKTRexState + 0xc0;
+    } else {
+        *(void **)((char *)gKTRexState + 0xd0) = (char *)gKTRexState + 0x10;
+        *(void **)((char *)gKTRexState + 0xd4) = (char *)gKTRexState + 0x20;
+        *(void **)((char *)gKTRexState + 0xd8) = (char *)gKTRexState + 0x30;
+        *(void **)((char *)gKTRexState + 0xdc) = (char *)gKTRexState + 0x40;
+        *(void **)((char *)gKTRexState + 0xe0) = (char *)gKTRexState + 0x50;
+        *(void **)((char *)gKTRexState + 0xe4) = (char *)gKTRexState + 0x60;
+    }
+    phase = (*(u16 *)((char *)gKTRexState + 0xfa) >> 1) & 3;
+    f5 = ((f32 *)*(int *)((char *)gKTRexState + 0xdc))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd0))[phase];
+    f4 = ((f32 *)*(int *)((char *)gKTRexState + 0xe4))[phase] - ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase];
+    if (__fabs(f5) > __fabs(f4)) {
+        *(f32 *)((char *)gKTRexState + 8) =
+            (*(f32 *)((char *)obj + 0xc) - ((f32 *)*(int *)((char *)gKTRexState + 0xd0))[phase]) / f5;
+    } else {
+        *(f32 *)((char *)gKTRexState + 8) =
+            (*(f32 *)((char *)obj + 0x14) - ((f32 *)*(int *)((char *)gKTRexState + 0xd8))[phase]) / f4;
+    }
+    *(u16 *)((char *)gKTRexState + 0xfa) |= 0x40;
+    return 3;
+}
+#pragma scheduling reset
