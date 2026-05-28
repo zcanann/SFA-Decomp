@@ -10,6 +10,9 @@ extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
 extern void objSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void *entries, int count);
 extern void playerEnvFxFn_80088ad4(int envFxValue);
+extern void renderSunAndMoon(void);
+extern void skyFn_8008a04c(void);
+extern void skyFn_8008a500(void);
 
 extern s16 lbl_80399398[];
 extern u8 lbl_80399EA8[];
@@ -30,6 +33,7 @@ extern int lbl_803DD13C;
 extern u8 lbl_803DD140;
 extern u8 *lbl_803DD12C;
 extern u8 *lbl_803DD148;
+extern void *lbl_803DD14C;
 extern void *lbl_803DD150;
 extern u8 lbl_803DD158;
 extern u8 lbl_803DD15C;
@@ -37,6 +41,7 @@ extern f32 lbl_803DD160;
 extern u8 lbl_803DD164;
 extern u8 lbl_803DD178;
 extern f32 lbl_8039A7A8[];
+extern f32 pEXIInputFlag;
 extern void PSVECNormalize(void *src, void *dst);
 
 extern undefined4 ABS();
@@ -4208,6 +4213,27 @@ void fn_800891F8(f32 x, f32 y, f32 z, f32 intensity)
 void fn_80089234(u8 enabled)
 {
     lbl_803DD164 = enabled;
+}
+
+void getTimeOfDay(f32 *time)
+{
+    u8 *sky;
+
+    sky = lbl_803DD12C;
+    if (sky == NULL) {
+        *time = pEXIInputFlag;
+        return;
+    }
+    *time = *(f32 *)(sky + 0x20c);
+}
+
+void renderSky(void)
+{
+    if (lbl_803DD148 != NULL && lbl_803DD14C != NULL) {
+        renderSunAndMoon();
+    }
+    skyFn_8008a500();
+    skyFn_8008a04c();
 }
 
 #pragma pop
