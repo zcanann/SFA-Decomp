@@ -16613,24 +16613,37 @@ void fn_80295918(int obj, int sel, f32 fval)
     }
 }
 
+#pragma scheduling off
+#pragma peephole off
 int fn_80295A04(int obj, int sel)
 {
     int state = *(int *)((char *)obj + 0xb8);
     switch (sel) {
     case 1:
-        if (*(u32 *)((char *)state + 0x310) & 0x1000) return 0;
-        if (*(u16 *)((char *)obj + 0xb0) & 0x1000) return 0;
+        if ((*(int *)((char *)state + 0x310) & 0x1000) != 0 ||
+            (*(u16 *)((char *)obj + 0xb0) & 0x1000) != 0)
+            return 0;
         return 1;
-    case 2: {
-        s16 *list = *(s16 **)((char *)state + 0x3f8);
-        s16 key = *(s16 *)((char *)obj + 0xa0);
-        int i = 0;
-        while (key != *list && i < 0x14) {
-            list += 4;
-            i += 4;
+    case 2:
+        switch (*(s16 *)((char *)state + 0x274)) {
+        case 1:
+            return 0;
+        case 2: {
+            s16 *list;
+            s16 key;
+            int i;
+            i = 0;
+            list = *(s16 **)((char *)state + 0x3f8);
+            key = *(s16 *)((char *)obj + 0xa0);
+            while (key != *list && i < 0x14) {
+                list += 4;
+                i += 4;
+            }
+            return i / 4;
         }
-        return i >> 2;
-    }
+        default:
+            return 5;
+        }
     case 9:
         return *(s8 *)((char *)state + 0x34d) == 3;
     case 10:
@@ -16642,13 +16655,15 @@ int fn_80295A04(int obj, int sel)
     case 14:
         return *(s16 *)((char *)state + 0x80a);
     case 18: {
-        int p = *(int *)((char *)state + 0x7f0);
+        void *p = *(void **)((char *)state + 0x7f0);
         if (p != 0) return *(s16 *)((char *)p + 0x46);
         return 0;
     }
     }
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
