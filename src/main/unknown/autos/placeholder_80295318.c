@@ -6973,6 +6973,102 @@ int fn_802B7298(int obj, int p2)
 
 extern f32 lbl_803E7FAC;
 extern s16 lbl_803332B0[];
+extern f32 lbl_803E8008;
+extern s16 lbl_803DC69C;
+extern s16 lbl_803DC698;
+extern s16 fn_802A71E0(int obj, int a, int b, int *p6, int *p7, f32 e, f32 f, int n, int flags);
+extern void fn_8029FFD0(int obj, int p2);
+extern void fn_802A13F4(int obj, int p2);
+
+int fn_802A1114(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int flag549;
+    f32 fz;
+    s16 *tbl;
+    int flags;
+    int model;
+    u8 ic;
+    f32 buf1[3];
+    f32 buf2[2];
+    f32 pos[2];
+    *(int *)((char *)inner + 0x360) &= ~2;
+    *(int *)((char *)inner + 0x360) |= 0x2000;
+    *(int *)((char *)state + 0x4) |= 0x100000;
+    fz = lbl_803E7EA4;
+    *(f32 *)((char *)state + 0x280) = fz;
+    *(f32 *)((char *)state + 0x284) = fz;
+    *(int *)((char *)state + 0x0) |= 0x200000;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(int *)((char *)state + 0x4) |= 0x8000000;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(s16 *)((char *)state + 0x278) = 0x12;
+        *(int *)((char *)inner + 0x898) = (int)fn_8029FFD0;
+        if (lbl_803DE44C != NULL) {
+            if (((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                *(u8 *)((char *)inner + 0x8b4) = 1;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+            }
+        }
+        ObjHits_MarkObjectPositionDirty(obj);
+    }
+    flag549 = *(s8 *)((char *)inner + 0x549);
+    if (flag549 != 0) {
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
+    } else {
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E8008;
+    }
+    fn_802A13F4(obj, state);
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(f32 *)((char *)state + 0x280) = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x284) = lbl_803E7EA4;
+        *(s16 *)((char *)inner + 0x478) =
+            (s16)getAngle(*(f32 *)((char *)inner + 0x56c), *(f32 *)((char *)inner + 0x574));
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)inner + 0x58c);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)inner + 0x594);
+        if (flag549 != 0) {
+            tbl = &lbl_803DC69C;
+        } else {
+            tbl = &lbl_803DC698;
+        }
+        flags = 0x25;
+        if (flag549 != 0) {
+            flags |= 0x40;
+        }
+        *(s16 *)((char *)inner + 0x5a4) =
+            fn_802A71E0(obj, tbl[0], tbl[1], (int *)((char *)inner + 0x598),
+                        (int *)((char *)inner + 0x56c), lbl_803E7EA4, lbl_803E7EA4, 2, (u8)flags);
+        model = *(int *)((char *)*(int *)((char *)obj + 0x7c) +
+                         ((s32)(*(s8 *)((char *)obj + 0xad)) << 2));
+        ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
+                                      *(f32 *)((char *)obj + 0x8), buf1, buf2);
+        *(f32 *)((char *)inner + 0x564) = lbl_803E7EA4;
+        *(f32 *)((char *)inner + 0x560) = buf1[1];
+        *(f32 *)((char *)inner + 0x568) = lbl_803E7EA4;
+        pos[0] = *(f32 *)((char *)inner + 0x54c);
+        pos[1] = *(f32 *)((char *)inner + 0x550);
+        ic = *(u8 *)((char *)inner + 0x8c8);
+        if (ic != 0x48 && ic != 0x47) {
+            (*(void (*)(int, int, int, int, f32 *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x4b, 1, 1, 8, pos, 0, 0);
+        }
+    } else {
+        if (*(f32 *)((char *)obj + 0x98) >= lbl_803E7EE0) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+            return 0x14;
+        }
+    }
+    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 1, *(s16 *)((char *)inner + 0x5a4));
+    (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(
+        *(f32 *)((char *)obj + 0xc),
+        *(f32 *)((char *)inner + 0x560) * *(f32 *)((char *)obj + 0x98) + *(f32 *)((char *)obj + 0x10),
+        *(f32 *)((char *)obj + 0x14));
+    fn_802AB5A4(obj, inner, 5);
+    return 0;
+}
 
 #pragma peephole off
 #pragma scheduling off
