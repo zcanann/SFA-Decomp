@@ -6314,6 +6314,12 @@ extern f32 lbl_803E7F94;
 extern f32 lbl_803E7F98;
 extern f32 lbl_803DE460;
 extern f32 lbl_803DE464;
+extern int arrayIndexOf(void *arr, int count, int val);
+extern void objRenderFuzz(int obj);
+extern void objRenderFn_800413d4(int obj);
+extern void fuzzRenderFn_800412dc(int obj);
+extern void objSetMtxFn_800412d4(int a);
+extern s16 lbl_803DC6C4;
 extern void setAButtonIcon(int idx);
 extern void setBButtonIcon(int idx);
 extern f32 lbl_803DE45C;
@@ -9216,6 +9222,67 @@ int fn_8029B7B0(int obj, int state)
         return 0x2c;
     }
     return 0;
+}
+
+void fn_802B4ED8(int obj, int p2, int mode)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 sx, sy, sz;
+    u32 v;
+    u32 m;
+
+    if ((s8)p2 != -1) {
+        if ((*(u32 *)((char *)inner + 0x360) & 0x4001) != 0) {
+            return;
+        }
+    }
+    v = (*(u8 *)((char *)inner + 0x3f3) >> 3) & 1;
+    if (v != 0) {
+        return;
+    }
+    if ((u32)*(u8 *)((char *)obj + 0x36) < 2) {
+        return;
+    }
+    if (*(void **)((char *)inner + 0x7f0) != NULL) {
+        if ((*(u16 *)((char *)obj + 0xb0) & 0x1000) != 0 ||
+            arrayIndexOf(&lbl_803DC6C4, 2, *(s16 *)((char *)inner + 0x274)) != -1) {
+            int p = *(int *)((char *)inner + 0x7f0);
+            (*(void (*)(int, f32))(*(int *)((char *)*(int *)*(int *)((char *)p + 0x68) + 0x50)))(
+                p, *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4));
+        }
+    }
+    if ((*(u32 *)((char *)inner + 0x360) & 0x8000000) != 0) {
+        sx = *(f32 *)((char *)obj + 0xc);
+        sy = *(f32 *)((char *)obj + 0x10);
+        sz = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x20);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x24);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x28);
+        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x20) = sx;
+        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x24) = sy;
+        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x28) = sz;
+    }
+    *(f32 *)((char *)obj + 0x10) =
+        *(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)inner + 0x7c8);
+    m = (u32)(mode & 0xff);
+    if (m == 1) {
+        objRenderFuzz(obj);
+    } else if (m == 2) {
+        objRenderFn_800413d4(obj);
+    } else if (m == 4) {
+        fuzzRenderFn_800412dc(obj);
+    }
+    objSetMtxFn_800412d4(0);
+    *(f32 *)((char *)obj + 0x10) =
+        *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)inner + 0x7c8);
+    if ((*(u32 *)((char *)inner + 0x360) & 0x8000000) != 0) {
+        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x20) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x24) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x28) = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)((char *)obj + 0xc) = sx;
+        *(f32 *)((char *)obj + 0x10) = sy;
+        *(f32 *)((char *)obj + 0x14) = sz;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
