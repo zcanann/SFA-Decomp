@@ -208,6 +208,18 @@ Heuristic before reaching for `asm { }`:
     Mirror: `!x` gives the `== 0` `cntlzw` form. Match whichever the target
     uses. Clean C, no asm — supersedes leaving these as a "cntlzw-idiom cap."
 
+24. **Declare single-precision math/helper callees as `f32 fn(f32)`, NOT
+    `double fn(double)`.** A `double` signature makes MWCC promote args and
+    round results through `fmul`+`frsp` (double-precision multiply then
+    round-to-single) where target uses a single `fmuls`. Declaring the extern
+    with `f32` params/return matches target's single-precision form. Applies to
+    trig/interp helpers (e.g. `extern f32 fn_80293E80(f32);` for sin/cos).
+    Pairs with #10 ((u32) for int→f32). Took drcreator_update to 99.7%. Clean C,
+    no asm. (Related: declare a varargs callee `extern void fn(char *, ...);` to
+    reproduce target's `crclr 4*cr1+eq` varargs marker; widen a callee's return
+    `void`→`int` when target keeps its result live even if your caller ignores
+    it.)
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
