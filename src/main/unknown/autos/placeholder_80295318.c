@@ -6403,6 +6403,12 @@ extern f32 lbl_803E7F0C;
 extern int audioPickSoundEffect_8006ed24(u8 id, int bank);
 extern void characterDoEyeAnims(int obj, int q);
 extern f32 lbl_803E820C;
+extern f32 lbl_803E7EB4;
+extern void playerShadowFn_80062a30(int obj);
+extern int lbl_803DAFC8[];
+extern int lbl_803DE4B8;
+extern void fn_802B0EA4(int obj, int state, int sub);
+extern s8 fn_802A74A4(int obj, int state, int sub, void *out, f32 fv, int n);
 
 typedef struct {
     u8 pad[0x7ac];
@@ -8585,6 +8591,42 @@ void fn_802B86B8(int obj, int a, int b)
         *(int *)((char *)obj + 0xc0) = *(int *)((char *)a + 0x3e0);
         fn_802B8360(obj, a);
     }
+}
+
+void fn_802B4C18(int obj, int state, f32 fv)
+{
+    u8 buf[0x40];
+
+    *(f32 *)((char *)state + 0x2a4) = lbl_803E7EB4;
+    *(f32 *)((char *)state + 0x290) = *(f32 *)((char *)state + 0x6dc);
+    *(f32 *)((char *)state + 0x28c) = *(f32 *)((char *)state + 0x6d8);
+    *(int *)((char *)state + 0x31c) = *(u16 *)((char *)state + 0x6e2);
+    *(int *)((char *)state + 0x318) = *(u16 *)((char *)state + 0x6e0);
+    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6e) = 0;
+    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6f) = 0;
+    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6c) = 0;
+    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6d) = 0;
+    *(u8 *)((char *)state + 0x25f) = 1;
+    *(u32 *)((char *)state + 0x4) &= ~0x8100000;
+    playerShadowFn_80062a30(obj);
+    *(u8 *)((char *)state + 0x8c5) = 0;
+    *(int *)((char *)state + 0x360) &= ~0x2000;
+    *(int *)state |= 0x1000000;
+    fn_802B0EA4(obj, state, state);
+    if (fn_802A74A4(obj, state, state, buf, fv, 0x60) == 8) {
+        *(int *)((char *)state + 0x2d0) = 0;
+        *(u8 *)((char *)state + 0x349) = 0;
+        (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+        if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)state + 0x3f4))->b40) {
+            *(u8 *)((char *)state + 0x8b4) = 1;
+            ((ByteFlags *)((char *)state + 0x3f4))->b08 = 1;
+        }
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0xa);
+        *(int *)((char *)state + 0x304) = 0;
+    }
+    (*(void (*)(int, int, f32, f32, int *, int *))(*(int *)(*gPlayerInterface + 0x8)))(
+        obj, state, fv, fv, lbl_803DAFC8, &lbl_803DE4B8);
+    *(int *)state &= ~0x1000000;
 }
 #pragma peephole reset
 #pragma scheduling reset
