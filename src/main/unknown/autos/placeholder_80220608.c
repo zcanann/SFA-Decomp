@@ -5363,7 +5363,9 @@ void fn_8023137C(int obj, int src)
     *(f32 *)(obj + 0x2c) = *(f32 *)(src + 0x8);
 }
 
+#pragma dont_inline on
 void fn_8022ED74(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+#pragma dont_inline reset
 void fn_8022F558(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
 void fn_80231028(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
 void fn_8023134C(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
@@ -5379,6 +5381,7 @@ void fn_8022F27C(int obj)
 }
 
 extern f32 lbl_803E7044;
+#pragma dont_inline on
 void fn_8022ECE0(int obj, f32 param)
 {
     int state = *(int *)(obj + 0xb8);
@@ -5397,6 +5400,40 @@ void fn_8022ECE0(int obj, f32 param)
     Matrix_TransformPoint(mtx, lbl_803E7044, lbl_803E7044, *(f32 *)(state + 4),
                           (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
 }
+#pragma dont_inline reset
+
+extern int loadObjectAtObject(int obj);
+
+#pragma peephole off
+void fn_8022B764(int p, int q, int idx) {
+    f32 pz, py, px;
+    int setup;
+    u8 cnt;
+    if (Obj_IsLoadingLocked() == 0)
+        return;
+    cnt = *(u8 *)(q + 0x44c);
+    if (cnt == 0)
+        return;
+    *(u8 *)(q + 0x44c) = cnt - 1;
+    if (idx == 0)
+        ObjPath_GetPointWorldPosition(p, 5, &px, &py, &pz, 0);
+    else
+        ObjPath_GetPointWorldPosition(p, 6, &px, &py, &pz, 0);
+    setup = Obj_AllocObjectSetup(0x20, 0x605);
+    *(f32 *)(setup + 8) = px;
+    *(f32 *)(setup + 0xc) = py;
+    *(f32 *)(setup + 0x10) = pz;
+    *(u8 *)(setup + 0x1a) = *(s16 *)(p + 0) >> 8;
+    *(u8 *)(setup + 0x19) = *(s16 *)(p + 2) >> 8;
+    *(u8 *)(setup + 0x18) = *(s16 *)(p + 4) >> 8;
+    *(u8 *)(setup + 4) = 1;
+    *(u8 *)(setup + 5) = 1;
+    *(int *)(q + 0x438) = loadObjectAtObject(p);
+    fn_8022ED74(*(int *)(q + 0x438), *(u16 *)(q + 0x446));
+    fn_8022ECE0(*(int *)(q + 0x438), *(f32 *)(q + 0x448));
+    Sfx_PlayFromObject(p, 0x2a3);
+}
+#pragma peephole reset
 
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
