@@ -10474,3 +10474,48 @@ void voxmaps_resetLoadedMaps(void)
         xy++;
     }
 }
+
+extern s8 gAudioSoundMode;
+extern void sndOutputMode(int mode);
+extern u32 OSGetSoundMode(void);
+extern void OSSetSoundMode(int mode);
+
+/*
+ * Function: audioSetSoundMode
+ * EN v1.0 Address: 0x80009920
+ * EN v1.0 Size: 264b
+ */
+void audioSetSoundMode(int mode, u8 forceFlag)
+{
+    if (forceFlag == 0) {
+        if (OSGetSoundMode() != 1) {
+            return;
+        }
+    }
+    if ((u8)mode != gAudioSoundMode) {
+        switch ((u8)mode) {
+        case 0:
+            sndOutputMode(1);
+            break;
+        case 1:
+            sndOutputMode(2);
+            break;
+        case 2:
+            sndOutputMode(0);
+            break;
+        case 3:
+            sndOutputMode(1);
+            break;
+        }
+    }
+    if ((u8)mode == 2) {
+        if (gAudioSoundMode != 2) {
+            OSSetSoundMode(0);
+        }
+    } else {
+        if (gAudioSoundMode == 2) {
+            OSSetSoundMode(1);
+        }
+    }
+    gAudioSoundMode = (s8)mode;
+}
