@@ -240,6 +240,13 @@ extern int fn_802972A8(void);
 extern int dll_2E_func0A(int a, f32 *buf);
 extern s16 getAngle(f32 dx, f32 dz);
 
+extern f32 lbl_803E69F0;
+extern f32 lbl_803AD208[];
+extern void ObjPath_GetPointLocalPosition(int obj, int idx, f32 *x, f32 *y, f32 *z);
+extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
+extern void objRemoveFromListFn_8002ce88(int obj);
+extern int dll_2E_func07(int obj, u8 *arg, char *p, int a, int b);
+
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;
@@ -1085,6 +1092,63 @@ void hightop_getLookTargetYaw(int obj, int mode, int *out) {
         *out = 0;
         break;
     }
+}
+
+void hightop_renderGroundMarker(int obj, f32 scale) {
+    f32 *mtx;
+    f32 lx, ly, lz;
+    ObjPosParams pos;
+    mtx = (f32 *)ObjPath_GetPointModelMtx(obj, 2);
+    ObjPath_GetPointLocalPosition(obj, 2, &lx, &ly, &lz);
+    pos.x = lx;
+    pos.y = ly;
+    pos.z = lz;
+    pos.rx = -0x8000;
+    pos.ry = 0;
+    pos.rz = 0;
+    pos.scale = scale / *(f32 *)(*(int *)((char *)obj + 0x50) + 0x4);
+    setMatrixFromObjectPos(lbl_803AD208, &pos);
+    mtx44_mult(lbl_803AD208, mtx, lbl_803AD208);
+    fn_8003B950(lbl_803AD208);
+}
+
+void drcagewith_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int *b;
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
+        if (*(int **)p != 0) {
+            ObjPath_GetPointWorldPosition((int)obj, 0, (f32 *)(*(int *)p + 0xc), (f32 *)(*(int *)p + 0x10), (f32 *)(*(int *)p + 0x14), 0);
+            objRenderFn_8003b8f4(*(void **)p, p2, p3, p4, p5, (double)lbl_803E69F0);
+            b = *(int **)(p + 0x4);
+            if (b != 0) {
+                *(s16 *)((char *)b + 0x2) = *(s16 *)(*(int *)p + 0x2);
+                *(s16 *)((char *)b + 0x4) = *(s16 *)(*(int *)p + 0x4);
+                ObjPath_GetPointWorldPosition(*(int *)p, 0, (f32 *)((char *)b + 0xc), (f32 *)((char *)b + 0x10), (f32 *)((char *)b + 0x14), 0);
+                objRenderFn_8003b8f4(b, p2, p3, p4, p5, (double)lbl_803E69F0);
+            }
+        }
+    }
+}
+
+int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int q;
+    int i;
+    int r;
+    Obj_GetPlayerObject();
+    q = *(int *)((char *)obj + 0x4c);
+    ObjHits_EnableObject(obj);
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+    for (i = 0; i < arg[0x8b]; i++) {
+        if (arg[i + 0x81] == 1 && *(s8 *)(q + 0x19) != 0) {
+            objRemoveFromListFn_8002ce88(obj);
+            ObjHits_DisableObject(obj);
+            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        }
+    }
+    r = *(int *)(p + 0x6dc);
+    return !!dll_2E_func07(obj, arg, p, *(s16 *)(r + 0x4), *(s16 *)(r + 0x4));
 }
 
 #pragma peephole reset
