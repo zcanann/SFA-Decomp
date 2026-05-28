@@ -8661,7 +8661,7 @@ extern u8 lbl_803398F0[];
 extern s32 lbl_802C6E08[];
 extern u8 lbl_802C7400[];
 extern void* lbl_803DC954;
-extern void* lbl_803DC958;
+extern volatile int lbl_803DC958;
 extern void* lbl_803DC9CC;
 extern f32 lbl_803DE6B8;
 extern f32 lbl_803DE6D4;
@@ -9135,7 +9135,7 @@ void setRumbleEnabled(u8 enabled)
  */
 void fileReadCb_80015954(void* result)
 {
-    lbl_803DC958 = result;
+    lbl_803DC958 = (int)result;
 }
 
 /*
@@ -10353,4 +10353,44 @@ void* loadFileByPath(char* path, int* outSize)
         *outSize = size;
     }
     return buf;
+}
+
+extern void DVDReadAsyncPrio(void* fileInfo, void* buf, int size, int offset, void (*cb)(void*), int prio);
+extern void checkReset(void);
+extern void waitNextFrame(void);
+extern void mmFreeTick(int arg);
+extern void GXFlush_(int a, int b);
+extern void padUpdate(void);
+extern void dvdCheckError(void);
+extern void gameTextRun(void);
+
+/*
+ * Function: DVDRead
+ * EN v1.0 Address: 0x80015850
+ * EN v1.0 Size: 284b
+ */
+int DVDRead(void* fileInfo, void* buf, int size, int offset)
+{
+    u8 resetSeen = 0;
+    lbl_803DC958 = 0;
+    while (lbl_803DC958 == 0 || lbl_803DC958 == -1 || lbl_803DC958 == -3) {
+        DVDReadAsyncPrio(fileInfo, buf, size, offset, fileReadCb_80015954, 2);
+        while (lbl_803DC958 == 0 || lbl_803DC958 == -1) {
+            padUpdate();
+            checkReset();
+            if (resetSeen) {
+                waitNextFrame();
+            }
+            dvdCheckError();
+            if (resetSeen) {
+                mmFreeTick(0);
+                gameTextRun();
+                GXFlush_(1, 0);
+            }
+            if (lbl_803DC950 != 0) {
+                resetSeen = 1;
+            }
+        }
+    }
+    return lbl_803DC958;
 }
