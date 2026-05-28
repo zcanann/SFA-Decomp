@@ -8282,6 +8282,30 @@ void *Obj_AllocObjectSetup(int size, int b) {
     return p;
 }
 
+extern void *getCurrentDataFile(int id);
+extern int lbl_803DCB68;
+extern void *lbl_803DCB4C;
+extern int lbl_803DCB58;
+
+int loadModelAndAnimTabs(void) {
+    int *p = getCurrentDataFile(0x2a);
+    if (p == NULL) {
+        return 0;
+    }
+    lbl_803DCB68 = 0;
+    while (*p != -1) {
+        p++;
+        lbl_803DCB68++;
+    }
+    lbl_803DCB68--;
+    lbl_803DCB4C = getCurrentDataFile(0x2f);
+    if (lbl_803DCB4C == NULL) {
+        return 0;
+    }
+    lbl_803DCB58 = 0;
+    return 1;
+}
+
 int gameBitDecrement(int bit) {
     int val = GameBit_Get(bit);
     if (val != 0) {
