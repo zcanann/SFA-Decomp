@@ -6320,6 +6320,10 @@ extern void objRenderFn_800413d4(int obj);
 extern void fuzzRenderFn_800412dc(int obj);
 extern void objSetMtxFn_800412d4(int a);
 extern s16 lbl_803DC6C4;
+extern int *gPartfxInterface;
+extern f32 lbl_803E80C4;
+extern f32 lbl_803DE478;
+extern f32 lbl_803E80D8;
 extern void setAButtonIcon(int idx);
 extern void setBButtonIcon(int idx);
 extern f32 lbl_803DE45C;
@@ -9282,6 +9286,41 @@ void fn_802B4ED8(int obj, int p2, int mode)
         *(f32 *)((char *)obj + 0xc) = sx;
         *(f32 *)((char *)obj + 0x10) = sy;
         *(f32 *)((char *)obj + 0x14) = sz;
+    }
+}
+
+void fn_802AA8D0(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    struct {
+        u8 pad[0xc];
+        f32 x;
+        f32 y;
+        f32 z;
+        u8 pad2[0x10];
+    } buf;
+    f32 dy;
+    int i;
+
+    dy = lbl_803E80C4 - *(f32 *)((char *)inner + 0x7d0);
+    buf.y = dy;
+    if (lbl_803DE478 < lbl_803E80D8) {
+        *(u8 *)((char *)inner + 0x8ca) = 0;
+        return;
+    }
+    if (dy <= lbl_803E7EA4) {
+        lbl_803DE478 = lbl_803DE478 - lbl_803E7F14 * timeDelta;
+        return;
+    }
+    lbl_803DE478 = lbl_803E80C4;
+    buf.y = dy + *(f32 *)((char *)obj + 0x10);
+    for (i = 0; i < 10; i++) {
+        buf.x = *(f32 *)((char *)obj + 0xc) + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
+        buf.z = *(f32 *)((char *)obj + 0x14) + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
+        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+            obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, 0);
+        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+            obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, 0);
     }
 }
 #pragma peephole reset
