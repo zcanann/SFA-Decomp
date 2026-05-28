@@ -1183,7 +1183,7 @@ int waterflowwe_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void waterflowwe_free(int obj)
 {
-    if (obj == lbl_803DDDA8) {
+    if ((u32)obj == (u32)lbl_803DDDA8) {
         lbl_803DDDA8 = 0;
     }
 }
@@ -1197,6 +1197,45 @@ void waterflowwe_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 void waterflowwe_hitDetect(void) {}
+extern void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz);
+extern int getAngle(f32 dx, f32 dz);
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
+extern f32 lbl_803E72EC;
+extern f32 lbl_803E72F0;
+#pragma scheduling off
+void waterflowwe_update(int obj)
+{
+    int setup = *(int *)(obj + 0x4c);
+    f32 vx, vz;
+
+    waterflowwe_calcCurrentVector(obj, &vx, &vz);
+    *(s16 *)obj = (s16)(getAngle(vx, vz) + 0x4000);
+    if ((u32)lbl_803DDDA8 == 0 && *(u8 *)(setup + 0x1f) == 0) {
+        lbl_803DDDA8 = obj;
+    }
+    if ((u32)obj == (u32)lbl_803DDDA8) {
+        f32 a;
+
+        lbl_803DDDB0 = lbl_803E72EC * timeDelta + lbl_803DDDB0;
+        a = lbl_803DDDB0;
+        while (a > lbl_803E72E8) {
+            a -= lbl_803E72E8;
+        }
+        lbl_803DDDB0 = a;
+        lbl_803DDDAC = lbl_803E72F0 * timeDelta + lbl_803DDDAC;
+        a = lbl_803DDDAC;
+        while (a > lbl_803E72E8) {
+            a -= lbl_803E72E8;
+        }
+        lbl_803DDDAC = a;
+    }
+    if (lbl_803E72B0 == vx && lbl_803E72B0 == vz) {
+        ObjAnim_SetCurrentMove(obj, 1, lbl_803DDDB0, 0);
+    } else {
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803DDDB0, 0);
+    }
+}
+#pragma scheduling on
 void waterflowwe_release(void) {}
 #pragma scheduling off
 void waterflowwe_initialise(void)
