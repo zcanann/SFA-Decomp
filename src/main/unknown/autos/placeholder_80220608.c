@@ -4906,6 +4906,175 @@ void drbarrelgr_init(int obj, int setup)
 #pragma scheduling on
 #pragma peephole on
 
+extern int gunpowderbarrel_isHeld(int obj);
+extern int gunpowderbarrel_canBeGrabbed(int obj);
+extern void gunpowderbarrel_setScale(int obj, void *vec);
+extern void gunpowderbarrel_setHeldState(int obj);
+extern int timerCountDown(void *timer);
+extern void PSVECNormalize(void *src, void *dst);
+extern void PSVECScale(void *dst, void *src, f32 scale);
+extern f32 PSVECDistance(void *a, void *b);
+extern int fn_80222358(int obj, int p2, f32 a, f32 b, f32 c, int p6);
+extern void fn_80221D6C(void *p1, void *p2);
+extern void PSVECSubtract(void *a, void *b, void *ab);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
+extern f32 lbl_803E6CA0;
+extern f32 lbl_803E6CA8;
+extern f32 lbl_803E6CB0;
+extern f32 lbl_803E6CB4;
+extern f32 lbl_803E6CB8;
+extern f32 lbl_803E6CBC;
+extern f32 lbl_803E6CC0;
+extern f32 lbl_803DC3B0;
+extern f32 lbl_803DC3B4;
+
+#pragma peephole off
+#pragma scheduling off
+void drbarrelgr_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    int newMode = -1;
+    DrBarrelGrFlags *flags = (DrBarrelGrFlags *)(state + 0x12a);
+    int nearest;
+    int match;
+    int gbId;
+    f32 vec[3];
+    f32 tmp[3];
+
+    if (*(void **)(state + 8) != 0) {
+        nearest = ObjGroup_FindNearestObject(25, obj, 0);
+        match = 0;
+        if ((u32)nearest != 0 && *(u32 *)(state + 8) == (u32)nearest) {
+            match = 1;
+        }
+        if (match == 0 ||
+            (flags->bit80 != 0 && gunpowderbarrel_isHeld(*(int *)(state + 8)) == 0)) {
+            *(int *)(state + 8) = 0;
+            flags->bit80 = 0;
+        }
+    }
+
+    gbId = *(s16 *)(setup + 0x20);
+    if (gbId != -1 && (u32)GameBit_Get(gbId) == 0) {
+        flags->bit40 = 0;
+        return;
+    }
+    flags->bit40 = 1;
+    Sfx_KeepAliveLoopedObjectSound(obj, 958);
+
+    switch (*(int *)(state + 0)) {
+    case 0:
+        if (*(void **)(state + 8) == 0) {
+            nearest = ObjGroup_FindNearestObject(25, obj, 0);
+            if ((u32)nearest != 0 &&
+                Vec_xzDistance(obj + 24, nearest + 24) < lbl_803E6CB0 &&
+                *(f32 *)(nearest + 16) < *(f32 *)(obj + 16)) {
+                vec[0] = *(f32 *)(nearest + 12);
+                vec[1] = lbl_803E6CB4 + *(f32 *)(nearest + 16);
+                vec[2] = *(f32 *)(nearest + 20);
+                if (((int (*)(void *, void *))fn_80221D6C)((void *)(obj + 12), vec) != 0 &&
+                    gunpowderbarrel_canBeGrabbed(nearest) != 0) {
+                    Sfx_PlayFromObject(obj, 959);
+                    newMode = 4;
+                    *(int *)(state + 8) = nearest;
+                }
+                break;
+            }
+        }
+        if (timerCountDown((void *)(state + 12)) != 0) {
+            newMode = 5;
+        }
+        break;
+    case 4:
+        if (*(void **)(state + 8) == 0 ||
+            gunpowderbarrel_canBeGrabbed(*(int *)(state + 8)) == 0) {
+            *(int *)(state + 0) = 0;
+            *(int *)(state + 8) = 0;
+            flags->bit80 = 0;
+            break;
+        }
+        if (Vec_xzDistance(obj + 24, *(int *)(state + 8) + 24) > lbl_803E6CB0) {
+            newMode = *(int *)(state + 4);
+            flags->bit80 = 0;
+            *(int *)(state + 8) = 0;
+            break;
+        }
+        PSVECSubtract((void *)(state + 0x14), (void *)(*(int *)(state + 8) + 12), tmp);
+        if (tmp[0] != lbl_803E6CA4 || tmp[1] != lbl_803E6CA4 || tmp[2] != lbl_803E6CA4) {
+            PSVECNormalize(tmp, tmp);
+        }
+        PSVECScale(tmp, tmp, lbl_803DC3B0);
+        gunpowderbarrel_setScale(*(int *)(state + 8), tmp);
+        if (PSVECDistance((void *)(state + 0x14), (void *)(*(int *)(state + 8) + 12)) < lbl_803E6CA0 ||
+            *(f32 *)(*(int *)(state + 8) + 16) > *(f32 *)(state + 24)) {
+            Sfx_PlayFromObject(obj, 960);
+            gunpowderbarrel_setHeldState(*(int *)(state + 8));
+            newMode = *(int *)(state + 4);
+            flags->bit80 = 1;
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E6CA4, 0);
+        }
+        break;
+    case 5: {
+        int r = fn_80222358(obj, state + 0x20,
+                            lbl_803E6CB8 * (f32)*(s16 *)(state + 0x128) * timeDelta,
+                            lbl_803E6CBC, lbl_803E6CB4, 1);
+        objMove(obj, *(f32 *)(obj + 36), *(f32 *)(obj + 40), *(f32 *)(obj + 44));
+        if (r != 0) {
+            newMode = r - 1;
+            storeZeroToFloatParam((void *)(state + 12));
+            s16toFloat((void *)(state + 12), *(s16 *)(setup + 0x1a));
+            *(f32 *)(obj + 36) = lbl_803E6CA4;
+            *(f32 *)(obj + 40) = lbl_803E6CA4;
+            *(f32 *)(obj + 44) = lbl_803E6CA4;
+        }
+        break;
+    }
+    case 2:
+        if (*(s16 *)(state + 0x128) == *(u8 *)(setup + 0x19)) {
+            *(s16 *)(state + 0x128) =
+                (int)((f32)*(s16 *)(state + 0x128) * lbl_803E6CA8);
+        } else {
+            *(s16 *)(state + 0x128) = *(u8 *)(setup + 0x19);
+        }
+        storeZeroToFloatParam((void *)(state + 12));
+        newMode = 5;
+        break;
+    case 1:
+        if (*(void **)(state + 8) != 0) {
+            newMode = 3;
+        } else if (timerCountDown((void *)(state + 12)) != 0) {
+            newMode = 5;
+        }
+        break;
+    case 3:
+        if (*(void **)(state + 8) != 0) {
+            gunpowderbarrel_clearHeldState(*(int *)(state + 8));
+            flags->bit80 = 0;
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E6CA4, 0);
+        }
+        *(int *)(state + 8) = 0;
+        newMode = *(int *)(state + 4);
+        break;
+    }
+
+    ObjAnim_AdvanceCurrentMove(lbl_803E6CC0, timeDelta, obj, 0);
+    if (newMode != -1 && newMode != *(int *)(state + 0)) {
+        *(int *)(state + 4) = *(int *)(state + 0);
+        *(int *)(state + 0) = newMode;
+    }
+    if ((*(u16 *)(obj + 0xb0) & 0x800) == 0 && *(void **)(state + 8) != 0) {
+        *(f32 *)(state + 0x14) = *(f32 *)(obj + 12);
+        *(f32 *)(state + 0x18) = *(f32 *)(obj + 16) + lbl_803DC3B4;
+        *(f32 *)(state + 0x1c) = *(f32 *)(obj + 20);
+        *(f32 *)(*(int *)(state + 8) + 12) = *(f32 *)(state + 0x14);
+        *(f32 *)(*(int *)(state + 8) + 16) = *(f32 *)(state + 0x18);
+        *(f32 *)(*(int *)(state + 8) + 20) = *(f32 *)(state + 0x1c);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
 extern void PSVECSubtract(void *a, void *b, void *ab);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
 extern f32 lbl_803E6CA0;
