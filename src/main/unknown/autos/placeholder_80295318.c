@@ -6549,6 +6549,9 @@ extern f32 lbl_803E8204;
 extern f32 lbl_803E8208;
 extern f32 lbl_803E827C;
 extern f32 lbl_803E8284;
+extern f32 lbl_803E828C;
+extern f32 lbl_803E8290;
+extern f32 lbl_803E8294;
 extern f32 lbl_803E824C;
 extern f32 lbl_803E8288;
 extern f32 lbl_803E8244;
@@ -6556,6 +6559,10 @@ extern f32 lbl_803E8248;
 extern s16 lbl_803DC748;
 extern f32 lbl_803E813C;
 extern int RandomTimer_UpdateRangeTrigger(int timer, f32 lo, f32 hi);
+extern f32 Vec_distance(void *posA, void *posB);
+extern void *ObjList_FindObjectById(int id);
+extern void fn_8014C63C(int *obj);
+extern void fn_8014C66C(int *obj, int x);
 extern s8 padGetStickX(int channel);
 extern s8 padGetStickY(int channel);
 extern u16 getButtonsHeld(int channel);
@@ -11184,6 +11191,110 @@ int fn_8029B9FC(int obj, int state, f32 fv)
     }
     v = fn_80299E44(obj, state, fv);
     if (v != 0) return v;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802BA3EC(int obj, int state)
+{
+    int inner;
+    int id_a, id_b, id_c, id_d;
+    void *player;
+    int bit_a, bit_b;
+    int *o1;
+    int *o2;
+    int v;
+    f32 f;
+
+    f = lbl_803E8234;
+    *(f32 *)((char *)state + 0x294) = f;
+    *(f32 *)((char *)state + 0x284) = f;
+    *(f32 *)((char *)state + 0x280) = f;
+    *(f32 *)((char *)obj + 0x24) = f;
+    *(f32 *)((char *)obj + 0x28) = f;
+    *(f32 *)((char *)obj + 0x2c) = f;
+    *(int *)state |= 0x200000;
+
+    inner = *(int *)((char *)obj + 0xb8);
+    player = (void *)Obj_GetPlayerObject();
+    switch (*(u8 *)((char *)inner + 0xa8c)) {
+    case 1:
+        id_a = 0x1602;
+        id_b = 0x454bc;
+        id_c = 0x454b8;
+        id_d = 0x454b9;
+        bit_a = 0x172;
+        bit_b = 0x9ed;
+        break;
+    case 4:
+        id_a = 0x4963b;
+        id_b = 0x4963c;
+        id_c = 0x4963d;
+        id_d = 0x4963e;
+        bit_a = 0x8f9;
+        bit_b = 0x85d;
+        break;
+    }
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
+        if (*(s16 *)((char *)obj + 0xa0) != 0x13) {
+            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E8234, 0);
+        }
+    }
+
+    if (GameBit_Get(bit_a) != 0 && GameBit_Get(bit_b) != 0 && player != NULL &&
+        Vec_distance((char *)player + 0x18, (char *)obj + 0x18) < lbl_803E828C) {
+        switch (*(u8 *)((char *)inner + 0xa8c)) {
+        case 1:
+            *(u8 *)((char *)inner + 0xa8d) = 0;
+            GameBit_Set(0x245, 1);
+            GameBit_Set(0x27, 1);
+            break;
+        case 4:
+            *(u8 *)((char *)inner + 0xa8d) = 9;
+            GameBit_Set(0x1db, 1);
+            break;
+        }
+        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+            *(u8 *)((char *)inner + 0xa8d), obj, -1);
+        buttonDisable(0, 0x100);
+    } else {
+        *(u8 *)((char *)obj + 0xaf) |= 8;
+        v = *(u8 *)((char *)inner + 0xa91);
+        switch (v) {
+        case 1:
+            if (Vec_distance((char *)player + 0x18, (char *)obj + 0x18) < lbl_803E8290) {
+                o1 = ObjList_FindObjectById(id_a);
+                if (o1 != NULL) fn_8014C63C(o1);
+                o1 = ObjList_FindObjectById(id_b);
+                if (o1 != NULL) fn_8014C63C(o1);
+                *(u8 *)((char *)inner + 0xa91) = 2;
+            }
+            break;
+        case 0:
+        case 2:
+            if (v != 0 &&
+                Vec_distance((char *)player + 0x18, (char *)obj + 0x18) <= lbl_803E8240) {
+                if (RandomTimer_UpdateRangeTrigger((int)((char *)inner + 0xd08),
+                                                   lbl_803E8294, lbl_803E8284) != 0) {
+                    Sfx_PlayFromObject(obj, 0x375);
+                }
+            } else {
+                o1 = ObjList_FindObjectById(id_a);
+                o2 = ObjList_FindObjectById(id_c);
+                if (o1 != NULL && o2 != NULL) fn_8014C66C(o1, (int)o2);
+                o1 = ObjList_FindObjectById(id_b);
+                o2 = ObjList_FindObjectById(id_d);
+                if (o1 != NULL && o2 != NULL) fn_8014C66C(o1, (int)o2);
+                *(u8 *)((char *)inner + 0xa91) = 1;
+            }
+            break;
+        }
+    }
     return 0;
 }
 #pragma peephole reset
