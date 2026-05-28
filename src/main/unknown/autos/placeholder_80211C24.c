@@ -233,6 +233,13 @@ extern void fn_8003B950(f32 *mtx);
 extern void Stack_Free(void *p);
 extern void Resource_Release(void *p);
 
+extern s16 lbl_803DC328;
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern int *getTrickyObject(void);
+extern int fn_802972A8(void);
+extern int dll_2E_func0A(int a, f32 *buf);
+extern s16 getAngle(f32 dx, f32 dz);
+
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;
@@ -1012,6 +1019,72 @@ void ktrex_free(int obj) {
     Music_Trigger(0x28, 0);
     Music_Trigger(0x93, 0);
     Music_Trigger(0x94, 0);
+}
+
+int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8 *arg) {
+    int *player = Obj_GetPlayerObject();
+    int p = *(int *)((char *)obj + 0x4c);
+    f32 dist;
+    ObjHits_DisableObject(obj);
+    dist = Vec_xzDistance((f32 *)((char *)player + 0x18), (f32 *)((char *)obj + 0x18));
+    if (dist < (f32)*(s16 *)(p + 0x1a)) {
+        arg[0x90] |= 4;
+    } else {
+        arg[0x90] &= ~4;
+    }
+    return 0;
+}
+
+int drlasercannon_getTrackedTarget(int obj, int *arg) {
+    int *tricky = getTrickyObject();
+    void *player;
+    void *r;
+    int t;
+    if (tricky != 0 && arg != 0 &&
+        (u8)(*(int (**)(int *))((char *)*(void **)*(void **)((char *)tricky + 0x68) + 0x40))(tricky)) {
+        t = *arg - framesThisStep;
+        *arg = t;
+        if (t < 0) {
+            (*(void (**)(int *, int, int))((char *)*(void **)*(void **)((char *)tricky + 0x68) + 0x34))(tricky, 0, 0);
+            *arg = 0x258;
+        }
+        return (int)tricky;
+    }
+    player = Obj_GetPlayerObject();
+    if (player != 0) {
+        r = (void *)fn_802972A8();
+        if (r != 0 && (*(u16 *)((char *)r + 0xb0) & 0x1000) == 0) {
+            return (int)r;
+        }
+        if ((*(u16 *)((char *)player + 0xb0) & 0x1000) == 0) {
+            return (int)player;
+        }
+    }
+    return 0;
+}
+
+void hightop_getLookTargetYaw(int obj, int mode, int *out) {
+    f32 buf[6];
+    char *p;
+    switch (mode) {
+    case 2:
+        if (dll_2E_func0A(0x11, buf) != 0) {
+            *out = getAngle(buf[3] - *(f32 *)((char *)obj + 0xc), buf[5] - *(f32 *)((char *)obj + 0x14)) + lbl_803DC328;
+            p = *(char **)((char *)obj + 0xb8);
+            *(f32 *)(p + 0xc1c) = buf[3];
+            *(f32 *)(p + 0xc20) = buf[4];
+            *(f32 *)(p + 0xc24) = buf[5];
+        } else {
+            *out = *(s16 *)obj + 0x4000;
+        }
+        break;
+    case 3:
+        *out = 1;
+        break;
+    case 4:
+        *out = 0;
+        break;
+    }
 }
 
 #pragma peephole reset
