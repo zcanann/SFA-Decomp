@@ -3169,3 +3169,86 @@ void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 #pragma scheduling on
+
+extern int *gSHthorntailAnimationInterface;
+extern f32 lbl_803E7360;
+extern f32 lbl_803E7384;
+
+#pragma peephole off
+#pragma scheduling off
+int cmbsrc_shouldActivate(int obj, int state, int setup)
+{
+    int result = 0;
+    int hitOut;
+
+    if (*(void **)state != NULL && fn_8001DB64(*(void **)state) != 0) {
+        return 0;
+    }
+    if (*(s16 *)(setup + 0x24) != -1 && GameBit_Get(*(s16 *)(setup + 0x24)) != 0) {
+        result = 1;
+    } else if ((*(u8 *)(state + 0x22) & 0x4) != 0 &&
+               (*(int (**)(int *))(*gSHthorntailAnimationInterface + 0x24))(&hitOut) != 0) {
+        result = 1;
+    }
+    if ((*(u8 *)(setup + 0x2a) & 0x30) == 0x10) {
+        if (*(f32 *)(state + 0x14) != lbl_803E7360) {
+            *(f32 *)(state + 0x14) -= timeDelta;
+            if (*(f32 *)(state + 0x14) <= lbl_803E7360) {
+                result = 1;
+            }
+        }
+    }
+    return result;
+}
+
+int cmbsrc_shouldDeactivate(int obj, int state, int setup)
+{
+    int result = 0;
+    int hitOut;
+
+    if (*(void **)state != NULL && fn_8001DB64(*(void **)state) != 2) {
+        return 0;
+    }
+    if (*(s16 *)(setup + 0x24) != -1 && GameBit_Get(*(s16 *)(setup + 0x24)) == 0) {
+        result = 1;
+    } else if ((*(u8 *)(state + 0x22) & 0x4) != 0 &&
+               (*(int (**)(int *))(*gSHthorntailAnimationInterface + 0x24))(&hitOut) == 0) {
+        result = 1;
+    } else if (*(s8 *)(state + 0x26) == 0) {
+        *(f32 *)(state + 0x14) = (f32)(u32)*(u16 *)(state + 0x20);
+        result = 1;
+    }
+    return result;
+}
+
+void cmbsrc_hitDetect(int obj)
+{
+    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    int v;
+
+    *(u8 *)(state + 0x24) = 0;
+    if ((*(u8 *)(setup + 0x2a) & 0x30) != 0) {
+        *(u8 *)(state + 0x24) = (u8)ObjHits_GetPriorityHit(obj, 0, 0, 0);
+        if (*(u8 *)(state + 0x24) == 0x10) {
+            *(u8 *)(state + 0x26) -= 1;
+            *(f32 *)(state + 0x1c) = lbl_803E7384;
+        }
+        if (*(f32 *)(state + 0x1c) != lbl_803E7360) {
+            *(f32 *)(state + 0x1c) -= timeDelta;
+            if (*(f32 *)(state + 0x1c) <= lbl_803E7360) {
+                *(u8 *)(state + 0x26) += 1;
+                *(f32 *)(state + 0x1c) = lbl_803E7384;
+            }
+        }
+        v = *(s8 *)(state + 0x26);
+        if (v < 0) {
+            v = 0;
+        } else if (v > 0xf) {
+            v = 0xf;
+        }
+        *(s8 *)(state + 0x26) = (s8)v;
+    }
+}
+#pragma scheduling on
+#pragma peephole on
