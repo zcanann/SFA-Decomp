@@ -2140,12 +2140,14 @@ void arwingandrossstuff_free(int obj)
         ModelLightStruct_free(*(void **)(state + 0x14));
     }
 }
+#pragma peephole off
 void arwingandrossstuff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E701C);
     }
 }
+#pragma peephole on
 void arwingandrossstuff_release(void) {}
 void arwingandrossstuff_initialise(void) {}
 
@@ -2190,4 +2192,170 @@ void arwprojectile_setLifetime(int obj, int lifetime)
     int state = *(int *)(obj + 0xb8);
 
     *(f32 *)(state + 4) = (f32)lifetime;
+}
+
+extern f32 lbl_803E7008;
+extern f32 lbl_803E70EC;
+extern f32 lbl_803E70F0;
+extern f32 lbl_803E70F4;
+extern void ObjHits_SetTargetMask(int obj, int mask);
+extern void setMatrixFromObjectPos(void *mtx, void *src);
+extern void Matrix_TransformPoint(void *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern void gameTextFn_80125ba4(int id);
+extern void pauseMenuCreateHeads(void);
+
+typedef struct ArwProjPosSrc {
+    s16 rot[3];
+    f32 scale;
+    f32 pos[3];
+} ArwProjPosSrc;
+
+void arwprojectile_placeForward(int obj, f32 dist)
+{
+    int state = *(int *)(obj + 0xb8);
+    f32 mtx[12];
+    ArwProjPosSrc src;
+
+    *(f32 *)(state + 8) = dist;
+    src.pos[0] = lbl_803E7008;
+    src.pos[1] = lbl_803E7008;
+    src.pos[2] = lbl_803E7008;
+    src.rot[0] = *(s16 *)obj;
+    src.rot[1] = *(s16 *)(obj + 2);
+    src.rot[2] = 0;
+    src.scale = lbl_803E701C;
+    setMatrixFromObjectPos(mtx, &src);
+    Matrix_TransformPoint(mtx, lbl_803E7008, lbl_803E7008, *(f32 *)(state + 8),
+                          (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
+    *(s16 *)obj += 0x8000;
+    *(s16 *)(obj + 2) = -*(s16 *)(obj + 2);
+}
+
+void arwingandrossstuff_init(int obj, u8 *setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    int linked;
+
+    *(s16 *)obj = (s16)(setup[0x1a] << 8);
+    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
+    *(u8 *)(obj + 0x36) = 1;
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x80d:
+        *(s16 *)(state + 0x1a) = randomGetRange(-0x1f4, 0x1f4);
+        *(s16 *)(state + 0x1c) = randomGetRange(-0x1f4, 0x1f4);
+        /* fallthrough */
+    case 0x6ae:
+    case 0x7e4:
+        ObjHits_SetTargetMask(obj, 4);
+        *(u8 *)state = 4;
+        *(u8 *)(state + 0x18) = 2;
+        break;
+    case 0x655:
+        ObjHits_SetTargetMask(obj, 1);
+        *(u8 *)state = 0;
+        *(u8 *)(state + 0x18) = 1;
+        break;
+    case 0x604:
+        ObjHits_SetTargetMask(obj, 1);
+        if (*(s8 *)(obj + 0xad) != 0) {
+            *(u8 *)state = 2;
+            *(u8 *)(state + 0x18) = 2;
+        } else {
+            *(u8 *)state = 1;
+            *(u8 *)(state + 0x18) = 2;
+        }
+        break;
+    default:
+        ObjHits_SetTargetMask(obj, 1);
+        *(u8 *)state = 2;
+        break;
+    }
+    linked = *(int *)(obj + 0x54);
+    if (linked != 0) {
+        *(s16 *)(linked + 0xb2) = 1;
+    }
+    ObjGroup_AddObject(obj, 2);
+}
+
+int arwlevelcon_ringEventCallback(int obj, int p2, int data);
+
+void arwlevelcon_init(int obj, u8 *setup)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(int *)(obj + 0xbc) = (int)arwlevelcon_ringEventCallback;
+    *(s16 *)(state + 0x14) = 1;
+    *(s16 *)(state + 0x16) = 0x50;
+    *(f32 *)(state + 0) = lbl_803E70EC;
+    *(f32 *)(state + 4) = lbl_803E70EC;
+    *(f32 *)(state + 8) = lbl_803E70F0;
+    *(f32 *)(state + 0xc) = lbl_803E70F4;
+    if (*(int *)(setup + 0x14) == 0x48f7e) {
+        *(u8 *)(state + 0x1b) = 1;
+    }
+    if (*(u8 *)(state + 0x19) == 0) {
+        GameBit_Set(0x9d6, 0);
+        GameBit_Set(0x9d8, 0);
+        GameBit_Set(0x9d7, 0);
+        GameBit_Set(0xe74, 0);
+        arwingHudSetVisible(2);
+        pauseMenuCreateHeads();
+    }
+    switch (*(s8 *)(obj + 0xac)) {
+    case 0x3a:
+        *(int *)(state + 0x1c) = 0x51bc;
+        *(s16 *)(state + 0x20) = 0x6e3;
+        break;
+    case 0x3b:
+        *(int *)(state + 0x1c) = 0x51bd;
+        *(s16 *)(state + 0x20) = 0x6df;
+        break;
+    case 0x3d:
+        *(int *)(state + 0x1c) = 0x51bf;
+        *(s16 *)(state + 0x20) = 0x6e2;
+        break;
+    case 0x3c:
+        *(int *)(state + 0x1c) = 0x51be;
+        *(s16 *)(state + 0x20) = 0x6e1;
+        break;
+    case 0x3e:
+    default:
+        *(int *)(state + 0x1c) = 0x51c0;
+        *(s16 *)(state + 0x20) = 0x6e0;
+        break;
+    }
+}
+
+int arwlevelcon_ringEventCallback(int obj, int p2, int data)
+{
+    int i;
+    int textId;
+
+    *(int *)(data + 0xe8) = (int)arwlevelcon_commitRingChoice;
+    for (i = 0; i < *(u8 *)(data + 0x8b); i++) {
+        u8 v = *(u8 *)(data + i + 0x81);
+        if (v == 1) {
+            (*(void (**)(int, int, int, int))(*gObjectTriggerInterface + 0x50))(0x56, 0, 0, 0);
+        } else if (v == 4) {
+            switch (*(s8 *)(obj + 0xac)) {
+            case 0x3a:
+                textId = 0;
+                break;
+            case 0x3b:
+                textId = 1;
+                break;
+            case 0x3c:
+                textId = 2;
+                break;
+            case 0x3e:
+                textId = 3;
+                break;
+            case 0x3d:
+                textId = 4;
+                break;
+            }
+            gameTextFn_80125ba4(textId);
+        }
+    }
+    return 0;
 }
