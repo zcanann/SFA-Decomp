@@ -10016,6 +10016,198 @@ void fn_802B1BF8(EmitObj *a, int b, int state)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 lbl_803E8148;
+extern f32 lbl_803E814C;
+extern f32 lbl_803DE440;
+extern f32 lbl_803E8144;
+extern f32 lbl_803E8118;
+extern f32 lbl_803E7FEC;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
+{
+    u32 b;
+    void *found;
+    int iv;
+    s16 sv;
+    f32 fv2;
+    f32 clamp;
+    f32 velMag;
+    f32 damp;
+    f32 r;
+    f32 local_78;
+    f32 local_74;
+    int **nearList;
+    f32 local_6c[4];
+    f32 local_5c;
+    f32 local_58;
+    f32 local_54;
+
+    fv2 = lbl_803E7EE0;
+    found = 0;
+    *(f32 *)((char *)state + 0x82c) = lbl_803E7EE0;
+    *(f32 *)((char *)state + 0x834) = fv2;
+    *(f32 *)((char *)state + 0x830) = lbl_803E8144;
+    *(u8 *)((char *)state + 0x86c) = 0;
+    b = *(u8 *)((char *)state + 0x3f0) >> 5 & 1;
+    if (b == 0 || (b != 0 && lbl_803E80D0 != *(f32 *)((char *)cfg + 0x1c0))) {
+        *(f32 *)((char *)state + 0x83c) = *(f32 *)((char *)cfg + 0x1c0);
+    }
+    if (lbl_803E80D0 != *(f32 *)((char *)state + 0x83c)) {
+        *(f32 *)((char *)state + 0x838) =
+            *(f32 *)((char *)state + 0x83c) - *(f32 *)((char *)obj + 0x1c);
+    } else {
+        *(f32 *)((char *)state + 0x838) = lbl_803E7EA4;
+    }
+    ((ByteFlags *)((char *)state + 0x3f1))->b01 = 0;
+    clamp = lbl_803E7EA4;
+    local_74 = lbl_803E7EA4;
+    local_78 = lbl_803E7EA4;
+    if ((*(s8 *)((char *)cfg + 0x264) & 0x10) != 0) {
+        ((ByteFlags *)((char *)state + 0x3f1))->b01 = 1;
+        *(u8 *)((char *)state + 0x86c) = *(u8 *)((char *)cfg + 0xbc);
+        fv2 = lbl_803E7EE0;
+        switch (*(u8 *)((char *)state + 0x86c)) {
+        case 13:
+            *(f32 *)((char *)state + 0x82c) = lbl_803E8148;
+            *(f32 *)((char *)state + 0x834) = lbl_803E814C;
+            *(f32 *)((char *)state + 0x830) = lbl_803E8118;
+            break;
+        case 3:
+            *(f32 *)((char *)state + 0x82c) = lbl_803E7EE0;
+            *(f32 *)((char *)state + 0x834) = fv2;
+            *(f32 *)((char *)state + 0x830) = lbl_803E7F6C;
+            break;
+        case 6:
+            iv = (int)((f32)*(s16 *)((char *)state + 0x808) - dt);
+            sv = (s16)iv;
+            *(s16 *)((char *)state + 0x808) = sv;
+            if (sv <= 0) {
+                *(s16 *)((char *)state + 0x808) = 0x3c;
+                ObjHits_RecordObjectHit(obj, 0, 0x14, 2, 0);
+            }
+            break;
+        case 29:
+            local_6c[0] = lbl_803E8150;
+            found = (void *)ObjGroup_FindNearestObject(0x16, obj, local_6c);
+            if (found != 0) {
+                (*(void (*)(f32, int, int, f32 *, f32 *))(*(int *)(*(int *)(*(int *)((char *)found + 0x68)) + 0x20)))(
+                    lbl_803E7EE0, (int)found, obj, &local_74, &local_78);
+            }
+            break;
+        case 26:
+            iv = (int)((f32)*(s16 *)((char *)state + 0x808) - dt);
+            sv = (s16)iv;
+            *(s16 *)((char *)state + 0x808) = sv;
+            if (sv <= 0) {
+                *(s16 *)((char *)state + 0x808) = 0x3c;
+                ObjPath_GetPointWorldPosition(obj, 0xb, &local_5c, &local_58, &local_54, 0);
+                ObjHits_RecordPositionHit(local_5c, local_58, local_54, obj, 0, 0x14, 2, 0xffffffff);
+            }
+            break;
+        case 8:
+            ObjHits_RecordObjectHit(obj, 0, 1, 0, 0);
+            break;
+        case 28:
+            if (GameBit_Get(0x21) == 0) {
+                *(s16 *)((char *)state + 0x8a0) =
+                    (s16)(int)((f32)*(u16 *)((char *)state + 0x8a0) + dt);
+                if (0x78 < *(u16 *)((char *)state + 0x8a0)) {
+                    *(u16 *)((char *)state + 0x8a0) = *(u16 *)((char *)state + 0x8a0) - 0x78;
+                    ObjPath_GetPointWorldPosition(obj, 0xb, &local_5c, &local_58, &local_54, 0);
+                    ObjHits_RecordPositionHit(local_5c, local_58, local_54, obj, 0, 0x16, 2,
+                                              0xffffffff);
+                }
+            }
+            break;
+        case 32:
+            if (*(f32 *)((char *)cfg + 0x280) <= lbl_803E7E98) {
+                *(f32 *)((char *)state + 0x7c8) =
+                    -(lbl_803E7E90 * dt - *(f32 *)((char *)state + 0x7c8));
+                if (lbl_803DE440 <= clamp) {
+                    Sfx_PlayFromObject(obj, 0x208);
+                    lbl_803DE440 = (f32)(int)randomGetRange(0x27, 0x3c);
+                } else {
+                    lbl_803DE440 = lbl_803DE440 - dt;
+                }
+            } else {
+                r = lbl_803E7F6C + *(f32 *)((char *)state + 0x7c8);
+                if (r < clamp) {
+                    clamp = r;
+                }
+                *(f32 *)((char *)state + 0x7c8) = clamp;
+            }
+            iv = hitDetectFn_80065e50(obj, &nearList, 0, 0x20, *(f32 *)((char *)obj + 0xc),
+                                      *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14));
+            velMag = -*(f32 *)((char *)state + 0x7c8);
+            if (1 < iv &&
+                (velMag = velMag + (**nearList - *nearList[iv - 1]), lbl_803E7FA0 < velMag)) {
+                int inner = *(int *)((char *)obj + 0xb8);
+                s8 *p = *(s8 **)((char *)inner + 0x35c);
+                int n = *p - 1;
+                if (n < 0) {
+                    n = 0;
+                } else if (p[1] < n) {
+                    n = p[1];
+                }
+                *p = (s8)n;
+                if (**(s8 **)((char *)inner + 0x35c) < 1) {
+                    playerDie(obj);
+                }
+            }
+            break;
+        case 31:
+            GameBit_Set(0x643, 1);
+            break;
+        default:
+            *(s16 *)((char *)state + 0x808) = 0;
+            if (*(f32 *)((char *)state + 0x7c8) < lbl_803E7EA4) {
+                fv2 = lbl_803E7EFC * *(f32 *)((char *)cfg + 0x280) +
+                      *(f32 *)((char *)state + 0x7c8);
+                r = lbl_803E7EA4;
+                if (fv2 < lbl_803E7EA4) {
+                    r = fv2;
+                }
+                *(f32 *)((char *)state + 0x7c8) = r;
+                velMag = -*(f32 *)((char *)state + 0x7c8);
+            }
+            break;
+        }
+        if (velMag != lbl_803E7EA4) {
+            damp = lbl_803E7F14;
+            r = -(lbl_803E7F6C * velMag - lbl_803E7EE0);
+            if (damp < r) {
+                damp = r;
+            }
+            *(f32 *)((char *)obj + 0x24) =
+                *(f32 *)((char *)obj + 0x24) * powfBitEstimate(damp, dt);
+            *(f32 *)((char *)obj + 0x2c) =
+                *(f32 *)((char *)obj + 0x2c) * powfBitEstimate(damp, dt);
+        }
+    }
+    r = interpolate(local_74 - *(f32 *)((char *)state + 0x890), lbl_803E7FCC, timeDelta);
+    *(f32 *)((char *)state + 0x890) = *(f32 *)((char *)state + 0x890) + r;
+    r = interpolate(local_78 - *(f32 *)((char *)state + 0x894), lbl_803E7FCC, timeDelta);
+    *(f32 *)((char *)state + 0x894) = *(f32 *)((char *)state + 0x894) + r;
+    if (found == 0) {
+        *(f32 *)((char *)state + 0x890) =
+            *(f32 *)((char *)state + 0x890) * powfBitEstimate(lbl_803E7FF4, timeDelta);
+        *(f32 *)((char *)state + 0x894) =
+            *(f32 *)((char *)state + 0x894) * powfBitEstimate(lbl_803E7FF4, timeDelta);
+    }
+    if (*(f32 *)((char *)state + 0x890) > lbl_803E7FEC &&
+        *(f32 *)((char *)state + 0x890) < lbl_803E7EF8) {
+        *(f32 *)((char *)state + 0x890) = lbl_803E7EA4;
+    }
+    if (*(f32 *)((char *)state + 0x894) > lbl_803E7FEC &&
+        *(f32 *)((char *)state + 0x894) < lbl_803E7EF8) {
+        *(f32 *)((char *)state + 0x894) = lbl_803E7EA4;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 void fn_8029A4A8(int obj, int p2)
 {
     int inner = *(int *)((char *)obj + 0xb8);
