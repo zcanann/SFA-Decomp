@@ -9,6 +9,7 @@ extern void *Obj_GetPlayerObject(void);
 extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
 extern void objSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void *entries, int count);
+extern int seqEvalCondition(int condition, u8 *seq, int obj);
 extern void playerEnvFxFn_80088ad4(int envFxValue);
 extern void renderSunAndMoon(void);
 extern void skyFn_8008a04c(void);
@@ -4007,6 +4008,41 @@ int objSeqFindLabel(u8 *seq, int label)
             if (repeatCount > 0) {
                 packed = *(u32 *)(command + 4);
                 if ((int)(packed & 0x3f) == 9 && (int)(packed >> 16) == label) {
+                    return currentLabel;
+                }
+                commandIndex += repeatCount;
+            }
+        }
+        currentLabel += command[1];
+        commandIndex++;
+    }
+    return -1;
+}
+
+int objSeqFindConditional(u8 *seq, u8 *seqState)
+{
+    int currentLabel;
+    int commandIndex;
+    u8 *command;
+    int repeatCount;
+    u32 packed;
+
+    currentLabel = -1;
+    commandIndex = 0;
+    while (commandIndex < *(s16 *)(seq + 0x62)) {
+        command = *(u8 **)(seq + 0x94) + commandIndex * 4;
+        if ((s8)command[0] == 0) {
+            currentLabel = *(s16 *)(command + 2);
+        } else if ((s8)command[0] == 0xb) {
+            repeatCount = *(s16 *)(command + 2);
+            if (repeatCount > 0) {
+                packed = *(u32 *)(command + 4);
+                if ((int)(packed & 0x3f) == 4 &&
+                    seqEvalCondition((packed >> 6) & 0x3ff, seq, *(int *)(seqState + 0x4c)) != 0) {
+                    currentLabel -= 10;
+                    if (currentLabel < 0) {
+                        currentLabel = 0;
+                    }
                     return currentLabel;
                 }
                 commandIndex += repeatCount;
