@@ -5689,7 +5689,9 @@ void fn_8023137C(int obj, int src)
 #pragma dont_inline on
 void fn_8022ED74(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
 #pragma dont_inline reset
+#pragma dont_inline on
 void fn_8022F558(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+#pragma dont_inline reset
 void fn_80231028(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
 void fn_8023134C(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
 
@@ -5761,6 +5763,7 @@ void fn_8022B764(int p, int q, int idx) {
 extern int ObjList_FindNearestObjectByDefNo(int obj, int defNo, f32 *maxDistanceSq);
 extern f32 lbl_803E7490;
 
+#pragma dont_inline on
 #pragma peephole off
 #pragma scheduling off
 void fn_80239DD8(int p1, int p2)
@@ -5790,6 +5793,7 @@ void fn_80239DD8(int p1, int p2)
 }
 #pragma scheduling reset
 #pragma peephole reset
+#pragma dont_inline reset
 
 extern int lbl_803DC4E8;
 
@@ -5819,6 +5823,66 @@ void fn_80239EAC(int p1, int p2)
     }
 }
 #pragma scheduling reset
+
+extern f32 lbl_803E74AC;
+extern f32 lbl_803E74B0;
+extern f32 lbl_803E74D4;
+extern f32 lbl_803E74D8;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_8023A168(int p1, int p2)
+{
+    int yawRnd;
+    int pitchRnd;
+    int newObj;
+    int proj;
+
+    if (Obj_IsLoadingLocked()) {
+        yawRnd = (s16)(randomGetRange(-0x1f40, 0x1f40) - 0x8000);
+        pitchRnd = randomGetRange(-0x1f40, 0x1f40) >> 8;
+        newObj = Obj_AllocObjectSetup(0x20, 0x80d);
+        *(f32 *)(newObj + 8) = *(f32 *)(p2 + 0xc0);
+        *(f32 *)(newObj + 0xc) = *(f32 *)(p2 + 0xc4);
+        *(f32 *)(newObj + 0x10) = *(f32 *)(p2 + 0xc8);
+        *(u8 *)(newObj + 0x1a) = (*(s16 *)p1 + yawRnd) >> 8;
+        *(u8 *)(newObj + 0x19) = pitchRnd;
+        *(u8 *)(newObj + 0x18) = 0;
+        *(u8 *)(newObj + 4) = 1;
+        *(u8 *)(newObj + 5) = 1;
+        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        if (proj != 0) {
+            *(f32 *)(proj + 8) = lbl_803E74B0;
+            arwprojectile_setLifetime(proj, 0x6e);
+            arwprojectile_placeForward(proj, lbl_803E74AC);
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+void fn_8023A87C(int p1, int p2)
+{
+    void *spawned;
+
+    spawned = *(void **)(p2 + 0x10);
+    if (spawned != NULL) {
+        *(f32 *)((char *)spawned + 0x14) -= lbl_803E74D8;
+        *(int *)(p2 + 0x90) -= framesThisStep;
+        if (*(int *)(p2 + 0x90) < 0) {
+            fn_8022F558(*(int *)(p2 + 0x10), 5);
+            *(int *)(p2 + 0x90) = 0;
+            *(int *)(p2 + 0x10) = 0;
+        }
+    } else if (*(f32 *)(p2 + 0x6c) >= lbl_803E74D4) {
+        *(f32 *)(p2 + 0x6c) -= timeDelta;
+        if (*(f32 *)(p2 + 0x6c) < lbl_803E74D4)
+            fn_80239DD8(p1, p2);
+    } else if ((u32)GameBit_Get(0x12) != 0) {
+        *(f32 *)(p2 + 0x6c) = (f32)(u32)randomGetRange(1, 0x14);
+        GameBit_Set(0x12, 0);
+    }
+}
 
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
