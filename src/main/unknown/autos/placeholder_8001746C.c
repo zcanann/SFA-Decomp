@@ -8816,6 +8816,40 @@ int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int 
     return idx;
 }
 
+extern char sMmFreeMemoryUsageCorruptedError[];
+
+void heapFree(int region, int idx) {
+    HeapItem *base = (HeapItem *)gMmRegionTable[region].start;
+    s16 next = base[idx].next;
+    s16 prev = base[idx].prev;
+    base[idx].type = 0;
+    lbl_803DCB14++;
+    gMmRegionTable[region].f10 -= base[idx].size;
+    if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size) {
+        OSReport(sMmFreeMemoryUsageCorruptedError);
+    }
+    if (next != -1 && base[next].type == 0) {
+        s16 nn;
+        base[idx].size += base[next].size;
+        nn = base[next].next;
+        base[idx].next = nn;
+        if (nn != -1) {
+            base[nn].prev = idx;
+        }
+        base[--gMmRegionTable[region].f4].stack = next;
+    }
+    if (prev != -1 && base[prev].type == 0) {
+        s16 in;
+        base[prev].size += base[idx].size;
+        in = base[idx].next;
+        base[prev].next = in;
+        if (in != -1) {
+            base[in].prev = prev;
+        }
+        base[--gMmRegionTable[region].f4].stack = idx;
+    }
+}
+
 int getHeapItemSize(void *ptr) {
     int i = mmGetRegionForPtr(ptr);
     HeapItem *items = (HeapItem *)gMmRegionTable[i].start;
