@@ -11343,6 +11343,7 @@ int fn_80297854(int obj, int state, f32 fv)
     return 0;
 }
 
+#pragma dont_inline on
 void fn_802B86B8(int obj, int a, int b)
 {
     int p = *(int *)((char *)a + 0x40c);
@@ -11377,6 +11378,7 @@ void fn_802B86B8(int obj, int a, int b)
         fn_802B8360(obj, a);
     }
 }
+#pragma dont_inline reset
 
 void fn_802B4C18(int obj, int state, f32 fv)
 {
@@ -11555,7 +11557,69 @@ extern int lbl_803DC70C;
 extern int lbl_803DC720;
 extern int lbl_803DC724;
 
-void fn_802B8864(void) {}
+extern void fn_80098B18(f32 a, int obj, int b, int c, int d, void *out);
+extern f32 lbl_803E81C4;
+extern f32 lbl_803E8210;
+extern f32 lbl_803E81C8;
+
+int fn_802B8864(int p1, int p2, int p3)
+{
+    int obj = p1;
+    int inner = *(int *)((char *)obj + 0xb8);
+    int iv6 = *(int *)((char *)obj + 0x4c);
+    int t;
+    int mode;
+    u8 i;
+    u8 j;
+    f32 f31v;
+    f32 z;
+    f32 local_58;
+    f32 local_54;
+    f32 local_50;
+    f32 arr[6];
+
+    t = *(int *)((char *)inner + 0x40c);
+    z = lbl_803E8180;
+    if (*(f32 *)((char *)t + 0x10) != z &&
+        (*(f32 *)((char *)t + 0x10) = *(f32 *)((char *)t + 0x10) - timeDelta,
+         *(f32 *)((char *)t + 0x10) <= z)) {
+        Obj_FreeObject(obj);
+    }
+    for (i = 0; i < *(u8 *)((char *)p3 + 0x8b); i++) {
+        if (*(u8 *)((char *)p3 + i + 0x81) == 1) {
+            *(u8 *)((char *)inner + 0x404) = *(u8 *)((char *)inner + 0x404) | 1;
+            GameBit_Set(*(s16 *)((char *)iv6 + 0x1c), 1);
+            arr[3] = lbl_803E8180;
+            arr[4] = lbl_803E81C4;
+            arr[5] = lbl_803E8180;
+            f31v = lbl_803E8210;
+            for (j = 0x19; j != 0; j--) {
+                fn_80098B18(f31v * *(f32 *)((char *)obj + 8), obj, 3, 0, 0, arr);
+            }
+        }
+    }
+    if (*(s16 *)((char *)iv6 + 0x1a) == 0x64c) {
+        fn_802B86B8(obj, inner, inner);
+        if ((*(u8 *)((char *)inner + 0x404) & 1) != 0 &&
+            (*(u16 *)((char *)obj + 0xb0) & 0x800) != 0) {
+            t = *(int *)((char *)inner + 0x40c);
+            *(f32 *)((char *)t + 0xc) = *(f32 *)((char *)t + 0xc) - timeDelta;
+            if (lbl_803E8180 < *(f32 *)((char *)t + 0xc)) {
+                mode = 0;
+            } else {
+                mode = 3;
+                *(f32 *)((char *)t + 0xc) = *(f32 *)((char *)t + 0xc) + lbl_803E81C0;
+            }
+            local_58 = lbl_803E8180;
+            local_54 = lbl_803E81C4;
+            local_50 = lbl_803E8180;
+            Sfx_KeepAliveLoopedObjectSound(obj, 0x455);
+            fn_80098B18(lbl_803E81C8 * *(f32 *)((char *)obj + 8), obj, 3, mode, 0, &local_58);
+        }
+    }
+    *(u16 *)((char *)inner + 0x400) = *(u16 *)((char *)inner + 0x400) | 2;
+    return 0;
+}
 
 void lightfoot_init(int obj, int p2, int p3)
 {
