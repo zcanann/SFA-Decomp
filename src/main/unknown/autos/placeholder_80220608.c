@@ -6005,6 +6005,86 @@ int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern u8 lbl_803DC4C8;
+
+#pragma scheduling off
+void fn_8023A3E4(int p1, int p2)
+{
+    int hitVol;
+    int hitType;
+    int hitObj;
+    u8 i;
+    int got;
+
+    got = ObjHits_GetPriorityHit(p1, &hitObj, &hitType, &hitVol);
+    for (i = 0; i < 4; i++) {
+        int v = *(u8 *)(p2 + 0xb2 + i) - framesThisStep;
+        if (v < 0)
+            v = 0;
+        *(u8 *)(p2 + 0xb2 + i) = v;
+    }
+    if (got != 0) {
+        if (hitType == 3) {
+            if (*(s16 *)(hitObj + 0x46) == 0x605 &&
+                *(u8 *)(p2 + hitType + 0xb2) == 0 &&
+                *(u8 *)(p2 + hitType + 0xae) != 0 &&
+                *(int *)(p2 + 0x88) == 0xc) {
+                Obj_SetModelColorFadeRecursive(p1, 0x19, 0xc8, 0, 0, 1);
+                *(u8 *)(p2 + hitType + 0xae) = *(u8 *)(p2 + hitType + 0xae) - 1;
+                *(u8 *)(p2 + hitType + 0xb2) = 0xc8;
+            }
+        } else if (hitType >= 0 && hitType < 3) {
+            if (*(u8 *)(p2 + hitType + 0xae) != 0 && *(u8 *)(p2 + hitType + 0xb2) == 0) {
+                *(u8 *)(p2 + hitType + 0xae) = *(u8 *)(p2 + hitType + 0xae) - 1;
+                *(u8 *)(p2 + hitType + 0xb2) = 6;
+                if (*(u8 *)(p2 + hitType + 0xae) != 0)
+                    Sfx_PlayFromObject(p1, 0x484);
+                else
+                    Sfx_PlayFromObject(p1, 0x485);
+                switch (hitType) {
+                case 0:
+                    *(s16 *)(p2 + 0xa2) = -0xfa;
+                    break;
+                case 1:
+                    *(s16 *)(p2 + 0xa2) = 0xfa;
+                    break;
+                case 2:
+                    *(s16 *)(p2 + 0xa4) = -0xc8;
+                    break;
+                }
+            }
+        }
+    }
+    for (i = 0; i < 3; i++) {
+        int state;
+        int adjusted;
+        int texIdx;
+        int *tex;
+
+        if (*(u8 *)(p2 + i + 0xae) != 0) {
+            if (*(u8 *)(p2 + i + 0xb2) != 0)
+                *(u8 *)(p2 + i + 0xb9) = 1;
+            else
+                *(u8 *)(p2 + i + 0xb9) = 0;
+        } else {
+            *(u8 *)(p2 + i + 0xb9) = 2;
+        }
+        state = *(u8 *)(p2 + i + 0xb9);
+        adjusted = state;
+        texIdx = (&lbl_803DC4C8)[i];
+        if (texIdx < 2 && state == 1)
+            adjusted = 0;
+        tex = objFindTexture(p1, texIdx * 2, 0);
+        *tex = adjusted << 8;
+        if (texIdx == 2 && state == 1)
+            state = 0;
+        tex = objFindTexture(p1, texIdx * 2 + 1, 0);
+        *tex = state << 8;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
