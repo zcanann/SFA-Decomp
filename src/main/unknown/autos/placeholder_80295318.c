@@ -5952,6 +5952,15 @@ extern f32 lbl_803E80B0;
 extern f32 lbl_803E80B4;
 extern f32 lbl_803E80B8;
 extern f32 lbl_803DC6B8[];
+extern f32 lbl_803E8250;
+extern f32 lbl_803E8254;
+extern f32 lbl_803E8258;
+extern f32 lbl_803E825C;
+extern f32 lbl_803E8260;
+extern f32 lbl_803E8264;
+extern f32 lbl_803E8268;
+extern f32 lbl_803E826C;
+extern f32 lbl_80335128[];
 extern f32 lbl_803E7EF8;
 extern f32 lbl_803E7EE0;
 extern int lbl_803DE450;
@@ -12144,6 +12153,133 @@ void fn_802AAD44(int obj)
         *(u8 *)((char *)obj + 0x36) = t;
     }
     GXSetColorUpdate(1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802B98F0(int obj, int state, f32 t)
+{
+    int near;
+    int inner;
+    int phase;
+    int changed;
+    int useNormal;
+    f32 v;
+    f32 target;
+    f32 f2;
+    f32 blend;
+    f32 nearDist;
+    s16 moveId;
+
+    nearDist = lbl_803E8240;
+    near = ObjGroup_FindNearestObject(0x13, obj, &nearDist);
+    inner = *(int *)((char *)obj + 0xb8);
+    if (GameBit_Get(0x3e3) != 0) {
+        if (RandomTimer_UpdateRangeTrigger(inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0) {
+            Sfx_PlayFromObject(obj, 0x43a);
+        }
+    }
+    *(int *)((char *)state + 0) |= 0x200000;
+    if (*(f32 *)((char *)state + 0x298) < lbl_803E824C) {
+        *(s16 *)((char *)state + 0x334) = 0;
+        *(s16 *)((char *)state + 0x336) = 0;
+        *(f32 *)((char *)state + 0x298) = lbl_803E8234;
+    }
+    if (*(s16 *)((char *)state + 0x334) >= 0x5a) {
+        return 8;
+    }
+
+    *(s16 *)((char *)obj + 0) = (s16)(s32)(
+        lbl_803E8250 * ((f32)(s16) * (s16 *)((char *)state + 0x336) * t / lbl_803E8254) +
+        (f32)(s16) * (s16 *)((char *)obj + 0));
+
+    v = *(f32 *)((char *)state + 0x298);
+    if (v < lbl_803E8234) {
+        v = lbl_803E8234;
+    }
+    if (v > lbl_803E8258) {
+        v = lbl_803E8258;
+    }
+    if (*(s16 *)((char *)inner + 0xa88) == 0) {
+        v = lbl_803E8234;
+    }
+    target = lbl_803E825C * v;
+    if (target < lbl_803E8234) {
+        target = lbl_803E8234;
+    }
+    *(f32 *)((char *)state + 0x294) =
+        t * ((target - *(f32 *)((char *)state + 0x294)) / *(f32 *)((char *)state + 0x2b8)) +
+        *(f32 *)((char *)state + 0x294);
+
+    if (*(s16 *)((char *)obj + 2) > 0) {
+        target = target -
+                 lbl_803E8260 * fn_80293E80(lbl_803E8264 * (f32)(s16) * (s16 *)((char *)obj + 2) /
+                                            lbl_803E8268);
+    } else {
+        target = target -
+                 lbl_803E826C * fn_80293E80(lbl_803E8264 * (f32)(s16) * (s16 *)((char *)obj + 2) /
+                                            lbl_803E8268);
+    }
+    if (target < lbl_80335128[2]) {
+        target = lbl_80335128[2];
+    }
+    *(f32 *)((char *)state + 0x280) =
+        t * ((target - *(f32 *)((char *)state + 0x280)) / *(f32 *)((char *)state + 0x2b8)) +
+        *(f32 *)((char *)state + 0x280);
+
+    changed = 0;
+    blend = *(f32 *)((char *)obj + 0x98);
+    moveId = *(s16 *)((char *)obj + 0xa0);
+    phase = 0;
+    while (phase < 2 && (&lbl_803DC748)[phase] != moveId) {
+        phase++;
+    }
+    if (phase >= 2) {
+        phase = 0;
+    }
+    if (moveId == 0x208) {
+        phase = 1;
+    }
+
+    f2 = *(f32 *)((char *)state + 0x294);
+    if (f2 < lbl_80335128[phase * 2]) {
+        if (phase == 1) {
+            return 8;
+        }
+        phase--;
+        changed = 1;
+    } else if (f2 >= lbl_80335128[phase * 2 + 1]) {
+        if (phase == 0) {
+            blend = lbl_803E8234;
+        }
+        phase++;
+        changed = 1;
+    }
+
+    useNormal = 1;
+    if (*(s8 *)((char *)state + 0x346) != 0 && moveId == 0x208) {
+        changed = 1;
+        useNormal = 0;
+    }
+    if (changed != 0) {
+        if (phase == 1 && useNormal != 0) {
+            ObjAnim_SetCurrentMove(obj, 0x208, blend, 0);
+        } else {
+            ObjAnim_SetCurrentMove(obj, (&lbl_803DC748)[phase], blend, 0);
+        }
+    }
+
+    ObjAnim_SampleRootCurvePhase(*(f32 *)((char *)state + 0x280), (ObjAnimComponent *)obj,
+                                 (f32 *)((char *)state + 0x2a0));
+    if ((*(int *)((char *)state + 0x31c) & 0x100) == 0) {
+        return 0;
+    }
+    if (near != 0 && (*(u8 *)((char *)near + 0xaf) & 0x4)) {
+        return 0;
+    }
+    return 0xc;
 }
 #pragma peephole reset
 #pragma scheduling reset
