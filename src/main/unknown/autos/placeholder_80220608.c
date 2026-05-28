@@ -4789,3 +4789,58 @@ void drbarrelgr_init(int obj, int setup)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern void PSVECSubtract(void *a, void *b, void *ab);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
+extern f32 lbl_803E6CA0;
+extern f32 lbl_803E6CA8;
+extern f32 lbl_803E6CAC;
+
+typedef struct DrBarrelGrRenderParams {
+    s16 a;
+    s16 b;
+    s16 c;
+    f32 d;
+} DrBarrelGrRenderParams;
+
+#pragma scheduling off
+void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+    int objRef;
+    int nearest;
+    int match;
+    f32 dval;
+    f32 vec[3];
+    DrBarrelGrRenderParams params;
+
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6CA0);
+    ObjPath_GetPointWorldPosition(obj, 0, (f32 *)(state + 0x14), (f32 *)(state + 0x18),
+                                  (f32 *)(state + 0x1c), 0);
+    params.a = 0;
+    params.c = 0;
+    params.b = 0x4000;
+    dval = lbl_803E6CA4;
+    for (i = 0; i < 4; i++) {
+        ObjPath_GetPointWorldPosition(obj, i + 1, &vec[0], &vec[1], &vec[2], 0);
+        PSVECSubtract(&vec[0], (void *)(obj + 0xc), &vec[0]);
+        params.d = dval;
+        fn_8009837C(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, (int)&params);
+    }
+    objRef = *(int *)(state + 8);
+    if (objRef != 0) {
+        match = 0;
+        nearest = ObjGroup_FindNearestObject(0x19, obj, 0);
+        if (nearest != 0 && nearest == objRef) {
+            match = 1;
+        }
+        if (match && *(int *)state != 4) {
+            *(f32 *)(*(int *)(state + 8) + 0xc) = *(f32 *)(state + 0x14);
+            *(f32 *)(*(int *)(state + 8) + 0x10) = *(f32 *)(state + 0x18);
+            *(f32 *)(*(int *)(state + 8) + 0x14) = *(f32 *)(state + 0x1c);
+            objRenderFn_8003b8f4(*(int *)(state + 8), p2, p3, p4, p5, lbl_803E6CA0);
+        }
+    }
+}
+#pragma scheduling on
