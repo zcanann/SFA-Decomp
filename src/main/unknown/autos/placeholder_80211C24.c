@@ -304,6 +304,9 @@ extern f32 lbl_803E6920;
 extern f32 lbl_803E6938;
 extern int fn_801702D4(int obj, f32 v);
 extern void staffFn_80170380(int handle, int v);
+extern f32 lbl_803E68F0;
+extern f32 lbl_803E68F4;
+extern f32 lbl_803E68F8;
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg);
 int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg);
 
@@ -1893,6 +1896,52 @@ void drlasercannon_init(int obj, char *arg) {
         *(s16 *)(p + 0x1a4) = 0xe90;
     } else {
         *(s16 *)(p + 0x1a4) = -1;
+    }
+}
+
+void drlasercannon_hitDetect(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x4c);
+    f32 a18;
+    f32 a14;
+    f32 a10;
+    int ac;
+    int *a8;
+    int hit;
+    int *tricky;
+    if (((BitFlags8 *)(p + 0x1a8))->b0 || ((BitFlags8 *)(p + 0x1a8))->b3) {
+        return;
+    }
+    hit = ObjHits_GetPriorityHitWithPosition(obj, &a8, 0, &ac, &a10, &a14, &a18);
+    if (((BitFlags8 *)(p + 0x1a8))->b6 != 0) {
+        if (hit != 0 && *(s16 *)((char *)a8 + 0x46) != *(int *)(p + 0x19c) &&
+            *(void **)(p + 0x190) != 0) {
+            staffFn_80170380(*(int *)(p + 0x190), 6);
+        }
+    } else if (((u32)(hit - 0xe) <= 1 || hit == 5) &&
+               *(int **)(p + 0xc) != a8 &&
+               *(s16 *)((char *)a8 + 0x46) != *(int *)(p + 0x19c)) {
+        *(int **)(p + 0xc) = a8;
+        p[0x1a6] = p[0x1a6] - ac;
+        fn_80221E94(obj, &a10, lbl_803E68F0);
+        fn_8009A8C8(obj, lbl_803E68F4);
+        Sfx_PlayFromObject(obj, 0x3cc);
+        if (p[0x1a6] <= 0) {
+            tricky = getTrickyObject();
+            Sfx_PlayFromObject(obj, 0x4b6);
+            spawnExplosion(obj, lbl_803E68F8, 0, 1, 1, 1, 0, 1, 0);
+            ((BitFlags8 *)(p + 0x1a8))->b0 = 1;
+            GameBit_Set(*(s16 *)(q + 0x1e), 1);
+            if (tricky != 0) {
+                (*(void (**)(int *, int, int))((char *)*(void **)*(void **)((char *)tricky + 0x68) + 0x34))(tricky, 0, 0);
+            }
+            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        }
+    }
+    if (hit == 0) {
+        *(int *)(p + 0xc) = 0;
+    } else {
+        *(int **)(p + 0xc) = a8;
     }
 }
 #pragma peephole reset
