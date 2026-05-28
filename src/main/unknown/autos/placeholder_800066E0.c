@@ -2153,6 +2153,44 @@ ushort * FUN_80006840(uint param_1)
     return 0;
 }
 
+typedef struct SfxTrigger {
+    u16 id;
+    u8 pad[0x1e];
+} SfxTrigger;
+
+typedef struct SfxTriggerCacheEntry {
+    u16 key;
+    u16 index;
+} SfxTriggerCacheEntry;
+
+extern SfxTrigger *gSfxTriggersData;
+extern int gSfxTriggersCount;
+extern SfxTriggerCacheEntry lbl_802C5D78[];
+
+SfxTrigger *Sfx_FindTrigger(u16 id)
+{
+    SfxTrigger *low = gSfxTriggersData;
+    SfxTrigger *high = gSfxTriggersData + gSfxTriggersCount;
+    SfxTriggerCacheEntry *c = &lbl_802C5D78[id & 0xf];
+
+    if (c->key == id) {
+        return gSfxTriggersData + c->index;
+    }
+    while (low < high) {
+        SfxTrigger *mid = low + (high - low) / 2;
+        if (mid->id > id) {
+            high = mid;
+        } else if (mid->id < id) {
+            low = mid + 1;
+        } else {
+            c->key = id;
+            c->index = mid - gSfxTriggersData;
+            return mid;
+        }
+    }
+    return NULL;
+}
+
 /*
  * --INFO--
  *
