@@ -4501,3 +4501,35 @@ int ktrex_stateHandlerA05(int obj, int runtime) {
     return 0;
 }
 #pragma scheduling reset
+
+#pragma scheduling off
+int ktrex_stateHandlerA08(int obj, int runtime) {
+    void *p;
+    f32 t;
+    p = *(void **)((char *)obj + 0x4c);
+    if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
+        (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 7);
+        *(f32 *)((char *)gKTRexState + 4) =
+            (f32)(u32)*(u16 *)((char *)p + (*(u8 *)((char *)gKTRexState + 0x101) & ~1) + 0x4a);
+        *(u8 *)((char *)obj + 0xaf) &= ~8;
+        return 0;
+    }
+    if ((*(u16 *)((char *)gKTRexState + 0xfa) & 8) == 0) {
+        t = *(f32 *)((char *)gKTRexState + 4) - timeDelta;
+        *(f32 *)((char *)gKTRexState + 4) = t;
+        if (!(t <= lbl_803E67B8)) {
+            return 0;
+        }
+    }
+    if ((*(u16 *)((char *)gKTRexState + 0xfa) & 8) != 0) {
+        *(u8 *)((char *)gKTRexState + 0x102) -= 1;
+        *(u8 *)((char *)runtime + 0x354) = 3;
+    }
+    *(u16 *)((char *)gKTRexState + 0xfa) &= ~0x10;
+    if (*(u8 *)((char *)gKTRexState + 0x102) == 0) {
+        return 2;
+    }
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+    return 10;
+}
+#pragma scheduling reset
