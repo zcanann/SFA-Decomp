@@ -3904,3 +3904,48 @@ void kytesmum_playAnimationEventSfx(int obj, u8 *arg, s16 *sfxData) {
     }
 }
 #pragma scheduling reset
+
+extern void *gKTRexStateHandlersA[];
+extern void *gKTRexStateHandlersB[];
+int ktrex_stateHandlerB01(int obj, int runtime);
+int ktrex_stateHandlerB02(int obj, int runtime);
+int ktrex_stateHandlerB03(int obj, int runtime);
+int ktrex_stateHandlerB04(int obj, int runtime);
+int ktrex_stateHandlerB05(int obj, int runtime);
+int ktrex_stateHandlerB06(int obj, int runtime);
+int ktrex_stateHandlerB07(int obj, int runtime);
+int ktrex_stateHandlerB08(int obj, int runtime);
+int ktrex_stateHandlerA01(int obj, int runtime);
+int ktrex_stateHandlerA02(int obj, int runtime);
+int ktrex_stateHandlerA03(int obj, int runtime);
+int ktrex_stateHandlerA04(int obj, int runtime);
+int ktrex_stateHandlerA05(int obj, int runtime);
+int ktrex_stateHandlerA07(int obj, int runtime);
+int ktrex_stateHandlerA08(int obj, int runtime);
+int ktrex_stateHandlerA09(int obj, int runtime);
+int ktrex_stateHandlerA10(int obj, int runtime);
+int ktrex_stateHandlerA11(int obj, int runtime);
+
+void ktrex_initialiseStateHandlerTables(void) {
+    gKTRexStateHandlersB[0] = (void *)ktrex_stateHandlerB00;
+    gKTRexStateHandlersB[1] = (void *)ktrex_stateHandlerB01;
+    gKTRexStateHandlersB[2] = (void *)ktrex_stateHandlerB02;
+    gKTRexStateHandlersB[3] = (void *)ktrex_stateHandlerB03;
+    gKTRexStateHandlersB[4] = (void *)ktrex_stateHandlerB04;
+    gKTRexStateHandlersB[5] = (void *)ktrex_stateHandlerB05;
+    gKTRexStateHandlersB[6] = (void *)ktrex_stateHandlerB06;
+    gKTRexStateHandlersB[7] = (void *)ktrex_stateHandlerB07;
+    gKTRexStateHandlersB[8] = (void *)ktrex_stateHandlerB08;
+    gKTRexStateHandlersA[0] = (void *)ktrex_stateHandlerA00;
+    gKTRexStateHandlersA[1] = (void *)ktrex_stateHandlerA01;
+    gKTRexStateHandlersA[2] = (void *)ktrex_stateHandlerA02;
+    gKTRexStateHandlersA[3] = (void *)ktrex_stateHandlerA03;
+    gKTRexStateHandlersA[4] = (void *)ktrex_stateHandlerA04;
+    gKTRexStateHandlersA[5] = (void *)ktrex_stateHandlerA05;
+    gKTRexStateHandlersA[6] = (void *)ktrex_stateHandlerA06;
+    gKTRexStateHandlersA[7] = (void *)ktrex_stateHandlerA07;
+    gKTRexStateHandlersA[8] = (void *)ktrex_stateHandlerA08;
+    gKTRexStateHandlersA[9] = (void *)ktrex_stateHandlerA09;
+    gKTRexStateHandlersA[10] = (void *)ktrex_stateHandlerA10;
+    gKTRexStateHandlersA[11] = (void *)ktrex_stateHandlerA11;
+}
