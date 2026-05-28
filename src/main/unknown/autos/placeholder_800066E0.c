@@ -10427,3 +10427,50 @@ found:
     trigger->track = *(s16*)((u8*)sMusicTrackTable + (index << 4));
     Music_Trigger(0xec, 1);
 }
+
+typedef struct {
+    u16 a;
+    u16 b;
+} VoxXY;
+
+typedef struct {
+    VoxXY xy[6];
+    int timer[6];
+    int f30[6];
+    u8 gap[0x14];
+    void* buf[6];
+} VoxMaps;
+
+extern VoxMaps lbl_803387A0;
+extern u8 lbl_803DC8D0[];
+
+/*
+ * Function: voxmaps_resetLoadedMaps
+ * EN v1.0 Address: 0x800134D4
+ * EN v1.0 Size: 156b
+ */
+void voxmaps_resetLoadedMaps(void)
+{
+    VoxXY* xy = lbl_803387A0.xy;
+    u8* b = lbl_803DC8D0;
+    int* timer = lbl_803387A0.timer;
+    int* f30 = lbl_803387A0.f30;
+    void** buf = lbl_803387A0.buf;
+    int i;
+    for (i = 0; i < 6; i++) {
+        if (*buf != NULL) {
+            mm_free(*buf);
+            *buf = NULL;
+        }
+        *f30 = -2;
+        *timer = 0x40000000;
+        *b = 0;
+        xy->a = 0;
+        xy->b = 0;
+        buf++;
+        f30++;
+        timer++;
+        b++;
+        xy++;
+    }
+}
