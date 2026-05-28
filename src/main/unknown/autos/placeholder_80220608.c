@@ -2490,7 +2490,9 @@ extern void fn_80125D04(void);
 extern void setIsOvercast(int value);
 extern void Music_Trigger(int id, int p2);
 
+#pragma dont_inline on
 int getArwing(void) { return lbl_803DDD88; }
+#pragma dont_inline reset
 
 int arwarwing_getExtraSize(void) { return 0x498; }
 int arwarwing_getObjectTypeId(void) { return 0; }
@@ -5253,6 +5255,38 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern f32 lbl_803E721C;
+extern f32 lbl_803E7220;
+
+#pragma scheduling off
+void arwblocker_update(int obj) {
+    int state = *(int *)(obj + 0xb8);
+    int arwing = getArwing();
+    if (arwing == 0)
+        arwing = Obj_GetPlayerObject();
+    if (Vec_distance(obj + 0x18, arwing + 0x18) < lbl_803E721C) {
+        int a = (int)(lbl_803E7220 * timeDelta + (f32)(u32) * (u8 *)(obj + 0x36));
+        if (a > 0xff)
+            a = 0xff;
+        *(u8 *)(obj + 0x36) = a;
+        *(s16 *)(obj + 6) &= ~0x4000;
+        ObjHits_EnableObject(obj);
+        if (*(int *)(obj + 0xf4) == 0) {
+            switch (*(u8 *)(state + 0)) {
+            case 1:
+                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                break;
+            case 0:
+            default:
+                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                break;
+            }
+            *(int *)(obj + 0xf4) = 1;
+        }
+    }
+}
+#pragma scheduling reset
 
 void fn_8022D6D0(int arwing)
 {
