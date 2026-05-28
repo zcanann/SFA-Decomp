@@ -6304,6 +6304,8 @@ extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern void ObjModel_SampleJointTransform(int model, int a, int b, f32 blend, f32 frame, void *out1, void *out2);
 extern void fn_8014C540(int obj, void *a, void *b, void *c);
 extern void fn_802AA2B0(int obj, int state, f32 a, f32 b);
+extern void objHitDetectFn_80062e84(int obj, int a, int b);
+extern void staffFn_80170380(int a, int b);
 extern void setAButtonIcon(int idx);
 extern void setBButtonIcon(int idx);
 extern f32 lbl_803DE45C;
@@ -9069,6 +9071,46 @@ int fn_8029A5E4(int obj, int state)
         }
     }
     return 0;
+}
+
+void fn_80296D20(int obj, void *arg)
+{
+    int state = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)((char *)obj + 0xb8);
+    short type;
+
+    if (*(void **)((char *)obj + 0x30) == arg) {
+        objHitDetectFn_80062e84(obj, 0, 1);
+        type = *(s16 *)((char *)state + 0x274);
+        if (type == 0xa || type == 0xc) {
+            *(int *)((char *)state + 4) &= ~0x100000;
+            fn_802AB5A4(obj, inner, 5);
+            ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
+            staffFn_80170380(lbl_803DE450, 2);
+            ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
+            *(int *)((char *)inner + 0x360) |= 0x800000;
+            ObjHits_SyncObjectPositionIfDirty(obj);
+            ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 1;
+            ((ByteFlags *)((char *)inner + 0x3f4))->b10 = 1;
+            *(u8 *)((char *)inner + 0x800) = 0;
+            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                short id = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                if (id == 0x3cf || id == 0x662) {
+                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                } else {
+                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                }
+                *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 6) &= ~0x4000;
+                *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 2);
+            *(int *)((char *)state + 0x304) = (int)fn_802A514C;
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
