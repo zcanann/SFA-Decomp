@@ -4750,3 +4750,41 @@ int hightop_stateHandler07(int obj, int p) {
     return 9;
 }
 #pragma scheduling reset
+
+extern int randFn_80080100(int n);
+extern int lbl_8032AB3C[];
+extern int lbl_8032AB30[];
+extern f32 lbl_803E6AA4;
+
+#pragma scheduling off
+int hightop_stateHandler10(int obj, int p) {
+    u8 *rt = *(u8 **)((char *)obj + 0xb8);
+    int r;
+    int i;
+    if ((s8)*(u8 *)((char *)p + 0x27a) != 0) {
+        *(u8 *)(rt + 0xc4b) = 3;
+        *(int *)((char *)p + 0) |= 0x1000000;
+    }
+    if (GameBit_Get(451) != 0) {
+        if ((int)GameBit_Get(238) == 2) {
+            *(u8 *)(rt + 0xc4b) = 7;
+        } else {
+            *(u8 *)(rt + 0xc4b) = 9;
+        }
+    } else {
+        *(u8 *)(rt + 0xc4b) = 3;
+    }
+    if (Vec_distance((f32 *)((char *)Obj_GetPlayerObject() + 0x18), (f32 *)((char *)obj + 0x18)) > lbl_803E6AA4) {
+        if (randFn_80080100(500) != 0) {
+            r = randomGetRange(0, 100);
+            i = 0;
+            while (lbl_8032AB3C[i] < r) {
+                r -= lbl_8032AB3C[i];
+                i++;
+            }
+            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(lbl_8032AB30[i], obj, -1);
+        }
+    }
+    return 0;
+}
+#pragma scheduling reset
