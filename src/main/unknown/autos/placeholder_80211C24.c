@@ -294,7 +294,14 @@ extern int *ObjGroup_GetObjects(int group, int *count);
 extern f32 lbl_803E6B68;
 extern f32 lbl_803E6B6C;
 extern f32 lbl_803E6964;
-extern int *Obj_GetActiveModel(void);
+extern int *Obj_GetActiveModel();
+extern f32 *ObjModel_GetJointMatrix(int *model, int jointIdx);
+extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E67BC;
+extern f32 lbl_803E67B4;
+extern f32 lbl_803E67C0;
 extern int fn_8001DB64(void);
 extern void queueGlowRender(void *p);
 extern f32 lbl_803E6A30;
@@ -421,6 +428,38 @@ int ktrex_animEventCallback(int obj, int p2, u8 *arg) {
     return 0;
 }
 #pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+void ktrex_spawnRandomEnergyArc(int obj, u16 angle, int slot) {
+    int *model;
+    f32 point1[3];
+    f32 point2[3];
+    f32 localPoint[3];
+
+    if (*(void **)((char *)gKTRexState + slot * 4 + 0x17c) != NULL) {
+        mm_free(*(void **)((char *)gKTRexState + slot * 4 + 0x17c));
+        *(void **)((char *)gKTRexState + slot * 4 + 0x17c) = NULL;
+    }
+    model = Obj_GetActiveModel(obj);
+    localPoint[0] = lbl_803E67B8;
+    localPoint[1] = lbl_803E67B8;
+    localPoint[2] = lbl_803E67B8;
+
+    PSMTXMultVec(ObjModel_GetJointMatrix(model, randomGetRange(0, *(u8 *)(*(int *)model + 0xf3) - 1)),
+                 localPoint, point1);
+    point1[0] = point1[0] + playerMapOffsetX;
+    point1[1] = point1[1] + lbl_803E67BC;
+    point1[2] = point1[2] + playerMapOffsetZ;
+
+    PSMTXMultVec(ObjModel_GetJointMatrix(model, randomGetRange(0, *(u8 *)(*(int *)model + 0xf3) - 1)),
+                 localPoint, point2);
+    point2[0] = point2[0] + playerMapOffsetX;
+    point2[2] = point2[2] + playerMapOffsetZ;
+
+    *(void **)((char *)gKTRexState + slot * 4 + 0x17c) =
+        fn_8008FB20(point1, point2, lbl_803E67B4, lbl_803E67C0, angle, 96, 0);
+}
 #pragma scheduling reset
 
 #pragma scheduling off
