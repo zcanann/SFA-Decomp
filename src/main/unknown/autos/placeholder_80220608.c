@@ -6472,6 +6472,68 @@ void androsshand_spawnShot(int p1, int p2)
 #pragma scheduling reset
 #pragma peephole reset
 
+typedef struct { int a; int b; u16 c; } ArwInitCfg;
+extern ArwInitCfg lbl_802C25E8;
+extern int lbl_8032B408[];
+extern int lbl_8032B480[];
+extern void fn_8022C7B4();
+
+#pragma scheduling off
+void arwarwing_init(int obj)
+{
+    int state;
+    int sub;
+    ArwInitCfg cfg;
+
+    cfg.a = lbl_802C25E8.a;
+    cfg.b = lbl_802C25E8.b;
+    cfg.c = lbl_802C25E8.c;
+    state = *(int *)(obj + 0xb8);
+    sub = state + 0xc0;
+    *(int *)(obj + 0xbc) = (int)fn_8022C7B4;
+    (*(void (**)(int, int, int, int))(*gPathControlInterface + 4))(sub, 4, 0x1040006, 1);
+    (*(void (**)(int, int, void *, void *, void *))(*gPathControlInterface + 0xc))(sub, 3, lbl_8032B408, lbl_8032B480, &cfg);
+    (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, sub);
+    ObjGroup_AddObject(obj, 0x26);
+    lbl_803DDD88 = obj;
+    ObjHits_SetTargetMask(obj, 1);
+    *(u8 *)(state + 0x480) = 1;
+    switch ((s8)*(u8 *)(obj + 0xac) - 0x26) {
+    case 27:
+    default:
+        *(u8 *)(state + 0x480) = 0;
+        break;
+    case 20:
+        *(u8 *)(state + 0x47b) = 0;
+        *(u8 *)(state + 0x471) = 1;
+        *(u8 *)(state + 0x47e) = 0;
+        break;
+    case 21:
+        *(u8 *)(state + 0x47b) = 1;
+        *(u8 *)(state + 0x471) = 3;
+        *(u8 *)(state + 0x47e) = 1;
+        break;
+    case 23:
+        *(u8 *)(state + 0x47b) = 2;
+        *(u8 *)(state + 0x471) = 7;
+        *(u8 *)(state + 0x47e) = 3;
+        break;
+    case 22:
+        *(u8 *)(state + 0x47b) = 3;
+        *(u8 *)(state + 0x471) = 5;
+        *(u8 *)(state + 0x47e) = 2;
+        break;
+    case 24:
+        *(u8 *)(state + 0x47b) = 4;
+        *(u8 *)(state + 0x471) = 0xa;
+        *(u8 *)(state + 0x47e) = 4;
+        break;
+    case 0:
+        break;
+    }
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
