@@ -6699,6 +6699,42 @@ void drearthcal_update(int obj)
 
 extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *from, void *to, void *out, int p4, int p5);
+extern f32 lbl_803E6C58;
+
+#pragma scheduling off
+int fn_80221C18(int obj, f32 dt, int p3, int p4)
+{
+    f32 vel[3];
+    f32 step[3];
+    f32 pos[3];
+    int gridA[2];
+    int gridB[2];
+    int gridOut[3];
+    int i;
+
+    if ((u32)obj != (u32)Obj_GetPlayerObject()) {
+        PSVECSubtract((void *)(obj + 0xc), (void *)(obj + 0x80), vel);
+    } else {
+        vel[0] = *(f32 *)(obj + 0x24);
+        vel[1] = *(f32 *)(obj + 0x28);
+        vel[2] = *(f32 *)(obj + 0x2c);
+    }
+    PSVECScale(vel, vel, oneOverTimeDelta);
+    pos[0] = *(f32 *)(obj + 0xc);
+    pos[1] = lbl_803E6C58 + *(f32 *)(obj + 0x10);
+    pos[2] = *(f32 *)(obj + 0x14);
+    for (i = 0; i < 5; i++) {
+        PSVECScale(vel, step, PSVECDistance(pos, (void *)p3) / dt);
+        PSVECAdd(obj + 0xc, (int)step, (int)pos);
+    }
+    *(f32 *)(p4 + 0) = pos[0];
+    *(f32 *)(p4 + 4) = pos[1];
+    *(f32 *)(p4 + 8) = pos[2];
+    voxmaps_worldToGrid((void *)p3, gridA);
+    voxmaps_worldToGrid(pos, gridB);
+    return voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) != 0;
+}
+#pragma scheduling reset
 
 #pragma scheduling off
 void fn_80221D6C(void *p1, void *p2)
