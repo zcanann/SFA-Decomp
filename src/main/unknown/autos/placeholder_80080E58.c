@@ -3986,6 +3986,44 @@ void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 #pragma scheduling off
 #pragma peephole off
 
+int objSeqFindLabel(u8 *seq, int label)
+{
+    int currentLabel;
+    int commandIndex;
+    int commandCount;
+    u8 *command;
+    int repeatCount;
+    u32 packed;
+
+    currentLabel = 0;
+    commandIndex = 0;
+    commandCount = *(s16 *)(seq + 0x62);
+    while (commandIndex < commandCount) {
+        command = *(u8 **)(seq + 0x94) + commandIndex * 4;
+        if ((s8)command[0] == 0) {
+            currentLabel = *(s16 *)(command + 2);
+        } else if ((s8)command[0] == 0xb) {
+            repeatCount = *(s16 *)(command + 2);
+            if (repeatCount > 0) {
+                packed = *(u32 *)(command + 4);
+                if ((int)(packed & 0x3f) == 9 && (int)(packed >> 16) == label) {
+                    return currentLabel;
+                }
+                commandIndex += repeatCount;
+            }
+        }
+        currentLabel += command[1];
+        commandIndex++;
+    }
+    return -1;
+}
+
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+
 void ObjSeq_setXrot(int index, int xrot)
 {
     s16 xrot16;
