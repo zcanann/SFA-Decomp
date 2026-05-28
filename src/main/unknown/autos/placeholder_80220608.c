@@ -136,6 +136,7 @@ typedef struct DrLightBeaFlags {
 
 int drlightbea_getExtraSize(void) { return 0xc; }
 int drlightbea_getObjectTypeId(void) { return 0; }
+#pragma scheduling off
 void drlightbea_free(int obj)
 {
     int state = *(int *)(obj + 0xb8);
@@ -146,6 +147,7 @@ void drlightbea_free(int obj)
         *(void **)state = NULL;
     }
 }
+#pragma scheduling reset
 
 void drlightbea_hitDetect(void) {}
 void drlightbea_update(int obj)
@@ -1564,6 +1566,7 @@ void pointlight_setEffectState(int obj, int flag)
 }
 #pragma dont_inline reset
 
+#pragma scheduling off
 void pointlight_free(int obj)
 {
     int state = *(int *)(obj + 0xb8);
@@ -1572,6 +1575,7 @@ void pointlight_free(int obj)
     }
     ObjGroup_RemoveObject(obj, 0x35);
 }
+#pragma scheduling reset
 
 void pointlight_render(int obj)
 {
@@ -1946,6 +1950,7 @@ extern void fn_8001D820(void *light, f32 v);
 int projectedlight_getExtraSize(void) { return 8; }
 int projectedlight_getObjectTypeId(void) { return 0; }
 
+#pragma scheduling off
 void projectedlight_free(int obj)
 {
     int state = *(int *)(obj + 0xb8);
@@ -1956,6 +1961,7 @@ void projectedlight_free(int obj)
         textureFree(*(void **)(state + 4));
     }
 }
+#pragma scheduling reset
 
 void projectedlight_hitDetect(void) {}
 void projectedlight_render(void) {}
@@ -2466,6 +2472,7 @@ extern f32 lbl_803E70B0;
 int ring_getExtraSize(void) { return 0x24; }
 int ring_getObjectTypeId(void) { return 0; }
 
+#pragma scheduling off
 void ring_free(int obj)
 {
     int state = *(int *)(obj + 0xb8);
@@ -2474,6 +2481,7 @@ void ring_free(int obj)
         *(void **)(state + 0x20) = NULL;
     }
 }
+#pragma scheduling reset
 
 void ring_hitDetect(void) {}
 
@@ -3050,6 +3058,7 @@ void arwspeedstr_initialise(void) {}
 int arwproximit_getExtraSize(void) { return 0x18; }
 int arwproximit_getObjectTypeId(void) { return 0; }
 
+#pragma scheduling off
 void arwproximit_free(int obj)
 {
     int state = *(int *)(obj + 0xb8);
@@ -3058,6 +3067,7 @@ void arwproximit_free(int obj)
         *(void **)(state + 4) = NULL;
     }
 }
+#pragma scheduling reset
 
 void arwproximit_hitDetect(void) {}
 
@@ -3099,11 +3109,13 @@ void arwproximit_initialise(void) {}
 int arwarwingbo_getExtraSize(void) { return 0xc; }
 int arwarwingbo_getObjectTypeId(void) { return 0; }
 
+#pragma scheduling off
 void arwarwingbo_free(int obj)
 {
     (*(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
     ObjGroup_RemoveObject(obj, 0x52);
 }
+#pragma scheduling reset
 
 void arwarwingbo_hitDetect(void) {}
 
