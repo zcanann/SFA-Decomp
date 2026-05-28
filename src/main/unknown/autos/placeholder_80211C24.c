@@ -4677,3 +4677,40 @@ int hightop_stateHandler01(int obj, int p) {
     return 0;
 }
 #pragma scheduling reset
+
+extern void ObjHits_SyncObjectPositionIfDirty(int obj);
+extern f32 lbl_803E6AAC;
+
+#pragma scheduling off
+int hightop_stateHandler07(int obj, int p) {
+    u8 *rt = *(u8 **)((char *)obj + 0xb8);
+    f32 v;
+    if ((s8)*(u8 *)((char *)p + 0x27a) != 0) {
+        v = lbl_803E6AA8;
+        *(f32 *)((char *)p + 0x294) = v;
+        *(f32 *)((char *)p + 0x284) = v;
+        *(f32 *)((char *)p + 0x280) = v;
+        *(f32 *)((char *)obj + 0x24) = v;
+        *(f32 *)((char *)obj + 0x28) = v;
+        *(f32 *)((char *)obj + 0x2c) = v;
+        ObjHits_SyncObjectPositionIfDirty(obj);
+        (*(void (**)(void))((char *)*gGameUIInterface + 0x60))();
+        ((BitFlags8 *)(rt + 0xc49))->b7 = 0;
+        ((BitFlags8 *)(rt + 0xc49))->b1 = 0;
+        *(u8 *)(rt + 0xc4b) = 5;
+        *(f32 *)((char *)p + 0x2a0) = lbl_803E6AAC;
+        *(u8 *)(rt + 0x9fd) &= ~1;
+        ObjGroup_RemoveObject(obj, 10);
+    }
+    if ((s8)*(u8 *)((char *)p + 0x346) != 0) {
+        if (*(s16 *)((char *)obj + 0xa0) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E6AA8, 0);
+            *(f32 *)((char *)p + 0x2a0) = lbl_803E6AC8;
+        }
+    }
+    if (randomGetRange(0, 1000) != 0) {
+        return 0;
+    }
+    return 9;
+}
+#pragma scheduling reset
