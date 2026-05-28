@@ -3054,3 +3054,52 @@ void gf_levelcon_init(int obj)
     (*(void (**)(int, int))(*gScreenTransitionInterface + 0xc))(0x258, 1);
 }
 #pragma scheduling on
+
+int tree_getExtraSize(void) { return 0x5c; }
+
+extern f32 lbl_803E745C;
+extern void mclightning_handleScriptEvents(int obj);
+
+typedef struct McLightningFlags {
+    u8 hi : 4;
+    u8 lo : 4;
+} McLightningFlags;
+
+int mclightning_getExtraSize(void) { return 0x1c; }
+#pragma peephole off
+#pragma scheduling off
+void mclightning_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    ObjGroup_RemoveObject(obj, 0x48);
+    if (*(void **)state != NULL) {
+        mm_free(*(void **)state);
+    }
+}
+void mclightning_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (*(void **)state != NULL) {
+        mm_free(*(void **)state);
+        *(int *)state = 0;
+    }
+    ((McLightningFlags *)(state + 0x1b))->hi = 0;
+    *(s16 *)(obj + 6) |= 0x4000;
+}
+void mclightning_init(int obj, u8 *setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    f32 v;
+
+    *(s16 *)(obj + 6) |= 0x4000;
+    *(void **)(obj + 0xbc) = (void *)mclightning_handleScriptEvents;
+    ObjGroup_AddObject(obj, 0x48);
+    ((McLightningFlags *)(state + 0x1b))->lo = setup[0x1a];
+    v = lbl_803E745C;
+    *(f32 *)(state + 0x10) = v;
+    *(f32 *)(state + 0x14) = v;
+}
+#pragma scheduling on
+#pragma peephole on
