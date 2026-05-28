@@ -2704,6 +2704,70 @@ void androssligh_setState(int obj, int newState, u8 force)
 }
 #pragma peephole on
 
+extern void fn_8006CB50(void);
+extern void unlockLevel(int a, int b, int c);
+extern int ObjModel_GetRenderOp(int model, int idx);
+extern f32 lbl_803E74B4;
+extern f32 lbl_803E74D4;
+extern f32 lbl_803E7530;
+extern f32 lbl_803E7590;
+extern f32 lbl_803E7594;
+extern f32 lbl_803E7598;
+
+#pragma scheduling off
+int andross_updateModelAlpha(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    f32 v;
+    int model;
+    int i;
+    int alpha;
+
+    *(f32 *)(state + 0x68) = lbl_803E74D4;
+    v = *(f32 *)(state + 0x68);
+    model = *(int *)Obj_GetActiveModel(obj);
+    alpha = (int)(lbl_803E74B4 * v);
+    for (i = 0; i < *(u8 *)(model + 0xf8); i++) {
+        *(u8 *)(ObjModel_GetRenderOp(model, i) + 0x43) = alpha;
+    }
+    return 0;
+}
+
+void andross_init(int obj, u8 *setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+    int model;
+
+    *(f32 *)(state + 0x58) = *(f32 *)(setup + 8);
+    *(f32 *)(state + 0x5c) = *(f32 *)(setup + 0xc);
+    *(f32 *)(state + 0x60) = *(f32 *)(setup + 0x10);
+    *(s16 *)(state + 0x98) = 0;
+    *(int *)(state + 0x88) = 0;
+    *(int *)(state + 0x8c) = -1;
+    *(f32 *)(state + 0x64) = lbl_803E7590;
+    *(u8 *)(state + 0xb6) = 5;
+    *(int *)(state + 0x7c) = 1;
+    *(int *)(state + 0x80) = -1;
+    *(s16 *)(state + 0xa0) = -0x8000;
+    *(s16 *)obj = -0x8000;
+    *(f32 *)(state + 0x6c) = lbl_803E7594;
+    *(f32 *)(state + 0xa8) = lbl_803E74D4;
+    *(f32 *)(state + 0x74) = lbl_803E7598;
+    *(f32 *)(state + 0x78) = lbl_803E7530;
+    *(u8 *)(state + 0xbc) = 1;
+    ObjHits_SetTargetMask(obj, 4);
+    *(void **)(obj + 0xbc) = (void *)andross_updateModelAlpha;
+    fn_8006CB50();
+    model = *(int *)Obj_GetActiveModel(obj);
+    for (i = 0; i < *(u8 *)(model + 0xf8); i++) {
+        *(u8 *)(ObjModel_GetRenderOp(model, i) + 0x43) = 0;
+    }
+    GameBit_Set(0xd, 0);
+    unlockLevel(0, 0, 1);
+}
+#pragma scheduling on
+
 int androssbrain_getExtraSize(void) { return 0x28; }
 int androssbrain_getObjectTypeId(void) { return 0; }
 void androssbrain_free(void) {}
