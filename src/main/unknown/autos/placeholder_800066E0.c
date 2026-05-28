@@ -10519,3 +10519,37 @@ void audioSetSoundMode(int mode, u8 forceFlag)
     }
     gAudioSoundMode = (s8)mode;
 }
+
+extern u8 lbl_802C6E98[];
+extern int lbl_802C6F98[];
+
+/*
+ * Function: utf8GetNextChar
+ * EN v1.0 Address: 0x80015CB8
+ * EN v1.0 Size: 184b
+ */
+int utf8GetNextChar(u8* str, int* outLen)
+{
+    u8 first = *str;
+    int cls = lbl_802C6E98[first];
+    u32 acc = 0;
+    switch (cls) {
+    case 5:
+        str++;
+        acc = first << 6;
+    case 4:
+        acc = (acc + *str++) << 6;
+    case 3:
+        acc = (acc + *str++) << 6;
+    case 2:
+        acc = (acc + *str++) << 6;
+    case 1:
+        acc = (acc + *str++) << 6;
+    case 0:
+        acc += *str;
+    default:
+        break;
+    }
+    *outLen = cls + 1;
+    return acc - lbl_802C6F98[cls];
+}
