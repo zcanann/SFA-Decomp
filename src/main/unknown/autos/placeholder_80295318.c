@@ -6532,6 +6532,8 @@ extern int randomGetRange(int lo, int hi);
 extern void mm_free(void *ptr);
 extern void fn_80026C88(int a);
 extern void buttonDisable(int a, int b);
+extern int getYButtonItem(s16 *out);
+extern void cameraSetInterpMode(int mode);
 extern f32 lbl_803E8234;
 extern f32 lbl_803DC740[];
 extern s16 lbl_803DC73C[];
@@ -7486,6 +7488,7 @@ int fn_80299BB0(int obj, int p2)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma dont_inline on
 int fn_802A9B1C(int obj, int p2, int p3)
 {
     int inner = *(int *)((char *)obj + 0xb8);
@@ -7512,6 +7515,7 @@ int fn_802A9B1C(int obj, int p2, int p3)
     }
     return 0;
 }
+#pragma dont_inline reset
 
 void fn_8029FFD0(int obj, int p2)
 {
@@ -11916,6 +11920,125 @@ int fn_802B74C4(int obj, int state)
         }
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802AF410(int obj, int state)
+{
+    u8 noMatch;
+    s16 cmd;
+    s16 item;
+
+    if ((*(u16 *)((char *)state + 0x6e2) & 0x800) && getYButtonItem(&item) == 1) {
+        buttonDisable(0, 0x800);
+        *(u16 *)((char *)state + 0x6e2) &= ~0x800;
+        *(s16 *)((char *)state + 0x80c) = item;
+    }
+
+    cmd = *(s16 *)((char *)state + 0x80c);
+    if (cmd != -1 && cmd != *(s16 *)((char *)state + 0x80a) && getCurSeqNo() == 0) {
+        s16 sel = *(s16 *)((char *)state + 0x80c);
+        noMatch = 0;
+        switch (sel) {
+        case 0x2d:
+        case 0x958:
+        case 0x5ce:
+            if (fn_802A9B1C(obj, state, sel) != 0) {
+                ByteFlags *f1 = (ByteFlags *)((char *)state + 0x3f1);
+                u8 c8;
+                if (*(void **)((char *)state + 0x2d0) != NULL) {
+                    break;
+                }
+                c8 = *(u8 *)((char *)state + 0x8c8);
+                if (c8 == 0x49) {
+                    break;
+                }
+                if (c8 == 0x52 && !f1->b20 && !f1->b10 &&
+                    *(s16 *)((char *)state + 0x274) != 0x1d) {
+                    break;
+                }
+                if (f1->b20) {
+                    s16 v = *(s16 *)((char *)obj + 0);
+                    *(s16 *)((char *)state + 0x484) = v;
+                    *(s16 *)((char *)state + 0x478) = v;
+                    *(int *)((char *)state + 0x494) = v;
+                    *(f32 *)((char *)state + 0x284) = lbl_803E7EA4;
+                }
+                f1->b20 = 0;
+                if (f1->b10) {
+                    u8 c = *(u8 *)((char *)state + 0x8c8);
+                    if (c != 0x48 && c != 0x47 && getCurSeqNo() == 0) {
+                        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                            0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                        f1->b10 = 0;
+                    }
+                }
+                cameraSetInterpMode(2);
+                (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                    0x52, 1, 0, 0, 0, 0x2d, 0xff);
+                ((ByteFlags *)((char *)state + 0x3f6))->b40 = 1;
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0x2a);
+                *(int *)((char *)state + 0x304) = (int)fn_8029A4A8;
+                fn_802AB38C(obj, state, *(s16 *)((char *)state + 0x80c));
+            } else {
+                noMatch = 1;
+            }
+            break;
+        case 0x957:
+            if (fn_802A97D0(obj, state) != 0) {
+                fn_802AB38C(obj, state, *(s16 *)((char *)state + 0x80c));
+            } else {
+                noMatch = 1;
+            }
+            break;
+        case 0x107:
+        case 0xc55:
+            if (fn_802A9A0C(obj, state) != 0) {
+                fn_802AB38C(obj, state, *(s16 *)((char *)state + 0x80c));
+            } else {
+                noMatch = 1;
+            }
+            break;
+        case 0x40: {
+            int inner = *(int *)((char *)obj + 0xb8);
+            int ok;
+            if (*(void **)((char *)state + 0x2d0) != NULL ||
+                *(s16 *)((char *)*(int *)((char *)inner + 0x35c) + 4) < 0xa ||
+                ((ByteFlags *)((char *)inner + 0x3f3))->b08) {
+                ok = 0;
+            } else if (*(s16 *)((char *)state + 0x274) == 1 ||
+                       *(s16 *)((char *)state + 0x274) == 2) {
+                ok = 1;
+            } else {
+                ok = 0;
+            }
+            if (ok && !((ByteFlags *)((char *)state + 0x3f3))->b08) {
+                fn_802AB38C(obj, state, sel);
+            } else {
+                noMatch = 1;
+            }
+            break;
+        }
+        case 0x5bd:
+            if (fn_802A98FC(obj, state) != 0) {
+                fn_802AB38C(obj, state, *(s16 *)((char *)state + 0x80c));
+            } else {
+                noMatch = 1;
+            }
+            break;
+        default:
+            fn_802AB38C(obj, state, sel);
+            break;
+        }
+        if (noMatch) {
+            Sfx_PlayFromObject(0, 0x10a);
+        }
+    }
+
+    *(s16 *)((char *)state + 0x80c) = -1;
 }
 #pragma peephole reset
 #pragma scheduling reset
