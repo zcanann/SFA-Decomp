@@ -2137,6 +2137,92 @@ void FUN_8000683c(undefined4 param_1,undefined4 param_2,char *param_3,float *par
 {
 }
 
+typedef struct SfxTriggerFull {
+    u16 id;
+    u8 volBase;
+    u8 volRand;
+    u8 pitchBase;
+    u8 pitchRand;
+    u16 field_6;
+    u16 field_8;
+    u16 sfxIds[6];
+    u8 weights[6];
+    u16 selectRange;
+    u8 e_tableIdx : 4;
+    u8 e_bit3 : 1;
+    u8 e_pad : 2;
+    u8 e_bit0 : 1;
+    u8 f_count : 4;
+    u8 f_curIdx : 4;
+} SfxTriggerFull;
+
+extern int randomGetRange(int min, int max);
+extern u8 lbl_803DB248;
+
+int Sfx_ReadTriggerParams(SfxTriggerFull *trigger, u16 *outSfxId, u8 *outVol, f32 *outF6,
+                          f32 *outF7, f32 *outF8, int *outI9, int *outI10, int *outI11)
+{
+    int idx;
+    int selector;
+
+    if (trigger == NULL || trigger->f_count == 0) {
+        return 0;
+    }
+
+    selector = randomGetRange(1, trigger->selectRange);
+    if (trigger->id == 0xab) {
+        if (trigger->f_curIdx == 0) {
+            trigger->f_curIdx = 1;
+        } else {
+            trigger->f_curIdx = 0;
+        }
+        idx = trigger->f_curIdx;
+    } else {
+        idx = 0;
+        while (selector > trigger->weights[idx]) {
+            selector -= trigger->weights[idx];
+            idx++;
+        }
+        if (trigger->f_curIdx == idx) {
+            idx++;
+            if (idx >= trigger->f_count) {
+                idx = 0;
+            }
+        }
+    }
+    trigger->f_curIdx = idx;
+
+    *outSfxId = trigger->sfxIds[idx];
+    if (*outSfxId == 0) {
+        return 0;
+    }
+
+    {
+        u8 vr = trigger->volRand;
+        if (vr != 0) {
+            int hi = trigger->volBase + randomGetRange(0, vr);
+            *outVol = hi - randomGetRange(0, vr);
+        } else {
+            *outVol = trigger->volBase;
+        }
+    }
+    {
+        u8 pr = trigger->pitchRand;
+        if (pr != 0) {
+            int hi = trigger->pitchBase + randomGetRange(0, pr);
+            *outF6 = (f32)(hi - randomGetRange(0, pr));
+        } else {
+            *outF6 = (f32)(u32)trigger->pitchBase;
+        }
+    }
+    *outF7 = (f32)(u32)trigger->field_6;
+    *outF8 = (f32)(u32)trigger->field_8;
+    *outI9 = (&lbl_803DB248)[trigger->e_tableIdx];
+    *outI10 = trigger->e_bit0;
+    *outI11 = trigger->e_bit3;
+    return 1;
+}
+
 /*
  * --INFO--
  *
