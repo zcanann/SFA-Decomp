@@ -4897,7 +4897,9 @@ void fn_8022D4CC(int arwing, int in)
     PSVECAdd(v, in, v);
 }
 
+#pragma dont_inline on
 void fn_8022D4F8(int arwing) { *(int *)(*(int *)(arwing + 0xb8) + 0x438) = 0; }
+#pragma dont_inline reset
 
 #pragma dont_inline on
 int fn_8022D508(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x471); }
@@ -6197,6 +6199,69 @@ void fn_8022D308(int obj)
     *(s16 *)(obj + 2) = 0;
     *(s16 *)(obj + 4) = 0;
     arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+}
+#pragma scheduling reset
+
+extern f32 lbl_803E7040;
+extern f32 lbl_803E7048;
+
+#pragma scheduling off
+void arwarwingbo_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int arwing = getArwing();
+
+    if (*(u16 *)(arwing + 0xb0) & 0x1000) {
+        fn_8022D4F8(arwing);
+        Obj_FreeObject(obj);
+        return;
+    }
+    if (*(f32 *)(state + 8) > lbl_803E7044) {
+        *(f32 *)(state + 8) -= timeDelta;
+        if (*(f32 *)(state + 8) <= lbl_803E7044)
+            Obj_FreeObject(obj);
+        return;
+    }
+    if (*(f32 *)(state + 0) > lbl_803E7044) {
+        *(f32 *)(state + 0) -= timeDelta;
+        if (*(f32 *)(state + 0) <= lbl_803E7044) {
+            state = *(int *)(obj + 0xb8);
+            fn_8022D4F8(getArwing());
+            Sfx_PlayFromObject(obj, 0x2a5);
+            *(f32 *)(state + 8) = lbl_803E7040;
+            *(f32 *)(state + 0) = lbl_803E7044;
+            *(u8 *)(obj + 0x36) = 0;
+            *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~0x200;
+            spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
+            ObjHitbox_SetSphereRadius(obj, 0x280);
+            ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
+            *(f32 *)(obj + 0x24) = lbl_803E7044;
+            *(f32 *)(obj + 0x28) = lbl_803E7044;
+            *(f32 *)(obj + 0x2c) = lbl_803E7044;
+        }
+        (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x79e, 0, 1, -1, obj + 0x24);
+        (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x79e, 0, 1, -1, obj + 0x24);
+        ObjHits_SetHitVolumeSlot(obj, 0xf, 0, 0);
+        if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL ||
+            (s8)*(u8 *)(*(int *)(obj + 0x54) + 0xad) != 0 ||
+            (getButtonsJustPressed(0) & 0x200)) {
+            state = *(int *)(obj + 0xb8);
+            fn_8022D4F8(getArwing());
+            Sfx_PlayFromObject(obj, 0x2a5);
+            *(f32 *)(state + 8) = lbl_803E7040;
+            *(f32 *)(state + 0) = lbl_803E7044;
+            *(u8 *)(obj + 0x36) = 0;
+            *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~0x200;
+            spawnExplosion(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
+            ObjHitbox_SetSphereRadius(obj, 0x280);
+            ObjHits_SetHitVolumeSlot(obj, 5, 5, 0);
+            *(f32 *)(obj + 0x24) = lbl_803E7044;
+            *(f32 *)(obj + 0x28) = lbl_803E7044;
+            *(f32 *)(obj + 0x2c) = lbl_803E7044;
+        }
+        objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
+                *(f32 *)(obj + 0x2c) * timeDelta);
+    }
 }
 #pragma scheduling reset
 
