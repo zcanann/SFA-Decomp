@@ -6401,6 +6401,8 @@ extern f32 lbl_803E7F24;
 extern f32 lbl_803E7FC0;
 extern f32 lbl_803E7F0C;
 extern int audioPickSoundEffect_8006ed24(u8 id, int bank);
+extern void characterDoEyeAnims(int obj, int q);
+extern f32 lbl_803E820C;
 
 typedef struct {
     u8 pad[0x7ac];
@@ -7695,6 +7697,7 @@ int fn_8029BC4C(int obj, int state, f32 fv)
     return 0;
 }
 
+#pragma dont_inline on
 void fn_802B8360(int obj, int p2)
 {
     if (*(int *)((char *)p2 + 0x314) & 4) {
@@ -7731,6 +7734,7 @@ void fn_802B8360(int obj, int p2)
         doRumble(lbl_803E81D8);
     }
 }
+#pragma dont_inline reset
 
 int fn_8029E3F4(int obj, int state)
 {
@@ -8546,6 +8550,41 @@ int fn_80297854(int obj, int state, f32 fv)
         return 0;
     }
     return 0;
+}
+
+void fn_802B86B8(int obj, int a, int b)
+{
+    int p = *(int *)((char *)a + 0x40c);
+    int sub = *(int *)((char *)obj + 0x4c);
+    int mode;
+    int v;
+
+    (*(void (*)(int, int, int, void *, void *, void *))(*(int *)(*gBaddieControlInterface + 0x14)))(
+        obj, Obj_GetPlayerObject(), 0x10,
+        (char *)p + 0x1e, (char *)p + 0x20, (char *)p + 0x22);
+    *(f32 *)((char *)b + 0x2c0) = (f32)(u32)*(u16 *)((char *)p + 0x22);
+    mode = *(int *)((char *)obj + 0xf8);
+    if (mode == 2) {
+        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+        *(int *)((char *)obj + 0xf8) = 1;
+    } else if (mode == 3) {
+        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
+        *(int *)((char *)obj + 0xf8) = 1;
+    } else {
+        characterDoEyeAnims(obj, a + 0x3ac);
+        *(int *)((char *)b + 0x2d0) = Obj_GetPlayerObject();
+        v = *(int *)((char *)sub + 0x14);
+        if (v >= 0x49942 || v < 0x4993f) {
+            (*(void (*)(int, int, f32, int))(*(int *)(*gBaddieControlInterface + 0x2c)))(
+                obj, b, lbl_803E820C, 1);
+        }
+        *(int *)((char *)a + 0x3e0) = *(int *)((char *)obj + 0xc0);
+        *(int *)((char *)obj + 0xc0) = 0;
+        (*(void (*)(int, int, f32, f32, void *, void *))(*(int *)(*gPlayerInterface + 0x8)))(
+            obj, b, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
+        *(int *)((char *)obj + 0xc0) = *(int *)((char *)a + 0x3e0);
+        fn_802B8360(obj, a);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
