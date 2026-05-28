@@ -6605,6 +6605,7 @@ extern f32 lbl_803E6C78;
 extern f32 lbl_803E6C7C;
 extern f32 lbl_803E6C80;
 
+#pragma dont_inline on
 #pragma scheduling off
 int fn_80222358(int p1, int p2, f32 a, f32 b, f32 c, int flag)
 {
@@ -6642,6 +6643,7 @@ int fn_80222358(int p1, int p2, f32 a, f32 b, f32 c, int flag)
     return result;
 }
 #pragma scheduling reset
+#pragma dont_inline reset
 
 #pragma scheduling off
 int fn_80222160(int p1, int p2, f32 a, f32 b, f32 c, int flag, int *p6)
@@ -6681,6 +6683,7 @@ int fn_80222160(int p1, int p2, f32 a, f32 b, f32 c, int flag, int *p6)
     return result;
 }
 #pragma scheduling reset
+#pragma dont_inline reset
 
 typedef struct {
     u8 f80 : 1;
@@ -6693,6 +6696,7 @@ typedef struct {
 extern f32 lbl_803E716C;
 extern f32 lbl_803E7170;
 
+#pragma dont_inline on
 #pragma scheduling off
 void arwsquadron_applyCommandParams(int p1, int p2)
 {
@@ -6740,6 +6744,42 @@ void arwsquadron_applyCommandParams(int p1, int p2)
                 break;
             }
         }
+    }
+}
+#pragma scheduling reset
+
+extern void fn_80222550(int a, int b, int c, f32 d, f32 e);
+extern f32 lbl_803E7168;
+extern f32 lbl_803E719C;
+extern f32 lbl_803E71A0;
+extern f32 lbl_803E71A4;
+
+#pragma scheduling off
+void arwsquadron_followPath(int p1, int p2)
+{
+    int state = *(int *)(p1 + 0x4c);
+    int r;
+
+    r = fn_80222358(p1, p2, *(f32 *)(p2 + 0x108), lbl_803E719C, *(f32 *)(p2 + 0x108), 1);
+    if (r == -1) {
+        *(s16 *)(p1 + 6) |= 0x4000;
+        ObjHits_DisableObject(p1);
+        *(u8 *)(p2 + 0x159) = 4;
+    } else {
+        if (r != 0)
+            arwsquadron_applyCommandParams(p1, p2);
+        if (*(u8 *)(state + 0x2f) == 2) {
+            if (*(u8 *)(p2 + 0x15c) == 2)
+                fn_80222550(p1, p1 + 0x24, 0xf, lbl_803E71A0, lbl_803E7188);
+            else
+                fn_80222550(p1, p1 + 0x24, 0xf,
+                            ((SquadCmdFlags *)(p2 + 0x160))->f08 ? lbl_803E7168 : lbl_803E71A0,
+                            lbl_803E7188);
+        }
+        *(f32 *)(p2 + 0x108) += interpolate(*(f32 *)(p2 + 0x10c) - *(f32 *)(p2 + 0x108),
+                                            lbl_803E71A4, timeDelta);
+        objMove(p1, *(f32 *)(p1 + 0x24) * timeDelta, *(f32 *)(p1 + 0x28) * timeDelta,
+                *(f32 *)(p1 + 0x2c) * timeDelta);
     }
 }
 #pragma scheduling reset
