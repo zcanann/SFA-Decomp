@@ -63,6 +63,14 @@ Heuristic before reaching for `asm { }`:
 2. **Replace `& 0xff7f`-style literal with `& ~0x80`** for single-bit clears.
    The bit-NOT form often produces `rlwinm` directly where the explicit
    inverted-literal form produces `andi.`. See `782a09a8`, `91f5f4ab`.
+   **Inverse cap — when target MATERIALIZES the mask (`li rX,-K; and` /
+   `lis;ori`) MWCC won't reproduce it from clean C.** For some constants (e.g.
+   `&= ~K`, `|= 0x800000`) target emits a materialized-constant `li`/`lis;or`
+   form while every clean-C spelling gives `rlwinm`/`oris`. This is NOT
+   peephole-controllable (confirmed: peephole-off region still emits `rlwinm`).
+   Caps tiny flag fns ~70% — leave partial, don't grind. (november9, 80295318
+   fn_80296BBC.) The asm `li;and` recipe at the bottom *can* force it but isn't
+   worth it for a tiny fn — Prime Directive.
 
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
