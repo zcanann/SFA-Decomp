@@ -364,6 +364,22 @@ extern f32 lbl_803E6998;
 extern f32 lbl_803E69A0;
 extern char sKytesMumYawDiffMessage[];
 void kytesmum_playAnimationEventSfx(int obj, u8 *arg, s16 *sfxData);
+extern void curveFn_80010320(void *curve, f32 v);
+extern s16 Obj_GetYawDeltaToObject(int obj, int target, int p3);
+extern void fn_80221F14(int obj, f32 *a, f32 *b, f32 f1, f32 f2, f32 f3);
+extern f32 lbl_803E6A4C;
+extern f32 lbl_803E6A50;
+extern f32 lbl_803E6A54;
+extern f32 lbl_803E6A58;
+extern f32 lbl_803E6A8C;
+extern f32 lbl_803E6A90;
+extern f32 lbl_803E6A94;
+extern f32 lbl_803E6A98;
+extern f32 lbl_803E6A9C;
+extern f32 lbl_803DC2F8;
+extern s16 lbl_803DC2FC;
+int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out);
+void drakorhoverpad_update(void *curve, int arg);
 
 extern int fn_80080150(void *timer);
 extern void s16toFloat(void *timer, int v);
@@ -1074,6 +1090,174 @@ void kytesmum_update(int obj) {
         (*(void (**)(int, int, int, int))(*(int *)(*(int *)((char *)nearest + 0x68)) + 0x28))(
             nearest, obj, 1, 2);
     }
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+void drakorhoverpad_updateMain(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x4c);
+    HoverpadFlags *f = (HoverpadFlags *)(p + 0x178);
+    Flags377 *g = (Flags377 *)(p + 0x179);
+    u8 *curve;
+    int curveArg;
+    f32 curvePos[3];
+    f32 diff[3];
+    int evOut;
+    f32 phase;
+    f32 wobbleY;
+    f32 limit;
+    f32 absH;
+    f32 absV;
+    int nearest;
+    int yawDelta;
+    int c;
+
+    Obj_GetPlayerObject();
+    if (drakorhoverpad_init(obj) != 0) {
+        return;
+    }
+    if (f->bit20 == 0) {
+        f->bit20 = GameBit_Get(*(s16 *)((char *)q + 0x20));
+        *(f32 *)(p + 0x114) = lbl_803E6A3C;
+        if (f->bit20 != 0) {
+            curveArg = 0x2a;
+            (*(void (**)(int, int, f32, int *, int))((char *)*gRomCurveInterface + 0x8c))(
+                (int)(p + 4), obj, lbl_803E6A4C, &curveArg, -1);
+            curveFn_80010320(p + 4, lbl_803E6A50);
+            *(f32 *)((char *)obj + 0xc) = *(f32 *)(p + 0x6c);
+            *(f32 *)((char *)obj + 0x10) = *(f32 *)(p + 0x70);
+            *(f32 *)((char *)obj + 0x14) = *(f32 *)(p + 0x74);
+            *(f32 *)p = lbl_803E6A38;
+            Sfx_PlayFromObject(obj, 0x308);
+            Sfx_PlayFromObject(obj, 0x30a);
+        }
+        return;
+    }
+    curve = p + 4;
+    if (g->f08 != 0) {
+        phase = lbl_803E6A54 *
+                (f32)(int)getAngle(sqrtf(*(f32 *)(curve + 0x74) * *(f32 *)(curve + 0x74) +
+                                         *(f32 *)(curve + 0x7c) * *(f32 *)(curve + 0x7c)),
+                                   *(f32 *)(curve + 0x78)) /
+                lbl_803E6A58;
+        wobbleY = lbl_803E6A8C * sin(phase);
+        limit = lbl_803E6A90 * (lbl_803E6A94 * fn_80293E80(phase));
+        if (f->b40 != 0) {
+            absH = *(f32 *)p;
+            if (absH < lbl_803E6A3C) {
+                absH = -absH;
+            }
+            absV = *(f32 *)(p + 0x110);
+            if (absV < lbl_803E6A3C) {
+                absV = -absV;
+            }
+            if (absV > lbl_803E6A38 + absH) {
+                limit = limit + lbl_803E6A38;
+            }
+        }
+        if (f->state != 0) {
+            limit = limit + lbl_803E6A38;
+        }
+        *(f32 *)(p + 0x110) = *(f32 *)(p + 0x114) + (*(f32 *)(p + 0x110) + wobbleY);
+        absV = *(f32 *)(p + 0x110);
+        if (absV < lbl_803E6A3C) {
+            absV = -absV;
+        }
+        if (absV < limit) {
+            *(f32 *)(p + 0x110) = *(f32 *)p;
+        } else {
+            if (*(f32 *)(p + 0x110) > *(f32 *)p) {
+                *(f32 *)(p + 0x110) = *(f32 *)(p + 0x110) + -limit;
+            } else {
+                *(f32 *)(p + 0x110) = *(f32 *)(p + 0x110) + limit;
+            }
+        }
+        ObjHits_SetHitVolumeSlot(obj, 8, 1, 0);
+    } else {
+        ObjHits_DisableObject(obj);
+        *(f32 *)(p + 0x110) = *(f32 *)p;
+        lbl_803DC2F8 = lbl_803E6A38 * *(f32 *)p;
+    }
+    if (*(f32 *)(p + 0x110) < lbl_803E6A3C) {
+        (*(void (**)(int, int))((char *)*gRomCurveInterface + 0x94))((int)(p + 4), 1);
+    } else {
+        (*(void (**)(int, int))((char *)*gRomCurveInterface + 0x94))((int)(p + 4), 0);
+    }
+    *(f32 *)(p + 0x114) = lbl_803E6A3C;
+    if (lbl_803E6A3C != *(f32 *)(p + 0x110)) {
+        curveFn_80010320(curve, *(f32 *)(p + 0x110));
+        if ((*(int *)(curve + 0x80) != 0) != (*(int *)(curve + 0x10) != 0)) {
+            if (drakorhoverpad_handlePathPointEvent(obj, *(u8 *)(*(int *)(curve + 0xa0) + 0x18),
+                                                    *(u8 *)(*(int *)(curve + 0xa4) + 0x18),
+                                                    &evOut) != 0) {
+                drakorhoverpad_update(curve, evOut);
+            }
+        }
+    }
+    curvePos[0] = *(f32 *)(curve + 0x68);
+    curvePos[1] = *(f32 *)(curve + 0x6c);
+    curvePos[2] = *(f32 *)(curve + 0x70);
+    curvePos[1] = curvePos[1] + (lbl_803E6A48 + fn_80293E80(lbl_803E6A54 *
+                                                            (f32)(int)*(s16 *)(p + 0x174) /
+                                                            lbl_803E6A58));
+    *(s16 *)(p + 0x174) = (s16)(*(s16 *)(p + 0x174) + framesThisStep * 0x320);
+    if (g->f10 != 0) {
+        nearest = ObjGroup_FindNearestObject(0x45, obj, 0);
+        if (nearest != 0) {
+            yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
+            if (yawDelta < -0x200) {
+                yawDelta = -0x200;
+            } else if (yawDelta > 0x200) {
+                yawDelta = 0x200;
+            }
+            *(s16 *)obj = (s16)(*(s16 *)obj + yawDelta);
+            if (*(s16 *)((char *)obj + 2) != 0) {
+                c = *(s16 *)((char *)obj + 2);
+                if (c < -0x100) {
+                    c = -0x100;
+                } else if (c > 0x100) {
+                    c = 0x100;
+                }
+                *(s16 *)((char *)obj + 2) = (s16)(*(s16 *)((char *)obj + 2) - c);
+            }
+            *(s16 *)((char *)obj + 4) = (s16)(yawDelta * lbl_803DC2FC);
+        }
+    } else {
+        phase = sqrtf(*(f32 *)(curve + 0x74) * *(f32 *)(curve + 0x74) +
+                      *(f32 *)(curve + 0x7c) * *(f32 *)(curve + 0x7c));
+        yawDelta = (s16)((s16)(getAngle(*(f32 *)(curve + 0x74), *(f32 *)(curve + 0x7c)) + 0x8000) -
+                         *(s16 *)obj);
+        *(s16 *)((char *)obj + 2) = getAngle(*(f32 *)(curve + 0x78), phase);
+        if (yawDelta < -0x800) {
+            yawDelta = -0x800;
+        } else if (yawDelta > 0x800) {
+            yawDelta = 0x800;
+        }
+        if (*(f32 *)(p + 0x110) < lbl_803E6A3C) {
+            *(s16 *)((char *)obj + 4) = yawDelta;
+        } else {
+            *(s16 *)((char *)obj + 4) = -yawDelta;
+        }
+        c = yawDelta;
+        if (c < -0x100) {
+            c = -0x100;
+        } else if (c > 0x100) {
+            c = 0x100;
+        }
+        *(s16 *)obj = (s16)(*(s16 *)obj + c);
+        c = *(s16 *)((char *)obj + 2);
+        if (c < -0x64) {
+            c = -0x64;
+        } else if (c > 0x64) {
+            c = 0x64;
+        }
+        *(s16 *)((char *)obj + 2) = c;
+    }
+    PSVECSubtract(curvePos, (f32 *)((char *)obj + 0xc), diff);
+    fn_80221F14(obj, (f32 *)((char *)obj + 0x24), diff, lbl_803DC2F8,
+                lbl_803DC2F8 / lbl_803E6A98, lbl_803E6A9C);
+    PSVECAdd((f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x24), (f32 *)((char *)obj + 0xc));
 }
 #pragma scheduling reset
 
