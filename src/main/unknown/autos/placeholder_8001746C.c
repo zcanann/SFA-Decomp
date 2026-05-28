@@ -7282,6 +7282,7 @@ int roundUpTo4(int x) {
     return x;
 }
 
+#pragma dont_inline on
 int roundUpTo8(int x) {
     int r = x & 7;
     if (r > 0) {
@@ -7305,6 +7306,7 @@ int roundUpTo32(int x) {
     }
     return x;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 
 /* Simple field/global accessors. */
@@ -8266,6 +8268,7 @@ extern int *lbl_803DCB60;
 extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 
 #pragma peephole off
+#pragma dont_inline on
 int modelGetAmapSize(int a, int b, int c) {
     int size;
     if (b != 0) {
@@ -8283,6 +8286,7 @@ int modelGetAmapSize(int a, int b, int c) {
     }
     return size;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 
 extern void *mmAlloc(int size, int type, int flag);
@@ -8376,6 +8380,35 @@ void ObjModel_RelocateModelData(u8 *m) {
     if (*(u32 *)(m + 0x60)) {
         *(u32 *)(m + 0x60) += (u32)m;
     }
+}
+
+extern int getTableFileEntry(int fileId, int index, int *out);
+extern void loadModelsBin();
+extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
+
+void *ObjModel_LoadModelData(int id) {
+    int a18, a14, a10, aC, a8;
+    void *model;
+    if (getTableFileEntry(0x2a, id, &a18) == 0) {
+        return NULL;
+    }
+    ((void (*)(int, int *, int *, int *, int *, int))loadModelsBin)(a18, &a10, &aC, &a8, &a14, id);
+    aC = roundUpTo8(aC);
+    aC += 0xb0;
+    model = (void *)roundUpTo16((int)mmAlloc(a14 + modelGetAmapSize(id, a8, a10) + 0x1f4, 9, 0));
+    loadAndDecompressDataFile(0x2b, model, a18, a14, 0, id, 0);
+    *(s16 *)((u8 *)model + 0x84) = aC;
+    *(u16 *)((u8 *)model + 0x4) = id;
+    *(u16 *)((u8 *)model + 0xec) = a10;
+    *(u16 *)((u8 *)model + 0x2) &= ~0x40;
+    *(u8 *)model = 1;
+    if (*(u16 *)((u8 *)model + 0xec) == 0) {
+        *(u16 *)((u8 *)model + 0x2) |= 2;
+    }
+    if (a8 != 0) {
+        *(u16 *)((u8 *)model + 0x2) |= 0x40;
+    }
+    return model;
 }
 
 void ObjModel_ResolveRenderOpTextures(u8 *m) {
