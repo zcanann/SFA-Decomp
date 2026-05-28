@@ -8595,3 +8595,40 @@ void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
     return m;
 }
 #pragma pop
+
+extern void setGQR6(u32 v);
+extern void mapSetup();
+extern void *memset(void *dst, int val, int n);
+extern void Music_Trigger(int triggerId, int mode);
+extern u8 lbl_803DCA38;
+extern int lbl_803DCAF8;
+extern int lbl_803DCAF4;
+extern u8 lbl_803DCA40;
+extern u8 lbl_803DCA41;
+extern u8 lbl_8033BFB8[];
+extern int lbl_803DCAD4;
+extern u8 lbl_803DCA44;
+extern f32 lbl_803DE7B4;
+extern f32 lbl_803DB420;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void setGQR6_2(int a, int b, int c, int d) {
+    setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
+}
+
+void mapLoadByCoords(int arg) {
+    lbl_803DCA38 = 0;
+    mapSetup(arg, &lbl_803DCAF8, &lbl_803DCAF4);
+    lbl_803DCA40 = 1;
+    lbl_803DCA41 = 1;
+    memset(lbl_8033BFB8, 0, 0x3c0);
+    lbl_803DCAD4 = 0;
+    lbl_803DCA39 = 1;
+    lbl_803DCA44 = 0;
+    Music_Trigger(0xc9, 0);
+    Music_Trigger(0xd0, 0);
+    lbl_803DB420 = lbl_803DE7B4;
+}
+#pragma pop
