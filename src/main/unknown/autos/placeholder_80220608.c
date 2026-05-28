@@ -5791,6 +5791,35 @@ void fn_80239DD8(int p1, int p2)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern int lbl_803DC4E8;
+
+#pragma scheduling off
+void fn_80239EAC(int p1, int p2)
+{
+    f32 dx, dy, dz;
+    int *objs;
+    int obj;
+    int i;
+    int count;
+    int defNo;
+
+    objs = ObjGroup_GetObjects(2, &count);
+    for (i = 0; i < count; i++) {
+        obj = *objs;
+        defNo = *(s16 *)(*(int *)(obj + 0x4c));
+        if (defNo == 0x80d || defNo == 0x859) {
+            dy = *(f32 *)(p2 + 0xc4) - *(f32 *)(obj + 0x10);
+            dz = *(f32 *)(p2 + 0xc8) - *(f32 *)(obj + 0x14);
+            dx = *(f32 *)(p2 + 0xc0) - *(f32 *)(obj + 0xc);
+            *(s16 *)(obj + 0) = (s16)getAngle(dx, dz);
+            *(s16 *)(obj + 2) = -(s16)getAngle(dy, dz);
+            arwprojectile_placeForward(obj, (f32)(u32)lbl_803DC4E8);
+        }
+        objs++;
+    }
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
