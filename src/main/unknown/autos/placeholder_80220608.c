@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 /* Pattern wrappers. */
 extern byte framesThisStep;
@@ -3641,6 +3642,10 @@ extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern f32 lbl_803E72F8;
 extern f32 lbl_803E7308;
+extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
+extern f32 lbl_803E730C;
+extern f32 lbl_803E7328;
+extern f32 lbl_803E732C;
 
 #pragma dont_inline on
 #pragma scheduling off
@@ -3724,6 +3729,80 @@ void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             }
         }
         *(int *)(obj + 0xf8) = 1;
+    }
+}
+
+void tree_init(int obj, u8 *setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    ObjAnimEventList animOut;
+
+    *(f32 *)(state + 0x44) = lbl_803E730C;
+    *(f32 *)(state + 0x40) = lbl_803E72F8;
+    *(u16 *)(state + 0x54) = setup[0x1d] << 1;
+    *(u16 *)(state + 0x58) = setup[0x1e];
+    *(u16 *)(state + 0x58) = *(u16 *)(state + 0x58) << 8;
+    *(u16 *)(state + 0x58) |= setup[0x1c];
+    *(f32 *)(state + 0x3c) = lbl_803E72F8;
+    *(s16 *)(obj + 4) = (s16)(setup[0x18] << 8);
+    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
+    *(s16 *)(obj + 0) = (s16)(setup[0x1a] << 8);
+    *(u8 *)(obj + 0xaf) |= 0x8;
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+    *(int *)(obj + 0xf8) = 0;
+    if (setup[0x1b] != 0) {
+        *(f32 *)(state + 0x48) = (f32)(u32)setup[0x1b] / lbl_803E7328;
+        *(f32 *)(obj + 8) = *(f32 *)(state + 0x48);
+        if (*(f32 *)(obj + 8) == lbl_803E72F8) {
+            *(f32 *)(obj + 8) = lbl_803E7308;
+        }
+        *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
+    } else {
+        *(f32 *)(state + 0x48) = lbl_803E7308;
+    }
+    ObjAnim_SetCurrentMove(obj, 0, lbl_803E72F8, 0);
+    ObjAnim_AdvanceCurrentMove(lbl_803E7308, lbl_803E7308, obj, &animOut);
+    if (*(u16 *)(state + 0x58) & 0x80) {
+        *(u16 *)(state + 0x58) |= 0x20;
+    }
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x798:
+        *(u16 *)(state + 0x5a) = 0xa;
+        break;
+    case 0x799:
+        *(u16 *)(state + 0x5a) = 0x9;
+        break;
+    case 0x70d:
+        *(u16 *)(state + 0x5a) = 0x8;
+        break;
+    case 0x70c:
+        *(u16 *)(state + 0x5a) = 0x7;
+        ObjHitbox_SetCapsuleBounds(obj, (int)(lbl_803E732C * *(f32 *)(obj + 8)), -0x5, 0x64);
+        break;
+    case 0x625:
+        *(u16 *)(state + 0x5a) = 0x6;
+        break;
+    case 0x77a:
+        *(u16 *)(state + 0x5a) = 0x5;
+        break;
+    case 0x624:
+        *(u16 *)(state + 0x5a) = 0x4;
+        break;
+    case 0x39:
+        *(u16 *)(state + 0x5a) = 0x3;
+        break;
+    case 0x10b:
+        *(u16 *)(state + 0x5a) = 0x2;
+        break;
+    case 0x5d1:
+        *(u16 *)(state + 0x5a) = 0x1;
+        break;
+    default:
+        *(u16 *)(state + 0x5a) = 0x0;
+        break;
+    }
+    if (!(*(u16 *)(state + 0x58) & 0x20)) {
+        ObjHits_DisableObject(obj);
     }
 }
 #pragma peephole on
