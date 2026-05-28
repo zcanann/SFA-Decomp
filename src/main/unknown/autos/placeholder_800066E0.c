@@ -11275,6 +11275,89 @@ typedef struct {
 extern MusicTrigger* gMusicTriggersData;
 extern int gMusicTriggersCount;
 extern s16 sMusicTrackTable[];
+extern void Music_LoadChannelForTrigger(MusicTrigger *trigger);
+
+/*
+ * Function: Music_Trigger
+ * EN v1.0 Address: 0x8000A518
+ */
+void Music_Trigger(int id, int arg)
+{
+    MusicTrigger *trigger;
+    MusicChannel *channel;
+    int i;
+    int found;
+
+    if (arg != 1 && arg != 0) {
+        return;
+    }
+    trigger = gMusicTriggersData;
+    i = gMusicTriggersCount;
+    while (i != 0) {
+        if ((int)trigger->id == id) {
+            goto foundTrigger;
+        }
+        trigger++;
+        i--;
+    }
+    trigger = NULL;
+foundTrigger:
+    if (trigger == NULL) {
+        return;
+    }
+    if (id == 0xeb && arg == 1) {
+        channel = gMusicChannels;
+        found = 0;
+        for (i = 0; i < 16; i++) {
+            if (channel->field_0 == 0x5e && channel->status != 0 && channel->status != 2 &&
+                channel->status != 5) {
+                found = 1;
+                break;
+            }
+            channel++;
+        }
+        if (found) {
+            return;
+        }
+        if (GameBit_Get(0xa7f)) {
+            return;
+        }
+    }
+    channel = gMusicChannels;
+    found = 0;
+    for (i = 0; i < 16; i++) {
+        if (channel->field_0 == (int)trigger->track && channel->status != 0 &&
+            channel->status != 2 && channel->status != 5) {
+            found = 1;
+            break;
+        }
+        channel++;
+    }
+    if (!found) {
+        channel = NULL;
+    }
+    if (arg == 1) {
+        if (channel == NULL) {
+            Music_LoadChannelForTrigger(trigger);
+            return;
+        }
+        if (channel->status != 1) {
+            return;
+        }
+        sndSeqVolume(channel->pad14[0], *(u16 *)trigger->pad, channel->seqHandle, 0);
+    } else if (channel != NULL) {
+        if (channel->status == 2) {
+            return;
+        }
+        if (channel->status == 4 || channel->status == 5) {
+            channel->status = 5;
+            return;
+        }
+        i = *(u16 *)trigger->pad;
+        sndSeqVolume(0, i < 0x1f4 ? 0x1f4 : i, channel->seqHandle, 1);
+        channel->status = 2;
+    }
+}
 
 /*
  * Function: Music_PlayTrackByIndex
