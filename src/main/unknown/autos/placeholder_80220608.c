@@ -1996,6 +1996,74 @@ void dustmotesou_init(int obj, int setup)
 #pragma scheduling on
 #pragma peephole on
 
+extern void fn_800971A0(int obj, int a, int b, f32 c, int d, int e);
+extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);
+extern void fn_80097B30(int obj, int a, int b, int c, f32 e, f32 f, f32 g, f32 h, int i,
+                        int j, int k);
+extern void objFn_800972dc(int obj, int a, int b, int c, f32 e, f32 f, int g, int h, int i);
+extern void objParticleFn_80097734(int obj, int enabled, f32 radius, int particleKind,
+                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
+                                   f32 scaleZ, void *args, int arg9);
+
+#pragma peephole off
+#pragma scheduling off
+void dustmotesou_update(int obj)
+{
+    int setup = *(int *)(obj + 0x4c);
+
+    if (*(s16 *)(setup + 0x24) != -1 && (u32)GameBit_Get(*(s16 *)(setup + 0x24)) == 0) {
+        return;
+    }
+    if (*(s16 *)(obj + 0x46) == 2055) {
+        if (*(u8 *)(setup + 0x1b) == 0) {
+            return;
+        }
+        if (*(u8 *)(setup + 0x1c) == 0) {
+            return;
+        }
+        fn_800971A0(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(f32 *)(setup + 0x20),
+                    *(u8 *)(setup + 0x1d), 0);
+        return;
+    }
+    if (*(s16 *)(obj + 0x46) == 2062) {
+        if (*(u8 *)(setup + 0x1b) == 0) {
+            return;
+        }
+        if (*(u8 *)(setup + 0x1c) == 0) {
+            return;
+        }
+        hitDetectFn_80097070(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c),
+                             *(f32 *)(setup + 0x20), *(u8 *)(setup + 0x1d), 0);
+        return;
+    }
+    if (*(u8 *)(setup + 0x1b) == 0) {
+        return;
+    }
+    if (*(u8 *)(setup + 0x1c) == 0) {
+        return;
+    }
+    if (*(u8 *)(setup + 0x1d) == 0) {
+        return;
+    }
+    if (*(u8 *)(setup + 0x2a) == 0) {
+        fn_80097B30(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(u8 *)(setup + 0x1d),
+                    *(f32 *)(setup + 0x20), (f32)(u32)*(u8 *)(setup + 0x26),
+                    (f32)(u32)*(u8 *)(setup + 0x27), (f32)(u32)*(u8 *)(setup + 0x28),
+                    *(u8 *)(setup + 0x29), 0, 0);
+    } else if (*(u8 *)(setup + 0x2a) == 1) {
+        objParticleFn_80097734(obj, *(u8 *)(setup + 0x1b), *(f32 *)(setup + 0x20),
+                               *(u8 *)(setup + 0x1c), *(u8 *)(setup + 0x1d), *(u8 *)(setup + 0x29),
+                               (f32)(u32)*(u8 *)(setup + 0x26), (f32)(u32)*(u8 *)(setup + 0x27),
+                               (f32)(u32)*(u8 *)(setup + 0x28), 0, 0);
+    } else {
+        objFn_800972dc(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(u8 *)(setup + 0x1d),
+                       *(f32 *)(setup + 0x20), (f32)(u32)*(u8 *)(setup + 0x26),
+                       *(u8 *)(setup + 0x29), 0, 0);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
 void dustmotesou_release(void) {}
 void dustmotesou_initialise(void) {}
 
