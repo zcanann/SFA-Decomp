@@ -219,6 +219,13 @@ extern int lbl_803DC320;
 extern void dll_2E_func05(int obj, void *p, int a, int b, int c);
 extern void dll_2E_func08(void *p, int a, int b);
 extern void dll_2E_func09(void *p, void *a, void *b, int c);
+extern f32 lbl_803E69C0;
+extern f32 lbl_803E69C4;
+extern f32 lbl_803E69C8;
+extern f32 lbl_803E69BC;
+extern f32 lbl_803E69B8;
+extern f32 sin(f32);
+extern f32 fn_80293E80(f32);
 extern void lightFn_8001d6b0(void *p);
 
 extern f32 lbl_803E6898;
@@ -333,7 +340,7 @@ extern u8 lbl_803DC308;
 extern void objSoundFn_800392f0(int obj, int a, void *b, int c);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
-extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
+extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern f32 lbl_803DC324;
 extern s16 lbl_803DC314;
 extern u8 lbl_8032AAB0[];
@@ -1633,6 +1640,54 @@ void hightop_init(void *obj, u8 *arg) {
     }
     ((BitFlags8 *)(runtime + 0xc49))->b6 = 0;
     ((BitFlags8 *)(runtime + 0xc4a))->b0 = 0;
+}
+
+void drcreator_update(int obj) {
+    int q = *(int *)((char *)obj + 0x4c);
+    char *runtime = *(char **)((char *)obj + 0xb8);
+    int o;
+    int p;
+    if (Obj_IsLoadingLocked() != 0) {
+        switch (*(s16 *)(q + 0x1a)) {
+        case 3:
+        case 9:
+            if (GameBit_Get(*(s16 *)(runtime + 4)) != 0) {
+                (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(
+                    (*(s16 *)(q + 0x1a) == 3) ? 0 : 4, obj, -1);
+            }
+            break;
+        case 4:
+            if (GameBit_Get(*(s16 *)(runtime + 4)) != 0) {
+                *(s16 *)(runtime + 8) -= framesThisStep;
+                if (*(s16 *)(runtime + 8) <= 0) {
+                    o = Obj_AllocObjectSetup(36, 1725);
+                    *(f32 *)(o + 8) = *(f32 *)((char *)obj + 0xc);
+                    *(f32 *)(o + 0xc) = *(f32 *)((char *)obj + 0x10);
+                    *(f32 *)(o + 0x10) = *(f32 *)((char *)obj + 0x14);
+                    *(u8 *)(o + 4) = 1;
+                    *(u8 *)(o + 5) = 1;
+                    *(u8 *)(o + 6) = 255;
+                    *(u8 *)(o + 7) = 250;
+                    if ((s8)*(u8 *)((char *)obj + 0xac) == 2) {
+                        *(u8 *)(o + 0x19) = 4;
+                    } else {
+                        *(u8 *)(o + 0x19) = 1;
+                    }
+                    p = Obj_SetupObject(o, 5, -1, -1, 0);
+                    if (p != 0) {
+                        *(s16 *)(p + 2) = 0;
+                        *(s16 *)p = (s16)randomGetRange(0, 65535);
+                        *(f32 *)(p + 0x24) = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -fn_80293E80((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
+                        *(f32 *)(p + 0x28) = lbl_803E69B8 * ((f32)*(int *)runtime * (lbl_803E69C8 * (f32)(int)randomGetRange(0, 1000)));
+                        *(f32 *)(p + 0x2c) = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -sin((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
+                        *(int *)(p + 0xc4) = obj;
+                    }
+                    *(s16 *)(runtime + 8) = *(s16 *)(runtime + 6) + randomGetRange(0, *(s16 *)(runtime + 0xa));
+                }
+            }
+            break;
+        }
+    }
 }
 
 #pragma peephole reset
