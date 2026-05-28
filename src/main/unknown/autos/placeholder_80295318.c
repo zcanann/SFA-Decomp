@@ -6100,7 +6100,7 @@ extern s16 lbl_80334F9C[];
 extern f32 lbl_80334FAC[];
 extern int fn_802B7B0C(int obj, int state, f32 fv);
 extern int fn_802B78A4(int obj, int state, f32 fv);
-extern void fn_802B74C4(void);
+extern int fn_802B74C4(int obj, int state);
 extern int fn_802B735C(int obj, int state);
 extern f32 lbl_803E8178;
 extern f32 lbl_803E817C;
@@ -11824,6 +11824,97 @@ int fn_8029D4C0(int obj, int state, f32 fv)
         *(f32 *)((char *)obj + 0x24) * powfBitEstimate(lbl_803E7FD0, fv);
     *(f32 *)((char *)obj + 0x2c) =
         *(f32 *)((char *)obj + 0x2c) * powfBitEstimate(lbl_803E7FD0, fv);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802B74C4(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int r4c;
+    int sub;
+    int v;
+
+    if (*(void **)((char *)state + 0x2d0) != NULL) {
+        sub = *(int *)((char *)inner + 0x40c);
+        v = (s16) * (u16 *)((char *)sub + 0x20);
+        if (v < 0) {
+            v = -v;
+        }
+        if ((u16)v < 0x1770) {
+            r4c = *(int *)((char *)obj + 0x4c);
+            *(u8 *)((char *)obj + 0xaf) &= ~8;
+            switch (*(int *)((char *)r4c + 0x14)) {
+            case 0x46a51:
+                if (GameBit_Get(0xc52)) {
+                    *(u8 *)((char *)obj + 0xaf) |= 8;
+                }
+                break;
+            case 0x46a55:
+                if (GameBit_Get(0xc53)) {
+                    *(u8 *)((char *)obj + 0xaf) |= 8;
+                }
+                break;
+            case 0x49928:
+                if (GameBit_Get(0xc54)) {
+                    *(u8 *)((char *)obj + 0xaf) |= 8;
+                }
+                break;
+            }
+            if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
+                buttonDisable(0, 0x100);
+                switch (*(int *)((char *)r4c + 0x14)) {
+                case 0x46a51:
+                    if (GameBit_Get(0xc38) != 0 && GameBit_Get(0xc39) != 0 &&
+                        GameBit_Get(0xc3a) != 0) {
+                        if (GameBit_Get(0xc52) == 0) {
+                            GameBit_Set(0xc52, 1);
+                            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(3, obj, -1);
+                            *(u8 *)((char *)sub + 0x2e) = 1;
+                            *(u8 *)((char *)obj + 0xaf) |= 8;
+                        }
+                    } else {
+                        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(2, obj, -1);
+                    }
+                    break;
+                case 0x46a55:
+                    if (GameBit_Get(0xc3b) != 0 && GameBit_Get(0xc3c) != 0 &&
+                        GameBit_Get(0xc3d) != 0) {
+                        if (GameBit_Get(0xc53) == 0) {
+                            GameBit_Set(0xc53, 1);
+                            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(5, obj, -1);
+                            *(u8 *)((char *)sub + 0x2e) = 1;
+                            *(u8 *)((char *)obj + 0xaf) |= 8;
+                        }
+                    } else {
+                        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(4, obj, -1);
+                    }
+                    break;
+                case 0x49928:
+                    if (GameBit_Get(0xc3e) != 0 && GameBit_Get(0xc3f) != 0 &&
+                        GameBit_Get(0xc40) != 0) {
+                        if (GameBit_Get(0xc54) == 0) {
+                            GameBit_Set(0xc54, 1);
+                            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(7, obj, -1);
+                            *(u8 *)((char *)sub + 0x2e) = 1;
+                            *(u8 *)((char *)obj + 0xaf) |= 8;
+                        }
+                    } else {
+                        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(6, obj, -1);
+                    }
+                    break;
+                }
+            }
+        } else {
+            *(u8 *)((char *)obj + 0xaf) |= 8;
+        }
+        if (*(s8 *)((char *)state + 0x27b) != 0 || *(s8 *)((char *)state + 0x346) != 0) {
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0);
+        }
+    }
     return 0;
 }
 #pragma peephole reset
