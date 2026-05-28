@@ -26,6 +26,11 @@ extern int seqEvalCondition(int condition, u8 *seq, int obj);
 extern int isGameTimerDisabled(void);
 extern void playerEnvFxFn_80088ad4(int envFxValue);
 extern void renderSunAndMoon(void);
+extern void *Obj_AllocObjectSetup(int size, int objectId);
+extern void *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, void *parent);
+extern void *Obj_GetActiveModel(void *obj);
+extern void ObjModel_SetRenderCallback(void *model, void *callback);
+extern int moonFxCb_80074110(int obj, int *model, int param);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern void renderFn_8008f904(void *state);
@@ -79,6 +84,7 @@ extern u8 *lbl_803DD12C;
 extern u8 *lbl_803DD148;
 extern void *lbl_803DD14C;
 extern void *lbl_803DD150;
+extern int lbl_803DD154;
 extern u8 lbl_803DD158;
 extern u8 lbl_803DD15C;
 extern f32 lbl_803DD160;
@@ -4814,6 +4820,19 @@ void fn_80088870(int a, int b, int c, int d)
     lbl_803DD130 = b;
     lbl_803DD138 = c;
     lbl_803DD134 = d;
+}
+
+void loadSunAndMoon(void)
+{
+    void *moonObj;
+
+    if (lbl_803DD154 == 0) {
+        lbl_803DD148 = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x62b), 4, -1, -1, NULL);
+        moonObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x62c), 4, -1, -1, NULL);
+        lbl_803DD14C = moonObj;
+        lbl_803DD154 = 1;
+        ObjModel_SetRenderCallback(Obj_GetActiveModel(moonObj), moonFxCb_80074110);
+    }
 }
 
 int getSkyColorFn_80088e08(int slot)
