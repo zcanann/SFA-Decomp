@@ -1451,3 +1451,157 @@ void timer_init(int obj, int setup)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern void set_hudNumber_803db278(int n);
+
+int cntcounter_getExtraSize(void) { return 8; }
+int cntcounter_getObjectTypeId(void) { return 0; }
+
+void cntcounter_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (*(u8 *)(state + 4) != 0) {
+        set_hudNumber_803db278(-1);
+    }
+}
+
+void cntcounter_hitDetect(void) {}
+void cntcounter_render(void) {}
+
+void cntcounter_init(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    *(u8 *)(state + 4) = 0;
+    *(int *)(state + 0) = 0;
+}
+
+#pragma peephole off
+#pragma scheduling off
+void cntcounter_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+
+    if (*(int *)(state + 0) != 0) {
+        int bit;
+        if (*(u8 *)(state + 4) != 0) {
+            set_hudNumber_803db278(*(int *)(state + 0));
+        }
+        bit = GameBit_Get(*(s16 *)(setup + 0x20));
+        if (bit != 0) {
+            GameBit_Set(*(s16 *)(setup + 0x20), 0);
+            *(int *)(state + 0) -= bit;
+            if (*(int *)(state + 0) <= 0) {
+                *(int *)(state + 0) = 0;
+                GameBit_Set(*(s16 *)(setup + 0x1e), 1);
+                if (*(u8 *)(state + 4) != 0) {
+                    set_hudNumber_803db278(-1);
+                }
+                *(u8 *)(state + 4) = 0;
+            }
+        }
+    } else {
+        if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
+            *(u8 *)(state + 4) = *(u8 *)(setup + 0x19);
+            *(int *)(state + 0) = *(s16 *)(setup + 0x1a);
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+void cntcounter_release(void) {}
+void cntcounter_initialise(void) {}
+
+typedef struct VortexFlags {
+    u8 active : 1;
+    u8 pad : 7;
+} VortexFlags;
+
+extern int *gExpgfxInterface;
+extern f32 lbl_803E73E0;
+extern f32 lbl_803E73D0;
+extern f32 lbl_803E7400;
+
+int vortex_getExtraSize(void) { return 0x28; }
+int vortex_getObjectTypeId(void) { return 0; }
+
+void vortex_free(int obj)
+{
+    (*(void (**)(int))(*gExpgfxInterface + 0x18))(obj);
+}
+
+void vortex_hitDetect(void) {}
+
+#pragma peephole off
+#pragma scheduling off
+void vortex_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+
+    ((VortexFlags *)(state + 0x26))->active = 0;
+    if (*(s16 *)(setup + 0x20) != -1) {
+        ((VortexFlags *)(state + 0x26))->active = (u8)GameBit_Get(*(s16 *)(setup + 0x20));
+    }
+
+    if (*(s16 *)(obj + 0x46) == 0x29a || *(s16 *)(obj + 0x46) == 0x829) {
+        if (((VortexFlags *)(state + 0x26))->active != 0) {
+            if (*(s16 *)(setup + 0x1e) != -1) {
+                ((VortexFlags *)(state + 0x26))->active = !GameBit_Get(*(s16 *)(setup + 0x1e));
+            }
+        }
+    }
+
+    if (((VortexFlags *)(state + 0x26))->active != 0) {
+        f32 lim = lbl_803E73E0;
+        if (*(f32 *)(state + 0) < lim) {
+            *(f32 *)(state + 0) = lbl_803E7400 * timeDelta + *(f32 *)(state + 0);
+            if (*(f32 *)(state + 0) > lim) {
+                *(f32 *)(state + 0) = lim;
+            }
+        }
+    } else {
+        f32 lim = lbl_803E73D0;
+        if (*(f32 *)(state + 0) > lim) {
+            *(f32 *)(state + 0) = *(f32 *)(state + 0) - lbl_803E7400 * timeDelta;
+            if (*(f32 *)(state + 0) < lim) {
+                *(f32 *)(state + 0) = lim;
+            }
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+void vortex_release(void) {}
+void vortex_initialise(void) {}
+
+extern int fn_8001DB64(void *light);
+extern f32 lbl_803E70B0;
+
+int ring_getExtraSize(void) { return 0x24; }
+int ring_getObjectTypeId(void) { return 0; }
+
+void ring_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (*(void **)(state + 0x20) != NULL) {
+        ModelLightStruct_free(*(void **)(state + 0x20));
+        *(void **)(state + 0x20) = NULL;
+    }
+}
+
+void ring_hitDetect(void) {}
+
+void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (*(void **)(state + 0x20) != NULL && fn_8001DB64(*(void **)(state + 0x20)) != 0) {
+        queueGlowRender(*(void **)(state + 0x20));
+    }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70B0);
+}
+
+void ring_release(void) {}
+void ring_initialise(void) {}
