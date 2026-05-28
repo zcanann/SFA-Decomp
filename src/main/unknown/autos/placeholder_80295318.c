@@ -6429,6 +6429,14 @@ typedef struct {
     f32 angles[8];
 } MoveTable;
 
+typedef struct {
+    u8 pad0[8];
+    int a8[26];
+    f32 a70[3];
+    f32 a7c[6];
+    f32 a94[7];
+} EmitElem;
+
 #pragma scheduling off
 #pragma peephole off
 int fn_8029DA60(int obj, int state)
@@ -8827,6 +8835,62 @@ int fn_802A14F8(int obj, int state)
     }
     fn_802AB5A4(obj, inner + 4, 5);
     return 0;
+}
+
+void fn_802972B4(int obj, int *flags, f32 *p5, f32 *p6, f32 *p7, s16 *p8)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    s8 idx;
+    u8 mode;
+    f32 zero;
+
+    *flags = 0;
+    zero = lbl_803E7EA4;
+    *p5 = zero;
+    *p6 = zero;
+    *p7 = zero;
+    if (*(s16 *)((char *)inner + 0x274) == 0x26) {
+        *flags |= 1;
+        idx = *(s8 *)((char *)inner + 0x8ce);
+        if (idx != -1) {
+            *flags |= ((EmitElem *)(*(int *)((char *)inner + 0x3dc) +
+                                    *(u8 *)((char *)inner + 0x8a9) * 0xb0))->a8[idx];
+            *p6 = ((EmitElem *)(*(int *)((char *)inner + 0x3dc) +
+                                *(u8 *)((char *)inner + 0x8a9) * 0xb0))
+                      ->a70[*(s8 *)((char *)inner + 0x8ce)];
+            *p7 = ((EmitElem *)(*(int *)((char *)inner + 0x3dc) +
+                                *(u8 *)((char *)inner + 0x8a9) * 0xb0))
+                      ->a7c[*(s8 *)((char *)inner + 0x8ce)];
+            *p5 = ((EmitElem *)(*(int *)((char *)inner + 0x3dc) +
+                                *(u8 *)((char *)inner + 0x8a9) * 0xb0))
+                      ->a94[*(s8 *)((char *)inner + 0x8ce)];
+        }
+        if (*(u8 *)(*(int *)((char *)inner + 0x3dc) +
+                    *(u8 *)((char *)inner + 0x8a9) * 0xb0 + 0x88) & 2) {
+            if (*(u8 *)((char *)inner + 0x8ab) < *(u8 *)((char *)inner + 0x8ac)) {
+                *p6 = lbl_803E7EA4;
+                *p7 = lbl_803E7EA4;
+            }
+        }
+        if ((*(u8 *)(*(int *)((char *)inner + 0x3dc) +
+                     *(u8 *)((char *)inner + 0x8a9) * 0xb0 + 0x88) & 1) &&
+            *(f32 *)((char *)inner + 0x820) >= lbl_803E7EF0) {
+            *flags |= 0x80;
+        }
+    }
+    mode = *(u8 *)((char *)inner + 0x8c1);
+    if (mode == 0) {
+        *flags |= 0x100;
+    } else if (mode == 1) {
+        *flags |= 0x200;
+    } else if (mode == 2) {
+        *flags |= 0x400;
+    }
+    if (*(s16 *)((char *)inner + 0x274) == 0x2e || *(s16 *)((char *)inner + 0x274) == 0x2f) {
+        *flags &= 0x7d;
+        *flags |= 2;
+    }
+    *p8 = 0x78;
 }
 #pragma peephole reset
 #pragma scheduling reset
