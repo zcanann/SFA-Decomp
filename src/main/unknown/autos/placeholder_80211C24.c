@@ -307,6 +307,12 @@ extern void staffFn_80170380(int handle, int v);
 extern f32 lbl_803E68F0;
 extern f32 lbl_803E68F4;
 extern f32 lbl_803E68F8;
+extern f32 lbl_803E6B40;
+extern u8 lbl_803DC308;
+extern void objSoundFn_800392f0(int obj, int a, void *b, int c);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg);
 int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg);
 
@@ -1942,6 +1948,63 @@ void drlasercannon_hitDetect(int obj) {
         *(int *)(p + 0xc) = 0;
     } else {
         *(int **)(p + 0xc) = a8;
+    }
+}
+
+void hightop_hitDetect(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    f32 l10;
+    f32 lc;
+    f32 l8;
+    int hit;
+    s16 st;
+    hit = ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &l8, &lc, &l10);
+    if (hit == 0) {
+        return;
+    }
+    st = *(s16 *)(p + 0x274);
+    if (st != 4 && (u16)(st - 9) > 1) {
+        if (hit == 0xf || hit == 0xe) {
+            return;
+        }
+    }
+    if (*(s16 *)(p + 0xc18) == 0) {
+        return;
+    }
+    fn_80221E94(obj, &l8, lbl_803E6B40);
+    objSoundFn_800392f0(obj, (int)(p + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
+    st = *(s16 *)(p + 0x274);
+    if (st != 3) {
+        *(int *)(p + 0xc3c) = st;
+    }
+    st = *(s16 *)(p + 0x274);
+    if (st == 2 || st == 8) {
+        *(s16 *)(p + 0xc18) -= 1;
+        fn_8009A8C8(obj, lbl_803E6B30);
+        if (*(s16 *)(p + 0xc18) <= 0) {
+            (*(void (**)(void *))((char *)*gGameUIInterface + 0x60))(*gGameUIInterface);
+            ((BitFlags8 *)(p + 0xc49))->b7 = 0;
+            GameBit_Set(0x634, 0);
+            if (Obj_IsLoadingLocked() != 0) {
+                int spawn = Obj_AllocObjectSetup(0x2c, 0xd4);
+                *(u8 *)(spawn + 0x4) = 2;
+                *(f32 *)(spawn + 0x8) = *(f32 *)((char *)obj + 0xc);
+                *(f32 *)(spawn + 0xc) = *(f32 *)((char *)obj + 0x10);
+                *(f32 *)(spawn + 0x10) = *(f32 *)((char *)obj + 0x14);
+                *(s16 *)(spawn + 0x1a) = 0x675;
+                *(s16 *)(spawn + 0x1c) = 0;
+                *(s16 *)(spawn + 0x1e) = -1;
+                Obj_SetupObject(spawn, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
+            }
+            *(s16 *)((char *)obj + 0x2) = 0;
+            *(s16 *)((char *)obj + 0x4) = 0;
+            *(u8 *)(p + 0x25f) = 0;
+            *(int *)p |= 0x1000000;
+            GameBit_Set(0xb48, 1);
+            (*(void (**)(void *))((char *)*gGameUIInterface + 0x60))(*gGameUIInterface);
+        }
+    } else {
+        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, p, 3);
     }
 }
 #pragma peephole reset
