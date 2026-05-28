@@ -2656,6 +2656,7 @@ void andross_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E74DC);
 }
+#pragma dont_inline on
 void andross_setPartSignal(int obj, int signal)
 {
     int state;
@@ -2666,6 +2667,7 @@ void andross_setPartSignal(int obj, int signal)
     state = *(int *)(obj + 0xb8);
     *(u8 *)(state + 0xad) |= signal;
 }
+#pragma dont_inline reset
 
 int androsshand_getExtraSize(void) { return 0x2c; }
 int androsshand_getObjectTypeId(void) { return 0; }
@@ -2775,3 +2777,53 @@ void androssbrain_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7600);
 }
+
+void androsshand_hitDetect(void) {}
+void androssligh_hitDetect(void) {}
+void androssbrain_hitDetect(void) {}
+
+#pragma peephole off
+#pragma scheduling off
+void androsshand_setState(int obj, int newState, u8 force)
+{
+    int state;
+
+    if ((void *)obj == NULL) {
+        return;
+    }
+    state = *(int *)(obj + 0xb8);
+    if (*(s8 *)(state + 0x23) != 9 || force != 0) {
+        *(s8 *)(state + 0x23) = (s8)newState;
+        if (force != 0) {
+            if (force == 2) {
+                *(u8 *)(state + 0x25) = 0x12;
+            } else {
+                *(u8 *)(state + 0x25) = 0xf;
+            }
+        }
+    } else {
+        if ((u8)newState != 0) {
+            andross_setPartSignal(*(int *)state, 1);
+        }
+    }
+}
+
+void androssbrain_setState(int obj, int newState, u8 force)
+{
+    int state;
+
+    if ((void *)obj == NULL) {
+        return;
+    }
+    state = *(int *)(obj + 0xb8);
+    if (*(s8 *)(state + 0x1c) != 2 || force != 0) {
+        *(s8 *)(state + 0x1c) = (s8)newState;
+        if (force != 0) {
+            *(u8 *)(state + 0x1e) = 0x50;
+        }
+    } else {
+        andross_setPartSignal(*(int *)state, 1);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
