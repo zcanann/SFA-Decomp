@@ -3591,6 +3591,7 @@ void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
     s32 matrixIndex;
@@ -3604,6 +3605,7 @@ void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
         *outZ = z;
     }
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
