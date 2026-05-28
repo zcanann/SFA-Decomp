@@ -12,6 +12,7 @@ extern void **ObjList_GetObjects(void *unused, int *count);
 extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
 extern void objSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void *entries, int count);
+extern int ObjSeq_func20(void *obj, u8 *seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
 extern int seqEvalCondition(int condition, u8 *seq, int obj);
 extern int isGameTimerDisabled(void);
 extern void playerEnvFxFn_80088ad4(int envFxValue);
@@ -19,6 +20,7 @@ extern void renderSunAndMoon(void);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern void renderFn_8008f904(void *state);
+extern void Obj_GetWorldPosition(void *obj, f32 *x, f32 *y, f32 *z);
 extern void Camera_GetCurrentViewSlot(void);
 extern int randomGetRange(int min, int max);
 
@@ -27,6 +29,7 @@ extern u8 lbl_80399EA8[];
 extern s16 lbl_80399F00[];
 extern s8 lbl_8039A45C[];
 extern s8 lbl_8039A4B4[];
+extern s8 lbl_8039A50C[];
 extern u8 lbl_8030ECA8[];
 extern u8 lbl_803DB748;
 extern s16 seqGlobal1;
@@ -35,6 +38,7 @@ extern s8 seqGlobal3;
 extern int *gSHthorntailAnimationInterface;
 extern s8 lbl_803DD0BC;
 extern void *lbl_803DD0D4;
+extern u8 lbl_803DD0DA;
 extern int lbl_803DD100;
 extern int lbl_803DD104;
 extern int lbl_803DD108;
@@ -57,8 +61,11 @@ extern u8 lbl_803DD178;
 extern void *lbl_803DD144;
 extern f32 lbl_8039A7A8[];
 extern f32 pEXIInputFlag;
+extern f32 timeDelta;
 extern f32 lbl_803DEFB0;
+extern f32 lbl_803DEFC8;
 extern f32 lbl_803DEFF0;
+extern f32 lbl_803DF024;
 extern f32 lbl_803DF06C;
 extern f32 lbl_803DF118;
 extern f32 lbl_803DF138;
@@ -4063,6 +4070,85 @@ int objSeqFindConditional(u8 *seq, u8 *seqState)
         commandIndex++;
     }
     return -1;
+}
+
+void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, void *action)
+{
+    int callbackResult;
+    s8 actionSlot;
+    int movementState;
+    int flags;
+    u8 *sourceModel;
+
+    (void)action;
+
+    sourceModel = *(u8 **)(sourceObj + 0x4c);
+    *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+    *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0x18);
+    *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x1c);
+    *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x20);
+
+    if (*(void **)(obj + 0xbc) != NULL) {
+        callbackResult = (*(int (**)(void))(obj + 0xbc))();
+        if (callbackResult == 4) {
+            lbl_803DD0DA = 1;
+        } else if (callbackResult != 0) {
+            actionSlot = seq[0x57];
+            if (lbl_8039A50C[actionSlot] < 2) {
+                lbl_8039A50C[actionSlot] = callbackResult;
+            }
+        }
+        seq[0x8b] = 0;
+        seq[0x80] = 0;
+    } else {
+        if ((s8)seq[0x7b] != 0) {
+            seq[0x56] = 0;
+            return;
+        }
+
+        movementState = (s8)seq[0x56];
+        if (movementState >= 4) {
+            if (ObjSeq_func20(obj, seq, 6, 0x1e, 0x50, -1, -1) != 0) {
+                actionSlot = seq[0x57];
+                if (lbl_8039A50C[actionSlot] < 2) {
+                    lbl_8039A50C[actionSlot] = 1;
+                }
+            }
+        } else if (movementState != 0) {
+            if (movementState != 2) {
+                *(f32 *)(seq + 0x4c) = lbl_803DEFC8;
+                *(f32 *)(seq + 0x40) = *(f32 *)(obj + 0xc) - *(f32 *)(sourceObj + 0xc);
+                *(f32 *)(seq + 0x44) = *(f32 *)(obj + 0x10) - *(f32 *)(sourceObj + 0x10);
+                *(f32 *)(seq + 0x48) = *(f32 *)(obj + 0x14) - *(f32 *)(sourceObj + 0x14);
+                seq[0x56] = 2;
+            }
+            if ((s8)sourceModel[0x20] == 1) {
+                *(f32 *)(seq + 0x24) = lbl_803DF024;
+                actionSlot = seq[0x57];
+                if (lbl_8039A50C[actionSlot] < 2) {
+                    lbl_8039A50C[actionSlot] = 1;
+                }
+            }
+            *(f32 *)(seq + 0x4c) = *(f32 *)(seq + 0x4c) - *(f32 *)(seq + 0x24) * timeDelta;
+            if (*(f32 *)(seq + 0x4c) <= lbl_803DEFB0) {
+                seq[0x56] = 0;
+            }
+        }
+    }
+
+    flags = obj[0xaf];
+    flags &= 0xf8;
+    obj[0xaf] = flags;
+    Obj_GetWorldPosition(obj, (f32 *)(obj + 0x18), (f32 *)(obj + 0x1c), (f32 *)(obj + 0x20));
+    if (*(void **)(obj + 0x54) != NULL) {
+        *(void **)(*(u8 **)(obj + 0x54) + 0x50) = NULL;
+        *(u8 *)(*(u8 **)(obj + 0x54) + 0x71) = 0;
+    }
+    if (*(void **)(obj + 0x58) != NULL) {
+        *(u8 *)(*(u8 **)(obj + 0x58) + 0x10f) = 0;
+    }
 }
 
 int seqEvalCondition(int condition, u8 *seq, int obj)
