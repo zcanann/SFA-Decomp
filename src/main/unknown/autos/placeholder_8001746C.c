@@ -9167,6 +9167,28 @@ void *ObjModel_Load(int id, int arg2, int *outSize) {
     return header;
 }
 
+extern void OSReport(char *fmt, ...);
+extern void *loadCharacter(int a, int b, int c, int d, int e, int f);
+extern void Obj_RegisterObject(void *obj, int b);
+extern char sObjSetupObjectLoadingLockedWarning[];
+extern char lbl_802CAC54[];
+
+#pragma peephole off
+void *Obj_SetupObject(int a, int b, int c, int d, int e) {
+    void *obj;
+    if (getLoadedFileFlags(0) & 0x100000) {
+        OSReport(sObjSetupObjectLoadingLockedWarning, d);
+        return NULL;
+    }
+    obj = loadCharacter(a, b, c, d, e, 0);
+    if (obj != NULL) {
+        Obj_RegisterObject(obj, b);
+        OSReport(lbl_802CAC54, *(int *)((u8 *)obj + 0x50) + 0x91);
+    }
+    return obj;
+}
+#pragma peephole reset
+
 extern void setGQR6(u32 v);
 extern void mapSetup();
 extern void *memset(void *dst, int val, int n);
