@@ -127,6 +127,7 @@ extern f32 lbl_803E6978;
 extern f32 lbl_803E69D0;
 extern f32 lbl_803E69D8;
 extern f32 lbl_803E69E0;
+extern f32 lbl_803E69E8;
 extern f32 lbl_803E6A44;
 extern f32 lbl_803E6B58;
 
@@ -142,6 +143,9 @@ extern void GameBit_Set(int eventId, int value);
 extern void Music_Trigger(int trackId, int restart);
 extern void Obj_FreeObject(int obj);
 extern void mm_free(void *ptr);
+extern void storeZeroToFloatParam(void *timer);
+extern void **gGameUIInterface;
+extern void gmmazewell_clearPendingTriggerCallback(void);
 
 #pragma scheduling off
 #pragma peephole off
@@ -332,6 +336,63 @@ void ktlazerwall_free(int obj) {
     if (m != 0) {
         mm_free(m);
         *(void **)(p + 0x10) = 0;
+    }
+}
+
+void ktrexlevel_clearPathGameBits(void) {
+    GameBit_Set(0x54a, 0);
+    GameBit_Set(0x54e, 0);
+    GameBit_Set(0x552, 0);
+    GameBit_Set(0x556, 0);
+}
+
+void hightop_free(int obj) {
+    void *ui;
+    ObjGroup_RemoveObject(obj, 0x26);
+    ObjGroup_RemoveObject(obj, 0xa);
+    ui = *gGameUIInterface;
+    (*(void (**)(void *))((char *)ui + 0x60))(ui);
+}
+
+void drchimmey_init(int obj, char *arg) {
+    int p;
+    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
+    p = *(int *)((char *)obj + 0xb8);
+    *(f32 *)(p + 0xc) = lbl_803E69E8;
+    *(s16 *)(p + 0x14) = *(s16 *)(arg + 0x1e);
+    *(u8 *)(p + 0x16) = 3;
+    storeZeroToFloatParam((void *)(p + 0x10));
+}
+
+void drakormissile_free(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    void *m = *(void **)p;
+    if (m != 0) {
+        ModelLightStruct_free(m);
+        *(void **)p = 0;
+    }
+    ObjGroup_RemoveObject(obj, 0x2);
+}
+
+void gmmazewell_init(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    p[0] = 0;
+    GameBit_Set(0xefc, 1);
+    Music_Trigger(0x36, 1);
+    *(void **)((char *)obj + 0xbc) = (void *)gmmazewell_clearPendingTriggerCallback;
+}
+
+void drakorhoverpad_func17(int obj, int sel, int *out) {
+    switch (sel) {
+    case 2:
+        *out = *(s16 *)obj;
+        break;
+    case 3:
+        *out = 0x1000;
+        break;
+    case 4:
+        *out = 1;
+        break;
     }
 }
 #pragma peephole reset
