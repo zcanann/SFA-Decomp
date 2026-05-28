@@ -383,6 +383,8 @@ extern void fn_8022578C(int obj, int state);
 extern void fn_802251B4(int obj, int state);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
+extern void fn_80225BD8(int obj, int p2, int p3);
+extern void *memcpy(void *dst, const void *src, u32 n);
 
 #pragma peephole off
 #pragma scheduling off
@@ -615,8 +617,53 @@ void wclevelcont_update(int obj)
         GameBit_Set(0x7f1, 1);
     }
 }
+typedef struct {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 b18 : 2;
+    u8 b07 : 3;
+} WclevelcontFlags;
+#pragma peephole off
+#pragma scheduling off
+void wclevelcont_init(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    u16 flags;
+
+    *(void **)(obj + 0xbc) = (void *)fn_80225BD8;
+    GameBit_Set(0x810, 0);
+    memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
+    GameBit_Set(0x811, 0);
+    memcpy(lbl_803AD298, lbl_8032B088, 0x40);
+    if ((u32)GameBit_Get(0x7fa) != 0) *(u16 *)(state + 0x1a) |= 0x8;
+    if ((u32)GameBit_Get(0x7f9) != 0) *(u16 *)(state + 0x1a) |= 0x4;
+    if ((u32)GameBit_Get(0x813) != 0) *(u16 *)(state + 0x1a) |= 0x20;
+    if ((u32)GameBit_Get(0x812) != 0) *(u16 *)(state + 0x1a) |= 0x10;
+    if ((u32)GameBit_Get(0x2a5) != 0) *(u16 *)(state + 0x1a) |= 0x40;
+    if ((u32)GameBit_Get(0x205) != 0) *(u16 *)(state + 0x1a) |= 0x80;
+    if ((u32)GameBit_Get(0xbcf) != 0) *(u16 *)(state + 0x1a) |= 0x100;
+    if ((u32)GameBit_Get(0xcac) != 0) *(u16 *)(state + 0x1a) |= 0x200;
+    flags = *(u16 *)(state + 0x1a);
+    if (flags & 0x200) {
+        *(u8 *)(state + 0xc) = 7;
+    } else if ((flags & 0x4) && (flags & 0x8)) {
+        *(u8 *)(state + 0xc) = 3;
+    }
+    ObjGroup_AddObject(obj, 9);
+    GameBit_Set(0x226, 1);
+    GameBit_Set(0x2a6, 1);
+    GameBit_Set(0x206, 1);
+    GameBit_Set(0x25f, 1);
+    (*(void (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    ((WclevelcontFlags *)(state + 0x14))->b40 = GameBit_Get(0xc58);
+    ((WclevelcontFlags *)(state + 0x14))->b20 = GameBit_Get(0xc59);
+    ((WclevelcontFlags *)(state + 0x14))->b18 = GameBit_Get(0xc5a);
+}
 #pragma scheduling on
 #pragma peephole on
+void wclevelcont_release(void) {}
+void wclevelcont_initialise(void) {}
 
 #pragma scheduling off
 int wcbeacon_aButtonCallback(int obj)
