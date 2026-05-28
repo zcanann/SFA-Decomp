@@ -8099,6 +8099,25 @@ void *getTabEntry(int id, int arg, int e, int d) {
     return loadAsset(&lbl_8033BF88);
 }
 
+int ObjModel_HasActiveBlendChannels(u8 *model) {
+    u8 *ch;
+
+    if (*(void **)(*(u8 **)model + 0xdc) == NULL) {
+        return 0;
+    }
+    ch = *(u8 **)(model + 0x28);
+    if (*(f32 *)(ch + 0x0) != *(f32 *)(ch + 0x4) || (ch[0xe] & 0xe)) {
+        return 1;
+    }
+    if (*(f32 *)(ch + 0x10) != *(f32 *)(ch + 0x14) || (ch[0x1e] & 0xe)) {
+        return 1;
+    }
+    if (*(f32 *)(ch + 0x20) != *(f32 *)(ch + 0x24) || (ch[0x2e] & 0xe)) {
+        return 1;
+    }
+    return 0;
+}
+
 void ObjModel_SetBlendChannelWeight(u8 *model, int channel, f32 weight) {
     u8 *ch;
 
