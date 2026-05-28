@@ -483,6 +483,25 @@ dereference are separate statements. `*p++` merges them and the loop loses
 the tight `lwz; addi; cmpw; b` body that target uses. Keep `*p` and `p++`
 on separate lines inside the loop body.
 
+**Inverse case — `arr[i] = …` (index) NOT `*p++` when target strength-reduces
+to induction pointers off saved-reg params.** When target copies a base param
+into a volatile reg and bumps it per iter (`mr r3,r28; … ; addi r3,r3,4`),
+write the output as `outX[i] = v;` (array indexing with the loop counter).
+MWCC then strength-reduces the index to exactly that induction-pointer form;
+`*outX++` produces a different pointer-walk. (mike7, curveFn_80010018 output
+loop → 99.5%.) Match whichever the target uses — neither form is universally
+right.
+
+## Don't hoist a global/`.bss` address when target RE-DERIVES it per use
+
+The mirror of #6/#16 (lift/base-pointer-hoist): if target emits a fresh
+`lis;addi` (or `lis;lfd`) to re-derive a `.bss`/`.data`/`.sdata` address at
+*each* use, do NOT pull it into a local — hoisting parks it in a saved reg and
+shifts the whole register-coloring + frame size, making the match worse. Only
+hoist when target itself keeps the base live in a saved reg across the body.
+(mike7, curveFn_80010018 coeff table lbl_80338790 — leaving it re-derived per
+use was required for the 99.5%.)
+
 ## Graduating a `placeholder_XXXX` catch-all into real DLL files
 
 The `unknown/autos/placeholder_XXXXXXXX` units are dtk auto-splits that bundle
