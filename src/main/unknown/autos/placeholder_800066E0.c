@@ -765,8 +765,8 @@ extern void AudioStream_CancelPrepared(void);
 extern void streamFn_8000a380(u32 channel, u32 mode, u32 time);
 extern void Movie_SetVolumeFade(u32 volume, u32 fadeMs);
 extern void AISetStreamPlayState(u32 state);
-extern void AISetStreamVolLeft(u32 volume);
-extern void AISetStreamVolRight(u32 volume);
+extern void AISetStreamVolLeft(u8 volume);
+extern void AISetStreamVolRight(u8 volume);
 extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
 extern s32 getGameState(void);
@@ -2345,8 +2345,9 @@ u8 AudioStream_IsPreparing(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 #pragma scheduling off
-void AudioStream_SetVolume(u32 volume)
+void AudioStream_SetVolume(u8 volume)
 {
     gAudioStreamVolumeLeft = volume;
     gAudioStreamVolumeRight = volume;
@@ -2354,6 +2355,7 @@ void AudioStream_SetVolume(u32 volume)
     AISetStreamVolRight(volume);
 }
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2550,10 +2552,12 @@ void AudioStream_UpdateFadeTimer(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void AudioStream_SetDefaultVolume(u8 volume)
 {
     gAudioStreamDefaultVolume = volume;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -9688,5 +9692,69 @@ void gameTextShow(int a)
         e[1] = a;
         e[2] = 0;
         e[3] = 0;
+    }
+}
+
+extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
+extern u32 gAudioPendingLoadFlags;
+extern u32 gAudioCompletedLoadFlags;
+extern char sMidiWadLoadedCallbackLoadError[];
+extern void gameTextRenderStrs(char* str, int arg2);
+
+/*
+ * Function: audioSetVolumes
+ * EN v1.0 Address: 0x80009A28
+ * EN v1.0 Size: 108b
+ */
+void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag)
+{
+    if (musicFlag != 0 || fxFlag != 0) {
+        sndMasterVolume(volume, time, musicFlag, fxFlag);
+    }
+    if (streamFlag != 0) {
+        AudioStream_SetVolume(volume);
+        AudioStream_SetDefaultVolume(volume);
+    }
+}
+
+/*
+ * Function: MIDIWADLoadedCallback
+ * EN v1.0 Address: 0x8000A264
+ * EN v1.0 Size: 128b
+ */
+void MIDIWADLoadedCallback(int status, void* fileInfo)
+{
+    if (status == -1) {
+        OSReport(sMidiWadLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        mm_free(fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        mm_free(fileInfo);
+        gAudioPendingLoadFlags &= ~0x800;
+        gAudioCompletedLoadFlags |= 0x800;
+    }
+}
+
+/*
+ * Function: gameTextAppendStr
+ * EN v1.0 Address: 0x8001618C
+ * EN v1.0 Size: 144b
+ */
+void gameTextAppendStr(char* str, int arg2)
+{
+    int i;
+    int* e;
+    char* buf;
+    if (gameTextDrawFunc != NULL) {
+        gameTextRenderStrs(str, arg2);
+    } else {
+        i = lbl_803DC9C8++;
+        e = (int*)&lbl_8033A540[i * 0x14];
+        e[0] = 6;
+        buf = lbl_803DC9C4;
+        lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
+        e[1] = (int)buf;
+        e[2] = arg2;
     }
 }
