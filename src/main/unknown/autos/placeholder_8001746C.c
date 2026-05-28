@@ -7172,3 +7172,55 @@ void *Obj_GetActiveModel(u8 *obj) {
     return *(void **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4);
 }
 #pragma pop
+
+/* Global game-state / text accessors. */
+extern u8 lbl_803DCA3D;
+extern u8 lbl_803DCA3C;
+extern u8 lbl_803DCA3E;
+extern s8 lbl_803DCA3A;
+extern u8 lbl_803DCA3B;
+extern s16 lbl_803DCA46;
+extern int curLanguage;
+extern void *curGameTextDir;
+
+u8 getGameState(void) {
+    return lbl_803DCA3D;
+}
+
+#pragma peephole off
+void setGameState(int state) {
+    lbl_803DCA3D = (u8)state;
+}
+
+void setTimeStop(int v) {
+    lbl_803DCA3C = (u8)v;
+}
+
+void setShouldResetNextFrame(int v) {
+    lbl_803DCA3E = (u8)v;
+}
+#pragma peephole reset
+
+void setFrameCountdown_800202c4(u8 v) {
+    lbl_803DCA3B = v;
+}
+
+int getHudHiddenFrameCount(void) {
+    return lbl_803DCA3A;
+}
+
+s16 getScreenBlankFrameCount(void) {
+    return lbl_803DCA46;
+}
+
+int getCurLanguage(void) {
+    return curLanguage;
+}
+
+void *getCurGameText(void) {
+    return curGameTextDir;
+}
+
+int objIsFrozen(u8 *obj) {
+    return obj[0xe5] & 1;
+}
