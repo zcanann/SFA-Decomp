@@ -1352,3 +1352,102 @@ void controllight_update(int obj)
 
 void controllight_release(void) {}
 void controllight_initialise(void) {}
+
+typedef struct TimerFlags {
+    u8 expired : 1;
+    u8 manual : 1;
+    u8 flag20 : 1;
+    u8 pad : 5;
+} TimerFlags;
+
+extern f32 lbl_803E7408;
+extern f32 lbl_803E7418;
+extern f32 lbl_803E7424;
+extern void fn_8001CB3C(int p);
+extern void gameTimerStop(void);
+extern int fn_80080150(int state);
+extern void gameTimerInit(int a, int b);
+extern void timerSetToCountUp(void);
+
+int timer_getExtraSize(void) { return 0x20; }
+
+void timer_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 0x4c);
+    if (*(void **)(state + 4) != NULL) {
+        fn_8001CB3C(state + 4);
+    }
+    gameTimerStop();
+}
+
+int timer_hasExpired(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    return ((TimerFlags *)(state + 0xd))->expired;
+}
+
+int timer_isEffectMode(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    return *(u8 *)(state + 0xc) == 2;
+}
+
+void timer_clearManualFlags(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    ((TimerFlags *)(state + 0xd))->manual = 0;
+    ((TimerFlags *)(state + 0xd))->expired = 0;
+}
+
+void timer_forceStart(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    ((TimerFlags *)(state + 0xd))->manual = 1;
+}
+
+#pragma peephole off
+#pragma scheduling off
+void timer_addDuration(int obj, int duration)
+{
+    int state = *(int *)(obj + 0xb8);
+    if (fn_80080150(state) != 0) {
+        *(f32 *)(state + 0) = *(f32 *)(state + 0) + (f32)duration;
+        if (*(u8 *)(state + 0xc) == 1) {
+            gameTimerInit(0x1d, (int)(*(f32 *)(state + 0) / lbl_803E7408));
+            timerSetToCountUp();
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    void *light = *(void **)(*(int *)(obj + 0xb8) + 4);
+    if (light != NULL && *(u8 *)((char *)light + 0x2f8) != 0 &&
+        *(u8 *)((char *)light + 0x4c) != 0) {
+        queueGlowRender(light);
+    }
+    if (*(void **)(obj + 0xc4) == NULL) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7418);
+    }
+}
+
+#pragma peephole off
+#pragma scheduling off
+void timer_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    storeZeroToFloatParam((void *)state);
+    *(u8 *)(state + 0xc) = *(u8 *)(setup + 0x19);
+    *(f32 *)(state + 8) = lbl_803E7424;
+    ((TimerFlags *)(state + 0xd))->expired = 0;
+    ((TimerFlags *)(state + 0xd))->manual = 0;
+    *(int *)(state + 4) = 0;
+    ObjGroup_AddObject(obj, 0x4c);
+    ((TimerFlags *)(state + 0xd))->flag20 = 0;
+}
+#pragma scheduling on
+#pragma peephole on
