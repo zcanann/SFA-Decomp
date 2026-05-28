@@ -6414,6 +6414,12 @@ extern f32 lbl_803E80E8;
 extern f32 lbl_803E7EFC;
 extern f32 lbl_803E8070;
 extern f32 lbl_803E7F30;
+extern void *getTrickyObject(void);
+extern void trickyImpress(void *trickyObj);
+extern int Obj_GetActiveModel(int obj);
+extern int Obj_SetActiveModelIndex(int obj, int idx);
+extern void *memcpy(void *dst, const void *src, u32 size);
+extern int *lbl_803DCAB4;
 
 typedef struct {
     u8 pad[0x7ac];
@@ -8728,6 +8734,48 @@ int fn_802AE480(int obj, int inner, int state)
         *(f32 *)((char *)inner + 0x438) = *(f32 *)((char *)inner + 0x830);
     }
     return 0;
+}
+
+void fn_80295E90(int obj, int mode)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int oldModel;
+    int newModel;
+    void *tricky;
+
+    objModelGetVecFn_800395d8(obj, 0);
+    objModelGetVecFn_800395d8(obj, 9);
+    if (mode != 0) {
+        fn_80295CF4(obj, 0);
+        ((ByteFlags *)((char *)inner + 0x3f3))->b08 = 1;
+        tricky = getTrickyObject();
+        if (tricky != NULL) {
+            trickyImpress(tricky);
+        }
+        GameBit_Set(0xc30, 1);
+        Sfx_PlayFromObject(obj, 0x69);
+        (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(obj, 0x801, 0, 0x50, 0);
+        oldModel = Obj_GetActiveModel(obj);
+        Obj_SetActiveModelIndex(obj, 2);
+        newModel = Obj_GetActiveModel(obj);
+        memcpy((void *)*(int *)((char *)newModel + 0x2c), (void *)*(int *)((char *)oldModel + 0x2c), 0x68);
+        memcpy((void *)*(int *)((char *)newModel + 0x30), (void *)*(int *)((char *)oldModel + 0x30), 0x68);
+        if (mode == 2) {
+            ((ByteFlags *)((char *)inner + 0x3f4))->b80 = 1;
+        }
+    } else {
+        fn_80295CF4(obj, 1);
+        ((ByteFlags *)((char *)inner + 0x3f3))->b08 = 0;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b80 = 0;
+        (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(obj, 0x801, 0, 0x50, 0);
+        oldModel = Obj_GetActiveModel(obj);
+        Obj_SetActiveModelIndex(obj, 1);
+        newModel = Obj_GetActiveModel(obj);
+        memcpy((void *)*(int *)((char *)newModel + 0x2c), (void *)*(int *)((char *)oldModel + 0x2c), 0x68);
+        memcpy((void *)*(int *)((char *)newModel + 0x30), (void *)*(int *)((char *)oldModel + 0x30), 0x68);
+        GameBit_Set(0xc30, 0);
+        Sfx_PlayFromObject(obj, 0x69);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
