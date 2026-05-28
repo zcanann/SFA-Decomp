@@ -6312,6 +6312,8 @@ extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 extern f32 lbl_803E7F94;
 extern f32 lbl_803E7F98;
+extern f32 lbl_803DE460;
+extern f32 lbl_803DE464;
 extern void setAButtonIcon(int idx);
 extern void setBButtonIcon(int idx);
 extern f32 lbl_803DE45C;
@@ -9142,6 +9144,78 @@ void fn_802A81B8(int obj, int state, f32 *out)
         out[1] = lbl_803E7EA4;
         out[2] = -sin(lbl_803E7F94 * (f32)*(s16 *)((char *)state + 0x478) / lbl_803E7F98);
     }
+}
+
+int fn_8029B7B0(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int r = fn_802AC7DC(obj, state, inner);
+    u32 b;
+    if (r != 0) {
+        return r;
+    }
+    {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x294) = z;
+        *(f32 *)((char *)state + 0x284) = z;
+        *(f32 *)((char *)state + 0x280) = z;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x28) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
+    }
+    setAButtonIcon(6);
+    setBButtonIcon(0xa);
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0x43d:
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029A4A8;
+            return 0x2d;
+        }
+        break;
+    case 0x448:
+        if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E9C) {
+            if (*(u8 *)((char *)inner + 0x8b3) == 0) {
+                Sfx_PlayFromObject(obj, 0x2c);
+                if (lbl_803DE44C != NULL) {
+                    b = (*(u8 *)((char *)inner + 0x3f4) >> 6) & 1;
+                    if (b != 0) {
+                        *(u8 *)((char *)inner + 0x8b4) = 2;
+                        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+                    }
+                }
+            }
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029A4A8;
+            return 0x2d;
+        }
+        break;
+    default:
+    {
+        f32 z;
+        ObjAnim_SetCurrentMove(obj, 0x43d, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F4C;
+        if (lbl_803DE44C != NULL) {
+            b = (*(u8 *)((char *)inner + 0x3f4) >> 6) & 1;
+            if (b != 0) {
+                *(u8 *)((char *)inner + 0x8b4) = 4;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+            }
+        }
+        z = lbl_803E7EA4;
+        lbl_803DE460 = z;
+        lbl_803DE464 = z;
+        *(f32 *)((char *)inner + 0x7bc) = z;
+        *(f32 *)((char *)inner + 0x7b8) = z;
+        break;
+    }
+    }
+    if ((*(u16 *)((char *)inner + 0x6e2) & 0x200) != 0 || *(u8 *)((char *)inner + 0x8c8) != 0x52) {
+        buttonDisable(0, 0x200);
+        *(int *)((char *)state + 0x308) = (int)fn_8029A420;
+        return 0x2c;
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
