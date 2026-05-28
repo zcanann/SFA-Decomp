@@ -180,6 +180,11 @@ extern void fn_80137948(char *fmt, ...);
 extern f32 lbl_803E69A8;
 extern void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int b);
 extern f32 lbl_803E68B8;
+extern void mathFn_80021ac8(int obj, f32 *v);
+extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern f32 lbl_803E689C;
+extern f32 lbl_803E68A0;
+extern f32 lbl_803E68A4;
 extern void setMatrixFromObjectPos(f32 *mtx, void *desc);
 extern void Matrix_TransformPoint(f32 *mtx, double x, double y, double z, f32 *ox, f32 *oy, f32 *oz);
 extern f32 lbl_803E6B38;
@@ -1791,6 +1796,28 @@ void ktlazerwall_update(int obj) {
             *(f32 *)(runtime + 4) = lbl_803E6898;
         }
     }
+}
+
+void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle) {
+    char *runtime = *(char **)((char *)obj + 0xb8);
+    f32 pos[3];
+    f32 dir[3];
+    if (*(void **)(runtime + 0x10) != 0) {
+        mm_free(*(void **)(runtime + 0x10));
+        *(void **)(runtime + 0x10) = 0;
+    }
+    pos[0] = *(f32 *)((char *)obj + 0xc);
+    pos[1] = *(f32 *)((char *)obj + 0x10);
+    pos[2] = *(f32 *)((char *)obj + 0x14);
+    dir[0] = lbl_803E6898;
+    dir[1] = -((f32)angle * *(f32 *)(runtime + 0xc) * lbl_803E689C);
+    dir[2] = scale;
+    mathFn_80021ac8(obj, dir);
+    dir[0] += *(f32 *)((char *)obj + 0xc);
+    dir[1] += *(f32 *)((char *)obj + 0x10);
+    dir[2] += *(f32 *)((char *)obj + 0x14);
+    *(f32 *)(runtime + 8) = (f32)(int)randomGetRange(10, angle);
+    *(void **)(runtime + 0x10) = fn_8008FB20(pos, dir, lbl_803E68A0, lbl_803E68A4, (u16)angle, 96, 0);
 }
 
 #pragma peephole reset
