@@ -10150,3 +10150,37 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5
     lbl_803DC7BC = 0;
     ARQPostRequest(entry, 0x64, 1, 1, (u32)source, (u32)buf, size, (void (*)(void*))fn_80008EDC);
 }
+
+extern void Music_Trigger(int id, int arg);
+
+/*
+ * Function: Sfx_ResolveObjectSfxId
+ * EN v1.0 Address: 0x8000C0BC
+ * EN v1.0 Size: 232b
+ */
+int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
+{
+    switch (*sfxId) {
+    case 0x170:
+    case 0xca:
+    case 0x109:
+        *sfxId = 0x409;
+    case 0x409:
+        *outChannel = 0;
+        return 1;
+    case 0x7e:
+    case 0x487:
+        *outChannel = 0;
+        return 1;
+    case 0x420:
+        Music_Trigger(0xe7, 0);
+        Music_Trigger(0xe7, 1);
+        return 0;
+    case 0x38c:
+        return !(gAudioActiveChannelMask & 4);
+    case 0x0:
+        return 0;
+    default:
+        return 1;
+    }
+}
