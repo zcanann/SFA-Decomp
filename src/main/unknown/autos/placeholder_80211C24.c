@@ -109,6 +109,8 @@ void kytesmum_initialise(void) {}
 void kytesmum_release(void) {}
 
 extern u8 framesThisStep;
+extern f32 lbl_803E6A3C;
+extern f32 lbl_803E6A40;
 extern f32 lbl_803E6AA8;
 extern f32 lbl_803E6AB4;
 extern f32 lbl_803E6AB8;
@@ -116,6 +118,95 @@ extern f32 lbl_803E6ABC;
 extern f32 lbl_803E6AC0;
 extern f32 lbl_803E6AC4;
 extern f32 lbl_803E6AC8;
+extern f32 lbl_803E6B34;
+
+extern void *gKTRexState;
+extern void *gKTRexRuntime;
+extern void ktrex_initialiseStateHandlerTables(void);
+
+#pragma scheduling off
+#pragma peephole off
+int drcagewith_setScale(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    return p[0x30];
+}
+
+void ktfallingrocks_init(int obj) {
+    *(int *)((char *)obj + 0xbc) = 0;
+}
+
+int drakorhoverpad_setScale(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    return (p[0x179] >> 2) & 1;
+}
+
+int drakorhoverpad_render2(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    return ((p[0x179] >> 2) & 1) == 0;
+}
+
+int ktrex_setScale(int obj) {
+    void *p = *(void **)((char *)obj + 0xb8);
+    gKTRexRuntime = p;
+    return *(s16 *)((char *)p + 0x274);
+}
+
+int drshackle_func0B(int obj) {
+    int p = *(int *)((char *)obj + 0x4c);
+    return *(s8 *)(p + 0x19);
+}
+
+void hightop_func11(int obj, int val) {
+    u8 v = val;
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    p[0xc43] = v;
+}
+
+f32 hightop_func13(int obj, f32 *out) {
+    *out = lbl_803E6B34;
+    return lbl_803E6AA8;
+}
+
+void drakorhoverpad_func12(int obj, f32 *a, int *b) {
+    *a = lbl_803E6A3C;
+    *b = 0;
+}
+
+void hightop_func12(int obj, f32 *a, int *b) {
+    *a = lbl_803E6AA8;
+    *b = 0;
+}
+
+int drakormissile_setScale(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    return p[0x4] == 1;
+}
+
+void drakormissile_render2(int obj) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    if (p[0x4] == 3) {
+        p[0x4] = 2;
+    }
+}
+
+void hightop_modelMtxFn(int obj, f32 *a, f32 *b, f32 *c) {
+    f32 *p = *(f32 **)((char *)obj + 0xb8);
+    *a = *(f32 *)((char *)p + 0xb6c);
+    *b = *(f32 *)((char *)p + 0xb70);
+    *c = *(f32 *)((char *)p + 0xb74);
+}
+
+void drakorhoverpad_modelMtxFn(int obj, f32 *a, f32 *b, f32 *c) {
+    *a = *(f32 *)((char *)obj + 0xc);
+    *b = lbl_803E6A40 + *(f32 *)((char *)obj + 0x10);
+    *c = *(f32 *)((char *)obj + 0x14);
+}
+
+void ktrex_initialise(void) {
+    ktrex_initialiseStateHandlerTables();
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
