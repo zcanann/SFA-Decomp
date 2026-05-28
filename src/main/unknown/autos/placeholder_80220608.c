@@ -204,7 +204,7 @@ void drearthcal_initialise(void) {}
 int barrelgener_getLinkId(int obj)
 {
     obj = *(int *)(obj + 0x4c);
-    return (s8)*(u8 *)(obj + 0x19);
+    return *(s8 *)(obj + 0x19);
 }
 #pragma scheduling off
 void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
@@ -2148,11 +2148,13 @@ void timer_clearManualFlags(int obj)
     ((TimerFlags *)(state + 0xd))->expired = 0;
 }
 
+#pragma scheduling off
 void timer_forceStart(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     ((TimerFlags *)(state + 0xd))->manual = 1;
 }
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -5544,10 +5546,13 @@ int fn_8022D514(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x470); }
 void fn_8022D520(int arwing, u8 amount)
 {
     int state = *(int *)(arwing + 0xb8);
+    u16 v;
     *(u16 *)(state + 0x47c) = *(u16 *)(state + 0x47c) + amount;
-    if (*(u16 *)(state + 0x47c) > 0x270f) {
-        *(u16 *)(state + 0x47c) = 0x270f;
+    v = *(u16 *)(state + 0x47c);
+    if (v > 0x270f) {
+        v = 0x270f;
     }
+    *(u16 *)(state + 0x47c) = v;
 }
 
 int fn_8022D550(int arwing)
