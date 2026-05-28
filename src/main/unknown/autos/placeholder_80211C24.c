@@ -151,7 +151,8 @@ extern void **gGameUIInterface;
 extern int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg);
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
-extern void explodeplan_updateTriggerCallback(void);
+extern int explodeplan_updateTriggerCallback(int obj);
+extern void Sfx_StopObjectChannel(int obj, int ch);
 extern void firepipe_clearLinkedUpdateFlag(int handle);
 extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjHits_EnableObject(int obj);
@@ -1818,6 +1819,35 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle) {
     dir[2] += *(f32 *)((char *)obj + 0x14);
     *(f32 *)(runtime + 8) = (f32)(int)randomGetRange(10, angle);
     *(void **)(runtime + 0x10) = fn_8008FB20(pos, dir, lbl_803E68A0, lbl_803E68A4, (u16)angle, 96, 0);
+}
+
+int explodeplan_updateTriggerCallback(int obj) {
+    int q = *(int *)((char *)obj + 0x4c);
+    char *runtime = *(char **)((char *)obj + 0xb8);
+    int ret;
+    if (*(int *)runtime == 0) {
+        if (GameBit_Get(*(s16 *)(q + 0x1e)) != 0) {
+            Sfx_StopObjectChannel(obj, 8);
+            return 4;
+        }
+        if (((BitFlags8 *)(runtime + 4))->b0 != GameBit_Get(*(s16 *)(q + 0x20))) {
+            Sfx_PlayFromObject(obj, 402);
+            Sfx_PlayFromObject(obj, 403);
+            if (GameBit_Get(*(s16 *)(q + 0x20)) != 0) {
+                Sfx_PlayFromObject(obj, 404);
+            } else {
+                Sfx_StopObjectChannel(obj, 8);
+            }
+        }
+        ((BitFlags8 *)(runtime + 4))->b0 = GameBit_Get(*(s16 *)(q + 0x20));
+    }
+    ret = 0;
+    if (*(int *)runtime == 0) {
+        if (GameBit_Get(*(s16 *)(q + 0x20)) == 0) {
+            ret = 1;
+        }
+    }
+    return ret;
 }
 
 #pragma peephole reset
