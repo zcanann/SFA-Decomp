@@ -6411,6 +6411,9 @@ extern void fn_802B0EA4(int obj, int state, int sub);
 extern s8 fn_802A74A4(int obj, int state, int sub, void *out, f32 fv, int n);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E80E8;
+extern f32 lbl_803E7EFC;
+extern f32 lbl_803E8070;
+extern f32 lbl_803E7F30;
 
 typedef struct {
     u8 pad[0x7ac];
@@ -8681,6 +8684,50 @@ int fn_802AB1D0(int obj)
         }
     }
     return best;
+}
+
+int fn_802AE480(int obj, int inner, int state)
+{
+    f32 h;
+    f32 lim;
+
+    *(int *)((char *)inner + 0x360) |= 0x1000000;
+    *(f32 *)((char *)state + 0x2a0) = lbl_803E7F20;
+    h = *(f32 *)((char *)obj + 0x98);
+    if (h > lbl_803E7EFC && h < lbl_803E7F44 &&
+        *(f32 *)((char *)state + 0x294) >
+            *(f32 *)((char *)*(int *)((char *)inner + 0x400) + 0x1c) - lbl_803E7E9C &&
+        *(f32 *)((char *)state + 0x298) > lbl_803E7F2C &&
+        *(int *)((char *)inner + 0x488) >= 0x96) {
+        ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 1;
+        ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+        *(u8 *)((char *)inner + 0x8a6) = *(u8 *)((char *)inner + 0x8a7);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E8070;
+        ObjAnim_SetCurrentMove(obj, *(s16 *)((char *)*(int *)((char *)inner + 0x3f8) + 0x3a),
+                               lbl_803E7EA4, 0);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x10);
+        *(int *)((char *)inner + 0x858) = *(s16 *)((char *)inner + 0x484);
+        *(f32 *)((char *)inner + 0x844) =
+            (lbl_803E7F14 + (*(f32 *)((char *)*(int *)((char *)inner + 0x400) + 0x14) +
+                             *(f32 *)((char *)state + 0x294))) / lbl_803E7F30;
+        *(s16 *)((char *)inner + 0x478) = *(s16 *)((char *)inner + 0x484);
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x484) + 0x8000;
+        *(f32 *)((char *)state + 0x294) = -*(f32 *)((char *)state + 0x294);
+        *(f32 *)((char *)state + 0x280) = -*(f32 *)((char *)state + 0x280);
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b80) {
+        if (*(f32 *)((char *)state + 0x294) <=
+                (lim = *(f32 *)((char *)*(int *)((char *)inner + 0x400) + 0x10)) &&
+            *(f32 *)((char *)state + 0x280) <= lim) {
+            *(int *)((char *)inner + 0x494) = *(s16 *)((char *)inner + 0x484);
+            ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+            return 1;
+        }
+        *(f32 *)((char *)inner + 0x408) = lbl_803E7EA4;
+        *(f32 *)((char *)inner + 0x438) = *(f32 *)((char *)inner + 0x830);
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
