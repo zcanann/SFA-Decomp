@@ -5945,6 +5945,13 @@ extern f32 lbl_803E7F04;
 extern f32 lbl_803E7ED8;
 extern f32 lbl_803E7E98;
 extern f32 lbl_803E7EFC;
+extern f32 lbl_803E80A4;
+extern f32 lbl_803E80A8;
+extern f32 lbl_803E80AC;
+extern f32 lbl_803E80B0;
+extern f32 lbl_803E80B4;
+extern f32 lbl_803E80B8;
+extern f32 lbl_803DC6B8[];
 extern f32 lbl_803E7EF8;
 extern f32 lbl_803E7EE0;
 extern int lbl_803DE450;
@@ -6475,6 +6482,8 @@ extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void staffFn_80170380(int a, int b);
 extern f32 PSVECMag(f32 *v);
 extern void PSVECScale(f32 *dst, f32 *src, f32 s);
+extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
+extern int hitDetectFn_80065e50(int obj, int ***out, int a, int b, f32 x, f32 y, f32 z);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 extern f32 lbl_803E7F94;
@@ -12058,6 +12067,113 @@ void fn_8029560C(int obj, int *state)
         tailFn_80026c38(lbl_803DE420, lbl_803DC670, lbl_803DC674, lbl_803DC678);
         playerTailFn_80026b3c(state, v, lbl_803DE420, fn_80295334);
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802A8350(int obj, int p4, int src, int dst, int flag)
+{
+    int **hits;
+    f32 pos[3];
+    f32 y;
+    f32 minDist;
+    int best;
+    int i;
+    int count;
+    int *chosen;
+
+    *(u8 *)((char *)dst + 3) = 0;
+    ((ByteFlags *)((char *)dst + 0x63))->b80 = 1;
+    if ((*(s8 *)((char *)src + 0x52) & 0x08) == 0) {
+        ((ByteFlags *)((char *)dst + 0x63))->b80 = 0;
+    }
+
+    *(f32 *)((char *)dst + 0x48) =
+        *(f32 *)((char *)src + 0x4) +
+        lbl_803E7E98 * (*(f32 *)((char *)src + 0x8) - *(f32 *)((char *)src + 0x4));
+    *(f32 *)((char *)dst + 0x4c) = *(f32 *)((char *)src + 0xc);
+    *(f32 *)((char *)dst + 0x50) =
+        *(f32 *)((char *)src + 0x14) +
+        lbl_803E7E98 * (*(f32 *)((char *)src + 0x18) - *(f32 *)((char *)src + 0x14));
+
+    if (flag != 0) {
+        *(f32 *)((char *)dst + 0x28) = -*(f32 *)((char *)src + 0x1c);
+        *(f32 *)((char *)dst + 0x2c) = -*(f32 *)((char *)src + 0x20);
+        *(f32 *)((char *)dst + 0x30) = -*(f32 *)((char *)src + 0x24);
+        *(f32 *)((char *)dst + 0x34) = -*(f32 *)((char *)src + 0x28);
+    } else {
+        *(f32 *)((char *)dst + 0x28) = *(f32 *)((char *)src + 0x1c);
+        *(f32 *)((char *)dst + 0x2c) = *(f32 *)((char *)src + 0x20);
+        *(f32 *)((char *)dst + 0x30) = *(f32 *)((char *)src + 0x24);
+        *(f32 *)((char *)dst + 0x34) = *(f32 *)((char *)src + 0x28);
+    }
+
+    *(f32 *)((char *)dst + 0x38) = -*(f32 *)((char *)src + 0x24);
+    *(f32 *)((char *)dst + 0x3c) = lbl_803E7EA4;
+    *(f32 *)((char *)dst + 0x40) = *(f32 *)((char *)src + 0x1c);
+    *(f32 *)((char *)dst + 0x44) =
+        -(*(f32 *)((char *)dst + 0x4c) * *(f32 *)((char *)dst + 0x3c) +
+          *(f32 *)((char *)dst + 0x48) * *(f32 *)((char *)dst + 0x38) +
+          *(f32 *)((char *)dst + 0x50) * *(f32 *)((char *)dst + 0x40));
+
+    *(f32 *)((char *)dst + 0x54) = *(f32 *)((char *)p4 + 0x768);
+    *(f32 *)((char *)dst + 0x58) = lbl_803E7EA4;
+    *(f32 *)((char *)dst + 0x5c) = *(f32 *)((char *)p4 + 0x770);
+    *(f32 *)((char *)dst + 0x18) =
+        *(f32 *)((char *)dst + 0x58) * *(f32 *)((char *)dst + 0x3c) +
+        *(f32 *)((char *)dst + 0x54) * *(f32 *)((char *)dst + 0x38) +
+        *(f32 *)((char *)dst + 0x5c) * *(f32 *)((char *)dst + 0x40) +
+        *(f32 *)((char *)dst + 0x44);
+
+    *(s8 *)((char *)dst + 0x62) = *(s8 *)((char *)src + 0x53);
+
+    if (*(f32 *)((char *)dst + 0x18) <= lbl_803E80A4) {
+        return 0;
+    }
+    if (*(f32 *)((char *)dst + 0x18) >= lbl_803E80A8) {
+        return 0;
+    }
+
+    *(f32 *)((char *)dst + 0x8) = *(f32 *)((char *)src + 0xc);
+    PSVECScale((f32 *)((char *)src + 0x1c), pos, -lbl_803DC6B8[1]);
+    PSVECAdd((f32 *)((char *)dst + 0x48), pos, pos);
+    y = *(f32 *)((char *)src + 0x3c);
+    pos[1] = y;
+    count = hitDetectFn_80065e50(obj, &hits, 0, 0x204, pos[0], y, pos[2]);
+
+    minDist = lbl_803E80AC;
+    best = -1;
+    for (i = 0; i < count; i++) {
+        int *entry = hits[i];
+        if (*(f32 *)((char *)entry + 0x8) > lbl_803E80B0) {
+            f32 d = pos[1] - *(f32 *)((char *)entry + 0x0);
+            if (d < lbl_803E7EA4) {
+                d = -d;
+            }
+            if (d < minDist) {
+                minDist = d;
+                best = i;
+            }
+        }
+    }
+
+    chosen = hits[best];
+    *(f32 *)((char *)dst + 0x4) = *(f32 *)((char *)chosen + 0x0);
+    *(s8 *)((char *)dst + 0x1) =
+        (s8)(s32)((lbl_803E80B4 + (*(f32 *)((char *)src + 0x3c) - *(f32 *)((char *)dst + 0x8))) /
+                  lbl_803E80B8);
+    *(f32 *)((char *)dst + 0xc) =
+        (*(f32 *)((char *)src + 0x3c) - *(f32 *)((char *)dst + 0x8)) /
+        (f32)*(s8 *)((char *)dst + 0x1);
+
+    if (*(f32 *)((char *)obj + 0x10) > *(f32 *)((char *)dst + 0x4) - lbl_803E7ED8) {
+        *(s8 *)((char *)dst + 0x0) = *(u8 *)((char *)dst + 0x1) - 3;
+    } else {
+        *(s8 *)((char *)dst + 0x0) = 1;
+    }
+    return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
