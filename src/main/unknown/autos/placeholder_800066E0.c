@@ -3001,6 +3001,7 @@ void AudioStream_SetDefaultVolume(u8 volume)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 #pragma scheduling off
 void AudioStream_Init(void)
 {
@@ -3013,6 +3014,7 @@ void AudioStream_Init(void)
     gAudioStreamStartWhenPrepared = 0;
 }
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -7575,6 +7577,7 @@ void Sfx_UpdateObjectSounds(void)
  * EN v1.0 Address: 0x8000BDB4
  * EN v1.0 Size: 172b
  */
+#pragma dont_inline on
 void Sfx_InitObjectChannels(void)
 {
     SfxObjectChannel* objectChannel;
@@ -7603,6 +7606,7 @@ checkNextChannel:
         objectChannel++;
     } while (i-- != 0);
 }
+#pragma dont_inline reset
 
 /*
  * Function: Sfx_FindObjectChannel
@@ -10470,7 +10474,7 @@ void gameTextShow(int a)
 
 extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
 extern u32 gAudioPendingLoadFlags;
-extern u32 gAudioCompletedLoadFlags;
+extern volatile u32 gAudioCompletedLoadFlags;
 extern char sMidiWadLoadedCallbackLoadError[];
 extern void gameTextRenderStrs(char* str, int arg2);
 
@@ -11581,6 +11585,7 @@ extern int gSfxTriggersCount;
  * EN v1.0 Address: 0x8000980C
  * EN v1.0 Size: 276b
  */
+#pragma dont_inline on
 void audioLoadTriggerData(void)
 {
     char* base = sSampleBufferSLoadedCallbackLoadError;
@@ -11602,4 +11607,169 @@ void audioLoadTriggerData(void)
     gAudioPendingLoadFlags |= 0x4;
     gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, (void (*)(void*))streamsLoadedCallback);
     gStreamsCount = (u32)info / 0xb0;
+}
+#pragma dont_inline reset
+
+extern u8 gAudioHardwareInitialized;
+extern u8 gAudioMusicGroupReady;
+extern u8 gAudioSfxGroupsReady;
+extern u8 gAudioReady;
+extern void *gAudioStarfoxMPoolDataHandle;
+extern void *gAudioStarfoxMProjectDataHandle;
+extern void *gAudioStarfoxMSampleDirectoryHandle;
+extern void *gAudioStarfoxMSampleBufferHandle;
+extern void *gAudioStarfoxSPoolDataHandle;
+extern void *gAudioStarfoxSProjectDataHandle;
+extern void *gAudioStarfoxSSampleDirectoryHandle;
+extern void *gAudioStarfoxSSampleBufferHandle;
+extern int lbl_803DE548;
+extern int lbl_803DE54C;
+extern f32 lbl_803DE550;
+extern f32 lbl_803DE554;
+extern f32 lbl_803DE558;
+extern f32 lbl_803DE55C;
+extern u8 lbl_80335C40[];
+extern u8 lbl_80335D94[];
+extern void ARInit(void *arena, int count);
+extern void ARQInit(void);
+extern void AIInit(int arg);
+extern void AISetDSPSampleRate(int rate);
+extern void sndSetHooks(int *hooks);
+extern void sndInit(int a, int b, int c, int d, int e, int f);
+extern void sndAuxCallbackUpdateSettingsReverbSTD(void *settings);
+extern void sndAuxCallbackReverbSTD(void);
+extern void sndSetAuxProcessingCallbacks(int a, void *cb, void *settings, int d, int e, int f, int g, int h, int i);
+extern void sndVolume(int a, int b, int c);
+extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
+
+/*
+ * Function: audioInit
+ * EN v1.0 Address: 0x80009BF8
+ */
+int audioInit(void)
+{
+    char *base = sSampleBufferSLoadedCallbackLoadError;
+    int hooks[2];
+    int reverbWork;
+    int delay;
+    int v;
+
+    hooks[0] = lbl_803DE548;
+    hooks[1] = lbl_803DE54C;
+    if (!gAudioInitStarted) {
+        gAudioInitStarted = 1;
+        gAudioPendingLoadFlags = 0;
+        gAudioCompletedLoadFlags = 0;
+        testAndSet_onlyUseHeap3(1);
+        if (gAudioHardwareInitialized) {
+            return 1;
+        }
+        gAudioHardwareInitialized = 1;
+        ARInit(lbl_80335D94, 0xa);
+        ARQInit();
+        AIInit(0);
+        AISetDSPSampleRate(0);
+        sndSetHooks(hooks);
+        sndInit(0x30, 0x30, 0x18, 1, 1, 0x1000000);
+        sndSetMaxVoices(0x30, 0x18);
+        if (OSGetSoundMode() == 0) {
+            gAudioSoundMode = 2;
+            sndOutputMode(0);
+        } else {
+            gAudioSoundMode = 0;
+            sndOutputMode(1);
+        }
+        lbl_80335C40[0x13c] = 0;
+        *(f32 *)&lbl_80335C40[0x148] = lbl_803DE550;
+        *(f32 *)&lbl_80335C40[0x150] = lbl_803DE554;
+        *(f32 *)&lbl_80335C40[0x14c] = lbl_803DE558;
+        *(f32 *)&lbl_80335C40[0x140] = lbl_803DE558;
+        *(f32 *)&lbl_80335C40[0x144] = lbl_803DE55C;
+        sndAuxCallbackUpdateSettingsReverbSTD(lbl_80335C40);
+        reverbWork = 0;
+        sndSetAuxProcessingCallbacks(0, (void *)sndAuxCallbackReverbSTD, lbl_80335C40, 0xff, 0, 0, 0,
+                                     0xff, reverbWork);
+        if (!sndIsInstalled()) {
+            OSReport(base + 0x1f8);
+            return 0xff;
+        }
+        sndVolume(0x7f, 0, 0xff);
+        sndMasterVolume(0x7f, 0x64, 1, 1);
+        Sfx_InitObjectChannels();
+        AudioStream_Init();
+        audioLoadTriggerData();
+        testAndSet_onlyUseHeap3(1);
+        gAudioPendingLoadFlags |= 0x8;
+        gAudioStarfoxMPoolDataHandle = loadFileByPathAsync(base + 0x228, NULL, 0,
+                                                           (void (*)(void *))poolDataMLoadedCallback);
+        gAudioPendingLoadFlags |= 0x10;
+        gAudioStarfoxMProjectDataHandle = loadFileByPathAsync(base + 0x23c, NULL, 0,
+                                                             (void (*)(void *))projectDataMLoadedCallback);
+        gAudioPendingLoadFlags |= 0x20;
+        gAudioStarfoxMSampleDirectoryHandle = loadFileByPathAsync(base + 0x250, NULL, 0,
+                                                                 (void (*)(void *))sampleDirectoryMLoadedCallback);
+        testAndSet_onlyUseHeap3(0);
+        gAudioPendingLoadFlags |= 0x40;
+        gAudioStarfoxMSampleBufferHandle = loadFileByPathAsync(base + 0x264, NULL, 0,
+                                                              (void (*)(void *))sampleBufferMLoadedCallback);
+        if (gAudioStarfoxMPoolDataHandle == NULL || gAudioStarfoxMProjectDataHandle == NULL ||
+            gAudioStarfoxMSampleDirectoryHandle == NULL || gAudioStarfoxMSampleBufferHandle == NULL) {
+            return 0xff;
+        }
+        testAndSet_onlyUseHeap3(0);
+    }
+    if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & 0x8) && (gAudioCompletedLoadFlags & 0x10) &&
+        (gAudioCompletedLoadFlags & 0x8) && (gAudioCompletedLoadFlags & 0x20) &&
+        (gAudioCompletedLoadFlags & 0x40)) {
+        sndPushGroup(gAudioStarfoxMProjectDataHandle, 0, gAudioStarfoxMSampleBufferHandle,
+                     gAudioStarfoxMSampleDirectoryHandle, gAudioStarfoxMPoolDataHandle);
+        delay = mmSetFreeDelay(0);
+        mm_free(gAudioStarfoxMSampleBufferHandle);
+        mmSetFreeDelay(delay);
+        gAudioMusicGroupReady = 1;
+        testAndSet_onlyUseHeap3(1);
+        gAudioPendingLoadFlags |= 0x80;
+        gAudioStarfoxSPoolDataHandle = loadFileByPathAsync(base + 0x278, NULL, 0,
+                                                          (void (*)(void *))poolDataSLoadedCallback);
+        gAudioPendingLoadFlags |= 0x100;
+        gAudioStarfoxSProjectDataHandle = loadFileByPathAsync(base + 0x28c, NULL, 0,
+                                                             (void (*)(void *))projectDataSLoadedCallback);
+        gAudioPendingLoadFlags |= 0x200;
+        gAudioStarfoxSSampleDirectoryHandle = loadFileByPathAsync(base + 0x2a0, NULL, 0,
+                                                                 (void (*)(void *))sampleDirectorySLoadedCallback);
+        testAndSet_onlyUseHeap3(0);
+        gAudioPendingLoadFlags |= 0x400;
+        gAudioStarfoxSSampleBufferHandle = loadFileByPathAsync(base + 0x2b4, NULL, 0,
+                                                              (void (*)(void *))sampleBufferSLoadedCallback);
+        if (gAudioStarfoxSPoolDataHandle == NULL || gAudioStarfoxSProjectDataHandle == NULL ||
+            gAudioStarfoxSSampleDirectoryHandle == NULL || gAudioStarfoxSSampleBufferHandle == NULL) {
+            return 0xff;
+        }
+    }
+    if (!gAudioSfxGroupsReady && (gAudioCompletedLoadFlags & 0x80) && (gAudioCompletedLoadFlags & 0x100) &&
+        (gAudioCompletedLoadFlags & 0x80) && (gAudioCompletedLoadFlags & 0x200) &&
+        (gAudioCompletedLoadFlags & 0x400)) {
+        for (v = 1; v <= 0x37; v++) {
+            if (sndPushGroup(gAudioStarfoxSProjectDataHandle, (u16)v, gAudioStarfoxSSampleBufferHandle,
+                             gAudioStarfoxSSampleDirectoryHandle, gAudioStarfoxSPoolDataHandle) == 0) {
+                OSReport(base + 0x2c8, v);
+            }
+        }
+        delay = mmSetFreeDelay(0);
+        mm_free(gAudioStarfoxSSampleBufferHandle);
+        mmSetFreeDelay(delay);
+        gAudioSfxGroupsReady = 1;
+    }
+    if (!gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady) {
+        gAudioReady = musicInitMidiWad();
+    }
+    if (gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady &&
+        (gAudioCompletedLoadFlags & 0x1) && (gAudioCompletedLoadFlags & 0x2) &&
+        (gAudioCompletedLoadFlags & 0x4)) {
+        gAudioResetting = 0;
+        gAudioManagedChannelMask = 0x1f;
+        gAudioActiveChannelMask = 0;
+        return 1;
+    }
+    return 0;
 }
