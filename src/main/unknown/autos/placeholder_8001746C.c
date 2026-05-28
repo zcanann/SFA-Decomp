@@ -8307,6 +8307,25 @@ extern void *lbl_803DCB4C;
 extern int lbl_803DCB58;
 extern void shaderInit(u8 *def, void *out, int arg, int n);
 
+void ObjModel_RelocateAnimData(u8 *m, u8 *dst) {
+    int i;
+    *(u8 **)(m + 0x94) = *(u8 **)(m + 0xa4);
+    for (i = 0; i < *(u16 *)(m + 0x8a); i++) {
+        *(int *)(*(u8 **)(dst + 0x40) + i * 4) = *(int *)(*(u8 **)(m + 0xa4) + i * 0x74 + 0x60);
+        if (*(u32 *)(*(u8 **)(m + 0xa4) + i * 0x74 + 0x64) < *(u32 *)(m + 0xa8)) {
+            *(u32 *)(*(u8 **)(m + 0xa4) + i * 0x74 + 0x64) += *(u32 *)(m + 0xa8);
+        }
+    }
+    *(u8 **)(m + 0xb8) = *(u8 **)(m + 0xc8);
+    for (i = 0; i < *(u16 *)(m + 0xae); i++) {
+        *(int *)(*(u8 **)(dst + 0x44) + i * 4) =
+            *(int *)(dst + 0x24) + *(int *)(*(u8 **)(m + 0xc8) + i * 0x74 + 0x60);
+        if (*(u32 *)(*(u8 **)(m + 0xc8) + i * 0x74 + 0x64) < *(u32 *)(m + 0xcc)) {
+            *(u32 *)(*(u8 **)(m + 0xc8) + i * 0x74 + 0x64) += *(u32 *)(m + 0xcc);
+        }
+    }
+}
+
 void ObjModel_LoadRenderOpTextures(u8 *model, int arg) {
     u8 *hdr = *(u8 **)model;
     int i;
@@ -9091,7 +9110,7 @@ void ObjModel_AdvanceBlendChannels(u8 *model, f32 dt) {
 
 extern void *modelLoadFn_80025ae4(u8 *p, int b, int isType1, int c);
 extern void modelLoadColorFn_80024ec8(void *m, void *data);
-extern void ObjModel_RelocateAnimData(u8 *p, void *m);
+extern void ObjModel_RelocateAnimData(u8 *p, u8 *m);
 extern void DCStoreRange(void *p, int size);
 
 #pragma push
