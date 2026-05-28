@@ -37,6 +37,13 @@ Heuristic before reaching for `asm { }`:
    is *all-switch with no bit-ops*, keep it OUTSIDE the peephole-off region so
    the jump table survives; if it mixes a switch with bit-ops you can't have
    both, so pick whichever the target uses and leave the other as the residual.
+   **BUT peephole-off does NOT always kill the table — DENSE switches can keep
+   both.** For a sufficiently dense switch (e.g. 30 contiguous cases) `#pragma
+   peephole off` KEPT the jump table (verify: still two `bctr`) AND unfused the
+   bit-test compares (`rlwinm`+`cmplwi` vs the merged `rlwinm.`), netting more
+   than peephole-on. So don't *assume* the table dies — test peephole-off on a
+   dense jump-table fn and check for `bctr`; you may get the table + the unfused
+   compares together. (november10, fn_802B1E5C 30-case → +2%.)
    **Inside a file/region that is GLOBALLY `peephole off`, locally re-enable it
    for one jump-table function** by wrapping just that function in `#pragma
    peephole on` … `#pragma peephole reset` (the `reset` restores the surrounding
@@ -325,6 +332,24 @@ Heuristic before reaching for `asm { }`:
     `if`/`while`/`?:` conditions; only accept the residual when the boolean is
     actually stored or returned. (Corrects the over-broad "FP-compare → mfcr/cror
     cap" that earlier handoffs propagated.)
+
+26. **"Floor-first" clamp restructure forces a FRESH callee-saved FP reg (frame
+    size + coloring fix).** When a clamp `x = computed; if (x < floor) x = floor;`
+    makes MWCC *reuse* an earlier value's FP reg (e.g. f31) — shrinking the frame
+    and cascading every stack offset off-by — rewrite it to load the floor FIRST:
+    `x = floor; tmp = computed; if (x < tmp) x = tmp;`. Loading the constant floor
+    before the computed value forces MWCC to allocate a fresh FP reg (f29), fixing
+    the frame size and the coloring. Took fn_802B1E5C 78.4→80.6%. Clean C, no asm.
+    (november10. Mirror of the GPR decl-order tricks #5/#16, for FP.)
+
+27. **Lead an accumulation subterm with the UNARY-NEGATED operand to get
+    `fneg`+`fadds` instead of `fsubs`.** When target computes `a = k*v1 - v0` as
+    `fneg`+`fadds` (because it *reuses* the `k*v1` product elsewhere and can't
+    consume it in an `fsubs`), writing `k*v1 - values[0]` emits `fsubs` and won't
+    match. Write `-values[0] + k*v1` (lead with the negated term) → MWCC emits
+    `fneg` on `values[0]` then `fadds`, preserving the reusable product. Fixed the
+    whole cubic-spline family (curveFn_80010ce4 76→90.4%, mathFn_80010c64
+    86.6→93.9%, mathFn_80010ee0 90.7→94.9%). Clean C, no asm. (mike6, 800066E0.)
 
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
