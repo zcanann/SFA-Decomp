@@ -1,6 +1,23 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80080E58.h"
 
+extern void *mmAlloc(int size, int heap, int flags);
+extern void mm_free(void *ptr);
+extern void objSeq_onMapSetup(void);
+extern void objSeqInitFn_80080078(void *entries, int count);
+
+extern s16 lbl_80399398[];
+extern u8 lbl_80399EA8[];
+extern s16 lbl_80399F00[];
+extern s8 lbl_8039A45C[];
+extern u8 lbl_8030ECA8[];
+extern s8 lbl_803DD0BC;
+extern void *lbl_803DD0D4;
+extern int lbl_803DD100;
+extern int lbl_803DD104;
+extern int lbl_803DD108;
+extern int lbl_803DD10C;
+
 extern undefined4 ABS();
 extern undefined4 FUN_800033a8();
 extern int FUN_80006714();
@@ -3909,6 +3926,95 @@ int FUN_80081134(undefined8 param_1,double param_2,double param_3,undefined8 par
 {
     return 0;
 }
+
+void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
+{
+    lbl_803DD10C = camA;
+    lbl_803DD108 = camB;
+    lbl_803DD104 = camC;
+    lbl_803DD100 = camD;
+}
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+
+void ObjSeq_setXrot(int index, int xrot)
+{
+    s16 xrot16;
+
+    lbl_80399EA8[index] = 1;
+    xrot16 = xrot;
+    lbl_80399F00[index] = xrot16;
+}
+
+int ObjSeq_getBool(int index)
+{
+    if (index < 0 || index >= 0x55) {
+        return 0;
+    }
+    return lbl_8039A45C[index];
+}
+
+void ObjSeq_setFlag(int index, int value)
+{
+    s8 flag;
+
+    if (index < 0) {
+        return;
+    }
+    if (index < 0x55) {
+        flag = value;
+        lbl_8039A45C[index] = flag;
+        return;
+    }
+    return;
+}
+
+void ObjSeq_addBgCmd(int index, int xrot, int yrot)
+{
+    s8 count;
+    s16 shortIndex;
+    s16 shortXrot;
+    s16 shortYrot;
+
+    if (index < 0) {
+        return;
+    }
+    if (index < 0x55) {
+        count = lbl_803DD0BC;
+        if (count >= 0x1e) {
+            return;
+        }
+
+        shortIndex = index;
+        shortYrot = yrot;
+        lbl_80399398[count * 3] = shortIndex;
+        lbl_80399398[count * 3 + 2] = shortYrot;
+        shortXrot = xrot;
+        lbl_803DD0BC++;
+        lbl_80399398[count * 3 + 1] = shortXrot;
+        return;
+    }
+    return;
+}
+
+void ObjSeq_release(void)
+{
+    mm_free(lbl_803DD0D4);
+}
+
+void ObjSeq_initialise(void)
+{
+    lbl_803DD0D4 = mmAlloc(0x10, 0x11, 0);
+    objSeq_onMapSetup();
+    lbl_803DD108 = 1;
+    lbl_803DD100 = 0x5a;
+    lbl_803DD10C = 0x42;
+    objSeqInitFn_80080078(lbl_8030ECA8, 5);
+}
+
+#pragma pop
 
 /* Pattern wrappers. */
 int return0_80088758(void) { return 0x0; }
