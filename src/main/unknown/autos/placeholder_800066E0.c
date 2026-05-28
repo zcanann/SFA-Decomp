@@ -2225,6 +2225,35 @@ void FUN_8000684c(uint *param_1)
 {
 }
 
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 lbl_803DE5AC;
+extern f32 lbl_803DE5B0;
+
+void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v)
+{
+    f32 x = v[0];
+    f32 y = v[1];
+    f32 z = v[2];
+    f32 ra = lbl_803DE5AC * (f32)angX / lbl_803DE5B0;
+    f32 ca = fn_80293E80(ra);
+    f32 rb = lbl_803DE5AC * (f32)angY / lbl_803DE5B0;
+    f32 cb = fn_80293E80(rb);
+    f32 rc = lbl_803DE5AC * (f32)angZ / lbl_803DE5B0;
+    f32 cc = fn_80293E80(rc);
+    f32 sa = sin(ra);
+    f32 sb = sin(rb);
+    f32 sc = sin(rc);
+    f32 A = x * sa + z * ca;
+    f32 p = z * sa - x * ca;
+    f32 B = y * sb - p * cb;
+    f32 C = p * sb + y * cb;
+
+    v[0] = A * sc - B * cc;
+    v[1] = B * sc + A * cc;
+    v[2] = C;
+}
+
 /*
  * --INFO--
  *
@@ -2263,18 +2292,22 @@ f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
 
     if (player != NULL && seqNo == 0) {
         listener = (f32 *)((u8 *)player + 0x18);
-    } else if (slot == NULL) {
-        return lbl_803DE570;
-    } else if (player == NULL) {
-        listener = (f32 *)((u8 *)slot + 0x44);
     } else {
-        PSVECSubtract((f32 *)((u8 *)slot + 0x44), (f32 *)((u8 *)player + 0x18), v);
-        t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
-        t = (t > lbl_803DE5C8 ? t : lbl_803DE5C8) > lbl_803DE5C0 ? lbl_803DE5C0
-                                                                  : (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
-        PSVECScale(v, v, t);
-        PSVECAdd((f32 *)((u8 *)player + 0x18), v, v);
-        listener = v;
+        if (slot == NULL) {
+            return lbl_803DE570;
+        }
+        if (player != NULL) {
+            PSVECSubtract((f32 *)((u8 *)slot + 0x44), (f32 *)((u8 *)player + 0x18), v);
+            t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
+            t = (t > lbl_803DE5C8 ? t : lbl_803DE5C8) > lbl_803DE5C0
+                    ? lbl_803DE5C0
+                    : (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
+            PSVECScale(v, v, t);
+            PSVECAdd((f32 *)((u8 *)player + 0x18), v, v);
+            listener = v;
+        } else {
+            listener = (f32 *)((u8 *)slot + 0x44);
+        }
     }
     PSVECSubtract(listener, soundPos, outDelta);
     return PSVECMag(outDelta);
