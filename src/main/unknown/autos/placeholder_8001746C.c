@@ -8305,6 +8305,20 @@ extern void *getCurrentDataFile(int id);
 extern int lbl_803DCB68;
 extern void *lbl_803DCB4C;
 extern int lbl_803DCB58;
+extern void shaderInit(u8 *def, void *out, int arg, int n);
+
+void ObjModel_LoadRenderOpTextures(u8 *model, int arg) {
+    u8 *hdr = *(u8 **)model;
+    int i;
+    if (*(u16 *)(model + 0x18) & 0x40) {
+        return;
+    }
+    *(u16 *)(model + 0x18) |= 0x40;
+    for (i = 0; i < (*(u8 **)model)[0xf8]; i++) {
+        shaderInit(*(u8 **)(hdr + 0x38) + i * 0x44, *(u8 **)(model + 0x34) + i * 0xc, arg,
+                   *(u16 *)(hdr + 0xe2));
+    }
+}
 
 int loadModelAndAnimTabs(void) {
     int *p = getCurrentDataFile(0x2a);
