@@ -4574,3 +4574,26 @@ int ktrex_stateHandlerA11(int obj, int runtime) {
     return 3;
 }
 #pragma scheduling reset
+
+extern void **gCameraInterface;
+extern f32 lbl_803E67D8;
+
+#pragma scheduling off
+int ktrex_stateHandlerA09(int obj, int runtime) {
+    if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
+        (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 8);
+        if ((*(int (**)(void))((char *)*gCameraInterface + 0x10))() == 66) {
+            (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(2, 0, 0);
+        }
+        return 0;
+    }
+    if ((s8)*(u8 *)((char *)runtime + 0x346) != 0) {
+        *(int *)((char *)gKTRexState + 0xc) = (*(u16 *)((char *)gKTRexState + 0xfa) >> 1) & 3;
+        *(f32 *)((char *)gKTRexState + 4) = lbl_803E67D8;
+        Music_Trigger(147, 0);
+        Music_Trigger(148, 1);
+        return 11;
+    }
+    return 0;
+}
+#pragma scheduling reset
