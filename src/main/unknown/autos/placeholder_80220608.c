@@ -774,6 +774,7 @@ extern void fn_8001DB5C(void *light);
 int pointlight_getExtraSize(void) { return 8; }
 int pointlight_getObjectTypeId(void) { return 0; }
 
+#pragma dont_inline on
 void pointlight_setEffectState(int obj, int flag)
 {
     void *light = *(void **)*(int *)(obj + 0xb8);
@@ -781,6 +782,7 @@ void pointlight_setEffectState(int obj, int flag)
         lightFn_8001db6c(light, flag, lbl_803E7230);
     }
 }
+#pragma dont_inline reset
 
 void pointlight_free(int obj)
 {
@@ -1277,3 +1279,76 @@ void projectedlight_init(int obj, int setup)
 
 void projectedlight_release(void) {}
 void projectedlight_initialise(void) {}
+
+extern int *ObjGroup_GetObjects(int group, int *count);
+extern f32 Vec_distance(int a, int b);
+
+int controllight_getExtraSize(void) { return 0xc; }
+int controllight_getObjectTypeId(void) { return 0; }
+void controllight_free(void) {}
+void controllight_hitDetect(void) {}
+void controllight_render(void) {}
+
+#pragma peephole off
+#pragma scheduling off
+void controllight_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(s16 *)(state + 0) = *(s16 *)(setup + 0x1e);
+    *(f32 *)(state + 4) = (f32)*(s16 *)(setup + 0x1a);
+    *(u8 *)(state + 8) = *(s8 *)(setup + 0x19) % 2;
+    *(u8 *)(state + 9) = 0xff;
+}
+#pragma scheduling on
+#pragma peephole on
+
+#pragma peephole off
+#pragma scheduling off
+void controllight_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    u8 bit = (u8)GameBit_Get(*(s16 *)(state + 0));
+
+    if (bit != *(u8 *)(state + 9)) {
+        switch (*(u8 *)(state + 8)) {
+        case 0: {
+            f32 radius = *(f32 *)(state + 4);
+            int count;
+            int *objs = ObjGroup_GetObjects(0x35, &count);
+            int *p = objs;
+            int i;
+            for (i = 0; i < count; i++) {
+                int o = *p;
+                if (Vec_distance(obj + 0x18, o + 0x18) < radius) {
+                    pointlight_setEffectState(o, bit);
+                }
+                p++;
+            }
+            break;
+        }
+        case 1: {
+            f32 radius = *(f32 *)(state + 4);
+            int count;
+            int *objs = ObjGroup_GetObjects(0x35, &count);
+            int *p = objs;
+            int i;
+            for (i = 0; i < count; i++) {
+                int o = *p;
+                if (Vec_distance(obj + 0x18, o + 0x18) < radius) {
+                    pointlight_setEffectState(o, !bit);
+                }
+                p++;
+            }
+            break;
+        }
+        }
+    }
+
+    *(u8 *)(state + 9) = bit;
+}
+#pragma scheduling on
+#pragma peephole on
+
+void controllight_release(void) {}
+void controllight_initialise(void) {}
