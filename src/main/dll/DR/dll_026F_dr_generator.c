@@ -1,0 +1,680 @@
+#include "ghidra_import.h"
+#include "main/objanim.h"
+
+typedef struct {
+    s16 rx;
+    s16 ry;
+    s16 rz;
+    s16 pad;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ObjPosParams;
+
+typedef struct { s16 v[9]; } HtInitData;
+
+typedef struct {
+    int v[3];
+} QuestTriple;
+
+typedef struct {
+    u8 b0 : 1;
+    u8 b1 : 1;
+    u8 b2 : 1;
+    u8 b3 : 1;
+    u8 b4 : 1;
+    u8 b5 : 1;
+    u8 b6 : 1;
+    u8 b7 : 1;
+} BitFlags8;
+
+typedef struct {
+    u8 bit80 : 1;
+    u8 b40 : 1;
+    u8 bit20 : 1;
+    u8 state : 4;
+    u8 b01 : 1;
+} HoverpadFlags;
+
+typedef struct {
+    u8 p0 : 1;
+    u8 p1 : 1;
+    u8 p2 : 1;
+    u8 f10 : 1;
+    u8 f08 : 1;
+    u8 f04 : 1;
+    u8 p6 : 1;
+    u8 p7 : 1;
+} Flags377;
+
+extern u8 framesThisStep;
+extern f32 lbl_803E6A3C;
+extern f32 lbl_803E6A40;
+extern f32 lbl_803E6AA8;
+extern f32 lbl_803E6AB4;
+extern f32 lbl_803E6AB8;
+extern f32 lbl_803E6ABC;
+extern f32 lbl_803E6AC0;
+extern f32 lbl_803E6AC4;
+extern f32 lbl_803E6AC8;
+extern f32 lbl_803E6B34;
+extern f32 lbl_803E67A0;
+extern f32 lbl_803E67B8;
+extern f32 lbl_803E6808;
+extern f32 lbl_803E6858;
+extern f32 lbl_803E6994;
+extern f32 lbl_803E6978;
+extern f32 lbl_803E69D0;
+extern f32 lbl_803E69D8;
+extern f32 lbl_803E69E0;
+extern f32 lbl_803E69E8;
+extern f32 lbl_803E6A44;
+extern f32 lbl_803E6B00;
+extern f32 lbl_803E6B58;
+extern void *gKTRexState;
+extern void *gKTRexRuntime;
+extern undefined4 *gExpgfxInterface;
+extern void ktrex_initialiseStateHandlerTables(void);
+extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void *Obj_GetPlayerObject(void);
+extern void ModelLightStruct_free(void *p);
+extern void GameBit_Set(int eventId, int value);
+extern void Music_Trigger(int trackId, int restart);
+extern void Obj_FreeObject(int obj);
+extern void mm_free(void *ptr);
+extern void storeZeroToFloatParam(void *timer);
+extern void **gGameUIInterface;
+extern int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg);
+extern u32 GameBit_Get(int eventId);
+extern u32 randomGetRange(int min, int max);
+extern int explodeplan_updateTriggerCallback(int obj);
+extern void Sfx_StopObjectChannel(int obj, int ch);
+extern void firepipe_clearLinkedUpdateFlag(int handle);
+extern void ObjLink_DetachChild(int obj, int child);
+extern void ObjHits_EnableObject(int obj);
+extern void ObjHits_DisableObject(int obj);
+extern void *objCreateLight(int v1, int v2);
+extern void modelLightStruct_setField50(void *light, int v);
+extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
+extern void lightSetField2FB(void *handle, int v);
+extern int *objFindTexture(int obj, int idx, int p3);
+extern void buttonDisable(int index, u32 flags);
+extern void **gObjectTriggerInterface;
+extern void *gHighTopStateHandlers[];
+extern void *gHighTopDefaultStateHandler;
+extern int hightop_stateHandler01();
+extern int hightop_stateHandler02(int obj, int p, f32 t);
+extern int hightop_stateHandler04();
+extern int hightop_stateHandler07();
+extern int hightop_stateHandler09();
+extern int hightop_stateHandler10();
+extern void ObjGroup_AddObject(int obj, int group);
+extern int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg);
+extern char sDrCreatorTimeFormat[];
+extern void fn_80137948(char *fmt, ...);
+extern f32 lbl_803E69A8;
+extern void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int b);
+extern f32 lbl_803E68B8;
+extern void mathFn_80021ac8(int obj, f32 *v);
+extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern f32 lbl_803E689C;
+extern f32 lbl_803E68A0;
+extern f32 lbl_803E68A4;
+extern void setMatrixFromObjectPos(f32 *mtx, void *desc);
+extern void Matrix_TransformPoint(f32 *mtx, double x, double y, double z, f32 *ox, f32 *oy, f32 *oz);
+extern f32 lbl_803E6B38;
+extern f32 lbl_803E6B3C;
+extern f32 lbl_803E6A48;
+extern f32 lbl_803E6A88;
+extern f32 lbl_803DC300;
+extern f32 lbl_803DC304;
+extern f32 lbl_803E68E8;
+extern f32 lbl_803E68EC;
+extern f32 lbl_803E6A38;
+extern f32 lbl_803E6A74;
+extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
+extern void ObjPath_GetPointWorldPositionArray(int obj, int idx, int count, f32 *out);
+extern void dll_2E_func06(int obj, void *p, int v);
+extern int lbl_8032AB48[];
+extern s16 lbl_8032A730[];
+extern u8 lbl_803DC968;
+extern void **gMapEventInterface;
+extern int getCurMapLayer(void);
+extern void saveFileStruct_unlockCheat(int v);
+extern HtInitData lbl_802C2590;
+extern HtInitData lbl_802C25A4;
+extern int lbl_803E6AA0;
+extern void **gPathControlInterface;
+extern int lbl_803DC318;
+extern f32 lbl_803E6B4C;
+extern f32 lbl_803E6B50;
+extern f32 lbl_803E6B54;
+extern int lbl_803DC320;
+extern void dll_2E_func05(int obj, void *p, int a, int b, int c);
+extern void dll_2E_func08(void *p, int a, int b);
+extern void dll_2E_func09(void *p, void *a, void *b, int c);
+extern f32 lbl_803E69C0;
+extern f32 lbl_803E69C4;
+extern f32 lbl_803E69C8;
+extern f32 lbl_803E69BC;
+extern f32 lbl_803E69B8;
+extern f32 sin(f32);
+extern f32 fn_80293E80(f32);
+extern void lightFn_8001d6b0(void *p);
+extern f32 lbl_803E6898;
+extern f32 lbl_803E68BC;
+extern f32 lbl_803E67A4;
+extern f32 lbl_803E67A8;
+extern int lbl_803DDD40;
+extern void setDrawCloudsAndLights(int v);
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern void skyFn_80088e54(int a, f32 b);
+extern int drshackle_toggleEventCallback(int obj, int unused, u8 *arg);
+extern f32 lbl_803E6A2C;
+extern f32 lbl_803E6B30;
+extern s16 lbl_803DC310;
+extern void seqFn_800394a0(int obj);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void fn_8009A8C8(int obj, f32 v);
+extern f32 lbl_803E683C;
+extern f32 lbl_803E6840;
+extern f32 lbl_803E6844;
+extern void *lbl_803DDD50;
+extern void *lbl_803DDD48;
+extern int lbl_803DC2A0;
+extern f32 lbl_803AD1C8[];
+extern void **gRomCurveInterface;
+extern void **gBaddieControlInterface;
+extern void *ObjPath_GetPointModelMtx(int obj, int idx);
+extern void mtx44_mult(f32 *dst, f32 *a, f32 *b);
+extern void fn_8003B950(f32 *mtx);
+extern void Stack_Free(void *p);
+extern void Resource_Release(void *p);
+extern s16 lbl_803DC328;
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern int *getTrickyObject(void);
+extern int fn_802972A8(void);
+extern int dll_2E_func0A(int a, f32 *buf);
+extern s16 getAngle(f32 dx, f32 dz);
+extern f32 lbl_803E69F0;
+extern f32 lbl_803AD208[];
+extern void ObjPath_GetPointLocalPosition(int obj, int idx, f32 *x, f32 *y, f32 *z);
+extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
+extern void objRemoveFromListFn_8002ce88(int obj);
+extern int dll_2E_func07(int obj, u8 *arg, char *p, int a, int b);
+extern f32 lbl_803E68C0;
+extern void lightFn_8001db6c(void *light, int v, f32 f);
+extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int d);
+extern void lightSetFieldBC_8001db14(void *light, int v);
+extern void ObjModel_CopyJointTranslation(void *model, int joint, f32 *out);
+extern void objSetMtxFn_800412d4(void *mtx);
+extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
+extern int *objModelGetVecFn_800395d8(int obj, int i);
+extern f32 interpolate(f32 a, f32 b, f32 c);
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E69F4;
+extern f32 lbl_803E69F8;
+extern f32 lbl_803E69FC;
+extern f32 lbl_803E6A00;
+extern f32 lbl_803E6A04;
+extern f32 lbl_803E6A08;
+extern f32 lbl_803E6A0C;
+extern f32 lbl_803E6A10;
+extern f32 lbl_803E6A14;
+extern f32 lbl_803E6A28;
+extern int lbl_803DC2F0;
+extern int lbl_803DDD70;
+extern void fn_8001D730(void *light, int a, int b, int c, int d, int e, f32 f);
+extern void fn_8001D714(void *light, f32 f);
+extern void ObjHits_SetTargetMask(int obj, int mask);
+extern f32 lbl_803E6940;
+extern f32 lbl_803E6944;
+extern f32 lbl_803E6948;
+extern f32 lbl_803E694C;
+extern f32 lbl_803E6950;
+extern f32 lbl_803E6954;
+extern f32 lbl_803E6958;
+extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
+extern int *ObjGroup_GetObjects(int group, int *count);
+extern f32 lbl_803E6B68;
+extern f32 lbl_803E6B6C;
+extern f32 lbl_803E6964;
+extern int *Obj_GetActiveModel();
+extern f32 *ObjModel_GetJointMatrix(int *model, int jointIdx);
+extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E67BC;
+extern f32 lbl_803E67B4;
+extern f32 lbl_803E67C0;
+extern f32 lbl_803E67C4;
+extern f32 lbl_803E67E8;
+extern int fn_8001DB64(void);
+extern void queueGlowRender(void *p);
+extern f32 lbl_803E6A30;
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
+extern f32 PSVECMag(f32 *v);
+extern f32 sqrtf(f32 v);
+extern void voxmaps_worldToGrid(void *world, void *grid);
+extern int voxmaps_traceLine(void *start, void *end, void *hit, int d, int e);
+extern void voxmaps_gridToWorld(void *world, void *grid);
+extern f32 lbl_803E6960;
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void Sfx_StopFromObject(int obj, int id);
+extern int fn_80221C18(int player, f32 v, f32 *objPos, f32 *out);
+extern void PSVECNormalize(f32 *out, f32 *in);
+extern void PSVECScale(f32 *out, f32 *in, f32 scale);
+extern void PSVECAdd(f32 *out, f32 *a, f32 *b);
+extern int ObjHits_GetPriorityHit(int obj, void *out, int a, int b);
+extern f32 Vec_distance(f32 *a, f32 *b);
+extern f32 lbl_803DC2B0;
+extern f32 lbl_803DC2B4;
+extern f32 lbl_803DC2B8;
+extern f32 lbl_803DC2BC;
+extern f32 lbl_803E6968;
+extern f32 lbl_803E68E0;
+extern f32 lbl_803E68E4;
+extern s16 lbl_803DC2AE;
+extern f32 lbl_803E6998;
+extern f32 lbl_803E69A0;
+extern char sKytesMumYawDiffMessage[];
+extern void curveFn_80010320(void *curve, f32 v);
+extern s16 Obj_GetYawDeltaToObject(int obj, int target, int p3);
+extern void fn_80221F14(int obj, f32 *a, f32 *b, f32 f1, f32 f2, f32 f3);
+extern f32 lbl_803E6A4C;
+extern f32 lbl_803E6A50;
+extern f32 lbl_803E6A54;
+extern f32 lbl_803E6A58;
+extern f32 lbl_803E6A8C;
+extern f32 lbl_803E6A90;
+extern f32 lbl_803E6A94;
+extern f32 lbl_803E6A98;
+extern f32 lbl_803E6A9C;
+extern f32 lbl_803DC2F8;
+extern s16 lbl_803DC2FC;
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 m);
+extern f32 lbl_803E6A78;
+extern f32 lbl_803E6A7C;
+extern f32 lbl_803E6A80;
+extern f32 lbl_803E6A84;
+extern int Stack_IsEmpty(int stack);
+extern void Stack_Pop(int stack, int *out);
+extern int fn_80080150(void *timer);
+extern void s16toFloat(void *timer, int v);
+extern int timerCountDown(void *timer);
+extern void objRenderFn_80041018(int obj);
+extern f32 lbl_803E69E4;
+extern f32 lbl_803E6A18;
+extern f32 lbl_803E6A1C;
+extern f32 lbl_803E695C;
+extern f32 timeDelta;
+extern f32 lbl_803E68B0;
+extern f32 lbl_803E68B4;
+extern void renderFn_8008f904(void *p);
+extern int ObjHits_GetPriorityHitWithPosition(int obj, void *a, int b, int *c, f32 *x, f32 *y, f32 *z);
+extern void fn_80221E94(int obj, f32 *p, f32 v);
+extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern int ObjGroup_FindNearestObject(int group, int obj, void *out);
+extern void timer_addDuration(int obj, s16 dur);
+extern void **gPartfxInterface;
+extern f32 lbl_803E6B5C;
+extern f32 lbl_803E6B60;
+extern f32 lbl_803E6B64;
+extern int lbl_802C2578[];
+extern int lbl_802C2584[];
+extern int lbl_8032A7FC[];
+extern int ObjTrigger_IsSet(int obj);
+extern void saveGame_saveObjectPos(int obj);
+extern int objGetAnimState80A(int *obj);
+extern void ObjHits_SetHitVolumeSlot(int obj, int a, int b, int c);
+extern f32 lbl_803E6988;
+extern f32 lbl_803E698C;
+extern f32 lbl_803E6990;
+extern u8 lbl_8032A7C0[];
+extern int lbl_803DC2C8;
+extern int lbl_803DC2D0;
+extern f32 lbl_803E699C;
+extern void **gPlayerInterface;
+extern f32 lbl_803E690C;
+extern f32 lbl_803E6920;
+extern f32 lbl_803E6938;
+extern int fn_801702D4(int obj, f32 v);
+extern void staffFn_80170380(int handle, int v);
+extern f32 lbl_803E68F0;
+extern f32 lbl_803E68F4;
+extern f32 lbl_803E68F8;
+extern f32 lbl_803E6B40;
+extern u8 lbl_803DC308;
+extern void objSoundFn_800392f0(int obj, int a, void *b, int c);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
+extern f32 lbl_803DC324;
+extern s16 lbl_803DC314;
+extern u8 lbl_8032AAB0[];
+extern f32 lbl_803E6B44;
+extern f32 lbl_803E6ADC;
+extern f32 lbl_803E6B48;
+extern int fn_80222358(int obj, f32 *p, f32 a, f32 b, f32 c, int d);
+extern void characterDoEyeAnims(int obj, void *p);
+extern void objAnimFn_80038f38(int obj, void *p);
+extern void dll_2E_func03(int obj, void *p);
+extern void ktrex_updateAttackEffects(int obj);
+extern void curvesSetupMoveNetworkCurve(void *curve);
+extern f32 lbl_803E6A70;
+extern void *gKTRexStateHandlersA[];
+extern void *gKTRexStateHandlersB[];
+extern f32 lbl_8032A534[];
+extern f32 lbl_8032A540[];
+extern f32 lbl_803E6818;
+extern f32 lbl_803E6848;
+extern void fn_8003B5E0(int a, int b, int c, int d);
+extern void PSMTXMultVecSR(f32 *m, f32 *src, f32 *dst);
+extern s16 lbl_803DC290[];
+extern s16 lbl_803DC298[];
+extern u32 lbl_803E67B0;
+extern void ObjHits_SetHitVolumeMasks(int obj, int a, int b, int c);
+extern void ktrex_updateContactEffects(int obj, void *runtime);
+extern s16 lbl_803DC250;
+extern f32 lbl_803E6810;
+extern f32 lbl_803E67F4;
+extern f32 lbl_803E67F8;
+extern f32 lbl_803E680C;
+extern f32 lbl_803E6814;
+extern s16 lbl_803DC260;
+extern u16 lbl_803DC288;
+extern f32 lbl_8032A51C[];
+extern s16 lbl_803DC258;
+extern u16 lbl_803DC268;
+extern u16 lbl_803DC270;
+extern u16 lbl_803DC278;
+extern u16 lbl_803DC280;
+extern s16 lbl_8032A510[];
+extern f32 lbl_8032A528[];
+extern f32 lbl_803E681C;
+extern f32 lbl_803E684C;
+extern f32 lbl_803E6850;
+extern f32 lbl_803E67F0;
+extern int allocModelStruct_800139e8(int a, int b);
+extern int Resource_Acquire(int a, int b);
+extern int mapBlockFn_800592e4(void);
+extern void streamFn_8000a380(int a, int b, int c);
+extern f32 lbl_802C2560[];
+extern f32 lbl_802C256C[];
+extern f64 lbl_803E6860;
+extern f64 lbl_803E6868;
+extern f32 lbl_803E6870;
+extern f32 lbl_803E6874;
+extern f32 lbl_803E6878;
+extern f32 lbl_803E687C;
+extern f32 lbl_803E6880;
+extern int lbl_803DDD60;
+extern void PSMTXRotRad(f32 *m, int axis, f32 rad);
+extern f32 lbl_803E6824;
+extern f32 lbl_803E6828;
+extern f32 lbl_803E682C;
+extern f32 lbl_803E6830;
+extern f32 lbl_803E6834;
+extern f32 lbl_803E6838;
+extern f32 lbl_803E67C8;
+extern f32 lbl_803E67CC;
+extern void doRumble(f32 m);
+extern f32 lbl_803E68FC;
+extern f32 lbl_803E6900;
+extern f32 lbl_803E6904;
+extern f32 lbl_803E6908;
+extern f32 lbl_803E6910;
+extern f32 lbl_803E6914;
+extern f32 lbl_803E6918;
+extern f32 lbl_803E691C;
+extern f32 lbl_803E6924;
+extern f32 lbl_803E6928;
+extern f32 lbl_803E692C;
+extern f32 lbl_803DC2A8;
+extern s16 lbl_803DC2AC;
+extern f32 lbl_803DDD68;
+extern void ObjLink_AttachChild(int obj, int child, int v);
+extern void firepipe_setLinkedUpdateFlag(int handle);
+extern void fn_80098270(int obj, f32 a, int b, int c, f32 d);
+extern void fn_802966CC(int obj);
+extern int lbl_802C2550[];
+extern int lbl_803DDD4C;
+extern f32 lbl_803E6820;
+extern s16 lbl_803AD158[];
+extern void ObjMsg_SendToObject(int target, int msg, int sender, int arg);
+extern int Stack_IsFull(int stack);
+extern void Stack_Push(int stack, int *val);
+extern int RandomTimer_UpdateRangeTrigger(void *timer, f32 lo, f32 hi);
+extern int Stack_IsFull(int stack);
+extern void Stack_Push(int stack, int *val);
+extern f32 lbl_803E67C4;
+extern f32 lbl_803E67C8;
+extern f32 lbl_803E67CC;
+extern void **gCameraInterface;
+extern f32 lbl_803E67D8;
+extern f32 lbl_803E67D0;
+extern f32 lbl_803E67D4;
+extern void **gScreenTransitionInterface;
+extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
+extern void unlockLevel(int a, int b, int c);
+extern f32 lbl_803E67EC;
+extern f32 lbl_803E67F0;
+extern f32 lbl_803E6B24;
+extern f32 lbl_803E6B28;
+extern f32 lbl_803E6B2C;
+extern s16 lbl_803DC32C;
+extern void ObjHits_SyncObjectPositionIfDirty(int obj);
+extern f32 lbl_803E6AAC;
+extern f32 lbl_803E6AB0;
+extern f32 lbl_803E6AD8;
+extern f32 lbl_803E6AE0;
+extern f32 lbl_803E6AE4;
+extern f32 lbl_803E6AE8;
+extern f32 lbl_803E6AEC;
+extern f32 lbl_803E6AF0;
+extern void fn_80039264(void *p);
+extern void objModelAndSoundFn_80039118(int obj, void *p);
+extern void ObjHits_MarkObjectPositionDirty(int obj);
+extern void ObjHits_ClearSourceMask(int obj, int mask);
+extern f32 lbl_803E6B04;
+extern f32 lbl_803E6B08;
+extern f32 lbl_803E6B0C;
+extern f32 lbl_803E6B10;
+extern f32 lbl_803E6B14;
+extern f32 lbl_803E6B18;
+extern f32 lbl_803E6B1C;
+extern f32 lbl_803E6B20;
+extern f32 lbl_8032ABB0[];
+extern int randFn_80080100(int n);
+extern int lbl_8032AB3C[];
+extern int lbl_8032AB30[];
+extern f32 lbl_803E6AA4;
+extern s16 lbl_803DC330;
+extern void getYButtonItem(s16 *out);
+extern int cMenuGetSelectedItem(void);
+extern void fn_8002B6D8(int obj, int a, int b, int c, int d, int e);
+extern int ObjTrigger_IsSetById(int obj, int id);
+extern void objModelClearVecFn_8003aa40(int obj);
+
+void kytesmum_playAnimationEventSfx(int obj, u8 *arg, s16 *sfxData);
+int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out);
+int drakorhoverpad_update(void *curve, int arg);
+int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg);
+int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg);
+int ktrex_stateHandlerB01(int obj, int runtime);
+int ktrex_stateHandlerB02(int obj, int runtime);
+int ktrex_stateHandlerB03(int obj, int runtime);
+int ktrex_stateHandlerB04(int obj, int runtime);
+int ktrex_stateHandlerB05(int obj, int runtime);
+int ktrex_stateHandlerB06(int obj, int runtime);
+int ktrex_stateHandlerB07(int obj, int runtime);
+int ktrex_stateHandlerB08(int obj, int runtime);
+int ktrex_stateHandlerA01(int obj, int runtime);
+int ktrex_stateHandlerA02(int obj, int runtime);
+int ktrex_stateHandlerA03(int obj, int runtime);
+int ktrex_stateHandlerA04(int obj, int runtime);
+int ktrex_stateHandlerA05(int obj, int runtime);
+int ktrex_stateHandlerA07(int obj, int runtime);
+int ktrex_stateHandlerA08(int obj, int runtime);
+int ktrex_stateHandlerA09(int obj, int runtime);
+int ktrex_stateHandlerA10(int obj, int runtime);
+int ktrex_stateHandlerA11(int obj, int runtime);
+
+int drgenerator_getExtraSize(void) { return 0x19c; }
+int drgenerator_getObjectTypeId(void) { return 0x0; }
+void drgenerator_initialise(void) {}
+void drgenerator_release(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+void drgenerator_free(int obj) {
+    ObjGroup_RemoveObject(obj, 0x3);
+}
+
+void drgenerator_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
+    }
+}
+
+int drgenerator_eventCallback(int obj, int unused, u8 *arg) {
+    int i;
+    for (i = 0; i < arg[0x8b]; i++) {
+        if (arg[i + 0x81] == 1) {
+            int *t = objFindTexture(obj, 0, 0);
+            if (t != 0) {
+                *t = 0;
+            }
+        }
+    }
+    return 0;
+}
+
+void drgenerator_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    f32 fv;
+    if (*(s16 *)((char *)obj + 0x46) == 0x72e) {
+        int *t;
+        *(void **)((char *)obj + 0xbc) = (void *)drgenerator_eventCallback;
+        t = objFindTexture(obj, 0, 0);
+        if (t != 0) {
+            *t = 0x100;
+        }
+    }
+    *(u8 *)(p + 0x19a) = 2;
+    ObjHits_EnableObject(obj);
+    if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
+        *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        objRemoveFromListFn_8002ce88(obj);
+        ObjHits_DisableObject(obj);
+    }
+    ObjGroup_AddObject(obj, 0x3);
+    *(int *)p = 0;
+    ((BitFlags8 *)(p + 0x19b))->b3 = 1;
+    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
+    *(s16 *)(p + 0x198) = (*(s16 *)(arg + 0x1a) == 0) ? 0x14 : *(s16 *)(arg + 0x1a);
+    *(s16 *)(p + 0x198) = *(s16 *)(p + 0x198) * 0x3c;
+    *(f32 *)(p + 0x124) = lbl_803E6B68;
+    if (GameBit_Get(0x9b9) != 0) {
+        ((BitFlags8 *)(p + 0x19b))->b0 = 1;
+        ((BitFlags8 *)(p + 0x19b))->b4 = 1;
+    } else {
+        ((BitFlags8 *)(p + 0x19b))->b4 = 0;
+    }
+    fv = lbl_803E6B6C;
+    *(f32 *)((char *)obj + 0x2c) = fv;
+    *(f32 *)((char *)obj + 0x28) = fv;
+    *(f32 *)((char *)obj + 0x24) = fv;
+}
+
+void drgenerator_hitDetect(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x4c);
+    f32 a18;
+    f32 a14;
+    f32 a10;
+    int ac;
+    int a8;
+    int found;
+    if (((BitFlags8 *)(p + 0x19b))->b0 || ((BitFlags8 *)(p + 0x19b))->b3) {
+        return;
+    }
+    if (ObjHits_GetPriorityHitWithPosition(obj, &a8, 0, &ac, &a10, &a14, &a18) != 5) {
+        return;
+    }
+    p[0x19a] = p[0x19a] - ac;
+    fn_80221E94(obj, &a10, lbl_803E6B5C);
+    fn_8009A8C8(obj, lbl_803E6B60);
+    if (p[0x19a] > 0) {
+        return;
+    }
+    {
+        int *tex = objFindTexture(obj, 0, 0);
+        spawnExplosion(obj, lbl_803E6B64, 1, 1, 1, 1, 0, 1, 0);
+        if (tex != 0) {
+            *tex = 0x100;
+        }
+    }
+    ((BitFlags8 *)(p + 0x19b))->b0 = 1;
+    GameBit_Set(*(s16 *)(q + 0x1e), 1);
+    if (*(s16 *)((char *)obj + 0x46) == 0x716 &&
+        (found = ObjGroup_FindNearestObject(0x4c, obj, 0)) != 0) {
+        timer_addDuration(found, *(s16 *)(p + 0x198));
+    } else {
+        ObjHits_DisableObject(obj);
+    }
+}
+
+void drgenerator_update(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x4c);
+    int n;
+    if (((BitFlags8 *)(p + 0x19b))->b4 == 0 && GameBit_Get(0x9b9) != 0) {
+        ((BitFlags8 *)(p + 0x19b))->b4 = 1;
+    }
+    if (((BitFlags8 *)(p + 0x19b))->b4 != 0) {
+        goto loop;
+    }
+    if (((BitFlags8 *)(p + 0x19b))->b3 != 0) {
+        goto enable;
+    }
+    if (GameBit_Get(*(s16 *)(q + 0x20)) != 0) {
+        goto enable;
+    }
+    if (*(s16 *)((char *)obj + 0x46) != 0x72e) {
+        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(4, obj, -1);
+    }
+    ((BitFlags8 *)(p + 0x19b))->b3 = 1;
+    ((BitFlags8 *)(p + 0x19b))->b0 = 0;
+    ObjHits_DisableObject(obj);
+    return;
+enable:
+    if (((BitFlags8 *)(p + 0x19b))->b3 == 0) {
+        goto loop;
+    }
+    if (GameBit_Get(*(s16 *)(q + 0x20)) == 0) {
+        goto loop;
+    }
+    if (*(s16 *)((char *)obj + 0x46) != 0x72e) {
+        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(3, obj, -1);
+    }
+    ((BitFlags8 *)(p + 0x19b))->b3 = 0;
+    ObjHits_EnableObject(obj);
+    return;
+loop:
+    if (((BitFlags8 *)(p + 0x19b))->b0 == 0) {
+        return;
+    }
+    n = 1;
+    do {
+        (*(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x690, 0, 1, -1, 0);
+    } while (n-- != 0);
+}
+
+#pragma peephole reset
+#pragma scheduling reset
