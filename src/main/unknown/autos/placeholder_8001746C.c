@@ -7274,3 +7274,101 @@ int roundUpTo32(int x) {
     return x;
 }
 #pragma peephole reset
+
+/* Simple field/global accessors. */
+extern int lbl_803DC9E8;
+extern void *gameTextDrawFunc;
+extern u8 *gameTextFonts;
+extern u8 lbl_803DCB10;
+extern int lbl_803DCAE8;
+extern u8 lbl_803DCA48;
+
+void fn_8001D714(u8 *p, f32 v) {
+    *(f32 *)(p + 0x2f4) = v;
+}
+
+void *fn_8001D818(u8 *p) {
+    return p + 0x230;
+}
+
+void *fn_8001D984(u8 *p) {
+    return *(void **)(p + 0x16c);
+}
+
+void fn_8001D98C(u8 *p, void *v) {
+    *(void **)(p + 0x16c) = v;
+}
+
+void *fn_8001DB1C(u8 *p) {
+    return *(void **)(p + 0x54);
+}
+
+void fn_8001DB24(u8 *p, void *v) {
+    *(void **)(p + 0x54) = v;
+}
+
+void fn_8001DB5C(u8 *p, u8 v) {
+    p[0x2fc] = v;
+}
+
+void *fn_8001DB64(u8 *p) {
+    return *(void **)(p + 0x58);
+}
+
+f32 fn_8001DD48(u8 *p) {
+    return *(f32 *)(p + 0x144);
+}
+
+void fn_80026C30(u8 *p, u8 v) {
+    p[0x1a] = v;
+}
+
+int gameTextFn_80019b14(void) {
+    return lbl_803DC9E8;
+}
+
+void gameTextSetDrawFunc(void *fn) {
+    gameTextDrawFunc = fn;
+}
+
+void lightSetField2FB(u8 *p, u8 v) {
+    p[0x2fb] = v;
+}
+
+void lightSetField4D(u8 *p, u8 v) {
+    p[0x4d] = v;
+}
+
+void lightSetFieldBC_8001db14(u8 *p, u8 v) {
+    p[0xbc] = v;
+}
+
+void modelLightStruct_setField50(u8 *p, void *v) {
+    *(void **)(p + 0x50) = v;
+}
+
+void fn_8001D80C(u8 *p, void *a, void *b) {
+    *(void **)(p + 0x270) = a;
+    *(void **)(p + 0x274) = b;
+}
+
+f32 gameTextFn_80019c00(void) {
+    return *(f32 *)(gameTextFonts + 0x20);
+}
+
+u8 fn_8001FD88(void **p) {
+    *p = &lbl_803DCAE8;
+    return lbl_803DCA48;
+}
+
+void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
+    *(f32 *)(p + 8) = a;
+    *(f32 *)(p + 0xc) = b;
+    *(f32 *)(p + 0x10) = c;
+}
+
+#pragma peephole off
+void texFlagFn_80023cbc(int v) {
+    lbl_803DCB10 = (u8)v;
+}
+#pragma peephole reset
