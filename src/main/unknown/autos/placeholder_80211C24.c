@@ -333,6 +333,8 @@ extern f32 playerMapOffsetZ;
 extern f32 lbl_803E67BC;
 extern f32 lbl_803E67B4;
 extern f32 lbl_803E67C0;
+extern f32 lbl_803E67C4;
+extern f32 lbl_803E67E8;
 extern int fn_8001DB64(void);
 extern void queueGlowRender(void *p);
 extern f32 lbl_803E6A30;
@@ -4370,6 +4372,100 @@ int ktrex_stateHandlerB02(int obj, int runtime) {
         *(s16 *)obj = lbl_803E681C * *(f32 *)((char *)obj + 0x98) + (f32)(int)*(s16 *)((char *)gKTRexState + 0xf8);
     } else {
         *(s16 *)obj = (f32)(int)*(s16 *)((char *)gKTRexState + 0xf8) - lbl_803E681C * *(f32 *)((char *)obj + 0x98);
+    }
+    return 0;
+}
+#pragma scheduling reset
+
+extern int Stack_IsFull(int stack);
+extern void Stack_Push(int stack, int *val);
+
+#pragma scheduling off
+int ktrex_stateHandlerA02(int obj, int runtime) {
+    void *p;
+    int phase;
+    int idx;
+    u16 flags;
+    p = *(void **)((char *)obj + 0x4c);
+    if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
+        (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 1);
+        *(u8 *)((char *)gKTRexState + 0xfc) = 0;
+        *(u16 *)((char *)gKTRexState + 0xfa) &= ~0x20;
+        *(f32 *)((char *)runtime + 0x294) =
+            *(f32 *)((char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4 + 0x38) / lbl_803E67C4;
+    }
+    if (ktrex_updateArenaPathProgress(runtime) != 0) {
+        int push = 2;
+        if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+            Stack_Push(*(int *)gKTRexState, &push);
+        }
+        return 4;
+    }
+    flags = *(u16 *)((char *)gKTRexState + 0xfa);
+    phase = *(u8 *)((char *)gKTRexState + 0x101);
+    if (*(u8 *)((char *)gKTRexState + 0xfc) == 0 && phase >= 2 && (flags & 0x20) == 0 &&
+        (((flags & 1) == 0 && *(f32 *)((char *)gKTRexState + 8) >= lbl_803E67E8) ||
+         ((flags & 1) != 0 && *(f32 *)((char *)gKTRexState + 8) <= lbl_803E67C0))) {
+        idx = phase >> 1;
+        if (randomGetRange(0, 0x64) <= *(u8 *)((char *)p + idx + 0x56)) {
+            int push = 5;
+            *(u8 *)((char *)gKTRexState + 0x103) = 2;
+            if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+                Stack_Push(*(int *)gKTRexState, &push);
+            }
+            *(u8 *)((char *)gKTRexState + 0xfd) = 1;
+            return 5;
+        }
+        if (randomGetRange(0, 0x64) <= *(u8 *)((char *)p + idx + 0x52)) {
+            int cond;
+            u8 fe = *(u8 *)((char *)gKTRexState + 0xfe);
+            if (fe == 1) {
+                cond = *(u8 *)((char *)gKTRexState + 0xff) == 2;
+            } else if (fe == 2) {
+                cond = *(u8 *)((char *)gKTRexState + 0xff) == 1;
+            } else if (fe == 4) {
+                cond = *(u8 *)((char *)gKTRexState + 0xff) == 8;
+            } else {
+                cond = *(u8 *)((char *)gKTRexState + 0xff) == 4;
+            }
+            if (cond && (*(u16 *)((char *)gKTRexState + 0xfa) & 0x40) == 0) {
+                int push = 0xb;
+                *(u8 *)((char *)gKTRexState + 0xfd) = 0;
+                if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+                    Stack_Push(*(int *)gKTRexState, &push);
+                }
+                return 5;
+            }
+        }
+        *(u16 *)((char *)gKTRexState + 0xfa) |= 0x20;
+    }
+    if ((*(u8 *)((char *)gKTRexState + 0xfe) & *(u8 *)((char *)gKTRexState + 0xff)) != 0) {
+        *(u16 *)((char *)gKTRexState + 0xfa) &= ~0x40;
+        if ((*(u8 *)((char *)gKTRexState + 0xfe) & *(u8 *)((char *)gKTRexState + 0xff)) != 0) {
+            int result;
+            if ((*(u16 *)((char *)gKTRexState + 0xfa) & 1) != 0) {
+                if (*(f32 *)((char *)gKTRexState + 8) - *(f32 *)((char *)gKTRexState + 0xf4) > lbl_803E67B4) {
+                    result = 1;
+                } else {
+                    result = 0;
+                }
+            } else {
+                if (*(f32 *)((char *)gKTRexState + 0xf4) - *(f32 *)((char *)gKTRexState + 8) > lbl_803E67B4) {
+                    result = 1;
+                } else {
+                    result = 0;
+                }
+            }
+            if (result != 0) {
+                int push = 5;
+                *(u8 *)((char *)gKTRexState + 0x103) = 1;
+                if (Stack_IsFull(*(int *)gKTRexState) == 0) {
+                    Stack_Push(*(int *)gKTRexState, &push);
+                }
+                *(u8 *)((char *)gKTRexState + 0xfd) = 1;
+                return 5;
+            }
+        }
     }
     return 0;
 }
