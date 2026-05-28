@@ -200,6 +200,17 @@ extern f32 lbl_803E6A38;
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
 extern void lightFn_8001d6b0(void *p);
 
+extern f32 lbl_803E6898;
+extern f32 lbl_803E68BC;
+extern f32 lbl_803E67A4;
+extern f32 lbl_803E67A8;
+extern int lbl_803DDD40;
+extern void setDrawCloudsAndLights(int v);
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern void skyFn_80088e54(int a, f32 b);
+extern int drshackle_toggleEventCallback(int obj, int unused, u8 *arg);
+
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;
@@ -756,6 +767,60 @@ void drlasercannon_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E68E8);
         ObjPath_GetPointWorldPosition((int)obj, 0, (f32 *)(p + 0x10), (f32 *)(p + 0x14), (f32 *)(p + 0x18), 0);
         *(f32 *)(p + 0x14) = *(f32 *)(p + 0x14) - lbl_803E68EC;
+    }
+}
+
+void ktrexlevel_init(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    setDrawCloudsAndLights(0);
+    GameBit_Set(0x572, 0);
+    GameBit_Set(0x56e, 1);
+    GameBit_Set(0x566, 1);
+    GameBit_Set(0x569, 1);
+    *(f32 *)p = lbl_803E67A8;
+    GameBit_Set(0x55a, 1);
+    GameBit_Set(0x54a, 2);
+    GameBit_Set(0x54e, 2);
+    GameBit_Set(0x552, 1);
+    GameBit_Set(0x556, 1);
+    *(int *)((char *)obj + 0xf4) = 0;
+    GameBit_Set(0xefd, 1);
+}
+
+void ktrexlevel_update(int obj) {
+    if (*(int *)((char *)obj + 0xf4) == 0) {
+        skyFn_80088c94(7, 1);
+        getEnvfxAct(obj, obj, 0x18f, 0);
+        getEnvfxAct(obj, obj, 0x18e, 0);
+        getEnvfxAct(obj, obj, 0x190, 0);
+        skyFn_80088e54(1, lbl_803E67A4);
+        GameBit_Set(0x55e, 1);
+        *(int *)((char *)obj + 0xf4) = 1;
+    }
+    lbl_803DDD40 = GameBit_Get(0x572);
+}
+
+void ktlazerwall_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
+    *(f32 *)(p + 0x4) = lbl_803E6898;
+    *(f32 *)(p + 0xc) = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
+    if (randomGetRange(0, 1) != 0) {
+        *(f32 *)(p + 0xc) = -*(f32 *)(p + 0xc);
+    }
+}
+
+void drshackle_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    ObjGroup_AddObject(obj, 0x37);
+    ((BitFlags8 *)(p + 0x1a))->b0 = (GameBit_Get(*(s16 *)(arg + 0x1e)) == 0);
+    *(u8 *)(p + 0x1b) = (s8)arg[0x18] % 2;
+    *(void **)((char *)obj + 0xbc) = (void *)drshackle_toggleEventCallback;
+    if (*(s16 *)(arg + 0x1c) == 1) {
+        *(int *)(p + 0x14) = 2;
+        *(u8 *)(p + 0x1c) = 1 - *(u8 *)(p + 0x1b);
+    } else {
+        *(int *)(p + 0x14) = 1;
     }
 }
 #pragma peephole reset
