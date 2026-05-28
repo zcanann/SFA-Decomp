@@ -37,6 +37,12 @@ Heuristic before reaching for `asm { }`:
    is *all-switch with no bit-ops*, keep it OUTSIDE the peephole-off region so
    the jump table survives; if it mixes a switch with bit-ops you can't have
    both, so pick whichever the target uses and leave the other as the residual.
+   **Inside a file/region that is GLOBALLY `peephole off`, locally re-enable it
+   for one jump-table function** by wrapping just that function in `#pragma
+   peephole on` … `#pragma peephole reset` (the `reset` restores the surrounding
+   global-off). MWCC then regenerates the jump table for that fn while the rest
+   of the file stays peephole-off — combine with #13 case-order. Took
+   `dvdCheckError` to 99.2% inside a global-peephole-off unit (placeholder_800066E0).
    **Treat the two pragmas independently — `scheduling off` ALONE is often the
    win.** For vtable-dispatch / call-heavy / FP-heavy functions, `scheduling
    off` by itself takes 40-70% → 95-100% (it stops MWCC reordering loads/stores
