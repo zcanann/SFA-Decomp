@@ -1395,7 +1395,7 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
   DAT_8039cb30 = lbl_803E00B4;
   DAT_8039cb52 = 0;
   DAT_8039cb53 = 0;
-  gExpgfxSpawnConfig.velocitySource = (void *)uVar1;
+  gExpgfxSpawnConfig.quadVertex3Pad06 = (s32)uVar1;
   DAT_8039cb34 = param_5;
   DAT_8039cb38 = param_4;
   DAT_8039cb51 = param_3;

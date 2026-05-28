@@ -181,8 +181,8 @@ typedef struct ExpgfxAttachedSourceState {
  */
 typedef struct ExpgfxSpawnConfig {
   void *attachedSource;
-  void *velocitySource;
-  u8 pad08[0x0C - 0x08];
+  s32 quadVertex3Pad06;
+  s32 lifetimeFrames;
   s16 sourceVecX;
   s16 sourceVecY;
   s16 sourceVecZ;

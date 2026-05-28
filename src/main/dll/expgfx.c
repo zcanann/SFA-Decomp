@@ -1767,9 +1767,9 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   slot->velocityY = config->velocityY;
   slot->velocityZ = config->velocityZ;
   slot->initialStateByte = config->initialStateByte;
-  quadVertices[3].pad06 = (s16)*(int *)((char *)config + 0x4);
-  slot->lifetimeFrame = (s16)*(int *)((char *)config + 0x8);
-  slot->lifetimeFrameLimit = (s16)*(int *)((char *)config + 0x8);
+  quadVertices[3].pad06 = (s16)config->quadVertex3Pad06;
+  slot->lifetimeFrame = (s16)config->lifetimeFrames;
+  slot->lifetimeFrameLimit = (s16)config->lifetimeFrames;
 
   if (config->scale > lbl_803DF354) {
     debugPrintf(sExpgfxScaleOverflow);
