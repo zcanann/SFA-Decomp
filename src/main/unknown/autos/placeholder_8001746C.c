@@ -8375,6 +8375,25 @@ void mtx44Transpose(f32 *src, f32 *dst) {
     dst[11] = src[14];
 }
 
+extern void setMatrixFromObjectPos(f32 *mtx, void *obj);
+
+void setMatrixFromObjectTransposed(void *obj, f32 *out) {
+    f32 m[16];
+    setMatrixFromObjectPos(m, obj);
+    out[0] = m[0];
+    out[1] = m[4];
+    out[2] = m[8];
+    out[4] = m[1];
+    out[5] = m[5];
+    out[6] = m[9];
+    out[8] = m[2];
+    out[9] = m[6];
+    out[10] = m[10];
+    out[3] = m[12];
+    out[7] = m[13];
+    out[11] = m[14];
+}
+
 void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz) {
     *ox = m[12] + (m[0] * x + m[4] * y + m[8] * z);
     *oy = m[13] + (m[1] * x + m[5] * y + m[9] * z);
