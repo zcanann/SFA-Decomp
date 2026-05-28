@@ -438,7 +438,10 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
    the **complete** extern set — collect **every** `extern`/forward-decl in the
    WHOLE placeholder `.c`, not just its preamble (auto-gen scatters callee
    externs through the body; missing ones fail to compile). Externs emit no
-   code → duplicating them is harmless.
+   code → duplicating them is harmless. **Include standalone col-0 forward
+   prototypes too** (e.g. `void fn_802BF4D8(int);`) — once functions are
+   reordered into a new file, a call that precedes its def with no prototype
+   gets an implicit-`int` decl that then conflicts with the real definition.
 3. **Graduate EDGE-FIRST in address order** — dtk requires linear link order;
    a mid-unit hole makes the placeholder appear on both sides of another unit's
    range → cyclic-dependency abort. Keep the placeholder one shrinking
