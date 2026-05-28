@@ -8963,9 +8963,11 @@ f32 curveFn_80010ce4(f32 t, f32* values, f32* outTangent)
  */
 void curveFn_80010d54(f32* values, f32* coefficients)
 {
-    coefficients[0] = values[3] + (values[2] + (lbl_803DE660 * values[0] + lbl_803DE698 * values[1]));
+    f32 k698 = lbl_803DE698;
+
+    coefficients[0] = values[3] + (values[2] + (lbl_803DE660 * values[0] + k698 * values[1]));
     coefficients[1] = (lbl_803DE668 * values[0] + lbl_803DE664 * values[1] +
-                       lbl_803DE698 * values[2]) -
+                       k698 * values[2]) -
                       values[3];
     coefficients[2] = values[2];
     coefficients[3] = values[0];
