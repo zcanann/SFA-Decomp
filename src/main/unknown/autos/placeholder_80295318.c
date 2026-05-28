@@ -9297,12 +9297,12 @@ void fn_802AA8D0(int obj)
         f32 x;
         f32 y;
         f32 z;
-        u8 pad2[0x10];
     } buf;
+    f32 base = lbl_803E80C4;
     f32 dy;
     int i;
 
-    dy = lbl_803E80C4 - *(f32 *)((char *)inner + 0x7d0);
+    dy = base - *(f32 *)((char *)inner + 0x7d0);
     buf.y = dy;
     if (lbl_803DE478 < lbl_803E80D8) {
         *(u8 *)((char *)inner + 0x8ca) = 0;
@@ -9312,7 +9312,7 @@ void fn_802AA8D0(int obj)
         lbl_803DE478 = lbl_803DE478 - lbl_803E7F14 * timeDelta;
         return;
     }
-    lbl_803DE478 = lbl_803E80C4;
+    lbl_803DE478 = base;
     buf.y = dy + *(f32 *)((char *)obj + 0x10);
     for (i = 0; i < 10; i++) {
         buf.x = *(f32 *)((char *)obj + 0xc) + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
