@@ -3021,3 +3021,36 @@ void androssbrain_update(int obj)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern int *gScreenTransitionInterface;
+extern f32 lbl_803E7480;
+extern void gf_levelcon_handleScriptEvents(int obj);
+
+int gf_levelcon_getExtraSize(void) { return 0x10; }
+int gf_levelcon_getObjectTypeId(void) { return 0; }
+void gf_levelcon_hitDetect(void) {}
+void gf_levelcon_initialise(void) {}
+void gf_levelcon_release(void) {}
+#pragma scheduling off
+void gf_levelcon_free(void)
+{
+    setIsOvercast(1);
+}
+void gf_levelcon_update(int obj)
+{
+    *(void **)(obj + 0xbc) = (void *)gf_levelcon_handleScriptEvents;
+}
+#pragma peephole off
+void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7480);
+    }
+}
+#pragma peephole on
+void gf_levelcon_init(int obj)
+{
+    setIsOvercast(0);
+    (*(void (**)(int, int))(*gScreenTransitionInterface + 0xc))(0x258, 1);
+}
+#pragma scheduling on
