@@ -4129,3 +4129,24 @@ void ktrex_update(int obj) {
     *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)gKTRexState + 0xec);
 }
 #pragma scheduling reset
+
+extern s16 lbl_803DC250;
+extern f32 lbl_803E6810;
+
+#pragma scheduling off
+int ktrex_stateHandlerB05(int obj, int runtime) {
+    f32 z;
+    if ((s8)*(u8 *)((char *)runtime + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, (&lbl_803DC250)[*(u8 *)((char *)gKTRexState + 0xfc)], lbl_803E67B8, 0);
+        *(f32 *)((char *)runtime + 0x2a0) = lbl_803E6810;
+        z = lbl_803E67B8;
+        *(f32 *)((char *)runtime + 0x280) = z;
+        *(f32 *)((char *)runtime + 0x284) = z;
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 1) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~1;
+        *(int *)((char *)gKTRexState + 0x104) |= 0x200;
+    }
+    return 0;
+}
+#pragma scheduling reset
