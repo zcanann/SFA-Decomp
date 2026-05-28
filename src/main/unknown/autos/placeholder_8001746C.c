@@ -8733,10 +8733,47 @@ void mmInit(void) {
 typedef struct {
     void *key;
     int size;
-    u8 _8[4];
+    s16 type;
+    s16 prev;
     s16 next;
-    u8 _e[0x1c - 0xe];
+    s16 stack;
+    int f10;
+    int f14;
+    int f18;
 } HeapItem;
+
+extern char sMmSpawnedUnalignedSlotWarning[];
+extern int lbl_803DCB1C;
+
+int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val) {
+    MmRegion *reg = &gMmRegionTable[region];
+    HeapItem *base = (HeapItem *)reg->start;
+    int oldSize;
+    base[idx].type = type;
+    oldSize = base[idx].size;
+    base[idx].size = newSize;
+    base[idx].f10 = f10val;
+    if (oldSize > newSize) {
+        s16 oldNext;
+        int ni = base[reg->f4++].stack;
+        base[ni].key = (char *)base[idx].key + newSize;
+        if ((int)base[ni].key % 32 != 0) {
+            OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
+        }
+        base[ni].size = oldSize - newSize;
+        base[ni].type = newType;
+        oldNext = base[idx].next;
+        base[ni].next = oldNext;
+        base[ni].prev = idx;
+        base[idx].next = ni;
+        if (oldNext != -1) {
+            base[oldNext].prev = ni;
+        }
+        base[idx].f14 = lbl_803DCB1C;
+        return ni;
+    }
+    return idx;
+}
 
 int getHeapItemSize(void *ptr) {
     int i = mmGetRegionForPtr(ptr);
