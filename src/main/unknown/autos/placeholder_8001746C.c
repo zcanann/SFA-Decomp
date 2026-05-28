@@ -7187,6 +7187,23 @@ u8 getGameState(void) {
     return lbl_803DCA3D;
 }
 
+extern u8 lbl_803DCA49;
+extern void init(void);
+extern void checkReset(void);
+extern void gameLoop(void);
+
+void main(void) {
+    lbl_803DCA3D = 0;
+    lbl_803DCA49 = 0;
+    init();
+    lbl_803DCA49 = 1;
+    lbl_803DCA3D = 1;
+    do {
+        checkReset();
+        gameLoop();
+    } while (1);
+}
+
 #pragma peephole off
 void setGameState(int state) {
     lbl_803DCA3D = (u8)state;
@@ -7459,8 +7476,28 @@ void fn_8001FEA8(void) {
     lbl_803DCAF0 = 0xc9;
 }
 
+#pragma dont_inline on
 int gameTextGetState(int i) {
     return lbl_8033AF40[i].state;
+}
+#pragma dont_inline reset
+
+extern void textFn_8001b7b8(void);
+extern int lbl_803DC9F0;
+extern int lbl_803DCA04;
+extern void *lbl_803DC9F8;
+
+void mainLoopDoGameText(void) {
+    if (lbl_803DC9F0 != 0) {
+        if (gameTextGetState(1) == 2 && lbl_803DCA04 == 1) {
+            textFn_8001b7b8();
+        }
+    } else {
+        if (gameTextGetState(0) == 2 && (int)lbl_803DC9F8 == (int)getCurGameText() &&
+            lbl_803DCA04 == 1) {
+            textFn_8001b7b8();
+        }
+    }
 }
 
 void blankScreen(int frames) {
