@@ -814,24 +814,24 @@ void ObjHits_MarkObjectPositionDirty(int param_1)
 #pragma peephole off
 void ObjHits_SyncObjectPositionIfDirty(u32 param_1)
 {
-  u32 iVar1;
+  ObjHitsPriorityState *hitState;
   s16 flags;
 
-  iVar1 = *(u32 *)(param_1 + 0x54);
-  if (iVar1 == 0) {
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  if (hitState == 0) {
     return;
   }
-  flags = *(s16 *)(iVar1 + 0x60);
+  flags = hitState->flags;
   if ((flags & 0x40) == 0) {
     return;
   }
-  *(s16 *)(iVar1 + 0x60) = (s16)(flags & ~0x40);
-  *(f32 *)(iVar1 + 0x10) = *(f32 *)(param_1 + 0xc);
-  *(f32 *)(iVar1 + 0x14) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)(iVar1 + 0x18) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)(iVar1 + 0x1c) = *(f32 *)(param_1 + 0x18);
-  *(f32 *)(iVar1 + 0x20) = *(f32 *)(param_1 + 0x1c);
-  *(f32 *)(iVar1 + 0x24) = *(f32 *)(param_1 + 0x20);
+  hitState->flags = (s16)(flags & ~0x40);
+  *(f32 *)((int)hitState + 0x10) = *(f32 *)(param_1 + 0xc);
+  *(f32 *)((int)hitState + 0x14) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)((int)hitState + 0x18) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)((int)hitState + 0x1c) = *(f32 *)(param_1 + 0x18);
+  *(f32 *)((int)hitState + 0x20) = *(f32 *)(param_1 + 0x1c);
+  *(f32 *)((int)hitState + 0x24) = *(f32 *)(param_1 + 0x20);
   return;
 }
 #pragma peephole reset
@@ -852,13 +852,13 @@ void ObjHits_SyncObjectPositionIfDirty(u32 param_1)
 #pragma peephole off
 void ObjHits_DisableObject(u32 param_1)
 {
-  u32 iVar1;
+  ObjHitsPriorityState *hitState;
 
-  iVar1 = *(u32 *)(param_1 + 0x54);
-  if (iVar1 == 0) {
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  if (hitState == 0) {
     return;
   }
-  *(s16 *)(iVar1 + 0x60) = (s16)(*(s16 *)(iVar1 + 0x60) & ~1);
+  hitState->flags = (s16)(hitState->flags & ~1);
   return;
 }
 #pragma peephole reset
@@ -879,24 +879,24 @@ void ObjHits_DisableObject(u32 param_1)
 #pragma peephole off
 void ObjHits_EnableObject(u32 param_1)
 {
-  u32 iVar1;
+  ObjHitsPriorityState *hitState;
   s16 flags;
 
-  iVar1 = *(u32 *)(param_1 + 0x54);
-  if (iVar1 == 0) {
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  if (hitState == 0) {
     return;
   }
-  flags = *(s16 *)(iVar1 + 0x60);
+  flags = hitState->flags;
   if ((flags & 1) != 0) {
     return;
   }
-  *(s16 *)(iVar1 + 0x60) = (s16)(flags | 1);
-  *(f32 *)(iVar1 + 0x10) = *(f32 *)(param_1 + 0xc);
-  *(f32 *)(iVar1 + 0x14) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)(iVar1 + 0x18) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)(iVar1 + 0x1c) = *(f32 *)(param_1 + 0x18);
-  *(f32 *)(iVar1 + 0x20) = *(f32 *)(param_1 + 0x1c);
-  *(f32 *)(iVar1 + 0x24) = *(f32 *)(param_1 + 0x20);
+  hitState->flags = (s16)(flags | 1);
+  *(f32 *)((int)hitState + 0x10) = *(f32 *)(param_1 + 0xc);
+  *(f32 *)((int)hitState + 0x14) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)((int)hitState + 0x18) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)((int)hitState + 0x1c) = *(f32 *)(param_1 + 0x18);
+  *(f32 *)((int)hitState + 0x20) = *(f32 *)(param_1 + 0x1c);
+  *(f32 *)((int)hitState + 0x24) = *(f32 *)(param_1 + 0x20);
   return;
 }
 #pragma peephole reset
@@ -916,7 +916,7 @@ void ObjHits_EnableObject(u32 param_1)
  */
 ushort ObjHits_IsObjectEnabled(int param_1)
 {
-  return *(s16 *)(*(int *)(param_1 + 0x54) + 0x60) & 1;
+  return (*(ObjHitsPriorityState **)(param_1 + 0x54))->flags & 1;
 }
 
 /*
@@ -934,18 +934,18 @@ ushort ObjHits_IsObjectEnabled(int param_1)
  */
 void ObjHits_SyncObjectPosition(u32 param_1)
 {
-  u32 iVar1;
+  ObjHitsPriorityState *hitState;
 
-  iVar1 = *(u32 *)(param_1 + 0x54);
-  if (iVar1 == 0) {
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  if (hitState == 0) {
     return;
   }
-  *(f32 *)(iVar1 + 0x10) = *(f32 *)(param_1 + 0xc);
-  *(f32 *)(iVar1 + 0x14) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)(iVar1 + 0x18) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)(iVar1 + 0x1c) = *(f32 *)(param_1 + 0x18);
-  *(f32 *)(iVar1 + 0x20) = *(f32 *)(param_1 + 0x1c);
-  *(f32 *)(iVar1 + 0x24) = *(f32 *)(param_1 + 0x20);
+  *(f32 *)((int)hitState + 0x10) = *(f32 *)(param_1 + 0xc);
+  *(f32 *)((int)hitState + 0x14) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)((int)hitState + 0x18) = *(f32 *)(param_1 + 0x14);
+  *(f32 *)((int)hitState + 0x1c) = *(f32 *)(param_1 + 0x18);
+  *(f32 *)((int)hitState + 0x20) = *(f32 *)(param_1 + 0x1c);
+  *(f32 *)((int)hitState + 0x24) = *(f32 *)(param_1 + 0x20);
   return;
 }
 
@@ -967,15 +967,15 @@ void ObjHits_SyncObjectPosition(u32 param_1)
 int ObjHits_AllocObjectState(int param_1,uint param_2)
 {
   uint uVar1;
-  int iVar2;
+  ObjHitsPriorityState *hitState;
 
   uVar1 = roundUpTo4(param_2);
   *(uint *)(param_1 + 0x54) = uVar1;
-  iVar2 = *(int *)(param_1 + 0x54);
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
   ObjHits_RefreshObjectState(param_1);
-  *(undefined *)(iVar2 + 0xae) = 1;
-  if ((*(byte *)(iVar2 + 0x62) & 0x30) != 0) {
-    *(undefined *)(iVar2 + 0xaf) = 2;
+  *(undefined *)((int)hitState + 0xae) = 1;
+  if ((hitState->shapeFlags & 0x30) != 0) {
+    *(undefined *)((int)hitState + 0xaf) = 2;
   }
   return uVar1 + 0xb8;
 }
@@ -1002,98 +1002,98 @@ void ObjHits_RefreshObjectState(int param_1)
   float fVar1;
   short sVar3;
   short sVar4;
-  uint iVar5;
+  ObjHitsPriorityState *hitState;
   int *piVar6;
 
-  iVar5 = *(uint *)(param_1 + 0x54);
-  if (iVar5 != 0) {
-    *(s16 *)(iVar5 + 0x60) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x4e);
-    *(undefined *)(iVar5 + 0x62) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x65);
-    if ((*(byte *)(iVar5 + 0x62) & 0x20) != 0) {
+  hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
+  if (hitState != 0) {
+    hitState->flags = *(s16 *)(*(int *)(param_1 + 0x50) + 0x4e);
+    hitState->shapeFlags = *(undefined *)(*(int *)(param_1 + 0x50) + 0x65);
+    if ((hitState->shapeFlags & 0x20) != 0) {
       piVar6 = *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
       if (((*(ushort *)(*piVar6 + 2) & 0x1000) == 0) || (piVar6[5] == 0)) {
-        *(byte *)(iVar5 + 0x62) = *(byte *)(iVar5 + 0x62) & 0xdf;
+        hitState->shapeFlags = hitState->shapeFlags & 0xdf;
       }
     }
-    *(undefined *)(iVar5 + 0x6a) = *(undefined *)(*(int *)(param_1 + 0x50) + 99);
-    *(undefined *)(iVar5 + 0x6b) = *(undefined *)(*(int *)(param_1 + 0x50) + 100);
-    *(ushort *)(iVar5 + 0x5a) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x62);
-    *(s16 *)(iVar5 + 0x5c) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x68);
-    *(s16 *)(iVar5 + 0x5e) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6a);
-    *(undefined *)(iVar5 + 0xb0) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x60);
-    *(undefined2 *)(iVar5 + 0x58) = 0x400;
-    fVar1 = (float)(s32)*(short *)(iVar5 + 0x5a);
-    *(float *)(iVar5 + 0xc) = fVar1 * fVar1;
-    *(undefined *)(iVar5 + 0xb6) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x90);
-    *(ushort *)(iVar5 + 100) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x77);
-    *(s16 *)(iVar5 + 0x66) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6c);
-    *(s16 *)(iVar5 + 0x68) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6e);
-    *(float *)(iVar5 + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-    if ((*(byte *)(iVar5 + 0x62) & 2) == 0) {
-      if ((*(byte *)(iVar5 + 0x62) & 1) != 0) {
-        if ((float)(s32)*(short *)(iVar5 + 0x5a) > *(float *)(iVar5 + 0x28)) {
-          *(float *)(iVar5 + 0x28) = (float)(s32)*(short *)(iVar5 + 0x5a);
+    *(undefined *)((int)hitState + 0x6a) = *(undefined *)(*(int *)(param_1 + 0x50) + 99);
+    *(undefined *)((int)hitState + 0x6b) = *(undefined *)(*(int *)(param_1 + 0x50) + 100);
+    *(ushort *)((int)hitState + 0x5a) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x62);
+    *(s16 *)((int)hitState + 0x5c) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x68);
+    *(s16 *)((int)hitState + 0x5e) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6a);
+    *(undefined *)((int)hitState + 0xb0) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x60);
+    *(undefined2 *)((int)hitState + 0x58) = 0x400;
+    fVar1 = (float)(s32)*(short *)((int)hitState + 0x5a);
+    *(float *)((int)hitState + 0xc) = fVar1 * fVar1;
+    hitState->secondaryShapeFlags = *(undefined *)(*(int *)(param_1 + 0x50) + 0x90);
+    *(ushort *)((int)hitState + 100) = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x77);
+    *(s16 *)((int)hitState + 0x66) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6c);
+    *(s16 *)((int)hitState + 0x68) = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6e);
+    *(float *)((int)hitState + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
+    if ((hitState->shapeFlags & 2) == 0) {
+      if ((hitState->shapeFlags & 1) != 0) {
+        if ((float)(s32)*(short *)((int)hitState + 0x5a) > *(float *)((int)hitState + 0x28)) {
+          *(float *)((int)hitState + 0x28) = (float)(s32)*(short *)((int)hitState + 0x5a);
         }
       }
     }
     else {
-      sVar3 = *(short *)(iVar5 + 0x5c);
+      sVar3 = *(short *)((int)hitState + 0x5c);
       if (sVar3 < 0) {
         sVar3 = -sVar3;
       }
-      sVar4 = *(short *)(iVar5 + 0x5e);
+      sVar4 = *(short *)((int)hitState + 0x5e);
       if (sVar4 < 0) {
         sVar4 = -sVar4;
       }
       if (sVar4 < sVar3) {
         sVar4 = sVar3;
       }
-      if ((float)(s32)sVar4 > *(float *)(iVar5 + 0x28)) {
-        *(float *)(iVar5 + 0x28) = (float)(s32)sVar4;
+      if ((float)(s32)sVar4 > *(float *)((int)hitState + 0x28)) {
+        *(float *)((int)hitState + 0x28) = (float)(s32)sVar4;
       }
     }
-    *(float *)(iVar5 + 0x2c) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-    if (((*(byte *)(iVar5 + 0x62) & 2) != 0) || ((*(byte *)(iVar5 + 0x62) & 1) != 0)) {
-      if ((float)(s32)*(short *)(iVar5 + 0x5a) > *(float *)(iVar5 + 0x2c)) {
-        *(float *)(iVar5 + 0x2c) = (float)(s32)*(short *)(iVar5 + 0x5a);
+    *(float *)((int)hitState + 0x2c) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
+    if (((hitState->shapeFlags & 2) != 0) || ((hitState->shapeFlags & 1) != 0)) {
+      if ((float)(s32)*(short *)((int)hitState + 0x5a) > *(float *)((int)hitState + 0x2c)) {
+        *(float *)((int)hitState + 0x2c) = (float)(s32)*(short *)((int)hitState + 0x5a);
       }
     }
-    *(float *)(iVar5 + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-    if ((*(byte *)(iVar5 + 0xb6) & 2) == 0) {
-      if ((*(byte *)(iVar5 + 0xb6) & 1) != 0) {
-        if ((float)(s32)*(short *)(iVar5 + 100) > *(float *)(iVar5 + 0x30)) {
-          *(float *)(iVar5 + 0x30) = (float)(s32)*(short *)(iVar5 + 100);
+    *(float *)((int)hitState + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
+    if ((hitState->secondaryShapeFlags & 2) == 0) {
+      if ((hitState->secondaryShapeFlags & 1) != 0) {
+        if ((float)(s32)*(short *)((int)hitState + 100) > *(float *)((int)hitState + 0x30)) {
+          *(float *)((int)hitState + 0x30) = (float)(s32)*(short *)((int)hitState + 100);
         }
       }
     }
     else {
-      sVar3 = *(short *)(iVar5 + 0x66);
+      sVar3 = *(short *)((int)hitState + 0x66);
       if (sVar3 < 0) {
         sVar3 = -sVar3;
       }
-      sVar4 = *(short *)(iVar5 + 0x68);
+      sVar4 = *(short *)((int)hitState + 0x68);
       if (sVar4 < 0) {
         sVar4 = -sVar4;
       }
       if (sVar4 < sVar3) {
         sVar4 = sVar3;
       }
-      if ((float)(s32)sVar4 > *(float *)(iVar5 + 0x30)) {
-        *(float *)(iVar5 + 0x30) = (float)(s32)sVar4;
+      if ((float)(s32)sVar4 > *(float *)((int)hitState + 0x30)) {
+        *(float *)((int)hitState + 0x30) = (float)(s32)sVar4;
       }
     }
-    *(float *)(iVar5 + 0x34) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
-    if (((*(byte *)(iVar5 + 0xb6) & 2) != 0) || ((*(byte *)(iVar5 + 0xb6) & 1) != 0)) {
-      if ((float)(s32)*(short *)(iVar5 + 100) > *(float *)(iVar5 + 0x34)) {
-        *(float *)(iVar5 + 0x34) = (float)(s32)*(short *)(iVar5 + 100);
+    *(float *)((int)hitState + 0x34) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
+    if (((hitState->secondaryShapeFlags & 2) != 0) || ((hitState->secondaryShapeFlags & 1) != 0)) {
+      if ((float)(s32)*(short *)((int)hitState + 100) > *(float *)((int)hitState + 0x34)) {
+        *(float *)((int)hitState + 0x34) = (float)(s32)*(short *)((int)hitState + 100);
       }
     }
-    *(float *)(iVar5 + 0x38) = *(float *)(iVar5 + 0x2c);
-    if (*(float *)(iVar5 + 0x38) < *(float *)(iVar5 + 0x34)) {
-      *(float *)(iVar5 + 0x38) = *(float *)(iVar5 + 0x34);
+    *(float *)((int)hitState + 0x38) = *(float *)((int)hitState + 0x2c);
+    if (*(float *)((int)hitState + 0x38) < *(float *)((int)hitState + 0x34)) {
+      *(float *)((int)hitState + 0x38) = *(float *)((int)hitState + 0x34);
     }
-    *(undefined *)(iVar5 + 0xb4) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x70);
-    *(undefined *)(iVar5 + 0xb5) = *(undefined *)(*(int *)(param_1 + 0x50) + 0x67);
+    hitState->sourceMask = *(undefined *)(*(int *)(param_1 + 0x50) + 0x70);
+    hitState->targetMask = *(undefined *)(*(int *)(param_1 + 0x50) + 0x67);
   }
   return;
 }
