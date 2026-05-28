@@ -165,6 +165,13 @@ Heuristic before reaching for `asm { }`:
     `x = Camera_GetCurrentViewSlot();`) instead of a literal. Took fn_802AA2B0
     11.6% → 97.3%. Clean C, no asm.
 
+20. **Compound-assign a narrow lvalue (`*(s16*)p += K`) instead of the expanded
+    read-modify-write (`*(s16*)p = *(s16*)p + K`).** The expanded form reloads
+    the value and re-sign-extends it, emitting a redundant `extsh` (or `extsb`
+    for `s8`); the compound form folds load+add+store and drops the extra
+    extension. Took fn_802B7B0C 96.5% → 100%. Clean C, no asm. (Same family as
+    the caller-side extsb/extsh table below.)
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
