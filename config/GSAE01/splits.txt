@@ -1382,8 +1382,11 @@ main/dll/WM/dll_020B_firefly.c:
 main/dll/WM/dll_020C_wmspiritplace.c:
 	.text       start:0x801F568C end:0x801F654C
 
+main/dll/WM/dll_020D_wmseqpoint.c:
+	.text       start:0x801F654C end:0x801F6E8C
+
 main/unknown/autos/placeholder_801F5184.c:
-	.text       start:0x801F654C end:0x801FB9F4
+	.text       start:0x801F6E8C end:0x801FB9F4
 
 main/light.c:
 	.text       start:0x801FB9F4 end:0x801FD398
