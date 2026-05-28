@@ -2053,3 +2053,141 @@ void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
 
 void arwarwingbo_release(void) {}
 void arwarwingbo_initialise(void) {}
+
+/* Arwing family (untouched: arwarwing, arwarwinggu, arwingandrossstuff, arwlevelcon, arwsquadron). */
+extern int lbl_803DDD88;
+extern f32 lbl_803E701C;
+extern f32 lbl_803E7058;
+extern f32 lbl_803E70E0;
+extern f32 lbl_803E7188;
+extern void arwingHudSetVisible(int mode);
+extern void fn_80125D04(void);
+extern void setIsOvercast(int value);
+extern void Music_Trigger(int id, int p2);
+
+int getArwing(void) { return lbl_803DDD88; }
+
+int arwarwing_getExtraSize(void) { return 0x498; }
+int arwarwing_getObjectTypeId(void) { return 0; }
+void arwarwing_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    ObjGroup_RemoveObject(obj, 0x26);
+    lbl_803DDD88 = 0;
+    if (*(void **)(state + 0x450) != NULL) {
+        ModelLightStruct_free(*(void **)(state + 0x450));
+    }
+}
+void arwarwing_release(void) {}
+void arwarwing_initialise(void) {}
+
+int arwarwinggu_getExtraSize(int obj)
+{
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x606:
+        return 8;
+    case 0x610:
+    case 0x615:
+        return 4;
+    case 0x611:
+        return 1;
+    default:
+        return 0;
+    }
+}
+int arwarwinggu_getObjectTypeId(void) { return 0; }
+void arwarwinggu_free(void) {}
+void arwarwinggu_render(void) {}
+void arwarwinggu_hitDetect(void) {}
+void arwarwinggu_init(int obj)
+{
+    if (*(s16 *)(obj + 0x46) == 0x606) {
+        return;
+    }
+    *(s16 *)(obj + 6) |= 0x4000;
+    *(u8 *)(obj + 0x36) = 0;
+}
+#pragma peephole off
+#pragma scheduling off
+void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (active != 0) {
+        Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
+        *(s16 *)(obj + 6) &= ~0x4000;
+        *(u8 *)(obj + 0x36) = 0xff;
+        *(f32 *)state = lbl_803E7058;
+    } else {
+        *(s16 *)(obj + 6) |= 0x4000;
+        *(u8 *)(obj + 0x36) = 0;
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+void arwarwinggu_release(void) {}
+void arwarwinggu_initialise(void) {}
+
+int arwingandrossstuff_getExtraSize(void) { return 0x20; }
+int arwingandrossstuff_getObjectTypeId(void) { return 0; }
+void arwingandrossstuff_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    ObjGroup_RemoveObject(obj, 0x2);
+    if (*(void **)(state + 0x14) != NULL) {
+        ModelLightStruct_free(*(void **)(state + 0x14));
+    }
+}
+void arwingandrossstuff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E701C);
+    }
+}
+void arwingandrossstuff_release(void) {}
+void arwingandrossstuff_initialise(void) {}
+
+int arwlevelcon_getExtraSize(void) { return 0x24; }
+int arwlevelcon_getObjectTypeId(void) { return 0; }
+void arwlevelcon_free(void)
+{
+    arwingHudSetVisible(2);
+    fn_80125D04();
+    setIsOvercast(1);
+}
+void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
+{
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70E0);
+}
+void arwlevelcon_hitDetect(void) {}
+void arwlevelcon_commitRingChoice(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (*(u8 *)(state + 0x1b) != 0) {
+        Music_Trigger(0xf3, 1);
+    } else {
+        Music_Trigger(2, 1);
+    }
+    arwingHudSetVisible(1);
+}
+void arwlevelcon_release(void) {}
+void arwlevelcon_initialise(void) {}
+
+int arwsquadron_getExtraSize(void) { return 0x164; }
+int arwsquadron_getObjectTypeId(void) { return 0; }
+void arwsquadron_free(void) {}
+void arwsquadron_render(int obj, int p2, int p3, int p4, int p5)
+{
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7188);
+}
+void arwsquadron_hitDetect(void) {}
+
+void arwprojectile_setLifetime(int obj, int lifetime)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(f32 *)(state + 4) = (f32)lifetime;
+}
