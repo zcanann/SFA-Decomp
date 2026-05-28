@@ -1705,7 +1705,7 @@ void dustmotesou_initialise(void) {}
 extern f32 lbl_803E7338;
 extern f32 lbl_803E733C;
 extern f32 lbl_803E7340;
-extern void ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int state);
+extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int state);
 
 int brokenpipe_getExtraSize(void) { return 4; }
 
@@ -3643,7 +3643,21 @@ extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern f32 lbl_803E72F8;
 extern f32 lbl_803E7308;
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
+extern void mathFn_80021ac8(int obj, f32 *vec);
+extern void fn_80096C94(int obj, int mode, int p3, void *vec, f32 f, int flag);
+extern void objLightFn_8009a1dc(int obj, f32 a, void *pos, int count, int p5);
+extern int ObjHits_GetPriorityHitWithPosition(int obj, f32 *a, f32 *b, f32 *c, f32 *x, f32 *y, f32 *z);
+extern void ObjHits_RecordObjectHit(int handle, int obj, int a, int b, int c);
+extern int Obj_GetPlayerObject(void);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_8032BBE0[];
 extern f32 lbl_803E730C;
+extern f32 lbl_803E7310;
+extern f32 lbl_803E7314;
+extern f32 lbl_803E7318;
+extern f32 lbl_803E731C;
+extern f32 lbl_803E7320;
+extern f32 lbl_803E7324;
 extern f32 lbl_803E7328;
 extern f32 lbl_803E732C;
 
@@ -3803,6 +3817,117 @@ void tree_init(int obj, u8 *setup)
     }
     if (!(*(u16 *)(state + 0x58) & 0x20)) {
         ObjHits_DisableObject(obj);
+    }
+}
+
+void tree_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int hit;
+    int player;
+    int i;
+    int hp;
+    f32 dx, dz, dist;
+    f32 out8, outc, out10;
+    f32 vec14[3];
+    f32 colorVec[3];
+    f32 intensity;
+    f32 *ctbl;
+    ObjAnimEventList animOut;
+
+    ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x44), timeDelta, obj, &animOut);
+    if (*(u16 *)(state + 0x58) != 0) {
+        if (*(f32 *)(state + 0x3c) > lbl_803E72F8) {
+            *(f32 *)(state + 0x3c) -= timeDelta;
+        }
+        if (*(f32 *)(state + 0x44) > lbl_803E730C) {
+            *(f32 *)(state + 0x44) -= lbl_803E7310;
+        }
+        if (*(u16 *)(state + 0x58) & 0x80) {
+            tree_updateAmbientEffects(obj, state);
+        }
+        if (*(u16 *)(state + 0x58) & 0x20) {
+            if (*(u16 *)(state + 0x58) & 0xc0) {
+                hit = ObjHits_GetPriorityHitWithPosition(obj, &out10, &outc, &out8,
+                                                         &colorVec[0], &colorVec[1], &colorVec[2]);
+            } else {
+                hit = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129,
+                                                                state + 0x50);
+            }
+            if (*(f32 *)(state + 0x4c) >= lbl_803E72F8) {
+                *(f32 *)(state + 0x4c) -= timeDelta;
+            }
+            if (hit != 0 && hit != 0x11 && *(f32 *)(state + 0x4c) <= lbl_803E72F8) {
+                if (*(u16 *)(state + 0x58) & 0xc0) {
+                    colorVec[0] += playerMapOffsetX;
+                    colorVec[2] += playerMapOffsetZ;
+                    objLightFn_8009a1dc(obj, lbl_803E7314, vec14, 1, 0);
+                    Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
+                }
+                if (*(u16 *)(state + 0x58) & 0xf) {
+                    intensity = *(f32 *)(state + 0x48);
+                    ctbl = &lbl_8032BBE0[*(u16 *)(state + 0x5a) * 4];
+                    colorVec[0] = intensity * ctbl[0];
+                    colorVec[1] = intensity * ctbl[1];
+                    colorVec[2] = intensity * ctbl[2];
+                    mathFn_80021ac8(obj, colorVec);
+                    fn_80096C94(obj, *(u16 *)(state + 0x58) & 0xf, 0x14, vec14,
+                                *(f32 *)(state + 0x48) * ctbl[3], 0);
+                }
+                *(f32 *)(state + 0x44) = lbl_803E7318;
+                *(f32 *)(state + 0x4c) = lbl_803E731C;
+                if (*(u16 *)(state + 0x58) & 0x80) {
+                    if (hit != 0) {
+                        hp = state;
+                        for (i = 0; i < 3; i++) {
+                            if (*(int *)hp != 0) {
+                                if ((*(int (**)(int))(*(int *)(*(int *)hp + 0x68) + 0x28))(
+                                        *(int *)hp) > 1) {
+                                    ObjHits_RecordObjectHit(*(int *)(state + i * 4), obj, 0xe, 1, 0);
+                                    break;
+                                }
+                            }
+                            hp += 4;
+                        }
+                    }
+                }
+            }
+        }
+        player = Obj_GetPlayerObject();
+        if (player != 0 && !(*(u16 *)(state + 0x58) & 0x100) && (*(u16 *)(state + 0x58) & 0xf)) {
+            dx = *(f32 *)(obj + 0xc) - *(f32 *)(player + 0xc);
+            dz = *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14);
+            dist = sqrtf(dx * dx + dz * dz);
+            hit = (int)dist;
+            if ((u16)hit < *(u16 *)(state + 0x54)) {
+                if ((*(u16 *)(state + 0x58) & 0x10) &&
+                    *(u16 *)(state + 0x56) >= *(u16 *)(state + 0x54) &&
+                    *(f32 *)(state + 0x3c) <= lbl_803E72F8) {
+                    intensity = *(f32 *)(state + 0x48);
+                    ctbl = &lbl_8032BBE0[*(u16 *)(state + 0x5a) * 4];
+                    colorVec[0] = intensity * ctbl[0];
+                    colorVec[1] = intensity * ctbl[1];
+                    colorVec[2] = intensity * ctbl[2];
+                    mathFn_80021ac8(obj, colorVec);
+                    fn_80096C94(obj, *(u16 *)(state + 0x58) & 0xf, 0x14, vec14,
+                                *(f32 *)(state + 0x48) * ctbl[3], 1);
+                    *(f32 *)(state + 0x3c) = lbl_803E7320;
+                }
+                *(f32 *)(state + 0x40) -= timeDelta;
+                if (*(f32 *)(state + 0x40) <= lbl_803E72F8) {
+                    intensity = *(f32 *)(state + 0x48);
+                    ctbl = &lbl_8032BBE0[*(u16 *)(state + 0x5a) * 4];
+                    colorVec[0] = intensity * ctbl[0];
+                    colorVec[1] = intensity * ctbl[1];
+                    colorVec[2] = intensity * ctbl[2];
+                    mathFn_80021ac8(obj, colorVec);
+                    fn_80096C94(obj, *(u16 *)(state + 0x58) & 0xf, 1, vec14,
+                                *(f32 *)(state + 0x48) * ctbl[3], 0);
+                    *(f32 *)(state + 0x40) += lbl_803E7324;
+                }
+            }
+            *(u16 *)(state + 0x56) = hit;
+        }
     }
 }
 #pragma peephole on
