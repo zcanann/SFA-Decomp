@@ -4659,18 +4659,88 @@ typedef struct Curve {
     f32 *pz;
     int count;
     CurveEvalFn eval;
-    u32 flag98;
+    void (*flag98)(f32 *ch, f32 *buf);
 } Curve;
 
-extern void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count);
+extern void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *ch, f32 *buf));
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803DE658;
 extern f32 lbl_803DE674;
 extern f32 lbl_803DE690;
 extern f32 lbl_803DE67C;
+extern f32 lbl_803DE660;
+extern f32 lbl_803DE680;
+extern f32 lbl_803DC8B0;
+extern int lbl_803DB270;
+extern f32 lbl_80338790[];
 extern f32 curveFn_80010ce4(f32 t, f32 *values, f32 *outTangent);
 extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
 int curveFn_80010320(Curve *curve, f32 dt);
+
+void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *ch, f32 *buf))
+{
+    f32 bufX[4];
+    f32 bufY[4];
+    f32 bufZ[4];
+    f32 vx, d1x, d2x, d3x;
+    f32 vy, d1y, d2y, d3y;
+    f32 vz, d1z, d2z, d3z;
+    f32 step;
+    int i;
+
+    if (count != lbl_803DB270) {
+        step = lbl_803DE674 / (f32)count;
+        lbl_803DC8B0 = step;
+        lbl_80338790[0] = step * step;
+        lbl_80338790[1] = lbl_803DE660 * lbl_80338790[0];
+        lbl_80338790[2] = step * lbl_80338790[0];
+        lbl_80338790[3] = lbl_803DE680 * lbl_80338790[2];
+        lbl_803DB270 = count;
+    }
+
+    if (px != NULL) {
+        evalFn(px, bufX);
+        vx = bufX[3];
+        d1x = lbl_803DC8B0 * bufX[2] + (lbl_80338790[2] * bufX[0] + lbl_80338790[0] * bufX[1]);
+        d2x = lbl_80338790[1] * bufX[1] + lbl_80338790[3] * bufX[0];
+        d3x = lbl_80338790[3] * bufX[0];
+    }
+    if (py != NULL) {
+        evalFn(py, bufY);
+        vy = bufY[3];
+        d1y = lbl_803DC8B0 * bufY[2] + (lbl_80338790[2] * bufY[0] + lbl_80338790[0] * bufY[1]);
+        d2y = lbl_80338790[1] * bufY[1] + lbl_80338790[3] * bufY[0];
+        d3y = lbl_80338790[3] * bufY[0];
+    }
+    if (pz != NULL) {
+        evalFn(pz, bufZ);
+        vz = bufZ[3];
+        d1z = lbl_803DC8B0 * bufZ[2] + (lbl_80338790[2] * bufZ[0] + lbl_80338790[0] * bufZ[1]);
+        d2z = lbl_80338790[1] * bufZ[1] + lbl_80338790[3] * bufZ[0];
+        d3z = lbl_80338790[3] * bufZ[0];
+    }
+
+    for (i = 0; i <= count; i++) {
+        if (px != NULL) {
+            outX[i] = vx;
+            vx += d1x;
+            d1x += d2x;
+            d2x += d3x;
+        }
+        if (py != NULL) {
+            outY[i] = vy;
+            vy += d1y;
+            d1y += d2y;
+            d2y += d3y;
+        }
+        if (pz != NULL) {
+            outZ[i] = vz;
+            vz += d1z;
+            d1z += d2z;
+            d2z += d3z;
+        }
+    }
+}
 
 #pragma dont_inline on
 void curveFn_8000fe8c(Curve *curve, int count)
@@ -4695,7 +4765,7 @@ void curveFn_8000fe8c(Curve *curve, int count)
         pz = curve->pz + curve->idx;
     }
     if (curve->flag98 != 0) {
-        curveFn_80010018(px, py, pz, outX, outY, outZ, count);
+        curveFn_80010018(px, py, pz, outX, outY, outZ, count, curve->flag98);
     }
 
     zero = lbl_803DE658;
