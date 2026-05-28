@@ -8367,6 +8367,71 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
 }
 #pragma scheduling reset
 
+extern f32 lbl_803E6C5C;
+extern f32 lbl_803E6C84;
+extern f32 lbl_803E6C88;
+extern f32 lbl_803E6C8C;
+extern f32 lbl_803E6C90;
+extern f32 lbl_803E6C94;
+extern f32 lbl_803E6C98;
+
+#pragma scheduling off
+void fn_80222550(int a, int b, int c, f32 d, f32 e)
+{
+    f32 rate;
+    f32 delta;
+    f32 clamped;
+    f32 dist;
+    int tmp;
+
+    rate = timeDelta / (f32)(u32)(u16)c;
+    if (rate > lbl_803E6C6C) {
+        rate = lbl_803E6C6C;
+    }
+
+    delta = (f32)(int)((u16)getAngle(-*(f32 *)(b + 0), -*(f32 *)(b + 8)) - (u16)*(s16 *)(a + 0));
+    if (delta > lbl_803E6C64) {
+        delta = lbl_803E6C84 + delta;
+    }
+    if (delta < lbl_803E6C8C) {
+        delta = lbl_803E6C88 + delta;
+    }
+    delta *= rate;
+    if (delta < lbl_803E6C90) {
+        clamped = lbl_803E6C90;
+    } else if (delta > lbl_803E6C94) {
+        clamped = lbl_803E6C94;
+    } else {
+        clamped = delta;
+    }
+    *(s16 *)(a + 0) = *(s16 *)(a + 0) + (int)clamped;
+
+    if (d != lbl_803E6C38) {
+        *(s16 *)(a + 4) = (int)(lbl_803E6C98 * (f32)*(s16 *)(a + 4));
+        *(s16 *)(a + 4) = (int)(oneOverTimeDelta * (lbl_803E6C5C * (clamped * d)) + (f32)*(s16 *)(a + 4));
+        tmp = *(s16 *)(a + 4);
+        if (tmp < -0x2000) {
+            tmp = -0x2000;
+        } else if (tmp > 0x2000) {
+            tmp = 0x2000;
+        }
+        *(s16 *)(a + 4) = (s16)tmp;
+    }
+
+    if (lbl_803E6C38 != e) {
+        dist = sqrtf(*(f32 *)(b + 0) * *(f32 *)(b + 0) + *(f32 *)(b + 8) * *(f32 *)(b + 8));
+        delta = (f32)(int)((u16)getAngle(*(f32 *)(b + 4) * e, dist) - (u16)*(s16 *)(a + 2));
+        if (delta > lbl_803E6C64) {
+            delta = lbl_803E6C84 + delta;
+        }
+        if (delta < lbl_803E6C8C) {
+            delta = lbl_803E6C88 + delta;
+        }
+        *(s16 *)(a + 2) = *(s16 *)(a + 2) + (int)(delta * rate);
+    }
+}
+#pragma scheduling reset
+
 #pragma scheduling off
 int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
