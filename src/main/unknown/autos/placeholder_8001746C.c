@@ -8960,6 +8960,20 @@ void Matrix_TransformVector(f32 *m, f32 *v, f32 *out) {
     out[2] = vx * m[2] + vy * m[6] + vz * m[10];
 }
 
+extern int rand(void);
+extern f32 lbl_803DE7F8;
+extern f64 lbl_803DE800;
+extern f64 lbl_803DE7E0;
+
+int randomGetRange(int lo, int hi) {
+    f32 v;
+    if (lo == hi) {
+        return lo;
+    }
+    v = ((f32)(u32)rand() / lbl_803DE7F8) * (lbl_803DE7C4 + (f32)hi - (f32)lo);
+    return (int)(v + (f32)lo);
+}
+
 void copyMatrix44(f32 *src, f32 *dst) {
     dst[0] = src[0];
     dst[1] = src[1];
