@@ -1195,6 +1195,25 @@ void wcapertures_initialise(void) {}
 
 int waterflowwe_getExtraSize(void) { return 8; }
 int waterflowwe_getObjectTypeId(void) { return 0; }
+extern f32 lbl_803E72F4;
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
+#pragma scheduling off
+void waterflowwe_init(int obj, u8 *setup)
+{
+    *(s16 *)(obj + 4) = setup[0x18] << 8;
+    *(s16 *)(obj + 2) = setup[0x19] << 8;
+    *(s16 *)(obj + 0) = setup[0x1a] << 8;
+    if (setup[0x1b] != 0) {
+        *(f32 *)(obj + 8) = (f32)(u32)setup[0x1b] / lbl_803E72F4;
+        if (*(f32 *)(obj + 8) == lbl_803E72B0) {
+            *(f32 *)(obj + 8) = lbl_803E72E8;
+        }
+        *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
+    }
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+    ObjAnim_SetCurrentMove(obj, 0, lbl_803E72B0, 0);
+}
+#pragma scheduling reset
 #pragma scheduling off
 void waterflowwe_free(int obj)
 {
