@@ -7715,6 +7715,7 @@ void arwsquadron_followLeader(int p1, int p2)
 #pragma scheduling reset
 
 extern f32 lbl_803E6C68;
+#pragma scheduling off
 void fn_80221E94(int obj, f32 *p2)
 {
     struct {
@@ -7728,6 +7729,7 @@ void fn_80221E94(int obj, f32 *p2)
     objLightFn_8009a1dc(obj, lbl_803E6C68, &s, 1, 0);
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
+#pragma scheduling reset
 
 typedef struct DrMusicContFlags {
     u8 b_state : 1;
