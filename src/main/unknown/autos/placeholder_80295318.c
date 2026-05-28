@@ -6527,6 +6527,12 @@ extern int lbl_803DE448;
 extern int lbl_803DE450;
 extern int lbl_803DE420;
 extern int lbl_803DE47C;
+extern f32 lbl_803DC670;
+extern f32 lbl_803DC674;
+extern f32 lbl_803DC678;
+extern void fn_80295334();
+extern void tailFn_80026c38(int a, f32 x, f32 y, f32 z);
+extern void playerTailFn_80026b3c(int *a, int b, int c, void *fn);
 extern int coordsToMapCell(f32 x, f32 z);
 extern int randomGetRange(int lo, int hi);
 extern void mm_free(void *ptr);
@@ -12039,6 +12045,19 @@ void fn_802AF410(int obj, int state)
     }
 
     *(s16 *)((char *)state + 0x80c) = -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_8029560C(int obj, int *state)
+{
+    int v = *state;
+    if ((void *)lbl_803DE420 != NULL) {
+        tailFn_80026c38(lbl_803DE420, lbl_803DC670, lbl_803DC674, lbl_803DC678);
+        playerTailFn_80026b3c(state, v, lbl_803DE420, fn_80295334);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
