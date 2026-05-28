@@ -7126,7 +7126,7 @@ void *ObjModel_GetJointMatrix(u8 *model, int jointIndex) {
         jointCount = 1;
     }
 
-    if (jointIndex >= jointCount) {
+    if (jointIndex >= (int)jointCount) {
         jointIndex = 0;
     }
 
@@ -7766,6 +7766,8 @@ typedef struct {
     u8 _2[2];
     int f4;
     int f8;
+    int fc;
+    int f10;
 } AssetReq;
 extern AssetReq lbl_8033BF88;
 
@@ -7853,5 +7855,99 @@ void Obj_SetActiveModelIndex(u8 *obj, int idx) {
         }
     }
     *(s8 *)(obj + 0xad) = idx;
+}
+#pragma pop
+
+extern int OSDisableInterrupts(void);
+extern int OSRestoreInterrupts(int level);
+extern void subtitleFn_8001b700(void);
+extern int lbl_803DCA00;
+extern s16 lbl_803DC9AA;
+extern s16 lbl_803DC9A8;
+extern int lbl_803DC9C8;
+typedef struct {
+    int v;
+    u8 _4[0x10];
+} GameTextSlot;
+extern GameTextSlot lbl_8033A540[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int setSubtitlesEnabled(int enabled) {
+    int old = lbl_803DCA00;
+    lbl_803DCA00 = enabled;
+    if (enabled == 0) {
+        subtitleFn_8001b700();
+    }
+    return old;
+}
+
+void *getTrickyObject(void) {
+    int count;
+    void **objs = ObjGroup_GetObjects(1, &count);
+    if (count != 0) {
+        return objs[0];
+    }
+    return NULL;
+}
+
+void AtomicSList_Push(void **list, void *node) {
+    int intr = OSDisableInterrupts();
+    *(void **)node = *list;
+    *list = node;
+    OSRestoreInterrupts(intr);
+}
+
+void *ObjList_FindObjectById(int id) {
+    int i;
+    int count = lbl_803DCB84;
+    void **arr = lbl_803DCB88;
+    for (i = 0; i < count; i++) {
+        void *obj = arr[i];
+        void *sub = *(void **)((u8 *)obj + 0x4c);
+        if (sub != NULL && *(u32 *)((u8 *)sub + 0x14) == (u32)id) {
+            return obj;
+        }
+    }
+    return NULL;
+}
+
+void gameTextFn_80019804(int flags) {
+    if (flags & 1) {
+        lbl_803DC9AA = 0;
+        lbl_803DC9A8 = 0;
+    }
+    if (flags & 2) {
+        int i = lbl_803DC9C8;
+        lbl_803DC9C8 = i + 1;
+        lbl_8033A540[i].v = 0xb;
+    }
+}
+
+void *getTabEntry(int id, int arg, int e, int d) {
+    lbl_8033BF88.f0 = 1;
+    lbl_8033BF88.f1 = 2;
+    lbl_8033BF88.f4 = arg;
+    lbl_8033BF88.f8 = id;
+    lbl_8033BF88.f10 = e;
+    lbl_8033BF88.fc = d;
+    return loadAsset(&lbl_8033BF88);
+}
+
+void ObjModel_SetBlendChannelWeight(u8 *model, int channel, f32 weight) {
+    u8 *ch;
+
+    if (channel > 2) {
+        return;
+    }
+    if (*(void **)(*(u8 **)model + 0xdc) == NULL) {
+        return;
+    }
+    ch = *(u8 **)(model + 0x28) + channel * 0x10;
+    if (weight != *(f32 *)ch) {
+        *(f32 *)ch = weight;
+        ch[0xe] |= 4;
+    }
 }
 #pragma pop
