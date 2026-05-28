@@ -133,6 +133,27 @@ Heuristic before reaching for `asm { }`:
     try this before any `register`/asm approach. See `fa209c270`
     (fn_8019C3A0 → 100%).
 
+17. **Fold multiple early-return guards into ONE big `||` (with embedded
+    assignments) for convergent-predicate functions.** When target computes a
+    multi-condition predicate — several globals/fields checked, sometimes with
+    an assignment threaded in — and your early-return chain (`if(a) return;
+    if(b) return; ...`) sits at a partial, merge the guards into a single
+    `if (a || (x = f()) == 0 || b) return ...;`. MWCC's branch fusion for the
+    merged form matches target's convergent compare/branch layout, where
+    separate early-returns each emit their own branch island. Took two
+    EmissionController predicates 82% → 95%. Clean C, no asm. (Pairs with #14
+    `int`-param `cmpwi` and #3 `*(void**)` `cmplwi` for the individual compares.)
+
+18. **Model base+displacement indexed loads as a STRUCT member-array, not
+    `*(T*)(base + idx*N + disp)`.** When target indexes a table with
+    `add base,idx; lha disp(base)` (the index added to the base *before* the
+    displaced load), the pointer-arithmetic form `*(T*)(base+idx*N+disp)` emits
+    the indexed-load form (`lhax`/`lfsx`) and won't match. Declare a struct whose
+    layout mirrors the table element (e.g. `typedef struct { ...; s16 f; } Elem;`)
+    and index `tbl[idx].f` — MWCC then emits `add; lha disp`. Single-level
+    indexing matches 100% (fn_8029D250); double-level (`element*stride + idx*4`)
+    only partials — leave those partial. Clean C, no asm.
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
@@ -234,6 +255,11 @@ never match. Wrap the callee:
 void small_helper(...) { ... }
 #pragma dont_inline reset
 ```
+
+**Diagnostic:** when a freshly-added function lands mysteriously low (<70%) for
+no visible source reason, suspect a same-TU callee got auto-inlined into it.
+Wrap that *callee's definition* (not the caller) — this frequently lifts the
+caller AND every other caller of that helper to 100% in one move.
 
 ## `for (i=0; i<n; i++) { use(*p); p++; }` vs `*p++`
 

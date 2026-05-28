@@ -967,6 +967,7 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int fn_801A8F88(int obj, int arg2)
 {
     int i;
@@ -998,6 +999,7 @@ int fn_801A8F88(int obj, int arg2)
     }
     return 0;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1027,6 +1029,168 @@ void ccgasvent_update(int *obj) {
             break;
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int MoonSeedPlantingSpot_setScale(int *obj, int arg) {
+    int *sub;
+    u8 *inner;
+    int ret;
+
+    inner = *(u8 **)((char *)obj + 0xb8);
+    ret = 0;
+    if (arg == 0) {
+        if ((inner[1] & 2) != 0) {
+            inner[0] = 3;
+            *(s16 *)(inner + 0xc) = 0;
+        }
+        ret = 1;
+    } else if (arg == 1) {
+        if (inner[0] == 3) {
+            ret = 1;
+            if (GameBit_Get(*(s16 *)(inner + 8)) != 0 && GameBit_Get(*(s16 *)(inner + 0xa)) == 0) {
+                inner = *(u8 **)((char *)obj + 0xb8);
+                sub = *(int **)((char *)obj + 0x4c);
+                if (GameBit_Get(*(s16 *)(inner + 8)) != 0) {
+                    *(u8 *)((char *)obj + 0xaf) |= 8;
+                    GameBit_Set(*(s16 *)(inner + 0xa), 1);
+                    inner[0] = 4;
+                    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)sub + 0xc);
+                }
+            }
+        }
+    }
+    return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E45D8;
+extern f32 lbl_803E45DC;
+extern f32 lbl_803E45E0;
+extern f32 lbl_803E45E4;
+extern f32 fn_80293E80(f32 x);
+extern void fn_8003B608(int r, int g, int b);
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
+    u8 *inner = *(u8 **)(p1 + 0xb8);
+    s32 v = visible;
+    if (v != 0) {
+        if (inner[0] == 2) {
+            if ((inner[1] & 2) != 0) {
+                f32 s;
+                int iv;
+                *(s16 *)(inner + 0xc) += 0x1000;
+                s = fn_80293E80(lbl_803E45E0 * (f32)*(s16 *)(inner + 0xc) / lbl_803E45E4);
+                iv = (int)(lbl_803E45D8 * (lbl_803E45DC + s));
+                fn_8003B608((u8)(iv + 0x7f), 0xff, 0xff);
+            }
+        } else if (inner[0] == 3) {
+            if (*(s16 *)(inner + 0xc) < 0x7d00) {
+                *(s16 *)(inner + 0xc) += 0xff;
+            }
+            fn_8003B608((s16)(*(s16 *)(inner + 0xc) >> 7), 0xff, 0xff);
+        } else {
+            fn_8003B608(0xff, 0xff, 0xff);
+        }
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E45DC);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objSetSlot(void *obj, int slot);
+
+#pragma scheduling off
+#pragma peephole off
+void animsharpclaw_init(int *obj, u8 *init) {
+    int *inner;
+    int f4;
+
+    *(int *)((char *)obj + 0xbc) = 0;
+    objSetSlot(obj, 0x64);
+    inner = *(int **)((char *)obj + 0xb8);
+    *(s16 *)((char *)inner + 0x6a) = *(s16 *)((char *)init + 0x1a);
+    *(s16 *)((char *)inner + 0x6e) = -1;
+    *(f32 *)((char *)inner + 0x24) = lbl_803E45C8 / (lbl_803E45C8 + (f32)(u32)init[0x24]);
+    *(int *)((char *)inner + 0x28) = -1;
+    *(int *)((char *)inner + 0x98) = 0;
+    *(int *)((char *)inner + 0x94) = 0;
+    *(int *)((char *)obj + 0xf8) = -1;
+    f4 = *(int *)((char *)obj + 0xf4);
+    if (f4 == 0 && *(s16 *)((char *)init + 0x18) != 1) {
+        (*(void (*)(int *, u8 *))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, init);
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)init + 0x18) + 1;
+    } else if (f4 != 0 && *(s16 *)((char *)init + 0x18) != f4 - 1) {
+        (*(void (*)(int *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
+        if (*(s16 *)((char *)init + 0x18) != -1) {
+            (*(void (*)(int *, u8 *))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, init);
+        }
+        *(int *)((char *)obj + 0xf4) = *(s16 *)((char *)init + 0x18) + 1;
+    }
+    if (*(int **)((char *)obj + 0x64) != NULL) {
+        *(u8 *)(*(int *)((char *)obj + 0x64) + 0x3a) = 0x64;
+        *(u8 *)(*(int *)((char *)obj + 0x64) + 0x3b) = 0x96;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 framesThisStep;
+
+#pragma scheduling off
+#pragma peephole off
+void animsharpclaw_update(int *obj) {
+    int *found;
+    int *inner;
+    int *child;
+    int kind;
+    int matchCount;
+    int *objects;
+    int i;
+    int count;
+    int result;
+
+    inner = *(int **)((char *)obj + 0xb8);
+    child = *(int **)((char *)obj + 0x4c);
+    if (child == NULL) {
+        return;
+    }
+    if (*(s16 *)((char *)child + 0x18) == -1) {
+        return;
+    }
+    result = (*(int (*)(int *, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)framesThisStep);
+    fn_801A8F88((int)obj, (int)inner);
+    if (result == 0) {
+        return;
+    }
+    if (*(s16 *)((char *)obj + 0xb4) != -2) {
+        return;
+    }
+    kind = (s8)*(u8 *)((char *)inner + 0x57);
+    found = NULL;
+    objects = (int *)ObjList_GetObjects(&i, &count);
+    matchCount = 0;
+    for (i = 0; i < count; i++) {
+        int *o = (int *)objects[i];
+        if (*(s16 *)((char *)o + 0xb4) == kind) {
+            found = o;
+        }
+        if (*(s16 *)((char *)o + 0xb4) == -2 && *(s16 *)((char *)o + 0x44) == 0x10 &&
+            kind == (s8)*(u8 *)((char *)*(int **)((char *)o + 0xb8) + 0x57)) {
+            matchCount++;
+        }
+    }
+    if (matchCount <= 1 && found != NULL && *(s16 *)((char *)found + 0xb4) != -1) {
+        *(s16 *)((char *)found + 0xb4) = -1;
+        (*(void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(kind);
+    }
+    *(s16 *)((char *)obj + 0xb4) = -1;
 }
 #pragma peephole reset
 #pragma scheduling reset

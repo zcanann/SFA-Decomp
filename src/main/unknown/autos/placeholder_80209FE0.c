@@ -1686,3 +1686,540 @@ void drakord_thornbush_release(void)
 void drakord_thornbush_initialise(void)
 {
 }
+
+extern void ModelLightStruct_free(int light);
+extern void Music_Trigger(int id, int value);
+extern void fn_80221978(int obj, int p1, int n, int p2, f32 v);
+extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
+extern void storeZeroToFloatParam(f32 *p);
+extern void lightVecFn_8001dd88(int model, f32 x, f32 y, f32 z);
+extern void queueGlowRender(int model);
+extern int randomGetRange(int lo, int hi);
+extern int bossdrakor_animEventCallback(int obj, int a2, int events);
+extern f32 lbl_803E6588;
+extern f32 lbl_803E658C;
+extern f32 lbl_803E6590;
+extern f32 lbl_803E6594;
+extern f32 lbl_803E651C;
+extern f32 lbl_803E6510;
+extern f32 lbl_803E657C;
+extern f32 lbl_803E65C0;
+extern f32 lbl_803E65C4;
+extern f32 lbl_803E65C8;
+extern void s16toFloat(void *p, int v);
+extern int timerCountDown(f32 *p);
+extern int arrayIndexOf(int arr, int val);
+extern int Obj_FreeObject(int obj);
+extern int fn_80080150(int p);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern int fn_802972A8(int obj);
+extern double Vec_distance(int *from, int *to);
+extern int *Obj_GetPlayerObject(void);
+extern u8 framesThisStep;
+extern f32 lbl_803E6598;
+extern f32 lbl_803E65A8;
+extern f32 lbl_803E65AC;
+extern f32 lbl_803E65B0;
+extern f32 lbl_803E65B8;
+extern void lightFn_8001db6c(f32 intensity, void *light, int onoff);
+extern void drakorhoverpad_resetPendingMotion(int obj);
+extern int GameBit_Get(int bit);
+extern f32 lbl_803E6540;
+extern f32 lbl_803E6544;
+extern f32 lbl_803E6548;
+extern f32 lbl_803E654C;
+extern int lbl_80329F90[];
+extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern int objRemoveFromListFn_8002ce88(int *obj);
+extern void fn_80221E94(int obj, f32 *pos, f32 v);
+extern int GameBit_Set(int bit, int val);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int *gMapEventInterface;
+extern f32 timeDelta;
+extern void gameTextShow(int id);
+extern int warpToMap(int id, int flags);
+extern void timeOfDayFn_80055000(void);
+extern void objParticleFn_80099d84(double s1, double s2, int obj, int type, int light);
+extern f32 lbl_803E6514;
+extern f32 lbl_803E6518;
+extern f32 lbl_803E6520;
+extern f32 lbl_803E6550;
+extern f32 lbl_803E6554;
+extern f32 lbl_803E6558;
+extern f32 lbl_803E655C;
+extern int lbl_803DC1A0;
+extern int lbl_803DC1A8;
+extern f32 lbl_803DC1B0;
+
+typedef struct {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 b10 : 1;
+    u8 b08 : 1;
+    u8 b04 : 1;
+    u8 b02 : 1;
+    u8 b01 : 1;
+} DrakorFlags;
+
+int bossdrakor_getExtraSize(void)
+{
+    return 0x1a4;
+}
+
+#pragma scheduling off
+#pragma peephole off
+void bossdrakor_free(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 0x45);
+    if (*(void **)((char *)obj + 0xc8) != NULL) {
+        ObjLink_DetachChild(obj, *(int *)((char *)obj + 0xc8));
+    }
+    if (*(void **)((char *)inner + 0x160) != NULL) {
+        ModelLightStruct_free(*(int *)((char *)inner + 0x160));
+    }
+    Music_Trigger(0x26, 0);
+    Music_Trigger(0x96, 0);
+}
+
+void drakord_thornbush_free(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(s16 *)((char *)obj + 0x46) == 0x709) {
+        fn_80221978(obj, inner + 0x14, 3, inner + 0x64, lbl_803E6588);
+    }
+    if (*(void **)((char *)inner + 0x64) != NULL) {
+        ModelLightStruct_free(*(int *)((char *)inner + 0x64));
+    }
+}
+
+void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+{
+    int inner = *(int *)((char *)p1 + 0xb8);
+    f32 v;
+    if (*(s16 *)((char *)p1 + 0x46) == 0x709) {
+        v = *(f32 *)((char *)inner + 0x68);
+        if (v < lbl_803E6590) {
+            v = lbl_803E658C;
+        }
+        fn_80221978(p1, inner + 0x14, 3, inner + 0x64, v);
+    }
+    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6594);
+}
+
+void drakord_thornbush_update(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int setup = *(int *)((char *)obj + 0x4c);
+    int s2;
+    if (fn_80080150((int)((char *)inner + 0xc)) != 0) {
+        if (*(f32 *)((char *)inner + 0xc) < (f32)(s32)*(s16 *)((char *)setup + 0x1c)) {
+            ObjHits_EnableObject(obj);
+            ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E65A8 + (f32)(s32)*(s16 *)((char *)setup + 0x1c) - *(f32 *)((char *)inner + 0xc)));
+        }
+        if (timerCountDown((f32 *)((char *)inner + 0xc)) != 0) {
+            *(s16 *)((char *)obj + 6) &= ~0x4000;
+            ((DrakorFlags *)((char *)inner + 0x79))->b80 = 1;
+            if (*(u32 *)((char *)setup + 0x14) == 0xffffffff) {
+                Obj_FreeObject(obj);
+            }
+        }
+    } else {
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x479);
+        if (((DrakorFlags *)((char *)inner + 0x79))->b80) {
+            ((DrakorFlags *)((char *)inner + 0x79))->b80 = 0;
+        }
+        switch (*(s16 *)((char *)obj + 0x46)) {
+        case 0x727:
+            if (fn_802972A8((int)Obj_GetPlayerObject()) != 0) {
+                ObjHits_ClearHitVolumes(obj);
+                ObjHits_EnableObject(obj);
+            } else {
+                ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+            }
+            break;
+        case 0x709:
+            if (Vec_distance((int *)((char *)Obj_GetPlayerObject() + 0x18), (int *)((char *)obj + 0x18)) <
+                (f32)(s32)(*(s16 *)((char *)setup + 0x1c) << 1)) {
+                ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), obj, 5, 1, 0);
+            }
+            break;
+        }
+        if (*(int *)((char *)inner + 0) == 0) {
+            s2 = *(int *)((char *)obj + 0x4c);
+            ObjHits_EnableObject(obj);
+            *(int *)((char *)inner + 0) = *(u8 *)((char *)s2 + 0x19);
+            ObjHitbox_SetSphereRadius(obj, (s16)*(int *)((char *)inner + 0x74));
+        }
+        if (*(s16 *)((char *)obj + 0x46) == 0x709) {
+            if (*(f32 *)((char *)inner + 0x68) < lbl_803E658C) {
+                *(f32 *)((char *)inner + 0x68) = lbl_803E65AC * (f32)(u32)framesThisStep + *(f32 *)((char *)inner + 0x68);
+                *(f32 *)((char *)obj + 8) =
+                    *(f32 *)((char *)inner + 0x68) * (*(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4) * (f32)(s32)*(s16 *)((char *)setup + 0x1c)) / lbl_803E65B0;
+            }
+        }
+    }
+}
+
+void drakord_thornbush_hitDetect(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 v2;
+    f32 v1;
+    f32 v0;
+    int pC;
+    int hitObj;
+    int flag;
+    int setup;
+    if (*(int *)((char *)inner + 0) != 0) {
+        flag = timerCountDown((f32 *)((char *)inner + 0x10));
+        if (ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, &pC, &v0, &v1, &v2) != 0) {
+            if (*(s16 *)((char *)hitObj + 0x46) != 0x35f &&
+                *(int *)((char *)inner + 8) != hitObj &&
+                arrayIndexOf(*(int *)((char *)inner + 0x6c), 2) != -1) {
+                *(int *)((char *)inner + 8) = hitObj;
+                fn_80221E94(obj, &v0, lbl_803E6598);
+                *(int *)((char *)inner + 0) -= pC;
+                if (*(int *)((char *)inner + 0) <= 0) {
+                    flag = 1;
+                } else {
+                    Sfx_PlayFromObject(obj, 0x496);
+                }
+            }
+        } else {
+            *(int *)((char *)inner + 8) = 0;
+        }
+        if (flag != 0) {
+            setup = *(int *)((char *)obj + 0x4c);
+            *(int *)((char *)inner + 0) = 0;
+            switch (*(s16 *)((char *)obj + 0x46)) {
+            case 0x727:
+                spawnExplosion((int *)obj, (f32)(s32)*(s16 *)((char *)setup + 0x1c), 1, 0, 0, 0, 0, 1, 1);
+                break;
+            case 0x709:
+                Sfx_PlayFromObject(obj, 0x2f9);
+                spawnExplosion((int *)obj, (f32)(s32)(*(int *)((char *)inner + 0x74) << 1), 1, 1, 1, 1, 0, 1, 0);
+                fn_80221978(obj, inner + 0x14, 3, inner + 0x64, lbl_803E6588);
+                break;
+            }
+            if (*(s16 *)((char *)setup + 0x1a) != 0) {
+                s16toFloat((void *)((char *)inner + 0xc), *(s16 *)((char *)setup + 0x1a));
+                *(s16 *)((char *)obj + 6) |= 0x4000;
+                ObjHits_DisableObject(obj);
+            } else if (*(u32 *)((char *)setup + 0x14) == 0xffffffff) {
+                Obj_FreeObject(obj);
+            } else {
+                objRemoveFromListFn_8002ce88((int *)obj);
+                ObjHits_DisableObject(obj);
+                *(s16 *)((char *)obj + 6) |= 0x4000;
+            }
+        }
+    }
+}
+
+void bossdrakor_handleActionEvent(int obj, int state, int action)
+{
+    int *tbl = lbl_80329F90;
+    f32 t;
+    int found;
+    switch (action) {
+    case 1:
+        if (((DrakorFlags *)((char *)state + 0x198))->b40) {
+            *(int *)((char *)state + 0x168) = 0x12;
+            if (*(void **)((char *)state + 0x160) != NULL) {
+                lightFn_8001db6c(lbl_803E651C, *(void **)((char *)state + 0x160), 0);
+            }
+        } else {
+            ((DrakorFlags *)((char *)state + 0x198))->b40 = 1;
+            if (*(void **)((char *)state + 0x160) != NULL) {
+                lightFn_8001db6c(lbl_803E651C, *(void **)((char *)state + 0x160), 1);
+            }
+        }
+        break;
+    case 2:
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        s16toFloat((void *)((char *)state + 0x10), 0x1e);
+        *(int *)((char *)state + 0x174) = 2;
+        *(f32 *)((char *)state + 0x14) = lbl_803E6510;
+        break;
+    case 3:
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        s16toFloat((void *)((char *)state + 0x10), 0x5a);
+        *(f32 *)((char *)state + 0x14) = lbl_803E6540;
+        *(int *)((char *)state + 0x174) = 1;
+        *(f32 *)((char *)state + 0x184) = *(f32 *)((char *)tbl + 0x84);
+        *(f32 *)((char *)state + 0x188) = *(f32 *)((char *)tbl + 0x90);
+        break;
+    case 4:
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        s16toFloat((void *)((char *)state + 0x10), 0x3c);
+        *(f32 *)((char *)state + 0x14) = lbl_803E6544;
+        *(int *)((char *)state + 0x174) = 1;
+        *(f32 *)((char *)state + 0x184) = *(f32 *)((char *)tbl + 0x88);
+        *(f32 *)((char *)state + 0x188) = *(f32 *)((char *)tbl + 0x94);
+        break;
+    case 5:
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        s16toFloat((void *)((char *)state + 0x10), 0x1e);
+        *(f32 *)((char *)state + 0x14) = lbl_803E6548;
+        *(int *)((char *)state + 0x174) = 1;
+        *(f32 *)((char *)state + 0x184) = *(f32 *)((char *)tbl + 0x8c);
+        *(f32 *)((char *)state + 0x188) = *(f32 *)((char *)tbl + 0x98);
+        break;
+    case 6:
+        t = lbl_803E6510;
+        *(f32 *)((char *)state + 0x14) = t;
+        *(f32 *)((char *)state + 0x10) = t;
+        storeZeroToFloatParam((f32 *)((char *)state + 0x10));
+        break;
+    case 7:
+        *(int *)((char *)state + 0x168) = 0x13;
+        *(f32 *)((char *)state + 0x164) = lbl_803E654C;
+        ((DrakorFlags *)((char *)state + 0x198))->b08 = 0;
+        break;
+    case 25:
+        *(int *)((char *)state + 0x168) = 0x14;
+        *(f32 *)((char *)state + 0x164) = lbl_803E654C;
+        break;
+    case 8:
+        *(int *)((char *)state + 0x168) = 0x11;
+        break;
+    case 9:
+        *(int *)((char *)state + 0x168) = 0;
+        break;
+    case 10:
+    case 11:
+    case 12:
+        if (*(int *)((char *)state + 0x170) < *(int *)((char *)tbl + action * 4 + 0x74)) {
+            *(int *)((char *)state + 0x194) = 1;
+        }
+        break;
+    case 14:
+    case 15:
+    case 16:
+    case 17:
+    case 18:
+    case 19:
+        *(u8 *)((char *)state + 0x190) = *(u8 *)((char *)state + 0x190) + 1;
+        if (*(u8 *)((char *)state + 0x190) > action - 0xd) {
+            *(u8 *)((char *)state + 0x190) = 0;
+            *(int *)((char *)state + 0x194) = 1;
+        }
+        break;
+    case 20:
+    case 21:
+    case 22:
+    case 23:
+        if (GameBit_Get((s16)(action + 0xbe5)) != 0) {
+            *(int *)((char *)state + 0x194) = 1;
+        }
+        /* fall through */
+    case 24:
+        found = ObjGroup_FindNearestObject(0x46, obj, 0);
+        if (found != 0) {
+            drakorhoverpad_resetPendingMotion(found);
+        }
+        break;
+    }
+}
+
+void bossdrakor_hitDetect(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int setup = *(int *)((char *)obj + 0x4c);
+    f32 hz;
+    f32 hy;
+    f32 hx;
+    f32 t518;
+    int hit = ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &hx, &hy, &hz);
+    if (hit == 0xf || hit == 0xe) {
+        if (((DrakorFlags *)((char *)inner + 0x198))->b40) {
+            *(int *)((char *)inner + 0x170) -= 1;
+            ((DrakorFlags *)((char *)inner + 0x198))->b08 = 1;
+            if (*(int *)((char *)inner + 0x170) < 0) {
+                GameBit_Set(*(s16 *)((char *)setup + 0x1e), 1);
+                spawnExplosion((int *)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
+                objRemoveFromListFn_8002ce88((int *)obj);
+                (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x44)))(0x1d, 3);
+                GameBit_Set(0x83c, 1);
+            } else {
+                fn_80221E94(obj, &hx, lbl_803E6554);
+            }
+            if (*(f32 *)((char *)inner + 0x19c) <= lbl_803E6510) {
+                *(f32 *)((char *)inner + 0x19c) = lbl_803E6558;
+                Sfx_PlayFromObject(obj, 0x478);
+            }
+            if (*(f32 *)((char *)inner + 0x1a0) <= lbl_803E6510) {
+                *(f32 *)((char *)inner + 0x1a0) = lbl_803E6520;
+                Sfx_PlayFromObject(obj, 0x4af);
+            }
+            t518 = lbl_803E6518;
+            *(f32 *)((char *)inner + 0x17c) = t518;
+            *(f32 *)((char *)inner + 0x178) = t518;
+            *(f32 *)((char *)inner + 0x180) = (f32)(s32)randomGetRange(-0x32, 0x32) / lbl_803E655C;
+        } else {
+            if (*(f32 *)((char *)inner + 0x1a0) < lbl_803E6510) {
+                *(f32 *)((char *)inner + 0x1a0) = lbl_803E6520;
+                Sfx_PlayFromObject(obj, 0x4b0);
+            }
+        }
+    }
+    *(f32 *)((char *)inner + 0x19c) -= timeDelta;
+    *(f32 *)((char *)inner + 0x1a0) -= timeDelta;
+}
+
+int bossdrakor_animEventCallback(int obj, int a2, int events)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int i;
+    int target;
+    ((DrakorFlags *)((char *)inner + 0x198))->b10 = 1;
+    if (*(f32 *)((char *)inner + 0x18c) > lbl_803E6510) {
+        gameTextShow(0x569);
+        *(f32 *)((char *)inner + 0x18c) -= timeDelta;
+        if (*(f32 *)((char *)inner + 0x18c) < lbl_803E6510) {
+            *(f32 *)((char *)inner + 0x18c) = lbl_803E6510;
+        }
+    }
+    for (i = 0; i < *(u8 *)((char *)events + 0x8b); i++) {
+        switch (*(u8 *)((char *)events + 0x81 + i)) {
+        case 6:
+            target = ObjGroup_FindNearestObject(0x1e, obj, 0);
+            if (target != 0 && *(u8 *)((char *)obj + 0xeb) != 0) {
+                (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)target + 0x68)) + 0x20)))(target, 2);
+                ObjLink_DetachChild(obj, target);
+            }
+            break;
+        case 7:
+            target = ObjGroup_FindNearestObject(0x1e, obj, 0);
+            if (target != 0) {
+                (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)target + 0x68)) + 0x20)))(target, 0);
+                ObjLink_AttachChild(obj, target, 1);
+                *(f32 *)((char *)inner + 0x18c) = lbl_803E6514;
+            }
+            break;
+        case 9:
+            ((DrakorFlags *)((char *)inner + 0x198))->b02 = 1;
+            break;
+        case 8:
+            GameBit_Set(0x5db, 0);
+            (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(2, 0xf, 1);
+            (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(2, 0x10, 1);
+            GameBit_Set(0xe7b, 0);
+            warpToMap(0x79, 0);
+            timeOfDayFn_80055000();
+            break;
+        }
+    }
+    if (((DrakorFlags *)((char *)inner + 0x198))->b02) {
+        objParticleFn_80099d84(lbl_803E6518, lbl_803E651C, obj, 6, 0);
+    }
+    return 0;
+}
+
+void bossdrakor_init(int obj, u8 *init)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz;
+    if (*(u8 *)((char *)init + 0x19) == 0) {
+        *(u8 *)((char *)init + 0x19) = 0xa;
+    }
+    if (*(s16 *)((char *)init + 0x1a) <= 0) {
+        *(s16 *)((char *)init + 0x1a) = 0x1e;
+    }
+    *(int *)((char *)inner + 0xc) = 0;
+    ((DrakorFlags *)((char *)inner + 0x198))->b80 = 0;
+    *(f32 *)((char *)inner + 0) = (f32)(u32)*(u8 *)((char *)init + 0x19);
+    *(int *)((char *)inner + 0x170) = *(s16 *)((char *)init + 0x1a);
+    fz = lbl_803E6510;
+    *(f32 *)((char *)inner + 0x14) = fz;
+    *(int *)((char *)inner + 0x168) = 0;
+    *(int *)((char *)inner + 0x16c) = -1;
+    *(int *)((char *)inner + 0x174) = 0;
+    *(f32 *)((char *)inner + 0x164) = lbl_803E657C;
+    ((DrakorFlags *)((char *)inner + 0x198))->b40 = 1;
+    *(f32 *)((char *)inner + 0x178) = fz;
+    *(f32 *)((char *)inner + 0x17c) = fz;
+    *(int *)((char *)inner + 0x194) = 0;
+    *(f32 *)((char *)inner + 0x18c) = fz;
+    ((DrakorFlags *)((char *)inner + 0x198))->b10 = 1;
+    storeZeroToFloatParam((f32 *)((char *)inner + 0x10));
+    ObjGroup_AddObject(obj, 0x45);
+    storeZeroToFloatParam((f32 *)((char *)inner + 0x18));
+    *(void **)((char *)obj + 0xbc) = (void *)bossdrakor_animEventCallback;
+    Music_Trigger(0x26, 1);
+    Music_Trigger(0x96, 1);
+    *(int *)((char *)inner + 0x160) = 0;
+}
+
+void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+{
+    int inner = *(int *)((char *)p1 + 0xb8);
+    f32 pos2;
+    f32 pos1;
+    f32 pos0;
+    int light;
+    int val;
+    objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E651C);
+    ObjPath_GetPointWorldPosition(p1, 0, (char *)inner + 0x1c, (char *)inner + 0x20, (char *)inner + 0x24, 0);
+    if (*(void **)((char *)inner + 0x160) != NULL) {
+        ObjPath_GetPointWorldPosition(p1, 5, &pos0, &pos1, &pos2, 0);
+        lightVecFn_8001dd88(*(int *)((char *)inner + 0x160), pos0, pos1, pos2);
+        light = *(int *)((char *)inner + 0x160);
+        if (*(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
+            val = *(u8 *)((char *)light + 0x2f9) + (s8)*(u8 *)((char *)light + 0x2fa);
+            if (val < 0) {
+                val = 0;
+                *(u8 *)((char *)light + 0x2fa) = 0;
+            } else if (val > 0xc) {
+                val += randomGetRange(-0xc, 0xc);
+                if (val > 0xff) {
+                    val = 0xff;
+                    *(u8 *)((char *)*(int *)((char *)inner + 0x160) + 0x2fa) = 0;
+                }
+            }
+            *(u8 *)((char *)*(int *)((char *)inner + 0x160) + 0x2f9) = (u8)val;
+        }
+        light = *(int *)((char *)inner + 0x160);
+        if (*(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
+            queueGlowRender(light);
+        }
+    }
+}
+
+void drakord_thornbush_init(int obj, u8 *init)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    *(int *)((char *)inner + 0) = 0;
+    ObjHits_SetTargetMask(obj, 4);
+    *(s16 *)((char *)obj + 2) = (s16)((s8)init[0x18] << 8);
+    if (*(u32 *)((char *)init + 0x14) == 0xffffffff) {
+        ((DrakorFlags *)((char *)inner + 0x79))->b80 = 1;
+    }
+    storeZeroToFloatParam((f32 *)((char *)inner + 0xc));
+    storeZeroToFloatParam((f32 *)((char *)inner + 0x10));
+    *(int *)((char *)inner + 8) = 0;
+    switch (*(s16 *)((char *)obj + 0x46)) {
+    case 0x727:
+        *(void **)((char *)inner + 0x6c) = &lbl_803DC1A8;
+        ObjHitbox_SetSphereRadius(obj, *(s16 *)((char *)init + 0x1c));
+        *(int *)((char *)inner + 0x74) = *(s16 *)((char *)init + 0x1c);
+        *(f32 *)((char *)inner + 0x70) = lbl_803E65C0;
+        *(f32 *)((char *)obj + 8) =
+            *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E6590;
+        break;
+    case 0x709:
+        *(void **)((char *)inner + 0x6c) = &lbl_803DC1A0;
+        *(f32 *)((char *)obj + 8) =
+            *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E65C4;
+        ObjHitbox_SetSphereRadius(obj, (s16)(*(s16 *)((char *)init + 0x1c) / 7));
+        s16toFloat((f32 *)((char *)inner + 0x10), (int)lbl_803DC1B0);
+        *(f32 *)((char *)inner + 0x70) = lbl_803E65C8;
+        *(int *)((char *)inner + 0x74) = *(s16 *)((char *)init + 0x1c) / 5;
+        *(f32 *)((char *)inner + 0x68) = lbl_803E6594;
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

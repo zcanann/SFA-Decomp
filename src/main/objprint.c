@@ -3194,5 +3194,691 @@ void fn_8003A168(int p1, int p2)
     }
     *(s16*)(p2 + 0x1a) = 0;
 }
+
+void objModelClearVecFn_8003aa40(int obj)
+{
+    s16* found;
+    int* table;
+    int k;
+    int n;
+    int i;
+    int j;
+    int slot;
+
+    for (slot = 0; slot < 0x16; slot++) {
+        found = NULL;
+        table = *(int**)(obj + 0x50);
+        if (table != NULL) {
+            i = 0;
+            j = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+            for (k = 0; k < n; k++) {
+                u8* data = *(u8**)((char*)table + 0x10);
+                s32 offset = *(s8*)(obj + 0xad);
+                if (data[(offset + i) + 1] != 0xff && (int)data[i] == slot) {
+                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                }
+                i = i + *(s8*)((char*)table + 0x55) + 1;
+                j += 0x12;
+            }
+        }
+        if (found != NULL) {
+            found[0] = 0;
+            found[1] = 0;
+            found[2] = 0;
+        }
+    }
+}
+
+void fn_8003AC14(int obj, int* keys, int count)
+{
+    s16* found;
+    int* table;
+    int k;
+    int n;
+    int i;
+    int j;
+    int idx;
+
+    for (idx = 0; idx < count; idx++) {
+        int key = *keys;
+        found = NULL;
+        table = *(int**)(obj + 0x50);
+        if (table != NULL) {
+            i = 0;
+            j = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+            for (k = 0; k < n; k++) {
+                u8* data = *(u8**)((char*)table + 0x10);
+                s32 di = *(s8*)(obj + 0xad) + i + 1;
+                if (data[di] != 0xff && (int)data[i] == key) {
+                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                }
+                i = i + *(s8*)((char*)table + 0x55) + 1;
+                j += 0x12;
+            }
+        }
+        if (found != NULL) {
+            found[1] = (s16)(found[1] * 3 >> 2);
+            found[0] = (s16)(found[0] * 3 >> 2);
+            found[2] = (s16)(found[2] * 3 >> 2);
+        }
+        keys++;
+    }
+}
+
+void objFn_8003acfc(int obj, int* keys, int count, int out)
+{
+    s16* found;
+    int* table;
+    int k;
+    int n;
+    int i;
+    int j;
+    int idx;
+
+    for (idx = 0; idx < count; idx++) {
+        int key = *keys;
+        found = NULL;
+        table = *(int**)(obj + 0x50);
+        if (table != NULL) {
+            i = 0;
+            j = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+            for (k = 0; k < n; k++) {
+                u8* data = *(u8**)((char*)table + 0x10);
+                s32 di = *(s8*)(obj + 0xad) + i + 1;
+                if (data[di] != 0xff && (int)data[i] == key) {
+                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                }
+                i = i + *(s8*)((char*)table + 0x55) + 1;
+                j += 0x12;
+            }
+        }
+        if (found != NULL) {
+            *(s16*)(out + 0x16) = found[1];
+            *(s16*)(out + 0x46) = found[0];
+        }
+        keys++;
+        out += 0x60;
+    }
+}
+
+void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
+{
+    s16* found;
+    int* table;
+    int k;
+    int n;
+    int i;
+    int j;
+    int idx;
+    int v;
+
+    for (idx = 0; idx < count; idx++) {
+        int key = *keys;
+        found = NULL;
+        table = *(int**)(obj + 0x50);
+        if (table != NULL) {
+            i = 0;
+            j = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+            for (k = 0; k < n; k++) {
+                u8* data = *(u8**)((char*)table + 0x10);
+                s32 di = *(s8*)(obj + 0xad) + i + 1;
+                if (data[di] != 0xff && (int)data[i] == key) {
+                    found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+                }
+                i = i + *(s8*)((char*)table + 0x55) + 1;
+                j += 0x12;
+            }
+        }
+        if (found != NULL) {
+            v = found[0];
+            if (v < lo) v = lo;
+            else if (v > hi) v = hi;
+            found[0] = (s16)v;
+            v = found[1];
+            if (v < lo) v = lo;
+            else if (v > hi) v = hi;
+            found[1] = (s16)v;
+            v = found[2];
+            if (v < lo) v = lo;
+            else if (v > hi) v = hi;
+            found[2] = (s16)v;
+        }
+        keys++;
+    }
+}
+
+extern u8 framesThisStep;
+
+void characterDoEyeMovements(int obj, int p4)
+{
+    int* foundA;
+    int* foundB;
+    u8* list;
+    int i;
+    int n;
+    int k;
+    int* table;
+    int flag;
+    s16 t;
+    s8 timer;
+
+    foundA = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        list = *(u8**)((char*)table + 0xc);
+        if (list != NULL) {
+            i = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x59);
+            for (k = 0; k < n; k++) {
+                if (list[0] == 1) {
+                    foundA = (int*)((char*)*(void**)(obj + 0x70) + i);
+                }
+                list += 2;
+                i += 0x10;
+            }
+        }
+    }
+    foundB = NULL;
+    if (table != NULL) {
+        list = *(u8**)((char*)table + 0xc);
+        if (list != NULL) {
+            i = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x59);
+            for (k = 0; k < n; k++) {
+                if (list[0] == 0) {
+                    foundB = (int*)((char*)*(void**)(obj + 0x70) + i);
+                }
+                list += 2;
+                i += 0x10;
+            }
+        }
+    }
+    if (foundA == NULL) return;
+    if (foundB == NULL) return;
+
+    flag = 0;
+    t = *(s16*)(p4 + 0x22);
+    if (t == 0) {
+        flag = 1;
+    }
+    if (t > 0) {
+        if (*(s16*)((char*)foundA + 8) >= *(int*)(p4 + 0x24)) {
+            flag = 1;
+        }
+    }
+    if (t < 0) {
+        if (*(s16*)((char*)foundA + 8) <= *(int*)(p4 + 0x24)) {
+            flag = 1;
+        }
+    }
+    if (flag != 0) {
+        *(int*)(p4 + 0x24) = randomGetRange(-0x3e8, 0x3e8);
+        if (*(int*)(p4 + 0x24) < *(s16*)((char*)foundA + 8)) {
+            *(s16*)(p4 + 0x22) = -0x96;
+        } else {
+            *(s16*)(p4 + 0x22) = 0x96;
+        }
+        *(s8*)(p4 + 0x20) = (s8)randomGetRange(0x1e, 0x64);
+    }
+    timer = *(s8*)(p4 + 0x20);
+    if (timer > 0) {
+        *(s8*)(p4 + 0x20) = timer - framesThisStep;
+    } else {
+        *(s16*)((char*)foundA + 8) =
+            (s16)(*(s16*)((char*)foundA + 8) + *(s16*)(p4 + 0x22) * framesThisStep);
+        *(s16*)((char*)foundA + 0xa) = 0;
+        *(s16*)((char*)foundB + 8) = *(s16*)((char*)foundA + 8);
+        *(s16*)((char*)foundB + 0xa) = 0;
+    }
+}
+
+extern u8 framesThisStep;
+
+void fn_8003B228(int obj, int p2)
+{
+    int* foundA;
+    int* foundB;
+    u8* list;
+    int i;
+    int n;
+    int k;
+    int* table;
+    int val;
+
+    foundA = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        list = *(u8**)((char*)table + 0xc);
+        if (list != NULL) {
+            i = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x59);
+            for (k = 0; k < n; k++) {
+                if (list[0] == 5) {
+                    foundA = (int*)((char*)*(void**)(obj + 0x70) + i);
+                }
+                list += 2;
+                i += 0x10;
+            }
+        }
+    }
+    foundB = NULL;
+    if (table != NULL) {
+        list = *(u8**)((char*)table + 0xc);
+        if (list != NULL) {
+            i = 0;
+            n = (s32)(u32)*(u8*)((char*)table + 0x59);
+            for (k = 0; k < n; k++) {
+                if (list[0] == 4) {
+                    foundB = (int*)((char*)*(void**)(obj + 0x70) + i);
+                }
+                list += 2;
+                i += 0x10;
+            }
+        }
+    }
+    if (foundA == NULL) return;
+    if (foundB == NULL) return;
+    val = *foundB + framesThisStep * 0x30;
+    if (val >= 0x200) {
+        val = 0x200;
+    }
+    *foundA = val;
+    *foundB = val;
+    *(u8*)(p2 + 0x1e) = 1;
+}
+
+extern void* getCache(void);
+extern void copyToCache(void* dst, void* src, int blockCount);
+extern void modelCalcVtxGroupMtxs(int p1, int p2);
+extern void* ObjModel_GetJointMatrix(int* model, int joint);
+extern void DCFlushRange(void* addr, u32 nBytes);
+extern int lbl_803DCC48;
+
+void modelInitMtxs(int p1, int p2)
+{
+    int cache;
+    int mtx;
+    int count;
+    u8 rem;
+
+    cache = (int)getCache();
+    if (*(u8*)(p1 + 0xf4) != 0) {
+        modelCalcVtxGroupMtxs(p1, p2);
+    }
+    count = (s32)(u32)*(u8*)(p1 + 0xf3) + (s32)(u32)*(u8*)(p1 + 0xf4);
+    if (count >= 2 && count <= 0x64) {
+        mtx = (int)ObjModel_GetJointMatrix((int*)p2, 0);
+        DCFlushRange((void*)mtx, count << 6);
+        rem = (u8)(count << 1);
+        cache += 0x2700;
+        while (rem >= 0x80) {
+            copyToCache((void*)cache, (void*)mtx, 0);
+            rem -= 0x80;
+            mtx += 0x1000;
+            cache += 0x1000;
+        }
+        if (rem != 0) {
+            copyToCache((void*)cache, (void*)mtx, rem);
+        }
+        lbl_803DCC48 = 1;
+    } else {
+        lbl_803DCC48 = 3;
+    }
+}
+
+extern void fn_80039DF8(int obj, int p4, f32 x);
+extern f32 lbl_803DE9A4;
+
+void objAudioFn_800393f8(int p1, int p2, int p3, int p4, int p5, u8 p6)
+{
+    if (p6 == 0 && Sfx_IsPlayingFromObjectChannel(p1, 0x10) != 0) {
+        return;
+    }
+    Sfx_PlayFromObjectChannel(p1, 0x10, p3);
+    *(f32*)((char*)p2 + 0xc) = (f32)p5;
+    *(s16*)((char*)p2 + 0x14) = (s16)(-p4);
+    *(u8*)((char*)p2 + 0) = 1;
+    *(f32*)((char*)p2 + 4) = lbl_803DE99C;
+}
+
+void fn_8003B500(int obj, int p4)
+{
+    s16* found;
+    int* table;
+    int i;
+    int j;
+    int k;
+    int n;
+
+    found = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        i = 0;
+        j = 0;
+        n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+        for (k = 0; k < n; k++) {
+            u8* data = *(u8**)((char*)table + 0x10);
+            s32 di = *(s8*)(obj + 0xad) + i + 1;
+            if (data[di] != 0xff && data[i] == 0) {
+                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+            }
+            i = i + *(s8*)((char*)table + 0x55) + 1;
+            j += 0x12;
+        }
+    }
+    if (found != NULL) {
+        if (found[0] != 0) {
+            found[0] = (s16)(found[0] * 3 / 4);
+        }
+        fn_80039DF8(obj, p4, lbl_803DE9A4);
+        *(s16*)(p4 + 0x1a) = (s16)(u8)*(s16*)(p4 + 0x1a);
+    }
+}
+
+extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
+extern f32 lbl_803DB464;
+
+void objSoundFn_800392f0(int p1, int p2, int p3, u8 flag6)
+{
+    u16 sfx;
+    s16 pitch;
+    u32 count;
+    int model;
+    int did;
+
+    pitch = *(s16*)((char*)p3 + 2);
+    sfx = (u16)*(s16*)((char*)p3 + 0);
+    if (flag6 != 0 || Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
+        Sfx_PlayFromObjectChannel(p1, 0x10, sfx);
+        *(f32*)((char*)p2 + 0xc) = lbl_803DE9C8;
+        *(s16*)((char*)p2 + 0x14) = (s16)(-pitch);
+        *(u8*)((char*)p2 + 0) = 1;
+        *(f32*)((char*)p2 + 4) = lbl_803DE99C;
+    }
+    count = *(u8*)((char*)p3 + 4);
+    if (count != 0) {
+        model = ((int*)*(int*)((char*)p1 + 0x7c))[*(s8*)((char*)p1 + 0xad)];
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
+            ObjModel_SetBlendChannelTargets(model, 2,
+                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
+                count - 1, lbl_803DE99C / lbl_803DB464, 0);
+            did = 1;
+        } else {
+            did = 0;
+        }
+        if (did != 0) {
+            *(s16*)((char*)p3 + 2) = 0;
+        }
+    }
+}
+
+extern int Obj_GetActiveModel(int obj);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+
+void objPosFn_80039510(int obj, int key, int out)
+{
+    int* table;
+    int i;
+    int k;
+    int n;
+    int joint;
+    int model;
+
+    table = *(int**)(obj + 0x50);
+    i = 0;
+    n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+    for (k = 0; k < n; k++) {
+        u8* data = *(u8**)((char*)table + 0x10);
+        if (key == (int)data[i]) {
+            joint = *(u8*)(data + i + *(s8*)((char*)obj + 0xad) + 1);
+            break;
+        }
+        i = i + *(s8*)((char*)table + 0x55) + 1;
+    }
+    model = Obj_GetActiveModel(obj);
+    model = (int)ObjModel_GetJointMatrix((int*)model, joint);
+    *(f32*)((char*)out + 0) = *(f32*)((char*)model + 0xc);
+    *(f32*)((char*)out + 4) = *(f32*)((char*)model + 0x1c);
+    *(f32*)((char*)out + 8) = *(f32*)((char*)model + 0x2c);
+    *(f32*)((char*)out + 0) = *(f32*)((char*)out + 0) + playerMapOffsetX;
+    *(f32*)((char*)out + 8) = *(f32*)((char*)out + 8) + playerMapOffsetZ;
+}
+
+extern void cacheFn_800229c4(int x);
+extern void PSMTXConcat(int a, int b, int c);
+extern f32 lbl_803DEA04;
+
+void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
+{
+    int cache;
+    int count;
+    int dstA;
+    int mid;
+    int dstB;
+    f32 fill;
+    int i;
+
+    cache = (int)getCache();
+    count = (s32)(u32)*(u8*)((char*)p1 + 0xf3) + (s32)(u32)*(u8*)((char*)p1 + 0xf4);
+    dstA = cache + 0x2700;
+    mid = cache;
+    dstB = cache + 0x12c0;
+    cacheFn_800229c4(0);
+    fill = lbl_803DEA04;
+    for (i = 0; i < count; i++) {
+        PSMTXConcat(p3, dstA, mid);
+        PSMTXConcat(mid, p4, dstB);
+        *(f32*)((char*)dstB + 0xc) = fill;
+        *(f32*)((char*)dstB + 0x1c) = fill;
+        *(f32*)((char*)dstB + 0x2c) = fill;
+        dstA += 0x40;
+        mid += 0x30;
+        dstB += 0x30;
+    }
+    lbl_803DCC48 = 2;
+}
+
+extern void doNothing_beforeRenderObject(int x);
+extern void doNothing_afterRenderObject(void);
+extern void playerRender(int obj, int a, int b, int c, int d, int flag);
+extern void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c);
+
+void objRender(int a, int b, int c, int d, int obj, int flag)
+{
+    void* sub;
+    int i;
+    int walk;
+    void (*vfn)(int, int, int, int, int, int);
+
+    if ((*(u16*)((char*)obj + 0xb0) & 0x40) != 0) return;
+    if (*(void**)((char*)obj + 0xc4) != NULL) return;
+    if ((*(s16*)((char*)obj + 6) & 0x4000) != 0) return;
+    sub = *(void**)((char*)obj + 0x30);
+    if (sub != NULL && (*(s16*)((char*)sub + 6) & 0x4000) != 0) return;
+
+    doNothing_beforeRenderObject(4);
+    *(u16*)((char*)obj + 0xb0) |= 0x800;
+    sub = *(void**)((char*)obj + 0x68);
+    if (sub != NULL) {
+        if ((*(u16*)((char*)obj + 0xb0) & 0x4000) != 0) {
+            if ((s8)flag != 0 &&
+                ((void**)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)] != NULL) {
+                (*(void(*)(int))objRenderModel)(obj);
+                if (*(void**)((char*)obj + 0x74) != NULL) {
+                    objRenderFn_80041018((int*)obj);
+                }
+            }
+        } else {
+            vfn = *(void(**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
+            if (vfn != NULL) {
+                vfn(obj, a, b, c, d, flag);
+            }
+        }
+    } else if ((s8)flag != 0) {
+        s16 m = *(s16*)((char*)obj + 0x46);
+        if (m == 0x1f || m == 0) {
+            playerRender(obj, a, b, c, d, flag);
+        } else if (((void**)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)] != NULL) {
+            (*(void(*)(int))objRenderModel)(obj);
+            if (*(void**)((char*)obj + 0x74) != NULL) {
+                objRenderFn_80041018((int*)obj);
+            }
+        }
+    }
+    doNothing_afterRenderObject();
+    walk = obj;
+    for (i = 0; i < (s32)(u32)*(u8*)((char*)obj + 0xeb); i++) {
+        int staff = *(int*)((char*)walk + 0xc8);
+        if (*(s16*)((char*)staff + 0x44) == 0x2d) {
+            staffMtxFn_8003b620(staff, obj,
+                ((int*)*(int*)((char*)staff + 0x7c))[*(s8*)((char*)staff + 0xad)],
+                a, b, c);
+        }
+        walk += 4;
+    }
+}
+
+extern f32 timeDelta;
+
+void objModelAndSoundFn_80039118(int obj, int p2)
+{
+    int frame;
+    int model;
+    int kfval;
+    int* kf;
+
+    f32 t;
+
+    if (*(s32*)((char*)p2 + 0) < 0) return;
+    t = *(f32*)((char*)p2 + 8) - timeDelta;
+    *(f32*)((char*)p2 + 8) = t;
+    if (t >= lbl_803DE9A4) return;
+    frame = *(int*)((char*)p2 + 0);
+    if (frame >= *(int*)((char*)p2 + 4)) {
+        *(int*)((char*)p2 + 0) = -1;
+        model = ((int*)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)];
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
+            ObjModel_SetBlendChannelTargets(model, 2,
+                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
+                -1, lbl_803DE99C / lbl_803DB464, 0);
+        }
+    } else {
+        if (frame == 1) {
+            Sfx_PlayFromObjectChannel(obj, 0x10, *(u16*)((char*)p2 + 0x14));
+        }
+        kf = *(int**)((char*)p2 + 0x10);
+        frame = *(int*)((char*)p2 + 0);
+        *(int*)((char*)p2 + 0) = frame + 1;
+        kfval = kf[frame];
+        model = ((int*)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)];
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0) {
+            ObjModel_SetBlendChannelTargets(model, 2,
+                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d),
+                kfval - 1, lbl_803DE99C / lbl_803DB464, 0);
+        }
+        *(f32*)((char*)p2 + 8) = *(f32*)((char*)p2 + 8) + *(f32*)((char*)p2 + 0xc);
+    }
+}
+
+extern void fn_80039B54(int obj, int p2, f32 val);
+extern f32 lbl_803DE9E4;
+
+void fn_8003A230(int obj, int p2, f32 val)
+{
+    s16* found;
+    int* table;
+    int i;
+    int j;
+    int k;
+    int n;
+    int flag;
+
+    found = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        i = 0;
+        j = 0;
+        n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+        for (k = 0; k < n; k++) {
+            u8* data = *(u8**)((char*)table + 0x10);
+            s32 di = *(s8*)(obj + 0xad) + i + 1;
+            if (data[di] != 0xff && data[i] == 0) {
+                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+            }
+            i = i + *(s8*)((char*)table + 0x55) + 1;
+            j += 0x12;
+        }
+    }
+    if (found != NULL) {
+        if (found[0] != 0) {
+            found[0] = (s16)(found[0] * 3 / 4);
+        }
+        if (val < lbl_803DE9A4) {
+            val = -val;
+        }
+        if (val <= lbl_803DE9E4) {
+            fn_80039DF8(obj, p2, val);
+        } else {
+            fn_80039B54(obj, p2, val);
+        }
+        *(s16*)((char*)p2 + 0x1a) = (s16)(u8)*(s16*)((char*)p2 + 0x1a);
+        if (val > lbl_803DE9E4) {
+            flag = 1;
+        } else {
+            flag = 0;
+        }
+        *(s16*)((char*)p2 + 0x1a) = (s16)(*(s16*)((char*)p2 + 0x1a) | (flag << 8));
+    }
+}
+
+extern int getAngle(f32 dx, f32 dy);
+extern f32 lbl_803DE9EC;
+
+void fn_8003B0D0(int obj, int p2, int p3, int p4)
+{
+    s16* found;
+    int* table;
+    int i;
+    int j;
+    int k;
+    int n;
+    int angle;
+    s16 limit;
+
+    found = NULL;
+    table = *(int**)(obj + 0x50);
+    if (table != NULL) {
+        i = 0;
+        j = 0;
+        n = (s32)(u32)*(u8*)((char*)table + 0x5a);
+        for (k = 0; k < n; k++) {
+            u8* data = *(u8**)((char*)table + 0x10);
+            s32 di = *(s8*)(obj + 0xad) + i + 1;
+            if (data[di] != 0xff && data[i] == 0) {
+                found = (s16*)((char*)*(void**)(obj + 0x6c) + j);
+            }
+            i = i + *(s8*)((char*)table + 0x55) + 1;
+            j += 0x12;
+        }
+    }
+    if (found != NULL) {
+        angle = (s16)getAngle(*(f32*)((char*)obj + 0xc) - *(f32*)((char*)p2 + 0xc),
+                              *(f32*)((char*)obj + 0x14) - *(f32*)((char*)p2 + 0x14));
+        *(s16*)((char*)p3 + 0x14) = (s16)(angle - *(s16*)(obj + 0));
+        limit = (s16)(int)(lbl_803DE9EC * (f32)(s32)p4);
+        if (*(s16*)((char*)p3 + 0x14) > limit) {
+            *(s16*)((char*)p3 + 0x14) = limit;
+        }
+        if (*(s16*)((char*)p3 + 0x14) < -limit) {
+            *(s16*)((char*)p3 + 0x14) = -limit;
+        }
+        found[1] = *(s16*)((char*)p3 + 0x14);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
