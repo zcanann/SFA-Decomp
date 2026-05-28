@@ -1831,3 +1831,52 @@ void softbody_update(int obj)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern f32 lbl_803E7078;
+extern f32 lbl_803E7150;
+
+int arwbombcoll_getExtraSize(void) { return 8; }
+int arwbombcoll_getObjectTypeId(void) { return 0; }
+void arwbombcoll_free(void) {}
+void arwbombcoll_hitDetect(void) {}
+
+void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7078);
+}
+
+#pragma peephole off
+#pragma scheduling off
+void arwbombcoll_init(int obj, int setup)
+{
+    *(s16 *)(obj + 0) = (s16)(*(s8 *)(setup + 0x18) << 8);
+    *(u8 *)(obj + 0x36) = 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
+void arwbombcoll_release(void) {}
+void arwbombcoll_initialise(void) {}
+
+int arwgenerato_getExtraSize(void) { return 4; }
+int arwgenerato_getObjectTypeId(void) { return 0; }
+void arwgenerato_free(void) {}
+void arwgenerato_hitDetect(void) {}
+
+void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7150);
+}
+
+#pragma peephole off
+#pragma scheduling off
+void arwgenerato_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    *(f32 *)(state + 0) = (f32)(u32)*(u16 *)(setup + 0x18);
+}
+#pragma scheduling on
+#pragma peephole on
+
+void arwgenerato_release(void) {}
+void arwgenerato_initialise(void) {}
