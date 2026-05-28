@@ -8439,6 +8439,66 @@ void fn_802B19F8(int obj, int state, f32 fv)
     fn_802B18BC(obj, state, fv);
 }
 
+extern f32 lbl_803E8140;
+extern void setMatrixFromObjectPos(f32 *matrix, s16 *objpos);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+
+typedef struct {
+    u8 pad24[0x24];
+    f32 x;
+    f32 y;
+    f32 z;
+} EmitObj;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802B1BF8(EmitObj *a, int b, int state)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 mtx[16];
+    f32 oy;
+    f32 f31v;
+    f32 f30v;
+    s8 flags = *(s8 *)((char *)state + 0x34c);
+
+    if ((flags & 2) == 0 && (flags & 1) == 0) {
+        f31v = *(f32 *)((char *)state + 0x280);
+        f30v = *(f32 *)((char *)state + 0x284);
+        if (((ByteFlags *)((char *)b + 0x3f0))->b20) {
+            f31v = f31v + *(f32 *)((char *)b + 0x43c);
+            f30v = f30v + *(f32 *)((char *)b + 0x440);
+        }
+        v.angles[0] = *(s16 *)((char *)b + 0x484);
+        v.angles[1] = 0;
+        v.angles[2] = 0;
+        v.mat[0] = lbl_803E7EE0;
+        v.mat[1] = lbl_803E7EA4;
+        v.mat[2] = lbl_803E7EA4;
+        v.mat[3] = lbl_803E7EA4;
+        setMatrixFromObjectPos(mtx, v.angles);
+        Matrix_TransformPoint(mtx, f30v, lbl_803E7EA4, -f31v, &a->x, &oy, &a->z);
+        a->x = a->x + *(f32 *)((char *)b + 0x890);
+        a->z = a->z + *(f32 *)((char *)b + 0x894);
+    } else {
+        int cosI =
+            (int)fn_80293E80(lbl_803E7F94 * (f32)*(s16 *)((char *)b + 0x484) / lbl_803E7F98);
+        int sinI =
+            (int)sin(lbl_803E7F94 * (f32)*(s16 *)((char *)b + 0x484) / lbl_803E7F98);
+        *(f32 *)((char *)state + 0x284) = a->x * (f32)sinI - a->z * (f32)cosI;
+        *(f32 *)((char *)state + 0x280) = -a->z * (f32)sinI - a->x * (f32)cosI;
+    }
+
+    if ((*(int *)((char *)state) & 0x200000) == 0) {
+        a->y = a->y * powfBitEstimate(lbl_803E8140, timeDelta);
+        a->y = a->y - *(f32 *)((char *)state + 0x2a4) * timeDelta;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void fn_8029A4A8(int obj, int p2)
 {
     int inner = *(int *)((char *)obj + 0xb8);
