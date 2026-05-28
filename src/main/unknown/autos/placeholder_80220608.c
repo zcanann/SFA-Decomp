@@ -323,8 +323,8 @@ int wcpushblock_getExtraSize(void) { return 0x288; }
 #pragma scheduling off
 int wcpushblock_getObjectTypeId(int obj)
 {
-    int modelIndex = (s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x19);
-    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -683,8 +683,8 @@ int wcbeacon_getExtraSize(void) { return 8; }
 #pragma scheduling off
 int wcbeacon_getObjectTypeId(int obj)
 {
-    int modelIndex = (s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x19);
-    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -729,8 +729,8 @@ int wctile_getExtraSize(void) { return 0xc; }
 #pragma scheduling off
 int wctile_getObjectTypeId(int obj)
 {
-    int modelIndex = (s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x19);
-    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -886,8 +886,8 @@ int wctrexstatu_getExtraSize(void) { return 0; }
 #pragma scheduling off
 int wctrexstatu_getObjectTypeId(int obj)
 {
-    int modelIndex = (s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x19);
-    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -1071,8 +1071,8 @@ int wctemplebri_getExtraSize(void) { return 0x68; }
 #pragma scheduling off
 int wctemplebri_getObjectTypeId(int obj)
 {
-    int modelIndex = (s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x19);
-    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -1096,6 +1096,116 @@ void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling on
 #pragma peephole on
 void wctemplebri_hitDetect(void) {}
+
+extern f32 lbl_803E6E98;
+extern f32 lbl_803E6E2C;
+extern f32 lbl_803E72E8;
+extern void ModelLightStruct_free(void *light);
+extern void queueGlowRender(void *light);
+extern int lbl_803DDDA8;
+extern f32 lbl_803DDDB0;
+extern f32 lbl_803DDDAC;
+extern f32 lbl_803E72B0;
+
+int wcfloortile_getExtraSize(void) { return 8; }
+int wcfloortile_getObjectTypeId(void) { return 0; }
+void wcfloortile_free(void) {}
+#pragma peephole off
+void wcfloortile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E98);
+    }
+}
+#pragma peephole on
+void wcfloortile_hitDetect(void) {}
+#pragma peephole off
+#pragma scheduling off
+void wcfloortile_init(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(s16 *)obj = -0x4000;
+    *(s16 *)(*(int *)(obj + 0x54) + 0x60) |= 0x1800;
+    *(u8 *)(state + 7) |= 2;
+}
+#pragma scheduling on
+#pragma peephole on
+void wcfloortile_release(void) {}
+void wcfloortile_initialise(void) {}
+
+int wcapertures_getExtraSize(void) { return 8; }
+#pragma scheduling off
+int wcapertures_getObjectTypeId(int obj)
+{
+    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
+
+    if (modelIndex >= modelCount) {
+        modelIndex = 0;
+    }
+    return (modelIndex << 0xb) | 0x400;
+}
+void wcapertures_free(int obj)
+{
+    void *light = *(void **)(*(int *)(obj + 0xb8));
+
+    if (light != NULL) {
+        ModelLightStruct_free(light);
+    }
+}
+#pragma peephole off
+void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int state = *(int *)(obj + 0xb8);
+    u8 *light;
+
+    if (visible != 0) {
+        *(u8 *)(state + 7) |= 1;
+    } else {
+        *(u8 *)(state + 7) &= ~1;
+    }
+    light = *(u8 **)state;
+    if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0) {
+        queueGlowRender(light);
+    }
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E2C);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+void wcapertures_release(void) {}
+void wcapertures_initialise(void) {}
+
+int waterflowwe_getExtraSize(void) { return 8; }
+int waterflowwe_getObjectTypeId(void) { return 0; }
+#pragma scheduling off
+void waterflowwe_free(int obj)
+{
+    if (obj == lbl_803DDDA8) {
+        lbl_803DDDA8 = 0;
+    }
+}
+#pragma scheduling on
+#pragma peephole off
+void waterflowwe_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E72E8);
+    }
+}
+#pragma peephole on
+void waterflowwe_hitDetect(void) {}
+void waterflowwe_release(void) {}
+#pragma scheduling off
+void waterflowwe_initialise(void)
+{
+    lbl_803DDDA8 = 0;
+    lbl_803DDDB0 = lbl_803E72B0;
+    lbl_803DDDAC = lbl_803E72B0;
+}
+#pragma scheduling on
 
 int suntemple_getExtraSize(void) { return 2; }
 int suntemple_getObjectTypeId(void) { return 0; }
