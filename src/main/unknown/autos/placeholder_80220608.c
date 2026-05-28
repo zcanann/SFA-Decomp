@@ -4286,6 +4286,69 @@ void dll_28B_initialise(void)
 #pragma scheduling on
 #pragma peephole on
 
+extern int dll_2E_func07(int obj, int p2, int state, int p4, int p5);
+extern void fn_80113F94(int state, f32 a);
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern int lbl_803E6CD8;
+extern f32 lbl_803E6CDC;
+extern f32 lbl_803E6CE8;
+
+#pragma peephole off
+#pragma scheduling off
+int earthwalker_animEventCallback(int obj, int p2, int p3, int p4)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+
+    *(u8 *)(state + 0x659) &= ~1;
+    characterDoEyeAnims(obj, state + 0x624);
+    if (dll_2E_func07(obj, p3, state, 0, 0) != 0) {
+        return 0;
+    }
+    if ((s8)p4 != 0) {
+        ObjAnim_AdvanceCurrentMove(lbl_803E6CDC, timeDelta, obj, 0);
+    }
+    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+        switch (*(u8 *)(p3 + i + 0x81)) {
+        case 1:
+            getEnvfxActImmediately(obj, obj, 509, 0);
+            break;
+        case 2:
+            getEnvfxActImmediately(obj, obj, 512, 0);
+            break;
+        }
+    }
+    return 0;
+}
+
+void earthwalker_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    int local;
+
+    local = lbl_803E6CD8;
+    *(int *)(obj + 0xbc) = (int)earthwalker_animEventCallback;
+    dll_2E_func05(obj, state, -8192, 12743, 2);
+    dll_2E_func09(state, 0, &local, 2);
+    fn_80113F94(state, lbl_803E6CE8);
+    *(u8 *)(state + 0x611) |= 2;
+    *(s16 *)obj = (s16)((s8)*(s8 *)(setup + 0x18) << 8);
+    *(u8 *)(state + 0x65b) = *(u8 *)(setup + 0x19);
+    if (*(u8 *)(state + 0x65b) == 1) {
+        if (GameBit_Get(0x7fc) == 0 &&
+            (u8)(*(int (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) != 2) {
+            *(u8 *)(state + 0x658) = 0;
+        } else {
+            *(u8 *)(state + 0x658) = 2;
+        }
+    } else {
+        *(u8 *)(state + 0x658) = 2;
+    }
+    *(s8 *)(state + 0x65c) = -1;
+}
+#pragma scheduling on
+#pragma peephole on
+
 extern int *gModgfxInterface;
 extern void Resource_Release(int handle);
 extern int Resource_Acquire(int id, int p2);
