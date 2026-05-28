@@ -5137,6 +5137,54 @@ void fn_8022B8A0(int p, int q) {
 }
 #pragma scheduling reset
 
+extern f32 lbl_803E6F08;
+extern f32 lbl_803E6F0C;
+extern f32 lbl_803E6F10;
+extern f32 lbl_803E6F14;
+extern f32 lbl_803E6F18;
+extern f32 lbl_803E6F1C;
+extern f32 lbl_803E6F20;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_8022BCD0(int p, int q) {
+    u8 flag;
+    struct {
+        u8 pad[6];
+        s16 type;
+        f32 a;
+        f32 b;
+        f32 c;
+        f32 d;
+    } emit;
+    flag = 0;
+    if ((s8) * (u8 *)(q + 0x468) <= 4) {
+        if ((*(u8 *)(q + 0x476))++ % 2 != 0) {
+            emit.a = lbl_803E6F08;
+            emit.b = lbl_803E6F0C;
+            emit.c = lbl_803E6F10;
+            emit.d = lbl_803E6F14;
+            if ((s8) * (u8 *)(q + 0x468) <= 2)
+                emit.type = 0x61a8;
+            else
+                emit.type = -0x63c0;
+            (*(void (**)(int, int, void *, int, int, u8 *))(*gPartfxInterface + 0x8))(
+                p, 0x7d0, &emit.pad, 4, -1, &flag);
+        }
+    }
+    if ((s8) * (u8 *)(q + 0x468) <= 2) {
+        emit.a = lbl_803E6F18;
+        emit.type = 0xc0a;
+        emit.b = lbl_803E6ECC;
+        emit.c = lbl_803E6F1C;
+        emit.d = lbl_803E6F20;
+        (*(void (**)(int, int, void *, int, int, u8 *))(*gPartfxInterface + 0x8))(
+            p, 0x7d1, &emit.pad, 4, -1, &flag);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 void fn_8022D6D0(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
