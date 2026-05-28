@@ -8875,7 +8875,7 @@ f32 mathFn_80010c64(f32 t, f32* values, f32* outTangent)
  */
 f32 curveFn_80010ce4(f32 t, f32* values, f32* outTangent)
 {
-    f32 a = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     f32 b = lbl_803DE664 * values[2] +
             (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
     f32 c = lbl_803DE668 * values[0] + lbl_803DE664 * values[1];
