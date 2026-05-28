@@ -5368,6 +5368,52 @@ void arwspeedstr_update(int obj) {
 #pragma scheduling reset
 #pragma peephole reset
 
+extern void fn_8022A9C8(int obj, int state);
+extern void arwarwing_spawnLaserShot(int obj, int state, int a, int b, int c);
+extern f32 lbl_803E6F04;
+
+#pragma peephole off
+#pragma scheduling off
+void arwarwing_updateWeaponFire(int obj, int state) {
+    int fire;
+    fn_8022A9C8(obj, state);
+    {
+        f32 t = *(f32 *)(state + 0x408);
+        if (t > lbl_803E6ECC) {
+            *(f32 *)(state + 0x408) = t - timeDelta;
+            if (*(f32 *)(state + 0x408) >= lbl_803E6ECC)
+                return;
+            *(f32 *)(state + 0x408) = lbl_803E6ECC;
+        }
+    }
+    fire = 0;
+    if (*(u16 *)(state + 0x3f8) & 0x100) {
+        *(f32 *)(state + 0x414) -= timeDelta;
+        if (*(f32 *)(state + 0x414) <= lbl_803E6ECC)
+            fire = 1;
+    }
+    if ((*(u16 *)(state + 0x3f4) & 0x100) == 0 && fire == 0)
+        return;
+    *(f32 *)(state + 0x414) = lbl_803E6F04;
+    switch ((s8) * (u8 *)(state + 0x404)) {
+    case 2:
+        arwarwing_spawnLaserShot(obj, state, 0, 2, 1);
+        arwarwing_spawnLaserShot(obj, state, 1, 2, 0);
+        break;
+    case 1:
+        arwarwing_spawnLaserShot(obj, state, 0, 1, 1);
+        arwarwing_spawnLaserShot(obj, state, 1, 1, 0);
+        break;
+    default:
+        arwarwing_spawnLaserShot(obj, state, *(u8 *)(state + 0x405), 0, 1);
+        *(u8 *)(state + 0x405) = (*(u8 *)(state + 0x405) ^ 1) & 0xff;
+        break;
+    }
+    *(f32 *)(state + 0x408) = (f32)(u32) * (u16 *)(state + 0x40c);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 void fn_8022D6D0(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
