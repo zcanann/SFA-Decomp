@@ -4746,3 +4746,46 @@ void drmusiccont_init(int obj)
 }
 #pragma peephole on
 #pragma scheduling on
+
+typedef struct DrBarrelGrFlags {
+    u8 bit80 : 1;
+    u8 bit40 : 1;
+    u8 pad : 6;
+} DrBarrelGrFlags;
+
+extern f32 lbl_803E6CA4;
+extern f32 lbl_803E6CD0;
+
+#pragma peephole off
+#pragma scheduling off
+void drbarrelgr_init(int obj, int setup)
+{
+    int one;
+    int state;
+
+    one = 1;
+    state = *(int *)(obj + 0xb8);
+    if (*(u8 *)(setup + 0x19) == 0) {
+        *(u8 *)(setup + 0x19) = 0xa;
+    }
+    if (*(s16 *)(setup + 0x1a) <= 0) {
+        *(s16 *)(setup + 0x1a) = 0x64;
+    }
+    *(int *)(state + 0) = 5;
+    *(int *)(state + 8) = 0;
+    ((DrBarrelGrFlags *)(state + 0x12a))->bit80 = 0;
+    *(s16 *)(state + 0x128) = *(u8 *)(setup + 0x19);
+    *(f32 *)(state + 0x10) = lbl_803E6CA4;
+    *(int *)(state + 4) = -3;
+    ((DrBarrelGrFlags *)(state + 0x12a))->bit40 = 0;
+    storeZeroToFloatParam((void *)(state + 0xc));
+    s16toFloat((void *)(state + 0xc), *(s16 *)(setup + 0x1a));
+    *(s16 *)obj = (s16)((s8)*(s8 *)(setup + 0x18) << 8);
+    (*(void (**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
+        state + 0x20, obj, lbl_803E6CD0, &one, 0);
+    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x88);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x90);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x8c);
+}
+#pragma scheduling on
+#pragma peephole on
