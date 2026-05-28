@@ -148,7 +148,7 @@ extern void Obj_FreeObject(int obj);
 extern void mm_free(void *ptr);
 extern void storeZeroToFloatParam(void *timer);
 extern void **gGameUIInterface;
-extern void gmmazewell_clearPendingTriggerCallback(void);
+extern int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg);
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern void explodeplan_updateTriggerCallback(void);
@@ -161,6 +161,17 @@ extern void modelLightStruct_setField50(void *light, int v);
 extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
 extern void lightSetField2FB(void *handle, int v);
 extern int *objFindTexture(int obj, int idx, int p3);
+extern void buttonDisable(int index, u32 flags);
+extern void **gObjectTriggerInterface;
+extern void *gHighTopStateHandlers[];
+extern void *gHighTopDefaultStateHandler;
+
+extern int hightop_stateHandler01();
+extern int hightop_stateHandler02();
+extern int hightop_stateHandler04();
+extern int hightop_stateHandler07();
+extern int hightop_stateHandler09();
+extern int hightop_stateHandler10();
 
 typedef struct {
     u8 b0 : 1;
@@ -510,6 +521,44 @@ void drcagewith_free(int obj, int arg) {
     ObjGroup_RemoveObject(obj, 0x18);
 }
 
+void ktrexlevel_updatePathGameBits(void) {
+    if (GameBit_Get(0x55a) != 0) {
+        GameBit_Set(0x54a, 2);
+        GameBit_Set(0x54e, 2);
+        GameBit_Set(0x552, 1);
+        GameBit_Set(0x556, 1);
+    } else if (GameBit_Get(0x55b) != 0) {
+        GameBit_Set(0x54a, 1);
+        GameBit_Set(0x54e, 1);
+        GameBit_Set(0x552, 2);
+        GameBit_Set(0x556, 2);
+    }
+}
+
+int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int i;
+    for (i = 0; i < arg[0x8b]; i++) {
+        if (arg[i + 0x81] == 1 && *(int *)(p + 0x4) != -1) {
+            (*(void (**)(int, int, int, int))((char *)*gGameUIInterface + 0x38))(*(int *)(p + 0x4), 0x14, 0x8c, 0);
+            *(int *)(p + 0x4) = -1;
+        }
+    }
+    return 0;
+}
+
+int kytesmum_spawnInteractionCallback(int obj) {
+    Obj_GetPlayerObject();
+    if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
+        buttonDisable(0, 0x100);
+        if ((*(int (**)(void *))((char *)*gGameUIInterface + 0x1c))(*gGameUIInterface) == 0) {
+            (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(0, obj, -1);
+        }
+        return 0;
+    }
+    return 0;
+}
+
 int drgenerator_eventCallback(int obj, int unused, u8 *arg) {
     int i;
     for (i = 0; i < arg[0x8b]; i++) {
@@ -627,6 +676,26 @@ int hightop_stateHandler08(int obj, u8 *p2) {
     }
     *(f32 *)((char *)state + 0xc30) -= (f32)(u32)framesThisStep;
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void hightop_initialise(void) {
+    void **t = gHighTopStateHandlers;
+    t[0] = (void *)hightop_stateHandler00;
+    t[1] = (void *)hightop_stateHandler01;
+    t[2] = (void *)hightop_stateHandler02;
+    t[3] = (void *)hightop_stateHandler03;
+    t[4] = (void *)hightop_stateHandler04;
+    t[5] = (void *)hightop_stateHandler05;
+    t[6] = (void *)hightop_stateHandler06;
+    t[7] = (void *)hightop_stateHandler07;
+    t[8] = (void *)hightop_stateHandler08;
+    t[9] = (void *)hightop_stateHandler09;
+    t[10] = (void *)hightop_stateHandler10;
+    gHighTopDefaultStateHandler = (void *)hightop_defaultStateHandler;
 }
 #pragma peephole reset
 #pragma scheduling reset
