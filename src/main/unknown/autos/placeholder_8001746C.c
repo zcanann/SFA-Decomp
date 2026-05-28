@@ -9029,6 +9029,82 @@ u32 GameBit_Get(int eventId) {
     return result;
 }
 
+extern int isSaveGameLoading(void);
+extern void gameBitFn_800ea2e0(int a);
+extern char lbl_802CA4E0[];
+extern void OSReport(char *fmt, ...);
+
+void GameBit_Set(int eventId, int value) {
+    s16 id;
+    u8 flags;
+    u8 *base;
+    int limit;
+    int start;
+    int end;
+    int i;
+    u32 bit;
+
+    if (isSaveGameLoading()) {
+        OSReport(lbl_802CA4E0, eventId, value);
+        return;
+    }
+    if (eventId & 0x8000) {
+        value = (value & 1) ^ 1;
+    }
+    id = (s16)eventId & 0xfff;
+    if (id == 0x95) {
+        return;
+    }
+    if (id == 0x96) {
+        return;
+    }
+    if (eventId == -1) {
+        return;
+    }
+    if (id < 0 || id >= lbl_803DCAD8) {
+        return;
+    }
+    flags = lbl_803DCADC[id * 4 + 2];
+    switch (flags >> 6) {
+    case 0:
+        base = lbl_803DCAE0 + 0xef0;
+        limit = 0x80;
+        break;
+    case 1:
+        base = lbl_803DCAE0 + 0x564;
+        limit = 0x74;
+        break;
+    case 2:
+        base = lbl_803DCAE0 + 0x24;
+        limit = 0x144;
+        break;
+    case 3:
+        base = lbl_803DCAE0 + 0x5d8;
+        limit = 0xac;
+        break;
+    }
+    if (flags & 0x20) {
+        gameBitFn_800ea2e0(lbl_803DCADC[id * 4 + 3]);
+    }
+    start = *(u16 *)(lbl_803DCADC + id * 4);
+    bit = 1;
+    end = (lbl_803DCADC[id * 4 + 2] & 0x1f) + start + 1;
+    for (i = start; i < end; i++) {
+        int byteIdx = i >> 3;
+        int mask;
+        if (byteIdx >= limit) {
+            break;
+        }
+        mask = 1 << (i & 7);
+        if (value & bit) {
+            base[byteIdx] |= mask;
+        } else {
+            base[byteIdx] &= ~mask;
+        }
+        bit <<= 1;
+    }
+}
+
 void copyMatrix44(f32 *src, f32 *dst) {
     dst[0] = src[0];
     dst[1] = src[1];
