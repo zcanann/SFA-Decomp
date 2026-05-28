@@ -10048,3 +10048,54 @@ int fn_802ADC08(int obj, int inner, int p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_8029B9FC(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int v;
+
+    if (*(u8 *)((char *)state + 0x349) != 1 && *(s16 *)((char *)state + 0x274) != 0x26) {
+        if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+            *(u8 *)((char *)inner + 0x8b4) = 0;
+            ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+        }
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return 2;
+    }
+    v = ((int (*)(int, int, int, f32))fn_802AC7DC)(obj, state, inner, fv);
+    if (v != 0) {
+        if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+            *(u8 *)((char *)inner + 0x8b4) = 1;
+            ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+        }
+        *(int *)((char *)state + 0x2d0) = 0;
+        *(u8 *)((char *)state + 0x349) = 0;
+        (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+        return v;
+    }
+    if (*(s16 *)((char *)state + 0x274) == 0x26 || ((ByteFlags *)((char *)inner + 0x3f6))->b20) {
+        return 0;
+    }
+    if (*(s16 *)((char *)state + 0x274) != 0x39) {
+        if ((getButtons_80014dd8(0) & 0x20) != 0) {
+            ((ByteFlags *)((char *)inner + 0x3f6))->b20 = 1;
+            *(int *)((char *)state + 0x308) = (int)fn_8029782C;
+            return 0x3a;
+        }
+    }
+    if (*(s16 *)((char *)state + 0x274) == 0x39) {
+        return 0;
+    }
+    if ((*(int *)((char *)state + 0x31c) & 0x100) && lbl_803DE44C != NULL
+        && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+        *(u8 *)((char *)inner + 0x8b4) = 4;
+        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+    }
+    v = fn_80299E44(obj, state, fv);
+    if (v != 0) return v;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
