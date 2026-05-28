@@ -9042,6 +9042,39 @@ void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 w
 }
 #pragma scheduling reset
 
+extern f32 lbl_803DE874;
+extern f32 lbl_803DE878;
+extern f32 lbl_803DE87C;
+
+#pragma peephole off
+void ObjModel_AdvanceBlendChannels(u8 *model, f32 dt) {
+    int i;
+    u8 *ch;
+    if (*(void **)(*(u8 **)model + 0xdc) == NULL) {
+        return;
+    }
+    for (i = 0; i < 3; i++) {
+        ch = *(u8 **)(model + 0x28) + i * 0x10;
+        if ((s8)ch[0xc] == -1 && (s8)ch[0xd] == -1) {
+            continue;
+        }
+        if (ch[0xe] & 1) {
+            continue;
+        }
+        *(f32 *)(ch + 0x0) = *(f32 *)(ch + 0x8) * dt + *(f32 *)(ch + 0x0);
+        if (*(f32 *)(ch + 0x0) >= lbl_803DE874) {
+            *(f32 *)(ch + 0x0) = lbl_803DE874;
+            *(f32 *)(ch + 0x8) = lbl_803DE878;
+            ch[0xe] &= ~4;
+        } else if (*(f32 *)(ch + 0x0) <= lbl_803DE87C) {
+            *(f32 *)(ch + 0x0) = lbl_803DE87C;
+            *(f32 *)(ch + 0x8) = lbl_803DE878;
+            ch[0xe] &= ~4;
+        }
+    }
+}
+#pragma peephole reset
+
 extern void *modelLoadFn_80025ae4(u8 *p, int b, int isType1, int c);
 extern void modelLoadColorFn_80024ec8(void *m, void *data);
 extern void ObjModel_RelocateAnimData(u8 *p, void *m);
