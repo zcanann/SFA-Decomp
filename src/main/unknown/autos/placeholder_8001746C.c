@@ -7034,7 +7034,7 @@ void ObjModel_CopyJointTranslation(u8 *model, int jointIndex, f32 *out) {
         jointCount = 1;
     }
 
-    if (jointIndex >= jointCount) {
+    if (jointIndex >= (int)jointCount) {
         jointIndex = 0;
     }
 
@@ -7872,7 +7872,10 @@ extern s16 lbl_803DC9A8;
 extern int lbl_803DC9C8;
 typedef struct {
     int v;
-    u8 _4[0x10];
+    int f4;
+    int f8;
+    int fc;
+    int f10;
 } GameTextSlot;
 extern GameTextSlot lbl_8033A540[];
 
@@ -8150,5 +8153,116 @@ void lightDistAttenFn_8001dc38(u8 *obj, f32 a, f32 b) {
     *(f32 *)(obj + 0x144) = b;
     GXInitLightDistAttn(obj + 0x68, *(f32 *)(obj + 0x140), lbl_803DE758, 2);
     GXGetLightAttnK(obj + 0x68, (f32 *)(obj + 0x124), (f32 *)(obj + 0x128), (f32 *)(obj + 0x12c));
+}
+#pragma pop
+
+extern u8 lbl_803DC9A7;
+extern u8 lbl_803DC9A6;
+extern u8 lbl_803DC9A5;
+extern u8 lbl_803DC9A4;
+extern u8 lbl_802C7400[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void mtx44Transpose(f32 *src, f32 *dst) {
+    dst[0] = src[0];
+    dst[1] = src[4];
+    dst[2] = src[8];
+    dst[4] = src[1];
+    dst[5] = src[5];
+    dst[6] = src[9];
+    dst[8] = src[2];
+    dst[9] = src[6];
+    dst[10] = src[10];
+    dst[3] = src[12];
+    dst[7] = src[13];
+    dst[11] = src[14];
+}
+
+void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz) {
+    *ox = m[12] + (m[0] * x + m[4] * y + m[8] * z);
+    *oy = m[13] + (m[1] * x + m[5] * y + m[9] * z);
+    *oz = m[14] + (m[2] * x + m[6] * y + m[10] * z);
+}
+
+void objFn_8002b67c(u8 *obj) {
+    u8 *dst;
+    u8 *src;
+    int idx;
+
+    if (obj == NULL) {
+        return;
+    }
+    dst = *(u8 **)(obj + 0x78);
+    if (dst == NULL) {
+        return;
+    }
+    src = *(u8 **)(*(u8 **)(obj + 0x50) + 0x40);
+    idx = obj[0xe4];
+    src += idx * 0x18;
+    dst += idx * 5;
+    dst[0] = src[0xc];
+    dst[1] = src[0xd];
+    dst[2] = src[0xe];
+    dst[3] = src[0xf];
+    dst[4] = src[0x10];
+}
+
+void lightFn_8001d6b0(u8 *obj) {
+    s16 v;
+
+    if (obj[0x2f8] == 0) {
+        return;
+    }
+    if (obj[0x4c] == 0) {
+        return;
+    }
+    v = obj[0x2f9] + *(s8 *)(obj + 0x2fa);
+    if (v < 0) {
+        v = 0;
+        obj[0x2fa] = 0;
+    } else if (v > 0xff) {
+        v = 0xff;
+        obj[0x2fa] = 0;
+    }
+    obj[0x2f9] = v;
+}
+
+void gameTextSetColor(u8 r, u8 g, u8 b, u8 a) {
+    if (gameTextDrawFunc != NULL) {
+        lbl_803DC9A7 = r;
+        lbl_803DC9A6 = g;
+        lbl_803DC9A5 = b;
+        lbl_803DC9A4 = a;
+    } else {
+        int i = lbl_803DC9C8;
+        GameTextSlot *s;
+        lbl_803DC9C8 = i + 1;
+        s = &lbl_8033A540[i];
+        s->v = 3;
+        s->f4 = r;
+        s->f8 = g;
+        s->fc = b;
+        s->f10 = a;
+    }
+}
+
+void gameTextSetWindowStrPos(int idx, int x, int y) {
+    if (gameTextDrawFunc != NULL) {
+        s16 sx = x;
+        u8 *p = lbl_802C7400 + idx * 0x20;
+        *(s16 *)(p + 0x18) = sx;
+        *(s16 *)(p + 0x1a) = y;
+    } else {
+        int i = lbl_803DC9C8;
+        GameTextSlot *s;
+        lbl_803DC9C8 = i + 1;
+        s = &lbl_8033A540[i];
+        s->v = 4;
+        s->f4 = idx;
+        s->f8 = x;
+        s->fc = y;
+    }
 }
 #pragma pop
