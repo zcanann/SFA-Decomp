@@ -6399,6 +6399,8 @@ extern f32 lbl_803E7F18;
 extern f32 lbl_803E7F1C;
 extern f32 lbl_803E7F24;
 extern f32 lbl_803E7FC0;
+extern f32 lbl_803E7F0C;
+extern int audioPickSoundEffect_8006ed24(u8 id, int bank);
 
 typedef struct {
     u8 pad[0x7ac];
@@ -8476,6 +8478,72 @@ int fn_8029D250(int obj, int state, f32 fv)
     if (*(s8 *)((char *)state + 0x346) != 0) {
         *(int *)((char *)state + 0x308) = (int)fn_802A514C;
         return 2;
+    }
+    return 0;
+}
+
+int fn_80297854(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int r;
+    f32 k;
+    s16 hdr;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, lbl_803336BC[*(s16 *)((char *)lbl_80333714 + 0x4d2)],
+                               lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F0C;
+        k = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x294) = k;
+        *(f32 *)((char *)state + 0x284) = k;
+        *(f32 *)((char *)state + 0x280) = k;
+        *(f32 *)((char *)obj + 0x24) = k;
+        *(f32 *)((char *)obj + 0x28) = k;
+        *(f32 *)((char *)obj + 0x2c) = k;
+    }
+    r = fn_8029B9FC(obj, state, fv);
+    if (r != 0) {
+        return r;
+    }
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x30)))(obj, state, fv, 0x10);
+    hdr = *(s16 *)obj;
+    *(s16 *)((char *)inner + 0x484) = hdr;
+    *(s16 *)((char *)inner + 0x478) = hdr;
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
+    if (*(int *)((char *)state + 0x314) & 0x200) {
+        doRumble(lbl_803E7F10);
+        Sfx_PlayFromObject(obj, 0x3cd);
+        *(u16 *)((char *)inner + 0x8d8) |= 4;
+    }
+    if ((*(u8 *)((char *)state + 0x356) & 1) == 0 &&
+        *(f32 *)((char *)obj + 0x98) > lbl_803E7F14) {
+        Sfx_PlayFromObject(obj, 0x1b);
+        *(u8 *)((char *)state + 0x356) |= 1;
+    }
+    if ((*(u8 *)((char *)state + 0x356) & 2) == 0 &&
+        *(f32 *)((char *)obj + 0x98) > lbl_803E7F18) {
+        Sfx_PlayFromObject(obj, audioPickSoundEffect_8006ed24(*(u8 *)((char *)inner + 0x86c),
+                                                              *(u8 *)((char *)inner + 0x8a5)));
+        *(u8 *)((char *)state + 0x356) |= 2;
+    }
+    if (*(s8 *)((char *)state + 0x346) != 0) {
+        *(int *)((char *)state + 0x308) = (int)fn_8029C8C8;
+        return 0x25;
+    }
+    if (*(f32 *)((char *)obj + 0x98) > lbl_803E7F1C) {
+        if (*(u8 *)((char *)state + 0x349) != 1) {
+            if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                *(u8 *)((char *)inner + 0x8b4) = 0;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+            }
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return -1;
+        }
+        r = fn_80299E44(obj, state, fv);
+        if (r != 0) {
+            return r;
+        }
+        return 0;
     }
     return 0;
 }
