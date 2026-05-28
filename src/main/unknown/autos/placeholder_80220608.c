@@ -371,7 +371,9 @@ extern f32 lbl_803E6DB8;
 extern f32 lbl_803E6DC0;
 extern f32 lbl_803E6DD0;
 extern f32 lbl_803E6DD4;
+extern f32 lbl_803E6DD8;
 extern void fn_8005B0A8(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z);
+extern void gameTimerStop(void);
 
 #pragma peephole off
 #pragma scheduling off
@@ -498,6 +500,40 @@ void wclevelcont_setScale(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
 }
 #pragma scheduling on
 #pragma peephole on
+
+int wclevelcont_getExtraSize(void) { return 0x1c; }
+int wclevelcont_getObjectTypeId(void) { return 0; }
+#pragma scheduling off
+void wclevelcont_free(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    u8 mode;
+
+    ObjGroup_RemoveObject(obj, 9);
+    mode = *(u8 *)(state + 0xc);
+    if (mode == 1) {
+        GameBit_Set(0x7ef, 0);
+        GameBit_Set(0x7ed, 0);
+        GameBit_Set(0xba6, 0);
+        GameBit_Set(0xedd, 0);
+    } else if (mode == 2) {
+        GameBit_Set(0x7f0, 0);
+        GameBit_Set(0x7ee, 0);
+        GameBit_Set(0xba6, 0);
+        GameBit_Set(0xedc, 0);
+    }
+    gameTimerStop();
+}
+#pragma scheduling on
+#pragma peephole off
+void wclevelcont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6DD8);
+    }
+}
+#pragma peephole on
+void wclevelcont_hitDetect(void) {}
 
 #pragma scheduling off
 int wcbeacon_aButtonCallback(int obj)
