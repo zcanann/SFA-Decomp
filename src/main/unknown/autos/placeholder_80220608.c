@@ -5185,6 +5185,38 @@ void fn_8022BCD0(int p, int q) {
 #pragma scheduling reset
 #pragma peephole reset
 
+extern void warpToMap(int map, int p2);
+
+#pragma scheduling off
+void fn_8022C680(int obj) {
+    switch ((s8) * (u8 *)(obj + 0xac)) {
+    case 0x3a:
+        if (GameBit_Get(0xc85) != 0) {
+            GameBit_Set(0x405, 0);
+            (*(void (**)(int, int))(*gMapEventInterface + 0x44))(0xb, 5);
+            (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xb, 0xa, 1);
+            (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xb, 0xb, 1);
+            warpToMap(0x22, 0);
+        } else {
+            warpToMap(0x6c, 0);
+        }
+        break;
+    case 0x3b:
+        warpToMap(0x77, 0);
+        break;
+    case 0x3d:
+        warpToMap(0x78, 0);
+        break;
+    case 0x3c:
+        warpToMap(0x63, 0);
+        break;
+    case 0x3e:
+        warpToMap(0x79, 0);
+        break;
+    }
+}
+#pragma scheduling reset
+
 void fn_8022D6D0(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
