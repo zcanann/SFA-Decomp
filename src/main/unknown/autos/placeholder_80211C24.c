@@ -4377,6 +4377,81 @@ int ktrex_stateHandlerB02(int obj, int runtime) {
 }
 #pragma scheduling reset
 
+extern f32 lbl_803E684C;
+extern f32 lbl_803E6850;
+extern f32 lbl_803E67F0;
+extern int allocModelStruct_800139e8(int a, int b);
+extern int Resource_Acquire(int a, int b);
+extern int mapBlockFn_800592e4(void);
+extern void streamFn_8000a380(int a, int b, int c);
+
+#pragma scheduling off
+void ktrex_init(int obj, char *arg) {
+    int i;
+    int cp;
+    gKTRexRuntime = *(void **)((char *)obj + 0xb8);
+    (*(void (**)(int, char *, void *, int, int, int, int, f32))((char *)*gBaddieControlInterface + 0x58))(
+        obj, arg, gKTRexRuntime, 9, 0xc, 0x100, 0x10 | (arg != 0), lbl_803E684C);
+    *(void **)((char *)obj + 0xbc) = (void *)ktrex_animEventCallback;
+    (*(void (**)(int, void *, int))((char *)*gPlayerInterface + 0x14))(obj, gKTRexRuntime, 0);
+    *(s16 *)((char *)gKTRexRuntime + 0x270) = 2;
+    *(int *)((char *)gKTRexRuntime + 0x2d0) = 0;
+    *(u8 *)((char *)gKTRexRuntime + 0x25f) = 0;
+    *(u8 *)((char *)gKTRexRuntime + 0x349) = 0;
+    *(u8 *)((char *)obj + 0xaf) |= 0x88;
+    ObjHits_EnableObject(obj);
+    if (*(int *)((char *)obj + 0x64) != 0) {
+        *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x810;
+    }
+    gKTRexState = *(void **)((char *)gKTRexRuntime + 0x40c);
+    *(int *)gKTRexState = allocModelStruct_800139e8(4, 4);
+    *(s16 *)obj = (s16)((s8)arg[0x2a] << 8);
+    *(s16 *)((char *)gKTRexState + 0xf8) = (s16)((s8)arg[0x2a] << 8);
+    for (i = 0; i < 4; i++) {
+        cp = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(*(int *)((char *)lbl_8032A510 + 0x4c + i * 4));
+        if (cp != 0) {
+            *(f32 *)((char *)gKTRexState + i * 4 + 0x10) = *(f32 *)((char *)cp + 0x8);
+            *(f32 *)((char *)gKTRexState + i * 4 + 0x20) = *(f32 *)((char *)cp + 0xc);
+            *(f32 *)((char *)gKTRexState + i * 4 + 0x30) = *(f32 *)((char *)cp + 0x10);
+            cp = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(*(int *)((char *)lbl_8032A510 + 0x3c + i * 4));
+            *(f32 *)((char *)gKTRexState + i * 4 + 0x40) = *(f32 *)((char *)cp + 0x8);
+            *(f32 *)((char *)gKTRexState + i * 4 + 0x50) = *(f32 *)((char *)cp + 0xc);
+            *(f32 *)((char *)gKTRexState + i * 4 + 0x60) = *(f32 *)((char *)cp + 0x10);
+            cp = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(*(int *)((char *)lbl_8032A510 + 0x6c + i * 4));
+            *(f32 *)((char *)gKTRexState + i * 4 + 0x70) = *(f32 *)((char *)cp + 0x8);
+            *(f32 *)((char *)gKTRexState + i * 4 + 0x80) = *(f32 *)((char *)cp + 0xc);
+            *(f32 *)((char *)gKTRexState + i * 4 + 0x90) = *(f32 *)((char *)cp + 0x10);
+            cp = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(*(int *)((char *)lbl_8032A510 + 0x5c + i * 4));
+            *(f32 *)((char *)gKTRexState + i * 4 + 0xa0) = *(f32 *)((char *)cp + 0x8);
+            *(f32 *)((char *)gKTRexState + i * 4 + 0xb0) = *(f32 *)((char *)cp + 0xc);
+            *(f32 *)((char *)gKTRexState + i * 4 + 0xc0) = *(f32 *)((char *)cp + 0x10);
+        }
+    }
+    *(void **)((char *)gKTRexState + 0xd0) = (char *)gKTRexState + 0x10;
+    *(void **)((char *)gKTRexState + 0xd4) = (char *)gKTRexState + 0x20;
+    *(void **)((char *)gKTRexState + 0xd8) = (char *)gKTRexState + 0x30;
+    *(void **)((char *)gKTRexState + 0xdc) = (char *)gKTRexState + 0x40;
+    *(void **)((char *)gKTRexState + 0xe0) = (char *)gKTRexState + 0x50;
+    *(void **)((char *)gKTRexState + 0xe4) = (char *)gKTRexState + 0x60;
+    *(u8 *)((char *)gKTRexState + 0x102) = 4;
+    *(u8 *)((char *)gKTRexRuntime + 0x354) = 3;
+    lbl_803DDD48 = (void *)Resource_Acquire(0x5a, 1);
+    *(int *)((char *)obj + 0xf8) = 0;
+    lbl_803DDD50 = (void *)mapBlockFn_800592e4();
+    *(void **)((char *)gKTRexState + 0x178) = objCreateLight(0, 1);
+    if (*(void **)((char *)gKTRexState + 0x178) != 0) {
+        modelLightStruct_setField50(*(void **)((char *)gKTRexState + 0x178), 2);
+        lightVecFn_8001dd88(*(void **)((char *)gKTRexState + 0x178), *(f32 *)((char *)obj + 0xc),
+            *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14));
+        modelLightStruct_setColorsA8AC(*(void **)((char *)gKTRexState + 0x178), 0xff, 0, 0, 0);
+        lightDistAttenFn_8001dc38(*(void **)((char *)gKTRexState + 0x178), lbl_803E6850, lbl_803E67F0);
+        fn_8001D730(*(void **)((char *)gKTRexState + 0x178), 0, 0xff, 0, 0, 0x50, lbl_803E67F0);
+        fn_8001D714(*(void **)((char *)gKTRexState + 0x178), lbl_803E67BC);
+    }
+    streamFn_8000a380(3, 2, 0x1f4);
+}
+#pragma scheduling reset
+
 extern int Stack_IsFull(int stack);
 extern void Stack_Push(int stack, int *val);
 
