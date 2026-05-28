@@ -263,6 +263,14 @@ extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);
 
+extern int fn_80080150(void *timer);
+extern void s16toFloat(void *timer, int v);
+extern int timerCountDown(void *timer);
+extern void objRenderFn_80041018(int obj);
+extern f32 lbl_803E69E4;
+extern f32 lbl_803E6A18;
+extern f32 lbl_803E6A1C;
+
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;
@@ -1444,6 +1452,75 @@ void hightop_initialise(void) {
     t[9] = (void *)hightop_stateHandler09;
     t[10] = (void *)hightop_stateHandler10;
     gHighTopDefaultStateHandler = (void *)hightop_defaultStateHandler;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void drchimmey_update(int obj) {
+    int q = *(int *)((char *)obj + 0x4c);
+    char *p = *(char **)((char *)obj + 0xb8);
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+    if (*(s16 *)(q + 0x20) != -1 && GameBit_Get(*(s16 *)(q + 0x20)) == 0) {
+        return;
+    }
+    if (fn_80080150((void *)(p + 0x10)) == 0) {
+        if ((s8)p[0x16] <= 0) {
+            p[0x17] = 1;
+            s16toFloat((void *)(p + 0x10), (int)*(f32 *)(p + 0xc));
+            GameBit_Set(*(s16 *)(p + 0x14), 1);
+        } else {
+            int *tricky = getTrickyObject();
+            if (tricky != 0) {
+                if ((*(u8 *)((char *)obj + 0xaf) & 4) != 0) {
+                    (*(void (**)(int *, int, int, int))((char *)*(void **)*(void **)((char *)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+                }
+                *(u8 *)((char *)obj + 0xaf) &= ~8;
+                objRenderFn_80041018(obj);
+            }
+        }
+    }
+    if (timerCountDown((void *)(p + 0x10)) != 0) {
+        *(int *)p = 0;
+        *(f32 *)(p + 0x10) = lbl_803E69E4;
+        p[0x17] = 0;
+        p[0x16] = 1;
+        GameBit_Set(*(s16 *)(p + 0x14), 0);
+        GameBit_Set(0xea4, 0);
+    }
+}
+
+void drcagewith_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    s16 type;
+    f32 fz;
+    *(void **)((char *)obj + 0xbc) = (void *)drcagewith_toggleRopeStateCallback;
+    type = *(s16 *)((char *)obj + 0x46);
+    if (type == 0x86a || type == 0x86b) {
+        if (GameBit_Get(0x609) == 0) {
+            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        }
+    } else {
+        ObjHits_EnableObject(obj);
+        if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
+            ObjHits_DisableObject(obj);
+            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+            ((BitFlags8 *)(p + 0x31))->b0 = 1;
+        } else {
+            GameBit_Set(0x7aa, 5);
+        }
+        *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
+        *(f32 *)(p + 0x8) = (f32)*(s16 *)(arg + 0x1c);
+        *(f32 *)(p + 0x10) = (f32)*(s16 *)(arg + 0x1a) / lbl_803E6A18;
+        *(int *)(p + 0x4) = 0;
+        fz = lbl_803E6A1C;
+        *(f32 *)(p + 0x14) = fz;
+        *(f32 *)(p + 0x18) = fz;
+        *(f32 *)(p + 0x1c) = fz;
+        *(f32 *)(p + 0x20) = fz;
+        ObjGroup_AddObject(obj, 0x18);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
