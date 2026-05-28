@@ -10931,6 +10931,46 @@ extern f32 lbl_803DAEF0[];
 extern f32 lbl_803E7FFC;
 extern int fn_80295674(int obj, int inner);
 
+extern f32 lbl_803E7EC8;
+extern f32 lbl_803E7ECC;
+extern f32 lbl_803E7ED0;
+extern void PSMTXMultVec(f32 *m, f32 *src, f32 *dst);
+
+int fn_80295674(int obj, int inner)
+{
+    f32 outvec[3];
+    struct {
+        u8 pad[0xc];
+        f32 x;
+        f32 y;
+        f32 z;
+    } buf;
+    f32 mtx[12];
+    u8 cnt = *(u8 *)((char *)inner + 0x8b1);
+
+    if (cnt != 0) {
+        if (cnt & 1) {
+            int t;
+            memcpy(mtx, (void *)ObjPath_GetPointModelMtx(obj, 5), 0x30);
+            mtx[3] = lbl_803E7EA4;
+            mtx[7] = lbl_803E7EA4;
+            mtx[11] = lbl_803E7EA4;
+            buf.x = lbl_803E7EA4;
+            buf.y = lbl_803E7EA4;
+            t = *(u8 *)((char *)inner + 0x8b1);
+            buf.z = lbl_803E7EC8 * (f32)(int)randomGetRange(t + 4, t + 8);
+            PSMTXMultVec(mtx, &buf.x, outvec);
+            buf.x = lbl_803E7EA4;
+            buf.y = lbl_803E7ECC;
+            buf.z = lbl_803E7ED0;
+            ObjPath_GetPointWorldPosition(obj, 0xa, &buf.x, &buf.y, &buf.z, 1);
+            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                obj, 0x7e5, &buf, 0x200001, -1, (int)outvec);
+        }
+        *(u8 *)((char *)inner + 0x8b1) -= 1;
+    }
+}
+
 void fn_802AAF80(int obj, int inner, int a, int b, int c)
 {
     int v;
