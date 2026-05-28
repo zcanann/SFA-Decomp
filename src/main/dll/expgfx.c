@@ -715,6 +715,7 @@ int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType
 #pragma peephole off
 int expgfx_updateSourceFrameFlags(void *sourceObject)
 {
+  ExpgfxSourceObject *source;
   ExpgfxTrackedSourceFrameMask *mask;
   u32 bit;
   u32 highBits;
@@ -722,19 +723,22 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
   u32 *poolSourceIds;
   int poolIndex;
   u8 *poolFrameFlags;
+  int signedPoolIndex;
 
   result = EXPGFX_SOURCE_FRAME_STATE_NONE;
   lbl_803DD253 = 0;
   poolIndex = 0;
+  source = (ExpgfxSourceObject *)sourceObject;
   poolSourceIds = gExpgfxTrackedPoolSourceIds;
   poolFrameFlags = gExpgfxStaticPoolFrameFlags;
 
   while ((s16)poolIndex < EXPGFX_POOL_COUNT) {
-    if ((((ExpgfxSourceObject *)sourceObject)->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) ||
+    if ((source->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) ||
         (*poolSourceIds == (u32)sourceObject)) {
-      bit = 1 << ((s16)poolIndex >> 1);
+      signedPoolIndex = (s16)poolIndex;
+      bit = 1 << (signedPoolIndex >> 1);
       highBits = (u32)((s32)bit >> 31);
-      mask = &gExpgfxTrackedSourceFrameMasks[poolIndex & 1];
+      mask = &gExpgfxTrackedSourceFrameMasks[signedPoolIndex & 1];
       if ((CONCAT44(mask->high, mask->low) & CONCAT44(highBits, bit)) != 0) {
         *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
         if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A) {
