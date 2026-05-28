@@ -8146,10 +8146,39 @@ int gameTextFn_8001bcb4(void) {
     return 0;
 }
 
+#pragma dont_inline on
 void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst) {
     Mtx mtx;
     Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
     PSMTXMultVecSR((f32 *)mtx, src, dst);
+}
+#pragma dont_inline reset
+
+extern void Vec_normalize(f32 *dst, f32 *src);
+extern f32 *Camera_GetViewMatrix(void);
+
+void modelStruct2_setVectors(u8 *s, f32 x, f32 y, f32 z) {
+    f32 *view;
+    if (*(void **)s != NULL) {
+        *(f32 *)(s + 0x28) = x;
+        *(f32 *)(s + 0x2c) = y;
+        *(f32 *)(s + 0x30) = z;
+        Vec_normalize((f32 *)(s + 0x28), (f32 *)(s + 0x28));
+        Obj_TransformLocalVectorByWorldMatrix(*(void **)s, (f32 *)(s + 0x28), (f32 *)(s + 0x34));
+    } else {
+        *(f32 *)(s + 0x34) = x;
+        *(f32 *)(s + 0x38) = y;
+        *(f32 *)(s + 0x3c) = z;
+        Vec_normalize((f32 *)(s + 0x34), (f32 *)(s + 0x34));
+    }
+    view = Camera_GetViewMatrix();
+    if (*(int *)(s + 0x60) == 0) {
+        PSMTXMultVecSR(view, (f32 *)(s + 0x34), (f32 *)(s + 0x40));
+    } else {
+        *(int *)(s + 0x40) = *(int *)(s + 0x34);
+        *(int *)(s + 0x44) = *(int *)(s + 0x38);
+        *(int *)(s + 0x48) = *(int *)(s + 0x3c);
+    }
 }
 
 int gameBitDecrement(int bit) {
