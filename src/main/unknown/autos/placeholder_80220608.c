@@ -5884,6 +5884,89 @@ void fn_8023A87C(int p1, int p2)
     }
 }
 
+extern int lbl_803DC4D8;
+extern int lbl_803DC4DC;
+extern int lbl_803DC4E0;
+extern f32 lbl_803DC4E4;
+extern int lbl_803DDDBC;
+extern int lbl_803DDDC0;
+extern s16 lbl_803DDDC4;
+extern s16 lbl_803DDDC6;
+extern f32 lbl_803E74A0;
+extern f32 lbl_803E74A4;
+extern f32 lbl_803E74A8;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_8023A268(int p1, int p2)
+{
+    f32 dx, dz, dist;
+    int yaw;
+    int newObj;
+    int proj;
+
+    if (Obj_IsLoadingLocked()) {
+        dx = *(f32 *)(p2 + 0xc0) - *(f32 *)(*(int *)p2 + 0xc);
+        dz = *(f32 *)(p2 + 0xc8) - *(f32 *)(*(int *)p2 + 0x14);
+        dist = sqrtf(dx * dx + dz * dz);
+        yaw = (u16)getAngle(dx, dz);
+        lbl_803DDDBC = (u16)getAngle(*(f32 *)(p2 + 0xc4) - *(f32 *)(*(int *)p2 + 0x10), dist) >> 8;
+        newObj = Obj_AllocObjectSetup(0x20, 0x7e4);
+        *(f32 *)(newObj + 8) = *(f32 *)(p2 + 0xc0);
+        *(f32 *)(newObj + 0xc) = *(f32 *)(p2 + 0xc4);
+        *(f32 *)(newObj + 0x10) = *(f32 *)(p2 + 0xc8);
+        *(u8 *)(newObj + 0x1a) = (*(s16 *)p1 + yaw) >> 8;
+        *(u8 *)(newObj + 0x19) = lbl_803DDDBC;
+        *(u8 *)(newObj + 0x18) = 0;
+        *(u8 *)(newObj + 4) = 1;
+        *(u8 *)(newObj + 5) = 1;
+        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        if (proj != 0) {
+            arwprojectile_setLifetime(proj, lbl_803DC4DC);
+            arwprojectile_placeForward(proj, (f32)(u32)lbl_803DC4D8);
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_80239FCC(int p1, int p2)
+{
+    f32 ang;
+    int yaw;
+    int rndYaw;
+    int rndDur;
+    int newObj;
+    int proj;
+
+    if (Obj_IsLoadingLocked()) {
+        yaw = lbl_803DDDC4;
+        lbl_803DDDC0 = lbl_803DDDC6;
+        rndYaw = (s16)randomGetRange(-0x8000, 0x7fff);
+        rndDur = randomGetRange(0x64, 0x12c);
+        newObj = Obj_AllocObjectSetup(0x20, 0x859);
+        ang = lbl_803E74A0 * (f32)(u32)rndYaw / lbl_803E74A4;
+        *(f32 *)(newObj + 8) = (f32)(u32)rndDur * fn_80293E80(ang) + *(f32 *)(*(int *)p2 + 0xc);
+        *(f32 *)(newObj + 0xc) = (f32)(u32)rndDur * sin(ang) + *(f32 *)(*(int *)p2 + 0x10);
+        *(f32 *)(newObj + 0x10) = *(f32 *)(p2 + 0xc8) - lbl_803E74A8;
+        *(u8 *)(newObj + 0x1a) = (*(s16 *)p1 + yaw) >> 8;
+        *(u8 *)(newObj + 0x19) = lbl_803DDDC0;
+        *(u8 *)(newObj + 0x18) = 0;
+        *(u8 *)(newObj + 4) = 1;
+        *(u8 *)(newObj + 5) = 1;
+        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+        if (proj != 0) {
+            *(f32 *)(proj + 8) = lbl_803DC4E4;
+            arwprojectile_setLifetime(proj, lbl_803DC4E0);
+            arwprojectile_placeForward(proj, lbl_803E74AC);
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
