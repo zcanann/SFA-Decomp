@@ -2713,4 +2713,7 @@ main/unknown/autos/placeholder_802BB4B0.c:
 	.text       start:0x802BB4B0 end:0x802BB720
 
 main/unknown/autos/placeholder_802BBC10.c:
-	.text       start:0x802BB720 end:0x802C187C
+	.text       start:0x802BB720 end:0x802BF0C8
+
+main/dll/DR/dll_0078_DR_CloudRunner.c:
+	.text       start:0x802BF0C8 end:0x802C187C

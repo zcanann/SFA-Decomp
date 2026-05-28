@@ -816,6 +816,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_80295318.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_802BACC0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_802BBC10.c"),
+            Object(NonMatching, "main/dll/DR/dll_0078_DR_CloudRunner.c"),
             Object(NonMatching, "main/objanim.c"),
             Object(NonMatching, "main/lightmap.c"),
             Object(NonMatching, "main/textblock.c"),
