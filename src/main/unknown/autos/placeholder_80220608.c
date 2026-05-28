@@ -4534,6 +4534,69 @@ void earthwalker_init(int obj, int setup)
 #pragma scheduling on
 #pragma peephole on
 
+extern int Obj_IsObjectAlive(int obj);
+extern int Obj_GetPlayerObject(void);
+extern f32 lbl_803E6C24;
+extern f32 lbl_803E6C28;
+extern f32 lbl_803E6C2C;
+extern f32 lbl_803E6C30;
+extern f32 lbl_803E6C34;
+
+#pragma peephole off
+#pragma scheduling off
+void barrelgener_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int player = Obj_GetPlayerObject();
+
+    if ((u32)GameBit_Get(0xadb) == 0) {
+        if (Vec_distance(obj + 24, player + 24) < lbl_803E6C24) {
+            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+            GameBit_Set(0xadb, 1);
+        }
+    }
+    if (fn_80080150(state + 8) != 0) {
+        if (*(f32 *)(state + 8) <= lbl_803E6C28 && *(u8 *)(state + 4) == 0) {
+            *(u8 *)(state + 4) = 1;
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E6C2C, 0);
+            Sfx_PlayFromObject(obj, 808);
+            *(u8 *)(state + 0xc) = 0;
+        }
+        if (timerCountDown((void *)(state + 8)) != 0) {
+            if (Obj_IsObjectAlive(*(int *)(state + 0)) != 0) {
+                int o = *(int *)(state + 0);
+                f32 c2c;
+                *(f32 *)(o + 12) = *(f32 *)(obj + 12);
+                *(f32 *)(o + 16) = *(f32 *)(obj + 16);
+                *(f32 *)(o + 20) = *(f32 *)(obj + 20);
+                *(f32 *)(o + 128) = *(f32 *)(o + 12);
+                *(f32 *)(o + 132) = *(f32 *)(o + 16);
+                *(f32 *)(o + 136) = *(f32 *)(o + 20);
+                *(f32 *)(o + 24) = *(f32 *)(o + 12);
+                *(f32 *)(o + 28) = *(f32 *)(o + 16);
+                *(f32 *)(o + 32) = *(f32 *)(o + 20);
+                c2c = lbl_803E6C2C;
+                *(f32 *)(o + 44) = c2c;
+                *(f32 *)(o + 40) = c2c;
+                *(f32 *)(o + 36) = c2c;
+                ObjGroup_AddObject(o, 25);
+                *(int *)(state + 0) = 0;
+            }
+        }
+    }
+    if (*(u8 *)(state + 4) != 0) {
+        if (*(f32 *)(obj + 0x98) > lbl_803E6C30) {
+            if (*(u8 *)(state + 0xc) == 0) {
+                Sfx_PlayFromObject(obj, 809);
+                *(u8 *)(state + 0xc) = 1;
+            }
+        }
+        *(u8 *)(state + 4) = !ObjAnim_AdvanceCurrentMove(lbl_803E6C34, timeDelta, obj, 0);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
 extern int *gModgfxInterface;
 extern void Resource_Release(int handle);
 extern int Resource_Acquire(int id, int p2);
