@@ -93,6 +93,8 @@ extern u8 lbl_803DD15C;
 extern f32 lbl_803DD160;
 extern u8 lbl_803DD164;
 extern void *lbl_803DD168;
+extern u8 lbl_803DD170;
+extern u8 lbl_803DD174;
 extern u8 lbl_803DD178;
 extern s8 lbl_803DD113;
 extern u8 lbl_803DD114;
@@ -4890,6 +4892,48 @@ void fn_8008904C(u8 *red, u8 *green, u8 *blue)
     *red = 0xff;
     *green = 0xff;
     *blue = 0xff;
+}
+
+void fn_8008908C(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed,
+                 u8 *lightGreen, u8 *lightBlue)
+{
+    u8 *color;
+    u8 red;
+    u8 green;
+    u8 blue;
+
+    if (lbl_803DD15C != 0) {
+        red = lbl_803DD158;
+        *ambientRed = red;
+        *lightRed = red;
+        color = &lbl_803DD158;
+        green = color[1];
+        *ambientGreen = green;
+        *lightGreen = green;
+        blue = color[2];
+        *ambientBlue = blue;
+        *lightBlue = blue;
+        return;
+    }
+
+    if (lbl_803DD12C != NULL) {
+        *ambientRed = lbl_803DD174;
+        color = &lbl_803DD174;
+        *ambientGreen = color[1];
+        *ambientBlue = color[2];
+        *lightRed = lbl_803DD170;
+        color = &lbl_803DD170;
+        *lightGreen = color[1];
+        *lightBlue = color[2];
+        return;
+    }
+
+    *ambientRed = 0xff;
+    *ambientGreen = 0xff;
+    *ambientBlue = 0xff;
+    *lightRed = 0xff;
+    *lightGreen = 0xff;
+    *lightBlue = 0xff;
 }
 
 void *fn_8008912C(void)
