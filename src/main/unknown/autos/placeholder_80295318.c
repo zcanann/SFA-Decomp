@@ -7139,6 +7139,89 @@ void fn_802A93F4(int obj, int p2, int p3)
     *(s16 *)((char *)tex + 0xa) = 0;
 }
 
+void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
+{
+    void *vec;
+    s16 v;
+    f32 a, b, c;
+    int d, e, flag;
+    s16 angle;
+    int clamped;
+    int inner;
+    if (p8 != 0) {
+        vec = (void *)objModelGetVecFn_800395d8(p1, 0);
+        if (vec != NULL) {
+            v = *(s16 *)((char *)vec + 0x2);
+            if (v > 0) {
+                *(s16 *)((char *)vec + 0x2) = v - (int)(lbl_803E8050 * timeDelta);
+                if (*(s16 *)((char *)vec + 0x2) < 0) {
+                    *(s16 *)((char *)vec + 0x2) = 0;
+                }
+            } else {
+                *(s16 *)((char *)vec + 0x2) = v + (int)(lbl_803E8050 * timeDelta);
+                if (*(s16 *)((char *)vec + 0x2) > 0) {
+                    *(s16 *)((char *)vec + 0x2) = 0;
+                }
+            }
+        }
+        (*(void (*)(int, int, int, int, int, int))(*(int *)((char *)*(int *)*(int *)((char *)p3 + 0x68) + 0x10)))(
+            p3, p4, p5, p6, p7, -1);
+        *(f32 *)((char *)p1 + 0x8c) = *(f32 *)((char *)p1 + 0x18);
+        *(f32 *)((char *)p1 + 0x90) = *(f32 *)((char *)p1 + 0x1c);
+        *(f32 *)((char *)p1 + 0x94) = *(f32 *)((char *)p1 + 0x20);
+        *(f32 *)((char *)p1 + 0x80) = *(f32 *)((char *)p1 + 0xc);
+        *(f32 *)((char *)p1 + 0x84) = *(f32 *)((char *)p1 + 0x10);
+        *(f32 *)((char *)p1 + 0x88) = *(f32 *)((char *)p1 + 0x14);
+    }
+    (*(void (*)(int, f32 *, f32 *, f32 *))(*(int *)((char *)*(int *)*(int *)((char *)p3 + 0x68) + 0x28)))(
+        p3, &a, &b, &c);
+    *(f32 *)((char *)p1 + 0xc) = a;
+    *(f32 *)((char *)p1 + 0x10) = b;
+    *(f32 *)((char *)p1 + 0x14) = c;
+    inner = *(int *)((char *)p1 + 0xb8);
+    if (*(s16 *)((char *)inner + 0x274) == 0x18 || (*(u16 *)((char *)p1 + 0xb0) & 0x1000) != 0) {
+        *(s16 *)((char *)p1 + 0x2) = *(s16 *)((char *)p3 + 0x2);
+        *(s16 *)((char *)p1 + 0x4) = *(s16 *)((char *)p3 + 0x4);
+        *(s16 *)((char *)p2 + 0x478) = *(s16 *)((char *)p3 + 0x0);
+    } else {
+        flag = 1;
+        (*(void (*)(int, int, int *))(*(int *)((char *)*(int *)*(int *)((char *)p3 + 0x68) + 0x54)))(
+            p3, 2, &d);
+        angle = (s16)(*(s16 *)((char *)p2 + 0x478) - (u16)d);
+        if (angle > 0x8000) {
+            angle = angle - 0xFFFF;
+        }
+        if (angle < -0x8000) {
+            angle = angle + 0xFFFF;
+        }
+        (*(void (*)(int, int, int *))(*(int *)((char *)*(int *)*(int *)((char *)p3 + 0x68) + 0x54)))(
+            p3, 3, &e);
+        if (angle < (s16)-e) {
+            clamped = (s16)-e;
+        } else if (angle > (s16)e) {
+            clamped = (s16)e;
+        } else {
+            clamped = angle;
+        }
+        *(s16 *)((char *)p2 + 0x478) = (s16)d + clamped;
+        (*(void (*)(int, int, int *))(*(int *)((char *)*(int *)*(int *)((char *)p3 + 0x68) + 0x54)))(
+            p3, 4, &flag);
+        if (flag != 0) {
+            *(s16 *)((char *)p1 + 0x2) = *(s16 *)((char *)p3 + 0x2);
+            *(s16 *)((char *)p1 + 0x4) = *(s16 *)((char *)p3 + 0x4);
+        }
+    }
+    *(s16 *)((char *)p2 + 0x484) = *(s16 *)((char *)p2 + 0x478);
+    *(s16 *)((char *)p1 + 0x0) = *(s16 *)((char *)p2 + 0x478);
+    *(f32 *)((char *)p1 + 0x18) = *(f32 *)((char *)p1 + 0xc);
+    *(f32 *)((char *)p1 + 0x1c) = *(f32 *)((char *)p1 + 0x10);
+    *(f32 *)((char *)p1 + 0x20) = *(f32 *)((char *)p1 + 0x14);
+    *(f32 *)((char *)p1 + 0x24) = *(f32 *)((char *)p3 + 0x24);
+    *(f32 *)((char *)p1 + 0x28) = *(f32 *)((char *)p3 + 0x28);
+    *(f32 *)((char *)p1 + 0x2c) = *(f32 *)((char *)p3 + 0x2c);
+    fn_802AB5A4(p1, p2, 7);
+}
+
 int fn_802A9B1C(int obj, int p2, int p3)
 {
     int inner = *(int *)((char *)obj + 0xb8);
