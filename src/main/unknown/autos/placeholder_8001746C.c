@@ -8378,6 +8378,50 @@ void ObjModel_RelocateModelData(u8 *m) {
     }
 }
 
+void ObjModel_ResolveRenderOpTextures(u8 *m) {
+    int j, k;
+    u8 *op;
+    for (j = 0; j < m[0xf8]; j++) {
+        op = *(u8 **)(m + 0x38) + j * 0x44;
+        for (k = 0; k < op[0x41]; k++) {
+            u8 *e = op + k * 8;
+            if (*(int *)(e + 0x24) != -1) {
+                *(int *)(e + 0x24) = ((int *)*(u8 **)(m + 0x20))[*(int *)(e + 0x24)];
+            } else {
+                *(int *)(e + 0x24) = 0;
+            }
+        }
+        if (*(int *)(op + 0x34) != -1) {
+            *(int *)(op + 0x34) = ((int *)*(u8 **)(m + 0x20))[*(int *)(op + 0x34)];
+        } else {
+            *(int *)(op + 0x34) = 0;
+        }
+        if (*(int *)(op + 0x38) != -1) {
+            *(int *)(op + 0x38) = ((int *)*(u8 **)(m + 0x20))[*(int *)(op + 0x38)];
+        } else {
+            *(int *)(op + 0x38) = 0;
+        }
+        if (*(int *)(op + 0x1c) == -1) {
+            *(int *)(op + 0x1c) = 0;
+        } else if (*(int *)(op + 0x1c) == -2) {
+            *(int *)(op + 0x1c) = 0;
+        } else {
+            *(int *)(op + 0x1c) = 1;
+        }
+        if (*(int *)(op + 0x18) != -1) {
+            *(int *)(op + 0x18) = ((int *)*(u8 **)(m + 0x20))[*(int *)(op + 0x18)];
+        } else {
+            *(int *)(op + 0x18) = 0;
+        }
+        if (!(*(u16 *)(m + 0xe2) & 0xc)) {
+            *(int *)(op + 0x8) = 0;
+        }
+        if (!(*(u16 *)(m + 0xe2) & 0xe00)) {
+            *(int *)(op + 0x14) = 0;
+        }
+    }
+}
+
 void ObjModel_RelocateAnimData(u8 *m, u8 *dst) {
     int i;
     *(u8 **)(m + 0x94) = *(u8 **)(m + 0xa4);
@@ -9202,7 +9246,7 @@ void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
 
 extern void *ObjModel_LoadModelData(int id);
 extern void ObjModel_RelocateModelData(u8 *model);
-extern void ObjModel_ResolveRenderOpTextures(void *model);
+extern void ObjModel_ResolveRenderOpTextures(u8 *model);
 extern void modelLoadAnimations(void *model, int id, void *animBase);
 extern int modelLoad_calcSizes(void *model, int arg, void *out, int flag);
 extern int ModelList_getHeader(void *list, int index, void *out);
