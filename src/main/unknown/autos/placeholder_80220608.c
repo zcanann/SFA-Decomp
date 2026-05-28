@@ -378,6 +378,11 @@ extern u8 gameTimerIsRunning(void);
 extern int *gSHthorntailAnimationInterface;
 extern void Music_Trigger(int id, int p2);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
+extern f32 lbl_803E6DA8;
+extern void fn_8022578C(int obj, int state);
+extern void fn_802251B4(int obj, int state);
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern void skyFn_80088e54(int a, f32 b);
 
 #pragma peephole off
 #pragma scheduling off
@@ -540,6 +545,7 @@ void wclevelcont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void wclevelcont_hitDetect(void) {}
 #pragma peephole off
 #pragma scheduling off
+#pragma dont_inline on
 void wclevelcont_syncProgressBits(int obj)
 {
     int flag;
@@ -573,6 +579,41 @@ void wclevelcont_syncProgressBits(int obj)
     }
     GameBit_Set(0xf31, flag);
     SCGameBitLatch_Update(obj + 0x10, 0x80, -1, -1, 0xf31, 0xaf);
+}
+#pragma dont_inline reset
+void wclevelcont_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int hitOut;
+
+    if (*(int *)(obj + 0xf4) == 0) {
+        if ((u32)GameBit_Get(0xe05) == 0) {
+            getEnvfxActImmediately(obj, obj, 0x1fb, 0);
+            getEnvfxActImmediately(obj, obj, 0x1ff, 0);
+            getEnvfxActImmediately(obj, obj, 0x1fc, 0);
+            getEnvfxActImmediately(obj, obj, 0x1fd, 0);
+            skyFn_80088e54(0, lbl_803E6DA8);
+            GameBit_Set(0xe05, 1);
+        }
+        *(int *)(obj + 0xf4) = 1;
+    }
+    switch ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac))) {
+    case 1:
+    default:
+        fn_8022578C(obj, state);
+        break;
+    case 2:
+        fn_802251B4(obj, state);
+        break;
+    }
+    wclevelcont_syncProgressBits(state);
+    if ((*(int (**)(int *))(*gSHthorntailAnimationInterface + 0x24))(&hitOut)) {
+        GameBit_Set(0x7f3, 1);
+        GameBit_Set(0x7f1, 0);
+    } else {
+        GameBit_Set(0x7f3, 0);
+        GameBit_Set(0x7f1, 1);
+    }
 }
 #pragma scheduling on
 #pragma peephole on
