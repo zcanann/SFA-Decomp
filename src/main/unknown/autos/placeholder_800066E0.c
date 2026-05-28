@@ -3563,6 +3563,7 @@ void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, 
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
     s32 matrixIndex;
@@ -3577,6 +3578,7 @@ void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
         *outZ = z;
     }
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -7264,6 +7266,7 @@ s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
  * EN v1.0 Address: 0x8000B624
  * EN v1.0 Size: 112b
  */
+#pragma dont_inline on
 void Sfx_StopAllObjectSounds(void)
 {
     s32 i;
@@ -7279,6 +7282,7 @@ void Sfx_StopAllObjectSounds(void)
         objectChannel++;
     } while (i-- != 0);
 }
+#pragma dont_inline reset
 
 /*
  * Function: audioFn_8000b694
