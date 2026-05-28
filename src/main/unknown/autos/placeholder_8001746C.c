@@ -8582,6 +8582,40 @@ void *mmInitRegion(u8 *buf, int size, int numSlots) {
     return gMmRegionTable[regIdx].start;
 }
 
+extern u32 OSGetTick(void);
+extern void heapFree(int region, int slotIdx);
+extern char sMmFreeInvalidLocationError[];
+extern char sMmAllocFreeMessageBlock[];
+extern int lbl_803DCB34;
+extern void OSReport(char *fmt, ...);
+
+void mmFree(void *p) {
+    int region;
+    int i;
+    u8 *slot;
+    u8 *base;
+    lbl_803DCB34 = OSGetTick();
+    region = mmGetRegionForPtr(p);
+    if (region != -1) {
+        base = gMmRegionTable[region].start;
+        i = 0;
+        do {
+            slot = base + i * 0x1c;
+            if (*(void **)slot == p) {
+                s16 t = *(s16 *)(slot + 8);
+                if (t == 1 || t == 4) {
+                    heapFree(region, i);
+                } else {
+                    OSReport(sMmFreeInvalidLocationError, p);
+                }
+                return;
+            }
+            i = *(s16 *)(slot + 0xc);
+        } while (i != -1);
+    }
+    OSReport(sMmAllocFreeMessageBlock, p);
+}
+
 typedef struct {
     void *key;
     int size;
