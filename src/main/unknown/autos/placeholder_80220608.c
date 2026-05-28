@@ -745,6 +745,73 @@ void dll_2A4_hitDetect_nop(void) {}
 void dll_2A4_release_nop(void) {}
 void dll_2A4_initialise_nop(void) {}
 
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int lbl_803DDD90;
+extern int lbl_803DDD94;
+extern f32 lbl_803E7118;
+extern f32 lbl_803E711C;
+extern f32 lbl_803E7120;
+extern f32 lbl_803E7124;
+
+void dll_2A3_free(void) { lbl_803DDD90 = lbl_803DDD90 - 1; }
+
+void dll_2A3_render(int obj, int p2, int p3, int p4, int p5)
+{
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7118);
+}
+
+void dll_2A3_hitDetect(void) { lbl_803DDD94 = 0; }
+
+#pragma peephole off
+#pragma scheduling off
+void dll_2A3_update(int obj)
+{
+    f32 v;
+    int state = *(int *)(obj + 0xb8);
+
+    if (*(f32 *)state > lbl_803E711C) {
+        *(f32 *)state -= timeDelta;
+        if (*(f32 *)state <= lbl_803E711C) {
+            *(f32 *)state = lbl_803E711C;
+            Obj_FreeObject(obj);
+            return;
+        }
+    }
+
+    v = (f32)(u32) * (u8 *)(obj + 0x36) + lbl_803E7120 * timeDelta;
+    if (v > lbl_803E7124) {
+        v = lbl_803E7124;
+    }
+    *(u8 *)(obj + 0x36) = (u8)v;
+
+    *(s16 *)(obj + 0) = (s16)((f32) * (s16 *)(state + 4) * timeDelta + (f32) * (s16 *)(obj + 0));
+    *(s16 *)(obj + 2) = (s16)((f32) * (s16 *)(state + 6) * timeDelta + (f32) * (s16 *)(obj + 2));
+    *(s16 *)(obj + 4) = (s16)((f32) * (s16 *)(state + 8) * timeDelta + (f32) * (s16 *)(obj + 4));
+
+    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
+            *(f32 *)(obj + 0x2c) * timeDelta);
+
+    if (lbl_803DDD94 == 0) {
+        lbl_803DDD94 = 1;
+    }
+}
+
+void dll_2A3_init(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(u8 *)(obj + 0x36) = 0;
+    *(s16 *)(obj + 0) = randomGetRange(0, 0xffff);
+    *(s16 *)(obj + 2) = randomGetRange(0, 0xffff);
+    *(s16 *)(obj + 4) = randomGetRange(0, 0xffff);
+    *(s16 *)(state + 4) = randomGetRange(-0x32, 0x32);
+    *(s16 *)(state + 6) = randomGetRange(-0x32, 0x32);
+    *(s16 *)(state + 8) = randomGetRange(-0x32, 0x32);
+    lbl_803DDD90 = lbl_803DDD90 + 1;
+}
+#pragma scheduling on
+#pragma peephole on
+
 typedef struct PointLightVec { f32 x, y, z; } PointLightVec;
 
 extern f32 lbl_802C25F8[];
