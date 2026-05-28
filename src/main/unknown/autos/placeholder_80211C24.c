@@ -4452,6 +4452,163 @@ void ktrex_init(int obj, char *arg) {
 }
 #pragma scheduling reset
 
+extern f32 lbl_803E6824;
+extern f32 lbl_803E6828;
+extern f32 lbl_803E682C;
+extern f32 lbl_803E6830;
+extern f32 lbl_803E6834;
+extern f32 lbl_803E6838;
+extern f32 lbl_803E67C8;
+extern f32 lbl_803E67CC;
+extern void doRumble(f32 m);
+
+#pragma scheduling off
+void ktrex_updateAttackEffects(int obj) {
+    int i;
+    f32 mag;
+    mag = lbl_803E6818 - *(f32 *)((char *)gKTRexRuntime + 0x2c0) / lbl_803E6824;
+    if (mag < lbl_803E67B8) {
+        mag = lbl_803E67B8;
+    } else if (mag > lbl_803E6818) {
+        mag = lbl_803E6818;
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x40) != 0) {
+        Sfx_PlayFromObject(obj, 0x86);
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x80) != 0) {
+        Sfx_PlayFromObject(obj, 0x87);
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x100) != 0) {
+        Sfx_PlayFromObject(obj, 0x88);
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x200) != 0) {
+        Sfx_PlayFromObject(obj, 0x89);
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x10000) != 0) {
+        Sfx_PlayFromObject(obj, 0x8a);
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x40000) != 0) {
+        Sfx_PlayFromObject(obj, 0x8b);
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x80000) != 0) {
+        Sfx_PlayFromObject(obj, 0x8c);
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x2000) != 0) {
+        Sfx_PlayFromObject(obj, 0x8c);
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x1000) != 0) {
+        *(u32 *)((char *)gKTRexState + 0x104) &= ~0x1800;
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x20000) != 0) {
+        Sfx_PlayFromObject(obj, 0x8a);
+        Camera_EnableViewYOffset();
+        CameraShake_SetAllMagnitudes(lbl_803E67C8 * mag);
+    }
+    if ((*(u16 *)((char *)gKTRexState + 0xfa) & 0x10) != 0) {
+        for (i = 0; i < 5; i++) {
+            if (randomGetRange(0, 5) == 0 && *(int *)((char *)gKTRexState + i * 4 + 0x17c) == 0) {
+                ktrex_spawnRandomEnergyArc(obj, randomGetRange(8, 0xc), i);
+            }
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x4000) != 0) {
+        Sfx_PlayFromObject(obj, 0x8e);
+        *(u8 *)((char *)gKTRexState + 0x108) ^= 1;
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x8000) != 0) {
+        Sfx_PlayFromObject(obj, 0x8f);
+        *(u8 *)((char *)gKTRexState + 0x108) ^= 1;
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x3) != 0) {
+        Sfx_PlayFromObject(obj, 0x90);
+        doRumble(lbl_803E67CC);
+        if (mag > lbl_803E67B4) {
+            Camera_EnableViewYOffset();
+            CameraShake_SetAllMagnitudes(mag);
+            GameBit_Set(0x554, 1);
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0xc) != 0) {
+        doRumble(lbl_803E682C);
+        Sfx_PlayFromObject(obj, 0x91);
+        if (mag > lbl_803E67B4) {
+            Camera_EnableViewYOffset();
+            CameraShake_SetAllMagnitudes(lbl_803E67C8 * mag);
+            GameBit_Set(0x554, 1);
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x30) != 0) {
+        doRumble(lbl_803E6830);
+        Sfx_PlayFromObject(obj, 0x92);
+        if (mag > lbl_803E67B4) {
+            Camera_EnableViewYOffset();
+            CameraShake_SetAllMagnitudes(lbl_803E6834 * mag);
+            GameBit_Set(0x554, 1);
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x100000) == 0) {
+        *(u32 *)((char *)gKTRexState + 0x104) &= 0x1800;
+        return;
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x1) != 0) {
+        *(f32 *)((char *)gKTRexState + 0x12c) = lbl_803E6818;
+        for (i = 0; i < 10; i++) {
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x2) != 0) {
+        *(f32 *)((char *)gKTRexState + 0x144) = lbl_803E6818;
+        for (i = 0; i < 10; i++) {
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x4) != 0) {
+        *(f32 *)((char *)gKTRexState + 0x12c) = lbl_803E6838;
+        for (i = 0; i < 13; i++) {
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x8) != 0) {
+        *(f32 *)((char *)gKTRexState + 0x144) = lbl_803E6838;
+        for (i = 0; i < 13; i++) {
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x10) != 0) {
+        *(f32 *)((char *)gKTRexState + 0x12c) = lbl_803E67C8;
+        for (i = 0; i < 16; i++) {
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x124, 0x200001, -1, 0);
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x20) != 0) {
+        *(f32 *)((char *)gKTRexState + 0x144) = lbl_803E67C8;
+        for (i = 0; i < 16; i++) {
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x483, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+            (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x484, (char *)gKTRexState + 0x13c, 0x200001, -1, 0);
+        }
+    }
+    if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x800) != 0) {
+        (*(void (**)(int, int, void *, int, int, void *))((char *)*gPartfxInterface + 0x8))(
+            obj, 0x487, (char *)gKTRexState + 0x10c, 0x200001, -1, (char *)gKTRexState + 0x16c);
+    }
+    *(u32 *)((char *)gKTRexState + 0x104) &= 0x1800;
+    if (*(int *)(*(int *)((char *)obj + 0x54) + 0x50) == (int)Obj_GetPlayerObject()) {
+        Sfx_PlayFromObject((int)Obj_GetPlayerObject(), 0x2b9);
+    }
+}
+#pragma scheduling reset
+
 extern f32 lbl_803E68FC;
 extern f32 lbl_803E6900;
 extern f32 lbl_803E6904;
