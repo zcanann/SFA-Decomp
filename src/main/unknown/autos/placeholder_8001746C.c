@@ -7917,6 +7917,29 @@ void Vec3_Cross(f32 *a, f32 *b, f32 *out) {
     out[2] = a[0] * b[1] - a[1] * b[0];
 }
 
+extern f32 lbl_803DE808;
+extern f32 lbl_803DE80C;
+
+void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
+    f32 dot = a[1] * n[1] + a[0] * n[0] + a[2] * n[2];
+    if (dot > lbl_803DE808) {
+        out[0] = n[0];
+        out[1] = n[1];
+        out[2] = n[2];
+    } else {
+        f32 s = dot * lbl_803DE80C;
+        out[0] = a[0];
+        out[1] = a[1];
+        out[2] = a[2];
+        out[0] *= s;
+        out[1] *= s;
+        out[2] *= s;
+        out[0] += n[0];
+        out[1] += n[1];
+        out[2] += n[2];
+    }
+}
+
 void *loadAssetFileById(int id, int arg) {
     lbl_8033BF88.f0 = 1;
     lbl_8033BF88.f1 = 0;
