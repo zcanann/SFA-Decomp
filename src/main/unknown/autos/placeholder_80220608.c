@@ -3183,7 +3183,18 @@ extern f32 lbl_803E7384;
 extern u8 lbl_803DC3E0[];
 extern u8 lbl_8032BD00[];
 extern u8 lbl_8032BD50[];
-extern void cmbsrc_updateVisuals(int obj, int state);
+extern f32 lbl_803E7378;
+extern f32 lbl_803E737C;
+extern f32 lbl_803E7380;
+extern f32 lbl_803E7388;
+extern f32 lbl_803E738C;
+extern f32 lbl_803E7390;
+extern f32 lbl_803E7394;
+extern f32 lbl_803E7398;
+extern int Camera_GetCurrentViewSlot(void);
+extern f32 interpolate(f32 a, f32 b, f32 c);
+extern void fn_8009837C(int obj, f32 brightness, int b, int c, int d, f32 e, int f);
+extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void *vec);
 
 #pragma dont_inline on
 #pragma peephole off
@@ -3300,6 +3311,118 @@ int cmbsrc_cycleColor(int obj, int state)
         idx = lbl_803DC3E0[*(u8 *)(state + 0x23)];
     }
     return idx;
+}
+
+void cmbsrc_updateVisuals(int obj, int state)
+{
+    int setup = *(int *)(obj + 0x4c);
+    int colorIdx = 0;
+    int effectMode = 0;
+    int subMode = 0;
+    int viewSlot;
+    f32 dist;
+    f32 vec[3];
+    f32 param[3];
+
+    viewSlot = Camera_GetCurrentViewSlot();
+    if (*(u8 *)(state + 0x25) == 0) {
+        *(f32 *)(state + 0x18) = lbl_803E7374 * *(f32 *)(setup + 0x20);
+    } else {
+        *(f32 *)(state + 0x18) += interpolate(
+            (f32)*(s8 *)(state + 0x26) / lbl_803E7378 *
+                    (lbl_803E7374 * *(f32 *)(setup + 0x20) -
+                     *(f32 *)(setup + 0x20) * lbl_803E737C) +
+                *(f32 *)(setup + 0x20) * lbl_803E737C - *(f32 *)(state + 0x18),
+            lbl_803E7380, timeDelta);
+    }
+    dist = Vec_distance(viewSlot + 0x44, obj + 0x18);
+    if (*(u8 *)(state + 0x25) == 1) {
+        if (dist <= (f32)(u32)(*(u8 *)(setup + 0x26) << 3)) {
+            if (*(u8 *)(setup + 0x1b) == 0xf) {
+                colorIdx = (u8)cmbsrc_cycleColor(obj, state);
+            } else {
+                colorIdx = *(u8 *)(setup + 0x1b);
+            }
+        }
+    }
+    *(f32 *)(state + 0x4) -= timeDelta;
+    *(f32 *)(state + 0x8) -= timeDelta;
+    if (*(f32 *)(state + 0x4) <= lbl_803E7360) {
+        if (*(u8 *)(setup + 0x1c) < 9) {
+            if (dist <= (f32)(u32)(*(u8 *)(setup + 0x27) << 3)) {
+                effectMode = *(u8 *)(setup + 0x1c);
+            }
+        }
+        if (*(u8 *)(state + 0x25) == 0) {
+            if (dist <= (f32)(u32)(*(u8 *)(setup + 0x26) << 3) &&
+                (*(u8 *)(state + 0x22) & 0x8) == 0) {
+                effectMode = *(u8 *)(setup + 0x1c);
+                if (*(u8 *)(setup + 0x1c) == 0) {
+                    effectMode = 2;
+                }
+            } else {
+                effectMode = 0;
+            }
+        }
+        if (*(u8 *)(state + 0x25) == 1) {
+            *(f32 *)(state + 0x4) += lbl_803E7384;
+        } else {
+            *(f32 *)(state + 0x4) += lbl_803E7378;
+        }
+    }
+    if ((*(u16 *)(obj + 0xb0) & 0x800) || (*(u8 *)(state + 0x22) & 0x2)) {
+        switch (*(s16 *)(obj + 0x46)) {
+        case 0x758:
+            if (*(u8 *)(state + 0x25) == 1) {
+                if (dist <= (f32)(u32)(*(u8 *)(setup + 0x26) << 3)) {
+                    subMode = *(u8 *)(setup + 0x1d);
+                }
+            }
+            fn_8009837C(obj, *(f32 *)(state + 0x18), colorIdx, effectMode, subMode,
+                        (f32)(u32)*(u8 *)(setup + 0x28) / lbl_803E7388, 0);
+            break;
+        case 0x6e8:
+        default:
+            if (*(u8 *)(state + 0x25) == 1) {
+                if (*(f32 *)(state + 0x8) <= lbl_803E7360) {
+                    if (*(u8 *)(setup + 0x1d) < 4) {
+                        if (dist <= (f32)(u32)(*(u8 *)(setup + 0x28) << 3)) {
+                            subMode = *(u8 *)(setup + 0x1d);
+                        }
+                    }
+                    *(f32 *)(state + 0x8) += lbl_803E738C;
+                }
+            }
+            vec[0] = lbl_803E7360;
+            if (*(s16 *)(obj + 0x46) == 0x853) {
+                if (*(u8 *)(state + 0x25) == 0) {
+                    vec[1] = lbl_803E7390;
+                } else {
+                    vec[1] = lbl_803E7394;
+                }
+            } else {
+                if (*(u8 *)(state + 0x25) == 0) {
+                    vec[1] = lbl_803E7390;
+                } else {
+                    vec[1] = lbl_803E7360;
+                }
+            }
+            vec[2] = lbl_803E7360;
+            fn_80098B18(obj, *(f32 *)(state + 0x18), colorIdx, effectMode, subMode, vec);
+            break;
+        }
+    }
+    if (*(u8 *)(state + 0x25) == 1 && (*(u8 *)(setup + 0x2a) & 0x2)) {
+        *(f32 *)(state + 0xc) -= timeDelta;
+        if (*(f32 *)(state + 0xc) <= lbl_803E7360) {
+            if (*(u16 *)(obj + 0xb0) & 0x800) {
+                param[2] = *(f32 *)(state + 0x18);
+                (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 0x8))(
+                    obj, 0x7cb, param, 2, -1, 0);
+            }
+            *(f32 *)(state + 0xc) += lbl_803E7398;
+        }
+    }
 }
 
 int cmbsrc_update(int obj)
