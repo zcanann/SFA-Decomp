@@ -5327,6 +5327,47 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag) {
 #pragma scheduling reset
 #pragma peephole reset
 
+extern void *Camera_GetInverseViewMatrix(void);
+extern f32 lbl_803E7104;
+extern f32 lbl_803E7108;
+extern f32 lbl_803E710C;
+
+#pragma peephole off
+#pragma scheduling off
+void arwspeedstr_update(int obj) {
+    int state = *(int *)(obj + 0xb8);
+    if (*(u8 *)(state + 0x18) == 0) {
+        f32 local[3];
+        local[0] = (f32)(int)randomGetRange((int)-*(f32 *)(state + 0xc), (int)*(f32 *)(state + 0xc));
+        local[1] =
+            (f32)(int)randomGetRange((int)-*(f32 *)(state + 0x10), (int)*(f32 *)(state + 0x10));
+        local[2] = *(f32 *)(state + 0x14);
+        PSMTXMultVec(Camera_GetInverseViewMatrix(), &local[0], (f32 *)(obj + 0xc));
+        *(f32 *)(obj + 0xc) += playerMapOffsetX;
+        *(f32 *)(obj + 0x14) += playerMapOffsetZ;
+        *(u8 *)(state + 0x18) = (*(u8 *)(state + 0x18) | 1) & 0xff;
+        *(f32 *)(state + 8) = lbl_803E7104;
+    }
+    {
+        f32 t = *(f32 *)(state + 4);
+        if (t > lbl_803E7104) {
+            *(f32 *)(state + 4) = t - timeDelta;
+            if (*(f32 *)(state + 4) <= lbl_803E7104) {
+                *(f32 *)(state + 4) = lbl_803E7104;
+                Obj_FreeObject(obj);
+            } else {
+                objMove(obj, lbl_803E7104, lbl_803E7104, *(f32 *)(state + 0) * timeDelta);
+                *(f32 *)(state + 8) = lbl_803E7108 * timeDelta + *(f32 *)(state + 8);
+                if (*(f32 *)(state + 8) > lbl_803E710C)
+                    *(f32 *)(state + 8) = lbl_803E710C;
+                *(u8 *)(obj + 0x36) = (int)*(f32 *)(state + 8);
+            }
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 void fn_8022D6D0(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
