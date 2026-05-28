@@ -1605,3 +1605,73 @@ void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 
 void ring_release(void) {}
 void ring_initialise(void) {}
+
+typedef struct CntHitFlags {
+    u8 disabled : 1;
+    u8 pad : 7;
+} CntHitFlags;
+
+extern f32 lbl_803E7430;
+extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
+extern void ObjHits_DisableObject(int obj);
+extern void ObjHits_EnableObject(int obj);
+extern void ObjHitbox_SetSphereRadius(int obj, int radius);
+
+int cnthitobjec_getExtraSize(void) { return 0xc; }
+int cnthitobjec_getObjectTypeId(void) { return 0; }
+void cnthitobjec_free(void) {}
+void cnthitobjec_release(void) {}
+void cnthitobjec_initialise(void) {}
+
+#pragma peephole off
+#pragma scheduling off
+void cnthitobjec_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    if (*(u8 *)(setup + 0x19) == 2 && ((CntHitFlags *)(state + 9))->disabled == 0) {
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7430);
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
+#pragma peephole off
+#pragma scheduling off
+int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
+{
+    int i;
+    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+        spawnExplosion(obj, (f32)(u32)*(u8 *)(p3 + (i + 0x81)), 1, 1, 1, 1, 0, 1, 0);
+    }
+    return 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
+#pragma peephole off
+#pragma scheduling off
+void cnthitobjec_update(int obj)
+{
+    int setup;
+    int state = *(int *)(obj + 0xb8);
+    setup = *(int *)(obj + 0x4c);
+
+    if (((CntHitFlags *)(state + 9))->disabled == 0) {
+        if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+            ((CntHitFlags *)(state + 9))->disabled = 1;
+            ObjHits_DisableObject(obj);
+        }
+    }
+
+    if (((CntHitFlags *)(state + 9))->disabled == 0 && *(int *)(state + 0) == 0 &&
+        (u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
+        ObjHits_EnableObject(obj);
+        *(int *)(state + 0) = *(s16 *)(setup + 0x1a);
+        if (*(u8 *)(setup + 0x19) != 2) {
+            ObjHitbox_SetSphereRadius(obj, *(s16 *)(setup + 0x1c));
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
