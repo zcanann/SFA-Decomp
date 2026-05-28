@@ -1,8 +1,17 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_80080E58.h"
 
+typedef struct ObjSeqBgCmd {
+    int object;
+    s16 param;
+    s8 opcode;
+    s8 pad;
+} ObjSeqBgCmd;
+
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mm_free(void *ptr);
+extern void *Resource_Acquire(int id, int mode);
+extern void Resource_Release(void *handle);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void *Obj_GetPlayerObject(void);
@@ -23,6 +32,7 @@ extern void renderFn_8008f904(void *state);
 extern void Obj_GetWorldPosition(void *obj, f32 *x, f32 *y, f32 *z);
 extern void Camera_GetCurrentViewSlot(void);
 extern int randomGetRange(int min, int max);
+extern int return0xFFFF_80008B6C(int obj, int a, int b, int c, int d, int e, int f);
 
 extern s16 lbl_80399398[];
 extern u8 lbl_80399EA8[];
@@ -30,8 +40,13 @@ extern s16 lbl_80399F00[];
 extern s8 lbl_8039A45C[];
 extern s8 lbl_8039A4B4[];
 extern s8 lbl_8039A50C[];
+extern ObjSeqBgCmd lbl_8039A5BC[];
+extern int lbl_8030EDA4[];
 extern u8 lbl_8030ECA8[];
 extern u8 lbl_803DB748;
+extern int *gGameUIInterface;
+extern int *gPartfxInterface;
+extern int *gScreenTransitionInterface;
 extern s16 seqGlobal1;
 extern s16 seqGlobal2;
 extern s8 seqGlobal3;
@@ -39,6 +54,7 @@ extern int *gSHthorntailAnimationInterface;
 extern s8 lbl_803DD0BC;
 extern void *lbl_803DD0D4;
 extern u8 lbl_803DD0DA;
+extern int lbl_803DD090;
 extern int lbl_803DD100;
 extern int lbl_803DD104;
 extern int lbl_803DD108;
@@ -58,6 +74,7 @@ extern f32 lbl_803DD160;
 extern u8 lbl_803DD164;
 extern void *lbl_803DD168;
 extern u8 lbl_803DD178;
+extern s8 lbl_803DD113;
 extern void *lbl_803DD144;
 extern f32 lbl_8039A7A8[];
 extern f32 pEXIInputFlag;
@@ -66,6 +83,7 @@ extern f32 lbl_803DEFB0;
 extern f32 lbl_803DEFC8;
 extern f32 lbl_803DEFF0;
 extern f32 lbl_803DF024;
+extern f32 lbl_803DF028;
 extern f32 lbl_803DF06C;
 extern f32 lbl_803DF118;
 extern f32 lbl_803DF138;
@@ -4148,6 +4166,106 @@ void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, void *action)
     }
     if (*(void **)(obj + 0x58) != NULL) {
         *(u8 *)(*(u8 **)(obj + 0x58) + 0x10f) = 0;
+    }
+}
+
+void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
+{
+    ObjSeqBgCmd *cmd;
+    int cmdObj;
+    int cmdParam;
+    void *resource;
+    int transitionSlot;
+    int uiId;
+
+    if (lbl_803DD090 != 0 && *(s16 *)(obj + 0xb4) != (s8)seq[0x57]) {
+        (*(void (*)(int, int, int))(*(int *)(*gGameUIInterface + 0x44)))(0, 0, 0);
+    }
+
+    while (lbl_803DD113 > 0) {
+        lbl_803DD113--;
+        cmd = &lbl_8039A5BC[(s8)lbl_803DD113];
+        cmdParam = cmd->param;
+        cmdObj = cmd->object;
+
+        switch (cmd->opcode) {
+        case 3:
+            if ((u8)skipSpawns == 0) {
+                (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(
+                    cmdObj, cmdParam, 0, 0x10000, -1, 0);
+            }
+            break;
+        case 4:
+            if ((u8)skipSpawns == 0) {
+                return0xFFFF_80008B6C(cmdObj, 0, 0, 1, -1, (u8)cmdParam, 0);
+            }
+            break;
+        case 5:
+            if ((u8)skipSpawns == 0) {
+                resource = Resource_Acquire((u16)(cmdParam + 0xab), 1);
+                if (resource != NULL) {
+                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*(int *)resource + 0x4)))(
+                        cmdObj, 0, 0, 1, -1, (u8)cmdParam, 0);
+                }
+                if (resource != NULL) {
+                    Resource_Release(resource);
+                }
+            }
+            break;
+        case 9:
+            if ((u8)skipSpawns == 0) {
+                switch (cmdParam & 0x2f) {
+                case 6:
+                    transitionSlot = (cmdParam & 0xfc0) >> 4;
+                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(
+                        transitionSlot, 3);
+                    break;
+                case 7:
+                    transitionSlot = (cmdParam & 0xfc0) >> 4;
+                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(
+                        transitionSlot, 3);
+                    break;
+                case 8:
+                    transitionSlot = (cmdParam & 0xfc0) >> 4;
+                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(
+                        transitionSlot, 2);
+                    break;
+                case 9:
+                    transitionSlot = (cmdParam & 0xfc0) >> 4;
+                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(
+                        transitionSlot, 2);
+                    break;
+                case 0xb:
+                    transitionSlot = (cmdParam & 0xfc0) >> 4;
+                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(
+                        transitionSlot, 4);
+                    break;
+                case 0xc:
+                    transitionSlot = (cmdParam & 0xfc0) >> 4;
+                    (*(void (*)(int, int, f32))(*(int *)(*gScreenTransitionInterface + 0x10)))(
+                        transitionSlot, 4, lbl_803DF028);
+                    break;
+                }
+            }
+            break;
+        case 0xb:
+            GameBit_Set(cmdParam, 1);
+            break;
+        case 0xc:
+            GameBit_Set(cmdParam, 0);
+            break;
+        case 0xd:
+            if ((u8)skipSpawns == 0) {
+                uiId = lbl_8030EDA4[cmdParam];
+                (*(void (*)(int, int, int))(*(int *)(*gGameUIInterface + 0x44)))(uiId, 0, 0);
+                if (lbl_8030EDA4[cmdParam] != -1) {
+                    lbl_803DD090 = 1;
+                } else {
+                    lbl_803DD090 = 0;
+                }
+            }
+            break;
+        }
     }
 }
 
