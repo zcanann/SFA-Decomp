@@ -1096,6 +1096,8 @@ void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling on
 #pragma peephole on
 void wctemplebri_hitDetect(void) {}
+void wctemplebri_release(void) {}
+void wctemplebri_initialise(void) {}
 
 extern f32 lbl_803E6E98;
 extern f32 lbl_803E6E2C;
@@ -6113,15 +6115,17 @@ void fn_8022D6F0(int arwing)
     }
 }
 
+#pragma scheduling off
 int fn_8022D710(int arwing)
 {
     int result = 0;
-    int v = *(u8 *)(*(int *)(arwing + 0xb8) + 0x478);
+    u32 v = *(u8 *)(*(int *)(arwing + 0xb8) + 0x478);
     if (v == 5 || v == 6) {
         result = 1;
     }
     return result;
 }
+#pragma scheduling on
 
 int fn_8022D738(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x478) == 1; }
 
