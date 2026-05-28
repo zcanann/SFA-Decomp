@@ -6185,7 +6185,7 @@ void fn_802A4B4C(int obj)
 #pragma scheduling reset
 
 extern uint GameBit_Get(int bit);
-extern void fn_802A514C(void);
+extern void fn_802A514C(int obj, int state);
 
 #pragma scheduling off
 #pragma peephole off
@@ -9829,6 +9829,71 @@ void fn_802AB38C(int a, int b, int c)
         break;
     }
     *(s16 *)((char *)b + 0x80a) = c;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802A514C(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    ((ByteFlags *)((char *)inner + 0x3f1))->b80 = 0;
+    {
+        s16 mode = *(s16 *)((char *)state + 0x274);
+        if (mode != 2 && mode != 1 && mode != 5 && mode != 7 && mode != 6) {
+            void *sub;
+            *(u8 *)((char *)inner + 0x800) = 0;
+            sub = *(void **)((char *)inner + 0x7f8);
+            if (sub != NULL) {
+                s16 id = *(s16 *)((char *)sub + 0x46);
+                if (id == 0x3cf || id == 0x662) {
+                    objThrowFn_80182504((int)sub);
+                } else {
+                    objSaveFn_800ea774((int)sub);
+                }
+                *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) &= ~0x4000;
+                *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+        }
+    }
+    {
+        s16 mode = *(s16 *)((char *)state + 0x274);
+        if (mode != 2 && mode != 1) {
+            ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+            *(u8 *)((char *)inner + 0x40d) = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b20 = 0;
+            if (((ByteFlags *)((char *)inner + 0x3f1))->b20) {
+                s16 t = *(s16 *)((char *)obj + 0);
+                *(s16 *)((char *)inner + 0x484) = t;
+                *(s16 *)((char *)inner + 0x478) = t;
+                *(int *)((char *)inner + 0x494) = t;
+                *(f32 *)((char *)inner + 0x284) = lbl_803E7EA4;
+            }
+            ((ByteFlags *)((char *)inner + 0x3f1))->b20 = 0;
+            if (((ByteFlags *)((char *)inner + 0x3f1))->b10) {
+                u8 anim = *(u8 *)((char *)inner + 0x8c8);
+                if (anim != 0x48 && anim != 0x47 && getCurSeqNo() == 0) {
+                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                    ((ByteFlags *)((char *)inner + 0x3f1))->b10 = 0;
+                }
+            }
+            *(int *)((char *)inner + 0x360) &= ~0x2000000;
+        }
+    }
+    if (*(s16 *)((char *)state + 0x274) != 2) {
+        staffFn_80170380(lbl_803DE450, 2);
+        ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
+        *(int *)((char *)inner + 0x360) |= 0x800000;
+        ObjHits_SyncObjectPositionIfDirty(obj);
+    }
+    lbl_803DC66C = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
