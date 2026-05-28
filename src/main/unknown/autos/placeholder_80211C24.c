@@ -174,7 +174,10 @@ extern int hightop_stateHandler09();
 extern int hightop_stateHandler10();
 
 extern void ObjGroup_AddObject(int obj, int group);
-extern void drcreator_spawnProjectileCallback(void);
+extern int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg);
+extern char sDrCreatorTimeFormat[];
+extern void fn_80137948(char *fmt, ...);
+extern f32 lbl_803E69A8;
 extern void setMatrixFromObjectPos(f32 *mtx, void *desc);
 extern void Matrix_TransformPoint(f32 *mtx, double x, double y, double z, f32 *ox, f32 *oy, f32 *oz);
 extern f32 lbl_803E6B38;
@@ -1688,6 +1691,48 @@ void drcreator_update(int obj) {
             break;
         }
     }
+}
+
+int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg) {
+    int q = *(int *)((char *)obj + 0x4c);
+    char *runtime;
+    int o;
+    int p;
+    int i;
+    fn_80137948(sDrCreatorTimeFormat, *(s16 *)(q + 0x1a), *(s16 *)(arg + 0x58));
+    if (Obj_IsLoadingLocked() == 0) {
+        return 0;
+    }
+    for (i = 0; i < arg[0x8b]; i++) {
+        switch (*(s16 *)(q + 0x1a)) {
+        case 3:
+        case 4:
+        case 9:
+            runtime = *(char **)((char *)obj + 0xb8);
+            if (GameBit_Get(*(s16 *)(runtime + 4)) != 0) {
+                o = Obj_AllocObjectSetup(36, 1725);
+                *(f32 *)(o + 8) = *(f32 *)((char *)obj + 0xc);
+                *(f32 *)(o + 0xc) = *(f32 *)((char *)obj + 0x10);
+                *(f32 *)(o + 0x10) = *(f32 *)((char *)obj + 0x14);
+                *(u8 *)(o + 4) = 1;
+                *(u8 *)(o + 5) = 1;
+                *(u8 *)(o + 6) = 255;
+                *(u8 *)(o + 7) = 255;
+                *(u8 *)(o + 0x19) = 2;
+                p = Obj_SetupObject(o, 5, -1, -1, 0);
+                if (p != 0) {
+                    *(s16 *)(p + 2) = 0;
+                    *(s16 *)p = (s16)randomGetRange(0, 65535);
+                    *(f32 *)(p + 0x24) = lbl_803E69A8 * (f32)(int)randomGetRange(-*(s16 *)(runtime + 0xa), *(s16 *)(runtime + 0xa));
+                    *(f32 *)(p + 0x28) = lbl_803E69A8 * (f32)*(int *)runtime;
+                    *(f32 *)(p + 0x2c) = lbl_803E69A8 * (f32)(int)randomGetRange(-*(s16 *)(runtime + 0xa), *(s16 *)(runtime + 0xa));
+                    *(int *)(p + 0xc4) = obj;
+                }
+            }
+            break;
+        }
+    }
+    return 0;
 }
 
 #pragma peephole reset
