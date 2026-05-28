@@ -2653,9 +2653,9 @@ int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
 
 int ktrex_shouldAdvanceArenaPhase(void) {
     int *s = gKTRexState;
-    int r6;
     u8 a;
     u8 b;
+    int r6;
     r6 = *(u16 *)((char *)s + 0xfa) & 1;
     a = *(u8 *)((char *)s + 0xfe);
     b = *(u8 *)((char *)s + 0xff);
@@ -2664,10 +2664,10 @@ int ktrex_shouldAdvanceArenaPhase(void) {
             if (*(f32 *)((char *)s + 0x8) < *(f32 *)((char *)s + 0xf4)) {
                 return 1;
             }
-            return 0;
-        }
-        if (*(f32 *)((char *)s + 0x8) > *(f32 *)((char *)s + 0xf4)) {
-            return 1;
+        } else {
+            if (*(f32 *)((char *)s + 0x8) > *(f32 *)((char *)s + 0xf4)) {
+                return 1;
+            }
         }
         return 0;
     }
