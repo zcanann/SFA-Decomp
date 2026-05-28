@@ -258,6 +258,10 @@ extern f32 lbl_803E6964;
 extern int *Obj_GetActiveModel(void);
 extern int fn_8001DB64(void);
 extern void queueGlowRender(void *p);
+extern f32 lbl_803E6A30;
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
+extern f32 PSVECMag(f32 *v);
 
 typedef struct {
     u8 b0 : 1;
@@ -1347,6 +1351,24 @@ void drakormissile_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
         if (*(void **)p != 0 && fn_8001DB64() != 0) {
             queueGlowRender(*(void **)p);
+        }
+    }
+}
+
+void drshackle_hitDetect(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8 *)(p + 0x1a))->b0 != 0) {
+        f32 vec[3];
+        int n;
+        PSVECSubtract((f32 *)((char *)obj + 0xc), (f32 *)(p + 0x8), vec);
+        n = 0xc8 - (int)(lbl_803E6A30 * PSVECMag(vec));
+        if (n < 1) {
+            n = 1;
+        } else if (n > 0xc8) {
+            n = 0xc8;
+        }
+        if ((int)randomGetRange(0, n) == 0) {
+            Sfx_PlayFromObject(obj, 0x1b3);
         }
     }
 }
