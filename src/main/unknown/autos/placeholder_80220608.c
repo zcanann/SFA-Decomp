@@ -6689,7 +6689,7 @@ typedef struct {
     u8 f80 : 1;
     u8 : 1;
     u8 f20 : 1;
-    u8 : 1;
+    u8 f10 : 1;
     u8 f08 : 1;
     u8 : 3;
 } SquadCmdFlags;
@@ -6858,6 +6858,72 @@ void arwsquadron_emitEffects(int p1, int p2)
     if (*(u8 *)(p2 + 0x15a) > 1 && (s8)*(u8 *)(p2 + 0x15e) > 1) {
         ObjPath_GetPointLocalPosition(p2, 3, &pfx.fx, &pfx.fy, &pfx.fz);
         fn_8009837C(p1, *(f32 *)(p2 + 0x114), 2, 0, 0, *(f32 *)(p2 + 0x118), (int)&pfx);
+    }
+}
+#pragma scheduling reset
+
+extern f32 lbl_803E71AC;
+extern f32 lbl_803E71B0;
+extern f32 lbl_803E71B4;
+
+#pragma scheduling off
+void arwsquadron_handleDamage(int obj, int state)
+{
+    SquadCmdFlags *flags = (SquadCmdFlags *)(state + 0x160);
+    int hitObj;
+    int hitVol;
+    int arwing;
+
+    if (*(void **)(obj + 0x54) == NULL)
+        return;
+    if (*(u8 *)(state + 0x154) != 0) {
+        *(f32 *)(state + 0x110) -= timeDelta;
+        if (*(f32 *)(state + 0x110) <= lbl_803E7168)
+            *(u8 *)(state + 0x154) = 0;
+        if (flags->f10) {
+            *(s16 *)(state + 0x150) = lbl_803E71AC * timeDelta + (f32)*(u16 *)(state + 0x150);
+            *(s16 *)(state + 0x152) = lbl_803E71B0 * timeDelta + (f32)*(u16 *)(state + 0x152);
+        }
+    }
+    if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 ||
+        *(void **)(*(int *)(obj + 0x54) + 0x50) != NULL) {
+        if (flags->f10) {
+            if (*(u8 *)(state + 0x154) == 0)
+                Sfx_PlayFromObjectLimited(obj, 0x29e, 4);
+            Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
+            *(f32 *)(state + 0x110) = lbl_803E71B4;
+            *(u8 *)(state + 0x154) = 1;
+            *(s16 *)(state + 0x150) = 0;
+            *(s16 *)(state + 0x152) = 0;
+            *(u8 *)(state + 0x15e) = *(u8 *)(state + 0x15e) - hitVol;
+            if ((s8)*(u8 *)(state + 0x15e) <= 0) {
+                storeZeroToFloatParam((void *)(state + 0x12c));
+                s16toFloat((void *)(state + 0x12c), 0x78);
+                if (*(u8 *)(state + 0x15c) == 1) {
+                    spawnExplosion(obj, lbl_803E719C, 1, 0, 1, 1, 0, 0, 0);
+                    *(s16 *)(obj + 6) |= 0x4000;
+                    ObjHits_DisableObject(obj);
+                    *(u8 *)(state + 0x159) = 4;
+                    *(u8 *)(state + 0x159) = 3;
+                    if (*(u8 *)(state + 0x15d) == 3)
+                        gameTextFn_80125ba4(0xe);
+                } else {
+                    spawnExplosion(obj, lbl_803E719C, 1, 0, 0, 1, 0, 0, 3);
+                    *(s16 *)(obj + 6) |= 0x4000;
+                    ObjHits_DisableObject(obj);
+                    *(u8 *)(state + 0x159) = 3;
+                }
+                arwing = getArwing();
+                if (arwing != 0)
+                    fn_8022D520(arwing, *(u8 *)(state + 0x157));
+            } else {
+                arwing = getArwing();
+                if (arwing != 0)
+                    fn_8022D520(arwing, *(u8 *)(state + 0x158));
+            }
+        } else if (*(u8 *)(state + 0x154) == 0) {
+            Sfx_PlayFromObjectLimited(obj, 0x2b3, 4);
+        }
     }
 }
 #pragma scheduling reset
