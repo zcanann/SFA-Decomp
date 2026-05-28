@@ -247,6 +247,11 @@ extern void ObjHits_RegisterActiveHitVolumeObject(int obj);
 extern void objRemoveFromListFn_8002ce88(int obj);
 extern int dll_2E_func07(int obj, u8 *arg, char *p, int a, int b);
 
+extern f32 lbl_803E68C0;
+extern void lightFn_8001db6c(void *light, int v, f32 f);
+extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int d);
+extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
+
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;
@@ -1149,6 +1154,78 @@ int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
     }
     r = *(int *)(p + 0x6dc);
     return !!dll_2E_func07(obj, arg, p, *(s16 *)(r + 0x4), *(s16 *)(r + 0x4));
+}
+
+int ktrex_shouldAdvanceArenaPhase(void) {
+    int *s = gKTRexState;
+    int r6;
+    u8 a;
+    u8 b;
+    r6 = *(u16 *)((char *)s + 0xfa) & 1;
+    a = *(u8 *)((char *)s + 0xfe);
+    b = *(u8 *)((char *)s + 0xff);
+    if ((a & b) != 0) {
+        if (r6 != 0) {
+            if (*(f32 *)((char *)s + 0x8) < *(f32 *)((char *)s + 0xf4)) {
+                return 1;
+            }
+            return 0;
+        }
+        if (*(f32 *)((char *)s + 0x8) > *(f32 *)((char *)s + 0xf4)) {
+            return 1;
+        }
+        return 0;
+    }
+    if (r6 != 0) {
+        if (a == 8 && (b & 1)) {
+            return 1;
+        }
+        if (a == 2 && (b & 8)) {
+            return 1;
+        }
+        if (a == 4 && (b & 2)) {
+            return 1;
+        }
+        if (a == 1 && (b & 4)) {
+            return 1;
+        }
+        return 0;
+    }
+    if (a == 1 && (b & 8)) {
+        return 1;
+    }
+    if (a == 4 && (b & 1)) {
+        return 1;
+    }
+    if (a == 2 && (b & 4)) {
+        return 1;
+    }
+    if (a == 8 && (b & 2)) {
+        return 1;
+    }
+    return 0;
+}
+
+void ktlazerlight_update(int obj) {
+    int q = *(int *)((char *)obj + 0x4c);
+    char *p = *(char **)((char *)obj + 0xb8);
+    s16 v;
+    void *light = *(void **)(p + 0x4);
+    v = (s16)GameBit_Get(*(s16 *)(q + 0x1a));
+    if (v >= 1 || GameBit_Get(*(s16 *)(q + 0x1c)) != 0) {
+        if (v == 0) {
+            v = 0x10;
+        }
+        if (light != 0) {
+            lightFn_8001db6c(light, 1, lbl_803E68C0);
+            modelLightStruct_setColorsA8AC(light, 0x64, 0x6e, 0xff, 0xff);
+            lightDistAttenFn_8001dc38(*(void **)(p + 0x4), (f32)(v * 0x1a), (f32)(v * 0x1a + 0x14));
+        }
+    } else {
+        if (light != 0) {
+            lightFn_8001db6c(light, 0, lbl_803E68C0);
+        }
+    }
 }
 
 #pragma peephole reset
