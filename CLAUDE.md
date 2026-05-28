@@ -73,6 +73,13 @@ Heuristic before reaching for `asm { }`:
    CSE. `f32 fz = lbl_xxx; *p1 = fz; *p2 = fz; *p3 = fz;` instead of three
    direct stores — MWCC will reload the constant each time without the lift.
    See `75660758` (ecsh_cup_init 67% → 100%).
+   **Inverse caveat — lift ONLY when the live range is call-free.** If the
+   lifted local's uses straddle a `bl` (call), MWCC must keep it in a
+   *callee-saved* FP reg (f31…) across the call, which adds a save/restore and
+   grows the stack frame — making the match *worse* than just reloading the
+   global inline (where the load stays in volatile `f0`). So lift for a tight
+   call-free store-burst; inline the global when any use crosses a call.
+   (placeholder_80295318: fn_80295674, repeated `0.0`.)
 
 7. **`u8` not `char` for byte arrays you load and assign without arithmetic**.
    `char buf[N]; buf[0] = arr[i];` emits a spurious `extsb`; `u8 buf[N];`
