@@ -12796,6 +12796,157 @@ int fn_802A2918(int obj, int state, f32 fv)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+int fn_8029FA24(int obj, int state, f32 fv)
+{
+    char *base = (char *)lbl_80332EC0;
+    int inner = *(int *)((char *)obj + 0xb8);
+    int sub = *(int *)((char *)inner + 0x7f0);
+    f32 wpos[3];
+
+    *(int *)((char *)inner + 0x360) &= ~0x2;
+    *(int *)((char *)inner + 0x360) |= 0x2000;
+    *(int *)((char *)state + 0x4) |= 0x100000;
+    {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x280) = z;
+        *(f32 *)((char *)state + 0x284) = z;
+        *(int *)((char *)state + 0x0) |= 0x200000;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
+    }
+    *(s8 *)((char *)state + 0x25f) = 0;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(s16 *)((char *)state + 0x278) = 0x16;
+        *(int *)((char *)inner + 0x898) = 0;
+    }
+    ObjHits_DisableObject(obj);
+    *(f32 *)((char *)obj + 0x28) = lbl_803E7EA4;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        int sel;
+        int joint;
+        f32 scratch;
+        f32 j1[3];
+        f32 j0[3];
+
+        if (lbl_803DE44C != NULL && (*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0) {
+            *(u8 *)((char *)inner + 0x8b4) = 1;
+            *(u8 *)((char *)inner + 0x3f4) |= 8;
+        }
+        switch (*(s16 *)((char *)sub + 0x46)) {
+        case 0x72:
+            *(int *)((char *)inner + 0x6e8) = (int)(base + 0x3f0);
+            *(u8 *)((char *)inner + 0x6ec) = 3;
+            if (coordsToMapCell(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x14)) == 0x13) {
+                GameBit_Set(0xf0a, 1);
+            }
+            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x45, 1, 0, 0, 0, 0, 0xff);
+            break;
+        case 0x38c:
+            *(int *)((char *)inner + 0x6e8) = (int)(base + 0x3f0);
+            *(u8 *)((char *)inner + 0x6ec) = 3;
+            (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(sub, 0);
+            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x45, 1, 0, 0, 0, 0, 0xff);
+            break;
+        case 0x419:
+            *(int *)((char *)inner + 0x6e8) = (int)(base + 0x420);
+            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x53, 1, 0, 0, 0, 0x2d, 0xff);
+            break;
+        case 0x416:
+            *(int *)((char *)inner + 0x6e8) = (int)(base + 0x438);
+            *(u8 *)((char *)inner + 0x6ec) = 8;
+            (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(sub, 0);
+            (*(void (*)(int, int, int))(*(int *)(*gCameraInterface + 0x24)))(0, 0x69, 0);
+            break;
+        case 0x8c:
+            *(int *)((char *)inner + 0x6e8) = (int)(base + 0x408);
+            *(u8 *)((char *)inner + 0x6ec) = 4;
+            break;
+        default:
+            *(int *)((char *)inner + 0x6e8) = (int)(base + 0x420);
+            *(u8 *)((char *)inner + 0x6ec) = 4;
+            (*(void (*)(int, int, int))(*(int *)(*gCameraInterface + 0x24)))(0, 0x1d, 0);
+            break;
+        }
+        {
+            int t = (*(int (*)(int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x24)))(sub);
+            (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 1);
+            switch (t) {
+            case 1:
+                sel = 6;
+                break;
+            case 2:
+                sel = 7;
+                break;
+            default:
+                sel = 7;
+                break;
+            }
+        }
+        *(s16 *)((char *)inner + 0x478) = *(s16 *)((char *)sub + 0x0);
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        ObjAnim_SetCurrentMove(obj, ((s16 *)*(int *)((char *)inner + 0x6e8))[sel],
+                               lbl_803E7EA4, 4);
+        joint = ((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)];
+        ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EA4, *(f32 *)((char *)obj + 0x8),
+                                      j0, &scratch);
+        ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, *(f32 *)((char *)obj + 0x8),
+                                      j1, &scratch);
+        (*(void (*)(int, void *, void *, void *))(*(int *)(*(int *)((char *)sub + 0x68) + 0x28)))(
+            sub, &wpos[0], &wpos[1], &wpos[2]);
+        wpos[0] = wpos[0] - *(f32 *)((char *)obj + 0xc);
+        wpos[1] = wpos[1] - *(f32 *)((char *)obj + 0x10);
+        wpos[2] = wpos[2] - *(f32 *)((char *)obj + 0x14);
+        *(f32 *)((char *)inner + 0x6b4) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)inner + 0x6b8) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)inner + 0x6bc) = *(f32 *)((char *)obj + 0x14);
+        *(f32 *)((char *)inner + 0x6c0) = wpos[0];
+        *(f32 *)((char *)inner + 0x6c4) = wpos[1] - j1[1];
+        *(f32 *)((char *)inner + 0x6c8) = wpos[2];
+        *(s16 *)((char *)obj + 0x6) |= 8;
+        *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x1000;
+        *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = 0;
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7FD8;
+    }
+    {
+        *(f32 *)((char *)obj + 0xc) =
+            *(f32 *)((char *)obj + 0x98) * *(f32 *)((char *)inner + 0x6c0) +
+            *(f32 *)((char *)inner + 0x6b4);
+        *(f32 *)((char *)obj + 0x10) =
+            *(f32 *)((char *)obj + 0x98) * *(f32 *)((char *)inner + 0x6c4) +
+            *(f32 *)((char *)inner + 0x6b8);
+        *(f32 *)((char *)obj + 0x14) =
+            *(f32 *)((char *)obj + 0x98) * *(f32 *)((char *)inner + 0x6c8) +
+            *(f32 *)((char *)inner + 0x6bc);
+        (*(void (*)(int, void *, void *, void *))(*(int *)(*(int *)((char *)sub + 0x68) + 0x34)))(
+            sub, &wpos[0], &wpos[1], &wpos[2]);
+        (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(
+            *(f32 *)((char *)obj + 0x98) * (wpos[0] - *(f32 *)((char *)inner + 0x6b4)) +
+                *(f32 *)((char *)inner + 0x6b4),
+            *(f32 *)((char *)obj + 0x98) * (wpos[1] - *(f32 *)((char *)inner + 0x6b8)) +
+                *(f32 *)((char *)inner + 0x6b8),
+            *(f32 *)((char *)obj + 0x98) * (wpos[2] - *(f32 *)((char *)inner + 0x6bc)) +
+                *(f32 *)((char *)inner + 0x6bc));
+    }
+    if (*(s8 *)((char *)state + 0x27a) == 0 && *(s8 *)((char *)state + 0x346) != 0) {
+        ObjAnim_SetCurrentMove(obj, *(s16 *)*(int *)((char *)inner + 0x6e8), lbl_803E7EA4, 1);
+        (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 2);
+        if (arrayIndexOf((s16 *)(base + 0x160), 4, *(s16 *)((char *)sub + 0x46)) != -1) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029F67C;
+            return 0x1b;
+        }
+        *(int *)((char *)state + 0x308) = (int)fn_8029F67C;
+        return 0x19;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int fn_802ABFBC(int obj, int state, int inner)
 {
     void *sub;
@@ -14079,7 +14230,7 @@ extern int fn_8029DB70();
 extern int fn_8029E568();
 extern int fn_8029EBCC(int obj, int state);
 extern int fn_8029F108(int obj, int state);
-extern int fn_8029FA24();
+extern int fn_8029FA24(int obj, int state, f32 fv);
 extern int fn_802A0680();
 extern int fn_802A16CC();
 extern int fn_802A1CA8();
