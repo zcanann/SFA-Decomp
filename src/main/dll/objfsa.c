@@ -4434,6 +4434,10 @@ void RomCurve_setA4(void *a, void *b) {
 extern void curveFn_80010d54(void);
 extern void curveFn_80010dc0(void);
 extern void curvesMove(float *state);
+extern void curvesSetupMoveNetworkCurve(float *state);
+extern f32 gFloatNegOne;
+extern f32 gFloatOne;
+extern void *memcpy(void *dst, const void *src, u32 n);
 extern u8 RomCurve_goNextPoint(float *state);
 
 #pragma peephole off
@@ -4509,6 +4513,151 @@ int RomCurve_setClosed(float *state, int closed) {
 }
 #pragma scheduling on
 #pragma peephole on
+
+#define ROMCURVE_ADD_LINK(off, mask, wantSet)                                     \
+    neighborId = *(s32 *)(curve + (off));                                         \
+    if (neighborId > -1 && (((*(s8 *)(curve + 0x1b) & (mask)) != 0) == (wantSet)) && \
+        neighborId != -1) {                                                       \
+        candidateIds[candidateCount++] = neighborId;                              \
+    }
+
+#define ROMCURVE_REFRESH_CONTROL(secondOff)                                       \
+    *(f32 *)(stateBytes + 0xb8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0x8);    \
+    *(f32 *)(stateBytes + 0xbc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0x8); \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
+        fn_80293E80(lbl_803E0614 *                                                \
+                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2c) << 8) / \
+                    lbl_803E0618);                                                \
+    *(f32 *)(stateBytes + 0xc0) = lbl_803E0610 * t;                               \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
+        fn_80293E80(lbl_803E0614 *                                                \
+                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2c) << 8) / \
+                    lbl_803E0618);                                                \
+    *(f32 *)(stateBytes + 0xc4) = lbl_803E0610 * t;                               \
+    *(f32 *)(stateBytes + 0xd8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0xc);    \
+    *(f32 *)(stateBytes + 0xdc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0xc); \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
+        fn_80293E80(lbl_803E0614 *                                                \
+                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2d) << 8) / \
+                    lbl_803E0618);                                                \
+    *(f32 *)(stateBytes + 0xe0) = lbl_803E0610 * t;                               \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
+        fn_80293E80(lbl_803E0614 *                                                \
+                    (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2d) << 8) / \
+                    lbl_803E0618);                                                \
+    *(f32 *)(stateBytes + 0xe4) = lbl_803E0610 * t;                               \
+    *(f32 *)(stateBytes + 0xf8) = *(f32 *)(*(s32 *)(stateBytes + 0xa0) + 0x10);   \
+    *(f32 *)(stateBytes + 0xfc) = *(f32 *)(*(s32 *)(stateBytes + (secondOff)) + 0x10); \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2e) *                 \
+        sin(lbl_803E0614 *                                                        \
+            (float)((s32)*(s8 *)(*(s32 *)(stateBytes + 0xa0) + 0x2c) << 8) / lbl_803E0618); \
+    *(f32 *)(stateBytes + 0x100) = lbl_803E0610 * t;                              \
+    t = (float)(u32)*(u8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2e) *          \
+        sin(lbl_803E0614 *                                                        \
+            (float)((s32)*(s8 *)(*(s32 *)(stateBytes + (secondOff)) + 0x2c) << 8) / \
+            lbl_803E0618);                                                        \
+    *(f32 *)(stateBytes + 0x104) = lbl_803E0610 * t
+
+#pragma peephole off
+#pragma scheduling off
+u8 RomCurve_goNextPoint(float *state) {
+    char *stateBytes;
+    int candidateIds[4];
+    int candidateCount;
+    int neighborId;
+    int curve;
+    int low;
+    int high;
+    int mid;
+    int nextCurve;
+    float t;
+
+    if (state == NULL) {
+        return 1;
+    }
+    stateBytes = (char *)state;
+    if (*(void **)(stateBytes + 0xa0) == NULL || *(void **)(stateBytes + 0xa4) == NULL) {
+        return 1;
+    }
+
+    *(void **)(stateBytes + 0x9c) = *(void **)(stateBytes + 0xa0);
+    *(void **)(stateBytes + 0xa0) = *(void **)(stateBytes + 0xa4);
+    memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
+    memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
+    memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
+
+    curve = *(s32 *)(stateBytes + 0xa0);
+    candidateCount = 0;
+    if (*(s32 *)(stateBytes + 0x80) == 0) {
+        ROMCURVE_ADD_LINK(0x1c, 1, 0);
+        ROMCURVE_ADD_LINK(0x20, 2, 0);
+        ROMCURVE_ADD_LINK(0x24, 4, 0);
+        ROMCURVE_ADD_LINK(0x28, 8, 0);
+    } else {
+        ROMCURVE_ADD_LINK(0x1c, 1, 1);
+        ROMCURVE_ADD_LINK(0x20, 2, 1);
+        ROMCURVE_ADD_LINK(0x24, 4, 1);
+        ROMCURVE_ADD_LINK(0x28, 8, 1);
+    }
+
+    if (candidateCount == 0) {
+        neighborId = -1;
+    } else {
+        neighborId = candidateIds[randomGetRange(0, candidateCount - 1)];
+    }
+    if (neighborId == -1) {
+        *(void **)(stateBytes + 0xa4) = NULL;
+        return 1;
+    }
+
+    if (neighborId < 0) {
+        nextCurve = 0;
+    } else {
+        low = 0;
+        high = nRomCurves - 1;
+        nextCurve = 0;
+        while (low <= high) {
+            mid = (low + high) >> 1;
+            nextCurve = (s32)romCurves[mid];
+            if (*(u32 *)(nextCurve + 0x14) < (u32)neighborId) {
+                low = mid + 1;
+            } else if (*(u32 *)(nextCurve + 0x14) <= (u32)neighborId) {
+                break;
+            } else {
+                high = mid - 1;
+            }
+        }
+        if (low > high) {
+            nextCurve = 0;
+        }
+    }
+
+    *(s32 *)(stateBytes + 0xa4) = nextCurve;
+    if (*(void **)(stateBytes + 0xa4) == NULL) {
+        return 1;
+    }
+
+    if (*(s32 *)(stateBytes + 0x80) == 0) {
+        ROMCURVE_REFRESH_CONTROL(0xa4);
+    } else {
+        ROMCURVE_REFRESH_CONTROL(0x9c);
+    }
+
+    if (*(s32 *)(stateBytes + 0x90) != 0) {
+        curvesSetupMoveNetworkCurve(state);
+    }
+    if (*(s32 *)(stateBytes + 0x80) == 0) {
+        ((void (*)(float *, double))curveFn_80010320)(state, gFloatOne);
+    } else {
+        ((void (*)(float *, double))curveFn_80010320)(state, gFloatNegOne);
+    }
+    return 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
+#undef ROMCURVE_REFRESH_CONTROL
+#undef ROMCURVE_ADD_LINK
 
 /* fn_800DA928: clamp + curveFn call. */
 #pragma scheduling off
