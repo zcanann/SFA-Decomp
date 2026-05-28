@@ -8996,6 +8996,52 @@ void ObjModel_ClearBlendChannels(u8 *model) {
 }
 #pragma pop
 
+extern f32 lbl_803DE840;
+
+#pragma scheduling off
+void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 weight, int flags) {
+    u8 *ch;
+    u8 *hdr;
+    if (channel > 2) {
+        return;
+    }
+    hdr = *(u8 **)model;
+    if (*(void **)(hdr + 0xdc) == NULL) {
+        return;
+    }
+    if (a < -1) {
+        return;
+    }
+    if (b < -1) {
+        return;
+    }
+    if (a >= hdr[0xf9]) {
+        return;
+    }
+    if (b >= hdr[0xf9]) {
+        return;
+    }
+    ch = *(u8 **)(model + 0x28) + channel * 0x10;
+    if (a == -1 && b == -1) {
+        if ((s8)ch[0xc] == -1 && (s8)ch[0xd] == -1) {
+            return;
+        }
+        flags |= 6;
+    }
+    if ((s8)ch[0xc] == a && (s8)ch[0xd] == b) {
+        return;
+    }
+    *(s8 *)(ch + 0xc) = a;
+    *(s8 *)(ch + 0xd) = b;
+    if (!(flags & 0x10)) {
+        *(f32 *)(ch + 0x0) = lbl_803DE828;
+    }
+    *(f32 *)(ch + 0x4) = lbl_803DE840;
+    *(f32 *)(ch + 0x8) = weight;
+    ch[0xe] = flags | 4;
+}
+#pragma scheduling reset
+
 extern void *modelLoadFn_80025ae4(u8 *p, int b, int isType1, int c);
 extern void modelLoadColorFn_80024ec8(void *m, void *data);
 extern void ObjModel_RelocateAnimData(u8 *p, void *m);
