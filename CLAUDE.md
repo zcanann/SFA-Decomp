@@ -153,6 +153,19 @@ Heuristic before reaching for `asm { }`:
     by two hunters — the `(f32)(int)` variant tested and reverted, sometimes
     *worse*). If the explicit cast doesn't flip it on a late-pool function, it's
     a genuine residual (~85-96%) — leave it, don't keep retrying.
+    **The `@NNN`-vs-named-`lbl` LABEL is largely a MEASUREMENT ARTIFACT — NOT
+    fixable via symbols.txt.** objdiff content-matches the literal-pool entry by
+    the actual DATA BYTES at the resolved address; both your `.o` and target hold
+    the same bias `0x4330000000000000`, so objdiff already scores it MATCHED even
+    though `function_objdump.py --diff` always prints the raw local name `@NNN`.
+    Measured proof: retyping `lbl_803E7158` (the int→double bias, mistyped in
+    symbols.txt as a 3-byte `string`) to an 8-byte `double` produced ZERO
+    project-wide delta (fuzzy 46.066067 → 46.066067 to the digit; build green).
+    So the `@NNN` print is cosmetic when the bytes match — do NOT retype symbols
+    or chase the label. The GENUINE caps are the float-pool-ORDERING cases above
+    (the entry lands at a *different address* than the shared pool symbol, so the
+    bytes can't content-match) — those are real and not symbols.txt-fixable.
+    (zulu14, task #9, decisive negative — don't re-run this experiment.)
 
 11. **`extern int fn(...)` for callees whose return is treated as `int`** —
     even if conceptually the return is a byte. Declaring `extern u8 fn(...)`
