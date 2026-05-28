@@ -8814,6 +8814,162 @@ typedef struct {
     u8 pad[0xb0 - 4];
 } MoveSlot;
 
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80299E44(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    struct {
+        u8 pad[6];
+        u16 mode;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } pfx;
+
+    if (lbl_803DE42C != 0) {
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
+        *(f32 *)((char *)inner + 0x854) = *(f32 *)((char *)inner + 0x854) - timeDelta;
+        if (*(f32 *)((char *)inner + 0x854) <= lbl_803E7EA4) {
+            int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+            int v = *(s16 *)((char *)sub + 0x4) - 1;
+            if (v < 0) {
+                v = 0;
+            } else if (v > *(s16 *)((char *)sub + 0x6)) {
+                v = *(s16 *)((char *)sub + 0x6);
+            }
+            *(s16 *)((char *)sub + 0x4) = v;
+            *(f32 *)((char *)inner + 0x854) = lbl_803E7F58;
+        }
+        ObjPath_GetPointWorldPosition(lbl_803DE44C, 5, &pfx.x, &pfx.y, &pfx.z, 0);
+        pfx.scale = lbl_803E7F9C;
+        pfx.mode = 0;
+        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        pfx.mode = 1;
+        (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+            (int)lbl_803DE44C, 0x7f5, &pfx, 0x200001, -1, 0);
+        if ((*(u16 *)((char *)inner + 0x6e0) & lbl_803DE4B4) == 0 ||
+            *(s16 *)((char *)*(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c) + 0x4) == 0 ||
+            getCurSeqNo() != 0) {
+            int i;
+            void **p = lbl_80332ED4;
+            lbl_803DE42C = 0;
+            for (i = 0; i < 7; i++) {
+                if (*p != NULL) {
+                    Obj_FreeObject((int)*p);
+                    *p = NULL;
+                }
+                p++;
+            }
+            if (lbl_803DE454 != NULL) {
+                Resource_Release(lbl_803DE454);
+                lbl_803DE454 = NULL;
+            }
+        }
+    }
+    if (*(s16 *)((char *)inner + 0x80e) != -1 || (*(int *)((char *)state + 0x31c) & 0x800) != 0) {
+        int r = fn_8029ABD8(obj, state, fv);
+        if (r != 0) {
+            return r;
+        }
+        *(s16 *)((char *)inner + 0x80e) = -1;
+    }
+    if ((*(int *)((char *)state + 0x31c) & 0x400) != 0) {
+        switch (*(u8 *)((char *)state + 0x34b)) {
+        case 1:
+            *(u8 *)((char *)inner + 0x8a9) = 8;
+            ObjAnim_SetCurrentMove(
+                obj,
+                lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+                lbl_803E7EA4, 0);
+            *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+            return 0x27;
+        case 3:
+            *(u8 *)((char *)inner + 0x8a9) = 9;
+            ObjAnim_SetCurrentMove(
+                obj,
+                lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+                lbl_803E7EA4, 0);
+            *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+            return 0x27;
+        case 4:
+            *(u8 *)((char *)inner + 0x8a9) = 7;
+            ObjAnim_SetCurrentMove(
+                obj,
+                lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+                lbl_803E7EA4, 0);
+            *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+            return 0x27;
+        case 2:
+            *(u8 *)((char *)inner + 0x8a9) = 6;
+            ObjAnim_SetCurrentMove(
+                obj,
+                lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+                lbl_803E7EA4, 0);
+            *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+            return 0x27;
+        default:
+            *(u8 *)((char *)inner + 0x8a9) = 5;
+            ObjAnim_SetCurrentMove(
+                obj,
+                lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+                lbl_803E7EA4, 0);
+            *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+            return 0x27;
+        }
+    }
+    if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+        if (*(u8 *)((char *)state + 0x34b) == 2 && *(f32 *)((char *)state + 0x298) > lbl_803E7EAC) {
+            *(u8 *)((char *)inner + 0x8a9) = 1;
+            ObjAnim_SetCurrentMove(
+                obj,
+                lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+                lbl_803E7EA4, 0);
+            *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+            return 0x27;
+        }
+        if (*(u8 *)((char *)state + 0x34b) == 3 && *(f32 *)((char *)state + 0x298) > lbl_803E7EAC) {
+            *(u8 *)((char *)inner + 0x8a9) = 4;
+            ObjAnim_SetCurrentMove(
+                obj,
+                lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+                lbl_803E7EA4, 0);
+            *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+            return 0x27;
+        }
+        if (*(u8 *)((char *)state + 0x34b) == 1 && *(f32 *)((char *)state + 0x298) > lbl_803E7EAC) {
+            *(u8 *)((char *)inner + 0x8a9) = 3;
+            ObjAnim_SetCurrentMove(
+                obj,
+                lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+                lbl_803E7EA4, 0);
+            *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+            return 0x27;
+        }
+        if (*(u8 *)((char *)state + 0x34b) == 4 && *(f32 *)((char *)state + 0x298) > lbl_803E7EAC) {
+            *(u8 *)((char *)inner + 0x8a9) = 2;
+            ObjAnim_SetCurrentMove(
+                obj,
+                lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+                lbl_803E7EA4, 0);
+            *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+            return 0x27;
+        }
+        *(u8 *)((char *)inner + 0x8a9) = 0;
+        ObjAnim_SetCurrentMove(
+            obj,
+            lbl_803336BC[((MoveSlot *)(*(int *)((char *)inner + 0x3dc)))[*(u8 *)((char *)inner + 0x8a9)].moveIdx],
+            lbl_803E7EA4, 0);
+        *(int *)((char *)state + 0x308) = (int)fn_8029BC08;
+        return 0x27;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 #pragma peephole off
 #pragma scheduling off
 int fn_80299BB0(int obj, int p2)
