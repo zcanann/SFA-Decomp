@@ -270,6 +270,11 @@ extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E69E4;
 extern f32 lbl_803E6A18;
 extern f32 lbl_803E6A1C;
+extern f32 lbl_803E695C;
+extern f32 timeDelta;
+extern f32 lbl_803E68B0;
+extern f32 lbl_803E68B4;
+extern void renderFn_8008f904(void *p);
 
 typedef struct {
     u8 b0 : 1;
@@ -1520,6 +1525,68 @@ void drcagewith_init(int obj, char *arg) {
         *(f32 *)(p + 0x1c) = fz;
         *(f32 *)(p + 0x20) = fz;
         ObjGroup_AddObject(obj, 0x18);
+    }
+}
+
+void drakormissile_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int s;
+    int i;
+    *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = 0x13;
+    *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = 1;
+    s = *(int *)((char *)obj + 0x54);
+    *(s16 *)(s + 0x60) = *(s16 *)(s + 0x60) & ~1;
+    *(f32 *)((char *)obj + 0xc) = *(f32 *)(arg + 0x8);
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)(arg + 0xc);
+    *(f32 *)((char *)obj + 0x14) = *(f32 *)(arg + 0x10);
+    *(f32 *)((char *)obj + 0x24) = (f32)(u32)(u8)arg[0x18];
+    *(f32 *)((char *)obj + 0x28) = (f32)(u32)(u8)arg[0x19];
+    *(f32 *)((char *)obj + 0x2c) = (f32)(u32)(u8)arg[0x1a];
+    {
+        int *r = *(int **)((char *)obj + 0x54);
+        if (r != 0) {
+            *(s16 *)((char *)r + 0xb2) = 1;
+        }
+    }
+    ObjGroup_AddObject(obj, 0x2);
+    *(u8 *)(p + 0x4) = 0;
+    *(u8 *)(p + 0x5) = 0;
+    *(int *)(p + 0x8) = 0;
+    *(int *)p = 0;
+    *(f32 *)(p + 0xc) = lbl_803E695C;
+    for (i = 0; i < 5; i++) {
+        *(u16 *)(p + 0x10) = (u16)randomGetRange(-0x7fff, 0x7fff);
+        *(u16 *)(p + 0x1a) = (u16)randomGetRange(-0x400, 0x400);
+        *(u16 *)(p + 0x24) = (u16)randomGetRange(-0x7fff, 0x7fff);
+        *(u16 *)(p + 0x2e) = (u16)randomGetRange(-0x400, 0x400);
+        p += 2;
+    }
+}
+
+void ktlazerwall_render(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x4c);
+    int m;
+    if (*(void **)(p + 0x10) != 0) {
+        *(f32 *)(p + 0x8) -= timeDelta;
+        if (*(f32 *)(p + 0x8) <= lbl_803E6898) {
+            f32 t = lbl_803E68B0 * *(f32 *)(p + 0xc);
+            m = *(int *)(p + 0x10);
+            *(f32 *)(m + 0x10) = *(f32 *)(m + 0x10) - t * lbl_803E68B4;
+            *(f32 *)(p + 0x8) = (f32)(int)randomGetRange(0xa, 0x78);
+        } else {
+            m = *(int *)(p + 0x10);
+            *(f32 *)(m + 0x10) = *(f32 *)(p + 0xc) * timeDelta + *(f32 *)(m + 0x10);
+        }
+        renderFn_8008f904(*(void **)(p + 0x10));
+        *(u16 *)(*(int *)(p + 0x10) + 0x20) += framesThisStep;
+        m = *(int *)(p + 0x10);
+        if (*(u16 *)(m + 0x20) >= *(u16 *)(m + 0x22)) {
+            mm_free((void *)m);
+            *(int *)(p + 0x10) = 0;
+            *(u8 *)p &= ~8;
+            GameBit_Set(*(s16 *)(q + 0x1e), 0);
+        }
     }
 }
 #pragma peephole reset
