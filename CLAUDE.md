@@ -484,6 +484,15 @@ that leaf's definition in `#pragma dont_inline on` — fixes the caller AND lift
 the leaf standalone. Catches hidden ones a size-check misses (a small leaf
 inlined into a big caller barely moves the symbol size). On inline-heavy TUs
 (placeholder_800066E0), run this check first on any partial <90%.
+**Inverse direction — extra `bl`s in YOURS (not target) of the SAME callee
+repeated = a DUPLICATED code BLOCK, not an inline victim.** If your call set has
+*more* `bl`s than target and the extras are repeats of the same callee(s), it's
+usually because a `switch`/`if` arm DUPLICATES the common post-block tail
+(e.g. a case emits its own copy of the shared `PSVECScale/Add; return` tail)
+where target shares ONE tail. Fix by replacing that arm's body with `break`
+(or a goto-the-shared-tail structure) so it falls through to the single common
+tail — the call set then matches. NOT a dont_inline case. (november11,
+fn_8029E568 86.8→91.7%.)
 
 ## `for (i=0; i<n; i++) { use(*p); p++; }` vs `*p++`
 
@@ -561,6 +570,18 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
    Revert any family that doesn't conserve. Build green, **land on `main`**.
 
 ## Drift handling (Ghidra-imported `FUN_xxx` don't match v1.0)
+
+**A stuck mid-range partial (60-95%) is OFTEN a CORRECTNESS bug, not a codegen
+cap — verify the target's actual control flow BEFORE assuming a cap.** The
+Ghidra import frequently got the C *logic* subtly wrong: a `return`/store nested
+inside an `if` that target executes unconditionally, an over-simplified switch
+arm (a bare list-walk where target has an inner sub-switch), a spurious extra
+`return 0`. These read like "register-allocation residuals" but are really wrong
+behaviour. Before filing a partial as a cap, diff the target asm's branches/
+returns against your C control flow and fix the logic — november11 took
+fn_80295A04 66.6→100% and fn_802A7160 93.6→100% this way (both were import
+control-flow bugs, not caps). Only after the control flow provably matches should
+a residual be called a coloring/codegen cap.
 
 Many `.c` files were imported from a v1.1 Ghidra session and have wrong
 function boundaries vs the v1.0 `.s`. **Don't try to fix `FUN_xxx`** — instead:
