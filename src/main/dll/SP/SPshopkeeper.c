@@ -18,7 +18,7 @@ typedef void (*ObjectTriggerRefreshFn)(int triggerId, int obj, int arg);
 typedef void (*ScreenTransitionStartFn)(int transitionId, int value);
 typedef int (*ScreenTransitionFinishedFn)(void);
 typedef void (*MapEventTriggerFn)(int mapId, int eventId, int value, int arg);
-typedef int (*MapEventGetAnimFn)(int mapId, int eventId);
+typedef u8 (*MapEventGetAnimFn)(int mapId, int eventId);
 typedef void (*MapEventSetAnimFn)(int mapId, int eventId, int value);
 
 extern u32 GameBit_Get(u32 id);
@@ -159,14 +159,10 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState *sta
 void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState *state)
 {
     ShopkeeperObject *playerObj;
-    s32 mapId;
-    u8 mapEventActive;
 
     SHOPKEEPER_APPLY_MAP_OVERRIDE(state, 0x1ab);
 
-    if (state->earlySceneDelay < 2) {
-        state->earlySceneDelay++;
-    } else {
+    if (state->earlySceneDelay >= 2) {
         if (GameBit_Get(0xb) == 0) {
             padClearAnalogInputX(0);
             padClearAnalogInputY(0);
@@ -184,6 +180,8 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState *state)
             GameBit_Set(0x2ba, 0);
             state->flags |= SHOPKEEPER_OBJFLAG_EARLY_SCENE_STARTED;
         }
+    } else {
+        state->earlySceneDelay++;
     }
 
     if (GameBit_Get(0x2da) == 0 &&
@@ -197,12 +195,10 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState *state)
         }
     }
 
-    mapId = ((ShopkeeperObject *)obj)->mapId;
-    mapEventActive = MAP_EVENT_GET_ANIM(mapId, 6);
-    if (mapEventActive == 0) {
+    if (MAP_EVENT_GET_ANIM(((ShopkeeperObject *)obj)->mapId, 6) == 0) {
         playerObj = (ShopkeeperObject *)Obj_GetPlayerObject();
         if (playerHasSpell((int)playerObj, 0) != 0) {
-            MAP_EVENT_SET_ANIM(mapId, 6, 1);
+            MAP_EVENT_SET_ANIM(((ShopkeeperObject *)obj)->mapId, 6, 1);
         }
     }
 }

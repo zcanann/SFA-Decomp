@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 typedef struct ShopkeeperLevelControlState {
-    u32 flags;
+    s32 flags;
     u8 earlySceneDelay;
     u8 unk5;
     u8 thornTailState;
