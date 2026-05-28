@@ -6014,7 +6014,7 @@ extern f32 lbl_803E7EEC;
 extern void fn_802B8108(void);
 extern void fn_802B7D28(void);
 extern void fn_802B7BF0(void);
-extern void fn_802B7B0C(void);
+extern int fn_802B7B0C(int obj, int state, f32 fv);
 extern void fn_802B78A4(void);
 extern void fn_802B74C4(void);
 extern void fn_802B735C(void);
@@ -6336,6 +6336,8 @@ extern f32 lbl_803E7FA0;
 extern f32 lbl_803E7FA4;
 extern f32 lbl_803E7F5C;
 extern f32 lbl_803E8150;
+extern f32 lbl_803E8180;
+extern f32 lbl_803E81A8;
 extern f32 lbl_803DAF88[];
 extern s16 lbl_80332F2C[];
 extern s16 lbl_80332F48[];
@@ -9490,6 +9492,27 @@ void fn_802AED2C(int obj, int state, int p3)
         }
         Sfx_PlayFromObject(obj, sound);
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802B7B0C(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        Sfx_PlayFromObject(obj, *(u16 *)((char *)*(int *)((char *)inner + 0x40c) + 0x2a));
+        if (randomGetRange(0, 1) != 0) {
+            *(s16 *)((char *)obj + 0) += 0x8AA9;
+        } else {
+            *(s16 *)((char *)obj + 0) -= 0x8AA9;
+        }
+        ObjAnim_SetCurrentMove(obj, 0x23, lbl_803E8180, 0);
+    }
+    *(f32 *)((char *)state + 0x2a0) = lbl_803E81A8;
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
