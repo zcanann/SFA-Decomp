@@ -298,6 +298,7 @@ extern u8 lbl_8032A7C0[];
 extern int lbl_803DC2C8;
 extern int lbl_803DC2D0;
 extern f32 lbl_803E699C;
+extern void **gPlayerInterface;
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg);
 int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg);
 
@@ -1809,6 +1810,34 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
     if (ObjTrigger_IsSet(obj) != 0) {
         *(void **)((char *)obj + 0xbc) = (void *)kytesmum_idleCallback;
         (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(next, obj, -1);
+    }
+    return 0;
+}
+
+int hightop_handleMotionEvent(int obj, u8 event) {
+    char *runtime = *(char **)((char *)obj + 0xb8);
+    switch (event) {
+    case 5:
+        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 8);
+        break;
+    case 6:
+        GameBit_Set(0x634, 1);
+        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(4, obj, -1);
+        break;
+    case 7:
+        GameBit_Set(0x634, 0);
+        GameBit_Set(0x631, 1);
+        *(u8 *)(*(int *)((char *)obj + 0x50) + 0x71) |= 1;
+        *(u16 *)(runtime + 0xc40) &= ~0x140;
+        *(u8 *)(runtime + 0x9fd) &= ~2;
+        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 7);
+        break;
+    case 8:
+        (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(7, obj, -1);
+        break;
+    case 9:
+        (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 7);
+        break;
     }
     return 0;
 }
