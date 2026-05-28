@@ -44,6 +44,8 @@ extern u8 lbl_803DD178;
 extern void *lbl_803DD144;
 extern f32 lbl_8039A7A8[];
 extern f32 pEXIInputFlag;
+extern f32 lbl_803DF06C;
+extern u8 colorScale;
 extern void PSVECNormalize(void *src, void *dst);
 
 extern undefined4 ABS();
@@ -4296,6 +4298,51 @@ void fn_8008B88C(int *outTimer)
         return;
     }
     *outTimer = *(int *)(sky + 0x218);
+}
+
+void fn_800897D4(int slot, f32 *x, f32 *y, f32 *z)
+{
+    u8 *sky;
+    int offset;
+    f32 fallback;
+
+    if (lbl_803DD12C == NULL) {
+        fallback = pEXIInputFlag;
+        *x = fallback;
+        *y = lbl_803DF06C;
+        *z = fallback;
+        return;
+    }
+
+    offset = slot * 0xa4;
+    sky = lbl_803DD12C + offset;
+    *x = *(f32 *)(sky + 0x90);
+    sky = lbl_803DD12C + offset;
+    *y = *(f32 *)(sky + 0x94);
+    sky = lbl_803DD12C + offset;
+    *z = *(f32 *)(sky + 0x98);
+}
+
+void objGetColor(int slot, u8 *red, u8 *green, u8 *blue)
+{
+    u8 *sky;
+    int offset;
+
+    sky = lbl_803DD12C;
+    if (sky == NULL) {
+        *blue = 0xff;
+        *green = 0xff;
+        *red = 0xff;
+    } else {
+        offset = slot * 0xa4;
+        *red = lbl_803DD12C[offset + 0x78];
+        *green = lbl_803DD12C[offset + 0x79];
+        *blue = lbl_803DD12C[offset + 0x7a];
+    }
+
+    *red = (u8)((*red * colorScale) >> 8);
+    *green = (u8)((*green * colorScale) >> 8);
+    *blue = (u8)((*blue * colorScale) >> 8);
 }
 
 #pragma pop
