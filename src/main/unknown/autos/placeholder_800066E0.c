@@ -6248,6 +6248,110 @@ void FUN_80006c24(void)
 {
 }
 
+extern u8 lbl_803DC950;
+extern u8 lbl_803DC951;
+extern int lbl_803DC960;
+extern u8 lbl_80339950[];
+extern void stopRumble2(void);
+extern void gameTextShow(int a);
+extern int DVDGetDriveStatus(void);
+extern int DVDCheckDisk(void);
+extern void DVDGetStreamPlayAddrAsync(void *buf, void *callback);
+extern void setTimeStop(int frames);
+extern void cutsceneFadeInOut(int mode);
+extern int getLoadedFileFlags(int slot);
+extern int gameTextFn_80019b14(void);
+extern void gameTextSetCharset(int a, int b);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void Sfx_SetObjectSoundsPaused(s32 paused);
+
+#pragma peephole on
+void dvdCheckError(void)
+{
+    int msgId = 0xffff;
+    int status;
+
+    if (gAudioStreamPlayAddrCallbackDone) {
+        gAudioStreamPlayAddrCallbackDone = 0;
+        gAudioStreamPlayAddrCallbackResult = 0;
+        DVDGetStreamPlayAddrAsync(lbl_80339950, AudioStream_PlayAddrCallback);
+    }
+
+    status = DVDGetDriveStatus();
+    lbl_803DC960 = status;
+    switch (status) {
+    case -1:
+        msgId = 0x339;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+            lbl_803DC951 = 1;
+        }
+        break;
+    case 4:
+        msgId = 0x33d;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+        }
+        break;
+    case 5:
+        msgId = 0x33c;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+        }
+        break;
+    case 6:
+        msgId = 0x33e;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+        }
+        break;
+    case 11:
+        msgId = 0x33a;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+        }
+        break;
+    default:
+        if (lbl_803DC950 != 0) {
+            if ((getLoadedFileFlags(0) & ~0x100000) == 0) {
+                if (getGameState() != 1 || DVDCheckDisk() != 0) {
+                    lbl_803DC950 = 0;
+                    cutsceneFadeInOut(0);
+                    Sfx_SetObjectSoundsPaused(0);
+                }
+            }
+        }
+        break;
+    }
+
+    if (msgId != 0xffff) {
+        int prevCharset = gameTextFn_80019b14();
+        Sfx_SetObjectSoundsPaused(1);
+        gameTextSetCharset(2, 2);
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        gameTextShow(msgId);
+        if (prevCharset != 2) {
+            gameTextSetCharset(prevCharset, 2);
+        }
+    }
+}
+#pragma peephole reset
+
 /*
  * --INFO--
  *
