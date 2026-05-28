@@ -380,6 +380,12 @@ extern f32 lbl_803DC2F8;
 extern s16 lbl_803DC2FC;
 int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out);
 void drakorhoverpad_update(void *curve, int arg);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 m);
+extern f32 lbl_803E6A78;
+extern f32 lbl_803E6A7C;
+extern f32 lbl_803E6A80;
+extern f32 lbl_803E6A84;
 
 extern int fn_80080150(void *timer);
 extern void s16toFloat(void *timer, int v);
@@ -1258,6 +1264,236 @@ void drakorhoverpad_updateMain(int obj) {
     fn_80221F14(obj, (f32 *)((char *)obj + 0x24), diff, lbl_803DC2F8,
                 lbl_803DC2F8 / lbl_803E6A98, lbl_803E6A9C);
     PSVECAdd((f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x24), (f32 *)((char *)obj + 0xc));
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    HoverpadFlags *f = (HoverpadFlags *)(p + 0x178);
+    Flags377 *g = (Flags377 *)(p + 0x179);
+    int player;
+    f32 m;
+    f32 absP;
+
+    player = (int)Obj_GetPlayerObject();
+    *(int *)out = -1;
+    switch (a) {
+    case 1:
+        player = (int)Obj_GetPlayerObject();
+        *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
+        *(f32 *)p = lbl_803E6A3C;
+        if (*(void **)((char *)player + 0x30) == (void *)obj) {
+            Camera_EnableViewYOffset();
+            if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
+                m = *(f32 *)(p + 0x110);
+            } else {
+                m = -*(f32 *)(p + 0x110);
+            }
+            CameraShake_SetAllMagnitudes(m);
+        }
+        break;
+    case 3:
+        if (f->b40 != 0) {
+            break;
+        }
+        if (*(f32 *)(p + 0x110) <= lbl_803E6A3C) {
+            break;
+        }
+        if (f->bit80 != 0) {
+            break;
+        }
+        player = (int)Obj_GetPlayerObject();
+        *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
+        *(f32 *)p = lbl_803E6A3C;
+        if (*(void **)((char *)player + 0x30) == (void *)obj) {
+            Camera_EnableViewYOffset();
+            if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
+                m = *(f32 *)(p + 0x110);
+            } else {
+                m = -*(f32 *)(p + 0x110);
+            }
+            CameraShake_SetAllMagnitudes(m);
+        }
+        return 1;
+    case 4:
+        if (*(f32 *)(p + 0x110) <= lbl_803E6A3C) {
+            break;
+        }
+        if (f->b40 != 0) {
+            GameBit_Set(0x660, 1);
+        } else if (GameBit_Get(0x661) != 0) {
+            if (*(f32 *)p < lbl_803E6A3C) {
+                *(f32 *)(p + 0x114) += lbl_803E6A74;
+            } else {
+                *(f32 *)(p + 0x114) += lbl_803E6A38;
+            }
+        } else {
+            GameBit_Set(0x788, 1);
+            f->state = 1;
+            *(f32 *)p = lbl_803E6A3C;
+        }
+        break;
+    case 9:
+        if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
+            break;
+        }
+        if (GameBit_Get(0x661) != 0) {
+            if (*(f32 *)p < lbl_803E6A3C) {
+                *(f32 *)(p + 0x114) += lbl_803E6A74;
+            } else {
+                *(f32 *)(p + 0x114) += lbl_803E6A38;
+            }
+        } else {
+            f->state = 1;
+            *(f32 *)p = lbl_803E6A3C;
+        }
+        break;
+    case 5:
+        if (f->b40 != 0) {
+            break;
+        }
+        f->state = 2;
+        break;
+    case 6:
+        if (f->b40 != 0) {
+            break;
+        }
+        if (*(f32 *)p < lbl_803E6A3C) {
+            *(f32 *)(p + 0x114) += lbl_803E6A7C;
+        } else {
+            *(f32 *)(p + 0x114) += lbl_803E6A80;
+        }
+        break;
+    case 7:
+        if (*(f32 *)p > lbl_803E6A3C) {
+            break;
+        }
+        f->state = 3;
+        *(f32 *)p = lbl_803E6A3C;
+        Sfx_PlayFromObject(obj, 0x30b);
+        break;
+    case 17:
+        if (*(f32 *)p < lbl_803E6A3C) {
+            break;
+        }
+        f->state = 4;
+        *(f32 *)p = lbl_803E6A3C;
+        Sfx_PlayFromObject(obj, 0x30b);
+        break;
+    case 10:
+        if (g->p1 == 0) {
+            break;
+        }
+        if (GameBit_Get(0x689) != 0) {
+            break;
+        }
+        GameBit_Set(0x689, 1);
+        break;
+    case 11:
+        if (g->p1 == 0) {
+            break;
+        }
+        if (*(void **)((char *)player + 0x30) != (void *)obj) {
+            break;
+        }
+        GameBit_Set(0x68a, 1);
+        break;
+    case 12:
+        if (g->p1 == 0) {
+            break;
+        }
+        if (*(void **)((char *)player + 0x30) != (void *)obj) {
+            break;
+        }
+        GameBit_Set(0x68b, 1);
+        break;
+    case 13:
+        if (GameBit_Get(0x68a) == 0) {
+            break;
+        }
+        if (*(f32 *)p < lbl_803E6A3C) {
+            break;
+        }
+        player = (int)Obj_GetPlayerObject();
+        *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
+        *(f32 *)p = lbl_803E6A3C;
+        if (*(void **)((char *)player + 0x30) == (void *)obj) {
+            Camera_EnableViewYOffset();
+            if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
+                m = *(f32 *)(p + 0x110);
+            } else {
+                m = -*(f32 *)(p + 0x110);
+            }
+            CameraShake_SetAllMagnitudes(m);
+        }
+        break;
+    case 14:
+        if (g->p1 == 0) {
+            break;
+        }
+        if (*(f32 *)p > lbl_803E6A3C) {
+            break;
+        }
+        player = (int)Obj_GetPlayerObject();
+        *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
+        *(f32 *)p = lbl_803E6A3C;
+        if (*(void **)((char *)player + 0x30) == (void *)obj) {
+            Camera_EnableViewYOffset();
+            if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
+                m = *(f32 *)(p + 0x110);
+            } else {
+                m = -*(f32 *)(p + 0x110);
+            }
+            CameraShake_SetAllMagnitudes(m);
+        }
+        break;
+    case 15:
+        if (f->b40 != 0) {
+            break;
+        }
+        GameBit_Set(0x788, 1);
+        break;
+    case 16:
+        if (*(f32 *)p >= lbl_803E6A3C) {
+            absP = *(f32 *)p;
+        } else {
+            absP = -*(f32 *)p;
+        }
+        if (lbl_803E6A38 == absP) {
+            *(f32 *)p = *(f32 *)p * lbl_803E6A84;
+        } else {
+            *(f32 *)p = lbl_803E6A38 * *(f32 *)p;
+        }
+        Sfx_PlayFromObject(obj, 0x309);
+        break;
+    case 20:
+        g->f10 = !g->f10;
+        break;
+    case 21:
+        g->p6 = 1;
+        *(f32 *)p = lbl_803E6A3C;
+        break;
+    }
+    switch (b) {
+    case 8:
+        if (GameBit_Get(0x67f) != 0) {
+            *(int *)out = 1;
+        } else {
+            *(int *)out = 0;
+        }
+        break;
+    case 2:
+        GameBit_Set(0x7ba, 1);
+        break;
+    case 18:
+        *(int *)out = 0;
+        break;
+    case 19:
+        *(int *)out = 1;
+        break;
+    }
+    return 1;
 }
 #pragma scheduling reset
 
