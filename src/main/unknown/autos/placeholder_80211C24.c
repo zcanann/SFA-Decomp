@@ -313,6 +313,16 @@ extern void objSoundFn_800392f0(int obj, int a, void *b, int c);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
+extern f32 lbl_803DC324;
+extern s16 lbl_803DC314;
+extern u8 lbl_8032AAB0[];
+extern f32 lbl_803E6B44;
+extern f32 lbl_803E6ADC;
+extern f32 lbl_803E6B48;
+extern int fn_80222358(int obj, f32 *p, f32 a, f32 b, f32 c, int d);
+extern void characterDoEyeAnims(int obj, void *p);
+extern void objAnimFn_80038f38(int obj, void *p);
+extern void dll_2E_func03(int obj, void *p);
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg);
 int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg);
 
@@ -1024,6 +1034,7 @@ void drshackle_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, un
     }
 }
 
+#pragma dont_inline on
 void hightop_playMovementSfx(int obj, int p2, int p3) {
     int flags = *(int *)((char *)p3 + 0x314);
     int idx;
@@ -1041,6 +1052,7 @@ void hightop_playMovementSfx(int obj, int p2, int p3) {
         Sfx_PlayFromObject(obj, (u16)lbl_803DC310);
     }
 }
+#pragma dont_inline reset
 
 void drakorhoverpad_func16(int obj, f32 scale) {
     f32 *mtx;
@@ -1828,6 +1840,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
     return 0;
 }
 
+#pragma dont_inline on
 int hightop_handleMotionEvent(int obj, u8 event) {
     char *runtime = *(char **)((char *)obj + 0xb8);
     switch (event) {
@@ -1855,6 +1868,7 @@ int hightop_handleMotionEvent(int obj, u8 event) {
     }
     return 0;
 }
+#pragma dont_inline reset
 
 void drlasercannon_init(int obj, char *arg) {
     char *p = *(char **)((char *)obj + 0xb8);
@@ -2005,6 +2019,64 @@ void hightop_hitDetect(int obj) {
         }
     } else {
         (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, p, 3);
+    }
+}
+
+void hightop_update(int obj) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    *(s16 *)(p + 0xc16) = 5;
+    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    *(s8 *)(p + 0x25f) = !((BitFlags8 *)(p + 0xc49))->b4;
+    *(u8 *)(p + 0x354) = 0;
+    *(int *)p &= ~0x8000;
+    if ((*(u16 *)(p + 0xc40) & 0x40) != 0) {
+        int ev = fn_80222358(obj, (f32 *)(p + 0xa10),
+                             lbl_803DC324 * (*(f32 *)(p + 0xc28) * timeDelta),
+                             lbl_803E6B44, lbl_803E6ADC * timeDelta, 0);
+        if (ev != 0) {
+            if (ev == -1) {
+                *(u16 *)(p + 0xc40) &= ~0x140;
+                *(u8 *)(p + 0x9fd) &= ~2;
+            } else {
+                hightop_handleMotionEvent(obj, (u8)ev);
+            }
+        }
+    } else {
+        *(f32 *)(p + 0x290) = lbl_803E6AA8;
+        *(f32 *)(p + 0x28c) = lbl_803E6AA8;
+    }
+    *(int *)(p + 0x31c) = 0;
+    *(int *)(p + 0x318) = 0;
+    *(s16 *)(p + 0x330) = 0;
+    *(int *)p &= ~0x400000;
+    (*(void (**)(int, char *, f32, f32, void **, void *))((char *)*gPlayerInterface + 0x8))(
+        obj, p, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
+    hightop_playMovementSfx(obj, (int)p, (int)p);
+    characterDoEyeAnims(obj, (void *)(p + 0x38c));
+    objAnimFn_80038f38(obj, (void *)(p + 0x3bc));
+    dll_2E_func03(obj, (void *)(p + 0x3ec));
+    if (ObjTrigger_IsSet(obj) != 0) {
+        s8 v;
+        buttonDisable(0, 0x100);
+        v = (s8)p[0xc4b];
+        if (v != -1) {
+            if (v < 0xa) {
+                (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(v, obj, -1);
+            } else {
+                GameBit_Set(*(s16 *)((char *)&lbl_803DC314 + v * 2 - 0x14), 1);
+            }
+        }
+    }
+    if ((int)randomGetRange(0, 0x64) == 0) {
+        objSoundFn_800392f0(obj, (int)(p + 0x3bc), &lbl_8032AAB0[randomGetRange(0, 2) * 6], 0);
+    }
+    if (((BitFlags8 *)(p + 0xc49))->b7 != 0) {
+        (*(void (**)(int, void *))((char *)*gGameUIInterface + 0x5c))(*(s16 *)(p + 0xc18), *gGameUIInterface);
+        *(f32 *)(p + 0xc38) += timeDelta;
+        if (*(f32 *)(p + 0xc38) > lbl_803E6B48) {
+            *(f32 *)(p + 0xc38) -= lbl_803E6B48;
+            Sfx_PlayFromObject(obj, 0x47f);
+        }
     }
 }
 #pragma peephole reset
