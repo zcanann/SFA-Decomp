@@ -294,6 +294,12 @@ extern void ObjHits_SetHitVolumeSlot(int obj, int a, int b, int c);
 extern f32 lbl_803E6988;
 extern f32 lbl_803E698C;
 extern f32 lbl_803E6990;
+extern u8 lbl_8032A7C0[];
+extern int lbl_803DC2C8;
+extern int lbl_803DC2D0;
+extern f32 lbl_803E699C;
+int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg);
+int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg);
 
 typedef struct {
     int v[3];
@@ -1695,6 +1701,50 @@ loop:
     do {
         (*(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 0x8))(obj, 0x690, 0, 1, -1, 0);
     } while (n-- != 0);
+}
+
+void kytesmum_init(int obj, char *arg) {
+    char *base = (char *)lbl_8032A7C0;
+    char *runtime = *(char **)((char *)obj + 0xb8);
+    int r;
+    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
+    if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
+        *(u8 *)(runtime + 0x6e6) = 1;
+    }
+    switch ((s8)arg[0x19]) {
+    case 1:
+        *(int *)(runtime + 0x6dc) = (int)base;
+        *(void **)(runtime + 0x6d4) = (void *)kytesmum_spawnInteractionCallback;
+        *(int *)(runtime + 0x6d8) = 0;
+        *(void **)((char *)obj + 0xbc) = (void *)kytesmum_animEventCallback;
+        break;
+    case 2:
+        *(int *)(runtime + 0x6dc) = (int)(base + 0xc);
+        *(void **)(runtime + 0x6d4) = (void *)kytesmum_updateNearPlayerCallback;
+        *(int *)(runtime + 0x6d8) = (int)&lbl_803DC2C8;
+        ObjGroup_AddObject(obj, 0x3);
+        if (*(u8 *)(runtime + 0x6e6) != 0) {
+            objRemoveFromListFn_8002ce88(obj);
+            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        }
+        ObjHits_RegisterActiveHitVolumeObject(obj);
+        *(void **)((char *)obj + 0xbc) = (void *)kytesmum_animEventCallback;
+        break;
+    case 0:
+    case 3:
+        GameBit_Set(0x934, 0);
+        GameBit_Set(0x933, 0);
+        *(int *)(runtime + 0x6dc) = (int)(base + 0x18);
+        *(void **)(runtime + 0x6d4) = (void *)kytesmum_updateQuestStateCallback;
+        *(int *)(runtime + 0x6d8) = (int)&lbl_803DC2D0;
+        *(void **)((char *)obj + 0xbc) = (void *)kytesmum_updateInteractionRangeCallback;
+        break;
+    }
+    *(int *)(runtime + 0x6d0) = (int)(base + 0x24);
+    *(f32 *)(runtime + 0x6e0) = lbl_803E699C;
+    r = randomGetRange(0, 1) * 2;
+    ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)(runtime + 0x6dc) + r), lbl_803E698C, 0);
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
 }
 
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
