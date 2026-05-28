@@ -6302,6 +6302,7 @@ int fn_8029B994(int obj, int state)
     }
     return 0;
 }
+
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -9315,6 +9316,7 @@ void fn_802B4ED8(int obj, int p2, int mode)
     }
 }
 
+#pragma dont_inline on
 void fn_802AA8D0(int obj)
 {
     int inner = *(int *)((char *)obj + 0xb8);
@@ -9347,6 +9349,58 @@ void fn_802AA8D0(int obj)
             obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, 0);
         (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
             obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, 0);
+    }
+}
+#pragma dont_inline reset
+
+extern int *gModgfxInterface;
+extern int *gSHthorntailAnimationInterface;
+extern f32 lbl_803DAEF0[];
+extern f32 lbl_803E7FFC;
+extern int fn_80295674(int obj, int inner);
+
+void fn_802AAF80(int obj, int inner, int a, int b, int c)
+{
+    int v;
+    if (lbl_803DE44C != NULL && ((*(u8 *)((char *)inner + 0x3f4) >> 6) & 1) != 0) {
+        (*(void (*)(int, int, int, int, void *))(*(int *)(*gModgfxInterface + 0x1c)))(
+            a, b, c, 1, lbl_803DE44C);
+    }
+    if (*(s16 *)((char *)inner + 0x81c) != 0) {
+        (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, *(s16 *)((char *)inner + 0x81c), 0, 0x64, 0);
+    }
+    *(s16 *)((char *)inner + 0x81c) = 0;
+    if (*(u8 *)((char *)inner + 0x8ca) == 1) {
+        fn_802AA8D0(obj);
+    }
+    if ((*(int (**)(int))((char *)(*gSHthorntailAnimationInterface) + 0x34))(2) != 0) {
+        fn_80295674(obj, inner);
+    }
+    v = *(int *)((char *)inner + 0x360);
+    if ((v & 0x60000) != 0) {
+        *(f32 *)((char *)lbl_803DAEF0 + 0xc) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)lbl_803DAEF0 + 0x10) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)lbl_803DAEF0 + 0x14) = *(f32 *)((char *)obj + 0x14);
+        if ((v & 0x40000) != 0) {
+            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                obj, 0x427, lbl_803DAEF0, 0x200001, -1, 0);
+            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                obj, 0x427, lbl_803DAEF0, 0x200001, -1, 0);
+            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                obj, 0x427, lbl_803DAEF0, 0x200001, -1, 0);
+        }
+        if ((*(int *)((char *)inner + 0x360) & 0x20000) != 0) {
+            (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x10)))(
+                obj, *(f32 *)((char *)obj + 0xc),
+                (*(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)inner + 0x838)) - lbl_803E7F10,
+                *(f32 *)((char *)obj + 0x14), lbl_803E7FFC);
+            (*(void (*)(int, int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x14)))(
+                0, 2, *(f32 *)((char *)obj + 0xc),
+                *(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)inner + 0x838),
+                *(f32 *)((char *)obj + 0x14), lbl_803E80E4);
+            *(int *)((char *)inner + 0x360) &= ~0x20000;
+        }
     }
 }
 
