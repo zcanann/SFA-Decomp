@@ -28,6 +28,16 @@ extern int lbl_803DD134;
 extern int lbl_803DD138;
 extern int lbl_803DD13C;
 extern u8 lbl_803DD140;
+extern u8 *lbl_803DD12C;
+extern u8 *lbl_803DD148;
+extern void *lbl_803DD150;
+extern u8 lbl_803DD158;
+extern u8 lbl_803DD15C;
+extern f32 lbl_803DD160;
+extern u8 lbl_803DD164;
+extern u8 lbl_803DD178;
+extern f32 lbl_8039A7A8[];
+extern void PSVECNormalize(void *src, void *dst);
 
 extern undefined4 ABS();
 extern undefined4 FUN_800033a8();
@@ -4094,6 +4104,110 @@ void fn_80088870(int a, int b, int c, int d)
     lbl_803DD130 = b;
     lbl_803DD138 = c;
     lbl_803DD134 = d;
+}
+
+int getSkyColorFn_80088e08(int slot)
+{
+    u8 *sky;
+    int offset;
+
+    sky = lbl_803DD12C;
+    if (sky != NULL) {
+        slot *= 0xa4;
+        offset = slot + 0xc1;
+        return (sky[offset] >> 7) & 1;
+    }
+    return 0;
+}
+
+int getSkyColorFn_80088e30(int slot)
+{
+    u8 *sky;
+
+    sky = lbl_803DD12C;
+    if (sky != NULL) {
+        return sky[slot * 0xa4 + 0xc0];
+    }
+    return 0xff;
+}
+
+int getSkyStructField24C(void)
+{
+    u8 *sky;
+
+    sky = lbl_803DD12C;
+    if (sky != NULL) {
+        return sky[0x24c];
+    }
+    return 0;
+}
+
+void fn_8008904C(u8 *red, u8 *green, u8 *blue)
+{
+    u8 *color;
+
+    if (lbl_803DD12C != NULL) {
+        *red = lbl_803DD178;
+        color = &lbl_803DD178;
+        *green = color[1];
+        *blue = color[2];
+        return;
+    }
+    *red = 0xff;
+    *green = 0xff;
+    *blue = 0xff;
+}
+
+void *fn_8008912C(void)
+{
+    return lbl_803DD150;
+}
+
+int skyFn_8008919c(int slot)
+{
+    u8 *sky;
+    int offset;
+
+    sky = lbl_803DD12C;
+    if (sky == NULL) {
+        return 0;
+    }
+
+    slot *= 0xa4;
+    offset = slot + 0xc1;
+    if (((sky[offset] >> 7) & 1) != 0) {
+        return 0;
+    }
+    return lbl_803DD148[0x37];
+}
+
+void fn_800891DC(u8 red, u8 green, u8 blue)
+{
+    u8 *color;
+
+    lbl_803DD158 = red;
+    color = &lbl_803DD158;
+    color[1] = green;
+    color[2] = blue;
+}
+
+void fn_800891F0(u8 enabled)
+{
+    lbl_803DD15C = enabled;
+}
+
+void fn_800891F8(f32 x, f32 y, f32 z, f32 intensity)
+{
+    lbl_8039A7A8[0] = x;
+    lbl_8039A7A8[1] = y;
+    lbl_8039A7A8[2] = z;
+    lbl_803DD160 = intensity;
+    PSVECNormalize(lbl_8039A7A8, lbl_8039A7A8);
+}
+
+void fn_80089234(u8 enabled)
+{
+    lbl_803DD164 = enabled;
 }
 
 #pragma pop
