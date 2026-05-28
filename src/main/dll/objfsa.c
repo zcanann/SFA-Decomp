@@ -4431,6 +4431,85 @@ void RomCurve_setA4(void *a, void *b) {
 #pragma scheduling on
 #pragma peephole on
 
+extern void curveFn_80010d54(void);
+extern void curveFn_80010dc0(void);
+extern void curvesMove(float *state);
+extern u8 RomCurve_goNextPoint(float *state);
+
+#pragma peephole off
+#pragma scheduling off
+int RomCurve_setClosed(float *state, int closed) {
+    float savedPhase;
+    float t;
+    void *tmpCurve;
+
+    if (closed == *(int *)(state + 0x20)) {
+        return 0;
+    }
+    if (*(void **)(state + 0x28) == 0 || *(void **)(state + 0x27) == 0) {
+        return 1;
+    }
+
+    savedPhase = state[0];
+    *(int *)(state + 0x20) = closed;
+    tmpCurve = *(void **)(state + 0x27);
+    *(void **)(state + 0x27) = *(void **)(state + 0x29);
+    *(void **)(state + 0x29) = tmpCurve;
+
+    state[0x2e] = *(f32 *)((char *)*(void **)(state + 0x28) + 0x8);
+    state[0x2f] = *(f32 *)((char *)*(void **)(state + 0x29) + 0x8);
+    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x28) + 0x2e) *
+        fn_80293E80(lbl_803E0614 *
+                    (float)((s32)((s8)*((char *)*(void **)(state + 0x28) + 0x2c)) << 8) /
+                    lbl_803E0618);
+    state[0x30] = lbl_803E0610 * t;
+    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x29) + 0x2e) *
+        fn_80293E80(lbl_803E0614 *
+                    (float)((s32)((s8)*((char *)*(void **)(state + 0x29) + 0x2c)) << 8) /
+                    lbl_803E0618);
+    state[0x31] = lbl_803E0610 * t;
+
+    state[0x36] = *(f32 *)((char *)*(void **)(state + 0x28) + 0xc);
+    state[0x37] = *(f32 *)((char *)*(void **)(state + 0x29) + 0xc);
+    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x28) + 0x2e) *
+        fn_80293E80(lbl_803E0614 *
+                    (float)((s32)((s8)*((char *)*(void **)(state + 0x28) + 0x2d)) << 8) /
+                    lbl_803E0618);
+    state[0x38] = lbl_803E0610 * t;
+    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x29) + 0x2e) *
+        fn_80293E80(lbl_803E0614 *
+                    (float)((s32)((s8)*((char *)*(void **)(state + 0x29) + 0x2d)) << 8) /
+                    lbl_803E0618);
+    state[0x39] = lbl_803E0610 * t;
+
+    state[0x3e] = *(f32 *)((char *)*(void **)(state + 0x28) + 0x10);
+    state[0x3f] = *(f32 *)((char *)*(void **)(state + 0x29) + 0x10);
+    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x28) + 0x2e) *
+        sin(lbl_803E0614 *
+            (float)((s32)((s8)*((char *)*(void **)(state + 0x28) + 0x2c)) << 8) / lbl_803E0618);
+    state[0x40] = lbl_803E0610 * t;
+    t = (float)(u32)*(u8 *)((char *)*(void **)(state + 0x29) + 0x2e) *
+        sin(lbl_803E0614 *
+            (float)((s32)((s8)*((char *)*(void **)(state + 0x29) + 0x2c)) << 8) / lbl_803E0618);
+    state[0x41] = lbl_803E0610 * t;
+
+    if (RomCurve_goNextPoint(state) != 0) {
+        return 1;
+    }
+
+    *(void **)(state + 0x25) = curveFn_80010dc0;
+    *(void **)(state + 0x26) = curveFn_80010d54;
+    *(float **)(state + 0x21) = state + 0x2a;
+    *(float **)(state + 0x22) = state + 0x32;
+    *(float **)(state + 0x23) = state + 0x3a;
+    *(s32 *)(state + 0x24) = 8;
+    curvesMove(state);
+    state[0] = savedPhase;
+    return 0;
+}
+#pragma scheduling on
+#pragma peephole on
+
 /* fn_800DA928: clamp + curveFn call. */
 #pragma scheduling off
 void fn_800DA928(float *p) {
