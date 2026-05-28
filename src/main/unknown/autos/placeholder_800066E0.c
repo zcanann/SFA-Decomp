@@ -8664,6 +8664,10 @@ extern f32 lbl_803DE6D4;
 extern f64 lbl_803DE6D8;
 extern f32 lbl_803DE6E0;
 extern f32 lbl_803DE6E8;
+extern int lbl_803DC7BC;
+extern int gRenderMode;
+extern int lbl_803DC9C8;
+extern u8 lbl_8033A540[];
 
 extern int sprintf(char* buf, const char* fmt, ...);
 extern char* strcpy(char* dst, const char* src);
@@ -9480,4 +9484,84 @@ void* gameTextGetBox(int box)
 void* gameTextGetCurBox(void)
 {
     return lbl_803DC9CC;
+}
+
+/*
+ * Function: fn_80009008
+ * EN v1.0 Address: 0x80009008
+ * EN v1.0 Size: 12b
+ */
+void fn_80009008(void)
+{
+    lbl_803DC7BC = 1;
+}
+
+/*
+ * Function: renderModeSetOrGet
+ * EN v1.0 Address: 0x80008B4C
+ * EN v1.0 Size: 32b
+ */
+s16 renderModeSetOrGet(int mode)
+{
+    if (mode != -1) {
+        gRenderMode = mode;
+        return mode;
+    }
+    return gRenderMode;
+}
+
+/*
+ * Function: gameTextFn_80016c18
+ * EN v1.0 Address: 0x80016C18
+ * EN v1.0 Size: 48b
+ */
+void gameTextFn_80016c18(int a, int b)
+{
+    int i = lbl_803DC9C8++;
+    int* e = (int*)&lbl_8033A540[i * 0x14];
+    e[0] = 1;
+    e[1] = a;
+    e[2] = b;
+}
+
+/*
+ * Function: voxmaps_freeRouteWork
+ * EN v1.0 Address: 0x80012848
+ * EN v1.0 Size: 64b
+ */
+void voxmaps_freeRouteWork(void** p)
+{
+    if (p[0] != NULL) {
+        mm_free(p[0]);
+        p[0] = NULL;
+    }
+}
+
+/*
+ * Function: voxmaps_allocRouteWork
+ * EN v1.0 Address: 0x80012888
+ * EN v1.0 Size: 84b
+ */
+void voxmaps_allocRouteWork(void** p)
+{
+    p[0] = mmAlloc(0xe88, 0x10, NULL);
+    p[1] = (u8*)p[0] + 0xaf0;
+    p[2] = (u8*)p[1] + 0x320;
+}
+
+/*
+ * Function: gameTextFreePhrase
+ * EN v1.0 Address: 0x80016C48
+ * EN v1.0 Size: 84b
+ */
+void gameTextFreePhrase(int* p)
+{
+    p[0] = 0;
+    p[1] = 0;
+    p[2] = 0;
+    p[3] = 0;
+    if (((void**)p)[5] != NULL) {
+        mm_free(((void**)p)[5]);
+        ((void**)p)[5] = NULL;
+    }
 }
