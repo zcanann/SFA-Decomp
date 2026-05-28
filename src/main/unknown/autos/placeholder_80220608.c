@@ -3634,3 +3634,98 @@ void cmbsrc_init(int obj, u8 *setup)
 #pragma peephole on
 #pragma scheduling on
 #pragma dont_inline reset
+
+extern void fn_8003B608(int r, int g, int b);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
+extern f32 lbl_803E72F8;
+extern f32 lbl_803E7308;
+
+#pragma dont_inline on
+#pragma scheduling off
+#pragma peephole off
+void tree_spawnAmbientEffect(int obj, int p2, s8 index)
+{
+    int setup = *(int *)(obj + 0x4c);
+    int idx;
+    int newObj;
+
+    if (Obj_IsLoadingLocked()) {
+        newObj = Obj_AllocObjectSetup(0x28, 0x210);
+        *(u8 *)(newObj + 0x4) = *(u8 *)(setup + 0x4);
+        *(u8 *)(newObj + 0x6) = *(u8 *)(setup + 0x6);
+        *(u8 *)(newObj + 0x5) = *(u8 *)(setup + 0x5);
+        *(u8 *)(newObj + 0x7) = *(u8 *)(setup + 0x7) - 0xa;
+        idx = index;
+        *(f32 *)(newObj + 0x8) = *(f32 *)(p2 + idx * 0xc + 0xc);
+        *(f32 *)(newObj + 0xc) = *(f32 *)(p2 + idx * 0xc + 0x10);
+        *(f32 *)(newObj + 0x10) = *(f32 *)(p2 + idx * 0xc + 0x14);
+        *(u16 *)(newObj + 0x1c) = randomGetRange(0x708, 0x1770);
+        *(s16 *)(newObj + 0x1e) = 0;
+        *(u8 *)(newObj + 0x20) = 0xa;
+        *(u8 *)(newObj + 0x21) = 0x28;
+        *(u8 *)(newObj + 0x22) = 0x32;
+        *(u8 *)(newObj + 0x23) = 0xa;
+        *(u8 *)(newObj + 0x24) = 0x28;
+        *(s8 *)(newObj + 0x25) = -0x28;
+        *(s16 *)(newObj + 0x26) = -1;
+        *(int *)(newObj + 0x18) = 0;
+        *(int *)(p2 + idx * 4) =
+            Obj_SetupObject(newObj, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+    }
+}
+
+void tree_updateAmbientEffects(int obj, int p2)
+{
+    int i;
+    int handlePtr;
+    int posPtr;
+
+    if (*(int *)(obj + 0xf8) != 0) {
+        handlePtr = p2;
+        posPtr = p2;
+        for (i = 0; i < 3; i++) {
+            if (*(int *)handlePtr == 0) {
+                *(f32 *)(handlePtr + 0x30) -= timeDelta;
+                if (*(f32 *)(handlePtr + 0x30) <= lbl_803E72F8) {
+                    *(f32 *)(handlePtr + 0x30) = (f32)randomGetRange(0x3c, 0x12c);
+                    tree_spawnAmbientEffect(obj, p2, i);
+                }
+            } else {
+                if ((*(int (**)(int))(*(int *)(*(int *)handlePtr + 0x68) + 0x28))(
+                        *(int *)handlePtr) > 3) {
+                    *(int *)handlePtr = 0;
+                } else {
+                    (*(void (**)(int, int))(*(int *)(*(int *)handlePtr + 0x68) + 0x24))(
+                        *(int *)handlePtr, posPtr + 0xc);
+                }
+            }
+            handlePtr += 4;
+            posPtr += 0xc;
+        }
+    }
+}
+
+void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    int i;
+
+    if (visible != 0) {
+        fn_8003B608(*(u8 *)(setup + 0x20), *(u8 *)(setup + 0x21), *(u8 *)(setup + 0x22));
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7308);
+        if (*(u16 *)(state + 0x58) & 0x80) {
+            for (i = 0; i < 3; i++) {
+                ObjPath_GetPointWorldPosition(obj, i, (f32 *)(state + 0xc),
+                    (f32 *)(state + 0x10), (f32 *)(state + 0x14), 0);
+                state += 0xc;
+            }
+        }
+        *(int *)(obj + 0xf8) = 1;
+    }
+}
+#pragma peephole on
+#pragma scheduling on
+#pragma dont_inline reset
