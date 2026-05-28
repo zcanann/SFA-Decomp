@@ -4982,3 +4982,19 @@ void drearthcal_update(int obj)
 }
 #pragma scheduling on
 #pragma peephole on
+
+extern void voxmaps_worldToGrid(void *world, void *grid);
+extern int voxmaps_traceLine(void *from, void *to, void *out, int p4, int p5);
+
+#pragma scheduling off
+void fn_80221D6C(void *p1, void *p2)
+{
+    int grid1[2];
+    int grid2[2];
+    int out[2];
+
+    voxmaps_worldToGrid(p1, grid1);
+    voxmaps_worldToGrid(p2, grid2);
+    voxmaps_traceLine(grid1, grid2, out, 0, 0);
+}
+#pragma scheduling on
