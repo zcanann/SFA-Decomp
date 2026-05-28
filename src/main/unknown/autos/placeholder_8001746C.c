@@ -9190,6 +9190,130 @@ void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 w
 }
 #pragma scheduling reset
 
+extern void modelApplyBoneTransforms(int a, int b, int c, void *d, void *e, int f);
+extern f32 lbl_803DE818;
+extern f32 lbl_803DE868;
+extern f32 lbl_803DE86C;
+extern f32 lbl_803DE870;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjModel_ApplyBlendChannels(u8 *model) {
+    u8 *hdr;
+    u8 *ch;
+    int i;
+    s16 defFrame;
+    int arrB[3] = {0, 0, 0};
+    int arrA[3] = {0, 0, 0};
+    void *boneA;
+    void *boneB;
+    int arg0;
+    int arg1;
+    int fl;
+    f32 w;
+    f32 t;
+    f32 r;
+
+    hdr = *(u8 **)model;
+    if (*(void **)(hdr + 0xdc) == NULL) {
+        return;
+    }
+    defFrame = *(u16 *)(hdr + 0xe4) + 1;
+    for (i = 0; i < 3; i++) {
+        ch = *(u8 **)(model + 0x28) + i * 0x10;
+        if (*(f32 *)(ch + 0x0) != *(f32 *)(ch + 0x4)) {
+            ch[0xe] &= ~0xc;
+            ch[0xe] |= 4;
+        }
+        fl = ch[0xe] & 0xc;
+        arrA[i] = fl;
+        if ((s8)ch[0xc] != -1 || (s8)ch[0xd] != -1 || fl != 0) {
+            arrB[i] = 1;
+        }
+        if (arrA[i] & 4) {
+            ch[0xe] &= ~4;
+            ch[0xe] |= 8;
+        } else if (arrA[i] & 8) {
+            ch[0xe] &= ~8;
+        }
+    }
+    if (arrB[0] == 0 && arrB[1] == 0 && arrB[2] == 0) {
+        return;
+    }
+    if (arrB[1]) {
+        arrB[0] = 0;
+    }
+    if (arrA[2]) {
+        arrA[0] = 1;
+        arrA[1] = 1;
+    }
+    if ((arrB[0] && arrA[0]) || (arrB[1] && arrA[1])) {
+        if (arrB[2]) {
+            arrA[2] = 1;
+        }
+    }
+    for (i = 0; i < 3; i++) {
+        if (arrB[i] && *(void **)(hdr + 0xa4)) {
+            arrA[i] = 1;
+        }
+        ch = *(u8 **)(model + 0x28) + i * 0x10;
+        if (ch[0xe] & 2) {
+            ch[0xe] &= ~2;
+            *(f32 *)(ch + 0x0) = lbl_803DE828;
+        }
+        if (arrB[i] && arrA[i]) {
+            if ((s8)ch[0xc] > -1) {
+                boneA = (void *)((int *)(*(u8 **)(hdr + 0xdc)))[(s8)ch[0xc]];
+            } else {
+                boneA = &defFrame;
+            }
+            if ((s8)ch[0xd] > -1) {
+                boneB = (void *)((int *)(*(u8 **)(hdr + 0xdc)))[(s8)ch[0xd]];
+            } else {
+                boneB = &defFrame;
+            }
+            if (i == 2) {
+                if (arrB[0] == 0 && arrB[1] == 0) {
+                    arg0 = *(int *)(hdr + 0x28);
+                } else {
+                    arg0 = *(int *)(model + ((*(u16 *)(model + 0x18) >> 1) & 1) * 4 + 0x1c);
+                }
+            } else {
+                arg0 = *(int *)(hdr + 0x28);
+            }
+            w = *(f32 *)(ch + 0x0);
+            if (w > lbl_803DE818) {
+                *(f32 *)(ch + 0x0) = lbl_803DE818;
+            } else if (w < lbl_803DE828) {
+                if (ch[0xe] & 0x20) {
+                    if (w < lbl_803DE840) {
+                        *(f32 *)(ch + 0x0) = lbl_803DE840;
+                    }
+                } else {
+                    *(f32 *)(ch + 0x0) = lbl_803DE828;
+                }
+            }
+            w = *(f32 *)(ch + 0x0);
+            if (w >= lbl_803DE828) {
+                t = w;
+                r = lbl_803DE868 * t + lbl_803DE86C * (t * t) - t * (t * t);
+            } else {
+                t = w * lbl_803DE840;
+                r = (lbl_803DE868 * t + lbl_803DE86C * (t * t) - t * (t * t)) * lbl_803DE840;
+            }
+            arg1 = *(int *)(model + ((*(u16 *)(model + 0x18) >> 1) & 1) * 4 + 0x1c);
+            modelApplyBoneTransforms(arg0, arg1, *(u16 *)(hdr + 0xe4), boneA, boneB,
+                (int)(lbl_803DE870 * r));
+            model[0x60] = 1;
+        }
+        if (*(f32 *)(ch + 0x4) != *(f32 *)(ch + 0x0)) {
+            *(f32 *)(ch + 0x4) = *(f32 *)(ch + 0x0);
+        }
+    }
+}
+#pragma pop
+
 extern f32 lbl_803DE874;
 extern f32 lbl_803DE878;
 extern f32 lbl_803DE87C;
