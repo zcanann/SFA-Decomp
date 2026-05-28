@@ -6348,6 +6348,7 @@ extern s16 lbl_80332F2C[];
 extern s16 lbl_80332F48[];
 extern int *gPlayerInterface;
 extern int *gObjectTriggerInterface;
+extern int *gGameUIInterface;
 extern f32 lbl_803E7F08;
 extern f32 lbl_803E7FD8;
 extern f32 lbl_803E801C;
@@ -9691,6 +9692,70 @@ int fn_802B9FC0(int obj, int state)
     if (GameBit_Get(0x3e3) != 0) {
         if (RandomTimer_UpdateRangeTrigger(inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0) {
             Sfx_PlayFromObject(obj, 0x43a);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802BA1D4(int obj, int state)
+{
+    int inner;
+    f32 fz;
+
+    fz = lbl_803E8234;
+    *(f32 *)((char *)state + 0x294) = fz;
+    *(f32 *)((char *)state + 0x284) = fz;
+    *(f32 *)((char *)state + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(u32 *)((char *)state) |= 0x200000;
+    inner = *(int *)((char *)obj + 0xb8);
+    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    *(u8 *)((char *)obj + 0xe4) = GameBit_Get(0x170) != 0;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E827C;
+        if (*(s16 *)((char *)obj + 0xa0) != 0x13) {
+            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E8234, 0);
+        }
+    }
+    if (*(u8 *)((char *)obj + 0xaf) & 4) {
+        if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x170) != 0) {
+            u8 bit170 = GameBit_Get(0x170);
+            if (GameBit_Get(0x28) == 0) {
+                switch (bit170) {
+                case 1:
+                    GameBit_Set(0x28, 1);
+                    *(u8 *)((char *)inner + 0xa8d) = 2;
+                    break;
+                case 2:
+                    *(u8 *)((char *)inner + 0xa8d) = 4;
+                    GameBit_Set(0x16f, 1);
+                    break;
+                }
+            } else {
+                *(u8 *)((char *)inner + 0xa8d) = 4;
+                GameBit_Set(0x16f, 1);
+            }
+            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                *(u8 *)((char *)inner + 0xa8d), obj, -1);
+            GameBit_Set(0x170, GameBit_Get(0x170) - bit170);
+            buttonDisable(0, 0x100);
+        } else {
+            if (*(u8 *)((char *)obj + 0xaf) & 1) {
+                if (GameBit_Get(0x28) != 0) {
+                    *(u8 *)((char *)inner + 0xa8d) = 3;
+                } else {
+                    *(u8 *)((char *)inner + 0xa8d) = 1;
+                }
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                    *(u8 *)((char *)inner + 0xa8d), obj, -1);
+                buttonDisable(0, 0x100);
+            }
         }
     }
     return 0;
