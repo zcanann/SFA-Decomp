@@ -4704,4 +4704,45 @@ void fn_80221E94(int obj, f32 *p2)
     objLightFn_8009a1dc(obj, lbl_803E6C68, &s, 1, 0);
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
+
+typedef struct DrMusicContFlags {
+    u8 pad8 : 2;
+    u8 b_e30 : 1;
+    u8 b_e31 : 1;
+    u8 b_e32 : 1;
+    u8 b_e33 : 1;
+    u8 b_e9c : 1;
+    u8 b_e38 : 1;
+    u8 b_e3c : 1;
+    u8 b_e3d : 1;
+    u8 b_e3e : 1;
+    u8 b_e39 : 1;
+    u8 b_9e0 : 1;
+    u8 b_9e1 : 1;
+    u8 b_9e2 : 1;
+    u8 b_9e7 : 1;
+} DrMusicContFlags;
+
+#pragma peephole off
+void drmusiccont_init(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    DrMusicContFlags *f = (DrMusicContFlags *)(state + 0x8);
+
+    f->b_e30 = (u8)GameBit_Get(0xe30);
+    f->b_e31 = (u8)GameBit_Get(0xe31);
+    f->b_e32 = (u8)GameBit_Get(0xe32);
+    f->b_e33 = (u8)GameBit_Get(0xe33);
+    f->b_e9c = (u8)GameBit_Get(0xe9c);
+    f->b_e38 = (u8)GameBit_Get(0xe38);
+    f->b_e3c = (u8)GameBit_Get(0xe3c);
+    f->b_e3d = (u8)GameBit_Get(0xe3d);
+    f->b_e3e = (u8)GameBit_Get(0xe3e);
+    f->b_e39 = (u8)GameBit_Get(0xe39);
+    f->b_9e0 = (u8)GameBit_Get(0x9e0);
+    f->b_9e1 = (u8)GameBit_Get(0x9e1);
+    f->b_9e2 = (u8)GameBit_Get(0x9e2);
+    f->b_9e7 = (u8)GameBit_Get(0x9e7);
+}
+#pragma peephole on
 #pragma scheduling on
