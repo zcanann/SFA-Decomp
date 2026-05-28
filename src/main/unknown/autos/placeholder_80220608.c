@@ -3526,6 +3526,66 @@ void mclightning_init(int obj, u8 *setup)
     *(f32 *)(state + 0x10) = v;
     *(f32 *)(state + 0x14) = v;
 }
+
+extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern f32 lbl_803E7450;
+extern f32 lbl_803E7454;
+extern f32 lbl_803E7458;
+
+void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
+    int state = *(int *)(obj + 0xb8);
+    McLightningFlags *f = (McLightningFlags *)(state + 0x1b);
+    u32 mode = f->hi;
+    if (mode == 5) {
+        int count;
+        int *objs = ObjGroup_GetObjects(0x48, &count);
+        int i;
+        for (i = 0; i < count; i++) {
+            int *o = (int *)objs[i];
+            if (*(u8 *)(*(int *)((int)o + 0x4c) + 0x1b) == *(u8 *)(state + 0x1a))
+                break;
+        }
+        if (i == count) {
+            f->hi = 0xa;
+        } else {
+            int foundState;
+            McLightningFlags *ff;
+            *(void **)(state + 0) =
+                fn_8008FB20((f32 *)(obj + 0xc), (f32 *)(objs[i] + 0xc), *(f32 *)(state + 8),
+                            *(f32 *)(state + 0xc), *(u8 *)(state + 0x18), *(u8 *)(state + 0x19), 0);
+            f->hi = 6;
+            *(f32 *)(state + 4) = lbl_803E7450;
+            if (f->lo & 1) {
+                hitDetectFn_80097070(obj, 1, 7, *(f32 *)(state + 0x10), 0x1e, 0);
+            }
+            foundState = *(int *)(objs[i] + 0xb8);
+            ff = (McLightningFlags *)(foundState + 0x1b);
+            if (ff->lo & 1) {
+                hitDetectFn_80097070(objs[i], 1, 7, *(f32 *)(foundState + 0x10), 0x1e, 0);
+            }
+            if (f->lo & 2) {
+                objFn_800972dc(obj, 5, 1, 1, *(f32 *)(state + 0x14), lbl_803E7454, 0x64, 0, 0);
+            }
+            if (ff->lo & 2) {
+                objFn_800972dc(objs[i], 5, 1, 1, *(f32 *)(foundState + 0x14), lbl_803E7454, 0x64, 0,
+                               0);
+            }
+        }
+    } else if (mode == 6) {
+        void *p = *(void **)(state + 0);
+        if (p != NULL) {
+            renderFn_8008f904(p);
+            *(f32 *)(state + 4) += timeDelta;
+            *(u16 *)((int)p + 0x20) = (u16)(lbl_803E7458 + *(f32 *)(state + 4));
+            if (*(u16 *)((int)p + 0x20) >= *(u16 *)((int)p + 0x22)) {
+                mm_free(p);
+                *(void **)(state + 0) = NULL;
+                f->hi = 0;
+                *(s16 *)(obj + 6) |= 0x4000;
+            }
+        }
+    }
+}
 #pragma scheduling on
 #pragma peephole on
 
