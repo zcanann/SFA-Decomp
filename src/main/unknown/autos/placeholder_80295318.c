@@ -7211,6 +7211,119 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
     }
 }
 
+extern void Obj_TransformLocalPointToWorld(f32 *ox, f32 *oy, f32 *oz, int xform, f32 x, f32 y, f32 z);
+extern void Obj_TransformLocalVectorToWorld(f32 *ox, f32 *oy, f32 *oz, int xform, f32 x, f32 y, f32 z);
+extern void Obj_TransformWorldVectorToLocal(f32 *ox, f32 *oy, f32 *oz, int xform, f32 x, f32 y, f32 z);
+extern int Angle_AddWrappedS16(int angle, int xform);
+extern int Angle_SubWrappedS16(int angle, int xform);
+
+void fn_80296EB4(int obj, int newParent)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int oldParent = *(int *)((char *)obj + 0x30);
+    struct {
+        f32 wp0[3];
+        f32 wv[3];
+        f32 wp2[3];
+        f32 wp[3];
+    } s;
+    int a0;
+    int a1;
+    int a2;
+    int a3;
+    int a4;
+    int a5;
+
+    if ((void *)oldParent == (void *)newParent) {
+        return;
+    }
+    if ((void *)oldParent != NULL) {
+        Obj_TransformLocalPointToWorld(&s.wp[0], &s.wp[1], &s.wp[2], oldParent,
+                                       *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+                                       *(f32 *)((char *)obj + 0x14));
+        Obj_TransformLocalPointToWorld(&s.wp2[0], &s.wp2[1], &s.wp2[2], oldParent,
+                                       *(f32 *)((char *)obj + 0x80), *(f32 *)((char *)obj + 0x84),
+                                       *(f32 *)((char *)obj + 0x88));
+        Obj_TransformLocalVectorToWorld(&s.wv[0], &s.wv[1], &s.wv[2], oldParent,
+                                        *(f32 *)((char *)obj + 0x24), lbl_803E7EA4,
+                                        *(f32 *)((char *)obj + 0x2c));
+        a0 = Angle_AddWrappedS16(*(s16 *)((char *)obj + 0x0), oldParent);
+        a1 = Angle_AddWrappedS16(*(s16 *)((char *)inner + 0x478), oldParent);
+        a2 = Angle_AddWrappedS16(*(s16 *)((char *)inner + 0x484), oldParent);
+        a3 = Angle_AddWrappedS16(*(s16 *)((char *)inner + 0x492), oldParent);
+        a4 = Angle_AddWrappedS16(*(s16 *)((char *)inner + 0x490), oldParent);
+        a5 = Angle_AddWrappedS16(*(int *)((char *)inner + 0x494), oldParent);
+        Obj_TransformLocalPointToWorld(&s.wp0[0], &s.wp0[1], &s.wp0[2], oldParent,
+                                       *(f32 *)((char *)inner + 0x118), *(f32 *)((char *)inner + 0x11c),
+                                       *(f32 *)((char *)inner + 0x120));
+    } else {
+        s.wp[0] = *(f32 *)((char *)obj + 0xc);
+        s.wp[1] = *(f32 *)((char *)obj + 0x10);
+        s.wp[2] = *(f32 *)((char *)obj + 0x14);
+        s.wp2[0] = *(f32 *)((char *)obj + 0x80);
+        s.wp2[1] = *(f32 *)((char *)obj + 0x84);
+        s.wp2[2] = *(f32 *)((char *)obj + 0x88);
+        s.wv[0] = *(f32 *)((char *)obj + 0x24);
+        s.wv[2] = *(f32 *)((char *)obj + 0x2c);
+        a0 = *(s16 *)((char *)obj + 0x0);
+        a1 = *(s16 *)((char *)inner + 0x478);
+        a2 = *(s16 *)((char *)inner + 0x484);
+        a3 = *(s16 *)((char *)inner + 0x492);
+        a4 = *(s16 *)((char *)inner + 0x490);
+        a5 = *(int *)((char *)inner + 0x494);
+        s.wp0[0] = *(f32 *)((char *)inner + 0x118);
+        s.wp0[1] = *(f32 *)((char *)inner + 0x11c);
+        s.wp0[2] = *(f32 *)((char *)inner + 0x120);
+    }
+    if ((void *)newParent != NULL) {
+        Obj_TransformWorldPointToLocal((f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10),
+                                       (f32 *)((char *)obj + 0x14), newParent, s.wp[0], s.wp[1], s.wp[2]);
+        Obj_TransformWorldPointToLocal((f32 *)((char *)obj + 0x80), (f32 *)((char *)obj + 0x84),
+                                       (f32 *)((char *)obj + 0x88), newParent, s.wp2[0], s.wp2[1], s.wp2[2]);
+        Obj_TransformWorldVectorToLocal((f32 *)((char *)obj + 0x24), &s.wv[1],
+                                        (f32 *)((char *)obj + 0x2c), newParent, s.wv[0], lbl_803E7EA4, s.wv[2]);
+        *(s16 *)((char *)obj + 0x0) = Angle_SubWrappedS16(a0, newParent);
+        *(s16 *)((char *)inner + 0x478) = Angle_SubWrappedS16(a1, newParent);
+        *(s16 *)((char *)inner + 0x484) = Angle_SubWrappedS16(a2, newParent);
+        *(s16 *)((char *)inner + 0x492) = Angle_SubWrappedS16(a3, newParent);
+        *(s16 *)((char *)inner + 0x490) = Angle_SubWrappedS16(a4, newParent);
+        *(int *)((char *)inner + 0x494) = Angle_SubWrappedS16(a5, newParent);
+        Obj_TransformWorldPointToLocal((f32 *)((char *)inner + 0x118), (f32 *)((char *)inner + 0x11c),
+                                       (f32 *)((char *)inner + 0x120), newParent, s.wp0[0], s.wp0[1], s.wp0[2]);
+    } else {
+        *(f32 *)((char *)obj + 0xc) = s.wp[0];
+        *(f32 *)((char *)obj + 0x10) = s.wp[1];
+        *(f32 *)((char *)obj + 0x14) = s.wp[2];
+        *(f32 *)((char *)obj + 0x80) = s.wp2[0];
+        *(f32 *)((char *)obj + 0x84) = s.wp2[1];
+        *(f32 *)((char *)obj + 0x88) = s.wp2[2];
+        *(f32 *)((char *)obj + 0x24) = s.wv[0];
+        *(f32 *)((char *)obj + 0x2c) = s.wv[2];
+        *(s16 *)((char *)obj + 0x0) = a0;
+        *(s16 *)((char *)inner + 0x478) = a1;
+        *(s16 *)((char *)inner + 0x484) = a2;
+        *(s16 *)((char *)inner + 0x492) = a3;
+        *(s16 *)((char *)inner + 0x490) = a4;
+        *(int *)((char *)inner + 0x494) = a5;
+        *(f32 *)((char *)inner + 0x118) = s.wp0[0];
+        *(f32 *)((char *)inner + 0x11c) = s.wp0[1];
+        *(f32 *)((char *)inner + 0x120) = s.wp0[2];
+    }
+    *(f32 *)((char *)obj + 0x18) = s.wp[0];
+    *(f32 *)((char *)obj + 0x1c) = s.wp[1];
+    *(f32 *)((char *)obj + 0x20) = s.wp[2];
+    *(f32 *)((char *)obj + 0x8c) = s.wp2[0];
+    *(f32 *)((char *)obj + 0x90) = s.wp2[1];
+    *(f32 *)((char *)obj + 0x94) = s.wp2[2];
+    *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x10) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x14) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x18) = *(f32 *)((char *)obj + 0x14);
+    *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x1c) = *(f32 *)((char *)obj + 0x18);
+    *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x20) = *(f32 *)((char *)obj + 0x1c);
+    *(f32 *)((char *)*(int *)((char *)obj + 0x54) + 0x24) = *(f32 *)((char *)obj + 0x20);
+    *(int *)((char *)obj + 0x30) = newParent;
+}
+
 int fn_802977A8(int obj, int state)
 {
     if (*(s8 *)((char *)state + 0x27a) != 0) {
