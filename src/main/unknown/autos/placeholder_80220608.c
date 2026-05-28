@@ -3933,3 +3933,39 @@ void tree_update(int obj)
 #pragma peephole on
 #pragma scheduling on
 #pragma dont_inline reset
+
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+
+#pragma scheduling off
+#pragma peephole off
+void gf_levelcon_findLinkedObjects(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int *objects;
+    int objectCount;
+    int objectIndex;
+    int o;
+
+    *(int *)(state + 0) = 0;
+    *(int *)(state + 4) = 0;
+    *(int *)(state + 8) = 0;
+    objects = ObjList_GetObjects(&objectIndex, &objectCount);
+    for (; objectIndex < objectCount; objectIndex++) {
+        o = objects[objectIndex];
+        if ((u32)o != (u32)obj && *(void **)(o + 0x4c) != NULL) {
+            switch (*(int *)(*(int *)(o + 0x4c) + 0x14)) {
+            case 0x477E3:
+                *(int *)(state + 0) = o;
+                break;
+            case 0x4A946:
+                *(int *)(state + 4) = o;
+                break;
+            case 0x4A947:
+                *(int *)(state + 8) = o;
+                break;
+            }
+        }
+    }
+}
+#pragma peephole on
+#pragma scheduling on
