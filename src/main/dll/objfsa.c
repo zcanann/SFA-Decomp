@@ -3777,9 +3777,9 @@ LAB_800e1030:
 /*
  * --INFO--
  *
- * Function: FUN_800df660
- * EN v1.0 Address: 0x800DF660
- * EN v1.0 Size: 1516b
+ * Function: curves_lengthFn24
+ * EN v1.0 Address: 0x800E0E18
+ * EN v1.0 Size: 1888b
  * EN v1.1 Address: 0x800E109C
  * EN v1.1 Size: 1888b
  * JP Address: TODO
@@ -3787,7 +3787,7 @@ LAB_800e1030:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_800df660(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
+void curves_lengthFn24(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
 {
   float fVar1;
   float fVar2;
@@ -3898,7 +3898,7 @@ void FUN_800df660(undefined4 param_1,undefined4 param_2,float *param_3,float *pa
           iVar8 = 0;
         }
         else {
-          iVar11 = DAT_803de0f0 + -1;
+          iVar11 = nRomCurves + -1;
           iVar9 = 0;
           while (iVar9 <= iVar11) {
             iVar14 = iVar11 + iVar9 >> 1;
@@ -3962,7 +3962,7 @@ LAB_800e13a0:
       iVar9 = 0;
     }
     else {
-      iVar10 = DAT_803de0f0 + -1;
+      iVar10 = nRomCurves + -1;
       iVar8 = 0;
       while (iVar8 <= iVar10) {
         iVar11 = iVar10 + iVar8 >> 1;
@@ -4027,7 +4027,7 @@ LAB_800e1564:
           iVar14 = 0;
         }
         else {
-          iVar10 = DAT_803de0f0 + -1;
+          iVar10 = nRomCurves + -1;
           iVar8 = 0;
           while (iVar8 <= iVar10) {
             iVar11 = iVar10 + iVar8 >> 1;
