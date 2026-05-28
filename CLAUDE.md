@@ -138,6 +138,13 @@ Heuristic before reaching for `asm { }`:
     anonymous form — wrapping it `(f32)(int)randomGetRange(...)` forces the named
     path. `#pragma peephole off` can independently flip this choice too. Proven:
     drakorhoverpad render 95→100% and initMain 98.5→100% (placeholder_80211C24).
+    **Caveat — on some units this is float-pool-ORDERING-bound, not cast-bound.**
+    On large multi-handler units (placeholder_80295318, 80220608) the named f64
+    magic is emitted only for the EARLIEST functions in the TU's float pool;
+    later functions cap at the anonymous `@NNN` regardless of the cast (confirmed
+    by two hunters — the `(f32)(int)` variant tested and reverted, sometimes
+    *worse*). If the explicit cast doesn't flip it on a late-pool function, it's
+    a genuine residual (~85-96%) — leave it, don't keep retrying.
 
 11. **`extern int fn(...)` for callees whose return is treated as `int`** —
     even if conceptually the return is a byte. Declaring `extern u8 fn(...)`
