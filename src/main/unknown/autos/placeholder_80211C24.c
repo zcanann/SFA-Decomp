@@ -4423,3 +4423,33 @@ int ktrex_stateHandlerA07(int obj, int runtime) {
     return 0;
 }
 #pragma scheduling reset
+
+#pragma scheduling off
+int ktrex_stateHandlerA04(int obj, int runtime) {
+    void *p;
+    int popped;
+    f32 t;
+    p = *(void **)((char *)obj + 0x4c);
+    if ((s8)*(u8 *)((char *)runtime + 0x27b) != 0) {
+        (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 4);
+        *(f32 *)((char *)gKTRexState + 4) =
+            (f32)(u32)*(u16 *)((char *)p + *(u8 *)((char *)gKTRexState + 0xfd) * 2 + 0x44);
+        return 0;
+    }
+    t = *(f32 *)((char *)gKTRexState + 4) - timeDelta;
+    *(f32 *)((char *)gKTRexState + 4) = t;
+    if (t < lbl_803E67B8) {
+        *(f32 *)((char *)gKTRexState + 4) = lbl_803E67B8;
+    }
+    if ((s8)*(u8 *)((char *)runtime + 0x346) != 0) {
+        if (*(f32 *)((char *)gKTRexState + 4) <= lbl_803E67B8) {
+            popped = 0;
+            if (Stack_IsEmpty(*(int *)gKTRexState) == 0) {
+                Stack_Pop(*(int *)gKTRexState, &popped);
+            }
+            return popped + 1;
+        }
+    }
+    return 0;
+}
+#pragma scheduling reset
