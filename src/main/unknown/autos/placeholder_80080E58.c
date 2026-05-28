@@ -39,7 +39,9 @@ extern u8 lbl_803DD158;
 extern u8 lbl_803DD15C;
 extern f32 lbl_803DD160;
 extern u8 lbl_803DD164;
+extern void *lbl_803DD168;
 extern u8 lbl_803DD178;
+extern void *lbl_803DD144;
 extern f32 lbl_8039A7A8[];
 extern f32 pEXIInputFlag;
 extern void PSVECNormalize(void *src, void *dst);
@@ -4234,6 +4236,66 @@ void renderSky(void)
     }
     skyFn_8008a500();
     skyFn_8008a04c();
+}
+
+void getAmbientColor(int slot, u8 *red, u8 *green, u8 *blue)
+{
+    u8 *sky;
+    int offset;
+
+    sky = lbl_803DD12C;
+    if (sky == NULL) {
+        *blue = 0xff;
+        *green = 0xff;
+        *red = 0xff;
+        return;
+    }
+
+    offset = slot * 0xa4;
+    *red = lbl_803DD12C[offset + 0x78];
+    *green = lbl_803DD12C[offset + 0x79];
+    *blue = lbl_803DD12C[offset + 0x7a];
+}
+
+void textureColorFn_8008991c(int slot, u8 *red, u8 *green, u8 *blue)
+{
+    u8 *sky;
+    int offset;
+
+    sky = lbl_803DD12C;
+    if (sky == NULL) {
+        *blue = 0xff;
+        *green = 0xff;
+        *red = 0xff;
+        return;
+    }
+
+    offset = slot * 0xa4;
+    *red = lbl_803DD12C[offset + 0x88];
+    *green = lbl_803DD12C[offset + 0x89];
+    *blue = lbl_803DD12C[offset + 0x8a];
+}
+
+void *fn_80089A50(void)
+{
+    return lbl_803DD168;
+}
+
+void *fn_80089A58(void)
+{
+    return lbl_803DD144;
+}
+
+void fn_8008B88C(int *outTimer)
+{
+    u8 *sky;
+
+    sky = lbl_803DD12C;
+    if (sky == NULL) {
+        *outTimer = 0;
+        return;
+    }
+    *outTimer = *(int *)(sky + 0x218);
 }
 
 #pragma pop
