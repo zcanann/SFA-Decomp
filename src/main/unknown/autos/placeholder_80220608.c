@@ -5758,6 +5758,39 @@ void fn_8022B764(int p, int q, int idx) {
 }
 #pragma peephole reset
 
+extern int ObjList_FindNearestObjectByDefNo(int obj, int defNo, f32 *maxDistanceSq);
+extern f32 lbl_803E7490;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_80239DD8(int p1, int p2)
+{
+    f32 maxDist;
+    int near;
+    int newObj;
+
+    maxDist = lbl_803E7490;
+    if (Obj_IsLoadingLocked()) {
+        near = ObjList_FindNearestObjectByDefNo(p1, 0x7e5, &maxDist);
+        if (near != 0) {
+            newObj = Obj_AllocObjectSetup(0x24, 0x608);
+            *(f32 *)(newObj + 8) = *(f32 *)(near + 0xc);
+            *(f32 *)(newObj + 0xc) = *(f32 *)(near + 0x10);
+            *(f32 *)(newObj + 0x10) = *(f32 *)(near + 0x14);
+            *(u8 *)(newObj + 4) = 1;
+            *(u8 *)(newObj + 5) = 1;
+            *(int *)(p2 + 0x10) = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
+            if (*(void **)(p2 + 0x10) != NULL) {
+                *(u8 *)(*(int *)(p2 + 0x10) + 0x36) = 0xff;
+                *(u8 *)(*(int *)(p2 + 0x10) + 0x37) = 0xff;
+                *(int *)(p2 + 0x90) = 0x12c;
+            }
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern f32 lbl_803E6C68;
 void fn_80221E94(int obj, f32 *p2)
 {
