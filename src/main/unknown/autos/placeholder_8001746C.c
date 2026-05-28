@@ -295,7 +295,7 @@ extern undefined4 FUN_8028fde8();
 extern undefined4 FUN_802924c8();
 extern undefined4 FUN_80292804();
 extern undefined4 FUN_80292b24();
-extern undefined4 powfBitEstimate();
+extern f32 powfBitEstimate(f32 x, f32 y);
 extern undefined4 FUN_80293130();
 extern undefined4 FUN_80293134();
 extern undefined4 FUN_80293520();
@@ -7949,5 +7949,122 @@ void ObjModel_SetBlendChannelWeight(u8 *model, int channel, f32 weight) {
         *(f32 *)ch = weight;
         ch[0xe] |= 4;
     }
+}
+#pragma pop
+
+typedef f32 Mtx[3][4];
+extern void cutsceneEnterExit(int a, int b);
+extern void Obj_BuildWorldTransformMatrix(void *obj, f32 *mtx, int flags);
+extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
+extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId, int value);
+extern int lbl_803DC9F0;
+extern int lbl_803DB3E0;
+extern int lbl_803DCA04;
+extern f32 lbl_803DE7C0;
+extern f32 lbl_803DE7C4;
+extern u8 lbl_803DCB42;
+
+typedef struct {
+    u8 _0[8];
+    u8 *start;
+    int size;
+    u8 _10[4];
+} MmRegion;
+extern MmRegion gMmRegionTable[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void cutsceneFadeInOut(int a) {
+    cutsceneEnterExit(a, 1);
+}
+
+int gameTextFn_8001b44c(int x) {
+    if (lbl_803DC9F0 == 0) {
+        lbl_803DB3E0 = x;
+        return 1;
+    }
+    return 0;
+}
+
+int gameTextFn_8001bcb4(void) {
+    if (lbl_803DCA00 != 0 && lbl_803DCA04 != 0) {
+        return 1;
+    }
+    return 0;
+}
+
+void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst) {
+    Mtx mtx;
+    Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
+    PSMTXMultVecSR((f32 *)mtx, src, dst);
+}
+
+int gameBitDecrement(int bit) {
+    int val = GameBit_Get(bit);
+    if (val != 0) {
+        val--;
+        GameBit_Set(bit, val);
+        return val;
+    }
+    return 0;
+}
+
+void initRotationMtx(f32 *m, f32 a, f32 b, f32 c) {
+    f32 z = lbl_803DE7C0;
+    m[0] = z;
+    m[1] = z;
+    m[2] = z;
+    m[3] = z;
+    m[4] = z;
+    m[5] = z;
+    m[6] = z;
+    m[7] = z;
+    m[8] = z;
+    m[9] = z;
+    m[10] = z;
+    m[11] = z;
+    m[12] = z;
+    m[13] = z;
+    m[14] = z;
+    m[15] = z;
+    m[0] = a;
+    m[5] = b;
+    m[10] = c;
+}
+
+int mmGetRegionForPtr(u8 *ptr) {
+    int i;
+    for (i = 0; i < lbl_803DCB42; i++) {
+        u8 *start = gMmRegionTable[i].start;
+        if (ptr > start && ptr < start + gMmRegionTable[i].size) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void *AtomicSList_Pop(void **list) {
+    int intr = OSDisableInterrupts();
+    void *head = *list;
+    if (head == NULL) {
+        OSRestoreInterrupts(intr);
+        return NULL;
+    }
+    *list = *(void **)head;
+    OSRestoreInterrupts(intr);
+    return head;
+}
+
+f32 interpolate(f32 a, f32 t, f32 exp) {
+    if (t <= lbl_803DE7C4) {
+        return a * (lbl_803DE7C4 - powfBitEstimate(lbl_803DE7C4 - t, exp));
+    }
+    return lbl_803DE7C0;
+}
+
+int atan2i(int y, int x) {
+    return (int)(lbl_803DE7D8 * fn_802924B4((f32)y, (f32)x));
 }
 #pragma pop
