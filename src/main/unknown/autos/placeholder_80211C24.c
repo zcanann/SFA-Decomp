@@ -4314,3 +4314,57 @@ int ktrex_stateHandlerB01(int obj, int runtime) {
     return 0;
 }
 #pragma scheduling reset
+
+extern s16 lbl_8032A510[];
+extern f32 lbl_8032A528[];
+extern f32 lbl_803E681C;
+
+#pragma scheduling off
+int ktrex_stateHandlerB02(int obj, int runtime) {
+    u16 dir;
+    f32 tmpY;
+    ObjPosParams pos;
+    f32 mtx[16];
+
+    dir = *(u16 *)((char *)gKTRexState + 0xfa) & 1;
+    if ((s8)*(u8 *)((char *)runtime + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, lbl_8032A510[*(u8 *)((char *)gKTRexState + 0xfc) * 2 + dir], lbl_803E67B8, 0);
+        *(f32 *)((char *)runtime + 0x2a0) = lbl_8032A528[*(u8 *)((char *)gKTRexState + 0xfc)];
+        *(s16 *)((char *)gKTRexState + 0xf8) = *(s16 *)obj;
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 4) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~4;
+        *(int *)((char *)gKTRexState + 0x104) |= 1;
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 2) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~2;
+        *(int *)((char *)gKTRexState + 0x104) |= 2;
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 1) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~1;
+        *(int *)((char *)gKTRexState + 0x104) |= 0x40;
+    }
+    if ((*(int *)((char *)gKTRexRuntime + 0x314) & 0x80) != 0) {
+        *(int *)((char *)gKTRexRuntime + 0x314) &= ~0x80;
+        *(int *)((char *)gKTRexState + 0x104) |= 0x10000;
+    }
+    *(s8 *)((char *)runtime + 0x34c) |= 1;
+    (*(void (**)(int, int, f32, int))((char *)*gPlayerInterface + 0x20))(obj, runtime, timeDelta, 3);
+    pos.rx = *(s16 *)((char *)gKTRexState + 0xf8);
+    pos.ry = 0;
+    pos.rz = 0;
+    pos.scale = lbl_803E6818;
+    pos.x = lbl_803E67B8;
+    pos.y = lbl_803E67B8;
+    pos.z = lbl_803E67B8;
+    setMatrixFromObjectPos(mtx, &pos);
+    Matrix_TransformPoint(mtx, *(f32 *)((char *)runtime + 0x284), lbl_803E67B8, -*(f32 *)((char *)runtime + 0x280),
+                          (f32 *)((char *)obj + 0x24), &tmpY, (f32 *)((char *)obj + 0x2c));
+    if (dir != 0) {
+        *(s16 *)obj = lbl_803E681C * *(f32 *)((char *)obj + 0x98) + (f32)(int)*(s16 *)((char *)gKTRexState + 0xf8);
+    } else {
+        *(s16 *)obj = (f32)(int)*(s16 *)((char *)gKTRexState + 0xf8) - lbl_803E681C * *(f32 *)((char *)obj + 0x98);
+    }
+    return 0;
+}
+#pragma scheduling reset
