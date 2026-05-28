@@ -8131,6 +8131,7 @@ void ObjModel_InitRenderBuffers(void) {
     }
 }
 
+#pragma dont_inline on
 void *animationLoad(int id, s16 a, s16 b, int e, int f) {
     lbl_8033BF88.f0 = 1;
     lbl_8033BF88.f1 = 7;
@@ -8141,6 +8142,7 @@ void *animationLoad(int id, s16 a, s16 b, int e, int f) {
     lbl_8033BF88.f24 = f;
     return loadAsset(&lbl_8033BF88);
 }
+#pragma dont_inline reset
 
 void fn_8001DA60(u8 *obj, f32 cutoff, int mode) {
     *(f32 *)(obj + 0xb4) = cutoff;
@@ -8349,5 +8351,100 @@ void Obj_ApplyPendingParentLinks(void) {
             }
         }
     }
+}
+#pragma pop
+
+extern void DCFlushRange(void *addr, u32 nBytes);
+extern void LCStoreBlocks(void *destAddr, void *srcTag, u32 numBlocks);
+extern void objFreeObjDef(void *def, int flags);
+extern f32 lbl_803DE808;
+extern f32 lbl_803DE810;
+extern u8 *lbl_803DCADC;
+extern int lbl_803DCB94;
+extern void **lbl_803DCB98;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void Matrix_TransformVector(f32 *m, f32 *v, f32 *out) {
+    f32 vx = v[0];
+    f32 vy = v[1];
+    f32 vz = v[2];
+    out[0] = vx * m[0] + vy * m[4] + vz * m[8];
+    out[1] = vx * m[1] + vy * m[5] + vz * m[9];
+    out[2] = vx * m[2] + vy * m[6] + vz * m[10];
+}
+
+void copyMatrix44(f32 *src, f32 *dst) {
+    dst[0] = src[0];
+    dst[1] = src[1];
+    dst[2] = src[2];
+    dst[3] = src[3];
+    dst[4] = src[4];
+    dst[5] = src[5];
+    dst[6] = src[6];
+    dst[7] = src[7];
+    dst[8] = src[8];
+    dst[9] = src[9];
+    dst[10] = src[10];
+    dst[11] = src[11];
+    dst[12] = src[12];
+    dst[13] = src[13];
+    dst[14] = src[14];
+    dst[15] = src[15];
+}
+
+void Vec3_Normalize(f32 *v) {
+    f32 len = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    if (len != lbl_803DE808) {
+        f32 s = lbl_803DE810 / len;
+        v[0] *= s;
+        v[1] *= s;
+        v[2] *= s;
+    }
+}
+
+int gameBitIncrement(int bit) {
+    int val = GameBit_Get(bit) + 1;
+    int max = 1 << ((lbl_803DCADC[bit * 4 + 2] & 0x1f) + 1);
+    if (val < max) {
+        GameBit_Set(bit, val);
+    } else {
+        val--;
+    }
+    return val;
+}
+
+void memcpyToCache(void *dst, void *src, u32 count) {
+    if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
+        int len;
+        if (count != 0) {
+            len = count << 5;
+        } else {
+            len = 0x1000;
+        }
+        memcpy(dst, src, len);
+        DCFlushRange(dst, len);
+    } else {
+        LCStoreBlocks(dst, src, count);
+    }
+}
+
+void Obj_FlushDeferredFreeList(void) {
+    int i;
+    for (i = 0; i < lbl_803DCB94; i++) {
+        void *p = lbl_803DCB98[i];
+        if (p != NULL) {
+            objFreeObjDef(p, 0);
+            lbl_803DCB98[i] = NULL;
+        }
+    }
+    lbl_803DCB94 = 0;
+}
+
+void *ObjAnim_LoadCachedMove(int a, int b, int c, int d) {
+    void *out = NULL;
+    animationLoad((int)&out, a, b, c, d);
+    return out;
 }
 #pragma pop
