@@ -6321,6 +6321,7 @@ extern void fuzzRenderFn_800412dc(int obj);
 extern void objSetMtxFn_800412d4(int a);
 extern s16 lbl_803DC6C4;
 extern int *gPartfxInterface;
+extern f32 lbl_803E7F50;
 extern f32 lbl_803E80C4;
 extern f32 lbl_803DE478;
 extern f32 lbl_803E80D8;
@@ -9321,6 +9322,62 @@ void fn_802AA8D0(int obj)
             obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, 0);
         (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
             obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, 0);
+    }
+}
+
+void fn_802AE650(int obj, int state, int p3)
+{
+    f32 v;
+    u32 b;
+
+    (*(void (*)(int, int, int, f32))(*(int *)(*gPlayerInterface + 0x20)))(obj, p3, 1, timeDelta);
+    if (*(f32 *)((char *)obj + 0x98) >=
+        lbl_803E7EE0 - lbl_803E7F50 * *(f32 *)((char *)p3 + 0x2a0)) {
+        *(f32 *)((char *)p3 + 0x280) =
+            *(f32 *)((char *)state + 0x844) *
+                ((lbl_803E7F14 + *(f32 *)((char *)*(int *)((char *)state + 0x400) + 0x14)) -
+                 *(f32 *)((char *)p3 + 0x280)) +
+            *(f32 *)((char *)p3 + 0x280);
+        *(f32 *)((char *)p3 + 0x294) = *(f32 *)((char *)p3 + 0x280);
+        *(f32 *)((char *)state + 0x844) =
+            lbl_803E7EFC * timeDelta + *(f32 *)((char *)state + 0x844);
+        v = *(f32 *)((char *)state + 0x844);
+        if (v < lbl_803E7EA4) {
+            v = lbl_803E7EA4;
+        } else if (v > lbl_803E7EE0) {
+            v = lbl_803E7EE0;
+        }
+        *(f32 *)((char *)state + 0x844) = v;
+    }
+    if ((*(int *)((char *)p3 + 0x314) & 0x200) != 0) {
+        doRumble(lbl_803E7F10);
+        Sfx_PlayFromObject(obj, 0x3cd);
+        *(u16 *)((char *)state + 0x8d8) |= 4;
+    }
+    *(f32 *)((char *)state + 0x428) = lbl_803E7FA4;
+    *(f32 *)((char *)state + 0x430) = lbl_803E7FA4;
+    b = (*(u8 *)((char *)state + 0x3f1) >> 4) & 1;
+    if (b != 0) {
+        *(f32 *)((char *)state + 0x42c) = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x434) = lbl_803E7EA4;
+    } else {
+        *(f32 *)((char *)state + 0x42c) = lbl_803E7ED4;
+        *(f32 *)((char *)state + 0x434) = lbl_803E7ED4;
+    }
+    *(f32 *)((char *)state + 0x7a4) = lbl_803E80E4;
+    if (*(f32 *)((char *)obj + 0x98) >= lbl_803E7EE0) {
+        short tmp;
+        ((ByteFlags *)((char *)state + 0x3f0))->b10 = 0;
+        lbl_803DC66C = 1;
+        ((ByteFlags *)((char *)state + 0x3f1))->b02 = 1;
+        ((ByteFlags *)((char *)state + 0x3f1))->b08 = 1;
+        *(u8 *)((char *)state + 0x8cc) = 0xc;
+        tmp = *(s16 *)((char *)state + 0x484);
+        *(s16 *)((char *)state + 0x478) = tmp;
+        *(int *)((char *)state + 0x494) = tmp;
+        ObjAnim_SetCurrentMove(obj, ((s16 *)lbl_80333050)[(s8)*(u8 *)((char *)state + 0x8cc)],
+                               lbl_803E7EA4, 0);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 1);
     }
 }
 #pragma peephole reset
