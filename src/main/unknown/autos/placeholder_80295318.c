@@ -7015,6 +7015,81 @@ int fn_802A00E0(int obj, int state)
     return 0;
 }
 
+extern f32 lbl_803E7F84;
+
+int fn_802A03BC(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz;
+    f32 obj98;
+    f32 t1, t2, t3;
+    f32 outY;
+    fn_802A13F4(obj, state);
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        u8 ic;
+        int model;
+        f32 buf2[2];
+        f32 buf1[3];
+        ObjHits_MarkObjectPositionDirty(obj);
+        ic = *(u8 *)((char *)inner + 0x8c8);
+        if (ic != 0x48 && ic != 0x47) {
+            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x42, 0, 1, 0, 0, 0x3c, 0xff);
+        }
+        ObjAnim_SetCurrentMove(obj, lbl_80332F48[0x11], lbl_803E7EA4, 1);
+        Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, lbl_80332F48[0x12], 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F84;
+        model = *(int *)((char *)*(int *)((char *)obj + 0x7c) +
+                         ((s32)(*(s8 *)((char *)obj + 0xad)) << 2));
+        ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0,
+                                      *(f32 *)((char *)obj + 0x8), buf1, buf2);
+        *(f32 *)((char *)inner + 0x564) = *(f32 *)((char *)inner + 0x56c) * buf1[2];
+        *(f32 *)((char *)inner + 0x568) = *(f32 *)((char *)inner + 0x574) * buf1[2];
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x54c);
+        *(s16 *)((char *)state + 0x278) = 0x14;
+        *(int *)((char *)inner + 0x898) = (int)fn_8029FFD0;
+    }
+    *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x360) &= ~2;
+    *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x360) |= 0x2000;
+    *(int *)((char *)state + 4) |= 0x100000;
+    fz = lbl_803E7EA4;
+    *(f32 *)((char *)state + 0x280) = fz;
+    *(f32 *)((char *)state + 0x284) = fz;
+    *(int *)((char *)state + 0) |= 0x200000;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(int *)((char *)state + 4) |= 0x8000000;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 1, *(s16 *)((char *)inner + 0x5a4));
+    obj98 = *(f32 *)((char *)obj + 0x98);
+    if (obj98 > lbl_803E7F68) {
+        *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)inner + 0x768);
+        *(f32 *)((char *)obj + 0x20) = *(f32 *)((char *)inner + 0x770);
+        if (*(int *)((char *)obj + 0x30) != 0) {
+            *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)obj + 0x18) + playerMapOffsetX;
+            *(f32 *)((char *)obj + 0x20) = *(f32 *)((char *)obj + 0x20) + playerMapOffsetZ;
+        }
+        Obj_TransformWorldPointToLocal(
+            (f32 *)((char *)obj + 0xc), &outY, (f32 *)((char *)obj + 0x14),
+            *(int *)((char *)obj + 0x30),
+            *(f32 *)((char *)obj + 0x18), lbl_803E7EA4, *(f32 *)((char *)obj + 0x20));
+        fn_802AB5A4(obj, inner, 5);
+        ObjAnim_SetCurrentMove(obj,
+                               *(s16 *)*(int *)((char *)inner + 0x3f8),
+                               lbl_803E7EA4, 1);
+        *(int *)((char *)inner + 0x360) |= 0x800000;
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return -1;
+    }
+    t1 = *(f32 *)((char *)inner + 0x564) * obj98 + *(f32 *)((char *)obj + 0xc);
+    t2 = *(f32 *)((char *)obj + 0x10) -
+         *(f32 *)((char *)inner + 0x560) * (lbl_803E7EE0 - obj98);
+    t3 = *(f32 *)((char *)inner + 0x568) * obj98 + *(f32 *)((char *)obj + 0x14);
+    (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(t1, t2, t3);
+    fn_802AB5A4(obj, inner, 5);
+    return 0;
+}
+
 int objAnimFn_80296328(int obj)
 {
     int inner = *(int *)((char *)obj + 0xb8);
