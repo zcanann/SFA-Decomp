@@ -9220,12 +9220,9 @@ BOOL Stack_IsFull(RingBufferQueue* stack)
  */
 void Stack_Pop(RingBufferQueue* stack, void* dst)
 {
-    s16 writeIndex = stack->writeIndex - 1;
-
-    stack->writeIndex = writeIndex;
-    if (writeIndex < 0) {
-        writeIndex = stack->capacity - 1;
-        stack->writeIndex = writeIndex;
+    stack->writeIndex--;
+    if (stack->writeIndex < 0) {
+        stack->writeIndex = stack->capacity - 1;
     }
     memcpy(dst, (u8*)stack->data + stack->writeIndex * stack->elemSize, stack->elemSize);
     stack->count--;
