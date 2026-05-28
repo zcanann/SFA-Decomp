@@ -31,6 +31,9 @@ extern void *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, 
 extern void *Obj_GetActiveModel(void *obj);
 extern void ObjModel_SetRenderCallback(void *model, void *callback);
 extern int moonFxCb_80074110(int obj, int *model, int param);
+extern void modelStruct2_setVectors(void *model, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setColorsA8AC(void *model, int red, int green, int blue, int alpha);
+extern void colorFn_8001efe0(int index, int red, int green, int blue);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern void renderFn_8008f904(void *state);
@@ -4998,6 +5001,34 @@ void textureColorFn_8008991c(int slot, u8 *red, u8 *green, u8 *blue)
     *red = lbl_803DD12C[offset + 0x88];
     *green = lbl_803DD12C[offset + 0x89];
     *blue = lbl_803DD12C[offset + 0x8a];
+}
+
+void modelTextureFn_80089970(int slot)
+{
+    int offset;
+    u8 *sky;
+
+    if (lbl_803DD144 != NULL) {
+        offset = slot * 0xa4;
+        sky = lbl_803DD12C + offset;
+        modelStruct2_setVectors(lbl_803DD144, *(f32 *)(sky + 0x90), *(f32 *)(sky + 0x94),
+                                *(f32 *)(sky + 0x98));
+        modelLightStruct_setColorsA8AC(lbl_803DD144, lbl_803DD12C[offset + 0x78],
+                                       lbl_803DD12C[offset + 0x79],
+                                       lbl_803DD12C[offset + 0x7a], 0xff);
+    }
+    if (lbl_803DD168 != NULL) {
+        offset = slot * 0xa4;
+        sky = lbl_803DD12C + offset;
+        modelStruct2_setVectors(lbl_803DD168, *(f32 *)(sky + 0x9c), *(f32 *)(sky + 0xa0),
+                                *(f32 *)(sky + 0xa4));
+        modelLightStruct_setColorsA8AC(lbl_803DD168, lbl_803DD12C[offset + 0x80],
+                                       lbl_803DD12C[offset + 0x81],
+                                       lbl_803DD12C[offset + 0x82], 0xff);
+    }
+    offset = slot * 0xa4;
+    colorFn_8001efe0(0, lbl_803DD12C[offset + 0x88], lbl_803DD12C[offset + 0x89],
+                     lbl_803DD12C[offset + 0x8a]);
 }
 
 void *fn_80089A50(void)
