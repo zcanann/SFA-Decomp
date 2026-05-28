@@ -11299,3 +11299,106 @@ int fn_802BA3EC(int obj, int state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int fn_802985FC();
+extern int fn_80298944();
+extern int fn_80298E54();
+extern int fn_802994D0();
+extern int fn_8029A76C();
+extern int fn_8029ABD8();
+extern int fn_8029AF9C();
+extern int fn_8029BDB4();
+extern int fn_8029C9C8();
+extern int fn_8029CF30();
+extern int fn_8029D4C0();
+extern int fn_8029DB70();
+extern int fn_8029E568();
+extern int fn_8029EBCC();
+extern int fn_8029F108();
+extern int fn_8029FA24();
+extern int fn_802A0680();
+extern int fn_802A16CC();
+extern int fn_802A1CA8();
+extern int fn_802A2918();
+extern int fn_802A2EE0();
+extern int fn_802A36EC();
+extern int fn_802A3B04();
+extern int fn_802A418C();
+extern int fn_802A5384();
+extern int fn_802A6694();
+
+#pragma peephole off
+#pragma scheduling off
+void playerInitFuncPtrs(int obj)
+{
+    int *p = lbl_803DAFC8;
+    p[0] = (int)fn_802A7160;
+    p[1] = (int)fn_802A6694;
+    p[2] = (int)fn_802A5384;
+    p[3] = (int)fn_802A5048;
+    p[4] = (int)fn_802A4F8C;
+    p[5] = (int)fn_802A4D34;
+    p[6] = (int)fn_802A4B78;
+    p[7] = (int)fn_802A49C8;
+    p[8] = (int)fn_802A418C;
+    p[9] = (int)fn_802A3F24;
+    p[10] = (int)fn_802A3B04;
+    p[11] = (int)fn_802A36EC;
+    p[12] = (int)fn_802A2EE0;
+    p[13] = (int)fn_802A2E8C;
+    p[14] = (int)fn_802A2918;
+    p[15] = (int)fn_802A1CA8;
+    p[16] = (int)fn_802A16CC;
+    p[17] = (int)fn_802A14F8;
+    p[18] = (int)fn_802A1114;
+    p[19] = (int)fn_802A0680;
+    p[20] = (int)fn_802A03BC;
+    p[21] = (int)fn_802A00E0;
+    p[22] = (int)fn_8029FA24;
+    p[23] = (int)fn_8029F9D4;
+    p[24] = (int)fn_8029F6E4;
+    p[25] = (int)fn_8029F108;
+    p[26] = (int)fn_8029EBCC;
+    p[27] = (int)fn_8029E568;
+    p[28] = (int)fn_8029E3F4;
+    p[29] = (int)fn_8029DB70;
+    p[30] = (int)fn_8029DA60;
+    p[31] = (int)fn_8029D900;
+    p[32] = (int)fn_8029D7F0;
+    p[33] = (int)fn_8029D4C0;
+    p[34] = (int)fn_8029D454;
+    p[35] = (int)fn_8029D250;
+    p[36] = (int)fn_8029CF30;
+    p[37] = (int)fn_8029C9C8;
+    p[38] = (int)fn_8029BDB4;
+    p[39] = (int)fn_8029BC4C;
+    p[40] = (int)fn_8029B9FC;
+    p[41] = (int)fn_8029B994;
+    p[42] = (int)fn_8029B7B0;
+    p[43] = (int)fn_8029B6BC;
+    p[44] = (int)fn_8029AF9C;
+    p[45] = (int)fn_8029ABD8;
+    p[46] = (int)fn_8029A76C;
+    p[47] = (int)fn_8029A5E4;
+    p[48] = (int)fn_80299E44;
+    p[49] = (int)fn_80299BB0;
+    p[50] = (int)fn_802994D0;
+    p[51] = (int)fn_80298E54;
+    p[52] = (int)fn_80298CCC;
+    p[53] = (int)fn_80298944;
+    p[54] = (int)fn_802985FC;
+    p[55] = (int)fn_8029852C;
+    p[56] = (int)fn_80298380;
+    p[57] = (int)fn_80298184;
+    p[58] = (int)fn_80297F48;
+    p[59] = (int)fn_80297D0C;
+    p[60] = (int)fn_80297AD0;
+    p[61] = (int)fn_80297854;
+    p[62] = (int)fn_80297824;
+    p[63] = (int)fn_802977A8;
+    p[64] = (int)fn_80297748;
+    p[65] = (int)fn_802974A0;
+    lbl_803DE4B8 = (int)fn_80297498;
+}
+#pragma scheduling reset
+#pragma peephole reset
