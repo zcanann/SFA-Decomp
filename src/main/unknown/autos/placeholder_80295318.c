@@ -6301,6 +6301,10 @@ int fn_8029B994(int obj, int state)
 #pragma scheduling reset
 
 extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
+extern void ObjModel_SampleJointTransform(int model, int a, int b, f32 blend, f32 frame, void *out1, void *out2);
+extern f32 lbl_803DAF88[];
+extern s16 lbl_80332F2C[];
+extern s16 lbl_80332F48[];
 extern int *gPlayerInterface;
 extern int *gObjectTriggerInterface;
 extern f32 lbl_803E7F08;
@@ -8935,6 +8939,39 @@ void fn_802B066C(int obj, int state)
         ObjHits_RecordPositionHit(px, py, pz, obj, 0, 0x1f, 1, -1);
         *(f32 *)((char *)state + 0x7a0) = lbl_803E8050;
     }
+}
+
+void fn_802AABE4(int obj)
+{
+    s16 *movp;
+    f32 *outp;
+    int model;
+    short i;
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 out2[2];
+    f32 out1[5];
+
+    model = ((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)];
+
+    ObjAnim_SetCurrentMove(obj, *(s16 *)*(int *)((char *)inner + 0x3f8), lbl_803E7EA4, 0);
+    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, *(f32 *)((char *)obj + 8), out1, out2);
+    lbl_803DAF88[0] = out1[1];
+
+    ObjAnim_SetCurrentMove(obj, lbl_80332F2C[0], lbl_803E7EA4, 0);
+    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, *(f32 *)((char *)obj + 8), out1, out2);
+    lbl_803DAF88[1] = out1[1];
+
+    i = 12;
+    movp = (s16 *)((char *)lbl_80332F48 + 0x22);
+    outp = &lbl_803DAF88[i];
+    for (; i <= 15; i++) {
+        ObjAnim_SetCurrentMove(obj, *movp, lbl_803E7EA4, 0);
+        ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, *(f32 *)((char *)obj + 8), out1, out2);
+        *outp = out1[1];
+        movp++;
+        outp++;
+    }
+    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 0, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
