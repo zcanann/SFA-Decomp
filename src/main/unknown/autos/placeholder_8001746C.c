@@ -8210,6 +8210,32 @@ void ObjModel_InitRenderBuffers(void) {
     }
 }
 
+typedef struct {
+    s16 *start;
+    s16 *end;
+    u8 _8[4];
+    u8 size;
+    u8 stride;
+    u8 _e[2];
+    s16 *iter;
+} ModelStream;
+extern ModelStream *lbl_803DCB54;
+extern void *memset(void *dst, int val, int n);
+
+void modelFn_800292e0(void) {
+    u8 buf[8];
+    lbl_803DCB54->iter = lbl_803DCB54->start;
+    while (lbl_803DCB54->iter != lbl_803DCB54->end) {
+        s16 *iter = lbl_803DCB54->iter;
+        if (*iter == -1) {
+            memset(buf, 0, lbl_803DCB54->size);
+        } else {
+            memcpy(buf, iter + 1, lbl_803DCB54->size);
+        }
+        lbl_803DCB54->iter += lbl_803DCB54->stride;
+    }
+}
+
 #pragma dont_inline on
 void *animationLoad(int id, s16 a, s16 b, int e, int f) {
     lbl_8033BF88.f0 = 1;
