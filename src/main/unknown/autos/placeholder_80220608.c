@@ -5662,3 +5662,31 @@ void fn_80221D6C(void *p1, void *p2)
     voxmaps_traceLine(grid1, grid2, out, 0, 0);
 }
 #pragma scheduling on
+
+extern void voxmaps_gridToWorld(void *grid, void *out);
+
+#pragma scheduling off
+void fn_80221DC0(int p1, void *p2, f32 *p3, f32 scale)
+{
+    f32 endPos[3];
+    f32 scaled[3];
+    int gridA[2];
+    int gridB[2];
+    int gridOut[2];
+    int e0;
+    int e1;
+
+    PSVECNormalize(p3, p3);
+    PSVECScale(p3, scaled, scale);
+    PSVECAdd((int)scaled, (int)p2, (int)endPos);
+    voxmaps_worldToGrid(p2, gridA);
+    voxmaps_worldToGrid(endPos, gridB);
+    if (voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) == 0)
+        voxmaps_gridToWorld(endPos, gridOut);
+    e0 = *(int *)&endPos[0];
+    e1 = *(int *)&endPos[1];
+    *(int *)(p1 + 0) = e0;
+    *(int *)(p1 + 4) = e1;
+    *(int *)(p1 + 8) = *(int *)&endPos[2];
+}
+#pragma scheduling on
