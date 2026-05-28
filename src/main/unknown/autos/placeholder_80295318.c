@@ -12796,6 +12796,72 @@ void fn_8029560C(int obj, int *state)
 #pragma peephole reset
 #pragma scheduling reset
 
+void fn_80295918(int obj, int sel, f32 fval)
+{
+    int state = *(int *)((char *)obj + 0xb8);
+    int iv = (int)fval;
+    switch (sel) {
+    case 1: {
+        u8 n = *(u8 *)((char *)state + 0x8b8);
+        if (n < 4) {
+            *(u8 *)((char *)state + 0x8b8) = n + 1;
+            *(u8 *)((char *)state + n + 0x8b9) = (u8)iv;
+        }
+        break;
+    }
+    case 6:
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0x3f);
+        break;
+    case 5:
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 1);
+        *(int *)((char *)state + 0x304) = (int)fn_802A514C;
+        break;
+    case 10:
+        *(u32 *)((char *)state + 0x360) |= 0x80000;
+        break;
+    case 11:
+        *(u32 *)((char *)state + 0x360) &= ~0x80000;
+        break;
+    }
+}
+
+int fn_80295A04(int obj, int sel)
+{
+    int state = *(int *)((char *)obj + 0xb8);
+    switch (sel) {
+    case 1:
+        if (*(u32 *)((char *)state + 0x310) & 0x1000) return 0;
+        if (*(u16 *)((char *)obj + 0xb0) & 0x1000) return 0;
+        return 1;
+    case 2: {
+        s16 *list = *(s16 **)((char *)state + 0x3f8);
+        s16 key = *(s16 *)((char *)obj + 0xa0);
+        int i = 0;
+        while (key != *list && i < 0x14) {
+            list += 4;
+            i += 4;
+        }
+        return i >> 2;
+    }
+    case 9:
+        return *(s8 *)((char *)state + 0x34d) == 3;
+    case 10:
+        return *(u32 *)((char *)state + 0x360) & 0x200;
+    case 11:
+        return *(u32 *)((char *)state + 0x360) & 0x100;
+    case 13:
+        return *(u8 *)((char *)state + 0x349) == 1;
+    case 14:
+        return *(s16 *)((char *)state + 0x80a);
+    case 18: {
+        int p = *(int *)((char *)state + 0x7f0);
+        if (p != 0) return *(s16 *)((char *)p + 0x46);
+        return 0;
+    }
+    }
+    return 0;
+}
+
 #pragma peephole off
 #pragma scheduling off
 int fn_802A8350(int obj, int p4, int src, int dst, int flag)
