@@ -4335,6 +4335,51 @@ void *objFindForSeqFn_80081bf0(u8 *obj)
     return bestObj;
 }
 
+void seq_findAction(void *obj, void *seqFile, u8 *seq)
+{
+    int stop;
+    int actionIndex;
+    u8 *command;
+    s8 opcode;
+    s16 repeatCount;
+
+    if (*(void **)(seq + 0x94) == NULL) {
+        return;
+    }
+
+    *(s16 *)(seq + 0x68) = -1;
+    *(s16 *)(seq + 0x66) = 0;
+    *(f32 *)(seq + 0x20) = lbl_803DEFB0;
+    stop = 0;
+    while (stop == 0 && *(s16 *)(seq + 0x66) < *(s16 *)(seq + 0x62)) {
+        actionIndex = *(s16 *)(seq + 0x66);
+        command = *(u8 **)(seq + 0x94) + actionIndex * 4;
+        opcode = command[0];
+        if (opcode == 0) {
+            if (*(s16 *)(seq + 0x58) >= *(s16 *)(command + 2)) {
+                *(s16 *)(seq + 0x68) = *(s16 *)(command + 2);
+                *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
+            } else {
+                stop = 1;
+            }
+        } else if (opcode == 0xb && (repeatCount = *(s16 *)(command + 2)) > 0) {
+            if (*(s16 *)(seq + 0x58) >= *(s16 *)(seq + 0x68)) {
+                *(s16 *)(seq + 0x68) = *(s16 *)(seq + 0x68) + command[1];
+                *(s16 *)(seq + 0x66) = (s16)(*(s16 *)(seq + 0x66) + repeatCount + 1);
+            } else {
+                stop = 1;
+            }
+        } else if (*(s16 *)(seq + 0x58) >= *(s16 *)(seq + 0x68)) {
+            if (opcode != 0xf) {
+                *(s16 *)(seq + 0x68) = *(s16 *)(seq + 0x68) + command[1];
+            }
+            *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
+        } else {
+            stop = 1;
+        }
+    }
+}
+
 void ObjSeq_release(void)
 {
     mm_free(lbl_803DD0D4);
