@@ -1009,6 +1009,40 @@ void FUN_80006710(uint *param_1,uint param_2)
 {
 }
 
+#pragma peephole on
+void fn_8000881C(u64 *dst, u32 packed)
+{
+    u64 src = *(u64 *)(packed & ~7);
+
+    switch (packed & 7) {
+    case 0: *dst = src; break;
+    case 1: *dst = (src >> 8) | (*dst & 0xff00000000000000ULL); break;
+    case 2: *dst = (src >> 16) | (*dst & 0xffff000000000000ULL); break;
+    case 3: *dst = (src >> 24) | (*dst & 0xffffff0000000000ULL); break;
+    case 4: *dst = (src >> 32) | (*dst & 0xffffffff00000000ULL); break;
+    case 5: *dst = (src >> 40) | (*dst & 0xffffffffff000000ULL); break;
+    case 6: *dst = (src >> 48) | (*dst & 0xffffffffffff0000ULL); break;
+    case 7: *dst = (src >> 56) | (*dst & 0xffffffffffffff00ULL); break;
+    }
+}
+
+void fn_800089AC(u64 *dst, u32 packed)
+{
+    u64 src = *(u64 *)(packed & ~7);
+
+    switch (packed & 7) {
+    case 0: *dst = src; break;
+    case 1: *dst = (src << 8) | (*dst & 0xffULL); break;
+    case 2: *dst = (src << 16) | (*dst & 0xffffULL); break;
+    case 3: *dst = (src << 24) | (*dst & 0xffffffULL); break;
+    case 4: *dst = (src << 32) | (*dst & 0xffffffffULL); break;
+    case 5: *dst = (src << 40) | (*dst & 0xffffffffffULL); break;
+    case 6: *dst = (src << 48) | (*dst & 0xffffffffffffULL); break;
+    case 7: *dst = (src << 56) | (*dst & 0xffffffffffffffULL); break;
+    }
+}
+#pragma peephole reset
+
 /*
  * --INFO--
  *
