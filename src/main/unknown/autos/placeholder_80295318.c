@@ -6321,6 +6321,10 @@ extern void fuzzRenderFn_800412dc(int obj);
 extern void objSetMtxFn_800412d4(int a);
 extern s16 lbl_803DC6C4;
 extern int *gPartfxInterface;
+extern int Camera_GetCurrentViewSlot(void);
+extern void arwprojectile_placeForward(int obj, f32 dist);
+extern void arwprojectile_setLifetime(int obj, int frames);
+extern void arwprojectile_createLinkedEffect(int obj, int a);
 extern f32 lbl_803E7F50;
 extern f32 lbl_803E80C4;
 extern f32 lbl_803DE478;
@@ -9378,6 +9382,47 @@ void fn_802AE650(int obj, int state, int p3)
         ObjAnim_SetCurrentMove(obj, ((s16 *)lbl_80333050)[(s8)*(u8 *)((char *)state + 0x8cc)],
                                lbl_803E7EA4, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 1);
+    }
+}
+
+void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
+{
+    int slot = Camera_GetCurrentViewSlot();
+    int setup;
+    f32 x1, y1, z1, x0, y0, z0;
+    f32 dx, dy, dz, len;
+
+    if (Obj_IsLoadingLocked() != 0) {
+        Sfx_PlayFromObject(0, 0x20b);
+        setup = Obj_AllocObjectSetup(0x24, 0x655);
+        *(u8 *)((char *)setup + 4) = 2;
+        *(u8 *)((char *)setup + 5) = 1;
+        *(u8 *)((char *)setup + 6) = 0xff;
+        *(u8 *)((char *)setup + 7) = 0xff;
+        ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 0, &x0, &y0, &z0, 0);
+        *(f32 *)((char *)setup + 8) = x0 + yoff;
+        *(f32 *)((char *)setup + 0xc) = y0 + yoff;
+        *(f32 *)((char *)setup + 0x10) = z0 + yoff;
+        setup = Obj_SetupObject(setup, 5, -1, -1, 0);
+        if (setup != 0) {
+            ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 0, &x0, &y0, &z0, 0);
+            ObjPath_GetPointWorldPosition((int)lbl_803DE44C, 1, &x1, &y1, &z1, 0);
+            dx = x0 - x1;
+            dy = y0 - y1;
+            dz = z0 - z1;
+            len = sqrtf(dx * dx + dy * dy + dz * dz);
+            dx = dx / len;
+            dy = dy / len;
+            dz = dz / len;
+            *(s16 *)((char *)setup + 0) = (s16)getAngle(dx, dz);
+            *(s16 *)((char *)setup + 2) = (s16)(-getAngle(dy, sqrtf(dx * dx + dz * dz)));
+            *(f32 *)((char *)setup + 8) = *(f32 *)((char *)setup + 8) * lbl_803E7EF0;
+            arwprojectile_placeForward(setup, lbl_803E7ED8);
+            arwprojectile_setLifetime(setup, 0x32);
+            if (slot == 1) {
+                arwprojectile_createLinkedEffect(setup, 1);
+            }
+        }
     }
 }
 #pragma peephole reset
