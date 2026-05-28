@@ -7349,6 +7349,37 @@ void modelLightStruct_setField50(u8 *p, void *v) {
     *(void **)(p + 0x50) = v;
 }
 
+extern u8 lbl_803DCA30;
+extern void *lbl_8033BEC0[];
+extern void *objAllocLight(void);
+
+#pragma peephole off
+#pragma scheduling off
+void *objCreateLight(int arg, u8 addToList) {
+    void *light;
+    if (addToList) {
+        if (lbl_803DCA30 >= 0x32) {
+            return NULL;
+        }
+        light = objAllocLight();
+        if (light == NULL) {
+            return NULL;
+        }
+        {
+            int i = lbl_803DCA30++;
+            lbl_8033BEC0[i] = light;
+        }
+        return light;
+    }
+    light = objAllocLight();
+    if (light != NULL) {
+        return light;
+    }
+    return NULL;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 void fn_8001D80C(u8 *p, void *a, void *b) {
     *(void **)(p + 0x270) = a;
     *(void **)(p + 0x274) = b;
