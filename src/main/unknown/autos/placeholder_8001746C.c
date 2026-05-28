@@ -8167,6 +8167,27 @@ void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst) {
 }
 #pragma dont_inline reset
 
+extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
+extern f32 lbl_803DE890;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+
+void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag) {
+    f32 savedZ;
+    Mtx mtx;
+    if (flag) {
+        savedZ = *(f32 *)(obj + 8);
+        *(f32 *)(obj + 8) = lbl_803DE890;
+    }
+    Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
+    PSMTXMultVec((f32 *)mtx, src, dst);
+    if (flag) {
+        *(f32 *)(obj + 8) = savedZ;
+    }
+    dst[0] += playerMapOffsetX;
+    dst[2] += playerMapOffsetZ;
+}
+
 extern void Vec_normalize(f32 *dst, f32 *src);
 extern f32 *Camera_GetViewMatrix(void);
 
