@@ -110,6 +110,8 @@ extern f32 lbl_803DEFF0;
 extern f32 lbl_803DF024;
 extern f32 lbl_803DF028;
 extern f32 lbl_803DF06C;
+extern f32 init_803DF080;
+extern f32 lbl_803DF088;
 extern f32 lbl_803DF118;
 extern f32 lbl_803DF138;
 extern f32 lbl_803DF13C;
@@ -5006,6 +5008,35 @@ void *fn_80089A50(void)
 void *fn_80089A58(void)
 {
     return lbl_803DD144;
+}
+
+int getSunPos(f32 *outTime)
+{
+    f32 time;
+
+    if (lbl_803DD12C == NULL) {
+        if (outTime != NULL) {
+            *outTime = pEXIInputFlag;
+        }
+        return 0;
+    }
+
+    time = *(f32 *)(lbl_803DD12C + 0x20c);
+    if (time >= lbl_803DF088 || time < *(&init_803DF080 + 1)) {
+        if (outTime != NULL) {
+            if (time >= lbl_803DF088) {
+                *outTime = *(&init_803DF080 + 1) + (time - lbl_803DF088);
+            } else {
+                *outTime = *(&init_803DF080 + 1) - time;
+            }
+        }
+        return 1;
+    }
+
+    if (outTime != NULL) {
+        *outTime = lbl_803DF088 - time;
+    }
+    return 0;
 }
 
 void fn_8008B88C(int *outTimer)
