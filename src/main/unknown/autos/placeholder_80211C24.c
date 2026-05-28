@@ -357,6 +357,9 @@ extern f32 lbl_803DC2B4;
 extern f32 lbl_803DC2B8;
 extern f32 lbl_803DC2BC;
 extern f32 lbl_803E6968;
+extern f32 lbl_803E68E0;
+extern f32 lbl_803E68E4;
+extern s16 lbl_803DC2AE;
 
 extern int fn_80080150(void *timer);
 extern void s16toFloat(void *timer, int v);
@@ -910,6 +913,90 @@ void drakormissile_update(int obj) {
     }
 }
 #pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+int drlasercannon_aimAtTarget(int self, int target, int *out, int maxRate, f32 *eyePos) {
+    s16 *vec;
+    f32 d[3];
+    f32 horiz;
+    s16 yaw;
+    s16 pitch;
+    int clamp;
+    int delta;
+
+    vec = (s16 *)objModelGetVecFn_800395d8(self, 0xb);
+    if (vec == NULL) {
+        return 0;
+    }
+    if (target == 0) {
+        *(s16 *)self = (s16)(*(s16 *)self >> 1);
+        *vec = (s16)(*vec >> 1);
+        return 0;
+    }
+    d[0] = *(f32 *)((char *)target + 0xc) - eyePos[0];
+    d[1] = *(f32 *)((char *)target + 0x10) - eyePos[1];
+    d[2] = *(f32 *)((char *)target + 0x14) - eyePos[2];
+    horiz = sqrtf(d[0] * d[0] + d[2] * d[2]);
+    yaw = getAngle(d[0], d[2]);
+    pitch = getAngle(d[1], horiz);
+    if (*(s16 *)((char *)self + 0x46) == 0x417) {
+        pitch = -pitch;
+    }
+    if (maxRate < 0x168) {
+        clamp = (s16)(lbl_803E68E0 * (f32)maxRate);
+        *(s16 *)((char *)out + 0x14) = yaw;
+        if (*(s16 *)((char *)out + 0x14) > clamp) {
+            *(s16 *)((char *)out + 0x14) = clamp;
+        }
+        if (*(s16 *)((char *)out + 0x14) < -clamp) {
+            *(s16 *)((char *)out + 0x14) = -clamp;
+        }
+        *(s16 *)((char *)out + 0x44) = pitch;
+        if (*(s16 *)((char *)out + 0x44) > clamp) {
+            *(s16 *)((char *)out + 0x44) = clamp;
+        }
+        if (*(s16 *)((char *)out + 0x44) < -clamp) {
+            *(s16 *)((char *)out + 0x44) = -clamp;
+        }
+    } else {
+        *(s16 *)((char *)out + 0x14) = yaw;
+        *(s16 *)((char *)out + 0x44) = pitch;
+    }
+    delta = (s16)(*(s16 *)((char *)out + 0x14) - (u16)*(s16 *)self);
+    if (delta > 0x8000) {
+        delta -= 0xFFFF;
+    }
+    if (delta < -0x8000) {
+        delta += 0xFFFF;
+    }
+    if (delta < -lbl_803DC2AE) {
+        delta = -lbl_803DC2AE;
+    } else if (delta > lbl_803DC2AE) {
+        delta = lbl_803DC2AE;
+    }
+    *(s16 *)self = (s16)((f32)*(s16 *)self + interpolate((f32)delta, lbl_803E68E4, timeDelta));
+    if (vec != NULL) {
+        delta = (s16)(*(s16 *)((char *)out + 0x44) - (u16)*vec);
+        if (delta > 0x8000) {
+            delta -= 0xFFFF;
+        }
+        if (delta < -0x8000) {
+            delta += 0xFFFF;
+        }
+        if (delta < -lbl_803DC2AE) {
+            delta = -lbl_803DC2AE;
+        } else if (delta > lbl_803DC2AE) {
+            delta = lbl_803DC2AE;
+        }
+        *vec = (s16)((f32)*vec + interpolate((f32)delta, lbl_803E68E4, timeDelta));
+    }
+    delta = *(s16 *)self - *(s16 *)((char *)out + 0x14);
+    if (delta < 0) {
+        delta = -delta;
+    }
+    return delta > 0x100;
+}
 #pragma scheduling reset
 
 #pragma scheduling off
