@@ -9129,6 +9129,44 @@ void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
 }
 #pragma pop
 
+extern void *ObjModel_LoadModelData(int id);
+extern void ObjModel_RelocateModelData(void *model);
+extern void ObjModel_ResolveRenderOpTextures(void *model);
+extern void modelLoadAnimations(void *model, int id, void *animBase);
+extern int modelLoad_calcSizes(void *model, int arg, void *out, int flag);
+extern int ModelList_getHeader(void *list, int index, void *out);
+extern void modelInitModelList(void *list, s16 index, void *out);
+extern int textureLoad(int id, int flag);
+extern s16 *lbl_803DCB64;
+
+void *ObjModel_Load(int id, int arg2, int *outSize) {
+    int idx;
+    void *header;
+    int realId;
+    if (id >= 0) {
+        fileLoadToBufferOffset(0x2c, lbl_803DCB64, id * 2, 8);
+        realId = lbl_803DCB64[0];
+    } else {
+        realId = -id;
+    }
+    if (ModelList_getHeader(lbl_803DCB54, realId, &header)) {
+        (*(u8 *)header)++;
+    } else {
+        int i;
+        header = ObjModel_LoadModelData(realId);
+        ObjModel_RelocateModelData(header);
+        for (i = 0; i < ((u8 *)header)[0xf2]; i++) {
+            *(int *)(*(u8 **)((u8 *)header + 0x20) + i * 4) =
+                textureLoad(-(*(int *)(*(u8 **)((u8 *)header + 0x20) + i * 4) | 0x8000), 1);
+        }
+        ObjModel_ResolveRenderOpTextures(header);
+        modelLoadAnimations(header, realId, (u8 *)header + *(int *)((u8 *)header + 0xc));
+        modelInitModelList(lbl_803DCB54, realId, &header);
+    }
+    *outSize = modelLoad_calcSizes(header, arg2, &idx, 0);
+    return header;
+}
+
 extern void setGQR6(u32 v);
 extern void mapSetup();
 extern void *memset(void *dst, int val, int n);
