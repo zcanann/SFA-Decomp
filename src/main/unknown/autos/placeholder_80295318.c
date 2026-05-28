@@ -6122,7 +6122,9 @@ extern f32 lbl_803E7EE4;
 extern f32 lbl_803E7EE8;
 extern f32 lbl_803E7EEC;
 extern int fn_802B8108(int obj, int state, f32 fv);
-extern void fn_802B7D28(void);
+extern int fn_802B7D28(int obj, int state, f32 fv);
+extern void fn_8011F6E0(int button, u8 angle, int mag);
+extern void fn_8011F6D4(int flag);
 extern int fn_802B7BF0(int obj, int state, f32 fv);
 extern void fn_8003B0D0(int a, int b, int c, int d);
 extern s16 lbl_80334F9C[];
@@ -7591,6 +7593,11 @@ extern f32 lbl_803E7FA4;
 extern f32 lbl_803E7F5C;
 extern f32 lbl_803E8150;
 extern f32 lbl_803E8180;
+extern f32 lbl_803E81AC;
+extern f32 lbl_803E81B0;
+extern f32 lbl_803E81B4;
+extern f32 lbl_803E81B8;
+extern f32 lbl_803E81BC;
 extern f32 lbl_803E81A8;
 extern f32 lbl_803DAF88[];
 extern s16 lbl_80332F2C[];
@@ -12550,6 +12557,102 @@ int fn_802B7BF0(int obj, int state, f32 fv)
         ObjAnim_SetCurrentMove(obj, lbl_80334F9C[*(u16 *)((char *)a4 + 0x24)], lbl_803E8180, 0);
     }
     *(f32 *)((char *)state + 0x2a0) = lbl_80334FAC[*(u16 *)((char *)a4 + 0x24)];
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct {
+    u8 pad00[0x60];
+    s16 anims[14];   /* 0x60 */
+    f32 blends[25];  /* 0x7c */
+    u16 bits[8];     /* 0xe0 */
+    f32 scales[16];  /* 0xf0 */
+} EmitCtrlTbl;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802B7D28(int obj, int state, f32 fv)
+{
+    EmitCtrlTbl *t = (EmitCtrlTbl *)lbl_80334EE8;
+    int inner = *(int *)((char *)obj + 0xb8);
+    int data = *(int *)((char *)inner + 0x40c);
+    void *p = *(void **)((char *)state + 0x2d0);
+    if (p != NULL) {
+        fn_8003B0D0(obj, (int)p, inner + 0x3ac, 0x19);
+    }
+    if (*(int *)((char *)obj + 0xf8) == 0) {
+        *(u16 *)((char *)data + 0x1a) = *(u16 *)((char *)data + 0x1c);
+        *(u16 *)((char *)data + 0x1c) = *(u16 *)((char *)data + 0x18);
+        *(s16 *)((char *)data + 0x18) += (int)(lbl_803E81AC * timeDelta);
+    }
+    if (*(u16 *)((char *)data + 0x24) < 4) {
+        int v = (s16)(int)(lbl_803E81B0 *
+                           fn_80293E80(lbl_803E81B4 * (f32)*(u16 *)((char *)data + 0x18) /
+                                       lbl_803E81B8));
+        int w = (u16)(int)(lbl_803E81B0 * t->scales[*(u8 *)((char *)data + 0x2d)]);
+        if (*(int *)((char *)obj + 0xf8) == 0) {
+            if ((s16)*(u16 *)((char *)data + 0x1c) * (s16)*(u16 *)((char *)data + 0x18) < 0) {
+                Sfx_PlayFromObject(0, 0x44c);
+            }
+        }
+        setAButtonIcon(6);
+        fn_8011F6E0(0x60, (u8)w, v);
+        if ((((u32 (*)(int))getButtonsJustPressed)(0) & 0x100) && *(int *)((char *)obj + 0xf8) == 0) {
+            int a = v < 0 ? -v : v;
+            if (a <= w) {
+                Sfx_PlayFromObject(0, 0x109);
+                *(int *)((char *)obj + 0xf8) = 2;
+            } else {
+                Sfx_PlayFromObject(0, 0x487);
+                *(int *)((char *)obj + 0xf8) = 3;
+            }
+            fn_8011F6D4(0);
+        }
+    } else {
+        fn_8011F6D4(0);
+    }
+    if (*(s8 *)((char *)state + 0x346) != 0 || *(s8 *)((char *)state + 0x27a) != 0) {
+        int q;
+        if (*(s8 *)((char *)state + 0x27a) != 0) {
+            int i;
+            *(u8 *)((char *)data + 0x2d) = 0;
+            for (i = 0; i < 8; i++) {
+                if (GameBit_Get(t->bits[i]) != 0) {
+                    *(u8 *)((char *)data + 0x2d) += 1;
+                }
+            }
+            *(u16 *)((char *)data + 0x18) = (u16)randomGetRange(0, 0xffff);
+            *(u16 *)((char *)data + 0x1c) = *(u16 *)((char *)data + 0x18);
+            *(u16 *)((char *)data + 0x1a) = *(u16 *)((char *)data + 0x1c);
+            fn_8011F6E0(0x60,
+                        (u8)(int)(lbl_803E81BC * t->scales[*(u8 *)((char *)data + 0x2d)]),
+                        (int)(lbl_803E81B0 *
+                              fn_80293E80(lbl_803E81B4 * (f32)*(u16 *)((char *)data + 0x18) /
+                                          lbl_803E81B8)));
+            fn_8011F6D4(1);
+            setAButtonIcon(6);
+        }
+        q = *(int *)((char *)obj + 0x4c);
+        if (*(s8 *)((char *)state + 0x27a) != 0) {
+            *(u16 *)((char *)data + 0x24) = 0;
+            *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)q + 0x8);
+            *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)q + 0x10);
+        } else {
+            *(u16 *)((char *)data + 0x24) += 1;
+        }
+        if (t->anims[*(u16 *)((char *)data + 0x24)] == -1) {
+            *(u16 *)((char *)data + 0x24) = 0;
+            *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)q + 0x8);
+            *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)q + 0x10);
+            GameBit_Set(*(s16 *)((char *)q + 0x1a), 1);
+            GameBit_Set(*(s16 *)((char *)q + 0x30), 0);
+            return 3;
+        }
+        ObjAnim_SetCurrentMove(obj, t->anims[*(u16 *)((char *)data + 0x24)], lbl_803E8180, 0);
+    }
+    *(f32 *)((char *)state + 0x2a0) = t->blends[*(u16 *)((char *)data + 0x24)];
     (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
     return 0;
 }
