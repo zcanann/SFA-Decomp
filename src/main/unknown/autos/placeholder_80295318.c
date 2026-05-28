@@ -11310,7 +11310,7 @@ extern int fn_8029AF9C();
 extern int fn_8029BDB4();
 extern int fn_8029C9C8();
 extern int fn_8029CF30();
-extern int fn_8029D4C0();
+extern int fn_8029D4C0(int obj, int state, f32 fv);
 extern int fn_8029DB70();
 extern int fn_8029E568();
 extern int fn_8029EBCC();
@@ -11728,6 +11728,103 @@ void fn_802AE9C8(int obj, int inner, int state)
             *(int *)((char *)inner + 0x7f8) = 0;
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E7FD0;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_8029D4C0(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    u16 sfxId;
+    int d;
+
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0x450:
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7FCC;
+        if (*(f32 *)((char *)obj + 0x28) < lbl_803E7EE0 &&
+            ((ByteFlags *)((char *)inner + 0x3f1))->b01) {
+            if (*(s16 *)((char *)inner + 0x81a) == 0) {
+                sfxId = 0x2d2;
+            } else {
+                sfxId = 0x214;
+            }
+            Sfx_PlayFromObject(obj, sfxId);
+            ObjAnim_SetCurrentMove(obj, 0xc6, lbl_803E7EA4, 0);
+        }
+        if (*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c) >
+            lbl_803E7EE0) {
+            d = (u16)getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c)) -
+                (u16) * (s16 *)((char *)inner + 0x478);
+            if (d > 0x8000) {
+                d -= 0xffff;
+            }
+            if (d < -0x8000) {
+                d += 0xffff;
+            }
+            *(s16 *)((char *)inner + 0x478) =
+                *(s16 *)((char *)inner + 0x478) + (d * (int)fv >> 3);
+            *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        }
+        break;
+    case 0xc4:
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F6C;
+        if (*(f32 *)((char *)obj + 0x28) < lbl_803E7EE0 &&
+            ((ByteFlags *)((char *)inner + 0x3f1))->b01) {
+            if (*(s16 *)((char *)inner + 0x81a) == 0) {
+                sfxId = 0x2d2;
+            } else {
+                sfxId = 0x214;
+            }
+            Sfx_PlayFromObject(obj, sfxId);
+            ObjAnim_SetCurrentMove(obj, 0xc6, lbl_803E7EA4, 0);
+        }
+        if (*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c) >
+            lbl_803E7EE0) {
+            d = (u16)getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c)) -
+                (u16) * (s16 *)((char *)inner + 0x478);
+            if (d > 0x8000) {
+                d -= 0xffff;
+            }
+            if (d < -0x8000) {
+                d += 0xffff;
+            }
+            *(s16 *)((char *)inner + 0x478) =
+                *(s16 *)((char *)inner + 0x478) + (d * (int)fv >> 3);
+            *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        }
+        break;
+    case 0xc6:
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F6C;
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0xc8, lbl_803E7EA4, 0);
+        }
+        *(f32 *)((char *)obj + 0x24) = lbl_803E7EA4;
+        *(f32 *)((char *)obj + 0x2c) = lbl_803E7EA4;
+        break;
+    case 0xc8:
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(int *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return -1;
+        }
+        break;
+    default:
+        ObjAnim_SetCurrentMove(obj, 0xc4, lbl_803E7EA4, 0);
+        break;
+    }
+    *(s8 *)((char *)state + 0x34c) |= 2;
+    *(f32 *)((char *)obj + 0x24) =
+        *(f32 *)((char *)obj + 0x24) * powfBitEstimate(lbl_803E7FD0, fv);
+    *(f32 *)((char *)obj + 0x2c) =
+        *(f32 *)((char *)obj + 0x2c) * powfBitEstimate(lbl_803E7FD0, fv);
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
