@@ -4635,3 +4635,28 @@ void drcloudper_init(int obj, int setup)
 }
 
 #pragma scheduling on
+
+#pragma scheduling off
+void fn_8022F270(int obj, int p2) { *(int *)(*(int *)(obj + 0xb8) + 0x4) = p2; }
+
+void fn_8022C7A4(int obj) { *(u8 *)(*(int *)(obj + 0xb8) + 0x47f) = 0; }
+
+void fn_80231058(int obj, int src)
+{
+    *(f32 *)(obj + 0x24) = *(f32 *)(src + 0x0);
+    *(f32 *)(obj + 0x28) = *(f32 *)(src + 0x4);
+    *(f32 *)(obj + 0x2c) = *(f32 *)(src + 0x8);
+}
+
+void fn_8023137C(int obj, int src)
+{
+    *(f32 *)(obj + 0x24) = *(f32 *)(src + 0x0);
+    *(f32 *)(obj + 0x28) = *(f32 *)(src + 0x4);
+    *(f32 *)(obj + 0x2c) = *(f32 *)(src + 0x8);
+}
+
+void fn_8022ED74(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+void fn_8022F558(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+void fn_80231028(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+void fn_8023134C(int obj, int v) { *(f32 *)(*(int *)(obj + 0xb8) + 0x0) = (f32)v; }
+#pragma scheduling on
