@@ -339,6 +339,11 @@ extern f32 lbl_803E6A30;
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);
+extern f32 sqrtf(f32 v);
+extern void voxmaps_worldToGrid(void *world, void *grid);
+extern int voxmaps_traceLine(void *start, void *end, void *hit, int d, int e);
+extern void voxmaps_gridToWorld(void *world, void *grid);
+extern f32 lbl_803E6960;
 
 extern int fn_80080150(void *timer);
 extern void s16toFloat(void *timer, int v);
@@ -692,6 +697,81 @@ void drakormissile_startActiveLaunch(int obj) {
     ObjHits_SetHitVolumeSlot(obj, 22, 1, 0);
     Sfx_PlayFromObject(obj, 965);
     Sfx_PlayFromObject(obj, 966);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void drakormissile_func0B(int obj, int from, int target, f32 speed) {
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+    void *light;
+    f32 dir[3];
+    f32 hitDir[3];
+    f32 endPos[3];
+    int startGrid[2];
+    int endGrid[2];
+    int hitGrid[2];
+    f32 mag;
+    f32 horizDist;
+
+    dir[0] = *(f32 *)((char *)target + 0xc) - *(f32 *)((char *)from + 0xc);
+    dir[1] = *(f32 *)((char *)target + 0x10) - *(f32 *)((char *)from + 0x10);
+    dir[2] = *(f32 *)((char *)target + 0x14) - *(f32 *)((char *)from + 0x14);
+    mag = sqrtf(dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]) / speed;
+    if (mag != lbl_803E695C) {
+        dir[0] = dir[0] / mag;
+        dir[1] = dir[1] / mag;
+        dir[2] = dir[2] / mag;
+    }
+    *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)from + 0xc);
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)from + 0x10);
+    *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)from + 0x14);
+    *(f32 *)((char *)obj + 0x24) = dir[0];
+    *(f32 *)((char *)obj + 0x28) = dir[1];
+    *(f32 *)((char *)obj + 0x2c) = dir[2];
+    horizDist = sqrtf(*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                      *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c));
+    *(s16 *)obj = getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c));
+    *(s16 *)((char *)obj + 2) = -getAngle(*(f32 *)((char *)obj + 0x28), horizDist);
+    *(s16 *)((char *)obj + 4) = 0;
+    ObjHits_EnableObject(obj);
+    *(u8 *)(p + 4) = 3;
+    endPos[0] = lbl_803E6960 * *(f32 *)((char *)obj + 0x24);
+    endPos[1] = lbl_803E6960 * *(f32 *)((char *)obj + 0x28);
+    endPos[2] = lbl_803E6960 * *(f32 *)((char *)obj + 0x2c);
+    endPos[0] = *(f32 *)((char *)obj + 0xc) + endPos[0];
+    endPos[1] = *(f32 *)((char *)obj + 0x10) + endPos[1];
+    endPos[2] = *(f32 *)((char *)obj + 0x14) + endPos[2];
+    voxmaps_worldToGrid((f32 *)((char *)obj + 0xc), startGrid);
+    voxmaps_worldToGrid(endPos, endGrid);
+    if (voxmaps_traceLine(startGrid, endGrid, hitGrid, 0, 0) == 0) {
+        voxmaps_gridToWorld(endPos, hitGrid);
+        hitDir[0] = endPos[0] - *(f32 *)((char *)obj + 0xc);
+        hitDir[1] = endPos[1] - *(f32 *)((char *)obj + 0x10);
+        hitDir[2] = endPos[2] - *(f32 *)((char *)obj + 0x14);
+        *(int *)(p + 8) =
+            (int)(sqrtf(hitDir[0] * hitDir[0] + hitDir[1] * hitDir[1] + hitDir[2] * hitDir[2]) / speed);
+    } else {
+        *(int *)(p + 8) = 0x258;
+    }
+    if (*(void **)p != NULL) {
+        ModelLightStruct_free(*(void **)p);
+        *(void **)p = NULL;
+    }
+    light = objCreateLight(obj, 1);
+    if (light != NULL) {
+        modelLightStruct_setField50(light, 2);
+        modelLightStruct_setColorsA8AC(light, 0, 255, 255, 0);
+        lightSetFieldBC_8001db14(light, 1);
+        lightDistAttenFn_8001dc38(light, lbl_803E6940, lbl_803E6944);
+        fn_8001D730(light, 0, 0, 255, 255, 128, lbl_803E6948);
+        fn_8001D714(light, lbl_803E694C);
+    }
+    *(void **)p = light;
+    *(u8 *)((char *)obj + 0x36) = 255;
+    *(f32 *)((char *)obj + 8) = lbl_803E6958 * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
+    Sfx_PlayFromObject(obj, 371);
 }
 #pragma peephole reset
 #pragma scheduling reset
