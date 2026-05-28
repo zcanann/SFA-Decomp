@@ -15631,10 +15631,7 @@ int fn_8029E568(int obj, int state, f32 fv)
             }
         }
         *(f32 *)((char *)state + 0x294) = lbl_803E7EA4;
-        PSVECScale((f32 *)((char *)inner + 0x634), vec, *(f32 *)((char *)inner + 0x640));
-        PSVECAdd((f32 *)((char *)inner + 0x61c), vec, (f32 *)((char *)obj + 0xc));
-        fn_802AB5A4(obj, inner, 7);
-        return 0;
+        break;
     }
     }
     PSVECScale((f32 *)((char *)inner + 0x634), vec, *(f32 *)((char *)inner + 0x640));
