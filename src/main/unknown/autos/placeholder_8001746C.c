@@ -8588,6 +8588,40 @@ extern char sMmFreeInvalidLocationError[];
 extern char sMmAllocFreeMessageBlock[];
 extern int lbl_803DCB34;
 extern void OSReport(char *fmt, ...);
+extern void waitNextFrame(void);
+extern void GXFlush_(int a, int b);
+extern char sMmStbfStackTooDeepError[];
+extern s16 gMmDeferredFreeCount;
+
+typedef struct {
+    void *ptr;
+    u8 delay;
+    u8 pad[3];
+} DeferredFree;
+extern DeferredFree gMmDeferredFreeStack[];
+
+void mmFreeDeferred(void *p) {
+    DeferredFree *stack;
+    if (gMmDeferredFreeCount == 0x7d0) {
+        waitNextFrame();
+        GXFlush_(1, 0);
+        waitNextFrame();
+        GXFlush_(1, 0);
+        stack = gMmDeferredFreeStack;
+        while (gMmDeferredFreeCount > 0) {
+            DeferredFree *top;
+            mmFree(stack[0].ptr);
+            top = &stack[gMmDeferredFreeCount];
+            stack[0].ptr = top[-1].ptr;
+            stack[0].delay = top[-1].delay;
+            gMmDeferredFreeCount--;
+        }
+        OSReport(sMmStbfStackTooDeepError);
+    }
+    gMmDeferredFreeStack[gMmDeferredFreeCount].ptr = p;
+    gMmDeferredFreeStack[gMmDeferredFreeCount].delay = gMmFreeDelay;
+    gMmDeferredFreeCount++;
+}
 
 void mmFree(void *p) {
     int region;
