@@ -6561,7 +6561,7 @@ extern int lbl_803DE47C;
 extern f32 lbl_803DC670;
 extern f32 lbl_803DC674;
 extern f32 lbl_803DC678;
-extern void fn_80295334();
+extern void fn_80295334(int a, int b, f32 *vec, int c, int mode, f32 angle);
 extern void tailFn_80026c38(int a, f32 x, f32 y, f32 z);
 extern void playerTailFn_80026b3c(int *a, int b, int c, void *fn);
 extern int coordsToMapCell(f32 x, f32 z);
@@ -10943,6 +10943,83 @@ extern void Matrix_TransformVector(int m, f32 *src, f32 *dst);
 extern f32 lbl_803E80D4;
 extern f32 lbl_803E80D8;
 extern f32 lbl_803E80AC;
+
+extern f32 fn_802943F4(f32 x);
+extern void PSMTXRotRad(f32 *m, int axis, f32 rad);
+extern void PSMTXMultVecSR(f32 *m, f32 *src, f32 *dst);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
+extern f32 lbl_803E7E80;
+extern f32 lbl_803E7E84;
+extern f32 lbl_803E7E88;
+extern f32 lbl_803E7E8C;
+extern f32 lbl_803E7E94;
+extern f32 lbl_803E7E98;
+extern f32 lbl_803E7E9C;
+extern f32 lbl_803E7EA0;
+extern f32 lbl_803E7EA8;
+extern f32 lbl_803E7EAC;
+extern f32 lbl_803E7EB0;
+extern f32 lbl_803E7EB8;
+extern f32 lbl_803E7EBC;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_80295334(int a, int b, f32 *vec, int c, int mode, f32 angle)
+{
+    f32 mtx1[12];
+    f32 mtx2[12];
+
+    switch (lbl_803DC66C) {
+    case 0:
+        lbl_803DC670 = lbl_803E7E80;
+        lbl_803DC674 = lbl_803E7E84;
+        lbl_803DC678 = lbl_803E7E88;
+        break;
+    case 1:
+        lbl_803DC670 = lbl_803E7E80;
+        lbl_803DC674 = lbl_803E7E84;
+        lbl_803DC678 = lbl_803E7E88;
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * fn_802943F4(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
+        PSMTXMultVecSR(mtx1, vec, vec);
+        break;
+    case 4:
+        lbl_803DC670 = lbl_803E7E98;
+        lbl_803DC674 = lbl_803E7E84;
+        lbl_803DC678 = lbl_803E7E88;
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * fn_802943F4(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
+        PSMTXMultVecSR(mtx1, vec, vec);
+        break;
+    case 5:
+        lbl_803DC670 = lbl_803E7E9C;
+        lbl_803DC674 = lbl_803E7E84;
+        lbl_803DC678 = lbl_803E7E88;
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * fn_802943F4(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
+        PSMTXMultVecSR(mtx1, vec, vec);
+        break;
+    case 2:
+        lbl_803DC670 = lbl_803E7EA0;
+        lbl_803DC674 = lbl_803E7EA4;
+        lbl_803DC678 = lbl_803E7EA8;
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7EAC * fn_802943F4(lbl_803E7E98 * angle));
+        PSMTXRotRad(mtx2, 0x78, lbl_803E7EB0);
+        PSMTXConcat(mtx2, mtx1, mtx1);
+        PSMTXMultVecSR(mtx1, vec, vec);
+        break;
+    case 3:
+        lbl_803DC670 = lbl_803E7E80;
+        lbl_803DC674 = lbl_803E7E84;
+        lbl_803DC678 = lbl_803E7E88;
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7EB4 * fn_802943F4(lbl_803E7EB4 * angle - lbl_803E7EB8 * (f32)mode));
+        if (mode == 1) {
+            PSMTXRotRad(mtx2, 0x78, lbl_803E7EBC);
+            PSMTXConcat(mtx2, mtx1, mtx1);
+        }
+        PSMTXMultVecSR(mtx1, vec, vec);
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 void fn_802AA014(int obj)
 {
