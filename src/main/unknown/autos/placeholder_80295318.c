@@ -8088,10 +8088,9 @@ int fn_802A7160(int obj, int state)
     if (GameBit_Get(0x970)) {
         GameBit_Set(0x970, 0);
         (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0x10, obj, -1);
-        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
-        return 2;
     }
-    return 0;
+    *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+    return 2;
 }
 
 void fn_8029BC08(int obj)
