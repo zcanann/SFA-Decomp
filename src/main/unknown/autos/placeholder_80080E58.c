@@ -4120,6 +4120,23 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     return;
 }
 
+void ObjSeq_seqState_free(u8 *seq)
+{
+    void *ptr;
+
+    ptr = *(void **)(seq + 0x94);
+    if (ptr != NULL) {
+        mm_free(ptr);
+        *(void **)(seq + 0x94) = NULL;
+        *(void **)(seq + 0x98) = NULL;
+    }
+    ptr = *(void **)(seq + 0x2c);
+    if (ptr != NULL) {
+        mm_free(ptr);
+        *(void **)(seq + 0x2c) = NULL;
+    }
+}
+
 void ObjSeq_release(void)
 {
     mm_free(lbl_803DD0D4);
