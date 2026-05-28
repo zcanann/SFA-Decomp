@@ -6,6 +6,9 @@ extern void mm_free(void *ptr);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void *Obj_GetPlayerObject(void);
+extern void *getTrickyObject(void);
+extern void *ObjList_FindObjectById(int id);
+extern void **ObjList_GetObjects(void *unused, int *count);
 extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
 extern void objSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void *entries, int count);
@@ -48,6 +51,8 @@ extern u8 lbl_803DD178;
 extern void *lbl_803DD144;
 extern f32 lbl_8039A7A8[];
 extern f32 pEXIInputFlag;
+extern f32 lbl_803DEFB0;
+extern f32 lbl_803DEFF0;
 extern f32 lbl_803DF06C;
 extern f32 lbl_803DF118;
 extern f32 lbl_803DF138;
@@ -4135,6 +4140,98 @@ void ObjSeq_seqState_free(u8 *seq)
         mm_free(ptr);
         *(void **)(seq + 0x2c) = NULL;
     }
+}
+
+void ObjSeq_seqState_init(u8 *seq)
+{
+    int animIndex;
+    int runLength;
+    int track;
+    int animCount;
+    u8 *animEntry;
+    int commandIndex;
+    u8 *command;
+
+    for (track = 0; track < 0x13; track++) {
+        *(s16 *)(seq + 0xc2 + track * 2) = 0;
+    }
+
+    track = 0;
+    animIndex = 0;
+    while (animIndex < *(s16 *)(seq + 0x64)) {
+        runLength = 0;
+        animCount = *(s16 *)(seq + 0x64);
+        while (animIndex + runLength < animCount) {
+            animEntry = *(u8 **)(seq + 0x98) + (animIndex + runLength) * 8;
+            if (track == ((s8)animEntry[5] & 0x1f)) {
+                runLength++;
+            } else {
+                break;
+            }
+        }
+        *(s16 *)(seq + 0xc2 + track * 2) = runLength;
+        *(s16 *)(seq + 0x9c + track * 2) = animIndex;
+        track++;
+        animIndex += runLength;
+    }
+
+    *(s16 *)(seq + 0x5c) = 1000;
+    commandIndex = 0;
+    while (commandIndex < 2 && commandIndex < *(s16 *)(seq + 0x62)) {
+        command = *(u8 **)(seq + 0x94) + commandIndex * 4;
+        if ((s8)command[0] == -1) {
+            *(s16 *)(seq + 0x5c) = *(s16 *)(command + 2) + 1;
+        }
+        commandIndex++;
+    }
+}
+
+void *objFindForSeqFn_80081bf0(u8 *obj)
+{
+    void *unused;
+    int objectCount;
+    void **objects;
+    int targetId;
+    int objectType;
+    f32 bestDistSq;
+    void *bestObj;
+    int i;
+    u8 *candidate;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distSq;
+
+    targetId = *(int *)(*(u8 **)(obj + 0xb8) + 0x10c);
+    if (targetId != 0) {
+        return ObjList_FindObjectById(targetId);
+    }
+
+    objects = ObjList_GetObjects(&unused, &objectCount);
+    objectType = *(s16 *)(*(u8 **)(obj + 0x4c) + 0x1c) - 4;
+    if (objectType == 0x1f || objectType == 0) {
+        return Obj_GetPlayerObject();
+    }
+    if (objectType == 0x24 || objectType == 0x25) {
+        return getTrickyObject();
+    }
+
+    bestDistSq = lbl_803DEFF0;
+    bestObj = NULL;
+    for (i = 0; i < objectCount; i++) {
+        candidate = objects[i];
+        if (*(s16 *)(candidate + 0x46) == objectType) {
+            dx = *(f32 *)(obj + 0xc) - *(f32 *)(candidate + 0xc);
+            dy = *(f32 *)(obj + 0x10) - *(f32 *)(candidate + 0x10);
+            dz = *(f32 *)(obj + 0x14) - *(f32 *)(candidate + 0x14);
+            distSq = dx * dx + dy * dy + dz * dz;
+            if (bestDistSq < lbl_803DEFB0 || distSq < bestDistSq) {
+                bestDistSq = distSq;
+                bestObj = candidate;
+            }
+        }
+    }
+    return bestObj;
 }
 
 void ObjSeq_release(void)
