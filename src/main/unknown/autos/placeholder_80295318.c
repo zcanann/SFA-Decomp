@@ -11300,7 +11300,7 @@ int fn_802BA3EC(int obj, int state)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_802985FC();
+extern int fn_802985FC(int obj, int state, f32 fv);
 extern int fn_80298944();
 extern int fn_80298E54();
 extern int fn_802994D0();
@@ -11497,6 +11497,106 @@ int fn_80298944(int obj, int state)
         *(u8 *)((char *)state + 0x356) = 0;
         *(s16 *)((char *)inner + 0x478) = *(s16 *)lbl_803DE434;
         *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+        if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+            *(u8 *)((char *)inner + 0x8b4) = 4;
+            ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+        }
+        break;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void superQuakeFn_8016d9fc(void *a);
+
+#pragma peephole off
+#pragma scheduling off
+int fn_802985FC(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 f;
+
+    *(int *)state |= 0x200000;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ((ByteFlags *)((char *)inner + 0x3f3))->b10 = 0;
+        if (*(s16 *)((char *)inner + 0x80a) == 0xc55) {
+            *(u8 *)((char *)inner + 0x41c) = 0x14;
+        } else {
+            *(u8 *)((char *)inner + 0x41c) = 0xa;
+        }
+        ObjHits_MarkObjectPositionDirty(obj);
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b20 == 0 &&
+        lbl_803E7EA4 != *(f32 *)((char *)inner + 0x784)) {
+        *(int *)((char *)state + 0x308) = 0;
+        return 0x42;
+    }
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0x84:
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0x85, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7EFC;
+        }
+        break;
+    case 0x85:
+        *(f32 *)((char *)inner + 0x7d4) =
+            *(f32 *)((char *)inner + 0x7d4) + lbl_803E7ED4 * fv / lbl_803E7EF0;
+        *(f32 *)((char *)inner + 0x7d4) =
+            lbl_803E7E98 * fv + *(f32 *)((char *)inner + 0x7d4);
+        if (*(f32 *)((char *)inner + 0x7d4) >=
+            (f32)(u32) * (u8 *)((char *)inner + 0x41c)) {
+            int amt;
+            int r35c;
+            int v;
+            Sfx_PlayFromObject(obj, 0x219);
+            amt = -*(u8 *)((char *)inner + 0x41c);
+            r35c = *(int *)((char *)(*(int *)((char *)obj + 0xb8)) + 0x35c);
+            v = *(s16 *)((char *)r35c + 4) + amt;
+            if (v < 0) {
+                v = 0;
+            } else if (v > *(s16 *)((char *)r35c + 6)) {
+                v = *(s16 *)((char *)r35c + 6);
+            }
+            *(s16 *)((char *)r35c + 4) = v;
+            if (amt > 0) {
+                Sfx_PlayFromObject(0, 0x21c);
+            }
+            ObjAnim_SetCurrentMove(obj, 0x86, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
+        }
+        break;
+    case 0x86:
+        if (((ByteFlags *)((char *)inner + 0x3f3))->b10 == 0 &&
+            *(f32 *)((char *)obj + 0x98) > lbl_803E7EFC) {
+            void *tricky = getTrickyObject();
+            if (tricky != NULL) {
+                trickyImpress(tricky);
+            }
+            Sfx_PlayFromObject(obj, 0x21a);
+            superQuakeFn_8016d9fc((char *)obj + 0xc);
+            ((ByteFlags *)((char *)inner + 0x3f3))->b10 = 1;
+            doRumble(lbl_803E7F30);
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(int *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        break;
+    default:
+        Sfx_PlayFromObject(obj, 0x21b);
+        f = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x294) = f;
+        *(f32 *)((char *)state + 0x284) = f;
+        *(f32 *)((char *)state + 0x280) = f;
+        *(f32 *)((char *)obj + 0x24) = f;
+        *(f32 *)((char *)obj + 0x28) = f;
+        *(f32 *)((char *)obj + 0x2c) = f;
+        ObjAnim_SetCurrentMove(obj, 0x84, f, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F34;
+        *(f32 *)((char *)inner + 0x7d4) = lbl_803E7EA4;
+        ((ByteFlags *)((char *)inner + 0x3f3))->b10 = 0;
         if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
             *(u8 *)((char *)inner + 0x8b4) = 4;
             ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
