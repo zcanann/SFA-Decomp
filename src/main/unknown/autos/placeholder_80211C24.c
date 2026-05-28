@@ -218,6 +218,21 @@ extern void seqFn_800394a0(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void fn_8009A8C8(int obj, f32 v);
 
+extern f32 lbl_803E683C;
+extern f32 lbl_803E6840;
+extern f32 lbl_803E6844;
+extern void *lbl_803DDD50;
+extern void *lbl_803DDD48;
+extern int lbl_803DC2A0;
+extern f32 lbl_803AD1C8[];
+extern void **gRomCurveInterface;
+extern void **gBaddieControlInterface;
+extern void *ObjPath_GetPointModelMtx(int obj, int idx);
+extern void mtx44_mult(f32 *dst, f32 *a, f32 *b);
+extern void fn_8003B950(f32 *mtx);
+extern void Stack_Free(void *p);
+extern void Resource_Release(void *p);
+
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;
@@ -228,6 +243,45 @@ typedef struct {
     u8 b6 : 1;
     u8 b7 : 1;
 } BitFlags8;
+
+#pragma scheduling off
+int ktrex_isPlayerInLaneThreatRange(int obj) {
+    u8 state = *(u8 *)((char *)gKTRexState + 0x100);
+    f32 center;
+    f32 lo;
+    f32 hi;
+    if (state == 0) {
+        return 0;
+    }
+    switch (state) {
+    case 1:
+    case 2:
+        center = *(f32 *)((char *)obj + 0x14);
+        lo = (center - lbl_803E683C) - *(f32 *)((char *)lbl_803DDD50 + 0x28);
+        hi = (lbl_803E683C + center) - *(f32 *)((char *)lbl_803DDD50 + 0x28);
+        if (lo > lbl_803E6840) {
+            return 0;
+        }
+        if (hi >= lbl_803E6840) {
+            return 1;
+        }
+        return 0;
+    case 4:
+    case 8:
+        center = *(f32 *)((char *)obj + 0xc);
+        lo = (center - lbl_803E683C) - *(f32 *)((char *)lbl_803DDD50 + 0x24);
+        hi = (lbl_803E683C + center) - *(f32 *)((char *)lbl_803DDD50 + 0x24);
+        if (lo > lbl_803E6844) {
+            return 0;
+        }
+        if (hi >= lbl_803E6844) {
+            return 1;
+        }
+        return 0;
+    }
+    return 0;
+}
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -900,6 +954,66 @@ void hightop_playMovementSfx(int obj, int p2, int p3) {
         Sfx_PlayFromObject(obj, (u16)lbl_803DC310);
     }
 }
+
+void drakorhoverpad_func16(int obj, f32 scale) {
+    f32 *mtx;
+    ObjPosParams pos;
+    mtx = (f32 *)ObjPath_GetPointModelMtx(obj, 0);
+    pos.x = lbl_803E6A3C;
+    pos.y = lbl_803E6A40;
+    pos.z = lbl_803E6A3C;
+    pos.rx = 0;
+    pos.ry = 0;
+    pos.rz = 0;
+    pos.scale = scale / *(f32 *)(*(int *)((char *)obj + 0x50) + 0x4);
+    setMatrixFromObjectPos(lbl_803AD1C8, &pos);
+    mtx44_mult(lbl_803AD1C8, mtx, lbl_803AD1C8);
+    fn_8003B950(lbl_803AD1C8);
+}
+
+void ktrexfloorswitch_init(int obj, char *arg) {
+    char *p = *(char **)((char *)obj + 0xb8);
+    int q;
+    int r;
+    *(s16 *)obj = (s16)(((u8 *)arg)[0x18] << 8);
+    *(f32 *)(p + 0x8) = (f32)(u32)((u8 *)arg)[0x19];
+    *(int *)((char *)obj + 0xf4) = 1;
+    *(int *)((char *)obj + 0xf8) = 1;
+    q = *(int *)((char *)obj + 0x4c);
+    r = (*(int (**)(int, int, int, f32, f32, f32))((char *)*gRomCurveInterface + 0x14))((int)&lbl_803DC2A0, 1, 0, *(f32 *)(q + 0x8), *(f32 *)(q + 0xc), *(f32 *)(q + 0x10));
+    if (r != -1) {
+        r = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(r);
+        if (r != 0) {
+            *(f32 *)((char *)obj + 0xc) = *(f32 *)(r + 0x8);
+            *(f32 *)((char *)obj + 0x14) = *(f32 *)(r + 0x10);
+        }
+    }
+}
+
+void ktrex_free(int obj) {
+    int i;
+    gKTRexRuntime = *(void **)((char *)obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 0x3);
+    (*(void (**)(int, void *, int))((char *)*gBaddieControlInterface + 0x40))(obj, gKTRexRuntime, 0);
+    Stack_Free(*(void **)gKTRexState);
+    if (lbl_803DDD48 != 0) {
+        Resource_Release(lbl_803DDD48);
+    }
+    if (*(void **)((char *)gKTRexState + 0x178) != 0) {
+        ModelLightStruct_free(*(void **)((char *)gKTRexState + 0x178));
+    }
+    for (i = 0; i < 5; i++) {
+        void *m = *(void **)((char *)gKTRexState + i * 4 + 0x17c);
+        if (m != 0) {
+            mm_free(m);
+        }
+    }
+    lbl_803DDD48 = 0;
+    Music_Trigger(0x28, 0);
+    Music_Trigger(0x93, 0);
+    Music_Trigger(0x94, 0);
+}
+
 #pragma peephole reset
 #pragma scheduling reset
 
