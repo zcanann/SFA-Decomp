@@ -379,7 +379,7 @@ extern f32 lbl_803E6A9C;
 extern f32 lbl_803DC2F8;
 extern s16 lbl_803DC2FC;
 int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out);
-void drakorhoverpad_update(void *curve, int arg);
+int drakorhoverpad_update(void *curve, int arg);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 m);
 extern f32 lbl_803E6A78;
@@ -652,6 +652,7 @@ void drakorhoverpad_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p
     }
 }
 
+#pragma dont_inline on
 int drakorhoverpad_pickUnmaskedNextPoint(int *pad, int exclude, int maxIndex) {
     int collected[4];
     int pt;
@@ -709,7 +710,81 @@ int drakorhoverpad_pickMaskedNextPoint(int *pad, int exclude, int maxIndex) {
     }
     return collected[maxIndex];
 }
+#pragma dont_inline reset
 #pragma peephole reset
+#pragma scheduling reset
+
+extern void curvesSetupMoveNetworkCurve(void *curve);
+extern f32 lbl_803E6A70;
+
+#pragma scheduling off
+int drakorhoverpad_update(void *curve, int arg) {
+    u8 *p = (u8 *)curve;
+    u8 *cur;
+    int result;
+
+    if (curve == NULL) {
+        return 1;
+    }
+    cur = *(u8 **)(p + 0xa0);
+    if (cur == NULL || *(void **)(p + 0xa4) == NULL) {
+        return 1;
+    }
+    *(u8 **)(p + 0x9c) = cur;
+    *(u8 **)(p + 0xa0) = *(u8 **)(p + 0xa4);
+    memcpy(p + 0xa8, p + 0xb8, 16);
+    memcpy(p + 0xc8, p + 0xd8, 16);
+    memcpy(p + 0xe8, p + 0xf8, 16);
+    if (*(int *)(p + 0x80) != 0) {
+        result = drakorhoverpad_pickMaskedNextPoint(*(int **)(p + 0xa0), -1, arg);
+    } else {
+        result = drakorhoverpad_pickUnmaskedNextPoint(*(int **)(p + 0xa0), -1, arg);
+    }
+    if (result == -1) {
+        *(void **)(p + 0xa4) = NULL;
+        return 1;
+    }
+    *(int *)(p + 0xa4) = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(result);
+    if (*(void **)(p + 0xa4) == NULL) {
+        return 1;
+    }
+    if (*(int *)(p + 0x80) != 0) {
+        *(f32 *)(p + 0xb8) = *(f32 *)(*(u8 **)(p + 0xa0) + 8);
+        *(f32 *)(p + 0xbc) = *(f32 *)(*(u8 **)(p + 0x9c) + 8);
+        *(f32 *)(p + 0xc0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xc4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0xc);
+        *(f32 *)(p + 0xdc) = *(f32 *)(*(u8 **)(p + 0x9c) + 0xc);
+        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xf8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0x10);
+        *(f32 *)(p + 0xfc) = *(f32 *)(*(u8 **)(p + 0x9c) + 0x10);
+        *(f32 *)(p + 0x100) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * sin(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0x104) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * sin(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2c) << 8) / lbl_803E6A58));
+    } else {
+        *(f32 *)(p + 0xb8) = *(f32 *)(*(u8 **)(p + 0xa0) + 8);
+        *(f32 *)(p + 0xbc) = *(f32 *)(*(u8 **)(p + 0xa0) + 8);
+        *(f32 *)(p + 0xc0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xc4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0xc);
+        *(f32 *)(p + 0xdc) = *(f32 *)(*(u8 **)(p + 0xa0) + 0xc);
+        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * fn_80293E80(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xf8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0x10);
+        *(f32 *)(p + 0xfc) = *(f32 *)(*(u8 **)(p + 0xa0) + 0x10);
+        *(f32 *)(p + 0x100) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * sin(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0x104) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * sin(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+    }
+    if (*(int *)(p + 0x90) != 0) {
+        curvesSetupMoveNetworkCurve(curve);
+    }
+    if (*(int *)(p + 0x80) != 0) {
+        curveFn_80010320(curve, lbl_803E6A70);
+    } else {
+        curveFn_80010320(curve, lbl_803E6A48);
+    }
+    return 0;
+}
 #pragma scheduling reset
 
 #pragma scheduling off
