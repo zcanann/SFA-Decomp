@@ -1290,9 +1290,95 @@ void FUN_80006740(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modelRenderFn_80006744(int param_1,int *param_2)
+typedef struct ModelRenderInstrsState {
+    void* instrs;
+    s32 byteCount;
+    s32 bitCount;
+    s32 fieldC;
+    s32 bit;
+} ModelRenderInstrsState;
+
+s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state);
+void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit);
+
+extern int lbl_802C18C0[];
+extern int lbl_802C1A24[];
+
+#define MODEL_DECODE_NIBBLE(nibExpr)                                           \
+    {                                                                          \
+        u8 nib = (nibExpr);                                                    \
+        int base = lbl_802C18C0[idx];                                          \
+        int delta = 0;                                                         \
+        if (nib & 1) {                                                         \
+            delta = base >> 2;                                                 \
+        }                                                                      \
+        if (nib & 2) {                                                         \
+            delta += base >> 1;                                                \
+        }                                                                      \
+        if (nib & 4) {                                                         \
+            delta += base;                                                     \
+        }                                                                      \
+        if (nib & 8) {                                                         \
+            delta = -delta;                                                    \
+        }                                                                      \
+        acc += delta;                                                          \
+        idx += lbl_802C1A24[nib];                                              \
+        if (idx < 0) {                                                         \
+            idx = 0;                                                           \
+        } else if (idx > 0x58) {                                               \
+            idx = 0x58;                                                        \
+        }                                                                      \
+        {                                                                      \
+            int v = acc & 0xffff;                                              \
+            int curBit = state->bit;                                           \
+            int bo = curBit >> 3;                                              \
+            u32 packed = (u32)v << ((8 - (curBit & 7)) + sh16);                \
+            ((u8 *)state->instrs)[bo] |= (packed >> 16) & 0xff;                \
+            ((u8 *)state->instrs)[bo + 1] |= (packed >> 8) & 0xff;             \
+            ((u8 *)state->instrs)[bo + 2] |= packed & 0xff;                    \
+            state->bit += bitWidth;                                            \
+            state->bit += gap;                                                 \
+        }                                                                      \
+    }
+
+#pragma scheduling off
+u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bitWidth)
 {
+    int acc;
+    int idx;
+    u8 *cur;
+    int initialBit;
+    int gap;
+    int sh16;
+    int shamt = bitWidth - 4;
+    int hi = (*p >> 4) & 0xf;
+    int i;
+
+    if (shamt < 0) {
+        shamt = 0;
+    }
+    acc = hi << shamt;
+    idx = (*p & 0xf) << 3;
+    cur = p + 1;
+    initialBit = modelRenderInstrsState_getBit(state);
+    gap = stride - bitWidth;
+    sh16 = 0x10 - bitWidth;
+
+    for (i = count / 2; i > 0; i--) {
+        MODEL_DECODE_NIBBLE(*cur & 0xf);
+        MODEL_DECODE_NIBBLE((*cur >> 4) & 0xf);
+        cur++;
+    }
+    if (count & 1) {
+        MODEL_DECODE_NIBBLE(*cur & 0xf);
+        cur++;
+    }
+    if (gap != 0) {
+        modelRenderInstrsState_setBit(state, initialBit + bitWidth);
+    }
+    return cur;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -8917,14 +9003,6 @@ typedef struct RingBufferQueue {
     s16 readIndex;
     void* data;
 } RingBufferQueue;
-
-typedef struct ModelRenderInstrsState {
-    void* instrs;
-    s32 byteCount;
-    s32 bitCount;
-    s32 fieldC;
-    s32 bit;
-} ModelRenderInstrsState;
 
 typedef struct ObjLinkedList {
     s16 count;
