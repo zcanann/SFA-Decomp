@@ -8151,10 +8151,11 @@ extern f32 lbl_803DE7C4;
 extern u8 lbl_803DCB42;
 
 typedef struct {
-    u8 _0[8];
+    int numSlots;
+    int f4;
     u8 *start;
     int size;
-    u8 _10[4];
+    int f10;
 } MmRegion;
 extern MmRegion gMmRegionTable[];
 
@@ -8548,6 +8549,37 @@ int mmGetRegionForPtr(u8 *ptr) {
         }
     }
     return -1;
+}
+
+void *mmInitRegion(u8 *buf, int size, int numSlots) {
+    int regIdx = lbl_803DCB42++;
+    int after = size - numSlots * 0x1c;
+    int i;
+    u8 *slot;
+    int freePtr;
+    gMmRegionTable[regIdx].numSlots = numSlots;
+    gMmRegionTable[regIdx].f4 = 0;
+    gMmRegionTable[regIdx].start = buf;
+    gMmRegionTable[regIdx].size = size;
+    gMmRegionTable[regIdx].f10 = 0;
+    slot = gMmRegionTable[regIdx].start;
+    for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++) {
+        *(s16 *)(slot + 0xe) = i;
+        slot += 0x1c;
+    }
+    slot = gMmRegionTable[regIdx].start;
+    freePtr = (int)buf + numSlots * 0x1c;
+    if (freePtr & 0x1f) {
+        *(int *)(slot + 0) = (freePtr & ~0x1f) + 0x20;
+    } else {
+        *(int *)(slot + 0) = freePtr;
+    }
+    *(int *)(slot + 4) = after;
+    *(s16 *)(slot + 8) = 0;
+    *(s16 *)(slot + 0xa) = -1;
+    *(s16 *)(slot + 0xc) = -1;
+    gMmRegionTable[regIdx].f4++;
+    return gMmRegionTable[regIdx].start;
 }
 
 typedef struct {
