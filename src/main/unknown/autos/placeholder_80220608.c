@@ -662,6 +662,36 @@ void suntemple_hitDetect(int obj)
     }
 }
 #pragma peephole on
+void suntemple_interactCallback(int obj, int p2, int p3);
+#pragma peephole off
+#pragma scheduling off
+void suntemple_init(u8 *obj, u8 *setup)
+{
+    u8 *state;
+
+    *(s16 *)(obj + 0) = (s16)(setup[0x18] << 8);
+    *(s16 *)(obj + 2) = (s16)(setup[0x19] << 8);
+    *(s16 *)(obj + 4) = (s16)(setup[0x1a] << 8);
+    *(void **)(obj + 0xbc) = (void *)suntemple_interactCallback;
+    obj[0xad] = setup[0x21];
+    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        obj[0xad] = 0;
+    }
+    state = *(u8 **)(obj + 0xb8);
+    state[0] = (u8)GameBit_Get(*(s16 *)(setup + 0x1c));
+    state[1] = (*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    if ((setup[0x1b] & 1) != 0 && state[0] != 0) {
+        obj[0x36] = 0;
+    }
+    if (state[0] != 0) {
+        int *texture = objFindTexture((int)obj, 0, 0);
+        if (texture != NULL) {
+            *texture = 0x100;
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
 void suntemple_release(void) {}
 void suntemple_initialise(void) {}
 
