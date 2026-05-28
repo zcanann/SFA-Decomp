@@ -206,6 +206,19 @@ extern u8 lbl_803DC968;
 extern void **gMapEventInterface;
 extern int getCurMapLayer(void);
 extern void saveFileStruct_unlockCheat(int v);
+typedef struct { s16 v[9]; } HtInitData;
+extern HtInitData lbl_802C2590;
+extern HtInitData lbl_802C25A4;
+extern int lbl_803E6AA0;
+extern void **gPathControlInterface;
+extern int lbl_803DC318;
+extern f32 lbl_803E6B4C;
+extern f32 lbl_803E6B50;
+extern f32 lbl_803E6B54;
+extern int lbl_803DC320;
+extern void dll_2E_func05(int obj, void *p, int a, int b, int c);
+extern void dll_2E_func08(void *p, int a, int b);
+extern void dll_2E_func09(void *p, void *a, void *b, int c);
 extern void lightFn_8001d6b0(void *p);
 
 extern f32 lbl_803E6898;
@@ -1570,6 +1583,56 @@ checkValue:
         }
     }
     objRenderFn_80041018((int)obj);
+}
+
+void hightop_init(void *obj, u8 *arg) {
+    u8 *base = lbl_8032AAB0;
+    char *runtime = *(char **)((char *)obj + 0xb8);
+    char *pathObj;
+    int *node;
+    HtInitData local1;
+    HtInitData local2;
+    int local8;
+    local8 = lbl_803E6AA0;
+    local1 = lbl_802C2590;
+    local2 = lbl_802C25A4;
+    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
+    *(int *)((char *)obj + 0xbc) = (int)hightop_interactionCallback;
+    *(u8 *)(runtime + 0xc45) = arg[0x19];
+    *(s16 *)(runtime + 0xc16) = 5;
+    *(s8 *)(runtime + 0xc4b) = -1;
+    node = *(int **)((char *)obj + 0x64);
+    if (node != 0) {
+        *(int *)((char *)node + 0x30) |= 0xa10;
+    }
+    ObjGroup_AddObject((int)obj, 38);
+    ObjGroup_AddObject((int)obj, 10);
+    (*(void (**)(void *, char *, int, int))((char *)*gPlayerInterface + 4))(obj, runtime, 11, 1);
+    *(f32 *)(runtime + 0x2a4) = lbl_803E6B4C;
+    pathObj = runtime + 4;
+    *(u8 *)(pathObj + 0x25b) = 1;
+    (*(void (**)(char *, int, int, int))((char *)*gPathControlInterface + 4))(pathObj, 3, 1024, 0);
+    (*(void (**)(char *, int, u8 *, int *, int))((char *)*gPathControlInterface + 8))(pathObj, 2, &base[0xe8], &lbl_803DC318, 8);
+    (*(void (**)(char *, int, u8 *, u8 *, int *))((char *)*gPathControlInterface + 12))(pathObj, 4, &base[0xa8], &base[0xd8], &local8);
+    (*(void (**)(void *, char *))((char *)*gPathControlInterface + 32))(obj, pathObj);
+    dll_2E_func05((int)obj, runtime + 0x3ec, -4551, 23665, 6);
+    dll_2E_func08(runtime + 0x3ec, 300, 120);
+    dll_2E_func09(runtime + 0x3ec, &local2, &local1, 6);
+    *(u8 *)(runtime + 0x9fd) |= 2;
+    *(u8 *)(runtime + 0x9fd) |= 8;
+    *(s16 *)(runtime + 0xc18) = *(s16 *)(arg + 0x1a);
+    *(u8 *)(runtime + 0x9fd) |= 1;
+    *(u8 *)(*(int *)((char *)obj + 0x50) + 0x71) = 127;
+    ((BitFlags8 *)(runtime + 0xc49))->b4 = 0;
+    ((BitFlags8 *)(runtime + 0xc49))->b7 = 0;
+    lbl_803DC320 = *(s16 *)(arg + 0x1a);
+    if (*(s16 *)(arg + 0x1c) == 0) {
+        *(f32 *)(runtime + 0xc28) = lbl_803E6B50;
+    } else {
+        *(f32 *)(runtime + 0xc28) = (f32)*(s16 *)(arg + 0x1c) / lbl_803E6B54;
+    }
+    ((BitFlags8 *)(runtime + 0xc49))->b6 = 0;
+    ((BitFlags8 *)(runtime + 0xc4a))->b0 = 0;
 }
 
 #pragma peephole reset
