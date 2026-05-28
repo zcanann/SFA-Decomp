@@ -7749,3 +7749,109 @@ void fn_8001E8F4(u8 v) {
 }
 #pragma peephole reset
 #pragma pop
+
+extern void mapReloadWithFadeout(void);
+extern f32 fcos16(int angle);
+extern f32 sqrtf(f32 x);
+extern void *loadAsset(void *req);
+extern void setGQR7(u32 v);
+extern int lbl_803DCB84;
+extern void *lbl_803DCB88;
+extern u8 lbl_803DCA39;
+extern f32 lbl_803DE7D0;
+
+typedef struct {
+    u8 f0;
+    u8 f1;
+    u8 _2[2];
+    int f4;
+    int f8;
+} AssetReq;
+extern AssetReq lbl_8033BF88;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void mtxFn_80021ec0(u8 *p, f32 s) {
+    *(f32 *)(p + 0x10) *= s;
+    *(f32 *)(p + 0x14) *= s;
+    *(f32 *)(p + 0x18) *= s;
+}
+
+void *ObjList_GetObjects(int *outA, int *outB) {
+    if (outA != NULL) {
+        *outA = 0;
+        if (outB != NULL) {
+            *outB = lbl_803DCB84;
+        }
+    }
+    return lbl_803DCB88;
+}
+
+void mapReload(void) {
+    mapReloadWithFadeout();
+    lbl_803DCA39 = 1;
+}
+
+int cos16(u16 angle) {
+    return (int)(lbl_803DE7D0 * fcos16(angle));
+}
+
+void fn_8002A3D4(int a, int b, int c, int d) {
+    setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
+}
+
+f32 Vec3_Length(f32 *v) {
+    return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+}
+
+f32 Vec_xzDistance(f32 *a, f32 *b) {
+    f32 dx = a[0] - b[0];
+    f32 dz = a[2] - b[2];
+    return sqrtf(dx * dx + dz * dz);
+}
+
+f32 Vec_distance(f32 *a, f32 *b) {
+    f32 dx = a[0] - b[0];
+    f32 dy = a[1] - b[1];
+    f32 dz = a[2] - b[2];
+    return sqrtf(dx * dx + dy * dy + dz * dz);
+}
+
+void Vec3_Cross(f32 *a, f32 *b, f32 *out) {
+    out[0] = a[1] * b[2] - a[2] * b[1];
+    out[1] = a[2] * b[0] - a[0] * b[2];
+    out[2] = a[0] * b[1] - a[1] * b[0];
+}
+
+void *loadAssetFileById(int id, int arg) {
+    lbl_8033BF88.f0 = 1;
+    lbl_8033BF88.f1 = 0;
+    lbl_8033BF88.f4 = arg;
+    lbl_8033BF88.f8 = id;
+    return loadAsset(&lbl_8033BF88);
+}
+
+void *loadTextureFile(int id, int arg) {
+    lbl_8033BF88.f0 = 1;
+    lbl_8033BF88.f1 = 3;
+    lbl_8033BF88.f4 = arg;
+    lbl_8033BF88.f8 = id;
+    return loadAsset(&lbl_8033BF88);
+}
+
+void Obj_SetActiveModelIndex(u8 *obj, int idx) {
+    if (idx == (s8)obj[0xad]) {
+        return;
+    }
+    if (idx < 0) {
+        idx = 0;
+    } else {
+        int max = *(s8 *)(*(u8 **)(obj + 0x50) + 0x55);
+        if (idx >= max) {
+            idx = max - 1;
+        }
+    }
+    *(s8 *)(obj + 0xad) = idx;
+}
+#pragma pop
