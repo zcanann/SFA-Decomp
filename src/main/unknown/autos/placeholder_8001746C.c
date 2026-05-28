@@ -6997,3 +6997,36 @@ int return0_8002A5B8(void) { return 0x0; }
 void doNothing_afterRenderObject(void) {}
 void doNothing_beforeRenderObject(void) {}
 void fn_8002B85C(void) {}
+
+/* ObjModel/model-file accessors. */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void *modelFileGetDisplayList(u8 *modelFile, int displayListIndex) {
+    return *(u8 **)(modelFile + 0xd0) + displayListIndex * 0x1c;
+}
+
+void *ObjModel_GetBaseVertexCoords(u8 *model, int vertexIndex) {
+    return *(u8 **)(model + 0x28) + vertexIndex * 6;
+}
+
+void *ObjModel_GetRenderOp(u8 *model, int renderOpIndex) {
+    return *(u8 **)(model + 0x38) + renderOpIndex * 0x44;
+}
+
+void ObjModel_ToggleVertexBuffer(u8 *model) {
+    *(u16 *)(model + 0x18) ^= 2;
+}
+
+void ObjModel_ToggleMatrixBuffer(u8 *model) {
+    *(u16 *)(model + 0x18) ^= 1;
+}
+
+void *ObjModel_GetRenderOpTextureRefs(u8 *model, int renderOpIndex) {
+    return *(u8 **)(model + 0x34) + renderOpIndex * 0xc;
+}
+
+int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
+    return baseSize + resource[8] * resource[7];
+}
+#pragma pop
