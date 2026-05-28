@@ -291,6 +291,17 @@ extern int dll_2E_func07(int obj, u8 *arg, char *p, int a, int b);
 extern f32 lbl_803E68C0;
 extern void lightFn_8001db6c(void *light, int v, f32 f);
 extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int d);
+extern void lightSetFieldBC_8001db14(void *light, int v);
+extern void fn_8001D730(void *light, int a, int b, int c, int d, int e, f32 f);
+extern void fn_8001D714(void *light, f32 f);
+extern void ObjHits_SetTargetMask(int obj, int mask);
+extern f32 lbl_803E6940;
+extern f32 lbl_803E6944;
+extern f32 lbl_803E6948;
+extern f32 lbl_803E694C;
+extern f32 lbl_803E6950;
+extern f32 lbl_803E6954;
+extern f32 lbl_803E6958;
 extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
 extern int *ObjGroup_GetObjects(int group, int *count);
 extern f32 lbl_803E6B68;
@@ -630,6 +641,39 @@ int drakorhoverpad_pickMaskedNextPoint(int *pad, int exclude, int maxIndex) {
         maxIndex = randomGetRange(0, count - 1);
     }
     return collected[maxIndex];
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void drakormissile_startActiveLaunch(int obj) {
+    void *light;
+    u8 *p = *(u8 **)((char *)obj + 0xb8);
+
+    ObjHits_EnableObject(obj);
+    *(u8 *)(p + 4) = 4;
+    *(s16 *)((char *)obj + 4) = 0;
+    light = objCreateLight(obj, 1);
+    if (light != NULL) {
+        modelLightStruct_setField50(light, 2);
+        modelLightStruct_setColorsA8AC(light, 255, 128, 0, 0);
+        lightSetFieldBC_8001db14(light, 1);
+        lightDistAttenFn_8001dc38(light, lbl_803E6940, lbl_803E6944);
+        fn_8001D730(light, 0, 0, 255, 255, 128, lbl_803E6948);
+        fn_8001D714(light, lbl_803E694C);
+    }
+    *(void **)p = light;
+    if (*(void **)p != NULL) {
+        lightDistAttenFn_8001dc38(*(void **)p, lbl_803E6950, lbl_803E6954);
+    }
+    *(u8 *)((char *)obj + 0x36) = 255;
+    *(f32 *)((char *)obj + 8) = lbl_803E6958 * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
+    *(int *)(p + 8) = 2400;
+    ObjHits_SetTargetMask(obj, 4);
+    ObjHits_SetHitVolumeSlot(obj, 22, 1, 0);
+    Sfx_PlayFromObject(obj, 965);
+    Sfx_PlayFromObject(obj, 966);
 }
 #pragma peephole reset
 #pragma scheduling reset
