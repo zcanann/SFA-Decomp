@@ -168,7 +168,7 @@ extern void *gHighTopStateHandlers[];
 extern void *gHighTopDefaultStateHandler;
 
 extern int hightop_stateHandler01();
-extern int hightop_stateHandler02();
+extern int hightop_stateHandler02(int obj, int p, f32 t);
 extern int hightop_stateHandler04();
 extern int hightop_stateHandler07();
 extern int hightop_stateHandler09();
@@ -4904,6 +4904,117 @@ int hightop_stateHandler07(int obj, int p) {
         return 0;
     }
     return 9;
+}
+#pragma scheduling reset
+
+extern f32 lbl_803E6B04;
+extern f32 lbl_803E6B08;
+extern f32 lbl_803E6B0C;
+extern f32 lbl_803E6B10;
+extern f32 lbl_803E6B14;
+extern f32 lbl_803E6B18;
+extern f32 lbl_803E6B1C;
+extern f32 lbl_803E6B20;
+extern f32 lbl_8032ABB0[];
+
+#pragma scheduling off
+int hightop_stateHandler02(int obj, int p, f32 t) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    s16 d336;
+    int absd;
+    int conv;
+    int band;
+    int changed;
+    int cont;
+    f32 v;
+    f32 f31;
+    f32 ang;
+    f32 moveSpeed;
+    s16 *vec;
+    *(u32 *)p = *(u32 *)p | 0x200000;
+    if (*(f32 *)((char *)p + 0x298) < lbl_803E6B04) {
+        *(s16 *)((char *)p + 0x334) = 0;
+        *(s16 *)((char *)p + 0x336) = 0;
+        *(f32 *)((char *)p + 0x298) = lbl_803E6AA8;
+    }
+    d336 = *(s16 *)((char *)p + 0x336);
+    absd = d336 < 0 ? -d336 : d336;
+    if (*(s16 *)((char *)state + 0xc16) < absd) {
+        conv = (int)(lbl_803E6B08 * ((f32)d336 * t));
+        *(s16 *)obj = (s16)(*(s16 *)obj + ((s16)conv >> 5));
+    } else {
+        *(s16 *)obj = (s16)(int)(lbl_803E6B0C * (((f32)d336 * t) / lbl_803E6B10) + (f32)*(s16 *)obj);
+    }
+    conv = (int)(lbl_803E6B08 * ((f32)*(s16 *)((char *)p + 0x336) * t));
+    vec = (s16 *)objModelGetVecFn_800395d8(obj, 9);
+    if (vec != 0) {
+        vec[1] = (s16)(vec[1] + (((s16)conv - vec[1]) >> 3));
+        vec[0] = (s16)(vec[0] + ((-vec[0]) >> 3));
+        if (vec[1] < -0x1555) {
+            vec[1] = -0x1555;
+        } else if (vec[1] > 0x1555) {
+            vec[1] = 0x1555;
+        }
+        if (vec[1] < -0x1555) {
+            vec[1] = -0x1555;
+        } else if (vec[1] > 0x1555) {
+            vec[1] = 0x1555;
+        }
+    }
+    v = *(f32 *)((char *)p + 0x298);
+    if (v < lbl_803E6AA8) {
+        v = lbl_803E6AA8;
+    }
+    if (v > lbl_803E6AB8) {
+        v = lbl_803E6AB8;
+    }
+    f31 = lbl_803E6ADC * v;
+    if (f31 < lbl_803E6AA8) {
+        f31 = lbl_803E6AA8;
+    }
+    *(f32 *)((char *)p + 0x294) =
+        t * ((f31 - *(f32 *)((char *)p + 0x294)) / *(f32 *)((char *)p + 0x2b8)) + *(f32 *)((char *)p + 0x294);
+    if (*(s16 *)((char *)obj + 0x2) > 0) {
+        ang = f31 - lbl_803E6B14 * fn_80293E80(lbl_803E6B18 * (f32)*(s16 *)((char *)obj + 0x2) / lbl_803E6B1C);
+    } else {
+        ang = f31 - lbl_803E6B20 * fn_80293E80(lbl_803E6B18 * (f32)*(s16 *)((char *)obj + 0x2) / lbl_803E6B1C);
+    }
+    *(f32 *)((char *)p + 0x280) =
+        t * ((ang - *(f32 *)((char *)p + 0x280)) / *(f32 *)((char *)p + 0x2b8)) + *(f32 *)((char *)p + 0x280);
+    moveSpeed = *(f32 *)((char *)obj + 0x98);
+    band = 0;
+    while ((&lbl_803DC32C)[band] != *(s16 *)((char *)obj + 0xa0) && band < 2) {
+        band++;
+    }
+    if (band >= 2) {
+        band = 0;
+    }
+    changed = 0;
+    cont = 1;
+    while (cont != 0) {
+        f32 spd = *(f32 *)((char *)p + 0x294);
+        if (spd < lbl_8032ABB0[band * 2]) {
+            if (band == 1) {
+                return 2;
+            }
+            band -= 1;
+            changed = 1;
+        } else if (spd >= lbl_8032ABB0[band * 2 + 1]) {
+            if (band == 0) {
+                moveSpeed = lbl_803E6AA8;
+            }
+            band += 1;
+            changed = 1;
+        } else {
+            cont = 0;
+        }
+    }
+    if (changed != 0) {
+        ObjAnim_SetCurrentMove(obj, (&lbl_803DC32C)[band], moveSpeed, 0);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0xa);
+    }
+    ObjAnim_SampleRootCurvePhase(*(f32 *)((char *)p + 0x280), (ObjAnimComponent *)obj, (f32 *)((char *)p + 0x2a0));
+    return 0;
 }
 #pragma scheduling reset
 
