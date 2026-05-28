@@ -7063,6 +7063,7 @@ u16 modelFileHeaderGetCullDistance(u8 *modelFile) {
     return *(u16 *)(modelFile + 0xe0);
 }
 
+#pragma dont_inline on
 void ObjModel_ClearRenderAttachment(u8 *model) {
     if (*(void **)(model + 0x58) != NULL) {
         mm_free(*(void **)(model + 0x58));
@@ -7071,6 +7072,7 @@ void ObjModel_ClearRenderAttachment(u8 *model) {
         *(void **)(model + 0x38) = NULL;
     }
 }
+#pragma dont_inline reset
 
 void ObjModel_EnableDefaultRenderCallback(void *obj, u8 *model) {
     if (*(void **)(model + 0x58) == NULL) {
@@ -7170,6 +7172,17 @@ void Obj_ClearModelSlotIndex(u8 *obj) {
 
 void *Obj_GetActiveModel(u8 *obj) {
     return *(void **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4);
+}
+
+extern int *lbl_803DCAB4;
+
+void Obj_ResetModelColorState(u8 *obj) {
+    *(s16 *)(obj + 0xe6) = 0;
+    obj[0xe5] &= ~1;
+    obj[0xf0] = 0;
+    ObjModel_ClearRenderAttachment(Obj_GetActiveModel(obj));
+    (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fb, 0, 0x50, 0);
+    (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x32, 0);
 }
 #pragma pop
 
