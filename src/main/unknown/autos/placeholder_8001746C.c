@@ -1348,6 +1348,7 @@ extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
 
 #pragma push
 #pragma scheduling off
+#pragma peephole off
 void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
     int byteOff;
     int glyphLang;
