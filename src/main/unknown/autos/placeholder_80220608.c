@@ -2313,6 +2313,61 @@ int wctemplebri_interactCallback(int obj, int p2, int p3)
     }
     return 0;
 }
+extern f32 PSVECDistance(void *a, void *b);
+extern f32 lbl_803E6E94;
+void wctemplebri_update(int obj)
+{
+    int r4c = *(int *)(obj + 0x4c);
+    int state;
+    int model;
+    int modelBase;
+    int i;
+
+    Obj_GetPlayerObject();
+    state = *(int *)(obj + 0xb8);
+    wctemplebri_updateModelWarp(obj, state);
+    model = Obj_GetActiveModel(obj);
+    modelBase = *(int *)model;
+    for (i = 0; i < *(u16 *)(modelBase + 0xe4); i++) {
+        int curr = ObjModel_GetCurrentVertexCoords(model, i);
+        int base = ObjModel_GetBaseVertexCoords(modelBase, i);
+        int idx = (u16)(int)(lbl_803E6E70 * ((f32)*(s16 *)(curr + 4) / *(f32 *)state)) +
+                  *(u16 *)(state + 0x60);
+        if (*(s16 *)(base + 0) > 0)
+            *(s16 *)(curr + 0) =
+                (int)(lbl_803E6E74 * fn_80293E80(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
+                      (f32)*(s16 *)(base + 0));
+        else
+            *(s16 *)(curr + 0) =
+                (int)((f32)*(s16 *)(base + 0) -
+                      lbl_803E6E74 * fn_80293E80(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
+    }
+    if (*(u8 *)(state + 0x5f) != 0) {
+        if ((*(u8 *)(state + 0x66) & 1) == 0) {
+            GameBit_Set(0xedb, 1);
+            *(u8 *)(state + 0x66) |= 1;
+            GameBit_Set(*(s16 *)(r4c + 0x1e), 1);
+        }
+        {
+            int a = (int)((f32)(u32) * (u8 *)(obj + 0x36) + timeDelta);
+            if (a < 0)
+                a = 0;
+            else if (a > 0xff)
+                a = 0xff;
+            *(u8 *)(obj + 0x36) = a;
+        }
+        ObjHits_EnableObject(obj);
+    } else {
+        GameBit_Set(0xedb, 0);
+        ObjHits_DisableObject(obj);
+    }
+    if ((void *)Obj_GetPlayerObject() != NULL) {
+        if (PSVECDistance((void *)(obj + 0x18), (void *)(Obj_GetPlayerObject() + 0x18)) >
+            lbl_803E6E94) {
+            GameBit_Set(0xedb, 0);
+        }
+    }
+}
 #pragma scheduling on
 #pragma peephole on
 
