@@ -305,7 +305,7 @@ void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
     }
 }
 
-extern void snowclaw_animEventCallback();
+int snowclaw_animEventCallback(int obj, int a2, int evt);
 extern u8 lbl_8032A310[];
 extern f32 lbl_803E66EC;
 extern int lbl_803DDD38;
@@ -899,6 +899,123 @@ void snowclaw_hitDetect(int obj) {
     if (a5 >= 0) {
         *(s8 *)((char *)inner + 0xa5) = a5 - framesThisStep;
     }
+}
+
+extern void ObjHits_DisableObject(int obj);
+typedef struct {
+    s16 v[5];
+} SnowClawAnimTbl;
+extern SnowClawAnimTbl lbl_802C2540;
+
+int snowclaw_animEventCallback(int obj, int a2, int evt) {
+    int *inner;
+    int sub;
+    int i;
+    SnowClawAnimTbl tbl;
+    f32 dist;
+
+    dist = lbl_803E6708;
+    inner = *(int **)((char *)obj + 0xb8);
+    *(u8 *)((char *)inner + 0xa1) = 1;
+    ObjHits_DisableObject(obj);
+    if (*(int *)inner != 0) {
+        ObjHits_DisableObject(*(int *)inner);
+    }
+    if (*(s16 *)((char *)obj + 0xb4) != -1 &&
+        (*(s16 *)((char *)obj + 0x46) == 0x16d || *(s16 *)((char *)obj + 0x46) == 0x170) &&
+        GameBit_Get(0x3a3) != 0) {
+        (*(void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(*(s16 *)((char *)obj + 0xb4));
+        *(f32 *)((char *)inner + 0xac) = lbl_803E66F0;
+        return 4;
+    }
+    *(s16 *)((char *)obj + 6) &= ~0x4000;
+    sub = *(int *)inner;
+    *(u8 *)((char *)inner + 0xa0) = 0xff;
+    if (sub != 0) {
+        s16 v6 = *(s16 *)((char *)sub + 6);
+        if (v6 & 0x4000) {
+            *(s16 *)((char *)sub + 6) = v6 & ~0x4000;
+            (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c))(sub, 2);
+        }
+    }
+    if (*(u8 *)((char *)evt + 0x7e) == 2) {
+        *(u8 *)((char *)evt + 0x90) |= 8;
+    }
+    *(s16 *)((char *)evt + 0x6e) = *(s16 *)((char *)evt + 0x70);
+    for (i = 0; i < *(u8 *)((char *)evt + 0x8b); i++) {
+        switch (*(u8 *)((char *)evt + i + 0x81)) {
+        case 3:
+            *(s8 *)((char *)inner + 0xa2) = -1;
+            break;
+        case 4:
+            if (GameBit_Get(0xb7d) != 0) {
+                *(u8 *)((char *)evt + 0x90) |= 4;
+            }
+            break;
+        case 5:
+            if (GameBit_Get(*(s16 *)(*(int *)((char *)inner + 4))) != 0) {
+                *(u8 *)((char *)evt + 0x90) |= 4;
+            }
+            break;
+        case 2:
+            if (sub != 0) {
+                *(f32 *)((char *)inner + 0x8) = lbl_803E670C;
+                *(f32 *)((char *)inner + 0xc) = *(f32 *)((char *)inner + 0x18);
+                *(f32 *)((char *)inner + 0x10) = *(f32 *)((char *)inner + 0x1c);
+                *(f32 *)((char *)inner + 0x14) = *(f32 *)((char *)inner + 0x20);
+                (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c))(sub, 2);
+                ObjAnim_SetCurrentMove(obj, *(u16 *)((char *)inner + 0xa8), lbl_803E66F0, 1);
+                if (*(int *)((char *)obj + 0x64) != 0) {
+                    *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x1000;
+                }
+                *(s16 *)((char *)evt + 0x6e) &= ~4;
+            }
+            break;
+        case 1:
+            sub = *(int *)inner;
+            if (sub != 0) {
+                (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c))(sub, 0);
+                *(s16 *)((char *)evt + 0x6e) |= 4;
+            }
+            break;
+        case 6: {
+            int found = ObjGroup_FindNearestObject(0x1e, obj, &dist);
+            if (found != 0) {
+                (*(void (*)(int, int))(*(int *)(*(int *)((char *)found + 0x68)) + 0x20))(found, 2);
+                ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 0;
+            }
+            break;
+        }
+        case 7: {
+            int found = ObjGroup_FindNearestObject(0x1e, obj, &dist);
+            if (found != 0) {
+                (*(void (*)(int, int))(*(int *)(*(int *)((char *)found + 0x68)) + 0x20))(found, 0);
+                ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 1;
+            }
+            break;
+        }
+        }
+        *(u8 *)((char *)evt + i + 0x81) = 0;
+    }
+    tbl = lbl_802C2540;
+    if (*(s8 *)((char *)inner + 0xa2) != *(s8 *)((char *)inner + 0xa3)) {
+        if (*(int *)((char *)obj + 0xc8) != 0) {
+            Obj_FreeObject(*(int *)((char *)obj + 0xc8));
+            *(int *)((char *)obj + 0xc8) = 0;
+            *(u8 *)((char *)obj + 0xeb) = 0;
+        }
+        if (*(s8 *)((char *)inner + 0xa2) > 0 && Obj_IsLoadingLocked() != 0) {
+            int o = Obj_AllocObjectSetup(0x18, tbl.v[*(s8 *)((char *)inner + 0xa2)]);
+            Obj_SetupObject(o, 4, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
+            *(int *)((char *)obj + 0xc8) = o;
+            *(u8 *)((char *)obj + 0xeb) = 1;
+        }
+        *(s8 *)((char *)inner + 0xa3) = *(s8 *)((char *)inner + 0xa2);
+    }
+    if (sub != 0 && (*(int (*)(int))(*(int *)(*(int *)((char *)sub + 0x68)) + 0x38))(sub) == 2) {
+        *(s16 *)((char *)evt + 0x6e) &= ~3;
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
