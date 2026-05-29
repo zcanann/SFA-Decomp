@@ -1756,6 +1756,41 @@ void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *out
 }
 #pragma pop
 
+extern u8 sGameTextGlyphOrder[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void translateToDinoLanguage(u8 *str) {
+    int byteOff = 0;
+    u32 ch;
+    int charLen;
+    u8 *p;
+
+    if (str == NULL) {
+        return;
+    }
+    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
+        if (ch >= 0xe000 && ch <= 0xf8ff) {
+            byteOff += getControlCharLen(ch) * 2;
+        } else {
+            int base;
+            if (ch >= 0x61 && ch <= 0x7a) {
+                base = 0x61;
+            } else if (ch >= 0x41 && ch <= 0x5a) {
+                base = 0x41;
+            } else {
+                base = 0;
+            }
+            if (base != 0) {
+                *p = sGameTextGlyphOrder[ch - base] + base - 0x61;
+            }
+        }
+        byteOff += charLen;
+    }
+}
+#pragma pop
+
 /*
  * --INFO--
  *
