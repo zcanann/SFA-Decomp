@@ -76,7 +76,6 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
     int state = *(int *)(obj + 0xb8);
     int setup = *(int *)(obj + 0x4c);
     int player;
-    int connectId;
     f32 buf[6];
     f32 vecA[3];
     f32 vecB[3];
@@ -112,8 +111,7 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
             vecA[0] = *(f32 *)(obj + 0xc);
             vecA[1] = *(f32 *)(obj + 0x10);
             vecA[2] = *(f32 *)(obj + 0x14);
-            connectId = *(s8 *)(setup + 0x19);
-            if (connectId != 0 && dll_2E_func0A(connectId, buf) != 0) {
+            if (*(s8 *)(setup + 0x19) != 0 && dll_2E_func0A(*(s8 *)(setup + 0x19), buf) != 0) {
                 vecB[0] = buf[3];
                 vecB[1] = buf[4];
                 vecB[2] = buf[5];
