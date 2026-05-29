@@ -1810,6 +1810,71 @@ extern int sprintf(char *dst, const char *fmt, ...);
 
 #pragma push
 #pragma scheduling off
+void *gameTextGetPhrase(int textId, int phraseIndex) {
+    char *strings;
+    u16 *entry;
+
+    strings = lbl_802C8F40;
+    if (*(int *)(gameTextFonts + 0x1c) != 2) {
+        lbl_803DC97C = lbl_803DC97C + 1;
+        if (lbl_803DC97C >= 8) {
+            lbl_803DC97C = 0;
+        }
+        entry = (u16 *)(lbl_803399C0 + lbl_803DC97C * 0xc);
+        lbl_803DC974 = (u8 *)entry;
+        lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
+        *entry = 0xffff;
+        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+        switch (*(int *)(gameTextFonts + 0x1c)) {
+        case 0:
+            sprintf((char *)lbl_803DC978, strings + 0xec4);
+            break;
+        case 1:
+            sprintf((char *)lbl_803DC978, strings + 0xed4);
+            break;
+        case 3:
+            sprintf((char *)lbl_803DC978, strings + 0xee0);
+            break;
+        case 4:
+            sprintf((char *)lbl_803DC978, strings + 0xef0);
+            break;
+        }
+        return lbl_803DC974;
+    }
+
+    entry = gameTextGet();
+    if (*entry == 0xffff) {
+        lbl_803DC97C = lbl_803DC97C + 1;
+        if (lbl_803DC97C >= 8) {
+            lbl_803DC97C = 0;
+        }
+        entry = (u16 *)(lbl_803399C0 + lbl_803DC97C * 0xc);
+        lbl_803DC974 = (u8 *)entry;
+        lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
+        *entry = 0xffff;
+        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+        sprintf((char *)lbl_803DC978, strings + 0xefc, textId,
+                sMapDirectoryNameTable[(int)curGameTextDir]);
+        return lbl_803DC974;
+    }
+
+    if (phraseIndex >= entry[1]) {
+        lbl_803DC97C = lbl_803DC97C + 1;
+        if (lbl_803DC97C >= 8) {
+            lbl_803DC97C = 0;
+        }
+        entry = (u16 *)(lbl_803399C0 + lbl_803DC97C * 0xc);
+        lbl_803DC974 = (u8 *)entry;
+        lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
+        *entry = 0xffff;
+        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+        sprintf((char *)lbl_803DC978, strings + 0xf10, textId, phraseIndex);
+        return lbl_803DC974;
+    }
+
+    return *(void **)(*(int *)((u8 *)entry + 8) + phraseIndex * 4);
+}
+
 void *gameTextGetStr(void) {
     u8 *entry;
     void *t;
