@@ -28,10 +28,10 @@ static inline DfpLightniState *dfplightni_getState(u8 *obj)
   return *(DfpLightniState **)(obj + DFPLIGHTNI_OBJECT_STATE_OFFSET);
 }
 
-static inline f64 dfplightni_u32AsDouble(u32 value)
+static inline f32 dfplightni_s32AsFloat(s32 value)
 {
-  u64 bits = CONCAT44(0x43300000,value);
-  return *(f64 *)&bits;
+  u64 bits = CONCAT44(0x43300000,(u32)value ^ 0x80000000);
+  return (f32)(*(f64 *)&bits - lbl_803E64F0);
 }
 
 int dfplightni_getExtraSize(void)
@@ -120,23 +120,23 @@ void dfplightni_update(u8 *obj)
         start[2] = *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Z_OFFSET);
         if (eventActive != 0) {
           randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[0] = (f32)(s32)randomZ * lbl_803E64FC +
+          end[0] = lbl_803E64FC * dfplightni_s32AsFloat((s32)randomZ) +
                    *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_X_OFFSET);
           randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN,DFPLIGHTNI_RANDOM_Y_MAX);
-          end[1] = (f32)(s32)randomY * lbl_803E64FC +
+          end[1] = lbl_803E64FC * dfplightni_s32AsFloat((s32)randomY) +
                    *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
           randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[2] = (f32)(s32)randomX * lbl_803E64FC +
+          end[2] = lbl_803E64FC * dfplightni_s32AsFloat((s32)randomX) +
                    *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_Z_OFFSET);
         }
         else {
           randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[0] = (f32)(s32)randomX * lbl_803E64FC + start[0];
+          end[0] = lbl_803E64FC * dfplightni_s32AsFloat((s32)randomX) + start[0];
           randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN,DFPLIGHTNI_RANDOM_Y_MAX);
-          end[1] = (f32)(s32)randomY * lbl_803E64FC +
+          end[1] = lbl_803E64FC * dfplightni_s32AsFloat((s32)randomY) +
                    *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
           randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[2] = (f32)(s32)randomZ * lbl_803E64FC + start[2];
+          end[2] = lbl_803E64FC * dfplightni_s32AsFloat((s32)randomZ) + start[2];
         }
         if (state->effectHandle != 0) {
           mm_free(state->effectHandle);
@@ -150,12 +150,22 @@ void dfplightni_update(u8 *obj)
           double clampY;
           Sfx_PlayFromObjectLimited(obj,DFPLIGHTNI_SFX_ID,DFPLIGHTNI_SFX_MAX_COUNT);
           if (eventActive != 0) {
-            clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : (radiusY > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusY;
+            clampY = lbl_803E6500;
+            if (radiusY >= (double)lbl_803E6500) {
+              clampY = lbl_803E6504;
+              if (radiusY <= (double)lbl_803E6504) {
+                clampY = radiusY;
+              }
+            }
             effectStart = start;
             effectEnd = end;
-            clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
+            clampX = lbl_803E6500;
+            if (radiusX >= (double)lbl_803E6500) {
+              clampX = lbl_803E6504;
+              if (radiusX <= (double)lbl_803E6504) {
+                clampX = radiusX;
+              }
+            }
             state->effectHandle =
                 fn_8008FB20(clampX,clampY,effectStart,effectEnd,
                             DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
@@ -163,12 +173,22 @@ void dfplightni_update(u8 *obj)
                                 DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
           else {
-            clampY = (radiusY < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : (radiusY > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusY;
+            clampY = lbl_803E6500;
+            if (radiusY >= (double)lbl_803E6500) {
+              clampY = lbl_803E6504;
+              if (radiusY <= (double)lbl_803E6504) {
+                clampY = radiusY;
+              }
+            }
             effectStart = start;
             effectEnd = end;
-            clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
-                       : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
+            clampX = lbl_803E6500;
+            if (radiusX >= (double)lbl_803E6500) {
+              clampX = lbl_803E6504;
+              if (radiusX <= (double)lbl_803E6504) {
+                clampX = radiusX;
+              }
+            }
             state->effectHandle =
                 fn_8008FB20(clampX,clampY,effectStart,effectEnd,(u16)state->delayFrames,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
@@ -197,7 +217,7 @@ void dfplightni_init(u8 *obj,DfpLightniMapData *mapData)
   if (obj != 0) {
     state = dfplightni_getState(obj);
     randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN,DFPLIGHTNI_RANDOM_TIMER_MAX);
-    state->timer = (f32)(s32)randomValue;
+    state->timer = dfplightni_s32AsFloat((s32)randomValue);
     state->effectHandle = 0;
     if (mapData->radiusX <= 0) {
       mapData->radiusX = 1;
@@ -206,11 +226,13 @@ void dfplightni_init(u8 *obj,DfpLightniMapData *mapData)
       mapData->radiusY = 1;
     }
     randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN,DFPLIGHTNI_RANDOM_TIMER_MAX);
-    state->triggerTime = (f32)(s32)randomValue + lbl_803E6508;
+    state->triggerTime = lbl_803E6508 + dfplightni_s32AsFloat((s32)randomValue);
     radiusMax = lbl_803E6504;
     radiusParamScale = lbl_803E650C;
-    state->radiusX = ((f32)(s32)mapData->radiusX / radiusParamScale) * radiusMax;
-    state->radiusY = ((f32)(s32)mapData->radiusY / radiusParamScale) * radiusMax;
+    state->radiusX = (dfplightni_s32AsFloat((s32)mapData->radiusX) / radiusParamScale) *
+                     radiusMax;
+    state->radiusY = (dfplightni_s32AsFloat((s32)mapData->radiusY) / radiusParamScale) *
+                     radiusMax;
     state->angleIndex = mapData->angleIndex;
     state->delayFrames = mapData->delayTicks * DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES;
     state->eventId = mapData->eventId;
