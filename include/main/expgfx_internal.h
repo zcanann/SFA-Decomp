@@ -1,6 +1,7 @@
 #ifndef MAIN_EXPGFX_INTERNAL_H_
 #define MAIN_EXPGFX_INTERNAL_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 
 #define EXPGFX_POOL_COUNT 0x50
@@ -272,6 +273,8 @@ typedef struct ExpgfxRuntimeDataLayout {
   u32 slotPoolBases[EXPGFX_POOL_COUNT];
 } ExpgfxRuntimeDataLayout;
 
+STATIC_ASSERT(sizeof(ExpgfxRuntimeDataLayout) == 0x1340);
+
 typedef union ExpgfxSlotStateBits {
   u8 value;
   struct {
@@ -360,5 +363,7 @@ typedef struct ExpgfxSlot {
 #define gExpgfxPoolBoundsTemplateIds DAT_8039c7d8
 #define gExpgfxPoolActiveCounts gExpgfxSlotActiveCounts
 #define gExpgfxPoolActiveMasks gExpgfxSlotActiveMasks
+#define EXPGFX_STATIC_DATA ((ExpgfxStaticDataLayout *)gExpgfxStaticData)
+#define EXPGFX_RUNTIME_DATA ((ExpgfxRuntimeDataLayout *)gExpgfxRuntimeData)
 
 #endif /* MAIN_EXPGFX_INTERNAL_H_ */
