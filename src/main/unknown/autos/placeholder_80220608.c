@@ -2026,9 +2026,21 @@ extern s16 lbl_803DC3B8;
 extern s16 lbl_803DC3C0;
 extern f32 lbl_8032B348[];
 extern f32 lbl_8032B354[];
+extern f32 lbl_803E6E48;
 int wctempledia_interactCallback(int obj, int p2, int p3);
 #pragma peephole off
 #pragma scheduling off
+int wctempledia_interactCallback(int obj, int p2, int p3)
+{
+    f32 *p = *(f32 **)(obj + 0xb8);
+
+    *p = lbl_803E6E48 * -*p * timeDelta + *p;
+    *(s16 *)(obj + 4) = (int)(timeDelta * *p + (f32)*(s16 *)(obj + 4));
+    *(s8 *)(p3 + 0x56) = 0;
+    *(s16 *)(p3 + 0x70) &= ~2;
+    *(s16 *)(p3 + 0x6e) &= ~2;
+    return 0;
+}
 void wctempledia_init(int obj, int setup)
 {
     int state = *(int *)(obj + 0xb8);
