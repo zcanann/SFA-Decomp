@@ -2084,6 +2084,7 @@ void wctempledia_release(void) {}
 void wctempledia_initialise(void) {}
 
 extern f32 lbl_803E6E90;
+#pragma dont_inline on
 #pragma scheduling off
 void wctemplebri_updateModelWarp(int obj, int p2)
 {
@@ -2106,6 +2107,7 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     *(u16 *)(p2 + 0x62) = (u16)v;
 }
 #pragma scheduling on
+#pragma dont_inline reset
 int wctemplebri_getExtraSize(void) { return 0x68; }
 #pragma scheduling off
 int wctemplebri_getObjectTypeId(int obj)
@@ -2139,8 +2141,65 @@ void wctemplebri_release(void) {}
 void wctemplebri_initialise(void) {}
 
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
+extern int ObjModel_GetBaseVertexCoords(int model, int idx);
 extern void ObjHits_DisableObject(int obj);
 extern int wctemplebri_interactCallback(int obj, int p2, int p3);
+extern f32 lbl_803E6E70;
+extern f32 lbl_803E6E74;
+extern f32 lbl_803E6E78;
+extern f32 lbl_803E6E7C;
+
+#pragma peephole off
+#pragma scheduling off
+int wctemplebri_interactCallback(int obj, int p2, int p3)
+{
+    int r4c = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    int model;
+    int modelBase;
+    int i;
+
+    *(s8 *)(p3 + 0x56) = 0;
+    *(s16 *)(p3 + 0x70) &= ~0x20;
+    *(s16 *)(p3 + 0x6e) &= ~0x20;
+    wctemplebri_updateModelWarp(obj, state);
+    if (*(u8 *)(p3 + 0x80) == 1) {
+        *(s8 *)(state + 0x5f) = 1;
+    }
+    if (*(u8 *)(state + 0x5f) != 0) {
+        if ((*(u8 *)(state + 0x66) & 1) == 0) {
+            *(u8 *)(state + 0x66) |= 1;
+            GameBit_Set(*(s16 *)(r4c + 0x1e), 1);
+        }
+        {
+            int a = (int)((f32)(u32) * (u8 *)(obj + 0x36) + timeDelta);
+            if (a < 0)
+                a = 0;
+            else if (a > 0xff)
+                a = 0xff;
+            *(u8 *)(obj + 0x36) = a;
+        }
+    }
+    model = Obj_GetActiveModel(obj);
+    modelBase = *(int *)model;
+    for (i = 0; i < *(u16 *)(modelBase + 0xe4); i++) {
+        int curr = ObjModel_GetCurrentVertexCoords(model, i);
+        int base = ObjModel_GetBaseVertexCoords(modelBase, i);
+        int idx = (u16)(int)(lbl_803E6E70 * ((f32)*(s16 *)(curr + 4) / *(f32 *)state)) +
+                  *(u16 *)(state + 0x60);
+        if (*(s16 *)(base + 0) > 0)
+            *(s16 *)(curr + 0) =
+                (int)(lbl_803E6E74 * fn_80293E80(lbl_803E6E78 * (f32)idx / lbl_803E6E7C) +
+                      (f32)*(s16 *)(base + 0));
+        else
+            *(s16 *)(curr + 0) =
+                (int)((f32)*(s16 *)(base + 0) -
+                      lbl_803E6E74 * fn_80293E80(lbl_803E6E78 * (f32)idx / lbl_803E6E7C));
+    }
+    return 0;
+}
+#pragma scheduling on
+#pragma peephole on
 
 #pragma peephole off
 #pragma scheduling off
