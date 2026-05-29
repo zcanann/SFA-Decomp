@@ -1118,6 +1118,68 @@ void wcbeacon_init(u8 *obj, u8 *setup)
 #pragma scheduling on
 #pragma peephole on
 
+extern int getTrickyObject(void);
+extern int fn_80138F84(int tricky);
+extern int trickyFn_80138f14(int tricky);
+extern f32 lbl_803E6DE4;
+extern f32 lbl_803E6DE8;
+
+#pragma peephole off
+#pragma scheduling off
+void wcbeacon_update(int obj)
+{
+    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    u32 phase;
+
+    *(u8 *)(obj + 0xaf) |= 8;
+    phase = *(u8 *)(state + 4);
+    if (phase == 1) {
+        int tricky = getTrickyObject();
+        if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) == 0) {
+            if ((u32)fn_80138F84(tricky) != (u32)obj || trickyFn_80138f14(tricky) != 0) {
+                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                *(u8 *)(state + 4) = 0;
+            }
+        } else {
+            *(u8 *)(obj + 0xaf) &= ~8;
+            if ((u32)tricky != 0 && (*(u8 *)(obj + 0xaf) & 4)) {
+                (*(void (**)(int, int, int, int, int))(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(
+                    tricky, obj, 1, 4, *(int *)(*(int *)(tricky + 0x68)));
+            }
+        }
+        if (*(u8 *)(state + 5) != 0) {
+            Sfx_PlayFromObject(obj, 159);
+            Sfx_PlayFromObject(obj, 158);
+            *(u8 *)(state + 4) = 2;
+            *(f32 *)(state + 0) = lbl_803E6DE4;
+        }
+    } else if (phase == 0) {
+        if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
+            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+            *(u8 *)(state + 4) = 1;
+        }
+    } else if (phase == 2) {
+        f32 v = *(f32 *)(state + 0) + timeDelta;
+        *(f32 *)(state + 0) = v;
+        if (v >= lbl_803E6DE8) {
+            *(u8 *)(state + 4) = 3;
+        }
+    } else if (phase == 3) {
+        if (*(u16 *)(obj + 0xb0) & 0x800) {
+            (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 1850, 0, 2, -1,
+                                                                                0);
+        }
+        if (*(int *)(obj + 0xf4) == 0) {
+            (*(void (**)(int, int))(*gObjectTriggerInterface + 0x54))(obj, 105);
+            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, 1);
+        }
+    }
+    *(int *)(obj + 0xf4) = 1;
+}
+#pragma scheduling on
+#pragma peephole on
+
 int wctile_getExtraSize(void) { return 0xc; }
 #pragma scheduling off
 int wctile_getObjectTypeId(int obj)
