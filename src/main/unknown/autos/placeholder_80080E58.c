@@ -5833,22 +5833,106 @@ void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
 #pragma pop
 
 typedef struct RomCurveNode {
-    u8 pad00[0x1b];
+    u8 pad00[0x08];
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 pad14[0x07];
     s8 directionMask;
     s32 links[4];
+    s8 yaw;
+    s8 pitch;
+    u8 tangentScale;
 } RomCurveNode;
 
 typedef struct RomCurveInterpState {
     s32 fromNodeId;
     s32 toNodeId;
     f32 fromTime;
-    u8 pad0C[0x28 - 0x0c];
+    f32 segmentTime1;
+    f32 segmentTime2;
+    f32 segmentTime3;
+    f32 segmentTime4;
+    f32 segmentTime5;
+    f32 segmentTime6;
+    f32 segmentTime7;
     f32 toTime;
 } RomCurveInterpState;
 
+#define ROM_CURVE_NODE_ANGLE(v) ((lbl_803DEFE8 * (f32)((s32)(v) << 8)) / lbl_803DEFEC)
+#define ROM_CURVE_NODE_SCALE(node) (lbl_803DF008 * (f32)(u8)((node)->tangentScale))
+
 extern void **gRomCurveInterface;
-extern void curveFn_80083e00(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNode *x, f32 f,
-                             int flag);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 sqrtf(f32 x);
+extern s16 getAngle(f32 x, f32 z);
+extern void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ,
+                             int count, void (*evalFn)(f32 *values, f32 *coefficients));
+extern void curveFn_80010d54(f32 *values, f32 *coefficients);
+extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
+extern f32 lbl_803DEFE8;
+extern f32 lbl_803DEFEC;
+extern f32 lbl_803DF008;
+extern f32 lbl_803DF01C;
+extern f32 lbl_803DF020;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void curveFn_80083e00(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNode *next, f32 t,
+                      int flag) {
+    f32 curveScale;
+    f32 nextScale;
+    f32 xPoints[4];
+    f32 yPoints[4];
+    f32 zPoints[4];
+    f32 xSamples[9];
+    f32 ySamples[9];
+    f32 zSamples[9];
+    f32 *times;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    int i;
+
+    curveScale = ROM_CURVE_NODE_SCALE(curve);
+    nextScale = ROM_CURVE_NODE_SCALE(next);
+
+    xPoints[0] = curve->x;
+    xPoints[1] = next->x;
+    xPoints[2] = curveScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(curve->yaw));
+    xPoints[3] = nextScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(next->yaw));
+
+    yPoints[0] = curve->y;
+    yPoints[1] = next->y;
+    yPoints[2] = curveScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(curve->pitch));
+    yPoints[3] = nextScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(next->pitch));
+
+    zPoints[0] = curve->z;
+    zPoints[1] = next->z;
+    zPoints[2] = curveScale * sin(ROM_CURVE_NODE_ANGLE(curve->yaw));
+    zPoints[3] = nextScale * sin(ROM_CURVE_NODE_ANGLE(next->yaw));
+
+    curveFn_80010018(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
+                     curveFn_80010d54);
+
+    times = &out->fromTime;
+    times[0] = lbl_803DEFB0;
+    for (i = 0; i < 8; i++) {
+        dx = xSamples[i + 1] - xSamples[i];
+        dy = ySamples[i + 1] - ySamples[i];
+        dz = zSamples[i + 1] - zSamples[i];
+        times[i + 1] = times[i] + sqrtf(dx * dx + dy * dy + dz * dz);
+    }
+    if ((s8)flag == 1) {
+        t -= out->toTime;
+    }
+    for (i = 0; i <= 8; i++) {
+        times[i] += t;
+    }
+}
+#pragma pop
 
 #pragma push
 #pragma scheduling off
@@ -5948,6 +6032,103 @@ void curveFindFn_800843c4(RomCurveInterpState *out, int id) {
                          (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out->toNodeId),
                          lbl_803DEFB0, 0);
     }
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int romCurveFn_800844b8(RomCurveInterpState *state, f32 *offset, f32 *outPos, s16 *outAngle,
+                        int ignoreY) {
+    RomCurveNode *from;
+    RomCurveNode *to;
+    f32 t;
+    f32 fromScale;
+    f32 toScale;
+    f32 xPoints[4];
+    f32 yPoints[4];
+    f32 zPoints[4];
+    f32 xTangent;
+    f32 yTangent;
+    f32 zTangent;
+    f32 segmentT;
+    f32 length;
+    f32 scale;
+    f32 angle;
+    f32 *times;
+    int segment;
+    int i;
+
+    t = offset[2];
+    romCurveFn_80084190(state, t);
+    from = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->fromNodeId);
+    if (from != NULL && state->toNodeId > -1) {
+        to = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
+        times = &state->fromTime;
+        i = 0;
+        while (i < 9 && t >= times[i]) {
+            i++;
+        }
+        segment = i - 1;
+        segmentT = ((f32)segment +
+                    (t - times[segment]) / (times[segment + 1] - times[segment])) *
+                   lbl_803DF01C;
+
+        fromScale = ROM_CURVE_NODE_SCALE(from);
+        toScale = ROM_CURVE_NODE_SCALE(to);
+
+        xPoints[0] = from->x;
+        xPoints[1] = to->x;
+        xPoints[2] = fromScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(from->yaw));
+        xPoints[3] = toScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(to->yaw));
+
+        yPoints[0] = from->y;
+        yPoints[1] = to->y;
+        yPoints[2] = fromScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(from->pitch));
+        yPoints[3] = toScale * fn_80293E80(ROM_CURVE_NODE_ANGLE(to->pitch));
+
+        zPoints[0] = from->z;
+        zPoints[1] = to->z;
+        zPoints[2] = fromScale * sin(ROM_CURVE_NODE_ANGLE(from->yaw));
+        zPoints[3] = toScale * sin(ROM_CURVE_NODE_ANGLE(to->yaw));
+
+        outPos[0] = curveFn_80010dc0(segmentT, xPoints, &xTangent);
+        if ((s8)ignoreY == 0) {
+            outPos[1] = curveFn_80010dc0(segmentT, yPoints, &yTangent);
+        }
+        outPos[2] = curveFn_80010dc0(segmentT, zPoints, &zTangent);
+
+        length = sqrtf(xTangent * xTangent + zTangent * zTangent);
+        if (length > lbl_803DF020) {
+            scale = offset[0] / length;
+            *outAngle = (s16)(getAngle(xTangent, zTangent) - 0x8000);
+            xTangent *= scale;
+            zTangent *= scale;
+            outPos[0] += zTangent;
+            outPos[2] -= xTangent;
+            if ((s8)ignoreY == 0) {
+                outPos[1] += offset[1];
+            }
+        }
+        return 1;
+    }
+
+    if (from == NULL) {
+        from = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
+    }
+    if (from == NULL) {
+        return 0;
+    }
+    outPos[0] = from->x;
+    if ((s8)ignoreY == 0) {
+        outPos[1] = from->y + offset[1];
+    }
+    outPos[2] = from->z;
+    angle = ROM_CURVE_NODE_ANGLE(from->yaw);
+    outPos[0] += offset[0] * sin(angle);
+    outPos[2] += offset[0] * fn_80293E80(angle);
+    *outAngle = (s16)(((s32)from->yaw << 8) - 0x8000);
+    return 1;
 }
 #pragma pop
 
