@@ -2305,7 +2305,7 @@ void mapReloadWithFadeout(void) {
 
 /* 16b sda lookup. */
 extern int lbl_803DCE6C;
-void* fn_80056684(int idx) {
+void* mapTextureOverrideGetEntry(int idx) {
 	return (void*)(lbl_803DCE6C + (idx << 4));
 }
 
@@ -2323,13 +2323,13 @@ extern int lbl_803DCE68;
 extern f32 lbl_803DEBC8;
 
 #pragma scheduling off
-void fn_80056B8C(int idx, float* out1, float* out2) {
+void mapTextureScrollGetOffset(int idx, float* outX, float* outY) {
 	f32 divisor;
 	char* base;
 	idx <<= 4;
-	*out1 = *(f32*)(lbl_803DCE68 + idx) / (divisor = lbl_803DEBC8);
+	*outX = *(f32*)(lbl_803DCE68 + idx) / (divisor = lbl_803DEBC8);
 	base = (char*)lbl_803DCE68 + idx;
-	*out2 = *(f32*)(base + 4) / divisor;
+	*outY = *(f32*)(base + 4) / divisor;
 }
 #pragma scheduling reset
 
@@ -2499,10 +2499,10 @@ void gameTextLoadForMap_800571f0(u8 force) {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80056BBC(int idx, int a, int b, int p4, int p5) {
+void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, int texHeightFixed) {
     int base = lbl_803DCE68 + idx * 16;
-    *(s16*)(base + 8) = (s16)((a << 16) / (p4 >> 6));
-    *(s16*)(base + 10) = (s16)((b << 16) / (p5 >> 6));
+    *(s16*)(base + 8) = (s16)((xStep << 16) / (texWidthFixed >> 6));
+    *(s16*)(base + 10) = (s16)((yStep << 16) / (texHeightFixed >> 6));
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2832,7 +2832,7 @@ void mapLoadForObject(int p1, char *p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80056BF4(int kx, int ky, int sx, int sy)
+int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed)
 {
     char *base = (char *)lbl_803DCE68;
     char *e;
@@ -2841,7 +2841,7 @@ int fn_80056BF4(int kx, int ky, int sx, int sy)
 
     e = base;
     for (idx = 0; idx < 0x3a; idx++) {
-        if (*(s16 *)(e + 8) == kx && *(s16 *)(e + 0xa) == ky) {
+        if (*(s16 *)(e + 8) == xStep && *(s16 *)(e + 0xa) == yStep) {
             *(u8 *)(e + 0xc) += 1;
             return idx;
         }
@@ -2859,8 +2859,8 @@ int fn_80056BF4(int kx, int ky, int sx, int sy)
     if (slot == -1)
         return -1;
     e = base + slot * 0x10;
-    *(s16 *)(e + 8) = (s16)((kx << 16) / (sx >> 6));
-    *(s16 *)(e + 0xa) = (s16)((ky << 16) / (sy >> 6));
+    *(s16 *)(e + 8) = (s16)((xStep << 16) / (texWidthFixed >> 6));
+    *(s16 *)(e + 0xa) = (s16)((yStep << 16) / (texHeightFixed >> 6));
     *(f32 *)e = lbl_803DEBCC;
     *(f32 *)(e + 4) = lbl_803DEBCC;
     *(u8 *)(e + 0xc) += 1;
@@ -2994,7 +2994,7 @@ extern char sTrackGlobalTexanimOverflowError[];
 
 #pragma scheduling off
 #pragma peephole off
-int texAnimFn_800567a8(int key, int p4, int type)
+int mapTextureOverrideAcquire(int key, int value, int type)
 {
     char *base = (char *)lbl_803DCE6C;
     char *e;
@@ -3029,7 +3029,7 @@ int texAnimFn_800567a8(int key, int p4, int type)
     off = found * 0x10;
     *(s16 *)(base + off + 0xc) = 1;
     *(int *)(lbl_803DCE6C + off + 4) = 0;
-    *(int *)(lbl_803DCE6C + off + 8) = p4;
+    *(int *)(lbl_803DCE6C + off + 8) = value;
     *(int *)(lbl_803DCE6C + off) = key;
     *(u8 *)(lbl_803DCE6C + off + 0xe) = type;
     return found;

@@ -4506,7 +4506,7 @@ void *MapBlock_loadFromFile(int blockId)
     return buf;
 }
 
-extern void texAnimFn_800567a8(int tex, int b);
+extern int mapTextureOverrideAcquire(int tex, int value, int type);
 
 void MapBlock_initShaders(int obj)
 {
@@ -4523,8 +4523,9 @@ void MapBlock_initShaders(int obj)
             v = *(int *)(p + 0x24);
             if (v != -1) {
                 *(int *)(p + 0x24) = ((int *)*(int *)(obj + 0x54))[v];
-                if (*(u8 *)(p + 0x29) != 0) {
-                    texAnimFn_800567a8(*(int *)(p + 0x24), 0);
+                v = *(u8 *)(p + 0x29);
+                if (v != 0) {
+                    mapTextureOverrideAcquire(*(int *)(p + 0x24), 0, v);
                 }
             } else {
                 *(int *)(p + 0x24) = 0;
