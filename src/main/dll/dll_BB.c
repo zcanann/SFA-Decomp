@@ -2,19 +2,17 @@
 #include "main/dll/CAM/camcontrol.h"
 #include "main/dll/dll_BB.h"
 
-extern undefined4 FUN_800068d8();
-extern undefined4 FUN_80006954();
-extern undefined4 FUN_80006984();
-extern void* FUN_800069a8();
-extern int FUN_800069c0();
-extern undefined4 FUN_800069c8();
-extern undefined4 FUN_80006a00();
-extern double FUN_800176f4();
-extern undefined4 FUN_80056a50();
-extern undefined4 FUN_800723a0();
-extern undefined4 FUN_80247eb8();
-extern undefined4 FUN_80247ef8();
-extern double SeekTwiceBeforeRead();
+extern void Obj_UpdateWorldTransform(void *obj);
+extern void Camera_SetCurrentViewIndex(s32 index);
+extern void Camera_UpdateViewMatrices(void);
+extern s32 Camera_GetViewportYOffset(void);
+extern void Camera_SetFovY(f32 fovY);
+extern f32 interpolate(f32 cur,f32 target,f32 t);
+extern void loadMapForCameraPos(f32 x,f32 y,f32 z);
+extern void OSReport(const char *fmt,...);
+extern void PSVECSubtract(f32 *a,f32 *b,f32 *out);
+extern void PSVECNormalize(f32 *src,f32 *dst);
+extern f32 PSVECMag(f32 *v);
 extern CameraViewSlot *Camera_GetCurrentViewSlot(void);
 extern f32 Camera_GetFovY(void);
 extern void Camera_SetViewportYOffset(s32 yOffset);
@@ -23,6 +21,7 @@ extern void camcontrol_activateHandler(u32 actionId,void *actionData);
 
 extern undefined4 DAT_803de138;
 extern undefined4 gCamcontrolState;
+extern char sDllBBTimeDebugFormat[];
 extern f64 DOUBLE_803e22d0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DE148;
@@ -56,29 +55,24 @@ void camcontrol_applyState(short *param_1)
   int iVar4;
   double dVar5;
   double dVar6;
-  undefined8 in_f4;
-  undefined8 in_f5;
-  undefined8 in_f6;
-  undefined8 in_f7;
-  undefined8 in_f8;
   float local_38;
   float local_34;
   float local_30;
   undefined8 local_28;
   undefined8 local_20;
   
-  FUN_80006954(0);
-  psVar3 = FUN_800069a8();
+  Camera_SetCurrentViewIndex(0);
+  psVar3 = (short *)Camera_GetCurrentViewSlot();
   *psVar3 = *param_1;
   psVar3[1] = param_1[1];
   psVar3[2] = param_1[2];
   if (*(char *)((int)param_1 + 0x143) < '\0') {
-    FUN_80247eb8((float *)(param_1 + 0xc),(float *)(psVar3 + 6),&local_38);
-    dVar5 = SeekTwiceBeforeRead(&local_38);
+    PSVECSubtract((float *)(param_1 + 0xc),(float *)(psVar3 + 6),&local_38);
+    dVar5 = PSVECMag(&local_38);
     if ((double)lbl_803E22B0 < dVar5) {
-      FUN_80247ef8(&local_38,&local_38);
+      PSVECNormalize(&local_38,&local_38);
     }
-    dVar6 = FUN_800176f4(dVar5,(double)lbl_803E22E8,(double)lbl_803DC074);
+    dVar6 = interpolate((f32)dVar5,lbl_803E22E8,lbl_803DC074);
     dVar5 = (double)lbl_803E22B0;
     if ((dVar5 <= dVar6) && (dVar5 = dVar6, (double)(lbl_803E22EC * lbl_803DC074) < dVar6)) {
       dVar5 = (double)(lbl_803E22EC * lbl_803DC074);
@@ -134,7 +128,7 @@ void camcontrol_applyState(short *param_1)
                                           (double)*(float *)(param_1 + 0x8a)) +
                   (double)*(float *)(param_1 + 0x8a));
     }
-    FUN_800723a0();
+    OSReport(sDllBBTimeDebugFormat,dVar6);
     if ((*(byte *)((int)param_1 + 0x13f) & 1) != 0) {
       param_1[0x80] = param_1[0x83] - *psVar3;
       if (0x8000 < param_1[0x80]) {
@@ -175,11 +169,11 @@ void camcontrol_applyState(short *param_1)
       psVar3[2] = param_1[0x85] - (short)iVar4;
     }
   }
-  FUN_80006a00((double)lbl_803DE148);
-  FUN_800068d8(psVar3);
-  FUN_80056a50((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
-               (double)*(float *)(param_1 + 0x10),in_f4,in_f5,in_f6,in_f7,in_f8);
-  iVar4 = FUN_800069c0();
+  Camera_SetFovY(lbl_803DE148);
+  Obj_UpdateWorldTransform(psVar3);
+  loadMapForCameraPos(*(float *)(param_1 + 0xc),*(float *)(param_1 + 0xe),
+                      *(float *)(param_1 + 0x10));
+  iVar4 = Camera_GetViewportYOffset();
   DAT_803de138 = (short)iVar4;
   if ((int)DAT_803de138 != (int)*(char *)((int)param_1 + 0x13b)) {
     if ((int)DAT_803de138 < (int)*(char *)((int)param_1 + 0x13b)) {
@@ -196,10 +190,10 @@ void camcontrol_applyState(short *param_1)
         DAT_803de138 = (short)*(char *)((int)param_1 + 0x13b);
       }
     }
-    FUN_800069c8(DAT_803de138);
+    Camera_SetViewportYOffset(DAT_803de138);
   }
   *(undefined *)((int)param_1 + 0x13b) = 0;
-  FUN_80006984();
+  Camera_UpdateViewMatrices();
   return;
 }
 #pragma peephole reset
