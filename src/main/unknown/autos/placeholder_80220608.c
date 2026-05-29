@@ -5504,11 +5504,13 @@ typedef struct ArwProjPosSrc {
     f32 pos[3];
 } ArwProjPosSrc;
 
+#pragma peephole off
+#pragma scheduling off
 #pragma dont_inline on
 void arwprojectile_placeForward(int obj, f32 dist)
 {
     int state = *(int *)(obj + 0xb8);
-    f32 mtx[12];
+    f32 mtx[16];
     ArwProjPosSrc src;
 
     *(f32 *)(state + 8) = dist;
@@ -5526,6 +5528,8 @@ void arwprojectile_placeForward(int obj, f32 dist)
     *(s16 *)(obj + 2) = -*(s16 *)(obj + 2);
 }
 #pragma dont_inline reset
+#pragma scheduling reset
+#pragma peephole reset
 
 void arwingandrossstuff_init(int obj, u8 *setup)
 {
