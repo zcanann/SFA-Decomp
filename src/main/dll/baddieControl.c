@@ -3878,7 +3878,7 @@ void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
 #pragma peephole off
 #pragma scheduling off
 int dll_19_func17(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, s16 p8) {
-    int msgData;
+    u32 msgData;
     int msgType;
     int extra;
 
