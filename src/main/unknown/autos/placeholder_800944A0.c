@@ -76,6 +76,70 @@ void cloudaction_onMapSetup(void) {
     memset(lbl_8039AB28, 0, 0x1c);
 }
 
+extern void GXSetPointSize(int size, int fmt);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void *Camera_GetViewMatrix(void);
+extern void GXLoadPosMtxImm(void *mtx, int id);
+extern void GXSetCurrentMtx(int id);
+extern void GXSetTevKColorSel(int stage, int sel);
+extern void GXSetTevKAlphaSel(int stage, int sel);
+extern void GXSetNumIndStages(int n);
+extern void GXSetNumTexGens(int n);
+extern void GXSetNumTevStages(int n);
+extern void GXSetNumChans(int n);
+extern void GXSetTevDirect(int stage);
+extern void GXSetTevOrder(int stage, int coord, int map, int color);
+extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevSwapMode(int stage, int ras, int tex);
+extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int reg);
+extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int reg);
+extern void GXSetBlendMode(int type, int src, int dst, int op);
+extern void gxSetZMode_(int compEnable, int func, int updateEnable);
+extern void gxSetPeControl_ZCompLoc_(int zcomploc);
+extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
+extern void GXSetCullMode(int mode);
+extern void GXSetTevKColor(int id, void *color);
+extern int *gSHthorntailAnimationInterface;
+
+void fn_80094F7C(void) {
+    f32 dummy;
+    u8 kcol[4];
+    u8 col[4];
+    GXSetPointSize(0x12, 5);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
+    GXSetCurrentMtx(0);
+    GXSetTevKColorSel(0, 0xc);
+    GXSetTevKAlphaSel(0, 0x1c);
+    GXSetNumIndStages(0);
+    GXSetNumTexGens(0);
+    GXSetNumTevStages(1);
+    GXSetNumChans(1);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 0xff, 0xff, 4);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xe);
+    GXSetTevAlphaIn(0, 7, 7, 7, 6);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 5, 5);
+    gxSetZMode_(1, 3, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetCullMode(0);
+    (*(void (*)(void *, void *, void *, f32 *, f32 *, f32 *))(*(int *)(*gSHthorntailAnimationInterface + 0x40)))(
+        &col[0], &col[1], &col[2], &dummy, &dummy, &dummy);
+    col[0] = (col[0] >> 2) + 0x80;
+    col[1] = (col[1] >> 2) + 0x80;
+    col[2] = (col[2] >> 2) + 0x80;
+    col[3] = 0x80;
+    *(int *)kcol = *(int *)col;
+    GXSetTevKColor(0, kcol);
+}
+
 void cloudaction_func05(void) {
     int tex;
     if (*(void **)lbl_8039AB28 != NULL) {
