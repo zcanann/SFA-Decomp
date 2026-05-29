@@ -5779,3 +5779,47 @@ void curveFindFn_800843c4(int *out, int id) {
     }
 }
 #pragma pop
+
+extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int flags);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void playerEnvFxFn_80088ad4(int idx) {
+    void *player;
+    int alt;
+    s16 val;
+
+    player = Obj_GetPlayerObject();
+    if ((void *)lbl_803DD134 == NULL) {
+        return;
+    }
+    if (player == NULL) {
+        return;
+    }
+    if ((lbl_803DD140 & 0x8) == 0) {
+        return;
+    }
+    if (GameBit_Get(944) != 0) {
+        return;
+    }
+    alt = (s8)(idx - 1);
+    if (alt < 0) {
+        alt = 27;
+    }
+    val = ((s16 *)lbl_803DD134)[(u8)idx];
+    if (val <= 0 || ((s16 *)lbl_803DD134)[(s8)alt] != val) {
+        getEnvfxAct(player, player, 310, 0);
+        getEnvfxAct(player, player, 311, 0);
+        getEnvfxAct(player, player, 323, 0);
+    }
+    val = ((s16 *)lbl_803DD134)[(u8)idx];
+    if (val > 0) {
+        if (lbl_803DD140 & 0x20) {
+            getEnvfxActImmediately(player, player, (u16)val, 0);
+        } else {
+            getEnvfxAct(player, player, (u16)val, 0);
+        }
+    }
+}
+#pragma pop
