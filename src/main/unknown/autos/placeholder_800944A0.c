@@ -1137,10 +1137,104 @@ void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
 }
 
 typedef struct {
+    u16 v[9];
+} ParticleTblA;
+
+typedef struct {
+    u16 v[8];
+} ParticleTbl8;
+
+extern int lbl_802C1FD8[];
+extern f32 lbl_803DF350;
+extern f32 lbl_803DF358;
+extern f32 lbl_803DF368;
+extern f32 lbl_803DF36C;
+extern f32 lbl_803DF370;
+extern f32 sin(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern void mathFn_80021ac8(void *in, f32 *out);
+
+void objParticleFn_80097734(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
+                            void *origin, int flags, f32 f8val, f32 angBase,
+                            f32 lo, f32 hi) {
+    PartfxParams params;
+    ParticleTblA tA = *(ParticleTblA *)((char *)lbl_802C1FD8 + 0x8c);
+    ParticleTbl8 tB = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xa0);
+    ParticleTbl8 tC = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xb0);
+    ParticleTbl8 tD = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xc0);
+    u16 rvec[3];
+    int i;
+    f32 fdelta;
+    f32 f30;
+    f32 f29;
+
+    params.f8 = f8val;
+    params.f6 = (s16)tA.v[kind];
+    params.pad[1] = 0x3c;
+    fdelta = angBase - lo;
+    for (i = 0; i < 4; i++) {
+        u16 val;
+        f32 a;
+        if (randomGetRange(0, 0x63) >= chance) {
+            continue;
+        }
+        rvec[0] = (u16)randomGetRange(0, 0xffff);
+        rvec[1] = 0;
+        rvec[2] = 0;
+        f30 = (f32)randomGetRange(1, 1000) / lbl_803DF368;
+        f29 = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        params.vec[1] = lbl_803DF35C;
+        params.vec[2] = lbl_803DF35C;
+        switch (mode) {
+        case 1:
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 2:
+            f29 = f29 * (f29 * f29);
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 3:
+            f29 = lbl_803DF354 - f29 * (f29 * f29);
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 4:
+            val = (u16)(int)(lbl_803DF350 * f29);
+            a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
+            f29 = lbl_803DF358 * (lbl_803DF354 + (f32)sin(a));
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 5:
+            val = (u16)(int)(lbl_803DF350 * f29);
+            a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
+            f29 = lbl_803DF358 * (lbl_803DF354 + fn_80293E80(a));
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 6:
+            params.vec[0] = f30 * f30;
+            break;
+        case 7:
+            params.vec[0] = lbl_803DF354 - f30 * (f30 * (f30 * (f30 * f30)));
+            break;
+        }
+        params.vec[0] = params.vec[0] * (f29 * fdelta + lo);
+        mathFn_80021ac8(rvec, params.vec);
+        params.vec[1] = (f29 - lbl_803DF358) * hi;
+        if (origin != NULL) {
+            params.vec[0] += *(f32 *)((char *)origin + 0xc);
+            params.vec[1] += *(f32 *)((char *)origin + 0x10);
+            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+        }
+        params.pad[2] = (s16)tC.v[idx];
+        params.pad[0] = (s16)tD.v[idx];
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, tB.v[idx], &params, flags | 2, -1, 0);
+    }
+}
+
+typedef struct {
     u16 v[15];
 } ColorTbl;
 
-extern int lbl_802C1FD8[];
 extern int *lbl_803DCAB4;
 extern f32 lbl_803DF394;
 extern f32 lbl_803DF398;
