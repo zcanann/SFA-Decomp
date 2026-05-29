@@ -400,6 +400,17 @@ Heuristic before reaching for `asm { }`:
     whole cubic-spline family (curveFn_80010ce4 76→90.4%, mathFn_80010c64
     86.6→93.9%, mathFn_80010ee0 90.7→94.9%). Clean C, no asm. (mike6, 800066E0.)
 
+28. **A `li r0,<bit>; li rX,1; slw r0,rX,r0; and` (RUNTIME shift) over apparently
+    CONSTANT bit positions 0,1,2… = an UNROLLED `for` loop — write the loop, not
+    the manual unroll.** When target tests `flags & (1<<bit)` for a run of fixed
+    bit positions via a runtime `slw` (not a folded `andi`/`clrlwi`), the original
+    source was a small `for(bit=0;bit<N;bit++)` that MWCC unrolled: the unroller
+    keeps `1<<bit` as `slw` (doesn't re-fold per copy) WHILE folding the
+    induction-derived offset (`bit*STRIDE`) to per-iteration constants. Writing the
+    manual unroll in C instead folds `1<<0`→`clrlwi`/`andi` and mismatches. So
+    write `for(bit=0;bit<N;bit++){ if(flags&(1<<bit)){ p[bit*STRIDE+off]=…; } }`.
+    Took 3 sky-setter fns 75→100%. (november12, 80080E58.)
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
