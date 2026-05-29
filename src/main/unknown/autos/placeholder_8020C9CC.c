@@ -297,6 +297,36 @@ extern f32 lbl_803E6708;
 extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
 
+void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9) {
+    f32 va, vb, vc;
+
+    if (a9 != 0 && (s8)opacity != 0 && a8 > 0) {
+        u8 saved = *(u8 *)(sub + 0x37);
+        *(u8 *)(sub + 0x37) = (u8)a8;
+        (*(void (*)(int, int, int, int, int, int))(*(int *)(*(int *)(*(int *)(sub + 0x68)) + 0x10)))(sub, p2, p3, p4, p5, -1);
+        *(u8 *)(sub + 0x37) = saved;
+    }
+    *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0x18);
+    *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x1c);
+    *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x20);
+    *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+    (*(void (*)(int, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x68)) + 0x28)))(sub, &va, &vb, &vc);
+    *(f32 *)(obj + 0xc) = va;
+    *(f32 *)(obj + 0x10) = vb;
+    *(f32 *)(obj + 0x14) = vc;
+    *(s16 *)(obj + 0x0) = *(s16 *)(sub + 0x0);
+    *(s16 *)(obj + 0x2) = *(s16 *)(sub + 0x2);
+    *(s16 *)(obj + 0x4) = *(s16 *)(sub + 0x4);
+    *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+    *(f32 *)(obj + 0x24) = *(f32 *)(sub + 0x24);
+    *(f32 *)(obj + 0x28) = *(f32 *)(sub + 0x28);
+    *(f32 *)(obj + 0x2c) = *(f32 *)(sub + 0x2c);
+}
+
 void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis) {
     int *inner;
     int sub;
