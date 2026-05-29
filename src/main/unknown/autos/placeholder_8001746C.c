@@ -8145,7 +8145,7 @@ void ObjModel_SetBlendChannelWeight(u8 *model, int channel, f32 weight) {
 
 typedef f32 Mtx[3][4];
 extern void cutsceneEnterExit(int a, int b);
-extern void Obj_BuildWorldTransformMatrix(void *obj, f32 *mtx, int flags);
+extern void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags);
 extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
@@ -8189,9 +8189,9 @@ int gameTextFn_8001bcb4(void) {
 
 #pragma dont_inline on
 void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst) {
-    Mtx mtx;
-    Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
-    PSMTXMultVecSR((f32 *)mtx, src, dst);
+    f32 mtx[16];
+    Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+    PSMTXMultVecSR(mtx, src, dst);
 }
 #pragma dont_inline reset
 
@@ -8203,13 +8203,13 @@ extern f32 playerMapOffsetZ;
 #pragma dont_inline on
 void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag) {
     f32 savedZ;
-    Mtx mtx;
+    f32 mtx[16];
     if (flag) {
         savedZ = *(f32 *)(obj + 8);
         *(f32 *)(obj + 8) = lbl_803DE890;
     }
-    Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
-    PSMTXMultVec((f32 *)mtx, src, dst);
+    Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+    PSMTXMultVec(mtx, src, dst);
     if (flag) {
         *(f32 *)(obj + 8) = savedZ;
     }
@@ -9381,6 +9381,7 @@ void model_multMtxs(u8 *model, f32 *out) {
     }
 }
 
+#pragma dont_inline on
 void setMatrixFromObjectTransposed(void *obj, f32 *out) {
     f32 m[16];
     setMatrixFromObjectPos(m, obj);
@@ -9397,6 +9398,7 @@ void setMatrixFromObjectTransposed(void *obj, f32 *out) {
     out[7] = m[13];
     out[11] = m[14];
 }
+#pragma dont_inline reset
 
 void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz) {
     *ox = m[12] + (m[0] * x + m[4] * y + m[8] * z);
@@ -10671,4 +10673,39 @@ void ObjList_PartitionForRender(int *out) {
     }
     lbl_803DCBC4 = i;
 }
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags) {
+    f32 savedZ;
+    f32 parentMtx[16];
+    void *parent;
+
+    if (*(void **)(obj + 0x30) == NULL) {
+        *(f32 *)(obj + 0xc) -= playerMapOffsetX;
+        *(f32 *)(obj + 0x14) -= playerMapOffsetZ;
+    }
+    if ((u8)flags != 0) {
+        savedZ = *(f32 *)(obj + 0x8);
+        if ((*(u16 *)(obj + 0xb0) & 0x8) == 0) {
+            *(f32 *)(obj + 0x8) = lbl_803DE890;
+        }
+    }
+    setMatrixFromObjectTransposed(obj, mtx);
+    if ((u8)flags != 0) {
+        *(f32 *)(obj + 0x8) = savedZ;
+    }
+    parent = *(void **)(obj + 0x30);
+    if (parent == NULL) {
+        *(f32 *)(obj + 0xc) += playerMapOffsetX;
+        *(f32 *)(obj + 0x14) += playerMapOffsetZ;
+    } else {
+        Obj_BuildWorldTransformMatrix(parent, (f32 *)parentMtx, 1);
+        PSMTXConcat((f32 *)parentMtx, mtx, mtx);
+    }
+}
+#pragma dont_inline reset
 #pragma pop
