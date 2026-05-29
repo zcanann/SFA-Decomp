@@ -8419,6 +8419,8 @@ extern s8 lbl_803DCB74;
 extern int lbl_803408A8[];
 extern int lbl_803DD610;
 extern void *lbl_803DD61C;
+extern f32 lbl_803DE760;
+extern f32 lbl_803DE75C;
 extern f32 lbl_803DE764;
 extern f32 lbl_803DE78C;
 
@@ -8498,6 +8500,29 @@ void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
     out[0] = s * b[0] + a[0];
     out[1] = s * b[1] + a[1];
     out[2] = s * b[2] + a[2];
+}
+
+void lightFn_8001d620(u8 *light, int mode, s16 frames) {
+    f32 denom;
+
+    *(int *)(light + 0x2d8) = mode;
+    if (mode != 0) {
+        if (frames != 0) {
+            denom = frames;
+        } else {
+            denom = lbl_803DE760;
+        }
+        *(f32 *)(light + 0x2dc) = lbl_803DE760 / denom;
+        light[0xac] = light[0xa8];
+        light[0xad] = light[0xa9];
+        light[0xae] = light[0xaa];
+        light[0x104] = light[0x100];
+        light[0x105] = light[0x101];
+        light[0x106] = light[0x102];
+        denom = lbl_803DE75C;
+        *(f32 *)(light + 0x2e0) = denom;
+        *(f32 *)(light + 0x2e4) = denom;
+    }
 }
 
 void fn_8001D820(u8 *p, f32 v) {
