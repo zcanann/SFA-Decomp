@@ -5859,3 +5859,41 @@ void dll_07_func07(int arg) {
     }
 }
 #pragma pop
+
+extern int ObjModel_GetRenderOp(int model, int x);
+extern int Shader_getLayer(int renderOp, int x);
+extern int *objFindTexture(int obj, int idx, int p3);
+extern void *textureIdxToPtr(int idx);
+extern void *lbl_8039AB28[];
+extern f32 lbl_803DF2B0;
+extern f32 lbl_803DF2B4;
+
+#pragma push
+#pragma scheduling off
+void *skyTextureFn_80094390(f32 *out1, f32 *out2) {
+    int *tex;
+    int *layer;
+
+    if (lbl_8039AB28[0] != NULL) {
+        layer = (int *)Shader_getLayer(
+            ObjModel_GetRenderOp(*(int *)Obj_GetActiveModel(lbl_8039AB28[0]), 0), 0);
+        tex = objFindTexture((int)lbl_8039AB28[0], 0, 0);
+        if (tex != NULL) {
+            f32 scale = lbl_803DF2B0;
+            *out1 = scale * (f32) * (s16 *)((char *)tex + 8);
+            *out2 = scale * (f32) * (s16 *)((char *)tex + 10);
+        } else {
+            f32 d = lbl_803DF2B4;
+            *out1 = d;
+            *out2 = d;
+        }
+        return textureIdxToPtr(*layer);
+    }
+    {
+        f32 d = lbl_803DF2B4;
+        *out1 = d;
+        *out2 = d;
+    }
+    return NULL;
+}
+#pragma pop
