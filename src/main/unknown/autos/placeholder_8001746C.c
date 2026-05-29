@@ -1658,6 +1658,7 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
 
 #pragma push
 #pragma scheduling off
+#pragma peephole off
 void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang) {
     int byteOff;
     int ch;
