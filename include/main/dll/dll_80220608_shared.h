@@ -160,11 +160,11 @@ extern int *gSHthorntailAnimationInterface;
 extern void Music_Trigger(int id, int p2);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern f32 lbl_803E6DA8;
-extern void fn_8022578C(int obj, int state);
+extern void wcpushblock_updateLevelControlState(int obj, int state);
 extern void fn_802251B4(int obj, int state);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
-extern int fn_80225BD8(int obj, int p2, int p3);
+extern int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3);
 extern void *memcpy(void *dst, const void *src, u32 n);
 
 
@@ -1766,8 +1766,8 @@ void wclevelcont_syncProgressBits(int obj);
 void wclevelcont_update(int obj);
 void fn_802251B4(int obj, int state);
 int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy);
-void fn_8022578C(int obj, int state);
-int fn_80225BD8(int obj, int p2, int p3);
+void wcpushblock_updateLevelControlState(int obj, int state);
+int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3);
 int fn_80225D2C(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy);
 void wclevelcont_init(int obj);
 void wclevelcont_release(void);

@@ -290,7 +290,7 @@ void wclevelcont_update(int obj)
     switch ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac))) {
     case 1:
     default:
-        fn_8022578C(obj, state);
+        wcpushblock_updateLevelControlState(obj, state);
         break;
     case 2:
         fn_802251B4(obj, state);
@@ -397,7 +397,7 @@ void wclevelcont_init(int obj)
     int state = *(int *)(obj + 0xb8);
     u16 flags;
 
-    *(void **)(obj + 0xbc) = (void *)fn_80225BD8;
+    *(void **)(obj + 0xbc) = (void *)wcpushblock_levelControlTriggerCallback;
     GameBit_Set(0x810, 0);
     memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
     GameBit_Set(0x811, 0);

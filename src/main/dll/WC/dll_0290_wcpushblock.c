@@ -553,7 +553,7 @@ void fn_802251B4(int obj, int state)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022578C(int obj, int state)
+void wcpushblock_updateLevelControlState(int obj, int state)
 {
     if (*(u16 *)(state + 0x1a) & 0x2)
         return;
@@ -657,7 +657,7 @@ void fn_8022578C(int obj, int state)
 
 #pragma peephole off
 #pragma scheduling off
-int fn_80225BD8(int obj, int p2, int p3)
+int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
 {
     int state = *(int *)(obj + 0xb8);
     int i;
