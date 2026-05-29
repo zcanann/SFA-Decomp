@@ -39,7 +39,7 @@ extern f32 lbl_803E3C74;
 extern f32 lbl_803E3CCC;
 
 extern void fn_801659B8(void);
-extern void fn_8016558C(void);
+extern void LandedArwing_UpdateFlightChase(void);
 extern void fn_801653D8(void);
 extern void fn_80165188(void);
 extern void fn_801650D8(void);
@@ -287,7 +287,7 @@ void dll_D3_initialise(void)
 
   table = lbl_803AC650;
   table[0] = fn_801659B8;
-  table[1] = fn_8016558C;
+  table[1] = LandedArwing_UpdateFlightChase;
   table[2] = fn_801653D8;
   table[3] = fn_80165188;
   table[4] = fn_801650D8;

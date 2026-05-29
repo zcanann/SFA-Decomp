@@ -54,11 +54,11 @@ typedef struct {
 /*
  * --INFO--
  *
- * Function: fn_8016558C
+ * Function: LandedArwing_UpdateFlightChase
  * EN v1.0 Address: 0x8016558C
  * EN v1.0 Size: 1068b
  */
-undefined4 fn_8016558C(int obj, int param_2)
+undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
 {
     int objLocal;
     int stateWord;
@@ -72,7 +72,7 @@ undefined4 fn_8016558C(int obj, int param_2)
     u32 scriptFlags;
 
     objLocal = obj;
-    stateWord = param_2;
+    stateWord = state;
     sub = *(int *)(*(int *)(objLocal + 0xb8) + 0x40c);
     playerObj = (int)Obj_GetPlayerObject();
     *(u8 *)(stateWord + 0x34d) = 1;
