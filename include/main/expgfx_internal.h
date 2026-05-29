@@ -103,6 +103,8 @@
 #define EXPGFX_SOURCE_OBJTYPE_MATCH_ALL 0xD4
 #define EXPGFX_QUAD_TEXCOORD_MAX 0x80
 #define EXPGFX_QUEUE_DEPTH_SLOT_TYPE_MASK 0x21
+#define EXPGFX_STATIC_BOUNDS_TEMPLATE_COUNT \
+  (EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET / sizeof(ExpgfxBounds))
 
 typedef struct ExpgfxBounds {
   float minX;
@@ -241,7 +243,7 @@ typedef struct ExpgfxQuadTemplateVertex {
  * less error-prone.
  */
 typedef struct ExpgfxStaticDataLayout {
-  u8 pad00[EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET];
+  ExpgfxBounds boundsTemplates[EXPGFX_STATIC_BOUNDS_TEMPLATE_COUNT];
   s16 poolSlotTypeIds[EXPGFX_POOL_COUNT];
   u8 poolFrameFlags[EXPGFX_POOL_COUNT];
   u8 pad120[EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET -
@@ -254,6 +256,17 @@ typedef struct ExpgfxStaticDataLayout {
                                  EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET];
   char noTextureString[1];
 } ExpgfxStaticDataLayout;
+
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, poolSlotTypeIds) ==
+              EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, poolFrameFlags) ==
+              EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, quadTemplateA) ==
+              EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, quadTemplateB) ==
+              EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxStaticDataLayout, mismatchInAddRemoveString) ==
+              EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET);
 
 /*
  * Retail diagnostics call the 0x980 table "exptab". This layout captures the
