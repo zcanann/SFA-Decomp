@@ -8583,6 +8583,10 @@ void *ObjList_FindObjectById(int id) {
 
 extern int lbl_803DB3C8;
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void *color);
+extern int lbl_803DC9D8;
+extern int gameTextFn_8001bcb4(void);
+extern int gameTextFn_8001b44c(int x);
+extern void gameTextLoadForCurMap(int sourceId);
 
 void gameTextSetCharset(int charset, int flags) {
     if (gameTextDrawFunc != NULL || (flags & 1)) {
@@ -8601,6 +8605,59 @@ void gameTextSetCharset(int charset, int flags) {
         s = &lbl_8033A540[i];
         s->v = 0xf;
         s->f4 = charset;
+    }
+}
+
+void gameTextLoadDir(int dirId) {
+    GameTextSlot *cmd;
+    int color;
+    int slotIndex;
+
+    lbl_803DC9A7 = 0xff;
+    lbl_803DC9A6 = 0xff;
+    lbl_803DC9A5 = 0xff;
+    lbl_803DC9A4 = 0xff;
+
+    if (dirId == 3) {
+        gameTextFonts = (u8 *)&lbl_8033AF40[2];
+        lbl_803DC9E8 = 2;
+        color = lbl_803DB3C8;
+        hudDrawRect(0, 0, 0xa00, 0x780, &color);
+        lbl_803DC99C = 0;
+        if (gameTextDrawFunc == NULL) {
+            slotIndex = lbl_803DC9C8;
+            lbl_803DC9C8 = slotIndex + 1;
+            cmd = &lbl_8033A540[slotIndex];
+            cmd->v = 0xf;
+            cmd->f4 = 2;
+        }
+    } else if (dirId == 0x1c) {
+        curGameTextDir = (void *)dirId;
+        gameTextFonts = (u8 *)&lbl_8033AF40[3];
+        lbl_803DC9E8 = 3;
+        if (gameTextDrawFunc == NULL) {
+            slotIndex = lbl_803DC9C8;
+            lbl_803DC9C8 = slotIndex + 1;
+            cmd = &lbl_8033A540[slotIndex];
+            cmd->v = 0xf;
+            cmd->f4 = 3;
+        }
+        gameTextLoadForCurMap(3);
+    } else {
+        gameTextFonts = (u8 *)&lbl_8033AF40[0];
+        lbl_803DC9E8 = 0;
+        if (gameTextDrawFunc == NULL) {
+            slotIndex = lbl_803DC9C8;
+            lbl_803DC9C8 = slotIndex + 1;
+            cmd = &lbl_8033A540[slotIndex];
+            cmd->v = 0xf;
+            cmd->f4 = 0;
+        }
+        curGameTextDir = (void *)dirId;
+        if ((gameTextFn_8001bcb4() == 0 || gameTextFn_8001b44c(dirId) == 0) &&
+            (int)curGameTextDir != lbl_803DC9D8) {
+            gameTextLoadForCurMap(0);
+        }
     }
 }
 
