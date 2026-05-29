@@ -196,10 +196,10 @@ void lightfoot_update(int obj)
                                    lbl_803E8224, buf, 0);
         }
     } else {
-        fn_802B85E4(obj, inner);
+        Lightfoot_UpdateAttachedChild(obj, inner);
         if (*(u16 *)((char *)inner + 0x400) & 0x2) {
             Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);
-            fn_802B84D0(obj);
+            Lightfoot_ResetScriptedPosition(obj);
             *(int *)((char *)obj + 0xf8) = 0;
             *(u16 *)((char *)inner + 0x400) &= ~0x4;
         }
@@ -239,7 +239,7 @@ void lightfoot_init(int obj, int p2, int p3)
     }
     (*(void (*)(int, int, int, int, int, int, int, f32))(*(int *)(*gBaddieControlInterface + 0x58)))(
         obj, p2, inner, 5, 3, 0x108, flags, lbl_803E8228);
-    *(int *)((char *)obj + 0xbc) = (int)fn_802B8864;
+    *(int *)((char *)obj + 0xbc) = (int)Lightfoot_SeqFn;
     *(s16 *)((char *)inner + 0x274) = 0;
     *(s16 *)((char *)inner + 0x270) = 0;
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
@@ -347,7 +347,7 @@ void lightfoot_init(int obj, int p2, int p3)
             break;
         }
     }
-    fn_802B84D0(obj);
+    Lightfoot_ResetScriptedPosition(obj);
     ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C,
                             (ObjAnimComponent *)obj);
     if (randomGetRange(0, 1) != 0) {

@@ -3923,13 +3923,13 @@ void fn_802B1B28(int obj, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_802B85E4(int obj, int p2)
+void Lightfoot_UpdateAttachedChild(int obj, int inner)
 {
-    int inner = *(int *)((char *)p2 + 0x40c);
+    int animState = *(int *)((char *)inner + 0x40c);
     int child;
     int setup;
 
-    if (*(s16 *)((char *)inner + 0x26) == *(s16 *)((char *)inner + 0x28)) return;
+    if (*(s16 *)((char *)animState + 0x26) == *(s16 *)((char *)animState + 0x28)) return;
     if (*(u8 *)((char *)obj + 0x36) == 0) return;
 
     child = *(int *)((char *)obj + 0xc8);
@@ -3938,15 +3938,15 @@ void fn_802B85E4(int obj, int p2)
         Obj_FreeObject(child);
     }
     if (Obj_IsLoadingLocked()) {
-        if (*(s16 *)((char *)inner + 0x28) > 0) {
+        if (*(s16 *)((char *)animState + 0x28) > 0) {
             setup = Obj_AllocObjectSetup(0x20);
             setup = Obj_SetupObject(setup, 4, *(s8 *)((char *)obj + 0xac), -1,
                                     *(int *)((char *)obj + 0x30));
             ObjLink_AttachChild(obj, setup, 0);
-            *(s16 *)((char *)inner + 0x26) = *(s16 *)((char *)inner + 0x28);
+            *(s16 *)((char *)animState + 0x26) = *(s16 *)((char *)animState + 0x28);
         }
     } else {
-        *(s16 *)((char *)inner + 0x26) = 0;
+        *(s16 *)((char *)animState + 0x26) = 0;
     }
 }
 #pragma peephole reset
@@ -4167,7 +4167,7 @@ int fn_802A98FC(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_802B84D0(int obj)
+void Lightfoot_ResetScriptedPosition(int obj)
 {
     switch (*(int *)((char *)*(int *)((char *)obj + 0x4c) + 0x14)) {
     case 0x34316:
@@ -5753,7 +5753,7 @@ void fn_802AC32C(int p1, int p2, int p3)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B8864(int p1, int p2, int p3)
+int Lightfoot_SeqFn(int p1, int p2, int p3)
 {
     int obj = p1;
     int inner = *(int *)((char *)obj + 0xb8);
