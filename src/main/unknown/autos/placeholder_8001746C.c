@@ -8965,6 +8965,16 @@ extern void GameBit_Set(int eventId, int value);
 extern int lbl_803DC9F0;
 extern int lbl_803DB3E0;
 extern int lbl_803DCA04;
+extern s16 lbl_802C9EE8[];
+extern int lbl_803DC9FC;
+extern void *lbl_803DC9F8;
+extern u8 lbl_803DC9F7;
+extern u8 lbl_803DC9F6;
+extern u8 lbl_803DC9F5;
+extern u8 lbl_803DC9F4;
+extern int gameTextGetTaskText(int taskId, int *textId, int *dirId);
+extern void *getCurGameText(void);
+extern void loadGameTextSequence();
 extern f32 lbl_803DE7C0;
 extern f32 lbl_803DE7C4;
 extern u8 lbl_803DCB42;
@@ -8993,11 +9003,61 @@ int gameTextFn_8001b44c(int x) {
     return 0;
 }
 
-int gameTextFn_8001bcb4(void) {
-    if (lbl_803DCA00 != 0 && lbl_803DCA04 != 0) {
-        return 1;
+#pragma optimize_for_size on
+void gameTextLoadTaskText(int taskId) {
+    int textId;
+    int dirId;
+    s16 *taskList;
+    int count;
+    int allowed;
+
+    if (gameTextGetTaskText(taskId, &textId, &dirId) != 0) {
+        if (lbl_803DCA00 == 0) {
+            taskList = lbl_802C9EE8;
+            count = 0xb;
+            do {
+                if (taskId == *taskList) {
+                    allowed = 1;
+                    goto checkAllowed;
+                }
+                taskList++;
+            } while (--count != 0);
+            allowed = 0;
+checkAllowed:
+            if (allowed == 0) {
+                return;
+            }
+        }
+
+        lbl_803DC9FC = textId;
+        lbl_803DC9F8 = (void *)dirId;
+        if (dirId == 0x29) {
+            loadGameTextSequence();
+            lbl_803DC9F0 = 1;
+        } else {
+            lbl_803DB3E0 = (int)getCurGameText();
+            gameTextLoadDir((int)lbl_803DC9F8);
+            lbl_803DC9F0 = 0;
+        }
+        lbl_803DCA04 = 1;
+        lbl_803DC9F7 = 0xff;
+        lbl_803DC9F6 = 0xff;
+        lbl_803DC9F5 = 0xff;
+        lbl_803DC9F4 = 0xff;
     }
-    return 0;
+}
+#pragma optimize_for_size reset
+
+int gameTextFn_8001bcb4(void) {
+    int ret;
+
+    ret = 0;
+    if (lbl_803DCA00 != 0) {
+        if (lbl_803DCA04 != 0) {
+            ret = 1;
+        }
+    }
+    return ret;
 }
 
 #pragma dont_inline on
