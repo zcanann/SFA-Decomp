@@ -12234,6 +12234,69 @@ void voxmaps_initialise(void)
     lbl_803DC8B8[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
 }
 
+typedef struct {
+    u8 pad00[0x14];
+    int f14;
+    int f18;
+    int f1c;
+    int f20;
+    int f24;
+    int f28;
+} VoxMapFile;
+
+extern char sVoxmapsRouteNodesListOverflow[];
+extern int getTableFileEntry(int fileId, int index, int *out);
+extern void loadVoxMaps(int handle, int *outCount, int *outSize);
+extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
+
+/*
+ * Function: voxLoadVoxMapActual
+ * EN v1.0 Address: 0x8000CBE0
+ * EN v1.0 Size: 372b
+ */
+void *voxLoadVoxMapActual(int mapArg)
+{
+    char *msg = sVoxmapsRouteNodesListOverflow;
+    int entry;
+    int size;
+    int count;
+    VoxMapFile *hdr;
+
+    if (getTableFileEntry(26, mapArg, &entry) == 0) {
+        OSReport(msg + 0xd0);
+        return NULL;
+    }
+    loadVoxMaps(entry, &count, &size);
+    if (count <= 0) {
+        return NULL;
+    }
+    if (size > 30720) {
+        debugPrintf(msg + 0x104);
+        return NULL;
+    }
+    if (size <= 0) {
+        OSReport(msg + 0x13c);
+        return NULL;
+    }
+    hdr = mmAlloc(size, 16, NULL);
+    if (hdr == NULL) {
+        OSReport(msg + 0x174);
+        return NULL;
+    }
+    loadAndDecompressDataFile(27, hdr, entry, count, 0, 0, 0);
+    if (hdr == NULL) {
+        OSReport(msg + 0x174);
+        return NULL;
+    }
+    hdr->f1c += (int)hdr;
+    hdr->f24 += (int)hdr;
+    hdr->f14 += (int)hdr;
+    hdr->f20 += (int)hdr;
+    hdr->f28 += (int)hdr;
+    hdr->f18 += (int)hdr;
+    return hdr;
+}
+
 extern s8 gAudioSoundMode;
 extern void sndOutputMode(int mode);
 extern u32 OSGetSoundMode(void);
