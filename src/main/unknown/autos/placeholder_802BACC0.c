@@ -30,7 +30,7 @@ extern void ObjPath_GetPointWorldPosition(int obj, int point, f32 *out_x, f32 *o
 extern void ObjPath_GetPointWorldPositionArray(int obj, int point, int count, f32 *out);
 extern u32 randomGetRange(int min, int max);
 extern u16 audioPickSoundEffect_8006ed24(u8 id, int bank);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void doRumble(f32 strength);
 
 extern undefined lbl_803DB0F0[];
@@ -288,6 +288,8 @@ void fn_802BB998(int obj, int pointState, int inputState)
     u8 flags;
     u8 pointIndex;
     u8 count;
+    s32 inputFlags;
+    u16 sfxId;
     struct {
         undefined4 unk0;
         undefined4 unk4;
@@ -298,10 +300,11 @@ void fn_802BB998(int obj, int pointState, int inputState)
     } args;
 
     flags = 0;
-    if ((*(u32 *)(inputState + 0x314) & 2) != 0) {
+    inputFlags = *(s32 *)(inputState + 0x314);
+    if ((inputFlags & 2) != 0) {
         flags |= 1;
     }
-    if ((*(u32 *)(inputState + 0x314) & 4) != 0) {
+    if ((inputFlags & 4) != 0) {
         flags |= 2;
     }
 
@@ -320,9 +323,8 @@ void fn_802BB998(int obj, int pointState, int inputState)
                 count--;
             }
 
-            Sfx_PlayFromObject(obj,
-                               audioPickSoundEffect_8006ed24((u8)(s8)*(u8 *)(inputState + 0xbc),
-                                                             9));
+            sfxId = audioPickSoundEffect_8006ed24((u8)(s8)*(u8 *)(inputState + 0xbc), 9);
+            Sfx_PlayFromObject(obj, sfxId);
             doRumble(lbl_803E8244);
         }
         flags >>= 1;
