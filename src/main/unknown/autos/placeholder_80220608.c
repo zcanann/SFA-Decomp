@@ -6499,6 +6499,7 @@ extern f32 lbl_803E6ECC;
 extern void fn_8022B764(int p, int q, int idx);
 
 #pragma scheduling off
+#pragma dont_inline on
 void fn_8022AE1C(int obj, int bounds) {
     f32 cx = *(f32 *)(bounds + 0x14);
     f32 hx = cx + *(f32 *)(bounds + 0x20);
@@ -6524,6 +6525,7 @@ void fn_8022AE1C(int obj, int bounds) {
     *(f32 *)(bounds + 0x30) = *(f32 *)(obj + 0x10) - *(f32 *)(bounds + 0x18);
     *(f32 *)(bounds + 0x34) = lbl_803E6ECC;
 }
+#pragma dont_inline reset
 
 extern f32 lbl_803E6ED0;
 extern f32 lbl_803E6EFC;
@@ -6957,6 +6959,177 @@ void arwarwing_updateWeaponFire(int obj, int state) {
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern f32 lbl_803E6F34;
+extern f32 lbl_803E6F24;
+extern f32 lbl_803E6F28;
+extern f32 lbl_803E6F6C;
+extern f32 lbl_803E6EF8;
+extern f32 lbl_803E6FFC;
+extern f32 lbl_803E7000;
+extern int *gScreenTransitionInterface;
+extern int *gCameraInterface;
+extern void unlockLevel(int a, int b, int c);
+extern int mapGetDirIdx(int mapId);
+extern void lockLevel(int idx, int p2);
+extern void warpToMap(int map, int p2);
+extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
+extern void fn_8022CDEC(int obj, int state);
+extern void fn_8022A670(int obj, int state);
+extern void fn_8022C30C(int obj, int state);
+extern void fn_8022BE14(int obj, int state);
+extern void fn_8022C0D0(int obj, int state);
+
+#pragma scheduling off
+void arwarwing_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    f32 camPos[2];
+    s16 camRot[3];
+    u8 mode;
+    int p;
+    f32 t;
+    f32 throttle;
+
+    if ((*(u8 *)(state + 0x477) & 1) == 0) {
+        fn_8022CDEC(obj, state);
+        return;
+    }
+    mode = *(u8 *)(state + 0x478);
+    if (mode == 5) {
+        t = *(f32 *)(state + 0x46c) - timeDelta;
+        *(f32 *)(state + 0x46c) = t;
+        if (t <= lbl_803E6ECC) {
+            *(u8 *)(state + 0x478) = 6;
+            (*(void (**)(int, int))(*gScreenTransitionInterface + 8))(0x14, 1);
+            *(f32 *)(state + 0x46c) = lbl_803E6F34;
+        }
+        return;
+    }
+    if (mode == 6) {
+        t = *(f32 *)(state + 0x46c) - timeDelta;
+        *(f32 *)(state + 0x46c) = t;
+        if (t <= lbl_803E6ECC) {
+            if (*(s8 *)(obj + 0xac) == 0x26) {
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(0x26), 0);
+                lockLevel(mapGetDirIdx(0xb), 1);
+                warpToMap(0x32, 0);
+            } else {
+                warpToMap(0x60, 0);
+            }
+        }
+        return;
+    }
+    if (mode == 4) {
+        t = *(f32 *)(state + 0x46c) - timeDelta;
+        *(f32 *)(state + 0x46c) = t;
+        if (t <= lbl_803E6ECC) {
+            *(u8 *)(state + 0x478) = 5;
+            *(f32 *)(state + 0x46c) = lbl_803E6F24;
+            *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+            spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
+        }
+        *(int *)(state + 0x36c) =
+            (int)(lbl_803E6F6C * timeDelta + (f32) * (int *)(state + 0x36c));
+        *(s16 *)(obj + 4) = (s16) * (int *)(state + 0x36c);
+        *(f32 *)(state + 0x4c) = *(f32 *)(state + 0x4c) - lbl_803E6EF8 * timeDelta;
+        objMove(obj, *(f32 *)(state + 0x48) * timeDelta, *(f32 *)(state + 0x4c) * timeDelta,
+                *(f32 *)(state + 0x50) * timeDelta);
+        fn_8022AE1C(obj, state);
+        p = *(int *)(state + 0x418);
+        *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
+        p = *(int *)(state + 0x41c);
+        *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
+    } else {
+        fn_8022A670(obj, state);
+        if ((*(s16 *)(obj + 6) & 0x4000) != 0) {
+            *(s16 *)(state + 0x3f8) = 0;
+            *(s16 *)(state + 0x3f4) = 0;
+            p = *(int *)(state + 0x418);
+            *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
+            p = *(int *)(state + 0x41c);
+            *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) | 0x4000);
+        } else {
+            p = *(int *)(state + 0x418);
+            *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) & ~0x4000);
+            throttle = lbl_803E6FFC * timeDelta +
+                       (f32)(u32) * (u8 *)(*(int *)(state + 0x418) + 0x36);
+            if (throttle > lbl_803E7000) throttle = lbl_803E7000;
+            *(u8 *)(*(int *)(state + 0x418) + 0x36) = (u8)(int)throttle;
+            p = *(int *)(state + 0x41c);
+            *(s16 *)(p + 6) = (s16)(*(s16 *)(p + 6) & ~0x4000);
+            *(u8 *)(*(int *)(state + 0x41c) + 0x36) = (u8)(int)throttle;
+        }
+        *(f32 *)(state + 0x3c) = -*(f32 *)(state + 0x3e4) * *(f32 *)(state + 0x54);
+        *(f32 *)(state + 0x40) = -*(f32 *)(state + 0x3e8) * *(f32 *)(state + 0x58);
+        *(f32 *)(state + 0x44) = *(f32 *)(state + 0x5c) * *(f32 *)(state + 0x6c);
+        *(int *)(state + 0x340) =
+            (int)(-*(f32 *)(state + 0x3e4) * *(f32 *)(state + 0x348));
+        *(int *)(state + 0x354) = (int)(*(f32 *)(state + 0x3e8) * *(f32 *)(state + 0x35c));
+        *(int *)(state + 0x368) = (int)(*(f32 *)(state + 0x3e4) * *(f32 *)(state + 0x370));
+        *(int *)(state + 0x37c) =
+            (int)(*(f32 *)(state + 0x384) *
+                  (*(f32 *)(state + 0x3f0) + *(f32 *)(state + 0x3ec)));
+        fn_8022AECC(obj, state);
+        arwarwing_updateWeaponFire(obj, state);
+        fn_8022B8A0(obj, state);
+
+        *(s16 *)(*(int *)(state + 0x454) + 0) =
+            (int)((f32)(-*(int *)(state + 0x36c)) * *(f32 *)(state + 0x464));
+        *(s16 *)(*(int *)(state + 0x454) + 4) =
+            (int)((f32) * (int *)(state + 0x36c) * *(f32 *)(state + 0x464));
+        *(s16 *)(*(int *)(state + 0x458) + 0) =
+            (int)((f32)(-*(int *)(state + 0x36c)) * *(f32 *)(state + 0x464));
+        *(s16 *)(*(int *)(state + 0x458) + 4) =
+            (int)((f32) * (int *)(state + 0x36c) * *(f32 *)(state + 0x464));
+        p = (int)((f32) * (int *)(state + 0x36c) * *(f32 *)(state + 0x464));
+        *(s16 *)(*(int *)(state + 0x45c) + 4) = p;
+        *(s16 *)(*(int *)(state + 0x45c) + 0) = p;
+        p = (int)((f32) * (int *)(state + 0x36c) * *(f32 *)(state + 0x464));
+        *(s16 *)(*(int *)(state + 0x460) + 4) = p;
+        *(s16 *)(*(int *)(state + 0x460) + 0) = p;
+
+        *(s16 *)(*(int *)(state + 0x454) + 0) =
+            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
+                  (f32) * (s16 *)(*(int *)(state + 0x454) + 0));
+        *(s16 *)(*(int *)(state + 0x454) + 4) =
+            (int)((f32) * (int *)(state + 0x358) * *(f32 *)(state + 0x464) +
+                  (f32) * (s16 *)(*(int *)(state + 0x454) + 4));
+        *(s16 *)(*(int *)(state + 0x458) + 0) =
+            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
+                  (f32) * (s16 *)(*(int *)(state + 0x458) + 0));
+        *(s16 *)(*(int *)(state + 0x458) + 4) =
+            (int)((f32) * (int *)(state + 0x358) * *(f32 *)(state + 0x464) +
+                  (f32) * (s16 *)(*(int *)(state + 0x458) + 4));
+        *(s16 *)(*(int *)(state + 0x45c) + 0) =
+            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
+                  (f32) * (s16 *)(*(int *)(state + 0x45c) + 0));
+        *(s16 *)(*(int *)(state + 0x45c) + 4) =
+            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
+                  (f32) * (s16 *)(*(int *)(state + 0x45c) + 4));
+        *(s16 *)(*(int *)(state + 0x460) + 0) =
+            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
+                  (f32) * (s16 *)(*(int *)(state + 0x460) + 0));
+        *(s16 *)(*(int *)(state + 0x460) + 4) =
+            (int)((f32)(-*(int *)(state + 0x358)) * *(f32 *)(state + 0x464) +
+                  (f32) * (s16 *)(*(int *)(state + 0x460) + 4));
+    }
+
+    fn_8022C30C(obj, state);
+    (*(void (**)(void *, int))(*gCameraInterface + 0x60))((void *)(state + 0x2c), 0xc);
+    camRot[0] = *(s16 *)(obj + 0);
+    camRot[1] = *(s16 *)(obj + 2);
+    camRot[2] = (s16) * (int *)(state + 0x36c);
+    (*(void (**)(void *, int))(*gCameraInterface + 0x60))(camRot, 6);
+    camPos[0] = *(f32 *)(state + 0x5c);
+    camPos[1] = *(f32 *)(state + 0x50);
+    (*(void (**)(void *, int))(*gCameraInterface + 0x60))(camPos, 8);
+    fn_8022BE14(obj, state);
+    fn_8022C0D0(obj, state);
+    fn_8022BCD0(obj, state);
+}
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
