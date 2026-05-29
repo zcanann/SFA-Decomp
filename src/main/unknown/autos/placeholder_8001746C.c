@@ -9048,6 +9048,7 @@ checkAllowed:
 }
 #pragma optimize_for_size reset
 
+#pragma optimize_for_size on
 int gameTextFn_8001bcb4(void) {
     int ret;
 
@@ -9059,6 +9060,7 @@ int gameTextFn_8001bcb4(void) {
     }
     return ret;
 }
+#pragma optimize_for_size reset
 
 #pragma dont_inline on
 void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst) {
