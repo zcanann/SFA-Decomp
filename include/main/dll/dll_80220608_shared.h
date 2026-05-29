@@ -457,19 +457,42 @@ typedef struct VortexFlags {
     u8 pad : 7;
 } VortexFlags;
 
+typedef struct VortexState {
+    f32 alpha;
+    f32 particleTimer;
+    f32 alphaScale[3];
+    f32 radiusScale[3];
+    s16 angles[3];
+    VortexFlags flags;
+    u8 pad27;
+} VortexState;
+
 extern int *gExpgfxInterface;
 extern f32 lbl_803E73E0;
 extern f32 lbl_803E73D0;
+extern f32 lbl_803E73D4;
+extern f32 lbl_803E73D8;
+extern f32 lbl_803E73DC;
+extern f32 lbl_803E73E4;
+extern f32 lbl_803E73E8;
+extern f32 lbl_803E73EC;
+extern double lbl_803E73F0;
+extern double lbl_803E73F8;
 extern f32 lbl_803E7400;
 
 
 
 
+extern s16 lbl_803DC3E8[4];
+extern s16 lbl_803DC3F0[4];
+extern s16 lbl_803DC410[2];
+extern s16 lbl_803DC414[2];
 extern f32 lbl_8032BE20[];
 extern f32 lbl_803DC3F8[2];
 extern f32 lbl_803DC400[2];
 extern f32 lbl_803DC408[2];
 extern f32 lbl_803E7404;
+extern int getHudHiddenFrameCount(void);
 
 
 
