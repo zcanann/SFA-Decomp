@@ -918,9 +918,13 @@ void FUN_8011c080(void)
  */
 #pragma scheduling off
 void SaveSelectScreen_release(void) {
-    int i = 0;
-    void **p = lbl_803A8658;
-    void *zero = NULL;
+    void **p;
+    int i;
+    void *zero;
+
+    i = 0;
+    p = lbl_803A8658;
+    zero = NULL;
     do {
         mm_free(*p);
         *p = zero;
