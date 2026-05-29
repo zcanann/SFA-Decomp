@@ -371,6 +371,140 @@ extern int fn_8001DB64(int model);
 extern void queueGlowRender(int model);
 extern int *gPartfxInterface;
 extern void mathFn_80021ac8(void *in, void *out);
+
+extern int ObjList_FindObjectById(int id);
+extern f32 Vec_distance(void *a, void *b);
+extern int objCreateLight(int obj, int arg);
+extern void modelLightStruct_setField50(int light, int v);
+extern void lightVecFn_8001dd88(int light, f32 a, f32 b, f32 c);
+extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
+extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern void fn_8001D730(int light, int a, int r, int g, int b, int e, f32 f);
+extern void fn_8001D714(int light, f32 a);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
+extern u8 lbl_803DC210[8];
+extern int lbl_803DDD30;
+extern f32 lbl_803E6668;
+extern f32 lbl_803E66B4;
+extern f32 lbl_803E66C8;
+extern f32 lbl_803E66CC;
+extern f32 lbl_803E66D0;
+extern f32 lbl_803E66D4;
+extern f32 lbl_803E66A0;
+extern f32 lbl_803E66AC;
+extern f32 lbl_803E66D8;
+extern f32 lbl_803E665C;
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int extraSize, int id);
+
+void worldobj_init(int obj, int arg) {
+    int inner = *(int *)(obj + 0xb8);
+    int objA, objB;
+    int sub;
+    int idx;
+    int i;
+    f32 base;
+    f32 d;
+
+    switch (*(s16 *)arg) {
+    case 0x5dd:
+    case 0x5ed:
+    case 0x5ee:
+    case 0x5ef:
+    case 0x5f0:
+    case 0x5f1:
+    case 0x5f2:
+    case 0x5f3:
+        *(u8 *)(inner + 0x27d) = 0;
+        break;
+    case 0x80f:
+        objA = ObjList_FindObjectById(0x42fe7);
+        objB = ObjList_FindObjectById(0x4305a);
+        base = *(f32 *)(objB + 0x10) - *(f32 *)(objA + 0x10);
+        *(f32 *)(inner + 0x264) = (*(f32 *)(objA + 0x10) - base) + (f32)(int)randomGetRange(-0x3e8, 0x3e8);
+        *(f32 *)(inner + 0x268) = *(f32 *)(objB + 0x10) + (f32)(int)randomGetRange(-5, 5);
+        *(f32 *)(inner + 0x26c) = lbl_803E6668 * ((f32)(int)randomGetRange(0, 0x64) / lbl_803E66B4) + lbl_803E6668;
+        *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(inner + 0x26c);
+        *(s8 *)(inner + 0x280) = (s8)randomGetRange(0xa, 0x19);
+        if (randomGetRange(0, 1) != 0) {
+            *(s8 *)(inner + 0x280) = (s8)(-*(s8 *)(inner + 0x280));
+            *(int *)(inner + 0x270) = 0x8000;
+        }
+        base = (f32)(int)randomGetRange(0xc8, 0x190);
+        d = Vec_distance((char *)objB + 0x18, (char *)objA + 0x18);
+        *(f32 *)(inner + 0x25c) = lbl_803E66C8 * d + base;
+        *(f32 *)(inner + 0x260) = *(f32 *)(inner + 0x25c) * (lbl_803E66CC * ((f32)(int)randomGetRange(0, 0x64) / lbl_803E66B4) + lbl_803E66CC);
+        *(int *)(obj + 0) = objCreateLight(obj, 1);
+        if (*(int *)(obj + 0) != 0) {
+            modelLightStruct_setField50(*(int *)(obj + 0), 2);
+            lightVecFn_8001dd88(*(int *)(obj + 0), lbl_803E665C, lbl_803E665C, lbl_803E665C);
+            modelLightStruct_setColorsA8AC(*(int *)(obj + 0), 0xff, 0xff, 0xff, 0);
+            lightDistAttenFn_8001dc38(*(int *)(obj + 0), lbl_803E66AC, lbl_803E66D0);
+            fn_8001D730(*(int *)(obj + 0), 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * *(f32 *)(inner + 0x26c));
+            fn_8001D714(*(int *)(obj + 0), lbl_803E66A0);
+        }
+        break;
+    case 0x5f5:
+        *(f32 *)(obj + 8) = lbl_803E66D8;
+        break;
+    case 0x5e3:
+        *(u8 *)(inner + 0x27c) = 0;
+        *(u8 *)(inner + 0x27e) = 0;
+        break;
+    case 0x5e2:
+        idx = *(u8 *)(arg + 0x1b);
+        Obj_SetActiveModelIndex(obj, idx);
+        *(u8 *)(obj + 0x36) = lbl_803DC210[idx];
+        for (i = 0; i < 0xb; i++) {
+            sub = *(int *)(obj + 0x4c);
+            if (Obj_IsLoadingLocked() != 0) {
+                int o2 = Obj_AllocObjectSetup(0x20, 0x5da);
+                *(u8 *)(o2 + 4) = *(u8 *)(sub + 4);
+                *(u8 *)(o2 + 6) = *(u8 *)(sub + 6);
+                *(u8 *)(o2 + 5) = *(u8 *)(sub + 5);
+                *(u8 *)(o2 + 7) = *(u8 *)(sub + 7);
+                *(f32 *)(o2 + 8) = *(f32 *)(obj + 0xc);
+                *(f32 *)(o2 + 0xc) = *(f32 *)(obj + 0x10);
+                *(f32 *)(o2 + 0x10) = *(f32 *)(obj + 0x14);
+                Obj_SetupObject(o2, 5, (s8)*(u8 *)(obj + 0xac), -1, 0);
+            }
+        }
+        break;
+    case 0x5da:
+        *(s16 *)(obj + 4) = (s16)randomGetRange(0, 0xffff);
+        *(s16 *)(obj + 2) = (s16)randomGetRange(0, 0xffff);
+        *(s16 *)(obj + 0) = (s16)randomGetRange(0, 0xffff);
+        *(u8 *)(inner + 0x27c) = (u8)randomGetRange(0, 0xff);
+        *(s8 *)(inner + 0x27e) = (s8)randomGetRange(-0xa, 0xa);
+        *(s8 *)(inner + 0x27f) = (s8)randomGetRange(-0xa, 0xa);
+        *(s8 *)(inner + 0x280) = (s8)randomGetRange(-0xa, 0xa);
+        break;
+    case 0x61e:
+        *(u8 *)(inner + 0x27c) = 0;
+        break;
+    case 0x740:
+        *(u8 *)(inner + 0x27d) = 0;
+        lbl_803DDD30 = obj;
+        break;
+    case 0x5d5:
+        *(int *)(inner + 0x274) = 0x4aaf7;
+        *(int *)(inner + 0x278) = 0x4ab08;
+        break;
+    case 0x5d6:
+        *(int *)(inner + 0x274) = 0x4ab03;
+        *(int *)(inner + 0x278) = 0x4ab09;
+        break;
+    case 0x5d8:
+        *(int *)(inner + 0x274) = 0x4ab04;
+        *(int *)(inner + 0x278) = 0x4ab0a;
+        break;
+    case 0x5d7:
+        *(int *)(inner + 0x274) = 0x4ab05;
+        *(int *)(inner + 0x278) = 0x4ab0b;
+        break;
+    }
+}
 extern f32 lbl_803E665C;
 
 typedef struct {
