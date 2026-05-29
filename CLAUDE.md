@@ -459,6 +459,14 @@ Heuristic before reaching for `asm { }`:
     folds `1<<const`→`clrlwi` (losing the slw machinery, ~18 instr short) — so
     such fns just CAP at ~66-70%; commit the for-loop partial and move on.
     (november12, skyFn_80088c94/skyFn_80089710.)
+    **Unroll-FACTOR mismatch is a separate, often-uncontrollable cap.** Even with
+    the right loop form, MWCC sometimes picks a DIFFERENT unroll factor than target
+    for a fixed-trip loop (target unrolls a 16-trip init to ctr=4 / x4, a 12-trip
+    to x3; MWCC unrolls your identical-body source MORE — x8 / x4). Field-reorder
+    and constant-lift don't flip it, and there's no per-loop unroll pragma. When
+    the only residual is "target unrolls x4, mine x8" on an init/clear loop, it's a
+    codegen-heuristic cap — leave the partial. (mike14, musicInitMidiWad /
+    Camera_InitState on 800066E0.)
 
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
