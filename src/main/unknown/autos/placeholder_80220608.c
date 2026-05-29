@@ -7385,6 +7385,116 @@ void drcloudper_init(int obj, int setup)
 #pragma scheduling on
 
 #pragma scheduling off
+extern int objModelGetVecFn_800395d8(int model, int idx);
+extern f32 fn_802945E0(f32 ratio);
+extern void Sfx_SetObjectChannelVolume(int obj, int channel, int p3, f32 vol);
+extern double lbl_803E6F48;
+extern double lbl_803E6F50;
+extern f32 lbl_803E6F58;
+extern f32 lbl_803E6F60;
+extern f32 lbl_803E6F64;
+extern f32 lbl_803E6F68;
+extern f32 lbl_803E6F38;
+extern f32 lbl_803E6EF8;
+void fn_8022F270(int obj, int p2);
+
+#pragma peephole off
+void fn_8022C30C(int obj, int state)
+{
+    int vec;
+    f32 vol;
+
+    vec = objModelGetVecFn_800395d8(*(int *)(state + 0x4), 0x14);
+
+    if (*(u8 *)(state + 0x478) < 4 && (u32)GameBit_Get(0x9d6) == 0 && (u32)GameBit_Get(0x9d8) == 0) {
+        vol = (f32)((lbl_803E6F48 + fn_802945E0(*(f32 *)(state + 0x50) / *(f32 *)(state + 0x5c))) *
+                    lbl_803E6F50);
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x29f);
+        Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
+    }
+
+    fn_8022F270(*(int *)(state + 0x4), *(u16 *)(state + 0x44e));
+
+    if (*(f32 *)(state + 0xb4) <= lbl_803E6ECC) {
+        if ((*(u8 *)(state + 0x477) & 0x2) == 0) {
+            if ((*(u16 *)(state + 0x3f4) & 0x800) != 0) {
+                *(u8 *)(state + 0x477) &= ~0x4;
+                *(u8 *)(state + 0x477) |= 0x2;
+                *(f32 *)(state + 0xb0) = lbl_803E6F58;
+                Sfx_PlayFromObjectLimited(obj, 0x2b6, 3);
+            }
+        } else {
+            *(f32 *)(state + 0x6c) = *(f32 *)(state + 0x88);
+            *(f32 *)(state + 0x68) = *(f32 *)(state + 0x90);
+            if ((*(u16 *)(state + 0x3f6) & 0x800) != 0) {
+                *(u8 *)(state + 0x477) &= ~0x2;
+                *(f32 *)(state + 0xb0) = lbl_803E6F5C;
+            }
+        }
+        if ((*(u8 *)(state + 0x477) & 0x4) == 0) {
+            if ((*(u16 *)(state + 0x3f4) & 0x400) != 0) {
+                *(u8 *)(state + 0x477) &= ~0x2;
+                *(u8 *)(state + 0x477) |= 0x4;
+                *(f32 *)(state + 0xb0) = lbl_803E6F60;
+                Sfx_PlayFromObjectLimited(obj, 0x2b7, 3);
+            }
+        } else {
+            *(f32 *)(state + 0x6c) = *(f32 *)(state + 0x8c);
+            *(f32 *)(state + 0x68) = *(f32 *)(state + 0x94);
+            if ((*(u16 *)(state + 0x3f6) & 0x400) != 0) {
+                *(u8 *)(state + 0x477) &= ~0x4;
+                *(f32 *)(state + 0xb0) = lbl_803E6F5C;
+            }
+        }
+    } else {
+        if ((*(u16 *)(state + 0x3f4) & 0xc00) != 0) {
+            Sfx_PlayFromObject(obj, 0x381);
+        }
+        *(f32 *)(state + 0xb4) -= timeDelta;
+        if (*(f32 *)(state + 0xb4) <= lbl_803E6ECC) {
+            *(f32 *)(state + 0xb0) = lbl_803E6F5C;
+        }
+    }
+
+    if ((*(u8 *)(state + 0x477) & 0x6) == 0) {
+        *(f32 *)(state + 0x6c) = lbl_803E6ED0;
+        *(f32 *)(state + 0x68) = *(f32 *)(state + 0x98);
+        if (*(f32 *)(state + 0xbc) <= lbl_803E6ECC) {
+            *(f32 *)(state + 0x9c) = lbl_803E6F64 * timeDelta + *(f32 *)(state + 0x9c);
+        } else {
+            *(f32 *)(state + 0xbc) -= timeDelta;
+        }
+    } else {
+        *(f32 *)(state + 0x9c) -= timeDelta;
+        *(f32 *)(state + 0xbc) = lbl_803E6F38;
+    }
+
+    *(f32 *)(state + 0x9c) = *(f32 *)(state + 0x9c) < lbl_803E6ECC
+                                 ? lbl_803E6ECC
+                                 : *(f32 *)(state + 0x9c) > *(f32 *)(state + 0xa0)
+                                       ? *(f32 *)(state + 0xa0)
+                                       : *(f32 *)(state + 0x9c);
+
+    if (*(f32 *)(state + 0x9c) <= lbl_803E6ECC) {
+        *(u8 *)(state + 0x477) &= ~0x6;
+        *(f32 *)(state + 0xb4) = *(f32 *)(state + 0xb8);
+        *(f32 *)(state + 0x9c) = *(f32 *)(state + 0xa0);
+        *(f32 *)(state + 0xb0) = lbl_803E6F68;
+        *(f32 *)(state + 0xbc) = lbl_803E6ECC;
+    }
+
+    if ((u32)vec != 0) {
+        int n;
+        *(f32 *)(state + 0xac) =
+            lbl_803E6EF8 * (*(f32 *)(state + 0xb0) - *(f32 *)(state + 0xac)) + *(f32 *)(state + 0xac);
+        n = (int)*(f32 *)(state + 0xac);
+        *(s16 *)(vec + 0xa) = n;
+        *(s16 *)(vec + 0x8) = n;
+        *(s16 *)(vec + 0x6) = n;
+    }
+}
+#pragma peephole reset
+
 void fn_8022F270(int obj, int p2) { *(int *)(*(int *)(obj + 0xb8) + 0x4) = p2; }
 
 void fn_8022C7A4(int obj) { *(u8 *)(*(int *)(obj + 0xb8) + 0x47f) = 0; }
