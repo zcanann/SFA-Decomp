@@ -4154,6 +4154,16 @@ int fn_80065640(void) {
 #pragma scheduling reset
 
 extern int lbl_803DCF48;
+
+#define MAP_DYNAMIC_SLOT_COUNT 64
+
+typedef struct MapDynamicSlot {
+    u32 object;
+    u8 pad04[0x10];
+    u8 cooldown;
+    u8 pad15[3];
+} MapDynamicSlot;
+
 #pragma scheduling off
 #pragma peephole off
 void objFn_80065604(void) {
@@ -4166,9 +4176,9 @@ void objFn_80065604(void) {
         u8 *p = (u8 *)(lbl_803DCF48 + idx);
         cur = p[20];
         if (cur != 0) p[20]--;
-        idx += 24;
+        idx += sizeof(MapDynamicSlot);
         i++;
-    } while (i < 64);
+    } while (i < MAP_DYNAMIC_SLOT_COUNT);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4181,12 +4191,12 @@ void fn_80063368(int target) {
     i = 0;
     idx = 0;
     zero = idx;
-    for ( ; i < 64; i++) {
+    for ( ; i < MAP_DYNAMIC_SLOT_COUNT; i++) {
         u32 *p = (u32 *)(lbl_803DCF48 + idx);
         if (*p == (u32)target) {
-            ((u8 *)p)[0x14] = (u8)zero;
+            ((MapDynamicSlot *)p)->cooldown = (u8)zero;
         }
-        idx += 24;
+        idx += sizeof(MapDynamicSlot);
     }
 }
 #pragma peephole reset
@@ -4549,9 +4559,9 @@ void mapInitFn_80069990(void)
     for (i = 0; i < 4; i++) {
         int j;
         for (j = 0; j < 16; j++) {
-            *(u8 *)(lbl_803DCF48 + off + 0x14 + j * 0x18) = 0;
+            ((MapDynamicSlot *)(lbl_803DCF48 + off + j * sizeof(MapDynamicSlot)))->cooldown = 0;
         }
-        off += 0x180;
+        off += sizeof(MapDynamicSlot) * 16;
     }
     lbl_803DCF5E = 0;
     lbl_803DCF5C = 0;

@@ -7777,7 +7777,7 @@ void ObjModel_ClearRenderAttachment(u8 *model) {
 }
 #pragma dont_inline reset
 
-void ObjModel_EnableDefaultRenderCallback(void *obj, u8 *model) {
+void ObjModel_EnableDefaultRenderCallback(void *obj, u8 *model, f32 *mtx, int enabled, f32 scale) {
     if (*(void **)(model + 0x58) == NULL) {
         *(void **)(model + 0x38) = gxTextureFn_80072dfc;
     }
@@ -7882,6 +7882,8 @@ extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
 extern f32 lbl_803DE89C;
 extern f32 lbl_803DE8A0;
+extern void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags);
+extern void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags);
 
 void Obj_ClearModelColorFadeRecursive(u8 *obj) {
     int i;
@@ -7889,10 +7891,12 @@ void Obj_ClearModelColorFadeRecursive(u8 *obj) {
 
     *(s16 *)(obj + 0xe6) = 0;
     obj[0xe5] &= ~0x6;
+    i = 0;
     childScan = obj;
-    for (i = 0; i < obj[0xeb]; i++) {
+    while (i < obj[0xeb]) {
         Obj_ClearModelColorFadeRecursive(*(u8 **)(childScan + 0xc8));
         childScan += 4;
+        i++;
     }
 }
 
@@ -7915,26 +7919,29 @@ void Obj_TickModelColorFadeRecursive(u8 *obj) {
         obj[0xe5] ^= 4;
     }
 
-    obj[0xef] = (u8)(int)alpha;
+    *(s8 *)(obj + 0xef) = (int)alpha;
     if ((obj[0xe5] & 8) == 0) {
         *(s16 *)(obj + 0xe6) -= framesThisStep;
-        if (*(s16 *)(obj + 0xe6) < 1 && *(void **)(obj + 0xc4) == NULL) {
+        if (*(s16 *)(obj + 0xe6) <= 0 && *(void **)(obj + 0xc4) == NULL) {
             Obj_ClearModelColorFadeRecursive(obj);
         }
     }
 
+    i = 0;
     childScan = obj;
-    for (i = 0; i < obj[0xeb]; i++) {
+    while (i < obj[0xeb]) {
         Obj_TickModelColorFadeRecursive(*(u8 **)(childScan + 0xc8));
         childScan += 4;
+        i++;
     }
 }
 
-void Obj_SetModelColorFadeRecursive(u8 *obj, s16 frames, u8 red, u8 green, u8 blue, u8 startAtHalf) {
+#pragma dont_inline on
+void Obj_SetModelColorFadeRecursive(u8 *obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf) {
     int i;
     u8 *childScan;
 
-    *(s16 *)(obj + 0xe6) = frames;
+    *(s16 *)(obj + 0xe6) = (s16)frames;
     obj[0xe5] &= ~4;
     obj[0xe5] |= 2;
     obj[0xec] = red;
@@ -7945,14 +7952,21 @@ void Obj_SetModelColorFadeRecursive(u8 *obj, s16 frames, u8 red, u8 green, u8 bl
     } else {
         obj[0xe5] &= ~8;
     }
-    obj[0xef] = startAtHalf != 0 ? 0x7f : 0;
+    if (startAtHalf != 0) {
+        obj[0xef] = 0x7f;
+    } else {
+        obj[0xef] = 0;
+    }
 
+    i = 0;
     childScan = obj;
-    for (i = 0; i < obj[0xeb]; i++) {
+    while (i < obj[0xeb]) {
         Obj_SetModelColorFadeRecursive(*(u8 **)(childScan + 0xc8), frames, red, green, blue, startAtHalf);
         childScan += 4;
+        i++;
     }
 }
+#pragma dont_inline reset
 
 void Obj_SetModelColorOverrideRecursive(u8 *obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled) {
     int i;
@@ -7968,10 +7982,12 @@ void Obj_SetModelColorOverrideRecursive(u8 *obj, u8 red, u8 green, u8 blue, u8 a
         obj[0xe5] &= ~0x10;
     }
 
+    i = 0;
     childScan = obj;
-    for (i = 0; i < obj[0xeb]; i++) {
+    while (i < obj[0xeb]) {
         Obj_SetModelColorOverrideRecursive(*(u8 **)(childScan + 0xc8), red, green, blue, alpha, enabled);
         childScan += 4;
+        i++;
     }
 }
 
@@ -7979,9 +7995,39 @@ void Obj_ResetModelColorState(u8 *obj) {
     *(s16 *)(obj + 0xe6) = 0;
     obj[0xe5] &= ~1;
     obj[0xf0] = 0;
-    ObjModel_ClearRenderAttachment(Obj_GetActiveModel(obj));
+    ObjModel_ClearRenderAttachment((u8 *)Obj_GetActiveModel(obj));
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fb, 0, 0x50, 0);
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x32, 0);
+}
+
+void Obj_StartModelFadeIn(u8 *obj, s16 frames) {
+    s16 id;
+    int limit;
+    f32 mtx[12];
+
+    limit = 10;
+    id = *(s16 *)(obj + 0x44);
+    if (id == 0x1c || id == 0x6d || id == 0x2a) {
+        limit = 0x28;
+    }
+
+    if ((*(u8 *)(*(u8 **)(obj + 0x50) + 0x76) & 1) != 0) {
+        if (obj[0xf0] < limit) {
+            obj[0xf0]++;
+            Obj_SetModelColorFadeRecursive(obj, 0x1e, 0xa0, 0xff, 0xff, 0);
+        }
+        if (obj[0xf0] == limit) {
+            if ((obj[0xe5] & 2) != 0) {
+                Obj_ClearModelColorFadeRecursive(obj);
+            }
+            *(s16 *)(obj + 0xe6) = frames;
+            obj[0xe5] |= 1;
+            Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+            ObjModel_EnableDefaultRenderCallback(obj, (u8 *)Obj_GetActiveModel(obj), mtx, 1,
+                                                 *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
+            (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 100, 0);
+        }
+    }
 }
 #pragma pop
 
@@ -8056,6 +8102,38 @@ void *getCurGameText(void) {
 
 int objIsFrozen(u8 *obj) {
     return obj[0xe5] & 1;
+}
+
+void Obj_StartModelFadeIn(u8 *obj, int frames) {
+    int fadeFrames;
+    f32 mtx[16];
+
+    fadeFrames = 10;
+    if (*(s16 *)(obj + 0x44) == 0x1c || *(s16 *)(obj + 0x44) == 0x6d || *(s16 *)(obj + 0x44) == 0x2a) {
+        fadeFrames = 40;
+    }
+
+    if ((*(u8 *)(*(u8 **)(obj + 0x50) + 0x76) & 1) != 0) {
+        if (obj[0xf0] < fadeFrames) {
+            obj[0xf0]++;
+            Obj_SetModelColorFadeRecursive(obj, 30, 0xa0, 0xff, 0xff, 0);
+        }
+        if (obj[0xf0] == fadeFrames) {
+            if ((obj[0xe5] & 2) != 0) {
+                Obj_ClearModelColorFadeRecursive(obj);
+            }
+            *(s16 *)(obj + 0xe6) = frames;
+            obj[0xe5] |= 1;
+            Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+            ((void (*)(u8 *, void *, f32 *, int, f32))ObjModel_EnableDefaultRenderCallback)(
+                obj,
+                *(void **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4),
+                mtx,
+                1,
+                *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
+            (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 100, 0);
+        }
+    }
 }
 
 int objGetFlagsE5_2(u8 *obj) {
