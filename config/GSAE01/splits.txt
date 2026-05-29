@@ -1700,8 +1700,53 @@ main/dll/WC/dll_0297_wctemplebri.c:
 main/dll/WC/dll_0298_wcfloortile.c:
 	.text       start:0x8022A298 end:0x8022B998
 
+main/dll/ARW/dll_029A_arwarwing.c:
+	.text       start:0x8022B998 end:0x8022E418
+
+main/dll/ARW/dll_029B_arwingandrossstuff.c:
+	.text       start:0x8022E418 end:0x8022EDA4
+
+main/dll/ARW/dll_029C_arwarwingbo.c:
+	.text       start:0x8022EDA4 end:0x8022F1D8
+
+main/dll/ARW/dll_029D_arwarwinggu.c:
+	.text       start:0x8022F1D8 end:0x8022F52C
+
+main/dll/dll_029E_Dummy29E.c:
+	.text       start:0x8022F52C end:0x8022F588
+
+main/dll/ARW/dll_029F_arwbombcoll.c:
+	.text       start:0x8022F588 end:0x8022FE00
+
+main/dll/dll_02A0_ring.c:
+	.text       start:0x8022FE00 end:0x802308B4
+
+main/dll/ARW/dll_02A1_arwlevelcon.c:
+	.text       start:0x802308B4 end:0x80230E2C
+
+main/dll/ARW/dll_02A2_arwspeedstr.c:
+	.text       start:0x80230E2C end:0x80231074
+
+main/dll/dll_02A3.c:
+	.text       start:0x80231074 end:0x80231398
+
+main/dll/dll_02A4.c:
+	.text       start:0x80231398 end:0x80231964
+
+main/dll/ARW/dll_02A5_arwgenerato.c:
+	.text       start:0x80231964 end:0x80231A90
+
+main/dll/ARW/dll_02A6_arwsquadron.c:
+	.text       start:0x80231A90 end:0x802331B0
+
+main/dll/ARW/dll_02A7_arwproximit.c:
+	.text       start:0x802331B0 end:0x802338F0
+
+main/dll/ARW/dll_02A8_arwblocker.c:
+	.text       start:0x802338F0 end:0x80233B0C
+
 main/unknown/autos/placeholder_80220608.c:
-	.text       start:0x8022B998 end:0x8024034C
+	.text       start:0x80233B0C end:0x8024034C
 
 dolphin/base/PPCArch.c:
 	.text       start:0x8024034C end:0x802403D8
