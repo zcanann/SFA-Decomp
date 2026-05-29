@@ -462,6 +462,11 @@ param type to `int` and cast at the use site. The narrow param type pushes
 extension to the *use side* instead. For half-word stores, the array element
 type also matters — `s16[]` triggers `extsh`, `u16[]` triggers `clrlwi`.
 
+**Storing the constant `0xFFFF`: `*(u16*)p = 0xFFFF` emits `lis;addi` (full
+materialization); `*(s16*)p = 0xFFFF` emits `li -1` (one instr short).** When
+target materializes 0xFFFF via `lis;addi`, use the `u16` cast; when it uses
+`li -1`, use `s16`. (november12.)
+
 ## FP compare operand order picks the load registers
 
 `fcmpo cr0, f1, f0` puts the LHS of the C compare in f1 and the RHS in f0,
@@ -695,7 +700,15 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
 
 ## Tooling
 
-- `python3 tools/function_objdump.py --diff <unit> <symbol>` — per-function diff
+- `python3 tools/function_objdump.py --diff <unit> <symbol>` — per-function diff.
+  **⚠️ DO NOT use --diff to declare a match %.** It MASKS two real diff classes:
+  (1) scheduling REORDERINGS of same-opcode instructions, and (2) SIZE diffs from
+  peephole fusion (`extsb.+cmpwi→extsb.`, `and.+cmpwi→and.`) — so it prints
+  "CLEAN" on functions that are really only 88-97% in objdiff. The SOURCE OF
+  TRUTH for any reported % is **objdiff's `report.json` `fuzzy_match_percent`**
+  (`rm -f build/GSAE01/report.json && timeout 30 ninja build/GSAE01/report.json`).
+  Use --diff to LOCATE a divergence, never to certify 100%. (november12 reported
+  several "100%"s off --diff that were actually 88-97%.)
 - `python3 tools/drift_audit.py [--only-drifted] [--csv] [unit]` — find drifted units
 - `python3 tools/stub_queue.py [--aligned-only] [--max-size N]` — ranked targets.
   **CAVEAT: output is STALE** — it flags already-matched functions (and dead
