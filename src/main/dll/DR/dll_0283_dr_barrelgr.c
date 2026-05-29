@@ -167,7 +167,7 @@ void drbarrelgr_update(int obj)
         }
         break;
     case 5: {
-        int r = fn_80222358(obj, state + 0x20,
+        int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20,
                             lbl_803E6CB8 * (f32)*(s16 *)(state + 0x128) * timeDelta,
                             lbl_803E6CBC, lbl_803E6CB4, 1);
         objMove(obj, *(f32 *)(obj + 36), *(f32 *)(obj + 40), *(f32 *)(obj + 44));

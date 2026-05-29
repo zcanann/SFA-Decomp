@@ -393,7 +393,7 @@ void drlasercannon_update(int obj) {
         }
     }
     if (((BitFlags8 *)((char *)state + 0x1a8))->b5 != 0) {
-        fn_80222358(obj, (f32 *)((char *)state + 0x1c), lbl_803E6914 * lbl_803DC2A8, lbl_803E6918, lbl_803E6908, 1);
+        Obj_UpdateRomCurveFollowVelocity(obj, (f32 *)((char *)state + 0x1c), lbl_803E6914 * lbl_803DC2A8, lbl_803E6918, lbl_803E6908, 1);
         objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta, *(f32 *)((char *)obj + 0x28) * timeDelta,
             *(f32 *)((char *)obj + 0x2c) * timeDelta);
     } else {

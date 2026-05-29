@@ -1878,7 +1878,7 @@ extern int padGetStickX(int p);
 extern int padGetStickY(int p);
 extern int getButtonsJustPressed(int p);
 extern int getButtonsHeld(int p);
-extern void fn_80222358(int obj, int q, f32 a, f32 b, f32 c, int d);
+extern int Obj_UpdateRomCurveFollowVelocity(int obj, int q, f32 a, f32 b, f32 c, int d);
 extern int lbl_803DE4D8;
 extern f32 lbl_803E83B4;
 void fn_802BF4D8(int obj);

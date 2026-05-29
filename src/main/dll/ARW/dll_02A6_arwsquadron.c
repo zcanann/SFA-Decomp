@@ -242,7 +242,7 @@ void arwsquadron_followPath(int p1, int p2)
     int state = *(int *)(p1 + 0x4c);
     int r;
 
-    r = fn_80222358(p1, p2, *(f32 *)(p2 + 0x108), lbl_803E719C, *(f32 *)(p2 + 0x108), 1);
+    r = Obj_UpdateRomCurveFollowVelocity(p1, p2, *(f32 *)(p2 + 0x108), lbl_803E719C, *(f32 *)(p2 + 0x108), 1);
     if (r == -1) {
         *(s16 *)(p1 + 6) |= 0x4000;
         ObjHits_DisableObject(p1);

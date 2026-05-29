@@ -364,7 +364,7 @@ extern u8 lbl_8032AAB0[];
 extern f32 lbl_803E6B44;
 extern f32 lbl_803E6ADC;
 extern f32 lbl_803E6B48;
-extern int fn_80222358(int obj, f32 *p, f32 a, f32 b, f32 c, int d);
+extern int Obj_UpdateRomCurveFollowVelocity(int obj, f32 *p, f32 a, f32 b, f32 c, int d);
 extern void characterDoEyeAnims(int obj, void *p);
 extern void objAnimFn_80038f38(int obj, void *p);
 extern void dll_2E_func03(int obj, void *p);

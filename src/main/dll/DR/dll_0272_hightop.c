@@ -529,7 +529,7 @@ void hightop_update(int obj) {
     *(u8 *)(p + 0x354) = 0;
     *(int *)p &= ~0x8000;
     if ((*(u16 *)(p + 0xc40) & 0x40) != 0) {
-        int ev = fn_80222358(obj, (f32 *)(p + 0xa10),
+        int ev = Obj_UpdateRomCurveFollowVelocity(obj, (f32 *)(p + 0xa10),
                              lbl_803DC324 * (*(f32 *)(p + 0xc28) * timeDelta),
                              lbl_803E6B44, lbl_803E6ADC * timeDelta, 0);
         if (ev != 0) {

@@ -445,7 +445,7 @@ void fn_802C11BC(int obj, int p2, f32 f)
         *(int *)((char *)inner + 0x318) = getButtonsHeld(0);
         *(s16 *)((char *)inner + 0x330) = *(s16 *)slot;
         if (((ByteFlags *)((char *)inner + 0xbc0))->b01 != 0) {
-            fn_80222358(obj, inner + 0x35c, *(f32 *)((char *)inner + 0xb50), lbl_803E83B4, lbl_803E8414, 1);
+            Obj_UpdateRomCurveFollowVelocity(obj, inner + 0x35c, *(f32 *)((char *)inner + 0xb50), lbl_803E83B4, lbl_803E8414, 1);
         }
     } else {
         f32 v = lbl_803E83A4;
