@@ -5838,6 +5838,74 @@ extern void curveFn_80083e00(int *out, u8 *curve, int x, f32 f, int flag);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+void romCurveFn_80084190(int *state, f32 t) {
+    u8 *node;
+    u8 *prev;
+    int found;
+    int i;
+    int mask;
+    int val;
+    f32 thr;
+
+    node = NULL;
+    if (t < *(f32 *)((char *)state + 8)) {
+        node = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state[0]);
+    }
+    if (node != NULL) {
+        while (t < (thr = *(f32 *)((char *)state + 8))) {
+            mask = 1;
+            for (i = 0; i < 4; i++) {
+                val = *(int *)(node + i * 4 + 0x1c);
+                if (val > -1 && ((s8)node[0x1b] & mask) != 0) {
+                    found = val;
+                    i = 5;
+                }
+                mask <<= 1;
+            }
+            if (i != 6) {
+                *(f32 *)((char *)state + 0x28) = thr;
+                state[1] = state[0];
+                state[0] = -1;
+                return;
+            }
+            state[1] = state[0];
+            state[0] = found;
+            prev = node;
+            node = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state[0]);
+            curveFn_80083e00(state, node, (int)prev, *(f32 *)((char *)state + 8), 1);
+        }
+    }
+    node = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state[1]);
+    if (node != NULL) {
+        while (t >= (thr = *(f32 *)((char *)state + 0x28))) {
+            mask = 1;
+            for (i = 0; i < 4; i++) {
+                val = *(int *)(node + i * 4 + 0x1c);
+                if (val > -1 && ((s8)node[0x1b] & mask) == 0) {
+                    found = val;
+                    i = 5;
+                }
+                mask <<= 1;
+            }
+            if (i != 6) {
+                *(f32 *)((char *)state + 8) = thr;
+                state[0] = state[1];
+                state[1] = -1;
+                return;
+            }
+            state[0] = state[1];
+            state[1] = found;
+            prev = node;
+            node = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state[1]);
+            curveFn_80083e00(state, prev, (int)node, *(f32 *)((char *)state + 0x28), 0);
+        }
+    }
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 void curveFindFn_800843c4(int *out, int id) {
     u8 *curve;
     int i;

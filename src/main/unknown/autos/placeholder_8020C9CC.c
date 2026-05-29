@@ -715,6 +715,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
     }
 }
 
+#pragma dont_inline on
 void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9) {
     f32 va, vb, vc;
 
@@ -744,6 +745,7 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
     *(f32 *)(obj + 0x28) = *(f32 *)(sub + 0x28);
     *(f32 *)(obj + 0x2c) = *(f32 *)(sub + 0x2c);
 }
+#pragma dont_inline reset
 
 void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis) {
     int *inner;
@@ -821,6 +823,12 @@ extern f32 lbl_803E6734;
 extern f32 lbl_803E6738;
 extern f32 lbl_803E66F4;
 
+typedef struct {
+    u8 b0 : 1;
+    u8 flag6 : 1;
+    u8 rest : 6;
+} SnowclawAaFlags;
+
 void snowclaw_hitDetect(int obj) {
     int *inner;
     int *sub;
@@ -865,7 +873,7 @@ void snowclaw_hitDetect(int obj) {
                 } else {
                     (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, 3);
                 }
-                *(u8 *)((char *)inner + 0xaa) |= 0x40;
+                ((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 = 1;
                 *(f32 *)((char *)inner + 0xac) = lbl_803E670C;
                 *(f32 *)((char *)inner + 0x24) = lbl_803E6728 * fn_80293E80((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
                 *(f32 *)((char *)inner + 0x28) = lbl_803E6734 * (f32)(int)randomGetRange(0x28, 0x64);
