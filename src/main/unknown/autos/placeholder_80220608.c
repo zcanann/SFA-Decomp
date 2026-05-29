@@ -9011,7 +9011,7 @@ int fn_80222160(int p1, int p2, f32 a, f32 b, f32 c, int flag, int *p6)
 
 typedef struct {
     u8 f80 : 1;
-    u8 : 1;
+    u8 f40 : 1;
     u8 f20 : 1;
     u8 f10 : 1;
     u8 f08 : 1;
@@ -9304,6 +9304,176 @@ void arwsquadron_followLeader(int p1, int p2)
         *(u8 *)(p2 + 0x159) = 4;
         *(u8 *)(p2 + 0x159) = 4;
     }
+}
+#pragma scheduling reset
+
+extern f32 lbl_803E7164;
+extern f32 lbl_803E71B8;
+extern f32 lbl_803E71BC;
+
+#pragma scheduling off
+void arwsquadron_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    SquadCmdFlags *flags = (SquadCmdFlags *)(state + 0x160);
+    u8 s = *(u8 *)(state + 0x159);
+
+    if (s == 4 || s == 3)
+        return;
+
+    if (*(u8 *)(state + 0x15d) == 1) {
+        int aim = getArwing();
+        f32 d;
+        int inRange;
+        if (aim == 0)
+            aim = Obj_GetPlayerObject();
+        d = *(f32 *)(obj + 0x14) - *(f32 *)(aim + 0x14);
+        inRange = (d < lbl_803E71B8 && d > lbl_803E7164);
+        if (inRange) {
+            if (randomGetRange(0, 1) != 0)
+                gameTextFn_80125ba4(0x10);
+            else
+                gameTextFn_80125ba4(0xd);
+            *(u8 *)(state + 0x15d) = 0;
+        }
+    }
+
+    switch (*(u8 *)(state + 0x159)) {
+    case 0: {
+        int setupL = *(int *)(obj + 0x4c);
+        int leader = obj;
+        int enable;
+        getArwing();
+        if (*(int *)(setupL + 0x20) > 0) {
+            if (*(int *)(state + 0x13c) == 0)
+                *(int *)(state + 0x13c) = ObjList_FindObjectById(*(int *)(setupL + 0x20));
+            leader = *(int *)(state + 0x13c);
+        }
+        if (leader == 0) {
+            enable = 0;
+        } else {
+            f32 thr = *(f32 *)(state + 0x130);
+            int aim = getArwing();
+            f32 d;
+            int inRange;
+            if (aim == 0)
+                aim = Obj_GetPlayerObject();
+            d = *(f32 *)(leader + 0x14) - *(f32 *)(aim + 0x14);
+            inRange = (d < thr && d > lbl_803E7164);
+            if (!inRange) {
+                enable = 0;
+            } else if (*(s16 *)(setupL + 0x32) > 0) {
+                enable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
+            } else {
+                f32 thr2 = *(f32 *)(state + 0x134);
+                int aim2 = getArwing();
+                f32 d2;
+                int inRange2;
+                if (aim2 == 0)
+                    aim2 = Obj_GetPlayerObject();
+                d2 = *(f32 *)(leader + 0x14) - *(f32 *)(aim2 + 0x14);
+                inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
+                if (!inRange2)
+                    enable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
+                else
+                    enable = 1;
+            }
+        }
+        if (enable) {
+            *(s16 *)(obj + 6) &= ~0x4000;
+            ObjHits_EnableObject(obj);
+            *(u8 *)(state + 0x159) = 1;
+            setupL = *(int *)(obj + 0x4c);
+            if (*(u8 *)(state + 0x15c) == 1) {
+                flags->f20 = 0;
+                storeZeroToFloatParam((void *)(state + 0x124));
+                s16toFloat((void *)(state + 0x124), *(u8 *)(setupL + 0x2c));
+            }
+        }
+        return;
+    }
+    case 1: {
+        int setupL = *(int *)(obj + 0x4c);
+        int leader = obj;
+        int disable;
+        *(u8 *)(obj + 0x36) = 0xff;
+        getArwing();
+        if (*(int *)(state + 0x13c) != 0)
+            leader = *(int *)(state + 0x13c);
+        if (leader == 0) {
+            disable = 0;
+        } else {
+            f32 thr = *(f32 *)(state + 0x130);
+            int aim = getArwing();
+            f32 d;
+            int inRange;
+            if (aim == 0)
+                aim = Obj_GetPlayerObject();
+            d = *(f32 *)(leader + 0x14) - *(f32 *)(aim + 0x14);
+            inRange = (d < thr && d > lbl_803E7164);
+            if (inRange) {
+                disable = 0;
+            } else if (*(s16 *)(setupL + 0x32) > 0) {
+                disable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
+            } else {
+                f32 thr2 = *(f32 *)(state + 0x134);
+                int aim2 = getArwing();
+                f32 d2;
+                int inRange2;
+                if (aim2 == 0)
+                    aim2 = Obj_GetPlayerObject();
+                d2 = *(f32 *)(leader + 0x14) - *(f32 *)(aim2 + 0x14);
+                inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
+                if (!inRange2)
+                    disable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
+                else
+                    disable = 1;
+            }
+        }
+        if (disable) {
+            *(s16 *)(obj + 6) |= 0x4000;
+            ObjHits_DisableObject(obj);
+            *(u8 *)(state + 0x159) = 4;
+            return;
+        }
+        if (*(u8 *)(state + 0x15c) != 2) {
+            if (*(u8 *)(setup + 0x2f) != 2) {
+                *(s16 *)(obj + 0) =
+                    (f32)*(s16 *)(state + 0x140) * timeDelta + (f32)*(s16 *)(obj + 0);
+                *(s16 *)(obj + 2) =
+                    (f32)*(s16 *)(state + 0x142) * timeDelta + (f32)*(s16 *)(obj + 2);
+            }
+            if (flags->f08 || *(u8 *)(setup + 0x2f) != 2) {
+                *(s16 *)(obj + 4) =
+                    (f32)*(s16 *)(state + 0x144) * timeDelta + (f32)*(s16 *)(obj + 4);
+            }
+        }
+        if (*(int *)(state + 0x13c) != 0) {
+            arwsquadron_followLeader(obj, state);
+        } else if (flags->f40) {
+            arwsquadron_followPath(obj, state);
+        }
+        if (flags->f80) {
+            setupL = *(int *)(obj + 0x4c);
+            ObjHits_SetHitVolumeSlot(obj, 0x13, *(u8 *)(state + 0x156), 0);
+            if (*(u8 *)(state + 0x15c) == 1)
+                arwsquadron_updateVolley(obj, state, setupL);
+        }
+        break;
+    }
+    case 3:
+    case 4:
+        return;
+    default:
+        break;
+    }
+
+    arwsquadron_handleDamage(obj, state);
+    if (*(u8 *)(state + 0x15c) == 1)
+        arwsquadron_emitEffects(obj, state);
+    if (*(int *)(*(int *)(obj + 0x50) + 0x44) == 0)
+        ObjAnim_AdvanceCurrentMove(lbl_803E71BC, timeDelta, obj, 0);
 }
 #pragma scheduling reset
 
