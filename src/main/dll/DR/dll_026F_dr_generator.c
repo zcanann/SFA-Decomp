@@ -94,7 +94,7 @@ void drgenerator_hitDetect(int obj) {
     f32 a10;
     int ac;
     int a8;
-    int found;
+    void *found;
     if (((BitFlags8 *)(p + 0x19b))->b0 || ((BitFlags8 *)(p + 0x19b))->b3) {
         return;
     }
@@ -117,8 +117,8 @@ void drgenerator_hitDetect(int obj) {
     ((BitFlags8 *)(p + 0x19b))->b0 = 1;
     GameBit_Set(*(s16 *)(q + 0x1e), 1);
     if (*(s16 *)((char *)obj + 0x46) == 0x716 &&
-        (found = ObjGroup_FindNearestObject(0x4c, obj, 0)) != 0) {
-        timer_addDuration(found, *(s16 *)(p + 0x198));
+        (found = (void *)ObjGroup_FindNearestObject(0x4c, obj, 0)) != NULL) {
+        timer_addDuration((int)found, *(s16 *)(p + 0x198));
     } else {
         ObjHits_DisableObject(obj);
     }

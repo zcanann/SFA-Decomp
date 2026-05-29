@@ -607,7 +607,7 @@ void DIMbossspit_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int objCreateLight(int obj, int n);
+extern void *objCreateLight(int obj, int n);
 extern void modelLightStruct_setField50(int light, int v);
 extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setColors100104(int light, int a, int b, int c, int d);
@@ -630,8 +630,8 @@ void DIMbossspit_init(int obj)
 {
   u8 *state = *(u8 **)(obj + 0xb8);
 
-  *(int *)(state + 4) = objCreateLight(obj, 1);
-  if (*(int *)(state + 4) != 0) {
+  *(void **)(state + 4) = objCreateLight(obj, 1);
+  if (*(void **)(state + 4) != NULL) {
     modelLightStruct_setField50(*(int *)(state + 4), 2);
     modelLightStruct_setColorsA8AC(*(int *)(state + 4), 0, 255, 0, 0);
     modelLightStruct_setColors100104(*(int *)(state + 4), 0, 255, 0, 0);

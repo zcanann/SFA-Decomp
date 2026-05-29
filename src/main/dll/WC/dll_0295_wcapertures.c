@@ -38,7 +38,7 @@ void wcapertures_free(int obj)
 #pragma scheduling off
 void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state = *(int *)(obj + 0xb8);
+    char *state = *(char **)(obj + 0xb8);
     u8 *light;
 
     if (visible != 0) {
@@ -131,8 +131,8 @@ void wcapertures_init(int obj, int initData)
     *(u8 *)(obj + 0x36) = 1;
     *(u16 *)(state + 4) = 0xff;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
-    *(int *)(state + 0) = (int)objCreateLight(obj, 1);
-    if (*(int *)(state + 0) != 0) {
+    *(void **)(state + 0) = objCreateLight(obj, 1);
+    if (*(void **)(state + 0) != NULL) {
         modelLightStruct_setField50(*(void **)(state + 0), 2);
         if ((s8)*(u8 *)(obj + 0xad) == 0)
             fn_8001D730(*(void **)(state + 0), 0, 0xff, 0xff, 0x4d, 0x96, lbl_803E6E3C);

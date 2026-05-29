@@ -40,13 +40,13 @@ void ktfallingrocks_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p
 void ktfallingrocks_update(int obj) {
     int q = *(int *)((char *)obj + 0x4c);
     ObjPosParams params;
-    int player;
+    char *player;
     int i;
     if (GameBit_Get(*(s16 *)(q + 0x24)) == 0) {
         return;
     }
-    player = (int)Obj_GetPlayerObject();
-    if (player == 0) {
+    player = Obj_GetPlayerObject();
+    if (player == NULL) {
         return;
     }
     *(f32 *)((char *)obj + 0xc) = *(f32 *)(player + 0xc);

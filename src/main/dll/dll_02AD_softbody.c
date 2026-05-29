@@ -56,7 +56,7 @@ void softbody_init(int obj, int setup)
     }
     *(u16 *)(obj + 0xb0) |= 0x2000;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E7298, 0);
-    if (*(int *)(obj + 0x54) != 0) {
+    if (*(void **)(obj + 0x54) != NULL) {
         ObjHitbox_SetSphereRadius(obj,
             (s16)((f32)*(s16 *)(*(int *)(obj + 0x54) + 0x5a) * *(f32 *)(obj + 8)));
     }
