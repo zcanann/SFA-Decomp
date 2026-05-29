@@ -1,0 +1,484 @@
+#include "ghidra_import.h"
+#include "main/engine_shared.h"
+
+#pragma scheduling off
+#pragma peephole off
+void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *ch, f32 *buf))
+{
+    f32 bufX[4];
+    f32 bufY[4];
+    f32 bufZ[4];
+    f32 vx, d1x, d2x, d3x;
+    f32 vy, d1y, d2y, d3y;
+    f32 vz, d1z, d2z, d3z;
+    f32 step;
+    int i;
+
+    if (count != lbl_803DB270) {
+        step = lbl_803DE674 / (f32)count;
+        lbl_803DC8B0 = step;
+        lbl_80338790[0] = step * step;
+        lbl_80338790[1] = lbl_803DE660 * lbl_80338790[0];
+        lbl_80338790[2] = step * lbl_80338790[0];
+        lbl_80338790[3] = lbl_803DE680 * lbl_80338790[2];
+        lbl_803DB270 = count;
+    }
+
+    if (px != NULL) {
+        evalFn(px, bufX);
+        vx = bufX[3];
+        d1x = lbl_803DC8B0 * bufX[2] + (lbl_80338790[2] * bufX[0] + lbl_80338790[0] * bufX[1]);
+        d2x = lbl_80338790[1] * bufX[1] + lbl_80338790[3] * bufX[0];
+        d3x = lbl_80338790[3] * bufX[0];
+    }
+    if (py != NULL) {
+        evalFn(py, bufY);
+        vy = bufY[3];
+        d1y = lbl_803DC8B0 * bufY[2] + (lbl_80338790[2] * bufY[0] + lbl_80338790[0] * bufY[1]);
+        d2y = lbl_80338790[1] * bufY[1] + lbl_80338790[3] * bufY[0];
+        d3y = lbl_80338790[3] * bufY[0];
+    }
+    if (pz != NULL) {
+        evalFn(pz, bufZ);
+        vz = bufZ[3];
+        d1z = lbl_803DC8B0 * bufZ[2] + (lbl_80338790[2] * bufZ[0] + lbl_80338790[0] * bufZ[1]);
+        d2z = lbl_80338790[1] * bufZ[1] + lbl_80338790[3] * bufZ[0];
+        d3z = lbl_80338790[3] * bufZ[0];
+    }
+
+    for (i = 0; i <= count; i++) {
+        if (px != NULL) {
+            outX[i] = vx;
+            vx += d1x;
+            d1x += d2x;
+            d2x += d3x;
+        }
+        if (py != NULL) {
+            outY[i] = vy;
+            vy += d1y;
+            d1y += d2y;
+            d2y += d3y;
+        }
+        if (pz != NULL) {
+            outZ[i] = vz;
+            vz += d1z;
+            d1z += d2z;
+            d2z += d3z;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void curveFn_8000fe8c(Curve *curve, int count)
+{
+    f32 outX[21];
+    f32 outY[21];
+    f32 outZ[21];
+    f32 *px = NULL;
+    f32 *py = NULL;
+    f32 *pz = NULL;
+    int i;
+    f32 dx, dy, dz, sq;
+    f32 zero;
+
+    if (curve->px != NULL) {
+        px = curve->px + curve->idx;
+    }
+    if (curve->py != NULL) {
+        py = curve->py + curve->idx;
+    }
+    if (curve->pz != NULL) {
+        pz = curve->pz + curve->idx;
+    }
+    if (curve->flag98 != 0) {
+        curveFn_80010018(px, py, pz, outX, outY, outZ, count, curve->flag98);
+    }
+
+    zero = lbl_803DE658;
+    curve->totalLen = zero;
+    for (i = 0; i < count; i++) {
+        dx = px != NULL ? outX[i + 1] - outX[i] : lbl_803DE658;
+        dy = py != NULL ? outY[i + 1] - outY[i] : lbl_803DE658;
+        dz = pz != NULL ? outZ[i + 1] - outZ[i] : lbl_803DE658;
+        sq = dx * dx + dy * dy + dz * dz;
+        if (sq > zero) {
+            curve->segLen[i] = sqrtf(sq);
+        } else {
+            curve->segLen[i] = lbl_803DE67C;
+        }
+        curve->totalLen += curve->segLen[i];
+    }
+}
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int curveFn_80010320(Curve *curve, f32 dt)
+{
+    int seg, savedIdx;
+    f32 *lengths = &curve->totalLen;
+    f32 step = dt * timeDelta;
+    f32 zero;
+    f32 base, frac, t;
+
+    if (step > lbl_803DE658) {
+        seg = (int)(lbl_803DE690 * curve->t);
+        if (seg == 20) {
+            seg--;
+        }
+        if (curve->dir != 0) {
+            curve->f4 = lengths[seg + 1] + curve->f4;
+        } else if (curve->t >= lbl_803DE674) {
+            return 1;
+        }
+        curve->f8 += step;
+        step += curve->f4;
+        zero = lbl_803DE658;
+        while (step > zero) {
+            step -= lengths[seg + 1];
+            if (step > zero && ++seg >= 20) {
+                savedIdx = curve->idx;
+                if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+                    curve->idx += 3;
+                }
+                if (++curve->idx > curve->count - 4) {
+                    if (curve->px != NULL) {
+                        curve->sample[0] = curve->eval(lbl_803DE674, curve->px + savedIdx, &curve->tangent[0]);
+                    }
+                    if (curve->py != NULL) {
+                        curve->sample[1] = curve->eval(lbl_803DE674, curve->py + savedIdx, &curve->tangent[1]);
+                    }
+                    if (curve->pz != NULL) {
+                        curve->sample[2] = curve->eval(lbl_803DE674, curve->pz + savedIdx, &curve->tangent[2]);
+                    }
+                    curve->t = lbl_803DE674;
+                    curve->f4 = lbl_803DE658;
+                    curve->f8 = curve->fc;
+                    curve->idx = curve->count - 4;
+                    return 1;
+                }
+                curveFn_8000fe8c(curve, 20);
+                seg = 0;
+            }
+        }
+        step += lengths[seg + 1];
+        base = (f32)seg / lbl_803DE690;
+        frac = step / lengths[seg + 1];
+        t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
+        if (curve->px != NULL) {
+            curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);
+        }
+        if (curve->py != NULL) {
+            curve->sample[1] = curve->eval(t, curve->py + curve->idx, &curve->tangent[1]);
+        }
+        if (curve->pz != NULL) {
+            curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
+        }
+        curve->t = t;
+        curve->f4 = step;
+        curve->dir = 0;
+        return 0;
+    } else if (step < lbl_803DE658) {
+        seg = (int)(lbl_803DE690 * curve->t);
+        if (seg == 20) {
+            seg--;
+        }
+        if (curve->dir == 0) {
+            curve->f4 = lengths[seg + 1] - curve->f4;
+        } else if (curve->t <= lbl_803DE658) {
+            return 1;
+        }
+        curve->f8 += step;
+        step += curve->f4;
+        zero = lbl_803DE658;
+        while (step < zero) {
+            step += lengths[seg + 1];
+            if (step < zero && --seg < 0) {
+                savedIdx = curve->idx;
+                if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+                    curve->idx -= 3;
+                }
+                if (--curve->idx < 0) {
+                    if (curve->px != NULL) {
+                        curve->sample[0] = curve->eval(lbl_803DE658, curve->px + savedIdx, &curve->tangent[0]);
+                    }
+                    if (curve->py != NULL) {
+                        curve->sample[1] = curve->eval(lbl_803DE658, curve->py + savedIdx, &curve->tangent[1]);
+                    }
+                    if (curve->pz != NULL) {
+                        curve->sample[2] = curve->eval(lbl_803DE658, curve->pz + savedIdx, &curve->tangent[2]);
+                    }
+                    curve->t = lbl_803DE658;
+                    curve->f4 = -lengths[1];
+                    curve->f8 = lbl_803DE658;
+                    curve->idx = 0;
+                    return 1;
+                }
+                curveFn_8000fe8c(curve, 20);
+                seg = 19;
+            }
+        }
+        base = (f32)seg / lbl_803DE690;
+        frac = step / lengths[seg + 1];
+        t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
+        if (curve->px != NULL) {
+            curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);
+        }
+        if (curve->py != NULL) {
+            curve->sample[1] = curve->eval(t, curve->py + curve->idx, &curve->tangent[1]);
+        }
+        if (curve->pz != NULL) {
+            curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
+        }
+        curve->t = t;
+        curve->f4 = step - lengths[seg + 1];
+        curve->dir = 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void curvesSetupMoveNetworkCurve(Curve *curve)
+{
+    if (curve->count < 4) {
+        debugPrintf(sCurvesSetupMoveNetworkCurveTooFewControlPoints);
+    }
+    if ((curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) &&
+        (curve->count & 3) != 0) {
+        debugPrintf(sCurvesSetupMoveNetworkCurveBadControlPointCount);
+    }
+
+    curve->fc = lbl_803DE658;
+    curve->idx = 0;
+    while (curve->idx < curve->count - 3) {
+        curveFn_8000fe8c(curve, 5);
+        curve->fc += curve->totalLen;
+        if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+            curve->idx += 4;
+        } else {
+            curve->idx += 1;
+        }
+    }
+
+    if (curve->dir != 0) {
+        curve->idx = curve->count - 4;
+    } else {
+        curve->idx = 0;
+    }
+    curveFn_8000fe8c(curve, 20);
+    if (curve->dir != 0) {
+        curve->f8 = curve->fc - curve->f4;
+    } else {
+        curve->f8 = curve->f4;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void curvesMove(Curve *curve)
+{
+    if (curve->count < 4) {
+        debugPrintf(sCurvesMoveTooFewControlPoints);
+    }
+    if ((curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) &&
+        (curve->count & 3) != 0) {
+        debugPrintf(sCurvesMoveBadControlPointCount);
+    }
+
+    curve->fc = lbl_803DE658;
+    curve->idx = 0;
+    while (curve->idx < curve->count - 3) {
+        curveFn_8000fe8c(curve, 5);
+        curve->fc += curve->totalLen;
+        if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+            curve->idx += 4;
+        } else {
+            curve->idx += 1;
+        }
+    }
+
+    if (curve->dir != 0) {
+        curve->idx = curve->count - 4;
+    } else {
+        curve->idx = 0;
+    }
+    curveFn_8000fe8c(curve, 20);
+
+    if (curve->dir != 0) {
+        curve->t = lbl_803DE674;
+        curve->f4 = curve->segLen[19];
+        curve->f8 = curve->fc;
+    } else {
+        curve->t = lbl_803DE658;
+        curve->f4 = lbl_803DE658;
+        curve->f8 = lbl_803DE658;
+    }
+
+    if (curve->px != NULL) {
+        curve->sample[0] = curve->eval(curve->t, curve->px, &curve->tangent[0]);
+    }
+    if (curve->py != NULL) {
+        curve->sample[1] = curve->eval(curve->t, curve->py, &curve->tangent[1]);
+    }
+    if (curve->pz != NULL) {
+        curve->sample[2] = curve->eval(curve->t, curve->pz, &curve->tangent[2]);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+f32 fn_80010C50(f32 t, f32* values)
+{
+    return t * (values[1] - values[0]) + values[0];
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+f32 mathFn_80010c64(f32 t, f32* values, f32* outTangent)
+{
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
+    f32 b = (lbl_803DE65C * values[2] + (lbl_803DE660 * values[0] + lbl_803DE694 * values[1])) - values[3];
+    f32 c = -values[0] + values[2];
+    f32 d = lbl_803DE660 * values[1];
+
+    if (outTangent != NULL) {
+        *outTangent = t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + c;
+    }
+    return lbl_803DE678 * (t * (t * (a * t + b) + c) + d);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+f32 curveFn_80010ce4(f32 t, f32* values, f32* outTangent)
+{
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
+    f32 b = lbl_803DE664 * values[2] +
+            (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
+    f32 c = lbl_803DE668 * values[0] + lbl_803DE664 * values[1];
+
+    if (outTangent != NULL) {
+        *outTangent = t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + c;
+    }
+    return t * (t * (a * t + b) + c) + values[0];
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void curveFn_80010d54(f32* values, f32* coefficients)
+{
+    f32 k698 = lbl_803DE698;
+
+    coefficients[0] = values[3] + (values[2] + (lbl_803DE660 * values[0] + k698 * values[1]));
+    coefficients[1] = (lbl_803DE668 * values[0] + lbl_803DE664 * values[1] +
+                       k698 * values[2]) -
+                      values[3];
+    coefficients[2] = values[2];
+    coefficients[3] = values[0];
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+f32 curveFn_80010dc0(f32 t, f32* values, f32* outTangent)
+{
+    f32 a = values[3] + (values[2] + (lbl_803DE660 * values[0] + lbl_803DE698 * values[1]));
+    f32 b = (lbl_803DE698 * values[2] + (lbl_803DE668 * values[0] + lbl_803DE664 * values[1])) - values[3];
+
+    if (outTangent != NULL) {
+        *outTangent = t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + values[2];
+    }
+    return t * (t * (a * t + b) + values[2]) + values[0];
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80010E2C(f32* values, f32* coefficients)
+{
+    f32 scale;
+
+    coefficients[0] = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
+    coefficients[1] = lbl_803DE664 * values[2] +
+                      (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
+    coefficients[2] = lbl_803DE668 * values[0] + lbl_803DE664 * values[2];
+    coefficients[3] = values[2] + (values[0] + lbl_803DE65C * values[1]);
+
+    scale = lbl_803DE670;
+    coefficients[0] *= scale;
+    coefficients[1] *= scale;
+    coefficients[2] *= scale;
+    coefficients[3] *= scale;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+f32 mathFn_80010ee0(f32 t, f32* values, f32* outTangent)
+{
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
+    f32 b = lbl_803DE664 * values[2] +
+            (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
+    f32 c = lbl_803DE668 * values[0] + lbl_803DE664 * values[2];
+    f32 d = values[2] + (values[0] + lbl_803DE65C * values[1]);
+
+    if (outTangent != NULL) {
+        *outTangent = lbl_803DE670 *
+                      (t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + c);
+    }
+    return lbl_803DE670 * (t * (t * (a * t + b) + c) + d);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void fn_80010F6C(CurveHeapNode* heap, s32 count, s32 index)
+{
+    u16 priority = heap[index].priority;
+    u16 value = heap[index].value;
+
+    while (index <= count >> 1) {
+        s32 child = index * 2;
+
+        if ((child < count) && (heap[child].priority < heap[child + 1].priority)) {
+            child++;
+        }
+
+        if (heap[child].priority <= priority) {
+            break;
+        }
+
+        heap[index].priority = heap[child].priority;
+        heap[index].value = heap[child].value;
+        index = child;
+    }
+
+    heap[index].priority = priority;
+    heap[index].value = value;
+}
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset

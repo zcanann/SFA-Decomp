@@ -1,0 +1,1317 @@
+#include "ghidra_import.h"
+#include "main/engine_shared.h"
+
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, int f)
+{
+    int count;
+    int e3 = e * 2 + e;
+    u8 *cur;
+    u8 *end;
+    u8 byte;
+
+    if ((f >> 3) != 0) {
+        u8 *q = header + e3;
+        count = ((u32)q[1] >> 4) | (q[2] << 4);
+        cur = bitmap + (e * 32 | 0x10);
+    } else {
+        u8 *q = header + e3;
+        count = header[e3] | ((q[1] & 0xf) << 8);
+        cur = bitmap + e * 32;
+    }
+    end = bitmap + (e * 32 | (f * 2 + (d >> 3)));
+    while (cur < end) {
+        byte = *cur;
+        while (byte != 0) {
+            byte &= byte - 1;
+            count++;
+        }
+        cur++;
+    }
+    byte = *end & ((u32)0xff >> (8 - (d & 7)));
+    while (byte != 0) {
+        byte &= byte - 1;
+        count++;
+    }
+    return nodeBase + count;
+}
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+s16 Queue_GetCount(RingBufferQueue* queue)
+{
+    return queue->count;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+BOOL Queue_IsEmpty(RingBufferQueue* queue)
+{
+    return queue->count == 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void Queue_Peek(RingBufferQueue* queue, void* dst)
+{
+    memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void Queue_Pop(RingBufferQueue* queue, void* dst)
+{
+    s16 readIndex;
+
+    memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
+    readIndex = queue->readIndex + 1;
+    queue->readIndex = readIndex;
+    if (readIndex == queue->capacity) {
+        queue->readIndex = 0;
+    }
+    queue->count--;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void Queue_Push(RingBufferQueue* queue, void* src)
+{
+    s16 writeIndex;
+
+    memcpy((u8*)queue->data + queue->writeIndex * queue->elemSize, src, queue->elemSize);
+    writeIndex = queue->writeIndex + 1;
+    queue->writeIndex = writeIndex;
+    if (writeIndex == queue->capacity) {
+        queue->writeIndex = 0;
+    }
+    queue->count++;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void Queue_Init(RingBufferQueue* queue, void* data, int capacity, int elemSize)
+{
+    queue->data = data;
+    queue->count = 0;
+    queue->capacity = capacity;
+    queue->elemSize = elemSize;
+    queue->writeIndex = 0;
+    queue->readIndex = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+BOOL Stack_IsEmpty(RingBufferQueue* stack)
+{
+    return stack->count == 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+BOOL Stack_IsFull(RingBufferQueue* stack)
+{
+    return stack->count == stack->capacity - 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void Stack_Pop(RingBufferQueue* stack, void* dst)
+{
+    stack->writeIndex--;
+    if (stack->writeIndex < 0) {
+        stack->writeIndex = stack->capacity - 1;
+    }
+    memcpy(dst, (u8*)stack->data + stack->writeIndex * stack->elemSize, stack->elemSize);
+    stack->count--;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void Stack_Push(RingBufferQueue* stack, void* src)
+{
+    s16 writeIndex;
+
+    memcpy((u8*)stack->data + stack->writeIndex * stack->elemSize, src, stack->elemSize);
+    writeIndex = stack->writeIndex + 1;
+    stack->writeIndex = writeIndex;
+    if (writeIndex == stack->capacity) {
+        stack->writeIndex = 0;
+    }
+    stack->count++;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void Stack_Free(RingBufferQueue* stack)
+{
+    mm_free(stack);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void voxmaps_freeRouteWork(void** p)
+{
+    if (p[0] != NULL) {
+        mm_free(p[0]);
+        p[0] = NULL;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void voxmaps_allocRouteWork(void** p)
+{
+    p[0] = mmAlloc(0xe88, 0x10, NULL);
+    p[1] = (u8*)p[0] + 0xaf0;
+    p[2] = (u8*)p[1] + 0x320;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void voxmaps_updateTimers(void)
+{
+    int* p = lbl_803387B8;
+    int i;
+    for (i = 0; i < 6; i++) {
+        if (*p < 0x3FFFFFFF) {
+            (*p)++;
+        }
+        p++;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void voxmaps_gridToWorld(f32* out, s16* grid)
+{
+    int v;
+    v = grid[0] * 10 + 5;
+    out[0] = (f32)v;
+    v = grid[1] * 10 + 5;
+    out[1] = (f32)v;
+    v = grid[2] * 10 + 5;
+    out[2] = (f32)v;
+    if (lbl_803DC8CC != 0) {
+        Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], lbl_803DC8CC);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void voxmaps_worldToGrid(f32* in, s16* out)
+{
+    f32 sx, sy, sz;
+    int ix, iy, iz;
+    sx = in[0];
+    sy = in[1];
+    sz = in[2];
+    if (lbl_803DC8CC != 0) {
+        Obj_TransformWorldPointToLocal(sx, sy, sz, &sx, &sy, &sz, lbl_803DC8CC);
+    }
+    ix = (int)sx;
+    iy = (int)sy;
+    iz = (int)sz;
+    if (sx < lbl_803DE6B0) {
+        ix -= 10;
+    }
+    if (sy < lbl_803DE6B0) {
+        iy -= 10;
+    }
+    if (sz < lbl_803DE6B0) {
+        iz -= 10;
+    }
+    out[0] = ix / 10;
+    out[1] = iy / 10;
+    out[2] = iz / 10;
+}
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void voxmaps_resetLoadedMaps(void)
+{
+    VoxXY* xy = lbl_803387A0.xy;
+    u8* b = lbl_803DC8D0;
+    int* timer = lbl_803387A0.timer;
+    int* f30 = lbl_803387A0.f30;
+    void** buf = lbl_803387A0.buf;
+    int i;
+    for (i = 0; i < 6; i++) {
+        if (*buf != NULL) {
+            mm_free(*buf);
+            *buf = NULL;
+        }
+        *f30 = -2;
+        *timer = 0x40000000;
+        *b = 0;
+        xy->a = 0;
+        xy->b = 0;
+        buf++;
+        f30++;
+        timer++;
+        b++;
+        xy++;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void voxmaps_initialise(void)
+{
+    VoxMaps *mgr = &lbl_803387A0;
+    int *p;
+    int i;
+
+    loadAssetFileById((void **)&lbl_803DC8E0, 53);
+    i = 0;
+    p = lbl_803DC8E0;
+    while (*p != -1) {
+        p++;
+        i++;
+    }
+    lbl_803DC8C8 = i - 1;
+    lbl_803DC8DC = mmAlloc(640, 16, NULL);
+
+    for (i = 0; i < 6; i++) {
+        mgr->buf[i] = NULL;
+        mgr->f30[i] = -2;
+        mgr->timer[i] = 0x40000000;
+        lbl_803DC8D0[i] = 0;
+        mgr->xy[i].a = 0;
+        mgr->xy[i].b = 0;
+    }
+
+    lbl_803DC8D8 = lbl_803DC8DC;
+    lbl_803DC8CC = 0;
+    lbl_803DC8C0[0] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    lbl_803DC8C0[1] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    lbl_803DC8B8[0] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
+    lbl_803DC8B8[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int *voxmaps_updateActiveMap(VoxPos *obj)
+{
+    VoxMaps *vm = &lbl_803387A0;
+    int gridX;
+    int gridY;
+    int blockId;
+    int i;
+    int found;
+    int bestSlot;
+    int bestVal;
+    VoxBlock *block;
+    int ay = obj->z * 10 + 5 - lbl_803DCDCC;
+
+    gridX = (int)fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / lbl_803DE6B4);
+    gridY = (int)fastFloorf((f32)ay / lbl_803DE6B4);
+
+    vm->f48 = lbl_803DCDC8 + gridX * 640;
+    vm->f4c = lbl_803DCDCC + gridY * 640;
+    vm->f50 = vm->f48 / 10;
+    vm->f54 = vm->f4c / 10;
+
+    blockId = -1;
+    if (mapGetBlockAtPos(gridX, gridY, 0) != NULL) {
+        block = fn_80059334(gridX, gridY);
+        blockId = block->f6;
+    }
+    if (blockId == -1) {
+        vm->f58 = 0;
+    } else {
+        found = -1;
+        for (i = 0; i < 6; i++) {
+            if (blockId == vm->f30[i]) {
+                found = i;
+                i = 6;
+            }
+        }
+        if (found != -1) {
+            vm->timer[found] = 0;
+            vm->f58 = 0;
+        } else {
+            s8 b8;
+            s8 b9;
+            void **slot;
+            bestSlot = -1;
+            bestVal = -1;
+            for (i = 0; i < 6; i++) {
+                if (lbl_803DC8D0[i] == 0 && vm->timer[i] > bestVal) {
+                    bestSlot = i;
+                    bestVal = vm->timer[i];
+                }
+            }
+            b8 = block->f8;
+            b9 = block->f9;
+            slot = &vm->buf[bestSlot];
+            if (*slot != NULL) {
+                int saved = mmSetFreeDelay(0);
+                mm_free(*slot);
+                mmSetFreeDelay(saved);
+            }
+            *slot = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
+            vm->f30[bestSlot] = blockId;
+            vm->timer[bestSlot] = 0;
+            vm->xy[bestSlot].a = (s16)vm->f50;
+            vm->xy[bestSlot].b = (s16)vm->f54;
+            vm->f58 = 0;
+        }
+    }
+    return &vm->f48;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, u8 skipFirst) {
+    int zstep, dx2, dy2, dz2;
+    int p_xy, p_xz, p_yz;
+    int steps;
+    int voxX6, slot, voxZ6, voxX, voxZ;
+    int remap;
+    VoxActiveMap *cachedMap;
+    VoxState *st;
+    int oldVox;
+    u8 first;
+    VoxPos cur = *start;
+    VoxPos found;
+    u8 *node;
+    int xstep, ystep;
+    int dx, dy, dz;
+    unsigned int skip;
+
+    xstep = 1;
+    dx = end->x - cur.x;
+    if (dx < 0) { xstep = -1; dx = -dx; }
+    ystep = 1;
+    dy = end->unk2 - cur.unk2;
+    if (dy < 0) { ystep = -1; dy = -dy; }
+    zstep = 1;
+    dz = end->z - cur.z;
+    if (dz < 0) { zstep = -1; dz = -dz; }
+
+    dx2 = dx * 2;
+    p_xy = dy - dx;
+    dy2 = dy * 2;
+    p_xz = dz - dx;
+    dz2 = dz * 2;
+    p_yz = dy - dz;
+    steps = dx + (dy + dz);
+
+    voxmaps_updateActiveMap(&cur);
+
+    st = &lbl_803387E8;
+    voxX6 = (cur.x - st->originX) & 0x3f;
+    voxX = voxX6 >> 2;
+    voxZ6 = (cur.z - st->originY) & 0x3f;
+    voxZ = voxZ6 >> 2;
+    found = cur;
+    cachedMap = NULL;
+    first = 1;
+    skip = skipFirst;
+
+    while (steps-- != 0) {
+        if (skip != 0 && first != 0) {
+            first = 0;
+        } else {
+            VoxActiveMap *map = st->activeMap;
+            if (map != NULL) {
+                if (map != cachedMap || cur.unk2 != found.unk2) {
+                    int y = cur.unk2;
+                    if (y < map->minY) {
+                        slot = 0;
+                    } else if (y >= map->maxY) {
+                        slot = (map->maxY - 1) - map->minY;
+                    } else {
+                        slot = y - map->minY;
+                    }
+                    remap = 1;
+                    cachedMap = map;
+                    found.unk2 = y;
+                }
+                {
+                    u8 *bitmap = map->bitmap;
+                    unsigned int bit = (bitmap[(slot << 5) | ((voxZ << 1) + (voxX >> 3))] >> (voxX & 7)) & 1;
+                    if (bit != 0) {
+                        unsigned int occ;
+                        if (remap != 0) {
+                            node = (u8 *)voxmaps_getRouteNode(map->header, map->nodeBase, bitmap, voxX, slot, voxZ);
+                            remap = 0;
+                        }
+                        occ = (node[voxZ6 & 3] >> ((voxX6 & 3) << 1)) & 3;
+                        if (occ != 0) {
+                            if (occOut != NULL) {
+                                *occOut = occ;
+                            }
+                            if (coordOut != NULL) {
+                                *coordOut = found;
+                            }
+                            return 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (p_xy < 0) {
+            if (p_xz < 0) {
+                found.x = cur.x;
+                cur.x = (s16)(cur.x + xstep);
+                p_xy += dy2;
+                p_xz += dz2;
+                oldVox = voxX;
+                if (((cur.x - st->originX) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                voxX6 = (cur.x - st->originX) & 0x3f;
+                voxX = voxX6 >> 2;
+                if (voxX != oldVox) {
+                    remap = 1;
+                }
+            } else {
+                found.z = cur.z;
+                cur.z = (s16)(cur.z + zstep);
+                p_xz -= dx2;
+                p_yz += dy2;
+                oldVox = voxZ;
+                if (((cur.z - st->originY) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                voxZ6 = (cur.z - st->originY) & 0x3f;
+                voxZ = voxZ6 >> 2;
+                if (voxZ != oldVox) {
+                    remap = 1;
+                }
+            }
+        } else {
+            if (p_yz < 0) {
+                found.z = cur.z;
+                cur.z = (s16)(cur.z + zstep);
+                p_xz -= dx2;
+                p_yz += dy2;
+                oldVox = voxZ;
+                if (((cur.z - st->originY) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                voxZ6 = (cur.z - st->originY) & 0x3f;
+                voxZ = voxZ6 >> 2;
+                if (voxZ != oldVox) {
+                    remap = 1;
+                }
+            } else {
+                found.unk2 = cur.unk2;
+                cur.unk2 = (s16)(cur.unk2 + ystep);
+                p_xy -= dx2;
+                p_yz -= dz2;
+            }
+        }
+    }
+
+    if (coordOut != NULL) {
+        *coordOut = *end;
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
+{
+    char *msg = sVoxmapsRouteNodesListOverflow;
+    int entry;
+    int size;
+    int count;
+    VoxMapFile *hdr;
+
+    if (getTableFileEntry(26, mapArg, &entry) == 0) {
+        OSReport(msg + 0xd0);
+        return NULL;
+    }
+    loadVoxMaps(entry, &count, &size);
+    if (count <= 0) {
+        return NULL;
+    }
+    if (size > 30720) {
+        debugPrintf(msg + 0x104);
+        return NULL;
+    }
+    if (size <= 0) {
+        OSReport(msg + 0x13c);
+        return NULL;
+    }
+    hdr = mmAlloc(size, 16, NULL);
+    if (hdr == NULL) {
+        OSReport(msg + 0x174);
+        return NULL;
+    }
+    loadAndDecompressDataFile(27, hdr, entry, count, 0, 0, 0);
+    if (hdr == NULL) {
+        OSReport(msg + 0x174);
+        return NULL;
+    }
+    hdr->f1c += (int)hdr;
+    hdr->f24 += (int)hdr;
+    hdr->f14 += (int)hdr;
+    hdr->f20 += (int)hdr;
+    hdr->f28 += (int)hdr;
+    hdr->f18 += (int)hdr;
+    return hdr;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
+{
+    s16 box[3];
+    u16 count = a2->f8 + 1;
+    box[0] = a2->f0;
+    box[1] = a2->f2;
+    box[2] = a2->f4;
+    box[0] = a2->f0 + 2;
+    voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
+    box[0] = box[0] - 4;
+    box[1] = a2->f2;
+    voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
+    box[0] = box[0] + 2;
+    box[2] = box[2] + 2;
+    box[1] = a2->f2;
+    voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
+    box[2] = box[2] - 4;
+    box[1] = a2->f2;
+    voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
+}
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+static void heapSiftUp(CurveHeapNode *q, int i)
+{
+    int parent;
+    u16 key = q[i].priority;
+    u16 val = q[i].value;
+    q[0].priority = 0xFFFF;
+    while (q[(parent = i >> 1)].priority <= key) {
+        q[i].value = q[parent].value;
+        q[i].priority = q[parent].priority;
+        i = parent;
+    }
+    q[i].priority = key;
+    q[i].value = val;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void voxmapsFn_80010ff4(struct RouteState *state, VoxBoxArg *a2, int a3, u16 count, s16 *box)
+{
+    VoxState *vs;
+    VoxActiveMap *map;
+    CurveHeapNode *q;
+    RouteNode *n;
+    u8 occ[3][4];
+    u8 *p;
+    int dxh, dyh;
+    int foundIdx, savedFlag, foundSlot;
+    int nodeCount;
+    int key, oldp;
+    int dx, dz;
+    int voxX, voxZ, col, shift, xbit2, xbit2p, zlo, zlo1;
+    int i, slot, y;
+    int blocked, dir, next, chosen, sumCur, sumNext;
+
+    if (box[0] == state->tgtX && box[2] == state->tgtY) {
+        s16 idx = state->unk1C;
+        if (idx == 200) {
+            debugPrintf(sVoxmapsRouteNodesListOverflow);
+        } else {
+            n = &state->nodes[idx];
+            state->unk1C = idx + 1;
+            n->x = box[0];
+            n->unk2 = box[1];
+            n->y = box[2];
+            n->unk8 = count;
+            n->unkA = (u8)a3;
+            dxh = n->x - state->tgtX;
+            dyh = n->y - state->tgtY;
+            n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+        }
+        q = state->queue;
+        state->queueCount++;
+        q[state->queueCount].value = (u16)idx;
+        q[state->queueCount].priority = 0xFFFE;
+        heapSiftUp(q, state->queueCount);
+    }
+
+    vs = &lbl_803387E8;
+    dx = box[0] - vs->originX;
+    dz = box[2] - vs->originY;
+    if ((dx >> 6) != 0 || (dz >> 6) != 0) {
+        voxmaps_updateActiveMap((VoxPos *)box);
+        dx = box[0] - vs->originX;
+        dz = box[2] - vs->originY;
+    }
+    map = vs->activeMap;
+    if (map == NULL) {
+        return;
+    }
+
+    voxX = (dx & 0x3f) >> 2;
+    voxZ = (dz & 0x3f) >> 2;
+    shift = voxX & 7;
+    xbit2 = (dx & 3) << 1;
+    xbit2p = xbit2 + 2;
+    zlo = dz & 3;
+    zlo1 = zlo + 1;
+    col = (voxZ << 1) + (voxX >> 3);
+
+    p = &occ[0][0];
+    for (i = 0; i < 3; i++) {
+        y = box[1] + i - 1;
+        if (y < map->minY) {
+            slot = 0;
+        } else if (y >= map->maxY) {
+            slot = (map->maxY - 1) - map->minY;
+        } else {
+            slot = y - map->minY;
+        }
+        if ((map->bitmap[(slot << 5) | col] >> shift) & 1) {
+            u8 *node = (u8 *)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
+            p[0] = (node[zlo] >> xbit2) & 3;
+            p[1] = (node[zlo] >> xbit2p) & 3;
+            p[2] = (node[zlo1] >> xbit2) & 3;
+            p[3] = (node[zlo1] >> xbit2p) & 3;
+        } else {
+            p[0] = 0;
+            p[1] = 0;
+            p[2] = 0;
+            p[3] = 0;
+        }
+        p += 4;
+    }
+
+    if (state->mode26 != 0) {
+        if ((occ[1][0] & 2) || (occ[1][1] & 2) || (occ[1][2] & 2) || (occ[1][3] & 2)) {
+            blocked = 1;
+        }
+        dir = -1;
+    } else {
+        dir = 1;
+    }
+
+    for (; dir >= 0; dir--) {
+        next = dir + 1;
+        blocked = 0;
+        chosen = dir;
+        if ((occ[dir][0] & 2) || (occ[dir][1] & 2) || (occ[dir][2] & 2) || (occ[dir][3] & 2)) {
+            blocked = 1;
+            dir = 0;
+        } else if ((occ[next][0] & 2) || (occ[next][1] & 2) || (occ[next][2] & 2) || (occ[next][3] & 2)) {
+            blocked = 1;
+            dir = 0;
+        } else {
+            sumCur = occ[dir][0] + occ[dir][1] + occ[dir][2] + occ[dir][3];
+            sumNext = occ[next][0] + occ[next][1] + occ[next][2] + occ[next][3];
+            if (next == 2 && sumNext == 0) {
+                blocked = 1;
+            } else {
+                if (next == 1) {
+                    if (sumCur < sumNext) {
+                        sumCur = sumNext;
+                    } else {
+                        chosen--;
+                    }
+                } else {
+                    if (sumCur <= sumNext) {
+                        sumCur = sumNext;
+                    } else {
+                        chosen--;
+                    }
+                }
+                if (sumCur > 1) {
+                    dir = 0;
+                } else {
+                    blocked = 1;
+                }
+            }
+        }
+    }
+
+    if (blocked != 0) {
+        return;
+    }
+
+    box[1] = (s16)(box[1] + chosen);
+
+    foundIdx = -1;
+    {
+        int kkk = 0;
+        int boff = 0;
+        nodeCount = state->unk1C;
+        for (; nodeCount != 0; nodeCount--) {
+            RouteNode *nn = (RouteNode *)((char *)state->nodes + boff);
+            if (nn->x == box[0] && nn->y == box[2]) {
+                savedFlag = nn->flag;
+                foundIdx = kkk;
+                goto searched;
+            }
+            boff += 14;
+            kkk++;
+        }
+        foundIdx = -1;
+    }
+searched:
+    nodeCount = state->unk1C;
+
+    if (foundIdx >= 0 && savedFlag == 0) {
+        n = &state->nodes[foundIdx];
+        if (count >= n->unk8) {
+            return;
+        }
+        n->unkA = (u8)a3;
+        n->unk8 = count;
+        key = (u16)(n->unk6 + n->unk8);
+        q = state->queue;
+        foundSlot = 0;
+        for (slot = 0; slot <= state->queueCount; slot++) {
+            if ((u16)foundIdx == q[slot].value) {
+                foundSlot = slot;
+                slot = state->queueCount + 1;
+            }
+        }
+        oldp = q[foundSlot].priority;
+        q[foundSlot].priority = key;
+        if (key < oldp) {
+            fn_80010F6C(q, state->queueCount, foundSlot);
+        } else if (key > oldp) {
+            heapSiftUp(q, foundSlot);
+        }
+        return;
+    }
+
+    if (foundIdx >= 0) {
+        return;
+    }
+
+    if (nodeCount == 200) {
+        debugPrintf(sVoxmapsRouteNodesListOverflow);
+        n = NULL;
+    } else {
+        n = &state->nodes[nodeCount];
+        state->unk1C = nodeCount + 1;
+        n->x = box[0];
+        n->unk2 = box[1];
+        n->y = box[2];
+        n->unk8 = count;
+        n->unkA = (u8)a3;
+        dxh = n->x - state->tgtX;
+        dyh = n->y - state->tgtY;
+        n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+    }
+
+    if (n == NULL) {
+        debugPrintf(lbl_802C6184);
+        return;
+    }
+
+    if (n->unk6 > state->unk24) {
+        key = (u16)(n->unk6 + n->unk8);
+        q = state->queue;
+        state->queueCount++;
+        q[state->queueCount].value = (u16)nodeCount;
+        q[state->queueCount].priority = 0xFFFF - key;
+        heapSiftUp(q, state->queueCount);
+    } else {
+        if (n->unk6 < state->unk24) {
+            state->unk24 = n->unk6;
+        }
+        key = (u16)(n->unk6 + n->unk8);
+        q = state->queue;
+        state->queueCount++;
+        q[state->queueCount].value = (u16)nodeCount;
+        q[state->queueCount].priority = 0xFFFF - key;
+        heapSiftUp(q, state->queueCount);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+int voxmaps_processRouteQueue(RouteState *state, int count)
+{
+    int done = 0;
+    int ret = 0;
+    int nodeIdx;
+    CurveHeapNode *queue;
+    RouteNode *node;
+
+    while (!done && count != 0) {
+        queue = state->queue;
+        if (state->queueCount == 0) {
+            nodeIdx = -1;
+        } else {
+            nodeIdx = queue[1].value;
+            queue[1].priority = queue[state->queueCount].priority;
+            queue[1].value = queue[state->queueCount--].value;
+            fn_80010F6C(queue, state->queueCount, 1);
+        }
+        if (nodeIdx < 0) {
+            done = 1;
+            ret = -1;
+        } else {
+            node = state->nodes + nodeIdx;
+            state->cur = nodeIdx;
+            if (node->x == state->tgtX && node->y == state->tgtY) {
+                done = 1;
+                ret = 1;
+            } else {
+                node->flag = 1;
+                fn_800118EC((int)state, (VoxBoxArg *)node, nodeIdx);
+            }
+        }
+        count--;
+    }
+    return ret;
+}
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int voxmaps_updateRoutePath(RouteNav *nav, RouteState *state) {
+    RouteNode *node;
+    int navState;
+    int ret = 0;
+    int flag = 0;
+    int i;
+    s16 out[3];
+
+    navState = nav->navState;
+    if (navState == 0) {
+        int pathDirect;
+
+        state->queueCount = 0;
+        state->unk1C = 0;
+        for (i = 0; i < 200; i++) {
+            state->queue[i].priority = 0;
+            state->nodes[i].flag = 0;
+        }
+        voxmaps_worldToGrid(nav->destPos, &state->unk12);
+        voxmaps_worldToGrid(nav->curPos, &state->tgtX);
+        state->unk12 &= ~1;
+        state->unk16 &= ~1;
+        state->tgtX &= ~1;
+        state->tgtY &= ~1;
+        if (fn_800119FC(&state->unk12, &state->tgtX, out) != 0) {
+            pathDirect = 1;
+        } else {
+            int count;
+            state->unk24 = 0x2710;
+            count = state->unk1C;
+            if (count == 0xc8) {
+                debugPrintf(sVoxmapsRouteNodesListOverflow);
+                node = NULL;
+            } else {
+                int dx, dz, d2;
+                state->unk1C = count + 1;
+                node = &state->nodes[count];
+                node->x = out[0];
+                node->unk2 = out[1];
+                node->y = out[2];
+                node->unk8 = 0;
+                node->unkA = 0xff;
+                dx = state->tgtX - node->x;
+                dz = state->tgtY - node->y;
+                d2 = dx * dx + dz * dz;
+                node->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)d2));
+            }
+            {
+                u16 cost = node->unk6 + node->unk8;
+                CurveHeapNode *queue = state->queue;
+                int pos;
+                u16 key;
+                u16 val;
+                int parent;
+
+                state->queueCount++;
+                queue[state->queueCount].value = (u16)(state->unk1C - 1);
+                queue[state->queueCount].priority = (u16)(0xffff - cost);
+                pos = state->queueCount;
+                key = queue[pos].priority;
+                val = queue[pos].value;
+                queue[0].priority = 0xffff;
+                parent = pos >> 1;
+                while (queue[parent].priority <= key) {
+                    queue[pos].value = queue[parent].value;
+                    queue[pos].priority = queue[parent].priority;
+                    pos = parent;
+                    parent = pos >> 1;
+                }
+                queue[pos].priority = key;
+                queue[pos].value = val;
+                state->unk20 = 0;
+            }
+            pathDirect = 0;
+        }
+        if (pathDirect != 0) {
+            nav->tgtPos[0] = nav->curPos[0];
+            nav->tgtPos[1] = nav->curPos[1];
+            nav->tgtPos[2] = nav->curPos[2];
+            ret = 1;
+            flag = 1;
+        } else {
+            navState = 1;
+        }
+    }
+
+    if (navState != 0) {
+        int r;
+        ret = 1;
+        r = voxmaps_processRouteQueue(state, nav->budget);
+        if (r == 0) {
+            if (navState++ < nav->maxIters) {
+                /* keep stepping next frame */
+            } else {
+                navState = 0;
+                if (fn_80011EB0(state, 1) != 0) {
+                    nav->tgtPos[0] = state->unk08[0];
+                    nav->tgtPos[1] = state->unk08[1];
+                    nav->tgtPos[2] = state->unk08[2];
+                } else {
+                    nav->tgtPos[0] = nav->curPos[0];
+                    nav->tgtPos[1] = nav->curPos[1];
+                    nav->tgtPos[2] = nav->curPos[2];
+                    flag = 1;
+                }
+            }
+            ret = 1;
+        } else if (r > 0) {
+            if (r < 2) {
+                navState = 0;
+                if (fn_80011EB0(state, 1) != 0) {
+                    nav->tgtPos[0] = state->unk08[0];
+                    nav->tgtPos[1] = state->unk08[1];
+                    nav->tgtPos[2] = state->unk08[2];
+                } else {
+                    nav->tgtPos[0] = nav->curPos[0];
+                    nav->tgtPos[1] = nav->curPos[1];
+                    nav->tgtPos[2] = nav->curPos[2];
+                    flag = 1;
+                }
+                ret = 1;
+            }
+        } else {
+            if (r >= -1) {
+                navState = 0;
+                nav->tgtPos[0] = nav->destPos[0];
+                nav->tgtPos[1] = nav->destPos[1];
+                nav->tgtPos[2] = nav->destPos[2];
+                flag = 1;
+            }
+        }
+    }
+
+    nav->navState = (u8)navState;
+    nav->flag25 = (u8)flag;
+    return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
+    VoxPos cur = *(VoxPos *)dest;
+    VoxPos found;
+    VoxState *st;
+    VoxActiveMap *map;
+    u8 *node;
+    u8 buf[12];
+    int sumA, sumB;
+    int adj, blocked;
+    int i, next;
+    int row;
+    int slot;
+    int z6lo, z6hi, bitmapCol;
+    int voxXand7, shiftLo, shiftHi;
+    int voxX6, voxZ6, voxX, voxZ;
+    int err, steps;
+    int dx2, dy2;
+    int xstep, ystep;
+    int dx, dy;
+
+    xstep = 2;
+    dx = ((VoxPos *)start)->x - cur.x;
+    if (dx < 0) { xstep = -2; dx = -dx; }
+    ystep = 2;
+    dy = ((VoxPos *)start)->z - cur.z;
+    if (dy < 0) { ystep = -2; dy = -dy; }
+
+    dx2 = dx & ~1;
+    dy2 = dy & ~1;
+    err = (dy >> 1) - (dx >> 1);
+    steps = (dx >> 1) + (dy >> 1);
+
+    voxmaps_updateActiveMap(&cur);
+
+    st = &lbl_803387E8;
+    voxX6 = (cur.x - st->originX) & 0x3f;
+    voxX = voxX6 >> 2;
+    voxZ6 = (cur.z - st->originY) & 0x3f;
+    voxZ = voxZ6 >> 2;
+    voxXand7 = voxX & 7;
+    shiftLo = (voxX6 & 3) << 1;
+    shiftHi = shiftLo + 2;
+    found = cur;
+
+    while (steps-- != 0) {
+        map = st->activeMap;
+        if (map != NULL) {
+            z6lo = voxZ6 & 3;
+            z6hi = z6lo + 1;
+            bitmapCol = (voxZ << 1) + (voxX >> 3);
+            for (row = 0; row < 3; row++) {
+                int y = row + cur.unk2 - 1;
+                if (y < map->minY) {
+                    slot = 0;
+                } else if (y >= map->maxY) {
+                    slot = (map->maxY - 1) - map->minY;
+                } else {
+                    slot = y - map->minY;
+                }
+                if ((map->bitmap[(slot << 5) | bitmapCol] >> voxXand7) & 1) {
+                    node = (u8 *)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
+                    buf[row * 4 + 0] = (node[z6lo] >> shiftLo) & 3;
+                    buf[row * 4 + 1] = (node[z6lo] >> shiftHi) & 3;
+                    buf[row * 4 + 2] = (node[z6hi] >> shiftLo) & 3;
+                    buf[row * 4 + 3] = (node[z6hi] >> shiftHi) & 3;
+                } else {
+                    buf[row * 4 + 0] = 0;
+                    buf[row * 4 + 1] = 0;
+                    buf[row * 4 + 2] = 0;
+                    buf[row * 4 + 3] = 0;
+                }
+            }
+
+            i = 1;
+            while (i >= 0) {
+                next = i + 1;
+                blocked = 0;
+                adj = i;
+                if ((buf[i * 4] & 2) || (buf[i * 4 + 1] & 2) || (buf[i * 4 + 2] & 2) || (buf[i * 4 + 3] & 2)) {
+                    blocked = 1;
+                }
+                if (!blocked) {
+                    if ((buf[next * 4] & 2) || (buf[next * 4 + 1] & 2) || (buf[next * 4 + 2] & 2) || (buf[next * 4 + 3] & 2)) {
+                        blocked = 1;
+                    }
+                }
+                if (!blocked) {
+                    sumA = buf[i * 4];
+                    sumB = buf[next * 4];
+                    sumA += buf[i * 4 + 1];
+                    sumB += buf[next * 4 + 1];
+                    sumA += buf[i * 4 + 2];
+                    sumB += buf[next * 4 + 2];
+                    sumA += buf[i * 4 + 3];
+                    sumB += buf[next * 4 + 3];
+                    if (next == 2 && sumB == 0) {
+                        blocked = 1;
+                    } else {
+                        if (next == 1) {
+                            if (sumA >= sumB) adj--; else sumA = sumB;
+                        } else {
+                            if (sumA > sumB) adj--; else sumA = sumB;
+                        }
+                        if (sumA <= 1) {
+                            blocked = 1;
+                        } else {
+                            i = 0;
+                        }
+                    }
+                }
+                i--;
+            }
+
+            if (blocked) {
+                if (out != NULL) {
+                    *(VoxPos *)out = found;
+                }
+                return 0;
+            }
+            found.unk2 = cur.unk2 = (s16)(cur.unk2 + adj);
+        }
+
+        if (err < 0) {
+            found.x = cur.x;
+            cur.x = (s16)(cur.x + xstep);
+            err += dy2;
+            if (((cur.x - st->originX) >> 6) != 0) {
+                voxmaps_updateActiveMap(&cur);
+            }
+            voxX6 = (cur.x - st->originY) & 0x3f;
+            voxX = voxX6 >> 2;
+            voxXand7 = voxX & 7;
+            shiftLo = (voxX6 & 3) << 1;
+            shiftHi = shiftLo + 2;
+        } else {
+            found.z = cur.z;
+            cur.z = (s16)(cur.z + ystep);
+            err -= dx2;
+            if (((cur.z - st->originY) >> 6) != 0) {
+                voxmaps_updateActiveMap(&cur);
+            }
+            voxZ6 = (cur.z - st->originY) & 0x3f;
+            voxZ = voxZ6 >> 2;
+        }
+    }
+
+    if (out != NULL) {
+        *(VoxPos *)out = *(VoxPos *)start;
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80011EB0(RouteState *state, int count) {
+    f32 local[3];
+    RouteNode startNode;
+    RouteNode *cur;
+    RouteNode *cand;
+    RouteNode *lastClear;
+    RouteNode *node;
+    int idx;
+    int i;
+    int j;
+
+    if (count < 0) {
+        count = 10;
+    }
+    i = state->cur;
+    node = &state->nodes[i];
+    node->unkB = 0xff;
+    while ((j = node->unkA) != 0xff) {
+        node = &state->nodes[j];
+        node->unkB = (u8)i;
+        i = j;
+    }
+
+    startNode.x = state->unk12;
+    startNode.unk2 = state->unk14;
+    startNode.y = state->unk16;
+    startNode.unkB = (u8)i;
+    if (node->unkB == 0xff) {
+        cand = NULL;
+    } else {
+        cand = &state->nodes[node->unkB];
+    }
+    lastClear = node;
+    cur = &startNode;
+    idx = 0;
+
+    while (idx < count && cand != NULL) {
+        if (cur->x != cand->x || cur->y != cand->y) {
+            if (fn_800119FC((s16 *)cand, (s16 *)cur, NULL) == 0) {
+                local[0] = (f32)(lastClear->x * 10 + 5);
+                local[1] = (f32)(lastClear->unk2 * 10 + 5);
+                local[2] = (f32)(lastClear->y * 10 + 5);
+                if (lbl_803DC8CC != 0) {
+                    Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2], lbl_803DC8CC);
+                }
+                state->unk08[idx * 3 + 0] = (f32)((int)local[0] + 5);
+                state->unk08[idx * 3 + 1] = (f32)(int)local[1];
+                state->unk08[idx * 3 + 2] = (f32)((int)local[2] + 5);
+                idx++;
+                cur = cand;
+            }
+        }
+        lastClear = cand;
+        if (cand->unkB == 0xff) {
+            cand = NULL;
+        } else {
+            cand = &state->nodes[cand->unkB];
+        }
+    }
+
+    if (idx < count) {
+        local[0] = (f32)(lastClear->x * 10 + 5);
+        local[1] = (f32)(lastClear->unk2 * 10 + 5);
+        local[2] = (f32)(lastClear->y * 10 + 5);
+        if (lbl_803DC8CC != 0) {
+            Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2], lbl_803DC8CC);
+        }
+        state->unk08[idx * 3 + 0] = (f32)((int)local[0] + 5);
+        state->unk08[idx * 3 + 1] = (f32)(int)local[1];
+        state->unk08[idx * 3 + 2] = (f32)((int)local[2] + 5);
+        idx++;
+        if (idx >= 10) {
+            idx = 10;
+        }
+    }
+
+    state->unk20 = (s16)idx;
+    state->pad22 = 0;
+    return idx;
+}
+#pragma peephole reset
+#pragma scheduling reset
