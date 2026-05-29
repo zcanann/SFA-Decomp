@@ -747,13 +747,13 @@ int fn_8015E210(int *obj, u8 *p)
     player = (int *)Obj_GetPlayerObject();
     r = (**(int (**)(int *))(*(int *)(*(int *)((char *)player_b8 + 0x68)) + 0x44))(player_b8);
     if (r != 0) {
-      if (*(s16 *)((char *)player + 0x46) == 0) {
+      if (*(s16 *)((char *)player + 0x46) != 0) {
         Sfx_PlayFromObject(obj, 498);
       } else {
         Sfx_PlayFromObject(obj, 149);
       }
     } else {
-      if (*(s16 *)((char *)player + 0x46) == 0) {
+      if (*(s16 *)((char *)player + 0x46) != 0) {
         Sfx_PlayFromObject(obj, 498);
       } else {
         Sfx_PlayFromObject(obj, 569);
