@@ -201,5 +201,33 @@ void waterfx_initialise(void) {
     waterfx_onMapSetup();
     waterfx_drawFn_800953fc();
 }
+
+extern u8 *Obj_GetPlayerObject(void);
+extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern void doRumble(f32 v);
+extern f32 lbl_803DF354;
+extern f32 lbl_803DF384;
+extern f32 lbl_803DF3A0;
+extern f32 lbl_803DF3A4;
+extern f32 lbl_803DF3A8;
+
+void fn_8009A8C8(u8 *obj, f32 thresh) {
+    u8 *player = Obj_GetPlayerObject();
+    if (player == NULL) {
+        return;
+    }
+    if (*(u16 *)(player + 0xb0) & 0x1000) {
+        return;
+    }
+    {
+        f32 d = Camera_DistanceToCurrentViewPosition(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20));
+        if (d <= thresh) {
+            f32 t = lbl_803DF354 - d / thresh;
+            CameraShake_Start(lbl_803DF3A0 * t, lbl_803DF384 * t, lbl_803DF3A4);
+            doRumble(lbl_803DF3A8 * t);
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
