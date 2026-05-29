@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objHitReact.h"
 
 /* Pattern wrappers. */
 extern byte framesThisStep;
@@ -312,11 +313,10 @@ void earthwalker_hitDetect(int obj)
 void earthwalker_release(void) {}
 void earthwalker_initialise(void) {}
 
-extern int objHitReact_update(int obj, void *p, int a, int prev, int statePtr);
 extern void dll_2E_func03(int obj, int p2);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void buttonDisable(int a, int b);
-extern u8 lbl_8032AEC0[];
+extern ObjHitReactEntry lbl_8032AEC0[];
 extern f32 lbl_803E6CE4;
 extern f32 lbl_803E6CDC;
 
@@ -328,7 +328,7 @@ void earthwalker_update(int obj)
     int prevAnim;
     int hitOut;
 
-    hitOut = objHitReact_update(obj, lbl_8032AEC0, 1, *(u8 *)(state + 0x65a), state + 0x654);
+    hitOut = objHitReact_update(obj, lbl_8032AEC0, 1, *(u8 *)(state + 0x65a), (f32 *)(state + 0x654));
     *(u8 *)(state + 0x65a) = hitOut;
     if ((u8)hitOut != 0) {
         return;
