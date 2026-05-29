@@ -1712,7 +1712,7 @@ extern int arrayIndexOf(int arr, int val);
 extern int Obj_FreeObject(int obj);
 extern int fn_80080150(int p);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
-extern int fn_802972A8(int obj);
+extern void *fn_802972A8(int obj);
 extern double Vec_distance(int *from, int *to);
 extern int *Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
@@ -1832,7 +1832,7 @@ void drakord_thornbush_update(int obj)
         }
         switch (*(s16 *)((char *)obj + 0x46)) {
         case 0x727:
-            if (fn_802972A8((int)Obj_GetPlayerObject()) != 0) {
+            if (fn_802972A8((int)Obj_GetPlayerObject()) != NULL) {
                 ObjHits_ClearHitVolumes(obj);
                 ObjHits_EnableObject(obj);
             } else {
