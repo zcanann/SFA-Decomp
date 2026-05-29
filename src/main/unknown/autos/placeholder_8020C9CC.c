@@ -373,6 +373,70 @@ extern int *gPartfxInterface;
 extern void mathFn_80021ac8(void *in, void *out);
 extern f32 lbl_803E665C;
 
+typedef struct {
+    f32 f0;
+    f32 f4;
+    f32 f8;
+    f32 fc;
+    u8 f10;
+    u8 f11;
+    u8 pad12[2];
+} GreatFoxFxEntry;
+
+extern GreatFoxFxEntry lbl_8032A210[10];
+extern f32 lbl_803E6640;
+extern f32 lbl_803E6644;
+extern f32 lbl_803E6648;
+extern f32 lbl_803E664C;
+extern f32 lbl_803E6650;
+extern f32 lbl_803E6654;
+extern f32 lbl_803E6658;
+extern f32 lbl_803E6660;
+extern f32 lbl_803E6664;
+extern f32 lbl_803E6668;
+extern f32 lbl_803E666C;
+extern void fn_800971A0(int obj, int a, int b, int c, void *params, f32 scale);
+extern void fn_8009837C(int obj, int a, int b, int c, void *params, f32 scale, f32 arg2);
+
+void worldobj_spawnGreatFoxEffects(int obj) {
+    struct {
+        u8 pad0[8];
+        f32 f8;
+        f32 fc;
+        f32 f10;
+        f32 f14;
+    } params;
+    u8 i;
+    f32 s;
+    f32 k = lbl_803E6640;
+
+    for (i = 0; i < 0xa; i++) {
+        GreatFoxFxEntry *e;
+        s = *(f32 *)(obj + 8);
+        e = &lbl_8032A210[i];
+        params.fc = k * (s * e->f0);
+        params.f10 = k * (s * e->f4);
+        params.f14 = k * (s * e->f8);
+        fn_800971A0(obj, 3, e->f10, e->f11, &params, s * e->fc);
+    }
+    s = *(f32 *)(obj + 8);
+    params.f8 = lbl_803E6644;
+    params.fc = lbl_803E6640 * (lbl_803E6648 * s);
+    params.f10 = lbl_803E6640 * (lbl_803E664C * s);
+    params.f14 = lbl_803E6640 * (lbl_803E6650 * s);
+    fn_8009837C(obj, 1, 0, 6, &params, lbl_803E6654 * s, lbl_803E6658);
+    s = *(f32 *)(obj + 8);
+    params.fc = lbl_803E665C;
+    params.f10 = lbl_803E6640 * (lbl_803E6660 * s);
+    params.f14 = lbl_803E6640 * (lbl_803E6664 * s);
+    fn_8009837C(obj, 1, 0, 6, &params, lbl_803E6654 * s, lbl_803E6668);
+    s = *(f32 *)(obj + 8);
+    params.fc = lbl_803E6640 * (lbl_803E666C * s);
+    params.f10 = lbl_803E6640 * (lbl_803E664C * s);
+    params.f14 = lbl_803E6640 * (lbl_803E6650 * s);
+    fn_8009837C(obj, 1, 0, 6, &params, lbl_803E6654 * s, lbl_803E6658);
+}
+
 void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId) {
     struct {
         s16 f8;

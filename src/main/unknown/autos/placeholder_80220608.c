@@ -312,6 +312,221 @@ void earthwalker_hitDetect(int obj)
 void earthwalker_release(void) {}
 void earthwalker_initialise(void) {}
 
+extern int objHitReact_update(int obj, void *p, int a, int prev, int statePtr);
+extern void dll_2E_func03(int obj, int p2);
+extern void characterDoEyeAnims(int obj, int p2);
+extern void buttonDisable(int a, int b);
+extern u8 lbl_8032AEC0[];
+extern f32 lbl_803E6CE4;
+extern f32 lbl_803E6CDC;
+
+#pragma peephole off
+#pragma scheduling off
+void earthwalker_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int prevAnim;
+    int hitOut;
+
+    hitOut = objHitReact_update(obj, lbl_8032AEC0, 1, *(u8 *)(state + 0x65a), state + 0x654);
+    *(u8 *)(state + 0x65a) = hitOut;
+    if ((u8)hitOut != 0) {
+        return;
+    }
+
+    if (*(u8 *)(state + 0x65b) >= 4 && *(u8 *)(state + 0x65b) <= 8) {
+        if (*(s16 *)(obj + 0xa0) != 0x203) {
+            ObjAnim_SetCurrentMove(obj, 0x203, lbl_803E6CE4, 0);
+        }
+    } else {
+        if (*(s16 *)(obj + 0xa0) != 2) {
+            ObjAnim_SetCurrentMove(obj, 2, lbl_803E6CE4, 0);
+        }
+    }
+
+    prevAnim = *(u8 *)(state + 0x600);
+    dll_2E_func03(obj, state);
+    if (*(u8 *)(state + 0x65b) >= 4 && *(u8 *)(state + 0x65b) <= 7 && prevAnim != 1 &&
+        *(u8 *)(state + 0x600) == 1) {
+        Sfx_PlayFromObject(obj, 0x3e6);
+    }
+
+    characterDoEyeAnims(obj, state + 0x624);
+    if (*(u8 *)(state + 0x659) & 1) {
+        return;
+    }
+
+    switch (*(u8 *)(state + 0x658)) {
+    case 0:
+        if (*(u8 *)(obj + 0xaf) & 1) {
+            buttonDisable(0, 0x100);
+            GameBit_Set(0x7fb, 1);
+            *(u8 *)(state + 0x658) = 2;
+            *(u8 *)(state + 0x659) |= 1;
+        }
+        break;
+    case 1:
+        break;
+    case 2:
+        if (*(u8 *)(obj + 0xaf) & 1) {
+            int newState;
+            switch (*(u8 *)(state + 0x65b)) {
+            case 0:
+                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                    if (*(s8 *)(state + 0x65c) == 0x14) {
+                        newState = 0x15;
+                    } else {
+                        newState = 0x14;
+                    }
+                } else if (GameBit_Get(0xc90) != 0) {
+                    newState = 5;
+                } else if (GameBit_Get(0xc36) != 0) {
+                    newState = 4;
+                } else if (GameBit_Get(0xc55) != 0) {
+                    newState = 3;
+                } else if (GameBit_Get(0x7fc) != 0) {
+                    newState = 3;
+                } else if (*(s8 *)(state + 0x65c) == 0) {
+                    newState = 1;
+                } else if (*(s8 *)(state + 0x65c) == 1) {
+                    newState = 2;
+                } else {
+                    newState = 0;
+                }
+                break;
+            case 9:
+                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                    if (*(s8 *)(state + 0x65c) == 0x16) {
+                        newState = 0x17;
+                    } else {
+                        newState = 0x16;
+                    }
+                } else if (GameBit_Get(0xc90) != 0) {
+                    newState = 0xa;
+                } else if (GameBit_Get(0xc36) != 0) {
+                    newState = 9;
+                } else if (GameBit_Get(0xc55) != 0) {
+                    newState = 8;
+                } else if (GameBit_Get(0x7fc) != 0) {
+                    newState = 8;
+                } else if (*(s8 *)(state + 0x65c) == 6) {
+                    newState = 7;
+                } else {
+                    newState = 6;
+                }
+                break;
+            case 10:
+                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                    if (*(s8 *)(state + 0x65c) == 0x18) {
+                        newState = 0x19;
+                    } else if (*(s8 *)(state + 0x65c) == 0x19) {
+                        newState = 0x1a;
+                    } else if (*(s8 *)(state + 0x65c) == 0x1a) {
+                        newState = 0x1b;
+                    } else {
+                        newState = 0x18;
+                    }
+                } else if (GameBit_Get(0xc90) != 0) {
+                    newState = 0xf;
+                } else if (GameBit_Get(0xc36) != 0) {
+                    newState = 0xe;
+                } else if (GameBit_Get(0xc55) != 0) {
+                    newState = 0xd;
+                } else if (GameBit_Get(0x7fc) != 0) {
+                    if (*(s8 *)(state + 0x65c) == 0xb) {
+                        newState = 0xc;
+                    } else {
+                        newState = 0xb;
+                    }
+                }
+                break;
+            case 11:
+                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                    if (*(s8 *)(state + 0x65c) == 0x1c) {
+                        newState = 0x1d;
+                    } else if (*(s8 *)(state + 0x65c) == 0x1d) {
+                        newState = 0x1e;
+                    } else if (*(s8 *)(state + 0x65c) == 0x1e) {
+                        newState = 0x1f;
+                    } else {
+                        newState = 0x1c;
+                    }
+                } else if (GameBit_Get(0xc90) != 0) {
+                    newState = 0x13;
+                } else if (GameBit_Get(0xc36) != 0) {
+                    if (*(s8 *)(state + 0x65c) == 0x11) {
+                        newState = 0x12;
+                    } else {
+                        newState = 0x11;
+                    }
+                } else if (GameBit_Get(0xc55) != 0) {
+                    newState = 0x10;
+                } else if (GameBit_Get(0x7fc) != 0) {
+                    newState = 0x10;
+                }
+                break;
+            case 1:
+                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                    if (GameBit_Get(0xc92) != 0) {
+                        *(u8 *)(obj + 0xaf) |= 8;
+                        newState = -1;
+                    } else if (GameBit_Get(0x235) != 0) {
+                        newState = 9;
+                    } else {
+                        newState = 8;
+                    }
+                } else if (GameBit_Get(0xc90) != 0) {
+                    newState = 7;
+                } else if (GameBit_Get(0xc36) != 0) {
+                    newState = 6;
+                } else if (GameBit_Get(0xc55) != 0) {
+                    newState = 5;
+                } else {
+                    newState = 0;
+                }
+                break;
+            case 3:
+                newState = 0;
+                break;
+            case 2:
+                newState = 0;
+                break;
+            case 4:
+                newState = 0;
+                break;
+            case 5:
+                newState = 1;
+                break;
+            case 6:
+                newState = 2;
+                break;
+            case 7:
+                newState = 3;
+                break;
+            case 8:
+                if ((u32)GameBit_Get(0x9ad) == 0) {
+                    newState = 4;
+                    buttonDisable(0, 0x100);
+                    GameBit_Set(0x9ad, 1);
+                } else {
+                    newState = 0;
+                }
+                break;
+            }
+            if (newState != -1) {
+                buttonDisable(0, 0x100);
+                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(newState, obj, -1);
+                *(s8 *)(state + 0x65c) = newState;
+            }
+        }
+        break;
+    }
+
+    ObjAnim_AdvanceCurrentMove(lbl_803E6CDC, timeDelta, obj, 0);
+}
+#pragma peephole on
+#pragma scheduling on
+
 int wcbouncycra_getExtraSize(void) { return 0xc; }
 int wcbouncycra_getObjectTypeId(void) { return 0; }
 void wcbouncycra_free(void) {}
