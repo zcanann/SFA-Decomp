@@ -8423,6 +8423,8 @@ extern f32 lbl_803DE760;
 extern f32 lbl_803DE75C;
 extern f32 lbl_803DE764;
 extern f32 lbl_803DE78C;
+extern f32 lbl_803DE794;
+extern f32 lbl_803DE798;
 
 #pragma push
 #pragma scheduling off
@@ -8523,6 +8525,40 @@ void lightFn_8001d620(u8 *light, int mode, s16 frames) {
         *(f32 *)(light + 0x2e0) = denom;
         *(f32 *)(light + 0x2e4) = denom;
     }
+}
+
+void lightFn_8001db6c(u8 *light, u8 enabled, f32 duration) {
+    f32 zero;
+
+    zero = lbl_803DE75C;
+    if (zero == duration) {
+        if (enabled != 0) {
+            *(int *)(light + 0x58) = 2;
+            *(f32 *)(light + 0x138) = lbl_803DE760;
+        } else {
+            *(int *)(light + 0x58) = 0;
+            *(f32 *)(light + 0x138) = zero;
+        }
+        light[0x4c] = enabled;
+        return;
+    }
+
+    if (enabled != 0) {
+        if (*(int *)(light + 0x58) == 0 || *(int *)(light + 0x58) == 3) {
+            *(int *)(light + 0x58) = 1;
+            *(f32 *)(light + 0x13c) = lbl_803DE760 / (lbl_803DE794 * duration);
+            *(f32 *)(light + 0x138) = lbl_803DE75C;
+        }
+        light[0x4c] = 1;
+        return;
+    }
+
+    if (*(int *)(light + 0x58) != 2 && *(int *)(light + 0x58) != 1) {
+        return;
+    }
+    *(int *)(light + 0x58) = 3;
+    *(f32 *)(light + 0x13c) = lbl_803DE798 / (lbl_803DE794 * duration);
+    *(f32 *)(light + 0x138) = lbl_803DE760;
 }
 
 void fn_8001D820(u8 *p, f32 v) {
