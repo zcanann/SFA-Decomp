@@ -38,10 +38,10 @@ void tumbleweed_updateStateMachine(int obj);
 void tumbleweed_updateTargetedStateMachine(int obj);
 void tumbleweed_updateEffects(int obj);
 void tumbleweed_update(int obj);
-int fn_801650D0(void);
+int LandedArwing_ReturnZero(void);
 void tumbleweed_init(int obj, int defData);
-int fn_801650D8(int obj, int target);
-int fn_80165188(int obj, u32 *stateWord);
-int fn_801653D8(int obj, int stateWord);
+int LandedArwing_TriggerLaunchTarget(int obj, int target);
+int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord);
+int LandedArwing_UpdateRetreatChase(int obj, int stateWord);
 
 #endif /* MAIN_DLL_BACKPACK_H_ */

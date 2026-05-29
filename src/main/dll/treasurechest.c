@@ -40,10 +40,10 @@ extern f32 lbl_803E3CCC;
 
 extern void fn_801659B8(void);
 extern void LandedArwing_UpdateFlightChase(void);
-extern void fn_801653D8(void);
-extern void fn_80165188(void);
-extern void fn_801650D8(void);
-extern void fn_801650D0(void);
+extern void LandedArwing_UpdateRetreatChase(void);
+extern void LandedArwing_UpdateBounceFade(void);
+extern void LandedArwing_TriggerLaunchTarget(void);
+extern void LandedArwing_ReturnZero(void);
 extern void *lbl_803AC650[];
 extern void *lbl_803DDA88;
 
@@ -288,10 +288,10 @@ void dll_D3_initialise(void)
   table = lbl_803AC650;
   table[0] = fn_801659B8;
   table[1] = LandedArwing_UpdateFlightChase;
-  table[2] = fn_801653D8;
-  table[3] = fn_80165188;
-  table[4] = fn_801650D8;
-  lbl_803DDA88 = fn_801650D0;
+  table[2] = LandedArwing_UpdateRetreatChase;
+  table[3] = LandedArwing_UpdateBounceFade;
+  table[4] = LandedArwing_TriggerLaunchTarget;
+  lbl_803DDA88 = LandedArwing_ReturnZero;
 }
 
 

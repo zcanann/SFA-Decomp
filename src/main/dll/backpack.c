@@ -100,7 +100,7 @@ void tumbleweed_update(int obj) {
 #pragma pop
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801650D0(void) { return 0x0; }
+int LandedArwing_ReturnZero(void) { return 0x0; }
 
 /*
  * --INFO--
@@ -402,14 +402,14 @@ void tumbleweed_updateEffects(int obj) {
 /*
  * --INFO--
  *
- * Function: fn_801650D8
+ * Function: LandedArwing_TriggerLaunchTarget
  * EN v1.0 Address: 0x801650D8
  * EN v1.0 Size: 176b
  */
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-int fn_801650D8(int obj, int target) {
+int LandedArwing_TriggerLaunchTarget(int obj, int target) {
     int *aux = *(int**)(obj + 0xb8);
     if ((s8)*(u8*)(target + 0x27a) != 0) {
         (*(int(**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(obj, (int)*(s16*)((char*)aux + 0x3f0), -1, 0);
@@ -424,14 +424,14 @@ int fn_801650D8(int obj, int target) {
 /*
  * --INFO--
  *
- * Function: fn_80165188
+ * Function: LandedArwing_UpdateBounceFade
  * EN v1.0 Address: 0x80165188
  * EN v1.0 Size: 592b
  */
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-int fn_80165188(int obj, u32 *stateWord) {
+int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
     f32 horizontalDamping;
     int state;
 
@@ -489,14 +489,14 @@ int fn_80165188(int obj, u32 *stateWord) {
 /*
  * --INFO--
  *
- * Function: fn_801653D8
+ * Function: LandedArwing_UpdateRetreatChase
  * EN v1.0 Address: 0x801653D8
  * EN v1.0 Size: 436b
  */
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-int fn_801653D8(int obj, int stateWord) {
+int LandedArwing_UpdateRetreatChase(int obj, int stateWord) {
     f32 scale;
     int player;
     int state;
