@@ -5897,3 +5897,44 @@ void *skyTextureFn_80094390(f32 *out1, f32 *out2) {
     return NULL;
 }
 #pragma pop
+
+extern void *memset(void *dst, int c, int n);
+extern int lbl_803DB754;
+extern f32 lbl_803DF190;
+extern f32 lbl_803DF194;
+
+#pragma push
+#pragma scheduling off
+void sky2_onMapSetup(void) {
+    int i;
+    void **slot;
+    f32 b;
+    f32 a;
+
+    lbl_803DB610 = -1;
+    (&lbl_803DB610)[1] = -1;
+    slot = (void **)&lbl_803DD184;
+    a = lbl_803DF190;
+    b = lbl_803DF194;
+    for (i = 0; i < 2; i++) {
+        if (slot[i] == NULL) {
+            slot[i] = mmAlloc(792, 23, 0);
+        }
+        memset(slot[i], 0, 792);
+        *(int *)((char *)slot[i] + 0x24) = 255;
+        *(int *)((char *)slot[i] + 0x28) = 255;
+        *(int *)((char *)slot[i] + 0x2c) = 255;
+        *(f32 *)((char *)slot[i] + 0x14) = a;
+        *(f32 *)((char *)slot[i] + 0x18) = b;
+        *(int *)((char *)slot[i] + 0x30) = 255;
+        *(int *)((char *)slot[i] + 0x34) = 255;
+        *(int *)((char *)slot[i] + 0x38) = 255;
+        *(f32 *)((char *)slot[i] + 0x1c) = a;
+        *(f32 *)((char *)slot[i] + 0x20) = b;
+        if (lbl_803DB754 != 0) {
+            getEnvfxAct(NULL, NULL, 9, 0);
+            lbl_803DB754 = 0;
+        }
+    }
+}
+#pragma pop
