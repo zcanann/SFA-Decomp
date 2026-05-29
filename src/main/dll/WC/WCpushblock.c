@@ -112,7 +112,7 @@ typedef int (*ObjAnimAdvanceObjectFirstFn)(int obj, f32 moveStepScale, f32 delta
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801EE0C0(s16 *path)
+void WCPushBlock_SpawnFromPath(s16 *path)
 {
     WCPushBlockObjectSetup *setup;
     WCPushBlockObject *block;
@@ -176,7 +176,7 @@ void fn_801EE0C0(s16 *path)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801EE248(int obj, WCPushBlockState *state)
+void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState *state)
 {
     f32 angle;
     f32 angleSin;
@@ -220,7 +220,7 @@ void fn_801EE248(int obj, WCPushBlockState *state)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801EE3B4(WCPushBlockObject *obj, WCPushBlockState *state)
+void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
 {
     int targetPitch;
     int targetRoll;

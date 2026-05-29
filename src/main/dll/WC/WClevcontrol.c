@@ -28,7 +28,7 @@ extern undefined4 FUN_80053754();
 extern undefined4 FUN_8005398c();
 extern undefined4 FUN_80061a80();
 extern undefined4 FUN_8011e868();
-extern void fn_801EE0C0(s16 *path);
+extern void WCPushBlock_SpawnFromPath(s16 *path);
 extern undefined4 FUN_80247bf8();
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -336,7 +336,7 @@ void FUN_801eeafc(ushort *param_1,int param_2,undefined4 param_3,undefined4 para
     }
   }
   if (bVar1) {
-    fn_801EE0C0((s16 *)param_1);
+    WCPushBlock_SpawnFromPath((s16 *)param_1);
   }
   return;
 }
@@ -905,7 +905,7 @@ void fn_801EE668(ushort *param_1,int param_2,undefined4 param_3,undefined4 param
     }
   }
   if (bVar1) {
-    fn_801EE0C0((s16 *)param_1);
+    WCPushBlock_SpawnFromPath((s16 *)param_1);
   }
   return;
 }
@@ -1085,8 +1085,8 @@ extern f32 lbl_803E5CA0;
 extern f32 lbl_803E5CB8;
 extern f32 lbl_803E5CBC;
 extern f32 lbl_803E5CC0;
-extern void fn_801EE3B4(int obj, int state);
-extern void fn_801EE248(int obj, int state);
+extern void WCPushBlock_UpdateRideTilt(int obj, int state);
+extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 #pragma scheduling off
 #pragma peephole off
 void SB_CloudRunner_update(int obj)
@@ -1125,7 +1125,7 @@ void SB_CloudRunner_update(int obj)
         ((void (*)(int, int))fn_801EEB50)(obj, state);
         break;
     case 1:
-        fn_801EE3B4(obj, state);
+        WCPushBlock_UpdateRideTilt(obj, state);
         break;
     case 2:
     case 3:
@@ -1143,7 +1143,7 @@ void SB_CloudRunner_update(int obj)
     if (*(s8 *)(state + 0x65) != prevKey) {
         *(s16 *)(state + 0x6c) = 0;
     }
-    ((void (*)(int, int))fn_801EE248)(obj, state);
+    ((void (*)(int, int))WCPushBlock_UpdateCloudAction)(obj, state);
 }
 #pragma peephole reset
 #pragma scheduling reset

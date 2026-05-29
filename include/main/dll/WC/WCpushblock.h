@@ -6,8 +6,8 @@
 typedef struct WCPushBlockObject WCPushBlockObject;
 typedef struct WCPushBlockState WCPushBlockState;
 
-void fn_801EE0C0(s16 *path);
-void fn_801EE248(int obj, WCPushBlockState *state);
-void fn_801EE3B4(WCPushBlockObject *obj, WCPushBlockState *state);
+void WCPushBlock_SpawnFromPath(s16 *path);
+void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState *state);
+void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state);
 
 #endif /* MAIN_DLL_WC_WCPUSHBLOCK_H_ */
