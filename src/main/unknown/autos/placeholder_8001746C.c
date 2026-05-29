@@ -10077,6 +10077,7 @@ void gameTextSetWindowStrPos(int idx, int x, int y) {
 extern void textureFree(void *tex);
 extern void *textureLoadAsset(int asset);
 extern void *lbl_8033BE54[];
+extern int lbl_8033B240[];
 extern f32 lbl_803DE8B8;
 extern int lbl_803DC9FC;
 extern void *lbl_803DC9F8;
@@ -10088,6 +10089,61 @@ extern u8 lbl_803DC9F4;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+#pragma optimize_for_size on
+void gameTextInitFn_8001bd14(void) {
+    int i;
+    int zero;
+    int *scratch;
+
+    zero = 0;
+    lbl_803DCA04 = zero;
+    lbl_803DCA00 = 1;
+    lbl_803DB3E0 = -1;
+
+    scratch = lbl_8033B240;
+    i = 8;
+    do {
+        scratch[0] = zero;
+        scratch[1] = zero;
+        scratch[2] = zero;
+        scratch[3] = zero;
+        scratch[4] = zero;
+        scratch[5] = zero;
+        scratch[6] = zero;
+        scratch[7] = zero;
+        scratch += 8;
+        scratch[0] = zero;
+        scratch[1] = zero;
+        scratch[2] = zero;
+        scratch[3] = zero;
+        scratch[4] = zero;
+        scratch[5] = zero;
+        scratch[6] = zero;
+        scratch[7] = zero;
+        scratch += 8;
+        scratch[0] = zero;
+        scratch[1] = zero;
+        scratch[2] = zero;
+        scratch[3] = zero;
+        scratch[4] = zero;
+        scratch[5] = zero;
+        scratch[6] = zero;
+        scratch[7] = zero;
+        scratch += 8;
+        scratch[0] = zero;
+        scratch[1] = zero;
+        scratch[2] = zero;
+        scratch[3] = zero;
+        scratch[4] = zero;
+        scratch[5] = zero;
+        scratch[6] = zero;
+        scratch[7] = zero;
+        scratch += 8;
+        i--;
+    } while (i != 0);
+}
+#pragma optimize_for_size reset
+
 void fn_8001BDD4(int mode) {
     switch (mode) {
     case 3:
