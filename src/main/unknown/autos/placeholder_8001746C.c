@@ -8942,7 +8942,137 @@ int printHeapStats(void) {
     return lbl_803DCB20 + (lbl_803DCB24 + lbl_803DCB28 + lbl_803DCB2C);
 }
 
-int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val) {
+int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag);
+int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag);
+extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
+extern int lbl_803DB430;
+extern int lbl_803DCB0C;
+extern int lbl_803DCC7C;
+
+int mmAllocFromRegion(int region, int size, int type, int tag) {
+    char *msg = sMmShowInfoFBMemoryStoreMessageBlock;
+    int bestIdx;
+    HeapItem *base;
+    HeapItem *it;
+    HeapItem *res;
+    int bestSize;
+    int largest;
+    int t28;
+    int t27;
+    int idx;
+
+    largest = 0;
+    t28 = 0;
+    t27 = 0;
+
+    if (gMmRegionTable[region].f4 + 1 == gMmRegionTable[region].numSlots) {
+        OSReport(msg + 0x4b8, tag, region);
+        return 0;
+    }
+
+    if (size & 0x1f) {
+        size = (size & ~0x1f) + 0x20;
+    }
+
+    bestIdx = -1;
+    bestSize = 0x7fffffff;
+    base = (HeapItem *)gMmRegionTable[region].start;
+    idx = 0;
+
+    if (region == 0 && size < 0x33450) {
+        it = base;
+        while (it->next != -1) {
+            idx = it->next;
+            it = &base[idx];
+        }
+        do {
+            it = &base[idx];
+            if (it->type == 0) {
+                if (it->size >= size) {
+                    if (it->size < bestSize) {
+                        bestSize = it->size;
+                        bestIdx = idx;
+                    }
+                } else if (it->size > largest) {
+                    largest = it->size;
+                }
+            }
+            idx = it->prev;
+        } while (idx != -1);
+    } else {
+        do {
+            it = &base[idx];
+            if (it->type == 0) {
+                if (it->size >= size) {
+                    if (it->size < bestSize) {
+                        bestSize = it->size;
+                        bestIdx = idx;
+                        if (region == 0) {
+                            break;
+                        }
+                    }
+                } else if (it->size > largest) {
+                    largest = it->size;
+                }
+            }
+            idx = it->next;
+        } while (idx != -1);
+    }
+
+    if (bestIdx != -1) {
+        gMmRegionTable[region].f10 += size;
+        if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size) {
+            OSReport(msg + 0x50c);
+        }
+        if (lbl_803DB430 != 0 && region == 0 && size < 0x33450) {
+            bestIdx = heapSpawnSlot(region, bestIdx, size, 1, 0, type, tag);
+        } else {
+            changeHeapSlot(region, bestIdx, size, 1, 0, type, tag);
+        }
+        res = &base[bestIdx];
+        if (lbl_803DCB0C == 0x3ef) {
+            OSReport(msg + 0x53c);
+        }
+        res->f18 = lbl_803DCB0C++;
+        lbl_803DCB14++;
+        return (int)res->key;
+    }
+
+    if ((region == 2 && size > 0x3000) || region == 3 || region == 1) {
+        HeapItem *b0;
+        HeapItem *b1;
+        OSReport(msg + 0x54c, tag, region, type, size);
+        b0 = (HeapItem *)gMmRegionTable[0].start;
+        it = b0;
+        while (it->next != -1) {
+            it = &b0[it->next];
+            if (it->size > t28 && it->type == 0) {
+                t28 = it->size;
+            }
+        }
+        b1 = (HeapItem *)gMmRegionTable[1].start;
+        it = b1;
+        while (it->next != -1) {
+            it = &b1[it->next];
+            if (it->size > t27 && it->type == 0) {
+                t27 = it->size;
+            }
+        }
+        reportAllocFail(
+            gMmRegionTable[0].size / 1024,
+            gMmRegionTable[0].size / 1024 - lbl_803DCB20 / 1024,
+            gMmRegionTable[1].size / 1024,
+            gMmRegionTable[1].size / 1024 - lbl_803DCB24 / 1024,
+            gMmRegionTable[2].size / 1024,
+            gMmRegionTable[2].size / 1024 - lbl_803DCB28 / 1024,
+            lbl_803DCC7C,
+            lbl_803DCB1C,
+            size, t28, t27);
+    }
+    return 0;
+}
+
+int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag) {
     MmRegion *reg;
     HeapItem *base;
     int oldSize;
@@ -8983,7 +9113,7 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10v
     return idx;
 }
 
-int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val) {
+int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag) {
     MmRegion *reg = &gMmRegionTable[region];
     HeapItem *base = (HeapItem *)reg->start;
     int oldSize;
