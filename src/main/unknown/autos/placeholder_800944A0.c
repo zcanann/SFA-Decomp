@@ -1154,6 +1154,84 @@ extern f32 sin(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern void mathFn_80021ac8(void *in, f32 *out);
 
+void objFn_800972dc(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+                    int flags, f32 f8val, f32 mult) {
+    PartfxParams params;
+    ParticleTblA tA = *(ParticleTblA *)((char *)lbl_802C1FD8 + 0xd0);
+    ParticleTbl8 tB = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xe4);
+    ParticleTbl8 tC = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xf4);
+    ParticleTbl8 tD = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0x104);
+    u16 rvec[3];
+    int i;
+    f32 f30;
+
+    params.f8 = f8val;
+    params.f6 = (s16)tA.v[kind];
+    params.pad[1] = 0x3c;
+    for (i = 0; i < 4; i++) {
+        if (randomGetRange(0, 0x63) >= chance) {
+            continue;
+        }
+        f30 = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        switch (mode) {
+        case 1:
+            rvec[0] = (u16)randomGetRange(0, 0xffff);
+            rvec[1] = (u16)randomGetRange(0, 0xffff);
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 2:
+            rvec[0] = 0;
+            rvec[1] = (u16)randomGetRange(0, 0xffff);
+            rvec[2] = 0;
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 3:
+            rvec[0] = (u16)randomGetRange(0, 0xffff);
+            rvec[1] = 0;
+            rvec[2] = 0;
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 4:
+            rvec[0] = 0;
+            rvec[1] = 0;
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 5:
+            rvec[0] = (u16)randomGetRange(0x7fff, 0xffff);
+            rvec[1] = 0;
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 6:
+            rvec[0] = (u16)randomGetRange(0, 0xffff);
+            rvec[1] = (u16)randomGetRange(0, 0xffff);
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = f30 * mult;
+            break;
+        case 7:
+            rvec[0] = (u16)randomGetRange(0, 0xffff);
+            rvec[1] = (u16)randomGetRange(0, 0xffff);
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * (f30 * (f30 * f30))));
+            break;
+        }
+        params.vec[1] = lbl_803DF35C;
+        params.vec[2] = lbl_803DF35C;
+        mathFn_80021ac8(rvec, params.vec);
+        if (origin != NULL) {
+            params.vec[0] += *(f32 *)((char *)origin + 0xc);
+            params.vec[1] += *(f32 *)((char *)origin + 0x10);
+            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+        }
+        params.pad[2] = (s16)tC.v[idx];
+        params.pad[0] = (s16)tD.v[idx];
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, tB.v[idx], &params, flags | 2, -1, 0);
+    }
+}
+
 void objParticleFn_80097734(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
                             void *origin, int flags, f32 f8val, f32 angBase,
                             f32 lo, f32 hi) {
