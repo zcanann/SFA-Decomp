@@ -5832,15 +5832,30 @@ void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
 }
 #pragma pop
 
+typedef struct RomCurveNode {
+    u8 pad00[0x1b];
+    s8 directionMask;
+    s32 links[4];
+} RomCurveNode;
+
+typedef struct RomCurveInterpState {
+    s32 fromNodeId;
+    s32 toNodeId;
+    f32 fromTime;
+    u8 pad0C[0x28 - 0x0c];
+    f32 toTime;
+} RomCurveInterpState;
+
 extern void **gRomCurveInterface;
-extern void curveFn_80083e00(int *out, u8 *curve, int x, f32 f, int flag);
+extern void curveFn_80083e00(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNode *x, f32 f,
+                             int flag);
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void romCurveFn_80084190(int *state, f32 t) {
-    u8 *node;
-    u8 *prev;
+void romCurveFn_80084190(RomCurveInterpState *state, f32 t) {
+    RomCurveNode *node;
+    RomCurveNode *prev;
     int found;
     int i;
     int mask;
@@ -5848,56 +5863,56 @@ void romCurveFn_80084190(int *state, f32 t) {
     f32 thr;
 
     node = NULL;
-    if (t < *(f32 *)((char *)state + 8)) {
-        node = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state[0]);
+    if (t < state->fromTime) {
+        node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->fromNodeId);
     }
     if (node != NULL) {
-        while (t < (thr = *(f32 *)((char *)state + 8))) {
+        while (t < (thr = state->fromTime)) {
             mask = 1;
             for (i = 0; i < 4; i++) {
-                val = *(int *)(node + i * 4 + 0x1c);
-                if (val > -1 && ((s8)node[0x1b] & mask) != 0) {
+                val = node->links[i];
+                if (val > -1 && (node->directionMask & mask) != 0) {
                     found = val;
                     i = 5;
                 }
                 mask <<= 1;
             }
             if (i != 6) {
-                *(f32 *)((char *)state + 0x28) = thr;
-                state[1] = state[0];
-                state[0] = -1;
+                state->toTime = thr;
+                state->toNodeId = state->fromNodeId;
+                state->fromNodeId = -1;
                 return;
             }
-            state[1] = state[0];
-            state[0] = found;
+            state->toNodeId = state->fromNodeId;
+            state->fromNodeId = found;
             prev = node;
-            node = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state[0]);
-            curveFn_80083e00(state, node, (int)prev, *(f32 *)((char *)state + 8), 1);
+            node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->fromNodeId);
+            curveFn_80083e00(state, node, prev, state->fromTime, 1);
         }
     }
-    node = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state[1]);
+    node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
     if (node != NULL) {
-        while (t >= (thr = *(f32 *)((char *)state + 0x28))) {
+        while (t >= (thr = state->toTime)) {
             mask = 1;
             for (i = 0; i < 4; i++) {
-                val = *(int *)(node + i * 4 + 0x1c);
-                if (val > -1 && ((s8)node[0x1b] & mask) == 0) {
+                val = node->links[i];
+                if (val > -1 && (node->directionMask & mask) == 0) {
                     found = val;
                     i = 5;
                 }
                 mask <<= 1;
             }
             if (i != 6) {
-                *(f32 *)((char *)state + 8) = thr;
-                state[0] = state[1];
-                state[1] = -1;
+                state->fromTime = thr;
+                state->fromNodeId = state->toNodeId;
+                state->toNodeId = -1;
                 return;
             }
-            state[0] = state[1];
-            state[1] = found;
+            state->fromNodeId = state->toNodeId;
+            state->toNodeId = found;
             prev = node;
-            node = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state[1]);
-            curveFn_80083e00(state, prev, (int)node, *(f32 *)((char *)state + 0x28), 0);
+            node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
+            curveFn_80083e00(state, prev, node, state->toTime, 0);
         }
     }
 }
@@ -5906,31 +5921,31 @@ void romCurveFn_80084190(int *state, f32 t) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void curveFindFn_800843c4(int *out, int id) {
-    u8 *curve;
+void curveFindFn_800843c4(RomCurveInterpState *out, int id) {
+    RomCurveNode *curve;
     int i;
     int mask;
     int found;
     int val;
 
-    out[0] = id;
-    out[1] = -1;
-    curve = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out[0]);
+    out->fromNodeId = id;
+    out->toNodeId = -1;
+    curve = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out->fromNodeId);
     mask = 1;
     for (i = 0; i < 4; i++) {
-        val = *(int *)(curve + i * 4 + 28);
-        if (val > -1 && ((s8)curve[0x1b] & mask) == 0) {
+        val = curve->links[i];
+        if (val > -1 && (curve->directionMask & mask) == 0) {
             found = val;
             i = 5;
         }
         mask <<= 1;
     }
     if (i != 6) {
-        out[0] = -1;
+        out->fromNodeId = -1;
     } else {
-        out[1] = found;
+        out->toNodeId = found;
         curveFn_80083e00(out, curve,
-                         (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out[1]),
+                         (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out->toNodeId),
                          lbl_803DEFB0, 0);
     }
 }
