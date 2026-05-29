@@ -4,10 +4,8 @@
 #include "ghidra_import.h"
 
 int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, int seqArg);
-void FUN_801c4b14(ushort *param_1);
-undefined4 FUN_801c4de0(int param_1);
 int mmsh_shrine_getExtraSize(void);
-int mmsh_shrine_func08(void);
+int mmsh_shrine_getObjectTypeId(void);
 void mmsh_shrine_free(int param_1);
 void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
                         char flag);
