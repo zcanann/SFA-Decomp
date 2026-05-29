@@ -8422,11 +8422,13 @@ extern void *lbl_803DD61C;
 extern f32 lbl_803DE760;
 extern f32 lbl_803DE75C;
 extern f32 lbl_803DE764;
+extern f32 lbl_803DE778;
 extern f32 lbl_803DE78C;
 extern f32 lbl_803DE788;
 extern f32 lbl_803DE794;
 extern f32 lbl_803DE798;
 extern void *textureLoadAsset(int assetId);
+extern int randomGetRange(int lo, int hi);
 
 #pragma push
 #pragma scheduling off
@@ -8504,6 +8506,54 @@ void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
     out[0] = s * b[0] + a[0];
     out[1] = s * b[1] + a[1];
     out[2] = s * b[2] + a[2];
+}
+
+void lightFn_8001d168(u8 *light) {
+    f32 progress;
+    f32 intensity;
+    int mode;
+
+    mode = *(int *)(light + 0x2d8);
+    if (mode == 2) {
+        *(f32 *)(light + 0x2e0) += *(f32 *)(light + 0x2dc) * timeDelta;
+    } else if (mode > 0 && mode < 2) {
+        *(f32 *)(light + 0x2e4) += *(f32 *)(light + 0x2dc) * timeDelta;
+        if (*(f32 *)(light + 0x2e4) >= lbl_803DE760) {
+            *(f32 *)(light + 0x2e0) = (f32)randomGetRange(0, 100) / lbl_803DE778;
+            *(f32 *)(light + 0x2e4) = lbl_803DE75C;
+        }
+    }
+
+    progress = *(f32 *)(light + 0x2e0);
+    if (progress > lbl_803DE760) {
+        *(f32 *)(light + 0x2e0) = lbl_803DE760 - (progress - lbl_803DE760);
+        *(f32 *)(light + 0x2dc) = -*(f32 *)(light + 0x2dc);
+    } else if (progress < lbl_803DE75C) {
+        *(f32 *)(light + 0x2e0) = -progress;
+        *(f32 *)(light + 0x2dc) = -*(f32 *)(light + 0x2dc);
+    }
+
+    progress = *(f32 *)(light + 0x2e0);
+    light[0xa8] = (u8)(int)(progress * (f32)(light[0xb0] - light[0xac]) + (f32)light[0xac]);
+    light[0xa9] = (u8)(int)(progress * (f32)(light[0xb1] - light[0xad]) + (f32)light[0xad]);
+    light[0xaa] = (u8)(int)(progress * (f32)(light[0xb2] - light[0xae]) + (f32)light[0xae]);
+    light[0xab] = (u8)(int)(progress * (f32)(light[0xb3] - light[0xaf]) + (f32)light[0xaf]);
+
+    intensity = *(f32 *)(light + 0x138);
+    light[0xa8] = (u8)(int)((f32)light[0xa8] * intensity);
+    light[0xa9] = (u8)(int)((f32)light[0xa9] * intensity);
+    light[0xaa] = (u8)(int)((f32)light[0xaa] * intensity);
+    light[0xab] = (u8)(int)((f32)light[0xab] * intensity);
+
+    light[0x100] = (u8)(int)(progress * (f32)(light[0x108] - light[0x104]) + (f32)light[0x104]);
+    light[0x101] = (u8)(int)(progress * (f32)(light[0x109] - light[0x105]) + (f32)light[0x105]);
+    light[0x102] = (u8)(int)(progress * (f32)(light[0x10a] - light[0x106]) + (f32)light[0x106]);
+    light[0x103] = (u8)(int)(progress * (f32)(light[0x10b] - light[0x107]) + (f32)light[0x107]);
+
+    light[0x100] = (u8)(int)((f32)light[0x100] * intensity);
+    light[0x101] = (u8)(int)((f32)light[0x101] * intensity);
+    light[0x102] = (u8)(int)((f32)light[0x102] * intensity);
+    light[0x103] = (u8)(int)((f32)light[0x103] * intensity);
 }
 
 void lightFn_8001d620(u8 *light, int mode, s16 frames) {
