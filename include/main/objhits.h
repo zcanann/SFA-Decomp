@@ -132,7 +132,22 @@ typedef struct ObjHitsPriorityWorkSlot {
 } ObjHitsPriorityWorkSlot;
 
 typedef struct ObjHitsPriorityState {
-  u8 pad00[0x48];
+  u8 pad00[0x0C];
+  f32 primaryRadiusSquared;
+  f32 localPosX;
+  f32 localPosY;
+  f32 localPosZ;
+  f32 worldPosX;
+  f32 worldPosY;
+  f32 worldPosZ;
+  f32 primaryRadiusY;
+  f32 primaryRadiusXZ;
+  f32 secondaryRadiusY;
+  f32 secondaryRadiusXZ;
+  f32 sweepRadiusX;
+  f32 contactPosX;
+  f32 contactPosY;
+  f32 contactPosZ;
   u32 objectHitMask;
   u32 skeletonHitMask;
   int lastHitObject;
