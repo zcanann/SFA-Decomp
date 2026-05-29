@@ -10220,8 +10220,13 @@ extern void setGQR6_2(int a, int b, int c, int d);
 extern void GXInitLightSpot(u8 *lt_obj, f32 cutoff, int spot_func);
 extern void GXInitLightDistAttn(u8 *lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
 extern void GXGetLightAttnK(u8 *lt_obj, f32 *k0, f32 *k1, f32 *k2);
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
+extern f32 PSVECMag(f32 *v);
+extern void PSVECScale(f32 *src, f32 *dst, f32 scale);
+extern f32 PSVECDotProduct(f32 *a, f32 *b);
 extern f32 lbl_803DE760;
 extern f32 lbl_803DE75C;
+extern f32 lbl_803DE768;
 extern f32 lbl_803DE758;
 
 #pragma push
@@ -10314,6 +10319,36 @@ void lightDistAttenFn_8001dc38(u8 *obj, f32 a, f32 b) {
     *(f32 *)(obj + 0x144) = b;
     GXInitLightDistAttn(obj + 0x68, *(f32 *)(obj + 0x140), lbl_803DE758, 2);
     GXGetLightAttnK(obj + 0x68, (f32 *)(obj + 0x124), (f32 *)(obj + 0x128), (f32 *)(obj + 0x12c));
+}
+
+f32 ModelLightStruct_getLightAmount(u8 *light, u8 *obj) {
+    f32 delta[3];
+    f32 dist;
+    f32 amount;
+
+    if (*(void **)(obj + 0xc4) != NULL) {
+        obj = *(u8 **)(obj + 0xc4);
+    }
+
+    PSVECSubtract((f32 *)(obj + 0x18), (f32 *)(light + 0x10), delta);
+    dist = PSVECMag(delta) - *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8);
+    if (dist > lbl_803DE768 || *(f32 *)(light + 0x144) < dist) {
+        return lbl_803DE75C;
+    }
+
+    if (dist < *(f32 *)(light + 0x140)) {
+        amount = lbl_803DE760;
+    } else {
+        amount = lbl_803DE760 - (dist - *(f32 *)(light + 0x140)) /
+                                    (*(f32 *)(light + 0x144) - *(f32 *)(light + 0x140));
+    }
+
+    if (*(int *)(light + 0xb8) != 0) {
+        PSVECScale(delta, delta, lbl_803DE760 / dist);
+        PSVECDotProduct((f32 *)(light + 0x34), delta);
+    }
+
+    return amount;
 }
 #pragma pop
 
