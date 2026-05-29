@@ -110,6 +110,29 @@ extern u8 salAuxFrame;
 extern u8 salMaxStudioNum;
 extern void DCFlushRangeNoSync(void *addr, int len);
 
+typedef struct SalStudioInputSource {
+    u8 volume;
+    u8 panning;
+    u8 surroundPanning;
+    u8 auxBus;
+} SalStudioInputSource;
+
+typedef struct SalStudioInput {
+    u8 auxBus;
+    u8 pad1;
+    u16 volume;
+    u16 panning;
+    u16 surroundPanning;
+    SalStudioInputSource *source;
+} SalStudioInput;
+
+typedef struct SalStudio {
+    u8 pad0[0x52];
+    u8 inputCount;
+    u8 pad53[5];
+    SalStudioInput inputs[7];
+} SalStudio;
+
 int salSynthSendMessage(int synth, int msg) {
     if (salMessageCallback == NULL) {
         return 0;
@@ -157,20 +180,21 @@ void salDeactivateVoice(int voice) {
     *(u8 *)(voice + 0xec) = 0;
 }
 
-int salAddStudioInput(int studio, u8 *input) {
-    if (*(u8 *)(studio + 0x52) < 7) {
-        ((char *)studio + *(u8 *)(studio + 0x52) * 0xc)[0x58] = input[3];
-        *(s16 *)((char *)studio + *(u8 *)(studio + 0x52) * 0xc + 0x5a) = (input[0] << 8) | (input[0] << 1);
-        *(s16 *)((char *)studio + *(u8 *)(studio + 0x52) * 0xc + 0x5c) = (input[1] << 8) | (input[1] << 1);
-        *(s16 *)((char *)studio + *(u8 *)(studio + 0x52) * 0xc + 0x5e) = (input[2] << 8) | (input[2] << 1);
-        *(int *)((char *)studio + *(u8 *)(studio + 0x52) * 0xc + 0x60) = (int)input;
-        *(u8 *)(studio + 0x52) = *(u8 *)(studio + 0x52) + 1;
+int salAddStudioInput(SalStudio *studio, SalStudioInputSource *input) {
+    if (studio->inputCount < 7) {
+        studio->inputs[studio->inputCount].auxBus = input->auxBus;
+        studio->inputs[studio->inputCount].volume = (input->volume << 8) | (input->volume << 1);
+        studio->inputs[studio->inputCount].panning = (input->panning << 8) | (input->panning << 1);
+        studio->inputs[studio->inputCount].surroundPanning =
+            (input->surroundPanning << 8) | (input->surroundPanning << 1);
+        studio->inputs[studio->inputCount].source = input;
+        studio->inputCount++;
         return 1;
     }
     return 0;
 }
 
-int salRemoveStudioInput(int studio, int input) {
+int salRemoveStudioInput(int studio, SalStudioInputSource *input) {
     int i;
     int count;
     char *e;
@@ -178,10 +202,11 @@ int salRemoveStudioInput(int studio, int input) {
     count = *(u8 *)(studio + 0x52);
     e = (char *)studio;
     for (i = 0; i < count; i++) {
-        if (*(int *)(e + 0x60) == input) {
+        if (*(SalStudioInputSource **)(e + 0x60) == input) {
             e = (char *)studio + i * 0xc;
             for (; i <= *(u8 *)(studio + 0x52) - 2; i++) {
-                *(int *)(e + 0x58) = *(int *)(e + 0x64);
+                *(SalStudioInputSource **)(e + 0x58) =
+                    *(SalStudioInputSource **)(e + 0x64);
                 *(int *)(e + 0x5c) = *(int *)(e + 0x68);
                 *(int *)(e + 0x60) = *(int *)(e + 0x6c);
                 e += 0xc;
