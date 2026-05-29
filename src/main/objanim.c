@@ -83,13 +83,11 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16 *axis,int sampleIndex)
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,s16 eventState)
 {
-  int eventStateValue;
   int moveIndex;
   ObjAnimMoveData *moveData;
   int frameType;
   float frameValue;
 
-  eventStateValue = eventState;
   moveIndex =
       animDef->moveGroupBaseIndices[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
       (moveId & OBJANIM_MOVE_INDEX_MASK);
@@ -133,7 +131,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
       state->eventState = 0;
     }
     else {
-      state->eventState = (u16)eventStateValue;
+      state->eventState = (u16)eventState;
     }
   }
   return;
@@ -350,17 +348,17 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
         events->triggeredIds[events->triggerCount++] = (s8)eventId;
       }
     }
-    else if (scanMode == OBJANIM_EVENT_SCAN_WRAPPED) {
+    if (scanMode == OBJANIM_EVENT_SCAN_WRAPPED) {
       if ((eventFrame >= previousFrame) || (eventFrame < currentFrame)) {
         events->triggeredIds[events->triggerCount++] = (s8)eventId;
       }
     }
-    else if (scanMode == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) {
+    if (scanMode == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) {
       if ((eventFrame > currentFrame) && (eventFrame <= previousFrame)) {
         events->triggeredIds[events->triggerCount++] = (s8)eventId;
       }
     }
-    else if (scanMode == OBJANIM_EVENT_SCAN_REVERSE) {
+    if (scanMode == OBJANIM_EVENT_SCAN_REVERSE) {
       if ((eventFrame > currentFrame) || (eventFrame <= previousFrame)) {
         events->triggeredIds[events->triggerCount++] = (s8)eventId;
       }
@@ -794,7 +792,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   s16 eventEntry;
   int eventFrame;
   int eventId;
-  int shouldEmit;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
   clampedStepScale = gObjAnimMoveStepScaleMin;
@@ -918,23 +915,25 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
           continue;
         }
 
-        shouldEmit = 0;
         if (scanMode == OBJANIM_EVENT_SCAN_FORWARD) {
-          shouldEmit = (previousFrame <= eventFrame) && (eventFrame < currentFrame);
+          if ((previousFrame <= eventFrame) && (eventFrame < currentFrame)) {
+            events->triggeredIds[events->triggerCount++] = (s8)eventId;
+          }
         }
-        else if (scanMode == OBJANIM_EVENT_SCAN_WRAPPED) {
-          shouldEmit = (eventFrame >= previousFrame) || (eventFrame < currentFrame);
+        if (scanMode == OBJANIM_EVENT_SCAN_WRAPPED) {
+          if ((eventFrame >= previousFrame) || (eventFrame < currentFrame)) {
+            events->triggeredIds[events->triggerCount++] = (s8)eventId;
+          }
         }
-        else if (scanMode == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) {
-          shouldEmit = (eventFrame > currentFrame) && (eventFrame <= previousFrame);
+        if (scanMode == OBJANIM_EVENT_SCAN_REVERSE_WRAPPED) {
+          if ((eventFrame > currentFrame) && (eventFrame <= previousFrame)) {
+            events->triggeredIds[events->triggerCount++] = (s8)eventId;
+          }
         }
-        else if (scanMode == OBJANIM_EVENT_SCAN_REVERSE) {
-          shouldEmit = (eventFrame > currentFrame) || (eventFrame <= previousFrame);
-        }
-
-        if (shouldEmit != 0) {
-          events->triggeredIds[events->triggerCount] = (s8)eventId;
-          events->triggerCount++;
+        if (scanMode == OBJANIM_EVENT_SCAN_REVERSE) {
+          if ((eventFrame > currentFrame) || (eventFrame <= previousFrame)) {
+            events->triggeredIds[events->triggerCount++] = (s8)eventId;
+          }
         }
       }
     }
