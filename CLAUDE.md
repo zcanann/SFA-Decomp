@@ -56,8 +56,15 @@ Heuristic before reaching for `asm { }`:
    and FP ops around calls), while `peephole off` can *hurt* them (jump-table
    suppression, clamp/compare fusion changes). Default to `scheduling off` only,
    and add `peephole off` *only* to kill a specific `extsb.`/`rlwinm.` dot-merge
-   residual. Whole object-DLL units (e.g. placeholder_80220608) match best on
-   scheduling-off-only.
+   residual. Many object-DLL units lean scheduling-off; but the on/off choice is
+   PER-FUNCTION, not per-unit — A/B test both each time. On placeholder_80220608:
+   scheduling-off always; `peephole off` WINS on the arwing bit-test/flag handlers
+   (target has UNFUSED `rlwinm+cmpwi` bit-tests + a redundant `clrlwi r0,r0,24`
+   after byte-flag `|=`/`&=` that peephole-ON wrongly fuses/drops — fn_8022C30C
+   91.2→98.3%, fn_8022CDEC 89.9→97%), but `peephole off` LOSES on the
+   cror-float-compare-heavy handlers (arwarwing_update). Same unit, opposite
+   answer — so measure both per function (corrects the earlier over-broad
+   "80220608 = scheduling-off-only" claim).
    **`#pragma ... reset` POPS a stack — it does NOT reset-to-default.** `on`/`off`
    push; `reset` restores the *surrounding* state. So nested regions matter: a
    function between an outer `off` and an inner `... reset` is still `off`. When
