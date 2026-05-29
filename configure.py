@@ -764,7 +764,7 @@ config.libs = [
             Object(NonMatching, "main/dll/waterfx.c"),
             Object(NonMatching, "main/dll/viewfinder.c"),
             Object(NonMatching, "main/dll/objfx.c"),
-            Object(NonMatching, "main/unknown/autos/placeholder_800944A0.c"),
+            Object(NonMatching, "main/dll/expgfxresource.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801175B4.c"),
             Object(NonMatching, "main/dll/WM/dll_020B_firefly.c"),
             Object(NonMatching, "main/dll/WM/dll_020C_wmspiritplace.c"),
