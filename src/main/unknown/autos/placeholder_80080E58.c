@@ -32,11 +32,13 @@ extern int seqEvalCondition(int condition, u8 *seq, int obj);
 extern int isGameTimerDisabled(void);
 extern void playerEnvFxFn_80088ad4(int envFxValue);
 extern void renderSunAndMoon(void);
+extern void AudioStream_CancelPrepared(void);
 extern void *Obj_AllocObjectSetup(int size, int objectId);
 extern void *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, void *parent);
 extern void *Obj_GetActiveModel(void *obj);
 extern void ObjModel_SetRenderCallback(void *model, void *callback);
 extern int moonFxCb_80074110(int obj, int *model, int param);
+extern int getCurMapLayer(void);
 extern void modelStruct2_setVectors(void *model, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setColorsA8AC(void *model, int red, int green, int blue, int alpha);
 extern void colorFn_8001efe0(int index, int red, int green, int blue);
@@ -71,7 +73,9 @@ extern u8 lbl_80396918[];
 extern int lbl_8030EDA4[];
 extern u8 lbl_8030ECA8[];
 extern u8 lbl_803DB748;
+extern int lbl_803DB720;
 extern int *gGameUIInterface;
+extern int *gMapEventInterface;
 extern int *gPartfxInterface;
 extern int *gScreenTransitionInterface;
 extern s16 seqGlobal1;
@@ -6264,6 +6268,48 @@ void objAnimCurvFn_800849e8(u8 *obj, u8 *seq) {
     angleSin = sin((lbl_803DEFE8 * (f32)*(s16 *)(seq + 0x1a)) / lbl_803DEFEC);
     *(f32 *)(obj + 0x0c) = angleCos * offset[2] + (angleSin * offset[0] + *(f32 *)(base + 0x08));
     *(f32 *)(obj + 0x14) = -(angleCos * offset[0] - (angleSin * offset[2] + *(f32 *)(base + 0x10)));
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq) {
+    void (*callback)(void *ctx, u8 *obj);
+    u8 *player;
+    int clearBit;
+
+    callback = *(void (**)(void *, u8 *))(seq + 0xe8);
+    if (callback != NULL) {
+        callback(*(void **)(seq + 0x110), obj);
+        *(void **)(seq + 0xe8) = NULL;
+    }
+
+    if ((s8)seq[0x57] == lbl_803DB720) {
+        AudioStream_CancelPrepared();
+        lbl_803DB720 = -1;
+    }
+
+    if (seq[0x7e] != 0) {
+        if ((s8)seq[0x7b] != 0) {
+            seq[0x7b] = 0;
+        }
+        if (*(void **)seq != NULL) {
+            *(void **)(seqObj + 0xc0) = NULL;
+            *(u16 *)(seqObj + 0xb0) &= ~0x1000;
+            *(void **)seq = NULL;
+        }
+    }
+
+    if ((((u32)seq[0x136] >> 2) & 1U) != 0U) {
+        player = Obj_GetPlayerObject();
+        ((void (*)(void *, s16, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(
+            player + 0xc, *(s16 *)player, 0, getCurMapLayer());
+        clearBit = 0;
+        seq[0x136] = (seq[0x136] & (u8)~4) | ((clearBit & 1) << 2);
+    }
+
+    seq[0x7e] = 0;
 }
 #pragma pop
 
