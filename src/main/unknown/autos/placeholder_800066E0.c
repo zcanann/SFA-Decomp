@@ -12154,7 +12154,7 @@ typedef struct {
 } VoxMaps;
 
 extern VoxMaps lbl_803387A0;
-extern u8 lbl_803DC8D0[];
+extern u8 lbl_803DC8D0[8];
 
 /*
  * Function: voxmaps_resetLoadedMaps
@@ -12185,6 +12185,53 @@ void voxmaps_resetLoadedMaps(void)
         b++;
         xy++;
     }
+}
+
+extern int *lbl_803DC8E0;
+extern int lbl_803DC8C8;
+extern void *lbl_803DC8DC;
+extern void *lbl_803DC8D8;
+extern void *lbl_803DC8C0[2];
+extern void *lbl_803DC8B8[2];
+extern void loadAssetFileById(void **out, int id);
+extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+
+/*
+ * Function: voxmaps_initialise
+ * EN v1.0 Address: 0x8000CE90
+ * EN v1.0 Size: 484b
+ */
+void voxmaps_initialise(void)
+{
+    VoxMaps *mgr = &lbl_803387A0;
+    int *p;
+    int i;
+
+    loadAssetFileById((void **)&lbl_803DC8E0, 53);
+    i = 0;
+    p = lbl_803DC8E0;
+    while (*p != -1) {
+        p++;
+        i++;
+    }
+    lbl_803DC8C8 = i - 1;
+    lbl_803DC8DC = mmAlloc(640, 16, NULL);
+
+    for (i = 0; i < 6; i++) {
+        mgr->buf[i] = NULL;
+        mgr->f30[i] = -2;
+        mgr->timer[i] = 0x40000000;
+        lbl_803DC8D0[i] = 0;
+        mgr->xy[i].a = 0;
+        mgr->xy[i].b = 0;
+    }
+
+    lbl_803DC8D8 = lbl_803DC8DC;
+    lbl_803DC8CC = 0;
+    lbl_803DC8C0[0] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    lbl_803DC8C0[1] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    lbl_803DC8B8[0] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
+    lbl_803DC8B8[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
 }
 
 extern s8 gAudioSoundMode;
