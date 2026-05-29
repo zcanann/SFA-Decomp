@@ -83,8 +83,8 @@ void dll_28B_update(int obj)
 void dll_28B_init(int obj)
 {
     int two;
-    Blob16 blockB;
     Blob16 blockA;
+    Blob16 blockB;
     int state = *(int *)(obj + 0xb8);
 
     blockA = *(Blob16 *)lbl_802C25B8;
