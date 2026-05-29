@@ -2065,8 +2065,8 @@ extern void Music_Trigger(int id, int p2);
 extern int getSaveGameLoadStatus(void);
 extern void *Obj_GetPlayerObject(void);
 extern int coordsToMapCell(f32 x, f32 z);
-extern void fn_801AF568(int *obj);
-extern void fn_801AF6DC(int *obj);
+extern void link_levcontrol_updateAreaMusic(int *obj);
+extern void link_levcontrol_applyEnterAreaEffects(int *obj);
 #pragma scheduling off
 #pragma peephole off
 void link_levcontrol_free(int obj) {
@@ -2078,7 +2078,7 @@ void link_levcontrol_free(int obj) {
 }
 extern void *gSHthorntailAnimationInterface;
 extern void SCGameBitLatch_Update(void *p, int a, int b, int c, int d, int e);
-void fn_801AF568(int *obj) {
+void link_levcontrol_updateAreaMusic(int *obj) {
     int *sub = *(int **)((char *)obj + 0xb8);
     switch (*(s8 *)((char *)obj + 0xac)) {
     case 0x47:
@@ -2121,7 +2121,7 @@ extern void fn_80088870(u8 *a, u8 *b, u8 *c, u8 *d);
 extern void envFxActFn_800887f8(int id);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern u8 lbl_803239F0[];
-void fn_801AF6DC(int *obj) {
+void link_levcontrol_applyEnterAreaEffects(int *obj) {
     u8 *tbl = lbl_803239F0;
     switch (*(s8 *)((char *)obj + 0xac)) {
     case 0x47:
@@ -2206,13 +2206,13 @@ void link_levcontrol_update(int *obj) {
 
     if ((s32)inner[0] != (s32)*((s8 *)obj + 0xac)) {
         if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
-            fn_801AF6DC(obj);
+            link_levcontrol_applyEnterAreaEffects(obj);
         } else {
             return;
         }
     }
     if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
-        fn_801AF568(obj);
+        link_levcontrol_updateAreaMusic(obj);
     }
     inner[0] = (s8)coordsToMapCell(player[3], player[5]);
 }
