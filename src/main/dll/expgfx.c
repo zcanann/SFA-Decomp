@@ -1462,8 +1462,8 @@ void expgfx_resetAllPools(void)
   u32 *slotPoolBases;
   u32 *poolActiveMasks;
   s8 *poolActiveCounts;
-  u32 *poolSourceIds;
   s16 *poolSlotTypeIds;
+  u32 *poolSourceIds;
   u8 *poolFrameFlags;
   u16 *refCount;
   u32 activeBit;
@@ -1474,6 +1474,7 @@ void expgfx_resetAllPools(void)
 
   staticBase = gExpgfxStaticData;
   expgfxBase = gExpgfxRuntimeData;
+  poolIndex = 0;
   slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
   poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
   poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
@@ -1481,7 +1482,7 @@ void expgfx_resetAllPools(void)
   poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
   poolFrameFlags = staticBase + EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET;
 
-  for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
+  while (poolIndex < EXPGFX_POOL_COUNT) {
     slot = (ExpgfxSlot *)*slotPoolBases;
     for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
       activeBit = 1 << slotIndex;
@@ -1525,11 +1526,12 @@ void expgfx_resetAllPools(void)
     poolSlotTypeIds++;
     poolSourceIds++;
     poolFrameFlags++;
+    poolIndex++;
   }
 
   resourceEntry = (ExpgfxResourceEntry *)expgfxBase;
-  for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceIndex++,
-      resourceEntry++) {
+  resourceIndex = 0;
+  while (resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT) {
     gExpgfxTextureFreeInProgress = 1;
     if (resourceEntry->resource != NULL) {
       textureFree(resourceEntry->resource);
@@ -1539,6 +1541,8 @@ void expgfx_resetAllPools(void)
     resourceEntry->tableKeyType = 0;
     resourceEntry->evictionScore = 0;
     resourceEntry->wordC = 0;
+    resourceIndex++;
+    resourceEntry++;
   }
 }
 #pragma peephole reset
