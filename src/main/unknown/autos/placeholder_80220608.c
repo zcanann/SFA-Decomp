@@ -1849,6 +1849,7 @@ void wctile_update(int obj)
 #pragma peephole reset
 
 int wcpressures_getExtraSize(void) { return 0x7c; }
+#pragma peephole off
 #pragma scheduling off
 int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
 {
@@ -1858,11 +1859,9 @@ int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
 
     if (*(u8 *)(callbackData + 0x80) == 1) {
         for (i = 0; i < 10; i++) {
-            int tile = *(int *)(state + 4 + i * 4);
-
-            if (tile != 0) {
-                *(f32 *)(state + 0x2c + i * 8) = *(f32 *)(tile + 0xc);
-                *(f32 *)(state + 0x30 + i * 8) = *(f32 *)(tile + 0x14);
+            if (((void **)state)[i + 1] != NULL) {
+                *(f32 *)(state + 0x2c + i * 8) = *(f32 *)(((int *)state)[i + 1] + 0xc);
+                *(f32 *)(state + 0x30 + i * 8) = *(f32 *)(((int *)state)[i + 1] + 0x14);
             }
         }
         *(u8 *)(callbackData + 0x80) = 0;
@@ -1880,6 +1879,7 @@ int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
     return 0;
 }
 #pragma scheduling on
+#pragma peephole on
 
 #pragma scheduling off
 int wcpressures_getObjectTypeId(int obj)
