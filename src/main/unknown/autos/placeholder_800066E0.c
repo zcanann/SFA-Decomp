@@ -2549,7 +2549,7 @@ extern int sndFXStartEx(s16 a, int b, int c, int d);
 extern f32 lbl_803DE590;
 extern u8 lbl_803DE593;
 
-#pragma peephole on
+#pragma peephole off
 SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, f32 pitch, int c, int d)
 {
     SfxObjectChannel *ch;
@@ -2561,12 +2561,14 @@ SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, f32 pitch, int c, int d)
     }
 
     ch = gSfxObjectChannels;
-    for (i = SFX_OBJECT_CHANNEL_COUNT - 1; ch->handle != (u32)-1; i--) {
-        ch++;
-        if (i == 0) {
-            ch = NULL;
+    for (i = SFX_OBJECT_CHANNEL_COUNT - 1; i >= 0; i--) {
+        if (ch->handle == (u32)-1) {
             break;
         }
+        ch++;
+    }
+    if (i < 0) {
+        ch = NULL;
     }
     if (ch == NULL) {
         return 0;
