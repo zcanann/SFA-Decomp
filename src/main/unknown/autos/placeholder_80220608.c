@@ -761,6 +761,7 @@ extern u8 lbl_803AD298[][8];
 extern u8 lbl_803AD2D8[][8];
 extern f32 lbl_803E6DB4;
 extern f32 lbl_803E6DB8;
+extern f32 lbl_803E6DBC;
 extern f32 lbl_803E6DC0;
 extern f32 lbl_803E6DD0;
 extern f32 lbl_803E6DD4;
@@ -1156,6 +1157,88 @@ void fn_802251B4(int obj, int state)
         GameBit_Set(0x4e5, 0);
         if (GameBit_Get(0x4e3) == 0xff)
             GameBit_Set(0x4e3, randomGetRange(6, 7));
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_80225D2C(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
+{
+    int i;
+    int limit;
+
+    if (dx != 0) {
+        int bi = b;
+        if (dx == -1) {
+            f32 pz, px;
+            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + lbl_803E6DBC);
+            *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)(bi * 48));
+            a += 1;
+            limit = 8;
+        } else {
+            f32 pz, px;
+            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + lbl_803E6DA8);
+            *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)(bi * 48));
+            a -= 1;
+            limit = -1;
+        }
+        for (i = a; i != limit; i -= dx) {
+            if (lbl_803AD298[i][b] != 0) {
+                if (lbl_803AD298[i][b] <= 4) {
+                    f32 pz, px;
+                    i += dx;
+                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)((s16)i * 48));
+                    return 1;
+                }
+                {
+                    f32 pz, px;
+                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)((s16)i * 48));
+                    return 2;
+                }
+            }
+        }
+        return 4;
+    } else {
+        int ai = a;
+        if (dy == -1) {
+            f32 pz, px;
+            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)(ai * 48));
+            *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + lbl_803E6DBC);
+            b += 1;
+            limit = 8;
+        } else {
+            f32 pz, px;
+            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            *outX = lbl_803E6DB4 + (lbl_803E6DB8 + px + (f32)(ai * 48));
+            *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + lbl_803E6DA8);
+            b -= 1;
+            limit = -1;
+        }
+        for (i = b; i != limit; i -= dy) {
+            if (lbl_803AD298[a][i] != 0) {
+                if (lbl_803AD298[a][i] <= 4) {
+                    f32 pz, px;
+                    i += dy;
+                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)((s16)i * 48));
+                    return 1;
+                }
+                {
+                    f32 pz, px;
+                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    *outZ = lbl_803E6DB4 + (lbl_803E6DC0 + pz + (f32)((s16)i * 48));
+                    return 2;
+                }
+            }
+        }
+        return 4;
     }
 }
 #pragma scheduling reset
