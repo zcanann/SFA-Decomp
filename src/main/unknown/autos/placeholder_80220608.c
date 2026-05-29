@@ -324,6 +324,59 @@ void wcbouncycra_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 void wcbouncycra_hitDetect(void) {}
+extern f32 lbl_803E6D20;
+extern f32 lbl_803E6D24;
+extern f32 lbl_803E6D28;
+extern f32 lbl_803E6D2C;
+extern f32 lbl_803E6D30;
+extern f32 lbl_803E6D34;
+extern f32 lbl_803E6D3C;
+extern f32 lbl_803E6D40;
+#pragma peephole off
+#pragma scheduling off
+void wcbouncycra_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if ((*(u8 *)(state + 0xa) & 1) == 0) {
+        int n = (int)((f32)*(s16 *)(state + 8) - timeDelta);
+        *(s16 *)(state + 8) = n;
+        if ((s16)n <= 0) {
+            f32 v = lbl_803E6D20;
+            f32 dist;
+
+            if ((void *)ObjGroup_FindNearestObject(3, obj, &v) == NULL) {
+                dist = lbl_803E6D24;
+            } else if (v < lbl_803E6D28) {
+                dist = lbl_803E6D2C;
+            } else if (v > lbl_803E6D30) {
+                dist = lbl_803E6D24;
+            } else {
+                dist = (lbl_803E6D38 - (v - lbl_803E6D28) / lbl_803E6D34) * lbl_803E6D2C;
+            }
+            *(f32 *)(obj + 0x28) = dist;
+            *(u8 *)(state + 0xa) |= 1;
+            *(u8 *)(state + 0xb) = 0;
+        }
+    } else {
+        *(f32 *)(obj + 0x28) = lbl_803E6D3C * timeDelta + *(f32 *)(obj + 0x28);
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+        if (*(f32 *)(obj + 0x10) <= *(f32 *)(state + 0)) {
+            *(f32 *)(obj + 0x10) =
+                *(f32 *)(obj + 0x10) + (*(f32 *)(state + 0) - *(f32 *)(obj + 0x10));
+            *(f32 *)(obj + 0x28) = lbl_803E6D40 * -*(f32 *)(obj + 0x28);
+            *(u8 *)(state + 0xb) += 1;
+            if (*(u8 *)(state + 0xb) > 0xa) {
+                *(u8 *)(state + 0xa) &= ~1;
+                *(s16 *)(state + 8) = 0x28;
+                *(f32 *)(obj + 0x10) = *(f32 *)(state + 0);
+                *(f32 *)(obj + 0x28) = lbl_803E6D24;
+            }
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
 #pragma scheduling off
 void wcbouncycra_init(int obj, int setup)
 {
