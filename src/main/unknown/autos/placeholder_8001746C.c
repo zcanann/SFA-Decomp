@@ -10530,6 +10530,13 @@ extern u8 lbl_803DC991;
 extern u8 lbl_803DC992;
 extern void *lbl_803DC9CC;
 extern u8 *lbl_803DC9C4;
+extern int lbl_803DC9BC;
+extern int lbl_803DC97C;
+extern u8 *lbl_803DC974;
+extern int lbl_803DC978;
+extern u8 lbl_803DC980;
+extern int lbl_803DB378;
+extern void gameTextLoadGraphicsFn_8001a918(void);
 
 typedef struct ObjPathTransform {
     s16 rotX;
@@ -10547,6 +10554,127 @@ extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+#pragma optimize_for_size on
+void gameTextInitFn_8001a234(void) {
+    u8 *gameTextBase;
+    u8 *textWindow;
+    u8 *glyphPage;
+    u8 **glyphPagePtr;
+    u8 *fontState;
+    u8 *request;
+    u8 *clearPtr;
+    f32 zero;
+    int i;
+    int j;
+
+    gameTextBase = lbl_80339980;
+
+    i = 0x94;
+    textWindow = lbl_802C7400 + 0x1280;
+    while (1) {
+        textWindow -= 0x20;
+        if (i == 0) {
+            break;
+        }
+        i--;
+        *(u16 *)(textWindow + 8) = *(u16 *)(textWindow + 2);
+        *(u16 *)(textWindow + 0xa) = *(u16 *)(textWindow + 6);
+    }
+
+    i = 8;
+    glyphPage = gameTextBase + 0x2c0;
+    glyphPagePtr = (u8 **)(gameTextBase + 0xc0);
+    fontState = gameTextBase + 0xa0;
+    while (1) {
+        glyphPage -= 0x40;
+        glyphPagePtr--;
+        fontState -= 0xc;
+        if (i == 0) {
+            break;
+        }
+        i--;
+        *glyphPagePtr = glyphPage;
+        *(u16 *)fontState = 0xffff;
+        *(u16 *)(fontState + 2) = 1;
+        fontState[4] = 0xff;
+        fontState[5] = 0;
+        fontState[6] = 0;
+        fontState[7] = 0;
+        *(u8 ***)(fontState + 8) = glyphPagePtr;
+    }
+
+    i = 0x94;
+    textWindow = lbl_802C7400 + 0x1280;
+    while (1) {
+        textWindow -= 0x20;
+        if (i == 0) {
+            break;
+        }
+        i--;
+        textWindow[0x1e] = 0xff;
+    }
+
+    i = 4;
+    zero = lbl_803DE704;
+    request = gameTextBase + 0x1660;
+    while (1) {
+        request -= 0x28;
+        if (i == 0) {
+            break;
+        }
+        i--;
+        *(int *)(request + 8) = 0;
+        *(int *)(request + 0xc) = 0;
+        *(int *)(request + 0) = 0;
+        *(int *)(request + 4) = 0;
+        *(int *)(request + 0x1c) = 0;
+        *(f32 *)(request + 0x20) = zero;
+        request[0x24] = 0xff;
+        request[0x25] = 6;
+
+        j = 3;
+        clearPtr = request + 0xc;
+        while (1) {
+            clearPtr -= 4;
+            if (j == 0) {
+                break;
+            }
+            j--;
+            *(int *)(clearPtr + 0x10) = 0;
+        }
+    }
+
+    gameTextFonts = gameTextBase + 0x1610;
+    lbl_803DC9E8 = 2;
+    curLanguage = -1;
+    curGameTextDir = (void *)-1;
+    lbl_803DC9CC = NULL;
+    lbl_803DC9E0 = -1;
+    lbl_803DC9D8 = -1;
+    lbl_803DC9BC = 0;
+    lbl_803DC9A7 = 0xff;
+    lbl_803DC9A6 = 0xff;
+    lbl_803DC9A5 = 0xff;
+    lbl_803DC9A4 = 0xff;
+    lbl_803DC9C8 = 0;
+    lbl_803DC9C4 = gameTextBase + 0x3c0;
+    lbl_803DC97C = 0;
+    textWindow = gameTextBase + 0x40;
+    lbl_803DC974 = textWindow;
+    lbl_803DC978 = *(int *)*(void **)(textWindow + 8);
+    lbl_803DC992 = 0;
+    lbl_803DC991 = 0;
+    lbl_803DC990 = 0;
+    lbl_803DC98C = 5;
+    lbl_803DC988 = 5;
+    lbl_803DC984 = 1;
+    lbl_803DC980 = 0;
+    gameTextLoadGraphicsFn_8001a918();
+    curGameTextDir = (void *)3;
+    lbl_803DB378 = mmCreateMemoryStore(0x800);
+}
+#pragma optimize_for_size reset
+
 void gameTextRun(void) {
     u8 *gameTextBase;
     GameTextLoadSlot *slot;
