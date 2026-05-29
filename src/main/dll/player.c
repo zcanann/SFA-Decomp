@@ -4004,12 +4004,12 @@ int fn_802B78A4(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_802B827C(int obj, int p2, int p3)
+void Lightfoot_RecordCompletedChallengeTargetHit(int obj, int inner, int animState)
 {
     int idx;
 
-    if (*(u8 *)((char *)p3 + 0x2e) == 0) return;
-    if ((*(u16 *)((char *)p2 + 0x400) & 2) == 0) return;
+    if (*(u8 *)((char *)animState + 0x2e) == 0) return;
+    if ((*(u16 *)((char *)inner + 0x400) & 2) == 0) return;
 
     idx = *(int *)((char *)obj + 0x4c);
     if (*(u32 *)((char *)idx + 0x14) == 0x46A51 && GameBit_Get(0xc49) == 0) {
@@ -4019,7 +4019,7 @@ void fn_802B827C(int obj, int p2, int p3)
     } else if (*(u32 *)((char *)idx + 0x14) == 0x49928 && GameBit_Get(0xc4b) == 0) {
         GameBit_Set(0xc4b, 1);
     }
-    *(u8 *)((char *)p3 + 0x2e) = 0;
+    *(u8 *)((char *)animState + 0x2e) = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

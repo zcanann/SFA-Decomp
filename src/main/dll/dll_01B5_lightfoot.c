@@ -198,7 +198,7 @@ void lightfoot_update(int obj)
     } else {
         fn_802B85E4(obj, inner);
         if (*(u16 *)((char *)inner + 0x400) & 0x2) {
-            fn_802B827C(obj, inner, anim);
+            Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);
             fn_802B84D0(obj);
             *(int *)((char *)obj + 0xf8) = 0;
             *(u16 *)((char *)inner + 0x400) &= ~0x4;

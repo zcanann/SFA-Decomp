@@ -1620,7 +1620,7 @@ int fn_802B7B0C(int obj, int state, f32 fv);
 int fn_802B7BF0(int obj, int state, f32 fv);
 int fn_802B7D28(int obj, int state, f32 fv);
 int fn_802B8108(int obj, int state, f32 fv);
-void fn_802B827C(int obj, int p2, int p3);
+void Lightfoot_RecordCompletedChallengeTargetHit(int obj, int inner, int animState);
 void fn_802B8360(int obj, int p2);
 void fn_802B84D0(int obj);
 void fn_802B85E4(int obj, int p2);
