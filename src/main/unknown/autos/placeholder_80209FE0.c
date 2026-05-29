@@ -2074,6 +2074,8 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
     int inner = *(int *)((char *)obj + 0xb8);
     int i;
     int target;
+    int eventOffset;
+    int eventId;
     ((DrakorFlags *)((char *)inner + 0x198))->b10 = 1;
     if (*(f32 *)((char *)inner + 0x18c) > lbl_803E6510) {
         gameTextShow(0x569);
@@ -2083,17 +2085,19 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
         }
     }
     for (i = 0; i < *(u8 *)((char *)events + 0x8b); i++) {
-        switch (*(u8 *)((char *)events + 0x81 + i)) {
+        eventOffset = i + 0x81;
+        eventId = *(u8 *)((char *)events + eventOffset);
+        switch (eventId) {
         case 6:
             target = ObjGroup_FindNearestObject(0x1e, obj, 0);
-            if (target != 0 && *(u8 *)((char *)obj + 0xeb) != 0) {
+            if ((void *)target != NULL && *(u8 *)((char *)obj + 0xeb) != 0) {
                 (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)target + 0x68)) + 0x20)))(target, 2);
                 ObjLink_DetachChild(obj, target);
             }
             break;
         case 7:
             target = ObjGroup_FindNearestObject(0x1e, obj, 0);
-            if (target != 0) {
+            if ((void *)target != NULL) {
                 (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)target + 0x68)) + 0x20)))(target, 0);
                 ObjLink_AttachChild(obj, target, 1);
                 *(f32 *)((char *)inner + 0x18c) = lbl_803E6514;
