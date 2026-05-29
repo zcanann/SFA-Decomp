@@ -4731,36 +4731,36 @@ int fn_8029BC4C(int obj, int state, f32 fv)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void fn_802B8360(int obj, int p2)
+void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
 {
-    if (*(int *)((char *)p2 + 0x314) & 4) {
-        *(int *)((char *)p2 + 0x314) &= ~4;
+    if (*(int *)((char *)inner + 0x314) & 4) {
+        *(int *)((char *)inner + 0x314) &= ~4;
         Sfx_PlayFromObject(obj, 0x12e);
     }
-    if (*(int *)((char *)p2 + 0x314) & 2) {
-        *(int *)((char *)p2 + 0x314) &= ~2;
+    if (*(int *)((char *)inner + 0x314) & 2) {
+        *(int *)((char *)inner + 0x314) &= ~2;
         Sfx_PlayFromObject(obj, 0x12e);
     }
-    if (*(int *)((char *)p2 + 0x314) & 1) {
-        *(int *)((char *)p2 + 0x314) &= ~1;
+    if (*(int *)((char *)inner + 0x314) & 1) {
+        *(int *)((char *)inner + 0x314) &= ~1;
         if (randomGetRange(0, 2) == 0) {
             Sfx_PlayFromObject(obj, 0x43c);
         }
     }
-    if (*(int *)((char *)p2 + 0x314) & 0x80) {
-        *(int *)((char *)p2 + 0x314) &= ~0x80;
+    if (*(int *)((char *)inner + 0x314) & 0x80) {
+        *(int *)((char *)inner + 0x314) &= ~0x80;
         Sfx_PlayFromObject(obj, 0x130);
     }
-    if (*(int *)((char *)p2 + 0x314) & 0x200) {
-        *(int *)((char *)p2 + 0x314) &= ~0x200;
+    if (*(int *)((char *)inner + 0x314) & 0x200) {
+        *(int *)((char *)inner + 0x314) &= ~0x200;
         Sfx_PlayFromObject(obj, 0x133);
     }
-    if (*(int *)((char *)p2 + 0x314) & 0x40) {
-        *(int *)((char *)p2 + 0x314) &= ~0x40;
+    if (*(int *)((char *)inner + 0x314) & 0x40) {
+        *(int *)((char *)inner + 0x314) &= ~0x40;
         Sfx_PlayFromObject(obj, 0x135);
     }
-    if (*(int *)((char *)p2 + 0x314) & 0x800) {
-        *(int *)((char *)p2 + 0x314) &= ~0x800;
+    if (*(int *)((char *)inner + 0x314) & 0x800) {
+        *(int *)((char *)inner + 0x314) &= ~0x800;
         ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x19, 2, 1);
         Sfx_PlayFromObject(obj, 0x136);
         CameraShake_Start(lbl_803E81CC, lbl_803E81D0, lbl_803E81D4);
@@ -5577,7 +5577,7 @@ void fn_802B86B8(int obj, int a, int b)
         (*(void (*)(int, int, f32, f32, void *, void *))(*(int *)(*gPlayerInterface + 0x8)))(
             obj, b, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
         *(int *)((char *)obj + 0xc0) = *(int *)((char *)a + 0x3e0);
-        fn_802B8360(obj, a);
+        Lightfoot_ProcessHitResponseFlags(obj, a);
     }
 }
 #pragma dont_inline reset
