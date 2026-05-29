@@ -16,6 +16,11 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void textureFree(void *resource);
 extern void doNothing_onSaveSelectScreenExit(void);
 extern void loadUiDll(int id);
+extern void *mmAlloc(int size, int heap, int flags);
+extern void *textureLoadAsset(int id);
+extern void gameTextLoadDir(int dirId);
+extern void *gameTextGet(int id);
+extern int getUiDllFn_80014930(void);
 
 extern s8 lbl_803DB9FB;
 extern u8 lbl_803DB424;
@@ -28,9 +33,11 @@ extern TitleMenuControl *gScreenTransitionInterface;
 extern TitleMenuControl *gTitleMenuControlInterface;
 extern TitleMenuControl *gTitleMenuLinkInterface;
 extern TitleMenuControl *gTitleMenuItemInterface;
-extern int lbl_803DD6A0;
+extern void *lbl_803DD6A0;
 extern void *lbl_803DD6AC;
 extern void *lbl_803DD6B8;
+extern u8 lbl_803DD6B4;
+extern int lbl_803DD6C0;
 extern void *lbl_803DD6C8;
 extern u8 lbl_803DD6C5;
 extern u8 lbl_803DD6CC;
@@ -42,6 +49,7 @@ extern void *lbl_8031A804[4];
 extern void *lbl_803A8680[4];
 extern SaveSelectPanel lbl_8031A7BC[8];
 extern u8 lbl_8031A7F8[];
+extern s16 lbl_803DBA04;
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800067c0();
@@ -1060,6 +1068,7 @@ void saveSelectGoToChapterSelect(void)
  * EN v1.0 Size: 216b
  */
 #pragma scheduling off
+#pragma dont_inline on
 void saveSelectFn_8011a70c(void) {
     int i;
     int off;
@@ -1084,6 +1093,7 @@ void saveSelectFn_8011a70c(void) {
         i++;
     }
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 /*
  * --INFO--
@@ -1190,7 +1200,60 @@ void saveSelectScreenFree(int param_1) {
 #pragma scheduling reset
 void SaveSelectScreen_render(void) {}
 void SaveSelectScreen_run(void) {}
-void SaveSelectScreen_initialise(void) {}
+void SaveSelectScreen_initialise(void) {
+    int i;
+    SaveSelectPanel *panel;
+
+    saveFileSelect_saveSlotsBase = mmAlloc(0x6c, 5, 0);
+    lbl_803DD6AC = mmAlloc(0x6c, 5, 0);
+    lbl_803DD6C8 = textureLoadAsset(0x2dd);
+    gameTextLoadDir(0x15);
+
+    if (lbl_803DD6A0 == 0) {
+        lbl_803DD6A0 = gameTextGet(0xec);
+    }
+
+    for (i = 0; i < 4; i++) {
+        lbl_803A8680[i] = textureLoadAsset((&lbl_803DBA04)[i]);
+    }
+
+    if (getUiDllFn_80014930() != 6) {
+        if (getUiDllFn_80014930() != 5) {
+            ((void (**)(int, int))gScreenTransitionInterface->vtable)[3](0x14, 5);
+        }
+        saveSelectGoToChooseSlot(1);
+    } else {
+        saveSelectFn_8011a70c();
+        saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
+        if (lbl_803DB9FB != -1) {
+            ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
+        }
+
+        lbl_803DB9FB = 1;
+        panel = &lbl_8031A7BC[1];
+        panel->entries[0].flags = (u16)(panel->entries[0].flags & ~0x4000);
+        *(s8 *)((char *)panel->entries + 0x56) = 0;
+        *(u16 *)((char *)panel->entries + 0x3c) = 0x3d6;
+        lbl_803DD6C5 = 0;
+        ((void (**)(TitleMenuTextEntry *, u8, int, int, int, int, int, int, int, int, int, int))
+             gTitleMenuLinkInterface->vtable)[1]
+            (panel->entries, panel->count, 0, 0, 5, 4, 0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
+        ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](0);
+        saveFileSelect_debugCheatProgress = 0;
+        saveFileSelect_saveCheatProgress = 0;
+        saveFileSelect_cheatInputTimer = 0;
+    }
+
+    lbl_803DD6CC = 0;
+    lbl_803DD6CD = 0;
+    lbl_803DD6CF = 0;
+    lbl_803DD6CE = 4;
+    lbl_803DD6B4 = 0;
+
+    for (i = 0; i < 10; i++) {
+        lbl_803A8658[i] = mmAlloc(5, 5, 0);
+    }
+}
 
 /* Trivial 4b 0-arg blr leaves. */
 void SaveSelectScreen_frameEnd_nop(void) {}
