@@ -5823,3 +5823,39 @@ void playerEnvFxFn_80088ad4(int idx) {
     }
 }
 #pragma pop
+
+typedef struct FogColor {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} FogColor;
+
+extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
+extern int snowPrintSnowCloud(int arg, int x);
+extern void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void *vec, u8 a0, u8 a1);
+extern f32 lbl_8039A8F0[];
+extern int lbl_803DF198;
+
+#pragma push
+#pragma scheduling off
+void dll_07_func07(int arg) {
+    int i;
+    int total;
+    u8 *snow;
+
+    GXSetFog(0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0,
+             *(FogColor *)&lbl_803DF198);
+    total = 0;
+    for (i = 0; i < 8; i++) {
+        snow = (u8 *)lbl_8039A828[i];
+        if (snow != NULL && snow[0x144F] == 0) {
+            total += snowPrintSnowCloud(arg, *(int *)(snow + 0x13F0));
+        }
+    }
+    if (lbl_803DD198 != 0) {
+        drawFn_80079e64(lbl_803DD190, lbl_803DB764, lbl_803DB768, lbl_803DD198,
+                        lbl_8039A8F0, lbl_803DD199, lbl_803DD19A);
+    }
+}
+#pragma pop
