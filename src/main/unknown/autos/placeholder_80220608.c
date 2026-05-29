@@ -2718,6 +2718,35 @@ void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma scheduling on
 #pragma peephole on
+extern f32 lbl_803E6E28;
+extern f32 lbl_803E6E30;
+extern f32 lbl_803E6E34;
+extern void lightFn_8001d6b0(void *light);
+#pragma peephole off
+#pragma scheduling off
+void wcapertures_hitDetect(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (*(u8 *)(state + 6) == 2) {
+        f32 col[3];
+        s16 ev[2];
+
+        if ((s8)*(u8 *)(obj + 0xad) == 0)
+            ev[1] = 1;
+        else
+            ev[1] = 0;
+        col[0] = lbl_803E6E30;
+        col[1] = lbl_803E6E34;
+        col[2] = lbl_803E6E28;
+        (*(void (**)(int, int, void *, int, int, void *))(*gPartfxInterface + 8))(
+            obj, 0x805, ev, 2, -1, col);
+    }
+    if (*(void **)state != NULL)
+        lightFn_8001d6b0(*(void **)state);
+}
+#pragma scheduling on
+#pragma peephole on
 void wcapertures_release(void) {}
 void wcapertures_initialise(void) {}
 
