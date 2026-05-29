@@ -7676,6 +7676,7 @@ void Sfx_StopObjectChannel(u32 obj, u32 channel)
  * EN v1.0 Address: 0x8000B824
  * EN v1.0 Size: 100b
  */
+#pragma dont_inline on
 void Sfx_StopFromObject(u32 obj, u32 sfxId)
 {
     SfxObjectChannel* objectChannel;
@@ -7691,6 +7692,7 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId)
         objectChannel->handle = (u32)-1;
     }
 }
+#pragma dont_inline reset
 
 /*
  * Function: Sfx_SetObjectChannelVolume
@@ -13823,7 +13825,7 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
 
 typedef struct {
     u8 pad0[2];
-    s16 count;
+    u16 count;
     u8 slotHint;
     u8 f5;
     u8 f6;
@@ -13924,6 +13926,135 @@ void gameTextRenderStrs(char *str, int boxIdx)
     if (lbl_803DC9BC == 0) {
         Camera_ApplyCurrentViewport(NULL);
     }
+}
+
+typedef struct {
+    u32 key;
+    u32 val;
+} SpecialGlyph;
+
+typedef struct {
+    int active;
+    int charIndex;
+    int f8;
+    int fC;
+    int f10;
+} TextDisplayState;
+
+extern u8 lbl_803399C0[];
+extern SpecialGlyph lbl_802C86F0[];
+extern f32 lbl_803DC994;
+extern int lbl_803DC998;
+extern int lbl_803DC99C;
+extern f32 lbl_803DE700;
+extern f32 lbl_803DB3D0;
+
+/*
+ * Function: textDisplayFn_800168dc
+ * EN v1.0 Address: 0x800168DC
+ * EN v1.0 Size: 828b
+ */
+void textDisplayFn_800168dc(int textId, TextDisplayState *state)
+{
+    GameTextDef *def;
+    int charCount;
+    int byteOffset;
+    char *lineStr;
+    int special;
+    u32 ch;
+    int charLen;
+
+    if (*(int *)((u8 *)gameTextFonts + 0x1c) == 1) {
+        return;
+    }
+    def = gameTextGet(textId);
+    special = 0;
+    if ((u8 *)def >= lbl_803399C0 && (u8 *)def < lbl_803399C0 + 0x60) {
+        special = 1;
+    }
+    if (special) {
+        state->f8 = 1;
+        return;
+    }
+    lineStr = def->strings[state->charIndex];
+    charCount = 0;
+    byteOffset = 0;
+    if (lineStr != NULL) {
+        while ((ch = utf8GetNextChar((u8 *)(lineStr + byteOffset), &charLen)) != 0) {
+            byteOffset += charLen;
+            if (ch >= 0xe000 && ch <= 0xf8ff) {
+                SpecialGlyph *g = lbl_802C86F0;
+                int val = 0;
+                int n;
+                for (n = 46; n != 0; n--) {
+                    if (g->key == ch) {
+                        val = g->val;
+                        break;
+                    }
+                    g++;
+                }
+                byteOffset += val * 2;
+            } else {
+                charCount++;
+            }
+        }
+    }
+    if (state->active == 0) {
+        lbl_803DC998 = 0;
+        lbl_803DC994 = lbl_803DE700;
+        state->f10 = def->count;
+        state->f8 = 0;
+        state->active = 1;
+    }
+    if (lbl_803DE700 == lbl_803DC994) {
+        Sfx_PlayFromObject(0, 0x397);
+    }
+    lbl_803DC99C = 1;
+    lbl_803DC998 = 0;
+    lbl_803DC994 = timeDelta * lbl_803DB3D0 + lbl_803DC994;
+    if (lbl_803DC994 >= (f32)(charCount - 2)) {
+        Sfx_StopFromObject(0, 0x397);
+    }
+    if (state->fC != 0) {
+        if (lbl_803DC994 < (f32)charCount) {
+            lbl_803DC994 = (f32)charCount;
+        } else {
+            for (;;) {
+                if (state->fC > 0) {
+                    state->charIndex++;
+                } else {
+                    state->charIndex--;
+                }
+                if (state->charIndex < def->count &&
+                    *(u8 *)def->strings[state->charIndex] == 0) {
+                    continue;
+                }
+                break;
+            }
+            if (state->charIndex < 0) {
+                state->charIndex = 0;
+            } else if (state->charIndex >= def->count) {
+                state->charIndex = def->count - 1;
+            } else {
+                lbl_803DC994 = lbl_803DE700;
+            }
+            if (state->charIndex < 0) {
+                state->charIndex = 0;
+            }
+            if (state->charIndex == def->count - 1) {
+                state->fC = 1;
+                if (lbl_803DC994 >= (f32)charCount) {
+                    state->f8 = 1;
+                } else {
+                    state->f8 = 0;
+                }
+            } else {
+                state->f8 = 0;
+            }
+            state->fC = 0;
+        }
+    }
+    gameTextRenderStrs(def->strings[state->charIndex], 0x7c);
 }
 
 /*
