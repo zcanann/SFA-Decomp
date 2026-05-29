@@ -14118,6 +14118,240 @@ extern int lbl_803DC9C0;
 
 extern char **textMeasureFn_80016c9c(char *str, f32 width, f32 height, int *outCount, f32 *outLineH);
 extern void textRenderStr(char *str, TextSlot *slot, int flag, f32 x, f32 y, f32 lineH);
+
+typedef struct {
+    u8 pad0[4];
+    u8 sizeIdx;
+    u8 pad5[3];
+} LanguageName;
+
+typedef struct {
+    u8 pad0[0xa];
+    u16 lineHeight;
+    u8 padc[4];
+} FontSizeEntry;
+
+typedef struct {
+    u32 key;
+    u8 pad4[4];
+    s8 f8;
+    s8 f9;
+    u8 padA[2];
+    u8 fC;
+    u8 padD;
+    u8 lang;
+    u8 padF;
+} MeasGlyph;
+
+extern int lbl_803DC9E8;
+extern int curLanguage;
+extern LanguageName sLanguageNameTable[];
+extern FontSizeEntry lbl_802C8680[];
+extern u16 lbl_803DC9AA;
+extern u16 lbl_803DC9A8;
+extern void *lbl_803DB378;
+extern f32 lbl_803DE704;
+extern f32 lbl_803DE708;
+extern void *mmAllocateFromFBMemoryStore(void *store);
+
+typedef struct {
+    u32 key;
+    u32 val;
+} SpecialGlyph;
+
+extern SpecialGlyph lbl_802C86F0[];
+
+char **textMeasureFn_80016c9c(char *str, f32 width, f32 height, int *outCount, f32 *outLineH)
+{
+    int lineStarts[32];
+    int params[8];
+    int charLen;
+    int charLen2;
+    int total;
+    f32 penX = lbl_803DE704;
+    f32 maxWidth = width;
+    f32 scale = height;
+    int cursor = 0;
+    int breakPos = 0;
+    int haveSpace = 0;
+    int lineCount = 0;
+    int lineOff = 0;
+    int langIdx;
+    FontSizeEntry *sizeEntry;
+    int *bp;
+    int *boundary;
+    u32 ch;
+    int i;
+    char **buffer;
+    char *dst;
+    char *src;
+    int lineIdx;
+    int charPos;
+
+    if (lbl_803DC9E8 == 2) {
+        langIdx = 6;
+    } else {
+        langIdx = sLanguageNameTable[curLanguage].sizeIdx;
+    }
+    sizeEntry = &lbl_802C8680[langIdx];
+
+    *outCount = 0;
+    if (outLineH != NULL) {
+        *outLineH = (f32)(u32)sizeEntry->lineHeight * scale;
+    }
+    if (str == NULL) {
+        return 0;
+    }
+    if (lbl_803DC9AA != 0 || lbl_803DC9A8 != 0) {
+        maxWidth = (f32)(u32)lbl_803DC9AA;
+    }
+
+    lineStarts[0] = 0;
+    boundary = lineStarts;
+    bp = boundary;
+
+    while ((ch = utf8GetNextChar((u8 *)(str + cursor), &charLen)) != 0) {
+        cursor += charLen;
+        if (ch == 0x20) {
+            breakPos = cursor;
+            haveSpace = 1;
+        }
+        if (ch >= 0xe000 && ch <= 0xf8ff) {
+            SpecialGlyph *g = lbl_802C86F0;
+            int count = 0;
+            int n;
+            int sel;
+            for (n = 46; n != 0; n--) {
+                if (g->key == ch) {
+                    count = g->val;
+                    break;
+                }
+                g++;
+            }
+            for (i = 0; i < count; i++) {
+                u8 b0 = str[cursor++];
+                u8 b1 = str[cursor++];
+                params[i] = (b0 << 8) | b1;
+            }
+            sel = 1;
+            switch (ch) {
+            case 0xf8f7:
+                langIdx = params[0];
+                sizeEntry = &lbl_802C8680[langIdx];
+                break;
+            case 0xf8f4:
+                scale = (f32)(int)params[0] * lbl_803DE708;
+                break;
+            default:
+                sel = 0;
+            }
+            if (sel != 0 && langIdx != 5) {
+                f32 lh = (f32)(u32)sizeEntry->lineHeight * scale;
+                if (outLineH != NULL && lh > *outLineH) {
+                    *outLineH = lh;
+                }
+            }
+        } else {
+            MeasGlyph *glyphs = (MeasGlyph *)gameTextFonts->field0;
+            MeasGlyph *found = NULL;
+            int n = gameTextFonts->field8;
+            for (; n != 0; n--) {
+                if (glyphs->key == ch && glyphs->lang == langIdx) {
+                    found = glyphs;
+                    break;
+                }
+                glyphs++;
+            }
+            if (found != NULL) {
+                int advance = found->fC + (found->f8 + found->f9);
+                penX += scale * (f32)(int)advance;
+                if (penX >= maxWidth) {
+                    if (haveSpace == 0) {
+                        breakPos = cursor - charLen;
+                    }
+                    bp++;
+                    lineCount++;
+                    lineOff += 4;
+                    lineStarts[lineCount] = breakPos;
+                    if (lineCount > 1 && bp[0] == bp[-1]) {
+                        return 0;
+                    }
+                    if (lineCount >= 0x1e) {
+                        return 0;
+                    }
+                    penX = lbl_803DE704;
+                    cursor = breakPos;
+                    haveSpace = 0;
+                }
+            }
+        }
+    }
+
+    lineCount++;
+    lineOff = lineCount << 2;
+    lineStarts[lineCount] = cursor;
+    *outCount = lineCount;
+    if (cursor == 0) {
+        return 0;
+    }
+    total = cursor + (lineCount + lineOff);
+    if (outLineH != NULL) {
+        buffer = (char **)mmAllocateFromFBMemoryStore(lbl_803DB378);
+    } else {
+        buffer = (char **)mmAlloc(total, 0, 0);
+    }
+    if (buffer == NULL) {
+        return 0;
+    }
+    for (i = 0; i < total; i++) {
+        ((char *)buffer)[i] = 0;
+    }
+
+    dst = (char *)buffer + lineOff;
+    buffer[0] = dst;
+    lineIdx = 0;
+    charPos = 0;
+    src = str;
+    while (charPos < cursor) {
+        *dst++ = *src;
+        if (charPos == boundary[1]) {
+            char *q = --dst;
+            for (;;) {
+                int k = 6;
+                while (k > 0) {
+                    ch = utf8GetNextChar((u8 *)(dst - k), &charLen2);
+                    if (k == charLen2) {
+                        break;
+                    }
+                    k--;
+                }
+                if (k == 0) {
+                    continue;
+                }
+                if (!isSpace(ch)) {
+                    break;
+                }
+                if (charLen2 != 0) {
+                    int j;
+                    for (j = 0; j < charLen2; j++) {
+                        *--dst = 0;
+                    }
+                }
+            }
+            q[1] = q[0];
+            q[0] = 0;
+            dst = q + 1;
+            buffer[lineIdx + 1] = dst;
+            dst++;
+            boundary++;
+            lineIdx++;
+        }
+        charPos++;
+        src++;
+    }
+    *dst = 0;
+    return buffer;
+}
 extern int lbl_803DC984;
 extern f32 lbl_803DC9A0;
 extern u8 lbl_803DC990;
@@ -14188,11 +14422,6 @@ void gameTextRenderStrs(char *str, int boxIdx)
 }
 
 typedef struct {
-    u32 key;
-    u32 val;
-} SpecialGlyph;
-
-typedef struct {
     int active;
     int charIndex;
     int f8;
@@ -14201,7 +14430,6 @@ typedef struct {
 } TextDisplayState;
 
 extern u8 lbl_803399C0[];
-extern SpecialGlyph lbl_802C86F0[];
 extern f32 lbl_803DC994;
 extern int lbl_803DC998;
 extern int lbl_803DC99C;
