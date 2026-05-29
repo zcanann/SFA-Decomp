@@ -5735,4 +5735,36 @@ void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
     *(u8 *)(p + 0x27) = g;
     return p;
 }
+
+extern void **gRomCurveInterface;
+extern void curveFn_80083e00(int *out, u8 *curve, int x, f32 f, int flag);
+
+void curveFindFn_800843c4(int *out, int id) {
+    u8 *curve;
+    int i;
+    int mask;
+    int found;
+    int val;
+
+    out[0] = id;
+    out[1] = -1;
+    curve = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out[0]);
+    mask = 1;
+    for (i = 0; i < 4; i++) {
+        val = *(int *)(curve + i * 4 + 28);
+        if (val > -1 && ((s8)curve[0x1b] & mask) == 0) {
+            found = val;
+            i = 5;
+        }
+        mask <<= 1;
+    }
+    if (i == 6) {
+        out[1] = found;
+        curveFn_80083e00(out, curve,
+                         (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out[1]),
+                         lbl_803DEFB0, 0);
+    } else {
+        out[0] = -1;
+    }
+}
 #pragma pop
