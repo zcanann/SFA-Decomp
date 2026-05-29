@@ -6,9 +6,9 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 #pragma scheduling off
 #pragma peephole off
 void fn_80094F7C(void) {
-    f32 dummy;
-    u8 kcol[4];
     u8 col[4];
+    u8 kcol[4];
+    f32 dummy;
     GXSetPointSize(0x12, 5);
     GXClearVtxDesc();
     GXSetVtxDesc(9, 1);
