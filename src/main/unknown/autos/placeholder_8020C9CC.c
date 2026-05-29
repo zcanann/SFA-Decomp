@@ -233,6 +233,46 @@ extern int *gScreenTransitionInterface;
 extern int lbl_803DDD34;
 extern int fn_8001DB64(int model);
 extern void queueGlowRender(int model);
+extern int *gPartfxInterface;
+extern void mathFn_80021ac8(void *in, void *out);
+extern f32 lbl_803E665C;
+
+void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId) {
+    struct {
+        s16 f8;
+        s16 fa;
+        s16 fc;
+        s16 pad_e;
+        f32 f10;
+        f32 f14;
+        f32 f18;
+    } dir;
+    struct {
+        u8 pad0[6];
+        s16 f6;
+        u8 pad8[4];
+        f32 fc;
+        f32 f10;
+        f32 f14;
+    } params;
+    int i;
+    f32 base = lbl_803E665C;
+
+    for (i = 0; i < count; i++) {
+        dir.f10 = base;
+        dir.f14 = (f32)(int)randomGetRange(xMin, xMax);
+        dir.f18 = (f32)(int)randomGetRange(yMin, yMax);
+        dir.f8 = 0;
+        dir.fa = 0;
+        dir.fc = (s16)randomGetRange(-0x7fff, 0x7fff);
+        mathFn_80021ac8(&dir.f8, &dir.f10);
+        params.fc = dir.f10;
+        params.f10 = dir.f14;
+        params.f14 = dir.f18;
+        params.f6 = 0x64;
+        (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, dispatchId, &params, 2, -1, 0);
+    }
+}
 
 void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
     int *inner = *(int **)(p1 + 0xb8);
