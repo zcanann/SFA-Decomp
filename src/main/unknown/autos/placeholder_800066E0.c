@@ -12846,6 +12846,130 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
     }
 }
 
+typedef struct {
+    u8 pad0[2];
+    s16 count;
+    u8 slotHint;
+    u8 f5;
+    u8 f6;
+    u8 pad7;
+    char **strings;
+} GameTextDef;
+
+typedef struct {
+    u8 pad0[8];
+    u16 f08;
+    u16 f0a;
+    u8 pad0c[4];
+    u8 f10;
+    u8 f11;
+    u8 f12;
+    u8 pad13;
+    s16 f14;
+    s16 f16;
+    s16 f18;
+    s16 f1a;
+    u8 pad1c[4];
+} TextSlot;
+
+extern GameTextDef *gameTextGet(int id);
+extern void gameTextDrawBox(GameTextDef *def, int a, TextSlot *slot);
+extern u8 lbl_803DC9A4;
+extern u8 lbl_803DC9A5;
+extern u8 lbl_803DC9A6;
+extern u8 lbl_803DC9A7;
+extern int lbl_803DC9C0;
+
+/*
+ * Function: gameTextFn_8001658c
+ * EN v1.0 Address: 0x8001658C
+ * EN v1.0 Size: 644b
+ */
+void gameTextFn_8001658c(int a, int b, int c)
+{
+    GameTextDef *def = gameTextGet(a);
+    TextSlot *slot;
+    u8 save7 = lbl_803DC9A7;
+    u8 save6 = lbl_803DC9A6;
+    u8 save5 = lbl_803DC9A5;
+    u8 save4 = lbl_803DC9A4;
+    int i;
+    int slotIndex;
+
+    lbl_803DC9C0 = 1;
+    if (lbl_803DC9CC != NULL) {
+        slot = lbl_803DC9CC;
+    } else if (def->slotHint == 255) {
+        slot = (TextSlot *)lbl_802C7400 + 2;
+    } else {
+        slot = (TextSlot *)lbl_802C7400 + def->slotHint;
+    }
+
+    if ((u8 *)slot == lbl_802C7400 + 0x10a0) {
+        lbl_803DC9A7 = 255;
+        lbl_803DC9A6 = 255;
+        lbl_803DC9A5 = 255;
+        lbl_803DC9A4 = 255;
+    }
+
+    if (def->f5 == 0) {
+        slot->f12 = slot->f10;
+    }
+    slot->f18 = (s16)b;
+    slot->f1a = (s16)c;
+
+    if (lbl_803DC9BC == 0) {
+        int mode;
+        if (def->f6 == 0) {
+            mode = slot->f11;
+        } else {
+            mode = def->f6;
+        }
+        if (mode == 2 || mode == 3) {
+            int maxX, maxY, minX, minY;
+            int v;
+            gameTextFn_8001628c(a, b, c, &maxX, &maxY, &minX, &minY);
+            v = slot->f0a - (minY - minX);
+            if (mode == 2) {
+                slot->f1a = (s16)(v / 2);
+            } else {
+                slot->f1a = (s16)v;
+            }
+        }
+    }
+
+    if (lbl_803DC9BC == 0) {
+        gameTextDrawBox(def, 0, slot);
+    }
+    if (gameTextDrawFunc != NULL) {
+        gxSetScissorRect(0, 0, 0, 0, 640, 480);
+    } else {
+        if (slot->f14 < 0) {
+            slot->f14 = 0;
+        }
+        if (slot->f16 < 0) {
+            slot->f16 = 0;
+        }
+        if (lbl_803DC9BC == 0) {
+            gxSetScissorRect(0, 0, slot->f14, slot->f16, slot->f14 + slot->f08, slot->f16 + slot->f0a);
+        }
+    }
+
+    slotIndex = slot - (TextSlot *)lbl_802C7400;
+    for (i = 0; i < def->count; i++) {
+        gameTextRenderStrs(def->strings[i], slotIndex);
+    }
+
+    lbl_803DC9C0 = 0;
+    if (lbl_803DC9BC == 0) {
+        Camera_ApplyCurrentViewport(0);
+    }
+    lbl_803DC9A7 = save7;
+    lbl_803DC9A6 = save6;
+    lbl_803DC9A5 = save5;
+    lbl_803DC9A4 = save4;
+}
+
 extern u8 testAndSet_onlyUseHeap3(int arg);
 
 /*
