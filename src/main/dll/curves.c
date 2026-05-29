@@ -4303,12 +4303,12 @@ uint playerHasKrazoaSpirit(u8 checkStoryBits,uint bit)
   if (checkStoryBits == 0) {
     return GameBit_Get(bit);
   }
-  if ((GameBit_Get(0xbfd) == 0) && (GameBit_Get(0xff) == 0) &&
-      (GameBit_Get(0xba8) == 0) && (GameBit_Get(0xc85) == 0) &&
-      (GameBit_Get(0xc6e) == 0) && (GameBit_Get(0x174) == 0)) {
-    return 0;
+  if ((GameBit_Get(0xbfd) != 0) || (GameBit_Get(0xff) != 0) ||
+      (GameBit_Get(0xba8) != 0) || (GameBit_Get(0xc85) != 0) ||
+      (GameBit_Get(0xc6e) != 0) || (GameBit_Get(0x174) != 0)) {
+    return 1;
   }
-  return 1;
+  return 0;
 }
 
 /*
