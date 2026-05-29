@@ -35,7 +35,7 @@ extern void *gTitleMenuControlInterfaceCopy;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern s16 lbl_803DC0A0[1];
-extern f32 lbl_803DC0A4[3];
+__declspec(section ".sdata") extern f32 lbl_803DC0A4[3];
 extern f32 lbl_803E59DC;
 extern f32 lbl_803E59E0;
 extern f32 lbl_803E59E4;
@@ -142,7 +142,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
         if (animState->moveComplete != 0) {
             if (*(s16 *)((char *)obj + 0xa0) == DR_LASERTURRET_ANIM_TRACKING) {
                 if (animState->animStepScale > lbl_803E59DC) {
-                    ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_ALERT, 0.0f, 0);
+                    ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_ALERT, lbl_803E59DC, 0);
                     goto L_DE8;
                 }
             }
