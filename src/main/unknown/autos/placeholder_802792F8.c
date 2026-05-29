@@ -13,6 +13,17 @@ extern u16 voicePrioSortRootListRoot;
 extern u8 *synthVoice;
 extern void voiceUnregister(int state);
 
+typedef struct VoicePriorityLink {
+    u8 prev;
+    u8 next;
+    u16 active;
+} VoicePriorityLink;
+
+typedef struct VoicePrioritySortLink {
+    u16 next;
+    u16 prev;
+} VoicePrioritySortLink;
+
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.
  */
@@ -271,37 +282,40 @@ void voiceRemovePriority(int state)
 {
     u8 *nodes;
     int offset;
-    u16 *priorityNode;
-    u8 *slot;
+    u8 group;
+    VoicePriorityLink *links;
+    VoicePriorityLink *slot;
+    VoicePrioritySortLink *sortLinks;
+    VoicePrioritySortLink *sortNode;
 
     nodes = vidListNodes;
+    links = (VoicePriorityLink *)voicePriorityLinks;
+    sortLinks = (VoicePrioritySortLink *)voicePrioritySortLinks;
     offset = (*(u32 *)(state + 0xf4) << 2) & 0x3fc;
-    slot = nodes + 0x8c0 + offset;
-    if (*(u16 *)(slot + 2) != 1) {
+    slot = (VoicePriorityLink *)(nodes + 0x8c0 + offset);
+    if (slot->active != 1) {
         return;
     }
-    if (*slot != 0xff) {
-        *(u8 *)(nodes + 0x8c1 + (u32)*slot * 4) = slot[1];
+    if (slot->prev != 0xff) {
+        links[slot->prev].next = slot->next;
     } else {
-        *(u8 *)(nodes + 0x9c0 + *(u8 *)(state + 0x10c)) = slot[1];
+        group = *(u8 *)(state + 0x10c);
+        (nodes + group)[0x9c0] = slot->next;
     }
-    if (slot[1] != 0xff) {
-        *(u8 *)(nodes + 0x8c0 + (u32)slot[1] * 4) = *slot;
-    } else if (*slot == 0xff) {
-        offset = (u32)*(u8 *)(state + 0x10c) * 4;
-        priorityNode = (u16 *)(nodes + 0xac0 + offset);
-        if (*(u16 *)(nodes + 0xac2 + offset) == 0xffff) {
-            voicePrioSortRootListRoot = *priorityNode;
+    if (slot->next != 0xff) {
+        links[slot->next].prev = slot->prev;
+    } else if (slot->prev == 0xff) {
+        group = *(u8 *)(state + 0x10c);
+        sortNode = &sortLinks[group];
+        if (sortNode->prev == 0xffff) {
+            voicePrioSortRootListRoot = sortNode->next;
         } else {
-            *(u16 *)(nodes + 0xac0 +
-                     (u32)*(u16 *)(nodes + 0xac2 + offset) * 4) =
-                *priorityNode;
+            sortLinks[sortNode->prev].next = sortNode->next;
         }
-        if (*priorityNode != 0xffff) {
-            *(u16 *)(nodes + 0xac2 + (u32)*priorityNode * 4) =
-                *(u16 *)(nodes + 0xac2 + offset);
+        if (sortNode->next != 0xffff) {
+            sortLinks[sortNode->next].prev = sortNode->prev;
         }
     }
-    *(u16 *)(slot + 2) = 0;
+    slot->active = 0;
 }
 #pragma dont_inline reset
