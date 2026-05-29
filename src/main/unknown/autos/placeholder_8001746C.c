@@ -8158,6 +8158,33 @@ void fn_8001CB3C(void **lightSlot) {
     }
 }
 
+void ModelLightStruct_free(u8 *light) {
+    int count;
+    int i;
+
+    i = 0;
+    count = lbl_803DCA30;
+    while (i < count) {
+        if (lbl_8033BEC0[i] == light) {
+            break;
+        }
+        i++;
+    }
+
+    if (i < count) {
+        while (i < count - 1) {
+            lbl_8033BEC0[i] = lbl_8033BEC0[i + 1];
+            i++;
+        }
+        lbl_803DCA30--;
+    }
+
+    if (light[0x2f8] == 2 && *(void **)(light + 0x2e8) != NULL) {
+        textureFree(*(void **)(light + 0x2e8));
+    }
+    mm_free(light);
+}
+
 void *fn_8001CC9C(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
     u8 *light;
     u8 *newLight;
