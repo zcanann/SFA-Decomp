@@ -8423,8 +8423,10 @@ extern f32 lbl_803DE760;
 extern f32 lbl_803DE75C;
 extern f32 lbl_803DE764;
 extern f32 lbl_803DE78C;
+extern f32 lbl_803DE788;
 extern f32 lbl_803DE794;
 extern f32 lbl_803DE798;
+extern void *textureLoadAsset(int assetId);
 
 #pragma push
 #pragma scheduling off
@@ -8525,6 +8527,32 @@ void lightFn_8001d620(u8 *light, int mode, s16 frames) {
         *(f32 *)(light + 0x2e0) = denom;
         *(f32 *)(light + 0x2e4) = denom;
     }
+}
+
+void fn_8001D730(u8 *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale) {
+    void *texture;
+
+    if (textureId != 0) {
+        texture = textureLoadAsset(textureId);
+        *(void **)(light + 0x2e8) = texture;
+        if (texture != NULL) {
+            light[0x2f8] = 2;
+        }
+    } else {
+        texture = textureLoadAsset(0x605);
+        *(void **)(light + 0x2e8) = texture;
+        if (texture != NULL) {
+            light[0x2f8] = 2;
+        }
+    }
+    light[0x2ec] = red;
+    light[0x2ed] = green;
+    light[0x2ee] = blue;
+    light[0x2ef] = alpha;
+    *(f32 *)(light + 0x2f0) = scale;
+    light[0x2f9] = 0;
+    light[0x2fa] = 0;
+    *(f32 *)(light + 0x2f4) = lbl_803DE788 * *(f32 *)(light + 0x2f0);
 }
 
 void lightFn_8001db6c(u8 *light, u8 enabled, f32 duration) {
