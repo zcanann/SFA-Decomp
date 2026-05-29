@@ -8091,6 +8091,7 @@ int getControlCharLen(u32 c) {
     return 0;
 }
 
+#pragma dont_inline on
 void *getTabEntry(int id, int arg, int e, int d) {
     lbl_8033BF88.f0 = 1;
     lbl_8033BF88.f1 = 2;
@@ -8100,6 +8101,7 @@ void *getTabEntry(int id, int arg, int e, int d) {
     lbl_8033BF88.fc = d;
     return loadAsset(&lbl_8033BF88);
 }
+#pragma dont_inline reset
 
 int ObjModel_HasActiveBlendChannels(u8 *model) {
     u8 *ch;
@@ -10369,6 +10371,39 @@ void Obj_RunInitCallback(u8 *obj) {
         *(f32 *)(obj + 0xfc) = v;
         *(f32 *)(obj + 0x100) = v;
         *(f32 *)(obj + 0x104) = v;
+    }
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void objGetWeaponDa(u8 *obj, int dummy, int *out, int key, u8 load) {
+    int i;
+    s16 *tbl;
+    s16 da2;
+
+    tbl = (s16 *)*(int *)(*(u8 **)(obj + 0x50) + 0x28);
+    *out = 0;
+    if (tbl == NULL) {
+        return;
+    }
+    i = 0;
+    while (tbl[i] != -1) {
+        if (tbl[i] == key) {
+            da2 = tbl[i + 1];
+            *out = tbl[i + 2];
+            if (*out > 0x800) {
+                *out = 0x800;
+            }
+            if (load) {
+                getTabEntry(out[1], 0x34, da2, *out);
+            } else {
+                fileLoadToBufferOffset(0x34, (void *)out[1], da2, *out);
+            }
+            return;
+        }
+        i += 3;
     }
 }
 #pragma pop
