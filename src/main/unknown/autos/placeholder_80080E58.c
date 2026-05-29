@@ -5933,6 +5933,7 @@ extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
 extern f32 lbl_803DEFE8;
 extern f32 lbl_803DEFEC;
 extern f32 lbl_803DF008;
+extern f32 lbl_803DF000;
 extern f32 lbl_803DF01C;
 extern f32 lbl_803DF020;
 
@@ -6260,6 +6261,108 @@ void objAnimCurvFn_800849e8(u8 *obj, u8 *seq) {
     angleSin = sin((lbl_803DEFE8 * (f32)*(s16 *)(seq + 0x1a)) / lbl_803DEFEC);
     *(f32 *)(obj + 0x0c) = angleCos * offset[2] + (angleSin * offset[0] + *(f32 *)(base + 0x08));
     *(f32 *)(obj + 0x14) = -(angleCos * offset[0] - (angleSin * offset[2] + *(f32 *)(base + 0x10)));
+}
+#pragma pop
+
+typedef struct ObjCurveKey {
+    f32 value;
+    s8 tangentAndMode;
+    u8 pad05;
+    s16 frame;
+} ObjCurveKey;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+f32 objCurveInterpolate(ObjCurveKey *keys, int count, int frame) {
+    int index;
+    int mode;
+    int prevIndex;
+    ObjCurveKey *key;
+    ObjCurveKey *prev;
+    f32 values[4];
+    f32 span;
+    f32 deltaPrev;
+    f32 deltaNext;
+    f32 t;
+
+    if (count <= 0) {
+        return lbl_803DEFB0;
+    }
+
+    index = 0;
+    key = keys;
+    while (index < count && key->frame < frame) {
+        key++;
+        index++;
+    }
+
+    if (index == count) {
+        return keys[count - 1].value;
+    }
+    if (index == 0) {
+        return keys[0].value;
+    }
+    key = &keys[index];
+    if (frame == key->frame) {
+        t = keys[index].value;
+        mode = keys[index].tangentAndMode & 3;
+        if (mode > 1 && index < count - 1) {
+            t = key[1].value;
+        }
+        return t;
+    }
+
+    prevIndex = index - 1;
+    prev = &keys[prevIndex];
+    mode = prev->tangentAndMode & 3;
+    values[0] = prev->value;
+    if (mode == 0) {
+        deltaNext = prev[1].value - values[0];
+        if (prevIndex > 0) {
+            deltaPrev = values[0] - prev[-1].value;
+        } else {
+            deltaPrev = deltaNext;
+        }
+        if (deltaNext < lbl_803DEFB0) {
+            deltaNext = -deltaNext;
+        }
+        if (deltaPrev < lbl_803DEFB0) {
+            deltaPrev = -deltaPrev;
+        }
+        values[2] = (deltaNext + deltaPrev) * lbl_803DF000 *
+                    (f32)((s8)prev->tangentAndMode >> 2);
+    }
+
+    span = (f32)(keys[prevIndex + 1].frame - keys[prevIndex].frame);
+    if (index < count) {
+        key = &keys[index];
+        values[1] = key->value;
+        if (mode == 0) {
+            index++;
+            if (index < count) {
+                deltaPrev = key[1].value - values[1];
+            } else {
+                deltaPrev = deltaNext;
+            }
+            if (deltaPrev < lbl_803DEFB0) {
+                deltaPrev = -deltaPrev;
+            }
+            values[3] = (deltaNext + deltaPrev) * lbl_803DF000 *
+                        (f32)((s8)key->tangentAndMode >> 2);
+        }
+    }
+
+    if (span > lbl_803DEFB0) {
+        t = (f32)(frame - keys[prevIndex].frame) / span;
+        if (mode == 0) {
+            return curveFn_80010dc0(t, values, NULL);
+        }
+        if (mode == 1) {
+            return t * (values[1] - values[0]) + values[0];
+        }
+    }
+    return values[1];
 }
 #pragma pop
 
