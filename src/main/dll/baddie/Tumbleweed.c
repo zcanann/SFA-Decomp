@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/dll/FRONT/dll_39.h"
+#include "stdarg.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006728();
@@ -3771,6 +3772,7 @@ extern void* lbl_803DDA24;
 extern void* debugLogEnd;
 extern u8    debugLogBuffer[0x1100];
 extern void  getScreenResolution(void);
+extern int   vsprintf(char *s, const char *format, va_list arg);
 
 /* EN v1.0 0x80137998  size: 104b  Title-screen system init. Calls
  * getScreenResolution, primes the two float counters, clears two state bytes,
@@ -3958,6 +3960,21 @@ void fn_80133718(void)
         *(u8 *)((char *)lbl_803DBBC8[b] + 55) = 255;
     }
     viewFn_80129c74();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Variadic debug logger: append formatted text while the debug arena has room. */
+#pragma peephole off
+#pragma scheduling off
+void debugPrintf(char *fmt, ...)
+{
+    va_list args;
+
+    if ((int)((u8 *)debugLogEnd - debugLogBuffer) <= 0x1000) {
+        va_start(args, fmt);
+        vsprintf(debugLogEnd, fmt, args);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
