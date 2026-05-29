@@ -9729,3 +9729,78 @@ void ring_update(int obj)
     }
 }
 #pragma scheduling reset
+
+extern f32 lbl_803E6EC8;
+extern f32 lbl_803E6ED4;
+extern f32 lbl_803E6ED8;
+extern void debugPrintSetColor(int r, int g, int b, int a);
+extern int padGetStickX(int controller);
+extern int padGetStickY(int controller);
+extern int padGetRTrigger(int controller);
+extern int padGetLTrigger(int controller);
+extern int getButtonsJustPressedIfNotBusy(int controller);
+extern int getButtonsHeld(int controller);
+extern f32 lbl_8032B4A8[];
+
+#pragma scheduling off
+void fn_8022A670(int obj, int state)
+{
+    f32 nx;
+    f32 ny;
+    f32 tv;
+    int btn;
+
+    debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
+    *(f32 *)(state + 0x3e4) = (f32)(s8)padGetStickX(0) / lbl_803E6EC8;
+    *(f32 *)(state + 0x3e8) = (f32)(s8)padGetStickY(0) / lbl_803E6EC8;
+    if (*(f32 *)(state + 0x328) > lbl_803E6ECC) {
+        nx = -*(f32 *)(state + 0x32c);
+        ny = -*(f32 *)(state + 0x330);
+        *(f32 *)(state + 0x328) = *(f32 *)(state + 0x328) - timeDelta;
+        tv = lbl_8032B4A8[(int)*(f32 *)(state + 0x328)];
+        if (*(f32 *)(state + 0x328) <= lbl_803E6ECC) {
+            *(u8 *)(state + 0x338) = 0;
+            (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, state + 0xc0);
+        }
+        *(f32 *)(state + 0x3e4) =
+            *(f32 *)(state + 0x3e4) * (lbl_803E6ED0 - tv) + nx * tv;
+        *(f32 *)(state + 0x3e8) =
+            *(f32 *)(state + 0x3e8) * (lbl_803E6ED0 - tv) + ny * tv;
+    }
+    *(f32 *)(state + 0x3ec) = (f32)(u32)(u8)padGetRTrigger(0) / lbl_803E6ED4;
+    if (*(f32 *)(state + 0x3ec) < lbl_803E6ECC)
+        *(f32 *)(state + 0x3ec) = lbl_803E6ECC;
+    else if (*(f32 *)(state + 0x3ec) > lbl_803E6ED0)
+        *(f32 *)(state + 0x3ec) = lbl_803E6ED0;
+    *(f32 *)(state + 0x3f0) = -(f32)(u32)(u8)padGetLTrigger(0) / lbl_803E6ED4;
+    if (*(f32 *)(state + 0x3f0) < lbl_803E6ED8)
+        *(f32 *)(state + 0x3f0) = lbl_803E6ED8;
+    else if (*(f32 *)(state + 0x3f0) > lbl_803E6ECC)
+        *(f32 *)(state + 0x3f0) = lbl_803E6ECC;
+    *(u16 *)(state + 0x3f4) = (u16)getButtonsJustPressed(0);
+    *(u16 *)(state + 0x3f6) = (u16)getButtonsJustPressedIfNotBusy(0);
+    *(u16 *)(state + 0x3f8) = (u16)getButtonsHeld(0);
+    if (*(u8 *)(state + 0x478) == 0) {
+        btn = *(u16 *)(state + 0x3f4);
+        if ((btn & 0x20) != 0) {
+            Sfx_PlayFromObject(obj, 0x2a4);
+            *(u8 *)(state + 0x478) = 1;
+            *(int *)(state + 0x398) = *(s16 *)(obj + 4);
+            *(f32 *)(state + 0x3a0) = *(f32 *)(state + 0x39c);
+            *(f32 *)(state + 0x3a8) = lbl_803E6ED0;
+            *(f32 *)(state + 0x54) = *(f32 *)(state + 0x54) * *(f32 *)(state + 0x3ac);
+            *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) * *(f32 *)(state + 0x3b0);
+            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 1, 0);
+        } else if ((btn & 0x40) != 0) {
+            Sfx_PlayFromObject(obj, 0x2a4);
+            *(u8 *)(state + 0x478) = 1;
+            *(int *)(state + 0x398) = *(s16 *)(obj + 4);
+            *(f32 *)(state + 0x3a0) = -*(f32 *)(state + 0x39c);
+            *(f32 *)(state + 0x3a8) = lbl_803E6ED0;
+            *(f32 *)(state + 0x54) = *(f32 *)(state + 0x54) * *(f32 *)(state + 0x3ac);
+            *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) * *(f32 *)(state + 0x3b0);
+            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 1, 1);
+        }
+    }
+}
+#pragma scheduling reset
