@@ -449,7 +449,7 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_80221D6C(void *p1, void *p2)
+int voxmaps_traceWorldLine(void *p1, void *p2)
 {
     int grid1[2];
     int grid2[2];
@@ -457,14 +457,14 @@ void fn_80221D6C(void *p1, void *p2)
 
     voxmaps_worldToGrid(p1, grid1);
     voxmaps_worldToGrid(p2, grid2);
-    voxmaps_traceLine(grid1, grid2, out, 0, 0);
+    return voxmaps_traceLine(grid1, grid2, out, 0, 0);
 }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-void fn_80221DC0(int p1, void *p2, f32 *p3, f32 scale)
+void voxmaps_traceScaledVectorEnd(int p1, void *p2, f32 *p3, f32 scale)
 {
     f32 endPos[3];
     f32 scaled[3];

@@ -124,7 +124,7 @@ void drbarrelgr_update(int obj)
                 vec[0] = *(f32 *)(nearest + 12);
                 vec[1] = lbl_803E6CB4 + *(f32 *)(nearest + 16);
                 vec[2] = *(f32 *)(nearest + 20);
-                if (((int (*)(void *, void *))fn_80221D6C)((void *)(obj + 12), vec) != 0 &&
+                if (voxmaps_traceWorldLine((void *)(obj + 12), vec) != 0 &&
                     gunpowderbarrel_canBeGrabbed(nearest) != 0) {
                     Sfx_PlayFromObject(obj, 959);
                     newMode = 4;

@@ -3669,7 +3669,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     vec[0] = *(f32*)((char*)hit + 0xc);
     vec[1] = lbl_803E4298 + *(f32*)((char*)hit + 0x10);
     vec[2] = *(f32*)((char*)hit + 0x14);
-    if (fn_80221D6C((int)obj + 0xc, vec) == 0) return;
+    if (voxmaps_traceWorldLine((void *)((int)obj + 0xc), vec) == 0) return;
     if (*(int*)((char*)obj + 0xf4) != 0 ||
         objBboxFn_800640cc((int)obj + 0xc, vec, 0, &out, (int)obj, 4, -1, 0, 0) == 0) {
         ((Bit80*)(sub + 8))->top = 1;
@@ -3988,7 +3988,7 @@ extern void *fn_8001CC9C(int a, int b, int c, int d);
 extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
 extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
 extern void Obj_TransformLocalVectorByWorldMatrix(int *obj, void *out, void *in);
-extern void fn_80221DC0(void *dst, void *posA, void *posB, f32 factor);
+extern void voxmaps_traceScaledVectorEnd(void *dst, void *posA, void *posB, f32 factor);
 extern f32 PSVECDistance(void *a, void *b);
 extern void PSVECScale(void *in, void *out, f32 scale);
 extern void getAmbientColor(int mode, u8 *r, u8 *g, u8 *b);
@@ -4014,7 +4014,7 @@ void gcrobotlightbea_update(int *obj) {
     vec[1] = lbl_80322C38[1];
     vec[2] = lbl_80322C38[2];
     Obj_TransformLocalVectorByWorldMatrix(obj, vec, vec);
-    fn_80221DC0(vec2, (char*)obj + 0xc, vec, lbl_803DBE5C);
+    voxmaps_traceScaledVectorEnd(vec2, (char*)obj + 0xc, vec, lbl_803DBE5C);
     PSVECDistance((char*)obj + 0xc, vec2);
     PSVECScale(lbl_80322C38, vec2, 0);
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
