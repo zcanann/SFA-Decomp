@@ -9804,3 +9804,64 @@ void fn_8022A670(int obj, int state)
     }
 }
 #pragma scheduling reset
+
+extern f32 lbl_803E6EF8;
+
+#pragma scheduling off
+void fn_8022AB68(int obj, int state)
+{
+    int tgt;
+    int cur;
+    int d;
+
+    *(int *)(state + 0x398) =
+        (int)(timeDelta * (*(f32 *)(state + 0x3a0) * *(f32 *)(state + 0x3a8)) +
+              (f32) * (int *)(state + 0x398));
+    *(s16 *)(obj + 4) =
+        (s16)(int)(timeDelta * (*(f32 *)(state + 0x3a0) * *(f32 *)(state + 0x3a8)) +
+                   (f32) * (s16 *)(obj + 4));
+    if (*(f32 *)(state + 0x3a0) > lbl_803E6ECC) {
+        tgt = *(int *)(state + 0x380);
+        cur = *(int *)(state + 0x398);
+        if (cur > tgt + 0xffff) {
+            *(u8 *)(state + 0x478) = 0;
+            *(int *)(state + 0x380) = *(int *)(state + 0x398) - 0xffff;
+            *(f32 *)(state + 0x38c) = lbl_803E6ECC;
+            *(f32 *)(state + 0x54) = *(f32 *)(state + 0x54) / *(f32 *)(state + 0x3ac);
+            *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) / *(f32 *)(state + 0x3b0);
+            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+        } else if (cur > tgt + 0x8000) {
+            d = cur - (u16)tgt;
+            if (d > 0x8000) d -= 0xffff;
+            if (d < -0x8000) d += 0xffff;
+            if (d < 0) d = -d;
+            *(f32 *)(state + 0x3a8) = (f32)d / *(f32 *)(state + 0x3a4);
+            if (*(f32 *)(state + 0x3a8) < lbl_803E6EF8)
+                *(f32 *)(state + 0x3a8) = lbl_803E6EF8;
+            else if (*(f32 *)(state + 0x3a8) > lbl_803E6ED0)
+                *(f32 *)(state + 0x3a8) = lbl_803E6ED0;
+        }
+    } else {
+        tgt = *(int *)(state + 0x380);
+        cur = *(int *)(state + 0x398);
+        if (cur < tgt - 0xffff) {
+            *(u8 *)(state + 0x478) = 0;
+            *(int *)(state + 0x380) = *(int *)(state + 0x398) + 0xffff;
+            *(f32 *)(state + 0x38c) = lbl_803E6ECC;
+            *(f32 *)(state + 0x54) = *(f32 *)(state + 0x54) / *(f32 *)(state + 0x3ac);
+            *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) / *(f32 *)(state + 0x3b0);
+            arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+        } else if (cur > tgt - 0x8000) {
+            d = cur - (u16)tgt;
+            if (d > 0x8000) d -= 0xffff;
+            if (d < -0x8000) d += 0xffff;
+            if (d < 0) d = -d;
+            *(f32 *)(state + 0x3a8) = (f32)d / *(f32 *)(state + 0x3a4);
+            if (*(f32 *)(state + 0x3a8) < lbl_803E6EF8)
+                *(f32 *)(state + 0x3a8) = lbl_803E6EF8;
+            else if (*(f32 *)(state + 0x3a8) > lbl_803E6ED0)
+                *(f32 *)(state + 0x3a8) = lbl_803E6ED0;
+        }
+    }
+}
+#pragma scheduling reset
