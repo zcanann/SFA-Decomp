@@ -48,13 +48,7 @@ extern void *lbl_803DD24C;
 
 #pragma scheduling off
 #pragma peephole off
-void viewFinderSetZoomTo50(void) {
-    lbl_803DB790 = lbl_803DF34C;
-}
 
-void viewFinderSetZoom(f32 zoom) {
-    lbl_803DB790 = lbl_803DF348 / zoom;
-}
 
 
 

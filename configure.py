@@ -762,6 +762,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/gamecube.c", progress_category="sdk"),
             Object(NonMatching, "main/dll/cloudaction.c"),
             Object(NonMatching, "main/dll/waterfx.c"),
+            Object(NonMatching, "main/dll/viewfinder.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_800944A0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_801175B4.c"),
             Object(NonMatching, "main/dll/WM/dll_020B_firefly.c"),
