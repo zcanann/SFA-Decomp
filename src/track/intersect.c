@@ -1174,7 +1174,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
     extern void selectTexture(void* tex, int slot);
     extern void selectReflectionTexture(int);
     extern void GXInitTexObj();
-    extern void fn_8006CABC(void* a, void* b);
+    extern void newshadows_getReflectionScrollOffsets(void* a, void* b);
     extern int isHeavyFogEnabled(void);
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern int fn_8003BB74(void);
@@ -1207,7 +1207,7 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
     GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);
     GXLoadTexMtxImm(lbl_80396820, 0x55, 0);
     GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x55);
-    fn_8006CABC(&fA, &fB);
+    newshadows_getReflectionScrollOffsets(&fA, &fB);
     PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
     scaleMtx[1][2] = -fA;
     GXLoadTexMtxImm(scaleMtx, 0x21, 1);
@@ -1388,7 +1388,7 @@ void screenImageDraw(u8 alpha)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void fn_8006CABC(f32* a, f32* b);
+    extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void updateReflectionTextures(void);
     extern void selectReflectionTexture(int);
@@ -1402,7 +1402,7 @@ void screenImageDraw(u8 alpha)
     f32 fA;
     f32 fB;
 
-    fn_8006CABC(&fA, &fB);
+    newshadows_getReflectionScrollOffsets(&fA, &fB);
     getTextureFn_8006c5e4(&handle);
     updateReflectionTextures();
     selectReflectionTexture(0);
@@ -2357,7 +2357,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     extern int lbl_803DD014;
     extern void Camera_GetViewMatrix(void);
     extern void selectReflectionTexture(int);
-    extern void fn_8006CABC(f32* a, f32* b);
+    extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void fn_8006C5CC(int* out);
     extern void selectTexture(int handle, int slot);
@@ -2376,7 +2376,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     selectReflectionTexture(0);
     GXLoadTexMtxImm(lbl_80396820, 0x52, 0);
     GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);
-    fn_8006CABC(&a, &b);
+    newshadows_getReflectionScrollOffsets(&a, &b);
     a = a * lbl_803DEF28;
     getTextureFn_8006c5e4(&handle1);
     selectTexture(handle1, 1);
@@ -2742,7 +2742,7 @@ u32 objCallback_80074d04(int handle, void* model)
     extern f32* Camera_GetViewMatrix(void);
     extern f32* ObjModel_GetJointMatrix(void* model, int joint);
     extern void selectReflectionTexture(int);
-    extern void fn_8006CABC(f32* a, f32* b);
+    extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void fn_8006C5CC(int* out);
     extern void selectTexture(int handle, int slot);
@@ -2783,7 +2783,7 @@ u32 objCallback_80074d04(int handle, void* model)
     selectReflectionTexture(0);
     GXLoadTexMtxImm(lbl_80396820, 0x52, 0);
     GXSetTexCoordGen2(0, 0, 0, 0, 0, 0x52);
-    fn_8006CABC(&f1, &f2);
+    newshadows_getReflectionScrollOffsets(&f1, &f2);
     f1 *= hudScale;
     f2 *= hudScale;
     getTextureFn_8006c5e4(&handle1);
@@ -5408,7 +5408,7 @@ void doHeatEffect(u32 alpha_in)
     extern void selectReflectionTexture(int);
     extern void getReflectionTexture2(int* out);
     extern void getTextureFn_8006c5e4(int* out);
-    extern void fn_8006CABC(f32* a, f32* b);
+    extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void fn_80293C64(f32* a, f32* b, f32 c);
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
@@ -5449,7 +5449,7 @@ void doHeatEffect(u32 alpha_in)
     selectTexture(handle1, 1);
     GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
 
-    fn_8006CABC(&fA, &fB);
+    newshadows_getReflectionScrollOffsets(&fA, &fB);
     fA *= lbl_803DEF6C;
     fB *= lbl_803DEF6C;
     getTextureFn_8006c5e4(&handle2);
@@ -6206,7 +6206,7 @@ void gxTextureSetupFn_8007cf7c(void)
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
     extern int lbl_803DD014;
-    extern void fn_8006CABC(f32* a, f32* b);
+    extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void selectReflectionTexture(int);
     extern int isHeavyFogEnabled(void);
@@ -6221,7 +6221,7 @@ void gxTextureSetupFn_8007cf7c(void)
     int handle1;
     GXColor temp;
 
-    fn_8006CABC(&fA, &fB);
+    newshadows_getReflectionScrollOffsets(&fA, &fB);
     selectReflectionTexture(0);
     GXSetTexCoordGen2(0, 0, 0, 0x1e, 0, 0x7d);
     getTextureFn_8006c5e4(&handle1);

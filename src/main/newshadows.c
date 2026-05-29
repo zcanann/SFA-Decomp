@@ -2756,7 +2756,7 @@ void getTextureFn_8006c5e4(u32 *p) { *p = lbl_803DCFE0; }
 /* *p1 = lbl1; *p2 = lbl2; (f32) */
 extern f32 lbl_803DCFAC;
 extern f32 lbl_803DCFA8;
-void fn_8006CABC(f32 *p1, f32 *p2) { *p1 = lbl_803DCFAC; *p2 = lbl_803DCFA8; }
+void newshadows_getReflectionScrollOffsets(f32 *p1, f32 *p2) { *p1 = lbl_803DCFAC; *p2 = lbl_803DCFA8; }
 
 /* misc 8b leaves */
 extern f32 lbl_803DCFA4;
