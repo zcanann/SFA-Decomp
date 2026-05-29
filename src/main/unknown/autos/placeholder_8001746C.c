@@ -9335,6 +9335,7 @@ extern u8 lbl_802C7400[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void mtx44Transpose(f32 *src, f32 *dst) {
     dst[0] = src[0];
     dst[1] = src[4];
@@ -9349,6 +9350,7 @@ void mtx44Transpose(f32 *src, f32 *dst) {
     dst[7] = src[13];
     dst[11] = src[14];
 }
+#pragma dont_inline reset
 
 extern void setMatrixFromObjectPos(f32 *mtx, void *obj);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
@@ -10437,6 +10439,46 @@ void ObjAnim_LoadMoveEvents(u8 *obj, int dummy, int *out, int key, u8 load) {
             return;
         }
         i += 3;
+    }
+}
+#pragma pop
+
+typedef struct ObjPathTransform {
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    u8 pad06[2];
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ObjPathTransform;
+
+extern void mtxRotateByVec3s(f32 *mtx, void *transform);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out) {
+    ObjPathTransform transform;
+    f32 rotMtx[16];
+
+    if (*(void **)(obj + 0x30) == NULL) {
+        *(f32 *)(obj + 0xc) -= playerMapOffsetX;
+        *(f32 *)(obj + 0x14) -= playerMapOffsetZ;
+    }
+    transform.x = -*(f32 *)(obj + 0xc);
+    transform.y = -*(f32 *)(obj + 0x10);
+    transform.z = -*(f32 *)(obj + 0x14);
+    transform.rotX = -*(s16 *)(obj + 0x0);
+    transform.rotY = -*(s16 *)(obj + 0x2);
+    transform.rotZ = -*(s16 *)(obj + 0x4);
+    transform.scale = lbl_803DE890;
+    mtxRotateByVec3s(rotMtx, &transform);
+    mtx44Transpose(rotMtx, out);
+    if (*(void **)(obj + 0x30) == NULL) {
+        *(f32 *)(obj + 0xc) += playerMapOffsetX;
+        *(f32 *)(obj + 0x14) += playerMapOffsetZ;
     }
 }
 #pragma pop
