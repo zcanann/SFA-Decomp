@@ -1017,6 +1017,150 @@ typedef struct {
     u8 b18 : 2;
     u8 b07 : 3;
 } WclevelcontFlags;
+
+extern void gameTimerInit(int a, int b);
+extern void timerSetToCountUp(void);
+extern f32 lbl_803E6DAC;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802251B4(int obj, int state)
+{
+    int scratch;
+
+    (*(int (**)(int *))(*gSHthorntailAnimationInterface + 0x24))(&scratch);
+    switch (*(u8 *)(state + 0xc)) {
+    case 6:
+        gameTimerInit(0x1d, 0x50);
+        timerSetToCountUp();
+        *(u8 *)(state + 0xc) = 4;
+        break;
+    case 4:
+        if ((u32)GameBit_Get(0x2a5) != 0) {
+            int player;
+            GameBit_Set(0x274, 1);
+            GameBit_Set(0xef1, 0);
+            player = Obj_GetPlayerObject();
+            (*(void (**)(int, int, int, int))(*gMapEventInterface + 0x1c))(
+                player + 0xc, *(s16 *)player, 1, 0);
+            *(u16 *)(state + 0x1a) |= 0x40;
+            *(u8 *)(state + 0xc) = 0;
+            Sfx_PlayFromObject(0, 0x7e);
+            gameTimerStop();
+        } else if (isGameTimerDisabled() != 0) {
+            GameBit_Set(0x274, 0);
+            GameBit_Set(0xef1, 0);
+            if ((u32)GameBit_Get(0x34d) == 0) {
+                GameBit_Set(0x2b1, 0);
+                GameBit_Set(0x226, 1);
+                GameBit_Set(0x2a6, 1);
+                GameBit_Set(0x206, 1);
+                GameBit_Set(0x25f, 1);
+                *(u8 *)(state + 0xc) = 0;
+            }
+        }
+        break;
+    default:
+        if (!(*(u16 *)(state + 0x1a) & 0x40) && (u32)GameBit_Get(0x2b1) != 0) {
+            GameBit_Set(0xef1, 1);
+            GameBit_Set(0xe6d, 0);
+            if ((u32)GameBit_Get(0x204) != 0) {
+                GameBit_Set(0x226, 0);
+                GameBit_Set(0x2a6, 0);
+                GameBit_Set(0x206, 0);
+                GameBit_Set(0x25f, 0);
+                GameBit_Set(0x274, 1);
+                *(u8 *)(state + 0xc) = 6;
+            }
+        }
+        break;
+    }
+
+    if (!(*(u16 *)(state + 0x1a) & 0x10)) {
+        if ((u8)GameBit_Get(0x810) == 4) {
+            GameBit_Set(0x812, 1);
+            Sfx_PlayFromObject(0, 0x7e);
+            *(u16 *)(state + 0x1a) |= 0x10;
+        } else if ((u32)GameBit_Get(0x808) != 0) {
+            if (*(f32 *)(state + 8) <= lbl_803E6DA8) {
+                GameBit_Set(0x810, 0);
+                memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
+                *(f32 *)(state + 8) = lbl_803E6DAC;
+            }
+        }
+        if (*(f32 *)(state + 8) > lbl_803E6DA8) {
+            *(f32 *)(state + 8) -= timeDelta;
+            if (*(f32 *)(state + 8) <= lbl_803E6DA8)
+                GameBit_Set(0x808, 0);
+        }
+    }
+
+    if (!(*(u16 *)(state + 0x1a) & 0x20)) {
+        if ((u8)GameBit_Get(0x811) == 4) {
+            GameBit_Set(0x813, 1);
+            Sfx_PlayFromObject(0, 0x7e);
+            *(u16 *)(state + 0x1a) |= 0x20;
+        } else if ((u32)GameBit_Get(0x809) != 0) {
+            if (*(f32 *)(state + 4) <= lbl_803E6DA8) {
+                GameBit_Set(0x811, 0);
+                memcpy(lbl_803AD298, lbl_8032B088, 0x40);
+                *(f32 *)(state + 4) = lbl_803E6DAC;
+            }
+        }
+        if (*(f32 *)(state + 4) > lbl_803E6DA8) {
+            *(f32 *)(state + 4) -= timeDelta;
+            if (*(f32 *)(state + 4) <= lbl_803E6DA8)
+                GameBit_Set(0x809, 0);
+        }
+    }
+
+    if (!(*(u16 *)(state + 0x1a) & 0x80)) {
+        if ((u32)GameBit_Get(0xc58) != 0 && (u32)GameBit_Get(0xc59) != 0 &&
+            (u32)GameBit_Get(0xc5a) != 0) {
+            GameBit_Set(0x205, 1);
+            Sfx_PlayFromObject(0, 0x7e);
+            *(u16 *)(state + 0x1a) |= 0x80;
+        } else if (!((WclevelcontFlags *)(state + 0x14))->b40 &&
+                   (u32)GameBit_Get(0xc58) != 0) {
+            Sfx_PlayFromObject(0, 0x109);
+            ((WclevelcontFlags *)(state + 0x14))->b40 = 1;
+        } else if (!((WclevelcontFlags *)(state + 0x14))->b20 &&
+                   (u32)GameBit_Get(0xc59) != 0) {
+            Sfx_PlayFromObject(0, 0x109);
+            ((WclevelcontFlags *)(state + 0x14))->b20 = 1;
+        } else if (!((WclevelcontFlags *)(state + 0x14))->b18 &&
+                   (u32)GameBit_Get(0xc5a) != 0) {
+            Sfx_PlayFromObject(0, 0x109);
+            ((WclevelcontFlags *)(state + 0x14))->b18 = 1;
+        }
+    }
+
+    if (!(*(u16 *)(state + 0x1a) & 0x100)) {
+        if ((u32)GameBit_Get(0xbcf) != 0) {
+            int player;
+            GameBit_Set(0xbc8, 0);
+            GameBit_Set(0x2f0, 1);
+            GameBit_Set(0xeec, 0);
+            GameBit_Set(0xbd0, 0);
+            player = Obj_GetPlayerObject();
+            (*(void (**)(int, int, int, int))(*gMapEventInterface + 0x1c))(
+                player + 0xc, *(s16 *)player, 1, 0);
+            Sfx_PlayFromObject(0, 0x7e);
+            *(u16 *)(state + 0x1a) |= 0x100;
+        }
+    }
+
+    *(u16 *)(state + 0x1a) &= ~1;
+    if ((u32)GameBit_Get(0xc92) != 0) {
+        GameBit_Set(0x4e4, 0);
+        GameBit_Set(0x4e5, 0);
+        if (GameBit_Get(0x4e3) == 0xff)
+            GameBit_Set(0x4e3, randomGetRange(6, 7));
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole off
 #pragma scheduling off
 void wclevelcont_init(int obj)
