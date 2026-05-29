@@ -10771,10 +10771,12 @@ void padUpdate(void)
  * EN v1.0 Address: 0x800173C8
  * EN v1.0 Size: 20b
  */
+#pragma dont_inline on
 void* gameTextGetBox(int box)
 {
     return &lbl_802C7400[box * 0x20];
 }
+#pragma dont_inline reset
 
 /*
  * Function: gameTextGetCurBox
@@ -11002,6 +11004,7 @@ extern void gameTextRenderStrs(char* str, int arg2);
  * EN v1.0 Address: 0x8000F6E8
  * EN v1.0 Size: 188b
  */
+#pragma dont_inline on
 void gameTextShowStr(char *text, int box, int arg2, int arg3)
 {
     int i;
@@ -11024,6 +11027,7 @@ void gameTextShowStr(char *text, int box, int arg2, int arg3)
         e[4] = arg3;
     }
 }
+#pragma dont_inline reset
 
 /*
  * Function: audioSetVolumes
