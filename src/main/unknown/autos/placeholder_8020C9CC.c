@@ -943,7 +943,8 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
     }
     *(s16 *)((char *)evt + 0x6e) = *(s16 *)((char *)evt + 0x70);
     for (i = 0; i < *(u8 *)((char *)evt + 0x8b); i++) {
-        switch (*(u8 *)((char *)evt + i + 0x81)) {
+        int idx = i + 0x81;
+        switch (*(u8 *)((char *)evt + idx)) {
         case 3:
             *(s8 *)((char *)inner + 0xa2) = -1;
             break;
@@ -998,7 +999,7 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
             break;
         }
         }
-        *(u8 *)((char *)evt + i + 0x81) = 0;
+        *(u8 *)((char *)evt + idx) = 0;
     }
     tbl = lbl_802C2540;
     if (*(s8 *)((char *)inner + 0xa2) != *(s8 *)((char *)inner + 0xa3)) {
