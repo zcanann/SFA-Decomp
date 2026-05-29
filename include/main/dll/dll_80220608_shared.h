@@ -139,10 +139,6 @@ extern f32 lbl_803E6D8C;
 extern f32 lbl_803E6D90;
 extern f32 lbl_803E6D94;
 
-#define PB_IFACE (*(int *)(*(int *)(*(int *)(state + 0x268) + 0x68)))
-
-#undef PB_IFACE
-
 extern u8 lbl_8032B0C8[][8];
 extern u8 lbl_8032B088[][8];
 extern u8 lbl_8032B048[][8];
