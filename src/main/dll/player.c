@@ -5546,9 +5546,9 @@ int fn_80297854(int obj, int state, f32 fv)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void fn_802B86B8(int obj, int a, int b)
+void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
 {
-    int p = *(int *)((char *)a + 0x40c);
+    int p = *(int *)((char *)inner + 0x40c);
     int sub = *(int *)((char *)obj + 0x4c);
     int mode;
     int v;
@@ -5556,7 +5556,7 @@ void fn_802B86B8(int obj, int a, int b)
     (*(void (*)(int, int, int, void *, void *, void *))(*(int *)(*gBaddieControlInterface + 0x14)))(
         obj, Obj_GetPlayerObject(), 0x10,
         (char *)p + 0x1e, (char *)p + 0x20, (char *)p + 0x22);
-    *(f32 *)((char *)b + 0x2c0) = (f32)(u32)*(u16 *)((char *)p + 0x22);
+    *(f32 *)((char *)state + 0x2c0) = (f32)(u32)*(u16 *)((char *)p + 0x22);
     mode = *(int *)((char *)obj + 0xf8);
     if (mode == 2) {
         (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
@@ -5565,19 +5565,19 @@ void fn_802B86B8(int obj, int a, int b)
         (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
         *(int *)((char *)obj + 0xf8) = 1;
     } else {
-        characterDoEyeAnims(obj, a + 0x3ac);
-        *(int *)((char *)b + 0x2d0) = Obj_GetPlayerObject();
+        characterDoEyeAnims(obj, inner + 0x3ac);
+        *(int *)((char *)state + 0x2d0) = Obj_GetPlayerObject();
         v = *(int *)((char *)sub + 0x14);
         if (v >= 0x49942 || v < 0x4993f) {
             (*(void (*)(int, int, f32, int))(*(int *)(*gBaddieControlInterface + 0x2c)))(
-                obj, b, lbl_803E820C, 1);
+                obj, state, lbl_803E820C, 1);
         }
-        *(int *)((char *)a + 0x3e0) = *(int *)((char *)obj + 0xc0);
+        *(int *)((char *)inner + 0x3e0) = *(int *)((char *)obj + 0xc0);
         *(int *)((char *)obj + 0xc0) = 0;
         (*(void (*)(int, int, f32, f32, void *, void *))(*(int *)(*gPlayerInterface + 0x8)))(
-            obj, b, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
-        *(int *)((char *)obj + 0xc0) = *(int *)((char *)a + 0x3e0);
-        Lightfoot_ProcessHitResponseFlags(obj, a);
+            obj, state, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
+        *(int *)((char *)obj + 0xc0) = *(int *)((char *)inner + 0x3e0);
+        Lightfoot_ProcessHitResponseFlags(obj, inner);
     }
 }
 #pragma dont_inline reset
@@ -5790,7 +5790,7 @@ int fn_802B8864(int p1, int p2, int p3)
         }
     }
     if (*(s16 *)((char *)iv6 + 0x1a) == 0x64c) {
-        fn_802B86B8(obj, inner, inner);
+        Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
         if ((*(u8 *)((char *)inner + 0x404) & 1) != 0 &&
             (*(u16 *)((char *)obj + 0xb0) & 0x800) != 0) {
             t = *(int *)((char *)inner + 0x40c);

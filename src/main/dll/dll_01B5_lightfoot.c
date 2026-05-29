@@ -203,7 +203,7 @@ void lightfoot_update(int obj)
             *(int *)((char *)obj + 0xf8) = 0;
             *(u16 *)((char *)inner + 0x400) &= ~0x4;
         }
-        fn_802B86B8(obj, inner, inner);
+        Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
         if ((*(u8 *)((char *)inner + 0x404) & 1) && (*(u16 *)((char *)obj + 0xb0) & 0x800)) {
             int a40c = *(int *)((char *)inner + 0x40c);
             int mode;

@@ -1624,7 +1624,7 @@ void Lightfoot_RecordCompletedChallengeTargetHit(int obj, int inner, int animSta
 void Lightfoot_ProcessHitResponseFlags(int obj, int inner);
 void fn_802B84D0(int obj);
 void fn_802B85E4(int obj, int p2);
-void fn_802B86B8(int obj, int a, int b);
+void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state);
 int fn_802B8864(int p1, int p2, int p3);
 int lightfoot_getExtraSize(void);
 int lightfoot_getObjectTypeId(void);
