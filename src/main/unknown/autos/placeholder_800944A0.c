@@ -357,7 +357,8 @@ extern int randomGetRange(int lo, int hi);
 extern f32 sqrtf(f32 x);
 extern int fn_80095B18(WaterParticle *slot, int idx, int rand, f32 v);
 
-void waterfx_func06(f32 a, f32 b, f32 c, f32 d) {
+#pragma dont_inline on
+void waterfx_func06(void *obj, f32 a, f32 b, f32 c, f32 d) {
     WaterParticle *p;
     int i;
     WaterParticle *base;
@@ -461,6 +462,34 @@ void waterfx_func07(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
     e = (WaterEntry7 *)lbl_803DD238 + i;
     e->f18 = lbl_803DF2E8 * (f32)p2;
     lbl_803DD23C = (void *)((int)lbl_803DD23C + 1);
+}
+#pragma dont_inline reset
+
+extern f32 lbl_803DF338;
+extern f32 lbl_803DF33C;
+
+void waterfx_func04(u8 *p3, u16 mask, f32 *vecs, u8 *p6, f32 fval) {
+    u8 *q = p6;
+    f32 *v = vecs;
+    while (mask != 0) {
+        if (mask & 1) {
+            f32 vx = v[0];
+            f32 vz = v[2];
+            if (*(f32 *)(q + 0x1b4) < lbl_803DF338) {
+                if (fval > lbl_803DF33C) {
+                    waterfx_func06(p3, vx, *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4), vz, lbl_803DF300);
+                }
+            }
+            lbl_803DD20C = lbl_803DF318;
+            waterfx_func07(*(s16 *)p3, 4, vx, *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4), vz, lbl_803DF300);
+            lbl_8039AB48[0] = vx;
+            lbl_8039AB48[1] = *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4);
+            lbl_8039AB48[2] = vz;
+            lbl_803DD1F8 = 1;
+        }
+        mask >>= 1;
+        v += 3;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
