@@ -1742,6 +1742,69 @@ void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void wcapertures_release(void) {}
 void wcapertures_initialise(void) {}
 
+extern int *gCameraInterface;
+extern int fn_802969F0(int player);
+extern f32 Camera_GetFovY(void);
+extern void lightFn_8001db6c(void *light, int flag, f32 val);
+extern f32 lbl_803E6E38;
+
+#pragma peephole off
+#pragma scheduling off
+void wcapertures_update(int obj)
+{
+    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    int player = Obj_GetPlayerObject();
+    void *light;
+    int alpha, target;
+
+    *(s16 *)(state + 4) = 0;
+    switch (*(u8 *)(state + 6)) {
+    case 0:
+        if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
+            *(u8 *)(state + 6) = 1;
+        }
+        break;
+    case 1:
+        if ((*(int (**)(void))(*gCameraInterface + 0x10))() == 68 && fn_802969F0(player) == 33) {
+            *(s16 *)(state + 4) = 255;
+            if (Camera_GetFovY() <= lbl_803E6E38 && (*(u16 *)(obj + 0xb0) & 0x800)) {
+                GameBit_Set(*(s16 *)(setup + 0x1e), 1);
+                *(u8 *)(state + 6) = 2;
+            }
+        }
+        break;
+    case 2:
+        *(s16 *)(state + 4) = 0;
+        break;
+    }
+    alpha = *(u8 *)(obj + 0x36);
+    target = *(s16 *)(state + 4);
+    if (alpha < target) {
+        int v = alpha + framesThisStep * 4;
+        if (v > target) {
+            v = target;
+        }
+        *(u8 *)(obj + 0x36) = v;
+    } else if (alpha > target) {
+        int v = alpha - framesThisStep * 4;
+        if (v < target) {
+            v = target;
+        }
+        *(u8 *)(obj + 0x36) = v;
+    }
+    light = *(void **)(state + 0);
+    if (light != NULL) {
+        if (*(u8 *)(obj + 0x36) > 128) {
+            lightFn_8001db6c(light, 1, lbl_803E6E2C);
+        } else {
+            lightFn_8001db6c(light, 0, lbl_803E6E2C);
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
 int waterflowwe_getExtraSize(void) { return 8; }
 int waterflowwe_getObjectTypeId(void) { return 0; }
 extern f32 lbl_803E72F4;
