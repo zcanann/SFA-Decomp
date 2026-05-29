@@ -70,7 +70,7 @@ extern f32 lbl_803E48D8;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801B1FF4(int obj, u8 variant)
+void DIMwooddoor_spawnShard(int obj, u8 variant)
 {
     DIMWoodDoorConfig *config;
     DIMWoodDoorState *state;
@@ -139,7 +139,7 @@ void fn_801B1FF4(int obj, u8 variant)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801B2244(int obj, f32 targetX, f32 targetY, f32 targetZ)
+void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
 {
     DIMWoodDoorState *state;
     DIMWoodDoorConfig *config;
