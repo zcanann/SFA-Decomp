@@ -9039,7 +9039,7 @@ int atan2_8002178c(float y, float x) {
 }
 
 void cacheFn_800229c4(void) {
-    if (lbl_803DD610 != 4 && lbl_803DD610 == 0) {
+    if (lbl_803DD610 == 4 || lbl_803DD610 == 0) {
         LCQueueWait();
     }
 }
