@@ -227,6 +227,51 @@ typedef struct ExpgfxResourceHandle {
   u16 linkGroup;
 } ExpgfxResourceHandle;
 
+typedef struct ExpgfxQuadTemplateVertex {
+  s16 x;
+  s16 y;
+  s16 z;
+} ExpgfxQuadTemplateVertex;
+
+/*
+ * Recovered shape of the static expgfx data blob. The warning strings and
+ * quad templates sit in the same source corridor as the exptab diagnostics,
+ * so keeping the layout together makes future offset-to-field promotion
+ * less error-prone.
+ */
+typedef struct ExpgfxStaticDataLayout {
+  u8 pad00[EXPGFX_STATIC_POOL_SLOT_TYPE_IDS_OFFSET];
+  s16 poolSlotTypeIds[EXPGFX_POOL_COUNT];
+  u8 poolFrameFlags[EXPGFX_POOL_COUNT];
+  u8 pad120[EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET -
+            (EXPGFX_STATIC_POOL_FRAME_FLAGS_OFFSET + EXPGFX_POOL_COUNT)];
+  ExpgfxQuadTemplateVertex quadTemplateA[4];
+  ExpgfxQuadTemplateVertex quadTemplateB[4];
+  u8 pad180[EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET -
+            (EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET + sizeof(ExpgfxQuadTemplateVertex) * 4)];
+  char mismatchInAddRemoveString[EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET -
+                                 EXPGFX_STATIC_MISMATCH_ADD_REMOVE_STRING_OFFSET];
+  char noTextureString[1];
+} ExpgfxStaticDataLayout;
+
+/*
+ * Retail diagnostics call the 0x980 table "exptab". This layout captures the
+ * surrounding runtime pool state that expgfxRemove, expgfxGetSlot, and
+ * expgfx_addremove currently access through offsets.
+ */
+typedef struct ExpgfxRuntimeDataLayout {
+  ExpgfxResourceEntry resourceTable[EXPGFX_RESOURCE_TABLE_COUNT];
+  ExpgfxBounds poolBounds[EXPGFX_POOL_COUNT];
+  ExpgfxTableEntry expTab[EXPGFX_EXPTAB_ENTRY_COUNT];
+  u8 poolSourceModes[EXPGFX_POOL_COUNT];
+  u32 poolSourceIds[EXPGFX_POOL_COUNT];
+  ExpgfxTrackedSourceFrameMask trackedSourceFrameMasks[2];
+  u8 poolBoundsTemplateIds[EXPGFX_POOL_COUNT];
+  s8 poolActiveCounts[EXPGFX_POOL_COUNT];
+  u32 poolActiveMasks[EXPGFX_POOL_COUNT];
+  u32 slotPoolBases[EXPGFX_POOL_COUNT];
+} ExpgfxRuntimeDataLayout;
+
 typedef union ExpgfxSlotStateBits {
   u8 value;
   struct {
@@ -254,12 +299,6 @@ typedef struct ExpgfxQuadVertex {
   u8 colorB;
   u8 alpha;
 } ExpgfxQuadVertex;
-
-typedef struct ExpgfxQuadTemplateVertex {
-  s16 x;
-  s16 y;
-  s16 z;
-} ExpgfxQuadTemplateVertex;
 
 typedef struct ExpgfxSlot {
   u8 pad00[0x06];
