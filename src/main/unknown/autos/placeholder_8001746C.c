@@ -9984,6 +9984,7 @@ void ObjModel_ClearBlendChannels(u8 *model) {
 extern f32 lbl_803DE840;
 
 #pragma scheduling off
+#pragma peephole off
 void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 weight, int flags) {
     u8 *ch;
     u8 *hdr;
@@ -10026,6 +10027,7 @@ void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 w
     ch[0xe] = flags | 4;
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 extern void modelApplyBoneTransforms(int a, int b, int c, void *d, void *e, int f);
 extern f32 lbl_803DE818;
