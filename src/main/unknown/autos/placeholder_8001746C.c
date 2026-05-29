@@ -9314,6 +9314,16 @@ typedef struct {
 } GameTextSlot;
 extern GameTextSlot lbl_8033A540[];
 
+typedef struct ObjListObjectDef {
+    u8 pad00[0x14];
+    u32 objectId;
+} ObjListObjectDef;
+
+typedef struct ObjListObject {
+    u8 pad00[0x4c];
+    ObjListObjectDef *def;
+} ObjListObject;
+
 #pragma push
 #pragma scheduling off
 #pragma peephole off
@@ -9342,14 +9352,14 @@ void AtomicSList_Push(void **list, void *node) {
     OSRestoreInterrupts(intr);
 }
 
-void *ObjList_FindObjectById(int id) {
+ObjListObject *ObjList_FindObjectById(u32 objectId) {
     int i;
     int count = lbl_803DCB84;
-    void **arr = lbl_803DCB88;
+    ObjListObject **arr = lbl_803DCB88;
     for (i = 0; i < count; i++) {
-        void *obj = arr[i];
-        void *sub = *(void **)((u8 *)obj + 0x4c);
-        if (sub != NULL && *(u32 *)((u8 *)sub + 0x14) == (u32)id) {
+        ObjListObject *obj = arr[i];
+        ObjListObjectDef *def = obj->def;
+        if (def != NULL && def->objectId == objectId) {
             return obj;
         }
     }
