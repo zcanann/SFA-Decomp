@@ -9339,6 +9339,7 @@ extern u8 lbl_802C7400[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void mtx44Transpose(f32 *src, f32 *dst) {
     dst[0] = src[0];
     dst[1] = src[4];
@@ -9353,6 +9354,7 @@ void mtx44Transpose(f32 *src, f32 *dst) {
     dst[7] = src[13];
     dst[11] = src[14];
 }
+#pragma dont_inline reset
 
 extern void setMatrixFromObjectPos(f32 *mtx, void *obj);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
@@ -10475,6 +10477,19 @@ extern void setFileInfo(void *fileInfo);
 extern void *loadFileByPathAsync(char *path, void *fileInfo, int flags, void *callback);
 extern void DVDCancelAsync(void *fileInfo, void *callback);
 
+typedef struct ObjPathTransform {
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    u8 pad06[2];
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ObjPathTransform;
+
+extern void mtxRotateByVec3s(f32 *mtx, void *transform);
+
 #pragma push
 #pragma scheduling off
 #pragma peephole off
@@ -10578,5 +10593,82 @@ void gameTextLoadForCurMap(int sourceId) {
     }
 
     testAndSet_onlyUseHeap3(oldHeap);
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out) {
+    ObjPathTransform transform;
+    f32 rotMtx[16];
+
+    if (*(void **)(obj + 0x30) == NULL) {
+        *(f32 *)(obj + 0xc) -= playerMapOffsetX;
+        *(f32 *)(obj + 0x14) -= playerMapOffsetZ;
+    }
+    transform.x = -*(f32 *)(obj + 0xc);
+    transform.y = -*(f32 *)(obj + 0x10);
+    transform.z = -*(f32 *)(obj + 0x14);
+    transform.rotX = -*(s16 *)(obj + 0x0);
+    transform.rotY = -*(s16 *)(obj + 0x2);
+    transform.rotZ = -*(s16 *)(obj + 0x4);
+    transform.scale = lbl_803DE890;
+    mtxRotateByVec3s(rotMtx, &transform);
+    mtx44Transpose(rotMtx, out);
+    if (*(void **)(obj + 0x30) == NULL) {
+        *(f32 *)(obj + 0xc) += playerMapOffsetX;
+        *(f32 *)(obj + 0x14) += playerMapOffsetZ;
+    }
+}
+#pragma pop
+
+extern s16 lbl_803DCBC4;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjList_PartitionForRender(int *out) {
+    void **arr;
+    void *tmp;
+    int stop;
+    int i;
+    int j;
+    int hi;
+
+    *out = lbl_803DCB84;
+    if (lbl_803DCBC4 != 0) {
+        return;
+    }
+    i = 0;
+    j = lbl_803DCB84 - 1;
+    hi = j;
+    while (i <= j) {
+        arr = (void **)lbl_803DCB88;
+        stop = 0;
+        while (i <= hi && stop == 0) {
+            if (*(int *)(*(u8 **)((u8 *)arr[i] + 0x50) + 0x44) & 1) {
+                i++;
+            } else {
+                stop = -1;
+            }
+        }
+        stop = 0;
+        while (j >= 0 && stop == 0) {
+            if (*(int *)(*(u8 **)((u8 *)arr[j] + 0x50) + 0x44) & 1) {
+                stop = -1;
+            } else {
+                j--;
+            }
+        }
+        if (i < j) {
+            tmp = arr[i];
+            arr[i] = arr[j];
+            ((void **)lbl_803DCB88)[j] = tmp;
+            i++;
+            j--;
+        }
+    }
+    lbl_803DCBC4 = i;
 }
 #pragma pop

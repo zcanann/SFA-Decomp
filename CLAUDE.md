@@ -566,6 +566,19 @@ MWCC then strength-reduces the index to exactly that induction-pointer form;
 loop → 99.5%.) Match whichever the target uses — neither form is universally
 right.
 
+**Loop induction-update ORDER is sometimes a hard cap (~1-3 instr).** Target
+emits `addi ptr; addi counter; cmpwi counter; b`; clean-C array-index form emits
+`addi counter; cmpwi; addi ptr` (counter bumped/tested before the pointer). This
+does NOT respond to index-vs-pointer-walk OR scheduling toggle — it's allocator/
+loop-form internal. Caps array-walk loops at ~93-95%; leave partial, don't grind.
+(november12, newclouds loops.)
+
+**Passing a small by-value struct (e.g. `GXColor`, 4 bytes) goes BY ADDRESS in
+this ABI — load the global STRAIGHT into the outgoing-arg slot.** Write
+`GXSetFog(..., *(GXColor*)&lbl_xxx)` so MWCC loads the global directly into the
+arg stack slot (one store); an intermediate local (`GXColor c = ...; f(c)`) adds
+a redundant copy. (november12, dll_07 GXSetFog.)
+
 ## Don't hoist a global/`.bss` address when target RE-DERIVES it per use
 
 The mirror of #6/#16 (lift/base-pointer-hoist): if target emits a fresh

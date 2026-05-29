@@ -5779,3 +5779,162 @@ void curveFindFn_800843c4(int *out, int id) {
     }
 }
 #pragma pop
+
+extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int flags);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void playerEnvFxFn_80088ad4(int idx) {
+    void *player;
+    int alt;
+    s16 val;
+
+    player = Obj_GetPlayerObject();
+    if ((void *)lbl_803DD134 == NULL) {
+        return;
+    }
+    if (player == NULL) {
+        return;
+    }
+    if ((lbl_803DD140 & 0x8) == 0) {
+        return;
+    }
+    if (GameBit_Get(944) != 0) {
+        return;
+    }
+    alt = (s8)(idx - 1);
+    if (alt < 0) {
+        alt = 27;
+    }
+    val = ((s16 *)lbl_803DD134)[(u8)idx];
+    if (val <= 0 || ((s16 *)lbl_803DD134)[(s8)alt] != val) {
+        getEnvfxAct(player, player, 310, 0);
+        getEnvfxAct(player, player, 311, 0);
+        getEnvfxAct(player, player, 323, 0);
+    }
+    val = ((s16 *)lbl_803DD134)[(u8)idx];
+    if (val > 0) {
+        if (lbl_803DD140 & 0x20) {
+            getEnvfxActImmediately(player, player, (u16)val, 0);
+        } else {
+            getEnvfxAct(player, player, (u16)val, 0);
+        }
+    }
+}
+#pragma pop
+
+typedef struct FogColor {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} FogColor;
+
+extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
+extern int snowPrintSnowCloud(int arg, int x);
+extern void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void *vec, u8 a0, u8 a1);
+extern f32 lbl_8039A8F0[];
+extern int lbl_803DF198;
+
+#pragma push
+#pragma scheduling off
+void dll_07_func07(int arg) {
+    int i;
+    int total;
+    u8 *snow;
+
+    GXSetFog(0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0,
+             *(FogColor *)&lbl_803DF198);
+    total = 0;
+    for (i = 0; i < 8; i++) {
+        snow = (u8 *)lbl_8039A828[i];
+        if (snow != NULL && snow[0x144F] == 0) {
+            total += snowPrintSnowCloud(arg, *(int *)(snow + 0x13F0));
+        }
+    }
+    if (lbl_803DD198 != 0) {
+        drawFn_80079e64(lbl_803DD190, lbl_803DB764, lbl_803DB768, lbl_803DD198,
+                        lbl_8039A8F0, lbl_803DD199, lbl_803DD19A);
+    }
+}
+#pragma pop
+
+extern int ObjModel_GetRenderOp(int model, int x);
+extern int Shader_getLayer(int renderOp, int x);
+extern int *objFindTexture(int obj, int idx, int p3);
+extern void *textureIdxToPtr(int idx);
+extern void *lbl_8039AB28[];
+extern f32 lbl_803DF2B0;
+extern f32 lbl_803DF2B4;
+
+#pragma push
+#pragma scheduling off
+void *skyTextureFn_80094390(f32 *out1, f32 *out2) {
+    int *tex;
+    int *layer;
+
+    if (lbl_8039AB28[0] != NULL) {
+        layer = (int *)Shader_getLayer(
+            ObjModel_GetRenderOp(*(int *)Obj_GetActiveModel(lbl_8039AB28[0]), 0), 0);
+        tex = objFindTexture((int)lbl_8039AB28[0], 0, 0);
+        if (tex != NULL) {
+            f32 scale = lbl_803DF2B0;
+            *out1 = scale * (f32) * (s16 *)((char *)tex + 8);
+            *out2 = scale * (f32) * (s16 *)((char *)tex + 10);
+        } else {
+            f32 d = lbl_803DF2B4;
+            *out1 = d;
+            *out2 = d;
+        }
+        return textureIdxToPtr(*layer);
+    }
+    {
+        f32 d = lbl_803DF2B4;
+        *out1 = d;
+        *out2 = d;
+    }
+    return NULL;
+}
+#pragma pop
+
+extern void *memset(void *dst, int c, int n);
+extern int lbl_803DB754;
+extern f32 lbl_803DF190;
+extern f32 lbl_803DF194;
+
+#pragma push
+#pragma scheduling off
+void sky2_onMapSetup(void) {
+    int i;
+    void **slot;
+    f32 b;
+    f32 a;
+
+    lbl_803DB610 = -1;
+    (&lbl_803DB610)[1] = -1;
+    slot = (void **)&lbl_803DD184;
+    a = lbl_803DF190;
+    b = lbl_803DF194;
+    for (i = 0; i < 2; i++) {
+        if (slot[i] == NULL) {
+            slot[i] = mmAlloc(792, 23, 0);
+        }
+        memset(slot[i], 0, 792);
+        *(int *)((char *)slot[i] + 0x24) = 255;
+        *(int *)((char *)slot[i] + 0x28) = 255;
+        *(int *)((char *)slot[i] + 0x2c) = 255;
+        *(f32 *)((char *)slot[i] + 0x14) = a;
+        *(f32 *)((char *)slot[i] + 0x18) = b;
+        *(int *)((char *)slot[i] + 0x30) = 255;
+        *(int *)((char *)slot[i] + 0x34) = 255;
+        *(int *)((char *)slot[i] + 0x38) = 255;
+        *(f32 *)((char *)slot[i] + 0x1c) = a;
+        *(f32 *)((char *)slot[i] + 0x20) = b;
+        if (lbl_803DB754 != 0) {
+            getEnvfxAct(NULL, NULL, 9, 0);
+            lbl_803DB754 = 0;
+        }
+    }
+}
+#pragma pop
