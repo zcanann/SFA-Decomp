@@ -100,6 +100,14 @@
 #define DIMBOSS_HIT_EFFECT_ID 0x5A
 #define DIMBOSS_HIT_EFFECT_RESOURCE_COUNT 1
 
+#define DIMBOSS_ANIM_CONTROLLER_OFFSET 0x6C
+#define DIMBOSS_ANIM_CONTROLLER_SIZE 0x624
+#define DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET 0x611
+#define DIMBOSS_ANIM_TABLE_OFFSET 0x690
+#define DIMBOSS_ANIM_TABLE_COUNT 6
+#define DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET 0x6A8
+#define DIMBOSS_HITDETECT_ANIM_TABLE_COUNT 12
+
 typedef struct DIMbossEffect {
   u8 pad00[0x4C];
   u8 visible;
@@ -118,6 +126,13 @@ typedef struct DIMbossTopState {
   u8 pad0B5;
   u8 steamSfxPending;
 } DIMbossTopState;
+
+typedef struct DIMbossAnimScratch {
+  u8 pad000[DIMBOSS_ANIM_CONTROLLER_OFFSET];
+  u8 animController[DIMBOSS_ANIM_CONTROLLER_SIZE];
+  void (*animTable[DIMBOSS_ANIM_TABLE_COUNT])(void);
+  void (*hitDetectAnimTable[DIMBOSS_HITDETECT_ANIM_TABLE_COUNT])(void);
+} DIMbossAnimScratch;
 
 typedef struct DIMbossRuntime {
   u8 pad000[0x270];

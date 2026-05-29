@@ -133,9 +133,6 @@ extern char sDIMBossFreeingAssetsForDIMBoss[];
 extern char sDIMBossLoadingAssetsForDIMTop[];
 
 #define gDIMbossAnimScratchBase lbl_803AC970
-#define DIMBOSS_ANIM_CONTROLLER_OFFSET 0x6C
-#define DIMBOSS_ANIM_TABLE_OFFSET 0x690
-#define DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET 0x6A8
 
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMbossRuntime *runtime,
                                    int param_4,int param_5,int param_6,int param_7,float scale);
@@ -735,7 +732,7 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   GameBit_Set(DIMBOSS_GAMEBIT_TRICKY_BOSS_MODE,1);
   dll_2E_func05(obj,gDIMbossAnimController,0xffffd8e4,0x1c71,6);
   dll_2E_func09(gDIMbossAnimController,&localVec,&localVec,6);
-  animFlagsByte = (u8 *)((int)gDIMbossAnimController + 0x611);
+  animFlagsByte = (u8 *)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
   *animFlagsByte |= 8;
   *animFlagsByte &= 0xfe;
   topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
