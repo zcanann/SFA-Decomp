@@ -9415,6 +9415,9 @@ extern void GXSetNumChans(int numChannels);
 extern void PSVECScale(f32 *src, f32 *dst, f32 scale);
 extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
 extern f32 lbl_803DE7A4;
+extern f32 *Camera_GetInverseViewMatrix(void);
+extern void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 void modelStruct2LightFn_8001e178(u8 *light, u8 *obj, int lightId) {
     f32 worldPos[3];
@@ -9596,6 +9599,85 @@ void gxColorFn_8001e634(void) {
         GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
         GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
         GXSetNumChans(0);
+    }
+}
+
+void updateLights(void) {
+    f32 viewPos[3];
+    f32 concatMtx[16];
+    f32 *view;
+    u8 *light;
+    int i;
+    int fadeState;
+
+    view = Camera_GetViewMatrix();
+    for (i = 0; i < lbl_803DCA30; i++) {
+        light = lbl_8033BEC0[i];
+        fadeState = *(int *)(light + 0x58);
+        if (fadeState == 1) {
+            *(f32 *)(light + 0x138) += *(f32 *)(light + 0x13c);
+            if (*(f32 *)(light + 0x138) >= lbl_803DE760) {
+                *(f32 *)(light + 0x138) = lbl_803DE760;
+                *(int *)(light + 0x58) = 2;
+            }
+        } else if (fadeState == 3) {
+            *(f32 *)(light + 0x138) += *(f32 *)(light + 0x13c);
+            if (*(f32 *)(light + 0x138) <= lbl_803DE788) {
+                *(f32 *)(light + 0x138) = lbl_803DE788;
+                *(int *)(light + 0x58) = 0;
+                light[0x4c] = 0;
+            }
+        }
+
+        if (light[0x4c] != 0) {
+            if (*(int *)(light + 0x50) != 4) {
+                if (*(void **)light != NULL) {
+                    Obj_TransformLocalPointByWorldMatrix(*(u8 **)light, (f32 *)(light + 4), (f32 *)(light + 0x10),
+                                                         1);
+                }
+                if (*(int *)(light + 0x60) == 0) {
+                    viewPos[0] = *(f32 *)(light + 0x10) - playerMapOffsetX;
+                    viewPos[1] = *(f32 *)(light + 0x14);
+                    viewPos[2] = *(f32 *)(light + 0x18) - playerMapOffsetZ;
+                    PSMTXMultVec(view, viewPos, (f32 *)(light + 0x1c));
+                } else {
+                    *(int *)(light + 0x1c) = *(int *)(light + 0x10);
+                    *(int *)(light + 0x20) = *(int *)(light + 0x14);
+                    *(int *)(light + 0x24) = *(int *)(light + 0x18);
+                }
+            }
+
+            if (*(void **)light != NULL) {
+                Obj_TransformLocalVectorByWorldMatrix(*(void **)light, (f32 *)(light + 0x28),
+                                                       (f32 *)(light + 0x34));
+            }
+            if (*(int *)(light + 0x60) == 0) {
+                PSMTXMultVecSR(view, (f32 *)(light + 0x34), (f32 *)(light + 0x40));
+            } else {
+                *(int *)(light + 0x40) = *(int *)(light + 0x34);
+                *(int *)(light + 0x44) = *(int *)(light + 0x38);
+                *(int *)(light + 0x48) = *(int *)(light + 0x3c);
+            }
+
+            if (*(int *)(light + 0x2d8) != 0) {
+                lightFn_8001d168(light);
+            } else {
+                light[0xa8] = (u8)(int)((f32)light[0xac] * *(f32 *)(light + 0x138));
+                light[0xa9] = (u8)(int)((f32)light[0xad] * *(f32 *)(light + 0x138));
+                light[0xaa] = (u8)(int)((f32)light[0xae] * *(f32 *)(light + 0x138));
+                light[0xab] = (u8)(int)((f32)light[0xaf] * *(f32 *)(light + 0x138));
+                light[0x100] = (u8)(int)((f32)light[0x104] * *(f32 *)(light + 0x138));
+                light[0x101] = (u8)(int)((f32)light[0x105] * *(f32 *)(light + 0x138));
+                light[0x102] = (u8)(int)((f32)light[0x106] * *(f32 *)(light + 0x138));
+                light[0x103] = (u8)(int)((f32)light[0x107] * *(f32 *)(light + 0x138));
+            }
+
+            if (*(int *)(light + 0x50) == 8) {
+                Obj_BuildInverseWorldTransformMatrix(*(u8 **)light, (f32 *)(light + 0x170));
+                PSMTXConcat((f32 *)(light + 0x170), Camera_GetInverseViewMatrix(), concatMtx);
+                PSMTXConcat((f32 *)(light + 0x1b0), concatMtx, (f32 *)(light + 0x230));
+            }
+        }
     }
 }
 
