@@ -5579,6 +5579,8 @@ extern u8 lbl_803DD19A;
 extern u8 lbl_803DD1CC;
 void snowFreeSnowCloud(int index);
 
+#pragma push
+#pragma scheduling off
 void newclouds_release(void) {
     int i;
 
@@ -5601,6 +5603,7 @@ void newclouds_release(void) {
     }
     lbl_803DD1C0 = 0;
 }
+#pragma pop
 
 #pragma push
 #pragma scheduling off
@@ -5644,6 +5647,7 @@ extern s8 lbl_803DB750;
 
 #pragma push
 #pragma scheduling off
+#pragma peephole off
 void dll_06_func06(int obj) {
     u8 *s = lbl_803DD184;
 
@@ -5713,7 +5717,10 @@ void fn_8008DAE8(int obj) {
         Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
     }
 }
+#pragma pop
 
+#pragma push
+#pragma scheduling off
 void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
     u8 *p = mmAlloc(40, 23, 0);
 
@@ -5731,14 +5738,18 @@ void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
     *(s16 *)(p + 0x22) = e;
     *(u8 *)(p + 0x26) = f;
     *(s16 *)(p + 0x20) = 0;
-    *(s16 *)(p + 0x24) = 0xFFFF;
+    *(u16 *)(p + 0x24) = 0xFFFF;
     *(u8 *)(p + 0x27) = g;
     return p;
 }
+#pragma pop
 
 extern void **gRomCurveInterface;
 extern void curveFn_80083e00(int *out, u8 *curve, int x, f32 f, int flag);
 
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 void curveFindFn_800843c4(int *out, int id) {
     u8 *curve;
     int i;
@@ -5758,13 +5769,13 @@ void curveFindFn_800843c4(int *out, int id) {
         }
         mask <<= 1;
     }
-    if (i == 6) {
+    if (i != 6) {
+        out[0] = -1;
+    } else {
         out[1] = found;
         curveFn_80083e00(out, curve,
                          (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out[1]),
                          lbl_803DEFB0, 0);
-    } else {
-        out[0] = -1;
     }
 }
 #pragma pop
