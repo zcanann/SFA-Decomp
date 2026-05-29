@@ -9165,6 +9165,8 @@ typedef f32 Mtx[3][4];
 extern void cutsceneEnterExit(int a, int b);
 extern void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags);
 extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
+extern void PSVECNormalize(f32 *src, f32 *dst);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int lbl_803DC9F0;
@@ -9349,6 +9351,55 @@ void lightVecFn_8001dd88(u8 *s, f32 x, f32 y, f32 z) {
         *(int *)(s + 0x20) = *(int *)(s + 0x14);
         *(int *)(s + 0x24) = *(int *)(s + 0x18);
     }
+}
+
+extern void modelStruct2LightFn_8001e178(u8 *light, u8 *obj, int lightId);
+extern void GXInitSpecularDir(u8 *lt_obj, f32 x, f32 y, f32 z);
+extern void GXInitLightColor(u8 *lt_obj, void *color);
+extern void GXLoadLightObjImm(u8 *lt_obj, int lightId);
+
+void modelStruct2_setLights(int channel, u8 *light, u8 *obj) {
+    f32 viewDir[3];
+    f32 localDir[3];
+    u32 color;
+    f32 *view;
+    int lightId;
+    int offset;
+    int lightType;
+
+    offset = channel * 0x10;
+    if (lbl_8033BE60[channel].f8 == 0 || lbl_8033BE60[channel].f8 == 2) {
+        modelStruct2LightFn_8001e178(light, obj, lbl_803DCA34);
+    } else {
+        lightId = lbl_803DCA34;
+        view = Camera_GetViewMatrix();
+        lightType = *(int *)(light + 0x50);
+        if (lightType != 3) {
+            if (lightType < 3) {
+                if (lightType < 2) {
+                } else {
+                    PSVECSubtract((f32 *)(obj + 0xc), (f32 *)(light + 0x10), localDir);
+                    PSVECNormalize(localDir, localDir);
+                    if (*(int *)(light + 0x60) == 0) {
+                        PSMTXMultVecSR(view, localDir, viewDir);
+                    } else {
+                        *(int *)&viewDir[0] = *(int *)&localDir[0];
+                        *(int *)&viewDir[1] = *(int *)&localDir[1];
+                        *(int *)&viewDir[2] = *(int *)&localDir[2];
+                    }
+                    GXInitSpecularDir(light + 0xc0, viewDir[0], viewDir[1], viewDir[2]);
+                }
+            } else if (lightType < 5) {
+                GXInitSpecularDir(light + 0xc0, *(f32 *)(light + 0x40), *(f32 *)(light + 0x44),
+                                  *(f32 *)(light + 0x48));
+            }
+        }
+        color = *(u32 *)(light + 0x100);
+        GXInitLightColor(light + 0xc0, &color);
+        GXLoadLightObjImm(light + 0xc0, lightId);
+    }
+    lbl_8033BE60[channel].f4 |= lbl_803DCA34;
+    lbl_803DCA34 <<= 1;
 }
 
 extern int *lbl_803DCB60;
