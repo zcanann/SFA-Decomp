@@ -9403,13 +9403,91 @@ void lightVecFn_8001dd88(u8 *s, f32 x, f32 y, f32 z) {
     }
 }
 
-extern void modelStruct2LightFn_8001e178(u8 *light, u8 *obj, int lightId);
 extern void GXInitSpecularDir(u8 *lt_obj, f32 x, f32 y, f32 z);
 extern void GXInitLightColor(u8 *lt_obj, void *color);
 extern void GXLoadLightObjImm(u8 *lt_obj, int lightId);
+extern void GXInitLightPos(u8 *lt_obj, f32 x, f32 y, f32 z);
+extern void GXInitLightDir(u8 *lt_obj, f32 x, f32 y, f32 z);
+extern void GXInitLightAttnK(u8 *lt_obj, f32 k0, f32 k1, f32 k2);
 extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int lightMask, int diffFn,
                           int attnFn);
 extern void GXSetNumChans(int numChannels);
+extern void PSVECScale(f32 *src, f32 *dst, f32 scale);
+extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
+extern f32 lbl_803DE7A4;
+
+void modelStruct2LightFn_8001e178(u8 *light, u8 *obj, int lightId) {
+    f32 worldPos[3];
+    f32 viewPos[3];
+    u32 color;
+    f32 *view;
+    f32 fade;
+    int lightType;
+
+    view = Camera_GetViewMatrix();
+    lightType = *(int *)(light + 0x50);
+    if (lightType == 4) {
+        if (obj == NULL) {
+            viewPos[0] = lbl_803DE75C;
+            viewPos[1] = lbl_803DE75C;
+            viewPos[2] = lbl_803DE75C;
+        } else if (*(int *)(light + 0x60) == 0) {
+            worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
+            worldPos[1] = *(f32 *)(obj + 0x10);
+            worldPos[2] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
+            PSMTXMultVec(view, worldPos, viewPos);
+        } else {
+            *(int *)&viewPos[0] = *(int *)(obj + 0xc);
+            *(int *)&viewPos[1] = *(int *)(obj + 0x10);
+            *(int *)&viewPos[2] = *(int *)(obj + 0x14);
+        }
+        PSVECScale((f32 *)(light + 0x40), (f32 *)(light + 0x1c), lbl_803DE7A4);
+        PSVECAdd((f32 *)(light + 0x1c), viewPos, viewPos);
+        GXInitLightPos(light + 0x68, viewPos[0], viewPos[1], viewPos[2]);
+        color = *(u32 *)(light + 0xa8);
+        GXInitLightColor(light + 0x68, &color);
+        GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
+    } else {
+        if (lightType == 2 || lightType == 8) {
+            if (lbl_803DCA31 == 0) {
+                GXInitLightPos(light + 0x68, *(f32 *)(light + 0x1c), *(f32 *)(light + 0x20),
+                               *(f32 *)(light + 0x24));
+            } else {
+                if (*(int *)(light + 0x60) == 0) {
+                    worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
+                    worldPos[1] = *(f32 *)(obj + 0x10);
+                    worldPos[2] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
+                    PSMTXMultVec(view, worldPos, viewPos);
+                } else {
+                    *(int *)&viewPos[0] = *(int *)(obj + 0xc);
+                    *(int *)&viewPos[1] = *(int *)(obj + 0x10);
+                    *(int *)&viewPos[2] = *(int *)(obj + 0x14);
+                }
+                PSVECSubtract((f32 *)(light + 0x1c), viewPos, viewPos);
+                GXInitLightPos(light + 0x68, viewPos[0], viewPos[1], viewPos[2]);
+            }
+            GXInitLightDir(light + 0x68, *(f32 *)(light + 0x40), *(f32 *)(light + 0x44),
+                           *(f32 *)(light + 0x48));
+            if (obj == NULL || (*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 0x10) != 0) {
+                color = *(u32 *)(light + 0xa8);
+                GXInitLightColor(light + 0x68, &color);
+                GXInitLightAttnK(light + 0x68, *(f32 *)(light + 0x124), *(f32 *)(light + 0x128),
+                                 *(f32 *)(light + 0x12c));
+            } else {
+                fade = *(f32 *)(light + 0x134);
+                viewPos[0] = (f32)(u8)light[0xa8] * fade;
+                viewPos[1] = (f32)(u8)light[0xa9] * fade;
+                viewPos[2] = (f32)(u8)light[0xaa] * fade;
+                worldPos[0] = (f32)(u8)light[0xab] * fade;
+                color = ((u8)(int)viewPos[0] << 24) | ((u8)(int)viewPos[1] << 16) |
+                        ((u8)(int)viewPos[2] << 8) | (u8)(int)worldPos[0];
+                GXInitLightColor(light + 0x68, &color);
+                GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
+            }
+        }
+    }
+    GXLoadLightObjImm(light + 0x68, lightId);
+}
 
 void modelStruct2_setLights(int channel, u8 *light, u8 *obj) {
     f32 viewDir[3];
