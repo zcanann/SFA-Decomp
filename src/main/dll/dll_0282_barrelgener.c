@@ -353,7 +353,7 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_80222550(int a, int b, int c, f32 d, f32 e)
+void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 {
     f32 rate;
     f32 delta;

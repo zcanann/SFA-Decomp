@@ -252,9 +252,9 @@ void arwsquadron_followPath(int p1, int p2)
             arwsquadron_applyCommandParams(p1, p2);
         if (*(u8 *)(state + 0x2f) == 2) {
             if (*(u8 *)(p2 + 0x15c) == 2)
-                fn_80222550(p1, p1 + 0x24, 0xf, lbl_803E71A0, lbl_803E7188);
+                Obj_SmoothTurnAnglesTowardVelocity(p1, p1 + 0x24, 0xf, lbl_803E71A0, lbl_803E7188);
             else
-                fn_80222550(p1, p1 + 0x24, 0xf,
+                Obj_SmoothTurnAnglesTowardVelocity(p1, p1 + 0x24, 0xf,
                             ((SquadCmdFlags *)(p2 + 0x160))->f08 ? lbl_803E7168 : lbl_803E71A0,
                             lbl_803E7188);
         }

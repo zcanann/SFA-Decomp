@@ -1461,7 +1461,7 @@ extern f32 lbl_803E7170;
 
 #pragma dont_inline on
 
-extern void fn_80222550(int a, int b, int c, f32 d, f32 e);
+extern void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e);
 extern f32 lbl_803E7168;
 extern f32 lbl_803E719C;
 extern f32 lbl_803E71A0;
@@ -2312,7 +2312,7 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5);
 void drlightbea_render(int obj, int p2, int p3, int p4, int p5);
 void drearthcal_update(int obj);
 int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity);
-void fn_80222550(int a, int b, int c, f32 d, f32 e);
+void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e);
 int fn_80221C18(int obj, f32 dt, int p3, int p4);
 int voxmaps_traceWorldLine(void *p1, void *p2);
 void voxmaps_traceScaledVectorEnd(int p1, void *p2, f32 *p3, f32 scale);
