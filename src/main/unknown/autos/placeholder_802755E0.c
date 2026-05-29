@@ -16,30 +16,32 @@ extern u32 macRealTimeLo;
  */
 int mcmdWait(McmdVoiceState *state, McmdCommandArgs *args)
 {
-    u32 delay[2];
+    u32 delay;
     u32 rand;
-    u32 nowHi;
-    int carry;
+    u32 lo;
+    u32 hi;
+    u32 isMs;
+    u64 wake;
 
-    delay[0] = args->value >> 0x10;
-    if (delay[0] != 0) {
+    delay = args->value >> 0x10;
+    if (delay != 0) {
         if ((args->flags & MCMD_LOOP_WAIT_FOR_KEYOFF_FLAG) == 0) {
-            state->outputFlags &= ~MCMD_VOICE_KEYOFF_WAIT_OUTPUT_FLAG;
-            state->inputFlags = state->inputFlags;
+            state->outputFlags &= 0xfffffffb;
+            state->inputFlags &= 0xffffffff;
         } else {
             if ((state->outputFlags & MCMD_VOICE_KEYOFF_OUTPUT_FLAG) != 0) {
                 if ((state->inputFlags & MCMD_VOICE_KEYOFF_INPUT_FLAG) == 0) {
                     return 0;
                 }
-                state->outputFlags = state->outputFlags;
+                state->outputFlags &= 0xffffffff;
                 state->inputFlags |= MCMD_VOICE_DEFERRED_KEYOFF_INPUT_FLAG;
             }
             state->outputFlags |= MCMD_VOICE_KEYOFF_WAIT_OUTPUT_FLAG;
         }
 
         if ((args->flags & MCMD_LOOP_WAIT_FOR_INACTIVE_FLAG) == 0) {
-            state->outputFlags &= ~MCMD_VOICE_INACTIVE_WAIT_OUTPUT_FLAG;
-            state->inputFlags = state->inputFlags;
+            state->outputFlags &= 0xfffbffff;
+            state->inputFlags &= 0xffffffff;
         } else {
             if (((state->outputFlags & MCMD_VOICE_ACTIVE_OUTPUT_FLAG) == 0) &&
                 hwIsActive(state->voiceHandle & 0xff) == 0) {
@@ -50,32 +52,43 @@ int mcmdWait(McmdVoiceState *state, McmdCommandArgs *args)
 
         if ((args->flags & MCMD_LOOP_RANDOM_DELAY_FLAG) != 0) {
             rand = sndRand();
-            delay[0] = (rand & 0xffff) - ((rand & 0xffff) / delay[0]) * delay[0];
+            delay = (rand & 0xffff) - ((rand & 0xffff) / delay) * delay;
         }
 
-        if (delay[0] == 0xffff) {
+        if (delay == 0xffff) {
             state->wakeTimeLo = 0xffffffff;
             state->wakeTimeHi = 0xffffffff;
         } else {
-            if ((args->value & MCMD_WAIT_TIME_UNIT_MS_FLAG) == 0) {
-                sndConvertTicks(delay, state);
+            isMs = (args->value & MCMD_WAIT_TIME_UNIT_MS_FLAG) != 0;
+            if (isMs != 0) {
+                sndConvertMs(&delay);
+            } else {
+                sndConvertTicks(&delay, state);
+            }
+            if (isMs == 0) {
                 if ((args->value & MCMD_WAIT_ABSOLUTE_TIME_FLAG) == 0) {
-                    state->wakeTimeLo = state->activeTimeLo + delay[0];
-                    state->wakeTimeHi = state->activeTimeHi + CARRY4(state->activeTimeLo, delay[0]);
+                    lo = state->activeTimeLo;
+                    hi = state->activeTimeHi;
+                    wake = (((u64)hi << 32) | lo) + delay;
+                    state->wakeTimeLo = (u32)wake;
+                    state->wakeTimeHi = (u32)(wake >> 32);
                 } else {
-                    state->wakeTimeLo = delay[0];
+                    state->wakeTimeLo = delay;
                     state->wakeTimeHi = 0;
                 }
             } else {
-                sndConvertMs(delay);
-                nowHi = macRealTimeHi;
                 if ((args->value & MCMD_WAIT_ABSOLUTE_TIME_FLAG) == 0) {
-                    carry = CARRY4(macRealTimeLo, delay[0]);
-                    state->wakeTimeLo = macRealTimeLo + delay[0];
-                    state->wakeTimeHi = nowHi + carry;
+                    lo = macRealTimeLo;
+                    hi = macRealTimeHi;
+                    wake = (((u64)hi << 32) | lo) + delay;
+                    state->wakeTimeLo = (u32)wake;
+                    state->wakeTimeHi = (u32)(wake >> 32);
                 } else {
-                    state->wakeTimeLo = state->startTimeLo + delay[0];
-                    state->wakeTimeHi = state->startTimeHi + CARRY4(state->startTimeLo, delay[0]);
+                    lo = state->startTimeLo;
+                    hi = state->startTimeHi;
+                    wake = (((u64)hi << 32) | lo) + delay;
+                    state->wakeTimeLo = (u32)wake;
+                    state->wakeTimeHi = (u32)(wake >> 32);
                 }
             }
 
