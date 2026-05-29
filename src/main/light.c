@@ -1437,7 +1437,7 @@ void fn_801FC6F4(int obj, int param2, int ctx)
         case 0:
             break;
         case 13:
-            if (*(u8 *)(ctx + i + 0x81) == 20) {
+            if ((int)*(u8 *)(ctx + i + 0x81) == 20) {
                 GameBit_Set(0x500, 0);
                 GameBit_Set(0xd72, 1);
                 GameBit_Set(0xd44, 1);
