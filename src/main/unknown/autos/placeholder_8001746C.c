@@ -1791,6 +1791,53 @@ void translateToDinoLanguage(u8 *str) {
 }
 #pragma pop
 
+extern char lbl_802C8F40[];
+extern u8 lbl_803399A0[];
+extern u8 lbl_803399C0[];
+extern int lbl_803DC970;
+extern u8 *lbl_803DC974;
+extern int lbl_803DC978;
+extern int lbl_803DC97C;
+extern void *gameTextGet(void);
+extern int sprintf(char *dst, const char *fmt, ...);
+
+#pragma push
+#pragma scheduling off
+void *gameTextGetStr(void) {
+    u8 *entry;
+    void *t;
+
+    if (*(int *)(gameTextFonts + 0x1c) == 2) {
+        t = gameTextGet();
+        return *(void **)*(u8 **)((u8 *)t + 8);
+    }
+    lbl_803DC97C = lbl_803DC97C + 1;
+    if (lbl_803DC97C >= 8) {
+        lbl_803DC97C = 0;
+    }
+    entry = lbl_803399C0 + lbl_803DC97C * 0xc;
+    lbl_803DC974 = entry;
+    lbl_803DC978 = *(int *)*(int **)(entry + 8);
+    *(u16 *)entry = 0xffff;
+    lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+    switch (*(int *)(gameTextFonts + 0x1c)) {
+    case 0:
+        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xec4);
+        break;
+    case 1:
+        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xed4);
+        break;
+    case 3:
+        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xee0);
+        break;
+    case 4:
+        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xef0);
+        break;
+    }
+    return lbl_803DC974;
+}
+#pragma pop
+
 /*
  * --INFO--
  *
