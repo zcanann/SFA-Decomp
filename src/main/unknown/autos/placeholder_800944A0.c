@@ -1154,6 +1154,69 @@ extern f32 sin(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern void mathFn_80021ac8(void *in, f32 *out);
 
+typedef struct {
+    u16 a;
+    u16 b;
+} ParticlePair;
+
+typedef struct {
+    ParticlePair e[13];
+} ParticlePairTbl;
+
+extern int lbl_802C212C[];
+
+void fn_80096C94(void *obj, u8 type, u8 count, void *origin, u8 flagByte, f32 mult) {
+    PartfxParams params;
+    ParticlePairTbl partbl = *(ParticlePairTbl *)lbl_802C212C;
+    u16 rvec[3];
+    int i;
+    int n;
+    f32 f26;
+    f32 cScale = lbl_803DF368;
+    f32 cOne = lbl_803DF354;
+    f32 cZero = lbl_803DF35C;
+    u8 fc = framesThisStep;
+
+    if (fc > 3) {
+        fc = 3;
+    }
+    n = fc * count;
+    for (i = 0; i < n; i++) {
+        f26 = (f32)randomGetRange(0, 1000) / cScale;
+        rvec[0] = (u16)randomGetRange(0, 0xffff);
+        rvec[1] = (u16)randomGetRange(0, 0xffff);
+        rvec[2] = (u16)randomGetRange(0, 0xffff);
+        params.vec[0] = mult * (cOne - f26 * (f26 * f26));
+        params.vec[1] = cZero;
+        params.vec[2] = cZero;
+        mathFn_80021ac8(rvec, params.vec);
+        if (origin != NULL) {
+            params.vec[0] += *(f32 *)((char *)origin + 0xc);
+            params.vec[1] += *(f32 *)((char *)origin + 0x10);
+            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+        }
+        params.f6 = (s16)partbl.e[type].a;
+        params.pad[1] = (s16)partbl.e[type].b;
+        params.pad[2] = flagByte;
+        params.f8 = cOne;
+        switch (type) {
+        case 0xa:
+        case 0xb:
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7e3, &params, 2, -1, 0);
+            break;
+        case 9:
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7e4, &params, 2, -1, 0);
+            break;
+        default:
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7e2, &params, 2, -1, 0);
+            break;
+        }
+    }
+}
+
 void objFn_800972dc(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
                     int flags, f32 f8val, f32 mult) {
     PartfxParams params;
