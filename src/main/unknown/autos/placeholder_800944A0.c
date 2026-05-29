@@ -528,5 +528,51 @@ void fn_80098270(void *obj, u8 a, u8 b, f32 c, f32 d) {
         fn_80098B18(obj, (u8)t1.v[b], frame, 0, vec);
     }
 }
+
+typedef struct {
+    u16 v[11];
+} Tbl11;
+
+typedef struct {
+    s16 pad[3];
+    s16 f6;
+    f32 f8;
+    f32 vec[3];
+} PartfxParams;
+
+extern int lbl_802C2114[];
+extern int lbl_803DF340;
+extern u16 lbl_803DF344;
+extern int *gPartfxInterface;
+
+void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval) {
+    PartfxParams params;
+    Tbl11 table = *(Tbl11 *)lbl_802C2114;
+    u16 ps[3];
+    int i;
+    *(int *)ps = lbl_803DF340;
+    ps[2] = lbl_803DF344;
+    if (a == 0) {
+        return;
+    }
+    if (b == 0) {
+        return;
+    }
+    params.f8 = fval;
+    params.f6 = (s16)table.v[b];
+    if (p7 != NULL) {
+        params.vec[0] = *(f32 *)((char *)p7 + 0xc);
+        params.vec[1] = *(f32 *)((char *)p7 + 0x10);
+        params.vec[2] = *(f32 *)((char *)p7 + 0x14);
+    } else {
+        params.vec[0] = lbl_803DF35C;
+        params.vec[1] = lbl_803DF35C;
+        params.vec[2] = lbl_803DF35C;
+    }
+    for (i = 0; i < count; i++) {
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, ps[a], &params, 2, -1, 0);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset

@@ -13835,7 +13835,7 @@ typedef struct {
     u8 pad0[8];
     u16 f08;
     u16 f0a;
-    u8 pad0c[4];
+    f32 f0c;
     u8 f10;
     u8 f11;
     u8 f12;
@@ -13854,6 +13854,77 @@ extern u8 lbl_803DC9A5;
 extern u8 lbl_803DC9A6;
 extern u8 lbl_803DC9A7;
 extern int lbl_803DC9C0;
+
+extern char **textMeasureFn_80016c9c(char *str, f32 width, f32 height, int *outCount, f32 *outLineH);
+extern void textRenderStr(char *str, TextSlot *slot, int flag, f32 x, f32 y, f32 lineH);
+extern int lbl_803DC984;
+extern f32 lbl_803DC9A0;
+extern u8 lbl_803DC990;
+extern u8 lbl_803DC991;
+extern u8 lbl_803DC992;
+
+/*
+ * Function: gameTextRenderStrs
+ * EN v1.0 Address: 0x80015E84
+ * EN v1.0 Size: 776b
+ */
+void gameTextRenderStrs(char *str, int boxIdx)
+{
+    TextSlot *slot = (TextSlot *)lbl_802C7400 + boxIdx;
+    char **lines;
+    int count;
+    f32 lineH;
+    int i;
+    int closeAtEnd = 0;
+
+    if (lbl_803DC9C0 != 1) {
+        slot->f12 = slot->f10;
+        if (lbl_803DC9BC == 0) {
+            gameTextDrawBox(NULL, (int)str, slot);
+        }
+    }
+    lines = textMeasureFn_80016c9c(str, (f32)(u32)slot->f08,
+                                   slot->f0c, &count, &lineH);
+    if (lines == NULL) {
+        slot->f1a = (s16)(lineH * (f32)count + (f32)slot->f1a);
+        return;
+    }
+    if (gameTextDrawFunc != NULL) {
+        gxSetScissorRect(0, 0, 0, 0, 0x280, 0x1e0);
+    } else if (lbl_803DC9BC == 0) {
+        gxSetScissorRect(0, 0, slot->f14, slot->f16,
+                         slot->f14 + slot->f08, slot->f16 + slot->f0a);
+    }
+    lbl_803DC9A0 = slot->f0c;
+    for (i = 0; i < count; i++) {
+        if (i == count - 1 && slot->f12 == 3) {
+            slot->f12 = 0;
+            closeAtEnd = 1;
+        }
+        if (lbl_803DC984 == 1 && lbl_803DC9BC == 0) {
+            u8 save7 = lbl_803DC9A7;
+            u8 save6 = lbl_803DC9A6;
+            u8 save5 = lbl_803DC9A5;
+            f32 saveColor = lbl_803DC9A0;
+            lbl_803DC9A7 = lbl_803DC992;
+            lbl_803DC9A6 = lbl_803DC991;
+            lbl_803DC9A5 = lbl_803DC990;
+            textRenderStr(lines[i], slot, 1, (f32)slot->f18, (f32)slot->f1a, lineH);
+            lbl_803DC9A7 = save7;
+            lbl_803DC9A6 = save6;
+            lbl_803DC9A5 = save5;
+            lbl_803DC9A0 = saveColor;
+        }
+        textRenderStr(lines[i], slot, 0, (f32)slot->f18, (f32)slot->f1a, lineH);
+        slot->f1a = (s16)((f32)slot->f1a + lineH);
+        if (closeAtEnd) {
+            slot->f12 = 3;
+        }
+    }
+    if (lbl_803DC9BC == 0) {
+        Camera_ApplyCurrentViewport(NULL);
+    }
+}
 
 /*
  * Function: gameTextFn_8001658c
