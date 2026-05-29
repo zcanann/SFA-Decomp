@@ -9581,8 +9581,8 @@ void ObjModel_SetBlendChannelWeight(u8 *model, int channel, f32 weight) {
     ch = *(u8 **)(model + 0x28) + channel * 0x10;
     if (weight != *(f32 *)ch) {
         *(f32 *)ch = weight;
-        ch[0xe] |= 4;
     }
+    ch[0xe] |= 4;
 }
 #pragma pop
 
