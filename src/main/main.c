@@ -1442,11 +1442,13 @@ void fn_801FE31C(int obj, u8 *state) {
 #pragma peephole off
 int dbegg_func0B(int obj, f32 *v) {
     char *inner = *(char **)(obj + 0xb8);
-    if (*(u8 *)(inner + 0x118) != 0xb) return 0;
-    *(f32 *)(inner + 0x10c) = v[0];
-    *(f32 *)(inner + 0x110) = v[1];
-    *(f32 *)(inner + 0x114) = v[2];
-    return 1;
+    if (*(u8 *)(inner + 0x118) == 0xb) {
+        *(f32 *)(inner + 0x10c) = v[0];
+        *(f32 *)(inner + 0x110) = v[1];
+        *(f32 *)(inner + 0x114) = v[2];
+        return 1;
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
