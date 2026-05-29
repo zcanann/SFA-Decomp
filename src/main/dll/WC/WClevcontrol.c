@@ -910,7 +910,7 @@ void fn_801EE668(ushort *param_1,int param_2,undefined4 param_3,undefined4 param
   return;
 }
 
-/* fn_801EEB50: priority-hit handler — when the laser hits an object whose
+/* SB_CloudRunner_HandlePriorityHit: when the laser hits an object whose
  * type isn't 281 and isn't currently in fade state, fade it red, rumble,
  * play SFX, gate further damage on a GameBit, then if the hit type is 154
  * emit 3 partfx of effect 168 followed by a 10-shot burst of effect 169. */
@@ -932,7 +932,7 @@ struct WCPartfxArgs {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801EEB50(int obj, u8 *state) {
+void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
     int hitObj;
     f32 pos[3];
     struct WCPartfxArgs args;
@@ -1122,7 +1122,7 @@ void SB_CloudRunner_update(int obj)
     switch (*(s8 *)(state + 0x65)) {
     case 0:
         ((void (*)(int, int))fn_801EE668)(obj, state);
-        ((void (*)(int, int))fn_801EEB50)(obj, state);
+        ((void (*)(int, int))SB_CloudRunner_HandlePriorityHit)(obj, state);
         break;
     case 1:
         WCPushBlock_UpdateRideTilt(obj, state);
