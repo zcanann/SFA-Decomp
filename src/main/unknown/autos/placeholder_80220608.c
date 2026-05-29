@@ -5136,6 +5136,94 @@ void arwingandrossstuff_render(int obj, int p2, int p3, int p4, int p5, s8 visib
 void arwingandrossstuff_release(void) {}
 void arwingandrossstuff_initialise(void) {}
 
+extern int getArwing(void);
+extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, int *outVol);
+extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
+extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int limit);
+extern int getAngle(f32 dx, f32 dz);
+extern f32 sin(f32 x);
+extern void fn_8022D4AC(int arwing, int in);
+extern void doRumble(f32 v);
+extern int fn_8022D738(int arwing);
+extern void PSVECNormalize(void *src, void *dst);
+extern void C_VECHalfAngle(void *out, void *a, void *b);
+extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
+extern f32 lbl_803E7008;
+extern f32 lbl_803E7014;
+extern f32 lbl_803E7028;
+extern f32 lbl_803E702C;
+extern f32 lbl_803E7030;
+extern f32 lbl_803E7034;
+extern f32 lbl_803E7038;
+extern f32 lbl_803E703C;
+#pragma peephole off
+#pragma scheduling off
+void arwingandrossstuff_hitDetect(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int arwing = getArwing();
+
+    if (*(s16 *)(obj + 0x46) == 0x80d) {
+        int hit;
+        int vol;
+
+        if (ObjHits_GetPriorityHit(obj, &hit, 0, &vol) != 0) {
+            spawnExplosion(obj, lbl_803E7014, 1, 0, 0, 1, 0, 0, 3);
+            *(s16 *)(obj + 6) |= 0x4000;
+            ObjHits_DisableObject(obj);
+            *(f32 *)(state + 0x10) = lbl_803E7028;
+        }
+    }
+    if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL && *(u8 *)(state + 1) == 0) {
+        if (*(s16 *)(obj + 0x46) != 0x6ae) {
+            Sfx_PlayFromObjectLimited(obj, 0x2b3, 4);
+        }
+        if (*(s16 *)(obj + 0x46) == 0x7e4) {
+            struct {
+                f32 x, y, z;
+            } v, w;
+            f32 ang = lbl_803E7030 *
+                      (f32)(s16)(-getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc),
+                                           *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10))) /
+                      lbl_803E7034;
+
+            v.x = lbl_803E702C * fn_80293E80(ang);
+            v.y = lbl_803E7038 * sin(ang);
+            v.z = lbl_803E7008;
+            w = v;
+            fn_8022D4AC(arwing, (int)&w);
+            doRumble(lbl_803E703C);
+        }
+        if (*(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)arwing) {
+            if (fn_8022D738(arwing) != 0) {
+                struct {
+                    f32 x, y, z;
+                } d;
+
+                PSVECNormalize((void *)(obj + 0x24), (void *)(obj + 0x24));
+                d.x = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
+                d.y = *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10);
+                d.z = *(f32 *)(obj + 0x14) - *(f32 *)(arwing + 0x14);
+                PSVECNormalize(&d, &d);
+                C_VECHalfAngle((void *)(obj + 0x24), &d, (void *)(obj + 0x24));
+                *(f32 *)(obj + 0x24) *= *(f32 *)(state + 8);
+                *(f32 *)(obj + 0x28) *= *(f32 *)(state + 8);
+                *(f32 *)(obj + 0x2c) *= *(f32 *)(state + 8);
+                *(u8 *)(state + 1) = 1;
+            }
+        }
+        *(f32 *)(state + 0x10) = lbl_803E7028;
+        *(u8 *)(obj + 0x36) = 0;
+        projectileParticleFxFn_80099660(obj, lbl_803E701C, *(u8 *)state);
+        if (*(int *)(state + 0x14) != 0) {
+            ModelLightStruct_free(*(void **)(state + 0x14));
+            *(int *)(state + 0x14) = 0;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 int arwlevelcon_getExtraSize(void) { return 0x24; }
 int arwlevelcon_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
