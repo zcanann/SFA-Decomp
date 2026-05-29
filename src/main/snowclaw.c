@@ -36,7 +36,7 @@ extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
 extern int getAngle(f32 dx, f32 dz);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int loadObjectAtObject(int obj, int spawn);
+extern void *loadObjectAtObject(int obj, int spawn);
 extern f32 lbl_803E66E0;
 extern int ObjHits_GetPriorityHit(int *sub, int *hit, int c, int d);
 extern void ObjHits_RecordObjectHit(int *sub, int hit, int c, int d, int e);
@@ -144,7 +144,7 @@ void snowclaw_init(int *obj, u8 *init) {
 void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
     int player;
     int obj2;
-    int spawned;
+    char *spawned;
 
     player = Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() != 0) {
@@ -171,7 +171,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
             break;
         }
         spawned = loadObjectAtObject(obj, obj2);
-        if (spawned != 0) {
+        if (spawned != NULL) {
             *(int *)(spawned + 0xf4) = (u8)c;
             *(int *)(spawned + 0xc4) = a;
         }
