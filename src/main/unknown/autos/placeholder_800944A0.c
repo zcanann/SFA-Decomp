@@ -665,5 +665,53 @@ int fn_80095B18(WaterParticle *src, int idx, int count, f32 v) {
     }
     return count;
 }
+
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 *Obj_AllocObjectSetup(int size, int id);
+extern void Obj_SetupObject(void *obj, int a, int b, int c, int d);
+extern f32 lbl_803DF3AC;
+extern f32 lbl_803DF3B0;
+
+void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
+                    u8 flag20, u8 f1cinit) {
+    u8 *obj;
+    if (Obj_IsLoadingLocked() != 0) {
+        obj = Obj_AllocObjectSetup(0x24, 0x253);
+        *(u8 *)(obj + 4) = 2;
+        *(u8 *)(obj + 5) = 1;
+        *(f32 *)(obj + 8) = *(f32 *)(src + 0x18);
+        *(f32 *)(obj + 0xc) = *(f32 *)(src + 0x1c);
+        *(f32 *)(obj + 0x10) = *(f32 *)(src + 0x20);
+        *(s8 *)(obj + 0x19) = (s8)a;
+        *(s16 *)(obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
+        *(s16 *)(obj + 0x1c) = (u8)f1cinit;
+        if (flag4 != 0) {
+            *(s16 *)(obj + 0x1c) |= 4;
+        }
+        if (flag8 != 0) {
+            *(s16 *)(obj + 0x1c) |= 8;
+        }
+        if (flag10 != 0) {
+            *(s16 *)(obj + 0x1c) |= 0x10;
+        }
+        if (flag20 != 0) {
+            *(s16 *)(obj + 0x1c) |= 0x20;
+        }
+        if (doShake != 0) {
+            u8 *player = Obj_GetPlayerObject();
+            if (player != NULL && (*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+                f32 d = Camera_DistanceToCurrentViewPosition(*(f32 *)(src + 0x18),
+                                                             *(f32 *)(src + 0x1c),
+                                                             *(f32 *)(src + 0x20));
+                if (d <= lbl_803DF3B0) {
+                    f32 t = lbl_803DF354 - d / lbl_803DF3B0;
+                    CameraShake_Start(lbl_803DF3A0 * t, lbl_803DF384 * t, lbl_803DF3A4);
+                    doRumble(lbl_803DF3A8 * t);
+                }
+            }
+        }
+        Obj_SetupObject(obj, 5, *(s8 *)(src + 0xac), -1, 0);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
