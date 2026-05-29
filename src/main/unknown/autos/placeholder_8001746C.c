@@ -7709,10 +7709,19 @@ void doNothing_beforeRenderObject(void) {}
 void fn_8002B85C(void) {}
 
 /* ObjModel/model-file accessors. */
+typedef struct ObjModelRenderOpLite {
+    u8 pad00[0x43];
+    s8 alpha;
+} ObjModelRenderOpLite;
+
 typedef struct ObjModelFileHeaderLite {
-    u8 pad00[0xf3];
+    u8 pad00[0x38];
+    ObjModelRenderOpLite *renderOps;
+    u8 pad3c[0xf3 - 0x3c];
     u8 jointCount;
     u8 extraJointCount;
+    u8 padf5[0xf8 - 0xf5];
+    u8 renderOpCount;
 } ObjModelFileHeaderLite;
 
 typedef struct ObjModelInstanceLite {
@@ -7868,16 +7877,17 @@ int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
 void Obj_SetModelRenderOpAlpha(u8 *obj, int alpha) {
     int renderOpAlpha;
     int renderOpIndex;
-    u8 *modelFile;
-    u8 *model;
+    ObjModelFileHeaderLite *modelFile;
+    ObjModelInstanceLite *model;
 
     renderOpAlpha = alpha;
-    model = *(u8 **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4);
+    model = *(ObjModelInstanceLite **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4);
     if (model != NULL) {
-        modelFile = *(u8 **)model;
+        modelFile = model->file;
         if (modelFile != NULL) {
-            for (renderOpIndex = 0; renderOpIndex < modelFile[0xf8]; renderOpIndex++) {
-                *(s8 *)((u8 *)ObjModel_GetRenderOp(modelFile, renderOpIndex) + 0x43) = renderOpAlpha;
+            for (renderOpIndex = 0; renderOpIndex < modelFile->renderOpCount; renderOpIndex++) {
+                ((ObjModelRenderOpLite *)ObjModel_GetRenderOp((u8 *)modelFile, renderOpIndex))
+                    ->alpha = renderOpAlpha;
             }
         }
     }
