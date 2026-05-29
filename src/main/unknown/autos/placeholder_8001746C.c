@@ -10223,6 +10223,25 @@ void *Obj_SetupObject(int a, int b, int c, int d, int e) {
     }
     return obj;
 }
+
+#pragma scheduling off
+void *loadObjectAtObject(u8 *src, int arg1) {
+    int type = *(s8 *)(src + 0xac);
+    int objF30 = *(int *)(src + 0x30);
+    void *obj;
+    if (getLoadedFileFlags(0) & 0x100000) {
+        OSReport(sObjSetupObjectLoadingLockedWarning, -1);
+        obj = NULL;
+    } else {
+        obj = loadCharacter(arg1, 5, type, -1, objF30, 0);
+        if (obj != NULL) {
+            Obj_RegisterObject(obj, 5);
+            OSReport(lbl_802CAC54, *(int *)((u8 *)obj + 0x50) + 0x91);
+        }
+    }
+    return obj;
+}
+#pragma scheduling reset
 #pragma peephole reset
 
 extern void ShaderDef_free(int *def);
