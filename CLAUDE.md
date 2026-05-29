@@ -678,6 +678,15 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
 
 ## Drift handling (Ghidra-imported `FUN_xxx` don't match v1.0)
 
+**Drift stubs HIDE large recoverable functions — a tiny header size (e.g. "4b")
+can mask a big real v1.0 body, so size-based triage UNDERCOUNTS the work.** When
+a unit looks "mostly capped/drained" by function-size, run `drift_audit.py` and
+check the real `.s` body sizes: a 0%/"0.1%" symbol the report calls tiny may be a
+1-4KB drift stub fully recoverable by the reconstruction recipe below. hotel8
+found ~111 such stubs on placeholder_8001746C (textRenderStr was labeled "4b" but
+is ~4100B → reconstructed to 83%). Before declaring any unit drained, confirm via
+the .s sizes, not the header/report sizes.
+
 **A stuck mid-range partial (60-95%) is OFTEN a CORRECTNESS bug, not a codegen
 cap — verify the target's actual control flow BEFORE assuming a cap.** The
 Ghidra import frequently got the C *logic* subtly wrong: a `return`/store nested
