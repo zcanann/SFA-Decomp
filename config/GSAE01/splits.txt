@@ -73,8 +73,11 @@ main/unknown/autos/placeholder_80080E28.c:
 main/objseq.c:
 	.text       start:0x80080E58 end:0x80088758
 
+main/sky.c:
+	.text       start:0x80088758 end:0x8008EE18
+
 main/unknown/autos/placeholder_80080E58.c:
-	.text       start:0x80088758 end:0x80094494
+	.text       start:0x8008EE18 end:0x80094494
 
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 	.text       start:0x80094494 end:0x800944A0
