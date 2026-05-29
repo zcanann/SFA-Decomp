@@ -10077,7 +10077,8 @@ void gameTextSetWindowStrPos(int idx, int x, int y) {
 extern void textureFree(void *tex);
 extern void *textureLoadAsset(int asset);
 extern void *lbl_8033BE54[];
-extern int lbl_8033B240[];
+extern void *lbl_8033B240[];
+extern int lbl_803DCA14;
 extern f32 lbl_803DE8B8;
 extern int lbl_803DC9FC;
 extern void *lbl_803DC9F8;
@@ -10100,7 +10101,7 @@ void gameTextInitFn_8001bd14(void) {
     lbl_803DCA00 = 1;
     lbl_803DB3E0 = -1;
 
-    scratch = lbl_8033B240;
+    scratch = (int *)lbl_8033B240;
     i = 8;
     do {
         scratch[0] = zero;
@@ -10143,6 +10144,33 @@ void gameTextInitFn_8001bd14(void) {
     } while (i != 0);
 }
 #pragma optimize_for_size reset
+
+void subtitleFn_8001b700(void) {
+    void **slot;
+    int i;
+    int oldDelay;
+
+    if (lbl_803DCA04 != 0) {
+        lbl_803DCA04 = 0;
+        i = 0;
+        slot = lbl_8033B240;
+        while (i < lbl_803DCA14) {
+            if (*slot != NULL) {
+                oldDelay = mmSetFreeDelay(0);
+                mm_free(*slot);
+                mmSetFreeDelay(oldDelay);
+                *slot = NULL;
+            }
+            slot++;
+            i++;
+        }
+
+        if (lbl_803DB3E0 != -1) {
+            gameTextLoadDir(lbl_803DB3E0);
+            lbl_803DB3E0 = -1;
+        }
+    }
+}
 
 void fn_8001BDD4(int mode) {
     switch (mode) {
