@@ -78,6 +78,7 @@ int crcloudrace_completionCallback(int obj, int arg2, u8 *data) {
     return 0;
 }
 
+#pragma dont_inline on
 void crcloudrace_updateCompletionState(int obj, int *state) {
     f32 dist;
     int player;
@@ -103,6 +104,141 @@ void crcloudrace_updateCompletionState(int obj, int *state) {
             *(u8 *)((char *)state + 8) = 5;
         }
     }
+}
+#pragma dont_inline reset
+
+extern int timerCountDown(void *p);
+extern void s16toFloat(void *p, int duration);
+
+void crcloudrace_updateRaceState(int obj) {
+    int *inner;
+    int player;
+
+    inner = *(int **)(obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    switch (*(u8 *)((char *)inner + 8)) {
+    case 2:
+        if (GameBit_Get(0x4a0) != 0) {
+            GameBit_Set(0x4ba, 1);
+        }
+        if (fn_802972A8(player) != 0) {
+            GameBit_Set(0x49d, 1);
+            GameBit_Set(0x497, 1);
+            *(u8 *)((char *)inner + 8) = 3;
+            unlockLevel(0, 0, 1);
+        }
+        break;
+    case 3:
+        crcloudrace_updateCompletionState(obj, inner);
+        break;
+    case 4:
+        GameBit_Set(0x4ba, 0);
+        *(u8 *)((char *)inner + 8) = 7;
+        s16toFloat((char *)inner + 4, 0xa);
+        break;
+    case 7:
+        if (timerCountDown((char *)inner + 4) != 0) {
+            *(u8 *)((char *)inner + 8) = 8;
+        }
+        break;
+    case 8:
+        unlockLevel(0, 0, 1);
+        loadMapAndParent(0xc);
+        lockLevel(mapGetDirIdx(0xc), 0);
+        GameBit_Set(0xd73, 0);
+        GameBit_Set(0x983, 0);
+        GameBit_Set(0xe23, 0);
+        GameBit_Set(0xe1d, 0);
+        GameBit_Set(0xdb8, 0);
+        GameBit_Set(0x984, 0);
+        GameBit_Set(0x458, 0);
+        *(u8 *)((char *)inner + 8) = 0;
+        break;
+    case 5:
+        *(u8 *)((char *)inner + 8) = 2;
+        break;
+    case 1:
+    case 6:
+    default:
+        *(u8 *)((char *)inner + 8) = 2;
+        break;
+    case 0:
+        break;
+    }
+}
+
+extern int lbl_8032A1B4[5];
+extern u8 lbl_803DC1B8[8];
+extern u8 lbl_803DC1C0[8];
+extern int lbl_803DC1F0;
+extern int lbl_803DDD04;
+extern u8 lbl_803DDD08;
+extern s16 lbl_803DDD0A;
+extern int lbl_803DDD28;
+extern f32 lbl_803DDD2C;
+extern f32 lbl_803E65F8;
+extern u16 getNextTaskHintText(void);
+extern void setDrawLights(int mode);
+extern void audioStopByMask(int mask);
+extern void Music_Trigger(int track, int arg2);
+extern void setShowWorldMapHud(int show);
+extern void mapUnload(int mapId, int flags);
+extern int getCurMapLayer(void);
+extern void envFxActFn_800887f8(int arg);
+extern int *gScreenTransitionInterface;
+
+void worldplanet_init(int obj) {
+    int inner;
+    int mask;
+    int i;
+    int flag;
+    int layer;
+    int j;
+
+    inner = *(int *)(obj + 0xb8);
+    lbl_803DDD04 = 0;
+    GameBit_Set(0xa63, 1);
+    mask = 0;
+    for (i = 0; i < 5; i++) {
+        if (GameBit_Get(lbl_8032A1B4[i]) != 0) {
+            flag = 1;
+            if (lbl_803DC1B8[i] != 0) {
+                if (getNextTaskHintText() > 0xad) {
+                    flag = 0;
+                }
+            }
+            if ((u8)flag != 0) {
+                mask |= 1 << i;
+            }
+        }
+    }
+    *(u8 *)(inner + 0x11) = (u8)mask;
+    if (lbl_803DC1F0 != -1) {
+        *(s8 *)(inner + 0x10) = (s8)lbl_803DC1F0;
+    } else {
+        for (j = 0; j < 5; j++) {
+            if (GameBit_Get(lbl_8032A1B4[lbl_803DC1C0[j]]) != 0) {
+                *(s8 *)(inner + 0x10) = (s8)lbl_803DC1C0[j];
+                break;
+            }
+        }
+    }
+    lbl_803DDD08 = 0;
+    setDrawLights(0);
+    audioStopByMask(0xf);
+    Music_Trigger(0x8f, 1);
+    lbl_803DDD2C = lbl_803E65F8;
+    setShowWorldMapHud(1);
+    lbl_803DDD28 = -1;
+    unlockLevel(0, 0, 1);
+    mapUnload(0x2d, 0x10000000);
+    layer = getCurMapLayer();
+    (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(obj + 0xc, 0, 0, layer);
+    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(0x1e, 1);
+    lbl_803DDD0A = 0xa;
+    GameBit_Set(lbl_8032A1B4[2], 1);
+    *(s16 *)(inner + 0x6) = 0x78;
+    envFxActFn_800887f8(0);
 }
 
 extern int padGetStickX(int controller);
@@ -233,6 +369,46 @@ extern int *gScreenTransitionInterface;
 extern int lbl_803DDD34;
 extern int fn_8001DB64(int model);
 extern void queueGlowRender(int model);
+extern int *gPartfxInterface;
+extern void mathFn_80021ac8(void *in, void *out);
+extern f32 lbl_803E665C;
+
+void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId) {
+    struct {
+        s16 f8;
+        s16 fa;
+        s16 fc;
+        s16 pad_e;
+        f32 f10;
+        f32 f14;
+        f32 f18;
+    } dir;
+    struct {
+        u8 pad0[6];
+        s16 f6;
+        u8 pad8[4];
+        f32 fc;
+        f32 f10;
+        f32 f14;
+    } params;
+    int i;
+    f32 base = lbl_803E665C;
+
+    for (i = 0; i < count; i++) {
+        dir.f10 = base;
+        dir.f14 = (f32)(int)randomGetRange(xMin, xMax);
+        dir.f18 = (f32)(int)randomGetRange(yMin, yMax);
+        dir.f8 = 0;
+        dir.fa = 0;
+        dir.fc = (s16)randomGetRange(-0x7fff, 0x7fff);
+        mathFn_80021ac8(&dir.f8, &dir.f10);
+        params.fc = dir.f10;
+        params.f10 = dir.f14;
+        params.f14 = dir.f18;
+        params.f6 = 0x64;
+        (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, dispatchId, &params, 2, -1, 0);
+    }
+}
 
 void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
     int *inner = *(int **)(p1 + 0xb8);
@@ -296,6 +472,80 @@ extern f32 lbl_803E66F0;
 extern f32 lbl_803E6708;
 extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int extraSize, int id);
+extern int getAngle(f32 dx, f32 dz);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int loadObjectAtObject(int obj, int spawn);
+extern f32 lbl_803E66E0;
+
+void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
+    int player;
+    int obj2;
+    int spawned;
+
+    player = Obj_GetPlayerObject();
+    if (Obj_IsLoadingLocked() != 0) {
+        obj2 = Obj_AllocObjectSetup(0x24, 0x5ff);
+        *(s16 *)(obj2 + 0x0) = 0x5ff;
+        *(u8 *)(obj2 + 0x4) = 2;
+        *(u8 *)(obj2 + 0x6) = 0xff;
+        *(u8 *)(obj2 + 0x5) = 1;
+        *(u8 *)(obj2 + 0x7) = 0xff;
+        *(s8 *)(obj2 + 0x19) = (s8)b;
+        *(f32 *)(obj2 + 0x8) = *(f32 *)(obj + 0xc);
+        *(f32 *)(obj2 + 0xc) = lbl_803E66E0 + *(f32 *)(obj + 0x10);
+        *(f32 *)(obj2 + 0x10) = *(f32 *)(obj + 0x14);
+        *(s8 *)(obj2 + 0x18) = (s8)(u8)((((getAngle(*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc),
+                                                   *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) & 0xffff) >> 8) + 0x8000) >> 8);
+        Sfx_PlayFromObject(obj, 0x2e4);
+        switch ((u8)b) {
+        case 0:
+            *(s16 *)(obj2 + 0x1a) = (s16)lbl_803DDD38;
+            break;
+        case 1:
+            *(s16 *)(obj2 + 0x1a) = (s16)(getAngle(*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc),
+                                                    *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) + 0x8000);
+            break;
+        }
+        spawned = loadObjectAtObject(obj, obj2);
+        if (spawned != 0) {
+            *(int *)(spawned + 0xf4) = (u8)c;
+            *(int *)(spawned + 0xc4) = a;
+        }
+    }
+}
+
+void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9) {
+    f32 va, vb, vc;
+
+    if (a9 != 0 && (s8)opacity != 0 && a8 > 0) {
+        u8 saved = *(u8 *)(sub + 0x37);
+        *(u8 *)(sub + 0x37) = (u8)a8;
+        (*(void (*)(int, int, int, int, int, int))(*(int *)(*(int *)(*(int *)(sub + 0x68)) + 0x10)))(sub, p2, p3, p4, p5, -1);
+        *(u8 *)(sub + 0x37) = saved;
+    }
+    *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0x18);
+    *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x1c);
+    *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x20);
+    *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+    (*(void (*)(int, f32 *, f32 *, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x68)) + 0x28)))(sub, &va, &vb, &vc);
+    *(f32 *)(obj + 0xc) = va;
+    *(f32 *)(obj + 0x10) = vb;
+    *(f32 *)(obj + 0x14) = vc;
+    *(s16 *)(obj + 0x0) = *(s16 *)(sub + 0x0);
+    *(s16 *)(obj + 0x2) = *(s16 *)(sub + 0x2);
+    *(s16 *)(obj + 0x4) = *(s16 *)(sub + 0x4);
+    *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+    *(f32 *)(obj + 0x24) = *(f32 *)(sub + 0x24);
+    *(f32 *)(obj + 0x28) = *(f32 *)(sub + 0x28);
+    *(f32 *)(obj + 0x2c) = *(f32 *)(sub + 0x2c);
+}
 
 void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis) {
     int *inner;

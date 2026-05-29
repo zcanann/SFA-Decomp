@@ -733,7 +733,7 @@ int fn_80095B18(WaterParticle *src, int idx, int count, f32 v) {
 
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 *Obj_AllocObjectSetup(int size, int id);
-extern void Obj_SetupObject(void *obj, int a, int b, int c, int d);
+extern void *Obj_SetupObject(void *obj, int a, int b, int c, int d);
 extern f32 lbl_803DF3AC;
 extern f32 lbl_803DF3B0;
 
@@ -1133,6 +1133,563 @@ void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
                 obj, 0x7b1, &params, 1, -1, 0);
         }
         break;
+    }
+}
+
+typedef struct {
+    u16 v[9];
+} ParticleTblA;
+
+typedef struct {
+    u16 v[8];
+} ParticleTbl8;
+
+extern int lbl_802C1FD8[];
+extern f32 lbl_803DF350;
+extern f32 lbl_803DF358;
+extern f32 lbl_803DF368;
+extern f32 lbl_803DF36C;
+extern f32 lbl_803DF370;
+extern f32 sin(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern void mathFn_80021ac8(void *in, f32 *out);
+
+typedef struct {
+    int a[5];
+    int b[4];
+    int c[5];
+} CloudEnvTbl;
+
+extern int lbl_8030F7B0[];
+extern f32 lbl_803DF2DC;
+extern int saveGameGetEnvState(void);
+
+void cloudaction_update(int p1, int p2, u8 *state, int p4, int val) {
+    CloudEnvTbl *tbl = (CloudEnvTbl *)lbl_8030F7B0;
+
+    saveGameGetEnvState();
+    if (state == NULL) {
+        return;
+    }
+    if ((state[0x58] & 2) == 0) {
+        return;
+    }
+    *(s16 *)((char *)tbl + 0xa) = (s16)((s16)*(u16 *)(state + 0x24) - 1);
+    if ((state[0x59] & 1) == 0) {
+        return;
+    }
+    lbl_803DB618[0] = lbl_803DB618[1];
+    lbl_803DB618[1] = (u16)val;
+    lbl_8039AB28[0x18] = (int)(*(f32 *)(state + 8) / lbl_803DF2DC);
+    lbl_8039AB28[0x19] = 0;
+    if ((state[0x59] & 4) != 0) {
+        lbl_8039AB28[0x1a] = 0;
+    } else {
+        lbl_8039AB28[0x1a] = 1;
+    }
+    if (state[0x5d] != 0) {
+        if (state[0x5d] < 5) {
+            if (*(int *)(lbl_8039AB28 + 0xc) != tbl->a[state[0x5d]]) {
+                if (*(void **)lbl_8039AB28 != NULL) {
+                    Obj_FreeObject(*(int *)lbl_8039AB28);
+                }
+                *(int *)lbl_8039AB28 = (int)Obj_SetupObject(
+                    Obj_AllocObjectSetup(0x20, tbl->a[state[0x5d]]), 4, -1, -1, 0);
+                *(int *)(lbl_8039AB28 + 0xc) = tbl->a[state[0x5d]];
+            }
+        }
+    } else {
+        if (*(void **)lbl_8039AB28 != NULL) {
+            Obj_FreeObject(*(int *)lbl_8039AB28);
+            *(int *)lbl_8039AB28 = 0;
+        }
+        *(int *)(lbl_8039AB28 + 0xc) = 0;
+    }
+    if (state[0x5b] != 0) {
+        if (state[0x5b] < 4) {
+            if (*(int *)(lbl_8039AB28 + 0x10) != tbl->b[state[0x5b]]) {
+                if (*(void **)(lbl_8039AB28 + 4) != NULL) {
+                    Obj_FreeObject(*(int *)(lbl_8039AB28 + 4));
+                }
+                *(int *)(lbl_8039AB28 + 4) = (int)Obj_SetupObject(
+                    Obj_AllocObjectSetup(0x20, tbl->b[state[0x5b]]), 4, -1, -1, 0);
+                *(int *)(lbl_8039AB28 + 0x10) = tbl->b[state[0x5b]];
+            }
+        }
+    } else {
+        if (*(void **)(lbl_8039AB28 + 4) != NULL) {
+            Obj_FreeObject(*(int *)(lbl_8039AB28 + 4));
+            *(int *)(lbl_8039AB28 + 4) = 0;
+        }
+        *(int *)(lbl_8039AB28 + 0x10) = 0;
+    }
+    if (state[0x5a] != 0) {
+        if (state[0x5a] < 5) {
+            if (*(int *)(lbl_8039AB28 + 0x14) != tbl->c[state[0x5a]]) {
+                if (*(void **)(lbl_8039AB28 + 8) != NULL) {
+                    Obj_FreeObject(*(int *)(lbl_8039AB28 + 8));
+                }
+                *(int *)(lbl_8039AB28 + 8) = (int)Obj_SetupObject(
+                    Obj_AllocObjectSetup(0x20, tbl->c[state[0x5a]]), 4, -1, -1, 0);
+                *(int *)(lbl_8039AB28 + 0x14) = tbl->c[state[0x5a]];
+            }
+        }
+    } else {
+        if (*(void **)(lbl_8039AB28 + 8) != NULL) {
+            Obj_FreeObject(*(int *)(lbl_8039AB28 + 8));
+            *(int *)(lbl_8039AB28 + 8) = 0;
+        }
+        *(int *)(lbl_8039AB28 + 0x14) = 0;
+    }
+}
+
+typedef struct {
+    u16 a;
+    u16 b;
+} ParticlePair;
+
+typedef struct {
+    ParticlePair e[13];
+} ParticlePairTbl;
+
+extern int lbl_802C212C[];
+
+void fn_80096C94(void *obj, u8 type, u8 count, void *origin, u8 flagByte, f32 mult) {
+    PartfxParams params;
+    ParticlePairTbl partbl = *(ParticlePairTbl *)lbl_802C212C;
+    u16 rvec[3];
+    int i;
+    int n;
+    f32 f26;
+    f32 cScale = lbl_803DF368;
+    f32 cOne = lbl_803DF354;
+    f32 cZero = lbl_803DF35C;
+    u8 fc = framesThisStep;
+
+    if (fc > 3) {
+        fc = 3;
+    }
+    n = fc * count;
+    for (i = 0; i < n; i++) {
+        f26 = (f32)randomGetRange(0, 1000) / cScale;
+        rvec[0] = (u16)randomGetRange(0, 0xffff);
+        rvec[1] = (u16)randomGetRange(0, 0xffff);
+        rvec[2] = (u16)randomGetRange(0, 0xffff);
+        params.vec[0] = mult * (cOne - f26 * (f26 * f26));
+        params.vec[1] = cZero;
+        params.vec[2] = cZero;
+        mathFn_80021ac8(rvec, params.vec);
+        if (origin != NULL) {
+            params.vec[0] += *(f32 *)((char *)origin + 0xc);
+            params.vec[1] += *(f32 *)((char *)origin + 0x10);
+            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+        }
+        params.f6 = (s16)partbl.e[type].a;
+        params.pad[1] = (s16)partbl.e[type].b;
+        params.pad[2] = flagByte;
+        params.f8 = cOne;
+        switch (type) {
+        case 0xa:
+        case 0xb:
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7e3, &params, 2, -1, 0);
+            break;
+        case 9:
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7e4, &params, 2, -1, 0);
+            break;
+        default:
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7e2, &params, 2, -1, 0);
+            break;
+        }
+    }
+}
+
+void objFn_800972dc(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+                    int flags, f32 f8val, f32 mult) {
+    PartfxParams params;
+    ParticleTblA tA = *(ParticleTblA *)((char *)lbl_802C1FD8 + 0xd0);
+    ParticleTbl8 tB = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xe4);
+    ParticleTbl8 tC = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xf4);
+    ParticleTbl8 tD = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0x104);
+    u16 rvec[3];
+    int i;
+    f32 f30;
+
+    params.f8 = f8val;
+    params.f6 = (s16)tA.v[kind];
+    params.pad[1] = 0x3c;
+    for (i = 0; i < 4; i++) {
+        if (randomGetRange(0, 0x63) >= chance) {
+            continue;
+        }
+        f30 = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        switch (mode) {
+        case 1:
+            rvec[0] = (u16)randomGetRange(0, 0xffff);
+            rvec[1] = (u16)randomGetRange(0, 0xffff);
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 2:
+            rvec[0] = 0;
+            rvec[1] = (u16)randomGetRange(0, 0xffff);
+            rvec[2] = 0;
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 3:
+            rvec[0] = (u16)randomGetRange(0, 0xffff);
+            rvec[1] = 0;
+            rvec[2] = 0;
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 4:
+            rvec[0] = 0;
+            rvec[1] = 0;
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 5:
+            rvec[0] = (u16)randomGetRange(0x7fff, 0xffff);
+            rvec[1] = 0;
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * f30));
+            break;
+        case 6:
+            rvec[0] = (u16)randomGetRange(0, 0xffff);
+            rvec[1] = (u16)randomGetRange(0, 0xffff);
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = f30 * mult;
+            break;
+        case 7:
+            rvec[0] = (u16)randomGetRange(0, 0xffff);
+            rvec[1] = (u16)randomGetRange(0, 0xffff);
+            rvec[2] = (u16)randomGetRange(0, 0xffff);
+            params.vec[0] = mult * (lbl_803DF354 - f30 * (f30 * (f30 * (f30 * f30))));
+            break;
+        }
+        params.vec[1] = lbl_803DF35C;
+        params.vec[2] = lbl_803DF35C;
+        mathFn_80021ac8(rvec, params.vec);
+        if (origin != NULL) {
+            params.vec[0] += *(f32 *)((char *)origin + 0xc);
+            params.vec[1] += *(f32 *)((char *)origin + 0x10);
+            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+        }
+        params.pad[2] = (s16)tC.v[idx];
+        params.pad[0] = (s16)tD.v[idx];
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, tB.v[idx], &params, flags | 2, -1, 0);
+    }
+}
+
+void objParticleFn_80097734(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
+                            void *origin, int flags, f32 f8val, f32 angBase,
+                            f32 lo, f32 hi) {
+    PartfxParams params;
+    ParticleTblA tA = *(ParticleTblA *)((char *)lbl_802C1FD8 + 0x8c);
+    ParticleTbl8 tB = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xa0);
+    ParticleTbl8 tC = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xb0);
+    ParticleTbl8 tD = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0xc0);
+    u16 rvec[3];
+    int i;
+    f32 fdelta;
+    f32 f30;
+    f32 f29;
+
+    params.f8 = f8val;
+    params.f6 = (s16)tA.v[kind];
+    params.pad[1] = 0x3c;
+    fdelta = angBase - lo;
+    for (i = 0; i < 4; i++) {
+        u16 val;
+        f32 a;
+        if (randomGetRange(0, 0x63) >= chance) {
+            continue;
+        }
+        rvec[0] = (u16)randomGetRange(0, 0xffff);
+        rvec[1] = 0;
+        rvec[2] = 0;
+        f30 = (f32)randomGetRange(1, 1000) / lbl_803DF368;
+        f29 = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        params.vec[1] = lbl_803DF35C;
+        params.vec[2] = lbl_803DF35C;
+        switch (mode) {
+        case 1:
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 2:
+            f29 = f29 * (f29 * f29);
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 3:
+            f29 = lbl_803DF354 - f29 * (f29 * f29);
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 4:
+            val = (u16)(int)(lbl_803DF350 * f29);
+            a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
+            f29 = lbl_803DF358 * (lbl_803DF354 + (f32)sin(a));
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 5:
+            val = (u16)(int)(lbl_803DF350 * f29);
+            a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
+            f29 = lbl_803DF358 * (lbl_803DF354 + fn_80293E80(a));
+            params.vec[0] = lbl_803DF354 - f30 * f30;
+            break;
+        case 6:
+            params.vec[0] = f30 * f30;
+            break;
+        case 7:
+            params.vec[0] = lbl_803DF354 - f30 * (f30 * (f30 * (f30 * f30)));
+            break;
+        }
+        params.vec[0] = params.vec[0] * (f29 * fdelta + lo);
+        mathFn_80021ac8(rvec, params.vec);
+        params.vec[1] = (f29 - lbl_803DF358) * hi;
+        if (origin != NULL) {
+            params.vec[0] += *(f32 *)((char *)origin + 0xc);
+            params.vec[1] += *(f32 *)((char *)origin + 0x10);
+            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+        }
+        params.pad[2] = (s16)tC.v[idx];
+        params.pad[0] = (s16)tD.v[idx];
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, tB.v[idx], &params, flags | 2, -1, 0);
+    }
+}
+
+void fn_80097B30(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+                 int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ) {
+    PartfxParams params;
+    ParticleTblA tA = *(ParticleTblA *)((char *)lbl_802C1FD8 + 0x48);
+    ParticleTbl8 tB = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0x5c);
+    ParticleTbl8 tC = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0x6c);
+    ParticleTbl8 tD = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0x7c);
+    int i;
+
+    params.f8 = f8val;
+    params.f6 = (s16)tA.v[kind];
+    params.pad[1] = 0x3c;
+    for (i = 0; i < 4; i++) {
+        u16 val;
+        f32 a;
+        if (randomGetRange(0, 0x63) >= chance) {
+            continue;
+        }
+        params.vec[0] = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        params.vec[1] = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        params.vec[2] = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        switch (mode) {
+        case 1:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] -= lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 2:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] = params.vec[1] * (params.vec[1] * params.vec[1]) - lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 3:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] =
+                (lbl_803DF354 - params.vec[1] * (params.vec[1] * params.vec[1])) - lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 4:
+            params.vec[0] -= lbl_803DF358;
+            val = (u16)(int)(lbl_803DF350 * params.vec[1]);
+            a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
+            params.vec[1] = lbl_803DF358 * sin(a);
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 5:
+            params.vec[0] -= lbl_803DF358;
+            val = (u16)(int)(lbl_803DF350 * params.vec[1]);
+            a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
+            params.vec[1] = lbl_803DF358 * fn_80293E80(a);
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 6:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] -= lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 7:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] -= lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        }
+        params.vec[0] = params.vec[0] * mulX;
+        params.vec[1] = params.vec[1] * mulY;
+        params.vec[2] = params.vec[2] * mulZ;
+        if (origin != NULL) {
+            params.vec[0] += *(f32 *)((char *)origin + 0xc);
+            params.vec[1] += *(f32 *)((char *)origin + 0x10);
+            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+        }
+        params.pad[2] = (s16)tC.v[idx];
+        params.pad[0] = (s16)tD.v[idx];
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, tB.v[idx], &params, flags | 2, -1, 0);
+    }
+}
+
+void objShowButtonGlow(void *obj, u8 mode, f32 intensity) {
+    PartfxParams params;
+    int i;
+
+    params.f8 = intensity;
+    if (mode == 0) {
+        return;
+    }
+    switch (mode) {
+    case 1:
+        params.f6 = 0xc8c;
+        for (i = 0; i < 0x28; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7c8, &params, 1, -1, 0);
+        }
+        params.f6 = 1;
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        break;
+    case 2:
+        params.f6 = 0xc8d;
+        for (i = 0; i < 0x28; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7c8, &params, 1, -1, 0);
+        }
+        params.f6 = 0;
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        break;
+    case 3:
+        params.f6 = 0xc8e;
+        for (i = 0; i < 0x28; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7c8, &params, 1, -1, 0);
+        }
+        params.f6 = 2;
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        break;
+    case 4:
+        params.f6 = 0;
+        for (i = 0; i < 0x14; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7f2, &params, 1, -1, 0);
+        }
+        break;
+    }
+}
+
+typedef struct {
+    u16 v[15];
+} ColorTbl;
+
+extern int *lbl_803DCAB4;
+extern f32 lbl_803DF394;
+extern f32 lbl_803DF398;
+extern void modelLightStruct_setField50(void *light, int v);
+extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setColorsA8AC(void *light, int r, int g, int b, int a);
+extern void modelLightStruct_setColors100104(void *light, int r, int g, int b, int a);
+extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
+extern void lightSetField4D(void *light, int v);
+extern void lightFn_8001db6c(void *light, f32 a, int b);
+extern void lightFn_8001d620(void *light, int a, int b);
+extern void lightSetField2FB(void *light, int v);
+
+void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fextra) {
+    f32 p8 = fextra;
+    PartfxParams params;
+    ColorTbl colors = *(ColorTbl *)lbl_802C1FD8;
+    f32 zoff = lbl_803DF394;
+    u8 *cbuf;
+
+    params.f8 = scale;
+    params.pad[0] = 0;
+    params.pad[2] = 0;
+    params.pad[1] = 0;
+    params.f6 = 0xc0a;
+    switch (type) {
+    case 1:
+        params.vec[0] = scale * (f32)randomGetRange(-10, 10);
+        params.vec[1] = scale * (f32)randomGetRange(-10, 10);
+        params.vec[2] = scale * (f32)randomGetRange(-10, 10);
+        (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x32f, &params, 2, -1, &p8);
+        break;
+    case 2:
+        params.vec[0] = scale * (f32)randomGetRange(-10, 10);
+        params.vec[1] = scale * (f32)randomGetRange(-10, 10);
+        params.vec[2] = scale * (f32)randomGetRange(-10, 10);
+        (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x330, &params, 2, -1, &p8);
+        break;
+    case 3:
+        (*(void (*)(void *, int, void *, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x32f, &p8, 0x19, 0);
+        break;
+    case 4:
+        (*(void (*)(void *, int, void *, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x330, &p8, 0x19, 0);
+        break;
+    case 5:
+        params.f6 = 0xc0a;
+        (*(void (*)(void *, int, void *, int, void *))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x7cd, &p8, 0x32, &params);
+        break;
+    case 6:
+        params.f6 = 0xc0d;
+        (*(void (*)(void *, int, void *, int, void *))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x7ce, &p8, 0x50, &params);
+        break;
+    case 7:
+        params.f6 = 0x605;
+        params.pad[2] = 1;
+        (*(void (*)(void *, int, void *, int, void *))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x7cf, &p8, 0x19, &params);
+        zoff = lbl_803DF35C;
+        break;
+    case 8:
+        params.f6 = 0x605;
+        params.pad[2] = 0;
+        (*(void (*)(void *, int, void *, int, void *))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x7cf, &p8, 0x19, &params);
+        zoff = lbl_803DF35C;
+        break;
+    }
+
+    if (light != NULL) {
+        modelLightStruct_setField50(light, 2);
+        lightVecFn_8001dd88(light, *(f32 *)((char *)obj + 0x18),
+                            *(f32 *)((char *)obj + 0x1c) + zoff,
+                            *(f32 *)((char *)obj + 0x20));
+        cbuf = (u8 *)&colors;
+        modelLightStruct_setColorsA8AC(light, cbuf[type * 3], cbuf[type * 3 + 1],
+                                       cbuf[type * 3 + 2], 0xff);
+        modelLightStruct_setColors100104(light, cbuf[type * 3], cbuf[type * 3 + 1],
+                                         cbuf[type * 3 + 2], 0xff);
+        lightDistAttenFn_8001dc38(light, lbl_803DF34C, lbl_803DF398);
+        lightSetField4D(light, 0);
+        lightFn_8001db6c(light, lbl_803DF35C, 1);
+        lightFn_8001db6c(light, lbl_803DF354, 0);
+        lightFn_8001d620(light, 0, 0);
+        lightSetField2FB(light, 1);
     }
 }
 #pragma peephole reset
