@@ -8169,8 +8169,7 @@ void *fn_8001CC9C(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
         if (newLight == NULL) {
             light = NULL;
         } else {
-            int index = lbl_803DCA30;
-            lbl_803DCA30 = index + 1;
+            int index = lbl_803DCA30++;
             lbl_8033BEC0[index] = newLight;
             light = newLight;
         }
