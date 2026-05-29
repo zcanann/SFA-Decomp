@@ -819,6 +819,8 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_80284E78.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80285010.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8028521C.c"),
+            Object(NonMatching, "main/dll/player.c"),
+            Object(NonMatching, "main/dll/dll_01B5_lightfoot.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80295318.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_802BACC0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_802BBC10.c"),
