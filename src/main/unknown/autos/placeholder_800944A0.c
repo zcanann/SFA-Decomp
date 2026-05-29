@@ -630,6 +630,120 @@ void waterfx_run(void) {
     }
 }
 
+typedef union {
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} PPCWGPipe;
+volatile PPCWGPipe GXWGFifo : (0xCC008000);
+
+extern void GXSetArray(int attr, void *base, int stride);
+extern void GXBegin(int type, int fmt, int count);
+extern void setTextColor(int unused, int a, int b, int c, int d);
+extern void Camera_LoadModelViewMatrix(int p1, int p2, void *obj, f32 scale, f32 unused, int p6);
+extern void drawFn_8005cf8c(void *matrix, void *displayList, int count);
+extern void fn_8007D670(void);
+extern void fn_8007CAF4(int a);
+extern void fn_8007BD8C(int a, int b);
+extern void fn_8007C664(int a);
+extern void fn_800542F4(void);
+extern void fn_80095164(WaterParticle *s);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+
+typedef struct {
+    s16 f8;
+    s16 fa;
+    s16 fc;
+    u8 pade[2];
+    f32 f10;
+    f32 x;
+    f32 y;
+    f32 z;
+} WaterDrawObj;
+
+void waterfx_func05(int p1, int p2) {
+    int i;
+    f32 thr;
+    WaterDrawObj dp;
+    if ((int)lbl_803DD23C != 0 || (int)lbl_803DD22C != 0 || (int)lbl_803DD234 != 0 ||
+        (int)lbl_803DD224 != 0) {
+        GXSetCullMode(0);
+        if ((int)lbl_803DD23C != 0) {
+            fn_8007CAF4((int)lbl_803DD21C);
+        }
+        for (i = 0; i < 30; i++) {
+            WaterEntry7 *e = &((WaterEntry7 *)lbl_803DD238)[i];
+            if (e->active != 0) {
+                setTextColor(p1, 0xff, 0xff, 0xff, (u8)e->active);
+                dp.x = e->x;
+                dp.y = e->y;
+                dp.z = e->z;
+                dp.f10 = e->f10;
+                dp.f8 = e->f14;
+                dp.fc = 0;
+                dp.fa = 0;
+                Camera_LoadModelViewMatrix(p1, p2, &dp, lbl_803DF2EC, lbl_803DF300, 0);
+                fn_8007D670();
+                drawFn_8005cf8c((char *)lbl_803DD24C + i * 0x40, (char *)lbl_803DD248 + i * 0x20, 2);
+            }
+        }
+        if ((int)lbl_803DD234 != 0) {
+            fn_8007BD8C((int)lbl_803DD218, (int)lbl_803DD214);
+            GXSetArray(9, lbl_803DD200, 0xc);
+            GXSetArray(0xd, lbl_803DD1FC, 8);
+            GXClearVtxDesc();
+            GXSetVtxDesc(0, 1);
+            GXSetVtxDesc(1, 1);
+            GXSetVtxDesc(9, 3);
+            GXSetVtxDesc(0xb, 3);
+            GXSetVtxDesc(0xd, 3);
+        }
+        thr = lbl_803DF2EC;
+        for (i = 0; i < 10; i++) {
+            WaterParticle *s = &((WaterParticle *)lbl_803DD230)[i];
+            if (s->f10 < thr) {
+                fn_80095164(s);
+            }
+        }
+        if ((int)lbl_803DD224 != 0) {
+            fn_80094F7C();
+        }
+        for (i = 0; i < 30; i++) {
+            WaterDrop *d = &((WaterDrop *)lbl_803DD220)[i];
+            if (d->idx != -1) {
+                GXBegin(0xb8, 2, 1);
+                GXWGFifo.f32 = d->x - playerMapOffsetX;
+                GXWGFifo.f32 = d->y;
+                GXWGFifo.f32 = d->z - playerMapOffsetZ;
+            }
+        }
+        if ((int)lbl_803DD22C != 0) {
+            fn_8007C664((int)lbl_803DD210);
+        }
+        for (i = 0; i < 30; i++) {
+            WaterEntry *g = &((WaterEntry *)lbl_803DD228)[i];
+            if (g->active != 0 && g->f18 == 0) {
+                setTextColor(p1, 0xff, 0xff, 0xff, (u8)g->active);
+                dp.x = g->x;
+                dp.y = g->y;
+                dp.z = g->z;
+                dp.f10 = g->f10;
+                dp.f8 = g->f16;
+                dp.fc = 0;
+                dp.fa = 0;
+                Camera_LoadModelViewMatrix(p1, p2, &dp, lbl_803DF2EC, lbl_803DF300, 0);
+                fn_8007D670();
+                drawFn_8005cf8c((char *)lbl_803DD244 + i * 0x40, (char *)lbl_803DD240 + i * 0x20, 2);
+            }
+        }
+        fn_800542F4();
+    }
+}
+
 typedef struct {
     int v[5];
 } Tbl5;
