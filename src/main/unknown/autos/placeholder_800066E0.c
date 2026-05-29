@@ -13474,6 +13474,87 @@ int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
     return 1;
 }
 
+int fn_80011EB0(RouteState *state, int count) {
+    f32 local[3];
+    RouteNode startNode;
+    RouteNode *cur;
+    RouteNode *cand;
+    RouteNode *lastClear;
+    RouteNode *node;
+    int idx;
+    int i;
+    int j;
+
+    if (count < 0) {
+        count = 10;
+    }
+    i = state->cur;
+    node = &state->nodes[i];
+    node->unkB = 0xff;
+    while ((j = node->unkA) != 0xff) {
+        node = &state->nodes[j];
+        node->unkB = (u8)i;
+        i = j;
+    }
+
+    startNode.x = state->unk12;
+    startNode.unk2 = state->unk14;
+    startNode.y = state->unk16;
+    startNode.unkB = (u8)i;
+    if (node->unkB == 0xff) {
+        cand = NULL;
+    } else {
+        cand = &state->nodes[node->unkB];
+    }
+    lastClear = node;
+    cur = &startNode;
+    idx = 0;
+
+    while (idx < count && cand != NULL) {
+        if (cur->x != cand->x || cur->y != cand->y) {
+            if (fn_800119FC((s16 *)cand, (s16 *)cur, NULL) == 0) {
+                local[0] = (f32)(lastClear->x * 10 + 5);
+                local[1] = (f32)(lastClear->unk2 * 10 + 5);
+                local[2] = (f32)(lastClear->y * 10 + 5);
+                if (lbl_803DC8CC != 0) {
+                    Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2], lbl_803DC8CC);
+                }
+                state->unk08[idx * 3 + 0] = (f32)((int)local[0] + 5);
+                state->unk08[idx * 3 + 1] = (f32)(int)local[1];
+                state->unk08[idx * 3 + 2] = (f32)((int)local[2] + 5);
+                idx++;
+                cur = cand;
+            }
+        }
+        lastClear = cand;
+        if (cand->unkB == 0xff) {
+            cand = NULL;
+        } else {
+            cand = &state->nodes[cand->unkB];
+        }
+    }
+
+    if (idx < count) {
+        local[0] = (f32)(lastClear->x * 10 + 5);
+        local[1] = (f32)(lastClear->unk2 * 10 + 5);
+        local[2] = (f32)(lastClear->y * 10 + 5);
+        if (lbl_803DC8CC != 0) {
+            Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2], lbl_803DC8CC);
+        }
+        state->unk08[idx * 3 + 0] = (f32)((int)local[0] + 5);
+        state->unk08[idx * 3 + 1] = (f32)(int)local[1];
+        state->unk08[idx * 3 + 2] = (f32)((int)local[2] + 5);
+        idx++;
+        if (idx >= 10) {
+            idx = 10;
+        }
+    }
+
+    state->unk20 = (s16)idx;
+    state->pad22 = 0;
+    return idx;
+}
+
 typedef struct {
     u16 id;
     u8 pad[0xa];
