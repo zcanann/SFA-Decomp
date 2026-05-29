@@ -868,16 +868,18 @@ extern f32 timeDelta;
 #pragma peephole off
 int Menu_func08(int *sel)
 {
-    s8 xInput;
     s8 yInput;
+    s8 xInput;
     int input;
+    f32 timer;
 
     if (getHudHiddenFrameCount() != 0) {
         return -1;
     }
-    lbl_803DD8EC += timeDelta;
-    if (lbl_803DD8EC > lbl_803E21D8) {
-        lbl_803DD8EC -= lbl_803E21D8;
+    timer = lbl_803DD8EC + timeDelta;
+    lbl_803DD8EC = timer;
+    if (timer > lbl_803E21D8) {
+        lbl_803DD8EC = timer - lbl_803E21D8;
     }
     padGetAnalogInput(0, &yInput, &xInput);
     if (xInput < 0) {
