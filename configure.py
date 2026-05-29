@@ -758,6 +758,8 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_800066E0.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8001746C.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8002F604.c"),
+            Object(NonMatching, "main/objseq.c"),
+            Object(NonMatching, "main/sky.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80080E58.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/gamecube.c", progress_category="sdk"),
             Object(NonMatching, "main/dll/cloudaction.c"),
