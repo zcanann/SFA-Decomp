@@ -7777,11 +7777,13 @@ void ObjModel_ClearRenderAttachment(u8 *model) {
 }
 #pragma dont_inline reset
 
+#pragma dont_inline on
 void ObjModel_EnableDefaultRenderCallback(void *obj, u8 *model, f32 *mtx, int enabled, f32 scale) {
     if (*(void **)(model + 0x58) == NULL) {
         *(void **)(model + 0x38) = gxTextureFn_80072dfc;
     }
 }
+#pragma dont_inline reset
 
 void *ObjModel_GetCurrentVertexCoords(u8 *model, int vertexIndex) {
     model += (((*(u16 *)(model + 0x18) >> 1) & 1) * 4);
@@ -7882,7 +7884,6 @@ extern u8 framesThisStep;
 extern f32 lbl_803DE88C;
 extern f32 lbl_803DE89C;
 extern f32 lbl_803DE8A0;
-extern void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags);
 extern void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags);
 
 void Obj_ClearModelColorFadeRecursive(u8 *obj) {
@@ -8000,35 +8001,39 @@ void Obj_ResetModelColorState(u8 *obj) {
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x32, 0);
 }
 
-void Obj_StartModelFadeIn(u8 *obj, s16 frames) {
-    s16 id;
-    int limit;
-    f32 mtx[12];
+void Obj_StartModelFadeIn(u8 *obj, int frames) {
+    f32 mtx[16];
+    int fadeLimit;
+    s16 objType;
 
-    limit = 10;
-    id = *(s16 *)(obj + 0x44);
-    if (id == 0x1c || id == 0x6d || id == 0x2a) {
-        limit = 0x28;
+    fadeLimit = 10;
+    objType = *(s16 *)(obj + 0x44);
+    if (objType == 0x1c || objType == 0x6d || objType == 0x2a) {
+        fadeLimit = 40;
     }
-
     if ((*(u8 *)(*(u8 **)(obj + 0x50) + 0x76) & 1) != 0) {
-        if (obj[0xf0] < limit) {
+        if (obj[0xf0] < fadeLimit) {
             obj[0xf0]++;
             Obj_SetModelColorFadeRecursive(obj, 0x1e, 0xa0, 0xff, 0xff, 0);
         }
-        if (obj[0xf0] == limit) {
+        if (obj[0xf0] == fadeLimit) {
             if ((obj[0xe5] & 2) != 0) {
                 Obj_ClearModelColorFadeRecursive(obj);
             }
-            *(s16 *)(obj + 0xe6) = frames;
+            *(s16 *)(obj + 0xe6) = (s16)frames;
             obj[0xe5] |= 1;
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-            ObjModel_EnableDefaultRenderCallback(obj, (u8 *)Obj_GetActiveModel(obj), mtx, 1,
-                                                 *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
-            (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 100, 0);
+            ObjModel_EnableDefaultRenderCallback(
+                obj,
+                *(u8 **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4),
+                mtx,
+                1,
+                *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
+            (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x64, 0);
         }
     }
 }
+
 #pragma pop
 
 /* Global game-state / text accessors. */
@@ -8106,10 +8111,12 @@ int objIsFrozen(u8 *obj) {
 
 void Obj_StartModelFadeIn(u8 *obj, int frames) {
     int fadeFrames;
+    s16 objId;
     f32 mtx[16];
 
     fadeFrames = 10;
-    if (*(s16 *)(obj + 0x44) == 0x1c || *(s16 *)(obj + 0x44) == 0x6d || *(s16 *)(obj + 0x44) == 0x2a) {
+    objId = *(s16 *)(obj + 0x44);
+    if (objId == 0x1c || objId == 0x6d || objId == 0x2a) {
         fadeFrames = 40;
     }
 
@@ -8125,12 +8132,8 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
             *(s16 *)(obj + 0xe6) = frames;
             obj[0xe5] |= 1;
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-            ((void (*)(u8 *, void *, f32 *, int, f32))ObjModel_EnableDefaultRenderCallback)(
-                obj,
-                *(void **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4),
-                mtx,
-                1,
-                *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
+            ObjModel_EnableDefaultRenderCallback(obj, *(u8 **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4), mtx, 1,
+                                                 *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
             (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 100, 0);
         }
     }
