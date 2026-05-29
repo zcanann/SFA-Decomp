@@ -3820,6 +3820,66 @@ void vortex_free(int obj)
 
 void vortex_hitDetect(void) {}
 
+extern f32 lbl_8032BE20[];
+extern f32 lbl_803DC3F8[2];
+extern f32 lbl_803DC400[2];
+extern f32 lbl_803DC408[2];
+extern f32 lbl_803E7404;
+
+#pragma peephole off
+#pragma scheduling off
+void vortex_init(int obj, int initData)
+{
+    f32 *base = lbl_8032BE20;
+    int state = *(int *)(obj + 0xb8);
+    u8 i;
+
+    ((VortexFlags *)(state + 0x26))->active = 0;
+    if (*(s16 *)(initData + 0x20) != -1) {
+        ((VortexFlags *)(state + 0x26))->active = (u8)GameBit_Get(*(s16 *)(initData + 0x20));
+    }
+    if (*(s16 *)(obj + 0x46) == 0x835) {
+        for (i = 0; i < 2; i++) {
+            *(f32 *)(state + i * 4 + 0x14) = lbl_803DC3F8[i];
+            *(f32 *)(state + i * 4 + 0x8) = lbl_803DC400[i];
+            *(s16 *)(state + i * 2 + 0x20) = (s16)randomGetRange(-0x7fff, 0x7fff);
+        }
+    } else if (*(s16 *)(obj + 0x46) == 0x838) {
+        for (i = 0; i < 2; i++) {
+            *(f32 *)(state + i * 4 + 0x14) = lbl_803DC3F8[i];
+            *(f32 *)(state + i * 4 + 0x8) = lbl_803DC408[i];
+            *(s16 *)(state + i * 2 + 0x20) = (s16)randomGetRange(-0x7fff, 0x7fff);
+        }
+    } else if (*(s16 *)(obj + 0x46) == 0x83d) {
+        for (i = 0; i < 3; i++) {
+            *(f32 *)(state + i * 4 + 0x14) = base[i];
+            *(f32 *)(state + i * 4 + 0x8) = base[i + 3];
+            *(s16 *)(state + i * 2 + 0x20) = (s16)randomGetRange(-0x7fff, 0x7fff);
+        }
+    } else {
+        for (i = 0; i < 3; i++) {
+            *(f32 *)(state + i * 4 + 0x14) = base[i + 6];
+            *(f32 *)(state + i * 4 + 0x8) = base[i + 9];
+            *(s16 *)(state + i * 2 + 0x20) = (s16)randomGetRange(-0x7fff, 0x7fff);
+        }
+        if (((VortexFlags *)(state + 0x26))->active != 0) {
+            if (*(s16 *)(initData + 0x1e) != -1) {
+                ((VortexFlags *)(state + 0x26))->active = !GameBit_Get(*(s16 *)(initData + 0x1e));
+            }
+        }
+    }
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
+    if (((VortexFlags *)(state + 0x26))->active != 0)
+        *(f32 *)(state + 0) = lbl_803E73E0;
+    else
+        *(f32 *)(state + 0) = lbl_803E73D0;
+    *(f32 *)(state + 4) = (f32)randomGetRange(0, 0x14);
+    *(f32 *)(obj + 0x40) = *(f32 *)(obj + 0x40) * lbl_803E7404;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole off
 #pragma scheduling off
 void vortex_update(int obj)

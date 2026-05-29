@@ -887,5 +887,189 @@ void fn_80098928(void *obj, u8 mode, int p5, int p6, int p7, f32 fval) {
         break;
     }
 }
+
+typedef struct {
+    s16 pad[3];
+    s16 h6;
+    f32 f8;
+} PFX3;
+
+extern f32 lbl_803DF358;
+extern f32 lbl_803DF390;
+
+void projectileParticleFxFn_80099660(void *obj, int mode) {
+    PartfxParams ps;
+    f32 tailScale;
+    f32 scale;
+    int i;
+
+    switch (mode) {
+    case 0:
+        scale = lbl_803DF358;
+        for (i = 10; i < 20; i += 2) {
+            ps.f6 = (s16)i;
+            ps.f8 = scale;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7a0, &ps, 1, -1, 0);
+        }
+        tailScale = lbl_803DF390;
+        break;
+    case 1:
+        scale = lbl_803DF354;
+        for (i = 10; i < 20; i += 2) {
+            ps.f6 = (s16)i;
+            ps.f8 = scale;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7a0, &ps, 1, -1, 0);
+        }
+        for (i = 0; i < 20; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7a0, 0, 1, -1, 0);
+        }
+        tailScale = lbl_803DF354;
+        break;
+    case 2:
+        scale = lbl_803DF354;
+        for (i = 10; i < 20; i += 2) {
+            ps.f6 = (s16)i;
+            ps.f8 = scale;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7a1, &ps, 1, -1, 0);
+        }
+        for (i = 0; i < 20; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7a1, 0, 1, -1, 0);
+        }
+        tailScale = lbl_803DF354;
+        break;
+    case 3:
+        scale = lbl_803DF358;
+        for (i = 10; i < 20; i += 2) {
+            ps.f6 = (s16)i;
+            ps.f8 = scale;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7a6, &ps, 1, -1, 0);
+        }
+        tailScale = lbl_803DF390;
+        break;
+    case 4:
+        scale = lbl_803DF354;
+        for (i = 10; i < 20; i += 2) {
+            ps.f6 = (s16)i;
+            ps.f8 = scale;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7a6, &ps, 1, -1, 0);
+        }
+        for (i = 0; i < 20; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7a6, 0, 1, -1, 0);
+        }
+        tailScale = lbl_803DF354;
+        break;
+    case 6:
+        scale = lbl_803DF358;
+        for (i = 10; i < 20; i += 2) {
+            ps.f6 = (s16)i;
+            ps.f8 = scale;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7a1, &ps, 1, -1, 0);
+        }
+        tailScale = lbl_803DF390;
+        break;
+    default:
+        return;
+    }
+    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+        obj, 0x79f, 0, 1, -1, &tailScale);
+}
+
+void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
+    PartfxParams params;
+    int i;
+
+    params.f8 = fval;
+    if (mode == 0) {
+        return;
+    }
+    switch (mode) {
+    case 1:
+        params.f6 = 0x79;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b1, &params, 1, -1, 0);
+        }
+        break;
+    case 2:
+        params.f6 = 0xc13;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b1, &params, 1, -1, 0);
+        }
+        break;
+    case 3:
+        params.f6 = 0x71;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b1, &params, 1, -1, 0);
+        }
+        break;
+    case 4:
+        params.f6 = 0xdb;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b1, &params, 1, -1, 0);
+        }
+        break;
+    case 5:
+        params.f6 = 0x77;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b1, &params, 1, -1, 0);
+        }
+        break;
+    case 6:
+        params.f6 = 0x7b;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b1, &params, 1, -1, 0);
+        }
+        break;
+    case 7:
+        params.f6 = 0xda;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b1, &params, 1, -1, 0);
+        }
+        break;
+    case 8:
+        params.f6 = 0xdd;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7cc, &params, 1, -1, 0);
+        }
+        break;
+    case 10:
+        params.f6 = 0xde;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7cc, &params, 1, -1, 0);
+        }
+        break;
+    case 9:
+        params.f6 = 0xdf;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7cc, &params, 1, -1, 0);
+        }
+        break;
+    default:
+        params.f6 = 0x5c;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b1, &params, 1, -1, 0);
+        }
+        break;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
