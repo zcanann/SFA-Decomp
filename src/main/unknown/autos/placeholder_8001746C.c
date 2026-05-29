@@ -795,9 +795,7 @@ extern undefined4 uRam00000000;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void gameTextFn_80017434(int param_1)
-{
-}
+/* moved below GameTextSlot/global declarations */
 
 /*
  * --INFO--
@@ -8058,6 +8056,36 @@ void gameTextFn_80019804(int flags) {
         int i = lbl_803DC9C8;
         lbl_803DC9C8 = i + 1;
         lbl_8033A540[i].v = 0xb;
+    }
+}
+
+extern u8 lbl_802C7400[];
+extern void *lbl_803DC9CC;
+
+void gameTextFn_80017434(u8 *param_1) {
+    int i;
+    GameTextSlot *s;
+    int idx;
+
+    if (param_1 == NULL) {
+        i = lbl_803DC9C8;
+        lbl_803DC9C8 = i + 1;
+        s = &lbl_8033A540[i];
+        lbl_803DC9CC = NULL;
+        s->v = 8;
+        s->f4 = 0xff;
+    } else {
+        i = lbl_803DC9C8;
+        lbl_803DC9C8 = i + 1;
+        s = &lbl_8033A540[i];
+        idx = (param_1 - lbl_802C7400) / 0x20;
+        if (idx == 0xff) {
+            lbl_803DC9CC = NULL;
+        } else {
+            lbl_803DC9CC = lbl_802C7400 + idx * 0x20;
+        }
+        s->v = 8;
+        s->f4 = idx;
     }
 }
 
