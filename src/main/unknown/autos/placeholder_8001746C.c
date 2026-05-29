@@ -7878,6 +7878,102 @@ void *Obj_GetActiveModel(u8 *obj) {
 }
 
 extern int *lbl_803DCAB4;
+extern u8 framesThisStep;
+extern f32 lbl_803DE88C;
+extern f32 lbl_803DE89C;
+extern f32 lbl_803DE8A0;
+
+void Obj_ClearModelColorFadeRecursive(u8 *obj) {
+    int i;
+    u8 *childScan;
+
+    *(s16 *)(obj + 0xe6) = 0;
+    obj[0xe5] &= ~0x6;
+    childScan = obj;
+    for (i = 0; i < obj[0xeb]; i++) {
+        Obj_ClearModelColorFadeRecursive(*(u8 **)(childScan + 0xc8));
+        childScan += 4;
+    }
+}
+
+void Obj_TickModelColorFadeRecursive(u8 *obj) {
+    f32 alpha;
+    int i;
+    u8 *childScan;
+
+    if ((obj[0xe5] & 4) != 0) {
+        alpha = (f32)obj[0xef] + lbl_803DE89C * timeDelta;
+    } else {
+        alpha = (f32)obj[0xef] - lbl_803DE89C * timeDelta;
+    }
+
+    if (alpha < lbl_803DE88C) {
+        alpha = -alpha;
+        obj[0xe5] ^= 4;
+    } else if (alpha > lbl_803DE8A0) {
+        alpha = lbl_803DE8A0 - (alpha - lbl_803DE8A0);
+        obj[0xe5] ^= 4;
+    }
+
+    obj[0xef] = (u8)(int)alpha;
+    if ((obj[0xe5] & 8) == 0) {
+        *(s16 *)(obj + 0xe6) -= framesThisStep;
+        if (*(s16 *)(obj + 0xe6) < 1 && *(void **)(obj + 0xc4) == NULL) {
+            Obj_ClearModelColorFadeRecursive(obj);
+        }
+    }
+
+    childScan = obj;
+    for (i = 0; i < obj[0xeb]; i++) {
+        Obj_TickModelColorFadeRecursive(*(u8 **)(childScan + 0xc8));
+        childScan += 4;
+    }
+}
+
+void Obj_SetModelColorFadeRecursive(u8 *obj, s16 frames, u8 red, u8 green, u8 blue, u8 startAtHalf) {
+    int i;
+    u8 *childScan;
+
+    *(s16 *)(obj + 0xe6) = frames;
+    obj[0xe5] &= ~4;
+    obj[0xe5] |= 2;
+    obj[0xec] = red;
+    obj[0xed] = green;
+    obj[0xee] = blue;
+    if (frames == 10000) {
+        obj[0xe5] |= 8;
+    } else {
+        obj[0xe5] &= ~8;
+    }
+    obj[0xef] = startAtHalf != 0 ? 0x7f : 0;
+
+    childScan = obj;
+    for (i = 0; i < obj[0xeb]; i++) {
+        Obj_SetModelColorFadeRecursive(*(u8 **)(childScan + 0xc8), frames, red, green, blue, startAtHalf);
+        childScan += 4;
+    }
+}
+
+void Obj_SetModelColorOverrideRecursive(u8 *obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled) {
+    int i;
+    u8 *childScan;
+
+    if (enabled != 0) {
+        obj[0xe5] |= 0x10;
+        obj[0xec] = red;
+        obj[0xed] = green;
+        obj[0xee] = blue;
+        obj[0xef] = alpha;
+    } else {
+        obj[0xe5] &= ~0x10;
+    }
+
+    childScan = obj;
+    for (i = 0; i < obj[0xeb]; i++) {
+        Obj_SetModelColorOverrideRecursive(*(u8 **)(childScan + 0xc8), red, green, blue, alpha, enabled);
+        childScan += 4;
+    }
+}
 
 void Obj_ResetModelColorState(u8 *obj) {
     *(s16 *)(obj + 0xe6) = 0;
