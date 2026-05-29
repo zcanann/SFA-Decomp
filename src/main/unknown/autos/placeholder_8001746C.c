@@ -10699,6 +10699,7 @@ extern f32 lbl_803DE75C;
 extern f32 lbl_803DE768;
 extern f32 lbl_803DE76C;
 extern f32 lbl_803DE758;
+extern f32 lbl_803DE790;
 extern f32 lbl_802C1A88[];
 
 #pragma push
@@ -10957,6 +10958,102 @@ f32 ModelLightStruct_getLightAmount(u8 *light, u8 *obj) {
     }
 
     return amount;
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
+void fn_8001E928(u8 **outLights, int maxLights, int *outCount, f32 minX, f32 minY, f32 minZ, f32 maxX,
+                 f32 maxY, f32 maxZ) {
+    f32 center[3];
+    f32 delta[3];
+    u8 *candidates[20];
+    u8 *light;
+    f32 dist;
+    f32 radius;
+    f32 intensity;
+    f32 red;
+    f32 green;
+    f32 blue;
+    int candidateCount;
+    int selectedCount;
+    int i;
+
+    center[0] = lbl_803DE790 * (minX + maxX);
+    center[1] = lbl_803DE790 * (minY + maxY);
+    center[2] = lbl_803DE790 * (minZ + maxZ);
+
+    candidateCount = 0;
+    for (i = 0; i < lbl_803DCA30; i++) {
+        light = lbl_8033BEC0[i];
+        if (light[0x4c] != 0 && *(int *)(light + 0x50) == 2 && *(f32 *)(light + 0x144) > lbl_803DE75C &&
+            light[0x2fb] != 0) {
+            PSVECSubtract(center, (f32 *)(light + 0x10), delta);
+            dist = PSVECMag(delta);
+            radius = *(f32 *)(light + 0x144);
+            if (*(f32 *)(light + 0x10) + radius >= minX &&
+                *(f32 *)(light + 0x14) + radius >= minY &&
+                *(f32 *)(light + 0x18) + radius >= minZ &&
+                *(f32 *)(light + 0x10) - radius <= maxX &&
+                *(f32 *)(light + 0x14) - radius <= maxY &&
+                *(f32 *)(light + 0x18) - radius <= maxZ) {
+                intensity = lbl_803DE760 /
+                            (*(f32 *)(light + 0x124) +
+                             dist * (*(f32 *)(light + 0x12c) * dist + *(f32 *)(light + 0x128)));
+                red = intensity * (f32)light[0xa8];
+                if (red < lbl_803DE75C) {
+                    red = lbl_803DE75C;
+                } else if (red > lbl_803DE76C) {
+                    red = lbl_803DE76C;
+                }
+                green = intensity * (f32)light[0xa9];
+                if (green < lbl_803DE75C) {
+                    green = lbl_803DE75C;
+                } else if (green > lbl_803DE76C) {
+                    green = lbl_803DE76C;
+                }
+                blue = intensity * (f32)light[0xaa];
+                if (blue < lbl_803DE75C) {
+                    blue = lbl_803DE75C;
+                } else if (blue > lbl_803DE76C) {
+                    blue = lbl_803DE76C;
+                }
+                if (green < red) {
+                    green = red;
+                }
+                *(f32 *)(light + 0x130) = green;
+                if (blue < *(f32 *)(light + 0x130)) {
+                    blue = *(f32 *)(light + 0x130);
+                }
+                *(f32 *)(light + 0x130) = blue;
+
+                selectedCount = candidateCount;
+                candidateCount++;
+                candidates[selectedCount] = light;
+                if (candidateCount >= 20) {
+                    break;
+                }
+            }
+        }
+    }
+
+    if (maxLights > candidateCount) {
+        maxLights = candidateCount;
+    }
+
+    *outCount = 0;
+    while (*outCount < maxLights) {
+        intensity = lbl_803DE75C;
+        for (i = 0; i < candidateCount; i++) {
+            if (*(f32 *)(candidates[i] + 0x130) > intensity) {
+                light = candidates[i];
+                intensity = *(f32 *)(light + 0x130);
+            }
+        }
+        selectedCount = *outCount;
+        *outCount = selectedCount + 1;
+        outLights[selectedCount] = light;
+        *(f32 *)(light + 0x130) = lbl_803DE75C;
+    }
 }
 #pragma dont_inline reset
 
