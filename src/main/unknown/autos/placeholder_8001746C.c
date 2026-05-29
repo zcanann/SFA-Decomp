@@ -8838,6 +8838,51 @@ typedef struct {
     int f24;
 } AssetReq;
 extern AssetReq lbl_8033BF88;
+extern void *fileLoad(int id, int heap);
+extern void fileLoadToBuffer(int id, void *buf);
+extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
+extern void *Resource_Acquire(u32 id, u32 arg);
+extern void *loadCharacter(int a, int b, int c, int d, int e, int f);
+extern int textureLoad(int id, int flag);
+extern void *loadAnimation(int id, s16 a, s16 b, int flags);
+
+void *loadAsset(void *reqVoid) {
+    u8 tmp[0x14];
+    AssetReq *req;
+
+    req = reqVoid;
+    switch (req->f1) {
+        case 0:
+            *(void **)req->f8 = fileLoad(req->f4, 0);
+            break;
+        case 1:
+            fileLoadToBuffer(req->f4, (void *)req->f8);
+            break;
+        case 2:
+            fileLoadToBufferOffset(req->f4, (void *)req->f8, req->f10, req->fc);
+            break;
+        case 4:
+            *(void **)req->f8 =
+                loadCharacter(*(int *)((u8 *)req + 0x18), *(int *)((u8 *)req + 0x1c),
+                              *(int *)((u8 *)req + 0x24), *(int *)((u8 *)req + 0x20),
+                              *(int *)((u8 *)req + 0x14), *(int *)((u8 *)req + 0x28));
+            break;
+        case 3:
+            *(void **)req->f8 = (void *)textureLoad(req->f4, 0);
+            break;
+        case 5:
+            *(void **)req->f8 = Resource_Acquire(req->f4 & 0xffff, req->fc & 0xffff);
+            break;
+        case 6:
+            *(void **)req->f8 = (void *)((int (*)(int, int, void *))return0_8002969C)(req->f4, req->fc, tmp);
+            break;
+        case 7:
+            *(void **)req->f8 =
+                loadAnimation(*(int *)((u8 *)req + 0x24), (s16)req->f4, (s16)req->fc,
+                              *(int *)((u8 *)req + 0x20));
+            break;
+    }
+}
 
 #pragma push
 #pragma scheduling off
