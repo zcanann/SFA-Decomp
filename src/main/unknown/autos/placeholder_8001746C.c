@@ -10483,6 +10483,25 @@ extern int sprintf(char *s, const char *format, ...);
 extern void setFileInfo(void *fileInfo);
 extern void *loadFileByPathAsync(char *path, void *fileInfo, int flags, void *callback);
 extern void DVDCancelAsync(void *fileInfo, void *callback);
+extern void setLanguageFn_8001ad64(void *slot);
+extern void textDisplayFn_800168dc(int a, int b);
+extern void gameTextFn_8001658c(int a, int b, int c);
+extern void gameTextRenderStrs(int a, int b);
+extern void hudDrawRect(int x0, int y0, int x1, int y1, void *color);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern f32 lbl_803DE704;
+extern f32 lbl_803DE71C;
+extern char lbl_803DB3D4[];
+extern int lbl_803DB3C8;
+extern int lbl_803DC99C;
+extern int lbl_803DC984;
+extern int lbl_803DC988;
+extern int lbl_803DC98C;
+extern u8 lbl_803DC990;
+extern u8 lbl_803DC991;
+extern u8 lbl_803DC992;
+extern void *lbl_803DC9CC;
+extern u8 *lbl_803DC9C4;
 
 typedef struct ObjPathTransform {
     s16 rotX;
@@ -10500,6 +10519,230 @@ extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+void gameTextRun(void) {
+    u8 *gameTextBase;
+    GameTextLoadSlot *slot;
+    GameTextLoadSlot *freeSlot;
+    u8 *pending;
+    char *path;
+    int sourceId;
+    int dirId;
+    int languageId;
+    int i;
+    GameTextSlot *cmd;
+    u8 *textWindow;
+    int color;
+    double zero;
+    double fadeLimit;
+
+    gameTextBase = lbl_80339980;
+
+    slot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
+    i = 7;
+    do {
+        if (slot->state == 2) {
+            setLanguageFn_8001ad64(slot);
+        }
+        slot++;
+    } while (i-- != 0);
+
+    sourceId = 0;
+    pending = gameTextBase + 0x15c0;
+    do {
+        dirId = pending[0x24];
+        if ((u8)dirId != 0xff) {
+            freeSlot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
+            if (freeSlot->active != 0) {
+                freeSlot++;
+                if (freeSlot->active != 0) {
+                    freeSlot++;
+                    if (freeSlot->active != 0) {
+                        freeSlot++;
+                        if (freeSlot->active != 0) {
+                            freeSlot++;
+                            if (freeSlot->active != 0) {
+                                freeSlot++;
+                                if (freeSlot->active != 0) {
+                                    freeSlot++;
+                                    if (freeSlot->active != 0) {
+                                        freeSlot++;
+                                        if (freeSlot->active != 0) {
+                                            freeSlot = NULL;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (freeSlot != NULL) {
+                languageId = pending[0x25];
+                freeSlot->state = 1;
+                freeSlot->dirId = (u8)dirId;
+                freeSlot->languageId = (u8)languageId;
+                freeSlot->active = 1;
+                freeSlot->sourceId = (u8)sourceId;
+                path = (char *)(gameTextBase + 0x380);
+                sprintf(path, sGameTextMapPathFormat, sMapDirectoryNameTable[dirId],
+                        sLanguageNameTable[languageId][0]);
+                setFileInfo(freeSlot);
+                freeSlot->loadHandle =
+                    loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
+                setFileInfo(NULL);
+                pending[0x24] = 0xff;
+                pending[0x25] = 6;
+            }
+        }
+        pending += 0x28;
+        sourceId++;
+    } while (sourceId < 4);
+
+    slot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
+    i = 7;
+    do {
+        if ((slot->state == 5 || slot->state == 6) && slot->loadHandle != NULL) {
+            mm_free(slot->loadHandle);
+            slot->loadHandle = NULL;
+            slot->dvdFileInfo = NULL;
+            slot->active = 0;
+        }
+        slot++;
+    } while (i-- != 0);
+
+    zero = lbl_803DE704;
+    fadeLimit = lbl_803DE71C;
+    for (i = 7; i >= 0; i--) {
+        f32 *alpha = (f32 *)(gameTextBase + 0x20 + i * 4);
+        f32 *timer = (f32 *)(gameTextBase + 0x40 + i * 4);
+        u8 *entry = gameTextBase + 0xa0 + i * 0xc;
+
+        if ((double)*timer > zero) {
+            *alpha += timeDelta;
+            if ((double)*alpha > fadeLimit) {
+                *timer = (f32)zero;
+                *alpha = (f32)zero;
+                sprintf(**(char ***)(entry + 8), lbl_803DB3D4);
+            }
+        }
+    }
+
+    if (*(int *)(gameTextFonts + 0x1c) == 1) {
+        *(f32 *)(gameTextFonts + 0x20) += timeDelta;
+    } else {
+        *(f32 *)(gameTextFonts + 0x20) = lbl_803DE704;
+    }
+
+    textWindow = lbl_802C7400;
+    for (i = 0x25; i > 0; i--) {
+        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
+        textWindow += 0x20;
+        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
+        textWindow += 0x20;
+        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
+        textWindow += 0x20;
+        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
+        textWindow += 0x20;
+    }
+
+    lbl_803DC99C = 0;
+    lbl_803DC9AA = 0;
+    lbl_803DC9A8 = 0;
+
+    cmd = lbl_8033A540;
+    i = lbl_803DC9C8;
+    while (i-- != 0) {
+        switch (cmd->v) {
+        case 3:
+            lbl_803DC9A7 = (u8)cmd->f4;
+            lbl_803DC9A6 = (u8)cmd->f8;
+            lbl_803DC9A5 = (u8)cmd->fc;
+            lbl_803DC9A4 = (u8)cmd->f10;
+            break;
+        case 4:
+            textWindow = lbl_802C7400 + cmd->f4 * 0x20;
+            *(s16 *)(textWindow + 0x18) = (s16)cmd->f8;
+            *(s16 *)(textWindow + 0x1a) = (s16)cmd->fc;
+            break;
+        case 1:
+            textDisplayFn_800168dc(cmd->f4, cmd->f8);
+            break;
+        case 2:
+            gameTextFn_8001658c(cmd->f4, cmd->f8, cmd->fc);
+            break;
+        case 5:
+            if (lbl_803DC9CC != NULL) {
+                gameTextRenderStrs(cmd->f4, ((u8 *)lbl_803DC9CC - lbl_802C7400) / 0x20);
+            }
+            break;
+        case 6:
+            gameTextRenderStrs(cmd->f4, cmd->f8);
+            break;
+        case 7:
+            textWindow = lbl_802C7400 + cmd->f8 * 0x20;
+            *(s16 *)(textWindow + 0x18) = (s16)cmd->fc;
+            *(s16 *)(textWindow + 0x1a) = (s16)cmd->f10;
+            gameTextRenderStrs(cmd->f4, cmd->f8);
+            break;
+        case 8:
+            if (cmd->f4 == 0xff) {
+                lbl_803DC9CC = NULL;
+            } else {
+                lbl_803DC9CC = lbl_802C7400 + cmd->f4 * 0x20;
+            }
+            break;
+        case 9:
+            ((void (*)(void))cmd->f4)();
+            break;
+        case 10:
+            lbl_803DC9AA = (u16)cmd->f4;
+            lbl_803DC9A8 = (u16)cmd->f8;
+            break;
+        case 11:
+            lbl_803DC9AA = 0;
+            lbl_803DC9A8 = 0;
+            break;
+        case 12:
+            lbl_803DC984 = cmd->f4;
+            break;
+        case 14:
+            lbl_803DC992 = (u8)cmd->f4;
+            lbl_803DC991 = (u8)cmd->f8;
+            lbl_803DC990 = (u8)cmd->fc;
+            break;
+        case 13:
+            lbl_803DC98C = cmd->f4;
+            lbl_803DC988 = cmd->f8;
+            break;
+        case 15:
+            gameTextFonts = gameTextBase + 0x15c0 + cmd->f4 * 0x28;
+            lbl_803DC9E8 = cmd->f4;
+            if (cmd->f4 == 2) {
+                color = lbl_803DB3C8;
+                hudDrawRect(0, 0, 0xa00, 0x780, &color);
+                lbl_803DC99C = 0;
+            }
+            break;
+        }
+        cmd++;
+    }
+
+    if (lbl_803DC99C == 0) {
+        Sfx_StopFromObject(0, 0x397);
+    }
+    lbl_803DC9C8 = 0;
+    lbl_803DC9C4 = gameTextBase + 0x3c0;
+
+    textWindow = lbl_802C7400 + 0x1280;
+    for (i = 0x94; i > 0; i--) {
+        textWindow -= 0x20;
+        *(s16 *)(textWindow + 0x18) = 0;
+        *(s16 *)(textWindow + 0x1a) = 0;
+    }
+    lbl_803DC9CC = NULL;
+}
+
 void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     int oldHeap;
     int languageId;
