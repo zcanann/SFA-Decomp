@@ -123,6 +123,7 @@ void drlasercannon_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int drlasercannon_getTrackedTarget(int obj, int *arg) {
     int *tricky = getTrickyObject();
     void *player;
@@ -150,6 +151,7 @@ int drlasercannon_getTrackedTarget(int obj, int *arg) {
     }
     return 0;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
