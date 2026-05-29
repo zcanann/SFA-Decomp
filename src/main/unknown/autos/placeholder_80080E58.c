@@ -5010,69 +5010,48 @@ void fn_80089234(u8 enabled)
 void skyFn_800894a8(int flags, f32 x, f32 y, f32 z)
 {
     int bit;
-    int maskBase;
 
     if (lbl_803DD12C == NULL) {
         return;
     }
-    bit = 0;
-    maskBase = 1;
-    if ((flags & (maskBase << bit)) != 0) {
-        *(f32 *)(lbl_803DD12C + 0xa8) = x;
-        *(f32 *)(lbl_803DD12C + 0xac) = y;
-        *(f32 *)(lbl_803DD12C + 0xb0) = z;
-    }
-    bit = 1;
-    if ((flags & (maskBase << bit)) != 0) {
-        *(f32 *)(lbl_803DD12C + 0x14c) = x;
-        *(f32 *)(lbl_803DD12C + 0x150) = y;
-        *(f32 *)(lbl_803DD12C + 0x154) = z;
+    for (bit = 0; bit < 2; bit++) {
+        if ((flags & (1 << bit)) != 0) {
+            *(f32 *)(lbl_803DD12C + bit * 0xa4 + 0xa8) = x;
+            *(f32 *)(lbl_803DD12C + bit * 0xa4 + 0xac) = y;
+            *(f32 *)(lbl_803DD12C + bit * 0xa4 + 0xb0) = z;
+        }
     }
 }
 
 void fn_80089510(int flags, u8 red, u8 green, u8 blue)
 {
     int bit;
-    int maskBase;
 
     if (lbl_803DD12C == NULL) {
         return;
     }
-    bit = 0;
-    maskBase = 1;
-    if ((flags & (maskBase << bit)) != 0) {
-        lbl_803DD12C[0x8c] = red;
-        lbl_803DD12C[0x8d] = green;
-        lbl_803DD12C[0x8e] = blue;
-    }
-    bit = 1;
-    if ((flags & (maskBase << bit)) != 0) {
-        lbl_803DD12C[0x130] = red;
-        lbl_803DD12C[0x131] = green;
-        lbl_803DD12C[0x132] = blue;
+    for (bit = 0; bit < 2; bit++) {
+        if ((flags & (1 << bit)) != 0) {
+            lbl_803DD12C[bit * 0xa4 + 0x8c] = red;
+            lbl_803DD12C[bit * 0xa4 + 0x8d] = green;
+            lbl_803DD12C[bit * 0xa4 + 0x8e] = blue;
+        }
     }
 }
 
 void fn_80089578(int flags, u8 red, u8 green, u8 blue)
 {
     int bit;
-    int maskBase;
 
     if (lbl_803DD12C == NULL) {
         return;
     }
-    bit = 0;
-    maskBase = 1;
-    if ((flags & (maskBase << bit)) != 0) {
-        lbl_803DD12C[0x84] = red;
-        lbl_803DD12C[0x85] = green;
-        lbl_803DD12C[0x86] = blue;
-    }
-    bit = 1;
-    if ((flags & (maskBase << bit)) != 0) {
-        lbl_803DD12C[0x128] = red;
-        lbl_803DD12C[0x129] = green;
-        lbl_803DD12C[0x12a] = blue;
+    for (bit = 0; bit < 2; bit++) {
+        if ((flags & (1 << bit)) != 0) {
+            lbl_803DD12C[bit * 0xa4 + 0x84] = red;
+            lbl_803DD12C[bit * 0xa4 + 0x85] = green;
+            lbl_803DD12C[bit * 0xa4 + 0x86] = blue;
+        }
     }
 }
 

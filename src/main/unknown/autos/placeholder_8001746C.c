@@ -8462,6 +8462,7 @@ void ObjModel_ResolveRenderOpTextures(u8 *m) {
     }
 }
 
+#pragma dont_inline on
 void ObjModel_RelocateAnimData(u8 *m, u8 *dst) {
     int i;
     *(u8 **)(m + 0x94) = *(u8 **)(m + 0xa4);
@@ -8480,6 +8481,7 @@ void ObjModel_RelocateAnimData(u8 *m, u8 *dst) {
         }
     }
 }
+#pragma dont_inline reset
 
 void ObjModel_LoadRenderOpTextures(u8 *model, int arg) {
     u8 *hdr = *(u8 **)model;

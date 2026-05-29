@@ -244,6 +244,18 @@ Heuristic before reaching for `asm { }`:
     ~74-90% — it is the dominant residual on placeholder_80220608 (zulu15:
     wcpushblock obj/player r29↔r30, wcfloortile setup r27↔r29). Don't grind it;
     the partial still banks real fuzzy%.
+    **BUT before declaring a coloring cap, try making the base a REAL PARAM
+    instead of `void*` + a local copy.** If the function is `f(void *p){ Obj *o =
+    (Obj*)p; ... }` and the saved-reg coloring is off, change the signature to the
+    concrete pointer type `f(u8 *o)` (or `Obj *o`) — taking the base as a typed
+    PARAM (no local copy) often flips MWCC's r29/r30/r31 assignment to match
+    target. (hotel7, Obj_BuildWorldTransformMatrix → 100%.) This is a real fix,
+    not a cap — try it first.
+    **Local TYPE controls frame size: `f32 m[16]` (64B) vs `Mtx m` (48B).** When
+    target reserves a full 64-byte 4x4 stack slot but your `Mtx`/`MtxP` local only
+    reserves 48B (shifting the frame + every sp-offset), declare the matrix local
+    as `f32 m[16]` to match the 64B reservation. (hotel7, the
+    Obj_TransformLocal*ByWorldMatrix pair 99.6→100%.)
     **Base-pointer hoist for saved-register coloring.** When target keeps a
     repeatedly-used base address in a *saved* register (r29-r31) across the whole
     function — e.g. it references one global table at many offsets — declare that
@@ -387,6 +399,17 @@ Heuristic before reaching for `asm { }`:
     `fneg` on `values[0]` then `fadds`, preserving the reusable product. Fixed the
     whole cubic-spline family (curveFn_80010ce4 76→90.4%, mathFn_80010c64
     86.6→93.9%, mathFn_80010ee0 90.7→94.9%). Clean C, no asm. (mike6, 800066E0.)
+
+28. **A `li r0,<bit>; li rX,1; slw r0,rX,r0; and` (RUNTIME shift) over apparently
+    CONSTANT bit positions 0,1,2… = an UNROLLED `for` loop — write the loop, not
+    the manual unroll.** When target tests `flags & (1<<bit)` for a run of fixed
+    bit positions via a runtime `slw` (not a folded `andi`/`clrlwi`), the original
+    source was a small `for(bit=0;bit<N;bit++)` that MWCC unrolled: the unroller
+    keeps `1<<bit` as `slw` (doesn't re-fold per copy) WHILE folding the
+    induction-derived offset (`bit*STRIDE`) to per-iteration constants. Writing the
+    manual unroll in C instead folds `1<<0`→`clrlwi`/`andi` and mismatches. So
+    write `for(bit=0;bit<N;bit++){ if(flags&(1<<bit)){ p[bit*STRIDE+off]=…; } }`.
+    Took 3 sky-setter fns 75→100%. (november12, 80080E58.)
 
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
