@@ -1135,5 +1135,103 @@ void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
         break;
     }
 }
+
+typedef struct {
+    u16 v[15];
+} ColorTbl;
+
+extern int lbl_802C1FD8[];
+extern int *lbl_803DCAB4;
+extern f32 lbl_803DF394;
+extern f32 lbl_803DF398;
+extern void modelLightStruct_setField50(void *light, int v);
+extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setColorsA8AC(void *light, int r, int g, int b, int a);
+extern void modelLightStruct_setColors100104(void *light, int r, int g, int b, int a);
+extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
+extern void lightSetField4D(void *light, int v);
+extern void lightFn_8001db6c(void *light, f32 a, int b);
+extern void lightFn_8001d620(void *light, int a, int b);
+extern void lightSetField2FB(void *light, int v);
+
+void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fextra) {
+    f32 p8 = fextra;
+    PartfxParams params;
+    ColorTbl colors = *(ColorTbl *)lbl_802C1FD8;
+    f32 zoff = lbl_803DF394;
+    u8 *cbuf;
+
+    params.f8 = scale;
+    params.pad[0] = 0;
+    params.pad[2] = 0;
+    params.pad[1] = 0;
+    params.f6 = 0xc0a;
+    switch (type) {
+    case 1:
+        params.vec[0] = scale * (f32)randomGetRange(-10, 10);
+        params.vec[1] = scale * (f32)randomGetRange(-10, 10);
+        params.vec[2] = scale * (f32)randomGetRange(-10, 10);
+        (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x32f, &params, 2, -1, &p8);
+        break;
+    case 2:
+        params.vec[0] = scale * (f32)randomGetRange(-10, 10);
+        params.vec[1] = scale * (f32)randomGetRange(-10, 10);
+        params.vec[2] = scale * (f32)randomGetRange(-10, 10);
+        (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x330, &params, 2, -1, &p8);
+        break;
+    case 3:
+        (*(void (*)(void *, int, void *, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x32f, &p8, 0x19, 0);
+        break;
+    case 4:
+        (*(void (*)(void *, int, void *, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x330, &p8, 0x19, 0);
+        break;
+    case 5:
+        params.f6 = 0xc0a;
+        (*(void (*)(void *, int, void *, int, void *))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x7cd, &p8, 0x32, &params);
+        break;
+    case 6:
+        params.f6 = 0xc0d;
+        (*(void (*)(void *, int, void *, int, void *))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x7ce, &p8, 0x50, &params);
+        break;
+    case 7:
+        params.f6 = 0x605;
+        params.pad[2] = 1;
+        (*(void (*)(void *, int, void *, int, void *))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x7cf, &p8, 0x19, &params);
+        zoff = lbl_803DF35C;
+        break;
+    case 8:
+        params.f6 = 0x605;
+        params.pad[2] = 0;
+        (*(void (*)(void *, int, void *, int, void *))(*(int *)(*lbl_803DCAB4 + 0xc)))(
+            obj, 0x7cf, &p8, 0x19, &params);
+        zoff = lbl_803DF35C;
+        break;
+    }
+
+    if (light != NULL) {
+        modelLightStruct_setField50(light, 2);
+        lightVecFn_8001dd88(light, *(f32 *)((char *)obj + 0x18),
+                            *(f32 *)((char *)obj + 0x1c) + zoff,
+                            *(f32 *)((char *)obj + 0x20));
+        cbuf = (u8 *)&colors;
+        modelLightStruct_setColorsA8AC(light, cbuf[type * 3], cbuf[type * 3 + 1],
+                                       cbuf[type * 3 + 2], 0xff);
+        modelLightStruct_setColors100104(light, cbuf[type * 3], cbuf[type * 3 + 1],
+                                         cbuf[type * 3 + 2], 0xff);
+        lightDistAttenFn_8001dc38(light, lbl_803DF34C, lbl_803DF398);
+        lightSetField4D(light, 0);
+        lightFn_8001db6c(light, lbl_803DF35C, 1);
+        lightFn_8001db6c(light, lbl_803DF354, 0);
+        lightFn_8001d620(light, 0, 0);
+        lightSetField2FB(light, 1);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
