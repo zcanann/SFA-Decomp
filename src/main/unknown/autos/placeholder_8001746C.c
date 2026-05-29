@@ -10711,6 +10711,7 @@ int objMove(u8 *obj, f32 dx, f32 dy, f32 dz) {
     return 0;
 }
 
+#pragma dont_inline on
 void copyToCache(void *dst, void *src, u32 count) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
         int len;
@@ -10724,6 +10725,50 @@ void copyToCache(void *dst, void *src, u32 count) {
         LCLoadBlocks(dst, src, count);
     }
 }
+#pragma dont_inline reset
+
+#pragma dont_inline on
+int fn_8001F978(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 limit) {
+    register u32 src;
+    register u32 copySize;
+    register u32 *cursor;
+    register u32 *endOut;
+    register u32 maxEnd;
+    u32 alignOffset;
+    u32 end;
+    u8 *dst;
+
+    src = srcAddr;
+    copySize = size;
+    cursor = cacheCursor;
+    endOut = outEnd;
+    maxEnd = limit;
+    dst = getCache();
+    alignOffset = src & 0x1f;
+    copySize = (copySize + alignOffset + 0x1f) & ~0x1f;
+    end = *cursor + copySize;
+    if (end <= maxEnd) {
+        src -= alignOffset;
+        *endOut = end;
+        dst += *cursor;
+        *cursor = (u32)(dst + alignOffset);
+        copySize >>= 5;
+        while (copySize > 0x7f) {
+            copyToCache(dst, (void *)src, 0);
+            dst += 0x1000;
+            src += 0x1000;
+            copySize -= 0x80;
+        }
+        if (copySize != 0) {
+            copyToCache(dst, (void *)src, copySize);
+        }
+        return 1;
+    }
+    *endOut = *cursor;
+    *cursor = src;
+    return 0;
+}
+#pragma dont_inline reset
 
 void ObjModel_InitRenderBuffers(void) {
     if ((PPCMfhid2() & 0x10000000) == 0) {
