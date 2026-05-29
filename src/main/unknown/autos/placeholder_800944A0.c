@@ -557,6 +557,79 @@ void waterfx_func04(u8 *p3, u16 mask, f32 *vecs, u8 *p6, f32 fval) {
     }
 }
 
+extern f32 timeDelta;
+extern f32 lbl_803DF324;
+extern f32 lbl_803DF328;
+extern f32 lbl_803DF32C;
+extern f32 lbl_803DF330;
+extern f32 lbl_803DF334;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 f0c;
+    f32 f10;
+    f32 f14;
+    s8 idx;
+    u8 pad19[3];
+} WaterDrop;
+
+void waterfx_run(void) {
+    int i;
+    for (i = 0; i < 30; i++) {
+        WaterEntry7 *e = &((WaterEntry7 *)lbl_803DD238)[i];
+        if (e->active != 0) {
+            e->f10 += lbl_803DF324 * timeDelta;
+            e->active = (s16)(e->active - framesThisStep * e->f18);
+            if (e->active < 0) {
+                e->active = 0;
+                lbl_803DD23C = (void *)((int)lbl_803DD23C - 1);
+            }
+        }
+    }
+    for (i = 0; i < 30; i++) {
+        WaterEntry *g = &((WaterEntry *)lbl_803DD228)[i];
+        if (g->active != 0) {
+            g->f10 += lbl_803DF328 * timeDelta;
+            g->active = (s16)(g->active - framesThisStep * 2);
+            if (g->active < 0) {
+                g->active = 0;
+                lbl_803DD22C = (void *)((int)lbl_803DD22C - 1);
+            }
+        }
+    }
+    for (i = 0; i < 10; i++) {
+        WaterParticle *s = &((WaterParticle *)lbl_803DD230)[i];
+        if (s->f10 < lbl_803DF2EC) {
+            s->f10 += s->f14 * timeDelta;
+            if (s->f10 >= lbl_803DF2EC) {
+                lbl_803DD234 = (void *)((int)lbl_803DD234 - 1);
+            }
+        }
+    }
+    for (i = 0; i < 30; i++) {
+        WaterDrop *d = &((WaterDrop *)lbl_803DD220)[i];
+        if (d->idx != -1) {
+            WaterParticle *wp = &((WaterParticle *)lbl_803DD230)[d->idx];
+            d->f10 += lbl_803DF32C * timeDelta;
+            d->f0c *= lbl_803DF330;
+            d->f10 *= lbl_803DF330;
+            d->f14 *= lbl_803DF330;
+            d->x += d->f0c;
+            d->y += d->f10;
+            d->z += d->f14;
+            if (d->y < wp->y) {
+                wp->active--;
+                d->idx = -1;
+                lbl_803DD224 = (void *)((int)lbl_803DD224 - 1);
+                lbl_803DD20C = lbl_803DF334;
+                waterfx_func07(0, 8, d->x, wp->y, d->z, lbl_803DF300);
+            }
+        }
+    }
+}
+
 typedef struct {
     int v[5];
 } Tbl5;
