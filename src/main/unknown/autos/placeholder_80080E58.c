@@ -5632,3 +5632,58 @@ void newclouds_onMapSetup(void) {
     Music_Trigger(235, 0);
 }
 #pragma pop
+
+extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
+extern void fogFn_80070404(f32 a, f32 b);
+extern void setTextColor(int unused, int a, int b, int c, int d);
+extern f32 lbl_803DF14C;
+extern f32 lbl_803DF108;
+extern f32 lbl_803DF148;
+extern f32 lbl_803DF118;
+extern s8 lbl_803DB750;
+
+#pragma push
+#pragma scheduling off
+void dll_06_func06(int obj) {
+    u8 *s = lbl_803DD184;
+
+    if (s != NULL) {
+        lbl_803DD180 = 2;
+        fn_8005D0BC(obj, (u8) * (int *)(s + 0x24), (u8) * (int *)(s + 0x28),
+                    (u8) * (int *)(s + 0x2c), 55);
+        s = lbl_803DD184;
+        if (*(f32 *)(s + 0x14) == *(f32 *)(s + 0x18)) {
+            *(f32 *)(s + 0x14) = *(f32 *)(s + 0x14) - lbl_803DF14C;
+        }
+        s = lbl_803DD184;
+        if (*(f32 *)(s + 0x14) > *(f32 *)(s + 0x18)) {
+            *(f32 *)(s + 0x14) = *(f32 *)(s + 0x18) - lbl_803DF14C;
+        }
+        s = lbl_803DD184;
+        fogFn_80070404(*(f32 *)(s + 0x14), *(f32 *)(s + 0x18));
+    }
+}
+
+void dll_06_func08(int obj) {
+    u8 *s = lbl_803DD184;
+    f32 v;
+    int alpha;
+
+    if (s != NULL) {
+        if (lbl_803DB750 == 0 && (*(u16 *)(s + 4) & 1) == 0) {
+            v = *(f32 *)(s + 0x14);
+            if (v < lbl_803DF108) {
+                alpha = 255;
+            } else if (v > lbl_803DF148) {
+                alpha = 0;
+            } else {
+                alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
+            }
+            setTextColor(obj, (u8) * (int *)(s + 0x24), (u8) * (int *)(s + 0x28),
+                         (u8) * (int *)(s + 0x2c), (u8)alpha);
+        } else {
+            setTextColor(obj, 255, 255, 255, 0);
+        }
+    }
+}
+#pragma pop
