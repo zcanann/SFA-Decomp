@@ -174,8 +174,8 @@ void gf_levelcon_findLinkedObjects(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     int *objects;
-    int objectCount;
     int objectIndex;
+    int objectCount;
     int o;
 
     *(int *)(state + 0) = 0;
