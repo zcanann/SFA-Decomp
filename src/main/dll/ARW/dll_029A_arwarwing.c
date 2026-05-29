@@ -322,7 +322,7 @@ void fn_8022BCD0(int p, int q) {
 void fn_8022C680(int obj) {
     switch ((s8) * (u8 *)(obj + 0xac)) {
     case 0x3a:
-        if (GameBit_Get(0xc85) != 0) {
+        if ((u32)GameBit_Get(0xc85) != 0) {
             GameBit_Set(0x405, 0);
             (*(void (**)(int, int))(*gMapEventInterface + 0x44))(0xb, 5);
             (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xb, 0xa, 1);

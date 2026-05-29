@@ -5191,7 +5191,7 @@ void dfplevelcontrol_init(int obj, int param2)
     if (*(s8 *)(obj + 0xac) == 0x15) {
         GameBit_Set(0xdce, 0);
     }
-    if (GameBit_Get(0xdce) != 0) {
+    if ((u32)GameBit_Get(0xdce) != 0) {
         Music_Trigger(0x37, 0);
         Music_Trigger(0xe4, 0);
     }

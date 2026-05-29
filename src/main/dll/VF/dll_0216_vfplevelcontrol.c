@@ -51,7 +51,7 @@ void vfplevelcontrol_init(int *obj, u8 *init) {
     timeOfDayFn_80055038();
     GameBit_Set(0xdcf, 1);
     unlockLevel(0, 0, 1);
-    if (GameBit_Get(0xe1b) != 0) {
+    if ((u32)GameBit_Get(0xe1b) != 0) {
         *(u8 *)((char *)inner + 0x18) = 4;
     } else {
         GameBit_Set(0xe1a, 0);

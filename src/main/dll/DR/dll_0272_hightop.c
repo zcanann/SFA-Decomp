@@ -642,7 +642,7 @@ int hightop_stateHandler07(int obj, int p) {
             *(f32 *)((char *)p + 0x2a0) = lbl_803E6AC8;
         }
     }
-    if (randomGetRange(0, 1000) != 0) {
+    if ((s32)randomGetRange(0, 1000) != 0) {
         return 0;
     }
     return 9;

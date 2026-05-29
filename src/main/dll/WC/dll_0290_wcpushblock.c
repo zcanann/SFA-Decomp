@@ -544,7 +544,7 @@ void fn_802251B4(int obj, int state)
     if ((u32)GameBit_Get(0xc92) != 0) {
         GameBit_Set(0x4e4, 0);
         GameBit_Set(0x4e5, 0);
-        if (GameBit_Get(0x4e3) == 0xff)
+        if ((u32)GameBit_Get(0x4e3) == 0xff)
             GameBit_Set(0x4e3, randomGetRange(6, 7));
     }
 }
