@@ -361,6 +361,14 @@ Heuristic before reaching for `asm { }`:
     reproduce target's `crclr 4*cr1+eq` varargs marker; widen a callee's return
     `void`→`int` when target keeps its result live even if your caller ignores
     it.)
+    **`#pragma fp_contract off` IS available per-function** (used in several real
+    DLLs) — wrap a function in it when target does a SEPARATE `fmul`+`fadd` where
+    MWCC fuses to `fmadds`. (Corrects the earlier "no fp_contract control"
+    assumption behind the mtx44_mult tar pit.) CAVEAT: it only controls the
+    fmadds FUSION — it does NOT fix eval-order / FP-register-allocation
+    divergences. hotel7 confirmed Matrix_TransformVector still capped ~55% with
+    fp_contract off (its divergence is FP-reg/eval-order, not fusion), so try it
+    on a true fmadds-vs-fmul+fadd mismatch but don't expect it to fix coloring.
 
 25. **An FP comparison feeding a BRANCH is NOT a cap — write the plain
     operator.** `if (a >= b)` / `while (a < b)` / `a <= b ? x : y` on floats
