@@ -1376,8 +1376,56 @@ main/dll/LGT/LGTcontrollight.c:
 main/dll/boulder.c:
 	.text       start:0x801F4ECC end:0x801F4F88
 
-main/unknown/autos/placeholder_801F5184.c:
-	.text       start:0x801F4F88 end:0x801FB9F4
+main/dll/WM/dll_020B_firefly.c:
+	.text       start:0x801F4F88 end:0x801F568C
+
+main/dll/WM/dll_020C_wmspiritplace.c:
+	.text       start:0x801F568C end:0x801F654C
+
+main/dll/WM/dll_020D_wmseqpoint.c:
+	.text       start:0x801F654C end:0x801F6E8C
+
+main/dll/WM/dll_020E_wmsun.c:
+	.text       start:0x801F6E8C end:0x801F7C50
+
+main/dll/WM/dll_020F_wmspiritset.c:
+	.text       start:0x801F7C50 end:0x801F7D34
+
+main/dll/WM/dll_0210_wmplanets.c:
+	.text       start:0x801F7D34 end:0x801F7FF4
+
+main/dll/WM/dll_0211_wmwallcrawler.c:
+	.text       start:0x801F7FF4 end:0x801F943C
+
+main/dll/WM/dll_0212_wmnewcrystal.c:
+	.text       start:0x801F943C end:0x801F9804
+
+main/dll/VF/dll_0216_vfplevelcontrol.c:
+	.text       start:0x801F9804 end:0x801F9D78
+
+main/dll/VF/dll_0217_vfpobjcreator.c:
+	.text       start:0x801F9D78 end:0x801FA228
+
+main/dll/VF/dll_0218_vfpminifire.c:
+	.text       start:0x801FA228 end:0x801FA6FC
+
+main/dll/VF/dll_0219.c:
+	.text       start:0x801FA6FC end:0x801FA870
+
+main/dll/VF/dll_021A_vfpstatueball.c:
+	.text       start:0x801FA870 end:0x801FAC6C
+
+main/dll/VF/dll_021B.c:
+	.text       start:0x801FAC6C end:0x801FAFEC
+
+main/dll/VF/dll_021C_vfpladders.c:
+	.text       start:0x801FAFEC end:0x801FB220
+
+main/dll/VF/dll_021D_vfplift.c:
+	.text       start:0x801FB220 end:0x801FB9AC
+
+main/dll/VF/dll_021E_vfpblock1.c:
+	.text       start:0x801FB9AC end:0x801FB9F4
 
 main/light.c:
 	.text       start:0x801FB9F4 end:0x801FD398
@@ -1507,8 +1555,62 @@ main/unknown/autos/placeholder_802113F8.c:
 main/proximitymine_init.c:
 	.text       start:0x80211A10 end:0x80211C24
 
-main/unknown/autos/placeholder_80211C24.c:
-	.text       start:0x80211C24 end:0x8021F8CC
+main/dll/DR/dll_024F_kt_rexlevel.c:
+	.text       start:0x80211C24 end:0x80211F38
+
+main/dll/DR/obj_008A_kt_rex.c:
+	.text       start:0x80211F38 end:0x80215A3C
+
+main/dll/DR/dll_0251_kt_rexfloorswitch.c:
+	.text       start:0x80215A3C end:0x80216620
+
+main/dll/DR/dll_0252_kt_lazerwall.c:
+	.text       start:0x80216620 end:0x80216B48
+
+main/dll/DR/dll_0253_kt_lazerlight.c:
+	.text       start:0x80216B48 end:0x80216D18
+
+main/dll/DR/dll_0254_kt_fallingrocks.c:
+	.text       start:0x80216D18 end:0x80216EAC
+
+main/dll/DR/dll_0261_dr_lasercannon.c:
+	.text       start:0x80216EAC end:0x80217F24
+
+main/dll/DR/dll_0262_drakormissile.c:
+	.text       start:0x80217F24 end:0x80218B24
+
+main/dll/DR/dll_0263_gm_mazewell.c:
+	.text       start:0x80218B24 end:0x80218EE8
+
+main/dll/DR/dll_0266_kytesmum.c:
+	.text       start:0x80218EE8 end:0x80219A88
+
+main/dll/DR/dll_0265_dr_creator.c:
+	.text       start:0x80219A88 end:0x8021A008
+
+main/dll/DR/dll_0268_dr_cagecontrol.c:
+	.text       start:0x8021A008 end:0x8021A13C
+
+main/dll/DR/dll_0269_explodeplan.c:
+	.text       start:0x8021A13C end:0x8021A42C
+
+main/dll/DR/dll_026B_dr_chimmey.c:
+	.text       start:0x8021A42C end:0x8021A62C
+
+main/dll/DR/dll_026C_dr_cagewith.c:
+	.text       start:0x8021A62C end:0x8021ACE8
+
+main/dll/DR/dll_026E_dr_shackle.c:
+	.text       start:0x8021ACE8 end:0x8021B358
+
+main/dll/DR/dll_0271_drakorhoverpad.c:
+	.text       start:0x8021B358 end:0x8021CF60
+
+main/dll/DR/dll_0272_hightop.c:
+	.text       start:0x8021CF60 end:0x8021F34C
+
+main/dll/DR/dll_026F_dr_generator.c:
+	.text       start:0x8021F34C end:0x8021F8CC
 
 main/dll/firepipe.c:
 	.text       start:0x8021F8CC end:0x80220608
@@ -2611,4 +2713,10 @@ main/unknown/autos/placeholder_802BB4B0.c:
 	.text       start:0x802BB4B0 end:0x802BB720
 
 main/unknown/autos/placeholder_802BBC10.c:
-	.text       start:0x802BB720 end:0x802C187C
+	.text       start:0x802BB720 end:0x802BC7C0
+
+main/dll/DR/dll_0077_DR_EarthWarrior.c:
+	.text       start:0x802BC7C0 end:0x802BF0C8
+
+main/dll/DR/dll_0078_DR_CloudRunner.c:
+	.text       start:0x802BF0C8 end:0x802C187C

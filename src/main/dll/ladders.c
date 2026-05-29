@@ -633,7 +633,7 @@ typedef struct TumbleweedBushState {
 void tumbleweedbush_update(int *obj) {
     TumbleweedBushState *state;
     int *player;
-    struct { int *hitObj; int extra; } hitInfo;
+    int hitInfo[2];
     int hitData;
     f32 dx, dy, d;
     int i;
@@ -641,17 +641,17 @@ void tumbleweedbush_update(int *obj) {
 
     state = *(TumbleweedBushState **)((char*)obj + 0xb8);
     player = (int*)Obj_GetPlayerObject();
-    if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, &hitInfo, &hitData) != 0) {
-        if (*(s16*)((char*)hitInfo.hitObj + 0x46) != 0x4ba) {
+    if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, hitInfo, &hitData) != 0) {
+        if (*(s16*)((char*)hitInfo[0] + 0x46) != 0x4ba) {
             fn_80096F9C(&hitData, 8, 0xff, 0xff, 0x78);
             Sfx_PlayFromObject(obj, 0x280);
             for (i = 0; (u8)i < state->pieceCount; i++) {
                 int **slot = (int **)&state->pieceObjects[(u8)i];
                 if (*slot != NULL) {
                     if (*(s16*)((char*)obj + 0x46) == 0x28d) {
-                        if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&hitInfo.extra) == 0) continue;
+                        if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&hitData) == 0) continue;
                     }
-                    ((void(*)(int*))((void**)*(int*)((char*)*slot + 0x68))[10])(*slot);
+                    ((void(*)(int*))*(int*)(*(int*)(*(int*)((char*)*slot + 0x68)) + 0x28))(*slot);
                 }
             }
         }
@@ -666,7 +666,7 @@ void tumbleweedbush_update(int *obj) {
     for (j = 0; (u8)j < state->pieceCount; j++) {
         int **slot = (int **)&state->pieceObjects[(u8)j];
         if (*slot != NULL) {
-            if (((int(*)(int*))((void**)*(int*)((char*)*slot + 0x68))[8])(*slot) > 1) {
+            if (((int(*)(int*))*(int*)(*(int*)(*(int*)((char*)*slot + 0x68)) + 0x20))(*slot) > 1) {
                 *slot = NULL;
             }
         }
@@ -747,6 +747,142 @@ void tumbleweedbush_setScale(u8* obj, void* match) {
         i++;
     }
 }
+#pragma scheduling reset
+
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int *Obj_AllocObjectSetup(int size, int type);
+extern int *Obj_SetupObject(int *obj, int a, s8 b, int c, void *d);
+extern int **ObjList_GetObjects(int *idx, int *count);
+extern f32 lbl_803E2F40;
+
+#pragma scheduling off
+#pragma peephole off
+s8 fn_801631C8(int *obj) {
+    u8 *state;
+    u8 *p4c;
+    int siblingType;
+    int idx;
+    int outCount;
+    int aliveOut;
+    int freeSlot;
+    u8 *scan;
+    int **list;
+    int count;
+    int *newObj;
+    u8 *off;
+
+    state = *(u8 **)((char*)obj + 0xb8);
+    p4c = *(u8 **)((char*)obj + 0x4c);
+    switch (*(s16 *)((char*)obj + 0x46)) {
+    case 0x28d:
+        if (((int(*)(int*))((void**)*(int*)gSHthorntailAnimationInterface)[9])(&aliveOut) == 0)
+            return -1;
+        siblingType = 0x39d;
+        break;
+    case 0x3fd:
+        siblingType = 0x3fb;
+        break;
+    case 0x4b9:
+        siblingType = 0x4ba;
+        break;
+    case 0x4be:
+        siblingType = 0x4c1;
+        break;
+    }
+
+    idx = 0;
+    freeSlot = -1;
+    scan = state;
+    while (idx < (int)(u8)state[0x50] && freeSlot == -1) {
+        if (*(void **)(scan + 0xc) == NULL) freeSlot = idx;
+        scan += 4;
+        idx++;
+    }
+    if (freeSlot == -1) return -1;
+
+    list = ObjList_GetObjects(&idx, &outCount);
+    count = 0;
+    while (idx < outCount) {
+        int j = idx;
+        idx = j + 1;
+        if (siblingType == *(s16 *)((char*)list[j] + 0x46)) count++;
+    }
+    if (count >= 7) return -1;
+    if (Obj_IsLoadingLocked() == 0) return -1;
+
+    newObj = Obj_AllocObjectSetup(0x20, siblingType);
+    off = state + freeSlot * 12;
+    *(f32 *)((char*)newObj + 0x8) = *(f32 *)((char*)obj + 0xc) + *(f32 *)(off + 0x1c);
+    *(f32 *)((char*)newObj + 0xc) = *(f32 *)((char*)obj + 0x10) + *(f32 *)(off + 0x20);
+    *(f32 *)((char*)newObj + 0x10) = *(f32 *)((char*)obj + 0x14) + *(f32 *)(off + 0x24);
+    *((u8 *)newObj + 4) = p4c[4];
+    *((u8 *)newObj + 5) = p4c[5];
+    *((u8 *)newObj + 6) = p4c[6];
+    *((u8 *)newObj + 7) = p4c[7];
+    *(f32 *)((char*)newObj + 0x1c) = lbl_803E2F40;
+
+    if ((state[0x4c] & 1) != 0
+        && *(int *)(*(int *)((char*)obj + 0x4c) + 0x14) == 0x292c
+        && *(u16 *)(state + 0x4e) == 6) {
+        *((u8 *)newObj + 0x1b) = 1;
+        list = ObjList_GetObjects(&idx, &outCount);
+        while (idx < outCount) {
+            int *child = list[idx];
+            if (*(s16 *)((char*)child + 0x46) == 0x27f) {
+                *(f32 *)((char*)newObj + 0x8) = *(f32 *)((char*)child + 0xc);
+                *(f32 *)((char*)newObj + 0xc) = *(f32 *)((char*)list[idx] + 0x10);
+                *(f32 *)((char*)newObj + 0x10) = *(f32 *)((char*)list[idx] + 0x14);
+                idx = outCount;
+            }
+            idx++;
+        }
+    }
+
+    *(int **)(state + freeSlot * 4 + 0xc) = Obj_SetupObject(newObj, 5, (s8)*((u8 *)obj + 0xac), -1, *(void **)((char*)obj + 0x30));
+    (**(void(***)(f64, f64))(*(int *)((char*)(*(int **)(state + freeSlot * 4 + 0xc)) + 0x68) + 0x24))(
+        (f64)*(f32 *)((char*)obj + 0xc), (f64)*(f32 *)((char*)obj + 0x14));
+    *(u16 *)(state + 0x4e) = *(u16 *)(state + 0x4e) + 1;
+    return (s8)freeSlot;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int fn_80065684(int obj, f32 a, f32 b, f32 c, f32 *out, int flag);
+extern f32 lbl_803E2F5C;
+extern f32 lbl_803E2F60;
+extern f32 lbl_803E2F64;
+extern f32 lbl_803E2F68;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80163990(int *piece, u8 *state) {
+    f32 gh;
+
+    *(f32 *)((char*)piece + 0x24) = *(f32 *)((char*)piece + 0x24) / lbl_803E2F5C;
+    if (fn_80065684((int)piece, *(f32 *)((char*)piece + 0xc), *(f32 *)((char*)piece + 0x10), *(f32 *)((char*)piece + 0x14), &gh, 0) != 0) {
+        if (gh > lbl_803E2F60) {
+            *(f32 *)((char*)piece + 0x28) = *(f32 *)((char*)piece + 0x28) + lbl_803E2F64 * timeDelta;
+        } else {
+            *(f32 *)((char*)piece + 0x10) = *(f32 *)((char*)piece + 0x10) - (gh - lbl_803E2F60);
+            *(f32 *)((char*)piece + 0x28) = lbl_803E2F68;
+        }
+    }
+    *(f32 *)((char*)piece + 0x2c) = *(f32 *)((char*)piece + 0x2c) / lbl_803E2F5C;
+
+    *(s16 *)(state + 0x27c) = (s16)(*(s16 *)(state + 0x27c) / 100);
+    *(s16 *)(state + 0x27e) = (s16)(*(s16 *)(state + 0x27e) / 100);
+    *(s16 *)(state + 0x280) = (s16)(*(s16 *)(state + 0x280) / 100);
+
+    *(f32 *)((char*)piece + 0xc) = *(f32 *)((char*)piece + 0xc) + *(f32 *)((char*)piece + 0x24) * timeDelta;
+    *(f32 *)((char*)piece + 0x10) = *(f32 *)((char*)piece + 0x10) + *(f32 *)((char*)piece + 0x28) * timeDelta;
+    *(f32 *)((char*)piece + 0x14) = *(f32 *)((char*)piece + 0x14) + *(f32 *)((char*)piece + 0x2c) * timeDelta;
+
+    *(s16 *)((char*)piece + 0x4) = (s16)(s32)((f32)(int)*(s16 *)(state + 0x27c) * timeDelta + (f32)(int)*(s16 *)((char*)piece + 0x4));
+    *(s16 *)((char*)piece + 0x2) = (s16)(s32)((f32)(int)*(s16 *)(state + 0x27e) * timeDelta + (f32)(int)*(s16 *)((char*)piece + 0x2));
+    *(s16 *)((char*)piece + 0x0) = (s16)(s32)((f32)(int)*(s16 *)(state + 0x280) * timeDelta + (f32)(int)*(s16 *)((char*)piece + 0x0));
+}
+#pragma peephole reset
 #pragma scheduling reset
 
 

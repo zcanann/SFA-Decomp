@@ -32,10 +32,52 @@ Heuristic before reaching for `asm { }`:
    peephole pass that fuses `extsb + cmpwi → extsb.`, `rlwinm + cmpwi →
    rlwinm.`, and similar dot-form merges. Single most useful change on this
    project. See `b7eda753` (dll_198 — 3 functions to 100%).
+   **Caveat — peephole-off suppresses jump tables.** `peephole off` also turns a
+   `switch` MWCC would lower to a jump table into a compare-chain. If a function
+   is *all-switch with no bit-ops*, keep it OUTSIDE the peephole-off region so
+   the jump table survives; if it mixes a switch with bit-ops you can't have
+   both, so pick whichever the target uses and leave the other as the residual.
+   **BUT peephole-off does NOT always kill the table — DENSE switches can keep
+   both.** For a sufficiently dense switch (e.g. 30 contiguous cases) `#pragma
+   peephole off` KEPT the jump table (verify: still two `bctr`) AND unfused the
+   bit-test compares (`rlwinm`+`cmplwi` vs the merged `rlwinm.`), netting more
+   than peephole-on. So don't *assume* the table dies — test peephole-off on a
+   dense jump-table fn and check for `bctr`; you may get the table + the unfused
+   compares together. (november10, fn_802B1E5C 30-case → +2%.)
+   **Inside a file/region that is GLOBALLY `peephole off`, locally re-enable it
+   for one jump-table function** by wrapping just that function in `#pragma
+   peephole on` … `#pragma peephole reset` (the `reset` restores the surrounding
+   global-off). MWCC then regenerates the jump table for that fn while the rest
+   of the file stays peephole-off — combine with #13 case-order. Took
+   `dvdCheckError` to 99.2% inside a global-peephole-off unit (placeholder_800066E0).
+   **Treat the two pragmas independently — `scheduling off` ALONE is often the
+   win.** For vtable-dispatch / call-heavy / FP-heavy functions, `scheduling
+   off` by itself takes 40-70% → 95-100% (it stops MWCC reordering loads/stores
+   and FP ops around calls), while `peephole off` can *hurt* them (jump-table
+   suppression, clamp/compare fusion changes). Default to `scheduling off` only,
+   and add `peephole off` *only* to kill a specific `extsb.`/`rlwinm.` dot-merge
+   residual. Whole object-DLL units (e.g. placeholder_80220608) match best on
+   scheduling-off-only.
+   **`#pragma ... reset` POPS a stack — it does NOT reset-to-default.** `on`/`off`
+   push; `reset` restores the *surrounding* state. So nested regions matter: a
+   function between an outer `off` and an inner `... reset` is still `off`. When
+   reproducing per-function pragma regions (esp. splitting/restructuring an
+   interleaved file), model the pragma state as a STACK and emit the *effective*
+   on/off for each function — tracking only the last-seen label silently compiles
+   functions with the wrong setting (regressed 7 fns during the 80211C24 split
+   until modeled as a stack).
 
 2. **Replace `& 0xff7f`-style literal with `& ~0x80`** for single-bit clears.
    The bit-NOT form often produces `rlwinm` directly where the explicit
    inverted-literal form produces `andi.`. See `782a09a8`, `91f5f4ab`.
+   **Inverse cap — when target MATERIALIZES the mask (`li rX,-K; and` /
+   `lis;ori`) MWCC won't reproduce it from clean C.** For some constants (e.g.
+   `&= ~K`, `|= 0x800000`) target emits a materialized-constant `li`/`lis;or`
+   form while every clean-C spelling gives `rlwinm`/`oris`. This is NOT
+   peephole-controllable (confirmed: peephole-off region still emits `rlwinm`).
+   Caps tiny flag fns ~70% — leave partial, don't grind. (november9, 80295318
+   fn_80296BBC.) The asm `li;and` recipe at the bottom *can* force it but isn't
+   worth it for a tiny fn — Prime Directive.
 
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
@@ -50,11 +92,23 @@ Heuristic before reaching for `asm { }`:
    (e.g. `ObjList_GetObjects(&objectIndex, &objectCount)`), MWCC assigns stack
    offsets in declaration order. If target has `&first` at sp+8 and `&second`
    at sp+0xc but yours is the opposite, swap the declarations. See `91f5f4ab`.
+   **Note — address-taken locals can color in REVERSE declaration order.** In
+   some functions MWCC assigns address-taken stack locals offsets in *reverse*
+   declaration order (declare the lowest-offset local LAST). If the plain
+   declaration-order swap above doesn't land the offsets, flip it. Proven on
+   drgenerator/drlasercannon/hightop_hitDetect (placeholder_80211C24).
 
 6. **Lift a repeated constant load to a local before multiple stores** to force
    CSE. `f32 fz = lbl_xxx; *p1 = fz; *p2 = fz; *p3 = fz;` instead of three
    direct stores — MWCC will reload the constant each time without the lift.
    See `75660758` (ecsh_cup_init 67% → 100%).
+   **Inverse caveat — lift ONLY when the live range is call-free.** If the
+   lifted local's uses straddle a `bl` (call), MWCC must keep it in a
+   *callee-saved* FP reg (f31…) across the call, which adds a save/restore and
+   grows the stack frame — making the match *worse* than just reloading the
+   global inline (where the load stays in volatile `f0`). So lift for a tight
+   call-free store-burst; inline the global when any use crosses a call.
+   (placeholder_80295318: fn_80295674, repeated `0.0`.)
 
 7. **`u8` not `char` for byte arrays you load and assign without arithmetic**.
    `char buf[N]; buf[0] = arr[i];` emits a spurious `extsb`; `u8 buf[N];`
@@ -81,6 +135,15 @@ Heuristic before reaching for `asm { }`:
    dispatch lands on target's exact instruction sequence. Simple render fns
    *without* intermediates don't need this — args pass through naturally.
    Picked up several 100% matches in TREX_trex and DIMcannon batches.
+   **Corollary — a callee may take MORE params than its BODY uses; declare the
+   trailing DEAD params so the caller sets up the registers.** If the call site
+   loads `r3..rN` but the callee's body only reads `r3..rM` (M<N), the caller
+   won't match unless the callee signature has all N params (the extra ones are
+   dead in the body but the caller still materializes them). Read the call's
+   r-register span off the target asm and declare the trailing `int`/`f32` params
+   even though unused. (hotel6 — heapSpawnSlot/changeHeapSlot actually take 7
+   params, the 7th `tag` dead in-body; adding it fixed mmAllocFromRegion's caller
+   setup with no regression to the callees.)
 
 10. **`(u32)` cast on a u8/u16 before int→f32 conversion** forces the unsigned
     path. The signed int→f32 path emits `xoris + lfd + fsubs` against a
@@ -88,6 +151,37 @@ Heuristic before reaching for `asm { }`:
     project's named `lbl_xxx` f64 magic (matching target). When converting an
     unsigned byte/halfword to float, write `(f32)(u32)obj->u8field` rather
     than `(f32)obj->u8field`. Picked up MoonSeedBush_init in DIMlavaball.
+    **THE @magic-vs-named-lbl cap is usually fixable — this is the #1 residual
+    on the autos units, don't just leave it.** When an int→f32 conversion emits
+    an anonymous compiler `@NNNN` magic where target references a named
+    `lbl_803Exxxx` f64 magic, add an EXPLICIT cast matching the conversion's
+    signedness and try both: `(f32)(int)x` (signed/`xoris` path) vs
+    `(f32)(u32)x` (unsigned path). The explicit cast frequently flips MWCC from
+    its anonymous local magic to the project's named magic. A bare
+    `(f32)someIntReturningCall()` (e.g. `randomGetRange`) tends to emit the
+    anonymous form — wrapping it `(f32)(int)randomGetRange(...)` forces the named
+    path. `#pragma peephole off` can independently flip this choice too. Proven:
+    drakorhoverpad render 95→100% and initMain 98.5→100% (placeholder_80211C24).
+    **Caveat — on some units this is float-pool-ORDERING-bound, not cast-bound.**
+    On large multi-handler units (placeholder_80295318, 80220608) the named f64
+    magic is emitted only for the EARLIEST functions in the TU's float pool;
+    later functions cap at the anonymous `@NNN` regardless of the cast (confirmed
+    by two hunters — the `(f32)(int)` variant tested and reverted, sometimes
+    *worse*). If the explicit cast doesn't flip it on a late-pool function, it's
+    a genuine residual (~85-96%) — leave it, don't keep retrying.
+    **The `@NNN`-vs-named-`lbl` LABEL is largely a MEASUREMENT ARTIFACT — NOT
+    fixable via symbols.txt.** objdiff content-matches the literal-pool entry by
+    the actual DATA BYTES at the resolved address; both your `.o` and target hold
+    the same bias `0x4330000000000000`, so objdiff already scores it MATCHED even
+    though `function_objdump.py --diff` always prints the raw local name `@NNN`.
+    Measured proof: retyping `lbl_803E7158` (the int→double bias, mistyped in
+    symbols.txt as a 3-byte `string`) to an 8-byte `double` produced ZERO
+    project-wide delta (fuzzy 46.066067 → 46.066067 to the digit; build green).
+    So the `@NNN` print is cosmetic when the bytes match — do NOT retype symbols
+    or chase the label. The GENUINE caps are the float-pool-ORDERING cases above
+    (the entry lands at a *different address* than the shared pool symbol, so the
+    bytes can't content-match) — those are real and not symbols.txt-fixable.
+    (zulu14, task #9, decisive negative — don't re-run this experiment.)
 
 11. **`extern int fn(...)` for callees whose return is treated as `int`** —
     even if conceptually the return is a byte. Declaring `extern u8 fn(...)`
@@ -112,6 +206,14 @@ Heuristic before reaching for `asm { }`:
     blocks are laid out differently, reorder the `case` labels in the source to
     the target's block order (read the block addresses off the `.s`). Clean C,
     no asm. See `61dd19936` (DIMcannon `fn_801AF6DC` → 100%).
+    **Jump-table switches also match — read the table and order cases by block
+    address.** When MWCC lowers the switch to a *jump table* (dense cases), read
+    the table (`jumptable_xxx`) from the unit's data `.s`
+    (`build/GSAE01/asm/..._data.s`) to recover each case→block-offset mapping,
+    then write the `case` labels in **target block-address order** and let cases
+    that fall to default just omit — MWCC regenerates the same table. Residual is
+    usually only the anonymous `@jumptable` vs the named symbol (a ~2-instr reloc
+    diff), leave that. Took drakorhoverpad_handlePathPointEvent (22-case) to 86%.
 
 14. **`int` parameter (not `u32`) for `(arg & bit)` flag tests → `cmpwi`.** A
     `u32` param makes a masked-flag compare emit `cmplwi`; an `int` param emits
@@ -132,6 +234,32 @@ Heuristic before reaching for `asm { }`:
     swapping two `int` locals, often flips the allocation to match. No asm —
     try this before any `register`/asm approach. See `fa209c270`
     (fn_8019C3A0 → 100%).
+    **But SAVED-reg coloring is sometimes allocator-internal and NOT
+    source-flippable — after trying decl-order BOTH ways, treat it as a hard cap
+    and STOP.** On some units there's a *systematic* saved-reg permutation: target
+    assigns the LOWER reg# (r27/r29) to the longer-lived / earlier variable (the
+    obj/setup base), MWCC does the reverse, and it cascades through every
+    instruction referencing that var. Declaration-order reorder (both directions)
+    does NOT flip it. This caps every fresh function on the affected unit at
+    ~74-90% — it is the dominant residual on placeholder_80220608 (zulu15:
+    wcpushblock obj/player r29↔r30, wcfloortile setup r27↔r29). Don't grind it;
+    the partial still banks real fuzzy%.
+    **Base-pointer hoist for saved-register coloring.** When target keeps a
+    repeatedly-used base address in a *saved* register (r29-r31) across the whole
+    function — e.g. it references one global table at many offsets — declare that
+    base as the FIRST local (`char *base = (char *)lbl_xxxx;`) and use `base + off`
+    everywhere, instead of re-deriving the address per access. MWCC then parks it
+    in a callee-saved reg matching target's coloring. Took fn_8029FA24 90.7% →
+    96.8% in one move (placeholder_80295318).
+    **Single-base struct-overlay for a CLUSTER of globals.** When target addresses
+    several "separate" globals off ONE base reg at fixed offsets (e.g.
+    `gMmDeferredFreeStack` = base+0x80, `gMmRegionTable` = base+0x3F00, all off
+    r31=`gMmStoreArray`), declare ONE struct that overlays the whole block and cast
+    the base global to it (`MmGlobal *g = (MmGlobal *)gMmStoreArray;`), then use
+    `g->field`. Every access then folds to `r31+const` off the single base,
+    matching target — instead of each global emitting its own `lis;addi`. The
+    cluster-of-globals generalization of the base-pointer hoist. (hotel5, mm
+    block on placeholder_8001746C — required for mmFreeTick/mmAllocFromRegion.)
 
 17. **Fold multiple early-return guards into ONE big `||` (with embedded
     assignments) for convergent-predicate functions.** When target computes a
@@ -153,6 +281,12 @@ Heuristic before reaching for `asm { }`:
     and index `tbl[idx].f` — MWCC then emits `add; lha disp`. Single-level
     indexing matches 100% (fn_8029D250); double-level (`element*stride + idx*4`)
     only partials — leave those partial. Clean C, no asm.
+    **End-pointer form for the LAST element: `T *top = &arr[n]; top[-1].f`
+    gives `add base; lwz -disp(base)` where `arr[n-1].f` emits indexed `lwzx`.**
+    When target walks to the end of a table and accesses the final entry with a
+    negative displacement off a computed end-pointer, write the end-pointer +
+    `top[-1]` form rather than the `arr[n-1]` index. Took mmFreeDeferred
+    94.8→99.45% (hotel4, 8001746C). Clean C, no asm.
 
 19. **objdiff cascade-misalign trap: a low fuzzy% with a high instruction-diff%
     means ONE dropped instruction early in the body, not a wrong function.**
@@ -189,6 +323,70 @@ Heuristic before reaching for `asm { }`:
     the positive `if (cond) { <body> }` wrapping the work and a single trailing
     `return 0;`. Took fn_802B74C4 73% → 100% (combined with a local decl-order
     swap). Clean C, no asm.
+
+23. **`!!x` for MWCC's double-`cntlzw` `x != 0` materialization; plain `!= 0`
+    gives `neg; or; srwi`.** When target materializes a boolean "is non-zero"
+    with the `cntlzw rX,rY; ...; cntlzw`/`srwi rX,rX,5` (count-leading-zeros)
+    idiom and your `x != 0` (or `(int)(x != 0)`) emits the `neg; orc/or; srwi`
+    form instead, write `!!x` (double logical-NOT) to get the `cntlzw` form.
+    Mirror: `!x` gives the `== 0` `cntlzw` form. Match whichever the target
+    uses. Clean C, no asm — supersedes leaving these as a "cntlzw-idiom cap."
+    **Related — `break` (fall to common return) instead of `case`-body
+    `return 0` drops a spurious `cntlzw` boolean.** When a switch case ends with
+    an explicit `return 0;` and target instead uses an `li`-branch to a shared
+    epilogue, write `break;` and let the function fall to one trailing return.
+    MWCC then emits the explicit `li r3,0; b` form rather than synthesizing the
+    `cntlzw` non-zero idiom. (zulu13, 80220608 *_free family.)
+
+24. **Declare single-precision math/helper callees as `f32 fn(f32)`, NOT
+    `double fn(double)`.** A `double` signature makes MWCC promote args and
+    round results through `fmul`+`frsp` (double-precision multiply then
+    round-to-single) where target uses a single `fmuls`. Declaring the extern
+    with `f32` params/return matches target's single-precision form. Applies to
+    trig/interp helpers (e.g. `extern f32 fn_80293E80(f32);` for sin/cos).
+    Pairs with #10 ((u32) for int→f32). Took drcreator_update to 99.7%. Clean C,
+    no asm. (Related: declare a varargs callee `extern void fn(char *, ...);` to
+    reproduce target's `crclr 4*cr1+eq` varargs marker; widen a callee's return
+    `void`→`int` when target keeps its result live even if your caller ignores
+    it.)
+
+25. **An FP comparison feeding a BRANCH is NOT a cap — write the plain
+    operator.** `if (a >= b)` / `while (a < b)` / `a <= b ? x : y` on floats
+    reproduces target's `fcmpo` + `cror` (the `cror eq,gt,eq`→`>=`,
+    `eq,lt,eq`→`<=` combine) directly from the `>=`/`<=`/`<`/`>` operator — do
+    NOT leave these partial. The cap is ONLY when target *materializes* the
+    boolean into a GPR (`int x = a >= b;` / `return a >= b;`), which clean C
+    emits via `mfcr`/`rlwinm` and rarely matches. So keep float compares inside
+    `if`/`while`/`?:` conditions; only accept the residual when the boolean is
+    actually stored or returned. (Corrects the over-broad "FP-compare → mfcr/cror
+    cap" that earlier handoffs propagated.)
+    **Counter-caveat — the reverse divergence IS sometimes a real cap.** On some
+    targets a clamp uses a SIMPLE `bge`/`ble` (single branch) where clean-C
+    `v>=lo`/`v<=hi` *over-produces* the `cror eq,gt,eq; bne` combine, and nothing
+    in C flips it back to the simple branch (peephole-on tested, no effect). So
+    #25 cuts both ways: when target has the cror combine, write the operator (not
+    a cap); when target has a plain `bge`/`ble` and your `>=`/`<=` emits the cror,
+    that 1-2 instr divergence is a genuine residual — leave it, and DON'T rewrite
+    the clamp chasing it (hotel5's logically-correct rewrite scored *lower*).
+    (hotel5, fn_8001D820/fn_8001D84C ~68%.)
+
+26. **"Floor-first" clamp restructure forces a FRESH callee-saved FP reg (frame
+    size + coloring fix).** When a clamp `x = computed; if (x < floor) x = floor;`
+    makes MWCC *reuse* an earlier value's FP reg (e.g. f31) — shrinking the frame
+    and cascading every stack offset off-by — rewrite it to load the floor FIRST:
+    `x = floor; tmp = computed; if (x < tmp) x = tmp;`. Loading the constant floor
+    before the computed value forces MWCC to allocate a fresh FP reg (f29), fixing
+    the frame size and the coloring. Took fn_802B1E5C 78.4→80.6%. Clean C, no asm.
+    (november10. Mirror of the GPR decl-order tricks #5/#16, for FP.)
+
+27. **Lead an accumulation subterm with the UNARY-NEGATED operand to get
+    `fneg`+`fadds` instead of `fsubs`.** When target computes `a = k*v1 - v0` as
+    `fneg`+`fadds` (because it *reuses* the `k*v1` product elsewhere and can't
+    consume it in an `fsubs`), writing `k*v1 - values[0]` emits `fsubs` and won't
+    match. Write `-values[0] + k*v1` (lead with the negated term) → MWCC emits
+    `fneg` on `values[0]` then `fadds`, preserving the reusable product. Fixed the
+    whole cubic-spline family (curveFn_80010ce4 76→90.4%, mathFn_80010c64
+    86.6→93.9%, mathFn_80010ee0 90.7→94.9%). Clean C, no asm. (mike6, 800066E0.)
 
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
@@ -264,6 +462,11 @@ param type to `int` and cast at the use site. The narrow param type pushes
 extension to the *use side* instead. For half-word stores, the array element
 type also matters — `s16[]` triggers `extsh`, `u16[]` triggers `clrlwi`.
 
+**Storing the constant `0xFFFF`: `*(u16*)p = 0xFFFF` emits `lis;addi` (full
+materialization); `*(s16*)p = 0xFFFF` emits `li -1` (one instr short).** When
+target materializes 0xFFFF via `lis;addi`, use the `u16` cast; when it uses
+`li -1`, use `s16`. (november12.)
+
 ## FP compare operand order picks the load registers
 
 `fcmpo cr0, f1, f0` puts the LHS of the C compare in f1 and the RHS in f0,
@@ -281,6 +484,17 @@ residual diff shows the two `lfs` lines swapped, flip the compare:
 Writing the scalar form for a `.data` symbol mis-emits sda21 and breaks every
 load/store of it. Check `config/GSAE01/symbols.txt` for the section.
 
+**Passing a `.sdata` string BY ADDRESS — declare a SCALAR `extern char tag;` and
+pass `&tag`** to get `addi r5, r13, tag@sda21`. The `extern char tag[];` array
+form emits `lis;addi` (wrong) for the same symbol. (hotel5, sMmShowInfo tag →
+matched the OSReport arg.)
+
+**For an ARRAY-typed `.sdata`/`.sbss` symbol, give the extern a KNOWN SIZE to
+get sda21.** An INCOMPLETE array `extern u8 lbl[];` emits far `lis;addi`; the
+SIZED form `extern u8 lbl[8];` lets MWCC pick `@sda21`. (mike8 — sizing
+lbl_803DC8D0[8]/lbl_803DC8C0[2]/lbl_803DC8B8[2] lifted resetLoadedMaps 88→94.3%,
+~+3% each on two fns. Read the size from symbols.txt.)
+
 ## `#pragma dont_inline on` for callees that live in the same TU
 
 With `-inline auto`, MWCC inlines small functions into their callers within
@@ -291,6 +505,18 @@ never match. Wrap the callee:
 void small_helper(...) { ... }
 #pragma dont_inline reset
 ```
+
+**CAUTION — `dont_inline on` disables inlining in BOTH directions: it stops the
+fn from being inlined into callers AND stops it from inlining ITS OWN callees.**
+So if target *keeps the `bl`* to a helper but that helper itself *inlines* its
+own leaves (which target does), wrapping the helper in `dont_inline` will fix the
+`bl` but REGRESS the helper (its leaves stop inlining). hotel5 hit this — wrapping
+mmFree regressed it 99→73 because mmFree relies on inlining mmGetRegionForPtr.
+**The safe fix in that case is SOURCE ORDER, not dont_inline:** place the new
+caller *before* the helper's definition so MWCC can't inline the helper upward
+(it's not yet defined), while the helper still inlines its own callees normally.
+Reach for `dont_inline` only when the wrapped fn has no callees it needs to
+inline.
 
 **Diagnostic:** when a freshly-added function lands mysteriously low (<70%) for
 no visible source reason, suspect a same-TU callee got auto-inlined into it.
@@ -306,6 +532,24 @@ inlined 5 `fn_802A9xxx` siblings, all at 0%; wrapping the 5 callees lifted every
 one to 99-100%). Inserting a new function *after* its callees' definitions in
 the file also avoids forward-decl churn.
 
+**Call-set diff = a systematic detector for inline victims.** Instead of
+guessing which leaf inlined, diff the partial's CALL SET against target
+(`tools/function_objdump.py --diff`): any callee that appears as a `bl` in
+*target* but NOT in your output has been auto-inlined into your function. Wrap
+that leaf's definition in `#pragma dont_inline on` — fixes the caller AND lifts
+the leaf standalone. Catches hidden ones a size-check misses (a small leaf
+inlined into a big caller barely moves the symbol size). On inline-heavy TUs
+(placeholder_800066E0), run this check first on any partial <90%.
+**Inverse direction — extra `bl`s in YOURS (not target) of the SAME callee
+repeated = a DUPLICATED code BLOCK, not an inline victim.** If your call set has
+*more* `bl`s than target and the extras are repeats of the same callee(s), it's
+usually because a `switch`/`if` arm DUPLICATES the common post-block tail
+(e.g. a case emits its own copy of the shared `PSVECScale/Add; return` tail)
+where target shares ONE tail. Fix by replacing that arm's body with `break`
+(or a goto-the-shared-tail structure) so it falls through to the single common
+tail — the call set then matches. NOT a dont_inline case. (november11,
+fn_8029E568 86.8→91.7%.)
+
 ## `for (i=0; i<n; i++) { use(*p); p++; }` vs `*p++`
 
 MWCC emits a `bdnz` countdown loop only when the increment and the
@@ -313,7 +557,87 @@ dereference are separate statements. `*p++` merges them and the loop loses
 the tight `lwz; addi; cmpw; b` body that target uses. Keep `*p` and `p++`
 on separate lines inside the loop body.
 
+**Inverse case — `arr[i] = …` (index) NOT `*p++` when target strength-reduces
+to induction pointers off saved-reg params.** When target copies a base param
+into a volatile reg and bumps it per iter (`mr r3,r28; … ; addi r3,r3,4`),
+write the output as `outX[i] = v;` (array indexing with the loop counter).
+MWCC then strength-reduces the index to exactly that induction-pointer form;
+`*outX++` produces a different pointer-walk. (mike7, curveFn_80010018 output
+loop → 99.5%.) Match whichever the target uses — neither form is universally
+right.
+
+## Don't hoist a global/`.bss` address when target RE-DERIVES it per use
+
+The mirror of #6/#16 (lift/base-pointer-hoist): if target emits a fresh
+`lis;addi` (or `lis;lfd`) to re-derive a `.bss`/`.data`/`.sdata` address at
+*each* use, do NOT pull it into a local — hoisting parks it in a saved reg and
+shifts the whole register-coloring + frame size, making the match worse. Only
+hoist when target itself keeps the base live in a saved reg across the body.
+(mike7, curveFn_80010018 coeff table lbl_80338790 — leaving it re-derived per
+use was required for the 99.5%.)
+
+## Graduating a `placeholder_XXXX` catch-all into real DLL files
+
+The `unknown/autos/placeholder_XXXXXXXX` units are dtk auto-splits that bundle
+several real per-object DLL TUs into one file (named by load address). Once a
+placeholder is meaningfully recovered, it can be *graduated* — dissolved into
+the real `dll/<AREA>/dll_XXXX_<name>.c` files — and this is **byte-for-byte
+match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
+801F5184→17 files), exact conservation both times, 2 functions even *improved*
+(splitting removed a wrong cross-family auto-inline the false single-TU caused).
+
+**Match-safety preconditions (verify in Phase 1, no edits):**
+- Unit is **`.text`-only** (no `.data`/`.rodata`/`.sdata`/`.bss` in its `.s`) —
+  so there are no per-TU pooled constants that splitting would re-pool. If it
+  has pooled data, splitting is risky; stop.
+- **0 file-local `static`s** (all `.fn … , global`) — no shared helpers pinning
+  a TU boundary.
+- Symbols place by **name→address** (symbols.txt), independent of which `.c`
+  defines them or source order — so identical compiled bytes ⇒ identical
+  placement ⇒ conserved.
+- Families are **contiguous address-ordered runs** (each = one original TU);
+  confirm boundaries by call sites + any descriptor table / doc-skeletons.
+
+**Procedure (per family, conservation-checked):**
+1. Map each family → real `dll/<AREA>/dll_XXXX_<name>.c` (canonical `dll_XXXX_`
+   prefix dodges basename collisions with unrelated existing DLLs).
+2. Shared header per area (`include/main/dll/<AREA>/<area>_shared.h`) carrying
+   the **complete** extern set — collect **every** `extern`/forward-decl in the
+   WHOLE placeholder `.c`, not just its preamble (auto-gen scatters callee
+   externs through the body; missing ones fail to compile). Externs emit no
+   code → duplicating them is harmless. **Include standalone col-0 forward
+   prototypes too** (e.g. `void fn_802BF4D8(int);`) — once functions are
+   reordered into a new file, a call that precedes its def with no prototype
+   gets an implicit-`int` decl that then conflicts with the real definition.
+3. **Graduate EDGE-FIRST in address order** — dtk requires linear link order;
+   a mid-unit hole makes the placeholder appear on both sides of another unit's
+   range → cyclic-dependency abort. Keep the placeholder one shrinking
+   contiguous range (carve the front edge each step).
+4. Emit each family's fns in **source-line order** (preserves intra-family
+   call-before-def) and wrap **each fn** in its **effective** pragma state
+   computed from a **stack model** (`reset` pops — see recipe #1; tracking only
+   the last label silently miscompiles nested-region fns).
+5. Update `splits.txt` (replace placeholder range with the per-family ranges) +
+   `configure.py` (replace the 1 placeholder Object with N). Delete the
+   placeholder `.c`/`.h` and any unbuilt doc-stub.
+6. **Conservation check** after each family: combined `matched_code` +
+   matched-fn-count across (shrunken placeholder + new file) must EQUAL the
+   pre-move total (NOT the headline %, which shifts with the denominator).
+   Revert any family that doesn't conserve. Build green, **land on `main`**.
+
 ## Drift handling (Ghidra-imported `FUN_xxx` don't match v1.0)
+
+**A stuck mid-range partial (60-95%) is OFTEN a CORRECTNESS bug, not a codegen
+cap — verify the target's actual control flow BEFORE assuming a cap.** The
+Ghidra import frequently got the C *logic* subtly wrong: a `return`/store nested
+inside an `if` that target executes unconditionally, an over-simplified switch
+arm (a bare list-walk where target has an inner sub-switch), a spurious extra
+`return 0`. These read like "register-allocation residuals" but are really wrong
+behaviour. Before filing a partial as a cap, diff the target asm's branches/
+returns against your C control flow and fix the logic — november11 took
+fn_80295A04 66.6→100% and fn_802A7160 93.6→100% this way (both were import
+control-flow bugs, not caps). Only after the control flow provably matches should
+a residual be called a coloring/codegen cap.
 
 Many `.c` files were imported from a v1.1 Ghidra session and have wrong
 function boundaries vs the v1.0 `.s`. **Don't try to fix `FUN_xxx`** — instead:
@@ -357,10 +681,34 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   stray `local_N`) — replace with real locals for plausible C.
 - **Two agents must never edit the same `.c`** — concurrent recovery of the same
   unit produces duplicate definitions and rebase conflicts. One owner per unit.
+- **NEVER `git stash` / `git stash pop` in a hunter worktree.** The stash store
+  lives in the COMMON git dir and is SHARED across all worktrees, so a `git stash
+  pop` can pop a DIFFERENT agent's (or an old) WIP stash and splatter it as
+  conflicts across dozens of files. For the recurring `.claude/scheduled_tasks.lock`
+  modification, use ONLY `git checkout -- .claude/scheduled_tasks.lock` before
+  rebasing — never stash. If a stray pop hits, `git reset --hard HEAD` recovers
+  cleanly (a failed pop does NOT drop the stash). (mike7 hit this — popped
+  hunter-bravo's WIP by accident.) For relocating uncommitted WIP between
+  worktrees, COMMIT it on a branch instead of stashing.
+- **A `shutdown_request` ack is NOT a process death.** Swapped-out hunters have
+  repeatedly replied "shutting down" / gone idle while their process kept running
+  (idle-but-alive zombies that keep drawing tokens → rate limits). After every
+  swap, VERIFY the predecessor is actually gone (`ps aux | grep "agent-id hunter-X"`
+  / its tmux pane) and hard-kill the PID + `tmux kill-pane` if it lingers. Removing
+  the config entry and pruning the worktree does NOT kill the process. Only spawn
+  the successor once the predecessor's process is confirmed dead.
 
 ## Tooling
 
-- `python3 tools/function_objdump.py --diff <unit> <symbol>` — per-function diff
+- `python3 tools/function_objdump.py --diff <unit> <symbol>` — per-function diff.
+  **⚠️ DO NOT use --diff to declare a match %.** It MASKS two real diff classes:
+  (1) scheduling REORDERINGS of same-opcode instructions, and (2) SIZE diffs from
+  peephole fusion (`extsb.+cmpwi→extsb.`, `and.+cmpwi→and.`) — so it prints
+  "CLEAN" on functions that are really only 88-97% in objdiff. The SOURCE OF
+  TRUTH for any reported % is **objdiff's `report.json` `fuzzy_match_percent`**
+  (`rm -f build/GSAE01/report.json && timeout 30 ninja build/GSAE01/report.json`).
+  Use --diff to LOCATE a divergence, never to certify 100%. (november12 reported
+  several "100%"s off --diff that were actually 88-97%.)
 - `python3 tools/drift_audit.py [--only-drifted] [--csv] [unit]` — find drifted units
 - `python3 tools/stub_queue.py [--aligned-only] [--max-size N]` — ranked targets.
   **CAVEAT: output is STALE** — it flags already-matched functions (and dead

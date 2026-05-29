@@ -3,11 +3,7 @@
 
 #include "ghidra_import.h"
 
-undefined4
-getLActions(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
-            undefined4 param_10,uint param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,undefined4 param_15,undefined4 param_16);
+int getLActions(int a, int b, u16 idx);
 void FUN_800066e8(undefined4 param_1,undefined4 param_2,int *param_3,int param_4,uint param_5);
 void FUN_800066ec(undefined4 param_1,undefined4 param_2,int param_3,int param_4,uint param_5);
 void FUN_800066f0(int *param_1,float *param_2,int param_3,undefined4 param_4,int param_5,int param_6

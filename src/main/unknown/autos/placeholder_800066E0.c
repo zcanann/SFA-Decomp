@@ -765,8 +765,8 @@ extern void AudioStream_CancelPrepared(void);
 extern void streamFn_8000a380(u32 channel, u32 mode, u32 time);
 extern void Movie_SetVolumeFade(u32 volume, u32 fadeMs);
 extern void AISetStreamPlayState(u32 state);
-extern void AISetStreamVolLeft(u32 volume);
-extern void AISetStreamVolRight(u32 volume);
+extern void AISetStreamVolLeft(u8 volume);
+extern void AISetStreamVolRight(u8 volume);
 extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
 extern s32 getGameState(void);
@@ -809,6 +809,7 @@ extern void copyMatrix44(f32* src, f32* dst);
 extern void *memmove(void *dest, const void *src, u32 count);
 extern void mm_free(void *ptr);
 extern void *mmAlloc(u32 size, u32 tag, void *name);
+extern void getTabEntry(void* dst, int kind, int offset, int size);
 
 /*
  * --INFO--
@@ -823,12 +824,11 @@ extern void *mmAlloc(u32 size, u32 tag, void *name);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-getLActions(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
-            undefined4 param_10,uint param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14,undefined4 param_15,undefined4 param_16)
+int getLActions(int a, int b, u16 idx)
 {
+    void* buf = mmAlloc(0x28, -1, NULL);
+    getTabEntry(buf, 0xc, idx * 0x28, 0x28);
+    mm_free(buf);
     return 0;
 }
 
@@ -1009,6 +1009,40 @@ void FUN_80006710(uint *param_1,uint param_2)
 {
 }
 
+#pragma peephole on
+void fn_8000881C(u64 *dst, u32 packed)
+{
+    u64 src = *(u64 *)(packed & ~7);
+
+    switch (packed & 7) {
+    case 0: *dst = src; break;
+    case 1: *dst = (src >> 8) | (*dst & 0xff00000000000000ULL); break;
+    case 2: *dst = (src >> 16) | (*dst & 0xffff000000000000ULL); break;
+    case 3: *dst = (src >> 24) | (*dst & 0xffffff0000000000ULL); break;
+    case 4: *dst = (src >> 32) | (*dst & 0xffffffff00000000ULL); break;
+    case 5: *dst = (src >> 40) | (*dst & 0xffffffffff000000ULL); break;
+    case 6: *dst = (src >> 48) | (*dst & 0xffffffffffff0000ULL); break;
+    case 7: *dst = (src >> 56) | (*dst & 0xffffffffffffff00ULL); break;
+    }
+}
+
+void fn_800089AC(u64 *dst, u32 packed)
+{
+    u64 src = *(u64 *)(packed & ~7);
+
+    switch (packed & 7) {
+    case 0: *dst = src; break;
+    case 1: *dst = (src << 8) | (*dst & 0xffULL); break;
+    case 2: *dst = (src << 16) | (*dst & 0xffffULL); break;
+    case 3: *dst = (src << 24) | (*dst & 0xffffffULL); break;
+    case 4: *dst = (src << 32) | (*dst & 0xffffffffULL); break;
+    case 5: *dst = (src << 40) | (*dst & 0xffffffffffULL); break;
+    case 6: *dst = (src << 48) | (*dst & 0xffffffffffffULL); break;
+    case 7: *dst = (src << 56) | (*dst & 0xffffffffffffffULL); break;
+    }
+}
+#pragma peephole reset
+
 /*
  * --INFO--
  *
@@ -1083,6 +1117,61 @@ void FUN_80006728(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
+}
+
+typedef struct EnvfxActEntry {
+    u8 pad0[0x2a];
+    u16 field_2a;
+    u8 pad1[0x30];
+    u8 kind;
+    u8 pad2[3];
+} EnvfxActEntry;
+
+extern int *gNewCloudsInterface;
+extern int *gSky2Interface;
+extern int *gSHthorntailAnimationInterface;
+extern int *gCloudActionInterface;
+
+int getEnvfxActImmediately(int a, int b, u16 idx, int d)
+{
+    u8 raw[0x80];
+    EnvfxActEntry *e = (EnvfxActEntry *)(((u32)raw + 0x1f) & ~0x1f);
+
+    getTabEntry(e, 0x57, idx * 0x60, 0x60);
+    if (e != NULL) {
+        if (e->kind <= 2 || e->kind == 4) {
+            (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gNewCloudsInterface + 0x4)))(a, b, e, d);
+        } else if (e->kind == 3) {
+            e->field_2a = 0;
+            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gSky2Interface + 0x4)))(a, b, e, d, idx);
+        } else if (e->kind == 5) {
+            e->field_2a = 0;
+            (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gSHthorntailAnimationInterface + 0x4)))(a, b, e, d);
+        } else if (e->kind == 6) {
+            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gCloudActionInterface + 0x4)))(a, b, e, d, idx);
+        }
+    }
+    return 0;
+}
+
+int getEnvfxAct(int a, int b, u16 idx, int d)
+{
+    u8 raw[0x80];
+    EnvfxActEntry *e = (EnvfxActEntry *)(((u32)raw + 0x1f) & ~0x1f);
+
+    getTabEntry(e, 0x57, idx * 0x60, 0x60);
+    if (e != NULL) {
+        if (e->kind <= 2 || e->kind == 4) {
+            (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gNewCloudsInterface + 0x4)))(a, b, e, d);
+        } else if (e->kind == 3) {
+            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gSky2Interface + 0x4)))(a, b, e, d, idx);
+        } else if (e->kind == 5) {
+            (*(void (*)(int, int, EnvfxActEntry *, int))(*(int *)(*gSHthorntailAnimationInterface + 0x4)))(a, b, e, d);
+        } else if (e->kind == 6) {
+            (*(void (*)(int, int, EnvfxActEntry *, int, u16))(*(int *)(*gCloudActionInterface + 0x4)))(a, b, e, d, idx);
+        }
+    }
+    return 0;
 }
 
 /*
@@ -1201,9 +1290,135 @@ void FUN_80006740(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modelRenderFn_80006744(int param_1,int *param_2)
+typedef struct ModelRenderInstrsState {
+    void* instrs;
+    s32 byteCount;
+    s32 bitCount;
+    s32 fieldC;
+    s32 bit;
+} ModelRenderInstrsState;
+
+s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state);
+void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit);
+
+extern int lbl_802C18C0[];
+extern int lbl_802C1A24[];
+
+#define MODEL_DECODE_NIBBLE(nibExpr)                                           \
+    {                                                                          \
+        u8 nib = (nibExpr);                                                    \
+        int base = lbl_802C18C0[idx];                                          \
+        int delta = 0;                                                         \
+        if (nib & 1) {                                                         \
+            delta = base >> 2;                                                 \
+        }                                                                      \
+        if (nib & 2) {                                                         \
+            delta += base >> 1;                                                \
+        }                                                                      \
+        if (nib & 4) {                                                         \
+            delta += base;                                                     \
+        }                                                                      \
+        if (nib & 8) {                                                         \
+            delta = -delta;                                                    \
+        }                                                                      \
+        acc += delta;                                                          \
+        idx += lbl_802C1A24[nib];                                              \
+        if (idx < 0) {                                                         \
+            idx = 0;                                                           \
+        } else if (idx > 0x58) {                                               \
+            idx = 0x58;                                                        \
+        }                                                                      \
+        {                                                                      \
+            int v = acc & 0xffff;                                              \
+            int curBit = state->bit;                                           \
+            int bo = curBit >> 3;                                              \
+            u32 packed = (u32)v << ((8 - (curBit & 7)) + sh16);                \
+            ((u8 *)state->instrs)[bo] |= (packed >> 16) & 0xff;                \
+            ((u8 *)state->instrs)[bo + 1] |= (packed >> 8) & 0xff;             \
+            ((u8 *)state->instrs)[bo + 2] |= packed & 0xff;                    \
+            state->bit += bitWidth;                                            \
+            state->bit += gap;                                                 \
+        }                                                                      \
+    }
+
+#pragma scheduling off
+u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bitWidth)
 {
+    int acc;
+    int idx;
+    u8 *cur;
+    int initialBit;
+    int gap;
+    int sh16;
+    int shamt = bitWidth - 4;
+    int hi = (*p >> 4) & 0xf;
+    int i;
+
+    if (shamt < 0) {
+        shamt = 0;
+    }
+    acc = hi << shamt;
+    idx = (*p & 0xf) << 3;
+    cur = p + 1;
+    initialBit = modelRenderInstrsState_getBit(state);
+    gap = stride - bitWidth;
+    sh16 = 0x10 - bitWidth;
+
+    for (i = count / 2; i > 0; i--) {
+        MODEL_DECODE_NIBBLE(*cur & 0xf);
+        MODEL_DECODE_NIBBLE((*cur >> 4) & 0xf);
+        cur++;
+    }
+    if (count & 1) {
+        MODEL_DECODE_NIBBLE(*cur & 0xf);
+        cur++;
+    }
+    if (gap != 0) {
+        modelRenderInstrsState_setBit(state, initialBit + bitWidth);
+    }
+    return cur;
 }
+#pragma scheduling reset
+
+/*
+ * Function: fn_80006B1C
+ * EN v1.0 Address: 0x80006B1C
+ * EN v1.0 Size: 336b
+ */
+#pragma scheduling off
+int fn_80006B1C(ModelRenderInstrsState *src, ModelRenderInstrsState *dst, int count, int gap, u8 bitWidth)
+{
+    int startBit = modelRenderInstrsState_getBit(dst);
+    u32 mask = ~(-1 << bitWidth);
+    int sh16 = 0x10 - bitWidth;
+    int i;
+    for (i = 0; i < count; i++) {
+        int sbit = src->bit;
+        int sByte = sbit >> 3;
+        u8 *sp = (u8 *)src->instrs + sByte;
+        u32 val;
+        int curBit;
+        int bo;
+        u32 packed;
+        u32 bits;
+        val = sp[0] << 16;
+        val = val | (sp[1] << 8);
+        val = val | sp[2];
+        src->bit = sbit + bitWidth;
+        bits = mask & (val >> (sbit & 7));
+        curBit = dst->bit;
+        bo = curBit >> 3;
+        packed = bits << ((8 - (curBit & 7)) + sh16);
+        ((u8 *)dst->instrs)[bo] |= (packed >> 16) & 0xff;
+        ((u8 *)dst->instrs)[bo + 1] |= (packed >> 8) & 0xff;
+        ((u8 *)dst->instrs)[bo + 2] |= packed & 0xff;
+        dst->bit += bitWidth;
+        dst->bit += gap;
+    }
+    modelRenderInstrsState_setBit(dst, startBit + bitWidth);
+    return ((u8 *)src->instrs)[(src->bit >> 3) + 1];
+}
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1528,6 +1743,7 @@ FUN_80006788(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 #pragma peephole off
+#pragma dont_inline on
 u32 audioFlagFn_8000a188(u32 mask)
 {
     s32 managed = gAudioManagedChannelMask & mask;
@@ -1536,6 +1752,7 @@ u32 audioFlagFn_8000a188(u32 mask)
     }
     return (gAudioActiveChannelMask & mask) != 0;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 
 /*
@@ -1750,6 +1967,85 @@ FUN_800067d4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 uint FUN_800067dc(uint param_1)
 {
     return 0;
+}
+
+typedef struct MusicSeqStartParams {
+    u32 flags;
+    u8 pad4[8];
+    u16 field_c;
+    u16 field_e;
+    u8 field_10;
+    u8 pad11[0xf];
+} MusicSeqStartParams;
+
+typedef struct MusicChannel {
+    u32 field_0;
+    u32 seqHandle;
+    void *bankData;
+    int status;
+    u8 voiceId;
+    u8 pad11;
+    u16 field_12;
+    u8 pad14[0xc];
+    f32 field_20;
+} MusicChannel;
+
+typedef struct MusicTrigParam {
+    u8 pad0[2];
+    u16 field_2;
+    u8 pad4[2];
+    u16 field_6;
+    u8 pad8[4];
+    u8 field_c;
+} MusicTrigParam;
+
+typedef struct MusicBank {
+    u8 pad0[2];
+    u8 field_2;
+} MusicBank;
+
+extern MusicSeqStartParams lbl_802C1A68;
+extern f32 lbl_803DE560;
+extern int fn_8027B9DC(int a, int b, void *bank, MusicSeqStartParams *params, int e);
+extern void sndSeqVolume(int voice, int a, int handle, int b);
+extern int synthResolveHandle(int handle);
+
+void Music_ChannelLoadedCallback(MusicBank *bank, MusicChannel *channel, MusicTrigParam *trigger)
+{
+    MusicSeqStartParams params = lbl_802C1A68;
+
+    if (channel != NULL) {
+        if (channel->status == 5) {
+            mm_free(channel->bankData);
+            channel->field_0 = -1;
+            channel->seqHandle = -1;
+            channel->bankData = NULL;
+            channel->voiceId = 0xff;
+            channel->status = 0;
+            channel->field_12 = 0;
+            channel->field_20 = lbl_803DE560;
+        } else {
+            int voice;
+            int seqHandle;
+            if (trigger->field_6 != -1) {
+                params.field_c = trigger->field_6;
+                params.flags |= 2;
+            }
+            if (trigger->field_c != -1) {
+                voice = trigger->field_c;
+            } else {
+                voice = 0x7f;
+            }
+            params.field_10 = 0;
+            params.field_e = 0;
+            params.flags |= 4;
+            seqHandle = fn_8027B9DC(bank->field_2, trigger->field_2, channel->bankData, &params, 0);
+            sndSeqVolume(voice, 0x1f4, seqHandle, 0);
+            channel->status = 1;
+            channel->seqHandle = seqHandle;
+            channel->voiceId = synthResolveHandle(seqHandle);
+        }
+    }
 }
 
 /*
@@ -2080,6 +2376,92 @@ void FUN_8000683c(undefined4 param_1,undefined4 param_2,char *param_3,float *par
 {
 }
 
+typedef struct SfxTriggerFull {
+    u16 id;
+    u8 volBase;
+    u8 volRand;
+    u8 pitchBase;
+    u8 pitchRand;
+    u16 field_6;
+    u16 field_8;
+    u16 sfxIds[6];
+    u8 weights[6];
+    u16 selectRange;
+    u8 e_tableIdx : 4;
+    u8 e_bit3 : 1;
+    u8 e_pad : 2;
+    u8 e_bit0 : 1;
+    u8 f_count : 4;
+    u8 f_curIdx : 4;
+} SfxTriggerFull;
+
+extern int randomGetRange(int min, int max);
+extern u8 lbl_803DB248;
+
+int Sfx_ReadTriggerParams(SfxTriggerFull *trigger, u16 *outSfxId, u8 *outVol, f32 *outF6,
+                          f32 *outF7, f32 *outF8, int *outI9, int *outI10, int *outI11)
+{
+    int idx;
+    int selector;
+
+    if (trigger == NULL || trigger->f_count == 0) {
+        return 0;
+    }
+
+    selector = randomGetRange(1, trigger->selectRange);
+    if (trigger->id == 0xab) {
+        if (trigger->f_curIdx == 0) {
+            trigger->f_curIdx = 1;
+        } else {
+            trigger->f_curIdx = 0;
+        }
+        idx = trigger->f_curIdx;
+    } else {
+        idx = 0;
+        while (selector > trigger->weights[idx]) {
+            selector -= trigger->weights[idx];
+            idx++;
+        }
+        if (trigger->f_curIdx == idx) {
+            idx++;
+            if (idx >= trigger->f_count) {
+                idx = 0;
+            }
+        }
+    }
+    trigger->f_curIdx = idx;
+
+    *outSfxId = trigger->sfxIds[idx];
+    if (*outSfxId == 0) {
+        return 0;
+    }
+
+    {
+        u8 vr = trigger->volRand;
+        if (vr != 0) {
+            int hi = trigger->volBase + randomGetRange(0, vr);
+            *outVol = hi - randomGetRange(0, vr);
+        } else {
+            *outVol = trigger->volBase;
+        }
+    }
+    {
+        u8 pr = trigger->pitchRand;
+        if (pr != 0) {
+            int hi = trigger->pitchBase + randomGetRange(0, pr);
+            *outF6 = (f32)(hi - randomGetRange(0, pr));
+        } else {
+            *outF6 = (f32)(u32)trigger->pitchBase;
+        }
+    }
+    *outF7 = (f32)(u32)trigger->field_6;
+    *outF8 = (f32)(u32)trigger->field_8;
+    *outI9 = (&lbl_803DB248)[trigger->e_tableIdx];
+    *outI10 = trigger->e_bit0;
+    *outI11 = trigger->e_bit3;
+    return 1;
+}
+
 /*
  * --INFO--
  *
@@ -2096,6 +2478,44 @@ void FUN_8000683c(undefined4 param_1,undefined4 param_2,char *param_3,float *par
 ushort * FUN_80006840(uint param_1)
 {
     return 0;
+}
+
+typedef struct SfxTrigger {
+    u16 id;
+    u8 pad[0x1e];
+} SfxTrigger;
+
+typedef struct SfxTriggerCacheEntry {
+    u16 key;
+    u16 index;
+} SfxTriggerCacheEntry;
+
+extern void *gSfxTriggersData;
+extern int gSfxTriggersCount;
+extern SfxTriggerCacheEntry lbl_802C5D78[];
+
+SfxTrigger *Sfx_FindTrigger(u16 id)
+{
+    SfxTrigger *low = (SfxTrigger *)gSfxTriggersData;
+    SfxTrigger *high = (SfxTrigger *)gSfxTriggersData + gSfxTriggersCount;
+    SfxTriggerCacheEntry *c = &lbl_802C5D78[id & 0xf];
+
+    if (c->key == id) {
+        return (SfxTrigger *)gSfxTriggersData + c->index;
+    }
+    while (low < high) {
+        SfxTrigger *mid = low + (high - low) / 2;
+        if (mid->id > id) {
+            high = mid;
+        } else if (mid->id < id) {
+            low = mid + 1;
+        } else {
+            c->key = id;
+            c->index = mid - (SfxTrigger *)gSfxTriggersData;
+            return mid;
+        }
+    }
+    return NULL;
 }
 
 /*
@@ -2115,6 +2535,70 @@ void FUN_80006848(undefined4 param_1,undefined4 param_2,uint param_3,int param_4
 {
 }
 
+extern int sndFXStartEx(s16 a, int b, int c, int d);
+extern f32 lbl_803DE590;
+extern u8 lbl_803DE593;
+
+#pragma peephole on
+SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, int c, int d)
+{
+    SfxObjectChannel *ch;
+    s32 i;
+    u32 handle;
+
+    if (audioFlagFn_8000a188(4)) {
+        return 0;
+    }
+
+    ch = gSfxObjectChannels;
+    for (i = SFX_OBJECT_CHANNEL_COUNT - 1; ch->handle != (u32)-1; i--) {
+        ch++;
+        if (i == 0) {
+            ch = NULL;
+            break;
+        }
+    }
+    if (ch == NULL) {
+        return 0;
+    }
+
+    handle = sndFXStartEx(a, b, c, 0);
+    if (handle == (u32)-1) {
+        ch->handle = (u32)-1;
+        return 0;
+    }
+    if (lbl_803DC838 != 0 && d == 0) {
+        sndFXCtrl(handle, 0x5b, 0);
+    }
+
+    {
+        f32 fz = lbl_803DE570;
+        ch->object = 0;
+        ch->channelMask = 0;
+        ch->paused = 0;
+        ch->hasPosition = 0;
+        ch->tracksObjectPosition = 0;
+        ch->handle = handle;
+        ch->x = fz;
+        ch->y = fz;
+        ch->z = fz;
+    }
+    *(s16 *)((u8 *)ch + 8) = a;
+    ch->volume = 0x64;
+    *(f32 *)((u8 *)ch + 0x20) = lbl_803DE590;
+    *(f32 *)((u8 *)ch + 0x24) = *(f32 *)((u8 *)&lbl_803DE593 + 1);
+    ch->globalCtrlDisabled = (u8)d;
+
+    ch->age = ((u64)gSfxObjectChannelAgeHi << 32) | gSfxObjectChannelAgeLo;
+    {
+        u64 next = (((u64)gSfxObjectChannelAgeHi << 32) | gSfxObjectChannelAgeLo) + 1;
+        gSfxObjectChannelAgeHi = (u32)(next >> 32);
+        gSfxObjectChannelAgeLo = (u32)next;
+    }
+    return ch;
+}
+#pragma peephole reset
+
 /*
  * --INFO--
  *
@@ -2132,6 +2616,35 @@ void FUN_8000684c(uint *param_1)
 {
 }
 
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 lbl_803DE5AC;
+extern f32 lbl_803DE5B0;
+
+void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v)
+{
+    f32 x = v[0];
+    f32 y = v[1];
+    f32 z = v[2];
+    f32 ra = lbl_803DE5AC * (f32)angX / lbl_803DE5B0;
+    f32 ca = fn_80293E80(ra);
+    f32 rb = lbl_803DE5AC * (f32)angY / lbl_803DE5B0;
+    f32 cb = fn_80293E80(rb);
+    f32 rc = lbl_803DE5AC * (f32)angZ / lbl_803DE5B0;
+    f32 cc = fn_80293E80(rc);
+    f32 sa = sin(ra);
+    f32 sb = sin(rb);
+    f32 sc = sin(rc);
+    f32 A = x * sa + z * ca;
+    f32 p = z * sa - x * ca;
+    f32 B = y * sb - p * cb;
+    f32 C = p * sb + y * cb;
+
+    v[0] = A * sc - B * cc;
+    v[1] = B * sc + A * cc;
+    v[2] = C;
+}
+
 /*
  * --INFO--
  *
@@ -2147,6 +2660,48 @@ void FUN_8000684c(uint *param_1)
  */
 void FUN_80006850(void)
 {
+}
+
+extern void *Obj_GetPlayerObject(void);
+extern int getCurSeqNo(void);
+extern void *Camera_GetCurrentViewSlot(void);
+extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
+extern f32 PSVECMag(f32 *v);
+extern f32 lbl_803DE5B4;
+extern f32 lbl_803DE5B8;
+extern double lbl_803DE5C0;
+extern double lbl_803DE5C8;
+
+f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
+{
+    f32 v[3];
+    f32 t;
+    f32 *listener;
+    void *player = Obj_GetPlayerObject();
+    void *slot = Camera_GetCurrentViewSlot();
+    int seqNo = getCurSeqNo();
+
+    if (player != NULL && seqNo == 0) {
+        listener = (f32 *)((u8 *)player + 0x18);
+    } else {
+        if (slot == NULL) {
+            return lbl_803DE570;
+        }
+        if (player != NULL) {
+            PSVECSubtract((f32 *)((u8 *)slot + 0x44), (f32 *)((u8 *)player + 0x18), v);
+            t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
+            t = (t > lbl_803DE5C8 ? t : lbl_803DE5C8) > lbl_803DE5C0
+                    ? lbl_803DE5C0
+                    : (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
+            PSVECScale(v, v, t);
+            PSVECAdd((f32 *)((u8 *)player + 0x18), v, v);
+            listener = v;
+        } else {
+            listener = (f32 *)((u8 *)slot + 0x44);
+        }
+    }
+    PSVECSubtract(listener, soundPos, outDelta);
+    return PSVECMag(outDelta);
 }
 
 /*
@@ -2267,6 +2822,7 @@ void FUN_80006868(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 u32 AudioStream_GetMusicFadeFlagA(void)
 {
     if (gAudioStreamPos > gAudioStreamEndPos) {
@@ -2274,6 +2830,7 @@ u32 AudioStream_GetMusicFadeFlagA(void)
     }
     return gAudioStreamMusicFadeFlagA;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2288,6 +2845,7 @@ u32 AudioStream_GetMusicFadeFlagA(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 u32 AudioStream_GetMusicFadeFlagB(void)
 {
     if (gAudioStreamPos > gAudioStreamEndPos) {
@@ -2295,6 +2853,7 @@ u32 AudioStream_GetMusicFadeFlagB(void)
     }
     return gAudioStreamMusicFadeFlagB;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2345,8 +2904,9 @@ u8 AudioStream_IsPreparing(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 #pragma scheduling off
-void AudioStream_SetVolume(u32 volume)
+void AudioStream_SetVolume(u8 volume)
 {
     gAudioStreamVolumeLeft = volume;
     gAudioStreamVolumeRight = volume;
@@ -2354,6 +2914,7 @@ void AudioStream_SetVolume(u32 volume)
     AISetStreamVolRight(volume);
 }
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2550,10 +3111,12 @@ void AudioStream_UpdateFadeTimer(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void AudioStream_SetDefaultVolume(u8 volume)
 {
     gAudioStreamDefaultVolume = volume;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2568,6 +3131,7 @@ void AudioStream_SetDefaultVolume(u8 volume)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 #pragma scheduling off
 void AudioStream_Init(void)
 {
@@ -2580,6 +3144,7 @@ void AudioStream_Init(void)
     gAudioStreamStartWhenPrepared = 0;
 }
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2808,10 +3373,12 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
  * PAL Size: TODO
  */
 #pragma scheduling off
+#pragma dont_inline on
 void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
 {
     Sfx_KeepAliveLoopedObjectSoundLimited(obj, sfxId, 0);
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 
 /*
@@ -3126,6 +3693,7 @@ void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, 
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
     s32 matrixIndex;
@@ -3140,6 +3708,7 @@ void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
         *outZ = z;
     }
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -3154,6 +3723,7 @@ void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
     s32 matrixIndex;
@@ -3167,6 +3737,7 @@ void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
         *outZ = z;
     }
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -4110,6 +4681,323 @@ void FUN_80006a04(void)
 {
 }
 
+typedef f32 (*CurveEvalFn)(f32 t, f32 *values, f32 *outTangent);
+
+typedef struct Curve {
+    f32 t;
+    f32 f4;
+    f32 f8;
+    f32 fc;
+    int idx;
+    f32 totalLen;
+    f32 segLen[20];
+    f32 sample[3];
+    f32 tangent[3];
+    int dir;
+    f32 *px;
+    f32 *py;
+    f32 *pz;
+    int count;
+    CurveEvalFn eval;
+    void (*flag98)(f32 *ch, f32 *buf);
+} Curve;
+
+extern void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *ch, f32 *buf));
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803DE658;
+extern f32 lbl_803DE674;
+extern f32 lbl_803DE690;
+extern f32 lbl_803DE67C;
+extern f32 lbl_803DE660;
+extern f32 lbl_803DE680;
+extern f32 lbl_803DC8B0;
+extern int lbl_803DB270;
+extern f32 lbl_80338790[];
+extern f32 curveFn_80010ce4(f32 t, f32 *values, f32 *outTangent);
+extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
+extern void debugPrintf(char *message, ...);
+extern char sCurvesSetupMoveNetworkCurveTooFewControlPoints[];
+extern char sCurvesSetupMoveNetworkCurveBadControlPointCount[];
+int curveFn_80010320(Curve *curve, f32 dt);
+void curveFn_8000fe8c(Curve *curve, int count);
+
+void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *ch, f32 *buf))
+{
+    f32 bufX[4];
+    f32 bufY[4];
+    f32 bufZ[4];
+    f32 vx, d1x, d2x, d3x;
+    f32 vy, d1y, d2y, d3y;
+    f32 vz, d1z, d2z, d3z;
+    f32 step;
+    int i;
+
+    if (count != lbl_803DB270) {
+        step = lbl_803DE674 / (f32)count;
+        lbl_803DC8B0 = step;
+        lbl_80338790[0] = step * step;
+        lbl_80338790[1] = lbl_803DE660 * lbl_80338790[0];
+        lbl_80338790[2] = step * lbl_80338790[0];
+        lbl_80338790[3] = lbl_803DE680 * lbl_80338790[2];
+        lbl_803DB270 = count;
+    }
+
+    if (px != NULL) {
+        evalFn(px, bufX);
+        vx = bufX[3];
+        d1x = lbl_803DC8B0 * bufX[2] + (lbl_80338790[2] * bufX[0] + lbl_80338790[0] * bufX[1]);
+        d2x = lbl_80338790[1] * bufX[1] + lbl_80338790[3] * bufX[0];
+        d3x = lbl_80338790[3] * bufX[0];
+    }
+    if (py != NULL) {
+        evalFn(py, bufY);
+        vy = bufY[3];
+        d1y = lbl_803DC8B0 * bufY[2] + (lbl_80338790[2] * bufY[0] + lbl_80338790[0] * bufY[1]);
+        d2y = lbl_80338790[1] * bufY[1] + lbl_80338790[3] * bufY[0];
+        d3y = lbl_80338790[3] * bufY[0];
+    }
+    if (pz != NULL) {
+        evalFn(pz, bufZ);
+        vz = bufZ[3];
+        d1z = lbl_803DC8B0 * bufZ[2] + (lbl_80338790[2] * bufZ[0] + lbl_80338790[0] * bufZ[1]);
+        d2z = lbl_80338790[1] * bufZ[1] + lbl_80338790[3] * bufZ[0];
+        d3z = lbl_80338790[3] * bufZ[0];
+    }
+
+    for (i = 0; i <= count; i++) {
+        if (px != NULL) {
+            outX[i] = vx;
+            vx += d1x;
+            d1x += d2x;
+            d2x += d3x;
+        }
+        if (py != NULL) {
+            outY[i] = vy;
+            vy += d1y;
+            d1y += d2y;
+            d2y += d3y;
+        }
+        if (pz != NULL) {
+            outZ[i] = vz;
+            vz += d1z;
+            d1z += d2z;
+            d2z += d3z;
+        }
+    }
+}
+
+#pragma dont_inline on
+void curveFn_8000fe8c(Curve *curve, int count)
+{
+    f32 outX[21];
+    f32 outY[21];
+    f32 outZ[21];
+    f32 *px = NULL;
+    f32 *py = NULL;
+    f32 *pz = NULL;
+    int i;
+    f32 dx, dy, dz, sq;
+    f32 zero;
+
+    if (curve->px != NULL) {
+        px = curve->px + curve->idx;
+    }
+    if (curve->py != NULL) {
+        py = curve->py + curve->idx;
+    }
+    if (curve->pz != NULL) {
+        pz = curve->pz + curve->idx;
+    }
+    if (curve->flag98 != 0) {
+        curveFn_80010018(px, py, pz, outX, outY, outZ, count, curve->flag98);
+    }
+
+    zero = lbl_803DE658;
+    curve->totalLen = zero;
+    for (i = 0; i < count; i++) {
+        dx = px != NULL ? outX[i + 1] - outX[i] : lbl_803DE658;
+        dy = py != NULL ? outY[i + 1] - outY[i] : lbl_803DE658;
+        dz = pz != NULL ? outZ[i + 1] - outZ[i] : lbl_803DE658;
+        sq = dx * dx + dy * dy + dz * dz;
+        if (sq > zero) {
+            curve->segLen[i] = sqrtf(sq);
+        } else {
+            curve->segLen[i] = lbl_803DE67C;
+        }
+        curve->totalLen += curve->segLen[i];
+    }
+}
+#pragma dont_inline reset
+
+/*
+ * Function: curveFn_80010320
+ * EN v1.0 Address: 0x80010320
+ */
+#pragma scheduling off
+int curveFn_80010320(Curve *curve, f32 dt)
+{
+    int seg, savedIdx;
+    f32 *lengths = &curve->totalLen;
+    f32 step = dt * timeDelta;
+    f32 zero;
+    f32 base, frac, t;
+
+    if (step > lbl_803DE658) {
+        seg = (int)(lbl_803DE690 * curve->t);
+        if (seg == 20) {
+            seg--;
+        }
+        if (curve->dir != 0) {
+            curve->f4 = lengths[seg + 1] + curve->f4;
+        } else if (curve->t >= lbl_803DE674) {
+            return 1;
+        }
+        curve->f8 += step;
+        step += curve->f4;
+        zero = lbl_803DE658;
+        while (step > zero) {
+            step -= lengths[seg + 1];
+            if (step > zero && ++seg >= 20) {
+                savedIdx = curve->idx;
+                if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+                    curve->idx += 3;
+                }
+                if (++curve->idx > curve->count - 4) {
+                    if (curve->px != NULL) {
+                        curve->sample[0] = curve->eval(lbl_803DE674, curve->px + savedIdx, &curve->tangent[0]);
+                    }
+                    if (curve->py != NULL) {
+                        curve->sample[1] = curve->eval(lbl_803DE674, curve->py + savedIdx, &curve->tangent[1]);
+                    }
+                    if (curve->pz != NULL) {
+                        curve->sample[2] = curve->eval(lbl_803DE674, curve->pz + savedIdx, &curve->tangent[2]);
+                    }
+                    curve->t = lbl_803DE674;
+                    curve->f4 = lbl_803DE658;
+                    curve->f8 = curve->fc;
+                    curve->idx = curve->count - 4;
+                    return 1;
+                }
+                curveFn_8000fe8c(curve, 20);
+                seg = 0;
+            }
+        }
+        step += lengths[seg + 1];
+        base = (f32)seg / lbl_803DE690;
+        frac = step / lengths[seg + 1];
+        t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
+        if (curve->px != NULL) {
+            curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);
+        }
+        if (curve->py != NULL) {
+            curve->sample[1] = curve->eval(t, curve->py + curve->idx, &curve->tangent[1]);
+        }
+        if (curve->pz != NULL) {
+            curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
+        }
+        curve->t = t;
+        curve->f4 = step;
+        curve->dir = 0;
+        return 0;
+    } else if (step < lbl_803DE658) {
+        seg = (int)(lbl_803DE690 * curve->t);
+        if (seg == 20) {
+            seg--;
+        }
+        if (curve->dir == 0) {
+            curve->f4 = lengths[seg + 1] - curve->f4;
+        } else if (curve->t <= lbl_803DE658) {
+            return 1;
+        }
+        curve->f8 += step;
+        step += curve->f4;
+        zero = lbl_803DE658;
+        while (step < zero) {
+            step += lengths[seg + 1];
+            if (step < zero && --seg < 0) {
+                savedIdx = curve->idx;
+                if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+                    curve->idx -= 3;
+                }
+                if (--curve->idx < 0) {
+                    if (curve->px != NULL) {
+                        curve->sample[0] = curve->eval(lbl_803DE658, curve->px + savedIdx, &curve->tangent[0]);
+                    }
+                    if (curve->py != NULL) {
+                        curve->sample[1] = curve->eval(lbl_803DE658, curve->py + savedIdx, &curve->tangent[1]);
+                    }
+                    if (curve->pz != NULL) {
+                        curve->sample[2] = curve->eval(lbl_803DE658, curve->pz + savedIdx, &curve->tangent[2]);
+                    }
+                    curve->t = lbl_803DE658;
+                    curve->f4 = -lengths[1];
+                    curve->f8 = lbl_803DE658;
+                    curve->idx = 0;
+                    return 1;
+                }
+                curveFn_8000fe8c(curve, 20);
+                seg = 19;
+            }
+        }
+        base = (f32)seg / lbl_803DE690;
+        frac = step / lengths[seg + 1];
+        t = frac * ((f32)(seg + 1) / lbl_803DE690 - base) + base;
+        if (curve->px != NULL) {
+            curve->sample[0] = curve->eval(t, curve->px + curve->idx, &curve->tangent[0]);
+        }
+        if (curve->py != NULL) {
+            curve->sample[1] = curve->eval(t, curve->py + curve->idx, &curve->tangent[1]);
+        }
+        if (curve->pz != NULL) {
+            curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
+        }
+        curve->t = t;
+        curve->f4 = step - lengths[seg + 1];
+        curve->dir = 1;
+    }
+    return 0;
+}
+#pragma scheduling reset
+
+/*
+ * Function: curvesSetupMoveNetworkCurve
+ * EN v1.0 Address: 0x80010904
+ */
+void curvesSetupMoveNetworkCurve(Curve *curve)
+{
+    if (curve->count < 4) {
+        debugPrintf(sCurvesSetupMoveNetworkCurveTooFewControlPoints);
+    }
+    if ((curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) &&
+        (curve->count & 3) != 0) {
+        debugPrintf(sCurvesSetupMoveNetworkCurveBadControlPointCount);
+    }
+
+    curve->fc = lbl_803DE658;
+    curve->idx = 0;
+    while (curve->idx < curve->count - 3) {
+        curveFn_8000fe8c(curve, 5);
+        curve->fc += curve->totalLen;
+        if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+            curve->idx += 4;
+        } else {
+            curve->idx += 1;
+        }
+    }
+
+    if (curve->dir != 0) {
+        curve->idx = curve->count - 4;
+    } else {
+        curve->idx = 0;
+    }
+    curveFn_8000fe8c(curve, 20);
+    if (curve->dir != 0) {
+        curve->f8 = curve->fc - curve->f4;
+    } else {
+        curve->f8 = curve->f4;
+    }
+}
+
 /*
  * --INFO--
  *
@@ -4509,6 +5397,40 @@ void FUN_80006a6c(float *param_1,short *param_2)
 int FUN_80006a70(int param_1,int param_2,int param_3,uint param_4,int param_5,int param_6)
 {
     return 0;
+}
+
+int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, int f)
+{
+    int count;
+    int e3 = e * 2 + e;
+    u8 *cur;
+    u8 *end;
+    u8 byte;
+
+    if ((f >> 3) != 0) {
+        u8 *q = header + e3;
+        count = ((u32)q[1] >> 4) | (q[2] << 4);
+        cur = bitmap + (e * 32 | 0x10);
+    } else {
+        u8 *q = header + e3;
+        count = header[e3] | ((q[1] & 0xf) << 8);
+        cur = bitmap + e * 32;
+    }
+    end = bitmap + (e * 32 | (f * 2 + (d >> 3)));
+    while (cur < end) {
+        byte = *cur;
+        while (byte != 0) {
+            byte &= byte - 1;
+            count++;
+        }
+        cur++;
+    }
+    byte = *end & ((u32)0xff >> (8 - (d & 7)));
+    while (byte != 0) {
+        byte &= byte - 1;
+        count++;
+    }
+    return nodeBase + count;
 }
 
 /*
@@ -5860,6 +6782,110 @@ void FUN_80006c24(void)
 {
 }
 
+extern u8 lbl_803DC950;
+extern u8 lbl_803DC951;
+extern int lbl_803DC960;
+extern u8 lbl_80339950[];
+extern void stopRumble2(void);
+extern void gameTextShow(int a);
+extern int DVDGetDriveStatus(void);
+extern int DVDCheckDisk(void);
+extern void DVDGetStreamPlayAddrAsync(void *buf, void *callback);
+extern void setTimeStop(int frames);
+extern void cutsceneFadeInOut(int mode);
+extern int getLoadedFileFlags(int slot);
+extern int gameTextFn_80019b14(void);
+extern void gameTextSetCharset(int a, int b);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void Sfx_SetObjectSoundsPaused(s32 paused);
+
+#pragma peephole on
+void dvdCheckError(void)
+{
+    int msgId = 0xffff;
+    int status;
+
+    if (gAudioStreamPlayAddrCallbackDone) {
+        gAudioStreamPlayAddrCallbackDone = 0;
+        gAudioStreamPlayAddrCallbackResult = 0;
+        DVDGetStreamPlayAddrAsync(lbl_80339950, AudioStream_PlayAddrCallback);
+    }
+
+    status = DVDGetDriveStatus();
+    lbl_803DC960 = status;
+    switch (status) {
+    case -1:
+        msgId = 0x339;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+            lbl_803DC951 = 1;
+        }
+        break;
+    case 4:
+        msgId = 0x33d;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+        }
+        break;
+    case 5:
+        msgId = 0x33c;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+        }
+        break;
+    case 6:
+        msgId = 0x33e;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+        }
+        break;
+    case 11:
+        msgId = 0x33a;
+        stopRumble2();
+        if (lbl_803DC950 == 0) {
+            lbl_803DC950 = 1;
+            setTimeStop(0xff);
+            cutsceneFadeInOut(1);
+        }
+        break;
+    default:
+        if (lbl_803DC950 != 0) {
+            if ((getLoadedFileFlags(0) & ~0x100000) == 0) {
+                if (getGameState() != 1 || DVDCheckDisk() != 0) {
+                    lbl_803DC950 = 0;
+                    cutsceneFadeInOut(0);
+                    Sfx_SetObjectSoundsPaused(0);
+                }
+            }
+        }
+        break;
+    }
+
+    if (msgId != 0xffff) {
+        int prevCharset = gameTextFn_80019b14();
+        Sfx_SetObjectSoundsPaused(1);
+        gameTextSetCharset(2, 2);
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        gameTextShow(msgId);
+        if (prevCharset != 2) {
+            gameTextSetCharset(prevCharset, 2);
+        }
+    }
+}
+#pragma peephole reset
+
 /*
  * --INFO--
  *
@@ -6483,6 +7509,7 @@ s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
  * EN v1.0 Address: 0x8000B624
  * EN v1.0 Size: 112b
  */
+#pragma dont_inline on
 void Sfx_StopAllObjectSounds(void)
 {
     s32 i;
@@ -6498,6 +7525,7 @@ void Sfx_StopAllObjectSounds(void)
         objectChannel++;
     } while (i-- != 0);
 }
+#pragma dont_inline reset
 
 /*
  * Function: audioFn_8000b694
@@ -6642,6 +7670,7 @@ void Sfx_SetObjectChannelVolume(f32 volumeScale, u32 obj, u32 channel, u8 volume
  * EN v1.0 Address: 0x8000B99C
  * EN v1.0 Size: 276b
  */
+#pragma dont_inline on
 void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume)
 {
     u8 volumeByte;
@@ -6683,6 +7712,7 @@ void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume)
         sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
     }
 }
+#pragma dont_inline reset
 
 /*
  * Function: Sfx_PlayFromObjectChannel
@@ -6714,10 +7744,12 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u32 sfxId)
  * EN v1.0 Address: 0x8000BB18
  * EN v1.0 Size: 44b
  */
+#pragma dont_inline on
 void Sfx_PlayFromObject(u32 obj, u32 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
 }
+#pragma dont_inline reset
 
 /*
  * Function: Sfx_UpdateObjectSounds
@@ -6800,6 +7832,7 @@ void Sfx_UpdateObjectSounds(void)
  * EN v1.0 Address: 0x8000BDB4
  * EN v1.0 Size: 172b
  */
+#pragma dont_inline on
 void Sfx_InitObjectChannels(void)
 {
     SfxObjectChannel* objectChannel;
@@ -6828,6 +7861,7 @@ checkNextChannel:
         objectChannel++;
     } while (i-- != 0);
 }
+#pragma dont_inline reset
 
 /*
  * Function: Sfx_FindObjectChannel
@@ -7937,14 +8971,19 @@ void Camera_InitState(void)
     gCameraFovY = lbl_803DE610;
     gCameraProjectionMode = 0;
 
-    C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
-                     gCameraFarPlane);
-    C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
-                          lbl_803DE628, lbl_803DE62C, lbl_803DE62C);
-    C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                          lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
-    C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
-                          lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+    if (gCameraProjectionMode == 1) {
+        C_MTXOrtho(gCameraProjectionMatrix, lbl_803DC8A0, lbl_803DC89C, lbl_803DC898,
+                   lbl_803DC894, gCameraNearPlane, gCameraFarPlane);
+    } else {
+        C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
+                         gCameraFarPlane);
+        C_MTXLightPerspective(lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628,
+                              lbl_803DE628, lbl_803DE62C, lbl_803DE62C);
+        C_MTXLightPerspective(lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                              lbl_803DE62C, lbl_803DE62C, lbl_803DE62C);
+        C_MTXLightPerspective(lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C,
+                              lbl_803DE630, lbl_803DE62C, lbl_803DE62C);
+    }
     GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
 
     scaledProjection = (f32*)((u8*)gObjInverseYawTransformMatrices + 0x1080);
@@ -7971,7 +9010,7 @@ f32 fn_80010C50(f32 t, f32* values)
  */
 f32 mathFn_80010c64(f32 t, f32* values, f32* outTangent)
 {
-    f32 a = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     f32 b = (lbl_803DE65C * values[2] + (lbl_803DE660 * values[0] + lbl_803DE694 * values[1])) - values[3];
     f32 c = -values[0] + values[2];
     f32 d = lbl_803DE660 * values[1];
@@ -7989,7 +9028,7 @@ f32 mathFn_80010c64(f32 t, f32* values, f32* outTangent)
  */
 f32 curveFn_80010ce4(f32 t, f32* values, f32* outTangent)
 {
-    f32 a = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     f32 b = lbl_803DE664 * values[2] +
             (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
     f32 c = lbl_803DE668 * values[0] + lbl_803DE664 * values[1];
@@ -8007,9 +9046,11 @@ f32 curveFn_80010ce4(f32 t, f32* values, f32* outTangent)
  */
 void curveFn_80010d54(f32* values, f32* coefficients)
 {
-    coefficients[0] = values[3] + (values[2] + (lbl_803DE660 * values[0] + lbl_803DE698 * values[1]));
+    f32 k698 = lbl_803DE698;
+
+    coefficients[0] = values[3] + (values[2] + (lbl_803DE660 * values[0] + k698 * values[1]));
     coefficients[1] = (lbl_803DE668 * values[0] + lbl_803DE664 * values[1] +
-                       lbl_803DE698 * values[2]) -
+                       k698 * values[2]) -
                       values[3];
     coefficients[2] = values[2];
     coefficients[3] = values[0];
@@ -8040,7 +9081,7 @@ void fn_80010E2C(f32* values, f32* coefficients)
 {
     f32 scale;
 
-    coefficients[0] = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    coefficients[0] = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     coefficients[1] = lbl_803DE664 * values[2] +
                       (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
     coefficients[2] = lbl_803DE668 * values[0] + lbl_803DE664 * values[2];
@@ -8060,7 +9101,7 @@ void fn_80010E2C(f32* values, f32* coefficients)
  */
 f32 mathFn_80010ee0(f32 t, f32* values, f32* outTangent)
 {
-    f32 a = values[3] + (lbl_803DE668 * values[2] + (lbl_803DE664 * values[1] - values[0]));
+    f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     f32 b = lbl_803DE664 * values[2] +
             (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
     f32 c = lbl_803DE668 * values[0] + lbl_803DE664 * values[2];
@@ -8083,6 +9124,7 @@ typedef struct CurveHeapNode {
  * EN v1.0 Address: 0x80010F6C
  * EN v1.0 Size: 136b
  */
+#pragma dont_inline on
 void fn_80010F6C(CurveHeapNode* heap, s32 count, s32 index)
 {
     u16 priority = heap[index].priority;
@@ -8107,6 +9149,7 @@ void fn_80010F6C(CurveHeapNode* heap, s32 count, s32 index)
     heap[index].priority = priority;
     heap[index].value = value;
 }
+#pragma dont_inline reset
 
 typedef struct RingBufferQueue {
     s16 count;
@@ -8117,14 +9160,6 @@ typedef struct RingBufferQueue {
     s16 readIndex;
     void* data;
 } RingBufferQueue;
-
-typedef struct ModelRenderInstrsState {
-    void* instrs;
-    s32 byteCount;
-    s32 bitCount;
-    s32 fieldC;
-    s32 bit;
-} ModelRenderInstrsState;
 
 typedef struct ObjLinkedList {
     s16 count;
@@ -8270,12 +9305,9 @@ BOOL Stack_IsFull(RingBufferQueue* stack)
  */
 void Stack_Pop(RingBufferQueue* stack, void* dst)
 {
-    s16 writeIndex = stack->writeIndex - 1;
-
-    stack->writeIndex = writeIndex;
-    if (writeIndex < 0) {
-        writeIndex = stack->capacity - 1;
-        stack->writeIndex = writeIndex;
+    stack->writeIndex--;
+    if (stack->writeIndex < 0) {
+        stack->writeIndex = stack->capacity - 1;
     }
     memcpy(dst, (u8*)stack->data + stack->writeIndex * stack->elemSize, stack->elemSize);
     stack->count--;
@@ -8657,13 +9689,19 @@ extern u8 lbl_803398F0[];
 extern s32 lbl_802C6E08[];
 extern u8 lbl_802C7400[];
 extern void* lbl_803DC954;
-extern void* lbl_803DC958;
+extern volatile int lbl_803DC958;
 extern void* lbl_803DC9CC;
 extern f32 lbl_803DE6B8;
 extern f32 lbl_803DE6D4;
 extern f64 lbl_803DE6D8;
 extern f32 lbl_803DE6E0;
 extern f32 lbl_803DE6E8;
+extern volatile int lbl_803DC7BC;
+extern int lbl_803DC7B8;
+extern int gRenderMode;
+extern int lbl_803DC9C8;
+extern u8 lbl_8033A540[];
+extern void ARQPostRequest(void* req, u32 owner, u32 type, u32 prio, u32 src, u32 dst, u32 size, void (*cb)(void*));
 
 extern int sprintf(char* buf, const char* fmt, ...);
 extern char* strcpy(char* dst, const char* src);
@@ -8692,6 +9730,7 @@ typedef struct PadStatusLite {
  * EN v1.0 Address: 0x8000A200
  * EN v1.0 Size: 100b
  */
+#pragma dont_inline on
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third)
 {
     strcpy(dst, first);
@@ -8699,6 +9738,7 @@ int concatThreeStrings(char* dst, void* unused, const char* first, const char* s
     strcat(dst, third);
     return 1;
 }
+#pragma dont_inline reset
 
 /*
  * Function: fn_8001404C
@@ -9125,7 +10165,7 @@ void setRumbleEnabled(u8 enabled)
  */
 void fileReadCb_80015954(void* result)
 {
-    lbl_803DC958 = result;
+    lbl_803DC958 = (int)result;
 }
 
 /*
@@ -9480,4 +10520,2472 @@ void* gameTextGetBox(int box)
 void* gameTextGetCurBox(void)
 {
     return lbl_803DC9CC;
+}
+
+/*
+ * Function: fn_80009008
+ * EN v1.0 Address: 0x80009008
+ * EN v1.0 Size: 12b
+ */
+void fn_80009008(void)
+{
+    lbl_803DC7BC = 1;
+}
+
+/*
+ * Function: renderModeSetOrGet
+ * EN v1.0 Address: 0x80008B4C
+ * EN v1.0 Size: 32b
+ */
+s16 renderModeSetOrGet(int mode)
+{
+    if (mode != -1) {
+        gRenderMode = mode;
+        return mode;
+    }
+    return gRenderMode;
+}
+
+/*
+ * Function: gameTextFn_80016c18
+ * EN v1.0 Address: 0x80016C18
+ * EN v1.0 Size: 48b
+ */
+void gameTextFn_80016c18(int a, int b)
+{
+    int i = lbl_803DC9C8++;
+    int* e = (int*)&lbl_8033A540[i * 0x14];
+    e[0] = 1;
+    e[1] = a;
+    e[2] = b;
+}
+
+/*
+ * Function: voxmaps_freeRouteWork
+ * EN v1.0 Address: 0x80012848
+ * EN v1.0 Size: 64b
+ */
+void voxmaps_freeRouteWork(void** p)
+{
+    if (p[0] != NULL) {
+        mm_free(p[0]);
+        p[0] = NULL;
+    }
+}
+
+/*
+ * Function: voxmaps_allocRouteWork
+ * EN v1.0 Address: 0x80012888
+ * EN v1.0 Size: 84b
+ */
+void voxmaps_allocRouteWork(void** p)
+{
+    p[0] = mmAlloc(0xe88, 0x10, NULL);
+    p[1] = (u8*)p[0] + 0xaf0;
+    p[2] = (u8*)p[1] + 0x320;
+}
+
+/*
+ * Function: gameTextFreePhrase
+ * EN v1.0 Address: 0x80016C48
+ * EN v1.0 Size: 84b
+ */
+void gameTextFreePhrase(int* p)
+{
+    p[0] = 0;
+    p[1] = 0;
+    p[2] = 0;
+    p[3] = 0;
+    if (((void**)p)[5] != NULL) {
+        mm_free(((void**)p)[5]);
+        ((void**)p)[5] = NULL;
+    }
+}
+
+extern void* gameTextDrawFunc;
+extern char* lbl_803DC9C4;
+extern char* gameStrcpy(char* dst, char* src);
+extern void gameTextFn_8001658c(int a, int b, int c);
+
+typedef struct {
+    u8 pad[0x20];
+    void (*fn)(int, int, int);
+    int a;
+    int b;
+    int c;
+} TextCallbackEntry;
+
+extern TextCallbackEntry lbl_80335940[];
+
+typedef struct {
+    u16 a;
+    u16 b;
+    u16 key;
+} TaskTextEntry;
+
+extern TaskTextEntry lbl_802C8860[];
+
+/*
+ * Function: fn_80008EDC
+ * EN v1.0 Address: 0x80008EDC
+ * EN v1.0 Size: 92b
+ */
+void fn_80008EDC(TextCallbackEntry* p)
+{
+    int i;
+    TextCallbackEntry* e = lbl_80335940;
+    for (i = 0; i < 16; i++) {
+        if (p == e) {
+            e->fn(e->a, e->b, e->c);
+            return;
+        }
+        e++;
+    }
+}
+
+/*
+ * Function: gameTextFn_80016810
+ * EN v1.0 Address: 0x80016810
+ * EN v1.0 Size: 96b
+ */
+void gameTextFn_80016810(int a, int b, int c)
+{
+    int i;
+    int* e;
+    if (gameTextDrawFunc != NULL) {
+        gameTextFn_8001658c(a, b, c);
+    } else {
+        i = lbl_803DC9C8++;
+        e = (int*)&lbl_8033A540[i * 0x14];
+        e[0] = 2;
+        e[1] = a;
+        e[2] = b;
+        e[3] = c;
+    }
+}
+
+/*
+ * Function: gameTextGetTaskText
+ * EN v1.0 Address: 0x80015D70
+ * EN v1.0 Size: 88b
+ */
+int gameTextGetTaskText(int id, int* outA, int* outB)
+{
+    int i;
+    TaskTextEntry* e = lbl_802C8860;
+    for (i = 0; i < 0x7a; i++) {
+        if (e->key == id) {
+            if (outA != NULL) {
+                *outA = e->a;
+            }
+            if (outB != NULL) {
+                *outB = e->b;
+            }
+            return 1;
+        }
+        e++;
+    }
+    return 0;
+}
+
+/*
+ * Function: gameTextShowTimeStr
+ * EN v1.0 Address: 0x80016220
+ * EN v1.0 Size: 108b
+ */
+void gameTextShowTimeStr(char* str)
+{
+    int i;
+    int* e;
+    char* buf;
+    i = lbl_803DC9C8++;
+    e = (int*)&lbl_8033A540[i * 0x14];
+    e[0] = 5;
+    buf = lbl_803DC9C4;
+    lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
+    e[1] = (int)buf;
+}
+
+/*
+ * Function: gameTextShow
+ * EN v1.0 Address: 0x80016870
+ * EN v1.0 Size: 104b
+ */
+void gameTextShow(int a)
+{
+    int i;
+    int* e;
+    if (gameTextDrawFunc != NULL) {
+        gameTextFn_8001658c(a, 0, 0);
+    } else {
+        i = lbl_803DC9C8++;
+        e = (int*)&lbl_8033A540[i * 0x14];
+        e[0] = 2;
+        e[1] = a;
+        e[2] = 0;
+        e[3] = 0;
+    }
+}
+
+extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
+extern u32 gAudioPendingLoadFlags;
+extern volatile u32 gAudioCompletedLoadFlags;
+extern char sMidiWadLoadedCallbackLoadError[];
+extern void gameTextRenderStrs(char* str, int arg2);
+
+/*
+ * Function: gameTextShowStr
+ * EN v1.0 Address: 0x8000F6E8
+ * EN v1.0 Size: 188b
+ */
+void gameTextShowStr(char *text, int box, int arg2, int arg3)
+{
+    int i;
+    int *e;
+    char *buf;
+    if (gameTextDrawFunc != NULL) {
+        u8 *slot = &lbl_802C7400[box * 0x20];
+        *(s16 *)(slot + 0x18) = (s16)arg2;
+        *(s16 *)(slot + 0x1a) = (s16)arg3;
+        gameTextRenderStrs(text, box);
+    } else {
+        i = lbl_803DC9C8++;
+        e = (int *)&lbl_8033A540[i * 0x14];
+        e[0] = 7;
+        buf = lbl_803DC9C4;
+        lbl_803DC9C4 = gameStrcpy(buf, text) + 1;
+        e[1] = (int)buf;
+        e[2] = box;
+        e[3] = arg2;
+        e[4] = arg3;
+    }
+}
+
+/*
+ * Function: audioSetVolumes
+ * EN v1.0 Address: 0x80009A28
+ * EN v1.0 Size: 108b
+ */
+void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag)
+{
+    if (musicFlag != 0 || fxFlag != 0) {
+        sndMasterVolume(volume, time, musicFlag, fxFlag);
+    }
+    if (streamFlag != 0) {
+        AudioStream_SetVolume(volume);
+        AudioStream_SetDefaultVolume(volume);
+    }
+}
+
+/*
+ * Function: MIDIWADLoadedCallback
+ * EN v1.0 Address: 0x8000A264
+ * EN v1.0 Size: 128b
+ */
+void MIDIWADLoadedCallback(int status, void* fileInfo)
+{
+    if (status == -1) {
+        OSReport(sMidiWadLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        mm_free(fileInfo);
+    } else {
+        DVDClose(fileInfo);
+        mm_free(fileInfo);
+        gAudioPendingLoadFlags &= ~0x800;
+        gAudioCompletedLoadFlags |= 0x800;
+    }
+}
+
+typedef struct MusicTrackSlot {
+    s16 id;
+    u8 pad2[6];
+    int offset;
+    int size;
+} MusicTrackSlot;
+
+extern u8 gMidiWadLoadStarted;
+extern MusicChannel gMusicChannels[];
+extern int lbl_803DC814;
+extern int lbl_803DC818;
+extern int gMidiWadLoadedSize;
+extern void *gMidiWadFileData;
+extern void *gMidiWadPayloadStart;
+extern int gMidiWadPayloadSize;
+extern int gMidiWadArenaSize;
+extern char sMidiWadPath[];
+extern uint mmSetFreeDelay(uint delay);
+extern u8 testAndSet_onlyUseHeap3(int arg);
+extern void *loadFileByPathAsync(char *path, int *outSize, int unused, void (*cb)(void *));
+extern void fn_80008F38(void *addr, u32 dest, u32 size);
+extern s16 sMusicTrackTable[];
+
+/*
+ * Function: musicInitMidiWad
+ * EN v1.0 Address: 0x8000AE90
+ */
+int musicInitMidiWad(void)
+{
+    MusicTrackSlot *table;
+    MusicTrackSlot *found;
+    MusicChannel *ch;
+    int track, j;
+    int size;
+    int arenaOffset;
+    int saved;
+    int i;
+
+    if (!gMidiWadLoadStarted) {
+        gMidiWadLoadStarted = 1;
+        ch = gMusicChannels;
+        for (i = 0; i < 16; i++) {
+            ch->field_0 = -1;
+            ch->seqHandle = -1;
+            ch->bankData = NULL;
+            ch->voiceId = 0xff;
+            ch->status = 0;
+            ch->field_12 = 0;
+            *(int *)&ch->pad14[4] = 0;
+            ch++;
+        }
+        lbl_803DC814 = 1;
+        lbl_803DC818 = 1;
+        gAudioPendingLoadFlags |= 0x800;
+        saved = testAndSet_onlyUseHeap3(0);
+        gMidiWadFileData = loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0,
+                                               (void (*)(void *))MIDIWADLoadedCallback);
+        testAndSet_onlyUseHeap3(saved);
+    }
+    if (gAudioCompletedLoadFlags & 0x800) {
+        size = gMidiWadLoadedSize;
+        if (size & 0x1f) {
+            size = (size | 0x1f) + 1;
+        }
+        gMidiWadPayloadStart = (u8 *)gMidiWadFileData + 0x1a0;
+        gMidiWadPayloadSize = size - 0x1a0;
+        gMidiWadArenaSize = 0x1000000 - gMidiWadPayloadSize;
+        arenaOffset = gMidiWadArenaSize;
+        table = (MusicTrackSlot *)sMusicTrackTable;
+        for (track = 0; track <= 0x63; track++) {
+            found = NULL;
+            for (j = 0; j < 0x64; j++) {
+                if (track == table[j].id) {
+                    found = &table[j];
+                    break;
+                }
+            }
+            if (found != NULL) {
+                found->offset = arenaOffset;
+                found->size = ((int *)gMidiWadFileData)[track];
+            }
+            size = found->size;
+            if (size & 0x1f) {
+                size = (size | 0x1f) + 1;
+            }
+            arenaOffset += size;
+        }
+        fn_80008F38(gMidiWadPayloadStart, gMidiWadArenaSize, gMidiWadPayloadSize);
+        saved = mmSetFreeDelay(0);
+        mm_free(gMidiWadFileData);
+        mmSetFreeDelay(saved);
+        return 1;
+    }
+    return 0;
+}
+
+/*
+ * Function: gameTextAppendStr
+ * EN v1.0 Address: 0x8001618C
+ * EN v1.0 Size: 144b
+ */
+void gameTextAppendStr(char* str, int arg2)
+{
+    int i;
+    int* e;
+    char* buf;
+    if (gameTextDrawFunc != NULL) {
+        gameTextRenderStrs(str, arg2);
+    } else {
+        i = lbl_803DC9C8++;
+        e = (int*)&lbl_8033A540[i * 0x14];
+        e[0] = 6;
+        buf = lbl_803DC9C4;
+        lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
+        e[1] = (int)buf;
+        e[2] = arg2;
+    }
+}
+
+extern uint mmSetFreeDelay(uint delay);
+extern char sPoolDataMLoadedCallbackLoadError[];
+
+/*
+ * Function: poolDataMLoadedCallback
+ * EN v1.0 Address: 0x800094E4
+ * EN v1.0 Size: 176b
+ */
+void poolDataMLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sPoolDataMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x8;
+        gAudioCompletedLoadFlags |= 0x8;
+    }
+}
+
+extern char sPoolDataSLoadedCallbackLoadError[];
+extern char sProjectDataMLoadedCallbackLoadError[];
+extern char sProjectDataSLoadedCallbackLoadError[];
+extern char sSampleBufferMLoadedCallbackLoadError[];
+extern char sSampleBufferSLoadedCallbackLoadError[];
+extern char sSampleDirectoryMLoadedCallbackLoadError[];
+extern char sSampleDirectorySLoadedCallbackLoadError[];
+extern char sSfxTriggersLoadedCallbackLoadError[];
+extern char sMusicTriggersLoadedCallbackLoadError[];
+extern char sStreamsLoadedCallbackLoadError[];
+
+/*
+ * Function: poolDataSLoadedCallback
+ * EN v1.0 Address: 0x80009210
+ * EN v1.0 Size: 176b
+ */
+void poolDataSLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sPoolDataSLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x80;
+        gAudioCompletedLoadFlags |= 0x80;
+    }
+}
+
+/*
+ * Function: projectDataMLoadedCallback
+ * EN v1.0 Address: 0x80009420
+ * EN v1.0 Size: 176b
+ */
+void projectDataMLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sProjectDataMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x10;
+        gAudioCompletedLoadFlags |= 0x10;
+    }
+}
+
+/*
+ * Function: projectDataSLoadedCallback
+ * EN v1.0 Address: 0x80009160
+ * EN v1.0 Size: 176b
+ */
+void projectDataSLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sProjectDataSLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x100;
+        gAudioCompletedLoadFlags |= 0x100;
+    }
+}
+
+/*
+ * Function: sampleBufferMLoadedCallback
+ * EN v1.0 Address: 0x800092D4
+ * EN v1.0 Size: 172b
+ */
+void sampleBufferMLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSampleBufferMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x40;
+        gAudioCompletedLoadFlags |= 0x40;
+    }
+}
+
+/*
+ * Function: sampleBufferSLoadedCallback
+ * EN v1.0 Address: 0x80009000
+ * EN v1.0 Size: 176b
+ */
+void sampleBufferSLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSampleBufferSLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x400;
+        gAudioCompletedLoadFlags |= 0x400;
+    }
+}
+
+/*
+ * Function: sampleDirectoryMLoadedCallback
+ * EN v1.0 Address: 0x80009384
+ * EN v1.0 Size: 176b
+ */
+void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSampleDirectoryMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x20;
+        gAudioCompletedLoadFlags |= 0x20;
+    }
+}
+
+/*
+ * Function: sampleDirectorySLoadedCallback
+ * EN v1.0 Address: 0x800090C4
+ * EN v1.0 Size: 176b
+ */
+void sampleDirectorySLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSampleDirectorySLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x200;
+        gAudioCompletedLoadFlags |= 0x200;
+    }
+}
+
+/*
+ * Function: sfxTriggersLoadedCallback
+ * EN v1.0 Address: 0x800096AC
+ * EN v1.0 Size: 176b
+ */
+void sfxTriggersLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sSfxTriggersLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x2;
+        gAudioCompletedLoadFlags |= 0x2;
+    }
+}
+
+/*
+ * Function: musicTriggersLoadedCallback
+ * EN v1.0 Address: 0x8000977C
+ * EN v1.0 Size: 176b
+ */
+void musicTriggersLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sMusicTriggersLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x1;
+        gAudioCompletedLoadFlags |= 0x1;
+    }
+}
+
+typedef struct {
+    u16 id;          // 0x0
+    u8 fadeBits;     // 0x2
+    u8 volBits;      // 0x3
+    u16 lengthRaw;   // 0x4
+    char name[0xF];  // 0x6
+    u8 flag;         // 0x15
+} StreamEntry;
+
+extern StreamEntry* gStreamsData;
+extern int gStreamsCount;
+
+/*
+ * Function: streamsLoadedCallback
+ * EN v1.0 Address: 0x80009594
+ * EN v1.0 Size: 276b
+ */
+void streamsLoadedCallback(int status, void* fileInfo)
+{
+    uint saved;
+    if (status < 0) {
+        OSReport(sStreamsLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    } else {
+        StreamEntry* s;
+        int count;
+        int i;
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~0x4;
+        gAudioCompletedLoadFlags |= 0x4;
+        s = gStreamsData;
+        count = gStreamsCount;
+        for (i = 0; i < count; i++) {
+            s->flag = 0;
+            s++;
+        }
+    }
+}
+
+extern int lbl_803387B8[];
+
+/*
+ * Function: voxmaps_updateTimers
+ * EN v1.0 Address: 0x80013434
+ * EN v1.0 Size: 160b
+ */
+void voxmaps_updateTimers(void)
+{
+    int* p = lbl_803387B8;
+    int i;
+    for (i = 0; i < 6; i++) {
+        if (*p < 0x3FFFFFFF) {
+            (*p)++;
+        }
+        p++;
+    }
+}
+
+extern u32 lbl_803DC8CC;
+
+/*
+ * Function: voxmaps_gridToWorld
+ * EN v1.0 Address: 0x80012E0C
+ * EN v1.0 Size: 180b
+ */
+void voxmaps_gridToWorld(f32* out, s16* grid)
+{
+    int v;
+    v = grid[0] * 10 + 5;
+    out[0] = (f32)v;
+    v = grid[1] * 10 + 5;
+    out[1] = (f32)v;
+    v = grid[2] * 10 + 5;
+    out[2] = (f32)v;
+    if (lbl_803DC8CC != 0) {
+        Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], lbl_803DC8CC);
+    }
+}
+
+/*
+ * Function: fn_80008F38
+ * EN v1.0 Address: 0x80008F38
+ * EN v1.0 Size: 204b
+ */
+void fn_80008F38(void* addr, u32 dest, u32 size)
+{
+    int idx;
+    TextCallbackEntry* entry;
+    idx = lbl_803DC7B8;
+    lbl_803DC7B8 = idx + 1;
+    entry = &lbl_80335940[idx];
+    if (idx + 1 >= 0x10) {
+        lbl_803DC7B8 = 0;
+    }
+    if ((size & 0x1f) != 0) {
+        size = (size | 0x1f) + 1;
+    }
+    DCFlushRange(addr, size);
+    lbl_803DC7BC = 0;
+    ARQPostRequest(entry, 0x64, 0, 1, (u32)addr, dest, size, (void (*)(void*))fn_80009008);
+    while (lbl_803DC7BC == 0) {
+    }
+}
+
+/*
+ * Function: audioAllocFn_80008df4
+ * EN v1.0 Address: 0x80008DF4
+ * EN v1.0 Size: 232b
+ */
+#pragma dont_inline on
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5, u32 p6, u32 p7)
+{
+    int idx;
+    TextCallbackEntry* entry;
+    void* buf;
+    idx = lbl_803DC7B8;
+    lbl_803DC7B8 = idx + 1;
+    entry = &lbl_80335940[idx];
+    if (idx + 1 >= 0x10) {
+        lbl_803DC7B8 = 0;
+    }
+    if ((size & 0x1f) != 0) {
+        size = (size | 0x1f) + 1;
+    }
+    buf = mmAlloc(size, 0, NULL);
+    *outBuf = buf;
+    entry->fn = (void (*)(int, int, int))cb;
+    entry->a = p5;
+    entry->b = p6;
+    entry->c = p7;
+    DCFlushRange(buf, size);
+    lbl_803DC7BC = 0;
+    ARQPostRequest(entry, 0x64, 1, 1, (u32)source, (u32)buf, size, (void (*)(void*))fn_80008EDC);
+}
+#pragma dont_inline reset
+
+extern void Music_Trigger(int id, int arg);
+
+/*
+ * Function: Sfx_ResolveObjectSfxId
+ * EN v1.0 Address: 0x8000C0BC
+ * EN v1.0 Size: 232b
+ */
+int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
+{
+    switch (*sfxId) {
+    case 0x170:
+    case 0xca:
+    case 0x109:
+        *sfxId = 0x409;
+    case 0x409:
+        *outChannel = 0;
+        return 1;
+    case 0x7e:
+    case 0x487:
+        *outChannel = 0;
+        return 1;
+    case 0x420:
+        Music_Trigger(0xe7, 0);
+        Music_Trigger(0xe7, 1);
+        return 0;
+    case 0x38c:
+        return !(gAudioActiveChannelMask & 4);
+    case 0x0:
+        return 0;
+    default:
+        return 1;
+    }
+}
+
+extern f32 lbl_803DE6B0;
+
+/*
+ * Function: voxmaps_worldToGrid
+ * EN v1.0 Address: 0x80012D00
+ * EN v1.0 Size: 264b
+ */
+void voxmaps_worldToGrid(f32* in, s16* out)
+{
+    f32 sx, sy, sz;
+    int ix, iy, iz;
+    sx = in[0];
+    sy = in[1];
+    sz = in[2];
+    if (lbl_803DC8CC != 0) {
+        Obj_TransformWorldPointToLocal(sx, sy, sz, &sx, &sy, &sz, lbl_803DC8CC);
+    }
+    ix = (int)sx;
+    iy = (int)sy;
+    iz = (int)sz;
+    if (sx < lbl_803DE6B0) {
+        ix -= 10;
+    }
+    if (sy < lbl_803DE6B0) {
+        iy -= 10;
+    }
+    if (sz < lbl_803DE6B0) {
+        iz -= 10;
+    }
+    out[0] = ix / 10;
+    out[1] = iy / 10;
+    out[2] = iz / 10;
+}
+
+extern int lbl_803DC9AC;
+extern int lbl_803DC9B0;
+extern int lbl_803DC9B4;
+extern int lbl_803DC9B8;
+extern int lbl_803DC9BC;
+
+/*
+ * Function: gameTextBoxFn_800164b0
+ * EN v1.0 Address: 0x800164B0
+ * EN v1.0 Size: 220b
+ */
+void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+{
+    u8* box = &lbl_802C7400[boxIdx * 0x20];
+    s16 savedX = *(s16*)(box + 0x18);
+    s16 savedY = *(s16*)(box + 0x1a);
+    lbl_803DC9BC = 1;
+    lbl_803DC9B0 = 0x7FFFFFFF;
+    lbl_803DC9AC = 0;
+    lbl_803DC9B8 = 0x7FFFFFFF;
+    lbl_803DC9B4 = 0;
+    gameTextRenderStrs(str, boxIdx);
+    lbl_803DC9BC = 0;
+    if (outMinX != NULL) {
+        *outMinX = lbl_803DC9B8 >> 2;
+    }
+    if (outMinY != NULL) {
+        *outMinY = lbl_803DC9B4 >> 2;
+    }
+    if (outMaxX != NULL) {
+        *outMaxX = lbl_803DC9B0 >> 2;
+    }
+    if (outMaxY != NULL) {
+        *outMaxY = lbl_803DC9AC >> 2;
+    }
+    *(s16*)(box + 0x18) = savedX;
+    *(s16*)(box + 0x1a) = savedY;
+}
+
+/*
+ * Function: gameTextMeasureFn_800163c4
+ * EN v1.0 Address: 0x800163C4
+ * EN v1.0 Size: 236b
+ */
+void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+{
+    u8* box = &lbl_802C7400[boxIdx * 0x20];
+    s16 savedX = *(s16*)(box + 0x18);
+    s16 savedY = *(s16*)(box + 0x1a);
+    lbl_803DC9BC = 1;
+    lbl_803DC9B0 = 0x7FFFFFFF;
+    lbl_803DC9AC = 0;
+    lbl_803DC9B8 = 0x7FFFFFFF;
+    lbl_803DC9B4 = 0;
+    *(s16*)(box + 0x18) = (s16)x;
+    *(s16*)(box + 0x1a) = (s16)y;
+    gameTextRenderStrs(str, boxIdx);
+    lbl_803DC9BC = 0;
+    if (outMinX != NULL) {
+        *outMinX = lbl_803DC9B8 >> 2;
+    }
+    if (outMinY != NULL) {
+        *outMinY = lbl_803DC9B4 >> 2;
+    }
+    if (outMaxX != NULL) {
+        *outMaxX = lbl_803DC9B0 >> 2;
+    }
+    if (outMaxY != NULL) {
+        *outMaxY = lbl_803DC9AC >> 2;
+    }
+    *(s16*)(box + 0x18) = savedX;
+    *(s16*)(box + 0x1a) = savedY;
+}
+
+/*
+ * Function: Sfx_PlayFromObjectLimited
+ * EN v1.0 Address: 0x8000B4D0
+ * EN v1.0 Size: 168b
+ */
+u32 Sfx_PlayFromObjectLimited(u32 obj, u32 sfxId, int limit)
+{
+    SfxObjectChannel* ch = Sfx_FindObjectChannel(0, 0, sfxId, 3);
+    if (ch != NULL && (int)gSfxObjectChannelMatchCount > limit) {
+        sndFXKeyOff(*(s32*)ch);
+        *(s32*)ch = -1;
+    }
+    if ((int)gSfxObjectChannelMatchCount < limit) {
+        Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
+    }
+    return gSfxObjectChannelMatchCount;
+}
+
+extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
+extern int DVDOpen(char* path, void* fileInfo);
+extern void DVDSetAutoInvalidation(int autoInval);
+extern void DCStoreRange(void* addr, u32 nBytes);
+
+/*
+ * Function: loadFileByPath
+ * EN v1.0 Address: 0x80015AB4
+ * EN v1.0 Size: 276b
+ */
+void* loadFileByPath(char* path, int* outSize)
+{
+    u8 fileInfo[0x3c];
+    int size;
+    u32 alignedSize;
+    void* buf;
+    if (outSize != NULL) {
+        *outSize = 0;
+    }
+    DVDSetAutoInvalidation(1);
+    if (DVDOpen(path, fileInfo) == 0) {
+        return NULL;
+    }
+    size = *(u32*)(fileInfo + 0x34);
+    alignedSize = (size + 0x1f) & ~0x1f;
+    buf = mmAlloc(alignedSize, 0x7d7d7d7d, NULL);
+    if (buf == NULL) {
+        return NULL;
+    }
+    if (DVDRead(fileInfo, buf, alignedSize, 0) == -1) {
+        mm_free(buf);
+        return NULL;
+    }
+    if (DVDClose(fileInfo) == 0) {
+        mm_free(buf);
+        return NULL;
+    }
+    DCStoreRange(buf, size);
+    if (outSize != NULL) {
+        *outSize = size;
+    }
+    return buf;
+}
+
+extern int DVDReadAsyncPrio(void* fileInfo, void* buf, int size, int offset, void (*cb)(void*), int prio);
+extern void checkReset(void);
+extern void waitNextFrame(void);
+extern void mmFreeTick(int arg);
+extern void GXFlush_(int a, int b);
+extern void padUpdate(void);
+extern void dvdCheckError(void);
+extern void gameTextRun(void);
+
+extern int lbl_802C5DB8[];
+extern f32 lbl_803DE5D4;
+extern f32 lbl_803DE5D8;
+extern char sAdpExtension[];
+extern int DVDPrepareStreamAsync(void* fileInfo, int a, int b, void (*cb)(void));
+extern int DVDStopStreamAtEndAsync(void* fileInfo, int a);
+
+/*
+ * Function: AudioStream_Play
+ * EN v1.0 Address: 0x80006B20
+ * EN v1.0 Size: 860b
+ */
+int AudioStream_Play(int id, void (*preparedCallback)(void))
+{
+    char path[64];
+    u8* dvd = lbl_80336C40;
+    int* fadeTbl = lbl_802C5DB8;
+    StreamEntry* s = gStreamsData;
+    int count = gStreamsCount;
+    int slot = -1;
+    int i;
+    u8 vol;
+    u8 stopped;
+
+    if (id == 1228) {
+        return 0;
+    }
+    if (id == 1318) {
+        Music_Trigger(0xA8, 0);
+        Music_Trigger(0xF4, 1);
+    }
+    if ((int)audioFlagFn_8000a188(8)) {
+        return 0;
+    }
+
+    for (i = count; i != 0; i--) {
+        if (s->id == id) {
+            slot = (s - gStreamsData) + 1;
+            break;
+        }
+        s++;
+    }
+
+    if (slot == -1) {
+        return 0;
+    }
+    if (gAudioStreamDvdState != 0) {
+        return 0;
+    }
+    gAudioStreamDvdState = 0;
+
+    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name,
+                           sAdpExtension) == 0) {
+        return 0;
+    }
+    if (DVDOpen(path, dvd + 0x90) == 0) {
+        return 0;
+    }
+
+    if (gAudioStreamCurrentId != 0) {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        if (DVDCancelStreamAsync(dvd, AudioStream_CancelCallback) == 0) {
+            OSReport((char*)fadeTbl + 0xC);
+            gAudioStreamPlaying = 0;
+        }
+        gAudioStreamPreparedId = 0;
+        gAudioStreamPreparingId = 0;
+        gAudioStreamCurrentId = 0;
+        gAudioStreamStartWhenPrepared = 0;
+        gAudioActiveChannelMask = 0;
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+    } else {
+        gAudioStreamPlaying = 0;
+    }
+
+    gAudioStreamEndPos = (f32)(u32)s->lengthRaw / lbl_803DE5D4;
+    if (gAudioStreamEndPos == lbl_803DE5D0) {
+        gAudioStreamEndPos = lbl_803DE5D8;
+    }
+
+    gAudioStreamMusicFadeFlagA = fadeTbl[(s->fadeBits >> 6) & 3] != 0 ? 1 : 0;
+    gAudioStreamMusicFadeFlagB = fadeTbl[(s->fadeBits >> 4) & 3] != 0 ? 1 : 0;
+    if ((s->fadeBits >> 2) & 3) {
+        Sfx_StopAllObjectSounds();
+    }
+    gAudioActiveChannelMask = ((s->volBits >> 7) & 1) ? 4 : 0;
+
+    stopped = 0;
+    while (gAudioStreamPlaying != 0) {
+        padUpdate();
+        checkReset();
+        if (stopped) {
+            mmFreeTick(0);
+            waitNextFrame();
+        }
+        dvdCheckError();
+        if (stopped) {
+            gameTextRun();
+            GXFlush_(1, 0);
+        }
+        if (lbl_803DC950 != 0) {
+            stopped = 1;
+            gAudioStreamPlaying = 0;
+        }
+    }
+
+    vol = (((s->volBits & 0x7F) + 1) * gAudioStreamDefaultVolume) >> 7;
+    gAudioStreamVolumeLeft = vol;
+    gAudioStreamVolumeRight = vol;
+    AISetStreamVolLeft(vol);
+    AISetStreamVolRight(vol);
+    gAudioStreamPreparedCallback = preparedCallback;
+    gAudioStreamPreparingId = slot;
+    gAudioStreamDvdState = 1;
+    DVDPrepareStreamAsync(lbl_80336C40 + 0x90, 0, 0, AudioStream_PrepareCallback);
+    DVDStopStreamAtEndAsync(lbl_80336C40 + 0x60, 0);
+    return 1;
+}
+
+extern f32 lbl_803DE6BC;
+extern f32 lbl_803DE6C0;
+extern f32 lbl_803DE6C4;
+extern f32 lbl_803DE6C8;
+extern f32 lbl_803DE6CC;
+extern f32 lbl_803DE6D0;
+extern char lbl_803DB294[];
+extern char lbl_803DB29C[];
+extern char lbl_803DB2A0[];
+extern int lbl_803DB27C;
+extern int lbl_803DB280;
+extern int lbl_803DB284;
+extern int lbl_803DB288;
+extern u8 pauseMenuState;
+extern int getHudHiddenFrameCount(void);
+extern int getMinimapY(void);
+extern void drawHudBox(int a, s16 b, int c, int d, int e, int f);
+
+/*
+ * Function: gameTimerRun
+ * EN v1.0 Address: 0x800140BC
+ * EN v1.0 Size: 1376b
+ */
+void gameTimerRun(void)
+{
+    f32 dt = timeDelta;
+    void* box = gameTextGetBox(0xD);
+    u8 colorFlag = 0;
+    int A;
+    int B;
+    int C;
+    u16 y;
+    char clamped;
+    f32 ratio;
+    int totalSecs;
+    int mins;
+
+    if ((lbl_803DC8F8 & 1) || getHudHiddenFrameCount() != 0) {
+        dt = lbl_803DE6B8;
+    }
+
+    clamped = 0;
+    if ((lbl_803DC8F9 & 1) != 0) {
+        lbl_803DC900 -= dt;
+        if (lbl_803DC900 <= lbl_803DE6B8) {
+            clamped = 1;
+            lbl_803DC900 = lbl_803DE6B8;
+        }
+        if (lbl_803DC900 < lbl_803DE6BC) {
+            colorFlag = 1;
+        }
+    } else {
+        lbl_803DC900 += dt;
+        if (lbl_803DC900 > lbl_803DC8FC) {
+            clamped = 1;
+            lbl_803DC900 = lbl_803DC8FC;
+        }
+        if (lbl_803DC900 > lbl_803DC8FC - lbl_803DE6BC) {
+            colorFlag = 1;
+        }
+    }
+
+    if (clamped) {
+        if ((lbl_803DC8F9 & 8) != 0) {
+            Sfx_PlayFromObject(0, 0x28D);
+        }
+        lbl_803DC8F8 &= ~4;
+        lbl_803DC8F8 |= 2;
+    }
+
+    if ((lbl_803DC8F9 & 4) != 0) {
+        f32 panByte;
+        Sfx_KeepAliveLoopedObjectSound(0, 0x28C);
+        if ((lbl_803DC8F9 & 1) != 0) {
+            ratio = lbl_803DC900 / lbl_803DC8FC;
+            panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * ratio) & 0xFF));
+            Sfx_SetObjectSfxVolume(lbl_803DE6C4 - lbl_803DE6C8 * ratio, 0, 0x28C, panByte);
+        } else {
+            ratio = lbl_803DC900 / lbl_803DC8FC;
+            panByte = (f32)(((int)(lbl_803DE6C0 * ratio) & 0xFF) + 0x2F);
+            Sfx_SetObjectSfxVolume(lbl_803DE6C8 * ratio + lbl_803DE6CC, 0, 0x28C, panByte);
+        }
+    }
+
+    if ((lbl_803DC8F9 & 0x10) == 0 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0) {
+        return;
+    }
+
+    totalSecs = (int)lbl_803DC900;
+    mins = totalSecs / 60;
+    A = mins / 60;
+    B = mins - A * 60;
+    C = (int)(lbl_803DE6D0 * (lbl_803DC900 / lbl_803DE6D4));
+    C = C - C / 100 * 100;
+
+    y = getMinimapY() - 0x28;
+    drawHudBox(0x32, (s16)(y - 4), 0x78, 0x28, 0xFF, 1);
+    *(s16*)((char*)box + 0x16) = (s16)y;
+
+    if (colorFlag && C < 0x32) {
+        gameTextSetColor(0xFF, 0x40, 0x40, 0xFF);
+    } else {
+        gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
+    }
+
+    sprintf(lbl_803398A0, lbl_803DB294, A / 10);
+    gameTextShowStr(lbl_803398A0, 0xD, 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, A % 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB27C + 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, B / 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 + 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, B % 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 + lbl_803DB27C + 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, C / 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB280 * 2 + 5, 3);
+    sprintf(lbl_803398A0, lbl_803DB294, C % 10);
+    gameTextShowStr(lbl_803398A0, 0xD, lbl_803DB27C + lbl_803DB280 * 2 + 5, 3);
+    if (B & 1) {
+        gameTextShowStr(lbl_803DB29C, 0xD, lbl_803DB284, 3);
+        gameTextShowStr(lbl_803DB2A0, 0xD, lbl_803DB288, 3);
+    }
+}
+
+/*
+ * Function: DVDRead
+ * EN v1.0 Address: 0x80015850
+ * EN v1.0 Size: 284b
+ */
+int DVDRead(void* fileInfo, void* buf, int size, int offset)
+{
+    u8 resetSeen = 0;
+    lbl_803DC958 = 0;
+    while (lbl_803DC958 == 0 || lbl_803DC958 == -1 || lbl_803DC958 == -3) {
+        DVDReadAsyncPrio(fileInfo, buf, size, offset, fileReadCb_80015954, 2);
+        while (lbl_803DC958 == 0 || lbl_803DC958 == -1) {
+            padUpdate();
+            checkReset();
+            if (resetSeen) {
+                waitNextFrame();
+            }
+            dvdCheckError();
+            if (resetSeen) {
+                mmFreeTick(0);
+                gameTextRun();
+                GXFlush_(1, 0);
+            }
+            if (lbl_803DC950 != 0) {
+                resetSeen = 1;
+            }
+        }
+    }
+    return lbl_803DC958;
+}
+
+typedef struct {
+    u16 id;
+    u16 track;
+    u8 pad[0xc];
+} MusicTrigger;
+
+extern MusicTrigger* gMusicTriggersData;
+extern int gMusicTriggersCount;
+extern s16 sMusicTrackTable[];
+extern void Music_LoadChannelForTrigger(MusicTrigger *trigger);
+
+/*
+ * Function: Music_Trigger
+ * EN v1.0 Address: 0x8000A518
+ */
+void Music_Trigger(int id, int arg)
+{
+    MusicTrigger *trigger;
+    MusicChannel *channel;
+    int i;
+    int found;
+
+    if (arg != 1 && arg != 0) {
+        return;
+    }
+    trigger = gMusicTriggersData;
+    i = gMusicTriggersCount;
+    while (i != 0) {
+        if ((int)trigger->id == id) {
+            goto foundTrigger;
+        }
+        trigger++;
+        i--;
+    }
+    trigger = NULL;
+foundTrigger:
+    if (trigger == NULL) {
+        return;
+    }
+    if (id == 0xeb && arg == 1) {
+        channel = gMusicChannels;
+        found = 0;
+        for (i = 0; i < 16; i++) {
+            if (channel->field_0 == 0x5e && channel->status != 0 && channel->status != 2 &&
+                channel->status != 5) {
+                found = 1;
+                break;
+            }
+            channel++;
+        }
+        if (found) {
+            return;
+        }
+        if (GameBit_Get(0xa7f)) {
+            return;
+        }
+    }
+    channel = gMusicChannels;
+    found = 0;
+    for (i = 0; i < 16; i++) {
+        if (channel->field_0 == (int)trigger->track && channel->status != 0 &&
+            channel->status != 2 && channel->status != 5) {
+            found = 1;
+            break;
+        }
+        channel++;
+    }
+    if (!found) {
+        channel = NULL;
+    }
+    if (arg == 1) {
+        if (channel == NULL) {
+            Music_LoadChannelForTrigger(trigger);
+            return;
+        }
+        if (channel->status != 1) {
+            return;
+        }
+        sndSeqVolume(channel->pad14[0], *(u16 *)trigger->pad, channel->seqHandle, 0);
+    } else if (channel != NULL) {
+        if (channel->status == 2) {
+            return;
+        }
+        if (channel->status == 4 || channel->status == 5) {
+            channel->status = 5;
+            return;
+        }
+        i = *(u16 *)trigger->pad;
+        sndSeqVolume(0, i < 0x1f4 ? 0x1f4 : i, channel->seqHandle, 1);
+        channel->status = 2;
+    }
+}
+
+extern f32 lbl_803DE564;
+extern f32 lbl_803DE568;
+extern void sndSeqStop(int handle);
+extern void sndSeqMute(int handle, int a, int b);
+extern void sndSeqContinue(int handle);
+
+typedef struct SynthVoice {
+    u8 pad0[8];
+    u8 field_8;
+    u8 pad9[0x1868 - 9];
+} SynthVoice;
+extern SynthVoice gSynthVoices[];
+
+static void Music_FreeChannel(MusicChannel *ch)
+{
+    sndSeqStop(ch->seqHandle);
+    mm_free(ch->bankData);
+    ch->field_0 = -1;
+    ch->seqHandle = -1;
+    ch->bankData = NULL;
+    ch->voiceId = 0xff;
+    ch->status = 0;
+    ch->field_12 = 0;
+    ch->field_20 = lbl_803DE560;
+}
+
+static int Music_IsTriggerExcluded(int id)
+{
+    switch (id) {
+    case 0x2b:
+    case 0xbd:
+    case 0xeb:
+        return 1;
+    }
+    return 0;
+}
+
+/*
+ * Function: Music_Update
+ * EN v1.0 Address: 0x8000A828
+ */
+void Music_Update(void)
+{
+    MusicChannel *ch;
+    int i;
+    int lowPriority = 0x7fff;
+    u32 bestActive18 = 0;
+    u32 bestLow18 = 0;
+    int activeVol = 0x1f4;
+    int lowVol = 0x1f4;
+    int s2VolA = 0x1f4;
+    int s2VolB = 0x1f4;
+    int found20 = 0;
+    int found19 = 0;
+    u32 fadeB = AudioStream_GetMusicFadeFlagB();
+    u32 fadeA = AudioStream_GetMusicFadeFlagA();
+
+    gMusicActivePriority = 0x7fff;
+
+    ch = gMusicChannels;
+    i = 0xf;
+    do {
+        int status = ch->status;
+        if (status != 0 && status != 4) {
+            if (gSynthVoices[ch->voiceId].field_8 == 0) {
+                if (status == 4 || status == 5) {
+                    ch->status = 5;
+                } else {
+                    Music_FreeChannel(ch);
+                }
+            }
+        }
+        switch (ch->status) {
+        case 1:
+        case 3:
+        case 4:
+            if (!Music_IsTriggerExcluded((*(MusicTrigger **)&ch->pad14[8])->id)) {
+                if (ch->pad11 != 0) {
+                    gMusicActivePriority = ch->field_12 < gMusicActivePriority
+                                               ? ch->field_12
+                                               : gMusicActivePriority;
+                } else {
+                    lowPriority =
+                        ch->field_12 < lowPriority ? ch->field_12 : lowPriority;
+                }
+            }
+            break;
+        case 2:
+            ch->field_20 += timeDelta / lbl_803DE564;
+            if (ch->field_20 > lbl_803DE568) {
+                if (ch->status == 4 || ch->status == 5) {
+                    ch->status = 5;
+                } else {
+                    Music_FreeChannel(ch);
+                }
+            }
+            break;
+        }
+        ch++;
+    } while (i-- != 0);
+
+    ch = gMusicChannels;
+    for (i = 0; i < 16; i++) {
+        switch (ch->status) {
+        case 1:
+        case 3:
+        case 4:
+            if (!Music_IsTriggerExcluded((*(MusicTrigger **)&ch->pad14[8])->id)) {
+                if (ch->pad11 != 0) {
+                    if (ch->field_12 == gMusicActivePriority &&
+                        *(u32 *)&ch->pad14[4] > bestActive18) {
+                        bestActive18 = *(u32 *)&ch->pad14[4];
+                        activeVol = *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad;
+                    }
+                } else {
+                    if (ch->field_12 == lowPriority &&
+                        *(u32 *)&ch->pad14[4] > bestLow18) {
+                        bestLow18 = *(u32 *)&ch->pad14[4];
+                        lowVol = *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad;
+                        if (ch->status != 3) {
+                            found20 = 1;
+                        }
+                    }
+                }
+            }
+            break;
+        case 2:
+            if (ch->pad11 != 0) {
+                s2VolA = s2VolA > *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad
+                             ? s2VolA
+                             : *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad;
+            } else {
+                s2VolB = s2VolB > *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad
+                             ? s2VolB
+                             : *(u16 *)(*(MusicTrigger **)&ch->pad14[8])->pad;
+                found19 = 1;
+            }
+            break;
+        }
+        ch++;
+    }
+
+    if (found20) {
+        activeVol = lowVol;
+    }
+    if (found19) {
+        s2VolA = s2VolB;
+    }
+    if ((int)fadeB != 0) {
+        if (activeVol >= 0x1f4) {
+            activeVol = 0x1f4;
+        }
+    }
+    if ((int)fadeA != 0) {
+        if (lowVol >= 0x1f4) {
+            lowVol = 0x1f4;
+        }
+    }
+
+    ch = gMusicChannels;
+    i = 0xf;
+    do {
+        int st = ch->status;
+        switch (st) {
+        case 1:
+        case 3:
+            if (ch->pad11 != 0) {
+                if (ch->field_12 == gMusicActivePriority &&
+                    *(u32 *)&ch->pad14[4] < bestActive18) {
+                    if (st != 2) {
+                        if (st == 4 || st == 5) {
+                            ch->status = 5;
+                        } else {
+                            sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol),
+                                         ch->seqHandle, 1);
+                            ch->status = 2;
+                        }
+                    }
+                } else if (ch->field_12 > gMusicActivePriority ||
+                           ch->field_12 > lowPriority || (int)fadeB != 0) {
+                    if (st != 3) {
+                        sndSeqVolume(0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol),
+                                     ch->seqHandle, (u8)(ch->pad11 != 0 ? 0 : 2));
+                        ch->status = 3;
+                    }
+                } else {
+                    if (st != 1) {
+                        sndSeqMute(ch->seqHandle, -1, -1);
+                        sndSeqContinue(ch->seqHandle);
+                        sndSeqVolume((u8)*(u16 *)&ch->pad14[0],
+                                     (u16)(s2VolA < 0x1f4 ? 0x1f4 : s2VolA),
+                                     ch->seqHandle, 0);
+                        ch->status = 1;
+                    }
+                }
+            } else {
+                if (ch->field_12 == lowPriority &&
+                    *(u32 *)&ch->pad14[4] < bestLow18) {
+                    if (st != 2) {
+                        if (st == 4 || st == 5) {
+                            ch->status = 5;
+                        } else {
+                            sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol),
+                                         ch->seqHandle, 1);
+                            ch->status = 2;
+                        }
+                    }
+                } else if (ch->field_12 > lowPriority ||
+                           ch->field_12 > gMusicActivePriority || (int)fadeA != 0) {
+                    if (st != 3) {
+                        sndSeqVolume(0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol),
+                                     ch->seqHandle, (u8)(ch->pad11 != 0 ? 0 : 2));
+                        ch->status = 3;
+                    }
+                } else {
+                    if (st != 1) {
+                        sndSeqMute(ch->seqHandle, -1, -1);
+                        sndSeqContinue(ch->seqHandle);
+                        sndSeqVolume((u8)*(u16 *)&ch->pad14[0],
+                                     (u16)(s2VolB < 0x1f4 ? 0x1f4 : s2VolB),
+                                     ch->seqHandle, 0);
+                        ch->status = 1;
+                    }
+                }
+            }
+            break;
+        }
+        ch++;
+    } while (i-- != 0);
+}
+
+/*
+ * Function: Music_LoadChannelForTrigger
+ * EN v1.0 Address: 0x8000B0D0
+ */
+void Music_LoadChannelForTrigger(MusicTrigger *trigger)
+{
+    MusicTrackSlot *slot;
+    MusicChannel *channel;
+    int counter;
+    int i;
+
+    if ((trigger->pad[0xb] >> 5) & 1) {
+        if (audioFlagFn_8000a188(2)) {
+            return;
+        }
+    }
+    if (!((trigger->pad[0xb] >> 5) & 1)) {
+        if (audioFlagFn_8000a188(1)) {
+            return;
+        }
+    }
+    slot = (MusicTrackSlot *)sMusicTrackTable;
+    for (i = 0; i < 100; i++) {
+        if (slot->id == (int)trigger->track) {
+            goto foundSlot;
+        }
+        slot++;
+    }
+    slot = NULL;
+foundSlot:
+    if (slot == NULL) {
+        return;
+    }
+    channel = gMusicChannels;
+    for (i = 0; i < 16; i++) {
+        if (channel->status == 0) {
+            goto foundChannel;
+        }
+        channel++;
+    }
+    channel = NULL;
+foundChannel:
+    if (channel == NULL) {
+        return;
+    }
+    channel->field_0 = trigger->track;
+    *(u16 *)&channel->pad14[0] = trigger->pad[8];
+    channel->pad11 = (trigger->pad[0xb] >> 5) & 1;
+    channel->status = 4;
+    channel->field_12 = trigger->pad[9];
+    if (channel->pad11) {
+        counter = lbl_803DC814++;
+    } else {
+        counter = lbl_803DC818++;
+    }
+    *(int *)&channel->pad14[4] = counter;
+    *(MusicTrigger **)&channel->pad14[8] = trigger;
+    channel->field_20 = lbl_803DE560;
+    audioAllocFn_80008df4((void *)slot->offset, slot->size, &channel->bankData,
+                          (u32)Music_ChannelLoadedCallback, (u32)slot, (u32)channel, (u32)trigger);
+}
+
+/*
+ * Function: Music_PlayTrackByIndex
+ * EN v1.0 Address: 0x8000A2E4
+ * EN v1.0 Size: 148b
+ */
+void Music_PlayTrackByIndex(int index)
+{
+    MusicTrigger* trigger = gMusicTriggersData;
+    int count = gMusicTriggersCount;
+    while (count != 0) {
+        if ((int)trigger->id == 0xec) {
+            goto found;
+        }
+        trigger++;
+        count--;
+    }
+    trigger = NULL;
+found:
+    streamFn_8000a380(3, 1, 0);
+    trigger->track = *(s16*)((u8*)sMusicTrackTable + (index << 4));
+    Music_Trigger(0xec, 1);
+}
+
+typedef struct {
+    u16 a;
+    u16 b;
+} VoxXY;
+
+typedef struct {
+    VoxXY xy[6];
+    int timer[6];
+    int f30[6];
+    int f48;
+    int f4c;
+    int f50;
+    int f54;
+    int f58;
+    void* buf[6];
+} VoxMaps;
+
+extern VoxMaps lbl_803387A0;
+extern u8 lbl_803DC8D0[8];
+
+/*
+ * Function: voxmaps_resetLoadedMaps
+ * EN v1.0 Address: 0x800134D4
+ * EN v1.0 Size: 156b
+ */
+void voxmaps_resetLoadedMaps(void)
+{
+    VoxXY* xy = lbl_803387A0.xy;
+    u8* b = lbl_803DC8D0;
+    int* timer = lbl_803387A0.timer;
+    int* f30 = lbl_803387A0.f30;
+    void** buf = lbl_803387A0.buf;
+    int i;
+    for (i = 0; i < 6; i++) {
+        if (*buf != NULL) {
+            mm_free(*buf);
+            *buf = NULL;
+        }
+        *f30 = -2;
+        *timer = 0x40000000;
+        *b = 0;
+        xy->a = 0;
+        xy->b = 0;
+        buf++;
+        f30++;
+        timer++;
+        b++;
+        xy++;
+    }
+}
+
+extern int *lbl_803DC8E0;
+extern int lbl_803DC8C8;
+extern void *lbl_803DC8DC;
+extern void *lbl_803DC8D8;
+extern void *lbl_803DC8C0[2];
+extern void *lbl_803DC8B8[2];
+extern void loadAssetFileById(void **out, int id);
+extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+
+/*
+ * Function: voxmaps_initialise
+ * EN v1.0 Address: 0x8000CE90
+ * EN v1.0 Size: 484b
+ */
+void voxmaps_initialise(void)
+{
+    VoxMaps *mgr = &lbl_803387A0;
+    int *p;
+    int i;
+
+    loadAssetFileById((void **)&lbl_803DC8E0, 53);
+    i = 0;
+    p = lbl_803DC8E0;
+    while (*p != -1) {
+        p++;
+        i++;
+    }
+    lbl_803DC8C8 = i - 1;
+    lbl_803DC8DC = mmAlloc(640, 16, NULL);
+
+    for (i = 0; i < 6; i++) {
+        mgr->buf[i] = NULL;
+        mgr->f30[i] = -2;
+        mgr->timer[i] = 0x40000000;
+        lbl_803DC8D0[i] = 0;
+        mgr->xy[i].a = 0;
+        mgr->xy[i].b = 0;
+    }
+
+    lbl_803DC8D8 = lbl_803DC8DC;
+    lbl_803DC8CC = 0;
+    lbl_803DC8C0[0] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    lbl_803DC8C0[1] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
+    lbl_803DC8B8[0] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
+    lbl_803DC8B8[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
+}
+
+typedef struct {
+    s16 x;
+    s16 unk2;
+    s16 z;
+} VoxPos;
+
+typedef struct {
+    u8 pad0[6];
+    s16 f6;
+    s8 f8;
+    s8 f9;
+} VoxBlock;
+
+extern int lbl_803DCDC8;
+extern int lbl_803DCDCC;
+extern f32 lbl_803DE6B4;
+extern f32 fastFloorf(f32 v);
+extern void *mapGetBlockAtPos(int x, int y, int z);
+extern void *fn_80059334(int a, int b);
+extern void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8);
+
+/*
+ * Function: voxmaps_updateActiveMap
+ * EN v1.0 Address: 0x8000C8D8
+ * EN v1.0 Size: 776b
+ */
+int *voxmaps_updateActiveMap(VoxPos *obj)
+{
+    VoxMaps *vm = &lbl_803387A0;
+    int gridX;
+    int gridY;
+    int blockId;
+    int i;
+    int found;
+    int bestSlot;
+    int bestVal;
+    VoxBlock *block;
+    int ay = obj->z * 10 + 5 - lbl_803DCDCC;
+
+    gridX = (int)fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / lbl_803DE6B4);
+    gridY = (int)fastFloorf((f32)ay / lbl_803DE6B4);
+
+    vm->f48 = lbl_803DCDC8 + gridX * 640;
+    vm->f4c = lbl_803DCDCC + gridY * 640;
+    vm->f50 = vm->f48 / 10;
+    vm->f54 = vm->f4c / 10;
+
+    blockId = -1;
+    if (mapGetBlockAtPos(gridX, gridY, 0) != NULL) {
+        block = fn_80059334(gridX, gridY);
+        blockId = block->f6;
+    }
+    if (blockId == -1) {
+        vm->f58 = 0;
+    } else {
+        found = -1;
+        for (i = 0; i < 6; i++) {
+            if (blockId == vm->f30[i]) {
+                found = i;
+                i = 6;
+            }
+        }
+        if (found != -1) {
+            vm->timer[found] = 0;
+            vm->f58 = 0;
+        } else {
+            s8 b8;
+            s8 b9;
+            void **slot;
+            bestSlot = -1;
+            bestVal = -1;
+            for (i = 0; i < 6; i++) {
+                if (lbl_803DC8D0[i] == 0 && vm->timer[i] > bestVal) {
+                    bestSlot = i;
+                    bestVal = vm->timer[i];
+                }
+            }
+            b8 = block->f8;
+            b9 = block->f9;
+            slot = &vm->buf[bestSlot];
+            if (*slot != NULL) {
+                int saved = mmSetFreeDelay(0);
+                mm_free(*slot);
+                mmSetFreeDelay(saved);
+            }
+            *slot = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
+            vm->f30[bestSlot] = blockId;
+            vm->timer[bestSlot] = 0;
+            vm->xy[bestSlot].a = (s16)vm->f50;
+            vm->xy[bestSlot].b = (s16)vm->f54;
+            vm->f58 = 0;
+        }
+    }
+    return &vm->f48;
+}
+
+typedef struct {
+    u8 pad00[0x14];
+    int f14;
+    int f18;
+    int f1c;
+    int f20;
+    int f24;
+    int f28;
+} VoxMapFile;
+
+extern char sVoxmapsRouteNodesListOverflow[];
+extern int getTableFileEntry(int fileId, int index, int *out);
+extern void loadVoxMaps(int handle, int *outCount, int *outSize);
+extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
+
+/*
+ * Function: voxLoadVoxMapActual
+ * EN v1.0 Address: 0x8000CBE0
+ * EN v1.0 Size: 372b
+ */
+void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
+{
+    char *msg = sVoxmapsRouteNodesListOverflow;
+    int entry;
+    int size;
+    int count;
+    VoxMapFile *hdr;
+
+    if (getTableFileEntry(26, mapArg, &entry) == 0) {
+        OSReport(msg + 0xd0);
+        return NULL;
+    }
+    loadVoxMaps(entry, &count, &size);
+    if (count <= 0) {
+        return NULL;
+    }
+    if (size > 30720) {
+        debugPrintf(msg + 0x104);
+        return NULL;
+    }
+    if (size <= 0) {
+        OSReport(msg + 0x13c);
+        return NULL;
+    }
+    hdr = mmAlloc(size, 16, NULL);
+    if (hdr == NULL) {
+        OSReport(msg + 0x174);
+        return NULL;
+    }
+    loadAndDecompressDataFile(27, hdr, entry, count, 0, 0, 0);
+    if (hdr == NULL) {
+        OSReport(msg + 0x174);
+        return NULL;
+    }
+    hdr->f1c += (int)hdr;
+    hdr->f24 += (int)hdr;
+    hdr->f14 += (int)hdr;
+    hdr->f20 += (int)hdr;
+    hdr->f28 += (int)hdr;
+    hdr->f18 += (int)hdr;
+    return hdr;
+}
+
+extern s8 gAudioSoundMode;
+extern void sndOutputMode(int mode);
+extern u32 OSGetSoundMode(void);
+extern void OSSetSoundMode(int mode);
+
+/*
+ * Function: audioSetSoundMode
+ * EN v1.0 Address: 0x80009920
+ * EN v1.0 Size: 264b
+ */
+void audioSetSoundMode(int mode, u8 forceFlag)
+{
+    if (forceFlag == 0) {
+        if (OSGetSoundMode() != 1) {
+            return;
+        }
+    }
+    if ((u8)mode != gAudioSoundMode) {
+        switch ((u8)mode) {
+        case 0:
+            sndOutputMode(1);
+            break;
+        case 1:
+            sndOutputMode(2);
+            break;
+        case 2:
+            sndOutputMode(0);
+            break;
+        case 3:
+            sndOutputMode(1);
+            break;
+        }
+    }
+    if ((u8)mode == 2) {
+        if (gAudioSoundMode != 2) {
+            OSSetSoundMode(0);
+        }
+    } else {
+        if (gAudioSoundMode == 2) {
+            OSSetSoundMode(1);
+        }
+    }
+    gAudioSoundMode = (s8)mode;
+}
+
+extern u8 lbl_802C6E98[];
+extern int lbl_802C6F98[];
+
+/*
+ * Function: utf8GetNextChar
+ * EN v1.0 Address: 0x80015CB8
+ * EN v1.0 Size: 184b
+ */
+#pragma dont_inline on
+int utf8GetNextChar(u8* str, int* outLen)
+{
+    u8 first = *str;
+    int cls = lbl_802C6E98[first];
+    u32 acc = 0;
+    switch (cls) {
+    case 5:
+        str++;
+        acc = first << 6;
+    case 4:
+        acc = (acc + *str++) << 6;
+    case 3:
+        acc = (acc + *str++) << 6;
+    case 2:
+        acc = (acc + *str++) << 6;
+    case 1:
+        acc = (acc + *str++) << 6;
+    case 0:
+        acc += *str;
+    default:
+        break;
+    }
+    *outLen = cls + 1;
+    return acc - lbl_802C6F98[cls];
+}
+#pragma dont_inline reset
+
+extern int getControlCharLen(u32 c);
+
+/*
+ * Function: gameStrcpy
+ * EN v1.0 Address: 0x8000F510
+ * EN v1.0 Size: 200b
+ */
+char *gameStrcpy(char *dst, char *src)
+{
+    u32 ch;
+    int len;
+    do {
+        ch = utf8GetNextChar((u8 *)src, &len);
+        while (len-- != 0) {
+            *dst++ = *src++;
+        }
+        if (ch >= 0xe000 && ch <= 0xf8ff) {
+            len = getControlCharLen(ch) * 2;
+            while (len-- != 0) {
+                *dst++ = *src++;
+            }
+        }
+    } while (ch != 0);
+    return dst - 1;
+}
+
+typedef struct {
+    s16 f0;
+    s16 f2;
+    s16 f4;
+    s16 pad6;
+    u16 f8;
+} VoxBoxArg;
+
+extern void voxmapsFn_80010ff4(int a1, VoxBoxArg* a2, int a3, u16 count, s16* box);
+
+/*
+ * Function: fn_800118EC
+ * EN v1.0 Address: 0x800118EC
+ * EN v1.0 Size: 272b
+ */
+#pragma dont_inline on
+void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
+{
+    s16 box[3];
+    u16 count = a2->f8 + 1;
+    box[0] = a2->f0;
+    box[1] = a2->f2;
+    box[2] = a2->f4;
+    box[0] = a2->f0 + 2;
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    box[0] = box[0] - 4;
+    box[1] = a2->f2;
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    box[0] = box[0] + 2;
+    box[2] = box[2] + 2;
+    box[1] = a2->f2;
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    box[2] = box[2] - 4;
+    box[1] = a2->f2;
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+}
+#pragma dont_inline reset
+
+typedef struct {
+    s16 x;
+    s16 unk2;
+    s16 y;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    u8 flag;
+    u8 unkD;
+} RouteNode;
+
+typedef struct {
+    RouteNode *nodes;
+    CurveHeapNode *queue;
+    int unk08;
+    s16 tgtX;
+    s16 unk0E;
+    s16 tgtY;
+    s16 unk12;
+    int unk14;
+    int cur;
+    s16 unk1C;
+    s16 queueCount;
+} RouteState;
+
+/*
+ * Function: voxmaps_processRouteQueue
+ * EN v1.0 Address: 0x8000C05C
+ * EN v1.0 Size: 268b
+ */
+int voxmaps_processRouteQueue(RouteState *state, int count)
+{
+    int done = 0;
+    int ret = 0;
+    int nodeIdx;
+    CurveHeapNode *queue;
+    RouteNode *node;
+
+    while (!done && count != 0) {
+        queue = state->queue;
+        if (state->queueCount == 0) {
+            nodeIdx = -1;
+        } else {
+            nodeIdx = queue[1].value;
+            queue[1].priority = queue[state->queueCount].priority;
+            queue[1].value = queue[state->queueCount--].value;
+            fn_80010F6C(queue, state->queueCount, 1);
+        }
+        if (nodeIdx < 0) {
+            done = 1;
+            ret = -1;
+        } else {
+            node = state->nodes + nodeIdx;
+            state->cur = nodeIdx;
+            if (node->x == state->tgtX && node->y == state->tgtY) {
+                done = 1;
+                ret = 1;
+            } else {
+                node->flag = 1;
+                fn_800118EC((int)state, (VoxBoxArg *)node, nodeIdx);
+            }
+        }
+        count--;
+    }
+    return ret;
+}
+
+typedef struct {
+    u16 id;
+    u8 pad[0xa];
+} GlyphEntry;
+
+typedef struct {
+    int field0;
+    GlyphEntry* entries;
+    int field8;
+    int count;
+    u8 pad[0x10];
+    int mode;
+} GameTextFont;
+
+extern GameTextFont* gameTextFonts;
+
+/*
+ * Function: gameTextFn_8001628c
+ * EN v1.0 Address: 0x8001628C
+ * EN v1.0 Size: 312b
+ */
+void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+{
+    GameTextFont* font = gameTextFonts;
+    int found = 0;
+    if (font->mode == 2) {
+        GlyphEntry* e = font->entries;
+        int count = font->count;
+        int i;
+        for (i = 0; i < count; i++) {
+            if (e->id == id) {
+                found = 1;
+                break;
+            }
+            e++;
+        }
+    }
+    if (!found) {
+        *outMaxX = 0;
+        *outMaxY = 0;
+        *outMinX = 0;
+        *outMinY = 0;
+        return;
+    }
+    lbl_803DC9BC = 1;
+    lbl_803DC9B0 = 0x7FFFFFFF;
+    lbl_803DC9AC = 0;
+    lbl_803DC9B8 = 0x7FFFFFFF;
+    lbl_803DC9B4 = 0;
+    gameTextFn_8001658c(id, a, b);
+    lbl_803DC9BC = 0;
+    if (outMinX != NULL) {
+        *outMinX = lbl_803DC9B8 >> 2;
+    }
+    if (outMinY != NULL) {
+        *outMinY = lbl_803DC9B4 >> 2;
+    }
+    if (outMaxX != NULL) {
+        *outMaxX = lbl_803DC9B0 >> 2;
+    }
+    if (outMaxY != NULL) {
+        *outMaxY = lbl_803DC9AC >> 2;
+    }
+}
+
+extern u8 testAndSet_onlyUseHeap3(int arg);
+
+/*
+ * Function: loadFileByPathAsync
+ * EN v1.0 Address: 0x80015964
+ * EN v1.0 Size: 332b
+ */
+#pragma dont_inline on
+void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*))
+{
+    void* fileInfo;
+    int size;
+    u32 alignedSize;
+    void* buf;
+    int guard;
+    if (outSize != NULL) {
+        *outSize = 0;
+    }
+    DVDSetAutoInvalidation(1);
+    if (lbl_803DC954 != NULL) {
+        fileInfo = lbl_803DC954;
+    } else {
+        guard = testAndSet_onlyUseHeap3(0);
+        fileInfo = mmAlloc(0x3c, 0xFACEFEED, NULL);
+        testAndSet_onlyUseHeap3(guard);
+    }
+    if (DVDOpen(path, fileInfo) == 0) {
+        mm_free(fileInfo);
+        return NULL;
+    }
+    size = *(int*)((u8*)fileInfo + 0x34);
+    alignedSize = (size + 0x1f) & ~0x1f;
+    guard = testAndSet_onlyUseHeap3(0);
+    buf = mmAlloc(alignedSize, 0x7d7d7d7d, NULL);
+    testAndSet_onlyUseHeap3(guard);
+    if (buf == NULL) {
+        mm_free(fileInfo);
+        return NULL;
+    }
+    if (DVDReadAsyncPrio(fileInfo, buf, alignedSize, 0, cb, 2) != 0) {
+        if (outSize != NULL) {
+            *outSize = size;
+        }
+        return buf;
+    }
+    mm_free(buf);
+    mm_free(fileInfo);
+    return NULL;
+}
+#pragma dont_inline reset
+
+extern void* gSfxTriggersData;
+extern int gSfxTriggersCount;
+
+/*
+ * Function: audioLoadTriggerData
+ * EN v1.0 Address: 0x8000980C
+ * EN v1.0 Size: 276b
+ */
+#pragma dont_inline on
+void audioLoadTriggerData(void)
+{
+    char* base = sSampleBufferSLoadedCallbackLoadError;
+    int info;
+    int delay;
+    if (gMusicTriggersData != NULL) {
+        delay = mmSetFreeDelay(0);
+        mm_free(gMusicTriggersData);
+        mm_free(gSfxTriggersData);
+        mm_free(gStreamsData);
+        mmSetFreeDelay(delay);
+    }
+    gAudioPendingLoadFlags |= 0x1;
+    gMusicTriggersData = loadFileByPathAsync(base + 0x1b4, &info, 1, (void (*)(void*))musicTriggersLoadedCallback);
+    gMusicTriggersCount = (u32)info >> 4;
+    gAudioPendingLoadFlags |= 0x2;
+    gSfxTriggersData = loadFileByPathAsync(base + 0x1cc, &info, 1, (void (*)(void*))sfxTriggersLoadedCallback);
+    gSfxTriggersCount = (u32)info >> 5;
+    gAudioPendingLoadFlags |= 0x4;
+    gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, (void (*)(void*))streamsLoadedCallback);
+    gStreamsCount = (u32)info / 0xb0;
+}
+#pragma dont_inline reset
+
+extern u8 gAudioHardwareInitialized;
+extern u8 gAudioMusicGroupReady;
+extern u8 gAudioSfxGroupsReady;
+extern u8 gAudioReady;
+extern void *gAudioStarfoxMPoolDataHandle;
+extern void *gAudioStarfoxMProjectDataHandle;
+extern void *gAudioStarfoxMSampleDirectoryHandle;
+extern void *gAudioStarfoxMSampleBufferHandle;
+extern void *gAudioStarfoxSPoolDataHandle;
+extern void *gAudioStarfoxSProjectDataHandle;
+extern void *gAudioStarfoxSSampleDirectoryHandle;
+extern void *gAudioStarfoxSSampleBufferHandle;
+extern int lbl_803DE548;
+extern int lbl_803DE54C;
+extern f32 lbl_803DE550;
+extern f32 lbl_803DE554;
+extern f32 lbl_803DE558;
+extern f32 lbl_803DE55C;
+extern u8 lbl_80335C40[];
+extern u8 lbl_80335D94[];
+extern void ARInit(void *arena, int count);
+extern void ARQInit(void);
+extern void AIInit(int arg);
+extern void AISetDSPSampleRate(int rate);
+extern void sndSetHooks(int *hooks);
+extern void sndInit(int a, int b, int c, int d, int e, int f);
+extern void sndAuxCallbackUpdateSettingsReverbSTD(void *settings);
+extern void sndAuxCallbackReverbSTD(void);
+extern void sndSetAuxProcessingCallbacks(int a, void *cb, void *settings, int d, int e, int f, int g, int h, int i);
+extern void sndVolume(int a, int b, int c);
+extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
+
+/*
+ * Function: audioInit
+ * EN v1.0 Address: 0x80009BF8
+ */
+int audioInit(void)
+{
+    char *base = sSampleBufferSLoadedCallbackLoadError;
+    int hooks[2];
+    int reverbWork;
+    int delay;
+    int v;
+
+    hooks[0] = lbl_803DE548;
+    hooks[1] = lbl_803DE54C;
+    if (!gAudioInitStarted) {
+        gAudioInitStarted = 1;
+        gAudioPendingLoadFlags = 0;
+        gAudioCompletedLoadFlags = 0;
+        testAndSet_onlyUseHeap3(1);
+        if (gAudioHardwareInitialized) {
+            return 1;
+        }
+        gAudioHardwareInitialized = 1;
+        ARInit(lbl_80335D94, 0xa);
+        ARQInit();
+        AIInit(0);
+        AISetDSPSampleRate(0);
+        sndSetHooks(hooks);
+        sndInit(0x30, 0x30, 0x18, 1, 1, 0x1000000);
+        sndSetMaxVoices(0x30, 0x18);
+        if (OSGetSoundMode() == 0) {
+            gAudioSoundMode = 2;
+            sndOutputMode(0);
+        } else {
+            gAudioSoundMode = 0;
+            sndOutputMode(1);
+        }
+        lbl_80335C40[0x13c] = 0;
+        *(f32 *)&lbl_80335C40[0x148] = lbl_803DE550;
+        *(f32 *)&lbl_80335C40[0x150] = lbl_803DE554;
+        *(f32 *)&lbl_80335C40[0x14c] = lbl_803DE558;
+        *(f32 *)&lbl_80335C40[0x140] = lbl_803DE558;
+        *(f32 *)&lbl_80335C40[0x144] = lbl_803DE55C;
+        sndAuxCallbackUpdateSettingsReverbSTD(lbl_80335C40);
+        reverbWork = 0;
+        sndSetAuxProcessingCallbacks(0, (void *)sndAuxCallbackReverbSTD, lbl_80335C40, 0xff, 0, 0, 0,
+                                     0xff, reverbWork);
+        if (!sndIsInstalled()) {
+            OSReport(base + 0x1f8);
+            return 0xff;
+        }
+        sndVolume(0x7f, 0, 0xff);
+        sndMasterVolume(0x7f, 0x64, 1, 1);
+        Sfx_InitObjectChannels();
+        AudioStream_Init();
+        audioLoadTriggerData();
+        testAndSet_onlyUseHeap3(1);
+        gAudioPendingLoadFlags |= 0x8;
+        gAudioStarfoxMPoolDataHandle = loadFileByPathAsync(base + 0x228, NULL, 0,
+                                                           (void (*)(void *))poolDataMLoadedCallback);
+        gAudioPendingLoadFlags |= 0x10;
+        gAudioStarfoxMProjectDataHandle = loadFileByPathAsync(base + 0x23c, NULL, 0,
+                                                             (void (*)(void *))projectDataMLoadedCallback);
+        gAudioPendingLoadFlags |= 0x20;
+        gAudioStarfoxMSampleDirectoryHandle = loadFileByPathAsync(base + 0x250, NULL, 0,
+                                                                 (void (*)(void *))sampleDirectoryMLoadedCallback);
+        testAndSet_onlyUseHeap3(0);
+        gAudioPendingLoadFlags |= 0x40;
+        gAudioStarfoxMSampleBufferHandle = loadFileByPathAsync(base + 0x264, NULL, 0,
+                                                              (void (*)(void *))sampleBufferMLoadedCallback);
+        if (gAudioStarfoxMPoolDataHandle == NULL || gAudioStarfoxMProjectDataHandle == NULL ||
+            gAudioStarfoxMSampleDirectoryHandle == NULL || gAudioStarfoxMSampleBufferHandle == NULL) {
+            return 0xff;
+        }
+        testAndSet_onlyUseHeap3(0);
+    }
+    if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & 0x8) && (gAudioCompletedLoadFlags & 0x10) &&
+        (gAudioCompletedLoadFlags & 0x8) && (gAudioCompletedLoadFlags & 0x20) &&
+        (gAudioCompletedLoadFlags & 0x40)) {
+        sndPushGroup(gAudioStarfoxMProjectDataHandle, 0, gAudioStarfoxMSampleBufferHandle,
+                     gAudioStarfoxMSampleDirectoryHandle, gAudioStarfoxMPoolDataHandle);
+        delay = mmSetFreeDelay(0);
+        mm_free(gAudioStarfoxMSampleBufferHandle);
+        mmSetFreeDelay(delay);
+        gAudioMusicGroupReady = 1;
+        testAndSet_onlyUseHeap3(1);
+        gAudioPendingLoadFlags |= 0x80;
+        gAudioStarfoxSPoolDataHandle = loadFileByPathAsync(base + 0x278, NULL, 0,
+                                                          (void (*)(void *))poolDataSLoadedCallback);
+        gAudioPendingLoadFlags |= 0x100;
+        gAudioStarfoxSProjectDataHandle = loadFileByPathAsync(base + 0x28c, NULL, 0,
+                                                             (void (*)(void *))projectDataSLoadedCallback);
+        gAudioPendingLoadFlags |= 0x200;
+        gAudioStarfoxSSampleDirectoryHandle = loadFileByPathAsync(base + 0x2a0, NULL, 0,
+                                                                 (void (*)(void *))sampleDirectorySLoadedCallback);
+        testAndSet_onlyUseHeap3(0);
+        gAudioPendingLoadFlags |= 0x400;
+        gAudioStarfoxSSampleBufferHandle = loadFileByPathAsync(base + 0x2b4, NULL, 0,
+                                                              (void (*)(void *))sampleBufferSLoadedCallback);
+        if (gAudioStarfoxSPoolDataHandle == NULL || gAudioStarfoxSProjectDataHandle == NULL ||
+            gAudioStarfoxSSampleDirectoryHandle == NULL || gAudioStarfoxSSampleBufferHandle == NULL) {
+            return 0xff;
+        }
+    }
+    if (!gAudioSfxGroupsReady && (gAudioCompletedLoadFlags & 0x80) && (gAudioCompletedLoadFlags & 0x100) &&
+        (gAudioCompletedLoadFlags & 0x80) && (gAudioCompletedLoadFlags & 0x200) &&
+        (gAudioCompletedLoadFlags & 0x400)) {
+        for (v = 1; v <= 0x37; v++) {
+            if (sndPushGroup(gAudioStarfoxSProjectDataHandle, (u16)v, gAudioStarfoxSSampleBufferHandle,
+                             gAudioStarfoxSSampleDirectoryHandle, gAudioStarfoxSPoolDataHandle) == 0) {
+                OSReport(base + 0x2c8, v);
+            }
+        }
+        delay = mmSetFreeDelay(0);
+        mm_free(gAudioStarfoxSSampleBufferHandle);
+        mmSetFreeDelay(delay);
+        gAudioSfxGroupsReady = 1;
+    }
+    if (!gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady) {
+        gAudioReady = musicInitMidiWad();
+    }
+    if (gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady &&
+        (gAudioCompletedLoadFlags & 0x1) && (gAudioCompletedLoadFlags & 0x2) &&
+        (gAudioCompletedLoadFlags & 0x4)) {
+        gAudioResetting = 0;
+        gAudioManagedChannelMask = 0x1f;
+        gAudioActiveChannelMask = 0;
+        return 1;
+    }
+    return 0;
 }

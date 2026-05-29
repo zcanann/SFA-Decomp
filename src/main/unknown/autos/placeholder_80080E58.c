@@ -5534,3 +5534,248 @@ void dll_06_func0C_nop(void) {}
 int dll_06_func07_ret_0(void) { return 0x0; }
 void sky2_release(void) {}
 void dll_07_func0A_nop(void) {}
+
+extern u8 lbl_803DD1EC;
+extern f32 lbl_803DD1E8;
+extern f32 lbl_803DD1E4;
+extern f32 lbl_803DD1E0;
+
+void fn_8009436C(void) {
+    lbl_803DD1EC = 0;
+}
+
+#pragma push
+#pragma scheduling off
+void fn_80094378(f32 a, f32 b, f32 c) {
+    lbl_803DD1EC = 1;
+    lbl_803DD1E8 = a;
+    lbl_803DD1E4 = b;
+    lbl_803DD1E0 = c;
+}
+#pragma pop
+
+extern void textureFree(void *handle);
+extern void ModelLightStruct_free(void *p);
+extern void Music_Trigger(int id, int restart);
+extern void *lbl_8039A818[];
+extern void *lbl_8039A828[];
+extern void *lbl_803DD1C8;
+extern void *lbl_803DD1C4;
+extern void *lbl_803DD1A0;
+extern u8 lbl_803DD1C0;
+extern f32 lbl_803DF1A0;
+extern f32 lbl_803DF1A4;
+extern f32 lbl_803DB760;
+extern f32 lbl_803DB764;
+extern f32 lbl_803DB768;
+extern f32 lbl_803DD1BC;
+extern f32 lbl_803DD1B8;
+extern f32 lbl_803DD1B4;
+extern f32 lbl_803DD190;
+extern f32 lbl_803DD194;
+extern u8 lbl_803DD198;
+extern u8 lbl_803DD199;
+extern u8 lbl_803DD19A;
+extern u8 lbl_803DD1CC;
+void snowFreeSnowCloud(int index);
+
+#pragma push
+#pragma scheduling off
+void newclouds_release(void) {
+    int i;
+
+    if (lbl_803DD1C8 != NULL) {
+        textureFree(lbl_803DD1C8);
+        lbl_803DD1C8 = NULL;
+    }
+    for (i = 0; i < 4; i++) {
+        if (lbl_8039A818[i] != NULL) {
+            textureFree(lbl_8039A818[i]);
+            lbl_8039A818[i] = NULL;
+        }
+    }
+    if (lbl_803DD1C4 != NULL) {
+        textureFree(lbl_803DD1C4);
+        lbl_803DD1C4 = NULL;
+    }
+    if (lbl_803DD1A0 != NULL) {
+        ModelLightStruct_free(lbl_803DD1A0);
+    }
+    lbl_803DD1C0 = 0;
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+void newclouds_onMapSetup(void) {
+    int i;
+    f32 a;
+    f32 b;
+
+    for (i = 0; i < 8; i++) {
+        if (lbl_8039A828[i] != NULL) {
+            snowFreeSnowCloud(i);
+        }
+        lbl_8039A828[i] = NULL;
+    }
+    a = lbl_803DF1A0;
+    lbl_803DD1BC = a;
+    lbl_803DD1B8 = a;
+    lbl_803DD1B4 = a;
+    lbl_803DD190 = a;
+    b = lbl_803DF1A4;
+    lbl_803DB760 = b;
+    lbl_803DD194 = a;
+    lbl_803DD198 = 0;
+    lbl_803DB764 = b;
+    lbl_803DD199 = 0;
+    lbl_803DD19A = 0;
+    lbl_803DB768 = b;
+    lbl_803DD1CC = 0;
+    Music_Trigger(235, 0);
+}
+#pragma pop
+
+extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
+extern void fogFn_80070404(f32 a, f32 b);
+extern void setTextColor(int unused, int a, int b, int c, int d);
+extern f32 lbl_803DF14C;
+extern f32 lbl_803DF108;
+extern f32 lbl_803DF148;
+extern f32 lbl_803DF118;
+extern s8 lbl_803DB750;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void dll_06_func06(int obj) {
+    u8 *s = lbl_803DD184;
+
+    if (s != NULL) {
+        lbl_803DD180 = 2;
+        fn_8005D0BC(obj, (u8) * (int *)(s + 0x24), (u8) * (int *)(s + 0x28),
+                    (u8) * (int *)(s + 0x2c), 55);
+        s = lbl_803DD184;
+        if (*(f32 *)(s + 0x14) == *(f32 *)(s + 0x18)) {
+            *(f32 *)(s + 0x14) = *(f32 *)(s + 0x14) - lbl_803DF14C;
+        }
+        s = lbl_803DD184;
+        if (*(f32 *)(s + 0x14) > *(f32 *)(s + 0x18)) {
+            *(f32 *)(s + 0x14) = *(f32 *)(s + 0x18) - lbl_803DF14C;
+        }
+        s = lbl_803DD184;
+        fogFn_80070404(*(f32 *)(s + 0x14), *(f32 *)(s + 0x18));
+    }
+}
+
+void dll_06_func08(int obj) {
+    u8 *s = lbl_803DD184;
+    f32 v;
+    int alpha;
+
+    if (s != NULL) {
+        if (lbl_803DB750 == 0 && (*(u16 *)(s + 4) & 1) == 0) {
+            v = *(f32 *)(s + 0x14);
+            if (v < lbl_803DF108) {
+                alpha = 255;
+            } else if (v > lbl_803DF148) {
+                alpha = 0;
+            } else {
+                alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
+            }
+            setTextColor(obj, (u8) * (int *)(s + 0x24), (u8) * (int *)(s + 0x28),
+                         (u8) * (int *)(s + 0x2c), (u8)alpha);
+        } else {
+            setTextColor(obj, 255, 255, 255, 0);
+        }
+    }
+}
+
+extern void Obj_SetModelColorOverrideRecursive(int obj, int r, int g, int b, int a, int flag);
+
+void fn_8008DAE8(int obj) {
+    u8 *s;
+    f32 v;
+    int alpha;
+
+    if (lbl_803DD184 == NULL) {
+        Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
+    }
+    if (lbl_803DB750 == 0 && (*(u16 *)((s = lbl_803DD184) + 4) & 1) == 0) {
+        v = *(f32 *)(s + 0x14);
+        if (v < lbl_803DF108) {
+            alpha = 255;
+        } else if (v > lbl_803DF148) {
+            alpha = 0;
+        } else {
+            alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
+        }
+        Obj_SetModelColorOverrideRecursive(obj, (u8) * (int *)(s + 0x24),
+                                           (u8) * (int *)(s + 0x28),
+                                           (u8) * (int *)(s + 0x2c), (u8)alpha, 1);
+    } else {
+        Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
+    }
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
+    u8 *p = mmAlloc(40, 23, 0);
+
+    if (p == NULL) {
+        return NULL;
+    }
+    *(f32 *)(p + 0) = a[0];
+    *(f32 *)(p + 4) = a[1];
+    *(f32 *)(p + 8) = a[2];
+    *(f32 *)(p + 0xc) = b[0];
+    *(f32 *)(p + 0x10) = b[1];
+    *(f32 *)(p + 0x14) = b[2];
+    *(f32 *)(p + 0x18) = c;
+    *(f32 *)(p + 0x1c) = d;
+    *(s16 *)(p + 0x22) = e;
+    *(u8 *)(p + 0x26) = f;
+    *(s16 *)(p + 0x20) = 0;
+    *(u16 *)(p + 0x24) = 0xFFFF;
+    *(u8 *)(p + 0x27) = g;
+    return p;
+}
+#pragma pop
+
+extern void **gRomCurveInterface;
+extern void curveFn_80083e00(int *out, u8 *curve, int x, f32 f, int flag);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void curveFindFn_800843c4(int *out, int id) {
+    u8 *curve;
+    int i;
+    int mask;
+    int found;
+    int val;
+
+    out[0] = id;
+    out[1] = -1;
+    curve = (u8 *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out[0]);
+    mask = 1;
+    for (i = 0; i < 4; i++) {
+        val = *(int *)(curve + i * 4 + 28);
+        if (val > -1 && ((s8)curve[0x1b] & mask) == 0) {
+            found = val;
+            i = 5;
+        }
+        mask <<= 1;
+    }
+    if (i != 6) {
+        out[0] = -1;
+    } else {
+        out[1] = found;
+        curveFn_80083e00(out, curve,
+                         (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out[1]),
+                         lbl_803DEFB0, 0);
+    }
+}
+#pragma pop
