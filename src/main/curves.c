@@ -144,7 +144,7 @@ int curveFn_80010320(Curve *curve, f32 dt)
             step -= lengths[seg + 1];
             if (step > zero && ++seg >= 20) {
                 savedIdx = curve->idx;
-                if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+                if (curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) {
                     curve->idx += 3;
                 }
                 if (++curve->idx > curve->count - 4) {
@@ -201,7 +201,7 @@ int curveFn_80010320(Curve *curve, f32 dt)
             step += lengths[seg + 1];
             if (step < zero && --seg < 0) {
                 savedIdx = curve->idx;
-                if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+                if (curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) {
                     curve->idx -= 3;
                 }
                 if (--curve->idx < 0) {
@@ -252,7 +252,7 @@ void curvesSetupMoveNetworkCurve(Curve *curve)
     if (curve->count < 4) {
         debugPrintf(sCurvesSetupMoveNetworkCurveTooFewControlPoints);
     }
-    if ((curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) &&
+    if ((curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) &&
         (curve->count & 3) != 0) {
         debugPrintf(sCurvesSetupMoveNetworkCurveBadControlPointCount);
     }
@@ -262,7 +262,7 @@ void curvesSetupMoveNetworkCurve(Curve *curve)
     while (curve->idx < curve->count - 3) {
         curveFn_8000fe8c(curve, 5);
         curve->pathLength += curve->totalLen;
-        if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+        if (curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) {
             curve->idx += 4;
         } else {
             curve->idx += 1;
@@ -291,7 +291,7 @@ void curvesMove(Curve *curve)
     if (curve->count < 4) {
         debugPrintf(sCurvesMoveTooFewControlPoints);
     }
-    if ((curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) &&
+    if ((curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) &&
         (curve->count & 3) != 0) {
         debugPrintf(sCurvesMoveBadControlPointCount);
     }
@@ -301,7 +301,7 @@ void curvesMove(Curve *curve)
     while (curve->idx < curve->count - 3) {
         curveFn_8000fe8c(curve, 5);
         curve->pathLength += curve->totalLen;
-        if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+        if (curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) {
             curve->idx += 4;
         } else {
             curve->idx += 1;

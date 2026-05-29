@@ -836,7 +836,7 @@ searched:
         oldp = q[foundSlot].priority;
         q[foundSlot].priority = key;
         if (key < oldp) {
-            fn_80010F6C(q, state->queueCount, foundSlot);
+            CurveHeap_SiftDown(q, state->queueCount, foundSlot);
         } else if (key > oldp) {
             heapSiftUp(q, foundSlot);
         }
@@ -909,7 +909,7 @@ int voxmaps_processRouteQueue(RouteState *state, int count)
             nodeIdx = queue[1].value;
             queue[1].priority = queue[state->queueCount].priority;
             queue[1].value = queue[state->queueCount--].value;
-            fn_80010F6C(queue, state->queueCount, 1);
+            CurveHeap_SiftDown(queue, state->queueCount, 1);
         }
         if (nodeIdx < 0) {
             done = 1;
