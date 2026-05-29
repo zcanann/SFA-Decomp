@@ -5553,3 +5553,82 @@ void fn_80094378(f32 a, f32 b, f32 c) {
     lbl_803DD1E0 = c;
 }
 #pragma pop
+
+extern void textureFree(void *handle);
+extern void ModelLightStruct_free(void *p);
+extern void Music_Trigger(int id, int restart);
+extern void *lbl_8039A818[];
+extern void *lbl_8039A828[];
+extern void *lbl_803DD1C8;
+extern void *lbl_803DD1C4;
+extern void *lbl_803DD1A0;
+extern u8 lbl_803DD1C0;
+extern f32 lbl_803DF1A0;
+extern f32 lbl_803DF1A4;
+extern f32 lbl_803DB760;
+extern f32 lbl_803DB764;
+extern f32 lbl_803DB768;
+extern f32 lbl_803DD1BC;
+extern f32 lbl_803DD1B8;
+extern f32 lbl_803DD1B4;
+extern f32 lbl_803DD190;
+extern f32 lbl_803DD194;
+extern u8 lbl_803DD198;
+extern u8 lbl_803DD199;
+extern u8 lbl_803DD19A;
+extern u8 lbl_803DD1CC;
+void snowFreeSnowCloud(int index);
+
+void newclouds_release(void) {
+    int i;
+
+    if (lbl_803DD1C8 != NULL) {
+        textureFree(lbl_803DD1C8);
+        lbl_803DD1C8 = NULL;
+    }
+    for (i = 0; i < 4; i++) {
+        if (lbl_8039A818[i] != NULL) {
+            textureFree(lbl_8039A818[i]);
+            lbl_8039A818[i] = NULL;
+        }
+    }
+    if (lbl_803DD1C4 != NULL) {
+        textureFree(lbl_803DD1C4);
+        lbl_803DD1C4 = NULL;
+    }
+    if (lbl_803DD1A0 != NULL) {
+        ModelLightStruct_free(lbl_803DD1A0);
+    }
+    lbl_803DD1C0 = 0;
+}
+
+#pragma push
+#pragma scheduling off
+void newclouds_onMapSetup(void) {
+    int i;
+    f32 a;
+    f32 b;
+
+    for (i = 0; i < 8; i++) {
+        if (lbl_8039A828[i] != NULL) {
+            snowFreeSnowCloud(i);
+        }
+        lbl_8039A828[i] = NULL;
+    }
+    a = lbl_803DF1A0;
+    lbl_803DD1BC = a;
+    lbl_803DD1B8 = a;
+    lbl_803DD1B4 = a;
+    lbl_803DD190 = a;
+    b = lbl_803DF1A4;
+    lbl_803DB760 = b;
+    lbl_803DD194 = a;
+    lbl_803DD198 = 0;
+    lbl_803DB764 = b;
+    lbl_803DD199 = 0;
+    lbl_803DD19A = 0;
+    lbl_803DB768 = b;
+    lbl_803DD1CC = 0;
+    Music_Trigger(235, 0);
+}
+#pragma pop
