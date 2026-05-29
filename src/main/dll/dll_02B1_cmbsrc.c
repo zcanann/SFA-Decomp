@@ -139,7 +139,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
     if (*(void **)state != NULL && fn_8001DB64(*(void **)state) != 2) {
         return 0;
     }
-    if (*(s16 *)(setup + 0x24) != -1 && GameBit_Get(*(s16 *)(setup + 0x24)) == 0) {
+    if (*(s16 *)(setup + 0x24) != -1 && (u32)GameBit_Get(*(s16 *)(setup + 0x24)) == 0) {
         result = 1;
     } else if ((*(u8 *)(state + 0x22) & 0x4) != 0 &&
                (*(int (**)(int *))(*gSHthorntailAnimationInterface + 0x24))(&hitOut) == 0) {
