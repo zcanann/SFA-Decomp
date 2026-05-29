@@ -7709,6 +7709,20 @@ void doNothing_beforeRenderObject(void) {}
 void fn_8002B85C(void) {}
 
 /* ObjModel/model-file accessors. */
+typedef struct ObjModelFileHeaderLite {
+    u8 pad00[0xf3];
+    u8 jointCount;
+    u8 extraJointCount;
+} ObjModelFileHeaderLite;
+
+typedef struct ObjModelInstanceLite {
+    ObjModelFileHeaderLite *file;
+    u8 pad04[0x0c - 0x04];
+    u8 *jointMatrices[2];
+    u8 pad14[0x18 - 0x14];
+    u16 bufferFlags;
+} ObjModelInstanceLite;
+
 #pragma push
 #pragma scheduling off
 #pragma peephole off
@@ -7724,15 +7738,17 @@ void *modelFileGetDisplayList(u8 *modelFile, int displayListIndex) {
     return *(u8 **)(modelFile + 0xd0) + displayListIndex * 0x1c;
 }
 
-void ObjModel_CopyJointTranslation(u8 *model, int jointIndex, f32 *out) {
-    u8 *modelFile;
+void ObjModel_CopyJointTranslation(u8 *modelBytes, int jointIndex, f32 *out) {
+    ObjModelInstanceLite *model;
+    ObjModelFileHeaderLite *modelFile;
     uint jointCount;
     u8 *jointMtx;
 
-    modelFile = *(u8 **)model;
-    jointCount = modelFile[0xf3];
+    model = (ObjModelInstanceLite *)modelBytes;
+    modelFile = model->file;
+    jointCount = modelFile->jointCount;
     if (jointCount != 0) {
-        jointCount += modelFile[0xf4];
+        jointCount += modelFile->extraJointCount;
     } else {
         jointCount = 1;
     }
@@ -7741,8 +7757,7 @@ void ObjModel_CopyJointTranslation(u8 *model, int jointIndex, f32 *out) {
         jointIndex = 0;
     }
 
-    model += (*(u16 *)(model + 0x18) & 1) * 4;
-    jointMtx = *(u8 **)(model + 0xc) + jointIndex * 0x40;
+    jointMtx = model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40;
     out[0] = *(f32 *)(jointMtx + 0xc);
     out[1] = *(f32 *)(jointMtx + 0x1c);
     out[2] = *(f32 *)(jointMtx + 0x2c);
@@ -7821,14 +7836,16 @@ void ObjModel_ToggleMatrixBuffer(u8 *model) {
     *(u16 *)(model + 0x18) ^= 1;
 }
 
-void *ObjModel_GetJointMatrix(u8 *model, int jointIndex) {
-    u8 *modelFile;
+void *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex) {
+    ObjModelInstanceLite *model;
+    ObjModelFileHeaderLite *modelFile;
     uint jointCount;
 
-    modelFile = *(u8 **)model;
-    jointCount = modelFile[0xf3];
+    model = (ObjModelInstanceLite *)modelBytes;
+    modelFile = model->file;
+    jointCount = modelFile->jointCount;
     if (jointCount != 0) {
-        jointCount += modelFile[0xf4];
+        jointCount += modelFile->extraJointCount;
     } else {
         jointCount = 1;
     }
@@ -7837,8 +7854,7 @@ void *ObjModel_GetJointMatrix(u8 *model, int jointIndex) {
         jointIndex = 0;
     }
 
-    model += (*(u16 *)(model + 0x18) & 1) * 4;
-    return *(u8 **)(model + 0xc) + jointIndex * 0x40;
+    return model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40;
 }
 
 void *ObjModel_GetRenderOpTextureRefs(u8 *model, int renderOpIndex) {
