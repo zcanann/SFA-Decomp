@@ -382,7 +382,7 @@ extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void fn_8001D730(int light, int a, int r, int g, int b, int e, f32 f);
 extern void fn_8001D714(int light, f32 a);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
+extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern u8 lbl_803DC210[8];
 extern int lbl_803DDD30;
 extern f32 lbl_803E6668;
@@ -909,7 +909,7 @@ extern SnowClawAnimTbl lbl_802C2540;
 
 int snowclaw_animEventCallback(int obj, int a2, int evt) {
     int *inner;
-    int sub;
+    int *sub;
     int i;
     SnowClawAnimTbl tbl;
     f32 dist;
@@ -929,13 +929,13 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
         return 4;
     }
     *(s16 *)((char *)obj + 6) &= ~0x4000;
-    sub = *(int *)inner;
+    sub = *(int **)inner;
     *(u8 *)((char *)inner + 0xa0) = 0xff;
     if (sub != 0) {
         s16 v6 = *(s16 *)((char *)sub + 6);
         if (v6 & 0x4000) {
             *(s16 *)((char *)sub + 6) = v6 & ~0x4000;
-            (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c))(sub, 2);
+            (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c)))(sub, 2);
         }
     }
     if (*(u8 *)((char *)evt + 0x7e) == 2) {
@@ -963,7 +963,7 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
                 *(f32 *)((char *)inner + 0xc) = *(f32 *)((char *)inner + 0x18);
                 *(f32 *)((char *)inner + 0x10) = *(f32 *)((char *)inner + 0x1c);
                 *(f32 *)((char *)inner + 0x14) = *(f32 *)((char *)inner + 0x20);
-                (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c))(sub, 2);
+                (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c)))(sub, 2);
                 ObjAnim_SetCurrentMove(obj, *(u16 *)((char *)inner + 0xa8), lbl_803E66F0, 1);
                 if (*(int *)((char *)obj + 0x64) != 0) {
                     *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x1000;
@@ -972,24 +972,24 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
             }
             break;
         case 1:
-            sub = *(int *)inner;
+            sub = *(int **)inner;
             if (sub != 0) {
-                (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c))(sub, 0);
+                (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c)))(sub, 0);
                 *(s16 *)((char *)evt + 0x6e) |= 4;
             }
             break;
         case 6: {
-            int found = ObjGroup_FindNearestObject(0x1e, obj, &dist);
+            int *found = (int *)ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if (found != 0) {
-                (*(void (*)(int, int))(*(int *)(*(int *)((char *)found + 0x68)) + 0x20))(found, 2);
+                (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)found + 0x68)) + 0x20)))(found, 2);
                 ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 0;
             }
             break;
         }
         case 7: {
-            int found = ObjGroup_FindNearestObject(0x1e, obj, &dist);
+            int *found = (int *)ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if (found != 0) {
-                (*(void (*)(int, int))(*(int *)(*(int *)((char *)found + 0x68)) + 0x20))(found, 0);
+                (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)found + 0x68)) + 0x20)))(found, 0);
                 ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 1;
             }
             break;
@@ -1005,14 +1005,14 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
             *(u8 *)((char *)obj + 0xeb) = 0;
         }
         if (*(s8 *)((char *)inner + 0xa2) > 0 && Obj_IsLoadingLocked() != 0) {
-            int o = Obj_AllocObjectSetup(0x18, tbl.v[*(s8 *)((char *)inner + 0xa2)]);
-            Obj_SetupObject(o, 4, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
-            *(int *)((char *)obj + 0xc8) = o;
+            *(int *)((char *)obj + 0xc8) =
+                Obj_SetupObject(Obj_AllocObjectSetup(0x18, tbl.v[*(s8 *)((char *)inner + 0xa2)]), 4,
+                                *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
             *(u8 *)((char *)obj + 0xeb) = 1;
         }
         *(s8 *)((char *)inner + 0xa3) = *(s8 *)((char *)inner + 0xa2);
     }
-    if (sub != 0 && (*(int (*)(int))(*(int *)(*(int *)((char *)sub + 0x68)) + 0x38))(sub) == 2) {
+    if (sub != 0 && (*(int (*)(int *))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x38)))(sub) == 2) {
         *(s16 *)((char *)evt + 0x6e) &= ~3;
     }
     return 0;
