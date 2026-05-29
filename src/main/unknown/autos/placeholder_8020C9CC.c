@@ -715,6 +715,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
     }
 }
 
+#pragma dont_inline on
 void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9) {
     f32 va, vb, vc;
 
@@ -744,6 +745,7 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
     *(f32 *)(obj + 0x28) = *(f32 *)(sub + 0x28);
     *(f32 *)(obj + 0x2c) = *(f32 *)(sub + 0x2c);
 }
+#pragma dont_inline reset
 
 void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis) {
     int *inner;
