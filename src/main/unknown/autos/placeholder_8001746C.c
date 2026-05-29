@@ -11789,6 +11789,40 @@ void fn_80026C88(u8 *p) {
     mm_free(p);
 }
 
+extern f32 lbl_803DE858;
+extern f32 lbl_803DE85C;
+extern f32 lbl_803DE860;
+extern f32 lbl_803DE828;
+
+void *allocModelStruct2(int **models, int count) {
+    int i;
+    int offset;
+    int *model;
+    u8 *entryBase;
+    u8 *state;
+
+    state = mmAlloc(0x1c, 0x1a, 0);
+    *(int *)(state + 4) = count;
+    state[0x19] = 0;
+    state[0x18] = 0;
+    entryBase = mmAlloc(count * 0xc, 0x1a, 0);
+    *(u8 **)state = entryBase;
+    offset = 0;
+    for (i = 0; i < count; i++) {
+        model = models[i];
+        *(int **)(entryBase + offset + 4) = model;
+        *(int *)(entryBase + offset + 8) = model[1];
+        *(void **)(entryBase + offset) = mmAlloc((*(int *)(entryBase + offset + 8) + 1) * 0x54, 0x1a, 0);
+        offset += 0xc;
+    }
+    *(f32 *)(state + 8) = lbl_803DE858;
+    *(f32 *)(state + 0xc) = lbl_803DE85C;
+    *(f32 *)(state + 0x10) = lbl_803DE860;
+    *(f32 *)(state + 0x14) = lbl_803DE828;
+    state[0x1a] = 1;
+    return state;
+}
+
 void textFn_8001bb78(int x) {
     if (lbl_803DCA00 != 0) {
         lbl_803DC9FC = x;
