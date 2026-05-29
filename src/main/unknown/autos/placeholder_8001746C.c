@@ -1792,13 +1792,20 @@ void translateToDinoLanguage(u8 *str) {
 #pragma pop
 
 extern char lbl_802C8F40[];
+extern u8 lbl_80339980[];
 extern u8 lbl_803399A0[];
 extern u8 lbl_803399C0[];
 extern int lbl_803DC970;
 extern u8 *lbl_803DC974;
 extern int lbl_803DC978;
 extern int lbl_803DC97C;
-extern void *gameTextGet(void);
+extern f32 timeDelta;
+extern f32 lbl_803DE704;
+extern f32 lbl_803DE71C;
+extern char lbl_803DB3D4[];
+extern char *sMapDirectoryNameTable[];
+extern void *curGameTextDir;
+extern void *gameTextGet();
 extern int sprintf(char *dst, const char *fmt, ...);
 
 #pragma push
@@ -1834,6 +1841,105 @@ void *gameTextGetStr(void) {
         sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xef0);
         break;
     }
+    return lbl_803DC974;
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+void *gameTextGet(int textId) {
+    u8 *gameTextBase;
+    char *strings;
+    u8 *fonts;
+    u16 *entry;
+    int count;
+    int slotIndex;
+    u16 *cachedEntry;
+    u16 *prevCachedEntry;
+    f32 zero;
+    f32 fadeLimit;
+    f32 *cachedAlpha;
+
+    gameTextBase = lbl_80339980;
+    strings = lbl_802C8F40;
+    fonts = gameTextFonts;
+
+    if (*(int *)(fonts + 0x1c) != 2) {
+        lbl_803DC97C++;
+        if (lbl_803DC97C >= 8) {
+            lbl_803DC97C = 0;
+        }
+        entry = (u16 *)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
+        lbl_803DC974 = (u8 *)entry;
+        lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
+        *entry = 0xffff;
+        lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
+
+        switch (*(int *)(gameTextFonts + 0x1c)) {
+        case 0:
+            sprintf((char *)lbl_803DC978, (char *)strings + 0xec4);
+            break;
+        case 1:
+            sprintf((char *)lbl_803DC978, (char *)strings + 0xed4);
+            break;
+        case 3:
+            sprintf((char *)lbl_803DC978, (char *)strings + 0xee0);
+            break;
+        case 4:
+            sprintf((char *)lbl_803DC978, (char *)strings + 0xef0);
+            break;
+        }
+        return lbl_803DC974;
+    }
+
+    entry = *(u16 **)(fonts + 4);
+    count = *(int *)(fonts + 0xc);
+    while (count != 0) {
+        if (*entry == textId) {
+            return entry;
+        }
+        entry += 6;
+        count--;
+    }
+
+    slotIndex = 8;
+    cachedEntry = (u16 *)(gameTextBase + 0xa0);
+    while (1) {
+        prevCachedEntry = cachedEntry;
+        cachedEntry = prevCachedEntry - 6;
+        if (slotIndex == 0) {
+            break;
+        }
+        slotIndex--;
+        if (*cachedEntry == textId) {
+            zero = lbl_803DE704;
+            *(f32 *)(gameTextBase + slotIndex * 4) = zero;
+            cachedAlpha = (f32 *)(gameTextBase + 0x20 + slotIndex * 4);
+            fadeLimit = lbl_803DE71C;
+            if (zero < fadeLimit) {
+                *cachedAlpha = zero + timeDelta;
+                if (*cachedAlpha >= fadeLimit) {
+                    sprintf((char *)*(int *)*(int **)((u8 *)cachedEntry + 8), strings + 0xefc, textId,
+                            sMapDirectoryNameTable[(int)curGameTextDir]);
+                }
+            }
+            return cachedEntry;
+        }
+    }
+
+    lbl_803DC97C++;
+    if (lbl_803DC97C >= 8) {
+        lbl_803DC97C = 0;
+    }
+    entry = (u16 *)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
+    lbl_803DC974 = (u8 *)entry;
+    lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
+    *entry = 0xffff;
+    lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
+    sprintf((char *)lbl_803DC978, lbl_803DB3D4, textId,
+            sMapDirectoryNameTable[(int)curGameTextDir]);
+    *(u16 *)lbl_803DC974 = (u16)textId;
+    *(f32 *)lbl_803DC970 = lbl_803DE704;
     return lbl_803DC974;
 }
 #pragma pop
