@@ -28,8 +28,8 @@ extern undefined4 FUN_8005d340();
 extern undefined4 FUN_8005e1d8();
 extern void fn_8005DE94(uint slotPoolBase,int poolIndex,float *position);
 extern uint FUN_8005e558();
-extern int fn_8005E97C(float minX,float maxX,float minY,float maxY,float minZ,float maxZ,
-                       ExpgfxBounds *boundsTemplate);
+extern u8 fn_8005E97C(float minX,float maxX,float minY,float maxY,float minZ,float maxZ,
+                      ExpgfxBounds *boundsTemplate);
 extern undefined4 FUN_8006f8a4();
 extern undefined4 FUN_8006f8fc();
 extern void trackIntersect_drawColorBand(void);
