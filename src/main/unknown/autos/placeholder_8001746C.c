@@ -10697,7 +10697,9 @@ extern f32 PSVECDotProduct(f32 *a, f32 *b);
 extern f32 lbl_803DE760;
 extern f32 lbl_803DE75C;
 extern f32 lbl_803DE768;
+extern f32 lbl_803DE76C;
 extern f32 lbl_803DE758;
+extern f32 lbl_802C1A88[];
 
 #pragma push
 #pragma scheduling off
@@ -10836,6 +10838,97 @@ void lightDistAttenFn_8001dc38(u8 *obj, f32 a, f32 b) {
     GXGetLightAttnK(obj + 0x68, (f32 *)(obj + 0x124), (f32 *)(obj + 0x128), (f32 *)(obj + 0x12c));
 }
 
+#pragma dont_inline on
+int modelColorFn_8001cdac(u8 *light, u8 *obj) {
+    f32 localPos[3];
+    f32 worldPos[3];
+    f32 projected[3];
+    f32 cornerPos[3];
+    f32 corners[24];
+    f32 extent;
+    f32 scaledExtent;
+    u32 clipMask;
+    u32 combinedClipMask;
+    u32 *cornerWords;
+    u32 *sourceWords;
+    int i;
+
+    extent = *(f32 *)(obj + 0xa8);
+    scaledExtent = *(f32 *)(obj + 8) * extent;
+    cornerWords = (u32 *)corners;
+    sourceWords = (u32 *)lbl_802C1A88;
+    i = 12;
+    do {
+        cornerWords[0] = sourceWords[0];
+        cornerWords[1] = sourceWords[1];
+        cornerWords += 2;
+        sourceWords += 2;
+    } while (--i != 0);
+
+    worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
+    worldPos[1] = *(f32 *)(obj + 0x10);
+    worldPos[2] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
+    PSMTXMultVec((f32 *)(light + 0x170), worldPos, localPos);
+
+    if (*(int *)(light + 0x168) == 0) {
+        if (*(f32 *)(light + 0x15c) < localPos[0] - extent ||
+            localPos[0] + scaledExtent < *(f32 *)(light + 0x158) ||
+            *(f32 *)(light + 0x150) < localPos[1] - extent ||
+            localPos[1] + scaledExtent < *(f32 *)(light + 0x154) ||
+            *(f32 *)(light + 0x164) < localPos[2] - extent ||
+            localPos[2] + scaledExtent < *(f32 *)(light + 0x160)) {
+            return 0;
+        }
+        return 1;
+    }
+
+    if (*(f32 *)(light + 0x164) < localPos[2] - extent ||
+        localPos[2] + scaledExtent < *(f32 *)(light + 0x160)) {
+        return 0;
+    }
+
+    combinedClipMask = 0x3f;
+    for (i = 0; i < 8; i++) {
+        cornerPos[0] = localPos[0] + scaledExtent * corners[i * 3 + 0];
+        cornerPos[1] = localPos[1] + scaledExtent * corners[i * 3 + 1];
+        cornerPos[2] = localPos[2] + scaledExtent * corners[i * 3 + 2];
+        PSMTXMultVec((f32 *)(light + 0x1f0), cornerPos, projected);
+        if (projected[2] != lbl_803DE75C) {
+            projected[0] /= projected[2];
+            projected[1] /= projected[2];
+        }
+
+        clipMask = 0;
+        if (cornerPos[2] < *(f32 *)(light + 0x160)) {
+            clipMask |= 0x10;
+        }
+        if (*(f32 *)(light + 0x164) < cornerPos[2]) {
+            clipMask |= 0x20;
+        }
+        if (projected[0] < lbl_803DE75C) {
+            clipMask |= 1;
+        } else if (projected[0] > lbl_803DE760) {
+            clipMask |= 2;
+        }
+        if (projected[1] < lbl_803DE75C) {
+            clipMask |= 4;
+        } else if (projected[1] > lbl_803DE760) {
+            clipMask |= 8;
+        }
+        if (clipMask == 0) {
+            return 1;
+        }
+        combinedClipMask &= clipMask;
+        if (combinedClipMask == 0) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
 f32 ModelLightStruct_getLightAmount(u8 *light, u8 *obj) {
     f32 delta[3];
     f32 dist;
@@ -10865,6 +10958,111 @@ f32 ModelLightStruct_getLightAmount(u8 *light, u8 *obj) {
 
     return amount;
 }
+#pragma dont_inline reset
+
+#pragma dont_inline on
+void modelLightFn_8001ec94(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask) {
+    f32 delta[3];
+    u8 *candidates[20];
+    u8 *light;
+    f32 intensity;
+    f32 dist;
+    f32 red;
+    f32 green;
+    f32 blue;
+    u32 objectLightMask;
+    int candidateCount;
+    int i;
+    int selectedCount;
+    int lightType;
+
+    if (obj != NULL) {
+        objectLightMask = (1 << *(u8 *)(*(u32 *)(obj + 0x50) + 0x8d)) & 0xff;
+    } else {
+        objectLightMask = 1;
+    }
+
+    candidateCount = 0;
+    for (i = 0; i < lbl_803DCA30; i++) {
+        light = lbl_8033BEC0[i];
+        lightType = *(int *)(light + 0x50);
+        if (light[0x4c] != 0 && (lightType & typeMask) != 0 &&
+            (light[0x64] & objectLightMask) != 0) {
+            if (lightType == 4) {
+                *(f32 *)(light + 0x130) = lbl_803DE768;
+            } else if (lightType == 8) {
+                if (*(void **)(light + 0x16c) == NULL || modelColorFn_8001cdac(light, obj) == 0) {
+                    *(f32 *)(light + 0x130) = lbl_803DE75C;
+                } else {
+                    PSVECSubtract((f32 *)(obj + 0x18), (f32 *)(light + 0x10), delta);
+                    dist = PSVECMag(delta);
+                    intensity = lbl_803DE764;
+                    *(f32 *)(light + 0x130) = intensity + intensity / dist;
+                    *(f32 *)(light + 0x134) = ModelLightStruct_getLightAmount(light, obj);
+                }
+            } else {
+                intensity = ModelLightStruct_getLightAmount(light, obj);
+                *(f32 *)(light + 0x134) = intensity;
+                red = intensity * (f32)light[0xa8];
+                if (red < lbl_803DE75C) {
+                    red = lbl_803DE75C;
+                } else if (red > lbl_803DE76C) {
+                    red = lbl_803DE76C;
+                }
+                green = intensity * (f32)light[0xa9];
+                if (green < lbl_803DE75C) {
+                    green = lbl_803DE75C;
+                } else if (green > lbl_803DE76C) {
+                    green = lbl_803DE76C;
+                }
+                blue = intensity * (f32)light[0xaa];
+                if (blue < lbl_803DE75C) {
+                    blue = lbl_803DE75C;
+                } else if (blue > lbl_803DE76C) {
+                    blue = lbl_803DE76C;
+                }
+                if (green < red) {
+                    green = red;
+                }
+                *(f32 *)(light + 0x130) = green;
+                if (blue < *(f32 *)(light + 0x130)) {
+                    blue = *(f32 *)(light + 0x130);
+                }
+                *(f32 *)(light + 0x130) = blue;
+            }
+
+            if (*(f32 *)(light + 0x130) > lbl_803DE75C) {
+                *(f32 *)(light + 0x130) += (f32)((int)light[0x2fc] << 8);
+                selectedCount = candidateCount;
+                candidateCount++;
+                candidates[selectedCount] = light;
+                if (candidateCount >= 20) {
+                    break;
+                }
+            }
+        }
+    }
+
+    if (maxLights > candidateCount) {
+        maxLights = candidateCount;
+    }
+
+    *outCount = 0;
+    while (*outCount < maxLights) {
+        intensity = lbl_803DE75C;
+        for (i = 0; i < candidateCount; i++) {
+            if (*(f32 *)(candidates[i] + 0x130) > intensity) {
+                light = candidates[i];
+                intensity = *(f32 *)(light + 0x130);
+            }
+        }
+        selectedCount = *outCount;
+        *outCount = selectedCount + 1;
+        outLights[selectedCount] = light;
+        *(f32 *)(light + 0x130) = -*(f32 *)(light + 0x130);
+    }
+}
+#pragma dont_inline reset
 #pragma pop
 
 extern u8 lbl_803DC9A7;
