@@ -1309,6 +1309,84 @@ void objParticleFn_80097734(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
     }
 }
 
+void fn_80097B30(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+                 int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ) {
+    PartfxParams params;
+    ParticleTblA tA = *(ParticleTblA *)((char *)lbl_802C1FD8 + 0x48);
+    ParticleTbl8 tB = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0x5c);
+    ParticleTbl8 tC = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0x6c);
+    ParticleTbl8 tD = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0x7c);
+    int i;
+
+    params.f8 = f8val;
+    params.f6 = (s16)tA.v[kind];
+    params.pad[1] = 0x3c;
+    for (i = 0; i < 4; i++) {
+        u16 val;
+        f32 a;
+        if (randomGetRange(0, 0x63) >= chance) {
+            continue;
+        }
+        params.vec[0] = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        params.vec[1] = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        params.vec[2] = (f32)randomGetRange(0, 1000) / lbl_803DF368;
+        switch (mode) {
+        case 1:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] -= lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 2:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] = params.vec[1] * (params.vec[1] * params.vec[1]) - lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 3:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] =
+                (lbl_803DF354 - params.vec[1] * (params.vec[1] * params.vec[1])) - lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 4:
+            params.vec[0] -= lbl_803DF358;
+            val = (u16)(int)(lbl_803DF350 * params.vec[1]);
+            a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
+            params.vec[1] = lbl_803DF358 * sin(a);
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 5:
+            params.vec[0] -= lbl_803DF358;
+            val = (u16)(int)(lbl_803DF350 * params.vec[1]);
+            a = lbl_803DF36C * (f32)(u32)val / lbl_803DF370;
+            params.vec[1] = lbl_803DF358 * fn_80293E80(a);
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 6:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] -= lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        case 7:
+            params.vec[0] -= lbl_803DF358;
+            params.vec[1] -= lbl_803DF358;
+            params.vec[2] -= lbl_803DF358;
+            break;
+        }
+        params.vec[0] = params.vec[0] * mulX;
+        params.vec[1] = params.vec[1] * mulY;
+        params.vec[2] = params.vec[2] * mulZ;
+        if (origin != NULL) {
+            params.vec[0] += *(f32 *)((char *)origin + 0xc);
+            params.vec[1] += *(f32 *)((char *)origin + 0x10);
+            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+        }
+        params.pad[2] = (s16)tC.v[idx];
+        params.pad[0] = (s16)tD.v[idx];
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, tB.v[idx], &params, flags | 2, -1, 0);
+    }
+}
+
 typedef struct {
     u16 v[15];
 } ColorTbl;
