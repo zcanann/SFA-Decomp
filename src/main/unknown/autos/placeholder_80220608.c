@@ -6169,7 +6169,124 @@ void androssbrain_update(int obj)
 
 extern int *gScreenTransitionInterface;
 extern f32 lbl_803E7480;
-extern void gf_levelcon_handleScriptEvents(int obj);
+extern int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script);
+extern void gf_levelcon_findLinkedObjects(int obj);
+extern int loadMapAndParent(int mapId);
+extern void mapUnload(int a, int b);
+extern int mapGetDirIdx(int mapId);
+extern void warpToMap(int map, int p2);
+extern void loadUiDll(int id);
+extern void creditsStart(void);
+extern void gameTextShow(int id);
+extern f32 lbl_803E7460;
+extern f32 lbl_803E7464;
+extern f32 lbl_803E7468;
+extern f32 lbl_803E746C;
+extern f32 lbl_803E7470;
+extern f32 lbl_803E7474;
+extern f32 lbl_803E7478;
+extern f32 lbl_803E747C;
+extern f32 lbl_803E7484;
+extern f32 lbl_803E7488;
+extern f32 lbl_803E748C;
+extern f32 timeDelta;
+
+#pragma scheduling off
+int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+
+    script[0x56] = 0;
+    for (i = 0; i < script[0x8b]; i++) {
+        switch (script[0x81 + i]) {
+        case 0:
+            break;
+        case 1:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
+            skyFn_800894a8(7, lbl_803E7460, lbl_803E7464, lbl_803E7468);
+            getEnvfxAct(obj, obj, 0x21f, 0);
+            break;
+        case 8:
+            *(f32 *)(state + 0xc) = lbl_803E746C;
+            break;
+        case 2:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, (int)lbl_803E7470, (int)lbl_803E7474, (int)lbl_803E7478, 0, 0);
+            skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, lbl_803E7464);
+            getEnvfxAct(obj, obj, 0x21d, 0);
+            break;
+        case 3:
+            gf_levelcon_findLinkedObjects(obj);
+            if (*(void **)state != NULL) {
+                pointlight_setEffectState(*(int *)state, 1);
+            }
+            break;
+        case 4:
+            gf_levelcon_findLinkedObjects(obj);
+            if (*(void **)state != NULL) {
+                pointlight_setEffectState(*(int *)state, 0);
+            }
+            break;
+        case 5:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
+            skyFn_800894a8(7, lbl_803E7480, lbl_803E747C, lbl_803E7464);
+            getEnvfxAct(obj, obj, 0x21e, 0);
+            break;
+        case 6:
+            loadMapAndParent(0x29);
+            break;
+        case 7:
+            unlockLevel(0, 0, 1);
+            unlockLevel(0, 1, 1);
+            mapUnload(mapGetDirIdx(0xb), 0x20000000);
+            break;
+        case 9:
+            unlockLevel(0, 0, 1);
+            loadUiDll(4);
+            warpToMap(0x12, 0);
+            creditsStart();
+            break;
+        case 10:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
+            skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
+            getEnvfxAct(obj, obj, 0x21f, 0);
+            break;
+        case 11:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, (int)lbl_803E7470, (int)lbl_803E7474, (int)lbl_803E7478, 0, 0);
+            skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
+            getEnvfxAct(obj, obj, 0x21d, 0);
+            break;
+        }
+    }
+
+    if (*(f32 *)(state + 0xc) > lbl_803E7488) {
+        gameTextShow(0x476);
+        *(f32 *)(state + 0xc) -= timeDelta;
+        if (*(f32 *)(state + 0xc) < lbl_803E7488) {
+            *(f32 *)(state + 0xc) = lbl_803E7488;
+        }
+    }
+
+    {
+        s16 *p = *(s16 **)(state + 4);
+        if (p != NULL) {
+            *p += (int)(lbl_803E748C * timeDelta);
+        }
+    }
+    {
+        s16 *p = *(s16 **)(state + 8);
+        if (p != NULL) {
+            *p -= (int)(lbl_803E748C * timeDelta);
+        }
+    }
+    return 0;
+}
+#pragma scheduling reset
 
 int gf_levelcon_getExtraSize(void) { return 0x10; }
 int gf_levelcon_getObjectTypeId(void) { return 0; }
