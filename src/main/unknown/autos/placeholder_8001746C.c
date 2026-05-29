@@ -10469,11 +10469,14 @@ typedef struct {
 } GameTextLoadSlot;
 
 extern u8 lbl_80339980[];
+extern int lbl_803DC9D0;
+extern int lbl_803DC9D4;
 extern int lbl_803DC9D8;
 extern int lbl_803DC9E0;
 extern char *sMapDirectoryNameTable[];
 extern char *sLanguageNameTable[][2];
 extern char sGameTextMapPathFormat[];
+extern char sGameTextSequencePathFormat[];
 extern int sprintf(char *s, const char *format, ...);
 extern void setFileInfo(void *fileInfo);
 extern void *loadFileByPathAsync(char *path, void *fileInfo, int flags, void *callback);
@@ -10495,6 +10498,95 @@ extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
+    int oldHeap;
+    int languageId;
+    int languageTableOffset;
+    GameTextLoadSlot *slot;
+    GameTextLoadSlot *freeSlot;
+    char *path;
+    u8 *gameTextBase;
+    u8 *languageTable;
+    int i;
+
+    gameTextBase = lbl_80339980;
+    languageId = curLanguage;
+    languageTableOffset = languageId << 3;
+    languageTable = (u8 *)sLanguageNameTable;
+    oldHeap = testAndSet_onlyUseHeap3(0);
+    if (getGameState() != 0 && getGameState() != 1) {
+        testAndSet_onlyUseHeap3(oldHeap);
+        return;
+    }
+
+    lbl_803DC9D0 = lbl_803DC9D4;
+    if (curLanguage < 0 || curLanguage >= 6) {
+        testAndSet_onlyUseHeap3(oldHeap);
+        return;
+    }
+
+    slot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
+    i = 7;
+    do {
+        if (slot->sourceId == 1) {
+            if (slot->state == 1) {
+                slot->state = 4;
+                DVDCancelAsync(slot, dvdCancelCallback_8001b39c);
+            }
+            if (slot->state == 3 && slot->active != 0) {
+                mmSetFreeDelay(0);
+                mm_free(slot->loadHandle);
+                mmSetFreeDelay(2);
+                slot->loadHandle = NULL;
+                slot->dvdFileInfo = NULL;
+                slot->active = 0;
+            }
+        }
+        slot++;
+    } while (i-- != 0);
+
+    *(int *)(gameTextBase + 0x1604) = 1;
+    freeSlot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
+    if (freeSlot->active != 0) {
+        freeSlot++;
+        if (freeSlot->active != 0) {
+            freeSlot++;
+            if (freeSlot->active != 0) {
+                freeSlot++;
+                if (freeSlot->active != 0) {
+                    freeSlot++;
+                    if (freeSlot->active != 0) {
+                        freeSlot++;
+                        if (freeSlot->active != 0) {
+                            freeSlot++;
+                            if (freeSlot->active != 0) {
+                                freeSlot++;
+                                if (freeSlot->active != 0) {
+                                    freeSlot = NULL;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    freeSlot->state = 1;
+    freeSlot->dirId = (u8)sequenceSlotDir;
+    freeSlot->languageId = (u8)curLanguage;
+    freeSlot->active = 1;
+    freeSlot->sourceId = 1;
+    path = (char *)(gameTextBase + 0x380);
+    sprintf(path, sGameTextSequencePathFormat, sequenceId,
+            *(char **)(languageTable + languageTableOffset));
+    setFileInfo(freeSlot);
+    freeSlot->loadHandle =
+        loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
+    setFileInfo(NULL);
+    testAndSet_onlyUseHeap3(oldHeap);
+}
+
 void gameTextLoadForCurMap(int sourceId) {
     int oldHeap;
     int dirId;
