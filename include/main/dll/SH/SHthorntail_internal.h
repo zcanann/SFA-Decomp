@@ -38,7 +38,10 @@ typedef struct SHthorntailRuntime {
   u8 freezeFrameCounter;
   u8 hitReactState;
   u8 pad641[0x644 - 0x641];
-  u8 moveScratch[0x89F - 0x644];
+  u8 moveScratch[0x7DC - 0x644];
+  s16 moveControlPitch;
+  s16 moveControlRoll;
+  u8 moveScratchTail[0x89F - 0x7E0];
   u8 activeMoveValid;
   u8 pad8A0[0x8AC - 0x8A0];
   u8 hitReactScratch[0x8B0 - 0x8AC];
@@ -49,7 +52,9 @@ typedef struct SHthorntailRuntime {
 
 typedef struct SHthorntailObject {
   s16 facingAngle;
-  u8 pad02[0x08 - 0x02];
+  s16 pitch;
+  s16 roll;
+  u8 pad06[0x08 - 0x06];
   f32 modelScale;
   Vec modelPos;
   Vec pos;

@@ -282,8 +282,8 @@ void SHthorntail_update(SHthorntailObject *obj)
       (*(code *)(*DAT_803dd728 + 0x10))((double)timeDelta,psVar2,(int)runtime->moveScratch);
       (*(code *)(*DAT_803dd728 + 0x14))(psVar2,(int)runtime->moveScratch);
       (*(code *)(*DAT_803dd728 + 0x18))((double)timeDelta,psVar2,(int)runtime->moveScratch);
-      psVar2[1] = *(short *)(iVar10 + 0x7dc);
-      psVar2[2] = *(short *)(iVar10 + 0x7de);
+      obj->pitch = runtime->moveControlPitch;
+      obj->roll = runtime->moveControlRoll;
     }
     else {
       if (gSHthorntailActiveConfigToken == config->configToken) {
@@ -297,8 +297,8 @@ void SHthorntail_update(SHthorntailObject *obj)
         (*(code *)(*DAT_803dd728 + 0x10))((double)timeDelta,psVar2,(int)runtime->moveScratch);
         (*(code *)(*DAT_803dd728 + 0x14))(psVar2,(int)runtime->moveScratch);
         (*(code *)(*DAT_803dd728 + 0x18))((double)timeDelta,psVar2,(int)runtime->moveScratch);
-        psVar2[1] = *(short *)(iVar10 + 0x7dc);
-        psVar2[2] = *(short *)(iVar10 + 0x7de);
+        obj->pitch = runtime->moveControlPitch;
+        obj->roll = runtime->moveControlRoll;
       }
     }
   }
