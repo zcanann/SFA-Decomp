@@ -859,11 +859,11 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
 {
   u8 *expgfxBase;
   ExpgfxBounds *boundsTemplate;
-  ExpgfxBounds *poolBounds;
   s8 *poolActiveCounts;
-  u8 *poolBoundsTemplateIds;
-  u8 *poolSourceModes;
   u32 *poolSourceIds;
+  u8 *poolSourceModes;
+  u8 *poolBoundsTemplateIds;
+  ExpgfxBounds *poolBounds;
   u32 *slotPoolBases;
   int poolIndex;
 
