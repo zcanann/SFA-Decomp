@@ -8001,6 +8001,7 @@ void Obj_ResetModelColorState(u8 *obj) {
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x32, 0);
 }
 
+#pragma peephole off
 void Obj_StartModelFadeIn(u8 *obj, int frames) {
     f32 mtx[16];
     int fadeLimit;
@@ -8021,18 +8022,16 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
                 Obj_ClearModelColorFadeRecursive(obj);
             }
             *(s16 *)(obj + 0xe6) = (s16)frames;
-            obj[0xe5] |= 1;
+            obj[0xe5] = (u8)(obj[0xe5] | 1);
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-            ObjModel_EnableDefaultRenderCallback(
-                obj,
-                *(u8 **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4),
-                mtx,
-                1,
+            ((void (*)(u8 *, u8 *, f32 *, int, f32))ObjModel_EnableDefaultRenderCallback)(
+                obj, *(u8 **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4), mtx, 1,
                 *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
             (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x64, 0);
         }
     }
 }
+#pragma peephole reset
 
 #pragma pop
 
@@ -8107,36 +8106,6 @@ void *getCurGameText(void) {
 
 int objIsFrozen(u8 *obj) {
     return obj[0xe5] & 1;
-}
-
-void Obj_StartModelFadeIn(u8 *obj, int frames) {
-    int fadeFrames;
-    s16 objId;
-    f32 mtx[16];
-
-    fadeFrames = 10;
-    objId = *(s16 *)(obj + 0x44);
-    if (objId == 0x1c || objId == 0x6d || objId == 0x2a) {
-        fadeFrames = 40;
-    }
-
-    if ((*(u8 *)(*(u8 **)(obj + 0x50) + 0x76) & 1) != 0) {
-        if (obj[0xf0] < fadeFrames) {
-            obj[0xf0]++;
-            Obj_SetModelColorFadeRecursive(obj, 30, 0xa0, 0xff, 0xff, 0);
-        }
-        if (obj[0xf0] == fadeFrames) {
-            if ((obj[0xe5] & 2) != 0) {
-                Obj_ClearModelColorFadeRecursive(obj);
-            }
-            *(s16 *)(obj + 0xe6) = frames;
-            obj[0xe5] |= 1;
-            Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-            ObjModel_EnableDefaultRenderCallback(obj, *(u8 **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4), mtx, 1,
-                                                 *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
-            (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 100, 0);
-        }
-    }
 }
 
 int objGetFlagsE5_2(u8 *obj) {
