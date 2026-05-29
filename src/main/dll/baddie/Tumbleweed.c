@@ -3962,6 +3962,9 @@ void fn_80133718(void)
 #pragma peephole reset
 #pragma scheduling reset
 
+/* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
+void fn_80137948(char *fmt, ...) {}
+
 /* EN v1.0 0x80133EA4  size: 156b  Two-step shutdown helper. Releases
  * the buffers at minimapTexture and lbl_803DD940 (the first only if
  * non-null), then walks the 2-slot live-objects table at lbl_803DBBC8
