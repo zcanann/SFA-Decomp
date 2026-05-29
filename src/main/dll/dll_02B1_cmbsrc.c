@@ -42,7 +42,8 @@ int cmbsrc_getColorIndex(int obj)
     int setup = *(int *)(obj + 0x4c);
 
     if (*(u8 *)(setup + 0x1b) == 0xf) {
-        return *(s8 *)(state + 0x23);
+        int colorIndex = *(u8 *)(state + 0x23);
+        return (s8)colorIndex;
     }
     return -1;
 }
