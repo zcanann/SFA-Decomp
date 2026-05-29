@@ -745,6 +745,95 @@ void waterfx_func05(int p1, int p2) {
 }
 
 typedef struct {
+    u8 pad0;
+    u8 b1;
+    u8 b2;
+    u8 b3;
+    u8 pad4[12];
+} VtxDesc;
+
+void waterfx_onMapSetup(void) {
+    int i;
+    VtxDesc *vd;
+    {
+        f32 cf10;
+        f32 cxyz;
+        vd = (VtxDesc *)lbl_803DD248;
+        cxyz = lbl_803DF300;
+        cf10 = lbl_803DF318;
+        for (i = 0; i < 30; i++) {
+            WaterEntry7 *e;
+            vd[0].b1 = 3;
+            vd[0].b2 = 1;
+            vd[0].b3 = 0;
+            vd[1].b1 = 3;
+            vd[1].b2 = 2;
+            vd[1].b3 = 1;
+            e = &((WaterEntry7 *)lbl_803DD238)[i];
+            e->x = cxyz;
+            e->y = cxyz;
+            e->z = cxyz;
+            e->w = cxyz;
+            e->f10 = cf10;
+            e->active = 0;
+            vd += 2;
+        }
+    }
+    {
+        f32 cf10;
+        f32 cxyz;
+        cxyz = lbl_803DF300;
+        cf10 = lbl_803DF2EC;
+        for (i = 0; i < 10; i++) {
+            WaterParticle *s = &((WaterParticle *)lbl_803DD230)[i];
+            s->x = cxyz;
+            s->y = cxyz;
+            s->z = cxyz;
+            s->f10 = cf10;
+            s->active = 0;
+        }
+    }
+    {
+        f32 cf10;
+        f32 cxyz;
+        vd = (VtxDesc *)lbl_803DD240;
+        cxyz = lbl_803DF300;
+        cf10 = lbl_803DF318;
+        for (i = 0; i < 30; i++) {
+            WaterEntry *g;
+            vd[0].b1 = 3;
+            vd[0].b2 = 1;
+            vd[0].b3 = 0;
+            vd[1].b1 = 3;
+            vd[1].b2 = 2;
+            vd[1].b3 = 1;
+            g = &((WaterEntry *)lbl_803DD228)[i];
+            g->x = cxyz;
+            g->y = cxyz;
+            g->z = cxyz;
+            g->w = cxyz;
+            g->f10 = cf10;
+            g->active = 0;
+            g->f16 = 0;
+            vd += 2;
+        }
+    }
+    {
+        f32 cf10 = lbl_803DF300;
+        for (i = 0; i < 30; i++) {
+            WaterDrop *d = &((WaterDrop *)lbl_803DD220)[i];
+            d->idx = -1;
+            d->f0c = cf10;
+            d->f10 = cf10;
+            d->f14 = cf10;
+            d->x = cf10;
+            d->y = cf10;
+            d->z = cf10;
+        }
+    }
+}
+
+typedef struct {
     int v[5];
 } Tbl5;
 
