@@ -117,24 +117,25 @@ void cloudaction_free(void) {
 }
 
 void fn_8009AD44(void) {
+    int *e;
     int i;
-    char *e;
 
-    e = (char *)gExpgfxRuntimeData;
-    for (i = 0; i < 0x20; i++) {
-        if (*(int *)(e + 8) != 0) {
-            *(int *)(e + 4) = *(int *)(e + 4) - framesThisStep;
-            if (*(int *)(e + 4) <= 0) {
-                *(int *)(e + 8) = 0;
-                *(int *)(e + 4) = 0;
-                *(int *)(e + 0xc) = 0;
+    i = 0;
+    e = gExpgfxRuntimeData;
+    for (; i < 0x20; i++) {
+        if (e[2] != 0) {
+            e[1] = e[1] - framesThisStep;
+            if (e[1] <= 0) {
+                e[2] = 0;
+                e[1] = 0;
+                e[3] = 0;
                 gExpgfxTextureFreeInProgress = 1;
-                textureFree(*(int *)e);
+                textureFree(e[0]);
                 gExpgfxTextureFreeInProgress = 0;
-                *(int *)e = 0;
+                e[0] = 0;
             }
         }
-        e += 0x10;
+        e += 4;
     }
 }
 
