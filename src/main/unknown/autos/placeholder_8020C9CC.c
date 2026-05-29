@@ -167,6 +167,80 @@ void crcloudrace_updateRaceState(int obj) {
     }
 }
 
+extern int lbl_8032A1B4[5];
+extern u8 lbl_803DC1B8[8];
+extern u8 lbl_803DC1C0[8];
+extern int lbl_803DC1F0;
+extern int lbl_803DDD04;
+extern u8 lbl_803DDD08;
+extern s16 lbl_803DDD0A;
+extern int lbl_803DDD28;
+extern f32 lbl_803DDD2C;
+extern f32 lbl_803E65F8;
+extern u16 getNextTaskHintText(void);
+extern void setDrawLights(int mode);
+extern void audioStopByMask(int mask);
+extern void Music_Trigger(int track, int arg2);
+extern void setShowWorldMapHud(int show);
+extern void mapUnload(int mapId, int flags);
+extern int getCurMapLayer(void);
+extern void envFxActFn_800887f8(int arg);
+extern int *gScreenTransitionInterface;
+
+void worldplanet_init(int obj) {
+    int inner;
+    int mask;
+    int i;
+    int flag;
+    int layer;
+    int j;
+
+    inner = *(int *)(obj + 0xb8);
+    lbl_803DDD04 = 0;
+    GameBit_Set(0xa63, 1);
+    mask = 0;
+    for (i = 0; i < 5; i++) {
+        if (GameBit_Get(lbl_8032A1B4[i]) != 0) {
+            flag = 1;
+            if (lbl_803DC1B8[i] != 0) {
+                if (getNextTaskHintText() > 0xad) {
+                    flag = 0;
+                }
+            }
+            if ((u8)flag != 0) {
+                mask |= 1 << i;
+            }
+        }
+    }
+    *(u8 *)(inner + 0x11) = (u8)mask;
+    if (lbl_803DC1F0 != -1) {
+        *(s8 *)(inner + 0x10) = (s8)lbl_803DC1F0;
+    } else {
+        for (j = 0; j < 5; j++) {
+            if (GameBit_Get(lbl_8032A1B4[lbl_803DC1C0[j]]) != 0) {
+                *(s8 *)(inner + 0x10) = (s8)lbl_803DC1C0[j];
+                break;
+            }
+        }
+    }
+    lbl_803DDD08 = 0;
+    setDrawLights(0);
+    audioStopByMask(0xf);
+    Music_Trigger(0x8f, 1);
+    lbl_803DDD2C = lbl_803E65F8;
+    setShowWorldMapHud(1);
+    lbl_803DDD28 = -1;
+    unlockLevel(0, 0, 1);
+    mapUnload(0x2d, 0x10000000);
+    layer = getCurMapLayer();
+    (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(obj + 0xc, 0, 0, layer);
+    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(0x1e, 1);
+    lbl_803DDD0A = 0xa;
+    GameBit_Set(lbl_8032A1B4[2], 1);
+    *(s16 *)(inner + 0x6) = 0x78;
+    envFxActFn_800887f8(0);
+}
+
 extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
 extern int getLoadedFileFlags(int file);
