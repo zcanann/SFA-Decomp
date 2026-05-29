@@ -214,7 +214,7 @@ extern f32 lbl_803E6E04;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern u8 *mapGetBlock(int idx);
 extern int fn_8006070C(int block, int index);
-extern void fn_80056A6C(int a, int b, int c);
+extern void mapTextureOverrideSetValue(int a, int b, int c);
 extern f32 lbl_803E6E58;
 #pragma dont_inline on
 #pragma dont_inline reset

@@ -2760,7 +2760,7 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-void fn_800566A4(int key, int type)
+void mapTextureOverrideRelease(int key, int type)
 {
     int i;
     int off;
@@ -2786,7 +2786,7 @@ void fn_800566A4(int key, int type)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80056A6C(int type, u32 key, int value)
+void mapTextureOverrideSetValue(int type, u32 key, int value)
 {
     int i;
     int off;
@@ -3088,7 +3088,7 @@ void unloadMap(void)
                                     *(u8*)(lbl_803DCE68 + cell * 16 + 12) -= 1;
                             }
                             if (*(u8*)(p + 0x29) != 0)
-                                fn_800566A4(*(int*)(p + 0x24), *(u8*)(p + 0x29));
+                                mapTextureOverrideRelease(*(int*)(p + 0x24), *(u8*)(p + 0x29));
                             p += 8;
                         }
                     }

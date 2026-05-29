@@ -17,9 +17,9 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
                 int entry = fn_8006070C((int)block, slot);
                 if (*(u8 *)(entry + 0x29) == part) {
                     if (bit != 0) {
-                        fn_80056A6C(part, *(int *)(entry + 0x24), 0x100);
+                        mapTextureOverrideSetValue(part, *(int *)(entry + 0x24), 0x100);
                     } else {
-                        fn_80056A6C(part, *(int *)(entry + 0x24), 0);
+                        mapTextureOverrideSetValue(part, *(int *)(entry + 0x24), 0);
                     }
                 }
             }
