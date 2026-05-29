@@ -141,7 +141,7 @@ void fn_8022FB5C(int obj, int state, int arwing) {
 
 #pragma peephole off
 #pragma scheduling off
-int fn_8022FCD8(int obj, int state, int arwing) {
+int arwbombcoll_checkArwingCollision(int obj, int state, int arwing) {
     RingFlags *f = (RingFlags *)(state + 0x14);
     if (f->bit10) {
         f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
@@ -155,10 +155,10 @@ int fn_8022FCD8(int obj, int state, int arwing) {
                 return 1;
         }
     } else {
-        f32 oz = *(f32 *)(obj + 0x14);
-        f32 a = oz - *(f32 *)(arwing + 0x14);
-        f32 b = oz - *(f32 *)(arwing + 0x88);
-        if (a <= lbl_803E70A0 && b >= lbl_803E70A0) {
+        f32 objZ = *(f32 *)(obj + 0x14);
+        f32 currentZDelta = objZ - *(f32 *)(arwing + 0x14);
+        f32 previousZDelta = objZ - *(f32 *)(arwing + 0x88);
+        if (currentZDelta <= lbl_803E70A0 && previousZDelta >= lbl_803E70A0) {
             f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)(arwing + 0xc);
             f32 dy = *(f32 *)(obj + 0x10) - *(f32 *)(arwing + 0x10);
             if (sqrtf(dx * dx + dy * dy) < lbl_803E70AC)

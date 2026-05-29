@@ -2227,7 +2227,7 @@ void fn_8022D634(int arwing, int p2);
 void fn_8022D64C(int arwing, int p2);
 void fn_8022FA00(int obj, int state);
 void fn_8022FB5C(int obj, int state, int arwing);
-int fn_8022FCD8(int obj, int state, int arwing);
+int arwbombcoll_checkArwingCollision(int obj, int state, int arwing);
 void fn_8022AE1C(int obj, int bounds);
 void fn_8022AECC(int obj, int p);
 void fn_8022B8A0(int p, int q);
