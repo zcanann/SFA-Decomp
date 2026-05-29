@@ -5935,6 +5935,69 @@ void androssligh_update(int obj)
     }
 }
 
+extern void *Camera_GetViewMatrix(void);
+extern void *Camera_GetInverseViewRotationMatrix(void);
+extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern void PSVECScale(void *dst, void *src, f32 scale);
+extern void PSVECAdd(int p1, int p2, int p3);
+extern f32 lbl_803DC518;
+extern f32 lbl_803DC51C;
+extern f32 lbl_803DC520;
+extern f32 lbl_803DC524;
+extern f32 lbl_803DC528;
+extern f32 lbl_803DC52C;
+extern f32 lbl_803E7608;
+extern f32 lbl_803E760C;
+#pragma peephole off
+#pragma scheduling off
+void androssligh_updateBeam(int obj, int beam)
+{
+    f32 start[3];
+    f32 end[3];
+    f32 tmp[3];
+
+    start[0] = *(f32 *)(obj + 0xc) - lbl_803DC528;
+    start[1] = *(f32 *)(obj + 0x10);
+    start[2] = *(f32 *)(obj + 0x14);
+    end[0] = *(f32 *)(obj + 0xc) + lbl_803DC528;
+    end[1] = start[1];
+    end[2] = start[2];
+    tmp[0] = start[0] - playerMapOffsetX;
+    tmp[1] = start[1];
+    tmp[2] = start[0] - playerMapOffsetZ;
+    PSMTXMultVec(Camera_GetViewMatrix(), tmp, tmp);
+    tmp[0] = -tmp[0];
+    tmp[1] = -tmp[1];
+    tmp[2] = -tmp[2];
+    PSVECScale(tmp, tmp, lbl_803DC52C);
+    PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), tmp, tmp);
+    PSVECAdd((int)start, (int)tmp, (int)start);
+    tmp[0] = end[0] - playerMapOffsetX;
+    tmp[1] = end[1];
+    tmp[2] = end[0] - playerMapOffsetZ;
+    PSMTXMultVec(Camera_GetViewMatrix(), tmp, tmp);
+    tmp[0] = -tmp[0];
+    tmp[1] = -tmp[1];
+    tmp[2] = -tmp[2];
+    PSVECScale(tmp, tmp, lbl_803DC52C);
+    PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), tmp, tmp);
+    PSVECAdd((int)end, (int)tmp, (int)end);
+    if (*(void **)(beam + 4) == NULL) {
+        *(int *)(beam + 4) = (int)fn_8008FB20(start, end, lbl_803DC518, lbl_803DC51C,
+                                              (int)lbl_803DC520, (int)lbl_803DC524, 0);
+        *(f32 *)(beam + 8) = lbl_803E7608;
+    } else {
+        *(f32 *)(beam + 8) += timeDelta;
+        *(u16 *)(*(int *)(beam + 4) + 0x20) = (int)(lbl_803E760C + *(f32 *)(beam + 8));
+        if (*(u16 *)(*(int *)(beam + 4) + 0x20) >= *(u16 *)(*(int *)(beam + 4) + 0x22)) {
+            mm_free((void *)*(int *)(beam + 4));
+            *(int *)(beam + 4) = 0;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern int *gGameUIInterface;
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
