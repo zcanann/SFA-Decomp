@@ -3954,7 +3954,7 @@ void Lightfoot_UpdateAttachedChild(int obj, int inner)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B78A4(int obj, int state, f32 fv)
+int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv)
 {
     int inner = *(int *)((char *)obj + 0xb8);
     int sub = *(int *)((char *)inner + 0x40c);

@@ -1615,7 +1615,7 @@ void playerInitFuncPtrs(int obj);
 int Lightfoot_UpdateProximityInteractionState(int obj, int state);
 int Lightfoot_UpdateCompletionInteraction(int obj, int state);
 int Lightfoot_UpdateChallengeGateInteraction(int obj, int state);
-int fn_802B78A4(int obj, int state, f32 fv);
+int Lightfoot_UpdateWanderSteering(int obj, int state, f32 fv);
 int Lightfoot_UpdateRandomTurn(int obj, int state, f32 fv);
 int Lightfoot_UpdateTargetAnimationCycle(int obj, int state, f32 fv);
 int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv);
