@@ -1331,7 +1331,7 @@ extern int lbl_803DC9E8;
 extern int lbl_803DB3CC;
 int getControlCharLen(u32 c);
 extern int utf8GetNextChar(u8 *p, int *outLen);
-extern void gameTextMeasureString(u8 *str, f32 *outW, int *outN, f32 scale, int e, int f, int g);
+void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8 *str);
 extern void setTextColor(int a, int r, int g, int b, int al);
 extern void _textSetColor(int a, int r, int g, int b, int al);
@@ -1365,7 +1365,7 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
     void *tex;
     f32 spaceExtra;
     f32 measW;
-    int measN;
+    f32 measN;
     f32 fx0, fy0, fx1, fy1;
     f32 u0, v0;
     int params[8];
@@ -1652,6 +1652,104 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
         if (g[0xe] != 5) {
             x = lbl_803DC9A0 * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + x;
         }
+    }
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang) {
+    int byteOff;
+    int ch;
+    int charLen;
+    int n2;
+    int i;
+    int cnt;
+    u8 *p;
+    u8 *g;
+    u8 *tbl;
+    f32 width;
+    f32 mAdv;
+    f32 mH;
+    int params[8];
+
+    byteOff = 0;
+    width = lbl_803DE704;
+    if (str == NULL) {
+        return;
+    }
+    if (glyphLang == -1) {
+        if (lbl_803DC9E8 == 2) {
+            glyphLang = 6;
+        } else {
+            glyphLang = ((u8 *)sLanguageNameTable)[curLanguage * 8 + 4];
+        }
+    }
+    tbl = &lbl_802C8680[glyphLang * 16];
+    if (glyphLang != 5) {
+        if (outMaxAdv != NULL) {
+            *outMaxAdv = (f32)(u32)*(u16 *)(tbl + 8) * scale;
+        }
+        if (outMaxH != NULL) {
+            *outMaxH = (f32)(u32)*(u16 *)(tbl + 0xa) * scale;
+        }
+    }
+
+    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
+        byteOff += charLen;
+        if (ch >= 0xe000 && ch <= 0xf8ff) {
+            n2 = getControlCharLen(ch);
+            for (i = 0; i < n2; i++) {
+                int hi = str[byteOff++];
+                int lo = str[byteOff++];
+                params[i] = (hi << 8) | lo;
+            }
+            switch (ch) {
+            case 0xf8f7:
+                glyphLang = params[0];
+                tbl = &lbl_802C8680[glyphLang * 16];
+                if (glyphLang != 5) {
+                    mAdv = (f32)(u32)*(u16 *)(tbl + 8) * scale;
+                    if (outMaxAdv != NULL && mAdv > *outMaxAdv) {
+                        *outMaxAdv = mAdv;
+                    }
+                    mH = (f32)(u32)*(u16 *)(tbl + 0xa) * scale;
+                    if (outMaxH != NULL && mH > *outMaxH) {
+                        *outMaxH = mH;
+                    }
+                }
+                break;
+            case 0xf8f4:
+                scale = (f32)params[0] * lbl_803DE708;
+                break;
+            }
+            continue;
+        }
+
+        g = *(u8 **)gameTextFonts;
+        cnt = *(int *)(gameTextFonts + 8);
+        while (cnt-- != 0) {
+            if (*(u32 *)g == (u32)ch && g[0xe] == glyphLang) {
+                goto matched;
+            }
+            g += 0x10;
+        }
+        g = NULL;
+    matched:
+        if (g == NULL) {
+            continue;
+        }
+        if (glyphLang == 5) {
+            continue;
+        }
+        width = scale * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + width;
+    }
+
+    if (outW != NULL) {
+        *outW = width;
+    }
+    if (outZero != NULL) {
+        *outZero = lbl_803DE704;
     }
 }
 #pragma pop
