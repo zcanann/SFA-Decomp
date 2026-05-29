@@ -733,7 +733,7 @@ int fn_80095B18(WaterParticle *src, int idx, int count, f32 v) {
 
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 *Obj_AllocObjectSetup(int size, int id);
-extern void Obj_SetupObject(void *obj, int a, int b, int c, int d);
+extern void *Obj_SetupObject(void *obj, int a, int b, int c, int d);
 extern f32 lbl_803DF3AC;
 extern f32 lbl_803DF3B0;
 
@@ -1153,6 +1153,95 @@ extern f32 lbl_803DF370;
 extern f32 sin(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern void mathFn_80021ac8(void *in, f32 *out);
+
+typedef struct {
+    int a[5];
+    int b[4];
+    int c[5];
+} CloudEnvTbl;
+
+extern int lbl_8030F7B0[];
+extern f32 lbl_803DF2DC;
+extern int saveGameGetEnvState(void);
+
+void cloudaction_update(int p1, int p2, u8 *state, int p4, int val) {
+    CloudEnvTbl *tbl = (CloudEnvTbl *)lbl_8030F7B0;
+
+    saveGameGetEnvState();
+    if (state == NULL) {
+        return;
+    }
+    if ((state[0x58] & 2) == 0) {
+        return;
+    }
+    *(s16 *)((char *)tbl + 0xa) = (s16)((s16)*(u16 *)(state + 0x24) - 1);
+    if ((state[0x59] & 1) == 0) {
+        return;
+    }
+    lbl_803DB618[0] = lbl_803DB618[1];
+    lbl_803DB618[1] = (u16)val;
+    lbl_8039AB28[0x18] = (int)(*(f32 *)(state + 8) / lbl_803DF2DC);
+    lbl_8039AB28[0x19] = 0;
+    if ((state[0x59] & 4) != 0) {
+        lbl_8039AB28[0x1a] = 0;
+    } else {
+        lbl_8039AB28[0x1a] = 1;
+    }
+    if (state[0x5d] != 0) {
+        if (state[0x5d] < 5) {
+            if (*(int *)(lbl_8039AB28 + 0xc) != tbl->a[state[0x5d]]) {
+                if (*(void **)lbl_8039AB28 != NULL) {
+                    Obj_FreeObject(*(int *)lbl_8039AB28);
+                }
+                *(int *)lbl_8039AB28 = (int)Obj_SetupObject(
+                    Obj_AllocObjectSetup(0x20, tbl->a[state[0x5d]]), 4, -1, -1, 0);
+                *(int *)(lbl_8039AB28 + 0xc) = tbl->a[state[0x5d]];
+            }
+        }
+    } else {
+        if (*(void **)lbl_8039AB28 != NULL) {
+            Obj_FreeObject(*(int *)lbl_8039AB28);
+            *(int *)lbl_8039AB28 = 0;
+        }
+        *(int *)(lbl_8039AB28 + 0xc) = 0;
+    }
+    if (state[0x5b] != 0) {
+        if (state[0x5b] < 4) {
+            if (*(int *)(lbl_8039AB28 + 0x10) != tbl->b[state[0x5b]]) {
+                if (*(void **)(lbl_8039AB28 + 4) != NULL) {
+                    Obj_FreeObject(*(int *)(lbl_8039AB28 + 4));
+                }
+                *(int *)(lbl_8039AB28 + 4) = (int)Obj_SetupObject(
+                    Obj_AllocObjectSetup(0x20, tbl->b[state[0x5b]]), 4, -1, -1, 0);
+                *(int *)(lbl_8039AB28 + 0x10) = tbl->b[state[0x5b]];
+            }
+        }
+    } else {
+        if (*(void **)(lbl_8039AB28 + 4) != NULL) {
+            Obj_FreeObject(*(int *)(lbl_8039AB28 + 4));
+            *(int *)(lbl_8039AB28 + 4) = 0;
+        }
+        *(int *)(lbl_8039AB28 + 0x10) = 0;
+    }
+    if (state[0x5a] != 0) {
+        if (state[0x5a] < 5) {
+            if (*(int *)(lbl_8039AB28 + 0x14) != tbl->c[state[0x5a]]) {
+                if (*(void **)(lbl_8039AB28 + 8) != NULL) {
+                    Obj_FreeObject(*(int *)(lbl_8039AB28 + 8));
+                }
+                *(int *)(lbl_8039AB28 + 8) = (int)Obj_SetupObject(
+                    Obj_AllocObjectSetup(0x20, tbl->c[state[0x5a]]), 4, -1, -1, 0);
+                *(int *)(lbl_8039AB28 + 0x14) = tbl->c[state[0x5a]];
+            }
+        }
+    } else {
+        if (*(void **)(lbl_8039AB28 + 8) != NULL) {
+            Obj_FreeObject(*(int *)(lbl_8039AB28 + 8));
+            *(int *)(lbl_8039AB28 + 8) = 0;
+        }
+        *(int *)(lbl_8039AB28 + 0x14) = 0;
+    }
+}
 
 typedef struct {
     u16 a;
