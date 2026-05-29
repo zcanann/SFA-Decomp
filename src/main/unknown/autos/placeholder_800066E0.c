@@ -5459,6 +5459,7 @@ int FUN_80006a70(int param_1,int param_2,int param_3,uint param_4,int param_5,in
     return 0;
 }
 
+#pragma dont_inline on
 int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, int f)
 {
     int count;
@@ -5492,6 +5493,7 @@ int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, i
     }
     return nodeBase + count;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -12504,6 +12506,182 @@ int *voxmaps_updateActiveMap(VoxPos *obj)
         }
     }
     return &vm->f48;
+}
+
+typedef struct {
+    u8 pad00[4];
+    int minY;
+    u8 pad08[4];
+    int maxY;
+    u8 pad10[4];
+    int *nodeBase;
+    u8 pad18[4];
+    u8 *header;
+    u8 pad20[4];
+    u8 *bitmap;
+} VoxActiveMap;
+
+typedef struct {
+    int unk00;
+    int unk04;
+    int originX;
+    int originY;
+    VoxActiveMap *activeMap;
+} VoxState;
+
+extern VoxState lbl_803387E8;
+
+int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, u8 skipFirst) {
+    int zstep, dx2, dy2, dz2;
+    int p_xy, p_xz, p_yz;
+    int steps;
+    int voxX6, slot, voxZ6, voxX, voxZ;
+    int remap;
+    VoxActiveMap *cachedMap;
+    VoxState *st;
+    int oldVox;
+    u8 first;
+    VoxPos cur = *start;
+    VoxPos found;
+    u8 *node;
+    int xstep, ystep;
+    int dx, dy, dz;
+    unsigned int skip;
+
+    xstep = 1;
+    dx = end->x - cur.x;
+    if (dx < 0) { xstep = -1; dx = -dx; }
+    ystep = 1;
+    dy = end->unk2 - cur.unk2;
+    if (dy < 0) { ystep = -1; dy = -dy; }
+    zstep = 1;
+    dz = end->z - cur.z;
+    if (dz < 0) { zstep = -1; dz = -dz; }
+
+    dx2 = dx * 2;
+    p_xy = dy - dx;
+    dy2 = dy * 2;
+    p_xz = dz - dx;
+    dz2 = dz * 2;
+    p_yz = dy - dz;
+    steps = dx + (dy + dz);
+
+    voxmaps_updateActiveMap(&cur);
+
+    st = &lbl_803387E8;
+    voxX6 = (cur.x - st->originX) & 0x3f;
+    voxX = voxX6 >> 2;
+    voxZ6 = (cur.z - st->originY) & 0x3f;
+    voxZ = voxZ6 >> 2;
+    found = cur;
+    cachedMap = NULL;
+    first = 1;
+    skip = skipFirst;
+
+    while (steps-- != 0) {
+        if (skip != 0 && first != 0) {
+            first = 0;
+        } else {
+            VoxActiveMap *map = st->activeMap;
+            if (map != NULL) {
+                if (map != cachedMap || cur.unk2 != found.unk2) {
+                    int y = cur.unk2;
+                    if (y < map->minY) {
+                        slot = 0;
+                    } else if (y >= map->maxY) {
+                        slot = (map->maxY - 1) - map->minY;
+                    } else {
+                        slot = y - map->minY;
+                    }
+                    remap = 1;
+                    cachedMap = map;
+                    found.unk2 = y;
+                }
+                {
+                    u8 *bitmap = map->bitmap;
+                    unsigned int bit = (bitmap[(slot << 5) | ((voxZ << 1) + (voxX >> 3))] >> (voxX & 7)) & 1;
+                    if (bit != 0) {
+                        unsigned int occ;
+                        if (remap != 0) {
+                            node = (u8 *)voxmaps_getRouteNode(map->header, map->nodeBase, bitmap, voxX, slot, voxZ);
+                            remap = 0;
+                        }
+                        occ = (node[voxZ6 & 3] >> ((voxX6 & 3) << 1)) & 3;
+                        if (occ != 0) {
+                            if (occOut != NULL) {
+                                *occOut = occ;
+                            }
+                            if (coordOut != NULL) {
+                                *coordOut = found;
+                            }
+                            return 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (p_xy < 0) {
+            if (p_xz < 0) {
+                found.x = cur.x;
+                cur.x = (s16)(cur.x + xstep);
+                p_xy += dy2;
+                p_xz += dz2;
+                oldVox = voxX;
+                if (((cur.x - st->originX) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                voxX6 = (cur.x - st->originX) & 0x3f;
+                voxX = voxX6 >> 2;
+                if (voxX != oldVox) {
+                    remap = 1;
+                }
+            } else {
+                found.z = cur.z;
+                cur.z = (s16)(cur.z + zstep);
+                p_xz -= dx2;
+                p_yz += dy2;
+                oldVox = voxZ;
+                if (((cur.z - st->originY) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                voxZ6 = (cur.z - st->originY) & 0x3f;
+                voxZ = voxZ6 >> 2;
+                if (voxZ != oldVox) {
+                    remap = 1;
+                }
+            }
+        } else {
+            if (p_yz < 0) {
+                found.z = cur.z;
+                cur.z = (s16)(cur.z + zstep);
+                p_xz -= dx2;
+                p_yz += dy2;
+                oldVox = voxZ;
+                if (((cur.z - st->originY) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                voxZ6 = (cur.z - st->originY) & 0x3f;
+                voxZ = voxZ6 >> 2;
+                if (voxZ != oldVox) {
+                    remap = 1;
+                }
+            } else {
+                found.unk2 = cur.unk2;
+                cur.unk2 = (s16)(cur.unk2 + ystep);
+                p_xy -= dx2;
+                p_yz -= dz2;
+            }
+        }
+    }
+
+    if (coordOut != NULL) {
+        *coordOut = *end;
+    }
+    return 1;
 }
 
 typedef struct {
