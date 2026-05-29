@@ -264,7 +264,7 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
 void camcontrol_updateTargetAction(int param_1,int param_2)
 {
   short sVar1;
-  uint uVar2;
+  int uVar2;
   int iVar3;
   CamcontrolAction43Payload local_28;
   CamcontrolAction44Payload local_24;
