@@ -97,8 +97,8 @@ extern int lbl_803DD138;
 extern int lbl_803DD13C;
 extern u8 lbl_803DD140;
 extern u8 *lbl_803DD12C;
-extern u8 *lbl_803DD148;
-extern void *lbl_803DD14C;
+extern u8 *gSkySunObject;
+extern void *gSkyMoonObject;
 extern void *lbl_803DD150;
 extern int lbl_803DD154;
 extern u8 lbl_803DD158;
@@ -4910,9 +4910,9 @@ void loadSunAndMoon(void)
     void *moonObj;
 
     if (lbl_803DD154 == 0) {
-        lbl_803DD148 = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x62b), 4, -1, -1, NULL);
+        gSkySunObject = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x62b), 4, -1, -1, NULL);
         moonObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x62c), 4, -1, -1, NULL);
-        lbl_803DD14C = moonObj;
+        gSkyMoonObject = moonObj;
         lbl_803DD154 = 1;
         ObjModel_SetRenderCallback(Obj_GetActiveModel(moonObj), moonFxCb_80074110);
     }
@@ -5016,14 +5016,14 @@ void *fn_8008912C(void)
     return lbl_803DD150;
 }
 
-void fn_80089134(f32 mtx[3][4])
+void skyBuildSunModelMatrix(f32 mtx[3][4])
 {
     f32 scale;
     f32 scaleMtx[3][4];
 
-    scale = EXIInputFlag / *(f32 *)(lbl_803DD148 + 8);
+    scale = EXIInputFlag / *(f32 *)(gSkySunObject + 8);
     PSMTXScale(scaleMtx, scale, scale, scale);
-    Obj_BuildWorldTransformMatrix(lbl_803DD148, mtx, 0);
+    Obj_BuildWorldTransformMatrix(gSkySunObject, mtx, 0);
     PSMTXConcat(mtx, scaleMtx, mtx);
 }
 
@@ -5041,7 +5041,7 @@ int skyFn_8008919c(int slot)
     if ((u32)((sky[slot] >> 7) & 1) != 0) {
         return 0;
     }
-    return lbl_803DD148[0x37];
+    return gSkySunObject[0x37];
 }
 
 void skySetOverrideLightColor(u8 red, u8 green, u8 blue)
@@ -5164,7 +5164,7 @@ void getTimeOfDay(f32 *time)
 
 void renderSky(void)
 {
-    if (lbl_803DD148 != NULL && lbl_803DD14C != NULL) {
+    if (gSkySunObject != NULL && gSkyMoonObject != NULL) {
         renderSunAndMoon();
     }
     skyFn_8008a500();
