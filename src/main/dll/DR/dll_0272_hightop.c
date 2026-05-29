@@ -480,7 +480,7 @@ void hightop_hitDetect(int obj) {
     if (*(s16 *)(p + 0xc18) == 0) {
         return;
     }
-    fn_80221E94(obj, &l8, lbl_803E6B40);
+    Obj_SpawnHitLightAndFade(obj, &l8, lbl_803E6B40);
     objSoundFn_800392f0(obj, (int)(p + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
     st = *(s16 *)(p + 0x274);
     if (st != 3) {

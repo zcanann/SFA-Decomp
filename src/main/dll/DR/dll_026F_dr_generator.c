@@ -102,7 +102,7 @@ void drgenerator_hitDetect(int obj) {
         return;
     }
     p[0x19a] = p[0x19a] - ac;
-    fn_80221E94(obj, &a10, lbl_803E6B5C);
+    Obj_SpawnHitLightAndFade(obj, &a10, lbl_803E6B5C);
     fn_8009A8C8(obj, lbl_803E6B60);
     if (p[0x19a] > 0) {
         return;

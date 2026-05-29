@@ -142,7 +142,7 @@ void barrelgener_update(int obj)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_80221F14(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 c)
+void Obj_SteerVelocityTowardVector(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 c)
 {
     f32 mtx[12];
     f32 n1[3];
@@ -228,7 +228,7 @@ int fn_80222358(int p1, int p2, f32 a, f32 b, f32 c, int flag)
         *(f32 *)(state2 + 0x290) = scale * -fn_80293E80(ang);
         *(f32 *)(state2 + 0x28c) = scale * -sin(ang);
     } else {
-        fn_80221F14(p1, (f32 *)(p1 + 0x24), d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
+        Obj_SteerVelocityTowardVector(p1, (f32 *)(p1 + 0x24), d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
     }
     return result;
 }
@@ -269,7 +269,7 @@ int fn_80222160(int p1, int p2, f32 a, f32 b, f32 c, int flag, int *p6)
         *(f32 *)(state2 + 0x290) = scale * -fn_80293E80(ang);
         *(f32 *)(state2 + 0x28c) = scale * -sin(ang);
     } else {
-        fn_80221F14(p1, (f32 *)(p1 + 0x24), d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
+        Obj_SteerVelocityTowardVector(p1, (f32 *)(p1 + 0x24), d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
     }
     return result;
 }
@@ -278,7 +278,7 @@ int fn_80222160(int p1, int p2, f32 a, f32 b, f32 c, int flag, int *p6)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_80221E94(int obj, f32 *p2)
+void Obj_SpawnHitLightAndFade(int obj, f32 *p2)
 {
     struct {
         f32 _pad[3];

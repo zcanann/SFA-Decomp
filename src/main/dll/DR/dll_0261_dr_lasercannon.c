@@ -232,7 +232,7 @@ void drlasercannon_hitDetect(int obj) {
                *(s16 *)((char *)a8 + 0x46) != *(int *)(p + 0x19c)) {
         *(int **)(p + 0xc) = a8;
         p[0x1a6] = p[0x1a6] - ac;
-        fn_80221E94(obj, &a10, lbl_803E68F0);
+        Obj_SpawnHitLightAndFade(obj, &a10, lbl_803E68F0);
         fn_8009A8C8(obj, lbl_803E68F4);
         Sfx_PlayFromObject(obj, 0x3cc);
         if (p[0x1a6] <= 0) {

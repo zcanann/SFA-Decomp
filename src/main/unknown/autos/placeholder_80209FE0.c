@@ -1731,7 +1731,7 @@ extern f32 lbl_803E654C;
 extern int lbl_80329F90[];
 extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern int objRemoveFromListFn_8002ce88(int *obj);
-extern void fn_80221E94(int obj, f32 *pos, f32 v);
+extern void Obj_SpawnHitLightAndFade(int obj, f32 *pos, f32 v);
 extern int GameBit_Set(int bit, int val);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int *gMapEventInterface;
@@ -1879,7 +1879,7 @@ void drakord_thornbush_hitDetect(int obj)
                 *(int *)((char *)inner + 8) != hitObj &&
                 arrayIndexOf(*(int *)((char *)inner + 0x6c), 2) != -1) {
                 *(int *)((char *)inner + 8) = hitObj;
-                fn_80221E94(obj, &v0, lbl_803E6598);
+                Obj_SpawnHitLightAndFade(obj, &v0, lbl_803E6598);
                 *(int *)((char *)inner + 0) -= pC;
                 if (*(int *)((char *)inner + 0) <= 0) {
                     flag = 1;
@@ -2044,7 +2044,7 @@ void bossdrakor_hitDetect(int obj)
                 (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x44)))(0x1d, 3);
                 GameBit_Set(0x83c, 1);
             } else {
-                fn_80221E94(obj, &hx, lbl_803E6554);
+                Obj_SpawnHitLightAndFade(obj, &hx, lbl_803E6554);
             }
             if (*(f32 *)((char *)inner + 0x19c) <= lbl_803E6510) {
                 *(f32 *)((char *)inner + 0x19c) = lbl_803E6558;
