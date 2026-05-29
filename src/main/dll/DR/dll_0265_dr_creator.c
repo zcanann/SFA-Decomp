@@ -37,7 +37,7 @@ void drcreator_update(int obj) {
     int q = *(int *)((char *)obj + 0x4c);
     char *runtime = *(char **)((char *)obj + 0xb8);
     int o;
-    int p;
+    char *p;
     if (Obj_IsLoadingLocked() != 0) {
         switch (*(s16 *)(q + 0x1a)) {
         case 3:
@@ -64,8 +64,8 @@ void drcreator_update(int obj) {
                     } else {
                         *(u8 *)(o + 0x19) = 1;
                     }
-                    p = Obj_SetupObject(o, 5, -1, -1, 0);
-                    if (p != 0) {
+                    p = (char *)Obj_SetupObject(o, 5, -1, -1, 0);
+                    if (p != NULL) {
                         *(s16 *)(p + 2) = 0;
                         *(s16 *)p = (s16)randomGetRange(0, 65535);
                         *(f32 *)(p + 0x24) = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -fn_80293E80((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
