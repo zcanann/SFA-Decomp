@@ -30,7 +30,7 @@ void ktlazerwall_init(int obj, char *arg) {
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
     *(f32 *)(p + 0x4) = lbl_803E6898;
     *(f32 *)(p + 0xc) = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
-    if (randomGetRange(0, 1) != 0) {
+    if ((s32)randomGetRange(0, 1) != 0) {
         *(f32 *)(p + 0xc) = -*(f32 *)(p + 0xc);
     }
 }
