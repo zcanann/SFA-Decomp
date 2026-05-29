@@ -6191,6 +6191,78 @@ int romCurveFn_800844b8(RomCurveInterpState *state, f32 *offset, f32 *outPos, s1
 }
 #pragma pop
 
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void objAnimCurvFn_800849e8(u8 *obj, u8 *seq) {
+    u8 *base;
+    RomCurveNode *node;
+    f32 outPos[3];
+    f32 offset[3];
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 angleSin;
+    f32 angleCos;
+    f32 x;
+    f32 y;
+    f32 z;
+
+    base = *(u8 **)(obj + 0x4c);
+    if (base == NULL) {
+        return;
+    }
+
+    if (*(s32 *)(seq + 0x28) < 0) {
+        dx = *(f32 *)(obj + 0x0c) - *(f32 *)(base + 0x08);
+        dz = *(f32 *)(obj + 0x14) - *(f32 *)(base + 0x10);
+        angleCos = fn_80293E80((lbl_803DEFE8 * (f32)*(s16 *)(seq + 0x1a)) / lbl_803DEFEC);
+        angleSin = sin((lbl_803DEFE8 * (f32)*(s16 *)(seq + 0x1a)) / lbl_803DEFEC);
+        *(f32 *)(obj + 0x0c) = angleCos * dz + (angleSin * dx + *(f32 *)(base + 0x08));
+        *(f32 *)(obj + 0x14) = -(angleCos * dx - (angleSin * dz + *(f32 *)(base + 0x10)));
+        return;
+    }
+
+    node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(*(s32 *)(seq + 0x28));
+    if (node == NULL) {
+        return;
+    }
+
+    x = *(f32 *)(obj + 0x0c);
+    dx = x - *(f32 *)(base + 0x08);
+    y = *(f32 *)(obj + 0x10);
+    dy = y - *(f32 *)(base + 0x0c);
+    z = *(f32 *)(obj + 0x14);
+    dz = z - *(f32 *)(base + 0x10);
+    offset[0] = dx;
+    offset[1] = dy;
+    offset[2] = dz;
+    outPos[0] = x;
+    outPos[1] = y;
+    outPos[2] = z;
+
+    if (node->links[0] < 0) {
+        *(f32 *)(obj + 0x0c) = outPos[0];
+        *(f32 *)(obj + 0x10) = outPos[1];
+        *(f32 *)(obj + 0x14) = outPos[2];
+        return;
+    }
+
+    if (romCurveFn_800844b8(*(RomCurveInterpState **)(seq + 0x2c), offset, outPos,
+                            (s16 *)(seq + 0x1a), seq[0x7a]) != 0) {
+        *(f32 *)(obj + 0x0c) = outPos[0];
+        *(f32 *)(obj + 0x10) = outPos[1];
+        *(f32 *)(obj + 0x14) = outPos[2];
+        return;
+    }
+
+    angleCos = fn_80293E80((lbl_803DEFE8 * (f32)*(s16 *)(seq + 0x1a)) / lbl_803DEFEC);
+    angleSin = sin((lbl_803DEFE8 * (f32)*(s16 *)(seq + 0x1a)) / lbl_803DEFEC);
+    *(f32 *)(obj + 0x0c) = angleCos * offset[2] + (angleSin * offset[0] + *(f32 *)(base + 0x08));
+    *(f32 *)(obj + 0x14) = -(angleCos * offset[0] - (angleSin * offset[2] + *(f32 *)(base + 0x10)));
+}
+#pragma pop
+
 extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int flags);
 
 #pragma push
