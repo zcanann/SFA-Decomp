@@ -11793,6 +11793,7 @@ extern f32 lbl_803DE858;
 extern f32 lbl_803DE85C;
 extern f32 lbl_803DE860;
 extern f32 lbl_803DE828;
+extern f32 lbl_803DE864;
 
 void *allocModelStruct2(int **models, int count) {
     int i;
@@ -11821,6 +11822,23 @@ void *allocModelStruct2(int **models, int count) {
     *(f32 *)(state + 0x14) = lbl_803DE828;
     state[0x1a] = 1;
     return state;
+}
+
+void Model_GetVertexPosition(u8 *model, int vertexIndex, f32 *out) {
+    s16 *vertex;
+    f32 scale;
+
+    vertex = (s16 *)(*(u8 **)(model + 0x28) + vertexIndex * 6);
+    if ((*(u16 *)(model + 2) & 0x800) != 0) {
+        out[0] = (f32)vertex[0];
+        out[1] = (f32)vertex[1];
+        out[2] = (f32)vertex[2];
+    } else {
+        scale = lbl_803DE864;
+        out[0] = (f32)vertex[0] * scale;
+        out[1] = (f32)vertex[1] * scale;
+        out[2] = (f32)vertex[2] * scale;
+    }
 }
 
 void textFn_8001bb78(int x) {
