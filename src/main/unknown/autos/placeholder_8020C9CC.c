@@ -78,6 +78,7 @@ int crcloudrace_completionCallback(int obj, int arg2, u8 *data) {
     return 0;
 }
 
+#pragma dont_inline on
 void crcloudrace_updateCompletionState(int obj, int *state) {
     f32 dist;
     int player;
@@ -102,6 +103,67 @@ void crcloudrace_updateCompletionState(int obj, int *state) {
             }
             *(u8 *)((char *)state + 8) = 5;
         }
+    }
+}
+#pragma dont_inline reset
+
+extern int timerCountDown(void *p);
+extern void s16toFloat(void *p, int duration);
+
+void crcloudrace_updateRaceState(int obj) {
+    int *inner;
+    int player;
+
+    inner = *(int **)(obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    switch (*(u8 *)((char *)inner + 8)) {
+    case 2:
+        if (GameBit_Get(0x4a0) != 0) {
+            GameBit_Set(0x4ba, 1);
+        }
+        if (fn_802972A8(player) != 0) {
+            GameBit_Set(0x49d, 1);
+            GameBit_Set(0x497, 1);
+            *(u8 *)((char *)inner + 8) = 3;
+            unlockLevel(0, 0, 1);
+        }
+        break;
+    case 3:
+        crcloudrace_updateCompletionState(obj, inner);
+        break;
+    case 4:
+        GameBit_Set(0x4ba, 0);
+        *(u8 *)((char *)inner + 8) = 7;
+        s16toFloat((char *)inner + 4, 0xa);
+        break;
+    case 7:
+        if (timerCountDown((char *)inner + 4) != 0) {
+            *(u8 *)((char *)inner + 8) = 8;
+        }
+        break;
+    case 8:
+        unlockLevel(0, 0, 1);
+        loadMapAndParent(0xc);
+        lockLevel(mapGetDirIdx(0xc), 0);
+        GameBit_Set(0xd73, 0);
+        GameBit_Set(0x983, 0);
+        GameBit_Set(0xe23, 0);
+        GameBit_Set(0xe1d, 0);
+        GameBit_Set(0xdb8, 0);
+        GameBit_Set(0x984, 0);
+        GameBit_Set(0x458, 0);
+        *(u8 *)((char *)inner + 8) = 0;
+        break;
+    case 5:
+        *(u8 *)((char *)inner + 8) = 2;
+        break;
+    case 1:
+    case 6:
+    default:
+        *(u8 *)((char *)inner + 8) = 2;
+        break;
+    case 0:
+        break;
     }
 }
 
