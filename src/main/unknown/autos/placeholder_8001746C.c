@@ -10407,3 +10407,36 @@ void objGetWeaponDa(u8 *obj, int dummy, int *out, int key, u8 load) {
     }
 }
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjAnim_LoadMoveEvents(u8 *obj, int dummy, int *out, int key, u8 load) {
+    int i;
+    s16 *tbl;
+    s16 da2;
+
+    tbl = (s16 *)*(int *)(*(u8 **)(obj + 0x50) + 0x20);
+    *out = 0;
+    if (tbl == NULL) {
+        return;
+    }
+    i = 0;
+    while (tbl[i] != -1) {
+        if (tbl[i] == key) {
+            da2 = tbl[i + 1];
+            *out = tbl[i + 2];
+            if (*out > 0x50) {
+                *out = 0x50;
+            }
+            if (load == 0) {
+                getTabEntry(out[1], 0x40, da2, *out);
+            } else {
+                fileLoadToBufferOffset(0x40, (void *)out[1], da2, *out);
+            }
+            return;
+        }
+        i += 3;
+    }
+}
+#pragma pop
