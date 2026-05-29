@@ -244,6 +244,18 @@ Heuristic before reaching for `asm { }`:
     ~74-90% — it is the dominant residual on placeholder_80220608 (zulu15:
     wcpushblock obj/player r29↔r30, wcfloortile setup r27↔r29). Don't grind it;
     the partial still banks real fuzzy%.
+    **BUT before declaring a coloring cap, try making the base a REAL PARAM
+    instead of `void*` + a local copy.** If the function is `f(void *p){ Obj *o =
+    (Obj*)p; ... }` and the saved-reg coloring is off, change the signature to the
+    concrete pointer type `f(u8 *o)` (or `Obj *o`) — taking the base as a typed
+    PARAM (no local copy) often flips MWCC's r29/r30/r31 assignment to match
+    target. (hotel7, Obj_BuildWorldTransformMatrix → 100%.) This is a real fix,
+    not a cap — try it first.
+    **Local TYPE controls frame size: `f32 m[16]` (64B) vs `Mtx m` (48B).** When
+    target reserves a full 64-byte 4x4 stack slot but your `Mtx`/`MtxP` local only
+    reserves 48B (shifting the frame + every sp-offset), declare the matrix local
+    as `f32 m[16]` to match the 64B reservation. (hotel7, the
+    Obj_TransformLocal*ByWorldMatrix pair 99.6→100%.)
     **Base-pointer hoist for saved-register coloring.** When target keeps a
     repeatedly-used base address in a *saved* register (r29-r31) across the whole
     function — e.g. it references one global table at many offsets — declare that
