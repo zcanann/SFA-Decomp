@@ -11620,6 +11620,146 @@ int fn_802B8864(int p1, int p2, int p3)
     return 0;
 }
 
+extern void objFn_800972dc(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, void *p8, int p9);
+extern void objParticleFn_80097734(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, f32 f3,
+                                   f32 f4, void *p10, int p11);
+extern f32 lbl_803E8214;
+extern f32 lbl_803E8218;
+extern f32 lbl_803E821C;
+extern f32 lbl_803E8220;
+extern f32 lbl_803E8224;
+
+void lightfoot_update(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int p30 = *(int *)((char *)obj + 0x4c);
+    int anim = *(int *)((char *)inner + 0x40c);
+    f32 snd[3];
+    f32 buf[6];
+    u8 i;
+
+    if (*(f32 *)((char *)anim + 0x10) != lbl_803E8180) {
+        *(f32 *)((char *)anim + 0x10) -= timeDelta;
+        if (*(f32 *)((char *)anim + 0x10) <= lbl_803E8180) {
+            Obj_FreeObject(obj);
+        }
+    }
+
+    if (*(s16 *)((char *)obj + 0x46) == 0x27c && *(s16 *)((char *)inner + 0x3f2) != -1) {
+        switch (*(int *)((char *)p30 + 0x14)) {
+        case 0x4993F:
+        case 0x49940:
+        case 0x49941:
+            if (GameBit_Get(0xc44)) {
+                *(int *)((char *)obj + 0xf4) = GameBit_Get(*(s16 *)((char *)inner + 0x3f2));
+            } else {
+                *(int *)((char *)obj + 0xf4) = 1;
+            }
+            break;
+        case 0x499AC:
+        case 0x499AE:
+        case 0x499AF:
+            if (GameBit_Get(0xc42) && GameBit_Get(*(s16 *)((char *)inner + 0x3f2)) == 0) {
+                void *other = ObjList_FindObjectById(0x499B5);
+                if (other != NULL &&
+                    Vec_distance((char *)obj + 0x18, (char *)other + 0x18) < lbl_803E8214) {
+                    GameBit_Set(*(s16 *)((char *)inner + 0x3f2), 1);
+                    buf[3] = lbl_803E8180;
+                    buf[4] = lbl_803E8218;
+                    buf[5] = lbl_803E8180;
+                    for (i = 0x14; i != 0; i--) {
+                        objFn_800972dc(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
+                    }
+                    if (GameBit_Get(0xc3b) && GameBit_Get(0xc3c) && GameBit_Get(0xc3d)) {
+                        Sfx_PlayFromObject(0, 0x7e);
+                    } else {
+                        Sfx_PlayFromObject(0, 0x409);
+                    }
+                }
+                *(int *)((char *)obj + 0xf4) = GameBit_Get(*(s16 *)((char *)inner + 0x3f2));
+            } else {
+                *(int *)((char *)obj + 0xf4) = 1;
+            }
+            break;
+        case 0x499B0:
+        case 0x499B1:
+        case 0x499B2:
+            if (GameBit_Get(0xc46) && GameBit_Get(*(s16 *)((char *)inner + 0x3f2)) == 0) {
+                void *other = ObjList_FindObjectById(0x499B6);
+                if (other != NULL &&
+                    Vec_distance((char *)obj + 0x18, (char *)other + 0x18) < lbl_803E8214) {
+                    GameBit_Set(*(s16 *)((char *)inner + 0x3f2), 1);
+                    buf[3] = lbl_803E8180;
+                    buf[4] = lbl_803E8218;
+                    buf[5] = lbl_803E8180;
+                    for (i = 0x14; i != 0; i--) {
+                        objFn_800972dc(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
+                    }
+                    if (GameBit_Get(0xc3e) && GameBit_Get(0xc3f) && GameBit_Get(0xc40)) {
+                        Sfx_PlayFromObject(0, 0x7e);
+                    } else {
+                        Sfx_PlayFromObject(0, 0x409);
+                    }
+                }
+                *(int *)((char *)obj + 0xf4) = GameBit_Get(*(s16 *)((char *)inner + 0x3f2));
+            } else {
+                *(int *)((char *)obj + 0xf4) = 1;
+            }
+            break;
+        default:
+            *(int *)((char *)obj + 0xf4) = GameBit_Get(*(s16 *)((char *)inner + 0x3f2)) == 0;
+            break;
+        }
+
+        if (*(int *)((char *)obj + 0xf4) != 0) {
+            ObjHits_DisableObject(obj);
+            *(s16 *)((char *)obj + 0x6) |= 0x4000;
+        } else {
+            ObjHits_EnableObject(obj);
+            *(s16 *)((char *)obj + 0x6) &= ~0x4000;
+        }
+    }
+
+    if (*(int *)((char *)obj + 0xf4) != 0) {
+        if ((*(int *)((char *)p30 + 0x14) == 0x499B5 && GameBit_Get(0xc42) &&
+             (GameBit_Get(0xc3b) == 0 || GameBit_Get(0xc3c) == 0 || GameBit_Get(0xc3d) == 0)) ||
+            (*(int *)((char *)p30 + 0x14) == 0x499B6 && GameBit_Get(0xc46) &&
+             (GameBit_Get(0xc3e) == 0 || GameBit_Get(0xc3f) == 0 || GameBit_Get(0xc40) == 0))) {
+            buf[3] = lbl_803E8180;
+            buf[4] = lbl_803E821C;
+            buf[5] = lbl_803E8180;
+            objParticleFn_80097734(obj, 5, lbl_803E8220, 1, 6, 0x32, lbl_803E8214, lbl_803E8214,
+                                   lbl_803E8224, buf, 0);
+        }
+    } else {
+        fn_802B85E4(obj, inner);
+        if (*(u16 *)((char *)inner + 0x400) & 0x2) {
+            fn_802B827C(obj, inner, anim);
+            fn_802B84D0(obj);
+            *(int *)((char *)obj + 0xf8) = 0;
+            *(u16 *)((char *)inner + 0x400) &= ~0x4;
+        }
+        fn_802B86B8(obj, inner, inner);
+        if ((*(u8 *)((char *)inner + 0x404) & 1) && (*(u16 *)((char *)obj + 0xb0) & 0x800)) {
+            int a40c = *(int *)((char *)inner + 0x40c);
+            int mode;
+            *(f32 *)((char *)a40c + 0xc) -= timeDelta;
+            if (*(f32 *)((char *)a40c + 0xc) <= lbl_803E8180) {
+                mode = 3;
+                *(f32 *)((char *)a40c + 0xc) += lbl_803E81C0;
+            } else {
+                mode = 0;
+            }
+            snd[0] = lbl_803E8180;
+            snd[1] = lbl_803E81C4;
+            snd[2] = lbl_803E8180;
+            Sfx_KeepAliveLoopedObjectSound(obj, 0x455);
+            fn_80098B18(lbl_803E81C8 * *(f32 *)((char *)obj + 0x8), obj, 3, mode, 0, snd);
+        }
+        *(f32 *)((char *)anim + 0x14) -= timeDelta;
+    }
+}
+
 void lightfoot_init(int obj, int p2, int p3)
 {
     int inner = *(int *)((char *)obj + 0xb8);
