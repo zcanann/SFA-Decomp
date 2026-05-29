@@ -9889,7 +9889,7 @@ int fn_8029D4C0(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B74C4(int obj, int state)
+int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
 {
     int inner = *(int *)((char *)obj + 0xb8);
     int r4c;

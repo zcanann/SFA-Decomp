@@ -61,7 +61,7 @@ void lightfoot_initialise(void)
     lbl_803DB0DC[2] = (int)fn_802B7BF0;
     lbl_803DB0DC[3] = (int)fn_802B7B0C;
     lbl_803DB0DC[4] = (int)fn_802B78A4;
-    lbl_803DB0D0[0] = (int)fn_802B74C4;
+    lbl_803DB0D0[0] = (int)Lightfoot_UpdateChallengeGateInteraction;
     lbl_803DB0D0[1] = (int)fn_802B735C;
     lbl_803DB0D0[2] = (int)fn_802B7298;
 }

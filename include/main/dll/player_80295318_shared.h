@@ -1614,7 +1614,7 @@ void fn_802B6F48(int obj);
 void playerInitFuncPtrs(int obj);
 int fn_802B7298(int obj, int p2);
 int fn_802B735C(int obj, int state);
-int fn_802B74C4(int obj, int state);
+int Lightfoot_UpdateChallengeGateInteraction(int obj, int state);
 int fn_802B78A4(int obj, int state, f32 fv);
 int fn_802B7B0C(int obj, int state, f32 fv);
 int fn_802B7BF0(int obj, int state, f32 fv);
