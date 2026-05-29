@@ -50,8 +50,8 @@ void camcontrol_applyState(short *param_1)
   float fVar2;
   short *psVar3;
   int iVar4;
-  double dVar5;
-  double dVar6;
+  float fVar5;
+  float fVar6;
   float delta[3];
   undefined8 local_28;
   undefined8 local_20;
@@ -63,18 +63,18 @@ void camcontrol_applyState(short *param_1)
   psVar3[2] = param_1[2];
   if ((*(byte *)((int)param_1 + 0x143) & 0x80) != 0) {
     PSVECSubtract((float *)(param_1 + 0xc),(float *)(psVar3 + 6),delta);
-    dVar5 = PSVECMag(delta);
-    if ((double)lbl_803E1630 < dVar5) {
+    fVar5 = PSVECMag(delta);
+    if (lbl_803E1630 < fVar5) {
       PSVECNormalize(delta,delta);
     }
-    dVar6 = interpolate((f32)dVar5,lbl_803E1668,timeDelta);
-    dVar5 = (double)lbl_803E1630;
-    if ((dVar5 <= dVar6) && (dVar5 = dVar6, (double)(lbl_803E166C * timeDelta) < dVar6)) {
-      dVar5 = (double)(lbl_803E166C * timeDelta);
+    fVar6 = interpolate(fVar5,lbl_803E1668,timeDelta);
+    fVar5 = lbl_803E1630;
+    if ((fVar5 <= fVar6) && (fVar5 = fVar6, (lbl_803E166C * timeDelta) < fVar6)) {
+      fVar5 = lbl_803E166C * timeDelta;
     }
-    *(float *)(psVar3 + 6) = (float)(dVar5 * (double)delta[0] + (double)*(float *)(psVar3 + 6));
-    *(float *)(psVar3 + 8) = (float)(dVar5 * (double)delta[1] + (double)*(float *)(psVar3 + 8));
-    *(float *)(psVar3 + 10) = (float)(dVar5 * (double)delta[2] + (double)*(float *)(psVar3 + 10));
+    *(float *)(psVar3 + 6) = fVar5 * delta[0] + *(float *)(psVar3 + 6);
+    *(float *)(psVar3 + 8) = fVar5 * delta[1] + *(float *)(psVar3 + 8);
+    *(float *)(psVar3 + 10) = fVar5 * delta[2] + *(float *)(psVar3 + 10);
   }
   else {
     *(undefined4 *)(psVar3 + 6) = *(undefined4 *)(param_1 + 0xc);
@@ -93,37 +93,34 @@ void camcontrol_applyState(short *param_1)
     *(float *)(param_1 + 0x7a) = fVar2;
     if (pCamera[0x139] == '\x02') {
       fVar2 = *(float *)(param_1 + 0x7a);
-      dVar5 = (double)(lbl_803E162C - fVar2 * fVar2 * fVar2);
+      fVar5 = lbl_803E162C - fVar2 * fVar2 * fVar2;
     }
     else if (pCamera[0x139] == '\x01') {
-      dVar5 = (double)(lbl_803E162C - *(float *)(param_1 + 0x7a) * *(float *)(param_1 + 0x7a));
+      fVar5 = lbl_803E162C - *(float *)(param_1 + 0x7a) * *(float *)(param_1 + 0x7a);
     }
     else {
-      dVar5 = (double)(lbl_803E162C - *(float *)(param_1 + 0x7a));
+      fVar5 = lbl_803E162C - *(float *)(param_1 + 0x7a);
     }
-    dVar6 = (double)lbl_803E1630;
-    if ((dVar6 <= dVar5) && (dVar6 = dVar5, (double)lbl_803E162C < dVar5)) {
-      dVar6 = (double)lbl_803E162C;
+    fVar6 = lbl_803E1630;
+    if ((fVar6 <= fVar5) && (fVar6 = fVar5, lbl_803E162C < fVar5)) {
+      fVar6 = lbl_803E162C;
     }
     if ((*(byte *)((int)param_1 + 0x13f) & 8) != 0) {
       *(float *)(psVar3 + 6) =
-           (float)(dVar6 * (double)(float)((double)*(float *)(psVar3 + 6) -
-                                          (double)*(float *)(param_1 + 0x86)) +
-                  (double)*(float *)(param_1 + 0x86));
+           fVar6 * (*(float *)(psVar3 + 6) - *(float *)(param_1 + 0x86)) +
+           *(float *)(param_1 + 0x86);
     }
     if ((*(byte *)((int)param_1 + 0x13f) & 0x10) != 0) {
       *(float *)(psVar3 + 8) =
-           (float)(dVar6 * (double)(float)((double)*(float *)(psVar3 + 8) -
-                                          (double)*(float *)(param_1 + 0x88)) +
-                  (double)*(float *)(param_1 + 0x88));
+           fVar6 * (*(float *)(psVar3 + 8) - *(float *)(param_1 + 0x88)) +
+           *(float *)(param_1 + 0x88);
     }
     if ((*(byte *)((int)param_1 + 0x13f) & 0x20) != 0) {
       *(float *)(psVar3 + 10) =
-           (float)(dVar6 * (double)(float)((double)*(float *)(psVar3 + 10) -
-                                          (double)*(float *)(param_1 + 0x8a)) +
-                  (double)*(float *)(param_1 + 0x8a));
+           fVar6 * (*(float *)(psVar3 + 10) - *(float *)(param_1 + 0x8a)) +
+           *(float *)(param_1 + 0x8a);
     }
-    OSReport(sDllBBTimeDebugFormat,dVar6);
+    OSReport(sDllBBTimeDebugFormat,fVar6);
     if ((*(byte *)((int)param_1 + 0x13f) & 1) != 0) {
       param_1[0x80] = param_1[0x83] - *psVar3;
       if (0x8000 < param_1[0x80]) {
@@ -133,7 +130,7 @@ void camcontrol_applyState(short *param_1)
         param_1[0x80] = param_1[0x80] + -1;
       }
       local_28 = (double)CONCAT44(0x43300000,(int)param_1[0x80] ^ 0x80000000);
-      iVar4 = (int)((double)(float)(local_28 - lbl_803E1650) * dVar6);
+      iVar4 = (int)((float)(local_28 - lbl_803E1650) * fVar6);
       local_20 = (double)(longlong)iVar4;
       *psVar3 = param_1[0x83] - (short)iVar4;
     }
@@ -146,7 +143,7 @@ void camcontrol_applyState(short *param_1)
         param_1[0x81] = param_1[0x81] + -1;
       }
       local_20 = (double)CONCAT44(0x43300000,(int)param_1[0x81] ^ 0x80000000);
-      iVar4 = (int)((double)(float)(local_20 - lbl_803E1650) * dVar6);
+      iVar4 = (int)((float)(local_20 - lbl_803E1650) * fVar6);
       local_28 = (double)(longlong)iVar4;
       psVar3[1] = param_1[0x84] - (short)iVar4;
     }
@@ -159,7 +156,7 @@ void camcontrol_applyState(short *param_1)
         param_1[0x82] = param_1[0x82] + -1;
       }
       local_20 = (double)CONCAT44(0x43300000,(int)param_1[0x82] ^ 0x80000000);
-      iVar4 = (int)((double)(float)(local_20 - lbl_803E1650) * dVar6);
+      iVar4 = (int)((float)(local_20 - lbl_803E1650) * fVar6);
       local_28 = (double)(longlong)iVar4;
       psVar3[2] = param_1[0x85] - (short)iVar4;
     }
