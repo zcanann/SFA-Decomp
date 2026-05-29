@@ -101,14 +101,14 @@ extern u8 *gSkySunObject;
 extern void *gSkyMoonObject;
 extern void *lbl_803DD150;
 extern int lbl_803DD154;
-extern u8 lbl_803DD158;
-extern u8 lbl_803DD15C;
-extern f32 lbl_803DD160;
-extern u8 lbl_803DD164;
+extern u8 gSkyOverrideLightColor;
+extern u8 gSkyOverrideLightColorEnabled;
+extern f32 gSkyOverrideLightIntensity;
+extern u8 gSkyOverrideLightDirectionEnabled;
 extern void *lbl_803DD168;
-extern u8 lbl_803DD170;
-extern u8 lbl_803DD174;
-extern u8 lbl_803DD178;
+extern u8 gSkyCurrentLightColor;
+extern u8 gSkyCurrentAmbientColor;
+extern u8 gSkyCurrentTextureColor;
 extern s8 lbl_803DD113;
 extern u8 lbl_803DD114;
 extern s16 lbl_803DD116;
@@ -119,7 +119,7 @@ extern void *lbl_803DD144;
 extern u16 lbl_803DD0B6;
 extern void *lbl_803DD0B8;
 extern u8 framesThisStep;
-extern f32 lbl_8039A7A8[];
+extern f32 gSkyOverrideLightDirection[];
 extern f32 pEXIInputFlag;
 extern f32 EXIInputFlag;
 extern f32 timeDelta;
@@ -4953,13 +4953,13 @@ int getSkyStructField24C(void)
     return 0;
 }
 
-void fn_8008904C(u8 *red, u8 *green, u8 *blue)
+void skyGetCurrentTextureColor(u8 *red, u8 *green, u8 *blue)
 {
     u8 *color;
 
     if (lbl_803DD12C != NULL) {
-        *red = lbl_803DD178;
-        color = &lbl_803DD178;
+        *red = gSkyCurrentTextureColor;
+        color = &gSkyCurrentTextureColor;
         *green = color[1];
         *blue = color[2];
         return;
@@ -4969,7 +4969,7 @@ void fn_8008904C(u8 *red, u8 *green, u8 *blue)
     *blue = 0xff;
 }
 
-void fn_8008908C(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed,
+void skyGetCurrentAmbientAndLightColors(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed,
                  u8 *lightGreen, u8 *lightBlue)
 {
     u8 *color;
@@ -4977,11 +4977,11 @@ void fn_8008908C(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed
     u8 green;
     u8 blue;
 
-    if (lbl_803DD15C != 0) {
-        red = lbl_803DD158;
+    if (gSkyOverrideLightColorEnabled != 0) {
+        red = gSkyOverrideLightColor;
         *ambientRed = red;
         *lightRed = red;
-        color = &lbl_803DD158;
+        color = &gSkyOverrideLightColor;
         green = color[1];
         *ambientGreen = green;
         *lightGreen = green;
@@ -4992,12 +4992,12 @@ void fn_8008908C(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed
     }
 
     if (lbl_803DD12C != NULL) {
-        *ambientRed = lbl_803DD174;
-        color = &lbl_803DD174;
+        *ambientRed = gSkyCurrentAmbientColor;
+        color = &gSkyCurrentAmbientColor;
         *ambientGreen = color[1];
         *ambientBlue = color[2];
-        *lightRed = lbl_803DD170;
-        color = &lbl_803DD170;
+        *lightRed = gSkyCurrentLightColor;
+        color = &gSkyCurrentLightColor;
         *lightGreen = color[1];
         *lightBlue = color[2];
         return;
@@ -5048,29 +5048,29 @@ void skySetOverrideLightColor(u8 red, u8 green, u8 blue)
 {
     u8 *color;
 
-    lbl_803DD158 = red;
-    color = &lbl_803DD158;
+    gSkyOverrideLightColor = red;
+    color = &gSkyOverrideLightColor;
     color[1] = green;
     color[2] = blue;
 }
 
 void skySetOverrideLightColorEnabled(u8 enabled)
 {
-    lbl_803DD15C = enabled;
+    gSkyOverrideLightColorEnabled = enabled;
 }
 
 void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity)
 {
-    lbl_8039A7A8[0] = x;
-    lbl_8039A7A8[1] = y;
-    lbl_8039A7A8[2] = z;
-    lbl_803DD160 = intensity;
-    PSVECNormalize(lbl_8039A7A8, lbl_8039A7A8);
+    gSkyOverrideLightDirection[0] = x;
+    gSkyOverrideLightDirection[1] = y;
+    gSkyOverrideLightDirection[2] = z;
+    gSkyOverrideLightIntensity = intensity;
+    PSVECNormalize(gSkyOverrideLightDirection, gSkyOverrideLightDirection);
 }
 
 void skySetOverrideLightDirectionEnabled(u8 enabled)
 {
-    lbl_803DD164 = enabled;
+    gSkyOverrideLightDirectionEnabled = enabled;
 }
 
 void skyFn_800894a8(int flags, f32 x, f32 y, f32 z)
@@ -5672,11 +5672,11 @@ void loadLightFn_8008bbc4(void)
             done = 1;
         }
     }
-    lbl_803DD164 = 0;
-    lbl_803DD15C = 0;
-    lbl_803DD158 = 0xff;
-    (&lbl_803DD158)[1] = 0xff;
-    (&lbl_803DD158)[2] = 0xff;
+    gSkyOverrideLightDirectionEnabled = 0;
+    gSkyOverrideLightColorEnabled = 0;
+    gSkyOverrideLightColor = 0xff;
+    (&gSkyOverrideLightColor)[1] = 0xff;
+    (&gSkyOverrideLightColor)[2] = 0xff;
     if (lbl_803DD144 == NULL) {
         lbl_803DD144 = objCreateLight(0, 1);
         if (lbl_803DD144 != NULL) {

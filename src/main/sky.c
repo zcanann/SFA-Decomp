@@ -187,13 +187,13 @@ int getSkyStructField24C(void)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8008904C(u8 *red, u8 *green, u8 *blue)
+void skyGetCurrentTextureColor(u8 *red, u8 *green, u8 *blue)
 {
     u8 *color;
 
     if (lbl_803DD12C != NULL) {
-        *red = lbl_803DD178;
-        color = &lbl_803DD178;
+        *red = gSkyCurrentTextureColor;
+        color = &gSkyCurrentTextureColor;
         *green = color[1];
         *blue = color[2];
         return;
@@ -207,7 +207,7 @@ void fn_8008904C(u8 *red, u8 *green, u8 *blue)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8008908C(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed,
+void skyGetCurrentAmbientAndLightColors(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed,
                  u8 *lightGreen, u8 *lightBlue)
 {
     u8 *color;
@@ -215,11 +215,11 @@ void fn_8008908C(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed
     u8 green;
     u8 blue;
 
-    if (lbl_803DD15C != 0) {
-        red = lbl_803DD158;
+    if (gSkyOverrideLightColorEnabled != 0) {
+        red = gSkyOverrideLightColor;
         *ambientRed = red;
         *lightRed = red;
-        color = &lbl_803DD158;
+        color = &gSkyOverrideLightColor;
         green = color[1];
         *ambientGreen = green;
         *lightGreen = green;
@@ -230,12 +230,12 @@ void fn_8008908C(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed
     }
 
     if (lbl_803DD12C != NULL) {
-        *ambientRed = lbl_803DD174;
-        color = &lbl_803DD174;
+        *ambientRed = gSkyCurrentAmbientColor;
+        color = &gSkyCurrentAmbientColor;
         *ambientGreen = color[1];
         *ambientBlue = color[2];
-        *lightRed = lbl_803DD170;
-        color = &lbl_803DD170;
+        *lightRed = gSkyCurrentLightColor;
+        color = &gSkyCurrentLightColor;
         *lightGreen = color[1];
         *lightBlue = color[2];
         return;
@@ -302,8 +302,8 @@ void skySetOverrideLightColor(u8 red, u8 green, u8 blue)
 {
     u8 *color;
 
-    lbl_803DD158 = red;
-    color = &lbl_803DD158;
+    gSkyOverrideLightColor = red;
+    color = &gSkyOverrideLightColor;
     color[1] = green;
     color[2] = blue;
 }
@@ -314,7 +314,7 @@ void skySetOverrideLightColor(u8 red, u8 green, u8 blue)
 #pragma scheduling off
 void skySetOverrideLightColorEnabled(u8 enabled)
 {
-    lbl_803DD15C = enabled;
+    gSkyOverrideLightColorEnabled = enabled;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -323,11 +323,11 @@ void skySetOverrideLightColorEnabled(u8 enabled)
 #pragma scheduling off
 void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity)
 {
-    lbl_8039A7A8[0] = x;
-    lbl_8039A7A8[1] = y;
-    lbl_8039A7A8[2] = z;
-    lbl_803DD160 = intensity;
-    PSVECNormalize(lbl_8039A7A8, lbl_8039A7A8);
+    gSkyOverrideLightDirection[0] = x;
+    gSkyOverrideLightDirection[1] = y;
+    gSkyOverrideLightDirection[2] = z;
+    gSkyOverrideLightIntensity = intensity;
+    PSVECNormalize(gSkyOverrideLightDirection, gSkyOverrideLightDirection);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -336,7 +336,7 @@ void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity)
 #pragma scheduling off
 void skySetOverrideLightDirectionEnabled(u8 enabled)
 {
-    lbl_803DD164 = enabled;
+    gSkyOverrideLightDirectionEnabled = enabled;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -983,11 +983,11 @@ void loadLightFn_8008bbc4(void)
             done = 1;
         }
     }
-    lbl_803DD164 = 0;
-    lbl_803DD15C = 0;
-    lbl_803DD158 = 0xff;
-    (&lbl_803DD158)[1] = 0xff;
-    (&lbl_803DD158)[2] = 0xff;
+    gSkyOverrideLightDirectionEnabled = 0;
+    gSkyOverrideLightColorEnabled = 0;
+    gSkyOverrideLightColor = 0xff;
+    (&gSkyOverrideLightColor)[1] = 0xff;
+    (&gSkyOverrideLightColor)[2] = 0xff;
     if (lbl_803DD144 == NULL) {
         lbl_803DD144 = objCreateLight(0, 1);
         if (lbl_803DD144 != NULL) {
