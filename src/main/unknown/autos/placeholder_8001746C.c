@@ -8089,6 +8089,12 @@ void modelLightStruct_setField50(u8 *p, void *v) {
 extern u8 lbl_803DCA30;
 extern void *lbl_8033BEC0[];
 extern void *objAllocLight(void);
+extern void GXInitLightDistAttn(u8 *lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
+extern void GXGetLightAttnK(u8 *lt_obj, f32 *k0, f32 *k1, f32 *k2);
+extern f32 lbl_803DE750;
+extern f32 lbl_803DE754;
+extern f32 lbl_803DE758;
+extern void textureFree(void *tex);
 
 #pragma peephole off
 #pragma scheduling off
@@ -8116,6 +8122,84 @@ void *objCreateLight(int arg, u8 addToList) {
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_8001CB3C(void **lightSlot) {
+    u8 *light;
+    int i;
+    int count;
+
+    light = *lightSlot;
+    if (light != NULL) {
+        i = 0;
+        count = lbl_803DCA30;
+        while (i < count) {
+            if (lbl_8033BEC0[i] == light) {
+                break;
+            }
+            i++;
+        }
+
+        if (i < count) {
+            while (i < count - 1) {
+                lbl_8033BEC0[i] = lbl_8033BEC0[i + 1];
+                i++;
+            }
+            lbl_803DCA30--;
+        }
+
+        if (light[0x2f8] == 2 && *(void **)(light + 0x2e8) != NULL) {
+            textureFree(*(void **)(light + 0x2e8));
+        }
+        mm_free(light);
+        *lightSlot = NULL;
+    }
+}
+
+void *fn_8001CC9C(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
+    u8 *light;
+    u8 *newLight;
+
+    if (lbl_803DCA30 >= 0x32) {
+        light = NULL;
+    } else {
+        newLight = objAllocLight();
+        if (newLight == NULL) {
+            light = NULL;
+        } else {
+            int index = lbl_803DCA30;
+            lbl_803DCA30 = index + 1;
+            lbl_8033BEC0[index] = newLight;
+            light = newLight;
+        }
+    }
+
+    if (light != NULL) {
+        *(int *)(light + 0x50) = 2;
+        light[0xac] = red;
+        light[0xa8] = red;
+        light[0xad] = green;
+        light[0xa9] = green;
+        light[0xae] = blue;
+        light[0xaa] = blue;
+        light[0xaf] = 0;
+        light[0xab] = 0;
+        light[0xbc] = 1;
+        *(f32 *)(light + 0x140) = lbl_803DE750;
+        *(f32 *)(light + 0x144) = lbl_803DE754;
+        GXInitLightDistAttn(light + 0x68, *(f32 *)(light + 0x140), lbl_803DE758, 2);
+        GXGetLightAttnK(light + 0x68, (f32 *)(light + 0x124), (f32 *)(light + 0x128),
+                        (f32 *)(light + 0x12c));
+        if (setFlag != 0) {
+            light[0x2fb] = 1;
+        }
+    }
+
+    return light;
+}
+#pragma pop
 
 void fn_8001D80C(u8 *p, void *a, void *b) {
     *(void **)(p + 0x270) = a;
