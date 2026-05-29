@@ -335,5 +335,161 @@ void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d) {
     entry->f18 = 0;
     lbl_803DD22C = (void *)((int)lbl_803DD22C + 1);
 }
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 f0c;
+    f32 f10;
+    f32 f14;
+    u8 pad18[0x20];
+    u8 active;
+    u8 pad39[3];
+} WaterParticle;
+
+extern f32 lbl_803DF300;
+extern f32 lbl_803DF31C;
+extern f32 lbl_803DF2EC;
+extern f32 lbl_803DF2FC;
+extern f32 lbl_803DF320;
+extern int randomGetRange(int lo, int hi);
+extern f32 sqrtf(f32 x);
+extern int fn_80095B18(WaterParticle *slot, int idx, int rand, f32 v);
+
+#pragma dont_inline on
+void waterfx_func06(void *obj, f32 a, f32 b, f32 c, f32 d) {
+    WaterParticle *p;
+    int i;
+    WaterParticle *base;
+    WaterParticle *slot;
+    int rnd;
+    if (lbl_803DF300 == d) {
+        d = lbl_803DF31C;
+    }
+    i = 0;
+    base = lbl_803DD230;
+    p = base;
+    while (i < 0xa && (p->active != 0 || p->f10 < lbl_803DF2EC)) {
+        p++;
+        i++;
+    }
+    if (i >= 0xa) {
+        return;
+    }
+    slot = &base[i];
+    slot->x = a;
+    slot->y = b;
+    slot->z = c;
+    lbl_803DD234 = (void *)((int)lbl_803DD234 + 1);
+    slot->f0c = d;
+    rnd = randomGetRange((int)slot->f0c, (int)(lbl_803DF2FC * slot->f0c));
+    slot->active = (u8)fn_80095B18(&((WaterParticle *)lbl_803DD230)[i], i, rnd, slot->f0c);
+    slot->f10 = lbl_803DF300;
+    slot->f14 = lbl_803DF2EC / (lbl_803DF320 * sqrtf(slot->f0c));
+}
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+    f32 f10;
+    s16 f14;
+    s16 active;
+    s16 f18;
+    u8 pad1a[2];
+} WaterEntry7;
+
+extern f32 lbl_803DF2E8;
+
+void waterfx_func07(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
+    int i = 0;
+    WaterEntry7 *p = lbl_803DD238;
+    WaterVtx *q;
+    WaterEntry7 *e;
+    int j;
+    while (i < 0x1e && p->active != 0) {
+        p++;
+        i++;
+    }
+    if (i >= 0x1e) {
+        return;
+    }
+    j = i * 4;
+    q = &((WaterVtx *)lbl_803DD24C)[j];
+    q->x = -300;
+    q->y = 0;
+    q->z = 300;
+    q->a = 0xff;
+    q->u = 0;
+    q->v = 0;
+    q = &((WaterVtx *)lbl_803DD24C)[j + 1];
+    q->x = -300;
+    q->y = 0;
+    q->z = -300;
+    q->a = 0xff;
+    q->u = 0;
+    q->v = 0x7f;
+    q = &((WaterVtx *)lbl_803DD24C)[j + 2];
+    q->x = 300;
+    q->y = 0;
+    q->z = -300;
+    q->a = 0xff;
+    q->u = 0x7f;
+    q->v = 0x7f;
+    q = &((WaterVtx *)lbl_803DD24C)[j + 3];
+    q->x = 300;
+    q->y = 0;
+    q->z = 300;
+    q->a = 0xff;
+    q->u = 0x7f;
+    q->v = 0;
+    e = (WaterEntry7 *)lbl_803DD238 + i;
+    e->w = d;
+    e = (WaterEntry7 *)lbl_803DD238 + i;
+    e->active = 0xff;
+    e = (WaterEntry7 *)lbl_803DD238 + i;
+    e->x = a;
+    e = (WaterEntry7 *)lbl_803DD238 + i;
+    e->y = b;
+    e = (WaterEntry7 *)lbl_803DD238 + i;
+    e->z = c;
+    e = (WaterEntry7 *)lbl_803DD238 + i;
+    e->f14 = p1;
+    e = (WaterEntry7 *)lbl_803DD238 + i;
+    e->f10 = lbl_803DD20C;
+    e = (WaterEntry7 *)lbl_803DD238 + i;
+    e->f18 = lbl_803DF2E8 * (f32)p2;
+    lbl_803DD23C = (void *)((int)lbl_803DD23C + 1);
+}
+#pragma dont_inline reset
+
+extern f32 lbl_803DF338;
+extern f32 lbl_803DF33C;
+
+void waterfx_func04(u8 *p3, u16 mask, f32 *vecs, u8 *p6, f32 fval) {
+    u8 *q = p6;
+    f32 *v = vecs;
+    while (mask != 0) {
+        if (mask & 1) {
+            f32 vx = v[0];
+            f32 vz = v[2];
+            if (*(f32 *)(q + 0x1b4) < lbl_803DF338) {
+                if (fval > lbl_803DF33C) {
+                    waterfx_func06(p3, vx, *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4), vz, lbl_803DF300);
+                }
+            }
+            lbl_803DD20C = lbl_803DF318;
+            waterfx_func07(*(s16 *)p3, 4, vx, *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4), vz, lbl_803DF300);
+            lbl_8039AB48[0] = vx;
+            lbl_8039AB48[1] = *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4);
+            lbl_8039AB48[2] = vz;
+            lbl_803DD1F8 = 1;
+        }
+        mask >>= 1;
+        v += 3;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset

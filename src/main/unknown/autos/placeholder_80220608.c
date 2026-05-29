@@ -1017,6 +1017,150 @@ typedef struct {
     u8 b18 : 2;
     u8 b07 : 3;
 } WclevelcontFlags;
+
+extern void gameTimerInit(int a, int b);
+extern void timerSetToCountUp(void);
+extern f32 lbl_803E6DAC;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_802251B4(int obj, int state)
+{
+    int scratch;
+
+    (*(int (**)(int *))(*gSHthorntailAnimationInterface + 0x24))(&scratch);
+    switch (*(u8 *)(state + 0xc)) {
+    case 6:
+        gameTimerInit(0x1d, 0x50);
+        timerSetToCountUp();
+        *(u8 *)(state + 0xc) = 4;
+        break;
+    case 4:
+        if ((u32)GameBit_Get(0x2a5) != 0) {
+            int player;
+            GameBit_Set(0x274, 1);
+            GameBit_Set(0xef1, 0);
+            player = Obj_GetPlayerObject();
+            (*(void (**)(int, int, int, int))(*gMapEventInterface + 0x1c))(
+                player + 0xc, *(s16 *)player, 1, 0);
+            *(u16 *)(state + 0x1a) |= 0x40;
+            *(u8 *)(state + 0xc) = 0;
+            Sfx_PlayFromObject(0, 0x7e);
+            gameTimerStop();
+        } else if (isGameTimerDisabled() != 0) {
+            GameBit_Set(0x274, 0);
+            GameBit_Set(0xef1, 0);
+            if ((u32)GameBit_Get(0x34d) == 0) {
+                GameBit_Set(0x2b1, 0);
+                GameBit_Set(0x226, 1);
+                GameBit_Set(0x2a6, 1);
+                GameBit_Set(0x206, 1);
+                GameBit_Set(0x25f, 1);
+                *(u8 *)(state + 0xc) = 0;
+            }
+        }
+        break;
+    default:
+        if (!(*(u16 *)(state + 0x1a) & 0x40) && (u32)GameBit_Get(0x2b1) != 0) {
+            GameBit_Set(0xef1, 1);
+            GameBit_Set(0xe6d, 0);
+            if ((u32)GameBit_Get(0x204) != 0) {
+                GameBit_Set(0x226, 0);
+                GameBit_Set(0x2a6, 0);
+                GameBit_Set(0x206, 0);
+                GameBit_Set(0x25f, 0);
+                GameBit_Set(0x274, 1);
+                *(u8 *)(state + 0xc) = 6;
+            }
+        }
+        break;
+    }
+
+    if (!(*(u16 *)(state + 0x1a) & 0x10)) {
+        if ((u8)GameBit_Get(0x810) == 4) {
+            GameBit_Set(0x812, 1);
+            Sfx_PlayFromObject(0, 0x7e);
+            *(u16 *)(state + 0x1a) |= 0x10;
+        } else if ((u32)GameBit_Get(0x808) != 0) {
+            if (*(f32 *)(state + 8) <= lbl_803E6DA8) {
+                GameBit_Set(0x810, 0);
+                memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
+                *(f32 *)(state + 8) = lbl_803E6DAC;
+            }
+        }
+        if (*(f32 *)(state + 8) > lbl_803E6DA8) {
+            *(f32 *)(state + 8) -= timeDelta;
+            if (*(f32 *)(state + 8) <= lbl_803E6DA8)
+                GameBit_Set(0x808, 0);
+        }
+    }
+
+    if (!(*(u16 *)(state + 0x1a) & 0x20)) {
+        if ((u8)GameBit_Get(0x811) == 4) {
+            GameBit_Set(0x813, 1);
+            Sfx_PlayFromObject(0, 0x7e);
+            *(u16 *)(state + 0x1a) |= 0x20;
+        } else if ((u32)GameBit_Get(0x809) != 0) {
+            if (*(f32 *)(state + 4) <= lbl_803E6DA8) {
+                GameBit_Set(0x811, 0);
+                memcpy(lbl_803AD298, lbl_8032B088, 0x40);
+                *(f32 *)(state + 4) = lbl_803E6DAC;
+            }
+        }
+        if (*(f32 *)(state + 4) > lbl_803E6DA8) {
+            *(f32 *)(state + 4) -= timeDelta;
+            if (*(f32 *)(state + 4) <= lbl_803E6DA8)
+                GameBit_Set(0x809, 0);
+        }
+    }
+
+    if (!(*(u16 *)(state + 0x1a) & 0x80)) {
+        if ((u32)GameBit_Get(0xc58) != 0 && (u32)GameBit_Get(0xc59) != 0 &&
+            (u32)GameBit_Get(0xc5a) != 0) {
+            GameBit_Set(0x205, 1);
+            Sfx_PlayFromObject(0, 0x7e);
+            *(u16 *)(state + 0x1a) |= 0x80;
+        } else if (!((WclevelcontFlags *)(state + 0x14))->b40 &&
+                   (u32)GameBit_Get(0xc58) != 0) {
+            Sfx_PlayFromObject(0, 0x109);
+            ((WclevelcontFlags *)(state + 0x14))->b40 = 1;
+        } else if (!((WclevelcontFlags *)(state + 0x14))->b20 &&
+                   (u32)GameBit_Get(0xc59) != 0) {
+            Sfx_PlayFromObject(0, 0x109);
+            ((WclevelcontFlags *)(state + 0x14))->b20 = 1;
+        } else if (!((WclevelcontFlags *)(state + 0x14))->b18 &&
+                   (u32)GameBit_Get(0xc5a) != 0) {
+            Sfx_PlayFromObject(0, 0x109);
+            ((WclevelcontFlags *)(state + 0x14))->b18 = 1;
+        }
+    }
+
+    if (!(*(u16 *)(state + 0x1a) & 0x100)) {
+        if ((u32)GameBit_Get(0xbcf) != 0) {
+            int player;
+            GameBit_Set(0xbc8, 0);
+            GameBit_Set(0x2f0, 1);
+            GameBit_Set(0xeec, 0);
+            GameBit_Set(0xbd0, 0);
+            player = Obj_GetPlayerObject();
+            (*(void (**)(int, int, int, int))(*gMapEventInterface + 0x1c))(
+                player + 0xc, *(s16 *)player, 1, 0);
+            Sfx_PlayFromObject(0, 0x7e);
+            *(u16 *)(state + 0x1a) |= 0x100;
+        }
+    }
+
+    *(u16 *)(state + 0x1a) &= ~1;
+    if ((u32)GameBit_Get(0xc92) != 0) {
+        GameBit_Set(0x4e4, 0);
+        GameBit_Set(0x4e5, 0);
+        if (GameBit_Get(0x4e3) == 0xff)
+            GameBit_Set(0x4e3, randomGetRange(6, 7));
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole off
 #pragma scheduling off
 void wclevelcont_init(int obj)
@@ -6741,6 +6885,7 @@ void fn_8022BCD0(int p, int q) {
 
 extern void warpToMap(int map, int p2);
 
+#pragma dont_inline on
 #pragma scheduling off
 void fn_8022C680(int obj) {
     switch ((s8) * (u8 *)(obj + 0xac)) {
@@ -6770,6 +6915,7 @@ void fn_8022C680(int obj) {
     }
 }
 #pragma scheduling reset
+#pragma dont_inline reset
 
 extern void lightSetFieldBC_8001db14(void *light, int v);
 extern f32 lbl_803E700C;
@@ -6841,6 +6987,148 @@ void arwblocker_update(int obj) {
     }
 }
 #pragma scheduling reset
+
+extern void fn_8001DACC(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
+extern void fn_8001D71C(void *light, u8 r, u8 g, u8 b, int e);
+extern f32 lbl_803E71D8;
+extern f32 lbl_803E71DC;
+extern f32 lbl_803E71E0;
+extern f32 lbl_803E71E8;
+extern f32 lbl_803E71EC;
+extern f32 lbl_803E71F0;
+extern f32 lbl_803E71F4;
+extern f32 lbl_803E71F8;
+extern f32 lbl_803E71FC;
+extern f32 lbl_803E7200;
+
+#pragma peephole off
+#pragma scheduling off
+void arwproximit_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    if (*(u8 *)(state + 0x15) == 1) {
+        int arwing = getArwing();
+        if (arwing == 0)
+            arwing = Obj_GetPlayerObject();
+        if (Vec_distance(obj + 0x18, arwing + 0x18) < lbl_803E71E8) {
+            gameTextFn_80125ba4(0xb);
+            *(u8 *)(state + 0x15) = 0;
+        }
+    }
+
+    switch (*(u8 *)(state + 0x14)) {
+    case 0: {
+        int arwing = getArwing();
+        if (arwing == 0)
+            arwing = Obj_GetPlayerObject();
+        if (Vec_distance(obj + 0x18, arwing + 0x18) < lbl_803E71EC) {
+            *(void **)(state + 4) = objCreateLight(obj, 1);
+            if (*(void **)(state + 4) != NULL) {
+                modelLightStruct_setField50(*(void **)(state + 4), 2);
+                lightVecFn_8001dd88(*(void **)(state + 4), lbl_803E71D8, lbl_803E71D8,
+                                    lbl_803E71F0);
+                modelLightStruct_setColorsA8AC(*(void **)(state + 4), 0, 0xff, 0, 0);
+                lightSetFieldB0(*(void **)(state + 4), 0, 0, 0, 0);
+                lightDistAttenFn_8001dc38(*(void **)(state + 4), lbl_803E71F0, lbl_803E71F4);
+                fn_8001D730(*(void **)(state + 4), 0, 0, 0xff, 0, 0x64, lbl_803E71F8);
+                fn_8001D714(*(void **)(state + 4), lbl_803E71F0);
+            }
+            ObjHits_EnableObject(obj);
+            ObjHits_MarkObjectPositionDirty(obj);
+            *(s16 *)(obj + 6) &= ~0x4000;
+            *(u8 *)(state + 0x14) = 1;
+        }
+        return;
+    }
+    case 1:
+    default: {
+        int arwing;
+        int a = (int)(lbl_803E71FC * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36));
+        if (a > 0xff)
+            a = 0xff;
+        *(u8 *)(obj + 0x36) = a;
+        arwing = getArwing();
+        if (arwing == 0)
+            arwing = Obj_GetPlayerObject();
+        if (Vec_distance(obj + 0x18, arwing + 0x18) < lbl_803E7200) {
+            if (*(void **)(state + 4) != NULL) {
+                modelLightStruct_setColorsA8AC(*(void **)(state + 4), 0xff, 0, 0, 0);
+                fn_8001D71C(*(void **)(state + 4), 0xff, 0, 0, 0x64);
+                lightFn_8001d620(*(void **)(state + 4), 2, 0xa);
+            }
+            s16toFloat((void *)(state + 0xc), 0x3c);
+            *(u8 *)(state + 0x14) = 2;
+            if (*(u8 *)(state + 0x15) == 2) {
+                if (randomGetRange(0, 1) != 0)
+                    gameTextFn_80125ba4(0xf);
+                else
+                    gameTextFn_80125ba4(0xc);
+            }
+        }
+        break;
+    }
+    case 2: {
+        u8 b0, b1, b2, b3;
+        *(u8 *)(obj + 0x36) = 0xff;
+        if (*(void **)(state + 4) != NULL) {
+            fn_8001DACC(*(void **)(state + 4), &b0, &b1, &b2, &b3);
+            fn_8001D71C(*(void **)(state + 4), b0, b1, b2, 0x64);
+        }
+        if (timerCountDown((void *)(state + 0xc)) != 0 ||
+            (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL &&
+             *(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)getArwing())) {
+            storeZeroToFloatParam((void *)(state + 0xc));
+            s16toFloat((void *)(state + 0x10), 0x14);
+            if (*(void **)(state + 4) != NULL)
+                lightFn_8001db6c(*(void **)(state + 4), 0, lbl_803E71D8);
+            spawnExplosion(obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
+            ObjHitbox_SetSphereRadius(obj, 0x12c);
+            ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
+            *(s16 *)(obj + 6) |= 0x4000;
+            ObjHits_MarkObjectPositionDirty(obj);
+            *(u8 *)(state + 0x14) = 3;
+        }
+        break;
+    }
+    case 3:
+        if (timerCountDown((void *)(state + 0x10)) != 0) {
+            ObjHits_DisableObject(obj);
+            *(u8 *)(state + 0x14) = 4;
+        }
+        break;
+    case 4:
+        if (*(void **)(state + 4) != NULL) {
+            ModelLightStruct_free(*(void **)(state + 4));
+            *(void **)(state + 4) = NULL;
+        }
+        return;
+    }
+
+    if (*(u8 *)(state + 0x14) == 1 || *(u8 *)(state + 0x14) == 2) {
+        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+            fn_8022D520(getArwing(), 0xa);
+            if (*(u8 *)(state + 0x15) == 3)
+                gameTextFn_80125ba4(0xe);
+            if (*(void **)(state + 4) != NULL)
+                lightFn_8001db6c(*(void **)(state + 4), 0, lbl_803E71D8);
+            spawnExplosion(obj, lbl_803E71DC, 1, 0, 0, 0, 0, 0, 1);
+            ObjHits_DisableObject(obj);
+            *(s16 *)(obj + 6) |= 0x4000;
+            ObjHits_MarkObjectPositionDirty(obj);
+            *(u8 *)(state + 0x14) = 4;
+        }
+        *(s16 *)(obj + 4) =
+            timeDelta * (f32)*(s16 *)(state + 0) + (f32)*(s16 *)(obj + 4);
+        *(s16 *)(obj + 2) =
+            timeDelta * (f32)*(s16 *)(state + 0) + (f32)*(s16 *)(obj + 2);
+    }
+
+    if (*(void **)(state + 4) != NULL && fn_8001DB64(*(void **)(state + 4)) != 0)
+        lightFn_8001d6b0(*(void **)(state + 4));
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 extern f32 lbl_803E71A8;
 
@@ -8057,6 +8345,7 @@ void fn_8022ECE0(int obj, f32 param)
 
 extern int loadObjectAtObject(int obj);
 
+#pragma dont_inline on
 #pragma peephole off
 void fn_8022B764(int p, int q, int idx) {
     f32 pz, py, px;
@@ -8087,6 +8376,7 @@ void fn_8022B764(int p, int q, int idx) {
     Sfx_PlayFromObject(p, 0x2a3);
 }
 #pragma peephole reset
+#pragma dont_inline reset
 
 extern int ObjList_FindNearestObjectByDefNo(int obj, int defNo, f32 *maxDistanceSq);
 extern f32 lbl_803E7490;
@@ -8592,6 +8882,7 @@ void arwarwingbo_update(int obj)
 extern f32 lbl_803E6EF0;
 extern f32 lbl_803E6EF4;
 
+#pragma dont_inline on
 #pragma scheduling off
 void fn_8022A9C8(int obj, int state)
 {
@@ -8632,6 +8923,7 @@ void fn_8022A9C8(int obj, int state)
     *(s16 *)(*(int *)(state + 0x41c) + 0) = 0x8000 - *(s16 *)slot;
 }
 #pragma scheduling reset
+#pragma dont_inline reset
 
 extern int *gPathControlInterface;
 extern f32 lbl_803E6F24;
@@ -8796,11 +9088,164 @@ void androsshand_spawnShot(int p1, int p2)
 #pragma scheduling reset
 #pragma peephole reset
 
+extern void mapUnload(int a, int b);
+extern void setLoadedFileFlags_blocks1(void);
+extern void clearLoadedFileFlags_blocks1(void);
+extern void registerNewScore(int a, int b, int c, int d);
+extern u8 lbl_803DC3C8[8];
+typedef struct { u8 scoreFlag : 1; } Arw339Flags;
+
+#pragma scheduling off
+int fn_8022C7B4(int obj, int p2, int script)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+
+    Camera_GetCurrentViewSlot();
+    *(int *)(script + 0xe8) = (int)fn_8022C7A4;
+    if ((*(u8 *)(state + 0x477) & 1) == 0) {
+        fn_8022CDEC(obj, state);
+        return 0;
+    }
+    fn_8022C30C(obj, state);
+    fn_8022A9C8(obj, state);
+    if (*(int *)(state + 0x10) != 0)
+        arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 0, 0);
+    *(s16 *)(*(int *)(state + 0x418) + 6) |= 0x4000;
+    *(u8 *)(*(int *)(state + 0x418) + 0x36) = 0;
+    *(s16 *)(*(int *)(state + 0x41c) + 6) |= 0x4000;
+    *(u8 *)(*(int *)(state + 0x41c) + 0x36) = 0;
+    *(s16 *)(obj + 6) &= ~0x4000;
+
+    for (i = 0; i < *(u8 *)(script + 0x8b); i++) {
+        switch (*(u8 *)(script + i + 0x81)) {
+        case 8: {
+            int cam = Camera_GetCurrentViewSlot();
+            *(f32 *)(state + 0x484) = *(f32 *)(cam + 0xc) - *(f32 *)(obj + 0xc);
+            *(f32 *)(state + 0x488) = *(f32 *)(cam + 0x10) - *(f32 *)(obj + 0x10);
+            *(f32 *)(state + 0x48c) = *(f32 *)(cam + 0x14) - *(f32 *)(obj + 0x14);
+            *(s16 *)(state + 0x490) = *(s16 *)(obj + 0) - (u16)*(s16 *)(cam + 0);
+            if (*(s16 *)(state + 0x490) > 32768)
+                *(s16 *)(state + 0x490) -= 65535;
+            if (*(s16 *)(state + 0x490) < -32768)
+                *(s16 *)(state + 0x490) += 65535;
+            *(s16 *)(state + 0x492) = *(s16 *)(obj + 2) - (u16)*(s16 *)(cam + 2);
+            if (*(s16 *)(state + 0x492) > 32768)
+                *(s16 *)(state + 0x492) -= 65535;
+            if (*(s16 *)(state + 0x492) < -32768)
+                *(s16 *)(state + 0x492) += 65535;
+            *(s16 *)(state + 0x494) = *(s16 *)(cam + 4) - *(s16 *)(obj + 4);
+            *(u8 *)(state + 0x47f) = 1;
+            break;
+        }
+        case 9:
+            *(u8 *)(state + 0x47f) = 0;
+            break;
+        case 1:
+            clearLoadedFileFlags_blocks1();
+            warpToMap(0x60, 0);
+            break;
+        case 2:
+            clearLoadedFileFlags_blocks1();
+            fn_8022C680(obj);
+            break;
+        case 0xa:
+            if (Obj_IsLoadingLocked()) {
+                int setup = Obj_AllocObjectSetup(0x24, 0x608);
+                int o;
+                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                *(u8 *)(setup + 4) = 1;
+                *(u8 *)(setup + 5) = 1;
+                o = loadObjectAtObject(obj);
+                if (o != 0)
+                    fn_8022F558(o, 0x12c);
+            }
+            break;
+        case 0xb:
+            *(u8 *)(state + 0x44c) = 1;
+            fn_8022B764(obj, state, *(u8 *)(state + 0x43d));
+            *(u8 *)(state + 0x43d) ^= 1;
+            break;
+        case 0xc:
+            arwarwing_spawnLaserShot(obj, state, 0, 1, 1);
+            arwarwing_spawnLaserShot(obj, state, 1, 1, 0);
+            break;
+        case 4:
+            unlockLevel(0, 0, 1);
+            mapUnload(0, 0x80000000);
+            setLoadedFileFlags_blocks1();
+            break;
+        case 5:
+            if (*(u8 *)(state + 0x47b) == 0 && GameBit_Get(0xc85)) {
+                loadMapAndParent(0xb);
+                lockLevel(mapGetDirIdx(0xb), 0);
+            } else {
+                loadMapAndParent(lbl_803DC3C8[*(u8 *)(state + 0x47b)]);
+                lockLevel(mapGetDirIdx(lbl_803DC3C8[*(u8 *)(state + 0x47b)]), 0);
+            }
+            switch ((s8)*(u8 *)(obj + 0xac)) {
+            case 0x3b:
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0x13, 0, 1);
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0x13, 0x16, 1);
+                break;
+            case 0x3d:
+                GameBit_Set(0x36a, 0);
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xd, 0, 1);
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xd, 1, 1);
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xd, 5, 1);
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xd, 0xa, 1);
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xd, 0xb, 1);
+                GameBit_Set(0xe05, 0);
+                break;
+            case 0x3c:
+                GameBit_Set(0x458, 0);
+                GameBit_Set(0x47c, 0);
+                GameBit_Set(0x4a3, 0);
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(0xc, 0, 1);
+                GameBit_Set(0xd73, 0);
+                break;
+            case 0x3e:
+                GameBit_Set(0x5db, 0);
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(2, 0xf, 1);
+                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(2, 0x10, 1);
+                GameBit_Set(0xe7b, 0);
+                GameBit_Set(0x9e9, 0);
+                break;
+            }
+            break;
+        case 6:
+            unlockLevel(0, 0, 1);
+            loadMapAndParent(0x29);
+            lockLevel(mapGetDirIdx(0x29), 0);
+            break;
+        case 7:
+            if (!((Arw339Flags *)(state + 0x339))->scoreFlag) {
+                int s2 = *(int *)(obj + 0xb8);
+                *(u16 *)(s2 + 0x47c) = *(u16 *)(s2 + 0x47c) + 0xc8;
+                if (*(u16 *)(s2 + 0x47c) > 0x270f)
+                    *(u16 *)(s2 + 0x47c) = 0x270f;
+            }
+            registerNewScore((s8)*(u8 *)(state + 0x47e), *(u16 *)(state + 0x47c),
+                             *(u8 *)(state + 0x470), 2);
+            break;
+        case 0xd:
+            gameTextFn_80125ba4(0x13);
+            break;
+        case 0xe:
+            gameTextFn_80125ba4(0x14);
+            break;
+        }
+    }
+    return 0;
+}
+#pragma scheduling reset
+
 typedef struct { int a; int b; u16 c; } ArwInitCfg;
 extern ArwInitCfg lbl_802C25E8;
 extern int lbl_8032B408[];
 extern int lbl_8032B480[];
-extern void fn_8022C7B4();
 
 #pragma scheduling off
 void arwarwing_init(int obj)

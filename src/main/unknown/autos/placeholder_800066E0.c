@@ -778,7 +778,7 @@ extern s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 extern void Sfx_StopFromObject(u32 obj, u32 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
-extern void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u32 sfxId);
+extern void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
 extern void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
 extern f32 lbl_803DE570;
 extern f32 lbl_803DE574;
@@ -2496,6 +2496,7 @@ extern void *gSfxTriggersData;
 extern int gSfxTriggersCount;
 extern SfxTriggerCacheEntry lbl_802C5D78[];
 
+#pragma dont_inline on
 SfxTrigger *Sfx_FindTrigger(u16 id)
 {
     SfxTrigger *low = (SfxTrigger *)gSfxTriggersData;
@@ -2519,6 +2520,7 @@ SfxTrigger *Sfx_FindTrigger(u16 id)
     }
     return NULL;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2542,7 +2544,7 @@ extern f32 lbl_803DE590;
 extern u8 lbl_803DE593;
 
 #pragma peephole on
-SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, int c, int d)
+SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, f32 pitch, int c, int d)
 {
     SfxObjectChannel *ch;
     s32 i;
@@ -2674,6 +2676,7 @@ extern f32 lbl_803DE5B8;
 extern double lbl_803DE5C0;
 extern double lbl_803DE5C8;
 
+#pragma dont_inline on
 f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
 {
     f32 v[3];
@@ -2705,6 +2708,7 @@ f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
     PSVECSubtract(listener, soundPos, outDelta);
     return PSVECMag(outDelta);
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -7776,6 +7780,102 @@ void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume)
 }
 #pragma dont_inline reset
 
+extern int Sfx_ResolveObjectSfxId(int *outChannel, u16 *sfxId);
+
+/*
+ * Function: Sfx_PlayFromObjectEx
+ * EN v1.0 Address: 0x8000BE60
+ * EN v1.0 Size: 604b
+ */
+void Sfx_PlayFromObjectEx(u32 obj, f32 *pos, u32 channel, u16 sfxId)
+{
+    u16 outSfxId;
+    u8 vol;
+    f32 pitch;
+    f32 f7;
+    f32 f8;
+    int i9;
+    int i10;
+    int i11;
+    f32 delta[3];
+    SfxObjectChannel *found;
+    SfxObjectChannel *ch;
+    int tracksObj;
+
+    tracksObj = 0;
+    if (!Sfx_ResolveObjectSfxId((int *)&obj, &sfxId)) {
+        return;
+    }
+    if (!Sfx_ReadTriggerParams((SfxTriggerFull *)Sfx_FindTrigger(sfxId), &outSfxId,
+                               &vol, &pitch, &f7, &f8, &i9, &i10, &i11)) {
+        return;
+    }
+    if (obj != 0 && pos == NULL) {
+        pos = (f32 *)(obj + 0x18);
+        tracksObj = 1;
+    }
+    if (pos != NULL) {
+        f32 maxDist = f8;
+        if (!(Sfx_GetListenerRelativeDistance(pos, delta) <= maxDist)) {
+            return;
+        }
+    }
+    if ((u8)channel != 0) {
+        i9 = (u8)channel;
+    }
+    if (obj != 0 && i9 != 0) {
+        if ((u8)i9 != 0 && obj != 0) {
+            found = Sfx_FindObjectChannel(obj, (u8)i9, 0, 0);
+        } else {
+            found = NULL;
+        }
+        if (found != NULL) {
+            if (i10 == 0) {
+                return;
+            }
+            sndFXKeyOff(found->handle);
+            found->handle = (u32)-1;
+        }
+    } else {
+        if (sfxId != 0) {
+            found = Sfx_FindObjectChannel(obj, 0, sfxId, 1);
+        } else {
+            found = NULL;
+        }
+        if (found != NULL) {
+            if (i10 != 0 || gSfxObjectChannelMatchCount == 3) {
+                sndFXKeyOff(found->handle);
+                found->handle = (u32)-1;
+            }
+        }
+    }
+    ch = Sfx_AllocObjectChannel(outSfxId, vol, pitch, 0x40, i11);
+    if (ch == NULL) {
+        return;
+    }
+    ch->sfxId = sfxId;
+    ch->channelMask = (u16)i9;
+    ch->object = obj;
+    if (pos != NULL) {
+        *(f32 *)((u8 *)ch + 0x20) = f7;
+        *(f32 *)((u8 *)ch + 0x24) = f8;
+        ch->hasPosition = 1;
+        {
+            int t = 0;
+            if (tracksObj != 0 && i9 != 0) {
+                t = 1;
+            }
+            ch->tracksObjectPosition = (u8)t;
+        }
+        ch->x = pos[0];
+        ch->y = pos[1];
+        ch->z = pos[2];
+        Sfx_UpdateObjectChannel3D(ch);
+    } else {
+        ch->volume = 0x7f;
+    }
+}
+
 /*
  * Function: Sfx_PlayFromObjectChannel
  * EN v1.0 Address: 0x8000BAB0
@@ -10771,10 +10871,12 @@ void padUpdate(void)
  * EN v1.0 Address: 0x800173C8
  * EN v1.0 Size: 20b
  */
+#pragma dont_inline on
 void* gameTextGetBox(int box)
 {
     return &lbl_802C7400[box * 0x20];
 }
+#pragma dont_inline reset
 
 /*
  * Function: gameTextGetCurBox
@@ -11002,6 +11104,7 @@ extern void gameTextRenderStrs(char* str, int arg2);
  * EN v1.0 Address: 0x8000F6E8
  * EN v1.0 Size: 188b
  */
+#pragma dont_inline on
 void gameTextShowStr(char *text, int box, int arg2, int arg3)
 {
     int i;
@@ -11024,6 +11127,7 @@ void gameTextShowStr(char *text, int box, int arg2, int arg3)
         e[4] = arg3;
     }
 }
+#pragma dont_inline reset
 
 /*
  * Function: audioSetVolumes
@@ -13472,6 +13576,87 @@ int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
         *(VoxPos *)out = *(VoxPos *)start;
     }
     return 1;
+}
+
+int fn_80011EB0(RouteState *state, int count) {
+    f32 local[3];
+    RouteNode startNode;
+    RouteNode *cur;
+    RouteNode *cand;
+    RouteNode *lastClear;
+    RouteNode *node;
+    int idx;
+    int i;
+    int j;
+
+    if (count < 0) {
+        count = 10;
+    }
+    i = state->cur;
+    node = &state->nodes[i];
+    node->unkB = 0xff;
+    while ((j = node->unkA) != 0xff) {
+        node = &state->nodes[j];
+        node->unkB = (u8)i;
+        i = j;
+    }
+
+    startNode.x = state->unk12;
+    startNode.unk2 = state->unk14;
+    startNode.y = state->unk16;
+    startNode.unkB = (u8)i;
+    if (node->unkB == 0xff) {
+        cand = NULL;
+    } else {
+        cand = &state->nodes[node->unkB];
+    }
+    lastClear = node;
+    cur = &startNode;
+    idx = 0;
+
+    while (idx < count && cand != NULL) {
+        if (cur->x != cand->x || cur->y != cand->y) {
+            if (fn_800119FC((s16 *)cand, (s16 *)cur, NULL) == 0) {
+                local[0] = (f32)(lastClear->x * 10 + 5);
+                local[1] = (f32)(lastClear->unk2 * 10 + 5);
+                local[2] = (f32)(lastClear->y * 10 + 5);
+                if (lbl_803DC8CC != 0) {
+                    Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2], lbl_803DC8CC);
+                }
+                state->unk08[idx * 3 + 0] = (f32)((int)local[0] + 5);
+                state->unk08[idx * 3 + 1] = (f32)(int)local[1];
+                state->unk08[idx * 3 + 2] = (f32)((int)local[2] + 5);
+                idx++;
+                cur = cand;
+            }
+        }
+        lastClear = cand;
+        if (cand->unkB == 0xff) {
+            cand = NULL;
+        } else {
+            cand = &state->nodes[cand->unkB];
+        }
+    }
+
+    if (idx < count) {
+        local[0] = (f32)(lastClear->x * 10 + 5);
+        local[1] = (f32)(lastClear->unk2 * 10 + 5);
+        local[2] = (f32)(lastClear->y * 10 + 5);
+        if (lbl_803DC8CC != 0) {
+            Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2], lbl_803DC8CC);
+        }
+        state->unk08[idx * 3 + 0] = (f32)((int)local[0] + 5);
+        state->unk08[idx * 3 + 1] = (f32)(int)local[1];
+        state->unk08[idx * 3 + 2] = (f32)((int)local[2] + 5);
+        idx++;
+        if (idx >= 10) {
+            idx = 10;
+        }
+    }
+
+    state->unk20 = (s16)idx;
+    state->pad22 = 0;
+    return idx;
 }
 
 typedef struct {
