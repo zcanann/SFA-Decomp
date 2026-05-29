@@ -86,10 +86,10 @@ void arwproximit_update(int obj)
     int state = *(int *)(obj + 0xb8);
 
     if (*(u8 *)(state + 0x15) == 1) {
-        int arwing = getArwing();
-        if (arwing == 0)
-            arwing = Obj_GetPlayerObject();
-        if (Vec_distance(obj + 0x18, arwing + 0x18) < lbl_803E71E8) {
+        char *arwing = (char *)getArwing();
+        if (arwing == NULL)
+            arwing = (char *)Obj_GetPlayerObject();
+        if (Vec_distance(obj + 0x18, (int)(arwing + 0x18)) < lbl_803E71E8) {
             gameTextFn_80125ba4(0xb);
             *(u8 *)(state + 0x15) = 0;
         }
@@ -97,10 +97,10 @@ void arwproximit_update(int obj)
 
     switch (*(u8 *)(state + 0x14)) {
     case 0: {
-        int arwing = getArwing();
-        if (arwing == 0)
-            arwing = Obj_GetPlayerObject();
-        if (Vec_distance(obj + 0x18, arwing + 0x18) < lbl_803E71EC) {
+        char *arwing = (char *)getArwing();
+        if (arwing == NULL)
+            arwing = (char *)Obj_GetPlayerObject();
+        if (Vec_distance(obj + 0x18, (int)(arwing + 0x18)) < lbl_803E71EC) {
             *(void **)(state + 4) = objCreateLight(obj, 1);
             if (*(void **)(state + 4) != NULL) {
                 modelLightStruct_setField50(*(void **)(state + 4), 2);
@@ -121,15 +121,15 @@ void arwproximit_update(int obj)
     }
     case 1:
     default: {
-        int arwing;
+        char *arwing;
         int a = (int)(lbl_803E71FC * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36));
         if (a > 0xff)
             a = 0xff;
         *(u8 *)(obj + 0x36) = a;
-        arwing = getArwing();
-        if (arwing == 0)
-            arwing = Obj_GetPlayerObject();
-        if (Vec_distance(obj + 0x18, arwing + 0x18) < lbl_803E7200) {
+        arwing = (char *)getArwing();
+        if (arwing == NULL)
+            arwing = (char *)Obj_GetPlayerObject();
+        if (Vec_distance(obj + 0x18, (int)(arwing + 0x18)) < lbl_803E7200) {
             if (*(void **)(state + 4) != NULL) {
                 modelLightStruct_setColorsA8AC(*(void **)(state + 4), 0xff, 0, 0, 0);
                 fn_8001D71C(*(void **)(state + 4), 0xff, 0, 0, 0x64);

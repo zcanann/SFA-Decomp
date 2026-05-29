@@ -207,13 +207,13 @@ void gf_levelcon_findLinkedObjects(int obj)
 void fn_80239DD8(int p1, int p2)
 {
     f32 maxDist;
-    int near;
+    char *near;
     int newObj;
 
     maxDist = lbl_803E7490;
     if (Obj_IsLoadingLocked()) {
-        near = ObjList_FindNearestObjectByDefNo(p1, 0x7e5, &maxDist);
-        if (near != 0) {
+        near = (char *)ObjList_FindNearestObjectByDefNo(p1, 0x7e5, &maxDist);
+        if (near != NULL) {
             newObj = Obj_AllocObjectSetup(0x24, 0x608);
             *(f32 *)(newObj + 8) = *(f32 *)(near + 0xc);
             *(f32 *)(newObj + 0xc) = *(f32 *)(near + 0x10);
