@@ -762,7 +762,7 @@ extern void Sfx_StopAllObjectSounds(void);
 extern void AudioStream_UpdateFadeTimer(void);
 extern void AudioStream_StopCurrent(void);
 extern void AudioStream_CancelPrepared(void);
-extern void streamFn_8000a380(u32 channel, u32 mode, u32 time);
+extern void streamFn_8000a380(int mask, int mode, int time);
 extern void Movie_SetVolumeFade(u32 volume, u32 fadeMs);
 extern void AISetStreamPlayState(u32 state);
 extern void AISetStreamVolLeft(u8 volume);
@@ -1654,10 +1654,12 @@ void audioReset(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u32 audioIsResetting(void)
+#pragma dont_inline on
+int audioIsResetting(void)
 {
     return gAudioResetting;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -11916,6 +11918,50 @@ static void Music_FreeChannel(MusicChannel *ch)
     ch->status = 0;
     ch->field_12 = 0;
     ch->field_20 = lbl_803DE560;
+}
+
+/*
+ * Function: streamFn_8000a380
+ * EN v1.0 Address: 0x8000A380
+ * EN v1.0 Size: 408b
+ */
+void streamFn_8000a380(int mask, int mode, int time)
+{
+    MusicChannel *ch = gMusicChannels;
+    int i = 15;
+    do {
+        if (ch->status != 0 && ((ch->pad11 + 1) & mask) != 0) {
+            switch (mode) {
+            case 1:
+                if (audioIsResetting() == 0) {
+                    if (ch->status != 2) {
+                        if (ch->status == 4 || ch->status == 5) {
+                            ch->status = 5;
+                        } else {
+                            sndSeqVolume(0, 250, ch->seqHandle, 1);
+                            ch->status = 2;
+                        }
+                    }
+                } else if (ch->status == 4 || ch->status == 5) {
+                    ch->status = 5;
+                } else {
+                    Music_FreeChannel(ch);
+                }
+                break;
+            case 2:
+                if (ch->status != 2) {
+                    if (ch->status == 4 || ch->status == 5) {
+                        ch->status = 5;
+                    } else {
+                        sndSeqVolume(0, (u16)(time < 500 ? 500 : time), ch->seqHandle, 1);
+                        ch->status = 2;
+                    }
+                }
+                break;
+            }
+        }
+        ch++;
+    } while (i-- != 0);
 }
 
 static int Music_IsTriggerExcluded(int id)
