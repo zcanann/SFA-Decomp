@@ -366,10 +366,10 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
     }
     hitReactMode = runtime->hitReactMode;
     if (hitReactMode == 1) {
-      baddieResult = (*(code *)(*gBaddieControlInterface + 0x34))
-                        (obj,animUpdate,runtime,
-                         animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
-                         animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET,0);
+      baddieResult = DIMboss_GetBaddieControlInterface()->updateHitDetect(
+          obj,animUpdate,runtime,
+          animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
+          animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET,0);
       if (baddieResult != 0) {
         DIMboss_GetBaddieControlInterface()->applyHitReact(obj,runtime,lbl_803E4C70);
       }

@@ -61,6 +61,16 @@ extern f32 lbl_803E1684;
 extern u16 lbl_803DB992;
 extern s8 lbl_803DD4CB;
 extern undefined4 lbl_803DD4CC;
+
+typedef struct CamcontrolBaddieControlInterface {
+  u8 pad00[0x60];
+  f32 (*getTargetReticleDistance)(int obj);
+} CamcontrolBaddieControlInterface;
+
+static inline CamcontrolBaddieControlInterface *camcontrol_GetBaddieControlInterface(void) {
+  return (CamcontrolBaddieControlInterface *)*gBaddieControlInterface;
+}
+
 /*
  * --INFO--
  *
@@ -81,7 +91,6 @@ void camcontrol_updateTargetFeedback(void)
   byte cVar2;
   short sVar3;
   float fVar4;
-  float fVar5;
   int iVar11;
   short *psVar6;
   int buttonPressed;
@@ -237,7 +246,7 @@ LAB_801029ac:
               }
               else {
                 targetDistance =
-                    ((f32 (*)(int))(*(code **)(*gBaddieControlInterface + 0x60)))(iVar11);
+                    camcontrol_GetBaddieControlInterface()->getTargetReticleDistance(iVar11);
               }
               goto LAB_801029e0;
             }
@@ -284,15 +293,15 @@ LAB_801029e0:
   *(float *)(pCamera + 0x134) = targetDistance;
 LAB_80102ab4:
   fVar4 = lbl_803E1678 * *(float *)(psVar6 + 0x4c);
-  fVar5 = lbl_803E1630;
-  if ((lbl_803E1630 <= fVar4) && (fVar5 = fVar4, lbl_803E1678 < fVar4)) {
-    fVar5 = lbl_803E1678;
+  if (fVar4 < lbl_803E1630) {
+    fVar4 = lbl_803E1630;
   }
-  *(char *)(psVar6 + 0x1b) = (char)(int)fVar5;
+  else if (lbl_803E1678 < fVar4) {
+    fVar4 = lbl_803E1678;
+  }
+  *(u8 *)(psVar6 + 0x1b) = (int)fVar4;
   lbl_803DD4C8 = 0x400;
-  *psVar6 = (short)(int)(lbl_803E167C * timeDelta +
-                        (float)((double)CONCAT44(0x43300000,(int)*psVar6 ^ 0x80000000) -
-                               lbl_803E1650));
+  *psVar6 = (short)(int)(lbl_803E167C * timeDelta + (float)*psVar6);
   return;
 }
 #pragma peephole reset
