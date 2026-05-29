@@ -225,6 +225,16 @@ Heuristic before reaching for `asm { }`:
     swapping two `int` locals, often flips the allocation to match. No asm —
     try this before any `register`/asm approach. See `fa209c270`
     (fn_8019C3A0 → 100%).
+    **But SAVED-reg coloring is sometimes allocator-internal and NOT
+    source-flippable — after trying decl-order BOTH ways, treat it as a hard cap
+    and STOP.** On some units there's a *systematic* saved-reg permutation: target
+    assigns the LOWER reg# (r27/r29) to the longer-lived / earlier variable (the
+    obj/setup base), MWCC does the reverse, and it cascades through every
+    instruction referencing that var. Declaration-order reorder (both directions)
+    does NOT flip it. This caps every fresh function on the affected unit at
+    ~74-90% — it is the dominant residual on placeholder_80220608 (zulu15:
+    wcpushblock obj/player r29↔r30, wcfloortile setup r27↔r29). Don't grind it;
+    the partial still banks real fuzzy%.
     **Base-pointer hoist for saved-register coloring.** When target keeps a
     repeatedly-used base address in a *saved* register (r29-r31) across the whole
     function — e.g. it references one global table at many offsets — declare that
