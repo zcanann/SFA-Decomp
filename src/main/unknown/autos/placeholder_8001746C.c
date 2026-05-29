@@ -8959,30 +8959,25 @@ void objSetSlot(u8 *obj, s8 slot) {
     *(s8 *)(obj + 0xae) = slot;
 }
 
-#pragma peephole off
+#pragma peephole on
 void fn_8002B758(void *v) {
     int i;
-    int *entry;
     int count;
 
-    i = 0;
-    entry = lbl_803408A8;
     count = lbl_803DCB74;
-    while (i < count && (void *)*entry != v) {
-        entry++;
-        i++;
+    for (i = 0; i < count; i++) {
+        if ((void *)lbl_803408A8[i] == v) {
+            break;
+        }
     }
     if (i == count) {
         return;
     }
-    while (i < count - 1) {
-        *entry = entry[1];
-        entry++;
-        i++;
+    for (; i < count - 1; i++) {
+        lbl_803408A8[i] = lbl_803408A8[i + 1];
     }
     lbl_803DCB74--;
 }
-#pragma peephole on
 
 void fn_8002B860(void *v) {
     s8 i = lbl_803DCB74;
