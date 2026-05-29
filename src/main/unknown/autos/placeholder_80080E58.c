@@ -5534,3 +5534,22 @@ void dll_06_func0C_nop(void) {}
 int dll_06_func07_ret_0(void) { return 0x0; }
 void sky2_release(void) {}
 void dll_07_func0A_nop(void) {}
+
+extern u8 lbl_803DD1EC;
+extern f32 lbl_803DD1E8;
+extern f32 lbl_803DD1E4;
+extern f32 lbl_803DD1E0;
+
+void fn_8009436C(void) {
+    lbl_803DD1EC = 0;
+}
+
+#pragma push
+#pragma scheduling off
+void fn_80094378(f32 a, f32 b, f32 c) {
+    lbl_803DD1EC = 1;
+    lbl_803DD1E8 = a;
+    lbl_803DD1E4 = b;
+    lbl_803DD1E0 = c;
+}
+#pragma pop
