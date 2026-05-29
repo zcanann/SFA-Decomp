@@ -341,6 +341,14 @@ Heuristic before reaching for `asm { }`:
     first, so flipping the C source flips the asm. Plain peer to #13 (case-order
     for compare-chain switches) but for if/else. Took fn_802BA1D4 91% → 100%.
     Clean C, no asm.
+    **Dispatch FORM: `if/else-if` chain vs `switch` controls linear-bne vs
+    binary-search.** When target dispatches an integer/enum with a LINEAR `bne`
+    chain (cmp; bne; cmp; bne; …), write an `if (x==0){} else if (x==1){} …`
+    chain — a `switch` makes MWCC emit a BINARY-SEARCH tree (or jump table)
+    instead and won't match. (Inverse of #13, which is for when target DOES use a
+    jump table/compare-chain switch.) Pair with the base-pointer hoist (#16). Took
+    vortex_init 86→97.8% (zulu20, 80220608). Read the target's branch shape and
+    pick the C form that produces it.
 
 22. **Wrap the whole body in `if (cond) { ... } return 0;` instead of
     `if (!cond) return 0; <body>`.** An early mid-function `return` of a constant
