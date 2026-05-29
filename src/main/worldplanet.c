@@ -92,7 +92,7 @@ void worldplanet_init(int obj) {
         if (GameBit_Get(lbl_8032A1B4[i]) != 0) {
             flag = 1;
             if (lbl_803DC1B8[i] != 0) {
-                if (getNextTaskHintText() > 0xad) {
+                if ((s32)getNextTaskHintText() > 0xad) {
                     flag = 0;
                 }
             }
