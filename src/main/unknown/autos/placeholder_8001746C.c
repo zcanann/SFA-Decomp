@@ -8088,12 +8088,33 @@ void modelLightStruct_setField50(u8 *p, void *v) {
 
 extern u8 lbl_803DCA30;
 extern void *lbl_8033BEC0[];
-extern void *objAllocLight(void);
+extern void *objAllocLight(void *owner);
 extern void GXInitLightDistAttn(u8 *lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
 extern void GXGetLightAttnK(u8 *lt_obj, f32 *k0, f32 *k1, f32 *k2);
+extern void GXInitLightAttnA(u8 *lt_obj, f32 a0, f32 a1, f32 a2);
+extern void GXInitLightAttn(u8 *lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
+extern void *mmAlloc(int size, int type, int flag);
+extern void *memset(void *dst, int val, int n);
+extern f32 *Camera_GetViewMatrix(void);
+extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
+extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
+extern void Vec_normalize(f32 *dst, f32 *src);
+extern void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag);
+extern void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst);
+extern void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
+extern void lightFn_8001db6c(u8 *light, u8 enabled, f32 duration);
+extern void lightFn_8001d620(u8 *light, int mode, s16 frames);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 extern f32 lbl_803DE750;
 extern f32 lbl_803DE754;
 extern f32 lbl_803DE758;
+extern f32 lbl_803DE760;
+extern f32 lbl_803DE75C;
+extern f32 lbl_803DE76C;
+extern f32 lbl_803DE790;
+extern f32 lbl_803DE79C;
+extern f32 lbl_803DE7A0;
 extern void textureFree(void *tex);
 
 #pragma peephole off
@@ -8104,7 +8125,7 @@ void *objCreateLight(int arg, u8 addToList) {
         if (lbl_803DCA30 >= 0x32) {
             return NULL;
         }
-        light = objAllocLight();
+        light = objAllocLight((void *)arg);
         if (light == NULL) {
             return NULL;
         }
@@ -8114,7 +8135,7 @@ void *objCreateLight(int arg, u8 addToList) {
         }
         return light;
     }
-    light = objAllocLight();
+    light = objAllocLight((void *)arg);
     if (light != NULL) {
         return light;
     }
@@ -8192,7 +8213,7 @@ void *fn_8001CC9C(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
     if (lbl_803DCA30 >= 0x32) {
         light = NULL;
     } else {
-        newLight = objAllocLight();
+        newLight = objAllocLight((void *)unused);
         if (newLight == NULL) {
             light = NULL;
         } else {
@@ -8226,6 +8247,124 @@ void *fn_8001CC9C(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
     return light;
 }
 #pragma pop
+
+#pragma dont_inline on
+void *objAllocLight(void *owner) {
+    u8 *light;
+    f32 tmp[3];
+    f32 *view;
+
+    light = mmAlloc(0x300, 0x1a, 0);
+    if (light == NULL) {
+        return NULL;
+    }
+
+    memset(light, 0, 0x300);
+    *(void **)light = owner;
+
+    if (*(void **)light != NULL) {
+        *(f32 *)(light + 4) = lbl_803DE75C;
+        *(f32 *)(light + 8) = lbl_803DE75C;
+        *(f32 *)(light + 0xc) = lbl_803DE75C;
+        Obj_TransformLocalPointByWorldMatrix(*(u8 **)light, (f32 *)(light + 4), (f32 *)(light + 0x10), 1);
+    } else {
+        *(f32 *)(light + 0x10) = lbl_803DE75C;
+        *(f32 *)(light + 0x14) = lbl_803DE75C;
+        *(f32 *)(light + 0x18) = lbl_803DE75C;
+    }
+
+    view = Camera_GetViewMatrix();
+    if (*(int *)(light + 0x60) == 0) {
+        tmp[0] = *(f32 *)(light + 0x10) - playerMapOffsetX;
+        tmp[1] = *(f32 *)(light + 0x14);
+        tmp[2] = *(f32 *)(light + 0x18) - playerMapOffsetZ;
+        PSMTXMultVec(view, tmp, (f32 *)(light + 0x1c));
+    } else {
+        *(int *)(light + 0x1c) = *(int *)(light + 0x10);
+        *(int *)(light + 0x20) = *(int *)(light + 0x14);
+        *(int *)(light + 0x24) = *(int *)(light + 0x18);
+    }
+
+    if (*(void **)light != NULL) {
+        *(f32 *)(light + 0x28) = lbl_803DE75C;
+        *(f32 *)(light + 0x2c) = lbl_803DE75C;
+        *(f32 *)(light + 0x30) = lbl_803DE760;
+        Vec_normalize((f32 *)(light + 0x28), (f32 *)(light + 0x28));
+        Obj_TransformLocalVectorByWorldMatrix(*(void **)light, (f32 *)(light + 0x28), (f32 *)(light + 0x34));
+    } else {
+        *(f32 *)(light + 0x34) = lbl_803DE75C;
+        *(f32 *)(light + 0x38) = lbl_803DE75C;
+        *(f32 *)(light + 0x3c) = lbl_803DE760;
+        Vec_normalize((f32 *)(light + 0x34), (f32 *)(light + 0x34));
+    }
+
+    view = Camera_GetViewMatrix();
+    if (*(int *)(light + 0x60) == 0) {
+        PSMTXMultVecSR(view, (f32 *)(light + 0x34), (f32 *)(light + 0x40));
+    } else {
+        *(int *)(light + 0x40) = *(int *)(light + 0x34);
+        *(int *)(light + 0x44) = *(int *)(light + 0x38);
+        *(int *)(light + 0x48) = *(int *)(light + 0x3c);
+    }
+
+    lightFn_8001db6c(light, 1, lbl_803DE75C);
+    *(int *)(light + 0x50) = 4;
+    *(int *)(light + 0x54) = 1;
+    *(f32 *)(light + 0x140) = lbl_803DE750;
+    *(f32 *)(light + 0x144) = lbl_803DE754;
+    GXInitLightDistAttn(light + 0x68, *(f32 *)(light + 0x140), lbl_803DE758, 2);
+    GXGetLightAttnK(light + 0x68, (f32 *)(light + 0x124), (f32 *)(light + 0x128), (f32 *)(light + 0x12c));
+    *(f32 *)(light + 0x144) = lbl_803DE75C;
+    light[0x2fc] = 0x7f;
+    *(int *)(light + 0x5c) = 0;
+    light[0x64] = 1;
+    *(int *)(light + 0x60) = 0;
+    light[0x4d] = 0;
+    light[0xbc] = 0;
+    light[0xac] = 0xff;
+    light[0xa8] = 0xff;
+    light[0xad] = 0xff;
+    light[0xa9] = 0xff;
+    light[0xae] = 0xff;
+    light[0xaa] = 0xff;
+    light[0xaf] = 0xff;
+    light[0xab] = 0xff;
+    *(f32 *)(light + 0xb4) = lbl_803DE79C;
+    *(int *)(light + 0xb8) = 0;
+    GXInitLightAttnA(light + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
+    light[0x114] = 0;
+    light[0x104] = 0xff;
+    light[0x100] = 0xff;
+    light[0x105] = 0xff;
+    light[0x101] = 0xff;
+    light[0x106] = 0xff;
+    light[0x102] = 0xff;
+    light[0x107] = 0xff;
+    light[0x103] = 0xff;
+    *(f32 *)(light + 0x10c) = lbl_803DE7A0;
+    *(f32 *)(light + 0x110) = lbl_803DE76C;
+    GXInitLightAttn(light + 0xc0, lbl_803DE75C, lbl_803DE75C, lbl_803DE760,
+                    *(f32 *)(light + 0x10c) * lbl_803DE790, lbl_803DE75C,
+                    lbl_803DE760 - *(f32 *)(light + 0x10c) * lbl_803DE790);
+    lightFn_8001d620(light, 0, 0);
+    light[0xb0] = 0xff;
+    light[0xb1] = 0xff;
+    light[0xb2] = 0xff;
+    light[0xb3] = 0xff;
+    light[0x108] = 0xff;
+    light[0x109] = 0xff;
+    light[0x10a] = 0xff;
+    light[0x10b] = 0xff;
+    if (*(void **)light != NULL) {
+        Obj_BuildInverseWorldTransformMatrix(*(u8 **)light, (f32 *)(light + 0x170));
+    }
+    *(f32 *)(light + 0x134) = lbl_803DE760;
+    *(f32 *)(light + 0x124) = lbl_803DE760;
+    *(f32 *)(light + 0x128) = lbl_803DE75C;
+    *(f32 *)(light + 0x12c) = lbl_803DE75C;
+    return light;
+}
+#pragma dont_inline reset
 
 void fn_8001D80C(u8 *p, void *a, void *b) {
     *(void **)(p + 0x270) = a;
