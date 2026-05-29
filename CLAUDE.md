@@ -475,6 +475,12 @@ pass `&tag`** to get `addi r5, r13, tag@sda21`. The `extern char tag[];` array
 form emits `lis;addi` (wrong) for the same symbol. (hotel5, sMmShowInfo tag →
 matched the OSReport arg.)
 
+**For an ARRAY-typed `.sdata`/`.sbss` symbol, give the extern a KNOWN SIZE to
+get sda21.** An INCOMPLETE array `extern u8 lbl[];` emits far `lis;addi`; the
+SIZED form `extern u8 lbl[8];` lets MWCC pick `@sda21`. (mike8 — sizing
+lbl_803DC8D0[8]/lbl_803DC8C0[2]/lbl_803DC8B8[2] lifted resetLoadedMaps 88→94.3%,
+~+3% each on two fns. Read the size from symbols.txt.)
+
 ## `#pragma dont_inline on` for callees that live in the same TU
 
 With `-inline auto`, MWCC inlines small functions into their callers within
