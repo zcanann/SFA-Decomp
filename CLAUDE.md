@@ -116,6 +116,14 @@ Heuristic before reaching for `asm { }`:
    global inline (where the load stays in volatile `f0`). So lift for a tight
    call-free store-burst; inline the global when any use crosses a call.
    (placeholder_80295318: fn_80295674, repeated `0.0`.)
+   **Counterpoint — when TARGET ITSELF keeps the value in a callee-saved FP reg
+   across a call, DO hoist (above the call) to reproduce that f31 save.** If
+   target loads a float threshold into f31 BEFORE a `bl` so it survives the call
+   (frame grows to hold the f31 save/restore — that's target's real shape), hoist
+   `f32 thr = *(f32*)(state+off);` ABOVE the call. The inverse caveat says don't
+   lift across calls because it adds an f31 save — but when target HAS that save,
+   the lift is the MATCH. Read the target frame/save-mask to decide. (zulu19,
+   arwsquadron_update 85.8→88.7%.)
 
 7. **`u8` not `char` for byte arrays you load and assign without arithmetic**.
    `char buf[N]; buf[0] = arr[i];` emits a spurious `extsb`; `u8 buf[N];`
@@ -396,6 +404,17 @@ Heuristic before reaching for `asm { }`:
     that 1-2 instr divergence is a genuine residual — leave it, and DON'T rewrite
     the clamp chasing it (hotel5's logically-correct rewrite scored *lower*).
     (hotel5, fn_8001D820/fn_8001D84C ~68%.)
+    **A MATERIALIZED float-bool (stored to a GPR) is NOT always a cap — two
+    confirmed recipes, pick by the FORM target uses:** (a) **mfcr/srwi form** —
+    target does `fcmpo … ; mfcr; rlwinm/srwi` to land 0/1 in a reg: reproduce with
+    a `goto`+ternary `cond ? (fcmpo-expr) : 0` and put the inactive/fall-through
+    block FIRST (recipe #21 layout). (zulu18, arwbombcoll 90.9→98.3%.) (b)
+    **li-branch form** — target does `li r0,0; fcmpo; bge; fcmpo; ble; li r0,1;
+    cmpwi r0,0; beq`: reproduce by ASSIGNING the `&&` to an int temp THEN testing
+    it — `int v = (d < A && d > B); if (v){…}`. Writing `if (d<A && d>B)` directly
+    short-circuits with NO materialization (loses the `li r0,0/1`); the int-temp
+    assignment forces it. (zulu19, arwsquadron_update — all 5 instances,
+    83.4→85.8%.) Only leave it a cap if NEITHER form lands.
 
 26. **"Floor-first" clamp restructure forces a FRESH callee-saved FP reg (frame
     size + coloring fix).** When a clamp `x = computed; if (x < floor) x = floor;`
