@@ -12450,6 +12450,7 @@ extern int lbl_802C6F98[];
  * EN v1.0 Address: 0x80015CB8
  * EN v1.0 Size: 184b
  */
+#pragma dont_inline on
 int utf8GetNextChar(u8* str, int* outLen)
 {
     u8 first = *str;
@@ -12474,6 +12475,33 @@ int utf8GetNextChar(u8* str, int* outLen)
     }
     *outLen = cls + 1;
     return acc - lbl_802C6F98[cls];
+}
+#pragma dont_inline reset
+
+extern int getControlCharLen(u32 c);
+
+/*
+ * Function: gameStrcpy
+ * EN v1.0 Address: 0x8000F510
+ * EN v1.0 Size: 200b
+ */
+char *gameStrcpy(char *dst, char *src)
+{
+    u32 ch;
+    int len;
+    do {
+        ch = utf8GetNextChar((u8 *)src, &len);
+        while (len-- != 0) {
+            *dst++ = *src++;
+        }
+        if (ch >= 0xe000 && ch <= 0xf8ff) {
+            len = getControlCharLen(ch) * 2;
+            while (len-- != 0) {
+                *dst++ = *src++;
+            }
+        }
+    } while (ch != 0);
+    return dst - 1;
 }
 
 typedef struct {
