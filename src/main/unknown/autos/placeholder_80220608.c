@@ -1529,6 +1529,113 @@ void wcfloortile_init(int obj)
 void wcfloortile_release(void) {}
 void wcfloortile_initialise(void) {}
 
+extern int fn_80065640(void);
+extern void fn_80065574(int a, int b, int c);
+extern f32 lbl_803E6E9C;
+extern f32 lbl_803E6EA0;
+extern f32 lbl_803E6EA4;
+extern f32 lbl_803E6EA8;
+extern f32 lbl_803E6EAC;
+extern f32 lbl_803E6EB0;
+extern f32 lbl_803E6EB4;
+extern f32 lbl_803E6EB8;
+extern f32 lbl_803E6EBC;
+
+#pragma peephole off
+#pragma scheduling off
+void wcfloortile_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+
+    if ((u32)GameBit_Get(824) != 0) {
+        *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
+        *(u8 *)(state + 6) = 3;
+    }
+    switch (*(u8 *)(state + 6)) {
+    case 0:
+    default:
+        if (*(u8 *)(state + 7) & 4) {
+            f32 z = lbl_803E6E9C;
+            int i, off;
+            for (i = 0, off = 0; i < *(s8 *)(*(int *)(obj + 0x58) + 0x10f); i++, off += 4) {
+                int e = *(int *)(*(int *)(obj + 0x58) + off + 0x100);
+                if (*(s16 *)(e + 0x44) == 1) {
+                    Sfx_PlayFromObject(obj, 198);
+                    *(u8 *)(state + 6) = 1;
+                    *(f32 *)(state + 0) = z;
+                    *(f32 *)(obj + 0x28) = z;
+                }
+            }
+        } else if ((u32)GameBit_Get(613) != 0) {
+            *(u8 *)(state + 7) |= 4;
+        }
+        break;
+    case 1:
+        *(f32 *)(state + 0) = *(f32 *)(state + 0) + timeDelta;
+        if (*(f32 *)(state + 0) > lbl_803E6EA0) {
+            *(u8 *)(state + 7) |= 3;
+            *(f32 *)(state + 0) = lbl_803E6EA0;
+            *(f32 *)(obj + 0x28) = lbl_803E6EA4 * timeDelta + *(f32 *)(obj + 0x28);
+        }
+        *(s16 *)(state + 4) = lbl_803E6EA8 * (*(f32 *)(state + 0) / lbl_803E6EA0);
+        *(s16 *)(obj + 2) = (s16)randomGetRange(-*(s16 *)(state + 4), *(s16 *)(state + 4));
+        *(s16 *)(obj + 4) = (s16)randomGetRange(-*(s16 *)(state + 4), *(s16 *)(state + 4));
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+        {
+            f32 d = *(f32 *)(setup + 0xc) - *(f32 *)(obj + 0x10);
+            f32 t;
+            if (d < lbl_803E6EAC) {
+                t = lbl_803E6EB0;
+            } else if (d > lbl_803E6EB4) {
+                t = lbl_803E6E9C;
+            } else {
+                t = lbl_803E6E98 - (d - lbl_803E6EAC) / lbl_803E6EB8;
+                if (t > lbl_803E6E98) {
+                    t = lbl_803E6E98;
+                } else if (t < lbl_803E6E9C) {
+                    t = lbl_803E6E9C;
+                }
+                t = t * lbl_803E6EB0;
+            }
+            *(u8 *)(obj + 0x36) = (int)t;
+        }
+        if (*(u8 *)(obj + 0x36) == 0) {
+            *(u8 *)(state + 6) = 2;
+        }
+        break;
+    case 2:
+        *(u8 *)(obj + 0x36) = 0;
+        ObjHits_DisableObject(obj);
+        *(u8 *)(state + 7) |= 3;
+        break;
+    case 3:
+        {
+            f32 a = lbl_803E6EBC * timeDelta + (f32)(u32) * (u8 *)(obj + 0x36);
+            if (a > lbl_803E6EB0) {
+                a = lbl_803E6EB0;
+            }
+            *(u8 *)(obj + 0x36) = (int)a;
+        }
+        ObjHits_EnableObject(obj);
+        break;
+    }
+    {
+        int setup2 = *(int *)(obj + 0x4c);
+        if (fn_80065640() != 0) {
+            *(u8 *)(state + 7) |= 2;
+        }
+        if (*(u8 *)(state + 7) & 2) {
+            if (fn_80065640() == 0) {
+                fn_80065574(*(s16 *)(setup2 + 0x1a), *(int *)(obj + 0x30), *(u8 *)(state + 7) & 1);
+                *(u8 *)(state + 7) &= ~2;
+            }
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
+
 int wcapertures_getExtraSize(void) { return 8; }
 #pragma scheduling off
 int wcapertures_getObjectTypeId(int obj)
