@@ -94,8 +94,8 @@ void curveFn_8000fe8c(Curve *curve, int count)
     if (curve->pz != NULL) {
         pz = curve->pz + curve->idx;
     }
-    if (curve->flag98 != 0) {
-        curveFn_80010018(px, py, pz, outX, outY, outZ, count, curve->flag98);
+    if (curve->coeffFn != 0) {
+        curveFn_80010018(px, py, pz, outX, outY, outZ, count, curve->coeffFn);
     }
 
     zero = lbl_803DE658;
@@ -133,12 +133,12 @@ int curveFn_80010320(Curve *curve, f32 dt)
             seg--;
         }
         if (curve->dir != 0) {
-            curve->f4 = lengths[seg + 1] + curve->f4;
+            curve->segmentDistance = lengths[seg + 1] + curve->segmentDistance;
         } else if (curve->t >= lbl_803DE674) {
             return 1;
         }
-        curve->f8 += step;
-        step += curve->f4;
+        curve->pathDistance += step;
+        step += curve->segmentDistance;
         zero = lbl_803DE658;
         while (step > zero) {
             step -= lengths[seg + 1];
@@ -158,8 +158,8 @@ int curveFn_80010320(Curve *curve, f32 dt)
                         curve->sample[2] = curve->eval(lbl_803DE674, curve->pz + savedIdx, &curve->tangent[2]);
                     }
                     curve->t = lbl_803DE674;
-                    curve->f4 = lbl_803DE658;
-                    curve->f8 = curve->fc;
+                    curve->segmentDistance = lbl_803DE658;
+                    curve->pathDistance = curve->pathLength;
                     curve->idx = curve->count - 4;
                     return 1;
                 }
@@ -181,7 +181,7 @@ int curveFn_80010320(Curve *curve, f32 dt)
             curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
         }
         curve->t = t;
-        curve->f4 = step;
+        curve->segmentDistance = step;
         curve->dir = 0;
         return 0;
     } else if (step < lbl_803DE658) {
@@ -190,12 +190,12 @@ int curveFn_80010320(Curve *curve, f32 dt)
             seg--;
         }
         if (curve->dir == 0) {
-            curve->f4 = lengths[seg + 1] - curve->f4;
+            curve->segmentDistance = lengths[seg + 1] - curve->segmentDistance;
         } else if (curve->t <= lbl_803DE658) {
             return 1;
         }
-        curve->f8 += step;
-        step += curve->f4;
+        curve->pathDistance += step;
+        step += curve->segmentDistance;
         zero = lbl_803DE658;
         while (step < zero) {
             step += lengths[seg + 1];
@@ -215,8 +215,8 @@ int curveFn_80010320(Curve *curve, f32 dt)
                         curve->sample[2] = curve->eval(lbl_803DE658, curve->pz + savedIdx, &curve->tangent[2]);
                     }
                     curve->t = lbl_803DE658;
-                    curve->f4 = -lengths[1];
-                    curve->f8 = lbl_803DE658;
+                    curve->segmentDistance = -lengths[1];
+                    curve->pathDistance = lbl_803DE658;
                     curve->idx = 0;
                     return 1;
                 }
@@ -237,7 +237,7 @@ int curveFn_80010320(Curve *curve, f32 dt)
             curve->sample[2] = curve->eval(t, curve->pz + curve->idx, &curve->tangent[2]);
         }
         curve->t = t;
-        curve->f4 = step - lengths[seg + 1];
+        curve->segmentDistance = step - lengths[seg + 1];
         curve->dir = 1;
     }
     return 0;
@@ -257,11 +257,11 @@ void curvesSetupMoveNetworkCurve(Curve *curve)
         debugPrintf(sCurvesSetupMoveNetworkCurveBadControlPointCount);
     }
 
-    curve->fc = lbl_803DE658;
+    curve->pathLength = lbl_803DE658;
     curve->idx = 0;
     while (curve->idx < curve->count - 3) {
         curveFn_8000fe8c(curve, 5);
-        curve->fc += curve->totalLen;
+        curve->pathLength += curve->totalLen;
         if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
             curve->idx += 4;
         } else {
@@ -276,9 +276,9 @@ void curvesSetupMoveNetworkCurve(Curve *curve)
     }
     curveFn_8000fe8c(curve, 20);
     if (curve->dir != 0) {
-        curve->f8 = curve->fc - curve->f4;
+        curve->pathDistance = curve->pathLength - curve->segmentDistance;
     } else {
-        curve->f8 = curve->f4;
+        curve->pathDistance = curve->segmentDistance;
     }
 }
 #pragma peephole reset
@@ -296,11 +296,11 @@ void curvesMove(Curve *curve)
         debugPrintf(sCurvesMoveBadControlPointCount);
     }
 
-    curve->fc = lbl_803DE658;
+    curve->pathLength = lbl_803DE658;
     curve->idx = 0;
     while (curve->idx < curve->count - 3) {
         curveFn_8000fe8c(curve, 5);
-        curve->fc += curve->totalLen;
+        curve->pathLength += curve->totalLen;
         if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
             curve->idx += 4;
         } else {
@@ -317,12 +317,12 @@ void curvesMove(Curve *curve)
 
     if (curve->dir != 0) {
         curve->t = lbl_803DE674;
-        curve->f4 = curve->segLen[19];
-        curve->f8 = curve->fc;
+        curve->segmentDistance = curve->segLen[19];
+        curve->pathDistance = curve->pathLength;
     } else {
         curve->t = lbl_803DE658;
-        curve->f4 = lbl_803DE658;
-        curve->f8 = lbl_803DE658;
+        curve->segmentDistance = lbl_803DE658;
+        curve->pathDistance = lbl_803DE658;
     }
 
     if (curve->px != NULL) {

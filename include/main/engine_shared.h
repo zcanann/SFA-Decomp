@@ -152,11 +152,12 @@ typedef struct SfxTriggerCacheEntry {
     u16 index;
 } SfxTriggerCacheEntry;
 typedef f32 (*CurveEvalFn)(f32 t, f32 *values, f32 *outTangent);
+typedef void (*CurveCoeffFn)(f32 *values, f32 *coeffs);
 typedef struct Curve {
     f32 t;
-    f32 f4;
-    f32 f8;
-    f32 fc;
+    f32 segmentDistance;
+    f32 pathDistance;
+    f32 pathLength;
     int idx;
     f32 totalLen;
     f32 segLen[20];
@@ -168,7 +169,7 @@ typedef struct Curve {
     f32 *pz;
     int count;
     CurveEvalFn eval;
-    void (*flag98)(f32 *ch, f32 *buf);
+    CurveCoeffFn coeffFn;
 } Curve;
 typedef struct CameraRenderMode {
     u32 viTVMode;
