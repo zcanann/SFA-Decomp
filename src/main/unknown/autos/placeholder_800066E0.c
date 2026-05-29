@@ -9084,6 +9084,7 @@ typedef struct CurveHeapNode {
  * EN v1.0 Address: 0x80010F6C
  * EN v1.0 Size: 136b
  */
+#pragma dont_inline on
 void fn_80010F6C(CurveHeapNode* heap, s32 count, s32 index)
 {
     u16 priority = heap[index].priority;
@@ -9108,6 +9109,7 @@ void fn_80010F6C(CurveHeapNode* heap, s32 count, s32 index)
     heap[index].priority = priority;
     heap[index].value = value;
 }
+#pragma dont_inline reset
 
 typedef struct RingBufferQueue {
     s16 count;
@@ -12279,6 +12281,7 @@ extern void voxmapsFn_80010ff4(int a1, VoxBoxArg* a2, int a3, u16 count, s16* bo
  * EN v1.0 Address: 0x800118EC
  * EN v1.0 Size: 272b
  */
+#pragma dont_inline on
 void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
 {
     s16 box[3];
@@ -12298,6 +12301,74 @@ void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
     box[2] = box[2] - 4;
     box[1] = a2->f2;
     voxmapsFn_80010ff4(a1, a2, a3, count, box);
+}
+#pragma dont_inline reset
+
+typedef struct {
+    s16 x;
+    s16 unk2;
+    s16 y;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    u8 flag;
+    u8 unkD;
+} RouteNode;
+
+typedef struct {
+    RouteNode *nodes;
+    CurveHeapNode *queue;
+    int unk08;
+    s16 tgtX;
+    s16 unk0E;
+    s16 tgtY;
+    s16 unk12;
+    int unk14;
+    int cur;
+    s16 unk1C;
+    s16 queueCount;
+} RouteState;
+
+/*
+ * Function: voxmaps_processRouteQueue
+ * EN v1.0 Address: 0x8000C05C
+ * EN v1.0 Size: 268b
+ */
+int voxmaps_processRouteQueue(RouteState *state, int count)
+{
+    int done = 0;
+    int ret = 0;
+    int nodeIdx;
+    CurveHeapNode *queue;
+    RouteNode *node;
+
+    while (!done && count != 0) {
+        queue = state->queue;
+        if (state->queueCount == 0) {
+            nodeIdx = -1;
+        } else {
+            nodeIdx = queue[1].value;
+            queue[1].priority = queue[state->queueCount].priority;
+            queue[1].value = queue[state->queueCount--].value;
+            fn_80010F6C(queue, state->queueCount, 1);
+        }
+        if (nodeIdx < 0) {
+            done = 1;
+            ret = -1;
+        } else {
+            node = state->nodes + nodeIdx;
+            state->cur = nodeIdx;
+            if (node->x == state->tgtX && node->y == state->tgtY) {
+                done = 1;
+                ret = 1;
+            } else {
+                node->flag = 1;
+                fn_800118EC((int)state, (VoxBoxArg *)node, nodeIdx);
+            }
+        }
+        count--;
+    }
+    return ret;
 }
 
 typedef struct {
