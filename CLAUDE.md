@@ -410,6 +410,13 @@ Heuristic before reaching for `asm { }`:
     manual unroll in C instead folds `1<<0`→`clrlwi`/`andi` and mismatches. So
     write `for(bit=0;bit<N;bit++){ if(flags&(1<<bit)){ p[bit*STRIDE+off]=…; } }`.
     Took 3 sky-setter fns 75→100%. (november12, 80080E58.)
+    **GUARD — only when the per-iteration body is ~≤4 simple instructions.** MWCC
+    only re-unrolls trip-small loops with TINY bodies. If target shows the
+    unrolled `slw` form but the body is larger (nested-if + bitfield/FP work),
+    MWCC keeps a REAL loop from your for-loop (won't unroll) AND manual-unroll
+    folds `1<<const`→`clrlwi` (losing the slw machinery, ~18 instr short) — so
+    such fns just CAP at ~66-70%; commit the for-loop partial and move on.
+    (november12, skyFn_80088c94/skyFn_80089710.)
 
 ## Last-resort: inline `asm { }` blocks with `register` variables
 

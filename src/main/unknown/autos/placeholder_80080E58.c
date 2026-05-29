@@ -5917,3 +5917,46 @@ void sky2_onMapSetup(void) {
     }
 }
 #pragma pop
+
+extern u8 *saveGameGetEnvState(void);
+extern int getSaveGameLoadStatus(void);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void skyFn_80088c94(int flags, int mode) {
+    u8 *env;
+    u8 *sky;
+
+    if ((flags & 1) != 0) {
+        if ((u8)mode != 0) {
+            ((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->unused80 = 1;
+        } else {
+            ((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->unused80 = 0;
+        }
+    }
+    if ((flags & 2) != 0) {
+        if ((u8)mode != 0) {
+            ((SkyBlendStateFlags *)(lbl_803DD12C + 0x165))->unused80 = 1;
+        } else {
+            ((SkyBlendStateFlags *)(lbl_803DD12C + 0x165))->unused80 = 0;
+        }
+    }
+    sky = lbl_803DD12C;
+    ((SkyBlendStateFlags *)(sky + 0x209))->unused80 =
+        ((SkyBlendStateFlags *)(sky + sky[0x24c] * 0xa4 + 0xc1))->unused80;
+    env = saveGameGetEnvState();
+    if (getSaveGameLoadStatus() == 0) {
+        if (((SkyBlendStateFlags *)(lbl_803DD12C + 0xc1))->unused80 != 0) {
+            env[0x40] |= 2;
+        } else {
+            env[0x40] &= ~2;
+        }
+        if (((SkyBlendStateFlags *)(lbl_803DD12C + 0x165))->unused80 != 0) {
+            env[0x40] |= 4;
+        } else {
+            env[0x40] &= ~4;
+        }
+    }
+}
+#pragma pop
