@@ -2094,6 +2094,68 @@ int wctempledia_interactCallback(int obj, int p2, int p3)
     *(s16 *)(p3 + 0x6e) &= ~2;
     return 0;
 }
+extern f32 lbl_803E6E5C;
+extern f32 lbl_803E6E60;
+extern f32 lbl_803E6E64;
+extern f32 lbl_803E6E68;
+void wctempledia_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int r4c = *(int *)(obj + 0x4c);
+    int i;
+    int j;
+    int k;
+
+    if (*(u8 *)(state + 9) & 1) {
+        wctempledia_syncPartVisibility(obj, *(u8 *)(state + 8));
+        return;
+    }
+    *(f32 *)state =
+        timeDelta * (lbl_803E6E48 * (*(f32 *)(state + 4) - *(f32 *)state)) + *(f32 *)state;
+    *(s16 *)(obj + 4) = (int)(timeDelta * *(f32 *)state + (f32)*(s16 *)(obj + 4));
+    Sfx_KeepAliveLoopedObjectSound(obj, 0x7f);
+    {
+        f32 ratio = *(f32 *)state / *(f32 *)(*(int *)(state + 0xc) + 8);
+        Sfx_SetObjectSfxVolume(obj, 0x7f, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
+                               lbl_803E6E68 * ratio + lbl_803E6E64);
+    }
+    for (i = 0; i < 3; i++) {
+        int bit = 1 << i;
+        if ((*(u8 *)(state + 8) & bit) == 0 &&
+            GameBit_Get(*(s16 *)(*(int *)(state + 0x10) + i * 2)) != 0) {
+            int found = 0;
+            for (j = 0; j < i; j++) {
+                if ((*(u8 *)(state + 8) & (1 << j)) == 0) {
+                    found = 1;
+                    break;
+                }
+            }
+            if (found) {
+                for (k = 0; k < 3; k++) {
+                    GameBit_Set(*(s16 *)(*(int *)(state + 0x10) + k * 2), 0);
+                }
+                Sfx_PlayFromObject(0, 0x487);
+                *(u8 *)(state + 8) = 0;
+                *(f32 *)(state + 4) = *(f32 *)(*(int *)(state + 0xc) + 0);
+                break;
+            }
+            *(u8 *)(state + 8) |= bit;
+            if (i == 0) {
+                *(f32 *)(state + 4) = *(f32 *)(*(int *)(state + 0xc) + 4);
+                Sfx_PlayFromObject(0, 0x409);
+            } else if (i == 1) {
+                *(f32 *)(state + 4) = *(f32 *)(*(int *)(state + 0xc) + 8);
+                Sfx_PlayFromObject(0, 0x409);
+            }
+        }
+    }
+    wctempledia_syncPartVisibility(obj, *(u8 *)(state + 8));
+    if (*(u8 *)(state + 8) == 7) {
+        GameBit_Set(*(s16 *)(r4c + 0x1e), 1);
+        Sfx_PlayFromObject(0, 0x7e);
+        *(u8 *)(state + 9) |= 1;
+    }
+}
 void wctempledia_init(int obj, int setup)
 {
     int state = *(int *)(obj + 0xb8);
