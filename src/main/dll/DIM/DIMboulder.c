@@ -1427,11 +1427,11 @@ extern void warpToMap(int mapId, int flags);
 #define MEVT_TRIGGER(a, b, c) ((void (*)(int, int, int))((int *)*gMapEventInterface)[0x50 / 4])((a), (b), (c))
 #define MEVT_SET(a, b)        ((void (*)(int, int))((int *)*gMapEventInterface)[0x44 / 4])((a), (b))
 
-/* EN v1.0 0x801AC248  fn_801AC248: 8-state ice-mountain event machine dispatched
+/* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
  * through jumptable_80323698 (states 1..7; state 0 idles). */
 #pragma scheduling off
 #pragma peephole off
-void fn_801AC248(int *obj)
+void imicemountain_updateEventState(int *obj)
 {
     int *extra = *(int **)((char *)obj + 0xb8);
     switch (*(u8 *)extra) {
@@ -1662,7 +1662,7 @@ void imicemountain_update(int *obj)
     }
     switch (*(u8 *)((char *)extra + 0xc)) {
     case 1:
-        fn_801AC248(obj);
+        imicemountain_updateEventState(obj);
         break;
     case 2:
         if (GameBit_Get(0x3a3) != 0) {
