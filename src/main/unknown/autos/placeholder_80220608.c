@@ -2126,6 +2126,73 @@ void wctemplebri_hitDetect(void) {}
 void wctemplebri_release(void) {}
 void wctemplebri_initialise(void) {}
 
+extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
+extern void ObjHits_DisableObject(int obj);
+extern int wctemplebri_interactCallback(int obj, int p2, int p3);
+
+#pragma peephole off
+#pragma scheduling off
+void wctemplebri_init(int obj, int initData)
+{
+    int state;
+    int model;
+    int modelData;
+    int maxY;
+    int i;
+    int p, k;
+    int done;
+
+    *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(initData + 0x18) << 8);
+    *(u8 *)(obj + 0xad) = *(u8 *)(initData + 0x19);
+    if ((s8)*(u8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55))
+        *(u8 *)(obj + 0xad) = 0;
+    *(void **)(obj + 0xbc) = (void *)wctemplebri_interactCallback;
+    state = *(int *)(obj + 0xb8);
+    maxY = 0;
+    model = Obj_GetActiveModel(obj);
+    modelData = *(int *)(model + 0);
+    for (i = 0; i < *(u16 *)(modelData + 0xe4); i++) {
+        int y = *(s16 *)(ObjModel_GetCurrentVertexCoords(model, i) + 4);
+        if (y < maxY)
+            maxY = y;
+    }
+    done = 0;
+    while (done == 0) {
+        done = 1;
+        p = state;
+        for (k = 0; k < *(u8 *)(state + 0x4f) - 1; k++) {
+            f32 a = *(f32 *)(p + 4);
+            f32 b = *(f32 *)(p + 8);
+            if (a < b) {
+                *(f32 *)(p + 4) = b;
+                *(f32 *)(p + 8) = (f32)(int)a;
+                done = 0;
+            }
+            p += 4;
+        }
+    }
+    *(u8 *)(state + 0x4f) = 0xa;
+    *(f32 *)(state + 0) = (f32)maxY;
+    if ((u32)GameBit_Get(*(s16 *)(initData + 0x1e)) != 0) {
+        *(u8 *)(state + 0x5f) = 1;
+        *(u8 *)(state + 0x66) |= 1;
+    }
+    if (*(u8 *)(state + 0x5f) != 0) {
+        for (k = 0; k < *(u8 *)(state + 0x4f); k++) {
+            *(u8 *)(state + k + 0x50) = 0xff;
+            *(u8 *)(state + k + 0x40) = 1;
+        }
+        *(u8 *)(obj + 0x36) = 0xff;
+    } else {
+        ObjHits_DisableObject(obj);
+        *(u8 *)(obj + 0x36) = 0;
+    }
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+    ObjModel_SetPostRenderCallback(model, fn_800284CC);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern f32 lbl_803E6E98;
 extern f32 lbl_803E6E2C;
 extern f32 lbl_803E72E8;
