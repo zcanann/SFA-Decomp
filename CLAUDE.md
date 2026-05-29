@@ -135,6 +135,15 @@ Heuristic before reaching for `asm { }`:
    dispatch lands on target's exact instruction sequence. Simple render fns
    *without* intermediates don't need this — args pass through naturally.
    Picked up several 100% matches in TREX_trex and DIMcannon batches.
+   **Corollary — a callee may take MORE params than its BODY uses; declare the
+   trailing DEAD params so the caller sets up the registers.** If the call site
+   loads `r3..rN` but the callee's body only reads `r3..rM` (M<N), the caller
+   won't match unless the callee signature has all N params (the extra ones are
+   dead in the body but the caller still materializes them). Read the call's
+   r-register span off the target asm and declare the trailing `int`/`f32` params
+   even though unused. (hotel6 — heapSpawnSlot/changeHeapSlot actually take 7
+   params, the 7th `tag` dead in-body; adding it fixed mmAllocFromRegion's caller
+   setup with no regression to the callees.)
 
 10. **`(u32)` cast on a u8/u16 before int→f32 conversion** forces the unsigned
     path. The signed int→f32 path emits `xoris + lfd + fsubs` against a
