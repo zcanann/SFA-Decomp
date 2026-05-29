@@ -76,8 +76,20 @@ main/unknown/autos/placeholder_80080E58.c:
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 	.text       start:0x80094494 end:0x800944A0
 
-main/unknown/autos/placeholder_800944A0.c:
-	.text       start:0x800944A0 end:0x8009B0E0
+main/dll/cloudaction.c:
+	.text       start:0x800944A0 end:0x80094F7C
+
+main/dll/waterfx.c:
+	.text       start:0x80094F7C end:0x80096994
+
+main/dll/viewfinder.c:
+	.text       start:0x80096994 end:0x800969B0
+
+main/dll/objfx.c:
+	.text       start:0x800969B0 end:0x8009AD44
+
+main/dll/expgfxresource.c:
+	.text       start:0x8009AD44 end:0x8009B0E0
 
 main/dll/expgfx.c:
 	.text       start:0x8009B0E0 end:0x8009FED0
@@ -1619,8 +1631,188 @@ main/dll/firepipe.c:
 	.text       start:0x8021F8CC end:0x80220608
 	.data       start:0x8032AC90 end:0x8032ACC8
 
-main/unknown/autos/placeholder_80220608.c:
-	.text       start:0x80220608 end:0x8024034C
+main/dll/DR/dll_0279_dr_energydisc.c:
+	.text       start:0x80220608 end:0x80220808
+
+main/dll/DR/dll_027C_dr_lightbea.c:
+	.text       start:0x80220808 end:0x80220AD0
+
+main/dll/DR/dll_027E_drmusiccont.c:
+	.text       start:0x80220AD0 end:0x80221178
+
+main/dll/DR/dll_0280_dr_cloudper.c:
+	.text       start:0x80221178 end:0x80221430
+
+main/dll/DR/dll_0281_dr_earthcal.c:
+	.text       start:0x80221430 end:0x80221670
+
+main/dll/dll_0282_barrelgener.c:
+	.text       start:0x80221670 end:0x802227EC
+
+main/dll/DR/dll_0283_dr_barrelgr.c:
+	.text       start:0x802227EC end:0x80223004
+
+main/dll/dll_028A_earthwalker.c:
+	.text       start:0x80223004 end:0x80223D18
+
+main/dll/dll_028B.c:
+	.text       start:0x80223D18 end:0x8022408C
+
+main/dll/WC/dll_028C_wcbouncycra.c:
+	.text       start:0x8022408C end:0x802243F4
+
+main/dll/WC/dll_0290_wcpushblock.c:
+	.text       start:0x802243F4 end:0x802261B0
+
+main/dll/WC/dll_028D_wclevelcont.c:
+	.text       start:0x802261B0 end:0x802272C8
+
+main/dll/WC/dll_028E_wcbeacon.c:
+	.text       start:0x802272C8 end:0x802276AC
+
+main/dll/WC/dll_0291_wctile.c:
+	.text       start:0x802276AC end:0x80227BB8
+
+main/dll/WC/dll_028F_wcpressures.c:
+	.text       start:0x80227BB8 end:0x802281CC
+
+main/dll/WC/dll_0292_wctrexstatu.c:
+	.text       start:0x802281CC end:0x80228478
+
+main/dll/dll_0293_suntemple.c:
+	.text       start:0x80228478 end:0x80228B38
+
+main/dll/WC/dll_0294_wctemple.c:
+	.text       start:0x80228B38 end:0x80228C68
+
+main/dll/dll_0299.c:
+	.text       start:0x80228C68 end:0x80228EDC
+
+main/dll/WC/dll_0295_wcapertures.c:
+	.text       start:0x80228EDC end:0x802293F8
+
+main/dll/WC/dll_0296_wctempledia.c:
+	.text       start:0x802293F8 end:0x8022999C
+
+main/dll/WC/dll_0297_wctemplebri.c:
+	.text       start:0x8022999C end:0x8022A298
+
+main/dll/WC/dll_0298_wcfloortile.c:
+	.text       start:0x8022A298 end:0x8022B998
+
+main/dll/ARW/dll_029A_arwarwing.c:
+	.text       start:0x8022B998 end:0x8022E418
+
+main/dll/ARW/dll_029B_arwingandrossstuff.c:
+	.text       start:0x8022E418 end:0x8022EDA4
+
+main/dll/ARW/dll_029C_arwarwingbo.c:
+	.text       start:0x8022EDA4 end:0x8022F1D8
+
+main/dll/ARW/dll_029D_arwarwinggu.c:
+	.text       start:0x8022F1D8 end:0x8022F52C
+
+main/dll/dll_029E_Dummy29E.c:
+	.text       start:0x8022F52C end:0x8022F588
+
+main/dll/ARW/dll_029F_arwbombcoll.c:
+	.text       start:0x8022F588 end:0x8022FE00
+
+main/dll/dll_02A0_ring.c:
+	.text       start:0x8022FE00 end:0x802308B4
+
+main/dll/ARW/dll_02A1_arwlevelcon.c:
+	.text       start:0x802308B4 end:0x80230E2C
+
+main/dll/ARW/dll_02A2_arwspeedstr.c:
+	.text       start:0x80230E2C end:0x80231074
+
+main/dll/dll_02A3.c:
+	.text       start:0x80231074 end:0x80231398
+
+main/dll/dll_02A4.c:
+	.text       start:0x80231398 end:0x80231964
+
+main/dll/ARW/dll_02A5_arwgenerato.c:
+	.text       start:0x80231964 end:0x80231A90
+
+main/dll/ARW/dll_02A6_arwsquadron.c:
+	.text       start:0x80231A90 end:0x802331B0
+
+main/dll/ARW/dll_02A7_arwproximit.c:
+	.text       start:0x802331B0 end:0x802338F0
+
+main/dll/ARW/dll_02A8_arwblocker.c:
+	.text       start:0x802338F0 end:0x80233B0C
+
+main/dll/LGT/dll_02A9_pointlight.c:
+	.text       start:0x80233B0C end:0x8023404C
+
+main/dll/LGT/dll_02AA_directionallight.c:
+	.text       start:0x8023404C end:0x80234748
+
+main/dll/LGT/dll_02AB_projectedlight.c:
+	.text       start:0x80234748 end:0x80234C10
+
+main/dll/LGT/dll_02AC_controllight.c:
+	.text       start:0x80234C10 end:0x80234DC8
+
+main/dll/dll_02AD_softbody.c:
+	.text       start:0x80234DC8 end:0x8023503C
+
+main/dll/dll_02AE_waterflowwe.c:
+	.text       start:0x8023503C end:0x802356CC
+
+main/dll/dll_02AF_tree.c:
+	.text       start:0x802356CC end:0x80236154
+
+main/dll/dll_02B0_brokenpipe.c:
+	.text       start:0x80236154 end:0x80236298
+
+main/dll/dll_02B1_cmbsrc.c:
+	.text       start:0x80236298 end:0x80237574
+
+main/dll/dll_02B2_dustmotesou.c:
+	.text       start:0x80237574 end:0x80237808
+
+main/dll/dll_02B3_vortex.c:
+	.text       start:0x80237808 end:0x802383E0
+
+main/dll/dll_02B4_cntcounter.c:
+	.text       start:0x802383E0 end:0x8023852C
+
+main/dll/dll_02B5_timer.c:
+	.text       start:0x8023852C end:0x80238AB0
+
+main/dll/dll_02B6_cnthitobjec.c:
+	.text       start:0x80238AB0 end:0x80238FA4
+
+main/dll/dll_02B7_mcupgrade.c:
+	.text       start:0x80238FA4 end:0x80239114
+
+main/dll/dll_02B8_mcupgradema.c:
+	.text       start:0x80239114 end:0x802392B8
+
+main/dll/dll_02B9_mcstaffeffe.c:
+	.text       start:0x802392B8 end:0x8023938C
+
+main/dll/dll_02BA_mclightning.c:
+	.text       start:0x8023938C end:0x80239858
+
+main/dll/dll_02BB_gf_levelcon.c:
+	.text       start:0x80239858 end:0x8023A688
+
+main/dll/dll_02BC_andross.c:
+	.text       start:0x8023A688 end:0x8023F05C
+
+main/dll/dll_02BD_androsshand.c:
+	.text       start:0x8023F05C end:0x8023FC8C
+
+main/dll/dll_02BE_androssbrain.c:
+	.text       start:0x8023FC8C end:0x80240010
+
+main/dll/dll_02BF_androssligh.c:
+	.text       start:0x80240010 end:0x8024034C
 
 dolphin/base/PPCArch.c:
 	.text       start:0x8024034C end:0x802403D8
