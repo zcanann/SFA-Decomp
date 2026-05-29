@@ -900,29 +900,30 @@ void romCurveFn_80084190(RomCurveInterpState *state, f32 t) {
         }
     }
     node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
-    if (node != NULL) {
-        while (t >= (thr = state->toTime)) {
-            mask = 1;
-            for (i = 0; i < 4; i++) {
-                val = node->links[i];
-                if (val > -1 && (node->directionMask & mask) == 0) {
-                    found = val;
-                    i = 5;
-                }
-                mask <<= 1;
+    if (node == NULL) {
+        return;
+    }
+    while (t >= (thr = state->toTime)) {
+        mask = 1;
+        for (i = 0; i < 4; i++) {
+            val = node->links[i];
+            if (val > -1 && (node->directionMask & mask) == 0) {
+                found = val;
+                i = 5;
             }
-            if (i != 6) {
-                state->fromTime = thr;
-                state->fromNodeId = state->toNodeId;
-                state->toNodeId = -1;
-                return;
-            }
-            state->fromNodeId = state->toNodeId;
-            state->toNodeId = found;
-            prev = node;
-            node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
-            curveFn_80083e00(state, prev, node, state->toTime, 0);
+            mask <<= 1;
         }
+        if (i != 6) {
+            state->fromTime = thr;
+            state->fromNodeId = state->toNodeId;
+            state->toNodeId = -1;
+            return;
+        }
+        state->fromNodeId = state->toNodeId;
+        state->toNodeId = found;
+        prev = node;
+        node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
+        curveFn_80083e00(state, prev, node, state->toTime, 0);
     }
 }
 #pragma scheduling reset
