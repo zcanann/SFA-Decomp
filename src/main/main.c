@@ -1535,25 +1535,31 @@ extern f32 lbl_803E621C;
 
 #pragma scheduling off
 #pragma peephole off
-void dbegg_hitDetect(int *obj) {
-    int hit;
+void dbegg_hitDetect(int obj) {
     u8 *state;
-    hit = ObjHits_GetPriorityHit((int)obj, 0, 0, 0);
-    state = *(u8 **)((char *)obj + 0xb8);
+    int hit;
+    hit = ObjHits_GetPriorityHit(obj, 0, 0, 0);
+    state = *(u8 **)(obj + 0xb8);
     if (hit == 0x12) {
         if (state[0x118] != 4) {
             Obj_GetPlayerObject();
         }
     }
     if (state[0x118] != 9) {
-        if (objBboxFn_800640cc(lbl_803E6218, (char *)obj + 0x80, (char *)obj + 0xc, 1, NULL, (int)obj, 8, -1, 0xff, 0) != 0) {
-            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) - lbl_803E621C * *(f32 *)((char *)obj + 0x24);
-            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) - lbl_803E621C * *(f32 *)((char *)obj + 0x2c);
+        void *hitFrom = (void *)(obj + 0x80);
+        void *hitTo = (void *)(obj + 0xc);
+        f32 hitRadius = lbl_803E6218;
+        if (objBboxFn_800640cc(hitRadius, hitFrom, hitTo, 1, NULL, obj, 8, -1, 0xff, 0) != 0) {
+            f32 damping = lbl_803E621C;
+            f32 velocityX = *(f32 *)(obj + 0x24);
+            *(f32 *)(obj + 0x24) = velocityX - damping * velocityX;
+            velocityX = *(f32 *)(obj + 0x2c);
+            *(f32 *)(obj + 0x2c) = velocityX - damping * velocityX;
         }
     }
-    *(f32 *)((char *)obj + 0x80) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)((char *)obj + 0x84) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)((char *)obj + 0x88) = *(f32 *)((char *)obj + 0x14);
+    *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
 }
 #pragma peephole reset
 #pragma scheduling reset
