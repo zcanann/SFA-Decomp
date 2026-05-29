@@ -337,6 +337,50 @@ extern f32 lbl_803E6708;
 extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
 
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int extraSize, int id);
+extern int getAngle(f32 dx, f32 dz);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int loadObjectAtObject(int obj, int spawn);
+extern f32 lbl_803E66E0;
+
+void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
+    int player;
+    int obj2;
+    int spawned;
+
+    player = Obj_GetPlayerObject();
+    if (Obj_IsLoadingLocked() != 0) {
+        obj2 = Obj_AllocObjectSetup(0x24, 0x5ff);
+        *(s16 *)(obj2 + 0x0) = 0x5ff;
+        *(u8 *)(obj2 + 0x4) = 2;
+        *(u8 *)(obj2 + 0x6) = 0xff;
+        *(u8 *)(obj2 + 0x5) = 1;
+        *(u8 *)(obj2 + 0x7) = 0xff;
+        *(s8 *)(obj2 + 0x19) = (s8)b;
+        *(f32 *)(obj2 + 0x8) = *(f32 *)(obj + 0xc);
+        *(f32 *)(obj2 + 0xc) = lbl_803E66E0 + *(f32 *)(obj + 0x10);
+        *(f32 *)(obj2 + 0x10) = *(f32 *)(obj + 0x14);
+        *(s8 *)(obj2 + 0x18) = (s8)(u8)((((getAngle(*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc),
+                                                   *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) & 0xffff) >> 8) + 0x8000) >> 8);
+        Sfx_PlayFromObject(obj, 0x2e4);
+        switch ((u8)b) {
+        case 0:
+            *(s16 *)(obj2 + 0x1a) = (s16)lbl_803DDD38;
+            break;
+        case 1:
+            *(s16 *)(obj2 + 0x1a) = (s16)(getAngle(*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc),
+                                                    *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) + 0x8000);
+            break;
+        }
+        spawned = loadObjectAtObject(obj, obj2);
+        if (spawned != 0) {
+            *(int *)(spawned + 0xf4) = (u8)c;
+            *(int *)(spawned + 0xc4) = a;
+        }
+    }
+}
+
 void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9) {
     f32 va, vb, vc;
 
