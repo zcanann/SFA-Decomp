@@ -12149,7 +12149,11 @@ typedef struct {
     VoxXY xy[6];
     int timer[6];
     int f30[6];
-    u8 gap[0x14];
+    int f48;
+    int f4c;
+    int f50;
+    int f54;
+    int f58;
     void* buf[6];
 } VoxMaps;
 
@@ -12235,6 +12239,102 @@ void voxmaps_initialise(void)
 }
 
 typedef struct {
+    s16 x;
+    s16 unk2;
+    s16 z;
+} VoxPos;
+
+typedef struct {
+    u8 pad0[6];
+    s16 f6;
+    s8 f8;
+    s8 f9;
+} VoxBlock;
+
+extern int lbl_803DCDC8;
+extern int lbl_803DCDCC;
+extern f32 lbl_803DE6B4;
+extern f32 fastFloorf(f32 v);
+extern void *mapGetBlockAtPos(int x, int y, int z);
+extern void *fn_80059334(int a, int b);
+extern void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8);
+
+/*
+ * Function: voxmaps_updateActiveMap
+ * EN v1.0 Address: 0x8000C8D8
+ * EN v1.0 Size: 776b
+ */
+int *voxmaps_updateActiveMap(VoxPos *obj)
+{
+    VoxMaps *vm = &lbl_803387A0;
+    int gridX;
+    int gridY;
+    int blockId;
+    int i;
+    int found;
+    int bestSlot;
+    int bestVal;
+    VoxBlock *block;
+    int ay = obj->z * 10 + 5 - lbl_803DCDCC;
+
+    gridX = (int)fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / lbl_803DE6B4);
+    gridY = (int)fastFloorf((f32)ay / lbl_803DE6B4);
+
+    vm->f48 = lbl_803DCDC8 + gridX * 640;
+    vm->f4c = lbl_803DCDCC + gridY * 640;
+    vm->f50 = vm->f48 / 10;
+    vm->f54 = vm->f4c / 10;
+
+    blockId = -1;
+    if (mapGetBlockAtPos(gridX, gridY, 0) != NULL) {
+        block = fn_80059334(gridX, gridY);
+        blockId = block->f6;
+    }
+    if (blockId == -1) {
+        vm->f58 = 0;
+    } else {
+        found = -1;
+        for (i = 0; i < 6; i++) {
+            if (blockId == vm->f30[i]) {
+                found = i;
+                i = 6;
+            }
+        }
+        if (found != -1) {
+            vm->timer[found] = 0;
+            vm->f58 = 0;
+        } else {
+            s8 b8;
+            s8 b9;
+            void **slot;
+            bestSlot = -1;
+            bestVal = -1;
+            for (i = 0; i < 6; i++) {
+                if (lbl_803DC8D0[i] == 0 && vm->timer[i] > bestVal) {
+                    bestSlot = i;
+                    bestVal = vm->timer[i];
+                }
+            }
+            b8 = block->f8;
+            b9 = block->f9;
+            slot = &vm->buf[bestSlot];
+            if (*slot != NULL) {
+                int saved = mmSetFreeDelay(0);
+                mm_free(*slot);
+                mmSetFreeDelay(saved);
+            }
+            *slot = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
+            vm->f30[bestSlot] = blockId;
+            vm->timer[bestSlot] = 0;
+            vm->xy[bestSlot].a = (s16)vm->f50;
+            vm->xy[bestSlot].b = (s16)vm->f54;
+            vm->f58 = 0;
+        }
+    }
+    return &vm->f48;
+}
+
+typedef struct {
     u8 pad00[0x14];
     int f14;
     int f18;
@@ -12254,7 +12354,7 @@ extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, i
  * EN v1.0 Address: 0x8000CBE0
  * EN v1.0 Size: 372b
  */
-void *voxLoadVoxMapActual(int mapArg)
+void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
 {
     char *msg = sVoxmapsRouteNodesListOverflow;
     int entry;
