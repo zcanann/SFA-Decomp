@@ -2196,6 +2196,57 @@ void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void wcapertures_release(void) {}
 void wcapertures_initialise(void) {}
 
+extern f32 lbl_803E6E3C;
+extern f32 lbl_803E6E40;
+extern void *objCreateLight(int obj, int kind);
+extern void modelLightStruct_setField50(void *light, int v);
+extern void fn_8001D730(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
+extern void fn_8001D714(void *light, f32 v);
+
+#pragma peephole off
+#pragma scheduling off
+int wcapertures_interactCallback(int obj, int p2, int p3)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+
+    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+        if (*(u8 *)(p3 + (i + 0x81)) == 1)
+            *(u8 *)(state + 6) = 1;
+    }
+    return 0;
+}
+void wcapertures_init(int obj, int initData)
+{
+    int state = *(int *)(obj + 0xb8);
+
+    *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(initData + 0x18) << 8);
+    *(void **)(obj + 0xbc) = (void *)wcapertures_interactCallback;
+    *(u8 *)(obj + 0xad) = *(u8 *)(initData + 0x19);
+    if ((s8)*(u8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55))
+        *(u8 *)(obj + 0xad) = 0;
+    if ((u32)GameBit_Get(*(s16 *)(initData + 0x20)) != 0) {
+        if ((u32)GameBit_Get(*(s16 *)(initData + 0x1e)) != 0)
+            *(u8 *)(state + 6) = 2;
+        else
+            *(u8 *)(state + 6) = 1;
+    }
+    *(u8 *)(obj + 0x36) = 1;
+    *(u16 *)(state + 4) = 0xff;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
+    *(int *)(state + 0) = (int)objCreateLight(obj, 1);
+    if (*(int *)(state + 0) != 0) {
+        modelLightStruct_setField50(*(void **)(state + 0), 2);
+        if ((s8)*(u8 *)(obj + 0xad) == 0)
+            fn_8001D730(*(void **)(state + 0), 0, 0xff, 0xff, 0x4d, 0x96, lbl_803E6E3C);
+        else
+            fn_8001D730(*(void **)(state + 0), 0, 0x4d, 0x4d, 0xff, 0xff, lbl_803E6E3C);
+        fn_8001D714(*(void **)(state + 0), lbl_803E6E40);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern int *gCameraInterface;
 extern int fn_802969F0(int player);
 extern f32 Camera_GetFovY(void);
