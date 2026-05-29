@@ -567,9 +567,9 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
 void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
 {
     char *msg = sVoxmapsRouteNodesListOverflow;
-    int entry;
-    int size;
     int count;
+    int size;
+    int entry;
     VoxMapFile *hdr;
 
     if (getTableFileEntry(26, mapArg, &entry) == 0) {
