@@ -1559,8 +1559,8 @@ void baddieInstantiateWeapon(int obj,int state)
   parentSetup = *(int *)(obj + 0x4c);
   if ((*(s16 *)(state + 0x2b4) != *(s16 *)(state + 0x2b6)) &&
       (*(u8 *)(obj + 0x36) != 0)) {
-    child = *(void **)(obj + 0xc8);
-    if (child != NULL) {
+    if (*(void **)(obj + 0xc8) != NULL) {
+      child = *(void **)(obj + 0xc8);
       ObjLink_DetachChild(obj, (int)child);
       Obj_FreeObject((int)child);
     }
