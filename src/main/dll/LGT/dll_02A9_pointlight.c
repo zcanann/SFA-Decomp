@@ -166,7 +166,7 @@ void pointlight_init(int obj, int setup)
         }
 
         if (*(u8 *)(setup + 0x2c) != 0) {
-            fn_8001DB5C(*(void **)state);
+            fn_8001DB5C(*(void **)state, *(u8 *)(setup + 0x2c));
         }
     }
 

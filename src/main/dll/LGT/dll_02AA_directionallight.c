@@ -189,7 +189,7 @@ void directionallight_init(int obj, int setup)
         lightFn_8001d620(*(void **)(state + 8), *(u8 *)(setup + 0x26), *(s16 *)(setup + 0x2e));
 
         if (*(u8 *)(setup + 0x2c) != 0) {
-            fn_8001DB5C(*(void **)(state + 8));
+            fn_8001DB5C(*(void **)(state + 8), *(u8 *)(setup + 0x2c));
         }
     }
 }

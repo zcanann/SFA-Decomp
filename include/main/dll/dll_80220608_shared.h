@@ -357,7 +357,7 @@ extern void Obj_SetActiveModelIndex(int obj, int index);
 extern void fn_8001D730(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
 extern void fn_8001D714(void *light, f32 v);
 extern void lightSetField2FB(void *light, int v);
-extern void fn_8001DB5C(void *light);
+extern void fn_8001DB5C(void *light, u8 v);
 
 
 #pragma dont_inline on
