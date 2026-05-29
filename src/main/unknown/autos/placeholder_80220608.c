@@ -6525,6 +6525,143 @@ void fn_8022AE1C(int obj, int bounds) {
     *(f32 *)(bounds + 0x34) = lbl_803E6ECC;
 }
 
+extern f32 lbl_803E6ED0;
+extern f32 lbl_803E6EFC;
+extern f32 lbl_803E6F00;
+extern f32 fn_80293E80(f32 x);
+extern void fn_8022AB68(int obj, int p);
+extern void PSVECScale(void *dst, void *src, f32 scale);
+extern void PSVECSubtract(void *a, void *b, void *ab);
+
+void fn_8022AECC(int obj, int p)
+{
+    f32 v[3];
+    f32 cz;
+    int diff;
+    int iv;
+
+    if (*(s8 *)(p + 0xac) == 0x26) {
+        *(f32 *)(p + 0x44) = lbl_803E6ECC;
+    }
+    PSVECSubtract((void *)(p + 0x3c), (void *)(p + 0x48), v);
+    v[0] = v[0] * *(f32 *)(p + 0x60);
+    v[1] = v[1] * *(f32 *)(p + 0x64);
+    v[2] = v[2] * *(f32 *)(p + 0x68);
+    if (v[2] < *(f32 *)(p + 0x84)) {
+        cz = *(f32 *)(p + 0x84);
+    } else if (v[2] > *(f32 *)(p + 0x78)) {
+        cz = *(f32 *)(p + 0x78);
+    } else {
+        cz = v[2];
+    }
+    v[2] = cz;
+    PSVECScale(v, v, timeDelta);
+    PSVECAdd((int)(p + 0x48), (int)v, (int)(p + 0x48));
+    objMove(obj, *(f32 *)(p + 0x48) * timeDelta, *(f32 *)(p + 0x4c) * timeDelta,
+            *(f32 *)(p + 0x50) * timeDelta);
+
+    diff = *(int *)(p + 0x340) - (u16) * (int *)(p + 0x344);
+    if (diff > 0x8000) diff -= 0xffff;
+    if (diff < -0x8000) diff += 0xffff;
+    iv = (int)(f32)((int)((f32)diff * *(f32 *)(p + 0x34c)) - *(int *)(p + 0x350));
+    if (iv < -0x32) iv = -0x32;
+    else if (iv > 0x32) iv = 0x32;
+    *(int *)(p + 0x350) = (int)((f32)iv * timeDelta + (f32) * (int *)(p + 0x350));
+    *(int *)(p + 0x344) =
+        (int)((f32) * (int *)(p + 0x350) * timeDelta + (f32) * (int *)(p + 0x344));
+
+    diff = *(int *)(p + 0x354) - (u16) * (int *)(p + 0x358);
+    if (diff > 0x8000) diff -= 0xffff;
+    if (diff < -0x8000) diff += 0xffff;
+    iv = (int)(f32)((int)((f32)diff * *(f32 *)(p + 0x360)) - *(int *)(p + 0x364));
+    if (iv < -0x32) iv = -0x32;
+    else if (iv > 0x32) iv = 0x32;
+    *(int *)(p + 0x364) = (int)((f32)iv * timeDelta + (f32) * (int *)(p + 0x364));
+    *(int *)(p + 0x358) =
+        (int)((f32) * (int *)(p + 0x364) * timeDelta + (f32) * (int *)(p + 0x358));
+
+    diff = *(int *)(p + 0x368) - (u16) * (int *)(p + 0x36c);
+    if (diff > 0x8000) diff -= 0xffff;
+    if (diff < -0x8000) diff += 0xffff;
+    iv = (int)((f32)(int)((f32)diff * *(f32 *)(p + 0x374)) - *(f32 *)(p + 0x378));
+    if (iv < -0x64) iv = -0x64;
+    else if (iv > 0x64) iv = 0x64;
+    *(f32 *)(p + 0x378) = (f32)iv * timeDelta + *(f32 *)(p + 0x378);
+    *(int *)(p + 0x36c) =
+        (int)(*(f32 *)(p + 0x378) * timeDelta + (f32) * (int *)(p + 0x36c));
+
+    if (*(u8 *)(p + 0x478) == 0) {
+        diff = *(int *)(p + 0x37c) - (u16) * (int *)(p + 0x380);
+        if (diff > 0x8000) diff -= 0xffff;
+        if (diff < -0x8000) diff += 0xffff;
+        *(int *)(p + 0x380) =
+            (int)(timeDelta * ((f32)diff * *(f32 *)(p + 0x388)) + (f32) * (int *)(p + 0x380));
+        if ((f32) * (int *)(p + 0x380) > *(f32 *)(p + 0x394) ||
+            (f32) * (int *)(p + 0x380) < -*(f32 *)(p + 0x394)) {
+            *(f32 *)(p + 0x38c) = *(f32 *)(p + 0x38c) - *(f32 *)(p + 0x390) * timeDelta;
+        } else {
+            *(f32 *)(p + 0x38c) = *(f32 *)(p + 0x390) * timeDelta + *(f32 *)(p + 0x38c);
+        }
+    } else {
+        *(f32 *)(p + 0x38c) = *(f32 *)(p + 0x38c) - *(f32 *)(p + 0x390) * timeDelta;
+    }
+    if (*(f32 *)(p + 0x38c) < lbl_803E6ECC) {
+        *(f32 *)(p + 0x38c) = lbl_803E6ECC;
+    } else if (*(f32 *)(p + 0x38c) > lbl_803E6ED0) {
+        *(f32 *)(p + 0x38c) = lbl_803E6ED0;
+    }
+
+    *(s16 *)(obj + 0) = (s16) * (int *)(p + 0x344);
+    *(s16 *)(obj + 2) = (s16) * (int *)(p + 0x358);
+    if (*(u8 *)(p + 0x478) == 1) {
+        fn_8022AB68(obj, p);
+    } else {
+        *(s16 *)(obj + 4) = (s16)(int)((f32) * (int *)(p + 0x36c) * *(f32 *)(p + 0x38c) +
+                                        (f32) * (int *)(p + 0x380));
+        if (*(s16 *)(obj + 4) < -0x4000) {
+            *(s16 *)(obj + 4) = -0x4000;
+        } else if (*(s16 *)(obj + 4) > 0x4000) {
+            *(s16 *)(obj + 4) = 0x4000;
+        }
+    }
+
+    if (sqrtf(*(f32 *)(p + 0x48) * *(f32 *)(p + 0x48) +
+              *(f32 *)(p + 0x4c) * *(f32 *)(p + 0x4c)) < *(f32 *)(p + 0x3b4) &&
+        *(u8 *)(p + 0x478) == 0) {
+        *(f32 *)(p + 0x3dc) = *(f32 *)(p + 0x3e0) * timeDelta + *(f32 *)(p + 0x3dc);
+    } else {
+        *(f32 *)(p + 0x3dc) = *(f32 *)(p + 0x3dc) - *(f32 *)(p + 0x3e0) * timeDelta;
+    }
+    if (*(f32 *)(p + 0x3dc) < lbl_803E6ECC) {
+        *(f32 *)(p + 0x3dc) = lbl_803E6ECC;
+    } else if (*(f32 *)(p + 0x3dc) > lbl_803E6ED0) {
+        *(f32 *)(p + 0x3dc) = lbl_803E6ED0;
+    }
+
+    *(s16 *)(obj + 4) = (s16)(int)(*(f32 *)(p + 0x3dc) *
+                                       (*(f32 *)(p + 0x3bc) *
+                                        fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3c0) /
+                                                    lbl_803E6F00)) +
+                                   (f32) * (s16 *)(obj + 4));
+    *(f32 *)(obj + 0xc) =
+        *(f32 *)(p + 0x3dc) *
+            (*(f32 *)(p + 0x3c8) *
+             fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3cc) / lbl_803E6F00)) +
+        *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x10) =
+        *(f32 *)(p + 0x3dc) *
+            (*(f32 *)(p + 0x3d4) *
+             fn_80293E80(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3d8) / lbl_803E6F00)) +
+        *(f32 *)(obj + 0x10);
+    *(u16 *)(p + 0x3c0) =
+        (u16)(int)(*(f32 *)(p + 0x3b8) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3c0));
+    *(u16 *)(p + 0x3cc) =
+        (u16)(int)(*(f32 *)(p + 0x3c4) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3cc));
+    *(u16 *)(p + 0x3d8) =
+        (u16)(int)(*(f32 *)(p + 0x3d0) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3d8));
+    fn_8022AE1C(obj, p);
+}
+
 void fn_8022B8A0(int p, int q) {
     if (*(void **)(q + 0x438) != NULL)
         return;
