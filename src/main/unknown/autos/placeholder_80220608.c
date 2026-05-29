@@ -759,6 +759,7 @@ extern u8 lbl_8032B048[][8];
 extern u8 lbl_8032B008[][8];
 extern u8 lbl_803AD298[][8];
 extern u8 lbl_803AD2D8[][8];
+extern f32 lbl_803E6DB0;
 extern f32 lbl_803E6DB4;
 extern f32 lbl_803E6DB8;
 extern f32 lbl_803E6DBC;
@@ -777,7 +778,7 @@ extern void fn_8022578C(int obj, int state);
 extern void fn_802251B4(int obj, int state);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
-extern void fn_80225BD8(int obj, int p2, int p3);
+extern int fn_80225BD8(int obj, int p2, int p3);
 extern void *memcpy(void *dst, const void *src, u32 n);
 
 #pragma peephole off
@@ -1158,6 +1159,232 @@ void fn_802251B4(int obj, int state)
         if (GameBit_Get(0x4e3) == 0xff)
             GameBit_Set(0x4e3, randomGetRange(6, 7));
     }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
+{
+    int i;
+    int limit;
+
+    if (dx != 0) {
+        int bi = b;
+        if (dx == -1) {
+            f32 pz, px;
+            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + lbl_803E6DBC);
+            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)(bi * 48));
+            a += 1;
+            limit = 8;
+        } else {
+            f32 pz, px;
+            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + lbl_803E6DA8);
+            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)(bi * 48));
+            a -= 1;
+            limit = -1;
+        }
+        for (i = a; i != limit; i -= dx) {
+            if (lbl_803AD2D8[i][b] != 0) {
+                if (lbl_803AD2D8[i][b] <= 4) {
+                    f32 pz, px;
+                    i += dx;
+                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)((s16)i * 48));
+                    return 1;
+                }
+                {
+                    f32 pz, px;
+                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)((s16)i * 48));
+                    return 2;
+                }
+            }
+        }
+        return 4;
+    } else {
+        int ai = a;
+        if (dy == -1) {
+            f32 pz, px;
+            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)(ai * 48));
+            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + lbl_803E6DBC);
+            b += 1;
+            limit = 8;
+        } else {
+            f32 pz, px;
+            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)(ai * 48));
+            *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + lbl_803E6DA8);
+            b -= 1;
+            limit = -1;
+        }
+        for (i = b; i != limit; i -= dy) {
+            if (lbl_803AD2D8[a][i] != 0) {
+                if (lbl_803AD2D8[a][i] <= 4) {
+                    f32 pz, px;
+                    i += dy;
+                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)((s16)i * 48));
+                    return 1;
+                }
+                {
+                    f32 pz, px;
+                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)((s16)i * 48));
+                    return 2;
+                }
+            }
+        }
+        return 4;
+    }
+}
+
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_8022578C(int obj, int state)
+{
+    if (*(u16 *)(state + 0x1a) & 0x2)
+        return;
+    *(u8 *)(state + 0xd) = *(u8 *)(state + 0xc);
+    switch (*(u8 *)(state + 0xc)) {
+    case 1:
+        if (*(u16 *)(state + 0x1a) & 0x1) {
+            gameTimerInit(0x1d, 0x3c);
+            timerSetToCountUp();
+            GameBit_Set(0xba6, 1);
+            GameBit_Set(0xedd, 1);
+        } else if ((u32)GameBit_Get(0x7f9) != 0) {
+            *(u16 *)(state + 0x1a) |= 0x4;
+            gameTimerStop();
+            if ((u32)GameBit_Get(0x7fa) != 0)
+                Sfx_PlayFromObject(0, 0x7e);
+            else
+                Sfx_PlayFromObject(0, 0x109);
+            GameBit_Set(0xba6, 0);
+            GameBit_Set(0xedd, 0);
+            if ((u32)GameBit_Get(0x7fa) != 0) {
+                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                *(u8 *)(state + 0xc) = 3;
+            } else {
+                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                *(u8 *)(state + 0xc) = 0;
+            }
+            *(u16 *)(state + 0x1a) |= 0x2;
+        } else if (isGameTimerDisabled() != 0) {
+            GameBit_Set(0x7ef, 0);
+            GameBit_Set(0x7ed, 0);
+            GameBit_Set(0xba6, 0);
+            GameBit_Set(0xedd, 0);
+            *(u8 *)(state + 0xc) = 0;
+        }
+        break;
+    case 2:
+        if (*(u16 *)(state + 0x1a) & 0x1) {
+            gameTimerInit(0x1d, 0x50);
+            timerSetToCountUp();
+            GameBit_Set(0xba6, 1);
+            GameBit_Set(0xedc, 1);
+        } else if ((u32)GameBit_Get(0x7fa) != 0) {
+            *(u16 *)(state + 0x1a) |= 0x8;
+            gameTimerStop();
+            if ((u32)GameBit_Get(0x7f9) != 0)
+                Sfx_PlayFromObject(0, 0x7e);
+            else
+                Sfx_PlayFromObject(0, 0x109);
+            GameBit_Set(0xba6, 0);
+            GameBit_Set(0xedc, 0);
+            if ((u32)GameBit_Get(0x7f9) != 0) {
+                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                *(u8 *)(state + 0xc) = 3;
+            } else {
+                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                *(u8 *)(state + 0xc) = 0;
+            }
+            *(u16 *)(state + 0x1a) |= 0x2;
+        } else if (isGameTimerDisabled() != 0) {
+            GameBit_Set(0x7f0, 0);
+            GameBit_Set(0x7ee, 0);
+            GameBit_Set(0xba6, 0);
+            GameBit_Set(0xedc, 0);
+            *(u8 *)(state + 0xc) = 0;
+        }
+        break;
+    case 3:
+        if ((u32)GameBit_Get(0xcac) != 0) {
+            int player;
+            GameBit_Set(0xda9, 0);
+            GameBit_Set(0xc37, 1);
+            player = Obj_GetPlayerObject();
+            (*(void (**)(int, int, int, int))(*gMapEventInterface + 0x1c))(
+                player + 0xc, *(s16 *)player, 1, 0);
+            *(u8 *)(state + 0xc) = 7;
+        }
+        break;
+    case 7:
+        break;
+    default:
+        if (!(*(u16 *)(state + 0x1a) & 0x4) && (u32)GameBit_Get(0x7ed) != 0) {
+            GameBit_Set(0x7ef, 1);
+            *(f32 *)(state + 0) = lbl_803E6DB0;
+            *(u8 *)(state + 0xc) = 1;
+            *(u16 *)(state + 0x1a) |= 0x2;
+            break;
+        }
+        if (!(*(u16 *)(state + 0x1a) & 0x8) && (u32)GameBit_Get(0x7ee) != 0) {
+            GameBit_Set(0x7f0, 1);
+            *(f32 *)(state + 0) = lbl_803E6DB0;
+            *(u8 *)(state + 0xc) = 2;
+            *(u16 *)(state + 0x1a) |= 0x2;
+        }
+        break;
+    }
+    *(u16 *)(state + 0x1a) &= ~1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int fn_80225BD8(int obj, int p2, int p3)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+
+    *(u16 *)(state + 0x1a) |= 0x1;
+    *(u16 *)(state + 0x1a) &= ~0x2;
+    if (*(u8 *)(state + 0xd) == 1) {
+        f32 t = *(f32 *)(state + 0) - timeDelta;
+        *(f32 *)(state + 0) = t;
+        if (t <= lbl_803E6DA8) {
+            int player;
+            GameBit_Set(0x7f7, 1);
+            player = Obj_GetPlayerObject();
+            (*(void (**)(int, int, int, int))(*gMapEventInterface + 0x1c))(
+                player + 0xc, *(s16 *)player, 1, 0);
+        }
+    } else if (*(u8 *)(state + 0xd) == 2) {
+        f32 t = *(f32 *)(state + 0) - timeDelta;
+        *(f32 *)(state + 0) = t;
+        if (t <= lbl_803E6DA8) {
+            int player;
+            GameBit_Set(0x802, 1);
+            player = Obj_GetPlayerObject();
+            (*(void (**)(int, int, int, int))(*gMapEventInterface + 0x1c))(
+                player + 0xc, *(s16 *)player, 1, 0);
+        }
+    }
+    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+        if (*(u8 *)(p3 + (i + 0x81)) == 1)
+            *(u8 *)(state + 0xc) = 6;
+    }
+    return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset

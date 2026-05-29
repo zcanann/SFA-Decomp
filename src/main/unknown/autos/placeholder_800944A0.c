@@ -610,5 +610,108 @@ void fn_800971A0(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fval) {
     (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
         obj, table2.v[a], &params, 2, -1, 0);
 }
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 f0c;
+    f32 f10;
+    f32 f14;
+    s8 active;
+    u8 pad[3];
+} ExpParticle;
+
+extern f32 lbl_803DF324;
+
+int fn_80095B18(WaterParticle *src, int idx, int count, f32 v) {
+    int cur;
+    f32 scale;
+    ExpParticle *p;
+    ExpParticle *base;
+    ExpParticle *slot;
+    int j;
+    int i;
+    cur = (int)lbl_803DD224;
+    if (count + cur > 30) {
+        count = 30 - cur;
+    }
+    if (count != 0) {
+        i = 0;
+        scale = lbl_803DF324 * v;
+        for (; i < count; i++) {
+            base = (ExpParticle *)lbl_803DD220;
+            p = base;
+            j = 0;
+            while (j < 30 && p->active != -1) {
+                p++;
+                j++;
+            }
+            if (j < 30) {
+                slot = &base[j];
+                slot->f0c = (f32)randomGetRange(-250, 250);
+                slot->f0c = slot->f0c * scale;
+                slot->f14 = (f32)randomGetRange(-250, 250);
+                slot->f14 = slot->f14 * scale;
+                slot->f10 = (f32)randomGetRange(200, 300);
+                slot->f10 = slot->f10 * scale;
+                slot->active = (s8)idx;
+                slot->x = src->x;
+                slot->y = src->y;
+                slot->z = src->z;
+                lbl_803DD224 = (void *)((int)lbl_803DD224 + 1);
+            }
+        }
+    }
+    return count;
+}
+
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 *Obj_AllocObjectSetup(int size, int id);
+extern void Obj_SetupObject(void *obj, int a, int b, int c, int d);
+extern f32 lbl_803DF3AC;
+extern f32 lbl_803DF3B0;
+
+void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
+                    u8 flag20, u8 f1cinit) {
+    u8 *obj;
+    if (Obj_IsLoadingLocked() != 0) {
+        obj = Obj_AllocObjectSetup(0x24, 0x253);
+        *(u8 *)(obj + 4) = 2;
+        *(u8 *)(obj + 5) = 1;
+        *(f32 *)(obj + 8) = *(f32 *)(src + 0x18);
+        *(f32 *)(obj + 0xc) = *(f32 *)(src + 0x1c);
+        *(f32 *)(obj + 0x10) = *(f32 *)(src + 0x20);
+        *(s8 *)(obj + 0x19) = (s8)a;
+        *(s16 *)(obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
+        *(s16 *)(obj + 0x1c) = (u8)f1cinit;
+        if (flag4 != 0) {
+            *(s16 *)(obj + 0x1c) |= 4;
+        }
+        if (flag8 != 0) {
+            *(s16 *)(obj + 0x1c) |= 8;
+        }
+        if (flag10 != 0) {
+            *(s16 *)(obj + 0x1c) |= 0x10;
+        }
+        if (flag20 != 0) {
+            *(s16 *)(obj + 0x1c) |= 0x20;
+        }
+        if (doShake != 0) {
+            u8 *player = Obj_GetPlayerObject();
+            if (player != NULL && (*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+                f32 d = Camera_DistanceToCurrentViewPosition(*(f32 *)(src + 0x18),
+                                                             *(f32 *)(src + 0x1c),
+                                                             *(f32 *)(src + 0x20));
+                if (d <= lbl_803DF3B0) {
+                    f32 t = lbl_803DF354 - d / lbl_803DF3B0;
+                    CameraShake_Start(lbl_803DF3A0 * t, lbl_803DF384 * t, lbl_803DF3A4);
+                    doRumble(lbl_803DF3A8 * t);
+                }
+            }
+        }
+        Obj_SetupObject(obj, 5, *(s8 *)(src + 0xac), -1, 0);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
