@@ -46,7 +46,7 @@ void vfplift_update(int obj) {
 #pragma scheduling off
 void vfplift_hitDetect(int obj) {
     int inner = *(int *)((char *)obj + 0xb8);
-    if (*(s16 *)((char *)inner + 0xc) != -1 && GameBit_Get(*(s16 *)((char *)inner + 0xc)) == 0) {
+    if (*(s16 *)((char *)inner + 0xc) != -1 && (u32)GameBit_Get(*(s16 *)((char *)inner + 0xc)) == 0) {
         *(u8 *)((char *)obj + 0xaf) |= 8;
     } else if ((*(u8 *)((char *)obj + 0xaf) & 8) != 0) {
         *(u8 *)((char *)obj + 0xaf) ^= 8;
