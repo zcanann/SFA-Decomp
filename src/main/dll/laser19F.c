@@ -486,19 +486,21 @@ void mmsh_shrine_free(int obj)
 #pragma peephole off
 #pragma scheduling off
 void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
-                        char flag)
+                        char visible)
 {
-    int t = *(int *)(obj + 0xb8);
-    if (flag == 0) {
-        if (*(void **)t != NULL) {
-            lightFn_8001db6c(*(int *)t, 0, lbl_803E4F50);
+    MMSHShrineObject *shrine = (MMSHShrineObject *)obj;
+    MMSHShrineRuntime *runtime = shrine->runtime;
+
+    if (visible == 0) {
+        if (runtime->light != NULL) {
+            lightFn_8001db6c((int)runtime->light, 0, lbl_803E4F50);
         }
     } else {
-        if (*(void **)t != NULL) {
-            lightFn_8001db6c(*(int *)t, 1, lbl_803E4F50);
+        if (runtime->light != NULL) {
+            lightFn_8001db6c((int)runtime->light, 1, lbl_803E4F50);
         }
         objRenderFn_8003b8f4(obj, a2, a3, a4, a5, lbl_803E4F50);
-        objParticleFn_80099d84(obj, 7, *(int *)t, lbl_803E4F50, lbl_803E4F50);
+        objParticleFn_80099d84(obj, 7, (int)runtime->light, lbl_803E4F50, lbl_803E4F50);
     }
 }
 #pragma scheduling reset
