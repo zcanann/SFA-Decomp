@@ -728,6 +728,41 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
    pre-move total (NOT the headline %, which shifts with the denominator).
    Revert any family that doesn't conserve. Build green, **land on `main`**.
 
+### Lessons from the 6-unit graduation wave (8020C9CC/800944A0/80220608/80295318/800066E0/80080E58)
+
+- **Pre-build + DRY-RUN the split script in /tmp** (parse all bodies, classify every
+  line once, compute the pragma-stack-per-fn) before any repo edit. Then **Phase-1
+  GATE**: report the family→file map + conservation baseline and get sign-off
+  BEFORE editing. Caught every structural surprise read-only.
+- **Directory/filename is PURELY organizational** — symbols place by name→address
+  regardless of which `.c`/dir defines them. So don't agonize over `dll/<AREA>/`
+  vs `dll/` root vs `src/main/`; it's conservation-neutral and renameable.
+- **Don't FABRICATE TU boundaries.** Only split where descriptor tables / call-graph
+  coupling / doc-stubs EVIDENCE a boundary. Engine-wide library fns with no
+  descriptors + ~0 internal coupling → group HONESTLY (coarse subsystem file), don't
+  invent per-object files. Coarse-by-evidenced-subsystem beats fine-but-guessed.
+- **Multi-area placeholder → ONE common shared header** (declarations-only =
+  conservation-neutral; address-based name like `dll_80220608_shared.h` matches
+  the prior `dr_802bbc10_shared.h` convention). Per-area headers are only for
+  single-area placeholders.
+- **MERGE into existing TU slivers** when a family is contiguous-adjacent to a real
+  file that already exists (e.g. 8020C9CC's worldplanet/crcloudrace slivers). To
+  preserve a caller's `bl` when caller+callee land in one TU, **append the merged
+  fns AFTER the sliver defs** (source order ⇒ MWCC can't inline upward).
+- **DROP dead v1.1 `FUN_xxx` phantoms during the carve** (unreferenced, not in
+  symbols.txt ⇒ objdiff never scored them). Conservation-neutral, gives clean real
+  files. 800066E0 shed 236.
+- **Two cases where a unit CANNOT carve exact → leave a RESIDUAL shrunk placeholder
+  (don't force the regression):** (a) a DLL fragmented ACROSS placeholders
+  (DIMSnowHorn1 spans 3 units → coordinate later); (b) a tail TU that **cross-inlines
+  leaves from an already-carved sibling** — pulling it into a smaller TU reorders its
+  constant pool / loses the inlined leaf (80080E58 clouds = −48). Engine units stay
+  exact ONLY when subsystems don't cross-inline (800066E0's 9 files did; 80080E58's
+  clouds didn't). Exact IS the bar — graduate the clean part, residual the rest.
+- **A stale task OWNER (a dead hunter still listed) reads as an "active recovery"
+  conflict to a splitter** — close recovery tasks when a unit parks, or splitters
+  will (correctly) refuse to edit. Three splitters flagged this; all were phantoms.
+
 ## Drift handling (Ghidra-imported `FUN_xxx` don't match v1.0)
 
 **Drift stubs HIDE large recoverable functions — a tiny header size (e.g. "4b")
