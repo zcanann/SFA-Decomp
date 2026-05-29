@@ -823,6 +823,12 @@ extern f32 lbl_803E6734;
 extern f32 lbl_803E6738;
 extern f32 lbl_803E66F4;
 
+typedef struct {
+    u8 b0 : 1;
+    u8 flag6 : 1;
+    u8 rest : 6;
+} SnowclawAaFlags;
+
 void snowclaw_hitDetect(int obj) {
     int *inner;
     int *sub;
@@ -867,7 +873,7 @@ void snowclaw_hitDetect(int obj) {
                 } else {
                     (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, 3);
                 }
-                *(u8 *)((char *)inner + 0xaa) |= 0x40;
+                ((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 = 1;
                 *(f32 *)((char *)inner + 0xac) = lbl_803E670C;
                 *(f32 *)((char *)inner + 0x24) = lbl_803E6728 * fn_80293E80((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
                 *(f32 *)((char *)inner + 0x28) = lbl_803E6734 * (f32)(int)randomGetRange(0x28, 0x64);
