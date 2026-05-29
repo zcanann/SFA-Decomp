@@ -35,7 +35,7 @@ void Tricky_update(int obj);
 void fn_80148C18(int obj,int state);
 void trickyFn_80148d8c(int obj,int state);
 int collectibleFn_80149cec(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mode);
-int baddieTargetFn_8014a150(int obj,int state,void *from,void *to);
+u8 baddieTargetFn_8014a150(int obj,int state,void *from,void *to);
 void baddieFn_8014a304(float radius,int obj,int state);
 void fn_8014A5FC(int obj,int state);
 void fn_8014A86C(int obj,int state,float *nearestFloorY,float *nearestSpecialY);

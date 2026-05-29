@@ -1583,7 +1583,7 @@ void baddieInstantiateWeapon(int obj,int state)
 /* baddieTargetFn_8014a150: 436b - line-of-sight and bbox visibility check between Tricky and a target. */
 #pragma scheduling off
 #pragma peephole off
-int baddieTargetFn_8014a150(int obj,int state,void *from,void *to)
+u8 baddieTargetFn_8014a150(int obj,int state,void *from,void *to)
 {
   u8 traceHit[4];
   s16 toGrid[4];

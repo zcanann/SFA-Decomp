@@ -1835,7 +1835,7 @@ f32 fn_8014C920(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
+extern u8 baddieTargetFn_8014a150(int obj, u8* state, f32* pos, void* dataOffset);
 extern void* gRomCurveInterface;
 extern u8 lbl_803DBC58;
 extern f32 lbl_803E25DC;
