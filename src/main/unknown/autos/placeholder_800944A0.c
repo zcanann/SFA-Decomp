@@ -886,6 +886,145 @@ extern int lbl_803DF340;
 extern u16 lbl_803DF344;
 extern int *gPartfxInterface;
 
+extern f32 lbl_803DF380;
+extern void mathFn_80021ac8(void *obj, f32 *vec);
+extern void Camera_ProjectWorldPointWithOffset(f32 *ox, f32 *oy, f32 *oz, f32 x, f32 y, f32 z, f32 w);
+extern void Camera_NdcToScreen(int *sx, int *sy, int *sz, f32 x, f32 y, f32 z);
+extern int maybeReadDepthBuffer(int x, int y, void *obj);
+
+void fn_8009837C(void *obj, u8 type, int a3, u8 mode, void *light, f32 fa, f32 fb) {
+    PartfxParams params;
+    f32 lvec[3];
+    f32 proj[3];
+    int screen[3];
+    int i;
+    int depth;
+    int n = framesThisStep > 3 ? 3 : framesThisStep;
+
+    params.f8 = fa;
+    if (fb <= lbl_803DF380) {
+        fb = lbl_803DF380;
+    }
+    params.vec[0] = fb;
+    switch (type) {
+    case 1:
+        params.f6 = 0x159;
+        params.pad[2] = 1;
+        for (i = 0; i < (u8)n; i++) {
+            (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7be, &params, 2, -1, light);
+        }
+        break;
+    case 2:
+        params.f6 = 0x159;
+        params.pad[2] = 0;
+        for (i = 0; i < (u8)n; i++) {
+            (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7be, &params, 2, -1, light);
+        }
+        break;
+    case 3:
+        params.f6 = 0x8e;
+        for (i = 0; i < (u8)n; i++) {
+            (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7c0, &params, 2, -1, light);
+        }
+        break;
+    case 4: {
+        int flags = 2;
+        if ((*(s16 *)((char *)obj + 6) & 0x40080) != 0) {
+            flags |= 0x20000000;
+        }
+        params.f6 = 0xc0e;
+        params.pad[2] = 0;
+        for (i = 0; i < (u8)n; i++) {
+            (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7eb, &params, flags, -1, light);
+        }
+        break;
+    }
+    }
+
+    if (mode != 0) {
+        if (light != NULL) {
+            lvec[0] = *(f32 *)((char *)light + 0xc);
+            lvec[1] = *(f32 *)((char *)light + 0x10);
+            lvec[2] = *(f32 *)((char *)light + 0x14);
+            mathFn_80021ac8(obj, lvec);
+            Camera_ProjectWorldPointWithOffset(
+                &proj[2], &proj[1], &proj[0],
+                *(f32 *)((char *)obj + 0x18) + lvec[0] - playerMapOffsetX,
+                *(f32 *)((char *)obj + 0x1c) + lvec[1],
+                *(f32 *)((char *)obj + 0x20) + lvec[2] - playerMapOffsetZ, lbl_803DF384);
+        } else {
+            Camera_ProjectWorldPointWithOffset(
+                &proj[2], &proj[1], &proj[0],
+                *(f32 *)((char *)obj + 0x18) - playerMapOffsetX,
+                *(f32 *)((char *)obj + 0x1c),
+                *(f32 *)((char *)obj + 0x20) - playerMapOffsetZ, lbl_803DF384);
+        }
+        Camera_NdcToScreen(&screen[2], &screen[1], &screen[0], proj[2], proj[1], proj[0]);
+        depth = maybeReadDepthBuffer(screen[2], screen[1], obj);
+        if (screen[0] > depth) {
+            switch (mode) {
+            case 1:
+                mode = 4;
+                break;
+            case 2:
+                mode = 5;
+                break;
+            case 3:
+                mode = 6;
+                break;
+            }
+        }
+        switch (mode) {
+        case 1:
+            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            for (i = 0; i < (u8)n; i++) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                    obj, 0x7bf, &params, 2, -1, light);
+            }
+            break;
+        case 2:
+            params.f6 = 0x605;
+            for (i = 0; i < (u8)n; i++) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                    obj, 0x7bf, &params, 2, -1, light);
+            }
+            break;
+        case 3:
+            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            for (i = 0; i < (u8)n; i++) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                    obj, 0x7c1, &params, 2, -1, light);
+            }
+            break;
+        case 4:
+            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            for (i = 0; i < (u8)n; i++) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                    obj, 0x7c4, &params, 2, -1, light);
+            }
+            break;
+        case 5:
+            params.f6 = 0x605;
+            for (i = 0; i < (u8)n; i++) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                    obj, 0x7c4, &params, 2, -1, light);
+            }
+            break;
+        case 6:
+            params.f6 = type == 1 ? 0xc75 : 0xc74;
+            for (i = 0; i < (u8)n; i++) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                    obj, 0x7c5, &params, 2, -1, light);
+            }
+            break;
+        }
+    }
+}
+
 void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval) {
     PartfxParams params;
     Tbl11 table = *(Tbl11 *)lbl_802C2114;

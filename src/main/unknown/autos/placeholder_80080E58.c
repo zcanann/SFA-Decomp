@@ -6031,6 +6031,50 @@ void dll_07_func07(int arg) {
 }
 #pragma pop
 
+extern char sSnowKillSnowCloudInvalidCloudId[];
+extern void debugPrintf(char *fmt, ...);
+
+#pragma push
+#pragma scheduling off
+void newclouds_snowKillSnowCloud(int cloudId, int flag)
+{
+    void *p;
+    int i;
+
+    if (flag == 0) {
+        if (cloudId == -1) {
+            for (i = 0; i < 8; i++) {
+                snowFreeSnowCloud(i);
+            }
+        } else {
+            snowFreeSnowCloud(cloudId);
+        }
+        return;
+    }
+    for (i = 0; i < 8; i++) {
+        p = lbl_8039A828[i];
+        if (p != NULL && cloudId == *(int *)((char *)p + 0x13f0)) {
+            break;
+        }
+    }
+    p = lbl_8039A828[i];
+    if (p == NULL) {
+        return;
+    }
+    if (i == 8) {
+        return;
+    }
+    if (cloudId != *(int *)((char *)p + 0x13f0)) {
+        debugPrintf(sSnowKillSnowCloudInvalidCloudId, cloudId);
+        return;
+    }
+    *(int *)((char *)p + 0x13f8) = 1;
+    p = lbl_8039A828[i];
+    *(f32 *)((char *)p + 0x1430) =
+        -((f32)flag / (f32)*(int *)((char *)p + 0x13fc));
+}
+#pragma pop
+
 extern int ObjModel_GetRenderOp(int model, int x);
 extern int Shader_getLayer(int renderOp, int x);
 extern int *objFindTexture(int obj, int idx, int p3);
