@@ -5146,12 +5146,14 @@ void arwsquadron_render(int obj, int p2, int p3, int p4, int p5)
 void arwsquadron_hitDetect(void) {}
 
 #pragma dont_inline on
+#pragma scheduling off
 void arwprojectile_setLifetime(int obj, int lifetime)
 {
     int state = *(int *)(obj + 0xb8);
 
     *(f32 *)(state + 4) = (f32)lifetime;
 }
+#pragma scheduling reset
 #pragma dont_inline reset
 
 extern f32 lbl_803E7008;
