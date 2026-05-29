@@ -664,8 +664,8 @@ int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType
   int freeIndex;
 
   tableIndex = 0;
-  freeScan = gExpgfxTableEntries;
-  entry = freeScan;
+  entry = gExpgfxTableEntries;
+  freeScan = entry;
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++) {
     if ((entry->refCount != 0) && (entry->resource == resource) &&
         (entry->sourceId == sourceId) && (entry->attachedKey1 == attachedKey1)) {
