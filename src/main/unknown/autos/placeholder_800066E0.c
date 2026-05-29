@@ -5000,6 +5000,64 @@ void curvesSetupMoveNetworkCurve(Curve *curve)
     }
 }
 
+extern char sCurvesMoveTooFewControlPoints[];
+extern char sCurvesMoveBadControlPointCount[];
+
+/*
+ * Function: curvesMove
+ * EN v1.0 Address: 0x8000A38C
+ * EN v1.0 Size: 484b
+ */
+void curvesMove(Curve *curve)
+{
+    if (curve->count < 4) {
+        debugPrintf(sCurvesMoveTooFewControlPoints);
+    }
+    if ((curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) &&
+        (curve->count & 3) != 0) {
+        debugPrintf(sCurvesMoveBadControlPointCount);
+    }
+
+    curve->fc = lbl_803DE658;
+    curve->idx = 0;
+    while (curve->idx < curve->count - 3) {
+        curveFn_8000fe8c(curve, 5);
+        curve->fc += curve->totalLen;
+        if (curve->eval == curveFn_80010ce4 || curve->eval == curveFn_80010dc0) {
+            curve->idx += 4;
+        } else {
+            curve->idx += 1;
+        }
+    }
+
+    if (curve->dir != 0) {
+        curve->idx = curve->count - 4;
+    } else {
+        curve->idx = 0;
+    }
+    curveFn_8000fe8c(curve, 20);
+
+    if (curve->dir != 0) {
+        curve->t = lbl_803DE674;
+        curve->f4 = curve->segLen[19];
+        curve->f8 = curve->fc;
+    } else {
+        curve->t = lbl_803DE658;
+        curve->f4 = lbl_803DE658;
+        curve->f8 = lbl_803DE658;
+    }
+
+    if (curve->px != NULL) {
+        curve->sample[0] = curve->eval(curve->t, curve->px, &curve->tangent[0]);
+    }
+    if (curve->py != NULL) {
+        curve->sample[1] = curve->eval(curve->t, curve->py, &curve->tangent[1]);
+    }
+    if (curve->pz != NULL) {
+        curve->sample[2] = curve->eval(curve->t, curve->pz, &curve->tangent[2]);
+    }
+}
+
 /*
  * --INFO--
  *
