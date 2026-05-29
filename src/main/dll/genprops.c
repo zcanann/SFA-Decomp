@@ -4066,8 +4066,8 @@ void checkpoint4_init(ushort *param_1,int param_2)
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_GetPlayerObject(void);
-extern int getTrickyObject(void);
+extern void *Obj_GetPlayerObject(void);
+extern void *getTrickyObject(void);
 extern u32 GameBit_Get(int eventId);
 extern void *Obj_AllocObjectSetup(int size, int type);
 extern int *Obj_SetupObject(void *setup, int a, int b, int c, void *d);
