@@ -229,5 +229,37 @@ void fn_8009A8C8(u8 *obj, f32 thresh) {
         }
     }
 }
+
+typedef struct {
+    u16 h18;
+    u16 h1a;
+    u16 h1c;
+    u16 pad;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} ParticleEmit;
+
+extern int *Resource_Acquire(int id, int kind);
+
+void fn_80096F9C(f32 *pos, u8 a, u8 b, u8 c, u8 d) {
+    int args[4];
+    ParticleEmit s1;
+    int *res;
+    s1.scale = lbl_803DF354;
+    s1.h1c = 0;
+    s1.h1a = 0;
+    s1.h18 = 0;
+    s1.x = pos[0];
+    s1.y = pos[1];
+    s1.z = pos[2];
+    res = Resource_Acquire(0x5a, 1);
+    args[0] = a;
+    args[1] = b;
+    args[2] = c;
+    args[3] = d;
+    (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*(int *)res + 4)))(0, 1, &s1, 0x401, -1, args);
+}
 #pragma peephole reset
 #pragma scheduling reset
