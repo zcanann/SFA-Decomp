@@ -127,10 +127,13 @@ extern f32 lbl_803DF028;
 extern f32 lbl_803DF06C;
 extern f32 init_803DF080;
 extern f32 lbl_803DF088;
+extern f32 lbl_803DF108;
+extern f64 lbl_803DF130;
 extern f32 lbl_803DF118;
 extern f32 lbl_803DF138;
 extern f32 lbl_803DF13C;
 extern f32 lbl_803DF140;
+extern f32 lbl_803DF144;
 extern f32 lbl_803DF1A0;
 extern f32 lbl_803DF1D8;
 extern f32 lbl_803DF1DC;
@@ -6407,6 +6410,56 @@ void playerEnvFxFn_80088ad4(int idx) {
             getEnvfxAct(player, player, (u16)val, 0);
         }
     }
+}
+#pragma pop
+
+typedef struct Dll06InterpState {
+    u8 pad00[0x24];
+    s32 targetX;
+    s32 targetY;
+    s32 targetZ;
+    u8 pad30[0x2dc];
+    f32 blend;
+    u8 pad310[0x06];
+    s8 active;
+} Dll06InterpState;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void dll_06_func09(s32 *x, s32 *y, s32 *z) {
+    Dll06InterpState *state;
+    s32 targetX;
+    s32 targetY;
+    s32 targetZ;
+    s32 oldX;
+    s32 oldY;
+    s32 oldZ;
+    f32 blend;
+
+    blend = lbl_803DF108;
+    state = (Dll06InterpState *)lbl_803DD184;
+    if (state == NULL) {
+        return;
+    }
+    if (state != NULL && state->active == 0) {
+        return;
+    }
+
+    oldX = *x;
+    oldY = *y;
+    oldZ = *z;
+    if (state != NULL) {
+        targetX = state->targetX;
+        targetY = state->targetY;
+        targetZ = state->targetZ;
+        blend = state->blend;
+    }
+
+    blend *= lbl_803DF144;
+    *x = (s32)((f32)(targetX - oldX) * blend + (f32)oldX);
+    *y = (s32)((f32)(targetY - oldY) * blend + (f32)oldY);
+    *z = (s32)((f32)(targetZ - oldZ) * blend + (f32)oldZ);
 }
 #pragma pop
 
