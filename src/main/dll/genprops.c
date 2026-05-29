@@ -5364,8 +5364,8 @@ void depthoffieldpoint_update(int *obj)
 
 void staff_release(void)
 {
-    int i;
     void **p;
+    int i;
     if (lbl_803DDAA8[0] != NULL) {
         p = lbl_803DDAA8;
         for (i = 0; i < 2; i++) {
