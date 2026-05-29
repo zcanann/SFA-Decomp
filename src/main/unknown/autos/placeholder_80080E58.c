@@ -5562,6 +5562,86 @@ void fn_80094378(f32 a, f32 b, f32 c) {
 }
 #pragma pop
 
+extern void padUpdate(void);
+extern void checkReset(void);
+void skyFn_80088c94(int flags, int mode);
+extern void waitNextFrame(void);
+extern void loadDataFiles(void);
+extern void dvdCheckError(void);
+extern void mmFreeTick(int);
+extern void gameTextRun(void);
+extern void GXFlush_(int, int);
+extern int getLoadedFileFlags(int);
+extern void *objCreateLight(int, int);
+extern void modelLightStruct_setField50(void *, int);
+extern void modelLightStruct_setColors100104(void *, int, int, int, int);
+extern void *textureLoadAsset(int);
+extern u8 lbl_803DC950;
+extern f32 lbl_8030F2C8[];
+extern f32 lbl_8030F2D4[];
+void skyFn_80088e54(int mode, f32 brightness);
+void fn_8008BDA8(void);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void loadLightFn_8008bbc4(void)
+{
+    u8 done = 0;
+
+    while (getLoadedFileFlags(0) != 0) {
+        padUpdate();
+        checkReset();
+        if (done) {
+            waitNextFrame();
+        }
+        loadDataFiles();
+        dvdCheckError();
+        if (done) {
+            mmFreeTick(0);
+            gameTextRun();
+            GXFlush_(1, 0);
+        }
+        if (lbl_803DC950 != 0) {
+            done = 1;
+        }
+    }
+    lbl_803DD164 = 0;
+    lbl_803DD15C = 0;
+    lbl_803DD158 = 0xff;
+    (&lbl_803DD158)[1] = 0xff;
+    (&lbl_803DD158)[2] = 0xff;
+    if (lbl_803DD144 == NULL) {
+        lbl_803DD144 = objCreateLight(0, 1);
+        if (lbl_803DD144 != NULL) {
+            modelLightStruct_setField50(lbl_803DD144, 4);
+            modelStruct2_setVectors(lbl_803DD144, pEXIInputFlag, lbl_803DF06C, pEXIInputFlag);
+            modelLightStruct_setColorsA8AC(lbl_803DD144, 0xff, 0xff, 0xff, 0xff);
+            modelLightStruct_setColors100104(lbl_803DD144, 0xff, 0xff, 0xff, 0xff);
+        }
+        lbl_803DD168 = objCreateLight(0, 1);
+        if (lbl_803DD168 != NULL) {
+            modelLightStruct_setField50(lbl_803DD168, 4);
+            modelStruct2_setVectors(lbl_803DD168, pEXIInputFlag, EXIInputFlag, pEXIInputFlag);
+            modelLightStruct_setColorsA8AC(lbl_803DD168, 0xff, 0xff, 0xff, 0xff);
+            modelLightStruct_setColors100104(lbl_803DD168, 0xff, 0xff, 0xff, 0xff);
+        }
+    }
+    fn_8008BDA8();
+    skyFn_80088c94(7, 0);
+    skyFn_80088e54(0, pEXIInputFlag);
+    skyFn_8008a500();
+    skyFn_8008a04c();
+    lbl_8030F2C8[0] = pEXIInputFlag;
+    lbl_8030F2C8[1] = lbl_803DF06C;
+    lbl_8030F2C8[2] = pEXIInputFlag;
+    lbl_8030F2D4[0] = pEXIInputFlag;
+    lbl_8030F2D4[1] = lbl_803DF06C;
+    lbl_8030F2D4[2] = pEXIInputFlag;
+    lbl_803DD150 = textureLoadAsset(0x5fa);
+}
+#pragma pop
+
 extern void textureFree(void *handle);
 extern void ModelLightStruct_free(void *p);
 extern void Music_Trigger(int id, int restart);
