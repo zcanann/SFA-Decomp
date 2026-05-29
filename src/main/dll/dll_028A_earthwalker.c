@@ -441,11 +441,11 @@ void earthwalker_init(int obj, int setup)
     *(s16 *)obj = (s16)((s8)*(s8 *)(setup + 0x18) << 8);
     *(u8 *)(state + 0x65b) = *(u8 *)(setup + 0x19);
     if (*(u8 *)(state + 0x65b) == 1) {
-        if (GameBit_Get(0x7fc) == 0 &&
-            (u8)(*(int (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) != 2) {
-            *(u8 *)(state + 0x658) = 0;
-        } else {
+        if (GameBit_Get(0x7fc) != 0 ||
+            (u8)(*(int (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
             *(u8 *)(state + 0x658) = 2;
+        } else {
+            *(u8 *)(state + 0x658) = 0;
         }
     } else {
         *(u8 *)(state + 0x658) = 2;
