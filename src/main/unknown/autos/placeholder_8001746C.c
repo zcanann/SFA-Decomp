@@ -8501,19 +8501,25 @@ void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
 }
 
 void fn_8001D820(u8 *p, f32 v) {
-    if (v >= *(f32 *)(p + 0x160)) {
-        if (v <= lbl_803DE764) {
-            *(f32 *)(p + 0x164) = v;
+    f32 clamped = *(f32 *)(p + 0x160);
+    if (v >= clamped) {
+        clamped = lbl_803DE764;
+        if (v <= clamped) {
+            clamped = v;
         }
     }
+    *(f32 *)(p + 0x164) = clamped;
 }
 
 void fn_8001D84C(u8 *p, f32 v) {
-    if (v >= lbl_803DE78C) {
-        if (v <= *(f32 *)(p + 0x164)) {
-            *(f32 *)(p + 0x160) = v;
+    f32 clamped = lbl_803DE78C;
+    if (v >= clamped) {
+        clamped = *(f32 *)(p + 0x164);
+        if (v <= clamped) {
+            clamped = v;
         }
     }
+    *(f32 *)(p + 0x160) = clamped;
 }
 
 int Obj_IsLoadingLocked(void) {
@@ -10936,14 +10942,19 @@ extern void C_MTXLightOrtho(f32 *m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 
                             f32 transS, f32 transT);
 
 void fn_8001D8F0(u8 *obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f) {
+    f32 fScale;
+    f32 eScale;
+
     *(f32 *)(obj + 0x150) = a;
     *(f32 *)(obj + 0x154) = b;
     *(f32 *)(obj + 0x158) = c;
     *(f32 *)(obj + 0x15c) = d;
     *(int *)(obj + 0x168) = 0;
+    fScale = f * lbl_803DE790;
+    eScale = e * lbl_803DE790;
     C_MTXLightOrtho((f32 *)(obj + 0x1b0), *(f32 *)(obj + 0x150), *(f32 *)(obj + 0x154),
-                    *(f32 *)(obj + 0x158), *(f32 *)(obj + 0x15c), f * lbl_803DE790,
-                    e * lbl_803DE790, f * lbl_803DE790, e * lbl_803DE790);
+                    *(f32 *)(obj + 0x158), *(f32 *)(obj + 0x15c), fScale, eScale, fScale,
+                    eScale);
     C_MTXLightOrtho((f32 *)(obj + 0x1f0), *(f32 *)(obj + 0x150), *(f32 *)(obj + 0x154),
                     *(f32 *)(obj + 0x158), *(f32 *)(obj + 0x15c), lbl_803DE790, lbl_803DE790,
                     lbl_803DE790, lbl_803DE790);
