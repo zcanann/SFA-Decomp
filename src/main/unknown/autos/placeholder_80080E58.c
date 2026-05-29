@@ -4839,6 +4839,65 @@ void fn_80088870(int a, int b, int c, int d)
     lbl_803DD134 = d;
 }
 
+extern u8 lbl_803DD16C;
+extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int flags);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void envFxFn_80088884(void)
+{
+    u8 a;
+    u8 b;
+    u8 flags;
+
+    a = (u8)(*(int (**)(int))((char *)*gSHthorntailAnimationInterface + 0x24))(0);
+    b = (u8)GameBit_Get(0x2ba);
+    if (a != lbl_803DD16C) {
+        lbl_803DD16C = a;
+        if (a == 0) {
+            b++;
+            if (b == 0x1c) {
+                b = 0;
+            }
+            GameBit_Set(0x2ba, b);
+        }
+        if (lbl_803DD140 != 0) {
+            lbl_803DD140 |= 0x10;
+        }
+    }
+    flags = lbl_803DD140;
+    if ((flags & 0x10) == 0) {
+        return;
+    }
+    flags &= ~0x10;
+    lbl_803DD140 = flags;
+    if (lbl_803DD130 != 0 && (flags & 0x2) != 0 && GameBit_Get(0x3ac) == 0) {
+        if ((lbl_803DD140 & 0x20) != 0) {
+            getEnvfxActImmediately(0, 0, (u16)((s16 *)lbl_803DD130)[b], 0);
+        } else {
+            getEnvfxAct(0, 0, (u16)((s16 *)lbl_803DD130)[b], 0);
+        }
+    }
+    if (lbl_803DD13C != 0 && (lbl_803DD140 & 0x4) != 0) {
+        if ((lbl_803DD140 & 0x20) != 0) {
+            getEnvfxActImmediately(0, 0, (u16)((s16 *)lbl_803DD13C)[b], 0);
+        } else {
+            getEnvfxAct(0, 0, (u16)((s16 *)lbl_803DD13C)[b], 0);
+        }
+    }
+    if (lbl_803DD138 != 0 && (lbl_803DD140 & 0x1) != 0 && GameBit_Get(0x3ab) == 0) {
+        if ((lbl_803DD140 & 0x20) != 0) {
+            getEnvfxActImmediately(0, 0, (u16)((s16 *)lbl_803DD138)[b], 0);
+        } else {
+            getEnvfxAct(0, 0, (u16)((s16 *)lbl_803DD138)[b], 0);
+        }
+    }
+    playerEnvFxFn_80088ad4(b);
+    lbl_803DD140 &= ~0x20;
+}
+#pragma pop
+
 void loadSunAndMoon(void)
 {
     void *moonObj;
