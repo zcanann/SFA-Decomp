@@ -10315,4 +10315,41 @@ void mapLoadByCoords(int arg) {
     Music_Trigger(0xd0, 0);
     lbl_803DB420 = lbl_803DE7B4;
 }
+
+extern void objLoadPlayerFromSave(u8 *obj);
+extern f32 lbl_803DE88C;
+
+void Obj_RunInitCallback(u8 *obj) {
+    s16 mode = *(s16 *)(obj + 0x46);
+    if (mode == 0x1f || mode == 0) {
+        objLoadPlayerFromSave(obj);
+    } else {
+        int *p = *(int **)(obj + 0x68);
+        if (p != NULL) {
+            int fn = ((int *)*p)[1];
+            if (fn != -1 && (void *)fn != NULL) {
+                ((void (*)(u8 *))fn)(obj);
+            }
+        }
+    }
+    {
+        int *q = *(int **)(obj + 0x64);
+        if (q != NULL) {
+            q[0xc] |= 8;
+        }
+    }
+    {
+        f32 v;
+        *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+        *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
+        *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+        *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0xc);
+        *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x10);
+        *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x14);
+        v = lbl_803DE88C;
+        *(f32 *)(obj + 0xfc) = v;
+        *(f32 *)(obj + 0x100) = v;
+        *(f32 *)(obj + 0x104) = v;
+    }
+}
 #pragma pop
