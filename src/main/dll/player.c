@@ -2728,18 +2728,18 @@ int fn_8029B6BC(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B7298(int obj, int p2)
+int Lightfoot_UpdateProximityInteractionState(int obj, int state)
 {
     int inner = *(int *)((char *)obj + 0xb8);
-    if (*(void **)((char *)p2 + 0x2d0) != NULL) {
+    if (*(void **)((char *)state + 0x2d0) != NULL) {
         if (*(u16 *)((char *)*(int *)((char *)inner + 0x40c) + 0x22) <
             *(u16 *)((char *)inner + 0x3fe)) {
-            if (*(s8 *)((char *)p2 + 0x27b) != 0 || *(s8 *)((char *)p2 + 0x346) != 0 ||
-                *(s16 *)((char *)p2 + 0x274) == 0) {
-                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, p2, 4);
+            if (*(s8 *)((char *)state + 0x27b) != 0 || *(s8 *)((char *)state + 0x346) != 0 ||
+                *(s16 *)((char *)state + 0x274) == 0) {
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 4);
             }
-        } else if (*(s8 *)((char *)p2 + 0x27b) != 0 || *(s8 *)((char *)p2 + 0x346) != 0) {
-            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, p2, 0);
+        } else if (*(s8 *)((char *)state + 0x27b) != 0 || *(s8 *)((char *)state + 0x346) != 0) {
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0);
         }
     }
     return 0;
@@ -8052,7 +8052,7 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B735C(int obj, int state)
+int Lightfoot_UpdateCompletionInteraction(int obj, int state)
 {
     int data = *(int *)((char *)obj + 0x4c);
     int inner = *(int *)((char *)obj + 0xb8);

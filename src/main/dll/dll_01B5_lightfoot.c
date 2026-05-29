@@ -62,8 +62,8 @@ void lightfoot_initialise(void)
     lbl_803DB0DC[3] = (int)Lightfoot_UpdateRandomTurn;
     lbl_803DB0DC[4] = (int)fn_802B78A4;
     lbl_803DB0D0[0] = (int)Lightfoot_UpdateChallengeGateInteraction;
-    lbl_803DB0D0[1] = (int)fn_802B735C;
-    lbl_803DB0D0[2] = (int)fn_802B7298;
+    lbl_803DB0D0[1] = (int)Lightfoot_UpdateCompletionInteraction;
+    lbl_803DB0D0[2] = (int)Lightfoot_UpdateProximityInteractionState;
 }
 #pragma peephole reset
 #pragma scheduling reset
