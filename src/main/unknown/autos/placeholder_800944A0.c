@@ -335,5 +335,57 @@ void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d) {
     entry->f18 = 0;
     lbl_803DD22C = (void *)((int)lbl_803DD22C + 1);
 }
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 f0c;
+    f32 f10;
+    f32 f14;
+    u8 pad18[0x20];
+    u8 active;
+    u8 pad39[3];
+} WaterParticle;
+
+extern f32 lbl_803DF300;
+extern f32 lbl_803DF31C;
+extern f32 lbl_803DF2EC;
+extern f32 lbl_803DF2FC;
+extern f32 lbl_803DF320;
+extern int randomGetRange(int lo, int hi);
+extern f32 sqrtf(f32 x);
+extern int fn_80095B18(WaterParticle *slot, int idx, int rand, f32 v);
+
+void waterfx_func06(f32 a, f32 b, f32 c, f32 d) {
+    WaterParticle *p;
+    int i;
+    WaterParticle *base;
+    WaterParticle *slot;
+    int rnd;
+    if (lbl_803DF300 == d) {
+        d = lbl_803DF31C;
+    }
+    i = 0;
+    base = lbl_803DD230;
+    p = base;
+    while (i < 0xa && (p->active != 0 || p->f10 < lbl_803DF2EC)) {
+        p++;
+        i++;
+    }
+    if (i >= 0xa) {
+        return;
+    }
+    slot = &base[i];
+    slot->x = a;
+    slot->y = b;
+    slot->z = c;
+    lbl_803DD234 = (void *)((int)lbl_803DD234 + 1);
+    slot->f0c = d;
+    rnd = randomGetRange((int)slot->f0c, (int)(lbl_803DF2FC * slot->f0c));
+    slot->active = (u8)fn_80095B18(&((WaterParticle *)lbl_803DD230)[i], i, rnd, slot->f0c);
+    slot->f10 = lbl_803DF300;
+    slot->f14 = lbl_803DF2EC / (lbl_803DF320 * sqrtf(slot->f0c));
+}
 #pragma peephole reset
 #pragma scheduling reset
