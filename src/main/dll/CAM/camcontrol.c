@@ -301,29 +301,29 @@ LAB_80102ab4:
 #pragma scheduling off
 int Camera_isZooming(void)
 {
-  return *(float *)((char *)pCamera + 0xf4) > lbl_803E1630;
+  return CAMCONTROL_CAMERA->zoomDistance > lbl_803E1630;
 }
 #pragma scheduling reset
 
 void Camera_func15(int x)
 {
-  *(int *)((char *)pCamera + 0x120) = x;
+  CAMCONTROL_CAMERA->func15Value = x;
 }
 
 void Camera_setTarget(int x)
 {
-  *(int *)((char *)pCamera + 0x11c) = x;
-  *(int *)((char *)pCamera + 0x124) = x;
+  CAMCONTROL_CAMERA->overrideTarget = x;
+  CAMCONTROL_CAMERA->currentTarget = x;
 }
 
 int Camera_getTarget(void)
 {
-  return *(int *)((char *)pCamera + 0x124);
+  return CAMCONTROL_CAMERA->currentTarget;
 }
 
 int Camera_getOverrideTarget(void)
 {
-  return *(int *)((char *)pCamera + 0x11c);
+  return CAMCONTROL_CAMERA->overrideTarget;
 }
 
 /*
@@ -387,27 +387,27 @@ void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue
 
 void Camera_moveBy(f32 x,f32 y,f32 z)
 {
-  *(float *)((char *)pCamera + 0xc) += x;
-  *(float *)((char *)pCamera + 0x10) += y;
-  *(float *)((char *)pCamera + 0x14) += z;
+  CAMCONTROL_CAMERA->localX += x;
+  CAMCONTROL_CAMERA->localY += y;
+  CAMCONTROL_CAMERA->localZ += z;
 }
 
 #pragma scheduling off
 void Camera_overridePos(f32 x,f32 y,f32 z)
 {
-  *(u8 *)((char *)pCamera + 0x13d) = 1;
-  *(float *)((char *)pCamera + 0xdc) = x;
-  *(float *)((char *)pCamera + 0xe0) = y;
-  *(float *)((char *)pCamera + 0xe4) = z;
+  CAMCONTROL_CAMERA->overrideWorldPosPending = 1;
+  CAMCONTROL_CAMERA->overrideWorldX = x;
+  CAMCONTROL_CAMERA->overrideWorldY = y;
+  CAMCONTROL_CAMERA->overrideWorldZ = z;
 }
 #pragma scheduling reset
 
 void Camera_setFocus(void *target)
 {
-  if (target == *(void **)((char *)pCamera + 0xa4)) {
+  if (target == CAMCONTROL_CAMERA->focusObj) {
     return;
   }
-  *(void **)((char *)pCamera + 0xa4) = target;
+  CAMCONTROL_CAMERA->focusObj = target;
 }
 
 /*
@@ -855,21 +855,21 @@ u32 Camera_get(void) { return (u32)pCamera; }
 
 void Camera_init(void *focus,f32 x,f32 y,f32 z)
 {
-  memset((void *)pCamera,0,0x144);
-  *(f32 *)((char *)pCamera + 0x0c) = x;
-  *(f32 *)((char *)pCamera + 0x10) = y;
-  *(f32 *)((char *)pCamera + 0x14) = z;
-  *(f32 *)((char *)pCamera + 0x18) = x;
-  *(f32 *)((char *)pCamera + 0x1c) = y;
-  *(f32 *)((char *)pCamera + 0x20) = z;
-  *(f32 *)((char *)pCamera + 0xa8) = x;
-  *(f32 *)((char *)pCamera + 0xac) = y;
-  *(f32 *)((char *)pCamera + 0xb0) = z;
-  *(f32 *)((char *)pCamera + 0xb8) = x;
-  *(f32 *)((char *)pCamera + 0xbc) = y;
-  *(f32 *)((char *)pCamera + 0xc0) = z;
-  *(void **)((char *)pCamera + 0xa4) = focus;
-  *(f32 *)((char *)pCamera + 0xb4) = lbl_803E1684;
+  memset((void *)pCamera,0,sizeof(CamcontrolCameraState));
+  CAMCONTROL_CAMERA->localX = x;
+  CAMCONTROL_CAMERA->localY = y;
+  CAMCONTROL_CAMERA->localZ = z;
+  CAMCONTROL_CAMERA->worldX = x;
+  CAMCONTROL_CAMERA->worldY = y;
+  CAMCONTROL_CAMERA->worldZ = z;
+  CAMCONTROL_CAMERA->prevLocalX = x;
+  CAMCONTROL_CAMERA->prevLocalY = y;
+  CAMCONTROL_CAMERA->prevLocalZ = z;
+  CAMCONTROL_CAMERA->prevWorldX = x;
+  CAMCONTROL_CAMERA->prevWorldY = y;
+  CAMCONTROL_CAMERA->prevWorldZ = z;
+  CAMCONTROL_CAMERA->focusObj = focus;
+  CAMCONTROL_CAMERA->focusHeight = lbl_803E1684;
   gCamcontrolTargetState = 0;
 }
 
@@ -882,7 +882,7 @@ void Camera_release(void)
 void Camera_initialise(void)
 {
   pCamera = gCamcontrolStateStorage;
-  memset((void *)pCamera,0,0x144);
+  memset((void *)pCamera,0,sizeof(CamcontrolCameraState));
   voxmaps_initialise();
   gCamcontrolActiveActionId = -1;
   gCamcontrolCurrentHandlerIndex = -1;

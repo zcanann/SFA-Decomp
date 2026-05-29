@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_CAM_CAMCONTROL_H_
 #define MAIN_DLL_CAM_CAMCONTROL_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 
 typedef struct CamcontrolTriggeredAction {
@@ -24,6 +25,50 @@ typedef struct CameraViewSlot {
   f32 y;
   f32 z;
 } CameraViewSlot;
+
+typedef struct CamcontrolCameraState {
+  u8 pad00[0x0C];
+  f32 localX;
+  f32 localY;
+  f32 localZ;
+  f32 worldX;
+  f32 worldY;
+  f32 worldZ;
+  u8 pad24[0x30 - 0x24];
+  u32 localFrameObj;
+  u8 pad34[0xA4 - 0x34];
+  void *focusObj;
+  f32 prevLocalX;
+  f32 prevLocalY;
+  f32 prevLocalZ;
+  f32 focusHeight;
+  f32 prevWorldX;
+  f32 prevWorldY;
+  f32 prevWorldZ;
+  u8 padC4[0xDC - 0xC4];
+  f32 overrideWorldX;
+  f32 overrideWorldY;
+  f32 overrideWorldZ;
+  u8 padE8[0xF4 - 0xE8];
+  f32 zoomDistance;
+  u8 padF8[0x11C - 0xF8];
+  int overrideTarget;
+  int func15Value;
+  int currentTarget;
+  int targetReticleFocus;
+  u8 pad12C[0x134 - 0x12C];
+  f32 targetDistance;
+  u8 targetKind;
+  u8 triggerType1Pending;
+  u8 pad13A[0x13D - 0x13A];
+  u8 overrideWorldPosPending;
+  u8 pad13E[0x140 - 0x13E];
+  u8 frameFlags;
+  u8 targetFlags;
+  u8 pad142[0x144 - 0x142];
+} CamcontrolCameraState;
+
+STATIC_ASSERT(sizeof(CamcontrolCameraState) == 0x144);
 
 typedef struct CamcontrolHandlerVTable {
   void (*func00)();
@@ -68,6 +113,7 @@ typedef struct CamcontrolHandlerEntry {
 #define CAMCONTROL_ACTION_HEAP 0xF
 #define CAMCONTROL_DEFAULT_BLEND_FRAMES 0x78
 #define CAMCONTROL_QUEUE_SENTINEL 0xFF
+#define CAMCONTROL_CAMERA ((CamcontrolCameraState *)pCamera)
 
 extern char sCamcontrolTriggeredCamActionLoadWarning[];
 extern CamcontrolHandlerEntry *gCamcontrolHandlerEntries[20];
