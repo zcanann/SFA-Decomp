@@ -57,7 +57,7 @@ void arwbombcoll_initialise(void) {}
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022FA00(int obj, int state) {
+void arwbombcoll_updateMovingAxis(int obj, int state) {
     u8 mode = *(u8 *)(state + 1);
     u16 raw = *(u16 *)(state + 2);
     if (mode == 1 || mode == 3) {
@@ -99,7 +99,7 @@ void fn_8022FA00(int obj, int state) {
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022FB5C(int obj, int state, int arwing) {
+void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
     int setup = *(int *)(obj + 0x4c);
     u8 mode = *(u8 *)(state + 0);
     if (mode == 0) {

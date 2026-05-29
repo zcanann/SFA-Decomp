@@ -171,7 +171,7 @@ void ring_update(int obj)
                     *(int *)(state + 0x20) = 0;
                 }
             }
-            fn_8022FA00(obj, state);
+            arwbombcoll_updateMovingAxis(obj, state);
             break;
         case 2:
             if (ObjHits_GetPriorityHit(obj, &hitB, 0, 0) != 0 && (hit = hitB) != 0 &&
@@ -190,13 +190,13 @@ void ring_update(int obj)
             break;
         case 1:
         case 4:
-            fn_8022FA00(obj, state);
+            arwbombcoll_updateMovingAxis(obj, state);
             break;
         }
         if ((*(u8 *)(state + 0x14) & 0x80) != 0) {
             if (fn_8022D750(arwing) == 0 && fn_8022D710(arwing) == 0 &&
                 arwbombcoll_checkArwingCollision(obj, state, arwing) != 0) {
-                fn_8022FB5C(obj, state, arwing);
+                arwbombcoll_handleArwingHit(obj, state, arwing);
             }
         }
         *(s16 *)(obj + 0) =
