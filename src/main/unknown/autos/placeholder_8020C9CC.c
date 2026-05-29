@@ -801,5 +801,96 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis) {
         }
     }
 }
+
+extern int ObjHits_GetPriorityHit(int *sub, int *hit, int c, int d);
+extern void ObjHits_RecordObjectHit(int *sub, int hit, int c, int d, int e);
+extern void ObjLink_DetachChild(int obj, int *child);
+extern void spawnExplosion(int obj, f32 f, int a, int b, int c, int d, int e, int g, int h);
+extern void ObjAnim_SetCurrentMove(int obj, int move, f32 f, int e);
+extern int *gObjectTriggerInterface;
+extern f32 fn_80293E80(f32 a);
+extern f32 sin(f32 a);
+extern u32 lbl_8032A350[8];
+extern u8 framesThisStep;
+extern f32 lbl_803E6720;
+extern f32 lbl_803E6724;
+extern f32 lbl_803E6728;
+extern f32 lbl_803E672C;
+extern f32 lbl_803E6730;
+extern f32 lbl_803E6734;
+extern f32 lbl_803E6738;
+extern f32 lbl_803E66F4;
+
+void snowclaw_hitDetect(int obj) {
+    int *inner;
+    int *sub;
+    int *near;
+    int *player;
+    int hit;
+    f32 dist;
+    s8 a5;
+
+    inner = *(int **)(obj + 0xb8);
+    dist = lbl_803E6720;
+    sub = *(int **)inner;
+    if (sub == 0) {
+        return;
+    }
+    if (ObjHits_GetPriorityHit(sub, &hit, 0, 0) == 0x15 && *(s8 *)((char *)inner + 0xa4) >= 0) {
+        ObjHits_RecordObjectHit(sub, hit, 0x15, 1, 0);
+        if (*(s8 *)((char *)inner + 0xa5) < 0) {
+            *(s8 *)((char *)inner + 0xa4) -= 1;
+            Sfx_PlayFromObject(obj, 0xf2);
+            Sfx_PlayFromObject(obj, 0x14);
+            Sfx_PlayFromObject(obj, (u16)lbl_8032A350[*(s8 *)((char *)inner + 0xa4)]);
+            *(s8 *)((char *)inner + 0xa5) = 0x14;
+            *(int *)((char *)inner + 0x9c) -= 0x28;
+            if (*(s8 *)((char *)inner + 0xa4) < 0) {
+                int *sub2;
+
+                spawnExplosion(obj, lbl_803E6724, 1, 1, 1, 1, 0, 1, 0);
+                sub2 = *(int **)inner;
+                if (sub2 != 0) {
+                    (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)sub2 + 0x68)) + 0x3c)))(sub2, 0);
+                }
+                if (*(s16 *)((char *)obj + 0x46) == 0x389) {
+                    near = (int *)ObjGroup_FindNearestObject(0x1e, obj, &dist);
+                    if (near != 0) {
+                        ObjLink_DetachChild(obj, near);
+                        (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)near + 0x68)) + 0x20)))(near, 2);
+                    }
+                }
+                if (*(s16 *)((char *)obj + 0x46) == 0x16d || *(s16 *)((char *)obj + 0x46) == 0x170) {
+                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, 1);
+                } else {
+                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, 3);
+                }
+                *(u8 *)((char *)inner + 0xaa) |= 0x40;
+                *(f32 *)((char *)inner + 0xac) = lbl_803E670C;
+                *(f32 *)((char *)inner + 0x24) = lbl_803E6728 * fn_80293E80((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
+                *(f32 *)((char *)inner + 0x28) = lbl_803E6734 * (f32)(int)randomGetRange(0x28, 0x64);
+                *(f32 *)((char *)inner + 0x2c) = lbl_803E6728 * sin((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
+                player = (int *)fn_802972A8(Obj_GetPlayerObject());
+                if (player != 0) {
+                    int *sub3 = *(int **)((char *)player + 0xb8);
+                    if (sub3 != 0) {
+                        *(f32 *)((char *)sub3 + 0x4c4) = lbl_803E6738;
+                    }
+                }
+            } else {
+                ObjAnim_SetCurrentMove(obj, *(u16 *)((char *)inner + 0xa8) + 9, lbl_803E66F0, 0);
+                *(f32 *)((char *)inner + 0x30) = lbl_803E66F4;
+            }
+        }
+    }
+    sub = *(int **)inner;
+    if (sub != 0 && (*(int (*)(int *))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x38)))(sub) == 2) {
+        snowclaw_syncMountTransform(obj, (int)sub, 0, 0, 0, 0, 0, 0, 0);
+    }
+    a5 = *(s8 *)((char *)inner + 0xa5);
+    if (a5 >= 0) {
+        *(s8 *)((char *)inner + 0xa5) = a5 - framesThisStep;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
