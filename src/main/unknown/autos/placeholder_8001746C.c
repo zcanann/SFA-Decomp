@@ -10482,3 +10482,53 @@ void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out) {
     }
 }
 #pragma pop
+
+extern s16 lbl_803DCBC4;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjList_PartitionForRender(int *out) {
+    void **arr;
+    void *tmp;
+    int stop;
+    int i;
+    int j;
+    int hi;
+
+    *out = lbl_803DCB84;
+    if (lbl_803DCBC4 != 0) {
+        return;
+    }
+    i = 0;
+    j = lbl_803DCB84 - 1;
+    hi = j;
+    while (i <= j) {
+        arr = (void **)lbl_803DCB88;
+        stop = 0;
+        while (i <= hi && stop == 0) {
+            if (*(int *)(*(u8 **)((u8 *)arr[i] + 0x50) + 0x44) & 1) {
+                i++;
+            } else {
+                stop = -1;
+            }
+        }
+        stop = 0;
+        while (j >= 0 && stop == 0) {
+            if (*(int *)(*(u8 **)((u8 *)arr[j] + 0x50) + 0x44) & 1) {
+                stop = -1;
+            } else {
+                j--;
+            }
+        }
+        if (i < j) {
+            tmp = arr[i];
+            arr[i] = arr[j];
+            ((void **)lbl_803DCB88)[j] = tmp;
+            i++;
+            j--;
+        }
+    }
+    lbl_803DCBC4 = i;
+}
+#pragma pop
