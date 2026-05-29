@@ -1450,6 +1450,63 @@ void fn_80097B30(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
     }
 }
 
+void objShowButtonGlow(void *obj, u8 mode, f32 intensity) {
+    PartfxParams params;
+    int i;
+
+    params.f8 = intensity;
+    if (mode == 0) {
+        return;
+    }
+    switch (mode) {
+    case 1:
+        params.f6 = 0xc8c;
+        for (i = 0; i < 0x28; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7c8, &params, 1, -1, 0);
+        }
+        params.f6 = 1;
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        break;
+    case 2:
+        params.f6 = 0xc8d;
+        for (i = 0; i < 0x28; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7c8, &params, 1, -1, 0);
+        }
+        params.f6 = 0;
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        break;
+    case 3:
+        params.f6 = 0xc8e;
+        for (i = 0; i < 0x28; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7c8, &params, 1, -1, 0);
+        }
+        params.f6 = 2;
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+            obj, 0x7f3, &params, 1, -1, 0);
+        break;
+    case 4:
+        params.f6 = 0;
+        for (i = 0; i < 0x14; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7f2, &params, 1, -1, 0);
+        }
+        break;
+    }
+}
+
 typedef struct {
     u16 v[15];
 } ColorTbl;
