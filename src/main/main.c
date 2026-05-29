@@ -1520,8 +1520,8 @@ void dll_224_init(void *obj, void *other) {
 
 void vfpflamepoint_init(int *obj, s8 *def) {
     u8 *extra = (u8 *)obj[0xb8 / 4];
-    extra[4] = (s8)*(s16 *)(def + 0x1a);
-    extra[5] = (u8)((extra[5] & ~0x40) | (((u8)*(s16 *)(def + 0x1c) & 1) << 6));
+    *(s8 *)(extra + 4) = (s8)*(s16 *)(def + 0x1a);
+    extra[5] = (u8)((extra[5] & 0xbf) | ((u8)*(s16 *)(def + 0x1c) << 6));
     *(s16 *)(extra + 0) = *(s16 *)(def + 0x1e);
     *(s16 *)(extra + 2) = *(s16 *)(def + 0x20);
     *(u16 *)((u8 *)obj + 0xb0) |= 0x6000;
