@@ -7814,6 +7814,142 @@ active : {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern int lbl_803E7160;
+extern f32 lbl_803E716C;
+extern f32 lbl_803E7170;
+extern f32 lbl_803E71C0;
+extern f32 lbl_803E71C4;
+extern f32 lbl_803E71C8;
+extern f32 lbl_803E71CC;
+extern f32 lbl_803E71D0;
+extern f32 lbl_803E71D4;
+void arwsquadron_applyCommandParams(int p1, int p2);
+
+typedef struct {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 b10 : 1;
+} SquadFlags;
+
+#pragma scheduling off
+#pragma peephole off
+void arwsquadron_init(int obj, int setup)
+{
+    SquadFlags *flags;
+    int s;
+    int tmp;
+
+    tmp = lbl_803E7160;
+    s = *(int *)(obj + 0xb8);
+    flags = (SquadFlags *)(s + 0x160);
+
+    *(s16 *)(obj + 0x0) = *(u8 *)(setup + 0x18) << 8;
+    *(s16 *)(obj + 0x2) = *(u8 *)(setup + 0x19) << 8;
+    *(s16 *)(obj + 0x4) = *(u8 *)(setup + 0x1a) << 8;
+    flags->b10 = 1;
+    *(u8 *)(s + 0x15e) = 1;
+    *(f32 *)(s + 0x108) = (f32)(u32) * (u8 *)(setup + 0x30) * lbl_803E716C;
+    *(f32 *)(s + 0x10c) = *(f32 *)(s + 0x108);
+    *(s16 *)(s + 0x140) = *(u8 *)(setup + 0x1b) << 4;
+    *(s16 *)(s + 0x142) = *(u8 *)(setup + 0x1c) << 4;
+    *(s16 *)(s + 0x144) = *(u8 *)(setup + 0x1d) << 4;
+    ObjHits_SetTargetMask(obj, 4);
+
+    if (*(s16 *)(setup + 0x0) == 0x616 || *(s16 *)(setup + 0x0) == 0x617) {
+        *(u8 *)(s + 0x15c) = 3;
+        if (*(s16 *)(setup + 0x0) == 0x616) {
+            flags->b10 = 0;
+        }
+        if (*(s16 *)(setup + 0x0) == 0x616) {
+            *(f32 *)(s + 0x130) = lbl_803E71C0;
+        } else {
+            *(f32 *)(s + 0x130) = lbl_803E71C4;
+        }
+        *(u8 *)(s + 0x157) = 5;
+        *(u8 *)(s + 0x158) = 0;
+        if (*(s16 *)(setup + 0x0) == 0x616) {
+            *(u8 *)(s + 0x156) = 2;
+        } else {
+            *(u8 *)(s + 0x156) = 1;
+        }
+        *(s16 *)(s + 0x140) = randomGetRange(-0x12c, 0x12c);
+        *(s16 *)(s + 0x142) = randomGetRange(-0x12c, 0x12c);
+        *(s16 *)(s + 0x144) = randomGetRange(-0x12c, 0x12c);
+        flags->b80 = 1;
+    } else if (*(s16 *)(setup + 0x0) == 0x7f0) {
+        *(u8 *)(s + 0x15c) = 2;
+        flags->b10 = 0;
+        *(f32 *)(s + 0x130) = lbl_803E71C0;
+    } else {
+        *(u8 *)(s + 0x15c) = 1;
+        *(f32 *)(s + 0x130) = lbl_803E71C4;
+        *(u8 *)(s + 0x156) = 1;
+        *(u8 *)(s + 0x157) = 0x14;
+        *(u8 *)(s + 0x158) = 0;
+        *(f32 *)(s + 0x11c) = lbl_803E71C8;
+        *(f32 *)(s + 0x120) = lbl_803E7170;
+        flags->b80 = 1;
+        switch (*(s16 *)(obj + 0x46)) {
+        case 0x6d6:
+            *(u8 *)(s + 0x15a) = 1;
+            *(u8 *)(s + 0x15b) = 2;
+            *(f32 *)(s + 0x114) = lbl_803E71CC;
+            *(f32 *)(s + 0x118) = lbl_803E71D0;
+            break;
+        case 0x6d5:
+            *(u8 *)(s + 0x15a) = 0;
+            *(u8 *)(s + 0x15b) = 1;
+            break;
+        case 0x6d7:
+            *(u8 *)(s + 0x15a) = 1;
+            *(u8 *)(s + 0x15b) = 1;
+            *(f32 *)(s + 0x114) = lbl_803E71CC;
+            *(f32 *)(s + 0x118) = lbl_803E71D0;
+            break;
+        default:
+            *(u8 *)(s + 0x15a) = 1;
+            *(u8 *)(s + 0x15b) = 1;
+            *(f32 *)(s + 0x114) = lbl_803E7170;
+            *(f32 *)(s + 0x118) = lbl_803E71D0;
+            break;
+        }
+    }
+
+    *(f32 *)(s + 0x134) = (f32)(u32) * (u16 *)(setup + 0x24);
+    if (*(f32 *)(s + 0x134) > *(f32 *)(s + 0x130)) {
+        *(f32 *)(s + 0x134) = *(f32 *)(s + 0x130);
+    }
+    *(u8 *)(obj + 0x36) = 0;
+    *(s16 *)(obj + 0x6) |= 0x4000;
+    storeZeroToFloatParam((void *)(s + 0x12c));
+
+    if (*(u8 *)(setup + 0x2f) != 0) {
+        if (*(u8 *)(s + 0x15c) == 1 || *(u8 *)(s + 0x15c) == 2) {
+            tmp = 0x28;
+        } else {
+            tmp = 2;
+        }
+        if ((u8)(*(int (**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
+                s, obj, lbl_803E71D4, &tmp, -1) == 0) {
+            flags->b40 = 1;
+            *(f32 *)(obj + 0xc) = *(f32 *)(s + 0x68);
+            *(f32 *)(obj + 0x10) = *(f32 *)(s + 0x6c);
+            *(f32 *)(obj + 0x14) = *(f32 *)(s + 0x70);
+            arwsquadron_applyCommandParams(obj, s);
+        }
+    }
+
+    *(u16 *)(s + 0x146) = randomGetRange(0, 0xffff);
+    *(u16 *)(s + 0x148) = randomGetRange(0, 0xffff);
+    *(u16 *)(s + 0x14a) = randomGetRange(0xc8, 0x12c);
+    *(u16 *)(s + 0x14c) = randomGetRange(0xc8, 0x12c);
+    *(f32 *)(s + 0x138) = (f32)(int)randomGetRange(0x3e8, 0x7d0);
+    *(u8 *)(s + 0x15d) = *(u8 *)(setup + 0x31);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void fn_80231058(int obj, int src)
 {
     *(f32 *)(obj + 0x24) = *(f32 *)(src + 0x0);
