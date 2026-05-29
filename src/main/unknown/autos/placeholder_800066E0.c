@@ -1381,6 +1381,46 @@ u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int 
 #pragma scheduling reset
 
 /*
+ * Function: fn_80006B1C
+ * EN v1.0 Address: 0x80006B1C
+ * EN v1.0 Size: 336b
+ */
+#pragma scheduling off
+int fn_80006B1C(ModelRenderInstrsState *src, ModelRenderInstrsState *dst, int count, int gap, u8 bitWidth)
+{
+    int startBit = modelRenderInstrsState_getBit(dst);
+    u32 mask = ~(-1 << bitWidth);
+    int sh16 = 0x10 - bitWidth;
+    int i;
+    for (i = 0; i < count; i++) {
+        int sbit = src->bit;
+        int sByte = sbit >> 3;
+        u8 *sp = (u8 *)src->instrs + sByte;
+        u32 val;
+        int curBit;
+        int bo;
+        u32 packed;
+        u32 bits;
+        val = sp[0] << 16;
+        val = val | (sp[1] << 8);
+        val = val | sp[2];
+        src->bit = sbit + bitWidth;
+        bits = mask & (val >> (sbit & 7));
+        curBit = dst->bit;
+        bo = curBit >> 3;
+        packed = bits << ((8 - (curBit & 7)) + sh16);
+        ((u8 *)dst->instrs)[bo] |= (packed >> 16) & 0xff;
+        ((u8 *)dst->instrs)[bo + 1] |= (packed >> 8) & 0xff;
+        ((u8 *)dst->instrs)[bo + 2] |= packed & 0xff;
+        dst->bit += bitWidth;
+        dst->bit += gap;
+    }
+    modelRenderInstrsState_setBit(dst, startBit + bitWidth);
+    return ((u8 *)src->instrs)[(src->bit >> 3) + 1];
+}
+#pragma scheduling reset
+
+/*
  * --INFO--
  *
  * Function: FUN_80006748
