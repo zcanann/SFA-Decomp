@@ -56,10 +56,10 @@ void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole off
 void lightfoot_initialise(void)
 {
-    lbl_803DB0DC[0] = (int)fn_802B8108;
-    lbl_803DB0DC[1] = (int)fn_802B7D28;
-    lbl_803DB0DC[2] = (int)fn_802B7BF0;
-    lbl_803DB0DC[3] = (int)fn_802B7B0C;
+    lbl_803DB0DC[0] = (int)Lightfoot_UpdateAnimationCycle;
+    lbl_803DB0DC[1] = (int)Lightfoot_UpdateButtonTimingChallenge;
+    lbl_803DB0DC[2] = (int)Lightfoot_UpdateTargetAnimationCycle;
+    lbl_803DB0DC[3] = (int)Lightfoot_UpdateRandomTurn;
     lbl_803DB0DC[4] = (int)fn_802B78A4;
     lbl_803DB0D0[0] = (int)Lightfoot_UpdateChallengeGateInteraction;
     lbl_803DB0D0[1] = (int)fn_802B735C;

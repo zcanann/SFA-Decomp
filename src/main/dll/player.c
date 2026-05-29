@@ -7916,7 +7916,7 @@ void fn_802AED2C(int obj, int state, int p3)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B7B0C(int obj, int state, f32 fv)
+int Lightfoot_UpdateRandomTurn(int obj, int state, f32 fv)
 {
     int inner = *(int *)((char *)obj + 0xb8);
     if (*(s8 *)((char *)state + 0x27a) != 0) {
@@ -7937,7 +7937,7 @@ int fn_802B7B0C(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B7BF0(int obj, int state, f32 fv)
+int Lightfoot_UpdateTargetAnimationCycle(int obj, int state, f32 fv)
 {
     int inner = *(int *)((char *)obj + 0xb8);
     int a4 = *(int *)((char *)inner + 0x40c);
@@ -7964,7 +7964,7 @@ int fn_802B7BF0(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B7D28(int obj, int state, f32 fv)
+int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
 {
     EmitCtrlTbl *t = (EmitCtrlTbl *)lbl_80334EE8;
     int inner = *(int *)((char *)obj + 0xb8);
@@ -8092,7 +8092,7 @@ int fn_802B735C(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802B8108(int obj, int state, f32 fv)
+int Lightfoot_UpdateAnimationCycle(int obj, int state, f32 fv)
 {
     int inner = *(int *)((char *)obj + 0xb8);
     void *p = *(void **)((char *)state + 0x2d0);
