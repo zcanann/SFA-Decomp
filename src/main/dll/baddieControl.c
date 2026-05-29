@@ -3939,7 +3939,7 @@ void CameraModeCannon_update(u8 *obj) {
     s16 delta;
 
     vec = objModelGetVecFn_800395d8(*(int *)lbl_803DD5A0, 0);
-    if (*(int *)lbl_803DD5A0 == 0) {
+    if (*(void **)lbl_803DD5A0 == NULL) {
         return;
     }
     yaw = *(s16 *)obj;
