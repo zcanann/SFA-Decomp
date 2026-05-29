@@ -13269,7 +13269,8 @@ typedef struct {
     u16 f8;
 } VoxBoxArg;
 
-extern void voxmapsFn_80010ff4(int a1, VoxBoxArg* a2, int a3, u16 count, s16* box);
+struct RouteState;
+extern void voxmapsFn_80010ff4(struct RouteState *state, VoxBoxArg* a2, int a3, u16 count, s16* box);
 
 /*
  * Function: fn_800118EC
@@ -13285,17 +13286,17 @@ void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
     box[1] = a2->f2;
     box[2] = a2->f4;
     box[0] = a2->f0 + 2;
-    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
     box[0] = box[0] - 4;
     box[1] = a2->f2;
-    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
     box[0] = box[0] + 2;
     box[2] = box[2] + 2;
     box[1] = a2->f2;
-    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
     box[2] = box[2] - 4;
     box[1] = a2->f2;
-    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
 }
 #pragma dont_inline reset
 
@@ -13311,7 +13312,7 @@ typedef struct {
     u8 unkD;
 } RouteNode;
 
-typedef struct {
+typedef struct RouteState {
     RouteNode *nodes;
     CurveHeapNode *queue;
     f32 *unk08;
@@ -13327,7 +13328,265 @@ typedef struct {
     s16 unk20;
     s16 pad22;
     s16 unk24;
+    u8 mode26;
+    u8 pad27;
 } RouteState;
+
+extern f32 lbl_803DE6A0;
+extern char lbl_802C6184[];
+
+static void heapSiftUp(CurveHeapNode *q, int i)
+{
+    int parent;
+    u16 key = q[i].priority;
+    u16 val = q[i].value;
+    q[0].priority = 0xFFFF;
+    while (q[(parent = i >> 1)].priority <= key) {
+        q[i].value = q[parent].value;
+        q[i].priority = q[parent].priority;
+        i = parent;
+    }
+    q[i].priority = key;
+    q[i].value = val;
+}
+
+/*
+ * Function: voxmapsFn_80010ff4
+ * EN v1.0 Address: 0x80010FF4
+ * EN v1.0 Size: 2296b
+ */
+#pragma scheduling off
+void voxmapsFn_80010ff4(struct RouteState *state, VoxBoxArg *a2, int a3, u16 count, s16 *box)
+{
+    VoxState *vs;
+    VoxActiveMap *map;
+    CurveHeapNode *q;
+    RouteNode *n;
+    u8 occ[3][4];
+    u8 *p;
+    int dxh, dyh;
+    int foundIdx, savedFlag, foundSlot;
+    int nodeCount;
+    int key, oldp;
+    int dx, dz;
+    int voxX, voxZ, col, shift, xbit2, xbit2p, zlo, zlo1;
+    int i, slot, y;
+    int blocked, dir, next, chosen, sumCur, sumNext;
+
+    if (box[0] == state->tgtX && box[2] == state->tgtY) {
+        s16 idx = state->unk1C;
+        if (idx == 200) {
+            debugPrintf(sVoxmapsRouteNodesListOverflow);
+        } else {
+            n = &state->nodes[idx];
+            state->unk1C = idx + 1;
+            n->x = box[0];
+            n->unk2 = box[1];
+            n->y = box[2];
+            n->unk8 = count;
+            n->unkA = (u8)a3;
+            dxh = n->x - state->tgtX;
+            dyh = n->y - state->tgtY;
+            n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+        }
+        q = state->queue;
+        state->queueCount++;
+        q[state->queueCount].value = (u16)idx;
+        q[state->queueCount].priority = 0xFFFE;
+        heapSiftUp(q, state->queueCount);
+    }
+
+    vs = &lbl_803387E8;
+    dx = box[0] - vs->originX;
+    dz = box[2] - vs->originY;
+    if ((dx >> 6) != 0 || (dz >> 6) != 0) {
+        voxmaps_updateActiveMap((VoxPos *)box);
+        dx = box[0] - vs->originX;
+        dz = box[2] - vs->originY;
+    }
+    map = vs->activeMap;
+    if (map == NULL) {
+        return;
+    }
+
+    voxX = (dx & 0x3f) >> 2;
+    voxZ = (dz & 0x3f) >> 2;
+    shift = voxX & 7;
+    xbit2 = (dx & 3) << 1;
+    xbit2p = xbit2 + 2;
+    zlo = dz & 3;
+    zlo1 = zlo + 1;
+    col = (voxZ << 1) + (voxX >> 3);
+
+    p = &occ[0][0];
+    for (i = 0; i < 3; i++) {
+        y = box[1] + i - 1;
+        if (y < map->minY) {
+            slot = 0;
+        } else if (y >= map->maxY) {
+            slot = (map->maxY - 1) - map->minY;
+        } else {
+            slot = y - map->minY;
+        }
+        if ((map->bitmap[(slot << 5) | col] >> shift) & 1) {
+            u8 *node = (u8 *)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
+            p[0] = (node[zlo] >> xbit2) & 3;
+            p[1] = (node[zlo] >> xbit2p) & 3;
+            p[2] = (node[zlo1] >> xbit2) & 3;
+            p[3] = (node[zlo1] >> xbit2p) & 3;
+        } else {
+            p[0] = 0;
+            p[1] = 0;
+            p[2] = 0;
+            p[3] = 0;
+        }
+        p += 4;
+    }
+
+    if (state->mode26 != 0) {
+        if ((occ[1][0] & 2) || (occ[1][1] & 2) || (occ[1][2] & 2) || (occ[1][3] & 2)) {
+            blocked = 1;
+        }
+        dir = -1;
+    } else {
+        dir = 1;
+    }
+
+    for (; dir >= 0; dir--) {
+        next = dir + 1;
+        blocked = 0;
+        chosen = dir;
+        if ((occ[dir][0] & 2) || (occ[dir][1] & 2) || (occ[dir][2] & 2) || (occ[dir][3] & 2)) {
+            blocked = 1;
+            dir = 0;
+        } else if ((occ[next][0] & 2) || (occ[next][1] & 2) || (occ[next][2] & 2) || (occ[next][3] & 2)) {
+            blocked = 1;
+            dir = 0;
+        } else {
+            sumCur = occ[dir][0] + occ[dir][1] + occ[dir][2] + occ[dir][3];
+            sumNext = occ[next][0] + occ[next][1] + occ[next][2] + occ[next][3];
+            if (next == 2 && sumNext == 0) {
+                blocked = 1;
+            } else {
+                if (next == 1) {
+                    if (sumCur < sumNext) {
+                        sumCur = sumNext;
+                    } else {
+                        chosen--;
+                    }
+                } else {
+                    if (sumCur <= sumNext) {
+                        sumCur = sumNext;
+                    } else {
+                        chosen--;
+                    }
+                }
+                if (sumCur > 1) {
+                    dir = 0;
+                } else {
+                    blocked = 1;
+                }
+            }
+        }
+    }
+
+    if (blocked != 0) {
+        return;
+    }
+
+    box[1] = (s16)(box[1] + chosen);
+
+    foundIdx = -1;
+    {
+        int kkk = 0;
+        int boff = 0;
+        nodeCount = state->unk1C;
+        for (; nodeCount != 0; nodeCount--) {
+            RouteNode *nn = (RouteNode *)((char *)state->nodes + boff);
+            if (nn->x == box[0] && nn->y == box[2]) {
+                savedFlag = nn->flag;
+                foundIdx = kkk;
+                goto searched;
+            }
+            boff += 14;
+            kkk++;
+        }
+        foundIdx = -1;
+    }
+searched:
+    nodeCount = state->unk1C;
+
+    if (foundIdx >= 0 && savedFlag == 0) {
+        n = &state->nodes[foundIdx];
+        if (count >= n->unk8) {
+            return;
+        }
+        n->unkA = (u8)a3;
+        n->unk8 = count;
+        key = (u16)(n->unk6 + n->unk8);
+        q = state->queue;
+        foundSlot = 0;
+        for (slot = 0; slot <= state->queueCount; slot++) {
+            if ((u16)foundIdx == q[slot].value) {
+                foundSlot = slot;
+                slot = state->queueCount + 1;
+            }
+        }
+        oldp = q[foundSlot].priority;
+        q[foundSlot].priority = key;
+        if (key < oldp) {
+            fn_80010F6C(q, state->queueCount, foundSlot);
+        } else if (key > oldp) {
+            heapSiftUp(q, foundSlot);
+        }
+        return;
+    }
+
+    if (foundIdx >= 0) {
+        return;
+    }
+
+    if (nodeCount == 200) {
+        debugPrintf(sVoxmapsRouteNodesListOverflow);
+        n = NULL;
+    } else {
+        n = &state->nodes[nodeCount];
+        state->unk1C = nodeCount + 1;
+        n->x = box[0];
+        n->unk2 = box[1];
+        n->y = box[2];
+        n->unk8 = count;
+        n->unkA = (u8)a3;
+        dxh = n->x - state->tgtX;
+        dyh = n->y - state->tgtY;
+        n->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+    }
+
+    if (n == NULL) {
+        debugPrintf(lbl_802C6184);
+        return;
+    }
+
+    if (n->unk6 > state->unk24) {
+        key = (u16)(n->unk6 + n->unk8);
+        q = state->queue;
+        state->queueCount++;
+        q[state->queueCount].value = (u16)nodeCount;
+        q[state->queueCount].priority = 0xFFFF - key;
+        heapSiftUp(q, state->queueCount);
+    } else {
+        if (n->unk6 < state->unk24) {
+            state->unk24 = n->unk6;
+        }
+        key = (u16)(n->unk6 + n->unk8);
+        q = state->queue;
+        state->queueCount++;
+        q[state->queueCount].value = (u16)nodeCount;
+        q[state->queueCount].priority = 0xFFFF - key;
+        heapSiftUp(q, state->queueCount);
+    }
+}
+#pragma scheduling reset
 
 /*
  * Function: voxmaps_processRouteQueue
