@@ -783,6 +783,12 @@ extern void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
 extern f32 lbl_803DE570;
 extern f32 lbl_803DE574;
 extern f32 lbl_803DE578;
+extern f32 lbl_803DE598;
+extern f32 lbl_803DE59C;
+extern f32 lbl_803DE5A0;
+extern f32 lbl_803DE5A4;
+extern f32 lbl_803DE5A8;
+extern void *Camera_GetCurrentViewSlot(void);
 extern void Matrix_TransformVector(f32 *matrix, f32 *in, f32 *out);
 extern void Matrix_TransformPoint(f32 *matrix, f64 x, f64 y, f64 z, f32 *outX, f32 *outY, f32 *outZ);
 extern void setMatrixFromObjectPos(f32 *matrix, void *obj);
@@ -2625,6 +2631,7 @@ extern f32 sin(f32 x);
 extern f32 lbl_803DE5AC;
 extern f32 lbl_803DE5B0;
 
+#pragma dont_inline on
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v)
 {
     f32 x = v[0];
@@ -2648,6 +2655,7 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v)
     v[1] = B * sc + A * cc;
     v[2] = C;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -7781,6 +7789,95 @@ void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume)
 #pragma dont_inline reset
 
 extern int Sfx_ResolveObjectSfxId(int *outChannel, u16 *sfxId);
+
+/*
+ * Function: Sfx_UpdateObjectChannel3D
+ * EN v1.0 Address: 0x8000C6C0
+ * EN v1.0 Size: 748b
+ */
+void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
+{
+    void *slot;
+    f32 volf;
+    int baseVol;
+    f32 near;
+    f32 far;
+    f32 dist;
+    f32 delta[3];
+
+    slot = Camera_GetCurrentViewSlot();
+    if (slot == NULL) {
+        return;
+    }
+    if (objectChannel == NULL) {
+        return;
+    }
+    if (!objectChannel->hasPosition) {
+        return;
+    }
+    volf = (f32)(u32)objectChannel->volume;
+    baseVol = (int)volf;
+    near = *(f32 *)((u8 *)objectChannel + 0x20);
+    far = *(f32 *)((u8 *)objectChannel + 0x24);
+    dist = Sfx_GetListenerRelativeDistance(&objectChannel->x, delta);
+    if (dist > lbl_803DE598 * far) {
+        sndFXKeyOff(objectChannel->handle);
+        objectChannel->handle = (u32)-1;
+        return;
+    }
+    Sfx_RotateVectorByAngles(0, 0, -*(s16 *)((u8 *)slot + 0x54), delta);
+    Sfx_RotateVectorByAngles(*(s16 *)slot, 0, 0, delta);
+    Sfx_RotateVectorByAngles(0, -*(s16 *)((u8 *)slot + 0x52), 0, delta);
+    if (dist > lbl_803DE59C) {
+        int level;
+        f32 scale;
+        int pan;
+        int fx;
+
+        if (dist < near) {
+            level = (int)volf;
+        } else if (dist > far) {
+            level = 1;
+        } else {
+            level = (int)(volf * (lbl_803DE574 - (dist - near) / (far - near)));
+            if (level < 1) {
+                level = 1;
+            } else if ((f32)level > volf) {
+                level = (int)volf;
+            }
+        }
+        scale = lbl_803DE5A0 / dist;
+        delta[0] = delta[0] * scale;
+        delta[1] = delta[1] * scale;
+        delta[2] = delta[2] * scale;
+        pan = (int)(lbl_803DE5A8 * delta[0] + lbl_803DE5A4);
+        if (pan > 0x7f) {
+            pan = 0x7f;
+        } else if (pan < 0) {
+            pan = 0;
+        }
+        fx = (int)(lbl_803DE5A8 * delta[2] + lbl_803DE5A4);
+        if (fx > 0x7f) {
+            fx = 0x7f;
+        } else if (fx < 0) {
+            fx = 0;
+        }
+        sndFXCtrl(objectChannel->handle, 0xa, (u8)pan);
+        sndFXCtrl(objectChannel->handle, 0x83, (u8)fx);
+        if (objectChannel->paused) {
+            level = 0;
+        }
+        sndFXCtrl(objectChannel->handle, 7, (u8)level);
+    } else {
+        int v;
+        if (objectChannel->paused) {
+            v = 0;
+        } else {
+            v = baseVol;
+        }
+        sndFXCtrl(objectChannel->handle, 7, (u8)v);
+    }
+}
 
 /*
  * Function: Sfx_PlayFromObjectEx
