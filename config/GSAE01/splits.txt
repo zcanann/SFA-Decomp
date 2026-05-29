@@ -76,8 +76,11 @@ main/unknown/autos/placeholder_80080E58.c:
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 	.text       start:0x80094494 end:0x800944A0
 
+main/dll/cloudaction.c:
+	.text       start:0x800944A0 end:0x80094F7C
+
 main/unknown/autos/placeholder_800944A0.c:
-	.text       start:0x800944A0 end:0x8009B0E0
+	.text       start:0x80094F7C end:0x8009B0E0
 
 main/dll/expgfx.c:
 	.text       start:0x8009B0E0 end:0x8009FED0
