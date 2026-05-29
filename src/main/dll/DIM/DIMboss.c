@@ -136,6 +136,18 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMbossRuntime *runtime,
                                    int param_4,int param_5,int param_6,int param_7,float scale);
+typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject *obj,DIMbossRuntime *runtime,f32 x,f32 y,
+                                        void *hitDetectAnimTable,void *animTable);
+
+typedef struct DIMbossBaddieControlInterface {
+  u8 pad00[0x2C];
+  void (*applyHitReact)(DIMbossObject *obj,DIMbossRuntime *runtime,f32 amount);
+  int (*updateState)(DIMbossObject *obj,DIMbossRuntime *runtime,int flags);
+  int (*updateHitDetect)(DIMbossObject *obj,ObjAnimUpdateState *animUpdate,
+                         DIMbossRuntime *runtime,void *hitDetectAnimTable,void *animTable,
+                         int flags);
+} DIMbossBaddieControlInterface;
+
 typedef struct DIMbossMapEventInterface {
   u8 pad00[0x40];
   u8 (*getAreaState)(int areaId);
@@ -144,7 +156,22 @@ typedef struct DIMbossMapEventInterface {
   void (*triggerArea)(int mapDir,int areaId,int enabled);
 } DIMbossMapEventInterface;
 
+typedef struct DIMbossObjectTriggerInterface {
+  u8 pad00[0x50];
+  void (*spawnObject)(int objectType,int spawnMode,DIMbossObject *parent,int timer);
+  u8 pad54[0x58 - 0x54];
+  void (*triggerEvent)(ObjAnimUpdateState *animUpdate,int eventId);
+} DIMbossObjectTriggerInterface;
+
 extern DIMbossMapEventInterface **gMapEventInterface;
+
+static inline DIMbossBaddieControlInterface *DIMboss_GetBaddieControlInterface(void) {
+  return (DIMbossBaddieControlInterface *)*gBaddieControlInterface;
+}
+
+static inline DIMbossObjectTriggerInterface *DIMboss_GetObjectTriggerInterface(void) {
+  return (DIMbossObjectTriggerInterface *)*gObjectTriggerInterface;
+}
 
 /*
  * --INFO--
@@ -173,9 +200,6 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
   int iVar4;
   undefined4 mapDirIndex;
   uint statusFlags;
-  undefined4 *puVar7;
-  undefined4 *puVar8;
-  undefined4 *puVar9;
   int eventIndex;
   int baddieResult;
   
@@ -191,9 +215,6 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
     return 0;
   }
 
-  puVar7 = (undefined4 *)(animScratchBase + DIMBOSS_ANIM_CONTROLLER_OFFSET);
-  puVar8 = (undefined4 *)0x1;
-  puVar9 = (undefined4 *)0x1;
   dll_2E_func07(obj,animUpdate,
                 (float *)(animScratchBase + DIMBOSS_ANIM_CONTROLLER_OFFSET),1,1);
   for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
@@ -208,9 +229,6 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
       (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
       (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
-      puVar7 = (undefined4 *)0x0;
-      puVar8 = (undefined4 *)0x64;
-      puVar9 = (undefined4 *)0x0;
       (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
       iVar4 = Obj_GetActiveModel((int)obj);
       ObjModel_ClearRenderAttachment(iVar4);
@@ -268,7 +286,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP,0);
       break;
     case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
-      (*(code *)(*gObjectTriggerInterface + 0x50))(DIMBOSS_OBJECT_TYPE_ID,4,obj,0x3c);
+      DIMboss_GetObjectTriggerInterface()->spawnObject(DIMBOSS_OBJECT_TYPE_ID,4,obj,0x3c);
       break;
     case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
       OSReport(sDIMBossFreeingAssetsForDIMBoss);
@@ -333,9 +351,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
     }
   }
   if (obj->animStateId != -1) {
-    puVar7 = (undefined4 *)0x1;
-    puVar8 = (undefined4 *)*gBaddieControlInterface;
-    baddieResult = (*(code *)puVar8[0xc])(obj,runtime);
+    baddieResult = DIMboss_GetBaddieControlInterface()->updateState(obj,runtime,1);
     if (baddieResult == 0) {
       updateResult = 1;
       goto LAB_801bd7dc;
@@ -345,8 +361,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
     }
     if ((runtime->eventGameBit != -1) &&
         (statusFlags = GameBit_Get((int)runtime->eventGameBit), statusFlags != 0)) {
-      puVar7 = (undefined4 *)*gObjectTriggerInterface;
-      (*(code *)puVar7[0x16])(animUpdate,(int)config->eventId);
+      DIMboss_GetObjectTriggerInterface()->triggerEvent(animUpdate,(int)config->eventId);
       runtime->eventGameBit = -1;
     }
     hitReactMode = runtime->hitReactMode;
@@ -356,22 +371,18 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
                          animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
                          animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET,0);
       if (baddieResult != 0) {
-        puVar7 = (undefined4 *)0x1;
-        puVar8 = (undefined4 *)*gBaddieControlInterface;
-        (*(code *)puVar8[0xb])((double)lbl_803E4C70,obj,runtime);
+        DIMboss_GetBaddieControlInterface()->applyHitReact(obj,runtime,lbl_803E4C70);
       }
     }
     else if ((hitReactMode != 0) && (hitReactMode < 3)) {
       animUpdate->hitVolumePair = 0;
-      puVar7 = (undefined4 *)runtime;
-      puVar8 = (undefined4 *)runtime;
       fn_801BC7E4(obj,animUpdate,(int)runtime,(int)runtime);
       if (runtime->hitReactMode == 1) {
-        *(undefined2 *)((undefined4 *)runtime + 0x9c) = 0;
-        puVar7 = (undefined4 *)(animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET);
-        puVar8 = (undefined4 *)(animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
-        puVar9 = (undefined4 *)*(int *)gPlayerInterface;
-        (*(code *)puVar9[2])(obj,runtime,lbl_803E4C44,lbl_803E4C44,puVar7,puVar8);
+        runtime->field270 = 0;
+        ((DIMbossPlayerHitReactFn)(*(code **)(*(int *)gPlayerInterface + 8)))
+            (obj,runtime,lbl_803E4C44,lbl_803E4C44,
+             animScratchBase + DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET,
+             animScratchBase + DIMBOSS_ANIM_TABLE_OFFSET);
         animUpdate->sequenceEventActive = 0;
       }
     }
