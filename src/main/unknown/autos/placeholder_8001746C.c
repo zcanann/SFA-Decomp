@@ -7799,10 +7799,10 @@ void mm_free(void *p) {
 #pragma dont_inline reset
 
 void *getTablesBinEntry(int i) {
-    if (i >= 0 && i < lbl_803DCBAC) {
-        return lbl_803DCBB4 + lbl_803DCBB0[i] * 4;
+    if (i < 0 || i >= lbl_803DCBAC) {
+        return lbl_803DCBB4;
     }
-    return lbl_803DCBB4;
+    return lbl_803DCBB4 + lbl_803DCBB0[i] * 4;
 }
 
 void fn_8002CE14(u8 *obj) {
