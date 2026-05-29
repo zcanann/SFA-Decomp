@@ -10694,6 +10694,34 @@ extern char sMidiWadLoadedCallbackLoadError[];
 extern void gameTextRenderStrs(char* str, int arg2);
 
 /*
+ * Function: gameTextShowStr
+ * EN v1.0 Address: 0x8000F6E8
+ * EN v1.0 Size: 188b
+ */
+void gameTextShowStr(char *text, int box, int arg2, int arg3)
+{
+    int i;
+    int *e;
+    char *buf;
+    if (gameTextDrawFunc != NULL) {
+        u8 *slot = &lbl_802C7400[box * 0x20];
+        *(s16 *)(slot + 0x18) = (s16)arg2;
+        *(s16 *)(slot + 0x1a) = (s16)arg3;
+        gameTextRenderStrs(text, box);
+    } else {
+        i = lbl_803DC9C8++;
+        e = (int *)&lbl_8033A540[i * 0x14];
+        e[0] = 7;
+        buf = lbl_803DC9C4;
+        lbl_803DC9C4 = gameStrcpy(buf, text) + 1;
+        e[1] = (int)buf;
+        e[2] = box;
+        e[3] = arg2;
+        e[4] = arg3;
+    }
+}
+
+/*
  * Function: audioSetVolumes
  * EN v1.0 Address: 0x80009A28
  * EN v1.0 Size: 108b
