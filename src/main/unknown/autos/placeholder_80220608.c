@@ -2601,7 +2601,49 @@ void suntemple_hitDetect(int obj)
     }
 }
 #pragma peephole on
-void suntemple_interactCallback(int obj, int p2, int p3);
+int suntemple_interactCallback(int obj, int p2, int p3);
+
+extern f32 lbl_802C25D8[];
+extern int getCurMapLayer(void);
+
+typedef struct { f32 x, y, z; } SunVec3;
+
+#pragma peephole off
+#pragma scheduling off
+int suntemple_interactCallback(int obj, int p2, int p3)
+{
+    int setup = *(int *)(obj + 0x4c);
+    int i;
+    SunVec3 vec = *(SunVec3 *)lbl_802C25D8;
+
+    *(u8 *)(obj + 0xaf) |= 0x8;
+    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+        switch (*(u8 *)(p3 + 0x81 + i)) {
+        default:
+            if (*(u8 *)(setup + 0x1b) & 0x4) {
+                int *tex;
+                GameBit_Set(*(s16 *)(setup + 0x1c), 1);
+                tex = (int *)objFindTexture(obj, 0, 0);
+                if (tex != NULL)
+                    *tex = 0x100;
+            }
+            break;
+        case 2:
+            if (*(s16 *)(setup + 0x24) != 0)
+                (*(void (**)(int))(*gObjectTriggerInterface + 0x58))(p3);
+            break;
+        case 3:
+            if ((s8)*(u8 *)(obj + 0xad) == 1)
+                (*(void (**)(void *, int, int, int))(*gMapEventInterface + 0x24))(
+                    &vec, -0x4000, getCurMapLayer(), 0);
+            break;
+        }
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole off
 #pragma scheduling off
 void suntemple_init(u8 *obj, u8 *setup)
