@@ -5579,6 +5579,7 @@ void arwingandrossstuff_init(int obj, u8 *setup)
 
 int arwlevelcon_ringEventCallback(int obj, int p2, int data);
 
+#pragma scheduling off
 void arwlevelcon_init(int obj, u8 *setup)
 {
     int state = *(int *)(obj + 0xb8);
@@ -5598,9 +5599,9 @@ void arwlevelcon_init(int obj, u8 *setup)
         GameBit_Set(0x9d8, 0);
         GameBit_Set(0x9d7, 0);
         GameBit_Set(0xe74, 0);
-        arwingHudSetVisible(2);
-        pauseMenuCreateHeads();
     }
+    arwingHudSetVisible(2);
+    pauseMenuCreateHeads();
     switch (*(s8 *)(obj + 0xac)) {
     case 0x3a:
         *(int *)(state + 0x1c) = 0x51bc;
@@ -5618,13 +5619,13 @@ void arwlevelcon_init(int obj, u8 *setup)
         *(int *)(state + 0x1c) = 0x51be;
         *(s16 *)(state + 0x20) = 0x6e1;
         break;
-    case 0x3e:
     default:
         *(int *)(state + 0x1c) = 0x51c0;
         *(s16 *)(state + 0x20) = 0x6e0;
         break;
     }
 }
+#pragma scheduling reset
 
 int arwlevelcon_ringEventCallback(int obj, int p2, int data)
 {
