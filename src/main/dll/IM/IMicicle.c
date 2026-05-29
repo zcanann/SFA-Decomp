@@ -1631,16 +1631,21 @@ void attractor_func0B(u8* obj, void** out) {
 #pragma scheduling off
 #pragma peephole off
 void slidingdoor_init(u8* obj, u8* data) {
+    typedef struct SlidingDoorSubFlags {
+        u8 doorState : 3;
+        u8 rest : 5;
+    } SlidingDoorSubFlags;
     u8* sub;
     f32 v;
-    *(u32*)(obj + 0xf4) = 0;
+    u32 doorState = 0;
+    *(u32*)(obj + 0xf4) = doorState;
     *(s16*)obj = (s16)(data[0x1f] << 8);
     *(int(**)(u8*, int, u8*))(obj + 0xbc) = fn_801A3E9C;
     v = (f32)(u32)data[0x21] * lbl_803E43C0;
     *(f32*)(obj + 0x8) = v;
     *(f32*)(obj + 0x8) = *(f32*)(obj + 0x8) * *(f32*)((char*)(*(u8**)(obj + 0x50)) + 4);
     sub = *(u8**)(obj + 0xb8);
-    sub[0] &= 0x1f;
+    ((SlidingDoorSubFlags *)sub)->doorState = doorState;
 }
 #pragma peephole reset
 #pragma scheduling reset
