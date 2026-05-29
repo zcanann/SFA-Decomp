@@ -1426,17 +1426,19 @@ void exploded_update(int *obj) {
         break;
     }
     if (state[0x5c/4] != -1) {
-        s32 newVal = state[0x58/4] + framesThisStep;
-        state[0x58/4] = newVal;
-        if (newVal >= state[0x5c/4]) {
+        s32 elapsedFrames = state[0x58/4] + framesThisStep;
+        s32 durationFrames;
+        state[0x58/4] = elapsedFrames;
+        durationFrames = state[0x5c/4];
+        if (elapsedFrames >= durationFrames) {
             state[0x5c/4] = -1;
             *((u8*)o + 0x36) = 0;
             *(s16*)((char*)o + 0x6) = (s16)(*(s16*)((char*)o + 0x6) | 0x4000);
             flag = 1;
         } else {
-            s32 diff = state[0x5c/4] - newVal;
-            if (diff < 0xff) {
-                *((u8*)o + 0x36) = (u8)diff;
+            s32 remainingFrames = durationFrames - state[0x58/4];
+            if (remainingFrames < 0xff) {
+                *((u8*)o + 0x36) = (u8)remainingFrames;
             }
             flag = 0;
         }
