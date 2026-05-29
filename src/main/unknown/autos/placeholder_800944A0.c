@@ -261,5 +261,79 @@ void fn_80096F9C(f32 *pos, u8 a, u8 b, u8 c, u8 d) {
     args[3] = d;
     (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*(int *)res + 4)))(0, 1, &s1, 0x401, -1, args);
 }
+
+typedef struct {
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 pad6;
+    s16 u;
+    s16 v;
+    u8 padc[3];
+    u8 a;
+} WaterVtx;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+    f32 f10;
+    s16 active;
+    s16 f16;
+    u8 f18;
+    u8 pad19[3];
+} WaterEntry;
+
+void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d) {
+    int i = 0;
+    WaterEntry *p = lbl_803DD228;
+    WaterVtx *q;
+    WaterEntry *entry;
+    int j;
+    while (i < 0x1e && p->active != 0) {
+        p++;
+        i++;
+    }
+    if (i >= 0x1e) {
+        return;
+    }
+    j = i * 4;
+    q = &((WaterVtx *)lbl_803DD244)[j];
+    q[0].x = -200;
+    q[0].y = 0;
+    q[0].z = 400;
+    q[0].a = 0xff;
+    q[0].u = 0;
+    q[0].v = 0;
+    q[1].x = -200;
+    q[1].y = 0;
+    q[1].z = -200;
+    q[1].a = 0xff;
+    q[1].u = 0;
+    q[1].v = 0x80;
+    q[2].x = 200;
+    q[2].y = 0;
+    q[2].z = -200;
+    q[2].a = 0xff;
+    q[2].u = 0x80;
+    q[2].v = 0x80;
+    q[3].x = 200;
+    q[3].y = 0;
+    q[3].z = 400;
+    q[3].a = 0xff;
+    q[3].u = 0x80;
+    q[3].v = 0;
+    entry = (WaterEntry *)lbl_803DD228 + i;
+    entry->x = a;
+    entry->y = b;
+    entry->z = c;
+    entry->w = d;
+    entry->f10 = lbl_803DF318;
+    entry->active = 0xff;
+    entry->f16 = p1;
+    entry->f18 = 0;
+    lbl_803DD22C = (void *)((int)lbl_803DD22C + 1);
+}
 #pragma peephole reset
 #pragma scheduling reset
