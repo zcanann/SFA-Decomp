@@ -13120,6 +13120,158 @@ int voxmaps_updateRoutePath(RouteNav *nav, RouteState *state) {
     return ret;
 }
 
+int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
+    VoxPos cur = *(VoxPos *)dest;
+    VoxPos found;
+    VoxState *st;
+    VoxActiveMap *map;
+    u8 *node;
+    u8 buf[12];
+    int sumA, sumB;
+    int adj, blocked;
+    int i, next;
+    int row;
+    int slot;
+    int z6lo, z6hi, bitmapCol;
+    int voxXand7, shiftLo, shiftHi;
+    int voxX6, voxZ6, voxX, voxZ;
+    int err, steps;
+    int dx2, dy2;
+    int xstep, ystep;
+    int dx, dy;
+
+    xstep = 2;
+    dx = ((VoxPos *)start)->x - cur.x;
+    if (dx < 0) { xstep = -2; dx = -dx; }
+    ystep = 2;
+    dy = ((VoxPos *)start)->z - cur.z;
+    if (dy < 0) { ystep = -2; dy = -dy; }
+
+    dx2 = dx & ~1;
+    dy2 = dy & ~1;
+    err = (dy >> 1) - (dx >> 1);
+    steps = (dx >> 1) + (dy >> 1);
+
+    voxmaps_updateActiveMap(&cur);
+
+    st = &lbl_803387E8;
+    voxX6 = (cur.x - st->originX) & 0x3f;
+    voxX = voxX6 >> 2;
+    voxZ6 = (cur.z - st->originY) & 0x3f;
+    voxZ = voxZ6 >> 2;
+    voxXand7 = voxX & 7;
+    shiftLo = (voxX6 & 3) << 1;
+    shiftHi = shiftLo + 2;
+    found = cur;
+
+    while (steps-- != 0) {
+        map = st->activeMap;
+        if (map != NULL) {
+            z6lo = voxZ6 & 3;
+            z6hi = z6lo + 1;
+            bitmapCol = (voxZ << 1) + (voxX >> 3);
+            for (row = 0; row < 3; row++) {
+                int y = row + cur.unk2 - 1;
+                if (y < map->minY) {
+                    slot = 0;
+                } else if (y >= map->maxY) {
+                    slot = (map->maxY - 1) - map->minY;
+                } else {
+                    slot = y - map->minY;
+                }
+                if ((map->bitmap[(slot << 5) | bitmapCol] >> voxXand7) & 1) {
+                    node = (u8 *)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
+                    buf[row * 4 + 0] = (node[z6lo] >> shiftLo) & 3;
+                    buf[row * 4 + 1] = (node[z6lo] >> shiftHi) & 3;
+                    buf[row * 4 + 2] = (node[z6hi] >> shiftLo) & 3;
+                    buf[row * 4 + 3] = (node[z6hi] >> shiftHi) & 3;
+                } else {
+                    buf[row * 4 + 0] = 0;
+                    buf[row * 4 + 1] = 0;
+                    buf[row * 4 + 2] = 0;
+                    buf[row * 4 + 3] = 0;
+                }
+            }
+
+            i = 1;
+            while (i >= 0) {
+                next = i + 1;
+                blocked = 0;
+                adj = i;
+                if ((buf[i * 4] & 2) || (buf[i * 4 + 1] & 2) || (buf[i * 4 + 2] & 2) || (buf[i * 4 + 3] & 2)) {
+                    blocked = 1;
+                }
+                if (!blocked) {
+                    if ((buf[next * 4] & 2) || (buf[next * 4 + 1] & 2) || (buf[next * 4 + 2] & 2) || (buf[next * 4 + 3] & 2)) {
+                        blocked = 1;
+                    }
+                }
+                if (!blocked) {
+                    sumA = buf[i * 4];
+                    sumB = buf[next * 4];
+                    sumA += buf[i * 4 + 1];
+                    sumB += buf[next * 4 + 1];
+                    sumA += buf[i * 4 + 2];
+                    sumB += buf[next * 4 + 2];
+                    sumA += buf[i * 4 + 3];
+                    sumB += buf[next * 4 + 3];
+                    if (next == 2 && sumB == 0) {
+                        blocked = 1;
+                    } else {
+                        if (next == 1) {
+                            if (sumA >= sumB) adj--; else sumA = sumB;
+                        } else {
+                            if (sumA > sumB) adj--; else sumA = sumB;
+                        }
+                        if (sumA <= 1) {
+                            blocked = 1;
+                        } else {
+                            i = 0;
+                        }
+                    }
+                }
+                i--;
+            }
+
+            if (blocked) {
+                if (out != NULL) {
+                    *(VoxPos *)out = found;
+                }
+                return 0;
+            }
+            found.unk2 = cur.unk2 = (s16)(cur.unk2 + adj);
+        }
+
+        if (err < 0) {
+            found.x = cur.x;
+            cur.x = (s16)(cur.x + xstep);
+            err += dy2;
+            if (((cur.x - st->originX) >> 6) != 0) {
+                voxmaps_updateActiveMap(&cur);
+            }
+            voxX6 = (cur.x - st->originY) & 0x3f;
+            voxX = voxX6 >> 2;
+            voxXand7 = voxX & 7;
+            shiftLo = (voxX6 & 3) << 1;
+            shiftHi = shiftLo + 2;
+        } else {
+            found.z = cur.z;
+            cur.z = (s16)(cur.z + ystep);
+            err -= dx2;
+            if (((cur.z - st->originY) >> 6) != 0) {
+                voxmaps_updateActiveMap(&cur);
+            }
+            voxZ6 = (cur.z - st->originY) & 0x3f;
+            voxZ = voxZ6 >> 2;
+        }
+    }
+
+    if (out != NULL) {
+        *(VoxPos *)out = *(VoxPos *)start;
+    }
+    return 1;
+}
+
 typedef struct {
     u16 id;
     u8 pad[0xa];
