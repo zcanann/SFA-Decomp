@@ -452,6 +452,16 @@ Heuristic before reaching for `asm { }`:
     such fns just CAP at ~66-70%; commit the for-loop partial and move on.
     (november12, skyFn_80088c94/skyFn_80089710.)
 
+## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
+
+A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
+`subfe` long-long arithmetic, and unrolled rounding-division/reciprocal loops
+(often 10×-then-7× `rlwimi` rotate sequences) is **compiler-emitted s64/fixed-
+point math** — the exact unrolled sequence is near-impossible to reproduce from
+clean C and asm-forcing it violates the Prime Directive. Treat these as a
+TAR-PIT cap: deprioritize, don't grind, don't burn a session on one. (mike13,
+fn_80007F78 ~2212B on 800066E0.) Spend the budget on tractable handlers instead.
+
 ## Last-resort: inline `asm { }` blocks with `register` variables
 
 **Read the Prime Directive at the top of this file first.** Use this only when
