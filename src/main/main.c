@@ -702,8 +702,8 @@ void fn_801FE16C(int obj)
           hbuf[1] = 0;
           hbuf[0] = *(s16 *)msgArg;
           mathFn_80021ac8(buf, obj + 0x24);
-          break;
         }
+        /* fallthrough */
         case 16:
           ObjGroup_AddObject(obj, 36);
           /* fallthrough */
