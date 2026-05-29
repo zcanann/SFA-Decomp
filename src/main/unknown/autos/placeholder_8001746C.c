@@ -9682,6 +9682,38 @@ void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag) 
 
 extern void Vec_normalize(f32 *dst, f32 *src);
 extern f32 *Camera_GetViewMatrix(void);
+extern void mtxRotateByVec3s(f32 *mtx, void *transform);
+extern void mtx44Transpose(f32 *src, f32 *dst);
+
+void fn_8002B2AC(f32 *out, u8 *transform, f32 *in) {
+    f32 rotated[3];
+    struct {
+        s16 rotX;
+        s16 rotY;
+        s16 rotZ;
+        s16 pad;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } inverse;
+    f32 rotMtx[16];
+    f32 transposed[16];
+
+    inverse.x = -*(f32 *)(transform + 0xc);
+    inverse.y = -*(f32 *)(transform + 0x10);
+    inverse.z = -*(f32 *)(transform + 0x14);
+    inverse.rotX = -*(s16 *)(transform + 0);
+    inverse.rotY = -*(s16 *)(transform + 2);
+    inverse.rotZ = -*(s16 *)(transform + 4);
+    inverse.scale = lbl_803DE890;
+    mtxRotateByVec3s(rotMtx, &inverse);
+    mtx44Transpose(rotMtx, transposed);
+    PSMTXMultVec(transposed, in, rotated);
+    *(u32 *)(out + 0) = *(u32 *)(rotated + 0);
+    *(u32 *)(out + 1) = *(u32 *)(rotated + 1);
+    *(u32 *)(out + 2) = *(u32 *)(rotated + 2);
+}
 
 void modelStruct2_setVectors(u8 *s, f32 x, f32 y, f32 z) {
     f32 *view;
