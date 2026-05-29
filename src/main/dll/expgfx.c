@@ -1386,8 +1386,8 @@ void expgfx_free(u32 sourceId)
   u8 *expgfxBase;
   ExpgfxRuntimeDataLayout *runtime;
   ExpgfxSlot *slot;
-  u32 *poolSourceIds;
   u32 *slotPoolBases;
+  u32 *poolSourceIds;
   s8 *poolActiveCounts;
   s16 *poolSlotTypeIds;
   u8 *poolFrameFlags;
@@ -1401,15 +1401,16 @@ void expgfx_free(u32 sourceId)
     return;
   }
 
-  poolSourceIds = runtime->poolSourceIds;
+  poolIndex = 0;
   slotPoolBases = runtime->slotPoolBases;
+  poolSourceIds = runtime->poolSourceIds;
   poolActiveCounts = runtime->poolActiveCounts;
   poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
   poolFrameFlags = gExpgfxStaticPoolFrameFlags;
 
-  for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
+  while (poolIndex < EXPGFX_POOL_COUNT) {
+    slot = (ExpgfxSlot *)*slotPoolBases;
     if (*poolSourceIds == sourceId) {
-      slot = (ExpgfxSlot *)*slotPoolBases;
       for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
         if (slot != NULL) {
           tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
@@ -1431,6 +1432,7 @@ void expgfx_free(u32 sourceId)
     poolActiveCounts++;
     poolSlotTypeIds++;
     poolFrameFlags++;
+    poolIndex++;
   }
 }
 #pragma peephole reset
