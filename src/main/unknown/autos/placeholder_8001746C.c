@@ -8655,9 +8655,9 @@ extern f32 timeDelta;
 typedef struct {
     u8 active;
     u8 _1[3];
-    int f4;
-    int f8;
-    int fc;
+    int lightMask;
+    int mode;
+    int matSrc;
 } Elem8033BE60;
 extern Elem8033BE60 lbl_8033BE60[];
 
@@ -8745,13 +8745,13 @@ void *Obj_GetPlayerObject(void) {
 }
 
 void fn_8001E608(int i, int a, int b) {
-    lbl_8033BE60[i].f8 = a;
-    lbl_8033BE60[i].f4 = 0;
-    lbl_8033BE60[i].fc = b;
+    lbl_8033BE60[i].mode = a;
+    lbl_8033BE60[i].lightMask = 0;
+    lbl_8033BE60[i].matSrc = b;
     lbl_8033BE60[i].active = 1;
 }
 
-#pragma peephole on
+#pragma peephole off
 void fn_8001E8F4(u8 v) {
     lbl_803DCA31 = v;
     lbl_803DCA34 = 1;
@@ -9357,6 +9357,9 @@ extern void modelStruct2LightFn_8001e178(u8 *light, u8 *obj, int lightId);
 extern void GXInitSpecularDir(u8 *lt_obj, f32 x, f32 y, f32 z);
 extern void GXInitLightColor(u8 *lt_obj, void *color);
 extern void GXLoadLightObjImm(u8 *lt_obj, int lightId);
+extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int lightMask, int diffFn,
+                          int attnFn);
+extern void GXSetNumChans(int numChannels);
 
 void modelStruct2_setLights(int channel, u8 *light, u8 *obj) {
     f32 viewDir[3];
@@ -9368,7 +9371,7 @@ void modelStruct2_setLights(int channel, u8 *light, u8 *obj) {
     int lightType;
 
     offset = channel * 0x10;
-    if (lbl_8033BE60[channel].f8 == 0 || lbl_8033BE60[channel].f8 == 2) {
+    if (lbl_8033BE60[channel].mode == 0 || lbl_8033BE60[channel].mode == 2) {
         modelStruct2LightFn_8001e178(light, obj, lbl_803DCA34);
     } else {
         lightId = lbl_803DCA34;
@@ -9398,8 +9401,74 @@ void modelStruct2_setLights(int channel, u8 *light, u8 *obj) {
         GXInitLightColor(light + 0xc0, &color);
         GXLoadLightObjImm(light + 0xc0, lightId);
     }
-    lbl_8033BE60[channel].f4 |= lbl_803DCA34;
+    lbl_8033BE60[channel].lightMask |= lbl_803DCA34;
     lbl_803DCA34 <<= 1;
+}
+
+void gxColorFn_8001e634(void) {
+    int activeMask;
+    int lightMask;
+    int channel;
+    int attnFn;
+    Elem8033BE60 *entry;
+
+    activeMask = 0;
+    channel = 0;
+    entry = lbl_8033BE60;
+    do {
+        if (entry->active != 0) {
+            if (entry->mode == 0) {
+                lightMask = entry->lightMask;
+                if (lightMask != 0) {
+                    attnFn = 1;
+                } else {
+                    attnFn = 2;
+                }
+                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, lightMask != 0 ? 2 : 0,
+                              attnFn);
+            } else if (entry->mode == 2) {
+                lightMask = entry->lightMask;
+                attnFn = lightMask != 0 ? 1 : 2;
+                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
+            } else {
+                lightMask = entry->lightMask;
+                attnFn = lightMask != 0 ? 0 : 2;
+                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
+            }
+            activeMask = (activeMask | (1 << channel)) & 0xff;
+        }
+        entry++;
+        channel++;
+    } while (channel <= 5);
+
+    activeMask &= 0xff;
+
+    if ((activeMask & 1) != 0) {
+        if ((activeMask & 4) == 0) {
+            GXSetChanCtrl(2, 0, 0, 0, 0, 0, 2);
+        }
+    } else if ((activeMask & 4) != 0) {
+        GXSetChanCtrl(0, 0, 0, 0, 0, 0, 2);
+    }
+
+    if ((activeMask & 2) != 0) {
+        if ((activeMask & 8) == 0) {
+            GXSetChanCtrl(3, 0, 0, 0, 0, 0, 2);
+        }
+    } else if ((activeMask & 8) != 0) {
+        GXSetChanCtrl(1, 0, 0, 0, 0, 0, 2);
+    }
+
+    if ((activeMask & 0x2a) != 0) {
+        GXSetNumChans(2);
+    } else if ((activeMask & 0x15) != 0) {
+        GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+        GXSetNumChans(1);
+    } else {
+        GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+        GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+        GXSetNumChans(0);
+    }
 }
 
 extern int *lbl_803DCB60;
