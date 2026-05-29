@@ -778,7 +778,7 @@ extern s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 extern void Sfx_StopFromObject(u32 obj, u32 sfxId);
 extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
-extern void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u32 sfxId);
+extern void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
 extern void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
 extern f32 lbl_803DE570;
 extern f32 lbl_803DE574;
@@ -2496,6 +2496,7 @@ extern void *gSfxTriggersData;
 extern int gSfxTriggersCount;
 extern SfxTriggerCacheEntry lbl_802C5D78[];
 
+#pragma dont_inline on
 SfxTrigger *Sfx_FindTrigger(u16 id)
 {
     SfxTrigger *low = (SfxTrigger *)gSfxTriggersData;
@@ -2519,6 +2520,7 @@ SfxTrigger *Sfx_FindTrigger(u16 id)
     }
     return NULL;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2542,7 +2544,7 @@ extern f32 lbl_803DE590;
 extern u8 lbl_803DE593;
 
 #pragma peephole on
-SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, int c, int d)
+SfxObjectChannel *Sfx_AllocObjectChannel(s16 a, int b, f32 pitch, int c, int d)
 {
     SfxObjectChannel *ch;
     s32 i;
@@ -2674,6 +2676,7 @@ extern f32 lbl_803DE5B8;
 extern double lbl_803DE5C0;
 extern double lbl_803DE5C8;
 
+#pragma dont_inline on
 f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
 {
     f32 v[3];
@@ -2705,6 +2708,7 @@ f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
     PSVECSubtract(listener, soundPos, outDelta);
     return PSVECMag(outDelta);
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -7775,6 +7779,102 @@ void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume)
     }
 }
 #pragma dont_inline reset
+
+extern int Sfx_ResolveObjectSfxId(int *outChannel, u16 *sfxId);
+
+/*
+ * Function: Sfx_PlayFromObjectEx
+ * EN v1.0 Address: 0x8000BE60
+ * EN v1.0 Size: 604b
+ */
+void Sfx_PlayFromObjectEx(u32 obj, f32 *pos, u32 channel, u16 sfxId)
+{
+    u16 outSfxId;
+    u8 vol;
+    f32 pitch;
+    f32 f7;
+    f32 f8;
+    int i9;
+    int i10;
+    int i11;
+    f32 delta[3];
+    SfxObjectChannel *found;
+    SfxObjectChannel *ch;
+    int tracksObj;
+
+    tracksObj = 0;
+    if (!Sfx_ResolveObjectSfxId((int *)&obj, &sfxId)) {
+        return;
+    }
+    if (!Sfx_ReadTriggerParams((SfxTriggerFull *)Sfx_FindTrigger(sfxId), &outSfxId,
+                               &vol, &pitch, &f7, &f8, &i9, &i10, &i11)) {
+        return;
+    }
+    if (obj != 0 && pos == NULL) {
+        pos = (f32 *)(obj + 0x18);
+        tracksObj = 1;
+    }
+    if (pos != NULL) {
+        f32 maxDist = f8;
+        if (!(Sfx_GetListenerRelativeDistance(pos, delta) <= maxDist)) {
+            return;
+        }
+    }
+    if ((u8)channel != 0) {
+        i9 = (u8)channel;
+    }
+    if (obj != 0 && i9 != 0) {
+        if ((u8)i9 != 0 && obj != 0) {
+            found = Sfx_FindObjectChannel(obj, (u8)i9, 0, 0);
+        } else {
+            found = NULL;
+        }
+        if (found != NULL) {
+            if (i10 == 0) {
+                return;
+            }
+            sndFXKeyOff(found->handle);
+            found->handle = (u32)-1;
+        }
+    } else {
+        if (sfxId != 0) {
+            found = Sfx_FindObjectChannel(obj, 0, sfxId, 1);
+        } else {
+            found = NULL;
+        }
+        if (found != NULL) {
+            if (i10 != 0 || gSfxObjectChannelMatchCount == 3) {
+                sndFXKeyOff(found->handle);
+                found->handle = (u32)-1;
+            }
+        }
+    }
+    ch = Sfx_AllocObjectChannel(outSfxId, vol, pitch, 0x40, i11);
+    if (ch == NULL) {
+        return;
+    }
+    ch->sfxId = sfxId;
+    ch->channelMask = (u16)i9;
+    ch->object = obj;
+    if (pos != NULL) {
+        *(f32 *)((u8 *)ch + 0x20) = f7;
+        *(f32 *)((u8 *)ch + 0x24) = f8;
+        ch->hasPosition = 1;
+        {
+            int t = 0;
+            if (tracksObj != 0 && i9 != 0) {
+                t = 1;
+            }
+            ch->tracksObjectPosition = (u8)t;
+        }
+        ch->x = pos[0];
+        ch->y = pos[1];
+        ch->z = pos[2];
+        Sfx_UpdateObjectChannel3D(ch);
+    } else {
+        ch->volume = 0x7f;
+    }
+}
 
 /*
  * Function: Sfx_PlayFromObjectChannel
