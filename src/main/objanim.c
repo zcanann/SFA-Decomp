@@ -20,22 +20,40 @@ extern f32 gObjAnimEventFrameScale;
 extern f32 gObjAnimSetMoveProgressMax;
 extern f32 gObjAnimMoveStepScaleMin;
 
-static inline ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state,u16 slot)
+static inline ObjAnimMoveData *ObjAnim_GetCurrentMoveData(ObjAnimDef *animDef,ObjAnimState *state)
+{
+  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    return (ObjAnimMoveData *)(state->moveCache[state->moveCacheSlot] +
+                               OBJANIM_CACHED_MOVE_DATA_OFFSET);
+  }
+  return (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
+}
+
+static inline ObjAnimMoveData *ObjAnim_GetCurrentBlendMoveData(ObjAnimDef *animDef,ObjAnimState *state)
+{
+  if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
+    return (ObjAnimMoveData *)(state->blendMoveCache[state->blendCacheSlot] +
+                               OBJANIM_CACHED_MOVE_DATA_OFFSET);
+  }
+  return (ObjAnimMoveData *)animDef->moveData[state->blendCacheSlot];
+}
+
+static inline ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state)
 {
   ObjAnimMoveData *moveData;
 
-  moveData = ObjAnim_GetMoveData(animDef,state,slot);
+  moveData = ObjAnim_GetCurrentMoveData(animDef,state);
   if (moveData->rootCurveOffset == 0) {
     return NULL;
   }
   return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
 }
 
-static inline ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state,u16 slot)
+static inline ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDef,ObjAnimState *state)
 {
   ObjAnimMoveData *moveData;
 
-  moveData = ObjAnim_GetBlendMoveData(animDef,state,slot);
+  moveData = ObjAnim_GetCurrentBlendMoveData(animDef,state);
   if (moveData->rootCurveOffset == 0) {
     return NULL;
   }
@@ -615,6 +633,8 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   int segmentCount;
   int sampleIndex;
   int lastSample;
+  int hasFirstAxis;
+  s16 axisFirstSample;
 
   bank = ObjAnim_GetActiveBank(objAnim);
   animDef = bank->animDef;
@@ -630,7 +650,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   if (state->eventState != 0) {
     blendWeight = (f32)state->eventState / gObjAnimEventStepScale;
     moveWeight = gObjAnimProgressOne - blendWeight;
-    moveData = ObjAnim_GetBlendMoveData(animDef,state,state->blendCacheSlot);
+    moveData = ObjAnim_GetCurrentBlendMoveData(animDef,state);
     if (moveData->rootCurveOffset != 0) {
       blendCurve = (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
       blendScale = blendCurve->scale * objAnim->rootMotionScale;
@@ -650,7 +670,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
     }
   }
 
-  moveData = ObjAnim_GetMoveData(animDef,state,state->moveCacheSlot);
+  moveData = ObjAnim_GetCurrentMoveData(animDef,state);
   if (moveData->rootCurveOffset == 0) {
     return 0;
   }
@@ -659,13 +679,22 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   rootScale = curve->scale * objAnim->rootMotionScale;
   segmentCount = curve->sampleCount - 1;
   axis = (s16 *)((u8 *)curve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
-  if (*axis == 0) {
+  hasFirstAxis = 0;
+  axisFirstSample = *axis;
+  if (axisFirstSample != 0) {
+    hasFirstAxis = 1;
+  }
+  if (axisFirstSample == 0) {
     axis++;
-    if (*axis == 0) {
+  }
+  if (hasFirstAxis == 0) {
+    axisFirstSample = *axis;
+    if (axisFirstSample == 0) {
       axis++;
     }
   }
-  if (*axis == 0) {
+  axisFirstSample = *axis;
+  if (axisFirstSample == 0) {
     return 0;
   }
 
@@ -796,10 +825,11 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   int eventId;
 
   objAnim = (ObjAnimComponent *)objAnimArg;
+  wrapped = 0;
   clampedStepScale = gObjAnimMoveStepScaleMin;
-  if (moveStepScale >= gObjAnimMoveStepScaleMin) {
+  if (!(moveStepScale < gObjAnimMoveStepScaleMin)) {
     clampedStepScale = gObjAnimProgressOne;
-    if (moveStepScale <= gObjAnimProgressOne) {
+    if (!(moveStepScale > gObjAnimProgressOne)) {
       clampedStepScale = moveStepScale;
     }
   }
@@ -815,7 +845,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
     return 0;
   }
 
-  wrapped = 0;
   state->step = clampedStepScale * state->segmentLength;
   if (state->eventCountdown != 0) {
     if ((state->flags & OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP) != 0) {
@@ -941,7 +970,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
     }
   }
 
-  curve = ObjAnim_GetMoveRootCurve(animDef,state,state->moveCacheSlot);
+  curve = ObjAnim_GetMoveRootCurve(animDef,state);
   if (curve == NULL) {
     events->rootCurveValid = 0;
     return wrapped;
@@ -963,7 +992,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   if (state->eventState != 0) {
     blendWeight = (f32)state->eventState / gObjAnimEventStepScale;
     moveWeight = gObjAnimProgressOne - blendWeight;
-    blendCurve = ObjAnim_GetBlendMoveRootCurve(animDef,state,state->blendCacheSlot);
+    blendCurve = ObjAnim_GetBlendMoveRootCurve(animDef,state);
     if (blendCurve != NULL) {
       blendAxis = (s16 *)((u8 *)blendCurve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
     }
