@@ -918,7 +918,7 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
     inner = *(int **)((char *)obj + 0xb8);
     *(u8 *)((char *)inner + 0xa1) = 1;
     ObjHits_DisableObject(obj);
-    if (*(int *)inner != 0) {
+    if (*(int **)inner != 0) {
         ObjHits_DisableObject(*(int *)inner);
     }
     if (*(s16 *)((char *)obj + 0xb4) != -1 &&
@@ -965,8 +965,11 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
                 *(f32 *)((char *)inner + 0x14) = *(f32 *)((char *)inner + 0x20);
                 (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c)))(sub, 2);
                 ObjAnim_SetCurrentMove(obj, *(u16 *)((char *)inner + 0xa8), lbl_803E66F0, 1);
-                if (*(int *)((char *)obj + 0x64) != 0) {
-                    *(int *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x1000;
+                {
+                    int *gx = *(int **)((char *)obj + 0x64);
+                    if (gx != 0) {
+                        *(int *)((char *)gx + 0x30) |= 0x1000;
+                    }
                 }
                 *(s16 *)((char *)evt + 0x6e) &= ~4;
             }
@@ -999,7 +1002,7 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
     }
     tbl = lbl_802C2540;
     if (*(s8 *)((char *)inner + 0xa2) != *(s8 *)((char *)inner + 0xa3)) {
-        if (*(int *)((char *)obj + 0xc8) != 0) {
+        if (*(int **)((char *)obj + 0xc8) != 0) {
             Obj_FreeObject(*(int *)((char *)obj + 0xc8));
             *(int *)((char *)obj + 0xc8) = 0;
             *(u8 *)((char *)obj + 0xeb) = 0;
