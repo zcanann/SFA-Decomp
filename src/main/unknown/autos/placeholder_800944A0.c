@@ -610,5 +610,60 @@ void fn_800971A0(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fval) {
     (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
         obj, table2.v[a], &params, 2, -1, 0);
 }
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 f0c;
+    f32 f10;
+    f32 f14;
+    s8 active;
+    u8 pad[3];
+} ExpParticle;
+
+extern f32 lbl_803DF324;
+
+int fn_80095B18(WaterParticle *src, int idx, int count, f32 v) {
+    int cur;
+    f32 scale;
+    ExpParticle *p;
+    ExpParticle *base;
+    ExpParticle *slot;
+    int j;
+    int i;
+    cur = (int)lbl_803DD224;
+    if (count + cur > 30) {
+        count = 30 - cur;
+    }
+    if (count != 0) {
+        i = 0;
+        scale = lbl_803DF324 * v;
+        for (; i < count; i++) {
+            base = (ExpParticle *)lbl_803DD220;
+            p = base;
+            j = 0;
+            while (j < 30 && p->active != -1) {
+                p++;
+                j++;
+            }
+            if (j < 30) {
+                slot = &base[j];
+                slot->f0c = (f32)randomGetRange(-250, 250);
+                slot->f0c = slot->f0c * scale;
+                slot->f14 = (f32)randomGetRange(-250, 250);
+                slot->f14 = slot->f14 * scale;
+                slot->f10 = (f32)randomGetRange(200, 300);
+                slot->f10 = slot->f10 * scale;
+                slot->active = (s8)idx;
+                slot->x = src->x;
+                slot->y = src->y;
+                slot->z = src->z;
+                lbl_803DD224 = (void *)((int)lbl_803DD224 + 1);
+            }
+        }
+    }
+    return count;
+}
 #pragma peephole reset
 #pragma scheduling reset
