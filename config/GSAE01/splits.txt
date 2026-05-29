@@ -13,8 +13,32 @@ Sections:
 	.sdata2     type:rodata align:32
 	.sbss2      type:bss align:64
 
-main/unknown/autos/placeholder_800066E0.c:
-	.text       start:0x800066E0 end:0x800173E4
+main/render.c:
+	.text       start:0x800066E0 end:0x80008DF4
+
+main/audio.c:
+	.text       start:0x80008DF4 end:0x8000DD74
+
+main/camera.c:
+	.text       start:0x8000DD74 end:0x8000FE8C
+
+main/curves.c:
+	.text       start:0x8000FE8C end:0x80010FF4
+
+main/voxmaps.c:
+	.text       start:0x80010FF4 end:0x800139E8
+
+main/modelEngine.c:
+	.text       start:0x800139E8 end:0x80014A28
+
+main/pad.c:
+	.text       start:0x80014A28 end:0x80015624
+
+main/fileio.c:
+	.text       start:0x80015624 end:0x80015BC8
+
+main/gametext.c:
+	.text       start:0x80015BC8 end:0x800173E4
 
 dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 	.text       start:0x800173E4 end:0x80017434
