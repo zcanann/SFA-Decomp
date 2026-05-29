@@ -908,8 +908,8 @@ typedef struct {
 extern SnowClawAnimTbl lbl_802C2540;
 
 int snowclaw_animEventCallback(int obj, int a2, int evt) {
-    int *inner;
     int *sub;
+    int *inner;
     int i;
     SnowClawAnimTbl tbl;
     f32 dist;
