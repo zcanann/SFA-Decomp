@@ -1905,6 +1905,105 @@ void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole on
 void wcpressures_hitDetect(void) {}
+extern void fn_80137948(void *fmt, ...);
+extern char sWCPressuresActivateFormat[];
+extern f32 lbl_803E6E04;
+#pragma peephole off
+#pragma scheduling off
+void wcpressures_update(int obj)
+{
+    int r4c = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    int i;
+    int j;
+    f32 thr;
+
+    if (*(s16 *)(r4c + 0x20) > 0 && (u32)GameBit_Get(*(s16 *)(r4c + 0x20)) == 0) {
+        fn_80137948(sWCPressuresActivateFormat, *(s16 *)(r4c + 0x20));
+        return;
+    }
+    {
+        int n = *(u8 *)state - 1;
+        *(s8 *)state = n;
+        if ((s8)n < 0)
+            *(s8 *)state = 0;
+    }
+    if ((s8)*(u8 *)(*(int *)(obj + 0x58) + 0x10f) > 0) {
+        for (i = 0; i < (s8)*(u8 *)(*(int *)(obj + 0x58) + 0x10f); i++) {
+            int ent = *(int *)(*(int *)(obj + 0x58) + (i * 4 + 0x100));
+            if (*(f32 *)(ent + 0x10) - *(f32 *)(obj + 0x10) >
+                (f32)(u32) * (u8 *)(r4c + 0x1d)) {
+                int s2 = *(int *)(obj + 0xb8);
+                int slot;
+
+                for (j = 0; *(void **)(s2 + (u8)j * 4 + 4) != NULL || (u8)j == 9; j++)
+                    ;
+                slot = (u8)j;
+                *(int *)(s2 + slot * 4 + 4) = ent;
+                *(f32 *)(s2 + slot * 8 + 0x2c) = *(f32 *)(ent + 0xc);
+                *(f32 *)(s2 + slot * 8 + 0x30) = *(f32 *)(ent + 0x14);
+            }
+        }
+    }
+    {
+        int s2 = *(int *)(obj + 0xb8);
+        int found = 0;
+
+        for (j = 0; (u8)j < 0xa; j++) {
+            int slot = (u8)j;
+            int val = *(int *)(s2 + slot * 4 + 4);
+            if ((u32)val != 0) {
+                if (*(f32 *)(s2 + slot * 8 + 0x2c) == *(f32 *)(val + 0xc) &&
+                    *(f32 *)(s2 + slot * 8 + 0x30) == *(f32 *)(val + 0x14)) {
+                    found = 1;
+                } else {
+                    *(int *)(s2 + slot * 4 + 4) = 0;
+                }
+            }
+        }
+        if (found)
+            *(s8 *)state = 5;
+    }
+    thr = *(f32 *)(r4c + 0xc) - (f32)(u32) * (u8 *)(r4c + 0x1c);
+    switch ((s8)*(s8 *)(state + 1)) {
+    case 0:
+        if (*(s8 *)state != 0 && *(f32 *)(obj + 0x10) >= thr) {
+            Sfx_PlayFromObject(obj, 0xc7);
+            *(s8 *)(state + 1) = 3;
+        }
+        break;
+    case 1:
+        *(f32 *)(obj + 0x10) = lbl_803E6E04 * timeDelta + *(f32 *)(obj + 0x10);
+        if (*(f32 *)(obj + 0x10) > *(f32 *)(r4c + 0xc)) {
+            *(f32 *)(obj + 0x10) = *(f32 *)(r4c + 0xc);
+            *(s8 *)(state + 1) = 0;
+        }
+        break;
+    case 2:
+        if ((u32)GameBit_Get(*(s16 *)(r4c + 0x1a)) == 0) {
+            Sfx_PlayFromObject(obj, 0xc7);
+            *(s8 *)(state + 1) = 1;
+        }
+        break;
+    case 3:
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E6E04 * timeDelta;
+        if (*(f32 *)(obj + 0x10) < thr) {
+            GameBit_Set(*(s16 *)(r4c + 0x1a), 1);
+            *(s8 *)(state + 1) = 2;
+            *(f32 *)(obj + 0x10) = thr;
+        }
+        break;
+    }
+    {
+        int *tex = objFindTexture(obj, 0, 0);
+        if (tex != 0) {
+            *tex = (s8)*(s8 *)(state + 1) == 2 ? 1 : 0;
+            *tex = *tex << 8;
+        }
+    }
+}
+#pragma scheduling on
+#pragma peephole on
 #pragma peephole off
 #pragma scheduling off
 void wcpressures_init(u8 *obj, u8 *setup)
