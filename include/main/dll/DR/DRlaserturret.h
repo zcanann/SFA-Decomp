@@ -67,7 +67,7 @@ typedef struct DRLaserTurretObject {
     f32 x;
     f32 y;
     f32 z;
-    u8 pad014[0xa0 - 0x14];
+    u8 pad018[0xa0 - 0x18];
     s16 currentMove;
     u8 pad0a2[0xaf - 0xa2];
     u8 hitFlags;
