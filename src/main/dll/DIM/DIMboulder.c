@@ -1541,7 +1541,7 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
 {
     int *p;
     int *extra = *(int **)((char *)obj + 0xb8);
-    s16 ids[6];
+    s16 ids[5];
 
     *(u8 *)((char *)extra + 0x20) = 0xff;
     p = (int *)*extra;
@@ -1549,7 +1549,7 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
         *(s8 *)((char *)extra + 0x21) = -1;
         arg3[0x80] = 0;
     }
-    *(Blob10 *)&ids[1] = *(Blob10 *)lbl_802C2308;
+    *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
 
     if (*(s8 *)((char *)extra + 0x21) != *(s8 *)((char *)extra + 0x22)) {
         if (*(void **)((char *)obj + 0xc8) != NULL) {
@@ -1561,7 +1561,7 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
             s8 idx = *(s8 *)((char *)extra + 0x21);
             if (idx > 0) {
                 *(int *)((char *)obj + 0xc8) =
-                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx]), 4, -1, -1,
+                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)((char *)obj + 0x30));
                 *(u8 *)((char *)obj + 0xeb) = 1;
             }
@@ -1719,9 +1719,9 @@ extern f32 lbl_803E4764;
 void dll_16C_update(int *obj)
 {
     int *extra = *(int **)((char *)obj + 0xb8);
-    s16 ids[6];
+    s16 ids[5];
 
-    *(Blob10 *)&ids[1] = *(Blob10 *)lbl_802C2308;
+    *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
     if (*(s8 *)((char *)extra + 0x21) != *(s8 *)((char *)extra + 0x22)) {
         if (*(void **)((char *)obj + 0xc8) != NULL) {
             Obj_FreeObject(*(int **)((char *)obj + 0xc8));
@@ -1732,7 +1732,7 @@ void dll_16C_update(int *obj)
             s8 idx = *(s8 *)((char *)extra + 0x21);
             if (idx > 0) {
                 *(int *)((char *)obj + 0xc8) =
-                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx]), 4, -1, -1,
+                    Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)((char *)obj + 0x30));
                 *(u8 *)((char *)obj + 0xeb) = 1;
             }
