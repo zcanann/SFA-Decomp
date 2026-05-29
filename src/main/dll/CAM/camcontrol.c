@@ -4,14 +4,14 @@
 #include "main/objanim.h"
 #include "string.h"
 
-extern undefined4 Sfx_PlayFromObject();
+extern void Sfx_PlayFromObject(int obj,int sfxId);
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 extern uint getButtonsJustPressed();
 extern undefined4 FUN_80017640();
 extern int Obj_IsObjectAlive();
 extern undefined8 FUN_800723a0();
-extern undefined4 objShowButtonGlow();
+extern void objShowButtonGlow(void *obj,f32 intensity,int mode);
 extern undefined4 FUN_800e8794();
 extern int camcontrol_findBestTarget(int cameraState, short *target);
 extern void camcontrol_updateMoveAverage(int cameraState, int target);
@@ -20,8 +20,8 @@ extern void camcontrol_applyQueuedAction(void);
 extern int dll_19_func1B();
 extern int isTalkingToNpc();
 extern int gameTextFn_80134be8(void);
-extern double fn_8014C5D0();
-extern double fn_80183204();
+extern f32 fn_8014C5D0(int obj);
+extern f32 fn_80183204(int obj);
 extern f32 sqrtf(f32 x);
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void mm_free(void *ptr);
@@ -89,7 +89,7 @@ void camcontrol_updateTargetFeedback(void)
   int iVar8;
   uint uVar9;
   uint uVar10;
-  double dVar12;
+  f32 targetDistance;
   
   iVar11 = *(int *)(pCamera + 0x124);
   psVar6 = gCamcontrolTargetReticle;
@@ -105,15 +105,15 @@ void camcontrol_updateTargetFeedback(void)
     cVar2 = *(byte *)(pCamera + 0x138);
     if (cVar2 == 1) {
       Sfx_PlayFromObject(0,0x3ff);
-      objShowButtonGlow((double)lbl_803E162C,psVar6,2);
+      objShowButtonGlow(psVar6,lbl_803E162C,2);
     }
     else if ((cVar2 == 4) || (cVar2 == 9)) {
       Sfx_PlayFromObject(0,0x402);
-      objShowButtonGlow((double)lbl_803E162C,psVar6,3);
+      objShowButtonGlow(psVar6,lbl_803E162C,3);
     }
     else if (cVar2 != 8) {
       Sfx_PlayFromObject(0,0x288);
-      objShowButtonGlow((double)lbl_803E162C,psVar6,1);
+      objShowButtonGlow(psVar6,lbl_803E162C,1);
     }
   }
   if (iVar11 != 0) {
@@ -193,7 +193,7 @@ void camcontrol_updateTargetFeedback(void)
   sVar3 = *(short *)(iVar11 + 0x46);
   if (sVar3 == 0x49f) {
 LAB_80102994:
-    dVar12 = fn_80183204(iVar11);
+    targetDistance = fn_80183204(iVar11);
   }
   else {
     if (sVar3 < 0x49f) {
@@ -202,7 +202,7 @@ LAB_80102994:
           if (sVar3 != 0x13a) {
             if (sVar3 < 0x13a) {
               if (sVar3 == 0x31) {
-                dVar12 = (double)lbl_803E162C;
+                targetDistance = lbl_803E162C;
                 goto LAB_801029e0;
               }
               if (sVar3 < 0x31) {
@@ -233,10 +233,11 @@ LAB_80102994:
 LAB_801029ac:
               iVar8 = dll_19_func1B(iVar11);
               if (iVar8 == 0) {
-                dVar12 = (double)lbl_803E162C;
+                targetDistance = lbl_803E162C;
               }
               else {
-                dVar12 = (double)(**(code **)(*gBaddieControlInterface + 0x60))(iVar11);
+                targetDistance =
+                    ((f32 (*)(int))(*(code **)(*gBaddieControlInterface + 0x60)))(iVar11);
               }
               goto LAB_801029e0;
             }
@@ -255,32 +256,32 @@ LAB_801029ac:
         else if ((sVar3 != 0x851) && ((0x850 < sVar3 || (sVar3 != 0x84b)))) goto LAB_801029ac;
       }
     }
-    dVar12 = fn_8014C5D0(iVar11);
+    targetDistance = fn_8014C5D0(iVar11);
   }
 LAB_801029e0:
-  if (((double)lbl_803E1630 < dVar12) ||
-     ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E1630)) {
-    if (((double)lbl_803E1634 < dVar12) ||
-       ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E1634)) {
-      if (((double)lbl_803E1638 < dVar12) ||
-         ((double)*(float *)(pCamera + 0x134) <= (double)lbl_803E1638)) {
-        if ((dVar12 <= (double)lbl_803E163C) &&
-           ((double)lbl_803E163C < (double)*(float *)(pCamera + 0x134))) {
-          objShowButtonGlow((double)lbl_803E162C,psVar6,4);
+  if ((lbl_803E1630 < targetDistance) ||
+     (*(float *)(pCamera + 0x134) <= lbl_803E1630)) {
+    if ((lbl_803E1634 < targetDistance) ||
+       (*(float *)(pCamera + 0x134) <= lbl_803E1634)) {
+      if ((lbl_803E1638 < targetDistance) ||
+         (*(float *)(pCamera + 0x134) <= lbl_803E1638)) {
+        if ((targetDistance <= lbl_803E163C) &&
+           (lbl_803E163C < *(float *)(pCamera + 0x134))) {
+          objShowButtonGlow(psVar6,lbl_803E162C,4);
         }
       }
       else {
-        objShowButtonGlow((double)lbl_803E162C,psVar6,4);
+        objShowButtonGlow(psVar6,lbl_803E162C,4);
       }
     }
     else {
-      objShowButtonGlow((double)lbl_803E162C,psVar6,4);
+      objShowButtonGlow(psVar6,lbl_803E162C,4);
     }
   }
   else {
-    objShowButtonGlow((double)lbl_803E162C,psVar6,4);
+    objShowButtonGlow(psVar6,lbl_803E162C,4);
   }
-  *(float *)(pCamera + 0x134) = (float)dVar12;
+  *(float *)(pCamera + 0x134) = targetDistance;
 LAB_80102ab4:
   fVar4 = lbl_803E1678 * *(float *)(psVar6 + 0x4c);
   fVar5 = lbl_803E1630;
