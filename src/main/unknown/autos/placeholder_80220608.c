@@ -7499,6 +7499,200 @@ void fn_8022F270(int obj, int p2) { *(int *)(*(int *)(obj + 0xb8) + 0x4) = p2; }
 
 void fn_8022C7A4(int obj) { *(u8 *)(*(int *)(obj + 0xb8) + 0x47f) = 0; }
 
+extern void ObjLink_AttachChild(int obj, int child, int p3);
+extern f32 lbl_803E6F2C;
+extern f32 lbl_803E6F34;
+extern f32 lbl_803E6F70;
+extern f32 lbl_803E6F74;
+extern f32 lbl_803E6F78;
+extern f32 lbl_803E6F7C;
+extern f32 lbl_803E6F80;
+extern f32 lbl_803E6F84;
+extern f32 lbl_803E6F88;
+extern f32 lbl_803E6F8C;
+extern f32 lbl_803E6F90;
+extern f32 lbl_803E6F94;
+extern f32 lbl_803E6F98;
+extern f32 lbl_803E6F9C;
+extern f32 lbl_803E6FA0;
+extern f32 lbl_803E6FA4;
+extern f32 lbl_803E6FA8;
+extern f32 lbl_803E6FAC;
+extern f32 lbl_803E6FB0;
+extern f32 lbl_803E6FB4;
+extern f32 lbl_803E6FB8;
+extern f32 lbl_803E6FBC;
+extern f32 lbl_803E6FC0;
+extern f32 lbl_803E6FC4;
+extern f32 lbl_803E6FC8;
+extern f32 lbl_803E6FCC;
+extern f32 lbl_803E6FD0;
+extern f32 lbl_803E6FD4;
+extern f32 lbl_803E6FD8;
+extern f32 lbl_803E6FDC;
+extern f32 lbl_803E6FE0;
+extern f32 lbl_803E6FE4;
+extern f32 lbl_803E6FE8;
+extern f32 lbl_803E6FEC;
+extern f32 lbl_803E6FF0;
+extern f32 lbl_803E6EF0;
+extern f32 lbl_803E6EF4;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8022CDEC(int obj, int state)
+{
+    int found;
+    int mev;
+    f32 radius;
+
+    radius = lbl_803E6FC0;
+    mev = (*(int (**)(int))(*gMapEventInterface + 0x8c))(*gMapEventInterface);
+
+    if (*(void **)(state + 0x4) == 0) {
+        *(int *)(state + 0x4) = ObjList_FindNearestObjectByDefNo(obj, 0x606, &radius);
+        if (*(void **)(state + 0x4) != 0) {
+            ObjLink_AttachChild(obj, *(int *)(state + 0x4), 0);
+        }
+    }
+
+    if (*(u8 *)(state + 0x480) != 0) {
+        if (*(void **)(state + 0x10) == 0) {
+            *(int *)(state + 0x10) = ObjList_FindNearestObjectByDefNo(obj, 0x611, &radius);
+            if (*(void **)(state + 0x10) != 0) {
+                ObjLink_AttachChild(obj, *(int *)(state + 0x10), 0);
+            }
+        }
+        if (*(void **)(state + 0x8) == 0) {
+            *(int *)(state + 0x8) = ObjList_FindNearestObjectByDefNo(obj, 0x610, &radius);
+            if (*(void **)(state + 0x8) != 0) {
+                ObjLink_AttachChild(obj, *(int *)(state + 0x8), 0);
+            }
+        }
+        if (*(void **)(state + 0xc) == 0) {
+            *(int *)(state + 0xc) = ObjList_FindNearestObjectByDefNo(obj, 0x615, &radius);
+            if (*(void **)(state + 0xc) != 0) {
+                ObjLink_AttachChild(obj, *(int *)(state + 0xc), 0);
+            }
+        }
+    }
+
+    if (*(void **)(state + 0x418) == 0 && *(void **)(state + 0x41c) == 0) {
+        int setup;
+        setup = Obj_AllocObjectSetup(0x20, 0x6de);
+        *(u8 *)(setup + 0x4) = 1;
+        *(u8 *)(setup + 0x5) = 1;
+        *(int *)(state + 0x418) = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
+        setup = Obj_AllocObjectSetup(0x20, 0x6de);
+        *(u8 *)(setup + 0x4) = 1;
+        *(u8 *)(setup + 0x5) = 1;
+        *(int *)(state + 0x41c) = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
+    }
+
+    found = 0;
+    if (*(u8 *)(state + 0x480) != 0) {
+        if (*(void **)(state + 0x450) == 0) {
+            *(int *)(state + 0x450) = (int)objCreateLight(obj, 1);
+            if (*(void **)(state + 0x450) != 0) {
+                modelLightStruct_setField50(*(void **)(state + 0x450), 2);
+                lightVecFn_8001dd88(*(void **)(state + 0x450), lbl_803E6ECC, lbl_803E6FC4, lbl_803E6FC8);
+                lightSetFieldBC_8001db14(*(void **)(state + 0x450), 1);
+                modelLightStruct_setColorsA8AC(*(void **)(state + 0x450), 0x28, 0x7d, 0xff, 0);
+                lightDistAttenFn_8001dc38(*(void **)(state + 0x450), lbl_803E6FCC, lbl_803E6FD0);
+                lightFn_8001d620(*(void **)(state + 0x450), 1, 1);
+                lightSetFieldB0(*(void **)(state + 0x450), 0x14, 0x64, 0xc8, 0);
+            }
+        }
+        if (*(void **)(state + 0x4) != 0 && *(void **)(state + 0x10) != 0 && *(void **)(state + 0x8) != 0 &&
+            *(void **)(state + 0xc) != 0) {
+            found = 1;
+        }
+    } else {
+        if (*(void **)(state + 0x4) != 0) {
+            found = 1;
+        }
+    }
+
+    if (found != 0) {
+        (*(void (**)(int, int))(*gCameraInterface + 0x28))(obj, 0);
+        *(u8 *)(state + 0x477) |= 1;
+        *(f32 *)(state + 0x54) = lbl_803E6F70;
+        *(f32 *)(state + 0x60) = lbl_803E6F74;
+        *(f32 *)(state + 0x58) = lbl_803E6F78;
+        *(f32 *)(state + 0x64) = lbl_803E6F7C;
+        *(f32 *)(state + 0x5c) = lbl_803E6F78;
+        *(f32 *)(state + 0x68) = lbl_803E6F7C;
+        *(f32 *)(state + 0x78) = lbl_803E6F80;
+        *(f32 *)(state + 0x84) = lbl_803E6F84;
+        *(f32 *)(state + 0x6c) = lbl_803E6ED0;
+        *(f32 *)(state + 0x348) = lbl_803E6F88;
+        *(f32 *)(state + 0x34c) = lbl_803E6F74;
+        *(f32 *)(state + 0x35c) = lbl_803E6F8C;
+        *(f32 *)(state + 0x360) = lbl_803E6F7C;
+        *(f32 *)(state + 0x370) = lbl_803E6F90;
+        *(f32 *)(state + 0x374) = lbl_803E6F94;
+        *(f32 *)(state + 0x384) = lbl_803E6F98;
+        *(f32 *)(state + 0x388) = lbl_803E6F9C;
+        *(f32 *)(state + 0x394) = lbl_803E6FA0;
+        *(f32 *)(state + 0x390) = lbl_803E6FA4;
+        *(f32 *)(state + 0x39c) = lbl_803E6FA8;
+        *(u8 *)(state + 0x3fa) = 0x19;
+        *(f32 *)(state + 0x3a4) = lbl_803E6FAC;
+        *(f32 *)(state + 0x38) = lbl_803E6FB0;
+        *(f32 *)(obj + 0x8) = lbl_803E6FB0;
+        *(f32 *)(state + 0x3ac) = lbl_803E6FB4;
+        *(f32 *)(state + 0x3b0) = lbl_803E6FB8;
+        *(f32 *)(state + 0x88) = lbl_803E6FBC;
+        *(f32 *)(state + 0x8c) = lbl_803E6F64;
+        *(f32 *)(state + 0x90) = lbl_803E6FD4;
+        *(f32 *)(state + 0x94) = lbl_803E6F74;
+        *(f32 *)(state + 0x98) = lbl_803E6FD8;
+        *(f32 *)(state + 0xb8) = lbl_803E6FDC;
+        *(f32 *)(state + 0xa0) = lbl_803E6FE0;
+        *(f32 *)(state + 0xa8) = lbl_803E6F2C;
+        *(f32 *)(state + 0x9c) = *(f32 *)(state + 0xa0);
+        *(f32 *)(state + 0xa4) = *(f32 *)(state + 0xa8);
+        *(f32 *)(state + 0xac) = lbl_803E6F5C;
+        *(f32 *)(state + 0xb0) = lbl_803E6F5C;
+        if (*(s8 *)(obj + 0xac) == 0x26) {
+            *(f32 *)(state + 0x50) = lbl_803E6ECC;
+        } else {
+            *(f32 *)(state + 0x50) = lbl_803E6F78;
+        }
+        *(s16 *)(state + 0x40e) = 0x28;
+        *(f32 *)(state + 0x410) = lbl_803E6FE0;
+        *(s16 *)(state + 0x40c) = 0x6;
+        *(s16 *)(state + 0x446) = 0x5a;
+        *(f32 *)(state + 0x448) = lbl_803E6F34;
+        *(s16 *)(state + 0x444) = 0xc;
+        *(u8 *)(state + 0x44d) = 0x3;
+        *(int *)(state + 0x454) = objModelGetVecFn_800395d8(obj, 0);
+        *(int *)(state + 0x458) = objModelGetVecFn_800395d8(obj, 1);
+        *(int *)(state + 0x45c) = objModelGetVecFn_800395d8(obj, 2);
+        *(int *)(state + 0x460) = objModelGetVecFn_800395d8(obj, 3);
+        *(f32 *)(state + 0x464) = lbl_803E6F64;
+        *(s16 *)(state + 0x44e) = 0xaf;
+        *(u8 *)(state + 0x469) = *(u8 *)(mev + 0x1);
+        *(u8 *)(state + 0x468) = *(u8 *)(state + 0x469);
+        *(f32 *)(state + 0x3b4) = lbl_803E6EF8;
+        *(f32 *)(state + 0x3b8) = lbl_803E6EF0;
+        *(f32 *)(state + 0x3bc) = lbl_803E6FE4;
+        *(f32 *)(state + 0x3c4) = lbl_803E6EF4;
+        *(f32 *)(state + 0x3c8) = lbl_803E6FD4;
+        *(f32 *)(state + 0x3d0) = lbl_803E6FE8;
+        *(f32 *)(state + 0x3d4) = lbl_803E6F80;
+        *(f32 *)(state + 0x3e0) = lbl_803E6FA4;
+        *(f32 *)(state + 0x14) = *(f32 *)(obj + 0xc);
+        *(f32 *)(state + 0x18) = *(f32 *)(obj + 0x10);
+        *(f32 *)(state + 0x1c) = *(f32 *)(obj + 0x14);
+        *(f32 *)(state + 0x20) = lbl_803E6FEC;
+        *(f32 *)(state + 0x28) = lbl_803E6FF0;
+        *(f32 *)(state + 0x24) = lbl_803E6EF0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 void fn_80231058(int obj, int src)
 {
     *(f32 *)(obj + 0x24) = *(f32 *)(src + 0x0);
