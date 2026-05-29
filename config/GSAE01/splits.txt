@@ -70,8 +70,11 @@ main/maketex.c:
 main/unknown/autos/placeholder_80080E28.c:
 	.text       start:0x80080E28 end:0x80080E58
 
+main/objseq.c:
+	.text       start:0x80080E58 end:0x80088758
+
 main/unknown/autos/placeholder_80080E58.c:
-	.text       start:0x80080E58 end:0x80094494
+	.text       start:0x80088758 end:0x80094494
 
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 	.text       start:0x80094494 end:0x800944A0
