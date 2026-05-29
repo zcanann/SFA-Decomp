@@ -6329,6 +6329,7 @@ int fn_8022D580(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x469); }
 
 int fn_8022D590(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x468); }
 
+#pragma dont_inline on
 int fn_8022D5A0(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x475))++; }
 
 int fn_8022D5B4(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x474))++; }
@@ -6336,6 +6337,7 @@ int fn_8022D5B4(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x474))+
 int fn_8022D5C8(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x473))++; }
 
 int fn_8022D5DC(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x472))++; }
+#pragma dont_inline reset
 
 int fn_8022D5F0(int arwing)
 {
@@ -7175,6 +7177,7 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
 #pragma scheduling reset
 #pragma peephole reset
 
+#pragma dont_inline on
 void fn_8022D6D0(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
@@ -7190,8 +7193,10 @@ void fn_8022D6F0(int arwing)
         (*(u8 *)(state + 0x404))++;
     }
 }
+#pragma dont_inline reset
 
 #pragma scheduling off
+#pragma dont_inline on
 int fn_8022D710(int arwing)
 {
     int result = 0;
@@ -7201,6 +7206,7 @@ int fn_8022D710(int arwing)
     }
     return result;
 }
+#pragma dont_inline reset
 #pragma scheduling on
 
 int fn_8022D738(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x478) == 1; }
@@ -7688,6 +7694,121 @@ void fn_8022CDEC(int obj, int state)
         *(f32 *)(state + 0x20) = lbl_803E6FEC;
         *(f32 *)(state + 0x28) = lbl_803E6FF0;
         *(f32 *)(state + 0x24) = lbl_803E6EF0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E707C;
+extern f32 lbl_803E7080;
+extern f32 lbl_803E7084;
+extern f32 lbl_803E7088;
+extern f32 lbl_803E708C;
+
+typedef struct {
+    u8 b80 : 1;
+    u8 b40 : 1;
+} ArwBombFlags;
+
+#pragma scheduling off
+#pragma peephole off
+void arwbombcoll_update(int obj)
+{
+    ArwBombFlags *flags;
+    int arw;
+    int s;
+    int a2;
+
+    arw = getArwing();
+    s = *(int *)(obj + 0xb8);
+    flags = (ArwBombFlags *)(s + 0x4);
+
+    if (*(f32 *)(s + 0x0) > lbl_803E707C) {
+        *(f32 *)(s + 0x0) -= timeDelta;
+        if (*(f32 *)(s + 0x0) <= lbl_803E707C) {
+            Obj_FreeObject(obj);
+            return;
+        }
+    }
+
+    if ((u32)arw != 0 && fn_8022D710(arw) != 0) {
+        flags->b80 = 0;
+        *(s16 *)(obj + 0x6) &= ~0x4000;
+        ObjHits_EnableObject(obj);
+        return;
+    }
+
+    if (flags->b80 == 0) {
+        a2 = getArwing();
+        if ((((u32)a2 != 0) ? (*(f32 *)(obj + 0x14) - *(f32 *)(a2 + 0x14) < lbl_803E7080) : 0) != 0) {
+            goto active;
+        }
+    }
+    *(s16 *)(obj + 0x6) |= 0x4000;
+    *(u8 *)(obj + 0x36) = 0;
+    return;
+active : {
+        int v;
+        v = (int)(lbl_803E7084 * timeDelta + (f32)(u32) * (u8 *)(obj + 0x36));
+        if (v > 0xff) {
+            v = 0xff;
+        }
+        *(u8 *)(obj + 0x36) = v;
+        *(s16 *)(obj + 0x6) &= ~0x4000;
+        *(s16 *)(obj + 0x0) = (int)(lbl_803E7088 * timeDelta + (f32) * (s16 *)(obj + 0x0));
+        ObjHits_SetHitVolumeSlot(obj, 0x13, 0, 0);
+        if (flags->b40 != 0) {
+            if (*(void **)(*(int *)(obj + 0x54) + 0x50) != 0 &&
+                *(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)getArwing()) {
+                fn_8022D520(arw, 0x19);
+                flags->b80 = 1;
+                *(s16 *)(obj + 0x6) |= 0x4000;
+                ObjHits_DisableObject(obj);
+            }
+        } else {
+            int hit;
+            if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0 && (u32)hit != 0 &&
+                (*(s16 *)(hit + 0x46) == 0x604 || *(s16 *)(hit + 0x46) == 0x605)) {
+                fn_8022D520(arw, 0xf);
+                flags->b40 = 1;
+                Obj_SetActiveModelIndex(obj, 1);
+                spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
+            }
+            if (*(void **)(*(int *)(obj + 0x54) + 0x50) != 0 &&
+                *(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)getArwing()) {
+                *(s16 *)(obj + 0x6) |= 0x4000;
+                ObjHits_DisableObject(obj);
+                spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
+            }
+        }
+        if ((u32)arw != 0 && flags->b80 != 0) {
+            switch (*(s16 *)(obj + 0x46)) {
+            case 0x609:
+                Sfx_PlayFromObject(obj, 0x2a6);
+                fn_8022D6F0(arw);
+                break;
+            case 0x608:
+                Sfx_PlayFromObject(obj, 0x2a7);
+                fn_8022D6D0(arw);
+                break;
+            case 0x6d8:
+                Sfx_PlayFromObject(obj, 0x2a8);
+                fn_8022D5DC(arw);
+                break;
+            case 0x6d9:
+                Sfx_PlayFromObject(obj, 0x2a8);
+                fn_8022D5C8(arw);
+                break;
+            case 0x6db:
+                Sfx_PlayFromObject(obj, 0x2a8);
+                fn_8022D5B4(arw);
+                break;
+            case 0x6da:
+                Sfx_PlayFromObject(obj, 0x2a8);
+                fn_8022D5A0(arw);
+                break;
+            }
+        }
     }
 }
 #pragma peephole reset
