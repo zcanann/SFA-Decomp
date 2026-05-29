@@ -10250,6 +10250,7 @@ extern char sObjSetupObjectLoadingLockedWarning[];
 extern char lbl_802CAC54[];
 
 #pragma peephole off
+#pragma scheduling off
 void *Obj_SetupObject(int a, int b, int c, int d, int e) {
     void *obj;
     if (getLoadedFileFlags(0) & 0x100000) {
@@ -10263,6 +10264,7 @@ void *Obj_SetupObject(int a, int b, int c, int d, int e) {
     }
     return obj;
 }
+#pragma scheduling reset
 
 #pragma scheduling off
 void *loadObjectAtObject(u8 *src, int arg1) {
