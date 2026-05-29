@@ -9200,9 +9200,9 @@ void mtxFn_80021ec0(u8 *p, f32 s) {
 void *ObjList_GetObjects(int *outA, int *outB) {
     if (outA != NULL) {
         *outA = 0;
-        if (outB != NULL) {
-            *outB = lbl_803DCB84;
-        }
+    }
+    if (outB != NULL) {
+        *outB = lbl_803DCB84;
     }
     return lbl_803DCB88;
 }
