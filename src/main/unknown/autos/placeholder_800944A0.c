@@ -830,5 +830,62 @@ int expgfx_acquireResourceEntry(int arg) {
     }
     return -3;
 }
+
+typedef struct {
+    s16 a;
+    s16 b;
+    s16 f4;
+    s16 f6;
+    f32 f8;
+} PartfxFlags;
+
+void fn_80098928(void *obj, u8 mode, int p5, int p6, int p7, f32 fval) {
+    PartfxFlags params;
+    int i;
+    u8 count;
+
+    if (framesThisStep > 3) {
+        count = 3;
+    } else {
+        count = framesThisStep;
+    }
+    params.f6 = (s16)p5;
+    params.f4 = (s16)p6;
+    params.f8 = fval;
+    switch (mode) {
+    case 1:
+        params.a = 0;
+        params.b = 0;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b7, &params, 1, -1, p7);
+        }
+        break;
+    case 2:
+        params.a = 1;
+        params.b = 0;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b7, &params, 1, -1, p7);
+        }
+        break;
+    case 3:
+        params.a = 0;
+        params.b = 1;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b7, &params, 1, -1, p7);
+        }
+        break;
+    case 4:
+        params.a = 1;
+        params.b = 1;
+        for (i = 0; i < count; i++) {
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7b7, &params, 1, -1, p7);
+        }
+        break;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
