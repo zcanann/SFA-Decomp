@@ -5686,4 +5686,53 @@ void dll_06_func08(int obj) {
         }
     }
 }
+
+extern void Obj_SetModelColorOverrideRecursive(int obj, int r, int g, int b, int a, int flag);
+
+void fn_8008DAE8(int obj) {
+    u8 *s;
+    f32 v;
+    int alpha;
+
+    if (lbl_803DD184 == NULL) {
+        Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
+    }
+    if (lbl_803DB750 == 0 && (*(u16 *)((s = lbl_803DD184) + 4) & 1) == 0) {
+        v = *(f32 *)(s + 0x14);
+        if (v < lbl_803DF108) {
+            alpha = 255;
+        } else if (v > lbl_803DF148) {
+            alpha = 0;
+        } else {
+            alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
+        }
+        Obj_SetModelColorOverrideRecursive(obj, (u8) * (int *)(s + 0x24),
+                                           (u8) * (int *)(s + 0x28),
+                                           (u8) * (int *)(s + 0x2c), (u8)alpha, 1);
+    } else {
+        Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
+    }
+}
+
+void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
+    u8 *p = mmAlloc(40, 23, 0);
+
+    if (p == NULL) {
+        return NULL;
+    }
+    *(f32 *)(p + 0) = a[0];
+    *(f32 *)(p + 4) = a[1];
+    *(f32 *)(p + 8) = a[2];
+    *(f32 *)(p + 0xc) = b[0];
+    *(f32 *)(p + 0x10) = b[1];
+    *(f32 *)(p + 0x14) = b[2];
+    *(f32 *)(p + 0x18) = c;
+    *(f32 *)(p + 0x1c) = d;
+    *(s16 *)(p + 0x22) = e;
+    *(u8 *)(p + 0x26) = f;
+    *(s16 *)(p + 0x20) = 0;
+    *(s16 *)(p + 0x24) = 0xFFFF;
+    *(u8 *)(p + 0x27) = g;
+    return p;
+}
 #pragma pop
