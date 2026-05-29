@@ -5459,6 +5459,7 @@ int FUN_80006a70(int param_1,int param_2,int param_3,uint param_4,int param_5,in
     return 0;
 }
 
+#pragma dont_inline on
 int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, int f)
 {
     int count;
@@ -5492,6 +5493,7 @@ int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, i
     }
     return nodeBase + count;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -11412,6 +11414,7 @@ extern f32 lbl_803DE6B0;
  * EN v1.0 Address: 0x80012D00
  * EN v1.0 Size: 264b
  */
+#pragma dont_inline on
 void voxmaps_worldToGrid(f32* in, s16* out)
 {
     f32 sx, sy, sz;
@@ -11438,6 +11441,7 @@ void voxmaps_worldToGrid(f32* in, s16* out)
     out[1] = iy / 10;
     out[2] = iz / 10;
 }
+#pragma dont_inline reset
 
 extern int lbl_803DC9AC;
 extern int lbl_803DC9B0;
@@ -12507,6 +12511,182 @@ int *voxmaps_updateActiveMap(VoxPos *obj)
 }
 
 typedef struct {
+    u8 pad00[4];
+    int minY;
+    u8 pad08[4];
+    int maxY;
+    u8 pad10[4];
+    int *nodeBase;
+    u8 pad18[4];
+    u8 *header;
+    u8 pad20[4];
+    u8 *bitmap;
+} VoxActiveMap;
+
+typedef struct {
+    int unk00;
+    int unk04;
+    int originX;
+    int originY;
+    VoxActiveMap *activeMap;
+} VoxState;
+
+extern VoxState lbl_803387E8;
+
+int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, u8 skipFirst) {
+    int zstep, dx2, dy2, dz2;
+    int p_xy, p_xz, p_yz;
+    int steps;
+    int voxX6, slot, voxZ6, voxX, voxZ;
+    int remap;
+    VoxActiveMap *cachedMap;
+    VoxState *st;
+    int oldVox;
+    u8 first;
+    VoxPos cur = *start;
+    VoxPos found;
+    u8 *node;
+    int xstep, ystep;
+    int dx, dy, dz;
+    unsigned int skip;
+
+    xstep = 1;
+    dx = end->x - cur.x;
+    if (dx < 0) { xstep = -1; dx = -dx; }
+    ystep = 1;
+    dy = end->unk2 - cur.unk2;
+    if (dy < 0) { ystep = -1; dy = -dy; }
+    zstep = 1;
+    dz = end->z - cur.z;
+    if (dz < 0) { zstep = -1; dz = -dz; }
+
+    dx2 = dx * 2;
+    p_xy = dy - dx;
+    dy2 = dy * 2;
+    p_xz = dz - dx;
+    dz2 = dz * 2;
+    p_yz = dy - dz;
+    steps = dx + (dy + dz);
+
+    voxmaps_updateActiveMap(&cur);
+
+    st = &lbl_803387E8;
+    voxX6 = (cur.x - st->originX) & 0x3f;
+    voxX = voxX6 >> 2;
+    voxZ6 = (cur.z - st->originY) & 0x3f;
+    voxZ = voxZ6 >> 2;
+    found = cur;
+    cachedMap = NULL;
+    first = 1;
+    skip = skipFirst;
+
+    while (steps-- != 0) {
+        if (skip != 0 && first != 0) {
+            first = 0;
+        } else {
+            VoxActiveMap *map = st->activeMap;
+            if (map != NULL) {
+                if (map != cachedMap || cur.unk2 != found.unk2) {
+                    int y = cur.unk2;
+                    if (y < map->minY) {
+                        slot = 0;
+                    } else if (y >= map->maxY) {
+                        slot = (map->maxY - 1) - map->minY;
+                    } else {
+                        slot = y - map->minY;
+                    }
+                    remap = 1;
+                    cachedMap = map;
+                    found.unk2 = y;
+                }
+                {
+                    u8 *bitmap = map->bitmap;
+                    unsigned int bit = (bitmap[(slot << 5) | ((voxZ << 1) + (voxX >> 3))] >> (voxX & 7)) & 1;
+                    if (bit != 0) {
+                        unsigned int occ;
+                        if (remap != 0) {
+                            node = (u8 *)voxmaps_getRouteNode(map->header, map->nodeBase, bitmap, voxX, slot, voxZ);
+                            remap = 0;
+                        }
+                        occ = (node[voxZ6 & 3] >> ((voxX6 & 3) << 1)) & 3;
+                        if (occ != 0) {
+                            if (occOut != NULL) {
+                                *occOut = occ;
+                            }
+                            if (coordOut != NULL) {
+                                *coordOut = found;
+                            }
+                            return 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (p_xy < 0) {
+            if (p_xz < 0) {
+                found.x = cur.x;
+                cur.x = (s16)(cur.x + xstep);
+                p_xy += dy2;
+                p_xz += dz2;
+                oldVox = voxX;
+                if (((cur.x - st->originX) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                voxX6 = (cur.x - st->originX) & 0x3f;
+                voxX = voxX6 >> 2;
+                if (voxX != oldVox) {
+                    remap = 1;
+                }
+            } else {
+                found.z = cur.z;
+                cur.z = (s16)(cur.z + zstep);
+                p_xz -= dx2;
+                p_yz += dy2;
+                oldVox = voxZ;
+                if (((cur.z - st->originY) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                voxZ6 = (cur.z - st->originY) & 0x3f;
+                voxZ = voxZ6 >> 2;
+                if (voxZ != oldVox) {
+                    remap = 1;
+                }
+            }
+        } else {
+            if (p_yz < 0) {
+                found.z = cur.z;
+                cur.z = (s16)(cur.z + zstep);
+                p_xz -= dx2;
+                p_yz += dy2;
+                oldVox = voxZ;
+                if (((cur.z - st->originY) >> 6) != 0) {
+                    voxmaps_updateActiveMap(&cur);
+                    cachedMap = NULL;
+                }
+                voxZ6 = (cur.z - st->originY) & 0x3f;
+                voxZ = voxZ6 >> 2;
+                if (voxZ != oldVox) {
+                    remap = 1;
+                }
+            } else {
+                found.unk2 = cur.unk2;
+                cur.unk2 = (s16)(cur.unk2 + ystep);
+                p_xy -= dx2;
+                p_yz -= dz2;
+            }
+        }
+    }
+
+    if (coordOut != NULL) {
+        *coordOut = *end;
+    }
+    return 1;
+}
+
+typedef struct {
     u8 pad00[0x14];
     int f14;
     int f18;
@@ -12718,9 +12898,10 @@ typedef struct {
     s16 x;
     s16 unk2;
     s16 y;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
+    u16 unk6;
+    u16 unk8;
+    u8 unkA;
+    u8 unkB;
     u8 flag;
     u8 unkD;
 } RouteNode;
@@ -12728,15 +12909,19 @@ typedef struct {
 typedef struct {
     RouteNode *nodes;
     CurveHeapNode *queue;
-    int unk08;
+    f32 *unk08;
     s16 tgtX;
     s16 unk0E;
     s16 tgtY;
     s16 unk12;
-    int unk14;
+    s16 unk14;
+    s16 unk16;
     int cur;
     s16 unk1C;
     s16 queueCount;
+    s16 unk20;
+    s16 pad22;
+    s16 unk24;
 } RouteState;
 
 /*
@@ -12744,6 +12929,7 @@ typedef struct {
  * EN v1.0 Address: 0x8000C05C
  * EN v1.0 Size: 268b
  */
+#pragma dont_inline on
 int voxmaps_processRouteQueue(RouteState *state, int count)
 {
     int done = 0;
@@ -12778,6 +12964,159 @@ int voxmaps_processRouteQueue(RouteState *state, int count)
         }
         count--;
     }
+    return ret;
+}
+#pragma dont_inline reset
+
+typedef struct {
+    f32 destPos[3];
+    f32 curPos[3];
+    f32 tgtPos[3];
+    u8 navState;
+    u8 flag25;
+    u8 maxIters;
+    u8 budget;
+} RouteNav;
+
+extern int fn_800119FC(s16 *dest, s16 *start, s16 *out);
+extern int fn_80011EB0(RouteState *state, int a);
+extern f32 lbl_803DE6A0;
+
+int voxmaps_updateRoutePath(RouteNav *nav, RouteState *state) {
+    RouteNode *node;
+    int navState;
+    int ret = 0;
+    int flag = 0;
+    int i;
+    s16 out[3];
+
+    navState = nav->navState;
+    if (navState == 0) {
+        int pathDirect;
+
+        state->queueCount = 0;
+        state->unk1C = 0;
+        for (i = 0; i < 200; i++) {
+            state->queue[i].priority = 0;
+            state->nodes[i].flag = 0;
+        }
+        voxmaps_worldToGrid(nav->destPos, &state->unk12);
+        voxmaps_worldToGrid(nav->curPos, &state->tgtX);
+        state->unk12 &= ~1;
+        state->unk16 &= ~1;
+        state->tgtX &= ~1;
+        state->tgtY &= ~1;
+        if (fn_800119FC(&state->unk12, &state->tgtX, out) != 0) {
+            pathDirect = 1;
+        } else {
+            int count;
+            state->unk24 = 0x2710;
+            count = state->unk1C;
+            if (count == 0xc8) {
+                debugPrintf(sVoxmapsRouteNodesListOverflow);
+                node = NULL;
+            } else {
+                int dx, dz, d2;
+                state->unk1C = count + 1;
+                node = &state->nodes[count];
+                node->x = out[0];
+                node->unk2 = out[1];
+                node->y = out[2];
+                node->unk8 = 0;
+                node->unkA = 0xff;
+                dx = state->tgtX - node->x;
+                dz = state->tgtY - node->y;
+                d2 = dx * dx + dz * dz;
+                node->unk6 = (u16)(lbl_803DE6A0 * sqrtf((f32)d2));
+            }
+            {
+                u16 cost = node->unk6 + node->unk8;
+                CurveHeapNode *queue = state->queue;
+                int pos;
+                u16 key;
+                u16 val;
+                int parent;
+
+                state->queueCount++;
+                queue[state->queueCount].value = (u16)(state->unk1C - 1);
+                queue[state->queueCount].priority = (u16)(0xffff - cost);
+                pos = state->queueCount;
+                key = queue[pos].priority;
+                val = queue[pos].value;
+                queue[0].priority = 0xffff;
+                parent = pos >> 1;
+                while (queue[parent].priority <= key) {
+                    queue[pos].value = queue[parent].value;
+                    queue[pos].priority = queue[parent].priority;
+                    pos = parent;
+                    parent = pos >> 1;
+                }
+                queue[pos].priority = key;
+                queue[pos].value = val;
+                state->unk20 = 0;
+            }
+            pathDirect = 0;
+        }
+        if (pathDirect != 0) {
+            nav->tgtPos[0] = nav->curPos[0];
+            nav->tgtPos[1] = nav->curPos[1];
+            nav->tgtPos[2] = nav->curPos[2];
+            ret = 1;
+            flag = 1;
+        } else {
+            navState = 1;
+        }
+    }
+
+    if (navState != 0) {
+        int r;
+        ret = 1;
+        r = voxmaps_processRouteQueue(state, nav->budget);
+        if (r == 0) {
+            if (navState++ < nav->maxIters) {
+                /* keep stepping next frame */
+            } else {
+                navState = 0;
+                if (fn_80011EB0(state, 1) != 0) {
+                    nav->tgtPos[0] = state->unk08[0];
+                    nav->tgtPos[1] = state->unk08[1];
+                    nav->tgtPos[2] = state->unk08[2];
+                } else {
+                    nav->tgtPos[0] = nav->curPos[0];
+                    nav->tgtPos[1] = nav->curPos[1];
+                    nav->tgtPos[2] = nav->curPos[2];
+                    flag = 1;
+                }
+            }
+            ret = 1;
+        } else if (r > 0) {
+            if (r < 2) {
+                navState = 0;
+                if (fn_80011EB0(state, 1) != 0) {
+                    nav->tgtPos[0] = state->unk08[0];
+                    nav->tgtPos[1] = state->unk08[1];
+                    nav->tgtPos[2] = state->unk08[2];
+                } else {
+                    nav->tgtPos[0] = nav->curPos[0];
+                    nav->tgtPos[1] = nav->curPos[1];
+                    nav->tgtPos[2] = nav->curPos[2];
+                    flag = 1;
+                }
+                ret = 1;
+            }
+        } else {
+            if (r >= -1) {
+                navState = 0;
+                nav->tgtPos[0] = nav->destPos[0];
+                nav->tgtPos[1] = nav->destPos[1];
+                nav->tgtPos[2] = nav->destPos[2];
+                flag = 1;
+            }
+        }
+    }
+
+    nav->navState = (u8)navState;
+    nav->flag25 = (u8)flag;
     return ret;
 }
 

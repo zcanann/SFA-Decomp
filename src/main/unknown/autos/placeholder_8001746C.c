@@ -1300,9 +1300,543 @@ void FUN_800174cc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void textRenderStr(void)
-{
+extern int curLanguage;
+extern u8 *gameTextFonts;
+extern void *gameTextDrawFunc;
+extern char *sLanguageNameTable[][2];
+extern u8 lbl_802C7400[];
+extern u8 lbl_802C8680[];
+extern f32 lbl_803DE704;
+extern f32 lbl_803DE708;
+extern f32 lbl_803DE70C;
+extern f32 lbl_803DE710;
+extern f32 lbl_803DE714;
+extern f32 lbl_803DE718;
+extern f32 lbl_803DC9A0;
+extern f32 lbl_803DC994;
+extern u8 lbl_803DC9A4;
+extern u8 lbl_803DC9A5;
+extern u8 lbl_803DC9A6;
+extern u8 lbl_803DC9A7;
+extern int lbl_803DC9BC;
+extern int lbl_803DC9B0;
+extern int lbl_803DC9AC;
+extern int lbl_803DC9B8;
+extern int lbl_803DC9B4;
+extern int lbl_803DC998;
+extern int lbl_803DC98C;
+extern int lbl_803DC988;
+extern int lbl_803DC99C;
+extern int lbl_803DC9E8;
+extern int lbl_803DB3CC;
+int getControlCharLen(u32 c);
+extern int utf8GetNextChar(u8 *p, int *outLen);
+void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang);
+extern void translateToDinoLanguage(u8 *str);
+extern void setTextColor(int a, int r, int g, int b, int al);
+extern void _textSetColor(int a, int r, int g, int b, int al);
+extern void textureSetupFn_800799c0(void);
+extern void textRenderSetup(void);
+extern void textRenderSetupFn_80079804(void);
+extern void textRenderSetupFn_800795e8(void);
+extern void textBlendSetupFn_80078a7c(void);
+extern void selectTexture(void *tex, int a);
+extern void GXGetScissor(u32 *a, u32 *b, u32 *c, u32 *d);
+extern void GXSetScissor(u32 a, u32 b, u32 c, u32 d);
+extern void gxSetScissorRect(int a, int b, int c, int d, int e, int f);
+extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
+    int byteOff;
+    int glyphLang;
+    int curTexPage;
+    int realign;
+    int ch;
+    int charLen;
+    int n2;
+    int i;
+    int cnt;
+    int skipGlyph;
+    u8 *p;
+    u8 *g;
+    u8 *winBase;
+    void *tex;
+    f32 spaceExtra;
+    f32 measW;
+    f32 measN;
+    f32 fx0, fy0, fx1, fy1;
+    f32 u0, v0;
+    int params[8];
+    u32 scisX, scisY, scisW, scisH;
+
+    byteOff = 0;
+    spaceExtra = lbl_803DE704;
+    if (lbl_803DC9E8 == 2) {
+        glyphLang = 6;
+    } else {
+        glyphLang = ((u8 *)sLanguageNameTable)[curLanguage * 8 + 4];
+    }
+    curTexPage = -1;
+    realign = 1;
+    if (str == NULL) {
+        return;
+    }
+    if (*(int *)(gameTextFonts + 0x1c) != 2) {
+        return;
+    }
+
+    if (curLanguage != 4 && mode == 1 && saveFileStruct_isCheatActive(3) &&
+        win == lbl_802C7400 + 0x140) {
+        translateToDinoLanguage(str);
+    }
+
+    gameTextMeasureString(str, &measW, &measN, lbl_803DC9A0, 0, 0, -1);
+    if (lbl_803DC9BC == 0) {
+        setTextColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
+        _textSetColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
+        textureSetupFn_800799c0();
+        textRenderSetup();
+        textRenderSetupFn_80079804();
+        textBlendSetupFn_80078a7c();
+    }
+
+    x = x + (f32)*(s16 *)(win + 0x14);
+    y = y + (f32)*(s16 *)(win + 0x16);
+    winBase = lbl_802C7400;
+
+    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
+        byteOff += charLen;
+        skipGlyph = 0;
+        if (ch >= 0xe000 && ch <= 0xf8ff) {
+            n2 = getControlCharLen(ch);
+            for (i = 0; i < n2; i++) {
+                int hi = str[byteOff++];
+                int lo = str[byteOff++];
+                params[i] = (hi << 8) | lo;
+            }
+            if ((u32)(ch - 0xf8f4) <= 0xb) {
+                switch (ch) {
+                case 0xf8f4:
+                    lbl_803DC9A0 = (f32)params[0] * lbl_803DE708;
+                    break;
+                case 0xf8f7:
+                    glyphLang = params[0];
+                    break;
+                case 0xf8f8:
+                    win[0x12] = 0;
+                    realign = 1;
+                    break;
+                case 0xf8f9:
+                    win[0x12] = 1;
+                    realign = 1;
+                    break;
+                case 0xf8fa:
+                    win[0x12] = 2;
+                    realign = 1;
+                    break;
+                case 0xf8fb:
+                    win[0x12] = 3;
+                    realign = 1;
+                    break;
+                case 0xf8ff:
+                    if (mode == 0) {
+                        lbl_803DC9A4 = params[3] * (lbl_803DC9A4 + 1) >> 8;
+                        lbl_803DC9A7 = params[0];
+                        lbl_803DC9A6 = params[1];
+                        lbl_803DC9A5 = params[2];
+                        if (lbl_803DC9BC == 0) {
+                            setTextColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
+                            _textSetColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
+                            textureSetupFn_800799c0();
+                            textRenderSetup();
+                            textRenderSetupFn_80079804();
+                            textBlendSetupFn_80078a7c();
+                        }
+                    }
+                    skipGlyph = 1;
+                    break;
+                }
+            }
+            if (skipGlyph) {
+                continue;
+            }
+        } else {
+            if (mode == 0) {
+                lbl_803DC998++;
+            }
+        }
+
+        if (realign != 0) {
+            switch (win[0x12]) {
+            case 0:
+                spaceExtra = lbl_803DE704;
+                break;
+            case 1:
+                spaceExtra = lbl_803DE704;
+                gameTextMeasureString(p, &measW, NULL, lbl_803DC9A0, 0, 0, -1);
+                x = (f32)*(s16 *)(win + 0x14) +
+                    ((f32)(u32)*(u16 *)(win + 8) - measW);
+                break;
+            case 2:
+                spaceExtra = lbl_803DE704;
+                gameTextMeasureString(p, &measW, NULL, lbl_803DC9A0, 0, 0, -1);
+                x = ((f32)(u32)*(u16 *)(win + 8) - measW) * lbl_803DE70C +
+                    (f32)*(s16 *)(win + 0x14);
+                break;
+            case 3: {
+                int acc = 0;
+                int spaceCount = 0;
+                int innerCh;
+                int innerLen;
+                gameTextMeasureString(p, &measW, NULL, lbl_803DC9A0, 0, 0, -1);
+                while ((innerCh = utf8GetNextChar(p + acc, &innerLen)) != 0) {
+                    acc += innerLen;
+                    if (innerCh == 0x20) {
+                        spaceCount++;
+                    }
+                    if (innerCh >= 0xe000 && innerCh <= 0xf8ff) {
+                        acc += getControlCharLen(innerCh) * 2;
+                    }
+                }
+                spaceExtra = ((f32)(u32)*(u16 *)(win + 8) - measW) / (f32)spaceCount;
+                break;
+            }
+            }
+            realign = 0;
+        }
+
+        g = *(u8 **)gameTextFonts;
+        cnt = *(int *)(gameTextFonts + 8);
+        while (cnt-- != 0) {
+            if (*(u32 *)g == (u32)ch && g[0xe] == glyphLang) {
+                goto matched;
+            }
+            g += 0x10;
+        }
+        g = NULL;
+    matched:
+        if (g == NULL) {
+            continue;
+        }
+
+        if (ch == 0xa) {
+            x = lbl_803DE704;
+            y = y + lineH;
+            continue;
+        }
+        if (ch == 0x20) {
+            x = lbl_803DC9A0 * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + x;
+            x = x + spaceExtra;
+            continue;
+        }
+
+        u0 = (f32)(*(u16 *)(g + 4) << 5);
+        v0 = (f32)(*(u16 *)(g + 6) << 5);
+        fx0 = lbl_803DE710 * (x + (f32)*(s8 *)(g + 8) * lbl_803DC9A0);
+        fy0 = lbl_803DE710 * (y + (f32)*(s8 *)(g + 0xa) * lbl_803DC9A0);
+        fx1 = lbl_803DE710 * ((f32)(u32)g[0xc] * lbl_803DC9A0) + fx0;
+        fy1 = lbl_803DE710 * ((f32)(u32)g[0xd] * lbl_803DC9A0) + fy0;
+        if (fx0 < lbl_803DE704 && fx1 > lbl_803DE704) {
+            u0 = lbl_803DE714 * -fx0 + u0;
+            fx0 = lbl_803DE704;
+        }
+        if (fy0 < lbl_803DE704 && fy1 > lbl_803DE704) {
+            v0 = lbl_803DE714 * -fy0 + v0;
+            fy0 = lbl_803DE704;
+        }
+
+        if (lbl_803DC9BC != 0) {
+            if (fx0 < (f32)lbl_803DC9B0) {
+                lbl_803DC9B0 = (int)fx0;
+            }
+            if (fx1 > (f32)lbl_803DC9AC) {
+                lbl_803DC9AC = (int)fx1;
+            }
+            if (fy0 < (f32)lbl_803DC9B8) {
+                lbl_803DC9B8 = (int)fy0;
+            }
+            if (fy1 > (f32)lbl_803DC9B4) {
+                lbl_803DC9B4 = (int)fy1;
+            }
+        } else {
+            if (g[0xe] == 3) {
+                f32 shift = (f32)(lbl_803DB3CC << 2);
+                fy0 = fy0 - shift;
+                fy1 = fy1 - shift;
+                GXGetScissor(&scisX, &scisY, &scisW, &scisH);
+                if (scisY < lbl_803DB3CC) {
+                    GXSetScissor(scisX, 0, scisW, scisH);
+                } else {
+                    GXSetScissor(scisX, scisY - lbl_803DB3CC, scisW, scisH);
+                }
+            }
+            if (g[0xe] == 5) {
+                int iw = g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9));
+                int ih = g[0xd] + (*(s8 *)(g + 0xa) + *(s8 *)(g + 0xb));
+                GXGetScissor(&scisX, &scisY, &scisW, &scisH);
+                gxSetScissorRect(0, 0, *(s16 *)(winBase + 0xfd4), *(s16 *)(winBase + 0xfd6),
+                                 *(s16 *)(winBase + 0xfd4) + *(u16 *)(winBase + 0xfc8),
+                                 *(s16 *)(winBase + 0xfd6) + *(u16 *)(winBase + 0xfca));
+                fx0 = (f32)(*(s16 *)(winBase + 0xfd4) + ((*(u16 *)(winBase + 0xfc8) - iw) >> 1));
+                fx1 = fx0 + (f32)iw;
+                fy0 = (f32)(*(s16 *)(winBase + 0xfd6) + ((*(u16 *)(winBase + 0xfca) - ih) >> 1));
+                fy1 = fy0 + (f32)ih;
+                fx0 = fx0 * lbl_803DE710;
+                fx1 = fx1 * lbl_803DE710;
+                fy0 = fy0 * lbl_803DE710;
+                fy1 = fy1 * lbl_803DE710;
+            }
+
+            if (mode != 0) {
+                f32 ox = (f32)lbl_803DC98C;
+                f32 oy = (f32)lbl_803DC988;
+                fx0 = fx0 + ox;
+                fx1 = fx1 + ox;
+                fy0 = fy0 + oy;
+                fy1 = fy1 + oy;
+            }
+
+            if (lbl_803DC9BC == 0) {
+                if (curTexPage != g[0xf]) {
+                    curTexPage = g[0xf];
+                    tex = *(void **)(gameTextFonts + 0x10 + g[0xf] * 4);
+                    selectTexture(tex, 0);
+                    if (lbl_802C8680[g[0xe] * 16 + 6] == 1) {
+                        if (mode != 0) {
+                            setTextColor(0, 0, 0, 0, lbl_803DC9A4);
+                        } else {
+                            setTextColor(0, 0xff, 0xff, 0xff, lbl_803DC9A4);
+                            textureSetupFn_800799c0();
+                            textRenderSetupFn_800795e8();
+                            textRenderSetupFn_80079804();
+                        }
+                    } else {
+                        setTextColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
+                        _textSetColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
+                        textureSetupFn_800799c0();
+                        textRenderSetup();
+                        textRenderSetupFn_80079804();
+                    }
+                }
+            }
+
+            if (lbl_803DC99C != 0 && mode == 0 && g[0xe] != 5 &&
+                (f32)lbl_803DC998 >= lbl_803DC994) {
+                setTextColor(0, 0, 0, 0, 0);
+            }
+
+            if (gameTextDrawFunc != NULL) {
+                f32 sW = lbl_803DE718 * (f32)(u32)*(u16 *)((u8 *)tex + 0xa);
+                f32 sH = lbl_803DE718 * (f32)(u32)*(u16 *)((u8 *)tex + 0xc);
+                ((void (*)(int, int, int, int, f32, f32, f32, f32))gameTextDrawFunc)(
+                    (int)fx0, (int)fy0, (int)fx1, (int)fy1,
+                    u0 / sW, v0 / sH,
+                    (u0 + (f32)(g[0xc] << 5)) / sW,
+                    (v0 + (f32)(g[0xd] << 5)) / sH);
+            } else {
+                f32 sW = lbl_803DE718 * (f32)(u32)*(u16 *)((u8 *)tex + 0xa);
+                f32 sH = lbl_803DE718 * (f32)(u32)*(u16 *)((u8 *)tex + 0xc);
+                textRenderChar((int)fx0, (int)fy0, (int)fx1, (int)fy1,
+                               u0 / sW, v0 / sH,
+                               (u0 + (f32)(g[0xc] << 5)) / sW,
+                               (v0 + (f32)(g[0xd] << 5)) / sH);
+            }
+
+            if (g[0xe] == 3 || g[0xe] == 5) {
+                GXSetScissor(scisX, scisY, scisW, scisH);
+            }
+        }
+
+        if (g[0xe] != 5) {
+            x = lbl_803DC9A0 * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + x;
+        }
+    }
 }
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang) {
+    int byteOff;
+    int ch;
+    int charLen;
+    int n2;
+    int i;
+    int cnt;
+    u8 *p;
+    u8 *g;
+    u8 *tbl;
+    f32 width;
+    f32 mAdv;
+    f32 mH;
+    int params[8];
+
+    byteOff = 0;
+    width = lbl_803DE704;
+    if (str == NULL) {
+        return;
+    }
+    if (glyphLang == -1) {
+        if (lbl_803DC9E8 == 2) {
+            glyphLang = 6;
+        } else {
+            glyphLang = ((u8 *)sLanguageNameTable)[curLanguage * 8 + 4];
+        }
+    }
+    tbl = &lbl_802C8680[glyphLang * 16];
+    if (glyphLang != 5) {
+        if (outMaxAdv != NULL) {
+            *outMaxAdv = (f32)(u32)*(u16 *)(tbl + 8) * scale;
+        }
+        if (outMaxH != NULL) {
+            *outMaxH = (f32)(u32)*(u16 *)(tbl + 0xa) * scale;
+        }
+    }
+
+    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
+        byteOff += charLen;
+        if (ch >= 0xe000 && ch <= 0xf8ff) {
+            n2 = getControlCharLen(ch);
+            for (i = 0; i < n2; i++) {
+                int hi = str[byteOff++];
+                int lo = str[byteOff++];
+                params[i] = (hi << 8) | lo;
+            }
+            switch (ch) {
+            case 0xf8f7:
+                glyphLang = params[0];
+                tbl = &lbl_802C8680[glyphLang * 16];
+                if (glyphLang != 5) {
+                    mAdv = (f32)(u32)*(u16 *)(tbl + 8) * scale;
+                    if (outMaxAdv != NULL && mAdv > *outMaxAdv) {
+                        *outMaxAdv = mAdv;
+                    }
+                    mH = (f32)(u32)*(u16 *)(tbl + 0xa) * scale;
+                    if (outMaxH != NULL && mH > *outMaxH) {
+                        *outMaxH = mH;
+                    }
+                }
+                break;
+            case 0xf8f4:
+                scale = (f32)params[0] * lbl_803DE708;
+                break;
+            }
+            continue;
+        }
+
+        g = *(u8 **)gameTextFonts;
+        cnt = *(int *)(gameTextFonts + 8);
+        while (cnt-- != 0) {
+            if (*(u32 *)g == (u32)ch && g[0xe] == glyphLang) {
+                goto matched;
+            }
+            g += 0x10;
+        }
+        g = NULL;
+    matched:
+        if (g == NULL) {
+            continue;
+        }
+        if (glyphLang == 5) {
+            continue;
+        }
+        width = scale * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + width;
+    }
+
+    if (outW != NULL) {
+        *outW = width;
+    }
+    if (outZero != NULL) {
+        *outZero = lbl_803DE704;
+    }
+}
+#pragma pop
+
+extern u8 sGameTextGlyphOrder[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void translateToDinoLanguage(u8 *str) {
+    int byteOff = 0;
+    u32 ch;
+    int charLen;
+    u8 *p;
+
+    if (str == NULL) {
+        return;
+    }
+    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
+        if (ch >= 0xe000 && ch <= 0xf8ff) {
+            byteOff += getControlCharLen(ch) * 2;
+        } else {
+            int base;
+            if (ch >= 0x61 && ch <= 0x7a) {
+                base = 0x61;
+            } else if (ch >= 0x41 && ch <= 0x5a) {
+                base = 0x41;
+            } else {
+                base = 0;
+            }
+            if (base != 0) {
+                *p = sGameTextGlyphOrder[ch - base] + base - 0x61;
+            }
+        }
+        byteOff += charLen;
+    }
+}
+#pragma pop
+
+extern char lbl_802C8F40[];
+extern u8 lbl_803399A0[];
+extern u8 lbl_803399C0[];
+extern int lbl_803DC970;
+extern u8 *lbl_803DC974;
+extern int lbl_803DC978;
+extern int lbl_803DC97C;
+extern void *gameTextGet(void);
+extern int sprintf(char *dst, const char *fmt, ...);
+
+#pragma push
+#pragma scheduling off
+void *gameTextGetStr(void) {
+    u8 *entry;
+    void *t;
+
+    if (*(int *)(gameTextFonts + 0x1c) == 2) {
+        t = gameTextGet();
+        return *(void **)*(u8 **)((u8 *)t + 8);
+    }
+    lbl_803DC97C = lbl_803DC97C + 1;
+    if (lbl_803DC97C >= 8) {
+        lbl_803DC97C = 0;
+    }
+    entry = lbl_803399C0 + lbl_803DC97C * 0xc;
+    lbl_803DC974 = entry;
+    lbl_803DC978 = *(int *)*(int **)(entry + 8);
+    *(u16 *)entry = 0xffff;
+    lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
+    switch (*(int *)(gameTextFonts + 0x1c)) {
+    case 0:
+        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xec4);
+        break;
+    case 1:
+        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xed4);
+        break;
+    case 3:
+        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xee0);
+        break;
+    case 4:
+        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xef0);
+        break;
+    }
+    return lbl_803DC974;
+}
+#pragma pop
 
 /*
  * --INFO--
@@ -9984,6 +10518,7 @@ void ObjModel_ClearBlendChannels(u8 *model) {
 extern f32 lbl_803DE840;
 
 #pragma scheduling off
+#pragma peephole off
 void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 weight, int flags) {
     u8 *ch;
     u8 *hdr;
@@ -10026,6 +10561,7 @@ void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 w
     ch[0xe] = flags | 4;
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 extern void modelApplyBoneTransforms(int a, int b, int c, void *d, void *e, int f);
 extern f32 lbl_803DE818;
@@ -10250,6 +10786,7 @@ extern char sObjSetupObjectLoadingLockedWarning[];
 extern char lbl_802CAC54[];
 
 #pragma peephole off
+#pragma scheduling off
 void *Obj_SetupObject(int a, int b, int c, int d, int e) {
     void *obj;
     if (getLoadedFileFlags(0) & 0x100000) {
@@ -10263,6 +10800,7 @@ void *Obj_SetupObject(int a, int b, int c, int d, int e) {
     }
     return obj;
 }
+#pragma scheduling reset
 
 #pragma scheduling off
 void *loadObjectAtObject(u8 *src, int arg1) {
@@ -10306,6 +10844,9 @@ void ObjModel_InitResourceCaches(void) {
 }
 #pragma pop
 
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 void ObjModel_Release(u8 *model) {
     u8 *header;
     int i;
@@ -10338,6 +10879,7 @@ void ObjModel_Release(u8 *model) {
         mm_free(header);
     }
 }
+#pragma pop
 
 extern void setGQR6(u32 v);
 extern void mapSetup();

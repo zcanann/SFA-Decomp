@@ -56,8 +56,15 @@ Heuristic before reaching for `asm { }`:
    and FP ops around calls), while `peephole off` can *hurt* them (jump-table
    suppression, clamp/compare fusion changes). Default to `scheduling off` only,
    and add `peephole off` *only* to kill a specific `extsb.`/`rlwinm.` dot-merge
-   residual. Whole object-DLL units (e.g. placeholder_80220608) match best on
-   scheduling-off-only.
+   residual. Many object-DLL units lean scheduling-off; but the on/off choice is
+   PER-FUNCTION, not per-unit — A/B test both each time. On placeholder_80220608:
+   scheduling-off always; `peephole off` WINS on the arwing bit-test/flag handlers
+   (target has UNFUSED `rlwinm+cmpwi` bit-tests + a redundant `clrlwi r0,r0,24`
+   after byte-flag `|=`/`&=` that peephole-ON wrongly fuses/drops — fn_8022C30C
+   91.2→98.3%, fn_8022CDEC 89.9→97%), but `peephole off` LOSES on the
+   cror-float-compare-heavy handlers (arwarwing_update). Same unit, opposite
+   answer — so measure both per function (corrects the earlier over-broad
+   "80220608 = scheduling-off-only" claim).
    **`#pragma ... reset` POPS a stack — it does NOT reset-to-default.** `on`/`off`
    push; `reset` restores the *surrounding* state. So nested regions matter: a
    function between an outer `off` and an inner `... reset` is still `off`. When
@@ -361,6 +368,14 @@ Heuristic before reaching for `asm { }`:
     reproduce target's `crclr 4*cr1+eq` varargs marker; widen a callee's return
     `void`→`int` when target keeps its result live even if your caller ignores
     it.)
+    **`#pragma fp_contract off` IS available per-function** (used in several real
+    DLLs) — wrap a function in it when target does a SEPARATE `fmul`+`fadd` where
+    MWCC fuses to `fmadds`. (Corrects the earlier "no fp_contract control"
+    assumption behind the mtx44_mult tar pit.) CAVEAT: it only controls the
+    fmadds FUSION — it does NOT fix eval-order / FP-register-allocation
+    divergences. hotel7 confirmed Matrix_TransformVector still capped ~55% with
+    fp_contract off (its divergence is FP-reg/eval-order, not fusion), so try it
+    on a true fmadds-vs-fmul+fadd mismatch but don't expect it to fix coloring.
 
 25. **An FP comparison feeding a BRANCH is NOT a cap — write the plain
     operator.** `if (a >= b)` / `while (a < b)` / `a <= b ? x : y` on floats
@@ -669,6 +684,15 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
    Revert any family that doesn't conserve. Build green, **land on `main`**.
 
 ## Drift handling (Ghidra-imported `FUN_xxx` don't match v1.0)
+
+**Drift stubs HIDE large recoverable functions — a tiny header size (e.g. "4b")
+can mask a big real v1.0 body, so size-based triage UNDERCOUNTS the work.** When
+a unit looks "mostly capped/drained" by function-size, run `drift_audit.py` and
+check the real `.s` body sizes: a 0%/"0.1%" symbol the report calls tiny may be a
+1-4KB drift stub fully recoverable by the reconstruction recipe below. hotel8
+found ~111 such stubs on placeholder_8001746C (textRenderStr was labeled "4b" but
+is ~4100B → reconstructed to 83%). Before declaring any unit drained, confirm via
+the .s sizes, not the header/report sizes.
 
 **A stuck mid-range partial (60-95%) is OFTEN a CORRECTNESS bug, not a codegen
 cap — verify the target's actual control flow BEFORE assuming a cap.** The
