@@ -8697,6 +8697,125 @@ void mmFreeDeferred(void *p) {
     gMmDeferredFreeCount++;
 }
 
+typedef struct {
+    void *key;
+    int size;
+    s16 type;
+    s16 prev;
+    s16 next;
+    s16 stack;
+    int f10;
+    int f14;
+    int f18;
+} HeapItem;
+
+typedef struct {
+    void *stores[0x20];
+    DeferredFree deferred[2000];
+    MmRegion regions[8];
+} MmGlobal;
+
+extern void mapBitsFn_800e9418(void);
+extern int lbl_803DCB30;
+extern int lbl_803DCB1C;
+extern char sMemStatsFormat[];
+extern int lbl_803DCB20;
+extern int lbl_803DCB24;
+extern int lbl_803DCB28;
+extern int lbl_803DCB2C;
+
+#pragma peephole on
+void mmFreeTick(void) {
+    MmGlobal *g = (MmGlobal *)gMmStoreArray;
+    int i;
+    DeferredFree *d;
+    int k;
+    HeapItem *base;
+    HeapItem *item;
+    s16 next;
+
+    lbl_803DCB1C++;
+    lbl_803DCB14++;
+
+    d = g->deferred;
+    for (i = 0; i < gMmDeferredFreeCount;) {
+        d->delay--;
+        if (d->delay == 0) {
+            mmFree(d->ptr);
+            d->ptr = g->deferred[gMmDeferredFreeCount - 1].ptr;
+            d->delay = g->deferred[gMmDeferredFreeCount - 1].delay;
+            gMmDeferredFreeCount--;
+        } else {
+            d++;
+            i++;
+        }
+    }
+
+    for (k = 0; k < 0x20; k++) {
+        MmStore *s = (MmStore *)g->stores[k];
+        if (s != NULL) {
+            s->bufCur = s->buf;
+        }
+    }
+    mapBitsFn_800e9418();
+
+    lbl_803DCB20 = 0;
+    lbl_803DCB28 = 0;
+    lbl_803DCB24 = 0;
+    lbl_803DCB2C = 0;
+
+    if (lbl_803DCB42 > 1) {
+        base = (HeapItem *)g->regions[1].start;
+        item = base;
+        do {
+            if (item->type != 0) {
+                lbl_803DCB24 += item->size;
+            }
+            next = item->next;
+            if (next != -1) {
+                item = &base[next];
+            }
+        } while (next != -1);
+
+        base = (HeapItem *)g->regions[2].start;
+        item = base;
+        do {
+            if (item->type != 0) {
+                lbl_803DCB28 += item->size;
+            }
+            next = item->next;
+            if (next != -1) {
+                item = &base[next];
+            }
+        } while (next != -1);
+
+        base = (HeapItem *)g->regions[3].start;
+        item = base;
+        do {
+            if (item->type != 0) {
+                lbl_803DCB2C += item->size;
+            }
+            next = item->next;
+            if (next != -1) {
+                item = &base[next];
+            }
+        } while (next != -1);
+    }
+
+    if (lbl_803DCB30++ % 500 == 0) {
+        OSReport(sMemStatsFormat,
+            0, g->regions[0].size,
+            lbl_803DCB24, g->regions[1].size,
+            lbl_803DCB28, g->regions[2].size,
+            lbl_803DCB2C, g->regions[3].size,
+            g->regions[0].f4, g->regions[0].numSlots,
+            g->regions[1].f4, g->regions[1].numSlots,
+            g->regions[2].f4, g->regions[2].numSlots,
+            g->regions[3].f4, g->regions[3].numSlots);
+    }
+}
+#pragma peephole reset
+
 void mmFree(void *p) {
     int region;
     int i;
@@ -8801,18 +8920,6 @@ void mmInit(void) {
     gMmFreeDelay = 2;
     gMmDeferredFreeCount = 0;
 }
-
-typedef struct {
-    void *key;
-    int size;
-    s16 type;
-    s16 prev;
-    s16 next;
-    s16 stack;
-    int f10;
-    int f14;
-    int f18;
-} HeapItem;
 
 extern char sMmSpawnedUnalignedSlotWarning[];
 extern int lbl_803DCB1C;
