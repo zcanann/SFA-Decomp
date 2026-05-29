@@ -6398,7 +6398,10 @@ void androsshand_handleDamage(int obj, int hand)
     } else {
         *(u8 *)(hand + 0x28) = 2;
     }
-    *(int *)objFindTexture(obj, 0, 0) = *(u8 *)(hand + 0x28) << 8;
+    {
+        int *texture = objFindTexture(obj, 0, 0);
+        *texture = *(u8 *)(hand + 0x28) << 8;
+    }
 }
 #pragma scheduling on
 #pragma peephole on
@@ -6421,15 +6424,17 @@ void androssbrain_init(int obj)
 void androsshand_init(int obj, u8 *setup)
 {
     int state = *(int *)(obj + 0xb8);
+    int animState;
 
     *(u8 *)(state + 0x22) = setup[0x1b];
-    *(u8 *)(state + 0x24) = -1;
+    *(s8 *)(state + 0x24) = -1;
     *(u8 *)(state + 0x25) = 0xf;
     *(u8 *)(state + 0x27) = 5;
     *(u8 *)(state + 0x23) = 3;
     *(u8 *)(state + 0x24) = 3;
+    animState = *(int *)(obj + 0xb8);
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
-    *(f32 *)(*(int *)(obj + 0xb8) + 0x14) = lbl_8032C270[4];
+    *(f32 *)(animState + 0x14) = lbl_8032C270[4];
     *(f32 *)(obj + 0x98) = lbl_803E75B0;
     ObjHits_SetTargetMask(obj, 4);
 }
@@ -10782,34 +10787,33 @@ extern int lbl_803DC510;
 
 #pragma peephole off
 #pragma scheduling off
-void androsshand_spawnShot(int p1, int p2, int p3)
+void androsshand_spawnShot(int obj, int hand, int p3)
 {
     f32 pt[3];
     f32 dx, dz, dist;
     int yaw;
-    int newObj;
-    int proj;
+    int setup;
 
     if (Obj_IsLoadingLocked()) {
-        ObjPath_GetPointWorldPosition(p1, 0, &pt[0], &pt[1], &pt[2], 0);
-        dx = pt[0] - *(f32 *)(*(int *)(p2 + 4) + 0xc);
-        dz = pt[2] - *(f32 *)(*(int *)(p2 + 4) + 0x14);
+        ObjPath_GetPointWorldPosition(obj, 0, &pt[0], &pt[1], &pt[2], 0);
+        dx = pt[0] - *(f32 *)(*(int *)(hand + 4) + 0xc);
+        dz = pt[2] - *(f32 *)(*(int *)(hand + 4) + 0x14);
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz) + 0x8000;
-        lbl_803DDDD0 = (u16)getAngle(pt[1] - *(f32 *)(*(int *)(p2 + 4) + 0x10), dist) >> 8;
-        newObj = Obj_AllocObjectSetup(0x20, 0x7e4);
-        *(f32 *)(newObj + 8) = pt[0];
-        *(f32 *)(newObj + 0xc) = pt[1];
-        *(f32 *)(newObj + 0x10) = pt[2];
-        *(u8 *)(newObj + 0x1a) = (*(s16 *)p1 + yaw) >> 8;
-        *(u8 *)(newObj + 0x19) = lbl_803DDDD0;
-        *(u8 *)(newObj + 0x18) = 0;
-        *(u8 *)(newObj + 4) = 1;
-        *(u8 *)(newObj + 5) = 1;
-        proj = ((int (*)(int, int))loadObjectAtObject)(p1, newObj);
-        if (proj != 0) {
-            arwprojectile_setLifetime(proj, lbl_803DC510);
-            arwprojectile_placeForward(proj, (f32)(u32)lbl_803DC50C);
+        lbl_803DDDD0 = (u16)getAngle(pt[1] - *(f32 *)(*(int *)(hand + 4) + 0x10), dist) >> 8;
+        setup = Obj_AllocObjectSetup(0x20, 0x7e4);
+        *(f32 *)(setup + 8) = pt[0];
+        *(f32 *)(setup + 0xc) = pt[1];
+        *(f32 *)(setup + 0x10) = pt[2];
+        *(u8 *)(setup + 0x1a) = (*(s16 *)obj + yaw) >> 8;
+        *(u8 *)(setup + 0x19) = lbl_803DDDD0;
+        *(u8 *)(setup + 0x18) = 0;
+        *(u8 *)(setup + 4) = 1;
+        *(u8 *)(setup + 5) = 1;
+        obj = ((int (*)(int, int))loadObjectAtObject)(obj, setup);
+        if ((void *)obj != NULL) {
+            arwprojectile_setLifetime(obj, lbl_803DC510);
+            arwprojectile_placeForward(obj, (f32)lbl_803DC50C);
         }
     }
 }
