@@ -10308,6 +10308,9 @@ void ObjModel_InitResourceCaches(void) {
 }
 #pragma pop
 
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 void ObjModel_Release(u8 *model) {
     u8 *header;
     int i;
@@ -10340,6 +10343,7 @@ void ObjModel_Release(u8 *model) {
         mm_free(header);
     }
 }
+#pragma pop
 
 extern void setGQR6(u32 v);
 extern void mapSetup();
