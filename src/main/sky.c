@@ -298,7 +298,7 @@ int skyFn_8008919c(int slot)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_800891DC(u8 red, u8 green, u8 blue)
+void skySetOverrideLightColor(u8 red, u8 green, u8 blue)
 {
     u8 *color;
 
@@ -312,7 +312,7 @@ void fn_800891DC(u8 red, u8 green, u8 blue)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_800891F0(u8 enabled)
+void skySetOverrideLightColorEnabled(u8 enabled)
 {
     lbl_803DD15C = enabled;
 }
@@ -321,7 +321,7 @@ void fn_800891F0(u8 enabled)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_800891F8(f32 x, f32 y, f32 z, f32 intensity)
+void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity)
 {
     lbl_8039A7A8[0] = x;
     lbl_8039A7A8[1] = y;
@@ -334,7 +334,7 @@ void fn_800891F8(f32 x, f32 y, f32 z, f32 intensity)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_80089234(u8 enabled)
+void skySetOverrideLightDirectionEnabled(u8 enabled)
 {
     lbl_803DD164 = enabled;
 }
@@ -834,7 +834,7 @@ int fn_8008B71C(int slot)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8008B744(f32 time, s16 *days, s16 *hours, s16 *minutes)
+void skyTimeToDayHourMinute(f32 time, s16 *days, s16 *hours, s16 *minutes)
 {
     s32 remaining;
 
@@ -850,7 +850,7 @@ void fn_8008B744(f32 time, s16 *days, s16 *hours, s16 *minutes)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8008B8B4(f32 *time)
+void skyGetClockTime(f32 *time)
 {
     u8 *sky;
 
