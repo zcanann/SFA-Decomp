@@ -2654,7 +2654,7 @@ void audioLoadTriggerData(void)
     gSfxTriggersCount = (u32)info >> 5;
     gAudioPendingLoadFlags |= 0x4;
     gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, (void (*)(void*))streamsLoadedCallback);
-    gStreamsCount = (u32)info / 0xb0;
+    gStreamsCount = (u32)info / sizeof(StreamEntry);
 }
 #pragma dont_inline reset
 #pragma peephole reset
