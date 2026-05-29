@@ -1745,8 +1745,65 @@ main/dll/ARW/dll_02A7_arwproximit.c:
 main/dll/ARW/dll_02A8_arwblocker.c:
 	.text       start:0x802338F0 end:0x80233B0C
 
+main/dll/LGT/dll_02A9_pointlight.c:
+	.text       start:0x80233B0C end:0x8023404C
+
+main/dll/LGT/dll_02AA_directionallight.c:
+	.text       start:0x8023404C end:0x80234748
+
+main/dll/LGT/dll_02AB_projectedlight.c:
+	.text       start:0x80234748 end:0x80234C10
+
+main/dll/LGT/dll_02AC_controllight.c:
+	.text       start:0x80234C10 end:0x80234DC8
+
+main/dll/dll_02AD_softbody.c:
+	.text       start:0x80234DC8 end:0x8023503C
+
+main/dll/dll_02AE_waterflowwe.c:
+	.text       start:0x8023503C end:0x802356CC
+
+main/dll/dll_02AF_tree.c:
+	.text       start:0x802356CC end:0x80236154
+
+main/dll/dll_02B0_brokenpipe.c:
+	.text       start:0x80236154 end:0x80236298
+
+main/dll/dll_02B1_cmbsrc.c:
+	.text       start:0x80236298 end:0x80237574
+
+main/dll/dll_02B2_dustmotesou.c:
+	.text       start:0x80237574 end:0x80237808
+
+main/dll/dll_02B3_vortex.c:
+	.text       start:0x80237808 end:0x802383E0
+
+main/dll/dll_02B4_cntcounter.c:
+	.text       start:0x802383E0 end:0x8023852C
+
+main/dll/dll_02B5_timer.c:
+	.text       start:0x8023852C end:0x80238AB0
+
+main/dll/dll_02B6_cnthitobjec.c:
+	.text       start:0x80238AB0 end:0x80238FA4
+
+main/dll/dll_02B7_mcupgrade.c:
+	.text       start:0x80238FA4 end:0x80239114
+
+main/dll/dll_02B8_mcupgradema.c:
+	.text       start:0x80239114 end:0x802392B8
+
+main/dll/dll_02B9_mcstaffeffe.c:
+	.text       start:0x802392B8 end:0x8023938C
+
+main/dll/dll_02BA_mclightning.c:
+	.text       start:0x8023938C end:0x80239858
+
+main/dll/dll_02BB_gf_levelcon.c:
+	.text       start:0x80239858 end:0x8023A688
+
 main/unknown/autos/placeholder_80220608.c:
-	.text       start:0x80233B0C end:0x8024034C
+	.text       start:0x8023A688 end:0x8024034C
 
 dolphin/base/PPCArch.c:
 	.text       start:0x8024034C end:0x802403D8
