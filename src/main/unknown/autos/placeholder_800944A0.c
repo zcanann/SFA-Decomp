@@ -491,5 +491,42 @@ void waterfx_func04(u8 *p3, u16 mask, f32 *vecs, u8 *p6, f32 fval) {
         v += 3;
     }
 }
+
+typedef struct {
+    int v[5];
+} Tbl5;
+
+extern int lbl_802C1FF8[];
+extern int lbl_802C200C[];
+extern f32 lbl_803DF35C;
+extern f32 gExpgfxFrameTimerB;
+extern void fn_80098B18(void *obj, int a, int b, int c, f32 *vec);
+
+void fn_80098270(void *obj, u8 a, u8 b, f32 c, f32 d) {
+    Tbl5 t1 = *(Tbl5 *)lbl_802C1FF8;
+    Tbl5 t2 = *(Tbl5 *)lbl_802C200C;
+    f32 vec[3];
+    int frame;
+    if (a == 0) {
+        return;
+    }
+    if (b == 0) {
+        return;
+    }
+    if (b >= 5) {
+        return;
+    }
+    if (gExpgfxFrameTimerB != lbl_803DF35C) {
+        frame = 0;
+    } else {
+        frame = (u8)t2.v[b];
+    }
+    vec[0] = lbl_803DF35C;
+    vec[1] = d;
+    vec[2] = lbl_803DF35C;
+    if (a == 1) {
+        fn_80098B18(obj, (u8)t1.v[b], frame, 0, vec);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
