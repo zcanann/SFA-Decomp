@@ -5531,6 +5531,7 @@ void arwprojectile_placeForward(int obj, f32 dist)
 #pragma scheduling reset
 #pragma peephole reset
 
+#pragma scheduling off
 void arwingandrossstuff_init(int obj, u8 *setup)
 {
     int state = *(int *)(obj + 0xb8);
@@ -5576,6 +5577,7 @@ void arwingandrossstuff_init(int obj, u8 *setup)
     }
     ObjGroup_AddObject(obj, 2);
 }
+#pragma scheduling reset
 
 int arwlevelcon_ringEventCallback(int obj, int p2, int data);
 
