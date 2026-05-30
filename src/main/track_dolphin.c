@@ -341,6 +341,7 @@ extern f32 lbl_803DF8B8;
 extern f32 lbl_803DF8BC;
 extern f32 lbl_803DF8C0;
 extern f32 lbl_803DF8D0;
+extern f32 lbl_803DEC50;
 extern f32 lbl_803DF8D8;
 extern f32 lbl_803DF8E8;
 extern f32 lbl_803DF8EC;
@@ -4568,4 +4569,16 @@ void mapInitFn_80069990(void)
     lbl_803DCF5C = 0;
     lbl_803DCF4E = 0;
     lbl_803DCF4F = 0;
+}
+
+void fn_8006058C(short *param_1, float *param_2)
+{
+  int iVar1;
+  int iVar2;
+
+  iVar1 = (int)(lbl_803DEC50 * param_2[1]);
+  iVar2 = (int)(lbl_803DEC50 * param_2[2]);
+  *param_1 = (short)(int)(lbl_803DEC50 * *param_2);
+  param_1[1] = (short)iVar1;
+  param_1[2] = (short)iVar2;
 }
