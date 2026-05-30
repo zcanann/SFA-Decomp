@@ -5,7 +5,8 @@
 
 #pragma peephole off
 #pragma scheduling off
-extern undefined4 Obj_TransformWorldPointToLocal();
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
+                                           int obj);
 extern void* FUN_800069a8();
 extern uint getButtonsJustPressed();
 extern double FUN_800176f4();
@@ -14,7 +15,8 @@ extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 FUN_80053bb0();
 extern void *mmAlloc(int size,int heap,int flags);
-extern undefined4 camcontrol_traceMove();
+extern void camcontrol_traceMove(f32 radius, f32 *from, void *to, f32 *out, void *work, int a,
+                                 int b, int c);
 extern uint FUN_801ef1a4();
 extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247eb8();
@@ -24,11 +26,11 @@ extern double SeekTwiceBeforeRead();
 extern undefined4 Camera_GetCurrentViewSlot();
 extern undefined4 FUN_8028688c();
 extern undefined4 FUN_80293130();
-extern double sqrtf();
-extern undefined4 fn_80293E80();
-extern undefined4 sin();
-extern uint FUN_80294c90();
-extern int FUN_80294c98();
+extern f32 sqrtf(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern uint fn_8029630C(int obj);
+extern int objAnimFn_80296328(int obj);
 extern undefined4 cameraGetPrevPos2();
 
 extern undefined4* gCameraInterface;
@@ -54,6 +56,8 @@ extern f32 lbl_803E18EC;
 extern f32 lbl_803E18F0;
 extern f32 lbl_803E18F4;
 extern f32 lbl_803E18F8;
+extern f32 lbl_803E18FC;
+extern f32 lbl_803E1900;
 extern f32 lbl_803E1904;
 extern f32 lbl_803E1908;
 extern f32 lbl_803E190C;
@@ -162,7 +166,7 @@ void CameraModeCombat_update(void)
   puVar5 = FUN_800069a8();
   if (*(char *)((int)lbl_803DD568 + 0x12) == '\0') {
     iVar8 = *(int *)(psVar4 + 0x52);
-    if ((*(short *)(iVar8 + 0x44) == 1) && (iVar6 = FUN_80294c98(iVar8), iVar6 == 0)) {
+    if ((*(short *)(iVar8 + 0x44) == 1) && (iVar6 = objAnimFn_80296328(iVar8), iVar6 == 0)) {
       if (*(int *)(psVar4 + 0x8e) != 0) {
         if (((*(byte *)(*(int *)(psVar4 + 0x8e) + 0xaf) & 0x40) != 0) ||
            ((*(byte *)((int)psVar4 + 0x141) & 2) != 0)) goto LAB_8010cfb8;
@@ -188,7 +192,7 @@ void CameraModeCombat_update(void)
                                       (uint)*(byte *)(*(int *)(*(int *)(iVar6 + 0x50) + 0x40) + 0xd)
                                       << 2);
           uVar7 = getButtonsJustPressed(0);
-          if (((uVar7 & 0x200) == 0) || (uVar7 = FUN_80294c90(iVar8), uVar7 == 0)) {
+          if (((uVar7 & 0x200) == 0) || (uVar7 = fn_8029630C(iVar8), uVar7 == 0)) {
             local_120 = lbl_803E18D0 + *(float *)(iVar8 + 0x1c);
             sVar2 = *(short *)(iVar6 + 0x44);
             if ((sVar2 == 0x1c) || ((sVar2 == 0x6d || (sVar2 == 0x2a)))) {
@@ -217,7 +221,7 @@ void CameraModeCombat_update(void)
               local_128 = *(float *)(iVar9 + (uint)*(byte *)(iVar6 + 0xe4) * 0x18 + 0x14) -
                           *(float *)(iVar8 + 0x20);
             }
-            dVar11 = sqrtf((double)(local_124 * local_124 + local_128 * local_128));
+            dVar11 = sqrtf(local_124 * local_124 + local_128 * local_128);
             *(undefined *)((int)psVar4 + 0x13b) = 0x30;
             *(undefined *)(psVar4 + 0x9e) = 1;
             if (dVar11 <= dVar14) {
@@ -308,11 +312,9 @@ void CameraModeCombat_update(void)
                                              lbl_803E18F4 - lbl_803DD568[2]),
                                     (double)lbl_803E18F8,(double)timeDelta);
               lbl_803DD568[2] = (float)((double)lbl_803DD568[2] + dVar12);
-              uStack_74 = (int)*psVar4 ^ 0x80000000;
-              local_78 = 0x43300000;
-              dVar12 = (double)fn_80293E80();
-              local_80 = (double)CONCAT44(0x43300000,(int)*psVar4 ^ 0x80000000);
-              dVar13 = (double)sin();
+              dVar12 = (double)fn_80293E80((lbl_803E18FC * (f32)(s32)*psVar4) /
+                                           lbl_803E1900);
+              dVar13 = (double)sin((lbl_803E18FC * (f32)(s32)*psVar4) / lbl_803E1900);
               local_10c = (float)(dVar16 + (double)(float)((double)*lbl_803DD568 * dVar12));
               local_104 = (float)(dVar14 - (double)(float)((double)*lbl_803DD568 * dVar13));
               local_11c = (local_120 - local_11c * lbl_803E1904) + lbl_803DD568[1];
@@ -328,7 +330,7 @@ void CameraModeCombat_update(void)
               if (*(float *)(psVar4 + 0x7a) <= lbl_803E18C4) {
                 fVar1 = *(float *)(iVar8 + 0x8c) - *(float *)(iVar8 + 0x18);
                 fVar3 = *(float *)(iVar8 + 0x94) - *(float *)(iVar8 + 0x20);
-                dVar16 = sqrtf((double)(fVar1 * fVar1 + fVar3 * fVar3));
+                dVar16 = sqrtf(fVar1 * fVar1 + fVar3 * fVar3);
                 dVar12 = (double)(float)(dVar16 * (double)(lbl_803E190C * timeDelta));
                 if (dVar12 < lbl_803E1918) {
                   dVar12 = (double)lbl_803E1910;
@@ -344,14 +346,14 @@ void CameraModeCombat_update(void)
               }
               FUN_80247edc(dVar14,afStack_100,afStack_100);
               FUN_80247e94((float *)(psVar4 + 0xc),afStack_100,(float *)(psVar4 + 0xc));
-              camcontrol_traceMove((double)lbl_803E18CC,&fStack_118,(float *)(psVar4 + 0xc),
-                                   (float *)(psVar4 + 0xc),(int)auStack_f4,3,'\x01','\x01');
+              camcontrol_traceMove(lbl_803E18CC,&fStack_118,(float *)(psVar4 + 0xc),
+                                   (float *)(psVar4 + 0xc),auStack_f4,3,1,1);
               fVar3 = *(float *)(puVar5 + 6) -
                       (lbl_803E18F8 * local_124 + *(float *)(iVar8 + 0x18));
               local_11c = (float)((double)*(float *)(puVar5 + 8) - dVar15);
               fVar1 = *(float *)(puVar5 + 10) -
                       (lbl_803E18F8 * local_128 + *(float *)(iVar8 + 0x20));
-              sqrtf((double)(fVar3 * fVar3 + fVar1 * fVar1));
+              sqrtf(fVar3 * fVar3 + fVar1 * fVar1);
               uVar7 = getAngle();
               uVar7 = (uVar7 & 0xffff) - (uint)(ushort)psVar4[1];
               if (0x8000 < (int)uVar7) {
@@ -388,9 +390,10 @@ void CameraModeCombat_update(void)
               if (lbl_803E18C4 == *(float *)(psVar4 + 0x7a)) {
                 *(byte *)((int)psVar4 + 0x143) = *(byte *)((int)psVar4 + 0x143) & 0x7f | 0x80;
               }
-              Obj_TransformWorldPointToLocal((double)*(float *)(psVar4 + 0xc),(double)*(float *)(psVar4 + 0xe),
-                           (double)*(float *)(psVar4 + 0x10),(float *)(psVar4 + 6),
-                           (float *)(psVar4 + 8),(float *)(psVar4 + 10),*(int *)(psVar4 + 0x18));
+              Obj_TransformWorldPointToLocal(*(float *)(psVar4 + 0xc),
+                           *(float *)(psVar4 + 0xe),*(float *)(psVar4 + 0x10),
+                           (float *)(psVar4 + 6),(float *)(psVar4 + 8),
+                           (float *)(psVar4 + 10),*(int *)(psVar4 + 0x18));
             }
             else {
               if (*(int *)(psVar4 + 0x8e) != 0) {
@@ -480,7 +483,7 @@ void CameraModeCombat_init(int param_1,undefined4 param_2,undefined4 *param_3)
         *lbl_803DD568 = lbl_803E1940;
       }
       else {
-        dVar6 = (double)sqrtf((double)(fVar1 * fVar1 + fVar2 * fVar2));
+        dVar6 = (double)sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
         *lbl_803DD568 = (float)dVar6;
       }
       *(undefined *)(lbl_803DD568 + 4) = 0;
@@ -599,8 +602,8 @@ void CameraModeShipBattle_update(undefined2 *param_1)
     fVar1 = lbl_803E1980;
   }
   lbl_803DD570[2] = lbl_803DD570[2] + fVar1 * timeDelta;
-  Obj_TransformWorldPointToLocal((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
-               (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
+  Obj_TransformWorldPointToLocal(*(float *)(param_1 + 0xc),*(float *)(param_1 + 0xe),
+               *(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   return;
 }
