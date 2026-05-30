@@ -2522,7 +2522,7 @@ void Effect18_func05(void)
 }
 
 typedef struct PartFxSpawn {
-    int f00;
+    void *f00;
     int f04;
     int f08;
     s16 f0c;
@@ -2583,7 +2583,7 @@ int Effect19_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f44 = 0;
         cfg.f48 = 0;
         cfg.f5e = (u8)param_2;
-        cfg.f00 = (int)param_1;
+        cfg.f00 = param_1;
         cfg.f30 = lbl_803E02EC;
         cfg.f34 = lbl_803E02EC;
         cfg.f38 = lbl_803E02EC;
@@ -2624,9 +2624,9 @@ int Effect19_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         if ((cfg.f44 & 1) != 0) {
             if ((param_4 & 0x200000) == 0) {
                 if (cfg.f00 != 0) {
-                    cfg.f30 = cfg.f30 + *(f32 *)(cfg.f00 + 0x18);
-                    cfg.f34 = cfg.f34 + *(f32 *)(cfg.f00 + 0x1c);
-                    cfg.f38 = cfg.f38 + *(f32 *)(cfg.f00 + 0x20);
+                    cfg.f30 = cfg.f30 + *(f32 *)((char *)cfg.f00 + 0x18);
+                    cfg.f34 = cfg.f34 + *(f32 *)((char *)cfg.f00 + 0x1c);
+                    cfg.f38 = cfg.f38 + *(f32 *)((char *)cfg.f00 + 0x20);
                 }
             } else {
                 cfg.f30 = cfg.f30 + cfg.f18;
@@ -2659,7 +2659,7 @@ int Effect13_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 pa
     cfg.f44 = 0;
     cfg.f48 = 0;
     cfg.f5e = (u8)param_2;
-    cfg.f00 = (int)param_1;
+    cfg.f00 = param_1;
     cfg.f30 = lbl_803E0180;
     cfg.f34 = lbl_803E0180;
     cfg.f38 = lbl_803E0180;
@@ -2750,7 +2750,7 @@ int Effect13_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 pa
     case 0x451:
         Sfx_PlayFromObject((int)param_1, 0x285);
         cfg.f08 = 0x64;
-        cfg.f3c = lbl_803E01AC * (f32)(s32)0x64;
+        cfg.f3c = lbl_803E01AC * (f32)(s32)cfg.f08;
         cfg.f44 = 0x0a100201;
         cfg.f42 = 0x56;
         break;
@@ -2766,9 +2766,9 @@ int Effect13_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 pa
             cfg.f38 = cfg.f38 + cfg.f20;
         } else {
             if (cfg.f00 != 0) {
-                cfg.f30 = cfg.f30 + *(f32 *)(cfg.f00 + 0x18);
-                cfg.f34 = cfg.f34 + *(f32 *)(cfg.f00 + 0x1c);
-                cfg.f38 = cfg.f38 + *(f32 *)(cfg.f00 + 0x20);
+                cfg.f30 = cfg.f30 + *(f32 *)((char *)cfg.f00 + 0x18);
+                cfg.f34 = cfg.f34 + *(f32 *)((char *)cfg.f00 + 0x1c);
+                cfg.f38 = cfg.f38 + *(f32 *)((char *)cfg.f00 + 0x20);
             }
         }
     }
