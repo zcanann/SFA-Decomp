@@ -3201,6 +3201,269 @@ void initFn_8006d020(void) {
     testAndSet_onlyUseHeap3(saved);
 }
 #pragma scheduling reset
+
+extern int textureLoadAsset(int);
+extern void DCInvalidateRange(void *, int);
+extern void fn_80069EB8();
+extern void GXTexModeSync(void);
+extern f32 lbl_803DED10, lbl_803DED34, Dev_803DED1C;
+extern f32 Udchuff_803DEDA0[], Uachuff_803DEE00[];
+#pragma scheduling off
+void allocLotsOfTextures(void) {
+    char *g = (char *)lbl_8038DF48;
+    u8 saved;
+    int i, j, h, k;
+
+    saved = testAndSet_onlyUseHeap3(1);
+
+    *(int *)(g + 0x3a10) = (int)textureAlloc(0x100, 0x100, 0, 0, 0, 0, 0, 1, 1);
+    *(int *)(g + 0x3a14) = (int)textureAlloc(0x100, 0x100, 1, 0, 0, 0, 0, 0, 0);
+    *(int *)(g + 0x3a18) = *(int *)(g + 0x3a14);
+    *(int *)(g + 0x3a1c) = *(int *)(g + 0x3a14);
+    *(int *)(g + 0x3a20) = *(int *)(g + 0x3a14);
+    *(int *)(g + 0x3a24) = *(int *)(g + 0x3a14);
+    *(int *)(g + 0x3a28) = *(int *)(g + 0x3a14);
+    *(int *)(g + 0x3a2c) = *(int *)(g + 0x3a14);
+    memset((void *)(*(int *)(g + 0x3a10) + 0x60), 0, *(u32 *)(*(int *)(g + 0x3a10) + 0x44));
+    DCFlushRange((void *)(*(int *)(g + 0x3a10) + 0x60), *(int *)(*(int *)(g + 0x3a10) + 0x44));
+
+    lbl_803DCF7C = (char *)textureAlloc(0x140, 0xf0, 4, 0, 0, 0, 0, 1, 1);
+    lbl_803DCFE4 = (int)textureAlloc(0x50, 0x3c, 4, 0, 0, 0, 0, 1, 1);
+    lbl_803DCFDC = (int)textureAlloc(0x140, 0xf0, 1, 0, 0, 0, 0, 1, 1);
+
+    lbl_803DCFD8 = (int)textureAlloc(0x20, 0x20, 1, 0, 0, 0, 0, 1, 1);
+    for (i = 0; i < 0x20; i++) {
+        f32 cy = (f32)i - Yachuff_803DEDE0[3];
+        for (j = 0; j < 0x20; j++) {
+            f32 dx = cy * Vdchuff_803DEDC0[4] * Yachuff_803DEDE0[4];
+            f32 dz = ((f32)j - Yachuff_803DEDE0[3]) * Vdchuff_803DEDC0[4] * Yachuff_803DEDE0[4];
+            f32 d2 = dx * dx + dz * dz;
+            f32 v = (d2 <= lbl_803DED2C) ? (lbl_803DED2C - d2) : lbl_803DED28;
+            *(u8 *)(lbl_803DCFD8 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60) =
+                (u8)(int)(__PADFixBits * v);
+        }
+    }
+    DCFlushRange((void *)(lbl_803DCFD8 + 0x60), *(int *)(lbl_803DCFD8 + 0x44));
+
+    lbl_803DCFD4 = (int)textureAlloc(0x10, 0x10, 1, 0, 0, 0, 0, 1, 1);
+    for (i = 0; i < 0x10; i++) {
+        f32 cy = ((f32)i - lbl_803DED10) * __GXCurrentThread_803DED40;
+        for (j = 0; j < 0x10; j++) {
+            f32 dx = cy * Yachuff_803DEDE0[5];
+            f32 dz = (((f32)j - lbl_803DED10) * __GXCurrentThread_803DED40) * Yachuff_803DEDE0[5];
+            f32 d2 = dx * dx + dz * dz;
+            f32 v = lbl_803DED2C - d2;
+            v = sqrtf(v);
+            *(u8 *)(lbl_803DCFD4 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x40 + 0x60) =
+                (u8)(int)(__PADFixBits * v);
+        }
+    }
+    DCFlushRange((void *)(lbl_803DCFD4 + 0x60), *(int *)(lbl_803DCFD4 + 0x44));
+
+    lbl_803DCFD0 = (int)textureAlloc(0x40, 0x40, 5, 0, 0, 0, 0, 1, 1);
+    {
+        f32 mx = lbl_803DED28;
+        for (i = 0; i < 0x40; i++) {
+            f32 rc = ((f32)i - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+            f32 rc2 = ((f32)(i + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+            for (j = 0; j < 0x40; j++) {
+                f32 cc = ((f32)j - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                f32 cc2 = ((f32)(j + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                f32 d1 = sqrtf(rc * rc + cc * cc);
+                f32 d2 = sqrtf(rc2 * rc2 + cc * cc);
+                f32 d3 = sqrtf(rc * rc + cc2 * cc2);
+                f32 n1 = -fn_802943F4(Uachuff_803DEE00[0] * d1);
+                f32 n2 = (f32)__fabs(fn_802943F4(Uachuff_803DEE00[0] * d2));
+                f32 n3 = fn_802943F4(Uachuff_803DEE00[0] * d3);
+                if (mx < n1 - n2) mx = n1 - n2;
+                if (mx < n1 - (f32)__fabs(n3)) mx = n1 - (f32)__fabs(n3);
+            }
+        }
+        {
+            f32 inv = lbl_803DED2C / mx;
+            for (i = 0; i < 0x40; i++) {
+                f32 rc = ((f32)i - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                f32 rc2 = ((f32)(i + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                for (j = 0; j < 0x40; j++) {
+                    f32 cc = ((f32)j - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                    f32 cc2 = ((f32)(j + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                    f32 d1 = sqrtf(rc * rc + cc * cc);
+                    f32 d2 = sqrtf(rc2 * rc2 + cc * cc);
+                    f32 d3 = sqrtf(rc * rc + cc2 * cc2);
+                    f32 n1 = -fn_802943F4(Uachuff_803DEE00[0] * d1);
+                    f32 n2 = -fn_802943F4(Uachuff_803DEE00[0] * d2);
+                    f32 n3 = -fn_802943F4(Uachuff_803DEE00[0] * d3);
+                    f32 a = inv * (Vdchuff_803DEDC0[0] * (n1 - n2)) + Vdchuff_803DEDC0[0];
+                    f32 b = inv * (Vdchuff_803DEDC0[0] * (n1 - n3)) + Vdchuff_803DEDC0[0];
+                    f32 dd = (d1 < lbl_803DED2C) ? sqrtf(lbl_803DED2C - d1) : lbl_803DED28;
+                    f32 c = Yachuff_803DEDE0[6] * dd;
+                    int r4, r3, r0;
+                    if (c > Uachuff_803DEE00[1]) c = Uachuff_803DEE00[1];
+                    a = a * Yachuff_803DEDE0[7];
+                    b = b * Vdchuff_803DEDC0[4];
+                    r4 = (int)b & 0xf;
+                    r3 = ((int)c & 0xf) << 4;
+                    r0 = ((int)a & 7) << 12;
+                    *(u16 *)(lbl_803DCFD0 + (i & 3) * 2 + (i >> 2) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) =
+                        (u16)(r4 | r3 | r0);
+                }
+            }
+        }
+    }
+    DCFlushRange((void *)(lbl_803DCFD0 + 0x60), *(int *)(lbl_803DCFD0 + 0x44));
+
+    lbl_803DCFCC = textureLoadAsset(0x5b0);
+    lbl_803DCFC8 = textureLoadAsset(0x600);
+    lbl_803DCFC4 = textureLoadAsset(0xc18);
+
+    lbl_803DCF9C = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 0, 0);
+    for (i = 0; i < 0x100; i++) {
+        *(u8 *)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20 + 0x60) = (u8)i;
+        *(u8 *)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20 + 0x68) = (u8)i;
+        *(u8 *)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20 + 0x70) = (u8)i;
+        *(u8 *)(lbl_803DCF9C + (i & 7) + (i >> 3) * 0x20 + 0x78) = (u8)i;
+    }
+    DCFlushRange((void *)(lbl_803DCF9C + 0x60), *(int *)(lbl_803DCF9C + 0x44));
+
+    lbl_803DCF98 = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 1, 1);
+    for (i = 0; i < 0x100; i++) {
+        u8 v = (u8)(-1 - i);
+        *(u8 *)(lbl_803DCF98 + (i & 7) + (i >> 3) * 0x20 + 0x60) = v;
+        *(u8 *)(lbl_803DCF98 + (i & 7) + (i >> 3) * 0x20 + 0x68) = v;
+        *(u8 *)(lbl_803DCF98 + (i & 7) + (i >> 3) * 0x20 + 0x70) = v;
+        *(u8 *)(lbl_803DCF98 + (i & 7) + (i >> 3) * 0x20 + 0x78) = v;
+    }
+    DCFlushRange((void *)(lbl_803DCF98 + 0x60), *(int *)(lbl_803DCF98 + 0x44));
+
+    lbl_803DCF90 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    for (i = 0; i < 0x80; i++) {
+        f32 cy = ((f32)i - Dev_803DED1C) * Yachuff_803DEDE0[0];
+        for (j = 0; j < 0x80; j++) {
+            f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0[0];
+            f32 d2 = cy * cy + cx * cx;
+            u8 v;
+            if (d2 > CPUFifo_803DED38) {
+                if (d2 <= lbl_803DED2C)
+                    v = (u8)(int)(Uachuff_803DEE00[2] * (lbl_803DED2C - (d2 - CPUFifo_803DED38) / CPUFifo_803DED38));
+                else
+                    v = 0;
+            } else {
+                v = 0xa0;
+            }
+            *(u8 *)(lbl_803DCF90 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) = v;
+        }
+    }
+    DCFlushRange((void *)(lbl_803DCF90 + 0x60), *(int *)(lbl_803DCF90 + 0x44));
+
+    lbl_803DCFC0 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    for (i = 0; i < 0x80; i++) {
+        f32 cy = (f32)__fabs(((f32)i - Dev_803DED1C) * Yachuff_803DEDE0[0]);
+        for (j = 0; j < 0x80; j++) {
+            f32 cx = (f32)__fabs(((f32)j - Dev_803DED1C) * Yachuff_803DEDE0[0]);
+            f32 d2 = cy * cy + cx * cx;
+            f32 v;
+            d2 = sqrtf(d2);
+            v = lbl_803DED2C - d2;
+            if (v < lbl_803DED28) v = lbl_803DED28;
+            *(u8 *)(lbl_803DCFC0 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) =
+                (u8)(int)(__PADFixBits * v);
+        }
+    }
+    DCFlushRange((void *)(lbl_803DCFC0 + 0x60), *(int *)(lbl_803DCFC0 + 0x44));
+
+    lbl_803DCFB8 = (int)textureAlloc(0x40, 0x40, 1, 0, 0, 0, 0, 1, 1);
+    DCInvalidateRange((void *)(lbl_803DCFB8 + 0x60), *(int *)(lbl_803DCFB8 + 0x44));
+    fn_80069EB8(0);
+
+    lbl_803DCFB4 = (int)textureAlloc(0x20, 4, 1, 0, 0, 0, 0, 1, 1);
+    for (i = 0; i < 0x20; i++) {
+        f32 c0 = (f32)__fabs(((f32)i - Yachuff_803DEDE0[3]) * Vdchuff_803DEDC0[4]);
+        for (j = 0; j < 4; j++) {
+            f32 v = c0;
+            v = sqrtf(v);
+            v = sqrtf(v);
+            *(u8 *)(lbl_803DCFB4 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60) =
+                (u8)(int)(__PADFixBits * (lbl_803DED2C - v));
+        }
+    }
+    DCFlushRange((void *)(lbl_803DCFB4 + 0x60), *(int *)(lbl_803DCFB4 + 0x44));
+
+    lbl_803DCFB0 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    for (i = 0; i < 0x80; i++) {
+        f32 cy = ((f32)i - Dev_803DED1C) * Yachuff_803DEDE0[0];
+        for (j = 0; j < 0x80; j++) {
+            f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0[0];
+            f32 d2 = cx * cx + cy * cy;
+            f32 v;
+            d2 = sqrtf(d2);
+            if (d2 < GPFifo_803DED3C || d2 > Uachuff_803DEE00[3]) {
+                v = lbl_803DED28;
+            } else {
+                f32 t = lbl_803DED34 * (d2 - GPFifo_803DED3C);
+                if (t <= CPUFifo_803DED38) t = CPUFifo_803DED38 - t;
+                else t = t - CPUFifo_803DED38;
+                v = -(lbl_803DED34 * t - lbl_803DED2C);
+                v = sqrtf(v);
+            }
+            *(u8 *)(lbl_803DCFB0 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) =
+                (u8)(int)(Yachuff_803DEDE0[3] * v);
+        }
+    }
+    DCFlushRange((void *)(lbl_803DCFB0 + 0x60), *(int *)(lbl_803DCFB0 + 0x44));
+
+    lbl_803DCF94 = (int)textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
+    h = (int)CPUFifo_803DED38;
+    j = (int)Uachuff_803DEE00[5];
+    k = (int)Uachuff_803DEE00[6];
+    {
+        int m = (int)Uachuff_803DEE00[7];
+        for (i = 0; i < 4; i++) {
+            u16 v = (u16)(((int)(__PADFixBits * ((f32)i / Uachuff_803DEE00[4] - CPUFifo_803DED38) + Udchuff_803DEDA0[7]) & 0xff) << 8);
+            *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x60) = v | ((u16)h & 0xff);
+            *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x68) = v | ((u16)j & 0xff);
+            *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x70) = v | ((u16)k & 0xff);
+            *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x78) = v | ((u16)m & 0xff);
+        }
+    }
+    DCFlushRange((void *)(lbl_803DCF94 + 0x60), *(int *)(lbl_803DCF94 + 0x44));
+
+    h = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    memset((void *)(h + 0x60), 0, *(u32 *)(h + 0x44));
+    *(u16 *)(h + 0xe) = 1;
+    DCFlushRange((void *)(h + 0x60), *(int *)(h + 0x44));
+    *(int *)(g + 0x294) = h;
+    h = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    memset((void *)(h + 0x60), 0, *(u32 *)(h + 0x44));
+    *(u16 *)(h + 0xe) = 1;
+    DCFlushRange((void *)(h + 0x60), *(int *)(h + 0x44));
+    *(int *)(g + 0x298) = h;
+    h = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    memset((void *)(h + 0x60), 0, *(u32 *)(h + 0x44));
+    *(u16 *)(h + 0xe) = 1;
+    DCFlushRange((void *)(h + 0x60), *(int *)(h + 0x44));
+    *(int *)(g + 0x29c) = h;
+    GXTexModeSync();
+
+    {
+        u8 *p = (u8 *)g;
+        for (i = 0; i < 0x20; i += 0x10) {
+            for (j = 0; j < 0x10; j++) {
+                p[j * 0x14 + 0x10] = 0;
+                p[j * 0x14 + 0x11] = 1;
+            }
+            p += 0x140;
+        }
+        p = (u8 *)g + i * 0x14;
+        for (; i < 0x21; i++) {
+            p[0x10] = 0;
+            p[0x11] = 1;
+            p += 0x14;
+        }
+    }
+    GXInvalidateTexAll();
+    testAndSet_onlyUseHeap3(saved);
+}
+#pragma scheduling reset
 void shadowCreate(int *obj) {
     int *cam;
     f32 dx, dy, dz, dist;
@@ -3250,7 +3513,7 @@ extern int isHeavyFogEnabled(void);
 extern f32 *Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 *a, f32 *b);
 extern f32 Dev_803DED1C;
-extern void fn_80069EB8(void);
+extern void fn_80069EB8();
 extern u16 lbl_803DCFA0;
 #pragma scheduling off
 void maybeHudFn_8006c91c(void) {
