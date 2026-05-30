@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
 
 
@@ -5185,7 +5186,7 @@ void dfplevelcontrol_init(int obj, int param2)
     if (v != 0 && v <= 2) {
         *(s16 *)(state + 2) = v;
     }
-    (*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    ((MapEventInterface *)*(int *)gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     unlockLevel(0, 0, 1);
     *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x4000;
     if (*(s8 *)(obj + 0xac) == 0x15) {

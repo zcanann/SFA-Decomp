@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/mapEventTypes.h"
 
 int gmmazewell_getExtraSize(void) { return 0x8; }
 
@@ -59,8 +60,8 @@ void gmmazewell_update(void *obj) {
     if (runtime[1] == 0) {
         player = (int)Obj_GetPlayerObject();
         if (player != 0) {
-            (*(void (**)(f32 *, int, int, int))((char *)*gMapEventInterface + 0x1c))(
-                (f32 *)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
+            ((MapEventInterface *)*gMapEventInterface)->triggerEvent(
+                player + 0xc, *(s16 *)player, 0, getCurMapLayer());
             runtime[1] = 1;
         }
     }
