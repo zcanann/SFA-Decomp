@@ -1398,10 +1398,10 @@ void cflevelcontrol_init(u8* obj, u8* params) {
             p++;
         }
     }
-    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 4, 0);
-    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 0x11, 0);
-    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 0x15, 0);
-    ((void(*)(s32, int, int))((void**)*gMapEventInterface)[20])((s8)obj[0xac], 0x16, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 4, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 0x11, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 0x15, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 0x16, 0);
     sub[0xc] = (u8)((sub[0xc] & ~0x20) | (((u8)GameBit_Get(0x974) & 1) << 5));
     sub[0xc] = (u8)((sub[0xc] & ~0x10) | (((u8)GameBit_Get(0x975) & 1) << 4));
     objSetSlot(obj, 0x51);

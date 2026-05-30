@@ -1,4 +1,5 @@
 #include "main/sky_80080E58_shared.h"
+#include "main/mapEventTypes.h"
 
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 {
@@ -1162,8 +1163,8 @@ void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq) {
 
     if ((((u32)seq[0x136] >> 2) & 1U) != 0U) {
         player = Obj_GetPlayerObject();
-        ((void (*)(void *, s16, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(
-            player + 0xc, *(s16 *)player, 0, getCurMapLayer());
+        ((MapEventInterface *)*gMapEventInterface)->triggerEvent(
+            (int)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
         clearBit = 0;
         seq[0x136] = (seq[0x136] & (u8)~4) | ((clearBit & 1) << 2);
     }

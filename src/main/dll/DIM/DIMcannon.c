@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
 
 extern undefined4 FUN_80006724();
@@ -2230,7 +2231,7 @@ void link_levcontrol_init(int *obj) {
 }
 
 extern u8 lbl_803238D8[];
-extern void *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void fn_80088870(u8 *a, u8 *b, u8 *c, u8 *d);
 extern void envFxActFn_800887f8(int id);
 extern void getEnvfxAct(int a, int b, int c, int d);
@@ -2259,12 +2260,12 @@ void linkb_levcontrol_init(int *obj) {
     }
     fn_80088870(t + 0x38, t, t + 0x70, t + 0xa8);
     if (getSaveGameLoadStatus() != 0) {
-        if ((u8)((int(*)(int, int))((void**)*(void**)gMapEventInterface)[19])((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
+        if ((*gMapEventInterface)->getAnimEvent((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
             envFxActFn_800887f8(0x3f);
         }
         getEnvfxActImmediately(0, 0, 0x23c, 0);
     } else {
-        if ((u8)((int(*)(int, int))((void**)*(void**)gMapEventInterface)[19])((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
+        if ((*gMapEventInterface)->getAnimEvent((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
             envFxActFn_800887f8(0x1f);
         }
         getEnvfxAct(0, 0, 0x23c, 0);

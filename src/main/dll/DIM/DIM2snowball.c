@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 
 extern undefined8 FUN_80006724();
@@ -1373,7 +1374,7 @@ void dll_1CF_init(int* obj, int* def)
 extern f32 lbl_803E4A28;
 extern int getSaveGameLoadStatus(void);
 extern void gameBitFn_800ea2e0(int n);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void unlockLevel(int a, int b, int c);
 void dim_levelcontrol_init(int *obj) {
     u8 *state;
@@ -1400,7 +1401,7 @@ void dim_levelcontrol_init(int *obj) {
     state[14] = (u8)((state[14] & ~0x20) | (((u32)GameBit_Get(3341) & 1) << 5));
     state[14] = (u8)((state[14] & ~0x10) | (((u32)GameBit_Get(3342) & 1) << 4));
     state[14] = (u8)((state[14] & ~0x08) | (((u32)GameBit_Get(2593) & 1) << 3));
-    ((void(*)(int, int))((void **)*gMapEventInterface)[17])((s32)*(s8 *)((char *)obj + 172), 1);
+    (*gMapEventInterface)->setMode((s32)*(s8 *)((char *)obj + 172), 1);
     *(u16 *)((char *)obj + 176) = (u16)(*(u16 *)((char *)obj + 176) | 0x6000);
     unlockLevel(0, 0, 1);
 }

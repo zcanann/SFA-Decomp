@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEventTypes.h"
 #include "main/dll/WM/WMcrystal.h"
 #include "main/objanim_update.h"
 
@@ -628,7 +629,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
     }
 
     if ((state->eventFlags & 0x10) != 0) {
-        (*(code *)(*gMapEventInterface + 0x44))(0xe,6);
+        ((MapEventInterface *)*gMapEventInterface)->setMode(0xe, 6);
         state->eventFlags &= ~0x10;
     }
 }
