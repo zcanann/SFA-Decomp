@@ -2228,6 +2228,12 @@ extern s32 lbl_803DD3F0; extern s32 lbl_803DD3F4;
 extern f32 lbl_803DD3F8; extern f32 lbl_803DD3FC;
 extern f32 lbl_803E0308; extern f32 lbl_803E030C;
 
+extern f32 lbl_803DB870; extern f32 lbl_803DB874;
+extern f32 lbl_803E02E4; extern f32 lbl_803E02EC;
+extern f32 lbl_803E02F0; extern f32 lbl_803E02F4;
+extern f32 lbl_803E02F8; extern f32 lbl_803E02FC;
+extern int *gExpgfxInterface;
+
 extern f32 lbl_803DB888; extern f32 lbl_803DB88C;
 extern f32 lbl_803E0310; extern f32 lbl_803E0314;
 extern f32 lbl_803E0318; extern f32 lbl_803E0320;
@@ -2492,6 +2498,124 @@ void Effect18_func05(void)
     lbl_803DD3E4 = lbl_803DD3E4 + (s32)framesThisStep * 0x32;
     if (lbl_803DD3E4 > 0x7fff) lbl_803DD3E4 = 0;
     lbl_803DD3E8 = fn_80293E80(lbl_803E02D0 * (f32)(s16)lbl_803DD3E4 / lbl_803E02D4);
+}
+
+typedef struct PartFxSpawn {
+    int f00;
+    int f04;
+    int f08;
+    s16 f0c;
+    s16 f0e;
+    s16 f10;
+    u8  pad12[2];
+    f32 f14;
+    f32 f18;
+    f32 f1c;
+    f32 f20;
+    f32 f24;
+    f32 f28;
+    f32 f2c;
+    f32 f30;
+    f32 f34;
+    f32 f38;
+    f32 f3c;
+    s16 f40;
+    s16 f42;
+    u32 f44;
+    u32 f48;
+    u32 f4c;
+    u32 f50;
+    u32 f54;
+    s16 f58;
+    s16 f5a;
+    s16 f5c;
+    u8  f5e;
+    u8  f60;
+    u8  f61;
+    u8  f62;
+} PartFxSpawn;
+
+int Effect19_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
+                    u8 param_5, f32 *param_6)
+{
+    int uVar1;
+    PartFxSpawn cfg;
+
+    lbl_803DB870 = lbl_803DB870 + lbl_803E02D8;
+    if (lbl_803DB870 > lbl_803E02E0) lbl_803DB870 = lbl_803E02DC;
+    lbl_803DB874 = lbl_803DB874 + lbl_803E02E4;
+    if (lbl_803DB874 > lbl_803E02E0) lbl_803DB874 = lbl_803E02E8;
+    if (param_1 == 0) {
+        uVar1 = -1;
+    } else {
+        if ((param_4 & 0x200000) != 0) {
+            if (param_3 == 0) return -1;
+            cfg.f18 = *(f32 *)(param_3 + 6);
+            cfg.f1c = *(f32 *)(param_3 + 8);
+            cfg.f20 = *(f32 *)(param_3 + 10);
+            cfg.f14 = *(f32 *)(param_3 + 4);
+            cfg.f10 = param_3[2];
+            cfg.f0e = param_3[1];
+            cfg.f0c = *param_3;
+            cfg.f62 = param_5;
+        }
+        cfg.f44 = 0;
+        cfg.f48 = 0;
+        cfg.f5e = (u8)param_2;
+        cfg.f00 = (int)param_1;
+        cfg.f30 = lbl_803E02EC;
+        cfg.f34 = lbl_803E02EC;
+        cfg.f38 = lbl_803E02EC;
+        cfg.f24 = lbl_803E02EC;
+        cfg.f28 = lbl_803E02EC;
+        cfg.f2c = lbl_803E02EC;
+        cfg.f3c = lbl_803E02EC;
+        cfg.f08 = 0;
+        cfg.f04 = -1;
+        cfg.f60 = 0xff;
+        cfg.f61 = 0;
+        cfg.f42 = 0;
+        cfg.f58 = 0xffff;
+        cfg.f5a = 0xffff;
+        cfg.f5c = 0xffff;
+        cfg.f4c = 0xffff;
+        cfg.f50 = 0xffff;
+        cfg.f54 = 0xffff;
+        cfg.f40 = 0;
+        if (param_2 == 0x76c) {
+            cfg.f24 = lbl_803E02F0 * (f32)(s32)randomGetRange(0x1e, 0x64);
+            if (*(f32 *)(param_3 + 6) > lbl_803E02EC) cfg.f24 = -cfg.f24;
+            cfg.f28 = lbl_803E02D8 * (f32)(s32)randomGetRange(0, 0x64) + lbl_803E02DC;
+            cfg.f38 = lbl_803E02DC *
+                      (f32)(s32)randomGetRange((s32)param_6[0], (s32)param_6[1]);
+            cfg.f30 = lbl_803E02F4;
+            if (*(f32 *)(param_3 + 6) > lbl_803E02EC) cfg.f30 = lbl_803E02F8;
+            cfg.f3c = lbl_803E02FC * (f32)(s32)randomGetRange(-0x64, 0x64) + param_6[2];
+            cfg.f08 = 0x23;
+            cfg.f44 = 0x80108;
+            cfg.f42 = 0x60;
+            cfg.f60 = 0xc4;
+        } else {
+            return -1;
+        }
+        cfg.f44 = cfg.f44 | param_4;
+        if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+        if ((cfg.f44 & 1) != 0) {
+            if ((param_4 & 0x200000) == 0) {
+                if (cfg.f00 != 0) {
+                    cfg.f30 = cfg.f30 + *(f32 *)(cfg.f00 + 0x18);
+                    cfg.f34 = cfg.f34 + *(f32 *)(cfg.f00 + 0x1c);
+                    cfg.f38 = cfg.f38 + *(f32 *)(cfg.f00 + 0x20);
+                }
+            } else {
+                cfg.f30 = cfg.f30 + cfg.f18;
+                cfg.f34 = cfg.f34 + cfg.f1c;
+                cfg.f38 = cfg.f38 + cfg.f20;
+            }
+        }
+        uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    }
+    return uVar1;
 }
 
 void Effect19_func05(void)
