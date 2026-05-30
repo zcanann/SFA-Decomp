@@ -105,8 +105,9 @@ int getEnvfxAct(int a, int b, u16 idx, int d)
 
 #pragma scheduling off
 #pragma peephole off
-u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bitWidth)
+u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bw)
 {
+    int bitWidth = bw;
     int acc;
     int idx;
     u8 *cur;
