@@ -2580,3 +2580,84 @@ void fearTestMeterDraw(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *Obj_GetPlayerObject(void);
+extern int getHudHiddenFrameCount(void);
+extern s8 lbl_803DBAEC;
+extern u8 lbl_803DBAED;
+extern s8 lbl_803DD7F8;
+extern s8 lbl_803DD7F9;
+#pragma scheduling off
+#pragma peephole off
+void hudDrawAirMeter(void) {
+    int sc0, sc1, sc2, sc3;
+    int *player = Obj_GetPlayerObject();
+    int *m = (int *)airMeter;
+    _Obj8011F70C *p = (_Obj8011F70C *)airMeter;
+    s16 alpha;
+    if (m == NULL) return;
+    alpha = *(u8 *)((char *)m + 0x18);
+    if (p->bit7 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0 ||
+        player == NULL || (*(u16 *)((char *)player + 0xb0) & 0x1000) == 0 ||
+        *(u16 *)((char *)m + 0x2c) == 0x5d5) {
+        alpha = (s16)(alpha - (framesThisStep << 2));
+        if (alpha < 0) alpha = 0;
+        *(u8 *)((char *)m + 0x18) = (u8)alpha;
+        if (*(u8 *)((char *)m + 0x18) == 0 && p->bit7) {
+            p->bit7 = 0;
+            GameUI_airMeterShutdown();
+            return;
+        }
+    } else {
+        alpha = (s16)(alpha + (framesThisStep << 2));
+        if (alpha > 0xff) alpha = 0xff;
+        *(u8 *)((char *)m + 0x18) = (u8)alpha;
+    }
+    GXGetScissor(&sc0, &sc1, &sc2, &sc3);
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    if (m[0x10] == 0) {
+        int x = 0x140 - ((u32)(m[4] * m[1]) >> 1);
+        int i;
+        for (i = 0; i < m[1]; i++) {
+            void *tex = (i >= m[3]) ? (void *)m[0xc] : (void *)m[0xb];
+            drawTexture(tex, (f32)(int)x, (f32)(int)(0x1a4 - m[5]),
+                        *(u8 *)((char *)m + 0x18), 0x100);
+            x += m[4];
+        }
+    } else if (m[0x10] == 1) {
+        int off;
+        int by;
+        int cy;
+        int clampedC;
+        u16 id = *(u16 *)((char *)m + 0x2c);
+        if (id == 0x643) off = -0xc;
+        else if (id == 0x63e) off = -0xa;
+        else off = 0;
+        {
+            int base = (0x1a4 - (*(u16 *)((char *)m[0xc] + 0xc) >> 1)) + lbl_803DBAEC;
+            drawTexture((void *)m[0xc], (f32)(int)(lbl_803DD7F9 + 0xb5),
+                        (f32)(int)(base + (s8)off + lbl_803DD7F8),
+                        *(u8 *)((char *)m + 0x18), 0x100);
+        }
+        by = *(u16 *)((char *)m[0xc] + 0xa) + 0xb4;
+        cy = 0x1a4 - (*(u16 *)((char *)m[0xd] + 0xc) >> 1);
+        if (m[2] < 0x9e) {
+            m[2] = m[2] + framesThisStep * lbl_803DBAED;
+        }
+        if (m[3] < 0) clampedC = 0;
+        else if (m[3] > m[2]) clampedC = m[2];
+        else clampedC = m[3];
+        m[3] = clampedC;
+        clampedC = (s16)clampedC;
+        drawScaledTexture((void *)m[0xf], (f32)(int)(by + clampedC), (f32)(int)cy,
+                          *(u8 *)((char *)m + 0x18), 0x100, m[2] - clampedC, 0x1a, 0);
+        drawScaledTexture((void *)m[0xe], (f32)(int)by, (f32)(int)cy,
+                          *(u8 *)((char *)m + 0x18), 0x100, clampedC, 0x1a, 0);
+        drawTexture((void *)m[0xd], (f32)(int)(by + m[2]),
+                    (f32)(int)(0x1a4 - (*(u16 *)((char *)m[0xd] + 0xc) >> 1)),
+                    *(u8 *)((char *)m + 0x18), 0x100);
+    }
+    GXSetScissor(sc0, sc1, sc2, sc3);
+}
+#pragma peephole reset
+#pragma scheduling reset
