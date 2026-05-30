@@ -2177,3 +2177,42 @@ void GameUI_func14(s16 a, int b, int c) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 framesThisStep;
+extern f32 hudElementOpacity;
+extern f32 lbl_803E1F9C;
+extern f32 lbl_803E1FA0;
+extern f32 lbl_803E1FA4;
+extern int lbl_803DD740;
+extern int lbl_803A9428[];
+extern void textureFree(int handle);
+extern void drawTexture(void *p, f32 a, f32 b, int c, int d);
+#pragma scheduling off
+#pragma peephole off
+void hudDrawTimedElement(int unused, int *e) {
+    if (e[1] < 0) return;
+    e[1] = e[1] - framesThisStep;
+    if (e[1] < 0) {
+        textureFree(e[0]);
+        e[0] = 0;
+        return;
+    }
+    if ((f32)e[1] < lbl_803E1F9C) {
+        *(f32 *)((char *)e + 0x8) = hudElementOpacity * (f32)e[1] / lbl_803E1F9C;
+    } else {
+        f32 cur = *(f32 *)((char *)e + 0x8);
+        if (hudElementOpacity != cur) {
+            *(f32 *)((char *)e + 0x8) = lbl_803E1FA0 * (f32)(u32)framesThisStep + cur;
+            if (*(f32 *)((char *)e + 0x8) > hudElementOpacity) {
+                *(f32 *)((char *)e + 0x8) = hudElementOpacity;
+            }
+        }
+    }
+    memset(lbl_803A9428, 0, 0xc);
+    lbl_803A9428[0] = e[0];
+    lbl_803A9428[3] = 0;
+    drawTexture(lbl_803A9428, lbl_803E1FA4, (f32)(lbl_803DD740 + 0xaf),
+                (int)*(f32 *)((char *)e + 0x8), 0x100);
+}
+#pragma peephole reset
+#pragma scheduling reset
