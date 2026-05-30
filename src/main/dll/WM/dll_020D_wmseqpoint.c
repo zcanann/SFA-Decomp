@@ -220,6 +220,8 @@ void wmseqpoint_update(int obj)
     }
 }
 
+#pragma scheduling off
+#pragma peephole off
 void wmseqpoint_init(int obj, int setup)
 {
     WmSeqPointState *state;
@@ -236,6 +238,8 @@ void wmseqpoint_init(int obj, int setup)
     state->command = 0;
     state->unk0A = 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void wmseqpoint_release(void) {}
 
