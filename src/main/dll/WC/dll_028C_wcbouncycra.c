@@ -113,9 +113,9 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
     f32 cellX;
     f32 cellZ;
+    f32 pos;
     f32 min;
     f32 max;
-    f32 pos;
     int iface;
 
     if ((s8)*(u8 *)(obj + 0xad) == 1) {
