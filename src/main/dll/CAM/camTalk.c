@@ -3,13 +3,13 @@
 
 extern void *memset(void *dst, int val, u32 n);
 extern void *mmAlloc(int size, int heap, int flags);
-extern undefined4 Obj_TransformWorldPointToLocal();
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
 extern undefined4 FUN_80006a1c();
 extern undefined4 FUN_80006a30();
 extern int FUN_80017730();
 extern void mathFn_80021ac8(void *param_1, void *outVec);
 extern undefined4 setMatrixFromObjectPos();
-extern undefined4 Matrix_TransformPoint();
+extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, void *matrix, f32 *outX, f32 *outY, f32 *outZ);
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 camcontrol_getTargetPosition(int param_1,int param_2,float *outPos,void *outAngle);
@@ -122,7 +122,7 @@ void CameraModeBike_update(short *param_1)
     local_fc.pitch = (undefined2)(int)*(float *)(lbl_803DD540 + 0x30);
     local_fc.roll = 0;
     setMatrixFromObjectPos(afStack_e4,&local_fc);
-    Matrix_TransformPoint((double)lbl_803E1780,(double)lbl_803E178C,(double)lbl_803E1780,afStack_e4,
+    Matrix_TransformPoint(lbl_803E1780,lbl_803E178C,lbl_803E1780,afStack_e4,
                  &local_100,&local_104,&local_108);
     *param_1 = -0x8000 - *puVar5;
     *(float *)(lbl_803DD540 + 0x20) =
@@ -140,10 +140,10 @@ void CameraModeBike_update(short *param_1)
       sVar4 = sVar4 + -1;
     }
     param_1[1] = param_1[1] + (sVar4 >> 3);
-    dVar6 = (f64)fn_80293E80((f64)(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0));
-    dVar7 = (f64)sin((f64)(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0));
-    dVar8 = (f64)sin((f64)(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0));
-    dVar9 = (f64)fn_80293E80((f64)(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0));
+    dVar6 = fn_80293E80(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0);
+    dVar7 = sin(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0);
+    dVar8 = sin(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
+    dVar9 = fn_80293E80(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
     fVar2 = -*(float *)(lbl_803DD540 + 0x24) / lbl_803E17A4;
     fVar3 = lbl_803E1780;
     if ((lbl_803E1780 <= fVar2) && (fVar3 = fVar2, lbl_803E1788 < fVar2)) {
@@ -154,10 +154,10 @@ void CameraModeBike_update(short *param_1)
          ((lbl_803E17B0 * fVar3 + lbl_803E17AC) - *(float *)(lbl_803DD540 + 0x28)) +
          *(float *)(lbl_803DD540 + 0x28);
     fVar2 = *(float *)(lbl_803DD540 + 0x28);
-    dVar8 = (double)(float)((double)fVar2 * dVar8);
-    *(float *)(param_1 + 0xc) = local_100 + (float)(dVar8 * dVar7);
-    *(float *)(param_1 + 0xe) = local_104 + (float)((double)fVar2 * dVar9);
-    *(float *)(param_1 + 0x10) = local_108 + (float)(dVar8 * dVar6);
+    dVar8 = fVar2 * dVar8;
+    *(float *)(param_1 + 0xc) = local_100 + dVar8 * dVar7;
+    *(float *)(param_1 + 0xe) = local_104 + fVar2 * dVar9;
+    *(float *)(param_1 + 0x10) = local_108 + dVar8 * dVar6;
     iVar1 = (int)(lbl_803E17A8 * *(float *)(lbl_803DD540 + 0x2c));
     local_60 = (longlong)iVar1;
     sVar4 = (short)iVar1 - param_1[2];
@@ -169,8 +169,8 @@ void CameraModeBike_update(short *param_1)
     }
     iVar1 = (int)((f32)(s32)sVar4 * timeDelta * lbl_803E17B4 + (f32)(s32)param_1[2]);
     param_1[2] = (short)iVar1;
-    Obj_TransformWorldPointToLocal((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
-                 (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
+    Obj_TransformWorldPointToLocal(*(float *)(param_1 + 0xc),*(float *)(param_1 + 0xe),
+                 *(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   }
   return;
