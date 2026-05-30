@@ -7297,7 +7297,6 @@ void dll_0B_func05(void)
     int cntA;
     int k;
     void *res;
-    f32 vec[3];
     s16 ang[3];
     f32 q[4];
     BoneSpawnData tmpl;
@@ -7375,9 +7374,9 @@ void dll_0B_func05(void)
                     }
                 }
                 if (flags & 0x10000000) {
-                    vec[0] = *(f32 *)((char *)eff + 0x60);
-                    vec[1] = *(f32 *)((char *)eff + 0x64);
-                    vec[2] = *(f32 *)((char *)eff + 0x68);
+                    tmpl.x = *(f32 *)((char *)eff + 0x60);
+                    tmpl.y = *(f32 *)((char *)eff + 0x64);
+                    tmpl.z = *(f32 *)((char *)eff + 0x68);
                     q[1] = lbl_803DF430;
                     q[2] = lbl_803DF430;
                     q[3] = lbl_803DF430;
@@ -7389,39 +7388,39 @@ void dll_0B_func05(void)
                     }
                     ang[1] = 0;
                     ang[2] = 0;
-                    mathFn_80021ac8(&ang[0], &vec[0]);
+                    mathFn_80021ac8(&ang[0], &tmpl.x);
                     if (*(int *)eff == 0) {
                         if (Obj_IsLoadingLocked()) {
                             int *o;
                             if (*(u32 *)((char *)eff + 0xa4) & 1) {
-                                vec[0] += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x18);
-                                vec[1] += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x1c);
-                                vec[2] += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x20);
+                                tmpl.x += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x18);
+                                tmpl.y += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x1c);
+                                tmpl.z += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x20);
                             } else {
-                                vec[0] += *(f32 *)((char *)eff + 0x18);
-                                vec[1] += *(f32 *)((char *)eff + 0x1c);
-                                vec[2] += *(f32 *)((char *)eff + 0x20);
+                                tmpl.x += *(f32 *)((char *)eff + 0x18);
+                                tmpl.y += *(f32 *)((char *)eff + 0x1c);
+                                tmpl.z += *(f32 *)((char *)eff + 0x20);
                             }
                             o = Obj_AllocObjectSetup(0x20, 0x66);
-                            *(f32 *)((char *)o + 0x8) = vec[0];
-                            *(f32 *)((char *)o + 0xc) = vec[1];
-                            *(f32 *)((char *)o + 0x10) = vec[2];
+                            *(f32 *)((char *)o + 0x8) = tmpl.x;
+                            *(f32 *)((char *)o + 0xc) = tmpl.y;
+                            *(f32 *)((char *)o + 0x10) = tmpl.z;
                             *(int *)eff = (int)Obj_SetupObject(o, 5, -1, -1, 0);
                             *(int *)(*(int *)eff + 0xf8) = 1;
                         }
                     } else if (*(int *)eff != 0) {
                         if (*(u32 *)((char *)eff + 0xa4) & 1) {
-                            vec[0] += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x18);
-                            vec[1] += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x1c);
-                            vec[2] += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x20);
+                            tmpl.x += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x18);
+                            tmpl.y += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x1c);
+                            tmpl.z += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x20);
                         } else {
-                            vec[0] += *(f32 *)((char *)eff + 0x18);
-                            vec[1] += *(f32 *)((char *)eff + 0x1c);
-                            vec[2] += *(f32 *)((char *)eff + 0x20);
+                            tmpl.x += *(f32 *)((char *)eff + 0x18);
+                            tmpl.y += *(f32 *)((char *)eff + 0x1c);
+                            tmpl.z += *(f32 *)((char *)eff + 0x20);
                         }
-                        *(f32 *)(*(int *)eff + 0x18) = vec[0];
-                        *(f32 *)(*(int *)eff + 0x1c) = vec[1];
-                        *(f32 *)(*(int *)eff + 0x20) = vec[2];
+                        *(f32 *)(*(int *)eff + 0x18) = tmpl.x;
+                        *(f32 *)(*(int *)eff + 0x1c) = tmpl.y;
+                        *(f32 *)(*(int *)eff + 0x20) = tmpl.z;
                     }
                     if (*(int *)eff != 0) {
                         int *o = *(int **)eff;
@@ -7463,7 +7462,7 @@ void dll_0B_func05(void)
                     ((ExpFn4)fn_800A09C4)(eff, E9 + emOff, active, 0);
                 }
                 if (*(int *)(E9 + emOff) & 0x8000000) {
-                    *(f32 *)(E9 + emOff + 0xc) = (f32)randomGetRange(0, 0x10000);
+                    *(f32 *)(E9 + emOff + 0xc) = (f32)randomGetRange(0, 0xffff);
                     ((ExpFn4)fn_800A09C4)(eff, E9 + emOff, active, 0);
                 }
                 if (*(int *)(E9 + emOff) & 0x4000) {
@@ -7506,10 +7505,64 @@ void dll_0B_func05(void)
                     *(f32 *)((char *)eff + 0x2c) = *(f32 *)(E9 + emOff + 0xc) * lbl_803DD284 + *(f32 *)((char *)eff + 0x2c);
                 }
                 if (*(int *)(E9 + emOff) & 0x800000) {
-                    /* TODO: emitter spawn-burst sub-block (bit 0x800000) */
+                    if ((*(int *)(E9 + emOff) & 0x1000000) && lbl_803DF430 == *(f32 *)(E9 + emOff + 0x8)) {
+                        for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
+                            if (randomGetRange(0, (int)*(f32 *)(E9 + emOff + 0xc)) == 0) {
+                                if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                                    (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10001, -1, NULL);
+                                } else {
+                                    (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10001, -1, NULL);
+                                }
+                            }
+                        }
+                    } else if (lbl_803DF430 == *(f32 *)(E9 + emOff + 0x8)) {
+                        for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
+                            if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                                (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), (char *)eff + 0xc, 0x10002, -1, NULL);
+                            } else {
+                                (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10002, -1, NULL);
+                            }
+                        }
+                    } else if (lbl_803DF434 == *(f32 *)(E9 + emOff + 0x8)) {
+                        if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                            tmpl.x = *(f32 *)((char *)eff + 0x60);
+                            tmpl.y = *(f32 *)((char *)eff + 0x64);
+                            tmpl.z = *(f32 *)((char *)eff + 0x68);
+                            if (*(int **)((char *)eff + 4) != NULL) {
+                                (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), &tmpl, 0x10001, -1, NULL);
+                            }
+                        } else {
+                            tmpl.x = *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x18) + *(f32 *)((char *)eff + 0x60);
+                            tmpl.y = *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x1c) + *(f32 *)((char *)eff + 0x64);
+                            tmpl.z = *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x20) + *(f32 *)((char *)eff + 0x68);
+                            if (*(int **)((char *)eff + 4) != NULL) {
+                                (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), &tmpl, 0x10001, -1, NULL);
+                            }
+                        }
+                    }
                 }
                 if (*(int *)(E9 + emOff) & 0x4000000) {
-                    /* TODO: resource-acquire spawn sub-block (bit 0x4000000) */
+                    res = Resource_Acquire((u16)(*(s16 *)(E9 + emOff + 0x14) + 0x58), 1);
+                    if (*(int *)(E9 + emOff) & 0x1000000) {
+                        for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
+                            if (randomGetRange(0, 5) == 0) {
+                                if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                                    (*(ExpResFn6 *)(*(int *)res + 4))(NULL, 0, (char *)eff + 0xc, 1, -1, NULL);
+                                } else {
+                                    (*(ExpResFn6 *)(*(int *)res + 4))(*(int **)((char *)eff + 4), 0, NULL, 1, -1, NULL);
+                                }
+                            }
+                        }
+                    } else {
+                        for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
+                            if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                                (*(ExpResFn6 *)(*(int *)res + 4))(NULL, 0, (char *)eff + 0xc, 1, -1, NULL);
+                            } else {
+                                (*(ExpResFn6 *)(*(int *)res + 4))(*(int **)((char *)eff + 4), 0, NULL, 1, -1, NULL);
+                            }
+                        }
+                    }
+                    Resource_Release(res);
                 }
             }
             if (feFlag == 0) {
