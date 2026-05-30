@@ -350,6 +350,11 @@ extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, in
 extern void mathFn_80021ac8(void *xf, f32 *out);
 extern f32 lbl_8038D7DC[];
 extern s16 lbl_803DCEF2;
+extern f32 PSVECDotProduct(f32 *a, f32 *b);
+extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
+extern void PSVECScale(f32 *src, f32 *dst, f32 s);
+extern f32 lbl_803DEC6C;
+extern f32 lbl_803DEC70;
 extern void PSVECNormalize(f32 *src, f32 *dst);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803879B0[];
@@ -4729,6 +4734,7 @@ int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32 *out, int e)
   return 1;
 }
 
+#pragma dont_inline on
 int fn_80065768(int a, f32 b, f32 val, f32 d, f32 *out1, f32 *out2, int f)
 {
   void **arr;
@@ -4760,6 +4766,7 @@ int fn_80065768(int a, f32 b, f32 val, f32 d, f32 *out1, f32 *out2, int f)
   *out1 = __AR_Callback;
   return 1;
 }
+#pragma dont_inline reset
 
 int fn_80062D60(int a, f32 b, f32 lo, f32 d, f32 hi, f32 *out1, int *out2)
 {
@@ -5020,4 +5027,84 @@ int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *out
     input += 5;
   }
   return lbl_803DCEF2 != 0;
+}
+
+void fn_8006135C(s16 *out, void *obj)
+{
+  f32 dist;
+  f32 a[3];
+  f32 c[3];
+  f32 b[3];
+  f32 d;
+  f32 scale;
+  f32 nd;
+  f32 z;
+  f32 s;
+
+  if (fn_80065768((int)obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+                  *(f32 *)((char *)obj + 0x14), &dist, a, 0) != 0) {
+    *(u8 *)((char *)out + 0x18) = 0xff;
+    return;
+  }
+  PSVECNormalize(a, a);
+  b[0] = lbl_803DEC68;
+  b[1] = lbl_803DEC58;
+  b[2] = lbl_803DEC58;
+  d = (f32)__fabs(PSVECDotProduct(a, b));
+  if (d >= lbl_803DEC6C) {
+    b[0] = lbl_803DEC58;
+    b[2] = lbl_803DEC68;
+  }
+  PSVECCrossProduct(a, b, c);
+  PSVECCrossProduct(c, a, b);
+  PSVECNormalize(b, b);
+  PSVECNormalize(c, c);
+  scale = lbl_803DEC70 * *(f32 *)*(void **)((char *)obj + 0x64);
+  PSVECScale(b, b, scale);
+  PSVECScale(c, c, scale);
+  nd = -dist;
+  z = lbl_803DEC58;
+  s = (&lbl_803DEC70)[1];
+  out[0] = (int)(s * ((z - b[0]) - c[0]));
+  out[1] = (int)(s * ((nd - b[1]) - c[1]));
+  out[2] = (int)(s * ((z - b[2]) - c[2]));
+  out[3] = (int)(s * ((z + b[0]) - c[0]));
+  out[4] = (int)(s * ((nd + b[1]) - c[1]));
+  out[5] = (int)(s * ((z + b[2]) - c[2]));
+  out[6] = (int)(s * (c[0] + (z + b[0])));
+  out[7] = (int)(s * (c[1] + (nd + b[1])));
+  out[8] = (int)(s * (c[2] + (z + b[2])));
+  out[9] = (int)(s * (c[0] + (z - b[0])));
+  out[10] = (int)(s * (c[1] + (nd - b[1])));
+  out[11] = (int)(s * (c[2] + (z - b[2])));
+  *(u8 *)((char *)out + 0x18) = 1;
+}
+
+void fn_8006961C(int *out, f32 *p4, f32 *p5, f32 *rad, int n)
+{
+  int i;
+
+  out[0] = 1000000;
+  out[3] = -1000000;
+  out[1] = 1000000;
+  out[4] = -1000000;
+  out[2] = 1000000;
+  out[5] = -1000000;
+  for (i = 0; i < n; i++) {
+    if (p4[0] - rad[0] < (f32)out[0]) out[0] = (int)(p4[0] - rad[0]);
+    if (p4[0] + rad[0] > (f32)out[3]) out[3] = (int)(p4[0] + rad[0]);
+    if (p4[1] - rad[0] < (f32)out[1]) out[1] = (int)(p4[1] - rad[0]);
+    if (p4[1] + rad[0] > (f32)out[4]) out[4] = (int)(p4[1] + rad[0]);
+    if (p4[2] - rad[0] < (f32)out[2]) out[2] = (int)(p4[2] - rad[0]);
+    if (p4[2] + rad[0] > (f32)out[5]) out[5] = (int)(p4[2] + rad[0]);
+    if (p5[0] - rad[0] < (f32)out[0]) out[0] = (int)(p5[0] - rad[0]);
+    if (p5[0] + rad[0] > (f32)out[3]) out[3] = (int)(p5[0] + rad[0]);
+    if (p5[1] - rad[0] < (f32)out[1]) out[1] = (int)(p5[1] - rad[0]);
+    if (p5[1] + rad[0] > (f32)out[4]) out[4] = (int)(p5[1] + rad[0]);
+    if (p5[2] - rad[0] < (f32)out[2]) out[2] = (int)(p5[2] - rad[0]);
+    if (p5[2] + rad[0] > (f32)out[5]) out[5] = (int)(p5[2] + rad[0]);
+    p4 += 3;
+    p5 += 3;
+    rad += 1;
+  }
 }

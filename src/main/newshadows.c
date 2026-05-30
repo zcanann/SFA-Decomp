@@ -3044,6 +3044,59 @@ extern inline float sqrtf(float x)
     }
     return x;
 }
+extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
+extern f32 Vdchuff_803DEDC0[];
+#pragma scheduling off
+void fn_8006CD20(f32 *arr, int n, f32 *out1, f32 *out2, f32 a, f32 b, f32 c) {
+    f32 *p;
+    int i;
+    f32 acc5 = lbl_803DED28;
+    f32 acc6 = lbl_803DED28;
+
+    p = arr;
+    for (i = 0; i < n; i++, p += 5) {
+        f32 over = lbl_803DED28;
+        if (c < p[0]) {
+            f32 mx, mz, t, s0, tmp, p2lo, d2, sq, ratio, frac, depth;
+            t = GPFifo_803DED3C + (p[0] - c) / p[0];
+            if (t > lbl_803DED2C) t = lbl_803DED2C;
+            s0 = sqrtf(t);
+
+            mx = (f32)__fabs(p[1] - a);
+            tmp = (f32)__fabs((lbl_803DED2C + p[1]) - a);
+            if (tmp < mx) mx = tmp;
+            tmp = (f32)__fabs((p[1] - lbl_803DED2C) - a);
+            if (tmp < mx) mx = tmp;
+
+            mz = (f32)__fabs(p[2] - b);
+            if (b > p[2]) over = b - p[2];
+            tmp = (f32)__fabs((lbl_803DED2C + p[2]) - b);
+            if (tmp < mz) { mz = tmp; over = lbl_803DED28; }
+            p2lo = p[2] - lbl_803DED2C;
+            tmp = (f32)__fabs(p2lo - b);
+            if (tmp < mz) { mz = tmp; if (b > p2lo) over = b - p2lo; }
+
+            d2 = mx * mx + mz * mz;
+            sq = sqrtf(d2);
+
+            ratio = c / p[0];
+            frac = sqrtf(ratio);
+            depth = p[3] - frac * (p[3] - p[4]);
+            if (sq <= depth) {
+                f32 g = lbl_803DED2C - sq / depth;
+                g = sqrtf(g);
+                acc5 = s0 * g + acc5;
+                acc6 = acc6 + over / depth;
+                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - c * Vdchuff_803DEDC0[4]) + acc6;
+            }
+        }
+    }
+    if (acc5 > lbl_803DED2C) acc5 = lbl_803DED2C;
+    if (acc6 > lbl_803DED2C) acc6 = lbl_803DED2C;
+    *out1 = __GXCurrentThread_803DED40 * acc6 + Vdchuff_803DEDC0[5];
+    *out2 = acc5;
+}
+#pragma scheduling reset
 void shadowCreate(int *obj) {
     int *cam;
     f32 dx, dy, dz, dist;
