@@ -558,8 +558,8 @@ void collectible_hitDetect(void)
 }
 
 extern uint GameBit_Get(int);
-extern f64 sin(f64);
-extern f64 fn_80293E80(f64);
+extern f32 sin(f32 x);
+extern f32 fn_80293E80(f32 x);
 extern void objFn_800972dc(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern int* gPartfxInterface;
 extern f32 lbl_803E3454;
@@ -594,8 +594,8 @@ int fn_80172680(int obj, int unused, u8* data)
     for (i = 0; i < (s32)data[0x8b]; i++) {
         u8 cmd = data[0x81 + i];
         if (cmd == 1) {
-            s_val = lbl_803E3484 * (f32)sin((f64)lbl_803E3488);
-            c_val = lbl_803E3484 * (f32)fn_80293E80((f64)lbl_803E3488);
+            s_val = lbl_803E3484 * sin(lbl_803E3488);
+            c_val = lbl_803E3484 * fn_80293E80(lbl_803E3488);
             *(u8*)((char*)*(int**)(obj + 0xb8) + 0x1d) = 8;
             *(f32*)(obj + 0x24) = c_val;
             *(f32*)(obj + 0x28) = lbl_803E3460;
