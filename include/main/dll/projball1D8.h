@@ -5,5 +5,6 @@
 
 void nw_levcontrol_update(int param_1);
 int sh_tricky_getExtraSize(void);
+void sh_tricky_update(int *obj);
 
 #endif /* MAIN_DLL_PROJBALL1D8_H_ */
