@@ -1956,6 +1956,111 @@ extern f32 lbl_803E25F0;
 extern f32 lbl_803E25F4;
 extern f32 oneOverTimeDelta;
 
+extern int *gCameraInterface;
+extern int playerIsDisguised(int *p);
+extern void baddieFn_8014a304(int *a, int *s, f32 v);
+extern f32 lbl_803E25D4;
+extern f32 lbl_803E25D8;
+
+void fn_8014B878(int *arg1, int *sub) {
+    int *player;
+    int *tricky;
+    int *target;
+    int *camTarget;
+
+    player = Obj_GetPlayerObject();
+    tricky = getTrickyObject();
+    target = *(int**)((char*)sub + 0x29c);
+    if (target != NULL && (*(u32*)((char*)sub + 0x2e4) & 0x10000) == 0 &&
+        (target != player || (*(u16*)((char*)player + 0xb0) & 0x1000) == 0)) {
+        *(u32*)((char*)sub + 0x2dc) &= 0xff7fffff;
+        camTarget = (int*)(*(int(**)(void))(*(int*)*gCameraInterface + 0x3c))();
+        if (camTarget == arg1) {
+            *(u32*)((char*)sub + 0x2dc) |= 0x800200;
+        }
+        {
+            u16 dist = *(u16*)((char*)sub + 0x2a4);
+            u16 near = (u16)(int)*(f32*)((char*)sub + 0x2ac);
+            if (dist >= near) {
+                u16 dist2 = *(u16*)((char*)sub + 0x2a4);
+                f32 midf = *(f32*)((char*)sub + 0x2a8);
+                u16 mid = (u16)(int)midf;
+                if (dist2 >= mid) {
+                    u16 far = (u16)(int)(lbl_803E25D8 * midf);
+                    if (dist2 > far) {
+                        *(u32*)((char*)sub + 0x2dc) &= 0xdffff9ff;
+                    }
+                } else {
+                    *(u32*)((char*)sub + 0x2dc) |= 0x200;
+                    *(u32*)((char*)sub + 0x2dc) &= 0xfffffbff;
+                }
+            } else {
+                *(u32*)((char*)sub + 0x2dc) |= 0x400;
+                *(u32*)((char*)sub + 0x2dc) &= 0xfffffdff;
+            }
+        }
+    } else {
+        *(u32*)((char*)sub + 0x2dc) &= 0xff7ff9ff;
+        if ((*(u32*)((char*)sub + 0x2e4) & 0x10000) != 0 ||
+            (*(int**)((char*)sub + 0x29c) == player && (*(u16*)((char*)player + 0xb0) & 0x1000) != 0)) {
+            *(u32*)((char*)sub + 0x2dc) &= 0xdfffffff;
+        }
+    }
+    *(u32*)((char*)sub + 0x2dc) &= 0xf890fff7;
+    if (tricky != NULL) {
+        u8 r = (*(u8(**)(int*))(*(int*)((char*)tricky + 0x68) + 0x40))(tricky);
+        if ((u8)r != 0) *(u32*)((char*)sub + 0x2dc) |= 0x200000;
+    }
+    if (*(int**)((char*)sub + 0x29c) == player) {
+        if (playerIsDisguised(player) != 0) {
+            *(u32*)((char*)sub + 0x2dc) |= 8;
+            if ((*(u32*)((char*)sub + 0x2e4) & 0x2000) != 0) {
+                *(u32*)((char*)sub + 0x2dc) &= 0xff7ff9ff;
+            }
+        }
+    }
+    if ((*(u32*)((char*)sub + 0x2dc) & 0x20000600) != 0) {
+        if ((*(u32*)((char*)sub + 0x2e4) & 0x1000) != 0) {
+            u8 r = baddieTargetFn_8014a150((int)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
+                                            (void*)(*(char**)((char*)sub + 0x29c) + 0x18));
+            if ((u8)r != 0) *(u32*)((char*)sub + 0x2dc) |= 0x1000000;
+            if ((*(u32*)((char*)sub + 0x2dc) & 0x1000000) == 0) {
+                *(u32*)((char*)sub + 0x2dc) &= 0xdfffffff;
+            }
+        } else {
+            *(u32*)((char*)sub + 0x2dc) |= 0x1000000;
+        }
+        {
+            u16 mode = *(u16*)((char*)sub + 0x2a0);
+            if (mode < 2 || mode > 5) {
+                *(u32*)((char*)sub + 0x2dc) |= 0x400000;
+            } else if ((*(u32*)((char*)sub + 0x2dc) & 0x1000000) != 0) {
+                *(u32*)((char*)sub + 0x2dc) |= 0x2000000;
+            }
+        }
+        if ((*(u32*)((char*)sub + 0x2e4) & 0x4000) == 0) {
+            f32 *t = (f32*)*(int**)((char*)sub + 0x29c);
+            f32 mag = sqrtf(t[11]*t[11] + (t[9]*t[9] + t[10]*t[10]));
+            if (mag > lbl_803E25D4) *(u32*)((char*)sub + 0x2dc) |= 0x4000000;
+        }
+        if ((*(u32*)((char*)sub + 0x2dc) & 0x600) != 0 &&
+            (*(u32*)((char*)sub + 0x2dc) & 0x6800000) != 0 &&
+            (*(u32*)((char*)sub + 0x2dc) & 0x1000000) != 0) {
+            *(u32*)((char*)sub + 0x2dc) |= 0x20000000;
+        }
+        if ((*(u32*)((char*)sub + 0x2dc) & 0x20000000) != 0) {
+            if ((*(u32*)((char*)sub + 0x2e4) & 0x40) != 0) {
+                baddieFn_8014a304(arg1, sub, *(f32*)((char*)sub + 0x2ac));
+            } else {
+                *(u32*)((char*)sub + 0x2dc) |= 0xf0000;
+            }
+        }
+    }
+    if (*(u16*)((char*)sub + 0x2b0) == 0) {
+        *(u32*)((char*)sub + 0x2dc) |= 0x800;
+    }
+}
+
 extern f32 PSVECMag(f32 *v);
 extern void PSVECNormalize(f32 *src, f32 *dst);
 extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *c);
