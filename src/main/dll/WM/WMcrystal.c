@@ -11,7 +11,6 @@ extern undefined4 FUN_80006824();
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
 extern uint FUN_80017ae8();
-extern int FUN_80017b00();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80039520();
 extern undefined4 FUN_8003b818();
@@ -28,7 +27,6 @@ extern undefined4 FUN_80294964();
 
 extern undefined4 DAT_80328658;
 extern undefined4 DAT_803286b0;
-extern undefined4* DAT_803dd6d4;
 extern f64 DOUBLE_803e62a8;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dda58;
@@ -71,6 +69,7 @@ extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern f32 fn_80293E80(f32 angle);
 extern f32 sin(f32 angle);
+extern int *gObjectTriggerInterface;
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
 extern f32 lbl_803E5640;
@@ -334,59 +333,62 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *stat
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 sc_totempuzzle_processAnimEvents(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
+undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
-  byte bVar1;
-  int iVar2;
-  int *piVar3;
-  int iVar4;
   ScTotemBondState *state;
-  int local_28;
-  int local_24;
-  int local_20;
-  int local_1c [3];
-  
-  state = ((ScTotemBondObject *)param_1)->state;
+  int startForEvent3;
+  int countForEvent3;
+  int startForEvent2;
+  int countForEvent2;
+  int *objects;
+  int *objectPtr;
+  int peer;
+  int eventIndex;
+  int eventId;
+
+  state = obj->state;
   animUpdate->sequenceEventActive = 0;
-  iVar4 = 0;
-  do {
-    if ((int)(uint)animUpdate->eventCount <= iVar4) {
-      return 0;
-    }
-    bVar1 = animUpdate->eventIds[iVar4];
-    if (bVar1 == 2) {
-      iVar2 = FUN_80017b00(&local_20,local_1c);
-      piVar3 = (int *)(iVar2 + local_20 * 4);
-      for (; local_20 < local_1c[0]; local_20 = local_20 + 1) {
-        if ((*piVar3 != param_1) && (*(short *)(*piVar3 + 0x46) == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
-          iVar2 = *(int *)(iVar2 + local_20 * 4);
-          (**(code **)(**(int **)(iVar2 + 0x68) + 0x20))(iVar2,2);
+  for (eventIndex = 0; eventIndex < animUpdate->eventCount; eventIndex++) {
+    eventId = animUpdate->eventIds[eventIndex];
+    switch (eventId) {
+    case 1:
+      state->eventFlags |= 1;
+      (*(code *)(*gObjectTriggerInterface + 0x50))(0x44,1,0,0);
+      break;
+    case 2:
+      objects = ObjList_GetObjects(&startForEvent2,&countForEvent2);
+      objectPtr = objects + startForEvent2;
+      while (startForEvent2 < countForEvent2) {
+        peer = *objectPtr;
+        if (((ScTotemBondObject *)peer != obj) &&
+            (*(s16 *)(peer + 0x46) == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
+          peer = objects[startForEvent2];
+          (*(code *)(**(int **)(peer + 0x68) + 0x20))(peer,2);
           break;
         }
-        piVar3 = piVar3 + 1;
+        objectPtr++;
+        startForEvent2++;
       }
-      state->eventFlags = state->eventFlags | 0x10;
-    }
-    else if (bVar1 < 2) {
-      if (bVar1 != 0) {
-        state->eventFlags = state->eventFlags | 1;
-        (**(code **)(*DAT_803dd6d4 + 0x50))(0x44,1,0,0);
-      }
-    }
-    else if (bVar1 < 4) {
-      iVar2 = FUN_80017b00(&local_28,&local_24);
-      piVar3 = (int *)(iVar2 + local_28 * 4);
-      for (; local_28 < local_24; local_28 = local_28 + 1) {
-        if ((*piVar3 != param_1) && (*(short *)(*piVar3 + 0x46) == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
-          iVar2 = *(int *)(iVar2 + local_28 * 4);
-          (**(code **)(**(int **)(iVar2 + 0x68) + 0x20))(iVar2,1);
+      state->eventFlags |= 0x10;
+      break;
+    case 3:
+      objects = ObjList_GetObjects(&startForEvent3,&countForEvent3);
+      objectPtr = objects + startForEvent3;
+      while (startForEvent3 < countForEvent3) {
+        peer = *objectPtr;
+        if (((ScTotemBondObject *)peer != obj) &&
+            (*(s16 *)(peer + 0x46) == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
+          peer = objects[startForEvent3];
+          (*(code *)(**(int **)(peer + 0x68) + 0x20))(peer,1);
           break;
         }
-        piVar3 = piVar3 + 1;
+        objectPtr++;
+        startForEvent3++;
       }
+      break;
     }
-    iVar4 = iVar4 + 1;
-  } while( true );
+  }
+  return 0;
 }
 
 /*

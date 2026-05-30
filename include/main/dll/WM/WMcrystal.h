@@ -47,7 +47,7 @@ typedef struct ScTotemBondObject {
     u16 objectFlags;
     u8 padB2[0xB8 - 0xB2];
     ScTotemBondState *state;
-    undefined4 (*animEventCallback)(int obj,undefined4 param2,ObjAnimUpdateState *animUpdate);
+    undefined4 (*animEventCallback)(struct ScTotemBondObject *obj,undefined4 param2,ObjAnimUpdateState *animUpdate);
 } ScTotemBondObject;
 
 void sc_totempuzzle_update(ScTotemPuzzleObject *obj);
@@ -58,7 +58,7 @@ void FUN_801dd6b8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 void FUN_801dd6e0(undefined2 *param_1);
 void FUN_801dd6e4(undefined2 *param_1,int param_2);
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *state,f32 radius);
-undefined4 sc_totempuzzle_processAnimEvents(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801ddb0c(void);
 void FUN_801ddb3c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void sc_totembond_init(ScTotemBondObject *obj,int params);
