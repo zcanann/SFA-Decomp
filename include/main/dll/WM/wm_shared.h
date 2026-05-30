@@ -309,7 +309,7 @@ extern f32 lbl_803E605C;
 extern f32 lbl_803E5F94;
 extern void fn_801FB434(int obj);
 extern void fn_801FB23C(int obj);
-extern void fn_801F943C(void);
+extern int fn_801F943C();
 extern void fn_80053ED0(int n);
 extern void fn_80053EBC(int n);
 extern void doNothing_8005D148(int a, int b);
