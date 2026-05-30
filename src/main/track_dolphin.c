@@ -5122,7 +5122,7 @@ void fn_8006961C(int *out, f32 *p4, f32 *p5, f32 *rad, int n)
 extern int shouldDrawShadows(void);
 extern void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b);
 extern int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8, int p9);
-extern void fn_80061954(int *obj, void *buf48, void *bufA8);
+void fn_80061954(int *obj, void *buf48, void *bufA8);
 extern void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *p7, void *buf48, f32 f);
 extern u8 lbl_803879BC[];
 extern int lbl_803DCF2C;
@@ -5661,4 +5661,102 @@ void objDrawFn_80061654(int param_1, int param_2)
             GXSetCurrentMtx(0);
         }
     }
+}
+
+void fn_80061954(int *obj, void *buf48, void *bufA8)
+{
+    f32 *param_2 = (f32 *)buf48;
+    f32 *param_3 = (f32 *)bufA8;
+    f32 fVar1, fVar2, fVar3, fVar4, fVar5, fVar6;
+    f32 nrm[3];
+
+    fVar1 = param_2[6] - param_2[9];
+    fVar3 = param_2[7] - param_2[10];
+    fVar5 = param_2[8] - param_2[0xb];
+    fVar2 = param_2[0x15] - param_2[9];
+    fVar4 = param_2[0x16] - param_2[10];
+    fVar6 = param_2[0x17] - param_2[0xb];
+    nrm[0] = fVar4 * fVar5 - fVar6 * fVar3;
+    nrm[1] = -(fVar2 * fVar5 - fVar6 * fVar1);
+    nrm[2] = fVar2 * fVar3 - fVar4 * fVar1;
+    PSVECNormalize(nrm, nrm);
+    param_3[0] = -nrm[0];
+    param_3[1] = -nrm[1];
+    param_3[2] = -nrm[2];
+    param_3[3] = -(param_3[2] * param_2[0xb] + param_3[0] * param_2[9] + param_3[1] * param_2[10]);
+
+    fVar1 = param_2[0x12] - param_2[0xf];
+    fVar3 = param_2[0x13] - param_2[0x10];
+    fVar5 = param_2[0x14] - param_2[0x11];
+    fVar2 = param_2[3] - param_2[0xf];
+    fVar4 = param_2[4] - param_2[0x10];
+    fVar6 = param_2[5] - param_2[0x11];
+    nrm[0] = fVar4 * fVar5 - fVar6 * fVar3;
+    nrm[1] = -(fVar2 * fVar5 - fVar6 * fVar1);
+    nrm[2] = fVar2 * fVar3 - fVar4 * fVar1;
+    PSVECNormalize(nrm, nrm);
+    param_3[5] = -nrm[0];
+    param_3[6] = -nrm[1];
+    param_3[7] = -nrm[2];
+    param_3[8] = -(param_3[7] * param_2[0x11] + param_3[5] * param_2[0xf] + param_3[6] * param_2[0x10]);
+
+    fVar1 = param_2[0xf] - param_2[0xc];
+    fVar3 = param_2[0x10] - param_2[0xd];
+    fVar5 = param_2[0x11] - param_2[0xe];
+    fVar2 = param_2[0] - param_2[0xc];
+    fVar4 = param_2[1] - param_2[0xd];
+    fVar6 = param_2[2] - param_2[0xe];
+    nrm[0] = fVar4 * fVar5 - fVar6 * fVar3;
+    nrm[1] = -(fVar2 * fVar5 - fVar6 * fVar1);
+    nrm[2] = fVar2 * fVar3 - fVar4 * fVar1;
+    PSVECNormalize(nrm, nrm);
+    param_3[10] = -nrm[0];
+    param_3[0xb] = -nrm[1];
+    param_3[0xc] = -nrm[2];
+    param_3[0xd] = -(param_3[0xc] * param_2[0xe] + param_3[10] * param_2[0xc] + param_3[0xb] * param_2[0xd]);
+
+    fVar1 = param_2[9] - param_2[0];
+    fVar3 = param_2[10] - param_2[1];
+    fVar5 = param_2[0xb] - param_2[2];
+    fVar2 = param_2[0xc] - param_2[0];
+    fVar4 = param_2[0xd] - param_2[1];
+    fVar6 = param_2[0xe] - param_2[2];
+    nrm[0] = fVar4 * fVar5 - fVar6 * fVar3;
+    nrm[1] = -(fVar2 * fVar5 - fVar6 * fVar1);
+    nrm[2] = fVar2 * fVar3 - fVar4 * fVar1;
+    PSVECNormalize(nrm, nrm);
+    param_3[0xf] = -nrm[0];
+    param_3[0x10] = -nrm[1];
+    param_3[0x11] = -nrm[2];
+    param_3[0x12] = -(param_3[0x11] * param_2[2] + param_3[0xf] * param_2[0] + param_3[0x10] * param_2[1]);
+
+    fVar1 = param_2[0x12] - param_2[0x15];
+    fVar3 = param_2[0x13] - param_2[0x16];
+    fVar5 = param_2[0x14] - param_2[0x17];
+    fVar2 = param_2[0xc] - param_2[0x15];
+    fVar4 = param_2[0xd] - param_2[0x16];
+    fVar6 = param_2[0xe] - param_2[0x17];
+    nrm[0] = fVar4 * fVar5 - fVar6 * fVar3;
+    nrm[1] = -(fVar2 * fVar5 - fVar6 * fVar1);
+    nrm[2] = fVar2 * fVar3 - fVar4 * fVar1;
+    PSVECNormalize(nrm, nrm);
+    param_3[0x14] = -nrm[0];
+    param_3[0x15] = -nrm[1];
+    param_3[0x16] = -nrm[2];
+    param_3[0x17] = -(param_3[0x16] * param_2[0x17] + param_3[0x14] * param_2[0x15] + param_3[0x15] * param_2[0x16]);
+
+    fVar1 = param_2[3] - param_2[0];
+    fVar3 = param_2[4] - param_2[1];
+    fVar5 = param_2[5] - param_2[2];
+    fVar2 = param_2[9] - param_2[0];
+    fVar4 = param_2[10] - param_2[1];
+    fVar6 = param_2[0xb] - param_2[2];
+    nrm[0] = fVar4 * fVar5 - fVar6 * fVar3;
+    nrm[1] = -(fVar2 * fVar5 - fVar6 * fVar1);
+    nrm[2] = fVar2 * fVar3 - fVar4 * fVar1;
+    PSVECNormalize(nrm, nrm);
+    param_3[0x19] = -nrm[0];
+    param_3[0x1a] = -nrm[1];
+    param_3[0x1b] = -nrm[2];
+    param_3[0x1c] = -(param_3[0x1b] * param_2[2] + param_3[0x19] * param_2[0] + param_3[0x1a] * param_2[1]);
 }
