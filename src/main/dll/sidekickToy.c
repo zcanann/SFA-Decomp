@@ -1956,6 +1956,94 @@ extern f32 lbl_803E25F0;
 extern f32 lbl_803E25F4;
 extern f32 oneOverTimeDelta;
 
+extern f32 PSVECMag(f32 *v);
+extern void PSVECNormalize(f32 *src, f32 *dst);
+extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *c);
+extern f32 PSVECDotProduct(f32 *a, f32 *b);
+extern f32 fn_80291FF4(f32 v);
+extern void PSMTXRotAxisRad(void *mtx, f32 *axis, f32 angle);
+extern void PSMTXMultVecSR(void *mtx, f32 *src, f32 *dst);
+extern f32 fabsf(f32 v);
+extern f32 lbl_803E25C4;
+extern f32 lbl_803E25D0;
+extern f32 lbl_803E25E8;
+
+void fn_8014C678(int *obj1, int *obj2, f32 *vec3, u8 flag, f32 fa, f32 fb, f32 fc) {
+    f32 mag1, mag2, magcross, finalScale;
+    f32 stk_8[3];
+    f32 stk_14[3];
+    f32 stk_20[3];
+    f32 stk_2c[12];
+
+    mag1 = PSVECMag((f32*)((char*)obj2 + 0x2b8));
+    if (mag1 > lbl_803E2574) {
+        f32 inv = lbl_803E256C / mag1;
+        stk_20[0] = *(f32*)((char*)obj2 + 0x2b8) * inv;
+        stk_20[1] = *(f32*)((char*)obj2 + 0x2bc) * inv;
+        stk_20[2] = *(f32*)((char*)obj2 + 0x2c0) * inv;
+        PSVECNormalize(stk_20, stk_20);
+    } else {
+        stk_20[0] = lbl_803E2574;
+        stk_20[1] = lbl_803E2574;
+        stk_20[2] = lbl_803E2574;
+    }
+
+    mag2 = PSVECMag(vec3);
+    if (mag2 > lbl_803E2574) {
+        f32 inv = lbl_803E256C / mag2;
+        stk_14[0] = vec3[0] * inv;
+        stk_14[1] = vec3[1] * inv;
+        stk_14[2] = vec3[2] * inv;
+    } else {
+        stk_14[0] = lbl_803E2574;
+        stk_14[1] = lbl_803E2574;
+        stk_14[2] = lbl_803E2574;
+    }
+
+    PSVECCrossProduct(stk_20, stk_14, stk_8);
+    magcross = PSVECMag(stk_8);
+    if (magcross > lbl_803E2574) {
+        f32 angle;
+        int gt;
+        angle = fn_80291FF4(PSVECDotProduct(stk_20, stk_14));
+        gt = (angle > fc);
+        if (fabsf((f32)gt) != lbl_803E2574) {
+            f32 rot = fc * ((angle > lbl_803E2574) ? lbl_803E256C : lbl_803E25C4);
+            PSMTXRotAxisRad(stk_2c, stk_8, rot);
+            PSMTXMultVecSR(stk_2c, stk_20, stk_14);
+        }
+    }
+
+    finalScale = mag2 * lbl_803E25E8;
+    {
+        f32 cap_high = mag1 + fb;
+        if (finalScale > cap_high) {
+            finalScale = cap_high;
+        } else {
+            f32 cap_low = mag1 - fb;
+            if (finalScale < cap_low) finalScale = cap_low;
+        }
+        if (finalScale > fa) finalScale = fa;
+    }
+
+    *(f32*)((char*)obj1 + 0x24) = stk_14[0] * finalScale;
+    *(f32*)((char*)obj1 + 0x28) = stk_14[1] * finalScale;
+    *(f32*)((char*)obj1 + 0x2c) = stk_14[2] * finalScale;
+
+    if ((u8)flag != 0) {
+        f32 y = *(f32*)((char*)obj1 + 0x28);
+        if (y < lbl_803E2574) {
+            f32 floor_height = *(f32*)((char*)obj1 + 0x10);
+            int *target = *(int**)((char*)obj2 + 0x29c);
+            f32 ground = lbl_803E25D0 + *(f32*)((char*)target + 0x10);
+            if (floor_height < ground) {
+                f32 t = (ground - floor_height) / lbl_803E25D0;
+                *(f32*)((char*)obj1 + 0x28) = y * (lbl_803E256C - t);
+            }
+        }
+    }
+}
+
 void fn_8014CD1C(int *node, int *sub, u16 p3, u8 p5, f32 fa, f32 fb) {
     f32 dt;
     int angle;
