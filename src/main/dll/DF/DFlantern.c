@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/DF/DFlantern.h"
 
 extern uint GameBit_Get(int eventId);
@@ -28,7 +29,7 @@ extern int ObjAnim_AdvanceCurrentMove(int obj,f32 moveStepScale,f32 deltaTime,vo
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern f32 Vec_xzDistance(void *a,void *b);
 extern f32 fn_80293E80(f32 angle);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void lightFn_8001db6c(int light,int mode,f32 value);
 
 extern undefined4 DAT_803dc070;
@@ -676,7 +677,7 @@ int fn_801C2C68(int obj,int unused,void *seq)
         fn_80296518(player,1,1);
         GameBit_Set(0xbfd,1);
         GameBit_Set(0x956,1);
-        (*(void (**)(int,int))(*gMapEventInterface + 0x44))(0xb,2);
+        (*gMapEventInterface)->setMode(0xb,2);
         break;
       case 0xe:
         *(s16 *)(objLocal + 6) = (s16)(*(s16 *)(objLocal + 6) | 0x4000);

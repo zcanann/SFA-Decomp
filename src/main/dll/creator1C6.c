@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/creator1C6.h"
 
 extern undefined4 FUN_80017710();
@@ -26,7 +27,7 @@ extern void fn_80296518(int obj,int param_2,int param_3);
 extern undefined4 FUN_80293f90();
 
 extern undefined4 DAT_803de848;
-extern undefined4 *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f64 DOUBLE_803e5d28;
 extern f64 DOUBLE_803e5d68;
 extern f32 lbl_803DC074;
@@ -82,7 +83,7 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
         fn_80296518(player,2,1);
         GameBit_Set(0x15f,1);
         GameBit_Set(0xc6e,1);
-        (*(code *)(*gMapEventInterface + 0x44))(0xb,3);
+        (*gMapEventInterface)->setMode(0xb,3);
         unlockLevel(0,0,1);
         lockLevel(mapGetDirIdx(10),0);
         break;
