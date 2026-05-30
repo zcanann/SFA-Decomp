@@ -14,6 +14,23 @@ extern undefined4* gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E5498;
 
+#define SCLANTERN_EVENT_LEFT_SPARK_A 1
+#define SCLANTERN_EVENT_RIGHT_SPARK_A 2
+#define SCLANTERN_EVENT_LEFT_SPARK_B 3
+#define SCLANTERN_EVENT_RIGHT_SPARK_B 4
+#define SCLANTERN_EVENT_LANTERN_SWING 9
+#define SCLANTERN_SWING_SFX_ID 0x2f4
+#define SCLANTERN_SPARK_SFX_ID 0x415
+#define SCLANTERN_SPARK_SUPPRESS_MOVE 0x1b
+
+typedef struct SClanternAnimObject {
+  s16 facingAngle;
+  u8 pad02[0x98 - 0x02];
+  f32 moveProgress;
+  u8 pad9C[0xA0 - 0x9C];
+  s16 currentMove;
+} SClanternAnimObject;
+
 /*
  * --INFO--
  *
@@ -33,7 +50,7 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
   undefined4 advanceResult;
   register s8 *event;
-  s16 *objYaw;
+  SClanternAnimObject *lantern;
   int pointIndex;
   int i;
   float posZ;
@@ -41,31 +58,31 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
   float posX;
 
   pointIndex = 0;
-  objYaw = (s16 *)obj;
+  lantern = (SClanternAnimObject *)obj;
   gSClanternObjAnimEvents.triggerCount = 0;
   gSClanternObjAnimEvents.rootCurveValid = 0;
   advanceResult = ObjAnim_AdvanceCurrentMove(moveStepScale,timeDelta,obj,&gSClanternObjAnimEvents);
   if (gSClanternObjAnimEvents.rootCurveValid != 0) {
-    *objYaw += gSClanternObjAnimEvents.rootPitch;
+    lantern->facingAngle += gSClanternObjAnimEvents.rootPitch;
   }
   i = 0;
   event = (s8 *)&gSClanternObjAnimEvents;
   while (i < (s8)gSClanternObjAnimEvents.triggerCount) {
     switch(event[0x13]) {
-    case 1:
+    case SCLANTERN_EVENT_LEFT_SPARK_A:
       pointIndex = 1;
       break;
-    case 2:
+    case SCLANTERN_EVENT_RIGHT_SPARK_A:
       pointIndex = 2;
       break;
-    case 3:
+    case SCLANTERN_EVENT_LEFT_SPARK_B:
       pointIndex = 1;
       break;
-    case 4:
+    case SCLANTERN_EVENT_RIGHT_SPARK_B:
       pointIndex = 2;
       break;
-    case 9:
-      Sfx_PlayFromObject(obj,0x2f4);
+    case SCLANTERN_EVENT_LANTERN_SWING:
+      Sfx_PlayFromObject(obj,SCLANTERN_SWING_SFX_ID);
       break;
     case 0:
     case 5:
@@ -80,8 +97,9 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
   }
   if (pointIndex != 0) {
     ObjPath_GetPointWorldPosition(obj,pointIndex - 1,&posX,&posY,&posZ,0);
-    if (!((*(s16 *)(obj + 0xa0) == 0x1b) && (*(f32 *)(obj + 0x98) < lbl_803E5498))) {
-      Sfx_PlayAtPositionFromObject(obj,posX,posY,posZ,0x415);
+    if (!((lantern->currentMove == SCLANTERN_SPARK_SUPPRESS_MOVE) &&
+          (lantern->moveProgress < lbl_803E5498))) {
+      Sfx_PlayAtPositionFromObject(obj,posX,posY,posZ,SCLANTERN_SPARK_SFX_ID);
     }
   }
   return advanceResult;
