@@ -4090,7 +4090,7 @@ void fn_80069958(void **out) {
 #pragma peephole off
 u32 mapBlockFn_80060678(int *obj)
 {
-    return ((u32)obj[0x10 / 4] >> 24) & 0xff;
+    return (*(u32 *)((char *)obj + 0x10) & 0xff000000) >> 24;
 }
 #pragma peephole reset
 #pragma scheduling reset
