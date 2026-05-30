@@ -100,7 +100,7 @@ void camcontrol_updateTargetFeedback(void)
   uint uVar10;
   f32 targetDistance;
   
-  iVar11 = *(int *)(pCamera + 0x124);
+  iVar11 = CAMCONTROL_CAMERA->currentTarget;
   psVar6 = gCamcontrolTargetReticle;
   buttonPressed = false;
   if (psVar6 == (short *)0x0) {
@@ -111,7 +111,7 @@ void camcontrol_updateTargetFeedback(void)
     return;
   }
   if ((gCamcontrolTargetChanged != '\0') && (gCamcontrolTargetChanged = '\0', iVar11 != 0)) {
-    cVar2 = *(byte *)(pCamera + 0x138);
+    cVar2 = CAMCONTROL_CAMERA->targetKind;
     if (cVar2 == 1) {
       Sfx_PlayFromObject(0,0x3ff);
       objShowButtonGlow(psVar6,lbl_803E162C,2);
@@ -148,11 +148,11 @@ void camcontrol_updateTargetFeedback(void)
   if (gCamcontrolTargetState == '\0') {
     if (*(float *)(psVar6 + 0x4c) <= lbl_803E1630) {
       if (iVar11 == 0) {
-        *(undefined4 *)(pCamera + 0x128) = 0;
+        CAMCONTROL_CAMERA->targetReticleFocus = 0;
       }
       else {
-        *(int *)(pCamera + 0x128) = iVar11;
-        *(byte *)(pCamera + 0x138) =
+        CAMCONTROL_CAMERA->targetReticleFocus = iVar11;
+        CAMCONTROL_CAMERA->targetKind =
              *(byte *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5 + 4) & 0xf;
         gCamcontrolTargetState = '\x03';
         gCamcontrolTargetChanged = '\x01';
@@ -163,7 +163,7 @@ void camcontrol_updateTargetFeedback(void)
                                  (ObjAnimEventList *)0x0);
     }
   }
-  else if ((*(int *)(pCamera + 0x128) == iVar11) ||
+  else if ((CAMCONTROL_CAMERA->targetReticleFocus == iVar11) ||
           (*(float *)(psVar6 + 0x4c) < lbl_803E162C)) {
     ObjAnim_AdvanceCurrentMove(lbl_803E1674,timeDelta,(int)psVar6,
                                (ObjAnimEventList *)0x0);
@@ -171,7 +171,7 @@ void camcontrol_updateTargetFeedback(void)
   else {
     gCamcontrolTargetState = '\0';
     if (iVar11 == 0) {
-      cVar2 = *(byte *)(pCamera + 0x138);
+      cVar2 = CAMCONTROL_CAMERA->targetKind;
       if (cVar2 == 1) {
         Sfx_PlayFromObject(0,0x400);
       }
@@ -186,19 +186,19 @@ void camcontrol_updateTargetFeedback(void)
       ObjAnim_SetMoveProgress(lbl_803E1630,(ObjAnimComponent *)psVar6);
     }
   }
-  iVar11 = Obj_IsObjectAlive(*(int *)(pCamera + 0x128));
+  iVar11 = Obj_IsObjectAlive(CAMCONTROL_CAMERA->targetReticleFocus);
   if (iVar11 == 0) {
-    *(undefined4 *)(pCamera + 0x128) = 0;
+    CAMCONTROL_CAMERA->targetReticleFocus = 0;
   }
-  if ((gCamcontrolTargetState != '\x03') || (*(int *)(pCamera + 0x128) == 0))
+  if ((gCamcontrolTargetState != '\x03') || (CAMCONTROL_CAMERA->targetReticleFocus == 0))
   goto LAB_80102ab4;
-  if ((*(byte *)(*(int *)(pCamera + 0x128) + 0xaf) & 0x10) == 0) {
-    *(byte *)(pCamera + 0x141) = *(byte *)(pCamera + 0x141) & 0xdf;
+  if ((*(byte *)(CAMCONTROL_CAMERA->targetReticleFocus + 0xaf) & 0x10) == 0) {
+    CAMCONTROL_CAMERA->targetFlags = CAMCONTROL_CAMERA->targetFlags & 0xdf;
   }
   else {
-    *(byte *)(pCamera + 0x141) = *(byte *)(pCamera + 0x141) | 0x20;
+    CAMCONTROL_CAMERA->targetFlags = CAMCONTROL_CAMERA->targetFlags | 0x20;
   }
-  iVar11 = *(int *)(pCamera + 0x128);
+  iVar11 = CAMCONTROL_CAMERA->targetReticleFocus;
   sVar3 = *(short *)(iVar11 + 0x46);
   if (sVar3 == 0x49f) {
 LAB_80102994:
@@ -269,13 +269,13 @@ LAB_801029ac:
   }
 LAB_801029e0:
   if ((lbl_803E1630 < targetDistance) ||
-     (*(float *)(pCamera + 0x134) <= lbl_803E1630)) {
+     (CAMCONTROL_CAMERA->targetDistance <= lbl_803E1630)) {
     if ((lbl_803E1634 < targetDistance) ||
-       (*(float *)(pCamera + 0x134) <= lbl_803E1634)) {
+       (CAMCONTROL_CAMERA->targetDistance <= lbl_803E1634)) {
       if ((lbl_803E1638 < targetDistance) ||
-         (*(float *)(pCamera + 0x134) <= lbl_803E1638)) {
+         (CAMCONTROL_CAMERA->targetDistance <= lbl_803E1638)) {
         if ((targetDistance <= lbl_803E163C) &&
-           (lbl_803E163C < *(float *)(pCamera + 0x134))) {
+           (lbl_803E163C < CAMCONTROL_CAMERA->targetDistance)) {
           objShowButtonGlow(psVar6,lbl_803E162C,4);
         }
       }
@@ -290,7 +290,7 @@ LAB_801029e0:
   else {
     objShowButtonGlow(psVar6,lbl_803E162C,4);
   }
-  *(float *)(pCamera + 0x134) = targetDistance;
+  CAMCONTROL_CAMERA->targetDistance = targetDistance;
 LAB_80102ab4:
   fVar4 = lbl_803E1678 * *(float *)(psVar6 + 0x4c);
   if (fVar4 < lbl_803E1630) {
@@ -355,7 +355,7 @@ void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,f
 {
   int focusObj;
 
-  focusObj = *(int *)((char *)pCamera + 0xa4);
+  focusObj = (int)CAMCONTROL_CAMERA->focusObj;
   if (useWorldPosition != 0) {
     *outX = *(float *)(targetObj + 0xc) - *(float *)(focusObj + 0xc);
     *outY = *(float *)(targetObj + 0x10) - (*(float *)(focusObj + 0x10) + heightOffset);
@@ -452,7 +452,7 @@ void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerM
   case CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE1:
     triggerType1Param.actionIndex = actionNo & CAMCONTROL_ACTION_INDEX_MASK;
     triggerType1Param.noBlendFlag = actionNo & CAMCONTROL_ACTION_FLAG_NO_BLEND;
-    *(undefined *)((int)pCamera + 0x139) = 1;
+    CAMCONTROL_CAMERA->triggerType1Pending = 1;
     if (triggerType1Param.noBlendFlag != 0) {
       blendFrames = 0;
     }
