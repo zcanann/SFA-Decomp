@@ -25,7 +25,7 @@ extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017b00();
-extern ushort ObjHits_IsObjectEnabled();
+extern int ObjHits_IsObjectEnabled();
 extern undefined4 ObjHits_AddContactObject();
 extern undefined4 FUN_80061fc8();
 extern int FUN_800620e8();
@@ -3314,7 +3314,6 @@ void objFn_800e64f4(int obj,u32 *state)
 {
   u8 *stateBytes;
   u32 flags;
-  int parent;
   int matrixSource;
   int pointIndex;
   int pointOffset;
@@ -3322,33 +3321,39 @@ void objFn_800e64f4(int obj,u32 *state)
   f32 *localPoint;
   f32 *point;
   f32 *height;
+  f32 raisedPointOffset;
+  f32 resetRange;
+  f32 resetMin;
+  f32 resetZero;
   CurvesTransformScratch transform;
-  f32 matrix[24];
+  f32 matrix[16];
 
   stateBytes = (u8 *)state;
-  if ((*state & 0x4000000) != 0) {
-    parent = *(int *)(obj + 0x30);
-    if (parent == 0) {
+  if ((s32)(*state & 0x4000000) != 0) {
+    if (*(int *)(obj + 0x30) != 0) {
+      if ((*(int *)(*(int *)(obj + 0x30) + 0x58) != 0) &&
+          (ObjHits_IsObjectEnabled(*(int *)(obj + 0x30)) != 0)) {
+        matrixSource = *(int *)(*(int *)(obj + 0x30) + 0x58);
+        Matrix_TransformPoint((f32 *)(matrixSource + ((*(u8 *)(matrixSource + 0x10c) + 2) * 0x40)),
+                              *(f32 *)(obj + 0xc),*(f32 *)(obj + 0x10),*(f32 *)(obj + 0x14),
+                              (f32 *)(obj + 0x18),(f32 *)(obj + 0x1c),(f32 *)(obj + 0x20));
+      }
+      else {
+        Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0xc),*(f32 *)(obj + 0x10),
+                                       *(f32 *)(obj + 0x14),(f32 *)(obj + 0x18),
+                                       (f32 *)(obj + 0x1c),(f32 *)(obj + 0x20),
+                                       *(u32 *)(obj + 0x30));
+      }
+    }
+    else {
       *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
       *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
       *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
     }
-    else if ((*(int *)(parent + 0x58) == 0) || (ObjHits_IsObjectEnabled(parent) == 0)) {
-      Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0xc),*(f32 *)(obj + 0x10),
-                                     *(f32 *)(obj + 0x14),(f32 *)(obj + 0x18),
-                                     (f32 *)(obj + 0x1c),(f32 *)(obj + 0x20),
-                                     *(u32 *)(obj + 0x30));
-    }
-    else {
-      matrixSource = *(int *)(parent + 0x58);
-      Matrix_TransformPoint((f32 *)(matrixSource + ((*(u8 *)(matrixSource + 0x10c) + 2) * 0x40)),
-                            *(f32 *)(obj + 0xc),*(f32 *)(obj + 0x10),*(f32 *)(obj + 0x14),
-                            (f32 *)(obj + 0x18),(f32 *)(obj + 0x1c),(f32 *)(obj + 0x20));
-    }
     flags = *state;
-    if ((flags & 0x2000) != 0) {
+    if ((s32)(flags & 0x2000) != 0) {
       transform.angles[0] = *(s16 *)obj;
-      if ((flags & 0x20) != 0) {
+      if ((s32)(flags & 0x20) != 0) {
         transform.angles[1] = 0;
         transform.angles[2] = 0;
       }
@@ -3363,24 +3368,24 @@ void objFn_800e64f4(int obj,u32 *state)
       setMatrixFromObjectPos(matrix,&transform);
       pointIndex = 0;
       pointOffset = 0;
-      point = (f32 *)state;
       pointWordIndex = 0;
       while (pointIndex < ((s8)stateBytes[0x25c] >> 4)) {
         localPoint = (f32 *)(state[1] + pointOffset);
         Matrix_TransformPoint(matrix,localPoint[0],localPoint[1],localPoint[2],
-                              point + 2,(f32 *)(state + pointWordIndex + 3),
+                              (f32 *)(state + pointWordIndex + 2),
+                              (f32 *)(state + pointWordIndex + 3),
                               (f32 *)(state + pointWordIndex + 4));
-        stateBytes[pointIndex + 0xb8] = 0xff;
-        point += 3;
+        *(s8 *)(stateBytes + pointIndex + 0xb8) = -1;
         pointOffset += 0xc;
         pointWordIndex += 3;
         pointIndex++;
       }
       point = (f32 *)state;
       height = (f32 *)state;
+      raisedPointOffset = lbl_803E06B8;
       for (pointIndex = 0; pointIndex < ((s8)stateBytes[0x25c] >> 4); pointIndex++) {
         point[0xe] = point[2];
-        point[0xf] = lbl_803E06B8 + point[3] + height[0x2a];
+        point[0xf] = raisedPointOffset + (point[3] + height[0x2a]);
         point[0x10] = point[4];
         point += 3;
         height++;
@@ -3396,17 +3401,20 @@ void objFn_800e64f4(int obj,u32 *state)
     }
     stateBytes[0x260] = 0;
     stateBytes[0x25f] = 0;
-    *(f32 *)(stateBytes + 0x1bc) = lbl_803E06A4;
-    *(f32 *)(stateBytes + 0x1b8) = lbl_803E06A4;
-    *(f32 *)(stateBytes + 0x1b0) = lbl_803E06A8;
-    *(f32 *)(stateBytes + 0x1b4) = lbl_803E0668;
-    *(f32 *)(stateBytes + 0x1ac) = lbl_803E0668;
+    resetRange = lbl_803E06A4;
+    *(f32 *)(stateBytes + 0x1bc) = resetRange;
+    *(f32 *)(stateBytes + 0x1b8) = resetRange;
+    resetMin = lbl_803E06A8;
+    *(f32 *)(stateBytes + 0x1b0) = resetMin;
+    resetZero = lbl_803E0668;
+    *(f32 *)(stateBytes + 0x1b4) = resetZero;
+    *(f32 *)(stateBytes + 0x1ac) = resetZero;
     state[0x36] = 0;
     point = (f32 *)state;
     for (pointIndex = 0; pointIndex < ((s8)stateBytes[0x25c] >> 4); pointIndex++) {
-      point[0x80] = lbl_803E06A4;
-      point[0x7c] = lbl_803E06A4;
-      point[0x74] = lbl_803E06A8;
+      point[0x80] = resetRange;
+      point[0x7c] = resetRange;
+      point[0x74] = resetMin;
       point++;
     }
   }
@@ -3435,13 +3443,13 @@ void objFn_800e67ac(int obj,u32 *state)
   f32 *localPoint;
   f32 *point;
   CurvesTransformScratch transform;
-  f32 matrix[24];
+  f32 matrix[16];
 
   stateBytes = (u8 *)state;
   flags = *state;
-  if (((flags & 0x4000000) != 0) && ((flags & 8) != 0)) {
+  if (((s32)(flags & 0x4000000) != 0) && ((s32)(flags & 8) != 0)) {
     transform.angles[0] = *(s16 *)obj;
-    if ((flags & 0x20) != 0) {
+    if ((s32)(flags & 0x20) != 0) {
       transform.angles[1] = 0;
       transform.angles[2] = 0;
     }
@@ -3502,14 +3510,14 @@ void dll_15_func0A(int obj,u32 *state)
   f32 *localPoint;
   f32 *point;
   CurvesTransformScratch transform;
-  f32 matrix[24];
+  f32 matrix[16];
 
   stateBytes = (u8 *)state;
   objFn_800e64f4(obj,state);
   flags = *state;
-  if (((flags & 0x4000000) != 0) && ((flags & 8) != 0)) {
+  if (((s32)(flags & 0x4000000) != 0) && ((s32)(flags & 8) != 0)) {
     transform.angles[0] = *(s16 *)obj;
-    if ((flags & 0x20) != 0) {
+    if ((s32)(flags & 0x20) != 0) {
       transform.angles[1] = 0;
       transform.angles[2] = 0;
     }
