@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/CF/CFBaby.h"
 
 extern undefined4 FUN_80006824();
@@ -2222,18 +2223,14 @@ extern void setLoadedFileFlags_blocks1(void);
 extern void clearLoadedFileFlags_blocks1(void);
 extern void warpToMap(int mapId, int arg);
 extern void unlockLevel(int a, int b, int c);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E3BA8;
 extern f32 lbl_803E3BAC;
 extern f32 lbl_803E3BB0;
 
-typedef u8 (*MapEventStatusFn)(int mapId);
-typedef void (*MapEventSetFn)(int mapId, int value);
-typedef void (*MapEventOpFn)(int mapId, int arg, int value);
-
-#define MAP_EVENT_STATUS(mapId) ((MapEventStatusFn)(*(u32 *)(*gMapEventInterface + 0x40)))(mapId)
-#define MAP_EVENT_SET(mapId, value) ((MapEventSetFn)(*(u32 *)(*gMapEventInterface + 0x44)))(mapId, value)
-#define MAP_EVENT_OP(mapId, arg, value) ((MapEventOpFn)(*(u32 *)(*gMapEventInterface + 0x50)))(mapId, arg, value)
+#define MAP_EVENT_STATUS(mapId) (*gMapEventInterface)->getMode((mapId))
+#define MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMode((mapId), (value))
+#define MAP_EVENT_OP(mapId, arg, value) (*gMapEventInterface)->setAnimEvent((mapId), (arg), (value))
 
 #pragma scheduling off
 #pragma peephole off

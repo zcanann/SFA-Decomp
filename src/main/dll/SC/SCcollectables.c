@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/SC/SCcollectables.h"
 
 extern undefined4 FUN_80006820();
@@ -466,15 +467,12 @@ extern void unlockLevel(int a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int locked);
 extern void mapUnload(int dirIdx, int flags);
-extern int *gMapEventInterface;
-
-typedef void (*WarpstoneMapEventSetFn)(int mapId, int value);
-typedef void (*WarpstoneMapEventAnimFn)(int mapId, int eventId, int value);
+extern MapEventInterface **gMapEventInterface;
 
 #define WARPSTONE_MAP_EVENT_SET(mapId, value) \
-    ((WarpstoneMapEventSetFn)(*(u32 *)(*gMapEventInterface + 0x44)))((mapId), (value))
+    (*gMapEventInterface)->setMode((mapId), (value))
 #define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value) \
-    ((WarpstoneMapEventAnimFn)(*(u32 *)(*gMapEventInterface + 0x50)))((mapId), (eventId), (value))
+    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 
 static void warpstone_setSwapstoneLoaded(void)
 {
