@@ -6,6 +6,14 @@ int vfpobjcreator_getObjectTypeId(void) { return 0x0; }
 
 void vfpobjcreator_free(void) {}
 
+#pragma peephole off
+#pragma scheduling off
+void vfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
+    if (visible == 0) return;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 void vfpobjcreator_hitDetect(void) {}
 
 void vfpobjcreator_release(void) {}
