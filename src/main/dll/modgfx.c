@@ -5239,3 +5239,135 @@ void dll_0B_onMapSetup(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *Obj_GetActiveModel(void);
+extern void *ObjModel_GetJointMatrix(void *model, int joint);
+extern void PSMTXMultVec(void *m, void *src, void *dst);
+extern int *gPartfxInterface;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803DF4A8;
+extern f32 lbl_803DF4B8;
+
+typedef struct BoneSpawnData {
+  s16 unk0;
+  s16 unk2;
+  s16 unk4;
+  s16 unk6;
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z;
+} BoneSpawnData;
+
+typedef void (*BoneSpawnFn)(void *, void *, void *, int, int, void *);
+
+#pragma scheduling off
+#pragma peephole off
+void boneParticleEffect_spawnAtBones(void *obj, void *arg1, void *arg2, u8 prob, short *src)
+{
+  void *model;
+  int i;
+  BoneSpawnData data;
+
+  model = Obj_GetActiveModel();
+  for (i = 0; i < *(u8 *)(*(int *)model + 0xf3); i++) {
+    if (randomGetRange(1, 0x64) <= prob) {
+      void *mtx;
+      data.x = lbl_803DF4A8;
+      data.y = lbl_803DF4A8;
+      data.z = lbl_803DF4A8;
+      data.scale = lbl_803DF4B8;
+      data.unk4 = 0;
+      data.unk2 = 0;
+      data.unk0 = 0;
+      mtx = ObjModel_GetJointMatrix(model, i);
+      PSMTXMultVec(mtx, &data.x, &data.x);
+      data.x = data.x - *(f32 *)((char *)obj + 0x18);
+      data.y = data.y - *(f32 *)((char *)obj + 0x1c);
+      data.z = data.z - *(f32 *)((char *)obj + 0x20);
+      data.x = data.x + playerMapOffsetX;
+      data.z = data.z + playerMapOffsetZ;
+      if (src != NULL) {
+        data.scale = *(f32 *)((char *)src + 0x8);
+        data.unk0 = src[0];
+        data.unk4 = src[2];
+        data.unk2 = src[1];
+        data.unk6 = src[3];
+      } else {
+        data.scale = lbl_803DF4B8;
+        data.unk0 = 0;
+        data.unk4 = 0;
+        data.unk2 = 0;
+        data.unk6 = 0;
+      }
+      (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(obj, arg1, &data, 2, -1, arg2);
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dll_0B_func08(void *param)
+{
+  int **arr = (int **)lbl_8039C1F8;
+  int i;
+
+  for (i = 0; i < 0x32; i++) {
+    if (arr[i] != NULL && *(void **)((char *)arr[i] + 0x4) == param) {
+      if (*(u32 *)((char *)arr[i] + 0xa4) & 0x10000) {
+        fn_800A1040(*(s16 *)((char *)arr[i] + 0x10c), 0);
+      } else {
+        *(f32 *)((char *)arr[i] + 0x18) = *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x18);
+        *(f32 *)((char *)arr[i] + 0x1c) = *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x1c);
+        *(f32 *)((char *)arr[i] + 0x20) = *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x20);
+        *(f32 *)((char *)arr[i] + 0x14) = *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x8);
+        *(s16 *)((char *)arr[i] + 0x10) = *(s16 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x4);
+        *(s16 *)((char *)arr[i] + 0xe) = *(s16 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x2);
+        *(s16 *)((char *)arr[i] + 0xc) = *(s16 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x0);
+        if (*(u32 *)((char *)arr[i] + 0xa4) & 0x2) {
+          *(f32 *)((char *)arr[i] + 0x6c) += *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x24);
+          *(f32 *)((char *)arr[i] + 0x70) += *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x28);
+          *(f32 *)((char *)arr[i] + 0x74) += *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x2c);
+        }
+        if (!(*(u32 *)((char *)arr[i] + 0xa4) & 0x200000)) {
+          *(u32 *)((char *)arr[i] + 0xa4) |= 0x200000;
+        }
+        *(int *)((char *)arr[i] + 0x4) = 0;
+      }
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int dll_0B_func04(void *base, int z, void *c, void *b, void *e, void *d, int f);
+
+#pragma scheduling off
+#pragma peephole off
+void dll_0B_func16(void *a, void *b, void *c, void *d, void *e, int f, void *g)
+{
+  *(ModgfxPendingSpawn **)lbl_8039BE98 = lbl_8039BEF8;
+  *(s8 *)(lbl_8039BE98 + 0x5d) = lbl_803DD28C - lbl_803DD290;
+  if (g == NULL && f == 0) {
+    *(u32 *)(lbl_8039BE98 + 0x54) |= 0x2000000;
+  } else {
+    *(u32 *)(lbl_8039BE98 + 0x54) |= 0x4000000;
+  }
+  if (*(u32 *)(lbl_8039BE98 + 0x54) & 1) {
+    if (*(void **)(lbl_8039BE98 + 0x4) != NULL) {
+      *(f32 *)(lbl_8039BE98 + 0x2c) += *(f32 *)((char *)*(void **)(lbl_8039BE98 + 0x4) + 0x18);
+      *(f32 *)(lbl_8039BE98 + 0x30) += *(f32 *)((char *)*(void **)(lbl_8039BE98 + 0x4) + 0x1c);
+      *(f32 *)(lbl_8039BE98 + 0x34) += *(f32 *)((char *)*(void **)(lbl_8039BE98 + 0x4) + 0x20);
+    } else {
+      *(f32 *)(lbl_8039BE98 + 0x2c) += *(f32 *)((char *)a + 0xc);
+      *(f32 *)(lbl_8039BE98 + 0x30) += *(f32 *)((char *)a + 0x10);
+      *(f32 *)(lbl_8039BE98 + 0x34) += *(f32 *)((char *)a + 0x14);
+    }
+  }
+  lbl_803DD288 = dll_0B_func04(lbl_8039BE98, 0, c, b, e, d, f);
+}
+#pragma peephole reset
+#pragma scheduling reset

@@ -3187,3 +3187,35 @@ void shadowRenderFn_8006b558(int *obj) {
     o64[6] = o64[6] - Dev_803DED1C * o64[0];
 }
 #pragma scheduling reset
+
+extern f32 Vdchuff_803DEDC0[];
+extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
+void fn_8006CB50(void) {
+    int y, x;
+    lbl_803DCFBC = (u32)textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
+    for (y = 0; y < 0x100; y++) {
+        f32 fy = (f32)y - Udchuff_803DEDA0[3];
+        for (x = 0; x < 0x100; x++) {
+            char *addr = (char *)lbl_803DCFBC + (y & 3) * 2 + (y >> 2) * 0x20
+                       + (x & 3) * 8 + (x >> 2) * 0x800;
+            f32 fx = (f32)x - Udchuff_803DEDA0[3];
+            f32 dist = sqrtf(fy * fy + fx * fx);
+            f32 ny = fy / dist;
+            f32 nx = fx / dist;
+            f32 s;
+            int gv, xv;
+            if (dist <= Udchuff_803DEDA0[6]) {
+                s = (lbl_803DED34 * (Udchuff_803DEDA0[4] -
+                     GXOverflowSuspendInProgress_803DED48 * dist)) * Udchuff_803DEDA0[5];
+            } else {
+                s = lbl_803DED28;
+            }
+            ny = ny * s;
+            nx = nx * s;
+            gv = (int)(Vdchuff_803DEDC0[0] * ny + Udchuff_803DEDA0[7]);
+            xv = (int)(Vdchuff_803DEDC0[0] * nx + Udchuff_803DEDA0[7]);
+            *(u16 *)(addr + 0x60) = (u16)(xv | ((gv & 0xffff) << 8));
+        }
+    }
+    DCFlushRange((char *)lbl_803DCFBC + 0x60, *(u32 *)((char *)lbl_803DCFBC + 0x44));
+}
