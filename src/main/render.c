@@ -14,39 +14,43 @@ int getLActions(int a, int b, u16 idx)
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 void fn_8000881C(u64 *dst, u32 packed)
 {
     u64 src = *(u64 *)(packed & ~7);
 
     switch (packed & 7) {
     case 0: *dst = src; break;
-    case 1: *dst = (src >> 8) | (*dst & 0xff00000000000000ULL); break;
-    case 2: *dst = (src >> 16) | (*dst & 0xffff000000000000ULL); break;
-    case 3: *dst = (src >> 24) | (*dst & 0xffffff0000000000ULL); break;
-    case 4: *dst = (src >> 32) | (*dst & 0xffffffff00000000ULL); break;
-    case 5: *dst = (src >> 40) | (*dst & 0xffffffffff000000ULL); break;
-    case 6: *dst = (src >> 48) | (*dst & 0xffffffffffff0000ULL); break;
-    case 7: *dst = (src >> 56) | (*dst & 0xffffffffffffff00ULL); break;
+    case 1: *dst = (*dst & 0xff00000000000000ULL) | (src >> 8); break;
+    case 2: *dst = (*dst & 0xffff000000000000ULL) | (src >> 16); break;
+    case 3: *dst = (*dst & 0xffffff0000000000ULL) | (src >> 24); break;
+    case 4: *dst = (*dst & 0xffffffff00000000ULL) | (src >> 32); break;
+    case 5: *dst = (*dst & 0xffffffffff000000ULL) | (src >> 40); break;
+    case 6: *dst = (*dst & 0xffffffffffff0000ULL) | (src >> 48); break;
+    case 7: *dst = (*dst & 0xffffffffffffff00ULL) | (src >> 56); break;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 void fn_800089AC(u64 *dst, u32 packed)
 {
     u64 src = *(u64 *)(packed & ~7);
 
     switch (packed & 7) {
     case 0: *dst = src; break;
-    case 1: *dst = (src << 8) | (*dst & 0xffULL); break;
-    case 2: *dst = (src << 16) | (*dst & 0xffffULL); break;
-    case 3: *dst = (src << 24) | (*dst & 0xffffffULL); break;
-    case 4: *dst = (src << 32) | (*dst & 0xffffffffULL); break;
-    case 5: *dst = (src << 40) | (*dst & 0xffffffffffULL); break;
-    case 6: *dst = (src << 48) | (*dst & 0xffffffffffffULL); break;
-    case 7: *dst = (src << 56) | (*dst & 0xffffffffffffffULL); break;
+    case 1: *dst = (*dst & 0xffULL) | (src << 8); break;
+    case 2: *dst = (*dst & 0xffffULL) | (src << 16); break;
+    case 3: *dst = (*dst & 0xffffffULL) | (src << 24); break;
+    case 4: *dst = (*dst & 0xffffffffULL) | (src << 32); break;
+    case 5: *dst = (*dst & 0xffffffffffULL) | (src << 40); break;
+    case 6: *dst = (*dst & 0xffffffffffffULL) | (src << 48); break;
+    case 7: *dst = (*dst & 0xffffffffffffffULL) | (src << 56); break;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -101,8 +105,9 @@ int getEnvfxAct(int a, int b, u16 idx, int d)
 
 #pragma scheduling off
 #pragma peephole off
-u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bitWidth)
+u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bw)
 {
+    int bitWidth = bw;
     int acc;
     int idx;
     u8 *cur;
@@ -145,8 +150,9 @@ u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int 
 int fn_80006B1C(ModelRenderInstrsState *src, ModelRenderInstrsState *dst, int count, int gap, u8 bitWidth)
 {
     int startBit = modelRenderInstrsState_getBit(dst);
-    u32 mask = ~(-1 << bitWidth);
-    int sh16 = 0x10 - bitWidth;
+    int bw = bitWidth;
+    u32 mask = ~(-1 << bw);
+    int sh16 = 0x10 - bw;
     int i;
     for (i = 0; i < count; i++) {
         int sbit = src->bit;
