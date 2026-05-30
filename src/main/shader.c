@@ -2407,7 +2407,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius) {
 
 /* 112b indexed teardown/free of map block. */
 extern char lbl_803822C8[];
-extern void* lbl_80386468[];
+extern void* gLoadedRomListPages[];
 extern void defStartFn_8005972c(void* p1, void* p2, int idx, int flag);
 extern void mm_free(void* p);
 
@@ -2415,11 +2415,11 @@ extern void mm_free(void* p);
 #pragma peephole off
 void fn_80059A50(int param_1) {
 	int idx = param_1;
-	void* p = lbl_80386468[idx];
+	void* p = gLoadedRomListPages[idx];
 	if (p != 0) {
 		defStartFn_8005972c(p, lbl_803822C8 + idx * 0x8C, idx, 1);
-		mm_free(lbl_80386468[idx]);
-		lbl_80386468[idx] = 0;
+		mm_free(gLoadedRomListPages[idx]);
+		gLoadedRomListPages[idx] = 0;
 	}
 }
 #pragma peephole reset
@@ -2449,7 +2449,7 @@ void loadMapForCameraPos(float x, float y, float z) {
 /* 80b current map block lookup. */
 extern int lbl_803DB648;
 extern void* lbl_803DCEA0;
-extern void* lbl_80386468[];
+extern void* gLoadedRomListPages[];
 
 #pragma scheduling off
 void* mapBlockFn_800592e4(void) {
@@ -2462,7 +2462,7 @@ void* mapBlockFn_800592e4(void) {
 		return 0;
 	}
 	{
-		void* res = lbl_80386468[v];
+		void* res = gLoadedRomListPages[v];
 		if (res == 0) {
 			return res;
 		}
@@ -2815,8 +2815,8 @@ void mapLoadForObject(int p1, char *p2)
     int i;
 
     for (i = 0; i < 40; i++) {
-        if (lbl_80386468[slot] == NULL) {
-            lbl_80386468[slot] = (void *)romList;
+        if (gLoadedRomListPages[slot] == NULL) {
+            gLoadedRomListPages[slot] = (void *)romList;
             break;
         }
         slot++;
@@ -3107,9 +3107,9 @@ void unloadMap(void)
     lbl_803DCE98 = 0;
     Obj_ResetObjectSystem();
     for (n = 0; n < 120; n++) {
-        if (lbl_80386468[n] != 0) {
-            mm_free(lbl_80386468[n]);
-            lbl_80386468[n] = 0;
+        if (gLoadedRomListPages[n] != 0) {
+            mm_free(gLoadedRomListPages[n]);
+            gLoadedRomListPages[n] = 0;
         }
     }
     (*(void (*)(void))(*(int *)(*gCheckpointInterface + 4)))();

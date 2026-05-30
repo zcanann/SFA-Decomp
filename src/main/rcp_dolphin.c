@@ -3029,7 +3029,7 @@ void textureAnimFn_80053f2c(u8 *def, u32 *node, int *cnt)
 #pragma peephole reset
 
 extern char lbl_803822C8[];
-extern void *lbl_80386468[];
+extern void *gLoadedRomListPages[];
 extern int *gMapEventInterface;
 extern int *Obj_SetupObject(int *obj, int p1, int p2, int p3, int p4);
 
@@ -3065,7 +3065,7 @@ void mapInstantiateObjects(int *p1, int mapId, int index, int p4)
         if (objIndex < 0) {
             visible = 0;
         } else {
-            void *bm = lbl_80386468[mapId];
+            void *bm = gLoadedRomListPages[mapId];
             byteIdx = objIndex >> 3;
             if (byteIdx >= 0xc4) {
                 visible = 0;
@@ -3099,7 +3099,7 @@ void mapInstantiateObjects(int *p1, int mapId, int index, int p4)
                 if (objIndex >= 0) {
                     byteIdx = objIndex >> 3;
                     bit = 1 << (objIndex & 7);
-                    vis = *(s8 **)((char *)lbl_80386468[mapId] + 0x10);
+                    vis = *(s8 **)((char *)gLoadedRomListPages[mapId] + 0x10);
                     vis[byteIdx] = vis[byteIdx] & ~bit;
                     vis[byteIdx] = vis[byteIdx] | bit;
                 }

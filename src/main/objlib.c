@@ -46,7 +46,7 @@ extern undefined4 FUN_80045328();
 extern void getTabEntry(void *dst,int fileId,int offset,int size);
 extern void fileLoadToBufferOffset(int fileId,void *dst,int offset,int size);
 extern void fn_80054F74(int obj,float *pos);
-extern ObjLibRegionList **fn_8005AFA0(void);
+extern ObjLibRegionList **RomList_GetLoadedPages(void);
 extern int * fn_8005B11C();
 extern void debugPrintf(const char *fmt, ...);
 extern void PSMTXConcat(float *a,float *b,float *out);
@@ -73,6 +73,8 @@ extern int objGetAnimState80A(void *obj);
 #define OBJGROUP_COUNT 0x54
 #define OBJGROUP_OFFSET_CLEAR_COUNT (OBJGROUP_COUNT + 1)
 #define OBJGROUP_MAX_OBJECTS 0x100
+#define OBJLIB_PRIMARY_ROM_PAGE_COUNT 0x50
+#define OBJHITREGION_ROM_ENTRY_TYPE 0x130
 
 extern uint gObjGroupObjects[OBJGROUP_MAX_OBJECTS];
 extern u8 gObjGroupOffsets[0x58];
@@ -3110,7 +3112,7 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 /*
  * --INFO--
  *
- * Function: fn_800386BC
+ * Function: ObjHitRegion_FindContainingId
  * EN v1.0 Address: 0x800386BC
  * EN v1.0 Size: 716b
  * EN v1.1 Address: 0x800387B4
@@ -3120,7 +3122,7 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint fn_800386BC(f32 x,f32 y,f32 z)
+uint ObjHitRegion_FindContainingId(f32 x,f32 y,f32 z)
 {
   ObjLibRegionList **lists;
   ObjLibRegionList *list;
@@ -3130,14 +3132,14 @@ uint fn_800386BC(f32 x,f32 y,f32 z)
   int entryOffset;
 
   hitId = -1;
-  lists = fn_8005AFA0();
-  for (listIndex = 0; listIndex < 0x50; listIndex++) {
+  lists = RomList_GetLoadedPages();
+  for (listIndex = 0; listIndex < OBJLIB_PRIMARY_ROM_PAGE_COUNT; listIndex++) {
     list = lists[listIndex];
     if (list != 0) {
       entry = list->entries;
       entryOffset = 0;
       while (entryOffset < (int)(uint)list->entryBytes) {
-        if (entry->type == 0x130) {
+        if (entry->type == OBJHITREGION_ROM_ENTRY_TYPE) {
           f32 yawCos =
               fn_80293E80(lbl_803DE980 * (f32)-(s32)((uint)entry->yaw << 8) / lbl_803DE984);
           f32 yawSin = sin(lbl_803DE980 * (f32)-(s32)((uint)entry->yaw << 8) / lbl_803DE984);

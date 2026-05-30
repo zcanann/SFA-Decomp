@@ -2887,10 +2887,10 @@ void setPendingMapLoad(int v) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* Return address of a global block. */
-extern u8 lbl_80386468[0x100];
-void *fn_8005AFA0(void) {
-    return lbl_80386468;
+/* Return the loaded romlist page table. */
+extern u8 gLoadedRomListPages[0x1e0];
+void *RomList_GetLoadedPages(void) {
+    return gLoadedRomListPages;
 }
 
 extern f32 lbl_803DEBB4;
@@ -3161,7 +3161,7 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     int sz;
 
     for (outer = 0; outer < 0x78; outer++) {
-        page = ((int**)lbl_80386468)[outer];
+        page = ((int**)gLoadedRomListPages)[outer];
         if (page == NULL) continue;
 
         lbl_803DCEA0 = page;

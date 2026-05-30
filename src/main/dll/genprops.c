@@ -75,7 +75,7 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
-extern u32 fn_800386BC(f32 x, f32 y, f32 z);
+extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 extern undefined4 FUN_8003b540();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8004036c();
@@ -4253,7 +4253,7 @@ undefined4 FUN_80171310(int param_1)
   
   iVar2 = *(int *)(param_1 + 0xb8);
   if (*(int *)(iVar2 + 0x18) == -2) {
-    uVar1 = fn_800386BC(0.0f, 0.0f, 0.0f);
+    uVar1 = ObjHitRegion_FindContainingId(0.0f, 0.0f, 0.0f);
     *(uint *)(iVar2 + 0x18) = uVar1 & 0xffff;
   }
   return *(undefined4 *)(iVar2 + 0x18);
@@ -5156,7 +5156,7 @@ int collectible_modelMtxFn(int *obj) {
         f32 f1 = *(f32*)((char*)obj + 0x18);
         f32 f2 = *(f32*)((char*)obj + 0x1c);
         f32 f3 = *(f32*)((char*)obj + 0x20);
-        *(u32*)((char*)inner + 0x18) = (u16)fn_800386BC(f1, f2, f3);
+        *(u32*)((char*)inner + 0x18) = (u16)ObjHitRegion_FindContainingId(f1, f2, f3);
     }
     return *(int*)((char*)inner + 0x18);
 }
