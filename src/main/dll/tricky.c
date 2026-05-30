@@ -2129,3 +2129,25 @@ void gameUiResetMenuState(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E1E68;
+#pragma scheduling off
+#pragma peephole off
+void GameUI_airMeterInitType0(int a, int b, int c) {
+    int *m;
+    if (airMeter != NULL) return;
+    m = (int *)mmAlloc(0x48, 0x19, 0);
+    memset(m, 0, 0x48);
+    m[0] = 0;
+    m[1] = a;
+    m[0xb] = (int)textureLoadAsset(b);
+    m[0xc] = (int)textureLoadAsset(c);
+    m[4] = *(u16 *)((char *)m[0xb] + 0xa);
+    m[5] = *(u16 *)((char *)m[0xb] + 0xc);
+    airMeter = m;
+    *(u8 *)((char *)m + 0x18) = 0;
+    *(f32 *)((char *)m + 0x24) = lbl_803E1E68;
+    m[0x10] = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
