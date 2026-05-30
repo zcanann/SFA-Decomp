@@ -1354,6 +1354,10 @@ extern f32 lbl_803E43BC;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E43D0;
 extern f32 lbl_803E43D8;
+extern f32 lbl_803E43DC;
+extern void *Obj_GetPlayerObject(void);
+extern f32 Vec_distance(void *a, void *b);
+extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803E43E8;
 extern f32 lbl_803E43F4;
 #pragma peephole off
@@ -1363,6 +1367,48 @@ void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E43E8); }
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E43F4); }
 #pragma peephole reset
+
+void cfmagicwall_update(int obj) {
+    int data = *(int *)(obj + 0x4c);
+    int player = (int)Obj_GetPlayerObject();
+    int alpha = 0xff;
+
+    if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
+        int yaw = (s16)Obj_GetYawDeltaToObject(obj, player, NULL);
+
+        if (yaw < 0) {
+            yaw = -yaw;
+        }
+
+        if (yaw > 0x4000) {
+            *(char *)(obj + 0x36) = 0;
+            return;
+        }
+
+        {
+            f32 playerDistance;
+            f32 range;
+            f32 fadeDistance;
+            range = (f32)(s32)*(s16 *)(data + 0x1a);
+            playerDistance = Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18));
+            fadeDistance = Camera_DistanceToCurrentViewPosition(
+                *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+
+            if (fadeDistance < playerDistance) {
+                fadeDistance = Camera_DistanceToCurrentViewPosition(
+                    *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            } else {
+                fadeDistance = playerDistance;
+            }
+
+            if (fadeDistance < range) {
+                alpha = (s32)(lbl_803E43DC * (fadeDistance / range));
+            }
+
+            *(char *)(obj + 0x36) = alpha;
+        }
+    }
+}
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
