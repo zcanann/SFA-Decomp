@@ -3024,3 +3024,46 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_803DCF78;
+extern int *lbl_803DCFE8;
+extern char lbl_8038E2A8[];
+extern f32 Ydchuff_803DED80[];
+extern inline float sqrtf(float x)
+{
+    static const double _half = .5;
+    static const double _three = 3.0;
+    volatile float y;
+    if (x > 0.0f) {
+        double guess = __frsqrte((double)x);
+        guess = _half * guess * (_three - guess * guess * x);
+        guess = _half * guess * (_three - guess * guess * x);
+        guess = _half * guess * (_three - guess * guess * x);
+        y = (float)(x * guess);
+        return y;
+    }
+    return x;
+}
+void shadowCreate(int *obj) {
+    int *cam;
+    f32 dx, dy, dz, dist;
+    if (lbl_803DCF78 >= 0x12c) return;
+    *(int **)(lbl_8038E2A8 + lbl_803DCF78 * 0xc) = obj;
+    cam = lbl_803DCFE8;
+    dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
+    dy = *(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)cam + 0x10);
+    dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)cam + 0x14);
+    dist = sqrtf(dx * dx + dy * dy + dz * dz);
+    *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
+        *(f32 *)(*(int *)((char *)obj + 0x64)) / dist;
+    if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) == 2) {
+        *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 1;
+        if (*(u8 *)(*(int *)((char *)obj + 0x50) + 0x5f) & 4) {
+            *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 2;
+            *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = Ydchuff_803DED80[4];
+        }
+    } else {
+        *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 0;
+    }
+    lbl_803DCF78 = lbl_803DCF78 + 1;
+}
